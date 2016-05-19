@@ -108,7 +108,7 @@ public class AlignmentCalc implements AlignmentCalculationRunnable {
 
 			DisplayAFP.showAlignmentPanel(afpChain,ca1,ca2,jmol);
 
-			System.out.println(afpChain.toCE(ca1,ca2));
+			logger.info(afpChain.toCE(ca1,ca2));
 
 		} catch (StructureException e){
 			e.printStackTrace();

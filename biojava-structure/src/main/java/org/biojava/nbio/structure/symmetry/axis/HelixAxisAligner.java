@@ -26,12 +26,16 @@ import org.biojava.nbio.structure.symmetry.core.QuatSymmetryResults;
 import org.biojava.nbio.structure.symmetry.core.Subunits;
 import org.biojava.nbio.structure.symmetry.geometry.MomentsOfInertia;
 import org.biojava.nbio.structure.symmetry.geometry.SuperPosition;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.vecmath.*;
 
 import java.util.*;
 
 public class HelixAxisAligner extends AxisAligner {
+	private static final Logger LOGGER = LoggerFactory.getLogger(HelixAxisAligner.class);
+
 	private static final Vector3d Y_AXIS = new Vector3d(0,1,0);
 	private static final Vector3d Z_AXIS = new Vector3d(0,0,1);
 
@@ -485,7 +489,7 @@ public class HelixAxisAligner extends AxisAligner {
 		ref[0] = new Point3d(referenceVectors[0]);
 		ref[1] = new Point3d(referenceVectors[1]);
 		if (SuperPosition.rmsd(axes, ref) > 0.1) {
-			System.out.println("Warning: AxisTransformation: axes alignment is off. RMSD: " + SuperPosition.rmsd(axes, ref));
+			LOGGER.warn("Warning: AxisTransformation: axes alignment is off. RMSD: " + SuperPosition.rmsd(axes, ref));
 		}
 
 		return m2;
@@ -605,7 +609,7 @@ public class HelixAxisAligner extends AxisAligner {
 		referenceVector = getReferenceAxisCylic();
 
 		if (referenceVector == null) {
-			System.err.println("Warning: no reference vector found. Using y-axis.");
+			LOGGER.error("Warning: no reference vector found. Using y-axis.");
 			referenceVector = new Vector3d(Y_AXIS);
 		}
 		// make sure reference vector is perpendicular principal roation vector
@@ -621,7 +625,7 @@ public class HelixAxisAligner extends AxisAligner {
 			vector2.negate();
 		}
 		if (Math.abs(dot) < 0.00001) {
-			System.out.println("HelixAxisAligner: Warning: reference axis parallel");
+			LOGGER.warn("HelixAxisAligner: Warning: reference axis parallel");
 		}
 		vector2.cross(vector1, vector2);
 //		System.out.println("Intermed. refVector: " + vector2);

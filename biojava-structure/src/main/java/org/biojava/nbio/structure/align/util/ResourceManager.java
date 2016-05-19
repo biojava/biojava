@@ -22,6 +22,9 @@
  */
 package org.biojava.nbio.structure.align.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
@@ -38,6 +41,8 @@ import java.util.ResourceBundle;
  * @version %I% %G%
  */
 public class ResourceManager {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(ResourceManager.class);
 
 	private String BUNDLE_NAME ;
 
@@ -66,7 +71,7 @@ public class ResourceManager {
 		try {
 			return RESOURCE_BUNDLE.getString(key);
 		} catch (MissingResourceException e) {
-			System.err.println(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return '!' + key + '!';
 		}
 	}

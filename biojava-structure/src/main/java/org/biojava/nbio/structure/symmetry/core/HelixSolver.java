@@ -39,10 +39,7 @@ import java.util.Map.Entry;
  *
  */
 public class HelixSolver {
-
-	private static final Logger logger = LoggerFactory
-			.getLogger(HelixSolver.class);
-
+	private static final Logger LOGGER = LoggerFactory.getLogger(HelixSolver.class);
 	private Subunits subunits = null;
 	private int fold = 1;
 	private HelixLayers helixLayers = new HelixLayers();
@@ -86,7 +83,7 @@ public class HelixSolver {
 
 		for (Entry<Integer[], Integer> entry : interactionMap.entrySet()) {
 			Integer[] pair = entry.getKey();
-			logger.debug("HelixSolver: pair: " + Arrays.toString(pair));
+			LOGGER.debug("HelixSolver: pair: " + Arrays.toString(pair));
 			
 			int contacts = entry.getValue();
 			Point3d[] h1 = null;
@@ -105,7 +102,7 @@ public class HelixSolver {
 					repeatUnitCenters.get(pair[1]));
 			double angle = getAngle(transformation);
 
-			logger.debug(
+			LOGGER.debug(
 					"Original rmsd: {}, Original rise {}, Original angle: {}",
 					rmsd, rise, Math.toDegrees(angle));
 
@@ -127,8 +124,7 @@ public class HelixSolver {
 				continue;
 			}
 			permutations.add(permutation);
-			logger.debug("Permutation: " + permutation);
-			
+            LOGGER.debug("Permutation: " + permutation);
 
 			// keep track of which subunits are permuted
 			Set<Integer> permSet = new HashSet<Integer>();
@@ -149,13 +145,13 @@ public class HelixSolver {
 
 			// a helix a repeat unit cannot map onto itself
 			if (!valid) {
-				logger.debug("Invalid mapping");
+				LOGGER.debug("Invalid mapping");
 				continue;
 			}
 
 			// all subunits must be involved in a permutation
 			if (permSet.size() != subunits.getSubunitCount()) {
-				logger.debug("Not all subunits involved in permutation");
+				LOGGER.debug("Not all subunits involved in permutation");
 				continue;
 			}
 
@@ -190,8 +186,8 @@ public class HelixSolver {
 				rise = getRise(transformation, repeatUnitCenters.get(pair[0]),
 						repeatUnitCenters.get(pair[1]));
 				angle = getAngle(transformation);
-
-				logger.debug("Subunit rmsd: {}, Subunit rise: {}, Subunit angle: {}", subunitRmsd, rise, Math.toDegrees(angle));
+                
+				LOGGER.debug("Subunit rmsd: {}, Subunit rise: {}, Subunit angle: {}", subunitRmsd, rise, Math.toDegrees(angle));
 
 				if (subunitRmsd > parameters.getRmsdThreshold()) {
 					continue;
@@ -238,11 +234,11 @@ public class HelixSolver {
 			rise = getRise(transformation, repeatUnitCenters.get(pair[0]),
 					repeatUnitCenters.get(pair[1]));
 			angle = getAngle(transformation);
-
-			logger.debug("Trace rmsd: " + traceRmsd);
-			logger.debug("Trace rise: " + rise);
-			logger.debug("Trace angle: " + Math.toDegrees(angle));
-			logger.debug("Permutation: " + permutation);
+            
+			LOGGER.debug("Trace rmsd: " + traceRmsd);
+            LOGGER.debug("Trace rise: " + rise);
+            LOGGER.debug("Trace angle: " + Math.toDegrees(angle));
+            LOGGER.debug("Permutation: " + permutation);
 
 			if (traceRmsd > parameters.getRmsdThreshold()) {
 				continue;
@@ -281,7 +277,7 @@ public class HelixSolver {
 			helix.setFold(fold);
 			helix.setContacts(contacts);
 			helix.setRepeatUnits(unit.getRepeatUnitIndices());
-			logger.debug("Layerlines: " + helix.getLayerLines());
+			LOGGER.debug("Layerlines: " + helix.getLayerLines());
 			
 			for (List<Integer> line : helix.getLayerLines()) {
 				maxLayerLineLength = Math.max(maxLayerLineLength, line.size());
@@ -329,7 +325,7 @@ public class HelixSolver {
 				}
 			}
 		}
-		System.out.println("SelfLimiting helix: " + overlap1 + ", " + overlap2);
+		LOGGER.info("SelfLimiting helix: " + overlap1 + ", " + overlap2);
 	}
 
 	private boolean preCheck() {

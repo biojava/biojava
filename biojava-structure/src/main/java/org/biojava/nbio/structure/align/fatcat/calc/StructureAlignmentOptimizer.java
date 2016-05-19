@@ -29,11 +29,14 @@ package org.biojava.nbio.structure.align.fatcat.calc;
 
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.jama.Matrix;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class StructureAlignmentOptimizer
 {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(StructureAlignmentOptimizer.class);
 
 	//private static final boolean showAlig = false;
 
@@ -197,7 +200,7 @@ public class StructureAlignmentOptimizer
 	public void runOptimization(int maxi) throws StructureException{
 		superimposeBySet();
 		if ( debug)
-			System.err.println("   initial rmsd " + rmsd);
+			LOGGER.debug("   initial rmsd " + rmsd);
 
 //      if (showAlig)
 //         showCurrentAlignment(equLen, equSet, "after initial superimposeBySet Len:" +equLen + " rmsd:" +rmsd);
@@ -302,7 +305,7 @@ public class StructureAlignmentOptimizer
 	{
 		long optStart = System.currentTimeMillis();
 		if ( debug)
-			System.out.println("Optimizing up to " + maxi + " iterations.. ");
+			LOGGER.debug("Optimizing up to " + maxi + " iterations.. ");
 		boolean ifstop = true;;
 		int     i, alnLen;
 		alnLen = 0;
@@ -333,10 +336,10 @@ public class StructureAlignmentOptimizer
 
 		if  (debug){
 			if(i < maxi)    {
-				System.out.println(String.format("   optimize converged at %d iterations\n", i));
+				LOGGER.debug(String.format("   optimize converged at %d iterations\n", i));
 			}
-			else    System.out.println("   optimize stop without convergence\n");
-			System.out.println("optimization time: " + (System.currentTimeMillis() - optStart) + " ms.");
+			else    LOGGER.debug("   optimize stop without convergence\n");
+			LOGGER.debug("optimization time: " + (System.currentTimeMillis() - optStart) + " ms.");
 		}
 
 //      if (showAlig)

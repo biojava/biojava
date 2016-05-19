@@ -21,10 +21,13 @@
 package org.biojava.nbio.structure.domain.pdp;
 
 import org.biojava.nbio.structure.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class GetDistanceMatrix {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(GetDistanceMatrix.class);
 
 	/** A set of Calpha atoms that are representing the protein
 	 *
@@ -39,7 +42,7 @@ public class GetDistanceMatrix {
 		int[] jclose= new int[protein.length*protein.length];
 
 		if(protein.length >= PDPParameters.MAXLEN) {
-			System.err.println(String.format("%d protein.len > MAXLEN %d\n",protein.length,PDPParameters.MAXLEN));
+			LOGGER.warn(String.format("%d protein.len > MAXLEN %d\n",protein.length,PDPParameters.MAXLEN));
 			return null;
 		}
 		for(i=0;i<protein.length;i++) {

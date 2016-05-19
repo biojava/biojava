@@ -71,7 +71,7 @@ public class JmolViewerImpl implements StructureViewer {
 
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
-			System.err.println("Could not find Jmol in classpath, please install first. http://www.jmol.org");
+			logger.error("Could not find Jmol in classpath, please install first. http://www.jmol.org");
 			return;
 		}
 		jmolPanel.setPreferredSize(new Dimension(500, 500));
@@ -106,7 +106,7 @@ public class JmolViewerImpl implements StructureViewer {
 	@Override
 	public void setStructure(Structure structure) {
 		if (jmolPanel == null) {
-			System.err.println("please install Jmol first");
+			logger.error("please install Jmol first");
 			return;
 		}
 

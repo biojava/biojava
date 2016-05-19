@@ -32,6 +32,8 @@ import org.biojava.nbio.structure.align.pairwise.AlternativeAlignment;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.gui.ScaleableMatrixPanel;
 import org.biojava.nbio.structure.jama.Matrix;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
@@ -51,6 +53,7 @@ import java.util.List;
  */
 public class DotPlotPanel extends ScaleableMatrixPanel {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(DotPlotPanel.class);
 	private static final long serialVersionUID = -7641953255857483895L;
 
 	/**
@@ -203,7 +206,7 @@ public class DotPlotPanel extends ScaleableMatrixPanel {
 			afpChain.setName1(name1);
 			afpChain.setName2(name2);
 			for ( AFP afpI : afpChain.getAfpSet()){
-				System.out.println(afpI);
+				LOGGER.info(afpI.toString());
 			}
 
 			/*
@@ -241,12 +244,12 @@ public class DotPlotPanel extends ScaleableMatrixPanel {
 			// Now make it circular
 			ceA = (CeMain) StructureAlignmentFactory.getAlgorithm(CeCPMain.algorithmName);
 
-			System.out.format("Aligning %s[%d] with %s[%d] with CPs\n",name1,ca1.length,name2,ca2.length);
+			LOGGER.info(String.format("Aligning %s[%d] with %s[%d] with CPs\n",name1,ca1.length,name2,ca2.length));
 			afpChain = ceA.align(ca1,ca2);
 			afpChain.setName1(name1);
 			afpChain.setName2(name2+"-"+name2);
 			for ( AFP afpI : afpChain.getAfpSet()){
-				System.out.println(afpI);
+				LOGGER.info(afpI.toString());
 			}
 
 			/*/ Reuse mat from the non-cp case, for simplicity

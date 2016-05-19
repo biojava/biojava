@@ -28,6 +28,8 @@ import org.biojava.nbio.structure.scop.ScopDatabase;
 import org.biojava.nbio.structure.scop.ScopDescription;
 import org.biojava.nbio.structure.scop.ScopDomain;
 import org.biojava.nbio.structure.scop.ScopFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +37,8 @@ import java.util.Vector;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class SCOPAutoSuggestProvider implements AutoSuggestProvider{
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(SCOPAutoSuggestProvider.class);
 
 	boolean DEBUG = false;
 
@@ -72,7 +76,7 @@ public class SCOPAutoSuggestProvider implements AutoSuggestProvider{
 		long timeE = System.currentTimeMillis();
 
 		if ( DEBUG)
-			System.out.println("ScopAutoSuggestProvider took " + (timeE - timeS) + " ms. to get " + v.size() + " suggestions");
+			LOGGER.debug("ScopAutoSuggestProvider took " + (timeE - timeS) + " ms. to get " + v.size() + " suggestions");
 
 		return v;
 
@@ -125,7 +129,7 @@ public class SCOPAutoSuggestProvider implements AutoSuggestProvider{
 				return domains;
 
 			if (DEBUG)
-				System.out.println("domains: " + domains);
+				LOGGER.debug("domains: " + domains);
 
 			if ( domains == null || domains.size() < 1) {
 				if ( userInput.length() > 0 ){
@@ -179,7 +183,7 @@ public class SCOPAutoSuggestProvider implements AutoSuggestProvider{
 	public void stop() {
 		stop.set(true);
 		if (DEBUG)
-			System.out.println("ScopAutoSuggestProvider got signal stop");
+			LOGGER.debug("ScopAutoSuggestProvider got signal stop");
 
 	}
 

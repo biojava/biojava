@@ -17,6 +17,8 @@ import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.biojava.nbio.structure.quaternary.BioAssemblyInfo;
 import org.rcsb.mmtf.api.StructureAdapterInterface;
 import org.rcsb.mmtf.dataholders.MmtfStructure;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Class to take Biojava structure data and covert to the DataApi for encoding. 
@@ -26,6 +28,7 @@ import org.rcsb.mmtf.dataholders.MmtfStructure;
  */
 public class MmtfStructureWriter {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(MmtfStructureWriter.class);
 
 	private StructureAdapterInterface mmtfDecoderInterface;
 
@@ -161,7 +164,7 @@ public class MmtfStructureWriter {
 			List<Chain> entityChains = entityInfo.getChains();
 			if (entityChains.isEmpty()){
 				// Error mapping chain to entity
-				System.err.println("ERROR MAPPING CHAIN TO ENTITY: "+description);
+				LOGGER.error("ERROR MAPPING CHAIN TO ENTITY: "+description);
 				continue;
 			}
 			int[] chainIndices = new int[entityChains.size()];

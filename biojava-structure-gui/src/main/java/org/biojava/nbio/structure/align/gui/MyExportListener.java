@@ -21,6 +21,9 @@ package org.biojava.nbio.structure.align.gui;
 
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.align.gui.jmol.AbstractAlignmentJmol;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.swing.*;
 
 import java.awt.event.ActionEvent;
@@ -31,6 +34,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 public class MyExportListener implements ActionListener{
+	private static final Logger LOGGER = LoggerFactory.getLogger(MyExportListener.class);
 
 	AbstractAlignmentJmol parent;
 	MyExportListener(AbstractAlignmentJmol parent){
@@ -46,7 +50,7 @@ public void actionPerformed(ActionEvent arg0)
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			File file = fc.getSelectedFile();
 			//This is where a real application would open the file.
-			System.out.println("Exporting PDB file to: " + file.getName());
+			LOGGER.info("Exporting PDB file to: " + file.getName());
 
 			Structure s = parent.getStructure();
 
@@ -60,7 +64,7 @@ public void actionPerformed(ActionEvent arg0)
 
 
 		} else {
-			System.out.println("Export command cancelled by user.");
+			LOGGER.info("Export command cancelled by user.");
 		}
 
 

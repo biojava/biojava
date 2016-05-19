@@ -22,6 +22,9 @@
  */
 package org.biojava.nbio.structure.align.gui.jmol;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,6 +35,8 @@ import java.util.regex.Pattern;
  *
  */
 public class AtomInfo {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(AtomInfo.class);
 
 	String chainId;
 	String atomName;
@@ -131,7 +136,7 @@ public class AtomInfo {
 
 			boolean found = matcher.find();
 			if ( ! found) {
-				System.err.println("JmolTools: could not parse the residue number string " + res1);
+				LOGGER.error("JmolTools: could not parse the residue number string " + res1);
 				buf.append(res1);
 			} else {
 				String residueNumber = matcher.group(1);

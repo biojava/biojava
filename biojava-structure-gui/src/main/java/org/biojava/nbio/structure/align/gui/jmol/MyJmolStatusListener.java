@@ -26,6 +26,8 @@ package org.biojava.nbio.structure.align.gui.jmol;
 
 import org.jmol.api.JmolStatusListener;
 import org.jmol.constant.EnumCallback;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 
@@ -33,6 +35,8 @@ import java.util.Hashtable;
 import java.util.Map;
 
 public class MyJmolStatusListener implements JmolStatusListener {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(MyJmolStatusListener.class);
 
 	private boolean verbose = false;
 
@@ -52,13 +56,13 @@ public class MyJmolStatusListener implements JmolStatusListener {
 
 	@Override
 	public String eval(String arg0) {
-		if(verbose) System.out.println("eval " + arg0);
+		if(verbose) LOGGER.info("eval " + arg0);
 		return null;
 	}
 
 	@Override
 	public float[][] functionXY(String arg0, int arg1, int arg2) {
-		if(verbose) System.out.println("XY " + arg0 + " " + arg1 + " " + arg2);
+		if(verbose) LOGGER.info("XY " + arg0 + " " + arg1 + " " + arg2);
 		return null;
 	}
 
@@ -93,26 +97,26 @@ public class MyJmolStatusListener implements JmolStatusListener {
 
 	@Override
 	public void setCallbackFunction(String arg0, String arg1) {
-		if(verbose) System.out.println("callback:" + arg0 + " " + arg1);
+		if(verbose) LOGGER.info("callback:" + arg0 + " " + arg1);
 		status.setText(arg0 + " " + arg1);
 
 	}
 
 	public String dialogAsk(String arg0, String arg1) {
 		// TODO Auto-generated method stub
-		if(verbose) System.out.println("dialogAsk");
+		if(verbose) LOGGER.info("dialogAsk");
 		return null;
 	}
 
 	public void handlePopupMenu(int arg0, int arg1) {
 		// TODO Auto-generated method stub
-		if(verbose) System.out.println("handlePopupMenu");
+		if(verbose) LOGGER.info("handlePopupMenu");
 	}
 
 	public void showConsole(boolean arg0) {
 
 		// TODO Auto-generated method stub
-		if(verbose) System.out.println("showConsole");
+		if(verbose) LOGGER.info("showConsole");
 
 	}
 

@@ -49,6 +49,8 @@ import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentWriter;
 import org.biojava.nbio.structure.align.util.AFPAlignmentDisplay;
 import org.biojava.nbio.structure.gui.events.AlignmentPositionListener;
 import org.biojava.nbio.structure.gui.util.AlignedPosition;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A JPanel that can display the sequence alignment of a
@@ -67,6 +69,8 @@ import org.biojava.nbio.structure.gui.util.AlignedPosition;
  */
 public class MultipleAligPanel extends JPrintPanel
 implements AlignmentPositionListener, WindowListener {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(MultipleAligPanel.class);
 
 	private static final long serialVersionUID = -6892229111166263764L;
 
@@ -457,7 +461,7 @@ implements AlignmentPositionListener, WindowListener {
 		} else if ( cmd.equals(MenuCreator.FATCAT_BLOCK)){
 			colorByAlignmentBlock();
 		} else {
-			System.err.println("Unknown command:" + cmd);
+			LOGGER.error("Unknown command:" + cmd);
 		}
 	}
 

@@ -32,6 +32,8 @@ import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.util.AFPChainScorer;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.jama.Matrix;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -53,6 +55,7 @@ import java.util.Scanner;
  *
  */
 public class OptimalCECPMain extends CeMain {
+	private static final Logger LOGGER = LoggerFactory.getLogger(OptimalCECPMain.class);
 	private static final boolean debug = true;
 
 
@@ -484,12 +487,12 @@ public class OptimalCECPMain extends CeMain {
 
 		if(debug) {
 			// print progress bar header
-			System.out.print("|");
+			LOGGER.debug("|");
 			for(int cp=1;cp<ca2.length-1;cp++) {
-				System.out.print("=");
+				LOGGER.debug("=");
 			}
-			System.out.println("|");
-			System.out.print(".");
+			LOGGER.debug("|");
+			LOGGER.debug(".");
 		}
 
 		if(alignments != null) {
@@ -524,8 +527,8 @@ public class OptimalCECPMain extends CeMain {
 		}
 		if(debug) {
 			long elapsedTime = System.currentTimeMillis()-startTime;
-			System.out.println();
-			System.out.format("%d alignments took %.4f s (%.1f ms avg)\n",
+			LOGGER.debug("\n");
+			LOGGER.debug("%d alignments took %.4f s (%.1f ms avg)\n",
 					ca2.length, elapsedTime/1000., (double)elapsedTime/ca2.length);
 		}
 
@@ -657,9 +660,9 @@ public class OptimalCECPMain extends CeMain {
 		Atom[] ca1clone = StructureTools.cloneAtomArray(ca1);
 		Atom[] ca2clone = StructureTools.cloneAtomArray(ca2);
 		if (! GuiWrapper.isGuiModuleInstalled()) {
-			System.err.println("The biojava-structure-gui and/or JmolApplet modules are not installed. Please install!");
+			LOGGER.error("The biojava-structure-gui and/or JmolApplet modules are not installed. Please install!");
 			// display alignment in console
-			System.out.println(afpChain.toCE(ca1clone, ca2clone));
+			LOGGER.info(afpChain.toCE(ca1clone, ca2clone));
 		} else {
 			Object jmol = GuiWrapper.display(afpChain,ca1clone,ca2clone);
 			GuiWrapper.showAlignmentImage(afpChain, ca1clone,ca2clone,jmol);

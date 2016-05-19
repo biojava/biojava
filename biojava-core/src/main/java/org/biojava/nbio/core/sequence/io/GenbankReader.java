@@ -40,6 +40,8 @@ import org.biojava.nbio.core.sequence.io.template.SequenceCreatorInterface;
 import org.biojava.nbio.core.sequence.io.template.SequenceHeaderParserInterface;
 import org.biojava.nbio.core.sequence.template.AbstractSequence;
 import org.biojava.nbio.core.sequence.template.Compound;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -52,6 +54,7 @@ import java.util.LinkedHashMap;
  *
  */
 public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
+	private static final Logger LOGGER = LoggerFactory.getLogger(GenbankReader.class);
 
 	private SequenceCreatorInterface<C> sequenceCreator;
 	private GenbankSequenceParser<S,C> genbankParser;
@@ -180,13 +183,13 @@ public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
 
 		GenbankReader<ProteinSequence, AminoAcidCompound> proteinReader = new GenbankReader<ProteinSequence, AminoAcidCompound>(is, new GenericGenbankHeaderParser<ProteinSequence,AminoAcidCompound>(), new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
 		LinkedHashMap<String,ProteinSequence> proteinSequences = proteinReader.process();
-		System.out.println(proteinSequences);
+		LOGGER.info(proteinSequences.toString());
 
 		String inputFile = "src/test/resources/NM_000266.gb";
 		is = new FileInputStream(inputFile);
 		GenbankReader<DNASequence, NucleotideCompound> dnaReader = new GenbankReader<DNASequence, NucleotideCompound>(is, new GenericGenbankHeaderParser<DNASequence,NucleotideCompound>(), new DNASequenceCreator(DNACompoundSet.getDNACompoundSet()));
 		LinkedHashMap<String,DNASequence> dnaSequences = dnaReader.process();
-		System.out.println(dnaSequences);
+		LOGGER.info(dnaSequences.toString());
 
 		String crazyFile = "src/test/resources/CraftedFeature.gb";
 		is = new FileInputStream(crazyFile);
@@ -194,7 +197,7 @@ public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
 		LinkedHashMap<String,DNASequence> crazyAnnotatedSequences = crazyReader.process();
 
 		is.close();
-		System.out.println(crazyAnnotatedSequences);
+		LOGGER.info(crazyAnnotatedSequences.toString());
 	}
 
 }

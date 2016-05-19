@@ -20,6 +20,9 @@
  */
 package org.biojava.nbio.survival.data;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.*;
 import java.util.*;
 
@@ -30,6 +33,8 @@ import java.util.*;
  * @author Scooter Willis <willishf at gmail dot com>
  */
 public class WorkSheet {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(WorkSheet.class);
 
 	private LinkedHashMap<String, HeaderInfo> columnLookup = new LinkedHashMap<String, HeaderInfo>();
 	private LinkedHashMap<String, HeaderInfo> rowLookup = new LinkedHashMap<String, HeaderInfo>();
@@ -102,7 +107,7 @@ public class WorkSheet {
 				data[row][col] = new CompactCharSequence(value);
 				values[row][col] = null;
 			}
-			System.out.println("Row " + row + " " + Runtime.getRuntime().totalMemory());
+			LOGGER.info("Row " + row + " " + Runtime.getRuntime().totalMemory());
 
 		}
 		values = null;

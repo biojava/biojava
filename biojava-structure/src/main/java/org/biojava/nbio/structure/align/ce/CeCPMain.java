@@ -30,6 +30,8 @@ import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.util.AFPAlignmentDisplay;
 import org.biojava.nbio.structure.align.util.ConfigurationException;
 import org.biojava.nbio.structure.jama.Matrix;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -50,6 +52,7 @@ import java.util.List;
  *
  */
 public class CeCPMain extends CeMain {
+	private static final Logger LOGGER = LoggerFactory.getLogger(CeCPMain.class);
 	private static boolean debug = false;
 
 	public static final String algorithmName = "jCE Circular Permutation";
@@ -125,7 +128,7 @@ public class CeCPMain extends CeMain {
 			return alignRight(ca1, ca2, cpparams);
 		} else {
 			if(debug) {
-				System.out.println("Swapping alignment order.");
+				LOGGER.info("Swapping alignment order.");
 			}
 			AFPChain afpChain = this.alignRight(ca2, ca1, cpparams);
 			return invertAlignment(afpChain);
@@ -148,7 +151,7 @@ public class CeCPMain extends CeMain {
 		Atom[] ca2m = StructureTools.duplicateCA2(ca2);
 
 		if(debug) {
-			System.out.format("Duplicating ca2 took %s ms\n",System.currentTimeMillis()-startTime);
+			LOGGER.info(String.format("Duplicating ca2 took %s ms\n",System.currentTimeMillis()-startTime));
 			startTime = System.currentTimeMillis();
 		}
 
@@ -161,13 +164,13 @@ public class CeCPMain extends CeMain {
 		} catch( Exception e) {}
 
 		if(debug) {
-			System.out.format("Running %dx2*%d alignment took %s ms\n",ca1.length,ca2.length,System.currentTimeMillis()-startTime);
+			LOGGER.info(String.format("Running %dx2*%d alignment took %s ms\n",ca1.length,ca2.length,System.currentTimeMillis()-startTime));
 			startTime = System.currentTimeMillis();
 		}
 		afpChain = postProcessAlignment(afpChain, ca1, ca2m, calculator, cpparams);
 
 		if(debug) {
-			System.out.format("Finding CP point took %s ms\n",System.currentTimeMillis()-startTime);
+			LOGGER.info("Finding CP point took %s ms\n",System.currentTimeMillis()-startTime);
 			startTime = System.currentTimeMillis();
 		}
 
@@ -371,7 +374,7 @@ public class CeCPMain extends CeMain {
 					firstRes = ca2len;
 
 					if(debug) {
-						System.out.format("Discarding n-terminal block as too " +
+						LOGGER.info("Discarding n-terminal block as too " +
 								"short (%d residues, needs %d)\n",
 								minCP.mid, minCPlength);
 					}
@@ -381,7 +384,7 @@ public class CeCPMain extends CeMain {
 					lastRes = ca2len-1;
 
 					if(debug) {
-						System.out.format("Discarding c-terminal block as too " +
+						LOGGER.info("Discarding c-terminal block as too " +
 								"short (%d residues, needs %d)\n",
 								optLen[0] - minCP.mid, minCPlength);
 					}
@@ -740,7 +743,7 @@ public class CeCPMain extends CeMain {
 		cp.lastRes = lastRes;
 
 		if(debug) {
-			System.out.format("Found a CP at residue %d. Trimming %d aligned residues from %d-%d of block 0 and %d-%d of block 1.\n",
+			LOGGER.info("Found a CP at residue %d. Trimming %d aligned residues from %d-%d of block 0 and %d-%d of block 1.\n",
 					firstRes,cp.numResiduesCut,nStart,firstRes-1,firstRes, cEnd-ca2len);
 		}
 
@@ -756,9 +759,9 @@ public class CeCPMain extends CeMain {
 		Atom[] ca1clone = StructureTools.cloneAtomArray(ca1);
 		Atom[] ca2clone = StructureTools.cloneAtomArray(ca2);
 		if (! GuiWrapper.isGuiModuleInstalled()) {
-			System.err.println("The biojava-structure-gui and/or JmolApplet modules are not installed. Please install!");
+			LOGGER.info("The biojava-structure-gui and/or JmolApplet modules are not installed. Please install!");
 			// display alignment in console
-			System.out.println(afpChain.toCE(ca1clone, ca2clone));
+			LOGGER.info(afpChain.toCE(ca1clone, ca2clone));
 		} else {
 			Object jmol = GuiWrapper.display(afpChain,ca1clone,ca2clone);
 			GuiWrapper.showAlignmentImage(afpChain, ca1clone,ca2clone,jmol);

@@ -21,6 +21,8 @@
 package org.biojava.nbio.structure.symmetry.core;
 
 import org.biojava.nbio.structure.symmetry.geometry.SuperPosition;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
@@ -29,6 +31,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HelixExtender {
+	private static final Logger LOGGER = LoggerFactory.getLogger(HelixExtender.class);
+
 	private Subunits subunits = null;
 	private Helix helix = null;
 
@@ -49,7 +53,7 @@ public class HelixExtender {
 				indices.add(line.get(line.size()-1));
 			}
 		}
-		System.out.println("Extending subunits: " + indices);
+		LOGGER.info("Extending subunits: " + indices);
 
 		List<Point3d> points = new ArrayList<Point3d>();
 		Matrix4d transformation = helix.getTransformation();

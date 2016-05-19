@@ -482,7 +482,7 @@ public class FileConvert {
 		/*xmlns="http://www.sanger.ac.uk/xml/das/2004/06/17/dasalignment.xsd" xmlns:align="http://www.sanger.ac.uk/xml/das/2004/06/17/alignment.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance" xsd:schemaLocation="http://www.sanger.ac.uk/xml/das/2004/06/17/dasalignment.xsd http://www.sanger.ac.uk/xml/das//2004/06/17/dasalignment.xsd"*/
 
 		if ( structure == null){
-			System.err.println("can not convert structure null");
+			logger.error("can not convert structure null");
 			return;
 		}
 

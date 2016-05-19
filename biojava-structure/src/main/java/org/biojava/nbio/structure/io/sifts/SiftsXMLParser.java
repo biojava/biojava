@@ -24,6 +24,8 @@
  */
 package org.biojava.nbio.structure.io.sifts;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -39,6 +41,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SiftsXMLParser {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(SiftsXMLParser.class);
 
 	Document dom;
 	List<SiftsEntity> entities;
@@ -146,7 +150,7 @@ public class SiftsXMLParser {
 			SiftsSegment seg = new SiftsSegment(segId,start,end);
 
 			if ( debug )
-				System.out.println("parsed " + seg);
+				LOGGER.info("parsed " + seg);
 
 			// get nodelist of segments...
 			NodeList nl = el.getElementsByTagName("listResidue");

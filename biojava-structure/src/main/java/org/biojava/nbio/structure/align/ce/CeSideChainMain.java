@@ -22,9 +22,13 @@ package org.biojava.nbio.structure.align.ce;
 
 import org.biojava.nbio.structure.align.StructureAlignment;
 import org.biojava.nbio.structure.align.util.ConfigurationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class CeSideChainMain  extends CeMain implements StructureAlignment {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(CeSideChainMain.class);
 
 	public static final String algorithmName = "jCE-sidechain";
 
@@ -63,7 +67,7 @@ public class CeSideChainMain  extends CeMain implements StructureAlignment {
 
 	@Override
 	public void setParameters(ConfigStrucAligParams params){
-		System.out.println("setting params : " + params);
+		LOGGER.info("setting params : " + params);
 		if (! (params instanceof CeParameters )){
 			throw new IllegalArgumentException("provided parameter object is not of type CeParameter");
 		}

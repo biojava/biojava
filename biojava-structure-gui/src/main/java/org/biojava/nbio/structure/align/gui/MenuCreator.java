@@ -27,6 +27,8 @@ import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
 import org.biojava.nbio.structure.align.webstart.WebStartMain;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 
@@ -47,6 +49,8 @@ import java.io.File;
  *
  */
 public class MenuCreator {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(MenuCreator.class);
 
 	public static final String PRINT     = "Print";
 	public static final String ALIGNMENT_PANEL = "Alignment Panel";
@@ -698,7 +702,7 @@ public class MenuCreator {
 		if (imgURL != null) {
 			return new ImageIcon(imgURL);
 		} else {
-			System.err.println("Couldn't find file: " + path);
+			LOGGER.error("Couldn't find file: " + path);
 			return null;
 		}
 	}

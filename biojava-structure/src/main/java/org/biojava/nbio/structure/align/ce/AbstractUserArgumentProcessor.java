@@ -36,6 +36,8 @@ import org.biojava.nbio.structure.align.util.*;
 import org.biojava.nbio.structure.align.xml.AFPChainXMLConverter;
 import org.biojava.nbio.structure.io.LocalPDBDirectory.FetchBehavior;
 import org.biojava.nbio.structure.io.PDBFileReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.beans.Introspector;
 import java.io.*;
@@ -77,6 +79,8 @@ import java.util.List;
  *
  */
 public abstract class AbstractUserArgumentProcessor implements UserArgumentProcessor {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractUserArgumentProcessor.class);
 
 	public static String newline = System.getProperty("line.separator");
 
@@ -121,13 +125,13 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 			if(arg.equalsIgnoreCase("-h") || arg.equalsIgnoreCase("-help")
 					|| arg.equalsIgnoreCase("--help") )
 			{
-				System.out.println(printHelp());
+				LOGGER.info(printHelp());
 				return;
 			}
 			// version
 			if(arg.equalsIgnoreCase("-version") || arg.equalsIgnoreCase("--version")) {
 				StructureAlignment alg = getAlgorithm();
-				System.out.println(alg.getAlgorithmName() + " v." + alg.getVersion() );
+				LOGGER.info(alg.getAlgorithmName() + " v." + alg.getVersion() );
 				return;
 			}
 
@@ -151,7 +155,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 				CliTools.configureBean(params, tmp);
 
 			} catch (ConfigurationException e){
-				System.err.println("Error: "+e.getLocalizedMessage());
+				LOGGER.error("Error: "+e.getLocalizedMessage());
 				System.exit(1); return;
 			}
 		}
@@ -165,11 +169,11 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 		}
 
 		if ( params.isShowMenu()){
-			System.err.println("showing menu...");
+			LOGGER.info("showing menu...");
 			try {
 				GuiWrapper.showAlignmentGUI();
 			} catch (Exception e){
-				System.err.println(e.getMessage());
+				LOGGER.error(e.getMessage());
 				e.printStackTrace();
 			}
 		}
@@ -178,11 +182,11 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 			// user wants to view DB search results:
 
 
-			System.err.println("showing DB results...");
+			LOGGER.info("showing DB results...");
 			try {
 				GuiWrapper.showDBResults(params);
 			} catch (Exception e){
-				System.err.println(e.getMessage());
+				LOGGER.error(e.getMessage());
 				e.printStackTrace();
 			}
 
@@ -208,12 +212,12 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 				return;
 			}
 		} catch (ConfigurationException e) {
-			System.err.println(e.getLocalizedMessage());
+			LOGGER.error(e.getLocalizedMessage());
 			System.exit(1); return;
 		}
 
-		System.out.println(printHelp());
-		System.err.println("Error: insufficient arguments.");
+		LOGGER.info(printHelp());
+		LOGGER.error("Error: insufficient arguments.");
 		System.exit(1); return;
 	}
 
@@ -228,7 +232,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 			String version = about.getString("project_version");
 			String build   = about.getString("build");
 
-			System.out.println("Protein Comparison Tool " + version + " " + build);
+			LOGGER.info("Protein Comparison Tool " + version + " " + build);
 		} catch (Exception e){
 			e.printStackTrace();
 		}
@@ -246,7 +250,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 
 			UserConfiguration c = new UserConfiguration();
 			pdbFilePath = c.getPdbFilePath();
-			System.err.println("You did not specify the -pdbFilePath parameter. Defaulting to "+pdbFilePath+".");
+			LOGGER.error("You did not specify the -pdbFilePath parameter. Defaulting to "+pdbFilePath+".");
 		}
 
 		String cacheFilePath = params.getCacheFilePath();
@@ -275,7 +279,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 			throw new ConfigurationException("Please specify the mandatory argument -outFile!");
 		}
 
-		System.out.println("running DB search with parameters: " + params);
+		LOGGER.info("running DB search with parameters: " + params);
 
 		if ( alignPairs != null && ! alignPairs.equals("")) {
 			runAlignPairs(cache, alignPairs, outputFile);
@@ -300,7 +304,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 			String outputFile,int useNrCPUs, StartupParameters params) throws ConfigurationException {
 
 
-		System.out.println("will use " + useNrCPUs + " CPUs.");
+		LOGGER.info("will use " + useNrCPUs + " CPUs.");
 
 		PDBFileReader reader = new PDBFileReader();
 		Structure structure1 = null ;
@@ -350,7 +354,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 			out.write("#Legend: " + newline );
 			String legend = getDbSearchLegend();
 			out.write(legend + newline );
-			System.out.println(legend);
+			LOGGER.info(legend);
 			String line = null;
 			while ( (line = is.readLine()) != null){
 				if ( line.startsWith("#"))
@@ -359,7 +363,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 				String[] spl = line.split(" ");
 
 				if ( spl.length != 2) {
-					System.err.println("wrongly formattted line. Expected format: 4hhb.A 4hhb.B but found " + line);
+					LOGGER.error("wrongly formattted line. Expected format: 4hhb.A 4hhb.B but found " + line);
 					continue;
 				}
 
@@ -387,7 +391,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 
 				String result = getDbSearchResult(afpChain);
 				out.write(result);
-				System.out.print(result);
+				LOGGER.info(result);
 
 				checkWriteFile(afpChain,ca1,ca2,true);
 			}
@@ -440,7 +444,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 			if ( path == null){
 				UserConfiguration c = new UserConfiguration();
 				path = c.getPdbFilePath();
-				System.err.println("You did not specify the -pdbFilePath parameter. Defaulting to "+path+".");
+				LOGGER.error("You did not specify the -pdbFilePath parameter. Defaulting to "+path+".");
 			}
 
 			AtomCache cache = new AtomCache(path, path);
@@ -460,12 +464,12 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 
 
 		if ( structure1 == null){
-			System.err.println("structure 1 is null, can't run alignment.");
+			LOGGER.error("structure 1 is null, can't run alignment.");
 			System.exit(1); return;
 		}
 
 		if ( structure2 == null){
-			System.err.println("structure 2 is null, can't run alignment.");
+			LOGGER.error("structure 2 is null, can't run alignment.");
 			System.exit(1); return;
 		}
 
@@ -505,7 +509,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 			if ( params.isShow3d()){
 
 				if (! GuiWrapper.isGuiModuleInstalled()) {
-					System.err.println("The biojava-structure-gui module is not installed. Please install!");
+					LOGGER.error("The biojava-structure-gui module is not installed. Please install!");
 				} else {
 
 					try {
@@ -516,7 +520,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 
 					} catch (Exception e){
 
-						System.err.println(e.getMessage());
+						LOGGER.error(e.getMessage());
 						e.printStackTrace();
 					}
 					//StructureAlignmentJmol jmol = algorithm.display(afpChain,ca1,ca2,hetatms1, nucs1, hetatms2, nucs2);
@@ -536,14 +540,14 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 
 			if ( params.isPrintXML()){
 				String fatcatXML = AFPChainXMLConverter.toXML(afpChain,ca1,ca2);
-				System.out.println(fatcatXML);
+				LOGGER.info(fatcatXML);
 			}
 			if ( params.isPrintFatCat()) {
 				// default output is to XML on sysout...
-				System.out.println(afpChain.toFatcat(ca1, ca2));
+				LOGGER.info(afpChain.toFatcat(ca1, ca2));
 			}
 			if ( params. isPrintCE()){
-				System.out.println(afpChain.toCE(ca1, ca2));
+				LOGGER.info(afpChain.toCE(ca1, ca2));
 			}
 
 		} catch (IOException e) {
@@ -584,7 +588,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 		String output = null;
 		if ( params.isOutputPDB()){
 			if (! GuiWrapper.isGuiModuleInstalled()) {
-				System.err.println("The biojava-structure-gui module is not installed. Please install!");
+				LOGGER.error("The biojava-structure-gui module is not installed. Please install!");
 				output = AFPChainXMLConverter.toXML(afpChain,ca1,ca2);
 			} else {
 
@@ -634,7 +638,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 			}
 
 		if (fileName == null) {
-			System.err.println("Can't write outputfile. Either provide a filename using -outFile or set -autoOutputFile to true .");
+			LOGGER.error("Can't write outputfile. Either provide a filename using -outFile or set -autoOutputFile to true .");
 			System.exit(1); return;
 		}
 		//System.out.println("writing results to " + fileName + " " + params.getSaveOutputDir());
@@ -677,22 +681,22 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 				// check if it is a URL:
 				try {
 					URL url = new URL(file);
-					System.out.println(url);
+					LOGGER.info(url.toString());
 
 					Structure s = reader.getStructure(url);
 
 					return fixStructureName(s,file);
 
 				} catch ( Exception e){
-					System.err.println(e.getMessage());
+					LOGGER.error(e.getMessage());
 				}
 				File f= new File(file);
-				System.out.println("file from local " + f.getAbsolutePath());
+				LOGGER.info("file from local " + f.getAbsolutePath());
 				Structure s= reader.getStructure(f);
 				return fixStructureName(s, file);
 			} catch (Exception e){
-				System.err.println("general exception:" + e.getMessage());
-				System.err.println("unable to load structure from " + file);
+				LOGGER.error("general exception:" + e.getMessage());
+				LOGGER.error("unable to load structure from " + file);
 				return null;
 			}
 		}
@@ -700,8 +704,8 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 			Structure s = cache.getStructure(name1);
 			return s;
 		} catch ( Exception e){
-			System.err.println(e.getMessage());
-			System.err.println("unable to load structure from dir: " + cache.getPath() + "/"+ name1);
+			LOGGER.error(e.getMessage());
+			LOGGER.error("unable to load structure from dir: " + cache.getPath() + "/"+ name1);
 			return null;
 		}
 

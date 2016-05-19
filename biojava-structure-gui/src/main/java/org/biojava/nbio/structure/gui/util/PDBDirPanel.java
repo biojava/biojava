@@ -47,6 +47,8 @@ public class PDBDirPanel
 extends JPanel
 implements StructurePairSelector{
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(PDBDirPanel.class);
+
 	/**
 	 *
 	 */
@@ -107,7 +109,7 @@ implements StructurePairSelector{
 
 		String chain = c.getText();
 		if ( debug )
-			System.out.println("file :" + pdb + " " +  chain);
+			LOGGER.debug("file :" + pdb + " " +  chain);
 		/// prepare structures
 
 		// load them from the file system
@@ -118,7 +120,7 @@ implements StructurePairSelector{
 		PDBFileReader reader = new PDBFileReader(dir);
 
 		if ( debug )
-			System.out.println("dir: " + dir);
+			LOGGER.debug("dir: " + dir);
 
 		Structure tmp1 = new StructureImpl();
 
@@ -131,13 +133,13 @@ implements StructurePairSelector{
 				return structure1;
 			}
 			if ( debug)
-				System.out.println("using chain " + chain +  " for structure " + structure1.getPDBCode());
+				LOGGER.debug("using chain " + chain +  " for structure " + structure1.getPDBCode());
 			Chain c1 = structure1.findChain(chain);
 			tmp1.setPDBCode(structure1.getPDBCode());
 			tmp1.setPDBHeader(structure1.getPDBHeader());
 			tmp1.setPDBCode(structure1.getPDBCode());
 			tmp1.addChain(c1);
-			System.out.println("ok");
+			LOGGER.debug("ok");
 
 		} catch (IOException e){
 			logger.warn(e.getMessage());

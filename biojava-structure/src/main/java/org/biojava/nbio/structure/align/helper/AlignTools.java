@@ -26,8 +26,12 @@ import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.AtomImpl;
 import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.jama.Matrix;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AlignTools {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(AlignTools.class);
 
 	/** get a subset of Atoms based by their positions
 	 *
@@ -101,7 +105,7 @@ public class AlignTools {
 		Atom center = new AtomImpl();
 
 		if ( pos+fragmentLength > ca.length) {
-			System.err.println("pos ("+pos+"), fragL ("+fragmentLength +") > ca.length"+ca.length);
+			LOGGER.info("pos ("+pos+"), fragL ("+fragmentLength +") > ca.length"+ca.length);
 			return center;
 		}
 

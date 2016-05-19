@@ -27,6 +27,8 @@
 package org.biojava.nbio.structure.align.fatcat.calc;
 
 import org.biojava.nbio.structure.align.model.AFPChain;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /* CDF: cumultive density function, SF: survial function for EVD distribution, Gumbel maximum function*/
@@ -45,7 +47,7 @@ import org.biojava.nbio.structure.align.model.AFPChain;
  */
 public class SigEva
 {
-
+	private static final Logger LOGGER = LoggerFactory.getLogger(SigEva.class);
 
 	double  mu;
 	double  beta;
@@ -116,7 +118,7 @@ public class SigEva
 			beta_b = -1.4017;
 		} //score * sqrt(optLen / RMSD), the new best parameters for flexible FATCAT, sparse-sampling=3, modified scoring 2
 		else    {
-			System.err.println("no corresponding parameter set found!");
+			LOGGER.error("no corresponding parameter set found!");
 		}
 
 		mu = beta = .0;

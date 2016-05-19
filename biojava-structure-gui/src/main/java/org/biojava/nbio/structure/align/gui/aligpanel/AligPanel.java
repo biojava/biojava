@@ -39,6 +39,8 @@ import org.biojava.nbio.structure.align.xml.AFPChainXMLParser;
 import org.biojava.nbio.structure.gui.events.AlignmentPositionListener;
 import org.biojava.nbio.structure.gui.util.AlignedPosition;
 import org.biojava.nbio.structure.gui.util.color.ColorUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -56,6 +58,8 @@ import java.util.List;
  *
  */
 public class AligPanel  extends JPrintPanel implements AlignmentPositionListener, WindowListener{
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(AligPanel.class);
 
 	/**
 	 *
@@ -604,7 +608,7 @@ public void actionPerformed(ActionEvent e) {
 			colorByAlignmentBlock();
 		}
 		else {
-			System.err.println("Unknown command:" + cmd);
+			LOGGER.error("Unknown command:" + cmd);
 		}
 
 	}

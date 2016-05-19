@@ -65,6 +65,9 @@ package org.biojava.nbio.survival.cox.matrix;
  *************************************************************************/
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  *  <i>Standard array IO</i>. This class provides methods for reading
  *  in 1D and 2D arrays from standard input and printing out to
@@ -77,7 +80,7 @@ package org.biojava.nbio.survival.cox.matrix;
  */
 public class StdArrayIO {
 
-
+	private static final Logger LOGGER = LoggerFactory.getLogger(StdArrayIO.class);
 
 	/**
 	 * Print an array of doubles to standard output.
@@ -85,12 +88,12 @@ public class StdArrayIO {
 	 */
 	public static void print(double[] a) {
 		int N = a.length;
-		System.out.println(N);
+		LOGGER.info(String.valueOf(N));
 		for (int i = 0; i < N; i++) {
 		 //   System.out.printf("%9.5f ", a[i]);
 			System.out.print(a[i] + " ");
 		}
-		System.out.println();
+		LOGGER.info("\n");
 	}
 
 
@@ -103,13 +106,13 @@ public class StdArrayIO {
 	public static void print(double[][] a) {
 		int M = a.length;
 		int N = a[0].length;
-		System.out.println(M + "x" + N);
+		LOGGER.info(M + "x" + N);
 		for (int i = 0; i < M; i++) {
 			for (int j = 0; j < N; j++) {
 	//            System.out.printf("%9.5f ", a[i][j]);
 				System.out.print(a[i][j] + " ");
 			}
-			System.out.println();
+			LOGGER.info("\n");
 		}
 	}
 
@@ -122,11 +125,11 @@ public class StdArrayIO {
 	 */
 	public static void print(int[] a) {
 		int N = a.length;
-		System.out.println(N);
+		LOGGER.info(String.valueOf(N));
 		for (int i = 0; i < N; i++) {
 			System.out.printf("%9d ", a[i]);
 		}
-		System.out.println();
+		LOGGER.info("\n");
 	}
 
 
@@ -139,12 +142,12 @@ public class StdArrayIO {
 	public static void print(int[][] a) {
 		int M = a.length;
 		int N = a[0].length;
-		System.out.println(M + " " + N);
+		LOGGER.info(M + " " + N);
 		for (int i = 0; i < M; i++) {
 			for (int j = 0; j < N; j++) {
-				System.out.printf("%9d ", a[i][j]);
+				LOGGER.info(String.format("%9d ", a[i][j]));
 			}
-			System.out.println();
+			LOGGER.info("\n");
 		}
 	}
 
@@ -157,12 +160,12 @@ public class StdArrayIO {
 	 */
 	public static void print(boolean[] a) {
 		int N = a.length;
-		System.out.println(N);
+		LOGGER.info(String.valueOf(N));
 		for (int i = 0; i < N; i++) {
 			if (a[i]) System.out.print("1 ");
 			else      System.out.print("0 ");
 		}
-		System.out.println();
+		LOGGER.info("\n");
 	}
 
 
@@ -174,13 +177,13 @@ public class StdArrayIO {
 	public static void print(boolean[][] a) {
 		int M = a.length;
 		int N = a[0].length;
-		System.out.println(M + " " + N);
+		LOGGER.info(M + " " + N);
 		for (int i = 0; i < M; i++) {
 			for (int j = 0; j < N; j++) {
-				if (a[i][j]) System.out.print("1 ");
-				else         System.out.print("0 ");
+				if (a[i][j]) LOGGER.info("1 ");
+				else         LOGGER.info("0 ");
 			}
-			System.out.println();
+			LOGGER.info("\n");
 		}
 	}
 

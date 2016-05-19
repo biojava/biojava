@@ -21,12 +21,16 @@
 package org.biojava.nbio.structure.domain.pdp;
 
 import org.biojava.nbio.structure.Atom;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class CutDomain {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(CutDomain.class);
 
 	int ndom;
 
@@ -51,7 +55,7 @@ public class CutDomain {
 	public  void cutDomain(Domain dom, CutSites cut_sites, PDPDistanceMatrix pdpMatrix){
 
 		if ( verbose )
-		System.out.println("  B ... beginning of cutDomain " +dom + " cutsites: " + cut_sites );
+			LOGGER.info("  B ... beginning of cutDomain " +dom + " cutsites: " + cut_sites );
 
 		/* recursive function to cut input domain into two domains */
 
@@ -71,7 +75,7 @@ public class CutDomain {
 
 		site = cut.cut(ca,dom,val, dist, pdpMatrix);
 		if ( verbose )
-		System.out.println("  S ... site " + dom + " : site: " + site + " val : " + val);
+			LOGGER.info("  S ... site " + dom + " : site: " + site + " val : " + val);
 
 		if(site<0) {
 
@@ -85,7 +89,7 @@ public class CutDomain {
 		}
 
 		if(verbose)
-			System.out.println(String.format("   C ... Cutting at position(s): %d %d %f\n",site,val.site2,dom.score));
+			LOGGER.info(String.format("   C ... Cutting at position(s): %d %d %f\n",site,val.site2,dom.score));
 
 		cut_sites.cut_sites[cut_sites.ncuts++] = site;
 
@@ -172,19 +176,19 @@ public class CutDomain {
 			}
 		}
 		if(verbose)
-			System.out.println(String.format("  CUTR dom1 ...  nseg %d",dom1.nseg));
+			LOGGER.info(String.format("  CUTR dom1 ...  nseg %d",dom1.nseg));
 
 		if ( verbose)
 		for(i=0;i<dom1.nseg;i++)
-			System.out.println(String.format("	F ... from %d to %d",dom1.getSegmentAtPos(i).getFrom(),dom1.getSegmentAtPos(i).getTo()));
+			LOGGER.info(String.format("	F ... from %d to %d",dom1.getSegmentAtPos(i).getFrom(),dom1.getSegmentAtPos(i).getTo()));
 
 		cutDomain(dom1, cut_sites, pdpMatrix);
 
 		if(verbose)
-			System.out.println(String.format("  C ... cutr dom2: nseg %d",dom2.nseg));
+			LOGGER.info(String.format("  C ... cutr dom2: nseg %d",dom2.nseg));
 		if(verbose)
 			for(i=0;i<dom2.nseg;i++)
-			 System.out.println(String.format("	F ... from %d to %d",dom2.getSegmentAtPos(i).getFrom(),dom2.getSegmentAtPos(i).getTo()));
+				LOGGER.info(String.format("	F ... from %d to %d",dom2.getSegmentAtPos(i).getFrom(),dom2.getSegmentAtPos(i).getTo()));
 
 		cutDomain(dom2, cut_sites, pdpMatrix);
 

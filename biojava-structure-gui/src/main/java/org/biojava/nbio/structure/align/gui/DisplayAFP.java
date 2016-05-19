@@ -111,7 +111,7 @@ public class DisplayAFP {
 	public static final List<String> getPDBresnum(int aligPos, AFPChain afpChain, Atom[] ca){
 		List<String> lst = new ArrayList<String>();
 		if ( aligPos > 1) {
-			System.err.println("multiple alignments not supported yet!");
+			logger.warn("multiple alignments not supported yet!");
 			return lst;
 		}
 
@@ -184,11 +184,11 @@ public class DisplayAFP {
 		}
 
 		if ( capos < 0) {
-			System.err.println("could not match position " + aligPos + " in chain " + chainNr +". Returing null...");
+			logger.warn("could not match position " + aligPos + " in chain " + chainNr +". Returing null...");
 			return null;
 		}
 		if ( capos > ca.length){
-			System.err.println("Atom array "+ chainNr + " does not have " + capos +" atoms. Returning null.");
+			logger.warn("Atom array "+ chainNr + " does not have " + capos +" atoms. Returning null.");
 			return null;
 		}
 		return ca[capos];
@@ -552,7 +552,7 @@ public class DisplayAFP {
 		StructureAlignmentJmol jmol = new StructureAlignmentJmol(afpChain,arr1,arr2);
 		//jmol.setStructure(artificial);
 
-		System.out.format("CA2[0]=(%.2f,%.2f,%.2f)%n", arr2[0].getX(), arr2[0].getY(), arr2[0].getZ());
+		logger.info(String.format("CA2[0]=(%.2f,%.2f,%.2f)%n", arr2[0].getX(), arr2[0].getY(), arr2[0].getZ()));
 
 		//jmol.setTitle("Structure Alignment: " + afpChain.getName1() + " vs. " + afpChain.getName2());
 		jmol.setTitle(title);

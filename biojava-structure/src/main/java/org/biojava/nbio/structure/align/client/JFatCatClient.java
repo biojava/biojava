@@ -87,13 +87,13 @@ public class JFatCatClient {
 
 		String testServer = "http://source.rcsb.org/jfatcatserver/align/";
 
-		System.out.println(getAFPChainFromServer(testServer, FatCatRigid.algorithmName, name1, name2, ca1, ca2, timeout));
+		logger.info(getAFPChainFromServer(testServer, FatCatRigid.algorithmName, name1, name2, ca1, ca2, timeout).toString());
 
 		PdbPairsMessage msg = getPdbPairs(testServer, 1, "test");
 
-		System.out.println(msg);
+		logger.info(msg.toString());
 
-		System.out.println(getRepresentatives(FarmJobParameters.DEFAULT_SERVER_URL, 40));
+		logger.info(getRepresentatives(FarmJobParameters.DEFAULT_SERVER_URL, 40).toString());
 	}
 
 	public static boolean hasPrecalculatedResult(String serverLocation, String method, String name1, String name2 ){

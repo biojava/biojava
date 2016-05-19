@@ -22,6 +22,8 @@ package org.biojava.nbio.structure.align.gui;
 import org.biojava.nbio.structure.align.gui.jmol.AbstractAlignmentJmol;
 import org.biojava.nbio.structure.gui.ScaleableMatrixPanel;
 import org.biojava.nbio.structure.jama.Matrix;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 
@@ -35,6 +37,8 @@ import java.awt.event.WindowEvent;
  */
 public class MyDistMaxListener implements ActionListener{
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(MyDistMaxListener.class);
+
 	AbstractAlignmentJmol parent;
 
 	public MyDistMaxListener(AbstractAlignmentJmol parent){
@@ -44,10 +48,10 @@ public class MyDistMaxListener implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent a) {
 
-		System.out.println("Show interatomic Distance Matrices");
+		LOGGER.info("Show interatomic Distance Matrices");
 
 		if (parent.getDistanceMatrices() == null) {
-			System.err.println("Not displaying any alignment currently!");
+			LOGGER.error("Not displaying any alignment currently!");
 			return;
 		}
 		for (int i=0; i<parent.getDistanceMatrices().size(); i++){

@@ -21,10 +21,14 @@
 package org.biojava.nbio.structure.align.util;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.*;
 import java.util.zip.GZIPOutputStream;
 
 public class SynchronizedOutFile {
+	private static final Logger LOGGER = LoggerFactory.getLogger(SynchronizedOutFile.class);
 
 	File file;
 
@@ -48,7 +52,7 @@ public class SynchronizedOutFile {
 			throw new FileNotFoundException("please provide a file and not a directory");
 
 		if ( ! f.exists()){
-			System.out.println("creating output file: " + f.getAbsolutePath());
+			LOGGER.info("creating output file: " + f.getAbsolutePath());
 			f.createNewFile();
 		}
 		file = f;
@@ -113,7 +117,7 @@ public class SynchronizedOutFile {
 			}
 
 		} catch (Exception x) {
-			System.err.println(x);
+			LOGGER.error(x.getMessage());
 		} finally {
 			if (out != null) {
 				out.flush();

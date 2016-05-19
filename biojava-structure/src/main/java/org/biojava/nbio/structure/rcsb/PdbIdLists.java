@@ -20,6 +20,9 @@
  */
 package org.biojava.nbio.structure.rcsb;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
@@ -33,6 +36,8 @@ import java.util.*;
  *  @since 4.2.0
  */
 public class PdbIdLists {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(PdbIdLists.class);
 
 	/** get the list of current PDB IDs
 	 *

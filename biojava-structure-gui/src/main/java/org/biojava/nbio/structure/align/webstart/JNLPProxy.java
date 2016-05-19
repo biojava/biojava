@@ -36,6 +36,9 @@
 
 package org.biojava.nbio.structure.align.webstart;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.lang.reflect.Method;
 import java.net.URL;
 
@@ -44,6 +47,7 @@ public final class  JNLPProxy
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 {
+private static final Logger LOGGER = LoggerFactory.getLogger(JNLPProxy.class);
 
 private static final Object  basicServiceObject
 	= getBasicServiceObject ( );
@@ -71,7 +75,7 @@ public static boolean  showDocument ( URL  url )
 {
 	if ( basicServiceObject == null )
 	{
-			System.out.println("basisServiceObject = null");
+			LOGGER.error("basisServiceObject = null");
 			return false;
 	}
 
@@ -85,7 +89,7 @@ public static boolean  showDocument ( URL  url )
 
 		boolean success = resultBoolean.booleanValue ( );
 		if ( ! success )
-		System.out.println("invocation of method failed!");
+			LOGGER.error("invocation of method failed!");
 		return success;
 	}
 	catch ( Exception  ex )

@@ -23,6 +23,8 @@ package org.biojava.nbio.ws.hmmer;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.biojava.nbio.core.sequence.ProteinSequence;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -37,6 +39,8 @@ import java.util.TreeSet;
  * @since 3.0.3
  */
 public class RemoteHmmerScan implements HmmerScan {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(RemoteHmmerScan.class);
 
 	public static String HMMER_SERVICE = "http://www.ebi.ac.uk/Tools/hmmer/search/hmmscan";
 
@@ -104,8 +108,8 @@ public class RemoteHmmerScan implements HmmerScan {
 
 		int responseCode = connection.getResponseCode();
 		if ( responseCode == 500){
-			System.err.println("something went wrong!" + serviceLocation);
-			System.err.println(connection.getResponseMessage());
+			LOGGER.error("something went wrong!" + serviceLocation);
+			LOGGER.error(connection.getResponseMessage());
 		}
 
 		HttpURLConnection connection2 = (HttpURLConnection) respUrl.openConnection();

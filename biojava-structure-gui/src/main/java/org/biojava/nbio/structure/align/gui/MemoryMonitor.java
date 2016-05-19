@@ -39,6 +39,9 @@
 
 package org.biojava.nbio.structure.align.gui;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
@@ -54,7 +57,7 @@ import java.util.Date;
  * Tracks Memory allocated & used, displayed in graph form.
  */
 public class MemoryMonitor extends JPanel {
-
+	private static final Logger LOGGER = LoggerFactory.getLogger(MemoryMonitor.class);
 	static JCheckBox dateStampCB = new JCheckBox("Output Date Stamp");
 	public Surface surf;
 	JPanel controls;
@@ -313,7 +316,7 @@ public class MemoryMonitor extends JPanel {
 					Thread.sleep(sleepAmount);
 				} catch (InterruptedException e) { break; }
 				if (MemoryMonitor.dateStampCB.isSelected()) {
-					System.out.println(new Date().toString() + " " + usedStr);
+					LOGGER.info(new Date().toString() + " " + usedStr);
 				}
 			}
 			thread = null;

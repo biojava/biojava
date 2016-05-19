@@ -26,8 +26,13 @@
 
 package org.biojava.nbio.structure.align.fatcat.calc;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class FCAlignHelper
 {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(FCAlignHelper.class);
 
 	int     M; //length of protein 1
 	int     N; //length of protein 2
@@ -251,11 +256,11 @@ public class FCAlignHelper
 	private void checkAlign(){
 
 		if(sapp[0] != 0)        {
-			System.err.println(String.format("warn: not a local-alignment result, first operation %d\n", sapp[0]));
+			LOGGER.error(String.format("warn: not a local-alignment result, first operation %d\n", sapp[0]));
 		}
 		double  sco = checkScore();
 		if(Math.abs(sco - alignScore) > 1e-3)       {
-			System.err.println(String.format("FCAlignHelper: warn: alignment scores are different %f(check) %f(align)\n", sco, alignScore));
+			LOGGER.error(String.format("FCAlignHelper: warn: alignment scores are different %f(check) %f(align)\n", sco, alignScore));
 		}
 	}
 

@@ -23,6 +23,8 @@ import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.align.helper.JointFragments;
 import org.biojava.nbio.structure.jama.Matrix;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
@@ -37,6 +39,7 @@ import java.util.List;
  */
 public class AlignmentProgressListener
 {
+	private static final Logger LOGGER = LoggerFactory.getLogger(AlignmentProgressListener.class);
 
 	String n1;
 	String n2;
@@ -60,7 +63,7 @@ public class AlignmentProgressListener
 	}
 
 	public void calculatedFragmentPairs(List<FragmentPair> fragments){
-		System.out.println("got: " + fragments.size() + " fragments");
+		LOGGER.info("got: " + fragments.size() + " fragments");
 
 		String title = "Initial FragmentPairs for:" +  n1 + "("+l1+")"+ " vs. " + n2 + " ("+l2+")";
 		// ScaleableMatrixPanel panel = new ScaleableMatrixPanel();
@@ -120,7 +123,7 @@ public class AlignmentProgressListener
 
 
 	public void jointFragments(JointFragments[] fragments){
-		System.out.println("numberof Joint fragments: " + fragments.length);
+		LOGGER.info("numberof Joint fragments: " + fragments.length);
 
 		String title = "JointFragment for:" +  n1 + "("+l1+")"+ " vs. " + n2 + " ("+l2+")";
 		// ScaleableMatrixPanel panel = new ScaleableMatrixPanel();
@@ -156,7 +159,7 @@ public class AlignmentProgressListener
 
 
 		for (JointFragments f : fragments){
-			System.out.println(f);
+			LOGGER.info(f.toString());
 		}
 	}
 }

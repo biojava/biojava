@@ -28,6 +28,8 @@ import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
 import org.biojava.nbio.structure.align.webstart.WebStartMain;
 import org.biojava.nbio.structure.align.xml.AFPChainXMLConverter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 
@@ -51,6 +53,8 @@ import java.io.FileWriter;
  *
  */
 public class MySaveFileListener implements ActionListener {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(MySaveFileListener.class);
 
 	private AFPChain afpChain;
 	private MultipleAlignment msa;
@@ -98,13 +102,13 @@ public class MySaveFileListener implements ActionListener {
 		int returnVal = fc.showSaveDialog(null);
 
 		if (returnVal != JFileChooser.APPROVE_OPTION) {
-			System.err.println("User canceled file save.");
+			LOGGER.error("User canceled file save.");
 			return;
 		}
 		File selFile = fc.getSelectedFile();
 		if (selFile == null) return;
 
-		System.out.println("Saving alignment to file: " + selFile.getName());
+		LOGGER.info("Saving alignment to file: " + selFile.getName());
 
 		//XML serialization of the alignment
 		try {

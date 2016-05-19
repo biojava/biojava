@@ -29,9 +29,12 @@ import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.jama.Matrix;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AFPChainFlipper {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(AFPChainFlipper.class);
 
 	/** Flip the position of name1 and name2 (as well as all underlying data) in an AFPChain.
 	 * This is a utility function for AFPChainXMLParser.
@@ -70,7 +73,7 @@ public class AFPChainFlipper {
 		String[][][] pdbAlnO         = o.getPdbAln();
 
 		if ( ( optAlnO == null) && ( pdbAlnO == null) ){
-			System.err.println("Can't get either optAln or pdbAln data from original AFPChain. Not enough information to recreate alignment!");
+			LOGGER.error("Can't get either optAln or pdbAln data from original AFPChain. Not enough information to recreate alignment!");
 		}
 
 

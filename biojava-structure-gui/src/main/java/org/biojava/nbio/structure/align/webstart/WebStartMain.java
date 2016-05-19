@@ -39,6 +39,8 @@ import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.seq.SmithWaterman3Daligner;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 
@@ -46,6 +48,7 @@ import java.io.File;
 
 public class WebStartMain
 {
+	private static final Logger LOGGER = LoggerFactory.getLogger(WebStartMain.class);
 
 	static UserConfiguration userConfig;
 
@@ -286,7 +289,7 @@ public class WebStartMain
 		File file = new File(textField.getText());
 		if ( ! file.isDirectory() ){
 			// should not happen
-			System.err.println("did not provide directory, going on level higher! " + file.getAbsolutePath());
+			LOGGER.error("did not provide directory, going on level higher! " + file.getAbsolutePath());
 			file = file.getParentFile();
 		}
 		System.setProperty(UserConfiguration.PDB_DIR, file.getAbsolutePath());
@@ -330,7 +333,7 @@ public class WebStartMain
 		// show results
 		StructureAlignmentJmol jmol =  StructureAlignmentDisplay.display(afpChain,ca1,ca2);
 
-		System.out.println(afpChain.toCE(ca1, ca2));
+		LOGGER.info(afpChain.toCE(ca1, ca2));
 
 		DisplayAFP.showAlignmentPanel(afpChain,ca1,ca2,jmol);
 

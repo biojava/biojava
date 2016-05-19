@@ -34,6 +34,9 @@
 
 package org.biojava.nbio.structure.align.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
@@ -49,6 +52,9 @@ import java.util.*;
  */
 
 public class CliTools {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(CliTools.class);
+
 	private CliTools() {
 	}
 
@@ -266,7 +272,7 @@ public class CliTools {
 						}
 
 					} else {
-						System.err.println("Unsupported optionType for " + arg + " propType:" + propType);
+						LOGGER.warn("Unsupported optionType for " + arg + " propType:" + propType);
 						System.exit(1);
 					}
 				}

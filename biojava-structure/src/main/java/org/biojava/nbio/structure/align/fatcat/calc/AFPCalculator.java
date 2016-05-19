@@ -30,6 +30,8 @@ import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.model.AFP;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.jama.Matrix;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +43,8 @@ import java.util.List;
  */
 public class AFPCalculator
 {
+	private static final Logger LOGGER = LoggerFactory.getLogger(AFPCalculator.class);
+
 	public static final boolean debug = FatCatAligner.debug;
 
 
@@ -52,7 +56,7 @@ public class AFPCalculator
 		afpChain.setAfpSet(afpSet);
 
 		if ( debug )
-			System.err.println("nr of atoms ca1: " + ca1.length + " ca2: " +  ca2.length);
+			LOGGER.error("nr of atoms ca1: " + ca1.length + " ca2: " +  ca2.length);
 
 
 
@@ -132,7 +136,7 @@ public class AFPCalculator
 		if(debug) {
 			String msg = String.format("possible AFP-pairs %d, remain %d after filter 1 remove %d; filter 2 remove %d\n",
 					n0, afpNum, n1, n2);
-			System.err.println(msg);
+			LOGGER.debug(msg);
 		}
 
 
@@ -188,13 +192,13 @@ public class AFPCalculator
 			Atom[] catmp2 = getFragment(ca2, p2, fragLen,true); // clone the atoms for fragment 2 so we can manipulate them...
 
 			if ( catmp1 == null) {
-				System.err.println("could not get fragment for ca1 " + p1 + " " + fragLen );
+				LOGGER.error("could not get fragment for ca1 " + p1 + " " + fragLen );
 				return rmsd;
 
 			}
 
 			if ( catmp2 == null) {
-				System.err.println("could not get fragment for ca2 " + p2 + " " + fragLen );
+				LOGGER.error("could not get fragment for ca2 " + p2 + " " + fragLen );
 				return rmsd;
 
 			}
@@ -267,7 +271,7 @@ public class AFPCalculator
 		List<AFP> afpSet = afpChain.getAfpSet();
 
 		if ( debug)
-			System.err.println("entering sortAfps");
+			LOGGER.debug("entering sortAfps");
 
 		int pro1Len = ca1.length;
 		int pro2Len = ca2.length;
@@ -300,7 +304,7 @@ public class AFPCalculator
 					afpBefIndex[i][j]=b;
 					afpAftIndex[i][j]=b;
 					if(afpSet.get(b).getP1() != i)    {
-						System.err.println(String.format("Warning: wrong afp index %d %d\n", i, afpSet.get(b).getP1()));
+						LOGGER.error(String.format("Warning: wrong afp index %d %d\n", i, afpSet.get(b).getP1()));
 						return;
 					}
 				}
@@ -319,7 +323,7 @@ public class AFPCalculator
 		}
 
 		if ( debug)
-			System.err.println("done sortAfps");
+			LOGGER.debug("done sortAfps");
 
 
 	}
