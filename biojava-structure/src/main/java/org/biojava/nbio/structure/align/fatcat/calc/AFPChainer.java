@@ -47,8 +47,6 @@ import java.util.List;
 public class AFPChainer
 {
 	private static final Logger LOGGER = LoggerFactory.getLogger(AFPChainer.class);
-
-	public static final boolean debug = FatCatAligner.debug;
 	// private static final boolean showAlig = false;
 
 	/**
@@ -152,8 +150,7 @@ public class AFPChainer
 		}
 
 		int     currafp = maxafp;
-		if(debug)
-			LOGGER.debug(String.format("maximum score %f, %d\n", maxsco, twi[currafp]));
+		LOGGER.debug(String.format("maximum score %f, %d\n", maxsco, twi[currafp]));
 
 		//trace-back from maxafp (maxsco)
 
@@ -535,12 +532,10 @@ public class AFPChainer
 			LOGGER.error(String.format("AFPChainer Warning: fail in alignment score checking %.4f %.4f\n", alignScore, checkscore));
 		}
 
-		if ( debug )
-			LOGGER.debug("traceBack:" + afpChainLen + " " + afpChainList.length);
+		LOGGER.debug("traceBack:" + afpChainLen + " " + afpChainList.length);
 		double  rmsd = calAfpRmsd(afpChainLen, afpChainList,0, afpChain,ca1,ca2);
 		afpChain.setChainRmsd(rmsd);
-		if (debug )
-			LOGGER.debug("Chain RMSD: " + rmsd);
+		LOGGER.debug("Chain RMSD: " + rmsd);
 		int     b1 = 0;
 		int     bk = 0;
 		int     a, b;
@@ -568,8 +563,7 @@ public class AFPChainer
 			}
 
 			if(afpChainTwiBin[i] == 1)   {
-				if (debug)
-					LOGGER.debug(" ** calAfpTmsd : afpChainWtiBin == 1 : i: "+i+" i-b1: " + (i-b1) + " b1: " + b1 + " afpChainList.len: " + afpChainList.length);
+				LOGGER.debug(" ** calAfpTmsd : afpChainWtiBin == 1 : i: "+i+" i-b1: " + (i-b1) + " b1: " + b1 + " afpChainList.len: " + afpChainList.length);
 
 				//int len = afpChainList.length - b1 +1;
 				//int[] fakeList = new int[len];
@@ -578,8 +572,7 @@ public class AFPChainer
 				//   pos++;
 				//   fakeList[pos] = afpChainList[fPos];
 				//}
-				if (debug )
-					LOGGER.error("calculation calAfpRmsd " + i + " " + b1 + " " );
+				LOGGER.error("calculation calAfpRmsd " + i + " " + b1 + " " );
 
 
 				rmsd = calAfpRmsd(i - b1, afpChainList,b1, afpChain, ca1, ca2);
@@ -596,12 +589,10 @@ public class AFPChainer
 		afpChain.setBlock2Afp(block2Afp);
 		afpChain.setChainLen(chainLen);
 
-		if (debug)
-			LOGGER.debug("after loop over all afpChainList " + (i-b1) + " " + b1);
+		LOGGER.debug("after loop over all afpChainList " + (i-b1) + " " + b1);
 
 		rmsd = calAfpRmsd(i - b1, afpChainList, b1, afpChain,ca1,ca2);
-		if (debug)
-			LOGGER.debug("*** i:" + i + " b1: " + b1 + " i-b1 " + (i-b1));
+		LOGGER.debug("*** i:" + i + " b1: " + b1 + " i-b1 " + (i-b1));
 
 
 
@@ -615,8 +606,7 @@ public class AFPChainer
 		afpChain.setBlockRmsd(blockRmsd);
 		int blockNum = afpChain.getBlockNum();
 		blockNum = ++bk;
-		if ( debug)
-			LOGGER.error("AFPChainser setBlockNUm:" + blockNum);
+		LOGGER.error("AFPChainser setBlockNUm:" + blockNum);
 		afpChain.setBlockNum(blockNum);
 		afpChain.setAfpChainList(afpChainList);
 		afpChain.setAfpChainTwiList(afpChainTwiList);
@@ -640,8 +630,7 @@ public class AFPChainer
 	{
 
 
-		if (debug)
-			LOGGER.debug("XXX calling afp2res "+ afpn + " " + afpPositions.length);
+		LOGGER.debug("XXX calling afp2res "+ afpn + " " + afpPositions.length);
 
 		int focusResn = AFPTwister.afp2Res(afpChain,afpn, afpPositions, listStart);
 
@@ -649,8 +638,7 @@ public class AFPChainer
 		int[] focusRes1 = afpChain.getFocusRes1();
 		int[] focusRes2 = afpChain.getFocusRes2();
 
-		if (debug)
-			LOGGER.debug("XXX calculating calAfpRmsd: " + focusResn + " " + focusRes1.length + " " + focusRes2.length + " " + afpChain.getMinLen() + " " );
+		LOGGER.debug("XXX calculating calAfpRmsd: " + focusResn + " " + focusRes1.length + " " + focusRes2.length + " " + afpChain.getMinLen() + " " );
 		double rmsd = getRmsd(focusResn, focusRes1, focusRes2 , afpChain,ca1,  ca2);
 
 		return rmsd;

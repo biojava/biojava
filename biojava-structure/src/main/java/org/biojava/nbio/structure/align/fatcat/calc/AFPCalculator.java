@@ -45,9 +45,6 @@ public class AFPCalculator
 {
 	private static final Logger LOGGER = LoggerFactory.getLogger(AFPCalculator.class);
 
-	public static final boolean debug = FatCatAligner.debug;
-
-
 	public static final  void extractAFPChains(FatCatParameters params, AFPChain afpChain,Atom[] ca1,Atom[] ca2) throws StructureException {
 
 
@@ -55,8 +52,7 @@ public class AFPCalculator
 		List<AFP> afpSet = new ArrayList<AFP>();
 		afpChain.setAfpSet(afpSet);
 
-		if ( debug )
-			LOGGER.error("nr of atoms ca1: " + ca1.length + " ca2: " +  ca2.length);
+		LOGGER.debug("nr of atoms ca1: " + ca1.length + " ca2: " +  ca2.length);
 
 
 
@@ -133,11 +129,9 @@ public class AFPCalculator
 
 		int afpNum = afpSet.size();
 
-		if(debug) {
-			String msg = String.format("possible AFP-pairs %d, remain %d after filter 1 remove %d; filter 2 remove %d\n",
-					n0, afpNum, n1, n2);
-			LOGGER.debug(msg);
-		}
+		String msg = String.format("possible AFP-pairs %d, remain %d after filter 1 remove %d; filter 2 remove %d\n",
+				n0, afpNum, n1, n2);
+		LOGGER.debug(msg);
 
 
 	}
@@ -270,8 +264,7 @@ public class AFPCalculator
 
 		List<AFP> afpSet = afpChain.getAfpSet();
 
-		if ( debug)
-			LOGGER.debug("entering sortAfps");
+		LOGGER.debug("entering sortAfps");
 
 		int pro1Len = ca1.length;
 		int pro2Len = ca2.length;
@@ -322,9 +315,7 @@ public class AFPCalculator
 			}
 		}
 
-		if ( debug)
-			LOGGER.debug("done sortAfps");
-
+		LOGGER.debug("done sortAfps");
 
 	}
 }

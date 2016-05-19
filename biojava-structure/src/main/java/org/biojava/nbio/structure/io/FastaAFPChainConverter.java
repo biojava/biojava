@@ -396,7 +396,7 @@ public class FastaAFPChainConverter {
 	 */
 	public static void main(String[] args) throws StructureException, IOException {
 		if (args.length != 3) {
-			System.err.println("Usage: FastaAFPChainConverter fasta-file structure-1-name structure-2-name");
+			logger.info("Usage: FastaAFPChainConverter fasta-file structure-1-name structure-2-name");
 			return;
 		}
 		File fasta = new File(args[0]);
@@ -406,7 +406,7 @@ public class FastaAFPChainConverter {
 		if (structure2 == null) throw new IllegalArgumentException("No structure for " + args[2] + " was found");
 		AFPChain afpChain = fastaFileToAfpChain(fasta, structure1, structure2);
 		String xml = AFPChainXMLConverter.toXML(afpChain);
-		System.out.println(xml);
+		logger.info(xml);
 	}
 
 }

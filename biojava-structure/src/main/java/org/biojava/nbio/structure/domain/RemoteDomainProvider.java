@@ -193,9 +193,9 @@ public class RemoteDomainProvider extends SerializableCache<String,SortedSet<Str
 	public static void main(String[] args) throws IOException, StructureException{
 		String name ="3KIH.A";
 		RemoteDomainProvider me = new RemoteDomainProvider(true);
-		System.out.println(me.getDomainNames(name));
+		logger.info(me.getDomainNames(name).toString());
 		StructureName n = new StructureName(name);
-		System.out.println(n);
+		logger.info(n.toString());
 		//System.out.println(new  AtomCache().getStructure(name));
 		me.flushCache();
 	}

@@ -765,7 +765,7 @@ v1.4 - added seqid_range and headers (develop101)
 
 	public static void main(String[] args) {
 		if( args.length!= 1) {
-			System.out.println("usage: ecod_domains.txt");
+			logger.info("usage: ecod_domains.txt");
 			System.exit(1); return;
 		}
 
@@ -776,14 +776,14 @@ v1.4 - added seqid_range and headers (develop101)
 
 			List<EcodDomain> domains = parser.getDomains();
 
-			System.out.format("Found %d ECOD domains.%n",domains.size());
+			logger.info("Found %d ECOD domains.%n",domains.size());
 
-			System.out.println("First 10 domains:");
+			logger.info("First 10 domains:");
 			int i = 0;
 			for(EcodDomain d: domains) {
 				if( i>10) break;
 
-				System.out.println(d.getDomainId());
+				logger.info(d.getDomainId());
 				i++;
 			}
 		} catch (IOException e) {

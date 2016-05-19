@@ -147,8 +147,7 @@ public class CeCalculatorEnhanced {
 		dist2 = initIntraDistmatrix(ca2, nse2);
 
 
-		if ( debug )
-			LOGGER.info("parameters: " + params);
+		LOGGER.debug("parameters: " + params);
 
 		if ( params.getScoringStrategy() == CeParameters.ScoringStrategy.SEQUENCE_CONSERVATION){
 			if ( params.getSeqWeight() < 1)
@@ -1367,8 +1366,7 @@ nBestTrace=nTrace;
 				(isRmsdLenAssigned && rmsd<rmsdLen*1.1 && nAtomPrev!=nAtom)) && ( counter< maxNrIterations)) {
 
 			counter++;
-			if ( debug)
-				LOGGER.info("nAtom: " + nAtom + " " + nAtomPrev + " " + rmsdLen + " " + isRmsdLenAssigned + " strLen:" + strLen + " nse1,nse2:" + nse1 + " " + nse2);
+			LOGGER.debug("nAtom: " + nAtom + " " + nAtomPrev + " " + rmsdLen + " " + isRmsdLenAssigned + " strLen:" + strLen + " nse1,nse2:" + nse1 + " " + nse2);
 			nAtomPrev=nAtom;
 			oRmsdThr += distanceIncrement;
 

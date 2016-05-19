@@ -21,6 +21,10 @@
  */
 package org.biojava.nbio.structure.gui.util.color;
 
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.awt.*;
 import java.awt.color.ColorSpace;
 
@@ -29,6 +33,8 @@ import java.awt.color.ColorSpace;
  *
  */
 public class HSVColorSpace extends ColorSpace {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(HSVColorSpace.class);
 
 	private static final long serialVersionUID = 8324413992279510075L;
 
@@ -44,38 +50,38 @@ public class HSVColorSpace extends ColorSpace {
 		hsvComp = c.getColorComponents(csHSV, null);
 		assert(rgbComp.length == 3);
 		assert(hsvComp.length == 3);
-		System.out.format("RED\tRGB[%f %f %f] HSV[%f %f %f]\n",
+		LOGGER.info(String.format("RED\tRGB[%f %f %f] HSV[%f %f %f]\n",
 				rgbComp[0], rgbComp[1], rgbComp[2],
-				hsvComp[0], hsvComp[1], hsvComp[2] );
+				hsvComp[0], hsvComp[1], hsvComp[2]));
 
 
 		c = Color.WHITE;
 		rgbComp = c.getColorComponents(csRGB,null);
 		hsvComp = c.getColorComponents(csHSV, null);
-		System.out.format("WHITE\tRGB[%f %f %f] HSV[%f %f %f]\n",
+		LOGGER.info(String.format("WHITE\tRGB[%f %f %f] HSV[%f %f %f]\n",
 				rgbComp[0], rgbComp[1], rgbComp[2],
-				hsvComp[0], hsvComp[1], hsvComp[2] );
+				hsvComp[0], hsvComp[1], hsvComp[2]));
 
 		c = Color.BLACK;
 		rgbComp = c.getColorComponents(csRGB,null);
 		hsvComp = c.getColorComponents(csHSV, null);
-		System.out.format("BLACK\tRGB[%f %f %f] HSV[%f %f %f]\n",
+		LOGGER.info(String.format("BLACK\tRGB[%f %f %f] HSV[%f %f %f]\n",
 				rgbComp[0], rgbComp[1], rgbComp[2],
-				hsvComp[0], hsvComp[1], hsvComp[2] );
+				hsvComp[0], hsvComp[1], hsvComp[2] ));
 
 		c = Color.GRAY;
 		rgbComp = c.getColorComponents(csRGB,null);
 		hsvComp = c.getColorComponents(csHSV, null);
-		System.out.format("GRAY\tRGB[%f %f %f] HSV[%f %f %f]\n",
+		LOGGER.info(String.format("GRAY\tRGB[%f %f %f] HSV[%f %f %f]\n",
 				rgbComp[0], rgbComp[1], rgbComp[2],
-				hsvComp[0], hsvComp[1], hsvComp[2] );
+				hsvComp[0], hsvComp[1], hsvComp[2] ));
 
 		c = Color.CYAN;
 		rgbComp = c.getColorComponents(csRGB,null);
 		hsvComp = c.getColorComponents(csHSV, null);
-		System.out.format("CYAN\tRGB[%f %f %f] HSV[%f %f %f]\n",
+		LOGGER.info(String.format("CYAN\tRGB[%f %f %f] HSV[%f %f %f]\n",
 				rgbComp[0], rgbComp[1], rgbComp[2],
-				hsvComp[0], hsvComp[1], hsvComp[2] );
+				hsvComp[0], hsvComp[1], hsvComp[2] ));
 
 
 	}

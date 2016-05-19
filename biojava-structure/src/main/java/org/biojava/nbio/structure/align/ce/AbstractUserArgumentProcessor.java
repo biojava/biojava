@@ -125,7 +125,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 			if(arg.equalsIgnoreCase("-h") || arg.equalsIgnoreCase("-help")
 					|| arg.equalsIgnoreCase("--help") )
 			{
-				LOGGER.info(printHelp());
+				System.out.println(printHelp());
 				return;
 			}
 			// version

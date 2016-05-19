@@ -50,7 +50,6 @@ public class FatCatAligner
 {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(FatCatAligner.class);
-	public static final boolean debug = false;
 	public static final boolean printTimeStamps = false;
 
 	AFPChain afpChain ;
@@ -142,17 +141,14 @@ public class FatCatAligner
 
 		List<AFP> afpSet = afpChain.getAfpSet();
 
-		if (debug)
-			LOGGER.info("entering chainAfp");
+		LOGGER.debug("entering chainAfp");
 		int afpNum = afpSet.size();
 
 		if ( afpNum < 1)
 			return new Group[0];
 
 		long bgtime = System.currentTimeMillis();
-		if(debug)    {
-			LOGGER.info(String.format("total AFP %d\n", afpNum));
-		}
+		LOGGER.debug(String.format("total AFP %d\n", afpNum));
 
 		//run AFP chaining
 
@@ -167,10 +163,7 @@ public class FatCatAligner
 		} //very short alignment
 
 		long chaintime = System.currentTimeMillis();
-		if(debug)    {
-
-			LOGGER.info("Afp chaining: time " + (chaintime-bgtime));
-		}
+		LOGGER.info("Afp chaining: time " + (chaintime-bgtime));
 
 		// do post processing
 
@@ -205,8 +198,6 @@ public class FatCatAligner
 		//if(maxTra == 0)       probability = sig.calSigRigid(pro1Len, pro2Len, alignScore, totalRmsdOpt, optLength);
 		//else  probability = sig.calSigFlexi(pro1Len, pro2Len, alignScore, totalRmsdOpt, optLength, blockNum - 1);
 
-		if(debug)    {
-
 			long nowtime = System.currentTimeMillis();
 			long diff = nowtime - chaintime;
 			LOGGER.info("Alignment optimization: time "+ diff);
@@ -215,7 +206,6 @@ public class FatCatAligner
 			LOGGER.info("opt length: " + afpChain.getOptLength());
 			LOGGER.info("opt rmsd:   "+ afpChain.getTotalRmsdOpt());
 
-		}
 		return twistedPDB;
 
 	}

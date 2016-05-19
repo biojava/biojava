@@ -91,7 +91,7 @@ public class StdArrayIO {
 		LOGGER.info(String.valueOf(N));
 		for (int i = 0; i < N; i++) {
 		 //   System.out.printf("%9.5f ", a[i]);
-			System.out.print(a[i] + " ");
+			LOGGER.info(a[i] + " ");
 		}
 		LOGGER.info("\n");
 	}
@@ -110,7 +110,7 @@ public class StdArrayIO {
 		for (int i = 0; i < M; i++) {
 			for (int j = 0; j < N; j++) {
 	//            System.out.printf("%9.5f ", a[i][j]);
-				System.out.print(a[i][j] + " ");
+				LOGGER.info(a[i][j] + " ");
 			}
 			LOGGER.info("\n");
 		}
@@ -127,7 +127,7 @@ public class StdArrayIO {
 		int N = a.length;
 		LOGGER.info(String.valueOf(N));
 		for (int i = 0; i < N; i++) {
-			System.out.printf("%9d ", a[i]);
+			LOGGER.info("%9d ", a[i]);
 		}
 		LOGGER.info("\n");
 	}
@@ -162,8 +162,8 @@ public class StdArrayIO {
 		int N = a.length;
 		LOGGER.info(String.valueOf(N));
 		for (int i = 0; i < N; i++) {
-			if (a[i]) System.out.print("1 ");
-			else      System.out.print("0 ");
+			if (a[i]) LOGGER.info("1 ");
+			else      LOGGER.info("0 ");
 		}
 		LOGGER.info("\n");
 	}

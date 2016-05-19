@@ -321,9 +321,7 @@ public class AlignmentTools {
 		double bestMetric = Double.POSITIVE_INFINITY; //lower is better
 		boolean foundSymmetry = false;
 
-		if(debug) {
-			logger.trace("Symm\tPos\tDelta");
-		}
+		logger.trace("Symm\tPos\tDelta");
 
 		for(int n=1;n<=maxSymmetry;n++) {
 			int deltasSq = 0;
@@ -341,9 +339,7 @@ public class AlignmentTools {
 					deltasSq += delta*delta;
 					numDeltas++;
 
-					if(debug) {
-						logger.debug("%d\t%d\t%d\n",n,preimage.get(i),delta);
-					}
+					logger.debug("%d\t%d\t%d\n",n,preimage.get(i),delta);
 				}
 
 			}

@@ -62,7 +62,6 @@ public class CECalculator {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CECalculator.class);
 
 	protected static final boolean isPrint = false;
-	private static final boolean debug = false;
 
 	int[] f1;
 	int[] f2;
@@ -148,8 +147,7 @@ public class CECalculator {
 		dist2 = initIntraDistmatrix(ca2, nse2);
 
 
-		if ( debug )
-			LOGGER.info("parameters: " + params);
+		LOGGER.debug("parameters: " + params);
 
 		if ( params.getScoringStrategy() == CeParameters.ScoringStrategy.SEQUENCE_CONSERVATION){
 			if ( params.getSeqWeight() < 1)
@@ -957,9 +955,7 @@ nBestTrace=nTrace;
 
 		// removing some loops that are run in orig CE
 		// and which did not do anything
-		if ( debug ){
-			checkPrintRmsdNew(traceMaxSize, winSize, ca1, ca2);
-		}
+		checkPrintRmsdNew(traceMaxSize, winSize, ca1, ca2);
 
 		double rmsd=100.0;
 
@@ -1373,8 +1369,7 @@ nBestTrace=nTrace;
 				(isRmsdLenAssigned && rmsd<rmsdLen*1.1 && nAtomPrev!=nAtom)) && ( counter< maxNrIterations)) {
 
 			counter++;
-			if ( debug)
-			   LOGGER.info("nAtom: " + nAtom + " " + nAtomPrev + " " + rmsdLen + " " + isRmsdLenAssigned + " strLen:" + strLen);
+			LOGGER.debug("nAtom: " + nAtom + " " + nAtomPrev + " " + rmsdLen + " " + isRmsdLenAssigned + " strLen:" + strLen);
 			nAtomPrev=nAtom;
 			oRmsdThr += distanceIncrement;
 
@@ -1416,8 +1411,7 @@ nBestTrace=nTrace;
 
 			double score = dpAlign( nse1, nse2, gapOpen , gapExtension , false, false);
 
-			if (debug)
-				LOGGER.info("iter: "+ counter + "  score:"  + score + " " + " nAtomPrev: " + nAtomPrev + " nAtom:" + nAtom + " oRmsdThr: " + oRmsdThr);
+			LOGGER.debug("iter: "+ counter + "  score:"  + score + " " + " nAtomPrev: " + nAtomPrev + " nAtom:" + nAtom + " oRmsdThr: " + oRmsdThr);
 
 			afpChain.setAlignScore(score);
 

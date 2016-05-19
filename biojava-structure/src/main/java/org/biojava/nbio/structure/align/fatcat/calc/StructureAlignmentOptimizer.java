@@ -66,8 +66,6 @@ public class StructureAlignmentOptimizer
 
 	double rmsd;
 
-	private static final boolean debug = FatCatAligner.debug;
-
 	/**
 	 * optimize the structural alignment by update the equivalent residues
 	 * and then run dynamic programming
@@ -199,8 +197,7 @@ public class StructureAlignmentOptimizer
 	 */
 	public void runOptimization(int maxi) throws StructureException{
 		superimposeBySet();
-		if ( debug)
-			LOGGER.debug("   initial rmsd " + rmsd);
+		LOGGER.debug("   initial rmsd " + rmsd);
 
 //      if (showAlig)
 //         showCurrentAlignment(equLen, equSet, "after initial superimposeBySet Len:" +equLen + " rmsd:" +rmsd);
@@ -304,8 +301,7 @@ public class StructureAlignmentOptimizer
 	private void optimize(int maxi) throws StructureException
 	{
 		long optStart = System.currentTimeMillis();
-		if ( debug)
-			LOGGER.debug("Optimizing up to " + maxi + " iterations.. ");
+		LOGGER.debug("Optimizing up to " + maxi + " iterations.. ");
 		boolean ifstop = true;;
 		int     i, alnLen;
 		alnLen = 0;
@@ -334,13 +330,10 @@ public class StructureAlignmentOptimizer
 //               showCurrentAlignment(alnLen, alnList,  "optimizing alignment - after " + i + " iterations alnLen:" + alnLen + " rmsd " + rmsd);
 		}
 
-		if  (debug){
-			if(i < maxi)    {
-				LOGGER.debug(String.format("   optimize converged at %d iterations\n", i));
-			}
-			else    LOGGER.debug("   optimize stop without convergence\n");
-			LOGGER.debug("optimization time: " + (System.currentTimeMillis() - optStart) + " ms.");
-		}
+		if (i < maxi) {
+			LOGGER.debug(String.format("   optimize converged at %d iterations\n", i));
+		} else LOGGER.debug("   optimize stop without convergence\n");
+		LOGGER.debug("optimization time: " + (System.currentTimeMillis() - optStart) + " ms.");
 
 //      if (showAlig)
 //         showCurrentAlignment(alnLen, alnList,  "optimizing alignment - after " + i + " iterations alnLen:" + alnLen + " rmsd " + rmsd);

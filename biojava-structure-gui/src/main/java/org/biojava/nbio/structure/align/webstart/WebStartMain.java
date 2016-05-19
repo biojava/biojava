@@ -130,12 +130,12 @@ public class WebStartMain
 			String name2 = args[2];
 
 			PdbPair pair = new PdbPair(name1, name2);
-			System.out.println("### user provided: " + pair);
+			LOGGER.info("### user provided: " + pair);
 
 			UserConfiguration config = getWebStartConfig();
 
 			System.setProperty(UserConfiguration.PDB_DIR,config.getPdbFilePath());
-			System.out.println("using PDB file path: " + config.getPdbFilePath());
+			LOGGER.info("using PDB file path: " + config.getPdbFilePath());
 
 			AtomCache cache = new AtomCache(config);
 
@@ -149,7 +149,7 @@ public class WebStartMain
 
 			frame.dispose();
 
-			System.out.println("done reading structures");
+			LOGGER.info("done reading structures");
 
 
 			if (arg0.equalsIgnoreCase("ce") ||

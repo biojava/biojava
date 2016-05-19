@@ -52,8 +52,8 @@ public class AtomInfoParser {
 	public static void main(String[]args){
 		String s1 = "[GLY]371:A.CA #2811";
 		String s2 = "[ASP]1^A:A.CA/2 #2";
-		System.out.println(s1 + " got: " + AtomInfoParser.parse(s1));
-		System.out.println(s2 + " got: " + AtomInfoParser.parse(s2));
+		logger.info(s1 + " got: " + AtomInfoParser.parse(s1));
+		logger.info(s2 + " got: " + AtomInfoParser.parse(s2));
 	}
 
 

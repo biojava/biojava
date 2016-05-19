@@ -75,7 +75,7 @@ public class SequenceDisplay extends JPanel implements ChangeListener {
 	 */
 	public static final int MAX_SCALE               = 10;
 
-	//private static final Logger logger = LoggerFactory.getLogger(SequenceDisplay.class);
+	private static final Logger logger = LoggerFactory.getLogger(SequenceDisplay.class);
 
 	List<AlignedPosition> apos;
 
@@ -106,7 +106,7 @@ public class SequenceDisplay extends JPanel implements ChangeListener {
 
 			// step1 : read molecules
 
-			System.out.println("aligning " + pdb1 + " vs. " + pdb2);
+			logger.info("aligning " + pdb1 + " vs. " + pdb2);
 
 			Structure s1 = pdbr.getStructureById(pdb1);
 			Structure s2 = pdbr.getStructureById(pdb2);

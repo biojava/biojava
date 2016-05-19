@@ -47,7 +47,6 @@ public class SiftsXMLParser {
 	Document dom;
 	List<SiftsEntity> entities;
 
-	static boolean debug = false;
 	public SiftsXMLParser(){
 		entities = new ArrayList<SiftsEntity>();
 	}
@@ -149,8 +148,7 @@ public class SiftsXMLParser {
 			String end = el.getAttribute("end");
 			SiftsSegment seg = new SiftsSegment(segId,start,end);
 
-			if ( debug )
-				LOGGER.info("parsed " + seg);
+			LOGGER.debug("parsed " + seg);
 
 			// get nodelist of segments...
 			NodeList nl = el.getElementsByTagName("listResidue");

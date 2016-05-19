@@ -40,8 +40,6 @@ public class SCOPAutoSuggestProvider implements AutoSuggestProvider{
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SCOPAutoSuggestProvider.class);
 
-	boolean DEBUG = false;
-
 	int maxResults = 20;
 
 	AtomicBoolean stop = new AtomicBoolean(false);
@@ -75,8 +73,7 @@ public class SCOPAutoSuggestProvider implements AutoSuggestProvider{
 
 		long timeE = System.currentTimeMillis();
 
-		if ( DEBUG)
-			LOGGER.debug("ScopAutoSuggestProvider took " + (timeE - timeS) + " ms. to get " + v.size() + " suggestions");
+		LOGGER.debug("ScopAutoSuggestProvider took " + (timeE - timeS) + " ms. to get " + v.size() + " suggestions");
 
 		return v;
 
@@ -128,8 +125,7 @@ public class SCOPAutoSuggestProvider implements AutoSuggestProvider{
 			if ( stop.get())
 				return domains;
 
-			if (DEBUG)
-				LOGGER.debug("domains: " + domains);
+			LOGGER.debug("domains: " + domains);
 
 			if ( domains == null || domains.size() < 1) {
 				if ( userInput.length() > 0 ){
@@ -182,8 +178,7 @@ public class SCOPAutoSuggestProvider implements AutoSuggestProvider{
 	@Override
 	public void stop() {
 		stop.set(true);
-		if (DEBUG)
-			LOGGER.debug("ScopAutoSuggestProvider got signal stop");
+		LOGGER.debug("ScopAutoSuggestProvider got signal stop");
 
 	}
 

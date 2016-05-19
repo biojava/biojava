@@ -30,6 +30,8 @@ import org.biojava.nbio.structure.scop.server.ScopDescriptions;
 import org.biojava.nbio.structure.scop.server.ScopDomains;
 import org.biojava.nbio.structure.scop.server.ScopNodes;
 import org.biojava.nbio.structure.scop.server.XMLUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,6 +46,8 @@ import java.util.List;
  */
 public class RemoteScopInstallation implements ScopDatabase {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(RemoteScopInstallation.class);
+
 	public static final String DEFAULT_SERVER = "http://source.rcsb.org/jfatcatserver/domains/";
 
 	String server = DEFAULT_SERVER;
@@ -57,7 +61,7 @@ public class RemoteScopInstallation implements ScopDatabase {
 
 		//System.out.println(scop.getByCategory(ScopCategory.Superfamily));
 
-		System.out.println(scop.getDomainsForPDB("4HHB"));
+		LOGGER.info(scop.getDomainsForPDB("4HHB").toString());
 	}
 
 

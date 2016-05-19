@@ -50,8 +50,6 @@ public class SelectPDBPanel
 extends JPanel
 implements StructurePairSelector{
 
-	boolean debug = true;
-
 	JTextField f1;
 	JTextField f2;
 	JTextField c1;

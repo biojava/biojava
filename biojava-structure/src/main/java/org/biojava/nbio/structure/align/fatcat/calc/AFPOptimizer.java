@@ -39,7 +39,6 @@ public class AFPOptimizer
 {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AFPOptimizer.class);
-	public static final boolean debug = FatCatAligner.debug;
 
 	/**
 	 * optimize the alignment by dynamic programming
@@ -82,8 +81,7 @@ public class AFPOptimizer
 		int[] blockSize       = afpChain.getBlockSize();
 
 
-		if (debug)
-			LOGGER.debug("AFPOptimizer got blockNum: " +blockNum);
+		LOGGER.debug("AFPOptimizer got blockNum: " +blockNum);
 		//optimize each alignment defined by a block
 		b1 = b2 = e1 = e2 = optLength = 0;
 		for(bk = 0; bk < blockNum; bk ++)       {
@@ -117,12 +115,10 @@ public class AFPOptimizer
 				}
 			}
 			//optimize the align by dynamic programming & constraint the optimization region
-			if(debug) {
-				LOGGER.error(String.format("optimize block %d (%d afp), region %d-%d(len %d), %d-%d(len %d)\n",
-						bk, blockSize[bk], b1, e1, e1-b1, b2, e2, e2-b2));
+			LOGGER.error(String.format("optimize block %d (%d afp), region %d-%d(len %d), %d-%d(len %d)\n",
+					bk, blockSize[bk], b1, e1, e1 - b1, b2, e2, e2 - b2));
 
-				LOGGER.error(" initial alignment Length: " + iniLen );
-			}
+			LOGGER.error(" initial alignment Length: " + iniLen);
 
 			StructureAlignmentOptimizer opt = new StructureAlignmentOptimizer(b1,e1, ca1, b2,e2, ca2, iniLen, iniSet);
 			opt.runOptimization(maxi);
@@ -132,8 +128,7 @@ public class AFPOptimizer
 			// SALNOPT *opt = new SALNOPT(e1-b1, &pro1->caCod[3 * b1], e2-b2, &pro2->caCod[3 * b2], iniLen, iniSet, maxi);
 			// optRmsd[bk] = opt->OptimizeResult(&optLen[bk], optAln[bk]);
 
-			if(debug)
-				LOGGER.debug(String.format(" optimized len=%d, rmsd %f\n", optLen[bk], optRmsd[bk]));
+			LOGGER.debug(String.format(" optimized len=%d, rmsd %f\n", optLen[bk], optRmsd[bk]));
 
 			for(i = 0; i < optLen[bk]; i ++)        {
 				optAln[bk][0][i] += b1; //restore the position
@@ -145,7 +140,7 @@ public class AFPOptimizer
 		}
 
 		long optEnd = System.currentTimeMillis();
-		if(debug)       LOGGER.debug("complete AlignOpt " + (optEnd-optStart) +"\n");
+		LOGGER.debug("complete AlignOpt " + (optEnd-optStart) +"\n");
 
 		afpChain.setBlockNum(blockNum);
 		afpChain.setOptLength(optLength);

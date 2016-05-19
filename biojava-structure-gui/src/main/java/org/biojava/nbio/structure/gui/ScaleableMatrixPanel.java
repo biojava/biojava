@@ -32,6 +32,8 @@ import org.biojava.nbio.structure.gui.util.color.*;
 import org.biojava.nbio.structure.gui.util.color.LinearColorInterpolator.InterpolationDirection;
 import org.biojava.nbio.structure.io.PDBFileReader;
 import org.biojava.nbio.structure.jama.Matrix;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -57,6 +59,8 @@ import java.util.TreeMap;
 public class ScaleableMatrixPanel
 extends JPanel
 implements ChangeListener, ActionListener {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(ActionListener.class);
 
 	/**
 	 *
@@ -100,10 +104,9 @@ implements ChangeListener, ActionListener {
 			Structure s1 = pdbr.getStructureById(pdb1);
 			Structure s2 = pdbr.getStructureById(pdb2);
 
-			System.out.println("aligning " + pdb1 + " vs. " + pdb2);
-			System.out.println(s1);
-			System.out.println();
-			System.out.println(s2);
+			LOGGER.info("aligning " + pdb1 + " vs. " + pdb2);
+			LOGGER.info(s1.toString());
+			LOGGER.info(s2.toString());
 			// step 2 : do the calculations
 			sc.align(s1,s2);
 
@@ -128,7 +131,7 @@ implements ChangeListener, ActionListener {
 
 			for (int i = 0; i < sc.getAlignments().length; i++) {
 				AlternativeAlignment aa =sc.getAlignments()[i];
-				System.out.println(aa);
+				LOGGER.info(aa.toString());
 
 			}
 

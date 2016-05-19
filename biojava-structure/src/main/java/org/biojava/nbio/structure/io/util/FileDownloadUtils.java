@@ -244,15 +244,15 @@ public class FileDownloadUtils {
 	public static void main(String[] args) {
 		String url;
 		url = "http://scop.mrc-lmb.cam.ac.uk/scop/parse/";
-		System.out.format("%s\t%s%n", ping(url, 200), url);
+		logger.info(String.format("%s\t%s%n", ping(url, 200), url));
 		url = "http://scop.mrc-lmb.cam.ac.uk/scop/parse/foo";
-		System.out.format("%s\t%s%n", ping(url, 200), url);
+		logger.info(String.format("%s\t%s%n", ping(url, 200), url));
 		url = "http://scopzzz.mrc-lmb.cam.ac.uk/scop/parse/";
-		System.out.format("%s\t%s%n", ping(url, 200), url);
+		logger.info(String.format("%s\t%s%n", ping(url, 200), url));
 		url = "scop.mrc-lmb.cam.ac.uk";
-		System.out.format("%s\t%s%n", ping(url, 200), url);
+		logger.info(String.format("%s\t%s%n", ping(url, 200), url));
 		url = "http://scop.mrc-lmb.cam.ac.uk";
-		System.out.format("%s\t%s%n", ping(url, 200), url);
+		logger.info(String.format("%s\t%s%n", ping(url, 200), url));
 	}
 
 }

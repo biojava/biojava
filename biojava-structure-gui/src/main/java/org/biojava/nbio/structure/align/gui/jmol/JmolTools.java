@@ -61,7 +61,7 @@ public class JmolTools {
 		g.addAtom(a);
 		c.addGroup(g);
 
-		System.out.println(getPdbInfo(a));
+		LOGGER.info(getPdbInfo(a));
 	}
 
 

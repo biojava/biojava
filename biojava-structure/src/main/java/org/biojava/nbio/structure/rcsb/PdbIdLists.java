@@ -284,13 +284,13 @@ public class PdbIdLists {
 
 	public static void main(String[] args){
 		try {
-			System.out.println("Current PDB status: " + getCurrentPDBIds().size());
-			System.out.println("Virus structures: " + getAllViruses().size());
-			System.out.println("NMR structures: " + getNMRStructures().size());
-			System.out.println("Gag-polyproteins: " + getGagPolyproteins().size());
-			System.out.println("Transmembrane proteins: " + getTransmembraneProteins().size());
-			System.out.println("Nucleotide: " + getNucleotides().size());
-			System.out.println("Ribosomes: " + getRibosomes().size());
+			LOGGER.info("Current PDB status: " + getCurrentPDBIds().size());
+			LOGGER.info("Virus structures: " + getAllViruses().size());
+			LOGGER.info("NMR structures: " + getNMRStructures().size());
+			LOGGER.info("Gag-polyproteins: " + getGagPolyproteins().size());
+			LOGGER.info("Transmembrane proteins: " + getTransmembraneProteins().size());
+			LOGGER.info("Nucleotide: " + getNucleotides().size());
+			LOGGER.info("Ribosomes: " + getRibosomes().size());
 		} catch ( Exception e){
 			e.printStackTrace();
 		}
