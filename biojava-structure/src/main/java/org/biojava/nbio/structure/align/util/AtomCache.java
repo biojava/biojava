@@ -66,6 +66,12 @@ import org.slf4j.LoggerFactory;
 public class AtomCache {
 
 	private static final Logger logger = LoggerFactory.getLogger(AtomCache.class);
+	
+	/**
+	 * The default output bioassembly style: if true the bioassemblies are multimodel,
+	 * if false the bioassemblies are flat with renamed chains for symmetry-partners.
+	 */
+	public static final boolean DEFAULT_BIOASSEMBLY_STYLE = true;
 
 	public static final String BIOL_ASSEMBLY_IDENTIFIER = "BIO:";
 	public static final String CHAIN_NR_SYMBOL = ":";
@@ -222,6 +228,7 @@ public class AtomCache {
 	public Atom[] getRepresentativeAtoms(String name) throws IOException, StructureException {
 		return getRepresentativeAtoms(new StructureName(name));
 	}
+	
 	public Atom[] getRepresentativeAtoms(StructureIdentifier name) throws IOException, StructureException {
 
 		Atom[] atoms = null;
@@ -249,13 +256,15 @@ public class AtomCache {
 	 *            the PDB ID
 	 * @param bioAssemblyId
 	 *            the 1-based index of the biological assembly (0 gets the asymmetric unit)
+	 * @param multiModel if true the output Structure will be a multi-model one with one transformId per model, 
+	 * if false the outputStructure will be as the original with added chains with renamed asymIds (in the form originalAsymId_transformId and originalAuthId_transformId).             
 	 * @return a structure object
 	 * @throws IOException
 	 * @throws StructureException if biassemblyId < 0 or other problems while loading structure
 	 * @author Peter Rose
 	 * @since 3.2
 	 */
-	public Structure getBiologicalAssembly(String pdbId, int bioAssemblyId)
+	public Structure getBiologicalAssembly(String pdbId, int bioAssemblyId, boolean multiModel)
 			throws StructureException, IOException {
 
 		if (bioAssemblyId < 0) {
@@ -304,7 +313,7 @@ public class AtomCache {
 		boolean useAsymIds = false;
 		if (useMmCif) useAsymIds = true;
 		if (useMmtf) useAsymIds = true;
-		return builder.rebuildQuaternaryStructure(asymUnit, transformations, useAsymIds);
+		return builder.rebuildQuaternaryStructure(asymUnit, transformations, useAsymIds, multiModel);
 		
 	}
 
@@ -314,14 +323,15 @@ public class AtomCache {
 	 *
 	 * <p>Biological assemblies can also be accessed using
 	 * <tt>getStructure("BIO:<i>[pdbId]</i>")</tt>
-	 * @param pdbId
-	 *            the PDB ID
+	 * @param pdbId the PDB id
+	 * @param multiModel if true the output Structure will be a multi-model one with one transformId per model, 
+	 * if false the outputStructure will be as the original with added chains with renamed asymIds (in the form originalAsymId_transformId and originalAuthId_transformId).  
 	 * @return a structure object
 	 * @throws IOException
 	 * @throws StructureException
 	 * @since 4.2
 	 */
-	public Structure getBiologicalAssembly(String pdbId) throws StructureException, IOException {
+	public Structure getBiologicalAssembly(String pdbId, boolean multiModel) throws StructureException, IOException {
 		
 		boolean prevIsParseBioAssembly = getFileParsingParams().isParseBioAssembly();
 		
@@ -362,19 +372,21 @@ public class AtomCache {
 		boolean useAsymIds = false;
 		if (useMmCif) useAsymIds = true;
 		if (useMmtf) useAsymIds = true;
-		return builder.rebuildQuaternaryStructure(asymUnit, transformations, useAsymIds);
+		return builder.rebuildQuaternaryStructure(asymUnit, transformations, useAsymIds, multiModel);
 		
 	}
 
 	/**
 	 * Returns all biological assemblies for given PDB id.
 	 * @param pdbId
+	 * @param multiModel if true the output Structure will be a multi-model one with one transformId per model, 
+	 * if false the outputStructure will be as the original with added chains with renamed asymIds (in the form originalAsymId_transformId and originalAuthId_transformId).  
 	 * @return
 	 * @throws StructureException
 	 * @throws IOException
 	 * @since 5.0
 	 */
-	public List<Structure> getBiologicalAssemblies(String pdbId) throws StructureException, IOException {
+	public List<Structure> getBiologicalAssemblies(String pdbId, boolean multiModel) throws StructureException, IOException {
 		
 		List<Structure> assemblies = new ArrayList<>();
 		
@@ -413,7 +425,7 @@ public class AtomCache {
 			boolean useAsymIds = false;
 			if (useMmCif) useAsymIds = true;
 			if (useMmtf) useAsymIds = true;
-			Structure s = builder.rebuildQuaternaryStructure(asymUnit, transformations, useAsymIds);
+			Structure s = builder.rebuildQuaternaryStructure(asymUnit, transformations, useAsymIds, multiModel);
 			assemblies.add(s);
 		}
 		return assemblies;

@@ -124,7 +124,7 @@ public class TestQuatSymmetryDetection {
 		BiologicalAssemblyBuilder builder = new BiologicalAssemblyBuilder();
 
 		// we use true in useAsymIds here because above we read mmcif files, if that changes this needs to change!
-		Structure bioAssembly = builder.rebuildQuaternaryStructure(pdb, transformations, true);
+		Structure bioAssembly = builder.rebuildQuaternaryStructure(pdb, transformations, true, true);
 
 		QuatSymmetryParameters parameters = new QuatSymmetryParameters();
 		parameters.setOnTheFly(true);

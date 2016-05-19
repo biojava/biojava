@@ -59,15 +59,24 @@ public class BiologicalAssemblyBuilder {
 	/**
 	 * Builds a Structure object containing the quaternary structure built from given asymUnit and transformations,
 	 * by adding symmetry partners as new models.
-	 * If the input Structure is multi-model, then only model 1 is retained and the quaternary structure is built
-	 * in the same way with additional models.
+	 * The output Structure will be different depending on the multiModel parameter:
+	 * <li>
+	 * the symmetry-expanded chains are added as new models, one per transformId. All original models but 
+	 * the first one are discarded.
+	 * </li>
+	 * <li>
+	 * as original with symmetry-expanded chains added with renamed chain ids and names (in the form 
+	 * originalAsymId_transformId and originalAuthId_transformId)
+	 * </li>
 	 * @param asymUnit
 	 * @param transformations
 	 * @param useAsymIds if true use {@link Chain#getId()} to match the ids in the BiologicalAssemblyTransformation (needed if data read from mmCIF), 
 	 * if false use {@link Chain#getName()} for the chain matching (needed if data read from PDB).
+	 * @param multiModel if true the output Structure will be a multi-model one with one transformId per model, 
+	 * if false the outputStructure will be as the original with added chains with renamed asymIds (in the form originalAsymId_transformId and originalAuthId_transformId). 
 	 * @return
 	 */
-	public Structure rebuildQuaternaryStructure(Structure asymUnit, List<BiologicalAssemblyTransformation> transformations, boolean useAsymIds) {
+	public Structure rebuildQuaternaryStructure(Structure asymUnit, List<BiologicalAssemblyTransformation> transformations, boolean useAsymIds, boolean multiModel) {
 		
 		// ensure that new chains are build in the same order as they appear in the asymmetric unit
 		orderTransformationsByChainId(asymUnit, transformations);
@@ -100,7 +109,7 @@ public class BiologicalAssemblyBuilder {
 			for (Chain c: chainsToTransform) {
 
 
-				Chain chain = (Chain)c.clone();
+				Chain chain = (Chain)c.clone();				
 
 				for (Group g : chain.getAtomGroups()) {
 
@@ -113,7 +122,11 @@ public class BiologicalAssemblyBuilder {
 
 				String transformId = transformation.getId();
 
-				addChainAndModel(s, chain, transformId);
+				// note that the Structure.addChain/Structure.addModel methods set the parent reference to the new Structure
+				if (multiModel) 
+					addChainMultiModel(s, chain, transformId);
+				else 
+					addChainFlattened(s, chain, transformId);
 
 			}
 		}
@@ -156,15 +169,24 @@ public class BiologicalAssemblyBuilder {
 		return chainIds;
 	}
 
-	private void addChainAndModel(Structure s, Chain newChain, String modelId) {
+	/**
+	 * Adds a chain to the given structure to form a biological assembly,
+	 * adding the symmetry expanded chains as new models per transformId.
+	 * @param s
+	 * @param newChain
+	 * @param transformId
+	 */
+	private void addChainMultiModel(Structure s, Chain newChain, String transformId) {
+
+		// multi-model bioassembly
 
 		if ( modelIndex.size() == 0)
 			modelIndex.add("PLACEHOLDER FOR ASYM UNIT");
 
-		int modelCount = modelIndex.indexOf(modelId);
+		int modelCount = modelIndex.indexOf(transformId);
 		if ( modelCount == -1)  {
-			modelIndex.add(modelId);
-			modelCount = modelIndex.indexOf(modelId);
+			modelIndex.add(transformId);
+			modelCount = modelIndex.indexOf(transformId);
 		}
 
 		if (modelCount == 0) {
@@ -176,6 +198,21 @@ public class BiologicalAssemblyBuilder {
 		} else {
 			s.addChain(newChain, modelCount-1);
 		}
+
+	}
+	
+	/**
+	 * Adds a chain to the given structure to form a biological assembly,
+	 * adding the symmetry-expanded chains as new chains with renamed 
+	 * chain ids and names (in the form originalAsymId_transformId and originalAuthId_transformId).
+	 * @param s
+	 * @param newChain
+	 * @param transformId
+	 */
+	private void addChainFlattened(Structure s, Chain newChain, String transformId) {
+		newChain.setId(newChain.getId()+"_"+transformId);
+		newChain.setName(newChain.getName()+"_"+transformId);
+		s.addChain(newChain);		
 	}
 
 	/**

@@ -119,8 +119,42 @@ public class StructureIO {
 
 	/**
 	 * Returns the first biological assembly that is available for the given PDB id.
-	 * If the assembly occurs through crystallographic symmetry, the symmetry partners
-	 * are added as new models.
+	 * <p>
+	 * The output Structure will be different depending on the multiModel parameter:
+	 * <li>
+	 * the symmetry-expanded chains are added as new models, one per transformId. All original models but 
+	 * the first one are discarded.
+	 * </li>
+	 * <li>
+	 * as original with symmetry-expanded chains added with renamed chain ids and names (in the form 
+	 * originalAsymId_transformId and originalAuthId_transformId)
+	 * </li> 
+	 * <p> 
+	 * For more documentation on quaternary structures see:
+	 * {@link http://pdb101.rcsb.org/learn/guide-to-understanding-pdb-data/biological-assemblies}
+	 *
+	 *
+	 * @param pdbId
+	 * @param multiModel if true the output Structure will be a multi-model one with one transformId per model, 
+	 * if false the outputStructure will be as the original with added chains with renamed asymIds (in the form originalAsymId_transformId and originalAuthId_transformId).              
+	 * @return a Structure object or null if that assembly is not available
+	 * @throws StructureException
+	 * @throws IOException
+	 */
+	public static Structure getBiologicalAssembly(String pdbId, boolean multiModel) throws IOException, StructureException{
+
+		checkInitAtomCache();		
+
+		pdbId = pdbId.toLowerCase();
+		
+		Structure s = cache.getBiologicalAssembly(pdbId, multiModel); 
+		
+		return s;
+	}
+	
+	/**
+	 * Returns the first biological assembly that is available for the given PDB id, 
+	 * using multiModel={@value AtomCache#DEFAULT_BIOASSEMBLY_STYLE}
 	 * <p> 
 	 * For more documentation on quaternary structures see:
 	 * {@link http://pdb101.rcsb.org/learn/guide-to-understanding-pdb-data/biological-assemblies}
@@ -132,20 +166,43 @@ public class StructureIO {
 	 * @throws IOException
 	 */
 	public static Structure getBiologicalAssembly(String pdbId) throws IOException, StructureException{
+		return getBiologicalAssembly(pdbId, AtomCache.DEFAULT_BIOASSEMBLY_STYLE);
+	}	
 
+	/**
+	 * Returns the biological assembly for the given PDB id and bioassembly identifier.
+	 * <p>
+	 * The output Structure will be different depending on the multiModel parameter:
+	 * <li>
+	 * the symmetry-expanded chains are added as new models, one per transformId. All original models but 
+	 * the first one are discarded.
+	 * </li>
+	 * <li>
+	 * as original with symmetry-expanded chains added with renamed chain ids and names (in the form 
+	 * originalAsymId_transformId and originalAuthId_transformId)
+	 * </li>  
+	 * @param pdbId
+	 * @param biolAssemblyNr - the ith biological assembly that is available for a PDB ID (we start counting at 1, 0 represents the asym unit).
+	 * @param multiModel if true the output Structure will be a multi-model one with one transformId per model, 
+	 * if false the outputStructure will be as the original with added chains with renamed asymIds (in the form originalAsymId_transformId and originalAuthId_transformId).              
+	 * @return a Structure object or null if that assembly is not available
+	 * @throws StructureException if there is no bioassembly available for given biolAssemblyNr or some other problems encountered while loading it
+	 * @throws IOException
+	 */
+	public static Structure getBiologicalAssembly(String pdbId, int biolAssemblyNr, boolean multiModel) throws IOException, StructureException {
+		
 		checkInitAtomCache();		
 
 		pdbId = pdbId.toLowerCase();
 		
-		Structure s = cache.getBiologicalAssembly(pdbId); 
+		Structure s = cache.getBiologicalAssembly(pdbId, biolAssemblyNr, multiModel); 
 		
 		return s;
 	}
-
+	
 	/**
-	 * Returns the biological assembly for the given PDB id and bioassembly identifier.
-	 * If the assembly occurs through crystallographic symmetry, the symmetry partners
-	 * are added as new models.
+	 * Returns the biological assembly for the given PDB id and bioassembly identifier,
+	 * using multiModel={@value AtomCache#DEFAULT_BIOASSEMBLY_STYLE}
 	 * @param pdbId
 	 * @param biolAssemblyNr - the ith biological assembly that is available for a PDB ID (we start counting at 1, 0 represents the asym unit).
 	 * @return a Structure object or null if that assembly is not available
@@ -153,20 +210,46 @@ public class StructureIO {
 	 * @throws IOException
 	 */
 	public static Structure getBiologicalAssembly(String pdbId, int biolAssemblyNr) throws IOException, StructureException {
-		
-		checkInitAtomCache();		
-
-		pdbId = pdbId.toLowerCase();
-		
-		Structure s = cache.getBiologicalAssembly(pdbId, biolAssemblyNr); 
-		
-		return s;
+		return getBiologicalAssembly(pdbId, biolAssemblyNr, AtomCache.DEFAULT_BIOASSEMBLY_STYLE);
 	}
+		
 	
 	/**
 	 * Returns all biological assemblies for the given PDB id.
-	 * If the assembly occurs through crystallographic symmetry, the symmetry partners
-	 * are added as new models. 
+	 * <p>
+	 * The output Structure will be different depending on the multiModel parameter:
+	 * <li>
+	 * the symmetry-expanded chains are added as new models, one per transformId. All original models but 
+	 * the first one are discarded.
+	 * </li>
+	 * <li>
+	 * as original with symmetry-expanded chains added with renamed chain ids and names (in the form 
+	 * originalAsymId_transformId and originalAuthId_transformId)
+	 * </li>  
+	 * If only one biological assembly is required use {@link #getBiologicalAssembly(String)} or {@link #getBiologicalAssembly(String, int)} instead.
+	 * @param pdbId
+	 * @param multiModel if true the output Structure will be a multi-model one with one transformId per model, 
+	 * if false the outputStructure will be as the original with added chains with renamed asymIds (in the form originalAsymId_transformId and originalAuthId_transformId).              
+	 * @return
+	 * @throws IOException
+	 * @throws StructureException
+	 * @since 5.0
+	 */
+	public static List<Structure> getBiologicalAssemblies(String pdbId, boolean multiModel) throws IOException, StructureException {
+
+		checkInitAtomCache();		
+
+		pdbId = pdbId.toLowerCase();		
+		
+		List<Structure> s = cache.getBiologicalAssemblies(pdbId, multiModel); 
+		
+		return s;
+		
+	}
+
+	/**
+	 * Returns all biological assemblies for the given PDB id,
+	 * using multiModel={@value AtomCache#DEFAULT_BIOASSEMBLY_STYLE}
 	 * <p>
 	 * If only one biological assembly is required use {@link #getBiologicalAssembly(String)} or {@link #getBiologicalAssembly(String, int)} instead.
 	 * @param pdbId
@@ -176,17 +259,8 @@ public class StructureIO {
 	 * @since 5.0
 	 */
 	public static List<Structure> getBiologicalAssemblies(String pdbId) throws IOException, StructureException {
-
-		checkInitAtomCache();		
-
-		pdbId = pdbId.toLowerCase();		
-		
-		List<Structure> s = cache.getBiologicalAssemblies(pdbId); 
-		
-		return s;
-		
+		return getBiologicalAssemblies(pdbId, AtomCache.DEFAULT_BIOASSEMBLY_STYLE);
 	}
-
 	
 
 	private static final String FILE_SEPARATOR = System.getProperty("file.separator");
