@@ -50,18 +50,36 @@ public class TestQuaternaryStructureProviders {
 	@Test
 	public void test5LDH() throws IOException, StructureException{
 		testID("5LDH",1, 4);
-		testID("5LDH",2, 0); // bioassembly 2 has 2 as mmsize, but at the moment the parsed value from mmcif files says 0 
+		
+		// the pdb file of 5ldh contains only 1 bioassembly, whilst the mmcif contains 2,
+		// thus we can't test here the comparison between the 2
+		//testID("5LDH",2, 2); 
 		
 		// in 5ldh there's also PAU and XAU but those are ignored, see github issue #230
 		
 		boolean gotException = false;
 		try {
+			AtomCache cache = new AtomCache();
+			cache.setUseMmCif(true);
+			StructureIO.setAtomCache(cache);
 			StructureIO.getBiologicalAssembly("5LDH",3);
 		} catch (StructureException e) {
 			gotException = true;
 		}
 
 		assertTrue("Bioassembly 3 for PDB id 5LDH should fail with a StructureException!", gotException);
+
+		// bioassembly 2 does exist in mmcif file, let's check that
+		gotException = false;
+		try {
+			AtomCache cache = new AtomCache();
+			cache.setUseMmCif(true);
+			StructureIO.setAtomCache(cache);
+			StructureIO.getBiologicalAssembly("5LDH",2);
+		} catch (StructureException e) {
+			gotException = true;
+		}
+		assertTrue("Bioassembly 2 for PDB id 5LDH should not fail with a StructureException!", !gotException);
 
 	}
 

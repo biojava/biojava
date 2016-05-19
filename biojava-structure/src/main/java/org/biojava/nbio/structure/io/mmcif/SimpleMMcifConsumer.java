@@ -804,30 +804,35 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				// these are the transformations that need to be applied to our model
 				List<BiologicalAssemblyTransformation> transformations = builder.getBioUnitTransformationList(psa, psags, structOpers);
 
-				int mmSize = 0;
 				int bioAssemblyId = -1;
 				try {
 					bioAssemblyId = Integer.parseInt(psa.getId());
 				} catch (NumberFormatException e) {
 					logger.info("Could not parse a numerical bio assembly id from '{}'",psa.getId());
 				}
-				try {
-					mmSize = Integer.parseInt(psa.getOligomeric_count());
-				} catch (NumberFormatException e) {
-					if (bioAssemblyId!=-1)
-						// if we have a numerical id, then it's unusual to have no oligomeric size: we warn about it
-						logger.warn("Could not parse oligomeric count from '{}' for biological assembly id {}",
-								psa.getOligomeric_count(),psa.getId());
-					else
-						// no numerical id (PAU,XAU in virus entries), it's normal to have no oligomeric size
-						logger.info("Could not parse oligomeric count from '{}' for biological assembly id {}",
-								psa.getOligomeric_count(),psa.getId());
-				}
 
 				// if bioassembly id is not numerical we throw it away
 				// this happens usually for viral capsid entries, like 1ei7
 				// see issue #230 in github
 				if (bioAssemblyId!=-1) {
+					int mmSize = 0;
+					// note that the transforms contain asym ids of both polymers and non-polymers
+					// For the mmsize, we are only interested in the polymers
+					for (BiologicalAssemblyTransformation transf:transformations) {
+						Chain c = structure.getChain(transf.getChainId());
+						if (c==null) {
+							logger.warn("Could not find asym id {} specified in struct_assembly_gen", transf.getChainId());
+							continue;
+						}
+						if (c.getEntityType() == EntityType.POLYMER &&
+							// for entries like 4kro, sugars are annotated as polymers but we
+							// don't want them in the macromolecularSize count
+							!c.getEntityInfo().getDescription().contains("SUGAR") ) {
+								
+								mmSize++;
+							}
+					}
+					
 					BioAssemblyInfo bioAssembly = new BioAssemblyInfo();
 					bioAssembly.setId(bioAssemblyId);
 					bioAssembly.setMacromolecularSize(mmSize);

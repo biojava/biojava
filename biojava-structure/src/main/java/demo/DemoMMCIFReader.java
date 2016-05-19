@@ -45,7 +45,7 @@ public class DemoMMCIFReader
 
 		demo.loadSimple();
 
-		//demo.loadFromDirectAccess();
+		demo.loadFromDirectAccess();
 
 	}
 
@@ -84,6 +84,8 @@ public class DemoMMCIFReader
 
 		try {
 			Structure s = pdbreader.getStructureById(pdbId);
+			
+			System.out.println("Getting chain H of 1A4W");
 
 			List<Chain> hs = s.getNonPolyChainsByPDB("H");
 
@@ -97,7 +99,7 @@ public class DemoMMCIFReader
 			}
 
 			System.out.println("Accessing QWE directly: ");
-			Group qwe = h.getGroupByPDB(new ResidueNumber("H",373,null));
+			Group qwe = s.getNonPolyChainsByPDB("H").get(2).getGroupByPDB(new ResidueNumber("H",373,null));
 
 			System.out.println(qwe.getChemComp());
 

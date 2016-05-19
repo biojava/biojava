@@ -126,7 +126,7 @@ public class TestLongPdbVsMmCifParsing {
 
 	@Test
 	public void testSingle() throws IOException, StructureException {
-		testAll(Arrays.asList("4a10"));
+		testAll(Arrays.asList("4kro"));
 	}
 
 	@After
@@ -394,7 +394,7 @@ public class TestLongPdbVsMmCifParsing {
 				// there's an inconsistency in 4amh pdb vs mmCIF in mmSize
 				if (sPdb.getPDBCode().equalsIgnoreCase("4amh")) continue;
 
-				assertEquals("Macromolecular size of assemblies doesn't coincide",
+				assertEquals("Macromolecular size of assembly "+id+" doesn't coincide",
 						batPdb.get(id).getMacromolecularSize(), batCif.get(id).getMacromolecularSize());
 			}
 		}
