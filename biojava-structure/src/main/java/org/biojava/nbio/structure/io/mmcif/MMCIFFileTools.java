@@ -23,6 +23,7 @@ package org.biojava.nbio.structure.io.mmcif;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.biojava.nbio.structure.Atom;
@@ -32,8 +33,11 @@ import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.GroupType;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.io.FileConvert;
+import org.biojava.nbio.structure.io.mmcif.model.AbstractBean;
 import org.biojava.nbio.structure.io.mmcif.model.AtomSite;
+import org.biojava.nbio.structure.io.mmcif.model.CIFLabel;
 import org.biojava.nbio.structure.io.mmcif.model.Cell;
+import org.biojava.nbio.structure.io.mmcif.model.IgnoreField;
 import org.biojava.nbio.structure.io.mmcif.model.Symmetry;
 import org.biojava.nbio.structure.xtal.CrystalCell;
 import org.biojava.nbio.structure.xtal.SpaceGroup;
@@ -45,7 +49,13 @@ import org.slf4j.LoggerFactory;
  *
  * See http://www.iucr.org/__data/assets/pdf_file/0019/22618/cifguide.pdf
  *
- *
+ * CIF categories are represented as a simple bean, typically extending {@link AbstractBean}.
+ * By default, all fields from the bean are taken as the CIF labels. Fields
+ * may be omitted by annotating them as {@link IgnoreField @IgnoreField}.
+ * The CIF label for a field may be changed (for instance, for fields that
+ * are not valid Java identifiers) by defining a function
+ * <tt>static Map<String,String> getCIFLabelMap()</tt>
+ * mapping from the field's name to the correct label.
  * @author duarte_j
  *
  */
@@ -81,7 +91,7 @@ public class MMCIFFileTools {
 
 		Class<?> c = Class.forName(className);
 
-		for (Field f : c.getDeclaredFields()) {
+		for (Field f : getFields(c)) {
 			str.append(categoryName+"."+f.getName()+newline);
 		}
 
@@ -101,33 +111,38 @@ public class MMCIFFileTools {
 
 		Class<?> c = o.getClass();
 
-		int maxFieldNameLength = getMaxFieldNameLength(o);
 
-		for (Field f : c.getDeclaredFields()) {
-			f.setAccessible(true);
+		Field[] fields = getFields(c);
+		String[] names = getFieldNames(fields);
 
-			sb.append(categoryName+"."+f.getName());
+		int maxFieldNameLength = getMaxStringLength(names);
 
-			int spacing = maxFieldNameLength - f.getName().length() + 3;
+		for (int i=0;i<fields.length;i++) {
+			Field f = fields[i];
+			String name = names[i];
+
+			sb.append(categoryName+"."+name);
+
+			int spacing = maxFieldNameLength - name.length() + 3;
 
 			try {
 				Object obj = f.get(o);
 				String val;
 				if (obj==null) {
-					logger.debug("Field {} is null, will write it out as {}",f.getName(),MMCIF_MISSING_VALUE);
+					logger.debug("Field {} is null, will write it out as {}",name,MMCIF_MISSING_VALUE);
 					val = MMCIF_MISSING_VALUE;
 				} else {
 					val = (String) obj;
 				}
-				for (int i=0;i<spacing;i++) sb.append(' ');
+				for (int j=0;j<spacing;j++) sb.append(' ');
 				sb.append(addMmCifQuoting(val));
 				sb.append(newline);
 
 			} catch (IllegalAccessException e) {
-				logger.warn("Field {} is inaccessible", f.getName());
+				logger.warn("Field {} is inaccessible", name);
 				continue;
 			} catch (ClassCastException e) {
-				logger.warn("Could not cast value to String for field {}",f.getName());
+				logger.warn("Could not cast value to String for field {}",name);
 				continue;
 			}
 
@@ -139,47 +154,124 @@ public class MMCIFFileTools {
 	}
 
 	/**
+	 * Gets all fields for a particular class, filtering fields annotated
+	 * with {@link IgnoreField @IgnoreField}.
+	 * 
+	 * As a side effect, calls {@link Field#setAccessible(boolean) setAccessible(true)}
+	 * on all fields.
+	 * @param c
+	 * @return
+	 */
+	private static Field[] getFields(Class<?> c) {
+		Field[] allFields = c.getDeclaredFields();
+		Field[] fields = new Field[allFields.length];
+		int n = 0;
+		for(Field f : allFields) {
+			f.setAccessible(true);
+			IgnoreField anno = f.getAnnotation(IgnoreField.class);
+			if(anno == null) {
+				fields[n] = f;
+				n++;
+			}
+		}
+		return Arrays.copyOf(fields, n);
+	}
+
+	/**
+	 * Gets the mmCIF record name for each field. This is generally just
+	 * the name of the field, but may be modified by passing a non-null nameMap
+	 * argument.
+	 * 
+	 * As a side effect, calls {@link Field#setAccessible(boolean) setAccessible(true)}
+	 * on all fields.
+	 * @param fields
+	 * @param nameMap
+	 * @return
+	 */
+	private static String[] getFieldNames(Field[] fields) {
+		String[] names = new String[fields.length];
+		for(int i=0;i<fields.length;i++) {
+			Field f = fields[i];
+			f.setAccessible(true);
+			String rawName = fields[i].getName();
+			CIFLabel cifLabel = f.getAnnotation(CIFLabel.class);
+			if(cifLabel != null) {
+				names[i] = cifLabel.label();
+			} else {
+				names[i] = rawName;
+			}
+		}
+		return names;
+	}
+
+	/**
 	 * Converts a list of mmCIF beans (see {@link org.biojava.nbio.structure.io.mmcif.model} to
 	 * a String representing them in mmCIF loop format with one record per line.
 	 * @param list
 	 * @return
 	 */
-	public static String toMMCIF(List<Object> list) {
-		int[] sizes = getFieldSizes(list);
+	public static <T> String toMMCIF(List<T> list, Class<T> klass) {
+		if (list.isEmpty()) throw new IllegalArgumentException("List of beans is empty!");
+
+		Field[] fields = getFields(klass);
+		int[] sizes = getFieldSizes(list,fields);
 
 		StringBuilder sb = new StringBuilder();
 
-		for (Object o:list) {
-			sb.append(toSingleLoopLineMmCifString(o, sizes));
+		for (T o:list) {
+			sb.append(toSingleLoopLineMmCifString(o, fields, sizes));
 		}
 
 		sb.append(SimpleMMcifParser.COMMENT_CHAR+newline);
 
 		return sb.toString();
 	}
+	/**
+	 * Converts a list of mmCIF beans (see {@link org.biojava.nbio.structure.io.mmcif.model} to
+	 * a String representing them in mmCIF loop format with one record per line.
+	 * @param list
+	 * @return
+	 * @deprecated The {@link #toMMCIF(List, Class)} provides compile-time type safety
+	 * @throws ClassCastException if not all list elements have the same type
+	 */
+	@Deprecated
+	@SuppressWarnings("unchecked")
+	public static <T> String toMMCIF(List<T> list) {
+		Class<T> klass = (Class<T>)list.get(0).getClass();
+		for(T t : list) {
+			if( klass != t.getClass() ) {
+				throw new ClassCastException("Not all loop elements have the same fields");
+			}
+		}
+		return toMMCIF(list,klass);
+	}
 
 	/**
 	 * Given a mmCIF bean produces a String representing it in mmCIF loop format as a single record line
-	 * @param a
+	 * @param record
+	 * @param fields Set of fields for the record. If null, will be calculated from the class of the record
 	 * @param sizes the size of each of the fields
 	 * @return
 	 */
-	private static String toSingleLoopLineMmCifString(Object a, int[] sizes) {
+	private static String toSingleLoopLineMmCifString(Object record, Field[] fields, int[] sizes) {
 
 		StringBuilder str = new StringBuilder();
 
-		Class<?> c = a.getClass();
+		Class<?> c = record.getClass();
 
-		if (sizes.length!=c.getDeclaredFields().length)
+		if(fields == null)
+			fields = getFields(c);
+		
+		if (sizes.length!=fields.length)
 			throw new IllegalArgumentException("The given sizes of fields differ from the number of declared fields");
 
 		int i = -1;
-		for (Field f : c.getDeclaredFields()) {
+		for (Field f : fields) {
 			i++;
 			f.setAccessible(true);
 
 			try {
-				Object obj = f.get(a);
+				Object obj = f.get(record);
 				String val;
 				if (obj==null) {
 					logger.debug("Field {} is null, will write it out as {}",f.getName(),MMCIF_MISSING_VALUE);
@@ -309,9 +401,11 @@ public class MMCIFFileTools {
 		}
 
 		Character  altLoc = a.getAltLoc()           ;
-		String altLocStr = altLoc.toString();
+		String altLocStr;
 		if (altLoc==null || altLoc == ' ') {
 			altLocStr = MMCIF_DEFAULT_VALUE;
+		} else {
+			altLocStr = altLoc.toString();
 		}
 
 		Element e = a.getElement();
@@ -428,22 +522,24 @@ public class MMCIFFileTools {
 	/**
 	 * Finds the max length of each of the String values contained in each of the fields of the given list of beans.
 	 * Useful for producing mmCIF loop data that is aligned for all columns.
-	 * @param a
+	 * @param list list of objects. All objects should have the same class.
+	 * @param fields Set of fields for the record. If null, will be calculated from the class of the first record
 	 * @return
-	 * @see #toMMCIF(List)
+	 * @see #toMMCIF(List, Class)
 	 */
-	private static int[] getFieldSizes(List<Object> list) {
+	private static <T> int[] getFieldSizes(List<T> list, Field[] fields) {
 
 		if (list.isEmpty()) throw new IllegalArgumentException("List of beans is empty!");
 
-		int[] sizes = new int [list.get(0).getClass().getDeclaredFields().length];
+		if(fields == null)
+			fields = getFields(list.get(0).getClass());
+
+		int[] sizes = new int [fields.length];
 
 
-		for (Object a:list) {
-			Class<?> c = a.getClass();
-
+		for (T a:list) {
 			int i = -1;
-			for (Field f : c.getDeclaredFields()) {
+			for (Field f : fields) {
 				i++;
 
 				f.setAccessible(true);
@@ -473,27 +569,19 @@ public class MMCIFFileTools {
 	}
 
 	/**
-	 * Finds the max length of the field strings corresponding to the given mmCIF bean.
+	 * Finds the max length of a list of strings
 	 * Useful for producing mmCIF single-record data that is aligned for all values.
-	 * @param a
+	 * @param names
 	 * @return
 	 * @see #toMMCIF(String, Object)
 	 */
-	private static int getMaxFieldNameLength(Object a) {
-
+	private static int getMaxStringLength(String[] names) {
 		int size = 0;
-
-		Class<?> c = a.getClass();
-
-		for (Field f : c.getDeclaredFields()) {
-
-			f.setAccessible(true);
-
-			if (f.getName().length() > size) {
-				size = f.getName().length();
+		for(String s : names) {
+			if(s.length()>size) {
+				size = s.length();
 			}
 		}
-
 		return size;
 	}
 }

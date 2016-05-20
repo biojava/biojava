@@ -20,7 +20,20 @@
  */
 package org.biojava.nbio.structure.contact;
 
-import org.biojava.nbio.structure.*;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+
+import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.Chain;
+import org.biojava.nbio.structure.Element;
+import org.biojava.nbio.structure.EntityInfo;
+import org.biojava.nbio.structure.Group;
+import org.biojava.nbio.structure.GroupType;
+import org.biojava.nbio.structure.ResidueNumber;
+import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.asa.AsaCalculator;
 import org.biojava.nbio.structure.asa.GroupAsa;
 import org.biojava.nbio.structure.io.FileConvert;
@@ -28,16 +41,11 @@ import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.mmcif.MMCIFFileTools;
 import org.biojava.nbio.structure.io.mmcif.SimpleMMcifParser;
 import org.biojava.nbio.structure.io.mmcif.chem.PolymerType;
+import org.biojava.nbio.structure.io.mmcif.model.AtomSite;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.biojava.nbio.structure.xtal.CrystalTransform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 
 /**
@@ -753,7 +761,7 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 
 		// we reassign atom ids if sym related (otherwise atom ids would be duplicated and some molecular viewers can't cope with that)
 		int atomId = 1;
-		List<Object> atomSites = new ArrayList<Object>();
+		List<AtomSite> atomSites = new ArrayList<>();
 		for (Atom atom:this.molecules.getFirst()) {
 			if (isSymRelated()) {
 				atomSites.add(MMCIFFileTools.convertAtomToAtomSite(atom, 1, molecId1, molecId1, atomId));
@@ -771,7 +779,7 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 			atomId++;
 		}
 
-		sb.append(MMCIFFileTools.toMMCIF(atomSites));
+		sb.append(MMCIFFileTools.toMMCIF(atomSites,AtomSite.class));
 
 		return sb.toString();
 	}
