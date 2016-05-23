@@ -612,9 +612,9 @@ public class OptimalCECPMain extends CeMain {
 			afpChain = cecp.align(ca1, ca2);
 			displayAlignment(afpChain,ca1,ca2);
 
-			LOGGER.info("Inspect additional alignments?");
+			System.out.println("Inspect additional alignments?");
 			Scanner scanner = new Scanner(System.in);
-			LOGGER.info("CP location [0,"+ca2.length+"): ");
+			System.out.println("CP location [0,"+ca2.length+"): ");
 			while(scanner.hasNext()) {
 				if(scanner.hasNextInt()) {
 					int cp = scanner.nextInt();
@@ -628,7 +628,7 @@ public class OptimalCECPMain extends CeMain {
 				} else {
 					//String next = scanner.nextLine();
 				}
-				LOGGER.info("CP location [0,"+ca2.length+"): ");
+				System.out.println("CP location [0,"+ca2.length+"): ");
 			}
 			scanner.close();
 

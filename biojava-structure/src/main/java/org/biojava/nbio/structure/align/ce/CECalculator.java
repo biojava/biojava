@@ -61,8 +61,6 @@ public class CECalculator {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CECalculator.class);
 
-	protected static final boolean isPrint = false;
-
 	int[] f1;
 	int[] f2;
 	double[][]dist1;
@@ -757,12 +755,8 @@ public class CECalculator {
 							}
 					}
 
-				if ( isPrint) {
-					LOGGER.info("fragment length: " + params.getWinSize());
-					LOGGER.info("ntraces : " + nTraces );
-				}
-
-
+					LOGGER.debug("fragment length: " + params.getWinSize());
+					LOGGER.debug("ntraces : " + nTraces );
 
 			}
 
@@ -955,7 +949,9 @@ nBestTrace=nTrace;
 
 		// removing some loops that are run in orig CE
 		// and which did not do anything
-		checkPrintRmsdNew(traceMaxSize, winSize, ca1, ca2);
+		if (LOGGER.isDebugEnabled()) {
+			checkPrintRmsdNew(traceMaxSize, winSize, ca1, ca2);
+		}
 
 		double rmsd=100.0;
 
@@ -965,8 +961,7 @@ nBestTrace=nTrace;
 			if(bestTracesN[ir]!=nBestTrace) continue;
 
 			rmsdNew = getRMSDForBestTrace(ir, strBuf1, strBuf2, bestTracesN,bestTraces1, bestTrace2,winSize,ca1,ca2);
-			if ( isPrint)
-				LOGGER.info(String.format("%d %d %d %.2f", ir, bestTracesN[ir], nBestTrace, rmsdNew));
+			LOGGER.debug(String.format("%d %d %d %.2f", ir, bestTracesN[ir], nBestTrace, rmsdNew));
 
 			if(rmsd>rmsdNew) {
 				iBestTrace=ir;
@@ -1038,8 +1033,7 @@ nBestTrace=nTrace;
 
 		rmsd=calc_rmsd(strBuf1, strBuf2, strLen,true);
 
-		if ( isPrint)
-			LOGGER.info("got first rmsd: " + rmsd);
+		LOGGER.debug("got first rmsd: " + rmsd);
 		boolean isCopied=false;
 
 		outer_loop:
@@ -1111,8 +1105,7 @@ nBestTrace=nTrace;
 					}
 			}
 		rmsdNew=calc_rmsd(strBuf1, strBuf2, strLen,true);
-		if ( isPrint)
-			LOGGER.info("rmsdNew: " + rmsdNew + " rmsd " + rmsd);
+		LOGGER.debug("rmsdNew: " + rmsdNew + " rmsd " + rmsd);
 		afpChain.setTotalRmsdIni(rmsdNew);
 		afpChain.setTotalLenIni(strBuf1.length);
 
@@ -1202,10 +1195,8 @@ nBestTrace=nTrace;
 		long time_q=(timeEnd-timeStart);
 
 		double gapsP = ( nGaps*100.0/nAtom) ;
-		if(isPrint) {
-			String msg = String.format("Alignment length = %d Rmsd = %.2fA Z-Score = %.1f Gaps = %d(%.1f%%)",nAtom,rmsd,z,nGaps, gapsP);
-			LOGGER.info(msg + " CPU = " + time_q);
-		}
+		String msg = String.format("Alignment length = %d Rmsd = %.2fA Z-Score = %.1f Gaps = %d(%.1f%%)",nAtom,rmsd,z,nGaps, gapsP);
+		LOGGER.debug(msg + " CPU = " + time_q);
 
 		//      if ( params.isShowAFPRanges()){
 
@@ -1309,17 +1300,12 @@ nBestTrace=nTrace;
 		double rmsdNew=calc_rmsd(strBuf1, strBuf2, nBestTrace*winSize, true);
 		//afpChain.setTotalRmsdIni(rmsdNew);
 
-
-		if ( isPrint){
-			LOGGER.info("rmsdNew after trace: " +rmsdNew);
+		LOGGER.debug("rmsdNew after trace: " + rmsdNew);
 
 			for(int k=0; k<nBestTrace; k++)
-				LOGGER.info(String.format("(%d,%d,%d) ", bestTrace1[k]+1, bestTrace2[k]+1,8));
-		}
+				LOGGER.debug(String.format("(%d,%d,%d) ", bestTrace1[k]+1, bestTrace2[k]+1,8));
 
-		if ( isPrint){
-			LOGGER.info("best traces: " + nBestTraces);
-		}
+		LOGGER.debug("best traces: " + nBestTraces);
 
 
 	}
@@ -1438,8 +1424,7 @@ nBestTrace=nTrace;
 			//sup_str(strBuf1, strBuf2, nAtom, _d);
 			// here we don't store the rotation matrix for the user!
 			rmsd= calc_rmsd(strBuf1, strBuf2, nAtom,false);
-			if ( isPrint )
-				LOGGER.info("iter: " + counter + " nAtom " + nAtom + " rmsd: " + rmsd);
+			LOGGER.debug("iter: " + counter + " nAtom " + nAtom + " rmsd: " + rmsd);
 			//afpChain.setTotalRmsdOpt(rmsd);
 			//System.out.println("rmsd: " + rmsd);
 
@@ -1957,13 +1942,11 @@ nBestTrace=nTrace;
 
 	private void noBestTrace(){
 
-		if(isPrint) {
 			timeEnd = System.currentTimeMillis();
 			long time_q=(timeEnd-timeStart);
 
 			String msg = String.format("size=0 time=%d comb=%d\n", (int)(time_q), nTraces);
-			LOGGER.info(msg);
-		}
+			LOGGER.debug(msg);
 	}
 
 
