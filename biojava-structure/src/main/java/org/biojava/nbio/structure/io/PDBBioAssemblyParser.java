@@ -23,8 +23,8 @@ package org.biojava.nbio.structure.io;
 import org.biojava.nbio.structure.jama.Matrix;
 import org.biojava.nbio.structure.quaternary.BioAssemblyInfo;
 import org.biojava.nbio.structure.quaternary.BiologicalAssemblyTransformation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
@@ -38,7 +38,7 @@ import java.util.*;
  */
 public class PDBBioAssemblyParser {
 
-	private static final Logger logger = LoggerFactory.getLogger(PDBBioAssemblyParser.class);
+	//private static final Logger logger = LoggerFactory.getLogger(PDBBioAssemblyParser.class);
 
 	private Integer currentBioMolecule = null;
 	private List<String> currentChainIDs = new ArrayList<String>();
@@ -46,7 +46,6 @@ public class PDBBioAssemblyParser {
 	private double[] shift = null;
 	private Map<Integer,BioAssemblyInfo> transformationMap = new HashMap<Integer, BioAssemblyInfo>();
 	private int modelNumber = 1;
-	private int currentMmSize;
 
 	private List<BiologicalAssemblyTransformation> transformations;
 
@@ -62,13 +61,17 @@ public class PDBBioAssemblyParser {
 		    initialize();
 			currentBioMolecule = Integer.parseInt(line.substring(24).trim());
 
-		} else if ( line.matches("REMARK 350 \\w+ DETERMINED BIOLOGICAL UNIT:.*" ) ||
-					line.matches("REMARK 350 \\w+ DETERMINED QUATERNARY STRUCTURE:.*" )) {
+		} 
+		// not parsing anymore the size (from biojava 5.0), thus this is not needed anymore
+		// eventually if needed this could be used to
+		// infer if bioassembly is author or software determined
+		//else if ( line.matches("REMARK 350 \\w+ DETERMINED BIOLOGICAL UNIT:.*" ) ||
+		//			line.matches("REMARK 350 \\w+ DETERMINED QUATERNARY STRUCTURE:.*" )) {
 			// text can be :
 			// author determined biological unit
 			// software determined quaternary structure
-			currentMmSize = getMmSize(line);
-		} else if ( line.startsWith("REMARK 350 APPLY THE FOLLOWING TO CHAINS:")) {
+		//} 
+		else if ( line.startsWith("REMARK 350 APPLY THE FOLLOWING TO CHAINS:")) {
 			currentChainIDs.clear();
 			addToCurrentChainList(line);
 
@@ -80,10 +83,10 @@ public class PDBBioAssemblyParser {
 			addToCurrentChainList(line);
 
 		} else if ( line.startsWith("REMARK 350   BIOMT")) {
-		if (readMatrix(line)) {
-			saveMatrix();
-			modelNumber++;
-		}
+			if (readMatrix(line)) {
+				saveMatrix();
+				modelNumber++;
+			}
 		}
 	}
 
@@ -139,70 +142,9 @@ public class PDBBioAssemblyParser {
 		if (!transformationMap.containsKey(currentBioMolecule)) {
 			BioAssemblyInfo bioAssembly = new BioAssemblyInfo();
 			bioAssembly.setId(currentBioMolecule);
-			if (currentMmSize==0) {
-				logger.warn("No macromolecular size could be parsed for biological assembly {}",currentBioMolecule);
-			}
-			bioAssembly.setMacromolecularSize(currentMmSize);
 			bioAssembly.setTransforms(transformations);
 			transformationMap.put(currentBioMolecule,bioAssembly);
 		}
-	}
-
-	private int getMmSize(String line) {
-		int index = line.indexOf(':');
-		String mmString = line.substring(index+1,line.length()-1).trim().toLowerCase();
-		return getSizefromString(mmString);
-	}
-
-	private static int getSizefromString(String oligomer){
-		int size=0;
-
-		oligomer = oligomer.toLowerCase();
-
-		if (oligomer.equals("monomeric")) {
-		    size = 1;
-		} else if (oligomer.equals("dimeric")) {
-		    size = 2;
-		} else if (oligomer.equals("trimeric")) {
-		    size = 3;
-		} else if (oligomer.equals("tetrameric")) {
-		    size = 4;
-		} else if (oligomer.equals("pentameric")) {
-		    size = 5;
-		} else if (oligomer.equals("hexameric")) {
-		    size = 6;
-		} else if (oligomer.equals("heptameric")) {
-		    size = 7;
-		} else if (oligomer.equals("octameric")) {
-		    size = 8;
-		} else if (oligomer.equals("nonameric")) {
-		    size = 9;
-		} else if (oligomer.equals("decameric")) {
-		    size = 10;
-		} else if (oligomer.equals("undecameric")) {
-		    size = 11;
-		} else if (oligomer.equals("dodecameric")) {
-		    size = 12;
-		} else if (oligomer.equals("tridecameric")) {
-		    size = 13;
-		} else if (oligomer.equals("tetradecameric")) {
-		    size = 14;
-		} else if (oligomer.equals("pentadecameric")) {
-		    size = 15;
-		} else if (oligomer.equals("hexadecameric")) {
-		    size = 16;
-		} else if (oligomer.equals("heptadecameric")) {
-		    size = 17;
-		} else if (oligomer.equals("octadecameric")) {
-		    size = 18;
-		} else if (oligomer.equals("nonadecameric")) {
-		    size = 19;
-		} else if (oligomer.equals("eicosameric")) {
-		    size = 20;
-		} else if( oligomer.matches("(\\d+).*")) {
-		    size = Integer.parseInt((oligomer.replaceAll("(\\d+).*", "$1")));
-		}
-		return size;
 	}
 
 	/**
@@ -211,7 +153,7 @@ public class PDBBioAssemblyParser {
 	private void addToCurrentChainList(String line) {
 		int index = line.indexOf(":");
 		String chainList = line.substring(index+1).trim();
-	// split by spaces or commas
+		// split by spaces or commas
 		String[] chainIds = chainList.split("[ ,]+");
 		currentChainIDs.addAll(Arrays.asList(chainIds));
 	}
@@ -222,6 +164,20 @@ public class PDBBioAssemblyParser {
 		currentBioMolecule = null;
 		shift = new double[3];
 		modelNumber = 1;
-		currentMmSize = 0;
+	}
+	
+	/**
+	 * Set the macromolecularSize fields of the parsed bioassemblies.
+	 * This can only be called after the full PDB file has been read so that
+	 * all the info for all bioassemblies has been gathered.
+	 * Note that an explicit method to set the field is necessary here because 
+	 * in PDB files the transformations contain only the author chain ids, corresponding 
+	 * to polymeric chains, whilst in mmCIF files the transformations 
+	 * contain all asym ids of both polymers and non-polymers.
+	 */
+	public void setMacromolecularSizes() {
+		for (BioAssemblyInfo bioAssembly : transformationMap.values()) {
+			bioAssembly.setMacromolecularSize(bioAssembly.getTransforms().size());
+		}
 	}
 }

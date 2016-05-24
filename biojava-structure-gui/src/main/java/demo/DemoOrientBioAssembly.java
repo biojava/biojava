@@ -22,6 +22,7 @@ package demo;
 
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.align.gui.jmol.StructureAlignmentJmol;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.FileParsingParameters;
@@ -223,10 +224,11 @@ public class DemoOrientBioAssembly {
 		params.setParseCAOnly(true);
 		params.setAtomCaThreshold(Integer.MAX_VALUE);
 		cache.setFileParsingParams(params);
+		StructureIO.setAtomCache(cache);
 
 		Structure structure = null;
 		try {
-			structure = cache.getBiologicalAssembly(pdbId, bioAssemblyId);
+			structure = StructureIO.getBiologicalAssembly(pdbId, bioAssemblyId);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

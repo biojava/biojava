@@ -227,7 +227,7 @@ public interface Chain {
 	 * Sets the 'private' asymId of this chain (Chain id in PDB file ).
 	 * @param asymId  a String specifying the name value
 	 * @see #getChainID()
-	 * @deprecated  use setId(String asymId) instead
+	 * @deprecated  use {@link #setId(String asymId)} instead
 	 */
 	@Deprecated
 	void setChainID(String asymId);
@@ -249,7 +249,7 @@ public interface Chain {
 	 *
 	 * @return String or null
 	 * @since 3.0.5
-	 * @deprecated  use getId() instead
+	 * @deprecated  use {@link #getId()} instead
 	 */
 	String getInternalChainID();
 
@@ -258,7 +258,7 @@ public interface Chain {
 	 *
 	 * @param internalChainID
 	 * @since 3.0.5
-	 * @deprecated use getId() instead
+	 * @deprecated use {@link #setId()} instead
 	 */
 	void setInternalChainID(String internalChainID);
 

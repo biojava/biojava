@@ -2726,6 +2726,7 @@ public class PDBFileParser  {
 		}
 
 		if ( bioAssemblyParser != null){
+			bioAssemblyParser.setMacromolecularSizes();
 			pdbHeader.setBioAssemblies(bioAssemblyParser.getTransformationMap());
 		}
 
