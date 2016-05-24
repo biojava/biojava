@@ -78,9 +78,9 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 	private List<EntityInfo> entityInfoList;
 
 	/** All the chains */
-	private List<Chain> chainList; 
+	private List<Chain> chainList;
 
-	/** All the chains as a list of maps */ 
+	/** All the chains as a list of maps */
 	private List<Map<String,Chain>> chainMap;
 
 	private List<double[]> transformList;
@@ -132,7 +132,7 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 	}
 
 	@Override
-	public void initStructure(int totalNumBonds, int totalNumAtoms, int totalNumGroups, 
+	public void initStructure(int totalNumBonds, int totalNumAtoms, int totalNumGroups,
 			int totalNumChains, int totalNumModels, String modelId) {
 		structure.setPDBCode(modelId);
 		allAtoms = new Atom[totalNumAtoms];
@@ -179,7 +179,7 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 	 */
 	@Override
 	public void setGroupInfo(String groupName, int groupNumber,
-			char insertionCode, String chemCompType, int atomCount, int bondCount, 
+			char insertionCode, String chemCompType, int atomCount, int bondCount,
 			char singleLetterCode, int sequenceIndexId, int secStructType) {
 		// Get the polymer type
 		int polymerType = getGroupTypIndicator(chemCompType);
@@ -222,7 +222,7 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	private Group getGroupWithSameResNumButDiffPDBName() {
@@ -459,7 +459,7 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 		EntityInfo entityInfo = new EntityInfo();
 		entityInfo.setDescription(description);
 		entityInfo.setType(EntityType.entityTypeFromString(type));
-		List<Chain> chains = new ArrayList<>(); 
+		List<Chain> chains = new ArrayList<>();
 		// Now loop through the chain ids and make a list of them
 		for( int index : chainIndices) {
 			chains.add(chainList.get(index));
@@ -471,7 +471,7 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 
 	@Override
 	public void setHeaderInfo(float rFree, float rWork, float resolution, String title, String depositionDate,
-			String releaseDate, String[] experimnetalMethods) {
+			String releaseDate, String[] experimentalMethods) {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		// Get the pdb header
 		PDBHeader pdbHeader = structure.getPDBHeader();
@@ -480,7 +480,7 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 		pdbHeader.setRfree(rFree);
 		pdbHeader.setRwork(rWork);
 		// Now loop through the techniques and add them in
-		for (String techniqueStr : experimnetalMethods) {
+		for (String techniqueStr : experimentalMethods) {
 			pdbHeader.setExperimentalTechnique(techniqueStr);
 		}
 		// Set the dates

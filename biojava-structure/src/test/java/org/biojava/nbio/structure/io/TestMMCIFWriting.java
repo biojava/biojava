@@ -33,9 +33,12 @@ import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.align.util.AtomCache;
+import org.biojava.nbio.structure.io.mmcif.MMCIFFileTools;
 import org.biojava.nbio.structure.io.mmcif.MMcifParser;
 import org.biojava.nbio.structure.io.mmcif.SimpleMMcifConsumer;
 import org.biojava.nbio.structure.io.mmcif.SimpleMMcifParser;
+import org.biojava.nbio.structure.io.mmcif.model.CIFLabel;
+import org.biojava.nbio.structure.io.mmcif.model.IgnoreField;
 import org.junit.Test;
 
 public class TestMMCIFWriting {
@@ -55,7 +58,7 @@ public class TestMMCIFWriting {
 		Structure originalStruct = StructureIO.getStructure("1SMT");
 
 		File outputFile = File.createTempFile("biojava_testing_", ".cif");
-
+		outputFile.deleteOnExit();
 
 		FileWriter fw = new FileWriter(outputFile);
 		fw.write(originalStruct.toMMCIF());
@@ -93,6 +96,8 @@ public class TestMMCIFWriting {
 			//assertEquals(origChain.getSeqResGroups().size(), readChain.getSeqResGroups().size());
 		}
 
+		// Test cell and symmetry
+		assertEquals(originalStruct.getCrystallographicInfo().getSpaceGroup(),readStruct.getCrystallographicInfo().getSpaceGroup());
 	}
 
 	/**
@@ -115,6 +120,7 @@ public class TestMMCIFWriting {
 		Structure originalStruct = StructureIO.getStructure("2N3J");
 
 		File outputFile = File.createTempFile("biojava_testing_", ".cif");
+		outputFile.deleteOnExit();
 
 
 		FileWriter fw = new FileWriter(outputFile);
@@ -179,6 +185,7 @@ public class TestMMCIFWriting {
 		Structure originalStruct = StructureIO.getStructure("1A2C");
 
 		File outputFile = File.createTempFile("biojava_testing_", ".cif");
+		outputFile.deleteOnExit();
 
 
 		FileWriter fw = new FileWriter(outputFile);
@@ -218,5 +225,44 @@ public class TestMMCIFWriting {
 		}
 
 	}
+	
+	private static class DemoBean {
+		@IgnoreField
+		String not_a_field;
+		
+		@SuppressWarnings("unused")//used by reflection
+		String default_field;
+		
+		@CIFLabel(label="custom_label")
+		String custom_field;
 
+		public void setNot_a_field(String not_a_field) {
+			this.not_a_field = not_a_field;
+		}
+		public void setDefault_field(String default_field) {
+			this.default_field = default_field;
+		}
+		public void setCustom_field(String custom_field) {
+			this.custom_field = custom_field;
+		}
+	}
+
+	@Test
+	public void testBeanAnnotations() {
+		DemoBean bean = new DemoBean();
+		bean.setCustom_field("custom_field");
+		bean.setDefault_field(null);
+		bean.setNot_a_field("not_a_field");
+		
+		
+		// Test (1) should have custom_label (@CIFLabel)
+		//      (2) shouldn't have not_a_field (@IgnoreField)
+		String newline = System.getProperty("line.separator");
+		String mmcif = MMCIFFileTools.toMMCIF("_demo", bean);
+		String expected = 
+				  "_demo.default_field   ?" + newline
+				+ "_demo.custom_label    custom_field" + newline
+				+ "#" + newline;
+		assertEquals(expected, mmcif);
+	}
 }
