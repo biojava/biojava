@@ -66,13 +66,19 @@ public class ChemComp implements Serializable, Comparable<ChemComp>{
 	private String pdbx_processing_site;
 	private String mon_nstd_flag;
 
+	@IgnoreField
 	private List<ChemCompDescriptor> descriptors = new ArrayList<ChemCompDescriptor>();
+	@IgnoreField
 	private List<ChemCompBond> bonds = new ArrayList<ChemCompBond>();
+	@IgnoreField
 	private List<ChemCompAtom> atoms = new ArrayList<ChemCompAtom>();
 
 	// and some derived data for easier processing...
+	@IgnoreField
 	private ResidueType residueType;
+	@IgnoreField
 	private PolymerType polymerType;
+	@IgnoreField
 	private boolean standard;
 
 	@Override

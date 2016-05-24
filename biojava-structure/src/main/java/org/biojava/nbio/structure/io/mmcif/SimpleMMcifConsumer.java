@@ -844,17 +844,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			structure.getPDBHeader().setBioAssemblies(bioAssemblies);
 		}
 
-		ArrayList<Matrix4d> ncsOperators = new ArrayList<Matrix4d>();
-		for (StructNcsOper sNcsOper:structNcsOper) {
-			if (sNcsOper.getCode().equals("generate")) {
-				ncsOperators.add(sNcsOper.getOperator());
-			}
-		}
-		// we only set it if not empty, otherwise remains null
-		if (ncsOperators.size()>0) {
-			structure.getCrystallographicInfo().setNcsOperators(
-					ncsOperators.toArray(new Matrix4d[ncsOperators.size()]));
-		}
+		setStructNcsOps();
 
 
 		Map<String,List<SeqMisMatch>> misMatchMap = new HashMap<String, List<SeqMisMatch>>();
@@ -1280,6 +1270,53 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			for (int i=0; i<chainNames.length; i++) {
 				asymId2authorId.put(asymIds.get(i), chainNames[i]);
 			}
+		}
+	}
+	
+	private void setStructNcsOps() {
+		
+		ArrayList<Matrix4d> ncsOperators = new ArrayList<Matrix4d>();
+		
+		for (StructNcsOper sNcsOper:structNcsOper) {
+			
+			if (!sNcsOper.getCode().equals("generate")) continue;
+			
+			try {
+				Matrix4d op = new Matrix4d();
+				op.setElement(3, 0, 0.0);
+				op.setElement(3, 1, 0.0);
+				op.setElement(3, 2, 0.0);
+				op.setElement(3, 3, 1.0);
+
+
+				op.setElement(0, 0, Double.parseDouble(sNcsOper.getMatrix11()));
+				op.setElement(0, 1, Double.parseDouble(sNcsOper.getMatrix12()));
+				op.setElement(0, 2, Double.parseDouble(sNcsOper.getMatrix13()));
+
+				op.setElement(1, 0, Double.parseDouble(sNcsOper.getMatrix21()));
+				op.setElement(1, 1, Double.parseDouble(sNcsOper.getMatrix22()));
+				op.setElement(1, 2, Double.parseDouble(sNcsOper.getMatrix23()));
+
+				op.setElement(2, 0, Double.parseDouble(sNcsOper.getMatrix31()));
+				op.setElement(2, 1, Double.parseDouble(sNcsOper.getMatrix32()));
+				op.setElement(2, 2, Double.parseDouble(sNcsOper.getMatrix33()));
+
+				op.setElement(0, 3, Double.parseDouble(sNcsOper.getVector1()));
+				op.setElement(1, 3, Double.parseDouble(sNcsOper.getVector2()));
+				op.setElement(2, 3, Double.parseDouble(sNcsOper.getVector3()));
+
+				ncsOperators.add(op);
+				
+			} catch (NumberFormatException e) {
+				logger.warn("Error parsing doubles in NCS operator list, skipping operator {}", structNcsOper.indexOf(sNcsOper)+1); 
+			}
+
+		}
+		
+		// we only set it if not empty, otherwise remains null
+		if (ncsOperators.size()>0) {
+			structure.getCrystallographicInfo().setNcsOperators(
+					ncsOperators.toArray(new Matrix4d[ncsOperators.size()]));
 		}
 	}
 

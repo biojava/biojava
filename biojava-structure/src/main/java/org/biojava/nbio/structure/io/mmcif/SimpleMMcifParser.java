@@ -25,6 +25,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -34,13 +35,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.vecmath.Matrix4d;
 
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.io.MMCIFFileReader;
 import org.biojava.nbio.structure.io.StructureIOFile;
 import org.biojava.nbio.structure.io.mmcif.model.AtomSite;
 import org.biojava.nbio.structure.io.mmcif.model.AuditAuthor;
+import org.biojava.nbio.structure.io.mmcif.model.CIFLabel;
 import org.biojava.nbio.structure.io.mmcif.model.Cell;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.biojava.nbio.structure.io.mmcif.model.ChemCompAtom;
@@ -56,6 +57,7 @@ import org.biojava.nbio.structure.io.mmcif.model.EntitySrcGen;
 import org.biojava.nbio.structure.io.mmcif.model.EntitySrcNat;
 import org.biojava.nbio.structure.io.mmcif.model.EntitySrcSyn;
 import org.biojava.nbio.structure.io.mmcif.model.Exptl;
+import org.biojava.nbio.structure.io.mmcif.model.IgnoreField;
 import org.biojava.nbio.structure.io.mmcif.model.PdbxChemCompDescriptor;
 import org.biojava.nbio.structure.io.mmcif.model.PdbxChemCompIdentifier;
 import org.biojava.nbio.structure.io.mmcif.model.PdbxEntityNonPoly;
@@ -76,7 +78,6 @@ import org.biojava.nbio.structure.io.mmcif.model.StructRefSeqDif;
 import org.biojava.nbio.structure.io.mmcif.model.StructSite;
 import org.biojava.nbio.structure.io.mmcif.model.StructSiteGen;
 import org.biojava.nbio.structure.io.mmcif.model.Symmetry;
-import org.biojava.nbio.structure.jama.Matrix;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -675,17 +676,10 @@ public class SimpleMMcifParser implements MMcifParser {
 			triggerNewSymmetry(symmetry);
 		} else if ( category.equals("_struct_ncs_oper")) {
 
-			// this guy is special because of the [] in the field names
-			StructNcsOper sNcsOper = null;
-			try{
-				sNcsOper = getStructNcsOper(loopFields,lineData);
-			}
-			catch(NumberFormatException e){
-				logger.warn("Error parsing doubles in NCS operator list");
-			}
-			if(sNcsOper!=null){
-				triggerNewStructNcsOper(sNcsOper);
-			}
+			StructNcsOper sNcsOper = (StructNcsOper) buildObject(
+					StructNcsOper.class.getName(), 
+					loopFields, lineData, loopWarnings);
+			triggerNewStructNcsOper(sNcsOper);
 
 		} else if ( category.equals("_struct_ref")){
 			StructRef sref  = (StructRef) buildObject(
@@ -795,11 +789,11 @@ public class SimpleMMcifParser implements MMcifParser {
 			triggerNewChemCompDescriptor(ccd);
 		} else if (category.equals("_pdbx_struct_oper_list")) {
 
-			// this guy is special since we convert to Matrices and shift vectors...
-			// and because it contains [] in field names
-			PdbxStructOperList structOper = getPdbxStructOperList(loopFields,lineData);
+			PdbxStructOperList structOper = (PdbxStructOperList) buildObject(
+					PdbxStructOperList.class.getName(),
+					loopFields, lineData, loopWarnings
+					);
 			triggerNewPdbxStructOper(structOper);
-
 
 		} else if (category.equals("_pdbx_struct_assembly")) {
 			PdbxStructAssembly sa = (PdbxStructAssembly) buildObject(
@@ -851,90 +845,50 @@ public class SimpleMMcifParser implements MMcifParser {
 	}
 
 
-	private PdbxStructOperList getPdbxStructOperList(List<String> loopFields,
-			List<String> lineData) {
-		PdbxStructOperList so = new PdbxStructOperList();
-
-		//System.out.println(loopFields);
-		//System.out.println(lineData);
-
-		String id = lineData.get(loopFields.indexOf("id"));
-		so.setId(id);
-		so.setType(lineData.get(loopFields.indexOf("type")));
-		Matrix matrix = new Matrix(3,3);
-		for (int i = 1 ; i <=3 ; i++){
-			for (int j =1 ; j <= 3 ; j++){
-				String max = String.format("matrix[%d][%d]",j,i);
-
-				String val = lineData.get(loopFields.indexOf(max));
-				Double d = Double.parseDouble(val);
-				matrix.set(j-1,i-1,d);
-				//				matrix.set(i-1,j-1,d);
-			}
-		}
-
-		double[] coords =new double[3];
-
-		for ( int i = 1; i <=3 ; i++){
-			String v = String.format("vector[%d]",i);
-			String val = lineData.get(loopFields.indexOf(v));
-			Double d = Double.parseDouble(val);
-			coords[i-1] = d;
-		}
-
-		so.setMatrix(matrix);
-		so.setVector(coords);
-
-
-
-		return so;
-	}
+//	private PdbxStructOperList getPdbxStructOperList(List<String> loopFields,
+//			List<String> lineData) {
+//		PdbxStructOperList so = new PdbxStructOperList();
+//
+//		//System.out.println(loopFields);
+//		//System.out.println(lineData);
+//
+//		String id = lineData.get(loopFields.indexOf("id"));
+//		so.setId(id);
+//		so.setType(lineData.get(loopFields.indexOf("type")));
+//		Matrix matrix = new Matrix(3,3);
+//		for (int i = 1 ; i <=3 ; i++){
+//			for (int j =1 ; j <= 3 ; j++){
+//				String max = String.format("matrix[%d][%d]",j,i);
+//
+//				String val = lineData.get(loopFields.indexOf(max));
+//				Double d = Double.parseDouble(val);
+//				matrix.set(j-1,i-1,d);
+//				//				matrix.set(i-1,j-1,d);
+//			}
+//		}
+//
+//		double[] coords =new double[3];
+//
+//		for ( int i = 1; i <=3 ; i++){
+//			String v = String.format("vector[%d]",i);
+//			String val = lineData.get(loopFields.indexOf(v));
+//			Double d = Double.parseDouble(val);
+//			coords[i-1] = d;
+//		}
+//
+//		so.setMatrix(matrix);
+//		so.setVector(coords);
+//
+//
+//
+//		return so;
+//	}
 
 	public void triggerNewPdbxStructOper(PdbxStructOperList structOper) {
 		for(MMcifConsumer c : consumers){
 			c.newPdbxStructOperList(structOper);
 		}
 
-	}
-
-	private StructNcsOper getStructNcsOper(List<String> loopFields, List<String> lineData) {
-		StructNcsOper sNcsOper = new StructNcsOper();
-
-		int id = Integer.parseInt(lineData.get(loopFields.indexOf("id")));
-		sNcsOper.setId(id);
-		sNcsOper.setCode(lineData.get(loopFields.indexOf("code")));
-
-		int detailsPos = loopFields.indexOf("details");
-		if ( detailsPos > -1)
-			sNcsOper.setDetails(lineData.get(detailsPos));
-		Matrix4d op = new Matrix4d();
-		op.setElement(3, 0, 0.0);
-		op.setElement(3, 1, 0.0);
-		op.setElement(3, 2, 0.0);
-		op.setElement(3, 3, 1.0);
-
-
-		for (int i = 1 ; i <=3 ; i++){
-			for (int j =1 ; j <= 3 ; j++){
-				String max = String.format("matrix[%d][%d]",i,j);
-				String val = lineData.get(loopFields.indexOf(max));
-				Double d = Double.parseDouble(val);
-				op.setElement(i-1,j-1,d);
-
-			}
-		}
-
-
-		for ( int i = 1; i <=3 ; i++){
-			String v = String.format("vector[%d]",i);
-			String val = lineData.get(loopFields.indexOf(v));
-			Double d = Double.parseDouble(val);
-			op.setElement(i-1, 3, d);
-		}
-
-		sNcsOper.setOperator(op);
-
-		return sNcsOper;
 	}
 
 	public void triggerNewStructNcsOper(StructNcsOper sNcsOper) {
@@ -944,6 +898,23 @@ public class SimpleMMcifParser implements MMcifParser {
 
 	}
 
+	/**
+	 * Populates a bean object from  the {@link org.biojava.nbio.structure.io.mmcif.model} package, 
+	 * from the data read from a CIF file.
+	 * It uses reflection to lookup the field and setter method names given the category 
+	 * found in the CIF file. 
+	 * <p>
+	 * Due to limitations in variable names in java, not all fields can have names 
+	 * exactly as defined in the CIF categories. In those cases the {@link CIFLabel} tag
+	 * can be used in the field names to give the appropriate name that corresponds to the
+	 * CIF category, which is the name that will be then looked up here.
+	 * The {@link IgnoreField} tag can also be used to exclude fields from being looked up.
+	 * @param className
+	 * @param loopFields
+	 * @param lineData
+	 * @param warnings
+	 * @return
+	 */
 	private Object buildObject(String className, List<String> loopFields, List<String> lineData, Set<String> warnings) {
 
 		Object o = null;
@@ -955,17 +926,16 @@ public class SimpleMMcifParser implements MMcifParser {
 
 			o = c.newInstance();
 
-		} catch (InstantiationException e){
+		} catch (InstantiationException|ClassNotFoundException|IllegalAccessException e){
 			logger.error( "Error while constructing {}: {}", className, e.getMessage());
 			return null;
-		} catch (ClassNotFoundException e){
-			logger.error( "Error while constructing {}: {}", className, e.getMessage());
-			return null;
-		} catch (IllegalAccessException e) {
-			logger.error( "Error while constructing {}: {}", className, e.getMessage());
-			return null;
-		}
+		} 
 
+		// these methods get the fields but also looking at the IgnoreField and CIFLabel annotations 
+		Field[] fields = MMCIFFileTools.getFields(c);
+		String[] names = MMCIFFileTools.getFieldNames(fields);
+
+		// let's build a map of all methods so that we can look up the setter methods later
 		Method[] methods = c.getMethods();
 
 		Map<String,Method> methodMap = new HashMap<String, Method>();
@@ -973,67 +943,83 @@ public class SimpleMMcifParser implements MMcifParser {
 			methodMap.put(m.getName(),m);
 		}
 
+		// and a map of all the fields so that we can lookup them up later
+		Map<String, Field> names2fields = new HashMap<>();
+		for (int i=0;i<fields.length;i++) {
+			names2fields.put(names[i], fields[i]);
+		}
+		
 		int pos = -1 ;
 		for (String key: loopFields){
 			pos++;
 
 			String val = lineData.get(pos);
-
-			// a necessary fix in order to be able to handle keys that contain hyphens (e.g. _symmetry.space_group_name_H-M)
-			// java can't use hyphens in variable names thus the corresponding bean can't use the hyphen and we replace it by underscore
-			if (key.contains("-"))
-				key = key.replace('-', '_');
-
-			// building up the setter method name: need to upper case the first letter, leave the rest untouched
-			String methodName = "set" + key.substring(0,1).toUpperCase() + key.substring(1, key.length());
-
-			Method m = methodMap.get(methodName);
-
-			if ( m == null) { 	// no method found in model class with the name found in file
-
-				if (!key.contains("[")) { // the fields with square brackets are handled elsewhere, see for instance getStructNcsOper
-
-					String warning = "Trying to set field " + key + " in "+ c.getName() +" found in file, but no corresponding field could be found in model class (value:" + val + ")";
-					String warnkey = key+"-"+c.getName();
-					// Suppress duplicate warnings or attempts to store empty data
-					if( val.equals("?") || val.equals(".") || ( warnings != null && warnings.contains(warnkey)) ) {
-						logger.debug(warning);
-					} else {
-						logger.warn(warning);
-					}
-
-					if(warnings != null) {
-						warnings.add(warnkey);
-					}
-				}
+			
+			// we first start looking up the field which can be annotated with a CIFLabel if they 
+			// need alternative names (e.g. for field _symmetry.space_group_name_H-M, since hyphen is not allowed in var names in java)
+			Field field = names2fields.get(key);
+			
+			if (field == null) {
+				produceWarning(key, val, c, warnings);
 				continue;
 			}
+			// now we need to find the corresponding setter
+			// note that we can't use the field directly and then call Field.set() because many setters 
+			// have more functionality than just setting the value (e.g. some setters in ChemComp)
 
-			// now we populate the object with the values by invoking the corresponding setter method,
+			// building up the setter method name: need to upper case the first letter, leave the rest untouched
+			String setterMethodName = "set" + field.getName().substring(0,1).toUpperCase() + field.getName().substring(1, field.getName().length());
+
+			Method setter = methodMap.get(setterMethodName);
+			
+			if (setter==null) {
+				produceWarning(key, val, c, warnings);
+				continue;
+			}
+			
+			
+
+			// now we populate the object with the values by invoking the corresponding setter method,			
 			// note that all of the mmCif container classes have only one argument (they are beans)
-
-			Class<?>[] pType  = m.getParameterTypes();
+			Class<?>[] pType  = setter.getParameterTypes();
+			
 
 			try {
 				if ( pType[0].getName().equals(Integer.class.getName())) {
 					if ( val != null && ! val.equals("?") && !val.equals(".")) {
 
 						Integer intVal = Integer.parseInt(val);
-						m.invoke(o, intVal);
+						setter.invoke(o, intVal);
+						
 					}
 				} else {
-					// default val is a String
-					m.invoke(o, val);
+					// default val is a String					
+					setter.invoke(o, val);
 				}
-			} catch (IllegalAccessException e) {
-				logger.error("Could not invoke setter {} with value {} for class {}", methodName, val, className);
-			} catch (InvocationTargetException e) {
-				logger.error("Could not invoke setter {} with value {} for class {}", methodName, val, className);
-			}
+			} catch (IllegalAccessException|InvocationTargetException e) {
+				logger.error("Could not invoke setter {} with value {} for class {}", setterMethodName, val, className);
+			} 
 
 		}
 
 		return o;
+	}
+	
+	private void produceWarning(String key, String val, Class<?> c, Set<String> warnings) {
+
+		String warning = "Trying to set field " + key + " in "+ c.getName() +" found in file, but no corresponding field could be found in model class (value:" + val + ")";
+		String warnkey = key+"-"+c.getName();
+		// Suppress duplicate warnings or attempts to store empty data
+		if( val.equals("?") || val.equals(".") || ( warnings != null && warnings.contains(warnkey)) ) {
+			logger.debug(warning);
+		} else {
+			logger.warn(warning);
+		}
+
+		if(warnings != null) {
+			warnings.add(warnkey);
+		}
+
 	}
 
 	public void triggerGeneric(String category, List<String> loopFields, List<String> lineData){
