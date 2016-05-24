@@ -51,7 +51,7 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 6772030485225130853L;
-	
+
 	/** The logger */
 	private static final Logger logger = LoggerFactory.getLogger(MmtfStructureReader.class);
 
@@ -228,7 +228,7 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 	private Group getGroupWithSameResNumButDiffPDBName() {
 		// If this chain already has this group number
 		for (Group g : chain.getAtomGroups() ) {
-			if (g.getResidueNumber().getSeqNum()==group.getResidueNumber().getSeqNum()) {
+			if (g.getResidueNumber().equals(group.getResidueNumber())) {
 				if( ! g.getPDBName().equals(group.getPDBName() )){
 					return g;
 				}
@@ -484,22 +484,27 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 			pdbHeader.setExperimentalTechnique(techniqueStr);
 		}
 		// Set the dates
-		try {
-			Date depDate = formatter.parse(depositionDate);
-			pdbHeader.setDepDate(depDate);
-		} catch (ParseException e) {
-			logger.warn("Could not parse date string '{}', depositon date will be unavailable", depositionDate);
-
+		if(depositionDate!=null){
+			try {
+				Date depDate = formatter.parse(depositionDate);
+				pdbHeader.setDepDate(depDate);
+			} catch (ParseException e) {
+				logger.warn("Could not parse date string '{}', depositon date will be unavailable", depositionDate);
+			}
 		}
-
-		try {
-			Date relDate = formatter.parse(releaseDate);
-			pdbHeader.setModDate(relDate);
-		} catch (ParseException e) {
-			logger.warn("Could not parse date string '{}', release/modification date will be unavailable", releaseDate);
-
+		else{
+			pdbHeader.setDepDate(new Date(0));
+		}
+		if(releaseDate!=null){
+			try {
+				Date relDate = formatter.parse(releaseDate);
+				pdbHeader.setModDate(relDate);
+			} catch (ParseException e) {
+				logger.warn("Could not parse date string '{}', release/modification date will be unavailable", releaseDate);
+			}
+		}
+		else{
+			pdbHeader.setModDate(new Date(0));
 		}
 	}
-
-
 }
