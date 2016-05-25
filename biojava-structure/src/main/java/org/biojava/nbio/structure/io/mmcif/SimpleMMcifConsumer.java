@@ -805,30 +805,35 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				// these are the transformations that need to be applied to our model
 				List<BiologicalAssemblyTransformation> transformations = builder.getBioUnitTransformationList(psa, psags, structOpers);
 
-				int mmSize = 0;
 				int bioAssemblyId = -1;
 				try {
 					bioAssemblyId = Integer.parseInt(psa.getId());
 				} catch (NumberFormatException e) {
 					logger.info("Could not parse a numerical bio assembly id from '{}'",psa.getId());
 				}
-				try {
-					mmSize = Integer.parseInt(psa.getOligomeric_count());
-				} catch (NumberFormatException e) {
-					if (bioAssemblyId!=-1)
-						// if we have a numerical id, then it's unusual to have no oligomeric size: we warn about it
-						logger.warn("Could not parse oligomeric count from '{}' for biological assembly id {}",
-								psa.getOligomeric_count(),psa.getId());
-					else
-						// no numerical id (PAU,XAU in virus entries), it's normal to have no oligomeric size
-						logger.info("Could not parse oligomeric count from '{}' for biological assembly id {}",
-								psa.getOligomeric_count(),psa.getId());
-				}
 
 				// if bioassembly id is not numerical we throw it away
 				// this happens usually for viral capsid entries, like 1ei7
 				// see issue #230 in github
 				if (bioAssemblyId!=-1) {
+					int mmSize = 0;
+					// note that the transforms contain asym ids of both polymers and non-polymers
+					// For the mmsize, we are only interested in the polymers
+					for (BiologicalAssemblyTransformation transf:transformations) {
+						Chain c = structure.getChain(transf.getChainId());
+						if (c==null) {
+							logger.warn("Could not find asym id {} specified in struct_assembly_gen", transf.getChainId());
+							continue;
+						}
+						if (c.getEntityType() == EntityType.POLYMER &&
+							// for entries like 4kro, sugars are annotated as polymers but we
+							// don't want them in the macromolecularSize count
+							!c.getEntityInfo().getDescription().contains("SUGAR") ) {
+								
+								mmSize++;
+							}
+					}
+					
 					BioAssemblyInfo bioAssembly = new BioAssemblyInfo();
 					bioAssembly.setId(bioAssemblyId);
 					bioAssembly.setMacromolecularSize(mmSize);
@@ -840,17 +845,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			structure.getPDBHeader().setBioAssemblies(bioAssemblies);
 		}
 
-		ArrayList<Matrix4d> ncsOperators = new ArrayList<Matrix4d>();
-		for (StructNcsOper sNcsOper:structNcsOper) {
-			if (sNcsOper.getCode().equals("generate")) {
-				ncsOperators.add(sNcsOper.getOperator());
-			}
-		}
-		// we only set it if not empty, otherwise remains null
-		if (ncsOperators.size()>0) {
-			structure.getCrystallographicInfo().setNcsOperators(
-					ncsOperators.toArray(new Matrix4d[ncsOperators.size()]));
-		}
+		setStructNcsOps();
 
 
 		Map<String,List<SeqMisMatch>> misMatchMap = new HashMap<String, List<SeqMisMatch>>();
@@ -1276,6 +1271,53 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			for (int i=0; i<chainNames.length; i++) {
 				asymId2authorId.put(asymIds.get(i), chainNames[i]);
 			}
+		}
+	}
+	
+	private void setStructNcsOps() {
+		
+		ArrayList<Matrix4d> ncsOperators = new ArrayList<Matrix4d>();
+		
+		for (StructNcsOper sNcsOper:structNcsOper) {
+			
+			if (!sNcsOper.getCode().equals("generate")) continue;
+			
+			try {
+				Matrix4d op = new Matrix4d();
+				op.setElement(3, 0, 0.0);
+				op.setElement(3, 1, 0.0);
+				op.setElement(3, 2, 0.0);
+				op.setElement(3, 3, 1.0);
+
+
+				op.setElement(0, 0, Double.parseDouble(sNcsOper.getMatrix11()));
+				op.setElement(0, 1, Double.parseDouble(sNcsOper.getMatrix12()));
+				op.setElement(0, 2, Double.parseDouble(sNcsOper.getMatrix13()));
+
+				op.setElement(1, 0, Double.parseDouble(sNcsOper.getMatrix21()));
+				op.setElement(1, 1, Double.parseDouble(sNcsOper.getMatrix22()));
+				op.setElement(1, 2, Double.parseDouble(sNcsOper.getMatrix23()));
+
+				op.setElement(2, 0, Double.parseDouble(sNcsOper.getMatrix31()));
+				op.setElement(2, 1, Double.parseDouble(sNcsOper.getMatrix32()));
+				op.setElement(2, 2, Double.parseDouble(sNcsOper.getMatrix33()));
+
+				op.setElement(0, 3, Double.parseDouble(sNcsOper.getVector1()));
+				op.setElement(1, 3, Double.parseDouble(sNcsOper.getVector2()));
+				op.setElement(2, 3, Double.parseDouble(sNcsOper.getVector3()));
+
+				ncsOperators.add(op);
+				
+			} catch (NumberFormatException e) {
+				logger.warn("Error parsing doubles in NCS operator list, skipping operator {}", structNcsOper.indexOf(sNcsOper)+1); 
+			}
+
+		}
+		
+		// we only set it if not empty, otherwise remains null
+		if (ncsOperators.size()>0) {
+			structure.getCrystallographicInfo().setNcsOperators(
+					ncsOperators.toArray(new Matrix4d[ncsOperators.size()]));
 		}
 	}
 

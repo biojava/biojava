@@ -22,7 +22,6 @@ package demo;
 
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.align.gui.jmol.StructureAlignmentJmol;
-import org.biojava.nbio.structure.quaternary.io.BioUnitDataProviderFactory;
 import org.biojava.nbio.structure.StructureIO;
 
 public class DemoShowBiolAssembly {
@@ -47,7 +46,6 @@ public class DemoShowBiolAssembly {
 
 			// DNA 173D .. 2
 
-			BioUnitDataProviderFactory.setBioUnitDataProvider(BioUnitDataProviderFactory.pdbProviderClassName);
 			//Structure bioAssembly = StructureIO.getBiologicalAssembly("4A1I",2);
 
 			Structure bioAssembly = StructureIO.getBiologicalAssembly("1pdr",1);

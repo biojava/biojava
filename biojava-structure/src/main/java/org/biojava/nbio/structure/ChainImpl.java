@@ -164,7 +164,7 @@ public class ChainImpl implements Chain, Serializable {
 		ChainImpl n = new ChainImpl();
 		// copy chain data:
 
-		n.setChainID( getChainID());
+		n.setId(getId());
 		n.setName(getName());
 		n.setSwissprotId ( getSwissprotId());
 
@@ -172,7 +172,6 @@ public class ChainImpl implements Chain, Serializable {
 		// here we don't deep-copy it and just keep the same reference, in case the cloning is happening at the Chain level only
 		n.setEntityInfo(this.entity);
 
-		n.setInternalChainID(asymId);
 
 		for (Group group : groups) {
 			Group g = (Group) group.clone();

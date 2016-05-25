@@ -114,29 +114,25 @@ public class ScanSymmetry implements Runnable {
 
 			StructureIO.setAtomCache(cache);
 
-			// get number of biological assemblies. If value is -1, the original PDB file is used (bio assembly id = 0)
-			int bioAssemblyCount = StructureIO.getNrBiologicalAssemblies(pdbId);
-
-			int first = 0;
-			int last = 1;
-			if (bioAssemblyCount != -1) {
-				first = 1;
-				last = bioAssemblyCount + 1;
+			
+			
+			List<Structure> structures = null;
+			try {
+				structures = StructureIO.getBiologicalAssemblies(pdbId);
+			} catch (StructureException|IOException e) {
+				e.printStackTrace();
+				error.println(pdbId + ": " + e.getMessage());
+				error.flush();
+				continue;
 			}
+			
+			int i = 0;
+			for (Structure structure : structures) {
 
-			for (int i = first; i < last; i++) {
-				Structure structure = null;
-				try {
-					structure = StructureIO.getBiologicalAssembly(pdbId, i);
-				} catch (IOException e) {
-					e.printStackTrace();
-					error.println(pdbId + "[" + i + "]: " + e.getMessage());
-					error.flush();
-				} catch (StructureException e) {
-					e.printStackTrace();
-					error.println(pdbId + "[" + i + "]: " + e.getMessage());
-					error.flush();
-				}
+				// note: before biojava 5.0 refactoring, the structures without bioassemblies would
+				// use i=0 as the identifier for the default bioassembly (the asymmetric unit). Now
+				// identifier i=1 is used - JD 2016-05-17
+				i++;				
 
 				long ts1 = System.nanoTime();
 

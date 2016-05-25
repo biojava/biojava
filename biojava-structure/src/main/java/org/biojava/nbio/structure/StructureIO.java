@@ -27,12 +27,8 @@ import java.util.List;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.MMCIFFileReader;
 import org.biojava.nbio.structure.io.PDBFileReader;
-import org.biojava.nbio.structure.quaternary.BiologicalAssemblyBuilder;
-import org.biojava.nbio.structure.quaternary.BiologicalAssemblyTransformation;
-import org.biojava.nbio.structure.quaternary.io.BioUnitDataProvider;
-import org.biojava.nbio.structure.quaternary.io.BioUnitDataProviderFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
 
 /**
  * A class that provides static access methods for easy lookup of protein structure related components
@@ -43,14 +39,15 @@ import org.slf4j.LoggerFactory;
  */
 public class StructureIO {
 
-	private static final Logger logger = LoggerFactory.getLogger(StructureIO.class);
+	//private static final Logger logger = LoggerFactory.getLogger(StructureIO.class);
 
 	private static AtomCache cache ;
 
 
-	/** Loads a structure based on a name. Supported naming conventions are:
+	/** 
+	 * Loads a structure based on a name. Supported naming conventions are:
 	 *
-	 *  * <pre>
+	 *  <pre>
 		Formal specification for how to specify the <i>name</i>:
 
 		name     := pdbID
@@ -81,7 +78,7 @@ public class StructureIO {
 		BIOL:1fah:1 #biological assembly nr 1 for 1fah
 		BIOL:1fah:2 #biological assembly nr 2 for 1fah
 
-		</pre>
+     * </pre>
 	 *
 	 * With the additional set of rules:
 	 *
@@ -121,8 +118,46 @@ public class StructureIO {
 	}
 
 	/**
-	 * Returns the first biologicalAssembly that is available for a protein structure. For more documentation on quaternary structures see:
-	 * {@link http://www.pdb.org/pdb/101/static101.do?p=education_discussion/Looking-at-Structures/bioassembly_tutorial.html}
+	 * Returns the first biological assembly that is available for the given PDB id.
+	 * <p>
+	 * The output Structure will be different depending on the multiModel parameter:
+	 * <li>
+	 * the symmetry-expanded chains are added as new models, one per transformId. All original models but 
+	 * the first one are discarded.
+	 * </li>
+	 * <li>
+	 * as original with symmetry-expanded chains added with renamed chain ids and names (in the form 
+	 * originalAsymId_transformId and originalAuthId_transformId)
+	 * </li> 
+	 * <p> 
+	 * For more documentation on quaternary structures see:
+	 * {@link http://pdb101.rcsb.org/learn/guide-to-understanding-pdb-data/biological-assemblies}
+	 *
+	 *
+	 * @param pdbId
+	 * @param multiModel if true the output Structure will be a multi-model one with one transformId per model, 
+	 * if false the outputStructure will be as the original with added chains with renamed asymIds (in the form originalAsymId_transformId and originalAuthId_transformId).              
+	 * @return a Structure object or null if that assembly is not available
+	 * @throws StructureException
+	 * @throws IOException
+	 */
+	public static Structure getBiologicalAssembly(String pdbId, boolean multiModel) throws IOException, StructureException{
+
+		checkInitAtomCache();		
+
+		pdbId = pdbId.toLowerCase();
+		
+		Structure s = cache.getBiologicalAssembly(pdbId, multiModel); 
+		
+		return s;
+	}
+	
+	/**
+	 * Returns the first biological assembly that is available for the given PDB id, 
+	 * using multiModel={@value AtomCache#DEFAULT_BIOASSEMBLY_STYLE}
+	 * <p> 
+	 * For more documentation on quaternary structures see:
+	 * {@link http://pdb101.rcsb.org/learn/guide-to-understanding-pdb-data/biological-assemblies}
 	 *
 	 *
 	 * @param pdbId
@@ -131,13 +166,43 @@ public class StructureIO {
 	 * @throws IOException
 	 */
 	public static Structure getBiologicalAssembly(String pdbId) throws IOException, StructureException{
-
-		return getBiologicalAssembly(pdbId,1);
-	}
+		return getBiologicalAssembly(pdbId, AtomCache.DEFAULT_BIOASSEMBLY_STYLE);
+	}	
 
 	/**
-	 * By default the getStructure method loads asym units. This access method allows to recreate the quaternary structure for a protein if it is available.
-	 *
+	 * Returns the biological assembly for the given PDB id and bioassembly identifier.
+	 * <p>
+	 * The output Structure will be different depending on the multiModel parameter:
+	 * <li>
+	 * the symmetry-expanded chains are added as new models, one per transformId. All original models but 
+	 * the first one are discarded.
+	 * </li>
+	 * <li>
+	 * as original with symmetry-expanded chains added with renamed chain ids and names (in the form 
+	 * originalAsymId_transformId and originalAuthId_transformId)
+	 * </li>  
+	 * @param pdbId
+	 * @param biolAssemblyNr - the ith biological assembly that is available for a PDB ID (we start counting at 1, 0 represents the asym unit).
+	 * @param multiModel if true the output Structure will be a multi-model one with one transformId per model, 
+	 * if false the outputStructure will be as the original with added chains with renamed asymIds (in the form originalAsymId_transformId and originalAuthId_transformId).              
+	 * @return a Structure object or null if that assembly is not available
+	 * @throws StructureException if there is no bioassembly available for given biolAssemblyNr or some other problems encountered while loading it
+	 * @throws IOException
+	 */
+	public static Structure getBiologicalAssembly(String pdbId, int biolAssemblyNr, boolean multiModel) throws IOException, StructureException {
+		
+		checkInitAtomCache();		
+
+		pdbId = pdbId.toLowerCase();
+		
+		Structure s = cache.getBiologicalAssembly(pdbId, biolAssemblyNr, multiModel); 
+		
+		return s;
+	}
+	
+	/**
+	 * Returns the biological assembly for the given PDB id and bioassembly identifier,
+	 * using multiModel={@value AtomCache#DEFAULT_BIOASSEMBLY_STYLE}
 	 * @param pdbId
 	 * @param biolAssemblyNr - the ith biological assembly that is available for a PDB ID (we start counting at 1, 0 represents the asym unit).
 	 * @return a Structure object or null if that assembly is not available
@@ -145,82 +210,58 @@ public class StructureIO {
 	 * @throws IOException
 	 */
 	public static Structure getBiologicalAssembly(String pdbId, int biolAssemblyNr) throws IOException, StructureException {
-		checkInitAtomCache();
-		return getBiologicalAssembly(pdbId,biolAssemblyNr,StructureIO.cache);
+		return getBiologicalAssembly(pdbId, biolAssemblyNr, AtomCache.DEFAULT_BIOASSEMBLY_STYLE);
 	}
-	public static Structure getBiologicalAssembly(String pdbId, int biolAssemblyNr, AtomCache cache) throws StructureException {
+		
+	
+	/**
+	 * Returns all biological assemblies for the given PDB id.
+	 * <p>
+	 * The output Structure will be different depending on the multiModel parameter:
+	 * <li>
+	 * the symmetry-expanded chains are added as new models, one per transformId. All original models but 
+	 * the first one are discarded.
+	 * </li>
+	 * <li>
+	 * as original with symmetry-expanded chains added with renamed chain ids and names (in the form 
+	 * originalAsymId_transformId and originalAuthId_transformId)
+	 * </li>  
+	 * If only one biological assembly is required use {@link #getBiologicalAssembly(String)} or {@link #getBiologicalAssembly(String, int)} instead.
+	 * @param pdbId
+	 * @param multiModel if true the output Structure will be a multi-model one with one transformId per model, 
+	 * if false the outputStructure will be as the original with added chains with renamed asymIds (in the form originalAsymId_transformId and originalAuthId_transformId).              
+	 * @return
+	 * @throws IOException
+	 * @throws StructureException
+	 * @since 5.0
+	 */
+	public static List<Structure> getBiologicalAssemblies(String pdbId, boolean multiModel) throws IOException, StructureException {
 
-		BioUnitDataProvider provider = null;
-		try {
-			provider = BioUnitDataProviderFactory.getBioUnitDataProvider();
-			provider.setAtomCache(cache);
-			Structure bio = getBiologicalAssembly(pdbId, biolAssemblyNr,cache,BioUnitDataProviderFactory.getBioUnitDataProvider());
-			return bio;
-		} finally {
-			if(provider != null) {
-				//cleanup to avoid memory leaks
-				provider.setAsymUnit(null);
-				provider.setAtomCache(null);
-			}
-		}
-	}
-	public static Structure getBiologicalAssembly(String pdbId, int biolAssemblyNr, AtomCache cache, BioUnitDataProvider provider) throws StructureException {
+		checkInitAtomCache();		
 
-		pdbId = pdbId.toLowerCase();
-
-
-
-		Structure asymUnit = provider.getAsymUnit(pdbId);
-
-		// 0 ... asym unit
-		if ( biolAssemblyNr == 0) {
-			logger.info("Requested biological assembly 0 for PDB id "+pdbId+", returning asymmetric unit");
-			return asymUnit;
-		}
-		// does it exist?
-		if (!asymUnit.getPDBHeader().getBioAssemblies().containsKey(biolAssemblyNr)) {
-			throw new StructureException("No biological assembly available for biological assembly nr " + biolAssemblyNr + " of " + pdbId);
-		}
-
-		List<BiologicalAssemblyTransformation> transformations =
-				asymUnit.getPDBHeader().getBioAssemblies().get(biolAssemblyNr).getTransforms();
-
-
-		if ( transformations == null || transformations.size() == 0){
-
-			throw new StructureException("Could not load transformations to recreate biological assembly nr " + biolAssemblyNr + " of " + pdbId);
-		}
-		BiologicalAssemblyBuilder builder = new BiologicalAssemblyBuilder();
-
-		return builder.rebuildQuaternaryStructure(asymUnit, transformations);
+		pdbId = pdbId.toLowerCase();		
+		
+		List<Structure> s = cache.getBiologicalAssemblies(pdbId, multiModel); 
+		
+		return s;
+		
 	}
 
 	/**
-	 * Does the provider PDB ID have a biological assembly?
-	 *
+	 * Returns all biological assemblies for the given PDB id,
+	 * using multiModel={@value AtomCache#DEFAULT_BIOASSEMBLY_STYLE}
+	 * <p>
+	 * If only one biological assembly is required use {@link #getBiologicalAssembly(String)} or {@link #getBiologicalAssembly(String, int)} instead.
 	 * @param pdbId
-	 * @return flag if one or more biological assemblies are available
+	 * @return
+	 * @throws IOException
+	 * @throws StructureException
+	 * @since 5.0
 	 */
-	public static boolean hasBiologicalAssembly(String pdbId){
-
-		pdbId = pdbId.toLowerCase();
-
-		BioUnitDataProvider provider = BioUnitDataProviderFactory.getBioUnitDataProvider();
-		checkInitAtomCache();
-		provider.setAtomCache(cache);
-		return provider.hasBiolAssembly(pdbId);
-
+	public static List<Structure> getBiologicalAssemblies(String pdbId) throws IOException, StructureException {
+		return getBiologicalAssemblies(pdbId, AtomCache.DEFAULT_BIOASSEMBLY_STYLE);
 	}
-
-	public static int getNrBiologicalAssemblies(String pdbId){
-
-		pdbId = pdbId.toLowerCase();
-
-		BioUnitDataProvider provider = BioUnitDataProviderFactory.getBioUnitDataProvider();
-		checkInitAtomCache();
-		provider.setAtomCache(cache);
-		return provider.getNrBiolAssemblies(pdbId);
-	}
+	
 
 	private static final String FILE_SEPARATOR = System.getProperty("file.separator");
 
