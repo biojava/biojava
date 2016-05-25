@@ -157,7 +157,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	 * the _struct_asym category
 	 */
 	private Map<String,String> asymId2entityId;
-	
+
 	/**
 	 * A map of asym ids (internal chain ids) to author ids extracted from 
 	 * the _entity_poly category. Used in header only parsing.
@@ -179,7 +179,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		logger.debug("New entity: {}",entity.toString());
 		entities.add(entity);
 	}
-	
+
 	@Override
 	public void newEntityPoly(EntityPoly entityPoly) {
 		entityPolys.add(entityPoly);
@@ -344,7 +344,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		String groupCode3    = atom.getLabel_comp_id();
 
 		boolean isHetAtomInFile = false;
-		
+
 		Character aminoCode1 = null;
 		if ( recordName.equals("ATOM") )
 			aminoCode1 = StructureTools.get1LetterCodeAmino(groupCode3);
@@ -354,7 +354,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			// for nucleotides this will be null..
 			if (aminoCode1 != null &&  aminoCode1.equals(StructureTools.UNKNOWN_GROUP_LABEL))
 				aminoCode1 = null;
-			
+
 			isHetAtomInFile = true;
 		}
 		String insCodeS = atom.getPdbx_PDB_ins_code();
@@ -481,7 +481,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			} else {
 				// same residueNumber, but altLocs...
 				// test altLoc
-				
+
 				if ( ! altLoc.equals(' ') && ( ! altLoc.equals('.'))) {
 					logger.debug("found altLoc! " + altLoc + " " + currentGroup + " " + altGroup);
 					altGroup = getCorrectAltLocGroup( altLoc,recordName,aminoCode1,groupCode3, seq_id);
@@ -519,20 +519,21 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		}
 
 
+		String atomName = a.getName();
 		// make sure that main group has all atoms 
 		// GitHub issue: #76
-		// Unless it's microheterogenity https://github.com/rcsb/codec-devel/issues/81
-		if ( ! currentGroup.hasAtom(a.getName())) {
+		if ( ! currentGroup.hasAtom(atomName)) {
+			// Unless it's microheterogenity https://github.com/rcsb/codec-devel/issues/81
 			if (currentGroup.getPDBName().equals(a.getGroup().getPDBName())) {
-				currentGroup.addAtom(a);
+				if(StructureTools.hasNonDeuteratedEquiv(a,currentGroup)){
+					
+				}
+				else{
+					currentGroup.addAtom(a);
+				}
 			}
+
 		}
-
-
-		//System.out.println(">" + atom.getLabel_atom_id()+"< " + a.getGroup().getPDBName() + " " + a.getGroup().getChemComp()  );
-
-		//System.out.println(current_group);
-
 	}
 
 	/** 
@@ -583,10 +584,10 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 
 	private Group getCorrectAltLocGroup( Character altLoc,
-										 String recordName,
-										 Character aminoCode1,
-										 String groupCode3,
-										 long seq_id) {
+			String recordName,
+			Character aminoCode1,
+			String groupCode3,
+			long seq_id) {
 
 		// see if we know this altLoc already;
 		List<Atom> atoms = currentGroup.getAtoms();
@@ -698,7 +699,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		// this populates the asymId2authorId and asymId2entityId maps, needed in header only mode to get the mapping 
 		// between the 2 chain identifiers.
 		initMaps();
-		
+
 		for (StructAsym asym : structAsyms) {
 
 			logger.debug("Entity {} matches asym_id: {}", asym.getEntity_id(), asym.getId() );
@@ -713,7 +714,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			} else {
 				seqres.setName(asym.getId());
 			}
-			
+
 			EntityType type = null;
 			try {
 				Entity ent = getEntity(Integer.parseInt(asym.getEntity_id()));
@@ -726,7 +727,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			if (type==null || (type!=null && type==EntityType.POLYMER) ) {
 				seqResChains.add(seqres);	
 			}
-			
+
 			logger.debug(" seqres: " + asym.getId() + " " + seqres + "<") ;
 			// adding the entities to structure
 			addEntities(asym);
@@ -747,7 +748,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		for (List<Chain> model:allModels) {
 			structure.addModel(model);
 		}
-		
+
 		// Only align if requested (default) and not when headerOnly mode with no Atoms.
 		// Otherwise, we store the empty SeqRes Groups unchanged in the right chains.
 		if ( params.isAlignSeqRes() && !params.isHeaderOnly() ){
@@ -761,8 +762,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 		// Now make sure all altlocgroups have all the atoms in all the groups
 		StructureTools.cleanUpAltLocs(structure);
-		
-		
+
+
 		// NOTE bonds and charges can only be done at this point that the chain id mapping is properly sorted out
 		if (!params.isHeaderOnly()) {
 			if ( params.shouldCreateAtomBonds()) {
@@ -885,9 +886,9 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				logger.warn("Could not set mismatches for chain with author id" + chainId);
 				continue;
 			}
-			
+
 			chain.setSeqMisMatches(misMatchMap.get(chainId));
-			
+
 
 		}
 
@@ -951,21 +952,21 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		// if no entity information was present in file we then go and find the entities heuristically with EntityFinder
 		List<EntityInfo> entityInfos = structure.getEntityInfos();
 		if (entityInfos==null || entityInfos.isEmpty()) {
-			
+
 			List<List<Chain>> polyModels = new ArrayList<>();
 			List<List<Chain>> nonPolyModels = new ArrayList<>();
 			List<List<Chain>> waterModels = new ArrayList<>();
 
 			for (List<Chain> model:allModels) {
-				
+
 				List<Chain> polyChains = new ArrayList<>();
 				List<Chain> nonPolyChains = new ArrayList<>();
 				List<Chain> waterChains = new ArrayList<>();
-				
+
 				polyModels.add(polyChains);
 				nonPolyModels.add(nonPolyChains);
 				waterModels.add(waterChains);
-				
+
 				for (Chain c:model) {
 
 					// we only have entities for polymeric chains, all others are ignored for assigning entities
@@ -980,14 +981,14 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 					}
 				}
 			}
-			
+
 			entityInfos = EntityFinder.findPolyEntities(polyModels);
 			EntityFinder.createPurelyNonPolyEntities(nonPolyModels, waterModels, entityInfos);
 
-			
+
 			structure.setEntityInfos(entityInfos);
 		}
-		
+
 		// final sanity check: it can happen that from the annotated entities some are not linked to any chains
 		// e.g. 3s26: a sugar entity does not have any chains associated to it (it seems to be happening with many sugar compounds)
 		// we simply log it, this can sign some other problems if the entities are used down the line
@@ -1147,8 +1148,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			}
 		}
 	}
-	
-	
+
+
 	/**
 	 * Add any extra information to the entity information.
 	 * @param asym 
@@ -1160,8 +1161,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		// Loop through each of the entity types and add the corresponding data
 		// We're assuming if data is duplicated between sources it is consistent
 		// This is a potentially huge assumption...
-		
-		
+
+
 		for (EntitySrcGen esg : entitySrcGens) {
 
 			if (! esg.getEntity_id().equals(asym.getEntity_id()))
@@ -1182,7 +1183,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			if (! ess.getEntity_id().equals(asym.getEntity_id()))
 				continue;
 			addInfoFromESS(ess, entityId, entityInfo);
-			
+
 		}		
 	}
 
@@ -1229,23 +1230,23 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		c.setOrganismTaxId(ess.getNcbi_taxonomy_id());
 
 	}
-	
+
 	private void initMaps() {
-		
-		
+
+
 		if (structAsyms == null || structAsyms.isEmpty()) {
 			logger.info("No _struct_asym category found in file. No asym id to entity_id mapping will be available");
 			return;
 		}
 
 		Map<String, List<String>> entityId2asymId = new HashMap<>();
-		
+
 		for (StructAsym asym : structAsyms) {
 
 			logger.debug("Entity {} matches asym_id: {}", asym.getEntity_id(), asym.getId() );
 
 			asymId2entityId.put(asym.getId(), asym.getEntity_id());
-			
+
 			if (entityId2asymId.containsKey(asym.getEntity_id())) {
 				List<String> asymIds = entityId2asymId.get(asym.getEntity_id());
 				asymIds.add(asym.getId());
@@ -1255,12 +1256,12 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				entityId2asymId.put(asym.getEntity_id(), asymIds);
 			}
 		}
-		
+
 		if (entityPolys==null || entityPolys.isEmpty()) {
 			logger.info("No _entity_poly category found in file. No asym id to author id mapping will be available for header only parsing");
 			return;
 		}
-		
+
 		for (EntityPoly ep:entityPolys) {
 			if (ep.getPdbx_strand_id()==null) {
 				logger.info("_entity_poly.pdbx_strand_id is null for entity {}. Won't be able to map asym ids to author ids for this entity.", ep.getEntity_id());
@@ -1421,7 +1422,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				logger.debug("Could not parse Rfree from string '{}'", r.getLs_R_factor_R_free());
 			}
 		}
-		
+
 		// RWORK
 		if(pdbHeader.getRwork()!=PDBHeader.DEFAULT_RFREE) {
 			logger.warn("More than 1 R work value present, will use last one {} and discard previous {} ",
@@ -1437,7 +1438,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			catch (NumberFormatException e){
 				logger.debug("Could not parse R-work from string '{}'", r.getLs_R_factor_R_work());
 			}
-			
+
 		}
 
 	}

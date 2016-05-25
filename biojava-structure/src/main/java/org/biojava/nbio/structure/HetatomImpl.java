@@ -245,7 +245,6 @@ public class HetatomImpl implements Group,Serializable {
 		else {
 			/** This is the performance penalty we pay for NOT using the atomnameLookup in PerformanceBehaviour.LESS_MEMORY_SLOWER_PERFORMANCE
 			 */
-
 			for (Atom a : atoms) {
 				if (a.getName().equals(name)) {
 					return a;

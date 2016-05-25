@@ -1800,12 +1800,12 @@ public class StructureTools {
 	public static boolean isChainPureNonPolymer(Chain c) {
 
 		for (Group g : c.getAtomGroups()) {
-			
+
 			ChemComp cc = g.getChemComp();
-			
+
 			ResidueType resType = cc.getResidueType();
 			PolymerType polType = cc.getPolymerType();
-			
+
 			if ( (	resType == ResidueType.lPeptideLinking || 
 					PolymerType.PROTEIN_ONLY.contains(polType) || 
 					PolymerType.POLYNUCLEOTIDE_ONLY.contains(polType) ) && 
@@ -1818,7 +1818,7 @@ public class StructureTools {
 	}
 
 	/**
-	 * Cleans up the structure's alternate location groups. All alternate location groups should have all atoms (except in the case of microheterogenity.
+	 * Cleans up the structure's alternate location groups. All alternate location groups should have all atoms (except in the case of microheterogenity) or when a deuetuim exiss.
 	 * Ensure that all the alt loc groups have all the atoms in the main group
 	 * @param structure The Structure to be cleaned up
 	 */
@@ -1830,8 +1830,15 @@ public class StructureTools {
 						for ( Atom groupAtom : group.getAtoms()) {
 							// If this alt loc doesn't have this atom
 							if (! altLocGroup.hasAtom(groupAtom.getName())) {
+								// Fix for microheterogenity
 								if (altLocGroup.getPDBName().equals(group.getPDBName())) {
-									altLocGroup.addAtom(groupAtom);
+									// If it's a Hydrogen then we check for it's Deuterated brother
+									if(hasDeuteratedEquiv(groupAtom, altLocGroup)){
+										
+									}
+									else{
+										altLocGroup.addAtom(groupAtom);
+									}
 								}
 							}
 						}
@@ -1840,7 +1847,7 @@ public class StructureTools {
 			}
 		}
 	}
-	
+
 	/**
 	 * Expands the NCS operators in the given Structure adding new chains as needed.
 	 * The new chains are assigned ids of the form: original_chain_id+ncs_operator_index+"n"
@@ -1849,14 +1856,14 @@ public class StructureTools {
 	public static void expandNcsOps(Structure structure) {
 		PDBCrystallographicInfo xtalInfo = structure.getCrystallographicInfo();
 		if (xtalInfo ==null) return;
-		
+
 		if (xtalInfo.getNcsOperators()==null || xtalInfo.getNcsOperators().length==0) return;
-		
+
 		List<Chain> chainsToAdd = new ArrayList<>();
 		int i = 0;
 		for (Matrix4d m:xtalInfo.getNcsOperators()) {
 			i++;
-			
+
 			for (Chain c:structure.getChains()) {
 				Chain clonedChain = (Chain)c.clone();
 				String newChainId = c.getChainID()+i+"n";
@@ -1868,12 +1875,12 @@ public class StructureTools {
 				c.getEntityInfo().addChain(clonedChain);
 			}
 		}
-		
+
 		for (Chain c:chainsToAdd) {
 			structure.addChain(c);
 		}
 	}
-	
+
 	/**
 	 * Auxiliary method to reset chain ids of residue numbers in a chain.
 	 * Used when cloning chains and resetting their ids: one needs to take care of 
@@ -1889,5 +1896,40 @@ public class StructureTools {
 			if (g.getResidueNumber()==null) continue;
 			g.setResidueNumber(newChainId, g.getResidueNumber().getSeqNum(), g.getResidueNumber().getInsCode());
 		}
+	}
+
+	/**
+	 * Check to see if an Deuterated atom has a non deuterated brother in the group.
+	 * @param atom the input atom that is putatively deuterium
+	 * @param currentGroup the group the atom is in
+	 * @return true if the atom is deuterated and it's hydrogen equive exists.
+	 */
+	public static boolean hasNonDeuteratedEquiv(Atom atom, Group currentGroup) {
+		if(atom.getElement()==Element.D && currentGroup.hasAtom(replaceFirstChar(atom.getName(),'D', 'H'))) {
+			// If it's deuterated and has a non-deuterated brother
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * Check to see if a Hydorgen has a  Deuterated brother in the group.
+	 * @param atom the input atom that is putatively hydorgen
+	 * @param currentGroup the group the atom is in
+	 * @return true if the atom is hydrogen and it's Deuterium equiv exists.
+	 */
+	public static boolean hasDeuteratedEquiv(Atom atom, Group currentGroup) {
+		if(atom.getElement()==Element.H && currentGroup.hasAtom(replaceFirstChar(atom.getName(),'H', 'D'))) {
+			// If it's hydrogen and has a deuterated brother
+			return true;
+		}
+		return false;
+	}
+
+	private static String replaceFirstChar(String name, char c, char d) {
+		if(name.charAt(0)==c){
+			return name.replaceFirst(""+c, ""+d);
+		}
+		return name;
 	}
 }
