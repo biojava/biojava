@@ -31,6 +31,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
@@ -40,7 +41,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.zip.GZIPOutputStream;
 
 import org.biojava.nbio.core.util.InputStreamProvider;
-import org.biojava.nbio.structure.align.util.HTTPConnectionTools;
+import org.biojava.nbio.structure.align.util.URLConnectionTools;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.slf4j.Logger;
@@ -378,8 +379,8 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 
 		try {
 			url = new URL(u);
-
-			HttpURLConnection uconn = HTTPConnectionTools.openHttpURLConnection(url);
+			
+			URLConnection uconn = URLConnectionTools.openURLConnection(url);
 
 			try( PrintWriter pw = new PrintWriter(new GZIPOutputStream(new FileOutputStream(newFile)));
 					BufferedReader fileBuffer = new BufferedReader(new InputStreamReader(uconn.getInputStream()));

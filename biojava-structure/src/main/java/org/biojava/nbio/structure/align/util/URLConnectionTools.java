@@ -30,92 +30,49 @@ package org.biojava.nbio.structure.align.util;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
-import java.lang.reflect.Method;
 import java.net.ConnectException;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.zip.GZIPInputStream;
 
 
 
-/** a class that takes care about opening HttpURLConnections and sets the proper timeouts
- *
+/** 
+ * A class that takes care about opening URLConnections and sets the proper timeouts
  * @author Andreas Prlic
+ * @author Anthony Bradley
  * @since 9:58:25 AM
  * @version %I% %G%
  */
-public class HTTPConnectionTools {
+public class URLConnectionTools {
 
 	public static final String USERAGENT = "JFatCat Java client";
 
 	public static final int    DEFAULT_CONNECTION_TIMEOUT = 15000; // timeout for http connection = 15. sec
 
 
-	public HTTPConnectionTools() {
+	public URLConnectionTools() {
 		super();
 
 	}
 
-	/**open HttpURLConnection. Recommended way to open
-	 * HttpURLConnections, since this take care of setting timeouts
-	 * properly for java 1.4 and 1.5
-	 *
-	 * @param url URL to oopen
+	/**
+	 * Open HttpURLConnection. Recommended way to open URL connections in Java 1.7 and 1.8.
+	 * https://eventuallyconsistent.net/2011/08/02/working-with-urlconnection-and-timeouts/
+	 * @param url URL to open
 	 * @param timeout timeout in milli seconds
-	 * @return a HttpURLConnection
-	 * @throws IOException
-	 * @throws ConnectException
-	 *
-	 *
 	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public static URLConnection openHttpURLConnection(URL url, int timeout)
+	public static URLConnection openURLConnection(URL url, int timeout)
 			throws IOException, ConnectException{
-
-
-		if(url.getProtocol().equals("http")){
-			
-			HttpURLConnection huc = (HttpURLConnection) url.openConnection();
-			huc.addRequestProperty("User-Agent", USERAGENT);
-
-			// this sets the timeouts for Java 1.4
-			System.setProperty("sun.net.client.defaultConnectTimeout", ""+timeout);
-			System.setProperty("sun.net.client.defaultReadTimeout", ""+timeout);
-
-			// for Java 1.5 we need to do this:
-			// use reflection to determine if get and set timeout methods for urlconnection are available
-			// seems java 1.5 does not watch the System properties any longer...
-			// and java 1.4 did not provide the new classes...
-
-
-			try {
-				// try to use reflection to set timeout property
-				Class urlconnectionClass = Class.forName("java.net.HttpURLConnection");
-
-				Method setconnecttimeout = urlconnectionClass.getMethod (
-						"setConnectTimeout", new Class [] {int.class}
-						);
-				setconnecttimeout.invoke(huc,new Object[] {new Integer(timeout)});
-
-				Method setreadtimeout = urlconnectionClass.getMethod (
-						"setReadTimeout", new Class[] {int.class}
-						);
-				setreadtimeout.invoke(huc,new Object[] {new Integer(timeout)});
-				//System.out.println("successfully set java 1.5 timeout");
-			} catch (Exception e) {
-				e.printStackTrace(); // TODO dmyersturnbull: should we rethrow this?
-				// most likely it was a NoSuchMEthodException and we are running java 1.4.
-			}
+			URLConnection huc = url.openConnection();
+			huc.setReadTimeout(timeout);
+			huc.setConnectTimeout(timeout);
 			return huc;
-		}
-		else{
-			return url.openConnection();
-		}
 	}
 
 
-	/** open HttpURLConnection. Recommended way to open
+	/** 
+	 * Open HttpURLConnection. Recommended way to open
 	 * HttpURLConnections, since this take care of setting timeouts
 	 * properly for java 1.4 and 1.5
 	 * uses the DEFAULT_CONNECTION_TIMEOUT (= 15 seconds)
@@ -126,21 +83,20 @@ public class HTTPConnectionTools {
 	 * @throws ConnectException
 	 *
 	 * */
-	public static URLConnection openHttpURLConnection(URL url)
+	public static URLConnection openURLConnection(URL url)
 			throws IOException, ConnectException {
 
-		return openHttpURLConnection(url,DEFAULT_CONNECTION_TIMEOUT);
+		return openURLConnection(url,DEFAULT_CONNECTION_TIMEOUT);
 
 	}
 
-	/** connect to DAS server and return result as an InputStream.
+	/** 
+	 * Connect to server and return result as an InputStream.
 	 * always asks for response to be in GZIP encoded
-	 *
 	 * @param url the URL to connect to
 	 * @param timeout the timeout for the connection
 	 * @return an InputStream
 	 * @throws IOException
-	 * @throws DASException if DAS server returns error response code
 	 *
 	 */
 	public static InputStream getInputStream(URL url, int timeout)
@@ -150,9 +106,9 @@ public class HTTPConnectionTools {
 	}
 
 
-	/** connect to DAS server and return result as an InputStream.
+	/** 
+	 * Connect to a URL and return result as an InputStream.
 	 * always asks for response to be in GZIP encoded
-	 *
 	 * @param url the URL to connect to
 	 * @return an InputStream
 	 * @throws IOException
@@ -165,10 +121,10 @@ public class HTTPConnectionTools {
 		return getInputStream(url,true, DEFAULT_CONNECTION_TIMEOUT);
 	}
 
-	/** open a URL and return an InputStream to it
+	/** 
+	 * Open a URL and return an InputStream to it
 	 *  if acceptGzipEncoding == true, use GZIPEncoding to
 	 *  compress communication
-	 *
 	 * @param url
 	 * @param acceptGzipEncoding
 	 * @return an InputStream to the URL
@@ -180,17 +136,12 @@ public class HTTPConnectionTools {
 			throws IOException {
 		InputStream inStream = null ;
 
-		//System.out.println("opening connection to "+url);
-		HttpURLConnection huc = (HttpURLConnection) HTTPConnectionTools.openHttpURLConnection(url,timeout);
+		URLConnection huc = URLConnectionTools.openURLConnection(url,timeout);
 
 		if ( acceptGzipEncoding) {
 			// should make communication faster
 			huc.setRequestProperty("Accept-Encoding", "gzip");
 		}
-
-
-		// check the HTTP response code
-		int httpCode = huc.getResponseCode();
 
 		String contentEncoding = huc.getContentEncoding();
 
@@ -207,9 +158,8 @@ public class HTTPConnectionTools {
 
 	}
 
-	/** do a POST to a URL and return the response stream for further processing elsewhere.
-	 *
-	 *
+	/** 
+	 * Do a POST to a URL and return the response stream for further processing elsewhere.
 	 * @param url
 	 * @return InputStream of response
 	 * @throws IOException
@@ -220,9 +170,8 @@ public class HTTPConnectionTools {
 		return doPOST(url,data,DEFAULT_CONNECTION_TIMEOUT);
 	}
 
-	/** do a POST to a URL and return the response stream for further processing elsewhere.
-	 *
-	 *
+	/** 
+	 * Do a POST to a URL and return the response stream for further processing elsewhere.
 	 * @param url
 	 * @return InputStream of response
 	 * @throws IOException
@@ -231,11 +180,7 @@ public class HTTPConnectionTools {
 			throws IOException
 	{
 
-		// Send data
-
-		HttpURLConnection conn = (HttpURLConnection) openHttpURLConnection(url, timeout);
-
-		//URLConnection conn = url.openConnection();
+		URLConnection conn = openURLConnection(url, timeout);
 		conn.setDoOutput(true);
 
 		OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
