@@ -71,7 +71,7 @@ public class URLConnectionTools {
 	 * @return HttpURLConnect the opened connection
 	 * @throws IOException an error in opening the URL
 	 *
-	 * */
+	 */
 	public static URLConnection openURLConnection(URL url) throws IOException {
 
 		return openURLConnection(url,DEFAULT_CONNECTION_TIMEOUT);
@@ -81,6 +81,9 @@ public class URLConnectionTools {
 	/** 
 	 * Connect to server and return result as an InputStream.
 	 * always asks for response to be in GZIP encoded
+	 * <p>
+	 * The caller is responsible to close the returned InputStream not to cause
+	 * resource leaks. 
 	 * @param url the URL to connect to
 	 * @param timeout the timeout for the connection
 	 * @return an InputStream
@@ -97,6 +100,9 @@ public class URLConnectionTools {
 	/** 
 	 * Connect to a URL and return result as an InputStream.
 	 * always asks for response to be in GZIP encoded
+	 * <p>
+	 * The caller is responsible to close the returned InputStream not to cause
+	 * resource leaks. 
 	 * @param url the URL to connect to
 	 * @return an InputStream
 	 * @throws IOException
@@ -112,9 +118,13 @@ public class URLConnectionTools {
 	/** 
 	 * Open a URL and return an InputStream to it
 	 * if acceptGzipEncoding == true, use GZIPEncoding to
-	 * compress communication
+	 * compress communication.
+	 * <p>
+	 * The caller is responsible to close the returned InputStream not to cause
+	 * resource leaks.
 	 * @param url  the input URL to be read
 	 * @param acceptGzipEncoding whether to accept Gzip encoding
+	 * @param timeout
 	 * @return an {@link InputStream} of response
 	 * @throws IOException due to an error opening the URL
 	 */
@@ -146,7 +156,11 @@ public class URLConnectionTools {
 
 	/** 
 	 * Do a POST to a URL and return the response stream for further processing elsewhere.
+	 * <p>
+	 * The caller is responsible to close the returned InputStream not to cause
+	 * resource leaks.  
 	 * @param url  the input URL to be read
+	 * @param data the post data
 	 * @return an {@link InputStream} of response
 	 * @throws IOException due to an error opening the URL
 	 */
@@ -158,7 +172,12 @@ public class URLConnectionTools {
 
 	/** 
 	 * Do a POST to a URL and return the response stream for further processing elsewhere.
+	 * <p>
+	 * The caller is responsible to close the returned InputStream not to cause
+	 * resource leaks. 
 	 * @param url the input URL to be read
+	 * @param data the post data
+	 * @param timeout
 	 * @return an {@link InputStream} of response
 	 * @throws IOException due to an error opening the URL
 	 */
