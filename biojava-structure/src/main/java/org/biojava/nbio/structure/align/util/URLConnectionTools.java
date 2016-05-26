@@ -55,10 +55,10 @@ public class URLConnectionTools {
 	 * @throws IOException an error in opening the URL
 	 */
 	public static URLConnection openURLConnection(URL url, int timeout) throws IOException {
-			URLConnection huc = url.openConnection();
-			huc.setReadTimeout(timeout);
-			huc.setConnectTimeout(timeout);
-			return huc;
+		URLConnection huc = url.openConnection();
+		huc.setReadTimeout(timeout);
+		huc.setConnectTimeout(timeout);
+		return huc;
 	}
 
 
@@ -73,9 +73,7 @@ public class URLConnectionTools {
 	 *
 	 */
 	public static URLConnection openURLConnection(URL url) throws IOException {
-
 		return openURLConnection(url,DEFAULT_CONNECTION_TIMEOUT);
-
 	}
 
 	/** 
@@ -86,12 +84,11 @@ public class URLConnectionTools {
 	 * resource leaks. 
 	 * @param url the URL to connect to
 	 * @param timeout the timeout for the connection
-	 * @return an InputStream
-	 * @throws IOException
+	 * @return an {@link InputStream} of response
+	 * @throws IOException due to an error opening the URL
 	 *
 	 */
-	public static InputStream getInputStream(URL url, int timeout)
-			throws IOException
+	public static InputStream getInputStream(URL url, int timeout) throws IOException
 	{
 		return getInputStream(url,true, timeout);
 	}
@@ -103,14 +100,11 @@ public class URLConnectionTools {
 	 * <p>
 	 * The caller is responsible to close the returned InputStream not to cause
 	 * resource leaks. 
-	 * @param url the URL to connect to
-	 * @return an InputStream
-	 * @throws IOException
-	 * @throws DASException if DAS server returns error response code
-	 *
+	 * @param url the input URL to be read
+	 * @return an {@link InputStream} of response
+	 * @throws IOException due to an error opening the URL
 	 */
-	public static InputStream getInputStream(URL url)
-			throws IOException
+	public static InputStream getInputStream(URL url) throws IOException
 	{
 		return getInputStream(url,true, DEFAULT_CONNECTION_TIMEOUT);
 	}
@@ -122,22 +116,17 @@ public class URLConnectionTools {
 	 * <p>
 	 * The caller is responsible to close the returned InputStream not to cause
 	 * resource leaks.
-	 * @param url  the input URL to be read
+	 * @param url the input URL to be read
 	 * @param acceptGzipEncoding whether to accept Gzip encoding
 	 * @param timeout
 	 * @return an {@link InputStream} of response
 	 * @throws IOException due to an error opening the URL
 	 */
-	public static InputStream getInputStream(URL url, boolean acceptGzipEncoding, int timeout)
-			throws IOException {
+	public static InputStream getInputStream(URL url, boolean acceptGzipEncoding, int timeout) throws IOException {
 		InputStream inStream = null ;
-
 		URLConnection huc = URLConnectionTools.openURLConnection(url,timeout);
 
-		if ( acceptGzipEncoding) {
-			// should make communication faster
-			huc.setRequestProperty("Accept-Encoding", "gzip");
-		}
+		if ( acceptGzipEncoding) huc.setRequestProperty("Accept-Encoding", "gzip");
 
 		String contentEncoding = huc.getContentEncoding();
 
@@ -145,7 +134,6 @@ public class URLConnectionTools {
 
 		if (contentEncoding != null) {
 			if (contentEncoding.contains("gzip")) {
-				// we have gzip encoding
 				inStream = new GZIPInputStream(inStream);
 			}
 		}
@@ -164,8 +152,7 @@ public class URLConnectionTools {
 	 * @return an {@link InputStream} of response
 	 * @throws IOException due to an error opening the URL
 	 */
-	public static InputStream doPOST(URL url, String data)
-			throws IOException
+	public static InputStream doPOST(URL url, String data) throws IOException
 	{
 		return doPOST(url,data,DEFAULT_CONNECTION_TIMEOUT);
 	}
@@ -181,21 +168,14 @@ public class URLConnectionTools {
 	 * @return an {@link InputStream} of response
 	 * @throws IOException due to an error opening the URL
 	 */
-	public static InputStream doPOST(URL url, String data, int timeout)
-			throws IOException
+	public static InputStream doPOST(URL url, String data, int timeout) throws IOException
 	{
-
 		URLConnection conn = openURLConnection(url, timeout);
 		conn.setDoOutput(true);
-
 		OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
 		wr.write(data);
 		wr.flush();
-
-		// Get the response
 		return conn.getInputStream();
-
-
 	}
 
 
