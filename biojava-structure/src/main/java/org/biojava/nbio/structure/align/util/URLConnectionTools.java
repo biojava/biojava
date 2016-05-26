@@ -30,7 +30,6 @@ package org.biojava.nbio.structure.align.util;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
-import java.net.ConnectException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.zip.GZIPInputStream;
@@ -41,28 +40,21 @@ import java.util.zip.GZIPInputStream;
  * A class that takes care about opening URLConnections and sets the proper timeouts
  * @author Andreas Prlic
  * @author Anthony Bradley
- * @since 5.0
+ * @since 5.0	
  */
 public class URLConnectionTools {
 
-	public static final String USERAGENT = "JFatCat Java client";
-
-	public static final int    DEFAULT_CONNECTION_TIMEOUT = 15000; // timeout for http connection = 15. sec
-
-
-	public URLConnectionTools() {
-		super();
-
-	}
+	/** The default connection timeout in ms - 15 seconds*/
+	public static final int    DEFAULT_CONNECTION_TIMEOUT = 15000;
 
 	/**
 	 * Open HttpURLConnection. Recommended way to open URL connections in Java 1.7 and 1.8.
 	 * https://eventuallyconsistent.net/2011/08/02/working-with-urlconnection-and-timeouts/
 	 * @param url URL to open
 	 * @param timeout timeout in milli seconds
+	 * @throws IOException an error in opening the URL
 	 */
-	public static URLConnection openURLConnection(URL url, int timeout)
-			throws IOException, ConnectException{
+	public static URLConnection openURLConnection(URL url, int timeout) throws IOException {
 			URLConnection huc = url.openConnection();
 			huc.setReadTimeout(timeout);
 			huc.setConnectTimeout(timeout);
@@ -75,15 +67,12 @@ public class URLConnectionTools {
 	 * HttpURLConnections, since this take care of setting timeouts
 	 * properly for java 1.4 and 1.5
 	 * uses the DEFAULT_CONNECTION_TIMEOUT (= 15 seconds)
-	 *
 	 * @param url a URL to open a http connection to
 	 * @return HttpURLConnect the opened connection
-	 * @throws IOException
-	 * @throws ConnectException
+	 * @throws IOException an error in opening the URL
 	 *
 	 * */
-	public static URLConnection openURLConnection(URL url)
-			throws IOException, ConnectException {
+	public static URLConnection openURLConnection(URL url) throws IOException {
 
 		return openURLConnection(url,DEFAULT_CONNECTION_TIMEOUT);
 
@@ -122,15 +111,13 @@ public class URLConnectionTools {
 
 	/** 
 	 * Open a URL and return an InputStream to it
-	 *  if acceptGzipEncoding == true, use GZIPEncoding to
-	 *  compress communication
-	 * @param url
-	 * @param acceptGzipEncoding
-	 * @return an InputStream to the URL
-	 * @throws IOException
-	 * @throws DASException if DAS server returns error response code
+	 * if acceptGzipEncoding == true, use GZIPEncoding to
+	 * compress communication
+	 * @param url  the input URL to be read
+	 * @param acceptGzipEncoding whether to accept Gzip encoding
+	 * @return an {@link InputStream} of response
+	 * @throws IOException due to an error opening the URL
 	 */
-	@SuppressWarnings("unused")
 	public static InputStream getInputStream(URL url, boolean acceptGzipEncoding, int timeout)
 			throws IOException {
 		InputStream inStream = null ;
@@ -159,9 +146,9 @@ public class URLConnectionTools {
 
 	/** 
 	 * Do a POST to a URL and return the response stream for further processing elsewhere.
-	 * @param url
-	 * @return InputStream of response
-	 * @throws IOException
+	 * @param url  the input URL to be read
+	 * @return an {@link InputStream} of response
+	 * @throws IOException due to an error opening the URL
 	 */
 	public static InputStream doPOST(URL url, String data)
 			throws IOException
@@ -171,9 +158,9 @@ public class URLConnectionTools {
 
 	/** 
 	 * Do a POST to a URL and return the response stream for further processing elsewhere.
-	 * @param url
-	 * @return InputStream of response
-	 * @throws IOException
+	 * @param url the input URL to be read
+	 * @return an {@link InputStream} of response
+	 * @throws IOException due to an error opening the URL
 	 */
 	public static InputStream doPOST(URL url, String data, int timeout)
 			throws IOException
