@@ -41,8 +41,7 @@ import java.util.zip.GZIPInputStream;
  * A class that takes care about opening URLConnections and sets the proper timeouts
  * @author Andreas Prlic
  * @author Anthony Bradley
- * @since 9:58:25 AM
- * @version %I% %G%
+ * @since 5.0
  */
 public class URLConnectionTools {
 
