@@ -155,13 +155,13 @@ public class TestBond {
 	 */
 	@Test
 	public void testHeavyAtomBondMissing() throws IOException, StructureException {
-		testPartialOccBonds("3jtm");
-		testPartialOccBonds("3jq8");
-		testPartialOccBonds("3jq9");
-		testPartialOccBonds("3i06");
-		testPartialOccBonds("3nu3");
-		testPartialOccBonds("3nu4");
-		testPartialOccBonds("3nvd");
+		assertEquals(testMissingBonds("3jtm"),0);
+		assertEquals(testMissingBonds("3jq8"),0);
+		assertEquals(testMissingBonds("3jq9"),0);
+		assertEquals(testMissingBonds("3i06"),0);
+		assertEquals(testMissingBonds("3nu3"),0);
+		assertEquals(testMissingBonds("3nu4"),0);
+		assertEquals(testMissingBonds("3nvd"),0);
 	}
 
 
@@ -172,8 +172,18 @@ public class TestBond {
 	 */
 	@Test
 	public void testHydrogenToProteinBondMissing() throws IOException, StructureException {
-		testPartialOccBonds("4txr");
-		testPartialOccBonds("3nvd");
+		assertEquals(testMissingBonds("4txr"),0);
+		assertEquals(testMissingBonds("3nvd"),0);
+	}
+	
+	/**
+	 * Test whether these partial occupancy hydrogens are bonded to the residue.
+	 * @throws StructureException 
+	 * @throws IOException 
+	 */
+	@Test
+	public void testAltLocBondMissing() throws IOException, StructureException {
+		assertEquals(testMissingBonds("4cup"),0);
 	}
 
 	/**
@@ -181,9 +191,10 @@ public class TestBond {
 	 * @throws IOException
 	 * @throws StructureException
 	 */
-	private void testPartialOccBonds(String pdbId) throws IOException, StructureException { 
+	private int testMissingBonds(String pdbId) throws IOException, StructureException { 
 		Structure inputStructure = StructureIO.getStructure(pdbId);
 		// Loop through the structure
+		int nonBondedCounter =0;
 		for(int i=0;i<inputStructure.nrModels();i++){
 			for(Chain c: inputStructure.getChains(i)){
 				for(Group g: c.getAtomGroups()){
@@ -198,12 +209,15 @@ public class TestBond {
 					}
 					// Check they all have bonds
 					for(Atom a: atomsList){
-						assertNotEquals(a.getBonds(), null);
+						if(a.getBonds()==null){
+							nonBondedCounter++;
+						}
 					}
 
 				}
 			}
 		}
+		return nonBondedCounter;
 
 	}
 
@@ -235,6 +249,31 @@ public class TestBond {
 	@Test
 	public void test1BDX() throws IOException, StructureException {
 		StructureIO.getStructure("1BDX");
+	}
+	
+	/**
+	 * Test that all the atoms in deuterated structures are bonded.
+	 * @throws IOException
+	 * @throws StructureException
+	 */
+	@Test
+	public void testDeuterated() throws IOException, StructureException {
+		// The terminal Hydrogen D3 - is missing (from the CCD)
+		assertEquals(testMissingBonds("1GKT"),1);
+		assertEquals(testMissingBonds("1IO5"),2);
+		// All H/D2,H/D3 errors
+		assertEquals(testMissingBonds("5E5J"),13);
+	}
+	
+	/**
+	 * Test this weird case - with missing Oxygen atoms, alternate locations on Deuterium 
+	 * and terminal hydrogens.
+	 * @throws IOException
+	 * @throws StructureException
+	 */
+	@Test
+	public void testWeirdCase() throws IOException, StructureException {
+		assertEquals(testMissingBonds("1IU6"),6);
 	}
 
 }

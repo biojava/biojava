@@ -920,14 +920,19 @@ public class AtomCache {
 	 */
 	public void setUseMmCif(boolean useMmCif) {
 		this.useMmCif = useMmCif;
+		// Either way the user wants to use PDB or MMCIF
+		this.useMmtf = false;
 	}
 	
 	/**
 	 * Set whether to use mmtf.
 	 * @param bool the input boolean to set
 	 */
-	public void setUseMmtf(boolean bool) {
-		useMmtf = bool;
+	public void setUseMmtf(boolean useMmtf) {
+		this.useMmtf = useMmtf;
+		if(useMmtf==true){
+			useMmCif=false;
+		}
 		
 	}
 

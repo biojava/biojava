@@ -42,7 +42,7 @@ public class TestParseMmCIFFeatures {
 	@Test
 	public void testSSBond()throws IOException, StructureException {
 		AtomCache cache = new AtomCache();
-
+		
 		StructureIO.setAtomCache(cache);
 
 		cache.setUseMmCif(true);

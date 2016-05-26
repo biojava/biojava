@@ -61,12 +61,15 @@ public class PDBHeader implements PDBRecord, Serializable{
 	private float resolution;
 
 	private float rFree;
+	
+	private float rWork;
 
 	private JournalArticle journalArticle;
 	private String authors;
 
 	public static final float DEFAULT_RESOLUTION = 99;
 	public static final float DEFAULT_RFREE = 1; // worst possible rfree is the default
+
 
 	private Long id;
 	public static final String newline = System.getProperty("line.separator");
@@ -84,6 +87,7 @@ public class PDBHeader implements PDBRecord, Serializable{
 		dateFormat = new SimpleDateFormat("dd-MMM-yy",Locale.US);
 		resolution = DEFAULT_RESOLUTION;
 		rFree = DEFAULT_RFREE;
+		rWork = DEFAULT_RFREE;
 		bioAssemblies = new HashMap<Integer, BioAssemblyInfo>();
 		crystallographicInfo = new PDBCrystallographicInfo();
 
@@ -624,5 +628,19 @@ public class PDBHeader implements PDBRecord, Serializable{
 
 	public void setRevisionRecords(List<DatabasePdbrevRecord> revisionRecords) {
 		this.revisionRecords = revisionRecords;
+	}
+
+	/**
+	 * @return the R-work for this structure.
+	 */
+	public float getRwork() {
+		return rWork;
+	}
+
+	/**
+	 * @param rWork  the R-work for this structure.
+	 */
+	public void setRwork(float rWork) {
+		this.rWork = rWork;
 	}
 }

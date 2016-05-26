@@ -24,6 +24,7 @@ import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
+import org.biojava.nbio.structure.align.util.AtomCache;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -39,8 +40,7 @@ public class TestHardBioUnits {
 		int biolAssemblyNr = 2;
 
 		Structure bioAssembly;
-
-
+		
 		bioAssembly = StructureIO.getBiologicalAssembly(pdbId,biolAssemblyNr);
 
 		if ( bioAssembly == null){
@@ -64,7 +64,7 @@ public class TestHardBioUnits {
 
 		//System.out.println(bioAssembly.toPDB());
 
-		assertTrue(bioAssembly.nrModels() == 2);
+		assertEquals(bioAssembly.nrModels(), 2);
 
 		assertTrue(bioAssembly.getChains().size() > 0);
 
