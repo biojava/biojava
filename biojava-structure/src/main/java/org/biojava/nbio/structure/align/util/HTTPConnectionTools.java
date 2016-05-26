@@ -34,6 +34,7 @@ import java.lang.reflect.Method;
 import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.zip.GZIPInputStream;
 
 
@@ -69,42 +70,48 @@ public class HTTPConnectionTools {
 	 *
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-public static HttpURLConnection openHttpURLConnection(URL url, int timeout)
-	throws IOException, ConnectException{
+	public static URLConnection openHttpURLConnection(URL url, int timeout)
+			throws IOException, ConnectException{
 
-		HttpURLConnection huc = null;
 
-		huc = (HttpURLConnection) url.openConnection();
-		huc.addRequestProperty("User-Agent", USERAGENT);
+		if(url.getProtocol().equals("http")){
+			
+			HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+			huc.addRequestProperty("User-Agent", USERAGENT);
 
-		// this sets the timeouts for Java 1.4
-		System.setProperty("sun.net.client.defaultConnectTimeout", ""+timeout);
-		System.setProperty("sun.net.client.defaultReadTimeout", ""+timeout);
+			// this sets the timeouts for Java 1.4
+			System.setProperty("sun.net.client.defaultConnectTimeout", ""+timeout);
+			System.setProperty("sun.net.client.defaultReadTimeout", ""+timeout);
 
-		// for Java 1.5 we need to do this:
-		// use reflection to determine if get and set timeout methods for urlconnection are available
-		// seems java 1.5 does not watch the System properties any longer...
-		// and java 1.4 did not provide the new classes...
+			// for Java 1.5 we need to do this:
+			// use reflection to determine if get and set timeout methods for urlconnection are available
+			// seems java 1.5 does not watch the System properties any longer...
+			// and java 1.4 did not provide the new classes...
 
-		try {
-			// try to use reflection to set timeout property
-			Class urlconnectionClass = Class.forName("java.net.HttpURLConnection");
 
-			Method setconnecttimeout = urlconnectionClass.getMethod (
-					"setConnectTimeout", new Class [] {int.class}
-			);
-			setconnecttimeout.invoke(huc,new Object[] {new Integer(timeout)});
+			try {
+				// try to use reflection to set timeout property
+				Class urlconnectionClass = Class.forName("java.net.HttpURLConnection");
 
-			Method setreadtimeout = urlconnectionClass.getMethod (
-					"setReadTimeout", new Class[] {int.class}
-			);
-			setreadtimeout.invoke(huc,new Object[] {new Integer(timeout)});
-			//System.out.println("successfully set java 1.5 timeout");
-		} catch (Exception e) {
-			e.printStackTrace(); // TODO dmyersturnbull: should we rethrow this?
-			// most likely it was a NoSuchMEthodException and we are running java 1.4.
+				Method setconnecttimeout = urlconnectionClass.getMethod (
+						"setConnectTimeout", new Class [] {int.class}
+						);
+				setconnecttimeout.invoke(huc,new Object[] {new Integer(timeout)});
+
+				Method setreadtimeout = urlconnectionClass.getMethod (
+						"setReadTimeout", new Class[] {int.class}
+						);
+				setreadtimeout.invoke(huc,new Object[] {new Integer(timeout)});
+				//System.out.println("successfully set java 1.5 timeout");
+			} catch (Exception e) {
+				e.printStackTrace(); // TODO dmyersturnbull: should we rethrow this?
+				// most likely it was a NoSuchMEthodException and we are running java 1.4.
+			}
+			return huc;
 		}
-		return huc;
+		else{
+			return url.openConnection();
+		}
 	}
 
 
@@ -119,8 +126,8 @@ public static HttpURLConnection openHttpURLConnection(URL url, int timeout)
 	 * @throws ConnectException
 	 *
 	 * */
-	public static HttpURLConnection openHttpURLConnection(URL url)
-	throws IOException, ConnectException {
+	public static URLConnection openHttpURLConnection(URL url)
+			throws IOException, ConnectException {
 
 		return openHttpURLConnection(url,DEFAULT_CONNECTION_TIMEOUT);
 
@@ -137,7 +144,7 @@ public static HttpURLConnection openHttpURLConnection(URL url, int timeout)
 	 *
 	 */
 	public static InputStream getInputStream(URL url, int timeout)
-	throws IOException
+			throws IOException
 	{
 		return getInputStream(url,true, timeout);
 	}
@@ -153,7 +160,7 @@ public static HttpURLConnection openHttpURLConnection(URL url, int timeout)
 	 *
 	 */
 	public static InputStream getInputStream(URL url)
-	throws IOException
+			throws IOException
 	{
 		return getInputStream(url,true, DEFAULT_CONNECTION_TIMEOUT);
 	}
@@ -169,12 +176,12 @@ public static HttpURLConnection openHttpURLConnection(URL url, int timeout)
 	 * @throws DASException if DAS server returns error response code
 	 */
 	@SuppressWarnings("unused")
-public static InputStream getInputStream(URL url, boolean acceptGzipEncoding, int timeout)
-	throws IOException {
+	public static InputStream getInputStream(URL url, boolean acceptGzipEncoding, int timeout)
+			throws IOException {
 		InputStream inStream = null ;
 
 		//System.out.println("opening connection to "+url);
-		HttpURLConnection huc = HTTPConnectionTools.openHttpURLConnection(url,timeout);
+		HttpURLConnection huc = (HttpURLConnection) HTTPConnectionTools.openHttpURLConnection(url,timeout);
 
 		if ( acceptGzipEncoding) {
 			// should make communication faster
@@ -208,7 +215,7 @@ public static InputStream getInputStream(URL url, boolean acceptGzipEncoding, in
 	 * @throws IOException
 	 */
 	public static InputStream doPOST(URL url, String data)
-	throws IOException
+			throws IOException
 	{
 		return doPOST(url,data,DEFAULT_CONNECTION_TIMEOUT);
 	}
@@ -221,12 +228,12 @@ public static InputStream getInputStream(URL url, boolean acceptGzipEncoding, in
 	 * @throws IOException
 	 */
 	public static InputStream doPOST(URL url, String data, int timeout)
-	throws IOException
+			throws IOException
 	{
 
-	// Send data
+		// Send data
 
-	  HttpURLConnection conn = openHttpURLConnection(url, timeout);
+		HttpURLConnection conn = (HttpURLConnection) openHttpURLConnection(url, timeout);
 
 		//URLConnection conn = url.openConnection();
 		conn.setDoOutput(true);
