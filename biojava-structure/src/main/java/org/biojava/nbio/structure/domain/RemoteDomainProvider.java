@@ -32,7 +32,7 @@ import java.util.TreeSet;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.client.JFatCatClient;
 import org.biojava.nbio.structure.align.client.StructureName;
-import org.biojava.nbio.structure.align.util.HTTPConnectionTools;
+import org.biojava.nbio.structure.align.util.URLConnectionTools;
 import org.biojava.nbio.structure.scop.ScopDatabase;
 import org.biojava.nbio.structure.scop.ScopDomain;
 import org.biojava.nbio.structure.scop.ScopFactory;
@@ -99,7 +99,7 @@ public class RemoteDomainProvider extends SerializableCache<String,SortedSet<Str
 		try {
 			URL u = new URL(url + "getRepresentativeDomains");
 			logger.info("Fetching {}",u);
-			InputStream response = HTTPConnectionTools.getInputStream(u);
+			InputStream response = URLConnectionTools.getInputStream(u);
 			String xml = JFatCatClient.convertStreamToString(response);
 			results  = AssignmentXMLSerializer.fromXML(xml);
 
@@ -217,7 +217,7 @@ public class RemoteDomainProvider extends SerializableCache<String,SortedSet<Str
 		try {
 			URL u = new URL(url);
 			logger.info("Fetching {}",url);
-			InputStream response = HTTPConnectionTools.getInputStream(u);
+			InputStream response = URLConnectionTools.getInputStream(u);
 			String xml = JFatCatClient.convertStreamToString(response);
 			//System.out.println(xml);
 			domainRanges = XMLUtil.getDomainRangesFromXML(xml);
