@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -64,7 +65,9 @@ public class MmtfUtils {
 	}
 
 	/**
-	 * Set up the configuration parameters for BioJava. - with an extra URL
+	 * Set up the configuration parameters for BioJava.
+	 * @param extraUrl the string describing the URL (or file path) from which
+	 * to get missing CCD entries.
 	 */
 	public static AtomCache setUpBioJava(String extraUrl) {
 		// Set up the atom cache etc
@@ -122,7 +125,7 @@ public class MmtfUtils {
 
 
 	/**
-	 * Function to generate the secondary structure for a Biojava structure object.
+	 * Generate the secondary structure for a Biojava structure object.
 	 * @param bioJavaStruct the Biojava structure for which it is to be calculate.
 	 */
 	public static void calculateDsspSecondaryStructure(Structure bioJavaStruct) {
@@ -273,7 +276,7 @@ public class MmtfUtils {
 
 
 	/**
-	 * Function to get a list of atoms for a group. Only add each atom once.
+	 * Get a list of atoms for a group. Only add each atom once.
 	 * @param inputGroup the Biojava Group to consider
 	 * @return the atoms for the input Biojava Group
 	 */
@@ -354,7 +357,7 @@ public class MmtfUtils {
 
 
 	/**
-	 * Helper function to set the DSSP type based on a numerical index.
+	 * Set the DSSP type based on a numerical index.
 	 * @param dsspIndex the integer index of the type to set
 	 * @return the instance of the SecStrucType object holding this secondary
 	 * structure type.
@@ -373,7 +376,7 @@ public class MmtfUtils {
 	}
 
 	/**
-	 * Function to get summary information for the structure.
+	 * Get summary information for the structure.
 	 * @param structure the structure for which to get the information.
 	 */
 	public static MmtfSummaryDataBean getStructureInfo(Structure structure) {
@@ -411,5 +414,42 @@ public class MmtfUtils {
 		mmtfSummaryDataBean.setNumBonds(bondCount/2);
 		return mmtfSummaryDataBean;
 
+	}
+
+	/**
+	 * Get a list of N 4*4 matrices from a single list of doubles of length 16*N.
+	 * @param ncsOperMatrixList the input list of doubles
+	 * @return the list of 4*4 matrics 
+	 */
+	public static Matrix4d[] getNcsAsMatrix4d(double[] ncsOperMatrixList) {
+		if(ncsOperMatrixList==null){
+			return new Matrix4d[0];
+		}
+		int numMats = ncsOperMatrixList.length/16;
+		Matrix4d[] outList = new Matrix4d[numMats];
+		for(int i=0; i<numMats; i++){
+			double[] inputData = Arrays.copyOfRange(ncsOperMatrixList, i*0, (i+1)*16);
+			outList[i] = new Matrix4d(inputData);
+		}
+		return outList;
+	}
+
+	/**
+	 * Get a list of length N*16 of a list of Matrix4d*N.
+	 * @param ncsOperators the {@link Matrix4d} list 
+	 * @return the list of length N*16 of the list of matrices
+	 */
+	public static double[] getNcsAsArray(Matrix4d[] ncsOperators) {
+		if(ncsOperators==null){
+			return new double[0];
+		}
+		double[] outList = new double[ncsOperators.length*16];
+		for(int i=0; i<ncsOperators.length;i++){
+			double[] doubleList = convertToDoubleArray(ncsOperators[i]);
+			for(int j=0; j<16; j++){
+				outList[i*16+j] = doubleList[j];
+			}
+		}
+		return outList;
 	}
 }

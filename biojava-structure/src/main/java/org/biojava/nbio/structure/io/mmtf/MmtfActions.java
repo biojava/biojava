@@ -18,7 +18,7 @@ import org.rcsb.mmtf.encoder.WriterUtils;
 public class MmtfActions {
 	
 	/**
-	 * Utility function to get a Structure object from a mmtf file.
+	 * Get a Structure object from a mmtf file.
 	 * @param filePath the mmtf file
 	 * @return a Structure object relating to the input byte array.
 	 * @throws IOException 
@@ -33,7 +33,7 @@ public class MmtfActions {
 	}
 	
 	/**
-	 * Utility function to write a Structure object to a file.
+	 * Write a Structure object to a file.
 	 * @param structure the Structure to write
 	 * @param path the file to write
 	 * @throws IOException
@@ -49,7 +49,7 @@ public class MmtfActions {
 
 	
 	/**
-	 * Utility function to get a Biojava structure from the mmtf REST service.
+	 * Get a Biojava structure from the mmtf REST service.
 	 * @param pdbId the PDB code of the required structure
 	 * @return a Structure object relating to the input byte array
 	 * @throws IOException 

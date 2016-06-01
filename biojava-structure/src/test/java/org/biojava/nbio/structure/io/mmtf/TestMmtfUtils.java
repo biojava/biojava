@@ -410,5 +410,63 @@ public class TestMmtfUtils {
 	  }
 	  return setToReturn;
 	}
+	
+	/**
+	 * Test that the NCS data can be roundtripped.
+	 */
+	@Test
+	public void testGetNcsMatrix() {
+		double[] testData = new double[] {1.0, 2.0,3.0,4.0,
+			11.0,12.0,13.0,14.0,
+			21.0,22.0,23.0,24.0,
+			31.0,32.0,33.0,34.0};
+		testInput(testData);
+	}
+
+	/**
+	 * Test that the NCS data can be roundtripped.
+	 */
+	@Test
+	public void testEmptyNcsMatrix() {
+		double[] testData = new double[] {};
+		testInput(testData);
+		double[] output = MmtfUtils.getNcsAsArray(new Matrix4d[0]);
+		assertNotNull(output);
+	}
+	
+	/**
+	 * Test what happens if the NCS is null
+	 */
+	@Test
+	public void testNullNcsMatrix(){
+		double[] output = MmtfUtils.getNcsAsArray(null);
+		assertArrayEquals(output, new double[0], 0.0);
+		Matrix4d[] outputMat = MmtfUtils.getNcsAsMatrix4d(null);
+		double[] outputMatArr = MmtfUtils.getNcsAsArray(outputMat);
+		assertArrayEquals(outputMatArr, new double[0], 0.0);
+	}
+
+
+	/**
+	 * Test that the NCS data can be roundtripped - when two matrices are present.
+	 */
+	@Test
+	public void testGetNcsMatrixHard() {
+		double[] testData = new double[] {1.0, 2.0,3.0,4.0,
+			11.0,12.0,13.0,14.0,
+			21.0,22.0,23.0,24.0,
+			31.0,32.0,33.0,34.0,
+			1.0, 2.0,3.0,4.0,
+			11.0,12.0,13.0,14.0,
+			21.0,22.0,23.0,24.0,
+			31.0,32.0,33.0,34.0};
+		testInput(testData);
+	}
+	
+	private void testInput(double[] testData) {
+		Matrix4d[] matArr = MmtfUtils.getNcsAsMatrix4d(testData);
+		double[] roundTrippedData = MmtfUtils.getNcsAsArray(matArr);
+		assertArrayEquals(testData, roundTrippedData, 0.0);		
+	}
 }
 

@@ -127,7 +127,6 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 				structure.addChain(modelChain, i);
 			}
 		}
-		// Ensure all altlocs have all atoms
 		StructureTools.cleanUpAltLocs(structure);
 	}
 
@@ -368,8 +367,7 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 	 * setXtalInfo(java.lang.String, java.util.List)
 	 */
 	@Override
-	public void setXtalInfo(String spaceGroupString,
-			float[] unitCell) {
+	public void setXtalInfo(String spaceGroupString, float[] unitCell, double[] ncsOperMatrixList) {
 		// Now set the xtalographic information
 		PDBCrystallographicInfo pci = new PDBCrystallographicInfo();
 		SpaceGroup spaceGroup = SpaceGroup.parseSpaceGroup(spaceGroupString);
@@ -380,6 +378,8 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 			pci.setCrystalCell(cell);
 			structure.setCrystallographicInfo(pci);
 		}
+
+		pci.setNcsOperators(MmtfUtils.getNcsAsMatrix4d(ncsOperMatrixList));
 	}
 
 
@@ -410,7 +410,7 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 
 
 	@Override
-	public void setBioAssemblyTrans(int bioAssemblyId, int[] inputChainIndices, double[] inputTransform) {
+	public void setBioAssemblyTrans(int bioAssemblyId, int[] inputChainIndices, double[] inputTransform, String name) {
 		if(bioassIndex!=bioAssemblyId){
 			transformList = new ArrayList<>();
 			bioassIndex = bioAssemblyId;
@@ -506,5 +506,6 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 		else{
 			pdbHeader.setModDate(new Date(0));
 		}
+
 	}
 }
