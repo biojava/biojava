@@ -88,6 +88,14 @@ public class ProteinModificationParserTest extends TestCase {
 				{"3H8L", "AA0513"}, // CYS-S3H-CYS
 				{"1CAD", null}, // FE and 4 Cys, cross-link4
 
+				// Terbium
+				{"1NCZ", null},
+				//{"3LTQ",null}, has metalc, we ignore those for now
+//				{"4ESQ",null},
+//				{"1TJB",null},
+//				{"2V15",null},
+//				{"2K61",null},
+
 		};
 		return strucs;
 	}
@@ -283,6 +291,14 @@ public class ProteinModificationParserTest extends TestCase {
 				{"3EE4", "AA0490"}, // VAL-TYR
 				{"3H8L", "AA0513"}, // CYS-S3H-CYS
 				{"1CAD", null}, // FE and 4 Cys, cross-link4
+
+				// Terbium
+				{"1NCZ", null},
+				{"3LTQ",null},
+				{"4ESQ",null},
+				{"1TJB",null},
+				{"2V15",null},
+				{"2K61",null},
 		};
 		return strucs;
 	}
@@ -326,8 +342,10 @@ public class ProteinModificationParserTest extends TestCase {
 
 		parser.identify(struc, mods);
 
-		if (! parser.getIdentifiedModifiedCompound().isEmpty() ){
-			logger.warn("Did not identify any modified compounds for {}", pdbId);
+		if ( parser.getIdentifiedModifiedCompound().isEmpty() ){
+			String msg = "Did not identify any modified compounds for " + pdbId;
+			logger.warn(msg);
+			fail(msg);
 		}
 
 		assertFalse("Did not identify any modified compounds for " + pdbId ,
@@ -352,7 +370,7 @@ public class ProteinModificationParserTest extends TestCase {
 			sb.append("Modification #");
 			sb.append(++i);
 			sb.append(":\n");
-			sb.append(mc);
+			sb.append(mc.getAtomLinkages());
 			sb.append('\n');
 		}
 
