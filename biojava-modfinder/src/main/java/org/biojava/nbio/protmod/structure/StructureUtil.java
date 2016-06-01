@@ -53,7 +53,11 @@ public final class StructureUtil {
 	 * @return the {@link StructureAtom} of the atom.
 	 */
 	public static StructureAtom getStructureAtom(Atom atom, boolean isParentAminoAcid) {
-		StructureGroup strucGroup = getStructureGroup(atom.getGroup(), isParentAminoAcid);
+
+		Group g = atom.getGroup();
+		String chainId = g.getChainId();
+		StructureGroup strucGroup = getStructureGroup(g, isParentAminoAcid);
+		strucGroup.setChainId(chainId);
 		return new StructureAtom(strucGroup, atom.getName());
 	}
 
@@ -104,6 +108,8 @@ public final class StructureUtil {
 	public static Atom[] findNearestAtomLinkage(final Group group1, final Group group2,
 			List<String> potentialNamesOfAtomOnGroup1, List<String> potentialNamesOfAtomOnGroup2,
 			final boolean ignoreNCLinkage, double bondLengthTolerance) {
+
+
 		List<Atom[]> linkages = findAtomLinkages(group1, group2,
 				potentialNamesOfAtomOnGroup1, potentialNamesOfAtomOnGroup2,
 				ignoreNCLinkage, bondLengthTolerance);
@@ -216,19 +222,28 @@ public final class StructureUtil {
 	public static Atom[] findLinkage(final Group group1, final Group group2,
 			String nameOfAtomOnGroup1, String nameOfAtomOnGroup2,
 			double bondLengthTolerance) {
-		Atom[] ret = new Atom[2];
-		double distance;
 
+		Atom[] ret = new Atom[2];
 
 		ret[0] = group1.getAtom(nameOfAtomOnGroup1);
 		ret[1] = group2.getAtom(nameOfAtomOnGroup2);
+
 		if (ret[0]==null || ret[1]==null) {
 			return null;
 		}
 
-		distance = Calc.getDistance(ret[0], ret[1]);
 
+		Atom a1 = ret[0];
+		Atom a2 = ret[1];
 
+		boolean hasBond =  a1.hasBond(a2);
+
+		if ( hasBond ) {
+
+			return ret;
+		}
+		
+		double distance = Calc.getDistance(a1,a2);
 
 		float radiusOfAtom1 = ret[0].getElement().getCovalentRadius();
 		float radiusOfAtom2 = ret[1].getElement().getCovalentRadius();
