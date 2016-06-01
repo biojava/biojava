@@ -44,7 +44,7 @@ import org.biojava.nbio.structure.xtal.SpaceGroup;
  *
  */
 public class TestMmtfUtils {
-	
+
 	/**
 	 * Integration test to see that the microheterogenity is being dealt with correctly.
 	 * @throws IOException
@@ -57,7 +57,7 @@ public class TestMmtfUtils {
 		// Count the number of groups
 		Group before = inputStructure.getChains().get(0).getAtomGroup(17);
 		assertTrue(inputStructure.getChains().get(0).getAtomGroup(17).hasAltLoc());
-	    List<Atom> totalAtoms = new ArrayList<>(getAllAtoms(inputStructure));
+		List<Atom> totalAtoms = new ArrayList<>(getAllAtoms(inputStructure));
 		int totGroups = 0;
 		int totAtomsCounter = 0;
 		Set<Atom> totAtoms = new HashSet<>();
@@ -92,7 +92,7 @@ public class TestMmtfUtils {
 			}
 		}
 		// Find the atoms after the fix.
-	    List<Atom> totalAtomsAfter = new ArrayList<>(getAllAtoms(inputStructure));
+		List<Atom> totalAtomsAfter = new ArrayList<>(getAllAtoms(inputStructure));
 		// Get all of the duplicate atoms
 		Set<Atom> duplicates = findDuplicates(totalAtomsAfter);
 		for (Atom a : duplicates) {
@@ -100,16 +100,16 @@ public class TestMmtfUtils {
 		}
 		// There should be no duplicates
 		assertEquals(duplicates.size(), 0);
-	    assertEquals(totalAtoms.size(), totalAtomsAfter.size());
+		assertEquals(totalAtoms.size(), totalAtomsAfter.size());
 		// Check there are two more groups afterwards
 		assertEquals(totGroupsAfter-2, totGroups);
 		// Check there are no more atoms afterwards
 		assertEquals(totAtomsAfter.size(), totAtoms.size());
 		// Check the counter are the same too
 		assertEquals(totAtomsCounterAfter, totAtomsCounter);
-		
+
 	}
-	
+
 	/**
 	 * Function to get all the atoms in the strucutre as a list.
 	 * @param bioJavaStruct the biojava structure
@@ -130,7 +130,7 @@ public class TestMmtfUtils {
 		}
 		return theseAtoms;
 	}
-	
+
 	/**
 	 * Test that getting the space group info as a string works.
 	 */
@@ -140,7 +140,7 @@ public class TestMmtfUtils {
 		SpaceGroup spaceGroup = new SpaceGroup(21, 1, 1, "P212121", "P 21 21 21", BravaisLattice.TRICLINIC);
 		assertEquals("P212121", MmtfUtils.getSpaceGroupAsString(spaceGroup));
 	}
-	
+
 	/**
 	 * Test that getting the unit cell as an array of doubles works.
 	 */
@@ -159,7 +159,7 @@ public class TestMmtfUtils {
 		float[] outputArray = MmtfUtils.getUnitCellAsArray(xtalInfo);
 		assertArrayEquals(testArray, outputArray, 0.0f);
 	}
-	
+
 	/**
 	 * Test getting the list of experimental methods as string array.
 	 */
@@ -174,7 +174,7 @@ public class TestMmtfUtils {
 		Arrays.sort(testTechniques);
 		assertArrayEquals(testTechniques, techniques);
 	}
-	
+
 	/**
 	 * Test the conversion of a matrix to an array of doubles.
 	 */
@@ -198,21 +198,21 @@ public class TestMmtfUtils {
 		matrix4d.m32 = 3.2;
 		matrix4d.m33 = 3.3;
 		double[] testData = new double[] {0.0, 0.1, 0.2, 0.3,
-			1.0, 1.1, 1.2, 1.3,
-			2.0, 2.1, 2.2, 2.3,
-			3.0, 3.1, 3.2, 3.3};
+				1.0, 1.1, 1.2, 1.3,
+				2.0, 2.1, 2.2, 2.3,
+				3.0, 3.1, 3.2, 3.3};
 		assertArrayEquals(testData,MmtfUtils.convertToDoubleArray(matrix4d), 0.0);
 	}
-	
+
 	/**
 	 * Test to check the conversion of BioassemblyInfo to a primitive map.
 	 */
 	@Test
 	public void testMakePrimitiveBioasembly() {
 		double[] testData = new double[] {0.0, 0.1, 0.2, 0.3,
-			1.0, 1.1, 1.2, 1.3,
-			2.0, 2.1, 2.2, 2.3,
-			3.0, 3.1, 3.2, 3.3};
+				1.0, 1.1, 1.2, 1.3,
+				2.0, 2.1, 2.2, 2.3,
+				3.0, 3.1, 3.2, 3.3};
 		BioAssemblyInfo bioAssemblyInfo = new BioAssemblyInfo();
 		List<BiologicalAssemblyTransformation> transforms = new ArrayList<>();
 		BiologicalAssemblyTransformation biologicalAssemblyTransformation = new BiologicalAssemblyTransformation();
@@ -223,14 +223,14 @@ public class TestMmtfUtils {
 		// Map the chain to the second index
 		Map<String, Integer> chainIdToIndexMap = new HashMap<>();
 		chainIdToIndexMap.put("C", 2);
-		
+
 		// Now do the conversion and test they are the same
 		Map<double[], int[]> transMap = MmtfUtils.getTransformMap(bioAssemblyInfo, chainIdToIndexMap);
 		assertArrayEquals(testData, (double[]) transMap.keySet().toArray()[0], 0.0);
 		assertArrayEquals(new int[] {2} , (int[]) transMap.values().toArray()[0]);
 	}
-	
-	
+
+
 	/**
 	 * Test getting the data as an appropriately formatted string.
 	 */
@@ -240,7 +240,7 @@ public class TestMmtfUtils {
 		// One day after 
 		assertEquals("1970-01-02",MmtfUtils.dateToIsoString(inputDate));
 	}
-	
+
 	/**
 	 * Test getting the number of groups from a structure.
 	 */
@@ -257,8 +257,8 @@ public class TestMmtfUtils {
 		chain.addGroup(groupThree);
 		assertEquals(3,MmtfUtils.getNumGroups(structure));
 	}
-	
-	
+
+
 	/**
 	 * Test getting the correct atoms from a group
 	 */
@@ -290,8 +290,8 @@ public class TestMmtfUtils {
 		List<Atom> atomList = MmtfUtils.getAtomsForGroup(group);
 		assertEquals(inputList, atomList);
 	}
-	
-	
+
+
 	/**
 	 * Test getting the number of bonds from a list of atoms.
 	 */
@@ -346,7 +346,7 @@ public class TestMmtfUtils {
 		MmtfUtils.setSecStructType(newerGroup, 10);
 		assertEquals(MmtfUtils.getSecStructType(newerGroup), -1);	
 	}
-	
+
 	/**
 	 * Test that setting the secondary structure types behaves as expected.
 	 */
@@ -364,7 +364,7 @@ public class TestMmtfUtils {
 		assertEquals(MmtfUtils.getSecStructTypeFromDsspIndex(10), null);
 
 	}
-	
+
 	/**
 	 * Test that getting the structure data info works.
 	 */
@@ -395,32 +395,32 @@ public class TestMmtfUtils {
 		assertEquals(chainList, mmtfSummaryDataBean.getAllChains());
 		assertEquals(1, mmtfSummaryDataBean.getNumBonds());
 	}
-	
+
 	private Set<Atom> findDuplicates(List<Atom> listContainingDuplicates)
 	{ 
-	  final Set<Atom> setToReturn = new HashSet<>(); 
-	  final Set<Atom> set1 = new HashSet<>();
+		final Set<Atom> setToReturn = new HashSet<>(); 
+		final Set<Atom> set1 = new HashSet<>();
 
-	  for (Atom yourInt : listContainingDuplicates)
-	  {
-	   if (!set1.add(yourInt))
-	   {
-	    setToReturn.add(yourInt);
-	   }
-	  }
-	  return setToReturn;
+		for (Atom yourInt : listContainingDuplicates)
+		{
+			if (!set1.add(yourInt))
+			{
+				setToReturn.add(yourInt);
+			}
+		}
+		return setToReturn;
 	}
-	
+
 	/**
 	 * Test that the NCS data can be roundtripped.
 	 */
 	@Test
 	public void testGetNcsMatrix() {
-		double[] testData = new double[] {1.0, 2.0,3.0,4.0,
+		double[][] testData = new double[][] {{1.0, 2.0,3.0,4.0,
 			11.0,12.0,13.0,14.0,
 			21.0,22.0,23.0,24.0,
-			31.0,32.0,33.0,34.0};
-		testInput(testData);
+			31.0,32.0,33.0,34.0}};
+			testInput(testData);
 	}
 
 	/**
@@ -428,22 +428,23 @@ public class TestMmtfUtils {
 	 */
 	@Test
 	public void testEmptyNcsMatrix() {
-		double[] testData = new double[] {};
+		double[][] testData = new double[0][0];
 		testInput(testData);
-		double[] output = MmtfUtils.getNcsAsArray(new Matrix4d[0]);
+		double[][] output = MmtfUtils.getNcsAsArray(new Matrix4d[0]);
 		assertNotNull(output);
 	}
-	
+
 	/**
 	 * Test what happens if the NCS is null
 	 */
 	@Test
 	public void testNullNcsMatrix(){
-		double[] output = MmtfUtils.getNcsAsArray(null);
-		assertArrayEquals(output, new double[0], 0.0);
+		double[][] output = MmtfUtils.getNcsAsArray(null);
+		assertNotNull(output);
 		Matrix4d[] outputMat = MmtfUtils.getNcsAsMatrix4d(null);
-		double[] outputMatArr = MmtfUtils.getNcsAsArray(outputMat);
-		assertArrayEquals(outputMatArr, new double[0], 0.0);
+		assertNotNull(outputMat);
+		double[][] outputMatArr = MmtfUtils.getNcsAsArray(outputMat);
+		assertNotNull(outputMatArr);
 	}
 
 
@@ -452,21 +453,23 @@ public class TestMmtfUtils {
 	 */
 	@Test
 	public void testGetNcsMatrixHard() {
-		double[] testData = new double[] {1.0, 2.0,3.0,4.0,
+		double[][] testData = new double[][] {{1.0, 2.0,3.0,4.0,
 			11.0,12.0,13.0,14.0,
 			21.0,22.0,23.0,24.0,
-			31.0,32.0,33.0,34.0,
-			1.0, 2.0,3.0,4.0,
-			11.0,12.0,13.0,14.0,
-			21.0,22.0,23.0,24.0,
-			31.0,32.0,33.0,34.0};
-		testInput(testData);
+			31.0,32.0,33.0,34.0,},{
+				1.0, 2.0,3.0,4.0,
+				11.0,12.0,13.0,14.0,
+				21.0,22.0,23.0,24.0,
+				31.0,32.0,33.0,34.0}};
+				testInput(testData);
 	}
-	
-	private void testInput(double[] testData) {
+
+	private void testInput(double[][] testData) {
 		Matrix4d[] matArr = MmtfUtils.getNcsAsMatrix4d(testData);
-		double[] roundTrippedData = MmtfUtils.getNcsAsArray(matArr);
-		assertArrayEquals(testData, roundTrippedData, 0.0);		
+		double[][] roundTrippedData = MmtfUtils.getNcsAsArray(matArr);
+		for(int i=0; i<testData.length; i++){
+			assertArrayEquals(testData[i], roundTrippedData[i], 0.0);		
+		}
 	}
 }
 

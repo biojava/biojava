@@ -4,7 +4,6 @@ import java.io.FileNotFoundException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -130,7 +129,7 @@ public class MmtfUtils {
 	 */
 	public static void calculateDsspSecondaryStructure(Structure bioJavaStruct) {
 		SecStrucCalc ssp = new SecStrucCalc();
-		
+
 		try{
 			ssp.calculate(bioJavaStruct, true);
 		}
@@ -421,15 +420,17 @@ public class MmtfUtils {
 	 * @param ncsOperMatrixList the input list of doubles
 	 * @return the list of 4*4 matrics 
 	 */
-	public static Matrix4d[] getNcsAsMatrix4d(double[] ncsOperMatrixList) {
+	public static Matrix4d[] getNcsAsMatrix4d(double[][] ncsOperMatrixList) {
 		if(ncsOperMatrixList==null){
 			return new Matrix4d[0];
 		}
-		int numMats = ncsOperMatrixList.length/16;
+		int numMats = ncsOperMatrixList.length;
+		if(numMats==1 && ncsOperMatrixList[0].length==0){
+			return new Matrix4d[0];
+		}
 		Matrix4d[] outList = new Matrix4d[numMats];
 		for(int i=0; i<numMats; i++){
-			double[] inputData = Arrays.copyOfRange(ncsOperMatrixList, i*0, (i+1)*16);
-			outList[i] = new Matrix4d(inputData);
+			outList[i] = new Matrix4d(ncsOperMatrixList[i]);
 		}
 		return outList;
 	}
@@ -439,16 +440,13 @@ public class MmtfUtils {
 	 * @param ncsOperators the {@link Matrix4d} list 
 	 * @return the list of length N*16 of the list of matrices
 	 */
-	public static double[] getNcsAsArray(Matrix4d[] ncsOperators) {
+	public static double[][] getNcsAsArray(Matrix4d[] ncsOperators) {
 		if(ncsOperators==null){
-			return new double[0];
+			return new double[0][0];
 		}
-		double[] outList = new double[ncsOperators.length*16];
+		double[][] outList = new double[ncsOperators.length][16];
 		for(int i=0; i<ncsOperators.length;i++){
-			double[] doubleList = convertToDoubleArray(ncsOperators[i]);
-			for(int j=0; j<16; j++){
-				outList[i*16+j] = doubleList[j];
-			}
+			outList[i] = convertToDoubleArray(ncsOperators[i]);
 		}
 		return outList;
 	}

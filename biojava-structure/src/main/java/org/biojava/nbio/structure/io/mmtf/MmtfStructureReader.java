@@ -367,7 +367,7 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 	 * setXtalInfo(java.lang.String, java.util.List)
 	 */
 	@Override
-	public void setXtalInfo(String spaceGroupString, float[] unitCell, double[] ncsOperMatrixList) {
+	public void setXtalInfo(String spaceGroupString, float[] unitCell, double[][] ncsOperMatrixList) {
 		// Now set the xtalographic information
 		PDBCrystallographicInfo pci = new PDBCrystallographicInfo();
 		SpaceGroup spaceGroup = SpaceGroup.parseSpaceGroup(spaceGroupString);
