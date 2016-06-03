@@ -194,7 +194,7 @@ public class SurvivalInfoHelper {
 			}
 			int rangeIndex = getRangeIndex(range, value);
 			String label = labels.get(rangeIndex);
-			if (validLabels.contains(groupName + "_" + label) == false) {
+			if (!validLabels.contains(groupName + "_" + label)) {
 				validLabels.add(groupName + "_" + label);
 			}
 		}

@@ -930,7 +930,7 @@ public class AtomCache {
 	 */
 	public void setUseMmtf(boolean useMmtf) {
 		this.useMmtf = useMmtf;
-		if(useMmtf==true){
+		if(useMmtf){
 			useMmCif=false;
 		}
 		
