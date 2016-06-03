@@ -87,6 +87,8 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 
 	private int bioassIndex;
 
+	private Map<String,String> chainSequenceMap;
+
 	/**
 	 * Instantiates a new bio java structure decoder.
 	 */
@@ -97,6 +99,7 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 		chainList = new ArrayList<>();
 		chainMap = new ArrayList<>();
 		transformList = new ArrayList<>();
+		chainSequenceMap = new HashMap<>();
 	}
 
 	/**
@@ -110,7 +113,6 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 
 	@Override
 	public void finalizeStructure() {
-
 		// Number the remaining ones
 		int counter =0;
 		// Add the entity info
@@ -125,9 +127,11 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 			Map<String, Chain> modelChainMap = chainMap.get(i);
 			for(Chain modelChain : modelChainMap.values()){
 				structure.addChain(modelChain, i);
+				String sequence = chainSequenceMap.get(modelChain.getId());
+				MmtfUtils.addSeqRes(modelChain, sequence);
+
 			}
 		}
-		// Ensure all altlocs have all atoms
 		StructureTools.cleanUpAltLocs(structure);
 	}
 
@@ -187,7 +191,7 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 		case 1:
 			AminoAcid aa = new AminoAcidImpl();
 			// Now set the one letter code
-			aa.setAminoType(StructureTools.get1LetterCodeAmino(groupName));
+			aa.setAminoType(singleLetterCode);
 			group = aa;
 			break;
 		case 2:
@@ -213,7 +217,7 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 		}
 		group.setAtoms(new ArrayList<Atom>(atomCount));
 		if (polymerType != 0) {
-			chain.getSeqResGroups().add(group);
+			MmtfUtils.insertSeqResGroup(chain, group, sequenceIndexId);
 		}
 		if (atomCount > 0) {
 			chain.addGroup(group);
@@ -368,8 +372,7 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 	 * setXtalInfo(java.lang.String, java.util.List)
 	 */
 	@Override
-	public void setXtalInfo(String spaceGroupString,
-			float[] unitCell) {
+	public void setXtalInfo(String spaceGroupString, float[] unitCell, double[][] ncsOperMatrixList) {
 		// Now set the xtalographic information
 		PDBCrystallographicInfo pci = new PDBCrystallographicInfo();
 		SpaceGroup spaceGroup = SpaceGroup.parseSpaceGroup(spaceGroupString);
@@ -380,6 +383,8 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 			pci.setCrystalCell(cell);
 			structure.setCrystallographicInfo(pci);
 		}
+
+		pci.setNcsOperators(MmtfUtils.getNcsAsMatrix4d(ncsOperMatrixList));
 	}
 
 
@@ -410,7 +415,9 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 
 
 	@Override
-	public void setBioAssemblyTrans(int bioAssemblyId, int[] inputChainIndices, double[] inputTransform) {
+	public void setBioAssemblyTrans(int bioAssemblyId, int[] inputChainIndices, double[] inputTransform, String name) {
+		// Biojava uses this as a one indexed id.
+		bioAssemblyId++;
 		if(bioassIndex!=bioAssemblyId){
 			transformList = new ArrayList<>();
 			bioassIndex = bioAssemblyId;
@@ -464,6 +471,7 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 		for( int index : chainIndices) {
 			chains.add(chainList.get(index));
 			chainList.get(index).setEntityInfo(entityInfo);
+			chainSequenceMap.put(chainList.get(index).getId(), sequence);
 		}
 		entityInfo.setChains(chains);
 		entityInfoList.add(entityInfo);
@@ -506,5 +514,6 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 		else{
 			pdbHeader.setModDate(new Date(0));
 		}
+
 	}
 }

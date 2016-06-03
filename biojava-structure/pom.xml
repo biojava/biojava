@@ -23,27 +23,21 @@
 		<dependency>
 			<groupId>org.rcsb</groupId>
 			<artifactId>mmtf-api</artifactId>
-			<version>0.1.0</version>
+            <version>${mmtf.version}</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.rcsb</groupId>
 			<artifactId>mmtf-serialization</artifactId>
-			<version>0.1.0</version>
+            <version>${mmtf.version}</version>
 			<scope>compile</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.rcsb</groupId>
-			<artifactId>mmtf-decoder</artifactId>
-			<version>0.1.0</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.rcsb</groupId>
-			<artifactId>mmtf-encoder</artifactId>
-			<version>0.1.0</version>
-			<scope>compile</scope>
-		</dependency>
+		      <dependency>
+            <groupId>org.rcsb</groupId>
+            <artifactId>mmtf-codec</artifactId>
+            <version>${mmtf.version}</version>
+            <scope>compile</scope>
+        </dependency>
 		<dependency>
 			<groupId>org.biojava</groupId>
 			<artifactId>biojava-alignment</artifactId>
@@ -107,10 +101,8 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.build.targetEncoding>UTF-8</project.build.targetEncoding>
-
 		<maven.build.timestamp.format>yyyyMMdd-HHmm</maven.build.timestamp.format>
 		<timestamp>${maven.build.timestamp}</timestamp>
-
 	</properties>
 	<build>
 

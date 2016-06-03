@@ -28,19 +28,16 @@ public class MmtfStructureWriter {
 
 
 	private StructureAdapterInterface mmtfDecoderInterface;
-	private Structure structure;
-
 
 	/**
-	 * Function to pass data from Biojava structure 
-	 * to another generic output type.Loops through the data 
+	 * Ppass data from Biojava structure  to another generic output type.Loops through the data 
 	 * structure and calls all the set functions.
+	 * @param structure the input {@link Structure} to write
 	 * @param dataTransferInterface the generic interface that 
 	 * implements all the set methods.
 	 */
-	public MmtfStructureWriter(Structure data, StructureAdapterInterface dataTransferInterface) {
+	public MmtfStructureWriter(Structure structure, StructureAdapterInterface dataTransferInterface) {
 		this.mmtfDecoderInterface = dataTransferInterface;
-		this.structure = data;
 		// Reset structure to consider altloc groups with the same residue number but different group names as seperate groups
 		MmtfUtils.fixMicroheterogenity(structure);
 		// Get the chain name to index map
@@ -57,7 +54,7 @@ public class MmtfStructureWriter {
 		PDBCrystallographicInfo xtalInfo = pdbHeader.getCrystallographicInfo();
 		mmtfDecoderInterface.setHeaderInfo(pdbHeader.getRfree(), pdbHeader.getRwork(), pdbHeader.getResolution(), pdbHeader.getTitle(), MmtfUtils.dateToIsoString(pdbHeader.getDepDate()), 
 				MmtfUtils.dateToIsoString(pdbHeader.getModDate()), MmtfUtils.techniquesToStringArray(pdbHeader.getExperimentalTechniques()));
-		mmtfDecoderInterface.setXtalInfo(MmtfUtils.getSpaceGroupAsString(xtalInfo.getSpaceGroup()), MmtfUtils.getUnitCellAsArray(xtalInfo));
+		mmtfDecoderInterface.setXtalInfo(MmtfUtils.getSpaceGroupAsString(xtalInfo.getSpaceGroup()), MmtfUtils.getUnitCellAsArray(xtalInfo), MmtfUtils.getNcsAsArray(xtalInfo.getNcsOperators()));
 		// Store the bioassembly data
 		storeBioassemblyInformation(chainIdToIndexMap, pdbHeader.getBioAssemblies());
 		// Store the entity data
@@ -73,10 +70,8 @@ public class MmtfStructureWriter {
 				List<Group> sequenceGroups = chain.getSeqResGroups();
 				mmtfDecoderInterface.setChainInfo(chain.getId(), chain.getName(), groups.size());
 				for(int groupInChainIndex=0; groupInChainIndex<groups.size(); groupInChainIndex++){
-					// Get the major compy of this group
 					Group group = groups.get(groupInChainIndex);
 					List<Atom> atomsInGroup = MmtfUtils.getAtomsForGroup(group);
-					// Get the group type
 					ChemComp chemComp = group.getChemComp();
 					Character insCode = group.getResidueNumber().getInsCode();
 					if(insCode==null){
@@ -192,9 +187,9 @@ public class MmtfStructureWriter {
 		for (Entry<Integer, BioAssemblyInfo> entry : inputBioAss.entrySet()) {
 			Map<double[], int[]> transformMap = MmtfUtils.getTransformMap(entry.getValue(), chainIdToIndexMap);
 			for(Entry<double[], int[]> transformEntry : transformMap.entrySet()) {
-				mmtfDecoderInterface.setBioAssemblyTrans(bioAssemblyIndex, transformEntry.getValue(), transformEntry.getKey());
+				mmtfDecoderInterface.setBioAssemblyTrans(bioAssemblyIndex, transformEntry.getValue(), transformEntry.getKey(), Integer.toString(bioAssemblyIndex));
 			}
-			bioAssemblyIndex+=1;
+			bioAssemblyIndex++;
 		}
 	}
 

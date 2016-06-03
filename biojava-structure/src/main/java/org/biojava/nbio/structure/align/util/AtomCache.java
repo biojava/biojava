@@ -150,8 +150,8 @@ public class AtomCache {
 		currentlyLoading.clear();
 		params = new FileParsingParameters();
 
-		setUseMmCif(true);
-		setUseMmtf(false);
+		setUseMmCif(false);
+		setUseMmtf(true);
 
 	}
 

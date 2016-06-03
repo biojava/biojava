@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 import org.biojava.nbio.structure.Structure;
-import org.rcsb.mmtf.decoder.DefaultDecoder;
+import org.rcsb.mmtf.decoder.GenericDecoder;
 import org.rcsb.mmtf.decoder.StructureDataToAdapter;
 import org.rcsb.mmtf.decoder.ReaderUtils;
 import org.rcsb.mmtf.encoder.AdapterToStructureData;
@@ -18,7 +18,7 @@ import org.rcsb.mmtf.encoder.WriterUtils;
 public class MmtfActions {
 	
 	/**
-	 * Utility function to get a Structure object from a mmtf file.
+	 * Get a Structure object from a mmtf file.
 	 * @param filePath the mmtf file
 	 * @return a Structure object relating to the input byte array.
 	 * @throws IOException 
@@ -27,13 +27,13 @@ public class MmtfActions {
 		// Get the reader - this is the bit that people need to implement.
 		MmtfStructureReader mmtfStructureReader = new MmtfStructureReader();
 		// Do the inflation
-		new StructureDataToAdapter(new DefaultDecoder(ReaderUtils.getDataFromFile(filePath)), mmtfStructureReader);
+		new StructureDataToAdapter(new GenericDecoder(ReaderUtils.getDataFromFile(filePath)), mmtfStructureReader);
 		// Get the structue
 		return mmtfStructureReader.getStructure();
 	}
 	
 	/**
-	 * Utility function to write a Structure object to a file.
+	 * Write a Structure object to a file.
 	 * @param structure the Structure to write
 	 * @param path the file to write
 	 * @throws IOException
@@ -49,7 +49,7 @@ public class MmtfActions {
 
 	
 	/**
-	 * Utility function to get a Biojava structure from the mmtf REST service.
+	 * Get a Biojava structure from the mmtf REST service.
 	 * @param pdbId the PDB code of the required structure
 	 * @return a Structure object relating to the input byte array
 	 * @throws IOException 
@@ -58,7 +58,7 @@ public class MmtfActions {
 		// Get the reader - this is the bit that people need to implement.
 		MmtfStructureReader mmtfStructureReader = new MmtfStructureReader();
 		// Do the inflation
-		new StructureDataToAdapter(new DefaultDecoder(ReaderUtils.getDataFromUrl(pdbId)), mmtfStructureReader);
+		new StructureDataToAdapter(new GenericDecoder(ReaderUtils.getDataFromUrl(pdbId)), mmtfStructureReader);
 		// Get the structue
 		return mmtfStructureReader.getStructure();
 	}
