@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 import org.biojava.nbio.structure.Structure;
-import org.rcsb.mmtf.decoder.DefaultDecoder;
+import org.rcsb.mmtf.decoder.GenericDecoder;
 import org.rcsb.mmtf.decoder.StructureDataToAdapter;
 import org.rcsb.mmtf.decoder.ReaderUtils;
 import org.rcsb.mmtf.encoder.AdapterToStructureData;
@@ -27,7 +27,7 @@ public class MmtfActions {
 		// Get the reader - this is the bit that people need to implement.
 		MmtfStructureReader mmtfStructureReader = new MmtfStructureReader();
 		// Do the inflation
-		new StructureDataToAdapter(new DefaultDecoder(ReaderUtils.getDataFromFile(filePath)), mmtfStructureReader);
+		new StructureDataToAdapter(new GenericDecoder(ReaderUtils.getDataFromFile(filePath)), mmtfStructureReader);
 		// Get the structue
 		return mmtfStructureReader.getStructure();
 	}
@@ -58,7 +58,7 @@ public class MmtfActions {
 		// Get the reader - this is the bit that people need to implement.
 		MmtfStructureReader mmtfStructureReader = new MmtfStructureReader();
 		// Do the inflation
-		new StructureDataToAdapter(new DefaultDecoder(ReaderUtils.getDataFromUrl(pdbId)), mmtfStructureReader);
+		new StructureDataToAdapter(new GenericDecoder(ReaderUtils.getDataFromUrl(pdbId)), mmtfStructureReader);
 		// Get the structue
 		return mmtfStructureReader.getStructure();
 	}

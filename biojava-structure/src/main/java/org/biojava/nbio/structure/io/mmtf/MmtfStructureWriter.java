@@ -189,7 +189,7 @@ public class MmtfStructureWriter {
 			for(Entry<double[], int[]> transformEntry : transformMap.entrySet()) {
 				mmtfDecoderInterface.setBioAssemblyTrans(bioAssemblyIndex, transformEntry.getValue(), transformEntry.getKey(), Integer.toString(bioAssemblyIndex));
 			}
-			bioAssemblyIndex+=1;
+			bioAssemblyIndex++;
 		}
 	}
 

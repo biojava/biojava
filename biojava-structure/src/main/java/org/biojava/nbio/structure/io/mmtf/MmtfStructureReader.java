@@ -411,6 +411,8 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 
 	@Override
 	public void setBioAssemblyTrans(int bioAssemblyId, int[] inputChainIndices, double[] inputTransform, String name) {
+		// Biojava uses this as a one indexed id.
+		bioAssemblyId++;
 		if(bioassIndex!=bioAssemblyId){
 			transformList = new ArrayList<>();
 			bioassIndex = bioAssemblyId;
