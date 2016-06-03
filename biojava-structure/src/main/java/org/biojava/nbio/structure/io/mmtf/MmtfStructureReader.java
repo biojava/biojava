@@ -110,7 +110,6 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 
 	@Override
 	public void finalizeStructure() {
-
 		// Number the remaining ones
 		int counter =0;
 		// Add the entity info
@@ -212,7 +211,7 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 		}
 		group.setAtoms(new ArrayList<Atom>(atomCount));
 		if (polymerType != 0) {
-			chain.getSeqResGroups().add(group);
+			MmtfUtils.insertSeqResGroup(chain, group, sequenceIndexId);
 		}
 		if (atomCount > 0) {
 			chain.addGroup(group);
@@ -466,6 +465,8 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 		for( int index : chainIndices) {
 			chains.add(chainList.get(index));
 			chainList.get(index).setEntityInfo(entityInfo);
+			MmtfUtils.addSeqRes(chainList.get(index), sequence);
+
 		}
 		entityInfo.setChains(chains);
 		entityInfoList.add(entityInfo);

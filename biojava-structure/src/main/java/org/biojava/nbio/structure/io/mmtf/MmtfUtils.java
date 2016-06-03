@@ -14,11 +14,15 @@ import java.util.Set;
 
 import javax.vecmath.Matrix4d;
 
+import org.biojava.nbio.structure.AminoAcid;
+import org.biojava.nbio.structure.AminoAcidImpl;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Bond;
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.ExperimentalTechnique;
 import org.biojava.nbio.structure.Group;
+import org.biojava.nbio.structure.GroupType;
+import org.biojava.nbio.structure.NucleotideImpl;
 import org.biojava.nbio.structure.PDBCrystallographicInfo;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
@@ -422,11 +426,14 @@ public class MmtfUtils {
 	 */
 	public static Matrix4d[] getNcsAsMatrix4d(double[][] ncsOperMatrixList) {
 		if(ncsOperMatrixList==null){
-			return new Matrix4d[0];
+			return null;
 		}
 		int numMats = ncsOperMatrixList.length;
+		if(numMats==0){
+			return null;
+		}
 		if(numMats==1 && ncsOperMatrixList[0].length==0){
-			return new Matrix4d[0];
+			return null;
 		}
 		Matrix4d[] outList = new Matrix4d[numMats];
 		for(int i=0; i<numMats; i++){
@@ -449,5 +456,67 @@ public class MmtfUtils {
 			outList[i] = convertToDoubleArray(ncsOperators[i]);
 		}
 		return outList;
+	}
+
+	/**
+	 * Insert the group in the given position in the sequence.
+	 * @param chain the chain to add the seq res group to
+	 * @param group the group to add
+	 * @param sequenceIndexId the index to add it in
+	 */
+	public static void insertSeqResGroup(Chain chain, Group group, int sequenceIndexId) {
+		List<Group> seqResGroups = chain.getSeqResGroups();
+		while(seqResGroups.size()<=sequenceIndexId){
+			seqResGroups.add(null);
+		}
+		seqResGroups.set(sequenceIndexId, group);
+	}
+
+	/**
+	 * Add the missing groups to the SeqResGroups.
+	 * @param modelChain the chain to add the information for
+	 * @param sequence the sequence of the construct
+	 */
+	public static void addSeqRes(Chain modelChain, String sequence) {
+		List<Group> seqResGroups = modelChain.getSeqResGroups();
+		GroupType chainType = getChainType(modelChain.getAtomGroups());
+		for(int i=0; i<sequence.length(); i++){
+			char aa = sequence.charAt(i);
+			Group group = seqResGroups.get(i);
+			if(group==null){
+				group = getSeqResGroup(modelChain, aa, chainType);
+				seqResGroups.set(i, group);
+			}
+
+		}
+	}
+
+	private static GroupType getChainType(List<Group> groups) {
+		for(Group group : groups) {
+			if(group==null){
+				continue;
+			}
+			else{
+				return group.getType();
+			}
+		}
+		return GroupType.HETATM;
+	}
+
+	
+	private static Group getSeqResGroup(Chain modelChain, char aa, GroupType type) {
+		if(type==GroupType.AMINOACID){
+			AminoAcidImpl a = new AminoAcidImpl();
+			a.setRecordType(AminoAcid.SEQRESRECORD);
+			a.setAminoType(aa);
+			return a;
+
+		} else if (type==GroupType.NUCLEOTIDE) {
+			NucleotideImpl n = new NucleotideImpl();
+			return n;
+		}
+		else{
+			return null;
+		}
 	}
 }

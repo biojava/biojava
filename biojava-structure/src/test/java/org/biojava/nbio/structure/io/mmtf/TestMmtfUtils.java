@@ -442,7 +442,7 @@ public class TestMmtfUtils {
 		double[][] output = MmtfUtils.getNcsAsArray(null);
 		assertNotNull(output);
 		Matrix4d[] outputMat = MmtfUtils.getNcsAsMatrix4d(null);
-		assertNotNull(outputMat);
+		assertNull(outputMat);
 		double[][] outputMatArr = MmtfUtils.getNcsAsArray(outputMat);
 		assertNotNull(outputMatArr);
 	}
