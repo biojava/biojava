@@ -87,6 +87,8 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 
 	private int bioassIndex;
 
+	private Map<String,String> chainSequenceMap;
+
 	/**
 	 * Instantiates a new bio java structure decoder.
 	 */
@@ -97,6 +99,7 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 		chainList = new ArrayList<>();
 		chainMap = new ArrayList<>();
 		transformList = new ArrayList<>();
+		chainSequenceMap = new HashMap<>();
 	}
 
 	/**
@@ -124,6 +127,9 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 			Map<String, Chain> modelChainMap = chainMap.get(i);
 			for(Chain modelChain : modelChainMap.values()){
 				structure.addChain(modelChain, i);
+				String sequence = chainSequenceMap.get(modelChain.getId());
+				MmtfUtils.addSeqRes(modelChain, sequence);
+
 			}
 		}
 		StructureTools.cleanUpAltLocs(structure);
@@ -465,8 +471,7 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 		for( int index : chainIndices) {
 			chains.add(chainList.get(index));
 			chainList.get(index).setEntityInfo(entityInfo);
-			MmtfUtils.addSeqRes(chainList.get(index), sequence);
-
+			chainSequenceMap.put(chainList.get(index).getId(), sequence);
 		}
 		entityInfo.setChains(chains);
 		entityInfoList.add(entityInfo);

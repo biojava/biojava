@@ -43,8 +43,7 @@ import org.junit.Test;
 public class TestSequenceFunctionOrderDetector {
 
 	@Test
-	public void testGetSymmetryOrder()
-			throws IOException, StructureException, RefinerFailedException {
+	public void testGetSymmetryOrder() throws IOException, StructureException, RefinerFailedException {
 		// List of alignments to try, along with proper symmetry
 		Map<String,Integer> orderMap = new HashMap<String,Integer>();
 		orderMap.put("1itb.A",3); // b-trefoil, C3

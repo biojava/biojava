@@ -466,10 +466,7 @@ public class MmtfUtils {
 	 */
 	public static void insertSeqResGroup(Chain chain, Group group, int sequenceIndexId) {
 		List<Group> seqResGroups = chain.getSeqResGroups();
-		while(seqResGroups.size()<=sequenceIndexId){
-			seqResGroups.add(null);
-		}
-		seqResGroups.set(sequenceIndexId, group);
+		addGroupAtId(seqResGroups, group, sequenceIndexId);
 	}
 
 	/**
@@ -487,13 +484,16 @@ public class MmtfUtils {
 				group=null;
 			}
 			else{
-				group= seqResGroups.get(i);
+				group=seqResGroups.get(i);
 			}
 			if(group!=null){
-				return;
+				group=null;
+				continue;
 			}
 			group = getSeqResGroup(modelChain, aa, chainType);
+			addGroupAtId(seqResGroups, group, i);
 			seqResGroups.set(i, group);
+			group=null;
 		}
 	}
 
@@ -502,14 +502,22 @@ public class MmtfUtils {
 			if(group==null){
 				continue;
 			}
-			else{
+			else if(group.getType()!=GroupType.HETATM){
 				return group.getType();
 			}
 		}
 		return GroupType.HETATM;
 	}
 
-
+	private static <T> void addGroupAtId(List<T> seqResGroups, T group, int sequenceIndexId) {
+		while(seqResGroups.size()<=sequenceIndexId){
+			seqResGroups.add(null);
+		}
+		if(sequenceIndexId>0){
+			seqResGroups.set(sequenceIndexId, group);
+		}		
+	}
+	
 	private static Group getSeqResGroup(Chain modelChain, char aa, GroupType type) {
 		if(type==GroupType.AMINOACID){
 			AminoAcidImpl a = new AminoAcidImpl();
