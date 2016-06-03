@@ -243,7 +243,7 @@ public class WorkSheet {
 		ArrayList<String> metaColumns = new ArrayList<String>();
 		for (String key : metaDataColumnsHashMap.keySet()) {
 			HeaderInfo hi = columnLookup.get(key);
-			if (hi.isHide() == false) {
+			if (!hi.isHide()) {
 				metaColumns.add(key);
 			}
 		}
@@ -258,7 +258,7 @@ public class WorkSheet {
 		ArrayList<String> metaRows = new ArrayList<String>();
 		for (String key : metaDataRowsHashMap.keySet()) {
 			HeaderInfo hi = rowLookup.get(key);
-			if (hi.isHide() == false) {
+			if (!hi.isHide()) {
 				metaRows.add(key);
 			}
 		}
@@ -273,7 +273,7 @@ public class WorkSheet {
 		ArrayList<String> dataColumns = new ArrayList<String>();
 		ArrayList<String> columns = this.getColumns();
 		for (String column : columns) {
-			if (metaDataColumnsHashMap.containsKey(column) == false) {
+			if (!metaDataColumnsHashMap.containsKey(column)) {
 				dataColumns.add(column);
 			}
 		}
@@ -439,7 +439,7 @@ public class WorkSheet {
 		ArrayList<String> rows = this.getRows();
 		boolean metarow = false;
 		for (String r : rows) {
-			if (r.equals(row) && metarow == false) {
+			if (r.equals(row) && !metarow) {
 				metarow = true;
 			}
 			if (metarow) {
@@ -456,7 +456,7 @@ public class WorkSheet {
 		ArrayList<String> cols = this.getColumns();
 		boolean metacolumns = false;
 		for (String col : cols) {
-			if (col.equals(column) && metacolumns == false) {
+			if (col.equals(column) && !metacolumns) {
 				metacolumns = true;
 			}
 			if (metacolumns) {
@@ -1067,7 +1067,7 @@ public class WorkSheet {
 		ArrayList<String> columns = new ArrayList<String>();
 		for (String col : columnLookup.keySet()) {
 			HeaderInfo hi = columnLookup.get(col);
-			if (hi.isHide() == false) {
+			if (!hi.isHide()) {
 				columns.add(col);
 			}
 		}
@@ -1087,7 +1087,7 @@ public class WorkSheet {
 		ArrayList<String> rows = getDataRows();
 		for (String row : rows) {
 			String value = getCell(row, column);
-			if (hashMapValues.containsKey(value) == false) {
+			if (!hashMapValues.containsKey(value)) {
 				hashMapValues.put(value, value);
 				values.add(value);
 			}
@@ -1107,7 +1107,7 @@ public class WorkSheet {
 		ArrayList<String> values = new ArrayList<String>();
 		for (String column : getColumns()) {
 			String value = getCell(row, column);
-			if (hashMapValues.containsKey(value) == false) {
+			if (!hashMapValues.containsKey(value)) {
 				hashMapValues.put(value, value);
 				values.add(value);
 			}
@@ -1138,7 +1138,7 @@ public class WorkSheet {
 		ArrayList<String> rows = new ArrayList<String>();
 		for (String row : rowLookup.keySet()) {
 			HeaderInfo hi = rowLookup.get(row);
-			if (hi.isHide() == false) {
+			if (!hi.isHide()) {
 				rows.add(row);
 			}
 		}
@@ -1157,7 +1157,7 @@ public class WorkSheet {
 				continue;
 			}
 			HeaderInfo hi = rowLookup.get(row);
-			if (hi.isHide() == false) {
+			if (!hi.isHide()) {
 				rows.add(row);
 			}
 		}
@@ -1383,7 +1383,7 @@ public class WorkSheet {
 
 
 		if (secondSheetMetaData) {
-			if (w1.getColumns().contains("META_DATA") == false) {
+			if (!w1.getColumns().contains("META_DATA")) {
 				w1DataColumns.add("META_DATA");
 			}
 		}
@@ -1391,16 +1391,16 @@ public class WorkSheet {
 		ArrayList<String> joinedColumns = new ArrayList<String>();
 		joinedColumns.addAll(w1DataColumns);
 		joinedColumns.addAll(w2DataColumns);
-		if (joinedColumns.contains("META_DATA") == false && (w1MetaDataColumns.size() > 0 || w2MetaDataColumns.size() > 0)) {
+		if (!joinedColumns.contains("META_DATA") && (w1MetaDataColumns.size() > 0 || w2MetaDataColumns.size() > 0)) {
 			joinedColumns.add("META_DATA");
 		}
 		for (String column : w1MetaDataColumns) {
-			if (joinedColumns.contains(column) == false) {
+			if (!joinedColumns.contains(column)) {
 				joinedColumns.add(column);
 			}
 		}
 		for (String column : w2MetaDataColumns) {
-			if (joinedColumns.contains(column) == false) {
+			if (!joinedColumns.contains(column)) {
 				joinedColumns.add(column);
 			}
 		}
@@ -1489,7 +1489,7 @@ public class WorkSheet {
 	public void saveCSV(String fileName) throws Exception {
 		File f = new File(fileName);
 		File parentFile = f.getParentFile();
-		if (parentFile.isDirectory() == false) {
+		if (!parentFile.isDirectory()) {
 			parentFile.mkdirs();
 		}
 		FileOutputStream file = new FileOutputStream(fileName);
@@ -1507,7 +1507,7 @@ public class WorkSheet {
 	public void saveTXT(String fileName) throws Exception {
 		File f = new File(fileName);
 		File parentFile = f.getParentFile();
-		if (parentFile.isDirectory() == false) {
+		if (!parentFile.isDirectory()) {
 			parentFile.mkdirs();
 		}
 		FileOutputStream file = new FileOutputStream(fileName);
@@ -1570,7 +1570,7 @@ public class WorkSheet {
 
 		this.addRows(newRows, "");
 		for (String col : this.getColumns()) {
-			if (worksheet.isValidColumn(col) == false) {
+			if (!worksheet.isValidColumn(col)) {
 				continue;
 			}
 			for (String row : newRows) {
@@ -1618,7 +1618,7 @@ public class WorkSheet {
 				// try{
 				String value = getCell(row, col);
 				outputStream.write(delimitter);
-				if (this.isMetaDataColumn(col) == false && this.isMetaDataRow(row) == false) {
+				if (!this.isMetaDataColumn(col) && !this.isMetaDataRow(row)) {
 					if (value == null || value.length() == 0 || value.equalsIgnoreCase("null")) {
 						value = "NaN";
 					}

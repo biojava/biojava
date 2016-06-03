@@ -519,7 +519,7 @@ public class CoxR {
 		/*
 		 ** here is the main loop
 		 */
-		if (gotofinish == false) {
+		if (!gotofinish) {
 			halving = 0;             /* =1 when in the midst of "step halving" */
 			for (iter = 1; iter <= maxiter; iter++) {
 				newlk = 0;
@@ -675,7 +675,7 @@ public class CoxR {
 			}   /* return for another iteration */
 		}
 
-		if (gotofinish == false) {
+		if (!gotofinish) {
 			/*
 			 ** We end up here only if we ran out of iterations
 			 */

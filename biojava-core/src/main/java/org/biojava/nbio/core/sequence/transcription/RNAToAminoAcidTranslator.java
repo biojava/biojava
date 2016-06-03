@@ -215,7 +215,7 @@ public class RNAToAminoAcidTranslator extends
 			target = quickLookup.get(triplet);
 
 			// Check for a start
-			if (doTranslate == false && target.isStart()) {
+			if (!doTranslate && target.isStart()) {
 				doTranslate = true;
 			}
 

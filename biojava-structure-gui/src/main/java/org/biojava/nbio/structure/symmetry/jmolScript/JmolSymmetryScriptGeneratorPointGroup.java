@@ -757,7 +757,7 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 		p2 = new Point3d(axis);
 		p2.scaleAdd(1.01*radius, center);
 
-		if (drawPolygon == true) {
+		if (drawPolygon) {
 			double polygonRadius = getMeanExtension() * 0.06;
 			if (n == 2) {
 				referenceAxis = getAligmentVector(p1, axis);
