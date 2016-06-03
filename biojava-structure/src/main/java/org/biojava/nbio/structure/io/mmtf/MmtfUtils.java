@@ -482,12 +482,18 @@ public class MmtfUtils {
 		GroupType chainType = getChainType(modelChain.getAtomGroups());
 		for(int i=0; i<sequence.length(); i++){
 			char aa = sequence.charAt(i);
-			Group group = seqResGroups.get(i);
-			if(group==null){
-				group = getSeqResGroup(modelChain, aa, chainType);
-				seqResGroups.set(i, group);
+			Group group;
+			if(seqResGroups.size()<=i){
+				group=null;
 			}
-
+			else{
+				group= seqResGroups.get(i);
+			}
+			if(group!=null){
+				return;
+			}
+			group = getSeqResGroup(modelChain, aa, chainType);
+			seqResGroups.set(i, group);
 		}
 	}
 
@@ -503,7 +509,7 @@ public class MmtfUtils {
 		return GroupType.HETATM;
 	}
 
-	
+
 	private static Group getSeqResGroup(Chain modelChain, char aa, GroupType type) {
 		if(type==GroupType.AMINOACID){
 			AminoAcidImpl a = new AminoAcidImpl();
