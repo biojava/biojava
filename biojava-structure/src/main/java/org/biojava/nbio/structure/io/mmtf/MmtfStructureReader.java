@@ -186,7 +186,7 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 		case 1:
 			AminoAcid aa = new AminoAcidImpl();
 			// Now set the one letter code
-			aa.setAminoType(StructureTools.get1LetterCodeAmino(groupName));
+			aa.setAminoType(singleLetterCode);
 			group = aa;
 			break;
 		case 2:

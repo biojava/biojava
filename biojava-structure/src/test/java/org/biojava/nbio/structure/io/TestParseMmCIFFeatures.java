@@ -142,6 +142,12 @@ public class TestParseMmCIFFeatures {
 
 	@Test
 	public void testSites()throws IOException, StructureException {
+
+		AtomCache cache = new AtomCache();
+
+		StructureIO.setAtomCache(cache);
+
+		cache.setUseMmCif(true);
 		Structure sCif = StructureIO.getStructure("4HHB");
 
 		assertNotNull(sCif);
@@ -171,6 +177,11 @@ public class TestParseMmCIFFeatures {
 
 	@Test
 	public void testSites1a4w()throws IOException, StructureException {
+		AtomCache cache = new AtomCache();
+
+		StructureIO.setAtomCache(cache);
+
+		cache.setUseMmCif(true);
 		Structure sCif = StructureIO.getStructure("1A4W");
 
 		assertNotNull(sCif);
