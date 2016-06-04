@@ -488,7 +488,7 @@ public class FeatureList extends ArrayList<FeatureI> {
 	 * whose seqnames differ.
 	 */
 	public FeatureList sortByStart() {
-		FeatureI array[] = toArray(new FeatureI[1]);
+		FeatureI[] array = toArray(new FeatureI[1]);
 
 		Arrays.sort(array, new FeatureComparator());
 
@@ -501,7 +501,7 @@ public class FeatureList extends ArrayList<FeatureI> {
 	 */
 	// FIXME features may have a null location() !!
 	@Deprecated
-	static public void main(String args[]) {
+	static public void main(String[] args) {
 	}
 
 

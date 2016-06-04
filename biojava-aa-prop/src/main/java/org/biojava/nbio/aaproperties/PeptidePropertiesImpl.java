@@ -322,7 +322,7 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 	//
 	// Ct Nt Sm Sc Sn
 	//
-	private final double cPk[][] = {
+	private final double[][] cPk = {
 			{3.55, 7.59, 0.0},  // A
 			{3.55, 7.50, 0.0},  // B
 			{3.55, 7.50, 9.00}, // C
@@ -365,7 +365,7 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 		//
 		// Compute the amino-acid composition.
 		//
-		int comp[] = new int[26];
+		int[] comp = new int[26];
 		for(int i = 0; i < sequence.length(); i++){
 			int index = sequence.charAt(i) - 'A';
 			if(index < 0 || index >= 26) continue;
@@ -430,7 +430,7 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 		//
 		// Compute the amino-acid composition.
 		//
-		int comp[] = new int[26];
+		int[] comp = new int[26];
 		for(int i = 0; i < sequence.length(); i++){
 			int index = sequence.charAt(i) - 'A';
 			if(index < 0 || index >= 26) continue;
@@ -444,7 +444,7 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 		return getNetChargeExpasy(comp, nTermResidue, cTermResidue, pHPoint);
 	}
 
-	private double getNetChargeExpasy(int comp[], int nTermResidue, int cTermResidue, double ph){
+	private double getNetChargeExpasy(int[] comp, int nTermResidue, int cTermResidue, double ph){
 		double cter = 0.0;
 		if(cTermResidue >= 0 && cTermResidue < 26) cter = exp10(-cPk[cTermResidue][0]) / (exp10(-cPk[cTermResidue][0]) + exp10(-ph));
 		double nter = 0.0;

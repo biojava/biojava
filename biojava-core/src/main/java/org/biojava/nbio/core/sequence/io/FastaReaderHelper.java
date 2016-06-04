@@ -130,7 +130,7 @@ public class FastaReaderHelper {
 		return dnaSequences;
 	}
 
-	public static void main(String args[]) throws Exception {
+	public static void main(String[] args) throws Exception {
 
 		LinkedHashMap<String, DNASequence> dnaSequences = FastaReaderHelper.readFastaDNASequence(new File("fasta.fna"));
 		for (DNASequence sequence : dnaSequences.values()) {

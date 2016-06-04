@@ -906,7 +906,7 @@ public class Location implements Iterable<Location>
 	 */
 	@Deprecated
 	@SuppressWarnings("unused")
-	public static void main( String args[] )
+	public static void main(String[] args )
 	throws Exception
 	{
 		Location p3_7= new Location( 3, 7 );

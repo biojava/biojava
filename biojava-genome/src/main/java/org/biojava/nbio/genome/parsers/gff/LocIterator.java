@@ -252,7 +252,7 @@ public class LocIterator implements Iterator<Location> {
 	 * @deprecated
 	 */
 	@Deprecated
-	public static void main( String args[] )
+	public static void main(String[] args )
 	{
 
 		Location r= new Location( 10, 21 );

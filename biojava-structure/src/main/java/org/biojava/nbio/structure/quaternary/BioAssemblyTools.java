@@ -130,7 +130,7 @@ public class BioAssemblyTools {
 	}
 
 	public static double[][]  getBiologicalMoleculeBounds(Structure asymStructure,List<BiologicalAssemblyTransformation> transformations) {
-		final double coordinateBounds[][] = new double[2][3];
+		final double[][] coordinateBounds = new double[2][3];
 		coordinateBounds[0][0] = Double.MAX_VALUE;  // min x
 		coordinateBounds[0][1] = Double.MAX_VALUE;  // min y
 		coordinateBounds[0][2] = Double.MAX_VALUE;  // min z
@@ -186,7 +186,7 @@ public class BioAssemblyTools {
 
 		org.biojava.nbio.structure.Atom[] atoms = StructureTools.getAllAtomArray(s);
 		int atomCount = atoms.length;
-		final double coordinateBounds[][] = new double[2][3];
+		final double[][] coordinateBounds = new double[2][3];
 		if ( atomCount <= 0 ) {
 			return coordinateBounds;
 		}

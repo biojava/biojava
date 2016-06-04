@@ -170,11 +170,12 @@ public class CoxR {
 
 		int i, j, k, person;
 		boolean gotofinish = false;
-		double cmat[][], imat[][];  /*ragged arrays covar[][], */
+		double[][] cmat, imat;  /*ragged arrays covar[][], */
 		double wtave;
-		double a[], newbeta[];
-		double a2[], cmat2[][];
-		double scale[];
+		double[] a, newbeta;
+		double[] a2;
+		double[][] cmat2;
+		double[] scale;
 		double denom = 0, zbeta, risk;
 		double temp, temp2;
 		int ndead;  /* actually, the sum of their weights */
@@ -198,7 +199,7 @@ public class CoxR {
 
 		/* returned objects */
 		// double imat2[][];
-		double u[], loglik[], means[];
+		double[] u, loglik, means;
 
 
 		double sctest;
