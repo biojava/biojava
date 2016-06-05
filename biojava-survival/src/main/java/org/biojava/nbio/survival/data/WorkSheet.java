@@ -1035,10 +1035,10 @@ public class WorkSheet {
 		while (picked.size() < number) {
 			double v = Math.random();
 			int index = (int) (v * columns.size());
-			if (picked.containsKey(index + "")) {
+			if (picked.containsKey(String.valueOf(index))) {
 				continue;
 			}
-			picked.put(index + "", index + "");
+			picked.put(String.valueOf(index), String.valueOf(index));
 			randomColumns.add(columns.get(index));
 		}
 		return randomColumns;
@@ -1267,7 +1267,7 @@ public class WorkSheet {
 		String line = br.readLine();
 		int numcolumns = -1;
 		while (line != null) {
-			String[] d = line.split(delimiter + "");
+			String[] d = line.split(String.valueOf(delimiter));
 			if (numcolumns == -1) {
 				numcolumns = d.length;
 			}
@@ -1314,7 +1314,7 @@ public class WorkSheet {
 		String line = br.readLine();
 		int numcolumns = -1;
 		while (line != null) {
-			String[] d = line.split(delimiter + "");
+			String[] d = line.split(String.valueOf(delimiter));
 			if (numcolumns == -1) {
 				numcolumns = d.length;
 			}

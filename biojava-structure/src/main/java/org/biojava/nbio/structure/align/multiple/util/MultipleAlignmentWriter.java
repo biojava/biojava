@@ -103,7 +103,7 @@ public class MultipleAlignmentWriter {
 			int blockNr = MultipleAlignmentTools.getBlockForSequencePosition(
 					alignment, mapSeqToStruct, pos);
 			if (blockNr != -1) {
-				blockNumbers = blockNumbers.concat("" + (blockNr + 1));
+				blockNumbers = blockNumbers.concat(String.valueOf(blockNr + 1));
 			} else
 				blockNumbers = blockNumbers.concat(" ");
 		}

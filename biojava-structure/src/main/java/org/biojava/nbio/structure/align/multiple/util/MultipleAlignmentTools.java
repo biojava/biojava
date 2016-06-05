@@ -212,9 +212,8 @@ public class MultipleAlignmentTools {
 										.set(str,
 												alnSequences
 														.get(str)
-														.concat(""
-																+ Character
-																		.toLowerCase(aa)));
+														.concat(String.valueOf(Character
+																		.toLowerCase(aa))) );
 								previousPos[str]++;
 							} else {
 								// Insert a gap otherwise
@@ -229,7 +228,7 @@ public class MultipleAlignmentTools {
 							alnSequences.set(
 									str,
 									alnSequences.get(str).concat(
-											"" + provisionalChar[str]));
+											String.valueOf(provisionalChar[str])));
 
 							if (provisionalChar[str] != '-') {
 								if (alignment.getBlocks().get(b).getAlignRes()
@@ -281,7 +280,7 @@ public class MultipleAlignmentTools {
 						alnSequences.set(
 								str,
 								alnSequences.get(str).concat(
-										"" + provisionalChar[str]));
+										String.valueOf(provisionalChar[str])) );
 					}
 					mapSeqToStruct.add(-1); // unaligned position
 				}
@@ -413,7 +412,7 @@ public class MultipleAlignmentTools {
 										alnSequences.set(
 												s2,
 												alnSequences.get(s2).concat(
-														"" + aa));
+														String.valueOf(aa)) );
 									} else {
 										alnSequences.set(s2,
 												alnSequences.get(s2)
@@ -429,7 +428,7 @@ public class MultipleAlignmentTools {
 							alnSequences.set(
 									str,
 									alnSequences.get(str).concat(
-											"" + provisionalChar[str]));
+											String.valueOf(provisionalChar[str])) );
 							if (provisionalChar[str] != '-') {
 								previousPos[str] = alignment.getBlocks().get(b)
 										.getAlignRes().get(str).get(pos);

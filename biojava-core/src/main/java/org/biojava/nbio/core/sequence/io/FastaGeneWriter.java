@@ -110,7 +110,7 @@ public class FastaGeneWriter {
 						for (int i = featureBioBegin; i <= featureBioEnd; i++) {
 							char ch = sb.charAt(i);
 							//probably not the fastest but the safest way if language is not standard ASCII
-							String temp = ch + "";
+							String temp = String.valueOf(ch);
 							ch = temp.toUpperCase().charAt(0);
 							sb.setCharAt(i, ch);
 						}

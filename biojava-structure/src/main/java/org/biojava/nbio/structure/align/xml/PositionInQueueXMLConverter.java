@@ -50,7 +50,7 @@ public class PositionInQueueXMLConverter
 		PrettyXMLWriter xml = new PrettyXMLWriter(writer);
 
 		xml.openTag("queue");
-		xml.attribute("position", position+"");
+		xml.attribute("position", String.valueOf(position));
 		xml.closeTag("queue");
 		xml.close();
 		return swriter.toString();

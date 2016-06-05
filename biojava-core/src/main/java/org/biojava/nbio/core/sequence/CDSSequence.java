@@ -94,7 +94,7 @@ public class CDSSequence extends DNASequence {
 			StringBuilder b = new StringBuilder(getLength());
 			CompoundSet<NucleotideCompound> compoundSet = this.getCompoundSet();
 			for (int i = 0; i < sequence.length(); i++) {
-				String nucleotide = sequence.charAt(i) + "";
+				String nucleotide = String.valueOf(sequence.charAt(i));
 				NucleotideCompound nucleotideCompound = compoundSet.getCompoundForString(nucleotide);
 				b.append(nucleotideCompound.getComplement().getShortName());
 			}

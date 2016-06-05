@@ -130,7 +130,7 @@ public class AFPChainXMLConverter {
 			String pdbres2 = spl2[1];
 
 			xml.openTag("eqr");
-			xml.attribute("eqrNr",eqrNr+"");
+			xml.attribute("eqrNr", String.valueOf(eqrNr));
 			xml.attribute("pdbres1",pdbres1);
 			xml.attribute("chain1", chain1);
 			xml.attribute("pdbres2",pdbres2);
@@ -155,7 +155,7 @@ public class AFPChainXMLConverter {
 			int pos1 = optAln[bk][0][pos];
 			int pos2 = optAln[bk][1][pos];
 			xml.openTag("eqr");
-			xml.attribute("eqrNr",pos+"");
+			xml.attribute("eqrNr", String.valueOf(pos));
 			xml.attribute("pdbres1",ca1[pos1].getGroup().getResidueNumber().toString());
 			xml.attribute("chain1", ca1[pos1].getGroup().getChain().getName());
 			xml.attribute("pdbres2",ca2[pos2].getGroup().getResidueNumber().toString());
@@ -185,11 +185,11 @@ public class AFPChainXMLConverter {
 		double[]blockScore = afpChain.getBlockScore();
 		double[] blockRmsd = afpChain.getBlockRmsd();
 
-		xml.attribute("blockNr",bk+"");
-		xml.attribute("blockSize", blockSize[bk]+"");
+		xml.attribute("blockNr", String.valueOf(bk));
+		xml.attribute("blockSize", String.valueOf(blockSize[bk]));
 		xml.attribute("blockScore", String.format("%5.2f",blockScore[bk]).trim());
 		xml.attribute("blockRmsd", String.format("%5.2f",blockRmsd[bk]).trim());
-		xml.attribute("blockGap", blockGap[bk]+"");
+		xml.attribute("blockGap", String.valueOf(blockGap[bk]));
 
 	}
 

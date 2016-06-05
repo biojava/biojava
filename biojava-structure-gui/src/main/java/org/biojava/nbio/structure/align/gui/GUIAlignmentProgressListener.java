@@ -122,7 +122,7 @@ public class GUIAlignmentProgressListener extends JPanel implements AlignmentPro
 		int v = progressBar.getValue();
 
 		progressBar.setValue(v+1);
-		progressBar.setString(v+"");
+		progressBar.setString(String.valueOf(v));
 		synchronized(this){notifyAll();}
 
 	}

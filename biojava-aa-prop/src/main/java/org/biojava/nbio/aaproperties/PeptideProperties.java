@@ -460,7 +460,7 @@ public class PeptideProperties {
 	 * @return the composition of specified amino acid in the sequence
 	 */
 	public static final double getEnrichment(String sequence, char aminoAcidCode){
-		return getEnrichment(sequence, aminoAcidCode + "");
+		return getEnrichment(sequence, aminoAcidCode);
 	}
 
 	/**
