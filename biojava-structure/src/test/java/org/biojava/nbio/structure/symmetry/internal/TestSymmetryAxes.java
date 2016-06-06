@@ -11,6 +11,7 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
 import org.biojava.nbio.structure.symmetry.internal.CESymmParameters.SymmetryType;
+import org.biojava.nbio.structure.symmetry.internal.SymmetryAxes.Axis;
 import org.junit.Test;
 
 
@@ -96,32 +97,32 @@ public class TestSymmetryAxes {
 		
 		Point3d x;
 		
-		List<Matrix4d> symmetryAxes = axes.getSymmetryAxes();
+		List<Axis> symmetryAxes = axes.getSymmetryAxes();
 		assertEquals(5,symmetryAxes.size());
 		int axisNum = 0;
 		// Repeat 2 -> 0 (90 deg around z)
 		x = new Point3d(repeats[2]);
-		symmetryAxes.get(axisNum).transform(x);
+		symmetryAxes.get(axisNum).getOperator().transform(x);
 		assertTrue(String.format("SymmAxis %d of %s=%s not %s",axisNum,round(repeats[2]),round(x),round(repeats[0])),x.epsilonEquals(repeats[0], 1e-5));
 		axisNum++;
 		// Repeat 1 -> 0 (180 deg around x)
 		x = new Point3d(repeats[1]);
-		symmetryAxes.get(axisNum).transform(x);
+		symmetryAxes.get(axisNum).getOperator().transform(x);
 		assertTrue(String.format("SymmAxis %d of %s=%s not %s",axisNum,round(repeats[1]),round(x),round(repeats[0])),x.epsilonEquals(repeats[0], 1e-5));
 		axisNum++;
 		// Repeat 3 -> 2 (180 deg around y)
 		x = new Point3d(repeats[3]);
-		symmetryAxes.get(axisNum).transform(x);
+		symmetryAxes.get(axisNum).getOperator().transform(x);
 		assertTrue(String.format("SymmAxis %d of %s=%s not %s",axisNum,round(repeats[3]),round(x),round(repeats[2])),x.epsilonEquals(repeats[2], 1e-5));
 		axisNum++;
 		// Repeat 5 -> 4 (180 deg around x)
 		x = new Point3d(repeats[5]);
-		symmetryAxes.get(axisNum).transform(x);
+		symmetryAxes.get(axisNum).getOperator().transform(x);
 		assertTrue(String.format("SymmAxis %d of %s=%s not %s",axisNum,round(repeats[5]),round(x),round(repeats[4])),x.epsilonEquals(repeats[4], 1e-5));
 		axisNum++;
 		// Repeat 7 -> 6 (180 deg around y)
 		x = new Point3d(repeats[7]);
-		symmetryAxes.get(axisNum).transform(x);
+		symmetryAxes.get(axisNum).getOperator().transform(x);
 		assertTrue(String.format("SymmAxis %d of %s=%s not %s",axisNum,round(repeats[7]),round(x),round(repeats[6])),x.epsilonEquals(repeats[6], 1e-5));
 		axisNum++;
 	}
@@ -209,33 +210,33 @@ public class TestSymmetryAxes {
 		
 		Point3d x;
 		
-		List<Matrix4d> symmetryAxes = axes.getSymmetryAxes();
+		List<Axis> symmetryAxes = axes.getSymmetryAxes();
 		assertEquals(5,symmetryAxes.size());
 		int axisNum = 0;
 		// Repeat 2 -> 0 (shift 1)
 		x = new Point3d(repeats[2]);
-		symmetryAxes.get(axisNum).transform(x);
+		symmetryAxes.get(axisNum).getOperator().transform(x);
 		assertTrue(String.format("SymmAxis %d of %s=%s not %s",axisNum,round(repeats[2]),round(x),round(repeats[0])),x.epsilonEquals(repeats[0], 1e-5));
 		axisNum++;
 		// All of these are actually equivalent
 		// Repeat 1 -> 0 (180 deg around x)
 		x = new Point3d(repeats[1]);
-		symmetryAxes.get(axisNum).transform(x);
+		symmetryAxes.get(axisNum).getOperator().transform(x);
 		assertTrue(String.format("SymmAxis %d of %s=%s not %s",axisNum,round(repeats[1]),round(x),round(repeats[0])),x.epsilonEquals(repeats[0], 1e-5));
 		axisNum++;
 		// Repeat 3 -> 2 (180 deg around x)
 		x = new Point3d(repeats[3]);
-		symmetryAxes.get(axisNum).transform(x);
+		symmetryAxes.get(axisNum).getOperator().transform(x);
 		assertTrue(String.format("SymmAxis %d of %s=%s not %s",axisNum,round(repeats[3]),round(x),round(repeats[2])),x.epsilonEquals(repeats[2], 1e-5));
 		axisNum++;
 		// Repeat 5 -> 4 (180 deg around x)
 		x = new Point3d(repeats[5]);
-		symmetryAxes.get(axisNum).transform(x);
+		symmetryAxes.get(axisNum).getOperator().transform(x);
 		assertTrue(String.format("SymmAxis %d of %s=%s not %s",axisNum,round(repeats[5]),round(x),round(repeats[4])),x.epsilonEquals(repeats[4], 1e-5));
 		axisNum++;
 		// Repeat 7 -> 6 (180 deg around x)
 		x = new Point3d(repeats[7]);
-		symmetryAxes.get(axisNum).transform(x);
+		symmetryAxes.get(axisNum).getOperator().transform(x);
 		assertTrue(String.format("SymmAxis %d of %s=%s not %s",axisNum,round(repeats[7]),round(x),round(repeats[6])),x.epsilonEquals(repeats[6], 1e-5));
 		axisNum++;
 	}
