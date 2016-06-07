@@ -172,7 +172,7 @@ public class TestDifficultMmCIFFiles {
 		cache.setUseMmCif(true);
 
 		Structure s = cache.getStructure("2PTC");
-		Chain c = s.getChain(0);
+		Chain c = s.getChainByIndex(0);
 		System.out.println(c);
 		assertEquals("Wrong first chain",c.getName(),"E");
 

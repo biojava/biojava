@@ -213,7 +213,7 @@ public class SubstructureIdentifier implements Serializable, StructureIdentifier
 					Chain chain;
 					if(chainId.equals("_") ) {
 						// Handle special case of "_" chain for single-chain proteins
-						chain = s.getChain(modelNr,0);
+						chain = s.getChainByIndex(modelNr,0);
 						if(pdbresnum1 != null)
 							pdbresnum1.setChainName(chain.getName());
 						if(pdbresnum2 != null)
@@ -234,7 +234,7 @@ public class SubstructureIdentifier implements Serializable, StructureIdentifier
 							try {
 								int chainNum = Integer.parseInt(chainId);
 								try {
-									chain = s.getChain(modelNr, chainNum);
+									chain = s.getChainByIndex(modelNr, chainNum);
 									logger.warn("No chain found for {}. Interpretting it as an index, using chain {} instead",chainId,chain.getChainID());
 								} catch(Exception e2) { //we don't care what gets thrown here -sbliven
 									throw e; // Nope, not an index. Throw the original exception

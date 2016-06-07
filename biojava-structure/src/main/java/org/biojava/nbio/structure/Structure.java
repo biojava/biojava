@@ -395,19 +395,19 @@ public interface Structure extends Cloneable {
 	/**
 	 * Retrieve a chain by its index within the Structure .
 	 *
-	 * @param pos  an int for the position in the List of Chains.
+	 * @param chainIndex the index of the desired chain in the structure
 	 * @return a Chain object
 	 */
-	Chain getChain(int pos);
+	Chain getChainByIndex(int chainIndex);
 
 	/**
 	 * Retrieve a chain by its indices within the Structure and model.
 	 *
-	 * @param pos      an int
-	 * @param modelnr  an int
+	 * @param chainIndex the index of the desired chain in the structure
+	 * @param modelnr the model the desired chain is in
 	 * @return a Chain object
 	 */
-	Chain getChain( int modelnr, int pos);
+	Chain getChainByIndex(int modelnr, int chainIndex);
 
 	/**
 	 * Request a particular chain from a structure.

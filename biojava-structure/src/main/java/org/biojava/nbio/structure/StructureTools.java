@@ -1141,7 +1141,7 @@ public class StructureTools {
 		}
 		Chain c = null;
 
-		c = s.getChain(0, chainNr);
+		c = s.getChainByIndex(0, chainNr);
 
 		newStructure.addChain(c);
 

@@ -58,7 +58,7 @@ public class DemoLoadStructure
 			System.out.println(StructureTools.getNrAtoms(s1));
 
 
-			Chain chain1 = s1.getChain(0);
+			Chain chain1 = s1.getChainByIndex(0);
 
 			System.out.println("First chain: " + chain1);
 
