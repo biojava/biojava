@@ -508,7 +508,7 @@ public class SymmetryTools {
 			throw new IllegalArgumentException("The symmetry result "
 					+ "is not refined, repeats cannot be defined");
 
-		Atom[] atoms = symmetry.getAtoms();
+		Atom[] atoms = StructureTools.cloneAtomArray(symmetry.getAtoms());
 
 		Structure symm = new StructureImpl();
 		symm.setStructureIdentifier(symmetry.getStructureId());
@@ -593,8 +593,7 @@ public class SymmetryTools {
 
 		MultipleAlignment msa = result.getMultipleAlignment();
 		MultipleAlignmentEnsemble newEnsemble = msa.getEnsemble().clone();
-		newEnsemble.setStructureIdentifiers(result.getRepeatsID());
-
+		
 		// Modify atom arrays to include the repeat atoms only
 		List<Atom[]> atomArrays = new ArrayList<Atom[]>();
 		Structure divided = SymmetryTools.getQuaternaryStructure(result);
@@ -992,7 +991,7 @@ public class SymmetryTools {
 
 		else {
 
-			// Get Atoms of all models and rename chains (in case BIO)
+			// Get Atoms of all models
 			List<Atom> atomList = new ArrayList<Atom>();
 			for (int m = 0; m < structure.nrModels(); m++) {
 				for (Chain c : structure.getModel(m))
