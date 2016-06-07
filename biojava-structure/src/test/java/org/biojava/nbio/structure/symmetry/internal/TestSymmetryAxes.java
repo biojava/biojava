@@ -52,6 +52,7 @@ public class TestSymmetryAxes {
 		assertEquals(expectedEven, axes.getRepeatTransform(6));
 		assertEquals(expectedOdd, axes.getRepeatTransform(7));
 
+		// Test Cauchy Form
 		List<List<Integer>> relation = Arrays.asList(
 				Arrays.asList(0,1,2,3,4,5,6,7),
 				Arrays.asList(2,3,4,5,6,7,0,1)
@@ -62,11 +63,43 @@ public class TestSymmetryAxes {
 				Arrays.asList(1,0)
 				);
 		assertEquals(relation,axes.getRepeatRelation(1));
+		relation = Arrays.asList(
+				Arrays.asList(2,3),
+				Arrays.asList(3,2)
+				);
+		assertEquals(relation,axes.getRepeatRelation(1,2));
 		try {
 			axes.getRepeatRelation(2);
 			fail("Invalid level");
 		} catch(IndexOutOfBoundsException e) {}
+		try {
+			axes.getRepeatRelation(1,1);
+			fail("Invalid firstRepeat");
+		} catch(IllegalArgumentException e) {}
 		
+		// Test Cyclic Form
+		relation = Arrays.asList(
+				Arrays.asList(0,2,4,6),
+				Arrays.asList(1,3,5,7)
+				);
+		assertEquals(relation,axes.getRepeatsCyclicForm(0));
+		relation = Arrays.asList(
+				Arrays.asList(0,1)
+				);
+		assertEquals(relation,axes.getRepeatsCyclicForm(1));
+		relation = Arrays.asList(
+				Arrays.asList(2,3)
+				);
+		assertEquals(relation,axes.getRepeatsCyclicForm(1,2));
+		try {
+			axes.getRepeatsCyclicForm(2);
+			fail("Invalid level");
+		} catch(IndexOutOfBoundsException e) {}
+		try {
+			axes.getRepeatsCyclicForm(1,1);
+			fail("Invalid firstRepeat");
+		} catch(IllegalArgumentException e) {}
+
 		
 		// Expected location of each repeat
 		Point3d[] repeats = new Point3d[] {
@@ -104,26 +137,31 @@ public class TestSymmetryAxes {
 		x = new Point3d(repeats[2]);
 		symmetryAxes.get(axisNum).getOperator().transform(x);
 		assertTrue(String.format("SymmAxis %d of %s=%s not %s",axisNum,round(repeats[2]),round(x),round(repeats[0])),x.epsilonEquals(repeats[0], 1e-5));
+		assertEquals(0,symmetryAxes.get(axisNum).getFirstRepeat());
 		axisNum++;
 		// Repeat 1 -> 0 (180 deg around x)
 		x = new Point3d(repeats[1]);
 		symmetryAxes.get(axisNum).getOperator().transform(x);
 		assertTrue(String.format("SymmAxis %d of %s=%s not %s",axisNum,round(repeats[1]),round(x),round(repeats[0])),x.epsilonEquals(repeats[0], 1e-5));
+		assertEquals(0,symmetryAxes.get(axisNum).getFirstRepeat());
 		axisNum++;
 		// Repeat 3 -> 2 (180 deg around y)
 		x = new Point3d(repeats[3]);
 		symmetryAxes.get(axisNum).getOperator().transform(x);
 		assertTrue(String.format("SymmAxis %d of %s=%s not %s",axisNum,round(repeats[3]),round(x),round(repeats[2])),x.epsilonEquals(repeats[2], 1e-5));
+		assertEquals(2,symmetryAxes.get(axisNum).getFirstRepeat());
 		axisNum++;
 		// Repeat 5 -> 4 (180 deg around x)
 		x = new Point3d(repeats[5]);
 		symmetryAxes.get(axisNum).getOperator().transform(x);
 		assertTrue(String.format("SymmAxis %d of %s=%s not %s",axisNum,round(repeats[5]),round(x),round(repeats[4])),x.epsilonEquals(repeats[4], 1e-5));
+		assertEquals(4,symmetryAxes.get(axisNum).getFirstRepeat());
 		axisNum++;
 		// Repeat 7 -> 6 (180 deg around y)
 		x = new Point3d(repeats[7]);
 		symmetryAxes.get(axisNum).getOperator().transform(x);
 		assertTrue(String.format("SymmAxis %d of %s=%s not %s",axisNum,round(repeats[7]),round(x),round(repeats[6])),x.epsilonEquals(repeats[6], 1e-5));
+		assertEquals(6,symmetryAxes.get(axisNum).getFirstRepeat());
 		axisNum++;
 	}
 	private static Point3d round(Point3d p) {
@@ -165,6 +203,7 @@ public class TestSymmetryAxes {
 		assertEquals(expectedEven, axes.getRepeatTransform(6));
 		assertEquals(expectedOdd, axes.getRepeatTransform(7));
 
+		// Test Cauchy Form
 		List<List<Integer>> relation = Arrays.asList(
 				Arrays.asList(0,1,2,3,4,5),
 				Arrays.asList(2,3,4,5,6,7)
@@ -179,7 +218,31 @@ public class TestSymmetryAxes {
 			axes.getRepeatRelation(2);
 			fail("Invalid level");
 		} catch(IndexOutOfBoundsException e) {}
+		
+		// Test Cyclic Form
+		relation = Arrays.asList(
+				Arrays.asList(0,2,4,6),
+				Arrays.asList(1,3,5,7)
+				);
+		assertEquals(relation,axes.getRepeatsCyclicForm(0));
+		relation = Arrays.asList(
+				Arrays.asList(0,1)
+				);
+		assertEquals(relation,axes.getRepeatsCyclicForm(1));
+		relation = Arrays.asList(
+				Arrays.asList(2,3)
+				);
+		assertEquals(relation,axes.getRepeatsCyclicForm(1,2));
+		try {
+			axes.getRepeatsCyclicForm(2);
+			fail("Invalid level");
+		} catch(IndexOutOfBoundsException e) {}
+		try {
+			axes.getRepeatsCyclicForm(1,1);
+			fail("Invalid firstRepeat");
+		} catch(IllegalArgumentException e) {}
 
+		
 		// Expected location of each repeat
 		Point3d[] repeats = new Point3d[] {
 				new Point3d(-15,1,1),
