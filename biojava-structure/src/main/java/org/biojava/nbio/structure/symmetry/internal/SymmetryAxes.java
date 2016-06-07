@@ -480,24 +480,24 @@ public class SymmetryAxes {
 		// elementary maps B -> A
 		// prior maps I -> A and J -> B
 		// want J -> I = J -> B -> A <- I= inv(prior) * elementary * prior
-		Matrix4d invPrior = new Matrix4d(prior);
-		invPrior.invert();
 		Matrix4d currAxisOp = new Matrix4d(prior);
+		currAxisOp.invert();
 		currAxisOp.mul(elemOp);
-		Matrix4d newPrior = new Matrix4d(currAxisOp);//save intermediate for later
-		currAxisOp.mul(invPrior);
+		currAxisOp.mul(prior);
 		Axis currAxis = new Axis(currAxisOp,elem.getOrder(),elem.getSymmType());
 		currAxis.setLevel(level);
 		currAxis.setFirstRepeat(firstRepeat);
 		symmAxes.add(currAxis);
 		
-		//New prior is elementary^d*prior
 		//Remember that all degrees are at least 2
 		getSymmetryAxes(symmAxes,prior,level+1,0);
+		//New prior is elementary^d*prior
+		Matrix4d newPrior = new Matrix4d(elemOp);
+		newPrior.mul(prior);
 		int childSize = getNumRepeats(level+1);
 		getSymmetryAxes(symmAxes,newPrior,level+1,childSize);
 		for(int d=2;d<elem.getOrder();d++) {
-			newPrior.mul(elemOp);
+			newPrior.mul(elemOp,newPrior);
 			getSymmetryAxes(symmAxes,newPrior,level+1,childSize*d);
 		}
 	}

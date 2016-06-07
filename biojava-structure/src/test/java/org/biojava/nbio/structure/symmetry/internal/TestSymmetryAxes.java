@@ -35,7 +35,7 @@ public class TestSymmetryAxes {
 		assertEquals(2,axes.getElementaryAxes().size());
 
 		Matrix4d expectedEven = new Matrix4d();
-		expectedEven.set(1);
+		expectedEven.setIdentity();
 		Matrix4d expectedOdd = new Matrix4d(r180);
 		assertEquals(expectedEven, axes.getRepeatTransform(0));
 		assertEquals(expectedOdd, axes.getRepeatTransform(1));
@@ -186,7 +186,7 @@ public class TestSymmetryAxes {
 		assertEquals(2,axes.getElementaryAxes().size());
 
 		Matrix4d expectedEven = new Matrix4d();
-		expectedEven.set(1);
+		expectedEven.setIdentity();
 		Matrix4d expectedOdd = new Matrix4d(r180);
 		assertEquals(expectedEven, axes.getRepeatTransform(0));
 		assertEquals(expectedOdd, axes.getRepeatTransform(1));
@@ -334,7 +334,7 @@ public class TestSymmetryAxes {
 		assertEquals(2,axes.getElementaryAxes().size());
 
 		Matrix4d expectedEven = new Matrix4d();
-		expectedEven.set(1);
+		expectedEven.setIdentity();
 		Matrix4d expectedOdd = new Matrix4d(r180);
 		assertEquals(expectedEven, axes.getRepeatTransform(0));
 		assertEquals(expectedOdd, axes.getRepeatTransform(1));
