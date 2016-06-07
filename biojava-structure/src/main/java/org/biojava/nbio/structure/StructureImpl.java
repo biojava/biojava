@@ -334,7 +334,11 @@ public class StructureImpl implements Structure, Serializable {
 
 	}
 
-
+	/** {@inheritDoc} */
+	@Override
+	public Chain getChain(char asymId) {
+		return getChain(""+asymId);
+	}
 
 	/** {@inheritDoc} */
 	@Override
@@ -1150,6 +1154,9 @@ public class StructureImpl implements Structure, Serializable {
 		}
 		return new SubstructureIdentifier(getPDBCode(),range);
 	}
+
+
+
 
 
 

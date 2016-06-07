@@ -520,6 +520,18 @@ public interface Structure extends Cloneable {
 	 */
 	Chain getChain(String asymId);
 	
+	
+	/**
+	 * Retrieve a Chain (polymeric, non-polymeric or water) based on
+	 * the 'internal' chain id (asymId) for the first model
+	 * @param asymId the asymId (chainId)
+	 * @return
+	 * @see #getPolyChain(String)
+	 * @see #getNonPolyChain(String)
+	 * @see #getWaterChain(String) 
+	 */
+	Chain getChain(char asymId);
+	
 	/**
 	 * Retrieve a Chain (polymeric, non-polymeric or water) based on
 	 * the 'internal' chain id (asymId) for the given model index 
