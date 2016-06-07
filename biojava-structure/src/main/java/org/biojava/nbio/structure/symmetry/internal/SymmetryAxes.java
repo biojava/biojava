@@ -82,7 +82,7 @@ public class SymmetryAxes {
 		private int firstRepeat;
 		private RotationAxis rotAxis;
 
-		public Axis(Matrix4d operator, int order, SymmetryType type) {
+		public Axis(Matrix4d operator, int order, SymmetryType type, int level, int firstRepeat) {
 			if (order < 2) {
 				throw new IllegalArgumentException("A symmetry axis should divide a structure in > 2 parts");
 			}
@@ -93,8 +93,8 @@ public class SymmetryAxes {
 			this.operator = operator;
 			this.order = order;
 			this.symmType = type;
-			this.level = -1;
-			this.firstRepeat = -1;
+			setLevel(level);
+			setFirstRepeat(firstRepeat);
 			rotAxis = null;
 		}
 		/**
@@ -242,7 +242,7 @@ public class SymmetryAxes {
 	 * @param type indicates whether the axis has OPEN or CLOSED symmetry
 	 */
 	public void addAxis(Matrix4d axis, int order, SymmetryType type) {
-		axes.add(new Axis(axis,order,type));
+		axes.add(new Axis(axis,order,type,axes.size(),0));
 	}
 
 	/**
@@ -345,11 +345,11 @@ public class SymmetryAxes {
 		int m = getNumRepeats(level+1);//size of the children
 		int d = axis.getOrder(); // degree of this node
 		int n = m*d; // number of repeats included
-		if(axis.getSymmType() == SymmetryType.OPEN) {
-			n -= m; // leave off last child for open symm
-		}
 		if(firstRepeat % n != 0) {
 			throw new IllegalArgumentException(String.format("Repeat %d cannot start a block at level %s of this tree",firstRepeat,level));
+		}
+		if(axis.getSymmType() == SymmetryType.OPEN) {
+			n -= m; // leave off last child for open symm
 		}
 		List<Integer> repeats = new ArrayList<>(n);
 		List<Integer> equiv = new ArrayList<>(n);
@@ -362,7 +362,7 @@ public class SymmetryAxes {
 	}
 
 	/**
-	 * Get the indicies of participating repeats in cyclic form.
+	 * Get the indices of participating repeats in cyclic form.
 	 * <p>
 	 * Each inner list gives a set of equivalent repeats and should have length
 	 * equal to the order of the axis' operator. 
@@ -484,9 +484,7 @@ public class SymmetryAxes {
 		currAxisOp.invert();
 		currAxisOp.mul(elemOp);
 		currAxisOp.mul(prior);
-		Axis currAxis = new Axis(currAxisOp,elem.getOrder(),elem.getSymmType());
-		currAxis.setLevel(level);
-		currAxis.setFirstRepeat(firstRepeat);
+		Axis currAxis = new Axis(currAxisOp,elem.getOrder(),elem.getSymmType(),level,firstRepeat);
 		symmAxes.add(currAxis);
 		
 		//Remember that all degrees are at least 2
@@ -501,6 +499,7 @@ public class SymmetryAxes {
 			getSymmetryAxes(symmAxes,newPrior,level+1,childSize*d);
 		}
 	}
+	
 	
 //	public Matrix4d getSymmetryAxis(int level, int axisNum) {
 //		if(level == 0) {

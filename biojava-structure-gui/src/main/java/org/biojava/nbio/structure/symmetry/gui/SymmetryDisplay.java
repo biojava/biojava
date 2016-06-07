@@ -237,12 +237,13 @@ public class SymmetryDisplay {
 		}
 		for (Axis a : symmAxes) {
 			RotationAxis rot = a.getRotationAxis();
-			Set<Integer> repIndex = new TreeSet<Integer>(axes
-					.getRepeatRelation(a).get(0));
-			repIndex.addAll(axes.getRepeatRelation(a).get(1));
+			List<List<Integer>> cyclicForm = axes.getRepeatsCyclicForm(a);
 			List<Atom> repAtoms = new ArrayList<Atom>();
-			for (Integer r : repIndex)
-				repAtoms.addAll(Arrays.asList(repeats.get(r)));
+			for(List<Integer> cycle : cyclicForm) {
+				for(Integer repeat : cycle) {
+					repAtoms.addAll(Arrays.asList(repeats.get(repeat)));
+				}
+			}
 
 			script += rot.getJmolScript(
 					repAtoms.toArray(new Atom[repAtoms.size()]), id);
