@@ -273,14 +273,14 @@ public class AtomCacheTest {
 		full = id.loadStructure(cache);
 		assertEquals("Wrong number of models in full "+name,1,full.nrModels());
 		assertEquals("Wrong number of chains in full "+name,1,full.getChains().size());
-		chain = full.getChain(0);
+		chain = full.getChainByIndex(0);
 		seqres = chain.getSeqResGroups();
 		assertEquals("Wrong seqres length in full "+name,46,seqres.size());
 		
 		reduced = id.reduce(full);
 		assertEquals("Wrong number of models in reduced "+name,1,reduced.nrModels());
 		assertEquals("Wrong number of chains in reduced "+name,1,reduced.getChains().size());
-		chain = reduced.getChain(0);
+		chain = reduced.getChainByIndex(0);
 		seqres = chain.getSeqResGroups();
 		assertEquals("Wrong seqres length in reduced "+name,46,seqres.size());
 
@@ -291,14 +291,14 @@ public class AtomCacheTest {
 		full = id.loadStructure(cache);
 		assertEquals("Wrong number of models in full "+name,1,full.nrModels());
 		assertEquals("Wrong number of chains in full "+name,1,full.getChains().size());
-		chain = full.getChain(0);
+		chain = full.getChainByIndex(0);
 		seqres = chain.getSeqResGroups();
 		assertEquals("Wrong seqres length in full "+name,46,seqres.size());
 		
 		reduced = id.reduce(full);
 		assertEquals("Wrong number of models in reduced "+name,1,reduced.nrModels());
 		assertEquals("Wrong number of chains in reduced "+name,1,reduced.getChains().size());
-		chain = reduced.getChain(0);
+		chain = reduced.getChainByIndex(0);
 		seqres = chain.getSeqResGroups();
 		assertEquals("Wrong seqres length in reduced "+name,46,seqres.size());
 
@@ -309,7 +309,7 @@ public class AtomCacheTest {
 		full = id.loadStructure(cache);
 		assertEquals("Wrong number of models in full "+name,1,full.nrModels());
 		assertEquals("Wrong number of chains in full "+name,1,full.getChains().size());
-		chain = full.getChain(0);
+		chain = full.getChainByIndex(0);
 		seqres = chain.getSeqResGroups();
 		assertEquals("Wrong seqres length in full "+name,46,seqres.size());
 		assertEquals("Wrong SeqNum at first group in full",1,(int)chain.getAtomGroup(0).getResidueNumber().getSeqNum());
@@ -317,7 +317,7 @@ public class AtomCacheTest {
 		reduced = id.reduce(full);
 		assertEquals("Wrong number of models in reduced "+name,1,reduced.nrModels());
 		assertEquals("Wrong number of chains in reduced "+name,1,reduced.getChains().size());
-		chain = reduced.getChain(0);
+		chain = reduced.getChainByIndex(0);
 		seqres = chain.getSeqResGroups();
 		assertEquals("Wrong seqres length in reduced "+name,46,seqres.size());
 		

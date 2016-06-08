@@ -84,7 +84,7 @@ public class DemoContacts {
 		System.out.println("Total number of residue contacts: "+groupContacts.size());
 
 
-		contacts = StructureTools.getAtomsInContact(structure.getChain(0),structure.getChain(1),5.5, false);
+		contacts = StructureTools.getAtomsInContact(structure.getChainByIndex(0),structure.getChainByIndex(1),5.5, false);
 
 		System.out.println("Contacting residues between 2 first chains (all non-H non-hetatoms)");
 

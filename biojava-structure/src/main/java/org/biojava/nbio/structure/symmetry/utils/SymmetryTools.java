@@ -604,7 +604,7 @@ public class SymmetryTools {
 
 		for (int i = 0; i < result.getMultipleAlignment().size(); i++) {
 			Structure newStr = new StructureImpl();
-			Chain newCh = divided.getChain(i);
+			Chain newCh = divided.getChainByIndex(i);
 			newStr.addChain(newCh);
 			Atom[] repeat = StructureTools.getRepresentativeAtomArray(newCh);
 			atomArrays.add(repeat);

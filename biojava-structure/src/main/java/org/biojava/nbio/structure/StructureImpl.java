@@ -150,7 +150,7 @@ public class StructureImpl implements Structure, Serializable {
 
 			for (int j=0;j<size(i);j++){
 
-				Chain cloned_chain  = (Chain) getChain(i,j).clone();
+				Chain cloned_chain  = (Chain) getChainByIndex(i,j).clone();
 
 				// setting the parent: can only be done from the parent
 				cloned_chain.setStructure(n);
@@ -338,17 +338,17 @@ public class StructureImpl implements Structure, Serializable {
 
 	/** {@inheritDoc} */
 	@Override
-	public Chain getChain(int number) {
+	public Chain getChainByIndex(int number) {
 
 		int modelnr = 0 ;
 
-		return getChain(modelnr,number);
+		return getChainByIndex(modelnr,number);
 	}
 
 
 	/** {@inheritDoc} */
 	@Override
-	public Chain getChain(int modelnr,int number) {
+	public Chain getChainByIndex(int modelnr,int number) {
 
 		Model model = models.get(modelnr);
 
@@ -434,7 +434,7 @@ public class StructureImpl implements Structure, Serializable {
 
 			for (int j=0;j<size(i);j++){
 
-				Chain cha = getChain(i,j);
+				Chain cha = getChainByIndex(i,j);
 				List<Group> agr = cha.getAtomGroups(GroupType.AMINOACID);
 				List<Group> hgr = cha.getAtomGroups(GroupType.HETATM);
 				List<Group> ngr = cha.getAtomGroups(GroupType.NUCLEOTIDE);

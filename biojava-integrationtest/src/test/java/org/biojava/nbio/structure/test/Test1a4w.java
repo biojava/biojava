@@ -106,8 +106,8 @@ public class Test1a4w extends TestCase{
 		assertEquals(structure.getPDBHeader().toPDB().toLowerCase(),structure2.getPDBHeader().toPDB().toLowerCase());
 
 		for ( int i = 0 ; i < 3 ; i++){
-			Chain c1 = structure.getChain(i);
-			Chain c2 = structure.getChain(i);
+			Chain c1 = structure.getChainByIndex(i);
+			Chain c2 = structure.getChainByIndex(i);
 			testEqualChains(c1, c2);
 		}
 	}
@@ -159,7 +159,7 @@ public class Test1a4w extends TestCase{
 
 		assertEquals(3, s.getPolyChains().size());
 
-		Chain c2 = s.getChain(1);
+		Chain c2 = s.getChainByIndex(1);
 		assertEquals("H", c2.getName());
 
 		
@@ -194,7 +194,7 @@ public class Test1a4w extends TestCase{
 	}
 
 	public void testLigandLoading(){
-		Chain c2 = structure.getChain(1);
+		Chain c2 = structure.getChainByIndex(1);
 		assertEquals("H", c2.getName());
 
 		
@@ -227,7 +227,7 @@ public class Test1a4w extends TestCase{
 		//			for (Chain chain : s.getChains()) {
 		//				System.out.println("Chain: " + chain.getChainID());
 		//			}
-		Chain c2 = s.getChain(1);
+		Chain c2 = s.getChainByIndex(1);
 		assertEquals("H", c2.getName());
 
 		//			if (s == null) {

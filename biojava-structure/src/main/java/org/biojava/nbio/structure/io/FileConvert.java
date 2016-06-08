@@ -509,7 +509,7 @@ public class FileConvert {
 
 			// do for all chains:
 			for (int chainnr = 0;chainnr<structure.size(modelnr);chainnr++){
-				Chain chain = structure.getChain(modelnr,chainnr);
+				Chain chain = structure.getChainByIndex(modelnr,chainnr);
 				xw.openTag("chain");
 				xw.attribute("id",chain.getId());
 				xw.attribute("SwissprotId",chain.getSwissprotId() );

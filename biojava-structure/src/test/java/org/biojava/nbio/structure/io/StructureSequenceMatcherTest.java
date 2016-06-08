@@ -121,7 +121,7 @@ public class StructureSequenceMatcherTest extends TestCase {
 		assertEquals("Wrong number of groups", 10, StructureTools.getNrGroups(result));
 		assertEquals("Wrong number of chains", 1, result.getChains().size());
 		int i = 0;
-		for (Group group : result.getChain(0).getAtomGroups()) {
+		for (Group group : result.getChainByIndex(0).getAtomGroups()) {
 			assertTrue("Contains non-amino acid group", group instanceof AminoAcid);
 			AminoAcid aa = (AminoAcid) group;
 			char c = StructureTools.get1LetterCodeAmino(aa.getPDBName());

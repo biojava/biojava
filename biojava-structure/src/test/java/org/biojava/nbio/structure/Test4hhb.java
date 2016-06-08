@@ -94,8 +94,8 @@ public class Test4hhb {
 		assertEquals(structure.getPDBHeader().toPDB().toLowerCase(),structure2.getPDBHeader().toPDB().toLowerCase());
 
 		for ( int i = 0 ; i < 4 ; i++){
-			Chain c1 = structure.getChain(i);
-			Chain c2 = structure.getChain(i);
+			Chain c1 = structure.getChainByIndex(i);
+			Chain c2 = structure.getChainByIndex(i);
 			testEqualChains(c1, c2);
 		}
 

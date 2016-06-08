@@ -157,7 +157,7 @@ public class TestAltLocs {
 		AtomCache cache = new AtomCache();
 		Structure structure = cache.getStructure("1JXX");
 
-		Chain chain = structure.getChain(0); // 1JXX example
+		Chain chain = structure.getChainByIndex(0); // 1JXX example
 
 		Group g = chain.getAtomGroups().get(1); // 1JXX  THR A   2
 		ensureAllAtomsSameAltCode(g, g);

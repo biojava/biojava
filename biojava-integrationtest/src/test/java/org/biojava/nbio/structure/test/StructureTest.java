@@ -108,12 +108,12 @@ public class StructureTest {
 
 		// since biojava 5.0, we have 4 chains here: 1 protein, 2 non-poly (ligands), 1 water
 		
-		Chain c = structure.getChain(0);
+		Chain c = structure.getChainByIndex(0);
 		assertEquals("did not find the expected 58 amino acids!",58,c.getAtomGroups(GroupType.AMINOACID).size());
 
 		assertEquals(0 , c.getAtomGroups(GroupType.HETATM).size());
 
-		Chain c4 = structure.getChain(3);
+		Chain c4 = structure.getChainByIndex(3);
 
 		// The fourth chain in the file contains 63 molecules of deutarated
 		assertEquals(63, c4.getAtomGroups(GroupType.HETATM).size());
@@ -221,7 +221,7 @@ public class StructureTest {
 	@Test
 	public void testCreateVirtualCBAtom(){
 
-		Group g1 = structure.getChain(0).getAtomGroup(11);
+		Group g1 = structure.getChainByIndex(0).getAtomGroup(11);
 
 		if ( g1.getPDBName().equals("GLY")){
 			if ( g1 instanceof AminoAcid){
@@ -240,11 +240,11 @@ public class StructureTest {
 	@Test
 	public void testMutation() throws Exception {
 
-		Group g1 = (Group)structure.getChain(0).getAtomGroup(21).clone();
+		Group g1 = (Group)structure.getChainByIndex(0).getAtomGroup(21).clone();
 		assertTrue(g1 != null);
 
 
-		Group g2 = (Group)structure.getChain(0).getAtomGroup(53).clone();
+		Group g2 = (Group)structure.getChainByIndex(0).getAtomGroup(53).clone();
 		assertTrue(g2 != null);
 
 
