@@ -121,8 +121,7 @@ public class ConfigPDBInstallPanel extends JPanel
 		vBox.add(instance);
 
 
-
-		UIManager.LookAndFeelInfo lookAndFeels[] = UIManager.getInstalledLookAndFeels();
+		UIManager.LookAndFeelInfo[] lookAndFeels = UIManager.getInstalledLookAndFeels();
 		JPanel panel = new JPanel();
 
 		for(int i = 0; i < lookAndFeels.length; i++){
@@ -219,7 +218,7 @@ class MyAction implements ActionListener{
 	public void actionPerformed(ActionEvent ae){
 		Object EventSource = ae.getSource();
 		String lookAndFeelClassName = null;
-		UIManager.LookAndFeelInfo looks[] = UIManager.getInstalledLookAndFeels();
+		UIManager.LookAndFeelInfo[] looks = UIManager.getInstalledLookAndFeels();
 		for(int i = 0; i < looks.length; i++){
 			if(ae.getActionCommand().equals(looks[i].getName())){
 				lookAndFeelClassName = looks[i].getClassName();

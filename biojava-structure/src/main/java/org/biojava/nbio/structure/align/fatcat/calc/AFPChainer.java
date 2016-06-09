@@ -542,7 +542,7 @@ public class AFPChainer
 		int     a, b;
 		afpChain.setChainLen( 0);
 		int chainLen       = afpChain.getChainLen();
-		int block2Afp[]    = afpChain.getBlock2Afp();
+		int[] block2Afp = afpChain.getBlock2Afp();
 
 
 		double[] blockRmsd = afpChain.getBlockRmsd();

@@ -105,7 +105,7 @@ public final class SphereSampler {
 
 	// The rotational symmetries of the cube. (Not normalized, since
 	// PackSet.Add does this.)
-	private static final double cubeSyms[][] = {
+	private static final double[][] cubeSyms = {
 		{ 1, 0, 0, 0 },
 		// 180 deg rotations about 3 axes
 		{ 0, 1, 0, 0 },

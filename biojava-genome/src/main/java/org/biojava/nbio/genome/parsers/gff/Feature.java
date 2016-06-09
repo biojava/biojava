@@ -317,7 +317,7 @@ public class Feature implements FeatureI {
 	 * @deprecated
 	 */
 	@Deprecated
-	public static void main(String args[])
+	public static void main(String[] args)
 			throws Exception {
 		//Feature f= new Feature();
 		//intentionally perverse

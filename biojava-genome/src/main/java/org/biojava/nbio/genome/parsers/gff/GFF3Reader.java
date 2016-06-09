@@ -170,7 +170,7 @@ public class GFF3Reader {
 
 
 
-	public static void main(String args[]) throws Exception {
+	public static void main(String[] args) throws Exception {
 		long start = System.currentTimeMillis();
 		@SuppressWarnings("unused")
 		FeatureList listGenes = GFF3Reader.read("/home/melo/workspace/release/stdout.combined.checked2.gtf");

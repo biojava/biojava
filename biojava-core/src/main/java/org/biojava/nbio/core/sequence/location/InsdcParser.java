@@ -296,7 +296,7 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
 		return returnStrand;
 	}
 
-	public static void main(String args[]){
+	public static void main(String[] args){
 		String[] testStrings = {
 			"J00194.1:100..202",
 			"A00001.5:34..45",

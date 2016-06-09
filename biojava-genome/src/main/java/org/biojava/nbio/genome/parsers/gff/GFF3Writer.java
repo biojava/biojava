@@ -138,7 +138,7 @@ public class GFF3Writer {
 		return notes;
 	}
 
-	public static void main(String args[]) throws Exception {
+	public static void main(String[] args) throws Exception {
 
 		if (true) {
 			FileOutputStream fo = new FileOutputStream("/Users/Scooter/scripps/dyadic/geneid/geneid/c1-geneid.gff3");//-16

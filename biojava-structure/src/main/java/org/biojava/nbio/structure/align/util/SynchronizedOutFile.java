@@ -108,7 +108,7 @@ public class SynchronizedOutFile {
 			for ( int i = 0 ; i <= counter ; i++){
 				if ( tmp[i] == null )
 					continue;
-				byte data[] = tmp[i].getBytes();
+				byte[] data = tmp[i].getBytes();
 				out.write(data, 0, data.length);
 			}
 
