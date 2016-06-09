@@ -92,11 +92,12 @@ public class ProteinModificationParserTest extends TestCase {
 
 				// Terbium
 				{"1NCZ", null},
-				//{"3LTQ",null}, has metalc, we ignore those for now
-//				{"4ESQ",null},
-//				{"1TJB",null},
-//				{"2V15",null},
-//				{"2K61",null},
+				{"3LTQ",null}, // has metalc,
+
+				{"4ESQ",null},
+				{"1TJB",null},
+				{"2V15",null},
+				{"2K61",null},
 
 		};
 		return strucs;

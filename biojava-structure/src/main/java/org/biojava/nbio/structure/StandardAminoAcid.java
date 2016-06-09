@@ -27,6 +27,7 @@ import org.biojava.nbio.structure.io.PDBFileParser;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.zip.GZIPInputStream;
 
 
 /** A class that provides a set of standard amino acids.
@@ -40,7 +41,7 @@ import java.util.Map;
  */
 public final class StandardAminoAcid {
 
-	private static final String STANDARD_AMINOS_FILE = "org/biojava/nbio/structure/standardaminos.pdb";
+	private static final String STANDARD_AMINOS_FILE = "org/biojava/nbio/structure/standardaminos.pdb.gz";
 
 	static private Map<String,AminoAcid> aminoAcids;
 
@@ -72,9 +73,12 @@ public final class StandardAminoAcid {
 			throw new RuntimeException("Could not find resource "+STANDARD_AMINOS_FILE+".  This probably means that your biojava.jar file is corrupt or incorrectly built.");
 		}
 
+
+
 		try {
+			GZIPInputStream gzipIS = new GZIPInputStream(fileStream);
 			PDBFileParser parser = new PDBFileParser();
-			Structure s = parser.parsePDBFile(fileStream);
+			Structure s = parser.parsePDBFile(gzipIS);
 
 
 			GroupIterator iter = new GroupIterator(s);
