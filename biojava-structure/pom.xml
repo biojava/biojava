@@ -123,7 +123,7 @@
 				<filtering>false</filtering>
 				<includes>
 					<include>**/*.cif.gz</include>
-					<include>**/*.pdb</include>
+					<include>**/*.pdb.gz</include>
 					<include>**/*.mat</include>
 					<include>**/*.xml</include>
 				</includes>

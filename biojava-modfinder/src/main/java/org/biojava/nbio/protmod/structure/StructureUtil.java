@@ -25,10 +25,13 @@
 package org.biojava.nbio.protmod.structure;
 
 import org.biojava.nbio.structure.*;
+import org.biojava.nbio.structure.io.mmcif.MetalBondParser;
+import org.biojava.nbio.structure.io.mmcif.chem.MetalBondDistance;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public final class StructureUtil {
 	private StructureUtil() {
@@ -242,18 +245,74 @@ public final class StructureUtil {
 
 			return ret;
 		}
-		
+
+		// is it a metal ?
+
+		if ( a1.getElement().isMetal() || a2.getElement().isMetal()){
+
+			MetalBondDistance defined = getMetalDistanceCutoff(a1.getName(),a2.getName());
+
+			if ( defined != null) {
+
+				if (hasMetalBond(a1, a2, defined))
+					return ret;
+				else
+					return null;
+			}
+
+		}
+
+			// not a metal
+
+			double distance = Calc.getDistance(a1, a2);
+
+			float radiusOfAtom1 = ret[0].getElement().getCovalentRadius();
+			float radiusOfAtom2 = ret[1].getElement().getCovalentRadius();
+
+			if (Math.abs(distance - radiusOfAtom1 - radiusOfAtom2)
+					> bondLengthTolerance) {
+				return null;
+			}
+
+
+		return ret;
+	}
+
+	private static boolean hasMetalBond(Atom a1, Atom a2, MetalBondDistance definition) {
+
 		double distance = Calc.getDistance(a1,a2);
 
-		float radiusOfAtom1 = ret[0].getElement().getCovalentRadius();
-		float radiusOfAtom2 = ret[1].getElement().getCovalentRadius();
+		Float min = definition.getLowerLimit();
+		Float max = definition.getUpperLimit();
 
-		if (Math.abs(distance-radiusOfAtom1 -radiusOfAtom2)
-				> bondLengthTolerance) {
+		return ( min < distance && max > distance);
+
+	}
+
+	private static MetalBondDistance getMetalDistanceCutoff(String name1, String name2) {
+		Map<String,List<MetalBondDistance>> defs= MetalBondParser.getMetalBondDefinitions();
+
+		List<MetalBondDistance> distances = defs.get(name1);
+
+		if ( distances == null){
+
+			distances = defs.get(name2);
+			String tmp = name1;
+			 name2 = name1;
+			 name1 = tmp;
+		}
+		if ( distances == null){
 			return null;
 		}
 
-		return ret;
+		for  ( MetalBondDistance d : distances){
+			if ( name1.equalsIgnoreCase(d.getAtomType1()) && name2.equalsIgnoreCase(d.getAtomType2()) )
+				return d;
+		}
+
+		// no matching atom definitions found
+		return null;
+
 	}
 
 	/**
