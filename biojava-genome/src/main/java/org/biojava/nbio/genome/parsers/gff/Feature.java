@@ -212,7 +212,7 @@ public class Feature implements FeatureI {
 		   String[] data = attribute.split(splitData);
 		   String value = "";
 		   if(data.length >= 2 && data[1].indexOf('"') != -1){ // an attibute field could be empty
-			   value = data[1].replaceAll('"' + "","").trim();
+			   value = data[1].replaceAll("\"","").trim();
 		   }else if(data.length >= 2){
 			   value = data[1].trim();
 		   }

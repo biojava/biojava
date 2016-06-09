@@ -203,7 +203,7 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 		atomsInGroup = new ArrayList<Atom>();
 		// Set the CC -> empty but not null
 		ChemComp chemComp = new ChemComp();
-		chemComp.setOne_letter_code("" + singleLetterCode);
+		chemComp.setOne_letter_code(String.valueOf(singleLetterCode));
 		ResidueType residueType = ResidueType.getResidueTypeFromString(chemCompType);
 		chemComp.setResidueType(residueType);
 		chemComp.setPolymerType(residueType.polymerType);

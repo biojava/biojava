@@ -286,7 +286,7 @@ implements AlignmentPositionListener, WindowListener {
 
 				// draw the AA sequence
 				g2D.setColor(Color.black);
-				g2D.drawString(c+"",points.get(str).x,points.get(str).y);
+				g2D.drawString(String.valueOf(c), points.get(str).x, points.get(str).y);
 			}
 		}
 

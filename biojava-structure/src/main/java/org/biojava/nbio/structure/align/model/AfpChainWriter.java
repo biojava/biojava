@@ -285,7 +285,7 @@ public class AfpChainWriter
 					int block = -1 ;
 					if ( cl != ' ') {
 						try {
-							block = Integer.parseInt(cl+"");
+							block = Integer.parseInt(String.valueOf(cl));
 						} catch (Exception e){
 							//
 						}
@@ -1117,7 +1117,7 @@ public class AfpChainWriter
 
 			String origString = "orig";
 			if ( blockNr > 0)
-				origString = (blockNr)+"";
+				origString = String.valueOf(blockNr);
 
 
 			txt.append(String.format("     X"+(blockNr+1)+" = (%9.6f)*X"+ origString +" + (%9.6f)*Y"+ origString +" + (%9.6f)*Z"+ origString +" + (%12.6f)",m.get(0,0),m.get(1,0), m.get(2,0), shift.getX()));

@@ -74,13 +74,13 @@ public class ModifiedCompoundXMLConverter {
 			for ( StructureAtomLinkage link: linkages){
 				pos ++;
 				xml.openTag("linkage");
-				xml.attribute("pos", pos+"");
-				xml.attribute("total", linkages.size()+"");
+				xml.attribute("pos", String.valueOf(pos));
+				xml.attribute("total", String.valueOf(linkages.size()));
 				StructureAtom atom1 = link.getAtom1();
 				StructureAtom atom2 = link.getAtom2();
 				double distance = link.getDistance();
 
-				xml.attribute("distance", distance+"");
+				xml.attribute("distance", String.valueOf(distance));
 				xml.openTag("atom1");
 				StructureAtomXMLConverter.toXML(atom1,xml);
 				xml.closeTag("atom1");

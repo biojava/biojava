@@ -1928,7 +1928,7 @@ public class StructureTools {
 
 	private static String replaceFirstChar(String name, char c, char d) {
 		if(name.charAt(0)==c){
-			return name.replaceFirst(""+c, ""+d);
+			return name.replaceFirst(String.valueOf(c), String.valueOf(d));
 		}
 		return name;
 	}

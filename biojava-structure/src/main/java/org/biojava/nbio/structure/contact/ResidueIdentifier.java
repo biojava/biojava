@@ -91,7 +91,7 @@ class ResidueIdentifier implements Serializable {
 
 	@Override
 	public String toString() {
-		return ""+ seqResIndex;
+		return String.valueOf(seqResIndex);
 	}
 
 }

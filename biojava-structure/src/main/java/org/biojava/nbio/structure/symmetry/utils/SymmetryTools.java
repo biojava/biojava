@@ -532,7 +532,7 @@ public class SymmetryTools {
 				Group g = (Group) repeat[k].getGroup().clone();
 				newCh.addGroup(g);
 			}
-			newCh.setName(chainID + "");
+			newCh.setName(String.valueOf(chainID));
 			chainID++;
 			symm.addChain(newCh);
 

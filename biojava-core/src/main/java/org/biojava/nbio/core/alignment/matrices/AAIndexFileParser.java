@@ -185,14 +185,14 @@ public class AAIndexFileParser {
 		AminoAcidCompoundSet compoundSet = AminoAcidCompoundSet.getAminoAcidCompoundSet();
 		for ( int i = 0 ; i < currentRows.length() ; i ++){
 			char c = currentRows.charAt(i);
-			AminoAcidCompound aa = compoundSet.getCompoundForString(c+"");
+			AminoAcidCompound aa = compoundSet.getCompoundForString(String.valueOf(c));
 
 			rows.add(aa);
 		}
 
 		for ( int i = 0 ; i < currentCols.length() ; i ++){
 			char c = currentRows.charAt(i);
-			AminoAcidCompound aa = compoundSet.getCompoundForString(c+"");
+			AminoAcidCompound aa = compoundSet.getCompoundForString(String.valueOf(c));
 
 			cols.add(aa);
 		}

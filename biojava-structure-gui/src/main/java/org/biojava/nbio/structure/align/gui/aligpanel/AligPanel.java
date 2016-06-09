@@ -282,7 +282,7 @@ public void paintComponent(Graphics g){
 							int block = 0;
 							char s = symb[i];
 							try {
-								block = Integer.parseInt(s+"") - 1;
+								block = Integer.parseInt(String.valueOf(s)) - 1;
 								bg  = ColorUtils.getIntermediate(ColorUtils.orange, end1, blockNum, block);
 								bg2   = ColorUtils.getIntermediate(ColorUtils.cyan, end2, blockNum, block);
 								//bg = ColorUtils.rotateHue(ColorUtils.orange,  (1.0f  / 24.0f) * block  );
@@ -347,8 +347,8 @@ public void paintComponent(Graphics g){
 
 			// draw the AA sequence
 			g2D.setColor(Color.black);
-			g2D.drawString(c1+"",xpos1,ypos1);
-			g2D.drawString(c2+"" ,xpos2,ypos2);
+			g2D.drawString(String.valueOf(c1), xpos1, ypos1);
+			g2D.drawString(String.valueOf(c2), xpos2, ypos2);
 
 
 

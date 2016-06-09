@@ -567,8 +567,8 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
 	private boolean isSimilar(char c1, char c2) {
 		AminoAcidCompoundSet set = AminoAcidCompoundSet.getAminoAcidCompoundSet();
 
-		AminoAcidCompound aa1 = set.getCompoundForString(""+c1);
-		AminoAcidCompound aa2 = set.getCompoundForString(""+c2);
+		AminoAcidCompound aa1 = set.getCompoundForString(String.valueOf(c1));
+		AminoAcidCompound aa2 = set.getCompoundForString(String.valueOf(c2));
 
 		short val = matrix.getValue(aa1,aa2);
 		return val > 0;
