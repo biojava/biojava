@@ -88,14 +88,22 @@ public class ProteinModificationParserTest extends TestCase {
 				{"3H8L", "AA0513"}, // CYS-S3H-CYS
 				{"1CAD", null}, // FE and 4 Cys, cross-link4
 
-				// Terbium
+				// Terbium cases
 				{"1NCZ", null},
 				{"3LTQ",null}, // has metalc,
-
 				{"4ESQ",null},
 				{"1TJB",null},
 				{"2V15",null},
 				{"2K61",null},
+
+				// iron bond to CYS
+				//{"1G20","AA0300"},
+
+				{"3CM6",null},
+				{"1W6Z",null},
+				//{"1Z2M",null}, distances are too big for the new cutoffs
+				{"2O6N",null},
+				{"1GA7",null},
 
 		};
 		return strucs;
