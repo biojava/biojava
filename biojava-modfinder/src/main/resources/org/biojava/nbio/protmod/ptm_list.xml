@@ -4550,30 +4550,37 @@
 			</Component>
 			<Bond>
 				<Atom component="1">SG</Atom>
+				<!--<Atom component="8">*</Atom>-->
 				<Atom component="8">FE1,FE2,FE3,FE4,FE5,FE6,FE7,FE8</Atom>
 			</Bond>
 			<Bond>
 				<Atom component="2">SG</Atom>
+				<!--<Atom component="8">*</Atom>-->
 				<Atom component="8">FE1,FE2,FE3,FE4,FE5,FE6,FE7,FE8</Atom>
 			</Bond>
 			<Bond>
 				<Atom component="3">SG</Atom>
+				<!--<Atom component="8">*</Atom>-->
 				<Atom component="8">FE1,FE2,FE3,FE4,FE5,FE6,FE7,FE8</Atom>
 			</Bond>
 			<Bond>
 				<Atom component="4">SG</Atom>
+				<!--<Atom component="8">*</Atom>-->
 				<Atom component="8">FE1,FE2,FE3,FE4,FE5,FE6,FE7,FE8</Atom>
 			</Bond>
 			<Bond>
 				<Atom component="5">SG</Atom>
+				<!--<Atom component="8">*</Atom>-->
 				<Atom component="8">FE1,FE2,FE3,FE4,FE5,FE6,FE7,FE8</Atom>
 			</Bond>
 			<Bond>
 				<Atom component="6">SG</Atom>
+				<!--<Atom component="8">*</Atom>-->
 				<Atom component="8">FE1,FE2,FE3,FE4,FE5,FE6,FE7,FE8</Atom>
 			</Bond>
 			<Bond>
 				<Atom component="7">OG</Atom>
+				<!--<Atom component="8">*</Atom>-->
 				<Atom component="8">FE1,FE2,FE3,FE4,FE5,FE6,FE7,FE8</Atom>
 			</Bond>
 		</Condition>
@@ -7035,7 +7042,7 @@
 				<Id source="PDBCC">TY2</Id>
 			</Component>
 		   <Bond>
-		    	<Atom component="1">CE2,CE1</Atom>
+		    	<Atom component="1">CE2</Atom>
 			    <Atom component="2">NE2</Atom>
 		    </Bond>
 		</Condition>
