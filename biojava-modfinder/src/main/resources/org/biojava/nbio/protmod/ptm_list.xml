@@ -7041,10 +7041,17 @@
 			<Component component="2">
 				<Id source="PDBCC">TY2</Id>
 			</Component>
+<<<<<<< HEAD
 			<Bond>
 				<Atom component="1">CE2</Atom>
 				<Atom component="2">NE2</Atom>
 			</Bond>
+=======
+		   <Bond>
+		    	<Atom component="1">CE2</Atom>
+			    <Atom component="2">NE2</Atom>
+		    </Bond>
+>>>>>>> 58c6743... update for 2VH3 TY2
 		</Condition>
 		<Occurrence>hypothetical</Occurrence>
 		<Category>crosslink2</Category>
