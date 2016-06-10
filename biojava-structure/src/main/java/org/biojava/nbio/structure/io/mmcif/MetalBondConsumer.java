@@ -45,10 +45,6 @@ public class MetalBondConsumer implements MMcifConsumer{
 
     }
 
-    @Override
-    public void newEntityPoly(EntityPoly entityPoly) {
-
-    }
 
     @Override
     public void newEntityPolySeq(EntityPolySeq epolseq) {
