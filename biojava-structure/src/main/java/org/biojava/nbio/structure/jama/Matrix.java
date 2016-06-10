@@ -1060,7 +1060,7 @@ public static Matrix read (BufferedReader input) throws java.io.IOException {
 			do {
 				if (j >= n) throw new java.io.IOException
 					("Row " + v.size() + " is too long.");
-				row[j++] = Double.valueOf(tokenizer.sval).doubleValue();
+				row[j++] = Double.parseDouble(tokenizer.sval);
 			} while (tokenizer.nextToken() == StreamTokenizer.TT_WORD);
 			if (j < n) throw new java.io.IOException
 				("Row " + v.size() + " is too short.");
