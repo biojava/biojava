@@ -250,7 +250,7 @@ public final class StructureUtil {
 
 		if ( a1.getElement().isMetal() || a2.getElement().isMetal()){
 
-			MetalBondDistance defined = getMetalDistanceCutoff(a1.getName(),a2.getName());
+			MetalBondDistance defined = getMetalDistanceCutoff(a1.getElement().name(),a2.getElement().name());
 
 			if ( defined != null) {
 
