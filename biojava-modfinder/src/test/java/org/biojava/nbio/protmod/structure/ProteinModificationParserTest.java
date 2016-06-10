@@ -104,6 +104,8 @@ public class ProteinModificationParserTest extends TestCase {
 				//{"1Z2M",null}, distances are too big for the new cutoffs
 				{"2O6N",null},
 				{"1GA7",null},
+				{"1ACD","AA0262"}, // test for CSD
+				{"1AA6","AA0022"} , // test for SEC
 
 		};
 		return strucs;
