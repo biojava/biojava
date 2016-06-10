@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ProteinModifications>
     <Revisions>
-    <Revision>
-		<Date>2016-05-10</Date>
-			<Change>Added definition for PLP</Change>
-    	<Date>2011-08-12</Date>
-    		<Change>Added glycosylation entries 386-429</Change>
+		<Revision>
+			<Date>2016-06-10</Date>
+			<Change>Updated legacy chemical component and atom names to current naming conventions. Removed two obsolete entires (CLE and CGL)</Change>
+		</Revision>
+    	<Revision>
+			<Date>2016-05-10</Date>
+				<Change>Added definition for PLP</Change>
+    		<Date>2011-08-12</Date>
+    			<Change>Added glycosylation entries 386-429</Change>
    		</Revision>
     	<Revision>
     		<Date>2011-07-26</Date>
@@ -730,7 +734,7 @@
 		<SystematicName>(R)-2-amino-3-selanylpropanoic acid</SystematicName>
 		<CrossReference>
 			<Source>PDBCC</Source>
-			<Id>CSE</Id>
+			<Id>SEC</Id>
 			<Name>selenocysteine</Name>
 		</CrossReference>
 		<CrossReference>
@@ -745,7 +749,7 @@
 		</CrossReference>
 		<Condition>
 			<Component component="1">
-				<Id source="PDBCC">CSE</Id>
+				<Id source="PDBCC">SEC</Id>
 			</Component>
 		</Condition>
 		<Occurrence>natural</Occurrence>
@@ -1347,35 +1351,6 @@
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">CY3</Id>
-			</Component>
-		</Condition>
-		<Occurrence>natural</Occurrence>
-		<Category>modified residue</Category>
-		<Keyword>amidated carboxyl end</Keyword>
-	</Entry>
-	<Entry>
-		<Id>0045</Id>
-		<Description>A protein modification that effectively converts an L-leucine residue to L-leucine amide.</Description>
-		<SystematicName>(S)-2-amino-4-methylpentanamide</SystematicName>
-		<CrossReference>
-			<Source>PDBCC</Source>
-			<Id>CLE</Id>
-			<Name>leucine amide</Name>
-		</CrossReference>
-		<CrossReference>
-			<Source>RESID</Source>
-			<Id>AA0091</Id>
-			<Name>L-leucine amide</Name>
-		</CrossReference>
-		<CrossReference>
-			<Source>PSI-MOD</Source>
-			<Id>MOD:00100</Id>
-			<Name>L-leucine amide</Name>
-		</CrossReference>
-		<Condition>
-			<Component component="1">
-				<Id source="PDBCC">CLE</Id>
-				<Terminal>C</Terminal>
 			</Component>
 		</Condition>
 		<Occurrence>natural</Occurrence>
@@ -3755,7 +3730,7 @@
 		<SystematicName>(R)-2-amino-2-carboxyethanesulfinic acid</SystematicName>
 		<CrossReference>
 			<Source>PDBCC</Source>
-			<Id>CSW</Id>
+			<Id>CSD</Id>
 			<Name>cysteine-S-dioxide</Name>
 		</CrossReference>
 		<CrossReference>
@@ -3770,7 +3745,7 @@
 		</CrossReference>
 		<Condition>
 			<Component component="1">
-				<Id source="PDBCC">CSW</Id>
+				<Id source="PDBCC">CSD</Id>
 			</Component>
 		</Condition>
 		<Occurrence>natural</Occurrence>
@@ -6788,8 +6763,8 @@
 				<Id source="PDBCC">SEC</Id>
 			</Component>
 			<Bond>
-				<Atom component="1">SEG</Atom>
-				<Atom component="2">SEG</Atom>
+				<Atom component="1">SE</Atom>
+				<Atom component="2">SE</Atom>
 			</Bond>
 		</Condition>
 		<Occurrence>hypothetical</Occurrence>
@@ -6997,7 +6972,7 @@
 			</Component>
 			<Bond>
 				<Atom component="1">SG</Atom>
-				<Atom component="2">SEG</Atom>
+				<Atom component="2">SE</Atom>
 			</Bond>
 		</Condition>
 		<Occurrence>natural</Occurrence>
@@ -9629,39 +9604,6 @@
 		<Occurrence>natural</Occurrence>
 		<Category>attachment</Category>
         <Keyword>phosphoprotein</Keyword>
-	</Entry>	
-	<Entry>
-		<Id>0290</Id>
-		<Description>A protein modification that effectively converts an L-cysteine residue to S-glutathionyl-L-cysteine.</Description>
-		<SystematicName>(2S)-2-amino-3-((2S)-2-((4R)-4-amino-4-carboxyl-1-oxobutyl)amino-3-(carboxylmethyl)amino-3-oxo-propyl)dithio-propanoic acid</SystematicName>
-		<CrossReference>
-			<Source>PDBCC</Source>
-			<Id>CGL</Id>
-			<Name></Name>
-		</CrossReference>
-		<CrossReference>
-			<Source>RESID</Source>
-			<Id>AA0229</Id>
-			<Name>L-cysteine glutathione disulfide</Name>
-		</CrossReference>
-		<CrossReference>
-			<Source>PSI-MOD</Source>
-			<Id>MOD:00234</Id>
-			<Name>L-cysteine glutathione disulfide</Name>
-		</CrossReference>
-		<CrossReference>
-			<Source>PDBCC</Source>
-			<Id>CGL</Id>
-			<Name>cystine-glutathione</Name>
-		</CrossReference>
-		<Condition>
-			<Component component="1">
-				<Id source="PDBCC">CGL</Id>
-			</Component>
-		</Condition>
-		<Occurrence>natural</Occurrence>
-		<Category>modified residue</Category>
-		<Keyword>disulfide bond</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0291</Id>
@@ -9983,7 +9925,7 @@
 		<SystematicName>(2R)-2-amino-6-[(2R,3R)-3-methyl-3,4-dihydro-2H-pyrrol-2-ylcarbonyl]aminohexanoic acid</SystematicName>
 		<CrossReference>
 			<Source>PDBCC</Source>
-			<Id>PYH</Id>
+			<Id>PYL</Id>
 			<Name>N6-{[(2R,3R)-3-methyl-3,4-dihydro-2H-pyrrol-2-yl]carbonyl}-L-lysine</Name>
 		</CrossReference>
 		<CrossReference>
@@ -9998,7 +9940,7 @@
 		</CrossReference>
 		<Condition>
 			<Component component="1">
-				<Id source="PDBCC">PYH</Id>
+				<Id source="PDBCC">PYL</Id>
 			</Component>
 		</Condition>
 		<Occurrence>natural</Occurrence>
