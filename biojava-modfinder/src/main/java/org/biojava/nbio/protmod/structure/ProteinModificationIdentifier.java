@@ -266,12 +266,13 @@ public class ProteinModificationIdentifier {
 			return;
 		}
 
-
+		Map<String, Chain> mapChainIdChain = new HashMap<String, Chain>(chains.size());
 		residues = new ArrayList<Group>();
 		List<Group> ligands = new ArrayList<Group>();
 		Map<Component, Set<Group>> mapCompGroups = new HashMap<Component, Set<Group>>();
 
 		for (Chain chain : chains) {
+			mapChainIdChain.put(chain.getChainID(), chain);
 
 			List<Group> ress = StructureUtil.getAminoAcids(chain);
 
@@ -316,7 +317,7 @@ public class ProteinModificationIdentifier {
 		if (recordAdditionalAttachments) {
 			// identify additional groups that are not directly attached to amino acids.
 			for (ModifiedCompound mc : modComps) {
-				identifyAdditionalAttachments(mc, ligands, chains);
+				identifyAdditionalAttachments(mc, ligands, mapChainIdChain);
 			}
 		}
 
@@ -382,7 +383,7 @@ public class ProteinModificationIdentifier {
 	 * @return a list of added groups
 	 */
 	private void identifyAdditionalAttachments(ModifiedCompound mc,
-			List<Group> ligands, List<Chain> chains) {
+			List<Group> ligands, Map<String, Chain> mapChainIdChain) {
 		if (ligands.isEmpty()) {
 			return;
 		}
@@ -406,7 +407,7 @@ public class ProteinModificationIdentifier {
 				resNum.setInsCode(num.getInsCode());
 				//group = chain.getGroupByPDB(numIns);
 
-				group = getGroup(num,chains);
+				group = mapChainIdChain.get(num.getChainId()).getGroupByPDB(resNum);
 				//group = mapChainIdChain.get(num.getChainId()).getGroupByPDB(resNum);
 			} catch (StructureException e) {
 				logger.error("Exception: ", e);
@@ -565,7 +566,7 @@ public class ProteinModificationIdentifier {
 			if (group.getType().equals(GroupType.HETATM)) {
 				StructureGroup strucGroup = StructureUtil.getStructureGroup(
 						group, true);
-				strucGroup.setChainId(group.getChainId());
+				//strucGroup.setChainId(group.getChainId());
 
 				if (!identifiedComps.contains(strucGroup)) {
 					unidentifiableModifiedResidues.add(strucGroup);
