@@ -27,9 +27,7 @@ package org.biojava.nbio.protmod.structure;
 import junit.framework.TestCase;
 import org.biojava.nbio.protmod.ProteinModification;
 import org.biojava.nbio.protmod.ProteinModificationRegistry;
-import org.biojava.nbio.structure.ResidueNumber;
-import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -90,13 +88,27 @@ public class ProteinModificationParserTest extends TestCase {
 				{"3H8L", "AA0513"}, // CYS-S3H-CYS
 				{"1CAD", null}, // FE and 4 Cys, cross-link4
 
-				// Terbium
+				// Terbium cases
 				{"1NCZ", null},
-				//{"3LTQ",null}, has metalc, we ignore those for now
-//				{"4ESQ",null},
-//				{"1TJB",null},
-//				{"2V15",null},
-//				{"2K61",null},
+				{"3LTQ",null}, // has metalc,
+				{"4ESQ",null},
+				{"1TJB",null},
+				{"2V15",null},
+				{"2K61",null},
+
+				// iron bond to CYS
+				//{"1G20","AA0300"},
+
+				{"3CM6",null},
+				{"1W6Z",null},
+				//{"1Z2M",null}, distances are too big for the new cutoffs
+				{"2O6N",null},
+				{"1GA7",null},
+				{"1ACD","AA0262"}, // test for CSD
+				{"1AA6","AA0022"} , // test for SEC
+
+				{"1WCT","AA0179"},
+				{"2VH3","AA0459"},
 
 		};
 		return strucs;
@@ -330,15 +342,34 @@ public class ProteinModificationParserTest extends TestCase {
 
 	private void parserTest(String pdbId, Set<ProteinModification> mods) throws IOException, StructureException {
 		Structure struc = TmpAtomCache.cache.getStructure(pdbId);
+/*
+ //needed for testing 1G20
+		if ( pdbId.equalsIgnoreCase("1G20")) {
+			Structure n = new StructureImpl();
+
+			n.addChain(struc.getPolyChainByPDB("A"));
+			n.addChain(struc.getPolyChainByPDB("B"));
+			for (Chain c : struc.getNonPolyChainsByPDB("A"))
+				n.addChain(c);
+
+			for (Chain c : struc.getNonPolyChainsByPDB("B"))
+				n.addChain(c);
+
+
+			struc = n;
+		}
+		*/
 
 		ProteinModificationIdentifier parser = new ProteinModificationIdentifier();
 		boolean recordUnidentifiable = false;
 		parser.setRecordUnidentifiableCompounds(recordUnidentifiable);
-//		parser.setbondLengthTolerance(2);
+		//parser.setbondLengthTolerance(2);
 
 		assertFalse(mods.isEmpty());
 
 		parser.identify(struc, mods);
+
+		//System.out.println(parser.getUnidentifiableModifiedResidues());
 
 		if ( parser.getIdentifiedModifiedCompound().isEmpty() ){
 			String msg = "Did not identify any modified compounds for " + pdbId;
