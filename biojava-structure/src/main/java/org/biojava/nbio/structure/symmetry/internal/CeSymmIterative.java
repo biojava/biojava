@@ -125,8 +125,9 @@ public class CeSymmIterative {
 		logger.debug("Starting new iteration...");
 
 		// Return if the Atom array is too short
-		if (atoms.length <= params.getWinSize()
-				|| atoms.length <= params.getMinCoreLength()) {
+		if ((atoms.length <= params.getWinSize()
+				|| atoms.length <= params.getMinCoreLength())
+				&& !levels.isEmpty()) {
 			logger.debug("Aborting iteration due to insufficient Atom "
 					+ "array length: %d", atoms.length);
 			return;
@@ -204,7 +205,7 @@ public class CeSymmIterative {
 	 */
 	private CeSymmResult reconstructSymmResult(Atom[] atoms)
 			throws StructureException {
-
+		
 		// If one level, nothing to build or calculate
 		if (levels.size() == 1)
 			return levels.get(0);
