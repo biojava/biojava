@@ -210,6 +210,7 @@ public class SymmetryDisplay {
 			throws StructureException {
 		return printSymmetryAxes(symm,true);
 	}
+	
 	/**
 	 * Generates a String that displays the symmetry axes of a structure.
 	 *

@@ -593,7 +593,7 @@ public class SymmetryTools {
 
 		MultipleAlignment msa = result.getMultipleAlignment();
 		MultipleAlignmentEnsemble newEnsemble = msa.getEnsemble().clone();
-		
+
 		// Modify atom arrays to include the repeat atoms only
 		List<Atom[]> atomArrays = new ArrayList<Atom[]>();
 		Structure divided = SymmetryTools.getQuaternaryStructure(result);
@@ -734,10 +734,10 @@ public class SymmetryTools {
 			throws StructureException {
 
 		// Obtain the clusters of aligned Atoms and repeat variables
-		MultipleAlignment repeats = SymmetryTools.toRepeatsAlignment(result);
-		List<Atom[]> alignedCA = repeats.getAtomArrays();
-		List<Integer> corePos = MultipleAlignmentTools.getCorePositions(repeats
-				.getBlock(0));
+		List<Atom[]> alignedCA = result.getMultipleAlignment().getAtomArrays();
+		MultipleAlignment msa = result.getMultipleAlignment();
+		List<Integer> corePos = MultipleAlignmentTools.getCorePositions(result
+				.getMultipleAlignment().getBlock(0));
 
 		List<Point3d[]> caCoords = new ArrayList<Point3d[]>();
 		List<Integer> folds = new ArrayList<Integer>();
@@ -752,7 +752,7 @@ public class SymmetryTools {
 		for (int str = 0; str < alignedCA.size(); str++) {
 			Atom[] array = alignedCA.get(str);
 			List<Point3d> points = new ArrayList<Point3d>();
-			List<Integer> alignedRes = repeats.getBlock(0).getAlignRes()
+			List<Integer> alignedRes = msa.getBlock(0).getAlignRes()
 					.get(str);
 			for (int pos = 0; pos < alignedRes.size(); pos++) {
 				Integer residue = alignedRes.get(pos);
@@ -1000,7 +1000,7 @@ public class SymmetryTools {
 			}
 			return atomList.toArray(new Atom[0]);
 		}
-		
+
 	}
 
 }
