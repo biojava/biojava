@@ -72,8 +72,7 @@ public class BioAssemblyIdentifier implements StructureIdentifier {
 
 	@Override
 	public SubstructureIdentifier toCanonical() throws StructureException {
-		// null pdbCode indicates that the structure can't be loaded by AtomCache
-		return new SubstructureIdentifier(null, new ArrayList<ResidueRange>());
+		return new SubstructureIdentifier(pdbCode, new ArrayList<ResidueRange>());
 	}
 
 	@Override
