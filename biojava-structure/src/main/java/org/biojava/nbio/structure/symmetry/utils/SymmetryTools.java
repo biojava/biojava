@@ -493,32 +493,31 @@ public class SymmetryTools {
 
 	/**
 	 * Method that converts the symmetric units of a structure into different
-	 * chains, so that internal symmetry can be translated into quaternary.
-	 * <p>
-	 * Application: obtain the internal symmetry axis with the quaternary
-	 * symmetry code in biojava or calculate independent repeat properties.
+	 * structures, so that they can be individually visualized.
 	 *
 	 * @param symmetry
 	 *            CeSymmResult
-	 * @return Structure with different chains for every symmetric unit
+	 * @throws StructureException
+	 * @result List of structures, by repeat index sequentially
+	 * 
 	 */
-	public static Structure getQuaternaryStructure(CeSymmResult symmetry) {
+	public static List<Structure> divideStructure(CeSymmResult symmetry)
+			throws StructureException {
 
 		if (!symmetry.isRefined())
 			throw new IllegalArgumentException("The symmetry result "
 					+ "is not refined, repeats cannot be defined");
 
+		int order = symmetry.getMultipleAlignment().size();
 		Atom[] atoms = StructureTools.cloneAtomArray(symmetry.getAtoms());
-
-		Structure symm = new StructureImpl();
-		symm.setStructureIdentifier(symmetry.getStructureId());
-		symm.setChains(new ArrayList<Chain>());
-		char chainID = 'A';
+		List<StructureIdentifier> repeatsId = symmetry.getRepeatsID();
+		List<Structure> repeats = new ArrayList<Structure>(order);
 
 		// Create new structure containing the repeat atoms
-		for (int i = 0; i < symmetry.getMultipleAlignment().size(); i++) {
+		for (int i = 0; i < order; i++) {
 
-			Chain newCh = new ChainImpl();
+			Structure s = new StructureImpl();
+			s.setStructureIdentifier(repeatsId.get(i));
 
 			Block align = symmetry.getMultipleAlignment().getBlock(0);
 
@@ -528,16 +527,17 @@ public class SymmetryTools {
 
 			Atom[] repeat = Arrays.copyOfRange(atoms, res1, res2 + 1);
 
+			Chain newCh = new ChainImpl();
+			newCh.setChainID(repeat[0].getGroup().getChainId());
+
 			for (int k = 0; k < repeat.length; k++) {
 				Group g = (Group) repeat[k].getGroup().clone();
 				newCh.addGroup(g);
 			}
-			newCh.setChainID(chainID + "");
-			chainID++;
-			symm.addChain(newCh);
-
+			s.addChain(newCh);
+			repeats.add(s);
 		}
-		return symm;
+		return repeats;
 	}
 
 	/**
@@ -594,20 +594,15 @@ public class SymmetryTools {
 		MultipleAlignment msa = result.getMultipleAlignment();
 		MultipleAlignmentEnsemble newEnsemble = msa.getEnsemble().clone();
 
-		// Modify atom arrays to include the repeat atoms only
-		List<Atom[]> atomArrays = new ArrayList<Atom[]>();
-		Structure divided = SymmetryTools.getQuaternaryStructure(result);
+		List<Structure> repSt = SymmetryTools.divideStructure(result);
 
 		MultipleAlignment repeats = newEnsemble.getMultipleAlignment(0);
 		Block block = repeats.getBlock(0);
+		List<Atom[]> atomArrays = new ArrayList<Atom[]>();
 
-		for (int i = 0; i < result.getMultipleAlignment().size(); i++) {
-			Structure newStr = new StructureImpl();
-			Chain newCh = divided.getChain(i);
-			newStr.addChain(newCh);
-			Atom[] repeat = StructureTools.getRepresentativeAtomArray(newCh);
-			atomArrays.add(repeat);
-		}
+		for (Structure s : repSt)
+			atomArrays.add(StructureTools.getRepresentativeAtomArray(s));
+		
 		newEnsemble.setAtomArrays(atomArrays);
 
 		for (int su = 0; su < block.size(); su++) {
@@ -752,8 +747,7 @@ public class SymmetryTools {
 		for (int str = 0; str < alignedCA.size(); str++) {
 			Atom[] array = alignedCA.get(str);
 			List<Point3d> points = new ArrayList<Point3d>();
-			List<Integer> alignedRes = msa.getBlock(0).getAlignRes()
-					.get(str);
+			List<Integer> alignedRes = msa.getBlock(0).getAlignRes().get(str);
 			for (int pos = 0; pos < alignedRes.size(); pos++) {
 				Integer residue = alignedRes.get(pos);
 				if (residue == null)
