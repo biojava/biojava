@@ -56,24 +56,22 @@ public class CeSymmResult {
 	private Atom[] atoms;
 
 	private CESymmParameters params;
-	private SymmetryAxes axes;
+	private SymmetryAxes axes = new SymmetryAxes();
 	private String symmGroup;
 
-	private int symmOrder;
-	private int symmLevels;
+	private int numRepeats;
 	private boolean refined;
-	private SymmetryType type;
 
 	/**
-	 * Conditions checked are: score above the threshold, order higher than 1
-	 * and refinement succeeded.
+	 * Conditions checked are: score above the threshold, number of repeats
+	 * higher than 1 and refinement succeeded.
 	 *
 	 * @return true if significant, false otherwise
 	 */
 	public boolean isSignificant() {
 
 		// In any case if the order is 1 it is asymmetric
-		if (symmOrder < 2)
+		if (numRepeats < 2)
 			return false;
 
 		// If the TM-Score before refinement is below the threshold
@@ -108,12 +106,12 @@ public class CeSymmResult {
 			return null;
 
 		List<StructureIdentifier> repeats = new ArrayList<StructureIdentifier>(
-				symmOrder);
+				numRepeats);
 
 		String pdbId = structureId.toCanonical().getPdbId();
 		Block align = multipleAlignment.getBlocks().get(0);
 
-		for (int su = 0; su < symmOrder; su++) {
+		for (int su = 0; su < numRepeats; su++) {
 			// Get the start and end residues of the repeat
 			ResidueNumber res1 = atoms[align.getStartResidue(su)].getGroup()
 					.getResidueNumber();
@@ -131,9 +129,9 @@ public class CeSymmResult {
 
 	@Override
 	public String toString() {
-		return structureId + ", symmGroup=" + getSymmGroup() + ", symmOrder="
-				+ symmOrder + ", symmLevels=" + symmLevels + ", refined="
-				+ refined + ", type=" + type + " | " + params;
+		return structureId + ", symmGroup=" + getSymmGroup() + ", numRepeats="
+				+ numRepeats + ", symmLevels=" + axes.getNumLevels()
+				+ ", refined=" + refined + " | " + params;
 	}
 
 	public MultipleAlignment getMultipleAlignment() {
@@ -174,15 +172,15 @@ public class CeSymmResult {
 	 *
 	 * @return the order of symmetry if the result is significant
 	 */
-	public int getSymmOrder() {
+	public int getNumRepeats() {
 		if (isSignificant())
-			return symmOrder;
+			return numRepeats;
 		else
 			return 1;
 	}
 
-	public void setSymmOrder(int symmOrder) {
-		this.symmOrder = symmOrder;
+	public void setNumRepeats(int symmOrder) {
+		this.numRepeats = symmOrder;
 	}
 
 	public boolean isRefined() {
@@ -208,8 +206,9 @@ public class CeSymmResult {
 						symmGroup = "R"; // could not find group
 				} else {
 					// in case significant but not refined
-					if (type.equals(SymmetryType.CLOSED))
-						symmGroup = "C" + symmOrder;
+					if (axes.getElementaryAxis(0).getSymmType()
+							.equals(SymmetryType.CLOSED))
+						symmGroup = "C" + numRepeats;
 					else
 						symmGroup = "R";
 				}
@@ -224,14 +223,6 @@ public class CeSymmResult {
 		this.symmGroup = symmGroup;
 	}
 
-	public SymmetryType getType() {
-		return type;
-	}
-
-	public void setType(SymmetryType type) {
-		this.type = type;
-	}
-
 	public Atom[] getAtoms() {
 		return atoms;
 	}
@@ -241,11 +232,7 @@ public class CeSymmResult {
 	}
 
 	public int getSymmLevels() {
-		return symmLevels;
-	}
-
-	public void setSymmLevels(int symmLevels) {
-		this.symmLevels = symmLevels;
+		return axes.getNumLevels();
 	}
 
 	public StructureIdentifier getStructureId() {
@@ -257,8 +244,8 @@ public class CeSymmResult {
 	}
 
 	/**
-	 * Return a String describing the reasons for the CE-Symm final decision
-	 * in this particular result.
+	 * Return a String describing the reasons for the CE-Symm final decision in
+	 * this particular result.
 	 * 
 	 * @return String decision reason
 	 */
@@ -270,8 +257,9 @@ public class CeSymmResult {
 			return String.format("Insignificant self-alignment (TM=%.2f)", tm);
 		}
 		// 2. Asymmetric because order detector returned 1
-		if (symmOrder == 1) {
-			return String.format("Order detector found asymmetric alignment (TM=%.2f)", tm);
+		if (numRepeats == 1) {
+			return String.format(
+					"Order detector found asymmetric alignment (TM=%.2f)", tm);
 		}
 
 		// Check that the user requested refinement
@@ -280,8 +268,8 @@ public class CeSymmResult {
 			if (!refined) {
 				return "Refinement failed";
 			}
-			tm = multipleAlignment.getScore(
-					MultipleAlignmentScorer.AVGTM_SCORE);
+			tm = multipleAlignment
+					.getScore(MultipleAlignmentScorer.AVGTM_SCORE);
 			// 4. Asymmetric because refinement & optimization were not
 			// significant
 			if (!isSignificant()) {
@@ -297,15 +285,15 @@ public class CeSymmResult {
 		}
 
 		String hierarchical = "";
-		if (symmLevels > 1) {
+		if (axes.getNumLevels() > 1) {
 			hierarchical = String.format("; Contains %d levels of symmetry",
-					symmLevels);
+					axes.getNumLevels());
 		}
 		// 5. Symmetric.
 		// a. Open. Give # repeats (1n0r.A)
-		if (type == SymmetryType.OPEN) {
+		if (axes.getElementaryAxis(0).getSymmType() == SymmetryType.OPEN) {
 			return String.format("Contains %d open repeats (TM=%.2f)%s",
-					getSymmOrder(), tm, hierarchical);
+					getNumRepeats(), tm, hierarchical);
 		}
 		// b. Closed, non-hierarchical (1itb.A)
 		// c. Closed, heirarchical (4gcr)
