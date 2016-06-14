@@ -105,10 +105,10 @@ final class InputParameters {
 		return ResultLayout.VERTICAL;
 	}
 	format = format.trim().substring(InputParameters.formatKey.length());
-	if (format.toUpperCase().equals("V")) {
+	if ("V".equalsIgnoreCase(format)) {
 		return ResultLayout.VERTICAL;
 	}
-	if (format.toUpperCase().equals("H")) {
+	if ("H".equalsIgnoreCase(format)) {
 		return ResultLayout.HORIZONTAL;
 	}
 	throw new IllegalArgumentException("Unrecognised format: '" + format
