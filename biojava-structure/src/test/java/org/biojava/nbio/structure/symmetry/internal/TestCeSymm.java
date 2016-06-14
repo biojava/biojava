@@ -55,7 +55,7 @@ public class TestCeSymm {
 			CeSymmResult result = CeSymm.analyze(atoms);
 
 			assertTrue(result.isSignificant());
-			assertEquals(result.getSymmOrder(), orders[i]);
+			assertEquals(result.getNumRepeats(), orders[i]);
 		}
 	}
 }

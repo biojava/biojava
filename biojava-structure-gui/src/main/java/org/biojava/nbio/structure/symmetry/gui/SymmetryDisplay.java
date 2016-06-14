@@ -24,21 +24,17 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
-
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.vecmath.Matrix4d;
 
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureTools;
+import org.biojava.nbio.structure.align.gui.MultipleAlignmentJmolDisplay;
 import org.biojava.nbio.structure.align.gui.StructureAlignmentDisplay;
 import org.biojava.nbio.structure.align.gui.jmol.AbstractAlignmentJmol;
-import org.biojava.nbio.structure.align.gui.MultipleAlignmentJmolDisplay;
 import org.biojava.nbio.structure.align.gui.jmol.MultipleAlignmentJmol;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.util.RotationAxis;
@@ -46,6 +42,7 @@ import org.biojava.nbio.structure.symmetry.core.AxisAligner;
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetryResults;
 import org.biojava.nbio.structure.symmetry.internal.CeSymmResult;
 import org.biojava.nbio.structure.symmetry.internal.SymmetryAxes;
+import org.biojava.nbio.structure.symmetry.internal.SymmetryAxes.Axis;
 import org.biojava.nbio.structure.symmetry.jmolScript.JmolSymmetryScriptGenerator;
 import org.biojava.nbio.structure.symmetry.jmolScript.JmolSymmetryScriptGeneratorPointGroup;
 import org.biojava.nbio.structure.symmetry.utils.SymmetryTools;
@@ -208,6 +205,21 @@ public class SymmetryDisplay {
 	 */
 	public static String printSymmetryAxes(CeSymmResult symm)
 			throws StructureException {
+		return printSymmetryAxes(symm,true);
+	}
+	
+	/**
+	 * Generates a String that displays the symmetry axes of a structure.
+	 *
+	 * @param symm
+	 *            CeSymmResult
+	 * @param allAxes Indicates whether all axes should be displayed or just
+	 *  the elemenatary ones
+	 * @return
+	 * @throws StructureException
+	 */
+	public static String printSymmetryAxes(CeSymmResult symm,boolean allAxes)
+			throws StructureException {
 
 		int id = 0;
 		String script = "";
@@ -215,15 +227,21 @@ public class SymmetryDisplay {
 		List<Atom[]> repeats = SymmetryTools.toRepeatsAlignment(symm)
 				.getAtomArrays();
 
-		List<Matrix4d> symmAxes = axes.getElementaryAxes();
-		for (int a = 0; a < symmAxes.size(); a++) {
-			RotationAxis rot = new RotationAxis(symmAxes.get(a));
-			Set<Integer> repIndex = new TreeSet<Integer>(axes
-					.getRepeatRelation(a).get(0));
-			repIndex.addAll(axes.getRepeatRelation(a).get(1));
+		List<Axis> symmAxes;
+		if(allAxes) {
+			symmAxes = axes.getSymmetryAxes();
+		} else {
+			symmAxes= axes.getElementaryAxesObjects();
+		}
+		for (Axis a : symmAxes) {
+			RotationAxis rot = a.getRotationAxis();
+			List<List<Integer>> cyclicForm = axes.getRepeatsCyclicForm(a);
 			List<Atom> repAtoms = new ArrayList<Atom>();
-			for (Integer r : repIndex)
-				repAtoms.addAll(Arrays.asList(repeats.get(r)));
+			for(List<Integer> cycle : cyclicForm) {
+				for(Integer repeat : cycle) {
+					repAtoms.addAll(Arrays.asList(repeats.get(repeat)));
+				}
+			}
 
 			script += rot.getJmolScript(
 					repAtoms.toArray(new Atom[repAtoms.size()]), id);
