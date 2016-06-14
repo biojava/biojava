@@ -351,7 +351,7 @@ public class SymmOptimizer {
 			throw new RefinerFailedException(
 					"Optimization converged to length 0");
 
-		SymmetryTools.updateSymmetryTransformation(axes, msa, atoms);
+		SymmetryTools.updateSymmetryTransformation(axes, msa);
 	}
 
 	/**

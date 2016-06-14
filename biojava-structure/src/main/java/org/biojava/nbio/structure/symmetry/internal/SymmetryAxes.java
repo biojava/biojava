@@ -345,9 +345,8 @@ public class SymmetryAxes {
 		int m = getNumRepeats(level+1);//size of the children
 		int d = axis.getOrder(); // degree of this node
 		int n = m*d; // number of repeats included
-		if(firstRepeat % n != 0) {
+		if(firstRepeat % n != 0)
 			throw new IllegalArgumentException(String.format("Repeat %d cannot start a block at level %s of this tree",firstRepeat,level));
-		}
 		if(axis.getSymmType() == SymmetryType.OPEN) {
 			n -= m; // leave off last child for open symm
 		}
@@ -418,6 +417,7 @@ public class SymmetryAxes {
 		}
 		return str.toString();
 	}
+	
 	/**
 	 * Return the transformation that needs to be applied to a
 	 * repeat in order to superimpose onto repeat 0.
@@ -438,6 +438,43 @@ public class SymmetryAxes {
 			Matrix4d axis = new Matrix4d(axes.get(t).getOperator());
 			for(int i=0;i<counts[t];i++) {
 				transform.mul(axis);
+			}
+		}
+		return transform;
+	}
+	
+	/**
+	 * Return the transformation that needs to be applied to
+	 * repeat x in order to superimpose onto repeat y.
+	 *
+	 * @param x the first repeat index (transformed)
+	 * @param y the second repeat index (fixed)
+	 * @return transformation matrix for the repeat x
+	 */
+	public Matrix4d getRepeatTransform(int x, int y){
+
+		Matrix4d transform = new Matrix4d();
+		transform.setIdentity();
+
+		int[] iCounts = getAxisCounts(x);
+		int[] jCounts = getAxisCounts(y);
+		
+		int[] counts = new int[iCounts.length];
+		for (int k = 0; k < iCounts.length; k++)
+			counts[k] = iCounts[k] - jCounts[k];
+		
+		for(int t = counts.length-1; t>=0; t--) {
+			if(counts[t] == 0)
+				continue;
+			if (counts[t] > 0) {
+				Matrix4d axis = new Matrix4d(axes.get(t).getOperator());
+				for(int i=0;i<counts[t];i++)
+					transform.mul(axis);
+			} else if (counts[t] < 0) {
+				Matrix4d axis = new Matrix4d(axes.get(t).getOperator());
+				axis.invert();
+				for(int i=0;i<counts[t];i++)
+					transform.mul(axis);
 			}
 		}
 		return transform;
@@ -535,6 +572,24 @@ public class SymmetryAxes {
 			}
 		}
 		return size;
+	}
+	
+	/**
+	 * Get the first repeat index of each axis of a specified level.
+	 * @param level level of the tree to cut at
+	 * @return List of first Repeats of each index, sorted in ascending order
+	 */
+	public List<Integer> getFirstRepeats(int level) {
+		List<Integer> firstRepeats = new ArrayList<Integer>();
+		if (level == 0)
+			firstRepeats.add(0); // No top level present
+		else {
+			int m = getNumRepeats(level);//size of the level
+			int d = axes.get(level).getOrder(); // degree of this node
+			for (int firstRepeat = 0; firstRepeat < m*d; firstRepeat+=d)
+				firstRepeats.add(firstRepeat);
+		}
+		return firstRepeats;
 	}
 
 	public Axis getElementaryAxis(int level) {

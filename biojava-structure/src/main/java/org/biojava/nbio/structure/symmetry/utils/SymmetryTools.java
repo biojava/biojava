@@ -30,6 +30,7 @@ import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
 
 import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.ChainImpl;
 import org.biojava.nbio.structure.Group;
@@ -602,7 +603,7 @@ public class SymmetryTools {
 
 		for (Structure s : repSt)
 			atomArrays.add(StructureTools.getRepresentativeAtomArray(s));
-		
+
 		newEnsemble.setAtomArrays(atomArrays);
 
 		for (int su = 0; su < block.size(); su++) {
@@ -689,6 +690,7 @@ public class SymmetryTools {
 	 *            error allowed in the axis comparison
 	 * @return true if equivalent, false otherwise
 	 */
+	@Deprecated
 	public static boolean equivalentAxes(Matrix4d axis1, Matrix4d axis2,
 			double epsilon) {
 
@@ -795,6 +797,7 @@ public class SymmetryTools {
 	 *            the symmetry alignment
 	 * @return true if the alignment is refined
 	 */
+	@Deprecated
 	public static boolean isRefined(MultipleAlignment symm) {
 
 		if (symm.getBlocks().size() > 1) {
@@ -834,6 +837,7 @@ public class SymmetryTools {
 	 * @return
 	 * @throws StructureException
 	 */
+	@Deprecated
 	public static boolean isSignificant(MultipleAlignment msa,
 			double symmetryThreshold) throws StructureException {
 
@@ -892,36 +896,42 @@ public class SymmetryTools {
 	 *            SymmetryAxes object. It will be modified.
 	 * @param msa
 	 *            MultipleAlignment. It will be modified.
-	 * @param atoms
-	 *            Atom array of the structure
 	 */
 	public static void updateSymmetryTransformation(SymmetryAxes axes,
-			MultipleAlignment msa, Atom[] atoms) throws StructureException {
+			MultipleAlignment msa) throws StructureException {
 
 		List<List<Integer>> block = msa.getBlocks().get(0).getAlignRes();
 		int length = block.get(0).size();
+		Atom[] atoms = StructureTools.cloneAtomArray(msa.getEnsemble()
+				.getAtomArrays().get(0));
 
 		if (axes != null) {
-			for (int t = 0; t < axes.getElementaryAxes().size(); t++) {
+			for (int level = 0; level < axes.getNumLevels(); level++) {
 
-				Matrix4d axis = axes.getElementaryAxes().get(t);
-				List<Integer> chain1 = axes.getRepeatRelation(t).get(0);
-				List<Integer> chain2 = axes.getRepeatRelation(t).get(1);
-
-				// Calculate the aligned atom arrays
+				// Calculate the aligned atom arrays to superimpose
 				List<Atom> list1 = new ArrayList<Atom>();
 				List<Atom> list2 = new ArrayList<Atom>();
 
-				for (int pair = 0; pair < chain1.size(); pair++) {
-					int p1 = chain1.get(pair);
-					int p2 = chain2.get(pair);
+				for (int firstRepeat : axes.getFirstRepeats(level)) {
 
-					for (int k = 0; k < length; k++) {
-						Integer pos1 = block.get(p1).get(k);
-						Integer pos2 = block.get(p2).get(k);
-						if (pos1 != null && pos2 != null) {
-							list1.add(atoms[pos1]);
-							list2.add(atoms[pos2]);
+					Matrix4d transform = axes.getRepeatTransform(firstRepeat);
+
+					List<List<Integer>> relation = axes.getRepeatRelation(
+							level, firstRepeat);
+
+					for (int index = 0; index < relation.get(0).size(); index++) {
+						int p1 = relation.get(0).get(index);
+						int p2 = relation.get(1).get(index);
+
+						for (int k = 0; k < length; k++) {
+							Integer pos1 = block.get(p1).get(k);
+							Integer pos2 = block.get(p2).get(k);
+							if (pos1 != null && pos2 != null) {
+								Calc.transform(atoms[pos1], transform);
+								Calc.transform(atoms[pos2], transform);
+								list1.add(atoms[pos1]);
+								list2.add(atoms[pos2]);
+							}
 						}
 					}
 				}
@@ -932,8 +942,8 @@ public class SymmetryTools {
 				// Calculate the new transformation information
 				if (arr1.length > 0 && arr2.length > 0) {
 					SVDSuperimposer svd = new SVDSuperimposer(arr1, arr2);
-					axis = svd.getTransformation();
-					axes.updateAxis(t, axis);
+					Matrix4d axis = svd.getTransformation();
+					axes.updateAxis(level, axis);
 				}
 
 				// Get the transformations from the SymmetryAxes

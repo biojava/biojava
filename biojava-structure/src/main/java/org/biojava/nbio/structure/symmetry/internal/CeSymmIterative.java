@@ -270,7 +270,7 @@ public class CeSymmIterative {
 
 		// Set the transformations and scores of the final alignment
 		SymmetryTools
-				.updateSymmetryTransformation(result.getAxes(), msa, atoms);
+				.updateSymmetryTransformation(result.getAxes(), msa);
 		double tmScore = MultipleAlignmentScorer.getAvgTMScore(msa)
 				* msa.size();
 		double rmsd = MultipleAlignmentScorer.getRMSD(msa);
