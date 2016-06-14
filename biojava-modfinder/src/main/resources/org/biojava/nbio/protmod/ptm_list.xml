@@ -1,21 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ProteinModifications>
-	<Revisions>
+
+    <Revisions>
+    <Revision>
+			<Date>2016-06-13</Date>
+			<Change>Added new chromophore definitions</Change>
+		</Revision>
 		<Revision>
 			<Date>2016-06-10</Date>
 			<Change>Updated legacy chemical component and atom names to current naming conventions. Removed two obsolete entires (CLE and CGL)</Change>
 		</Revision>
-		<Revision>
+    	<Revision>
 			<Date>2016-05-10</Date>
-			<Change>Added definition for PLP</Change>
-			<Date>2011-08-12</Date>
-			<Change>Added glycosylation entries 386-429</Change>
-		</Revision>
-		<Revision>
-			<Date>2011-07-26</Date>
-			<Change>Added PDBCC cross-references</Change>
-		</Revision>
-	</Revisions>
+				<Change>Added definition for PLP</Change>
+    		<Date>2011-08-12</Date>
+    			<Change>Added glycosylation entries 386-429</Change>
+   		</Revision>
+    	<Revision>
+    		<Date>2011-07-26</Date>
+    		<Change>Added PDBCC cross-references</Change>
+   		</Revision>
+    </Revisions>
 	<Entry>
 		<Id>0001</Id>
 		<Description>a protein modification that effectively forms a O3-xylosylserine.</Description>
@@ -2894,6 +2899,8 @@
 		<Occurrence>natural</Occurrence>
 		<Category>modified residue</Category>
 		<Comment>CRQ has two modifications: RESID:AA0183 and RESID:AA0189</Comment>
+		<Comment>RCSB PDB added keyword chromoprotein</Comment>
+		<Keyword>chromoprotein</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0091</Id>
@@ -2951,6 +2958,8 @@
 		<Occurrence>natural</Occurrence>
 		<Category>crosslink1</Category>
 		<Comment>CRO has two modifications: RESID:AA0183 and RESID:AA0184</Comment>
+		<Comment>RCSB PDB added keyword chromoprotein</Comment>
+		<Keyword>chromoprotein</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0093</Id>
@@ -5928,6 +5937,8 @@
 		<Occurrence>natural</Occurrence>
 		<Category>modified residue</Category>
 		<Comment>CRU has two modifications: RESID:AA0183 and RESID:AA0378</Comment>
+		<Comment>RCSB PDB added keyword chromoprotein</Comment>
+		<Keyword>chromoprotein</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0173</Id>
@@ -5985,6 +5996,8 @@
 		<Occurrence>natural</Occurrence>
 		<Category>modified residue</Category>
 		<Comment>CH6 has two modifications: RESID:AA0183 and RESID:AA0379</Comment>
+	    <Comment>RCSB PDB added keyword chromoprotein</Comment>
+		<Keyword>chromoprotein</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0175</Id>
@@ -6042,6 +6055,8 @@
 		<Occurrence>natural</Occurrence>
 		<Category>modified residue</Category>
 		<Comment>NRQ has two modifications: RESID:AA0183 and RESID:AA0379</Comment>
+		<Comment>RCSB PDB added keyword chromoprotein</Comment>
+		<Keyword>chromoprotein</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0177</Id>
@@ -6098,6 +6113,8 @@
 		<Occurrence>natural</Occurrence>
 		<Category>modified residue</Category>
 		<Comment>NYG has two modifications: RESID:AA0183 and RESID:AA0380</Comment>
+		<Comment>RCSB PDB added chromoprotein keyword</Comment>
+		<Keyword>chromoprotein</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0179</Id>
@@ -6181,6 +6198,8 @@
 		<Occurrence>natural</Occurrence>
 		<Category>modified residue</Category>
 		<Comment>CR7 has two modifications: RESID:AA0183 and RESID:AA0381/AA0382</Comment>
+		<Comment>RCSB PDB added keyword chromoprotein</Comment>
+		<Keyword>chromoprotein</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0182</Id>
@@ -7041,10 +7060,10 @@
 			<Component component="2">
 				<Id source="PDBCC">TY2</Id>
 			</Component>
-			<Bond>
-				<Atom component="1">CE2</Atom>
-				<Atom component="2">NE2</Atom>
-			</Bond>
+		   <Bond>
+		    	<Atom component="1">CE2</Atom>
+			    <Atom component="2">NE2</Atom>
+		    </Bond>
 		</Condition>
 		<Occurrence>hypothetical</Occurrence>
 		<Category>crosslink2</Category>
@@ -9610,7 +9629,7 @@
 		</Condition>
 		<Occurrence>natural</Occurrence>
 		<Category>attachment</Category>
-		<Keyword>phosphoprotein</Keyword>
+        <Keyword>phosphoprotein</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0291</Id>
@@ -10399,29 +10418,32 @@
 			</Component>
 		</Condition>
 		<Category>modified residue</Category>
-		<Occurrence>natural</Occurrence>
-		<Keyword>imidazolinone/oxazolinone ring</Keyword>
-	</Entry>
-	<Entry>
-		<Id>0315</Id>
-		<Description>A protein modification that effectively crosslinks an L-histidine residue and 5'-phosphoadenosine through a phosphoramide ester bond to form 1'-(phospho-5'-adenosine)-L-histidine.</Description>
-		<SystematicName>(2S)-2-amino-3-[1-(5'-adenosine phosphono)imidazol-4-yl]propanoic acid</SystematicName>
-		<CrossReference>
-			<Source>RESID</Source>
-			<Id>AA0371</Id>
-			<Name>1'-(phospho-5'-adenosine)-L-histidine</Name>
-		</CrossReference>
-		<CrossReference>
-			<Source>PDBCC</Source>
-			<Id>AMP</Id>
-			<Name>adenosine monophosphate</Name>
-		</CrossReference>
-		<CrossReference>
-			<Source>PSI-MOD</Source>
-			<Id>MOD:00376</Id>
-			<Name>1'-(phospho-5'-adenosine)-L-histidine</Name>
-		</CrossReference>
-		<Condition>
+        <Occurrence>natural</Occurrence>
+        <Keyword>imidazolinone/oxazolinone ring</Keyword>
+        <Comment>from RCSB PDB</Comment>
+		<Keyword>chromoprotein</Keyword>
+    </Entry>
+    <Entry>
+        <Id>0315</Id>
+        <Description>A protein modification that effectively crosslinks an L-histidine residue and 5'-phosphoadenosine through a phosphoramide ester bond to form 1'-(phospho-5'-adenosine)-L-histidine.</Description>
+        <SystematicName>(2S)-2-amino-3-[1-(5'-adenosine phosphono)imidazol-4-yl]propanoic acid</SystematicName>
+        <CrossReference>
+            <Source>RESID</Source>
+            <Id>AA0371</Id>
+            <Name>1'-(phospho-5'-adenosine)-L-histidine</Name>
+        </CrossReference>
+        <CrossReference>
+            <Source>PDBCC</Source>
+            <Id>AMP</Id>
+            <Name>adenosine monophosphate</Name>
+        </CrossReference>
+        <CrossReference>
+            <Source>PSI-MOD</Source>
+            <Id>MOD:00376</Id>
+            <Name>1'-(phospho-5'-adenosine)-L-histidine</Name>
+        </CrossReference>
+        <Condition>
+
 			<Component component="1">
 				<Id source="PDBCC">HIS</Id>
 			</Component>
@@ -10531,30 +10553,33 @@
 				<Id source="PDBCC">XYG</Id>
 			</Component>
 		</Condition>
-		<Category>modified residue</Category>
-		<Occurrence>natural</Occurrence>
-		<Keyword>imidazolinone/oxazolinone ring</Keyword>
-	</Entry>
-	<Entry>
-		<Id>0319</Id>
-		<Description>A protein modification that crosslinks an aspartic acid and the following glycine residue with the formation of (2-aminosuccinimidyl)acetic acid.</Description>
-		<SystematicName>[(3S)-3-amino-2,5-dioxopyrrolidin-1-yl]acetic acid</SystematicName>
-		<CrossReference>
-			<Source>RESID</Source>
-			<Id>AA0441</Id>
-			<Name>(2-aminosuccinimidyl)acetic acid</Name>
-		</CrossReference>
-		<CrossReference>
-			<Source>PDBCC</Source>
-			<Id>SUI</Id>
-			<Name>(3-amino-2,5-dioxo-1-pyrrolidinly)acetic acid</Name>
-		</CrossReference>
-		<CrossReference>
-			<Source>PSI-MOD</Source>
-			<Id>MOD:00952</Id>
-			<Name>(2-aminosuccinimidyl)acetic acid</Name>
-		</CrossReference>
-		<Condition>
+
+        <Category>modified residue</Category>
+        <Occurrence>natural</Occurrence>
+        <Keyword>imidazolinone/oxazolinone ring</Keyword>
+        <Comment>RCSB PDB added keyword chromoprotein</Comment>
+		<Keyword>chromoprotein</Keyword>
+    </Entry>
+    <Entry>
+        <Id>0319</Id>
+        <Description>A protein modification that crosslinks an aspartic acid and the following glycine residue with the formation of (2-aminosuccinimidyl)acetic acid.</Description>
+        <SystematicName>[(3S)-3-amino-2,5-dioxopyrrolidin-1-yl]acetic acid</SystematicName>
+        <CrossReference>
+            <Source>RESID</Source>
+            <Id>AA0441</Id>
+            <Name>(2-aminosuccinimidyl)acetic acid</Name>
+        </CrossReference>
+        <CrossReference>
+            <Source>PDBCC</Source>
+            <Id>SUI</Id>
+            <Name>(3-amino-2,5-dioxo-1-pyrrolidinly)acetic acid</Name>
+        </CrossReference>
+        <CrossReference>
+            <Source>PSI-MOD</Source>
+            <Id>MOD:00952</Id>
+            <Name>(2-aminosuccinimidyl)acetic acid</Name>
+        </CrossReference>
+        <Condition>
 			<Component component="1">
 				<Id source="PDBCC">SUI</Id>
 			</Component>
@@ -13680,5 +13705,974 @@
 		<Category>attachment</Category>
 		<Keyword>phosphoprotein</Keyword>
 		<Keyword>pyridoxal phosphate</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0431</Id>
+		<Description>A protein modification that effectively crosslinks an L-alanine and an L-lysine residue to form a chromophore.</Description>
+		<SystematicName>(2S)-2,8-DIAMINOOCTANOIC ACID</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>HHK</Id>
+			<Name>(2S)-2,8-DIAMINOOCTANOIC ACID</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">HHK</Id>
+			</Component>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Comment>from RCSB PBD</Comment>
+		<Keyword>chromoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0432</Id>
+		<Description>A protein modification that effectively crosslinks an L-alanine, L-phenylalanine, and a glycine residue to form a chromophore.</Description>
+		<SystematicName>{(2S)-2-[(1S)-1-AMINOETHYL]-5-OXO-2,5-DIHYDRO-1H-IMIDAZOL-1-YL}ACETIC ACID</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>CLV</Id>
+			<Name>{(2S)-2-[(1S)-1-AMINOETHYL]-5-OXO-2,5-DIHYDRO-1H-IMIDAZOL-1-YL}ACETIC ACID</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">CLV</Id>
+			</Component>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Comment>from RCSB PDB</Comment>
+		<Keyword>chromoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0433</Id>
+		<Description>A protein modification that effectively crosslinks an L-alanine, L-phenylalanine, and a glycine residue to form a chromophore.</Description>
+		<SystematicName>{(2S)-2-[(1S)-1-AMINOETHYL]-4-BENZYL-5-OXO-2,5-DIHYDRO-1H-IMIDAZOL-1-YL}ACETIC ACID</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>X9Q</Id>
+			<Name>{(2S)-2-[(1S)-1-AMINOETHYL]-4-BENZYL-5-OXO-2,5-DIHYDRO-1H-IMIDAZOL-1-YL}ACETIC ACID</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">X9Q</Id>
+			</Component>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Comment>from RCSB PDB</Comment>
+		<Keyword>chromoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0434</Id>
+		<Description>A protein modification that effectively crosslinks an L-alanine, L-serine, and a glycine residue to form a chromophore.</Description>
+		<SystematicName>3,5-DIHYDRO-5-METHYLIDENE-4H-IMIDAZOL-4-ON</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>175</Id>
+			<Name>3,5-DIHYDRO-5-METHYLIDENE-4H-IMIDAZOL-4-ON</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">175</Id>
+			</Component>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Comment>from RCSB PDB</Comment>
+		<Keyword>chromoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0435</Id>
+		<Description>A protein modification that effectively crosslinks an L-alanine, L-serine, and a glycine residue to form a chromophore.</Description>
+		<SystematicName>[2-(1-AMINOETHYL)-4-METHYLENE-5-OXO-4,5-DIHYDRO-1H-IMIDAZOL-1-YL]ACETIC ACID</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>CRW</Id>
+			<Name>[2-(1-AMINOETHYL)-4-METHYLENE-5-OXO-4,5-DIHYDRO-1H-IMIDAZOL-1-YL]ACETIC ACID</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">CRW</Id>
+			</Component>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Comment>from RCSB PDB</Comment>
+		<Keyword>chromoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0436</Id>
+		<Description>A protein modification that effectively crosslinks an L-alanine, L-serine, and a glycine residue to form a chromophore.</Description>
+		<SystematicName>[2-(1-AMINOETHYL)-2-HYDROXY-4-METHYLENE-5-OXOIMIDAZOLIDIN-1-YL]ACETIC ACID</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>CRX</Id>
+			<Name>[2-(1-AMINOETHYL)-2-HYDROXY-4-METHYLENE-5-OXOIMIDAZOLIDIN-1-YL]ACETIC ACID</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">CRX</Id>
+			</Component>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Comment>from RCSB PDB</Comment>
+		<Keyword>chromoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0437</Id>
+		<Description>A protein modification that effectively crosslinks an L-alanine, L-serine, and a glycine residue to form a chromophore.</Description>
+		<SystematicName>{2-[(1S)-1-aminoethyl]-4-methylidene-5-oxo-4,5-dihydro-1H-imidazol-1-yl}acetic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>MDO</Id>
+			<Name>{2-[(1S)-1-aminoethyl]-4-methylidene-5-oxo-4,5-dihydro-1H-imidazol-1-yl}acetic acid</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">MDO</Id>
+			</Component>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Comment>from RCSB PDB</Comment>
+		<Keyword>chromoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0438</Id>
+		<Description>A protein modification that effectively crosslinks an L-alanine, L-tyrosine, and a glycine residue to form a chromophore.</Description>
+		<SystematicName>[(4E)-2-[(1S)-1-AMINOETHYL]-4-(4-HYDROXYBENZYLIDENE)-5-OXO-4,5-DIHYDRO-1H-IMIDAZOL-1-YL]ACETIC ACID</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>AYG</Id>
+			<Name>[(4E)-2-[(1S)-1-AMINOETHYL]-4-(4-HYDROXYBENZYLIDENE)-5-OXO-4,5-DIHYDRO-1H-IMIDAZOL-1-YL]ACETIC ACID</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">AYG</Id>
+			</Component>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Comment>from RCSB PDB</Comment>
+		<Keyword>chromoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0439</Id>
+		<Description>A protein modification that effectively crosslinks an L-alanine, L-tyrosine, and a glycine residue to form a chromophore.</Description>
+		<SystematicName>[(4Z)-2-[(1S)-1-aminoethyl]-4-(4-hydroxybenzylidene)-5-oxo-4,5-dihydro-1H-imidazol-1-yl]acetic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>PIA</Id>
+			<Name>[(4Z)-2-[(1S)-1-aminoethyl]-4-(4-hydroxybenzylidene)-5-oxo-4,5-dihydro-1H-imidazol-1-yl]acetic acid</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">PIA</Id>
+			</Component>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Comment>from RCSB PDB</Comment>
+		<Keyword>chromoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0441</Id>
+		<Description>A protein modification that effectively crosslinks an L-aspartic acid and an L-cysteine residue to form a chromophore.</Description>
+		<SystematicName>(2R)-2-[(3S)-3-amino-2,5-dioxopyrrolidin-1-yl]-3-sulfanylpropanoic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>SIC</Id>
+			<Name>(2R)-2-[(3S)-3-amino-2,5-dioxopyrrolidin-1-yl]-3-sulfanylpropanoic acid</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">SIC</Id>
+			</Component>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Comment>from RCSB PDB</Comment>
+		<Keyword>chromoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0442</Id>
+		<Description>A protein modification that effectively crosslinks an L-aspartic acid and a glycine residue to form a chromophore.</Description>
+		<SystematicName>(3-AMINO-2,5-DIOXO-1-PYRROLIDINYL)ACETIC ACID</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>SUI</Id>
+			<Name>(3-AMINO-2,5-DIOXO-1-PYRROLIDINYL)ACETIC ACID</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">SUI</Id>
+			</Component>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Comment>from RCSB PDB</Comment>
+		<Keyword>chromoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0443</Id>
+		<Description>A protein modification that effectively crosslinks an L-aspartic acid, L-tyrosine, and a glycine residue to form a chromophore.</Description>
+		<SystematicName>(3S)-3-amino-3-[(4Z)-1-(carboxymethyl)-4-[(4-hydroxyphenyl)methylidene]-5-oxo-imidazol-2-yl]propanoic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>DYG</Id>
+			<Name>(3S)-3-amino-3-[(4Z)-1-(carboxymethyl)-4-[(4-hydroxyphenyl)methylidene]-5-oxo-imidazol-2-yl]propanoic acid</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">DYG</Id>
+			</Component>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Comment>from RCSB PDB</Comment>
+		<Keyword>chromoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0445</Id>
+		<Description>A protein modification that effectively crosslinks an L-cysteine, L-tyrosine, and a glycine residue to form a chromophore.</Description>
+		<SystematicName>2-(1-AMINO-2-MERCAPTO-ETHYL)-5-(4-HYDROXY-BENZYL)-3-(ETHANOYL)-3,5-DIHYDRO-IMIDAZOL-4-ONE</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>CCY</Id>
+			<Name>2-(1-AMINO-2-MERCAPTO-ETHYL)-5-(4-HYDROXY-BENZYL)-3-(ETHANOYL)-3,5-DIHYDRO-IMIDAZOL-4-ONE</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">CCY</Id>
+			</Component>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Comment>from RCSB PDB</Comment>
+		<Keyword>chromoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0446</Id>
+		<Description>A protein modification that effectively crosslinks an L-cysteine, L-tyrosine, and a glycine residue to form a chromophore.</Description>
+		<SystematicName>[(4Z)-2-[(1R)-1-AMINO-2-MERCAPTOETHYL]-4-(4-HYDROXYBENZYLIDENE)-5-OXO-4,5-DIHYDRO-1H-IMIDAZOL-1-YL]ACETIC ACID</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>GYC</Id>
+			<Name>[(4Z)-2-[(1R)-1-AMINO-2-MERCAPTOETHYL]-4-(4-HYDROXYBENZYLIDENE)-5-OXO-4,5-DIHYDRO-1H-IMIDAZOL-1-YL]ACETIC ACID</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">GYC</Id>
+			</Component>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Comment>from RCSB PDB</Comment>
+		<Keyword>chromoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0447</Id>
+		<Description>A protein modification that effectively crosslinks an L-glutamine, L-leucine, and a glycine residue to form a chromophore.</Description>
+		<SystematicName>[(4Z)-2-[(1Z)-4-AMINO-4-OXOBUTANIMIDOYL]-4-(2-METHYLPROPYLIDENE)-5-OXO-4,5-DIHYDRO-1H-IMIDAZOL-1-YL]ACETIC ACID</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>QLG</Id>
+			<Name>[(4Z)-2-[(1Z)-4-AMINO-4-OXOBUTANIMIDOYL]-4-(2-METHYLPROPYLIDENE)-5-OXO-4,5-DIHYDRO-1H-IMIDAZOL-1-YL]ACETIC ACID</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">QLG</Id>
+			</Component>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Comment>from RCSB PDB</Comment>
+		<Keyword>chromoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0449</Id>
+		<Description>A protein modification that effectively crosslinks an L-glutamine, L-phenylalanine, and a glycine residue to form a chromophore.</Description>
+		<SystematicName>{(4E)-2-[(1E)-4-amino-4-oxobutanimidoyl]-4-benzylidene-5-oxo-4,5-dihydro-1H-imidazol-1-yl}acetic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>QFG</Id>
+			<Name>{(4E)-2-[(1E)-4-amino-4-oxobutanimidoyl]-4-benzylidene-5-oxo-4,5-dihydro-1H-imidazol-1-yl}acetic acid</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">QFG</Id>
+			</Component>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Comment>from RCSB PDB</Comment>
+		<Keyword>chromoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0450</Id>
+		<Description>A protein modification that effectively crosslinks a glycine, L-tyrosine, and a glycine residue to form a chromophore.</Description>
+		<SystematicName>[2-(1-AMINO-2-HYDROXY-PROPYL)-4-(4-FLUORO-1H-INDOL-3-YLMETHYL)-5-HYDROXY-IMIDAZOL-1-YL]-ACETIC ACID</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>4F3</Id>
+			<Name>[2-(1-AMINO-2-HYDROXY-PROPYL)-4-(4-FLUORO-1H-INDOL-3-YLMETHYL)-5-HYDROXY-IMIDAZOL-1-YL]-ACETIC ACID</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">4F3</Id>
+			</Component>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Comment>from RCSB PDB</Comment>
+		<Keyword>chromoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0451</Id>
+		<Description>A protein modification that effectively crosslinks a glycine, L-tyrosine, and a glycine residue to form a chromophore.</Description>
+		<SystematicName>[(2R,4R)-2-[(1R,2R)-1-amino-2-hydroxypropyl]-4-(4-hydroxybenzyl)-5-oxoimidazolidin-1-yl]acetic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>CJO</Id>
+			<Name>[(2R,4R)-2-[(1R,2R)-1-amino-2-hydroxypropyl]-4-(4-hydroxybenzyl)-5-oxoimidazolidin-1-yl]acetic acid</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">CJO</Id>
+			</Component>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Comment>from RCSB PDB</Comment>
+		<Keyword>chromoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0452</Id>
+		<Description>A protein modification that effectively crosslinks a glycine, L-tyrosine, and a glycine residue to form a chromophore.</Description>
+		<SystematicName>{(4Z)-4-(4-aminobenzylidene)-2-[(1R,2R)-1-amino-2-hydroxypropyl]-5-oxo-4,5-dihydro-1H-imidazol-1-yl}acetic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>CQ2</Id>
+			<Name>{(4Z)-4-(4-aminobenzylidene)-2-[(1R,2R)-1-amino-2-hydroxypropyl]-5-oxo-4,5-dihydro-1H-imidazol-1-yl}acetic acid</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">CQ2</Id>
+			</Component>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Comment>from RCSB PDB</Comment>
+		<Keyword>chromoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0453</Id>
+		<Description>A protein modification that effectively crosslinks a glycine, L-tyrosine, and a glycine residue to form a chromophore.</Description>
+		<SystematicName>[(4Z)-2-(AMINOMETHYL)-4-(4-HYDROXYBENZYLIDENE)-5-OXO-4,5-DIHYDRO-1H-IMIDAZOL-1-YL]ACETIC ACID</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>CQR</Id>
+			<Name>[(4Z)-2-(AMINOMETHYL)-4-(4-HYDROXYBENZYLIDENE)-5-OXO-4,5-DIHYDRO-1H-IMIDAZOL-1-YL]ACETIC ACID</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">CQR</Id>
+			</Component>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Comment>from RCSB PDB</Comment>
+		<Keyword>chromoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0454</Id>
+		<Description>A protein modification that effectively crosslinks a glycine, L-tyrosine, and a glycine residue to form a chromophore.</Description>
+		<SystematicName>{(4Z)-2-(aminomethyl)-4-[(4-hydroxyphenyl)methylidene]-5-oxo-4,5-dihydro-1H-imidazol-1-yl}acetic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>CR2</Id>
+			<Name>{(4Z)-2-(aminomethyl)-4-[(4-hydroxyphenyl)methylidene]-5-oxo-4,5-dihydro-1H-imidazol-1-yl}acetic acid</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">CR2</Id>
+			</Component>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Comment>from RCSB PDB</Comment>
+		<Keyword>chromoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0455</Id>
+		<Description>A protein modification that effectively crosslinks a glycine, L-tyrosine, and a glycine residue to form a chromophore.</Description>
+		<SystematicName>[(2R,4S)-2-[(1S,2R)-1-amino-2-hydroxypropyl]-2-hydroxy-4-(4-hydroxybenzyl)-5-oxoimidazolidin-1-yl]acetic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>CZO</Id>
+			<Name>[(2R,4S)-2-[(1S,2R)-1-amino-2-hydroxypropyl]-2-hydroxy-4-(4-hydroxybenzyl)-5-oxoimidazolidin-1-yl]acetic acid</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">CZO</Id>
+			</Component>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Comment>from RCSB PDB</Comment>
+		<Keyword>chromoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0456</Id>
+		<Description>A protein modification that effectively crosslinks a glycine, L-tyrosine, and a glycine residue to form a chromophore.</Description>
+		<SystematicName>5-[1-(3-FLUORO-4-HYDROXY-PHENYL)-METH-(Z)-YLIDENE]-3,5-DIHYDRO-IMIDAZOL-4-ONE</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>MFC</Id>
+			<Name>5-[1-(3-FLUORO-4-HYDROXY-PHENYL)-METH-(Z)-YLIDENE]-3,5-DIHYDRO-IMIDAZOL-4-ONE</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">MFC</Id>
+			</Component>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Comment>from RCSB PDB</Comment>
+		<Keyword>chromoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0457</Id>
+		<Description>A protein modification that effectively crosslinks a glycine, L-tyrosine, and a glycine residue to form a chromophore.</Description>
+		<SystematicName>[(2R,4Z)-2-(aminomethyl)-2-hydroxy-4-(4-hydroxybenzylidene)-5-oxoimidazolidin-1-yl]acetic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>WCR</Id>
+			<Name>[(2R,4Z)-2-(aminomethyl)-2-hydroxy-4-(4-hydroxybenzylidene)-5-oxoimidazolidin-1-yl]acetic acid</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">WCR</Id>
+			</Component>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Comment>from RCSB PDB</Comment>
+		<Keyword>chromoprotein</Keyword>
+	</Entry>
+    <Entry>
+		<Id>0458</Id>
+		<Description>A protein modification that effectively crosslinks an L-histidine, L-tyrosine, and a glycine residue to form a chromophore.</Description>
+		<SystematicName>2-[1-AMINO-2-(1H-IMIDAZOL-5-YL)ETHYL]-1-(CARBOXYMETHYL)-4-[(4-OXOCYCLOHEXA-2,5-DIEN-1-YLIDENE)METHYL]-1H-IMIDAZOL-5-OLATE</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>CR8</Id>
+			<Name>2-[1-AMINO-2-(1H-IMIDAZOL-5-YL)ETHYL]-1-(CARBOXYMETHYL)-4-[(4-OXOCYCLOHEXA-2,5-DIEN-1-YLIDENE)METHYL]-1H-IMIDAZOL-5-OLATE</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">CR8</Id>
+			</Component>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Comment>from RCSB PDB</Comment>
+		<Keyword>chromoprotein</Keyword>
+	</Entry>
+    <Entry>
+		<Id>0459</Id>
+		<Description>A protein modification that effectively crosslinks an L-histidine, L-tyrosine, and a glycine residue to form a chromophore.</Description>
+		<SystematicName>2-((1E)-2-(5-IMIDAZOLYL)ETHENYL)-4-(P-HYDROXYBENZYLIDENE)-5-IMIDAZOLINONE</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>IEY</Id>
+			<Name>2-((1E)-2-(5-IMIDAZOLYL)ETHENYL)-4-(P-HYDROXYBENZYLIDENE)-5-IMIDAZOLINONE</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">IEY</Id>
+			</Component>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Comment>from RCSB PDB</Comment>
+		<Keyword>chromoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0460</Id>
+		<Description>A protein modification that effectively crosslinks an L-histidine, L-tyrosine, and a glycine residue to form a chromophore.</Description>
+		<SystematicName>{(2R)-4-(4-HYDROXYBENZYL)-2-[2-(1H-IMIDAZOL-4-YL)ETHYL]-5-OXO-2,5-DIHYDRO-1H-IMIDAZOL-1-YL}ACETALDEHYDE</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>RC7</Id>
+			<Name>{(2R)-4-(4-HYDROXYBENZYL)-2-[2-(1H-IMIDAZOL-4-YL)ETHYL]-5-OXO-2,5-DIHYDRO-1H-IMIDAZOL-1-YL}ACETALDEHYDE</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">RC7</Id>
+			</Component>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Comment>from RCSB PDB</Comment>
+		<Keyword>chromoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0461</Id>
+		<Description>A protein modification that effectively crosslinks an L-isoleucine, glycine, L-tyrosine, and a glycine residue to form a chromophore.</Description>
+		<SystematicName>[(4Z)-2-{(2R,5R)-2-[(1S,2S)-1-amino-2-methylbutyl]-2-hydroxy-5-methyl-2,5-dihydro-1,3-oxazol-4-yl}-4-(4-hydroxybenzylidene)-5-oxo-4,5-dihydro-1H-imidazol-1-yl]acetic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>OIM</Id>
+			<Name>[(4Z)-2-{(2R,5R)-2-[(1S,2S)-1-amino-2-methylbutyl]-2-hydroxy-5-methyl-2,5-dihydro-1,3-oxazol-4-yl}-4-(4-hydroxybenzylidene)-5-oxo-4,5-dihydro-1H-imidazol-1-yl]acetic acid</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">OIM</Id>
+			</Component>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Comment>from RCSB PDB</Comment>
+		<Keyword>chromoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0462</Id>
+		<Description>A protein modification that effectively crosslinks an L-leucine, L-tyrosine, and a glycine residue to form a chromophore.</Description>
+		<SystematicName>{4-[(4-hydroxyphenyl)methylidene]-2-[(1E)-3-methylbutanimidoyl]-5-oxo-4,5-dihydro-1H-imidazol-1-yl}acetic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>NRP</Id>
+			<Name>{4-[(4-hydroxyphenyl)methylidene]-2-[(1E)-3-methylbutanimidoyl]-5-oxo-4,5-dihydro-1H-imidazol-1-yl}acetic acid</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">NRP</Id>
+			</Component>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Comment>from RCSB PDB</Comment>
+		<Keyword>chromoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0463</Id>
+		<Description>A protein modification that effectively crosslinks an L-methionine, L-tyrosine, and a glycine residue to form a chromophore.</Description>
+		<SystematicName>4-{(Z)-[2-[3-(METHYLSULFANYL)PROPANOYL]-5-OXO-1-(2-OXOETHYL)-1,5-DIHYDRO-4H-IMIDAZOL-4-YLIDENE]METHYL}BENZENOLATE</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>CRK</Id>
+			<Name>4-{(Z)-[2-[3-(METHYLSULFANYL)PROPANOYL]-5-OXO-1-(2-OXOETHYL)-1,5-DIHYDRO-4H-IMIDAZOL-4-YLIDENE]METHYL}BENZENOLATE</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">CRK</Id>
+			</Component>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Comment>from RCSB PDB</Comment>
+		<Keyword>chromoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0464</Id>
+		<Description>A protein modification that effectively crosslinks an L-methionine, L-tyrosine, and a glycine residue to form a chromophore.</Description>
+		<SystematicName>{(2R,4Z)-2-[(1R)-1-amino-3-(methylsulfanyl)propyl]-2-hydroxy-4-[(4-hydroxyphenyl)methylidene]-5-oxoimidazolidin-1-yl}acetic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>EYG</Id>
+			<Name>{(2R,4Z)-2-[(1R)-1-amino-3-(methylsulfanyl)propyl]-2-hydroxy-4-[(4-hydroxyphenyl)methylidene]-5-oxoimidazolidin-1-yl}acetic acid</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">EYG</Id>
+			</Component>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Comment>from RCSB PDB</Comment>
+		<Keyword>chromoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0465</Id>
+		<Description>A protein modification that effectively crosslinks an L-phenylalanine, L-cysteine, L-tyrosine, and a glycine residue to form a chromophore.</Description>
+		<SystematicName>[(4Z)-2-{(2R)-2-[(1S)-1-amino-2-phenylethyl]-2-hydroxy-2,5-dihydro-1,3-thiazol-4-yl}-4-(4-hydroxybenzylidene)-5-oxo-4,5-dihydro-1H-imidazol-1-yl]acetic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>CFY</Id>
+			<Name>[(4Z)-2-{(2R)-2-[(1S)-1-amino-2-phenylethyl]-2-hydroxy-2,5-dihydro-1,3-thiazol-4-yl}-4-(4-hydroxybenzylidene)-5-oxo-4,5-dihydro-1H-imidazol-1-yl]acetic acid</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">CFY</Id>
+			</Component>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Comment>from RCSB PDB</Comment>
+		<Keyword>chromoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0466</Id>
+		<Description>A protein modification that effectively crosslinks an L-phenylalanine, glycine, L-tyrosine, and a glycine residue to form a chromophore.</Description>
+		<SystematicName>[(4Z)-2-{(2R,5R)-2-[(1S)-1-amino-2-phenylethyl]-2-hydroxy-5-methyl-2,5-dihydro-1,3-oxazol-4-yl}-4-(4-hydroxybenzylidene)-5-oxo-4,5-dihydro-1H-imidazol-1-yl]acetic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>OFM</Id>
+			<Name>[(4Z)-2-{(2R,5R)-2-[(1S)-1-amino-2-phenylethyl]-2-hydroxy-5-methyl-2,5-dihydro-1,3-oxazol-4-yl}-4-(4-hydroxybenzylidene)-5-oxo-4,5-dihydro-1H-imidazol-1-yl]acetic acid</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">OFM</Id>
+			</Component>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Comment>from RCSB PDB</Comment>
+		<Keyword>chromoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0467</Id>
+		<Description>A protein modification that effectively crosslinks an L-serine, L-histidine, and a glycine residue to form a chromophore.</Description>
+		<SystematicName>[2-(2-HYDROXY-1-METHYL-ETHYL)-4-(1H-IMIDAZOL-4-YLMETHYL)-5-OXO-IMIDAZOLIDIN-1-YL]-ACETIC ACID</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>CSH</Id>
+			<Name>[2-(2-HYDROXY-1-METHYL-ETHYL)-4-(1H-IMIDAZOL-4-YLMETHYL)-5-OXO-IMIDAZOLIDIN-1-YL]-ACETIC ACID</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">CSH</Id>
+			</Component>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Comment>from RCSB PDB</Comment>
+		<Keyword>chromoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0468</Id>
+		<Description>A protein modification that effectively crosslinks an L-serine, L-histidine, and a glycine residue to form a chromophore.</Description>
+		<SystematicName>4-IMIDAZOLMETHYLENE-5-IMIDAZOLONE CHROMOPHORE</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>IIC</Id>
+			<Name>4-IMIDAZOLMETHYLENE-5-IMIDAZOLONE CHROMOPHORE</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">IIC</Id>
+			</Component>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Comment>from RCSB PDB</Comment>
+		<Keyword>chromoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0469</Id>
+		<Description>A protein modification that effectively crosslinks an L-serine, L-tryptophane, and a glycine residue to form a chromophore.</Description>
+		<SystematicName>2-[(4Z)-2-[(1R)-1-amino-2-hydroxy-ethyl]-4-(1H-indol-3-ylmethylidene)-5-oxo-imidazol-1-yl]ethanoic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>SWG</Id>
+			<Name>2-[(4Z)-2-[(1R)-1-amino-2-hydroxy-ethyl]-4-(1H-indol-3-ylmethylidene)-5-oxo-imidazol-1-yl]ethanoic acid</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">SWG</Id>
+			</Component>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Comment>from RCSB PDB</Comment>
+		<Keyword>chromoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0470</Id>
+		<Description>A protein modification that effectively crosslinks an L-serine, L-tyrosine, and a glycine residue to form a chromophore.</Description>
+		<SystematicName>[(4Z)-2-[(1R)-1-amino-2-hydroxyethyl]-4-(4-hydroxybenzylidene)-5-oxo-4,5-dihydro-1H-imidazol-1-yl]acetic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>CSY</Id>
+			<Name>[(4Z)-2-[(1R)-1-amino-2-hydroxyethyl]-4-(4-hydroxybenzylidene)-5-oxo-4,5-dihydro-1H-imidazol-1-yl]acetic acid</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">CSY</Id>
+			</Component>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Comment>from RCSB PDB</Comment>
+		<Keyword>chromoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0471</Id>
+		<Description>A protein modification that effectively crosslinks an L-serine, L-tyrosine, and a glycine residue to form a chromophore.</Description>
+		<SystematicName>[(4Z)-2-(1-AMINO-2-HYDROXYETHYL)-4-(4-HYDROXYBENZYLIDENE)-5-OXO-4,5-DIHYDRO-1H-IMIDAZOL-1-YL]ACETIC ACID</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>GYS</Id>
+			<Name>[(4Z)-2-(1-AMINO-2-HYDROXYETHYL)-4-(4-HYDROXYBENZYLIDENE)-5-OXO-4,5-DIHYDRO-1H-IMIDAZOL-1-YL]ACETIC ACID</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">GYS</Id>
+			</Component>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Comment>from RCSB PDB</Comment>
+		<Keyword>chromoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0472</Id>
+		<Description>A protein modification that effectively crosslinks an L-threonine, L-histidine, and a glycine residue to form a chromophore.</Description>
+		<SystematicName>[2-(1-AMINO-2-HYDROXY-PROPYL)-4-(3H-IMIDAZOL-4-YLMETHYLENE)-5-OXO-4,5-DIHYDRO-IMIDAZOL-1-YL]-ACETIC ACID</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>CRG</Id>
+			<Name>[2-(1-AMINO-2-HYDROXY-PROPYL)-4-(3H-IMIDAZOL-4-YLMETHYLENE)-5-OXO-4,5-DIHYDRO-IMIDAZOL-1-YL]-ACETIC ACID</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">CRG</Id>
+			</Component>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Comment>from RCSB PDB</Comment>
+		<Keyword>chromoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0473</Id>
+		<Description>A protein modification that effectively crosslinks an L-threonine, L-histidine, and a glycine residue to form a chromophore.</Description>
+		<SystematicName>2-[(1R,2R)-1-amino-2-hydroxypropyl]-1-(carboxymethyl)-4-(1H-imidazol-5-ylmethyl)-1H-imidazol-5-olate</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>XXY</Id>
+			<Name>2-[(1R,2R)-1-amino-2-hydroxypropyl]-1-(carboxymethyl)-4-(1H-imidazol-5-ylmethyl)-1H-imidazol-5-olate</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">XXY</Id>
+			</Component>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Comment>from RCSB PDB</Comment>
+		<Keyword>chromoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0474</Id>
+		<Description>A protein modification that effectively crosslinks an L-threonine, L-leucine, and a glycine residue to form a chromophore.</Description>
+		<SystematicName>[2-(1-AMINO-2-HYDROXYPROPYL)-2-HYDROXY-4-ISOBUTYL-5-OXO-2,5-DIHYDRO-1H-IMIDAZOL-1-YL]ACETALDEHYDE</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>CR0</Id>
+			<Name>2[2-(1-AMINO-2-HYDROXYPROPYL)-2-HYDROXY-4-ISOBUTYL-5-OXO-2,5-DIHYDRO-1H-IMIDAZOL-1-YL]ACETALDEHYDE</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">CR0</Id>
+			</Component>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Comment>from RCSB PDB</Comment>
+		<Keyword>chromoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0475</Id>
+		<Description>A protein modification that effectively crosslinks an L-threonine, L-phenylalanine, and a glycine residue to form a chromophore.</Description>
+		<SystematicName>{(2R)-2-[(1S,2R)-1-AMINO-2-HYDROXYPROPYL]-2-HYDROXY-4,5-DIOXOIMIDAZOLIDIN-1-YL}ACETIC ACID</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>C99</Id>
+			<Name>{(2R)-2-[(1S,2R)-1-AMINO-2-HYDROXYPROPYL]-2-HYDROXY-4,5-DIOXOIMIDAZOLIDIN-1-YL}ACETIC ACID</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">C99</Id>
+			</Component>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Comment>from RCSB PDB</Comment>
+		<Keyword>chromoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0476</Id>
+		<Description>A protein modification that effectively crosslinks an L-threonine, L-serine, and a glycine residue to form a chromophore.</Description>
+		<SystematicName>{2-[(1R,2R)-1-amino-2-hydroxypropyl]-4-methylidene-5-oxo-4,5-dihydro-1H-imidazol-1-yl}acetic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>KWS</Id>
+			<Name>{2-[(1R,2R)-1-amino-2-hydroxypropyl]-4-methylidene-5-oxo-4,5-dihydro-1H-imidazol-1-yl}acetic acid</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">KWS</Id>
+			</Component>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Comment>from RCSB PDB</Comment>
+		<Keyword>chromoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0477</Id>
+		<Description>A protein modification that effectively crosslinks an L-threonine, L-tryptophane, and a glycine residue to form a chromophore.</Description>
+		<SystematicName>(5Z)-2-[(1S,2R)-1-AMINO-2-HYDROXYPROPYL]-5-[(4-AMINO-1H-INDOL-3-YL)METHYLENE]-3-(2-HYDROXYETHYL)-3,5-DIHYDRO-4H-IMIDAZOL-4-ONE</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>5ZA</Id>
+			<Name>(5Z)-2-[(1S,2R)-1-AMINO-2-HYDROXYPROPYL]-5-[(4-AMINO-1H-INDOL-3-YL)METHYLENE]-3-(2-HYDROXYETHYL)-3,5-DIHYDRO-4H-IMIDAZOL-4-ONE</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">5ZA</Id>
+			</Component>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Comment>from RCSB PDB</Comment>
+		<Keyword>chromoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0478</Id>
+		<Description>A protein modification that effectively crosslinks an L-threonine, L-tryptophane, and a glycine residue to form a chromophore.</Description>
+		<SystematicName>[(4Z)-2-[(1R,2R)-1-amino-2-hydroxypropyl]-4-(1H-indol-3-ylmethylidene)-5-oxo-4,5-dihydro-1H-imidazol-1-yl]acetic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>CRF</Id>
+			<Name>[(4Z)-2-[(1R,2R)-1-amino-2-hydroxypropyl]-4-(1H-indol-3-ylmethylidene)-5-oxo-4,5-dihydro-1H-imidazol-1-yl]acetic acid</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">CRF</Id>
+			</Component>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Comment>from RCSB PDB</Comment>
+		<Keyword>chromoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0479</Id>
+		<Description>A protein modification that effectively crosslinks an L-threonine, L-tryptophane, and a glycine residue to form a chromophore.</Description>
+		<SystematicName>[(4E)-2-[(1R,2S)-1-AMINO-2-HYDROXYPROPYL]-4-(1H-INDOL-3-YLMETHYLENE)-5-OXO-4,5-DIHYDRO-1H-IMIDAZOL-1-YL]ACETIC ACID</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>NYC</Id>
+			<Name>[(4E)-2-[(1R,2S)-1-AMINO-2-HYDROXYPROPYL]-4-(1H-INDOL-3-YLMETHYLENE)-5-OXO-4,5-DIHYDRO-1H-IMIDAZOL-1-YL]ACETIC ACID</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">NYC</Id>
+			</Component>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Comment>from RCSB PDB</Comment>
+		<Keyword>chromoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0480</Id>
+		<Description>A protein modification that effectively crosslinks an L-threonine, L-tyrosine, and a glycine residue to form a chromophore.</Description>
+		<SystematicName>[(4Z)-2-[(1R,2R)-1-amino-2-hydroxypropyl]-4-(3-chloro-4-hydroxybenzylidene)-5-oxo-4,5-dihydro-1H-imidazol-1-yl]acetic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>4NT</Id>
+			<Name>[(4Z)-2-[(1R,2R)-1-amino-2-hydroxypropyl]-4-(3-chloro-4-hydroxybenzylidene)-5-oxo-4,5-dihydro-1H-imidazol-1-yl]acetic acid</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">4NT</Id>
+			</Component>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Comment>from RCSB PDB</Comment>
+		<Keyword>chromoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0481</Id>
+		<Description>A protein modification that effectively crosslinks an L-threonine, L-tyrosine, and a glycine residue to form a chromophore.</Description>
+		<SystematicName>{(4Z)-2-[(1R,2R)-1-amino-2-hydroxypropyl]-4-[(3,5-dichloro-4-oxocyclohexa-2,5-dien-1-yl)methylidene]-5-oxo-4,5-dihydro-1H-imidazol-1-yl}acetic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>4NU</Id>
+			<Name>{(4Z)-2-[(1R,2R)-1-amino-2-hydroxypropyl]-4-[(3,5-dichloro-4-oxocyclohexa-2,5-dien-1-yl)methylidene]-5-oxo-4,5-dihydro-1H-imidazol-1-yl}acetic acid</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">4NU</Id>
+			</Component>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Comment>from RCSB PDB</Comment>
+		<Keyword>chromoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0482</Id>
+		<Description>A protein modification that effectively crosslinks an L-threonine, L-tyrosine, and a glycine residue to form a chromophore.</Description>
+		<SystematicName>2-(1-AMINO-2-HYDROXYPROPYL)-4-(4-HYDROXYBENZYL)-1-(2-OXOETHYL)-1H-IMIDAZOL-5-OLATE</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>C12</Id>
+			<Name>2-(1-AMINO-2-HYDROXYPROPYL)-4-(4-HYDROXYBENZYL)-1-(2-OXOETHYL)-1H-IMIDAZOL-5-OLATE</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">C12</Id>
+			</Component>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Comment>from RCSB PDB</Comment>
+		<Keyword>chromoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0483</Id>
+		<Description>A protein modification that effectively crosslinks an L-threonine, L-tyrosine, and a glycine residue to form a chromophore.</Description>
+		<SystematicName>[(4Z)-2-[(1R,2R)-1-amino-2-hydroxypropyl]-4-(4-azidobenzylidene)-5-oxo-4,5-dihydro-1H-imidazol-1-yl]acetic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>CQ1</Id>
+			<Name>[(4Z)-2-[(1R,2R)-1-amino-2-hydroxypropyl]-4-(4-azidobenzylidene)-5-oxo-4,5-dihydro-1H-imidazol-1-yl]acetic acid</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">CQ1</Id>
+			</Component>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Comment>from RCSB PDB</Comment>
+		<Keyword>chromoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0484</Id>
+		<Description>A protein modification that effectively crosslinks an L-tyrosine and a glycine residue to form a chromophore.</Description>
+		<SystematicName>N-[(2Z)-2-amino-3-(4-hydroxyphenyl)prop-2-enoyl]glycine</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>0YG</Id>
+			<Name>N-[(2Z)-2-amino-3-(4-hydroxyphenyl)prop-2-enoyl]glycine</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">0YG</Id>
+			</Component>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Comment>from RCSB PDB</Comment>
+		<Keyword>chromoprotein</Keyword>
 	</Entry>
 </ProteinModifications>
