@@ -74,7 +74,7 @@ public class MmtfStructureWriter {
 					List<Atom> atomsInGroup = MmtfUtils.getAtomsForGroup(group);
 					ChemComp chemComp = group.getChemComp();
 					Character insCode = group.getResidueNumber().getInsCode();
-					if(insCode==null){
+					if(insCode==null || insCode.equals(' ')){
 						insCode=MmtfStructure.UNAVAILABLE_CHAR_VALUE;
 					}
 					char singleLetterCode = 'X';
@@ -87,7 +87,12 @@ public class MmtfStructureWriter {
 					for (Atom atom : atomsInGroup){
 						char altLoc = MmtfStructure.UNAVAILABLE_CHAR_VALUE;
 						if(atom.getAltLoc()!=null){
-							altLoc=atom.getAltLoc().charValue();
+							if(atom.getAltLoc().charValue()==' '){
+
+							}
+							else{
+								altLoc=atom.getAltLoc().charValue();
+							}
 						}
 						mmtfDecoderInterface.setAtomInfo(atom.getName(), atom.getPDBserial(), altLoc, (float) atom.getX(), 
 								(float) atom.getY(), (float) atom.getZ(), atom.getOccupancy(), 
@@ -166,7 +171,7 @@ public class MmtfStructureWriter {
 			Chain chain = entityChains.get(0);
 			ChainImpl chainImpl;
 			if (chain instanceof ChainImpl){
-			chainImpl = (ChainImpl) entityChains.get(0);
+				chainImpl = (ChainImpl) entityChains.get(0);
 			}
 			else{
 				throw new RuntimeException();
