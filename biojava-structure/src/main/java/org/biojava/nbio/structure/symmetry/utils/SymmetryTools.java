@@ -902,8 +902,6 @@ public class SymmetryTools {
 
 		List<List<Integer>> block = msa.getBlocks().get(0).getAlignRes();
 		int length = block.get(0).size();
-		Atom[] atoms = StructureTools.cloneAtomArray(msa.getEnsemble()
-				.getAtomArrays().get(0));
 
 		if (axes != null) {
 			for (int level = 0; level < axes.getNumLevels(); level++) {
@@ -913,7 +911,7 @@ public class SymmetryTools {
 				List<Atom> list2 = new ArrayList<Atom>();
 
 				for (int firstRepeat : axes.getFirstRepeats(level)) {
-
+						
 					Matrix4d transform = axes.getRepeatTransform(firstRepeat);
 
 					List<List<Integer>> relation = axes.getRepeatRelation(
@@ -927,10 +925,12 @@ public class SymmetryTools {
 							Integer pos1 = block.get(p1).get(k);
 							Integer pos2 = block.get(p2).get(k);
 							if (pos1 != null && pos2 != null) {
-								Calc.transform(atoms[pos1], transform);
-								Calc.transform(atoms[pos2], transform);
-								list1.add(atoms[pos1]);
-								list2.add(atoms[pos2]);
+								Atom a = (Atom) msa.getAtomArrays().get(p1)[pos1].clone();
+								Atom b = (Atom) msa.getAtomArrays().get(p2)[pos2].clone();
+								Calc.transform(a, transform);
+								Calc.transform(b, transform);
+								list1.add(a);
+								list2.add(b);
 							}
 						}
 					}

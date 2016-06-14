@@ -581,14 +581,11 @@ public class SymmetryAxes {
 	 */
 	public List<Integer> getFirstRepeats(int level) {
 		List<Integer> firstRepeats = new ArrayList<Integer>();
-		if (level == 0)
-			firstRepeats.add(0); // No top level present
-		else {
-			int m = getNumRepeats(level);//size of the level
-			int d = axes.get(level).getOrder(); // degree of this node
-			for (int firstRepeat = 0; firstRepeat < m*d; firstRepeat+=d)
-				firstRepeats.add(firstRepeat);
-		}
+		int m = getNumRepeats(level+1); //size of the level
+		int d = axes.get(level).getOrder(); //degree of this level
+		int n = m*d; // number of repeats included in each axis
+		for (int firstRepeat = 0; firstRepeat < getNumRepeats(); firstRepeat+=n)
+			firstRepeats.add(firstRepeat);
 		return firstRepeats;
 	}
 
