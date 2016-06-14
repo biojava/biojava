@@ -19,6 +19,7 @@
  *
  * Created on Jun 8, 2010
  * Author: Jianjiong Gao
+ * Author: Peter W. Rose
  *
  */
 
@@ -27,9 +28,7 @@ package org.biojava.nbio.protmod.structure;
 import junit.framework.TestCase;
 import org.biojava.nbio.protmod.ProteinModification;
 import org.biojava.nbio.protmod.ProteinModificationRegistry;
-import org.biojava.nbio.structure.ResidueNumber;
-import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,10 +63,12 @@ public class ProteinModificationParserTest extends TestCase {
 //				{"1ZNF", "AA0053"}, // ACE on THR
 				{"1MCC", "AA0045"}, // ACE on GLU
 				{"1SCY", "AA0089"}, // NH2 on HIS
+				{"5HNE", "AA0119"}, // PLP on LYS
 
 				// Modified resdiues
 				{"1UIS", "AA0183"}, // NRQ
 				{"3MVJ", "AA0037"}, // SEP
+				{"5EUN", "AA0119"}, // LLP
 
 				// remediation changed 1DOJ...
 				//{"1DOJ", "AA0065"}, // MEA
@@ -87,6 +88,32 @@ public class ProteinModificationParserTest extends TestCase {
 				{"2AXR", "AA0436"}, // CYS-FAD-HIS
 				{"3H8L", "AA0513"}, // CYS-S3H-CYS
 				{"1CAD", null}, // FE and 4 Cys, cross-link4
+
+				// Terbium cases
+				{"1NCZ", null},
+				{"3LTQ",null}, // has metalc,
+				{"4ESQ",null},
+				{"1TJB",null},
+				{"2V15",null},
+				{"2K61",null},
+
+				// iron bond to CYS
+				//{"1G20","AA0300"},
+
+				{"3CM6",null},
+				{"1W6Z",null},
+				//{"1Z2M",null}, distances are too big for the new cutoffs
+				{"2O6N",null},
+				{"1GA7",null},
+				{"1ACD","AA0262"}, // test for CSD
+				{"1AA6","AA0022"} , // test for SEC
+
+				{"1WCT","AA0179"},
+				{"2VH3","AA0459"},
+				
+				// Chromophores
+				{"2HGD",null}, // X9Q
+				{"3LF4",null}, // 0YG
 
 		};
 		return strucs;
@@ -109,7 +136,7 @@ public class ProteinModificationParserTest extends TestCase {
 				{"1EL5", "AA0143"}, // FAD on CYS
 				{"1W1O", "AA0144"}, // FAD on HIS
 				{"1DII", "AA0145"}, // FAD on TYR
-				{"2KJS", "AA0150"}, // PNS
+				{"2LML", "AA0150"}, // PNS
 				{"1D7E", "AA0207"}, // HC4
 				{"2TMD", "AA0220"}, // FMN
 				{"1VAO", "AA0221"}, // FAD on HIS
@@ -157,7 +184,7 @@ public class ProteinModificationParserTest extends TestCase {
 				{"1DM3", "AA0056"}, // SCY
 				// {"2NPP", "AA0061"}, // MAA
 				{"1GK8", "AA0064"}, // MME
-				{"1DOJ", "AA0065"}, // MEA
+				{"2PIL", "AA0065"}, // MEA
 				{"1DOJ", "AA0172"}, // TYS
 				{"1G42", "AA0067"}, // 2MR
 				{"2B2U", "AA0068"}, // DA2
@@ -210,7 +237,7 @@ public class ProteinModificationParserTest extends TestCase {
 				{"1HBM", "AA0273"}, // MGN
 				{"1FFU", "AA0277"}, // CSZ
 				{"3H5R", "AA0302"}, // SNN, note: SNN is not at C-terminal in some structures, e.g. 3I4W
-				{"1JQ7", "AA0311"}, // DMH
+				{"1NKK", "AA0311"}, // DMH
 				{"1J6Z", "AA0317"}, // HIC
 				{"1B80", "AA0322"}, // HTR
 				{"1CWM", "AA0336"}, // IML
@@ -224,7 +251,6 @@ public class ProteinModificationParserTest extends TestCase {
 				{"2IUW", "AA0444"}, // LED
 				{"1K83", "AA0449"}, // ILX
 				{"2VH3", "AA0458"}, // FGL
-				{"2AOC", "AA0464"}, // OLT
 				{"1DSR", "AA0478"}, // AHB
 				{"1AIQ", "AA0493"}, // CXM
 				{"1CF0", "AA0509"}, // IYR
@@ -283,6 +309,20 @@ public class ProteinModificationParserTest extends TestCase {
 				{"3EE4", "AA0490"}, // VAL-TYR
 				{"3H8L", "AA0513"}, // CYS-S3H-CYS
 				{"1CAD", null}, // FE and 4 Cys, cross-link4
+
+				// Terbium
+				{"1NCZ", null},
+				{"3LTQ",null},
+				{"4ESQ",null},
+				{"1TJB",null},
+				{"2V15",null},
+				{"2K61",null},
+				
+				// Chromophores
+				{"2HGD",null}, // X9Q
+				{"3LF4",null}, // 0YG
+				
+				
 		};
 		return strucs;
 	}
@@ -291,15 +331,11 @@ public class ProteinModificationParserTest extends TestCase {
 		multiTest();
 	}
 
-	public void multiTest() {
+	public void multiTest() throws IOException, StructureException {
 		for ( String[] name : strucs){
-			try {
-//				parserTest(name[0], (String)null);
-				parserTest(name[0], name[1]);
-			} catch (Exception e){
-				logger.error("Exception: ", e);
-				fail(e.getMessage());
-			}
+			parserTest(name[0], (String)null);
+			parserTest(name[0], name[1]);
+
 		}
 	}
 
@@ -316,18 +352,39 @@ public class ProteinModificationParserTest extends TestCase {
 
 	private void parserTest(String pdbId, Set<ProteinModification> mods) throws IOException, StructureException {
 		Structure struc = TmpAtomCache.cache.getStructure(pdbId);
+/*
+ //needed for testing 1G20
+		if ( pdbId.equalsIgnoreCase("1G20")) {
+			Structure n = new StructureImpl();
+
+			n.addChain(struc.getPolyChainByPDB("A"));
+			n.addChain(struc.getPolyChainByPDB("B"));
+			for (Chain c : struc.getNonPolyChainsByPDB("A"))
+				n.addChain(c);
+
+			for (Chain c : struc.getNonPolyChainsByPDB("B"))
+				n.addChain(c);
+
+
+			struc = n;
+		}
+		*/
 
 		ProteinModificationIdentifier parser = new ProteinModificationIdentifier();
 		boolean recordUnidentifiable = false;
 		parser.setRecordUnidentifiableCompounds(recordUnidentifiable);
-//		parser.setbondLengthTolerance(2);
+		//parser.setbondLengthTolerance(2);
 
 		assertFalse(mods.isEmpty());
 
 		parser.identify(struc, mods);
 
-		if (! parser.getIdentifiedModifiedCompound().isEmpty() ){
-			logger.warn("Did not identify any modified compounds for {}", pdbId);
+		//System.out.println(parser.getUnidentifiableModifiedResidues());
+
+		if ( parser.getIdentifiedModifiedCompound().isEmpty() ){
+			String msg = "Did not identify any modified compounds for " + pdbId;
+			logger.warn(msg);
+			fail(msg);
 		}
 
 		assertFalse("Did not identify any modified compounds for " + pdbId ,
@@ -352,7 +409,7 @@ public class ProteinModificationParserTest extends TestCase {
 			sb.append("Modification #");
 			sb.append(++i);
 			sb.append(":\n");
-			sb.append(mc);
+			sb.append(mc.getAtomLinkages());
 			sb.append('\n');
 		}
 
