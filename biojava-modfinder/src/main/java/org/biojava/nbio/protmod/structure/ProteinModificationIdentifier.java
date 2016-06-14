@@ -95,7 +95,7 @@ public class ProteinModificationIdentifier {
 
 	/**
 	 *
-	 * @param recordUnidentifiableAtomLinkages true if choosing to record unidentifiable
+	 * @param recordUnidentifiableModifiedCompounds true if choosing to record unidentifiable
 	 *  atoms; false, otherwise.
 	 * @see #getRecordUnidentifiableCompounds
 	 * @see #getUnidentifiableModifiedResidues
@@ -276,7 +276,6 @@ public class ProteinModificationIdentifier {
 
 			List<Group> ress = StructureUtil.getAminoAcids(chain);
 
-
 			//List<Group> ligs = chain.getAtomLigands();
 			List<Group> ligs = StructureTools.filterLigands(chain.getAtomGroups());
 			residues.addAll(ress);
@@ -378,9 +377,10 @@ public class ProteinModificationIdentifier {
 
 	/**
 	 * identify additional groups that are not directly attached to amino acids.
-	 * @param mc {@link ModifiedCompound}.
-	 * @param chain a {@link Chain}.
-	 * @return a list of added groups.
+	 * @param mc {@link ModifiedCompound}
+	 * @param ligands {@link Group}
+	 * @param chains List of {@link Chain}s
+	 * @return a list of added groups
 	 */
 	private void identifyAdditionalAttachments(ModifiedCompound mc,
 			List<Group> ligands, Map<String, Chain> mapChainIdChain) {
@@ -406,7 +406,9 @@ public class ProteinModificationIdentifier {
 				resNum.setSeqNum(num.getResidueNumber());
 				resNum.setInsCode(num.getInsCode());
 				//group = chain.getGroupByPDB(numIns);
+
 				group = mapChainIdChain.get(num.getChainId()).getGroupByPDB(resNum);
+				//group = mapChainIdChain.get(num.getChainId()).getGroupByPDB(resNum);
 			} catch (StructureException e) {
 				logger.error("Exception: ", e);
 				// should not happen
@@ -440,6 +442,23 @@ public class ProteinModificationIdentifier {
 			start = n;
 			n = identifiedGroups.size();
 		}
+	}
+
+	private Group getGroup(StructureGroup num, List<Chain> chains) throws StructureException {
+		for (Chain c : chains){
+			if ( c.getId().equals(num.getChainId())){
+
+				ResidueNumber resNum = new ResidueNumber();
+
+				resNum.setSeqNum(num.getResidueNumber());
+				resNum.setInsCode(num.getInsCode());
+
+
+				return c.getGroupByPDB(resNum);
+			}
+		}
+
+		throw new StructureException("Could not find residue " + num);
 	}
 
 	/**
@@ -547,6 +566,8 @@ public class ProteinModificationIdentifier {
 			if (group.getType().equals(GroupType.HETATM)) {
 				StructureGroup strucGroup = StructureUtil.getStructureGroup(
 						group, true);
+				//strucGroup.setChainId(group.getChainId());
+
 				if (!identifiedComps.contains(strucGroup)) {
 					unidentifiableModifiedResidues.add(strucGroup);
 				}
@@ -777,13 +798,12 @@ public class ProteinModificationIdentifier {
 		return matchedAtomsOfLinkages;
 	}
 
-	/**
-	 * Assembly the matched linkages.
+	/** Assembly the matched linkages
+	 *
 	 * @param matchedAtomsOfLinkages
 	 * @param mod
-	 * @param condition
-	 * @param ret ModifiedCompound will be stored here.
-	 */
+	 * @param ret ModifiedCompound will be stored here
+     */
 	private void assembleLinkages(List<List<Atom[]>> matchedAtomsOfLinkages,
 			ProteinModification mod, List<ModifiedCompound> ret) {
 		ModificationCondition condition = mod.getCondition();

@@ -110,10 +110,11 @@ public class ProteinModificationParserTest extends TestCase {
 
 				{"1WCT","AA0179"},
 				{"2VH3","AA0459"},
-				
+
 				// Chromophores
 				{"2HGD",null}, // X9Q
 				{"3LF4",null}, // 0YG
+
 
 		};
 		return strucs;
@@ -317,6 +318,7 @@ public class ProteinModificationParserTest extends TestCase {
 				{"1TJB",null},
 				{"2V15",null},
 				{"2K61",null},
+
 				
 				// Chromophores
 				{"2HGD",null}, // X9Q

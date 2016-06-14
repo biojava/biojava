@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ProteinModifications>
+
     <Revisions>
     <Revision>
 			<Date>2016-06-13</Date>
@@ -78,7 +79,7 @@
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">ASN</Id>
-			</Component>			
+			</Component>
 			<Component component="2">
 				<Id source="PDBCC">NAG</Id>
 			</Component>
@@ -966,7 +967,7 @@
 		<CrossReference>
 			<Source>PDBCC</Source>
 			<Id>DDE</Id>
-		    <Name>{3-[4-(2-amino-2-carboxy-ethyl)-1H-imidazol-2-yl]-1-carbamoyl-propyl}-trimethyl-ammonium</Name>
+			<Name>{3-[4-(2-amino-2-carboxy-ethyl)-1H-imidazol-2-yl]-1-carbamoyl-propyl}-trimethyl-ammonium</Name>
 		</CrossReference>
 		<CrossReference>
 			<Source>RESID</Source>
@@ -6983,7 +6984,7 @@
 			<Id>MOD:00363</Id>
 			<Name>L-cysteinyl-L-selenocysteine (Cys-Sec)</Name>
 		</CrossReference>
-			<CrossReference>
+		<CrossReference>
 			<Source>PDBCC</Source>
 			<Id>SEC</Id>
 			<Name>2-amino-3-selenino-propionic acid</Name>
@@ -8487,7 +8488,7 @@
 		<Category>modified residue</Category>
 		<Keyword>acetylated amino end</Keyword>
 	</Entry>
-    <Entry>
+	<Entry>
 		<Id>0255</Id>
 		<Description>A protein modification that effectively converts an L-glutamic acid residue to N-acetyl-L-glutamic acid.</Description>
 		<SystematicName>(S)-2-(acetamido)pentanedioic acid</SystematicName>
@@ -8514,8 +8515,8 @@
 		<Occurrence>natural</Occurrence>
 		<Category>modified residue</Category>
 		<Keyword>acetylated amino end</Keyword>
-	</Entry>	
-    <Entry>
+	</Entry>
+	<Entry>
 		<Id>0256</Id>
 		<Description>A protein modification that effectively converts an L-threonine residue to N-acetyl-L-threonine.</Description>
 		<SystematicName>(2S,3R)-2-acetamido-3-hydroxybutanoic acid</SystematicName>
@@ -8542,7 +8543,7 @@
 		<Occurrence>natural</Occurrence>
 		<Category>modified residue</Category>
 		<Keyword>acetylated amino end</Keyword>
-	</Entry>	
+	</Entry>
 	<Entry>
 		<Id>0257</Id>
 		<Description>A protein modification that effectively converts an L-serine residue to N-acetyl-L-serine.</Description>
@@ -8570,7 +8571,7 @@
 		<Occurrence>natural</Occurrence>
 		<Category>modified residue</Category>
 		<Keyword>acetylated amino end</Keyword>
-	</Entry>	
+	</Entry>
 	<Entry>
 		<Id>0258</Id>
 		<Description>A protein modification that effectively converts an L-tyrosine residue to N-acetyl-L-tyrosine.</Description>
@@ -8627,7 +8628,7 @@
 		<Category>modified residue</Category>
 		<Keyword>thioether bond</Keyword>
 		<Keyword>acetylated amino end</Keyword>
-	</Entry>	
+	</Entry>
 	<Entry>
 		<Id>0260</Id>
 		<Description>A protein modification that effectively converts a glycine residue to N-methylglycine.</Description>
@@ -8656,7 +8657,7 @@
 		<Category>modified residue</Category>
 		<Keyword>methylated amino acid</Keyword>
 		<Keyword>methylated amino end</Keyword>
-	</Entry>	
+	</Entry>
 	<Entry>
 		<Id>0261</Id>
 		<Description>A protein modification that effectively converts an L-arginine residue to L-arginine amide.</Description>
@@ -8762,7 +8763,7 @@
 		<Occurrence>natural</Occurrence>
 		<Category>attachment</Category>
 		<Keyword>amidated carboxyl end</Keyword>
-	</Entry>	
+	</Entry>
 	<Entry>
 		<Id>0264</Id>
 		<Description>A protein modification that effectively converts an L-phenylalanine residue to L-phenylalanine amide.</Description>
@@ -8832,7 +8833,7 @@
 		<Occurrence>natural</Occurrence>
 		<Category>attachment</Category>
 		<Keyword>amidated carboxyl end</Keyword>
-	</Entry>	
+	</Entry>
 	<Entry>
 		<Id>0266</Id>
 		<Description>A protein modification that effectively converts an L-serine residue to L-serine amide.</Description>
@@ -8867,7 +8868,7 @@
 		<Occurrence>natural</Occurrence>
 		<Category>attachment</Category>
 		<Keyword>amidated carboxyl end</Keyword>
-	</Entry>		
+	</Entry>
 	<Entry>
 		<Id>0267</Id>
 		<Description>A protein modification that effectively converts an L-serine residue to L-serine amide.</Description>
@@ -8895,7 +8896,7 @@
 		<Occurrence>natural</Occurrence>
 		<Category>modified residue</Category>
 		<Keyword>amidated carboxyl end</Keyword>
-	</Entry>	
+	</Entry>
 	<Entry>
 		<Id>0268</Id>
 		<Description>A protein modification that effectively converts an L-threonine residue to L-threonine amide.</Description>
@@ -8930,8 +8931,8 @@
 		<Occurrence>natural</Occurrence>
 		<Category>attachment</Category>
 		<Keyword>amidated carboxyl end</Keyword>
-	</Entry>	
-    <Entry>
+	</Entry>
+	<Entry>
 		<Id>0269</Id>
 		<Description>A protein modification that effectively converts an L-tryptophan residue to L-tryptophan amide.</Description>
 		<SystematicName></SystematicName>
@@ -8966,7 +8967,7 @@
 		<Category>attachment</Category>
 		<Keyword>amidated carboxyl end</Keyword>
 	</Entry>
-    <Entry>
+	<Entry>
 		<Id>0270</Id>
 		<Description>A protein modification that effectively converts an L-tryptophan residue to L-tryptophan amide.</Description>
 		<SystematicName>(2S)-2-amino-3-(1H-indol-3-yl)propanamide</SystematicName>
@@ -8993,7 +8994,7 @@
 		<Occurrence>natural</Occurrence>
 		<Category>modified residue</Category>
 		<Keyword>amidated carboxyl end</Keyword>
-	</Entry>	
+	</Entry>
 	<Entry>
 		<Id>0271</Id>
 		<Description>A protein modification that effectively converts an L-tyrosine residue to L-tyrosine amide.</Description>
@@ -9063,7 +9064,7 @@
 		<Occurrence>natural</Occurrence>
 		<Category>attachment</Category>
 		<Keyword>amidated carboxyl end</Keyword>
-	</Entry>	
+	</Entry>
 	<Entry>
 		<Id>0273</Id>
 		<Description>A protein modification that effectively converts an L-cysteine residue to S-farnesyl-L-cysteine.</Description>
@@ -9098,9 +9099,9 @@
 		<Occurrence>natural</Occurrence>
 		<Category>attachment</Category>
 		<Keyword>lipoprotein</Keyword>
-        <Keyword>prenylation</Keyword>
-        <Keyword>thioether bond</Keyword>
-	</Entry>	
+		<Keyword>prenylation</Keyword>
+		<Keyword>thioether bond</Keyword>
+	</Entry>
 	<Entry>
 		<Id>0274</Id>
 		<Description>A protein modification that effectively converts an L-cysteine residue to S-geranylgeranyl-L-cysteine.</Description>
@@ -9135,9 +9136,9 @@
 		<Occurrence>natural</Occurrence>
 		<Category>attachment</Category>
 		<Keyword>lipoprotein</Keyword>
-        <Keyword>prenylation</Keyword>
-        <Keyword>thioether bond</Keyword>
-	</Entry>	
+		<Keyword>prenylation</Keyword>
+		<Keyword>thioether bond</Keyword>
+	</Entry>
 	<Entry>
 		<Id>0275</Id>
 		<Description>A protein modification that effectively converts an L-cysteine, L-serine, or L-tyrosine residue to pyruvic acid.</Description>
@@ -9175,8 +9176,8 @@
 		<Occurrence>natural</Occurrence>
 		<Category>modified residue</Category>
 		<Keyword>blocked amino end</Keyword>
-	</Entry>	
-    <Entry>
+	</Entry>
+	<Entry>
 		<Id>0276</Id>
 		<Description>A protein modification that effectively converts an L-threonine residue into 2-oxobutanoic acid.</Description>
 		<SystematicName>2-oxobutanoic acid</SystematicName>
@@ -9237,13 +9238,13 @@
 		</Condition>
 		<Occurrence>natural</Occurrence>
 		<Category>attachment</Category>
-        <Keyword>chromoprotein</Keyword>
-        <Keyword>heme</Keyword>
-        <Keyword>iron</Keyword>
-        <Keyword>metalloprotein</Keyword>
-        <Keyword>thioether bond</Keyword>
-	</Entry>	
-    <Entry>
+		<Keyword>chromoprotein</Keyword>
+		<Keyword>heme</Keyword>
+		<Keyword>iron</Keyword>
+		<Keyword>metalloprotein</Keyword>
+		<Keyword>thioether bond</Keyword>
+	</Entry>
+	<Entry>
 		<Id>0278</Id>
 		<Description>A protein modification that effectively converts an L-tyrosine residue to L-3',4'-dihydroxyphenylalanine.</Description>
 		<SystematicName>(S)-2-amino-3-(3,4-dihydroxyphenyl)propanoic acid</SystematicName>
@@ -9270,8 +9271,8 @@
 		<Occurrence>natural</Occurrence>
 		<Category>modified residue</Category>
 		<Keyword>hydroxylation</Keyword>
-	</Entry>	
-    <Entry>
+	</Entry>
+	<Entry>
 		<Id>0279</Id>
 		<Description>A protein modification that effectively converts an L-tryptophan residue to L-6'-chlorotryptophan.</Description>
 		<SystematicName>(2S)-2-amino-3-(6-chloro-1H-indol-3-yl)propanoic acid</SystematicName>
@@ -9298,8 +9299,8 @@
 		<Occurrence>natural</Occurrence>
 		<Category>modified residue</Category>
 		<Keyword>chlorine</Keyword>
-	</Entry>	
-    <Entry>
+	</Entry>
+	<Entry>
 		<Id>0280</Id>
 		<Description>A protein modification that effectively converts an L-threonine residue to dehydrobutyrine.</Description>
 		<SystematicName>(2Z)-2-aminobut-2-enoic acid</SystematicName>
@@ -9326,7 +9327,7 @@
 		<Occurrence>natural</Occurrence>
 		<Category>modified residue</Category>
 		<Keyword></Keyword>
-	</Entry>	
+	</Entry>
 	<Entry>
 		<Id>0281</Id>
 		<Description>A protein modification that effectively converts an L-serine residue to an amino-terminal lactic acid.</Description>
@@ -9438,7 +9439,7 @@
 		<Occurrence>natural</Occurrence>
 		<Category>modified residue</Category>
 		<Keyword>D-amino acid</Keyword>
-	</Entry>	
+	</Entry>
 	<Entry>
 		<Id>0285</Id>
 		<Description>A protein modification that effectively converts an L-leucine residue to D-leucine.</Description>
@@ -9500,8 +9501,8 @@
 		</Condition>
 		<Occurrence>natural</Occurrence>
 		<Category>attachment</Category>
-        <Keyword>phosphoprotein</Keyword>
-	</Entry>	
+		<Keyword>phosphoprotein</Keyword>
+	</Entry>
 	<Entry>
 		<Id>0287</Id>
 		<Description></Description>
@@ -9535,7 +9536,7 @@
 		</Condition>
 		<Occurrence>natural</Occurrence>
 		<Category>attachment</Category>
-        <Keyword>phosphoprotein</Keyword>
+		<Keyword>phosphoprotein</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0288</Id>
@@ -9591,11 +9592,11 @@
 		</Condition>
 		<Occurrence>natural</Occurrence>
 		<Category>crosslink4</Category>
-        <Keyword>2Fe-2S</Keyword>
-        <Keyword>metalloprotein</Keyword>
-        <Keyword>Rieske iron-sulfur protein</Keyword>
+		<Keyword>2Fe-2S</Keyword>
+		<Keyword>metalloprotein</Keyword>
+		<Keyword>Rieske iron-sulfur protein</Keyword>
 	</Entry>
-    <Entry>
+	<Entry>
 		<Id>0289</Id>
 		<Description>A protein modification that effectively crosslinks an L-lysine residue and 5'-phosphoadenosine through a phosphoramide ester bond to form N6-(phospho-5'-adenosine)-L-lysine.</Description>
 		<SystematicName>(S)-2-amino-6-(5'-adenosine phosphonamino)hexanoic acid</SystematicName>
@@ -10133,7 +10134,7 @@
 		<Category>modified residue</Category>
 		<Keyword></Keyword>
 	</Entry>
-    <Entry>
+	<Entry>
 		<Id>0306</Id>
 		<Description>A protein modification that effectively converts an L-tryptophan residue to a 2'-hydroxy-L-tryptophan.</Description>
 		<SystematicName>(2S)-2-amino-3-(2-hydroxy-1H-indol-3-yl)propanoic acid</SystematicName>
@@ -10161,7 +10162,7 @@
 		<Category>modified residue</Category>
 		<Keyword>hydroxylation</Keyword>
 	</Entry>
-    <Entry>
+	<Entry>
 		<Id>0307</Id>
 		<Description>A protein modification that effectively converts an L-tryptophan residue to a 2'-oxo-L-tryptophan.</Description>
 		<SystematicName>(2S)-2-amino-3-[(3S)-2-oxo-2,3-dihydro-1H-indol-3-yl]propanoic acid</SystematicName>
@@ -10189,7 +10190,7 @@
 		<Category>modified residue</Category>
 		<Keyword></Keyword>
 	</Entry>
-    <Entry>
+	<Entry>
 		<Id>0308</Id>
 		<Description>The amino group of the following amino acid forms a thiopeptide bond. This is an amino(sulfanyl)methylidene in the tautomeric form.</Description>
 		<SystematicName>5-hydroxy-2-(3-methylbutanoyl)-1,3-oxazole-4-carbothioic O-acid</SystematicName>
@@ -10218,7 +10219,7 @@
 		<Category>modified residue</Category>
 		<Keyword>imidazolinone/oxazolinone ring</Keyword>
 	</Entry>
-    <Entry>
+	<Entry>
 		<Id>0309</Id>
 		<Description>The amino group of the following amino acid forms a thiopeptide bond. This is an amino(sulfanyl)methylidene in the tautomeric form</Description>
 		<SystematicName>5-hydroxy-2-[(2S)-pyrrolidin-2-yl]-1,3-oxazole-4-carbothioic O-acid</SystematicName>
@@ -10247,7 +10248,7 @@
 		<Category>modified residue</Category>
 		<Keyword>imidazolinone/oxazolinone ring</Keyword>
 	</Entry>
-    <Entry>
+	<Entry>
 		<Id>0310</Id>
 		<Description>A protein modification that effectively trioxygenates an L-cysteine residue to L-cysteine sulfonic acid.</Description>
 		<SystematicName>(2R)-2-amino-3-sulfopropanoic acid</SystematicName>
@@ -10299,7 +10300,7 @@
 				<Id source="PDBCC">MET</Id>
 				<Terminal>N</Terminal>
 			</Component>
-		    <Component component="2">
+			<Component component="2">
 				<Id source="PDBCC">FOR</Id>
 			</Component>
 			<Bond>
@@ -10337,7 +10338,7 @@
 			<Component component="1">
 				<Id source="PDBCC">LYS</Id>
 			</Component>
-		    <Component component="2">
+			<Component component="2">
 				<Id source="PDBCC">FOR</Id>
 			</Component>
 			<Bond>
@@ -10350,68 +10351,68 @@
 		<Keyword>formylation</Keyword>
 	</Entry>
 	<Entry>
-	    <Id>0313</Id>
-        <Description>A protein modification that effectively crosslinks an L-alanine residue and a glycine residue to form L-alanine 5-imidazolinone glycine.</Description>
-        <SystematicName>(2-[(1S)-1-aminoethyl]-5-oxo-4,5-dihydro-1H-imidazol-1-yl)acetic acid</SystematicName>
-        <CrossReference>
-            <Source>RESID</Source>
-            <Id>AA0187</Id>
-            <Name>L-alanine 5-imidazolinone glycine</Name>
-        </CrossReference>
-        <CrossReference>
-            <Source>PDBCC</Source>
-            <Id>AYG</Id>
-            <Name>[(4E)-2-[(1S)-1-aminoethyl]-4-(4-hydroxybenzylidene)-5-oxo-4,5-dihydro-1H-imidazol-1-yl]acetic acid</Name>
-        </CrossReference>
-        <CrossReference>
-            <Source>PDBCC</Source>
-            <Id>CRQ</Id>
-            <Name>[2-(3-carbamoyl-1-imino-propyl)-4-(4-hydroxy-benzylidene)-5-oxo-4,5-dihydro-imidazol-1-yl]-acetic acid</Name>
-        </CrossReference>
-        <CrossReference>
-            <Source>PDBCC</Source>
-            <Id>MDO</Id>
-            <Name>{2-[(1S)-1-aminoethyl]-4-methylidene-5-oxo-4,5-dihydro-1H-imidazol-1-yl}acetic acid</Name>
-        </CrossReference>
-        <CrossReference>
-            <Source>PDBCC</Source>
-            <Id>X9Q</Id>
-            <Name>{(2S)-2-[(1S)-1-aminoethyl]-4-benzyl-5-oxo-2,5-dihydro-1H-imidazol-1-yl}acetic acid</Name>
-        </CrossReference>
-        <CrossReference>
-            <Source>PSI-MOD</Source>
-            <Id>MOD:00195</Id>
-            <Name>L-alanine 5-imidazolinone glycine</Name>
-        </CrossReference>
-        <Condition>
+		<Id>0313</Id>
+		<Description>A protein modification that effectively crosslinks an L-alanine residue and a glycine residue to form L-alanine 5-imidazolinone glycine.</Description>
+		<SystematicName>(2-[(1S)-1-aminoethyl]-5-oxo-4,5-dihydro-1H-imidazol-1-yl)acetic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0187</Id>
+			<Name>L-alanine 5-imidazolinone glycine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>AYG</Id>
+			<Name>[(4E)-2-[(1S)-1-aminoethyl]-4-(4-hydroxybenzylidene)-5-oxo-4,5-dihydro-1H-imidazol-1-yl]acetic acid</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>CRQ</Id>
+			<Name>[2-(3-carbamoyl-1-imino-propyl)-4-(4-hydroxy-benzylidene)-5-oxo-4,5-dihydro-imidazol-1-yl]-acetic acid</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>MDO</Id>
+			<Name>{2-[(1S)-1-aminoethyl]-4-methylidene-5-oxo-4,5-dihydro-1H-imidazol-1-yl}acetic acid</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>X9Q</Id>
+			<Name>{(2S)-2-[(1S)-1-aminoethyl]-4-benzyl-5-oxo-2,5-dihydro-1H-imidazol-1-yl}acetic acid</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00195</Id>
+			<Name>L-alanine 5-imidazolinone glycine</Name>
+		</CrossReference>
+		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">AYG,CRQ,MDO,X9Q</Id>
 			</Component>
 		</Condition>
 		<Category>modified residue</Category>
-        <Occurrence>natural</Occurrence>
-        <Keyword>imidazolinone/oxazolinone ring</Keyword>
-    </Entry>
-    <Entry>
-        <Id>0314</Id>
-        <Description>A protein modification that effectively crosslinks an L-cysteine residue and a glycine residue to form L-cysteine 5-imidazolinone glycine.</Description>
-        <SystematicName>(2-[(1R)-1-amino-2-sulfanylethyl]-5-oxo-4,5-dihydro-1H-imidazol-1-yl)acetic acid</SystematicName>
-        <CrossReference>
-            <Source>RESID</Source>
-            <Id>AA0188</Id>
-            <Name>L-cysteine 5-imidazolinone glycine</Name>
-        </CrossReference>
-        <CrossReference>
-            <Source>PDBCC</Source>
-            <Id>GYC</Id>
-            <Name>[(4Z)-2-[(1R)-1-amino-2-mercaptoethyl]-4-(4-hydroxybenzylidene)-5-oxo-4,5-dihydro-1H-imidazol-1-yl]acetic acid</Name>
-        </CrossReference>
-        <CrossReference>
-            <Source>PSI-MOD</Source>
-            <Id>MOD:00196</Id>
-            <Name>L-cysteine 5-imidazolinone glycine</Name>
-        </CrossReference>
-        <Condition>
+		<Occurrence>natural</Occurrence>
+		<Keyword>imidazolinone/oxazolinone ring</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0314</Id>
+		<Description>A protein modification that effectively crosslinks an L-cysteine residue and a glycine residue to form L-cysteine 5-imidazolinone glycine.</Description>
+		<SystematicName>(2-[(1R)-1-amino-2-sulfanylethyl]-5-oxo-4,5-dihydro-1H-imidazol-1-yl)acetic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0188</Id>
+			<Name>L-cysteine 5-imidazolinone glycine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>GYC</Id>
+			<Name>[(4Z)-2-[(1R)-1-amino-2-mercaptoethyl]-4-(4-hydroxybenzylidene)-5-oxo-4,5-dihydro-1H-imidazol-1-yl]acetic acid</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00196</Id>
+			<Name>L-cysteine 5-imidazolinone glycine</Name>
+		</CrossReference>
+		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">GYC</Id>
 			</Component>
@@ -10442,10 +10443,11 @@
             <Name>1'-(phospho-5'-adenosine)-L-histidine</Name>
         </CrossReference>
         <Condition>
+
 			<Component component="1">
 				<Id source="PDBCC">HIS</Id>
 			</Component>
-		    <Component component="2">
+			<Component component="2">
 				<Id source="PDBCC">AMP</Id>
 			</Component>
 			<Bond>
@@ -10455,32 +10457,32 @@
 		</Condition>
 		<Category>attachment</Category>
 		<Occurrence>natural</Occurrence>
-        <Keyword>phosphoprotein</Keyword>
-    </Entry>
-    <Entry>
-        <Id>0316</Id>
-        <Description>a protein modification that effectively forms a O3-(N-acetylaminoglucosyl)serine</Description>
-        <SystematicName>(2S)-2-amino-3-(2-acetamido-2-deoxy-beta-D-glucopyranosyloxy)propanoic acid</SystematicName>
-        <CrossReference>
-            <Source>RESID</Source>
-            <Id>AA0398</Id>
-            <Name>O-(N-acetylamino)glucosyl-L-serine</Name>
-        </CrossReference>
-        <CrossReference>
-            <Source>PDBCC</Source>
-            <Id>NAG</Id>
-            <Name>N-acetyl-D-glucosamine</Name>
-        </CrossReference>
-        <CrossReference>
-            <Source>PSI-MOD</Source>
-            <Id>MOD:00805</Id>
-            <Name>O-(N-acetylaminoglucosyl)-L-serine</Name>
-        </CrossReference>
-        <Condition>
+		<Keyword>phosphoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0316</Id>
+		<Description>a protein modification that effectively forms a O3-(N-acetylaminoglucosyl)serine</Description>
+		<SystematicName>(2S)-2-amino-3-(2-acetamido-2-deoxy-beta-D-glucopyranosyloxy)propanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0398</Id>
+			<Name>O-(N-acetylamino)glucosyl-L-serine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>NAG</Id>
+			<Name>N-acetyl-D-glucosamine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00805</Id>
+			<Name>O-(N-acetylaminoglucosyl)-L-serine</Name>
+		</CrossReference>
+		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">SER</Id>
 			</Component>
-		    <Component component="2">
+			<Component component="2">
 				<Id source="PDBCC">NAG</Id>
 			</Component>
 			<Bond>
@@ -10490,32 +10492,32 @@
 		</Condition>
 		<Category>attachment</Category>
 		<Occurrence>natural</Occurrence>
-        <Keyword>glycoprotein</Keyword>
-    </Entry>
-    <Entry>
-        <Id>0317</Id>
-        <Description>a protein modification that effectively forms a O3-(N-acetylaminoglucosyl)threonine</Description>
-        <SystematicName>(2S,3R)-2-amino-3-(alpha-D-2-acetamido-2-deoxyglucopyranosyloxy)butanoic acid</SystematicName>
-        <CrossReference>
-            <Source>RESID</Source>
-            <Id>AA0399</Id>
-            <Name>O-(N-acetylamino)glucosyl-L-threonine</Name>
-        </CrossReference>
-        <CrossReference>
-            <Source>PDBCC</Source>
-            <Id>NDG</Id>
-            <Name>2-(acetylamino)-2-deoxy-A-D-glucopyranose</Name>
-        </CrossReference>
-        <CrossReference>
-            <Source>PSI-MOD</Source>
-            <Id>MOD:00806</Id>
-            <Name>O-(N-acetylaminoglucosyl)-L-threonine</Name>
-        </CrossReference>
-        <Condition>
+		<Keyword>glycoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0317</Id>
+		<Description>a protein modification that effectively forms a O3-(N-acetylaminoglucosyl)threonine</Description>
+		<SystematicName>(2S,3R)-2-amino-3-(alpha-D-2-acetamido-2-deoxyglucopyranosyloxy)butanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0399</Id>
+			<Name>O-(N-acetylamino)glucosyl-L-threonine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>NDG</Id>
+			<Name>2-(acetylamino)-2-deoxy-A-D-glucopyranose</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00806</Id>
+			<Name>O-(N-acetylaminoglucosyl)-L-threonine</Name>
+		</CrossReference>
+		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">THR</Id>
 			</Component>
-		    <Component component="2">
+			<Component component="2">
 				<Id source="PDBCC">NDG</Id>
 			</Component>
 			<Bond>
@@ -10524,33 +10526,34 @@
 			</Bond>
 		</Condition>
 		<Category>attachment</Category>
-        <Occurrence>natural</Occurrence>
-        <Keyword>glycoprotein</Keyword>
-    </Entry>
-    <Entry>
-        <Id>0318</Id>
-        <Description>A protein modification that effectively crosslinks an L-aspartic acid residue and a glycine residue to form 2-imino-alanine 5-imidazolinone glycine.</Description>
-        <SystematicName>(2-ethanimidoyl-5-oxo-4,5-dihydro-1H-imidazol-1-yl)acetic acid</SystematicName>
-        <CrossReference>
-            <Source>RESID</Source>
-            <Id>AA0410</Id>
-            <Name>2-imino-alanine 5-imidazolinone glycine</Name>
-        </CrossReference>
-        <CrossReference>
-            <Source>PDBCC</Source>
-            <Id>XYG</Id>
-            <Name>[(4Z)-2-[(1Z)-ethanimidoyl]-4-(4-hydroxybenzylidene)-5-oxo-4,5-dihydro-1H-imidazol-1-yl]acetic acid</Name> 
-        </CrossReference>
-        <CrossReference>
-            <Source>PSI-MOD</Source>
-            <Id>MOD:00820</Id>
-            <Name>2-imino-alanine 5-imidazolinone glycine</Name>
-        </CrossReference>
-        <Condition>
+		<Occurrence>natural</Occurrence>
+		<Keyword>glycoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0318</Id>
+		<Description>A protein modification that effectively crosslinks an L-aspartic acid residue and a glycine residue to form 2-imino-alanine 5-imidazolinone glycine.</Description>
+		<SystematicName>(2-ethanimidoyl-5-oxo-4,5-dihydro-1H-imidazol-1-yl)acetic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0410</Id>
+			<Name>2-imino-alanine 5-imidazolinone glycine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>XYG</Id>
+			<Name>[(4Z)-2-[(1Z)-ethanimidoyl]-4-(4-hydroxybenzylidene)-5-oxo-4,5-dihydro-1H-imidazol-1-yl]acetic acid</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00820</Id>
+			<Name>2-imino-alanine 5-imidazolinone glycine</Name>
+		</CrossReference>
+		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">XYG</Id>
 			</Component>
 		</Condition>
+
         <Category>modified residue</Category>
         <Occurrence>natural</Occurrence>
         <Keyword>imidazolinone/oxazolinone ring</Keyword>
@@ -10581,17 +10584,17 @@
 				<Id source="PDBCC">SUI</Id>
 			</Component>
 		</Condition>
-        <Category>modified residue</Category>
-        <Occurrence>hypothetical</Occurrence>
-    </Entry>
-    <Entry>
+		<Category>modified residue</Category>
+		<Occurrence>hypothetical</Occurrence>
+	</Entry>
+	<Entry>
 		<Id>320</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>AG</Id>
-            <Name>silver ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>AG</Id>
+			<Name>silver ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -10612,10 +10615,10 @@
 		<Id>321</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>AL</Id>
-            <Name>aluminum ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>AL</Id>
+			<Name>aluminum ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -10636,10 +10639,10 @@
 		<Id>322</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>AU</Id>
-            <Name>gold ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>AU</Id>
+			<Name>gold ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -10660,10 +10663,10 @@
 		<Id>323</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>AU3</Id>
-            <Name>gold 3+ ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>AU3</Id>
+			<Name>gold 3+ ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -10684,10 +10687,10 @@
 		<Id>324</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>BA</Id>
-            <Name>barium ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>BA</Id>
+			<Name>barium ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -10708,10 +10711,10 @@
 		<Id>325</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>CA</Id>
-            <Name>calcium ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>CA</Id>
+			<Name>calcium ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -10732,10 +10735,10 @@
 		<Id>326</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>CD</Id>
-            <Name>cadmium ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>CD</Id>
+			<Name>cadmium ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -10756,10 +10759,10 @@
 		<Id>327</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>CE</Id>
-            <Name>cerium (III) ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>CE</Id>
+			<Name>cerium (III) ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -10780,10 +10783,10 @@
 		<Id>328</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>CO</Id>
-            <Name>cobat (II) ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>CO</Id>
+			<Name>cobat (II) ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -10804,10 +10807,10 @@
 		<Id>329</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>3CO</Id>
-            <Name>cobat (III) ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>3CO</Id>
+			<Name>cobat (III) ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -10828,10 +10831,10 @@
 		<Id>330</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>CR</Id>
-            <Name>chromium ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>CR</Id>
+			<Name>chromium ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -10852,10 +10855,10 @@
 		<Id>331</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>CS</Id>
-            <Name>cesium ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>CS</Id>
+			<Name>cesium ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -10876,10 +10879,10 @@
 		<Id>332</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>CU</Id>
-            <Name>copper (II) ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>CU</Id>
+			<Name>copper (II) ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -10900,10 +10903,10 @@
 		<Id>333</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>CU1</Id>
-            <Name>copper (I) ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>CU1</Id>
+			<Name>copper (I) ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -10924,10 +10927,10 @@
 		<Id>334</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>CU3</Id>
-            <Name>copper (III) ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>CU3</Id>
+			<Name>copper (III) ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -10948,10 +10951,10 @@
 		<Id>335</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>ER3</Id>
-            <Name>erbium (III) ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>ER3</Id>
+			<Name>erbium (III) ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -10968,14 +10971,14 @@
 		<Category>undefined</Category>
 		<Keyword>Metal coordination</Keyword>
 	</Entry>
-    <Entry>
+	<Entry>
 		<Id>336</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>EU</Id>
-            <Name>europium ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>EU</Id>
+			<Name>europium ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -10996,10 +10999,10 @@
 		<Id>337</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>EU3</Id>
-            <Name>europium (III) ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>EU3</Id>
+			<Name>europium (III) ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -11020,10 +11023,10 @@
 		<Id>338</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>FE</Id>
-            <Name>Fe (III) ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>FE</Id>
+			<Name>Fe (III) ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -11044,10 +11047,10 @@
 		<Id>339</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>FE2</Id>
-            <Name>Fe (II) ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>FE2</Id>
+			<Name>Fe (II) ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -11068,10 +11071,10 @@
 		<Id>341</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>GA</Id>
-            <Name>gallium (III) ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>GA</Id>
+			<Name>gallium (III) ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -11092,10 +11095,10 @@
 		<Id>342</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>GD</Id>
-            <Name>gadolinium ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>GD</Id>
+			<Name>gadolinium ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -11116,10 +11119,10 @@
 		<Id>343</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>GD3</Id>
-            <Name>gadolinium (III) ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>GD3</Id>
+			<Name>gadolinium (III) ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -11140,10 +11143,10 @@
 		<Id>344</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>HG</Id>
-            <Name>mercury (II) ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>HG</Id>
+			<Name>mercury (II) ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -11164,10 +11167,10 @@
 		<Id>345</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>HO</Id>
-            <Name>holmium ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>HO</Id>
+			<Name>holmium ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -11188,10 +11191,10 @@
 		<Id>346</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>HO3</Id>
-            <Name>holmium (III) ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>HO3</Id>
+			<Name>holmium (III) ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -11212,10 +11215,10 @@
 		<Id>347</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>IN</Id>
-            <Name>indium (III) ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>IN</Id>
+			<Name>indium (III) ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -11236,10 +11239,10 @@
 		<Id>348</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>IR</Id>
-            <Name>iridium ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>IR</Id>
+			<Name>iridium ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -11260,10 +11263,10 @@
 		<Id>349</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>IR3</Id>
-            <Name>iridium (III) ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>IR3</Id>
+			<Name>iridium (III) ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -11284,10 +11287,10 @@
 		<Id>350</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>K</Id>
-            <Name>potassium ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>K</Id>
+			<Name>potassium ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -11308,10 +11311,10 @@
 		<Id>351</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>LA</Id>
-            <Name>lanthanum (III) ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>LA</Id>
+			<Name>lanthanum (III) ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -11332,10 +11335,10 @@
 		<Id>352</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>LI</Id>
-            <Name>lithium ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>LI</Id>
+			<Name>lithium ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -11356,10 +11359,10 @@
 		<Id>353</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>LU</Id>
-            <Name>lutetium (III) ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>LU</Id>
+			<Name>lutetium (III) ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -11380,10 +11383,10 @@
 		<Id>354</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>MG</Id>
-            <Name>magnesium ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>MG</Id>
+			<Name>magnesium ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -11404,10 +11407,10 @@
 		<Id>355</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>MN</Id>
-            <Name>manganese (II) ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>MN</Id>
+			<Name>manganese (II) ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -11428,10 +11431,10 @@
 		<Id>356</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>MN3</Id>
-            <Name>manganese (III) ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>MN3</Id>
+			<Name>manganese (III) ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -11452,10 +11455,10 @@
 		<Id>357</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>MO</Id>
-            <Name>molybdenum ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>MO</Id>
+			<Name>molybdenum ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -11476,10 +11479,10 @@
 		<Id>358</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>4MO</Id>
-            <Name>molybdenum (IV) ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>4MO</Id>
+			<Name>molybdenum (IV) ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -11496,14 +11499,14 @@
 		<Category>undefined</Category>
 		<Keyword>Metal coordination</Keyword>
 	</Entry>
-    <Entry>
+	<Entry>
 		<Id>359</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>6MO</Id>
-            <Name>molybdenum (VI) ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>6MO</Id>
+			<Name>molybdenum (VI) ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -11524,10 +11527,10 @@
 		<Id>360</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>NA</Id>
-            <Name>sodium ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>NA</Id>
+			<Name>sodium ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -11548,10 +11551,10 @@
 		<Id>361</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>NI</Id>
-            <Name>nickel (II) ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>NI</Id>
+			<Name>nickel (II) ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -11572,10 +11575,10 @@
 		<Id>362</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>3NI</Id>
-            <Name>nickel (III) ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>3NI</Id>
+			<Name>nickel (III) ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -11596,10 +11599,10 @@
 		<Id>363</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>OS</Id>
-            <Name>osmium ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>OS</Id>
+			<Name>osmium ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -11620,10 +11623,10 @@
 		<Id>364</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>OS4</Id>
-            <Name>osmium (IV) ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>OS4</Id>
+			<Name>osmium (IV) ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -11644,10 +11647,10 @@
 		<Id>365</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>PB</Id>
-            <Name>lead (II) ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>PB</Id>
+			<Name>lead (II) ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -11668,10 +11671,10 @@
 		<Id>366</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>PD</Id>
-            <Name>palladium ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>PD</Id>
+			<Name>palladium ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -11692,10 +11695,10 @@
 		<Id>367</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>PR</Id>
-            <Name>praseodymium ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>PR</Id>
+			<Name>praseodymium ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -11716,10 +11719,10 @@
 		<Id>368</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>PT</Id>
-            <Name>platinum (II) ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>PT</Id>
+			<Name>platinum (II) ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -11740,10 +11743,10 @@
 		<Id>369</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>PT4</Id>
-            <Name>platinum (IV) ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>PT4</Id>
+			<Name>platinum (IV) ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -11764,10 +11767,10 @@
 		<Id>370</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>RB</Id>
-            <Name>rubidium ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>RB</Id>
+			<Name>rubidium ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -11788,10 +11791,10 @@
 		<Id>371</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>RE</Id>
-            <Name>rhenium ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>RE</Id>
+			<Name>rhenium ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -11808,14 +11811,14 @@
 		<Category>undefined</Category>
 		<Keyword>Metal coordination</Keyword>
 	</Entry>
-	    <Entry>
+	<Entry>
 		<Id>0252</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>RH</Id>
-            <Name>rhodium ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>RH</Id>
+			<Name>rhodium ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -11836,10 +11839,10 @@
 		<Id>372</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>RH3</Id>
-            <Name>rhodium (III) ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>RH3</Id>
+			<Name>rhodium (III) ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -11860,10 +11863,10 @@
 		<Id>373</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>RU</Id>
-            <Name>ruthenium ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>RU</Id>
+			<Name>ruthenium ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -11884,10 +11887,10 @@
 		<Id>374</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>SM</Id>
-            <Name>samarium (III) ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>SM</Id>
+			<Name>samarium (III) ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -11908,10 +11911,10 @@
 		<Id>375</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>SR</Id>
-            <Name>strontium ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>SR</Id>
+			<Name>strontium ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -11932,10 +11935,10 @@
 		<Id>376</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>TB</Id>
-            <Name>terbium (III) ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>TB</Id>
+			<Name>terbium (III) ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -11956,10 +11959,10 @@
 		<Id>377</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>TL</Id>
-            <Name>thallium (I) ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>TL</Id>
+			<Name>thallium (I) ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -11980,10 +11983,10 @@
 		<Id>378</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>U1</Id>
-            <Name>uranium ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>U1</Id>
+			<Name>uranium ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -12000,14 +12003,14 @@
 		<Category>undefined</Category>
 		<Keyword>Metal coordination</Keyword>
 	</Entry>
-    <Entry>
+	<Entry>
 		<Id>379</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>V</Id>
-            <Name>vanadium ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>V</Id>
+			<Name>vanadium ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -12028,10 +12031,10 @@
 		<Id>380</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>W</Id>
-            <Name>tungsten ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>W</Id>
+			<Name>tungsten ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -12052,10 +12055,10 @@
 		<Id>381</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>Y1</Id>
-            <Name>yttrium ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>Y1</Id>
+			<Name>yttrium ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -12072,14 +12075,14 @@
 		<Category>undefined</Category>
 		<Keyword>Metal coordination</Keyword>
 	</Entry>
-    <Entry>
+	<Entry>
 		<Id>382</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>YT3</Id>
-            <Name>yttrium (III) ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>YT3</Id>
+			<Name>yttrium (III) ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -12100,10 +12103,10 @@
 		<Id>383</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>YB</Id>
-            <Name>ytterbium ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>YB</Id>
+			<Name>ytterbium ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -12124,10 +12127,10 @@
 		<Id>384</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>YB2</Id>
-            <Name>ytterbium (II) ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>YB2</Id>
+			<Name>ytterbium (II) ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -12148,10 +12151,10 @@
 		<Id>385</Id>
 		<Description>Metal coordination</Description>
 		<CrossReference>
-            <Source>PDBCC</Source>
-            <Id>ZN</Id>
-            <Name>zinc ion</Name>
-        </CrossReference>
+			<Source>PDBCC</Source>
+			<Id>ZN</Id>
+			<Name>zinc ion</Name>
+		</CrossReference>
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">*</Id>
@@ -12190,7 +12193,7 @@
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">ASN</Id>
-			</Component>			
+			</Component>
 			<Component component="2">
 				<Id source="PDBCC">NDG</Id>
 			</Component>
@@ -12225,7 +12228,7 @@
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">ASN</Id>
-			</Component>			
+			</Component>
 			<Component component="2">
 				<Id source="PDBCC">A2G</Id>
 			</Component>
@@ -12260,7 +12263,7 @@
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">ASN</Id>
-			</Component>			
+			</Component>
 			<Component component="2">
 				<Id source="PDBCC">NGA</Id>
 			</Component>
@@ -12295,7 +12298,7 @@
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">ASN</Id>
-			</Component>			
+			</Component>
 			<Component component="2">
 				<Id source="PDBCC">BGC</Id>
 			</Component>
@@ -12330,7 +12333,7 @@
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">ASN</Id>
-			</Component>			
+			</Component>
 			<Component component="2">
 				<Id source="PDBCC">GLC</Id>
 			</Component>
@@ -12365,7 +12368,7 @@
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">ARG</Id>
-			</Component>			
+			</Component>
 			<Component component="2">
 				<Id source="PDBCC">BGC</Id>
 			</Component>
@@ -12400,7 +12403,7 @@
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">ARG</Id>
-			</Component>			
+			</Component>
 			<Component component="2">
 				<Id source="PDBCC">GLC</Id>
 			</Component>
@@ -12435,7 +12438,7 @@
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">CYS</Id>
-			</Component>			
+			</Component>
 			<Component component="2">
 				<Id source="PDBCC">NAG</Id>
 			</Component>
@@ -12471,7 +12474,7 @@
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">CYS</Id>
-			</Component>			
+			</Component>
 			<Component component="2">
 				<Id source="PDBCC">NDG</Id>
 			</Component>
@@ -12507,7 +12510,7 @@
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">CYS</Id>
-			</Component>			
+			</Component>
 			<Component component="2">
 				<Id source="PDBCC">BGC</Id>
 			</Component>
@@ -12543,7 +12546,7 @@
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">CYS</Id>
-			</Component>			
+			</Component>
 			<Component component="2">
 				<Id source="PDBCC">GLC</Id>
 			</Component>
@@ -12580,7 +12583,7 @@
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">CYS</Id>
-			</Component>			
+			</Component>
 			<Component component="2">
 				<Id source="PDBCC">GLA</Id>
 			</Component>
@@ -12617,7 +12620,7 @@
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">CYS</Id>
-			</Component>			
+			</Component>
 			<Component component="2">
 				<Id source="PDBCC">GAL</Id>
 			</Component>
@@ -12632,29 +12635,29 @@
 		<Keyword>thioether bond</Keyword>
 	</Entry>
 	<Entry>
-        <Id>0399</Id>
-        <Description>a protein modification that effectively forms a O3-(N-acetylaminoglucosyl)serine</Description>
-        <SystematicName>(2S)-2-amino-3-(2-acetamido-2-deoxy-beta-D-glucopyranosyloxy)propanoic acid</SystematicName>
-        <CrossReference>
-            <Source>RESID</Source>
-            <Id>AA0398</Id>
-            <Name>O-(N-acetylamino)glucosyl-L-serine</Name>
-        </CrossReference>
-        <CrossReference>
-            <Source>PDBCC</Source>
-            <Id>NDG</Id>
-            <Name>2-(acetylamino)-2-deoxy-alpha-D-glucopyranose</Name>
-        </CrossReference>
-        <CrossReference>
-            <Source>PSI-MOD</Source>
-            <Id>MOD:00805</Id>
-            <Name>O-(N-acetylaminoglucosyl)-L-serine</Name>
-        </CrossReference>
-        <Condition>
+		<Id>0399</Id>
+		<Description>a protein modification that effectively forms a O3-(N-acetylaminoglucosyl)serine</Description>
+		<SystematicName>(2S)-2-amino-3-(2-acetamido-2-deoxy-beta-D-glucopyranosyloxy)propanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0398</Id>
+			<Name>O-(N-acetylamino)glucosyl-L-serine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>NDG</Id>
+			<Name>2-(acetylamino)-2-deoxy-alpha-D-glucopyranose</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00805</Id>
+			<Name>O-(N-acetylaminoglucosyl)-L-serine</Name>
+		</CrossReference>
+		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">SER</Id>
 			</Component>
-		    <Component component="2">
+			<Component component="2">
 				<Id source="PDBCC">NDG</Id>
 			</Component>
 			<Bond>
@@ -12664,9 +12667,9 @@
 		</Condition>
 		<Category>attachment</Category>
 		<Occurrence>natural</Occurrence>
-        <Keyword>glycoprotein</Keyword>
-    </Entry>
-    <Entry>
+		<Keyword>glycoprotein</Keyword>
+	</Entry>
+	<Entry>
 		<Id>0400</Id>
 		<Description>A protein modification that effectively converts an L-serine residue to O3-beta-glucosylated L-serine.</Description>
 		<SystematicName>(S)-2-amino-3-(beta-D-glucopyranosyloxy)propanoic acid</SystematicName>
@@ -12688,7 +12691,7 @@
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">SER</Id>
-			</Component>			
+			</Component>
 			<Component component="2">
 				<Id source="PDBCC">BGC</Id>
 			</Component>
@@ -12723,7 +12726,7 @@
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">SER</Id>
-			</Component>			
+			</Component>
 			<Component component="2">
 				<Id source="PDBCC">GLC</Id>
 			</Component>
@@ -12758,7 +12761,7 @@
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">SER</Id>
-			</Component>			
+			</Component>
 			<Component component="2">
 				<Id source="PDBCC">GLA</Id>
 			</Component>
@@ -12793,7 +12796,7 @@
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">SER</Id>
-			</Component>			
+			</Component>
 			<Component component="2">
 				<Id source="PDBCC">GAL</Id>
 			</Component>
@@ -12828,7 +12831,7 @@
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">SER</Id>
-			</Component>			
+			</Component>
 			<Component component="2">
 				<Id source="PDBCC">FCA</Id>
 			</Component>
@@ -12863,7 +12866,7 @@
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">SER</Id>
-			</Component>			
+			</Component>
 			<Component component="2">
 				<Id source="PDBCC">FCB</Id>
 			</Component>
@@ -13074,7 +13077,7 @@
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">THR</Id>
-			</Component>			
+			</Component>
 			<Component component="2">
 				<Id source="PDBCC">NAG</Id>
 			</Component>
@@ -13109,7 +13112,7 @@
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">THR</Id>
-			</Component>			
+			</Component>
 			<Component component="2">
 				<Id source="PDBCC">NDG</Id>
 			</Component>
@@ -13134,7 +13137,7 @@
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">THR</Id>
-			</Component>			
+			</Component>
 			<Component component="2">
 				<Id source="PDBCC">BGC</Id>
 			</Component>
@@ -13159,7 +13162,7 @@
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">THR</Id>
-			</Component>			
+			</Component>
 			<Component component="2">
 				<Id source="PDBCC">GLC</Id>
 			</Component>
@@ -13194,7 +13197,7 @@
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">THR</Id>
-			</Component>			
+			</Component>
 			<Component component="2">
 				<Id source="PDBCC">GLA</Id>
 			</Component>
@@ -13229,7 +13232,7 @@
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">THR</Id>
-			</Component>			
+			</Component>
 			<Component component="2">
 				<Id source="PDBCC">GAL</Id>
 			</Component>
@@ -13264,7 +13267,7 @@
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">THR</Id>
-			</Component>			
+			</Component>
 			<Component component="2">
 				<Id source="PDBCC">FCA</Id>
 			</Component>
@@ -13299,7 +13302,7 @@
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">THR</Id>
-			</Component>			
+			</Component>
 			<Component component="2">
 				<Id source="PDBCC">FCB</Id>
 			</Component>
@@ -13404,7 +13407,7 @@
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">TYR</Id>
-			</Component>			
+			</Component>
 			<Component component="2">
 				<Id source="PDBCC">BGC</Id>
 			</Component>
@@ -13439,7 +13442,7 @@
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">TYR</Id>
-			</Component>			
+			</Component>
 			<Component component="2">
 				<Id source="PDBCC">GLC</Id>
 			</Component>
@@ -13464,7 +13467,7 @@
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">TYR</Id>
-			</Component>			
+			</Component>
 			<Component component="2">
 				<Id source="PDBCC">GAL</Id>
 			</Component>
@@ -13489,7 +13492,7 @@
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">TYR</Id>
-			</Component>			
+			</Component>
 			<Component component="2">
 				<Id source="PDBCC">GAL</Id>
 			</Component>
@@ -13514,7 +13517,7 @@
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">TYR</Id>
-			</Component>			
+			</Component>
 			<Component component="2">
 				<Id source="PDBCC">GLA</Id>
 			</Component>
