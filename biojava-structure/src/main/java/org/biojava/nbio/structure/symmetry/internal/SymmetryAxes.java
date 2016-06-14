@@ -488,15 +488,15 @@ public class SymmetryAxes {
 		symmAxes.add(currAxis);
 		
 		//Remember that all degrees are at least 2
-		getSymmetryAxes(symmAxes,prior,level+1,firstRepeat,concat(priorCounts,0));
+		getSymmetryAxes(symmAxes,prior,level+1,firstRepeat);
 		//New prior is elementary^d*prior
 		Matrix4d newPrior = new Matrix4d(elemOp);
 		newPrior.mul(prior);
 		int childSize = getNumRepeats(level+1);
-		getSymmetryAxes(symmAxes,newPrior,level+1,firstRepeat+childSize,concat(priorCounts,1));
+		getSymmetryAxes(symmAxes,newPrior,level+1,firstRepeat+childSize);
 		for(int d=2;d<elem.getOrder();d++) {
 			newPrior.mul(elemOp,newPrior);
-			getSymmetryAxes(symmAxes,newPrior,level+1,firstRepeat+childSize*d,concat(priorCounts,d));
+			getSymmetryAxes(symmAxes,newPrior,level+1,firstRepeat+childSize*d);
 		}
 	}
 	
