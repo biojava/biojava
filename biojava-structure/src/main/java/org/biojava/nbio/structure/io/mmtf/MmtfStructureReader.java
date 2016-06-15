@@ -257,6 +257,9 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 		atom.setPDBserial(serialNumber);
 		atom.setName(atomName.trim());
 		atom.setElement(Element.valueOfIgnoreCase(element));
+		if(alternativeLocationId==MmtfStructure.UNAVAILABLE_CHAR_VALUE){
+			alternativeLocationId = ' ';
+		}
 		if (alternativeLocationId != ' ') {
 			// Get the altGroup
 			altGroup = getCorrectAltLocGroup(alternativeLocationId);
