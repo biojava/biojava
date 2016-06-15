@@ -26,6 +26,7 @@ package org.biojava.nbio.structure.align.gui;
 
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
+import java.io.Serializable;
 import java.util.Comparator;
 
 public class MyTableRowSorter extends TableRowSorter<TableModel>
@@ -46,7 +47,8 @@ public class MyTableRowSorter extends TableRowSorter<TableModel>
 
 }
 
-class MyComparator implements Comparator<String> {
+class MyComparator implements Comparator<String>, Serializable {
+    private static final long serialVersionUID = 1;
 
 	int column;
 	public MyComparator(int column){

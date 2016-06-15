@@ -144,9 +144,9 @@ public class DSSPParser {
 			//Only happens if dssp inserts a line indicating a chain break
 			if(!resNumStr.equals("")) {
 
-				int index = Integer.valueOf(indexStr);
+				int index = Integer.parseInt(indexStr);
 				//Get the group of the structure corresponding to the residue
-				int resNum = Integer.valueOf(resNumStr);
+				int resNum = Integer.parseInt(resNumStr);
 				char insCode = line.charAt(10);
 				String chainId = line.substring(11,13).trim();
 				ResidueNumber r = new ResidueNumber(chainId, resNum, insCode);
@@ -187,7 +187,7 @@ public class DSSPParser {
 
 					String[] p = val.split(",");
 
-					int partner = Integer.valueOf(p[0]);
+					int partner = Integer.parseInt(p[0]);
 					if (partner != 0) partner += index;
 					double energy = Double.valueOf(p[1]) * 1000.0;
 

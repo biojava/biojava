@@ -31,6 +31,7 @@ import org.biojava.nbio.structure.align.helper.AlignTools;
 import org.biojava.nbio.structure.align.helper.JointFragments;
 import org.biojava.nbio.structure.jama.Matrix;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -535,7 +536,8 @@ public class FragmentJoiner {
 
 
 class JointFragmentsComparator
-		  implements Comparator<JointFragments> {
+		  implements Comparator<JointFragments>, Serializable {
+    private static final long serialVersionUID = 1;
 
 	@Override
 	public int compare(JointFragments one, JointFragments two) {

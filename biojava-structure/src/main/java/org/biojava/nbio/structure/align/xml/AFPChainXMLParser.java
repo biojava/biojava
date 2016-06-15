@@ -260,31 +260,31 @@ public class AFPChainXMLParser
 				if ( version != null)
 					a.setVersion(version);
 
-				a.setAlnLength(	new Integer(getAttribute(rootElement,"alnLength")).intValue());
-				a.setBlockNum(		new Integer(getAttribute(rootElement,"blockNum")).intValue());
-				a.setGapLen(		new Integer(getAttribute(rootElement,"gapLen")).intValue());
-				a.setOptLength(	new Integer(getAttribute(rootElement,"optLength")).intValue());
-				a.setTotalLenIni(	new Integer(getAttribute(rootElement,"totalLenIni")).intValue());
-				a.setBlockNum(		new Integer(getAttribute(rootElement,"blockNum")).intValue());
+				a.setAlnLength(	Integer.parseInt(getAttribute(rootElement,"alnLength")));
+				a.setBlockNum(		Integer.parseInt(getAttribute(rootElement,"blockNum")));
+				a.setGapLen(		Integer.parseInt(getAttribute(rootElement,"gapLen")));
+				a.setOptLength(	Integer.parseInt(getAttribute(rootElement,"optLength")));
+				a.setTotalLenIni(	Integer.parseInt(getAttribute(rootElement,"totalLenIni")));
+				a.setBlockNum(		Integer.parseInt(getAttribute(rootElement,"blockNum")));
 
 				if ( a.getAlgorithmName().equals(CeCPMain.algorithmName)){
 						 a.setSequentialAlignment(a.getBlockNum() == 1);
 					 }
 
-				a.setAlignScore(new Double(getAttribute(rootElement,"alignScore")).doubleValue());
-				a.setChainRmsd(new Double(getAttribute(rootElement,"chainRmsd")).doubleValue());
-				Double identity = new Double(getAttribute(rootElement,"identity")).doubleValue();
+				a.setAlignScore(Double.parseDouble(getAttribute(rootElement,"alignScore")));
+				a.setChainRmsd(Double.parseDouble(getAttribute(rootElement,"chainRmsd")));
+				Double identity = Double.parseDouble(getAttribute(rootElement,"identity"));
 				a.setIdentity(identity);
 
-				a.setNormAlignScore(new Double(getAttribute(rootElement,"normAlignScore")).doubleValue());
-				a.setProbability(new Double(getAttribute(rootElement,"probability")).doubleValue());
-				a.setSimilarity(new Double(getAttribute(rootElement,"similarity")).doubleValue());
-				a.setTotalRmsdIni(new Double(getAttribute(rootElement,"totalRmsdIni")).doubleValue());
-				a.setTotalRmsdOpt(new Double(getAttribute(rootElement,"totalRmsdOpt")).doubleValue());
-				a.setAlignScoreUpdate(new Double(getAttribute(rootElement,"alignScoreUpdate")).doubleValue());
-				int ca1Length = new Integer(getAttribute(rootElement,"ca1Length")).intValue();
+				a.setNormAlignScore(Double.parseDouble(getAttribute(rootElement,"normAlignScore")));
+				a.setProbability(Double.parseDouble(getAttribute(rootElement,"probability")));
+				a.setSimilarity(Double.parseDouble(getAttribute(rootElement,"similarity")));
+				a.setTotalRmsdIni(Double.parseDouble(getAttribute(rootElement,"totalRmsdIni")));
+				a.setTotalRmsdOpt(Double.parseDouble(getAttribute(rootElement,"totalRmsdOpt")));
+				a.setAlignScoreUpdate(Double.parseDouble(getAttribute(rootElement,"alignScoreUpdate")));
+				int ca1Length = Integer.parseInt(getAttribute(rootElement,"ca1Length"));
 				a.setCa1Length(ca1Length);
-				int ca2Length = new Integer(getAttribute(rootElement,"ca2Length")).intValue();
+				int ca2Length = Integer.parseInt(getAttribute(rootElement,"ca2Length"));
 				a.setCa2Length(ca2Length);
 
 				String tmScoreS = getAttribute(rootElement,"tmScore");
@@ -315,7 +315,7 @@ public class AFPChainXMLParser
 				Atom[] blockShiftVector = new Atom[a.getBlockNum()];
 				a.setBlockShiftVector(blockShiftVector);
 
-				int afpNum = new Integer(getAttribute(rootElement,"afpNum")).intValue();
+				int afpNum = Integer.parseInt(getAttribute(rootElement,"afpNum"));
 				List<AFP> afpSet = new ArrayList<AFP>();
 				for (int afp=0;afp<afpNum;afp++){
 					afpSet.add( new AFP());
@@ -398,18 +398,18 @@ public class AFPChainXMLParser
 		Matrix[] ms     = a.getBlockRotationMatrix();
 		Atom[] shifts = a.getBlockShiftVector();
 
-		int blockNr = new Integer( map.getNamedItem("blockNr").getTextContent()).intValue();
+		int blockNr = Integer.parseInt( map.getNamedItem("blockNr").getTextContent());
 
-		int thisBlockGap = new Integer(map.getNamedItem("blockGap").getTextContent()).intValue();
+		int thisBlockGap = Integer.parseInt(map.getNamedItem("blockGap").getTextContent());
 		blockGap[blockNr] = thisBlockGap;
 
-		int thisBlockSize = new Integer(map.getNamedItem("blockSize").getTextContent()).intValue();
+		int thisBlockSize = Integer.parseInt(map.getNamedItem("blockSize").getTextContent());
 		blockSize[blockNr] = thisBlockSize;
 
-		double thisBlockScore = new Double(map.getNamedItem("blockScore").getTextContent()).doubleValue();
+		double thisBlockScore = Double.parseDouble(map.getNamedItem("blockScore").getTextContent());
 		blockScore[blockNr] = thisBlockScore;
 
-		double thisBlockRmsd = new Double(map.getNamedItem("blockRmsd").getTextContent()).doubleValue();
+		double thisBlockRmsd = Double.parseDouble(map.getNamedItem("blockRmsd").getTextContent());
 		blockRmsd[blockNr] = thisBlockRmsd;
 
 
@@ -425,7 +425,7 @@ public class AFPChainXMLParser
 				nrEqr++;
 				NamedNodeMap atts = eqr.getAttributes();
 
-				int eqrNr = new Integer(atts.getNamedItem("eqrNr").getTextContent()).intValue();
+				int eqrNr = Integer.parseInt(atts.getNamedItem("eqrNr").getTextContent());
 
 				String pdbres1 = atts.getNamedItem("pdbres1").getTextContent();
 				String chain1 = atts.getNamedItem("chain1").getTextContent();

@@ -19,6 +19,7 @@
  *
  * Created on Jun 8, 2010
  * Author: Jianjiong Gao
+ * Author: Peter W. Rose
  *
  */
 
