@@ -43,7 +43,8 @@ public class CESymmParameters extends CeParameters {
 	private boolean optimization;
 	private int rndSeed;
 	private int symmLevels;
-	private double scoreThreshold;
+	private double unrefinedScoreThreshold;
+	private double refinedScoreThreshold;
 	private int sseThreshold;
 	private int minCoreLength;
 	private double distanceCutoff;
@@ -97,7 +98,8 @@ public class CESymmParameters extends CeParameters {
 		p.optimization = optimization;
 		p.rndSeed = rndSeed;
 		p.symmLevels = symmLevels;
-		p.scoreThreshold = scoreThreshold;
+		p.unrefinedScoreThreshold = unrefinedScoreThreshold;
+		p.refinedScoreThreshold = refinedScoreThreshold;
 		p.sseThreshold = sseThreshold;
 		p.minCoreLength = minCoreLength;
 		p.distanceCutoff = distanceCutoff;
@@ -132,7 +134,8 @@ public class CESymmParameters extends CeParameters {
 		optimization = true;
 		rndSeed = new Random().nextInt(10000);
 		symmLevels = 0;
-		scoreThreshold = DEFAULT_SYMMETRY_THRESHOLD;
+		unrefinedScoreThreshold = DEFAULT_SYMMETRY_THRESHOLD;
+		refinedScoreThreshold = DEFAULT_SYMMETRY_THRESHOLD * 0.9;
 		sseThreshold = 0;
 		minCoreLength = 15;
 		distanceCutoff = 7.0;
@@ -206,8 +209,13 @@ public class CESymmParameters extends CeParameters {
 				+ "found. If equal to 2, D and two-level hierarchical C and H "
 				+ "can be found, etc. If equal to 0, the number of recursive "
 				+ "iterations is unbounded (until thresholds reached).");
-		// score threshold
-		params.add("Score threshold: TM-score values below the "
+		// unrefined score threshold
+		params.add("Unrefined score threshold: TM-score values for the optimal"
+				+ " self-alignment, before refinement, below the "
+				+ "threshold will be considered asymmetric.");
+		// refined score threshold
+		params.add("Refined score threshold: TM-score values for the refined "
+				+ "multiple alignment of repeats below the "
 				+ "threshold will be considered asymmetric.");
 		// SSE threshold
 		params.add("SSE threshold: The minimum number of secondary structure "
@@ -222,7 +230,9 @@ public class CESymmParameters extends CeParameters {
 				+ "between two aligned residues.");
 
 		// gaps
-		params.add("MStA Gaps: allow gaps in the multiple alignment if true.");
+		params.add("Internal Gaps: allow up to 50% of repeats to have gaps in "
+				+ "the multiple alignment if true, "
+				+ "otherwise all repeats must be aligned at each position.");
 
 		// optimization steps
 		params.add("Optimization Steps: maximum number of optimization steps:"
@@ -242,7 +252,8 @@ public class CESymmParameters extends CeParameters {
 		params.add("Optimization");
 		params.add("RndSeed");
 		params.add("SymmLevels");
-		params.add("ScoreThreshold");
+		params.add("UnrefinedScoreThreshold");
+		params.add("RefinedScoreThreshold");
 		params.add("SSEThreshold");
 		params.add("MinCoreLength");
 		params.add("DistanceCutoff");
@@ -262,11 +273,12 @@ public class CESymmParameters extends CeParameters {
 		params.add("Optimization");
 		params.add("Random Seed");
 		params.add("Symmetry Levels");
-		params.add("Score Threshold");
+		params.add("Unrefined Score Threshold");
+		params.add("Refined Score Threshold");
 		params.add("SSE Threshold");
 		params.add("Minimum Core Length");
 		params.add("Distance Cutoff");
-		params.add("MStA Gaps");
+		params.add("Internal Gaps");
 		params.add("Optimization Steps");
 		return params;
 	}
@@ -283,6 +295,7 @@ public class CESymmParameters extends CeParameters {
 		params.add(Boolean.class);
 		params.add(Integer.class);
 		params.add(Integer.class);
+		params.add(Double.class);
 		params.add(Double.class);
 		params.add(Integer.class);
 		params.add(Integer.class);
@@ -365,12 +378,20 @@ public class CESymmParameters extends CeParameters {
 		this.symmLevels = symmLevels;
 	}
 
-	public double getScoreThreshold() {
-		return scoreThreshold;
+	public double getUnrefinedScoreThreshold() {
+		return unrefinedScoreThreshold;
 	}
 
-	public void setScoreThreshold(Double scoreThreshold) {
-		this.scoreThreshold = scoreThreshold;
+	public void setUnrefinedScoreThreshold(Double unrefinedScoreThreshold) {
+		this.unrefinedScoreThreshold = unrefinedScoreThreshold;
+	}
+	
+	public double getRefinedScoreThreshold() {
+		return refinedScoreThreshold;
+	}
+
+	public void setRefinedScoreThreshold(Double refinedScoreThreshold) {
+		this.refinedScoreThreshold = refinedScoreThreshold;
 	}
 
 	public int getSSEThreshold() {
@@ -415,13 +436,17 @@ public class CESymmParameters extends CeParameters {
 
 	@Override
 	public String toString() {
-		return "CESymmParameters [orderDetectorMethod=" + orderDetectorMethod
+		return "CESymmParameters [maxSymmOrder=" + maxSymmOrder
+				+ ", userOrder=" + userOrder + ", symmType=" + symmType
+				+ ", orderDetectorMethod=" + orderDetectorMethod
 				+ ", refineMethod=" + refineMethod + ", optimization="
-				+ optimization + ", symmLevels=" + symmLevels
-				+ ", scoreThreshold=" + scoreThreshold + ", sseThreshold="
-				+ sseThreshold + ", minCoreLength=" + minCoreLength
-				+ ", distanceCutoff=" + distanceCutoff + ", gaps=" + gaps
-				+ ", optimizationSteps=" + optimizationSteps + "]";
+				+ optimization + ", rndSeed=" + rndSeed + ", symmLevels="
+				+ symmLevels + ", unrefinedScoreThreshold="
+				+ unrefinedScoreThreshold + ", refinedScoreThreshold="
+				+ refinedScoreThreshold + ", sseThreshold=" + sseThreshold
+				+ ", minCoreLength=" + minCoreLength + ", distanceCutoff="
+				+ distanceCutoff + ", gaps=" + gaps + ", optimizationSteps="
+				+ optimizationSteps + "]";
 	}
 
 }

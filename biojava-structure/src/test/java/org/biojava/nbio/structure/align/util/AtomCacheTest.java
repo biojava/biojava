@@ -245,4 +245,71 @@ public class AtomCacheTest {
 
 	}
 
+	@Test
+	public void testSeqRes() throws StructureException, IOException {
+		String name;
+		StructureIdentifier id;
+		Structure full, reduced;
+		Chain chain;
+		List<Group> seqres;
+
+		// normal structure
+		name = "1hh0";
+		id = new SubstructureIdentifier(name);
+		
+		full = id.loadStructure(cache);
+		assertEquals("Wrong number of models in full "+name,1,full.nrModels());
+		assertEquals("Wrong number of chains in full "+name,1,full.getChains().size());
+		chain = full.getChain(0);
+		seqres = chain.getSeqResGroups();
+		assertEquals("Wrong seqres length in full "+name,46,seqres.size());
+		
+		reduced = id.reduce(full);
+		assertEquals("Wrong number of models in reduced "+name,1,reduced.nrModels());
+		assertEquals("Wrong number of chains in reduced "+name,1,reduced.getChains().size());
+		chain = reduced.getChain(0);
+		seqres = chain.getSeqResGroups();
+		assertEquals("Wrong seqres length in reduced "+name,46,seqres.size());
+
+		// single chain
+		name = "1hh0.A";
+		id = new SubstructureIdentifier(name);
+		
+		full = id.loadStructure(cache);
+		assertEquals("Wrong number of models in full "+name,1,full.nrModels());
+		assertEquals("Wrong number of chains in full "+name,1,full.getChains().size());
+		chain = full.getChain(0);
+		seqres = chain.getSeqResGroups();
+		assertEquals("Wrong seqres length in full "+name,46,seqres.size());
+		
+		reduced = id.reduce(full);
+		assertEquals("Wrong number of models in reduced "+name,1,reduced.nrModels());
+		assertEquals("Wrong number of chains in reduced "+name,1,reduced.getChains().size());
+		chain = reduced.getChain(0);
+		seqres = chain.getSeqResGroups();
+		assertEquals("Wrong seqres length in reduced "+name,46,seqres.size());
+
+		// subrange
+		name = "1hh0.A:10-20";
+		id = new SubstructureIdentifier(name);
+		
+		full = id.loadStructure(cache);
+		assertEquals("Wrong number of models in full "+name,1,full.nrModels());
+		assertEquals("Wrong number of chains in full "+name,1,full.getChains().size());
+		chain = full.getChain(0);
+		seqres = chain.getSeqResGroups();
+		assertEquals("Wrong seqres length in full "+name,46,seqres.size());
+		assertEquals("Wrong SeqNum at first group in full",1,(int)chain.getAtomGroup(0).getResidueNumber().getSeqNum());
+
+		reduced = id.reduce(full);
+		assertEquals("Wrong number of models in reduced "+name,1,reduced.nrModels());
+		assertEquals("Wrong number of chains in reduced "+name,1,reduced.getChains().size());
+		chain = reduced.getChain(0);
+		seqres = chain.getSeqResGroups();
+		assertEquals("Wrong seqres length in reduced "+name,46,seqres.size());
+		
+		assertEquals("Wrong SeqNum at first group in reduced",10,(int)chain.getAtomGroup(0).getResidueNumber().getSeqNum());
+
+	}
+	
 }

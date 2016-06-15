@@ -31,6 +31,9 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -376,16 +379,11 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 				}
 
 				pw.flush();
-				// Now we move this across to where it actually wants to be
-				boolean couldRename = newFile.renameTo(new File(localName));
-
-				if (!couldRename) {
-
-					throw new IOException("Could not rename temp file "+newFile.toString()+" to file " + localName);
-				}
-
-				return true;
 			}
+			// Now we move this across to where it actually wants to be
+			Files.move(newFile.toPath(), Paths.get(localName), StandardCopyOption.REPLACE_EXISTING);
+
+			return true;
 		}  catch (IOException e){
 			logger.error("Could not download "+url.toString()+" OR store locally to "+localName+" Error ="+e.getMessage());
 			newFile.delete();

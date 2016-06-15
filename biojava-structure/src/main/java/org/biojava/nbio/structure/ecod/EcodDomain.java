@@ -29,6 +29,18 @@ import java.util.List;
 import java.util.Set;
 
 /**
+ * An EcodDomain contains all the information of the ECOD database: id, 
+ * classification groups (from higher to lower in the tree: X,H,T,F), PDB code,
+ * chain, residue ranges and status (manual or automatic classification).
+ * <p>
+ * For detailed explanation about the ECOD information see the original article
+ * at: http://www.ncbi.nlm.nih.gov/pmc/articles/PMC4256011.
+ * <pre>
+ * Cheng H, Schaeffer RD, Liao Y, et al. 
+ * ECOD: An Evolutionary Classification of Protein Domains. 
+ * Elofsson A, ed. PLoS Computational Biology. 2014;10(12):e1003926.
+ * </pre>
+ * 
  * @author Spencer Bliven
  *
  */

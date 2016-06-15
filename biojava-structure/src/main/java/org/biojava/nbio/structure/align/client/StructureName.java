@@ -522,6 +522,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 				break;
 			case BIO:
 				base = new BioAssemblyIdentifier(name);
+				break;
 			case PDB:
 				base = new SubstructureIdentifier(getIdentifier());
 				break;

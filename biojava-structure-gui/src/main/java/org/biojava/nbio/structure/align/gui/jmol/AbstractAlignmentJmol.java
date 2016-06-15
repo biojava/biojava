@@ -41,6 +41,8 @@ import org.biojava.nbio.structure.align.util.ResourceManager;
 import org.biojava.nbio.structure.jama.Matrix;
 import org.jcolorbrewer.ColorBrewer;
 import org.jmol.api.JmolViewer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * An Abstract Class to generalize the visualization of AFP and
@@ -52,6 +54,7 @@ import org.jmol.api.JmolViewer;
 public abstract class AbstractAlignmentJmol
 implements MouseMotionListener, MouseListener, WindowListener, ActionListener {
 
+	private static final Logger logger = LoggerFactory.getLogger(AbstractAlignmentJmol.class);
 	protected Structure structure;
 	protected ColorBrewer colorPalette = ColorBrewer.Spectral;
 
@@ -81,7 +84,7 @@ implements MouseMotionListener, MouseListener, WindowListener, ActionListener {
 	 * Set all the member variables to null.
 	 */
 	public void destroy(){
-		System.err.println("cleaning up AlignmentJmol window");
+		logger.debug("cleaning up AlignmentJmol window");
 		jmolPanel.removeMouseListener(this);
 		jmolPanel.removeMouseMotionListener(this);
 		jmolPanel.destroy();
@@ -135,7 +138,7 @@ implements MouseMotionListener, MouseListener, WindowListener, ActionListener {
 	 */
 	public void evalString(String rasmolScript){
 		if ( jmolPanel == null ){
-			System.err.println("please install Jmol first");
+			logger.error("please install Jmol first");
 			return;
 		}
 		jmolPanel.evalString(rasmolScript);
@@ -148,7 +151,7 @@ implements MouseMotionListener, MouseListener, WindowListener, ActionListener {
 	public void setStructure(Structure s) {
 
 		if (jmolPanel == null){
-			System.err.println("please install Jmol first");
+			logger.error("please install Jmol first");
 			return;
 		}
 		setTitle(s.getPDBCode());

@@ -2764,8 +2764,7 @@ public class PDBFileParser  {
 			}
 
 	private void addCharges() {
-		ChargeAdder adder = new ChargeAdder(structure);
-		adder.addCharges();
+		ChargeAdder.addCharges(structure);
 	}
 
 	/**

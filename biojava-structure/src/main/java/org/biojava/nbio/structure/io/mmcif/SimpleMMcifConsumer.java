@@ -992,8 +992,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	}
 
 	private void addCharges() {
-		ChargeAdder adder = new ChargeAdder(structure);
-		adder.addCharges();
+		ChargeAdder.addCharges(structure);
 	}
 
 	/**

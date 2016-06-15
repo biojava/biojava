@@ -148,7 +148,7 @@ public class BondMaker {
 	}
 
 	private void formNucleotideBonds() {
-		for (Chain chain : structure.getChains()) {
+ 		for (Chain chain : structure.getChains()) {
 			List<Group> groups = chain.getSeqResGroups();
 
 			for (int i = 0; i < groups.size() - 1; i++) {
@@ -165,8 +165,8 @@ public class BondMaker {
 					continue;
 				}
 
-				Atom phosphorous = tail.getP();
-				Atom oThreePrime = head.getO3Prime();
+				Atom phosphorous = head.getP();
+				Atom oThreePrime = tail.getO3Prime();
 
 				if (phosphorous == null || oThreePrime == null) {
 					continue;

@@ -322,7 +322,7 @@ public class MMCIFFileTools {
 
 		String insCode = MMCIF_MISSING_VALUE;
 		if (g.getResidueNumber().getInsCode()!=null ) {
-			insCode = Integer.toString(g.getResidueNumber().getInsCode());
+			insCode = Character.toString(g.getResidueNumber().getInsCode());
 		}
 
 		AtomSite atomSite = new AtomSite();
