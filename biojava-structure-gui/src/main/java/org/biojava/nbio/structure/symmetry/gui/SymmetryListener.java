@@ -66,7 +66,7 @@ public class SymmetryListener implements ActionListener {
 		try {
 			if (cmd.equals("Repeats Superposition")) {
 				MultipleAlignmentJmol j = SymmetryDisplay.displayRepeats(symm);
-				String s = SymmetryDisplay.printSymmetryAxes(symm);
+				String s = SymmetryDisplay.printSymmetryAxes(symm, false);
 				j.evalString(s);
 
 			} else if (cmd.equals("Multiple Structure Alignment")) {

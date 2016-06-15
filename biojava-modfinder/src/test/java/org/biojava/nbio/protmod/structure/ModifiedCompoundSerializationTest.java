@@ -164,6 +164,7 @@ public class ModifiedCompoundSerializationTest extends TestCase {
 				}
 			}
 		} catch (Exception e){
+			logger.error(e.getMessage(),e);
 			logger.error("Error when serializing {}", pdbId);
 			logger.error(currentMC.getDescription());
 			logger.error(xml, e);

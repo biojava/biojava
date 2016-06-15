@@ -225,6 +225,14 @@ public interface Atom extends Cloneable, PDBRecord {
 	 */
 	public void setBonds(List<Bond> bonds);
 
+
+	/** Test if another atom has a bond to this atom
+	 *
+	 * @param other
+	 * @return
+     */
+	public boolean hasBond(Atom other);
+
 	/**
 	 * Get the charge of this atom
 	 *

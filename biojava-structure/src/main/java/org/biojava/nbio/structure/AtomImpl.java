@@ -270,6 +270,21 @@ public class AtomImpl implements Atom, Serializable, PDBRecord {
 	 * {@inheritDoc}
 	 */
 	@Override
+	public boolean hasBond(Atom other){
+		if ( bonds == null)
+			return false;
+
+		for (Bond b : bonds){
+			if ( b.getAtomA().equals(other) || b.getAtomB().equals(other))
+				return true;
+		}
+		return false;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void setBonds(List<Bond> bonds) {
 		this.bonds = bonds;
 	}

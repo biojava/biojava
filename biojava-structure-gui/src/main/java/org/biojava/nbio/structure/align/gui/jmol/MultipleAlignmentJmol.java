@@ -48,8 +48,8 @@ import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIdentifier;
 import org.biojava.nbio.structure.align.gui.MenuCreator;
-import org.biojava.nbio.structure.align.gui.MultipleAlignmentJmolDisplay;
 import org.biojava.nbio.structure.align.gui.MultipleAlignmentGUI;
+import org.biojava.nbio.structure.align.gui.MultipleAlignmentJmolDisplay;
 import org.biojava.nbio.structure.align.multiple.Block;
 import org.biojava.nbio.structure.align.multiple.BlockSet;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
@@ -78,8 +78,7 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 	private JCheckBox colorByBlocks;
 	private List<JCheckBox> selectedStructures;
 
-	private static final String LIGAND_DISPLAY_SCRIPT =
-			"select ligand; wireframe 40; spacefill 120; color CPK;";
+	private static final String LIGAND_DISPLAY_SCRIPT = "select ligand; wireframe 40; spacefill 120; color CPK;";
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(MultipleAlignmentJmol.class);
@@ -162,17 +161,19 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 
 		// / STRUCTURE SELECTION
 		if (multAln != null) {
-			Box hBox0 = Box.createHorizontalBox();
-			hBox0.setMaximumSize(new Dimension(Short.MAX_VALUE, 30));
 
+			Box hBox00 = Box.createHorizontalBox();
+			hBox00.setMaximumSize(new Dimension(Short.MAX_VALUE, 30));
+			
 			JButton show = new JButton("Show Only: ");
 			show.addActionListener(new ActionListener() {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					jmolPanel.evalString("save selection;");
-					String cmd = getJmolString(multAln, transformedAtoms,
-							colorPalette, colorByBlocks.isSelected());
+					String cmd = getJmolString(multAln,
+							transformedAtoms, colorPalette,
+							colorByBlocks.isSelected());
 					cmd += "; restrict ";
 					for (int st = 0; st < multAln.size(); st++) {
 						if (selectedStructures.get(st).isSelected()) {
@@ -183,21 +184,28 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 					jmolPanel.executeCmd(cmd + " restore selection;");
 				}
 			});
+			hBox00.add(show);
+			hBox00.add(Box.createGlue());
+			vBox.add(hBox00);
+		
+			// A line of structures of maximum 5
+			for (int line = 0; line < 1 + (multAln.size() / 5); line++) {
+				Box hBox0 = Box.createHorizontalBox();
+				hBox0.setMaximumSize(new Dimension(Short.MAX_VALUE, 30));
 
-			hBox0.add(show);
-			hBox0.add(Box.createGlue());
+				for (int str = line * 5; str < Math.min((line + 1) * 5,
+						multAln.size()); str++) {
+					JCheckBox structureSelection = new JCheckBox(multAln
+							.getEnsemble().getStructureIdentifiers().get(str)
+							.getIdentifier());
+					hBox0.add(structureSelection);
+					hBox0.add(Box.createGlue());
+					structureSelection.setSelected(true);
+					selectedStructures.add(structureSelection);
+				}
 
-			for (int str = 0; str < multAln.size(); str++) {
-				JCheckBox structureSelection = new JCheckBox(multAln
-						.getEnsemble().getStructureIdentifiers().get(str)
-						.getIdentifier());
-				hBox0.add(structureSelection);
-				hBox0.add(Box.createGlue());
-				structureSelection.setSelected(true);
-				selectedStructures.add(structureSelection);
+				vBox.add(hBox0);
 			}
-
-			vBox.add(hBox0);
 		}
 
 		// / COMBO BOXES
@@ -260,7 +268,6 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 
 		// / CHECK BOXES
 		Box hBox2 = Box.createHorizontalBox();
-		hBox2.setMaximumSize(new Dimension(Short.MAX_VALUE, 30));
 
 		JButton resetDisplay = new JButton("Reset Display");
 		resetDisplay.addActionListener(new ActionListener() {
@@ -414,12 +421,12 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 				// Kimura, Structural and Fractional Dissimilarity Score
 				Phylogeny kimura = MultipleAlignmentTools
 						.getKimuraTree(multAln);
-				Phylogeny sdm = MultipleAlignmentTools
-						.getHSDMTree(multAln);
+				Phylogeny sdm = MultipleAlignmentTools.getHSDMTree(multAln);
 				// Phylogeny structural = MultipleAlignmentTools
-				//		.getStructuralTree(multAln);
+				// .getStructuralTree(multAln);
 
-				Archaeopteryx.createApplication(new Phylogeny[] { kimura, sdm });
+				Archaeopteryx
+						.createApplication(new Phylogeny[] { kimura, sdm });
 			}
 		} catch (Exception e) {
 			logger.error("Could not complete display option.", e);
