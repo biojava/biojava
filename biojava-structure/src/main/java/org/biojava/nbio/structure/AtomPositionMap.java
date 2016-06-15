@@ -23,6 +23,7 @@
 
 package org.biojava.nbio.structure;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -119,7 +120,8 @@ public class AtomPositionMap {
 	 * @param <V>
 	 *            The value type
 	 */
-	private static class ValueComparator<T, V extends Comparable<V>> implements Comparator<T> {
+	private static class ValueComparator<T, V extends Comparable<V>> implements Comparator<T>, Serializable {
+        private static final long serialVersionUID = 1;
 
 		private Map<T, V> map;
 

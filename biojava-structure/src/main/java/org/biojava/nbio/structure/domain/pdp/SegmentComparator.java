@@ -20,9 +20,11 @@
  */
 package org.biojava.nbio.structure.domain.pdp;
 
+import java.io.Serializable;
 import java.util.Comparator;
 
-public class SegmentComparator implements Comparator<Segment> {
+public class SegmentComparator implements Comparator<Segment>, Serializable {
+    private static final long serialVersionUID = 1;
 
 	@Override
 	public int compare(Segment v1, Segment v2) {
