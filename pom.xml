@@ -199,6 +199,8 @@
 						<autoVersionSubmodules>true</autoVersionSubmodules>
 						<!-- work around for GPG hanging issue http://jira.codehaus.org/browse/MGPG-9 -->
 						<mavenExecutorId>forked-path</mavenExecutorId>
+						<useReleaseProfile>false</useReleaseProfile>
+						<arguments>-Psonatype-nexus-staging</arguments>
 					</configuration>
 
 				</plugin>
