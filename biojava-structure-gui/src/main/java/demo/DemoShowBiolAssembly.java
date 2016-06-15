@@ -36,33 +36,33 @@ public class DemoShowBiolAssembly {
 			// assembly 0 ... asym Unit
 			// assembly 1 ... the first bio assembly
 			// example 1fah has  2 assemblies (two copies of the assembly in asymmetric unit)
-			
-			
+
+
 			// Various interesting symmetries: (see Lawson, 2008)
 			// Circular    - 1TJA
 			// Dihedral    - 1ei7
 			// Icosahedral - 1a34
 			// Helical     - 1cgm
-			
-			
+
+
 			// DNA 173D .. 2
-			
+
 			BioUnitDataProviderFactory.setBioUnitDataProvider(BioUnitDataProviderFactory.pdbProviderClassName);
-			//Structure bioAssembly = StructureIO.getBiologicalAssembly("4A1I",2);	
-			
+			//Structure bioAssembly = StructureIO.getBiologicalAssembly("4A1I",2);
+
 			Structure bioAssembly = StructureIO.getBiologicalAssembly("1pdr",1);
-									
+
 			StructureAlignmentJmol jmolPanel = new StructureAlignmentJmol();
 			//jmolPanel.evalString("set autobond=false");
 			jmolPanel.setStructure(bioAssembly);
 
 			// send some commands to Jmol
 			jmolPanel.evalString("select * ; color structure ; spacefill off; wireframe off; backbone off; cartoon on; select ligands ; spacefill 0.4; color cpk; model 0;");
-			
+
 			System.out.println("done!");
 
 		} catch (Exception e) {
 			e.printStackTrace();
-		}	
+		}
 	}
 }

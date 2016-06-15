@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * created at 20 Feb 2014
- * Author: ap3 
+ * Author: ap3
  */
 
 package org.biojava.nbio.genome.parsers.cytoband;
@@ -28,22 +28,22 @@ import java.io.Serializable;
 
 
 public enum StainType implements Serializable{
-	
-	acen("acen"), 
-	gneg("gneg"), 
+
+	acen("acen"),
+	gneg("gneg"),
 	gpos100("gpos100"),
 	gpos25("gpos25"),
-	gpos50("gpos50"), 
-	gpos75("gpos75"), 
-	gvar("gvar"), 
+	gpos50("gpos50"),
+	gpos75("gpos75"),
+	gvar("gvar"),
 	stalk("stalk");
-	
+
 	public final String type;
-	
+
 	StainType(String type){
 		this.type = type;
 	}
-	
+
 	public static StainType getStainTypeFromString(String type){
 		 for(StainType st : StainType.values()){
 			 if (st.type.equals(type)){

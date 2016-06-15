@@ -23,6 +23,7 @@
 
 package org.biojava.nbio.alignment.template;
 
+import org.biojava.nbio.core.alignment.template.Profile;
 import org.biojava.nbio.core.sequence.template.Compound;
 import org.biojava.nbio.core.sequence.template.Sequence;
 
@@ -35,10 +36,10 @@ import org.biojava.nbio.core.sequence.template.Sequence;
  */
 public interface PairInProfileScorer<S extends Sequence<C>, C extends Compound> extends PairwiseSequenceScorer<S, C> {
 
-    /**
-     * Returns the {@link Profile} from which the aligned pair originated.
-     * @return the original profile
-     */
-    Profile<S, C> getProfile();
+	/**
+	 * Returns the {@link Profile} from which the aligned pair originated.
+	 * @return the original profile
+	 */
+	Profile<S, C> getProfile();
 
 }

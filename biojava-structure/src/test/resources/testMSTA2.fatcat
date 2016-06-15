@@ -1,0 +1,16 @@
+Structures:[1mbc, 1hlb, 1thb.A, 1ith.A] 
+Algorithm:testAlignment_2.0 
+BlockSets: 2 
+Blocks: 3 
+Length: 43 
+Core Length: 39 
+AvgTM-score: 0.26 
+RMSD: 1.64
+
+Chain 01: VLSEGEWQLVLHVWAKVEADVAghgqdil--IRLFKSHPeTlekfdrfkhlkteaemkasedlkkhgvtvltalgailkkkghheaelkplaqshatkhkipikylefiseaiihvlhsrhpgdf-GADAQGAMNKAL
+          1111111111111111111111         22222222 2                                                                                     333333333333
+Chain 02: DLTLaQKKiVRKTWHQlMRNKtsfvtdvf--IRIFAYDPsAqnkfpqmagmsasqlrssrqmqahairvssimseyveeldsdilpellatlarthdlnkvgadhynlfakvlmealqaelgsdf-NEKTRDAWAKAF
+          1111111111111111111111         22222222 2                                                                                     333333333333
+Chain 03: VLSPaDKTNVKAAWGKVGAHAGeygaeal--ERMFLSFPtTktyfphfdlshgsaqvkghgkkvadaltnavahvddmpnalsalsdlhahklrvdpvnfkllshcllvtlaahlpaef-------TPAVHASLDKFL
+          1111111111111111111111         22222222 2                                                                                     333333333333
+Chain 04: GLTAaQIKAIQDHWFLnIKGCLqaaadsif-FKYLTAYPgDlaffhkfssvplyglrsnpaykaqtltvinyldkvvdalggnagalmkakvpshdamgitpkhfgqllklvggvfqeefsa----DPTTVAAWGDAA

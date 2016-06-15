@@ -16,7 +16,7 @@
  * at:
  *
  *      http://www.biojava.org/
- * 
+ *
  * Created on Aug 3, 2007
  */
 package org.biojava.nbio.structure.gui.util.color;
@@ -29,7 +29,7 @@ import java.awt.color.ColorSpace;
  *
  */
 public class HSVColorSpace extends ColorSpace {
-	
+
 	private static final long serialVersionUID = 8324413992279510075L;
 
 	public static void main(String args[]) {
@@ -38,7 +38,7 @@ public class HSVColorSpace extends ColorSpace {
 		Color c;
 		float[] rgbComp;
 		float[] hsvComp;
-	
+
 		c = Color.RED;
 		rgbComp = c.getColorComponents(csRGB,null);
 		hsvComp = c.getColorComponents(csHSV, null);
@@ -47,37 +47,37 @@ public class HSVColorSpace extends ColorSpace {
 		System.out.format("RED\tRGB[%f %f %f] HSV[%f %f %f]\n",
 				rgbComp[0], rgbComp[1], rgbComp[2],
 				hsvComp[0], hsvComp[1], hsvComp[2] );
-		
-		
+
+
 		c = Color.WHITE;
 		rgbComp = c.getColorComponents(csRGB,null);
 		hsvComp = c.getColorComponents(csHSV, null);
 		System.out.format("WHITE\tRGB[%f %f %f] HSV[%f %f %f]\n",
 				rgbComp[0], rgbComp[1], rgbComp[2],
 				hsvComp[0], hsvComp[1], hsvComp[2] );
-		
+
 		c = Color.BLACK;
 		rgbComp = c.getColorComponents(csRGB,null);
 		hsvComp = c.getColorComponents(csHSV, null);
 		System.out.format("BLACK\tRGB[%f %f %f] HSV[%f %f %f]\n",
 				rgbComp[0], rgbComp[1], rgbComp[2],
 				hsvComp[0], hsvComp[1], hsvComp[2] );
-		
+
 		c = Color.GRAY;
 		rgbComp = c.getColorComponents(csRGB,null);
 		hsvComp = c.getColorComponents(csHSV, null);
 		System.out.format("GRAY\tRGB[%f %f %f] HSV[%f %f %f]\n",
 				rgbComp[0], rgbComp[1], rgbComp[2],
 				hsvComp[0], hsvComp[1], hsvComp[2] );
-		
+
 		c = Color.CYAN;
 		rgbComp = c.getColorComponents(csRGB,null);
 		hsvComp = c.getColorComponents(csHSV, null);
 		System.out.format("CYAN\tRGB[%f %f %f] HSV[%f %f %f]\n",
 				rgbComp[0], rgbComp[1], rgbComp[2],
 				hsvComp[0], hsvComp[1], hsvComp[2] );
-		
-		
+
+
 	}
 	/**
 	 * @param type
@@ -134,7 +134,7 @@ public class HSVColorSpace extends ColorSpace {
 		Color rgbColor = new Color(rgb);
 		return rgbColor.getColorComponents(null);
 	}
-	
+
 	private static HSVColorSpace hsvSpace;
 	/**
 	 * The HSV color space
@@ -144,7 +144,7 @@ public class HSVColorSpace extends ColorSpace {
 		ColorSpace theColorSpace;
 		switch( colorspace ) {
 		case CS_HSV:
-			synchronized(HSVColorSpace.class) { 
+			synchronized(HSVColorSpace.class) {
 				if(hsvSpace == null) {
 					hsvSpace = new HSVColorSpace();
 				}
@@ -154,10 +154,10 @@ public class HSVColorSpace extends ColorSpace {
 		default:
 			theColorSpace = ColorSpace.getInstance(colorspace);
 		}
-		
+
 		return theColorSpace;
 	}
-	
+
 	public static ColorSpace getHSVColorSpace() {
 		return HSVColorSpace.getInstance(CS_HSV);
 	}

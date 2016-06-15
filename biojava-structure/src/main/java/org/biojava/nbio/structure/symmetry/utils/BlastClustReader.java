@@ -24,47 +24,51 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.net.URL;
 import java.util.*;
 
 
-public class BlastClustReader {
+public class BlastClustReader implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+
 	private int sequenceIdentity = 0;
 	private List<List<String>> clusters = new ArrayList<List<String>>();
 	private static final String coreUrl = "ftp://resources.rcsb.org/sequence/clusters/";
 	private static List<Integer> seqIdentities = Arrays.asList(30, 40, 50, 70, 90, 95, 100);
 
-	public BlastClustReader(int sequenceIdentity) {
+	public BlastClustReader(int sequenceIdentity)  {
 		this.sequenceIdentity = sequenceIdentity;
 	}
-	
+
 	public List<List<String>> getPdbChainIdClusters() {
 		loadClusters(sequenceIdentity);
 		return clusters;
 	}
-	
+
 	public Map<String,String> getRepresentatives(String pdbId) {
 		loadClusters(sequenceIdentity);
 		String pdbIdUc = pdbId.toUpperCase();
-		
+
 		Map<String,String> representatives = new LinkedHashMap<String,String>();
 		for (List<String> cluster: clusters) {
 			// map fist match to representative
 			for (String chainId: cluster) {
 				if (chainId.startsWith(pdbIdUc)) {
 					representatives.put(chainId, cluster.get(0));
-                    break;
+					break;
 				}
 			}
 		}
 		return representatives;
 	}
-	
+
 	public String getRepresentativeChain(String pdbId, String chainId) {
 		loadClusters(sequenceIdentity);
 
-		String pdbChainId = pdbId.toUpperCase() + "." + chainId;   
-		
+		String pdbChainId = pdbId.toUpperCase() + "." + chainId;
+
 		for (List<String> cluster: clusters) {
 			if (cluster.contains(pdbChainId)) {
 				return cluster.get(0);
@@ -72,12 +76,12 @@ public class BlastClustReader {
 		}
 		return "";
 	}
-	
+
 	public int indexOf(String pdbId, String chainId) {
 		loadClusters(sequenceIdentity);
 
-		String pdbChainId = pdbId.toUpperCase() + "." + chainId;   
-		
+		String pdbChainId = pdbId.toUpperCase() + "." + chainId;
+
 		for (int i = 0; i < clusters.size(); i++) {
 			List<String> cluster = clusters.get(i);
 			if (cluster.contains(pdbChainId)) {
@@ -86,7 +90,7 @@ public class BlastClustReader {
 		}
 		return -1;
 	}
-	
+
 	public List<List<String>> getPdbChainIdClusters(String pdbId) {
 		loadClusters(sequenceIdentity);
 		String pdbIdUpper = pdbId.toUpperCase();
@@ -102,13 +106,13 @@ public class BlastClustReader {
 		}
 		return matches;
 	}
-	
+
 	public List<List<String>> getChainIdsInEntry(String pdbId) {
 		loadClusters(sequenceIdentity);
-		
+
 		List<List<String>> matches = new ArrayList<List<String>>();
 		List<String> match = null;
-		
+
 		for (List<String> cluster: clusters) {
 			for (String chainId: cluster) {
 				if (chainId.startsWith(pdbId)) {
@@ -126,7 +130,7 @@ public class BlastClustReader {
 		}
 		return matches;
 	}
-	
+
 	private void loadClusters(int sequenceIdentity) {
 		// load clusters only once
 		if (clusters.size() > 0) {
@@ -153,7 +157,7 @@ public class BlastClustReader {
 				try {
 					while ((line = reader.readLine()) != null) {
 						line = line.replaceAll("_", ".");
-						List<String> cluster = Arrays.asList(line.split(" "));	
+						List<String> cluster = Arrays.asList(line.split(" "));
 						clusters.add(cluster);
 					}
 					reader.close();
@@ -174,9 +178,9 @@ public class BlastClustReader {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return;
 	}
-	
+
 }
 

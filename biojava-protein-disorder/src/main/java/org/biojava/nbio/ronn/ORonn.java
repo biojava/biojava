@@ -1,8 +1,8 @@
-/* 
+/*
  * @(#)ORonn.java 1.0 June 2010
- * 
+ *
  * Copyright (c) 2010 Peter Troshin
- *  
+ *
  *        BioJava development code
  *
  * This code may be freely distributed and modified under the
@@ -43,14 +43,14 @@ import java.util.concurrent.*;
 
 /**
  * Fully re-factored and enhanced version of RONN.
- * 
- * This class does the calculation and contains the main for the command line client. 
- * 
- * @author Peter Troshin 
+ *
+ * This class does the calculation and contains the main for the command line client.
+ *
+ * @author Peter Troshin
  * @version 1.0
  * @since 3.0.2
 
- * TODO refactor 
+ * TODO refactor
  */
 public final class ORonn implements Callable<ORonn> {
 
@@ -180,14 +180,14 @@ public final class ORonn implements Callable<ORonn> {
 	}
 
 	/**
-	 * 
+	 *
 	 * @author pvtroshin
-	 * 
-	 * VERTICAL - where the letters	of the sequence and corresponding disorder values are 
-	 * output in two column layout. 
-	 * 
-	 * HORIZONTAL where the disorder values are provided under the letters of the 
-	 * sequence. Letters and values separated by tabulation in	this case. 
+	 *
+	 * VERTICAL - where the letters	of the sequence and corresponding disorder values are
+	 * output in two column layout.
+	 *
+	 * HORIZONTAL where the disorder values are provided under the letters of the
+	 * sequence. Letters and values separated by tabulation in	this case.
 	 *
 	 */
 	static enum ResultLayout {
@@ -234,15 +234,15 @@ public final class ORonn implements Callable<ORonn> {
 			throw new IllegalArgumentException(message);
 		}
 		final String sequence = fsequence.getSequence();
-				
+
 		if ( SequenceUtil.isAmbiguosProtein(sequence)){
 			logger.warn("Sequence is ambiguous!");
 		}
-		
+
 		if (!(SequenceUtil.isProteinSequence(sequence) )){
 			logger.warn("Does not look like a protein sequence!");
 		}
-		
+
 		if (!(SequenceUtil.isProteinSequence(sequence) || SequenceUtil
 				.isAmbiguosProtein(sequence))) {
 			message = "IGNORING sequence " + fsequence.getId()

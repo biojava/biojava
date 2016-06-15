@@ -35,15 +35,15 @@ import java.io.InputStreamReader;
 
 /** How to parse an mmCif file:
  * <pre>
-  public static void main(String[] args) throws Exception {
-        String filename =  "/path/to/something.cif.gz" ;
+public static void main(String[] args) throws Exception {
+	String filename =  "/path/to/something.cif.gz" ;
 
-        StructureIOFile reader = new MMCIFFileReader();
+	StructureIOFile reader = new MMCIFFileReader();
 
-        Structure struc = reader.getStructure(filename);
-        System.out.println(struc);
-    }
-    </pre>
+	Structure struc = reader.getStructure(filename);
+	System.out.println(struc);
+}
+</pre>
  *
  * @author Andreas Prlic
  * @since 1.7
@@ -74,7 +74,7 @@ public class MMCIFFileReader extends LocalPDBDirectory {
 
 	/**
 	 * Constructs a new MMCIFFileReader, initializing the extensions member variable.
-	 * The path is initialized in the same way as {@link UserConfiguration}, 
+	 * The path is initialized in the same way as {@link UserConfiguration},
 	 * i.e. to system property/environment variable {@link UserConfiguration#PDB_DIR}.
 	 * Both autoFetch and splitDir are initialized to false
 	 */

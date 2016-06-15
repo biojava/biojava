@@ -29,7 +29,7 @@ import org.biojava.nbio.ronn.Jronn;
 import java.util.Arrays;
 
 public class PredictDisorder {
-  
+
 	public static void main(String[] args) throws Exception{
 
 		String uniprotID = "O30642";
@@ -46,12 +46,12 @@ public class PredictDisorder {
 		float[] values = Jronn.getDisorderScores(seq);
 
 		System.out.println("Disorder Scores: "+ Arrays.toString(values));
-			
-		
+
+
 	}
 
 	/** Fetch a protein sequence from the UniProt web site
-	 * 
+	 *
 	 * @param uniProtID
 	 * @return a Protein Sequence
 	 * @throws Exception

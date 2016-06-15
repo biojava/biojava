@@ -39,15 +39,15 @@ import java.util.Set;
  * @since 1.4
  */
 public interface OntologyOps {
-  /**
-   * Get the set of all remote terms.
-   *
-   * <p>
-   * We do not currently specify whether this set is mutable or not, and if it
-   * will reflect modifications to the optimised ontolgies.
-   * </p>
-   *
-   * @return a Set containing all remote terms in the ontology
-   */
-  public Set getRemoteTerms();
+	/**
+	 * Get the set of all remote terms.
+	 *
+	 * <p>
+	 * We do not currently specify whether this set is mutable or not, and if it
+	 * will reflect modifications to the optimised ontolgies.
+	 * </p>
+	 *
+	 * @return a Set containing all remote terms in the ontology
+	 */
+	public Set getRemoteTerms();
 }

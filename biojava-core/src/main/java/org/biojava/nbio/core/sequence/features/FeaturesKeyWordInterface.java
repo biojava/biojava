@@ -31,7 +31,7 @@ import java.util.ArrayList;
  * @author Scooter Willis <willishf at gmail dot com>
  */
 public interface FeaturesKeyWordInterface {
-	
+
 	/**
 	 *
 	 * @return

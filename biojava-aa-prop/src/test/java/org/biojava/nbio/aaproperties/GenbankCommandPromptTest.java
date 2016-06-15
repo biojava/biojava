@@ -45,7 +45,7 @@ public class GenbankCommandPromptTest {
 		args[10] = output.toString();
 		CommandPrompt.run(args);
 	}
-	
+
 	@Test
 	public void testExample1() throws Exception{
 		File output = new File(System.getProperty("java.io.tmpdir"),"testgb.tsv");
@@ -61,7 +61,7 @@ public class GenbankCommandPromptTest {
 		args[6] = "tsv";
 		CommandPrompt.run(args);
 	}
-	
+
 	@Test
 	public void testExample1WithCSV() throws Exception{
 		File output = new File(System.getProperty("java.io.tmpdir"),"testgb.csv");
@@ -77,7 +77,7 @@ public class GenbankCommandPromptTest {
 		args[6] = "csv";
 		CommandPrompt.run(args);
 	}
-	
+
 	@Test
 	public void testExample2() throws Exception{
 		//-i BondFeature.gb -1 -3 -7
@@ -89,7 +89,7 @@ public class GenbankCommandPromptTest {
 		args[4] = "-7";
 		CommandPrompt.run(args);
 	}
-	
+
 	@Test
 	public void testExample3() throws Exception{
 		//-i BondFeature.gb -0 A -0 N -1
@@ -103,7 +103,7 @@ public class GenbankCommandPromptTest {
 		args[6] = "-1";
 		CommandPrompt.run(args);
 	}
-	
+
 	@Test
 	public void testWithCases() throws Exception{
 		//-i BondFeature.gb -0 A -0 N -1

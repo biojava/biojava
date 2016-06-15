@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Feb 15, 2010
- * Author: Andreas Prlic 
+ * Author: Andreas Prlic
  *
  */
 
@@ -36,7 +36,7 @@ import java.io.StringWriter;
 import java.util.List;
 
 /** A class to convert the data in an AfpChain object to various String outputs.
- *  
+ *
  * @author Andreas Prlic
  *
  */
@@ -54,8 +54,8 @@ public class AfpChainWriter
 		boolean longHeader  = true;
 		boolean showHTML = false;
 		boolean showAlignmentBlock = false;
-		
-		return toFatCatCore(afpChain, ca1, ca2, printLegend, longHeader, showHTML, showAlignmentBlock);   
+
+		return toFatCatCore(afpChain, ca1, ca2, printLegend, longHeader, showHTML, showAlignmentBlock);
 	}
 
 	public static String toScoresList(AFPChain afpChain){
@@ -72,35 +72,35 @@ public class AfpChainWriter
 
 
 		writer.append("Sab (nr. equivalent residues): " );
-        writer.append(String.valueOf(afpChain.getNrEQR())).append("");
+		writer.append(String.valueOf(afpChain.getNrEQR())).append("");
 		writer.append(newline);
 
 		writer.append("Dab (distance between folds a,b): ");
 		int dab = afpChain.getCa1Length()+afpChain.getCa2Length() - 2 * afpChain.getNrEQR();
-        writer.append(String.valueOf(dab)).append("");
+		writer.append(String.valueOf(dab)).append("");
 		writer.append(newline);
 
 		writer.append("sab (relative similarity): ");
 		double sab = 2 * afpChain.getNrEQR() / (double)( afpChain.getCa1Length() + afpChain.getCa2Length());
-        writer.append(String.valueOf(sab)).append("");
+		writer.append(String.valueOf(sab)).append("");
 		writer.append(newline);
 
 		writer.append("cab (coverage a): ");
 		double cab = afpChain.getNrEQR() / (double) afpChain.getCa1Length();
-        writer.append(String.valueOf(cab)).append("");
+		writer.append(String.valueOf(cab)).append("");
 		writer.append(newline);
 
 		writer.append("cba (coverage b): ");
 		double cba = afpChain.getNrEQR() / (double) afpChain.getCa2Length();
-        writer.append(String.valueOf(cba)).append("");
+		writer.append(String.valueOf(cba)).append("");
 		writer.append(newline);
 
 		writer.append("seq similarity: ");
-        writer.append(String.valueOf(afpChain.getSimilarity())).append("");
+		writer.append(String.valueOf(afpChain.getSimilarity())).append("");
 		writer.append(newline);
 
 		writer.append("TM-score: ");
-        writer.append(String.valueOf(afpChain.getTMScore())).append("");
+		writer.append(String.valueOf(afpChain.getTMScore())).append("");
 		writer.append(newline);
 
 		return writer.toString();
@@ -108,10 +108,10 @@ public class AfpChainWriter
 
 	/**
 	 * Output in FatCatCore format
-	 * 
+	 *
 	 * <p>Note that if a circular permutation has occured the residue numbers may
 	 * be innaccurate.
-	 * 
+	 *
 	 * @param afpChain
 	 * @param ca1
 	 * @param ca2
@@ -122,9 +122,9 @@ public class AfpChainWriter
 	 * @return
 	 */
 	public static String toFatCatCore(
-			AFPChain afpChain, 
-			Atom[] ca1, 
-			Atom[] ca2, 
+			AFPChain afpChain,
+			Atom[] ca1,
+			Atom[] ca2,
 			boolean printLegend, boolean longHeader, boolean showHTML, boolean showAlignmentBlock){
 
 		//TODO The sequence numbers are inaccurate if a !afpChain.isSequential()
@@ -179,7 +179,7 @@ public class AfpChainWriter
 		char[] alnseq2 = afpChain.getAlnseq2();
 		char[] alnsymb = afpChain.getAlnsymb();
 
-		// == end of extractation of data values from afpChain 
+		// == end of extractation of data values from afpChain
 		////////////////////////////////
 
 		StringBuffer txt = new StringBuffer();
@@ -199,7 +199,7 @@ public class AfpChainWriter
 
 		if ( longHeader ) {
 			txt.append(String.format( "Twists %d ini-len %d ini-rmsd %.2f opt-equ %d opt-rmsd %.2f chain-rmsd %.2f Score %.2f align-len %d gaps %d (%.2f%%)",
-					blockNum - 1, totalLenIni, totalRmsdIni, optLength, totalRmsdOpt, chainRmsd, alignScore, 
+					blockNum - 1, totalLenIni, totalRmsdIni, optLength, totalRmsdOpt, chainRmsd, alignScore,
 					alnLength, gapLen, (100.0 * gapLen/alnLength)) );
 			txt.append(newline);
 
@@ -219,7 +219,7 @@ public class AfpChainWriter
 
 			txt.append(String.format("Afp-num %d Identity %.2f%% Similarity %.2f%%", afpNum, identity * 100, similarity * 100));
 			txt.append(newline);
-		} 
+		}
 
 		int i;
 		double gap;
@@ -246,7 +246,7 @@ public class AfpChainWriter
 		int     k, len;
 
 		//System.out.println(alnseq1.length + " " + alnseq1.toString());
-		
+
 		while((alnLength - t) > 0)      {
 			if(alnLength - t > linelen)     len = linelen;
 			else    len = alnLength - t;
@@ -258,12 +258,12 @@ public class AfpChainWriter
 
 			String pdb1 = ca1[ap].getGroup().getResidueNumber().toString();
 			String pdb2 = ca2[bp].getGroup().getResidueNumber().toString();
-			
+
 
 			//System.err.println("t,len:"+t+":"+len);
-			String lseq1 = new String(alnseq1).substring(t,t+len); 
-			String lseq2 = new String(alnseq2).substring(t,t+len); 
-			String lsymb = new String(alnsymb).substring(t,t+len); 
+			String lseq1 = new String(alnseq1).substring(t,t+len);
+			String lseq2 = new String(alnseq2).substring(t,t+len);
+			String lsymb = new String(alnsymb).substring(t,t+len);
 
 			//System.err.println("B:" + b);
 
@@ -274,9 +274,9 @@ public class AfpChainWriter
 				b = "";
 				c = "";
 
-				//	<span class=\"m\">|</span> ... Structurally equivalent and identical residues 
-				//  <span class=\"sm\">:</span> ... Structurally equivalent and similar residues  
-				//  <span class=\"qg\">.</span> ... Structurally equivalent, but not similar residues. 
+				//	<span class=\"m\">|</span> ... Structurally equivalent and identical residues
+				//  <span class=\"sm\">:</span> ... Structurally equivalent and similar residues
+				//  <span class=\"qg\">.</span> ... Structurally equivalent, but not similar residues.
 
 				for (int pos = 0 ; pos < lseq1.length() ; pos ++){
 					char c1 = lseq1.charAt(pos);
@@ -284,14 +284,14 @@ public class AfpChainWriter
 					char cl = lsymb.charAt(pos);
 					int block = -1 ;
 					if ( cl != ' ') {
-						try { 
+						try {
 							block = Integer.parseInt(cl+"");
 						} catch (Exception e){
 							//
 						}
 					}
 					if ( cl != ' ' ){
-						
+
 						if ( showAlignmentBlock && block > -1 ) {
 							a += "<span class=\"alignmentBlock1"+block+"\">" + c1 + "</span>";
 							b += "<span class=\"alignmentBlock2"+block+"\">" + c2 + "</span>";
@@ -332,7 +332,7 @@ public class AfpChainWriter
 			txt.append(newline);
 			if ( longHeader )
 				txt.append(String.format("%14s", " "));
-			else 
+			else
 				txt.append(String.format("%14s", " "));
 
 			if (  longHeader ) {
@@ -349,7 +349,7 @@ public class AfpChainWriter
 
 			}
 
-			
+
 
 			txt.append(newline);
 			txt.append(String.format("Chain 1:%5s %s"+newline +"%14s%s"+newline+"Chain 2:%5s %s",
@@ -370,7 +370,7 @@ public class AfpChainWriter
 		}
 		txt.append(newline);
 		if ( printLegend ){
-			if ( algorithmName.equalsIgnoreCase(CeMain.algorithmName) || 
+			if ( algorithmName.equalsIgnoreCase(CeMain.algorithmName) ||
 					algorithmName.equalsIgnoreCase(SmithWaterman3Daligner.algorithmName)){
 				txt.append("Note: positions are from PDB; | means alignment of identical amino acids, : of similar amino acids ");
 
@@ -416,7 +416,7 @@ public class AfpChainWriter
 
 	private static void printScore(StringBuffer txt,
 			String algorithmName,
-			double probability, 
+			double probability,
 			boolean longHeader)
 	{
 		if ( algorithmName.equalsIgnoreCase(CeMain.algorithmName) || algorithmName.equalsIgnoreCase(CeSideChainMain.algorithmName) ){
@@ -440,7 +440,7 @@ public class AfpChainWriter
 
 	/**
 	 * Prints the afpChain as a nicely formatted alignment, including alignment
-	 * statistics, the aligned sequences themselves, and information about the 
+	 * statistics, the aligned sequences themselves, and information about the
 	 * superposition.
 	 * @param afpChain
 	 * @param ca1
@@ -451,26 +451,26 @@ public class AfpChainWriter
 		boolean showAlignmentBlock   = true;
 		return toWebSiteDisplay(afpChain, ca1, ca2, showAlignmentBlock);
 	}
-	
+
 	/**
 	 * Prints the afpChain as a nicely formatted alignment, including alignment
-	 * statistics, the aligned sequences themselves, and information about the 
+	 * statistics, the aligned sequences themselves, and information about the
 	 * superposition.
 	 * @param afpChain
 	 * @param ca1
 	 * @param ca2
-	 * 
+	 *
 	 * @return a String representation as it is used on the RCSB PDB web site for display.
 	 */
 	public static String toWebSiteDisplay(AFPChain afpChain, Atom[] ca1, Atom[] ca2, boolean showAlignmentBlock){
-		
+
 		boolean printLegend = true;
 		boolean longHeader  = true;
 		boolean showHTML = true;
-		
+
 		if ( afpChain.getAlgorithmName().equalsIgnoreCase(FatCatFlexible.algorithmName)) {
 
-		
+
 			String msg =  toFatCatCore(afpChain,ca1,ca2,printLegend,longHeader,showHTML, showAlignmentBlock);
 
 			return msg;
@@ -488,9 +488,9 @@ public class AfpChainWriter
 		String msg = toPrettyAlignment(afpChain, ca1, ca2, showHTML, showAlignmentBlock);
 
 
-		msg = msg + newline + 
+		msg = msg + newline +
 		"     <span class=\"m\">|</span> ... Structurally equivalent and identical residues " + newline +
-		"     <span class=\"sm\">:</span> ... Structurally equivalent and similar residues " + newline + 
+		"     <span class=\"sm\">:</span> ... Structurally equivalent and similar residues " + newline +
 		"     <span class=\"qg\">.</span> ... Structurally equivalent, but not similar residues. " + newline;
 
 		msg += newline;
@@ -538,7 +538,7 @@ public class AfpChainWriter
 		double probability = afpChain.getProbability();
 
 
-		// == end of extractation of data values from afpChain 
+		// == end of extractation of data values from afpChain
 
 		StringBuffer txt = new StringBuffer();
 
@@ -576,7 +576,7 @@ public class AfpChainWriter
 		StringWriter block    = new StringWriter();
 
 		int aligPos = -1;
-		for(i = 0; i < blockNum; i ++)  {   
+		for(i = 0; i < blockNum; i ++)  {
 
 			for(j = 0; j < optLen[i]; j ++) {
 
@@ -596,23 +596,23 @@ public class AfpChainWriter
 
 
 						formatGappedRegion(ca1, ca2, txt, p1, p2, k, p1b, p2b, alnseq1, alnseq2, alnsymb, header1, footer1, header2,
-								footer2, block,len, showHTML);           
+								footer2, block,len, showHTML);
 						len++;
-						doLenCheck(len,txt,header1,header2,alnseq1,alnsymb,alnseq2,footer1, footer2,block, showHTML)  ;              
+						doLenCheck(len,txt,header1,header2,alnseq1,alnsymb,alnseq2,footer1, footer2,block, showHTML)  ;
 					}
 				}
 
 				// ALIGNED REGION
 				//           System.out.println(len + " >" + header1.toString() +"< ");
-				//           System.out.println(len + " >" + header2.toString() +"< ");   
+				//           System.out.println(len + " >" + header2.toString() +"< ");
 				//           System.out.println(len + " >" + alnseq1.toString() +"< ");
 				//           System.out.println(len + " >" + alnsymb.toString() +"< ");
 				//           System.out.println(len + " >" + alnseq2.toString() +"< ");
 				//           System.out.println(len + " >" + footer1.toString() +"< ");
 				formatAlignedRegion(afpChain, ca1, ca2, p1, p2, alnseq1, alnseq2, alnsymb, header1, footer1, header2, footer2, block,len, aligPos, showHTML, showAlignmentBlock);
 				//            System.out.println(len + " >" + header1.toString() +"< ");
-				//            System.out.println(len + " >" + header2.toString() +"< ");   
-				//            System.out.println(len + " >" + alnseq1.toString() +"< "); 
+				//            System.out.println(len + " >" + header2.toString() +"< ");
+				//            System.out.println(len + " >" + alnseq1.toString() +"< ");
 				//            System.out.println(len + " >" + alnsymb.toString() +"< ");
 				//            System.out.println(len + " >" + alnseq2.toString() +"< ");
 				//            System.out.println(len + " >" + footer1.toString() +"< ");
@@ -716,13 +716,13 @@ public class AfpChainWriter
 		if(k >= tmppos) {
 			//alnseq1[len] = '-';
 			if (  formatHTML){
-				alnseq1.append("<span class=\"qg\">-</span>");				
+				alnseq1.append("<span class=\"qg\">-</span>");
 				header1.append(" ");
 				header2.append(" ");
 
 
 			} else {
-				alnseq1.append('-');  
+				alnseq1.append('-');
 				header1.append(" ");
 				header2.append(" ");
 			}
@@ -757,7 +757,7 @@ public class AfpChainWriter
 			if ( formatHTML){
 				alnseq2.append(getPrefix(oneletter1,oneletter2,1, -1, false));
 			}
-			alnseq2.append(oneletter2);			
+			alnseq2.append(oneletter2);
 			if (formatHTML){
 				alnseq2.append("</span>");
 			}
@@ -775,19 +775,19 @@ public class AfpChainWriter
 			int i, int blockNr, boolean showAlignmentBlock) {
 
 		if ( oneletter1 == '-' || oneletter2 == '-' ) {
-			// a gap in the alignment. 
+			// a gap in the alignment.
 			// label as mismatch
 			return "<span class=\"qg\">";
 		}
 
 		// an aligned position
-		
+
 		if ( showAlignmentBlock && blockNr > -1){
 			return "<span class=\"alignmentBlock"+(i+1)+(blockNr+1)+"\">";
 		}
-		
+
 		// we return the "default" sequence alignment view...
-		
+
 		if ( oneletter1 == oneletter2)
 			return "<span class=\"m\">";
 
@@ -817,15 +817,15 @@ public class AfpChainWriter
 
 		ResidueNumber residueNumber = g.getResidueNumber();
 		pos1 = residueNumber.getSeqNum();
-		boolean hasInsertionCode = false;		 
+		boolean hasInsertionCode = false;
 		if ( residueNumber.getInsCode() != null) {
 			hasInsertionCode = true;
-		} 
+		}
 
 		if ( (pos1 %10  == 0) && ( ! hasInsertionCode)) {
 			CharSequence display = getPDBPos(a);
 
-			boolean ignoreH1 = false; 
+			boolean ignoreH1 = false;
 
 			// make sure we don't have a problem with the left boundary...
 			if ( header1.getBuffer().length()-1 > linePos) {
@@ -858,9 +858,9 @@ public class AfpChainWriter
 
 
 
-	private static void formatAlignedRegion(AFPChain afpChain, Atom[] ca1, Atom[] ca2, int p1, int p2, 
+	private static void formatAlignedRegion(AFPChain afpChain, Atom[] ca1, Atom[] ca2, int p1, int p2,
 			StringWriter alnseq1, StringWriter alnseq2,
-			StringWriter alnsymb, StringWriter header1, StringWriter footer1, StringWriter header2, 
+			StringWriter alnsymb, StringWriter header1, StringWriter footer1, StringWriter header2,
 			StringWriter footer2, StringWriter block, int len, int aligPos,
 			boolean showHTML, boolean showAlignmentBlock)
 	{
@@ -873,14 +873,14 @@ public class AfpChainWriter
 			c1 = 'X';
 			c2 = 'X';
 		}
-		
+
 		int blockPos = -1;
 		if ( afpChain.getBlockNum() > 0) {
 			blockPos = AFPAlignmentDisplay.getBlockNrForAlignPos(afpChain, aligPos);
-		}	
-		
-		
-		
+		}
+
+
+
 		double score = AFPAlignmentDisplay.aaScore(c1,c2);
 
 		if ( showHTML) {
@@ -888,7 +888,7 @@ public class AfpChainWriter
 			alnseq2.append(getPrefix(c1,c2,  1, blockPos, showAlignmentBlock));
 		}
 
-		alnseq1.append(c1);              
+		alnseq1.append(c1);
 		alnseq2.append(c2);
 
 		if ( showHTML){
@@ -898,9 +898,9 @@ public class AfpChainWriter
 
 		if ( c1 == c2){
 			if ( showHTML){
-				
+
 				alnsymb.append("<span class=\"m\">|</span>");
-				
+
 			} else {
 				alnsymb.append('|');
 			}
@@ -917,7 +917,7 @@ public class AfpChainWriter
 			}
 			else {
 				if ( showHTML)
-					alnsymb.append( "<span class=\"qg\">.</span>");					
+					alnsymb.append( "<span class=\"qg\">.</span>");
 				else
 					alnsymb.append( '.');
 			}
@@ -989,23 +989,23 @@ public class AfpChainWriter
 				int len2 = alnseq2.getBuffer().length();
 				int lens = alnsymb.getBuffer().length();
 				alnseq1.getBuffer().replace(0, len1, "");
-				alnseq2.getBuffer().replace(0, len2, "");         
-				alnsymb.getBuffer().replace(0, lens, "");              
+				alnseq2.getBuffer().replace(0, len2, "");
+				alnsymb.getBuffer().replace(0, lens, "");
 
 
 
 				header1.getBuffer().replace(0, LINELENGTH, "");
 				header2.getBuffer().replace(0, LINELENGTH , "");
-				footer1.getBuffer().replace(0, LINELENGTH, "");         
+				footer1.getBuffer().replace(0, LINELENGTH, "");
 				footer2.getBuffer().replace(0, LINELENGTH, "");
 				block.getBuffer().replace(0, LINELENGTH, "");
 			} else {
 				alnseq1.getBuffer().replace(0, LINELENGTH, "");
-				alnseq2.getBuffer().replace(0, LINELENGTH, "");         
-				alnsymb.getBuffer().replace(0, LINELENGTH, "");              
+				alnseq2.getBuffer().replace(0, LINELENGTH, "");
+				alnsymb.getBuffer().replace(0, LINELENGTH, "");
 				header1.getBuffer().replace(0, LINELENGTH, "");
 				header2.getBuffer().replace(0, LINELENGTH , "");
-				footer1.getBuffer().replace(0, LINELENGTH, "");         
+				footer1.getBuffer().replace(0, LINELENGTH, "");
 				footer2.getBuffer().replace(0, LINELENGTH, "");
 				block.getBuffer().replace(0, LINELENGTH, "");
 			}
@@ -1040,7 +1040,7 @@ public class AfpChainWriter
 			Chain c = g.getChain();
 			if (c != null){
 				return g.getResidueNumber().toString()+":" + c.getChainID() ;
-				//return g.getPDBCode()+":" + c.getName() + "." + getOneLetter(g) ; 
+				//return g.getPDBCode()+":" + c.getName() + "." + getOneLetter(g) ;
 			}
 		}
 		return "!";
@@ -1048,13 +1048,13 @@ public class AfpChainWriter
 
 	private static char getOneLetter(Group g){
 
-		
+
 		if (g==null) return StructureTools.UNKNOWN_GROUP_LABEL;
-		
-		
+
+
 		return StructureTools.get1LetterCode(g.getPDBName());
-		
-		
+
+
 	}
 
 
@@ -1067,7 +1067,7 @@ public class AfpChainWriter
 		str.append(afpChain.getName2());
 		str.append("\t");
 		str.append(String.format("%.2f",afpChain.getAlignScore()));
-		str.append("\t");     
+		str.append("\t");
 		if ( afpChain.getAlgorithmName().equalsIgnoreCase(CeMain.algorithmName)){
 			str.append(String.format("%.2f",afpChain.getProbability()));
 		} else {
@@ -1078,7 +1078,7 @@ public class AfpChainWriter
 		str.append("\t");
 		str.append(afpChain.getCa1Length());
 		str.append("\t");
-		str.append(afpChain.getCa2Length());      
+		str.append(afpChain.getCa2Length());
 		str.append("\t");
 		str.append(afpChain.getCoverage1());
 		str.append("\t");
@@ -1104,7 +1104,7 @@ public class AfpChainWriter
 
 		if ( blockRotationMatrix == null || blockRotationMatrix.length < 1)
 			return "";
-	
+
 
 		for ( int blockNr = 0 ; blockNr < blockNum  ; blockNr++){
 			Matrix m = blockRotationMatrix[blockNr];
@@ -1117,11 +1117,11 @@ public class AfpChainWriter
 
 			String origString = "orig";
 			if ( blockNr > 0)
-				origString = (blockNr)+""; 
+				origString = (blockNr)+"";
 
 
 			txt.append(String.format("     X"+(blockNr+1)+" = (%9.6f)*X"+ origString +" + (%9.6f)*Y"+ origString +" + (%9.6f)*Z"+ origString +" + (%12.6f)",m.get(0,0),m.get(1,0), m.get(2,0), shift.getX()));
-			txt.append( newline); 
+			txt.append( newline);
 			txt.append(String.format("     Y"+(blockNr+1)+" = (%9.6f)*X"+ origString +" + (%9.6f)*Y"+ origString +" + (%9.6f)*Z"+ origString +" + (%12.6f)",m.get(0,1),m.get(1,1), m.get(2,1), shift.getY()));
 			txt.append( newline);
 			txt.append(String.format("     Z"+(blockNr+1)+" = (%9.6f)*X"+ origString +" + (%9.6f)*Y"+ origString +" + (%9.6f)*Z"+ origString +" + (%12.6f)",m.get(0,2),m.get(1,2), m.get(2,2), shift.getZ()));
@@ -1153,7 +1153,7 @@ public class AfpChainWriter
 			identity = afpChain.getIdentity();
 		}
 
-	
+
 
 		double probability = afpChain.getProbability();
 
@@ -1167,7 +1167,7 @@ public class AfpChainWriter
 
 		long calculationTime = afpChain.getCalculationTime();
 
-		// == end of extractation of data values from afpChain 
+		// == end of extractation of data values from afpChain
 
 
 
@@ -1212,12 +1212,12 @@ public class AfpChainWriter
 			//System.err.println("B:" + b);
 
 			/*
-            txt.append(newline);
-            txt.append(String.format("%14s", " "));
+			txt.append(newline);
+			txt.append(String.format("%14s", " "));
 
-            for(k = 10; k <= len; k += 10)
-                txt.append("    .    :");
-            if(k <= len + 5) txt.append("    .");
+			for(k = 10; k <= len; k += 10)
+				txt.append("    .    :");
+			if(k <= len + 5) txt.append("    .");
 			 */
 
 			//String pdb1 = ca1[ap].getParent().getPDBCode();
@@ -1243,8 +1243,8 @@ public class AfpChainWriter
 	}
 
 
-	
-	
+
+
 
 
 }

@@ -21,17 +21,17 @@
  */
 package org.biojava.nbio.structure.io.mmcif.model;
 
-/** Contains the data for _struct_asym 
- * 
+/** Contains the data for _struct_asym
+ *
  * @author Andreas Prlic
  * @since 1.7
  *
  */
 public class StructAsym extends AbstractBean{
-	String id; 
-	String pdbx_blank_PDB_chainid_flag; 
-	String pdbx_modified; 
-	String entity_id; 
+	String id;
+	String pdbx_blank_PDB_chainid_flag;
+	String pdbx_modified;
+	String entity_id;
 	String details;
 	public String getId() {
 		return id;
@@ -63,6 +63,6 @@ public class StructAsym extends AbstractBean{
 	public void setDetails(String details) {
 		this.details = details;
 	}
-	
-	
+
+
 }

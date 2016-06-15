@@ -18,10 +18,6 @@
  *      http://www.biojava.org/
  *
  */
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.biojava.nbio.survival.kaplanmeier.figure;
 
 import java.util.ArrayList;
@@ -33,20 +29,20 @@ import java.util.ArrayList;
 public class GroupResults {
 
 
-    /**
-     *
-     */
-    public ArrayList<CensorStatus> group1;
-    /**
-     *
-     */
-    public ArrayList<CensorStatus> group2;
-    /**
-     *
-     */
-    public boolean group1WorseOutcome = false;
-    /**
-     *
-     */
-    public String signatureName ="";
+	/**
+	 *
+	 */
+	public ArrayList<CensorStatus> group1;
+	/**
+	 *
+	 */
+	public ArrayList<CensorStatus> group2;
+	/**
+	 *
+	 */
+	public boolean group1WorseOutcome = false;
+	/**
+	 *
+	 */
+	public String signatureName ="";
 }

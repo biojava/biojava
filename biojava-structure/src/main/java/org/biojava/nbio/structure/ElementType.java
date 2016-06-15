@@ -28,16 +28,16 @@ import java.io.Serializable;
 /**
  * ElementType is an enumeration of the types of elements found in the periodic table.
  * Each element type is further classified into Metal, Metalloid, and Non-Metal.
- * 
+ *
  * Element types based on definition at http://www.ptable.com/
- * 
+ *
  * @author Peter Rose
  * @version %I% %G%
  * @since 3.0
  */
 
 public enum ElementType implements Serializable {
-	
+
 	METALLOID(false),
 	OTHER_NONMETAL(false),
 	HALOGEN(false),
@@ -49,33 +49,33 @@ public enum ElementType implements Serializable {
 	TRANSITION_METAL(true),
 	POST_TRANSITION_METAL(true),
 	UNKNOWN(false);
-	
+
 	private boolean metal;
-	
+
 	private ElementType(boolean metal) {
 		this.metal = metal;
 	}
-	
+
 	/**
-     * Returns <CODE>true</CODE> if ElementType is a metal.
-     * @return <CODE>true</CODE> if ElementType is a metal.
-     */
+	 * Returns <CODE>true</CODE> if ElementType is a metal.
+	 * @return <CODE>true</CODE> if ElementType is a metal.
+	 */
 	public boolean isMetal() {
 		return metal;
 	}
-	
+
 	/**
-     * Returns <CODE>true</CODE> if ElementType is a metalloid.
-     * @return <CODE>true</CODE> if ElementType is a metalloid.
-     */
+	 * Returns <CODE>true</CODE> if ElementType is a metalloid.
+	 * @return <CODE>true</CODE> if ElementType is a metalloid.
+	 */
 	public boolean isMetalloid() {
 		return this.equals(METALLOID);
 	}
-	
+
 	/**
-     * Returns <CODE>true</CODE> if ElementType is a non-metal.
-     * @return <CODE>true</CODE> if ElementType is a non-metal.
-     */
+	 * Returns <CODE>true</CODE> if ElementType is a non-metal.
+	 * @return <CODE>true</CODE> if ElementType is a non-metal.
+	 */
 	public boolean isNonMetal() {
 		return this.equals(OTHER_NONMETAL) || this.equals(HALOGEN) || this.equals(NOBLE_GAS);
 	}

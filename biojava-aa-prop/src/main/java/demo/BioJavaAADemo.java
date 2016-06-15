@@ -32,11 +32,11 @@ import org.biojava.nbio.core.sequence.ProteinSequence;
 public class BioJavaAADemo {
 
 
-    public static void main(String[] args) throws CompoundNotFoundException {
-        ProteinSequence pSequence = new ProteinSequence("VLSPADKTNVKAAWGKVGAHAG");
+	public static void main(String[] args) throws CompoundNotFoundException {
+		ProteinSequence pSequence = new ProteinSequence("VLSPADKTNVKAAWGKVGAHAG");
 
-        IPeptideProperties pp = new PeptidePropertiesImpl();
+		IPeptideProperties pp = new PeptidePropertiesImpl();
 
-        System.out.println("Peptide Properties: " + pp.getIsoelectricPoint(pSequence));
-    }
+		System.out.println("Peptide Properties: " + pp.getIsoelectricPoint(pSequence));
+	}
 }

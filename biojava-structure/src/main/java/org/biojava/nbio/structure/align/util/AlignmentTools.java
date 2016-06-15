@@ -28,15 +28,21 @@ import org.biojava.nbio.structure.jama.Matrix;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.io.Writer;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Some utility methods for analyzing and manipulating AFPChains.
+ * Methods for analyzing and manipulating AFPChains and for
+ * other pairwise alignment utilities. <p>
+ * Current methods: replace optimal alignment, create new AFPChain,
+ * format conversion, update superposition, etc.
  *
  * @author Spencer Bliven
+ * @author Aleix Lafita
  *
  */
 public class AlignmentTools {
@@ -377,6 +383,12 @@ public class AlignmentTools {
 	 * to determine the the symmetry order. For the identity alignment, sorts
 	 * the aligned residues of each protein sequentially, then defines the ith
 	 * residues of each protein to be equivalent.
+	 *
+	 * <p>Note that the selection of the identity alignment here is <i>very</i>
+	 * naive, and only works for proteins with very good coverage. Wherever
+	 * possible, it is better to construct an identity function explicitly
+	 * from a sequence alignment (or use an {@link IdentityMap} for internally
+	 * symmetric proteins) and use {@link #getSymmetryOrder(Map, Map, int, float)}.
 	 */
 	public static int getSymmetryOrder(AFPChain afpChain, int maxSymmetry, float minimumMetricChange) throws StructureException {
 		// alignment comes from the afpChain alignment
@@ -553,12 +565,12 @@ public class AlignmentTools {
 			throw new IllegalArgumentException("Alignment lengths are not equal");
 		}
 
-		AFPChain a = new AFPChain();
+		AFPChain a = new AFPChain(AFPChain.UNKNOWN_ALGORITHM);
 		try {
-			a.setName1(ca1[0].getGroup().getChain().getParent().getName());
-			if(ca2[0].getGroup().getChain().getParent() != null) {
+			a.setName1(ca1[0].getGroup().getChain().getStructure().getName());
+			if(ca2[0].getGroup().getChain().getStructure() != null) {
 				// common case for cloned ca2
-				a.setName2(ca2[0].getGroup().getChain().getParent().getName());
+				a.setName2(ca2[0].getGroup().getChain().getStructure().getName());
 			}
 		} catch(Exception e) {
 			// One of the structures wasn't fully created. Ignore
@@ -672,15 +684,15 @@ public class AlignmentTools {
 
 		return replaceOptAln(a, ca1, ca2, blocks.size(), newBlockLens, newOptAln);
 	}
-	
+
 	/**
 	 * It replaces an optimal alignment of an AFPChain and calculates all the new alignment scores and variables.
 	 */
 	public static AFPChain replaceOptAln(int[][][] newAlgn, AFPChain afpChain, Atom[] ca1, Atom[] ca2) throws StructureException {
-		
+
 		//The order is the number of groups in the newAlgn
 		int order = newAlgn.length;
-		
+
 		//Calculate the alignment length from all the subunits lengths
 		int[] optLens = new int[order];
 		for(int s=0;s<order;s++) {
@@ -690,30 +702,30 @@ public class AlignmentTools {
 		for(int s=0;s<order;s++) {
 			optLength += optLens[s];
 		}
-		
+
 		//Create a copy of the original AFPChain and set everything needed for the structure update
 		AFPChain copyAFP = (AFPChain) afpChain.clone();
-		
+
 		//Set the new parameters of the optimal alignment
 		copyAFP.setOptLength(optLength);
 		copyAFP.setOptLen(optLens);
 		copyAFP.setOptAln(newAlgn);
-		
+
 		//Set the block information of the new alignment
 		copyAFP.setBlockNum(order);
 		copyAFP.setBlockSize(optLens);
 		copyAFP.setBlockResList(newAlgn);
 		copyAFP.setBlockResSize(optLens);
 		copyAFP.setBlockGap(calculateBlockGap(newAlgn));
-		
+
 		//Recalculate properties: superposition, tm-score, etc
 		Atom[] ca2clone = StructureTools.cloneAtomArray(ca2); // don't modify ca2 positions
 		AlignmentTools.updateSuperposition(copyAFP, ca1, ca2clone);
-		
+
 		//It re-does the sequence alignment strings from the OptAlgn information only
 		copyAFP.setAlnsymb(null);
 		AFPAlignmentDisplay.getAlign(copyAFP, ca1, ca2clone);
-		
+
 		return copyAFP;
 	}
 
@@ -840,7 +852,7 @@ public class AlignmentTools {
 		//Update ca information, because the atom array might also be changed
 		afpChain.setCa1Length(ca1.length);
 		afpChain.setCa2Length(ca2.length);
-		
+
 		//We need this to get the correct superposition
 		int[] focusRes1 = afpChain.getFocusRes1();
 		int[] focusRes2 = afpChain.getFocusRes2();
@@ -875,7 +887,7 @@ public class AlignmentTools {
 			}
 		}
 
-		// this can happen when we load an old XML serialization which did not support modern ChemComp representation of modified residues.		
+		// this can happen when we load an old XML serialization which did not support modern ChemComp representation of modified residues.
 		if (pos != afpChain.getOptLength()){
 			logger.warn("AFPChainScorer getTMScore: Problems reconstructing alignment! nr of loaded atoms is " + pos + " but should be " + afpChain.getOptLength());
 			// we need to resize the array, because we allocated too many atoms earlier on.
@@ -898,13 +910,13 @@ public class AlignmentTools {
 			Calc.rotate(a, matrix);
 			Calc.shift(a, shift);
 		}
-		
+
 		//Calculate the RMSD and TM score for the new alignment
 		double rmsd = SVDSuperimposer.getRMS(ca1aligned, ca2aligned);
 		double tmScore = SVDSuperimposer.getTMScore(ca1aligned, ca2aligned, ca1.length, ca2.length);
 		afpChain.setTotalRmsdOpt(rmsd);
 		afpChain.setTMScore(tmScore);
-		
+
 		//Calculate the RMSD and TM score for every block of the new alignment
 		double[] blockRMSD = new double[afpChain.getBlockNum()];
 		double[] blockScore = new double[afpChain.getBlockNum()];
@@ -1068,18 +1080,18 @@ public class AlignmentTools {
 		}
 		return map;
 	}
-	
+
 	/**
 	 * Method that calculates the number of gaps in each subunit block of an optimal AFP alignment.
-	 * 
+	 *
 	 * INPUT: an optimal alignment in the format int[][][].
 	 * OUTPUT: an int[] array of <order> length containing the gaps in each block as int[block].
 	 */
 	public static int[] calculateBlockGap(int[][][] optAln){
-		
+
 		//Initialize the array to be returned
 		int [] blockGap = new int[optAln.length];
-		
+
 		//Loop for every block and look in both chains for non-contiguous residues.
 		for (int i=0; i<optAln.length; i++){
 			int gaps = 0; //the number of gaps in that block
@@ -1110,4 +1122,80 @@ public class AlignmentTools {
 		}
 		return blockGap;
 	}
+
+	/**
+	 * Creates a simple interaction format (SIF) file for an alignment.
+	 *
+	 * The SIF file can be read by network software (eg Cytoscape) to analyze
+	 * alignments as graphs.
+	 *
+	 * This function creates a graph with residues as nodes and two types of edges:
+	 *   1. backbone edges, which connect adjacent residues in the aligned protein
+	 *   2. alignment edges, which connect aligned residues
+	 *
+	 * @param out Stream to write to
+	 * @param afpChain alignment to write
+	 * @param ca1 First protein, used to generate node names
+	 * @param ca2 Second protein, used to generate node names
+	 * @param backboneInteraction Two-letter string used to identify backbone edges
+	 * @param alignmentInteraction Two-letter string used to identify alignment edges
+	 * @throws IOException
+	 */
+	public static void alignmentToSIF(Writer out,AFPChain afpChain,
+			Atom[] ca1,Atom[] ca2, String backboneInteraction,
+			String alignmentInteraction) throws IOException {
+
+		//out.write("Res1\tInteraction\tRes2\n");
+		String name1 = afpChain.getName1();
+		String name2 = afpChain.getName2();
+		if(name1==null) name1=""; else name1+=":";
+		if(name2==null) name2=""; else name2+=":";
+
+		// Print alignment edges
+		int nblocks = afpChain.getBlockNum();
+		int[] blockLen = afpChain.getOptLen();
+		int[][][] optAlign = afpChain.getOptAln();
+		for(int b=0;b<nblocks;b++) {
+			for(int r=0;r<blockLen[b];r++) {
+				int res1 = optAlign[b][0][r];
+				int res2 = optAlign[b][1][r];
+
+				ResidueNumber rn1 = ca1[res1].getGroup().getResidueNumber();
+				ResidueNumber rn2 = ca2[res2].getGroup().getResidueNumber();
+
+				String node1 = name1+rn1.getChainId()+rn1.toString();
+				String node2 = name2+rn2.getChainId()+rn2.toString();
+
+				out.write(String.format("%s\t%s\t%s\n",node1, alignmentInteraction, node2));
+			}
+		}
+
+		// Print first backbone edges
+		ResidueNumber rn = ca1[0].getGroup().getResidueNumber();
+		String last = name1+rn.getChainId()+rn.toString();
+		for(int i=1;i<ca1.length;i++) {
+			rn = ca1[i].getGroup().getResidueNumber();
+			String curr = name1+rn.getChainId()+rn.toString();
+			out.write(String.format("%s\t%s\t%s\n",last, backboneInteraction, curr));
+			last = curr;
+		}
+
+		// Print second backbone edges, if the proteins differ
+		// Do some quick checks for whether the proteins differ
+		// (Not perfect, but should detect major differences and CPs.)
+		if(!name1.equals(name2) ||
+				ca1.length!=ca2.length ||
+				(ca1.length>0 && ca1[0].getGroup()!=null && ca2[0].getGroup()!=null &&
+						!ca1[0].getGroup().getResidueNumber().equals(ca2[0].getGroup().getResidueNumber()) ) ) {
+			rn = ca2[0].getGroup().getResidueNumber();
+			last = name2+rn.getChainId()+rn.toString();
+			for(int i=1;i<ca2.length;i++) {
+				rn = ca2[i].getGroup().getResidueNumber();
+				String curr = name2+rn.getChainId()+rn.toString();
+				out.write(String.format("%s\t%s\t%s\n",last, backboneInteraction, curr));
+				last = curr;
+			}
+		}
+	}
+
 }

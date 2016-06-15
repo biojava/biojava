@@ -126,7 +126,7 @@ public class ChemicalComponentDictionary {
 			isreplacedby.put(comp.getId(),isrep);
 		}
 	}
-	
+
 	public ChemComp getChemComp(String id){
 		return dictionary.get(id);
 	}

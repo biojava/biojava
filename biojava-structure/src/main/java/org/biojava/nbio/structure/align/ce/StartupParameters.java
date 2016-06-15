@@ -22,14 +22,14 @@ package org.biojava.nbio.structure.align.ce;
 
 
 /** a simple bean that contains the parameters that can get set at startup
- * 
+ *
  * @author Andreas Prlic
  *
  */
 public class StartupParameters {
 
-	
-	
+
+
 	String pdbFilePath;
 	String cacheFilePath;
 	String outFile;
@@ -46,17 +46,17 @@ public class StartupParameters {
 	boolean showMenu;
 	boolean printPDB;
 	boolean isDomainSplit;
-	
-	
+
+
 	// for DB searches
 	String alignPairs;
 	String searchFile;
 	String saveOutputDir;
 	int nrCPU;
-	
-	
+
+
 	private static final String newline = System.getProperty("line.separator");
-	
+
 	public StartupParameters(){
 		show3d = false;
 		printXML = false;
@@ -69,9 +69,9 @@ public class StartupParameters {
 		if ( nrCPU < 1)
 			nrCPU = 1;
 	}
-	
+
 	/** An input file to be used for the DB search
-	 * 
+	 *
 	 * @return
 	 */
 	public String getSearchFile() {
@@ -80,10 +80,10 @@ public class StartupParameters {
 	public void setSearchFile(String searchFile) {
 		this.searchFile = searchFile;
 	}
-	
-	
+
+
 	/** The file that contains a list of PDB pairs to be aligned
-	 * 
+	 *
 	 * @return
 	 */
 	public String getAlignPairs() {
@@ -111,7 +111,7 @@ public class StartupParameters {
 	}
 
 	/** Display the output string in CE style
-	 * 
+	 *
 	 * @return flag
 	 */
 	public boolean isPrintCE() {
@@ -119,7 +119,7 @@ public class StartupParameters {
 	}
 
 	/** Display the output string in CE style
-	 * 
+	 *
 	 * @param printCE a flag
 	 */
 	public void setPrintCE(boolean printCE) {
@@ -131,7 +131,7 @@ public class StartupParameters {
 		return pdb1;
 	}
 	/** mandatory argument to set the first PDB (and optionally chain ID) to be aligned.
-	 * 
+	 *
 	 * @param pdb1
 	 */
 	public void setPdb1(String pdb1) {
@@ -162,7 +162,7 @@ public class StartupParameters {
 	 */
 	@Deprecated
 	public void setPdbDirSplit(boolean pdbDirSplit) {}
-	
+
 	public boolean isPrintXML() {
 		return printXML;
 	}
@@ -181,13 +181,13 @@ public class StartupParameters {
 	}
 
 	/** mandatory argument to set the location of PDB files.
-	 * 
+	 *
 	 * @param pdbFilePath
 	 */
 	public void setPdbFilePath(String pdbFilePath) {
 		this.pdbFilePath = pdbFilePath;
 	}
-	
+
 	public String getCacheFilePath() {
 		return cacheFilePath;
 	}
@@ -228,46 +228,46 @@ public class StartupParameters {
 		this.nrCPU = nrCPU;
 	}
 
-   public String getFile1()
-   {
-      return file1;
-   }
+	public String getFile1()
+	{
+		return file1;
+	}
 
-   public void setFile1(String file1)
-   {
-      this.file1 = file1;
-   }
+	public void setFile1(String file1)
+	{
+		this.file1 = file1;
+	}
 
-   public String getFile2()
-   {
-      return file2;
-   }
+	public String getFile2()
+	{
+		return file2;
+	}
 
-   public void setFile2(String file2)
-   {
-      this.file2 = file2;
-   }
+	public void setFile2(String file2)
+	{
+		this.file2 = file2;
+	}
 
 
 
 	/** When writing the results to a file, don;t write as XML but write aligned PDB file
-	 * 
+	 *
 	 * @return flag
 	 */
 	public boolean isOutputPDB() {
 		return printPDB;
 	}
 	/** When writing the results to a file, don;t write as XML but write aligned PDB file
-	 * 
-	 * @param printPDB flag to print aligned PDB 
+	 *
+	 * @param printPDB flag to print aligned PDB
 	 */
 	public void setOutputPDB(boolean printPDB) {
 		this.printPDB = printPDB;
 	}
 
 
-	
-	
+
+
 
 	public boolean isDomainSplit() {
 		return isDomainSplit;
@@ -293,10 +293,10 @@ public class StartupParameters {
 				+ saveOutputDir + ", " + newline + " nrCPU=" + nrCPU + "]";
 	}
 
-	
-	
-	
-	
 
-	
+
+
+
+
+
 }

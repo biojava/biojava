@@ -5,9 +5,9 @@
  * Bioinformatics vol.19 suppl. 2. ii246-ii255.
  * http://www.ncbi.nlm.nih.gov/pubmed/14534198
  * </pre>
- * 
+ *
  * Thanks to Yuzhen Ye and A. Godzik for granting permission to freely use and redistribute this code.
- *  
+ *
  * This code may be freely distributed and modified under the
  * terms of the GNU Lesser General Public Licence.  This should
  * be distributed with the code.  If you do not have a copy,
@@ -20,8 +20,8 @@
  *
  *
  * Created on Jun 17, 2009
- * Created by Andreas Prlic - RCSB PDB 
- * 
+ * Created by Andreas Prlic - RCSB PDB
+ *
  */
 
 package org.biojava.nbio.structure.align.fatcat.calc;
@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /** a class that performs calculations on AFPCHains
- * 
+ *
  * @author Andreas Prlic
  *
  */

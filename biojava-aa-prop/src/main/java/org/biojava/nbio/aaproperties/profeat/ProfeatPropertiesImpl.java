@@ -102,13 +102,13 @@ public class ProfeatPropertiesImpl implements IProfeatProperties{
 		int dist = 0;
 		for(int x = 0; x < convertedSequence.length(); x++){
 			if(g == convertedSequence.charAt(x)){
-				currentCount++;				
+				currentCount++;
 				if(currentCount == countIndex){
 					dist = x+1;
-					break;					
-				}				
-			}	
-		}		
+					break;
+				}
+			}
+		}
 		return (dist + 0.0) / convertedSequence.length();
 	}
 
@@ -156,7 +156,7 @@ public class ProfeatPropertiesImpl implements IProfeatProperties{
 	@Override
 	public Map<DISTRIBUTION, Double> getDistributionPosition(ProteinSequence sequence, ATTRIBUTE attribute, GROUPING group) throws Exception {
 		Map<DISTRIBUTION, Double> distribution2Double = new HashMap<DISTRIBUTION, Double>();
-		for(DISTRIBUTION distribution:DISTRIBUTION.values()) 
+		for(DISTRIBUTION distribution:DISTRIBUTION.values())
 			distribution2Double.put(distribution, getDistributionPosition(sequence, attribute, group, distribution));
 		return distribution2Double;
 	}
@@ -164,7 +164,7 @@ public class ProfeatPropertiesImpl implements IProfeatProperties{
 	@Override
 	public Map<GROUPING, Map<DISTRIBUTION, Double>> getDistributionPosition(ProteinSequence sequence, ATTRIBUTE attribute) throws Exception {
 		Map<GROUPING, Map<DISTRIBUTION, Double>> grouping2Distribution2Double = new HashMap<GROUPING, Map<DISTRIBUTION, Double>>();
-		for(GROUPING group:GROUPING.values()) 
+		for(GROUPING group:GROUPING.values())
 			grouping2Distribution2Double.put(group, getDistributionPosition(sequence, attribute, group));
 		return grouping2Distribution2Double;
 	}

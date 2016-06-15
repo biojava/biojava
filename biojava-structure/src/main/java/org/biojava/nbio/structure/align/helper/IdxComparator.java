@@ -24,16 +24,16 @@ import java.util.Comparator;
 public class IdxComparator implements Comparator<int[]>
 {
 
-   @Override
-public int compare(int[] o1, int[] o2)
-   {
-      if (((o1[0]) == (o2[0])) &&
-            ((o2[1]) == (o2[1])))
-               return 0;
-      if ( o1[0] < o2[0])
-         return -1;
+	@Override
+	public int compare(int[] o1, int[] o2)
+	{
+		if (((o1[0]) == (o2[0])) &&
+				((o2[1]) == (o2[1])))
+			return 0;
+		if ( o1[0] < o2[0])
+			return -1;
 
-      return 1;
-   }
+		return 1;
+	}
 
 }

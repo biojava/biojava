@@ -19,7 +19,7 @@
  *
  */
 /**
- * 
+ *
  */
 package org.biojava.nbio.core.sequence.io.template;
 
@@ -28,11 +28,11 @@ import org.biojava.nbio.core.sequence.template.Sequence;
 
 /**
  * @author mckeee1
- * 
+ *
  */
 public interface GenbankHeaderFormatInterface<S extends Sequence<?>, C extends Compound> {
 	/**
-	 * 
+	 *
 	 * @param sequence
 	 * @return
 	 */

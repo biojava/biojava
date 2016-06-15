@@ -43,74 +43,74 @@ import static java.util.Collections.unmodifiableSet;
  */
 public class NucleotideCompound extends AbstractCompound implements ComplementCompound {
 
-    private final CompoundSet<NucleotideCompound> compoundSet;
-    private final String complementStr;
-    private final Set<NucleotideCompound> constituents;
+	private final CompoundSet<NucleotideCompound> compoundSet;
+	private final String complementStr;
+	private final Set<NucleotideCompound> constituents;
 
-    public NucleotideCompound(String base, CompoundSet<NucleotideCompound> compoundSet, String complementStr) {
-      super(base);
-      this.compoundSet = compoundSet;
-      this.complementStr = complementStr;
-      this.constituents = unmodifiableSet(new HashSet<NucleotideCompound>(asList(this)));
-    }
+	public NucleotideCompound(String base, CompoundSet<NucleotideCompound> compoundSet, String complementStr) {
+	  super(base);
+	  this.compoundSet = compoundSet;
+	  this.complementStr = complementStr;
+	  this.constituents = unmodifiableSet(new HashSet<NucleotideCompound>(asList(this)));
+	}
 
-    public NucleotideCompound(String base, CompoundSet<NucleotideCompound> compoundSet, String complementStr, NucleotideCompound[] constituents) {
-        super(base);
-        this.compoundSet = compoundSet;
-        this.complementStr = complementStr;
-        this.constituents = unmodifiableSet(new HashSet<NucleotideCompound>(asList(constituents)));
-    }
+	public NucleotideCompound(String base, CompoundSet<NucleotideCompound> compoundSet, String complementStr, NucleotideCompound[] constituents) {
+		super(base);
+		this.compoundSet = compoundSet;
+		this.complementStr = complementStr;
+		this.constituents = unmodifiableSet(new HashSet<NucleotideCompound>(asList(constituents)));
+	}
 
-    @Override
-    public String getShortName() {
-      return getBase();
-    }
+	@Override
+	public String getShortName() {
+	  return getBase();
+	}
 
-    @Override
+	@Override
 	public ComplementCompound getComplement() {
-        return compoundSet.getCompoundForString(complementStr);
-    }
+		return compoundSet.getCompoundForString(complementStr);
+	}
 
-    @Override
+	@Override
 	public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (!(obj instanceof NucleotideCompound)) {
-            return false;
-        }
-        NucleotideCompound them = (NucleotideCompound) obj;
-        return toString().equals(them.toString());
-    }
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof NucleotideCompound)) {
+			return false;
+		}
+		NucleotideCompound them = (NucleotideCompound) obj;
+		return toString().equals(them.toString());
+	}
 
-    @Override
+	@Override
 	public int hashCode() {
-        return toString().hashCode();
-    }
+		return toString().hashCode();
+	}
 
-    @Override
+	@Override
 	public boolean equalsIgnoreCase(Compound compound) {
-        if (compound == null) {
-            return false;
-        }
-        if (!(compound instanceof NucleotideCompound)) {
-            return false;
-        }
-        NucleotideCompound them = (NucleotideCompound) compound;
-        return toString().equalsIgnoreCase(them.toString());
-    }
+		if (compound == null) {
+			return false;
+		}
+		if (!(compound instanceof NucleotideCompound)) {
+			return false;
+		}
+		NucleotideCompound them = (NucleotideCompound) compound;
+		return toString().equalsIgnoreCase(them.toString());
+	}
 
-    public Set<NucleotideCompound> getConstituents() {
-      return constituents;
-    }
-    
-    /**@deprecated replaced with {@link #getConstituents()} due to typographical error */
-    @Deprecated
+	public Set<NucleotideCompound> getConstituents() {
+	  return constituents;
+	}
+
+	/**@deprecated replaced with {@link #getConstituents()} due to typographical error */
+	@Deprecated
 	public Set<NucleotideCompound> getConsituents() {
-    	return getConstituents();
-    }
+		return getConstituents();
+	}
 
-    public boolean isAmbiguous() {
-      return !constituents.isEmpty();
-    }
+	public boolean isAmbiguous() {
+	  return !constituents.isEmpty();
+	}
 }

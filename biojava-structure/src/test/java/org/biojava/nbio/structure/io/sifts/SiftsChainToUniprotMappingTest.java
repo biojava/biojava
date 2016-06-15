@@ -44,5 +44,5 @@ public class SiftsChainToUniprotMappingTest {
 		assertEquals("A", entry.getChainId());
 		assertEquals("P04585", entry.getUniProtId());
 	}
-	
+
 }

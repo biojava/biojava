@@ -25,7 +25,7 @@ package org.biojava.nbio.ws.alignment.qblast;
 
 /**
  * Enum representing matrices supported by QBlast
- * 
+ *
  * @author Gediminas Rimsa
  */
 public enum BlastMatrixEnum {

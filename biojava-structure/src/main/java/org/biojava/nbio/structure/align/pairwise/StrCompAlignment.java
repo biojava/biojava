@@ -16,7 +16,7 @@
  * at:
  *
  *      http://www.biojava.org/
- * 
+ *
  * Created on Jan 29, 2006
  *
  */
@@ -26,140 +26,140 @@ import org.biojava.nbio.structure.align.helper.AligMatEl;
 import org.biojava.nbio.structure.align.helper.IndexPair;
 
 
-public class StrCompAlignment 
+public class StrCompAlignment
 implements Alignable
 {
-    
-   
-    AligMatEl[][] aligmat;
-    int rows;
-    int cols;
-    IndexPair[] path;
-    int pathSize;
-    float gapOpenCol;
-    float gapOpenRow;
-    float gapExtCol;
-    float gapExtRow;
-    float score;
-    
-    public StrCompAlignment(int rows, int cols){
-        //System.out.println("new alignment " + rows + " " + cols);
-        this.rows = rows;
-        this.cols = cols;
-        aligmat = new AligMatEl[rows+1][cols+1];
-    
-        /*for (int i=0;i<rows+1;i++){
-            for(int j=0;j<cols+1;j++){
-                aligmat[i][j] = new AligMatEl();
-            }
-        }*/
-        path = new IndexPair[0];
-        score = 0;
-    }
-    
-    @Override
+
+
+	AligMatEl[][] aligmat;
+	int rows;
+	int cols;
+	IndexPair[] path;
+	int pathSize;
+	float gapOpenCol;
+	float gapOpenRow;
+	float gapExtCol;
+	float gapExtRow;
+	float score;
+
+	public StrCompAlignment(int rows, int cols){
+		//System.out.println("new alignment " + rows + " " + cols);
+		this.rows = rows;
+		this.cols = cols;
+		aligmat = new AligMatEl[rows+1][cols+1];
+
+		/*for (int i=0;i<rows+1;i++){
+			for(int j=0;j<cols+1;j++){
+				aligmat[i][j] = new AligMatEl();
+			}
+		}*/
+		path = new IndexPair[0];
+		score = 0;
+	}
+
+	@Override
 	public int getRows(){
-        return rows;
-    }
-    
-    @Override
+		return rows;
+	}
+
+	@Override
 	public int getCols() {
-        return cols;
-    }
-    
-    public void setAligMat(int i, int j,AligMatEl el){
-        aligmat[i][j] = el;
-    }
-    public AligMatEl getAligMat(int i,int j){
-        return aligmat[i][j];
-    }
-    
-    @Override
+		return cols;
+	}
+
+	public void setAligMat(int i, int j,AligMatEl el){
+		aligmat[i][j] = el;
+	}
+	public AligMatEl getAligMat(int i,int j){
+		return aligmat[i][j];
+	}
+
+	@Override
 	public AligMatEl[][] getAligMat(){
-        return aligmat;
-    }
-    
-    @Override
+		return aligmat;
+	}
+
+	@Override
 	public void setAligMat(AligMatEl[][] al){
-        //System.out.println("setting alig mat: " + al.length + " " + al[0].length);
-        rows = al.length -1;
-        cols = al[0].length -1;
-        aligmat = al;
-    }
-    
-    @Override
+		//System.out.println("setting alig mat: " + al.length + " " + al[0].length);
+		rows = al.length -1;
+		cols = al[0].length -1;
+		aligmat = al;
+	}
+
+	@Override
 	public float getGapExtCol() {
-        return gapExtCol;
-    }
+		return gapExtCol;
+	}
 
-    @Override
+	@Override
 	public void setGapExtCol(float gapExtCol) {
-        this.gapExtCol = gapExtCol;
-    }
+		this.gapExtCol = gapExtCol;
+	}
 
-    @Override
+	@Override
 	public float getGapExtRow() {
-        return gapExtRow;
-    }
+		return gapExtRow;
+	}
 
-    @Override
+	@Override
 	public void setGapExtRow(float gapExtRow) {
-        this.gapExtRow = gapExtRow;
-    }
+		this.gapExtRow = gapExtRow;
+	}
 
-    @Override
+	@Override
 	public float getGapOpenCol() {
-        return gapOpenCol;
-    }
+		return gapOpenCol;
+	}
 
-    @Override
+	@Override
 	public void setGapOpenCol(float gapOpenCol) {
-        this.gapOpenCol = gapOpenCol;
-    }
+		this.gapOpenCol = gapOpenCol;
+	}
 
-    @Override
+	@Override
 	public float getGapOpenRow() {
-        return gapOpenRow;
-    }
+		return gapOpenRow;
+	}
 
-    @Override
+	@Override
 	public void setGapOpenRow(float gapOpenRow) {
-        this.gapOpenRow = gapOpenRow;
-    }
+		this.gapOpenRow = gapOpenRow;
+	}
 
-    @Override
+	@Override
 	public float getScore() {
-      return score;
-    }
+	  return score;
+	}
 
-    @Override
+	@Override
 	public void setScore(float score) {
-        //System.out.println("StrCompAlig got score " +score);
-       this.score = score;
-    }
+		//System.out.println("StrCompAlig got score " +score);
+	   this.score = score;
+	}
 
-    @Override
+	@Override
 	public IndexPair[] getPath() {
-        return path;
-    }
+		return path;
+	}
 
-    @Override
+	@Override
 	public void setPath(IndexPair[] path) {
-        this.path = path;
-    }
+		this.path = path;
+	}
 
-    @Override
+	@Override
 	public int getPathSize() {
-        return pathSize;
-    }
+		return pathSize;
+	}
 
-    @Override
+	@Override
 	public void setPathSize(int pathSize) {
-        this.pathSize = pathSize;
-    }
-    
-    
-    
+		this.pathSize = pathSize;
+	}
+
+
+
 }
 
 

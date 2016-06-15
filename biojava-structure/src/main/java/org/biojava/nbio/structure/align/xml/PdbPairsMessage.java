@@ -31,19 +31,19 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 public class PdbPairsMessage {
-	
+
 	String method ;
-	
+
 	SortedSet<PdbPair> pairs;
-	
+
 	public PdbPairsMessage(){
-	
+
 		method = PdbPairXMLConverter.DEFAULT_METHOD_NAME;
-		
+
 		pairs = new TreeSet<PdbPair>();
-	
+
 	}
-	
+
 	public String getMethod() {
 		return method;
 	}
@@ -56,24 +56,24 @@ public class PdbPairsMessage {
 	public void setPairs(SortedSet<PdbPair> pairs) {
 		this.pairs = pairs;
 	}
-	
-	
+
+
 	@Override
 	public String toString(){
-		
+
 		StringWriter w = new StringWriter();
-		
+
 		w.append("PdbPairsMessage: ");
-		w.append("algorithm: ");	
+		w.append("algorithm: ");
 		w.append(method);
 		w.append(" pairs: ");
 		w.append(pairs.toString());
-			
-		
+
+
 		return w.toString();
-		
+
 	}
-	
-	
-	
+
+
+
 }

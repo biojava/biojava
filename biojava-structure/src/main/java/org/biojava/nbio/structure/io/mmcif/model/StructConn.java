@@ -18,12 +18,12 @@
  */
 
 package org.biojava.nbio.structure.io.mmcif.model;
-/** 
+/**
  * A bean that stores data from the mmcif category _struct_conn
  * @author Peter Rose
  *
- */ 
-public class StructConn
+ */
+public class StructConn extends AbstractBean
 {
 	private String id;
 	private String conn_type_id;
@@ -58,7 +58,7 @@ public class StructConn
 	private String details;
 	private String pdbx_dist_value;
 	private String pdbx_value_order;
-    private String pdbx_leaving_atom_flag;
+	private String pdbx_leaving_atom_flag;
 	/**
 	 * @return the id
 	 */
@@ -456,11 +456,11 @@ public class StructConn
 		this.pdbx_value_order = pdbx_value_order;
 	}
 
-    public String getPdbx_leaving_atom_flag() {
-        return pdbx_leaving_atom_flag;
-    }
+	public String getPdbx_leaving_atom_flag() {
+		return pdbx_leaving_atom_flag;
+	}
 
-    public void setPdbx_leaving_atom_flag(String pdbx_leaving_atom_flag) {
-        this.pdbx_leaving_atom_flag = pdbx_leaving_atom_flag;
-    }
+	public void setPdbx_leaving_atom_flag(String pdbx_leaving_atom_flag) {
+		this.pdbx_leaving_atom_flag = pdbx_leaving_atom_flag;
+	}
 }

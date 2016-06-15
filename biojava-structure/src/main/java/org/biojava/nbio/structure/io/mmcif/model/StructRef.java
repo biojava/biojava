@@ -22,7 +22,7 @@
 package org.biojava.nbio.structure.io.mmcif.model;
 
 /** A class to containt the _struct_ref field data
- * 
+ *
  * @author Andreas Prlic
  *
  */
@@ -83,7 +83,7 @@ public class StructRef extends AbstractBean {
 	public void setPdbx_seq_one_letter_code(String pdbx_seq_one_letter_code) {
 		this.pdbx_seq_one_letter_code = pdbx_seq_one_letter_code;
 	}
-	
-	
+
+
 
 }

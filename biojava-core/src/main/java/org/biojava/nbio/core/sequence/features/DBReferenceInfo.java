@@ -37,78 +37,78 @@ import java.util.LinkedHashMap;
  * @author Paolo Pavan
  */
 public class DBReferenceInfo extends Qualifier {
-    private LinkedHashMap<String, String> properties = new LinkedHashMap<String, String>();
-    private String database = "";
-    private String id = "";
-    
-    /**
-     * The source database and id
-     * @param database
-     * @param id
-     */
-    public DBReferenceInfo(String database, String id){
-        super("dbxref","");
-        this.database = database;
-        this.id = id;
-    }
+	private LinkedHashMap<String, String> properties = new LinkedHashMap<String, String>();
+	private String database = "";
+	private String id = "";
 
-    /**
-     * Add a property and type to associate with this DBReferenceInfo
-     * @param type
-     * @param value
-     */
+	/**
+	 * The source database and id
+	 * @param database
+	 * @param id
+	 */
+	public DBReferenceInfo(String database, String id){
+		super("dbxref","");
+		this.database = database;
+		this.id = id;
+	}
 
-    public void addProperty(String type, String value){
-        properties.put(type, value);
-    }
+	/**
+	 * Add a property and type to associate with this DBReferenceInfo
+	 * @param type
+	 * @param value
+	 */
 
-    /**
-     * Get the properties
-     * @return the properties
-     */
-    public LinkedHashMap<String, String> getProperties() {
-        return properties;
-    }
+	public void addProperty(String type, String value){
+		properties.put(type, value);
+	}
 
-    /**
-     * @param properties the properties to set
-     */
-    public void setProperties(LinkedHashMap<String, String> properties) {
-        this.properties = properties;
-    }
+	/**
+	 * Get the properties
+	 * @return the properties
+	 */
+	public LinkedHashMap<String, String> getProperties() {
+		return properties;
+	}
 
-    /**
-     * @return the database
-     */
-    public String getDatabase() {
-        return database;
-    }
+	/**
+	 * @param properties the properties to set
+	 */
+	public void setProperties(LinkedHashMap<String, String> properties) {
+		this.properties = properties;
+	}
 
-    /**
-     * @param database the database to set
-     */
-    public void setDatabase(String database) {
-        this.database = database;
-    }
+	/**
+	 * @return the database
+	 */
+	public String getDatabase() {
+		return database;
+	}
 
-    /**
-     * @return the id
-     */
-    public String getId() {
-        return id;
-    }
+	/**
+	 * @param database the database to set
+	 */
+	public void setDatabase(String database) {
+		this.database = database;
+	}
 
-    /**
-     * @param id the id to set
-     */
-    public void setId(String id) {
-        this.id = id;
-    }
+	/**
+	 * @return the id
+	 */
+	public String getId() {
+		return id;
+	}
 
-    @Override
-    public String toString() {
-        return database + ":" + id + ":" + properties;
-    }
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	@Override
+	public String toString() {
+		return database + ":" + id + ":" + properties;
+	}
 
 
 

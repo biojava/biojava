@@ -25,15 +25,15 @@ import org.biojava.nbio.structure.io.mmcif.DownloadChemCompProvider;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 
 public class TestDownloadChemCompProvider extends TestCase{
-	
+
 	public void testProtectedIDs(){
-		
+
 		String id = "CON";
-		
+
 		DownloadChemCompProvider prov = new DownloadChemCompProvider();
 		ChemComp cc = prov.getChemComp(id);
 		assertNotNull(cc);
-		
+
 		assertEquals(cc.getId(), id);
 	}
 

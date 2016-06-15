@@ -27,26 +27,26 @@ import java.util.List;
 public class StructureInterfaceCluster implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
-	
+
+
 	private int id;
-	
+
 	private List<StructureInterface> members;
-	
+
 	/**
 	 * The average similarity score between all pairs of members in the cluster.
 	 */
 	private double averageScore;
-	
-	
+
+
 	public StructureInterfaceCluster() {
 		this.members = new ArrayList<StructureInterface>();
 	}
-	
+
 	public List<StructureInterface> getMembers() {
 		return members;
 	}
-	
+
 	public void setMembers(List<StructureInterface> members) {
 		this.members = members;
 	}
@@ -54,15 +54,15 @@ public class StructureInterfaceCluster implements Serializable {
 	public boolean addMember(StructureInterface interf) {
 		return this.members.add(interf);
 	}
-	
+
 	public int getId() {
 		return id;
 	}
-	
+
 	public void setId(int id) {
 		this.id = id;
 	}
-	
+
 	/**
 	 * Return the average buried surface area for this interface cluster
 	 * @return
@@ -74,7 +74,7 @@ public class StructureInterfaceCluster implements Serializable {
 		}
 		return area/members.size();
 	}
-	
+
 	/**
 	 * Returns the average similarity score between all pairs of members in the cluster
 	 * @return
@@ -82,7 +82,7 @@ public class StructureInterfaceCluster implements Serializable {
 	public double getAverageScore() {
 		return averageScore;
 	}
-	
+
 	public void setAverageScore(double averageScore) {
 		this.averageScore = averageScore;
 	}

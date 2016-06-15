@@ -32,7 +32,7 @@ public interface EcodDatabase {
 	/** Return the release version.
 	 *
 	 * @return version
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public String getVersion() throws IOException;
 
@@ -57,10 +57,10 @@ public interface EcodDatabase {
 	 * @param hierarchy A dot-separated list giving the X-group, H-group, and/or
 	 *  T-group (e.g. "1.1" for all members of the RIFT-related H-group)
 	 * @return
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public List<EcodDomain> filterByHierarchy(String hierarchy) throws IOException;
-	
+
 	/**
 	 * Get all ECOD domains
 	 * @return

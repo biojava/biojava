@@ -17,8 +17,8 @@
  *
  *      http://www.biojava.org/
  *
- * 
- * Author: Andreas Prlic 
+ *
+ * Author: Andreas Prlic
  *
  */
 package org.biojava.nbio.structure.domain.pdp;
@@ -34,15 +34,15 @@ import java.util.List;
 @XmlAccessorType(XmlAccessType.PUBLIC_MEMBER)
 
 /** represents a Domain
- * @since 3.0.2 
+ * @since 3.0.2
  */
 public class Domain implements Comparable<Domain>, Serializable{
-	
+
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -1293994033102271366L;
-	
+
 	String id;
 	int size;
 	int nseg;
@@ -51,9 +51,9 @@ public class Domain implements Comparable<Domain>, Serializable{
 	List<Segment>segments = new ArrayList<Segment>();
 
 	public Domain(){
-		
+
 	}
-	
+
 	public String getId() {
 		return id;
 	}
@@ -69,21 +69,21 @@ public class Domain implements Comparable<Domain>, Serializable{
 	@Override
 	public String toString() {
 		return "Domain [size=" + size + ", nseg=" + nseg + ", score=" + score
-				
+
 				+ "]";
 	}
-	
+
 	public List<Segment> getSegments() {
-		
+
 		return segments;
 	}
-	
+
 	public Segment getSegmentAtPos(int pos){
 		int size = segments.size();
 		while ( pos >= size){
 			segments.add(new Segment());
 			size++;
-			
+
 		}
 		return segments.get(pos);
 	}
@@ -125,9 +125,9 @@ public class Domain implements Comparable<Domain>, Serializable{
 	public void setSegments(List<Segment> segments) {
 		this.segments = segments;
 	}
-	
-	
-	
+
+
+
 }
 
 

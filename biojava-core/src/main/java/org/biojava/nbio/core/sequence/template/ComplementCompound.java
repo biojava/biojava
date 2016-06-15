@@ -29,5 +29,5 @@ package org.biojava.nbio.core.sequence.template;
 
 public interface ComplementCompound extends Compound {
 
-  public ComplementCompound getComplement();
+	public ComplementCompound getComplement();
 }

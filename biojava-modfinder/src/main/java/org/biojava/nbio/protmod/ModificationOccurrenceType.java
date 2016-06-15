@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on May 30, 2010
- * Author: Jianjiong Gao 
+ * Author: Jianjiong Gao
  *
  */
 
@@ -28,7 +28,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 
+ *
  * @author Jianjiong Gao
  * @since 3.0
  */
@@ -36,19 +36,19 @@ public enum ModificationOccurrenceType {
 	NATURAL("natural"),
 	HYPOTHETICAL("hypothetical"),
 	ARTIFACTUAL("artifactual");
-	
+
 	ModificationOccurrenceType(String label) {
 		this.label = label;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @return the label of this ModificationOccurrenceType.
 	 */
 	public String label() {
 		return label;
 	}
-	
+
 	/**
 	 * @return the label of this ModificationOccurrenceType.
 	 */
@@ -56,22 +56,22 @@ public enum ModificationOccurrenceType {
 	public String toString() {
 		return label;
 	}
-	
+
 	/**
 	 * The variable is the same as the &ltOccurrence&gt; in the ptm_list XML file.
 	 */
 	private String label;
-	
+
 	/**
-	 * 
+	 *
 	 * @param label the label of ModificationOccurrenceType.
 	 * @return the ModificationOccurrenceType that has the label.
 	 */
 	public static ModificationOccurrenceType getByLabel(String label) {
 		return mapLabelOcc.get(label);
 	}
-	
-	private static Map<String, ModificationOccurrenceType> mapLabelOcc;	
+
+	private static Map<String, ModificationOccurrenceType> mapLabelOcc;
 	static {
 		mapLabelOcc = new HashMap<String, ModificationOccurrenceType>();
 		for (ModificationOccurrenceType occ:ModificationOccurrenceType.values()) {

@@ -1,0 +1,44 @@
+#Struct1:	2gox
+#Struct2:	2gox
+#Struct3:	2gox
+#Num1	Chain1	AA1	#Num2	Chain2	AA2	#Num3	Chain3	AA3	
+-	-	-	991	A	GLY	991	A	GLY	
+-	-	-	-	-	-	992	A	SER	
+994	A	SER	994	A	SER	-	-	-	
+-	-	-	-	-	-	995	A	THR	
+996	A	ASP	996	A	ASP	996	A	ASP	
+-	-	-	997	A	ALA	-	-	-	
+998	A	GLU	-	-	-	998	A	GLU	
+-	-	-	999	A	ARG	999	A	ARG	
+1000	A	LEU	1000	A	LEU	1000	A	LEU	
+-	-	-	-	-	-	-	-	-	
+-	-	-	1003	A	LEU	1004	A	ILE	
+1004	A	ILE	-	-	-	-	-	-	
+-	-	-	1005	A	VAL	1006	A	THR	
+1006	A	THR	1006	A	THR	1007	A	PRO	
+-	-	-	-	-	-	1008	A	SER	
+1008	A	SER	1008	A	SER	-	-	-	
+-	-	-	1009	A	GLY	1010	A	ALA	
+1010	A	ALA	-	-	-	1011	A	GLY	
+-	-	-	1011	A	GLY	1012	A	GLU	
+-	-	-	1012	A	GLU	-	-	-	
+1014	A	ASN	1015	A	MET	-	-	-	
+-	-	-	-	-	-	1018	A	MET	
+1016	A	ILE	1017	A	GLY	1019	A	THR	
+-	-	-	1018	A	MET	1020	A	PRO	
+1018	A	MET	-	-	-	-	-	-	
+-	-	-	1020	A	PRO	1022	A	VAL	
+1020	A	PRO	1021	A	THR	1023	A	ILE	
+-	-	-	-	-	-	-	-	-	
+-	-	-	1024	A	ALA	1026	A	HIS	
+1024	A	ALA	-	-	-	1027	A	TYR	
+-	-	-	1027	A	TYR	1030	A	GLU	
+1026	A	HIS	-	-	-	1031	A	THR	
+-	-	-	1029	A	ASP	1032	A	GLU	
+1028	A	LEU	1030	A	GLU	-	-	-	
+-	-	-	-	-	-	1035	A	GLU	
+1030	A	GLU	1032	A	GLU	1036	A	LYS	
+-	-	-	-	-	-	-	-	-	
+-	-	-	1035	A	GLU	1038	A	GLY	
+1034	A	TRP	1036	A	LYS	1039	A	LEU	
+-	-	-	-	-	-	1040	A	GLU	

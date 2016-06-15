@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * created at 28 Jan 2014
- * Author: ap3 
+ * Author: ap3
  */
 
 package org.biojava.nbio.genome.parsers.genename;
@@ -28,7 +28,7 @@ import java.util.List;
 
 public class GeneChromosomePosition implements Comparable<GeneChromosomePosition>, Serializable{
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -6886306238993367835L;
 	String geneName;
@@ -42,7 +42,7 @@ public class GeneChromosomePosition implements Comparable<GeneChromosomePosition
 	int exonCount;
 	List<Integer> exonStarts;
 	List<Integer> exonEnds;
-	
+
 	public String getGeneName() {
 		return geneName;
 	}
@@ -168,5 +168,5 @@ public class GeneChromosomePosition implements Comparable<GeneChromosomePosition
 				+ cdsStart + ", cdsEnd=" + cdsEnd + ", exonCount=" + exonCount
 				+ ", exonStarts=" + exonStarts + ", exonEnds=" + exonEnds + "]";
 	}
-	
+
 }

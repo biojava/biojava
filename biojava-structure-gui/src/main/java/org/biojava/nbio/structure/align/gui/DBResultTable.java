@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Nov 6, 2009
- * Author: Andreas Prlic 
+ * Author: Andreas Prlic
  *
  */
 
@@ -68,7 +68,7 @@ public class DBResultTable implements ActionListener{
 
 	String algorithmName;
 	StructureAlignment algorithm;
-	
+
 	boolean isCE = true;
 	UserConfiguration config;
 	AtomCache cache ;
@@ -76,7 +76,7 @@ public class DBResultTable implements ActionListener{
 	String userPath ;
 	String userChain;
 
-	
+
 
 	public static void main(String[] args){
 
@@ -120,8 +120,8 @@ public class DBResultTable implements ActionListener{
 				else if ( str.startsWith("#param:chain1=")){
 					String chain = str.substring(14);
 					userChain = chain.trim();
-				} 
-				
+				}
+
 				else if ( str.startsWith("#param:scoring=")){
 					try {
 						String[] spl = str.split("=");
@@ -164,12 +164,12 @@ public class DBResultTable implements ActionListener{
 
 		}
 		in.close();
-		
+
 		Object[][] d = new Object[tmpdat.size()][ceColumnNames.length + 1];
 
-		int i = -1; 
+		int i = -1;
 		for (String[] spl : tmpdat){
-			
+
 			i++;
 			Object[] o = new Object[spl.length + 1];
 			for ( int j=0; j< spl.length;j++){
@@ -177,8 +177,8 @@ public class DBResultTable implements ActionListener{
 				if (( j >= 2 && j <= 4)|| (j==9)) {
 					o[j] = Double.parseDouble(spl[j]);
 				}  else if (  j >4 && j< 10) {
-				
-					o[j] = Integer.parseInt(spl[j]);										    	    
+
+					o[j] = Integer.parseInt(spl[j]);
 				} else {
 					o[j] = spl[j];
 				}
@@ -211,9 +211,9 @@ public class DBResultTable implements ActionListener{
 		f.getContentPane().add(scrollPane);
 		f.pack();
 		f.setVisible(true);
-		
+
 	}
-	
+
 	public void show(File file, UserConfiguration config){
 		this.config = config;
 
@@ -221,7 +221,7 @@ public class DBResultTable implements ActionListener{
 		try {
 			BufferedReader in = new BufferedReader(new FileReader(file));
 			show(in, config);
-			
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -235,14 +235,14 @@ public class DBResultTable implements ActionListener{
 		try {
 			BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
 			show(in, config);
-			
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
 	}
 
-	
+
 	private void initAlgorithm(String algorithmName) {
 		try {
 			algorithm = StructureAlignmentFactory.getAlgorithm(algorithmName);
@@ -283,7 +283,7 @@ public class DBResultTable implements ActionListener{
 		public void valueChanged(ListSelectionEvent event) {
 			if (event.getValueIsAdjusting()) {
 				return;
-			}            
+			}
 			int row = table.getSelectionModel().getLeadSelectionIndex();
 			String name1 = (String)table.getValueAt(row, 0);
 			String name2 = (String)table.getValueAt(row, 1);
@@ -313,7 +313,7 @@ public class DBResultTable implements ActionListener{
 			if ( name1.equals("CUSTOM")) {
 				// user uploaded a custom PDB file...
 				structure1 = loadCustomStructure(userPath,userChain);
-			} else {						
+			} else {
 				structure1 = cache.getStructure(name1);
 			}
 			Structure structure2 = cache.getStructure(name2);

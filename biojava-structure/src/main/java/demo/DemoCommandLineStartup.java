@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Feb 3, 2010
- * Author: Andreas Prlic 
+ * Author: Andreas Prlic
  *
  */
 
@@ -29,13 +29,13 @@ import org.biojava.nbio.structure.align.ce.CeMain;
 public class DemoCommandLineStartup
 {
 
-   public static void main(String[] arg) throws Exception {
+	public static void main(String[] arg) throws Exception {
 
-      // demo how to use with command line parameters
-      String commandLine = "-file1 /tmp/cd/pdb1cdg.ent.gz -file2 file:///tmp/ti/pdb1tim.ent.gz -printCE";
-      String[] args = commandLine.split(" ");
-      
-      CeMain.main(args);
-      
-   }
+		// demo how to use with command line parameters
+		String commandLine = "-file1 /tmp/cd/pdb1cdg.ent.gz -file2 file:///tmp/ti/pdb1tim.ent.gz -printCE";
+		String[] args = commandLine.split(" ");
+
+		CeMain.main(args);
+
+	}
 }

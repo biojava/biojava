@@ -30,11 +30,11 @@ import java.util.Set;
 
 /**
  * Stores all the content parsed from the #=GS lines
- * 
+ *
  * @since 3.0.5
  * @author Amr AL-Hossary
  * @author Marko Vaz
- * 
+ *
  */
 class StockholmSequenceAnnotation {
 	private String accessionNumber;
@@ -45,7 +45,7 @@ class StockholmSequenceAnnotation {
 	private String organismClassification;
 	private String look;
 
-	
+
 	public String getDescription() {
 		return description.toString();
 	}
@@ -75,13 +75,13 @@ class StockholmSequenceAnnotation {
 	public void addDBReference(String dbReferenceRepresentingString) {
 		if (this.dbReferences == null) {
 			this.dbReferences = new HashSet<DatabaseReference>();
-		} 
+		}
 		dbReferences.add(new DatabaseReference(dbReferenceRepresentingString));
 	}
 
-	
-	
-	
+
+
+
 	public String getAccessionNumber() {
 		return accessionNumber;
 	}

@@ -42,15 +42,15 @@ import java.io.UnsupportedEncodingException;
 /**
  * Demo of how to use the {@link FastaStructureParser} class to read protein
  * structures from a FASTA file.
- * 
+ *
  * @author Spencer Bliven
  *
  */
 public class DemoStructureFromFasta {
-	
+
 	@SuppressWarnings("unused")
 	public static void getStructureFromFasta() {
-		
+
 		// Load a test sequence
 		// Normally this would come from a file, eg
 		// File fasta = new File("/path/to/file.fa");
@@ -66,7 +66,7 @@ public class DemoStructureFromFasta {
 			e.printStackTrace();
 			return;
 		}
-		
+
 		// Create a header parser to parse the header lines into valid structure accessions.
 		// The resulting accession can be anything interpretable by AtomCache.getStructure.
 		// Possible Examples: "4HHB" (whole structure), "d4hhba_" (SCOP domain),
@@ -74,15 +74,15 @@ public class DemoStructureFromFasta {
 		// For this example, the built-in fasta parser will extract the correct accession.
 		SequenceHeaderParserInterface<ProteinSequence, AminoAcidCompound> headerParser;
 		headerParser = new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>();
-		
+
 		// Create AtomCache to fetch structures from the PDB
 		AtomCache cache = new AtomCache();
-		
+
 		// Create SequenceCreator. This converts a String to a ProteinSequence
 		AminoAcidCompoundSet aaSet = AminoAcidCompoundSet.getAminoAcidCompoundSet();
 		SequenceCreatorInterface<AminoAcidCompound> creator;
 		creator = new ProteinSequenceCreator(aaSet);
-		
+
 		// parse file
 		FastaStructureParser parser = new FastaStructureParser(
 				fasta, headerParser, creator, cache);
@@ -94,7 +94,7 @@ public class DemoStructureFromFasta {
 		} catch (StructureException e) {
 			e.printStackTrace();
 			return;
-		} 
+		}
 
 		// Get info from the parser
 		ResidueNumber[][] residues = parser.getResidues();
@@ -103,14 +103,14 @@ public class DemoStructureFromFasta {
 		String[] accessions = parser.getAccessions();
 
 		// Use it! For example:
-		// Display the structure, highlighting the sequence 
+		// Display the structure, highlighting the sequence
 		displayStructure( structures[0], residues[0]);
 	}
 
 
 	/**
 	 * Displays the given structure and highlights the given residues.
-	 *  
+	 *
 	 * @param structure The structure to display
 	 * @param residues A list of residues to highlight
 	 */
@@ -131,7 +131,7 @@ public class DemoStructureFromFasta {
 
 	/**
 	 * Converts an array of ResidueNumbers into a jMol selection.
-	 * 
+	 *
 	 * <p>For example, "select 11^ :A.CA or 12^ :A.CA;" would select the
 	 * CA atoms of residues 11-12 on chain A.
 	 * @param residues Residues to include in the selection. Nulls are ignored.

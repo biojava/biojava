@@ -19,7 +19,7 @@
  *
  */
 /**
- * 
+ *
  */
 package org.biojava.nbio.structure.symmetry.geometry;
 

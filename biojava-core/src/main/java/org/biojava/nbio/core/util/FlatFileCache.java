@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Oct 1, 2009
- * Author: Andreas Prlic 
+ * Author: Andreas Prlic
  *
  */
 
@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 
 /** Provides a cache for storing multiple small files in memory. Can be used to e.g cache gzip compressed PDB files for avoiding disk IO bottlenecks.
- * 
+ *
  * @author Andreas Prlic.
  *
  */
@@ -41,19 +41,19 @@ public class FlatFileCache {
 	private static FlatFileCache me ;
 
 	private static SoftHashMap<String, byte[]> cache = new SoftHashMap<String, byte[]>(0);
-	
+
 	public static FlatFileCache getInstance() {
 
 	   if ( me == null){
 	      me = new FlatFileCache();
 	   }
-	   
+
 		return me;
 	}
 
 	// no public constructor;
 	private FlatFileCache(){
-		
+
 	}
 
 
@@ -91,9 +91,9 @@ public class FlatFileCache {
 
 			// Close the input stream and return bytes
 			is.close();
-	
+
 			cache.put(key,bytes);
-			
+
 		} catch (Exception e){
 			logger.error("Error adding to cache! " + e.getMessage(), e);
 		}
@@ -115,14 +115,14 @@ public class FlatFileCache {
 		else
 			return -1;
 	}
-	
+
 	public void clear(){
-	   cache.clear();	   
+	   cache.clear();
 	}
-	
+
 	public static void destroy(){
 	   me.clear();
 	   me = null;
 	}
-	
+
 }

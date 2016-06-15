@@ -26,12 +26,12 @@ package org.biojava.nbio.sequencing.io.fastq;
  * @since 3.0.3
  */
 public final class IlluminaFastqReader
-    extends AbstractFastqReader
+	extends AbstractFastqReader
 {
 
-    @Override
-    protected FastqVariant getVariant()
-    {
-        return FastqVariant.FASTQ_ILLUMINA;
-    }
+	@Override
+	protected FastqVariant getVariant()
+	{
+		return FastqVariant.FASTQ_ILLUMINA;
+	}
 }

@@ -47,7 +47,7 @@ public class ElementTest {
 		JAXBContext context = JAXBContext.newInstance(ElementTable.class);
 		context.generateSchema(new SchemaGenerator(outputFile.toString()));
 	}
-	
+
 	@Test
 	public void readXml() throws JAXBException, IOException{
 		ElementTable iTable = new ElementTable();
@@ -56,10 +56,10 @@ public class ElementTest {
 		Unmarshaller u = jc.createUnmarshaller();
 		iTable = (ElementTable)u.unmarshal(new FileInputStream("./src/main/resources/ElementMass.xml" ) );
 		for(Element e:iTable.getElement()){
-			logger.info("Element: {}", e);
+			logger.debug("Element: {}", e);
 		}
 	}
-	
+
 	@Test
 	public void generateXml() throws JAXBException, IOException {
 		List<Isotope> iList = new ArrayList<Isotope>();
@@ -774,7 +774,7 @@ public class ElementTest {
 		// marshall the object to XML
 		marshaller.marshal(iTable, sw);
 		// print it out for this example
-		logger.info("Marshal to file: {}", sw.toString());
+		logger.debug("Marshal to file: {}", sw.toString());
 		File outputFile = new File(System.getProperty("java.io.tmpdir"),"ElementMass.xml");
 		outputFile.deleteOnExit();
 		BufferedWriter output = new BufferedWriter(new FileWriter(outputFile));

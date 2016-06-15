@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Mar 1, 2010
- * Author: Andreas Prlic 
+ * Author: Andreas Prlic
  *
  */
 
@@ -31,17 +31,17 @@ import junit.framework.TestCase;
 public class TestAlignDBSearchPairs extends TestCase
 {
 
-	
+
 	public void testNothing(){
-		
+
 	}
-	
-	
+
+
 	// speedup... nothing new being tested here, so disabling for now
 //   public void testParsePairs(){
 //
 //      String tmpDir = System.getProperty("java.io.tmpdir");
-//      
+//
 //      AtomCache cache = new AtomCache(tmpDir,true);
 //
 //      InputStream inStream = this.getClass().getResourceAsStream("/db_search.pairs");

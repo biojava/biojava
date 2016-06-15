@@ -196,7 +196,7 @@ public class TranslationTest {
 		Sequence<AminoAcidCompound> pep = e.translate(volvoxDna);
 		assertThat("Ensure internal stops stay", pep.toString(), is(volvoxPep.toString()));
 	}
-	
+
 	@Test
 	public void translateStopAtInternalStops(){
 		//This should stop translation at the first stop codon encountered
@@ -206,7 +206,7 @@ public class TranslationTest {
 		String testpep = volvoxPep.getSequenceAsString().split("\\*")[0];
 		assertThat("Translation stops at Stop", pep, is(testpep));
 	}
-	
+
 	@Test
 	public void waitForStartCodon() throws CompoundNotFoundException{
 		//Should not start translation until a start codon is encountered
@@ -214,7 +214,7 @@ public class TranslationTest {
 		RNASequence rna = new RNASequence("UCCAUGAGC");
 		String pep = rna.getProteinSequence(e).getSequenceAsString();
 		assertThat("Translation starts at Start Codon",pep, is("MS"));
-		
+
 		//And should start at start of sequence (NB this is implied by success of all other tests)
 		e = new TranscriptionEngine.Builder().waitForStartCodon(false).build();
 		pep = rna.getProteinSequence(e).getSequenceAsString();

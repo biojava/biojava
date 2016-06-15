@@ -29,11 +29,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
-public class MyOpenPdbFileListener 
+public class MyOpenPdbFileListener
 implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		String cmd = e.getActionCommand();			        
+		String cmd = e.getActionCommand();
 		if ( cmd.equals("Open PDB file")){
 			final JFileChooser fc = new JFileChooser();
 
@@ -47,7 +47,7 @@ implements ActionListener {
 					Structure s = reader.getStructure(file);
 					StructureAlignmentJmol jmol = new StructureAlignmentJmol(null,null,null);
 					jmol.setStructure(s);
-										
+
 					jmol.evalString("set antialiasDisplay on; select all;spacefill off; wireframe off; backbone off; cartoon;color cartoon chain; select ligand;wireframe 0.16;spacefill 0.5; select all; color cartoon structure;");
 					jmol.evalString("save STATE state_1");
 				} catch (Exception ex){
@@ -56,7 +56,7 @@ implements ActionListener {
 
 
 			}
-		}				
-	}		
+		}
+	}
 }
 

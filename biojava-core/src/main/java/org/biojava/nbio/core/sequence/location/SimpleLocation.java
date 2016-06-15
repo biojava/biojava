@@ -41,62 +41,62 @@ import java.util.List;
  */
 public class SimpleLocation extends AbstractLocation {
 
-    private static final List<Location> EMPTY_LOCS = Collections.emptyList();
+	private static final List<Location> EMPTY_LOCS = Collections.emptyList();
 
-    public SimpleLocation(int start, int end) {
-        this(new SimplePoint(start), new SimplePoint(end));
-    }
+	public SimpleLocation(int start, int end) {
+		this(new SimplePoint(start), new SimplePoint(end));
+	}
 
-    public SimpleLocation(Point start, Point end) {
-        this(start, end, Strand.POSITIVE);
-    }
+	public SimpleLocation(Point start, Point end) {
+		this(start, end, Strand.POSITIVE);
+	}
 
-    public SimpleLocation(int start, int end, Strand strand) {
-        this(new SimplePoint(start), new SimplePoint(end), strand);
-    }
-    
-    public SimpleLocation(int start, int end, Strand strand, List<Location> subLocations) {
-        this(new SimplePoint(start), new SimplePoint(end), strand, subLocations);
-    }
+	public SimpleLocation(int start, int end, Strand strand) {
+		this(new SimplePoint(start), new SimplePoint(end), strand);
+	}
 
-    public SimpleLocation(Point start, Point end, Strand strand) {
-    	
-        super(start, end, strand, false, false, new ArrayList<Location>());
-    }
+	public SimpleLocation(int start, int end, Strand strand, List<Location> subLocations) {
+		this(new SimplePoint(start), new SimplePoint(end), strand, subLocations);
+	}
 
-    public SimpleLocation(Point start, Point end, Strand strand, AccessionID accession) {
-        super(start, end, strand, false, false, accession, EMPTY_LOCS);
-    }
+	public SimpleLocation(Point start, Point end, Strand strand) {
 
-    public SimpleLocation(Point start, Point end, Strand strand, boolean betweenCompounds, AccessionID accession) {
-        super(start, end, strand, false, betweenCompounds, accession, EMPTY_LOCS);
-    }
+		super(start, end, strand, false, false, new ArrayList<Location>());
+	}
 
-    public SimpleLocation(Point start, Point end, Strand strand, boolean circular, boolean betweenBases) {
-        super(start, end, strand, circular, betweenBases, EMPTY_LOCS);
-    }
+	public SimpleLocation(Point start, Point end, Strand strand, AccessionID accession) {
+		super(start, end, strand, false, false, accession, EMPTY_LOCS);
+	}
 
-    public SimpleLocation(int start, int end, Strand strand, Location... subLocations) {
-        this(new SimplePoint(start), new SimplePoint(end), strand, subLocations);
-    }
+	public SimpleLocation(Point start, Point end, Strand strand, boolean betweenCompounds, AccessionID accession) {
+		super(start, end, strand, false, betweenCompounds, accession, EMPTY_LOCS);
+	}
 
-    public SimpleLocation(Point start, Point end, Strand strand, Location... subLocations) {
-        super(start, end, strand, false, false, Arrays.asList(subLocations));
-    }
+	public SimpleLocation(Point start, Point end, Strand strand, boolean circular, boolean betweenBases) {
+		super(start, end, strand, circular, betweenBases, EMPTY_LOCS);
+	}
 
-    public SimpleLocation(Point start, Point end, Strand strand, boolean circular, Location... subLocations) {
-        super(start, end, strand, circular, false, Arrays.asList(subLocations));
-    }
+	public SimpleLocation(int start, int end, Strand strand, Location... subLocations) {
+		this(new SimplePoint(start), new SimplePoint(end), strand, subLocations);
+	}
 
-    public SimpleLocation(Point start, Point end, Strand strand, boolean circular, List<Location> subLocations) {
-        super(start, end, strand, circular, false, subLocations);
-    }
-    
-    public SimpleLocation(Point start, Point end, Strand strand, List<Location> subLocations) {
-        super(start, end, strand, false, false, subLocations);
-    }
+	public SimpleLocation(Point start, Point end, Strand strand, Location... subLocations) {
+		super(start, end, strand, false, false, Arrays.asList(subLocations));
+	}
 
-    public SimpleLocation(Point start, Point end, Strand strand, boolean circular, boolean betweenBases, List<Location> subLocations) {
-        super(start, end, strand, circular, betweenBases, subLocations);
-    }    
+	public SimpleLocation(Point start, Point end, Strand strand, boolean circular, Location... subLocations) {
+		super(start, end, strand, circular, false, Arrays.asList(subLocations));
+	}
+
+	public SimpleLocation(Point start, Point end, Strand strand, boolean circular, List<Location> subLocations) {
+		super(start, end, strand, circular, false, subLocations);
+	}
+
+	public SimpleLocation(Point start, Point end, Strand strand, List<Location> subLocations) {
+		super(start, end, strand, false, false, subLocations);
+	}
+
+	public SimpleLocation(Point start, Point end, Strand strand, boolean circular, boolean betweenBases, List<Location> subLocations) {
+		super(start, end, strand, circular, betweenBases, subLocations);
+	}
 }

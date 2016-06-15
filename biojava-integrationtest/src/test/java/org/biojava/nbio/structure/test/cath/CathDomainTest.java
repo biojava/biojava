@@ -36,6 +36,6 @@ public class CathDomainTest {
 	public void test() {
 		String id = "1qvrC03";
 		CathDomain domain = CathFactory.getCathDatabase().getDomainByCathId(id);
-		assertEquals("1qvr.C_332-400,C_514-540", domain.getIdentifier());
+		assertEquals("1qvr.C_332-400,C_514-540", domain.toCanonical().getIdentifier());
 	}
 }

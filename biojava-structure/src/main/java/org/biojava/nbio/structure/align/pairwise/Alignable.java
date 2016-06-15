@@ -16,7 +16,7 @@
  * at:
  *
  *      http://www.biojava.org/
- * 
+ *
  * Created on Jan 29, 2006
  *
  */
@@ -26,22 +26,22 @@ import org.biojava.nbio.structure.align.helper.AligMatEl;
 import org.biojava.nbio.structure.align.helper.IndexPair;
 
 public interface Alignable {
-   public int getRows();
-   public int getCols();
-   public AligMatEl[][] getAligMat();
-   public void setAligMat(AligMatEl[][] alignmentMatrix);
-   public float getGapExtCol();
-   public void setGapExtCol(float penalty);
-   public float getGapExtRow();
-   public void setGapExtRow(float penalty);
-   public float getGapOpenCol();
-   public void setGapOpenCol(float penalty);
-   public float getGapOpenRow();
-   public void setGapOpenRow(float penalty);
-   public void setScore(float score);
-   public float getScore();
-   public int getPathSize();
-   public void setPathSize(int pathSize);
-   public void setPath(IndexPair[] path);
-   public IndexPair[] getPath();
+	public int getRows();
+	public int getCols();
+	public AligMatEl[][] getAligMat();
+	public void setAligMat(AligMatEl[][] alignmentMatrix);
+	public float getGapExtCol();
+	public void setGapExtCol(float penalty);
+	public float getGapExtRow();
+	public void setGapExtRow(float penalty);
+	public float getGapOpenCol();
+	public void setGapOpenCol(float penalty);
+	public float getGapOpenRow();
+	public void setGapOpenRow(float penalty);
+	public void setScore(float score);
+	public float getScore();
+	public int getPathSize();
+	public void setPathSize(int pathSize);
+	public void setPath(IndexPair[] path);
+	public IndexPair[] getPath();
 }

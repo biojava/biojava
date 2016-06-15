@@ -25,15 +25,18 @@ import org.biojava.nbio.structure.Structure;
 
 import java.util.*;
 
+/**
+ * Represents a set of non-identical protein sequences.
+ */
 public class ProteinSequenceClusterer {
 	private Structure structure = null;
 	private Structure structure2 = null;
 	private QuatSymmetryParameters parameters = null;
-	
+
 	private List<Atom[]> caUnaligned = new ArrayList<Atom[]>();
 	private List<String> chainIds = new ArrayList<String>();
 	private List<Integer> modelNumbers = new ArrayList<Integer>();
-	private List<String> sequences = new ArrayList<String>();	
+	private List<String> sequences = new ArrayList<String>();
 	private List<SequenceAlignmentCluster> seqClusters = new ArrayList<SequenceAlignmentCluster>();
 	private int nucleicAcidChainCount = 0;
 	private boolean modified = true;
@@ -42,23 +45,23 @@ public class ProteinSequenceClusterer {
 		this.structure = structure;
 		this.parameters = parameters;
 	}
-	
+
 	public ProteinSequenceClusterer(Structure structure1, Structure structure2,  QuatSymmetryParameters parameters) {
 		this.structure = structure1;
 		this.structure2 = structure2;
 		this.parameters = parameters;
 	}
-	
+
 	public List<SequenceAlignmentCluster> getSequenceAlignmentClusters() {
 		run();
 		return seqClusters;
 	}
-	
+
 	public int getProteinChainCount() {
 		run();
 		return sequences.size();
 	}
-	
+
 	/**
 	 * @return the nucleicAcidChainCount
 	 */
@@ -69,6 +72,7 @@ public class ProteinSequenceClusterer {
 
 	public static void sortSequenceClustersBySize(List<SequenceAlignmentCluster> clusters) {
 		Collections.sort(clusters, new Comparator<SequenceAlignmentCluster>() {
+			@Override
 			public int compare(SequenceAlignmentCluster c1, SequenceAlignmentCluster c2) {
 				int sign = Math.round(Math.signum(c2.getSequenceCount() - c1.getSequenceCount()));
 				if (sign != 0) {
@@ -78,7 +82,7 @@ public class ProteinSequenceClusterer {
 			}
 		});
 	}
-	
+
 	private void run() {
 		if (modified) {
 			extractProteinChains();
@@ -86,7 +90,9 @@ public class ProteinSequenceClusterer {
 			modified = false;
 		}
 	}
-	
+	/**
+	 * Populate all fields. If two structres are give, concatenate their chains.
+	 */
 	private void extractProteinChains() {
 		ProteinChainExtractor extractor = new ProteinChainExtractor(structure,  parameters);
 		caUnaligned = extractor.getCalphaTraces();
@@ -94,7 +100,7 @@ public class ProteinSequenceClusterer {
 		sequences = extractor.getSequences();
 		modelNumbers = extractor.getModelNumbers();
 		nucleicAcidChainCount = extractor.getNucleicAcidChainCount();
-		
+
 		if (structure2 != null) {
 			extractor = new ProteinChainExtractor(structure2,  parameters);
 			caUnaligned.addAll(extractor.getCalphaTraces());
@@ -103,34 +109,39 @@ public class ProteinSequenceClusterer {
 			modelNumbers.addAll(extractor.getModelNumbers());
 		}
 	}
-	
+
+	/**
+	 * Cluster chains based on their sequence. Initializes seqClusters to the set
+	 * of non-identical sequences.
+	 */
 	private void clusterChains() {
 		boolean[] processed = new boolean[caUnaligned.size()];
 		Arrays.fill(processed, false);
-	
+
 		for (int i = 0; i < caUnaligned.size(); i++) {
 			if (processed[i]) {
 				continue;
 			}
 			processed[i] = true;
 			// create new sequence cluster
-            UniqueSequenceList seqList = new UniqueSequenceList(caUnaligned.get(i), chainIds.get(i), modelNumbers.get(i), 0, sequences.get(i));
-            SequenceAlignmentCluster seqCluster = new SequenceAlignmentCluster(parameters);
-            seqCluster.addUniqueSequenceList(seqList);	
-            seqClusters.add(seqCluster);
-			
-            for (int j = i + 1; j < caUnaligned.size(); j++) {
-            	if (processed[j]) {
-            		continue;
-            	}
-            	for (SequenceAlignmentCluster c: seqClusters) {
-            			if (c.identityMatch(caUnaligned.get(j), chainIds.get(j), modelNumbers.get(j), 0, sequences.get(j))) {
-            				processed[j] = true;
-            				//System.out.println("found identity match: " + i + " - " + j);
-            				break;
-            			}
-            	} 
-            }
+			UniqueSequenceList seqList = new UniqueSequenceList(caUnaligned.get(i), chainIds.get(i), modelNumbers.get(i), 0, sequences.get(i));
+			SequenceAlignmentCluster seqCluster = new SequenceAlignmentCluster(parameters);
+			seqCluster.addUniqueSequenceList(seqList);
+			seqClusters.add(seqCluster);
+
+			for (int j = i + 1; j < caUnaligned.size(); j++) {
+				if (processed[j]) {
+					continue;
+				}
+				// Mark any future identical sequences as processed
+				for (SequenceAlignmentCluster c: seqClusters) {
+						if (c.identityMatch(caUnaligned.get(j), chainIds.get(j), modelNumbers.get(j), 0, sequences.get(j))) {
+							processed[j] = true;
+							//System.out.println("found identity match: " + i + " - " + j);
+							break;
+						}
+				}
+			}
 		}
 		sortSequenceClustersBySize(seqClusters);
 	}

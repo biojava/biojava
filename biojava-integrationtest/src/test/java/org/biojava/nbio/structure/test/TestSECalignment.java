@@ -46,7 +46,7 @@ import java.io.InputStream;
 public class TestSECalignment extends  TestCase {
 
 	public void testOldSecOutput() throws Exception {
-		
+
 		String fileName = "/ce_1fdo.A_2iv2.X.out";
 		InputStream inStream = this.getClass().getResourceAsStream(fileName);
 		assertNotNull("Could not find file " + fileName +" in resource path. Config error?", inStream);
@@ -60,14 +60,14 @@ public class TestSECalignment extends  TestCase {
 
 		assertEquals(715, ca1.length);
 		assertEquals(697, ca2.length);
-		
+
 		AFPChain afpChainOrig = AFPChainXMLParser.fromXML(xml, ca1, ca2);
-		
+
 		assertNotNull("Could not get AfpChain object from flat file!", afpChainOrig);
-		
+
 		assertEquals("Could not find alignment string for prot 1","MKKVVTVCPYCASGCKINLVVDNGKIVRAEAAQGKTNQGTLCLKGYYGWDFINDTQILTPRLKTPMIRRQRGGKLEPVSWDEALNYVAERLSAIKEKYGPDAIQTTGSSRGTGNETNYVMQKFARAVIGTNNVDCCARVUHGPSVA-----GLHQSVGNGAMSNAINEIDNTDLVFVFGYNPADSHPIVANHVINAKRNGAKIIVCDPRKIETARIADMHIALKNGSNIALLNAMGHVIIEENLYDKAFVASRTEGFEEYRKIVEGYTPESVEDITGVSASEIRQAARMYAQAKSAAILWGMGVTQFYQGVETVRSLTSLAMLTGNLGKPHAGVNPVRGQNNVQGACDMGALPDTYPGYQYVKDPANREKFAKAWGVESLPAHTGYRISELPHRAAHGEVRAAYIMGEDPLQTDAELSAVRKAFEDLELVIVQDIFMTKTASAADVILPSTSWGEHEGVFTAADRGFQRFFKAVEPKWDLKTDWQIISEIATRMGYPMHYNNTQEIWDELRHLCPDFYGATYEKMGELGFIQWPCRDTSDADQGTSYLFKEKFDTPNGLAQFFTCDWVAPIDKLTDEYPMVLSTVREVGHYSCRSMTGNCAALAALADEPGYAQINTEDAKRLGIEDEALVWVHSRKGKIITRAQVSDRPNKGAIYMTYQWWIGACNELVTENLSPITKTPEYKYCAVRVEPIADQRAAEQYVIDEYNKLKTRLREAALA", new String(afpChainOrig.getAlnseq1(),0,afpChainOrig.getAlnLength()));
 		assertEquals("Could not find alignment string for prot 2","MKKVVTVCPYCASGCKINLVVDNGKIVRAEAAQGKTNQGTLCLKGYYGWDFINDTQILTPRLKTPMIRRQRGGKLEPVSWDEALNYVAERLSAIKEKYGPDAIQTTGSSRGTGNETNYVMQKFARAVIGTNNVDCCAR-----VUHGPSVAGLHQSVGNGAMSNAINEIDNTDLVFVFGYNPADSHPIVANHVINAKRNGAKIIVCDPRKIETARIADMHIALKNGSNIALLNAMGHVIIEENLYDKAFVASRTEGFEEYRKIVEGYTPESVEDITGVSASEIRQAARMYAQAKSAAILWGMGVTQFYQGVETVRSLTSLAMLTGNLGKPHAGVNPVRGQNNVQGACDMGALPDTYPGYQYVKDPANREKFAKAWGVESLPAHTGYRISELPHRAAHGEVRAAYIMGEDPLQTDAELSAVRKAFEDLELVIVQDIFMTKTASAADVILPSTSWGEHEGVFTAADRGFQRFFKAVEPKWDLKTDWQIISEIATRMGYPMHYNNTQEIWDELRHLCPDFYGATYEKMGELGFIQWPCRDTSDADQGTSYLFKEKFDTPNGLAQFFTCDWVAPIDKLTDEYPMVLSTVREVGHYSCRSMTGNCAALAALADEPGYAQINTEDAKRLGIEDEALVWVHSRKGKIITRAQVSDRPNKGAIYMTYQWW------------------PEYKYCAVRVEPIADQRAAEQYVIDEYNKLKTRLREAALA", new String(afpChainOrig.getAlnseq2(),0,afpChainOrig.getAlnLength()));
-		
+
 		// calc time is hardware dependent.... overwrite...
 		afpChainOrig.setCalculationTime(-1);
 
@@ -75,31 +75,31 @@ public class TestSECalignment extends  TestCase {
 				720,afpChainOrig.getAlnLength());
 		assertEquals("gapLength is wrong! ("+ afpChainOrig.getGapLen() + ")",
 				28, afpChainOrig.getGapLen());
-		
+
 		//identity should be 0.9569
 		assertTrue("alinment ID is < 0.95 ! (" + afpChainOrig.getIdentity()+")" , afpChainOrig.getIdentity() > 0.95);
 		assertTrue("alignment ID is > 0.96 ! (" + afpChainOrig.getIdentity()+")" ,afpChainOrig.getIdentity() < 0.96);
-		
+
 		String xmlComp =  AFPChainXMLConverter.toXML(afpChainOrig, ca1, ca2);
-		
-	
+
+
 		FlipAFPChainTest t = new FlipAFPChainTest();
 		t.printFirstMismatch(xml, xmlComp);
 		StringManipulationTestsHelper.assertEqualsIgnoreEndline(xml, xmlComp);
 		StructureAlignment ce = StructureAlignmentFactory.getAlgorithm(CeMain.algorithmName);
 
-	
+
 		AFPChain afpChainNew = ce.align(ca1,ca2);
 		afpChainNew.setCalculationTime(-1);
 		afpChainNew.setName1(name1);
 		afpChainNew.setName2(name2);
 
-		
-		
+
+
 		String xmlNew = AFPChainXMLConverter.toXML(afpChainNew,ca1,ca2);
 
 		StringManipulationTestsHelper.assertEqualsIgnoreEndline(xml,xmlNew);
-		
+
 
 	}
 }

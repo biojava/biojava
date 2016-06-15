@@ -20,7 +20,6 @@
  */
 package org.biojava.nbio.structure.align.gui;
 
-import org.biojava.nbio.structure.align.StructureAlignment;
 import org.biojava.nbio.structure.align.ce.ConfigStrucAligParams;
 
 import javax.swing.*;
@@ -33,7 +32,7 @@ import java.util.List;
 
 /**
  * UI for {@link ConfigStrucAligParams}, for the AlignmentGUI.
- * 
+ *
  * Visually parameters are displayed as a label and an input field such as a text box.
  * The following methods are used to determine which properties are accessible:
  * <ul>
@@ -46,35 +45,31 @@ import java.util.List;
  * <li> {@link ConfigStrucAligParams#getUserConfigHelp() getUserConfigHelp()}
  *      Alt text for each parameter
  * </ul>
- * 
+ *
  * @author Andreas Prlic
  *
  */
 public class ParameterGUI extends JFrame{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 723386061184110161L;
 
-	ConfigStrucAligParams params ;
-	List<Component> textFields;
+	private ConfigStrucAligParams params ;
+	private List<Component> textFields;
 
-
-
-
+	/**
+	 * Constructor for a ParameterGUI. Generalization for any type of
+	 * Structural Alignment algorithm that implements the parameter interface.
+	 *
+	 * @param params parameter bean
+	 * @param algorithm name of the algorithm
+	 */
 	@SuppressWarnings("rawtypes")
-	public ParameterGUI(StructureAlignment alignment){
+	public ParameterGUI(ConfigStrucAligParams params, String algorithm) {
 
-		ConfigStrucAligParams params = alignment.getParameters();
-
-		if ( params == null)
-			return;
+		if (params == null) return;
 		this.params = params;
 
-		String method = alignment.getAlgorithmName();
-		this.setTitle("Parameters for " + method);
-
+		this.setTitle("Parameters for " + algorithm);
 
 		List<String> names = params.getUserConfigParameterNames();
 		List<String> keys  = params.getUserConfigParameters();
@@ -115,7 +110,7 @@ public class ParameterGUI extends JFrame{
 				JComboBox jcbox = new JComboBox(values);
 				if ( data.equalsIgnoreCase("false"))
 					jcbox.setSelectedIndex(1);
-				else 
+				else
 					jcbox.setSelectedIndex(0);
 
 				field = jcbox;
@@ -189,8 +184,6 @@ public class ParameterGUI extends JFrame{
 		this.getContentPane().add(vBox);
 		this.pack();
 		this.setVisible(true);
-
-
 	}
 
 	@SuppressWarnings({  "rawtypes" })
@@ -204,7 +197,6 @@ public class ParameterGUI extends JFrame{
 
 			Class type = types.get(i);
 			Object data = getValue(keys.get(i));
-			String name = keys.get(i);
 			if( type.isEnum()) {
 				JComboBox field = (JComboBox)  textFields.get(i);
 				field.setSelectedItem(data);
@@ -213,8 +205,8 @@ public class ParameterGUI extends JFrame{
 				JComboBox field = (JComboBox)  textFields.get(i);
 				if ( data.toString().equalsIgnoreCase("false"))
 					field.setSelectedIndex(1);
-				else 
-					field.setSelectedIndex(0);   
+				else
+					field.setSelectedIndex(0);
 				field.updateUI();
 
 			} else {
@@ -228,7 +220,7 @@ public class ParameterGUI extends JFrame{
 					field.setText(stuff);
 				} else {
 
-					field.setText(data.toString()); 
+					field.setText(data.toString());
 				}
 				field.updateUI();
 			}
@@ -267,7 +259,7 @@ public class ParameterGUI extends JFrame{
 				Boolean flag = true;
 				if ( sel == 1 )
 					flag = false;
-				value = flag.toString(); 
+				value = flag.toString();
 			} else {
 				JTextField field = (JTextField)textFields.get(i);
 				value = field.getText();
@@ -309,7 +301,8 @@ public class ParameterGUI extends JFrame{
 			}
 
 			if (data == null){
-				System.err.println("Could not set value " + value + " for field " + name);
+				System.err.println("Could not set value " + value +
+						" for field " + name);
 				return;
 			}
 			m.invoke(params, data);

@@ -37,30 +37,30 @@ import org.biojava.nbio.core.sequence.template.SequenceProxyView;
  */
 public class ComplementSequenceView<C extends ComplementCompound> extends SequenceProxyView<C> {
 
-    public ComplementSequenceView(Sequence<C> sequence) {
-        super(sequence);
-    }
+	public ComplementSequenceView(Sequence<C> sequence) {
+		super(sequence);
+	}
 
-    @Override
-    public String getSequenceAsString() {
-        return SequenceMixin.toString(this);
-    }
+	@Override
+	public String getSequenceAsString() {
+		return SequenceMixin.toString(this);
+	}
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public C getCompoundAt(int position) {
-        return (C) super.getCompoundAt(position).getComplement();
-    }
+	@SuppressWarnings("unchecked")
+	@Override
+	public C getCompoundAt(int position) {
+		return (C) super.getCompoundAt(position).getComplement();
+	}
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public int getIndexOf(C compound) {
-        return super.getIndexOf((C) compound.getComplement());
-    }
+	@SuppressWarnings("unchecked")
+	@Override
+	public int getIndexOf(C compound) {
+		return super.getIndexOf((C) compound.getComplement());
+	}
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public int getLastIndexOf(C compound) {
-        return super.getLastIndexOf((C) compound.getComplement());
-    }
+	@SuppressWarnings("unchecked")
+	@Override
+	public int getLastIndexOf(C compound) {
+		return super.getLastIndexOf((C) compound.getComplement());
+	}
 }

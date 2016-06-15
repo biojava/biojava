@@ -46,7 +46,7 @@ public class ScopDescriptions implements Serializable{
 
 
 	private static final long serialVersionUID = 4924350548761431852L;
-	
+
 	static JAXBContext jaxbContext;
 	static {
 		try {
@@ -55,8 +55,8 @@ public class ScopDescriptions implements Serializable{
 			throw new RuntimeException("Could not initialize JAXB context for " + ScopDescriptions.class, e);
 		}
 	}
-	
-	
+
+
 	List<ScopDescription> scopDescriptions;
 
 	public List<ScopDescription> getScopDescription() {
@@ -66,7 +66,7 @@ public class ScopDescriptions implements Serializable{
 	public void setScopDescription(List<ScopDescription> descriptions) {
 		this.scopDescriptions = descriptions;
 	}
-	
+
 	public  String toXML(){
 
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -80,7 +80,7 @@ public class ScopDescriptions implements Serializable{
 			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 
 			m.marshal( this, ps);
-			
+
 
 		} catch (Exception e){
 			throw new RuntimeException("Could not convert " + getClass() + " to XML", e);
@@ -108,6 +108,6 @@ public class ScopDescriptions implements Serializable{
 
 		return job;
 	}
-	
+
 
 }

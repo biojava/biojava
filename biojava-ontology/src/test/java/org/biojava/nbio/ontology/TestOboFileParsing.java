@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Mar 19, 2014
- * Author: andreas 
+ * Author: andreas
  *
  */
 
@@ -41,16 +41,16 @@ public class TestOboFileParsing extends TestCase{
 	public void testParsingBioSapiensOBO(){
 		OboParser parser = new OboParser();
 		InputStream inStream = parser.getClass().getResourceAsStream("/ontology/biosapiens.obo");
-		
+
 		assertNotNull(inStream);
-		
+
 		BufferedReader oboFile = new BufferedReader ( new InputStreamReader ( inStream ) );
 
 		Ontology ontology;
 		try {
 			ontology = parser.parseOBO(oboFile, "BioSapiens", "the BioSapiens ontology");
 			Set<Term> keys = ontology.getTerms();
-			
+
 			assertTrue(keys.size() >4000);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -58,9 +58,9 @@ public class TestOboFileParsing extends TestCase{
 			fail(e.getMessage());
 		}
 
-		
-		
-		
+
+
+
 	}
 
 }

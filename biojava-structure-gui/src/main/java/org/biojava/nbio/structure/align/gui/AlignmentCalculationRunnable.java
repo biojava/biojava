@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Mar 30, 2010
- * Author: Andreas Prlic 
+ * Author: Andreas Prlic
  *
  */
 
@@ -27,8 +27,8 @@ package org.biojava.nbio.structure.align.gui;
 public interface AlignmentCalculationRunnable extends Runnable
 {
 
-   public void interrupt();
-   public void cleanup();
-   public void setNrCPUs(int useNrCPUs);
+	public void interrupt();
+	public void cleanup();
+	public void setNrCPUs(int useNrCPUs);
 
 }

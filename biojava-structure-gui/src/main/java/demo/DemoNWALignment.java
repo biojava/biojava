@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * created at 21 Feb 2014
- * Author: ap3 
+ * Author: ap3
  */
 
 package demo;

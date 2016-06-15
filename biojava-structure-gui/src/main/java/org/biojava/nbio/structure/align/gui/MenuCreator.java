@@ -38,12 +38,13 @@ import java.io.File;
 /**
  * Create the menus for structure alignment GUI windows (JFrames).
  * <p>
- * Examples: Text Frames, Alignment Panels, Jmol Panels, etc.
- * 
+ * Examples: Text Frames, Alignment Panels, Jmol Panels.
+ *
  * @author Andreas Prlic
  * @author Aleix Lafita
+ * @author Spencer Bliven
  * @since 1.7
- * 
+ *
  */
 public class MenuCreator {
 
@@ -64,20 +65,27 @@ public class MenuCreator {
 	public static final String DOT_PLOT = "Show Dot Plot";
 	public static final String PAIRWISE_ALIGN = "New Pairwise Alignment";
 	public static final String MULTIPLE_ALIGN = "New Multiple Alignment";
-	protected static final int keyMask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
-	
-	/** 
-	 * Provide a JMenuBar that can be added to a JFrame containing a JmolPanel.<p>
+	public static final String PHYLOGENETIC_TREE = "Phylogenetic Tree";
+	protected static final int keyMask =
+			Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+
+	/**
+	 * Provide a JMenuBar that can be added to a JFrame containing
+	 * a JmolPanel. The alignment has to be either an AFPChain or a
+	 * MultipleAlignment: set the other parameter to null.<p>
 	 * Menus included:
 	 * <ul><li>File: open, save, export, import, exit.
 	 * <li>Align: new pairwise alignment, new multiple alignment.
-	 * <li>View: aligment panel, aligned pairs, text format, FatCat format, distance matrices, dot plot.
+	 * <li>View: aligment panel, aligned pairs, text format,
+	 * FatCat format, distance matrices, dot plot.
 	 * <li>Help
 	 * </ul>
-	 * 
+	 *
 	 * @return a JMenuBar
 	 */
-	public static JMenuBar initJmolMenu(JFrame frame, AbstractAlignmentJmol parent, AFPChain afpChain){
+	public static JMenuBar initJmolMenu(JFrame frame,
+			AbstractAlignmentJmol parent, AFPChain afpChain,
+			MultipleAlignment msa) {
 
 		JMenuBar menu = new JMenuBar();
 
@@ -88,11 +96,11 @@ public class MenuCreator {
 		//Load
 		if (parent != null){
 			JMenuItem loadF = getLoadMenuItem();
-			loadF.addActionListener(new MyAlignmentLoadListener(parent));
+			loadF.addActionListener(new MyAlignmentLoadListener());
 			file.add(loadF);
 		}
 		//Save
-		JMenuItem saveF = getSaveAlignmentMenuItem(afpChain);  //TODO generalize saving afpChain and MultipleAlignment
+		JMenuItem saveF = getSaveAlignmentMenuItem(afpChain, msa);
 		file.add(saveF);
 		//Open PDB
 		JMenuItem openPDB = getShowPDBMenuItem();
@@ -120,8 +128,9 @@ public class MenuCreator {
 		JMenuItem closeI = getCloseMenuItem(frame);
 		file.add(closeI);
 		//Exit
-		JMenuItem exitI = getExitMenuItem();		
+		JMenuItem exitI = getExitMenuItem();
 		file.add(exitI);
+
 		menu.add(file);
 
 /// ALIGN MENU
@@ -130,7 +139,10 @@ public class MenuCreator {
 		//new Pairwise alignment
 		JMenuItem pairI = getPairwiseAlignmentMenuItem();
 		align.add(pairI);
-		//new Multiple alignment TODO
+		//new Multiple alignment
+		JMenuItem multI = getMultipleAlignmentMenuItem();
+		align.add(multI);
+
 		menu.add(align);
 
 /// VIEW MENU
@@ -140,10 +152,10 @@ public class MenuCreator {
 
 		if ( parent != null){
 			//Alignment Panel
-			JMenuItem aligpI = MenuCreator.getIcon(parent,ALIGNMENT_PANEL);
-			aligpI.setMnemonic(KeyEvent.VK_M);
-			aligpI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_M, keyMask));
-			view.add(aligpI);
+			JMenuItem apI = MenuCreator.getIcon(parent,ALIGNMENT_PANEL);
+			apI.setMnemonic(KeyEvent.VK_M);
+			apI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_M, keyMask));
+			view.add(apI);
 			//Text Format
 			JMenuItem textI = MenuCreator.getIcon(parent,TEXT_ONLY);
 			textI.setMnemonic(KeyEvent.VK_T);
@@ -167,6 +179,12 @@ public class MenuCreator {
 				dotplot.setMnemonic(KeyEvent.VK_O);
 				dotplot.addActionListener(new DotPlotListener(afpChain));
 				view.add(dotplot);
+			}
+			//Phylogenetics - only if it is a MultipleAlignment
+			if (afpChain == null){
+				JMenuItem tree = getIcon(parent, PHYLOGENETIC_TREE);
+				tree.setMnemonic(KeyEvent.VK_T);
+				view.add(tree);
 			}
 		}
 		menu.add(view);
@@ -195,7 +213,7 @@ public class MenuCreator {
 
 		if ( saveicon == null)
 			saveI = new JMenuItem(LOAD_DB_RESULTS);
-		else 
+		else
 			saveI = new JMenuItem(LOAD_DB_RESULTS, saveicon);
 
 		saveI.addActionListener(new ActionListener() {
@@ -226,7 +244,7 @@ public class MenuCreator {
 
 		if ( loadI == null)
 			openI =new JMenuItem("Show By ID");
-		else 
+		else
 			openI =new JMenuItem("Show By ID", loadI);
 		openI.setMnemonic(KeyEvent.VK_O);
 		openI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, keyMask));
@@ -241,7 +259,7 @@ public class MenuCreator {
 
 		if ( loadI == null)
 			openI =new JMenuItem("Open PDB file");
-		else 
+		else
 			openI =new JMenuItem("Open PDB file", loadI);
 		openI.setMnemonic(KeyEvent.VK_F);
 		openI.addActionListener(new MyOpenPdbFileListener());
@@ -255,7 +273,7 @@ public class MenuCreator {
 		ImageIcon loadI = createImageIcon("/icons/revert.png");
 		if ( loadI == null)
 			loadF = new JMenuItem(LOAD_ALIGNMENT_XML);
-		else 
+		else
 			loadF = new JMenuItem(LOAD_ALIGNMENT_XML, loadI);
 		loadF.setMnemonic(KeyEvent.VK_L);
 		loadF.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, keyMask));
@@ -265,14 +283,19 @@ public class MenuCreator {
 
 
 	/**
-	 * Create the menu for the Alignment Panel representation of Structural Alignments.
+	 * Create the menu for the Alignment Panel representation of
+	 * Structural Alignments. The alignment can be in AFPChain format
+	 * or in the MultipleAlignment format.
+	 *
 	 * @param frame
 	 * @param actionListener
 	 * @param afpChain
+	 * @param MultipleAlignment
 	 * @return a JMenuBar
 	 */
-	public static JMenuBar getAlignmentPanelMenu(JFrame frame, ActionListener actionListener,AFPChain afpChain){
-
+	public static JMenuBar getAlignmentPanelMenu(JFrame frame,
+			ActionListener actionListener, AFPChain afpChain,
+			MultipleAlignment msa){
 
 		JMenuBar menu = new JMenuBar();
 
@@ -284,14 +307,14 @@ public class MenuCreator {
 
 		JMenuItem saveF = null;
 
-		if (saveicon != null )
+		if (saveicon != null)
 			saveF = new JMenuItem("Save text display", saveicon);
-		else 
+		else
 			saveF = new JMenuItem("Save text display");
 
 		saveF.setMnemonic(KeyEvent.VK_S);
-		MySaveFileListener listener = new MySaveFileListener(afpChain);
-		listener.setFatCatOutput(true);
+		MySaveFileListener listener = new MySaveFileListener(afpChain, msa);
+		listener.setTextOutput(true);
 		saveF.addActionListener(listener);
 		file.add(saveF);
 
@@ -305,7 +328,7 @@ public class MenuCreator {
 
 		JMenuItem closeI = MenuCreator.getCloseMenuItem(frame);
 		file.add(closeI);
-		JMenuItem exitI = MenuCreator.getExitMenuItem();		
+		JMenuItem exitI = MenuCreator.getExitMenuItem();
 		file.add(exitI);
 
 		JMenu edit = new JMenu("Edit");
@@ -331,7 +354,7 @@ public class MenuCreator {
 
 		JMenuItem textI = MenuCreator.getIcon(actionListener,TEXT_ONLY);
 		view.add(textI);
-		
+
 		JMenuItem fastaI = MenuCreator.getIcon(actionListener,FASTA_FORMAT);
 		view.add(fastaI);
 
@@ -356,15 +379,18 @@ public class MenuCreator {
 
 		return menu;
 	}
-	
+
 	/**
 	 * Create the menu for the Text representations of Structural Alignments.
 	 * @param frame
 	 * @param actionListener
 	 * @param afpChain
+	 * @param msa
 	 * @return a JMenuBar
 	 */
-	public static JMenuBar getAlignmentTextMenu(JFrame frame, ActionListener actionListener, AFPChain afpChain){
+	public static JMenuBar getAlignmentTextMenu(JFrame frame,
+			ActionListener actionListener, AFPChain afpChain,
+			MultipleAlignment msa){
 
 		JMenuBar menu = new JMenuBar();
 
@@ -378,12 +404,13 @@ public class MenuCreator {
 
 		if (saveicon != null )
 			saveF = new JMenuItem("Save text display", saveicon);
-		else 
+		else
 			saveF = new JMenuItem("Save text display");
 
 		saveF.setMnemonic(KeyEvent.VK_S);
-		MySaveFileListener listener = new MySaveFileListener(afpChain);  //TODO save MultipleAlignment not implemented
-		listener.setFatCatOutput(true);
+		MySaveFileListener listener =
+				new MySaveFileListener(afpChain, msa);
+		listener.setTextOutput(true);
 		saveF.addActionListener(listener);
 		file.add(saveF);
 		file.addSeparator();
@@ -396,14 +423,14 @@ public class MenuCreator {
 
 		JMenuItem closeI = MenuCreator.getCloseMenuItem(frame);
 		file.add(closeI);
-		JMenuItem exitI = MenuCreator.getExitMenuItem();		
+		JMenuItem exitI = MenuCreator.getExitMenuItem();
 		file.add(exitI);
 
 		JMenu view= new JMenu("View");
 		view.getAccessibleContext().setAccessibleDescription("View Menu");
 		view.setMnemonic(KeyEvent.VK_V);
 		menu.add(view);
-		
+
 		JMenuItem textI = MenuCreator.getIcon(actionListener,TEXT_ONLY);
 		view.add(textI);
 
@@ -448,7 +475,7 @@ public class MenuCreator {
 
 		if ( printIcon == null)
 			print = new JMenuItem(PRINT);
-		else 
+		else
 			print= new JMenuItem(PRINT,printIcon);
 
 
@@ -464,7 +491,7 @@ public class MenuCreator {
 
 		if ( saveicon == null)
 			exportI = new JMenuItem("Export PDB file");
-		else 
+		else
 			exportI = new JMenuItem("Export PDB file", saveicon);
 
 		exportI.setMnemonic(KeyEvent.VK_E);
@@ -473,18 +500,20 @@ public class MenuCreator {
 		return exportI;
 	}
 
-	public static JMenuItem getSaveAlignmentMenuItem(AFPChain afpChain) {
+	public static JMenuItem getSaveAlignmentMenuItem(AFPChain afpChain,
+			MultipleAlignment msa){
+
 		ImageIcon saveicon = createImageIcon("/icons/filesave.png");
 		JMenuItem saveF = null;
 
-		if (saveicon == null) 
+		if (saveicon == null)
 			saveF = new JMenuItem(SAVE_ALIGNMENT_XML);
-		else 
+		else
 			saveF = new JMenuItem(SAVE_ALIGNMENT_XML, saveicon);
 
 		saveF.setMnemonic(KeyEvent.VK_S);
 		saveF.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, keyMask));
-		saveF.addActionListener(new MySaveFileListener(afpChain));
+		saveF.addActionListener(new MySaveFileListener(afpChain, msa));
 
 		return saveF;
 	}
@@ -507,7 +536,7 @@ public class MenuCreator {
 			public void actionPerformed(ActionEvent e) {
 				MenuCreator.showAboutDialog();
 
-			}			
+			}
 		});
 		return aboutM;
 	}
@@ -532,7 +561,7 @@ public class MenuCreator {
 			public void actionPerformed(ActionEvent e) {
 				MenuCreator.showSystemInfo();
 
-			}           
+			}
 		});
 		return aboutM;
 	}
@@ -546,7 +575,7 @@ public class MenuCreator {
 
 		if ( exitIcon == null)
 			exitI = new JMenuItem("Quit");
-		else 
+		else
 			exitI = new JMenuItem("Quit",exitIcon);
 		exitI.setMnemonic(KeyEvent.VK_Q);
 		exitI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, keyMask));
@@ -558,8 +587,8 @@ public class MenuCreator {
 
 				if ( cmd.equals("Quit")){
 					System.exit(0);
-				}				
-			}			
+				}
+			}
 		});
 		return exitI;
 	}
@@ -585,7 +614,7 @@ public class MenuCreator {
 				HelpDialog d = new HelpDialog();
 				d.showDialog();
 
-			}			
+			}
 		});
 
 		return helpM;
@@ -626,17 +655,25 @@ public class MenuCreator {
 	}
 
 
-	/** provide a display for the pairwise structure alignment
-	 * 
+	/**
+	 * Provide a display for the pairwise structure alignment.
 	 */
 	private static void showPairDialog(){
 		AlignmentGui gui =  AlignmentGui.getInstance();
 		gui.setVisible(true);
 	}
 
-	/** 
+	/**
+	 * Provide a display for the multiple structure alignment.
+	 */
+	private static void showMultipleDialog(){
+		MultipleAlignmentGUI gui =  MultipleAlignmentGUI.getInstance();
+		gui.setVisible(true);
+	}
+
+	/**
 	 * Show some info about this GUI
-	 * 
+	 *
 	 */
 	public static void showAboutDialog(){
 
@@ -649,8 +686,8 @@ public class MenuCreator {
 		dialog.showDialog();
 	}
 
-	/** 
-	 * Returns an ImageIcon, or null if the path was invalid. 
+	/**
+	 * Returns an ImageIcon, or null if the path was invalid.
 	 * @param path the path to the icon
 	 * @return ImageIcon object
 	 */
@@ -670,9 +707,9 @@ public class MenuCreator {
 		ImageIcon alignIcon = createImageIcon("/icons/window_new.png");
 
 		JMenuItem pairI ;
-		if ( alignIcon == null) 
+		if ( alignIcon == null)
 			pairI = new JMenuItem(PAIRWISE_ALIGN);
-		else 
+		else
 			pairI = new JMenuItem(PAIRWISE_ALIGN, alignIcon);
 		pairI.setMnemonic(KeyEvent.VK_N);
 		pairI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, keyMask));
@@ -683,19 +720,19 @@ public class MenuCreator {
 
 				if ( cmd.equals(PAIRWISE_ALIGN)){
 					MenuCreator.showPairDialog();
-				}				
+				}
 			}
 		});
 		return pairI;
 	}
-	
+
 	protected static JMenuItem getMultipleAlignmentMenuItem() {
 		ImageIcon alignIcon = createImageIcon("/icons/window_new.png");
 
 		JMenuItem multipleI ;
-		if ( alignIcon == null) 
+		if ( alignIcon == null)
 			multipleI = new JMenuItem(MULTIPLE_ALIGN);
-		else 
+		else
 			multipleI = new JMenuItem(MULTIPLE_ALIGN, alignIcon);
 		multipleI.setMnemonic(KeyEvent.VK_N);
 		multipleI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, keyMask));
@@ -705,8 +742,8 @@ public class MenuCreator {
 				String cmd = e.getActionCommand();
 
 				if ( cmd.equals(MULTIPLE_ALIGN)){
-					MenuCreator.showPairDialog();
-				}				
+					MenuCreator.showMultipleDialog();
+				}
 			}
 		});
 		return multipleI;
@@ -714,9 +751,7 @@ public class MenuCreator {
 
 	/**
 	 * Creates a frame to display a DotPlotPanel.
-	 * 
 	 * Used by the 'View>Show Dot Plot' menu item
-	 * @author Spencer Bliven
 	 *
 	 */
 	public static class DotPlotListener implements ActionListener {
@@ -726,7 +761,8 @@ public class MenuCreator {
 		}
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			String title = String.format("%s vs. %s", afpChain.getName1(),afpChain.getName2());
+			String title = String.format("%s vs. %s",
+					afpChain.getName1(),afpChain.getName2());
 
 			// Create window
 			JFrame frame = new JFrame(title);
@@ -749,18 +785,17 @@ public class MenuCreator {
 
 	public static JMenuBar initAlignmentGUIMenu(JFrame frame) {
 
-
 		JMenu file= new JMenu("File");
 		file.getAccessibleContext().setAccessibleDescription("File Menu");
 
 		JMenuItem loadF = MenuCreator.getLoadMenuItem();
-		loadF.addActionListener(new MyAlignmentLoadListener(null));
+		loadF.addActionListener(new MyAlignmentLoadListener());
 		file.add(loadF);
 
-		JMenuItem openPDB = MenuCreator.getShowPDBMenuItem();       
+		JMenuItem openPDB = MenuCreator.getShowPDBMenuItem();
 		file.add(openPDB);
 
-		JMenuItem openI = MenuCreator.getOpenPDBMenuItem();		
+		JMenuItem openI = MenuCreator.getOpenPDBMenuItem();
 		file.add(openI);
 
 		JMenuItem dbI = MenuCreator.getDBResultMenuItem();
@@ -773,7 +808,7 @@ public class MenuCreator {
 
 		JMenuItem closeI = MenuCreator.getCloseMenuItem(frame);
 		file.add(closeI);
-		JMenuItem exitI = MenuCreator.getExitMenuItem();		
+		JMenuItem exitI = MenuCreator.getExitMenuItem();
 		file.add(exitI);
 
 		JMenuBar menu = new JMenuBar();
@@ -823,17 +858,17 @@ public class MenuCreator {
 			public void actionPerformed(ActionEvent e) {
 				MenuCreator.showMemoryMonitor();
 
-			}			
+			}
 		});
 		return aboutM;
 	}
 
 	protected static void showMemoryMonitor() {
 		final MemoryMonitor demo = new MemoryMonitor();
-		
+
 		final JFrame f = new JFrame("MemoryMonitor");
 		f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		
+
 		WindowListener l = new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {}
@@ -842,29 +877,29 @@ public class MenuCreator {
 			@Override
 			public void windowIconified(WindowEvent e) { demo.surf.stop(); }
 		};
-		
+
 		f.addWindowListener(l);
-		
-		
+
+
 		Box vBox = Box.createVerticalBox();
-		
+
 		vBox.add(demo);
-		
+
 		Box b = Box.createHorizontalBox();
 		JButton b1 = new JButton("Run Garbage Collector");
-		
+
 		b1.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				System.gc();
-				
+
 			}
 		});
-		
+
 		b.add(b1);
 		b.add(Box.createGlue());
-		
+
 		vBox.add(b);
 		f.getContentPane().add("Center",vBox);
 		f.pack();
@@ -882,7 +917,7 @@ public class MenuCreator {
 
 		if ( configIcon == null)
 			configI = new JMenuItem("Settings");
-		else 
+		else
 			configI = new JMenuItem("Settings",configIcon);
 		configI.setMnemonic(KeyEvent.VK_S);
 		configI.addActionListener(new ActionListener(){
@@ -893,8 +928,8 @@ public class MenuCreator {
 
 				if ( cmd.equals("Settings")){
 					ConfigPDBInstallPanel.showDialog();
-				}               
-			}           
+				}
+			}
 		});
 		return configI;
 	}

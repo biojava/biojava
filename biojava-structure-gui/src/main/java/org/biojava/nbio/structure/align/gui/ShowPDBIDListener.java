@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Jul 16, 2010
- * Author: ap3 
+ * Author: ap3
  *
  */
 
@@ -36,7 +36,7 @@ public class ShowPDBIDListener
 implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		String cmd = e.getActionCommand();                  
+		String cmd = e.getActionCommand();
 		if ( cmd.equals("Show By ID")){
 
 			JCheckBox useBioAssembly = new JCheckBox("Show Biological Assembly");
@@ -55,20 +55,20 @@ implements ActionListener {
 					UserConfiguration config = WebStartMain.getWebStartConfig();
 
 					StructureLoaderThread r = new StructureLoaderThread(config,pdbId, useBioAssembly.isSelected());
-					
+
 					StructureLoaderThread.showProgressBar();
-					
+
 					r.execute();
-					
+
 
 				} catch (Exception ex){
 					ex.printStackTrace();
 				}
-			}        
-		}               
+			}
+		}
 	}
 
-	
+
 
 
 }

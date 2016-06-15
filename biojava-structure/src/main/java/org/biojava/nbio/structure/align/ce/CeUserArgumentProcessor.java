@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Nov 2, 2009
- * Author: Andreas Prlic 
+ * Author: Andreas Prlic
  *
  */
 
@@ -29,12 +29,12 @@ import org.biojava.nbio.structure.align.StructureAlignment;
 import org.biojava.nbio.structure.align.ce.CeParameters.ScoringStrategy;
 
 /** process the arguments from command line
- * 
+ *
  * @author Andreas Prlic
  *
  */
 public class CeUserArgumentProcessor extends AbstractUserArgumentProcessor {
-	
+
 	protected static class CeStartupParams extends StartupParameters {
 		protected int maxGapSize;
 		protected int winSize;
@@ -88,7 +88,7 @@ public class CeUserArgumentProcessor extends AbstractUserArgumentProcessor {
 		}
 
 		/** CE specific parameter: set the Max gap size parameter G (during AFP extension). Default: 30
-		 * 
+		 *
 		 * @return the maximum gap size G parameter.
 		 */
 		public int getMaxGapSize() {
@@ -96,7 +96,7 @@ public class CeUserArgumentProcessor extends AbstractUserArgumentProcessor {
 		}
 
 		/** CE specific parameter: set the Max gap size parameter G (during AFP extension). Default: 30
-		 * 
+		 *
 		 * @param maxGapSize
 		 */
 		public void setMaxGapSize(int maxGapSize) {
@@ -115,7 +115,7 @@ public class CeUserArgumentProcessor extends AbstractUserArgumentProcessor {
 
 
 		/**(jCE specific): maximum RMSD that shall be calculated for the alignment.
-		 * 
+		 *
 		 * @return maxOptRMSD parameter
 		 */
 		public Double getMaxOptRMSD() {
@@ -123,7 +123,7 @@ public class CeUserArgumentProcessor extends AbstractUserArgumentProcessor {
 		}
 
 		/** (jCE specific): maximum RMSD that shall be calculated for the alignment.
-		 * 
+		 *
 		 * @param maxOptRMSD max RMSD to calculate
 		 */
 		public void setMaxOptRMSD(Double maxOptRMSD) {
@@ -161,7 +161,7 @@ public class CeUserArgumentProcessor extends AbstractUserArgumentProcessor {
 		}
 
 	}
-	
+
 	@Override
 	protected StartupParameters getStartupParametersInstance() {
 		return new CeStartupParams();
@@ -175,15 +175,15 @@ public class CeUserArgumentProcessor extends AbstractUserArgumentProcessor {
 
 	@Override
 	public Object getParameters() {
-		
+
 		StructureAlignment alignment = getAlgorithm();
-		
+
 		CeParameters aligParams = (CeParameters) alignment.getParameters();
 		CeStartupParams startParams = (CeStartupParams) params;
-		
+
 		if ( aligParams == null)
 			aligParams = new CECPParameters();
-		
+
 		// Copy relevant parameters from the startup parameters
 		aligParams.setMaxGapSize(startParams.getMaxGapSize());
 		aligParams.setWinSize(startParams.getWinSize());
@@ -200,10 +200,10 @@ public class CeUserArgumentProcessor extends AbstractUserArgumentProcessor {
 	public String getDbSearchLegend(){
 		//String legend = "# name1\tname2\tscore\tz-score\trmsd\tlen1\tlen2\tsim1\tsim2\t " ;
 		//return legend;
-		
+
 		return "# name1\tname2\tscore\tz-score\trmsd\tlen1\tlen2\tcov1\tcov2\t%ID\tDescription\t " ;
-		
+
 	}
-	
+
 
 }

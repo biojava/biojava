@@ -31,18 +31,18 @@ import java.util.List;
 public class SiftsEntity implements Serializable{
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 750353252427491487L;
 	String type;
 	String entityId;
-	
+
 	List<SiftsSegment> segments;
-	
+
 	public SiftsEntity(){
 		this(null,null);
 	}
-	
+
 	public SiftsEntity(String type, String entityId) {
 		this.type = type;
 		this.entityId = entityId;
@@ -51,13 +51,13 @@ public class SiftsEntity implements Serializable{
 
 	public void addSegment(SiftsSegment s) {
 		segments.add(s);
-		
+
 	}
-	
+
 	public List<SiftsSegment> getSegments(){
 		return segments;
 	}
-	
+
 	public void setSegments(List<SiftsSegment> segments){
 		this.segments = segments;
 	}
@@ -122,7 +122,7 @@ public class SiftsEntity implements Serializable{
 			return false;
 		return true;
 	}
-	
-	
+
+
 
 }

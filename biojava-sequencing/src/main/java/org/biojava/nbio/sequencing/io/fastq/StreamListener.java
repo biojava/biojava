@@ -27,10 +27,10 @@ package org.biojava.nbio.sequencing.io.fastq;
  */
 public interface StreamListener
 {
-    /**
-     * Notify this listener of a FASTQ formatted sequence.
-     *
-     * @param fastq FASTQ formatted sequence
-     */
-    void fastq(Fastq fastq);
+	/**
+	 * Notify this listener of a FASTQ formatted sequence.
+	 *
+	 * @param fastq FASTQ formatted sequence
+	 */
+	void fastq(Fastq fastq);
 }

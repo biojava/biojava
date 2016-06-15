@@ -39,19 +39,19 @@ import org.slf4j.LoggerFactory;
 public class SimpleGenbankProxySequenceReaderTest {
 
 
-    private final static Logger logger = LoggerFactory.getLogger(SimpleGenbankProxySequenceReaderTest.class);
-    
-    @Test(expected = IOException.class)
-    public void testWrongSequence() throws Exception {
-        logger.info("test wrong sequence");
-        
-        String wrongGi = "34567";
-        
-        GenbankProxySequenceReader<AminoAcidCompound> genbankReader
-                = new GenbankProxySequenceReader<AminoAcidCompound>(System.getProperty("java.io.tmpdir"),
-                        wrongGi,
-                        AminoAcidCompoundSet.getAminoAcidCompoundSet());
+	private final static Logger logger = LoggerFactory.getLogger(SimpleGenbankProxySequenceReaderTest.class);
 
-        ProteinSequence seq = new ProteinSequence(genbankReader);
-    }
+	@Test(expected = IOException.class)
+	public void testWrongSequence() throws Exception {
+		logger.info("test wrong sequence");
+
+		String wrongGi = "34567";
+
+		GenbankProxySequenceReader<AminoAcidCompound> genbankReader
+				= new GenbankProxySequenceReader<AminoAcidCompound>(System.getProperty("java.io.tmpdir"),
+						wrongGi,
+						AminoAcidCompoundSet.getAminoAcidCompoundSet());
+
+		ProteinSequence seq = new ProteinSequence(genbankReader);
+	}
 }

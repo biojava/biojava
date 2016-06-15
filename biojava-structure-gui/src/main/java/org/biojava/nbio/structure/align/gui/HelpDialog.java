@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Oct 6, 2009
- * Author: Andreas Prlic 
+ * Author: Andreas Prlic
  *
  */
 
@@ -36,7 +36,7 @@ import java.awt.event.ActionListener;
 
 public class HelpDialog {
 	Box vBox;
-	
+
 	public void showDialog(){
 
 	      JDialog dialog = new JDialog();
@@ -46,7 +46,7 @@ public class HelpDialog {
 	      ResourceManager mgr = ResourceManager.getResourceManager("ce");
 
 	      String msg = mgr.getString("ce.help");
-	      	      
+
 	      JEditorPane txt = new JEditorPane("text/html", msg);
 	      txt.setEditable(false);
 
@@ -54,12 +54,12 @@ public class HelpDialog {
 	      scroll.setSize(new Dimension(300,500));
 	      vBox= Box.createVerticalBox();
 	      vBox.add(scroll);
-	      
+
 	      txt.addHyperlinkListener(new HyperlinkListener(){
-	         
+
 	         @Override
 			public void hyperlinkUpdate(HyperlinkEvent e) {
-	             
+
 	             if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
 	                 String href = e.getDescription();
 	                 BrowserOpener.showDocument(href);
@@ -68,7 +68,7 @@ public class HelpDialog {
 	                 // change the mouse curor
 	                 vBox.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 	             }
-	             if (e.getEventType() == HyperlinkEvent.EventType.EXITED) { 
+	             if (e.getEventType() == HyperlinkEvent.EventType.EXITED) {
 	                 vBox.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	             }
 	         }
@@ -98,8 +98,8 @@ public class HelpDialog {
 
 	      dialog.getContentPane().add(vBox);
 	      dialog.setVisible(true);
-	      
-	      
-	   
+
+
+
 	}
 }

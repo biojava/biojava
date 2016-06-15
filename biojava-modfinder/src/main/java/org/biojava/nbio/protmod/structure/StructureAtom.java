@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Jul 29, 2010
- * Author: Jianjiong Gao 
+ * Author: Jianjiong Gao
  *
  */
 
@@ -30,10 +30,10 @@ package org.biojava.nbio.protmod.structure;
  * @since 3.0
  */
 public class StructureAtom {
-	
+
 	private final StructureGroup group;
 	private final String atomName;
-	
+
 	public StructureAtom(final StructureGroup group, final String atomName) {
 		if (group==null || atomName==null) {
 			throw new IllegalArgumentException("Null argument(s).");
@@ -41,34 +41,34 @@ public class StructureAtom {
 		this.group = group;
 		this.atomName = atomName;
 	}
-	
+
 	public StructureGroup getGroup() {
 		return group;
 	}
-	
+
 	public String getAtomName() {
 		return atomName;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == this)
 			return true;
-		
+
 		if (!(obj instanceof StructureAtom))
 			return false;
-		
+
 		StructureAtom anAtom = (StructureAtom)obj;
-		
+
 		if (!anAtom.getGroup().equals(group))
 			return false;
-		
+
 		if (!anAtom.getAtomName().equals(atomName))
 			return false;
-		
+
 		return true;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		int result = 17;
@@ -76,9 +76,9 @@ public class StructureAtom {
 		result = result * 32 + atomName.hashCode();
 		return result;
 	}
-	
+
 	@Override
 	public String toString() {
-		return group.toString() + '\t' + atomName; 
+		return group.toString() + '\t' + atomName;
 	}
 }

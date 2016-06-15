@@ -16,9 +16,9 @@
  * at:
  *
  *      http://www.biojava.org/
- * 
+ *
  * Created on Jan 18, 2008
- * 
+ *
  */
 
 package org.biojava.nbio.ontology.obo;
@@ -33,15 +33,15 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 
-/** A class to parse the content of an OBO file. It delegates handling of the 
+/** A class to parse the content of an OBO file. It delegates handling of the
  * content to the OBOFileEventListener implementation.
- * 
+ *
  * This file contains parts of the OBO-Edit file OBOParseEngine, (particularly the encoding and decoding part)
- * 
+ *
  * http://geneontology.cvs.sourceforge.net/geneontology/go-dev/java/oboedit/sources/org/geneontology/oboedit/dataadapter/OBOParseEngine.java?revision=1.10&view=markup
  * Thanks to the OboEdit developers for giving permission to release this in BioJava.
- *  
- * 
+ *
+ *
  * @author Andreas Prlic
  * @author John Day Richter
  * @since 1.6
@@ -63,17 +63,17 @@ public class OboFileParser {
 	protected static final Map<Character, Character> escapeChars =
 		new HashMap<Character, Character>();
 
-	protected static final Map<Character, Character> unescapeChars = 
+	protected static final Map<Character, Character> unescapeChars =
 		new HashMap<Character, Character>();
 
 	static {
 		escapeChars.put(new Character('n'), new Character('\n'));
 		escapeChars.put(new Character('W'), new Character(' '));
 		escapeChars.put(new Character('t'), new Character('\t'));
-		escapeChars.put(new Character(':'), new Character(':'));			
+		escapeChars.put(new Character(':'), new Character(':'));
 		escapeChars.put(new Character(','), new Character(','));
 		escapeChars.put(new Character('"'), new Character('"'));
-		escapeChars.put(new Character('\''), new Character('\''));		
+		escapeChars.put(new Character('\''), new Character('\''));
 		escapeChars.put(new Character('\\'), new Character('\\'));
 		escapeChars.put(new Character('{'), new Character('{'));
 		escapeChars.put(new Character('}'), new Character('}'));
@@ -106,8 +106,8 @@ public class OboFileParser {
 			this.index = index;
 			this.endIndex = endIndex;
 		}
-		
-		
+
+
 	}
 
 
@@ -128,10 +128,10 @@ public class OboFileParser {
 	}
 
 	/** parse an ontology file
-	 * 
+	 *
 	 * @param oboFile
 	 * @throws IOException
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public void parseOBO(BufferedReader oboFile) throws IOException{
 
@@ -148,7 +148,7 @@ public class OboFileParser {
 				String stanzaname = line.substring(1, line.length() - 1);
 				if (stanzaname.length() < 1)
 					throw new IOException("Empty stanza: \"" +line+"\"");
-				currentStanza = stanzaname;				
+				currentStanza = stanzaname;
 
 				//logger.info("stanza: {}", currentStanza);
 				triggerNewStanza(currentStanza);
@@ -236,7 +236,7 @@ public class OboFileParser {
 	}
 
 	/** parse the Synonym String from the Term.
-	 * value can be: 
+	 * value can be:
 	 * <pre>"ca_bind" RELATED [uniprot:curation]</pre>
 	 * @param value
 	 * @return the synonym text
@@ -251,21 +251,21 @@ public class OboFileParser {
 				true);
 		int defIndex = findUnescaped(value, '[', p.index, value.length());
 		if (defIndex == -1) {
-			throw new IOException("Badly formatted synonym. " 
+			throw new IOException("Badly formatted synonym. "
 					+ "No dbxref list found." + line + " " + linenum );
 		}
 		String leftovers = value.substring(p.index + 1, defIndex).trim();
 		StringTokenizer tokenizer = new StringTokenizer(leftovers, " \t");
 		int scope = Synonym.RELATED_SYNONYM;
-		
+
 		if ( key.equals(OboFileHandler.EXACT_SYNONYM))
 			scope = Synonym.EXACT_SYNONYM;
 		else if ( key.equals(OboFileHandler.BROAD_SYNONYM))
 			scope = Synonym.BROAD_SYNONYM;
-		else if ( key.equals(OboFileHandler.NARROW_SYNONYM))			
+		else if ( key.equals(OboFileHandler.NARROW_SYNONYM))
 			scope = Synonym.NARROW_SYNONYM;
-		
-		
+
+
 		String catID = null;
 		for (int i = 0; tokenizer.hasMoreTokens(); i++) {
 			String token = tokenizer.nextToken();
@@ -298,7 +298,7 @@ public class OboFileParser {
 		//logger.info("SYNONYM: " + p.str +" " + synonym.getCategory() + " " + synonym.getScope());
 
 		Map<String,Object>[] refs = getDbxrefList(value,defIndex + 1, value.length());
-		
+
 		// set the refs in the synonym
 		for (Map<String, Object> ref : refs){
 			@SuppressWarnings("unused")
@@ -310,7 +310,7 @@ public class OboFileParser {
 			NestedValue nv = (NestedValue) ref.get("nv");
 			//TODO: add implementation for this...
 		}
-		
+
 
 		return synonym;
 	}
@@ -336,7 +336,7 @@ public class OboFileParser {
 				trailing = true;
 			}
 
-			Map<String, Object> pair = parseXref(line, 
+			Map<String, Object> pair = parseXref(line,
 					startoffset,
 					endIndex);
 			if (pair == null) {
@@ -365,7 +365,7 @@ public class OboFileParser {
 		return out;
 	}
 
-	protected Map<String,Object> parseXref(String line, 
+	protected Map<String,Object> parseXref(String line,
 			int startoffset, int endoffset) throws IOException {
 		String xref_str = null;
 		String desc_str = null;
@@ -394,7 +394,7 @@ public class OboFileParser {
 		while (iter.hasNext()){
 			OboFileEventListener li = iter.next();
 			li.newStanza(stanza);
-		}		
+		}
 	}
 
 	private void triggerNewKey(String key, String value){
@@ -487,10 +487,10 @@ public class OboFileParser {
 				i++;
 				continue;
 			} else if (inQuotes) {
-				if (c == quoteChar) 
+				if (c == quoteChar)
 					inQuotes = false;
 				continue;
-				
+
 			} else if (c == toChar) {
 				return i;
 			} else if (honorQuotes && isQuote(c)) {
@@ -525,15 +525,15 @@ public class OboFileParser {
 
 		for (; i < stopIndex; i++) {
 			// burn through any leading whitespace
-			if (Character.isWhitespace(value.charAt(i))) 
+			if (Character.isWhitespace(value.charAt(i)))
 				continue;
 
 			// if the first non-whitespace character is not a quote,
-			// proceed in non-quoted mode				
+			// proceed in non-quoted mode
 			else if (!isQuote(value.charAt(i))) {
 				if (requireQuotes)
 					throw new IOException(
-							"Expected start of quoted string. " + 
+							"Expected start of quoted string. " +
 							line + " " +  value+ " at linenr " + linenum);
 				useQuotes = false;
 				break;
@@ -592,7 +592,7 @@ public class OboFileParser {
 					break;
 				} else {
 					logger.error("found character |{}|", str.charAt(startIndex));
-					throw new IOException("Expected comma in trailing modifier. " + 
+					throw new IOException("Expected comma in trailing modifier. " +
 							line + " linenr: " + linenum);
 				}
 			}
@@ -611,6 +611,7 @@ class NestedValue {
 	public NestedValue() {
 	}
 
+	@Override
 	public String toString(){
 		String txt = "NestedValue: " ;
 		Set<Object> keys = propertyValues.keySet();
@@ -639,7 +640,7 @@ class NestedValue {
 		while (iter.hasNext()){
 			String key = iter.next().toString();
 			String value = pv.get(key).toString();
-			propertyValues.setProperty(key, value); 	
+			propertyValues.setProperty(key, value);
 		}
 
 	}

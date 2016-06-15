@@ -94,7 +94,7 @@ class Permute {
 };
 
 /**
- * 
+ *
  * @author Peter
  */
 public final class SphereSampler {
@@ -137,7 +137,7 @@ public final class SphereSampler {
 
 	private static final int[] mult = { 1, 8, 6, 12, 8, 24, 24, 8, 6, 24, 24, 12, 24, 8, 24, 48, 24, 24};
 
-	static 
+	static
 	{
 
 		List<Quat4d> myorientations = new ArrayList<Quat4d>();
@@ -182,22 +182,22 @@ public final class SphereSampler {
 	};
 
 	public static int getSphereCount() {
-	
+
 		return orientations.size();
 	}
 
 	public static Quat4d getQuat4d(int index) {
-	
+
 		return orientations.get(index);
 	}
 
 	public static void getAxisAngle(int index, AxisAngle4f axisAngle) {
-	
+
 		axisAngle.set(orientations.get(index));
 	}
 
 	public static void getAxisAngle(int index, AxisAngle4d axisAngle) {
-		
+
 		axisAngle.set(orientations.get(index));
 	}
 

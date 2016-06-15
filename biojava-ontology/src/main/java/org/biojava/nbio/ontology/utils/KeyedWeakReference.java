@@ -35,19 +35,19 @@ import java.lang.ref.WeakReference;
  */
 
 public class KeyedWeakReference extends WeakReference {
-    private Object key;
+	private Object key;
 
-    public KeyedWeakReference(Object key, Object ref) {
-	super(ref);
-	this.key = key;
-    }
+	public KeyedWeakReference(Object key, Object ref) {
+		super(ref);
+		this.key = key;
+	}
 
-    public KeyedWeakReference(Object key, Object ref, ReferenceQueue queue) {
-	super(ref, queue);
-	this.key = key;
-    }
+	public KeyedWeakReference(Object key, Object ref, ReferenceQueue queue) {
+		super(ref, queue);
+		this.key = key;
+	}
 
-    public Object getKey() {
-	return key;
-    }
+	public Object getKey() {
+		return key;
+	}
 }

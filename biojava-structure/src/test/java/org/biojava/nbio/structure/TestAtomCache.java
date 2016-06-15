@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Mar 1, 2010
- * Author: Andreas Prlic 
+ * Author: Andreas Prlic
  *
  */
 
@@ -41,10 +41,10 @@ import static org.junit.Assert.*;
 
 // TODO dmyersturnbull: we should merge TestAtomCache and AtomCacheTest
 public class TestAtomCache {
-	
+
 	public static final String lineSplit = System.getProperty("file.separator");
 	private AtomCache cache;
-	
+
 	@Before
 	public void setUp() {
 		cache = new AtomCache();
@@ -76,7 +76,7 @@ public class TestAtomCache {
 		Structure s = cache.getStructure(name1);
 		assertNotNull(s);
 		assertTrue(s.getChains().size() == 4);
-		
+
 		String name2 = "4hhb.C";
 		String chainId2 = "C";
 		s = cache.getStructure(name2);
@@ -86,7 +86,18 @@ public class TestAtomCache {
 		assertEquals(c.getChainID(),chainId2);
 
 
-		String name3 = "4hhb:1";
+		// Colon separators removed in BioJava 4.1.0
+		String name2b = "4hhb:A";
+		try {
+			s = cache.getStructure(name2b);
+			fail("Invalid structure format");
+		} catch(IOException e) {
+		} catch(StructureException e) {
+		}
+
+
+		// Numeric chain IDs are allowed but deprecated.
+		String name3 = "4hhb.1";
 		String chainId3 = "B";
 		s = cache.getStructure(name3);
 		assertNotNull(s);
@@ -96,7 +107,7 @@ public class TestAtomCache {
 		assertEquals(c.getChainID(),chainId3);
 
 
-		String name4 = "4hhb:A:10-20,B:10-20,C:10-20";		
+		String name4 = "4hhb.A:10-20,B:10-20,C:10-20";
 		s = cache.getStructure(name4);
 		assertNotNull(s);
 
@@ -105,7 +116,7 @@ public class TestAtomCache {
 		c = s.getChainByPDB("B");
 		assertEquals(c.getAtomLength(),11);
 
-		String name5 = "4hhb:(A:10-20,A:30-40)";
+		String name5 = "4hhb.(A:10-20,A:30-40)";
 		s =cache.getStructure(name5);
 		assertNotNull(s);
 
@@ -113,24 +124,15 @@ public class TestAtomCache {
 		c = s.getChainByPDB("A");
 		assertEquals(c.getAtomLength(),22);
 
-		// This syntax also works, since the first paren is treated as a separator
-		String name6 = "4hhb(A:10-20,A:30-40)";
-		s =cache.getStructure(name6);
-		assertNotNull(s);
-	
-		assertEquals(s.getChains().size(),1 );
-		c = s.getChainByPDB("A");
-		assertEquals(c.getAtomLength(),22);
+		try {
+			// This syntax used to work, since the first paren is treated as a separator
+			String name6 = "4hhb(A:10-20,A:30-40)";
+			s =cache.getStructure(name6);
+			fail("A chain separator is required after the ID since 4.2.0");
+		} catch(StructureException e) {}
 
-		// Doesn't work, since no ':' in name
-		// This behavior is questionable; perhaps it should return 4hhb.C?
-		// It's not a very likely/important case, I'm just documenting behavior here.
-		String name7 = "4hhb(C)";
-		s = cache.getStructure(name7);
-		assertNull("Invalid substructure style: "+name7,s);
-
-		// Works since we detect a ':'
-		String name8 = "4hhb:(C)";
+		// Works since we detect a separator
+		String name8 = "4hhb.(C)";
 		s = cache.getStructure(name8);
 
 		assertTrue(s.getChains().size() == 1);
@@ -138,7 +140,7 @@ public class TestAtomCache {
 		assertEquals(c.getChainID(),chainId2);
 
 	}
-	
+
 	@Test(expected=IOException.class)
 	public void testObsoleteId() throws StructureException, IOException {
 		cache.setFetchBehavior(FetchBehavior.FETCH_FILES);
@@ -148,14 +150,14 @@ public class TestAtomCache {
 		cache.setUseMmCif(false);
 		cache.getStructure("1HHB");
 	}
-	
+
 	// note: we expect an IOException because 1CMW is obsolete and hasn't got a replacement
 	@Test
 	public void testFetchCurrent1CMW() throws IOException, StructureException {
-		
+
 		cache.setFetchBehavior(FetchBehavior.FETCH_FILES);
 		cache.setObsoleteBehavior(ObsoleteBehavior.FETCH_CURRENT);
-		
+
 		// OBSOLETE PDB; should throw an exception
 		cache.setUseMmCif(false);
 		try {
@@ -173,14 +175,14 @@ public class TestAtomCache {
 	// 1HHB is obsolete with a replacement
 	@Test
 	public void testFetchCurrent1HHB() throws IOException, StructureException {
-		
+
 		cache.setFetchBehavior(FetchBehavior.FETCH_FILES);
 		cache.setObsoleteBehavior(ObsoleteBehavior.FETCH_CURRENT);
-		
+
 		cache.setUseMmCif(false);
 		Structure s = cache.getStructure("1HHB");
 		assertEquals("Failed to get the current ID for 1HHB.","4HHB",s.getPDBCode());
-		
+
 		cache.setUseMmCif(true);
 		s = cache.getStructure("1HHB");
 		assertEquals("Failed to get the current ID for 1HHB.","4HHB",s.getPDBCode());

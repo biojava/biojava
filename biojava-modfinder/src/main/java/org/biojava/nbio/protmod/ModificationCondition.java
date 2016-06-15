@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Jun 4, 2010
- * Author: Jianjiong Gao 
+ * Author: Jianjiong Gao
  *
  */
 
@@ -28,19 +28,19 @@ import java.util.List;
 
 /**
  * Conditions of a protein modification, e.g. components and atoms.
- * 
+ *
  * @author Jianjiong Gao
  * @since 3.0
  */
 public interface ModificationCondition {
 	/**
-	 * 
+	 *
 	 * @return the involved components.
 	 */
 	public List<Component> getComponents();
-	
+
 	/**
-	 * 
+	 *
 	 * @return a list of all {Link ModificationLinkage}s.
 	 */
 	public List<ModificationLinkage> getLinkages();

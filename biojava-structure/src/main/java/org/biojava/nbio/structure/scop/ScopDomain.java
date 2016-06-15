@@ -20,22 +20,30 @@
  */
 package org.biojava.nbio.structure.scop;
 
-import org.biojava.nbio.structure.ResidueRange;
-import org.biojava.nbio.structure.StructureIdentifier;
-
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+
+import org.biojava.nbio.structure.ResidueRange;
+import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureIdentifier;
+import org.biojava.nbio.structure.SubstructureIdentifier;
+import org.biojava.nbio.structure.align.util.AtomCache;
+
 
 /** Container for the information for a domain. Contains a line in the file
  * dir.cla.scop.txt_1.75
- * 
+ *
  * e.g d1dlwa_	1dlw	A:	a.1.1.1	14982	cl=46456,cf=46457,sf=46458,fa=46459,dm=46460,sp=46461,px=14982
+ *
+ * Instantiated using {@link ScopDatabase#getDomainByScopID(String)}
  * @author Andreas Prlic
  *
  */
@@ -44,7 +52,7 @@ import java.util.Set;
 public class ScopDomain implements Serializable, Cloneable, StructureIdentifier {
 
 	private static final long serialVersionUID = 5890476209571654301L;
-	
+
 	String scopId;
 	String pdbId;
 	List<String> ranges;
@@ -82,25 +90,25 @@ public class ScopDomain implements Serializable, Cloneable, StructureIdentifier 
 		buf.append("\t") ;
 		buf.append(classificationId);
 		buf.append("\t") ;
-        buf.append(String.valueOf(sunid));
+		buf.append(String.valueOf(sunid));
 		buf.append("\t") ;
-		
+
 		buf.append("cl=");
-        buf.append(String.valueOf(classId));
+		buf.append(String.valueOf(classId));
 		buf.append(",cf=");
-        buf.append(String.valueOf(foldId));
+		buf.append(String.valueOf(foldId));
 		buf.append(",sf=");
 		buf.append(String.valueOf(superfamilyId));
 		buf.append(",fa=");
-		buf.append(String.valueOf(familyId));        
+		buf.append(String.valueOf(familyId));
 		buf.append(",dm=");
-        buf.append(String.valueOf(domainId));
+		buf.append(String.valueOf(domainId));
 		buf.append(",sp=");
-        buf.append(String.valueOf(speciesId));
+		buf.append(String.valueOf(speciesId));
 		buf.append(",px=");
-        buf.append(String.valueOf(px));
-		
-		
+		buf.append(String.valueOf(px));
+
+
 		return buf.toString();
 	}
 
@@ -110,14 +118,12 @@ public class ScopDomain implements Serializable, Cloneable, StructureIdentifier 
 	public void setScopId(String scopId) {
 		this.scopId = scopId;
 	}
-	@Override
 	public String getPdbId() {
 		return pdbId;
 	}
 	public void setPdbId(String pdbId) {
 		this.pdbId = pdbId;
 	}
-	@Override
 	public List<String> getRanges() {
 		return ranges;
 	}
@@ -183,7 +189,7 @@ public class ScopDomain implements Serializable, Cloneable, StructureIdentifier 
 	protected Object clone() throws CloneNotSupportedException {
 
 		super.clone();
-		
+
 		ScopDomain n = new ScopDomain();
 		n.setClassId(getClassId());
 		n.setClassificationId(getClassificationId());
@@ -197,11 +203,11 @@ public class ScopDomain implements Serializable, Cloneable, StructureIdentifier 
 		n.setSpeciesId(getSpeciesId());
 		n.setSunid(getSunid());
 		n.setSuperfamilyId(getSuperfamilyId());
-		
-		
+
+
 		return n;
-		
-		
+
+
 	}
 
 	/**
@@ -216,15 +222,27 @@ public class ScopDomain implements Serializable, Cloneable, StructureIdentifier 
 
 	@Override
 	public String getIdentifier() {
-		return pdbId + "." + ResidueRange.toString(getResidueRanges());
+		return getScopId();
 	}
 
-	@Override
 	public List<ResidueRange> getResidueRanges() {
 		return ResidueRange.parseMultiple(ranges);
 	}
 
-	
+	@Override
+	public SubstructureIdentifier toCanonical() {
+		return new SubstructureIdentifier(getPdbId(), ResidueRange.parseMultiple(getRanges()));
+	}
 
+	@Override
+	public Structure reduce(Structure input) throws StructureException {
+		return toCanonical().reduce(input);
+	}
+
+	@Override
+	public Structure loadStructure(AtomCache cache) throws StructureException,
+	IOException {
+		return cache.getStructureForPdbId(pdbId);
+	}
 
 }

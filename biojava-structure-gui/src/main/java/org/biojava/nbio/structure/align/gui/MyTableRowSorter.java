@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Mar 30, 2010
- * Author: Andreas Prlic 
+ * Author: Andreas Prlic
  *
  */
 
@@ -31,43 +31,43 @@ import java.util.Comparator;
 public class MyTableRowSorter extends TableRowSorter<TableModel>
 {
 
-   public MyTableRowSorter(TableModel tm)
-   {
-      super(tm);
-   }
-   
-   @Override
-   public Comparator<?> getComparator(int column)
-   {
-     
-      return new MyComparator(column);
-      
-   }
-  
+	public MyTableRowSorter(TableModel tm)
+	{
+		super(tm);
+	}
+
+	@Override
+	public Comparator<?> getComparator(int column)
+	{
+
+		return new MyComparator(column);
+
+	}
+
 }
 
- class MyComparator implements Comparator<String> {
-  
-    int column;
-    public MyComparator(int column){
-       this.column = column;
-    }
-    
-  @Override
-public int compare(String s1, String s2){
-	  if (( column >= 2 && column <= 4)|| (column==9)){
-		  return compare(Float.parseFloat(s1), Float.parseFloat(s2));
-	  } else if  (  column > 4 && column < 10) {
-        return compare(Integer.parseInt(s1), Integer.parseInt(s2));
-     } else
-        return s1.compareTo(s2);
-  }
-    
-  public int compare(Float f1, Float f2){
-     return f1.compareTo(f2);
-  }
-   public int compare(Integer o1, Integer o2)
-   {
-     return o1.compareTo(o2);
-   }
+class MyComparator implements Comparator<String> {
+
+	int column;
+	public MyComparator(int column){
+		this.column = column;
+	}
+
+	@Override
+	public int compare(String s1, String s2){
+		if (( column >= 2 && column <= 4)|| (column==9)){
+			return compare(Float.parseFloat(s1), Float.parseFloat(s2));
+		} else if  (  column > 4 && column < 10) {
+			return compare(Integer.parseInt(s1), Integer.parseInt(s2));
+		} else
+			return s1.compareTo(s2);
+	}
+
+	public int compare(Float f1, Float f2){
+		return f1.compareTo(f2);
+	}
+	public int compare(Integer o1, Integer o2)
+	{
+		return o1.compareTo(o2);
+	}
 }

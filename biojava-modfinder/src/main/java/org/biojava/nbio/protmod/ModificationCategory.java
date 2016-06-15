@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on May 30, 2010
- * Author: Jianjiong Gao 
+ * Author: Jianjiong Gao
  *
  */
 
@@ -29,13 +29,13 @@ import java.util.Map;
 
 /**
  * define modification categories.
- * 
+ *
  * @author Jianjiong Gao
  * @since 3.0
  */
 public enum ModificationCategory {
 	ATTACHMENT("attachment", "Attachment of a chemical group"),
-	CHEMICAL_MODIFICATION("modified residue", "Chemical modification of an residue"), 
+	CHEMICAL_MODIFICATION("modified residue", "Chemical modification of an residue"),
 	CROSS_LINK_1("crosslink1", "A complicated cross-link (usually found in chromophores)"),
 	CROSS_LINK_2("crosslink2", "A cross-link of two residues"),
 	CROSS_LINK_3("crosslink3", "A cross-link of three residues"),
@@ -46,27 +46,27 @@ public enum ModificationCategory {
 	CROSS_LINK_8_OR_LARGE("crosslink8 or large", "A cross-link of eight or more residues"), // 8 or high
 	UNDEFINED("undefined", "Undefined category")
 	;
-	
+
 	ModificationCategory(String label, String desc) {
 		this.label = label;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @return the label of this ModificationCategory.
 	 */
 	public String label() {
 		return label;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @return the description
 	 */
 	public String description() {
 		return desc;
 	}
-	
+
 	/**
 	 * @return the label of this ModificationCategory.
 	 */
@@ -74,9 +74,9 @@ public enum ModificationCategory {
 	public String toString() {
 		return label;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @return true if it is a CrossLink; false, otherwise.
 	 */
 	public boolean isCrossLink() {
@@ -89,28 +89,28 @@ public enum ModificationCategory {
 			|| this == CROSS_LINK_7
 			|| this == CROSS_LINK_8_OR_LARGE;
 	}
-	
+
 	/**
 	 * The variable is the same as the &ltType&gt; in the ptm_list XML file.
 	 */
 	private String label;
-	
+
 	private String desc;
-	
+
 	/**
-	 * 
+	 *
 	 * @param label the label of ModificationCategory.
 	 * @return the ModificationCategory that has the label.
 	 */
 	public static ModificationCategory getByLabel(String label) {
 		return mapLabelCat.get(label);
 	}
-	
-	private static Map<String, ModificationCategory> mapLabelCat;	
+
+	private static Map<String, ModificationCategory> mapLabelCat;
 	static {
 		mapLabelCat = new HashMap<String, ModificationCategory>();
 		for (ModificationCategory cat:ModificationCategory.values()) {
 			mapLabelCat.put(cat.label, cat);
 		}
-	}	
+	}
 }

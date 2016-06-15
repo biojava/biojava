@@ -34,13 +34,13 @@ import java.awt.event.WindowEvent;
  * Shows the interatomic Distance Matrices of all the Structures aligned in different Frames.
  */
 public class MyDistMaxListener implements ActionListener{
-	
+
 	AbstractAlignmentJmol parent;
-	
+
 	public MyDistMaxListener(AbstractAlignmentJmol parent){
 		this.parent = parent;
 	}
-	
+
 	@Override
 	public void actionPerformed(ActionEvent a) {
 
@@ -51,7 +51,7 @@ public class MyDistMaxListener implements ActionListener{
 			return;
 		}
 		for (int i=0; i<parent.getDistanceMatrices().size(); i++){
-			if (parent.getDistanceMatrices().get(i)!=null) 
+			if (parent.getDistanceMatrices().get(i)!=null)
 				showMatrix(parent.getDistanceMatrices().get(i), "Internal Distances for Structure "+(i+1));
 		}
 	}

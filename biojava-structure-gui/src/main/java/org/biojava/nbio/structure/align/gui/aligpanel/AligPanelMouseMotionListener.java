@@ -58,16 +58,16 @@ public class AligPanelMouseMotionListener implements MouseMotionListener, MouseL
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		
+
 
 		AlignedPosition pos = getCurrentAlignedPosition(e);
-		
+
 		if ( pos == null)
 			return;
 
-		
+
 		int p = pos.getPos1();
-			
+
 		if ( prevPos == p && isDragging) {
 
 			return;
@@ -76,27 +76,27 @@ public class AligPanelMouseMotionListener implements MouseMotionListener, MouseL
 
 		if ( ! isDragging) {
 			isDragging = true;
-			
+
 			setSelectionLock(true);
 
 		}
-		
-		
+
+
 		if ( selectionStart == null)
 			selectionStart = pos;
 		if ( selectionEnd == null)
 			selectionEnd = pos;
 
 		if ( p <= selectionStart.getPos1()) {
-			//selectionEnd = selectionStart;			
+			//selectionEnd = selectionStart;
 			selectionStart = pos;
-			
+
 		} else {
 			selectionEnd = pos;
 		}
-		
+
 		//System.out.println("sel start : " + selectionStart + " - " + selectionEnd);
-		
+
 		if ( ! keyPressed(e)) {
 			triggerRangeSelected(selectionStart, selectionEnd);
 		} else {
@@ -114,7 +114,7 @@ public class AligPanelMouseMotionListener implements MouseMotionListener, MouseL
 	}
 
 	private void triggerRangeSelected(AlignedPosition start,
-			AlignedPosition end) {		
+			AlignedPosition end) {
 		for (AlignmentPositionListener li : aligPosListeners){
 			li.rangeSelected(start, end);
 		}
@@ -124,7 +124,7 @@ public class AligPanelMouseMotionListener implements MouseMotionListener, MouseL
 		for (AlignmentPositionListener li : aligPosListeners){
 			if ( b)
 				li.selectionLocked();
-			else 
+			else
 				li.selectionUnlocked();
 		}
 
@@ -214,7 +214,7 @@ public class AligPanelMouseMotionListener implements MouseMotionListener, MouseL
 		}
 
 	}
-	
+
 
 //	private void triggerToggleRange(AlignedPosition start,
 //			AlignedPosition end) {
@@ -226,7 +226,7 @@ public class AligPanelMouseMotionListener implements MouseMotionListener, MouseL
 //				li.toggleSelection(pos);
 //			}
 //		}
-//		
+//
 //	}
 
 	@Override
@@ -243,25 +243,25 @@ public class AligPanelMouseMotionListener implements MouseMotionListener, MouseL
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		
+
 		selectionStart = null;
 		selectionEnd = null;
-		
+
 		if ( ! keyPressed(e) ) {
 			//System.out.println("mouse pressed " + e.isShiftDown() + " selection locked: " + selectionLocked);
-			
+
 			setSelectionLock(false);
 			//System.out.println("selection unlocked by mousePressed");
 			triggerSelectionLocked(false);
-			
+
 			AlignedPosition pos = getCurrentAlignedPosition(e);
 			if ( pos != null) {
 				prevPos = pos.getPos1();
 			}
-			
-			
+
+
 		}
-		
+
 
 	}
 
@@ -281,22 +281,22 @@ public class AligPanelMouseMotionListener implements MouseMotionListener, MouseL
 			if ( ! selectionLocked)
 				keepOn = true;
 			setSelectionLock(true);
-			
-			
+
+
 			// add to selection
 			AlignedPosition pos = getCurrentAlignedPosition(e);
 			if ( pos == null)
 				return;
-			
+
 			if ( keepOn)
 				triggerMouseOverPosition(pos);
 			else
 				triggerToggleSelection(pos);
 			prevPos = pos.getPos1() ;
-			 
-		} 
-		
-		
+
+		}
+
+
 
 
 	}

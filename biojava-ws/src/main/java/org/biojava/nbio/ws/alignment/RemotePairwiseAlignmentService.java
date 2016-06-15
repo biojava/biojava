@@ -26,10 +26,10 @@ import org.biojava.nbio.core.sequence.template.Sequence;
 import java.io.InputStream;
 /**
  * This interface specifies minimal information needed to execute a pairwise alignment on a remote service.
- * 
+ *
  * Example of service: QBlast service at NCBI
  *                     Web Service at EBI
- * 
+ *
  * @author Sylvain Foisy
  * @since Biojava 3
  *
@@ -38,33 +38,33 @@ public interface RemotePairwiseAlignmentService {
 
 	/**
 	 * Doing the actual analysis on the instantiated service using specified parameters and the RichSequence object
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	public String sendAlignmentRequest(Sequence<Compound> seq, RemotePairwiseAlignmentProperties rpa) throws Exception;
-	
+
 	/**
 	 * Doing the actual analysis on the instantiated service using specified parameters on the string representation
 	 * of the Sequence object
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	public String sendAlignmentRequest(String str, RemotePairwiseAlignmentProperties rpa) throws Exception;
-	
+
 	/**
 	 * Simple method to check if the specified request has been completed by the service used.
-	 * 
-	 * @param id :an ID for an alignment request 
-	 * @param present :a long integer value representing the actual time  
+	 *
+	 * @param id :an ID for an alignment request
+	 * @param present :a long integer value representing the actual time
 	 * @return a boolean value telling if this requestID has been completed or not.
 	 * @throws Exception if the ID does not exist.
 	 */
 	public boolean isReady(String id,long present) throws Exception;
-	
+
 	/**
 	 * Getting the actual alignment results from this instantiated service for a given ID with specific
-	 * formatting parameters held in a RemotePairwiseAlignmentOutputProperties-implemented object. 
-	 * 
+	 * formatting parameters held in a RemotePairwiseAlignmentOutputProperties-implemented object.
+	 *
 	 * @param rid :a String with the request ID for this single alignment run
 	 * @param out :a RemotePairwiseAlignmentOutputProperties with the specific output instructions.
 	 * @return : an <code>InputStream</code> with the actual alignment results

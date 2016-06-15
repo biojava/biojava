@@ -38,7 +38,7 @@ import java.util.TreeSet;
 
 /**
  * Class to fetch domains through the RCSB's REST API.
- * 
+ *
  * @author Spencer Bliven
  *
  */
@@ -48,7 +48,7 @@ public class PDBDomainProvider implements DomainProvider{
 
 	private String base;
 	private int cutoff;
-	
+
 	/**
 	 */
 	public PDBDomainProvider() {
@@ -62,8 +62,8 @@ public class PDBDomainProvider implements DomainProvider{
 		this.base = base;
 		this.cutoff = cutoff;
 	}
-	
-	
+
+
 	/**
 	 * Gets a list of domain representatives for a given PDB ID.
 	 */
@@ -92,13 +92,13 @@ public class PDBDomainProvider implements DomainProvider{
 	 */
 	private SortedSet<String> requestRepresentativeDomains(String url) {
 		try {
-			
+
 			//System.out.println(url);
-			
+
 			final SortedSet<String> results = new TreeSet<String>();
 			DefaultHandler handler = new DefaultHandler() {
 				@Override
-				public void startElement(String uri, String localName,String qName, 
+				public void startElement(String uri, String localName,String qName,
 						Attributes attributes) throws SAXException {
 
 					//System.out.println("Start Element :" + qName);
@@ -136,7 +136,7 @@ public class PDBDomainProvider implements DomainProvider{
 		URL u = new URL(url);
 		InputStream response = HTTPConnectionTools.getInputStream(u);
 		InputSource xml = new InputSource(response);
-		
+
 		// Parse XML
 		SAXParserFactory factory = SAXParserFactory.newInstance();
 		SAXParser saxParser = factory.newSAXParser();
@@ -151,21 +151,21 @@ public class PDBDomainProvider implements DomainProvider{
 		PDBDomainProvider dom = new PDBDomainProvider();
 		String name;
 		name = "2CDG";
-		
+
 		SortedSet<String> domains = dom.getDomainNames(name);
 
 		System.out.println("Domains for "+name+":");
 		for(String s : domains) {
 			System.out.println(s);
 		}
-		
+
 		SortedSet<String> reprs = dom.getRepresentativeDomains();
 		System.out.format("%nFound %d clusters.%n",reprs.size());
-		
+
 		try {
 			File outfile  = new File("/Users/blivens/Downloads/representativeDomainsJava.xml");
 			Writer out = new BufferedWriter(new FileWriter(outfile));
-			
+
 			for(String repr : reprs) {
 				out.write(String.format("  <representative name=\"%s\"/>%n", repr));
 			}
@@ -173,7 +173,7 @@ public class PDBDomainProvider implements DomainProvider{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
 
 

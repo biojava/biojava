@@ -1,0 +1,110 @@
+LOCUS       vPetite                 2217 bp    DNA              linear 10-Feb-2015
+DEFINITION  petite cloning vector without any insert (ATG ->TAA @ 144->147
+ACCESSION   vPetite
+VERSION     vPetite
+KEYWORDS    .
+SOURCE      
+FEATURES             Location/Qualifiers
+
+ORIGIN
+        1 ggcagtgagc gcaacgcaat taatgtgagt tagctcactc attaggcacc taatacgact
+       61 cactataggg tgtgagcgga taacaatttc acgtggaaca gctagaaata attttgttta
+      121 actataagaa ggagatatac atatgtaata gagcggccgc caccgctgag caataactag
+      181 cataacccct tggggcctct aaacgggtct tgaggggttt tttgctgaaa ggaggaacta
+      241 tatccgggta acgaattcaa gcttgatatc attcaggacg agcctcagac tccagcgtaa
+      301 ctggactgca atcaactcac tggctcacct tcacgggtgg gcctttcttc ggtagaaaat
+      361 caaaggatct tcttgagatc ctttttttct gcgcgtaatc tgctgcttgc aaacaaaaaa
+      421 accaccgcta ccagcggtgg tttgtttgcc ggatcaagag ctaccaactc tttttccgag
+      481 gtaactggct tcagcagagc gcagatacca aatactgttc ttctagtgta gccgtagtta
+      541 ggccaccact tcaagaactc tgtagcaccg cctacatacc tcgctctgct aatcctgtta
+      601 ccagtggctg ctgccagtgg cgataagtcg tgtcttaccg ggttggactc aagacgatag
+      661 ttaccggata aggcgcagcg gtcgggctga acggggggtt cgtgcacaca gcccagcttg
+      721 gagcgaacga cctacaccga actgagatac ctacagcgtg agctatgaga aagcgccacg
+      781 cttcccgaag ggagaaaggc ggacaggtat ccggtaagcg gcagggtcgg aacaggagag
+      841 cgcacgaggg agcttccagg gggaaacgcc tggtatcttt atagtcctgt cgggtttcgc
+      901 cacctctgac ttgagcatcg atttttgtga tgctcgtcag gggggcggag cctatggaaa
+      961 aacgccagca acgcagaaag gcccacccga aggtgagcca ggtgattaca tttgggccct
+     1021 catcagaggt tttcaccgtc atcaccgaaa cgcgcgaggc agctgcggta aagctcatca
+     1081 gcgtggtcgt gaagcgattc acagatgtct gcctgttcat ccgcgtccag ctcgttgagt
+     1141 ttctccagaa gcgttaatgt ctggcttctg ataaagcggg ccatgttaag ggcggttttt
+     1201 tcctgtttgg tcatttagaa aaactcatcg agcatcaagt gaaactgcaa tttattcata
+     1261 tcaggattat caataccata tttttgaaaa agccgtttct gtaatgaagg agaaaactca
+     1321 ccgaggcagt tccataggat ggcaagatcc tggtatcggt ctgcgattcc gactcgtcca
+     1381 acatcaatac aacctattaa tttcccctcg tcaaaaataa ggttatcaag tgagaaatca
+     1441 ccatgagtga cgactgaatc cggtgagaat ggcaaaagct tatgcatttc tttccagact
+     1501 tgttcaacag gccagccatt acgctcgtca tcaaaatcac tcgcaccaac caaaccgtta
+     1561 ttcattcgtg attgcgcctg agcgagacga aatacgcgat cgccgttaaa aggacaatta
+     1621 caaacaggaa tcgaatgcaa ccggcgcagg aacactgcca gcgcatcaac aatattttca
+     1681 cctgaatcag gatattcttc taatacctgg aatgctgttt tccctgggat cgcagtggtg
+     1741 agtaaccatg catcatcagg agtacggata aaatgcttga tggtcggaag aggcataaat
+     1801 tccgtcagcc agtttagcct gaccatctca tctgtaacat cattggcaac gctacctttg
+     1861 ccatgtttca gaaacaactc tggcgcatcg ggcttcccat acaatcgata gattgtcgca
+     1921 cctgattgcc cgacattatc gcgagcccat ttatacccat ataaatcagc atccatgttg
+     1981 gaatttaatc gcggcctcga gcaagacgtt tcccgttgaa tatggctcat agctcctgaa
+     2041 aatctcgata actcaaaaaa tacgcccggt agtgatctta tttcattatg gtgaaagttg
+     2101 gaacctctta cgtgccgatc aagtcaaaag cctccggtcg gaggcttttg actttctgct
+     2161 atggaggtca ggtatgattt aaatggtcag tattgagcga tatctagaga attcgtc
+//
+LOCUS       sbFDR                   3018 bp    DNA              linear 10-Feb-2015
+DEFINITION  sbFDR construiert indem vor fdr ein modifiziertes B4 peptid kloniert
+            wurde. Vor dem B4 peptid ist ein His8 tag. Kloniert mit: H8petite,
+            1sbfdr5, 2sbfdr dann fdr selbst und am 3'ende nfdr3
+ACCESSION   sbFDR
+VERSION     sbFDR
+KEYWORDS    .
+SOURCE      
+FEATURES             Location/Qualifiers
+
+ORIGIN
+        1 gccagtttag cctgaccatc tcatctgtaa catcattggc aacgctacct ttgccatgtt
+       61 tcagaaacaa ctctggcgca tcgggcttcc catacaatcg atagattgtc gcacctgatt
+      121 gcccgacatt atcgcgagcc catttatacc catataaatc agcatccatg ttggaattta
+      181 atcgcggcct cgagcaagac gtttcccgtt gaatatggct catagctcct gaaaatctcg
+      241 ataactcaaa aaatacgccc ggtagtgatc ttatttcatt atggtgaaag ttggaacctc
+      301 ttacgtgccg atcaagtcaa aagcctccgg tcggaggctt ttgactttct gctatggagg
+      361 tcaggtatga tttaaatggt cagtattgag cgatatctag agaattcgtc ggcagtgagc
+      421 gcaacgcaat taatgtgagt tagctcactc attaggcacc taatacgact cactataggg
+      481 tgtgagcgga taacaatttc acgtggaaca gctagaaata attttgttta actataagaa
+      541 ggagatatac atatggatca ccatcaccac catcatcatc acaactggtg gtatcaccat
+      601 atgccgtgga acacccctgg ttgggtaaca ggcaaagtca ctaaagtgca gaactggacc
+      661 gacgccctgt ttagtctcac cgttcacgcc cccgtgcttc cgtttaccgc cgggcaattt
+      721 accaagcttg gccttgaaat cgacggcgaa cgcgtccagc gcgcctactc ctatgtaaac
+      781 tcgcccgata atcccgatct ggagttttac ctggtcaccg tccccgatgg caaattaagc
+      841 ccacgactgg cggcactgaa accaggcgat gaagtgcagg tggttagcga agcggcagga
+      901 ttctttgtgc tcgatgaagt gccgcactgc gaaacgctat ggatgctggc aaccggtaca
+      961 gcgattggcc cttatttatc gattctgcaa ctaggtaaag atttagatcg cttcaaaaat
+     1021 ctggtcctgg tgcacgccgc acgttatgcc gccgacttaa gctatttgcc actgatgcag
+     1081 gaactggaaa aacgctacga aggaaaactg cgcattcaga cggtggtcag tcgggaaacg
+     1141 gcagcggggt cgctcaccgg acggataccg gcattaattg aaagtgggga actggaaagc
+     1201 acgattggcc tgccgatgaa taaagaaacc agccatgtga tgctgtgcgg caatccacag
+     1261 atggtgcgcg atacacaaca gttgctgaaa gagacccggc agatgacgaa acatttacgt
+     1321 cgccgaccgg gccatatgac agcggagcat tactggtaat agagcggccg ccaccgctga
+     1381 gcaataacta gcataacccc ttggggcctc taaacgggtc ttgaggggtt ttttgctgaa
+     1441 aggaggaact atatccgggt aacgaattca agcttgatat cattcaggac gagcctcaga
+     1501 ctccagcgta actggactgc aatcaactca ctggctcacc ttcacgggtg ggcctttctt
+     1561 cggtagaaaa tcaaaggatc ttcttgagat cctttttttc tgcgcgtaat ctgctgcttg
+     1621 caaacaaaaa aaccaccgct accagcggtg gtttgtttgc cggatcaaga gctaccaact
+     1681 ctttttccga ggtaactggc ttcagcagag cgcagatacc aaatactgtt cttctagtgt
+     1741 agccgtagtt aggccaccac ttcaagaact ctgtagcacc gcctacatac ctcgctctgc
+     1801 taatcctgtt accagtggct gctgccagtg gcgataagtc gtgtcttacc gggttggact
+     1861 caagacgata gttaccggat aaggcgcagc ggtcgggctg aacggggggt tcgtgcacac
+     1921 agcccagctt ggagcgaacg acctacaccg aactgagata cctacagcgt gagctatgag
+     1981 aaagcgccac gcttcccgaa gggagaaagg cggacaggta tccggtaagc ggcagggtcg
+     2041 gaacaggaga gcgcacgagg gagcttccag ggggaaacgc ctggtatctt tatagtcctg
+     2101 tcgggtttcg ccacctctga cttgagcatc gatttttgtg atgctcgtca ggggggcgga
+     2161 gcctatggaa aaacgccagc aacgcagaaa ggcccacccg aaggtgagcc aggtgattac
+     2221 atttgggccc tcatcagagg ttttcaccgt catcaccgaa acgcgcgagg cagctgcggt
+     2281 aaagctcatc agcgtggtcg tgaagcgatt cacagatgtc tgcctgttca tccgcgtcca
+     2341 gctcgttgag tttctccaga agcgttaatg tctggcttct gataaagcgg gccatgttaa
+     2401 gggcggtttt ttcctgtttg gtcatttaga aaaactcatc gagcatcaag tgaaactgca
+     2461 atttattcat atcaggatta tcaataccat atttttgaaa aagccgtttc tgtaatgaag
+     2521 gagaaaactc accgaggcag ttccatagga tggcaagatc ctggtatcgg tctgcgattc
+     2581 cgactcgtcc aacatcaata caacctatta atttcccctc gtcaaaaata aggttatcaa
+     2641 gtgagaaatc accatgagtg acgactgaat ccggtgagaa tggcaaaagc ttatgcattt
+     2701 ctttccagac ttgttcaaca ggccagccat tacgctcgtc atcaaaatca ctcgcaccaa
+     2761 ccaaaccgtt attcattcgt gattgcgcct gagcgagacg aaatacgcga tcgccgttaa
+     2821 aaggacaatt acaaacagga atcgaatgca accggcgcag gaacactgcc agcgcatcaa
+     2881 caatattttc acctgaatca ggatattctt ctaatacctg gaatgctgtt ttccctggga
+     2941 tcgcagtggt gagtaaccat gcatcatcag gagtacggat aaaatgcttg atggtcggaa
+     3001 gaggcataaa ttccgtca
+//

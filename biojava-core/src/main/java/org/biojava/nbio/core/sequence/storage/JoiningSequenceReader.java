@@ -44,286 +44,286 @@ import java.util.*;
  */
 public class JoiningSequenceReader<C extends Compound> implements ProxySequenceReader<C> {
 
-    /**
-     * Internal implementation flag and controls how we look for the right
-     * sub-sequence
-     */
-    private static final boolean BINARY_SEARCH = true;
-    private final List<Sequence<C>> sequences;
-    private final CompoundSet<C> compoundSet;
-    private int[] maxSequenceIndex;
-    private int[] minSequenceIndex;
+	/**
+	 * Internal implementation flag and controls how we look for the right
+	 * sub-sequence
+	 */
+	private static final boolean BINARY_SEARCH = true;
+	private final List<Sequence<C>> sequences;
+	private final CompoundSet<C> compoundSet;
+	private int[] maxSequenceIndex;
+	private int[] minSequenceIndex;
 
-    /**
-     * Allows creation of the store from Vargs Sequence<C> objects. CompoundSet
-     * defaults to the first element of the array (assuming there are elements
-     * available during construction otherwise we will throw an illegal
-     * state exception).
-     */
-    public JoiningSequenceReader(Sequence<C>... sequences) {
-        this(Arrays.asList(sequences));
-    }
+	/**
+	 * Allows creation of the store from Vargs Sequence<C> objects. CompoundSet
+	 * defaults to the first element of the array (assuming there are elements
+	 * available during construction otherwise we will throw an illegal
+	 * state exception).
+	 */
+	public JoiningSequenceReader(Sequence<C>... sequences) {
+		this(Arrays.asList(sequences));
+	}
 
-    /**
-     * Allows creation of the store from List<Sequence<C>>. CompoundSet
-     * defaults to the first element of the List (assuming there are elements
-     * available during construction otherwise we will throw an illegal
-     * state exception).
-     */
-    public JoiningSequenceReader(List<Sequence<C>> sequences) {
-        this.sequences = grepSequences(sequences);
-        this.compoundSet = grepCompoundSet();
-    }
+	/**
+	 * Allows creation of the store from List<Sequence<C>>. CompoundSet
+	 * defaults to the first element of the List (assuming there are elements
+	 * available during construction otherwise we will throw an illegal
+	 * state exception).
+	 */
+	public JoiningSequenceReader(List<Sequence<C>> sequences) {
+		this.sequences = grepSequences(sequences);
+		this.compoundSet = grepCompoundSet();
+	}
 
-    public JoiningSequenceReader(CompoundSet<C> compoundSet, Sequence<C>... sequences) {
-        this(compoundSet, Arrays.asList(sequences));
-    }
+	public JoiningSequenceReader(CompoundSet<C> compoundSet, Sequence<C>... sequences) {
+		this(compoundSet, Arrays.asList(sequences));
+	}
 
-    public JoiningSequenceReader(CompoundSet<C> compoundSet, List<Sequence<C>> sequences) {
-        this.sequences = grepSequences(sequences);
-        this.compoundSet = compoundSet;
-    }
+	public JoiningSequenceReader(CompoundSet<C> compoundSet, List<Sequence<C>> sequences) {
+		this.sequences = grepSequences(sequences);
+		this.compoundSet = compoundSet;
+	}
 
-    private List<Sequence<C>> grepSequences(List<Sequence<C>> sequences) {
-        List<Sequence<C>> seqs = new ArrayList<Sequence<C>>();
-        for (Sequence<C> s : sequences) {
-            if (s.getLength() != 0) {
-                seqs.add(s);
-            }
-        }
-        return seqs;
-    }
+	private List<Sequence<C>> grepSequences(List<Sequence<C>> sequences) {
+		List<Sequence<C>> seqs = new ArrayList<Sequence<C>>();
+		for (Sequence<C> s : sequences) {
+			if (s.getLength() != 0) {
+				seqs.add(s);
+			}
+		}
+		return seqs;
+	}
 
-    private CompoundSet<C> grepCompoundSet() {
-        if (sequences.isEmpty()) {
-            throw new IllegalStateException("Cannot get a CompoundSet because we have no sequences. Set during construction");
-        }
-        return sequences.get(0).getCompoundSet();
-    }
+	private CompoundSet<C> grepCompoundSet() {
+		if (sequences.isEmpty()) {
+			throw new IllegalStateException("Cannot get a CompoundSet because we have no sequences. Set during construction");
+		}
+		return sequences.get(0).getCompoundSet();
+	}
 
-    
-    @Override
+
+	@Override
 	public C getCompoundAt(int position) {
-        int sequenceIndex = getSequenceIndex(position);
-        Sequence<C> sequence = sequences.get(sequenceIndex);
-        int indexInSequence = (position - getMinSequenceIndex()[sequenceIndex]) + 1;
-        return sequence.getCompoundAt(indexInSequence);
-    }
+		int sequenceIndex = getSequenceIndex(position);
+		Sequence<C> sequence = sequences.get(sequenceIndex);
+		int indexInSequence = (position - getMinSequenceIndex()[sequenceIndex]) + 1;
+		return sequence.getCompoundAt(indexInSequence);
+	}
 
-    
-    @Override
+
+	@Override
 	public CompoundSet<C> getCompoundSet() {
-        return compoundSet;
-    }
+		return compoundSet;
+	}
 
-    
-    @Override
+
+	@Override
 	public int getLength() {
-        int[] maxSeqIndex = getMaxSequenceIndex();
-        if (maxSeqIndex.length == 0) {
-            return 0;
-        }
-        return maxSeqIndex[maxSeqIndex.length - 1];
-    }
+		int[] maxSeqIndex = getMaxSequenceIndex();
+		if (maxSeqIndex.length == 0) {
+			return 0;
+		}
+		return maxSeqIndex[maxSeqIndex.length - 1];
+	}
 
-    /**
-     * Returns which Sequence holds the position queried for
-     */
-    private int getSequenceIndex(int position) {
-        if (BINARY_SEARCH) {
-            return binarySearch(position);
-        } else {
-            return linearSearch(position);
-        }
-    }
+	/**
+	 * Returns which Sequence holds the position queried for
+	 */
+	private int getSequenceIndex(int position) {
+		if (BINARY_SEARCH) {
+			return binarySearch(position);
+		} else {
+			return linearSearch(position);
+		}
+	}
 
-    private int[] getMinSequenceIndex() {
-        if (minSequenceIndex == null) {
-            initSeqIndexes();
-        }
-        return minSequenceIndex;
-    }
+	private int[] getMinSequenceIndex() {
+		if (minSequenceIndex == null) {
+			initSeqIndexes();
+		}
+		return minSequenceIndex;
+	}
 
-    private int[] getMaxSequenceIndex() {
-        if (maxSequenceIndex == null) {
-            initSeqIndexes();
-        }
-        return maxSequenceIndex;
-    }
+	private int[] getMaxSequenceIndex() {
+		if (maxSequenceIndex == null) {
+			initSeqIndexes();
+		}
+		return maxSequenceIndex;
+	}
 
-    private void initSeqIndexes() {
-        minSequenceIndex = new int[sequences.size()];
-        maxSequenceIndex = new int[sequences.size()];
-        int currentMaxIndex = 0;
-        int currentMinIndex = 1;
-        int lastLength = 0;
-        for (int i = 0; i < sequences.size(); i++) {
-            currentMinIndex += lastLength;
-            currentMaxIndex += sequences.get(i).getLength();
-            minSequenceIndex[i] = currentMinIndex;
-            maxSequenceIndex[i] = currentMaxIndex;
-            lastLength = sequences.get(i).getLength();
-        }
-    }
+	private void initSeqIndexes() {
+		minSequenceIndex = new int[sequences.size()];
+		maxSequenceIndex = new int[sequences.size()];
+		int currentMaxIndex = 0;
+		int currentMinIndex = 1;
+		int lastLength = 0;
+		for (int i = 0; i < sequences.size(); i++) {
+			currentMinIndex += lastLength;
+			currentMaxIndex += sequences.get(i).getLength();
+			minSequenceIndex[i] = currentMinIndex;
+			maxSequenceIndex[i] = currentMaxIndex;
+			lastLength = sequences.get(i).getLength();
+		}
+	}
 
-    /**
-     * Scans through the sequence index arrays in linear time. Not the best
-     * performance but easier to code
-     */
-    private int linearSearch(int position) {
-        int[] minSeqIndex = getMinSequenceIndex();
-        int[] maxSeqIndex = getMaxSequenceIndex();
-        int length = minSeqIndex.length;
-        for (int i = 0; i < length; i++) {
-            if (position >= minSeqIndex[i] && position <= maxSeqIndex[i]) {
-                return i;
-            }
-        }
-        throw new IndexOutOfBoundsException("Given position " + position + " does not map into this Sequence");
-    }
+	/**
+	 * Scans through the sequence index arrays in linear time. Not the best
+	 * performance but easier to code
+	 */
+	private int linearSearch(int position) {
+		int[] minSeqIndex = getMinSequenceIndex();
+		int[] maxSeqIndex = getMaxSequenceIndex();
+		int length = minSeqIndex.length;
+		for (int i = 0; i < length; i++) {
+			if (position >= minSeqIndex[i] && position <= maxSeqIndex[i]) {
+				return i;
+			}
+		}
+		throw new IndexOutOfBoundsException("Given position " + position + " does not map into this Sequence");
+	}
 
-    /**
-     * Scans through the sequence index arrays using binary search
-     */
-    private int binarySearch(int position) {
-        int[] minSeqIndex = getMinSequenceIndex();
-        int[] maxSeqIndex = getMaxSequenceIndex();
+	/**
+	 * Scans through the sequence index arrays using binary search
+	 */
+	private int binarySearch(int position) {
+		int[] minSeqIndex = getMinSequenceIndex();
+		int[] maxSeqIndex = getMaxSequenceIndex();
 
-        int low = 0;
-        int high = minSeqIndex.length - 1;
-        while (low <= high) {
-            //Go to the mid point in the array
-            int mid = (low + high) >>> 1;
+		int low = 0;
+		int high = minSeqIndex.length - 1;
+		while (low <= high) {
+			//Go to the mid point in the array
+			int mid = (low + high) >>> 1;
 
-            //Get the max position represented by this Sequence
-            int midMinPosition = minSeqIndex[mid];
-            int midMaxPosition = maxSeqIndex[mid];
+			//Get the max position represented by this Sequence
+			int midMinPosition = minSeqIndex[mid];
+			int midMaxPosition = maxSeqIndex[mid];
 
-            //if current position is greater than the current bounds then
-            //increase search space
-            if (midMinPosition < position && midMaxPosition < position) {
-                low = mid + 1;
-            } //if current position is less than current bounds then decrease
-            //search space
-            else if (midMinPosition > position && midMaxPosition > position) {
-                high = mid - 1;
-            } else {
-                return mid;
-            }
-        }
-        throw new IndexOutOfBoundsException("Given position " + position + " does not map into this Sequence");
-    }
+			//if current position is greater than the current bounds then
+			//increase search space
+			if (midMinPosition < position && midMaxPosition < position) {
+				low = mid + 1;
+			} //if current position is less than current bounds then decrease
+			//search space
+			else if (midMinPosition > position && midMaxPosition > position) {
+				high = mid - 1;
+			} else {
+				return mid;
+			}
+		}
+		throw new IndexOutOfBoundsException("Given position " + position + " does not map into this Sequence");
+	}
 
-    /**
-     * Iterator implementation which attempts to move through the 2D structure
-     * attempting to skip onto the next sequence as & when it is asked to
-     */
-    
-    @Override
+	/**
+	 * Iterator implementation which attempts to move through the 2D structure
+	 * attempting to skip onto the next sequence as & when it is asked to
+	 */
+
+	@Override
 	public Iterator<C> iterator() {
-        final List<Sequence<C>> localSequences = sequences;
-        return new Iterator<C>() {
+		final List<Sequence<C>> localSequences = sequences;
+		return new Iterator<C>() {
 
-            private Iterator<C> currentSequenceIterator = null;
-            private int currentPosition = 0;
+			private Iterator<C> currentSequenceIterator = null;
+			private int currentPosition = 0;
 
-            
-            @Override
+
+			@Override
 			public boolean hasNext() {
-                //If the current iterator is null then see if the Sequences object has anything
-                if (currentSequenceIterator == null) {
-                    return !localSequences.isEmpty();
-                }
+				//If the current iterator is null then see if the Sequences object has anything
+				if (currentSequenceIterator == null) {
+					return !localSequences.isEmpty();
+				}
 
-                //See if we had any compounds
-                boolean hasNext = currentSequenceIterator.hasNext();
-                if (!hasNext) {
-                    hasNext = currentPosition < sequences.size();
-                }
-                return hasNext;
-            }
+				//See if we had any compounds
+				boolean hasNext = currentSequenceIterator.hasNext();
+				if (!hasNext) {
+					hasNext = currentPosition < sequences.size();
+				}
+				return hasNext;
+			}
 
-            
-            @Override
+
+			@Override
 			public C next() {
-                if (currentSequenceIterator == null) {
-                    if (localSequences.isEmpty()) {
-                        throw new NoSuchElementException("No sequences to iterate over; make sure you call hasNext() before next()");
-                    }
-                    currentSequenceIterator = localSequences.get(currentPosition).iterator();
-                    currentPosition++;
-                }
-                if (!currentSequenceIterator.hasNext()) {
-                    currentSequenceIterator = localSequences.get(currentPosition).iterator();
-                    currentPosition++;
-                }
-                return currentSequenceIterator.next();
-            }
+				if (currentSequenceIterator == null) {
+					if (localSequences.isEmpty()) {
+						throw new NoSuchElementException("No sequences to iterate over; make sure you call hasNext() before next()");
+					}
+					currentSequenceIterator = localSequences.get(currentPosition).iterator();
+					currentPosition++;
+				}
+				if (!currentSequenceIterator.hasNext()) {
+					currentSequenceIterator = localSequences.get(currentPosition).iterator();
+					currentPosition++;
+				}
+				return currentSequenceIterator.next();
+			}
 
-            
-            @Override
+
+			@Override
 			public void remove() throws UnsupportedOperationException {
-                throw new UnsupportedOperationException("Cannot remove from this Sequence");
-            }
-        };
-    }
+				throw new UnsupportedOperationException("Cannot remove from this Sequence");
+			}
+		};
+	}
 
-    
-    @Override
+
+	@Override
 	public void setCompoundSet(CompoundSet<C> compoundSet) {
-        throw new UnsupportedOperationException();
-    }
+		throw new UnsupportedOperationException();
+	}
 
-    
-    @Override
+
+	@Override
 	public void setContents(String sequence) throws CompoundNotFoundException {
-        throw new UnsupportedOperationException();
-    }
+		throw new UnsupportedOperationException();
+	}
 
-    
-    @Override
+
+	@Override
 	public int countCompounds(C... compounds) {
-        return SequenceMixin.countCompounds(this, compounds);
-    }
+		return SequenceMixin.countCompounds(this, compounds);
+	}
 
-    
-    @Override
+
+	@Override
 	public AccessionID getAccession() throws UnsupportedOperationException {
-        throw new UnsupportedOperationException();
-    }
+		throw new UnsupportedOperationException();
+	}
 
-    
-    @Override
+
+	@Override
 	public List<C> getAsList() {
-        return SequenceMixin.toList(this);
-    }
+		return SequenceMixin.toList(this);
+	}
 
-    
-    @Override
+
+	@Override
 	public int getIndexOf(C compound) {
-        return SequenceMixin.indexOf(this, compound);
-    }
+		return SequenceMixin.indexOf(this, compound);
+	}
 
-    
-    @Override
+
+	@Override
 	public int getLastIndexOf(C compound) {
-        return SequenceMixin.lastIndexOf(this, compound);
-    }
+		return SequenceMixin.lastIndexOf(this, compound);
+	}
 
-    
-    @Override
+
+	@Override
 	public String getSequenceAsString() {
-        return SequenceMixin.toStringBuilder(this).toString();
-    }
+		return SequenceMixin.toStringBuilder(this).toString();
+	}
 
-    
-    @Override
+
+	@Override
 	public SequenceView<C> getSubSequence(Integer start, Integer end) {
-        return SequenceMixin.createSubSequence(this, start, end);
-    }
+		return SequenceMixin.createSubSequence(this, start, end);
+	}
 
-    @Override
-    public SequenceView<C> getInverse() {
-        return SequenceMixin.inverse(this);
-    }
+	@Override
+	public SequenceView<C> getInverse() {
+		return SequenceMixin.inverse(this);
+	}
 }

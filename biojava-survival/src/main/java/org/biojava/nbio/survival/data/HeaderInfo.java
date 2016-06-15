@@ -18,10 +18,6 @@
  *      http://www.biojava.org/
  *
  */
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.biojava.nbio.survival.data;
 
 /**
@@ -30,49 +26,49 @@ package org.biojava.nbio.survival.data;
  */
 public class HeaderInfo {
 
-    private Integer index;
-    private boolean hide = false;
+	private Integer index;
+	private boolean hide = false;
 
-    /**
-     *
-     * @param index
-     */
-    public HeaderInfo(Integer index) {
-        this.index = index;
-    }
+	/**
+	 *
+	 * @param index
+	 */
+	public HeaderInfo(Integer index) {
+		this.index = index;
+	}
 
-    @Override
-    public String toString() {
-        return index + ":" + hide;
-    }
+	@Override
+	public String toString() {
+		return index + ":" + hide;
+	}
 
-    /**
-     * @return the index
-     */
-    public Integer getIndex() {
-        return index;
-    }
+	/**
+	 * @return the index
+	 */
+	public Integer getIndex() {
+		return index;
+	}
 
-    /**
-     * @param index the index to set
-     */
-    public void setIndex(Integer index) {
-        this.index = index;
-    }
+	/**
+	 * @param index the index to set
+	 */
+	public void setIndex(Integer index) {
+		this.index = index;
+	}
 
-    /**
-     * @return the hide
-     */
-    public boolean isHide() {
-        return hide;
-    }
+	/**
+	 * @return the hide
+	 */
+	public boolean isHide() {
+		return hide;
+	}
 
-    /**
-     * @param hide the hide to set
-     */
-    public void setHide(boolean hide) {
-        this.hide = hide;
-    }
-    
-    
+	/**
+	 * @param hide the hide to set
+	 */
+	public void setHide(boolean hide) {
+		this.hide = hide;
+	}
+
+
 }

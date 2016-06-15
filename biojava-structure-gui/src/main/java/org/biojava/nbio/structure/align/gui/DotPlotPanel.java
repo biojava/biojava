@@ -42,10 +42,10 @@ import java.util.List;
 
 /**
  * Displays the dot plot trace for an alignment.
- * 
+ *
  * This class adapts ScaleableMatrixPanel, which uses code from org.biojava.nbio.structure.align.pairwise,
  * with more BioJava-friendly methods based off AFPChains.
- * 
+ *
  * @author Spencer Bliven
  *
  */
@@ -54,24 +54,24 @@ public class DotPlotPanel extends ScaleableMatrixPanel {
 	private static final long serialVersionUID = -7641953255857483895L;
 
 	/**
-	 * 
+	 *
 	 * @param alignment The alignment to plot
 	 * @param background [Optional]A matrix of 'background colors' over which to draw the alignment.
-	 * 
-	 *	Originally designed as a matrix of RMSD values between AFPs, so it is colorized 
-	 *	accordingly from red (0) to black (>10). 
+	 *
+	 *	Originally designed as a matrix of RMSD values between AFPs, so it is colorized
+	 *	accordingly from red (0) to black (>10).
 	 *
 	 *  If this set to null, the background is set to black.
 	 */
 	public DotPlotPanel(AFPChain alignment ){
 		super();
-		
+
 		final double defaultBackground = 100.;
-				
+
 		// Convert the AFPChain alignment into the MatrixPanel format
 		AlternativeAlignment[] aligns = new AlternativeAlignment[alignment.getBlockNum()];
 		int alignNumber = 0;
-		
+
 		//One alternative alignment for each block
 		int[][][] optAln = alignment.getOptAln(); // [block #][{0,1} chain index][pos]
 
@@ -89,7 +89,7 @@ public class DotPlotPanel extends ScaleableMatrixPanel {
 			aligns[alignNumber].apairs_from_idxlst(frag);
 
 		}
-		
+
 		/* TODO After the AFPSet is fixed in CeMain#filterDuplicateAFPs, maybe include this again
 		//add alignment for the AFPs
 		List<AFP> afps = alignment.getAfpSet();
@@ -107,7 +107,7 @@ public class DotPlotPanel extends ScaleableMatrixPanel {
 		aligns[alignNumber].apairs_from_idxlst(frag);
 		*/
 
-		
+
 		/* AFP boxes are unnecessary.
 		// Calculate FragmentPairs based on alignment.
 		// These are displayed as a small box around the start of each alignment.
@@ -117,11 +117,11 @@ public class DotPlotPanel extends ScaleableMatrixPanel {
 			pairs[i] = new FragmentPair(afp.getFragLen(), afp.getP1(), afp.getP2());
 			pairs[i].setRms(afp.getRmsd());
 		}
-		
+
 		this.setFragmentPairs(pairs);
 		*/
 
-		
+
 		// Now the alignments have been build; add it
 		this.setAlternativeAligs(aligns);
 		this.setSelectedAlignmentPos(0); //color white, not red
@@ -135,23 +135,23 @@ public class DotPlotPanel extends ScaleableMatrixPanel {
 					background.set(i, j, defaultBackground);
 				}
 		}
-		
+
 		// Set parameters
 		this.setMatrix(background);
 	}
 
 	/**
 	 * Helper function to create and display a JFrame with a single DotPlotPanel
-	 * 
+	 *
 	 * @param afpChain
 	 * @param background
 	 */
 	private static JFrame showDotPlotJFrame(AFPChain afpChain ) {
-		
-		DotPlotPanel dotplot = new DotPlotPanel(afpChain);			
-				
+
+		DotPlotPanel dotplot = new DotPlotPanel(afpChain);
+
 		//Create JFrame
-		
+
 		String title = String.format("Dot plot of %s vs. %s", afpChain.getName1(),afpChain.getName2());
 
 		// Create window
@@ -165,23 +165,23 @@ public class DotPlotPanel extends ScaleableMatrixPanel {
 			}
 		});
 
-		
+
 		frame.getContentPane().add(dotplot);
 
 		frame.pack();
 		frame.setVisible(true);
-		
+
 		return frame;
-	}	
-	
+	}
+
 	public static void main(String[] args) {
 
 //		String name2= "1k5j.A"; //16-68,73-119
 //		String name1= "1lrh.A"; //80-127,37-79
-		
+
 		String name1= "1iu9.A";
 		String name2= "1h0r.A";
-		
+
 		// Hard case
 //		String name1= "1uiz.A";
 //		String name2= "1xxa.C";
@@ -194,10 +194,10 @@ public class DotPlotPanel extends ScaleableMatrixPanel {
 
 			CeParameters params = (CeParameters) ceA.getParameters();
 			params.setMaxGapSize(0);
-			
+
 			Atom[] ca1 = cache.getAtoms(name1);
 			Atom[] ca2 = cache.getAtoms(name2);
-			
+
 			// Create initial alignment
 			AFPChain afpChain = ceA.align(ca1,ca2);
 			afpChain.setName1(name1);
@@ -205,16 +205,16 @@ public class DotPlotPanel extends ScaleableMatrixPanel {
 			for ( AFP afpI : afpChain.getAfpSet()){
 				System.out.println(afpI);
 			}
-			
+
 			/*
 			// Get background distances
 			CECalculator calculator = ceA.getCECalculator();
 			int winSize = params.getWinSize();
-			int winSizeComb1 = (winSize-1)*(winSize-2)/2;	
+			int winSizeComb1 = (winSize-1)*(winSize-2)/2;
 			double[][] m = calculator.initSumOfDistances(ca1.length, ca2.length, params.getWinSize(), winSizeComb1, ca1, ca2);
 			//double[][] m = calculator.getMatMatrix();
 			Matrix mat = new Matrix(m);
-			
+
 			//Find range
 			double min = mat.get(0, 0);
 			double max = min;
@@ -229,18 +229,18 @@ public class DotPlotPanel extends ScaleableMatrixPanel {
 			}
 			System.out.format("[%f, %f]\n", min, max);
 			*/
-			
+
 			//afpChain.setDistanceMatrix(mat);
 			showDotPlotJFrame(afpChain);
-			
+
 			//StructureAlignmentJmol jmol = new StructureAlignmentJmol(afpChain, ca1, ca2);
 //			jmol.setStructure(cache.getStructure(name1));
 
-			
+
 			//////////////////////////
 			// Now make it circular
 			ceA = (CeMain) StructureAlignmentFactory.getAlgorithm(CeCPMain.algorithmName);
-	
+
 			System.out.format("Aligning %s[%d] with %s[%d] with CPs\n",name1,ca1.length,name2,ca2.length);
 			afpChain = ceA.align(ca1,ca2);
 			afpChain.setName1(name1);
@@ -248,7 +248,7 @@ public class DotPlotPanel extends ScaleableMatrixPanel {
 			for ( AFP afpI : afpChain.getAfpSet()){
 				System.out.println(afpI);
 			}
-			
+
 			/*/ Reuse mat from the non-cp case, for simplicity
 
 			// Get background distances
@@ -278,8 +278,8 @@ public class DotPlotPanel extends ScaleableMatrixPanel {
 			*/
 
 			showDotPlotJFrame(afpChain);
-			
-			
+
+
 		} catch (StructureException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

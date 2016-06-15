@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Sep 15, 2009
- * Author: Andreas Prlic 
+ * Author: Andreas Prlic
  *
  */
 
@@ -27,7 +27,7 @@ package org.biojava.nbio.structure.align.ce;
 import java.util.List;
 
 /** Contains the parameters that can be sent to CE
- * 
+ *
  * @author Andreas Prlic
  *
  */
@@ -38,19 +38,19 @@ public class OptimalCECPParameters extends CeParameters {
 	protected Boolean tryAllCPs;
 	/**
 	 * The CP point, specified as a residue index
-	 * 
-	 * <p>TODO make this a ResidueNumber 
+	 *
+	 * <p>TODO make this a ResidueNumber
 	 */
 	protected Integer cpPoint;
 
 	@Override
 	public String toString() {
-		return "OptimalCECPParameters [scoringStrategy=" + scoringStrategy 
-		+ ", maxGapSize=" + maxGapSize 
-		+ ", rmsdThr=" + rmsdThr 
-		+ ", rmsdThrJoin="+ rmsdThrJoin 
-		+ ", winSize=" + winSize 
-		+ ", showAFPRanges=" + showAFPRanges 
+		return "OptimalCECPParameters [scoringStrategy=" + scoringStrategy
+		+ ", maxGapSize=" + maxGapSize
+		+ ", rmsdThr=" + rmsdThr
+		+ ", rmsdThrJoin="+ rmsdThrJoin
+		+ ", winSize=" + winSize
+		+ ", showAFPRanges=" + showAFPRanges
 		+ ", maxOptRMSD=" + maxOptRMSD
 		+ ", seqWeight=" + seqWeight
 		+ ", tryAllCPs" + tryAllCPs
@@ -86,7 +86,7 @@ public class OptimalCECPParameters extends CeParameters {
 	@Override
 	public List<String> getUserConfigParameterNames(){
 		List<String> params = super.getUserConfigParameterNames();
-		
+
 		params.add("Try all CPs");
 		params.add("CP Point");
 		return params;

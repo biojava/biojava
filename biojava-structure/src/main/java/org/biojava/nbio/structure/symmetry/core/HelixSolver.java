@@ -33,7 +33,7 @@ import java.util.Map.Entry;
 public class HelixSolver {
 	private Subunits subunits = null;
 	private int fold = 1;
-	private HelixLayers helixLayers = new HelixLayers(); 
+	private HelixLayers helixLayers = new HelixLayers();
 	private QuatSymmetryParameters parameters = null;
 	boolean modified = true;
 
@@ -42,7 +42,7 @@ public class HelixSolver {
 		this.fold = fold;
 		this.parameters = parameters;
 	}
-	
+
 	public HelixLayers getSymmetryOperations() {
 		if (modified) {
 			solve();
@@ -55,7 +55,7 @@ public class HelixSolver {
 		if (! preCheck()) {
 			return;
 		}
-		
+
 		HelicalRepeatUnit unit = new HelicalRepeatUnit(subunits);
 		List<Point3d> repeatUnitCenters = unit.getRepeatUnitCenters();
 		List<Point3d[]> repeatUnits = unit.getRepeatUnits();
@@ -63,7 +63,7 @@ public class HelixSolver {
 
 		double minRise = parameters.getMinimumHelixRise() * fold;  // for n-start helix, the rise must be steeper
 		Map<Integer[], Integer> interactionMap = unit.getInteractingRepeatUnits();
-		
+
 		int maxLayerLineLength = 0;
 
 		for (Entry<Integer[], Integer> entry : interactionMap.entrySet()) {
@@ -80,7 +80,7 @@ public class HelixSolver {
 			h2 = SuperPosition.clonePoint3dArray(repeatUnits.get(pair[1]));
 			Matrix4d transformation = SuperPosition.superposeWithTranslation(h1, h2);
 
-			double rmsd = SuperPosition.rmsd(h1, h2);		
+			double rmsd = SuperPosition.rmsd(h1, h2);
 			double rise = getRise(transformation, repeatUnitCenters.get(pair[0]), repeatUnitCenters.get(pair[1]));
 			double angle = getAngle(transformation);
 
@@ -101,7 +101,7 @@ public class HelixSolver {
 
 			// determine which subunits are permuted by the transformation
 			List<Integer> permutation = getPermutation(transformation);
-			
+
 			// check permutations for validity
 
 			// don't save redundant permutations
@@ -127,9 +127,9 @@ public class HelixSolver {
 					permSet.add(i);
 					count++;
 				}
-				
+
 			}
-			
+
 			// a helix a repeat unit cannot map onto itself
 			if (! valid) {
 				if (parameters.isVerbose()) {
@@ -137,7 +137,7 @@ public class HelixSolver {
 				}
 				continue;
 			}
-			
+
 			// all subunits must be involved in a permutation
 			if (permSet.size() != subunits.getSubunitCount()) {
 				if (parameters.isVerbose()) {
@@ -145,7 +145,7 @@ public class HelixSolver {
 				}
 				continue;
 			}
-			
+
 			// if all subunit permutation values are set, then it can't be helical symmetry (must be cyclic symmetry)
 			if (count == permutation.size()) {
 				continue;
@@ -175,7 +175,7 @@ public class HelixSolver {
 				subunitRmsd = SuperPosition.rmsd(h1, h2);
 				rise = getRise(transformation, repeatUnitCenters.get(pair[0]), repeatUnitCenters.get(pair[1]));
 				angle = getAngle(transformation);
-				
+
 				if (parameters.isVerbose()) {
 					System.out.println("Subunit rmsd: " + subunitRmsd);
 					System.out.println("Subunit rise: " + rise);
@@ -189,7 +189,7 @@ public class HelixSolver {
 				if (Math.abs(rise) < minRise) {
 					continue;
 				}
-				
+
 				if (subunitRmsd > parameters.getHelixRmsdToRiseRatio()*Math.abs(rise)) {
 					continue;
 				}
@@ -215,15 +215,15 @@ public class HelixSolver {
 			h2 = new Point3d[point2.size()];
 			point1.toArray(h1);
 			point2.toArray(h2);
-            Point3d[] h3 = SuperPosition.clonePoint3dArray(h1);
+			Point3d[] h3 = SuperPosition.clonePoint3dArray(h1);
 			transformation = SuperPosition.superposeWithTranslation(h1, h2);
-			
+
 			Point3d xtrans = SuperPosition.centroid(h3);
-	    	xtrans.negate();
-	    	
+			xtrans.negate();
+
 
 			double traceRmsd = SuperPosition.rmsd(h1, h2);
-			
+
 			rise = getRise(transformation, repeatUnitCenters.get(pair[0]), repeatUnitCenters.get(pair[1]));
 			angle = getAngle(transformation);
 
@@ -233,7 +233,7 @@ public class HelixSolver {
 				System.out.println("Trace angle: " + Math.toDegrees(angle));
 				System.out.println("Permutation: " + permutation);
 			}
-	
+
 			if (traceRmsd > parameters.getRmsdThreshold()) {
 				continue;
 			}
@@ -246,21 +246,21 @@ public class HelixSolver {
 			if (angle < Math.toRadians(parameters.getMinimumHelixAngle())) {
 				continue;
 			}
-			
+
 			if (traceRmsd > parameters.getHelixRmsdToRiseRatio()*Math.abs(rise)) {
 				continue;
 			}
 
 			AxisAngle4d a1 = new AxisAngle4d();
 			a1.set(transformation);
-			
+
 			// save this helix rot-translation
 			Helix helix = new Helix();
 			helix.setTransformation(transformation);
 			helix.setPermutation(permutation);
 			helix.setRise(rise);
 			// Old version of Vecmath on LINUX doesn't set element m33 to 1. Here we make sure it's 1.
-	        transformation.setElement(3, 3, 1.0);
+			transformation.setElement(3, 3, 1.0);
 			transformation.invert();
 			QuatSymmetryScores scores = QuatSuperpositionScorer.calcScores(subunits, transformation, permutation);
 			scores.setRmsdCenters(subunitRmsd);
@@ -274,12 +274,12 @@ public class HelixSolver {
 			for (List<Integer> line: helix.getLayerLines()) {
 				maxLayerLineLength = Math.max(maxLayerLineLength, line.size());
 			}
-			
+
 			// TODO
 	//		checkSelfLimitingHelix(helix);
-			
+
 			helixLayers.addHelix(helix);
-			
+
 		}
 		if (maxLayerLineLength < 3) {
 //			System.out.println("maxLayerLineLength: " + maxLayerLineLength);
@@ -293,7 +293,7 @@ public class HelixSolver {
 	private void checkSelfLimitingHelix(Helix helix) {
 		HelixExtender he = new HelixExtender(subunits, helix);
 		Point3d[] extendedHelix = he.extendHelix(1);
-		
+
 		int overlap1 = 0;
 		for (Point3d[] trace: subunits.getTraces()) {
 			for (Point3d pt: trace) {
@@ -306,7 +306,7 @@ public class HelixSolver {
 		}
 
 		extendedHelix = he.extendHelix(-1);
-		
+
 		int overlap2 = 0;
 		for (Point3d[] trace: subunits.getTraces()) {
 			for (Point3d pt: trace) {
@@ -319,7 +319,7 @@ public class HelixSolver {
 		}
 		System.out.println("SelfLimiting helix: " + overlap1 + ", " + overlap2);
 	}
-	
+
 	private boolean preCheck() {
 		if (subunits.getSubunitCount() < 3) {
 			return false;
@@ -329,7 +329,7 @@ public class HelixSolver {
 		return maxFold > 1;
 	}
 
-	/** 
+	/**
 	 * Returns a permutation of subunit indices for the given helix transformation.
 	 * An index of -1 is used to indicate subunits that do not superpose onto any other subunit.
 	 * @param transformation
@@ -357,7 +357,7 @@ public class HelixSolver {
 						double dSq = tCenter.distanceSquared(centers.get(j));
 						if (dSq < minDistSq && dSq <= rmsdThresholdSq) {
 							minDistSq = dSq;
-							permutation = j; 
+							permutation = j;
 							dSqs[j] = dSq;
 						}
 					}
@@ -372,15 +372,15 @@ public class HelixSolver {
 				used[permutation] = true;
 			}
 
-	
+
 			permutations.add(permutation);
 		}
 
 		return permutations;
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Returns the rise of a helix given the subunit centers of two adjacent
 	 * subunits and the helix transformation
@@ -396,7 +396,7 @@ public class HelixSolver {
 		p.sub(p1, p2);
 		return p.dot(h);
 	}
-	
+
 	/**
 	 * Returns the pitch angle of the helix
 	 * @param transformation helix transformation
@@ -405,7 +405,7 @@ public class HelixSolver {
 	private static double getAngle(Matrix4d transformation) {
 		return getAxisAngle(transformation).angle;
 	}
-	
+
 	/**
 	 * Returns the AxisAngle of the helix transformation
 	 * @param transformation helix transformation

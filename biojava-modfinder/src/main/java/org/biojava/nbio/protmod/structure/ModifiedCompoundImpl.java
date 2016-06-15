@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Jun 5, 2010
- * Author: Jianjiong Gao 
+ * Author: Jianjiong Gao
  *
  */
 
@@ -34,24 +34,24 @@ import java.util.*;
 
 
 /**
- * 
+ *
  * @author Jianjiong Gao
  * @since 3.0
  */
 public class ModifiedCompoundImpl
 implements ModifiedCompound, Serializable, Comparable<ModifiedCompound> {
-	
+
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1656563037849815427L;
 
 	ProteinModification originalModification;
 
 	ProteinModification modification;
-	
+
 	Set<StructureGroup> groups;
-	
+
 	Map<Set<StructureGroup>, Set<StructureAtomLinkage>> atomLinkages;
 
 	public static final String newline = System.getProperty("line.separator");
@@ -85,7 +85,7 @@ implements ModifiedCompound, Serializable, Comparable<ModifiedCompound> {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param modification ProteinModification.
 	 * @param linkages a collection of atom linkages.
 	 * @see ProteinModification
@@ -112,7 +112,7 @@ implements ModifiedCompound, Serializable, Comparable<ModifiedCompound> {
 	@Override
 	public void setModification(ProteinModification protmod){
 		originalModification = protmod;
-		
+
 		resetModification();
 	}
 
@@ -120,7 +120,7 @@ implements ModifiedCompound, Serializable, Comparable<ModifiedCompound> {
 	public ProteinModification getModification() {
 		return modification;
 	}
-	
+
 	private void resetModification() {
 		if (originalModification == null)
 			modification = originalModification;
@@ -158,14 +158,14 @@ implements ModifiedCompound, Serializable, Comparable<ModifiedCompound> {
 			default:
 				cat = ModificationCategory.CROSS_LINK_8_OR_LARGE; break;
 			}
-			
+
 			modification = new ProteinModificationImpl.Builder(originalModification)
-					.setCategory(cat).addKeywords(ligands).build();			
-		}		
+					.setCategory(cat).addKeywords(ligands).build();
+		}
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @return the original modification ID.
 	 * @deprecated use getModification().getId()
 	 */
@@ -173,7 +173,7 @@ implements ModifiedCompound, Serializable, Comparable<ModifiedCompound> {
 	public String getOriginalModificationId() {
 		if (originalModification==null)
 			return null;
-		
+
 		return originalModification.getId();
 	}
 
@@ -258,22 +258,22 @@ implements ModifiedCompound, Serializable, Comparable<ModifiedCompound> {
 		for (StructureAtomLinkage link : linkages) {
 			addAtomLinkage(link);
 		}
-		
+
 		resetModification();
 	}
-	
+
 	@Override
 	public boolean crossChains() {
 		if (groups==null || groups.isEmpty())
 			return false;
-		
+
 		Iterator<StructureGroup> it = groups.iterator();
 		String chain = it.next().getChainId();
 		while (it.hasNext()) {
 			if (!it.next().getChainId().equals(chain))
 				return true;
 		}
-		
+
 		return false;
 	}
 
@@ -307,7 +307,7 @@ implements ModifiedCompound, Serializable, Comparable<ModifiedCompound> {
 			sb.append(" !!! not initialized !!!");
 			return sb.toString();
 		}
-		
+
 		sb.append(originalModification.toString());
 //		sb.append(getModification().getCategory());
 //		if (!modification.getKeywords().isEmpty()) {
@@ -359,11 +359,11 @@ implements ModifiedCompound, Serializable, Comparable<ModifiedCompound> {
 			String xml2 = ModifiedCompoundXMLConverter.toXML(compound);
 			return xml.compareTo(xml2);
 		} catch (Exception e){
-			
+
 		}
 		return this.toString().compareTo(compound.toString());
 	}
-	
+
 	/**
 	 * @return true if same modification and same components; false, otherwise.
 	 */

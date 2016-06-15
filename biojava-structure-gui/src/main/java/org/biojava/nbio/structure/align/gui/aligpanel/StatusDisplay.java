@@ -36,7 +36,7 @@ import java.awt.event.WindowListener;
 public class StatusDisplay extends JTextField implements AlignmentPositionListener, WindowListener  {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 6939947266417830429L;
 
@@ -44,14 +44,14 @@ public class StatusDisplay extends JTextField implements AlignmentPositionListen
 	Atom[] ca1;
 	Atom[] ca2;
 
-	
+
 
 	public StatusDisplay(){
 		super();
 
 		this.setBackground(Color.white);
 		this.setEditable(false);
-		this.setMaximumSize(new Dimension(Short.MAX_VALUE,30));   
+		this.setMaximumSize(new Dimension(Short.MAX_VALUE,30));
 
 	}
 	public void destroy(){
@@ -85,7 +85,7 @@ public class StatusDisplay extends JTextField implements AlignmentPositionListen
 			this.setText(msg);
 
 
-			
+
 		} catch (StructureException e){
 			e.printStackTrace();
 		}
@@ -94,7 +94,7 @@ public class StatusDisplay extends JTextField implements AlignmentPositionListen
 
 	}
 
-	
+
 
 	@Override
 	public void positionSelected(AlignedPosition p) {
@@ -125,7 +125,7 @@ public class StatusDisplay extends JTextField implements AlignmentPositionListen
 		} catch (StructureException e){
 			e.printStackTrace();
 		}
-		
+
 	}
 
 
@@ -136,32 +136,32 @@ public class StatusDisplay extends JTextField implements AlignmentPositionListen
 
 		char c1 = aligs1[start.getPos1()];
 		char c3 = aligs1[end.getPos1()];
-		
+
 		char c2 = aligs2[start.getPos2()];
 		char c4 = aligs2[end.getPos2()];
-		
+
 		try {
 			Atom a1 = DisplayAFP.getAtomForAligPos(afpChain, 0, start.getPos1(), ca1,false);
 			Atom a2 = DisplayAFP.getAtomForAligPos(afpChain, 1, start.getPos2(), ca2,true);
 
 			Atom a3 = DisplayAFP.getAtomForAligPos(afpChain, 0, end.getPos1(), ca1,false);
 			Atom a4 = DisplayAFP.getAtomForAligPos(afpChain, 1, end.getPos2(), ca2,true);
-			
+
 			String pdbInfo1 = JmolTools.getPdbInfo(a1);
 			String pdbInfo2 = JmolTools.getPdbInfo(a2);
 
 			String pdbInfo3 = JmolTools.getPdbInfo(a3);
 			String pdbInfo4 = JmolTools.getPdbInfo(a4);
-			
+
 			String msg =  "Selected range1: " + pdbInfo1 + " ("+c1+") - " + pdbInfo3 + " ("+c3+")";
 			msg       +=  " range2: "         + pdbInfo2 + " ("+c2+") - " + pdbInfo4 + " ("+c4+")";
-		
+
 
 			this.setText(msg);
 		} catch (StructureException e){
 			e.printStackTrace();
 		}
-		
+
 
 	}
 
@@ -203,45 +203,45 @@ public class StatusDisplay extends JTextField implements AlignmentPositionListen
 	@Override
 	public void windowActivated(WindowEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 	@Override
 	public void windowClosed(WindowEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 	@Override
 	public void windowClosing(WindowEvent e) {
 		destroy();
-		
+
 	}
 	@Override
 	public void windowDeactivated(WindowEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 	@Override
 	public void windowDeiconified(WindowEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 	@Override
 	public void windowIconified(WindowEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 	@Override
 	public void windowOpened(WindowEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
-	
-	
-	
 
-	
-	
+
+
+
+
+
 
 
 }

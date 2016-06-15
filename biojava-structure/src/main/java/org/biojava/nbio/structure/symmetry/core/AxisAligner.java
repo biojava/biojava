@@ -27,7 +27,7 @@ import javax.vecmath.Vector3d;
 import java.util.List;
 
 public abstract class AxisAligner {
-	
+
 	/**
 	 * Returns an instance of AxisAligner for differnt type of QuatSymmetryResults (factory method)
 	 * @param results symmetry results
@@ -35,7 +35,7 @@ public abstract class AxisAligner {
 	 */
 	public static AxisAligner getInstance(QuatSymmetryResults results) {
 		String symmetry = results.getSymmetry();
-		
+
 		if (symmetry.equals("H")) {
 			return new HelixAxisAligner(results);
 		} else {
@@ -44,7 +44,7 @@ public abstract class AxisAligner {
 	}
 
 	public abstract String getSymmetry();
-	
+
 	public abstract Matrix4d getTransformation();
 
 	public abstract Matrix3d getRotationMatrix();
@@ -74,7 +74,7 @@ public abstract class AxisAligner {
 	public abstract Matrix4d getGeometicCenterTransformation();
 
 	/**
-	 * Returns the geometric center of polyhedron. In the case of the Cn 
+	 * Returns the geometric center of polyhedron. In the case of the Cn
 	 * point group, the centroid and geometric center are usually not
 	 * identical.
 	 * @return

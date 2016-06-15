@@ -33,7 +33,7 @@ import static org.junit.Assert.assertNotNull;
 
 
 public class TestLoadStructureFromURL {
-	
+
 	public static final String lineSplit = System.getProperty("file.separator");
 
 
@@ -43,7 +43,7 @@ public class TestLoadStructureFromURL {
 		// we use the cache path because there's no guarantee that the PDB dir is writable
 		String path = new UserConfiguration().getCacheFilePath();
 
-		File f = new File(path, "SUB DIR"); 
+		File f = new File(path, "TEST DIR");
 		f.deleteOnExit();
 		if ( ! f.exists()) {
 			System.out.println("making dir with space:" + f);
@@ -60,23 +60,19 @@ public class TestLoadStructureFromURL {
 		File subdir = f;
 		for(String dir :PDBFileReader.PDB_SPLIT_DIR) {
 			subdir = new File(subdir,dir);
+			subdir.deleteOnExit();
 		}
 		subdir = new File(subdir,"zn");
 		File newFile = new File(subdir, "pdb1znf.ent.gz");
 
 		subdir.deleteOnExit();
 		newFile.deleteOnExit();
-		
-		URL u = newFile.toURI().toURL();
 
-		System.out.println(u);
+		URL u = newFile.toURI().toURL();
 
 		Structure s = c.getStructure(u.toString()+"?args=test");
 
-		System.out.println(s);
-
 		assertNotNull(s);
-		
 
 	}
 }

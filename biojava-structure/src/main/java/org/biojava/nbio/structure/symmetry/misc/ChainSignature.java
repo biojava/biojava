@@ -37,21 +37,21 @@ public class ChainSignature implements Comparable<ChainSignature> {
 	public String getRepresentative() {
 		return representative;
 	}
-	
+
 	public List<String> getChainIds() {
 		return chainIds;
 	}
-	
+
 	public String getCompositionId() {
 		return compositionId;
 	}
-	
+
 	public void setCompositionId(String compositionId) {
 		this.compositionId = compositionId;
 	}
-	
+
 	@Override
-	public boolean equals (Object obj) { 
+	public boolean equals (Object obj) {
 		if (this == obj) {
 			return true;
 		}
@@ -64,7 +64,8 @@ public class ChainSignature implements Comparable<ChainSignature> {
 		return chainCount == other.chainCount && representative.equals(other.representative);
 	}
 
-	public int compareTo(ChainSignature other) {		
+	@Override
+	public int compareTo(ChainSignature other) {
 		if (other.chainCount < this.chainCount) {
 			return -1;
 		}
@@ -79,9 +80,9 @@ public class ChainSignature implements Comparable<ChainSignature> {
 		int hash = 7;
 		hash = 31 * hash + chainCount;
 		hash = 31 * hash + (representative == null ? 0 : representative.hashCode());
-		return hash;		
+		return hash;
 	}
-	
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();

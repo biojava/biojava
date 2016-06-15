@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Jul 31, 2010
- * Author: Jianjiong Gao 
+ * Author: Jianjiong Gao
  *
  */
 
@@ -39,7 +39,7 @@ import java.util.List;
 import java.util.Set;
 
 public class ModifiedCompoundSerializationTest extends TestCase {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(ModifiedCompoundSerializationTest.class);
 
 	boolean allOK = false;
@@ -82,34 +82,34 @@ public class ModifiedCompoundSerializationTest extends TestCase {
 		mainLoop:
 		for ( ModifiedCompound mc : all){
 			Set<StructureGroup> groups = mc.getGroups();
-			
+
 			for (StructureGroup g: groups){
 				if (! g.getChainId().equals("H"))
 					continue mainLoop;
 			}
 			ModificationCategory cat = mc.getModification().getCategory();
-			
+
 			// all modifications on chain H should be crosslink 2
-			
+
 //			if (  groups.size() != 2  ) {
 //				logger.info(ModifiedCompoundXMLConverter.toXML(mc));
 //				logger.info(cat);
 //				logger.info(mc);
-//			
+//
 //				logger.info(mc.getAtomLinkages());
-//				
+//
 //				for (StructureGroup structureGroup : groups) {
 //					logger.info(structureGroup);
 //				}
 //			}
 //			assertEquals("Not the right number of groups! should be 2, but got " + groups.size() + " in: " + ModifiedCompoundXMLConverter.toXML(mc),2,groups.size());
-//			
+//
 			if (!cat.equals(ModificationCategory.CROSS_LINK_2)) {
 				logger.info(ModifiedCompoundXMLConverter.toXML(mc));
 				logger.info(cat.toString());
 				logger.info(mc.toString());
 			}
-			
+
 			assertEquals(ModificationCategory.CROSS_LINK_2, cat);
 		}
 		} catch (Exception e){
@@ -137,7 +137,7 @@ public class ModifiedCompoundSerializationTest extends TestCase {
 	public List<ModifiedCompound> testXMLSerialization(String pdbId){
 		String xml = null;
 		ModifiedCompound currentMC = null;
-		List<ModifiedCompound> all = new ArrayList<ModifiedCompound>();		
+		List<ModifiedCompound> all = new ArrayList<ModifiedCompound>();
 		try {
 
 			Structure struc = TmpAtomCache.cache.getStructure(pdbId);
@@ -207,7 +207,7 @@ public class ModifiedCompoundSerializationTest extends TestCase {
 		 * read. We use the StringWriter class to produce the string.
 		 */
 		if (is != null) {
-			Writer writer = new StringWriter(); 
+			Writer writer = new StringWriter();
 			char[] buffer = new char[1024];
 			try {
 				Reader reader = new BufferedReader(
@@ -220,7 +220,7 @@ public class ModifiedCompoundSerializationTest extends TestCase {
 				is.close();
 			}
 			return writer.toString();
-		} else {       
+		} else {
 			return "";
 		}
 	}

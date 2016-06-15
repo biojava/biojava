@@ -18,10 +18,6 @@
  *      http://www.biojava.org/
  *
  */
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.biojava.nbio.core.sequence;
 
 /**
@@ -45,5 +41,5 @@ package org.biojava.nbio.core.sequence;
 
 public enum DataSource {
 
-    GENBANK, ENA, DDBJ, NBRF, PRF, PDB1, PDB2, PDBe, PATENTS, GENINFO, GENERAL, NCBI, UNIPROT, PFAM, LOCAL, UNKNOWN
+	GENBANK, ENA, DDBJ, NBRF, PRF, PDB1, PDB2, PDBe, PATENTS, GENINFO, GENERAL, NCBI, UNIPROT, PFAM, LOCAL, UNKNOWN
 }

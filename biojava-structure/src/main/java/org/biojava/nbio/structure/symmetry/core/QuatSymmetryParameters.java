@@ -20,22 +20,26 @@
  */
 package org.biojava.nbio.structure.symmetry.core;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
-public class QuatSymmetryParameters {
+public class QuatSymmetryParameters implements Serializable{
+
+	private static final long serialVersionUID = 1L;
+
 	private int minimumSequenceLength = 20;
 	private int absoluteMinimumSequenceLength = 5;
 	// if the shortest sequence length is >= 0.75 * the median sequence length,
-	// then the minimum sequence length is set to shortest sequence length, 
+	// then the minimum sequence length is set to shortest sequence length,
 	// but not shorter than the absoluteMinimumSequenceLength.
 	// This adaptive feature allows the consideration of very short chains, such as collagen
-	private double minimumSequenceLengthFraction = 0.75; 
+	private double minimumSequenceLengthFraction = 0.75;
 	private double[] sequenceIdentityThresholds = {0.0, 0.95};
 	private double sequencePseudoSymmetryThreshold = 0.95;
 	private double alignmentFractionThreshold = 0.9;
 	private double rmsdThreshold = 7.0;
 	private double angleThreshold = 10.0; // max angle deviation for C2 solver
-	// if a structure has both cyclic and helical symmetry (i.e., 3J4F: C2 and H), 
+	// if a structure has both cyclic and helical symmetry (i.e., 3J4F: C2 and H),
 	// then helical symmetry is assigned if Rmsd(helical) - Rmsd(cyclic) <= helixRmsdThreshold
 	// A slightly positive value gives preference to helical, if the RMSDs for the two symmetries
 	// are almost identical
@@ -52,7 +56,7 @@ public class QuatSymmetryParameters {
 	private boolean verbose = false;
 
 	private static final String n = System.getProperty("line.separator");
-	
+
 	/**
 	 * @return the minimumSequenceLength
 	 */
@@ -65,7 +69,7 @@ public class QuatSymmetryParameters {
 	public void setMinimumSequenceLength(int minimumSequenceLength) {
 		this.minimumSequenceLength = minimumSequenceLength;
 	}
-	
+
 	/**
 	 * @return the absoluteMinimumSequenceLength
 	 */
@@ -97,14 +101,14 @@ public class QuatSymmetryParameters {
 	public double[] getSequenceIdentityThresholds() {
 		return sequenceIdentityThresholds;
 	}
-	
+
 	/**
 	 * @param sequenceIdentityThresholds the sequenceIdentityThresholds to set
 	 */
 	public void setSequenceIdentityThresholds(double[] sequenceIdentityThresholds) {
 		this.sequenceIdentityThresholds = sequenceIdentityThresholds;
 	}
-	
+
 	/**
 	 * @return the alignmentFractionThreshold
 	 */
@@ -135,7 +139,7 @@ public class QuatSymmetryParameters {
 	public void setAngleThreshold(double angleThreshold) {
 		this.angleThreshold = angleThreshold;
 	}
-	
+
 	public double getHelixRmsdThreshold() {
 		return helixRmsdThreshold;
 	}
@@ -169,12 +173,12 @@ public class QuatSymmetryParameters {
 	public double getSequencePseudoSymmetryThreshold() {
 		return sequencePseudoSymmetryThreshold;
 	}
-	
+
 	public void setSequencePseudoSymmetryThreshold(
 			double sequencePseudoSymmetryThreshold) {
 		this.sequencePseudoSymmetryThreshold = sequencePseudoSymmetryThreshold;
 	}
-	
+
 	public int getMaximumLocalCombinations() {
 		return maximumLocalCombinations;
 	}
@@ -235,14 +239,15 @@ public class QuatSymmetryParameters {
 	public void setOnTheFly(boolean useJmolBioAssemblies) {
 		this.onTheFly = useJmolBioAssemblies;
 	}
-	
+
 	public boolean isVerbose() {
 		return verbose;
 	}
 	public void setVerbose(boolean verbose) {
 		this.verbose = verbose;
 	}
-	
+
+	@Override
 	public String toString() {
 		StringBuilder s = new StringBuilder();
 		s.append("Minimum protein sequence length   : ");
@@ -259,7 +264,7 @@ public class QuatSymmetryParameters {
 		s.append(n);
 		s.append("Angle threshold                   : ");
 		s.append(angleThreshold);
-		s.append(n);	
+		s.append(n);
 		s.append("Symmetry RMSD threshold           : ");
 		s.append(rmsdThreshold);
 		s.append(n);

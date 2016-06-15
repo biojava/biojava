@@ -42,9 +42,9 @@ import java.util.Map;
 @XmlAccessorType(XmlAccessType.PUBLIC_MEMBER)
 
 public class AssignmentXMLSerializer {
-	
+
 	Map<String, String> assignments;
-	
+
 	static JAXBContext jaxbContext;
 	static {
 		try {
@@ -53,22 +53,22 @@ public class AssignmentXMLSerializer {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public AssignmentXMLSerializer(){
 		assignments = new HashMap<String, String>();
-		
+
 	}
-	
+
 	public void setAssignments(Map<String, String> assignments){
-		
+
 		this.assignments = assignments;
-		
+
 	}
-	
+
 	public Map<String, String> getAssignments(){
 		return assignments;
 	}
-	
+
 	public  String toXML(){
 
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -82,7 +82,7 @@ public class AssignmentXMLSerializer {
 			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 
 			m.marshal( this, ps);
-			
+
 
 		} catch (Exception e){
 			e.printStackTrace();
@@ -111,5 +111,5 @@ public class AssignmentXMLSerializer {
 		return job;
 	}
 
-	
+
 }

@@ -32,5 +32,5 @@ import java.util.LinkedHashMap;
  */
 public interface DatabaseReferenceInterface {
 
-    public LinkedHashMap<String,ArrayList<DBReferenceInfo>> getDatabaseReferences();
+	public LinkedHashMap<String,ArrayList<DBReferenceInfo>> getDatabaseReferences();
 }

@@ -34,12 +34,12 @@ public class PDPParameters {
 	public static final float TD  = 25.f;
 	public static final float DBL = .05f;
 	public static final int MAXCONT = 900;
-	
+
 	public static final float CUT_OFF_VALUE=.50f; /* decide to cut */
 	public static final float CUT_OFF_VALUE1=.29f; /* decide to combine */
 	public static final float CUT_OFF_VALUE2=.44f; /* decide to double cut */
 	public static final float CUT_OFF_VALUE1S=.19f; /* decide to combine small domains */
 	public static final float CUT_OFF_VALUE1M=.21f; /* decide to combine medium domains */
 
-	
+
 }

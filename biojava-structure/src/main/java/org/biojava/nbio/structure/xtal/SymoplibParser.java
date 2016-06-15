@@ -36,19 +36,19 @@ import java.util.regex.Pattern;
 
 
 /**
- * A class containing static methods to parse the symop.lib file from the 
- * CCP4 package. The file contains the transformations belonging to all 
+ * A class containing static methods to parse the symop.lib file from the
+ * CCP4 package. The file contains the transformations belonging to all
  * protein crystallography space groups.
- * 
+ *
  * See http://structure.usc.edu/ccp4/symlib.html for documentation
- * 
+ *
  * @author duarte_j
  *
  */
 public class SymoplibParser {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(SymoplibParser.class);
-	
+
 	private static final String newline = System.getProperty("line.separator");
 
 	private static final String SPACE_GROUPS_FILE = "org/biojava/nbio/structure/xtal/spacegroups.xml";
@@ -71,26 +71,26 @@ public class SymoplibParser {
 	}
 
 
-	/** 
+	/**
 	 * Load all SpaceGroup information from the file spacegroups.xml
-	 * 
+	 *
 	 * @return a map providing information for all spacegroups
 	 */
 	private static TreeMap<Integer, SpaceGroup> parseSpaceGroupsXML() {
 
 		// NOTE: if the space group file is requested by some part of the code (i.e. this method is called) and
 		//       there is a problem in reading it, then that's truly a FATAL problem, since this is not a user file
-		//       but a file that's part of the distribution: it MUST be there and MUST have the right format. A failure 
-		//       to read it is more of a "compilation" error than a runtime error. That's the reason that System.exit 
+		//       but a file that's part of the distribution: it MUST be there and MUST have the right format. A failure
+		//       to read it is more of a "compilation" error than a runtime error. That's the reason that System.exit
 		//       is called (which otherwise usually is not a good idea).
 		//
-		//       The rest of the application will simply not work: there are 3 options to handle it 
-		//	     a) returning null and then a NullPointer will happen down the line and thus a not very clear 
+		//       The rest of the application will simply not work: there are 3 options to handle it
+		//	     a) returning null and then a NullPointer will happen down the line and thus a not very clear
 		//          error message will be printed
 		//       b) throw the exception forward and catch it in the final main but that would also be bad because
 		//          this is a file that the user didn't input but that should be part of the distribution
-		//		 c) call System.exit(1) and "crash" the application with a human-understandable error message 
-		
+		//		 c) call System.exit(1) and "crash" the application with a human-understandable error message
+
 		InputStream spaceGroupIS = SymoplibParser.class.getClassLoader().getResourceAsStream(SPACE_GROUPS_FILE);
 
 		if ( spaceGroupIS == null) {
@@ -107,7 +107,7 @@ public class SymoplibParser {
 			System.exit(1);
 		} catch (JAXBException e) {
 			logger.error("Fatal error! Could not parse resource: "+SPACE_GROUPS_FILE+". Problem in xml formatting: "+e.getMessage());
-			System.exit(1);			
+			System.exit(1);
 		}
 
 		name2sgs = new HashMap<String, SpaceGroup>();
@@ -127,9 +127,9 @@ public class SymoplibParser {
 	}
 
 
-	/** 
+	/**
 	 * Load all SpaceGroup information from the file spacegroups.xml
-	 * 
+	 *
 	 * @return a map providing information for all spacegroups
 	 */
 	public static TreeMap<Integer, SpaceGroup> parseSpaceGroupsXML(
@@ -148,7 +148,7 @@ public class SymoplibParser {
 		StringBuilder sb = new StringBuilder();
 
 		String line = null;
-		
+
 		while ((line = reader.readLine()) != null) {
 			sb.append(line).append(newline);
 		}
@@ -166,7 +166,7 @@ public class SymoplibParser {
 		if (shortName==null || shortName.length()<=2) return null;
 
 		// PDB uses group "P 1-" for 13 racemic mixture entries (as of Sep2011), e.g. 3e7r
-		// they call the space group "P 1-" unusually (symop.lib and everyone else call it "P -1")   
+		// they call the space group "P 1-" unusually (symop.lib and everyone else call it "P -1")
 		if (shortName.equals("P 1-")) shortName="P -1";
 
 		// enantiomorphic space groups contain sometime letters indicating glide planes which should always be lower case
@@ -181,14 +181,14 @@ public class SymoplibParser {
 	}
 
 
-	/** 
-	 * A parser for the symop.lib file provided by CCP4. Note: this file is not getting re-distributed by BioJava. 
+	/**
+	 * A parser for the symop.lib file provided by CCP4. Note: this file is not getting re-distributed by BioJava.
 	 * It can be downloaded from:
-	 * 
+	 *
 	 *  http://www.ccp4.ac.uk/cvs/viewvc.cgi/libccp4/data/symop.lib?revision=1.10&view=markup
-	 * 
+	 *
 	 * Note: this file is not needed by BioJava. BioJava loads equivalent information from the file spacegroups.xml
-	 * 
+	 *
 	 * @param symoplibIS
 	 * @return
 	 */
@@ -220,11 +220,11 @@ public class SymoplibParser {
 					String shortSymbol = null;
 					String altShortSymbol = null;
 					String brav = null;
-					if (m.matches()) {						
+					if (m.matches()) {
 						brav = m.group(1);
-						altShortSymbol = m.group(2); // null if there is no match 
+						altShortSymbol = m.group(2); // null if there is no match
 						if (altShortSymbol!=null) altShortSymbol = altShortSymbol.trim().replaceAll("'", "");
-						shortSymbol = m.group(3);							
+						shortSymbol = m.group(3);
 					}
 					currentSG = new SpaceGroup(id, multiplicity, primitiveMultiplicity, shortSymbol, altShortSymbol, BravaisLattice.getByName(brav));
 				} else {

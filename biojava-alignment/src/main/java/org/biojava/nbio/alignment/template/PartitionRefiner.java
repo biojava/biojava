@@ -35,13 +35,13 @@ import org.biojava.nbio.core.sequence.template.Sequence;
  * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
  */
 public interface PartitionRefiner<S extends Sequence<C>, C extends Compound> extends Aligner<S, C>,
-        ProfileProfileScorer<S, C> {
+		ProfileProfileScorer<S, C> {
 
-    /**
-     * Returns class type of profile-profile alignment subroutine.
-     *
-     * @return class type of profile-profile alignment subroutine
-     */
-    ProfileProfileAlignerType getProfileProfileAligner();
+	/**
+	 * Returns class type of profile-profile alignment subroutine.
+	 *
+	 * @return class type of profile-profile alignment subroutine
+	 */
+	ProfileProfileAlignerType getProfileProfileAligner();
 
 }

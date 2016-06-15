@@ -28,17 +28,17 @@ import java.io.IOException;
 
 public class SchemaGenerator extends SchemaOutputResolver{
 	private String fileName;
-	
+
 	public SchemaGenerator(String filename){
 		this.fileName = filename;
 	}
-	
+
 	@Override
 	public Result createOutput(String namespaceUri, String suggestedFileName) throws IOException {
 		File f = new File(this.fileName);
 		f.createNewFile();
-        return new StreamResult(f);
-    }
+		return new StreamResult(f);
+	}
 }
 
 

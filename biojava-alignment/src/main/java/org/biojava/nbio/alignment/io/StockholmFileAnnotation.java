@@ -29,12 +29,12 @@ import java.util.*;
 
 /**
  * Stores all the content parsed from the #=GF lines
- * 
- * 
+ *
+ *
  * @since 3.0.5
  * @author Amr AL-Hossary
  * @author Marko Vaz
- * 
+ *
  */
 public class StockholmFileAnnotation {
 	public static class StockholmFileAnnotationReference {
@@ -47,8 +47,8 @@ public class StockholmFileAnnotation {
 		 * RL   J Mol Biol 1994;242:309-320.
 		 */
 		private String refLocation;
-		
-		
+
+
 		public String getRefMedline() {
 			return refMedline;
 		}
@@ -70,7 +70,7 @@ public class StockholmFileAnnotation {
 				this.refTitle = new StringBuffer(this.refTitle).append(' ').append(refTitle);
 			}
 		}
-		
+
 		public String getRefAuthor() {
 			return refAuthor.toString();
 		}
@@ -93,8 +93,8 @@ public class StockholmFileAnnotation {
 		public void setRefLocation(String refLocation) {
 			this.refLocation = refLocation;
 		}
-		
-		
+
+
 
 	}
 
@@ -165,7 +165,7 @@ public class StockholmFileAnnotation {
 	public void addDBReference(String dbReferenceRepresentingString) {
 		if (this.dbReferences == null) {
 			this.dbReferences = new HashSet<DatabaseReference>();
-		} 
+		}
 		dbReferences.add(new DatabaseReference(dbReferenceRepresentingString));
 	}
 

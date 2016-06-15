@@ -40,12 +40,12 @@ import java.util.List;
 
 
 /** A job as it can be run on the farm.
- * 
+ *
  * @author Andreas Prlic
- * 
+ *
  * for arguments see the printHelp() method.
- * 
- * 
+ *
+ *
  *
  */
 public class FarmJob implements Runnable {
@@ -60,16 +60,16 @@ public class FarmJob implements Runnable {
 	List<FarmJobRunnable> jobs;
 
 	FarmJobParameters params ;
-	
+
 	public FarmJob(){
 		progressListeners = null;
-		
+
 		// send a flag to the PDb file loader to cache the gzip compressed files.
 		System.setProperty(InputStreamProvider.CACHE_PROPERTY, "true");
 
-		
+
 	}
-	
+
 	public FarmJobParameters getParams() {
 		return params;
 	}
@@ -81,10 +81,10 @@ public class FarmJob implements Runnable {
 	public void addAlignmentProgressListener(AlignmentProgressListener listener){
 		if (progressListeners == null)
 			progressListeners = new ArrayList<AlignmentProgressListener>();
-		
+
 		progressListeners.add(listener);
 	}
-	
+
 	public void clearListeners(){
 		progressListeners.clear();
 		progressListeners = null;
@@ -94,20 +94,20 @@ public class FarmJob implements Runnable {
 
 		FarmJob job = new FarmJob();
 
-		if (argv.length  == 0 ) {			
+		if (argv.length  == 0 ) {
 			job.printHelp();
-			return;			
+			return;
 		}
 
 		if ( argv.length == 1){
 			if (argv[0].equalsIgnoreCase("-h") || argv[0].equalsIgnoreCase("-help")|| argv[0].equalsIgnoreCase("--help")){
-				job.printHelp();								
+				job.printHelp();
 				return;
 			}
 		}
 
 		FarmJobParameters params = new FarmJobParameters();
-		
+
 		for (int i = 0 ; i < argv.length; i++){
 			String arg   = argv[i];
 
@@ -118,7 +118,7 @@ public class FarmJob implements Runnable {
 			// if value starts with - then the arg does not have a value.
 			if (value != null && value.startsWith("-"))
 				value = null;
-			else 
+			else
 				i++;
 
 
@@ -126,7 +126,7 @@ public class FarmJob implements Runnable {
 
 			try {
 
-				CliTools.configureBean(params, tmp);  
+				CliTools.configureBean(params, tmp);
 
 			} catch (ConfigurationException e){
 
@@ -138,10 +138,10 @@ public class FarmJob implements Runnable {
 				} else {
 					// but there can be with optional ...
 				}
-			}    
+			}
 		}
-				
-		
+
+
 		if (( params.getNrAlignments() == -1) && (params.getTime() == -1)){
 			logger.error("Please provide either the -time or the -nrAlignments argument!");
 			return;
@@ -149,21 +149,21 @@ public class FarmJob implements Runnable {
 
 
 		logger.info("Using parameters: {}", params);
-		
+
 		job.setParams(params);
 		job.run();
-		
+
 	}
-	
+
 	@Override
 	public void run(){
 
-		
+
 		// set the system wide PDB path
 
 		String path = params.getPdbFilePath();
 		System.setProperty(UserConfiguration.PDB_DIR,path);
-				
+
 		String cachePath = params.getCacheFilePath();
 		if ( cachePath != null && ! cachePath.equals(""))
 			System.setProperty(UserConfiguration.PDB_CACHE_DIR,cachePath);
@@ -179,15 +179,15 @@ public class FarmJob implements Runnable {
 			throw new RuntimeException("Could not load " + CachedRemoteScopInstallation.class.getName(), e);
 		}
 		ScopFactory.setScopDatabase(scop);
-		
+
 		String username = params.getUsername();
 		jobs = new ArrayList<FarmJobRunnable>();
 		for ( int i = 0 ; i < params.getThreads();i++){
 			logger.info("starting thread #{}", (i+1));
-			FarmJobRunnable runner = new FarmJobRunnable(params);	
+			FarmJobRunnable runner = new FarmJobRunnable(params);
 			params.setUsername(username+"_thread_" + (i+1));
 			jobs.add(runner);
-			
+
 			if ( progressListeners != null) {
 				for (AlignmentProgressListener li : progressListeners){
 					runner.addAlignmentProgressListener(li);
@@ -206,14 +206,14 @@ public class FarmJob implements Runnable {
 			}
 		}
 	}
-	
+
 	public void terminate(){
 
 		logger.info("terminating jobs");
-		
+
 		if ( jobs == null)
 			return;
-		
+
 		int js = jobs.size();
 		logger.info("number of jobs: {}", js);
 
@@ -222,7 +222,7 @@ public class FarmJob implements Runnable {
 			// runner.terminate() is already synchronized
 			runner.terminate();
 		}
-		
+
 		clearListeners();
 	}
 
@@ -234,8 +234,8 @@ public class FarmJob implements Runnable {
 		System.out.println("FarmJob accepts the following parameters:");
 		System.out.println("");
 		System.out.println(" Mandatory:");
-		System.out.println("   -pdbFilePath (mandatory) Path to the directory in your file system that contains the PDB files.");		
-		
+		System.out.println("   -pdbFilePath (mandatory) Path to the directory in your file system that contains the PDB files.");
+
 		System.out.println("   provide either -time or -nrAlignments. If both are provided the job stops as soon as any of the criteria has been reached.");
 		System.out.println("   -time maximum number of time to run (in seconds). -1 means no time limit, but run -nrAlignment arguments. Default: " + FarmJobParameters.DEFAULT_JOB_TIME );
 		System.out.println("   -nrAlignments number of alignments to calculate. Default: " + FarmJobParameters.DEFAULT_NR_ALIGNMENTS) ;

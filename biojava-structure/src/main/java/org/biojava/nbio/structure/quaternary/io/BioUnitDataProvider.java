@@ -27,49 +27,58 @@ import org.biojava.nbio.structure.quaternary.BiologicalAssemblyTransformation;
 import java.util.List;
 
 /** Provides access to the data that is needed in order to rebuild the correct biological assembly of a protein.
- * 
- * This is probably the simpler approach of accessing the necessary information. There is a second access layer, which is 
+ *
+ * This is probably the simpler approach of accessing the necessary information. There is a second access layer, which is
  * closer to the way the PDB is representing the files, it is defined by the interface RawBioUnitDataProvider.
- * 
+ *
  * @author Andreas Prlic
  *
  */
 public interface BioUnitDataProvider {
-	
+
 	/** get the data for a particular assembly, counting starts at 1...
-	 * 
+	 *
 	 * @param pdbId the PDB ID. E.g. 1STP
 	 * @param biolAssemblyNr the number of the assembly, the first one is nr 1. 0 refers to the asym unit
 	 * @return list of transformations.
 	 */
 	public List<BiologicalAssemblyTransformation>  getBioUnitTransformationList(String pdbId, int biolAssemblyNr);
-	
+
 	/** Returns the number of available biological assemblies.
 	 *  @param pdbId the PDB ID. E.g. 1STP
 	 * @return nr of available assemblies.
 	 */
 	public int getNrBiolAssemblies(String pdbId);
-	
-	
+
+
 	/** Does the PDB ID have biological assembly information?
-	 * 
+	 *
 	 * @param pdbId the PDB ID. E.g. 1STP
 	 * @return boolean flag
 	 */
 	public boolean hasBiolAssembly(String pdbId);
-	
-	
+
+
 	/** load the asym unit, but set the info how to re-create the bio unit in the PdbHeader object
-	 * 
+	 *
 	 * @param pdbId
 	 * @return
 	 */
 	public Structure getAsymUnit(String pdbId);
-	
+
 	public void setAsymUnit(Structure asymUnit);
-	
+
+	/**
+	 * Set an AtomCache to use when fetching asymmetric units. If null, a new
+	 * cache will be created with default parameters.
+	 * @param cache
+	 */
 	public void setAtomCache(AtomCache cache);
-	
+
+	/**
+	 *
+	 * @return The current cache, or null if no cache has been initialized
+	 */
 	public AtomCache getAtomCache();
-	
+
 }

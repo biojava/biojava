@@ -34,7 +34,7 @@ public abstract class Convertor {
 	 * Charge (Positive, Neutral, Negative)<br/>
 	 * Secondary structure (Helix, Strand, Coil)<br/>
 	 * Solvent accessibility (Buried, Exposed, Intermediate)<br/>
-	 * 
+	 *
 	 * @author kohchuanhock
 	 * @version 2011.06.09
 	 */
@@ -42,38 +42,38 @@ public abstract class Convertor {
 	public final static char group2 = '2';
 	public final static char group3 = '3';
 	public final static char unknownGroup = '0';
-	
- 	/**
- 	 * Returns the grouping of the amino acid character.
+
+	/**
+	 * Returns the grouping of the amino acid character.
 	 * The aminoAcid argument is preferably of non-ambiguous characters.
 	 * Standard amino acids will be converted to '1', '2' or '3' depending on its grouping
 	 * Non-standard amino acids are simply converted to '0'.
-	 * 
-	 * @param aminoAcid 
+	 *
+	 * @param aminoAcid
 	 * 		an amino acid character preferably of non-ambiguous characters
 	 * @return its grouping
- 	 */
+	 */
 	public abstract char convert(char aminoAcid);
-	
+
 	/**
 	 * Returns the groupings of the attribute
 	 * @return the groupings of the attribute
 	 */
 	public abstract String[] getGrouping();
-	
+
 	/**
 	 * Return the attribute of the grouping
 	 * @return the attribute of the grouping
 	 */
 	public abstract String getAttribute();
-	
+
 	/**
 	 * Returns the converted sequence.
 	 * The sequence argument must be a protein sequence consisting of preferably non-ambiguous characters only.
 	 * Standard amino acids will be converted to '1', '2' or '3' depending on its grouping
 	 * Non-standard amino acids are simply converted to '0'.
-	 * 
-	 * @param sequence 
+	 *
+	 * @param sequence
 	 * 		a protein sequence consisting of preferably non-ambiguous characters only
 	 * @return the converted sequence
 	 */
@@ -85,5 +85,5 @@ public abstract class Convertor {
 		}
 		return convertedSequence;
 	}
-	
+
 }

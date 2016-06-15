@@ -18,10 +18,6 @@
  *      http://www.biojava.org/
  *
  */
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 
 package org.biojava.nbio.survival.data;
 
@@ -31,10 +27,10 @@ package org.biojava.nbio.survival.data;
  */
 public interface ChangeValue {
 
-    /**
-     *
-     * @param originalValue
-     * @return
-     */
-    public String change(String originalValue);
+	/**
+	 *
+	 * @param originalValue
+	 * @return
+	 */
+	public String change(String originalValue);
 }

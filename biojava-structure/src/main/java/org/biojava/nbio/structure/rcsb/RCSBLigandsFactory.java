@@ -1,20 +1,20 @@
 /**
  * BioJava development code
- * 
+ *
  * This code may be freely distributed and modified under the terms of the GNU Lesser General Public Licence. This
  * should be distributed with the code. If you do not have a copy, see:
- * 
+ *
  * http://www.gnu.org/copyleft/lesser.html
- * 
+ *
  * Copyright for this code is held jointly by the individual authors. These should be listed in @author doc comments.
- * 
+ *
  * For more information on the BioJava project and its aims, or to join the biojava-l mailing list, visit the home page
  * at:
- * 
+ *
  * http://www.biojava.org/
- * 
+ *
  * Created on 2013-06-13 Created by Douglas Myers-Turnbull
- * 
+ *
  * @since 3.0.6
  */
 package org.biojava.nbio.structure.rcsb;
@@ -38,18 +38,18 @@ import java.util.logging.Logger;
  * {@code rcsb.descriptions}) of the XML file, either because it was blank or contained an error that could not be
  * safely ignored, that field will simply be null. This holds even for numerical values. On some parse errors, the error
  * will additionally be printed to standard error.
- * 
+ *
  * Example usage:
- * 
+ *
  * <pre>
  * RCSBLigands ligands = RCSBLigandsFactory.getFromPdbIds(&quot;1w0p&quot;);
  * List&lt;RCSBLigand&gt; list = ligands.getLigands();
  * System.out.println(list.get(0).getFormula()); // prints &quot;CA 2&quot;
  * System.out.println(list.get(1).getFormula()); // prints &quot;C11 H19 N O9&quot;
  * </pre>
- * 
+ *
  * @see <a href="http://www.pdb.org/pdb/software/rest.do#descPDB">RCSB RESTful</a>
- * 
+ *
  * @author dmyerstu
  * @since 3.0.6
  */

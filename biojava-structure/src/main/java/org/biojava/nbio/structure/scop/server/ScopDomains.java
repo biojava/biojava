@@ -43,12 +43,12 @@ import java.util.List;
 public class ScopDomains implements Serializable{
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 7693404355005856746L;
 
 	List<ScopDomain> domains ;
-	
+
 	static JAXBContext jaxbContext;
 	static {
 		try {
@@ -57,17 +57,17 @@ public class ScopDomains implements Serializable{
 			throw new RuntimeException("Could not initialize JAXB context for " + ScopDomains.class, e);
 		}
 	}
-	
-	
+
+
 	public void setScopDomain(List<ScopDomain> domains) {
 		this.domains = domains;
-		
+
 	}
 
 	public List<ScopDomain> getScopDomain() {
 		return domains;
 	}
-	
+
 	public  String toXML(){
 
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -81,7 +81,7 @@ public class ScopDomains implements Serializable{
 			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 
 			m.marshal( this, ps);
-			
+
 
 		} catch (Exception e){
 			throw new RuntimeException("Could not convert " + getClass() + " to XML", e);
@@ -109,7 +109,7 @@ public class ScopDomains implements Serializable{
 
 		return job;
 	}
-	
+
 
 
 

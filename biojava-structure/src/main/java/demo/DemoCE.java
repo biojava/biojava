@@ -37,64 +37,64 @@ import org.biojava.nbio.structure.align.xml.AFPChainXMLConverter;
 
 
 /** Example of how to run a structure alignment using the CE algorithm.
- * 
+ *
  * @author Andreas Prlic
  *
  */
 public class DemoCE {
 
 	public static void main(String[] args){
-		
+
 		//String name1 = "4hhb.A";
 		//String name2 = "4hhb.B";
-		
+
 		String name1 = "1cdg.A";
 		String name2 = "1tim.B";
-		
-	
-		
+
+
+
 		AtomCache cache = new AtomCache();
-				
+
 		Structure structure1 = null;
 		Structure structure2 = null;
 
 		try {
 
 		   StructureAlignment algorithm  = StructureAlignmentFactory.getAlgorithm(CeMain.algorithmName);
-		   
+
 			structure1 = cache.getStructure(name1);
 			structure2 = cache.getStructure(name2);
-			
+
 			Atom[] ca1 = StructureTools.getAtomCAArray(structure1);
 			Atom[] ca2 = StructureTools.getAtomCAArray(structure2);
-			
+
 			// get default parameters
 			CeParameters params = new CeParameters();
-			
+
 			// add more print
 			params.setShowAFPRanges(true);
-			
-			// set the maximum gap size to unlimited 
+
+			// set the maximum gap size to unlimited
 			params.setMaxGapSize(-1);
-			
-			AFPChain afpChain = algorithm.align(ca1,ca2,params);			
+
+			AFPChain afpChain = algorithm.align(ca1,ca2,params);
 
 			afpChain.setName1(name1);
 			afpChain.setName2(name2);
 
 			// flexible original results:
 			System.out.println(afpChain.toFatcat(ca1,ca2));
-			
+
 			System.out.println(afpChain.toRotMat());
 			//System.out.println(afpChain.toCE(ca1, ca2));
-			
+
 			System.out.println(AFPChainXMLConverter.toXML(afpChain,ca1,ca2));
-			
+
 			double tmScore = AFPChainScorer.getTMScore(afpChain, ca1, ca2);
 			afpChain.setTMScore(tmScore);
-			
+
 			//System.out.println(AfpChainWriter.toWebSiteDisplay(afpChain, ca1, ca2));
-			
+
 			printScores(afpChain);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -105,7 +105,7 @@ public class DemoCE {
 	private static void printScores(AFPChain afpChain) {
 		System.out.println("=====================");
 		System.out.println("The main scores for the alignment:");
-		
+
 		System.out.println("EQR       :\t" + afpChain.getNrEQR() + "\t The number of residues on structurally equivalent positions.")  ;
 		System.out.println("RMSD      :\t" + String.format("%.2f",afpChain.getTotalRmsdOpt() )+ "\t The RMSD of the alignment");
 		System.out.println("Z-score   :\t" + afpChain.getProbability() + "\t The Z-score of the alignment (CE)");
@@ -120,8 +120,8 @@ public class DemoCE {
 		System.out.println("Distance  :\t" + dab + "\t Distance between folds a,b ");
 		double sab = 2 * afpChain.getNrEQR() / (double)( afpChain.getCa1Length() + afpChain.getCa2Length());
 		System.out.println("Rel. Sim. :\t" + String.format("%.2f",sab) + "\t Relative similarity");
-		
-		
-		
+
+
+
 	}
 }

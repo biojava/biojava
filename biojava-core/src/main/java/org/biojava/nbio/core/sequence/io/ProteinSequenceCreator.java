@@ -40,16 +40,16 @@ import java.util.List;
  * @author Scooter Willis <willishf at gmail dot com>
  */
 public class ProteinSequenceCreator implements
-    SequenceCreatorInterface<AminoAcidCompound> {
+		SequenceCreatorInterface<AminoAcidCompound> {
 
-  private CompoundSet<AminoAcidCompound> compoundSet;
+	private CompoundSet<AminoAcidCompound> compoundSet;
 /**
  *
  * @param compoundSet
  */
-  public ProteinSequenceCreator(CompoundSet<AminoAcidCompound> compoundSet) {
-    this.compoundSet = compoundSet;
-  }
+	public ProteinSequenceCreator(CompoundSet<AminoAcidCompound> compoundSet) {
+		this.compoundSet = compoundSet;
+	}
 /**
  *
  * @param sequence
@@ -57,33 +57,33 @@ public class ProteinSequenceCreator implements
  * @return
  * @throws CompoundNotFoundException
  */
-  @Override
+	@Override
 public AbstractSequence<AminoAcidCompound> getSequence(String sequence,
-      long index) throws CompoundNotFoundException {
-    return new ProteinSequence(sequence, compoundSet);
-  }
+			long index) throws CompoundNotFoundException {
+		return new ProteinSequence(sequence, compoundSet);
+	}
 /**
  *
  * @param list
  * @return
  */
-  @Override
+	@Override
 public AbstractSequence<AminoAcidCompound> getSequence(
-      List<AminoAcidCompound> list) {
-    ArrayListProxySequenceReader<AminoAcidCompound> store = new ArrayListProxySequenceReader<AminoAcidCompound>();
-    store.setCompoundSet(compoundSet);
-    store.setContents(list);
-    return new ProteinSequence(store);
-  }
+			List<AminoAcidCompound> list) {
+		ArrayListProxySequenceReader<AminoAcidCompound> store = new ArrayListProxySequenceReader<AminoAcidCompound>();
+		store.setCompoundSet(compoundSet);
+		store.setContents(list);
+		return new ProteinSequence(store);
+	}
 /**
  *
  * @param proxyLoader
  * @param index not used in this implementation
  * @return
  */
-  @Override
+	@Override
 public AbstractSequence<AminoAcidCompound> getSequence(
-      ProxySequenceReader<AminoAcidCompound> proxyLoader, long index) {
-    return new ProteinSequence(proxyLoader, compoundSet);
-  }
+			ProxySequenceReader<AminoAcidCompound> proxyLoader, long index) {
+		return new ProteinSequence(proxyLoader, compoundSet);
+	}
 }

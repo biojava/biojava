@@ -27,13 +27,12 @@ import org.biojava.nbio.core.sequence.ProteinSequence;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 
 /** Makes remote calls to the HMMER web service at the EBI web site and returns Pfam domain annotations for an input protein sequence.
- * 
+ *
  * @author Andreas Prlic
  * @since 3.0.3
  */
@@ -56,7 +55,7 @@ public class RemoteHmmerScan implements HmmerScan {
 	}
 
 	/** Scans a protein sequence for Pfam profile matches.
-	 * 
+	 *
 	 * @param sequence
 	 * @param serviceLocation
 	 * @return
@@ -112,9 +111,9 @@ public class RemoteHmmerScan implements HmmerScan {
 		HttpURLConnection connection2 = (HttpURLConnection) respUrl.openConnection();
 		connection2.setRequestMethod("GET");
 		connection2.setRequestProperty("Accept", "application/json");
+		connection2.setConnectTimeout(60000); // 1 minute
 
-
-		//Get the response 
+		//Get the response
 		BufferedReader in = new BufferedReader(
 				new InputStreamReader(
 						connection2.getInputStream()));
@@ -153,7 +152,7 @@ public class RemoteHmmerScan implements HmmerScan {
 					dcl = dclL.intValue();
 				} else if ( dclO instanceof Integer){
 					dcl = (Integer) dclO;
-				} 
+				}
 
 
 				hmmResult.setAcc((String)hit.get("acc"));

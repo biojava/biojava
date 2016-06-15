@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * created at 20 Mar 2014
- * Author: ap3 
+ * Author: ap3
  */
 
 package org.biojava.nbio.ontology;
@@ -40,11 +40,11 @@ public class TestParseSBO extends TestCase {
 	public void testSBO(){
 		OboParser parser = new OboParser();
 
-		
+
 		try {
-		
+
 			InputStream inStream = parser.getClass().getResourceAsStream("/ontology/SBO_OBO.obo");
-		
+
 			assertNotNull(inStream);
 
 			BufferedReader oboFile = new BufferedReader ( new InputStreamReader ( inStream ) );
@@ -53,7 +53,7 @@ public class TestParseSBO extends TestCase {
 
 			ontology = parser.parseOBO(oboFile, "SBO", "systems biology representation");
 			Set<Term> keys = ontology.getTerms();
-			
+
 			assertTrue(keys.size() >1200);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

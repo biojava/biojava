@@ -37,7 +37,7 @@ import java.io.IOException;
  * A demo for how to use {@link RotationAxis} to display the rotation for an
  * alignment. This is particularly useful for symmetric alignments, eg between
  * several chains of a symmetric or pseudo-symmetric complex.
- * 
+ *
  * @author Spencer Bliven
  *
  */
@@ -64,7 +64,7 @@ public final class DemoRotationAxis {
 			// Perform the alignment
 			StructureAlignment ce = StructureAlignmentFactory.getAlgorithm(CeMain.algorithmName);
 			AFPChain afpChain = ce.align(ca1, ca2);
-			
+
 			// Calculate the axis of rotation
 			Matrix mat = afpChain.getBlockRotationMatrix()[0];
 			Atom shift = afpChain.getBlockShiftVector()[0];
@@ -87,8 +87,8 @@ public final class DemoRotationAxis {
 			String jmolString = axis.getJmolScript(caD);
 			jmolPanel.evalString(jmolString);
 
-			
-			
+
+
 			/*
 			// draw intermediate vectors for debugging
 			double width = .5;
@@ -111,13 +111,13 @@ public final class DemoRotationAxis {
 
 			jmolPanel.evalString(String.format("draw ID t VECTOR {0,0,0} {%f,%f,%f} WIDTH %f COLOR yellow \">t\";",
 					shift.getX(),shift.getY(),shift.getZ(), width));
-			
+
 			// draw coordinate axes
 			jmolPanel.evalString("draw ID x VECTOR {0,0,0} {5,0,0} WIDTH 0.5 COLOR red \">x\";");
 			jmolPanel.evalString("draw ID y VECTOR {0,0,0} {0,5,0} WIDTH 0.5 COLOR green \">y\";");
 			jmolPanel.evalString("draw ID z VECTOR {0,0,0} {0,0,5} WIDTH 0.5 COLOR blue \">z\";");
 			*/
-			
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (StructureException e) {

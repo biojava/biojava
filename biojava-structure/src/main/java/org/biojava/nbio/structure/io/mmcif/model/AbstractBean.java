@@ -30,55 +30,55 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 /** a generic class that implements the toString method for a bean
- * 
+ *
  * @author Andreas Prlic
  *
- */ 
+ */
 public abstract class AbstractBean {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(AbstractBean.class);
 
 	@Override
 	@SuppressWarnings({  "unchecked" })
 	public String toString(){
 		StringBuffer buf = new StringBuffer();
-        buf.append(this.getClass().getName()).append(": ");
+		buf.append(this.getClass().getName()).append(": ");
 		/* disabled for the moment
 
-    	 buf.append(" chains: " );
-    	Iterator<Chain> iter = chainList.iterator();
-    	while (iter.hasNext()){
-    		Chain c = iter.next();
-    		buf.append (c.getName() + " ");
-    	}
+		buf.append(" chains: " );
+		Iterator<Chain> iter = chainList.iterator();
+		while (iter.hasNext()){
+			Chain c = iter.next();
+			buf.append (c.getName() + " ");
+		}
 
 		 */
 		try {
-			Class<? extends AbstractBean> c = this.getClass(); 
+			Class<? extends AbstractBean> c = this.getClass();
 			Method[] methods  = c.getMethods();
 
 			for (int i = 0; i < methods.length; i++) {
-				Method m = methods[i];     
+				Method m = methods[i];
 
 				String name = m.getName();
-				if ( name.substring(0,3).equals("get")) {				 
+				if ( name.substring(0,3).equals("get")) {
 
 					Object o  = m.invoke(this, new Object[]{});
 					if ( o instanceof String){
-                        buf.append(name.substring(3, name.length())+": "+ o + " ");
+						buf.append(name.substring(3, name.length())+": "+ o + " ");
 					}
 					else if ( o instanceof List){
-                        buf.append(name.substring(3, name.length())).append(": ");
+						buf.append(name.substring(3, name.length())).append(": ");
 
 						List<Object>lst = (List<Object>)o;
 						for (Object obj : lst){
 							if ( obj instanceof Chain){
 								continue;
 							}
-                            buf.append(obj).append(" ");
+							buf.append(obj).append(" ");
 						}
 
-					} 
+					}
 					else {
 						// ignore...
 					}
@@ -99,5 +99,5 @@ public abstract class AbstractBean {
 
 		return buf.toString();
 	}
-	
+
 }

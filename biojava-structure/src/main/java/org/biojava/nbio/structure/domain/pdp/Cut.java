@@ -37,7 +37,7 @@ public class Cut {
 
 		int[] contacts = new int[PDPParameters.MAXLEN];
 		double[] max_contacts = new double [PDPParameters.MAXLEN];
-		double[] contact_density = new double[PDPParameters.MAXLEN]; 
+		double[] contact_density = new double[PDPParameters.MAXLEN];
 		double average_density,x,y;
 
 		int endsf,endst;
@@ -106,7 +106,7 @@ public class Cut {
 	if(k==392) printf("[from,k]x]iseg,nseg[ = %d\n",contacts[k]);
 				 */
 				for(int i=from;i<=k;i++) {
-					for (int j=k+1;j<=to;j++) 
+					for (int j=k+1;j<=to;j++)
 						if(Math.abs(i-j)>4) contacts[k]+=(dist[i][j]);
 				}
 				/*
@@ -145,7 +145,7 @@ public class Cut {
 			if(contact_density[k]>2.5) contact_density[k]=2.5;
 				 */
 				/*
-	if(first_cut) 
+	if(first_cut)
 		if(k==277 && !first_cut)
 		printf("k=%d s1=%d s2=%d x=%f y=%f mc=%d c=%d cd=%f\n",k,size1,size2,x,y,max_contacts[k],contacts[k],contact_density[k]);
 				 */
@@ -170,7 +170,7 @@ public class Cut {
 		if(verbose) System.out.println(String.format("  --- Trying to cut domain of size %d having %d segments and  average cont_density %f\n",dom.size,dom.nseg,average_density));
 
 		if ( verbose )
-			for(kseg=0;kseg<dom.nseg;kseg++) 
+			for(kseg=0;kseg<dom.nseg;kseg++)
 				System.out.println(String.format("	--- segment %d from %d to %d",kseg,dom.getSegmentAtPos(kseg).getFrom(),dom.getSegmentAtPos(kseg).getTo()) + " av density: " + average_density);
 
 
@@ -263,14 +263,14 @@ public class Cut {
 					}
 				}
 				for (int j=iclose[l]+1;j<jclose[l];j++) {
-					for(kseg=0;kseg<iseg;kseg++) 
+					for(kseg=0;kseg<iseg;kseg++)
 						for(int i=dom.getSegmentAtPos(kseg).getFrom();i<dom.getSegmentAtPos(kseg).getTo();i++) {
 							contacts[nc]+=(dist[i][j]);
 						}
 					for(int i=jclose[l];i<to;i++) {
 						contacts[nc]+=(dist[j][i]);
 					}
-					for(kseg=iseg+1;kseg<dom.nseg;kseg++) 
+					for(kseg=iseg+1;kseg<dom.nseg;kseg++)
 						for(int i=dom.getSegmentAtPos(kseg).getFrom();i<dom.getSegmentAtPos(kseg).getTo();i++) {
 							contacts[nc]+=(dist[j][i]);
 						}
@@ -282,8 +282,8 @@ public class Cut {
 			}
 			else {
 				//System.out.println(" ISEG!=JSEG " + " " + from + " " + iclose[l]);
-				for(int i=from;i<=iclose[l];i++) { 
-					for(kseg=iseg+1;kseg<jseg;kseg++) 
+				for(int i=from;i<=iclose[l];i++) {
+					for(kseg=iseg+1;kseg<jseg;kseg++)
 						for(int j=dom.getSegmentAtPos(kseg).getFrom();j<dom.getSegmentAtPos(kseg).getTo();j++) {
 							contacts[nc]+=(dist[i][j]);
 						}
@@ -295,11 +295,11 @@ public class Cut {
 					}
 				}
 				for(int i=iclose[l]+1;i<to;i++) {
-					for(kseg=0;kseg<iseg;kseg++) 
+					for(kseg=0;kseg<iseg;kseg++)
 						for(int j=dom.getSegmentAtPos(kseg).getFrom();j<dom.getSegmentAtPos(kseg).getTo();j++) {
 							contacts[nc]+=(dist[j][i]);
 						}
-					for(kseg=jseg+1;kseg<dom.nseg;kseg++) 
+					for(kseg=jseg+1;kseg<dom.nseg;kseg++)
 						for(int j=dom.getSegmentAtPos(kseg).getFrom();j<dom.getSegmentAtPos(kseg).getTo();j++) {
 							contacts[nc]+=(dist[i][j]);
 						}
@@ -308,7 +308,7 @@ public class Cut {
 					}
 				}
 				for (int i=from1;i<jclose[l];i++) {
-					for(kseg=0;kseg<iseg;kseg++) 
+					for(kseg=0;kseg<iseg;kseg++)
 						for(int j=dom.getSegmentAtPos(kseg).getFrom();j<dom.getSegmentAtPos(kseg).getTo();j++) {
 							contacts[nc]+=(dist[j][i]);
 						}
@@ -321,7 +321,7 @@ public class Cut {
 					}
 				}
 				for(int i=jclose[l];i<to1;i++)
-					for(kseg=iseg+1;kseg<jseg;kseg++) 
+					for(kseg=iseg+1;kseg<jseg;kseg++)
 						for(int j=dom.getSegmentAtPos(kseg).getFrom();j<dom.getSegmentAtPos(kseg).getTo();j++) {
 							/*
 						if(iclose[l]==33&&jclose[l]==69&&dist[i][j]) printf("%d %s %d %s %d\n",i,protein.res[i].type,j,protein.res[j].type,dist[i][j]);
@@ -334,16 +334,16 @@ public class Cut {
 			/*******************************************************************/
 			size11=0;
 			size22=0;
-			for(kseg=0;kseg<iseg;kseg++) 
+			for(kseg=0;kseg<iseg;kseg++)
 				size11+=(dom.getSegmentAtPos(kseg).getTo()-dom.getSegmentAtPos(kseg).getFrom()+1);
-			for(kseg=jseg+1;kseg<dom.nseg;kseg++) 
+			for(kseg=jseg+1;kseg<dom.nseg;kseg++)
 				size11+=(dom.getSegmentAtPos(kseg).getTo()-dom.getSegmentAtPos(kseg).getFrom()+1);
 			size11+=(iclose[l]-from+1);
 			size11+=(to1-jclose[l]+1);
 			/*
 	printf("size11 = %d from = %d to1 = %d \n",size11,from,to1);
 			 */
-			for(kseg=iseg+1;kseg<jseg;kseg++) 
+			for(kseg=iseg+1;kseg<jseg;kseg++)
 				size22+=(dom.getSegmentAtPos(kseg).getTo()-dom.getSegmentAtPos(kseg).getFrom()+1);
 			if(iseg==jseg)
 				size22+=(jclose[l]-iclose[l]);
@@ -390,10 +390,10 @@ public class Cut {
 				nc = PDPParameters.MAXSIZE-1;
 		}
 		val.first_cut=false;
-		if(verbose) 
+		if(verbose)
 			System.out.println(String.format("  --- E ... at the end of cut: s_min %f CUTOFF %f site_min %d *site2 %d",val.s_min,PDPParameters.CUT_OFF_VALUE,site_min,val.site2));
 		if(val.s_min> PDPParameters.CUT_OFF_VALUE) return -1;
 
 		return(site_min);
-	} 
+	}
 }

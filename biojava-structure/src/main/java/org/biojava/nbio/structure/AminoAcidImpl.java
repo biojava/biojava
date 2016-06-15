@@ -22,15 +22,12 @@
  *
  */
 package org.biojava.nbio.structure;
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
 
+import java.io.Serializable;
 
 /**
- *
- *  AminoAcid inherits most from Hetatom.  Adds a few AminoAcid
- *  specific methods.
+ * AminoAcid inherits most from Hetatom.  Adds a few AminoAcid
+ * specific methods.
  * @author Andreas Prlic
  * @author Jules Jacobsen
  * @since 1.4
@@ -48,8 +45,6 @@ public class AminoAcidImpl extends HetatomImpl implements AminoAcid, Serializabl
 	 */
 	private Character amino_char ;
 
-	private Map<String,String>   secstruc;
-
 	private String recordType; // allows to distinguish between AAs that have been created from SEQRES records and ATOM records
 
 	/**
@@ -59,7 +54,6 @@ public class AminoAcidImpl extends HetatomImpl implements AminoAcid, Serializabl
 		super();
 
 		amino_char = null;
-		secstruc = new HashMap<String,String>();
 		recordType = ATOMRECORD;
 	}
 
@@ -67,56 +61,40 @@ public class AminoAcidImpl extends HetatomImpl implements AminoAcid, Serializabl
 	public GroupType getType(){ return type;}
 
 	/**
-	 * {@inheritDoc} 
-	 */
-	@Override
-	public void setSecStruc(Map<String,String> secstr) {
-		this.secstruc = secstr ;
-	}
-
-	/**
-	 * {@inheritDoc} 
-	 */
-	@Override
-	public Map<String,String> getSecStruc(){
-		return secstruc ;
-	}
-
-	/**
-	 * {@inheritDoc} 
+	 * {@inheritDoc}
 	 */
 	@Override
 	public Atom getN()    {return getAtom("N");  }
 
-	/** 
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public Atom getCA()   {
 		// note CA can also be Calcium, but that can't happen in a standard aminoacid, so this should be safe
-		return getAtom("CA"); 
+		return getAtom("CA");
 	}
 
-	/** 
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public Atom getC()    {return getAtom("C");  }
 
-	/** 
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public Atom getO()    {return getAtom("O");  }
 
-	/** 
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public Atom getCB()   {return getAtom("CB"); }
 
 
-	/** 
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -124,7 +102,7 @@ public class AminoAcidImpl extends HetatomImpl implements AminoAcid, Serializabl
 		return amino_char;
 	}
 
-	/** 
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -132,7 +110,7 @@ public class AminoAcidImpl extends HetatomImpl implements AminoAcid, Serializabl
 		amino_char  = aa ;
 	}
 
-	/** 
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -140,7 +118,7 @@ public class AminoAcidImpl extends HetatomImpl implements AminoAcid, Serializabl
 		recordType = recordName;
 	}
 
-	/** 
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -158,7 +136,7 @@ public class AminoAcidImpl extends HetatomImpl implements AminoAcid, Serializabl
 			str = str + " atoms: "+atoms.size();
 		}
 		if (!getAltLocs().isEmpty())
-			str += " has altLocs :" + getAltLocs().size(); 
+			str += " has altLocs :" + getAltLocs().size();
 
 		return str ;
 
@@ -183,7 +161,7 @@ public class AminoAcidImpl extends HetatomImpl implements AminoAcid, Serializabl
 	public Object clone() {
 
 		AminoAcidImpl n = new AminoAcidImpl();
-		n.setPDBFlag(has3D());		
+		n.setPDBFlag(has3D());
 		n.setResidueNumber(getResidueNumber());
 
 		n.setPDBName(getPDBName());
@@ -197,6 +175,15 @@ public class AminoAcidImpl extends HetatomImpl implements AminoAcid, Serializabl
 			n.addAtom(atom);
 			atom.setGroup(n);
 		}
+
+		// copying the alt loc groups if present, otherwise they stay null
+		if (getAltLocs()!=null && !getAltLocs().isEmpty()) {
+			for (Group altLocGroup:this.getAltLocs()) {
+				Group nAltLocGroup = (Group)altLocGroup.clone();
+				n.addAltLoc(nAltLocGroup);
+			}
+		}
+
 		return n;
 	}
 

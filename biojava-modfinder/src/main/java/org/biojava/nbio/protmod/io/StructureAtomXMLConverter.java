@@ -57,13 +57,13 @@ public class StructureAtomXMLConverter {
 		String name = structureAtomElement.getNodeName();
 		if ( ! name.equals("structureAtom"))
 			throw new RuntimeException("Node is not a structureAtom, but " +name);
-		
+
 		String atomName = getAttribute( structureAtomElement,"name");
 		StructureGroup group = null;
-		
+
 		NodeList valList = structureAtomElement.getChildNodes();
 		int numChildren  = valList.getLength();
-	
+
 		for ( int e =0; e< numChildren ; e++){
 			Node  nodes = valList.item(e);
 
@@ -79,7 +79,7 @@ public class StructureAtomXMLConverter {
 	}
 
 	private static String getAttribute(Node node, String attr){
-		if( ! node.hasAttributes()) 
+		if( ! node.hasAttributes())
 			return null;
 
 		NamedNodeMap atts = node.getAttributes();

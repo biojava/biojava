@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * created at 28 Jan 2014
- * Author: Andreas Prlic 
+ * Author: Andreas Prlic
  */
 
 package org.biojava.nbio.genome.parsers.genename;
@@ -26,16 +26,16 @@ package org.biojava.nbio.genome.parsers.genename;
 import java.io.Serializable;
 
 /** A simple bean that contains gene name information as available from www.genenames.org
- * 
+ *
  * @author Andreas Prlic
  *
  */
 public class GeneName implements Serializable, Comparable<GeneName>{
-	//[HGNC ID, Approved Symbol, Approved Name, Status, Previous Symbols, Previous Names, Synonyms, 
+	//[HGNC ID, Approved Symbol, Approved Name, Status, Previous Symbols, Previous Names, Synonyms,
 	// Chromosome, Accession Numbers, RefSeq IDs,Uniprot]
-	
+
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -7163977639324764020L;
 	String hgncId;
@@ -51,7 +51,7 @@ public class GeneName implements Serializable, Comparable<GeneName>{
 	String uniprot;
 	String omimId;
 	String ensemblGeneId;
-	
+
 	public String getHgncId() {
 		return hgncId;
 	}
@@ -118,7 +118,7 @@ public class GeneName implements Serializable, Comparable<GeneName>{
 	public void setUniprot(String uniprot) {
 		this.uniprot = uniprot;
 	}
-	
+
 	public String getEnsemblGeneId() {
 		return ensemblGeneId;
 	}
@@ -135,7 +135,7 @@ public class GeneName implements Serializable, Comparable<GeneName>{
 	public int compareTo(GeneName o) {
 		return hgncId.compareTo(o.getHgncId());
 	}
-	
+
 	public boolean equals(GeneName o){
 		return hgncId.equals(o.getHgncId());
 	}
@@ -150,5 +150,5 @@ public class GeneName implements Serializable, Comparable<GeneName>{
 				+ ", omimId=" + omimId + ", ensemblGeneId=" + ensemblGeneId
 				+ "]";
 	}
-	
+
 }

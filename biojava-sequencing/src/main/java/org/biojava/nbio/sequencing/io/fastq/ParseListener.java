@@ -29,80 +29,80 @@ import java.io.IOException;
  */
 public interface ParseListener
 {
-    /**
-     * Notify this parse listener of a description line.
-     *
-     * @param description description line
-     * @throws IOException if an I/O error occurs
-     */
-    void description(String description) throws IOException;
+	/**
+	 * Notify this parse listener of a description line.
+	 *
+	 * @param description description line
+	 * @throws IOException if an I/O error occurs
+	 */
+	void description(String description) throws IOException;
 
-    /**
-     * Notify this parse listener of a sequence line.
-     *
-     * <p>
-     * Note that the sequence in FASTQ format may contain end-of-line characters,
-     * so both this method and <code>appendSequence(String)</code> may be called per FASTQ
-     * formatted sequence.
-     * </p>
-     *
-     * @param sequence sequence line
-     * @throws IOException if an I/O error occurs
-     */
-    void sequence(String sequence) throws IOException;
+	/**
+	 * Notify this parse listener of a sequence line.
+	 *
+	 * <p>
+	 * Note that the sequence in FASTQ format may contain end-of-line characters,
+	 * so both this method and <code>appendSequence(String)</code> may be called per FASTQ
+	 * formatted sequence.
+	 * </p>
+	 *
+	 * @param sequence sequence line
+	 * @throws IOException if an I/O error occurs
+	 */
+	void sequence(String sequence) throws IOException;
 
-    /**
-     * Notify this parse listener of an additional sequence line.
-     *
-     * <p>
-     * Note that the sequence in FASTQ format may contain end-of-line characters,
-     * so this method may be called more than once per FASTQ formatted sequence.
-     * </p>
-     *
-     * @param sequence additional sequence line
-     * @throws IOException if an I/O error occurs
-     */
-    void appendSequence(String sequence) throws IOException;
+	/**
+	 * Notify this parse listener of an additional sequence line.
+	 *
+	 * <p>
+	 * Note that the sequence in FASTQ format may contain end-of-line characters,
+	 * so this method may be called more than once per FASTQ formatted sequence.
+	 * </p>
+	 *
+	 * @param sequence additional sequence line
+	 * @throws IOException if an I/O error occurs
+	 */
+	void appendSequence(String sequence) throws IOException;
 
-    /**
-     * Notify this parse listener of a repeat description line.
-     *
-     * @param repeatDescription repeat description line
-     * @throws IOException if an I/O error occurs
-     */
-    void repeatDescription(String repeatDescription) throws IOException;
+	/**
+	 * Notify this parse listener of a repeat description line.
+	 *
+	 * @param repeatDescription repeat description line
+	 * @throws IOException if an I/O error occurs
+	 */
+	void repeatDescription(String repeatDescription) throws IOException;
 
-    /**
-     * Notify this listener of a quality line.
-     *
-     * <p>
-     * Note that the quality scores in FASTQ format may contain end-of-line characters,
-     * so both this method and <code>appendQuality(String)</code> may be called per FASTQ
-     * formatted sequence.
-     * </p>
-     *
-     * @param quality quality line
-     * @throws IOException if an I/O error occurs
-     */
-    void quality(String quality) throws IOException;
+	/**
+	 * Notify this listener of a quality line.
+	 *
+	 * <p>
+	 * Note that the quality scores in FASTQ format may contain end-of-line characters,
+	 * so both this method and <code>appendQuality(String)</code> may be called per FASTQ
+	 * formatted sequence.
+	 * </p>
+	 *
+	 * @param quality quality line
+	 * @throws IOException if an I/O error occurs
+	 */
+	void quality(String quality) throws IOException;
 
-    /**
-     * Notify this listener of a quality line.
-     *
-     * <p>
-     * Note that the quality scores in FASTQ format may contain end-of-line characters,
-     * so this method may be called more than once per FASTQ formatted sequence.
-     * </p>
-     *
-     * @param quality additional quality line
-     * @throws IOException if an I/O error occurs
-     */
-    void appendQuality(String quality) throws IOException;
+	/**
+	 * Notify this listener of a quality line.
+	 *
+	 * <p>
+	 * Note that the quality scores in FASTQ format may contain end-of-line characters,
+	 * so this method may be called more than once per FASTQ formatted sequence.
+	 * </p>
+	 *
+	 * @param quality additional quality line
+	 * @throws IOException if an I/O error occurs
+	 */
+	void appendQuality(String quality) throws IOException;
 
-    /**
-     * Notify this listener the FASTQ formatted sequence is complete.
-     *
-     * @throws IOException if an I/O error occurs
-     */
-    void complete() throws IOException;
+	/**
+	 * Notify this listener the FASTQ formatted sequence is complete.
+	 *
+	 * @throws IOException if an I/O error occurs
+	 */
+	void complete() throws IOException;
 }

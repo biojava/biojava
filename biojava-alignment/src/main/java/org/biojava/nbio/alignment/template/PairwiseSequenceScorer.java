@@ -35,18 +35,18 @@ import org.biojava.nbio.core.sequence.template.Sequence;
  */
 public interface PairwiseSequenceScorer<S extends Sequence<C>, C extends Compound> extends Scorer {
 
-    /**
-     * Returns the first sequence of the pair.
-     *
-     * @return the first sequence of the pair
-     */
-    S getQuery();
+	/**
+	 * Returns the first sequence of the pair.
+	 *
+	 * @return the first sequence of the pair
+	 */
+	S getQuery();
 
-    /**
-     * Returns the second sequence of the pair.
-     *
-     * @return the second sequence of the pair
-     */
-    S getTarget();
+	/**
+	 * Returns the second sequence of the pair.
+	 *
+	 * @return the second sequence of the pair
+	 */
+	S getTarget();
 
 }

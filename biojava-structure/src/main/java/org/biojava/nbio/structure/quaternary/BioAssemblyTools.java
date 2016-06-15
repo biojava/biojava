@@ -32,7 +32,7 @@ import java.util.List;
 
 /**
  * @author Peter Rose
- * 
+ *
  *
  */
 public class BioAssemblyTools {
@@ -43,7 +43,7 @@ public class BioAssemblyTools {
 	 * Example: (1,2,3) or (1-60) are unary operator expressions
 	 *          (1-60)(61-88) is a binary operator expression, representing
 	 *          a cartesian product of the two parenthesised lists
-	 *          
+	 *
 	 * @param expression
 	 * @return true if expression is a unary operator expression
 	 */
@@ -109,7 +109,7 @@ public class BioAssemblyTools {
 		return expandedExpression;
 	}
 
-	public static List<OrderedPair<String>> parseBinaryOperatorExpression(String expression) 
+	public static List<OrderedPair<String>> parseBinaryOperatorExpression(String expression)
 			throws IllegalArgumentException {
 		// split operator expression, i.e. (1,2,3)(4,5) into two subexpressions
 		String[] subExpressions = null;
@@ -139,7 +139,7 @@ public class BioAssemblyTools {
 		coordinateBounds[1][2] = Double.MIN_VALUE;  // max z
 
 		double[] transformedCoords = new double[3];
-		
+
 		Atom[] atoms = StructureTools.getAllAtomArray(asymStructure);
 
 		for ( Atom a : atoms) {
@@ -152,11 +152,11 @@ public class BioAssemblyTools {
 			for (BiologicalAssemblyTransformation m: transformations) {
 				if ( ! m.getChainId().equals(intChainID))
 					continue;
-				double[] coords = a.getCoords();	
+				double[] coords = a.getCoords();
 				transformedCoords[0] = coords[0];
 				transformedCoords[1] = coords[1];
 				transformedCoords[2] = coords[2];
-				
+
 				if (transformedCoords[0] < coordinateBounds[0][0] ) {
 					coordinateBounds[0][0] = transformedCoords[0];  // min x
 				}
@@ -323,9 +323,9 @@ public class BioAssemblyTools {
 
 		return centroid;
 	}
-	
+
 	/** reduce a structure to a Calpha representation only
-	 * 
+	 *
 	 * @param orig
 	 * @return
 	 * @deprecated Use the more generic {@link #getReducedStructure(Structure)}
@@ -335,31 +335,31 @@ public class BioAssemblyTools {
 		Structure s = new StructureImpl();
 		s.setPDBHeader(orig.getPDBHeader());
 		for ( Chain c : orig.getChains()){
-			
+
 			Chain c1 = new ChainImpl();
 			c1.setChainID(c.getChainID());
 			s.addChain(c1);
-			
+
 			for (Group g : c.getAtomGroups()){
-				
+
 				try {
 					Atom a = g.getAtom(StructureTools.CA_ATOM_NAME);
 					if ( a != null){
-						
+
 						Group g1 = (Group)g.clone();
 						g1.clearAtoms();
 						g1.addAtom(a);
 						c1.addGroup(g1);
-						
+
 					}
 				} catch (Exception e){}
 			}
-			
+
 		}
 		return s;
 	}
 	/** reduce a structure to a single-atom representation (e.g. CA atoms
-	 * 
+	 *
 	 * @param orig
 	 * @return
 	 * @since Biojava 4.1.0
@@ -368,13 +368,13 @@ public class BioAssemblyTools {
 		Structure s = new StructureImpl();
 		s.setPDBHeader(orig.getPDBHeader());
 		for ( Chain c : orig.getChains()){
-			
+
 			Chain c1 = new ChainImpl();
 			c1.setChainID(c.getChainID());
 			s.addChain(c1);
-			
+
 			for (Group g : c.getAtomGroups()){
-				
+
 				try {
 					Atom a = null;
 					switch(g.getType()) {
@@ -388,16 +388,16 @@ public class BioAssemblyTools {
 						//omit group
 					}
 					if ( a != null){
-						
+
 						Group g1 = (Group)g.clone();
 						g1.clearAtoms();
 						g1.addAtom(a);
 						c1.addGroup(g1);
-						
+
 					}
 				} catch (Exception e){}
 			}
-			
+
 		}
 		return s;
 	}

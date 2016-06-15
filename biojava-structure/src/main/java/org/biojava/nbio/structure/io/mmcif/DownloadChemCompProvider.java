@@ -20,14 +20,15 @@
  */
 package org.biojava.nbio.structure.io.mmcif;
 
-import org.biojava.nbio.structure.align.util.HTTPConnectionTools;
-import org.biojava.nbio.structure.align.util.UserConfiguration;
-import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
-import org.biojava.nbio.core.util.InputStreamProvider;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -35,18 +36,25 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.zip.GZIPOutputStream;
 
+import org.biojava.nbio.core.util.InputStreamProvider;
+import org.biojava.nbio.structure.align.util.HTTPConnectionTools;
+import org.biojava.nbio.structure.align.util.UserConfiguration;
+import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 
 /** This provider of chemical components can download and cache chemical component definition files from the RCSB PDB web site.
  *  It is the default way to access these definitions.
- *  If this provider is called he first time, it will download and install all chemical 
- *  component definitions in a local directory. 
- *  Once the definition files have been installed, it has quick startup time and low memory requirements. 
+ *  If this provider is called he first time, it will download and install all chemical
+ *  component definitions in a local directory.
+ *  Once the definition files have been installed, it has quick startup time and low memory requirements.
  *
  *  An alternative provider, that keeps all definitions in memory is the {@link AllChemCompProvider}. Another provider, that
- *  does not require any network access, but only can support a limited set of chemical component definitions, is the {@link ReducedChemCompProvider}. 
- *  
- * 
+ *  does not require any network access, but only can support a limited set of chemical component definitions, is the {@link ReducedChemCompProvider}.
+ *
+ *
  * @author Andreas Prlic
  *
  */
@@ -58,8 +66,8 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 
 	public static final String SERVER_LOCATION = "http://www.rcsb.org/pdb/files/ligand/";
 
-	
-	private static File path; 
+
+	private static File path;
 	//private static final String FILE_SEPARATOR = System.getProperty("file.separator");
 	private static final String NEWLINE = System.getProperty("line.separator");
 
@@ -74,50 +82,58 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 		protectedIDs.add("AUX");
 		protectedIDs.add("NUL");
 	}
-	
+
 	/** by default we will download only some of the files. User has to request that all files should be downloaded...
-	 * 
+	 *
 	 */
 	boolean downloadAll = false;
 
 	public DownloadChemCompProvider(){
 		logger.debug("Initialising DownloadChemCompProvider");
-		
+
 		// note that path is static, so this is just to make sure that all non-static methods will have path initialised
 		initPath();
 	}
-	
+
+	public DownloadChemCompProvider(String cacheFilePath){
+		logger.debug("Initialising DownloadChemCompProvider");
+
+		// note that path is static, so this is just to make sure that all non-static methods will have path initialised
+		path = new File(cacheFilePath);
+	}
+
 	private static void initPath(){
-		
+
 		if (path==null) {
 			UserConfiguration config = new UserConfiguration();
 			path = new File(config.getCacheFilePath());
 		}
 	}
 
-	/** checks if the chemical components already have been installed into the PDB directory.
-	 *  If not, will download the chemical components definitions file and split it up into small
-	 *  subfiles.
+	/**
+	 * Checks if the chemical components already have been installed into the PDB directory.
+	 * If not, will download the chemical components definitions file and split it up into small
+	 * subfiles.
 	 */
-	public void checkDoFirstInstall(){ 
+	public void checkDoFirstInstall(){
 
 		if ( ! downloadAll ) {
 			return;
 		}
-		
-		
+
+
 		// this makes sure there is a file separator between every component,
 		// if path has a trailing file separator or not, it will work for both cases
-		File dir = new File(path, CHEM_COMP_CACHE_DIRECTORY); 
+		File dir = new File(path, CHEM_COMP_CACHE_DIRECTORY);
 		File f = new File(dir, "components.cif.gz");
-		
+
 		if ( ! f.exists()) {
 
 			downloadAllDefinitions();
 
 		} else {
 			// file exists.. did it get extracted?
-			
+
 			FilenameFilter filter =new FilenameFilter() {
 
 				@Override
@@ -128,26 +144,29 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 			String[] files = dir.list(filter);
 			if ( files.length < 500) {
 				// not all did get unpacked
-				split();
+				try {
+					split();
+				} catch (IOException e) {
+					logger.error("Could not split file {} into individual chemical component files. Error: {}",
+							f.toString(), e.getMessage());
+				}
 			}
 		}
 	}
 
-	private void split(){
+	private void split() throws IOException {
 
 		logger.info("Installing individual chem comp files ...");
-		
+
 		File dir = new File(path, CHEM_COMP_CACHE_DIRECTORY);
 		File f = new File(dir, "components.cif.gz");
-		
+
 
 		int counter = 0;
 		InputStreamProvider prov = new InputStreamProvider();
-		try {
-			InputStream inStream = prov.getInputStream(f);
 
-			BufferedReader buf = new BufferedReader (new InputStreamReader (inStream));
-
+		try( BufferedReader buf = new BufferedReader (new InputStreamReader (prov.getInputStream(f)));
+				) {
 			String line = null;
 			line = buf.readLine ();
 			StringWriter writer = new StringWriter();
@@ -159,7 +178,7 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 					// a new record found!
 
 					if ( currentID != null) {
-						writeID(writer, currentID);
+						writeID(writer.toString(), currentID);
 						counter++;
 					}
 
@@ -174,96 +193,114 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 			}
 
 			// write the last record...
-			writeID(writer,currentID);
+			writeID(writer.toString(),currentID);
 			counter++;
-		} catch (IOException e){
-			e.printStackTrace();
+
 		}
+
 		logger.info("Created " + counter + " chemical component files.");
 	}
 
-	private void writeID(StringWriter writer, String currentID) throws IOException{
+	/**
+	 * Output chemical contents to a file
+	 * @param contents File contents
+	 * @param currentID Chemical ID, used to determine the filename
+	 * @throws IOException
+	 */
+	private void writeID(String contents, String currentID) throws IOException{
 
-		//System.out.println("writing ID " + currentID);
-
-		
-		
 		String localName = DownloadChemCompProvider.getLocalFileName(currentID);
 
-		FileOutputStream outPut = new FileOutputStream(localName);
+		try ( PrintWriter pw = new PrintWriter(new GZIPOutputStream(new FileOutputStream(localName))) ) {
 
-		GZIPOutputStream gzOutPut = new GZIPOutputStream(outPut);
-
-		PrintWriter pw = new PrintWriter(gzOutPut);
-
-		pw.print(writer.toString());
-		writer.close();
-		pw.flush();
-		pw.close();
-
-		outPut.close();
-
+			pw.print(contents.toString());
+			pw.flush();
+		}
 	}
 
-	/** Loads the definitions for this {@link ChemComp} from a local file and instantiates a new object.
-	 * 
+	/**
+	 * Loads the definitions for this {@link ChemComp} from a local file and instantiates a new object.
+	 *
 	 * @param recordName the ID of the {@link ChemComp}
 	 * @return a new {@link ChemComp} definition.
 	 */
 	@Override
 	public  ChemComp getChemComp(String recordName) {
 
-		// make sure we work with upper case records		
+		// make sure we work with upper case records
 		recordName = recordName.toUpperCase().trim();
 
+		boolean haveFile = true;
 		if ( recordName.equals("?")){
 			return null;
 		}
-		try {
-			if ( ! fileExists(recordName)) {
-				// check if we should install all components				
-				checkDoFirstInstall();
-			}
-			if ( ! fileExists(recordName)) {
-				// we previously have installed already the definitions,
-				// just do an incrememntal update
-				downloadChemCompRecord(recordName);
-			}
 
-			String filename = getLocalFileName(recordName);
-
-//			System.out.println("reading " + filename);
-			InputStreamProvider isp = new InputStreamProvider();
-
-			InputStream inStream = isp.getInputStream(filename);
-
-			MMcifParser parser = new SimpleMMcifParser();
-
-			ChemCompConsumer consumer = new ChemCompConsumer();
-
-			// The Consumer builds up the BioJava - structure object.
-			// you could also hook in your own and build up you own data model.
-			parser.addMMcifConsumer(consumer);
-
-			parser.parse(new BufferedReader(new InputStreamReader(inStream)));
-
-			ChemicalComponentDictionary dict = consumer.getDictionary();
-
-			ChemComp chemComp = dict.getChemComp(recordName);
-
-			return chemComp;
-
-		} catch (IOException e) {
-
-			e.printStackTrace();
-
+		if ( ! fileExists(recordName)) {
+			// check if we should install all components
+			checkDoFirstInstall();
 		}
-		return null;
+		if ( ! fileExists(recordName)) {
+			// we previously have installed already the definitions,
+			// just do an incrememntal update
+			haveFile = downloadChemCompRecord(recordName);
+		}
+
+		// Added check that download was successful and chemical component is available.
+		if (haveFile) {
+			String filename = getLocalFileName(recordName);
+			InputStream inStream = null;
+			try {
+
+				InputStreamProvider isp = new InputStreamProvider();
+
+				inStream = isp.getInputStream(filename);
+
+				MMcifParser parser = new SimpleMMcifParser();
+
+				ChemCompConsumer consumer = new ChemCompConsumer();
+
+				// The Consumer builds up the BioJava - structure object.
+				// you could also hook in your own and build up you own data model.
+				parser.addMMcifConsumer(consumer);
+
+				parser.parse(new BufferedReader(new InputStreamReader(inStream)));
+
+				ChemicalComponentDictionary dict = consumer.getDictionary();
+
+				ChemComp chemComp = dict.getChemComp(recordName);
+
+				return chemComp;
+
+			} catch (IOException e) {
+
+				logger.error("Could not parse chemical component file {}. Error: {}. "
+						+ "There will be no chemical component info available for {}", filename, e.getMessage(), recordName);
+
+			}
+			finally{
+				// Now close it
+				if(inStream!=null){
+					try {
+						inStream.close();
+					} catch (IOException e) {
+						// This would be weird...
+						logger.error("Could not close chemical component file {}. A resource leak could occur!!", filename);
+					}
+				}
+
+			}
+		}
+
+		// see https://github.com/biojava/biojava/issues/315
+		// probably a network error happened. Try to use the ReducedChemCOmpProvider
+		ReducedChemCompProvider reduced = new ReducedChemCompProvider();
+
+		return reduced.getChemComp(recordName);
 
 	}
 
 	/** Returns the file name that contains the definition for this {@link ChemComp}
-	 *  
+	 *
 	 * @param recordName the ID of the {@link ChemComp}
 	 * @return full path to the file
 	 */
@@ -272,22 +309,22 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 		if ( protectedIDs.contains(recordName)){
 			recordName = "_" + recordName;
 		}
-		
+
 		initPath();
-		
+
 		File f = new File(path, CHEM_COMP_CACHE_DIRECTORY);
 		if (! f.exists()){
 			logger.info("Creating directory " + f);
-			
+
 			boolean success = f.mkdir();
 			// we've checked in initPath that path is writable, so there's no need to check if it succeeds
-			// in the unlikely case that in the meantime it isn't writable at least we log an error 
+			// in the unlikely case that in the meantime it isn't writable at least we log an error
 			if (!success) logger.error("Directory {} could not be created",f);
-			
+
 		}
 
 		File theFile = new File(f,recordName + ".cif.gz");
-		
+
 		return theFile.toString();
 	}
 
@@ -301,48 +338,59 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 
 	}
 
-	private static void downloadChemCompRecord(String recordName) {
-		
-		String localName = getLocalFileName(recordName);
+	/**
+	 * @param recordName : three-letter name
+	 * @return true if successful download
+	 */
+	private static boolean downloadChemCompRecord(String recordName) {
 
+		String localName = getLocalFileName(recordName);
+		File newFile;
+		try{
+			newFile = File.createTempFile("chemcomp"+recordName, "cif");
+		}
+		catch(IOException e){
+			logger.error("Could not write to temp directory {} to create the chemical component download temp file", System.getProperty("java.io.tmpdir"));
+			return false;
+		}
 		String u = SERVER_LOCATION + recordName + ".cif";
 
-//		System.out.println("downloading " + u);
+		logger.debug("downloading " + u);
+
+		URL url = null;
+
 
 		try {
-
-			URL url = new URL(u);
+			url = new URL(u);
 
 			HttpURLConnection uconn = HTTPConnectionTools.openHttpURLConnection(url);
 
-			InputStream conn = uconn.getInputStream();
+			try( PrintWriter pw = new PrintWriter(new GZIPOutputStream(new FileOutputStream(newFile)));
+					BufferedReader fileBuffer = new BufferedReader(new InputStreamReader(uconn.getInputStream()));
+					) {
 
-			FileOutputStream outPut = new FileOutputStream(localName);
+				String line;
 
-			GZIPOutputStream gzOutPut = new GZIPOutputStream(outPut);
+				while ((line = fileBuffer.readLine()) != null) {
+					pw.println(line);
+				}
 
-			PrintWriter pw = new PrintWriter(gzOutPut);
+				pw.flush();
+				// Now we move this across to where it actually wants to be
+				boolean couldRename = newFile.renameTo(new File(localName));
 
-			BufferedReader fileBuffer = new BufferedReader(new InputStreamReader(conn));
+				if (!couldRename) {
 
-			String line;
+					throw new IOException("Could not rename temp file "+newFile.toString()+" to file " + localName);
+				}
 
-			while ((line = fileBuffer.readLine()) != null) {
-				pw.println(line);
+				return true;
 			}
-
-			pw.flush();
-			pw.close();
-
-			outPut.close();
-			conn.close();
-
-
-		} catch (IOException e){
-			e.printStackTrace();
+		}  catch (IOException e){
+			logger.error("Could not download "+url.toString()+" OR store locally to "+localName+" Error ="+e.getMessage());
+			newFile.delete();
 		}
-
-
+		return false;
 	}
 
 	private void downloadAllDefinitions() {
@@ -376,32 +424,43 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 		logger.info("Performing first installation of chemical components.");
 		logger.info("Downloading components.cif.gz ...");
 
-		
+
 		try {
 			AllChemCompProvider.downloadFile();
 		} catch (IOException e){
-			e.printStackTrace();
+			logger.error("Could not download the all chemical components file. Error: {}. "
+					+ "Chemical components information won't be available", e.getMessage());
+			// no point in trying to split if the file could not be downloaded
+			loading.set(false);
+			return;
 		}
-		
-		split();
-		long timeE = System.currentTimeMillis();		
-		logger.info("time to install chem comp dictionary: " + (timeE - timeS) / 1000 + " sec.");		
+		try {
+			split();
+		} catch (IOException e) {
+			logger.error("Could not split all chem comp file into individual chemical component files. Error: {}",
+				 e.getMessage());
+			// no point in reporting time
+			loading.set(false);
+			return;
+		}
+		long timeE = System.currentTimeMillis();
+		logger.info("time to install chem comp dictionary: " + (timeE - timeS) / 1000 + " sec.");
 		loading.set(false);
 
 	}
 
-	/** By default this provider will download only some of the {@link ChemComp} files. 
+	/** By default this provider will download only some of the {@link ChemComp} files.
 	 * The user has to request that all files should be downloaded by setting this parameter to true.
-	 * 
+	 *
 	 *  @return flag if the all components should be downloaded and installed at startup. (default: false)
 	 */
 	public boolean isDownloadAll() {
 		return downloadAll;
 	}
 
-	/** By default this provider will download only some of the {@link ChemComp} files. 
+	/** By default this provider will download only some of the {@link ChemComp} files.
 	 * The user has to request that all files should be downloaded by setting this parameter to true.
-	 * 
+	 *
 	 * @param  flag if the all components should be downloaded and installed at startup. (default: false)
 	 */
 	public void setDownloadAll(boolean downloadAll) {

@@ -29,7 +29,7 @@ public class SelectionImpl implements Selection {
 	@Override
 	public void clear() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -41,7 +41,7 @@ public class SelectionImpl implements Selection {
 	@Override
 	public void setSelection(List<AtomInfo> selection) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

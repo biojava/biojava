@@ -25,55 +25,58 @@ import org.biojava.nbio.structure.Atom;
 import javax.vecmath.Point3d;
 import java.util.*;
 
-public class ChainClusterer  {	
-	private List<SequenceAlignmentCluster> seqClusters = new ArrayList<SequenceAlignmentCluster>();	
+/**
+ * Wraps a sequence clustering with structural information
+ */
+public class ChainClusterer  {
+	private List<SequenceAlignmentCluster> seqClusters = new ArrayList<SequenceAlignmentCluster>();
 	private boolean modified = true;
 
 	private List<Atom[]> caAligned = new ArrayList<Atom[]>();
 	private List<Point3d[]> caCoords = new ArrayList<Point3d[]>();
-	
+
 	public ChainClusterer(List<SequenceAlignmentCluster> seqClusters) {
 		this.seqClusters = seqClusters;
 		this.modified = true;
 	}
-	
+
 	public List<Point3d[]> getCalphaCoordinates() {
-        run();
+		run();
 		return caCoords;
 	}
-	
+
 	public List<Atom[]> getCalphaTraces() {
 		run();
 		return caAligned;
 	}
-	
+
 	public List<String> getChainIds() {
 		run();
 		List<String> chainIdList = new ArrayList<String>();
 
 		for (int i = 0; i < seqClusters.size(); i++) {
-	        SequenceAlignmentCluster cluster = seqClusters.get(i);
-	        for (String chainId: cluster.getChainIds()) {
-	        	chainIdList.add(chainId);
-	        }
+			SequenceAlignmentCluster cluster = seqClusters.get(i);
+			for (String chainId: cluster.getChainIds()) {
+				chainIdList.add(chainId);
+			}
 		}
 		return chainIdList;
 	}
-	
-	
+
+
 	public List<Integer> getModelNumbers() {
 		run();
 		List<Integer> modNumbers = new ArrayList<Integer>();
 
 		for (int i = 0; i < seqClusters.size(); i++) {
-	        SequenceAlignmentCluster cluster = seqClusters.get(i);
-	        for (Integer number: cluster.getModelNumbers()) {
-	        	modNumbers.add(number);
-	        }
+			SequenceAlignmentCluster cluster = seqClusters.get(i);
+			for (Integer number: cluster.getModelNumbers()) {
+				modNumbers.add(number);
+			}
 		}
 		return modNumbers;
 	}
-	
+
 	public String getStoichiometry() {
 		run();
 		StringBuilder formula = new StringBuilder();
@@ -93,38 +96,54 @@ public class ChainClusterer  {
 		return formula.toString();
 	}
 
+	/**
+	 * Get valid symmetry order for this stoichiometry.
+	 * @return
+	 */
 	public List<Integer> getFolds() {
 		run();
-		List<Integer> denominators = new ArrayList<Integer>();
-        Set<Integer> nominators = new TreeSet<Integer>();
-		int nChains = caCoords.size();
-		
+		List<Integer> stoichiometry = new ArrayList<Integer>(seqClusters.size());
 		for (int id = 0; id < seqClusters.size(); id++) {
 			int seqCount = seqClusters.get(id).getSequenceCount();
-			nominators.add(seqCount);
+			stoichiometry.add(seqCount);
 		}
-		
+		return getValidFolds(stoichiometry);
+	}
+	/**
+	 * Find valid symmetry orders for a given stoichiometry. For instance,
+	 * an A6B4 protein would give [1,2] because (A6B4)1 and (A3B2)2 are valid
+	 * decompositions.
+	 * @param stoichiometry List giving the number of copies in each chain cluster
+	 * @return The common factors of the stoichiometry
+	 */
+	public static List<Integer> getValidFolds(List<Integer> stoichiometry){
+		List<Integer> denominators = new ArrayList<Integer>();
+
+		int nChains = Collections.max(stoichiometry);
+
+		// Remove duplicate stoichiometries
+		Set<Integer> nominators = new TreeSet<Integer>(stoichiometry);
+
 		// find common denominators
 		for (int d = 1; d <= nChains; d++) {
-
-			int count = 0;
-			for (Iterator<Integer> iter = nominators.iterator(); iter.hasNext();) {
-				if (iter.next() % d == 0) {
-					count++;
+			boolean isDivisable=true;
+			for (Integer n : nominators) {
+				if (n % d != 0) {
+					isDivisable = false;
+					break;
 				}
 			}
-			if (count == nominators.size()) {
+			if(isDivisable) {
 				denominators.add(d);
 			}
 		}
-		
 		return denominators;
 	}
-	
+
 	public List<Integer> getSequenceClusterIds() {
 		run();
 		List<Integer> list = new ArrayList<Integer>();
-		
+
 		for (int id = 0; id < seqClusters.size(); id++) {
 			int seqCount = seqClusters.get(id).getSequenceCount();
 			for (int i = 0; i < seqCount; i++) {
@@ -133,21 +152,21 @@ public class ChainClusterer  {
 		}
 		return list;
 	}
-	
-	
+
+
 	public int getSequenceClusterCount() {
 		run();
 		return seqClusters.size();
 	}
-	
+
 	public List<SequenceAlignmentCluster> getSequenceAlignmentClusters() {
 		return seqClusters;
 	}
-	
+
 	public List<Boolean> getPseudoStoichiometry() {
 		run();
 		List<Boolean> list = new ArrayList<Boolean>();
-		
+
 		for (int id = 0; id < seqClusters.size(); id++) {
 			int seqCount = seqClusters.get(id).getSequenceCount();
 			Boolean pseudo = seqClusters.get(id).isPseudoStoichiometric();
@@ -157,11 +176,11 @@ public class ChainClusterer  {
 		}
 		return list;
 	}
-	
+
 	public List<Double> getMinSequenceIdentity() {
 		run();
 		List<Double> list = new ArrayList<Double>();
-		
+
 		for (int id = 0; id < seqClusters.size(); id++) {
 			int seqCount = seqClusters.get(id).getSequenceCount();
 			double minSequenceIdentity = seqClusters.get(id).getMinSequenceIdentity();
@@ -171,11 +190,11 @@ public class ChainClusterer  {
 		}
 		return list;
 	}
-	
+
 	public List<Double> getMaxSequenceIdentity() {
 		run();
 		List<Double> list = new ArrayList<Double>();
-		
+
 		for (int id = 0; id < seqClusters.size(); id++) {
 			int seqCount = seqClusters.get(id).getSequenceCount();
 			double maxSequenceIdentity = seqClusters.get(id).getMaxSequenceIdentity();
@@ -185,7 +204,8 @@ public class ChainClusterer  {
 		}
 		return list;
 	}
-	
+
+	@Override
 	public String toString() {
 		run();
 		StringBuilder builder = new StringBuilder();
@@ -200,7 +220,7 @@ public class ChainClusterer  {
 		}
 		return builder.toString();
 	}
-	
+
 	private void run() {
 		if (modified) {
 			modified = false;
@@ -208,15 +228,15 @@ public class ChainClusterer  {
 			createCalphaTraces();
 		}
 	}
-	
+
 
 	private void calcAlignedSequences() {
 		caAligned = new ArrayList<Atom[]>();
 		for (SequenceAlignmentCluster cluster: seqClusters) {
-			caAligned.addAll(cluster.getAlignedCalphaAtoms());	
+			caAligned.addAll(cluster.getAlignedCalphaAtoms());
 		}
 	}
-	
+
 	private void createCalphaTraces() {
 		for (Atom[] atoms: caAligned) {
 			Point3d[] trace = new Point3d[atoms.length];

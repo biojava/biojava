@@ -51,10 +51,10 @@ public class ViewerTest extends TestCase {
 	 * then load a PDB file.
 	 */
 	public void testStructureLoad(){
-		
+
 //		if (  java.awt.GraphicsEnvironment.isHeadless())
 //    		return;
-//		
+//
 //		PDBFileReader parser = new PDBFileReader();
 //		parser.setAutoFetch(true);
 //		try {
@@ -63,7 +63,7 @@ public class ViewerTest extends TestCase {
 //			viewer.setStructure(structure);
 //
 //			// manipulate the coodriantes
-//			// 
+//			//
 //			//Calc.rotate(structure,Matrix m);
 //
 //			viewer.repaint();

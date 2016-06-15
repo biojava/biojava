@@ -18,7 +18,7 @@
  *	  http://www.biojava.org/
  *
  * Created on Jun 8, 2010
- * Author: Jianjiong Gao 
+ * Author: Jianjiong Gao
  *
  */
 
@@ -39,36 +39,36 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * 
+ *
  * @author Jianjiong Gao
  * @since 3.0
  */
 public class ProteinModificationParserTest extends TestCase {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(ProteinModificationParserTest.class);
 
 	private String[][] strucs;
-	
+
 	@Override
 	public void setUp() {
 		strucs = setUpShortTest();
 //		strucs = setUpLongTest();
 	}
-	
+
 	public static String[][] setUpShortTest() {
 		String[][] strucs = new String[][] {
 //				{"1cdg", null},
-//				
+//
 //				// Attachments
 //				{"3HN3", "AA0151"}, // NAG
 //				{"1ZNF", "AA0053"}, // ACE on THR
 				{"1MCC", "AA0045"}, // ACE on GLU
 				{"1SCY", "AA0089"}, // NH2 on HIS
-				
+
 				// Modified resdiues
 				{"1UIS", "AA0183"}, // NRQ
 				{"3MVJ", "AA0037"}, // SEP
-				
+
 				// remediation changed 1DOJ...
 				//{"1DOJ", "AA0065"}, // MEA
 				{"1DOJ", "AA0172"}, // TYS
@@ -87,11 +87,11 @@ public class ProteinModificationParserTest extends TestCase {
 				{"2AXR", "AA0436"}, // CYS-FAD-HIS
 				{"3H8L", "AA0513"}, // CYS-S3H-CYS
 				{"1CAD", null}, // FE and 4 Cys, cross-link4
-				
+
 		};
 		return strucs;
 	}
-	
+
 	public static String[][] setUpLongTest() {
 		String[][] strucs = new String[][] {
 				// Attachments
@@ -134,7 +134,7 @@ public class ProteinModificationParserTest extends TestCase {
 				{"1PVB", "AA0051"}, // ACE on SER
 				{"1ZNF", "AA0053"}, // ACE on THR
 				{"1SCY", "AA0089"}, // NH2 on HIS
-				
+
 				// Modified resdiues
 				{"3MVJ", "AA0037"}, // SEP
 				{"3MVJ", "AA0038"}, // TPO
@@ -286,15 +286,15 @@ public class ProteinModificationParserTest extends TestCase {
 		};
 		return strucs;
 	}
-	
+
 	public void testParser() throws IOException, StructureException {
 		multiTest();
 	}
-	
+
 	public void multiTest() {
 		for ( String[] name : strucs){
 			try {
-//				parserTest(name[0], (String)null); 
+//				parserTest(name[0], (String)null);
 				parserTest(name[0], name[1]);
 			} catch (Exception e){
 				logger.error("Exception: ", e);
@@ -310,18 +310,18 @@ public class ProteinModificationParserTest extends TestCase {
 		} else {
 			mods = ProteinModificationRegistry.getByResidId(residId);
 		}
-		
+
 		parserTest(pdbId, mods);
 	}
-	
-	private void parserTest(String pdbId, Set<ProteinModification> mods) throws IOException, StructureException {	
+
+	private void parserTest(String pdbId, Set<ProteinModification> mods) throws IOException, StructureException {
 		Structure struc = TmpAtomCache.cache.getStructure(pdbId);
 
 		ProteinModificationIdentifier parser = new ProteinModificationIdentifier();
 		boolean recordUnidentifiable = false;
 		parser.setRecordUnidentifiableCompounds(recordUnidentifiable);
 //		parser.setbondLengthTolerance(2);
-		
+
 		assertFalse(mods.isEmpty());
 
 		parser.identify(struc, mods);
@@ -329,24 +329,24 @@ public class ProteinModificationParserTest extends TestCase {
 		if (! parser.getIdentifiedModifiedCompound().isEmpty() ){
 			logger.warn("Did not identify any modified compounds for {}", pdbId);
 		}
-		
-		assertFalse("Did not identify any modified compounds for " + pdbId , 
+
+		assertFalse("Did not identify any modified compounds for " + pdbId ,
 				parser.getIdentifiedModifiedCompound().isEmpty());
-		
+
 		boolean print = false;
 		if (print)
 			printResult(pdbId, parser, recordUnidentifiable);
 	}
-	
+
 	private void printResult(String pdbId, ProteinModificationIdentifier parser, boolean recordUnidentifiable) {
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("===");
 		sb.append(pdbId);
 		sb.append("===\n");
-		
+
 		Set<ModifiedCompound> mcs = parser.getIdentifiedModifiedCompound();
-		
+
 		int i=0;
 		for (ModifiedCompound mc : mcs) {
 			sb.append("Modification #");
@@ -355,7 +355,7 @@ public class ProteinModificationParserTest extends TestCase {
 			sb.append(mc);
 			sb.append('\n');
 		}
-		
+
 		if (recordUnidentifiable) {
 			Set<StructureGroup> unidentifiedModifiedResidues = parser.getUnidentifiableModifiedResidues();
 			i = 0;
@@ -366,7 +366,7 @@ public class ProteinModificationParserTest extends TestCase {
 				sb.append(group);
 				sb.append('\n');
 			}
-	
+
 			Set<StructureAtomLinkage> unidentifiedLinkages = parser.getUnidentifiableAtomLinkages();
 			i = 0;
 			for (StructureAtomLinkage link : unidentifiedLinkages) {
@@ -377,11 +377,11 @@ public class ProteinModificationParserTest extends TestCase {
 				sb.append('\n');
 			}
 		}
-		
+
 		logger.info(sb.toString());
 	}
-	
-	
+
+
 	/**
 	 * Note: if you change this unit test, also change the cook book:
 	 * http://www.biojava.org/wiki/BioJava:CookBook3:ProtMod
@@ -392,14 +392,14 @@ public class ProteinModificationParserTest extends TestCase {
 		Structure struc = TmpAtomCache.cache.getStructure(pdbId);
 		Set<ModifiedCompound> mcs = identifyAllModfications(struc);
 		assertFalse(mcs.isEmpty());
- 
+
 		// identify all phosphosites from PDB:3MVJ and print them
 		pdbId = "3MVJ";
 		struc = TmpAtomCache.cache.getStructure(pdbId);
 		List<ResidueNumber> psites = identifyPhosphosites(struc);
 		assertFalse(psites.isEmpty());
 	}
-	
+
 	/**
 	 * Note: if you change this unit test, also change the cook book:
 	 * http://www.biojava.org/wiki/BioJava:CookBook3:ProtMod

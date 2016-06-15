@@ -64,7 +64,7 @@ public class NucleotideImpl extends HetatomImpl implements Group, Serializable, 
 
 	}
 
-	/** 
+	/**
 	 * Returns the O3' atom if present, otherwise null
 	 * @return O3' atom or null
 	 */
@@ -74,7 +74,7 @@ public class NucleotideImpl extends HetatomImpl implements Group, Serializable, 
 
 	}
 
-	/** 
+	/**
 	 * Returns the O5' atom if present, otherwise null
 	 * @return O5' atom or null
 	 */
@@ -84,7 +84,7 @@ public class NucleotideImpl extends HetatomImpl implements Group, Serializable, 
 
 	}
 
-	/** 
+	/**
 	 * Returns the P atom if present, otherwise null
 	 * @return P atom or null
 	 */
@@ -100,7 +100,7 @@ public class NucleotideImpl extends HetatomImpl implements Group, Serializable, 
 
 		n.setPDBFlag(has3D());
 		n.setResidueNumber(getResidueNumber());
-		
+
 		n.setPDBName(getPDBName());
 
 		// copy the atoms
@@ -108,6 +108,14 @@ public class NucleotideImpl extends HetatomImpl implements Group, Serializable, 
 			Atom atom = (Atom) atom1.clone();
 			n.addAtom(atom);
 			atom.setGroup(n);
+		}
+
+		// copying the alt loc groups if present, otherwise they stay null
+		if (getAltLocs()!=null && !getAltLocs().isEmpty()) {
+			for (Group altLocGroup:this.getAltLocs()) {
+				Group nAltLocGroup = (Group)altLocGroup.clone();
+				n.addAltLoc(nAltLocGroup);
+			}
 		}
 		return n;
 	}

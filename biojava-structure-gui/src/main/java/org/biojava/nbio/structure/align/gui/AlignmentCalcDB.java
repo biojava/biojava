@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Nov 5, 2009
- * Author: Andreas Prlic 
+ * Author: Andreas Prlic
  *
  */
 
@@ -38,10 +38,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 //import org.slf4j.LoggerFactory;
 
 public class AlignmentCalcDB implements AlignmentCalculationRunnable {
-	
-	
+
+
 	public static String SCOP_VERSION =  "1.75";
-	
+
 	//private static final Logger logger = LoggerFactory.getLogger(AlignmentCalcDB.class);
 
 	AtomicBoolean interrupted ;
@@ -86,10 +86,10 @@ public class AlignmentCalcDB implements AlignmentCalculationRunnable {
 		interrupted = new AtomicBoolean(false);
 		this.outFile = outFile;
 		this.domainSplit = domainSplit;
-		
+
 		System.out.println("AlignmentCalcDB: Using SCOP version " + SCOP_VERSION);
 		ScopFactory.setScopDatabase(SCOP_VERSION);
-		
+
 	}
 
 
@@ -108,7 +108,7 @@ public class AlignmentCalcDB implements AlignmentCalculationRunnable {
 
 		if ( name1.startsWith("file:/"))
 			name1= "CUSTOM";
-		
+
 		job = new MultiThreadedDBSearch(name1,structure1, outFile, algorithm, nrCPUs, domainSplit);
 
 		AtomCache cache = new AtomCache(config);
@@ -123,7 +123,7 @@ public class AlignmentCalcDB implements AlignmentCalculationRunnable {
 		}
 
 		job.run();
-		
+
 		File resultList = job.getResultFile();
 		//		if ((now-startTime)/1000 > 30) {
 
@@ -149,7 +149,7 @@ public class AlignmentCalcDB implements AlignmentCalculationRunnable {
 
 
 	/** stops what is currently happening and does not continue
-	 * 
+	 *
 	 *
 	 */
 	@Override

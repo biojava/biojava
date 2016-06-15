@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * created at 28 Jan 2014
- * Author: ap3 
+ * Author: ap3
  */
 
 package org.biojava.nbio.genome.parsers.genename;
@@ -37,7 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /** A parser that parses a file from the UCSC genome browser that contains mapping of gene name to chromosome positions
- * 
+ *
  * @author Andreas Prlic
  *
  */
@@ -52,14 +52,14 @@ public class GeneChromosomePositionParser {
 
 			List<GeneChromosomePosition> genePositions=	getChromosomeMappings();
 			logger.info("got {} gene positions", genePositions.size());
-			
+
 			for (GeneChromosomePosition pos : genePositions){
 				if ( pos.getGeneName().equals("FOLH1")) {
 					logger.info("Gene Position: {}", pos);
 					break;
 				}
 			}
-			
+
 		} catch(Exception e){
 			logger.error("Exception: ", e);
 		}

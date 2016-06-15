@@ -23,11 +23,11 @@ package demo;
 import org.biojava.nbio.alignment.Alignments;
 import org.biojava.nbio.alignment.Alignments.PairwiseSequenceAlignerType;
 import org.biojava.nbio.alignment.SimpleGapPenalty;
-import org.biojava.nbio.alignment.SubstitutionMatrixHelper;
+import org.biojava.nbio.core.alignment.matrices.SubstitutionMatrixHelper;
 import org.biojava.nbio.alignment.template.GapPenalty;
 import org.biojava.nbio.alignment.template.PairwiseSequenceAligner;
-import org.biojava.nbio.alignment.template.SequencePair;
-import org.biojava.nbio.alignment.template.SubstitutionMatrix;
+import org.biojava.nbio.core.alignment.template.SequencePair;
+import org.biojava.nbio.core.alignment.template.SubstitutionMatrix;
 import org.biojava.nbio.core.sequence.ProteinSequence;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
 import org.biojava.nbio.core.sequence.io.FastaReaderHelper;
@@ -62,7 +62,7 @@ public class DemoAlignProteins {
 
 		System.out.println(pair.toString(60));
 
-		
+
 	}
 
 	private static ProteinSequence getSequenceForId(String uniProtId) throws Exception {
@@ -70,7 +70,7 @@ public class DemoAlignProteins {
 		ProteinSequence seq = FastaReaderHelper.readFastaProteinSequence(uniprotFasta.openStream()).get(uniProtId);
 		System.out.printf("id : %s %s%s%s", uniProtId, seq, System.getProperty("line.separator"), seq.getOriginalHeader());
 		System.out.println();
-		
+
 		return seq;
 	}
 }

@@ -28,7 +28,7 @@ import org.biojava.nbio.structure.StructureIO;
 
 
 /** Example of how to load PDB files using the AtomCache class.
- * 
+ *
  * @author Andreas Prlic
  *
  */
@@ -47,7 +47,7 @@ public class DemoAtomCache {
 			Structure s1 = StructureIO.getStructure("4hhb");
 
 			Structure bioAssembly = StructureIO.getBiologicalAssembly("1stp",1);
-			
+
 			// do something with them...
 		} catch (Exception e){
 			e.printStackTrace();
@@ -60,7 +60,6 @@ public class DemoAtomCache {
 
 		FileParsingParameters params = cache.getFileParsingParams();
 
-		params.setLoadChemCompInfo(false);
 		params.setAlignSeqRes(true);
 		params.setHeaderOnly(false);
 		params.setParseCAOnly(false);

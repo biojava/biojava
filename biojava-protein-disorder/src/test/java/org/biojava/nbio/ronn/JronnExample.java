@@ -54,13 +54,13 @@ public class JronnExample {
 		}
 	}
 	*/
-	
+
 	@Test
 	public void rawScoresForMultipleSequences() {
 		try {
 		final List<FastaSequence> sequences = SequenceUtil.readFasta(new FileInputStream("src/test/resources/fasta.in"));
 		@SuppressWarnings("unused")
-		Map<FastaSequence, float[]>	rawProbabilityScores = Jronn.getDisorderScores(sequences); 
+		Map<FastaSequence, float[]>	rawProbabilityScores = Jronn.getDisorderScores(sequences);
 		} catch (FileNotFoundException e) {
 			logger.error("FileNotFoundException: ", e);
 			fail(e.getMessage());
@@ -69,7 +69,7 @@ public class JronnExample {
 			fail(e.getMessage());
 		}
 	}
-	
+
 	@Test
 	public void rawScoresForSingleSequence() {
 		@SuppressWarnings("unused")
@@ -77,8 +77,8 @@ public class JronnExample {
 				"RPLPTRAPTMDQWDHFALIQKHWTANLWFLTFPFNDKWGWIWFLKDWTPGSADQAQRACTWFFCHGHDTN" +
 				"CQIIFEGRNAPERADPMWTGGLNKHIIARGHFFQSNKFHFLERKFCEMAEIERPNFTCRTLDCQKFPWDDP" ));
 	}
-	
-	
+
+
 	@Test
 	public void disorderForMultipleSequences() {
 		try {
@@ -94,18 +94,18 @@ public class JronnExample {
 			fail(e.getMessage());
 		}
 	}
-	
-	
+
+
 	@Test
 	public void disorderForSingleSequence() {
 		@SuppressWarnings("unused")
 		Range[]	ranges = Jronn.getDisorder(new FastaSequence("name", "LLRGRHLMNGTMIMRPWNFLNDHHFPKFFPHLIEQQAIWLADWWRKKHC" +
 				"RPLPTRAPTMDQWDHFALIQKHWTANLWFLTFPFNDKWGWIWFLKDWTPGSADQAQRACTWFFCHGHDTN" +
 				"CQIIFEGRNAPERADPMWTGGLNKHIIARGHFFQSNKFHFLERKFCEMAEIERPNFTCRTLDCQKFPWDDP" ));
-		
+
 	}
-	
-	
-	
-	
+
+
+
+
 }

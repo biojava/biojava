@@ -37,49 +37,49 @@ import java.net.URL;
 import java.util.List;
 
 /** A BioUnitDataProvider that fetches the symmetry operations via remote calls to servers from RCSB PDB
- * 
+ *
  * @author Andreas Prlic
  *
  */
 public class RemoteRawBioUnitDataProvider implements RawBioUnitDataProvider {
 
 	String pdbId;
-	
+
 	public static String DEFAULT_SERVERNAME = "http://pepper.rcsb.org:8080/pdb/rest/biolassembly/";
-	
+
 	public static String NR_BIOL_APPEND = "nrBiolAssemblies?structureId=%s";
-	
+
 	public static String GET_ASSEMBLY =  "pdbxStructAssemblies?structureId=%s";
-	
+
 	public static String GET_ASSEMBLY_GENS =  "pdbxStructAssemblyGens?structureId=%s";
-	
+
 	public static String GET_STRUCT_OPER = "pdbxStructOperList?structureId=%s";
-	
+
 	String serverName;
 	private static final int DEFAULT_TIMEOUT = 5000;
-	
+
 	int timeout;
 	public RemoteRawBioUnitDataProvider(){
 		serverName = DEFAULT_SERVERNAME;
 		timeout = DEFAULT_TIMEOUT;
 	}
-	
+
 	public static void main(String[] args){
-		
+
 		RemoteRawBioUnitDataProvider me = new RemoteRawBioUnitDataProvider();
-		
+
 		me.setPdbId("4hhb");
-		
+
 		System.out.println("Nr biol assemblies: " + me.getNrBiolAssemblies());
 		System.out.println("has biol assembly:" + me.hasBiolAssembly());
 		System.out.println("assemblies: " + me.getPdbxStructAssemblies());
 		System.out.println("assemblygens:" + me.getPdbxStructAssemblyGens());
 		System.out.println("operations:" + me.getPdbxStructOperList());
-		
-		
+
+
 	}
-	
-	
+
+
 	public int getTimeout() {
 		return timeout;
 	}
@@ -100,17 +100,17 @@ public class RemoteRawBioUnitDataProvider implements RawBioUnitDataProvider {
 
 	}
 
-	
+
 
 	@Override
 	public int getNrBiolAssemblies() {
-		
+
 		String serverURL = serverName + NR_BIOL_APPEND;
 		int nrBiolAssemblies = -1;
 		try {
 			String u = String.format(serverURL,pdbId) ;
 
-			
+
 			URL url = new URL(u);
 			System.out.println("requesting nr biol assemblies from server..."  + url);
 			// have a short timeout for this...
@@ -123,7 +123,7 @@ public class RemoteRawBioUnitDataProvider implements RawBioUnitDataProvider {
 
 				xml = JFatCatClient.convertStreamToString(stream);
 				System.out.println("got XML from server: " + xml);
-				
+
 				nrBiolAssemblies = extractNrBiolAssemblies(xml);
 			}
 		} catch (Exception e){
@@ -134,7 +134,7 @@ public class RemoteRawBioUnitDataProvider implements RawBioUnitDataProvider {
 
 	private static int extractNrBiolAssemblies(String xml) {
 		int nrBiolAssemblies = -1;
-		
+
 		try {
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder db = factory.newDocumentBuilder();
@@ -160,7 +160,7 @@ public class RemoteRawBioUnitDataProvider implements RawBioUnitDataProvider {
 
 				NamedNodeMap map = pair.getAttributes();
 
-				String count =  map.getNamedItem("count").getTextContent();				
+				String count =  map.getNamedItem("count").getTextContent();
 				nrBiolAssemblies = Integer.parseInt(count);
 			}
 
@@ -181,15 +181,15 @@ public class RemoteRawBioUnitDataProvider implements RawBioUnitDataProvider {
 	@Override
 	public PdbxStructAssembly getPdbxStructAssembly(int biolAssemblyNr) {
 		PdbxStructAssembly pdbxStructAssembly = null;
-		
+
 		return pdbxStructAssembly;
 	}
 
 	@Override
 	public List<PdbxStructAssemblyGen> getPdbxStructAssemblyGen(int biolAssemblyNr) {
-		
+
 		List<PdbxStructAssemblyGen> pdbxStructAssemblyGen = null;
-		
+
 		return pdbxStructAssemblyGen;
 	}
 	@Override
@@ -199,7 +199,7 @@ public class RemoteRawBioUnitDataProvider implements RawBioUnitDataProvider {
 		try {
 			String u = String.format(serverURL,pdbId) ;
 
-			
+
 			URL url = new URL(u);
 			System.out.println("requesting biol assemblies from server..."  + url);
 			// have a short timeout for this...
@@ -229,7 +229,7 @@ public class RemoteRawBioUnitDataProvider implements RawBioUnitDataProvider {
 		try {
 			String u = String.format(serverURL,pdbId) ;
 
-			
+
 			URL url = new URL(u);
 			System.out.println("requesting  biol assembly gens from server..."  + url);
 			// have a short timeout for this...
@@ -249,9 +249,9 @@ public class RemoteRawBioUnitDataProvider implements RawBioUnitDataProvider {
 		} catch (Exception e){
 			e.printStackTrace();
 		}
-		
+
 		return assemblies;
-		
+
 	}
 
 	@Override
@@ -261,7 +261,7 @@ public class RemoteRawBioUnitDataProvider implements RawBioUnitDataProvider {
 		try {
 			String u = String.format(serverURL,pdbId) ;
 
-			
+
 			URL url = new URL(u);
 			System.out.println("requesting operators from server..."  + url);
 			// have a short timeout for this...
@@ -280,7 +280,7 @@ public class RemoteRawBioUnitDataProvider implements RawBioUnitDataProvider {
 		} catch (Exception e){
 			e.printStackTrace();
 		}
-		
+
 		return oper;
 	}
 

@@ -55,6 +55,7 @@ public interface MMcifConsumer {
 	public void newStructAsym(StructAsym sasym);
 	public void setStruct(Struct struct);
 	public void newDatabasePDBrev(DatabasePDBrev dbrev);
+	public void newDatabasePDBrevRecord(DatabasePdbrevRecord dbrev);
 	public void newDatabasePDBremark(DatabasePDBremark remark);
 	public void newExptl(Exptl exptl);
 	public void newCell(Cell cell);
@@ -62,6 +63,9 @@ public interface MMcifConsumer {
 	public void newStructNcsOper(StructNcsOper sNcsOper);
 	public void newStructRef(StructRef sref);
 	public void newStructRefSeq(StructRefSeq sref);
+	public void newStructRefSeqDif(StructRefSeqDif sref);
+	public void newStructSite(StructSite sref);
+	public void newStructSiteGen(StructSiteGen sref);
 	public void newPdbxPolySeqScheme(PdbxPolySeqScheme ppss);
 	public void newPdbxNonPolyScheme(PdbxNonPolyScheme ppss);
 	public void newPdbxEntityNonPoly(PdbxEntityNonPoly pen);
@@ -80,7 +84,7 @@ public interface MMcifConsumer {
 	public void newEntitySrcNat(EntitySrcNat entitySrcNat);
 	public void newEntitySrcSyn(EntitySrcSyn entitySrcSyn);
 	public void newStructConn(StructConn structConn);
-	
+
 	/** AuditAuthor contains the info from the PDB-AUTHOR records.
 	 *
 	 * @param aa
@@ -98,11 +102,11 @@ public interface MMcifConsumer {
 	public void setFileParsingParameters(FileParsingParameters params);
 	public FileParsingParameters getFileParsingParameters();
 
-	
 
-	
 
-	
 
-	
+
+
+
+
 }

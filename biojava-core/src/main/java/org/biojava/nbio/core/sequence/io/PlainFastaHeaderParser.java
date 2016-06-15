@@ -32,7 +32,7 @@ import org.biojava.nbio.core.sequence.template.Compound;
  * If the user has a custom header with local data that is kept constant all
  * over the data then they can create their own implementation of a
  * FastaHeaderParserInterface
- * 
+ *
  * @author Amr AL-Hossary
  * @since 3.0.6
  */
@@ -41,7 +41,7 @@ public class PlainFastaHeaderParser<S extends AbstractSequence<C>, C extends Com
 
 	/**
 	 * Parse out the all header as one entity
-	 * 
+	 *
 	 * @param header
 	 * @return
 	 */
@@ -51,7 +51,7 @@ public class PlainFastaHeaderParser<S extends AbstractSequence<C>, C extends Com
 
 	/**
 	 * Parse the header and set the values in the sequence
-	 * 
+	 *
 	 * @param header
 	 * @param sequence
 	 */

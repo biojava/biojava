@@ -30,16 +30,16 @@ public class ProteinComplexSignature {
 	private String pdbId = "";
 	private List<String> chainIds = null;
 	private List<ChainSignature> chainSignatures = new ArrayList<ChainSignature>();
-	
+
 
 	public ProteinComplexSignature(String pdbId, List<String> chainIds, BlastClustReader blastClust) {
 		this.pdbId = pdbId;
 		this.chainIds = chainIds;
 		this.blastClust = blastClust;
-		
+
 		getChainSignatures();
 	}
-	
+
 	public String getComplexSignature() {
 		StringBuilder builder = new StringBuilder();
 		for (ChainSignature s: chainSignatures) {
@@ -47,7 +47,7 @@ public class ProteinComplexSignature {
 		}
 		return builder.toString();
 	}
-	
+
 	public String getCompositionId(String chainId) {
 		for (ChainSignature s: chainSignatures) {
 			if (s.getChainIds().contains(chainId)) {
@@ -56,7 +56,7 @@ public class ProteinComplexSignature {
 		}
 		return "";
 	}
-	
+
 	public String getComplexStoichiometry() {
 		StringBuilder s = new StringBuilder();
 		for (ChainSignature c: chainSignatures) {
@@ -67,14 +67,14 @@ public class ProteinComplexSignature {
 		}
 		return s.toString();
 	}
-	
+
 	public int getSubunitTypeCount() {
 		return chainSignatures.size();
 	}
-	
-	private List<ChainSignature> getChainSignatures() {	
+
+	private List<ChainSignature> getChainSignatures() {
 		String alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-	
+
 		Map<String,Integer> mapCounts = new TreeMap<String,Integer>();
 		Map<String,List<String>> mapChainIds = new TreeMap<String, List<String>>();
 
@@ -110,8 +110,8 @@ public class ProteinComplexSignature {
 				c.setCompositionId("?");
 			}
 		}
-		
+
 		return chainSignatures;
 	}
-	
+
 }

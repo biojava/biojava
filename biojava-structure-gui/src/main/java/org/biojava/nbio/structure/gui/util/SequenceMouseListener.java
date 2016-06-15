@@ -16,7 +16,7 @@
  * at:
  *
  *      http://www.biojava.org/
- * 
+ *
  * Created on Nov 29, 2005
  *
  */
@@ -40,7 +40,7 @@ import java.util.List;
 /** a mouse listener for the AbstractChainRenderer class
  * it listens to all mouse events and triggeres appropriate
  * SequenceListener and FeatureListener events
- * 
+ *
  * @author Andreas Prlic
  *
  */
@@ -68,7 +68,7 @@ MouseMotionListener
 	SequenceDisplay parent;
 
 	List<AlignmentPositionListener> alignmentPositionListeners;
-	
+
 	public SequenceMouseListener(SequenceDisplay parent) {
 		super();
 
@@ -119,7 +119,7 @@ MouseMotionListener
 	// mouse motion part
 
 	/** get the sequence position of the current mouse event
-	 * 
+	 *
 	 */
 	private int getSeqPos(MouseEvent e) {
 
@@ -135,7 +135,7 @@ MouseMotionListener
 
 
 		return seqpos  ;
-	}   
+	}
 
 
 
@@ -195,7 +195,7 @@ MouseMotionListener
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-	
+
 
 		if ( selectionLocked )
 			return;
@@ -205,8 +205,8 @@ MouseMotionListener
 		int pos = getSeqPos(e) ;
 		//System.out.println("mouse moved " + pos);
 
-		
-		
+
+
 		oldSelectionStart = pos;
 
 
@@ -270,7 +270,7 @@ MouseMotionListener
 		for (AlignmentPositionListener li : alignmentPositionListeners) {
 			li.mouseOverPosition(apos.get(pos));
 		}
-		
+
 
 
 	}

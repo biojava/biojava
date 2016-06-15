@@ -19,7 +19,7 @@
  *
  */
 /**
- * 
+ *
  */
 package org.biojava.nbio.structure.symmetry.jmolScript;
 
@@ -45,21 +45,23 @@ public class JmolSymmetryScriptGeneratorCn extends JmolSymmetryScriptGeneratorPo
 			setPolyhedron(p);
 		}
 	}
-	
+
+	@Override
 	public int getZoom() {
 		// find maximum extension of structure
 		double maxExtension = getMaxExtension();
 		// find maximum extension of polyhedron
 		RotationAxisAligner at = getAxisTransformation();
 		double polyhedronExtension = Math.max(getPolyhedron().getCirumscribedRadius(), at.getDimension().z);
-		
+
 		int zoom = Math.round((float)(maxExtension/polyhedronExtension * 110));
 		if (zoom > 100) {
 			zoom = 100;
 		}
 		return zoom;
 	}
-	
+
+	@Override
 	public int getOrientationCount() {
 		//  the last two views (top, bottom) are not that interesting.
 		if (getAxisTransformation().getRotationGroup().getPointGroup().equals("C2")) {
@@ -67,20 +69,21 @@ public class JmolSymmetryScriptGeneratorCn extends JmolSymmetryScriptGeneratorPo
 		}
 		return getPolyhedron().getViewCount();
 	}
-	
+
 	/**
 	 * Returns the name of a specific orientation
 	 * @param index orientation index
 	 * @return name of orientation
 	 */
-	public String getOrientationName(int index) {	
+	@Override
+	public String getOrientationName(int index) {
 		if (getAxisTransformation().getRotationGroup().getPointGroup().equals("C2")) {
 			if (index == 0) {
 				return "Front C2 axis";
 			} else if (index == 2) {
 				return "Back C2 axis";
 			}
-		} 
+		}
 		return getPolyhedron().getViewName(index);
 	}
 }

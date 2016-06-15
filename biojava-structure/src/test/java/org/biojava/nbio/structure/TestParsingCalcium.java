@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Nov 1, 2013
- * Author: andreas 
+ * Author: andreas
  *
  */
 
@@ -37,12 +37,12 @@ public class TestParsingCalcium {
 
 
 	@Test
-	public void testCalciumParsing() throws StructureException, IOException { 
+	public void testCalciumParsing() throws StructureException, IOException {
 
 		String pdbID = "1SU4";
 
 		// Calcium is at position 995
-		// HETATM 7673 CA    CA A 995      64.194  12.588   7.315  1.00 41.55          CA  
+		// HETATM 7673 CA    CA A 995      64.194  12.588   7.315  1.00 41.55          CA
 
 		AtomCache cache = new AtomCache();
 		Structure s = cache.getStructure(pdbID);
@@ -62,54 +62,54 @@ public class TestParsingCalcium {
 
 
 	}
-	
+
 	@Test
 	public void testCAreturnsCalpha() throws IOException, StructureException {
-		
+
 		// there's an ambiguity in PDB names between the C alpha of an aminoacid, named "CA"
 		// and the Calcium of a Calcium ion, named "CA" (or potentially any calcium present in a group)
 		// in PDB files both are distinguished by different paddings: " CA " (Calpha) vs "CA  " (Calcium)
-		
-		
+
+
 		String pdbID = "1SU4";
 
 		// Calcium is at position 995
-		// HETATM 7673 CA    CA A 995      64.194  12.588   7.315  1.00 41.55          CA  
+		// HETATM 7673 CA    CA A 995      64.194  12.588   7.315  1.00 41.55          CA
 
 		AtomCache cache = new AtomCache();
 		Structure s = cache.getStructure(pdbID);
-		
+
 		Atom[] atoms = StructureTools.getRepresentativeAtomArray(s);
 		for (Atom atom:atoms) {
 			assertTrue("atom "+atom.getPDBserial()+" of residue "+atom.getGroup().getResidueNumber()+"-"+atom.getGroup().getPDBName()+
 					" is not a Carbon alpha", atom.getElement()==Element.C);
 		}
-		
+
 		for (Chain c:s.getChains()) {
 			atoms = StructureTools.getRepresentativeAtomArray(c);
 			for (Atom atom:atoms) {
 				assertTrue("atom "+atom.getPDBserial()+" of residue "+atom.getGroup().getResidueNumber()+"-"+atom.getGroup().getPDBName()+
 						" is not a Carbon alpha", atom.getElement()==Element.C);
-			}			
+			}
 		}
 
 		atoms = StructureTools.getBackboneAtomArray(s);
-		
+
 		boolean hasGlycine = false;
-		
+
 		for (Atom atom:atoms) {
 			assertTrue("atom "+atom.getPDBserial()+" of residue "+atom.getGroup().getResidueNumber()+"-"+atom.getGroup().getPDBName()+
-					" is not a backbone atom", 
-					atom.getElement()==Element.C || 
+					" is not a backbone atom",
+					atom.getElement()==Element.C ||
 					atom.getElement()==Element.O ||
 					atom.getElement()==Element.N    );
-			
+
 			assertTrue("backbone atoms should not contain CB atoms",!atom.getName().equals("CB"));
-			
+
 			if (atom.getGroup().getPDBName().equals("GLY")) {
-				hasGlycine = true; 
+				hasGlycine = true;
 			}
-						
+
 		}
 		assertTrue("the backbone atoms should contain atoms from at least 1 glycine",hasGlycine);
 

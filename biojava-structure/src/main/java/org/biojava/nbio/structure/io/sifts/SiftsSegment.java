@@ -30,21 +30,21 @@ import java.util.List;
 
 public class SiftsSegment implements Serializable{
 
-	
+
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -8005129863256307153L;
 	String segId;
 	String start;
 	String end;
-	
+
 	List<SiftsResidue> residues;
-	
+
 	public SiftsSegment(){
 		this(null,null,null);
 	}
-	
+
 	public SiftsSegment(String segId, String start, String end) {
 		this.segId = segId;
 		this.start = start;
@@ -78,13 +78,13 @@ public class SiftsSegment implements Serializable{
 
 	public void addResidue(SiftsResidue pos) {
 		residues.add(pos);
-		
+
 	}
 
 	public List<SiftsResidue> getResidues(){
 		return residues;
 	}
-	
+
 	public void setResidues(List<SiftsResidue> residues){
 		this.residues = residues;
 	}
@@ -138,6 +138,6 @@ public class SiftsSegment implements Serializable{
 			return false;
 		return true;
 	}
-	
-	
+
+
 }

@@ -37,7 +37,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class SCOPAutoSuggestProvider implements AutoSuggestProvider{
 
 	boolean DEBUG = false;
-	
+
 	int maxResults = 20;
 
 	AtomicBoolean stop = new AtomicBoolean(false);
@@ -51,7 +51,7 @@ public class SCOPAutoSuggestProvider implements AutoSuggestProvider{
 
 		domains = getPossibleScopDomains(userInput);
 
-	
+
 
 		// convert domains to Strings
 
@@ -70,10 +70,10 @@ public class SCOPAutoSuggestProvider implements AutoSuggestProvider{
 		}
 
 		long timeE = System.currentTimeMillis();
-		
+
 		if ( DEBUG)
 			System.out.println("ScopAutoSuggestProvider took " + (timeE - timeS) + " ms. to get " + v.size() + " suggestions");
-		
+
 		return v;
 
 	}
@@ -81,7 +81,7 @@ public class SCOPAutoSuggestProvider implements AutoSuggestProvider{
 
 
 	private List<ScopDomain> getPossibleScopDomains(String userInput) {
-		
+
 		List<ScopDomain> domains = new ArrayList<ScopDomain>();
 
 		ScopDatabase scop = ScopFactory.getSCOP();
@@ -89,7 +89,7 @@ public class SCOPAutoSuggestProvider implements AutoSuggestProvider{
 		if (userInput.length() ==5 && userInput.startsWith("d") && (! userInput.contains("."))) {
 			userInput = userInput.substring(1);
 		}
-				
+
 		if ( userInput.length() ==4){
 			domains = scop.getDomainsForPDB(userInput);
 
@@ -126,13 +126,13 @@ public class SCOPAutoSuggestProvider implements AutoSuggestProvider{
 
 			if (DEBUG)
 				System.out.println("domains: " + domains);
-			
+
 			if ( domains == null || domains.size() < 1) {
 				if ( userInput.length() > 0 ){
 					List<ScopDescription> descs = scop.filterByClassificationId(userInput);
 
 					if ( descs == null || descs.size() < 1){
-						descs = scop.filterByDescription(userInput); 
+						descs = scop.filterByDescription(userInput);
 					}
 
 
@@ -150,7 +150,7 @@ public class SCOPAutoSuggestProvider implements AutoSuggestProvider{
 			}
 
 		}
-		
+
 		return domains;
 	}
 

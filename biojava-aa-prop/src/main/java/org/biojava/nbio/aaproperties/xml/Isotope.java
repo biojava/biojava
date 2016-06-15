@@ -33,9 +33,9 @@ public class Isotope {
 	 * The isotope name i.e. T (tritium)
 	 */
 	@XmlAttribute(name = "name", required = true)
-	private String name; 
+	private String name;
 	/**
-	 * Number of neutrons 
+	 * Number of neutrons
 	 */
 	@XmlAttribute(name = "neutronsnum", required = true)
 	private int neutronsNum;
@@ -43,7 +43,7 @@ public class Isotope {
 	 * Relative Atomic Mass of the isotope
 	 */
 	@XmlAttribute(name = "mass", required = true)
-	private double mass; 
+	private double mass;
 
 	public Isotope(){}
 
@@ -58,7 +58,7 @@ public class Isotope {
 		this.setNeutronsNum(neutronsNum);
 		this.setMass(mass);
 	}
-	
+
 	public String getName(){
 		return this.name;
 	}
@@ -66,19 +66,19 @@ public class Isotope {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	public int getNeutronsNum() {
 		return neutronsNum;
 	}
-	
+
 	public void setNeutronsNum(int neutronsNum) {
 		this.neutronsNum = neutronsNum;
 	}
-	
+
 	public double getMass() {
 		return mass;
 	}
-	
+
 	public void setMass(double weight) {
 		this.mass = weight;
 	}

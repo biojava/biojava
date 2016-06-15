@@ -54,9 +54,9 @@ public interface Ontology  {
 	public String getName();
 
 	/** Set the name for this ontology
-	 * 
-	 * @param name - the name 
-	 * 
+	 *
+	 * @param name - the name
+	 *
 	 */
 	public void setName(String name);
 
@@ -69,7 +69,7 @@ public interface Ontology  {
 	public String getDescription();
 
 	/** set the description of this ontology
-	 * 
+	 *
 	 * @param description
 	 */
 	public void setDescription(String description);
@@ -129,7 +129,7 @@ public interface Ontology  {
 	 *         some other constraint of this implementation.
 	 * @throws AlreadyExistsException if a term of this name already exists
 	 * @return The newly created term.
-	 * @throws ChangeVetoException 
+	 * @throws ChangeVetoException
 	 */
 
 	public Term createTerm(String name)
@@ -148,7 +148,7 @@ public interface Ontology  {
 	 *         some other constraint of this implementation.
 	 * @throws AlreadyExistsException if a term of this name already exists
 	 * @return The newly created term.
-	 * @throws ChangeVetoException 
+	 * @throws ChangeVetoException
 	 */
 
 	public Term createTerm(String name, String description)
@@ -168,7 +168,7 @@ public interface Ontology  {
 	 *         some other constraint of this implementation.
 	 * @throws AlreadyExistsException if a term of this name already exists
 	 * @return The newly created term.
-	 * @throws ChangeVetoException 
+	 * @throws ChangeVetoException
 	 */
 
 	public Term createTerm(String name, String description, Object[] synonyms)
@@ -187,7 +187,7 @@ public interface Ontology  {
 	 *         some other constraint of this implementation.
 	 * @throws AlreadyExistsException if a term of this name already exists
 	 * @return The newly created term.
-	 * @throws ChangeVetoException 
+	 * @throws ChangeVetoException
 	 */
 
 	public Variable createVariable(String name, String description)
@@ -208,8 +208,8 @@ public interface Ontology  {
 	 * @param t  the Term to import
 	 * @param localName  the local name to import it under, optionally null
 	 * @return a Term
-	 * @throws ChangeVetoException 
-	 * @throws IllegalArgumentException 
+	 * @throws ChangeVetoException
+	 * @throws IllegalArgumentException
 	 */
 
 	public Term importTerm(Term t, String localName)
@@ -240,9 +240,9 @@ public interface Ontology  {
 
 	/**
 	 * See if a triple exists in this ontology
-	 * @param subject 
-	 * @param object 
-	 * @param predicate 
+	 * @param subject
+	 * @param object
+	 * @param predicate
 	 * @return true if contained
 	 */
 
@@ -250,15 +250,15 @@ public interface Ontology  {
 
 	/**
 	 * Remove a term from an ontology, together with all triples which refer to it.
-	 * @param t 
-	 * @throws ChangeVetoException 
+	 * @param t
+	 * @throws ChangeVetoException
 	 */
 
 	public void deleteTerm(Term t) ;
 
 	/**
 	 * Determines if this ontology currently contains a term named <code>name</code>
-	 * @param name 
+	 * @param name
 	 * @return true is contained
 	 */
 
@@ -278,7 +278,7 @@ public interface Ontology  {
 
 	implements Ontology, java.io.Serializable {
 		/**
-		 * 
+		 *
 		 */
 		private static final long serialVersionUID = -8064461497813727957L;
 		private final Map<String,Term> terms;
@@ -308,33 +308,39 @@ public interface Ontology  {
 			this.description = description;
 			ops = new DefaultOps() {
 				/**
-				 * 
+				 *
 				 */
 				private static final long serialVersionUID = -2135777733685713181L;
 
+				@Override
 				public Set<Term> getRemoteTerms() {
 					return localRemoteTerms;
 				}
 			};
 		}
 
+		@Override
 		public String getName() {
 			return name;
 		}
 
+		@Override
 		public String getDescription() {
 			return description;
 		}
 
 
+		@Override
 		public void setDescription(String description){
 			this.description = description;
 		}
 
+		@Override
 		public Set<Term> getTerms() {
 			return new HashSet<Term>(terms.values());
 		}
 
+		@Override
 		public Term getTerm(String name)
 				throws NoSuchElementException
 				{
@@ -346,6 +352,7 @@ public interface Ontology  {
 			}
 				}
 
+		@Override
 		public Set<Triple> getTriples(Term subject, Term object, Term predicate) {
 			if(subject != null && subject.getOntology() != this) {
 				throw new IllegalArgumentException("Subject is not in this ontology: " + subject + " " + this);
@@ -406,6 +413,7 @@ public interface Ontology  {
 
 				}
 
+		@Override
 		public Term createTerm(String name)
 				throws AlreadyExistsException, IllegalArgumentException
 				{
@@ -414,6 +422,7 @@ public interface Ontology  {
 			return t;
 				}
 
+		@Override
 		public Term createTerm(String name, String description)
 				throws AlreadyExistsException, IllegalArgumentException
 				{
@@ -422,6 +431,7 @@ public interface Ontology  {
 			return t;
 				}
 
+		@Override
 		public Term createTerm(String name, String description, Object[] synonyms)
 				throws AlreadyExistsException, IllegalArgumentException
 				{
@@ -430,6 +440,7 @@ public interface Ontology  {
 			return t;
 				}
 
+		@Override
 		public Variable createVariable(String name, String description)
 				throws
 				AlreadyExistsException,
@@ -449,6 +460,7 @@ public interface Ontology  {
 				}
 
 
+		@Override
 		public Term importTerm(Term t, String name)
 				throws IllegalArgumentException
 				{
@@ -477,6 +489,7 @@ public interface Ontology  {
 			return rt;
 				}
 
+		@Override
 		public void deleteTerm(Term t)
 
 		{
@@ -492,6 +505,7 @@ public interface Ontology  {
 
 		}
 
+		@Override
 		public boolean containsTerm(String name) {
 			return terms.containsKey(name);
 		}
@@ -500,6 +514,7 @@ public interface Ontology  {
 			return (terms.get(t.getName()) == t);
 		}
 
+		@Override
 		public boolean containsTriple(Term subject, Term object, Term predicate) {
 			if(!(subject.getOntology() == this)) return false;
 			if(!(object.getOntology() == this)) return false;
@@ -508,6 +523,7 @@ public interface Ontology  {
 			return triples.contains(new Triple.Impl(subject, object, predicate));
 		}
 
+		@Override
 		public Triple createTriple(Term subject,
 				Term object,
 				Term predicate,
@@ -515,7 +531,7 @@ public interface Ontology  {
 				String description)
 						throws
 						AlreadyExistsException,
-						IllegalArgumentException,						
+						IllegalArgumentException,
 						NullPointerException,
 						IllegalArgumentException
 						{
@@ -570,14 +586,17 @@ public interface Ontology  {
 			}
 		}
 
+		@Override
 		public OntologyOps getOps() {
 			return ops;
 		}
 
+		@Override
 		public String toString() {
 			return "ontology: " + getName();
 		}
 
+		@Override
 		public void setName(String name) {
 			this.name=name;
 

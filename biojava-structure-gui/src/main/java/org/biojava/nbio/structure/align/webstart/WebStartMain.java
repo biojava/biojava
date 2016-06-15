@@ -50,15 +50,15 @@ public class WebStartMain
 
 	static UserConfiguration userConfig;
 
-	/** 
+	/**
 	 *  If no arguments, shows AlignmentGui for pairwise alignments.
 	 *  if 1 argument: dbmenu shows the DBSearchGUI, otherwise the AlignentGUI is shown.
-	 *  
+	 *
 	 * if more than 3 arguments takes the following arguments
-	 * arg0 : fatcat or biojava . 
+	 * arg0 : fatcat or biojava .
 	 * arg1 : pdb1.X
 	 * arg2 ; pdb2.X
-	 * 
+	 *
 	 * The 4th argument is optional and it could be the serverLocation which the client should talk to.
 	 *
 	 * @param args
@@ -102,7 +102,7 @@ public class WebStartMain
 
 		String arg0 = args[0];
 
-		if (! (arg0.equals("fatcat") || 
+		if (! (arg0.equals("fatcat") ||
 				arg0.equals("biojava") ||
 				arg0.equals("fatcat_flexible") ||
 				arg0.equals("ce") ||
@@ -150,7 +150,7 @@ public class WebStartMain
 			System.out.println("done reading structures");
 
 
-			if (arg0.equalsIgnoreCase("ce") || 
+			if (arg0.equalsIgnoreCase("ce") ||
 					arg0.equalsIgnoreCase("ce_cp") ||
 					arg0.equalsIgnoreCase("sw") ||
 					arg0.equalsIgnoreCase("fatcat") ||
@@ -177,7 +177,7 @@ public class WebStartMain
 							"Something went wrong! : " + e.getMessage());
 				}
 
-			
+
 			} else if ( arg0.equalsIgnoreCase("biojava")){
 				try {
 					//showBiojava(ca1,ca2);
@@ -302,10 +302,10 @@ public class WebStartMain
 		action.actionPerformed(null);
 		if ( textField.getText() == null) {
 
-			// accessing temp. OS directory:         
+			// accessing temp. OS directory:
 			String property = "java.io.tmpdir";
 			String lineSplit = System.getProperty("file.separator");
-			
+
 			String tempdir = System.getProperty(property);
 
 			if ( !(tempdir.endsWith(lineSplit ) ) )
@@ -339,7 +339,7 @@ public class WebStartMain
 		showProgressBar(tmpFrame,title, "Calculating the structure alignment.");
 
 
-		//do the actual alignment 
+		//do the actual alignment
 		AFPChain afpChain = null;
 
 		try {
@@ -349,7 +349,7 @@ public class WebStartMain
 			e.printStackTrace();
 		}
 
-		if ( afpChain == null )  {         
+		if ( afpChain == null )  {
 			afpChain = algorithm.align(ca1, ca2);
 		}
 

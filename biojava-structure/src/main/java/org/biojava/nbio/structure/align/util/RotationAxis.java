@@ -35,26 +35,27 @@ import java.io.StringWriter;
 
 /**
  * Calculates the rotation axis for an alignment
- * 
+ *
  * <p>A superposition of two structures is generally represented as a rotation
  * matrix plus a translation vector. However, it can also be represented as an
  * axis of rotation plus some translation.
- * 
+ *
  * <p>This class calculates the rotation axis and stores it as four properties:
  * <ul><li>A unit vector parallel to the rotation axis ({@link #getRotationAxis()})
  * <li>The angle of rotation ({@link #getAngle()})
  * <li>A point on the rotation axis ({@link #getRotationPos()})
  * <li>Some translation parallel to the axis ({@link #getScrewTranslation()})
  * </ul>
- * 
+ *
  * <p>The axis of rotation is poorly defined and numerically unstable for small
- * angles. Therefore it's direction is left as null for angles less than 
+ * angles. Therefore it's direction is left as null for angles less than
  * {@link #MIN_ANGLE}.
- * 
+ *
  * @author Spencer Bliven
  *
  */
 public final class RotationAxis {
+
 	/**
 	 * Minimum angle to calculate rotation axes. 5 degrees.
 	 */
@@ -83,7 +84,7 @@ public final class RotationAxis {
 	}
 
 	/**
-	 * Returns the rotation axis and angle in a single javax.vecmath.AxisAngle4d object 
+	 * Returns the rotation axis and angle in a single javax.vecmath.AxisAngle4d object
 	 * @return
 	 */
 	public AxisAngle4d getAxisAngle4d() {
@@ -92,7 +93,7 @@ public final class RotationAxis {
 
 	/**
 	 * Get a position on the rotation axis.
-	 * 
+	 *
 	 * Specifically, project the origin onto the rotation axis
 	 * @return rotationPos
 	 */
@@ -126,7 +127,7 @@ public final class RotationAxis {
 	/**
 	 * Calculate the rotation axis for the first block of an AFPChain
 	 * @param afpChain
-	 * @throws StructureException 
+	 * @throws StructureException
 	 * @throws NullPointerException if afpChain does not contain a valid rotation matrix and shift vector
 	 */
 	public RotationAxis(AFPChain afpChain) throws StructureException {
@@ -138,7 +139,7 @@ public final class RotationAxis {
 
 	/**
 	 * Create a rotation axis from a vector, a point, and an angle.
-	 * 
+	 *
 	 * The result will be a pure rotation, with no screw component.
 	 * @param axis A vector parallel to the axis of rotation
 	 * @param pos A point on the axis of rotation
@@ -162,19 +163,15 @@ public final class RotationAxis {
 	}
 
 	/**
-	 * Create a rotation axis from a Matrix4d containing a rotational component and a translational component
+	 * Create a rotation axis from a Matrix4d containing a rotational
+	 * component and a translational component.
+	 *
 	 * @param transform
 	 */
 	public RotationAxis(Matrix4d transform) {
-		Atom transl = new AtomImpl();
-		double[] coords = {transform.m03, transform.m13, transform.m23};
-		transl.setCoords(coords);
-		Matrix rot = new Matrix(3,3);
-		for (int i=0;i<3;i++) {
-			for (int j=0;j<3;j++) {
-				rot.set(i, j, transform.getElement(i, j));
-			}
-		}
+
+		Matrix rot = Calc.getRotationMatrix(transform);
+		Atom transl = Calc.getTranslationVector(transform);
 		init(rot,transl);
 	}
 
@@ -236,7 +233,7 @@ public final class RotationAxis {
 
 	/**
 	 * Initialize variables
-	 * 
+	 *
 	 * @param rotation
 	 * @param translation
 	 */
@@ -372,17 +369,39 @@ public final class RotationAxis {
 	 * Returns a Jmol script which will display the axis of rotation. This
 	 * consists of a cyan arrow along the axis, plus an arc showing the angle
 	 * of rotation.
-	 * 
-	 * <p>As the rotation angle gets smaller, the axis of rotation becomes poorly
+	 * <p>
+	 * As the rotation angle gets smaller, the axis of rotation becomes poorly
 	 * defined and would need to get farther and farther away from the protein.
 	 * This is not particularly useful, so we arbitrarily draw it parallel to
 	 * the translation and omit the arc.
 	 * @param atoms Some atoms from the protein, used for determining the bounds
 	 *  	  of the axis.
+	 *
 	 * @return The Jmol script, suitable for calls to
 	 * {@link org.biojava.nbio.structure.align.gui.jmol.StructureAlignmentJmol#evalString() jmol.evalString()}
 	 */
 	public String getJmolScript(Atom[] atoms){
+		return getJmolScript(atoms, 0);
+	}
+
+	/**
+	 * Returns a Jmol script which will display the axis of rotation. This
+	 * consists of a cyan arrow along the axis, plus an arc showing the angle
+	 * of rotation.
+	 * <p>
+	 * As the rotation angle gets smaller, the axis of rotation becomes poorly
+	 * defined and would need to get farther and farther away from the protein.
+	 * This is not particularly useful, so we arbitrarily draw it parallel to
+	 * the translation and omit the arc.
+	 * @param atoms Some atoms from the protein, used for determining the bounds
+	 *  	  of the axis.
+	 * @param axisID in case of representing more than one axis in the same jmol
+	 * 		  panel, indicate the ID number.
+	 *
+	 * @return The Jmol script, suitable for calls to
+	 * {@link org.biojava.nbio.structure.align.gui.jmol.StructureAlignmentJmol#evalString() jmol.evalString()}
+	 */
+	public String getJmolScript(Atom[] atoms, int axisID){
 		final double width=.5;// width of JMol object
 		final String axisColor = "yellow"; //axis color
 		final String screwColor = "orange"; //screw translation color
@@ -426,24 +445,24 @@ public final class RotationAxis {
 		result.append("set defaultDrawArrowScale 2.0;");
 
 		// draw axis of rotation
-		result.append(	
-				String.format("draw ID rot CYLINDER {%f,%f,%f} {%f,%f,%f} WIDTH %f COLOR %s ;",
+		result.append(
+				String.format("draw ID rot"+axisID+" CYLINDER {%f,%f,%f} {%f,%f,%f} WIDTH %f COLOR %s ;",
 						axisMin.getX(),axisMin.getY(),axisMin.getZ(),
 						axisMax.getX(),axisMax.getY(),axisMax.getZ(), width, axisColor ));
 
 		// draw screw component
-		boolean positiveScrew = Math.signum(rotationAxis.getX()) == Math.signum(screwTranslation.getX()); 
+		boolean positiveScrew = Math.signum(rotationAxis.getX()) == Math.signum(screwTranslation.getX());
 		if( positiveScrew ) {
 			// screw is in the same direction as the axis
 			result.append( String.format(
-					"draw ID screw VECTOR {%f,%f,%f} {%f,%f,%f} WIDTH %f COLOR %s ;",
+					"draw ID screw"+axisID+" VECTOR {%f,%f,%f} {%f,%f,%f} WIDTH %f COLOR %s ;",
 					axisMax.getX(),axisMax.getY(),axisMax.getZ(),
 					screwTranslation.getX(),screwTranslation.getY(),screwTranslation.getZ(),
 					width, screwColor ));
 		} else {
 			// screw is in the opposite direction as the axis
 			result.append( String.format(
-					"draw ID screw VECTOR {%f,%f,%f} {%f,%f,%f} WIDTH %f COLOR %s ;",
+					"draw ID screw"+axisID+" VECTOR {%f,%f,%f} {%f,%f,%f} WIDTH %f COLOR %s ;",
 					axisMin.getX(),axisMin.getY(),axisMin.getZ(),
 					screwTranslation.getX(),screwTranslation.getY(),screwTranslation.getZ(),
 					width, screwColor ));
@@ -452,7 +471,7 @@ public final class RotationAxis {
 		// draw angle of rotation
 		if(rotationPos != null) {
 			result.append(System.getProperty("line.separator"));
-			result.append(String.format("draw ID rotArc ARC {%f,%f,%f} {%f,%f,%f} {0,0,0} {0,%f,%d} SCALE 500 DIAMETER %f COLOR %s;",
+			result.append(String.format("draw ID rotArc"+axisID+" ARC {%f,%f,%f} {%f,%f,%f} {0,0,0} {0,%f,%d} SCALE 500 DIAMETER %f COLOR %s;",
 					axisMin.getX(),axisMin.getY(),axisMin.getZ(),
 					axisMax.getX(),axisMax.getY(),axisMax.getZ(),
 					Math.toDegrees(theta),
@@ -506,9 +525,9 @@ public final class RotationAxis {
 			return;
 		}
 		Atom negPos;
-		
+
 			negPos = Calc.invert(rotationPos);
-		
+
 		for(Atom a: atoms) {
 			Calc.shift(a, negPos);
 		}
@@ -547,7 +566,7 @@ public final class RotationAxis {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return If the rotation axis is well defined, rather than purely translational
 	 */
 	public boolean isDefined() {

@@ -50,8 +50,8 @@ public class AtomPositionMapTest {
 
 	/**
 	 * Tests with no insertion codes.
-	 * @throws StructureException 
-	 * @throws IOException 
+	 * @throws StructureException
+	 * @throws IOException
 	 */
 	@Test
 	public void testEasy() throws IOException, StructureException { // no insertion codes
@@ -136,7 +136,7 @@ public class AtomPositionMapTest {
 		assertEquals("Bad length for ("+start+","+end+")",-1, len);
 		len = map.getLengthDirectional(start,end, "B");
 		assertEquals("Bad length for ("+start+","+end+")",1, len);
-		
+
 		start = chainAlen-2; //2 residues of A
 		end = chainAlen+2; // 3 residues of B
 		len = map.getLengthDirectional(start, end, "A");
@@ -173,8 +173,8 @@ public class AtomPositionMapTest {
 
 	/**
 	 * Tests with insertion codes.
-	 * @throws StructureException 
-	 * @throws IOException 
+	 * @throws StructureException
+	 * @throws IOException
 	 */
 	@Test
 	public void testInsertionCodes() throws IOException, StructureException {
@@ -199,7 +199,7 @@ public class AtomPositionMapTest {
 		assertEquals("Real atom length is wrong", length1, realLength1);
 		int realLength2 = map.getLength(start, end);
 		assertEquals("Real atom length is wrong", length2, realLength2);
-		
+
 		int realLength = map.getLength(new ResidueNumber("A",6,'P'),new ResidueNumber("A",338,null));
 		assertEquals("Full length wrong",430,realLength);
 	}
@@ -209,10 +209,10 @@ public class AtomPositionMapTest {
 		// Two identical chains, residues 1-68, no insertion codes or missing residues
 		String pdbId = "3w0e";
 		AtomPositionMap map = new AtomPositionMap(cache.getAtoms(pdbId));
-		
+
 		ResidueRangeAndLength trimmed;
 		ResidueRange untrimmed;
-		
+
 		untrimmed = new ResidueRange("A", "1", "68");
 		trimmed = map.trimToValidResidues(untrimmed);
 		assertEquals("Wrong start after trimming "+untrimmed,new ResidueNumber("A", 1, null), trimmed.getStart());

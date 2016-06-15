@@ -21,7 +21,6 @@
 package org.biojava.nbio.structure.test.ecod;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 
 import org.biojava.nbio.structure.Atom;
@@ -42,18 +41,20 @@ import org.slf4j.LoggerFactory;
 
 /**
  * This is not a unit test.
- * 
+ *
  * It is a long-running parsing test, which sequentially parses all ECOD domains.
- * 
+ *
  * The most common warning is caused by residue ranges with missing terminal CA atoms,
  * which cause a warning to print.
- * 
+ *
  * develop83 and earlier versions also had a number of invalid ranges, which cause
  * error messages to print.
- * 
+ *
  * Filtering log4j messages to the 'error' level will filter all but the most
- * grevious errors.
- * 
+ * grievous errors.
+ *
+ * Faster unit tests go in {@link EcodInstallationTest}.
+ *
  * @author blivens
  *
  */
@@ -61,14 +62,22 @@ public class EcodParseTest {
 	private static final Logger logger = LoggerFactory.getLogger(EcodParseTest.class);
 
 	public static void main(String[] args) throws IOException {
-		String ecodVersion = "develop83";
+		String ecodVersion = "develop124";
+//		String ecodVersion = "latest";
+
+		int errors = testVersion(ecodVersion);
+		logger.info("Done. {} errors.",errors);
+
+	}
+
+	private static int testVersion(String ecodVersion) throws IOException {
 		EcodDatabase ecod = EcodFactory.getEcodDatabase(ecodVersion);
 		AtomCache cache = new AtomCache();
 		cache.setObsoleteBehavior(ObsoleteBehavior.FETCH_OBSOLETE);
 		List<EcodDomain> domains = ecod.getAllDomains();
 //		domains = Arrays.asList(ecod.getDomainsById("e1yfbB2"));
 //		domains = Arrays.asList(ecod.getDomainsById("e1w50A2"));
-		domains = Arrays.asList(ecod.getDomainsById("e2ftlE1"));
+//		domains = Arrays.asList(ecod.getDomainsById("e2ftlE1"));
 		int errors = 0;
 		for(EcodDomain d : domains) {
 			Atom[] ca1;
@@ -85,7 +94,7 @@ public class EcodParseTest {
 				errors++;
 				continue;
 			}
-			
+
 			// Test that the ranges can be parsed
 			String rangeStr = d.getRange();
 			AtomPositionMap map = new AtomPositionMap(ca1);
@@ -109,7 +118,7 @@ public class EcodParseTest {
 				errors++;
 				continue;
 			}
-			
+
 
 			// Check that the ranges are valid (or at least that they have a group)
 			for(ResidueRange range : ranges) {
@@ -149,7 +158,7 @@ public class EcodParseTest {
 					clean = false;
 				}
 			}
-			
+
 			// Try to recover from missing residues by trimming them to the residue range
 			try {
 				// Parses more flexibly, giving only a warning for missing residues
@@ -170,7 +179,7 @@ public class EcodParseTest {
 				errors++;
 				continue;
 			}
-			
+
 			// Test whether we can use it to get a structure
 			String pdbRangeStr = String.format("%s.%s",d.getPdbId(),d.getRange());
 			try {
@@ -184,6 +193,6 @@ public class EcodParseTest {
 			//All test passed
 			logger.info("OK "+d.getDomainId());
 		}
-		logger.info("Done. {} errors.",errors);
+		return errors;
 	}
 }

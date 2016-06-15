@@ -24,7 +24,7 @@ public class Convert2Polarizability extends Convertor{
 	/**
 	 * Class for the conversion of protein sequence into polarizability
 	 */
-	
+
 	@Override
 	public char convert(char c){
 		switch(c){

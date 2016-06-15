@@ -18,10 +18,6 @@
  *      http://www.biojava.org/
  *
  */
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.biojava.nbio.core.sequence.io;
 
 import junit.framework.TestCase;
@@ -35,9 +31,6 @@ import org.slf4j.LoggerFactory;
 import java.io.InputStream;
 import java.util.LinkedHashMap;
 import java.util.logging.Level;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 /**
  *
@@ -58,10 +51,12 @@ public class FastaReaderTest extends TestCase{
 	public static void tearDownClass() throws Exception {
 	}
 
+	@Override
 	@Before
 	public void setUp() {
 	}
 
+	@Override
 	@After
 	public void tearDown() {
 	}

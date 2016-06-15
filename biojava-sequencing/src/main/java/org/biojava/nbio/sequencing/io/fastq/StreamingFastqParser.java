@@ -30,111 +30,111 @@ import java.io.IOException;
 final class StreamingFastqParser
 {
 
-    /**
-     * Stream the specified readable.
-     *
-     * @param readable readable, must not be null
-     * @param variant FASTQ variant, must not be null
-     * @param listener event based reader callback, must not be null
-     * @throws IOException if an I/O error occurs
-     */
-    static void stream(final Readable readable, final FastqVariant variant, final StreamListener listener)
-        throws IOException
-    {
-        if (readable == null)
-        {
-            throw new IllegalArgumentException("readable must not be null");
-        }
-        if (variant == null)
-        {
-            throw new IllegalArgumentException("variant must not be null");
-        }
-        if (listener == null)
-        {
-            throw new IllegalArgumentException("listener must not be null");
-        }
+	/**
+	 * Stream the specified readable.
+	 *
+	 * @param readable readable, must not be null
+	 * @param variant FASTQ variant, must not be null
+	 * @param listener event based reader callback, must not be null
+	 * @throws IOException if an I/O error occurs
+	 */
+	static void stream(final Readable readable, final FastqVariant variant, final StreamListener listener)
+		throws IOException
+	{
+		if (readable == null)
+		{
+			throw new IllegalArgumentException("readable must not be null");
+		}
+		if (variant == null)
+		{
+			throw new IllegalArgumentException("variant must not be null");
+		}
+		if (listener == null)
+		{
+			throw new IllegalArgumentException("listener must not be null");
+		}
 
-        final FastqBuilder builder = new FastqBuilder().withVariant(variant);
-        FastqParser.parse(readable, new ParseListener()
-            {
-                @Override
-                public void description(final String description) throws IOException
-                {
-                    builder.withDescription(description);
-                }
+		final FastqBuilder builder = new FastqBuilder().withVariant(variant);
+		FastqParser.parse(readable, new ParseListener()
+			{
+				@Override
+				public void description(final String description) throws IOException
+				{
+					builder.withDescription(description);
+				}
 
-                @Override
-                public void sequence(final String sequence) throws IOException
-                {
-                    builder.withSequence(sequence);
-                }
+				@Override
+				public void sequence(final String sequence) throws IOException
+				{
+					builder.withSequence(sequence);
+				}
 
-                @Override
-                public void appendSequence(final String sequence) throws IOException
-                {
-                    builder.appendSequence(sequence);
-                }
+				@Override
+				public void appendSequence(final String sequence) throws IOException
+				{
+					builder.appendSequence(sequence);
+				}
 
-                @Override
-                public void repeatDescription(final String repeatDescription) throws IOException
-                {
-                    String description = builder.getDescription();
-                    if ((description != null) && (description.length() > 0) && (repeatDescription.length() > 0))
-                    {
-                        if (!description.equals(repeatDescription))
-                        {
-                            throw new IOException("repeat description must match description");
-                        }
-                    }
-                }
+				@Override
+				public void repeatDescription(final String repeatDescription) throws IOException
+				{
+					String description = builder.getDescription();
+					if ((description != null) && (description.length() > 0) && (repeatDescription.length() > 0))
+					{
+						if (!description.equals(repeatDescription))
+						{
+							throw new IOException("repeat description must match description");
+						}
+					}
+				}
 
-                /**
-                 * Validate the specified quality line.
-                 *
-                 * @param quality quality line to validate
-                 * @throws IOException if an I/O error occurs
-                 */
-                private void validateQuality(final String quality) throws IOException
-                {
-                    for (int i = 0, size = quality.length(); i < size; i++)
-                    {
-                        char c = quality.charAt(i);
-                        int qualityScore = variant.qualityScore(c);
-                        if (qualityScore < variant.minimumQualityScore() || qualityScore > variant.maximumQualityScore())
-                        {
-                            throw new IOException("quality score must be between " + variant.minimumQualityScore() +
-                                                  " and " + variant.maximumQualityScore() + ", was " + qualityScore +
-                                                  " for ASCII char '" + c + "'");
-                        }
-                    }
-                }
+				/**
+				 * Validate the specified quality line.
+				 *
+				 * @param quality quality line to validate
+				 * @throws IOException if an I/O error occurs
+				 */
+				private void validateQuality(final String quality) throws IOException
+				{
+					for (int i = 0, size = quality.length(); i < size; i++)
+					{
+						char c = quality.charAt(i);
+						int qualityScore = variant.qualityScore(c);
+						if (qualityScore < variant.minimumQualityScore() || qualityScore > variant.maximumQualityScore())
+						{
+							throw new IOException("quality score must be between " + variant.minimumQualityScore() +
+												  " and " + variant.maximumQualityScore() + ", was " + qualityScore +
+												  " for ASCII char '" + c + "'");
+						}
+					}
+				}
 
-                @Override
-                public void quality(final String quality) throws IOException
-                {
-                    validateQuality(quality);
-                    builder.withQuality(quality);
-                }
+				@Override
+				public void quality(final String quality) throws IOException
+				{
+					validateQuality(quality);
+					builder.withQuality(quality);
+				}
 
-                @Override
-                public void appendQuality(final String quality) throws IOException
-                {
-                    validateQuality(quality);
-                    builder.appendQuality(quality);
-                }
+				@Override
+				public void appendQuality(final String quality) throws IOException
+				{
+					validateQuality(quality);
+					builder.appendQuality(quality);
+				}
 
-                @Override
-                public void complete() throws IOException
-                {
-                    try
-                    {
-                        listener.fastq(builder.build());
-                    }
-                    catch (IllegalStateException e)
-                    {
-                        throw new IOException("caught an IllegalStateException", e);
-                    }
-                }
-            });
-    }
+				@Override
+				public void complete() throws IOException
+				{
+					try
+					{
+						listener.fastq(builder.build());
+					}
+					catch (IllegalStateException e)
+					{
+						throw new IOException("caught an IllegalStateException", e);
+					}
+				}
+			});
+	}
 }

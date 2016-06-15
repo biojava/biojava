@@ -16,7 +16,7 @@
  * at:
  *
  *      http://www.biojava.org/
- * 
+ *
  * Created on Aug 3, 2007
  */
 package org.biojava.nbio.structure.gui.util.color;
@@ -26,14 +26,14 @@ import java.awt.*;
 /**
  * Provides a mapping between real numbers and Colors.
  * For instance, this could generate a gradient.
- * 
+ *
  * @author Spencer Bliven
  *
  */
 public interface ContinuousColorMapper {
 
 	/**
-	 * 
+	 *
 	 * @param value The real to be mapped
 	 * @return The color corresponding to value
 	 */

@@ -30,7 +30,7 @@ import java.util.Map;
 /**
  * Transforms Map to String. Used by {@linkplain NCBIQBlastService} to join
  * given map of arguments to a single String to pass to QBlast service
- * 
+ *
  * @author Gediminas Rimsa
  */
 public class MapToStringTransformer {
@@ -40,7 +40,7 @@ public class MapToStringTransformer {
 
 	/**
 	 * Creates {@code MapToStringTransformer} with defaults:
-	 * 
+	 *
 	 * <pre>
 	 * mappingSequence = "=";
 	 * separatorSequence = "&";
@@ -53,7 +53,7 @@ public class MapToStringTransformer {
 
 	/**
 	 * Creates {@code MapToStringTransformer} with given values
-	 * 
+	 *
 	 * @param mappingSequence sequence inserted between {@code key} and
 	 *            {@code value}
 	 * @param separatorSequence sequence inserted between every pair of
@@ -77,7 +77,7 @@ public class MapToStringTransformer {
 	 * For example, if we have a map with two entries: {@code ("key1", "1")} and
 	 * {@code ("key2", "2")} this method would return {@code "key1=1&key2=2"} if
 	 * {@code mappingSequence} is "=" and separator sequence is "&";
-	 * 
+	 *
 	 * @param map map of arguments
 	 * @return String resulting string
 	 */

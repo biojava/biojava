@@ -16,7 +16,7 @@
  * at:
  *
  *      http://www.biojava.org/
- * 
+ *
  * Created on Jul 25, 2006
  *
  */
@@ -27,82 +27,82 @@ import java.util.regex.Pattern;
 
 
 /** This class uniquely describes an atom
- * 
+ *
  * @author Andreas Prlic
  *
  */
 public class AtomInfo {
 
-    String chainId;
-    String atomName;
-   
-    String residueName;
-    String residueNumber;
-    int modelNumber;
-    
-    private static Pattern inscodePatter ;
+	String chainId;
+	String atomName;
+
+	String residueName;
+	String residueNumber;
+	int modelNumber;
+
+	private static Pattern inscodePatter ;
 	static {
 		inscodePatter = Pattern.compile("([0-9]+)([a-zA-Z]*)?");
 	}
-    
-    public AtomInfo() {
-        super();
 
-    }
-    
-    public static AtomInfo fromString(String atomInfo){
-    	return AtomInfoParser.parse(atomInfo);
-    }
-    
-    public int getModelNumber() {
-        return modelNumber;
-    }
+	public AtomInfo() {
+		super();
 
-    public void setModelNumber(int modelNumber) {
-        this.modelNumber = modelNumber;
-    }
+	}
 
-    public String getResidueName() {
-        return residueName;
-    }
+	public static AtomInfo fromString(String atomInfo){
+		return AtomInfoParser.parse(atomInfo);
+	}
 
-    /** Including insertion code
-     * 
-     * @param residueName
-     */
-    public void setResidueName(String residueName) {
-        this.residueName = residueName;
-    }
+	public int getModelNumber() {
+		return modelNumber;
+	}
 
-    public String getResidueNumber() {
-        return residueNumber;
-    }
+	public void setModelNumber(int modelNumber) {
+		this.modelNumber = modelNumber;
+	}
 
-    public void setResidueNumber(String residueNumber) {
-        this.residueNumber = residueNumber;
-    }
+	public String getResidueName() {
+		return residueName;
+	}
 
-    public String getChainId() {
-        return chainId;
-    }
+	/** Including insertion code
+	 *
+	 * @param residueName
+	 */
+	public void setResidueName(String residueName) {
+		this.residueName = residueName;
+	}
 
+	public String getResidueNumber() {
+		return residueNumber;
+	}
 
+	public void setResidueNumber(String residueNumber) {
+		this.residueNumber = residueNumber;
+	}
 
-    public void setChainId(String chainId) {
-        this.chainId = chainId;
-    }
+	public String getChainId() {
+		return chainId;
+	}
 
 
 
-    public String getAtomName() {
-        return atomName;
-    }
+	public void setChainId(String chainId) {
+		this.chainId = chainId;
+	}
 
 
 
-    public void setAtomName(String name) {
-        this.atomName = name;
-    }
+	public String getAtomName() {
+		return atomName;
+	}
+
+
+
+	public void setAtomName(String name) {
+		this.atomName = name;
+	}
 
 	@Override
 	public String toString() {
@@ -112,10 +112,10 @@ public class AtomInfo {
 		String chain1 ="";
 		String res1 = "";
 
-		aa3 = residueName;				
+		aa3 = residueName;
 		res1 = residueNumber;
 		chain1 = chainId;
-		
+
 		StringBuffer buf = new StringBuffer();
 		if ( printResName) {
 			if ( !aa3.equals("")){
@@ -140,7 +140,7 @@ public class AtomInfo {
 				if ( insCode != null && ! ( insCode.equals(""))) {
 					buf.append("^");
 					buf.append(insCode);
-				}								
+				}
 			}
 
 		}
@@ -149,7 +149,7 @@ public class AtomInfo {
 			buf.append(":");
 			buf.append(chain1);
 		}
-		
+
 		if ( atomName != null) {
 			buf.append(".");
 			buf.append(atomName);

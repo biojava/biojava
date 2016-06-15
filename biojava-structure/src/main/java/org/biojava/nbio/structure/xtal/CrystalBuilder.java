@@ -85,40 +85,40 @@ public class CrystalBuilder {
 	private int numCells;
 
 	private ArrayList<CrystalTransform> visited;
-	
+
 	private boolean isCrystallographic;
 
 
 
 	public CrystalBuilder(Structure structure) {
 		this.structure = structure;
-		
+
 		this.crystallographicInfo = structure.getCrystallographicInfo();
 
 		this.numChainsAu = structure.getChains().size();
 		this.numOperatorsSg = 1;
-				
-		
+
+
 		if (structure.isCrystallographic()) {
-			
+
 			this.isCrystallographic = true;
-			// we need to check space group not null for the cases where the entry is crystallographic but 
+			// we need to check space group not null for the cases where the entry is crystallographic but
 			// the space group is not a standard one recognized by biojava, e.g. 1mnk (SG: 'I 21')
 			if (this.crystallographicInfo.getSpaceGroup()==null) {
 				logger.warn("Could not find a space group, will only calculate asymmetric unit interfaces.");
 				this.isCrystallographic = false;
 			} else {
-				this.numOperatorsSg = this.crystallographicInfo.getSpaceGroup().getMultiplicity();				
+				this.numOperatorsSg = this.crystallographicInfo.getSpaceGroup().getMultiplicity();
 			}
-			// we need to check crystal cell not null for the rare cases where the entry is crystallographic but 
+			// we need to check crystal cell not null for the rare cases where the entry is crystallographic but
 			// the crystal cell is not given, e.g. 2i68, 2xkm, 4bpq
 			if (this.crystallographicInfo.getCrystalCell()==null) {
 				logger.warn("Could not find a crystal cell definition, will only calculate asymmetric unit interfaces.");
 				this.isCrystallographic = false;
 			}
-			
+
 		} else {
-			this.isCrystallographic = false;			
+			this.isCrystallographic = false;
 		}
 
 		this.numCells = DEF_NUM_CELLS;
@@ -163,7 +163,7 @@ public class CrystalBuilder {
 
 
 		StructureInterfaceList set = new StructureInterfaceList();
-		
+
 		// certain structures in the PDB are not macromolecules (contain no polymeric chains at all), e.g. 1ao2
 		// with the current mmCIF parsing, those will be empty since purely non-polymeric chains are removed
 		// see commit e9562781f23da0ebf3547146a307d7edd5741090
@@ -171,7 +171,7 @@ public class CrystalBuilder {
 			logger.warn("No chains present in the structure! No interfaces will be calculated");
 			return set;
 		}
-		
+
 
 
 		// initialising the visited ArrayList for keeping track of symmetry redundancy

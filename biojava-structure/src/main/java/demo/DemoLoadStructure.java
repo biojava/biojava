@@ -18,25 +18,21 @@
  *      http://www.biojava.org/
  *
  * Created on Jan 27, 2010
- * Author: Andreas Prlic 
+ * Author: Andreas Prlic
  *
  */
 
 package demo;
 
-import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.Chain;
-import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureTools;
+import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.PDBFileReader;
 import org.biojava.nbio.core.util.InputStreamProvider;
-import org.biojava.nbio.structure.StructureIO;
 
 
 /** Example for how to load protein structures (from PDB files).
- * 
+ *
  * @author Andreas Prlic
  *
  */
@@ -56,14 +52,24 @@ public class DemoLoadStructure
 
 	public void loadStructureIO(){
 		try {
-			Structure s1 = StructureIO.getStructure("1gav");			
+			Structure s1 = StructureIO.getStructure("1gav");
 			System.out.println(s1.getPDBCode() + " asym unit has nr atoms:");
 			System.out.println(StructureTools.getNrAtoms(s1));
-						
-			Structure s2 = StructureIO.getBiologicalAssembly("1gav");			
+
+
+			Chain chain1 = s1.getChain(0);
+
+			System.out.println("First chain: " + chain1);
+
+			System.out.println("Chain " + chain1.getChainID() + " has the following sequence mismatches:");
+			for (SeqMisMatch mm : chain1.getSeqMisMatches()){
+				System.out.println(mm);
+			}
+
+			Structure s2 = StructureIO.getBiologicalAssembly("1gav");
 			System.out.println(s2.getPDBCode() + " biological assembly has nr atoms:");
 			System.out.println(StructureTools.getNrAtoms(s2));
-			
+
 		} catch (Exception e){
 			e.printStackTrace();
 		}

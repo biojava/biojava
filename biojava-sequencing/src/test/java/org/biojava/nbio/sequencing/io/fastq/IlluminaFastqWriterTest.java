@@ -20,50 +20,41 @@
  */
 package org.biojava.nbio.sequencing.io.fastq;
 
-import java.io.IOException;
-
 /**
  * Unit test for IlluminaFastqWriter.
  */
 public final class IlluminaFastqWriterTest
-    extends AbstractFastqWriterTest
+	extends AbstractFastqWriterTest
 {
 
-    @Override
-    public FastqWriter createFastqWriter()
-    {
-        return new IlluminaFastqWriter();
-    }
+	@Override
+	public FastqWriter createFastqWriter()
+	{
+		return new IlluminaFastqWriter();
+	}
 
-    @Override
-    public Fastq createFastq()
-    {
-        return new FastqBuilder()
-            .withDescription("description")
-            .withSequence("sequence")
-            .withQuality("quality_")
-            .withVariant(FastqVariant.FASTQ_ILLUMINA)
-            .build();
-    }
+	@Override
+	public Fastq createFastq()
+	{
+		return new FastqBuilder()
+			.withDescription("description")
+			.withSequence("sequence")
+			.withQuality("quality_")
+			.withVariant(FastqVariant.FASTQ_ILLUMINA)
+			.build();
+	}
 
-    public void testValidateNotIlluminaVariant()
-    {
-        IlluminaFastqWriter writer = new IlluminaFastqWriter();
-        Appendable appendable = new StringBuilder();
-        Fastq invalid = new FastqBuilder()
-            .withDescription("description")
-            .withSequence("sequence")
-            .withQuality("quality_")
-            .withVariant(FastqVariant.FASTQ_SANGER)
-            .build();
-        try
-        {
-            writer.append(appendable, invalid);
-            fail("validate not fastq-illumina variant expected IOException");
-        }
-        catch (IOException e)
-        {
-            // expected
-        }
-    }
+	public void testConvertNotIlluminaVariant() throws Exception
+	{
+		IlluminaFastqWriter writer = new IlluminaFastqWriter();
+		Appendable appendable = new StringBuilder();
+		Fastq invalid = new FastqBuilder()
+			.withDescription("description")
+			.withSequence("sequence")
+			.withQuality("quality_")
+			.withVariant(FastqVariant.FASTQ_SANGER)
+			.build();
+
+		writer.append(appendable, invalid);
+	}
 }

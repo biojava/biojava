@@ -27,7 +27,7 @@ package org.biojava.nbio.structure.io.mmcif.model;
 import java.io.Serializable;
 
 /** stores these fields:
- * 
+ *
  * _chem_comp_atom.comp_id
 _chem_comp_atom.atom_id
 _chem_comp_atom.alt_atom_id
@@ -50,13 +50,13 @@ _chem_comp_atom.pdbx_polymer_type
 _chem_comp_atom.pdbx_ref_id
 _chem_comp_atom.pdbx_component_id
 _chem_comp_atom.pdbx_ordinal
- * 
+ *
  * @author Andreas Prlic
  *
  */
 public class ChemCompAtom implements Serializable{
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 4070599340294758941L;
 	String comp_id;
@@ -213,7 +213,7 @@ public class ChemCompAtom implements Serializable{
 	public void setPdbx_ordinal(String pdbx_ordinal) {
 		this.pdbx_ordinal = pdbx_ordinal;
 	}
-	
-	
-	
+
+
+
 }

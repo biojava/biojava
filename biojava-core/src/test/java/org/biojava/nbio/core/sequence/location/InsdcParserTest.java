@@ -38,40 +38,40 @@ import org.slf4j.LoggerFactory;
 @RunWith(Parameterized.class)
 public class InsdcParserTest {
 
-    private Logger log = LoggerFactory.getLogger(getClass());
-    private String data;
-    private String expected;
+	private Logger log = LoggerFactory.getLogger(getClass());
+	private String data;
+	private String expected;
 
-    public InsdcParserTest(String data, String expected) {
-        this.data = data;
-        this.expected = expected;
-    }
+	public InsdcParserTest(String data, String expected) {
+		this.data = data;
+		this.expected = expected;
+	}
 
-    @Parameterized.Parameters
-    public static Collection<String[]> data() {
-        return Arrays.asList(new String[][]{
-            {"complement(CP001663.1:6463934..6465826)", "CP001663.1"},
-            {"complement(NC_000932.1:69611..69724)", "NC_000932.1"}
-        });
-    }
+	@Parameterized.Parameters
+	public static Collection<String[]> data() {
+		return Arrays.asList(new String[][]{
+			{"complement(CP001663.1:6463934..6465826)", "CP001663.1"},
+			{"complement(NC_000932.1:69611..69724)", "NC_000932.1"}
+		});
+	}
 
-    /**
-     * Test for issue #254
-     *
-     * @throws Exception
-     */
-    @Test
-    public void extractAccessionTest() throws Exception {
-        log.info("test accession");
-        log.debug("data: '{}'   expected: '{}'", data, expected);
+	/**
+	 * Test for issue #254
+	 *
+	 * @throws Exception
+	 */
+	@Test
+	public void extractAccessionTest() throws Exception {
+		log.info("test accession");
+		log.debug("data: '{}'   expected: '{}'", data, expected);
 
-        InsdcParser parser = new InsdcParser(DataSource.GENBANK);
-        Location loc = parser.parse(data);
+		InsdcParser parser = new InsdcParser(DataSource.GENBANK);
+		Location loc = parser.parse(data);
 
-        if (!loc.isComplex()) {
-            log.info("simple location: {}", data);
-            log.debug("\taccession: '{}'  expected: '{}'", loc.getAccession().getID(), expected);
-            Assert.assertEquals(expected, loc.getAccession().getID());
-        }
-    }
+		if (!loc.isComplex()) {
+			log.info("simple location: {}", data);
+			log.debug("\taccession: '{}'  expected: '{}'", loc.getAccession().getID(), expected);
+			Assert.assertEquals(expected, loc.getAccession().getID());
+		}
+	}
 }

@@ -39,131 +39,131 @@ public enum PolymerType implements Serializable
 {
 
 
-   /**
-    * polypeptide(L)
-    */
-   peptide("polypeptide(L)"),
+	/**
+	 * polypeptide(L)
+	 */
+	peptide("polypeptide(L)"),
 
-   /**
-    * polypeptide(D)
-    */
-   dpeptide("polypeptide(D)"),
+	/**
+	 * polypeptide(D)
+	 */
+	dpeptide("polypeptide(D)"),
 
-   /**
-    * polydeoxyribonucleotide
-    */
-   dna("polydeoxyribonucleotide"),
+	/**
+	 * polydeoxyribonucleotide
+	 */
+	dna("polydeoxyribonucleotide"),
 
-   /**
-    * polyribonucleotide
-    */
-   rna("polyribonucleotide"),
+	/**
+	 * polyribonucleotide
+	 */
+	rna("polyribonucleotide"),
 
-   /**
-    * polydeoxyribonucleotide/polyribonucleotide hybrid
-    */
-   dnarna("polydeoxyribonucleotide/polyribonucleotide hybrid"),
+	/**
+	 * polydeoxyribonucleotide/polyribonucleotide hybrid
+	 */
+	dnarna("polydeoxyribonucleotide/polyribonucleotide hybrid"),
 
-   /**
-    * polysaccharide(D)
-    */
-   polysaccharide("polysaccharide(D)"),
+	/**
+	 * polysaccharide(D)
+	 */
+	polysaccharide("polysaccharide(D)"),
 
-   /**
-    * polysaccharide(L)
-    */
-   lpolysaccharide("polysaccharide(L)"),
+	/**
+	 * polysaccharide(L)
+	 */
+	lpolysaccharide("polysaccharide(L)"),
 
-   /**
-    * other
-    */
-   otherPolymer("other"),
+	/**
+	 * other
+	 */
+	otherPolymer("other"),
 
-   /**
-    * cyclic peptides
-    */
-   cyclicPeptide("cyclic-pseudo-peptide"),
-   
-   /**
-    * Peptide nucleic acids
-    */
-   peptideNucleicAcid("peptide nucleic acid"),
-   
-   /**
-    * if all else fails...
-    */
-   unknown(null);
+	/**
+	 * cyclic peptides
+	 */
+	cyclicPeptide("cyclic-pseudo-peptide"),
 
-   PolymerType(String entity_poly_type)
-   {
-      this.entity_poly_type = entity_poly_type;
-   }
-   public final String entity_poly_type;
+	/**
+	 * Peptide nucleic acids
+	 */
+	peptideNucleicAcid("peptide nucleic acid"),
 
-   public static PolymerType polymerTypeFromString(String polymerType)
-   {
-      for(PolymerType pt : PolymerType.values())
-      {
-         if(polymerType.equals(pt.entity_poly_type))
-         {
-            return pt;
-         }
-      }
-      return unknown;
-   }
+	/**
+	 * if all else fails...
+	 */
+	unknown(null);
 
-   /**
-    * Convenience <tt>Set</tt> of polymer types classified as protein.  This only contains {@link #peptide}
-    */
-   public static final Set<PolymerType> PROTEIN_ONLY;
+	PolymerType(String entity_poly_type)
+	{
+		this.entity_poly_type = entity_poly_type;
+	}
+	public final String entity_poly_type;
 
-   /**
-    * Convenience <tt>Set</tt> of polymer types classified as DNA.  This only contains {@link #dna}
-    */
-   public static final Set<PolymerType> DNA_ONLY;
+	public static PolymerType polymerTypeFromString(String polymerType)
+	{
+		for(PolymerType pt : PolymerType.values())
+		{
+			if(polymerType.equals(pt.entity_poly_type))
+			{
+				return pt;
+			}
+		}
+		return unknown;
+	}
 
-   /**
-    * Convenience <tt>Set</tt> of polymer types classified as RNA.  This only contains {@link #rna}
-    */
-   public static final Set<PolymerType> RNA_ONLY;
+	/**
+	 * Convenience <tt>Set</tt> of polymer types classified as protein.  This only contains {@link #peptide}
+	 */
+	public static final Set<PolymerType> PROTEIN_ONLY;
 
-   /**
-    * Convenience <tt>Set</tt> of polymer types classified as DNA.  This contains:
-    * <ul>
-    * <li>{@link #dna}</li>
-    * <li>{@link #rna}</li>
-    * <li>{@link #dnarna}</li>
-    * </ul>
-    */
-   public static final Set<PolymerType> POLYNUCLEOTIDE_ONLY;
+	/**
+	 * Convenience <tt>Set</tt> of polymer types classified as DNA.  This only contains {@link #dna}
+	 */
+	public static final Set<PolymerType> DNA_ONLY;
 
-   /**
-    * Convenience <tt>Set</tt> of all polymer types.
-    */
-   public static final Set<PolymerType> ALL_POLYMER_TYPES;
+	/**
+	 * Convenience <tt>Set</tt> of polymer types classified as RNA.  This only contains {@link #rna}
+	 */
+	public static final Set<PolymerType> RNA_ONLY;
 
-   static {
-      Set<PolymerType> tmp;
+	/**
+	 * Convenience <tt>Set</tt> of polymer types classified as DNA.  This contains:
+	 * <ul>
+	 * <li>{@link #dna}</li>
+	 * <li>{@link #rna}</li>
+	 * <li>{@link #dnarna}</li>
+	 * </ul>
+	 */
+	public static final Set<PolymerType> POLYNUCLEOTIDE_ONLY;
 
-      tmp = new HashSet<PolymerType>();
-      tmp.add(peptide);
-      PROTEIN_ONLY = Collections.unmodifiableSet(tmp);
+	/**
+	 * Convenience <tt>Set</tt> of all polymer types.
+	 */
+	public static final Set<PolymerType> ALL_POLYMER_TYPES;
 
-      tmp = new HashSet<PolymerType>();
-      tmp.add(dna);
-      DNA_ONLY = Collections.unmodifiableSet(tmp);
+	static {
+		Set<PolymerType> tmp;
 
-      tmp = new HashSet<PolymerType>();
-      tmp.add(rna);
-      RNA_ONLY = Collections.unmodifiableSet(tmp);
+		tmp = new HashSet<PolymerType>();
+		tmp.add(peptide);
+		PROTEIN_ONLY = Collections.unmodifiableSet(tmp);
 
-      tmp = new HashSet<PolymerType>();
-      tmp.add(dna);
-      tmp.add(rna);
-      tmp.add(dnarna);
-      POLYNUCLEOTIDE_ONLY = Collections.unmodifiableSet(tmp);
+		tmp = new HashSet<PolymerType>();
+		tmp.add(dna);
+		DNA_ONLY = Collections.unmodifiableSet(tmp);
 
-      ALL_POLYMER_TYPES = Collections.unmodifiableSet(new HashSet<PolymerType>(Arrays.asList(values())));
-   }
+		tmp = new HashSet<PolymerType>();
+		tmp.add(rna);
+		RNA_ONLY = Collections.unmodifiableSet(tmp);
+
+		tmp = new HashSet<PolymerType>();
+		tmp.add(dna);
+		tmp.add(rna);
+		tmp.add(dnarna);
+		POLYNUCLEOTIDE_ONLY = Collections.unmodifiableSet(tmp);
+
+		ALL_POLYMER_TYPES = Collections.unmodifiableSet(new HashSet<PolymerType>(Arrays.asList(values())));
+	}
 
 }

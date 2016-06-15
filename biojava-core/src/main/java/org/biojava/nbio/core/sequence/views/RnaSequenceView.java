@@ -39,92 +39,92 @@ import java.util.Map;
  */
 public class RnaSequenceView extends SequenceProxyView<NucleotideCompound> implements ProxySequenceReader<NucleotideCompound> {
 
-    private CompoundSet<NucleotideCompound> rnaCompounds;
-    private Map<NucleotideCompound, NucleotideCompound> dnaToRna = null;
-    private Map<NucleotideCompound, NucleotideCompound> rnaToDna = null;
+	private CompoundSet<NucleotideCompound> rnaCompounds;
+	private Map<NucleotideCompound, NucleotideCompound> dnaToRna = null;
+	private Map<NucleotideCompound, NucleotideCompound> rnaToDna = null;
 
-    public RnaSequenceView(Sequence<NucleotideCompound> sourceDna) {
-        this(sourceDna, RNACompoundSet.getRNACompoundSet());
-    }
+	public RnaSequenceView(Sequence<NucleotideCompound> sourceDna) {
+		this(sourceDna, RNACompoundSet.getRNACompoundSet());
+	}
 
-    public RnaSequenceView(Sequence<NucleotideCompound> sourceDna,
-            CompoundSet<NucleotideCompound> rnaCompounds) {
-        super(sourceDna);
-        this.rnaCompounds = rnaCompounds;
-    }
+	public RnaSequenceView(Sequence<NucleotideCompound> sourceDna,
+			CompoundSet<NucleotideCompound> rnaCompounds) {
+		super(sourceDna);
+		this.rnaCompounds = rnaCompounds;
+	}
 
-    @Override
-    public String getSequenceAsString() {
-        return SequenceMixin.toString(this);
-    }
+	@Override
+	public String getSequenceAsString() {
+		return SequenceMixin.toString(this);
+	}
 
-    @Override
-    public NucleotideCompound getCompoundAt(int position) {
-        NucleotideCompound dna = getViewedSequence().getCompoundAt(position);
-        return getDnaToRna().get(dna);
-    }
+	@Override
+	public NucleotideCompound getCompoundAt(int position) {
+		NucleotideCompound dna = getViewedSequence().getCompoundAt(position);
+		return getDnaToRna().get(dna);
+	}
 
-    @Override
-    public int getIndexOf(NucleotideCompound compound) {
-        return getViewedSequence().getIndexOf(getRnaToDna().get(compound));
-    }
+	@Override
+	public int getIndexOf(NucleotideCompound compound) {
+		return getViewedSequence().getIndexOf(getRnaToDna().get(compound));
+	}
 
-    @Override
-    public int getLastIndexOf(NucleotideCompound compound) {
-        return getViewedSequence().getLastIndexOf(getRnaToDna().get(compound));
-    }
+	@Override
+	public int getLastIndexOf(NucleotideCompound compound) {
+		return getViewedSequence().getLastIndexOf(getRnaToDna().get(compound));
+	}
 
-    public Map<NucleotideCompound, NucleotideCompound> getRnaToDna() {
-        if(rnaToDna == null) {
-            buildTranslators();
-        }
-        return rnaToDna;
-    }
+	public Map<NucleotideCompound, NucleotideCompound> getRnaToDna() {
+		if(rnaToDna == null) {
+			buildTranslators();
+		}
+		return rnaToDna;
+	}
 
-    public Map<NucleotideCompound, NucleotideCompound> getDnaToRna() {
-        if(dnaToRna == null) {
-            buildTranslators();
-        }
-        return dnaToRna;
-    }
+	public Map<NucleotideCompound, NucleotideCompound> getDnaToRna() {
+		if(dnaToRna == null) {
+			buildTranslators();
+		}
+		return dnaToRna;
+	}
 
-    protected void buildTranslators() {
-        Map<NucleotideCompound, NucleotideCompound> localDnaToRna =
-                new HashMap<NucleotideCompound, NucleotideCompound>();
-        Map<NucleotideCompound, NucleotideCompound> localRnaToDna =
-                new HashMap<NucleotideCompound, NucleotideCompound>();
+	protected void buildTranslators() {
+		Map<NucleotideCompound, NucleotideCompound> localDnaToRna =
+				new HashMap<NucleotideCompound, NucleotideCompound>();
+		Map<NucleotideCompound, NucleotideCompound> localRnaToDna =
+				new HashMap<NucleotideCompound, NucleotideCompound>();
 
-        NucleotideCompound thymine =
-                getViewedSequence().getCompoundSet().getCompoundForString("T");
-        NucleotideCompound lowerThymine =
-                getViewedSequence().getCompoundSet().getCompoundForString("t");
+		NucleotideCompound thymine =
+				getViewedSequence().getCompoundSet().getCompoundForString("T");
+		NucleotideCompound lowerThymine =
+				getViewedSequence().getCompoundSet().getCompoundForString("t");
 
-        for (NucleotideCompound dnaBase : getViewedSequence().getCompoundSet().getAllCompounds()) {
-            NucleotideCompound equivalent;
-            if (dnaBase.equals(thymine)) {
-                equivalent = rnaCompounds.getCompoundForString("U");
-            }
-            else if (dnaBase.equals(lowerThymine)) {
-                equivalent = rnaCompounds.getCompoundForString("u");
-            }
-            else {
-                equivalent = rnaCompounds.getCompoundForString(
-                    dnaBase.toString());
-            }
-            localDnaToRna.put(dnaBase, equivalent);
-            localRnaToDna.put(equivalent, dnaBase);
-        }
-        this.dnaToRna = localDnaToRna;
-        this.rnaToDna = localRnaToDna;
-    }
+		for (NucleotideCompound dnaBase : getViewedSequence().getCompoundSet().getAllCompounds()) {
+			NucleotideCompound equivalent;
+			if (dnaBase.equals(thymine)) {
+				equivalent = rnaCompounds.getCompoundForString("U");
+			}
+			else if (dnaBase.equals(lowerThymine)) {
+				equivalent = rnaCompounds.getCompoundForString("u");
+			}
+			else {
+				equivalent = rnaCompounds.getCompoundForString(
+					dnaBase.toString());
+			}
+			localDnaToRna.put(dnaBase, equivalent);
+			localRnaToDna.put(equivalent, dnaBase);
+		}
+		this.dnaToRna = localDnaToRna;
+		this.rnaToDna = localRnaToDna;
+	}
 
-    @Override
-    public void setCompoundSet(CompoundSet<NucleotideCompound> compoundSet) {
-        throw new UnsupportedOperationException("Unsupported operation; create a new viewed sequence");
-    }
+	@Override
+	public void setCompoundSet(CompoundSet<NucleotideCompound> compoundSet) {
+		throw new UnsupportedOperationException("Unsupported operation; create a new viewed sequence");
+	}
 
-    @Override
-    public void setContents(String sequence) throws CompoundNotFoundException {
-        throw new UnsupportedOperationException("Unsupported operation; create a new viewed sequence");
-    }
+	@Override
+	public void setContents(String sequence) throws CompoundNotFoundException {
+		throw new UnsupportedOperationException("Unsupported operation; create a new viewed sequence");
+	}
 }

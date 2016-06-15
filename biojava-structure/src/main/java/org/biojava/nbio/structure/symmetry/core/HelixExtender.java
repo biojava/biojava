@@ -30,15 +30,15 @@ import java.util.List;
 public class HelixExtender {
 	private Subunits subunits = null;
 	private Helix helix = null;
-	
+
 	public HelixExtender(Subunits subunits, Helix helix) {
 		this.subunits = subunits;
 		this.helix = helix;
 	}
-	
+
 	public Point3d[] extendHelix(int steps) {
 		List<List<Integer>> layerLines = helix.getLayerLines();
-		
+
 		// get list of subunit indices to be used for helix extension
 		List<Integer> indices = new ArrayList<Integer>();
 		for (List<Integer> line: layerLines) {
@@ -49,7 +49,7 @@ public class HelixExtender {
 			}
 		}
 		System.out.println("Extending subunits: " + indices);
-		
+
 		List<Point3d> points = new ArrayList<Point3d>();
 		Matrix4d transformation = helix.getTransformation();
 		for (int index: indices) {
@@ -64,5 +64,5 @@ public class HelixExtender {
 		}
 		return points.toArray(new Point3d[0]);
 	}
-	
+
 }

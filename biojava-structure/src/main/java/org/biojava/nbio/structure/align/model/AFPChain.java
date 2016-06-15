@@ -16,7 +16,6 @@
  * Created by ap3
  *
  */
-
 package org.biojava.nbio.structure.align.model;
 
 import org.biojava.nbio.structure.Atom;
@@ -31,137 +30,146 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-
-/** a bean to contain the core of an alignment
- * 
+/**
+ * A bean to contain the core of a structure alignment.
  * The FatCat aligner class is working on the AFPChain class.
- * 
+ *
  * @author Andreas Prlic
- * 
+ * @author Aleix Lafita
  *
  */
+public class AFPChain implements Serializable, Cloneable {
 
-public class AFPChain implements Serializable, Cloneable
-{
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -4474029015606617947L;
-
 	public static final String newline = System.getProperty("line.separator");
+	public static final String UNKNOWN_ALGORITHM = "unknown";
 
-	/** the default algorithm used in the RCSB PDB all vs. all database searches
-	 * 
-	 */
-	public static final String DEFAULT_ALGORITHM_NAME = "jFatCat_rigid";
+	private String algorithmName;
+	private String version;
 
-	String algorithmName;
+	private String name1;
+	private String name2;
+	private long ioTime;
+	private long calculationTime;
+	private long id;
 
-	String version;
-
-	String name1;
-	String name2;
-	long ioTime;
-	long calculationTime;
-	long id;
 	// results:
-	double alignScore;
-	double alignScoreUpdate;
-	int afpChainTwiNum;
+	private double alignScore;
+	private double alignScoreUpdate;
+	private int afpChainTwiNum;
+
 	// end of results
-	double tmScore;
+	private double tmScore;
+
 	// utility
-	int minLen ; // the length of the shorter 2 proteins.
+	private int minLen ; // the length of the shorter 2 proteins.
 
 
-	List<AFP> afpSet;
-	int[][] afpIndex;
-	int[][] afpAftIndex;
-	int[][] afpBefIndex;
+	private List<AFP> afpSet;
+	private int[][] afpIndex;
+	private int[][] afpAftIndex;
+	private int[][] afpBefIndex;
 
-	Matrix disTable1;
-	Matrix disTable2;
+	private Matrix disTable1;
+	private Matrix disTable2;
 
-	int[] twi = null ; //the number of twists making the best score ending at each AFP
+	private int[] twi = null ; //the number of twists making the best score ending at each AFP
 
-	int afpChainLen;
-	int[] afpChainList;
-	double[] afpChainTwiBin;
-	double[] afpChainTwiList;
-	double chainRmsd;
+	private int afpChainLen;
+	private int[] afpChainList;
+	private double[] afpChainTwiBin;
+	private double[] afpChainTwiList;
+	private double chainRmsd;
 
-	int chainLen,misLen,gapLen;
-	int     blockNum;       //the final block number
-	int     blockNumIni;    //block number before block clustering and split
-	int     blockNumClu;    //block number after clustering blocks
-	int     blockNumSpt;    //block number after spliting blocks
-	double[]  blockRmsd;     //the RMSD of each block
-	int[]     block2Afp;     //the index of afp for each block
-	int[]     blockSize;     //the number of AFPs involved in a block
-	double[]  blockScore;    //the score associated with each block
-	int[]     blockGap;      //the gaps in each block
-	int[]     blockResSize;  //the number of residues involved in a block
-	int[][][]     blockResList;//the list of AFP for each block
-	Matrix[] blockRotationMatrix;
-	Atom[]   blockShiftVector;
+	private int chainLen,misLen,gapLen;
+	private int     blockNum;       //the final block number
+	private int     blockNumIni;    //block number before block clustering and split
+	private int     blockNumClu;    //block number after clustering blocks
+	private int     blockNumSpt;    //block number after spliting blocks
+	private double[]  blockRmsd;     //the RMSD of each block
+	private int[]     block2Afp;     //the index of afp for each block
+	private int[]     blockSize;     //the number of AFPs involved in a block
+	private double[]  blockScore;    //the score associated with each block
+	private int[]     blockGap;      //the gaps in each block
+	private int[]     blockResSize;  //the number of residues involved in a block
+	private int[][][]     blockResList;//the list of AFP for each block
+	private Matrix[] blockRotationMatrix;
+	private Atom[]   blockShiftVector;
 
-	int     focusResn;      //the size of the set
-	int[]     focusRes1;     //the residues from protein 1
-	int[]     focusRes2;     //the residues from protein 2
-	int     focusAfpn;      //the AFP number
-	int[]     focusAfpList;  //the AFP list
+	private int     focusResn;      //the size of the set
+	private int[]     focusRes1;     //the residues from protein 1
+	private int[]     focusRes2;     //the residues from protein 2
+	private int     focusAfpn;      //the AFP number
+	private int[]     focusAfpList;  //the AFP list
 
-	boolean shortAlign;
+	private boolean shortAlign;
 
-	String [][][] pdbAln; // only needed temp. during XML serialization, since we don;t have coordinates loaded at that time and can map from PDB res numbers to atom positions.
-	int[][][] optAln;
-	int[] optLen ;
-	double[] optRmsd ;
-	int optLength;
+	private String [][][] pdbAln; // only needed temp. during XML serialization, since we don;t have coordinates loaded at that time and can map from PDB res numbers to atom positions.
+	private int[][][] optAln;
+	private int[] optLen ;
+	private double[] optRmsd ;
+	private int optLength;
 
-	char[] alnsymb;
-	char[] alnseq1;
-	char[] alnseq2;
-	int alnLength;
-	int alnbeg1;
-	int alnbeg2;
+	private char[] alnsymb;
+	private char[] alnseq1;
+	private char[] alnseq2;
+	private int alnLength;
+	private int alnbeg1;
+	private int alnbeg2;
 
-	int totalLenIni;
-	int totalLenOpt = 0;
+	private int totalLenIni;
+	private int totalLenOpt = 0;
 
-	double totalRmsdIni;
-	double totalRmsdOpt;
+	private double totalRmsdIni;
+	private double totalRmsdOpt;
 
-	int ca1Length;
-	int ca2Length;
+	private int ca1Length;
+	private int ca2Length;
 
 	// this one is special. it comes from the FatCatParameters...
 	// default is flexible alignment...
-	int maxTra = 5;
+	private int maxTra = 5;
 
-	Double conn;
-	Double dvar;
+	private Double conn;
+	private Double dvar;
 
-	double probability;
-	double identity;
-	double similarity;
-	double normAlignScore;
+	private double probability;
+	private double identity;
+	private double similarity;
+	private double normAlignScore;
 
-	int myResultsEQR;
-	int myResultsSimilarity1;
-	int myResultsSimilarity2;
+	private int myResultsEQR;
+	private int myResultsSimilarity1;
+	private int myResultsSimilarity2;
 
 	// Mark whether the alignment topology is sequential
 	// false if a circular permutation has occured
-	boolean sequentialAlignment;
+	private boolean sequentialAlignment;
 
 	// background distances
-	Matrix distanceMatrix;
-	
-	String description2;
+	private Matrix distanceMatrix;
 
+	private String description2;
+
+	/**
+	 * Construction of an AFPChain needs the algorithm name, since downstream
+	 * analysis methods (scores, display, etc) behave differently if the
+	 * alignment is flexible (created with FatCat).
+	 *
+	 * @param algorithmName
+	 */
+	public AFPChain(String algorithmName){
+		this.algorithmName = algorithmName;
+		init();
+	}
+
+	/**
+	 * Use the constructor with the algorithmName (design condition).
+	 * @see AFPChain#AFPChain(String)
+	 */
+	@Deprecated
 	public AFPChain(){
+		algorithmName = UNKNOWN_ALGORITHM;
 		init();
 	}
 
@@ -290,15 +298,15 @@ public class AFPChain implements Serializable, Cloneable
 		//probability = idMap.get("probability");
 		similarity = idMap.get("similarity");
 		identity   = idMap.get("identity");
-		
+
 	}
 
 
 
 
-	/** 
+	/**
 	 * Get the number of structurally equivalent residues
-	 * 
+	 *
 	 * @return nr of EQR
 	 */
 	public int getNrEQR(){
@@ -310,7 +318,7 @@ public class AFPChain implements Serializable, Cloneable
 			}
 
 			int nrEqr = 0;
-			for(int bk = 0; bk < blockNum; bk ++)       {        
+			for(int bk = 0; bk < blockNum; bk ++)       {
 
 				for ( int i=0;i< optLen[bk];i++){
 					nrEqr++;
@@ -322,7 +330,7 @@ public class AFPChain implements Serializable, Cloneable
 	}
 
 	/** Get the coverage of protein 1 with the alignment
-	 * 
+	 *
 	 * @return percentage of coverage, between 0 and 100.
 	 */
 	public int getCoverage1(){
@@ -332,18 +340,18 @@ public class AFPChain implements Serializable, Cloneable
 			int similarity = (ca1Length + ca2Length - distance ) / 2;
 
 			myResultsSimilarity1 = Math.round(similarity /(float) ca1Length * 100);
-		} 
+		}
 		return myResultsSimilarity1;
 	}
-	
+
 	/** Get the coverage of protein 2 with the alignment
-	 * 
+	 *
 	 * @return percentage of coverage, between 0 and 100.
-	*/
+	 */
 	public int getCoverage2(){
 		if ( myResultsSimilarity2 < 0 ) {
 
-			
+
 			int distance = ca1Length + ca2Length - 2 * getNrEQR();
 
 			int similarity = (ca1Length + ca2Length - distance ) / 2;
@@ -352,27 +360,27 @@ public class AFPChain implements Serializable, Cloneable
 		return myResultsSimilarity2;
 
 	}
-	
+
 	/** get the coverage of protein 1 with the alignment
-	 * 
+	 *
 	 * @return percentage of coverage, between 0 and 100.
 	 * @deprecated use getCoverage1() instead
 	 */
-	@Deprecated 
+	@Deprecated
 	public int getSimilarity1(){
 		return getCoverage1();
-		
+
 	}
 
 	/** get the coverage of protein 2 with the alignment
-	 * 
+	 *
 	 * @return percentage of coverage, between 0 and 100.
 	 * @deprecated use getCoverage2() instead
 	 */
 	@Deprecated
 	public int getSimilarity2(){
 		return getCoverage2();
-		
+
 	}
 
 	@Override
@@ -391,7 +399,7 @@ public class AFPChain implements Serializable, Cloneable
 		str.append("\tLen2:");
 		str.append(this.getCa2Length());
 		str.append(String.format("\tscore: %.2f",this.getAlignScore()));
-		str.append("\t");		
+		str.append("\t");
 		if ( algorithmName.equalsIgnoreCase(CeMain.algorithmName) || algorithmName.equalsIgnoreCase(CeSideChainMain.algorithmName)){
 			str.append("Z-score:");
 			str.append(String.format("%.2f",this.getProbability()));
@@ -403,7 +411,7 @@ public class AFPChain implements Serializable, Cloneable
 		str.append(String.format("%.2f",this.getTotalRmsdOpt()));
 
 		str.append("\tSeqID:");
-        str.append(String.format("%.0f",getIdentity()*100));
+		str.append(String.format("%.0f",getIdentity()*100));
 		str.append("%\tSeqSim:");
 		str.append(String.format("%.0f",getSimilarity()*100));
 		str.append("%\tCov1:");
@@ -411,7 +419,7 @@ public class AFPChain implements Serializable, Cloneable
 		str.append("%\tCov2:");
 		str.append(this.getCoverage2());
 		str.append("%");
-		
+
 		if (  tmScore != -1)  {
 			str.append("\ttmScore:");
 			str.append(String.format("%.2f",tmScore));
@@ -425,7 +433,7 @@ public class AFPChain implements Serializable, Cloneable
 	public boolean isSignificantResult(){
 		if ( algorithmName.equalsIgnoreCase(CeMain.algorithmName) || algorithmName.equalsIgnoreCase(CeSideChainMain.algorithmName)){
 			if (probability >= 3.5)
-				return true;			
+				return true;
 		} else {
 			if (probability < 0.01)
 				return true;
@@ -456,7 +464,7 @@ public class AFPChain implements Serializable, Cloneable
 		optRmsd = null;
 
 		block2Afp = new int[maxTra+1];
-		blockSize = new int[maxTra+1];      
+		blockSize = new int[maxTra+1];
 		blockRmsd = new double[maxTra+1];
 		blockScore = new double[maxTra+1];
 		blockGap = new int[maxTra+1];
@@ -473,13 +481,12 @@ public class AFPChain implements Serializable, Cloneable
 		conn = new Double(0);
 		dvar = new Double(0);
 		calculationTime = 0;
-		
+
 		similarity = -1;
 		identity   = -1;
 		myResultsEQR = -1;
 		myResultsSimilarity1 = -1;
 		myResultsSimilarity2 = -1;
-		algorithmName = "unknown";
 		version = "1.0";
 		sequentialAlignment = true;
 		distanceMatrix = null;
@@ -499,7 +506,7 @@ public class AFPChain implements Serializable, Cloneable
 	}
 
 	/** used temporarily during XML serialization to track the PDB positions of the alignmnet
-	 * 
+	 *
 	 * @return String array
 	 */
 	public String[][][] getPdbAln() {
@@ -537,8 +544,8 @@ public class AFPChain implements Serializable, Cloneable
 
 
 	/** get the maximum nr of Twists that are allowed...
-	 * 
-	 * @return maxTra, the max nr of twists 
+	 *
+	 * @return maxTra, the max nr of twists
 	 */
 	public int getMaxTra()
 	{
@@ -600,10 +607,10 @@ public class AFPChain implements Serializable, Cloneable
 	/**
 	 * Get the set of AFPs for this alignment.
 	 * An AFP is a local ungapped alignment between the two peptides.
-	 * 
+	 *
 	 * AFPs are set before the final optimization step. To get the final
 	 * alignment, look at the aligned pairs from {@link #getOptAln()}.
-	 *  
+	 *
 	 * @return The optimal set of AFPs
 	 * @see #getOptAln()
 	 */
@@ -613,13 +620,13 @@ public class AFPChain implements Serializable, Cloneable
 	}
 
 
-    /**
-     * Set the set of AFPs for this alignment.
-     * An AFP is a local ungapped alignment between the two peptides.
-     * 
-     * AFPs are set before the final optimization step. To get the final
-     * alignment, look at the aligned pairs from {@link #getOptAln()}.
-     */  
+	/**
+	 * Set the set of AFPs for this alignment.
+	 * An AFP is a local ungapped alignment between the two peptides.
+	 *
+	 * AFPs are set before the final optimization step. To get the final
+	 * alignment, look at the aligned pairs from {@link #getOptAln()}.
+	 */
 	public void setAfpSet(List<AFP> afpSet)
 	{
 		this.afpSet = afpSet;
@@ -736,7 +743,7 @@ public class AFPChain implements Serializable, Cloneable
 	}
 
 	/** The RMSD of the chain of AFPs. Set during AFPCHainer.traceBack();
-	 * 
+	 *
 	 * @param chainRmsd
 	 */
 	public void setChainRmsd(double chainRmsd)
@@ -775,7 +782,7 @@ public class AFPChain implements Serializable, Cloneable
 	}
 
 	/** The number of blocks in the alignment
-	 * 
+	 *
 	 * @return the nr of blocks in alignment
 	 */
 	public int getBlockNum()
@@ -784,7 +791,7 @@ public class AFPChain implements Serializable, Cloneable
 	}
 
 	public void setBlockNum(int blockNum)
-	{         
+	{
 		this.blockNum = blockNum;
 	}
 
@@ -880,8 +887,8 @@ public class AFPChain implements Serializable, Cloneable
 
 
 	/** tracks the residues of the initial blocks (before optimization)
-	 * 
-	 * 
+	 *
+	 *
 	 * @return list of block residues
 	 */
 	public int[][][] getBlockResList()
@@ -1004,7 +1011,7 @@ public class AFPChain implements Serializable, Cloneable
 
 	/** The length of the optimal alignment. Set by AFPOptimizer.optimizeAln().
 	 * This should be the sum of the elements in optLen
-	 * @param optLength 
+	 * @param optLength
 	 */
 	public void setOptLength(int optLength)
 	{
@@ -1105,7 +1112,7 @@ public class AFPChain implements Serializable, Cloneable
 	}
 
 	/** this is the init-RMSD, not the final RMSD after refinement.
-	 * 
+	 *
 	 * @return totalRmsdIni
 	 */
 	public double getTotalRmsdIni()
@@ -1114,7 +1121,7 @@ public class AFPChain implements Serializable, Cloneable
 	}
 
 	/** this is the init-RMSD, not the final RMSD after refinement.
-	 * 
+	 *
 	 * @param totalRmsdIni
 	 */
 	public void setTotalRmsdIni(double totalRmsdIni)
@@ -1124,7 +1131,7 @@ public class AFPChain implements Serializable, Cloneable
 
 
 	/** The RMSD of the final alignment. Use this to print overal alignment RMSD.
-	 * 
+	 *
 	 * @return total RMSD of the optimal alignment.
 	 */
 	public double getTotalRmsdOpt()
@@ -1133,7 +1140,7 @@ public class AFPChain implements Serializable, Cloneable
 	}
 
 	/** The RMSD of the final alignment. Use this to print overal alignment RMSD.
-	 * 
+	 *
 	 * @param totalRmsdOpt : total RMSD of the optimal alignment
 	 */
 	public void setTotalRmsdOpt(double totalRmsdOpt)
@@ -1207,7 +1214,7 @@ public class AFPChain implements Serializable, Cloneable
 	}
 
 	/** The probability (FATCAT) or Z-score (CE) of the alignment.
-	 * 
+	 *
 	 * @return either the probability (FATCAT) or the Z-score (CE) of the alignment.
 	 */
 	public double getProbability()
@@ -1220,26 +1227,26 @@ public class AFPChain implements Serializable, Cloneable
 		this.probability = probability;
 	}
 
-/** The percent of residues that are sequence-identical in the alignment.
- * 
- * @return a value between 0 and 1
- */
+	/** The percent of residues that are sequence-identical in the alignment.
+	 *
+	 * @return a value between 0 and 1
+	 */
 	public double getIdentity() {
-		if ( identity <= 0) {			
+		if ( identity <= 0) {
 			calcSimilarity();
 		}
 		return identity;
 	}
 
 	public void setIdentity(double identity) {
-		
+
 		this.identity = identity;
 	}
 
 
-	/** Returns the similarity score for the alignment. This gives the percent of 
+	/** Returns the similarity score for the alignment. This gives the percent of
 	 * sequence similar residues in the alignment.
-	 * 
+	 *
 	 * @return a double between 0 and 1
 	 */
 	public double getSimilarity() {
@@ -1287,6 +1294,13 @@ public class AFPChain implements Serializable, Cloneable
 		return algorithmName;
 	}
 
+	/**
+	 * Caution has to be made when changing the algorithmName of an AFPChain,
+	 * since downstream analysis methods (scores, display, etc) behave
+	 * differently if the alignment is flexible (created with FatCat).
+	 *
+	 * @param algorithmName
+	 */
 	public void setAlgorithmName(String algorithmName) {
 		this.algorithmName = algorithmName;
 	}
@@ -1302,7 +1316,7 @@ public class AFPChain implements Serializable, Cloneable
 	/**
 	 * Get whether this alignment has the normal topology, ie the residues
 	 * aligned in each block increase sequentially over the original protein.
-	 * 
+	 *
 	 * This will be false if a circular permutation was detected.
 	 * @return true if the alignment is sequential
 	 */
@@ -1312,7 +1326,7 @@ public class AFPChain implements Serializable, Cloneable
 	/**
 	 * Set whether this alignment has the normal topology, ie the residues
 	 * aligned in each block increase sequentially over the original protein.
-	 * 
+	 *
 	 * This will be false if a circular permutation was detected.
 	 */
 	public void setSequentialAlignment(boolean sequentialAlignment) {
@@ -1323,13 +1337,13 @@ public class AFPChain implements Serializable, Cloneable
 	 * A matrix with <i>ca1length</i> rows and <i>ca2length</i> columns.
 	 * For CE this is the distance matrix, but the exact interpretation is left
 	 * up to the alignment algorithm.
-	 * 
+	 *
 	 * <p>Note:
 	 * A {@link org.biojava.nbio.structure.gui.JMatrixPanel}, which is used in
 	 * the structure-gui package to display distance matrices, will display the
 	 * transpose of this matrix. Be sure to take that into account when debugging
 	 * visually.
-	 * 
+	 *
 	 * @return A matrix with dimensions ca1length x ca2length, or null
 	 */
 	public Matrix getDistanceMatrix() {
@@ -1344,39 +1358,39 @@ public class AFPChain implements Serializable, Cloneable
 	 */
 	public void setDistanceMatrix(Matrix distanceMatrix) {
 		this.distanceMatrix = distanceMatrix;
-		
+
 		//System.out.println("Setting distMatrix "+(distanceMatrix==null?"null":"not null"));
 	}
 
-	
+
 	public void setTMScore(double tmScore){
-	   this.tmScore = tmScore;
+		this.tmScore = tmScore;
 	}
-	
+
 	/** Returns the tmScore of the alignment. If the score has not been calcualted yet,
 	 * returns -1. To calculate it call AFPChainScorer.getTMScore(afpChain, ca1, ca2);
-	 * 
+	 *
 	 * @return -1, if not calculated, or the TM-score, a score between 0 and 1
 	 */
-   public double getTMScore()
-   {
-     
-      return tmScore;
-   }
+	public double getTMScore()
+	{
+
+		return tmScore;
+	}
 
 
-   
-   /** Get a textual description for the protein 2 of the alignment.
-    * 
-    * @return
-    */
+
+	/** Get a textual description for the protein 2 of the alignment.
+	 *
+	 * @return
+	 */
 	public String getDescription2() {
 		return description2;
 	}
-	
-	
+
+
 	/** Set the textual description for protein 2.
-	 * 
+	 *
 	 * @param desc
 	 */
 	public void setDescription2(String desc){
@@ -1402,7 +1416,7 @@ public class AFPChain implements Serializable, Cloneable
 
 	/**
 	 * A week equality metric.
-	 * 
+	 *
 	 * Checks if the optAlign is the same, and if the objects being compared
 	 * seem to be the same (same names, lengths). Does not check properties
 	 * of the alignment such as scores or superposition matrices.

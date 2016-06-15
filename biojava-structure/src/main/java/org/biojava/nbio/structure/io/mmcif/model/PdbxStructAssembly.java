@@ -29,16 +29,16 @@ import java.io.Serializable;
 
 @XmlAccessorType(XmlAccessType.PUBLIC_MEMBER)
 public class PdbxStructAssembly implements Serializable{
-	
+
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 3104504686693887219L;
-	
-	String id; 
-	String details; 
-	String method_details; 
-	String oligomeric_details; 
+
+	String id;
+	String details;
+	String method_details;
+	String oligomeric_details;
 	String oligomeric_count ;
 	public String getId() {
 		return id;
@@ -77,9 +77,9 @@ public class PdbxStructAssembly implements Serializable{
 				+ ", oligomeric_details=" + oligomeric_details
 				+ ", oligomeric_count=" + oligomeric_count + "]";
 	}
-	
-	
-	
-	
+
+
+
+
 
 }

@@ -28,7 +28,7 @@ package org.biojava.nbio.ws.alignment.qblast;
  * Not all are mandatory. Certain parameters only work with a subset of other parameters in the list.
  * <p/>
  * Taken from <a href=http://www.ncbi.nlm.nih.gov/staff/tao/URLAPI/new/node9.html>Blast URL API</a>
- * 
+ *
  * @author Gediminas Rimsa
  */
 public enum BlastOutputParameterEnum {

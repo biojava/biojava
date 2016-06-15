@@ -125,11 +125,11 @@ public class ScopTest {
 			Structure s = cache.getStructureForDomain(d2);
 			/*
 			The actual SCOP description is A:496-581.
-			HET    MAL  A 688      23                                                       
-			HET    MAL  A 689      23                                                       
-			HET    MAL  A 690      23                                                       
-			HET     CA  A 691       1                                                       
-			HET     CA  A 692       1    
+			HET    MAL  A 688      23
+			HET    MAL  A 689      23
+			HET    MAL  A 690      23
+			HET     CA  A 691       1
+			HET     CA  A 692       1
 			Thus, the two hetero-atoms are out of range.
 			*/
 			// t
@@ -151,10 +151,10 @@ public class ScopTest {
 
 
 		try {
-		
-			
+
+
 			Structure s = cache.getStructureForDomain(domains1xzp.get(0));
-			
+
 			Chain a = s.getChainByPDB("A");
 
 			// now with ligands...
@@ -182,7 +182,7 @@ public class ScopTest {
 		}catch (Exception e){
 			e.printStackTrace();
 			fail(e.getMessage());
-		}		
+		}
 	}
 
 	private void checkRange(Structure s, String range) {

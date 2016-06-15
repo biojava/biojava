@@ -93,7 +93,7 @@ public class XMLUtil {
 			throw new RuntimeException("Could not initialize JAXB context", e);
 		}
 	}
-	
+
 	static JAXBContext jaxbContextComments;
 	static {
 		try {
@@ -158,9 +158,9 @@ public class XMLUtil {
 		return container.toXML();
 
 	}
-	
-	
-	
+
+
+
 	public static String getCommentsXML(List<String> comments ){
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
@@ -174,7 +174,7 @@ public class XMLUtil {
 
 			ListStringWrapper wrapper = new ListStringWrapper();
 			wrapper.setData(comments);
-			
+
 			m.marshal( wrapper, ps);
 
 
@@ -203,7 +203,7 @@ public class XMLUtil {
 
 		return comments;
 	}
-	
+
 
 	public static String getScopNodeXML(ScopNode scopNode){
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();

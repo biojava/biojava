@@ -26,5 +26,5 @@ package org.biojava.nbio.structure.symmetry.core;
  * @author Peter
  */
 public interface QuatSymmetrySolver {
-    RotationGroup getSymmetryOperations();
+	RotationGroup getSymmetryOperations();
 }

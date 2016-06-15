@@ -27,7 +27,7 @@ public class GetDistanceMatrix {
 
 
 	/** A set of Calpha atoms that are representing the protein
-	 * 
+	 *
 	 * @param protein
 	 */
 	public  PDPDistanceMatrix getDistanceMatrix(Atom[] protein) throws StructureException{
@@ -37,13 +37,13 @@ public class GetDistanceMatrix {
 		int nclose=0;
 		int[] iclose = new int[protein.length*protein.length];
 		int[] jclose= new int[protein.length*protein.length];
-		
+
 		if(protein.length >= PDPParameters.MAXLEN) {
 			System.err.println(String.format("%d protein.len > MAXLEN %d\n",protein.length,PDPParameters.MAXLEN));
 			return null;
 		}
 		for(i=0;i<protein.length;i++) {
-			for(j=i;j<protein.length;j++) { 
+			for(j=i;j<protein.length;j++) {
 				dist[i][j]=0;
 				dist[j][i]=0;
 
@@ -63,14 +63,14 @@ public class GetDistanceMatrix {
 				dt2=64;
 				dt3=49;
 				dt4=36;
-				
+
 				if(hasCbeta1 && hasCbeta2) {
 					double distance = Calc.getDistance(cb1,cb2);
 					d+= distance*distance;
 				}
 				else if(hasCbeta1 && ! hasCbeta2) {
 					double distance = 999;
-					
+
 					distance = Calc.getDistance(cb1, ca2);
 					d += distance * distance;
 				}
@@ -82,7 +82,7 @@ public class GetDistanceMatrix {
 					double distance = Calc.getDistance(ca1, ca2);
 					d += distance * distance;
 				}
-				
+
 				if(d<dt1) {
 					dist[i][j]=1;
 					dist[j][i]=1;
@@ -90,8 +90,8 @@ public class GetDistanceMatrix {
 						dist[i][j]=2;
 						dist[j][i]=2;
 						if(j-i>35) {
-							iclose[nclose]=i;	
-							jclose[nclose]=j;	
+							iclose[nclose]=i;
+							jclose[nclose]=j;
 							nclose++;
 						}
 						if(d<dt3) {
@@ -108,7 +108,7 @@ public class GetDistanceMatrix {
 		}
 		/* secondary structure interaction */
 		for(i=1;i<protein.length;i++) {
-			for(j=i;j<protein.length-1;j++) { 
+			for(j=i;j<protein.length-1;j++) {
 				/* beta-sheet */
 				if(dist[i][j]>=2&&j-i>5) {
 					if(dist[i-1][j-1]>=2&&dist[i+1][j+1]>=2||dist[i-1][j+1]>=2&&dist[i+1][j-1]>=2) {
@@ -143,9 +143,9 @@ public class GetDistanceMatrix {
 				}
 			}
 		}
-		
+
 		PDPDistanceMatrix matrix = new PDPDistanceMatrix();
-		
+
 		matrix.setNclose(nclose);
 		matrix.setIclose(iclose);
 		matrix.setJclose(jclose);
@@ -159,7 +159,7 @@ public class GetDistanceMatrix {
 	private Atom getCBeta(Group g1) {
 		Atom cb = null;
 
-		
+
 		cb = g1.getAtom("CB");
 		if ( cb == null)
 			{
@@ -179,10 +179,10 @@ public class GetDistanceMatrix {
 
 
 
-	
 
 
 
-	
-	
+
+
+
 }

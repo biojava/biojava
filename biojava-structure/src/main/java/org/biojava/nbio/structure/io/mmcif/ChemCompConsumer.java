@@ -23,10 +23,14 @@ package org.biojava.nbio.structure.io.mmcif;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.mmcif.chem.ResidueType;
 import org.biojava.nbio.structure.io.mmcif.model.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 public class ChemCompConsumer implements MMcifConsumer {
+
+	private static final Logger logger = LoggerFactory.getLogger(ChemCompConsumer.class);
 
 	ChemicalComponentDictionary dictionary;
 
@@ -49,10 +53,10 @@ public class ChemCompConsumer implements MMcifConsumer {
 	public void newChemComp(ChemComp c) {
 
 		if ( c.getId() == null)
-			System.err.println("WARNING: chem comp ID == null " + c);
+			logger.warn("chem comp ID == null " + c);
 
 		latestChemCompId = c.getId();
-		dictionary.addChemComp(c);		
+		dictionary.addChemComp(c);
 		if ( c.getResidueType() == ResidueType.nonPolymer)
 			return;
 
@@ -91,6 +95,11 @@ public class ChemCompConsumer implements MMcifConsumer {
 	}
 
 	@Override
+	public void newDatabasePDBrevRecord(DatabasePdbrevRecord dbrev) {
+
+	}
+
+	@Override
 	public void newEntity(Entity entity) {
 		// TODO Auto-generated method stub
 
@@ -107,17 +116,17 @@ public class ChemCompConsumer implements MMcifConsumer {
 		// TODO Auto-generated method stub
 
 	}
-	
+
 	@Override
 	public void newCell(Cell cell) {
 		// TODO Auto-generated method stub
 	}
-	
+
 	@Override
 	public void newSymmetry(Symmetry symmetry) {
-		// TODO Auto-generated method stub 
+		// TODO Auto-generated method stub
 	}
-	
+
 	@Override
 	public void newStructNcsOper(StructNcsOper sNcsOper) {
 		// TODO Auto-generated method stub
@@ -172,6 +181,12 @@ public class ChemCompConsumer implements MMcifConsumer {
 	}
 
 	@Override
+	public void newStructRefSeqDif(StructRefSeqDif sref) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
 	public void setStruct(Struct struct) {
 		// TODO Auto-generated method stub
 
@@ -216,19 +231,19 @@ public class ChemCompConsumer implements MMcifConsumer {
 	@Override
 	public void newPdbxStructOperList(PdbxStructOperList structOper) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void newPdbxStrucAssembly(PdbxStructAssembly strucAssembly) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void newPdbxStrucAssemblyGen(PdbxStructAssemblyGen strucAssembly) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -239,7 +254,7 @@ public class ChemCompConsumer implements MMcifConsumer {
 	@Override
 	public void newPdbxChemCompIndentifier(PdbxChemCompIdentifier id) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -250,30 +265,40 @@ public class ChemCompConsumer implements MMcifConsumer {
 	@Override
 	public void newPdbxChemCompDescriptor(PdbxChemCompDescriptor desc) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void newEntitySrcGen(EntitySrcGen entitySrcGen) {
 		// TODO Auto-generated method stub
-		
+
 	}
 	@Override
 	public void newEntitySrcNat(EntitySrcNat entitySrcNat) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void newEntitySrcSyn(EntitySrcSyn entitySrcSyn) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void newStructConn(StructConn structConn) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
+	@Override
+	public void newStructSiteGen(StructSiteGen gen) {
+		// TODO
+	}
+
+	@Override
+	public void newStructSite(StructSite site) {
+		// TODO
+	}
 }
+

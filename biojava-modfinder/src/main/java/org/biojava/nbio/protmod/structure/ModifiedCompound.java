@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Jun 5, 2010
- * Author: Jianjiong Gao 
+ * Author: Jianjiong Gao
  *
  */
 
@@ -31,79 +31,79 @@ import java.util.Set;
 
 /**
  * Root interface for all modifications in structure.
- * 
+ *
  * @author Jianjiong Gao
  * @since 3.0
  */
 public interface ModifiedCompound {
-	
+
 	/** return a description of this compound
-	 * 
+	 *
 	 * @return a description
 	 */
 	public String getDescription();
-	
+
 	public void setDescription(String desc);
-	
+
 	/**
-	 * 
+	 *
 	 * @return {@link ProteinModificationBean} occurred on the residue.
 	 */
 	public ProteinModification getModification();
-	
+
 	public void setModification(ProteinModification modi);
-	
+
 	/**
-	 * 
+	 *
 	 * @return a set of involved group.
 	 */
 	public Set<StructureGroup> getGroups();
-	
+
 	public void setGroups(Set<StructureGroup> groups);
-	
+
 	/**
-	 * 
+	 *
 	 * @param isAminoAcid true if amino acids.
 	 * @return a set of involved group of the type.
 	 */
 	public Set<StructureGroup> getGroups(boolean isAminoAcid);
-	
-	
-	
+
+
+
 	/**
-	 * 
+	 *
 	 * @return a set of atom linkages.
 	 * @see #getLinkedGroupPairs
 	 * @see StructureAtomLinkage
 	 */
 	public Set<StructureAtomLinkage> getAtomLinkages();
-	
+
 	/** Set atom linkages
-	 * 
-	 * @return  
+	 *
+	 * @return
 	 */
 	public void setAtomLinkages(Set<StructureAtomLinkage> linkages);
-	
+
 	/**
-	 * Add a linkage. Add new the involved groups first using {@link addGroup}. 
+	 * Add a linkage. Add new the involved groups first using {@link addGroup}.
 	 * @param linkage an atom linkage.
 	 * @return true if this linkage was not already contained.
 	 * @see StructureAtomLinkage
 	 */
 	public boolean addAtomLinkage(StructureAtomLinkage linkage);
-	
+
 	/**
 	 * Add a collections of linkages.
 	 * @param linkages an atom linkage.
 	 */
 	public void addAtomLinkages(Collection<StructureAtomLinkage> linkages);
-	
-	
+
+
 	/**
-	 * 
+	 *
 	 * @return true if groups from multiple chains were involved
 	 */
 	public boolean crossChains();
-	
-	
+
+
 }

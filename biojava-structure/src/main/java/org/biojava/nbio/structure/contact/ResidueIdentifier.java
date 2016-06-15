@@ -20,6 +20,8 @@
  */
 package org.biojava.nbio.structure.contact;
 
+import java.io.Serializable;
+
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.Compound;
 import org.biojava.nbio.structure.Group;
@@ -28,19 +30,21 @@ import org.slf4j.LoggerFactory;
 
 /**
  * A bean for identifying groups in GroupContactSets.
- * Used only within the contact package to be able to compare 
- * contacts between chains of same entity/compound based on residue numbers 
+ * Used only within the contact package to be able to compare
+ * contacts between chains of same entity/compound based on residue numbers
  * and independently from chain identifiers.
- * 
+ *
  * @author duarte_j
  */
-class ResidueIdentifier {
+class ResidueIdentifier implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	private static final Logger logger = LoggerFactory.getLogger(ResidueIdentifier.class);
-	
+
 	private int seqResIndex;
-	
-	
+
+
 	public ResidueIdentifier(Group g) {
 
 		Chain c = g.getChain();
@@ -58,7 +62,7 @@ class ResidueIdentifier {
 
 		}
 	}
-	
+
 	public int getSeqResIndex() {
 		return seqResIndex;
 	}
@@ -81,7 +85,7 @@ class ResidueIdentifier {
 		if (getClass() != obj.getClass())
 			return false;
 		ResidueIdentifier other = (ResidueIdentifier) obj;
-		
+
 		return this.seqResIndex == other.seqResIndex;
 	}
 

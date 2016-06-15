@@ -16,7 +16,7 @@
  * at:
  *
  *      http://www.biojava.org/
- * 
+ *
  * Created on Aug 3, 2007
  */
 package org.biojava.nbio.structure.gui.util.color;
@@ -30,16 +30,16 @@ import java.util.*;
 
 /**
  * Maps a set of real values onto a gradient.
- * 
+ *
  * The real line is partitioned into segments [a,b). The endpoint of each segment is labeled with a color.
- * Colors are linearly interpolated between finite endpoints. Endpoints implicitly exist for 
+ * Colors are linearly interpolated between finite endpoints. Endpoints implicitly exist for
  * Double.NEGATIVE_INFINITY and Double.POSITIVE_INFINITY, representing default colors. Thus any point
  * in the segment [-Inf,a) is labeled with the negInf color, and any point in [b,Inf] is labeled with the posInf
  * color. If no endpoints are present, the posInf color is used as default.
- * 
- * Common gradients are predefined an may be instantiated through 
+ *
+ * Common gradients are predefined an may be instantiated through
  * GradientMapper.getGradientMapper().
- * 
+ *
  * @author Spencer Bliven
  *
  */
@@ -50,10 +50,10 @@ public class GradientMapper implements ContinuousColorMapper, Map<Double, Color>
 	public static final int RED_BLUE_GRADIENT = 3;
 	public static final int RAINBOW_GRADIENT = 4;
 	public static final int RAINBOW_INTENSITY_GRADIENT = 5;
-	
+
 	private NavigableMap<Double,Color> mapping;
 	private ColorInterpolator interpolator;
-	
+
 	public GradientMapper() {
 		this(Color.black,Color.white);
 	}
@@ -69,10 +69,10 @@ public class GradientMapper implements ContinuousColorMapper, Map<Double, Color>
 
 	/**
 	 * Constructs a gradientMapper to draw one of the pre-defined gradients
-	 * 
+	 *
 	 * For example,
 	 * GradientMapper.getGradientMapper(GradientMapper.RAINBOW_GRADIENT, 0, 10)
-	 * 
+	 *
 	 * @param gradientType One of the gradient types, eg GradientMapper.BLACK_WHITE_GRADIENT
 	 * @param min Start of the gradient
 	 * @param max End of the gradient
@@ -101,10 +101,10 @@ public class GradientMapper implements ContinuousColorMapper, Map<Double, Color>
 			ColorSpace hsv = HSVColorSpace.getHSVColorSpace();
 			LinearColorInterpolator interp = new LinearColorInterpolator(hsv);
 			interp.setInterpolationDirection(0, InterpolationDirection.UPPER);
-			
+
 			Color hsvLow = new Color(hsv,new float[] {0f, 1f, 1f},1f);
 			Color hsvHigh = new Color(hsv,new float[] {1f, 1f, 1f},1f);
-			
+
 			gm = new GradientMapper(hsvLow, hsvHigh, hsv);
 			gm.put(min, hsvLow);
 			gm.put(max, hsvHigh);
@@ -116,10 +116,10 @@ public class GradientMapper implements ContinuousColorMapper, Map<Double, Color>
 			ColorSpace hsv = HSVColorSpace.getHSVColorSpace();
 			LinearColorInterpolator interp = new LinearColorInterpolator(hsv);
 			interp.setInterpolationDirection(0, InterpolationDirection.LOWER);
-			
+
 			Color hsvLow = new Color(hsv,new float[] {1f, 1f, 1f},1f);
 			Color hsvHigh = new Color(hsv,new float[] {0f, 1f, 0f},1f);
-			
+
 			gm = new GradientMapper(hsvLow, hsvHigh, hsv);
 			gm.put(min, hsvLow);
 			gm.put(max, hsvHigh);
@@ -139,7 +139,7 @@ public class GradientMapper implements ContinuousColorMapper, Map<Double, Color>
 	public Color getColor(double value) {
 		Double left = mapping.floorKey(value);
 		Double right = mapping.higherKey(value);
-		
+
 		//don't interpolate to infinity
 		if(right == null || right.isInfinite()) {
 			return mapping.get(Double.POSITIVE_INFINITY);
@@ -147,14 +147,14 @@ public class GradientMapper implements ContinuousColorMapper, Map<Double, Color>
 		if(left == null || left.isInfinite()) {
 			return mapping.get(Double.NEGATIVE_INFINITY);
 		}
-		
+
 		// fraction of left color to use
 		float alpha = (float) ((right-value)/(right-left));
 		return interpolator.interpolate(mapping.get(left),mapping.get(right),alpha);
 	}
 
-	
-	
+
+
 	/*-*************************
 	 *  Map methods
 	 ***************************/
@@ -162,14 +162,14 @@ public class GradientMapper implements ContinuousColorMapper, Map<Double, Color>
 
 	/**
 	 * Clears all finite endpoints
-	 * 
+	 *
 	 * @see java.util.Map#clear()
 	 */
 	@Override
 	public void clear() {
 		Color neg = mapping.get(Double.NEGATIVE_INFINITY);
 		Color pos = mapping.get(Double.POSITIVE_INFINITY);
-		mapping.clear();		
+		mapping.clear();
 		mapping.put(Double.NEGATIVE_INFINITY, neg);
 		mapping.put(Double.POSITIVE_INFINITY, pos);
 	}
@@ -247,7 +247,7 @@ public class GradientMapper implements ContinuousColorMapper, Map<Double, Color>
 	 */
 	@Override
 	public void putAll(Map<? extends Double, ? extends Color> m) {
-		mapping.putAll(m);		
+		mapping.putAll(m);
 	}
 	/**
 	 * @param position
@@ -277,8 +277,8 @@ public class GradientMapper implements ContinuousColorMapper, Map<Double, Color>
 	public Collection<Color> values() {
 		return mapping.values();
 	}
-	
-	
+
+
 	/**
 	 * @return the interpolator
 	 */
@@ -299,14 +299,14 @@ public class GradientMapper implements ContinuousColorMapper, Map<Double, Color>
 		int i = 0;
 		ColorSpace hsv = HSVColorSpace.getHSVColorSpace();
 		LinearColorInterpolator interp;
-		
-		
+
+
 		// RGB colorspace
 		mappers[i] = new GradientMapper(Color.black, Color.white);
 		mappers[i].put(-5., Color.red);
 		mappers[i].put(5., Color.blue);
 		i++;
-		
+
 		// Premade
 		mappers[i] = GradientMapper.getGradientMapper(BLACK_WHITE_GRADIENT,-5,5);
 		i++;
@@ -314,7 +314,7 @@ public class GradientMapper implements ContinuousColorMapper, Map<Double, Color>
 		//mappers[i].put(Double.NEGATIVE_INFINITY, mappers[i].get(Double.NEGATIVE_INFINITY).brighter());
 		//mappers[i].put(Double.POSITIVE_INFINITY, mappers[i].get(Double.POSITIVE_INFINITY).darker());
 		i++;
-		
+
 		// Rainbow
 		mappers[i] = new GradientMapper(Color.black, Color.white, hsv);
 		mappers[i].put(-5., new Color(hsv,new float[] {0f, 1f, 1f},1f));
@@ -326,7 +326,7 @@ public class GradientMapper implements ContinuousColorMapper, Map<Double, Color>
 		mappers[i].put( 5., Color.red);
 		mappers[i].put(-5., Color.blue);
 		i++;
-		
+
 		// HSV OUTER
 		interp = new LinearColorInterpolator(hsv);
 		interp.setInterpolationDirection(0, InterpolationDirection.OUTER);
@@ -335,7 +335,7 @@ public class GradientMapper implements ContinuousColorMapper, Map<Double, Color>
 		mappers[i].put(-5., Color.blue);
 		mappers[i].setInterpolator(interp);
 		i++;
-		
+
 		// HSV UPPER
 		interp = new LinearColorInterpolator(hsv);
 		interp.setInterpolationDirection(0, InterpolationDirection.UPPER);
@@ -344,7 +344,7 @@ public class GradientMapper implements ContinuousColorMapper, Map<Double, Color>
 		mappers[i].put(-5., Color.blue);
 		mappers[i].setInterpolator(interp);
 		i++;
-		
+
 		// HSV LOWER
 		interp = new LinearColorInterpolator(hsv);
 		interp.setInterpolationDirection(0, InterpolationDirection.LOWER);
@@ -362,7 +362,7 @@ public class GradientMapper implements ContinuousColorMapper, Map<Double, Color>
 		mappers[i].put(10., new Color(hsv,new float[] {0f, .9f, 0f},1f));
 		mappers[i].setInterpolator(interp);
 		i++;
-		
+
 		// Better DefaultGradient
 		interp = new LinearColorInterpolator(hsv);
 		interp.setInterpolationDirection(0, InterpolationDirection.INNER);
@@ -383,12 +383,12 @@ public class GradientMapper implements ContinuousColorMapper, Map<Double, Color>
 		mappers[i].put(10., Color.black);
 		mappers[i].setInterpolator(interp);
 		i++;
-		
-		
+
+
 		DefaultMatrixMapper defaultMapper = new DefaultMatrixMapper(10f,.9f);
-		
-		
-		
+
+
+
 		JFrame frame = new JFrame("GradientMapper");
 		JPanel main = new JPanel();
 		main.setPreferredSize(new Dimension(300,500));
@@ -408,7 +408,7 @@ public class GradientMapper implements ContinuousColorMapper, Map<Double, Color>
 		frame.pack();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
-		
+
 	}
 
 

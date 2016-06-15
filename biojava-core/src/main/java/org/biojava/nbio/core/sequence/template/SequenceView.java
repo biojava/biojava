@@ -28,15 +28,15 @@ package org.biojava.nbio.core.sequence.template;
 
 public interface SequenceView<C extends Compound> extends Sequence<C> {
 
-    public Sequence<C> getViewedSequence();
+	public Sequence<C> getViewedSequence();
 
-    /**
-     * 1-indexed, inclusive.
-     */
-    public Integer getBioStart();
+	/**
+	 * 1-indexed, inclusive.
+	 */
+	public Integer getBioStart();
 
-    /**
-     * 1-indexed, inclusive.
-     */
-    public Integer getBioEnd();
+	/**
+	 * 1-indexed, inclusive.
+	 */
+	public Integer getBioEnd();
 }

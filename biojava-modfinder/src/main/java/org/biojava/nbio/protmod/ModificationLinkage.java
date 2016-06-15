@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Jun 21, 2010
- * Author: Jianjiong Gao 
+ * Author: Jianjiong Gao
  *
  */
 
@@ -35,9 +35,9 @@ public class ModificationLinkage {
 	private final List<String> pdbNameOfPotentialAtomsOnComponent2;
 	private final String labelOfAtomOnComponent1;
 	private final String labelOfAtomOnComponent2;
-	
+
 	/**
-	 * 
+	 *
 	 * @param components {@link Component}s involved in a modification.
 	 * @param indexOfComponent1 index of the first component.
 	 * @param indexOfComponent2 index of the second component.
@@ -46,12 +46,12 @@ public class ModificationLinkage {
 			final List<Component> components,
 			final int indexOfComponent1,
 			final int indexOfComponent2) {
-		this(components, indexOfComponent1, null, 
+		this(components, indexOfComponent1, null,
 				null, indexOfComponent2, null, null);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param components {@link Component}s involved in a modification.
 	 * @param indexOfComponent1 index of the first component.
 	 * @param labelOfAtomOnComponent1 label of the atom on the first
@@ -66,15 +66,15 @@ public class ModificationLinkage {
 			final String pdbNameOfAtomsOnComponent1,
 			final int indexOfComponent2,
 			final String pdbNameOfAtomsOnComponent2) {
-		this(components, indexOfComponent1, 
+		this(components, indexOfComponent1,
 				Collections.singletonList(pdbNameOfAtomsOnComponent1),
 				null, indexOfComponent2,
 				Collections.singletonList(pdbNameOfAtomsOnComponent2),
 				null);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param components {@link Component}s involved in a modification.
 	 * @param indexOfComponent1 index of the first component.
 	 * @param labelOfAtomOnComponent1 label of the atom on the first
@@ -92,9 +92,9 @@ public class ModificationLinkage {
 		this(components, indexOfComponent1, pdbNameOfPotentialAtomsOnComponent1,
 				null, indexOfComponent2, pdbNameOfPotentialAtomsOnComponent2, null);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param components {@link Component}s involved in a modification.
 	 * @param indexOfComponent1 index of the first component.
 	 * @param pdbNameOfPotentialAtomsOnComponent1 a list of PDB names of
@@ -118,24 +118,24 @@ public class ModificationLinkage {
 		if (components == null) {
 			throw new IllegalArgumentException("Null components");
 		}
-		
+
 		if ( indexOfComponent1 < 0)
 			throw new IllegalArgumentException("indexOfComponent1 has to be >= 0");
 		if ( indexOfComponent1 >= components.size())
 			throw new IllegalArgumentException("indexOfComponent1 has to be <= components.size()");
-		
+
 		if ( indexOfComponent2 < 0)
 			throw new IllegalArgumentException("indexOfComponent2 has to be >= 0");
 		if ( indexOfComponent2 >= components.size())
 			throw new IllegalArgumentException("indexOfComponent2 [" + indexOfComponent2 + "] has to be <= components.size() [" + components.size()+"]");
-		
-		
-		
+
+
+
 		if (indexOfComponent1 == indexOfComponent2) {
 			throw new IllegalArgumentException("No linkage is allowed for an" +
 					" identical component.");
 		}
-		
+
 		this.components = components;
 		this.indexOfComponent1 = indexOfComponent1;
 		this.indexOfComponent2 = indexOfComponent2;
@@ -146,71 +146,71 @@ public class ModificationLinkage {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return index of the first component.
 	 */
 	public int getIndexOfComponent1() {
 		return indexOfComponent1;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @return index of the second component.
 	 */
 	public int getIndexOfComponent2() {
 		return indexOfComponent2;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @return the first component.
 	 */
 	public Component getComponent1() {
 		return components.get(indexOfComponent1);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @return the second component.
 	 */
 	public Component getComponent2() {
 		return components.get(indexOfComponent2);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @return a list of PDB names of potential atoms on the first component.
 	 */
 	public List<String> getPDBNameOfPotentialAtomsOnComponent1() {
 		return pdbNameOfPotentialAtomsOnComponent1;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @return a list of PDB names of potential atoms on the second component.
 	 */
 	public List<String> getPDBNameOfPotentialAtomsOnComponent2() {
 		return pdbNameOfPotentialAtomsOnComponent2;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @return label of the atom on the first component.
 	 */
 	public String getLabelOfAtomOnComponent1() {
 		return labelOfAtomOnComponent1;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @return label of the atom on the second component.
 	 */
 	public String getLabelOfAtomOnComponent2() {
 		return labelOfAtomOnComponent2;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public String toString() {

@@ -28,7 +28,7 @@ import java.util.Set;
 
 /**
  * This is a utility class that contains utility methods which will facilitates the coding of other methods
- * 
+ *
  * @author kohchuanhock
  * @version 2011.08.22
  * @since 3.0.2
@@ -39,11 +39,11 @@ public class Utils {
 
 	/**
 	 * Returns a value with the desired number of decimal places.
-	 * 
+	 *
 	 * @param d
 	 * 		value to round
 	 * @param c
-	 * 		number of decimal places desired. 
+	 * 		number of decimal places desired.
 	 * 		Must be greater or equal to zero, otherwise, the given value d would be returned without any modification.
 	 * @return
 	 * 		a value with the given number of decimal places.
@@ -55,11 +55,11 @@ public class Utils {
 		double tmp = Math.round(d);
 		return tmp/p;
 	}
-	
+
 	/**
 	 * Checks if given sequence contains invalid characters. Returns true if invalid characters are found, else return false.
 	 * Note that any characters are deemed as valid only if it is found in cSet.
-	 * 
+	 *
 	 * @param sequence
 	 * 		protein sequence to be check.
 	 * @param cSet
@@ -73,10 +73,10 @@ public class Utils {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Return the number of invalid characters in sequence.
-	 * 
+	 *
 	 * @param sequence
 	 * 		protein sequence to count for invalid characters.
 	 * @param cSet
@@ -97,11 +97,11 @@ public class Utils {
 		}
 		return total;
 	}
-	
+
 	/**
 	 * Returns a new sequence with all invalid characters being replaced by '-'.
 	 * Note that any character outside of the 20 standard protein amino acid codes are considered as invalid.
-	 * 
+	 *
 	 * @param sequence
 	 * 		protein sequence to be clean
 	 * @param cSet
@@ -112,7 +112,7 @@ public class Utils {
 	public final static String cleanSequence(String sequence, Set<Character> cSet){
 		Set<Character> invalidCharSet = new HashSet<Character>();
 		StringBuilder cleanSeq = new StringBuilder();
-		if(cSet == null) cSet = PeptideProperties.standardAASet; 
+		if(cSet == null) cSet = PeptideProperties.standardAASet;
 		for(char c:sequence.toCharArray()){
 			if(!cSet.contains(c)){
 				cleanSeq.append("-");
@@ -121,7 +121,7 @@ public class Utils {
 				cleanSeq.append(c);
 			}
 		}
-		
+
 		// TODO: Should be StringJoiner once JDK8 used
 		StringBuilder stringBuilder = new StringBuilder();
 		for(char c: invalidCharSet){
@@ -130,16 +130,16 @@ public class Utils {
 		stringBuilder.deleteCharAt(stringBuilder.length()-1);
 		stringBuilder.append(" are being replaced with '-'");
 		logger.warn(stringBuilder.toString());
-		
+
 		return cleanSeq.toString();
 	}
-	
+
 	/**
-	 * Checks if the sequence contains invalid characters. 
+	 * Checks if the sequence contains invalid characters.
 	 * Note that any character outside of the 20 standard protein amino acid codes are considered as invalid.
 	 * If yes, it will return a new sequence where invalid characters are replaced with '-'.
-	 * If no, it will simply return the input sequence. 
-	 * 
+	 * If no, it will simply return the input sequence.
+	 *
 	 * @param sequence
 	 * 		protein sequence to be check for invalid characters.
 	 * @return
@@ -148,13 +148,13 @@ public class Utils {
 	public static final String checkSequence(String sequence){
 		return checkSequence(sequence, null);
 	}
-	
+
 	/**
-	 * Checks if the sequence contains invalid characters. 
+	 * Checks if the sequence contains invalid characters.
 	 * Note that any character outside of the 20 standard protein amino acid codes are considered as invalid.
 	 * If yes, it will return a new sequence where invalid characters are replaced with '-'.
-	 * If no, it will simply return the input sequence. 
-	 * 
+	 * If no, it will simply return the input sequence.
+	 *
 	 * @param sequence
 	 * 		protein sequence to be check for invalid characters.
 	 * @param cSet
@@ -173,7 +173,7 @@ public class Utils {
 			String cSeq = cleanSequence(sequence, cSet);
 			logger.warn("There exists invalid characters in the sequence. Computed results might not be precise.");
 			logger.warn("To remove this warning: Please use org.biojava.nbio.aaproperties.Utils.cleanSequence to clean sequence.");
-			
+
 			return cSeq;
 		}
 		else{

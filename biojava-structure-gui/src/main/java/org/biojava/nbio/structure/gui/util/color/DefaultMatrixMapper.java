@@ -16,7 +16,7 @@
  * at:
  *
  *      http://www.biojava.org/
- * 
+ *
  * Created on Aug 3, 2007
  */
 package org.biojava.nbio.structure.gui.util.color;
@@ -26,7 +26,7 @@ import java.awt.*;
 
 /**
  * Color Mapper which mimics the default coloring of JMatrixPanel pixels.
- * 
+ *
  * Assumes inputs in the range [0,max]. These are mapped to HSB colors such
  * that the hue and brightness are from [1,0].
  * @author Spencer Bliven
@@ -36,7 +36,7 @@ public class DefaultMatrixMapper implements ContinuousColorMapper {
 
 	private double scalevalue;
 	private float saturation;
-	
+
 	public DefaultMatrixMapper(double scale, float saturation ) {
 		this.scalevalue = scale;
 		this.saturation = saturation;
@@ -52,7 +52,7 @@ public class DefaultMatrixMapper implements ContinuousColorMapper {
 		hue = (float)(1-(value/scalevalue));
 		if (hue < 0)
 			hue = 0;
-		
+
 		return Color.getHSBColor(hue,saturation,hue);
 	}
 

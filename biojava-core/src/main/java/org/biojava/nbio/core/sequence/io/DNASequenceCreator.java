@@ -40,17 +40,17 @@ import java.util.List;
  * @author Scooter Willis <willishf at gmail dot com>
  */
 public class DNASequenceCreator implements
-    SequenceCreatorInterface<NucleotideCompound> {
+		SequenceCreatorInterface<NucleotideCompound> {
 
-  private final CompoundSet<NucleotideCompound> compoundSet;
+	private final CompoundSet<NucleotideCompound> compoundSet;
 
-  /**
-   *
-   * @param compoundSet
-   */
-  public DNASequenceCreator(CompoundSet<NucleotideCompound> compoundSet) {
-    this.compoundSet = compoundSet;
-  }
+	/**
+	 *
+	 * @param compoundSet
+	 */
+	public DNASequenceCreator(CompoundSet<NucleotideCompound> compoundSet) {
+		this.compoundSet = compoundSet;
+	}
 
 /**
  *
@@ -58,34 +58,34 @@ public class DNASequenceCreator implements
  * @param index Currently not used
  * @return
  */
-  @Override
+	@Override
 public AbstractSequence<NucleotideCompound> getSequence(String sequence,
-      long index) throws CompoundNotFoundException {
-    return new DNASequence(sequence, compoundSet);
-  }
+			long index) throws CompoundNotFoundException {
+		return new DNASequence(sequence, compoundSet);
+	}
 /**
  *
  * @param proxyLoader The Sequence from a ProxySequenceReader
  * @param index Currently not used
  * @return
  */
-  @Override
+	@Override
 public AbstractSequence<NucleotideCompound> getSequence(
-      ProxySequenceReader<NucleotideCompound> proxyLoader, long index) {
-    return new DNASequence(proxyLoader, compoundSet);
-  }
+			ProxySequenceReader<NucleotideCompound> proxyLoader, long index) {
+		return new DNASequence(proxyLoader, compoundSet);
+	}
 
-  /**
-   *
-   * @param list
-   * @return
-   */
-  @Override
+	/**
+	 *
+	 * @param list
+	 * @return
+	 */
+	@Override
 public AbstractSequence<NucleotideCompound> getSequence(
-      List<NucleotideCompound> list) {
-    ArrayListProxySequenceReader<NucleotideCompound> store = new ArrayListProxySequenceReader<NucleotideCompound>();
-    store.setCompoundSet(compoundSet);
-    store.setContents(list);
-    return new DNASequence(store);
-  }
+			List<NucleotideCompound> list) {
+		ArrayListProxySequenceReader<NucleotideCompound> store = new ArrayListProxySequenceReader<NucleotideCompound>();
+		store.setCompoundSet(compoundSet);
+		store.setContents(list);
+		return new DNASequence(store);
+	}
 }

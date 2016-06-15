@@ -30,9 +30,9 @@ public class Name2Count{
 	private String name;
 	@XmlAttribute(name = "count", required = true)
 	private int count;
-	
+
 	public Name2Count(){}
-	
+
 	public Name2Count(String n, int c){
 		if(c <= 0){
 			throw new Error("Count must be > 0.");
@@ -40,11 +40,11 @@ public class Name2Count{
 		this.name = n;
 		this.count = c;
 	}
-	
+
 	public String getName(){
 		return this.name;
 	}
-	
+
 	public int getCount(){
 		return this.count;
 	}

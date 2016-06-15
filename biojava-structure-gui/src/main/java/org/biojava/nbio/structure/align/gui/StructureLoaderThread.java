@@ -42,7 +42,7 @@ public class StructureLoaderThread extends SwingWorker<String, Object> {
 	StructureLoaderThread(UserConfiguration config, String name, boolean showBiolAssembly){
 		this.name = name;
 		this.showBiolAssembly = showBiolAssembly;
-	
+
 		this.config = config;
 	}
 
@@ -63,7 +63,7 @@ public class StructureLoaderThread extends SwingWorker<String, Object> {
 					// uh oh, we are probably going to exceed 512 MB usage...
 					// scale down to something smaller
 					System.err.println("Structure very large. Reducing display to C alpha atoms only");
-					s = BioAssemblyTools.getReducedCAStructure(s);
+					s = BioAssemblyTools.getReducedStructure(s);
 				}
 
 			} else {
@@ -71,7 +71,7 @@ public class StructureLoaderThread extends SwingWorker<String, Object> {
 			}
 
 			System.out.println("done loading structure...");
-		
+
 
 			StructureAlignmentJmol jmol = new StructureAlignmentJmol();
 			jmol.setStructure(s);
@@ -125,7 +125,7 @@ public class StructureLoaderThread extends SwingWorker<String, Object> {
 		}
 
 
-	}       
+	}
 
 	static JFrame progressFrame = null;
 	private void hideProgressBar() {

@@ -40,17 +40,17 @@ public class Element {
 	 * Element name as per periodic table e.g. "Hydrogen"
 	 */
 	@XmlAttribute(name = "name", required = true)
-	private String name; 
+	private String name;
 	/**
 	 * Element short name as in periodic table e.g. "H"
 	 */
 	@XmlAttribute(name = "symbol")
-	private String symbol; 
+	private String symbol;
 	/**
-	 * The atomic number of the element = number of protons. 
+	 * The atomic number of the element = number of protons.
 	 */
 	@XmlAttribute(name = "atomicnumber")
-	private int atomicNumber; 
+	private int atomicNumber;
 	/**
 	 * The computed mass based on isotopes and their abundances
 	 */
@@ -61,14 +61,14 @@ public class Element {
 	 */
 	@XmlElement
 	private List<Isotope> isotope;
-	
+
 	/**
 	 * To enable quick retrieval of Isotope from its name
 	 */
 	private Map<String, Isotope> name2Isotope;
-	
+
 	public Element(){}
-	
+
 	public Element(String name, String symbol, int atomicNumber, List<Isotope> isotopes, double mass){
 		if(atomicNumber <= 0){
 			throw new Error("Atomic number of Elements must be > 0.");
@@ -82,16 +82,16 @@ public class Element {
 		this.setIsotopes(isotopes);
 		this.setMass(mass);
 	}
-	
+
 	@Override
 	public String toString(){
 		return symbol + ", " + name + ", " + atomicNumber;
 	}
-	
+
 	public void setMass(double mass){
 		this.mass = mass;
 	}
-	
+
 	public double getMass(){
 		return this.mass;
 	}
@@ -99,7 +99,7 @@ public class Element {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	public String getName(){
 		return this.name;
 	}

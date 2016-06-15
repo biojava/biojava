@@ -39,10 +39,10 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 public class PdbPairXMLConverter {
-	
-	
+
+
 	public static final String DEFAULT_METHOD_NAME = FatCatRigid.algorithmName;
-	
+
 	public static PdbPairsMessage convertXMLtoPairs(String xml) {
 		SortedSet<PdbPair>  pairs = new TreeSet<PdbPair>();
 		PdbPairsMessage message = new PdbPairsMessage();
@@ -61,21 +61,21 @@ public class PdbPairXMLConverter {
 			NodeList algorithms =  doc.getElementsByTagName("pairs");
 			//System.out.println(algorithms.getLength());
 			for(int i=0; i<algorithms.getLength() ; i++) {
-				
+
 				Node algo       = algorithms.item(i);
-				
+
 				NamedNodeMap map = algo.getAttributes();
-				
+
 				String name = map.getNamedItem("algorithm").getTextContent();
-				
+
 				if ( name != null) {
-					
+
 					message.setMethod(name);
-				
+
 				}
-				
+
 			}
-			
+
 
 			NodeList listOfPairs = doc.getElementsByTagName("pair");
 			//System.out.println(listOfPairs.getLength());
@@ -109,18 +109,18 @@ public class PdbPairXMLConverter {
 		if (method == null){
 			method = DEFAULT_METHOD_NAME;
 		}
-		
-		
+
+
 		PrettyXMLWriter xml = new PrettyXMLWriter(writer);
 		try {
-			
-			
+
+
 			xml.openTag("pairs");
 			xml.attribute("algorithm", method);
 			for ( PdbPair pair : pairs){
 				xml.openTag("pair");
 				xml.attribute("name1", pair.getName1());
-				xml.attribute("name2", pair.getName2());				
+				xml.attribute("name2", pair.getName2());
 				xml.closeTag("pair");
 			}
 			xml.closeTag("pairs");

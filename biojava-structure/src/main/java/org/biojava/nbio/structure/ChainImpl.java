@@ -25,8 +25,6 @@ package org.biojava.nbio.structure;
 
 
 import org.biojava.nbio.structure.io.FileConvert;
-import org.biojava.nbio.structure.io.PDBFileReader;
-import org.biojava.nbio.structure.io.SeqRes2AtomAligner;
 import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
 import org.biojava.nbio.structure.io.mmcif.chem.PolymerType;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
@@ -73,6 +71,8 @@ public class ChainImpl implements Chain, Serializable {
 	private Map<String, Integer> pdbResnumMap;
 	private String internalChainID; // the chain identifier used in mmCIF files
 
+
+	private List<SeqMisMatch> seqMisMatches = null;
 	/**
 	 *  Constructs a ChainImpl object.
 	 */
@@ -108,7 +108,16 @@ public class ChainImpl implements Chain, Serializable {
 	 *
 	 */
 	@Override
+	@Deprecated
 	public void setParent(Structure parent) {
+		setStructure(parent);
+	}
+
+	/** {@inheritDoc}
+	 *
+	 */
+	@Override
+	public void setStructure(Structure parent){
 		this.parent = parent;
 	}
 
@@ -117,12 +126,24 @@ public class ChainImpl implements Chain, Serializable {
 	 * @return the parent Structure object
 	 */
 	@Override
-	public Structure getParent() {
-
+	public Structure getStructure() {
 
 		return parent;
 	}
 
+
+	/** Returns the parent Structure of this chain.
+	 *
+	 * @return the parent Structure object
+	 * @deprecated  use getStructure instead.
+	 */
+	@Override
+	@Deprecated
+	public Structure getParent() {
+
+
+		return getStructure();
+	}
 
 	/** Returns an identical copy of this Chain .
 	 * @return an identical copy of this Chain
@@ -148,32 +169,46 @@ public class ChainImpl implements Chain, Serializable {
 			g.setChain(n);
 		}
 
-		if (!seqResGroups.isEmpty()){
+
+
+		if (seqResGroups!=null){
+
+			List<Group> tmpSeqRes = new ArrayList<Group>();
 
 			// cloning seqres and atom groups is ugly, due to their
 			// nested relationship (some of the atoms can be in the seqres, but not all)
 
-			List<Group> tmpSeqRes = new ArrayList<Group>();
 			for (Group seqResGroup : seqResGroups) {
-				Group g = (Group) seqResGroup.clone();
+
+				int i = findMathingGroupIndex(groups, seqResGroup);
+
+				Group g = null;
+
+				if (i!=-1) {
+					// group found in atom groups, we get the equivalent reference from the newly cloned atom groups
+					g = n.getAtomGroup(i);
+				} else {
+					// group not found in atom groups, we clone the seqres group
+					g = (Group) seqResGroup.clone();
+				}
 				g.setChain(n);
 				tmpSeqRes.add(g);
 			}
 
-			Chain tmp = new ChainImpl();
-			// that's a bit confusing, but that's how to set the seqres so that SeqRes2AtomAligner can use them 
-			tmp.setAtomGroups(tmpSeqRes);
-
-			// now match them up..
-			SeqRes2AtomAligner seqresaligner = new SeqRes2AtomAligner();
-
-			seqresaligner.mapSeqresRecords(n, tmp);
-
-
+			n.setSeqResGroups(tmpSeqRes);
 		}
 
 
 		return n ;
+	}
+
+	private static int findMathingGroupIndex(List<Group> atomGroups, Group g) {
+		int i = 0;
+		for (Group atomGroup: atomGroups) {
+			if (g==atomGroup) return i;
+			i++;
+		}
+		return -1;
 	}
 
 
@@ -220,6 +255,11 @@ public class ChainImpl implements Chain, Serializable {
 
 		group.setChain(this);
 
+		// Set the altlocs chain as well
+		for(Group g : group.getAltLocs()) {
+			g.setChain(this);
+		}
+
 		groups.add(group);
 
 		// store the position internally for quick access of this group
@@ -237,14 +277,18 @@ public class ChainImpl implements Chain, Serializable {
 		 * ATOM    621  CA  GLY    93     -24.960  -6.849   5.497  1.00 47.35           C
 		 * ATOM    622  C   GLY    93     -26.076  -5.873   5.804  1.00 47.24           C
 		 * ATOM    623  O   GLY    93     -26.382  -4.986   5.006  1.00 47.56           O
-         and ...
+		 *    and ...
 		 * HETATM 1348  O   HOH    92     -21.853 -16.886  19.138  1.00 66.92           O
 		 * HETATM 1349  O   HOH    93     -26.126   1.226  29.069  1.00 71.69           O
 		 * HETATM 1350  O   HOH    94     -22.250 -18.060  -6.401  1.00 61.97           O
 		 */
 
 			// this check is to give in this case the entry priority that is an AminoAcid / comes first...
+			// a good example of same residue number for 2 residues is 3th3, chain T, residue 201 (a LYS and a sugar BGC covalently attached to it) - JD 2016-03-09
 			if (  pdbResnumMap.containsKey(pdbResnum)) {
+
+				logger.warn("Adding residue {}({}) to chain {} but a residue with same residue number is already present: {}({}). Will add only the aminoacid residue (if any) to the lookup, lookups for that residue number won't work properly.",
+						pdbResnum, group.getPDBName(), getChainID(), groups.get(pdbResnumMap.get(pdbResnum)).getResidueNumber(), groups.get(pdbResnumMap.get(pdbResnum)).getPDBName());
 				if ( group instanceof AminoAcid)
 					pdbResnumMap.put(pdbResnum,pos);
 			} else
@@ -483,9 +527,8 @@ public class ChainImpl implements Chain, Serializable {
 
 	}
 
-	/** Convert the SEQRES groups of a Chain to a Biojava Sequence object.
-	 *
-	 * @return the SEQRES groups of the Chain as a Sequence object.
+	/**
+	 * {@inheritDoc}
 	 */
 	@Override
 	public Sequence<?> getBJSequence()  {
@@ -505,45 +548,31 @@ public class ChainImpl implements Chain, Serializable {
 
 	}
 
-	/** {@inheritDoc}
-	 *
+	/**
+	 * {@inheritDoc}
 	 */
 	@Override
 	public String getAtomSequence(){
 
-		String prop = System.getProperty(PDBFileReader.LOAD_CHEM_COMP_PROPERTY);
 
-		if ( prop != null && prop.equalsIgnoreCase("true")){
-
-
-			List<Group> groups = getAtomGroups();
-			StringBuilder sequence = new StringBuilder() ;
-
-			for ( Group g: groups){
-				ChemComp cc = g.getChemComp();
-
-				if ( PolymerType.PROTEIN_ONLY.contains(cc.getPolymerType()) ||
-						PolymerType.POLYNUCLEOTIDE_ONLY.contains(cc.getPolymerType())){
-					// an amino acid residue.. use for alignment
-					String oneLetter= ChemCompGroupFactory.getOneLetterCode(cc);
-					if ( oneLetter == null)
-						oneLetter = "X";
-					sequence.append(oneLetter);
-				}
-
-			}
-			return sequence.toString();
-		}
-
-		// not using ChemCOmp records...
-		List<Group> aminos = getAtomGroups(GroupType.AMINOACID);
+		List<Group> groups = getAtomGroups();
 		StringBuilder sequence = new StringBuilder() ;
-		for (Group amino : aminos) {
-			AminoAcid a = (AminoAcid) amino;
-			sequence.append(a.getAminoType());
-		}
 
+		for ( Group g: groups){
+			ChemComp cc = g.getChemComp();
+
+			if ( PolymerType.PROTEIN_ONLY.contains(cc.getPolymerType()) ||
+					PolymerType.POLYNUCLEOTIDE_ONLY.contains(cc.getPolymerType())){
+				// an amino acid residue.. use for alignment
+				String oneLetter= ChemCompGroupFactory.getOneLetterCode(cc);
+				if ( oneLetter == null)
+					oneLetter = Character.toString(StructureTools.UNKNOWN_GROUP_LABEL);
+				sequence.append(oneLetter);
+			}
+
+		}
 		return sequence.toString();
+
 
 	}
 
@@ -553,45 +582,29 @@ public class ChainImpl implements Chain, Serializable {
 	@Override
 	public String getSeqResSequence(){
 
-		String prop = System.getProperty(PDBFileReader.LOAD_CHEM_COMP_PROPERTY);
-
-		if ( prop != null && prop.equalsIgnoreCase("true")){
-			StringBuilder str = new StringBuilder();
-			for (Group g : seqResGroups) {
-				ChemComp cc = g.getChemComp();
-				if ( cc == null) {
-					logger.warn("Could not load ChemComp for group: ", g);
-					str.append("X");
-				} else if ( PolymerType.PROTEIN_ONLY.contains(cc.getPolymerType()) ||
-						PolymerType.POLYNUCLEOTIDE_ONLY.contains(cc.getPolymerType())){
-					// an amino acid residue.. use for alignment
-					String oneLetter= ChemCompGroupFactory.getOneLetterCode(cc);
-					if ( oneLetter == null || oneLetter.isEmpty() || oneLetter.equals("?"))
-						oneLetter = "X";
-					str.append(oneLetter);
-				} else {
-					str.append("X");
-				}
-			}
-			return str.toString();
-		}
-
 		StringBuilder str = new StringBuilder();
-		for (Group group : seqResGroups) {
-			if (group instanceof AminoAcid) {
-				AminoAcid aa = (AminoAcid)group;
-				str.append(aa.getAminoType()) ;
+		for (Group g : seqResGroups) {
+			ChemComp cc = g.getChemComp();
+			if ( cc == null) {
+				logger.warn("Could not load ChemComp for group: ", g);
+				str.append(StructureTools.UNKNOWN_GROUP_LABEL);
+			} else if ( PolymerType.PROTEIN_ONLY.contains(cc.getPolymerType()) ||
+					PolymerType.POLYNUCLEOTIDE_ONLY.contains(cc.getPolymerType())){
+				// an amino acid residue.. use for alignment
+				String oneLetter= ChemCompGroupFactory.getOneLetterCode(cc);
+				if ( oneLetter == null || oneLetter.isEmpty() || oneLetter.equals("?"))
+					oneLetter = Character.toString(StructureTools.UNKNOWN_GROUP_LABEL);
+				str.append(oneLetter);
 			} else {
-				str.append("X");
+				str.append(StructureTools.UNKNOWN_GROUP_LABEL);
 			}
 		}
 		return str.toString();
-
 	}
 
 
-	/** {@inheritDoc}
-	 *
+	/**
+	 * {@inheritDoc}
 	 */
 	@Override
 	public Group getSeqResGroup(int position) {
@@ -599,8 +612,8 @@ public class ChainImpl implements Chain, Serializable {
 		return seqResGroups.get(position);
 	}
 
-	/** {@inheritDoc}
-	 *
+	/**
+	 * {@inheritDoc}
 	 */
 	@Override
 	public List<Group> getSeqResGroups(GroupType type) {
@@ -676,10 +689,20 @@ public class ChainImpl implements Chain, Serializable {
 	public String toPDB() {
 		return FileConvert.toPDB(this);
 	}
-	
+
 	@Override
 	public String toMMCIF() {
 		return FileConvert.toMMCIF(this, true);
+	}
+
+	@Override
+	public void setSeqMisMatches(List<SeqMisMatch> seqMisMatches) {
+		this.seqMisMatches = seqMisMatches;
+	}
+
+	@Override
+	public List<SeqMisMatch> getSeqMisMatches() {
+		return seqMisMatches;
 	}
 }
 

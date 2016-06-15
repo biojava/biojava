@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Jun 1, 2010
- * Author: Jianjiong Gao 
+ * Author: Jianjiong Gao
  *
  */
 
@@ -39,7 +39,7 @@ import java.io.InputStream;
 import java.util.*;
 
 /**
- * 
+ *
  * @author Jianjiong Gao
  * @since 3.0
  */
@@ -48,7 +48,7 @@ public final class ProteinModificationXmlReader {
 	 * This is a utility class and thus cannot be instantialized.
 	 */
 	private ProteinModificationXmlReader() {}
-	
+
 	/**
 	 * Read protein modifications from XML file and register them.
 	 * @param isXml {@link InputStream} of the XML file.
@@ -61,18 +61,18 @@ public final class ProteinModificationXmlReader {
 		if (isXml==null) {
 			throw new IllegalArgumentException("Null argument.");
 		}
-		
+
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = factory.newDocumentBuilder();
 		Document doc = builder.parse(isXml);
-		
-		NodeList modNodes = doc.getElementsByTagName("Entry");		
+
+		NodeList modNodes = doc.getElementsByTagName("Entry");
 		int modSize = modNodes.getLength();
 		List<Node> nodes;
 		for (int iMod=0; iMod<modSize; iMod++) {
 			Node modNode = modNodes.item(iMod);
 			Map<String,List<Node>> infoNodes = getChildNodes(modNode);
-			
+
 			// ID
 			nodes = infoNodes.get("Id");
 			if (nodes==null || nodes.size()!=1) {
@@ -80,7 +80,7 @@ public final class ProteinModificationXmlReader {
 						"one <Id> field.");
 			}
 			String id = nodes.get(0).getTextContent();
-			
+
 			// modification category
 			nodes = infoNodes.get("Category");
 			if (nodes==null || nodes.size()!=1) {
@@ -94,7 +94,7 @@ public final class ProteinModificationXmlReader {
 					" is not defined as an modification category." +
 					" See Modification "+id+".");
 			}
-			
+
 			// occurrence type
 			nodes = infoNodes.get("Occurrence");
 			if (nodes==null || nodes.size()!=1) {
@@ -108,7 +108,7 @@ public final class ProteinModificationXmlReader {
 					" is not defined as an modification occurence type." +
 					" See Modification "+id+".");
 			}
-			
+
 			// condition
 			ModificationCondition condition = null;
 			{
@@ -117,14 +117,14 @@ public final class ProteinModificationXmlReader {
 					throw new RuntimeException("Each modification must have exact " +
 							"one <Condition> field. See Modification "+id+".");
 				}
-				
+
 				Node compsNode = nodes.get(0);
-				
+
 				// keep track of the labels of component indices
 				Map<String,Integer> mapLabelComp = new HashMap<String,Integer>();
 
 				Map<String,List<Node>> compInfoNodes = getChildNodes(compsNode);
-				
+
 				// components
 				List<Node> compNodes = compInfoNodes.get("Component");
 				int sizeComp = compNodes.size();
@@ -139,12 +139,12 @@ public final class ProteinModificationXmlReader {
 								" See Modification "+id+".");
 					}
 					String label = labelNode.getTextContent();
-					
+
 					if (mapLabelComp.containsKey(label)) {
 						throw new RuntimeException("Each component must have a unique label." +
 								" See Modification "+id+".");
 					}
-					
+
 					// comp PDBCC ID
 					Set<String> compIds = new HashSet<String>();
 					List<Node> compIdNodes = getChildNodes(compNode).get("Id");
@@ -162,12 +162,12 @@ public final class ProteinModificationXmlReader {
 							}
 						}
 					}
-					
+
 					if (compIds.isEmpty()) {
 						throw new RuntimeException("Each component must have a PDBCC ID." +
 								" See Modification "+id+".");
 					}
-					
+
 					// terminal
 					boolean nTerminal = false;
 					boolean cTerminal = false;
@@ -190,10 +190,10 @@ public final class ProteinModificationXmlReader {
 
 					// register
 					Component comp = Component.of(compIds, nTerminal, cTerminal);
-					comps.add(comp);						
+					comps.add(comp);
 					mapLabelComp.put(label, comps.size()-1);
 				}
-				
+
 				// bonds
 				List<Node> bondNodes = compInfoNodes.get("Bond");
 				List<ModificationLinkage> linkages = null;
@@ -207,13 +207,13 @@ public final class ProteinModificationXmlReader {
 							throw new RuntimeException("Each bond must contain two atoms" +
 									" See Modification "+id+".");
 						}
-						
+
 						List<Node> atomNodes = bondChildNodes.get("Atom");
 						if (atomNodes==null || atomNodes.size()!=2) {
 							throw new RuntimeException("Each bond must contain two atoms" +
 									" See Modification "+id+".");
 						}
-						
+
 						// atom 1
 						NamedNodeMap atomNodeAttrs = atomNodes.get(0).getAttributes();
 						Node compNode = atomNodeAttrs.getNamedItem("component");
@@ -223,17 +223,17 @@ public final class ProteinModificationXmlReader {
 						}
 						String labelComp1 = compNode.getTextContent();
 						int iComp1 = mapLabelComp.get(labelComp1);
-						
+
 						Node labelNode = atomNodeAttrs.getNamedItem("atom");
 						String labelAtom1 = labelNode==null?null:labelNode.getTextContent();
-						
+
 						String atom1 = atomNodes.get(0).getTextContent();
 						if (atom1.isEmpty()) {
 							throw new RuntimeException("Each atom must have a name. Please use wildcard * if unknown." +
 									" See Modification "+id+".");
 						}
 						List<String> potentialAtoms1 = Arrays.asList(atom1.split(","));
-						
+
 						// atom 2
 						atomNodeAttrs = atomNodes.get(1).getAttributes();
 						compNode = atomNodeAttrs.getNamedItem("component");
@@ -246,14 +246,14 @@ public final class ProteinModificationXmlReader {
 
 						labelNode = atomNodeAttrs.getNamedItem("atom");
 						String labelAtom2 = labelNode==null?null:labelNode.getTextContent();
-						
+
 						String atom2 = atomNodes.get(1).getTextContent();
 						if (atom2.isEmpty()) {
 							throw new RuntimeException("Each atom must have a name. Please use wildcard * if unknown." +
 									" See Modification "+id+".");
 						}
 						List<String> potentialAtoms2 = Arrays.asList(atom2.split(","));
-						
+
 						// add linkage
 						ModificationLinkage linkage = new ModificationLinkage(comps,
 								iComp1, potentialAtoms1, labelAtom1,
@@ -261,25 +261,25 @@ public final class ProteinModificationXmlReader {
 						linkages.add(linkage);
 					}
 				}
-				
+
 				condition = new ModificationConditionImpl(comps, linkages);
-			} // end of condition	
-			
-			ProteinModificationImpl.Builder modBuilder = 
+			} // end of condition
+
+			ProteinModificationImpl.Builder modBuilder =
 				new ProteinModificationImpl.Builder(id, cat, occType, condition);
-			
+
 			// description
 			nodes = infoNodes.get("Description");
 			if (nodes!=null && !nodes.isEmpty()) {
 				modBuilder.setDescription(nodes.get(0).getTextContent());
 			}
-			
+
 			// cross references
 			nodes = infoNodes.get("CrossReference");
 			if (nodes!=null) {
 				for (Node node:nodes) {
 					Map<String,List<Node>> xrefInfoNodes = getChildNodes(node);
-					
+
 					// source
 					List<Node> xrefNode = xrefInfoNodes.get("Source");
 					if (xrefNode==null || xrefNode.size()!=1) {
@@ -288,7 +288,7 @@ public final class ProteinModificationXmlReader {
 							" See Modification "+id+".");
 					}
 					String xrefDb = xrefNode.get(0).getTextContent();
-					
+
 					// id
 					xrefNode = xrefInfoNodes.get("Id");
 					if (xrefNode==null || xrefNode.size()!=1) {
@@ -297,14 +297,14 @@ public final class ProteinModificationXmlReader {
 							" See Modification "+id+".");
 					}
 					String xrefId = xrefNode.get(0).getTextContent();
-					
+
 					// name
 					String xrefName = null;
 					xrefNode = xrefInfoNodes.get("Name");
 					if (xrefNode!=null && !xrefNode.isEmpty()) {
 						xrefName = xrefNode.get(0).getTextContent();
 					}
-					
+
 					if (xrefDb.equals("PDBCC")) {
 						modBuilder.setPdbccId(xrefId).setPdbccName(xrefName);
 					} else if (xrefDb.equals("RESID")) {
@@ -314,13 +314,13 @@ public final class ProteinModificationXmlReader {
 					}
 				}
 			} // end of cross references
-			
+
 			// formula
 			nodes = infoNodes.get("Formula");
 			if (nodes!=null && !nodes.isEmpty()) {
 				modBuilder.setFormula(nodes.get(0).getTextContent());
 			}
-			
+
 			// keywords
 			nodes = infoNodes.get("Keyword");
 			if (nodes!=null && !nodes.isEmpty()) {
@@ -328,11 +328,11 @@ public final class ProteinModificationXmlReader {
 					modBuilder.addKeyword(node.getTextContent());
 				}
 			}
-			
+
 			ProteinModificationRegistry.register(modBuilder.build());
 		}
 	}
-	
+
 	/**
 	 * Utility method to group child nodes by their names.
 	 * @param parent parent node.
@@ -341,16 +341,16 @@ public final class ProteinModificationXmlReader {
 	private static Map<String,List<Node>> getChildNodes(Node parent) {
 		if (parent==null)
 			return Collections.emptyMap();
-		
+
 		Map<String,List<Node>> children = new HashMap<String,List<Node>>();
-		
+
 		NodeList nodes = parent.getChildNodes();
 		int nNodes = nodes.getLength();
 		for (int i=0; i<nNodes; i++) {
 			Node node = nodes.item(i);
 			if (node.getNodeType()!=Node.ELEMENT_NODE)
 				continue;
-			
+
 			String name = node.getNodeName();
 			List<Node> namesakes = children.get(name);
 			if (namesakes==null) {
@@ -359,7 +359,7 @@ public final class ProteinModificationXmlReader {
 			}
 			namesakes.add(node);
 		}
-		
+
 		return children;
 	}
 }

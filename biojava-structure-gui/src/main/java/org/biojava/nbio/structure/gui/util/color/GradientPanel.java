@@ -16,7 +16,7 @@
  * at:
  *
  *      http://www.biojava.org/
- * 
+ *
  * Created on Aug 3, 2007
  */
 package org.biojava.nbio.structure.gui.util.color;
@@ -28,21 +28,21 @@ public class GradientPanel extends JPanel {
 	private static final long serialVersionUID = -6387922432121206731L;
 	private ContinuousColorMapper mapper;
 	private double min, max;
-	
-	
+
+
 	public GradientPanel(ContinuousColorMapper mapper, double min, double max) {
-		this.min = min; 
+		this.min = min;
 		this.max = max;
 		this.mapper = mapper;
 		this.setPreferredSize(new Dimension(100,20));
 	}
-	
+
 	@Override
 	public void paintComponent(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
 		int w = getWidth();
 		int h = getHeight();
-		
+
 		g2.setStroke(new BasicStroke(1.0f));
 		for(int i=0;i<w;i++) {
 			double val = (max-min)*i/w+min;
@@ -50,5 +50,5 @@ public class GradientPanel extends JPanel {
 			g2.drawLine(i, 0, i, h);
 		}
 	}
-	
+
 }

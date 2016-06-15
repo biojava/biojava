@@ -16,7 +16,7 @@
  * at:
  *
  *      http://www.biojava.org/
- * 
+ *
  * Created on Jul 17, 2006
  *
  */
@@ -25,46 +25,46 @@ package org.biojava.nbio.structure.gui.util;
 import javax.swing.table.AbstractTableModel;
 
 class JTableDataButtonModel extends AbstractTableModel {
-    
-    public static final long serialVersionUID = 0l;
-    
-    Object[][] __rows;
-    String[]   __columns;
-    
-    public JTableDataButtonModel(Object[][] rows, String[] columns){
-        __rows = rows;
-        __columns = columns;
-    }
-    
-    
-    @Override
-	public String getColumnName(int column) { 
-      return __columns[column];
-    }
 
-    @Override
+		public static final long serialVersionUID = 0l;
+
+		Object[][] __rows;
+		String[]   __columns;
+
+		public JTableDataButtonModel(Object[][] rows, String[] columns){
+				__rows = rows;
+				__columns = columns;
+		}
+
+
+		@Override
+	public String getColumnName(int column) {
+			return __columns[column];
+		}
+
+		@Override
 	public int getRowCount() {
-      return __rows.length;
-    }
+			return __rows.length;
+		}
 
-    @Override
+		@Override
 	public int getColumnCount() {
-      return __columns.length;
-    }
+			return __columns.length;
+		}
 
-    @Override
-	public Object getValueAt(int row, int column) { 
-        return __rows[row][column];
-    }
+		@Override
+	public Object getValueAt(int row, int column) {
+				return __rows[row][column];
+		}
 
-    @Override
+		@Override
 	public boolean isCellEditable(int row, int column) {
-      return false;
-    }
+			return false;
+		}
 
-    @Override
+		@Override
 	@SuppressWarnings({ "unchecked" })
 	public Class getColumnClass(int column) {
-      return getValueAt(0, column).getClass();
-    }
-  }
+			return getValueAt(0, column).getClass();
+		}
+	}

@@ -16,10 +16,10 @@
  * at:
  *
  *      http://www.biojava.org/
- * 
+ *
  * Author: Andreas Prlic
- * 
- * 
+ *
+ *
  */
 
 package org.biojava.nbio.structure.scop;
@@ -39,7 +39,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 
 /** This class provides access to the SCOP protein structure classification.
- * 
+ *
  * For more information about SCOP see here:
  *  <ul>
  *   <li>SCOP: <a href="http://scop.mrc-lmb.cam.ac.uk/scop/">http://scop.mrc-lmb.cam.ac.uk/scop/</a></li>
@@ -49,20 +49,20 @@ import java.util.concurrent.atomic.AtomicBoolean;
  *   <li> SCOP parsable files: <a href="http://scop.mrc-lmb.cam.ac.uk/scop/parse/">http://scop.mrc-lmb.cam.ac.uk/scop/parse/</a> </li>
  * </ul>
 
- * 
+ *
  * This class can automatically download missing files from the SCOP classification.
- * 
+ *
  * @author Andreas Prlic
  *
  */
 public class ScopInstallation implements LocalScopDatabase {
 
 	public static final String DEFAULT_VERSION = "1.75";
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(ScopInstallation.class);
 
 	protected String scopVersion;
-	
+
 	// Stores URLs for cla, des, hie, and com files
 	private final List<ScopMirror> mirrors;
 
@@ -75,7 +75,7 @@ public class ScopInstallation implements LocalScopDatabase {
 	// Download locations
 	public static final String SCOP_DOWNLOAD = "http://scop.mrc-lmb.cam.ac.uk/scop/parse/";
 	public static final String SCOP_DOWNLOAD_ALTERNATE = "http://scop.berkeley.edu/downloads/parse/";
-	
+
 	public static final String NEWLINE;
 	public static final String FILESPLIT ;
 
@@ -98,9 +98,9 @@ public class ScopInstallation implements LocalScopDatabase {
 	Map<Integer, ScopNode> scopTree;
 
 
-	/** Create a new SCOP installation. 
-	 * 
-	 * @param cacheLocation where the SCOP files are stored. If they can't be found at that location they will get automatically downloaded and installed there. 
+	/** Create a new SCOP installation.
+	 *
+	 * @param cacheLocation where the SCOP files are stored. If they can't be found at that location they will get automatically downloaded and installed there.
 	 */
 	public ScopInstallation(String cacheLocation){
 
@@ -132,7 +132,7 @@ public class ScopInstallation implements LocalScopDatabase {
 		commentsMap = null;
 		installedCom.set(false);
 	}
-	
+
 	/**
 	 * Create a new SCOP installation, downloading the file to "the right place".
 	 * This will first check for system properties or environmental variables
@@ -324,9 +324,9 @@ public class ScopInstallation implements LocalScopDatabase {
 		}
 
 		List<ScopDomain> doms = domainMap.get(pdbId.toLowerCase());
-		
+
 		List<ScopDomain> retdoms = new ArrayList<ScopDomain>();
-		
+
 		if ( doms == null)
 			return retdoms;
 
@@ -363,7 +363,7 @@ public class ScopInstallation implements LocalScopDatabase {
 		if ( doms == null)
 			return null;
 		for ( ScopDomain d : doms){
-			if ( d.getScopId().equalsIgnoreCase(scopId)) 
+			if ( d.getScopId().equalsIgnoreCase(scopId))
 				return d;
 		}
 
@@ -462,7 +462,7 @@ public class ScopInstallation implements LocalScopDatabase {
 		parseDescriptions(buffer);
 
 	}
-	
+
 	private void parseComments() throws IOException{
 
 		File file = new File(getComFilename());
@@ -473,7 +473,7 @@ public class ScopInstallation implements LocalScopDatabase {
 		parseComments(buffer);
 
 	}
-	
+
 	private void parseComments(BufferedReader buffer) throws IOException {
 
 		commentsMap = new HashMap<Integer,List<String>>();
@@ -501,7 +501,7 @@ public class ScopInstallation implements LocalScopDatabase {
 		logger.info("Parsed {} SCOP comments.", counter);
 
 	}
-	
+
 	private void parseDescriptions(BufferedReader buffer) throws IOException {
 		String line = null;
 
@@ -581,7 +581,7 @@ public class ScopInstallation implements LocalScopDatabase {
 			int classId =Integer.parseInt(treeSplit[0].substring(3));
 			int foldId = Integer.parseInt(treeSplit[1].substring(3));
 			int superfamilyId = Integer.parseInt(treeSplit[2].substring(3));
-			int familyId = Integer.parseInt(treeSplit[3].substring(3));						
+			int familyId = Integer.parseInt(treeSplit[3].substring(3));
 			int domainId = Integer.parseInt(treeSplit[4].substring(3));
 			int speciesId = Integer.parseInt(treeSplit[5].substring(3));
 			int px = Integer.parseInt(treeSplit[6].substring(3));
@@ -608,7 +608,7 @@ public class ScopInstallation implements LocalScopDatabase {
 
 	}
 
-	/** 
+	/**
 	 * Converts the SCOP range field into a list of subranges suitable for
 	 * storage in a ScopDomain object. Each range should be of a format
 	 * compatible with {@link StructureTools#getSubRanges(Structure,String)}.
@@ -813,7 +813,7 @@ public class ScopInstallation implements LocalScopDatabase {
 		installedCom.set(false);
 
 	}
-	
+
 
 	/**
 	 * Get the URL of the first scop mirror being used
@@ -834,7 +834,7 @@ public class ScopInstallation implements LocalScopDatabase {
 		mirrors.clear();
 		mirrors.add(new ScopMirror(scopDownloadURL));
 	}
-	
+
 	public void addMirror(String scopDownloadURL) {
 		mirrors.add(new ScopMirror(scopDownloadURL));
 	}
@@ -902,7 +902,7 @@ public class ScopInstallation implements LocalScopDatabase {
 		if (!commentsMap.containsKey(sunid)) return new ArrayList<String>(1);
 		return commentsMap.get(sunid);
 	}
-	
+
 
 	private void initScopURLs() {
 		if(!this.mirrors.isEmpty()) {

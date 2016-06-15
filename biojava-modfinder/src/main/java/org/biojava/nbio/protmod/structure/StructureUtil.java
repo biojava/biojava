@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Aug 2, 2010
- * Author: Jianjiong Gao 
+ * Author: Jianjiong Gao
  *
  */
 
@@ -36,7 +36,7 @@ public final class StructureUtil {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param group a {@link Group} in structure.
 	 * @param isAminoAcid true if it is an amino acid.
 	 * @return the {@link StructureGroup} of the group.
@@ -47,7 +47,7 @@ public final class StructureUtil {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param atom a {@link Atom} in structure.
 	 * @param isParentAminoAcid true if the containing group is an amino acid.
 	 * @return the {@link StructureAtom} of the atom.
@@ -58,14 +58,14 @@ public final class StructureUtil {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param atom1 the first {@link Atom} in structure.
 	 * @param isParentAminoAcid1 true if the first containing group is an amino acid..
 	 * @param atom2 the second {@link Atom} in structure.
 	 * @param isParentAminoAcid2 true if the second containing group is an amino acid..
 	 * @return the {@link StructureAtomLinkage} of the two atoms.
 	 */
-	public static StructureAtomLinkage getStructureAtomLinkage(Atom atom1, 
+	public static StructureAtomLinkage getStructureAtomLinkage(Atom atom1,
 			boolean isParentAminoAcid1, Atom atom2, boolean isParentAminoAcid2) {
 		StructureAtom strucAtom1 = getStructureAtom(atom1, isParentAminoAcid1);
 		StructureAtom strucAtom2 = getStructureAtom(atom2, isParentAminoAcid2);
@@ -74,7 +74,7 @@ public final class StructureUtil {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param atom1 the first {@link Atom} in structure.
 	 * @param atom2 the second {@link Atom} in structure.
 	 * @return the distance between the two atoms in Angstrom.
@@ -104,7 +104,7 @@ public final class StructureUtil {
 	public static Atom[] findNearestAtomLinkage(final Group group1, final Group group2,
 			List<String> potentialNamesOfAtomOnGroup1, List<String> potentialNamesOfAtomOnGroup2,
 			final boolean ignoreNCLinkage, double bondLengthTolerance) {
-		List<Atom[]> linkages = findAtomLinkages(group1, group2, 
+		List<Atom[]> linkages = findAtomLinkages(group1, group2,
 				potentialNamesOfAtomOnGroup1, potentialNamesOfAtomOnGroup2,
 				ignoreNCLinkage, bondLengthTolerance);
 
@@ -133,7 +133,7 @@ public final class StructureUtil {
 	 * @param group2 the second {@link Group}.
 	 * @param ignoreNCLinkage true to ignore all N-C linkages
 	 * @param bondLengthTolerance bond length error tolerance.
-	 * @return a list, each element of which is an array of two Atoms that form bond 
+	 * @return a list, each element of which is an array of two Atoms that form bond
 	 * between each other.
 	 */
 	public static List<Atom[]> findAtomLinkages(final Group group1,
@@ -154,10 +154,10 @@ public final class StructureUtil {
 	 * 		  If null, search all atoms on the second group.
 	 * @param ignoreNCLinkage true to ignore all N-C linkages
 	 * @param bondLengthTolerance bond length error tolerance.
-	 * @return a list, each element of which is an array of two Atoms that form bond 
+	 * @return a list, each element of which is an array of two Atoms that form bond
 	 * between each other.
 	 */
-	public static List<Atom[]> findAtomLinkages(final Group group1, 
+	public static List<Atom[]> findAtomLinkages(final Group group1,
 			final Group group2,
 			List<String> potentialNamesOfAtomOnGroup1,
 			List<String> potentialNamesOfAtomOnGroup2,
@@ -242,7 +242,7 @@ public final class StructureUtil {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param group a {@link Group}.
 	 * @return all atom names of the group.
 	 */

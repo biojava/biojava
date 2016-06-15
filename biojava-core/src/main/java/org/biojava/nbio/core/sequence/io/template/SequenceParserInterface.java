@@ -30,12 +30,12 @@ import java.io.IOException;
  * @author Scooter Willis <willishf at gmail dot com>
  */
 public interface SequenceParserInterface {
-/**
- *
- * @param dataInput
- * @param sequenceLength
- * @return
- * @throws Exception
- */
-    public String getSequence(BufferedReader bufferedReader,int sequenceLength) throws IOException;
+	/**
+	 *
+	 * @param dataInput
+	 * @param sequenceLength
+	 * @return
+	 * @throws Exception
+	 */
+	public String getSequence(BufferedReader bufferedReader,int sequenceLength) throws IOException;
 }

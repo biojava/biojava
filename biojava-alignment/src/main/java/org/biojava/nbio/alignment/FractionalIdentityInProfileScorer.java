@@ -23,9 +23,10 @@
 
 package org.biojava.nbio.alignment;
 
-import org.biojava.nbio.alignment.template.AlignedSequence;
+import org.biojava.nbio.core.alignment.SimpleSequencePair;
+import org.biojava.nbio.core.alignment.template.AlignedSequence;
 import org.biojava.nbio.alignment.template.PairInProfileScorer;
-import org.biojava.nbio.alignment.template.Profile;
+import org.biojava.nbio.core.alignment.template.Profile;
 import org.biojava.nbio.core.sequence.template.Compound;
 import org.biojava.nbio.core.sequence.template.Sequence;
 
@@ -38,25 +39,25 @@ import org.biojava.nbio.core.sequence.template.Sequence;
  * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
  */
 public class FractionalIdentityInProfileScorer<S extends Sequence<C>, C extends Compound>
-        extends FractionalIdentityScorer<S, C> implements PairInProfileScorer<S, C> {
+		extends FractionalIdentityScorer<S, C> implements PairInProfileScorer<S, C> {
 
-    private Profile<S, C> profile;
+	private Profile<S, C> profile;
 
-    /**
-     * Creates a fractional identity scorer for an aligned pair of sequences in the given alignment profile.
-     *
-     * @param profile alignment profile containing pair of sequences
-     * @param query index in the profile of the first sequence of the pair
-     * @param target index in the profile of the second sequence of the pair
-     */
-    public FractionalIdentityInProfileScorer(Profile<S, C> profile, int query, int target) {
-        super(new SimpleSequencePair<S, C>(profile.getAlignedSequence(query), profile.getAlignedSequence(target)));
-        this.profile = profile;
-    }
+	/**
+	 * Creates a fractional identity scorer for an aligned pair of sequences in the given alignment profile.
+	 *
+	 * @param profile alignment profile containing pair of sequences
+	 * @param query index in the profile of the first sequence of the pair
+	 * @param target index in the profile of the second sequence of the pair
+	 */
+	public FractionalIdentityInProfileScorer(Profile<S, C> profile, int query, int target) {
+		super(new SimpleSequencePair<S, C>(profile.getAlignedSequence(query), profile.getAlignedSequence(target)));
+		this.profile = profile;
+	}
 
-    @Override
-    public Profile<S, C> getProfile() {
-        return profile;
-    }
+	@Override
+	public Profile<S, C> getProfile() {
+		return profile;
+	}
 
 }

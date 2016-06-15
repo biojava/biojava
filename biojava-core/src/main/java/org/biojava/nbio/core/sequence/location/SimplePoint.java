@@ -21,6 +21,8 @@
  */
 package org.biojava.nbio.core.sequence.location;
 
+import java.io.Serializable;
+
 import org.biojava.nbio.core.sequence.location.template.Point;
 import org.biojava.nbio.core.util.Equals;
 import org.biojava.nbio.core.util.Hashcoder;
@@ -30,112 +32,115 @@ import org.biojava.nbio.core.util.Hashcoder;
  *
  * @author ayates
  */
-public class SimplePoint implements Point {
+public class SimplePoint implements Serializable, Point {
 
-    private int position;
-    private boolean unknown;
-    private boolean uncertain;
 
-    protected SimplePoint() {
-        super();
-    }
+	private static final long serialVersionUID = 1L;
 
-    public SimplePoint(int position) {
-        this.position = position;
-    }
+	private int position;
+	private boolean unknown;
+	private boolean uncertain;
 
-    public SimplePoint(int position, boolean unknown, boolean uncertain) {
-        this.position = position;
-        this.unknown = unknown;
-        this.uncertain = uncertain;
-    }
+	protected SimplePoint() {
+		super();
+	}
 
-    @Override
-    public Integer getPosition() {
-        return position;
-    }
+	public SimplePoint(int position) {
+		this.position = position;
+	}
 
-    protected void setPosition(int position) {
-        this.position = position;
-    }
+	public SimplePoint(int position, boolean unknown, boolean uncertain) {
+		this.position = position;
+		this.unknown = unknown;
+		this.uncertain = uncertain;
+	}
 
-    @Override
-    public boolean isUnknown() {
-        return unknown;
-    }
+	@Override
+	public Integer getPosition() {
+		return position;
+	}
 
-    protected void setUnknown(boolean unknown) {
-        this.unknown = unknown;
-    }
+	protected void setPosition(int position) {
+		this.position = position;
+	}
 
-    @Override
-    public boolean isUncertain() {
-        return uncertain;
-    }
+	@Override
+	public boolean isUnknown() {
+		return unknown;
+	}
 
-    protected void setUncertain(boolean uncertain) {
-        this.uncertain = uncertain;
-    }
+	protected void setUnknown(boolean unknown) {
+		this.unknown = unknown;
+	}
 
-    @Override
-    public Point reverse(int length) {
-        int translatedPosition = reverse(getPosition(), length);
-        return new SimplePoint(translatedPosition, isUnknown(), isUncertain());
-    }
+	@Override
+	public boolean isUncertain() {
+		return uncertain;
+	}
 
-    @Override
-    public Point offset(int distance) {
-        int offsetPosition = getPosition() + distance;
-        return new SimplePoint(offsetPosition, isUnknown(), isUncertain());
-    }
+	protected void setUncertain(boolean uncertain) {
+		this.uncertain = uncertain;
+	}
 
-    protected int reverse(int position, int length) {
-        return (length - position) + 1;
-    }
+	@Override
+	public Point reverse(int length) {
+		int translatedPosition = reverse(getPosition(), length);
+		return new SimplePoint(translatedPosition, isUnknown(), isUncertain());
+	}
 
-    @Override
-    public boolean equals(Object obj) {
-        boolean equals = false;
-        if (Equals.classEqual(this, obj)) {
-            SimplePoint p = (SimplePoint) obj;
-            equals = (Equals.equal(getPosition(), p.getPosition())
-                    && Equals.equal(isUncertain(), p.isUncertain())
-                    && Equals.equal(isUnknown(), p.isUnknown()));
-        }
-        return equals;
-    }
+	@Override
+	public Point offset(int distance) {
+		int offsetPosition = getPosition() + distance;
+		return new SimplePoint(offsetPosition, isUnknown(), isUncertain());
+	}
 
-    @Override
-    public int hashCode() {
-        int r = Hashcoder.SEED;
-        r = Hashcoder.hash(r, getPosition());
-        r = Hashcoder.hash(r, isUncertain());
-        r = Hashcoder.hash(r, isUnknown());
-        return r;
-    }
+	protected int reverse(int position, int length) {
+		return (length - position) + 1;
+	}
 
-    @Override
-    public String toString() {
-        return Integer.toString(getPosition());
-    }
+	@Override
+	public boolean equals(Object obj) {
+		boolean equals = false;
+		if (Equals.classEqual(this, obj)) {
+			SimplePoint p = (SimplePoint) obj;
+			equals = (Equals.equal(getPosition(), p.getPosition())
+					&& Equals.equal(isUncertain(), p.isUncertain())
+					&& Equals.equal(isUnknown(), p.isUnknown()));
+		}
+		return equals;
+	}
 
-    @Override
-    public int compareTo(Point o) {
-        return getPosition().compareTo(o.getPosition());
-    }
+	@Override
+	public int hashCode() {
+		int r = Hashcoder.SEED;
+		r = Hashcoder.hash(r, getPosition());
+		r = Hashcoder.hash(r, isUncertain());
+		r = Hashcoder.hash(r, isUnknown());
+		return r;
+	}
 
-    @Override
-    public boolean isLower(Point point) {
-        return (compareTo(point) < 0);
-    }
+	@Override
+	public String toString() {
+		return Integer.toString(getPosition());
+	}
 
-    @Override
-    public boolean isHigher(Point point) {
-        return (compareTo(point) > 0);
-    }
+	@Override
+	public int compareTo(Point o) {
+		return getPosition().compareTo(o.getPosition());
+	}
 
-    @Override
-    public Point clonePoint() {
-        return this.offset(0);
-    }
+	@Override
+	public boolean isLower(Point point) {
+		return (compareTo(point) < 0);
+	}
+
+	@Override
+	public boolean isHigher(Point point) {
+		return (compareTo(point) > 0);
+	}
+
+	@Override
+	public Point clonePoint() {
+		return this.offset(0);
+	}
 }

@@ -36,7 +36,7 @@ import static org.junit.Assert.*;
 public class TestAltLocs {
 
 	@Test
-	public void testAltLocParsing() throws StructureException, IOException{ 
+	public void testAltLocParsing() throws StructureException, IOException{
 
 
 		AtomCache cache = new AtomCache();
@@ -107,7 +107,7 @@ public class TestAltLocs {
 
 	@Test
 	public void test2W72() throws IOException, StructureException{
-		
+
 		AtomCache cache = new AtomCache();
 		Structure s = cache.getStructure("2W72");
 
@@ -118,7 +118,7 @@ public class TestAltLocs {
 		assertNotNull(ca1);
 
 		Group lys7 = a.getGroupByPDB(ResidueNumber.fromString("7"));
-		Atom ca7 = lys7.getAtom("CA");			
+		Atom ca7 = lys7.getAtom("CA");
 		assertNotNull(ca7);
 
 		Atom[] caA = StructureTools.getRepresentativeAtomArray(a);
@@ -141,7 +141,7 @@ public class TestAltLocs {
 		ensureAllAtomsSameAltCode(g);
 		//System.out.println("== alternate group ==");
 		for ( Group altGroup : g.getAltLocs() ) {
-			ensureAllAtomsSameAltCode(altGroup);	
+			ensureAllAtomsSameAltCode(altGroup);
 		}
 
 
@@ -159,20 +159,20 @@ public class TestAltLocs {
 		ensureAllAtomsSameAltCode(g);
 		//System.out.println("== alternate group ==");
 		for ( Group altGroup : g.getAltLocs() ) {
-			ensureAllAtomsSameAltCode(altGroup);	
+			ensureAllAtomsSameAltCode(altGroup);
 		}
 
 
 	}
 
 	private void ensureAllAtomsSameAltCode(Group g) {
-		
+
 		Character defaultAltLoc = null;
 		for (Atom atom : g.getAtoms()) {
-		
+
 			if ( defaultAltLoc == null) {
 				defaultAltLoc = atom.getAltLoc();
-		
+
 				continue;
 			}
 
@@ -183,7 +183,7 @@ public class TestAltLocs {
 	}
 
 	@Test
-	public void test1AAC() throws IOException, StructureException{ 
+	public void test1AAC() throws IOException, StructureException{
 
 		Structure s = StructureIO.getStructure("1AAC");
 
@@ -237,15 +237,15 @@ public class TestAltLocs {
 	}
 
 	@Test
-	public void test3PIUpdb() throws IOException, StructureException{ 
+	public void test3PIUpdb() throws IOException, StructureException{
 
 		AtomCache cache = new AtomCache();
 		FileParsingParameters params = new FileParsingParameters();
 		params.setAlignSeqRes(true);
 		cache.setFileParsingParams(params);
 
-		
-		StructureIO.setAtomCache(cache); 
+
+		StructureIO.setAtomCache(cache);
 
 		cache.setUseMmCif(false);
 
@@ -253,7 +253,7 @@ public class TestAltLocs {
 
 		assertNotNull(structure);
 
-		Atom[] ca = StructureTools.getRepresentativeAtomArray(structure);
+		Atom[] ca = StructureTools.getAtomCAArray(structure);
 
 		//System.out.println(structure.getPdbId() + " has # CA atoms: " + ca.length);
 
@@ -297,24 +297,28 @@ public class TestAltLocs {
 
 
 	}
-	
+
+
+
 	@Test
-	public void test3PIUmmcif() throws IOException, StructureException{ 
+	public void test4CUPBonds() throws IOException, StructureException{
 
 		AtomCache cache = new AtomCache();
 		FileParsingParameters params = new FileParsingParameters();
 		params.setAlignSeqRes(true);
+		params.setCreateAtomBonds(true);
 		cache.setFileParsingParams(params);
-		
-		StructureIO.setAtomCache(cache); 
 
-		cache.setUseMmCif(true);
 
-		Structure structure = StructureIO.getStructure("3PIU");
+		StructureIO.setAtomCache(cache);
+
+		cache.setUseMmCif(false);
+
+		Structure structure = StructureIO.getStructure("4CUP");
 
 		assertNotNull(structure);
 
-		Atom[] ca = StructureTools.getRepresentativeAtomArray(structure);
+		Atom[] ca = StructureTools.getAtomCAArray(structure);
 
 		//System.out.println(structure.getPdbId() + " has # CA atoms: " + ca.length);
 
@@ -324,7 +328,71 @@ public class TestAltLocs {
 
 				for (Group altLocGroup:g.getAltLocs()) {
 					ensureAllAtomsSameAltCode(altLocGroup);
-					
+					List<Atom> theseAtoms = new ArrayList<Atom>();
+					for (Atom a:altLocGroup.getAtoms()) {
+						theseAtoms.add(a);
+					}
+					for (Atom a:altLocGroup.getAtoms()) {
+						// Check the bonds are all part of this altLoc group
+						assertNotEquals(0, a.getBonds().size());
+					}
+				}
+
+				List<Atom> atoms = g.getAtoms();
+				boolean caInMain = false;
+				for (Atom a: atoms){
+					assertNotNull(a.getGroup());
+					assertNotNull(a.getGroup().getChain());
+
+					if ( a.getName().equals(StructureTools.CA_ATOM_NAME)) {
+						caList.add(a);
+						caInMain = true;
+						break;
+
+					}
+
+
+				}
+				if (! caInMain && g.hasAtom(StructureTools.CA_ATOM_NAME)){
+					// g.hasAtom checks altLocs
+					fail("CA is not in main group, but in altLoc");
+				}
+
+			}
+		}
+
+		assertTrue(ca.length == caList.size());
+
+
+	}
+
+	@Test
+	public void test3PIUmmcif() throws IOException, StructureException{
+
+		AtomCache cache = new AtomCache();
+		FileParsingParameters params = new FileParsingParameters();
+		params.setAlignSeqRes(true);
+		cache.setFileParsingParams(params);
+
+		StructureIO.setAtomCache(cache);
+
+		cache.setUseMmCif(true);
+
+		Structure structure = StructureIO.getStructure("3PIU");
+
+		assertNotNull(structure);
+
+		Atom[] ca = StructureTools.getAtomCAArray(structure);
+
+		//System.out.println(structure.getPdbId() + " has # CA atoms: " + ca.length);
+
+		List<Atom> caList = new ArrayList<Atom>();
+		for ( Chain c: structure.getChains()){
+			for (Group g: c.getAtomGroups()){
+
+				for (Group altLocGroup:g.getAltLocs()) {
+					ensureAllAtomsSameAltCode(altLocGroup);
+
 					for (Atom a:altLocGroup.getAtoms()) {
 						assertNotNull(a.getGroup());
 						assertNotNull(a.getGroup().getChain());
@@ -337,7 +405,7 @@ public class TestAltLocs {
 
 					assertNotNull(a.getGroup());
 					assertNotNull(a.getGroup().getChain());
-					
+
 					if ( a.getName().equals(StructureTools.CA_ATOM_NAME)) {
 						caList.add(a);
 						caInMain = true;
@@ -361,14 +429,14 @@ public class TestAltLocs {
 	}
 
 	@Test
-	public void test3U7Tmmcif() throws IOException, StructureException{ 
+	public void test3U7Tmmcif() throws IOException, StructureException{
 
-		// this test intends to check that the mmCIF parser doesn't read twice residues 22 and 25 
+		// this test intends to check that the mmCIF parser doesn't read twice residues 22 and 25
 		// which are annotated as "microheterogeneity" in the SEQRES (entity_poly_seq), see #160
-		
+
 		AtomCache cache = new AtomCache();
-		
-		StructureIO.setAtomCache(cache); 
+
+		StructureIO.setAtomCache(cache);
 
 		cache.setUseMmCif(true);
 		FileParsingParameters params = new FileParsingParameters();
@@ -389,7 +457,7 @@ public class TestAltLocs {
 			for (Group g: c.getSeqResGroups()){
 
 				for (Group altLocGroup:g.getAltLocs()) {
-					ensureAllAtomsSameAltCode(altLocGroup);						
+					ensureAllAtomsSameAltCode(altLocGroup);
 				}
 
 				List<Atom> atoms = g.getAtoms();

@@ -22,9 +22,10 @@
  */
 package org.biojava.nbio.alignment;
 
+import org.biojava.nbio.core.alignment.matrices.SubstitutionMatrixHelper;
 import org.biojava.nbio.alignment.Alignments.PairwiseSequenceAlignerType;
 import org.biojava.nbio.alignment.template.PairwiseSequenceAligner;
-import org.biojava.nbio.alignment.template.SubstitutionMatrix;
+import org.biojava.nbio.core.alignment.template.SubstitutionMatrix;
 import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.core.sequence.DNASequence;
 import org.biojava.nbio.core.sequence.compound.DNACompoundSet;
@@ -40,15 +41,15 @@ import static org.junit.Assert.assertEquals;
 public class LocalAlignmentTest {
 
 	private static final double PRECISION = 0.00000001;
-	
+
 	@Test
-	public void shouldAllowZeroLengthMatches() throws CompoundNotFoundException { 
-        DNASequence query = new DNASequence("C", DNACompoundSet.getDNACompoundSet());
-        DNASequence target = new DNASequence("A", DNACompoundSet.getDNACompoundSet());
-        SubstitutionMatrix<NucleotideCompound> matrix = SubstitutionMatrixHelper.getNuc4_4();
-        SimpleGapPenalty gapP = new SimpleGapPenalty((short)5, (short)2);
-        PairwiseSequenceAligner<DNASequence, NucleotideCompound> result = Alignments.getPairwiseAligner(query, target, PairwiseSequenceAlignerType.LOCAL, gapP, matrix);
-        assertEquals(0, result.getScore(), PRECISION);
-        assertEquals(0, result.getProfile().getLength());
+	public void shouldAllowZeroLengthMatches() throws CompoundNotFoundException {
+	DNASequence query = new DNASequence("C", DNACompoundSet.getDNACompoundSet());
+	DNASequence target = new DNASequence("A", DNACompoundSet.getDNACompoundSet());
+	SubstitutionMatrix<NucleotideCompound> matrix = SubstitutionMatrixHelper.getNuc4_4();
+	SimpleGapPenalty gapP = new SimpleGapPenalty((short)5, (short)2);
+	PairwiseSequenceAligner<DNASequence, NucleotideCompound> result = Alignments.getPairwiseAligner(query, target, PairwiseSequenceAlignerType.LOCAL, gapP, matrix);
+	assertEquals(0, result.getScore(), PRECISION);
+	assertEquals(0, result.getProfile().getLength());
 	}
 }

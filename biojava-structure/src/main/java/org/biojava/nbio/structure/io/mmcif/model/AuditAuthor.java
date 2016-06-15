@@ -21,31 +21,31 @@ package org.biojava.nbio.structure.io.mmcif.model;
 
 public class AuditAuthor
 {
-   String name;
-   String pdbx_ordinal;
-   String address;
-   public String getName()
-   {
-      return name;
-   }
-   public void setName(String name)
-   {
-      this.name = name;
-   }
-   public String getPdbx_ordinal()
-   {
-      return pdbx_ordinal;
-   }
-   public void setPdbx_ordinal(String pdbx_ordinal)
-   {
-      this.pdbx_ordinal = pdbx_ordinal;
-   }
-   public String getAddress() {
-	   return address;
-   }
-   public void setAddress(String address) {
-	   this.address = address;
-   }
+	String name;
+	String pdbx_ordinal;
+	String address;
+	public String getName()
+	{
+		return name;
+	}
+	public void setName(String name)
+	{
+		this.name = name;
+	}
+	public String getPdbx_ordinal()
+	{
+		return pdbx_ordinal;
+	}
+	public void setPdbx_ordinal(String pdbx_ordinal)
+	{
+		this.pdbx_ordinal = pdbx_ordinal;
+	}
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
+	}
 
 
 }

@@ -31,26 +31,26 @@ import java.io.IOException;
 
 public class DemoContacts {
 
-	
+
 	public static void main(String[] args) throws IOException, StructureException {
 
 		String pdbCode = "1smt";
-		
+
 		demoContacts(pdbCode);
 	}
-	
+
 	private static void demoContacts(String pdbCode) throws IOException, StructureException {
-		
+
 		AtomCache cache = new AtomCache();
 		cache.setUseMmCif(true);
-		
-		StructureIO.setAtomCache(cache); 
-		
+
+		StructureIO.setAtomCache(cache);
+
 		Structure structure = StructureIO.getStructure(pdbCode);
-			
+
 		Chain chain = structure.getChainByPDB("A");
-		
-			
+
+
 		String[] atoms = {"CA"};
 		AtomContactSet contacts = StructureTools.getAtomsInContact(chain, atoms, 8.0);
 
@@ -84,15 +84,15 @@ public class DemoContacts {
 //		}
 		System.out.println("Total number of residue contacts: "+groupContacts.size());
 
-		
+
 		contacts = StructureTools.getAtomsInContact(structure.getChain(0),structure.getChain(1),5.5, false);
-		
+
 		System.out.println("Contacting residues between 2 first chains (all non-H non-hetatoms)");
-		
+
 		for (AtomContact contact:contacts) {
 			Atom atom1 = contact.getPair().getFirst();
 			Atom atom2 = contact.getPair().getSecond();
-			
+
 			System.out.printf(" %3s:%1s-%3s-%3s || %3s:%1s-%3s-%3s : %5.2f\n",
 					atom1.getGroup().getResidueNumber(),
 					atom1.getGroup().getChainId(),
@@ -104,13 +104,13 @@ public class DemoContacts {
 					atom2.getName(),
 					contact.getDistance());
 		}
-		
+
 		System.out.println("Total number of atom contacts: "+contacts.size());
-		
+
 		groupContacts = new GroupContactSet(contacts);
 		System.out.println("Total number of residue contacts: "+groupContacts.size());
 
 	}
 
-	
+
 }

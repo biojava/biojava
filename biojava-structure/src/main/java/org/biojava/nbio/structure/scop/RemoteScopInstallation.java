@@ -202,16 +202,16 @@ public class RemoteScopInstallation implements ScopDatabase {
 	}
 
 	private ScopDomain requestRemoteDomainByScopID(String scopId)
-	throws IOException{
+			throws IOException{
 		scopId = scopId.trim();
 		URL u = new URL(server + "getDomainByScopID?scopId="+scopId+"&version="+getScopVersion());
 		InputStream response = HTTPConnectionTools.getInputStream(u);
 		String xml = JFatCatClient.convertStreamToString(response);
 
-        if( !xml.trim().isEmpty()) {
-        	return XMLUtil.getScopDomainFromXML(xml);
-        }
-        return null;
+		if( !xml.trim().isEmpty()) {
+			return XMLUtil.getScopDomainFromXML(xml);
+		}
+		return null;
 	}
 
 	@Override

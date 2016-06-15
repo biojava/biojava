@@ -31,6 +31,6 @@ import org.biojava.nbio.core.sequence.template.ProxySequenceReader;
  * @param <C>
  */
 public class ArrayListProxySequenceReader<C extends Compound>
-  extends ArrayListSequenceReader<C> implements ProxySequenceReader<C>{
+	extends ArrayListSequenceReader<C> implements ProxySequenceReader<C>{
 
 }

@@ -36,7 +36,7 @@ import java.awt.event.*;
 
 
 /** A class that provides a simple GUI for Jmol
- * 
+ *
  * @author Andreas Prlic
  * @since 1.6
  *
@@ -49,7 +49,7 @@ public class BiojavaJmol  {
 	public static final String adapter      = "org.jmol.api.JmolAdapter";
 	public static final String smartAdapter = "org.jmol.adapter.smarter.SmarterJmolAdapter";
 
-	Structure structure; 
+	Structure structure;
 
 	JmolPanel jmolPanel;
 	JFrame frame ;
@@ -82,7 +82,7 @@ public class BiojavaJmol  {
 
 
 
-	public BiojavaJmol() {		
+	public BiojavaJmol() {
 
 		frame = new JFrame();
 
@@ -103,14 +103,14 @@ public class BiojavaJmol  {
 		Box vBox = Box.createVerticalBox();
 
 		jmolPanel = new JmolPanel();
-	
+
 		jmolPanel.setPreferredSize(new Dimension(500,500));
 		vBox.add(jmolPanel);
 
 
 		JTextField field = new JTextField();
 
-		field.setMaximumSize(new Dimension(Short.MAX_VALUE,30));   
+		field.setMaximumSize(new Dimension(Short.MAX_VALUE,30));
 		field.setText("enter RASMOL like command...");
 		org.biojava.nbio.structure.align.gui.jmol.RasmolCommandListener listener = new org.biojava.nbio.structure.align.gui.jmol.RasmolCommandListener(jmolPanel,field) ;
 
@@ -120,7 +120,7 @@ public class BiojavaJmol  {
 		vBox.add(field);
 
 
-		/// COMBO BOXES 
+		/// COMBO BOXES
 		Box hBox1 = Box.createHorizontalBox();
 		hBox1.setMaximumSize(new Dimension(Short.MAX_VALUE,30));
 
@@ -131,7 +131,7 @@ public class BiojavaJmol  {
 		hBox1.add(new JLabel("Style"));
 		hBox1.add(style);
 		vBox.add(hBox1);
-		
+
 
 		style.addActionListener(jmolPanel);
 
@@ -141,71 +141,71 @@ public class BiojavaJmol  {
 		hBox1.add(Box.createGlue());
 		hBox1.add(new JLabel("Color"));
 		hBox1.add(colors);
-		
+
 		// Check boxes
 		Box hBox2 = Box.createHorizontalBox();
 		hBox2.setMaximumSize(new Dimension(Short.MAX_VALUE,30));
 
-		
+
 		JButton resetDisplay = new JButton("Reset Display");
-		
+
 		resetDisplay.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("reset!!");
 				jmolPanel.executeCmd("restore STATE state_1");
-				
+
 			}
 		});
-		
+
 		hBox2.add(resetDisplay); hBox2.add(Box.createGlue());
-		
+
 		JCheckBox toggleSelection = new JCheckBox("Show Selection");
 		toggleSelection.addItemListener(
 			    new ItemListener() {
-					
+
 					@Override
 					public void itemStateChanged(ItemEvent e) {
 						  boolean showSelection = (e.getStateChange() == ItemEvent.SELECTED);
-						  
+
 						  if (showSelection){
 							  jmolPanel.executeCmd("set display selected");
 						  } else {
 							  jmolPanel.executeCmd("set display off");
 						  }
-						
+
 					}
 				}
 			);
-		
-		
-		
+
+
+
 		hBox2.add(toggleSelection);
-		
+
 		hBox2.add(Box.createGlue());
 		vBox.add(hBox2);
-		
-	
+
+
 		// finish up
 		contentPane.add(vBox);
 		frame.pack();
-		frame.setVisible(true); 
-	
-	
+		frame.setVisible(true);
+
+
 	}
 
 
 
 	/** returns true if Jmol can be found in the classpath, otherwise false.
-	 * 
+	 *
 	 * @return true/false depending if Jmol can be found
 	 */
 	public static boolean jmolInClassPath(){
 		try {
-			Class.forName(viewer);		
+			Class.forName(viewer);
 		} catch (ClassNotFoundException e){
-			e.printStackTrace();			
+			e.printStackTrace();
 			return false;
 		}
 		return true;
@@ -231,7 +231,7 @@ public class BiojavaJmol  {
 		// actually this is very simple
 		// just convert the structure to a PDB file
 
-		String pdb = s.toPDB();	
+		String pdb = s.toPDB();
 		//System.out.println(s.isNmr());
 
 		//System.out.println(pdb);
@@ -246,7 +246,7 @@ public class BiojavaJmol  {
 		// access the biojava structure object, but they require more
 		// code. See the SPICE code repository for how to do this.
 
-		
+
 
 
 	}

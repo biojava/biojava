@@ -20,8 +20,8 @@
  */
 package demo;
 
-import org.biojava.nbio.alignment.SubstitutionMatrixHelper;
-import org.biojava.nbio.alignment.template.SubstitutionMatrix;
+import org.biojava.nbio.core.alignment.matrices.SubstitutionMatrixHelper;
+import org.biojava.nbio.core.alignment.template.SubstitutionMatrix;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
 
 public class DemoLoadSubstMax {
@@ -38,7 +38,7 @@ public class DemoLoadSubstMax {
 		SubstitutionMatrix<AminoAcidCompound> substMax3 = SubstitutionMatrixHelper.getMatrixFromAAINDEX(max3);
 		System.out.printf("%s matrix: %s", max3, substMax3);
 		System.out.println();
-		
+
 		// This one I developed a while ago to  be optimised for the alignment of distantly related sequences
 		String matrixName4 = "PRLA000101";
 		SubstitutionMatrix<AminoAcidCompound> substMax4 = SubstitutionMatrixHelper.getMatrixFromAAINDEX(matrixName4);

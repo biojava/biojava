@@ -39,8 +39,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * This class contains the actual implementation of IPeptideProperties and is wrapped around by PeptideProperties for ease of use. 
- * 
+ * This class contains the actual implementation of IPeptideProperties and is wrapped around by PeptideProperties for ease of use.
+ *
  * @author kohchuanhock
  * @version 2011.08.22
  * @since 3.0.2
@@ -48,9 +48,9 @@ import java.util.Map;
  * @see PeptideProperties
  */
 public class PeptidePropertiesImpl implements IPeptideProperties{
-	
+
 	private final static Logger logger = LoggerFactory.getLogger(PeptidePropertiesImpl.class);
-	
+
 	/**
 	 * @return the molecular weight of water
 	 */
@@ -60,7 +60,7 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 		//H	1.0079	OH	17.0073
 		return hydrogenMW + hydroxideMW;
 	}
-	
+
 	private char[] getSequence(String sequence, boolean ignoreCase){
 		if(ignoreCase){
 			return sequence.toUpperCase().toCharArray();
@@ -68,7 +68,7 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 			return sequence.toCharArray();
 		}
 	}
-	
+
 	@Override
 	public double getMolecularWeight(ProteinSequence sequence) {
 		double value = 0.0;
@@ -85,7 +85,7 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 		else
 			return value + getWaterMoleculeWeight();
 	}
-	
+
 	@Override
 	public double getMolecularWeight(ProteinSequence sequence, File aminoAcidCompositionFile) throws JAXBException, FileNotFoundException {
 		File elementMassFile = new File("./src/main/resources/ElementMass.xml");
@@ -95,13 +95,13 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 		}
 		return getMolecularWeightBasedOnXML(sequence, obtainAminoAcidCompositionTable(elementMassFile, aminoAcidCompositionFile));
 	}
-	
+
 	@Override
-	public double getMolecularWeight(ProteinSequence sequence, File elementMassFile, File aminoAcidCompositionFile) 
+	public double getMolecularWeight(ProteinSequence sequence, File elementMassFile, File aminoAcidCompositionFile)
 			throws JAXBException, FileNotFoundException{
 		return getMolecularWeightBasedOnXML(sequence, obtainAminoAcidCompositionTable(elementMassFile, aminoAcidCompositionFile));
 	}
-	
+
 	@Override
 	public double getMolecularWeightBasedOnXML(ProteinSequence sequence, AminoAcidCompositionTable aminoAcidCompositionTable){
 		double value = 0.0;
@@ -119,7 +119,7 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 	}
 
 	@Override
-	public AminoAcidCompositionTable obtainAminoAcidCompositionTable(File aminoAcidCompositionFile) 
+	public AminoAcidCompositionTable obtainAminoAcidCompositionTable(File aminoAcidCompositionFile)
 		throws JAXBException, FileNotFoundException{
 		File elementMassFile = new File("./src/main/resources/ElementMass.xml");
 		if(!elementMassFile.exists()){
@@ -128,25 +128,25 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 		}
 		return obtainAminoAcidCompositionTable(elementMassFile, aminoAcidCompositionFile);
 	}
-	
+
 	@Override
-	public AminoAcidCompositionTable obtainAminoAcidCompositionTable(File elementMassFile, File aminoAcidCompositionFile) 
+	public AminoAcidCompositionTable obtainAminoAcidCompositionTable(File elementMassFile, File aminoAcidCompositionFile)
 		throws JAXBException, FileNotFoundException{
 		//Parse elementMassFile
 		ElementTable iTable = new ElementTable();
 		// Get a JAXB Context for the object we created above
 		JAXBContext jc = JAXBContext.newInstance(iTable.getClass());
 		Unmarshaller u = jc.createUnmarshaller();
-		u.setEventHandler(new MyValidationEventHandler()); 
+		u.setEventHandler(new MyValidationEventHandler());
 		iTable = (ElementTable)u.unmarshal(new FileInputStream(elementMassFile));
 		iTable.populateMaps();
-		
+
 		//Parse aminoAcidCompositionFile
 		AminoAcidCompositionTable aTable = new AminoAcidCompositionTable();
 		// Get a JAXB Context for the object we created above
 		JAXBContext jc2 = JAXBContext.newInstance(aTable.getClass());
 		Unmarshaller u2 = jc2.createUnmarshaller();
-		u2.setEventHandler(new MyValidationEventHandler()); 
+		u2.setEventHandler(new MyValidationEventHandler());
 		aTable = (AminoAcidCompositionTable)u2.unmarshal(new FileInputStream(aminoAcidCompositionFile));
 		aTable.computeMolecularWeight(iTable);
 		return aTable;
@@ -161,24 +161,24 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 		//where (for proteins in water measured at 280 nm): Ext(Tyr) = 1490, Ext(Trp) = 5500, Ext(Cystine) = 125;
 		AminoAcidCompoundSet aaSet = new AminoAcidCompoundSet();
 		Map<AminoAcidCompound, Integer> extinctAA2Count = this.getExtinctAACount(sequence);
-		
+
 		double eProt;
 		if(!assumeCysReduced){
-			eProt = extinctAA2Count.get(aaSet.getCompoundForString("Y")) * 
-				Constraints.aa2ExtinctionCoefficient.get(aaSet.getCompoundForString("Y")) + 
-				extinctAA2Count.get(aaSet.getCompoundForString("W")) * 
+			eProt = extinctAA2Count.get(aaSet.getCompoundForString("Y")) *
+				Constraints.aa2ExtinctionCoefficient.get(aaSet.getCompoundForString("Y")) +
+				extinctAA2Count.get(aaSet.getCompoundForString("W")) *
 				Constraints.aa2ExtinctionCoefficient.get(aaSet.getCompoundForString("W")) +
-				extinctAA2Count.get(aaSet.getCompoundForString("C")) * 
+				extinctAA2Count.get(aaSet.getCompoundForString("C")) *
 				Constraints.aa2ExtinctionCoefficient.get(aaSet.getCompoundForString("C"));
 		}else
-			eProt = extinctAA2Count.get(aaSet.getCompoundForString("Y")) * 
-				Constraints.aa2ExtinctionCoefficient.get(aaSet.getCompoundForString("Y")) + 
+			eProt = extinctAA2Count.get(aaSet.getCompoundForString("Y")) *
+				Constraints.aa2ExtinctionCoefficient.get(aaSet.getCompoundForString("Y")) +
 				extinctAA2Count.get(aaSet.getCompoundForString("W")) *
 				Constraints.aa2ExtinctionCoefficient.get(aaSet.getCompoundForString("W"));
-		
+
 		return eProt;
 	}
-	
+
 	@Override
 	public double getAbsorbance(ProteinSequence sequence, boolean assumeCysReduced){
 		//Absorb(Prot) = E(Prot) / Molecular_weight
@@ -190,13 +190,13 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 		}
 		return eProt / mw;
 	}
-	
+
 	private Map<AminoAcidCompound, Integer> getExtinctAACount(ProteinSequence sequence){
 		//Cys => C, Tyr => Y, Trp => W
 		int numW = 0;
 		int smallW = 0;
 		double numC = 0;
-		double smallC = 0; 
+		double smallC = 0;
 		int numY = 0;
 		int smallY = 0;
 		for(char aa:sequence.getSequenceAsString().toCharArray()){
@@ -229,7 +229,7 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 			}
 		}
 		int denominator = s.length() - Utils.getNumberOfInvalidChar(s, null, true);
-		
+
 		if (denominator==0) {
 			logger.warn("Valid length of sequence is 0, can't divide by 0 to calculate instability index: setting instability index value to 0.0");
 			return 0.0;
@@ -239,11 +239,11 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 
 	@Override
 	public double getApliphaticIndex(ProteinSequence sequence) {
-//		Aliphatic index = X(Ala) + a * X(Val) + b * ( X(Ile) + X(Leu) )  
-//		where X(Ala), X(Val), X(Ile), and X(Leu) are mole percent (100 X mole fraction) 
-//		of alanine, valine, isoleucine, and leucine. 
-//		The coefficients a and b are the relative volume of valine side chain (a = 2.9) 
-//		and of Leu/Ile side chains (b = 3.9) to the side chain of alanine. 
+//		Aliphatic index = X(Ala) + a * X(Val) + b * ( X(Ile) + X(Leu) )
+//		where X(Ala), X(Val), X(Ile), and X(Leu) are mole percent (100 X mole fraction)
+//		of alanine, valine, isoleucine, and leucine.
+//		The coefficients a and b are the relative volume of valine side chain (a = 2.9)
+//		and of Leu/Ile side chains (b = 3.9) to the side chain of alanine.
 //		Ala => A, Val => V, Ile => I, Leu => L
 		AminoAcidCompoundSet aaSet = new AminoAcidCompoundSet();
 		Map<AminoAcidCompound, Double> aa2Composition = getAAComposition(sequence);
@@ -273,7 +273,7 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 			logger.warn("Valid length of sequence is 0, can't divide by 0 to calculate average hydropathy: setting average hydropathy to 0");
 			return 0.0;
 		}
-		
+
 		return total / validLength;
 	}
 
@@ -285,18 +285,18 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 			return this.getIsoelectricPointInnovagen(sequence);
 		}
 	}
-	
+
 	private double getIsoelectricPointInnovagen(ProteinSequence sequence){
 		double currentPH = 7.0;
 		double changeSize = 7.0;
 		String sequenceString = sequence.toString();
 		char nTerminalChar = sequenceString.charAt(0);
 		char cTerminalChar = sequenceString.charAt(sequenceString.length() - 1);
-		
+
 		Map<AminoAcidCompound, Integer> chargedAA2Count = this.getChargedAACount(sequence);
 		double margin;
 		final double difference = 0.0001;
-		
+
 		while(true){
 			margin = this.getNetChargeInnovagen(chargedAA2Count, currentPH, nTerminalChar, cTerminalChar);
 			//Within allowed difference
@@ -310,7 +310,7 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 		}
 		return currentPH;
 	}
-	
+
 	/*
 	 *  Pseudo code obtained from email correspondance with ExPASy Helpdesk, Gregoire Rossier
 	 */
@@ -356,11 +356,11 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 	private final double PH_MAX = 14.0; /* maximum pH value */
 	private final double MAXLOOP = 2000.0; /* maximum number of iterations */
 	private final double EPSI = 0.0001; /* desired precision */
-	
+
 	private double exp10(double pka){
 		return Math.pow(10, pka);
 	}
-	
+
 	private double getIsoelectricPointExpasy(String sequence){
 		//
 		// Compute the amino-acid composition.
@@ -379,7 +379,7 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 		while((nTermResidue < 0 || nTermResidue >= 26) && index < 25){
 			nTermResidue = sequence.charAt(index++) - 'A';
 		}
-		
+
 		int cTermResidue = -1;
 		index = 1;
 		while((cTermResidue < 0 || cTermResidue >= 26) && index < 25){
@@ -388,20 +388,20 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 
 		double phMin = PH_MIN;
 		double phMax = PH_MAX;
-		
+
 		double phMid = 0.0;
 		double charge = 1.0;
 		for (int i = 0; i < MAXLOOP && (phMax - phMin) > EPSI; i++){
 			phMid = phMin + (phMax - phMin) / 2.0;
-	
+
 			charge = getNetChargeExpasy(comp, nTermResidue, cTermResidue, phMid);
-	
+
 			if (charge > 0.0) phMin = phMid;
 			else phMax = phMid;
 		}
 		return phMid;
 	}
-	
+
 	@Override
 	public double getIsoelectricPoint(ProteinSequence sequence){
 		return getIsoelectricPoint(sequence, true);
@@ -411,12 +411,12 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 	public double getNetCharge(ProteinSequence sequence) {
 		return getNetCharge(sequence, true);
 	}
-	
+
 	@Override
 	public double getNetCharge(ProteinSequence sequence, boolean useExpasyValues){
 		return getNetCharge(sequence, true, 7.0);
 	}
-	
+
 	@Override
 	public double getNetCharge(ProteinSequence sequence, boolean useExpasyValues, double pHPoint){
 		if(useExpasyValues){
@@ -425,7 +425,7 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 			return getNetChargeInnovagen(sequence, pHPoint);
 		}
 	}
-	
+
 	private double getNetChargeExpasy(String sequence, double pHPoint){
 		//
 		// Compute the amino-acid composition.
@@ -443,14 +443,14 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 		int cTermResidue = sequence.charAt(sequence.length() - 1) - 'A';
 		return getNetChargeExpasy(comp, nTermResidue, cTermResidue, pHPoint);
 	}
-	
+
 	private double getNetChargeExpasy(int comp[], int nTermResidue, int cTermResidue, double ph){
-		double cter = 0.0; 
+		double cter = 0.0;
 		if(cTermResidue >= 0 && cTermResidue < 26) cter = exp10(-cPk[cTermResidue][0]) / (exp10(-cPk[cTermResidue][0]) + exp10(-ph));
-		double nter = 0.0; 
+		double nter = 0.0;
 		if(nTermResidue >= 0 && nTermResidue < 26) nter = exp10(-ph) / (exp10(-cPk[nTermResidue][1]) + exp10(-ph));
 
-		double carg = comp['R' - 'A'] * exp10(-ph) / (exp10(-cPk['R' - 'A'][2]) + exp10(-ph)); 
+		double carg = comp['R' - 'A'] * exp10(-ph) / (exp10(-cPk['R' - 'A'][2]) + exp10(-ph));
 		double chis = comp['H' - 'A'] * exp10(-ph) / (exp10(-cPk['H' - 'A'][2]) + exp10(-ph));
 		double clys = comp['K' - 'A'] * exp10(-ph) / (exp10(-cPk['K' - 'A'][2]) + exp10(-ph));
 
@@ -462,32 +462,32 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 
 		return (carg + clys + chis + nter) - (casp + cglu + ctyr + ccys + cter);
 	}
-	
+
 	private double getNetChargeInnovagen(ProteinSequence sequence, double pHPoint) {
 		Map<AminoAcidCompound, Integer> chargedAA2Count = this.getChargedAACount(sequence);
 		String sequenceString = sequence.getSequenceAsString();
 		return getNetChargeInnovagen(chargedAA2Count, pHPoint, sequenceString.charAt(0), sequenceString.charAt(sequenceString.length() - 1));
 	}
-	
+
 	private double getNetChargeInnovagen(Map<AminoAcidCompound, Integer> chargedAA2Count, double ph, char nTerminalChar, char cTerminalChar){
 		//Constraints.aa2PKa is aleady reinitialized in getChargedAACount hence no need to do it again
-		
+
 		//Lys => K, Arg => R, His => H
 		//Asp => D, Glu => E, Cys => C, Tyr => Y
 		AminoAcidCompoundSet aaSet = new AminoAcidCompoundSet();
-		
-		double nTerminalCharge = 0.0; 
+
+		double nTerminalCharge = 0.0;
 		AminoAcidCompound nTermCompound = aaSet.getCompoundForString(nTerminalChar + "");
 		if(Constraints.aa2NTerminalPka.containsKey(nTermCompound)){
 			nTerminalCharge = this.getPosCharge(Constraints.aa2NTerminalPka.get(nTermCompound), ph);
-		}			
-		
+		}
+
 		double cTerminalCharge = 0.0;
 		AminoAcidCompound cTermCompound = aaSet.getCompoundForString(cTerminalChar + "");
 		if(Constraints.aa2CTerminalPka.containsKey(cTermCompound)){
 			cTerminalCharge = this.getNegCharge(Constraints.aa2CTerminalPka.get(cTermCompound), ph);
 		}
-		
+
 		double kCharge = chargedAA2Count.get(aaSet.getCompoundForString("K")) * this.getPosCharge(Constraints.aa2PKa.get(aaSet.getCompoundForString("K")), ph);
 		double rCharge = chargedAA2Count.get(aaSet.getCompoundForString("R")) * this.getPosCharge(Constraints.aa2PKa.get(aaSet.getCompoundForString("R")), ph);
 		double hCharge = chargedAA2Count.get(aaSet.getCompoundForString("H")) * this.getPosCharge(Constraints.aa2PKa.get(aaSet.getCompoundForString("H")), ph);
@@ -500,15 +500,15 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 //		}
 		return (nTerminalCharge + kCharge + rCharge + hCharge) - (dCharge + eCharge + cCharge + yCharge + cTerminalCharge);
 	}
-	
+
 	private double getPosCharge(double pka, double ph){
 		return Math.pow(10, pka) / (Math.pow(10, pka) + Math.pow(10, ph));
 	}
-	
+
 	private double getNegCharge(double pka, double ph){
 		return Math.pow(10, ph) / (Math.pow(10, pka) + Math.pow(10, ph));
 	}
-	
+
 	private Map<AminoAcidCompound, Integer> getChargedAACount(ProteinSequence sequence){
 		//Lys => K, Arg => R, His => H
 		//Asp => D, Glu => E, Cys => C, Tyr => Y
@@ -542,7 +542,7 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 		chargedAA2Count.put(aaSet.getCompoundForString("Y"), numY);
 		return chargedAA2Count;
 	}
-	
+
 	@Override
 	public double getEnrichment(ProteinSequence sequence, AminoAcidCompound aminoAcidCode) {
 		double counter = 0.0;

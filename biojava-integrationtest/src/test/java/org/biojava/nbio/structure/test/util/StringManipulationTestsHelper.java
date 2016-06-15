@@ -31,7 +31,7 @@ public class StringManipulationTestsHelper extends TestCase {
 	 * be used if and only if two XMLs are considered identical when all nodes
 	 * are identical including their relative order. Generally useful when
 	 * asserting identity of <b>automatically regenerated</b> XML.
-	 * 
+	 *
 	 * @param expected
 	 * @param actual
 	 */
@@ -44,14 +44,14 @@ public class StringManipulationTestsHelper extends TestCase {
 	 * comparing each node's set of properties & children nodes. This method
 	 * should be used when two XMLs are considered identical when all nodes are
 	 * identical regardless to their order
-	 * 
+	 *
 	 * @param expectedXml
 	 * @param actualXml
 	 */
 	public static void assertEqualsXml(String expectedXml, String actualXml) {
 		assertTrue(StringManipulationHelper.equalsToXml(expectedXml, actualXml));
 	}
-	
+
 	/**
 	 * @param s
 	 * @param pdb
@@ -66,7 +66,7 @@ public class StringManipulationTestsHelper extends TestCase {
 			}
 		}
 	}
-	
+
 	public void testNothing(){
 		assertTrue(true);
 	}

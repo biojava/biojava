@@ -40,140 +40,140 @@ import org.slf4j.LoggerFactory;
  * @author Scooter Willis
  */
 public class DNASequence extends AbstractSequence<NucleotideCompound> {
-	
+
 	private final static Logger logger = LoggerFactory.getLogger(DNASequence.class);
 /**
  * The type of DNA sequence
  */
-    public enum DNAType {
-        CHROMOSOME, MITOCHONDRIAL, PLASMID, PLASTID, UNKNOWN
-    }
-    private DNAType dnaType = DNAType.UNKNOWN;
+	public enum DNAType {
+		CHROMOSOME, MITOCHONDRIAL, PLASMID, PLASTID, UNKNOWN
+	}
+	private DNAType dnaType = DNAType.UNKNOWN;
 
-    /**
-     * Shouldn't be used but makes it bean happy
-     */
-    public DNASequence() {
+	/**
+	 * Shouldn't be used but makes it bean happy
+	 */
+	public DNASequence() {
 //        throw new UnsupportedOperationException("Null constructor not supported");
-    }
+	}
 
-    /**
-     * String is king and create a sequence from DNA with default DNA compound set
-     * @param seqString
-     * @throws CompoundNotFoundException
-     */
-    public DNASequence(String seqString) throws CompoundNotFoundException {
-        super(seqString, DNACompoundSet.getDNACompoundSet());
-    }
+	/**
+	 * String is king and create a sequence from DNA with default DNA compound set
+	 * @param seqString
+	 * @throws CompoundNotFoundException
+	 */
+	public DNASequence(String seqString) throws CompoundNotFoundException {
+		super(seqString, DNACompoundSet.getDNACompoundSet());
+	}
 
-    /**
-     * Create a sequence where the actual storage of the sequence data is somewhere else
-     * @param proxyLoader
-     */
-    public DNASequence(SequenceReader<NucleotideCompound> proxyLoader) {
-        super(proxyLoader, DNACompoundSet.getDNACompoundSet());
-    }
+	/**
+	 * Create a sequence where the actual storage of the sequence data is somewhere else
+	 * @param proxyLoader
+	 */
+	public DNASequence(SequenceReader<NucleotideCompound> proxyLoader) {
+		super(proxyLoader, DNACompoundSet.getDNACompoundSet());
+	}
 
-    /**
-     * Create a sequence from a string with user defined compound set
-     * @param seqString
-     * @param compoundSet
-     * @throws CompoundNotFoundException
-     */
-    public DNASequence(String seqString, CompoundSet<NucleotideCompound> compoundSet) throws CompoundNotFoundException {
-        super(seqString, compoundSet);
-    }
+	/**
+	 * Create a sequence from a string with user defined compound set
+	 * @param seqString
+	 * @param compoundSet
+	 * @throws CompoundNotFoundException
+	 */
+	public DNASequence(String seqString, CompoundSet<NucleotideCompound> compoundSet) throws CompoundNotFoundException {
+		super(seqString, compoundSet);
+	}
 
-    /**
-     * Create a sequence from a ProxySequencereader and user defined compound set
-     * @param proxyLoader
-     * @param compoundSet
-     */
-    public DNASequence(SequenceReader<NucleotideCompound> proxyLoader, CompoundSet<NucleotideCompound> compoundSet) {
-        super(proxyLoader, compoundSet);
-    }
+	/**
+	 * Create a sequence from a ProxySequencereader and user defined compound set
+	 * @param proxyLoader
+	 * @param compoundSet
+	 */
+	public DNASequence(SequenceReader<NucleotideCompound> proxyLoader, CompoundSet<NucleotideCompound> compoundSet) {
+		super(proxyLoader, compoundSet);
+	}
 
-    /**
-     * Return the RNASequence equivalent of the DNASequence using default Transcription Engine. Not all
-     * species follow the same rules. If you don't know better use this method
-     * @return RNA sequence
-     */
-    public RNASequence getRNASequence() {
-      return getRNASequence(Frame.getDefaultFrame());
-    }
+	/**
+	 * Return the RNASequence equivalent of the DNASequence using default Transcription Engine. Not all
+	 * species follow the same rules. If you don't know better use this method
+	 * @return RNA sequence
+	 */
+	public RNASequence getRNASequence() {
+	  return getRNASequence(Frame.getDefaultFrame());
+	}
 
-    /**
-     * Allow a user to pass in a rules engine to do the DNA to RNA translation
-     * @param engine
-     * @return RNA sequence
-     */ 
-    public RNASequence getRNASequence(TranscriptionEngine engine) {
-      return getRNASequence(engine, Frame.getDefaultFrame());
-    }
+	/**
+	 * Allow a user to pass in a rules engine to do the DNA to RNA translation
+	 * @param engine
+	 * @return RNA sequence
+	 */
+	public RNASequence getRNASequence(TranscriptionEngine engine) {
+	  return getRNASequence(engine, Frame.getDefaultFrame());
+	}
 
-    /**
-     * Allows the user to pass in the Frame shift.
-     * @param frame
-     * @return rna sequence
-     */
-    public RNASequence getRNASequence(Frame frame) {
-      return getRNASequence(TranscriptionEngine.getDefault(), frame);
-    }
+	/**
+	 * Allows the user to pass in the Frame shift.
+	 * @param frame
+	 * @return rna sequence
+	 */
+	public RNASequence getRNASequence(Frame frame) {
+	  return getRNASequence(TranscriptionEngine.getDefault(), frame);
+	}
 
-    public RNASequence getRNASequence(TranscriptionEngine engine, Frame frame) {
-      return (RNASequence) engine.getDnaRnaTranslator().createSequence(this, frame);
-    }
+	public RNASequence getRNASequence(TranscriptionEngine engine, Frame frame) {
+	  return (RNASequence) engine.getDnaRnaTranslator().createSequence(this, frame);
+	}
 
-    /**
-     * Get the GC count in the DNA Sequence
-     * @return GC count
-     */
-    public int getGCCount() {
-        return SequenceMixin.countGC(this);
-    }
+	/**
+	 * Get the GC count in the DNA Sequence
+	 * @return GC count
+	 */
+	public int getGCCount() {
+		return SequenceMixin.countGC(this);
+	}
 
-    /**
-     * Returns a Sequence which runs in the current reverse order
-     */
-    public SequenceView<NucleotideCompound> getReverse() {
-        return new ReversedSequenceView<NucleotideCompound>(this);
-    }
+	/**
+	 * Returns a Sequence which runs in the current reverse order
+	 */
+	public SequenceView<NucleotideCompound> getReverse() {
+		return new ReversedSequenceView<NucleotideCompound>(this);
+	}
 
-    /**
-     * Returns a Sequence which will complement every base
-     */
-    public SequenceView<NucleotideCompound> getComplement() {
-        return new ComplementSequenceView<NucleotideCompound>(this);
-    }
+	/**
+	 * Returns a Sequence which will complement every base
+	 */
+	public SequenceView<NucleotideCompound> getComplement() {
+		return new ComplementSequenceView<NucleotideCompound>(this);
+	}
 
-    /**
-     * Delegates to {@link #getInverse() } for the reverse complement
-     */
-    public SequenceView<NucleotideCompound> getReverseComplement() {
-        return getInverse();
-    }
+	/**
+	 * Delegates to {@link #getInverse() } for the reverse complement
+	 */
+	public SequenceView<NucleotideCompound> getReverseComplement() {
+		return getInverse();
+	}
 
-    /**
-     * @return the dnaType
-     */
-    public DNAType getDNAType() {
-        return dnaType;
-    }
+	/**
+	 * @return the dnaType
+	 */
+	public DNAType getDNAType() {
+		return dnaType;
+	}
 
-    /**
-     * @param dnaType the dnaType to set
-     */
-    public void setDNAType(DNAType dnaType) {
-        this.dnaType = dnaType;
-    }
+	/**
+	 * @param dnaType the dnaType to set
+	 */
+	public void setDNAType(DNAType dnaType) {
+		this.dnaType = dnaType;
+	}
 
-    public static void main(String[] args) throws Exception {
-        DNASequence dnaSequence = new DNASequence("ATCG");
-        logger.info("DNA Sequence: {}", dnaSequence.toString());
+	public static void main(String[] args) throws Exception {
+		DNASequence dnaSequence = new DNASequence("ATCG");
+		logger.info("DNA Sequence: {}", dnaSequence.toString());
 
-        StringProxySequenceReader<NucleotideCompound> sequenceStringProxyLoader =
-                new StringProxySequenceReader<NucleotideCompound>("GCTA", DNACompoundSet.getDNACompoundSet());
-        DNASequence dnaSequenceFromProxy = new DNASequence(sequenceStringProxyLoader);
-        logger.info("DNA Sequence from Proxy: {}", dnaSequenceFromProxy.toString());
-    }
+		StringProxySequenceReader<NucleotideCompound> sequenceStringProxyLoader =
+				new StringProxySequenceReader<NucleotideCompound>("GCTA", DNACompoundSet.getDNACompoundSet());
+		DNASequence dnaSequenceFromProxy = new DNASequence(sequenceStringProxyLoader);
+		logger.info("DNA Sequence from Proxy: {}", dnaSequenceFromProxy.toString());
+	}
 }

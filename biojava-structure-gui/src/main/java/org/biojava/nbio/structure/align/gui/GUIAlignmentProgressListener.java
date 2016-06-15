@@ -29,7 +29,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /** a GUI that allows to watch progress as multiple alignments are being processed.
- * 
+ *
  * @author Andreas Prlic
  *
  */
@@ -39,7 +39,7 @@ public class GUIAlignmentProgressListener extends JPanel implements AlignmentPro
 
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 
@@ -75,8 +75,8 @@ public class GUIAlignmentProgressListener extends JPanel implements AlignmentPro
 		setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
 	}
-	
-	
+
+
 
 	 public FarmJob getFarmJob() {
 		return farmJob;
@@ -91,54 +91,54 @@ public class GUIAlignmentProgressListener extends JPanel implements AlignmentPro
 
 
 	/**
-     * Invoked when the user presses the stop button.
-     */
-    @Override
+	 * Invoked when the user presses the stop button.
+	 */
+	@Override
 	public void actionPerformed(ActionEvent evt) {
-    	
-    	//System.out.println("stopping!");
-    	logStatus("terminating");
-    	logStatus(" Total alignments processed: " + alignmentsProcessed);
-        stopButton.setEnabled(false);
-        setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        progressBar.setIndeterminate(true);
-        progressBar.setStringPainted(false);
-        System.out.println("terminating jobs");
-        
-        farmJob.terminate();
-       
-        setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-        progressBar.setIndeterminate(false);
-        
-    }
 
-   
+		//System.out.println("stopping!");
+		logStatus("terminating");
+		logStatus(" Total alignments processed: " + alignmentsProcessed);
+		stopButton.setEnabled(false);
+		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+		progressBar.setIndeterminate(true);
+		progressBar.setStringPainted(false);
+		System.out.println("terminating jobs");
+
+		farmJob.terminate();
+
+		setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+		progressBar.setIndeterminate(false);
+
+	}
+
+
 	@Override
 	public void alignmentEnded() {
-		
+
 		alignmentsProcessed++;
-		
+
 		//System.out.println("aligned " + alignmentsProcessed );
 		int v = progressBar.getValue();
-		
+
 		progressBar.setValue(v+1);
 		progressBar.setString(v+"");
-        synchronized(this){notifyAll();}
+		synchronized(this){notifyAll();}
 
 	}
 
 	@Override
-	public void alignmentStarted(String name1, String name2) {	
+	public void alignmentStarted(String name1, String name2) {
 		logStatus("#" + progressBar.getValue() + " starting alignment of " + name1 + " " + name2);
 	}
 
 	@Override
-	public void downloadingStructures(String name) {		
+	public void downloadingStructures(String name) {
 		logStatus("Downloading " + name );
 	}
 
 	@Override
-	public void logStatus(String message) {		
+	public void logStatus(String message) {
 		taskOutput.append(message+"\n");
 	}
 
@@ -146,8 +146,8 @@ public class GUIAlignmentProgressListener extends JPanel implements AlignmentPro
 	public void requestingAlignmentsFromServer(int nrAlignments) {
 		logStatus("Requesting " + nrAlignments + " alignments to be calculated");
 		progressBar.setMaximum(nrAlignments);
-		progressBar.setValue(0);	
-        synchronized(this){notifyAll();}
+		progressBar.setValue(0);
+		synchronized(this){notifyAll();}
 
 	}
 

@@ -51,10 +51,10 @@ import java.util.*;
 public class CliTools {
 	private CliTools() {
 	}
-	
+
 
 	/**
-	 * Configure a JavaBean based on a set of command line arguments.  
+	 * Configure a JavaBean based on a set of command line arguments.
 	 * For a command line construct such as "-foo 42", this method will use
 	 * available <code>BeanInfo</code> (usually obtained by introspection)
 	 * to find a property named "foo".  The argument will be interpreted
@@ -83,14 +83,14 @@ public class CliTools {
 	 * messages when something goes wrong.
 	 * </p>
 	 *
-	 * @param bean 
+	 * @param bean
 	 * @param args
 	 * @return A string array which contains any 'anonymous' arguments (may be empty)
 	 * @throws ConfigurationException
 	 */
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public static String[] configureBean(Object bean, String[] args) 
+	public static String[] configureBean(Object bean, String[] args)
 	throws ConfigurationException
 	{
 		BeanInfo bi;
@@ -114,12 +114,12 @@ public class CliTools {
 
 		for (int i = 0; i < args.length; ++i) {
 			String arg = args[i];
-			
+
 			//System.out.println("checking argument: " + arg);
-			
+
 			if ( arg == null)
 				continue;
-			
+
 			if ((arg.length() > 0 ) && arg.charAt(0) == '-') {
 				PropertyDescriptor pd = propertiesByName.get(arg.substring(1));
 
@@ -270,7 +270,7 @@ public class CliTools {
 						System.exit(1);
 					}
 				}
-				
+
 				//System.out.println("setting to: " + propVal + " " + propVal.getClass().getName());
 
 				if (arrayMode) {
@@ -330,7 +330,7 @@ public class CliTools {
 
 	/**
 	 * Constructs a comma-separated list of values for an enum.
-	 * 
+	 *
 	 * Example:
 	 * > getEnumValues(ScoringStrategy.class)
 	 * "CA_SCORING, SIDE_CHAIN_SCORING, SIDE_CHAIN_ANGLE_SCORING, CA_AND_SIDE_CHAIN_ANGLE_SCORING, or SEQUENCE_CONSERVATION"

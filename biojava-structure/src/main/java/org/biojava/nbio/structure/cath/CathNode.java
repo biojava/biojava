@@ -31,72 +31,72 @@ import java.io.Serializable;
  */
 public class CathNode implements Serializable{
 
-    public static final long serialVersionUID = 1L;
+	public static final long serialVersionUID = 1L;
 
-    /**
-     * The CATH code of the node, e.g. "1.10.8.10".
-     */
-    String nodeId;
+	/**
+	 * The CATH code of the node, e.g. "1.10.8.10".
+	 */
+	String nodeId;
 
-    /**
-     * The CATH code of the parent, e.g. "1.10.8". Calculated during parsing.
-     */
-    String parentId;
+	/**
+	 * The CATH code of the parent, e.g. "1.10.8". Calculated during parsing.
+	 */
+	String parentId;
 
-    /**
-     * The representative domain for this node.
-     */
-    String representative;
+	/**
+	 * The representative domain for this node.
+	 */
+	String representative;
 
-    /**
-     * A name or description.
-     */
-    String description;
+	/**
+	 * A name or description.
+	 */
+	String description;
 
-    /**
-     * This node's level within the hierarchy. One of CATH, not CATHSOLID.
-     */
-    CathCategory category;
+	/**
+	 * This node's level within the hierarchy. One of CATH, not CATHSOLID.
+	 */
+	CathCategory category;
 
-    public String getNodeId() {
-        return nodeId;
-    }
+	public String getNodeId() {
+		return nodeId;
+	}
 
-    public void setNodeId(String nodeId) {
-        this.nodeId = nodeId;
-        this.category = CathCategory.fromCathCode(nodeId);
-    }
+	public void setNodeId(String nodeId) {
+		this.nodeId = nodeId;
+		this.category = CathCategory.fromCathCode(nodeId);
+	}
 
-    public String getParentId() {
-        return parentId;
-    }
+	public String getParentId() {
+		return parentId;
+	}
 
-    public void setParentId(String parentId) {
-        this.parentId = parentId;
-    }
+	public void setParentId(String parentId) {
+		this.parentId = parentId;
+	}
 
-    public String getRepresentative() {
-        return representative;
-    }
+	public String getRepresentative() {
+		return representative;
+	}
 
-    public void setRepresentative(String representative) {
-        this.representative = representative;
-    }
+	public void setRepresentative(String representative) {
+		this.representative = representative;
+	}
 
-    public String getDescription() {
-        return description;
-    }
+	public String getDescription() {
+		return description;
+	}
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-    public CathCategory getCategory() {
-        return category;
-    }
+	public CathCategory getCategory() {
+		return category;
+	}
 
-    @Override
-    public String toString() {
-        return ""; //TODO implement
-    }
+	@Override
+	public String toString() {
+		return ""; //TODO implement
+	}
 }

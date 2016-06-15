@@ -20,50 +20,41 @@
  */
 package org.biojava.nbio.sequencing.io.fastq;
 
-import java.io.IOException;
-
 /**
  * Unit test for SolexaFastqWriter.
  */
 public final class SolexaFastqWriterTest
-    extends AbstractFastqWriterTest
+	extends AbstractFastqWriterTest
 {
 
-    @Override
-    public FastqWriter createFastqWriter()
-    {
-        return new SolexaFastqWriter();
-    }
+	@Override
+	public FastqWriter createFastqWriter()
+	{
+		return new SolexaFastqWriter();
+	}
 
-    @Override
-    public Fastq createFastq()
-    {
-        return new FastqBuilder()
-            .withDescription("description")
-            .withSequence("sequence")
-            .withQuality("quality_")
-            .withVariant(FastqVariant.FASTQ_SOLEXA)
-            .build();
-    }
+	@Override
+	public Fastq createFastq()
+	{
+		return new FastqBuilder()
+			.withDescription("description")
+			.withSequence("sequence")
+			.withQuality("quality_")
+			.withVariant(FastqVariant.FASTQ_SOLEXA)
+			.build();
+	}
 
-    public void testValidateNotSolexaVariant()
-    {
-        SolexaFastqWriter writer = new SolexaFastqWriter();
-        Appendable appendable = new StringBuilder();
-        Fastq invalid = new FastqBuilder()
-            .withDescription("description")
-            .withSequence("sequence")
-            .withQuality("quality_")
-            .withVariant(FastqVariant.FASTQ_ILLUMINA)
-            .build();
-        try
-        {
-            writer.append(appendable, invalid);
-            fail("validate not fastq-solexa variant expected IOException");
-        }
-        catch (IOException e)
-        {
-            // expected
-        }
-    }
+	public void testConvertNotSolexaVariant() throws Exception
+	{
+		SolexaFastqWriter writer = new SolexaFastqWriter();
+		Appendable appendable = new StringBuilder();
+		Fastq invalid = new FastqBuilder()
+			.withDescription("description")
+			.withSequence("sequence")
+			.withQuality("quality_")
+			.withVariant(FastqVariant.FASTQ_ILLUMINA)
+			.build();
+
+		writer.append(appendable, invalid);
+	}
 }
