@@ -25,6 +25,7 @@ package org.biojava.nbio.alignment.routines;
 
 import org.biojava.nbio.core.alignment.template.AlignedSequence.Step;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -207,7 +208,9 @@ public class AlignerHelper {
 			this.queryIndex = queryIndex;
 			this.targetIndex = targetIndex;
 		}
-		public static class QueryIndexComparator implements Comparator<Anchor> {
+		public static class QueryIndexComparator implements Comparator<Anchor>, Serializable {
+            private static final long serialVersionUID = 1;
+
 			@Override
 			public int compare(Anchor o1, Anchor o2) {
 				return o1.getQueryIndex() - o2.getQueryIndex();

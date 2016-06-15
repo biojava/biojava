@@ -22,13 +22,15 @@ package org.biojava.nbio.survival.cox.comparators;
 
 import org.biojava.nbio.survival.cox.SurvivalInfo;
 
+import java.io.Serializable;
 import java.util.Comparator;
 
 /**
  *
  * @author Scooter Willis <willishf at gmail dot com>
  */
-public class SurvivalInfoValueComparator implements Comparator<SurvivalInfo> {
+public class SurvivalInfoValueComparator implements Comparator<SurvivalInfo>, Serializable {
+    private static final long serialVersionUID = 1;
 
 	String variable = "";
 

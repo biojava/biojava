@@ -24,14 +24,15 @@ package org.biojava.nbio.core.sequence;
 
 import org.biojava.nbio.core.sequence.template.AbstractSequence;
 
+import java.io.Serializable;
 import java.util.Comparator;
 
 /**
  * Used to sort sequences
  * @author Scooter Willis <willishf at gmail dot com>
  */
-public class SequenceComparator implements Comparator<AbstractSequence<?>>{
-
+public class SequenceComparator implements Comparator<AbstractSequence<?>>, Serializable{
+    private static final long serialVersionUID = 1;
 
 	@Override
 	public int compare(AbstractSequence<?> o1, AbstractSequence<?> o2) {
