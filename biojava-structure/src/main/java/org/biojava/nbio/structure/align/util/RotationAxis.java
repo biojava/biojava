@@ -25,6 +25,7 @@ import org.biojava.nbio.structure.AtomImpl;
 import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.model.AFPChain;
+import org.biojava.nbio.structure.contact.Pair;
 import org.biojava.nbio.structure.jama.Matrix;
 
 import javax.vecmath.AxisAngle4d;
@@ -111,6 +112,10 @@ public final class RotationAxis {
 
 	public Vector3d getVector3dScrewTranslation() {
 		return new Vector3d(screwTranslation.getX(),screwTranslation.getY(),screwTranslation.getZ());
+	}
+	
+	public double getTranslation() {
+		return Calc.amount(screwTranslation);
 	}
 
 	/**
@@ -385,27 +390,17 @@ public final class RotationAxis {
 	}
 
 	/**
-	 * Returns a Jmol script which will display the axis of rotation. This
-	 * consists of a cyan arrow along the axis, plus an arc showing the angle
-	 * of rotation.
+	 * Find a segment of the axis that covers the specified set of atoms.
 	 * <p>
-	 * As the rotation angle gets smaller, the axis of rotation becomes poorly
-	 * defined and would need to get farther and farther away from the protein.
-	 * This is not particularly useful, so we arbitrarily draw it parallel to
-	 * the translation and omit the arc.
-	 * @param atoms Some atoms from the protein, used for determining the bounds
-	 *  	  of the axis.
-	 * @param axisID in case of representing more than one axis in the same jmol
-	 * 		  panel, indicate the ID number.
-	 *
-	 * @return The Jmol script, suitable for calls to
-	 * {@link org.biojava.nbio.structure.align.gui.jmol.StructureAlignmentJmol#evalString() jmol.evalString()}
+	 * Projects the input atoms onto the rotation axis and returns the bounding
+	 * points.
+	 * <p>
+	 * In the case of a pure translational axis, the axis location is undefined
+	 * so the center of mass will be used instead.
+	 * @param atoms
+	 * @return two points defining the axis segment
 	 */
-	public String getJmolScript(Atom[] atoms, int axisID){
-		final double width=.5;// width of JMol object
-		final String axisColor = "yellow"; //axis color
-		final String screwColor = "orange"; //screw translation color
-
+	public Pair<Atom> getAxisEnds(Atom[] atoms) {
 		// Project each Atom onto the rotation axis to determine limits
 		double min, max;
 		min = max = Calc.scalarProduct(rotationAxis,atoms[0]);
@@ -417,7 +412,7 @@ public final class RotationAxis {
 		double uLen = Calc.scalarProduct(rotationAxis,rotationAxis);// Should be 1, but double check
 		min/=uLen;
 		max/=uLen;
-
+		
 		// Project the origin onto the axis. If the axis is undefined, use the center of mass
 		Atom axialPt;
 		if(rotationPos == null) {
@@ -439,6 +434,34 @@ public final class RotationAxis {
 		Atom axisMax = (Atom) axialPt.clone();
 		Calc.scaleAdd(max, rotationAxis, axisMax);
 
+		return new Pair<>(axisMin, axisMax);
+	}
+	/**
+	 * Returns a Jmol script which will display the axis of rotation. This
+	 * consists of a cyan arrow along the axis, plus an arc showing the angle
+	 * of rotation.
+	 * <p>
+	 * As the rotation angle gets smaller, the axis of rotation becomes poorly
+	 * defined and would need to get farther and farther away from the protein.
+	 * This is not particularly useful, so we arbitrarily draw it parallel to
+	 * the translation and omit the arc.
+	 * @param atoms Some atoms from the protein, used for determining the bounds
+	 *  	  of the axis.
+	 * @param axisID in case of representing more than one axis in the same jmol
+	 * 		  panel, indicate the ID number.
+	 *
+	 * @return The Jmol script, suitable for calls to
+	 * {@link org.biojava.nbio.structure.align.gui.jmol.StructureAlignmentJmol#evalString() jmol.evalString()}
+	 */
+	public String getJmolScript(Atom[] atoms, int axisID){
+		final double width=.5;// width of JMol object
+		final String axisColor = "yellow"; //axis color
+		final String screwColor = "orange"; //screw translation color
+
+		Pair<Atom> endPoints = getAxisEnds(atoms);
+		Atom axisMin = endPoints.getFirst();
+		Atom axisMax = endPoints.getSecond();
+		
 		StringWriter result = new StringWriter();
 
 		// set arrow heads to a reasonable length

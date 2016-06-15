@@ -395,11 +395,11 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 	 */
 	private int getGroupTypIndicator(String currentGroupType) {
 		// At the moment - peptide like is a HETATM group (consistent with biojava)
-		if(currentGroupType.toUpperCase().equals("PEPTIDE-LIKE")){
+		if("PEPTIDE-LIKE".equalsIgnoreCase(currentGroupType)){
 			return 0;
 		}
 		// Again to correspond with Biojava - but I suspect we really want this to be 1
-		if(currentGroupType.toUpperCase().equals("D-PEPTIDE LINKING")){
+		if("D-PEPTIDE LINKING".equalsIgnoreCase(currentGroupType)){
 			return 0;
 		}
 		if(currentGroupType.toUpperCase().contains("PEPTIDE")){

@@ -22,6 +22,7 @@
  */
 package org.biojava.nbio.structure.align.pairwise;
 
+import java.io.Serializable;
 import java.util.Comparator;
 
 
@@ -31,8 +32,8 @@ import java.util.Comparator;
  * @author Andreas Prlic
  *
  */
-public class AltAligComparator implements Comparator<AlternativeAlignment> {
-
+public class AltAligComparator implements Comparator<AlternativeAlignment>, Serializable {
+    private static final long serialVersionUID = 1;
 
 	public AltAligComparator() {
 		super();

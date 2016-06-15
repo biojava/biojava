@@ -228,7 +228,7 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
 
 				String accession = m.group(1);
 				Strand s = versus == 1 ? Strand.POSITIVE : Strand.NEGATIVE;
-				int start = new Integer(m.group(3));
+				int start = Integer.parseInt(m.group(3));
 				int end = m.group(6) == null ? start : new Integer(m.group(6));
 
 				if (featureGlobalStart > start) {
