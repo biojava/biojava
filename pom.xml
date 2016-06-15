@@ -200,8 +200,8 @@
 						<!-- work around for GPG hanging issue http://jira.codehaus.org/browse/MGPG-9 -->
 						<mavenExecutorId>forked-path</mavenExecutorId>
 
-						<!-- needed for jenkins release plugin? -->
-						<!--<useReleaseProfile>false</useReleaseProfile>-->
+						<!-- needed for jenkins release plugin -->
+						<useReleaseProfile>true</useReleaseProfile>
 						<arguments>-Pgpg-release</arguments>
 					</configuration>
 
