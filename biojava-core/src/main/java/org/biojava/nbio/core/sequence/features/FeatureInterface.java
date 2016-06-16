@@ -1,12 +1,12 @@
 /*
- *                    BioJava development code
+ *					BioJava development code
  *
  * This code may be freely distributed and modified under the
  * terms of the GNU Lesser General Public Licence.  This should
  * be distributed with the code.  If you do not have a copy,
  * see:
  *
- *      http://www.gnu.org/copyleft/lesser.html
+ *	  http://www.gnu.org/copyleft/lesser.html
  *
  * Copyright for this code is held jointly by the individual
  * authors.  These should be listed in @author doc comments.
@@ -15,7 +15,7 @@
  * or to join the biojava-l mailing list, visit the home page
  * at:
  *
- *      http://www.biojava.org/
+ *	  http://www.biojava.org/
  *
  */
 
@@ -155,7 +155,7 @@ public interface FeatureInterface<S extends AbstractSequence<C>, C extends Compo
 	public void setChildrenFeatures(List<FeatureInterface<S, C>> features);
 
 
-		/**
+	/**
 	 * @return the userObject
 	 */
 	public Object getUserObject();
@@ -165,19 +165,19 @@ public interface FeatureInterface<S extends AbstractSequence<C>, C extends Compo
 	 */
 	public void setUserObject(Object userObject);
 
-    /* new feature interface methods for accessing qualifers and the new map 
-     * see abstract feature for implementation 
-     */
-    /**
-     * map implementation to store qualifiers where only qualifier hold its key and value pair
-     * @return
-     */
-    public GenBankQualifierMap getQualifierMap();
-    /**
-     * get all qualifiers of this feature
-     * @return
-     */
-    public Qualifier[] getQualifiers();
+	/* new feature interface methods for accessing qualifers and the new map 
+	 * see abstract feature for implementation 
+	 */
+	/**
+	 * map implementation to store qualifiers where only qualifier hold its key and value pair
+	 * @return
+	 */
+	public GenBankQualifierMap getQualifierMap();
+	/**
+	 * get all qualifiers of this feature
+	 * @return
+	 */
+	public Qualifier[] getQualifiers();
 	/**
 	 * overwrite qualifiermap
 	 * @param qualifierMap
@@ -203,16 +203,16 @@ public interface FeatureInterface<S extends AbstractSequence<C>, C extends Compo
 	 * @param qa
 	 */
 	public void addQualifiers(Qualifier[] qa);
-    public Qualifier getQualifierByName(String qName);
-    public Qualifier getFirstQualifierByValue(String value);
-    public Qualifier[] getQualifiersByValue(String value);
-	//DBreferenceInfo 
+	public Qualifier getQualifierByName(String qName);
+	public Qualifier getFirstQualifierByValue(String value);
+	public Qualifier[] getQualifiersByValue(String value);
+	//DBreferenceInfo
 	/**
 	 * returns the dbreferenceinfo of this feature, which can contain lots of 
 	 * entries 
 	 * * @return
 	 */
-    public DBReferenceInfo getAllDatabaseReferenceInfos();
+	public DBReferenceInfo getAllDatabaseReferenceInfos();
 	/**
 	 * returns all databases of this feature in a string[]
 	 * @return
@@ -263,5 +263,5 @@ public interface FeatureInterface<S extends AbstractSequence<C>, C extends Compo
 	 */
 	@Deprecated
 	public void addQualifier(String str, Qualifier q);
-
+		
 }
