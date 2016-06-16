@@ -108,7 +108,6 @@ public class GenbankProxySequenceReaderTest {
 		Assert.assertNotNull(Integer.decode(seq.getTaxonomy().getID().split(":")[1]));
 
 		// test taxonomy name
-<<<<<<< HEAD
 		//String taxonName = seq.getFeaturesByType("source").get(0).getQualifiers().get("organism").get(0).getValue();
 		String taxonName = seq.getFeaturesByType("source").get(0).getQualifierByName("organism").getFirstValue();
 		logger.info("taxonomy name '{}'", taxonName);
@@ -118,16 +117,6 @@ public class GenbankProxySequenceReaderTest {
 			logger.info("CDS: {}", CDS);
 			//String codedBy = CDS.getQualifiers().get("coded_by").get(0).getValue();
 			String codedBy = CDS.getQualifierByName("coded_by").getFirstValue();
-=======
-		String taxonName = seq.getFeaturesByType("source").get(0).getQualifierMap().get("organism").getFirstValue();
-		logger.info("taxonomy name '{}'", taxonName);
-		Assert.assertNotNull(taxonName);
-
-		if (seq.getFeaturesByType("CDS").size() > 0) {
-			FeatureInterface<AbstractSequence<AminoAcidCompound>, AminoAcidCompound> CDS = seq.getFeaturesByType("CDS").get(0);
-			logger.info("CDS: {}", CDS);
-			String codedBy = CDS.getQualifierMap().get("coded_by").getFirstValue();
->>>>>>> stefan/master
 			Assert.assertNotNull(codedBy);
 			Assert.assertTrue(!codedBy.isEmpty());
 			logger.info("\t\tcoded_by: {}", codedBy);
@@ -151,18 +140,13 @@ public class GenbankProxySequenceReaderTest {
 		if (CDSs != null) {
 			if (CDSs.size() == 1) {
 				//ArrayList<Qualifier> qualifiers = (ArrayList)CDSs.get(0).getQualifiers().get("coded_by");
-<<<<<<< HEAD
 				//Qualifier codedBy = qualifiers.get(0);
 				Qualifier codedBy = CDSs.get(0).getQualifierByName("coded_by");
-=======
-				Qualifier codedBy = (Qualifier) CDSs.get(0).getQualifierMap().get("coded_by");
->>>>>>> stefan/master
 				if (codedBy != null) {
 
 					AbstractSequence<?> parentSeq = seq.getParentSequence();
 					Assert.assertNotNull(parentSeq);
 
-<<<<<<< HEAD
 					/*
 					 Sometimes protein might have many 'parents' with different accessions
 					 so accession is not set.
@@ -170,15 +154,6 @@ public class GenbankProxySequenceReaderTest {
 					 That test is always failed
 					 */
 					//Assert.assertTrue(parentSeq.getAccession());
-=======
-					/* 
-					 Sometimes protein might have many 'parents' with different accessions
-					 so accession is not set.
-				
-					 That test is always failed
-					 */
-					//Assert.assertTrue(parentSeq.getAccession()); 
->>>>>>> stefan/master
 					Assert.assertTrue(!parentSeq.getSequenceAsString().isEmpty());
 				}
 			}
