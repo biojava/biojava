@@ -129,7 +129,6 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 				structure.addChain(modelChain, i);
 				String sequence = chainSequenceMap.get(modelChain.getId());
 				MmtfUtils.addSeqRes(modelChain, sequence);
-
 			}
 		}
 		StructureTools.cleanUpAltLocs(structure);
@@ -199,11 +198,12 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 			break;
 		default:
 			group = new HetatomImpl();
+			break;
 		}
 		atomsInGroup = new ArrayList<Atom>();
-		// Set the CC -> empty but not null
 		ChemComp chemComp = new ChemComp();
 		chemComp.setOne_letter_code(String.valueOf(singleLetterCode));
+		chemComp.setType(chemCompType.toUpperCase());
 		ResidueType residueType = ResidueType.getResidueTypeFromString(chemCompType);
 		chemComp.setResidueType(residueType);
 		chemComp.setPolymerType(residueType.polymerType);
@@ -216,7 +216,7 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 					groupNumber, insertionCode);
 		}
 		group.setAtoms(new ArrayList<Atom>(atomCount));
-		if (polymerType != 0) {
+		if (polymerType==1 || polymerType==2) {
 			MmtfUtils.insertSeqResGroup(chain, group, sequenceIndexId);
 		}
 		if (atomCount > 0) {
@@ -257,6 +257,9 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 		atom.setPDBserial(serialNumber);
 		atom.setName(atomName.trim());
 		atom.setElement(Element.valueOfIgnoreCase(element));
+		if(alternativeLocationId==MmtfStructure.UNAVAILABLE_CHAR_VALUE){
+			alternativeLocationId = ' ';
+		}
 		if (alternativeLocationId != ' ') {
 			// Get the altGroup
 			altGroup = getCorrectAltLocGroup(alternativeLocationId);
