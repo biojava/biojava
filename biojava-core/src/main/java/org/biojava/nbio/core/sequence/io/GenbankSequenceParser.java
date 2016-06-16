@@ -150,12 +150,6 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 						section.get(0)[1].length()==0) {
 					throw new ParserException(Messages.ENDOFFILE);
 				}
-			if (sectionKey == null) {
-				//if we reach the end of the file, section contains empty strings
-				if(section.get(0)[1]==null || section.get(0)[1]=="" ||
-						section.get(0)[1].length()==0) {
-					throw new ParserException(Messages.ENDOFFILE);
-				}
 				throw new ParserException(Messages.SECTIONKEYNULL);
 			}
 			// process section-by-section
