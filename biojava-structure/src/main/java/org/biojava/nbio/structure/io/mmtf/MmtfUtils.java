@@ -31,6 +31,7 @@ import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
 import org.biojava.nbio.structure.io.mmcif.DownloadChemCompProvider;
+import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.biojava.nbio.structure.quaternary.BioAssemblyInfo;
 import org.biojava.nbio.structure.quaternary.BiologicalAssemblyTransformation;
 import org.biojava.nbio.structure.secstruc.DSSPParser;
@@ -478,7 +479,7 @@ public class MmtfUtils {
 		List<Group> seqResGroups = modelChain.getSeqResGroups();
 		GroupType chainType = getChainType(modelChain.getAtomGroups());
 		for(int i=0; i<sequence.length(); i++){
-			char aa = sequence.charAt(i);
+			char singleLetterCode = sequence.charAt(i);
 			Group group;
 			if(seqResGroups.size()<=i){
 				group=null;
@@ -490,7 +491,7 @@ public class MmtfUtils {
 				group=null;
 				continue;
 			}
-			group = getSeqResGroup(modelChain, aa, chainType);
+			group = getSeqResGroup(modelChain, singleLetterCode, chainType);
 			addGroupAtId(seqResGroups, group, i);
 			seqResGroups.set(i, group);
 			group=null;
@@ -518,15 +519,21 @@ public class MmtfUtils {
 		}		
 	}
 	
-	private static Group getSeqResGroup(Chain modelChain, char aa, GroupType type) {
+	private static Group getSeqResGroup(Chain modelChain, char singleLetterCode, GroupType type) {
 		if(type==GroupType.AMINOACID){
 			AminoAcidImpl a = new AminoAcidImpl();
 			a.setRecordType(AminoAcid.SEQRESRECORD);
-			a.setAminoType(aa);
+			a.setAminoType(singleLetterCode);
+			ChemComp chemComp = new ChemComp();
+			chemComp.setOne_letter_code(""+singleLetterCode);
+			a.setChemComp(chemComp);
 			return a;
 
 		} else if (type==GroupType.NUCLEOTIDE) {
 			NucleotideImpl n = new NucleotideImpl();
+			ChemComp chemComp = new ChemComp();
+			chemComp.setOne_letter_code(""+singleLetterCode);
+			n.setChemComp(chemComp);
 			return n;
 		}
 		else{
