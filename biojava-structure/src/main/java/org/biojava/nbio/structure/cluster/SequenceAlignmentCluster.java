@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  */
-package org.biojava.nbio.structure.symmetry.core;
+package org.biojava.nbio.structure.cluster;
 
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
@@ -28,8 +28,7 @@ import org.biojava.nbio.structure.align.ce.CeMain;
 import org.biojava.nbio.structure.align.ce.CeParameters;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.seq.SmithWaterman3Daligner;
-import org.biojava.nbio.structure.cluster.PairwiseAlignment;
-import org.biojava.nbio.structure.cluster.UniqueSequenceList;
+import org.biojava.nbio.structure.symmetry.core.QuatSymmetryParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

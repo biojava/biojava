@@ -23,7 +23,6 @@ package org.biojava.nbio.structure.cluster;
 import java.util.*;
 
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetryParameters;
-import org.biojava.nbio.structure.symmetry.core.SequenceAlignmentCluster;
 
 /**
  * Merges clusters based on their sequence identity. This class does the actual

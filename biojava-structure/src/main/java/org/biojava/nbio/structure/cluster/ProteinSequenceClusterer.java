@@ -23,7 +23,6 @@ package org.biojava.nbio.structure.cluster;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetryParameters;
-import org.biojava.nbio.structure.symmetry.core.SequenceAlignmentCluster;
 
 import java.util.*;
 
