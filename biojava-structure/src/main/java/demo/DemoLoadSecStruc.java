@@ -28,6 +28,7 @@ import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.secstruc.DSSPParser;
+import org.biojava.nbio.structure.secstruc.SecStrucCalc;
 import org.biojava.nbio.structure.secstruc.SecStrucInfo;
 import org.biojava.nbio.structure.secstruc.SecStrucTools;
 
@@ -61,21 +62,28 @@ public class DemoLoadSecStruc {
 
 		// Print the Author's assignment (from PDB file)
 		System.out.println("Author's assignment: ");
-		List<SecStrucInfo> ssi = SecStrucTools.getSecStrucInfo(s);
-		for (SecStrucInfo ss : ssi) {
-			System.out.println(ss.getGroup().getChain().getName() + " "
-					+ ss.getGroup().getResidueNumber() + " "
-					+ ss.getGroup().getPDBName() + " -> " + ss.toString());
-		}
+		printSecStruc(s);
 
 		// If the more detailed DSSP prediction is required call this
 		DSSPParser.fetch(pdbID, s, true);
 
 		// Print the assignment residue by residue
 		System.out.println("DSSP assignment: ");
-		ssi = SecStrucTools.getSecStrucInfo(s);
+		printSecStruc(s);
+
+		// finally use BioJava's built in DSSP-like secondary structure assigner
+		SecStrucCalc secStrucCalc = new SecStrucCalc();
+
+		// calculate and assign
+		secStrucCalc.calculate(s,true);
+		printSecStruc(s);
+
+	}
+
+	public static void printSecStruc(Structure s){
+		List<SecStrucInfo> ssi = SecStrucTools.getSecStrucInfo(s);
 		for (SecStrucInfo ss : ssi) {
-			System.out.println(ss.getGroup().getChain().getName() + " "
+			System.out.println(ss.getGroup().getChain().getChainID() + " "
 					+ ss.getGroup().getResidueNumber() + " "
 					+ ss.getGroup().getPDBName() + " -> " + ss.toString());
 		}
