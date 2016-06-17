@@ -50,7 +50,6 @@ public class TestQuatSymmetryDetection {
 		params.setParseBioAssembly(true);
 		params.setAlignSeqRes(true);
 		AtomCache cache = new AtomCache();
-		cache.setUseMmCif(true);
 		cache.setFileParsingParams(params);
 		StructureIO.setAtomCache(cache);
 		Structure pdb = StructureIO.getStructure("1b4c");
@@ -73,7 +72,6 @@ public class TestQuatSymmetryDetection {
 		params.setAlignSeqRes(true);
 		AtomCache cache = new AtomCache();
 		cache.setFileParsingParams(params);
-		cache.setUseMmCif(true);
 		StructureIO.setAtomCache(cache);
 		Structure pdb = StructureIO.getStructure("4hhb");
 		String[] symmetries = getSymmetry(pdb, 1);
@@ -94,7 +92,6 @@ public class TestQuatSymmetryDetection {
 		params.setAlignSeqRes(true);
 		AtomCache cache = new AtomCache();
 		cache.setFileParsingParams(params);
-		cache.setUseMmCif(true);
 		StructureIO.setAtomCache(cache);
 		Structure pdb = StructureIO.getStructure("4p2c");
 		String[] symmetries = getSymmetry(pdb, 1);

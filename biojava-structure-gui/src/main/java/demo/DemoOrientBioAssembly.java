@@ -47,7 +47,7 @@ public class DemoOrientBioAssembly {
 
 		//String[] pdbIDs = new String[]{"4HHB","4AQ5","1LTI","1STP","4F88","2W6E","2LXC","3OE7","4INU","4D8s","4EAR","4IYQ","3ZKR"};
 
-		String[] pdbIDs = new String[]{"4x2s"};
+		String[] pdbIDs = new String[]{"4hhb"};
 
 		int bioAssemblyNr = 1;
 
@@ -218,7 +218,7 @@ public class DemoOrientBioAssembly {
 	private static Structure  readStructure(String pdbId, int bioAssemblyId) {
 		// initialize the PDB_DIR env variable
 		AtomCache cache = new AtomCache();
-		cache.setUseMmCif(true);
+		//cache.setUseMmCif(true);
 
 		FileParsingParameters params = new FileParsingParameters();
 		params.setParseCAOnly(true);
