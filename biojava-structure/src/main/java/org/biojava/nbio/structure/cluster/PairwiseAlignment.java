@@ -18,9 +18,11 @@
  *      http://www.biojava.org/
  *
  */
-package org.biojava.nbio.structure.symmetry.core;
+package org.biojava.nbio.structure.cluster;
 
 import java.util.Arrays;
+
+import org.biojava.nbio.structure.symmetry.core.SequenceAlignmentCluster;
 
 public class PairwiseAlignment {
 	private SequenceAlignmentCluster cluster1 = null;

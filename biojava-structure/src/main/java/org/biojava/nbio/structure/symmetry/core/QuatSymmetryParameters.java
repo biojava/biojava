@@ -23,6 +23,14 @@ package org.biojava.nbio.structure.symmetry.core;
 import java.io.Serializable;
 import java.util.Arrays;
 
+/**
+ * The QuatSymmetryParameters specify the options used for the detection of
+ * quaternary symmetry in structures using the {@link QuatSymmetryDetector}.
+ * 
+ * @author Peter Rose
+ * @author Aleix Lafita
+ *
+ */
 public class QuatSymmetryParameters implements Serializable{
 
 	private static final long serialVersionUID = 1L;
@@ -243,6 +251,7 @@ public class QuatSymmetryParameters implements Serializable{
 	public boolean isVerbose() {
 		return verbose;
 	}
+
 	public void setVerbose(boolean verbose) {
 		this.verbose = verbose;
 	}

@@ -20,10 +20,12 @@
  */
 package org.biojava.nbio.structure.symmetry.core;
 
+import org.biojava.nbio.structure.cluster.Subunits;
 import org.biojava.nbio.structure.symmetry.geometry.SuperPosition;
 
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
+
 import java.util.ArrayList;
 import java.util.List;
 

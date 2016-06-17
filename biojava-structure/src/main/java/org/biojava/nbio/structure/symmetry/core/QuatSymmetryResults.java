@@ -22,6 +22,8 @@
  */
 package org.biojava.nbio.structure.symmetry.core;
 
+import org.biojava.nbio.structure.cluster.Subunits;
+
 /**
  * Holds the results of quaternary symmetry perception.
  *

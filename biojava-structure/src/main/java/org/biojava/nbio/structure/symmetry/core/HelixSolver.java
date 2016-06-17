@@ -20,6 +20,7 @@
  */
 package org.biojava.nbio.structure.symmetry.core;
 
+import org.biojava.nbio.structure.cluster.Subunits;
 import org.biojava.nbio.structure.symmetry.geometry.SuperPosition;
 
 import javax.vecmath.AxisAngle4d;

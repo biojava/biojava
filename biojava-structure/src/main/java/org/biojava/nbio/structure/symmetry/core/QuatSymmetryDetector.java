@@ -23,6 +23,10 @@
 package org.biojava.nbio.structure.symmetry.core;
 
 import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.cluster.ChainClusterer;
+import org.biojava.nbio.structure.cluster.ClusterProteinChains;
+import org.biojava.nbio.structure.cluster.SubunitGraph;
+import org.biojava.nbio.structure.cluster.Subunits;
 import org.biojava.nbio.structure.symmetry.utils.CombinationGenerator;
 import org.jgrapht.UndirectedGraph;
 import org.jgrapht.alg.ConnectivityInspector;

@@ -21,6 +21,7 @@
 
 package org.biojava.nbio.structure.symmetry.core;
 
+import org.biojava.nbio.structure.cluster.Subunits;
 import org.biojava.nbio.structure.symmetry.geometry.DistanceBox;
 import org.biojava.nbio.structure.symmetry.geometry.MomentsOfInertia;
 import org.biojava.nbio.structure.symmetry.geometry.SphereSampler;
@@ -30,6 +31,7 @@ import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;

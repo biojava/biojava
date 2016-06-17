@@ -25,7 +25,7 @@ import static org.junit.Assert.*;
 import java.util.Arrays;
 import java.util.List;
 
-import org.biojava.nbio.structure.symmetry.core.ChainClusterer;
+import org.biojava.nbio.structure.cluster.ChainClusterer;
 import org.junit.Test;
 
 public class TestChainClusterer {

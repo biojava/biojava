@@ -28,6 +28,8 @@ import org.biojava.nbio.structure.align.ce.CeMain;
 import org.biojava.nbio.structure.align.ce.CeParameters;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.seq.SmithWaterman3Daligner;
+import org.biojava.nbio.structure.cluster.PairwiseAlignment;
+import org.biojava.nbio.structure.cluster.UniqueSequenceList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
