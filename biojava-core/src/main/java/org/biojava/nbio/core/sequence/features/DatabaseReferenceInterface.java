@@ -29,8 +29,15 @@ import java.util.LinkedHashMap;
  * If a SequenceProxyReader implements this interface then that external source
  * has a list of cross reference id(s)
  * @author Scooter Willis <willishf at gmail dot com>
+ * Deprecated, merged into featureInterface
  */
+@Deprecated
 public interface DatabaseReferenceInterface {
-
-	public LinkedHashMap<String,ArrayList<DBReferenceInfo>> getDatabaseReferences();
+	/**
+	 * 
+	 * @return
+	 * deprecated, lots of similar functionality in DBReferenceInfo or AbstractFeature
+	 */
+	@Deprecated
+    public DBReferenceInfo getDatabaseReferences();
 }

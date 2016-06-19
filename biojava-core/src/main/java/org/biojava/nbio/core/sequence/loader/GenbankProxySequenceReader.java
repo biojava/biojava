@@ -1,23 +1,23 @@
 /*
- *                    BioJava development code
+ *					BioJava development code
  *
  * This code may be freely distributed and modified under the
  * terms of the GNU Lesser General Public Licence.  This should
  * be distributed with the code.  If you do not have a copy,
  * see:
  *
- *      http://www.gnu.org/copyleft/lesser.html
+ *	  http://www.gnu.org/copyleft/lesser.html
  *
  * Copyright for this code is held jointly by the individual
  * authors.  These should be listed in @author doc comments.
- *
+ * 
  * @author Karl Nicholas <github:karlnicholas>
  *
  * For more information on the BioJava project and its aims,
  * or to join the biojava-l mailing list, visit the home page
  * at:
  *
- *      http://www.biojava.org/
+ *	  http://www.biojava.org/
  *
  * Created on 08-08-2013
  *
@@ -62,19 +62,19 @@ public class GenbankProxySequenceReader<C extends Compound> extends StringProxyS
 	private GenericGenbankHeaderParser<AbstractSequence<C>, C> headerParser;
 	private String header;
 	private HashMap<String, ArrayList<AbstractFeature>> features;
-
+	
 
 	/**
-	 *
-	 * @throws InterruptedException
-	 * @throws IOException
-	 * @throws CompoundNotFoundException
+	 * 
+	 * @throws InterruptedException 
+	 * @throws IOException 
+	 * @throws CompoundNotFoundException 
 	 */
 	public GenbankProxySequenceReader(
 			String genbankDirectoryCache,
 			String accessionID,
 			CompoundSet<C> compoundSet ) throws IOException, InterruptedException, CompoundNotFoundException {
-
+		
 		setGenbankDirectoryCache(genbankDirectoryCache);
 		setCompoundSet(compoundSet);
 
@@ -91,7 +91,7 @@ public class GenbankProxySequenceReader<C extends Compound> extends StringProxyS
 		if (compoundSet.getClass().equals(AminoAcidCompoundSet.class)) {
 			if (!genbankParser.getCompoundType().equals(compoundSet)) {
 				logger.error("Declared compount type {} does not mach the real: {}", genbankParser.getCompoundType().toString(), compoundSet.toString());
-				throw new IOException("Wrong declared compound type for: " + accessionID);
+				throw new IOException("Wrong declared compound type for: " + accessionID); 
 			}
 		}
 
@@ -176,7 +176,7 @@ public class GenbankProxySequenceReader<C extends Compound> extends StringProxyS
 	}
 
 	@Override
-	public LinkedHashMap<String, ArrayList<DBReferenceInfo>> getDatabaseReferences() {
+	public DBReferenceInfo getDatabaseReferences() {
 		return genbankParser.getDatabaseReferences();
 	}
 
@@ -262,22 +262,22 @@ public class GenbankProxySequenceReader<C extends Compound> extends StringProxyS
 
 		 sequence = genbankProxyReader.getDNASequence(new AccessionID("NM_000266"));
 		 System.out.println("Sequence" + "(" + sequence.getLength() + ")=" + sequence.getSequenceAsString().substring(0, 10) + "...");
-
+		
 		 sequence = genbankProxyReader.getProteinSequence(new AccessionID("NP_000257"));
 		 System.out.println("Sequence" + "(" + sequence.getLength() + ")=" + sequence.getSequenceAsString().substring(0, 10) + "...");
-
+		
 		 sequence = genbankProxyReader.getProteinSequence(new AccessionID("AV254721"));
 		 System.out.println("Sequence" + "(" + sequence.getLength() + ")=" + sequence.getSequenceAsString().substring(0, 10) + "...");
-
+		
 		 sequence = genbankProxyReader.getProteinSequence(new AccessionID("AV254721.2"));
 		 System.out.println("Sequence" + "(" + sequence.getLength() + ")=" + sequence.getSequenceAsString().substring(0, 10) + "...");
-
+		
 		 sequence = genbankProxyReader.getProteinSequence(new AccessionID("U49845"));
 		 System.out.println("Sequence" + "(" + sequence.getLength() + ")=" + sequence.getSequenceAsString().substring(0, 10) + "...");
-
+		
 		 sequence = genbankProxyReader.getProteinSequence(new AccessionID("GI:1293613"));
 		 System.out.println("Sequence" + "(" + sequence.getLength() + ")=" + sequence.getSequenceAsString().substring(0, 10) + "...");
-
+		
 		 sequence = genbankProxyReader.getProteinSequence(new AccessionID("14109166"));
 		 System.out.println("Sequence" + "(" + sequence.getLength() + ")=" + sequence.getSequenceAsString().substring(0, 10) + "...");
 		 */

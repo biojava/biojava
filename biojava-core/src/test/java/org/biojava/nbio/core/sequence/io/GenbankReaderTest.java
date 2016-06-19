@@ -35,6 +35,7 @@ import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava.nbio.core.sequence.compound.DNACompoundSet;
 import org.biojava.nbio.core.sequence.compound.NucleotideCompound;
 import org.biojava.nbio.core.sequence.features.FeatureInterface;
+import org.biojava.nbio.core.sequence.features.GenBankQualifierMap;
 import org.biojava.nbio.core.sequence.features.Qualifier;
 import org.biojava.nbio.core.sequence.template.AbstractSequence;
 import org.junit.After;
@@ -133,14 +134,15 @@ public class GenbankReaderTest {
 		ProteinSequence protein = new ArrayList<ProteinSequence>(proteinSequences.values()).get(0);
 
 		FeatureInterface<AbstractSequence<AminoAcidCompound>, AminoAcidCompound> cdsFeature = protein.getFeaturesByType("CDS").get(0);
-		String codedBy = cdsFeature.getQualifiers().get("coded_by").get(0).getValue();
-		Map<String, List<Qualifier>> quals = cdsFeature.getQualifiers();
-		List<Qualifier> dbrefs = quals.get("db_xref");
+        String codedBy = cdsFeature.getQualifierMap().get("coded_by").getFirstValue();
+        GenBankQualifierMap quals = cdsFeature.getQualifierMap();
+        Qualifier dbref = quals.get("db_xref");
+        String[] dbrefValues=dbref.getValues();
 
 		Assert.assertNotNull(codedBy);
 		Assert.assertTrue(!codedBy.isEmpty());
 		Assert.assertEquals(codedBy, "NM_000266.2:503..904");
-		Assert.assertEquals(5, dbrefs.size());
+        Assert.assertEquals(5, dbrefValues.length);
 
 	}
 

@@ -1,12 +1,12 @@
 /*
- *                    BioJava development code
+ *					BioJava development code
  *
  * This code may be freely distributed and modified under the
  * terms of the GNU Lesser General Public Licence.  This should
  * be distributed with the code.  If you do not have a copy,
  * see:
  *
- *      http://www.gnu.org/copyleft/lesser.html
+ *	  http://www.gnu.org/copyleft/lesser.html
  *
  * Copyright for this code is held jointly by the individual
  * authors.  These should be listed in @author doc comments.
@@ -15,7 +15,7 @@
  * or to join the biojava-l mailing list, visit the home page
  * at:
  *
- *      http://www.biojava.org/
+ *	  http://www.biojava.org/
  *
  */
 
@@ -155,7 +155,7 @@ public interface FeatureInterface<S extends AbstractSequence<C>, C extends Compo
 	public void setChildrenFeatures(List<FeatureInterface<S, C>> features);
 
 
-		/**
+	/**
 	 * @return the userObject
 	 */
 	public Object getUserObject();
@@ -165,25 +165,103 @@ public interface FeatureInterface<S extends AbstractSequence<C>, C extends Compo
 	 */
 	public void setUserObject(Object userObject);
 
-
+	/* new feature interface methods for accessing qualifers and the new map 
+	 * see abstract feature for implementation 
+	 */
 	/**
-	 * Get the qualifiers for this feature
+	 * map implementation to store qualifiers where only qualifier hold its key and value pair
 	 * @return
 	 */
-
-	public Map<String, List<Qualifier>> getQualifiers();
-
+	public GenBankQualifierMap getQualifierMap();
 	/**
-	 * Set the qualifiers
+	 * get all qualifiers of this feature
+	 * @return
+	 */
+	public Qualifier[] getQualifiers();
+	/**
+	 * overwrite qualifiermap
+	 * @param qualifierMap
+	 */
+	public void setQualifierMap(GenBankQualifierMap qualifierMap);
+	/**
+	 * overwrite qualifiers 
 	 * @param qualifiers
 	 */
-
-	public void setQualifiers(Map<String, List<Qualifier>> qualifiers);
+	public void setQualifiers(Qualifier[] qualifiers);
 	/**
-	 * Add a qualifier
+	 * overwrite this qualifier 
+	 * @param qualifiers
+	 */
+	public void setQualifier(Qualifier q);
+	/**
+	 * add this qualifier
 	 * @param qualifier
 	 */
-
-	public void addQualifier(String key, Qualifier qualifier);
-
+	public void addQualifier(Qualifier qualifier);
+	/**
+	 * add a bunch of qualifiers  
+	 * @param qa
+	 */
+	public void addQualifiers(Qualifier[] qa);
+	public Qualifier getQualifierByName(String qName);
+	public Qualifier getFirstQualifierByValue(String value);
+	public Qualifier[] getQualifiersByValue(String value);
+	//DBreferenceInfo
+	/**
+	 * returns the dbreferenceinfo of this feature, which can contain lots of 
+	 * entries 
+	 * * @return
+	 */
+	public DBReferenceInfo getAllDatabaseReferenceInfos();
+	/**
+	 * returns all databases of this feature in a string[]
+	 * @return
+	 */
+	public String[] getAllDatabases();
+	/**
+	 * returns all sequence database references for all databases in a string[]
+	 * for this feature 
+	 * @return
+	 */
+	public String[] getAllDatabaseReferences();
+	/**
+	 * get database reference info #i as new DBReferenceInfo
+	 * @param i
+	 * @return
+	 */
+	public DBReferenceInfo getDatabaseReferenceInfo(int i); 
+	/**
+	 * get database #i 
+	 * @param i
+	 * @return
+	 */
+	public String getDatabase(int i);
+	/**
+	 * get sequence database reference #i
+	 * @param i
+	 * @return
+	 */
+	public String getDatabaseReference(int i);
+	/**
+	 * convenience method to point out that there are several
+	 * @return
+	 */
+	public DBReferenceInfo getFirstDatabaseReferenceInfo();
+	public String getFirstDatabaseReference();
+	public String getFirstDatabase();
+	public String getDatabaseReference(String database, int i);
+	public String[] getAllDatabaseReferences(String database);
+	public String getFirstDatabaseReference(String database);
+	public void setDatabaseReferenceInfo(DBReferenceInfo dbRefI);
+	public void addDatabaseReferenceInfo(DBReferenceInfo dbRefI);
+	//old stuff to be removed
+	/**
+	 * 
+	 * @param str
+	 * @param q
+	 * Deprecated use addQualifier(Qualifier q)
+	 */
+	@Deprecated
+	public void addQualifier(String str, Qualifier q);
+		
 }

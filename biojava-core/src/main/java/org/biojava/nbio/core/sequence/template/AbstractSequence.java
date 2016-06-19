@@ -1,12 +1,12 @@
 /*
- *                    BioJava development code
+ *					BioJava development code
  *
  * This code may be freely distributed and modified under the
  * terms of the GNU Lesser General Public Licence.  This should
  * be distributed with the code.  If you do not have a copy,
  * see:
  *
- *      http://www.gnu.org/copyleft/lesser.html
+ *	  http://www.gnu.org/copyleft/lesser.html
  *
  * Copyright for this code is held jointly by the individual
  * authors.  These should be listed in @author doc comments.
@@ -15,7 +15,7 @@
  * or to join the biojava-l mailing list, visit the home page
  * at:
  *
- *      http://www.biojava.org/
+ *	  http://www.biojava.org/
  *
  * Created on 01-21-2010
  *
@@ -66,7 +66,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 	private ArrayList<String> notesList = new ArrayList<String>();
 	private Double sequenceScore = null;
 	private FeaturesKeyWordInterface featuresKeyWord = null;
-	private DatabaseReferenceInterface databaseReferences = null;
+    // private DatabaseReferenceInterface databaseReferences = null;
 	private FeatureRetriever featureRetriever = null;
 	private ArrayList<FeatureInterface<AbstractSequence<C>, C>> features =
 			new ArrayList<FeatureInterface<AbstractSequence<C>, C>>();
@@ -107,8 +107,13 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 	/**
 	 * Very important method that allows external mappings of sequence data and features. This method
 	 * will gain additional interface inspection that allows external data sources with knowledge
+<<<<<<< HEAD
 	 * of features for a sequence to be supported.
 	 *
+=======
+	 * of features for a sequence to be supported. 
+	 *  
+>>>>>>> stefan/master
 	 * @param proxyLoader
 	 */
 	public void setProxySequenceReader(SequenceReader<C> proxyLoader) {
@@ -116,24 +121,32 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 		if (proxyLoader instanceof FeaturesKeyWordInterface) {
 			this.setFeaturesKeyWord((FeaturesKeyWordInterface) sequenceStorage);
 		}
+        /*
 		if (proxyLoader instanceof DatabaseReferenceInterface) {
 			this.setDatabaseReferences((DatabaseReferenceInterface) sequenceStorage);
 		}
-
+         */
 		if (proxyLoader instanceof FeatureRetriever) {
 			this.setFeatureRetriever((FeatureRetriever) sequenceStorage);
 			HashMap<String, ArrayList<AbstractFeature>> ff = getFeatureRetriever().getFeatures();
+            DBReferenceInfo dbQualifier = null;
 			for (String k: ff.keySet()){
 				for (AbstractFeature f: ff.get(k)){
 					this.addFeature(f);
+                    //store all dbreferenceinfos of all features
+                    //if(dbQualifier==null) dbQualifier = f.getAllDatabaseReferenceInfos();
+                    //else dbQualifier.add(f.getAllDatabaseReferenceInfos());
 				}
 			}
 			// success of next statement guaranteed because source is a compulsory field
-			//DBReferenceInfo dbQualifier = (DBReferenceInfo)ff.get("source").get(0).getQualifiers().get("db_xref");
-			ArrayList<DBReferenceInfo> dbQualifiers = (ArrayList)ff.get("source").get(0).getQualifiers().get("db_xref");
-			DBReferenceInfo dbQualifier = dbQualifiers.get(0);
-
-			if (dbQualifier != null) this.setTaxonomy(new TaxonomyID(dbQualifier.getDatabase()+":"+dbQualifier.getId(), DataSource.UNKNOWN));
+            //DBReferenceInfo dbQualifier = (DBReferenceInfo)ff.get("source").get(0).getQualifierMap().get("db_xref");
+            //DBReferenceInfo dbQualifier = ff.g
+            //ArrayList<DBReferenceInfo> dbQualifiers = (ArrayList)ff.get("source").get(0).getQualifiers().get("db_xref");
+            //DBReferenceInfo dbQualifier = dbQualifiers.get(0);
+            dbQualifier = ff.get("source").get(0).getAllDatabaseReferenceInfos();
+            //if(dbQualifier==null) System.out.println("dbQualifier is null");
+            //else System.out.println("we have "+dbQualifier.valueSize()+" database records");
+            if (dbQualifier != null) this.setTaxonomy(new TaxonomyID(dbQualifier.getFirstValue(), DataSource.UNKNOWN));
 		}
 
 		if(getAccession() == null && proxyLoader instanceof UniprotProxySequenceReader){ // we have lots of unsupported operations for this call so quick fix to allow this tow rork
@@ -443,18 +456,19 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 
 	/**
 	 * @return the databaseReferences
-	 */
+     *
 	public DatabaseReferenceInterface getDatabaseReferences() {
 		return databaseReferences;
 	}
 
 	/**
 	 * @param databaseReferences the databaseReferences to set
-	 */
+     *
+    @Deprecated
 	public void setDatabaseReferences(DatabaseReferenceInterface databaseReferences) {
 		this.databaseReferences = databaseReferences;
 	}
-
+     // */
 	public FeatureRetriever getFeatureRetriever() {
 		return featureRetriever;
 	}
@@ -463,8 +477,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 		this.featureRetriever = featureRetriever;
 	}
 
-
-
+	
 	public enum AnnotationType {
 
 		CURATED, PREDICTED, UNKNOWN;
@@ -531,8 +544,6 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 		}
 		if (parentSequence != null) {
 
-			//return parentSequence.getSequenceStorage();
-
 			if ( this.compoundSet.equals(parentSequence.getCompoundSet())){
 				sequenceStorage = new ArrayListSequenceReader<C>();
 				sequenceStorage.setCompoundSet(this.getCompoundSet());
@@ -589,7 +600,6 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 	 */
 	@Override
 	public C getCompoundAt(int position) {
-
 		return getSequenceStorage().getCompoundAt(position);
 	}
 
@@ -660,6 +670,5 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 	public SequenceView<C> getInverse() {
 		return SequenceMixin.inverse(this);
 	}
-
 	//TODO needs equals and hashcode
 }

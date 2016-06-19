@@ -1,12 +1,12 @@
 /*
- *                    BioJava development code
+ *					BioJava development code
  *
  * This code may be freely distributed and modified under the
  * terms of the GNU Lesser General Public Licence.  This should
  * be distributed with the code.  If you do not have a copy,
  * see:
  *
- *      http://www.gnu.org/copyleft/lesser.html
+ *	  http://www.gnu.org/copyleft/lesser.html
  *
  * Copyright for this code is held jointly by the individual
  * authors.  These should be listed in @author doc comments.
@@ -15,7 +15,7 @@
  * or to join the biojava-l mailing list, visit the home page
  * at:
  *
- *      http://www.biojava.org/
+ *	  http://www.biojava.org/
  *
  * Created on 01-21-2010
  */
@@ -28,9 +28,7 @@ import org.biojava.nbio.core.sequence.template.Compound;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * A feature is currently any descriptive item that can be associated with a sequence position(s)
@@ -48,7 +46,8 @@ public abstract class AbstractFeature<S extends AbstractSequence<C>, C extends C
 	private String description = "";
 	private String shortDescription = "";
 	private Object userObject = null;
-	private Map<String, List<Qualifier>> Qualifiers = new HashMap<String, List<Qualifier>>();
+	private GenBankQualifierMap qualifierMap = new GenBankQualifierMap();
+	//private Map<String, List<Qualifier>> Qualifiers = new HashMap<String, List<Qualifier>>();
 
 	/**
 	 * A feature has a type and a source
@@ -241,7 +240,7 @@ public abstract class AbstractFeature<S extends AbstractSequence<C>, C extends C
 
 		}
 	};
-
+	
 	/**
 	 * Sort features by type
 	 */
@@ -270,33 +269,208 @@ public abstract class AbstractFeature<S extends AbstractSequence<C>, C extends C
 	public void setUserObject(Object userObject) {
 		this.userObject = userObject;
 	}
-
-	@Override
-	public Map<String, List<Qualifier>> getQualifiers() {
-		// TODO Auto-generated method stub
-		return Qualifiers;
+	/**
+	 * map implementation to store qualifiers where only qualifier hold its key and value pair
+	 * @return
+	 */
+	public GenBankQualifierMap getQualifierMap() {
+		return qualifierMap;
+	}
+	/**
+	 * get all qualifiers of this feature
+	 * @return
+	 */
+	public Qualifier[] getQualifiers() {
+		return qualifierMap.entrySet();
+	}
+	/**
+	 * overwrite qualifiermap
+	 * @param qualifierMap
+	 */
+	public void setQualifierMap(GenBankQualifierMap qualifierMap) {
+		this.qualifierMap = qualifierMap;
+	}
+	/**
+	 * overwrite qualifiers 
+	 * @param qualifiers
+	 */
+	public void setQualifiers(Qualifier[] qualifiers) {
+		this.qualifierMap=new GenBankQualifierMap(qualifiers);
+	}
+	/**
+	 * overwrite this qualifier 
+	 * @param qualifiers
+	 */
+	public void setQualifier(Qualifier q) {
+		qualifierMap.set(q);
+	}
+	/**
+	 * add this qualifier
+	 * @param qualifier
+	 */
+	public void addQualifier(Qualifier qualifier) {
+		qualifierMap.add(qualifier);
+	}
+	/**
+	 * add a bunch of qualifiers  
+	 * @param qa
+	 */
+	public void addQualifiers(Qualifier[] qa) {
+		for(Qualifier q:qa) this.addQualifier(q);
+	}
+	/**
+	 * get qualifier by name
+	 * 
+	 */
+	public Qualifier getQualifierByName(String qName) { return qualifierMap.getQualifierNyName(qName); }
+	/**
+	 * get the first qualifier which has the given value
+	 */
+	public Qualifier getFirstQualifierByValue(String value) { return qualifierMap.getFirstQualifierByValue(value); };
+	/**
+	 * get all qualifiers which have the given value
+	 */
+	public Qualifier[] getQualifiersByValue(String value) { return qualifierMap.getQualifiersByValue(value); };
+	//
+	//db reference info stuff 
+	//
+	/*
+	 * returns all database names and the sequence references for the corresponding database in a String[][2]
+	 * @return
+	 *
+	public String[][] getAllDatabasesReferenceInfos() {
+		DBReferenceInfo dbRefI =  this.qualifierMap.getDBReferenceInfo();
+		if(dbRefI!=null) return dbRefI.getAllDatabaseReferenceInfos();
+		else return null;
+	}*/
+	/**
+	 * returns the dbreferenceinfo of this feature, which can contain lots of 
+	 * entries 
+	 * * @return
+	 */
+	public DBReferenceInfo getAllDatabaseReferenceInfos() {
+		return this.qualifierMap.getDBReferenceInfo();
+	}
+	/**
+	 * returns all databases of this feature in a string[]
+	 * @return
+	 */
+	public String[] getAllDatabases() {
+		DBReferenceInfo dbRefI =  this.qualifierMap.getDBReferenceInfo();
+		if(dbRefI!=null) return dbRefI.getAllDatabases();		
+		else return null;
+	}
+	/**
+	 * returns all sequence database references for all databases in a string[]
+	 * for this feature 
+	 * @return
+	 */
+	public String[] getAllDatabaseReferences() {
+		DBReferenceInfo dbRefI = this.qualifierMap.getDBReferenceInfo();
+		if(dbRefI!=null) return dbRefI.getAllDatabaseReferences();
+		else return null;
+	}
+	/**
+	 * get database reference info #i as new DBReferenceInfo
+	 * @param i
+	 * @return
+	 */
+	public DBReferenceInfo getDatabaseReferenceInfo(int i) {
+		DBReferenceInfo dbRefI = this.qualifierMap.getDBReferenceInfo();
+		if(dbRefI!=null) return new DBReferenceInfo(dbRefI.getDatabaseReferenceInfo(i));
+		else return null;
+	}
+	/**
+	 * get database #i 
+	 * @param i
+	 * @return
+	 */
+	public String getDatabase(int i) {
+		DBReferenceInfo dbRefI = this.qualifierMap.getDBReferenceInfo();
+		if(dbRefI!=null) return dbRefI.getDatabase(i);
+		else return null;
+	}
+	/**
+	 * get sequence database reference #i
+	 * @param i
+	 * @return
+	 */
+	public String getDatabaseReference(int i) {
+		DBReferenceInfo dbRefI = this.qualifierMap.getDBReferenceInfo();
+		if(dbRefI!=null) return dbRefI.getDatabaseReference(i);
+		else return null;
+	}
+	/**
+	 * convenience method to point out that there can be several
+	 * databases each with several references. This method returns
+	 * only one database with one reference
+	 * 
+	 * @return
+	 */
+	public DBReferenceInfo getFirstDatabaseReferenceInfo() {
+		return getDatabaseReferenceInfo(0);
+	}
+	/**
+	 * convenience method to point out that there can be several
+	 * database references per database
+	 * @return
+	 */
+	public String getFirstDatabaseReference() {
+		return getDatabaseReference(0);
+	}
+	/**
+	 * convenience method to point out that there can be several 
+	 * databases
+	 * @return
+	 */
+	public String getFirstDatabase() {
+		return getDatabase(0);
+	}
+	/**
+	 * get the sequence record i for the database with name database
+	 * @param database
+	 * @return null if no such record
+	 */
+	public String getDatabaseReference(String database, int i) {
+		DBReferenceInfo dbRefI = this.qualifierMap.getDBReferenceInfo();
+		if(dbRefI!=null) return dbRefI.getDatabaseReference(database,i); 
+		else return null;
+	}
+	/**
+	 * get all references of a sequence in a particular database
+	 * in the same database
+	 * @param database
+	 * @return string[] of all references
+	 */
+	public String[] getAllDatabaseReferences(String database) {
+		DBReferenceInfo dbRefI = this.qualifierMap.getDBReferenceInfo();
+		if(dbRefI!=null) return dbRefI.getAllDatabaseReferences(database); 
+		else return null;
 	}
 
-	@Override
-	public void setQualifiers(Map<String, List<Qualifier>> qualifiers) {
-		// TODO Auto-generated method stub
-		Qualifiers = qualifiers;
-
+	/**
+	 * convenience method to point out that a sequence can have several database references
+	 * in the same database
+	 * @param database
+	 * @return
+	 */
+	public String getFirstDatabaseReference(String database) {
+		return getDatabaseReference(database, 0);
 	}
 
-	@Override
-	public void addQualifier(String key, Qualifier qualifier) {
-		// Check for key. Update list of values
-		if (Qualifiers.containsKey(key)){
-			List<Qualifier> vals = Qualifiers.get(key);
-			vals.add(qualifier);
-			Qualifiers.put(key, vals);
-		} else {
-			List<Qualifier> vals = new ArrayList<Qualifier>();
-			vals.add(qualifier);
-			Qualifiers.put(key, vals);
-		}
-
+	public void setDatabaseReferenceInfo(DBReferenceInfo dbRefI) {
+		qualifierMap.set(dbRefI);
 	}
-
+	
+	public void addDatabaseReferenceInfo(DBReferenceInfo dbRefI) {
+		this.qualifierMap.add(dbRefI);
+	}
+	/**
+	 * 
+	 *  @Deprecated use addQualifier(Qualifier q)
+	 */
+	@Deprecated
+	public void addQualifier(String str, Qualifier q) {
+		this.qualifierMap.add(q);
+	}
 }

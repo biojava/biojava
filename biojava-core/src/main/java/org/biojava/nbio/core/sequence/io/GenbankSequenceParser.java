@@ -1,12 +1,12 @@
 /*
- *                    BioJava development code
+ *					BioJava development code
  *
  * This code may be freely distributed and modified under the
  * terms of the GNU Lesser General Public Licence.  This should
  * be distributed with the code.  If you do not have a copy,
  * see:
  *
- *      http://www.gnu.org/copyleft/lesser.html
+ *	  http://www.gnu.org/copyleft/lesser.html
  *
  * Copyright for this code is held jointly by the individual
  * authors.  These should be listed in @author doc comments.
@@ -25,7 +25,7 @@
  * or to join the biojava-l mailing list, visit the home page
  * at:
  *
- *      http://www.biojava.org/
+ *	  http://www.biojava.org/
  *
  * Created on 01-21-2010
  */
@@ -66,7 +66,8 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 	private GenericGenbankHeaderParser<S, C> headerParser;
 	private String header;
 	private String accession;
-	public LinkedHashMap<String, ArrayList<DBReferenceInfo>> mapDB;
+   // public LinkedHashMap<String, ArrayList<DBReferenceInfo>> mapDB;
+	DBReferenceInfo dbRef;
 	/**
 	 * this data structure collects list of features extracted from the
 	 * FEATURE_TAG section They are organized by list of the same type (i.e.
@@ -89,7 +90,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 	protected static final String ACCESSION_TAG = "ACCESSION";
 	protected static final String VERSION_TAG = "VERSION";
 	protected static final String KEYWORDS_TAG = "KEYWORDS";
-	//                                                  "SEGMENT"
+	//												  "SEGMENT"
 	protected static final String SOURCE_TAG = "SOURCE";
 	protected static final String ORGANISM_TAG = "ORGANISM";
 	protected static final String REFERENCE_TAG = "REFERENCE";
@@ -133,7 +134,6 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 	private static final String DBLINK = "DBLINK";
 
 //  private NCBITaxon tax = null;
-
 
 
 	private String parse(BufferedReader bufferedReader) {
@@ -218,6 +218,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 				// Set up some comments
 				headerParser.setComment(section.get(0)[1]);
 			} else if (sectionKey.equals(FEATURE_TAG)) {
+
 				// starting from second line of input, start a new feature whenever we come across
 				// a key that does not start with /
 				AbstractFeature gbFeature = null;
@@ -234,39 +235,40 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 							val = val.substring(1, val.length() - 1); // strip quotes
 						}
 						// parameter on old feature
-						if (key.equals("db_xref")) {
+                        if (key.equals(DBReferenceInfo.DBXREF)) {
 							Matcher m = dbxp.matcher(val);
 							if (m.matches()) {
-								String dbname = m.group(1);
-								String raccession = m.group(2);
-								Qualifier xref = new DBReferenceInfo(dbname, raccession);
-								gbFeature.addQualifier(key, xref);
-
-								ArrayList<DBReferenceInfo> listDBEntry = new ArrayList<DBReferenceInfo>();
-								listDBEntry.add((DBReferenceInfo) xref);
-								mapDB.put(key, listDBEntry);
+                            	//check if we do need to take this string apart at all and can not do so in DBReferenceInfo itself??
+                                //String dbname = m.group(1);
+                                //String raccession = m.group(2);
+                                Qualifier xref = new DBReferenceInfo(val);
+                                gbFeature.addQualifier(xref); 
+                                //ArrayList<DBReferenceInfo> listDBEntry = new ArrayList<DBReferenceInfo>();
+                                //listDBEntry.add((DBReferenceInfo) xref);
+                                //mapDB.put(key, listDBEntry);
+                                if(dbRef==null) dbRef=new DBReferenceInfo(val);
+                                else dbRef.addValue(val); //why do we store this twice??
 							} else {
 								throw new ParserException("Bad dbxref");
 							}
 						} else if (key.equalsIgnoreCase("organism")) {
 							Qualifier q = new Qualifier(key, val.replace('\n', ' '));
-							gbFeature.addQualifier(key, q);
+                            gbFeature.addQualifier(q);
 						} else {
 							if (key.equalsIgnoreCase("translation")) {
 								// strip spaces from sequence
 								val = val.replaceAll("\\s+", "");
 								Qualifier q = new Qualifier(key, val);
-								gbFeature.addQualifier(key, q);
+                                gbFeature.addQualifier(q);
 							} else {
 								Qualifier q = new Qualifier(key, val);
-								gbFeature.addQualifier(key, q);
+                                gbFeature.addQualifier(q);
 							}
 						}
 					} else {
 						// new feature!
-						gbFeature = new TextFeature(key, val, key, key);
-						Location l =
-								locationParser.parse(val);
+                    	gbFeature = new TextFeature(key, val);
+						Location l = locationParser.parse(val);
 						gbFeature.setLocation((AbstractLocation)l);
 
 						if (!featureCollection.containsKey(key)) {
@@ -381,12 +383,18 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 
 	@Override
 	public String getSequence(BufferedReader bufferedReader, int sequenceLength) throws IOException {
+
 		featureCollection = new HashMap<String, ArrayList<AbstractFeature>>();
-		mapDB = new LinkedHashMap<String, ArrayList<DBReferenceInfo>>();
+ 
+        //stefan check hier!! wei es wird neu initialisiert!!
+        //mapDB = new LinkedHashMap<String, ArrayList<DBReferenceInfo>>();
+        dbRef=null;
+        //
 		headerParser = new GenericGenbankHeaderParser<S, C>();
 		try {
 			parse(bufferedReader);
 		} catch (ParserException e) {
+
 			if(e.getMessage().equalsIgnoreCase(Messages.ENDOFFILE))	return null;
 			else throw new ParserException(e.getMessage());
 		}
@@ -402,8 +410,8 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 		return headerParser;
 	}
 
-	public LinkedHashMap<String, ArrayList<DBReferenceInfo>> getDatabaseReferences() {
-		return mapDB;
+    public DBReferenceInfo getDatabaseReferences() {
+        return dbRef;
 	}
 
 	public ArrayList<String> getKeyWords() {
@@ -413,6 +421,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 	public ArrayList<AbstractFeature> getFeatures(String keyword) {
 		return featureCollection.get(keyword);
 	}
+	
 	public HashMap<String, ArrayList<AbstractFeature>> getFeatures() {
 		return featureCollection;
 	}

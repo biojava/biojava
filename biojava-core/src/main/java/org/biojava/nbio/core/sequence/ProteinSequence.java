@@ -1,12 +1,12 @@
 /*
- *                    BioJava development code
+ *					BioJava development code
  *
  * This code may be freely distributed and modified under the
  * terms of the GNU Lesser General Public Licence.  This should
  * be distributed with the code.  If you do not have a copy,
  * see:
  *
- *      http://www.gnu.org/copyleft/lesser.html
+ *	  http://www.gnu.org/copyleft/lesser.html
  *
  * Copyright for this code is held jointly by the individual
  * authors.  These should be listed in @author doc comments.
@@ -15,7 +15,7 @@
  * or to join the biojava-l mailing list, visit the home page
  * at:
  *
- *      http://www.biojava.org/
+ *	  http://www.biojava.org/
  *
  * Created on DATE
  *
@@ -109,10 +109,10 @@ public class ProteinSequence extends AbstractSequence<AminoAcidCompound> {
 
 		// cases if a protein has more than 1 parent are not supported yet
 		if (CDSFeatures.size() == 1) {
-			Qualifier codedBy = CDSFeatures.get(0).getQualifiers().get("coded_by").get(0);
+			Qualifier codedBy = CDSFeatures.get(0).getQualifierByName("coded_by");
 
 			if (codedBy != null) {
-				String codedBySeq = codedBy.getValue();
+				String codedBySeq = codedBy.getFirstValue();
 
 				InsdcParser parser = new InsdcParser(DataSource.GENBANK);
 				Location location = parser.parse(codedBySeq);
