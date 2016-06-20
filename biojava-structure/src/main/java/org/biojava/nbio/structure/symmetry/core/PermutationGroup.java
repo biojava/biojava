@@ -142,16 +142,16 @@ public class PermutationGroup {
 
 	@Override
 	public boolean equals(Object obj) {
-	    if (this == obj) {
-		return true;
-	    }
-	    if (obj == null) {
-		return false;
-	    }
-	    if (this.getClass() == obj.getClass()) {
-		return permutations.equals(((PermutationGroup)obj).permutations);
-	    }
-	    return false;
-	}
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (this.getClass() == obj.getClass()) {
+            return getGroupTable().equals(((PermutationGroup) obj).getGroupTable());
+        }
+        return false;
+    }
 
 }
