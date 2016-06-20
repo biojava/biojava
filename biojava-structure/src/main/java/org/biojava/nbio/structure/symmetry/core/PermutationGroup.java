@@ -137,6 +137,21 @@ public class PermutationGroup {
 
 	@Override
 	public int hashCode() {
-		return getGroupTable().hashCode();
+	    return getGroupTable().hashCode();
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+	    if (this == obj) {
+		return true;
+	    }
+	    if (obj == null) {
+		return false;
+	    }
+	    if (this.getClass() == obj.getClass()) {
+		return permutations.equals(((PermutationGroup)obj).permutations);
+	    }
+	    return false;
+	}
+
 }

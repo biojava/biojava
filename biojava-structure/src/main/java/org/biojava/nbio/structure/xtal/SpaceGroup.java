@@ -37,6 +37,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.io.Serializable;
@@ -374,6 +375,14 @@ public class SpaceGroup implements Serializable {
 	 */
 	public String getTransfAlgebraic(int i) {
 		return transfAlgebraic.get(i);
+	}
+
+	@Override
+	public int hashCode() {
+	    final int prime = 31;
+	    int result = 1;
+	    result = prime * result + id;
+	    return result;
 	}
 
 	@Override
