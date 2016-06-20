@@ -30,6 +30,7 @@ import java.util.*;
  * Wraps a sequence clustering with structural information
  */
 public class ChainClusterer {
+	
 	private List<SequenceAlignmentCluster> seqClusters = new ArrayList<SequenceAlignmentCluster>();
 	private boolean modified = true;
 

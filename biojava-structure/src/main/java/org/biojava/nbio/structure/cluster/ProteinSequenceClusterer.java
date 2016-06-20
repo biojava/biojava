@@ -23,6 +23,8 @@ package org.biojava.nbio.structure.cluster;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetryParameters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
@@ -30,6 +32,10 @@ import java.util.*;
  * Represents a set of non-identical protein sequences.
  */
 public class ProteinSequenceClusterer {
+	
+	private static final Logger logger = LoggerFactory
+			.getLogger(ProteinSequenceClusterer.class);
+	
 	private Structure structure = null;
 	private Structure structure2 = null;
 	private QuatSymmetryParameters parameters = null;
@@ -138,7 +144,7 @@ public class ProteinSequenceClusterer {
 				for (SequenceAlignmentCluster c: seqClusters) {
 						if (c.identityMatch(caUnaligned.get(j), chainIds.get(j), modelNumbers.get(j), 0, sequences.get(j))) {
 							processed[j] = true;
-							//System.out.println("found identity match: " + i + " - " + j);
+							logger.debug("found identity match: " + i + " - " + j);
 							break;
 						}
 				}
