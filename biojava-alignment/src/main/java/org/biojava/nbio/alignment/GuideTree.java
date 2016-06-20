@@ -318,7 +318,11 @@ public class GuideTree<S extends Sequence<C>, C extends Compound> implements Ite
 
 		@Override
 		public GuideTreeNode<S, C> next() {
-			while (hasNext()) {
+            if(!hasNext()){
+                throw new NoSuchElementException();
+            }
+
+            while (hasNext()) {
 				Node next = nodes.peek(), child1 = (Node) next.getChild1(), child2 = (Node) next.getChild2();
 				if (child1 != null && !child1.isVisited()) {
 					nodes.push(child1);

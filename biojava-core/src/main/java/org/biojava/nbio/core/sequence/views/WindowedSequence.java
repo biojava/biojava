@@ -26,6 +26,7 @@ import org.biojava.nbio.core.sequence.template.SequenceView;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * A sliding window view of a sequence which does not implement any
@@ -142,7 +143,10 @@ public class WindowedSequence<C extends Compound> implements Iterable<SequenceVi
 
 		@Override
 		public SequenceView<C> next() {
-			SequenceView<C> v = seq.getSubSequence(currentIndex, currentIndex + offset);
+            if(!hasNext()){
+                throw new NoSuchElementException();
+            }
+            SequenceView<C> v = seq.getSubSequence(currentIndex, currentIndex + offset);
 			currentIndex = currentIndex + window;
 			return v;
 		}

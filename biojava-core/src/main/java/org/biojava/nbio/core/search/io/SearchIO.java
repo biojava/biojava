@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ServiceLoader;
+import java.util.NoSuchElementException;
 
 /**
  * Designed by Paolo Pavan.
@@ -172,7 +173,10 @@ public class SearchIO implements Iterable<Result>{
 
 			@Override
 			public Result next() {
-				return results.get(currentResult++);
+                if(!hasNext()){
+                    throw new NoSuchElementException();
+                }
+                return results.get(currentResult++);
 			}
 
 			@Override
