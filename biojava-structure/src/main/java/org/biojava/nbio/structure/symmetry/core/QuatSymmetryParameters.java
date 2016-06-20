@@ -236,13 +236,20 @@ public class QuatSymmetryParameters implements Serializable{
 		this.localTimeLimit = localTimeLimit;
 	}
 	/**
+	 * On-the-fly Jmol bioassembly generation.
+	 * 
 	 * @return true if Jmol on the fly bioassembly generation is used
 	 */
 	public boolean isOnTheFly() {
 		return onTheFly;
 	}
+
 	/**
-	 * @param onTheFly the onTheFly to set
+	 * On-the-fly Jmol bioassembly generation.
+	 * 
+	 * @param useJmolBioAssemblies
+	 *            true if Jmol on the fly bioassembly generation is used, false
+	 *            otherwise
 	 */
 	public void setOnTheFly(boolean useJmolBioAssemblies) {
 		this.onTheFly = useJmolBioAssemblies;

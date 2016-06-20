@@ -29,7 +29,7 @@ import java.util.*;
 /**
  * Wraps a sequence clustering with structural information
  */
-public class ChainClusterer  {
+public class ChainClusterer {
 	private List<SequenceAlignmentCluster> seqClusters = new ArrayList<SequenceAlignmentCluster>();
 	private boolean modified = true;
 
@@ -57,13 +57,12 @@ public class ChainClusterer  {
 
 		for (int i = 0; i < seqClusters.size(); i++) {
 			SequenceAlignmentCluster cluster = seqClusters.get(i);
-			for (String chainId: cluster.getChainIds()) {
+			for (String chainId : cluster.getChainIds()) {
 				chainIdList.add(chainId);
 			}
 		}
 		return chainIdList;
 	}
-
 
 	public List<Integer> getModelNumbers() {
 		run();
@@ -71,7 +70,7 @@ public class ChainClusterer  {
 
 		for (int i = 0; i < seqClusters.size(); i++) {
 			SequenceAlignmentCluster cluster = seqClusters.get(i);
-			for (Integer number: cluster.getModelNumbers()) {
+			for (Integer number : cluster.getModelNumbers()) {
 				modNumbers.add(number);
 			}
 		}
@@ -86,7 +85,7 @@ public class ChainClusterer  {
 		for (int i = 0; i < seqClusters.size(); i++) {
 			String c = "?";
 			if (i < alpha.length()) {
-				c = alpha.substring(i, i+1);
+				c = alpha.substring(i, i + 1);
 			}
 			formula.append(c);
 			int multiplier = seqClusters.get(i).getSequenceCount();
@@ -99,6 +98,7 @@ public class ChainClusterer  {
 
 	/**
 	 * Get valid symmetry order for this stoichiometry.
+	 * 
 	 * @return
 	 */
 	public List<Integer> getFolds() {
@@ -110,14 +110,17 @@ public class ChainClusterer  {
 		}
 		return getValidFolds(stoichiometry);
 	}
+
 	/**
-	 * Find valid symmetry orders for a given stoichiometry. For instance,
-	 * an A6B4 protein would give [1,2] because (A6B4)1 and (A3B2)2 are valid
+	 * Find valid symmetry orders for a given stoichiometry. For instance, an
+	 * A6B4 protein would give [1,2] because (A6B4)1 and (A3B2)2 are valid
 	 * decompositions.
-	 * @param stoichiometry List giving the number of copies in each chain cluster
+	 * 
+	 * @param stoichiometry
+	 *            List giving the number of copies in each chain cluster
 	 * @return The common factors of the stoichiometry
 	 */
-	public static List<Integer> getValidFolds(List<Integer> stoichiometry){
+	public static List<Integer> getValidFolds(List<Integer> stoichiometry) {
 		List<Integer> denominators = new ArrayList<Integer>();
 
 		int nChains = Collections.max(stoichiometry);
@@ -127,14 +130,14 @@ public class ChainClusterer  {
 
 		// find common denominators
 		for (int d = 1; d <= nChains; d++) {
-			boolean isDivisable=true;
+			boolean isDivisable = true;
 			for (Integer n : nominators) {
 				if (n % d != 0) {
 					isDivisable = false;
 					break;
 				}
 			}
-			if(isDivisable) {
+			if (isDivisable) {
 				denominators.add(d);
 			}
 		}
@@ -153,7 +156,6 @@ public class ChainClusterer  {
 		}
 		return list;
 	}
-
 
 	public int getSequenceClusterCount() {
 		run();
@@ -184,7 +186,8 @@ public class ChainClusterer  {
 
 		for (int id = 0; id < seqClusters.size(); id++) {
 			int seqCount = seqClusters.get(id).getSequenceCount();
-			double minSequenceIdentity = seqClusters.get(id).getMinSequenceIdentity();
+			double minSequenceIdentity = seqClusters.get(id)
+					.getMinSequenceIdentity();
 			for (int i = 0; i < seqCount; i++) {
 				list.add(minSequenceIdentity);
 			}
@@ -198,7 +201,8 @@ public class ChainClusterer  {
 
 		for (int id = 0; id < seqClusters.size(); id++) {
 			int seqCount = seqClusters.get(id).getSequenceCount();
-			double maxSequenceIdentity = seqClusters.get(id).getMaxSequenceIdentity();
+			double maxSequenceIdentity = seqClusters.get(id)
+					.getMaxSequenceIdentity();
 			for (int i = 0; i < seqCount; i++) {
 				list.add(maxSequenceIdentity);
 			}
@@ -212,7 +216,7 @@ public class ChainClusterer  {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Sequence alignment clusters: " + seqClusters.size());
 		builder.append("\n");
-		for (SequenceAlignmentCluster s: seqClusters) {
+		for (SequenceAlignmentCluster s : seqClusters) {
 			builder.append("# seq: ");
 			builder.append(s.getSequenceCount());
 			builder.append(" alignment length: ");
@@ -230,16 +234,15 @@ public class ChainClusterer  {
 		}
 	}
 
-
 	private void calcAlignedSequences() {
 		caAligned = new ArrayList<Atom[]>();
-		for (SequenceAlignmentCluster cluster: seqClusters) {
+		for (SequenceAlignmentCluster cluster : seqClusters) {
 			caAligned.addAll(cluster.getAlignedCalphaAtoms());
 		}
 	}
 
 	private void createCalphaTraces() {
-		for (Atom[] atoms: caAligned) {
+		for (Atom[] atoms : caAligned) {
 			Point3d[] trace = new Point3d[atoms.length];
 			for (int j = 0; j < atoms.length; j++) {
 				trace[j] = new Point3d(atoms[j].getCoords());
