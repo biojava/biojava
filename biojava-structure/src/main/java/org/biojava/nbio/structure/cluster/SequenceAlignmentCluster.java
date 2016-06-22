@@ -269,9 +269,7 @@ public class SequenceAlignmentCluster implements Cloneable {
 		try {
 			StructureAlignment algorithm  = StructureAlignmentFactory.getAlgorithm(CeMain.algorithmName);
 			afp = algorithm.align(ca1Seq,ca2Seq,params);
-			if (verbose) {
-				System.out.println(afp.toFatcat(ca1Seq, ca2Seq));
-			}
+			logger.debug(afp.toFatcat(ca1Seq, ca2Seq));
 		} catch (StructureException e) {
 			logger.error("StructureException caught",e);
 		}
@@ -323,9 +321,7 @@ public class SequenceAlignmentCluster implements Cloneable {
 				align2.add(align[0][1][i]);
 			}
 		}
-//        System.out.println("PDB alignment: ");
-//        System.out.println(align1);
-//        System.out.println(align2);
+		logger.debug("PDB alignment: \n" + align1 + "\n" + align2);
 		return align1.size();
 	}
 

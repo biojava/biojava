@@ -30,7 +30,7 @@ import java.io.Serializable;
  * @author Aleix Lafita
  *
  */
-public class ChainClustererParameters implements Serializable {
+public class SubunitClustererParameters implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -39,10 +39,10 @@ public class ChainClustererParameters implements Serializable {
 	private double minimumSequenceLengthFraction = 0.75;
 
 	private double sequenceIdentityThreshold = 0.95;
-	private double tmScoreThreshold = 0.5;
-	private double alignmentFractionThreshold = 0.9;
+	private double rmsdThreshold = 3.0;
+	private double coverageThreshold = 0.9;
 
-	private ChainClustererMethod clustererMethod = ChainClustererMethod.SEQUENCE;
+	private SubunitClustererMethod clustererMethod = SubunitClustererMethod.SEQUENCE;
 
 	/**
 	 * Get the minimum number of residues of a chain to be considered in the
@@ -152,43 +152,43 @@ public class ChainClustererParameters implements Serializable {
 	}
 
 	/**
-	 * Structure similarity threshold (measured with TM-Score) to consider for
+	 * Structure similarity threshold (measured with RMSD) to consider for
 	 * the structural chain clustering.
 	 * 
-	 * @return tmScoreThreshold
+	 * @return rmsdThreshold
 	 */
-	public double getTmScoreThreshold() {
-		return tmScoreThreshold;
+	public double getRmsdThreshold() {
+		return rmsdThreshold;
 	}
 
 	/**
-	 * Structure similarity threshold (measured with TM-Score) to consider for
+	 * Structure similarity threshold (measured with RMSD) to consider for
 	 * the structural chain clustering.
 	 * 
-	 * @param tmScoreThreshold
+	 * @param rmsdThreshold
 	 */
-	public void setTmScoreThreshold(double tmScoreThreshold) {
-		this.tmScoreThreshold = tmScoreThreshold;
+	public void setRmsdThreshold(double rmsdThreshold) {
+		this.rmsdThreshold = rmsdThreshold;
 	}
 
 	/**
 	 * The minimum coverage of the sequence alignment between two chains to be
 	 * clustered together.
 	 * 
-	 * @return alignmentFractionThreshold
+	 * @return coverageThreshold
 	 */
-	public double getAlignmentFractionThreshold() {
-		return alignmentFractionThreshold;
+	public double getCoverageThreshold() {
+		return coverageThreshold;
 	}
 
 	/**
 	 * The minimum coverage of the sequence alignment between two chains to be
 	 * clustered together.
 	 * 
-	 * @param alignmentFractionThreshold
+	 * @param coverageThreshold
 	 */
-	public void setAlignmentFractionThreshold(double alignmentFractionThreshold) {
-		this.alignmentFractionThreshold = alignmentFractionThreshold;
+	public void setCoverageThreshold(double coverageThreshold) {
+		this.coverageThreshold = coverageThreshold;
 	}
 
 	/**
@@ -196,16 +196,16 @@ public class ChainClustererParameters implements Serializable {
 	 * 
 	 * @return ChainClustererMethod
 	 */
-	public ChainClustererMethod getClustererMethod() {
+	public SubunitClustererMethod getClustererMethod() {
 		return clustererMethod;
 	}
 
 	/**
 	 * Method to cluster chains.
 	 * 
-	 * @param ChainClustererMethod
+	 * @param SubunitClustererMethod
 	 */
-	public void setClustererMethod(ChainClustererMethod method) {
+	public void setClustererMethod(SubunitClustererMethod method) {
 		this.clustererMethod = method;
 	}
 
@@ -218,11 +218,11 @@ public class ChainClustererParameters implements Serializable {
 		s.append("Sequence identity threshold    : ");
 		s.append(sequenceIdentityThreshold);
 		s.append(System.getProperty("line.separator"));
-		s.append("TM-Score threshold             : ");
-		s.append(tmScoreThreshold);
+		s.append("RMSD threshold             : ");
+		s.append(rmsdThreshold);
 		s.append(System.getProperty("line.separator"));
-		s.append("Alignment fraction threshold   : ");
-		s.append(alignmentFractionThreshold);
+		s.append("Coverage threshold   : ");
+		s.append(coverageThreshold);
 		s.append(System.getProperty("line.separator"));
 		s.append("Chain clusterer method         : ");
 		s.append(clustererMethod);
