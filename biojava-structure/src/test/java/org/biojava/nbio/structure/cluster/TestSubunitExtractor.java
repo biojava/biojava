@@ -28,6 +28,7 @@ import java.util.List;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
+import org.biojava.nbio.structure.align.util.AtomCache;
 import org.junit.Test;
 
 /**
@@ -55,17 +56,17 @@ public class TestSubunitExtractor {
 
 		// We expect all 3 subunits to be returned
 		assertEquals(subunits.size(), 3);
-		
+
 		params.setMinimumSequenceLength(9);
 		params.setAbsoluteMinimumSequenceLength(8);
-		
+
 		subunits = SubunitExtractor.extractSubunits(s, params);
-		
+
 		// Now we expect only the long Subunit to be returned
 		assertEquals(subunits.size(), 1);
 		assertEquals(subunits.get(0).size(), 9);
 	}
-	
+
 	/**
 	 * Make sure that only aminoacid chains are extracted: 5B2I.
 	 */
@@ -83,5 +84,25 @@ public class TestSubunitExtractor {
 		assertEquals(subunits.get(1).size(), 82);
 		assertEquals(subunits.get(2).size(), 106);
 	}
-	
+
+	/**
+	 * Test that all chains from biological assemblies are extracted.
+	 */
+	@Test
+	public void testBioAssembly() throws StructureException, IOException {
+
+		AtomCache cache = new AtomCache(); //TODO change to StructureIO
+		cache.setUseMmCif(true);
+		Structure s = cache.getStructure("BIO:4E3E:1");
+		
+		SubunitClustererParameters params = new SubunitClustererParameters();
+
+		List<Subunit> subunits = SubunitExtractor.extractSubunits(s, params);
+
+		// We expect all 3 equal double hot-dog subunits to be returned
+		assertEquals(subunits.size(), 3);
+		assertEquals(subunits.get(0).size(), subunits.get(1).size(), subunits
+				.get(2).size());
+	}
+
 }
