@@ -633,7 +633,7 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 		s.append(color);
 		s.append(";");
 		s.append("font echo 24 sanserif;");
-		s.append("echo "+ text);
+		s.append("echo ").append(text);
 		s.append(";");
 		return s.toString();
 	}

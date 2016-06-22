@@ -995,7 +995,7 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 		s.append(color);
 		s.append(";");
 		s.append("font echo 24 sanserif;");
-		s.append("echo "+ text);
+		s.append("echo ").append(text);
 		//s.append("echo Point group ");
 		//s.append(rotationGroup.getPointGroup());
 		s.append(";");

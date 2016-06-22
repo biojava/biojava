@@ -73,7 +73,7 @@ public class GroupToSDF {
 				String spaceIndOne = getSpace(3, index);
 				String spaceIndTwo = getSpace(3, indexOther);
 				String spaceOrder = getSpace(3, order);
-				bondOrders.append(spaceIndOne+index+spaceIndTwo+indexOther+spaceOrder+order+"  0\n");
+				bondOrders.append(spaceIndOne).append(index).append(spaceIndTwo).append(indexOther).append(spaceOrder).append(order).append("  0\n");
 			}
 		}
 		StringBuilder outString = new  StringBuilder();
@@ -81,7 +81,7 @@ public class GroupToSDF {
 		String spaceNumAtoms = getSpace(3, Integer.toString(thisGroup.getAtoms().size()));
 		String spaceNumBonds = getSpace(3, Integer.toString(numBonds));
 		header.append("\n");
-		header.append(spaceNumAtoms+thisGroup.getAtoms().size()+spaceNumBonds+numBonds+"  0  0  0  0  0  0  0  0999 V2000\n");
+		header.append(spaceNumAtoms).append(thisGroup.getAtoms().size()).append(spaceNumBonds).append(numBonds).append("  0  0  0  0  0  0  0  0999 V2000\n");
 		// Now add the header, atom, bond and charge information togeyher
 		outString.append(header.toString());
 		outString.append(atomList.toString());
@@ -150,7 +150,7 @@ public class GroupToSDF {
 	private String getHeader(Group thisGroup) {
 		// Make the header info for the start of the block
 		StringBuilder sb = new StringBuilder();
-		sb.append(thisGroup.getPDBName()+"\n");
+		sb.append(thisGroup.getPDBName()).append("\n");
 		sb.append("Made by BioJava");
 		sb.append("\n");
 		return sb.toString();
