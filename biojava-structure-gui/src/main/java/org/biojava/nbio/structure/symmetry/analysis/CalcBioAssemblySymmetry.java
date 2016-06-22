@@ -27,7 +27,6 @@ package org.biojava.nbio.structure.symmetry.analysis;
 
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.align.util.ResourceManager;
-import org.biojava.nbio.structure.cluster.Subunits;
 import org.biojava.nbio.structure.symmetry.axis.AxisAligner;
 import org.biojava.nbio.structure.symmetry.core.*;
 import org.biojava.nbio.structure.symmetry.jmolScript.JmolSymmetryScriptGenerator;

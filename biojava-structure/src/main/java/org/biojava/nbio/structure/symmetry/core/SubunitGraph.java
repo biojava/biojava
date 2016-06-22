@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  */
-package org.biojava.nbio.structure.cluster;
+package org.biojava.nbio.structure.symmetry.core;
 
 import javax.vecmath.Point3d;
 

@@ -21,7 +21,6 @@
 
 package org.biojava.nbio.structure.symmetry.core;
 
-import org.biojava.nbio.structure.cluster.Subunits;
 import org.biojava.nbio.structure.symmetry.geometry.DistanceBox;
 import org.biojava.nbio.structure.symmetry.geometry.MomentsOfInertia;
 import org.biojava.nbio.structure.symmetry.geometry.SphereSampler;

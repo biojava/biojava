@@ -19,7 +19,7 @@
  *
  */
 
-package org.biojava.nbio.structure.cluster;
+package org.biojava.nbio.structure.symmetry.core;
 
 import org.biojava.nbio.structure.symmetry.geometry.MomentsOfInertia;
 import org.biojava.nbio.structure.symmetry.geometry.SuperPosition;
