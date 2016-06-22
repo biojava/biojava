@@ -57,7 +57,7 @@ public class SubunitClusterer {
 
 		// The collection of clusters to return
 		List<SubunitCluster> clusters = new ArrayList<SubunitCluster>();
-		
+
 		if (subunits.size() == 0)
 			return clusters;
 
@@ -85,7 +85,8 @@ public class SubunitClusterer {
 							params.getCoverageThreshold()))
 						clusters.remove(c2);
 				} catch (CompoundNotFoundException e) {
-					logger.warn("Could not merge by Sequence. {}", e.getMessage());
+					logger.warn("Could not merge by Sequence. {}",
+							e.getMessage());
 				}
 			}
 		}
@@ -102,19 +103,27 @@ public class SubunitClusterer {
 							params.getCoverageThreshold()))
 						clusters.remove(c2);
 				} catch (StructureException e) {
-					logger.warn("Could not merge by Structure. {}", e.getMessage());
+					logger.warn("Could not merge by Structure. {}",
+							e.getMessage());
 				}
 			}
 		}
 
 		if (params.getClustererMethod() == SubunitClustererMethod.STRUCTURE)
 			return clusters;
-		
+
 		// Now divide clusters by their INTERNAL SYMMETRY
 		for (int c = 0; c < clusters.size(); c++) {
-			clusters.get(c).divideInternally();
+			try {
+				clusters.get(c).divideInternally(params.getCoverageThreshold(),
+						params.getRmsdThreshold(),
+						params.getMinimumSequenceLength());
+			} catch (StructureException e) {
+				logger.warn("Error analyzing internal symmetry. {}",
+						e.getMessage());
+			}
 		}
-		
+
 		return clusters;
 	}
 }

@@ -28,6 +28,7 @@ import java.util.List;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
+import org.biojava.nbio.structure.align.util.AtomCache;
 import org.junit.Test;
 
 /**
@@ -76,7 +77,7 @@ public class TestSubunitClusterer {
 		assertEquals(clusters.get(1).length(), 146);
 		assertEquals(clusters.get(0).getClustererMethod(),
 				SubunitClustererMethod.IDENTITY);
-		assertEquals(clusters.get(0).getClustererMethod(),
+		assertEquals(clusters.get(1).getClustererMethod(),
 				SubunitClustererMethod.IDENTITY);
 
 		params.setClustererMethod(SubunitClustererMethod.STRUCTURE);
@@ -89,5 +90,42 @@ public class TestSubunitClusterer {
 		assertEquals(clusters.get(0).length(), 140);
 		assertEquals(clusters.get(0).getClustererMethod(),
 				SubunitClustererMethod.STRUCTURE);
+	}
+	
+	/**
+	 * Test internally symmetric: 4E3E bioassembly 1
+	 */
+	@Test
+	public void testInternalSymmetry() throws StructureException,
+			IOException {
+
+		AtomCache cache = new AtomCache(); //TODO change to StructureIO
+		cache.setUseMmCif(true);
+		Structure s = cache.getStructure("BIO:4E3E:1");
+		
+		SubunitClustererParameters params = new SubunitClustererParameters();
+		params.setClustererMethod(SubunitClustererMethod.SEQUENCE);
+		params.setCoverageThreshold(0.8);
+
+		List<SubunitCluster> clusters = SubunitClusterer.cluster(s, params);
+
+		// We expect one SEQUENCE cluster with 3 Subunits of length 351
+		assertEquals(clusters.size(), 1);
+		assertEquals(clusters.get(0).size(), 3);
+		assertEquals(clusters.get(0).length(), 351);
+		assertEquals(clusters.get(0).getClustererMethod(),
+				SubunitClustererMethod.IDENTITY);
+
+		params.setClustererMethod(SubunitClustererMethod.INTERNAL_SYMMETRY);
+		params.setRmsdThreshold(3.0);
+
+		clusters = SubunitClusterer.cluster(s, params);
+		
+		// We expect a single INTERNAL_SYMMETRY cluster with 6 Subunits
+		assertEquals(clusters.size(), 1);
+		assertEquals(clusters.get(0).size(), 6);
+		assertTrue(clusters.get(0).length() < 177);
+		assertEquals(clusters.get(0).getClustererMethod(),
+				SubunitClustererMethod.INTERNAL_SYMMETRY);
 	}
 }
