@@ -21,7 +21,6 @@
 package org.biojava.nbio.structure.cluster;
 
 import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.symmetry.core.QuatSymmetryParameters;
 
 import java.util.Collections;
 import java.util.List;
@@ -33,18 +32,18 @@ import java.util.List;
 public class ClusterProteinChains {
 	private Structure structure = null;
 	private Structure structure2 = null;
-	private QuatSymmetryParameters parameters = null;
+	private ChainClustererParameters parameters = null;
 	private ClusterMerger merger = null;
 	private int proteinChainCount = 0;
 	private int nucleicAcidChainCount = 0;
 
-	public ClusterProteinChains(Structure structure, QuatSymmetryParameters parameters) {
+	public ClusterProteinChains(Structure structure, ChainClustererParameters parameters) {
 		this.structure = structure;
 		this.parameters = parameters;
 		run();
 	}
 
-	public ClusterProteinChains(Structure structure1, Structure structure2, QuatSymmetryParameters parameters) {
+	public ClusterProteinChains(Structure structure1, Structure structure2, ChainClustererParameters parameters) {
 		this.structure = structure1;
 		this.structure2 = structure2;
 		this.parameters = parameters;

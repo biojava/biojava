@@ -23,11 +23,12 @@ package org.biojava.nbio.structure.cluster;
 import java.io.Serializable;
 
 /**
- * The ChainClustererParameters specifies the options used for the clustering of
+ * The SubunitClustererParameters specifies the options used for the clustering of
  * the chains in structures using the {@link ChainClusterer}.
  * 
  * @author Peter Rose
  * @author Aleix Lafita
+ * @since 5.0.0
  *
  */
 public class SubunitClustererParameters implements Serializable {
@@ -211,22 +212,15 @@ public class SubunitClustererParameters implements Serializable {
 
 	@Override
 	public String toString() {
-		StringBuilder s = new StringBuilder();
-		s.append("Minimum chain sequence length  : ");
-		s.append(minimumSequenceLength);
-		s.append(System.getProperty("line.separator"));
-		s.append("Sequence identity threshold    : ");
-		s.append(sequenceIdentityThreshold);
-		s.append(System.getProperty("line.separator"));
-		s.append("RMSD threshold             : ");
-		s.append(rmsdThreshold);
-		s.append(System.getProperty("line.separator"));
-		s.append("Coverage threshold   : ");
-		s.append(coverageThreshold);
-		s.append(System.getProperty("line.separator"));
-		s.append("Chain clusterer method         : ");
-		s.append(clustererMethod);
-		s.append(System.getProperty("line.separator"));
-		return s.toString();
+		return "SubunitClustererParameters [minimumSequenceLength="
+				+ minimumSequenceLength + ", absoluteMinimumSequenceLength="
+				+ absoluteMinimumSequenceLength
+				+ ", minimumSequenceLengthFraction="
+				+ minimumSequenceLengthFraction
+				+ ", sequenceIdentityThreshold=" + sequenceIdentityThreshold
+				+ ", rmsdThreshold=" + rmsdThreshold + ", coverageThreshold="
+				+ coverageThreshold + ", clustererMethod=" + clustererMethod
+				+ "]";
 	}
+
 }

@@ -5,6 +5,7 @@ package org.biojava.nbio.structure.cluster;
  * cluster {@link Subunit} in the {@link SubunitCluster}.
  * 
  * @author Aleix Lafita
+ * @since 5.0.0
  *
  */
 public enum SubunitClustererMethod {

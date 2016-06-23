@@ -22,7 +22,6 @@ package org.biojava.nbio.structure.cluster;
 
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.symmetry.core.QuatSymmetryParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +38,7 @@ public class ProteinSequenceClusterer {
 	
 	private Structure structure = null;
 	private Structure structure2 = null;
-	private QuatSymmetryParameters parameters = null;
+	private ChainClustererParameters parameters = null;
 
 	private List<Atom[]> caUnaligned = new ArrayList<Atom[]>();
 	private List<String> chainIds = new ArrayList<String>();
@@ -49,12 +48,12 @@ public class ProteinSequenceClusterer {
 	private int nucleicAcidChainCount = 0;
 	private boolean modified = true;
 
-	public ProteinSequenceClusterer(Structure structure, QuatSymmetryParameters parameters) {
+	public ProteinSequenceClusterer(Structure structure, ChainClustererParameters parameters) {
 		this.structure = structure;
 		this.parameters = parameters;
 	}
 
-	public ProteinSequenceClusterer(Structure structure1, Structure structure2,  QuatSymmetryParameters parameters) {
+	public ProteinSequenceClusterer(Structure structure1, Structure structure2,  ChainClustererParameters parameters) {
 		this.structure = structure1;
 		this.structure2 = structure2;
 		this.parameters = parameters;

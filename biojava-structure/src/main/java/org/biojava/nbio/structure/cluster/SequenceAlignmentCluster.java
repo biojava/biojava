@@ -28,7 +28,6 @@ import org.biojava.nbio.structure.align.ce.CeMain;
 import org.biojava.nbio.structure.align.ce.CeParameters;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.seq.SmithWaterman3Daligner;
-import org.biojava.nbio.structure.symmetry.core.QuatSymmetryParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +42,7 @@ public class SequenceAlignmentCluster implements Cloneable {
 
 	private static final Logger logger = LoggerFactory.getLogger(SequenceAlignmentCluster.class);
 
-	private QuatSymmetryParameters parameters = null;
+	private ChainClustererParameters parameters = null;
 	private List<UniqueSequenceList> uniqueSequenceList = new ArrayList<UniqueSequenceList>();
 	private List<Atom[]> alignedCAlphaAtoms = null;
 
@@ -53,7 +52,7 @@ public class SequenceAlignmentCluster implements Cloneable {
 
 	private boolean modified = true;
 
-	public SequenceAlignmentCluster (QuatSymmetryParameters parameters) {
+	public SequenceAlignmentCluster (ChainClustererParameters parameters) {
 		this.parameters = parameters;
 	}
 
@@ -196,7 +195,7 @@ public class SequenceAlignmentCluster implements Cloneable {
 			return null;
 		}
 
-		AFPChain afp = alignPairByStructure(referenceAtoms1, referenceAtoms2,parameters.isVerbose());
+		AFPChain afp = alignPairByStructure(referenceAtoms1, referenceAtoms2);
 		if (afp == null) {
 			return null;
 		}
@@ -263,7 +262,7 @@ public class SequenceAlignmentCluster implements Cloneable {
 		return aligner.align(ca1Seq, ca2Seq);
 	}
 
-	private static AFPChain alignPairByStructure(Atom[] ca1Seq, Atom[] ca2Seq, boolean verbose) {
+	private static AFPChain alignPairByStructure(Atom[] ca1Seq, Atom[] ca2Seq) {
 	   CeParameters params = new CeParameters();
 
 		AFPChain afp = null;

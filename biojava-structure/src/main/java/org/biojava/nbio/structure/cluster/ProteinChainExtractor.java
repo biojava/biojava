@@ -24,7 +24,6 @@ import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.io.mmcif.chem.PolymerType;
 import org.biojava.nbio.structure.io.mmcif.chem.ResidueType;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
-import org.biojava.nbio.structure.symmetry.core.QuatSymmetryParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +42,7 @@ public class ProteinChainExtractor {
 			.getLogger(ProteinChainExtractor.class);
 
 	private Structure structure = null;
-	private QuatSymmetryParameters parameters = null;
+	private ChainClustererParameters parameters = null;
 	private boolean modified = true;
 	private int adjustedMinimumSequenceLength = 0;
 
@@ -54,7 +53,7 @@ public class ProteinChainExtractor {
 	private int nucleicAcidChainCount = 0;
 
 	public ProteinChainExtractor(Structure structure,
-			QuatSymmetryParameters parameters) {
+			ChainClustererParameters parameters) {
 		this.structure = structure;
 		this.parameters = parameters;
 		modified = true;

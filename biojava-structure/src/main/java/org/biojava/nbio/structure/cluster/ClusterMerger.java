@@ -22,7 +22,6 @@ package org.biojava.nbio.structure.cluster;
 
 import java.util.*;
 
-import org.biojava.nbio.structure.symmetry.core.QuatSymmetryParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,11 +37,11 @@ public class ClusterMerger {
 			.getLogger(ClusterMerger.class);
 	
 	private List<SequenceAlignmentCluster> clusters = null;
-	private QuatSymmetryParameters parameters = null;
+	private ChainClustererParameters parameters = null;
 
 	List<PairwiseAlignment> pairwiseAlignments = Collections.emptyList();
 
-	public ClusterMerger(List<SequenceAlignmentCluster> clusters, QuatSymmetryParameters parameters) {
+	public ClusterMerger(List<SequenceAlignmentCluster> clusters, ChainClustererParameters parameters) {
 		this.clusters = clusters;
 		this.parameters = parameters;
 	}

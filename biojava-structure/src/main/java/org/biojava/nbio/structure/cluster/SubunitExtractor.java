@@ -34,6 +34,7 @@ import java.util.List;
  * 
  * @author Peter Rose
  * @author Aleix Lafita
+ * @since 5.0.0
  * 
  */
 public class SubunitExtractor {
