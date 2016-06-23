@@ -55,6 +55,7 @@ import java.util.*;
  * This class allows the comparison and merging of SubunitClusters.
  * 
  * @author Aleix Lafita
+ * @since 5.0.0
  * 
  */
 public class SubunitCluster {
@@ -515,8 +516,49 @@ public class SubunitCluster {
 		return subunitEQR.get(representative).size();
 	}
 
+	/**
+	 * @return the {@link SubunitClustererMethod} used for clustering the
+	 *         Subunits
+	 */
 	public SubunitClustererMethod getClustererMethod() {
 		return method;
+	}
+
+	/**
+	 * @return A List of size {@link #size()} of Atom arrays of length
+	 *         {@link #length()} with the aligned Atoms for each Subunit in the
+	 *         cluster
+	 */
+	public List<Atom[]> getAlignedAtomsSubunits() {
+
+		List<Atom[]> alignedAtoms = Collections.emptyList();
+
+		// Loop through all subunits and add only the aligned positions
+		for (int s = 0; s < subunits.size(); s++) {
+			Atom[] aligned = new Atom[length()];
+			for (int p = 0; p < length(); p++) {
+				aligned[p] = subunits.get(s).getRepresentativeAtoms()[subunitEQR
+						.get(s).get(p)];
+			}
+			alignedAtoms.add(aligned);
+		}
+
+		return alignedAtoms;
+	}
+
+	/**
+	 * @return An Atom array of length {@link #length()} with the aligned Atoms
+	 *         from the selected Subunit in the cluster
+	 */
+	public Atom[] getAlignedAtomsSubunit(int index) {
+
+		Atom[] aligned = new Atom[length()];
+		for (int p = 0; p < length(); p++) {
+			aligned[p] = subunits.get(index).getRepresentativeAtoms()[subunitEQR
+					.get(index).get(p)];
+		}
+
+		return aligned;
 	}
 
 	@Override

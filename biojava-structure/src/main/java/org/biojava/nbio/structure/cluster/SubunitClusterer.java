@@ -34,6 +34,7 @@ import org.slf4j.LoggerFactory;
  * returns a collection of {@link SubunitCluster}.
  * 
  * @author Aleix Lafita
+ * @since 5.0.0
  * 
  */
 public class SubunitClusterer {

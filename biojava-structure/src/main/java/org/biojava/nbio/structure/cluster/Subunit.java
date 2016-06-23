@@ -37,6 +37,7 @@ import org.biojava.nbio.structure.StructureTools;
  * assumed to always hold.
  * 
  * @author Aleix Lafita
+ * @since 5.0.0
  *
  */
 public class Subunit {

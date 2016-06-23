@@ -20,49 +20,92 @@
  */
 package org.biojava.nbio.structure.symmetry.core;
 
+import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.Chain;
+import org.biojava.nbio.structure.cluster.SubunitCluster;
+import org.biojava.nbio.structure.cluster.SubunitClustererMethod;
 import org.biojava.nbio.structure.symmetry.geometry.MomentsOfInertia;
 import org.biojava.nbio.structure.symmetry.geometry.SuperPosition;
 
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
+
 import java.util.*;
 import java.util.Map.Entry;
 
 /**
- * A bean to represent info about the set of subunits being considered for a
- * QuatSymmetryDetector alignment.
+ * A bean to represent information about the set of {@link Subunit} being
+ * considered for symmetry detection. This class is a helper for the
+ * {@link QuatSymmetryDetector} algorithm, since it calculates the
+ * {@link MomentsOfInertia} and the centroids of each Subunit.
+ * 
  * @author Peter Rose
+ * @author Aleix Lafita
+ * 
  */
 public class Subunits {
+	
 	private List<Point3d[]> caCoords = Collections.emptyList();
 	private List<Integer> sequenceClusterIds = Collections.emptyList();
+
+	@Deprecated
+	// Return variable, guessed from clusters
 	private List<Boolean> pseudoStoichiometry = Collections.emptyList();
+	@Deprecated
+	// Return variable, no longer valid
 	private List<Double> minSequenceIdentity = Collections.emptyList();
+	@Deprecated
+	// Return variable, no longer valid
 	private List<Double> maxSequenceIdentity = Collections.emptyList();
+
+	@Deprecated
+	// Subunits are not tied to a chain, used for coloring
 	private List<String> chainIds = Collections.emptyList();
-	private List<Integer> modelNumbers =  Collections.emptyList();
+	@Deprecated
+	// Subunits are not tied to a model? used for coloring
+	private List<Integer> modelNumbers = Collections.emptyList();
+
 	private List<Integer> folds = Collections.emptyList();
 	private List<Point3d> originalCenters = new ArrayList<Point3d>();
 	private List<Point3d> centers = new ArrayList<Point3d>();
 	private List<Vector3d> unitVectors = new ArrayList<Vector3d>();
+
+	@Deprecated
+	// Return variable, should be in the clusters
 	private int nucleicAcidChainCount = 0;
+	@Deprecated
+	// This should be in QuatSymmetryResults
 	private boolean pseudoSymmetric = false;
 
 	private Point3d centroid;
 	private MomentsOfInertia momentsOfInertia = new MomentsOfInertia();
 
 	/**
-	 * All inputs should contain one element per subunit.
-	 * @param caCoords CA coordinates of all subunits
-	 * @param sequenceClusterIds ID of the cluster that each subunit belongs to
-	 * @param pseudoStoichiometry Whether pseudosymmetry was used when clustering the subunit
-	 * @param minSequenceIdentity Minimum sequence identity to other cluster members
-	 * @param maxSequenceIdentity Maximum sequence identity to other cluster members
-	 * @param folds Valid symmetry orders for this stoichiometry
-	 * @param chainIds Chain ID for the subunit
-	 * @param modelNumbers Model number for the subunit
+	 * All input Lists should contain one element per subunit.
+	 * 
+	 * @param caCoords
+	 *            CA coordinates of all subunits
+	 * @param sequenceClusterIds
+	 *            ID of the cluster that each subunit belongs to
+	 * @param pseudoStoichiometry
+	 *            Whether pseudosymmetry was used when clustering the subunit
+	 * @param minSequenceIdentity
+	 *            Minimum sequence identity to other cluster members
+	 * @param maxSequenceIdentity
+	 *            Maximum sequence identity to other cluster members
+	 * @param folds
+	 *            Valid symmetry orders for this stoichiometry
+	 * @param chainIds
+	 *            Chain ID for the subunit
+	 * @param modelNumbers
+	 *            Model number for the subunit
 	 */
-	public Subunits(List<Point3d[]> caCoords, List<Integer> sequenceClusterIds, List<Boolean> pseudoStoichiometry, List<Double> minSequenceIdentity, List<Double> maxSequenceIdentity, List<Integer> folds, List<String> chainIds, List<Integer> modelNumbers) {
+	@Deprecated
+	public Subunits(List<Point3d[]> caCoords, List<Integer> sequenceClusterIds,
+			List<Boolean> pseudoStoichiometry,
+			List<Double> minSequenceIdentity, List<Double> maxSequenceIdentity,
+			List<Integer> folds, List<String> chainIds,
+			List<Integer> modelNumbers) {
 		this.caCoords = caCoords;
 		this.sequenceClusterIds = sequenceClusterIds;
 		this.pseudoStoichiometry = pseudoStoichiometry;
@@ -71,6 +114,58 @@ public class Subunits {
 		this.folds = folds;
 		this.chainIds = chainIds;
 		this.modelNumbers = modelNumbers;
+	}
+
+	/**
+	 * Converts the List of {@link SubunitCluster} to a Subunit object.
+	 * 
+	 * @param clusters
+	 *            List of SubunitCluster
+	 */
+	public Subunits(List<SubunitCluster> clusters) {
+
+		// Loop through all subunits in the clusters and fill Lists
+		for (int c = 0; c < clusters.size(); c++) {
+
+			// TODO we should remove these variables
+			minSequenceIdentity.add(0.0);
+			maxSequenceIdentity.add(0.0);
+
+			// Pseudostoichiometry means one structural cluster
+			SubunitClustererMethod method = clusters.get(c)
+					.getClustererMethod();
+			boolean ps = (method == SubunitClustererMethod.STRUCTURE);
+			ps = (ps || method == SubunitClustererMethod.INTERNAL_SYMMETRY);
+
+			for (int s = 0; s < clusters.get(c).size(); s++) {
+				sequenceClusterIds.add(c);
+				pseudoStoichiometry.add(ps);
+
+				Atom[] atoms = clusters.get(c).getAlignedAtomsSubunit(s);
+
+				// Convert atoms to points
+				Point3d[] points = new Point3d[atoms.length];
+				for (int i = 0; i < atoms.length; i++)
+					points[i] = new Point3d(atoms[i].getCoords());
+
+				caCoords.add(points);
+
+				// TODO guess them chain and model (very ugly)
+				Chain chain = atoms[0].getGroup().getChain();
+				String cid = chain.getId();
+				int model = chain.getStructure().getChains().indexOf(chain);
+				chainIds.add(cid);
+				modelNumbers.add(model);
+			}
+		}
+
+		// Fill in the folds with the function
+		List<Integer> stoichiometry = new ArrayList<Integer>(clusters.size());
+		for (int id = 0; id < clusters.size(); id++) {
+			int size = clusters.get(id).size();
+			stoichiometry.add(size);
+		}
+		folds = getValidFolds(stoichiometry);
 	}
 
 	public List<Point3d[]> getTraces() {
@@ -90,7 +185,7 @@ public class Subunits {
 	}
 
 	public boolean isPseudoStoichiometric() {
-		for (Boolean b: pseudoStoichiometry) {
+		for (Boolean b : pseudoStoichiometry) {
 			if (b) {
 				return true;
 			}
@@ -108,16 +203,16 @@ public class Subunits {
 
 	public double getMinSequenceIdentity() {
 		double minId = 1.0;
-		for (double seqId: minSequenceIdentity) {
-			minId = Math.min(seqId,  minId);
+		for (double seqId : minSequenceIdentity) {
+			minId = Math.min(seqId, minId);
 		}
 		return minId;
 	}
 
 	public double getMaxSequenceIdentity() {
 		double maxId = 1.0;
-		for (double seqId: maxSequenceIdentity) {
-			maxId = Math.min(seqId,  maxId);
+		for (double seqId : maxSequenceIdentity) {
+			maxId = Math.min(seqId, maxId);
 		}
 		return maxId;
 	}
@@ -130,14 +225,14 @@ public class Subunits {
 		return modelNumbers;
 	}
 
-	public List<Integer>getFolds() {
+	public List<Integer> getFolds() {
 		return folds;
 	}
 
 	public String getStoichiometry() {
 		// count number of members in each cluster
 		Map<Integer, Integer> map = new TreeMap<Integer, Integer>();
-		for (Integer id: sequenceClusterIds) {
+		for (Integer id : sequenceClusterIds) {
 			Integer value = map.get(id);
 			if (value == null) {
 				value = new Integer(1);
@@ -150,11 +245,11 @@ public class Subunits {
 		// build formula string
 		String alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 		StringBuilder formula = new StringBuilder();
-		for (Entry<Integer, Integer> entry: map.entrySet()) {
+		for (Entry<Integer, Integer> entry : map.entrySet()) {
 			String key = "?";
 			int id = entry.getKey();
 			if (id < alpha.length()) {
-				key = alpha.substring(id, id+1);
+				key = alpha.substring(id, id + 1);
 			}
 			formula.append(key);
 			if (entry.getValue() > 1) {
@@ -167,7 +262,7 @@ public class Subunits {
 
 	public int getCalphaCount() {
 		int count = 0;
-		for (Point3d[] trace: caCoords) {
+		for (Point3d[] trace : caCoords) {
 			count += trace.length;
 		}
 		return count;
@@ -219,7 +314,8 @@ public class Subunits {
 	}
 
 	/**
-	 * @param nucleicAcidChainCount the nucleicAcidChainCount to set
+	 * @param nucleicAcidChainCount
+	 *            the nucleicAcidChainCount to set
 	 */
 	public void setNucleicAcidChainCount(int nucleicAcidChainCount) {
 		this.nucleicAcidChainCount = nucleicAcidChainCount;
@@ -241,7 +337,8 @@ public class Subunits {
 	private static Set<String> getSignatures(Subunits subunits) {
 		Set<String> set = new HashSet<String>(subunits.getSubunitCount());
 		for (int i = 0; i < subunits.getSubunitCount(); i++) {
-			set.add(subunits.getChainIds().get(i) + "_" + subunits.getModelNumbers().get(i));
+			set.add(subunits.getChainIds().get(i) + "_"
+					+ subunits.getModelNumbers().get(i));
 		}
 		return set;
 	}
@@ -257,19 +354,20 @@ public class Subunits {
 	}
 
 	private void calcOriginalCenters() {
-		for (Point3d[] trace: caCoords) {
+		for (Point3d[] trace : caCoords) {
 			Point3d com = SuperPosition.centroid(trace);
 			originalCenters.add(com);
 		}
 	}
 
 	private void calcCentroid() {
-		Point3d[] orig = originalCenters.toArray(new Point3d[originalCenters.size()]);
+		Point3d[] orig = originalCenters.toArray(new Point3d[originalCenters
+				.size()]);
 		centroid = SuperPosition.centroid(orig);
 	}
 
 	private void calcCenters() {
-		for (Point3d p: originalCenters) {
+		for (Point3d p : originalCenters) {
 			Point3d c = new Point3d(p);
 			c.sub(centroid);
 			centers.add(c);
@@ -281,7 +379,7 @@ public class Subunits {
 
 	public Point3d getLowerBound() {
 		Point3d lower = new Point3d();
-		for (Point3d p: centers) {
+		for (Point3d p : centers) {
 			if (p.x < lower.x) {
 				lower.x = p.x;
 			}
@@ -297,7 +395,7 @@ public class Subunits {
 
 	public Point3d getUpperBound() {
 		Point3d upper = new Point3d();
-		for (Point3d p: centers) {
+		for (Point3d p : centers) {
 			if (p.x > upper.x) {
 				upper.x = p.x;
 			}
@@ -312,10 +410,43 @@ public class Subunits {
 	}
 
 	private void calcMomentsOfIntertia() {
-		for (Point3d[] trace: caCoords) {
-			for (Point3d p: trace) {
+		for (Point3d[] trace : caCoords) {
+			for (Point3d p : trace) {
 				momentsOfInertia.addPoint(p, 1.0f);
 			}
 		}
+	}
+
+	/**
+	 * Find valid symmetry orders for a given stoichiometry. For instance, an
+	 * A6B4 protein would give [1,2] because (A6B4)1 and (A3B2)2 are valid
+	 * decompositions.
+	 * 
+	 * @param stoichiometry
+	 *            List giving the number of copies in each chain cluster
+	 * @return The common factors of the stoichiometry
+	 */
+	public static List<Integer> getValidFolds(List<Integer> stoichiometry) {
+		List<Integer> denominators = new ArrayList<Integer>();
+
+		int nChains = Collections.max(stoichiometry);
+
+		// Remove duplicate stoichiometries
+		Set<Integer> nominators = new TreeSet<Integer>(stoichiometry);
+
+		// find common denominators
+		for (int d = 1; d <= nChains; d++) {
+			boolean isDivisable = true;
+			for (Integer n : nominators) {
+				if (n % d != 0) {
+					isDivisable = false;
+					break;
+				}
+			}
+			if (isDivisable) {
+				denominators.add(d);
+			}
+		}
+		return denominators;
 	}
 }
