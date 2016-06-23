@@ -32,6 +32,7 @@ import java.util.List;
  * as an imput to clustering.
  *
  */
+@Deprecated
 public class UniqueSequenceList implements Cloneable {
 	private String sequenceString = "";
 	private String seqResSequence = "";

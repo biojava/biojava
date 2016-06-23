@@ -38,6 +38,7 @@ import java.util.*;
  * Represents a cluster of equivalent sequences
  *
  */
+@Deprecated
 public class SequenceAlignmentCluster implements Cloneable {
 
 	private static final Logger logger = LoggerFactory.getLogger(SequenceAlignmentCluster.class);

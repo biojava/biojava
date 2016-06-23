@@ -18,7 +18,6 @@
  *      http://www.biojava.org/
  *
  */
-
 package org.biojava.nbio.structure.symmetry.core;
 
 import org.biojava.nbio.structure.symmetry.geometry.MomentsOfInertia;
@@ -28,7 +27,6 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 import java.util.*;
 import java.util.Map.Entry;
-
 
 /**
  * A bean to represent info about the set of subunits being considered for a

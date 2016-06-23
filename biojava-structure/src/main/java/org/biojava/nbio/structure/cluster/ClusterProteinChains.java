@@ -29,6 +29,7 @@ import java.util.List;
 /**
  * Clusters the chains of one or two structures by sequence.
  */
+@Deprecated
 public class ClusterProteinChains {
 	private Structure structure = null;
 	private Structure structure2 = null;

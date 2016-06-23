@@ -31,6 +31,7 @@ import java.util.*;
 /**
  * Represents a set of non-identical protein sequences.
  */
+@Deprecated
 public class ProteinSequenceClusterer {
 	
 	private static final Logger logger = LoggerFactory

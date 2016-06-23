@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
  * agglomerative clustering calculation, while {@link SequenceAlignmentCluster}
  * stores the results.
  */
+@Deprecated
 public class ClusterMerger {
 	
 	private static final Logger logger = LoggerFactory

@@ -36,6 +36,7 @@ import java.util.List;
  * Extracts information about all the chains in a structure, including chain
  * Ids, sequences, and atoms. Includes both protein and nucleic acid chains.
  */
+@Deprecated
 public class ProteinChainExtractor {
 
 	private static final Logger logger = LoggerFactory

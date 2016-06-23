@@ -29,6 +29,7 @@ import java.util.*;
 /**
  * Wraps a sequence clustering with structural information
  */
+@Deprecated
 public class ChainClusterer {
 	
 	private List<SequenceAlignmentCluster> seqClusters = new ArrayList<SequenceAlignmentCluster>();
