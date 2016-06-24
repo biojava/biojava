@@ -18,20 +18,27 @@
  *      http://www.biojava.org/
  *
  */
-package org.biojava.nbio.structure.symmetry.core;
+package org.biojava.nbio.structure.cluster;
 
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Structure;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
 /**
  * Represents a set of non-identical protein sequences.
  */
+@Deprecated
 public class ProteinSequenceClusterer {
+	
+	private static final Logger logger = LoggerFactory
+			.getLogger(ProteinSequenceClusterer.class);
+	
 	private Structure structure = null;
 	private Structure structure2 = null;
-	private QuatSymmetryParameters parameters = null;
+	private ChainClustererParameters parameters = null;
 
 	private List<Atom[]> caUnaligned = new ArrayList<Atom[]>();
 	private List<String> chainIds = new ArrayList<String>();
@@ -41,12 +48,12 @@ public class ProteinSequenceClusterer {
 	private int nucleicAcidChainCount = 0;
 	private boolean modified = true;
 
-	public ProteinSequenceClusterer(Structure structure, QuatSymmetryParameters parameters) {
+	public ProteinSequenceClusterer(Structure structure, ChainClustererParameters parameters) {
 		this.structure = structure;
 		this.parameters = parameters;
 	}
 
-	public ProteinSequenceClusterer(Structure structure1, Structure structure2,  QuatSymmetryParameters parameters) {
+	public ProteinSequenceClusterer(Structure structure1, Structure structure2,  ChainClustererParameters parameters) {
 		this.structure = structure1;
 		this.structure2 = structure2;
 		this.parameters = parameters;
@@ -137,7 +144,7 @@ public class ProteinSequenceClusterer {
 				for (SequenceAlignmentCluster c: seqClusters) {
 						if (c.identityMatch(caUnaligned.get(j), chainIds.get(j), modelNumbers.get(j), 0, sequences.get(j))) {
 							processed[j] = true;
-							//System.out.println("found identity match: " + i + " - " + j);
+							logger.debug("found identity match: " + i + " - " + j);
 							break;
 						}
 				}

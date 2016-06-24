@@ -23,6 +23,7 @@ package org.biojava.nbio.structure.symmetry.core;
 import org.biojava.nbio.structure.symmetry.geometry.SuperPosition;
 
 import javax.vecmath.Point3d;
+
 import java.util.*;
 import java.util.Map.Entry;
 

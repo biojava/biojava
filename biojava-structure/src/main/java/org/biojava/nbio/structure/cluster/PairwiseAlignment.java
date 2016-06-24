@@ -18,10 +18,11 @@
  *      http://www.biojava.org/
  *
  */
-package org.biojava.nbio.structure.symmetry.core;
+package org.biojava.nbio.structure.cluster;
 
 import java.util.Arrays;
 
+@Deprecated
 public class PairwiseAlignment {
 	private SequenceAlignmentCluster cluster1 = null;
 	private SequenceAlignmentCluster cluster2 = null;

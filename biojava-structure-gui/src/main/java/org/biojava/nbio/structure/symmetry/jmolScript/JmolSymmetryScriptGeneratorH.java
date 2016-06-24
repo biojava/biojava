@@ -23,7 +23,7 @@
  */
 package org.biojava.nbio.structure.symmetry.jmolScript;
 
-import org.biojava.nbio.structure.symmetry.core.HelixAxisAligner;
+import org.biojava.nbio.structure.symmetry.axis.HelixAxisAligner;
 import org.biojava.nbio.structure.symmetry.core.Subunits;
 import org.jcolorbrewer.ColorBrewer;
 

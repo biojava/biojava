@@ -20,13 +20,6 @@
  */
 package org.biojava.nbio.structure.symmetry.utils;
 
-
-
-
-/**
- *
- * @author Peter
- */
 // Changed hasMore to hasNext
 // Added a check in getNext whether there are more elements.
 // http://www.merriampark.com/comb.htm
@@ -60,6 +53,11 @@ package org.biojava.nbio.structure.symmetry.utils;
 import java.math.BigInteger;
 import java.util.NoSuchElementException;
 
+/**
+ * Replaced by {@link PowerSet}.
+ * @author Peter
+ */
+@Deprecated
 public class CombinationGenerator {
 
 	private int[] a;
