@@ -33,7 +33,7 @@ import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.StructureAlignment;
 import org.biojava.nbio.structure.align.StructureAlignmentFactory;
-import org.biojava.nbio.structure.align.fatcat.FatCatRigid;
+import org.biojava.nbio.structure.align.ce.CeMain;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsembleImpl;
@@ -279,7 +279,7 @@ public class SubunitCluster {
 
 		// Perform a FatCat alignment with default parameters
 		StructureAlignment algorithm = StructureAlignmentFactory
-				.getAlgorithm(FatCatRigid.algorithmName);
+				.getAlgorithm(CeMain.algorithmName);
 
 		AFPChain afp = algorithm.align(this.subunits.get(this.representative)
 				.getRepresentativeAtoms(),
@@ -474,7 +474,7 @@ public class SubunitCluster {
 						columns.get(r).get(columns.get(r).size() - 1));
 
 				Atom[] reprAtoms = Arrays.copyOfRange(subunits.get(s)
-						.getRepresentativeAtoms(), start, end);
+						.getRepresentativeAtoms(), start, end + 1);
 
 				newSubunits.add(new Subunit(reprAtoms));
 
@@ -552,8 +552,8 @@ public class SubunitCluster {
 	 */
 	public Atom[] getAlignedAtomsSubunit(int index) {
 
-		Atom[] aligned = new Atom[length()];
-		for (int p = 0; p < length(); p++) {
+		Atom[] aligned = new Atom[subunitEQR.get(index).size()];
+		for (int p = 0; p < subunitEQR.get(index).size(); p++) {
 			aligned[p] = subunits.get(index).getRepresentativeAtoms()[subunitEQR
 					.get(index).get(p)];
 		}

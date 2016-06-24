@@ -55,7 +55,6 @@ public class QuatSymmetryParameters implements Serializable {
 	private int maximumLocalResults = 1000;
 	private int maximumLocalSubunits = 20; // maximum number of subunits for
 											// local symmetry calculations
-	private boolean localSymmetry = true;
 	private double localTimeLimit = 120; // time limit for local calculations in
 											// seconds
 	private boolean onTheFly = true;
@@ -160,14 +159,6 @@ public class QuatSymmetryParameters implements Serializable {
 		this.maximumLocalResults = maximumLocalResults;
 	}
 
-	public boolean isLocalSymmetry() {
-		return localSymmetry;
-	}
-
-	public void setLocalSymmetry(boolean localSymmetry) {
-		this.localSymmetry = localSymmetry;
-	}
-
 	/**
 	 * @return the localTimeLimit
 	 */
@@ -214,7 +205,7 @@ public class QuatSymmetryParameters implements Serializable {
 				+ ", maximumLocalCombinations=" + maximumLocalCombinations
 				+ ", maximumLocalResults=" + maximumLocalResults
 				+ ", maximumLocalSubunits=" + maximumLocalSubunits
-				+ ", localSymmetry=" + localSymmetry + ", localTimeLimit="
-				+ localTimeLimit + ", onTheFly=" + onTheFly + "]";
+				+ ", localTimeLimit=" + localTimeLimit + ", onTheFly="
+				+ onTheFly + "]";
 	}
 }

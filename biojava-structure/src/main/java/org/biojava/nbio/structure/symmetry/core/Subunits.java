@@ -38,6 +38,8 @@ import java.util.Map.Entry;
  * considered for symmetry detection. This class is a helper for the
  * {@link QuatSymmetryDetector} algorithm, since it calculates the
  * {@link MomentsOfInertia} and the centroids of each Subunit.
+ * <p>
+ * Delete public modifier when finished.
  * 
  * @author Peter Rose
  * @author Aleix Lafita
@@ -45,27 +47,27 @@ import java.util.Map.Entry;
  */
 public class Subunits {
 	
-	private List<Point3d[]> caCoords = Collections.emptyList();
-	private List<Integer> sequenceClusterIds = Collections.emptyList();
+	private List<Point3d[]> caCoords = new ArrayList<Point3d[]>();
+	private List<Integer> sequenceClusterIds = new ArrayList<Integer>();
 
 	@Deprecated
 	// Return variable, guessed from clusters
-	private List<Boolean> pseudoStoichiometry = Collections.emptyList();
+	private List<Boolean> pseudoStoichiometry = new ArrayList<Boolean>();
 	@Deprecated
 	// Return variable, no longer valid
-	private List<Double> minSequenceIdentity = Collections.emptyList();
+	private List<Double> minSequenceIdentity = new ArrayList<Double>();
 	@Deprecated
 	// Return variable, no longer valid
-	private List<Double> maxSequenceIdentity = Collections.emptyList();
+	private List<Double> maxSequenceIdentity = new ArrayList<Double>();
 
 	@Deprecated
 	// Subunits are not tied to a chain, used for coloring
-	private List<String> chainIds = Collections.emptyList();
+	private List<String> chainIds = new ArrayList<String>();
 	@Deprecated
 	// Subunits are not tied to a model? used for coloring
-	private List<Integer> modelNumbers = Collections.emptyList();
+	private List<Integer> modelNumbers = new ArrayList<Integer>();
 
-	private List<Integer> folds = Collections.emptyList();
+	private List<Integer> folds = new ArrayList<Integer>();
 	private List<Point3d> originalCenters = new ArrayList<Point3d>();
 	private List<Point3d> centers = new ArrayList<Point3d>();
 	private List<Vector3d> unitVectors = new ArrayList<Vector3d>();
