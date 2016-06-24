@@ -171,4 +171,10 @@ implements SequencePair<S, C> {
 		return getAlignedSequence(2);
 	}
 
+	@Override
+	public double getPercentageOfIdentity() {
+		double seqid = getNumIdenticals();
+		return seqid / getLength();
+	}
+
 }
