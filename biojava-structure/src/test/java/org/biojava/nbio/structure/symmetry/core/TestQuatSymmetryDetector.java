@@ -171,4 +171,28 @@ public class TestQuatSymmetryDetector {
 		assertEquals("A6", symmetry.getSubunits().getStoichiometry());
 
 	}
+	
+	/**
+	 * A structure with helical symmetry: 1B47
+	 * 
+	 * @throws IOException
+	 * @throws StructureException
+	 */
+	@Test
+	public void testHelical() throws IOException, StructureException {
+
+		AtomCache cache = new AtomCache();
+		cache.setUseMmCif(true);
+		Structure pdb = cache.getStructure("BIO:1B47:1");
+
+		SubunitClustererParameters cp = new SubunitClustererParameters();
+		QuatSymmetryParameters symmParams = new QuatSymmetryParameters();
+		QuatSymmetryResults symmetry = QuatSymmetryDetector.calcGlobalSymmetry(
+				pdb, symmParams, cp);
+
+		// H symmetry A3 stoichiometry
+		assertEquals("H", symmetry.getSymmetry());
+		assertEquals("A3", symmetry.getSubunits().getStoichiometry());
+
+	}
 }
