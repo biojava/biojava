@@ -33,8 +33,8 @@ import org.biojava.nbio.structure.AtomImpl;
 import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.StructureTools;
+import org.biojava.nbio.structure.align.util.AtomCache;
 import org.junit.Test;
 
 /**
@@ -196,7 +196,9 @@ public class TestSubunitCluster {
 	@Test
 	public void testMergeStructure() throws StructureException, IOException {
 
-		Structure s = StructureIO.getStructure("4hhb");
+		AtomCache cache = new AtomCache();
+		cache.setUseMmCif(true);
+		Structure s = cache.getStructure("4hhb");
 
 		// Create one SubunitCluster for each chain
 		SubunitCluster sc1 = new SubunitCluster(
@@ -223,19 +225,25 @@ public class TestSubunitCluster {
 		assertEquals(sc2.size(), 2);
 		assertEquals(sc1.length(), 141);
 		assertEquals(sc2.length(), 146);
+		assertEquals(sc1.getAlignedAtomsSubunit(0).length,
+				sc1.getAlignedAtomsSubunit(1).length);
+		assertEquals(sc2.getAlignedAtomsSubunit(0).length,
+				sc2.getAlignedAtomsSubunit(1).length);
 
 		// Now test for pseudosymmetry
 		boolean merged = sc1.mergeStructure(sc2, 3.0, 0.9);
 
 		assertTrue(merged);
 		assertEquals(sc1.size(), 4);
-		assertEquals(sc1.length(), 140);
+		assertEquals(sc1.length(), 140, 2);
+		assertEquals(sc1.getAlignedAtomsSubunit(0).length,
+				sc1.getAlignedAtomsSubunit(2).length);
+		
 
 	}
-	
+
 	/**
-	 * Test
-	 * {@link SubunitCluster#divideInternally(double, double, int)}
+	 * Test {@link SubunitCluster#divideInternally(double, double, int)}
 	 * 
 	 * @throws StructureException
 	 * @throws IOException
@@ -243,7 +251,9 @@ public class TestSubunitCluster {
 	@Test
 	public void testDivideInternally() throws StructureException, IOException {
 
-		Structure s = StructureIO.getStructure("4e3e");
+		AtomCache cache = new AtomCache();
+		cache.setUseMmCif(true);
+		Structure s = cache.getStructure("4e3e");
 
 		// Create a SubunitCluster for the chain
 		SubunitCluster sc1 = new SubunitCluster(
@@ -257,5 +267,7 @@ public class TestSubunitCluster {
 		assertTrue(divided);
 		assertEquals(sc1.size(), 2);
 		assertTrue(sc1.length() < 178);
+		assertEquals(sc1.getAlignedAtomsSubunit(0).length,
+				sc1.getAlignedAtomsSubunit(1).length);
 	}
 }

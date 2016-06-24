@@ -91,18 +91,17 @@ public class TestSubunitExtractor {
 	@Test
 	public void testBioAssembly() throws StructureException, IOException {
 
-		AtomCache cache = new AtomCache(); //TODO change to StructureIO
+		AtomCache cache = new AtomCache(); // TODO change to StructureIO
 		cache.setUseMmCif(true);
 		Structure s = cache.getStructure("BIO:4E3E:1");
-		
+
 		SubunitClustererParameters params = new SubunitClustererParameters();
 
 		List<Subunit> subunits = SubunitExtractor.extractSubunits(s, params);
 
 		// We expect all 3 equal double hot-dog subunits to be returned
 		assertEquals(subunits.size(), 3);
-		assertEquals(subunits.get(0).size(), subunits.get(1).size(), subunits
-				.get(2).size());
+		assertEquals(subunits.get(0).size(), subunits.get(1).size());
+		assertEquals(subunits.get(0).size(), subunits.get(2).size());
 	}
-
 }

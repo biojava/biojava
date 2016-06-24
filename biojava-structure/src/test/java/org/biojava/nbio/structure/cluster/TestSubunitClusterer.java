@@ -27,7 +27,6 @@ import java.util.List;
 
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.junit.Test;
 
@@ -46,7 +45,9 @@ public class TestSubunitClusterer {
 	@Test
 	public void testPTMs() throws StructureException, IOException {
 
-		Structure s = StructureIO.getStructure("1hiv");
+		AtomCache cache = new AtomCache(); // TODO change to StructureIO
+		cache.setUseMmCif(true);
+		Structure s = cache.getStructure("1hiv");
 		SubunitClustererParameters params = new SubunitClustererParameters();
 		params.setClustererMethod(SubunitClustererMethod.SEQUENCE);
 
@@ -64,7 +65,9 @@ public class TestSubunitClusterer {
 	public void testPseudostoichiometry() throws StructureException,
 			IOException {
 
-		Structure s = StructureIO.getStructure("4HHB");
+		AtomCache cache = new AtomCache(); // TODO change to StructureIO
+		cache.setUseMmCif(true);
+		Structure s = cache.getStructure("4HHB");
 		SubunitClustererParameters params = new SubunitClustererParameters();
 		params.setClustererMethod(SubunitClustererMethod.SEQUENCE);
 		params.setSequenceIdentityThreshold(0.95);
@@ -84,25 +87,24 @@ public class TestSubunitClusterer {
 		params.setRmsdThreshold(3.0);
 
 		clusters = SubunitClusterer.cluster(s, params);
-		
+
 		// We expect a single STRUCTURE cluster with length 140
 		assertEquals(clusters.size(), 1);
-		assertEquals(clusters.get(0).length(), 140);
+		assertEquals(clusters.get(0).length(), 140, 2);
 		assertEquals(clusters.get(0).getClustererMethod(),
 				SubunitClustererMethod.STRUCTURE);
 	}
-	
+
 	/**
 	 * Test internally symmetric: 4E3E bioassembly 1
 	 */
 	@Test
-	public void testInternalSymmetry() throws StructureException,
-			IOException {
+	public void testInternalSymmetry() throws StructureException, IOException {
 
-		AtomCache cache = new AtomCache(); //TODO change to StructureIO
+		AtomCache cache = new AtomCache(); // TODO change to StructureIO
 		cache.setUseMmCif(true);
 		Structure s = cache.getStructure("BIO:4E3E:1");
-		
+
 		SubunitClustererParameters params = new SubunitClustererParameters();
 		params.setClustererMethod(SubunitClustererMethod.SEQUENCE);
 		params.setCoverageThreshold(0.8);
@@ -120,7 +122,7 @@ public class TestSubunitClusterer {
 		params.setRmsdThreshold(3.0);
 
 		clusters = SubunitClusterer.cluster(s, params);
-		
+
 		// We expect a single INTERNAL_SYMMETRY cluster with 6 Subunits
 		assertEquals(clusters.size(), 1);
 		assertEquals(clusters.get(0).size(), 6);
