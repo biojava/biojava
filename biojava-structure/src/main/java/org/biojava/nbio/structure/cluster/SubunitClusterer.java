@@ -124,6 +124,23 @@ public class SubunitClusterer {
 						e.getMessage());
 			}
 		}
+		
+		// After internal symmetry merge again by structural similarity
+		// Use case: C8 propeller with 3 chains with 3+3+2 repeats each
+		for (int c1 = 0; c1 < clusters.size(); c1++) {
+			for (int c2 = clusters.size() - 1; c2 > c1; c2--) {
+				try {
+					if (clusters.get(c1).mergeStructure(clusters.get(c2),
+							params.getRmsdThreshold(),
+							params.getCoverageThreshold()))
+						clusters.remove(c2);
+				} catch (StructureException e) {
+					logger.warn("Could not merge by Structure. {}",
+							e.getMessage());
+				}
+			}
+		}
+		
 
 		return clusters;
 	}
