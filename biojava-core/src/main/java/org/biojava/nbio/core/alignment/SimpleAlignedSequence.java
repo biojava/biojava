@@ -59,6 +59,7 @@ public class SimpleAlignedSequence<S extends Sequence<C>, C extends Compound> im
 
 	// cached (lazily initialized)
 	private int numGaps = -1;
+	private int numGapPositions = -1;
 	private int[] alignmentFromSequence, sequenceFromAlignment;
 
 	/**
@@ -167,6 +168,7 @@ public class SimpleAlignedSequence<S extends Sequence<C>, C extends Compound> im
 	public int getNumGaps() {
 		if (numGaps == -1) {
 			numGaps = 0;
+			numGapPositions = 0;
 			C cGap = getCompoundSet().getCompoundForString(gap);
 			boolean inGap = false;
 			for (C compound : getAsList()) {
@@ -175,6 +177,7 @@ public class SimpleAlignedSequence<S extends Sequence<C>, C extends Compound> im
 						numGaps++;
 						inGap = true;
 					}
+					numGapPositions++;
 				} else {
 					inGap = false;
 				}
@@ -381,5 +384,19 @@ public class SimpleAlignedSequence<S extends Sequence<C>, C extends Compound> im
 	//TODO Needs to implements
 	public SequenceView<C> getInverse() {
 		throw new UnsupportedOperationException("Not supported yet.");
+	}
+
+	@Override
+	public int getNumGapPositions() {
+		if (numGapPositions == -1)
+			getNumGaps();
+		return numGapPositions;
+	}
+
+	@Override
+	public double getCoverage() {
+		
+		double coverage = getLength() - getNumGapPositions();
+		return coverage / getOriginalSequence().getLength();
 	}
 }
