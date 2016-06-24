@@ -155,8 +155,15 @@ public class Subunits {
 				// TODO guess them chain and model (very ugly)
 				Chain chain = atoms[0].getGroup().getChain();
 				String cid = chain.getId();
-				int model = chain.getStructure().getChains().indexOf(chain);
 				chainIds.add(cid);
+				
+				int model = 0;
+				for (int m = 0; m < chain.getStructure().nrModels(); m++){
+					if (chain.getStructure().getModel(m).contains(chain)) {
+						model = m;
+						break;
+					}
+				}				
 				modelNumbers.add(model);
 			}
 		}

@@ -24,11 +24,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Matrix4d;
-import javax.vecmath.Point3d;
-
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.Chain;
@@ -53,13 +52,14 @@ import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsembleImpl;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentImpl;
 import org.biojava.nbio.structure.align.multiple.util.CoreSuperimposer;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
-import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentTools;
 import org.biojava.nbio.structure.align.multiple.util.MultipleSuperimposer;
+import org.biojava.nbio.structure.cluster.Subunit;
+import org.biojava.nbio.structure.cluster.SubunitClustererMethod;
+import org.biojava.nbio.structure.cluster.SubunitClustererParameters;
 import org.biojava.nbio.structure.jama.Matrix;
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetryDetector;
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetryParameters;
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetryResults;
-import org.biojava.nbio.structure.symmetry.core.Subunits;
 import org.biojava.nbio.structure.symmetry.internal.CeSymmResult;
 import org.biojava.nbio.structure.symmetry.internal.SymmetryAxes;
 import org.jgrapht.UndirectedGraph;
@@ -529,7 +529,7 @@ public class SymmetryTools {
 			Atom[] repeat = Arrays.copyOfRange(atoms, res1, res2 + 1);
 
 			Chain newCh = new ChainImpl();
-			newCh.setChainID(repeat[0].getGroup().getChainId());
+			newCh.setId(repeat[0].getGroup().getChainId());
 
 			for (int k = 0; k < repeat.length; k++) {
 				Group g = (Group) repeat[k].getGroup().clone();
@@ -730,57 +730,22 @@ public class SymmetryTools {
 	public static QuatSymmetryResults getQuaternarySymmetry(CeSymmResult result)
 			throws StructureException {
 
-		// Obtain the clusters of aligned Atoms and repeat variables
-		List<Atom[]> alignedCA = result.getMultipleAlignment().getAtomArrays();
-		MultipleAlignment msa = result.getMultipleAlignment();
-		List<Integer> corePos = MultipleAlignmentTools.getCorePositions(result
-				.getMultipleAlignment().getBlock(0));
+		// Obtain the subunits of the repeats
+		List<Atom[]> atoms = toRepeatsAlignment(result).getAtomArrays();
+		List<Subunit> subunits = atoms.stream().map(a -> new Subunit(a))
+				.collect(Collectors.toList());
 
-		List<Point3d[]> caCoords = new ArrayList<Point3d[]>();
-		List<Integer> folds = new ArrayList<Integer>();
-		List<Boolean> pseudo = new ArrayList<Boolean>();
-		List<String> chainIds = new ArrayList<String>();
-		List<Integer> models = new ArrayList<Integer>();
-		List<Double> seqIDmin = new ArrayList<Double>();
-		List<Double> seqIDmax = new ArrayList<Double>();
-		List<Integer> clusterIDs = new ArrayList<Integer>();
-		int fold = 1;
+		// The clustering thresholds are set to 0 so that all always merged
+		SubunitClustererParameters cp = new SubunitClustererParameters();
+		cp.setClustererMethod(SubunitClustererMethod.STRUCTURE);
+		cp.setRmsdThreshold(10.0);
+		cp.setCoverageThreshold(0.0);
+		cp.setSequenceIdentityThreshold(1.1); // avoid using sequence cluster
+		
+		QuatSymmetryParameters sp = new QuatSymmetryParameters();
 
-		for (int str = 0; str < alignedCA.size(); str++) {
-			Atom[] array = alignedCA.get(str);
-			List<Point3d> points = new ArrayList<Point3d>();
-			List<Integer> alignedRes = msa.getBlock(0).getAlignRes().get(str);
-			for (int pos = 0; pos < alignedRes.size(); pos++) {
-				Integer residue = alignedRes.get(pos);
-				if (residue == null)
-					continue;
-				else if (!corePos.contains(pos))
-					continue;
-				Atom a = array[residue];
-				points.add(new Point3d(a.getCoords()));
-			}
-			caCoords.add(points.toArray(new Point3d[points.size()]));
-			if (alignedCA.size() % fold == 0) {
-				folds.add(fold); // the folds are the common denominators
-			}
-			fold++;
-			pseudo.add(false);
-			chainIds.add(alignedCA.get(str)[0].getGroup().getChainId());
-			models.add(0);
-			seqIDmax.add(1.0);
-			seqIDmin.add(1.0);
-			clusterIDs.add(0);
-		}
-
-		// Create directly the repeats, because we know the aligned CA
-		Subunits globalSubunits = new Subunits(caCoords, clusterIDs, pseudo,
-				seqIDmin, seqIDmax, folds, chainIds, models);
-
-		// Quaternary Symmetry Detection
-		QuatSymmetryParameters param = new QuatSymmetryParameters();
-
-		QuatSymmetryResults gSymmetry = QuatSymmetryDetector.calcQuatSymmetry(
-				globalSubunits, param);
+		QuatSymmetryResults gSymmetry = QuatSymmetryDetector.calcGlobalSymmetry(
+				subunits, sp, cp);
 
 		return gSymmetry;
 	}
@@ -911,7 +876,7 @@ public class SymmetryTools {
 				List<Atom> list2 = new ArrayList<Atom>();
 
 				for (int firstRepeat : axes.getFirstRepeats(level)) {
-						
+
 					Matrix4d transform = axes.getRepeatTransform(firstRepeat);
 
 					List<List<Integer>> relation = axes.getRepeatRelation(
@@ -925,8 +890,10 @@ public class SymmetryTools {
 							Integer pos1 = block.get(p1).get(k);
 							Integer pos2 = block.get(p2).get(k);
 							if (pos1 != null && pos2 != null) {
-								Atom a = (Atom) msa.getAtomArrays().get(p1)[pos1].clone();
-								Atom b = (Atom) msa.getAtomArrays().get(p2)[pos2].clone();
+								Atom a = (Atom) msa.getAtomArrays().get(p1)[pos1]
+										.clone();
+								Atom b = (Atom) msa.getAtomArrays().get(p2)[pos2]
+										.clone();
 								Calc.transform(a, transform);
 								Calc.transform(b, transform);
 								list1.add(a);

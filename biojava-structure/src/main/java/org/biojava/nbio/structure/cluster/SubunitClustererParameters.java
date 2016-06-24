@@ -23,8 +23,8 @@ package org.biojava.nbio.structure.cluster;
 import java.io.Serializable;
 
 /**
- * The SubunitClustererParameters specifies the options used for the clustering of
- * the chains in structures using the {@link ChainClusterer}.
+ * The SubunitClustererParameters specifies the options used for the clustering
+ * of the subunits in structures using the {@link SubunitClusterer}.
  * 
  * @author Peter Rose
  * @author Aleix Lafita
@@ -46,7 +46,7 @@ public class SubunitClustererParameters implements Serializable {
 	private SubunitClustererMethod clustererMethod = SubunitClustererMethod.SEQUENCE;
 
 	/**
-	 * Get the minimum number of residues of a chain to be considered in the
+	 * Get the minimum number of residues of a subunits to be considered in the
 	 * clusters.
 	 * 
 	 * @return minimumSequenceLength
@@ -56,7 +56,7 @@ public class SubunitClustererParameters implements Serializable {
 	}
 
 	/**
-	 * Set the minimum number of residues of a chain to be considered in the
+	 * Set the minimum number of residues of a subunits to be considered in the
 	 * clusters.
 	 * 
 	 * @param minimumSequenceLength
@@ -66,10 +66,10 @@ public class SubunitClustererParameters implements Serializable {
 	}
 
 	/**
-	 * If the shortest chain sequence length is higher or equal the
-	 * minimumSequenceLengthFraction times the median chain sequence length,
-	 * then the minimumSequenceLength is set to shortest chain sequence length,
-	 * but not shorter than the absoluteMinimumSequenceLength.
+	 * If the shortest subunit sequence length is higher or equal the
+	 * minimumSequenceLengthFraction times the median subunit sequence length,
+	 * then the minimumSequenceLength is set to shortest subunit sequence
+	 * length, but not shorter than the absoluteMinimumSequenceLength.
 	 * <p>
 	 * This adaptive feature allows the consideration of structures mainly
 	 * constructed by very short chains, such as collagen (1A3I)
@@ -81,9 +81,9 @@ public class SubunitClustererParameters implements Serializable {
 	}
 
 	/**
-	 * If the shortest chain sequence length is higher or equal the
-	 * minimumSequenceLengthFraction times the median chain sequence length,
-	 * then the minimumSequenceLength is set to shortest chain sequence length,
+	 * If the shortest subunit sequence length is higher or equal the
+	 * minimumSequenceLengthFraction times the median subunit sequence length,
+	 * then the minimumSequenceLength is set to shortest subunit sequence length,
 	 * but not shorter than the absoluteMinimumSequenceLength.
 	 * <p>
 	 * This adaptive feature allows the consideration of structures mainly
@@ -97,9 +97,9 @@ public class SubunitClustererParameters implements Serializable {
 	}
 
 	/**
-	 * If the shortest chain sequence length is higher or equal the
-	 * minimumSequenceLengthFraction times the median chain sequence length,
-	 * then the minimumSequenceLength is set to shortest chain sequence length,
+	 * If the shortest subunit sequence length is higher or equal the
+	 * minimumSequenceLengthFraction times the median subunit sequence length,
+	 * then the minimumSequenceLength is set to shortest subunit sequence length,
 	 * but not shorter than the absoluteMinimumSequenceLength.
 	 * <p>
 	 * This adaptive feature allows the consideration of structures mainly
@@ -112,9 +112,9 @@ public class SubunitClustererParameters implements Serializable {
 	}
 
 	/**
-	 * If the shortest chain sequence length is higher or equal the
-	 * minimumSequenceLengthFraction times the median chain sequence length,
-	 * then the minimumSequenceLength is set to shortest chain sequence length,
+	 * If the shortest subunit sequence length is higher or equal the
+	 * minimumSequenceLengthFraction times the median subunit sequence length,
+	 * then the minimumSequenceLength is set to shortest subunit sequence length,
 	 * but not shorter than the absoluteMinimumSequenceLength.
 	 * <p>
 	 * This adaptive feature allows the consideration of structures mainly
@@ -128,10 +128,10 @@ public class SubunitClustererParameters implements Serializable {
 	}
 
 	/**
-	 * Sequence identity threshold to consider for the chain clustering.
+	 * Sequence identity threshold to consider for the subunits clustering.
 	 * <p>
-	 * Two chains with sequence identity equal or higher than the threshold will
-	 * be clustered together.
+	 * Two subunits with sequence identity equal or higher than the threshold
+	 * will be clustered together.
 	 * 
 	 * @return sequenceIdentityThreshold
 	 */
@@ -140,11 +140,11 @@ public class SubunitClustererParameters implements Serializable {
 	}
 
 	/**
-	 * Sequence identity threshold to consider for the sequence chain
+	 * Sequence identity threshold to consider for the sequence subunit
 	 * clustering.
 	 * <p>
-	 * Two chains with sequence identity equal or higher than the threshold will
-	 * be clustered together.
+	 * Two subunits with sequence identity equal or higher than the threshold
+	 * will be clustered together.
 	 * 
 	 * @param sequenceIdentityThreshold
 	 */
@@ -153,8 +153,8 @@ public class SubunitClustererParameters implements Serializable {
 	}
 
 	/**
-	 * Structure similarity threshold (measured with RMSD) to consider for
-	 * the structural chain clustering.
+	 * Structure similarity threshold (measured with RMSD) to consider for the
+	 * structural subunit clustering.
 	 * 
 	 * @return rmsdThreshold
 	 */
@@ -163,8 +163,8 @@ public class SubunitClustererParameters implements Serializable {
 	}
 
 	/**
-	 * Structure similarity threshold (measured with RMSD) to consider for
-	 * the structural chain clustering.
+	 * Structure similarity threshold (measured with RMSD) to consider for the
+	 * structural subunit clustering.
 	 * 
 	 * @param rmsdThreshold
 	 */
@@ -173,7 +173,7 @@ public class SubunitClustererParameters implements Serializable {
 	}
 
 	/**
-	 * The minimum coverage of the sequence alignment between two chains to be
+	 * The minimum coverage of the sequence alignment between two subunits to be
 	 * clustered together.
 	 * 
 	 * @return coverageThreshold
@@ -183,7 +183,7 @@ public class SubunitClustererParameters implements Serializable {
 	}
 
 	/**
-	 * The minimum coverage of the sequence alignment between two chains to be
+	 * The minimum coverage of the sequence alignment between two subunits to be
 	 * clustered together.
 	 * 
 	 * @param coverageThreshold
@@ -193,7 +193,7 @@ public class SubunitClustererParameters implements Serializable {
 	}
 
 	/**
-	 * Method to cluster chains.
+	 * Method to cluster subunits.
 	 * 
 	 * @return ChainClustererMethod
 	 */
@@ -202,7 +202,7 @@ public class SubunitClustererParameters implements Serializable {
 	}
 
 	/**
-	 * Method to cluster chains.
+	 * Method to cluster subunits.
 	 * 
 	 * @param SubunitClustererMethod
 	 */
