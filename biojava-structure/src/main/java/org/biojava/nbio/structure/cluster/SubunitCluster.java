@@ -20,7 +20,6 @@
  */
 package org.biojava.nbio.structure.cluster;
 
-import org.apache.commons.lang.StringUtils;
 import org.biojava.nbio.alignment.Alignments;
 import org.biojava.nbio.alignment.Alignments.PairwiseSequenceAlignerType;
 import org.biojava.nbio.alignment.SimpleGapPenalty;
