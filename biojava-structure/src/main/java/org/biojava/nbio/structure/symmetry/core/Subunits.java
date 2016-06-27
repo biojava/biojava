@@ -436,8 +436,12 @@ public class Subunits {
 	 * @return The common factors of the stoichiometry
 	 */
 	public static List<Integer> getValidFolds(List<Integer> stoichiometry) {
+		
 		List<Integer> denominators = new ArrayList<Integer>();
 
+		if (stoichiometry.isEmpty())
+			return denominators;
+		
 		int nChains = Collections.max(stoichiometry);
 
 		// Remove duplicate stoichiometries
