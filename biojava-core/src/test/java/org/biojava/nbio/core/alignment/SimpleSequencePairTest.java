@@ -250,8 +250,8 @@ public class SimpleSequencePairTest {
 	
 	@Test
 	public void testGetPercentageOfIdentity() {
-		assertEquals(global.getPercentageOfIdentity(), 0.4, 0.01);
-		assertEquals(local.getPercentageOfIdentity(), 0.66, 0.01);
+		assertEquals(global.getPercentageOfIdentity(), 1.0, 0.01);
+		assertEquals(local.getPercentageOfIdentity(), 1.0, 0.01);
 	}
 
 	@Test
