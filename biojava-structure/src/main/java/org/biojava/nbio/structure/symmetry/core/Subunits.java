@@ -31,7 +31,6 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
 import java.util.*;
-import java.util.Map.Entry;
 
 /**
  * A bean to represent information about the set of {@link Subunit} being
@@ -239,6 +238,7 @@ public class Subunits {
 	}
 
 	public String getStoichiometry() {
+		
 		// count number of members in each cluster
 		Map<Integer, Integer> map = new TreeMap<Integer, Integer>();
 		for (Integer id : sequenceClusterIds) {
@@ -250,20 +250,22 @@ public class Subunits {
 			}
 			map.put(id, value);
 		}
+		
+		List<Integer> stoichiometries = new ArrayList<Integer>(map.size());
+		for (Integer key : map.keySet())
+			stoichiometries.add(map.get(key));
+		Collections.sort(stoichiometries);
 
 		// build formula string
-		String alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+		String alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 		StringBuilder formula = new StringBuilder();
-		for (Entry<Integer, Integer> entry : map.entrySet()) {
+		for (Integer stoich : stoichiometries) {
 			String key = "?";
-			int id = entry.getKey();
-			if (id < alpha.length()) {
-				key = alpha.substring(id, id + 1);
-			}
+			if (stoich < alpha.length()) 
+				key = alpha.substring(stoich, stoich + 1);
+			
 			formula.append(key);
-			if (entry.getValue() > 1) {
-				formula.append(entry.getValue());
-			}
+			formula.append(stoich);
 		}
 
 		return formula.toString();
