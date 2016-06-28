@@ -255,17 +255,18 @@ public class Subunits {
 		for (Integer key : map.keySet())
 			stoichiometries.add(map.get(key));
 		Collections.sort(stoichiometries);
+		Collections.reverse(stoichiometries);
 
 		// build formula string
 		String alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 		StringBuilder formula = new StringBuilder();
-		for (Integer stoich : stoichiometries) {
+		for (int i = 0; i < stoichiometries.size(); i++) {
 			String key = "?";
-			if (stoich < alpha.length()) 
-				key = alpha.substring(stoich, stoich + 1);
+			if (i < alpha.length()) 
+				key = alpha.substring(i, i + 1);
 			
 			formula.append(key);
-			formula.append(stoich);
+			formula.append(stoichiometries.get(i));
 		}
 
 		return formula.toString();
