@@ -45,7 +45,7 @@ import java.util.*;
  * 
  */
 public class Subunits {
-	
+
 	private List<Point3d[]> caCoords = new ArrayList<Point3d[]>();
 	private List<Integer> sequenceClusterIds = new ArrayList<Integer>();
 
@@ -155,14 +155,14 @@ public class Subunits {
 				Chain chain = atoms[0].getGroup().getChain();
 				String cid = chain.getId();
 				chainIds.add(cid);
-				
+
 				int model = 0;
-				for (int m = 0; m < chain.getStructure().nrModels(); m++){
+				for (int m = 0; m < chain.getStructure().nrModels(); m++) {
 					if (chain.getStructure().getModel(m).contains(chain)) {
 						model = m;
 						break;
 					}
-				}				
+				}
 				modelNumbers.add(model);
 			}
 		}
@@ -238,7 +238,7 @@ public class Subunits {
 	}
 
 	public String getStoichiometry() {
-		
+
 		// count number of members in each cluster
 		Map<Integer, Integer> map = new TreeMap<Integer, Integer>();
 		for (Integer id : sequenceClusterIds) {
@@ -250,7 +250,7 @@ public class Subunits {
 			}
 			map.put(id, value);
 		}
-		
+
 		List<Integer> stoichiometries = new ArrayList<Integer>(map.size());
 		for (Integer key : map.keySet())
 			stoichiometries.add(map.get(key));
@@ -262,11 +262,12 @@ public class Subunits {
 		StringBuilder formula = new StringBuilder();
 		for (int i = 0; i < stoichiometries.size(); i++) {
 			String key = "?";
-			if (i < alpha.length()) 
+			if (i < alpha.length())
 				key = alpha.substring(i, i + 1);
-			
+
 			formula.append(key);
-			formula.append(stoichiometries.get(i));
+			if (stoichiometries.get(i) > 1)
+				formula.append(stoichiometries.get(i));
 		}
 
 		return formula.toString();
@@ -439,12 +440,12 @@ public class Subunits {
 	 * @return The common factors of the stoichiometry
 	 */
 	public static List<Integer> getValidFolds(List<Integer> stoichiometry) {
-		
+
 		List<Integer> denominators = new ArrayList<Integer>();
 
 		if (stoichiometry.isEmpty())
 			return denominators;
-		
+
 		int nChains = Collections.max(stoichiometry);
 
 		// Remove duplicate stoichiometries
