@@ -18,12 +18,16 @@
  *      http://www.biojava.org/
  *
  */
-package org.biojava.nbio.structure.symmetry.core;
+package org.biojava.nbio.structure.symmetry.axis;
 
 import javax.vecmath.Matrix3d;
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
+
+import org.biojava.nbio.structure.symmetry.core.QuatSymmetryResults;
+import org.biojava.nbio.structure.symmetry.core.Subunits;
+
 import java.util.List;
 
 public abstract class AxisAligner {

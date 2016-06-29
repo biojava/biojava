@@ -141,6 +141,20 @@ public class SimpleAlignedSequenceTest {
 		assertEquals(local.getNumGaps(), 2);
 		assertEquals(local2.getNumGaps(), 0);
 	}
+	
+	@Test
+	public void testGetNumGapPositions() {
+		assertEquals(global.getNumGapPositions(), 3);
+		assertEquals(local.getNumGapPositions(), 3);
+		assertEquals(local2.getNumGapPositions(), 0);
+	}
+	
+	@Test
+	public void testGetCoverage() {
+		assertEquals(global.getCoverage(), 1.0, 0.01);
+		assertEquals(local.getCoverage(), 0.556, 0.01);
+		assertEquals(local2.getCoverage(), 0.75, 0.01);
+	}
 
 	@Test
 	public void testGetOriginalSequence() {

@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  */
-package org.biojava.nbio.structure.symmetry.core;
+package org.biojava.nbio.structure.cluster;
 
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
@@ -37,11 +37,12 @@ import java.util.*;
  * Represents a cluster of equivalent sequences
  *
  */
+@Deprecated
 public class SequenceAlignmentCluster implements Cloneable {
 
 	private static final Logger logger = LoggerFactory.getLogger(SequenceAlignmentCluster.class);
 
-	private QuatSymmetryParameters parameters = null;
+	private ChainClustererParameters parameters = null;
 	private List<UniqueSequenceList> uniqueSequenceList = new ArrayList<UniqueSequenceList>();
 	private List<Atom[]> alignedCAlphaAtoms = null;
 
@@ -51,7 +52,7 @@ public class SequenceAlignmentCluster implements Cloneable {
 
 	private boolean modified = true;
 
-	public SequenceAlignmentCluster (QuatSymmetryParameters parameters) {
+	public SequenceAlignmentCluster (ChainClustererParameters parameters) {
 		this.parameters = parameters;
 	}
 
@@ -194,7 +195,7 @@ public class SequenceAlignmentCluster implements Cloneable {
 			return null;
 		}
 
-		AFPChain afp = alignPairByStructure(referenceAtoms1, referenceAtoms2,parameters.isVerbose());
+		AFPChain afp = alignPairByStructure(referenceAtoms1, referenceAtoms2);
 		if (afp == null) {
 			return null;
 		}
@@ -261,16 +262,14 @@ public class SequenceAlignmentCluster implements Cloneable {
 		return aligner.align(ca1Seq, ca2Seq);
 	}
 
-	private static AFPChain alignPairByStructure(Atom[] ca1Seq, Atom[] ca2Seq, boolean verbose) {
+	private static AFPChain alignPairByStructure(Atom[] ca1Seq, Atom[] ca2Seq) {
 	   CeParameters params = new CeParameters();
 
 		AFPChain afp = null;
 		try {
 			StructureAlignment algorithm  = StructureAlignmentFactory.getAlgorithm(CeMain.algorithmName);
 			afp = algorithm.align(ca1Seq,ca2Seq,params);
-			if (verbose) {
-				System.out.println(afp.toFatcat(ca1Seq, ca2Seq));
-			}
+			logger.debug(afp.toFatcat(ca1Seq, ca2Seq));
 		} catch (StructureException e) {
 			logger.error("StructureException caught",e);
 		}
@@ -322,9 +321,7 @@ public class SequenceAlignmentCluster implements Cloneable {
 				align2.add(align[0][1][i]);
 			}
 		}
-//        System.out.println("PDB alignment: ");
-//        System.out.println(align1);
-//        System.out.println(align2);
+		logger.debug("PDB alignment: \n" + align1 + "\n" + align2);
 		return align1.size();
 	}
 

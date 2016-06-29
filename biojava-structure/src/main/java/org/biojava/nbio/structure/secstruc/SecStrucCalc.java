@@ -29,6 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -676,6 +677,14 @@ public class SecStrucCalc {
 			buf.append(getSecStrucState(g).getType());
 		}
 		return buf.toString();
+	}
+
+	@Override
+	public int hashCode() {
+	    final int prime = 31;
+	    int result = 1;
+	    result = prime * result + Arrays.hashCode(atoms);
+	    return result;
 	}
 
 	@Override

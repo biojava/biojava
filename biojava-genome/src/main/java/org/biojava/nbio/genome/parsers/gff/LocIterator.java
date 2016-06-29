@@ -25,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * Move a sliding window over a Location.
@@ -169,7 +170,10 @@ public class LocIterator implements Iterator<Location> {
 	@Override
 	public Location next()
 	{
-		return next( mWindowSize, mIncrement );
+        if(!hasNext()){
+            throw new NoSuchElementException();
+        }
+        return next( mWindowSize, mIncrement );
 	}
 
 	/**

@@ -23,7 +23,7 @@
  */
 package org.biojava.nbio.structure.symmetry.jmolScript;
 
-import org.biojava.nbio.structure.symmetry.core.RotationAxisAligner;
+import org.biojava.nbio.structure.symmetry.axis.RotationAxisAligner;
 import org.biojava.nbio.structure.symmetry.geometry.Prism;
 
 

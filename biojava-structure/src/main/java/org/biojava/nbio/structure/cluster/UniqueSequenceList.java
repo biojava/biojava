@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  */
-package org.biojava.nbio.structure.symmetry.core;
+package org.biojava.nbio.structure.cluster;
 
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Group;
@@ -32,6 +32,7 @@ import java.util.List;
  * as an imput to clustering.
  *
  */
+@Deprecated
 public class UniqueSequenceList implements Cloneable {
 	private String sequenceString = "";
 	private String seqResSequence = "";

@@ -41,6 +41,17 @@ public class BetaBridge {
 	}
 
 	@Override
+        public int hashCode()
+        {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + getType().hashCode();
+            result = prime * result + partner1;
+            result = prime * result + partner2;
+            return result;
+        }
+
+	@Override
 	public boolean equals(Object o) {
 
 		if (!(o instanceof BetaBridge))

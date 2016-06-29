@@ -18,22 +18,30 @@
  *      http://www.biojava.org/
  *
  */
-package org.biojava.nbio.structure.symmetry.core;
+package org.biojava.nbio.structure.cluster;
 
 import java.util.*;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Merges clusters based on their sequence identity. This class does the actual
  * agglomerative clustering calculation, while {@link SequenceAlignmentCluster}
  * stores the results.
  */
+@Deprecated
 public class ClusterMerger {
+	
+	private static final Logger logger = LoggerFactory
+			.getLogger(ClusterMerger.class);
+	
 	private List<SequenceAlignmentCluster> clusters = null;
-	private QuatSymmetryParameters parameters = null;
+	private ChainClustererParameters parameters = null;
 
 	List<PairwiseAlignment> pairwiseAlignments = Collections.emptyList();
 
-	public ClusterMerger(List<SequenceAlignmentCluster> clusters, QuatSymmetryParameters parameters) {
+	public ClusterMerger(List<SequenceAlignmentCluster> clusters, ChainClustererParameters parameters) {
 		this.clusters = clusters;
 		this.parameters = parameters;
 	}
@@ -58,10 +66,8 @@ public class ClusterMerger {
 							alignment.getRmsd() <= parameters.getRmsdThreshold()) {
 						merged[j] = true;
 						pairwiseAlignments.add(alignment);
-						if (parameters.isVerbose()) {
-							System.out.println("ClusterMerger: pairwise cluster alignment: " + i + "-" + j + " seq. identity: " + alignment.getSequenceIdentity());
-							System.out.println(alignment);
-						}
+						logger.info("ClusterMerger: pairwise cluster alignment: " + i + "-" + j + " seq. identity: " + alignment.getSequenceIdentity());
+						logger.info(alignment.toString());
 					}
 				}
 			}

@@ -275,7 +275,10 @@ public class ResidueRange {
 
 			@Override
 			public ResidueNumber next() {
-				ResidueNumber pos = next.getKey();
+                if(!hasNext()){
+                    throw new NoSuchElementException();
+                }
+                ResidueNumber pos = next.getKey();
 				loadNext();
 				return pos;
 			}

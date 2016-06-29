@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  */
-package org.biojava.nbio.structure.symmetry.core;
+package org.biojava.nbio.structure.cluster;
 
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.io.mmcif.chem.PolymerType;
@@ -32,15 +32,17 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Extracts information about all the chains in a structure, including
- * chain Ids, sequences, and atoms. Includes both protein and nucleic acid chains.
+ * Extracts information about all the chains in a structure, including chain
+ * Ids, sequences, and atoms. Includes both protein and nucleic acid chains.
  */
-public class ProteinChainExtractor  {
+@Deprecated
+public class ProteinChainExtractor {
 
-	private static final Logger logger = LoggerFactory.getLogger(ProteinChainExtractor.class);
+	private static final Logger logger = LoggerFactory
+			.getLogger(ProteinChainExtractor.class);
 
 	private Structure structure = null;
-	private QuatSymmetryParameters parameters = null;
+	private ChainClustererParameters parameters = null;
 	private boolean modified = true;
 	private int adjustedMinimumSequenceLength = 0;
 
@@ -50,7 +52,8 @@ public class ProteinChainExtractor  {
 	private List<String> sequences = new ArrayList<String>();
 	private int nucleicAcidChainCount = 0;
 
-	public ProteinChainExtractor(Structure structure, QuatSymmetryParameters parameters) {
+	public ProteinChainExtractor(Structure structure,
+			ChainClustererParameters parameters) {
 		this.structure = structure;
 		this.parameters = parameters;
 		modified = true;
@@ -99,32 +102,31 @@ public class ProteinChainExtractor  {
 
 	private void extractProteinChains() {
 		int models = 1;
-		if (structure.isBiologicalAssembly()) {
+		if (structure.isBiologicalAssembly())
 			models = structure.nrModels();
-		}
 
-		if (parameters.isVerbose()) {
-			System.out.println("Protein chains used in calculation:");
-			System.out.println("Adjusted minimum sequence length: " + adjustedMinimumSequenceLength);
-		}
+		logger.info("Protein chains used in calculation:");
+		logger.info("Adjusted minimum sequence length: "
+				+ adjustedMinimumSequenceLength);
 
 		for (int i = 0; i < models; i++) {
 			for (Chain c : structure.getChains(i)) {
-				if (isNucleicAcidChain(c)) {
+				if (StructureTools.isNucleicAcid(c))
 					nucleicAcidChainCount++;
-				} //TODO Should we break here for DNA? If "CA" atoms are present, could cause bugs. -Spencer 9-2015
-				Atom[] ca = StructureTools.getAtomCAArray(c);
-				ca = retainStandardAminoAcidResidues(ca);
-
-				if (ca.length >= adjustedMinimumSequenceLength) {
-					if (parameters.isVerbose()) {
-						System.out.println("Chain " + c.getChainID() + " Calpha atoms: " + ca.length + " seqres: " + c.getSeqResSequence());
+				else if (StructureTools.isProtein(c)) {
+					Atom[] ca = StructureTools.getRepresentativeAtomArray(c);
+					//ca = retainStandardAminoAcidResidues(ca);
+	
+					if (ca.length >= adjustedMinimumSequenceLength) {
+						logger.info("Chain " + c.getId()
+									+ "; CA Atoms: " + ca.length + "; SEQRES: "
+									+ c.getSeqResSequence());
+	
+						cAlphaTrace.add(ca);
+						chainIds.add(c.getId());
+						modelNumbers.add(i);
+						sequences.add(replaceQuestionMarks(c.getSeqResSequence()));
 					}
-
-					cAlphaTrace.add(ca);
-					chainIds.add(c.getChainID());
-					modelNumbers.add(i);
-					sequences.add(replaceQuestionMarks(c.getSeqResSequence()));
 				}
 			}
 		}
@@ -134,6 +136,7 @@ public class ProteinChainExtractor  {
 	 * Returns an adapted minimum sequence length. This method ensure that
 	 * structure that only have short chains are not excluded by the
 	 * minimumSequenceLength cutoff value;
+	 * 
 	 * @return
 	 */
 	private void calcAdjustedMinimumSequenceLength() {
@@ -166,45 +169,57 @@ public class ProteinChainExtractor  {
 
 		double median = 0;
 		Collections.sort(lengths);
-		if (lengths.size() %2 == 1) {
-			int middle = (lengths.size()-1) / 2;
+		if (lengths.size() % 2 == 1) {
+			int middle = (lengths.size() - 1) / 2;
 			median = lengths.get(middle);
 		} else {
-			int middle2 = lengths.size()/2;
-			int middle1 = middle2-1;
+			int middle2 = lengths.size() / 2;
+			int middle1 = middle2 - 1;
 			median = 0.5 * (lengths.get(middle1) + lengths.get(middle2));
 		}
 
 		if (minLength >= median * parameters.getMinimumSequenceLengthFraction()) {
-			adjustedMinimumSequenceLength = Math.min(minLength, parameters.getMinimumSequenceLength());
+			adjustedMinimumSequenceLength = Math.min(minLength,
+					parameters.getMinimumSequenceLength());
 		}
 	}
 
+	@Deprecated
 	private boolean isNucleicAcidChain(Chain chain) {
 		int count = 0;
-		for (Group group: chain.getAtomGroups()) {
+		for (Group group : chain.getAtomGroups()) {
 			PolymerType type = group.getChemComp().getPolymerType();
-			if (type != null && (type.equals(PolymerType.dna) || type.equals(PolymerType.rna) || type.equals(PolymerType.dnarna))) {
+			if (type != null
+					&& (type.equals(PolymerType.dna)
+							|| type.equals(PolymerType.rna) || type
+								.equals(PolymerType.dnarna))) {
 				count++;
 			}
 		}
 		return count > 3;
 	}
 
-	// In some cases "?" are in the sequence string. Example 2WS1. This is caused
-	// because the chemical component file YNM doesn't contain a one-letter code.
+	/**
+	 * In some cases "?" are in the sequence string. Example 2WS1. This is
+	 * caused because the chemical component file (YNM) doesn't contain a
+	 * one-letter code. Couldn't we take the parent aa one-letter? AL
+	 * 
+	 * @param sequence
+	 * @return sequence replaced ? by X
+	 */
 	private String replaceQuestionMarks(String sequence) {
 		return sequence.replaceAll("\\?", "X");
 	}
 
+	@Deprecated
 	private Atom[] retainStandardAminoAcidResidues(Atom[] atoms) {
 		List<Atom> atomList = new ArrayList<Atom>(atoms.length);
-		for (Atom atom: atoms) {
+		for (Atom atom : atoms) {
 			Group group = atom.getGroup();
 			if (group.getPDBName().equalsIgnoreCase("UNK")) {
 				continue;
 			}
-			if (! isAminoAcid(group)) {
+			if (!isAminoAcid(group)) {
 				continue;
 			}
 			atomList.add(atom);
@@ -212,12 +227,14 @@ public class ProteinChainExtractor  {
 		return atomList.toArray(new Atom[atomList.size()]);
 	}
 
+	@Deprecated
 	private boolean isAminoAcid(Group group) {
-		ChemComp cc= group.getChemComp();
+		ChemComp cc = group.getChemComp();
 		if (cc.getResidueType() == null) {
 			logger.warn("null residue type for: " + group.getPDBName());
 			return false;
 		}
-		return (cc.getResidueType().equals(ResidueType.lPeptideLinking) || cc.getResidueType().equals(ResidueType.glycine));
+		return (cc.getResidueType().equals(ResidueType.lPeptideLinking) || cc
+				.getResidueType().equals(ResidueType.glycine));
 	}
 }
