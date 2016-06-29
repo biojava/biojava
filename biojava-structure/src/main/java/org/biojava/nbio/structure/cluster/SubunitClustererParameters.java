@@ -41,7 +41,7 @@ public class SubunitClustererParameters implements Serializable {
 
 	private double sequenceIdentityThreshold = 0.95;
 	private double rmsdThreshold = 3.0;
-	private double coverageThreshold = 0.9;
+	private double coverageThreshold = 0.75;
 
 	private SubunitClustererMethod clustererMethod = SubunitClustererMethod.STRUCTURE;
 
