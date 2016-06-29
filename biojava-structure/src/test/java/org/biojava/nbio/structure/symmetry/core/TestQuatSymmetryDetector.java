@@ -85,6 +85,7 @@ public class TestQuatSymmetryDetector {
 
 		// Non-pseudosymmetry
 		SubunitClustererParameters clusterParams = new SubunitClustererParameters();
+		clusterParams.setClustererMethod(SubunitClustererMethod.SEQUENCE);
 		QuatSymmetryParameters symmParams = new QuatSymmetryParameters();
 		QuatSymmetryResults symmetry = QuatSymmetryDetector.calcGlobalSymmetry(
 				pdb, symmParams, clusterParams);
@@ -124,7 +125,7 @@ public class TestQuatSymmetryDetector {
 
 		// C1 global symmetry
 		assertEquals("C1", symmetry.getSymmetry());
-		assertEquals("AB5C5", symmetry.getSubunits().getStoichiometry());
+		assertEquals("A5B5C", symmetry.getSubunits().getStoichiometry());
 
 		// Local symmetry
 		List<QuatSymmetryResults> localSymm = QuatSymmetryDetector
