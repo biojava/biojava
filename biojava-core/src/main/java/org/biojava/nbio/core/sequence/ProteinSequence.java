@@ -153,7 +153,7 @@ public class ProteinSequence extends AbstractSequence<AminoAcidCompound> {
 	}
 
 	private DNASequence getRawParentSequence(String accessId) throws IOException {
-		String seqUrlTemplate = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=%s&rettype=fasta&retmode=text";
+		String seqUrlTemplate = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=%s&rettype=fasta&retmode=text";
 		URL url = new URL(String.format(seqUrlTemplate, accessId));
 
 		logger.trace("Getting parent DNA sequence from URL: {}", url.toString());
