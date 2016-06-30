@@ -34,7 +34,7 @@ import java.util.Set;
  * chain, residue ranges and status (manual or automatic classification).
  * <p>
  * For detailed explanation about the ECOD information see the original article
- * at: http://www.ncbi.nlm.nih.gov/pmc/articles/PMC4256011.
+ * at: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4256011.
  * <pre>
  * Cheng H, Schaeffer RD, Liao Y, et al. 
  * ECOD: An Evolutionary Classification of Protein Domains. 
