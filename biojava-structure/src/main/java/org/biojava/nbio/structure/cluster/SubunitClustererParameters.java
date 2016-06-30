@@ -41,9 +41,9 @@ public class SubunitClustererParameters implements Serializable {
 
 	private double sequenceIdentityThreshold = 0.95;
 	private double rmsdThreshold = 3.0;
-	private double coverageThreshold = 0.9;
+	private double coverageThreshold = 0.75;
 
-	private SubunitClustererMethod clustererMethod = SubunitClustererMethod.SEQUENCE;
+	private SubunitClustererMethod clustererMethod = SubunitClustererMethod.STRUCTURE;
 
 	/**
 	 * Get the minimum number of residues of a subunits to be considered in the
@@ -83,8 +83,8 @@ public class SubunitClustererParameters implements Serializable {
 	/**
 	 * If the shortest subunit sequence length is higher or equal the
 	 * minimumSequenceLengthFraction times the median subunit sequence length,
-	 * then the minimumSequenceLength is set to shortest subunit sequence length,
-	 * but not shorter than the absoluteMinimumSequenceLength.
+	 * then the minimumSequenceLength is set to shortest subunit sequence
+	 * length, but not shorter than the absoluteMinimumSequenceLength.
 	 * <p>
 	 * This adaptive feature allows the consideration of structures mainly
 	 * constructed by very short chains, such as collagen (1A3I)
@@ -99,8 +99,8 @@ public class SubunitClustererParameters implements Serializable {
 	/**
 	 * If the shortest subunit sequence length is higher or equal the
 	 * minimumSequenceLengthFraction times the median subunit sequence length,
-	 * then the minimumSequenceLength is set to shortest subunit sequence length,
-	 * but not shorter than the absoluteMinimumSequenceLength.
+	 * then the minimumSequenceLength is set to shortest subunit sequence
+	 * length, but not shorter than the absoluteMinimumSequenceLength.
 	 * <p>
 	 * This adaptive feature allows the consideration of structures mainly
 	 * constructed by very short chains, such as collagen (1A3I)
@@ -114,8 +114,8 @@ public class SubunitClustererParameters implements Serializable {
 	/**
 	 * If the shortest subunit sequence length is higher or equal the
 	 * minimumSequenceLengthFraction times the median subunit sequence length,
-	 * then the minimumSequenceLength is set to shortest subunit sequence length,
-	 * but not shorter than the absoluteMinimumSequenceLength.
+	 * then the minimumSequenceLength is set to shortest subunit sequence
+	 * length, but not shorter than the absoluteMinimumSequenceLength.
 	 * <p>
 	 * This adaptive feature allows the consideration of structures mainly
 	 * constructed by very short chains, such as collagen (1A3I)

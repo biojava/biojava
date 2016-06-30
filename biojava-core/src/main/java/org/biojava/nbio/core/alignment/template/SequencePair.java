@@ -99,7 +99,8 @@ public interface SequencePair<S extends Sequence<C>, C extends Compound> extends
 	
 	/**
 	 * Returns the percentage of identity between the two sequences in the alignment as a fraction between 0 and 1.
-	 * This is equivalent to {@link #getNumIdenticals()} / {@link #getLength()}.
+	 * This is equivalent to {@link #getNumIdenticals()} / {@link #getLength()}. Gap positions are exluded 
+	 * from the calculation.
 	 *
 	 * @return the percentage of sequence identity as a fraction in [0,1]
 	 */
