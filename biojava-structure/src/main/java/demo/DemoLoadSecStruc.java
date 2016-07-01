@@ -83,7 +83,7 @@ public class DemoLoadSecStruc {
 	public static void printSecStruc(Structure s){
 		List<SecStrucInfo> ssi = SecStrucTools.getSecStrucInfo(s);
 		for (SecStrucInfo ss : ssi) {
-			System.out.println(ss.getGroup().getChain().getChainID() + " "
+			System.out.println(ss.getGroup().getChain().getName() + " "
 					+ ss.getGroup().getResidueNumber() + " "
 					+ ss.getGroup().getPDBName() + " -> " + ss.toString());
 		}
