@@ -20,7 +20,6 @@
  */
 package org.biojava.nbio.structure.cluster;
 
-import org.apache.commons.lang.StringUtils;
 import org.biojava.nbio.alignment.Alignments;
 import org.biojava.nbio.alignment.Alignments.PairwiseSequenceAlignerType;
 import org.biojava.nbio.alignment.SimpleGapPenalty;
@@ -158,22 +157,21 @@ public class SubunitCluster {
 						new SimpleGapPenalty(),
 						SubstitutionMatrixHelper.getBlosum62());
 
-		// TODO provisional coverage function
-		double gaps1 = StringUtils.countMatches(aligner.getPair()
-				.getAlignedSequence(1).getSequenceAsString(), "-");
-		double gaps2 = StringUtils.countMatches(aligner.getPair()
-				.getAlignedSequence(2).getSequenceAsString(), "-");
+		// Calculate real coverage (subtract gaps in both sequences)
+		double gaps1 = aligner.getPair().getAlignedSequence(1)
+				.getNumGapPositions();
+		double gaps2 = aligner.getPair().getAlignedSequence(2)
+				.getNumGapPositions();
 		double lengthAlignment = aligner.getPair().getLength();
 		double lengthThis = aligner.getQuery().getLength();
 		double lengthOther = aligner.getTarget().getLength();
-		double coverage = Math.min((lengthAlignment - gaps1 - gaps2)
-				/ lengthThis, (lengthAlignment - gaps1 - gaps2) / lengthOther);
+		double coverage = (lengthAlignment - gaps1 - gaps2)
+				/ Math.max(lengthThis, lengthOther);
 
 		if (coverage < minCoverage)
 			return false;
 
-		double seqid = aligner.getPair().getNumIdenticals();
-		seqid /= aligner.getPair().getLength();
+		double seqid = aligner.getPair().getPercentageOfIdentity();
 
 		if (seqid < minSeqid)
 			return false;

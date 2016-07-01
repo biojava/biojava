@@ -165,10 +165,10 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 		if( path == null) {
 			UserConfiguration config = new UserConfiguration();
 			path = config.getPdbFilePath();
-			logger.debug("Initialising from system property/environment variable to path: {}", path.toString());
+			logger.debug("Initialising from system property/environment variable to path: {}", path);
 		} else {
 			path = FileDownloadUtils.expandUserHome(path);
-			logger.debug("Initialising with path {}", path.toString());
+			logger.debug("Initialising with path {}", path);
 		}
 		this.path = new File(path);
 
