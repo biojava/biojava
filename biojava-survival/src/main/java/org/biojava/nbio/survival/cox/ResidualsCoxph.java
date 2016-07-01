@@ -153,7 +153,7 @@ public class ResidualsCoxph {
 	   //     Collections.sort(index);
 
 			for (int m = 0; m < index.size(); m++) {
-				String key = index.get(m).toString();
+				String key = index.get(m);
 				sum[m][j] = sumMap.get(key);
 			}
 
