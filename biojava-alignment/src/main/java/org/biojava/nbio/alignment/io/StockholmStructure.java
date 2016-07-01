@@ -301,7 +301,7 @@ public class StockholmStructure {
 	private String[] splitSeqName(String sequenceName) {
 		String[] result = new String[3];
 
-		String[] barSplit = sequenceName.toString().split("/");
+		String[] barSplit = sequenceName.split("/");
 		if (barSplit.length == 2) {
 			result[0] = barSplit[0];
 			String[] positions = barSplit[1].split("-");

@@ -224,7 +224,7 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 
 		try ( PrintWriter pw = new PrintWriter(new GZIPOutputStream(new FileOutputStream(localName))) ) {
 
-			pw.print(contents.toString());
+			pw.print(contents);
 			pw.flush();
 		}
 	}
