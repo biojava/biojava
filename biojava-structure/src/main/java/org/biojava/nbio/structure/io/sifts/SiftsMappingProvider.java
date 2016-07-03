@@ -52,13 +52,13 @@ public class SiftsMappingProvider {
 			List<SiftsEntity> entities = getSiftsMapping("1gc1");
 
 			for (SiftsEntity e : entities){
-				System.out.println(e.getEntityId() + " " +e.getType());
+				logger.info(e.getEntityId() + " " +e.getType());
 
 				for ( SiftsSegment seg: e.getSegments()) {
-					System.out.println(" Segment: " + seg.getSegId() + " " + seg.getStart() + " " + seg.getEnd()) ;
+					logger.info(" Segment: " + seg.getSegId() + " " + seg.getStart() + " " + seg.getEnd()) ;
 
 					for ( SiftsResidue res: seg.getResidues() ) {
-						System.out.println("  " + res);
+						logger.info("  " + res);
 					}
 				}
 

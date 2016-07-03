@@ -29,6 +29,8 @@ package org.biojava.nbio.structure.align.fatcat.calc;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.align.model.AFP;
 import org.biojava.nbio.structure.align.model.AFPChain;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -39,8 +41,7 @@ import java.util.List;
  */
 public class AFPPostProcessor
 {
-
-	public static final boolean debug = FatCatAligner.debug;
+	private static final Logger LOGGER = LoggerFactory.getLogger(AFPPostProcessor.class);
 
 	public static void postProcess(FatCatParameters params, AFPChain afpChain,Atom[] ca1, Atom[] ca2){
 
@@ -55,9 +56,7 @@ public class AFPPostProcessor
 		blockNum = afpChain.getBlockNum();
 		afpChain.setBlockNumSpt( blockNum);
 
-		if ( debug){
-			System.err.println("AFPPOstProcessor: postProcess blocknum = blocknumSpt:" + blockNum);
-		}
+		LOGGER.debug("AFPPOstProcessor: postProcess blocknum = blocknumSpt:" + blockNum);
 
 		//redo: merge blocks with similar transformations & remove small blocks
 		//if(blockNum >= 2)     ClustBlock();
@@ -82,8 +81,7 @@ public class AFPPostProcessor
 
 	private static void splitBlock(FatCatParameters params, AFPChain afpChain, Atom[] ca1, Atom[] ca2)
 	{
-		if ( debug)
-			System.err.println("AFPPostProcessor: splitBlock");
+		LOGGER.error("AFPPostProcessor: splitBlock");
 		int     i, a, bk, cut;
 		double  maxs, maxt;
 		int blockNum = afpChain.getBlockNum();
@@ -117,8 +115,7 @@ public class AFPPostProcessor
 
 				}
 			}
-			if(debug)
-				System.out.println(String.format("block %d original size %d rmsd %.3f maxt %.2f cut at %d\n", bk, blockSize[bk], maxs, maxt, cut));
+			LOGGER.debug(String.format("block %d original size %d rmsd %.3f maxt %.2f cut at %d\n", bk, blockSize[bk], maxs, maxt, cut));
 			for(i = blockNum - 1; i > bk; i --)     {
 				block2Afp[i + 1] = block2Afp[i];
 				blockSize[i + 1] = blockSize[i];
@@ -128,8 +125,7 @@ public class AFPPostProcessor
 			blockSize[bk + 1] = blockSize[bk] - cut;
 			blockSize[bk] = cut;
 
-			if(debug)
-				System.out.println(String.format("  split into %d and %d sizes\n", blockSize[bk], blockSize[bk + 1]));
+			LOGGER.debug(String.format("  split into %d and %d sizes\n", blockSize[bk], blockSize[bk + 1]));
 
 
 			int[] afpChainList = afpChain.getAfpChainList();
@@ -144,11 +140,9 @@ public class AFPPostProcessor
 			afpChain.setAfpChainList(afpChainList);
 		}
 		if(blockNum - blockNum0 > 0)    {
-			if(debug)
-				System.out.println(String.format("Split %d times:\n", blockNum - blockNum0));
+			LOGGER.debug(String.format("Split %d times:\n", blockNum - blockNum0));
 			for(i = 0; i < blockNum; i ++)  {
-				if(debug)
-					System.out.println(String.format("  block %d size %d from %d rmsd %.3f\n", i, blockSize[i], block2Afp[i], blockRmsd[i]));
+				LOGGER.debug(String.format("  block %d size %d from %d rmsd %.3f\n", i, blockSize[i], block2Afp[i], blockRmsd[i]));
 			}
 		}
 
@@ -216,14 +210,11 @@ public class AFPPostProcessor
 			} //delete a block
 		}
 		if(blockNumOld > blockNum)
-			if(debug)
-				System.out.println(
-						String.format("Delete %d small blocks\n", blockNumOld - blockNum)
-				);
+			LOGGER.debug(
+					String.format("Delete %d small blocks\n", blockNumOld - blockNum)
+			);
 
-
-		if (debug)
-			System.err.println("deleteBlock: end blockNum:"+ blockNum);
+		LOGGER.debug("deleteBlock: end blockNum:"+ blockNum);
 		afpChain.setBlock2Afp(block2Afp);
 		afpChain.setBlockSize(blockSize);
 		afpChain.setAfpChainList(afpChainList);
@@ -275,9 +266,8 @@ public class AFPPostProcessor
 			minb2 = minb1 + 1; //merge those most similar blocks
 			//maxrmsd = (blockRmsd[minb1] > blockRmsd[minb2])?blockRmsd[minb1]:blockRmsd[minb2];
 			if(minrmsd < badRmsd)   {
-				if(debug)
-					System.out.println(String.format("merge block %d (rmsd %.3f) and %d (rmsd %.3f), total rmsd %.3f\n",
-							minb1, blockRmsd[minb1], minb2, blockRmsd[minb2], minrmsd));
+				LOGGER.debug(String.format("merge block %d (rmsd %.3f) and %d (rmsd %.3f), total rmsd %.3f\n",
+						minb1, blockRmsd[minb1], minb2, blockRmsd[minb2], minrmsd));
 				blockSize[minb1] += blockSize[minb2];
 				blockRmsd[minb1] = minrmsd;
 				for(i = minb2; i < blockNum - 1; i ++)  {
@@ -310,13 +300,10 @@ public class AFPPostProcessor
 		}
 
 		if(merge > 0)       {
-			if(debug)
-				System.out.println(String.format("Merge %d blocks, remaining %d blocks\n", merge, blockNum));
+			LOGGER.debug(String.format("Merge %d blocks, remaining %d blocks\n", merge, blockNum));
 		}
-
-		if (debug){
-			System.err.println("AFPPostProcessor: mergeBlock end blocknum:" + blockNum);
-		}
+		
+		LOGGER.debug("AFPPostProcessor: mergeBlock end blocknum:" + blockNum);
 		afpChain.setBlock2Afp(block2Afp);
 		afpChain.setBlockSize(blockSize);
 		afpChain.setBlockNum(blockNum);

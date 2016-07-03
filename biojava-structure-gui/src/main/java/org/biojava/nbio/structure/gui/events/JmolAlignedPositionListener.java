@@ -28,10 +28,13 @@ import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.align.StructurePairAligner;
 import org.biojava.nbio.structure.gui.BiojavaJmol;
 import org.biojava.nbio.structure.gui.util.AlignedPosition;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class JmolAlignedPositionListener implements AlignmentPositionListener{
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(JmolAlignedPositionListener.class);
 
 	BiojavaJmol parent;
 	Atom[] ca1;
@@ -67,7 +70,7 @@ public class JmolAlignedPositionListener implements AlignmentPositionListener{
 		String s = "select ";
 
 		if ((p1 > ca1.length) || (p2 > ca2.length)){
-			System.err.println("requsting atom out of bounds! " );
+			LOGGER.error("requsting atom out of bounds! " );
 			return;
 		}
 

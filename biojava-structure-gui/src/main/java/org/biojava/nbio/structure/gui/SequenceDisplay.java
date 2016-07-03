@@ -29,6 +29,8 @@ import org.biojava.nbio.structure.gui.util.AlignedPosition;
 import org.biojava.nbio.structure.gui.util.SequenceMouseListener;
 import org.biojava.nbio.structure.gui.util.SequenceScalePanel;
 import org.biojava.nbio.structure.io.PDBFileReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -47,6 +49,8 @@ import java.util.List;
  * @since 1.7
  */
 public class SequenceDisplay extends JPanel implements ChangeListener {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(SequenceDisplay.class);
 
 	/**
 	 *
@@ -71,7 +75,7 @@ public class SequenceDisplay extends JPanel implements ChangeListener {
 	 */
 	public static final int MAX_SCALE               = 10;
 
-	//private static final Logger logger = LoggerFactory.getLogger(SequenceDisplay.class);
+	private static final Logger logger = LoggerFactory.getLogger(SequenceDisplay.class);
 
 	List<AlignedPosition> apos;
 
@@ -102,7 +106,7 @@ public class SequenceDisplay extends JPanel implements ChangeListener {
 
 			// step1 : read molecules
 
-			System.out.println("aligning " + pdb1 + " vs. " + pdb2);
+			logger.info("aligning " + pdb1 + " vs. " + pdb2);
 
 			Structure s1 = pdbr.getStructureById(pdb1);
 			Structure s2 = pdbr.getStructureById(pdb2);
@@ -345,7 +349,7 @@ public class SequenceDisplay extends JPanel implements ChangeListener {
 
 	private void setAtoms(Structure s, SequenceScalePanel panel){
 		if ( structurePairAligner == null){
-			System.err.println("StructurePairAligner has not been set");
+			LOGGER.error("StructurePairAligner has not been set");
 			return;
 		}
 		Atom[] ca1 = structurePairAligner.getAlignmentAtoms(s);

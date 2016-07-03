@@ -28,6 +28,8 @@ import org.biojava.nbio.structure.align.util.UserConfiguration;
 import org.biojava.nbio.structure.align.webstart.WebStartMain;
 import org.biojava.nbio.structure.gui.util.PDBUploadPanel;
 import org.biojava.nbio.structure.io.LocalPDBDirectory.FetchBehavior;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,6 +39,8 @@ import java.awt.event.KeyEvent;
 
 public class ConfigPDBInstallPanel extends JPanel
 {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(ConfigPDBInstallPanel.class);
 
 	/**
 	 *
@@ -190,7 +194,7 @@ public class ConfigPDBInstallPanel extends JPanel
 	}
 	public void setFromFtp(JCheckBox fromFtp)
 	{
-		System.out.println(fromFtp);
+		LOGGER.info(fromFtp.toString());
 		this.fromFtp = fromFtp;
 	}
 	public JTextField getPDBDirField(){

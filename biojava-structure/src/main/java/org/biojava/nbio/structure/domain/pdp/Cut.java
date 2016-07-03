@@ -21,11 +21,13 @@
 package org.biojava.nbio.structure.domain.pdp;
 
 import org.biojava.nbio.structure.Atom;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 public class Cut {
-
+	private static final Logger LOGGER = LoggerFactory.getLogger(Cut.class);
 	static boolean verbose = CutDomain.verbose;
 
 	public int cut( Atom[] ca, Domain dom, CutValues val, int[][] dist, PDPDistanceMatrix pdpMatrix) {
@@ -62,7 +64,7 @@ public class Cut {
 		java.util.Collections.sort(segments, new SegmentComparator());
 
 		if ( verbose)
-			System.out.println("  ---  Cut.cut " + dom + " ");
+			LOGGER.info("  ---  Cut.cut " + dom + " ");
 		average_density = 0.0;
 		size0=0;
 		for(iseg=0;iseg<dom.nseg;iseg++) {
@@ -167,11 +169,11 @@ public class Cut {
 			}
 		}
 		average_density/=size0;
-		if(verbose) System.out.println(String.format("  --- Trying to cut domain of size %d having %d segments and  average cont_density %f\n",dom.size,dom.nseg,average_density));
+		if(verbose) LOGGER.info(String.format("  --- Trying to cut domain of size %d having %d segments and  average cont_density %f\n",dom.size,dom.nseg,average_density));
 
 		if ( verbose )
 			for(kseg=0;kseg<dom.nseg;kseg++)
-				System.out.println(String.format("	--- segment %d from %d to %d",kseg,dom.getSegmentAtPos(kseg).getFrom(),dom.getSegmentAtPos(kseg).getTo()) + " av density: " + average_density);
+				LOGGER.info(String.format("	--- segment %d from %d to %d",kseg,dom.getSegmentAtPos(kseg).getFrom(),dom.getSegmentAtPos(kseg).getTo()) + " av density: " + average_density);
 
 
 		if(val.first_cut) {
@@ -180,7 +182,7 @@ public class Cut {
 			printf("%d	%s	%d	%d	%d	%d	%f\n",k,protein.res[k].type,k-from,to-k,contacts[k],max_contacts[k],contact_density[k]);
 			 */
 			val.AD = average_density;
-			if(verbose)	System.out.println(String.format("  --- AD=%f", average_density));
+			if(verbose)	LOGGER.info(String.format("  --- AD=%f", average_density));
 			/*
 			 */
 		}
@@ -188,14 +190,14 @@ public class Cut {
 
 		val.s_min/=val.AD;
 
-		if(verbose) System.out.println(String.format("  --- after single cut: s_min = %f site_min = %d",val.s_min,site_min));
+		if(verbose) LOGGER.info(String.format("  --- after single cut: s_min = %f site_min = %d",val.s_min,site_min));
 
 		///
 		k=0;
 
 		/* check double cuts */
 		if ( verbose )
-		System.out.println("  --- checking double cuts up to: " + nclose);
+		LOGGER.info("  --- checking double cuts up to: " + nclose);
 		nc=0;
 		for(l=0;l<nclose;l++) {
 
@@ -391,7 +393,7 @@ public class Cut {
 		}
 		val.first_cut=false;
 		if(verbose)
-			System.out.println(String.format("  --- E ... at the end of cut: s_min %f CUTOFF %f site_min %d *site2 %d",val.s_min,PDPParameters.CUT_OFF_VALUE,site_min,val.site2));
+			LOGGER.info(String.format("  --- E ... at the end of cut: s_min %f CUTOFF %f site_min %d *site2 %d",val.s_min,PDPParameters.CUT_OFF_VALUE,site_min,val.site2));
 		if(val.s_min> PDPParameters.CUT_OFF_VALUE) return -1;
 
 		return(site_min);

@@ -21,6 +21,8 @@
 package org.biojava.nbio.phosphosite;
 
 import org.biojava.nbio.structure.align.util.AtomCache;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.URL;
@@ -43,6 +45,7 @@ import java.util.List;
  */
 public class Dataset {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(Dataset.class);
 
 	public static final String ACETYLATION = "http://www.phosphosite.org/downloads/Acetylation_site_dataset.gz";
 
@@ -110,8 +113,8 @@ public class Dataset {
 
 	public void download(){
 
-		System.out.println("Downloading data from www.phosposite.org. Data is under CC-BY-NC-SA license. Please link to site and cite: ");
-		System.out.println("Hornbeck PV, Kornhauser JM, Tkachev S, Zhang B, Skrzypek E, Murray B, Latham V, Sullivan M (2012) PhosphoSitePlus: a comprehensive resource for investigating the structure and function of experimentally determined post-translational modifications in man and mouse. Nucleic Acids Res. 40(Database issue), D261–70.");
+		LOGGER.info("Downloading data from www.phosposite.org. Data is under CC-BY-NC-SA license. Please link to site and cite: ");
+		LOGGER.info("Hornbeck PV, Kornhauser JM, Tkachev S, Zhang B, Skrzypek E, Murray B, Latham V, Sullivan M (2012) PhosphoSitePlus: a comprehensive resource for investigating the structure and function of experimentally determined post-translational modifications in man and mouse. Nucleic Acids Res. 40(Database issue), D261–70.");
 
 		File dir = getLocalDir();
 
@@ -156,7 +159,7 @@ public class Dataset {
 
 	private void downloadFile(URL u, File localFile) throws IOException {
 
-		System.out.println("Downloading " + u);
+		LOGGER.info("Downloading " + u);
 
 		File tmp = File.createTempFile("tmp","phosphosite");
 
@@ -230,13 +233,13 @@ public class Dataset {
 
 			for (File f : ds.getLocalFiles()) {
 
-				System.out.println(f.getAbsoluteFile());
+				LOGGER.info(f.getAbsoluteFile().toString());
 
 				List<Site> sites = Site.parseSites(f);
 
 				for (Site s : sites) {
 					if (s.getUniprot().equals("P50225") || s.getUniprot().equals("P48025")) {
-						System.out.println(s);
+						LOGGER.info(s.toString());
 					}
 				}
 

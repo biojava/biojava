@@ -51,6 +51,8 @@ import org.biojava.nbio.structure.align.webstart.WebStartMain;
 import org.biojava.nbio.structure.gui.util.PDBUploadPanel;
 import org.biojava.nbio.structure.gui.util.ScopSelectPanel;
 import org.biojava.nbio.structure.gui.util.StructurePairSelector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** A JFrame that allows to trigger a pairwise structure alignment,
  * either from files in a directory,
@@ -65,6 +67,7 @@ import org.biojava.nbio.structure.gui.util.StructurePairSelector;
  */
 public class AlignmentGui extends JFrame{
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(AlignmentGui.class);
 	private final static long serialVersionUID =0l;
 
 	StructureAlignment algorithm;
@@ -281,7 +284,7 @@ public class AlignmentGui extends JFrame{
 				else if ( selectedIndex == 1)
 					calcDBSearch();
 				else {
-					System.err.println("Unknown TAB: " + selectedIndex);
+					LOGGER.warn("Unknown TAB: " + selectedIndex);
 				}
 
 			}
@@ -328,7 +331,7 @@ public class AlignmentGui extends JFrame{
 
 	protected void configureParameters() {
 		StructureAlignment algorithm = getStructureAlignment();
-		System.out.println("configure parameters for " + algorithm.getAlgorithmName());
+		LOGGER.info("configure parameters for " + algorithm.getAlgorithmName());
 
 		// show a new config GUI
 		new ParameterGUI(algorithm.getParameters(), algorithm.getAlgorithmName());
@@ -368,12 +371,12 @@ public class AlignmentGui extends JFrame{
 			Structure s2 = tab.getStructure2();
 
 			if ( s1 == null) {
-				System.err.println("please select structure 1");
+				LOGGER.info("please select structure 1");
 				return ;
 			}
 
 			if ( s2 == null) {
-				System.err.println("please select structure 2");
+				LOGGER.info("please select structure 2");
 				return;
 			}
 
@@ -388,7 +391,7 @@ public class AlignmentGui extends JFrame{
 				name2 = s2.getName();
 			}
 
-			System.out.println("aligning: " + name1 + " " + name2);
+			LOGGER.info("aligning: " + name1 + " " + name2);
 
 
 			alicalc = new AlignmentCalc(this,s1,s2, name1, name2);
@@ -412,7 +415,7 @@ public class AlignmentGui extends JFrame{
 	private void calcDBSearch() {
 
 		JTabbedPane tabPane = dbsearch.getTabPane();
-		System.out.println("run DB search " + tabPane.getSelectedIndex());
+		LOGGER.info("run DB search " + tabPane.getSelectedIndex());
 
 		Structure s = null;
 		boolean domainSplit = dbsearch.isDomainSplit();
@@ -454,7 +457,7 @@ public class AlignmentGui extends JFrame{
 
 
 
-		System.out.println("name1 in alig gui:" + name1);
+		LOGGER.info("name1 in alig gui:" + name1);
 		String file = dbsearch.getOutFileLocation();
 		if ( file == null || file.equals("") ){
 			JOptionPane.showMessageDialog(null,"Please select a directory to contain the DB search results.");
@@ -493,9 +496,9 @@ public class AlignmentGui extends JFrame{
 			if ( n < 0)
 				return;
 			useNrCPUs = (Integer) options[n];
-			System.out.println("will use " + useNrCPUs + " CPUs." );
+			LOGGER.info("will use " + useNrCPUs + " CPUs." );
 		}
-		System.out.println("using domainSplit data");
+		LOGGER.info("using domainSplit data");
 		alicalc = new AlignmentCalcDB(this, s,  name1,config,file, domainSplit);
 		alicalc.setNrCPUs(useNrCPUs);
 		abortB.setEnabled(true);
@@ -520,7 +523,7 @@ public class AlignmentGui extends JFrame{
 	}
 
 	private void abortCalc(){
-		System.err.println("Interrupting alignment ...");
+		LOGGER.warn("Interrupting alignment ...");
 		if ( alicalc != null )
 			alicalc.interrupt();
 		notifyCalcFinished();

@@ -49,6 +49,8 @@ import org.biojava.nbio.structure.align.ce.ConfigStrucAligParams;
 import org.biojava.nbio.structure.align.multiple.mc.MultipleMcMain;
 import org.biojava.nbio.structure.align.webstart.AligUIManager;
 import org.biojava.nbio.structure.gui.util.SelectMultiplePanel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A JFrame that allows to trigger a multiple structure alignment,
@@ -63,7 +65,7 @@ import org.biojava.nbio.structure.gui.util.SelectMultiplePanel;
  *
  */
 public class MultipleAlignmentGUI extends JFrame {
-
+	private static final Logger LOGGER = LoggerFactory.getLogger(MultipleAlignmentGUI.class);
 	private final static long serialVersionUID =0l;
 	private final static String version = "1.0";
 
@@ -288,7 +290,7 @@ public class MultipleAlignmentGUI extends JFrame {
 			List<Structure> structures = tab.getStructures();
 
 			if ( structures.size() < 2) {
-				System.err.println("please input more than 1 structure");
+				LOGGER.error("please input more than 1 structure");
 				return;
 			}
 
@@ -298,7 +300,7 @@ public class MultipleAlignmentGUI extends JFrame {
 			for (StructureIdentifier name:names){
 				message += name.getIdentifier() + " ";
 			}
-			System.out.println(message);
+			LOGGER.info(message);
 
 			alicalc = new MultipleAlignmentCalc(this, structures, names);
 
@@ -324,7 +326,7 @@ public class MultipleAlignmentGUI extends JFrame {
 	}
 
 	private void abortCalc(){
-		System.err.println("Interrupting alignment ...");
+		LOGGER.error("Interrupting alignment ...");
 		if (alicalc != null) alicalc.interrupt();
 		notifyCalcFinished();
 	}

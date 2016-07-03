@@ -29,6 +29,8 @@ import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.align.gui.jmol.JmolPanel;
 import org.biojava.nbio.structure.gui.util.MenuCreator;
 import org.biojava.nbio.structure.io.PDBFileReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -44,6 +46,8 @@ import java.awt.event.*;
  *
  */
 public class BiojavaJmol  {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(BiojavaJmol.class);
 
 	public static final String viewer       = "org.jmol.api.JmolSimpleViewer";
 	public static final String adapter      = "org.jmol.api.JmolAdapter";
@@ -153,7 +157,7 @@ public class BiojavaJmol  {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("reset!!");
+				LOGGER.info("reset!!");
 				jmolPanel.executeCmd("restore STATE state_1");
 
 			}
@@ -213,7 +217,7 @@ public class BiojavaJmol  {
 
 	public void evalString(String rasmolScript){
 		if ( jmolPanel == null ){
-			System.err.println("please install Jmol first");
+			LOGGER.warn("please install Jmol first");
 			return;
 		}
 		jmolPanel.evalString(rasmolScript);
@@ -222,7 +226,7 @@ public class BiojavaJmol  {
 	public void setStructure(Structure s) {
 
 		if ( jmolPanel == null ){
-			System.err.println("please install Jmol first");
+			LOGGER.warn("please install Jmol first");
 			return;
 		}
 

@@ -35,6 +35,8 @@ import org.biojava.nbio.structure.align.fatcat.FatCat;
 import org.biojava.nbio.structure.align.model.AFP;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.util.AFPAlignmentDisplay;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -47,7 +49,7 @@ import java.util.List;
 public class FatCatAligner
 {
 
-	public static final boolean debug = false;
+	private static final Logger LOGGER = LoggerFactory.getLogger(FatCatAligner.class);
 	public static final boolean printTimeStamps = false;
 
 	AFPChain afpChain ;
@@ -88,7 +90,7 @@ public class FatCatAligner
 		long cend = System.currentTimeMillis();
 
 		if (printTimeStamps)
-			System.out.println("calculation took:" + (cend - tstart) + " ms.");
+			LOGGER.info("calculation took:" + (cend - tstart) + " ms.");
 
 
 		AFPCalculator.sortAfps(afpChain,ca1,ca2);
@@ -97,7 +99,7 @@ public class FatCatAligner
 			long send = System.currentTimeMillis();
 
 
-			System.out.println("sorting  took:" + (send - cend) + " ms.");
+			LOGGER.info("sorting  took:" + (send - cend) + " ms.");
 		}
 
 		if ( doRigid)
@@ -111,7 +113,7 @@ public class FatCatAligner
 		long end = System.currentTimeMillis();
 		afpChain.setCalculationTime(end-tstart);
 		if ( printTimeStamps)
-			System.out.println("TOTAL calc time: " + (end -tstart) / 1000.0);
+			LOGGER.info("TOTAL calc time: " + (end -tstart) / 1000.0);
 
 	}
 
@@ -139,17 +141,14 @@ public class FatCatAligner
 
 		List<AFP> afpSet = afpChain.getAfpSet();
 
-		if (debug)
-			System.out.println("entering chainAfp");
+		LOGGER.debug("entering chainAfp");
 		int afpNum = afpSet.size();
 
 		if ( afpNum < 1)
 			return new Group[0];
 
 		long bgtime = System.currentTimeMillis();
-		if(debug)    {
-			System.out.println(String.format("total AFP %d\n", afpNum));
-		}
+		LOGGER.debug(String.format("total AFP %d\n", afpNum));
 
 		//run AFP chaining
 
@@ -164,10 +163,7 @@ public class FatCatAligner
 		} //very short alignment
 
 		long chaintime = System.currentTimeMillis();
-		if(debug)    {
-
-			System.out.println("Afp chaining: time " + (chaintime-bgtime));
-		}
+		LOGGER.info("Afp chaining: time " + (chaintime-bgtime));
 
 		// do post processing
 
@@ -202,17 +198,14 @@ public class FatCatAligner
 		//if(maxTra == 0)       probability = sig.calSigRigid(pro1Len, pro2Len, alignScore, totalRmsdOpt, optLength);
 		//else  probability = sig.calSigFlexi(pro1Len, pro2Len, alignScore, totalRmsdOpt, optLength, blockNum - 1);
 
-		if(debug)    {
-
 			long nowtime = System.currentTimeMillis();
 			long diff = nowtime - chaintime;
-			System.out.println("Alignment optimization: time "+ diff);
+			LOGGER.info("Alignment optimization: time "+ diff);
 
-			System.out.println("score:      " + afpChain.getAlignScore());
-			System.out.println("opt length: " + afpChain.getOptLength());
-			System.out.println("opt rmsd:   "+ afpChain.getTotalRmsdOpt());
+			LOGGER.info("score:      " + afpChain.getAlignScore());
+			LOGGER.info("opt length: " + afpChain.getOptLength());
+			LOGGER.info("opt rmsd:   "+ afpChain.getTotalRmsdOpt());
 
-		}
 		return twistedPDB;
 
 	}

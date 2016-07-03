@@ -31,6 +31,8 @@ import org.biojava.nbio.core.sequence.location.template.Location;
 import org.biojava.nbio.core.sequence.location.template.Point;
 import org.biojava.nbio.core.sequence.template.AbstractSequence;
 import org.biojava.nbio.core.sequence.template.Compound;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -48,7 +50,7 @@ import java.util.regex.Pattern;
  * @author Paolo Pavan
  */
 public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
-
+	private static final Logger LOGGER = LoggerFactory.getLogger(InsdcParser.class);
 	private final DataSource dataSource;
 
 		/**
@@ -313,7 +315,7 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
 
 		for (String s: testStrings){
 			Location l = p.parse(s);
-			System.out.println(l.toString());
+			LOGGER.info(l.toString());
 		}
 
 	}

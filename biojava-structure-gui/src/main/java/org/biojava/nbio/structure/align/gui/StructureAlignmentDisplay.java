@@ -34,8 +34,12 @@ import org.biojava.nbio.structure.align.fatcat.FatCatRigid;
 import org.biojava.nbio.structure.align.gui.jmol.StructureAlignmentJmol;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.jama.Matrix;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class StructureAlignmentDisplay {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(StructureAlignmentDisplay.class);
 
 	/** Display an AFPChain alignment
 	 *
@@ -73,7 +77,7 @@ public class StructureAlignmentDisplay {
 
 		if ( afpChain.getBlockRotationMatrix().length == 0 ) {
 			// probably the alignment is too short!
-			System.err.println("No rotation matrix found to rotate 2nd structure!");
+			LOGGER.error("No rotation matrix found to rotate 2nd structure!");
 			afpChain.setBlockRotationMatrix(new Matrix[]{Matrix.identity(3, 3)});
 			afpChain.setBlockShiftVector(new Atom[]{new AtomImpl()});
 		}

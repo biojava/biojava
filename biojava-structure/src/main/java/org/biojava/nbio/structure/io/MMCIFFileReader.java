@@ -26,6 +26,8 @@ import org.biojava.nbio.structure.align.util.UserConfiguration;
 import org.biojava.nbio.structure.io.mmcif.MMcifParser;
 import org.biojava.nbio.structure.io.mmcif.SimpleMMcifConsumer;
 import org.biojava.nbio.structure.io.mmcif.SimpleMMcifParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -51,7 +53,7 @@ public static void main(String[] args) throws Exception {
  */
 public class MMCIFFileReader extends LocalPDBDirectory {
 
-	//private static final Logger logger = LoggerFactory.getLogger(MMCIFFileReader.class);
+	private static final Logger logger = LoggerFactory.getLogger(MMCIFFileReader.class);
 
 	public static final String[] MMCIF_SPLIT_DIR    = new String[]{"data","structures","divided" ,"mmCIF"};
 	public static final String[] MMCIF_OBSOLETE_DIR = new String[]{"data","structures","obsolete","mmCIF"};
@@ -66,8 +68,8 @@ public class MMCIFFileReader extends LocalPDBDirectory {
 
 
 		Structure struc = reader.getStructureById("1m4x");
-		System.out.println(struc);
-		System.out.println(struc.toPDB());
+		logger.info(struc.toString());
+		logger.info(struc.toPDB());
 
 
 	}

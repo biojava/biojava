@@ -22,6 +22,8 @@ package org.biojava.nbio.survival.cox;
 
 
 import org.biojava.nbio.survival.data.WorkSheet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 
@@ -33,6 +35,8 @@ import java.util.ArrayList;
  * @author Scooter Willis <willishf at gmail dot com>
  */
 public class CoxHelper {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(CoxHelper.class);
 
 	/**
 	 *
@@ -162,8 +166,7 @@ public class CoxHelper {
 
 			  //  ci.dump();
 
-				System.out.println(ci);
-				System.out.println();
+				LOGGER.info(ci.toString());
 
 				CoxCC.process(ci);
 

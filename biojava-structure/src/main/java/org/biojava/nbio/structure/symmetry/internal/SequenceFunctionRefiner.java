@@ -35,6 +35,8 @@ import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.util.AlignmentTools;
 import org.biojava.nbio.structure.symmetry.utils.SymmetryTools;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Creates a refined alignment with the CE-Symm alternative self-alignment.
@@ -47,6 +49,8 @@ import org.biojava.nbio.structure.symmetry.utils.SymmetryTools;
  *
  */
 public class SequenceFunctionRefiner implements SymmetryRefiner {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(SequenceFunctionRefiner.class);
 
 	@Override
 	public MultipleAlignment refine(AFPChain selfAlignment, Atom[] atoms,
@@ -182,11 +186,11 @@ public class SequenceFunctionRefiner implements SymmetryRefiner {
 
 			Map<Integer, Double> virginScores = initializeScores(alignment, null, k);
 			if (scores.size() != virginScores.size()) {
-				System.out.println("Size missmatch");
+				LOGGER.info("Size missmatch");
 			} else {
 				for (Integer key : scores.keySet()) {
 					if (!virginScores.containsKey(key) || !scores.get(key).equals(virginScores.get(key))) {
-						System.out.format("Mismatch %d -> %f/%f%n", key, scores.get(key), virginScores.get(key));
+						LOGGER.info(String.format("Mismatch %d -> %f/%f%n", key, scores.get(key), virginScores.get(key)));
 					}
 				}
 			}

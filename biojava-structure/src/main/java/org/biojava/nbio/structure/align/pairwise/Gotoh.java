@@ -26,6 +26,8 @@ package org.biojava.nbio.structure.align.pairwise;
 import org.biojava.nbio.structure.align.helper.AligMatEl;
 import org.biojava.nbio.structure.align.helper.GapArray;
 import org.biojava.nbio.structure.align.helper.IndexPair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +39,8 @@ import java.util.List;
  * @version %I% %G%
  */
 public class Gotoh {
+	private static final Logger LOGGER = LoggerFactory.getLogger(Gotoh.class);
+
 	public static int ALIGFACTOR = 1000; // constant to shift floats to ints
 
 	Alignable a;
@@ -129,7 +133,7 @@ public class Gotoh {
 
 				if (currentGap.getValue() > currentCell.getValue()){
 					if ( currentGap.getIndex() >= rowDim)
-						System.err.println("col gap at" + rowCounter + " " + colCounter + " to " + currentGap.getIndex());
+						LOGGER.warn("col gap at" + rowCounter + " " + colCounter + " to " + currentGap.getIndex());
 					currentCell.setValue( currentGap.getValue());
 					currentCell.setRow((short)currentGap.getIndex());
 					currentCell.setCol((short)colCounter);
@@ -153,7 +157,7 @@ public class Gotoh {
 
 				if ( currentGap.getValue() > currentCell.getValue() ) {
 					if ( currentGap.getIndex() >= colDim)
-						System.err.println("row gap at" + rowCounter + " " + colCounter + " to " + currentGap.getIndex());
+						LOGGER.warn("row gap at" + rowCounter + " " + colCounter + " to " + currentGap.getIndex());
 					currentCell.setValue(currentGap.getValue());
 					currentCell.setRow((short)rowCounter);
 					currentCell.setCol((short)currentGap.getIndex());
@@ -240,19 +244,19 @@ public class Gotoh {
 
 					e.printStackTrace();
 					for (int f=0; f< n;f++){
-						System.out.println(backId[f]);
+						LOGGER.info(backId[f].toString());
 					}
 
 				}
 
 				if ( el == null)
-					System.out.println("el = null! x:"+ x + " y " + y);
+					LOGGER.info("el = null! x:"+ x + " y " + y);
 				backId[n] = el;
 			} catch (Exception e){
 				e.printStackTrace();
-				System.out.println("x " + x);
-				System.out.println("y " + y);
-				System.out.println(backId[n-2]);
+				LOGGER.error("x " + x);
+				LOGGER.error("y " + y);
+				LOGGER.error(backId[n-2].toString());
 				System.exit(0);
 			}
 			// get diagonal indeces into path

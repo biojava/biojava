@@ -21,6 +21,9 @@
 
 package org.biojava.nbio.structure.symmetry.geometry;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.vecmath.Matrix3d;
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
@@ -32,6 +35,8 @@ import javax.vecmath.Vector3d;
  * @author Peter
  */
 public final class SuperPositionQCP {
+	private static final Logger LOGGER = LoggerFactory.getLogger(SuperPositionQCP.class);
+
 	double evecprec = 1d-6;
 	double evalprec = 1d-11;
 
@@ -290,7 +295,7 @@ public final class SuperPositionQCP {
 
 
 		if (i == 50)
-			System.err.println("More than %d iterations needed!" + i);
+			LOGGER.warn("More than %d iterations needed!" + i);
 
 		/* the fabs() is to guard against extremely small, but *negative* numbers due to floating point error */
 		rmsd = Math.sqrt(Math.abs(2.0 * (e0 - mxEigenV)/len));
@@ -378,7 +383,7 @@ public final class SuperPositionQCP {
 		q3 /= normq;
 		q4 /= normq;
 
-		System.out.println("q: " + q1 + " " + q2 + " " + q3 + " " + q4);
+		LOGGER.info("q: " + q1 + " " + q2 + " " + q3 + " " + q4);
 
 		double a2 = q1 * q1;
 		double x2 = q2 * q2;

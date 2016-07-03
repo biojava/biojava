@@ -20,6 +20,9 @@
  */
 package org.biojava.nbio.structure.domain.pdp;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +30,7 @@ import java.util.List;
 
 public class ClusterDomains {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(ClusterDomains.class);
 
 	static private boolean verbose = CutDomain.verbose;
 
@@ -66,7 +70,7 @@ public class ClusterDomains {
 					Domain d1 = domains.get(i);
 					Domain d2 = domains.get(j);
 					long total_contacts = getTotalContacts(domains,pdpDistMatrix,d1,d2);
-					System.out.println(" pos: d1:" + i + " vs d2:" +j + " d1:" + d1.getSegmentAtPos(0).getFrom() + "-" + d1.getSegmentAtPos(0).getTo() + " " +  d2.getSegmentAtPos(0).getFrom() + "-" + d2.getSegmentAtPos(0).getTo() + " " + total_contacts);
+					LOGGER.info(" pos: d1:" + i + " vs d2:" +j + " d1:" + d1.getSegmentAtPos(0).getFrom() + "-" + d1.getSegmentAtPos(0).getTo() + " " +  d2.getSegmentAtPos(0).getFrom() + "-" + d2.getSegmentAtPos(0).getTo() + " " + total_contacts);
 					int size1dom1=domains.get(i).size;
 					int size2dom2=domains.get(j).size;
 					double minDomSize=Math.min(size1dom1,size2dom2);
@@ -99,9 +103,9 @@ public class ClusterDomains {
 					 */
 
 					double S_value= total_contacts/(double)total_max_contacts;
-					if(verbose) System.out.println(String.format(" size1=%d size2=%d minDomSize=%5.2f maxDomSize=%5.2f total_contacts = %d ", size1,size2,minDomSize,maxDomSize,total_contacts));
-					if(verbose) System.out.println(String.format(" total_contacts = %d total_max_contacts = %d", total_contacts, total_max_contacts));
-					if(verbose) System.out.println(String.format(" maximum_value = %f S_value = %f\n",maximum_value, S_value));
+					if(verbose) LOGGER.info(String.format(" size1=%d size2=%d minDomSize=%5.2f maxDomSize=%5.2f total_contacts = %d ", size1,size2,minDomSize,maxDomSize,total_contacts));
+					if(verbose) LOGGER.info(String.format(" total_contacts = %d total_max_contacts = %d", total_contacts, total_max_contacts));
+					if(verbose) LOGGER.info(String.format(" maximum_value = %f S_value = %f\n",maximum_value, S_value));
 
 					if (S_value > maximum_value) {
 						maximum_value = S_value;
@@ -124,18 +128,18 @@ public class ClusterDomains {
 			}
 
 			if ( verbose) {
-				System.out.println("Check for combining: " + maximum_value  + " 1 :" + PDPParameters.CUT_OFF_VALUE1);
-				System.out.println("                     " + maximum_valuem + " 1M:" + PDPParameters.CUT_OFF_VALUE1M );
-				System.out.println("                     " + maximum_values + " 1S:" + PDPParameters.CUT_OFF_VALUE1S);
+				LOGGER.info("Check for combining: " + maximum_value  + " 1 :" + PDPParameters.CUT_OFF_VALUE1);
+				LOGGER.info("                     " + maximum_valuem + " 1M:" + PDPParameters.CUT_OFF_VALUE1M );
+				LOGGER.info("                     " + maximum_values + " 1S:" + PDPParameters.CUT_OFF_VALUE1S);
 			}
 
 			if (maximum_value > PDPParameters.CUT_OFF_VALUE1) {
 				/*
 			avd=(domains.get(Si).avd+domains.get(Sj).avd)/2;
 				 */
-				if(verbose) System.out.println(" Criteria 1 matched");
-				if(verbose) System.out.println(String.format(" maximum_value = %f", maximum_value));
-				if(verbose) System.out.println(String.format(" Si = %d Sj = %d ", Si, Sj));
+				if(verbose) LOGGER.info(" Criteria 1 matched");
+				if(verbose) LOGGER.info(String.format(" maximum_value = %f", maximum_value));
+				if(verbose) LOGGER.info(String.format(" Si = %d Sj = %d ", Si, Sj));
 				domains = combine(domains,Si, Sj, maximum_value);
 				maximum_value = PDPParameters.CUT_OFF_VALUE1-.1;
 				maximum_values = PDPParameters.CUT_OFF_VALUE1S-.1;
@@ -144,16 +148,16 @@ public class ClusterDomains {
 			domains.get(Si).avd=domcont(domains.get(Si));
 			domains.get(Sj).avd=domcont(domains.get(Sj));
 				 */
-				if(verbose) System.out.println(String.format(" Listing the domains after combining..."));
+				if(verbose) LOGGER.info(String.format(" Listing the domains after combining..."));
 				if(verbose) listdomains (domains);
 			}
 			else if (maximum_valuem > PDPParameters.CUT_OFF_VALUE1M) {
 				/*
 			avd=(domains[Sim].avd+domains[Sjm].avd)/2;
 				 */
-				if(verbose) System.out.println(" Criteria 2 matched");
-				if(verbose) System.out.println(String.format(" maximum_values = %f", maximum_valuem));
-				if(verbose) System.out.println(String.format(" Sim = %d Sjm = %d", Sim, Sjm));
+				if(verbose) LOGGER.info(" Criteria 2 matched");
+				if(verbose) LOGGER.info(String.format(" maximum_values = %f", maximum_valuem));
+				if(verbose) LOGGER.info(String.format(" Sim = %d Sjm = %d", Sim, Sjm));
 				domains = combine(domains, Sim, Sjm, maximum_valuem);
 				maximum_value =  PDPParameters.CUT_OFF_VALUE1-.1;
 				maximum_values = PDPParameters.CUT_OFF_VALUE1S-.1;
@@ -162,16 +166,16 @@ public class ClusterDomains {
 			domains[Sim].avd=domcont(domains[Sim]);
 			domains[Sjm].avd=domcont(domains[Sjm]);
 				 */
-				if(verbose) System.out.println(String.format(" Listing the domains after combining..."));
+				if(verbose) LOGGER.info(String.format(" Listing the domains after combining..."));
 				if(verbose) listdomains (domains);
 			}
 			else if (maximum_values > PDPParameters.CUT_OFF_VALUE1S) {
 				/*
 			avd=(domains[Sis].avd+domains[Sjs].avd)/2;
 				 */
-				if(verbose) System.out.println(" Criteria 3 matched");
-				if(verbose) System.out.println(String.format(" maximum_values = %f", maximum_values));
-				if(verbose) System.out.println(String.format(" Sis = %d Sjs = %d", Sis, Sjs));
+				if(verbose) LOGGER.info(" Criteria 3 matched");
+				if(verbose) LOGGER.info(String.format(" maximum_values = %f", maximum_values));
+				if(verbose) LOGGER.info(String.format(" Sis = %d Sjs = %d", Sis, Sjs));
 				domains = combine(domains, Sis, Sjs, maximum_values);
 				maximum_value = PDPParameters.CUT_OFF_VALUE1-.1;
 				maximum_values = PDPParameters.CUT_OFF_VALUE1S-.1;
@@ -180,11 +184,11 @@ public class ClusterDomains {
 			domains[Sis].avd=domcont(domains[Sis]);
 			domains[Sjs].avd=domcont(domains[Sjs]);
 				 */
-				if(verbose) System.out.println(String.format(" Listing the domains after combining..."));
+				if(verbose) LOGGER.info(String.format(" Listing the domains after combining..."));
 				if(verbose) listdomains(domains);
 			}
 			else {
-				if(verbose) System.out.println(String.format(" Maximum value is less than cut off value. (max:" + maximum_value+")" ));
+				if(verbose) LOGGER.info(String.format(" Maximum value is less than cut off value. (max:" + maximum_value+")" ));
 				maximum_value = -1.0;
 				maximum_values = -1.0;
 				maximum_valuem = -1.0;
@@ -192,7 +196,7 @@ public class ClusterDomains {
 			}
 		} while ( maximum_value > 0.0||maximum_values>0.0||maximum_valuem>0.0);
 
-		if(verbose) System.out.println(String.format(" The domains are:"));
+		if(verbose) LOGGER.info(String.format(" The domains are:"));
 		if(verbose) listdomains(domains);
 		return domains;
 	}
@@ -224,7 +228,7 @@ public class ClusterDomains {
 	private static List<Domain> combine(List<Domain> domains,int Si, int Sj, double maximum_value) {
 
 		if ( verbose)
-			System.out.println("  +++  combining domains " + Si + " " + Sj);
+			LOGGER.info("  +++  combining domains " + Si + " " + Sj);
 
 		List<Domain> newdoms = new ArrayList<Domain>();
 
@@ -273,11 +277,11 @@ public class ClusterDomains {
 		int i = -1;
 		for ( Domain dom : domains){
 			i++;
-			System.out.println("DOMAIN:" + i + " size:" + dom.size + " " +  dom.score);
+			LOGGER.info("DOMAIN:" + i + " size:" + dom.size + " " +  dom.score);
 			List<Segment> segments = dom.getSegments();
 
 			for ( Segment s : segments){
-				System.out.println("   Segment: " + s);
+				LOGGER.info("   Segment: " + s);
 
 			}
 		}

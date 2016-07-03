@@ -21,6 +21,8 @@
 package org.biojava.nbio.structure.align.gui;
 
 import org.biojava.nbio.structure.align.ce.ConfigStrucAligParams;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -50,6 +52,8 @@ import java.util.List;
  *
  */
 public class ParameterGUI extends JFrame{
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(ParameterGUI.class);
 
 	private static final long serialVersionUID = 723386061184110161L;
 
@@ -248,7 +252,7 @@ public class ParameterGUI extends JFrame{
 			String key  = keys.get(i);
 			// String name = keys.get(i);
 			String value = null;
-			System.out.println(key);
+			LOGGER.info(key);
 			if( type.isEnum() ) {
 				JComboBox field = (JComboBox)  textFields.get(i);
 				Enum sel = (Enum)field.getSelectedItem();
@@ -268,7 +272,7 @@ public class ParameterGUI extends JFrame{
 			setValue(key, type, value);
 		}
 
-		System.out.println("new parameters: " + params.toString());
+		LOGGER.info("new parameters: " + params.toString());
 
 	}
 
@@ -301,7 +305,7 @@ public class ParameterGUI extends JFrame{
 			}
 
 			if (data == null){
-				System.err.println("Could not set value " + value +
+				LOGGER.error("Could not set value " + value +
 						" for field " + name);
 				return;
 			}

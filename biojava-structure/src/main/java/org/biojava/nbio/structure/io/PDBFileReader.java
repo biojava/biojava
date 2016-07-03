@@ -29,6 +29,9 @@ import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.EntityInfo;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -96,7 +99,7 @@ import java.util.List;
  */
 public class PDBFileReader extends LocalPDBDirectory {
 
-	//private static final Logger logger = LoggerFactory.getLogger(PDBFileReader.class);
+	private static final Logger logger = LoggerFactory.getLogger(PDBFileReader.class);
 
 	// a list of big pdb files for testing
 	//  "1htq",
@@ -144,22 +147,22 @@ public class PDBFileReader extends LocalPDBDirectory {
 		try{
 
 			Structure struc = pdbreader.getStructureById("193D");
-			System.out.println(struc);
+			logger.info(struc.toString());
 
 			List<EntityInfo>	compounds = struc.getEntityInfos();
 			for (EntityInfo comp : compounds  ){
 				List<Chain> chains = comp.getChains();
-				System.out.print(">Chains :" );
+				logger.info(">Chains :" );
 				for (Chain c : chains){
-					System.out.print(c.getId() + " " );
+					logger.info(c.getId() + " " );
 				}
-				System.out.println();
+				logger.info("\n");
 				if ( chains.size() > 0)	{
-					System.out.println(chains.get(0).getAtomSequence());
-					System.out.println(chains.get(0).getSeqResSequence());
-					
+					logger.info(chains.get(0).getAtomSequence());
+					logger.info(chains.get(0).getSeqResSequence());
 
-					System.out.println(" ");
+
+					logger.info(" ");
 				}
 			}
 

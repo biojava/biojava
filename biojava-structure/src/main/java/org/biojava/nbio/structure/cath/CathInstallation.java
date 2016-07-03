@@ -26,6 +26,8 @@ package org.biojava.nbio.structure.cath;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
 import org.biojava.nbio.structure.io.util.FileDownloadUtils;
 import org.biojava.nbio.core.util.InputStreamProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.URL;
@@ -40,7 +42,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author Daniel Asarnow
  */
 public class CathInstallation implements CathDatabase{
-
+	private static final Logger LOGGER = LoggerFactory.getLogger(CathInstallation.class);
 	public static final String DEFAULT_VERSION = CathFactory.DEFAULT_VERSION;
 
 	String cathVersion;
@@ -653,7 +655,7 @@ public class CathInstallation implements CathDatabase{
 			disp = disp / 1024.0;
 		}
 		long timeE = System.currentTimeMillis();
-		System.out.println("downloaded " + String.format("%.1f",disp) + unit  + " in " + (timeE - timeS)/1000 + " sec.");
+		LOGGER.info("downloaded " + String.format("%.1f",disp) + unit  + " in " + (timeE - timeS)/1000 + " sec.");
 	}
 
 	private boolean domainDescriptionFileAvailable(){

@@ -32,6 +32,8 @@ import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.util.AFPChainScorer;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.jama.Matrix;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -53,7 +55,7 @@ import java.util.Scanner;
  *
  */
 public class OptimalCECPMain extends CeMain {
-	private static final boolean debug = true;
+	private static final Logger LOGGER = LoggerFactory.getLogger(OptimalCECPMain.class);
 
 
 	public static final String algorithmName = "jCE Optimal Circular Permutation";
@@ -482,15 +484,13 @@ public class OptimalCECPMain extends CeMain {
 		AFPChain unaligned = super.align(ca1, ca2, param);
 		AFPChain bestAlignment = unaligned;
 
-		if(debug) {
-			// print progress bar header
-			System.out.print("|");
-			for(int cp=1;cp<ca2.length-1;cp++) {
-				System.out.print("=");
-			}
-			System.out.println("|");
-			System.out.print(".");
+		// print progress bar header
+		LOGGER.debug("|");
+		for (int cp = 1; cp < ca2.length - 1; cp++) {
+			LOGGER.debug("=");
 		}
+		LOGGER.debug("|");
+		LOGGER.debug(".");
 
 		if(alignments != null) {
 			alignments[0] = unaligned;
@@ -504,7 +504,7 @@ public class OptimalCECPMain extends CeMain {
 			AFPChain currentAlignment = alignPermuted(ca1,ca2p,param,cp);
 
 			// increment progress bar
-			if(debug) System.out.print(".");
+			LOGGER.debug(".");
 
 			// fix up names, since cloning ca2 wipes it
 
@@ -522,12 +522,10 @@ public class OptimalCECPMain extends CeMain {
 				bestAlignment = currentAlignment;
 			}
 		}
-		if(debug) {
-			long elapsedTime = System.currentTimeMillis()-startTime;
-			System.out.println();
-			System.out.format("%d alignments took %.4f s (%.1f ms avg)\n",
-					ca2.length, elapsedTime/1000., (double)elapsedTime/ca2.length);
-		}
+		long elapsedTime = System.currentTimeMillis() - startTime;
+		LOGGER.debug("\n");
+		LOGGER.debug("%d alignments took %.4f s (%.1f ms avg)\n",
+				ca2.length, elapsedTime / 1000., (double) elapsedTime / ca2.length);
 
 
 		return bestAlignment;
@@ -582,18 +580,18 @@ public class OptimalCECPMain extends CeMain {
 			// find optimal solution
 			AFPChain[] alignments = new AFPChain[ca2.length];
 			afpChain = ce.alignOptimal(ca1, ca2, params, alignments);
-			System.out.format("Optimal Score: %.2f\n", afpChain.getAlignScore());
+			LOGGER.info("Optimal Score: %.2f\n", afpChain.getAlignScore());
 
-			System.out.println("Pos\tScore\tTMScore\tLen\tRMSD\tBlocks");
+			LOGGER.info("Pos\tScore\tTMScore\tLen\tRMSD\tBlocks");
 			for(int i = 0; i< alignments.length; i++) {
 				double tm = AFPChainScorer.getTMScore(alignments[i], ca1, ca2);
-				System.out.format("%d\t%.2f\t%.2f\t%d\t%.2f\t%d\n",
+				LOGGER.info(String.format("%d\t%.2f\t%.2f\t%d\t%.2f\t%d\n",
 						i,
 						alignments[i].getAlignScore(),
 						tm,
 						alignments[i].getOptLength(),
 						alignments[i].getTotalRmsdOpt(),
-						alignments[i].getBlockNum()
+						alignments[i].getBlockNum())
 				);
 			}
 
@@ -616,7 +614,7 @@ public class OptimalCECPMain extends CeMain {
 
 			System.out.println("Inspect additional alignments?");
 			Scanner scanner = new Scanner(System.in);
-			System.out.print("CP location [0,"+ca2.length+"): ");
+			System.out.println("CP location [0,"+ca2.length+"): ");
 			while(scanner.hasNext()) {
 				if(scanner.hasNextInt()) {
 					int cp = scanner.nextInt();
@@ -630,7 +628,7 @@ public class OptimalCECPMain extends CeMain {
 				} else {
 					//String next = scanner.nextLine();
 				}
-				System.out.print("CP location [0,"+ca2.length+"): ");
+				System.out.println("CP location [0,"+ca2.length+"): ");
 			}
 			scanner.close();
 
@@ -657,9 +655,9 @@ public class OptimalCECPMain extends CeMain {
 		Atom[] ca1clone = StructureTools.cloneAtomArray(ca1);
 		Atom[] ca2clone = StructureTools.cloneAtomArray(ca2);
 		if (! GuiWrapper.isGuiModuleInstalled()) {
-			System.err.println("The biojava-structure-gui and/or JmolApplet modules are not installed. Please install!");
+			LOGGER.error("The biojava-structure-gui and/or JmolApplet modules are not installed. Please install!");
 			// display alignment in console
-			System.out.println(afpChain.toCE(ca1clone, ca2clone));
+			LOGGER.info(afpChain.toCE(ca1clone, ca2clone));
 		} else {
 			Object jmol = GuiWrapper.display(afpChain,ca1clone,ca2clone);
 			GuiWrapper.showAlignmentImage(afpChain, ca1clone,ca2clone,jmol);

@@ -23,6 +23,8 @@ package org.biojava.nbio.survival.cox;
 import org.biojava.nbio.survival.cox.stats.ChiSq;
 import org.biojava.nbio.survival.kaplanmeier.figure.ExpressionFigure;
 import org.biojava.nbio.survival.kaplanmeier.figure.KaplanMeierFigure;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -36,6 +38,7 @@ import java.util.LinkedHashMap;
  */
 public class CoxInfo {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(CoxInfo.class);
 	private WaldTestInfo waldTestInfo = null;
 	String message = "";
 	Integer maxIterations = null;
@@ -357,60 +360,60 @@ public class CoxInfo {
 		//       Collections.sort(orderedSurvivalInfoList,sicSort);
 
 
-		System.out.println();
-		System.out.println("$coef");
+		LOGGER.info("\n");
+		LOGGER.info("$coef");
 		for (CoxCoefficient coe : coefficientsList.values()) {
-			System.out.print(coe.getCoeff() + " ");
+			LOGGER.info(coe.getCoeff() + " ");
 		}
-		System.out.println();
-		System.out.println("$means");
+		LOGGER.info("\n");
+		LOGGER.info("$means");
 
 		for (CoxCoefficient coe : coefficientsList.values()) {
-			System.out.print(coe.getMean() + " ");
+			LOGGER.info(coe.getMean() + " ");
 		}
-		System.out.println();
-		System.out.println("$u");
+		LOGGER.info("\n");
+		LOGGER.info("$u");
 
 		for (double d : u) {
-			System.out.print(d + " ");
+			LOGGER.info(d + " ");
 		}
 
-		System.out.println();
-		System.out.println("$imat");
+		LOGGER.info("\n");
+		LOGGER.info("$imat");
 		for (int i = 0; i < imat.length; i++) {
 			for (int j = 0; j < imat[0].length; j++) {
-				System.out.print(imat[i][j] + " ");
+				LOGGER.info(imat[i][j] + " ");
 			}
-			System.out.println();
+			LOGGER.info("\n");
 		}
 
 		if (this.naive_imat != null) {
-			System.out.println("$naive_imat");
+			LOGGER.info("$naive_imat");
 			for (int i = 0; i < naive_imat.length; i++) {
 				for (int j = 0; j < naive_imat[0].length; j++) {
-					System.out.print(naive_imat[i][j] + " ");
+					LOGGER.info(naive_imat[i][j] + " ");
 				}
-				System.out.println();
+				LOGGER.info("\n");
 			}
 		}
 
-		System.out.println();
-		System.out.println("$loglik");
+		LOGGER.info("\n");
+		LOGGER.info("$loglik");
 
-		System.out.println(loglikInit + " " + loglikFinal);
+		LOGGER.info(loglikInit + " " + loglikFinal);
 
-		System.out.println();
-		System.out.println("$sctest");
+		LOGGER.info("\n");
+		LOGGER.info("$sctest");
 
-		System.out.println(this.scoreLogrankTest);
+		LOGGER.info(String.valueOf(this.scoreLogrankTest));
 
-		System.out.println("$iter");
-		System.out.println(this.iterations);
+		LOGGER.info("$iter");
+		LOGGER.info(String.valueOf(this.iterations));
 
-		System.out.println("$flag");
-		System.out.println(flag);
+		LOGGER.info("$flag");
+		LOGGER.info(String.valueOf(flag));
 
-		System.out.println();
+		LOGGER.info("\n");
 //        if (false) {
 //            System.out.println("ID      LP       Score      Residuals");
 //            for (SurvivalInfo si : orderedSurvivalInfoList) {

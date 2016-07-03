@@ -20,6 +20,9 @@
  */
 package org.biojava.nbio.structure.rcsb;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
@@ -33,6 +36,8 @@ import java.util.*;
  *  @since 4.2.0
  */
 public class PdbIdLists {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(PdbIdLists.class);
 
 	/** get the list of current PDB IDs
 	 *
@@ -279,13 +284,13 @@ public class PdbIdLists {
 
 	public static void main(String[] args){
 		try {
-			System.out.println("Current PDB status: " + getCurrentPDBIds().size());
-			System.out.println("Virus structures: " + getAllViruses().size());
-			System.out.println("NMR structures: " + getNMRStructures().size());
-			System.out.println("Gag-polyproteins: " + getGagPolyproteins().size());
-			System.out.println("Transmembrane proteins: " + getTransmembraneProteins().size());
-			System.out.println("Nucleotide: " + getNucleotides().size());
-			System.out.println("Ribosomes: " + getRibosomes().size());
+			LOGGER.info("Current PDB status: " + getCurrentPDBIds().size());
+			LOGGER.info("Virus structures: " + getAllViruses().size());
+			LOGGER.info("NMR structures: " + getNMRStructures().size());
+			LOGGER.info("Gag-polyproteins: " + getGagPolyproteins().size());
+			LOGGER.info("Transmembrane proteins: " + getTransmembraneProteins().size());
+			LOGGER.info("Nucleotide: " + getNucleotides().size());
+			LOGGER.info("Ribosomes: " + getRibosomes().size());
 		} catch ( Exception e){
 			e.printStackTrace();
 		}

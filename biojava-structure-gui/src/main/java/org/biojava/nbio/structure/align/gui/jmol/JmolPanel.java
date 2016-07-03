@@ -39,6 +39,7 @@ import org.jmol.api.JmolAdapter;
 import org.jmol.api.JmolStatusListener;
 import org.jmol.api.JmolViewer;
 import org.jmol.util.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -52,6 +53,8 @@ public class JmolPanel
 extends JPrintPanel
 implements ActionListener
 {
+	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(JmolPanel.class);
+
 	private static final long serialVersionUID = -3661941083797644242L;
 
 	private JmolViewer viewer;
@@ -255,7 +258,7 @@ implements ActionListener
 
 		List<ScopDomain> domains = scop.getDomainsForPDB(pdbId);
 		if ( domains == null) {
-			System.err.println("No SCOP domains found for " + pdbId);
+			LOGGER.error("No SCOP domains found for " + pdbId);
 			return;
 		}
 		int i = -1;
@@ -267,7 +270,7 @@ implements ActionListener
 			List<String>ranges = domain.getRanges();
 
 			for (String range : ranges){
-				if(verbose) System.out.println(range);
+				if(verbose) LOGGER.info(range);
 				String[] spl = range.split(":");
 				String script = " select  ";
 				if ( spl.length > 1 )
@@ -276,7 +279,7 @@ implements ActionListener
 					script += "*" + spl[0]+"/1;";
 				script += " color [" + c1.getRed() + ","+c1.getGreen() + "," +c1.getBlue()+"];";
 				script += " color cartoon [" + c1.getRed() + ","+c1.getGreen() + "," +c1.getBlue()+"] ;";
-				if(verbose) System.out.println(script);
+				if(verbose) LOGGER.info(script);
 				evalString(script);
 
 			}
@@ -286,7 +289,7 @@ implements ActionListener
 	}
 
 	private void colorByPDP() {
-		if(verbose) System.out.println("colorByPDP");
+		if(verbose) LOGGER.info("colorByPDP");
 		if ( structure == null)
 			return;
 
@@ -310,13 +313,13 @@ implements ActionListener
 					int end = s.getTo();
 					Group startG = ca[start].getGroup();
 					Group endG = ca[end].getGroup();
-					if(verbose) System.out.println("   Segment: " +startG.getResidueNumber() +":" + startG.getChainId() + " - " + endG.getResidueNumber()+":"+endG.getChainId() + " " + s);
+					if(verbose) LOGGER.info("   Segment: " +startG.getResidueNumber() +":" + startG.getChainId() + " - " + endG.getResidueNumber()+":"+endG.getChainId() + " " + s);
 					String j1 = startG.getResidueNumber()+"";
 					String j2 = endG.getResidueNumber()+":"+endG.getChainId();
 					String script = " select  " +j1 +"-" +j2 +"/1;";
 					script += " color [" + c1.getRed() + ","+c1.getGreen() + "," +c1.getBlue()+"];";
 					script += " color cartoon [" + c1.getRed() + ","+c1.getGreen() + "," +c1.getBlue()+"] ;";
-					if(verbose) System.out.println(script);
+					if(verbose) LOGGER.info(script);
 					evalString(script);
 				}
 

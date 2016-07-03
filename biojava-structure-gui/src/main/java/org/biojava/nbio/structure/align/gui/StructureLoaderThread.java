@@ -28,11 +28,15 @@ import org.biojava.nbio.structure.align.gui.jmol.StructureAlignmentJmol;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
 import org.biojava.nbio.structure.quaternary.BioAssemblyTools;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class StructureLoaderThread extends SwingWorker<String, Object> {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(StructureLoaderThread.class);
 
 	String name;
 	boolean showBiolAssembly;
@@ -49,7 +53,7 @@ public class StructureLoaderThread extends SwingWorker<String, Object> {
 	@Override
 	protected String doInBackground() {
 
-		System.out.println("loading " + name );
+		LOGGER.info("loading " + name );
 
 		AtomCache cache = new AtomCache(config.getPdbFilePath(),config.getCacheFilePath());
 		Structure s = null;
@@ -62,7 +66,7 @@ public class StructureLoaderThread extends SwingWorker<String, Object> {
 				if ( atomCount > 200000){
 					// uh oh, we are probably going to exceed 512 MB usage...
 					// scale down to something smaller
-					System.err.println("Structure very large. Reducing display to C alpha atoms only");
+					LOGGER.warn("Structure very large. Reducing display to C alpha atoms only");
 					s = BioAssemblyTools.getReducedStructure(s);
 				}
 
@@ -70,7 +74,7 @@ public class StructureLoaderThread extends SwingWorker<String, Object> {
 				s = cache.getStructure(name);
 			}
 
-			System.out.println("done loading structure...");
+			LOGGER.info("done loading structure...");
 
 
 			StructureAlignmentJmol jmol = new StructureAlignmentJmol();

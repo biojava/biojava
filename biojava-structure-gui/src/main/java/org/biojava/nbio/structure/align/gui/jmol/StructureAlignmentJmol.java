@@ -35,6 +35,8 @@ import org.biojava.nbio.structure.align.util.UserConfiguration;
 import org.biojava.nbio.structure.align.webstart.AligUIManager;
 import org.biojava.nbio.structure.gui.util.color.ColorUtils;
 import org.biojava.nbio.structure.jama.Matrix;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 
@@ -52,6 +54,8 @@ import java.util.List;
  *
  */
 public class StructureAlignmentJmol extends AbstractAlignmentJmol {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(StructureAlignmentJmol.class);
 
 	private Atom[] ca1;
 	private Atom[] ca2;
@@ -201,7 +205,7 @@ public class StructureAlignmentJmol extends AbstractAlignmentJmol {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("reset!!");
+				LOGGER.info("reset!!");
 				jmolPanel.executeCmd("restore STATE state_1");
 
 			}
@@ -310,7 +314,7 @@ public class StructureAlignmentJmol extends AbstractAlignmentJmol {
 		String cmd = e.getActionCommand();
 		if ( cmd.equals(MenuCreator.TEXT_ONLY)) {
 			if ( afpChain == null) {
-				System.err.println("Currently not viewing an alignment!");
+				LOGGER.error("Currently not viewing an alignment!");
 				return;
 			}
 			//Clone the AFPChain to not override the FatCat numbers in alnsymb
@@ -321,7 +325,7 @@ public class StructureAlignmentJmol extends AbstractAlignmentJmol {
 
 		} else if ( cmd.equals(MenuCreator.PAIRS_ONLY)) {
 			if ( afpChain == null) {
-				System.err.println("Currently not viewing an alignment!");
+				LOGGER.error("Currently not viewing an alignment!");
 				return;
 			}
 			String result = AfpChainWriter.toAlignedPairs(afpChain, ca1, ca2) ;
@@ -330,7 +334,7 @@ public class StructureAlignmentJmol extends AbstractAlignmentJmol {
 
 		} else if (cmd.equals(MenuCreator.ALIGNMENT_PANEL)){
 			if ( afpChain == null) {
-				System.err.println("Currently not viewing an alignment!");
+				LOGGER.error("Currently not viewing an alignment!");
 				return;
 			}
 			try {
@@ -342,7 +346,7 @@ public class StructureAlignmentJmol extends AbstractAlignmentJmol {
 
 		} else if (cmd.equals(MenuCreator.FATCAT_TEXT)){
 			if ( afpChain == null) {
-				System.err.println("Currently not viewing an alignment!");
+				LOGGER.error("Currently not viewing an alignment!");
 				return;
 			}
 			String result = afpChain.toFatcat(ca1, ca2) ;

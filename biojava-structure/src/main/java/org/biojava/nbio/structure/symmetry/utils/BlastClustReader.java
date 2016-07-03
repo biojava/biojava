@@ -20,6 +20,9 @@
  */
 package org.biojava.nbio.structure.symmetry.utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,6 +33,8 @@ import java.util.*;
 
 
 public class BlastClustReader implements Serializable {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(BlastClustReader.class);
 
 	private static final long serialVersionUID = 1L;
 
@@ -138,7 +143,7 @@ public class BlastClustReader implements Serializable {
 		}
 
 		if (!seqIdentities.contains(sequenceIdentity)) {
-			System.err.println("Error: representative chains are not available for %sequence identity: "
+			LOGGER.error("Error: representative chains are not available for %sequence identity: "
 					+ sequenceIdentity);
 			return;
 		}

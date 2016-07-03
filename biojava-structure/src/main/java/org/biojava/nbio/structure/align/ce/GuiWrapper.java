@@ -26,6 +26,8 @@ import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
 import org.biojava.nbio.structure.jama.Matrix;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.io.File;
@@ -40,6 +42,8 @@ import java.util.List;
  */
 
 public class GuiWrapper {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(GuiWrapper.class);
 
 	static final String guiPackage = "org.biojava.nbio.structure.gui";
 
@@ -218,7 +222,7 @@ public class GuiWrapper {
 		} catch (Exception e){
 			e.printStackTrace();
 
-			System.err.println("Probably structure-gui.jar is not in the classpath, can't show results...");
+			LOGGER.error("Probably structure-gui.jar is not in the classpath, can't show results...");
 		}
 
 		//DBResultTable table = new DBResultTable();

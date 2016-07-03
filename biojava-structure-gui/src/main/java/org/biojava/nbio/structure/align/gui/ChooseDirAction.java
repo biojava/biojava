@@ -26,6 +26,8 @@ package org.biojava.nbio.structure.align.gui;
 
 import org.biojava.nbio.structure.align.util.UserConfiguration;
 import org.biojava.nbio.structure.align.webstart.WebStartMain;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -39,6 +41,7 @@ import java.io.File;
  */
 public class ChooseDirAction extends AbstractAction{
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(ChooseDirAction.class);
 	JTextField textField;
 	UserConfiguration config;
 	public ChooseDirAction (JTextField textField, UserConfiguration config){
@@ -55,7 +58,7 @@ public class ChooseDirAction extends AbstractAction{
 		String txt = textField.getText();
 
 		if ( config == null) {
-			System.out.println("config == null, calling getWebStartConfig...");
+			LOGGER.warn("config == null, calling getWebStartConfig...");
 			config = WebStartMain.getWebStartConfig();
 		}
 		if ( txt != null){

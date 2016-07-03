@@ -67,11 +67,11 @@ public class RemotePDPProvider extends SerializableCache<String,SortedSet<String
 
 		//System.out.println(scop.getByCategory(ScopCategory.Superfamily));
 		SortedSet<String> pdpdomains = me.getPDPDomainNamesForPDB("4HHB");
-		System.out.println(pdpdomains);
+		logger.info(pdpdomains.toString());
 
 		AtomCache cache = new AtomCache();
 		Structure s = me.getDomain(pdpdomains.first(), cache);
-		System.out.println(s);
+		logger.info(s.toString());
 
 		me.flushCache();
 

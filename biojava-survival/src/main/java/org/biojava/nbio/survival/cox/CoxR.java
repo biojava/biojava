@@ -24,6 +24,8 @@ import org.biojava.nbio.survival.cox.matrix.Matrix;
 import org.biojava.nbio.survival.cox.stats.ChiSq;
 import org.biojava.nbio.survival.cox.stats.Cholesky2;
 import org.biojava.nbio.survival.data.WorkSheet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -109,6 +111,8 @@ import java.util.Collections;
  * @author Scooter Willis <willishf at gmail dot com>
  */
 public class CoxR {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(CoxR.class);
 
 	/**
 	 *
@@ -986,7 +990,7 @@ public class CoxR {
 				//       variables.add("TREAT:AGE");
 			  //  ArrayList<Integer> cluster = new ArrayList<Integer>();
 				CoxInfo ci = cox.process(variables, survivalInfoList, false, true,false, false);
-				System.out.println(ci);
+				LOGGER.info(ci.toString());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

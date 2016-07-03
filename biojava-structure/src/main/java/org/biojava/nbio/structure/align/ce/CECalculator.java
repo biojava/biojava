@@ -38,6 +38,8 @@ import org.biojava.nbio.structure.align.util.AFPAlignmentDisplay;
 import org.biojava.nbio.structure.jama.Matrix;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,8 +59,7 @@ import java.util.List;
  */
 public class CECalculator {
 
-	protected static final boolean isPrint = false;
-	private static final boolean debug = false;
+	private static final Logger LOGGER = LoggerFactory.getLogger(CECalculator.class);
 
 	int[] f1;
 	int[] f2;
@@ -144,8 +145,7 @@ public class CECalculator {
 		dist2 = initIntraDistmatrix(ca2, nse2);
 
 
-		if ( debug )
-			System.out.println("parameters: " + params);
+		LOGGER.debug("parameters: " + params);
 
 		if ( params.getScoringStrategy() == CeParameters.ScoringStrategy.SEQUENCE_CONSERVATION){
 			if ( params.getSeqWeight() < 1)
@@ -755,12 +755,8 @@ public class CECalculator {
 							}
 					}
 
-				if ( isPrint) {
-					System.out.println("fragment length: " + params.getWinSize());
-					System.out.println("ntraces : " + nTraces );
-				}
-
-
+					LOGGER.debug("fragment length: " + params.getWinSize());
+					LOGGER.debug("ntraces : " + nTraces );
 
 			}
 
@@ -787,8 +783,8 @@ public class CECalculator {
 
 
 		if ( params.isShowAFPRanges()){
-			System.out.println("fragment length: " + params.getWinSize());
-			System.out.println("ntraces : " + nTraces );
+			LOGGER.info("fragment length: " + params.getWinSize());
+			LOGGER.info("ntraces : " + nTraces );
 
 		}
 
@@ -953,7 +949,7 @@ nBestTrace=nTrace;
 
 		// removing some loops that are run in orig CE
 		// and which did not do anything
-		if ( debug ){
+		if (LOGGER.isDebugEnabled()) {
 			checkPrintRmsdNew(traceMaxSize, winSize, ca1, ca2);
 		}
 
@@ -965,8 +961,7 @@ nBestTrace=nTrace;
 			if(bestTracesN[ir]!=nBestTrace) continue;
 
 			rmsdNew = getRMSDForBestTrace(ir, strBuf1, strBuf2, bestTracesN,bestTraces1, bestTrace2,winSize,ca1,ca2);
-			if ( isPrint)
-				System.out.println(String.format("%d %d %d %.2f", ir, bestTracesN[ir], nBestTrace, rmsdNew));
+			LOGGER.debug(String.format("%d %d %d %.2f", ir, bestTracesN[ir], nBestTrace, rmsdNew));
 
 			if(rmsd>rmsdNew) {
 				iBestTrace=ir;
@@ -1038,8 +1033,7 @@ nBestTrace=nTrace;
 
 		rmsd=calc_rmsd(strBuf1, strBuf2, strLen,true);
 
-		if ( isPrint)
-			System.out.println("got first rmsd: " + rmsd);
+		LOGGER.debug("got first rmsd: " + rmsd);
 		boolean isCopied=false;
 
 		outer_loop:
@@ -1111,8 +1105,7 @@ nBestTrace=nTrace;
 					}
 			}
 		rmsdNew=calc_rmsd(strBuf1, strBuf2, strLen,true);
-		if ( isPrint)
-			System.out.println("rmsdNew: " + rmsdNew + " rmsd " + rmsd);
+		LOGGER.debug("rmsdNew: " + rmsdNew + " rmsd " + rmsd);
 		afpChain.setTotalRmsdIni(rmsdNew);
 		afpChain.setTotalLenIni(strBuf1.length);
 
@@ -1123,15 +1116,15 @@ nBestTrace=nTrace;
 		z=zStrAlign(winSize, strLen/winSize, bestTraceScore, nGaps);
 
 		if(params.isShowAFPRanges()) {
-			System.out.println("win size: " + winSize + " strLen/winSize: " + strLen/winSize + " best trace score: " + String.format("%.2f",bestTraceScore) + " nr gaps: " + nGaps + " nr residues: " + nAtom);
+			LOGGER.info("win size: " + winSize + " strLen/winSize: " + strLen/winSize + " best trace score: " + String.format("%.2f",bestTraceScore) + " nr gaps: " + nGaps + " nr residues: " + nAtom);
 
-			System.out.println(String.format("size=%d rmsd=%.2f z=%.1f gaps=%d(%.1f%%) comb=%d",
+			LOGGER.info(String.format("size=%d rmsd=%.2f z=%.1f gaps=%d(%.1f%%) comb=%d",
 					nAtom, rmsd, z, nGaps, nGaps*100.0/nAtom,
 					nTraces));
 
-			System.out.println("Best Trace, before optimization");
+			LOGGER.info("Best Trace, before optimization");
 			for(int k=0; k<nBestTrace; k++)
-				System.out.println(String.format("(%d,%d,%d) ", bestTrace1[k]+1, bestTrace2[k]+1,
+				LOGGER.info(String.format("(%d,%d,%d) ", bestTrace1[k]+1, bestTrace2[k]+1,
 						bestTraceLen[k]));
 
 		}
@@ -1202,10 +1195,8 @@ nBestTrace=nTrace;
 		long time_q=(timeEnd-timeStart);
 
 		double gapsP = ( nGaps*100.0/nAtom) ;
-		if(isPrint) {
-			String msg = String.format("Alignment length = %d Rmsd = %.2fA Z-Score = %.1f Gaps = %d(%.1f%%)",nAtom,rmsd,z,nGaps, gapsP);
-			System.out.println(msg + " CPU = " + time_q);
-		}
+		String msg = String.format("Alignment length = %d Rmsd = %.2fA Z-Score = %.1f Gaps = %d(%.1f%%)",nAtom,rmsd,z,nGaps, gapsP);
+		LOGGER.debug(msg + " CPU = " + time_q);
 
 		//      if ( params.isShowAFPRanges()){
 
@@ -1309,17 +1300,12 @@ nBestTrace=nTrace;
 		double rmsdNew=calc_rmsd(strBuf1, strBuf2, nBestTrace*winSize, true);
 		//afpChain.setTotalRmsdIni(rmsdNew);
 
-
-		if ( isPrint){
-			System.out.println("rmsdNew after trace: " +rmsdNew);
+		LOGGER.debug("rmsdNew after trace: " + rmsdNew);
 
 			for(int k=0; k<nBestTrace; k++)
-				System.out.println(String.format("(%d,%d,%d) ", bestTrace1[k]+1, bestTrace2[k]+1,8));
-		}
+				LOGGER.debug(String.format("(%d,%d,%d) ", bestTrace1[k]+1, bestTrace2[k]+1,8));
 
-		if ( isPrint){
-			System.out.println("best traces: " + nBestTraces);
-		}
+		LOGGER.debug("best traces: " + nBestTraces);
 
 
 	}
@@ -1369,8 +1355,7 @@ nBestTrace=nTrace;
 				(isRmsdLenAssigned && rmsd<rmsdLen*1.1 && nAtomPrev!=nAtom)) && ( counter< maxNrIterations)) {
 
 			counter++;
-			if ( debug)
-			   System.out.println("nAtom: " + nAtom + " " + nAtomPrev + " " + rmsdLen + " " + isRmsdLenAssigned + " strLen:" + strLen);
+			LOGGER.debug("nAtom: " + nAtom + " " + nAtomPrev + " " + rmsdLen + " " + isRmsdLenAssigned + " strLen:" + strLen);
 			nAtomPrev=nAtom;
 			oRmsdThr += distanceIncrement;
 
@@ -1412,8 +1397,7 @@ nBestTrace=nTrace;
 
 			double score = dpAlign( nse1, nse2, gapOpen , gapExtension , false, false);
 
-			if (debug)
-				System.out.println("iter: "+ counter + "  score:"  + score + " " + " nAtomPrev: " + nAtomPrev + " nAtom:" + nAtom + " oRmsdThr: " + oRmsdThr);
+			LOGGER.debug("iter: "+ counter + "  score:"  + score + " " + " nAtomPrev: " + nAtomPrev + " nAtom:" + nAtom + " oRmsdThr: " + oRmsdThr);
 
 			afpChain.setAlignScore(score);
 
@@ -1440,8 +1424,7 @@ nBestTrace=nTrace;
 			//sup_str(strBuf1, strBuf2, nAtom, _d);
 			// here we don't store the rotation matrix for the user!
 			rmsd= calc_rmsd(strBuf1, strBuf2, nAtom,false);
-			if ( isPrint )
-				System.out.println("iter: " + counter + " nAtom " + nAtom + " rmsd: " + rmsd);
+			LOGGER.debug("iter: " + counter + " nAtom " + nAtom + " rmsd: " + rmsd);
 			//afpChain.setTotalRmsdOpt(rmsd);
 			//System.out.println("rmsd: " + rmsd);
 
@@ -1959,13 +1942,11 @@ nBestTrace=nTrace;
 
 	private void noBestTrace(){
 
-		if(isPrint) {
 			timeEnd = System.currentTimeMillis();
 			long time_q=(timeEnd-timeStart);
 
 			String msg = String.format("size=0 time=%d comb=%d\n", (int)(time_q), nTraces);
-			System.out.println(msg);
-		}
+			LOGGER.debug(msg);
 	}
 
 

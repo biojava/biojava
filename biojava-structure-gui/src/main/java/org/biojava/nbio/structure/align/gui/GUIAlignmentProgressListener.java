@@ -22,6 +22,8 @@ package org.biojava.nbio.structure.align.gui;
 
 import org.biojava.nbio.structure.align.FarmJob;
 import org.biojava.nbio.structure.align.events.AlignmentProgressListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,9 +36,7 @@ import java.awt.event.ActionListener;
  *
  */
 public class GUIAlignmentProgressListener extends JPanel implements AlignmentProgressListener, ActionListener {
-
-
-
+	private static final Logger LOGGER = LoggerFactory.getLogger(GUIAlignmentProgressListener.class);
 
 	/**
 	 *
@@ -103,7 +103,7 @@ public class GUIAlignmentProgressListener extends JPanel implements AlignmentPro
 		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		progressBar.setIndeterminate(true);
 		progressBar.setStringPainted(false);
-		System.out.println("terminating jobs");
+		LOGGER.info("terminating jobs");
 
 		farmJob.terminate();
 

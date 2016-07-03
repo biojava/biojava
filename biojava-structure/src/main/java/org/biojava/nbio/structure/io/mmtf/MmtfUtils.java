@@ -42,6 +42,8 @@ import org.biojava.nbio.structure.xtal.CrystalCell;
 import org.biojava.nbio.structure.xtal.SpaceGroup;
 import org.rcsb.mmtf.dataholders.DsspType;
 import org.rcsb.mmtf.utils.CodecUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A utils class of functions needed for Biojava to read and write to mmtf.
@@ -49,6 +51,9 @@ import org.rcsb.mmtf.utils.CodecUtils;
  *
  */
 public class MmtfUtils {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(MmtfUtils.class);
+
 	/**
 	 * Set up the configuration parameters for BioJava.
 	 */
@@ -145,7 +150,7 @@ public class MmtfUtils {
 			catch(FileNotFoundException enew){
 			}
 			catch(Exception bige){
-				System.out.println(bige);
+				LOGGER.error(bige.getMessage());
 			}
 		}
 	}

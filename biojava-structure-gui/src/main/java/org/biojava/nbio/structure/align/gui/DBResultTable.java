@@ -41,6 +41,8 @@ import org.biojava.nbio.structure.align.util.UserConfiguration;
 import org.biojava.nbio.structure.align.webstart.WebStartMain;
 import org.biojava.nbio.structure.io.PDBFileReader;
 import org.biojava.nbio.structure.io.StructureIOFile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -57,6 +59,7 @@ import java.util.List;
 
 public class DBResultTable implements ActionListener{
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(DBResultTable.class);
 	public static final String[] ceColumnNames =  {"name1","tname2","score","z-score"    ,"rmsd","len1","len2","cov1","cov2","%ID","Description",""};
 	public static final String[] fatColumnNames = {"name1","tname2","score","probability","rmsd","len1","len2","cov1","cov2","%ID","Description",""};
 
@@ -143,11 +146,11 @@ public class DBResultTable implements ActionListener{
 							}
 						}
 					} catch (IndexOutOfBoundsException e){
-						System.err.println("Unknown scoring strategy from line: " + str);
+						LOGGER.error("Unknown scoring strategy from line: " + str);
 					} catch (IllegalArgumentException e) {
-						System.err.println("Unknown scoring strategy from line: " + str);
+						LOGGER.error("Unknown scoring strategy from line: " + str);
 					} catch (Exception e) {
-						System.err.println("Unknown parameter can't read parameters from line: " + str);
+						LOGGER.error("Unknown parameter can't read parameters from line: " + str);
 						e.printStackTrace();
 					}
 
@@ -156,8 +159,8 @@ public class DBResultTable implements ActionListener{
 			}
 			String[] spl = str.split("\t");
 			if ( spl.length != ceColumnNames.length -1) {
-				System.err.println("wrong table width! " + spl.length + " should be: " + (ceColumnNames.length -1 ));
-				System.err.println(str);
+				LOGGER.info("wrong table width! " + spl.length + " should be: " + (ceColumnNames.length -1 ));
+				LOGGER.info(str);
 				continue;
 			}
 			tmpdat.add(spl);
@@ -248,7 +251,7 @@ public class DBResultTable implements ActionListener{
 			algorithm = StructureAlignmentFactory.getAlgorithm(algorithmName);
 		} catch (Exception e){
 			e.printStackTrace();
-			System.err.println("Can't guess algorithm from output. Using jCE as default...");
+			LOGGER.error("Can't guess algorithm from output. Using jCE as default...");
 			try {
 				algorithm = StructureAlignmentFactory.getAlgorithm(CeMain.algorithmName);
 			} catch (Exception ex){
@@ -275,7 +278,7 @@ public class DBResultTable implements ActionListener{
 			output.append(String.format(" %d", c));
 		}
 
-		System.out.println(output.toString());
+		LOGGER.info(output.toString());
 	}
 
 	private class RowListener implements ListSelectionListener {
@@ -291,7 +294,7 @@ public class DBResultTable implements ActionListener{
 			if ( name1.equals(oldName1) && oldName2.equals(name2)){
 				return;
 			}
-			System.out.println("recreating alignment of: " + name1 + " " + name2 + " using " + algorithmName);
+			LOGGER.info("recreating alignment of: " + name1 + " " + name2 + " using " + algorithmName);
 			outputSelection();
 			showAlignment(name1,name2);
 			oldName1 = name1;

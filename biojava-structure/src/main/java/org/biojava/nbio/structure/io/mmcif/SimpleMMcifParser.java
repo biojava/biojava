@@ -105,7 +105,7 @@ System.out.println(s.toPDB());
  */
 public class SimpleMMcifParser implements MMcifParser {
 
-
+	private static final Logger LOGGER = LoggerFactory.getLogger(SimpleMMcifParser.class);
 
 	/**
 	 * The header appearing at the beginning of a mmCIF file.
@@ -168,14 +168,14 @@ public class SimpleMMcifParser implements MMcifParser {
 		//String file = "/Users/andreas/WORK/PDB/MMCIF/1gav.mmcif";
 		//String file = "/Users/andreas/WORK/PDB/MMCIF/100d.cif";
 		//String file = "/Users/andreas/WORK/PDB/MMCIF/1a4a.mmcif";
-		System.out.println("parsing " + file);
+		LOGGER.info("parsing " + file);
 
 		StructureIOFile pdbreader = new MMCIFFileReader();
 		try {
 			Structure s = pdbreader.getStructure(file);
-			System.out.println(s);
+			LOGGER.info(s.toString());
 			// convert it to a PDB file...
-			System.out.println(s.toPDB());
+			LOGGER.info(s.toPDB());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

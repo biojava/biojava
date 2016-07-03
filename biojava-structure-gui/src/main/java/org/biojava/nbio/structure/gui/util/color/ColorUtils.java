@@ -24,10 +24,15 @@
 
 package org.biojava.nbio.structure.gui.util.color;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.awt.*;
 
 public class ColorUtils
 {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(ColorUtils.class);
 
 	public static Color orange =   Color.decode("#FFA500");
 	public static Color cyan   =   Color.decode("#00FFFF");
@@ -48,8 +53,8 @@ public class ColorUtils
 		int i = -1;
 		for ( Color color : colorWheel){
 			i++;
-			float[] af = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
-			System.out.println("position "  + i + "  " + af[0] + " " + af[1] + " " + af[2]);
+			float[] af = Color.RGBtoHSB(color.getRed(),color.getGreen(),color.getBlue(), null);
+			LOGGER.info("position "  + i + "  " + af[0] + " " + af[1] + " " + af[2]);
 			//System.out.println(rotateHue(color, 0.1f));
 		}
 	}

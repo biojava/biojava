@@ -22,6 +22,9 @@
  */
 package org.biojava.nbio.structure.align.helper;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -35,6 +38,7 @@ import java.util.List;
  */
 public class JointFragments {
 
+		private static final Logger LOGGER = LoggerFactory.getLogger(JointFragments.class);
 
 		double rms;
 
@@ -81,7 +85,7 @@ public class JointFragments {
 				while (iter.hasNext()){
 					int[] kno = iter.next();
 					if ((kno[0] == e[0]) && ( kno[1] == e[1])){
-						System.err.println("already known index pair, not adding a 2nd time." + e[0] + " " + e[1]);
+						LOGGER.warn("already known index pair, not adding a 2nd time." + e[0] + " " + e[1]);
 						return;
 					}
 				}

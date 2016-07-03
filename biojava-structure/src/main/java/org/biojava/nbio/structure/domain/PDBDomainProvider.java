@@ -21,6 +21,8 @@
 package org.biojava.nbio.structure.domain;
 
 import org.biojava.nbio.structure.align.util.URLConnectionTools;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -43,6 +45,9 @@ import java.util.TreeSet;
  *
  */
 public class PDBDomainProvider implements DomainProvider{
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(PDBDomainProvider.class);
+
 	public static final String DEFAULT_PDB_HOST = "http://www.rcsb.org";
 	public static final String DEFAULT_PDB_API_URL = DEFAULT_PDB_HOST + "/pdb/rest/";
 
@@ -154,13 +159,13 @@ public class PDBDomainProvider implements DomainProvider{
 
 		SortedSet<String> domains = dom.getDomainNames(name);
 
-		System.out.println("Domains for "+name+":");
+		LOGGER.info("Domains for "+name+":");
 		for(String s : domains) {
-			System.out.println(s);
+			LOGGER.info(s);
 		}
 
 		SortedSet<String> reprs = dom.getRepresentativeDomains();
-		System.out.format("%nFound %d clusters.%n",reprs.size());
+		LOGGER.info(String.format("%nFound %d clusters.%n",reprs.size()));
 
 		try {
 			File outfile  = new File("/Users/blivens/Downloads/representativeDomainsJava.xml");

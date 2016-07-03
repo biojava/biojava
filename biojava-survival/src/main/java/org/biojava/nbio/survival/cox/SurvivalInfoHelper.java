@@ -20,6 +20,9 @@
  */
 package org.biojava.nbio.survival.cox;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,7 +33,7 @@ import java.util.LinkedHashMap;
  * @author Scooter Willis <willishf at gmail dot com>
  */
 public class SurvivalInfoHelper {
-
+	private static final Logger LOGGER = LoggerFactory.getLogger(SurvivalInfoHelper.class);
 	/**
 	 * For each analysis this allows outputing of the data used in the calculations to a printstream/file. This then
 	 * allows the file to be loaded into R and calculations can be verified.
@@ -199,7 +202,7 @@ public class SurvivalInfoHelper {
 			}
 		}
 		Collections.sort(validLabels);
-		System.out.println("Valid Lables:" + validLabels);
+		LOGGER.info("Valid Lables:" + validLabels);
 		for (SurvivalInfo si : survivalInfoList) {
 			Double value = si.getContinuousVariable(variable);
 			if (value == null) {

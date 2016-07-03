@@ -25,6 +25,8 @@
 package org.biojava.nbio.structure.align.xml;
 
 import org.biojava.nbio.core.util.PrettyXMLWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -43,7 +45,7 @@ import java.io.StringWriter;
 public class HasResultXMLConverter
 {
 
-
+	private static final Logger LOGGER = LoggerFactory.getLogger(HasResultXMLConverter.class);
 
 
 	/** return flag if the server has a result
@@ -103,9 +105,9 @@ public class HasResultXMLConverter
 		}
 		catch (SAXParseException err)
 		{
-			System.out.println ("** Parsing error" + ", line "
+			LOGGER.error ("** Parsing error" + ", line "
 					+ err.getLineNumber () + ", uri " + err.getSystemId ());
-			System.out.println(" " + err.getMessage ());
+			LOGGER.error(" " + err.getMessage ());
 		}
 		catch (SAXException e)
 		{

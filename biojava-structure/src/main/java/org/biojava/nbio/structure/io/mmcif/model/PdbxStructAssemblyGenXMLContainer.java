@@ -20,6 +20,9 @@
  */
 package org.biojava.nbio.structure.io.mmcif.model;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
@@ -32,6 +35,8 @@ import java.util.List;
 
 @XmlRootElement(name="PdbxStructAssemblyGenXMLContainer")
 public class PdbxStructAssemblyGenXMLContainer {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(PdbxStructAssemblyGenXMLContainer.class);
 
 	private List<PdbxStructAssemblyGen> data ;
 
@@ -56,7 +61,7 @@ public class PdbxStructAssemblyGenXMLContainer {
 
 	public  String toXML(){
 
-		System.out.println("converting to XML: " + data);
+		LOGGER.info("converting to XML: " + data);
 
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 

@@ -24,6 +24,9 @@
  */
 package org.biojava.nbio.structure.align.gui.autosuggest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -39,6 +42,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
  *
  */
 public class JAutoSuggest extends JTextField{
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(JAutoSuggest.class);
 
 	/**
 	 *
@@ -132,7 +137,7 @@ public class JAutoSuggest extends JTextField{
 		addFocusListener(new FocusListener() {
 			@Override
 			public void focusLost(FocusEvent e) {
-				System.out.println("Lost Focus");
+				LOGGER.info("Lost Focus");
 				dialog.setVisible(false);
 
 				if (getText().trim().equals("") && e.getOppositeComponent() != null && e.getOppositeComponent().getName() != null) {
@@ -146,7 +151,7 @@ public class JAutoSuggest extends JTextField{
 
 			@Override
 			public void focusGained(FocusEvent e) {
-				System.out.println("Lost Gained");
+				LOGGER.info("Lost Gained");
 				if (getText().trim().equals(defaultText)) {
 					setText("");
 				}

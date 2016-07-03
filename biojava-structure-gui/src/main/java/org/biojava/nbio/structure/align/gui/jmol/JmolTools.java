@@ -21,11 +21,15 @@
 package org.biojava.nbio.structure.align.gui.jmol;
 
 import org.biojava.nbio.structure.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class JmolTools {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(JmolTools.class);
 
 	/** get jmol style info:
 	 *  jmol style: [MET]508:A.CA/1 #3918
@@ -57,7 +61,7 @@ public class JmolTools {
 		g.addAtom(a);
 		c.addGroup(g);
 
-		System.out.println(getPdbInfo(a));
+		LOGGER.info(getPdbInfo(a));
 	}
 
 
@@ -95,7 +99,7 @@ public class JmolTools {
 
 			boolean found = matcher.find();
 			if ( ! found) {
-				System.err.println("JmolTools: could not parse the residue number string " + res1);
+				LOGGER.error("JmolTools: could not parse the residue number string " + res1);
 				buf.append(res1);
 			} else {
 				String residueNumber = matcher.group(1);

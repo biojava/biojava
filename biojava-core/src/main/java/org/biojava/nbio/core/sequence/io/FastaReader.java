@@ -244,7 +244,7 @@ public class FastaReader<S extends Sequence<?>, C extends Compound> {
 
 
 			if ( is == null)
-				System.err.println("Could not get input file " + inputFile);
+				logger.warn("Could not get input file " + inputFile);
 			FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = new FastaReader<ProteinSequence, AminoAcidCompound>(is, new GenericFastaHeaderParser<ProteinSequence,AminoAcidCompound>(), new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
 			LinkedHashMap<String,ProteinSequence> proteinSequences = fastaReader.process();
 			is.close();

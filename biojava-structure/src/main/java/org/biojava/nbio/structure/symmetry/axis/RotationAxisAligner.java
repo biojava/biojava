@@ -26,12 +26,16 @@ import org.biojava.nbio.structure.symmetry.core.RotationGroup;
 import org.biojava.nbio.structure.symmetry.core.Subunits;
 import org.biojava.nbio.structure.symmetry.geometry.MomentsOfInertia;
 import org.biojava.nbio.structure.symmetry.geometry.SuperPosition;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.vecmath.*;
 
 import java.util.*;
 
 public class RotationAxisAligner extends AxisAligner{
+	private static final Logger LOGGER = LoggerFactory.getLogger(RotationAxisAligner.class);
+
 	private static final Vector3d X_AXIS = new Vector3d(1,0,0);
 	private static final Vector3d Y_AXIS = new Vector3d(0,1,0);
 	private static final Vector3d Z_AXIS = new Vector3d(0,0,1);
@@ -325,7 +329,7 @@ public class RotationAxisAligner extends AxisAligner{
 		}
 		Collections.reverse(orbit.subList(1,  orbit.size()));
 		if (orbit.get(1) != index2) {
-			System.err.println("Warning: alignWithReferenceAxis failed");
+			LOGGER.error("Warning: alignWithReferenceAxis failed");
 		}
 //		System.out.println("Orbit2: " + orbit);
 		return orbit;
@@ -464,7 +468,7 @@ public class RotationAxisAligner extends AxisAligner{
 		ref[0] = new Point3d(referenceVectors[0]);
 		ref[1] = new Point3d(referenceVectors[1]);
 		if (SuperPosition.rmsd(axes, ref) > 0.1) {
-			System.out.println("Warning: AxisTransformation: axes alignment is off. RMSD: " + SuperPosition.rmsd(axes, ref));
+			LOGGER.info("Warning: AxisTransformation: axes alignment is off. RMSD: " + SuperPosition.rmsd(axes, ref));
 		}
 
 		return m2;
@@ -637,7 +641,7 @@ public class RotationAxisAligner extends AxisAligner{
 			int index = p0.indexOf(current);
 			int next = p1.get(index);
 			if (!orbit.contains(next)) {
-				System.err.println("deconvolute: inconsistency in permuation. Returning original order");
+				LOGGER.warn("deconvolute: inconsistency in permuation. Returning original order");
 				return orbit;
 			}
 			inRotationOrder.add(next);
@@ -680,7 +684,7 @@ public class RotationAxisAligner extends AxisAligner{
 		}
 
 		if (referenceVector == null) {
-			System.err.println("Warning: no reference vector found. Using y-axis.");
+			LOGGER.warn("Warning: no reference vector found. Using y-axis.");
 			referenceVector = new Vector3d(Y_AXIS);
 		}
 		// make sure reference vector is perpendicular principal roation vector

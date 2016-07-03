@@ -52,6 +52,8 @@ import org.biojava.nbio.structure.gui.util.ScopSelectPanel;
 import org.biojava.nbio.structure.gui.util.StructurePairSelector;
 import org.biojava.nbio.structure.symmetry.internal.CESymmParameters;
 import org.biojava.nbio.structure.symmetry.internal.CeSymm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A JFrame that allows to trigger a symmetry analysis, either from files
@@ -64,6 +66,8 @@ import org.biojava.nbio.structure.symmetry.internal.CeSymm;
  *
  */
 public class SymmetryGui extends JFrame {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(SymmetryGui.class);
 
 	private final static long serialVersionUID = 0l;
 
@@ -198,7 +202,7 @@ public class SymmetryGui extends JFrame {
 				if (selectedIndex == 0)
 					calcAlignment();
 				else {
-					System.err.println("Unknown TAB: " + selectedIndex);
+					LOGGER.warn("Unknown TAB: " + selectedIndex);
 				}
 			}
 		};
@@ -244,7 +248,7 @@ public class SymmetryGui extends JFrame {
 	}
 
 	protected void configureParameters() {
-		System.out.println("configure parameters for " +
+		LOGGER.info("configure parameters for " +
 				CeSymm.algorithmName);
 
 		// show a new config GUI
@@ -278,7 +282,7 @@ public class SymmetryGui extends JFrame {
 			Structure s = tab.getStructure1();
 
 			if ( s == null) {
-				System.err.println("Please select structure");
+				LOGGER.warn("Please select structure");
 				return ;
 			}
 
@@ -290,7 +294,7 @@ public class SymmetryGui extends JFrame {
 				name = s.getStructureIdentifier();
 			}
 
-			System.out.println("Analyzing: " + name);
+			LOGGER.info("Analyzing: " + name);
 
 
 			alicalc = new SymmetryCalc(this, s);
@@ -319,7 +323,7 @@ public class SymmetryGui extends JFrame {
 	}
 
 	private void abortCalc(){
-		System.err.println("Interrupting alignment ...");
+		LOGGER.error("Interrupting alignment ...");
 		if ( alicalc != null )
 			alicalc.interrupt();
 		notifyCalcFinished();

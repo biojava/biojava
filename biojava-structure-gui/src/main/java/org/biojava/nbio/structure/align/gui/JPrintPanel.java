@@ -24,6 +24,9 @@
 
 package org.biojava.nbio.structure.align.gui;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -34,6 +37,9 @@ import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 
 public class JPrintPanel extends JPanel implements Printable,ActionListener{
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(JPrintPanel.class);
+
 	/**
 	 *
 	 */
@@ -74,7 +80,7 @@ public class JPrintPanel extends JPanel implements Printable,ActionListener{
 				printJob.print();
 			}
 		} catch (Exception printException) {
-			System.err.println("Error during printing: " +printException.getMessage());
+			LOGGER.error("Error during printing: " +printException.getMessage());
 			printException.printStackTrace();
 		}
 	}

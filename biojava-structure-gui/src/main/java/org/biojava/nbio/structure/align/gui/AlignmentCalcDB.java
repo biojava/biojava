@@ -31,6 +31,8 @@ import org.biojava.nbio.structure.align.StructureAlignment;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
 import org.biojava.nbio.structure.scop.ScopFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -39,6 +41,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class AlignmentCalcDB implements AlignmentCalculationRunnable {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(AlignmentCalcDB.class);
 
 	public static String SCOP_VERSION =  "1.75";
 
@@ -87,7 +90,7 @@ public class AlignmentCalcDB implements AlignmentCalculationRunnable {
 		this.outFile = outFile;
 		this.domainSplit = domainSplit;
 
-		System.out.println("AlignmentCalcDB: Using SCOP version " + SCOP_VERSION);
+		LOGGER.info("AlignmentCalcDB: Using SCOP version " + SCOP_VERSION);
 		ScopFactory.setScopDatabase(SCOP_VERSION);
 
 	}
@@ -112,9 +115,9 @@ public class AlignmentCalcDB implements AlignmentCalculationRunnable {
 		job = new MultiThreadedDBSearch(name1,structure1, outFile, algorithm, nrCPUs, domainSplit);
 
 		AtomCache cache = new AtomCache(config);
-		System.out.println("using cache: " + cache.getPath());
-		System.out.println("name1: " + name1);
-		System.out.println("structure:" + structure1.getName());
+		LOGGER.info("using cache: " + cache.getPath());
+		LOGGER.info("name1: " + name1);
+		LOGGER.info("structure:" + structure1.getName());
 		job.setAtomCache(cache);
 
 		if ( name1.equals("CUSTOM")) {
