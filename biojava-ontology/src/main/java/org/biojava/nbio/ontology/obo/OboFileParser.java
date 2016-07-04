@@ -422,7 +422,7 @@ public class OboFileParser {
 				out.append(c);
 			else {
 				if (escapespaces || (!escapespaces && c != ' ' && c != '\t')) {
-					out.append("\\" + o);
+					out.append("\\").append(o);
 				} else
 					out.append(c);
 			}

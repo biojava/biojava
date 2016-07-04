@@ -287,7 +287,7 @@ public class CrystalBuilder {
 						}
 
 						StringBuilder builder = null;
-						if (verbose) builder = new StringBuilder(tt+" ");
+						if (verbose) builder = new StringBuilder(String.valueOf(tt)).append(" ");
 
 						// Now that we know that boxes overlap and operator is not redundant, we have to go to the details
 						int contactsFound = 0;

@@ -755,7 +755,7 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 			molecId2 = molecId2 + "_" +getTransforms().getSecond().getTransformId();
 		}
 
-		sb.append(SimpleMMcifParser.MMCIF_TOP_HEADER+"BioJava_interface_"+getId()+System.getProperty("line.separator"));
+		sb.append(SimpleMMcifParser.MMCIF_TOP_HEADER).append("BioJava_interface_").append(getId()).append(System.getProperty("line.separator"));
 
 		sb.append(FileConvert.getAtomSiteHeader());
 
