@@ -223,7 +223,6 @@ public class TestMmtfUtils {
 		// Map the chain to the second index
 		Map<String, Integer> chainIdToIndexMap = new HashMap<>();
 		chainIdToIndexMap.put("C", 2);
-
 		// Now do the conversion and test they are the same
 		Map<double[], int[]> transMap = MmtfUtils.getTransformMap(bioAssemblyInfo, chainIdToIndexMap);
 		assertArrayEquals(testData, (double[]) transMap.keySet().toArray()[0], 0.0);
