@@ -30,12 +30,9 @@ import javax.swing.JMenuBar;
 import javax.swing.JScrollPane;
 
 import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.Chain;
-import org.biojava.nbio.structure.ChainImpl;
 import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.StructureImpl;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.gui.aligpanel.AligPanel;
 import org.biojava.nbio.structure.align.gui.aligpanel.StatusDisplay;
@@ -44,6 +41,7 @@ import org.biojava.nbio.structure.align.gui.jmol.JmolTools;
 import org.biojava.nbio.structure.align.gui.jmol.StructureAlignmentJmol;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.util.AFPAlignmentDisplay;
+import org.biojava.nbio.structure.align.util.AlignmentTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -413,75 +411,6 @@ public class DisplayAFP {
 	}
 
 
-	/** get an artifical List of chains containing the Atoms and groups.
-	 * Does NOT rotate anything.
-	 * @param ca
-	 * @return a list of Chains that is built up from the Atoms in the ca array
-	 * @throws StructureException
-	 */
-	static final List<Chain> getAlignedModel(Atom[] ca){
-
-		List<Chain> model = new ArrayList<Chain>();
-		for ( Atom a: ca){
-
-			Group g = a.getGroup();
-			Chain parentC = g.getChain();
-
-			Chain newChain = null;
-			for ( Chain c :  model) {
-				if ( c.getChainID().equals(parentC.getChainID())){
-					newChain = c;
-					break;
-				}
-			}
-			if ( newChain == null){
-
-				newChain = new ChainImpl();
-
-				newChain.setChainID(parentC.getChainID());
-
-				model.add(newChain);
-			}
-
-			newChain.addGroup(g);
-
-		}
-
-		return model;
-	}
-
-
-	/** Get an artifical Structure containing both chains.
-	 * Does NOT rotate anything
-	 * @param ca1
-	 * @param ca2
-	 * @return a structure object containing two models, one for each set of Atoms.
-	 * @throws StructureException
-	 */
-	public static final Structure getAlignedStructure(Atom[] ca1, Atom[] ca2) throws StructureException{
-
-		/* Previous implementation commented
-
-		Structure s = new StructureImpl();
-
-
-		List<Chain>model1 = getAlignedModel(ca1);
-		List<Chain>model2 = getAlignedModel(ca2);
-		s.addModel(model1);
-		s.addModel(model2);
-
-		return s;*/
-
-		Structure s = new StructureImpl();
-
-		List<Chain>model1 = getAlignedModel(ca1);
-		s.addModel(model1);
-		List<Chain> model2 = getAlignedModel(ca2);
-		s.addModel(model2);
-
-		return s;
-	}
-
 	/**
 	 * Returns the first atom for each group
 	 * @param ca
@@ -638,10 +567,10 @@ public class DisplayAFP {
 
 
 		if ( afpChain.getNrEQR() < 1){
-			return DisplayAFP.getAlignedStructure(ca1, ca2);
+			return AlignmentTools.getAlignedStructure(ca1, ca2);
 		}
 
-		Group[] twistedGroups = StructureAlignmentDisplay.prepareGroupsForDisplay(afpChain,ca1, ca2);
+		Group[] twistedGroups = AlignmentTools.prepareGroupsForDisplay(afpChain,ca1, ca2);
 
 		List<Atom> twistedAs = new ArrayList<Atom>();
 
@@ -661,7 +590,7 @@ public class DisplayAFP {
 		Atom[] arr1 = DisplayAFP.getAtomArray(ca1, hetatms);
 		Atom[] arr2 = DisplayAFP.getAtomArray(twistedAtoms, hetatms2);
 
-		Structure artificial = DisplayAFP.getAlignedStructure(arr1,arr2);
+		Structure artificial = AlignmentTools.getAlignedStructure(arr1,arr2);
 		return artificial;
 	}
 }
