@@ -87,40 +87,39 @@ public class CESymmParameters extends CeParameters {
 
 	@Override
 	public CESymmParameters clone() {
+		return new CESymmParameters(this);
+	}
+	
+	public CESymmParameters(CESymmParameters o) {
+		this.maxSymmOrder = o.maxSymmOrder;
+		this.symmType = o.symmType;
+		this.orderDetectorMethod = o.orderDetectorMethod;
+		this.userOrder = o.userOrder;
+		this.refineMethod = o.refineMethod;
+		this.optimization = o.optimization;
+		this.rndSeed = o.rndSeed;
+		this.symmLevels = o.symmLevels;
+		this.unrefinedScoreThreshold = o.unrefinedScoreThreshold;
+		this.refinedScoreThreshold = o.refinedScoreThreshold;
+		this.sseThreshold = o.sseThreshold;
+		this.minCoreLength = o.minCoreLength;
+		this.distanceCutoff = o.distanceCutoff;
+		this.gaps = o.gaps;
+		this.optimizationSteps = o.optimizationSteps;
 
-		CESymmParameters p = new CESymmParameters();
-
-		p.maxSymmOrder = maxSymmOrder;
-		p.symmType = symmType;
-		p.orderDetectorMethod = orderDetectorMethod;
-		p.userOrder = userOrder;
-		p.refineMethod = refineMethod;
-		p.optimization = optimization;
-		p.rndSeed = rndSeed;
-		p.symmLevels = symmLevels;
-		p.unrefinedScoreThreshold = unrefinedScoreThreshold;
-		p.refinedScoreThreshold = refinedScoreThreshold;
-		p.sseThreshold = sseThreshold;
-		p.minCoreLength = minCoreLength;
-		p.distanceCutoff = distanceCutoff;
-		p.gaps = gaps;
-		p.optimizationSteps = optimizationSteps;
-
-		p.winSize = winSize;
-		p.rmsdThr = rmsdThr;
-		p.rmsdThrJoin = rmsdThrJoin;
-		p.scoringStrategy = scoringStrategy;
-		p.maxGapSize = maxGapSize;
-		p.showAFPRanges = showAFPRanges;
-		p.maxOptRMSD = maxOptRMSD;
-		p.gapOpen = gapOpen;
-		p.gapExtension = gapExtension;
-		p.distanceIncrement = distanceIncrement;
-		p.oRmsdThr = oRmsdThr;
-		p.maxNrIterationsForOptimization = maxNrIterationsForOptimization;
-		p.seqWeight = seqWeight;
-
-		return p;
+		this.winSize = o.winSize;
+		this.rmsdThr = o.rmsdThr;
+		this.rmsdThrJoin = o.rmsdThrJoin;
+		this.scoringStrategy = o.scoringStrategy;
+		this.maxGapSize = o.maxGapSize;
+		this.showAFPRanges = o.showAFPRanges;
+		this.maxOptRMSD = o.maxOptRMSD;
+		this.gapOpen = o.gapOpen;
+		this.gapExtension = o.gapExtension;
+		this.distanceIncrement = o.distanceIncrement;
+		this.oRmsdThr = o.oRmsdThr;
+		this.maxNrIterationsForOptimization = o.maxNrIterationsForOptimization;
+		this.seqWeight = o.seqWeight;
 	}
 
 	@Override
