@@ -45,11 +45,18 @@ import org.biojava.nbio.phylo.TreeConstructorType;
 import org.biojava.nbio.structure.AminoAcid;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Calc;
+import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.Group;
+import org.biojava.nbio.structure.PDBHeader;
+import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureIdentifier;
+import org.biojava.nbio.structure.StructureImpl;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.multiple.Block;
 import org.biojava.nbio.structure.align.multiple.BlockSet;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
+import org.biojava.nbio.structure.align.util.AlignmentTools;
 import org.biojava.nbio.structure.jama.Matrix;
 import org.forester.evoinference.matrix.distance.BasicSymmetricalDistanceMatrix;
 import org.forester.phylogeny.Phylogeny;
@@ -813,7 +820,44 @@ public class MultipleAlignmentTools {
 		}
 		return msa;
 	}
+	
+	public static Structure toMultimodelStructure(MultipleAlignment multAln, List<Atom[]> transformedAtoms) throws StructureException {
+		PDBHeader header = new PDBHeader();
+		String title = multAln.getEnsemble().getAlgorithmName() + " V."
+				+ multAln.getEnsemble().getVersion() + " : ";
 
+		for (StructureIdentifier name : multAln.getEnsemble()
+				.getStructureIdentifiers()) {
+			title += name.getIdentifier() + " ";
+		}
+		Structure artificial = getAlignedStructure(transformedAtoms);
+
+		artificial.setPDBHeader(header);
+		header.setTitle(title);
+		return artificial;
+	}
+
+	/**
+	 * Get an artificial Structure containing a different model for every
+	 * input structure, so that the alignment result can be viewed in Jmol.
+	 * The Atoms have to be rotated beforehand.
+	 *
+	 * @param atomArrays an array of Atoms for every aligned structure
+	 * @return a structure object containing a set of models,
+	 * 			one for each input array of Atoms.
+	 * @throws StructureException
+	 */
+	public static final Structure getAlignedStructure(List<Atom[]> atomArrays)
+			throws StructureException {
+
+		Structure s = new StructureImpl();
+		for (int i=0; i<atomArrays.size(); i++){
+			List<Chain> model = AlignmentTools.getAlignedModel(atomArrays.get(i));
+			s.addModel(model);
+		}
+		return s;
+	}
+	
 	/**
 	 * Calculate the RMSD matrix of a MultipleAlignment, that is, entry (i,j) of
 	 * the matrix contains the RMSD between structures i and j.

@@ -29,6 +29,7 @@ import org.biojava.nbio.structure.align.gui.DisplayAFP;
 import org.biojava.nbio.structure.align.gui.MenuCreator;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.model.AfpChainWriter;
+import org.biojava.nbio.structure.align.util.AlignmentTools;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.align.util.ResourceManager;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
@@ -286,7 +287,7 @@ public class StructureAlignmentJmol extends AbstractAlignmentJmol {
 					return;
 				}
 			}
-			Structure artificial = DisplayAFP.getAlignedStructure(ca1,ca2);
+			Structure artificial = AlignmentTools.getAlignedStructure(ca1,ca2);
 			PDBHeader header = new PDBHeader();
 			String title =  afpChain.getAlgorithmName() + " V." +afpChain.getVersion() + " : " + afpChain.getName1() + " vs. " + afpChain.getName2();
 			header.setTitle(title);

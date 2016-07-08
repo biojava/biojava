@@ -360,22 +360,9 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 					return;
 				}
 			}
-			PDBHeader header = new PDBHeader();
-			String title = multAln.getEnsemble().getAlgorithmName() + " V."
-					+ multAln.getEnsemble().getVersion() + " : ";
-
-			for (StructureIdentifier name : multAln.getEnsemble()
-					.getStructureIdentifiers()) {
-				title += name.getIdentifier() + " ";
-			}
-			Structure artificial = MultipleAlignmentJmolDisplay
-					.getAlignedStructure(transformedAtoms);
-
-			artificial.setPDBHeader(header);
+			Structure artificial = MultipleAlignmentTools.toMultimodelStructure(multAln, transformedAtoms);
 			setStructure(artificial);
-			header.setTitle(title);
-			logger.info(title);
-
+			logger.info(artificial.getPDBHeader().getTitle());
 		} catch (StructureException e) {
 			e.printStackTrace();
 		}
