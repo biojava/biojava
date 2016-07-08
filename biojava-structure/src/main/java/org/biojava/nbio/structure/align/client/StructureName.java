@@ -676,7 +676,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 				if (match.hasNext()) {
 					warnMsg.append(" Other possibilities: ");
 					while (match.hasNext()) {
-						warnMsg.append(match.next().getScopId() + " ");
+						warnMsg.append(match.next().getScopId()).append(" ");
 					}
 				}
 				warnMsg.append(System.getProperty("line.separator"));

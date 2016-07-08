@@ -122,7 +122,7 @@ public class MMCIFFileTools {
 			Field f = fields[i];
 			String name = names[i];
 
-			sb.append(categoryName+"."+name);
+			sb.append(categoryName).append(".").append(name);
 
 			int spacing = maxFieldNameLength - name.length() + 3;
 

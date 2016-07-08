@@ -192,7 +192,7 @@ public class MmtfStructureWriter {
 		for (Entry<Integer, BioAssemblyInfo> entry : inputBioAss.entrySet()) {
 			Map<double[], int[]> transformMap = MmtfUtils.getTransformMap(entry.getValue(), chainIdToIndexMap);
 			for(Entry<double[], int[]> transformEntry : transformMap.entrySet()) {
-				mmtfDecoderInterface.setBioAssemblyTrans(bioAssemblyIndex, transformEntry.getValue(), transformEntry.getKey(), Integer.toString(bioAssemblyIndex));
+				mmtfDecoderInterface.setBioAssemblyTrans(bioAssemblyIndex, transformEntry.getValue(), transformEntry.getKey(), entry.getKey().toString());
 			}
 			bioAssemblyIndex++;
 		}

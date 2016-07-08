@@ -368,9 +368,9 @@ public class SingleLinkageClusterer {
 	private String clustersToString(Map<Integer,Set<Integer>> finalClusters) {
 		StringBuilder sb = new StringBuilder();
 		for (int cId:finalClusters.keySet()) {
-			sb.append(cId+": ");
+			sb.append(cId).append(": ");
 			for (int member:finalClusters.get(cId)) {
-				sb.append(member+" ");
+				sb.append(member).append(" ");
 			}
 			sb.append("\n");
 		}

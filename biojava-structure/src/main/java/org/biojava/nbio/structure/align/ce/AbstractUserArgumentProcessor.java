@@ -741,7 +741,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 		buf.append("-------------------").append(newline);
 		buf.append(newline);
 
-		buf.append(alg.getAlgorithmName() + " accepts the following parameters:" + newline);
+		buf.append(alg.getAlgorithmName()).append(" accepts the following parameters:").append(newline);
 		buf.append(newline);
 
 		buf.append("--- pairwise alignments ---").append(newline);

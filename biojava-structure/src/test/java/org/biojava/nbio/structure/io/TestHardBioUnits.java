@@ -68,11 +68,16 @@ public class TestHardBioUnits {
 
 		assertTrue(bioAssembly.getChains().size() > 0);
 
+		// Check that one model has Chain B and the other has chain G
 		Chain g = bioAssembly.getPolyChainByPDB("G", 0);
-
-		assertNotNull(g);
-
 		Chain b = bioAssembly.getPolyChainByPDB("B", 1);
+		// Anthony Bradley - I think the model numbering here is arbitrary???
+		if(g==null){
+			g = bioAssembly.getPolyChainByPDB("G", 1);
+			b = bioAssembly.getPolyChainByPDB("B", 0);
+		}
+		
+		assertNotNull(g);
 
 		assertNotNull(b);
 
