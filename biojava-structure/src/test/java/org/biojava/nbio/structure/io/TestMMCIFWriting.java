@@ -168,7 +168,8 @@ public class TestMMCIFWriting {
 
 				assertEquals(origChain.getAtomGroups().size(), readChain.getAtomGroups().size());
 				//assertEquals(origChain.getSeqResGroups().size(), readChain.getSeqResGroups().size());
-				assertEquals(origChain.getChainID(), readChain.getChainID());
+				assertEquals(origChain.getId(), readChain.getId());
+				assertEquals(origChain.getName(), readChain.getName());
 				
 				Atom[] origAtoms = StructureTools.getAllAtomArray(origChain);
 				Atom[] readAtoms = StructureTools.getAllAtomArray(readChain);
