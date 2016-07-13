@@ -511,7 +511,7 @@ public class MMCIFFileTools {
 		List<AtomSite> list = new ArrayList<AtomSite>();
 
 		for (int m=0;m<s.nrModels();m++) {
-			for (Chain c:s.getChains()) {
+			for (Chain c:s.getChains(m)) {
 				list.addAll(convertChainToAtomSites(c, m+1, c.getChainID(), c.getInternalChainID()));
 			}
 		}
