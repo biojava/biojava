@@ -55,14 +55,11 @@ public class TestQuatSymmetryDetector {
 	public void testNMR() throws IOException, StructureException {
 
 		AtomCache cache = new AtomCache();
-		cache.setUseMmCif(true);
 		Structure pdb = cache.getStructure("BIO:1b4c:1");
-
 		SubunitClustererParameters clusterParams = new SubunitClustererParameters();
 		QuatSymmetryParameters symmParams = new QuatSymmetryParameters();
 		QuatSymmetryResults symmetry = QuatSymmetryDetector.calcGlobalSymmetry(
 				pdb, symmParams, clusterParams);
-
 		// C2 symmetry non pseudosymmetric
 		assertEquals("C2", symmetry.getSymmetry());
 		assertEquals("A2", symmetry.getSubunits().getStoichiometry());
