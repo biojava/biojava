@@ -33,8 +33,8 @@ import org.biojava.nbio.structure.AtomImpl;
 import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.StructureTools;
-import org.biojava.nbio.structure.align.util.AtomCache;
 import org.junit.Test;
 
 /**
@@ -196,9 +196,7 @@ public class TestSubunitCluster {
 	@Test
 	public void testMergeStructure() throws StructureException, IOException {
 
-		AtomCache cache = new AtomCache();
-		cache.setUseMmCif(true);
-		Structure s = cache.getStructure("4hhb");
+		Structure s = StructureIO.getStructure("4hhb");
 
 		// Create one SubunitCluster for each chain
 		SubunitCluster sc1 = new SubunitCluster(
@@ -251,9 +249,7 @@ public class TestSubunitCluster {
 	@Test
 	public void testDivideInternally() throws StructureException, IOException {
 
-		AtomCache cache = new AtomCache();
-		cache.setUseMmCif(true);
-		Structure s = cache.getStructure("4e3e");
+		Structure s = StructureIO.getStructure("4e3e");
 
 		// Create a SubunitCluster for the chain
 		SubunitCluster sc1 = new SubunitCluster(

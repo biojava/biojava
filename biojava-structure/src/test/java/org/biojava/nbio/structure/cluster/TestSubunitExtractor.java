@@ -28,7 +28,6 @@ import java.util.List;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
-import org.biojava.nbio.structure.align.util.AtomCache;
 import org.junit.Test;
 
 /**
@@ -91,9 +90,7 @@ public class TestSubunitExtractor {
 	@Test
 	public void testBioAssembly() throws StructureException, IOException {
 
-		AtomCache cache = new AtomCache(); // TODO change to StructureIO
-		cache.setUseMmCif(true);
-		Structure s = cache.getStructure("BIO:4E3E:1");
+		Structure s = StructureIO.getStructure("BIO:4E3E:1");
 
 		SubunitClustererParameters params = new SubunitClustererParameters();
 
