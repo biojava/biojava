@@ -21,12 +21,11 @@
 package org.biojava.nbio.structure.symmetry.core;
 
 import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.cluster.SubunitCluster;
 import org.biojava.nbio.structure.cluster.SubunitClustererMethod;
 import org.biojava.nbio.structure.symmetry.geometry.MomentsOfInertia;
-import org.biojava.nbio.structure.symmetry.geometry.SuperPosition;
-
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
@@ -368,7 +367,7 @@ public class Subunits {
 
 	private void calcOriginalCenters() {
 		for (Point3d[] trace : caCoords) {
-			Point3d com = SuperPosition.centroid(trace);
+			Point3d com = Calc.getCentroid(trace);
 			originalCenters.add(com);
 		}
 	}
@@ -376,7 +375,7 @@ public class Subunits {
 	private void calcCentroid() {
 		Point3d[] orig = originalCenters.toArray(new Point3d[originalCenters
 				.size()]);
-		centroid = SuperPosition.centroid(orig);
+		centroid = Calc.getCentroid(orig);
 	}
 
 	private void calcCenters() {

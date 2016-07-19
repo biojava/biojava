@@ -21,6 +21,7 @@
 
 package org.biojava.nbio.structure.symmetry.geometry;
 
+import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.jama.EigenvalueDecomposition;
 import org.biojava.nbio.structure.jama.Matrix;
 
@@ -238,6 +239,10 @@ public final class SuperPosition {
 		translate(center, x);
 	}
 
+	/**
+	 * @deprecated use {@link Calc#getCentroid(Point3d[])
+	 */
+	@Deprecated
 	public static Point3d centroid(Point3d[] x) {
 		Point3d center = new Point3d();
 		for (Point3d p: x) {
