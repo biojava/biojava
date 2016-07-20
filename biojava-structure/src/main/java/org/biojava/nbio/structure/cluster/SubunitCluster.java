@@ -34,9 +34,15 @@ import org.biojava.nbio.structure.align.StructureAlignment;
 import org.biojava.nbio.structure.align.StructureAlignmentFactory;
 import org.biojava.nbio.structure.align.ce.CeMain;
 import org.biojava.nbio.structure.align.model.AFPChain;
+import org.biojava.nbio.structure.align.multiple.Block;
+import org.biojava.nbio.structure.align.multiple.BlockImpl;
+import org.biojava.nbio.structure.align.multiple.BlockSet;
+import org.biojava.nbio.structure.align.multiple.BlockSetImpl;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsembleImpl;
+import org.biojava.nbio.structure.align.multiple.MultipleAlignmentImpl;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
+import org.biojava.nbio.structure.align.multiple.util.ReferenceSuperimposer;
 import org.biojava.nbio.structure.symmetry.core.Subunits;
 import org.biojava.nbio.structure.symmetry.internal.CESymmParameters;
 import org.biojava.nbio.structure.symmetry.internal.CeSymm;
@@ -45,6 +51,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * A SubunitCluster contains a set of equivalent {@link Subunits}, the set of
@@ -68,7 +75,9 @@ public class SubunitCluster {
 	private SubunitClustererMethod method = SubunitClustererMethod.IDENTITY;
 
 	/**
-	 * A SubunitCluster is always initialized with a single Subunit.
+	 * A SubunitCluster is always initialized with a single Subunit. To obtain a
+	 * SubunitCluster with multiple Subunits, initialize different
+	 * SubunitClusters and merge them.
 	 * 
 	 * @param subunit
 	 *            initial Subunit
@@ -83,6 +92,15 @@ public class SubunitCluster {
 		subunitEQR.add(identity);
 
 		representative = 0;
+	}
+
+	/**
+	 * Subunits contained in the SubunitCluster.
+	 * 
+	 * @return an unmodifiable view of the original List
+	 */
+	public List<Subunit> getSubunits() {
+		return Collections.unmodifiableList(subunits);
 	}
 
 	/**
@@ -643,32 +661,63 @@ public class SubunitCluster {
 
 		List<Atom[]> alignedAtoms = Collections.emptyList();
 
-		// Loop through all subunits and add only the aligned positions
-		for (int s = 0; s < subunits.size(); s++) {
-			Atom[] aligned = new Atom[length()];
-			for (int p = 0; p < length(); p++) {
-				aligned[p] = subunits.get(s).getRepresentativeAtoms()[subunitEQR
-						.get(s).get(p)];
-			}
-			alignedAtoms.add(aligned);
-		}
+		// Loop through all subunits and add the aligned positions
+		for (int s = 0; s < subunits.size(); s++)
+			alignedAtoms.add(getAlignedAtomsSubunit(s));
 
 		return alignedAtoms;
 	}
 
 	/**
+	 * @param index
+	 *            Subunit index in the Cluster
 	 * @return An Atom array of length {@link #length()} with the aligned Atoms
-	 *         from the selected Subunit in the cluster
+	 *         from the selected Subunit in the Cluster
 	 */
 	public Atom[] getAlignedAtomsSubunit(int index) {
 
 		Atom[] aligned = new Atom[subunitEQR.get(index).size()];
+
+		// Add only the aligned positions of the Subunit in the Cluster
 		for (int p = 0; p < subunitEQR.get(index).size(); p++) {
 			aligned[p] = subunits.get(index).getRepresentativeAtoms()[subunitEQR
 					.get(index).get(p)];
 		}
 
 		return aligned;
+	}
+
+	/**
+	 * The multiple alignment is calculated from the equivalent residues in the
+	 * SubunitCluster. The alignment is recalculated every time the method is
+	 * called (no caching).
+	 * 
+	 * @return MultipleAlignment representation of the aligned residues in this
+	 *         Subunit Cluster
+	 * @throws StructureException
+	 */
+	public MultipleAlignment getMultipleAlignment() throws StructureException {
+
+		// Create a multiple alignment with the atom arrays of the Subunits
+		MultipleAlignment msa = new MultipleAlignmentImpl();
+		msa.setEnsemble(new MultipleAlignmentEnsembleImpl());
+		msa.getEnsemble().setAtomArrays(
+				subunits.stream().map(s -> s.getRepresentativeAtoms())
+						.collect(Collectors.toList()));
+
+		// Fill in the alignment information
+		BlockSet bs = new BlockSetImpl(msa);
+		Block b = new BlockImpl(bs);
+		b.setAlignRes(subunitEQR);
+
+		// Fill in the transformation matrices
+		new ReferenceSuperimposer(representative).superimpose(msa);
+
+		// Calculate some scores
+		MultipleAlignmentScorer.calculateScores(msa);
+
+		return msa;
+
 	}
 
 	@Override
