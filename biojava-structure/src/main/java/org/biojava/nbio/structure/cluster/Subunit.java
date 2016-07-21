@@ -23,18 +23,17 @@ package org.biojava.nbio.structure.cluster;
 import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.core.sequence.ProteinSequence;
 import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.StructureIdentifier;
 import org.biojava.nbio.structure.StructureTools;
 
 /**
  * A Subunit consists of a set of residues from a Structure, which may
  * correspond to an entire Chain, a Domain, or any subset or combination of
- * residues from them.
+ * residues from them. All the residues of a Subunit are of the same type.
  * <p>
- * There are two fundamental requirements. First, the residues have to be
- * sequential and connected in the original Structure (with the exception of
- * missing residues or loops in between). All the residues are of the same type.
- * These requirements are not checked when constructing the Object, but they are
- * assumed to always hold.
+ * The Subunit object can contain additional fields for identification and
+ * annotation.
  * 
  * @author Aleix Lafita
  * @since 5.0.0
@@ -42,19 +41,41 @@ import org.biojava.nbio.structure.StructureTools;
  */
 public class Subunit {
 
+	// Optional fields for Subunit annotation
+	private String name;
+	private Structure structure;
+	private StructureIdentifier identifier;
+
+	// Required fields for Subunit definition
 	private Atom[] reprAtoms;
 	private ProteinSequence sequence = null;
 
 	/**
-	 * A Subunit is uniquely defined by the coordinates of the representative
-	 * Atoms of its residues, in sequential order.
+	 * A Subunit is solely defined by the coordinates of the representative
+	 * Atoms of its residues. It can be identified with a StructureIdentifier
+	 * and/or a name and stores a reference to the Structure from which the
+	 * Atoms were obtained.
 	 * 
 	 * @param repAtoms
-	 *            representative Atoms
+	 *            representative Atoms. It cannot be null
+	 * @param name
+	 *            String field that identifies the Subunit. It can be null
+	 * @param identifier
+	 *            StructureIdentifier. It can be null
+	 * @param structure
+	 *            parent Structure object. It can be null
 	 */
-	public Subunit(Atom[] reprAtoms) {
+	public Subunit(Atom[] reprAtoms, String name,
+			StructureIdentifier identifier, Structure structure) {
+
+		if (reprAtoms == null)
+			throw new IllegalArgumentException(
+					"Representative Atom Array of the Subunit is null");
 
 		this.reprAtoms = reprAtoms;
+		this.name = name;
+		this.identifier = identifier;
+		this.structure = structure;
 	}
 
 	/**
@@ -111,9 +132,47 @@ public class Subunit {
 		return sequence;
 	}
 
+	/**
+	 * The Name of a Subunit is a free-text field, user defined.
+	 * 
+	 * @return the Subunit name
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * The Name of a Subunit is a free-text field, user defined.
+	 * 
+	 * @param name
+	 *            of the Subunit
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	/**
+	 * The parent Structure from which the Subunit atoms were obtained.
+	 * 
+	 * @return Structure object
+	 */
+	public Structure getStructure() {
+		return structure;
+	}
+
+	/**
+	 * The standard identifier of the Subunit.
+	 * 
+	 * @return StructureIdentifier object
+	 */
+	public StructureIdentifier getIdentifier() {
+		return identifier;
+	}
+
 	@Override
 	public String toString() {
-		return "Subunit [Size=" + size() + ", Sequence=" + sequence + "]";
+		return "Subunit [Name: " + name + ", Identifier: " + identifier
+				+ ", Size:" + size() + ", Sequence:" + sequence + "]";
 	}
 
 }
