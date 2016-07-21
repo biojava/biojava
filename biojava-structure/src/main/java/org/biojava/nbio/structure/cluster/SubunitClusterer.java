@@ -110,7 +110,7 @@ public class SubunitClusterer {
 			}
 		}
 
-		if (params.getClustererMethod() == SubunitClustererMethod.STRUCTURE)
+		if (!params.isInternalSymmetry())
 			return clusters;
 
 		// Now divide clusters by their INTERNAL SYMMETRY

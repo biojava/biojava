@@ -12,15 +12,21 @@ public class QsAlignParameters {
 	private double dCutoff = 10.0;
 
 	/**
-	 * The maximum allowed distance between two aligned residues of equivalent
-	 * Subunits.
+	 * The maximum allowed distance between the centroids of two equivalent
+	 * Subunits, in A.
 	 * 
-	 * @return
+	 * @return dCutoff
 	 */
 	public double getdCutoff() {
 		return dCutoff;
 	}
 
+	/**
+	 * The maximum allowed distance between the centroids of two equivalent
+	 * Subunits, in A.
+	 * 
+	 * @param dCutoff
+	 */
 	public void setdCutoff(double dCutoff) {
 		this.dCutoff = dCutoff;
 	}

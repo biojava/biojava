@@ -65,8 +65,10 @@ public class TestSubunitCluster {
 		Atom[] reprAtoms = atoms.toArray(new Atom[atoms.size()]);
 
 		// Create two identical SubunitCluster
-		SubunitCluster sc1 = new SubunitCluster(new Subunit(reprAtoms));
-		SubunitCluster sc2 = new SubunitCluster(new Subunit(reprAtoms));
+		SubunitCluster sc1 = new SubunitCluster(new Subunit(reprAtoms,
+				"subunit 1", null, null));
+		SubunitCluster sc2 = new SubunitCluster(new Subunit(reprAtoms,
+				"subunit 2", null, null));
 
 		boolean merged = sc1.mergeIdentical(sc2);
 
@@ -88,7 +90,8 @@ public class TestSubunitCluster {
 		}
 		Atom[] reprAtoms2 = atoms2.toArray(new Atom[atoms2.size()]);
 
-		SubunitCluster sc3 = new SubunitCluster(new Subunit(reprAtoms2));
+		SubunitCluster sc3 = new SubunitCluster(new Subunit(reprAtoms2,
+				"subunit 1", null, null));
 
 		merged = sc1.mergeIdentical(sc3);
 
@@ -121,8 +124,10 @@ public class TestSubunitCluster {
 		Atom[] reprAtoms = atoms.toArray(new Atom[atoms.size()]);
 
 		// Create two identical SubunitCluster
-		SubunitCluster sc1 = new SubunitCluster(new Subunit(reprAtoms));
-		SubunitCluster sc2 = new SubunitCluster(new Subunit(reprAtoms));
+		SubunitCluster sc1 = new SubunitCluster(new Subunit(reprAtoms,
+				"subunit 1", null, null));
+		SubunitCluster sc2 = new SubunitCluster(new Subunit(reprAtoms,
+				"subunit 2", null, null));
 
 		boolean merged = sc1.mergeSequence(sc2, 0.9, 0.9);
 
@@ -144,7 +149,8 @@ public class TestSubunitCluster {
 		}
 		Atom[] reprAtoms2 = atoms2.toArray(new Atom[atoms2.size()]);
 
-		SubunitCluster sc3 = new SubunitCluster(new Subunit(reprAtoms2));
+		SubunitCluster sc3 = new SubunitCluster(new Subunit(reprAtoms2,
+				"subunit 3", null, null));
 
 		merged = sc1.mergeSequence(sc3, 0.9, 0.9);
 
@@ -174,7 +180,8 @@ public class TestSubunitCluster {
 		}
 		Atom[] reprAtoms3 = atoms3.toArray(new Atom[atoms3.size()]);
 
-		SubunitCluster sc4 = new SubunitCluster(new Subunit(reprAtoms3));
+		SubunitCluster sc4 = new SubunitCluster(new Subunit(reprAtoms3,
+				"subunit 4", null, null));
 
 		merged = sc1.mergeSequence(sc4, 0.9, 0.9);
 
@@ -203,16 +210,16 @@ public class TestSubunitCluster {
 		// Create one SubunitCluster for each chain
 		SubunitCluster sc1 = new SubunitCluster(
 				new Subunit(StructureTools.getRepresentativeAtomArray(s
-						.getChainByIndex(0))));
+						.getChainByIndex(0)), "chain 0", null, s));
 		SubunitCluster sc2 = new SubunitCluster(
 				new Subunit(StructureTools.getRepresentativeAtomArray(s
-						.getChainByIndex(1))));
+						.getChainByIndex(1)), "chain 1", null, s));
 		SubunitCluster sc3 = new SubunitCluster(
 				new Subunit(StructureTools.getRepresentativeAtomArray(s
-						.getChainByIndex(2))));
+						.getChainByIndex(2)), "chain 2", null, s));
 		SubunitCluster sc4 = new SubunitCluster(
 				new Subunit(StructureTools.getRepresentativeAtomArray(s
-						.getChainByIndex(3))));
+						.getChainByIndex(3)), "chain 3", null, s));
 
 		// Clusters 1 and 3 and 2 and 4 are identical
 		boolean merged13 = sc1.mergeStructure(sc3, 3.0, 0.9);
@@ -238,7 +245,6 @@ public class TestSubunitCluster {
 		assertEquals(sc1.length(), 140, 2);
 		assertEquals(sc1.getAlignedAtomsSubunit(0).length,
 				sc1.getAlignedAtomsSubunit(2).length);
-		
 
 	}
 
@@ -258,7 +264,7 @@ public class TestSubunitCluster {
 		// Create a SubunitCluster for the chain
 		SubunitCluster sc1 = new SubunitCluster(
 				new Subunit(StructureTools.getRepresentativeAtomArray(s
-						.getChainByIndex(0))));
+						.getChainByIndex(0)), "chain 0", null, s));
 
 		// Clusters should be merged by identity
 		boolean divided = sc1.divideInternally(0.8, 3.0, 20);

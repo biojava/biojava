@@ -118,7 +118,8 @@ public class TestSubunitClusterer {
 		assertEquals(clusters.get(0).getClustererMethod(),
 				SubunitClustererMethod.IDENTITY);
 
-		params.setClustererMethod(SubunitClustererMethod.INTERNAL_SYMMETRY);
+		params.setClustererMethod(SubunitClustererMethod.STRUCTURE);
+		params.setInternalSymmetry(true);
 		params.setRmsdThreshold(3.0);
 
 		clusters = SubunitClusterer.cluster(s, params);
@@ -128,6 +129,6 @@ public class TestSubunitClusterer {
 		assertEquals(clusters.get(0).size(), 6);
 		assertTrue(clusters.get(0).length() < 177);
 		assertEquals(clusters.get(0).getClustererMethod(),
-				SubunitClustererMethod.INTERNAL_SYMMETRY);
+				SubunitClustererMethod.STRUCTURE);
 	}
 }

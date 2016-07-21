@@ -604,7 +604,9 @@ public class SubunitCluster {
 				Atom[] reprAtoms = Arrays.copyOfRange(subunits.get(s)
 						.getRepresentativeAtoms(), start, end + 1);
 
-				newSubunits.add(new Subunit(reprAtoms));
+				newSubunits.add(new Subunit(reprAtoms, subunits.get(s)
+						.getName(), subunits.get(s).getIdentifier(), subunits
+						.get(s).getStructure()));
 
 				// Recalculate equivalent residues
 				List<Integer> eqr = new ArrayList<Integer>();
@@ -625,7 +627,7 @@ public class SubunitCluster {
 				representative = s;
 		}
 
-		method = SubunitClustererMethod.INTERNAL_SYMMETRY;
+		method = SubunitClustererMethod.STRUCTURE;
 
 		return true;
 	}

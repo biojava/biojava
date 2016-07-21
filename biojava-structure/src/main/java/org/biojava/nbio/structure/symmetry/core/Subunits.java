@@ -32,7 +32,7 @@ import java.util.*;
 /**
  * A bean to represent information about the set of {@link Subunit} being
  * considered for symmetry detection. This class is a helper for the
- * {@link QuatSymmetryDetector} algorithm, since it calculates the
+ * {@link QuatSymmetryDetector} algorithm, since it calculates and caches the
  * {@link MomentsOfInertia} and the centroids of each Subunit.
  * 
  * @author Peter Rose
@@ -42,32 +42,16 @@ import java.util.*;
 public class Subunits {
 
 	private List<Point3d[]> caCoords = new ArrayList<Point3d[]>();
-	private List<Integer> sequenceClusterIds = new ArrayList<Integer>();
-
-	private List<Integer> folds = new ArrayList<Integer>();
 	private List<Point3d> originalCenters = new ArrayList<Point3d>();
 	private List<Point3d> centers = new ArrayList<Point3d>();
 	private List<Vector3d> unitVectors = new ArrayList<Vector3d>();
 
+	private List<Integer> folds = new ArrayList<Integer>();
+	private List<Integer> clusterIds = new ArrayList<Integer>();
+	private List<SubunitCluster> clusters;
+
 	private Point3d centroid;
 	private MomentsOfInertia momentsOfInertia = new MomentsOfInertia();
-
-	/**
-	 * All input Lists should contain one element per subunit.
-	 * 
-	 * @param caCoords
-	 *            CA coordinates of all subunits
-	 * @param sequenceClusterIds
-	 *            ID of the cluster that each subunit belongs to
-	 * @param folds
-	 *            Valid symmetry orders for this stoichiometry
-	 */
-	public Subunits(List<Point3d[]> caCoords, List<Integer> sequenceClusterIds,
-			List<Integer> folds) {
-		this.caCoords = caCoords;
-		this.sequenceClusterIds = sequenceClusterIds;
-		this.folds = folds;
-	}
 
 	/**
 	 * Converts the List of {@link SubunitCluster} to a Subunit object.
@@ -77,12 +61,14 @@ public class Subunits {
 	 */
 	public Subunits(List<SubunitCluster> clusters) {
 
+		this.clusters = clusters;
+
 		// Loop through all subunits in the clusters and fill Lists
 		for (int c = 0; c < clusters.size(); c++) {
 
 			for (int s = 0; s < clusters.get(c).size(); s++) {
-				sequenceClusterIds.add(c);
 
+				clusterIds.add(c);
 				Atom[] atoms = clusters.get(c).getAlignedAtomsSubunit(s);
 
 				// Convert atoms to points
@@ -107,6 +93,14 @@ public class Subunits {
 		return caCoords;
 	}
 
+	public List<Integer> getClusterIds() {
+		return clusterIds;
+	}
+
+	public List<SubunitCluster> getClusters() {
+		return clusters;
+	}
+
 	public int getSubunitCount() {
 		run();
 		if (centers == null) {
@@ -115,48 +109,8 @@ public class Subunits {
 		return centers.size();
 	}
 
-	public List<Integer> getSequenceClusterIds() {
-		return sequenceClusterIds;
-	}
-
 	public List<Integer> getFolds() {
 		return folds;
-	}
-
-	public String getStoichiometry() {
-
-		// count number of members in each cluster
-		Map<Integer, Integer> map = new TreeMap<Integer, Integer>();
-		for (Integer id : sequenceClusterIds) {
-			Integer value = map.get(id);
-			if (value == null) {
-				value = new Integer(1);
-			} else {
-				value++;
-			}
-			map.put(id, value);
-		}
-
-		List<Integer> stoichiometries = new ArrayList<Integer>(map.size());
-		for (Integer key : map.keySet())
-			stoichiometries.add(map.get(key));
-		Collections.sort(stoichiometries);
-		Collections.reverse(stoichiometries);
-
-		// build formula string
-		String alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-		StringBuilder formula = new StringBuilder();
-		for (int i = 0; i < stoichiometries.size(); i++) {
-			String key = "?";
-			if (i < alpha.length())
-				key = alpha.substring(i, i + 1);
-
-			formula.append(key);
-			if (stoichiometries.get(i) > 1)
-				formula.append(stoichiometries.get(i));
-		}
-
-		return formula.toString();
 	}
 
 	public int getCalphaCount() {

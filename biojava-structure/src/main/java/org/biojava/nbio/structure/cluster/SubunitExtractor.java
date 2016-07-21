@@ -67,7 +67,7 @@ public class SubunitExtractor {
 					Atom[] ca = StructureTools.getRepresentativeAtomArray(c);
 					logger.info("Chain " + c.getId() + "; CA Atoms: "
 							+ ca.length + "; SEQRES: " + c.getSeqResSequence());
-					subunits.add(new Subunit(ca));
+					subunits.add(new Subunit(ca, c.getName(), null, structure));
 
 				}
 			}
@@ -97,8 +97,7 @@ public class SubunitExtractor {
 	 * @return adjustedMinimumSequenceLength
 	 */
 	private static int calcAdjustedMinimumSequenceLength(
-			List<Subunit> subunits, int absMinLen, double fraction,
-			int minLen) {
+			List<Subunit> subunits, int absMinLen, double fraction, int minLen) {
 
 		int maxLength = Integer.MIN_VALUE;
 		int minLength = Integer.MAX_VALUE;
@@ -133,10 +132,9 @@ public class SubunitExtractor {
 
 		// If the median * fraction is lower than the minLength
 		if (minLength >= median * fraction) {
-			adjustedMinimumSequenceLength = Math.min(minLength,
-					minLen);
+			adjustedMinimumSequenceLength = Math.min(minLength, minLen);
 		}
-		
+
 		return adjustedMinimumSequenceLength;
 	}
 }
