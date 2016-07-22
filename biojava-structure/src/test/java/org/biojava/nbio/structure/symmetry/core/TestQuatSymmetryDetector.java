@@ -65,8 +65,8 @@ public class TestQuatSymmetryDetector {
 
 		// C2 symmetry non pseudosymmetric
 		assertEquals("C2", symmetry.getSymmetry());
-		assertEquals("A2", symmetry.getSubunits().getStoichiometry());
-		assertFalse(symmetry.getSubunits().isPseudoStoichiometric());
+		assertEquals("A2", symmetry.getStoichiometry());
+		assertFalse(symmetry.isPseudoStoichiometric());
 
 	}
 
@@ -92,7 +92,7 @@ public class TestQuatSymmetryDetector {
 
 		// C2 symmetry
 		assertEquals("C2", symmetry.getSymmetry());
-		assertEquals("A2B2", symmetry.getSubunits().getStoichiometry());
+		assertEquals("A2B2", symmetry.getStoichiometry());
 
 		// Use pseudosymmetry (structural clustering)
 		clusterParams.setClustererMethod(SubunitClustererMethod.STRUCTURE);
@@ -101,7 +101,7 @@ public class TestQuatSymmetryDetector {
 
 		// D2 pseudo-symmetry
 		assertEquals("D2", symmetry.getSymmetry());
-		assertEquals("A4", symmetry.getSubunits().getStoichiometry());
+		assertEquals("A4", symmetry.getStoichiometry());
 	}
 
 	/**
@@ -125,7 +125,7 @@ public class TestQuatSymmetryDetector {
 
 		// C1 global symmetry
 		assertEquals("C1", symmetry.getSymmetry());
-		assertEquals("A5B5C", symmetry.getSubunits().getStoichiometry());
+		assertEquals("A5B5C", symmetry.getStoichiometry());
 
 		// Local symmetry
 		List<QuatSymmetryResults> localSymm = QuatSymmetryDetector
@@ -139,7 +139,7 @@ public class TestQuatSymmetryDetector {
 
 		// Two A5 and one A5B5 stoichiometries as local symmetry
 		List<String> stoich = localSymm.stream().map(
-				t -> t.getSubunits().getStoichiometry()).collect(Collectors.toList());
+				t -> t.getStoichiometry()).collect(Collectors.toList());
 
 		assertTrue(stoich.contains("A5"));
 		assertTrue(stoich.contains("A5B5"));
@@ -158,10 +158,11 @@ public class TestQuatSymmetryDetector {
 		cache.setUseMmCif(true);
 		Structure pdb = cache.getStructure("BIO:4e3e:1");
 
-		// Internal symmetry analysis
+		// Internal symmetry analysis, use structural clustering
 		SubunitClustererParameters cp = new SubunitClustererParameters();
-		cp.setClustererMethod(SubunitClustererMethod.INTERNAL_SYMMETRY);
-		cp.setCoverageThreshold(0.8); // Lower coverage for internal symm
+		cp.setClustererMethod(SubunitClustererMethod.STRUCTURE);
+		cp.setInternalSymmetry(true);
+		cp.setCoverageThreshold(0.75); // Lower coverage for internal symm
 
 		QuatSymmetryParameters symmParams = new QuatSymmetryParameters();
 		QuatSymmetryResults symmetry = QuatSymmetryDetector.calcGlobalSymmetry(
@@ -169,7 +170,7 @@ public class TestQuatSymmetryDetector {
 
 		// D2 combined internal and quaternary symmetry
 		assertEquals("D3", symmetry.getSymmetry());
-		assertEquals("A6", symmetry.getSubunits().getStoichiometry());
+		assertEquals("A6", symmetry.getStoichiometry());
 
 	}
 	
@@ -193,7 +194,7 @@ public class TestQuatSymmetryDetector {
 
 		// H symmetry A3 stoichiometry
 		assertEquals("H", symmetry.getSymmetry());
-		assertEquals("A3", symmetry.getSubunits().getStoichiometry());
+		assertEquals("A3", symmetry.getStoichiometry());
 
 	}
 }

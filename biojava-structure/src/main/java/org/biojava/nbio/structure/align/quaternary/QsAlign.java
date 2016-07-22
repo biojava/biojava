@@ -48,8 +48,15 @@ public class QsAlign {
 	public static QsAlignResult align(Structure s1, Structure s2,
 			SubunitClustererParameters cParams, QsAlignParameters aParams)
 			throws StructureException {
-		return align(SubunitExtractor.extractSubunits(s1, cParams),
-				SubunitExtractor.extractSubunits(s2, cParams), cParams, aParams);
+		return align(
+				SubunitExtractor.extractSubunits(s1,
+						cParams.getAbsoluteMinimumSequenceLength(),
+						cParams.getMinimumSequenceLengthFraction(),
+						cParams.getMinimumSequenceLength()),
+				SubunitExtractor.extractSubunits(s2,
+						cParams.getAbsoluteMinimumSequenceLength(),
+						cParams.getMinimumSequenceLengthFraction(),
+						cParams.getMinimumSequenceLength()), cParams, aParams);
 	}
 
 	public static QsAlignResult align(List<Subunit> s1, List<Subunit> s2,

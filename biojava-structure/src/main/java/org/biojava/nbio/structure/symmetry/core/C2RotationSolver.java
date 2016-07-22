@@ -37,7 +37,7 @@ import java.util.List;
  * @author Peter
  */
 public class C2RotationSolver implements QuatSymmetrySolver {
-	private Subunits subunits = null;
+	private QuatSymmetrySubunits subunits = null;
 	private QuatSymmetryParameters parameters = null;
 	private Vector3d centroid = new Vector3d();
 	private Matrix4d centroidInverse = new Matrix4d();
@@ -45,7 +45,7 @@ public class C2RotationSolver implements QuatSymmetrySolver {
 	private RotationGroup rotations = new RotationGroup();
 
 
-	public C2RotationSolver(Subunits subunits, QuatSymmetryParameters parameters) {
+	public C2RotationSolver(QuatSymmetrySubunits subunits, QuatSymmetryParameters parameters) {
 		if (subunits.getSubunitCount() != 2) {
 			throw new IllegalArgumentException("C2RotationSolver can only be applied to cases with 2 centers");
 		}

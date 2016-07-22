@@ -92,10 +92,10 @@ public class DemoQuatSymmetryJmol {
 	private static void showResults(Structure s, String name,
 			QuatSymmetryResults results) {
 
-		String title = name + ": " + results.getSubunits().getStoichiometry()
+		String title = name + ": " + results.getStoichiometry()
 				+ ", " + results.getSymmetry();
 
-		if (results.getSubunits().isPseudoSymmetric())
+		if (results.isPseudosymmetric())
 			title += ", pseudosymmetric";
 
 		if (results.isLocal())

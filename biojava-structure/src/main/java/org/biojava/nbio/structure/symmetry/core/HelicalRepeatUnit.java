@@ -28,13 +28,13 @@ import java.util.*;
 import java.util.Map.Entry;
 
 public class HelicalRepeatUnit {
-	private Subunits subunits = null;
+	private QuatSymmetrySubunits subunits = null;
 	private List<Point3d> repeatUnitCenters = new ArrayList<Point3d>();
 	private List<Point3d[]> repeatUnits = new ArrayList<Point3d[]>();
 	private List<List<Integer>> repeatUnitIndices = new ArrayList<List<Integer>>();
 	private Map<Integer[], Integer> interactingNeighbors = Collections.emptyMap();
 
-public HelicalRepeatUnit(Subunits subunits) {
+public HelicalRepeatUnit(QuatSymmetrySubunits subunits) {
 	this.subunits = subunits;
 }
 
@@ -107,7 +107,7 @@ private List<Point3d> calcRepeatUnitCenters() {
 //		System.out.println("calcRepeatUnitCenters case21");
 		// TODO need to group subunits into repeating groups
 		// Case of 3B5U: A14, but seems to form (A2)*7 and symmetry related subunits don't have direct contact
-		List<Integer> sequenceClusterIds = subunits.getSequenceClusterIds();
+		List<Integer> sequenceClusterIds = subunits.getClusterIds();
 		for (int i = 0; i < subunits.getSubunitCount(); i++) {
 			List<Integer> subunitIndices = new ArrayList<Integer>(1);
 			if (sequenceClusterIds.get(i) == 0) {
@@ -153,7 +153,7 @@ private List<Point3d[]> calcRepeatUnits() {
 			repeatTraces.add(SuperPosition.clonePoint3dArray(x));
 		}
 	} else {
-		List<Integer> sequenceClusterIds = subunits.getSequenceClusterIds();
+		List<Integer> sequenceClusterIds = subunits.getClusterIds();
 		for (int i = 0; i < subunits.getSubunitCount(); i++) {
 			if (sequenceClusterIds.get(i) == 0) {
 				Point3d[] x = subunits.getTraces().get(i);

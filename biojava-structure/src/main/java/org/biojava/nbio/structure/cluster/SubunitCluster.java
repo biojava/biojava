@@ -43,7 +43,7 @@ import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsembleImpl;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentImpl;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
 import org.biojava.nbio.structure.align.multiple.util.ReferenceSuperimposer;
-import org.biojava.nbio.structure.symmetry.core.Subunits;
+import org.biojava.nbio.structure.symmetry.core.QuatSymmetrySubunits;
 import org.biojava.nbio.structure.symmetry.internal.CESymmParameters;
 import org.biojava.nbio.structure.symmetry.internal.CeSymm;
 import org.biojava.nbio.structure.symmetry.internal.CeSymmResult;
@@ -54,7 +54,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * A SubunitCluster contains a set of equivalent {@link Subunits}, the set of
+ * A SubunitCluster contains a set of equivalent {@link QuatSymmetrySubunits}, the set of
  * equivalent residues (EQR) between {@link Subunit} and a {@link Subunit}
  * representative. It also stores the method used for clustering.
  * <p>

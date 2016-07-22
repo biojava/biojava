@@ -23,7 +23,7 @@ package org.biojava.nbio.structure.symmetry.axis;
 import org.biojava.nbio.structure.symmetry.core.Helix;
 import org.biojava.nbio.structure.symmetry.core.HelixLayers;
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetryResults;
-import org.biojava.nbio.structure.symmetry.core.Subunits;
+import org.biojava.nbio.structure.symmetry.core.QuatSymmetrySubunits;
 import org.biojava.nbio.structure.symmetry.geometry.MomentsOfInertia;
 import org.biojava.nbio.structure.symmetry.geometry.SuperPosition;
 
@@ -35,7 +35,7 @@ public class HelixAxisAligner extends AxisAligner {
 	private static final Vector3d Y_AXIS = new Vector3d(0,1,0);
 	private static final Vector3d Z_AXIS = new Vector3d(0,0,1);
 
-	private Subunits subunits = null;
+	private QuatSymmetrySubunits subunits = null;
 	private HelixLayers helixLayers = null;
 
 	private Matrix4d transformationMatrix = new Matrix4d();
@@ -201,7 +201,7 @@ public class HelixAxisAligner extends AxisAligner {
 	 * @see org.biojava.nbio.structure.quaternary.core.AxisAligner#getSubunits()
 	 */
 	@Override
-	public Subunits getSubunits() {
+	public QuatSymmetrySubunits getSubunits() {
 		return subunits;
 	}
 

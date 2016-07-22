@@ -24,10 +24,13 @@ import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.cluster.SubunitCluster;
 import org.biojava.nbio.structure.symmetry.geometry.MomentsOfInertia;
+import org.biojava.nbio.structure.symmetry.utils.SymmetryTools;
+
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * A bean to represent information about the set of {@link Subunit} being
@@ -48,7 +51,6 @@ public class QuatSymmetrySubunits {
 
 	private List<Integer> folds = new ArrayList<Integer>();
 	private List<Integer> clusterIds = new ArrayList<Integer>();
-	private List<SubunitCluster> clusters;
 
 	private Point3d centroid;
 	private MomentsOfInertia momentsOfInertia = new MomentsOfInertia();
@@ -60,8 +62,6 @@ public class QuatSymmetrySubunits {
 	 *            List of SubunitCluster
 	 */
 	public QuatSymmetrySubunits(List<SubunitCluster> clusters) {
-
-		this.clusters = clusters;
 
 		// Loop through all subunits in the clusters and fill Lists
 		for (int c = 0; c < clusters.size(); c++) {
@@ -80,13 +80,10 @@ public class QuatSymmetrySubunits {
 			}
 		}
 
-		// Fill in the folds with the function
-		List<Integer> stoichiometry = new ArrayList<Integer>(clusters.size());
-		for (int id = 0; id < clusters.size(); id++) {
-			int size = clusters.get(id).size();
-			stoichiometry.add(size);
-		}
-		folds = getValidFolds(stoichiometry);
+		// List number of members in each cluster
+		List<Integer> stoichiometries = clusters.stream().map(c -> c.size())
+						.collect(Collectors.toList());
+		folds = SymmetryTools.getValidFolds(stoichiometries);
 	}
 
 	public List<Point3d[]> getTraces() {
@@ -95,10 +92,6 @@ public class QuatSymmetrySubunits {
 
 	public List<Integer> getClusterIds() {
 		return clusterIds;
-	}
-
-	public List<SubunitCluster> getClusters() {
-		return clusters;
 	}
 
 	public int getSubunitCount() {
