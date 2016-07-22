@@ -39,7 +39,7 @@ import java.util.*;
  * @author Aleix Lafita
  * 
  */
-public class Subunits {
+public class QuatSymmetrySubunits {
 
 	private List<Point3d[]> caCoords = new ArrayList<Point3d[]>();
 	private List<Point3d> originalCenters = new ArrayList<Point3d>();
@@ -59,7 +59,7 @@ public class Subunits {
 	 * @param clusters
 	 *            List of SubunitCluster
 	 */
-	public Subunits(List<SubunitCluster> clusters) {
+	public QuatSymmetrySubunits(List<SubunitCluster> clusters) {
 
 		this.clusters = clusters;
 
@@ -232,40 +232,4 @@ public class Subunits {
 		}
 	}
 
-	/**
-	 * Find valid symmetry orders for a given stoichiometry. For instance, an
-	 * A6B4 protein would give [1,2] because (A6B4)1 and (A3B2)2 are valid
-	 * decompositions.
-	 * 
-	 * @param stoichiometry
-	 *            List giving the number of copies in each chain cluster
-	 * @return The common factors of the stoichiometry
-	 */
-	public static List<Integer> getValidFolds(List<Integer> stoichiometry) {
-
-		List<Integer> denominators = new ArrayList<Integer>();
-
-		if (stoichiometry.isEmpty())
-			return denominators;
-
-		int nChains = Collections.max(stoichiometry);
-
-		// Remove duplicate stoichiometries
-		Set<Integer> nominators = new TreeSet<Integer>(stoichiometry);
-
-		// find common denominators
-		for (int d = 1; d <= nChains; d++) {
-			boolean isDivisable = true;
-			for (Integer n : nominators) {
-				if (n % d != 0) {
-					isDivisable = false;
-					break;
-				}
-			}
-			if (isDivisable) {
-				denominators.add(d);
-			}
-		}
-		return denominators;
-	}
 }
