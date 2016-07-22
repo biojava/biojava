@@ -29,8 +29,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * The SubunitExtractor extracts the information about each protein Chain in a
- * Structure and converts them into a List of {@link Subunit}.
+ * The SubunitExtractor extracts the information of each protein {@link Chain}
+ * in a {@link Structure} and converts them into a List of {@link Subunit}.
  * 
  * @author Peter Rose
  * @author Aleix Lafita
@@ -46,8 +46,24 @@ public class SubunitExtractor {
 	private SubunitExtractor() {
 	}
 
+	/**
+	 * Extract the information of each protein Chain in a Structure and converts
+	 * them into a List of Subunit. The name of the Subunits is set to the
+	 * {@link Chain#getName()}.
+	 * 
+	 * 
+	 * @param structure
+	 *            Structure object with protein Chains
+	 * @param absMinLen
+	 *            {@link SubunitClustererParameters#getAbsoluteMinimumSequenceLength()}
+	 * @param fraction
+	 *            {@link SubunitClustererParameters#getMinimumSequenceLengthFraction()}
+	 * @param minLen
+	 *            {@link SubunitClustererParameters#getMinimumSequenceLength()}
+	 * @return List of Subunits
+	 */
 	public static List<Subunit> extractSubunits(Structure structure,
-			SubunitClustererParameters params) {
+			int absMinLen, double fraction, int minLen) {
 
 		// The extracted subunit container
 		List<Subunit> subunits = new ArrayList<Subunit>();
@@ -74,15 +90,13 @@ public class SubunitExtractor {
 		}
 
 		// Calculate the minimum length of a Subunit
-		int minLen = calcAdjustedMinimumSequenceLength(subunits,
-				params.getAbsoluteMinimumSequenceLength(),
-				params.getMinimumSequenceLengthFraction(),
-				params.getMinimumSequenceLength());
-		logger.info("Adjusted minimum sequence length: " + minLen);
+		int adjustedMinLen = calcAdjustedMinimumSequenceLength(subunits,
+				absMinLen, fraction, minLen);
+		logger.info("Adjusted minimum sequence length: " + adjustedMinLen);
 
 		// Filter out short Subunits
 		for (int s = subunits.size() - 1; s >= 0; s--) {
-			if (subunits.get(s).size() < minLen)
+			if (subunits.get(s).size() < adjustedMinLen)
 				subunits.remove(s);
 		}
 

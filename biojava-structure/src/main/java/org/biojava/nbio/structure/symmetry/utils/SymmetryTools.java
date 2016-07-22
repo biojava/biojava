@@ -1012,38 +1012,4 @@ public class SymmetryTools {
 		return denominators;
 	}
 
-	/**
-	 * Return a canonical String representation of the stoichiometry of a group
-	 * of Subunits.
-	 * <P>
-	 * This method only uses alphabetic charaters for Subunit ids. For
-	 * stoichiometries with a large number of entities, ? will be used when all
-	 * alphabetic characters are used.
-	 * 
-	 * @param stoichiometry
-	 *            List giving the number of copies in each Subunit cluster
-	 * @return String representation of the stoichiometry
-	 */
-	public static String getStoichiometryString(List<Integer> stoichiometry) {
-
-		Collections.sort(stoichiometry);
-		Collections.reverse(stoichiometry);
-
-		// build formula string
-		String alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-		StringBuilder formula = new StringBuilder();
-		for (int i = 0; i < stoichiometry.size(); i++) {
-			String key = "?";
-			if (i < alpha.length())
-				key = alpha.substring(i, i + 1);
-
-			formula.append(key);
-			if (stoichiometry.get(i) > 1)
-				formula.append(stoichiometry.get(i));
-		}
-
-		return formula.toString();
-
-	}
-
 }
