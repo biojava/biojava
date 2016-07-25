@@ -1,8 +1,10 @@
 package org.biojava.nbio.structure.align.quaternary;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.vecmath.Matrix4d;
 
@@ -154,7 +156,7 @@ public class QsAlignResult {
 		if (alignment == null)
 			return -1.0;
 		if (alignment.getScore(MultipleAlignmentScorer.RMSD) == null)
-			return -1.0;
+			return MultipleAlignmentScorer.getRMSD(alignment);
 
 		return alignment.getScore(MultipleAlignmentScorer.RMSD);
 	}
@@ -200,10 +202,50 @@ public class QsAlignResult {
 		this.alignment = alignment;
 	}
 
+	/**
+	 * Return the aligned subunits of the first Subunit group.
+	 * 
+	 * @return a List of Subunits in the alignment order
+	 */
+	public List<Subunit> getAlignedSubunits1() {
+
+		List<Subunit> aligned = new ArrayList<Subunit>(subunitMap.size());
+
+		for (Integer key : subunitMap.keySet())
+			aligned.add(subunits1.get(key));
+
+		return aligned;
+	}
+
+	/**
+	 * Return the aligned subunits of the second Subunit group.
+	 * 
+	 * @return a List of Subunits in the alignment order
+	 */
+	public List<Subunit> getAlignedSubunits2() {
+
+		List<Subunit> aligned = new ArrayList<Subunit>(subunitMap.size());
+
+		for (Integer key : subunitMap.keySet())
+			aligned.add(subunits1.get(subunitMap.get(key)));
+
+		return aligned;
+	}
+
 	@Override
 	public String toString() {
-		return "QsAlignResult [relation=" + relation + ", rmsd=" + getRmsd()
-				+ ", length=" + length() + "]";
+		return "QsAlignResult [relation="
+				+ relation
+				+ ", rmsd="
+				+ getRmsd()
+				+ ", length="
+				+ length()
+				+ "\n Aligned subunits 1: "
+				+ getAlignedSubunits1().stream().map(s -> s.getName())
+						.collect(Collectors.toList())
+				+ "\n Aligned subunits 2: "
+				+ getAlignedSubunits2().stream().map(s -> s.getName())
+						.collect(Collectors.toList()) + "]";
 	}
 
 }

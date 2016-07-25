@@ -8,15 +8,14 @@ import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.align.quaternary.QsAlign;
 import org.biojava.nbio.structure.align.quaternary.QsAlignParameters;
 import org.biojava.nbio.structure.align.quaternary.QsAlignResult;
-import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.cluster.SubunitClustererParameters;
 
 /**
  * Demo on how to use programatically {@link QsAlign} for the alignment of
  * quaternary structures.
  * <p>
- * Small oligomers: proliferating cell nuclear antigens (1PLR, 3HI8),
- * photosynthetic reaction centers (2JIY, 1DXR) ]
+ * Small oligomers: proliferating cell nuclear antigens (1PLR, 3HI8, 3IFV),
+ * photosynthetic reaction centers (2JIY, 1DXR)
  * <p>
  * Big oligomers: cytochrome bc1 complexes (1bcc, 1kb9, 1qcr), phycocyanin
  * (2VML, 2BV8), bacterial ribosome (1FJG, 4V54).
@@ -30,11 +29,6 @@ public class DemoQsAlign {
 
 	public static void main(String[] args) throws IOException,
 			StructureException {
-
-		// Remove lines when bug with ChemComp in MMTF is fixed TODO
-		AtomCache cache = new AtomCache();
-		cache.setUseMmCif(true);
-		StructureIO.setAtomCache(cache);
 
 		// Align two trimeric DNA clamps
 		Structure s1 = StructureIO.getStructure("1bcc");
