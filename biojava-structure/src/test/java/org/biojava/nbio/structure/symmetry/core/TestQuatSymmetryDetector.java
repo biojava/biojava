@@ -25,9 +25,10 @@ import static org.junit.Assert.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
+
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.align.util.AtomCache;
+import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.cluster.SubunitClustererMethod;
 import org.biojava.nbio.structure.cluster.SubunitClustererParameters;
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetryDetector;
@@ -54,15 +55,13 @@ public class TestQuatSymmetryDetector {
 	@Test
 	public void testNMR() throws IOException, StructureException {
 
-		AtomCache cache = new AtomCache();
-		cache.setUseMmCif(true);
-		Structure pdb = cache.getStructure("BIO:1b4c:1");
-
+		Structure pdb = StructureIO.getStructure("BIO:1b4c:1");
+		
 		SubunitClustererParameters clusterParams = new SubunitClustererParameters();
 		QuatSymmetryParameters symmParams = new QuatSymmetryParameters();
 		QuatSymmetryResults symmetry = QuatSymmetryDetector.calcGlobalSymmetry(
 				pdb, symmParams, clusterParams);
-
+		
 		// C2 symmetry non pseudosymmetric
 		assertEquals("C2", symmetry.getSymmetry());
 		assertEquals("A2", symmetry.getStoichiometry());
@@ -79,9 +78,7 @@ public class TestQuatSymmetryDetector {
 	@Test
 	public void testPseudosymmetry() throws IOException, StructureException {
 
-		AtomCache cache = new AtomCache();
-		cache.setUseMmCif(true);
-		Structure pdb = cache.getStructure("BIO:4hhb:1");
+		Structure pdb = StructureIO.getStructure("BIO:4hhb:1");
 
 		// Non-pseudosymmetry
 		SubunitClustererParameters clusterParams = new SubunitClustererParameters();
@@ -113,9 +110,7 @@ public class TestQuatSymmetryDetector {
 	@Test
 	public void testLocal() throws IOException, StructureException {
 
-		AtomCache cache = new AtomCache();
-		cache.setUseMmCif(true);
-		Structure pdb = cache.getStructure("BIO:4p2c:1");
+		Structure pdb = StructureIO.getStructure("BIO:4p2c:1");
 
 		// Global Symmetry
 		SubunitClustererParameters clusterParams = new SubunitClustererParameters();
@@ -154,9 +149,7 @@ public class TestQuatSymmetryDetector {
 	@Test
 	public void testInternalSymmetry() throws IOException, StructureException {
 
-		AtomCache cache = new AtomCache();
-		cache.setUseMmCif(true);
-		Structure pdb = cache.getStructure("BIO:4e3e:1");
+		Structure pdb = StructureIO.getStructure("BIO:4e3e:1");
 
 		// Internal symmetry analysis, use structural clustering
 		SubunitClustererParameters cp = new SubunitClustererParameters();
@@ -183,9 +176,7 @@ public class TestQuatSymmetryDetector {
 	@Test
 	public void testHelical() throws IOException, StructureException {
 
-		AtomCache cache = new AtomCache();
-		cache.setUseMmCif(true);
-		Structure pdb = cache.getStructure("BIO:1B47:1");
+		Structure pdb = StructureIO.getStructure("BIO:1B47:1");
 
 		SubunitClustererParameters cp = new SubunitClustererParameters();
 		QuatSymmetryParameters symmParams = new QuatSymmetryParameters();

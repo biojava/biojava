@@ -480,21 +480,18 @@ public class MmtfUtils {
 		GroupType chainType = getChainType(modelChain.getAtomGroups());
 		for(int i=0; i<sequence.length(); i++){
 			char singleLetterCode = sequence.charAt(i);
-			Group group;
+			Group group = null;
 			if(seqResGroups.size()<=i){
-				group=null;
 			}
 			else{
 				group=seqResGroups.get(i);
 			}
 			if(group!=null){
-				group=null;
 				continue;
 			}
 			group = getSeqResGroup(modelChain, singleLetterCode, chainType);
 			addGroupAtId(seqResGroups, group, i);
 			seqResGroups.set(i, group);
-			group=null;
 		}
 	}
 
@@ -514,7 +511,7 @@ public class MmtfUtils {
 		while(seqResGroups.size()<=sequenceIndexId){
 			seqResGroups.add(null);
 		}
-		if(sequenceIndexId>0){
+		if(sequenceIndexId>=0){
 			seqResGroups.set(sequenceIndexId, group);
 		}		
 	}

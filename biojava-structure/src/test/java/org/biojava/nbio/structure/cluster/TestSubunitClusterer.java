@@ -27,7 +27,7 @@ import java.util.List;
 
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.align.util.AtomCache;
+import org.biojava.nbio.structure.StructureIO;
 import org.junit.Test;
 
 /**
@@ -45,9 +45,7 @@ public class TestSubunitClusterer {
 	@Test
 	public void testPTMs() throws StructureException, IOException {
 
-		AtomCache cache = new AtomCache(); // TODO change to StructureIO
-		cache.setUseMmCif(true);
-		Structure s = cache.getStructure("1hiv");
+		Structure s = StructureIO.getStructure("1hiv");
 		SubunitClustererParameters params = new SubunitClustererParameters();
 		params.setClustererMethod(SubunitClustererMethod.SEQUENCE);
 
@@ -65,9 +63,7 @@ public class TestSubunitClusterer {
 	public void testPseudostoichiometry() throws StructureException,
 			IOException {
 
-		AtomCache cache = new AtomCache(); // TODO change to StructureIO
-		cache.setUseMmCif(true);
-		Structure s = cache.getStructure("4HHB");
+		Structure s = StructureIO.getStructure("4HHB");
 		SubunitClustererParameters params = new SubunitClustererParameters();
 		params.setClustererMethod(SubunitClustererMethod.SEQUENCE);
 		params.setSequenceIdentityThreshold(0.95);
@@ -101,9 +97,7 @@ public class TestSubunitClusterer {
 	@Test
 	public void testInternalSymmetry() throws StructureException, IOException {
 
-		AtomCache cache = new AtomCache(); // TODO change to StructureIO
-		cache.setUseMmCif(true);
-		Structure s = cache.getStructure("BIO:4E3E:1");
+		Structure s = StructureIO.getStructure("BIO:4E3E:1");
 
 		SubunitClustererParameters params = new SubunitClustererParameters();
 		params.setClustererMethod(SubunitClustererMethod.SEQUENCE);
