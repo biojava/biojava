@@ -444,7 +444,7 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 		int n = subunits.getSubunitCount();
 		List<Integer> modelNumbers = subunits.getModelNumbers();
 		List<String> chainIds = subunits.getChainIds();
-		List<Integer> seqClusterIds = subunits.getSequenceClusterIds();
+		List<Integer> seqClusterIds = subunits.getClusterIds();
 		int clusters = Collections.max(seqClusterIds) + 1;
 		Color[] col = ColorBrewer.BrBG.getColorPalette(clusters);
 		Color4f[] colors = ColorConverter.convertColor4f(col);
@@ -478,7 +478,7 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 		QuatSymmetrySubunits subunits = helixAxisAligner.getSubunits();
 		List<Integer> modelNumbers = subunits.getModelNumbers();
 		List<String> chainIds = subunits.getChainIds();
-		List<Integer> clusterIds = subunits.getSequenceClusterIds();
+		List<Integer> clusterIds = subunits.getClusterIds();
 		int clusterCount = Collections.max(clusterIds) + 1;
 
 		Map<Color4f, List<String>> colorMap = new HashMap<Color4f, List<String>>();

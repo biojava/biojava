@@ -22,6 +22,7 @@ package org.biojava.nbio.structure.symmetry.core;
 
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Calc;
+import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.cluster.SubunitCluster;
 import org.biojava.nbio.structure.symmetry.geometry.MomentsOfInertia;
 import org.biojava.nbio.structure.symmetry.utils.SymmetryTools;
@@ -51,6 +52,7 @@ public class QuatSymmetrySubunits {
 
 	private List<Integer> folds = new ArrayList<Integer>();
 	private List<Integer> clusterIds = new ArrayList<Integer>();
+	private List<SubunitCluster> clusters;
 
 	private Point3d centroid;
 	private MomentsOfInertia momentsOfInertia = new MomentsOfInertia();
@@ -62,6 +64,8 @@ public class QuatSymmetrySubunits {
 	 *            List of SubunitCluster
 	 */
 	public QuatSymmetrySubunits(List<SubunitCluster> clusters) {
+
+		this.clusters = clusters;
 
 		// Loop through all subunits in the clusters and fill Lists
 		for (int c = 0; c < clusters.size(); c++) {
@@ -82,7 +86,7 @@ public class QuatSymmetrySubunits {
 
 		// List number of members in each cluster
 		List<Integer> stoichiometries = clusters.stream().map(c -> c.size())
-						.collect(Collectors.toList());
+				.collect(Collectors.toList());
 		folds = SymmetryTools.getValidFolds(stoichiometries);
 	}
 
@@ -92,6 +96,52 @@ public class QuatSymmetrySubunits {
 
 	public List<Integer> getClusterIds() {
 		return clusterIds;
+	}
+
+	/**
+	 * This method is provisional and should only be used for coloring Subunits.
+	 * A new coloring schema has to be implemented to allow the coloring of
+	 * Subunits, without implying one Subunit = one Chain.
+	 * 
+	 * @return A List of the Chain Ids of each Subunit
+	 */
+	public List<String> getChainIds() {
+		return clusters
+				.stream()
+				.map(c -> c.getSubunits().get(0).getRepresentativeAtoms()[0]
+						.getGroup().getChainId()).collect(Collectors.toList());
+	}
+
+	/**
+	 * This method is provisional and should only be used for coloring Subunits.
+	 * A new coloring schema has to be implemented to allow the coloring of
+	 * Subunits, without implying one Subunit = one Chain.
+	 * 
+	 * @return A List of the Model number of each Subunit
+	 */
+	public List<Integer> getModelNumbers() {
+		List<Integer> models = new ArrayList<Integer>(clusterIds.size());
+
+		// Loop through all subunits in the clusters and fill Lists
+		for (int c = 0; c < clusters.size(); c++) {
+			for (int s = 0; s < clusters.get(c).size(); s++) {
+
+				Atom[] atoms = clusters.get(c).getAlignedAtomsSubunit(s);
+
+				// TODO guess them chain and model (very ugly)
+				Chain chain = atoms[0].getGroup().getChain();
+
+				int model = 0;
+				for (int m = 0; m < chain.getStructure().nrModels(); m++) {
+					if (chain.getStructure().getModel(m).contains(chain)) {
+						model = m;
+						break;
+					}
+				}
+				models.add(model);
+			}
+		}
+		return models;
 	}
 
 	public int getSubunitCount() {
