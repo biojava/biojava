@@ -138,8 +138,8 @@ public class TestQuatSymmetryDetector {
 		assertEquals("C5", localSymm.get(2).getSymmetry());
 
 		// Two A5 and one A5B5 stoichiometries as local symmetry
-		List<String> stoich = localSymm.stream().map(
-				t -> t.getStoichiometry()).collect(Collectors.toList());
+		List<String> stoich = localSymm.stream().map(t -> t.getStoichiometry())
+				.collect(Collectors.toList());
 
 		assertTrue(stoich.contains("A5"));
 		assertTrue(stoich.contains("A5B5"));
@@ -173,7 +173,7 @@ public class TestQuatSymmetryDetector {
 		assertEquals("A6", symmetry.getStoichiometry());
 
 	}
-	
+
 	/**
 	 * A structure with helical symmetry: 1B47
 	 * 
@@ -195,6 +195,30 @@ public class TestQuatSymmetryDetector {
 		// H symmetry A3 stoichiometry
 		assertEquals("H", symmetry.getSymmetry());
 		assertEquals("A3", symmetry.getStoichiometry());
+
+	}
+
+	/**
+	 * A structure with local helical symmetry: 5JLF
+	 * 
+	 * @throws IOException
+	 * @throws StructureException
+	 */
+	@Test
+	public void testHelicalLocal() throws IOException, StructureException {
+
+		AtomCache cache = new AtomCache();
+		cache.setUseMmCif(true);
+		Structure pdb = cache.getStructure("BIO:5JLF:1");
+
+		SubunitClustererParameters cp = new SubunitClustererParameters();
+		QuatSymmetryParameters symmParams = new QuatSymmetryParameters();
+		List<QuatSymmetryResults> results = QuatSymmetryDetector
+				.calcLocalSymmetries(pdb, symmParams, cp);
+
+		// H symmetry A5 stoichiometry
+		assertEquals("H", results.get(0).getSymmetry());
+		assertEquals("A3", results.get(0).getStoichiometry());
 
 	}
 }

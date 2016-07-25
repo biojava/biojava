@@ -52,7 +52,7 @@ public class HelixAxisAligner extends AxisAligner {
 	boolean modified = true;
 
 	public HelixAxisAligner(QuatSymmetryResults results) {
-		this.subunits = results.getSubunits();
+		this.subunits = new QuatSymmetrySubunits(results.getSubunitClusters());
 		this.helixLayers = results.getHelixLayers();
 		if (subunits == null) {
 			throw new IllegalArgumentException("HelixAxisTransformation: Subunits are null");

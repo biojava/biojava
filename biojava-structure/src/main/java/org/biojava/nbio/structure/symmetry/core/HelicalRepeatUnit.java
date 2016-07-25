@@ -73,14 +73,19 @@ private void run() {
 }
 
 private List<Point3d> calcRepeatUnitCenters() {
-	Set<Integer> uniqueModels = new HashSet<Integer>(subunits.getModelNumbers());
+	
+	// TODO why do we use models here? it should not matter. Setting to 0 all
+	List<Integer> models = new ArrayList<Integer>(subunits.getSubunitCount());
+	for (int s = 0; s <subunits.getSubunitCount(); s++)
+		models.add(0);
+	Set<Integer> uniqueModels = new HashSet<Integer>(Arrays.asList(1));
+	
 	int modelCount = uniqueModels.size();
 	List<Integer> folds = this.subunits.getFolds();
 	int maxFold = folds.get(folds.size()-1);
 
 	List<Point3d> repeatCenters = new ArrayList<Point3d>();
 	List<Point3d> centers = subunits.getCenters();
-	List<Integer> models = subunits.getModelNumbers();
 
 //	if (modelCount == maxFold && subunits.getSubunitCount() > 3) {
 	if (maxFold%modelCount == 0 && modelCount > 1 && subunits.getSubunitCount() > 3) {
@@ -129,13 +134,19 @@ private List<Point3d> calcRepeatUnitCenters() {
 }
 
 private List<Point3d[]> calcRepeatUnits() {
-	Set<Integer> uniqueModels = new HashSet<Integer>(subunits.getModelNumbers());
+	
+	// TODO why do we use models here? it should not matter. Setting to 0 all
+	List<Integer> models = new ArrayList<Integer>(
+			subunits.getSubunitCount());
+	for (int s = 0; s < subunits.getSubunitCount(); s++)
+		models.add(0);
+	Set<Integer> uniqueModels = new HashSet<Integer>(Arrays.asList(1));
+		
 	int modelCount = uniqueModels.size();
 	List<Integer> folds = this.subunits.getFolds();
 	int maxFold = folds.get(folds.size()-1);
 
 	List<Point3d[]> repeatTraces = new ArrayList<Point3d[]>();
-	List<Integer> models = subunits.getModelNumbers();
 	List<Point3d[]> traces = subunits.getTraces();
 
 //	if (modelCount == maxFold && subunitCount > 3) {
