@@ -198,9 +198,7 @@ public class TestQuatSymmetryDetector {
 	@Test
 	public void testHelicalLocal() throws IOException, StructureException {
 
-		AtomCache cache = new AtomCache();
-		cache.setUseMmCif(true);
-		Structure pdb = cache.getStructure("BIO:5JLF:1");
+		Structure pdb = StructureIO.getStructure("BIO:5JLF:1");
 
 		SubunitClustererParameters cp = new SubunitClustererParameters();
 		QuatSymmetryParameters symmParams = new QuatSymmetryParameters();
