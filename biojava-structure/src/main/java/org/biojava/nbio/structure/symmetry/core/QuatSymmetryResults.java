@@ -24,6 +24,7 @@ package org.biojava.nbio.structure.symmetry.core;
 
 import java.util.Collections;
 import java.util.List;
+
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.cluster.SubunitCluster;
 import org.biojava.nbio.structure.cluster.SubunitClusterUtils;
@@ -47,6 +48,7 @@ public class QuatSymmetryResults {
 
 	// Cached properties
 	private String stoichiometry;
+	int subunitCount;
 
 	// Information about the symmetry
 	private SymmetryPerceptionMethod method;
@@ -70,7 +72,11 @@ public class QuatSymmetryResults {
 		this.clusters = clusters;
 		this.stoichiometry = SubunitClusterUtils
 				.getStoichiometryString(clusters);
-
+		
+		subunitCount = 0;
+		for (SubunitCluster c : clusters)
+			subunitCount += c.size();
+			
 		this.rotationGroup = rotationGroup;
 		this.method = method;
 	}
@@ -102,7 +108,16 @@ public class QuatSymmetryResults {
 	public List<SubunitCluster> getSubunitClusters() {
 		return Collections.unmodifiableList(clusters);
 	}
-
+	
+	/**
+	 * Return the number of Subunits involved in the symmetry.
+	 * 
+	 * @return the number of Subunits
+	 */
+	public int getSubunitCount() {
+		return subunitCount;
+	}
+	
 	/**
 	 * @return rotation group (point group) information representing rotational
 	 *         quaternary symmetry.
@@ -211,7 +226,7 @@ public class QuatSymmetryResults {
 	@Override
 	public String toString() {
 		return "QuatSymmetryResults [stoichiometry: " + getStoichiometry()
-				+ ", symmetry: " + getSymmetry() + ", pseudoStoichiometric: "
+				+ ", symmetry: " + getSymmetry() + ", pseudo-stoichiometric: "
 				+ isPseudoStoichiometric() + ", local: " + local + ", method: "
 				+ method + "]";
 	}

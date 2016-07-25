@@ -61,7 +61,7 @@ public class DemoQuatSymmetryJmol {
 	public static void main(String[] args) throws IOException,
 			StructureException {
 
-		String name = "4hhb";
+		String name = "1VYM";
 
 		// Download the biological assembly
 		AtomCache cache = new AtomCache();

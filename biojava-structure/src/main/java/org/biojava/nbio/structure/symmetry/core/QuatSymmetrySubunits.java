@@ -106,10 +106,16 @@ public class QuatSymmetrySubunits {
 	 * @return A List of the Chain Ids of each Subunit
 	 */
 	public List<String> getChainIds() {
-		return clusters
-				.stream()
-				.map(c -> c.getSubunits().get(0).getRepresentativeAtoms()[0]
-						.getGroup().getChainId()).collect(Collectors.toList());
+		
+		List<String> chains = new ArrayList<String>(getSubunitCount());
+
+		// Loop through all subunits in the clusters and fill Lists
+		for (int c = 0; c < clusters.size(); c++) {
+			for (int s = 0; s < clusters.get(c).size(); s++)
+				chains.add(clusters.get(c).getSubunits().get(s).getName());
+		}
+		
+		return chains;
 	}
 
 	/**
@@ -120,7 +126,8 @@ public class QuatSymmetrySubunits {
 	 * @return A List of the Model number of each Subunit
 	 */
 	public List<Integer> getModelNumbers() {
-		List<Integer> models = new ArrayList<Integer>(clusterIds.size());
+		
+		List<Integer> models = new ArrayList<Integer>(getSubunitCount());
 
 		// Loop through all subunits in the clusters and fill Lists
 		for (int c = 0; c < clusters.size(); c++) {
