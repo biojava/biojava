@@ -17,6 +17,9 @@ import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
+import org.biojava.nbio.structure.align.util.AtomCache;
+import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
+import org.biojava.nbio.structure.io.mmcif.DownloadChemCompProvider;
 import org.junit.Test;
 import org.rcsb.mmtf.decoder.StructureDataToAdapter;
 import org.rcsb.mmtf.encoder.AdapterToStructureData;
@@ -35,6 +38,12 @@ public class TestMmtfRoundTrip {
 	 */
 	@Test
 	public void testRoundTrip() throws IOException, StructureException {
+		AtomCache cache = new AtomCache();
+		cache.setUseMmCif(true);
+		ChemCompGroupFactory.setChemCompProvider(new DownloadChemCompProvider());
+		
+		
+		StructureIO.setAtomCache(cache);
 		Structure structure = StructureIO.getStructure("4CUP");
 		AdapterToStructureData writerToEncoder = new AdapterToStructureData();
 		new MmtfStructureWriter(structure, writerToEncoder);

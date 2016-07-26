@@ -30,7 +30,7 @@ public class MmtfStructureWriter {
 	private StructureAdapterInterface mmtfDecoderInterface;
 
 	/**
-	 * Ppass data from Biojava structure  to another generic output type.Loops through the data 
+	 * Pass data from Biojava structure  to another generic output type. Loops through the data 
 	 * structure and calls all the set functions.
 	 * @param structure the input {@link Structure} to write
 	 * @param dataTransferInterface the generic interface that 
@@ -87,10 +87,7 @@ public class MmtfStructureWriter {
 					for (Atom atom : atomsInGroup){
 						char altLoc = MmtfStructure.UNAVAILABLE_CHAR_VALUE;
 						if(atom.getAltLoc()!=null){
-							if(atom.getAltLoc().charValue()==' '){
-
-							}
-							else{
+							if(atom.getAltLoc().charValue()!=' '){
 								altLoc=atom.getAltLoc().charValue();
 							}
 						}
