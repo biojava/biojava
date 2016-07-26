@@ -20,6 +20,7 @@ public class ChromosomeMappingTools {
     public static final boolean debug = false;
     private static final String newline = System.getProperty("line.separator");
 
+
     public static final String CHROMOSOME = "CHROMOSOME";
     public static final String CDS = "CDS";
 
@@ -36,6 +37,7 @@ public class ChromosomeMappingTools {
             return printHTMLExonStructureForward(chromosomePosition);
 
         return printHTMLExonStructureReverse(chromosomePosition);
+
     }
 
     private static String formatExonStructureForward(GeneChromosomePosition chromPos) {
@@ -765,8 +767,10 @@ public class ChromosomeMappingTools {
                 inCoding = false;
                 codingLength += (end - cdsStart);
                 if (debug) {
+
                     System.out.println(" <-  Exon        : " + (cdsStart+1) + " - " + end + " | " + (end - cdsStart) + " | " + (codingLength-3)  + " | " + (codingLength % 3));
                     System.out.println("     UTR         : " + start + " - " + (cdsStart ));
+
                 }
 
             } else if (inCoding) {
@@ -863,6 +867,7 @@ public class ChromosomeMappingTools {
      */
     public static List<Range> getCDSExonRanges(GeneChromosomePosition chromPos){
         if ( chromPos.getOrientation() == '+')
+
             return getCDSExonRangesForward(chromPos,CDS);
 
         return getCDSExonRangesReverse(chromPos,CDS);
@@ -883,6 +888,7 @@ public class ChromosomeMappingTools {
 
     private static List<Range> getCDSExonRangesReverse(GeneChromosomePosition chromPos,
                                                        String responseType) {
+
         List<Integer> exonStarts = chromPos.getExonStarts();
         List<Integer> exonEnds   = chromPos.getExonEnds();
 
@@ -944,6 +950,7 @@ public class ChromosomeMappingTools {
                     s.append(newline);
                 }
 
+
                 Range r ;
                 if ( responseType.equals(CDS))
                     r = Range.closed(0,codingLength);
@@ -954,6 +961,7 @@ public class ChromosomeMappingTools {
 
             } else if (start <= cdsStart && end >= cdsStart) {
                 inCoding = false;
+
                 Range r;
                 if ( responseType.equals(CDS))
                      r = Range.closed(codingLength,codingLength+(end-cdsStart));
@@ -973,6 +981,7 @@ public class ChromosomeMappingTools {
 
             } else if (inCoding) {
                 // full exon is coding
+
                 Range r;
                 if ( responseType.equals(CDS))
                      r = Range.closed(codingLength,codingLength+(end-start));
@@ -1003,6 +1012,7 @@ public class ChromosomeMappingTools {
     }
 
 
+
     private static List<Range> getCDSExonRangesForward(GeneChromosomePosition chromPos,
                                                        String responseType) {
 
@@ -1028,6 +1038,7 @@ public class ChromosomeMappingTools {
                 codingLength += (end - cdsStart);
 //
 
+
                 Range r;
                 if ( responseType.equals(CDS))
                     r = Range.closed(0,codingLength);
@@ -1039,6 +1050,7 @@ public class ChromosomeMappingTools {
                 //System.out.println(" <-- CDS end at: " + cdsEnd );
                 inCoding = false;
 
+
                 Range r;
                 if ( responseType.equals(CDS))
                      r = Range.closed(codingLength,codingLength+(cdsEnd-start));
@@ -1049,6 +1061,7 @@ public class ChromosomeMappingTools {
 
             } else if (inCoding) {
                 // full exon is coding
+
                 Range r;
                 if ( responseType.equals(CDS))
                     r = Range.closed(codingLength,codingLength+(end-start));

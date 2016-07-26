@@ -79,7 +79,7 @@ public class TestGenomeMapping extends TestCase{
                 chromranges = Lists.reverse(chromranges);
 
                 assertTrue(chromranges.size() == 6);
-                
+
                 // compare with https://www.ncbi.nlm.nih.gov/CCDS/CcdsBrowse.cgi?REQUEST=CCDS&DATA=CCDS6881
                 validateExon(0,127868008,127868076, chromranges  );
                 validateExon(1,127868320,127868512, chromranges  );
