@@ -108,7 +108,7 @@ public class QsAlign {
 			}
 		}
 
-		// STEP 3: Align the assemblies for each cluster match O(L^2+N^2)
+		// STEP 3: Align the assemblies for each cluster match O(L^2*N+N^2*L)
 		for (int globalKey : clusterMap.keySet()) {
 
 			// Obtain the clusters
