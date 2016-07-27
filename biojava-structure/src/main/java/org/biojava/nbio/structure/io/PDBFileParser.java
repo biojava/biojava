@@ -1828,17 +1828,27 @@ public class PDBFileParser  {
 		// missing (i.e. misformatted PDB file), then parse the
 		// element from the chemical component.
 		Element element = Element.R;
+		boolean guessElement = true;
 		if ( line.length() > 77 ) {
 			// parse element from element field
-			String elementSymbol = line.substring (76, 78).trim();
-			try {
-				element = Element.valueOfIgnoreCase(elementSymbol);
-			}  catch (IllegalArgumentException e){
-				logger.warn("Element {} was not recognised. Assigning generic element R to it", elementSymbol);
+			String elementSymbol = line.substring(76, 78).trim();
+			if (elementSymbol.equals("")) {
+				logger.warn("Element column was empty. Assigning atom element "
+						+ "from Chemical Component Dictionary information", elementSymbol);
+			} else {
+				try {
+					element = Element.valueOfIgnoreCase(elementSymbol);
+					guessElement = false;
+				}  catch (IllegalArgumentException e){
+					logger.warn("Element {} was not recognised. Assigning atom element "
+							+ "from Chemical Component Dictionary information", elementSymbol);
+				}
 			}
 		} else {
 			logger.warn("Missformatted PDB file: element column is not present. "
-					+ "Assigning atom elements from Chemical Component Dictionary information");
+					+ "Assigning atom element from Chemical Component Dictionary information");
+		}
+		if (guessElement) {
 			String elementSymbol = null;
 			if (currentGroup.getChemComp() != null) {
 				for (ChemCompAtom a : currentGroup.getChemComp().getAtoms()) {
