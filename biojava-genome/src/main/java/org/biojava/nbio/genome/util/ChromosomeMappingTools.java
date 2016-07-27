@@ -39,20 +39,7 @@ public class ChromosomeMappingTools {
         return formatExonStructureReverse(chromosomePosition);
 
     }
-
-
-    /** Pretty print the details of a GeneChromosomePosition in a HTML-formatted string
-     *
-     * @param chromosomePosition
-     * @return
-     */
-    public static String getHTMLExonStructure(GeneChromosomePosition chromosomePosition ){
-        if ( chromosomePosition.getOrientation() == '+')
-            return getHTMLExonStructureForward(chromosomePosition);
-
-        return getHTMLExonStructureReverse(chromosomePosition);
-
-    }
+    
 
     private static String formatExonStructureForward(GeneChromosomePosition chromPos) {
 
@@ -108,68 +95,6 @@ public class ChromosomeMappingTools {
     }
 
 
-    private static String getHTMLExonStructureForward(GeneChromosomePosition chromPos) {
-        StringWriter s = new StringWriter();
-
-        List<Integer> exonStarts = chromPos.getExonStarts();
-        List<Integer> exonEnds   = chromPos.getExonEnds();
-
-
-        int cdsStart = chromPos.getCdsStart();
-        int cdsEnd   = chromPos.getCdsEnd();
-
-        boolean inCoding = false;
-        int codingLength = 0;
-
-        for (int i = 0; i < exonStarts.size(); i++) {
-
-            int start = exonStarts.get(i);
-            int end = exonEnds.get(i);
-
-
-            //s.append("forward exon: " + start + " - " + end + " | " + (end - start));
-            //s.append(newline);
-
-            if (start <= cdsStart && end >= cdsStart) {
-
-                inCoding = true;
-                codingLength += (end - cdsStart);
-                s.append("<tr><th>Region</th><th>start</th><th>end</th><th>region length</th><th>phase at end</th></tr>");
-                s.append("<tr><td>UTR</td><td>"  + format(start)      + "</td><td>" +  format(cdsStart) + "</td><td></td><td></td></tr>");
-                s.append(newline);
-                s.append("<tr><td>Exon</td><td>").append(showGenePosLink(chromPos, (cdsStart + 1))).append("</td><td>").append(showGenePosLink(chromPos, end)).append("</td><td>").append(Integer.toString(end - cdsStart)).append("</td><td>").append(Integer.toString(codingLength % 3)).append("</td></tr>");
-                s.append(newline);
-
-            } else if (start <= cdsEnd && end >= cdsEnd) {
-                //logger.debug(" <-- CDS end at: " + cdsEnd );
-                inCoding = false;
-                codingLength += (cdsEnd - start);
-
-                s.append("<tr><td>Exon</td><td>" +  showGenePosLink(chromPos, (start + 1)) + "</td><td>" +  showGenePosLink(chromPos,cdsEnd) + "</td><td>" + (cdsEnd - start) +  "</td><td>" + (codingLength % 3)+"</td></tr>");
-                s.append(newline);
-                s.append("<tr><td>UTR</td><td>" +  format(cdsEnd +1) + "</td><td>" +  format(end)+"</td><td></td><td></td></tr>");
-                s.append(newline);
-
-
-            } else if (inCoding) {
-                // full exon is coding
-                codingLength += (end - start);
-
-                s.append("<tr><td>Exon</td><td>").append(showGenePosLink(chromPos, (start + 1))).append("</td><td>").append(showGenePosLink(chromPos, end)).append("</td><td>").append(Integer.toString(end - start)).append("</td><td>").append(Integer.toString(codingLength % 3)).append("</td></tr>");
-                s.append(newline);
-            }
-            //			if ( inCoding )
-            //				logger.debug("exon phase at end:" + (codingLength % 3));
-            //
-            //			logger.debug("   coding length: " + codingLength);
-
-
-        }
-        //s.append("Length of coding sequence: ");
-        //s.append((codingLength-3)+" nucleotides.");
-        s.append(newline);
-        return s.toString();
-    }
 
     private static String showGenePosLink(GeneChromosomePosition chromPos, Integer pos ) {
 
@@ -187,89 +112,6 @@ public class ChromosomeMappingTools {
         buf.append("</a>");
 
         return buf.toString();
-    }
-
-    private static String getHTMLExonStructureReverse(GeneChromosomePosition chromPos) {
-        StringWriter s = new StringWriter();
-
-        List<Integer> exonStarts = chromPos.getExonStarts();
-        List<Integer> exonEnds   = chromPos.getExonEnds();
-
-
-        int cdsStart = chromPos.getCdsStart();
-        int cdsEnd   = chromPos.getCdsEnd();
-
-        // logger.debug("CDS START:" +format(cdsStart) + " - " + format(cdsEnd));
-
-        boolean inCoding = false;
-        int codingLength = 0;
-
-        if (cdsEnd < cdsStart) {
-            int tmp = cdsEnd;
-            cdsEnd = cdsStart;
-            cdsStart = tmp;
-        }
-
-        s.append("<tr><th>Region</th><th>start</th><th>end</th><th>region length</th><th>phase at end</th></tr>");
-        // map reverse
-        for (int i = exonStarts.size() - 1; i >= 0; i--) {
-
-            int end = exonStarts.get(i);
-            int start = exonEnds.get(i);
-
-            if (end < start) {
-                int tmp = end;
-                end = start;
-                start = tmp;
-            }
-
-            if (start <= cdsEnd && end >= cdsEnd) {
-                inCoding = true;
-
-
-                int tmpstart = start;
-                if (start < cdsStart) {
-                    tmpstart = cdsStart;
-                }
-                codingLength += (cdsEnd - tmpstart);
-
-                s.append("<tr><td><div data-toggle=\"tooltip\" data-placement=\"top\" title=\"Untranslated Region\">UTR</div></td><td>").append(format(cdsEnd + 1)).append("</td><td>").append(format(end)).append("</td><td></td><td></td></tr>");
-                s.append(newline);
-
-                s.append("<tr><td>Exon</td><td>" + showGenePosLink(chromPos,(tmpstart+1)) + "</td><td>" + showGenePosLink(chromPos, cdsEnd) + "</td><td>" + (cdsEnd - tmpstart) + "</td><td>"  + (codingLength % 3)+"</td></tr>");
-                s.append(newline);
-                // single exon with UTR on both ends
-                if (tmpstart != start)
-                    s.append("<tr><td><div data-toggle=\"tooltip\" data-placement=\"top\" title=\"Untranslated Region\">UTR</div></td><td>" + format(cdsStart) + "</td><td>" + format(start + 1) + "</td><td></td><td></td></tr>");
-                s.append(newline);
-
-            } else if (start <= cdsStart && end >= cdsStart) {
-                inCoding = false;
-                codingLength += (end - cdsStart);
-
-                s.append("<tr><td>Exon</td><td>" + showGenePosLink(chromPos,(cdsStart+1)) + "</td><td>" + showGenePosLink(chromPos, end) + "</td><td>" + (end - cdsStart) +"</td><td>"+ (codingLength % 3)+"</td></tr>");
-                s.append(newline);
-                s.append("<tr><td><div data-toggle=\"tooltip\" data-placement=\"top\" title=\"Untranslated Region\">UTR</div></td><td>" + format(start+1) + "</td><td>" + format(cdsStart)+"</td><td></td><td></td></tr>");
-                s.append(newline);
-
-
-            } else if (inCoding) {
-                // full exon is coding
-                codingLength += (end - start);
-
-                s.append("<tr><td>Exon</td><td>" + showGenePosLink(chromPos,(start+1)) + "</td><td>" + showGenePosLink(chromPos, end) + "</td><td>" + (end - start) + "</td><td>"  + (codingLength % 3)+"</td></tr>");
-                s.append(newline);
-            } else {
-                // e.g. see UBQLN3
-                s.append("<tr><td data-toggle=\"tooltip\" data-placement=\"right\" title=\"Untranslated Region\">UTR</td><td>" + format(start) + "</td><td>" + format(end)+"</td><td></td><td></td></tr>");
-                s.append(newline);
-            }
-        }
-
-        // s.append("Length coding sequence: " + (codingLength-3) + " nucleotides");
-        s.append(newline);
-
-        return s.toString();
     }
 
 
