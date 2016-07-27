@@ -1,8 +1,6 @@
 package org.biojava.nbio.structure.io.mmtf;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -255,8 +253,21 @@ public class TestMmtfRoundTrip {
 		for (int i=0; i<chainOne.getSeqResGroups().size(); i++) {
 			Group gOne = chainOne.getSeqResGroup(i);
 			Group gTwo = chainTwo.getSeqResGroup(i);
+			assertNotNull(gOne.getChemComp());
+			assertNotNull(gTwo.getChemComp());
+			assertEquals(gOne.getChemComp().getOne_letter_code(), gTwo.getChemComp().getOne_letter_code());
+			
 			assertEquals(gOne.getResidueNumber(), gTwo.getResidueNumber());
-			assertEquals(gOne.getPDBName(), gTwo.getPDBName());
+			//assertEquals(gOne.getPDBName(), gTwo.getPDBName());
+		}
+		
+		// this is to test issue #517: a null pointer happens if the group hasn't been cloned (including the chem comp associated to it)
+		Chain clonedChain = (Chain)chainTwo.clone();
+		assertEquals(chainTwo.getSeqResGroups().size(), clonedChain.getSeqResGroups().size());
+		for (int i=0; i<clonedChain.getSeqResGroups().size(); i++) {
+			Group g = clonedChain.getSeqResGroup(i);
+			assertNotNull(g.getChemComp());
+			
 		}
 	}
 }
