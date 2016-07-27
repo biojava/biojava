@@ -46,11 +46,11 @@ public class ChromosomeMappingTools {
      * @param chromosomePosition
      * @return
      */
-    public static String printHTMLExonStructure(GeneChromosomePosition chromosomePosition ){
+    public static String getHTMLExonStructure(GeneChromosomePosition chromosomePosition ){
         if ( chromosomePosition.getOrientation() == '+')
-            return printHTMLExonStructureForward(chromosomePosition);
+            return getHTMLExonStructureForward(chromosomePosition);
 
-        return printHTMLExonStructureReverse(chromosomePosition);
+        return getHTMLExonStructureReverse(chromosomePosition);
 
     }
 
@@ -108,7 +108,7 @@ public class ChromosomeMappingTools {
     }
 
 
-    private static String printHTMLExonStructureForward(GeneChromosomePosition chromPos) {
+    private static String getHTMLExonStructureForward(GeneChromosomePosition chromPos) {
         StringWriter s = new StringWriter();
 
         List<Integer> exonStarts = chromPos.getExonStarts();
@@ -189,7 +189,7 @@ public class ChromosomeMappingTools {
         return buf.toString();
     }
 
-    private static String printHTMLExonStructureReverse(GeneChromosomePosition chromPos) {
+    private static String getHTMLExonStructureReverse(GeneChromosomePosition chromPos) {
         StringWriter s = new StringWriter();
 
         List<Integer> exonStarts = chromPos.getExonStarts();
@@ -783,7 +783,7 @@ public class ChromosomeMappingTools {
 
                 logger.debug(" no translation!");
             }
-            
+
         }
 
         logger.debug("length exons: " + lengthExons + " codin length: " + (codingLength - 3));
