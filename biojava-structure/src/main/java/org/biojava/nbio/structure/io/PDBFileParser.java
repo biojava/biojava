@@ -70,6 +70,7 @@ import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureImpl;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
+import org.biojava.nbio.structure.io.mmcif.model.ChemCompAtom;
 import org.biojava.nbio.structure.secstruc.SecStrucInfo;
 import org.biojava.nbio.structure.secstruc.SecStrucType;
 import org.biojava.nbio.structure.xtal.CrystalCell;
@@ -1825,30 +1826,38 @@ public class PDBFileParser  {
 
 		// Parse element from the element field. If this field is
 		// missing (i.e. misformatted PDB file), then parse the
-		// name from the atom name.
+		// element from the chemical component.
 		Element element = Element.R;
 		if ( line.length() > 77 ) {
 			// parse element from element field
+			String elementSymbol = line.substring (76, 78).trim();
 			try {
-				element = Element.valueOfIgnoreCase(line.substring (76, 78).trim());
-			}  catch (IllegalArgumentException e){}
-		} else {
-			// parse the name from the atom name
-			String elementSymbol = null;
-			// for atom names with 4 characters, the element is
-			// at the first position, example HG23 in Valine
-			if (fullname.trim().length() == 4) {
-				elementSymbol = fullname.substring(0, 1);
-			} else if ( fullname.trim().length() > 1){
-				elementSymbol = fullname.substring(0, 2).trim();
-			} 
-
-			try {
-				if (elementSymbol!=null)
-					element = Element.valueOfIgnoreCase(elementSymbol);
-			} catch (IllegalArgumentException e){
+				element = Element.valueOfIgnoreCase(elementSymbol);
+			}  catch (IllegalArgumentException e){
 				logger.warn("Element {} was not recognised. Assigning generic element R to it", elementSymbol);
 			}
+		} else {
+			logger.warn("Missformatted PDB file: element column is not present. "
+					+ "Assigning atom elements from Chemical Component Dictionary information");
+			String elementSymbol = null;
+			if (currentGroup.getChemComp() != null) {
+				for (ChemCompAtom a : currentGroup.getChemComp().getAtoms()) {
+					if (a.getAtom_id().equals(fullname.trim())) {
+						elementSymbol = a.getType_symbol();
+						break;
+					}
+				}
+				if (elementSymbol == null) {
+					logger.warn("Atom name {} was not found in the Chemical Component Dictionary information of {}. "
+							+ "Assigning generic element R to it", fullname.trim(), currentGroup.getPDBName());
+				} else {
+					element = Element.valueOfIgnoreCase(elementSymbol);
+				}			
+			} else {
+				logger.warn("Chemical Component Dictionary information was not found for Atom name {}. "
+						+ "Assigning generic element R to it", fullname.trim());
+			}
+			
 		}
 		atom.setElement(element);
 
