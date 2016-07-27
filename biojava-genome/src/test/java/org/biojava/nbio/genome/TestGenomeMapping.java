@@ -18,9 +18,9 @@ import java.util.zip.GZIPInputStream;
  */
 public class TestGenomeMapping extends TestCase{
 
-    static final String geneChromosomeFile = "http://cdn.rcsb.org/gene/hg38/geneChromosome38.tsf.gz";
+    private static final String geneChromosomeFile = "http://cdn.rcsb.org/gene/hg38/geneChromosome38.tsf.gz";
 
-    List<GeneChromosomePosition> gcps = null;
+    private List<GeneChromosomePosition> gcps = null;
 
     @Override
     protected void setUp() throws Exception {
@@ -59,7 +59,7 @@ public class TestGenomeMapping extends TestCase{
                 assertTrue(pos.getOrientation().equals('-'));
                 assertTrue(pos.getChromosome().equals("chr9"));
 
-                List<Range> cdsranges = ChromosomeMappingTools.getCDSExonRanges(pos);
+                List<Range<Integer>> cdsranges = ChromosomeMappingTools.getCDSExonRanges(pos);
 
                 validateExon(0,0,7, cdsranges  );
                 validateExon(1,7,43, cdsranges  );
@@ -73,7 +73,7 @@ public class TestGenomeMapping extends TestCase{
 
                 assertTrue("CDS length should be 582, but is " + cdslength, cdslength == (uniProtLength *3));
 
-                List<Range> chromranges = ChromosomeMappingTools.getChromosomalRangesForCDS(pos);
+                List<Range<Integer>> chromranges = ChromosomeMappingTools.getChromosomalRangesForCDS(pos);
 
                 // we are reverse strand. reverse the order
                 chromranges = Lists.reverse(chromranges);
@@ -94,7 +94,7 @@ public class TestGenomeMapping extends TestCase{
         }
     }
 
-        @Test
+    @Test
     public void testHBA(){
 
         String geneName = "HBA1";
@@ -117,7 +117,7 @@ public class TestGenomeMapping extends TestCase{
                 assertTrue(pos.getTranscriptionEnd().equals(177522));
                 assertTrue(pos.getOrientation().equals('+'));
 
-                List<Range> cdsranges = ChromosomeMappingTools.getCDSExonRanges(pos);
+                List<Range<Integer>> cdsranges = ChromosomeMappingTools.getCDSExonRanges(pos);
 
                 assertTrue(cdsranges.size() == 3);
 
@@ -126,7 +126,7 @@ public class TestGenomeMapping extends TestCase{
                 validateExon(2,300,429,cdsranges);
 
 
-                List<Range> chromranges = ChromosomeMappingTools.getChromosomalRangesForCDS(pos);
+                List<Range<Integer>> chromranges = ChromosomeMappingTools.getChromosomalRangesForCDS(pos);
 
                 validateExon(0,176716,176811, chromranges  );
                 validateExon(1,176928,177133, chromranges  );
@@ -141,7 +141,7 @@ public class TestGenomeMapping extends TestCase{
 
     }
 
-    private void validateExon(int exonNr, int start, int stop, List<Range> cdsranges) {
+    private void validateExon(int exonNr, int start, int stop, List<Range<Integer>> cdsranges) {
 
         Range exon = cdsranges.get(exonNr);
         assertTrue("Exon " + exonNr + " boundary "+ exon.lowerEndpoint()  + " does not match " +start , exon.lowerEndpoint().equals(start));
