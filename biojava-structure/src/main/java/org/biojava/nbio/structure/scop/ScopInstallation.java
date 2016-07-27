@@ -73,7 +73,7 @@ public class ScopInstallation implements LocalScopDatabase {
 	public static final String comFileName = "dir.com.scop.txt_";
 
 	// Download locations
-	public static final String SCOP_DOWNLOAD = "http://scop.mrc-lmb.cam.ac.uk/scop/parse/";
+	public static final String SCOP_DOWNLOAD = "http://scop.berkeley.edu/downloads/parse/";
 	public static final String SCOP_DOWNLOAD_ALTERNATE = "http://scop.berkeley.edu/downloads/parse/";
 
 	public static final String NEWLINE;
