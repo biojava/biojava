@@ -1832,21 +1832,23 @@ public class PDBFileParser  {
 		if ( line.length() > 77 ) {
 			// parse element from element field
 			String elementSymbol = line.substring(76, 78).trim();
-			if (elementSymbol.equals("")) {
-				logger.warn("Element column was empty. Assigning atom element "
-						+ "from Chemical Component Dictionary information", elementSymbol);
+			if (elementSymbol.isEmpty()) {
+				logger.warn("Element column was empty for atom {} {}. Assigning atom element "
+						+ "from Chemical Component Dictionary information", fullname.trim(), pdbnumber);
 			} else {
 				try {
 					element = Element.valueOfIgnoreCase(elementSymbol);
 					guessElement = false;
 				}  catch (IllegalArgumentException e){
-					logger.warn("Element {} was not recognised. Assigning atom element "
-							+ "from Chemical Component Dictionary information", elementSymbol);
+					logger.warn("Element {} of atom {} {} was not recognised. Assigning atom element "
+							+ "from Chemical Component Dictionary information", elementSymbol, 
+							fullname.trim(), pdbnumber);
 				}
 			}
 		} else {
-			logger.warn("Missformatted PDB file: element column is not present. "
-					+ "Assigning atom element from Chemical Component Dictionary information");
+			logger.warn("Missformatted PDB file: element column of atom {} {} is not present. "
+					+ "Assigning atom element from Chemical Component Dictionary information",
+					fullname.trim(), pdbnumber);
 		}
 		if (guessElement) {
 			String elementSymbol = null;
