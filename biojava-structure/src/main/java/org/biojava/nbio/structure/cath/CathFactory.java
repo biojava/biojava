@@ -37,7 +37,8 @@ public class CathFactory {
 
 	public static final String VERSION_3_5_0 = "3.5.0";
 	public static final String VERSION_4_0_0 = "4.0.0";
-	public static final String LATEST_VERSION = VERSION_4_0_0;
+	public static final String VERSION_4_1_0 = "4_1_0";
+	public static final String LATEST_VERSION = VERSION_4_1_0;
 
 	public static String DEFAULT_VERSION = LATEST_VERSION;
 
