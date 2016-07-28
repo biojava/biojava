@@ -45,37 +45,37 @@ public class CathInstallation implements CathDatabase{
 
 	String cathVersion;
 
-	public static final String domainListFileName = "CathDomainList";
+	public static final String domainListFileName = "cath-domain-list-v4_1_0.txt";
 	public static final String domainDescriptionFileName = "CathDomainDescriptionFile";
 	public static final String nodeListFileName = "CathNames";
 	public static final String domallFileName = "CathDomall";
+	
+	//http://download.cathdb.info/cath/releases/latest-release/v4_1_0/cath-classification-data/cath-domain-list-v4_1_0.txt
 
-	public static final String CATH_DOWNLOAD = "http://release.cathdb.info/";
+	public static final String CATH_DOWNLOAD = "http://download.cathdb.info/cath/releases/latest-release/";
+	public static final String CATH_DOWNLOAD_SUFFIX = "cath-classification-data";
 
-	String cathDownloadUrl;
+	private String cathDownloadUrl;
 
-	public static final String NEWLINE;
-	public static final String FILESPLIT ;
+	public static final String NEWLINE = System.getProperty("line.separator");;
+	public static final String FILESPLIT = System.getProperty("file.separator");;
 
-	static {
-		NEWLINE     = System.getProperty("line.separator");
-		FILESPLIT   = System.getProperty("file.separator");
-	}
+	
 
 	private String cacheLocation ;
 
-	AtomicBoolean installedDomainList;
-	AtomicBoolean installedDomainDescription;
-	AtomicBoolean installedNodeList;
-	AtomicBoolean installedDomall;
+	private AtomicBoolean installedDomainList;
+	private AtomicBoolean installedDomainDescription;
+	private AtomicBoolean installedNodeList;
+	private AtomicBoolean installedDomall;
 
-	final boolean useCathDomainDescriptionFile;
-	final boolean parseCathFragments;
+	private final boolean useCathDomainDescriptionFile;
+	private final boolean parseCathFragments;
 
-	Map<String, List<CathDomain>> pdbMap;
-	Map<String, CathDomain> domainMap;
-	Map<String, CathNode> cathTree;
-	Map<String, List<CathFragment>> fragmentMap;
+	private Map<String, List<CathDomain>> pdbMap;
+	private Map<String, CathDomain> domainMap;
+	private Map<String, CathNode> cathTree;
+	private Map<String, List<CathFragment>> fragmentMap;
 
 
 
@@ -682,7 +682,7 @@ public class CathInstallation implements CathDatabase{
 
 	protected void downloadDomainListFile() throws FileNotFoundException, IOException{
 		String remoteFilename = domainListFileName;
-		URL url = new URL(cathDownloadUrl + "v" + cathVersion + "/" + remoteFilename);
+		URL url = new URL(cathDownloadUrl + "v" + cathVersion + "/" + CATH_DOWNLOAD_SUFFIX + "/" + remoteFilename);
 		String localFileName = getDomainListFileName();
 		File localFile = new File(localFileName);
 		downloadFileFromRemote(url, localFile);
