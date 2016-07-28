@@ -131,6 +131,12 @@ public class TestCloning {
 				//}
 				assertEquals(g.getAltLocs().size(), testGroup.getAltLocs().size());
 			}
+			
+			it = test.getSeqResGroups().iterator();
+			for (Group g: chain.getSeqResGroups()) {
+				Group testGroup = it.next();
+				assertEquals(g.getAltLocs().size(), testGroup.getAltLocs().size());
+			}
 		}
 
 		Atom[] allAtoms = StructureTools.getAllAtomArray(s);
