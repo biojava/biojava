@@ -88,7 +88,7 @@ public class HetatomImpl implements Group,Serializable {
 
 	private Map<String,Atom> atomNameLookup;
 
-	private ChemComp chemComp ;
+	protected ChemComp chemComp ;
 
 	private List<Group> altLocs;
 
@@ -402,6 +402,9 @@ public class HetatomImpl implements Group,Serializable {
 				n.addAltLoc(nAltLocGroup);
 			}
 		}
+		
+		if (chemComp!=null)
+			n.setChemComp(chemComp);
 
 		return n;
 	}
