@@ -1836,6 +1836,7 @@ public class PDBFileParser  {
 				logger.warn("Element column was empty for atom {} {}. Assigning atom element "
 						+ "from Chemical Component Dictionary information", fullname.trim(), pdbnumber);
 			} else {
+			
 				try {
 					element = Element.valueOfIgnoreCase(elementSymbol);
 					guessElement = false;
@@ -1863,7 +1864,13 @@ public class PDBFileParser  {
 					logger.warn("Atom name {} was not found in the Chemical Component Dictionary information of {}. "
 							+ "Assigning generic element R to it", fullname.trim(), currentGroup.getPDBName());
 				} else {
-					element = Element.valueOfIgnoreCase(elementSymbol);
+					try {
+						element = Element.valueOfIgnoreCase(elementSymbol);
+					} catch (IllegalArgumentException e) {
+						// this can still happen for cases like UNK
+						logger.warn("Element symbol {} found in chemical component dictionary for Atom {} {} could not be recognised as a known element. "
+								+ "Assigning generic element R to it", elementSymbol, fullname.trim(), pdbnumber);
+					}
 				}			
 			} else {
 				logger.warn("Chemical Component Dictionary information was not found for Atom name {}. "
