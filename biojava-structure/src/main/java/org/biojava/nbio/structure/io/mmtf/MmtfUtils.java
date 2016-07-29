@@ -1,6 +1,5 @@
 package org.biojava.nbio.structure.io.mmtf;
 
-import java.io.FileNotFoundException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -42,6 +41,8 @@ import org.biojava.nbio.structure.xtal.CrystalCell;
 import org.biojava.nbio.structure.xtal.SpaceGroup;
 import org.rcsb.mmtf.dataholders.DsspType;
 import org.rcsb.mmtf.utils.CodecUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A utils class of functions needed for Biojava to read and write to mmtf.
@@ -49,6 +50,9 @@ import org.rcsb.mmtf.utils.CodecUtils;
  *
  */
 public class MmtfUtils {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(MmtfUtils.class);
+	
 	/**
 	 * Set up the configuration parameters for BioJava.
 	 */
@@ -139,13 +143,12 @@ public class MmtfUtils {
 			ssp.calculate(bioJavaStruct, true);
 		}
 		catch(StructureException e) {
-			try{
+			LOGGER.warn("Could not calculate secondary structure (error {}). Will try to get a DSSP file from the RCSB web server instead.", e.getMessage());
+			
+			try {
 				DSSPParser.fetch(bioJavaStruct.getPDBCode(), bioJavaStruct, true); //download from PDB the DSSP result
-			}
-			catch(FileNotFoundException enew){
-			}
-			catch(Exception bige){
-				System.out.println(bige);
+			} catch(Exception bige){
+				LOGGER.warn("Could not get a DSSP file from RCSB web server. There will not be secondary structure assignment for this structure ({}). Error: {}", bioJavaStruct.getPDBCode(), bige.getMessage());
 			}
 		}
 	}
