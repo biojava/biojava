@@ -24,8 +24,10 @@ package org.biojava.nbio.structure.symmetry.geometry;
 import org.biojava.nbio.structure.jama.EigenvalueDecomposition;
 import org.biojava.nbio.structure.jama.Matrix;
 
+import javax.vecmath.Matrix3d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,7 +69,7 @@ public class MomentsOfInertia {
 	}
 
 	public Point3d getCenterOfMass() {
-		
+
 		if (points.size() == 0) {
 			throw new IllegalStateException(
 					"MomentsOfInertia: no points defined");
@@ -86,7 +88,7 @@ public class MomentsOfInertia {
 	}
 
 	public double[] getPrincipalMomentsOfInertia() {
-		
+
 		if (modified) {
 			diagonalizeTensor();
 			modified = false;
@@ -94,13 +96,36 @@ public class MomentsOfInertia {
 		return principalMomentsOfInertia;
 	}
 
+	/**
+	 * The principal axes of intertia
+	 * 
+	 * @return
+	 */
 	public Vector3d[] getPrincipalAxes() {
-		
+
 		if (modified) {
 			diagonalizeTensor();
 			modified = false;
 		}
 		return principalAxes;
+	}
+
+	/**
+	 * The orientation Matrix is a 3x3 Matrix with a column for each principal
+	 * axis. It represents the orientation (rotation) of the principal axes with
+	 * respect to the axes of the coordinate system (unit vectors [1,0,0],
+	 * [0,1,0] and [0,0,1]).
+	 * 
+	 * @return the orientation Matrix as a Matrix3d object
+	 */
+	public Matrix3d getOrientationMatrix() {
+
+		// Convert the principal axes into rotation matrices
+		Matrix3d rot = new Matrix3d();
+		for (int i = 0; i < 3; i++)
+			rot.setColumn(i, getPrincipalAxes()[i]);
+
+		return rot;
 	}
 
 	/**
