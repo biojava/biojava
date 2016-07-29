@@ -53,6 +53,7 @@ public class MomentsOfInertia {
 
 	private double[] principalMomentsOfInertia = new double[3];
 	private Vector3d[] principalAxes = new Vector3d[3];
+	private Matrix3d orientation = new Matrix3d();
 
 	public enum SymmetryClass {
 		LINEAR, PROLATE, OBLATE, SYMMETRIC, ASYMMETRIC
@@ -120,12 +121,11 @@ public class MomentsOfInertia {
 	 */
 	public Matrix3d getOrientationMatrix() {
 
-		// Convert the principal axes into rotation matrices
-		Matrix3d rot = new Matrix3d();
-		for (int i = 0; i < 3; i++)
-			rot.setColumn(i, getPrincipalAxes()[i]);
-
-		return rot;
+		if (modified) {
+			diagonalizeTensor();
+			modified = false;
+		}
+		return orientation;
 	}
 
 	/**
@@ -249,11 +249,17 @@ public class MomentsOfInertia {
 		principalMomentsOfInertia = eig.getRealEigenvalues();
 		double[][] eigenVectors = eig.getV().getArray();
 
+		// Get the principal axes from the eigenVectors
 		principalAxes[0] = new Vector3d(eigenVectors[0][0], eigenVectors[1][0],
 				eigenVectors[2][0]);
 		principalAxes[1] = new Vector3d(eigenVectors[0][1], eigenVectors[1][1],
 				eigenVectors[2][1]);
 		principalAxes[2] = new Vector3d(eigenVectors[0][2], eigenVectors[1][2],
 				eigenVectors[2][2]);
+
+		// Convert the principal axes into a rotation matrix
+		for (int i = 0; i < 3; i++)
+			orientation.setColumn(i, principalAxes[i]);
+		
 	}
 }

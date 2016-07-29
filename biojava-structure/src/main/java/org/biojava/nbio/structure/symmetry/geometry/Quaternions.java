@@ -24,16 +24,17 @@ public class Quaternions {
 
 	/**
 	 * The orientation metric is obtained by comparing the quaternion
-	 * orientations of two superposed sets of points in 3D.
+	 * orientations of two sets of points in 3D.
 	 * <p>
 	 * First, the quaternion orientation of each set of points is calculated
-	 * using their principal axes. Then, the two quaternions are compared using
-	 * the formula: d(q1,q2) = arccos(|q1*q2|)
-	 * <p>
-	 * The formula is taken from: Huynh, D. Q. (2009). Metrics for 3D rotations:
-	 * comparison and analysis. Journal of Mathematical Imaging and Vision,
-	 * 35(2), 155–164. http://doi.org/10.1007/s10851-009-0161-2
+	 * using their principal axes with {@link #orientation(Point3d[])}. Then,
+	 * the two quaternions are compared using the method
+	 * {@link #orientationMetric(Quat4d, Quat4d)}.
 	 * 
+	 * @param a
+	 *            array of Point3d
+	 * @param b
+	 *            array of Point3d
 	 * @return the quaternion orientation metric
 	 */
 	public static double orientationMetric(Point3d[] a, Point3d[] b) {
@@ -41,21 +42,41 @@ public class Quaternions {
 		Quat4d qa = orientation(a);
 		Quat4d qb = orientation(b);
 
-		qa.mul(qb);
+		return orientationMetric(qa, qb);
+	}
 
-		double score;
-
-		return 0.0;
+	/**
+	 * The orientation metric is obtained by comparing two unit quaternion
+	 * orientations.
+	 * <p>
+	 * The two quaternions are compared using the formula: d(q1,q2) =
+	 * arccos(|q1*q2|). The range of the metric is [0, Pi/2], where 0 means the
+	 * same orientation and Pi/2 means the opposite orientation.
+	 * <p>
+	 * The formula is taken from: Huynh, D. Q. (2009). Metrics for 3D rotations:
+	 * comparison and analysis. Journal of Mathematical Imaging and Vision,
+	 * 35(2), 155–164. http://doi.org/10.1007/s10851-009-0161-2
+	 * 
+	 * @param q1
+	 *            quaternion as Quat4d object
+	 * @param q2
+	 *            quaternion as Quat4d object
+	 * @return the quaternion orientation metric
+	 */
+	public static double orientationMetric(Quat4d q1, Quat4d q2) {
+		return Math.acos(dotProduct(q1, q2));
 	}
 
 	/**
 	 * The orientation represents the rotation of the principal axes with
 	 * respect to the axes of the coordinate system (unit vectors [1,0,0],
-	 * [0,1,0] and [0,0,1]). The rotation can be expressed as a quaternion.
+	 * [0,1,0] and [0,0,1]).
+	 * <p>
+	 * The orientation can be expressed as a unit quaternion.
 	 * 
 	 * @param points
 	 *            array of Point3d
-	 * @return the orientation as a quaternion
+	 * @return the orientation of the point cloud as a unit quaternion
 	 */
 	public static Quat4d orientation(Point3d[] points) {
 
@@ -74,8 +95,8 @@ public class Quaternions {
 	/**
 	 * Return the euclidean length of the quaternion (the norm, the magnitude).
 	 * <p>
-	 * The length of the quaternion is obtained by multiplying by its conjugate
-	 * and taking the square root of the sum of terms.
+	 * The length of the quaternion is obtained by taking the square root of the
+	 * dot product of the quaternion with its conjugate.
 	 * 
 	 * @param q
 	 *            quaternion as Quat4d object
@@ -89,15 +110,28 @@ public class Quaternions {
 	 * Return the squared euclidean length of the quaternion. It is equivalent
 	 * to [{@link #length(Quat4d)}]^2.
 	 * <p>
-	 * The squared length of the quaternion is obtained by multiplying by its
-	 * conjugate and summing the terms of the resulting quaternion.
+	 * The squared length of the quaternion is obtained by the dot product of
+	 * the quaternion with its conjugate.
 	 * 
 	 * @param q
 	 *            quaternion as Quat4d object
 	 * @return the euclidean length of the quaterion
 	 */
 	public static double lengthSquared(Quat4d q) {
-		return q.x * q.x + q.y + q.y + q.z + q.z + q.w + q.w;
+		return q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w;
+	}
+
+	/**
+	 * Compute the dot (inner) product of two quaternions.
+	 * 
+	 * @param q1
+	 *            quaternion as Quat4d object
+	 * @param q2
+	 *            quaternion as Quat4d object
+	 * @return the value of the quaternion dot product
+	 */
+	public static double dotProduct(Quat4d q1, Quat4d q2) {
+		return q1.x * q2.x + q1.y * q2.y + q1.z * q2.z + q1.w * q2.w;
 	}
 
 }
