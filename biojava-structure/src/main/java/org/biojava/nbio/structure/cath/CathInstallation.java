@@ -47,10 +47,9 @@ public class CathInstallation implements CathDatabase{
 	
 	public static final String DEFAULT_VERSION = CathFactory.DEFAULT_VERSION;
 
-	public static final String domainListFileName = "cath-domain-list-v%s.txt";
-	// TODO I don't know what are the new file nams for domainDescriptionFileName and nodeListFileName in the new CATH 4.1.0 servers, must find out! - JD 2016-07-28 
-	public static final String domainDescriptionFileName = "CathDomainDescriptionFile";
-	public static final String nodeListFileName = "CathNames";
+	public static final String domainListFileName = "cath-domain-list-v%s.txt"; 
+	public static final String domainDescriptionFileName = "cath-domain-description-file-v%s.txt";
+	public static final String nodeListFileName = "cath-names-v%s.txt";
 	public static final String domallFileName = "cath-domain-boundaries-v%s.txt";
 	
 	public static final String CATH_DOWNLOAD_URL                     = "http://download.cathdb.info/cath/releases/";
