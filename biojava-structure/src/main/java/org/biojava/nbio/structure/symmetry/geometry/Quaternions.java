@@ -5,7 +5,9 @@ import javax.vecmath.Quat4d;
 
 /**
  * Quaternions is a static Class that contains methods for calculating and using
- * quaternions.
+ * quaternions. It assumes the use of {@link Quat4d} Class from vecmath to
+ * represent quaternions, and it also implements some of the methods that the
+ * library is missing.
  * <p>
  * A Quaternion is a four-dimensional vector used to describe a
  * three-dimensional attitude representation (axis and angle of rotation).
@@ -70,16 +72,32 @@ public class Quaternions {
 	}
 
 	/**
-	 * Return the length of the quaternion (the norm, the magnitude). The length
-	 * of the quaternion is obtained by multiplying by its conjugate and taking
-	 * the square root of the sum of terms.
+	 * Return the euclidean length of the quaternion (the norm, the magnitude).
+	 * <p>
+	 * The length of the quaternion is obtained by multiplying by its conjugate
+	 * and taking the square root of the sum of terms.
 	 * 
 	 * @param q
 	 *            quaternion as Quat4d object
-	 * @return the length of the quaterion
+	 * @return the euclidean length of the quaterion
 	 */
 	public static double length(Quat4d q) {
-		return 0.0;
+		return Math.sqrt(lengthSquared(q));
+	}
+
+	/**
+	 * Return the squared euclidean length of the quaternion. It is equivalent
+	 * to [{@link #length(Quat4d)}]^2.
+	 * <p>
+	 * The squared length of the quaternion is obtained by multiplying by its
+	 * conjugate and summing the terms of the resulting quaternion.
+	 * 
+	 * @param q
+	 *            quaternion as Quat4d object
+	 * @return the euclidean length of the quaterion
+	 */
+	public static double lengthSquared(Quat4d q) {
+		return q.x * q.x + q.y + q.y + q.z + q.z + q.w + q.w;
 	}
 
 }
