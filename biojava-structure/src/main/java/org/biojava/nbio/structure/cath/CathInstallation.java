@@ -53,8 +53,7 @@ public class CathInstallation implements CathDatabase{
 	public static final String domallFileName = "cath-domain-boundaries-v%s.txt";
 	
 	public static final String CATH_DOWNLOAD_URL                     = "http://download.cathdb.info/cath/releases/";
-	public static final String CATH_DOWNLOAD_LATEST_RELEASE_DIR      = "latest-release";
-	public static final String CATH_DOWNLOAD_PREV_RELEASE_DIR        = "previous-releases";
+	public static final String CATH_DOWNLOAD_ALL_RELEASES_DIR        = "all-releases";
 	public static final String CATH_DOWNLOAD_CLASSIFICATION_DATA_DIR = "cath-classification-data";
 
 	public static final String NEWLINE = System.getProperty("line.separator");;
@@ -134,10 +133,7 @@ public class CathInstallation implements CathDatabase{
 	
 	private String buildUrl(String remoteFileName) {
 		String remoteFileNameWithVer =  buildFileName(remoteFileName);
-		String releasesDir = CATH_DOWNLOAD_LATEST_RELEASE_DIR;
-		if (!cathVersion.equals(CathFactory.LATEST_VERSION)) {
-			releasesDir = CATH_DOWNLOAD_PREV_RELEASE_DIR;
-		}
+		String releasesDir = CATH_DOWNLOAD_ALL_RELEASES_DIR;
 		return cathDownloadUrl + releasesDir + "/v" + cathVersion + "/" + CATH_DOWNLOAD_CLASSIFICATION_DATA_DIR + "/" + remoteFileNameWithVer;
 	}
 
