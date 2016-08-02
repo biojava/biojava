@@ -19,7 +19,7 @@
  *
  */
 
-package org.biojava.nbio.structure.symmetry.geometry;
+package org.biojava.nbio.structure.geometry;
 
 import org.biojava.nbio.structure.jama.EigenvalueDecomposition;
 import org.biojava.nbio.structure.jama.Matrix;
@@ -39,6 +39,13 @@ public final class SuperPosition {
 	private SuperPosition() {
 	}
 
+	/**
+	 * This method superposes y onto x, so it transforms the coordinates of y.
+	 * 
+	 * @param x
+	 * @param y
+	 * @return the Matrix4d used for superposition
+	 */
 	public static Matrix4d superpose(Point3d[] x, Point3d[] y) {
 		// superpose x onto y
 		Point3d[] ref = clonePoint3dArray(y);

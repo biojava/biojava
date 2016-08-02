@@ -21,7 +21,7 @@
 
 package org.biojava.nbio.structure.symmetry.core;
 
-import org.biojava.nbio.structure.symmetry.geometry.SuperPosition;
+import org.biojava.nbio.structure.geometry.SuperPosition;
 
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;

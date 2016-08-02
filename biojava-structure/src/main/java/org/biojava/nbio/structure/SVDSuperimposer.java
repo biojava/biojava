@@ -131,11 +131,11 @@ import org.biojava.nbio.structure.jama.SingularValueDecomposition;
  */
 public class SVDSuperimposer {
 
-	Matrix rot;
-	Matrix tran;
+	private Matrix rot;
+	private Matrix tran;
 
-	Matrix centroidA;
-	Matrix centroidB;
+	private Matrix centroidA;
+	private Matrix centroidB;
 
 	/** Create a SVDSuperimposer object and calculate a SVD superimposition of two sets of atoms.
 	 *

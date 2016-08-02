@@ -1,25 +1,27 @@
-package org.biojava.nbio.structure.symmetry.geometry;
+package org.biojava.nbio.structure.geometry;
 
 import javax.vecmath.Point3d;
 import javax.vecmath.Quat4d;
 
 /**
- * Quaternions is a static Class that contains methods for calculating and using
- * quaternions. It assumes the use of {@link Quat4d} Class from vecmath to
- * represent quaternions, and it also implements some of the methods that the
- * library is missing.
+ * UnitQuaternions is a static Class that contains methods for calculating and
+ * using unit quaternions. It assumes the use of {@link Quat4d} Class from
+ * vecmath to represent the unit quaternions, and it also implements some of the
+ * basic methods that the library is missing.
  * <p>
- * A Quaternion is a four-dimensional vector used to describe a
- * three-dimensional attitude representation (axis and angle of rotation).
+ * A Unit Quaternion is a four-dimensional vector used to describe a
+ * three-dimensional attitude representation (axis and angle of rotation). By
+ * definition, unit quaternions are always normalized, so their length is always
+ * 1.
  * 
  * @author Aleix Lafita
  * @since 5.0.0
  *
  */
-public class Quaternions {
+public class UnitQuaternions {
 
 	/** Prevent instantiation */
-	private Quaternions() {
+	private UnitQuaternions() {
 	}
 
 	/**
@@ -64,7 +66,7 @@ public class Quaternions {
 	 * @return the quaternion orientation metric
 	 */
 	public static double orientationMetric(Quat4d q1, Quat4d q2) {
-		return Math.acos(dotProduct(q1, q2));
+		return Math.acos(Math.abs(dotProduct(q1, q2)));
 	}
 
 	/**
@@ -90,35 +92,6 @@ public class Quaternions {
 		quat.set(moi.getOrientationMatrix());
 
 		return quat;
-	}
-
-	/**
-	 * Return the euclidean length of the quaternion (the norm, the magnitude).
-	 * <p>
-	 * The length of the quaternion is obtained by taking the square root of the
-	 * dot product of the quaternion with its conjugate.
-	 * 
-	 * @param q
-	 *            quaternion as Quat4d object
-	 * @return the euclidean length of the quaterion
-	 */
-	public static double length(Quat4d q) {
-		return Math.sqrt(lengthSquared(q));
-	}
-
-	/**
-	 * Return the squared euclidean length of the quaternion. It is equivalent
-	 * to [{@link #length(Quat4d)}]^2.
-	 * <p>
-	 * The squared length of the quaternion is obtained by the dot product of
-	 * the quaternion with its conjugate.
-	 * 
-	 * @param q
-	 *            quaternion as Quat4d object
-	 * @return the euclidean length of the quaterion
-	 */
-	public static double lengthSquared(Quat4d q) {
-		return q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w;
 	}
 
 	/**

@@ -19,7 +19,7 @@
  *
  */
 
-package org.biojava.nbio.structure.symmetry.geometry;
+package org.biojava.nbio.structure.geometry;
 
 import javax.vecmath.Matrix3d;
 import javax.vecmath.Matrix4d;

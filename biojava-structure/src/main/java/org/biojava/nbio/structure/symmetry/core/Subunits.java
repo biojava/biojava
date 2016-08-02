@@ -24,8 +24,8 @@ import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.cluster.SubunitCluster;
 import org.biojava.nbio.structure.cluster.SubunitClustererMethod;
-import org.biojava.nbio.structure.symmetry.geometry.MomentsOfInertia;
-import org.biojava.nbio.structure.symmetry.geometry.SuperPosition;
+import org.biojava.nbio.structure.geometry.MomentsOfInertia;
+import org.biojava.nbio.structure.geometry.SuperPosition;
 
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;

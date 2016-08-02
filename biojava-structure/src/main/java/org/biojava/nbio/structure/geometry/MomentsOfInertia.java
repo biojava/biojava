@@ -19,7 +19,7 @@
  *
  */
 
-package org.biojava.nbio.structure.symmetry.geometry;
+package org.biojava.nbio.structure.geometry;
 
 import org.biojava.nbio.structure.jama.EigenvalueDecomposition;
 import org.biojava.nbio.structure.jama.Matrix;

@@ -20,7 +20,7 @@
  */
 package org.biojava.nbio.structure.symmetry.core;
 
-import org.biojava.nbio.structure.symmetry.geometry.SuperPosition;
+import org.biojava.nbio.structure.geometry.SuperPosition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

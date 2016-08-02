@@ -22,6 +22,9 @@ package org.biojava.nbio.structure.symmetry.geometry;
 
 import javax.vecmath.Matrix3d;
 import javax.vecmath.Point3d;
+
+import org.biojava.nbio.structure.geometry.SuperPosition;
+
 import java.util.Arrays;
 import java.util.List;
 
