@@ -21,6 +21,7 @@
 
 package org.biojava.nbio.structure.symmetry.core;
 
+import org.biojava.nbio.structure.geometry.CalcPoint;
 import org.biojava.nbio.structure.geometry.SuperPosition;
 
 import javax.vecmath.AxisAngle4d;
@@ -72,10 +73,10 @@ public class C2RotationSolver implements QuatSymmetrySolver {
 //		Point3d[] y = SuperPosition.clonePoint3dArray(traces.get(1));
 //		SuperPosition.center(y);
 
-		Point3d[] x = SuperPosition.clonePoint3dArray(traces.get(0));
-		SuperPosition.translate(new Point3d(trans), x);
-		Point3d[] y = SuperPosition.clonePoint3dArray(traces.get(1));
-		SuperPosition.translate(new Point3d(trans), y);
+		Point3d[] x = CalcPoint.clonePoint3dArray(traces.get(0));
+		CalcPoint.translate(new Point3d(trans), x);
+		Point3d[] y = CalcPoint.clonePoint3dArray(traces.get(1));
+		CalcPoint.translate(new Point3d(trans), y);
 
 		AxisAngle4d axisAngle = new AxisAngle4d();
 

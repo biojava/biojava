@@ -110,7 +110,7 @@ public final class SuperPositionQCP {
 	}
 
 	public Point3d[] getTransformedCoordinates() {
-		SuperPosition.transform(transformation, x);
+		CalcPoint.transform(transformation, x);
 		return x;
 	}
 
@@ -125,17 +125,17 @@ public final class SuperPositionQCP {
 			innerProduct(y, x);
 		} else {
 			// translate to origin
-			xref = SuperPosition.clonePoint3dArray(x);
-			xtrans = SuperPosition.centroid(xref);
+			xref = CalcPoint.clonePoint3dArray(x);
+			xtrans = CalcPoint.centroid(xref);
 			// System.out.println("x centroid: " + xtrans);
 			xtrans.negate();
-			SuperPosition.translate(xtrans, xref);
+			CalcPoint.translate(xtrans, xref);
 
-			yref = SuperPosition.clonePoint3dArray(y);
-			ytrans = SuperPosition.centroid(yref);
+			yref = CalcPoint.clonePoint3dArray(y);
+			ytrans = CalcPoint.centroid(yref);
 			// System.out.println("y centroid: " + ytrans);
 			ytrans.negate();
-			SuperPosition.translate(ytrans, yref);
+			CalcPoint.translate(ytrans, yref);
 			innerProduct(yref, xref);
 		}
 		calcRmsd(x.length);

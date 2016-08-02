@@ -3,6 +3,9 @@ package org.biojava.nbio.structure.geometry;
 import javax.vecmath.Point3d;
 import javax.vecmath.Quat4d;
 
+import org.biojava.nbio.structure.jama.EigenvalueDecomposition;
+import org.biojava.nbio.structure.jama.Matrix;
+
 /**
  * UnitQuaternions is a static Class that contains methods for calculating and
  * using unit quaternions. It assumes the use of {@link Quat4d} Class from
@@ -92,6 +95,25 @@ public class UnitQuaternions {
 		quat.set(moi.getOrientationMatrix());
 
 		return quat;
+	}
+
+	/**
+	 * Calculate the relative quaternion orientation of two arrays of points.
+	 * 
+	 * @param a
+	 *            point array
+	 * @param b
+	 *            point array
+	 * @return a unit quaternion representing the relative orientation
+	 */
+	public static Quat4d relativeOrientation(Point3d[] a, Point3d[] b) {
+		Matrix m = CalcPoint.formMatrix(a, b);
+		EigenvalueDecomposition eig = m.eig();
+		double[][] v = eig.getV().getArray();
+		Quat4d q = new Quat4d(v[1][3], v[2][3], v[3][3], v[0][3]);
+		q.normalize();
+		q.conjugate();
+		return q;
 	}
 
 	/**

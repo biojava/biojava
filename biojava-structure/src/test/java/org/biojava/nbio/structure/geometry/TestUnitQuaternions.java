@@ -8,7 +8,6 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Quat4d;
 import javax.vecmath.Vector3d;
 
-import org.biojava.nbio.structure.geometry.SuperPosition;
 import org.biojava.nbio.structure.geometry.UnitQuaternions;
 import org.junit.Test;
 
@@ -64,8 +63,8 @@ public class TestUnitQuaternions {
 		Matrix4d mat90x = new Matrix4d();
 		mat90x.set(axis90x);
 
-		Point3d[] cloud2 = SuperPosition.clonePoint3dArray(cloud);
-		SuperPosition.transform(mat90x, cloud2);
+		Point3d[] cloud2 = CalcPoint.clonePoint3dArray(cloud);
+		CalcPoint.transform(mat90x, cloud2);
 
 		orientation = UnitQuaternions.orientation(cloud2);
 		orientation.normalize();
@@ -84,7 +83,7 @@ public class TestUnitQuaternions {
 		Matrix4d mat = new Matrix4d();
 		mat.set(quat);
 
-		SuperPosition.transform(mat, cloud);
+		CalcPoint.transform(mat, cloud);
 
 		orientation = UnitQuaternions.orientation(cloud);
 		orientation.normalize();
