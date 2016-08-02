@@ -1,4 +1,4 @@
-package org.biojava.nbio.structure.symmetry.geometry;
+package org.biojava.nbio.structure.geometry;
 
 import static org.junit.Assert.*;
 
@@ -8,19 +8,21 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Quat4d;
 import javax.vecmath.Vector3d;
 
+import org.biojava.nbio.structure.geometry.SuperPosition;
+import org.biojava.nbio.structure.geometry.UnitQuaternions;
 import org.junit.Test;
 
 /**
- * Test the methods in the {@link Quaternions} class.
+ * Test the methods in the {@link UnitQuaternions} class.
  * 
  * @author Aleix Lafita
  * @since 5.0.0
  *
  */
-public class TestQuaternions {
+public class TestUnitQuaternions {
 
 	/**
-	 * Test {@link Quaternions#orientation(javax.vecmath.Point3d[])}.
+	 * Test {@link UnitQuaternions#orientation(javax.vecmath.Point3d[])}.
 	 * <p>
 	 * Tests the identity orientation, orientation around one coordinate axis
 	 * and orientation around a non-coordinate axis.
@@ -48,7 +50,7 @@ public class TestQuaternions {
 			cloud[3 * p + 2] = new Point3d(coords_neg);
 		}
 
-		Quat4d orientation = Quaternions.orientation(cloud);
+		Quat4d orientation = UnitQuaternions.orientation(cloud);
 		orientation.normalize();
 
 		// No rotation is equivalent to a quaternion with scalar 1 and rest 0
@@ -65,7 +67,7 @@ public class TestQuaternions {
 		Point3d[] cloud2 = SuperPosition.clonePoint3dArray(cloud);
 		SuperPosition.transform(mat90x, cloud2);
 
-		orientation = Quaternions.orientation(cloud2);
+		orientation = UnitQuaternions.orientation(cloud2);
 		orientation.normalize();
 		AxisAngle4d orientaxis = new AxisAngle4d();
 		orientaxis.set(orientation);
@@ -77,14 +79,14 @@ public class TestQuaternions {
 		assertEquals(orientaxis.angle, axis90x.angle, 0.01);
 
 		// Now try a rotation through a non-coordinate axis
-		Quat4d quat = new Quat4d(1.0, 1.0, 1.0, 1.0);
+		Quat4d quat = new Quat4d(0.5, 0.5, 0.5, 0.5);
 
 		Matrix4d mat = new Matrix4d();
 		mat.set(quat);
 
 		SuperPosition.transform(mat, cloud);
 
-		orientation = Quaternions.orientation(cloud);
+		orientation = UnitQuaternions.orientation(cloud);
 		orientation.normalize();
 
 		// Test recovering the quaternion (q and -q same rotation)
@@ -95,7 +97,7 @@ public class TestQuaternions {
 	}
 
 	/**
-	 * Test {@link Quaternions#orientationMetric(Point3d[], Point3d[])}.
+	 * Test {@link UnitQuaternions#orientationMetric(Point3d[], Point3d[])}.
 	 * <p>
 	 * Tests the range of values of the metric with a perfect correlation,
 	 * perfect anticorrelation and intermediate values.
@@ -106,17 +108,39 @@ public class TestQuaternions {
 		// no rotation quaternion
 		Quat4d qa = new Quat4d(0, 0, 0, 1);
 		Quat4d qb = new Quat4d(qa);
+
+		// Two equal quaternions produce the minimum score of 0
+		assertEquals(UnitQuaternions.orientationMetric(qa, qb), 0, 0.01);
+
+		// 90 degrees rotation over x
+		qa = new Quat4d(0.707, 0, 0, 0.707);
+
+		// 270 degrees rotation over x
+		qb = new Quat4d(0.707, 0, 0, -0.707);
+
+		// two quaternions with 180 degree axis produce the max score Pi / 2
+		assertEquals(UnitQuaternions.orientationMetric(qa, qb), Math.PI / 2,
+				0.01);
+
+		// 90 degrees rotation over y
+		qb = new Quat4d(0, 0.707, 0, 0.707);
+
+		// two quaternions with 90 degree axis produce the score Pi / 4
+		assertEquals(UnitQuaternions.orientationMetric(qa, qb), Math.PI / 3,
+				0.01);
+
+		// two quaternions with 45 degree axis produce the score Pi / 8
+		qb = new Quat4d(0.383, 0, 0, 0.924);
+
+		assertEquals(UnitQuaternions.orientationMetric(qa, qb), Math.PI / 8,
+				0.01);
 		
-		assertEquals(Quaternions.orientationMetric(qa, qb), 0, 0.01);
+		// 90 degrees rotation over x in negative
+		qb = new Quat4d(0, -0.707, 0, -0.707);
 		
-		// rotate 180 degrees to get opposite orientation
-		qb = new Quat4d(1, 0, 0, 0);
+		// assert no negative angles are returned
+		assertEquals(UnitQuaternions.orientationMetric(qa, qb), Math.PI / 3,
+				0.01);
 		
-		assertEquals(Quaternions.orientationMetric(qa, qb), Math.PI / 2, 0.01);
-		
-		// rotate 90 degrees to get half-way orientation
-		qb = new Quat4d(0.706, 0, 0, 0.706);
-		
-		assertEquals(Quaternions.orientationMetric(qa, qb), Math.PI / 4, 0.01);
 	}
 }
