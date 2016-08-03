@@ -26,6 +26,9 @@ import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Implementation of the Quaternion-Based Characteristic Polynomial algorithm
  * for RMSD and Superposition calculations.
@@ -39,9 +42,12 @@ import javax.vecmath.Vector3d;
  * 
  */
 public final class SuperPositionQCP {
+	
+	private static final Logger logger = LoggerFactory
+			.getLogger(SuperPositionQCP.class);
 
-	double evecprec = 1d - 6;
-	double evalprec = 1d - 11;
+	double evecprec = 1E-6;
+	double evalprec = 1E-11;
 
 	private Point3d[] x = null;
 	private Point3d[] y = null;
@@ -127,13 +133,13 @@ public final class SuperPositionQCP {
 			// translate to origin
 			xref = CalcPoint.clonePoint3dArray(x);
 			xtrans = CalcPoint.centroid(xref);
-			// System.out.println("x centroid: " + xtrans);
+			logger.debug("x centroid: " + xtrans);
 			xtrans.negate();
 			CalcPoint.translate(xtrans, xref);
 
 			yref = CalcPoint.clonePoint3dArray(y);
 			ytrans = CalcPoint.centroid(yref);
-			// System.out.println("y centroid: " + ytrans);
+			logger.debug("y centroid: " + ytrans);
 			ytrans.negate();
 			CalcPoint.translate(ytrans, yref);
 			innerProduct(yref, xref);
@@ -146,6 +152,7 @@ public final class SuperPositionQCP {
 	 * coords1 is held fixed
 	 */
 	private void calcTransformation() {
+		
 		// transformation.set(rotmat,new Vector3d(0,0,0), 1);
 		transformation.set(rotmat);
 		// long t2 = System.nanoTime();
@@ -160,8 +167,8 @@ public final class SuperPositionQCP {
 		transformation.mul(transformation, trans);
 		// System.out.println("setting xtrans");
 		// System.out.println(transformation);
-		//
-		// // combine with origin -> y translation
+		
+		// combine with origin -> y translation
 		ytrans.negate();
 		Matrix4d transInverse = new Matrix4d();
 		transInverse.setIdentity();
@@ -290,7 +297,7 @@ public final class SuperPositionQCP {
 		mxEigenV = e0;
 
 		int i;
-		for (i = 0; i < 50; ++i) {
+		for (i = 1; i < 51; ++i) {
 			double oldg = mxEigenV;
 			double x2 = mxEigenV * mxEigenV;
 			double b = (x2 + c2) * mxEigenV;
@@ -298,12 +305,15 @@ public final class SuperPositionQCP {
 			double delta = ((a * mxEigenV + c0) / (2.0 * x2 * mxEigenV + b + a));
 			mxEigenV -= delta;
 
-			if (Math.abs(mxEigenV - oldg) < Math.abs(evalprec * mxEigenV))
+			if (Math.abs(mxEigenV - oldg) < evalprec)
 				break;
 		}
 
-		if (i == 50)
-			System.err.println("More than %d iterations needed!" + i);
+		if (i == 50) {
+			logger.warn(String.format("More than %d iterations needed!", i));
+		} else {
+			logger.info(String.format("%d iterations needed!", i));
+		}
 
 		/*
 		 * the fabs() is to guard against extremely small, but *negative*
@@ -399,7 +409,7 @@ public final class SuperPositionQCP {
 		q3 /= normq;
 		q4 /= normq;
 
-		//System.out.println("q: " + q1 + " " + q2 + " " + q3 + " " + q4);
+		logger.debug("q: " + q1 + " " + q2 + " " + q3 + " " + q4);
 
 		double a2 = q1 * q1;
 		double x2 = q2 * q2;

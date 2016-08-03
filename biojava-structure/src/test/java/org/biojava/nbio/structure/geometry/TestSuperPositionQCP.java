@@ -45,7 +45,7 @@ public class TestSuperPositionQCP {
 	@Before
 	public void setUp() throws StructureException {
 
-		int size = 50;
+		int size = 500;
 
 		// Generate two big random clouds of points
 		Random rnd = new Random();
