@@ -232,6 +232,7 @@ public final class SuperPositionQCP {
 
     /**
      * Returns the transformed (superposed) y coordinates
+     * TODO this is actually returning a transformation of the x coordinates, we should review if that's correct and change it if not
      * @return transformed y coordinates
      */
 	public Point3d[] getTransformedCoordinates() {
