@@ -18,7 +18,6 @@
  *      http://www.biojava.org/
  *
  */
-
 package org.biojava.nbio.structure.geometry;
 
 import javax.vecmath.*;
@@ -37,12 +36,17 @@ public final class SuperPosition {
 	}
 
 	/**
-	 * This method superposes y onto x, so it transforms the coordinates of y.
+	 * This method superposes x onto y, so it transforms the coordinates of x.
+	 * The translation component of the matrix is wrong.
 	 * 
 	 * @param x
+	 *            point array, point coordinates will be modified
 	 * @param y
-	 * @return the Matrix4d used for superposition
+	 *            point array, point coordinates will not be modified
+	 * @return the Matrix4d used for superposition, without translation
+	 * @deprecated use {@link #superposeWithTranslation(Point3d[], Point3d[])}
 	 */
+	@Deprecated
 	public static Matrix4d superpose(Point3d[] x, Point3d[] y) {
 		// superpose x onto y
 		Point3d[] ref = CalcPoint.clonePoint3dArray(y);
@@ -59,7 +63,7 @@ public final class SuperPosition {
 		Matrix4d rotTrans = new Matrix4d();
 		rotTrans.set(q);
 
-		// set translational component of transformation matrix
+		// set translational component of transformation matrix TODO wrong
 		ytrans.negate();
 		rotTrans.setTranslation(new Vector3d(ytrans));
 
@@ -69,8 +73,16 @@ public final class SuperPosition {
 		return rotTrans;
 	}
 
+	/**
+	 * This method superposes x onto y, so it transforms the coordinates of x.
+	 * 
+	 * @param x
+	 *            point array, point coordinates will be modified
+	 * @param y
+	 *            point array, point coordinates will not be modified
+	 * @return the Matrix4d used for superposition
+	 */
 	public static Matrix4d superposeWithTranslation(Point3d[] x, Point3d[] y) {
-		// superpose x onto y
 
 		// translate to origin
 		Point3d[] xref = CalcPoint.clonePoint3dArray(x);
@@ -107,15 +119,43 @@ public final class SuperPosition {
 		return rotTrans;
 	}
 
+	/**
+	 * This method superposes x onto y, so it transforms the coordinates of x.
+	 * It requires the points to be centered (use
+	 * {@link CalcPoint#center(Point3d[])}, because the transformation matrix
+	 * will not have translation component (faster).
+	 * 
+	 * @param x
+	 *            point array, point coordinates will be modified
+	 * @param y
+	 *            point array, point coordinates will not be modified
+	 * @return the Matrix4d used for superposition, without translation
+	 */
 	public static Matrix4d superposeAtOrigin(Point3d[] x, Point3d[] y) {
 		Quat4d q = UnitQuaternions.relativeOrientation(x, y);
 
 		Matrix4d rotTrans = new Matrix4d();
 		rotTrans.set(q);
 
+		CalcPoint.transform(rotTrans, x);
+
 		return rotTrans;
 	}
 
+	/**
+	 * This method superposes x onto y, so it transforms the coordinates of x.
+	 * It requires the points to be centered (use
+	 * {@link CalcPoint#center(Point3d[])}, because the transformation matrix
+	 * will not have translation component (faster).
+	 * 
+	 * @param x
+	 *            point array, point coordinates will be modified
+	 * @param y
+	 *            point array, point coordinates will not be modified
+	 * @param axisAngle
+	 *            to be filled with rotation axis
+	 * @return the Matrix4d used for superposition, without translation
+	 */
 	public static Matrix4d superposeAtOrigin(Point3d[] x, Point3d[] y,
 			AxisAngle4d axisAngle) {
 		Quat4d q = UnitQuaternions.relativeOrientation(x, y);
@@ -137,16 +177,19 @@ public final class SuperPosition {
 			axisAngle.z = axis.z;
 		}
 		CalcPoint.transform(rotTrans, x);
-		// System.out.println("SuperPosition.superposeAtOrigin: rotTrans");
-		// System.out.println(rotTrans);
-		// Matrix4d temp = new Matrix4d();
-		// temp.setIdentity();
-		// temp.set(axisAngle);
-		// System.out.println("SuperPosition.superposeAtOrigin: from axisAngle");
-		// System.out.println(temp);
+
 		return rotTrans;
 	}
 
+	/**
+	 * Calculate the RMSD of two point arrays, already superposed.
+	 * 
+	 * @param x
+	 *            array of points superposed to y
+	 * @param y
+	 *            array of points superposed to x
+	 * @return RMSD
+	 */
 	public static double rmsd(Point3d[] x, Point3d[] y) {
 		double sum = 0.0;
 		for (int i = 0; i < x.length; i++) {
@@ -155,6 +198,15 @@ public final class SuperPosition {
 		return Math.sqrt(sum / x.length);
 	}
 
+	/*
+	 * Needs documentation!
+	 * 
+	 * @param x
+	 * 
+	 * @param y
+	 * 
+	 * @return
+	 */
 	public static double rmsdMin(Point3d[] x, Point3d[] y) {
 		double sum = 0.0;
 		for (int i = 0; i < x.length; i++) {
@@ -192,6 +244,13 @@ public final class SuperPosition {
 		return sum / lengthNative;
 	}
 
+	/*
+	 * Needs documentation!
+	 * 
+	 * @param x
+	 * @param y
+	 * @return
+	 */
 	public static double GTSlikeScore(Point3d[] x, Point3d[] y) {
 		int contacts = 0;
 
@@ -222,6 +281,13 @@ public final class SuperPosition {
 		return contacts * 25.0 / x.length;
 	}
 
+	/*
+	 * Needs documentation!
+	 * @param x
+	 * @param y
+	 * @param maxDistance
+	 * @return
+	 */
 	public static int contacts(Point3d[] x, Point3d[] y, double maxDistance) {
 		int contacts = 0;
 		for (int i = 0; i < x.length; i++) {
