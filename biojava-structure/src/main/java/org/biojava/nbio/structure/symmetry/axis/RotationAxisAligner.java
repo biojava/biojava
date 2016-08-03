@@ -20,12 +20,12 @@
  */
 package org.biojava.nbio.structure.symmetry.axis;
 
+import org.biojava.nbio.structure.geometry.MomentsOfInertia;
+import org.biojava.nbio.structure.geometry.SuperPosition;
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetryResults;
 import org.biojava.nbio.structure.symmetry.core.Rotation;
 import org.biojava.nbio.structure.symmetry.core.RotationGroup;
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetrySubunits;
-import org.biojava.nbio.structure.symmetry.geometry.MomentsOfInertia;
-import org.biojava.nbio.structure.symmetry.geometry.SuperPosition;
 
 import javax.vecmath.*;
 

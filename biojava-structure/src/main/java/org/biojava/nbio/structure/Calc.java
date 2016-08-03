@@ -22,6 +22,7 @@
  */
 package org.biojava.nbio.structure;
 
+import org.biojava.nbio.structure.geometry.CalcPoint;
 import org.biojava.nbio.structure.jama.Matrix;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,12 +36,9 @@ import javax.vecmath.Vector3d;
  * Utility operations on Atoms, AminoAcids, Matrices, Point3d, etc.
  * <p>
  * Currently the coordinates of an Atom are stored as an array of size 3
- * (double[3]). For some algorithms, Point3d from javax.vecmath is used to
- * represent Atoms, because only the coordinates are needed. That is why some
- * methods are overloaded for Atom and Point3d.
- * <p>
- * In addition, functions using jama Matrices are overloaded to use vecmath
- * objects.
+ * (double[3]). It would be more powerful to use Point3d from javax.vecmath.
+ * Overloaded methods for Point3d operations exist in the {@link CalcPoint}
+ * Class.
  *
  * @author Andreas Prlic
  * @author Aleix Lafita
@@ -766,7 +764,11 @@ public class Calc {
 	}
 
 	/**
+<<<<<<< HEAD
 	 * Returns the centroid of the set of atoms.
+=======
+	 * Returns the center of mass of the set of atoms.
+>>>>>>> refs/heads/quaternion
 	 * 
 	 * @param atomSet
 	 *            a set of Atoms
@@ -794,24 +796,6 @@ public class Calc {
 		Atom vec = new AtomImpl();
 		vec.setCoords(coords);
 		return vec;
-
-	}
-	
-	/**
-	 * Returns the centroid of the set of Point3d.
-	 * 
-	 * @param pointSet
-	 *            a set of Point3d
-	 * @return a Point3d representing the Centroid of the set of Point3d
-	 */
-	public static final Point3d getCentroid(Point3d[] pointSet) {
-
-		Point3d center = new Point3d();
-		for (Point3d p: pointSet) {
-			center.add(p);
-		}
-		center.scale(1.0/pointSet.length);
-		return center;
 
 	}
 

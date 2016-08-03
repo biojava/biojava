@@ -21,10 +21,10 @@
 package org.biojava.nbio.structure.symmetry.core;
 
 import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.cluster.SubunitCluster;
-import org.biojava.nbio.structure.symmetry.geometry.MomentsOfInertia;
+import org.biojava.nbio.structure.geometry.CalcPoint;
+import org.biojava.nbio.structure.geometry.MomentsOfInertia;
 import org.biojava.nbio.structure.symmetry.utils.SymmetryTools;
 
 import javax.vecmath.Point3d;
@@ -220,7 +220,7 @@ public class QuatSymmetrySubunits {
 
 	private void calcOriginalCenters() {
 		for (Point3d[] trace : caCoords) {
-			Point3d com = Calc.getCentroid(trace);
+			Point3d com = CalcPoint.centroid(trace);
 			originalCenters.add(com);
 		}
 	}
@@ -228,7 +228,7 @@ public class QuatSymmetrySubunits {
 	private void calcCentroid() {
 		Point3d[] orig = originalCenters.toArray(new Point3d[originalCenters
 				.size()]);
-		centroid = Calc.getCentroid(orig);
+		centroid = CalcPoint.centroid(orig);
 	}
 
 	private void calcCenters() {
