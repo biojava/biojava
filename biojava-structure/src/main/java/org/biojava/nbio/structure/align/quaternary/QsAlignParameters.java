@@ -10,6 +10,8 @@ package org.biojava.nbio.structure.align.quaternary;
 public class QsAlignParameters {
 
 	private double dCutoff = 10.0;
+	private double maxRmsd = 7.0;
+	private double minOrientationMetric = Math.PI / 8; // 45 degree
 
 	/**
 	 * The maximum allowed distance between the centroids of two equivalent
@@ -29,6 +31,23 @@ public class QsAlignParameters {
 	 */
 	public void setdCutoff(double dCutoff) {
 		this.dCutoff = dCutoff;
+	}
+
+	
+	public double getMaxRmsd() {
+		return maxRmsd;
+	}
+
+	public void setMaxRmsd(double maxRmsd) {
+		this.maxRmsd = maxRmsd;
+	}
+
+	public double getMinOrientationMetric() {
+		return minOrientationMetric;
+	}
+
+	public void setMinOrientationMetric(double minOrientationMetric) {
+		this.minOrientationMetric = minOrientationMetric;
 	}
 
 }
