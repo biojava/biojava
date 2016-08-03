@@ -67,7 +67,7 @@ public class TestSuperPositionQCP {
 					rnd.nextInt(150) });
 			cloud1[p] = a;
 			cloud2[p] = (Atom) a.clone();
-			
+
 			Atom b = new AtomImpl();
 			// Add some noise
 			b.setCoords(new double[] { a.getX() + rnd.nextDouble(),
@@ -143,11 +143,11 @@ public class TestSuperPositionQCP {
 	 */
 	@Test
 	public void testRMSD() throws StructureException {
-		
+
 		Atom[] cloud2clone = new Atom[cloud2noise.length];
 		for (int p = 0; p < cloud2noise.length; p++)
 			cloud2clone[p] = (Atom) cloud2noise[p].clone();
-		
+
 		// Use SVD superposition to obtain the RMSD
 		long svdStart = System.nanoTime();
 		SVDSuperimposer svd = new SVDSuperimposer(cloud1, cloud2noise);
@@ -178,6 +178,52 @@ public class TestSuperPositionQCP {
 		// Check that the returned RMSDs are equal
 		assertEquals(svdrmsd, qcprmsd, 0.001);
 		assertEquals(svdrmsd, sprmsd, 0.001);
+	}
+
+	@Test
+	public void testSymmetryQCP() {
+
+		Point3d[] set1 = new Point3d[16];
+		set1[0] = new Point3d(14.065934, 47.068832, -32.895836);
+		set1[1] = new Point3d(-14.065934, -47.068832, -32.895836);
+		set1[2] = new Point3d(-47.068832, 14.065934, -32.895836);
+		set1[3] = new Point3d(47.068832, -14.065934, -32.895836);
+		set1[4] = new Point3d(-14.065934, 47.068832, 32.895836);
+		set1[5] = new Point3d(14.065934, -47.068832, 32.895836);
+		set1[6] = new Point3d(47.068832, 14.065934, 32.895836);
+		set1[7] = new Point3d(-47.068832, -14.065934, 32.895836);
+		set1[8] = new Point3d(43.813946, 22.748293, -32.14434);
+		set1[9] = new Point3d(-43.813946, -22.748293, -32.14434);
+		set1[10] = new Point3d(-22.748293, 43.813946, -32.14434);
+		set1[11] = new Point3d(22.748293, -43.813946, -32.14434);
+		set1[12] = new Point3d(-43.813946, 22.748293, 32.14434);
+		set1[13] = new Point3d(43.813946, -22.748293, 32.14434);
+		set1[14] = new Point3d(22.748293, 43.813946, 32.14434);
+		set1[15] = new Point3d(-22.748293, -43.813946, 32.14434);
+
+		Point3d[] set2 = CalcPoint.clonePoint3dArray(set1);
+
+		// Use SVD superposition to obtain the RMSD
+		long spStart = System.nanoTime();
+		SuperPosition.superposeWithTranslation(set1, set2);
+		double sprmsd = SuperPosition.rmsd(set1, set2);
+		long spTime = (System.nanoTime() - spStart) / 1000;
+
+		set2 = CalcPoint.clonePoint3dArray(set1);
+		
+		// Use QCP algorithm to get the optimal transformation matrix
+		SuperPositionQCP qcp = new SuperPositionQCP();
+		qcp.set(set1, set2);
+		long qcpStart = System.nanoTime();
+		double qcprmsd = qcp.getRmsd();
+		long qcpTime = (System.nanoTime() - qcpStart) / 1000;
+
+		logger.info(String.format("RMSD Symmetry: SP time: %d us" + ", QCP time: %d us",
+				spTime, qcpTime));
+
+		// Check that the returned RMSDs are equal
+		assertEquals(sprmsd, qcprmsd, 0.001);
+
 	}
 
 }
