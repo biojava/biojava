@@ -53,6 +53,7 @@ public class MomentsOfInertia {
 
 	private double[] principalMomentsOfInertia = new double[3];
 	private Vector3d[] principalAxes = new Vector3d[3];
+
 	private Matrix3d orientation = new Matrix3d();
 
 	public enum SymmetryClass {
@@ -116,6 +117,9 @@ public class MomentsOfInertia {
 	 * axis. It represents the orientation (rotation) of the principal axes with
 	 * respect to the axes of the coordinate system (unit vectors [1,0,0],
 	 * [0,1,0] and [0,0,1]).
+	 * <p>
+	 * The orientation matrix indicates the rotation to bring the coordinate
+	 * axes to the principal axes, in this direction.
 	 * 
 	 * @return the orientation Matrix as a Matrix3d object
 	 */
@@ -260,6 +264,7 @@ public class MomentsOfInertia {
 		// Convert the principal axes into a rotation matrix
 		for (int i = 0; i < 3; i++)
 			orientation.setColumn(i, principalAxes[i]);
-		
+		orientation.negate();
+
 	}
 }

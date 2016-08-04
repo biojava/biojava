@@ -2,12 +2,18 @@ package org.biojava.nbio.structure.geometry;
 
 import static org.junit.Assert.*;
 
+import java.io.IOException;
+
 import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Quat4d;
-import javax.vecmath.Vector3d;
 
+import org.biojava.nbio.structure.Calc;
+import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureIO;
+import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.geometry.UnitQuaternions;
 import org.junit.Test;
 
@@ -25,60 +31,42 @@ public class TestUnitQuaternions {
 	 * <p>
 	 * Tests the identity orientation, orientation around one coordinate axis
 	 * and orientation around a non-coordinate axis.
+	 * 
+	 * @throws StructureException
+	 * @throws IOException
 	 */
 	@Test
-	public void testOrientation() {
+	public void testOrientation() throws IOException, StructureException {
 
-		// Cloud of points colinear with the coordinate axes centroid at orig
-		// Put more mass to x, then y, then z - give correct order of PCA axes
-		Point3d[] cloud = new Point3d[180];
-		for (int p = 0; p < 60; p++) {
+		// Get points from a structure. It is difficult to generate points
+		// with no bias in their distribution (too uniform, ie).
+		Structure pdb = StructureIO.getStructure("4hhb.A");
+		Point3d[] cloud = Calc.atomsToPoints(StructureTools
+				.getRepresentativeAtomArray(pdb));
 
-			// Two points, one positive one negative
-			double[] coords = { 0, 0, 0 };
-			double[] coords_neg = { 0, 0, 0 };
+		// Center the cloud at the origin
+		CalcPoint.center(cloud);
 
-			int value = 60 - p;
-			int index = p / 20;
-
-			coords[index] = 2 * value;
-			coords_neg[index] = -value;
-
-			cloud[3 * p] = new Point3d(coords);
-			cloud[3 * p + 1] = new Point3d(coords_neg);
-			cloud[3 * p + 2] = new Point3d(coords_neg);
-		}
-
+		// Orient its principal axes to the coordinate axis
 		Quat4d orientation = UnitQuaternions.orientation(cloud);
-		orientation.normalize();
+		Matrix4d transform = new Matrix4d();
+		transform.set(orientation);
+		transform.invert();
+		CalcPoint.transform(transform, cloud);
 
-		// No rotation is equivalent to a quaternion with scalar 1 and rest 0
+		// The orientation found now should be 0 (it has been re-oriented)
+		orientation = UnitQuaternions.orientation(cloud);
+		AxisAngle4d axis = new AxisAngle4d();
+		axis.set(orientation);
+
+		// No significant rotation
 		assertEquals(orientation.x, 0.0, 0.01);
 		assertEquals(orientation.y, 0.0, 0.01);
 		assertEquals(orientation.z, 0.0, 0.01);
-		assertEquals(Math.abs(orientation.w), 1.0, 0.01);
+		assertEquals(axis.angle, 0.0, 0.01);
 
-		// Rotate cloud 90 degrees through x axis and recover orientation
-		AxisAngle4d axis90x = new AxisAngle4d(new Vector3d(1, 0, 0), 1.57079633);
-		Matrix4d mat90x = new Matrix4d();
-		mat90x.set(axis90x);
-
-		Point3d[] cloud2 = CalcPoint.clonePoint3dArray(cloud);
-		CalcPoint.transform(mat90x, cloud2);
-
-		orientation = UnitQuaternions.orientation(cloud2);
-		orientation.normalize();
-		AxisAngle4d orientaxis = new AxisAngle4d();
-		orientaxis.set(orientation);
-
-		// Angle of rotation 90 degrees around x axis
-		assertEquals(Math.abs(orientaxis.x), 1.0, 0.01);
-		assertEquals(orientaxis.y, 0.0, 0.01);
-		assertEquals(orientaxis.z, 0.0, 0.01);
-		assertEquals(orientaxis.angle, axis90x.angle, 0.01);
-
-		// Now try a rotation through a non-coordinate axis
-		Quat4d quat = new Quat4d(0.5, 0.5, 0.5, 0.5);
+		// Now try to recover an orientation
+		Quat4d quat = new Quat4d(0.418, 0.606, 0.303, 0.606);
 
 		Matrix4d mat = new Matrix4d();
 		mat.set(quat);
@@ -86,7 +74,6 @@ public class TestUnitQuaternions {
 		CalcPoint.transform(mat, cloud);
 
 		orientation = UnitQuaternions.orientation(cloud);
-		orientation.normalize();
 
 		// Test recovering the quaternion (q and -q same rotation)
 		assertEquals(Math.abs(orientation.x), quat.x, 0.01);
@@ -133,13 +120,15 @@ public class TestUnitQuaternions {
 
 		assertEquals(UnitQuaternions.orientationMetric(qa, qb), Math.PI / 8,
 				0.01);
-		
+
 		// 90 degrees rotation over x in negative
 		qb = new Quat4d(0, -0.707, 0, -0.707);
-		
+
 		// assert no negative angles are returned
 		assertEquals(UnitQuaternions.orientationMetric(qa, qb), Math.PI / 3,
 				0.01);
-		
+
 	}
+	
+	
 }
