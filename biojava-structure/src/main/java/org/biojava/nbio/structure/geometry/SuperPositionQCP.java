@@ -126,6 +126,7 @@ public final class SuperPositionQCP {
 	private Point3d[] y;
 
 	private double[] weight;
+	private double wsum;
 
 	private Point3d[] xref;
 	private Point3d[] yref;
@@ -264,7 +265,7 @@ public final class SuperPositionQCP {
 			CalcPoint.translate(ytrans, yref);
 			innerProduct(yref, xref);
 		}
-		calcRmsd(x.length);
+		calcRmsd(wsum);
 	}
 
 	/**
@@ -323,7 +324,11 @@ public final class SuperPositionQCP {
 		Szz = 0;
 
 		if (weight != null) {
+			wsum = 0;
 			for (int i = 0; i < coords1.length; i++) {
+				
+				wsum += weight[i];
+				
 				x1 = weight[i] * coords1[i].x;
 				y1 = weight[i] * coords1[i].y;
 				z1 = weight[i] * coords1[i].z;
@@ -367,12 +372,13 @@ public final class SuperPositionQCP {
 				Szy += coords1[i].z * coords2[i].y;
 				Szz += coords1[i].z * coords2[i].z;
 			}
+			wsum = coords1.length;
 		}
 
 		e0 = (g1 + g2) * 0.5;
 	}
 
-	private int calcRmsd(int len) {
+	private int calcRmsd(double len) {
 		double Sxx2 = Sxx * Sxx;
 		double Syy2 = Syy * Syy;
 		double Szz2 = Szz * Szz;
@@ -427,7 +433,7 @@ public final class SuperPositionQCP {
 			double delta = ((a * mxEigenV + c0) / (2.0 * x2 * mxEigenV + b + a));
 			mxEigenV -= delta;
 
-			if (Math.abs(mxEigenV - oldg) < EVAL_PREC)
+			if (Math.abs(mxEigenV - oldg) < Math.abs(EVAL_PREC*mxEigenV))
 				break;
 		}
 
