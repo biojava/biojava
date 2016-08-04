@@ -23,8 +23,10 @@ package org.biojava.nbio.structure.cluster;
 import org.biojava.nbio.alignment.Alignments;
 import org.biojava.nbio.alignment.Alignments.PairwiseSequenceAlignerType;
 import org.biojava.nbio.alignment.SimpleGapPenalty;
+import org.biojava.nbio.alignment.template.GapPenalty;
 import org.biojava.nbio.alignment.template.PairwiseSequenceAligner;
 import org.biojava.nbio.core.alignment.matrices.SubstitutionMatrixHelper;
+import org.biojava.nbio.core.alignment.template.SubstitutionMatrix;
 import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.core.sequence.ProteinSequence;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
@@ -54,9 +56,10 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * A SubunitCluster contains a set of equivalent {@link QuatSymmetrySubunits}, the set of
- * equivalent residues (EQR) between {@link Subunit} and a {@link Subunit}
- * representative. It also stores the method used for clustering.
+ * A SubunitCluster contains a set of equivalent {@link QuatSymmetrySubunits},
+ * the set of equivalent residues (EQR) between {@link Subunit} and a
+ * {@link Subunit} representative. It also stores the method used for
+ * clustering.
  * <p>
  * This class allows the comparison and merging of SubunitClusters.
  * 
@@ -141,66 +144,6 @@ public class SubunitCluster {
 	}
 
 	/**
-	 * The other SubunitCluster is equivalent to this one if their
-	 * representatives sequences are similar (higher sequence identity and
-	 * coverage than the thresholds).
-	 * <p>
-	 * The sequence alignment is performed using Smith Waterman, default linear
-	 * {@link SimpleGapPenalty} and BLOSUM62 as scoring matrix.
-	 * 
-	 * @param other
-	 *            SubunitCluster
-	 * @param minSeqid
-	 *            sequence identity threshold. Value in [0,1]. Values lower than
-	 *            0.7 are not recommended. Use {@link #mergeStructure} for lower
-	 *            values.
-	 * @param minCoverage
-	 *            coverage (alignment fraction) threshold. Value in [0,1].
-	 * @return true if the SubunitClusters were merged, false otherwise
-	 * @throws CompoundNotFoundException
-	 */
-	public boolean isSequenceEq(SubunitCluster other, double minSeqid,
-			double minCoverage) throws CompoundNotFoundException {
-
-		// Extract the protein sequences as BioJava alignment objects
-		ProteinSequence thisSequence = this.subunits.get(this.representative)
-				.getProteinSequence();
-		ProteinSequence otherSequence = other.subunits
-				.get(other.representative).getProteinSequence();
-
-		// Perform a Smith-Waterman alignment with BLOSUM62
-		PairwiseSequenceAligner<ProteinSequence, AminoAcidCompound> aligner = Alignments
-				.getPairwiseAligner(thisSequence, otherSequence,
-						PairwiseSequenceAlignerType.LOCAL,
-						new SimpleGapPenalty(),
-						SubstitutionMatrixHelper.getBlosum62());
-
-		// Calculate real coverage (subtract gaps in both sequences)
-		double gaps1 = aligner.getPair().getAlignedSequence(1)
-				.getNumGapPositions();
-		double gaps2 = aligner.getPair().getAlignedSequence(2)
-				.getNumGapPositions();
-		double lengthAlignment = aligner.getPair().getLength();
-		double lengthThis = aligner.getQuery().getLength();
-		double lengthOther = aligner.getTarget().getLength();
-		double coverage = (lengthAlignment - gaps1 - gaps2)
-				/ Math.max(lengthThis, lengthOther);
-
-		if (coverage < minCoverage)
-			return false;
-
-		double seqid = aligner.getPair().getPercentageOfIdentity();
-
-		if (seqid < minSeqid)
-			return false;
-
-		logger.info("SubunitClusters are similar in sequence with {} sequence "
-				+ "identity and {} coverage", seqid, coverage);
-
-		return true;
-	}
-
-	/**
 	 * Merges the other SubunitCluster into this one if their representatives
 	 * sequences are similar (higher sequence identity and coverage than the
 	 * thresholds).
@@ -221,6 +164,41 @@ public class SubunitCluster {
 	 */
 	public boolean mergeSequence(SubunitCluster other, double minSeqid,
 			double minCoverage) throws CompoundNotFoundException {
+		return mergeSequence(other, minSeqid, minCoverage,
+				PairwiseSequenceAlignerType.LOCAL, new SimpleGapPenalty(),
+				SubstitutionMatrixHelper.getBlosum62());
+	}
+
+	/**
+	 * Merges the other SubunitCluster into this one if their representatives
+	 * sequences are similar (higher sequence identity and coverage than the
+	 * thresholds).
+	 * <p>
+	 * The sequence alignment is performed using Smith Waterman, default linear
+	 * {@link SimpleGapPenalty} and BLOSUM62 as scoring matrix.
+	 * 
+	 * @param other
+	 *            SubunitCluster
+	 * @param minSeqid
+	 *            sequence identity threshold. Value in [0,1]. Values lower than
+	 *            0.7 are not recommended. Use {@link #mergeStructure} for lower
+	 *            values.
+	 * @param minCoverage
+	 *            coverage (alignment fraction) threshold. Value in [0,1].
+	 * @param alignerType
+	 *            parameter for the sequence alignment algorithm
+	 * @param gapPenalty
+	 *            parameter for the sequence alignment algorithm
+	 * @param subsMatrix
+	 *            parameter for the sequence alignment algorithm
+	 * @return true if the SubunitClusters were merged, false otherwise
+	 * @throws CompoundNotFoundException
+	 */
+	public boolean mergeSequence(SubunitCluster other, double minSeqid,
+			double minCoverage, PairwiseSequenceAlignerType alignerType,
+			GapPenalty gapPenalty,
+			SubstitutionMatrix<AminoAcidCompound> subsMatrix)
+			throws CompoundNotFoundException {
 
 		// Extract the protein sequences as BioJava alignment objects
 		ProteinSequence thisSequence = this.subunits.get(this.representative)
@@ -228,12 +206,10 @@ public class SubunitCluster {
 		ProteinSequence otherSequence = other.subunits
 				.get(other.representative).getProteinSequence();
 
-		// Perform a Smith-Waterman alignment with BLOSUM62
+		// Perform the alignment with provided parameters
 		PairwiseSequenceAligner<ProteinSequence, AminoAcidCompound> aligner = Alignments
-				.getPairwiseAligner(thisSequence, otherSequence,
-						PairwiseSequenceAlignerType.LOCAL,
-						new SimpleGapPenalty(),
-						SubstitutionMatrixHelper.getBlosum62());
+				.getPairwiseAligner(thisSequence, otherSequence, alignerType,
+						gapPenalty, subsMatrix);
 
 		// Calculate real coverage (subtract gaps in both sequences)
 		double gaps1 = aligner.getPair().getAlignedSequence(1)
@@ -334,58 +310,6 @@ public class SubunitCluster {
 	}
 
 	/**
-	 * The other SubunitCluster is equivalent to this one if their
-	 * representative Atoms are structurally similar (lower RMSD and higher
-	 * coverage than the thresholds).
-	 * <p>
-	 * The structure alignment is performed using FatCatRigid, with default
-	 * parameters.
-	 * 
-	 * @param other
-	 *            SubunitCluster
-	 * @param maxRmsd
-	 *            RMSD threshold.
-	 * @param minCoverage
-	 *            coverage (alignment fraction) threshold. Value in [0,1].
-	 * @return true if the SubunitClusters were merged, false otherwise
-	 * @throws StructureException
-	 */
-	public boolean isStructureEq(SubunitCluster other, double maxRmsd,
-			double minCoverage) throws StructureException {
-
-		// Perform a FatCat alignment with default parameters
-		StructureAlignment algorithm = StructureAlignmentFactory
-				.getAlgorithm(CeMain.algorithmName);
-
-		AFPChain afp = algorithm.align(this.subunits.get(this.representative)
-				.getRepresentativeAtoms(),
-				other.subunits.get(other.representative)
-						.getRepresentativeAtoms());
-
-		// Convert AFPChain to MultipleAlignment for convinience
-		MultipleAlignment msa = new MultipleAlignmentEnsembleImpl(
-				afp,
-				this.subunits.get(this.representative).getRepresentativeAtoms(),
-				other.subunits.get(other.representative)
-						.getRepresentativeAtoms(), false)
-				.getMultipleAlignment(0);
-
-		double coverage = Math.min(msa.getCoverages().get(0), msa
-				.getCoverages().get(1));
-		if (coverage < minCoverage)
-			return false;
-
-		double rmsd = afp.getTotalRmsdOpt();
-		if (rmsd > maxRmsd)
-			return false;
-
-		logger.info("SubunitClusters are structurally similar with {} RMSD "
-				+ "and {} coverage", rmsd, coverage);
-
-		return true;
-	}
-
-	/**
 	 * Merges the other SubunitCluster into this one if their representative
 	 * Atoms are structurally similar (lower RMSD and higher coverage than the
 	 * thresholds).
@@ -404,12 +328,36 @@ public class SubunitCluster {
 	 */
 	public boolean mergeStructure(SubunitCluster other, double maxRmsd,
 			double minCoverage) throws StructureException {
-
-		// Perform a FatCat alignment with default parameters
+		// Use a CE alignment with default parameters
 		StructureAlignment algorithm = StructureAlignmentFactory
 				.getAlgorithm(CeMain.algorithmName);
+		return mergeStructure(other, maxRmsd, minCoverage, algorithm);
+	}
 
-		AFPChain afp = algorithm.align(this.subunits.get(this.representative)
+	/**
+	 * Merges the other SubunitCluster into this one if their representative
+	 * Atoms are structurally similar (lower RMSD and higher coverage than the
+	 * thresholds).
+	 * <p>
+	 * The structure alignment is performed using FatCatRigid, with default
+	 * parameters.
+	 * 
+	 * @param other
+	 *            SubunitCluster
+	 * @param maxRmsd
+	 *            RMSD threshold.
+	 * @param minCoverage
+	 *            coverage (alignment fraction) threshold. Value in [0,1].
+	 * @param aligner
+	 *            StructureAlignment algorithm
+	 * @return true if the SubunitClusters were merged, false otherwise
+	 * @throws StructureException
+	 */
+	public boolean mergeStructure(SubunitCluster other, double maxRmsd,
+			double minCoverage, StructureAlignment aligner)
+			throws StructureException {
+
+		AFPChain afp = aligner.align(this.subunits.get(this.representative)
 				.getRepresentativeAtoms(),
 				other.subunits.get(other.representative)
 						.getRepresentativeAtoms());
