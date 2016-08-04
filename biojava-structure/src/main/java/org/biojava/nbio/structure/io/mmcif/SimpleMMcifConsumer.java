@@ -525,10 +525,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		if ( ! currentGroup.hasAtom(atomName)) {
 			// Unless it's microheterogenity https://github.com/rcsb/codec-devel/issues/81
 			if (currentGroup.getPDBName().equals(a.getGroup().getPDBName())) {
-				if(StructureTools.hasNonDeuteratedEquiv(a,currentGroup)){
-					
-				}
-				else{
+				if(!StructureTools.hasNonDeuteratedEquiv(a,currentGroup)){
 					currentGroup.addAtom(a);
 				}
 			}
