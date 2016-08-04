@@ -2,12 +2,18 @@ package org.biojava.nbio.structure.geometry;
 
 import static org.junit.Assert.*;
 
+import java.io.IOException;
+
 import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Quat4d;
-import javax.vecmath.Vector3d;
 
+import org.biojava.nbio.structure.Calc;
+import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureIO;
+import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.geometry.UnitQuaternions;
 import org.junit.Test;
 
@@ -25,60 +31,42 @@ public class TestUnitQuaternions {
 	 * <p>
 	 * Tests the identity orientation, orientation around one coordinate axis
 	 * and orientation around a non-coordinate axis.
+	 * 
+	 * @throws StructureException
+	 * @throws IOException
 	 */
 	@Test
-	public void testOrientation() {
+	public void testOrientation() throws IOException, StructureException {
 
-		// Cloud of points colinear with the coordinate axes centroid at orig
-		// Put more mass to x, then y, then z - give correct order of PCA axes
-		Point3d[] cloud = new Point3d[180];
-		for (int p = 0; p < 60; p++) {
+		// Get points from a structure. It is difficult to generate points
+		// with no bias in their distribution (too uniform, ie).
+		Structure pdb = StructureIO.getStructure("4hhb.A");
+		Point3d[] cloud = Calc.atomsToPoints(StructureTools
+				.getRepresentativeAtomArray(pdb));
 
-			// Two points, one positive one negative
-			double[] coords = { 0, 0, 0 };
-			double[] coords_neg = { 0, 0, 0 };
+		// Center the cloud at the origin
+		CalcPoint.center(cloud);
 
-			int value = 60 - p;
-			int index = p / 20;
-
-			coords[index] = 2 * value;
-			coords_neg[index] = -value;
-
-			cloud[3 * p] = new Point3d(coords);
-			cloud[3 * p + 1] = new Point3d(coords_neg);
-			cloud[3 * p + 2] = new Point3d(coords_neg);
-		}
-
+		// Orient its principal axes to the coordinate axis
 		Quat4d orientation = UnitQuaternions.orientation(cloud);
-		orientation.normalize();
+		Matrix4d transform = new Matrix4d();
+		transform.set(orientation);
+		transform.invert();
+		CalcPoint.transform(transform, cloud);
 
-		// No rotation is equivalent to a quaternion with scalar 1 and rest 0
+		// The orientation found now should be 0 (it has been re-oriented)
+		orientation = UnitQuaternions.orientation(cloud);
+		AxisAngle4d axis = new AxisAngle4d();
+		axis.set(orientation);
+
+		// No significant rotation
 		assertEquals(orientation.x, 0.0, 0.01);
 		assertEquals(orientation.y, 0.0, 0.01);
 		assertEquals(orientation.z, 0.0, 0.01);
-		assertEquals(Math.abs(orientation.w), 1.0, 0.01);
+		assertEquals(axis.angle, 0.0, 0.01);
 
-		// Rotate cloud 90 degrees through x axis and recover orientation
-		AxisAngle4d axis90x = new AxisAngle4d(new Vector3d(1, 0, 0), 1.57079633);
-		Matrix4d mat90x = new Matrix4d();
-		mat90x.set(axis90x);
-
-		Point3d[] cloud2 = CalcPoint.clonePoint3dArray(cloud);
-		CalcPoint.transform(mat90x, cloud2);
-
-		orientation = UnitQuaternions.orientation(cloud2);
-		orientation.normalize();
-		AxisAngle4d orientaxis = new AxisAngle4d();
-		orientaxis.set(orientation);
-
-		// Angle of rotation 90 degrees around x axis
-		assertEquals(Math.abs(orientaxis.x), 1.0, 0.01);
-		assertEquals(orientaxis.y, 0.0, 0.01);
-		assertEquals(orientaxis.z, 0.0, 0.01);
-		assertEquals(orientaxis.angle, axis90x.angle, 0.01);
-
-		// Now try a rotation through a non-coordinate axis
-		Quat4d quat = new Quat4d(0.5, 0.5, 0.5, 0.5);
+		// Now try to recover an orientation
+		Quat4d quat = new Quat4d(0.418, 0.606, 0.303, 0.606);
 
 		Matrix4d mat = new Matrix4d();
 		mat.set(quat);
@@ -86,7 +74,6 @@ public class TestUnitQuaternions {
 		CalcPoint.transform(mat, cloud);
 
 		orientation = UnitQuaternions.orientation(cloud);
-		orientation.normalize();
 
 		// Test recovering the quaternion (q and -q same rotation)
 		assertEquals(Math.abs(orientation.x), quat.x, 0.01);
@@ -102,7 +89,7 @@ public class TestUnitQuaternions {
 	 * perfect anticorrelation and intermediate values.
 	 */
 	@Test
-	public void testOrientationMetric() {
+	public void testOrientationMetricRange() {
 
 		// no rotation quaternion
 		Quat4d qa = new Quat4d(0, 0, 0, 1);
@@ -133,13 +120,83 @@ public class TestUnitQuaternions {
 
 		assertEquals(UnitQuaternions.orientationMetric(qa, qb), Math.PI / 8,
 				0.01);
-		
+
 		// 90 degrees rotation over x in negative
 		qb = new Quat4d(0, -0.707, 0, -0.707);
-		
+
 		// assert no negative angles are returned
 		assertEquals(UnitQuaternions.orientationMetric(qa, qb), Math.PI / 3,
 				0.01);
-		
+
 	}
+
+	/**
+	 * Test {@link UnitQuaternions#orientationMetric(Point3d[], Point3d[])} on a
+	 * real structure, which will be deviating a little bit every time.
+	 * 
+	 * @throws StructureException
+	 * @throws IOException
+	 */
+	@Test
+	public void testOrientationMetricIncrement() throws IOException,
+			StructureException {
+		
+		// The rotation increment will be Pi/10, Pi/15 and Pi/12 degrees in X,Y and Z
+		Matrix4d transform = new Matrix4d();
+		transform.rotX(Math.PI / 10);
+		transform.rotY(Math.PI / 12);
+		transform.rotZ(Math.PI / 15);
+
+		// Get points from a structure.
+		Structure pdb = StructureIO.getStructure("4hhb.A");
+		Point3d[] cloud = Calc.atomsToPoints(StructureTools
+				.getRepresentativeAtomArray(pdb));
+		Point3d[] cloud2 = CalcPoint.clonePoint3dArray(cloud);
+
+		// Center the clouds at the origin
+		CalcPoint.center(cloud);
+		CalcPoint.center(cloud2);
+
+		// Their orientation is equal at this stage
+		double m0 = UnitQuaternions.orientationMetric(cloud, cloud2);
+		assertEquals(m0, 0.0, 0.001);
+		
+		// Assert it keeps incrementing every time transform is applied
+		CalcPoint.transform(transform, cloud2);
+		double m1 = UnitQuaternions.orientationMetric(cloud, cloud2);
+		assertTrue(m1 > m0);
+		
+		CalcPoint.transform(transform, cloud2);
+		double m2 = UnitQuaternions.orientationMetric(cloud, cloud2);
+		assertTrue(m2 > m1);
+		
+		CalcPoint.transform(transform, cloud2);
+		double m3 = UnitQuaternions.orientationMetric(cloud, cloud2);
+		assertTrue(m3 > m2);
+		
+		CalcPoint.transform(transform, cloud2);
+		double m4 = UnitQuaternions.orientationMetric(cloud, cloud2);
+		assertTrue(m4 > m3);
+		
+		CalcPoint.transform(transform, cloud2);
+		double m5 = UnitQuaternions.orientationMetric(cloud, cloud2);
+		assertTrue(m5 > m4);
+		
+		CalcPoint.transform(transform, cloud2);
+		double m6 = UnitQuaternions.orientationMetric(cloud, cloud2);
+		assertTrue(m6 > m5);
+		
+		CalcPoint.transform(transform, cloud2);
+		double m7 = UnitQuaternions.orientationMetric(cloud, cloud2);
+		assertTrue(m7 > m6);
+		
+		CalcPoint.transform(transform, cloud2);
+		double m8 = UnitQuaternions.orientationMetric(cloud, cloud2);
+		assertTrue(m8 > m7);
+		
+		CalcPoint.transform(transform, cloud2);
+		double m9 = UnitQuaternions.orientationMetric(cloud, cloud2);
+		assertTrue(m9 > m8);
+	}
+
 }
