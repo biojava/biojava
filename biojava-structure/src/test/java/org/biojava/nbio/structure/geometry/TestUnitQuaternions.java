@@ -89,7 +89,7 @@ public class TestUnitQuaternions {
 	 * perfect anticorrelation and intermediate values.
 	 */
 	@Test
-	public void testOrientationMetric() {
+	public void testOrientationMetricRange() {
 
 		// no rotation quaternion
 		Quat4d qa = new Quat4d(0, 0, 0, 1);
@@ -129,6 +129,74 @@ public class TestUnitQuaternions {
 				0.01);
 
 	}
-	
-	
+
+	/**
+	 * Test {@link UnitQuaternions#orientationMetric(Point3d[], Point3d[])} on a
+	 * real structure, which will be deviating a little bit every time.
+	 * 
+	 * @throws StructureException
+	 * @throws IOException
+	 */
+	@Test
+	public void testOrientationMetricIncrement() throws IOException,
+			StructureException {
+		
+		// The rotation increment will be Pi/10, Pi/15 and Pi/12 degrees in X,Y and Z
+		Matrix4d transform = new Matrix4d();
+		transform.rotX(Math.PI / 10);
+		transform.rotY(Math.PI / 12);
+		transform.rotZ(Math.PI / 15);
+
+		// Get points from a structure.
+		Structure pdb = StructureIO.getStructure("4hhb.A");
+		Point3d[] cloud = Calc.atomsToPoints(StructureTools
+				.getRepresentativeAtomArray(pdb));
+		Point3d[] cloud2 = CalcPoint.clonePoint3dArray(cloud);
+
+		// Center the clouds at the origin
+		CalcPoint.center(cloud);
+		CalcPoint.center(cloud2);
+
+		// Their orientation is equal at this stage
+		double m0 = UnitQuaternions.orientationMetric(cloud, cloud2);
+		assertEquals(m0, 0.0, 0.001);
+		
+		// Assert it keeps incrementing every time transform is applied
+		CalcPoint.transform(transform, cloud2);
+		double m1 = UnitQuaternions.orientationMetric(cloud, cloud2);
+		assertTrue(m1 > m0);
+		
+		CalcPoint.transform(transform, cloud2);
+		double m2 = UnitQuaternions.orientationMetric(cloud, cloud2);
+		assertTrue(m2 > m1);
+		
+		CalcPoint.transform(transform, cloud2);
+		double m3 = UnitQuaternions.orientationMetric(cloud, cloud2);
+		assertTrue(m3 > m2);
+		
+		CalcPoint.transform(transform, cloud2);
+		double m4 = UnitQuaternions.orientationMetric(cloud, cloud2);
+		assertTrue(m4 > m3);
+		
+		CalcPoint.transform(transform, cloud2);
+		double m5 = UnitQuaternions.orientationMetric(cloud, cloud2);
+		assertTrue(m5 > m4);
+		
+		CalcPoint.transform(transform, cloud2);
+		double m6 = UnitQuaternions.orientationMetric(cloud, cloud2);
+		assertTrue(m6 > m5);
+		
+		CalcPoint.transform(transform, cloud2);
+		double m7 = UnitQuaternions.orientationMetric(cloud, cloud2);
+		assertTrue(m7 > m6);
+		
+		CalcPoint.transform(transform, cloud2);
+		double m8 = UnitQuaternions.orientationMetric(cloud, cloud2);
+		assertTrue(m8 > m7);
+		
+		CalcPoint.transform(transform, cloud2);
+		double m9 = UnitQuaternions.orientationMetric(cloud, cloud2);
+		assertTrue(m9 > m8);
+	}
+
 }
