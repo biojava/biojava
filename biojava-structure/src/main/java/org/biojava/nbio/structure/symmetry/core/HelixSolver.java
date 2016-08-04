@@ -20,7 +20,8 @@
  */
 package org.biojava.nbio.structure.symmetry.core;
 
-import org.biojava.nbio.structure.symmetry.geometry.SuperPosition;
+import org.biojava.nbio.structure.geometry.CalcPoint;
+import org.biojava.nbio.structure.geometry.SuperPosition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -94,8 +95,8 @@ public class HelixSolver {
 
 			// trial superposition of repeat unit pairs to get a seed
 			// permutation
-			h1 = SuperPosition.clonePoint3dArray(repeatUnits.get(pair[0]));
-			h2 = SuperPosition.clonePoint3dArray(repeatUnits.get(pair[1]));
+			h1 = CalcPoint.clonePoint3dArray(repeatUnits.get(pair[0]));
+			h2 = CalcPoint.clonePoint3dArray(repeatUnits.get(pair[1]));
 			Matrix4d transformation = SuperPosition.superposeWithTranslation(
 					h1, h2);
 
@@ -227,10 +228,10 @@ public class HelixSolver {
 			h2 = new Point3d[point2.size()];
 			point1.toArray(h1);
 			point2.toArray(h2);
-			Point3d[] h3 = SuperPosition.clonePoint3dArray(h1);
+			Point3d[] h3 = CalcPoint.clonePoint3dArray(h1);
 			transformation = SuperPosition.superposeWithTranslation(h1, h2);
 
-			Point3d xtrans = SuperPosition.centroid(h3);
+			Point3d xtrans = CalcPoint.centroid(h3);
 			xtrans.negate();
 
 			double traceRmsd = SuperPosition.rmsd(h1, h2);

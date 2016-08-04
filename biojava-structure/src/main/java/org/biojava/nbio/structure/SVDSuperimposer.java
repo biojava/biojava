@@ -23,7 +23,9 @@
 package org.biojava.nbio.structure;
 
 import javax.vecmath.Matrix4d;
+import javax.vecmath.Point3d;
 
+import org.biojava.nbio.structure.geometry.CalcPoint;
 import org.biojava.nbio.structure.jama.Matrix;
 import org.biojava.nbio.structure.jama.SingularValueDecomposition;
 
@@ -122,7 +124,10 @@ import org.biojava.nbio.structure.jama.SingularValueDecomposition;
 			System.out.println("wrote to file " + outputfile);
 
 		</pre>
- *
+	
+ * TODO the documentaton should contain a reference and explanation 
+ * of the algorithm, rather than example code. 
+ * The example should go to demo (Aleix 08/2016)
  *
  * @author Andreas Prlic
  * @since 1.5
@@ -131,20 +136,21 @@ import org.biojava.nbio.structure.jama.SingularValueDecomposition;
  */
 public class SVDSuperimposer {
 
-	Matrix rot;
-	Matrix tran;
+	private Matrix rot;
+	private Matrix tran;
 
-	Matrix centroidA;
-	Matrix centroidB;
+	private Matrix centroidA;
+	private Matrix centroidB;
 
-	/** Create a SVDSuperimposer object and calculate a SVD superimposition of two sets of atoms.
+	/** Create a SVDSuperimposer object and calculate a SVD 
+	 * superimposition of two sets of atoms.
 	 *
-	 * @param atomSet1 Atom array 1
-	 * @param atomSet2 Atom array 2
+	 * @param atomSet1 Atom array 1, fixed
+	 * @param atomSet2 Atom array 2, moved/transformed
 	 * @throws StructureException
 	 */
 	public SVDSuperimposer(Atom[] atomSet1,Atom[]atomSet2)
-	throws StructureException{
+			throws StructureException{
 
 		if ( atomSet1.length != atomSet2.length ){
 			throw new StructureException("The two atom sets are not of same length!");
@@ -175,6 +181,54 @@ public class SVDSuperimposer {
 
 		calculate(coordSet1,coordSet2);
 
+	}
+	
+	/** Create a SVDSuperimposer object and calculate a SVD 
+	 * superimposition of two sets of points.
+	 *
+	 * @param pointSet1 Point3d array 1, fixed
+	 * @param pointSet2 Point3d array 2, moved/ transformed
+	 * @throws StructureException
+	 */
+	public SVDSuperimposer(Point3d[] pointSet1, Point3d[] pointSet2)
+			throws StructureException{
+
+		if ( pointSet1.length != pointSet2.length ){
+			throw new StructureException("The two point sets are not of same length!");
+		}
+
+		Point3d cena = CalcPoint.centroid(pointSet1);
+		Point3d cenb = CalcPoint.centroid(pointSet2);
+
+		double[][] centAcoords = new double[][]{{cena.x,cena.y,cena.z}};
+		centroidA = new Matrix(centAcoords);
+
+		double[][] centBcoords = new double[][]{{cenb.x,cenb.x,cenb.x}};
+		centroidB = new Matrix(centBcoords);
+
+		//      center at centroid
+
+		cena.negate();
+		cenb.negate();
+		
+		Point3d[] ats1 = CalcPoint.clonePoint3dArray(pointSet1);
+		CalcPoint.translate(cena, ats1);
+		
+		Point3d[] ats2 = CalcPoint.clonePoint3dArray(pointSet2);
+		CalcPoint.translate(cenb, ats2);
+
+		double[][] coordSet1 = new double[ats1.length][3];
+		double[][] coordSet2 = new double[ats2.length][3];
+
+		// copy the atoms into the internal coords;
+		for (int i =0 ; i< ats1.length;i++) {
+			coordSet1[i] = new double[3];
+			ats1[i].get(coordSet1[i]);
+			coordSet2[i] = new double[3];
+			ats2[i].get(coordSet2[i]);
+		}
+
+		calculate(coordSet1,coordSet2);
 
 	}
 

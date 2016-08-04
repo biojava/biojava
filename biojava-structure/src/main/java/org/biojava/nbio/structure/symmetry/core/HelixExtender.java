@@ -20,8 +20,7 @@
  */
 package org.biojava.nbio.structure.symmetry.core;
 
-import org.biojava.nbio.structure.symmetry.geometry.SuperPosition;
-
+import org.biojava.nbio.structure.geometry.CalcPoint;
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
 
@@ -55,9 +54,9 @@ public class HelixExtender {
 		Matrix4d transformation = helix.getTransformation();
 		for (int index: indices) {
 	    	Point3d[] trace = subunits.getTraces().get(index);
-	    	Point3d[] copy = SuperPosition.clonePoint3dArray(trace);
+	    	Point3d[] copy = CalcPoint.clonePoint3dArray(trace);
 		    for (int i = 0; i < Math.abs(steps); i++) {
-		    	SuperPosition.transform(transformation, copy);
+		    	CalcPoint.transform(transformation, copy);
 		    }
 		    for (Point3d p: copy) {
 		    	points.add(p);
