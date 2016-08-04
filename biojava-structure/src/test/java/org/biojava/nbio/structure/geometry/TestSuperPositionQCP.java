@@ -9,9 +9,6 @@ import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
-import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.AtomImpl;
-import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.SVDSuperimposer;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.geometry.SuperPosition;
@@ -34,11 +31,10 @@ public class TestSuperPositionQCP {
 	private static final Logger logger = LoggerFactory
 			.getLogger(TestSuperPositionQCP.class);
 
-	private Atom[] cloud1;
-	private Atom[] cloud2;
-	private Atom[] cloud2noise;
+	private Point3d[] cloud1;
+	private Point3d[] cloud2;
 
-	private AxisAngle4d axis;
+	private AxisAngle4d rotAxis;
 	private Vector3d translation;
 	private Matrix4d transform;
 
@@ -50,37 +46,31 @@ public class TestSuperPositionQCP {
 		// Generate two big random clouds of points
 		Random rnd = new Random();
 
-		cloud1 = new Atom[size];
-		cloud2 = new Atom[size];
-		cloud2noise = new Atom[size];
+		cloud1 = new Point3d[size];
+		cloud2 = new Point3d[size];
 
-		axis = new AxisAngle4d(0.440, 0.302, 0.845, 1.570);
+		rotAxis = new AxisAngle4d(0.440, 0.302, 0.845, 1.570);
 		translation = new Vector3d(0.345, 2.453, 5.324);
 		transform = new Matrix4d();
-		transform.set(axis);
+		transform.set(rotAxis);
 		transform.setTranslation(translation);
 
 		for (int p = 0; p < size; p++) {
 
-			Atom a = new AtomImpl();
-			a.setCoords(new double[] { rnd.nextInt(100), rnd.nextInt(50),
-					rnd.nextInt(150) });
+			Point3d a = new Point3d(rnd.nextInt(100), rnd.nextInt(50),
+					rnd.nextInt(150));
 			cloud1[p] = a;
-			cloud2[p] = (Atom) a.clone();
 
-			Atom b = new AtomImpl();
 			// Add some noise
-			b.setCoords(new double[] { a.getX() + rnd.nextDouble(),
-					a.getY() + rnd.nextDouble(), a.getZ() + rnd.nextDouble() });
-			cloud2noise[p] = b;
+			Point3d b = new Point3d(a.x + rnd.nextDouble(), a.y
+					+ rnd.nextDouble(), a.z + rnd.nextDouble());
+			cloud2[p] = b;
 		}
 
-		cloud1 = Calc.centerAtoms(cloud1);
-		cloud2 = Calc.centerAtoms(cloud2);
-		cloud2noise = Calc.centerAtoms(cloud2noise);
+		CalcPoint.center(cloud1);
+		CalcPoint.center(cloud2);
 
-		Calc.transform(cloud2, transform);
-		Calc.transform(cloud2noise, transform);
+		CalcPoint.transform(transform, cloud1);
 
 	}
 
@@ -100,17 +90,17 @@ public class TestSuperPositionQCP {
 		Matrix4d svdTransform = svd.getTransformation();
 		long svdTime = (System.nanoTime() - svdStart) / 1000;
 
+		Point3d[] cloud2c = CalcPoint.clonePoint3dArray(cloud2);
+		
 		// Use SuperPosition to obtain the optimal transformation matrix
-		Point3d[] cloud1p = Calc.atomsToPoints(cloud1);
-		Point3d[] cloud2p = Calc.atomsToPoints(cloud2);
 		long spStart = System.nanoTime();
-		Matrix4d spTransform = SuperPosition.superposeWithTranslation(cloud1p,
-				cloud2p);
+		Matrix4d spTransform = SuperPosition.superposeWithTranslation(cloud2c,
+				cloud1);
 		long spTime = (System.nanoTime() - spStart) / 1000;
-
+		
 		// Use QCP algorithm to get the optimal transformation matrix
 		SuperPositionQCP qcp = new SuperPositionQCP();
-		qcp.set(Calc.atomsToPoints(cloud1), Calc.atomsToPoints(cloud2));
+		qcp.set(cloud2, cloud1);
 		long qcpStart = System.nanoTime();
 		Matrix4d qcpTransform = qcp.getTransformationMatrix();
 		long qcpTime = (System.nanoTime() - qcpStart) / 1000;
@@ -121,17 +111,9 @@ public class TestSuperPositionQCP {
 						qcpTime));
 
 		// Check that the transformation matrix was recovered
-		Matrix4d inverse = new Matrix4d();
-		inverse.invert(transform);
-
-		assertTrue(transform.epsilonEquals(svdTransform, 0.01)
-				|| inverse.epsilonEquals(svdTransform, 0.01));
-
-		assertTrue(transform.epsilonEquals(spTransform, 0.01)
-				|| inverse.epsilonEquals(spTransform, 0.01));
-
-		assertTrue(transform.epsilonEquals(qcpTransform, 0.01)
-				|| inverse.epsilonEquals(qcpTransform, 0.01));
+		assertTrue(transform.epsilonEquals(svdTransform, 0.01));
+		assertTrue(transform.epsilonEquals(spTransform, 0.01));
+		assertTrue(transform.epsilonEquals(qcpTransform, 0.01));
 
 	}
 
@@ -144,30 +126,27 @@ public class TestSuperPositionQCP {
 	@Test
 	public void testRMSD() throws StructureException {
 
-		Atom[] cloud2clone = new Atom[cloud2noise.length];
-		for (int p = 0; p < cloud2noise.length; p++)
-			cloud2clone[p] = (Atom) cloud2noise[p].clone();
-
+		Point3d[] cloud2noisec = CalcPoint.clonePoint3dArray(cloud2);
+		
 		// Use SVD superposition to obtain the RMSD
 		long svdStart = System.nanoTime();
-		SVDSuperimposer svd = new SVDSuperimposer(cloud1, cloud2noise);
+		SVDSuperimposer svd = new SVDSuperimposer(cloud1, cloud2);
 		Matrix4d svdTransform = svd.getTransformation();
-		Calc.transform(cloud2clone, svdTransform);
-		double svdrmsd = SVDSuperimposer.getRMS(cloud1, cloud2clone);
+		CalcPoint.transform(svdTransform, cloud2noisec);
+		double svdrmsd = SuperPosition.rmsd(cloud1, cloud2noisec);
 		long svdTime = (System.nanoTime() - svdStart) / 1000;
 
-		Point3d[] cloud1p = Calc.atomsToPoints(cloud1);
-		Point3d[] cloud2p = Calc.atomsToPoints(cloud2noise);
+		cloud2noisec = CalcPoint.clonePoint3dArray(cloud2);
 
 		// Use SVD superposition to obtain the RMSD
 		long spStart = System.nanoTime();
-		SuperPosition.superposeWithTranslation(cloud1p, cloud2p);
-		double sprmsd = SuperPosition.rmsd(cloud1p, cloud2p);
+		SuperPosition.superposeWithTranslation(cloud2noisec, cloud1);
+		double sprmsd = SuperPosition.rmsd(cloud2noisec, cloud1);
 		long spTime = (System.nanoTime() - spStart) / 1000;
 
-		// Use QCP algorithm to get the optimal transformation matrix
+		// Use QCP algorithm to obtain the RMSD
 		SuperPositionQCP qcp = new SuperPositionQCP();
-		qcp.set(Calc.atomsToPoints(cloud1), Calc.atomsToPoints(cloud2noise));
+		qcp.set(cloud2, cloud1);
 		long qcpStart = System.nanoTime();
 		double qcprmsd = qcp.getRmsd();
 		long qcpTime = (System.nanoTime() - qcpStart) / 1000;
@@ -176,8 +155,8 @@ public class TestSuperPositionQCP {
 				+ ", QCP time: %d us", svdTime, spTime, qcpTime));
 
 		// Check that the returned RMSDs are equal
-		assertEquals(svdrmsd, qcprmsd, 0.001);
 		assertEquals(svdrmsd, sprmsd, 0.001);
+		assertEquals(svdrmsd, qcprmsd, 0.001);
 	}
 
 	@Test
@@ -210,7 +189,7 @@ public class TestSuperPositionQCP {
 		long spTime = (System.nanoTime() - spStart) / 1000;
 
 		set2 = CalcPoint.clonePoint3dArray(set1);
-		
+
 		// Use QCP algorithm to get the optimal transformation matrix
 		SuperPositionQCP qcp = new SuperPositionQCP();
 		qcp.set(set1, set2);
@@ -218,8 +197,8 @@ public class TestSuperPositionQCP {
 		double qcprmsd = qcp.getRmsd();
 		long qcpTime = (System.nanoTime() - qcpStart) / 1000;
 
-		logger.info(String.format("RMSD Symmetry: SP time: %d us" + ", QCP time: %d us",
-				spTime, qcpTime));
+		logger.info(String.format("RMSD Symmetry: SP time: %d us"
+				+ ", QCP time: %d us", spTime, qcpTime));
 
 		// Check that the returned RMSDs are equal
 		assertEquals(sprmsd, qcprmsd, 0.001);
