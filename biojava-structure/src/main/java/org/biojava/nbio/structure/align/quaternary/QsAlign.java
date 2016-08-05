@@ -91,6 +91,7 @@ public class QsAlign {
 		}
 
 		logger.info("Cluster Map: " + clusterMap.toString());
+		result.setClusters(c1);
 
 		// STEP 3: Align the assemblies for each cluster match O(N^2*L)
 		for (int globalKey : clusterMap.keySet()) {

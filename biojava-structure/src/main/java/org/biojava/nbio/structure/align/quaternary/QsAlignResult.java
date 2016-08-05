@@ -8,9 +8,11 @@ import java.util.stream.Collectors;
 
 import javax.vecmath.Matrix4d;
 
+import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
 import org.biojava.nbio.structure.cluster.Subunit;
+import org.biojava.nbio.structure.cluster.SubunitCluster;
 
 /**
  * Result of a Quaternary Structure Alignment {@link QsAlign}. The QsAlignResult
@@ -22,6 +24,8 @@ import org.biojava.nbio.structure.cluster.Subunit;
  *
  */
 public class QsAlignResult {
+
+	private List<SubunitCluster> clusters;
 
 	private List<Subunit> subunits1;
 	private List<Subunit> subunits2;
@@ -203,7 +207,8 @@ public class QsAlignResult {
 	}
 
 	/**
-	 * Return the aligned subunits of the first Subunit group.
+	 * Return the aligned subunits of the first Subunit group, in the alignment
+	 * order.
 	 * 
 	 * @return a List of Subunits in the alignment order
 	 */
@@ -218,7 +223,8 @@ public class QsAlignResult {
 	}
 
 	/**
-	 * Return the aligned subunits of the second Subunit group.
+	 * Return the aligned subunits of the second Subunit group, in the alignment
+	 * order.
 	 * 
 	 * @return a List of Subunits in the alignment order
 	 */
@@ -227,9 +233,37 @@ public class QsAlignResult {
 		List<Subunit> aligned = new ArrayList<Subunit>(subunitMap.size());
 
 		for (Integer key : subunitMap.keySet())
-			aligned.add(subunits1.get(subunitMap.get(key)));
+			aligned.add(subunits2.get(subunitMap.get(key)));
 
 		return aligned;
+	}
+
+	public void setClusters(List<SubunitCluster> clusters) {
+		this.clusters = clusters;
+	}
+
+	public Atom[] getAlignedAtomsForSubunits1(int index) {
+
+		// Obtain the indices of the clustered subunits
+		for (SubunitCluster cluster : clusters) {
+			if (cluster.getSubunits().contains(subunits1.get(index))) {
+				return cluster.getAlignedAtomsSubunit(cluster.getSubunits()
+						.indexOf(subunits1.get(index)));
+			}
+		}
+		return null;
+	}
+
+	public Atom[] getAlignedAtomsForSubunits2(int index) {
+
+		// Obtain the indices of the clustered subunits
+		for (SubunitCluster cluster : clusters) {
+			if (cluster.getSubunits().contains(subunits2.get(index))) {
+				return cluster.getAlignedAtomsSubunit(cluster.getSubunits()
+						.indexOf(subunits2.get(index)));
+			}
+		}
+		return null;
 	}
 
 	@Override
@@ -240,10 +274,10 @@ public class QsAlignResult {
 				+ getRmsd()
 				+ ", length="
 				+ length()
-				+ ", Aligned subunits 1: "
+				+ ", Aligned 1: "
 				+ getAlignedSubunits1().stream().map(s -> s.getName())
 						.collect(Collectors.toList())
-				+ ", Aligned subunits 2: "
+				+ ", Aligned 2: "
 				+ getAlignedSubunits2().stream().map(s -> s.getName())
 						.collect(Collectors.toList()) + "]";
 	}
