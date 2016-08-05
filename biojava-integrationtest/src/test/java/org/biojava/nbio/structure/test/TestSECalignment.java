@@ -77,11 +77,10 @@ public class TestSECalignment extends  TestCase {
 				28, afpChainOrig.getGapLen());
 
 		//identity should be 0.9569
-		assertTrue("alinment ID is < 0.95 ! (" + afpChainOrig.getIdentity()+")" , afpChainOrig.getIdentity() > 0.95);
-		assertTrue("alignment ID is > 0.96 ! (" + afpChainOrig.getIdentity()+")" ,afpChainOrig.getIdentity() < 0.96);
+		assertTrue("alignment ID is < 0.95 ! (" + afpChainOrig.getIdentity()+")" , afpChainOrig.getIdentity() > 0.95);
+		assertTrue("alignment ID is > 0.999 ! (" + afpChainOrig.getIdentity()+")" , afpChainOrig.getIdentity() < 0.999);
 
 		String xmlComp =  AFPChainXMLConverter.toXML(afpChainOrig, ca1, ca2);
-
 
 		FlipAFPChainTest t = new FlipAFPChainTest();
 		t.printFirstMismatch(xml, xmlComp);
