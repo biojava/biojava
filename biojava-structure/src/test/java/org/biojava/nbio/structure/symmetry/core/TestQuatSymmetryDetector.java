@@ -207,7 +207,7 @@ public class TestQuatSymmetryDetector {
 
 		// H symmetry A5 stoichiometry
 		assertEquals("H", results.get(0).getSymmetry());
-		assertEquals("A3", results.get(0).getStoichiometry());
+		assertEquals("A5", results.get(0).getStoichiometry());
 
 	}
 }
