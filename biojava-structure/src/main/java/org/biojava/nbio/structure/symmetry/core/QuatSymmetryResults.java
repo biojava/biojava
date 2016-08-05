@@ -22,10 +22,12 @@
  */
 package org.biojava.nbio.structure.symmetry.core;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.cluster.Subunit;
 import org.biojava.nbio.structure.cluster.SubunitCluster;
 import org.biojava.nbio.structure.cluster.SubunitClusterUtils;
 
@@ -48,7 +50,7 @@ public class QuatSymmetryResults {
 
 	// Cached properties
 	private String stoichiometry;
-	int subunitCount;
+	private List<Subunit> subunits;
 
 	// Information about the symmetry
 	private SymmetryPerceptionMethod method;
@@ -73,9 +75,10 @@ public class QuatSymmetryResults {
 		this.stoichiometry = SubunitClusterUtils
 				.getStoichiometryString(clusters);
 		
-		subunitCount = 0;
-		for (SubunitCluster c : clusters)
-			subunitCount += c.size();
+		subunits = new ArrayList<Subunit>();
+		for (SubunitCluster c : clusters) {
+			subunits.addAll(c.getSubunits());
+		}
 			
 		this.rotationGroup = rotationGroup;
 		this.method = method;
@@ -110,12 +113,21 @@ public class QuatSymmetryResults {
 	}
 	
 	/**
+	 * Returns the List of Subunits used to calculate symmetry.
+	 *
+	 * @return an unmodifiable view of the List
+	 */
+	public List<Subunit> getSubunits() {
+		return Collections.unmodifiableList(subunits);
+	}
+	
+	/**
 	 * Return the number of Subunits involved in the symmetry.
 	 * 
 	 * @return the number of Subunits
 	 */
 	public int getSubunitCount() {
-		return subunitCount;
+		return subunits.size();
 	}
 	
 	/**
