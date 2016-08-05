@@ -122,7 +122,7 @@ public class TestQsAlign {
 		QsAlignResult result = QsAlign
 				.align(s1, s2, clusterParams, alignParams);
 
-		assertEquals(result.length(), 3);
+		assertEquals(result.length(), 2);
 		assertEquals(result.getRelation(), QsRelation.PARTIAL_COMPLETE);
 		assertTrue(result.getRmsd() < 10.0);
 

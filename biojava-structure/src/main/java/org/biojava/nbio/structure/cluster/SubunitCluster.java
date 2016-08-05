@@ -230,8 +230,9 @@ public class SubunitCluster {
 		if (seqid < minSeqid)
 			return false;
 
-		logger.info("SubunitClusters are similar in sequence with {} sequence "
-				+ "identity and {} coverage", seqid, coverage);
+		logger.info(String.format("SubunitClusters are similar in sequence "
+				+ "with %.2f sequence identity and %.2f coverage", seqid,
+				coverage));
 
 		// If coverage and sequence identity sufficient, merge other and this
 		List<Integer> thisAligned = new ArrayList<Integer>();
@@ -379,8 +380,8 @@ public class SubunitCluster {
 		if (rmsd > maxRmsd)
 			return false;
 
-		logger.info("SubunitClusters are structurally similar with {} RMSD "
-				+ "and {} coverage", rmsd, coverage);
+		String.format("SubunitClusters are structurally similar with "
+				+ "%.2f RMSD %.2f coverage", rmsd, coverage);
 
 		// If RMSD is low and coverage sufficient merge clusters
 		List<List<Integer>> alignedRes = msa.getBlock(0).getAlignRes();
@@ -498,9 +499,8 @@ public class SubunitCluster {
 		if (coverage < coverageThreshold)
 			return false;
 
-		logger.info(
-				"SubunitCluster is internally symmetric with {} repeats, {} RMSD "
-						+ "and {} coverage", result.getNumRepeats(), rmsd,
+		logger.info("SubunitCluster is internally symmetric with {} repeats, "
+				+ "{} RMSD and {} coverage", result.getNumRepeats(), rmsd,
 				coverage);
 
 		// Divide if symmety was significant with RMSD and coverage sufficient

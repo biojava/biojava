@@ -240,10 +240,10 @@ public class QsAlignResult {
 				+ getRmsd()
 				+ ", length="
 				+ length()
-				+ "\n Aligned subunits 1: "
+				+ ", Aligned subunits 1: "
 				+ getAlignedSubunits1().stream().map(s -> s.getName())
 						.collect(Collectors.toList())
-				+ "\n Aligned subunits 2: "
+				+ ", Aligned subunits 2: "
 				+ getAlignedSubunits2().stream().map(s -> s.getName())
 						.collect(Collectors.toList()) + "]";
 	}

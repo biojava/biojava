@@ -120,7 +120,7 @@ public class UnitQuaternions {
 	/**
 	 * The angle of the relative orientation of the two sets of points in 3D.
 	 * Equivalent to {@link #angle(Quat4d)} of the unit quaternion obtained by
-	 * {@link #relativeOrientation(Point3d[], Point3d[])}
+	 * {@link #relativeOrientation(Point3d[], Point3d[])}.
 	 * 
 	 * @param a
 	 *            array of Point3d
