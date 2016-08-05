@@ -384,7 +384,7 @@ public class AfpChainWriter
 
 	}
 
-	private static void printScoresInLines(AFPChain afpChain, int blockNum, int optLength, double totalRmsdOpt, double alignScore,
+	public static void printScoresInLines(AFPChain afpChain, int blockNum, int optLength, double totalRmsdOpt, double alignScore,
 			int alnLength, int gapLen, double identity, double similarity, StringBuffer txt)
 	{
 		if ( blockNum - 1 > 0) {
@@ -503,9 +503,7 @@ public class AfpChainWriter
 
 	}
 
-
-
-	private static String toPrettyAlignment(AFPChain afpChain, Atom[] ca1, Atom[] ca2, boolean showHTML, boolean showAlignmentBlock) {
+	public static String toPrettyAlignment(AFPChain afpChain, Atom[] ca1, Atom[] ca2, boolean showHTML, boolean showAlignmentBlock) {
 		String name1 = afpChain.getName1();
 		String name2 = afpChain.getName2();
 		int ca1Length = afpChain.getCa1Length();
