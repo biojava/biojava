@@ -151,12 +151,11 @@ public class UnitQuaternions {
 	 */
 	public static double orientationAngle(Point3d[] a, Point3d[] b,
 			boolean centered) {
-		if (centered) {
-			Point3d[] ac = CalcPoint.clonePoint3dArray(a);
-			Point3d[] bc = CalcPoint.clonePoint3dArray(b);
-			CalcPoint.center(ac);
-			CalcPoint.center(bc);
-			return orientationAngle(ac, bc);
+		if (!centered) {
+			a = CalcPoint.clonePoint3dArray(a);
+			b = CalcPoint.clonePoint3dArray(b);
+			CalcPoint.center(a);
+			CalcPoint.center(b);
 		}
 		return orientationAngle(a, b);
 	}

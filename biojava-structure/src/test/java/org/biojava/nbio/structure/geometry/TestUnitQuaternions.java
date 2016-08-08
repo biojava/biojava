@@ -217,13 +217,9 @@ public class TestUnitQuaternions {
 		Point3d[] cloud = Calc.atomsToPoints(StructureTools
 				.getRepresentativeAtomArray(pdb));
 		Point3d[] cloud2 = CalcPoint.clonePoint3dArray(cloud);
-
-		// Center the clouds at the origin
-		CalcPoint.center(cloud);
-		CalcPoint.center(cloud2);
 		
 		// Test orientation angle equal to 0 at this point
-		double angle = UnitQuaternions.orientationAngle(cloud, cloud2);
+		double angle = UnitQuaternions.orientationAngle(cloud, cloud2, false);
 		assertEquals(angle, 0, 0.001);
 		
 		// Apply a 30 degree rotation to cloud 2
@@ -232,7 +228,7 @@ public class TestUnitQuaternions {
 		transform.set(axis);
 		
 		CalcPoint.transform(transform, cloud2);
-		angle = UnitQuaternions.orientationAngle(cloud, cloud2);
+		angle = UnitQuaternions.orientationAngle(cloud, cloud2, false);
 		angle = Math.min(Math.abs(2 * Math.PI - angle), angle);
 		
 		// Test that angle was recovered
