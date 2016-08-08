@@ -169,7 +169,7 @@ public class QsAlign {
 						// 2- Check the orientation metric condition
 						double qOrient = UnitQuaternions.orientationAngle(
 								Calc.atomsToPoints(atoms1),
-								Calc.atomsToPoints(atoms2c));
+								Calc.atomsToPoints(atoms2c), false);
 						qOrient = Math.min(Math.abs(2*Math.PI - qOrient), qOrient);
 						if (qOrient > aParams.getMaxOrientationAngle()) {
 							logger.debug(String.format("Subunit matching %d "

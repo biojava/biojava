@@ -121,16 +121,44 @@ public class UnitQuaternions {
 	 * The angle of the relative orientation of the two sets of points in 3D.
 	 * Equivalent to {@link #angle(Quat4d)} of the unit quaternion obtained by
 	 * {@link #relativeOrientation(Point3d[], Point3d[])}.
+	 * <p>
+	 * The arrays of points need to be centered at the origin. To center the
+	 * points use {@link CalcPoint#center(Point3d[])}.
 	 * 
 	 * @param a
-	 *            array of Point3d
+	 *            array of Point3d, centered at origin
 	 * @param b
-	 *            array of Point3d
+	 *            array of Point3d, centered at origin
 	 * @return the angle in radians of the relative orientation of the points
 	 */
 	public static double orientationAngle(Point3d[] a, Point3d[] b) {
 		Quat4d q = relativeOrientation(a, b);
 		return angle(q);
+	}
+
+	/**
+	 * The angle of the relative orientation of the two sets of points in 3D.
+	 * Equivalent to {@link #angle(Quat4d)} of the unit quaternion obtained by
+	 * {@link #relativeOrientation(Point3d[], Point3d[])}.
+	 * 
+	 * @param a
+	 *            array of Point3d
+	 * @param b
+	 *            array of Point3d
+	 * @param centered
+	 *            true if the points are already centered at the origin
+	 * @return the angle in radians of the relative orientation of the points
+	 */
+	public static double orientationAngle(Point3d[] a, Point3d[] b,
+			boolean centered) {
+		if (centered) {
+			Point3d[] ac = CalcPoint.clonePoint3dArray(a);
+			Point3d[] bc = CalcPoint.clonePoint3dArray(b);
+			CalcPoint.center(ac);
+			CalcPoint.center(bc);
+			return orientationAngle(ac, bc);
+		}
+		return orientationAngle(a, b);
 	}
 
 	/**
