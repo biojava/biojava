@@ -178,6 +178,29 @@ public interface Group {
 	 */
 	public boolean hasAminoAtoms() ;
 
+
+	/** tests in the Chemical Component Dictionary, if this group is a polymeric group
+	 *
+	 * @return true if a polymeric group
+	 */
+	public boolean isPolymeric();
+
+
+	/** Tests in the Chemical Component Dictionary, if this group is an amino acid
+	 *
+	 * @return true if an amino acid
+     */
+	public boolean isAminoAcid();
+
+
+	/** Tests in the Chemical Component Dictionary, if this group is a nucleotide
+	 *
+	 * @return true if a nucleotide
+     */
+	public boolean isNucleotide();
+
+
+
 	/**
 	 * Properties of this amino acid. Currently available properties are:
 	 * phi

@@ -25,6 +25,8 @@ package org.biojava.nbio.structure;
 
 import org.biojava.nbio.structure.io.GroupToSDF;
 import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
+import org.biojava.nbio.structure.io.mmcif.chem.PolymerType;
+import org.biojava.nbio.structure.io.mmcif.chem.ResidueType;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -327,6 +329,71 @@ public class HetatomImpl implements Group,Serializable {
 
 	}
 
+	@Override
+	public boolean isPolymeric() {
+
+		ChemComp cc = getChemComp();
+
+		if ( cc == null)
+			return getType().equals(GroupType.AMINOACID) || getType().equals(GroupType.NUCLEOTIDE);
+
+		ResidueType rt = cc.getResidueType();
+
+		if ( rt.equals(ResidueType.nonPolymer))
+			return false;
+
+		PolymerType pt = rt.getPolymerType();
+
+		return pt.equals(PolymerType.peptide) ||
+				pt.equals(PolymerType.dna) ||
+				pt.equals(PolymerType.rna) ||
+				pt.equals(PolymerType.dnarna);
+
+
+	}
+
+	@Override
+	public boolean isAminoAcid() {
+
+		ChemComp cc = getChemComp();
+
+		if ( cc == null)
+			return getType().equals(GroupType.AMINOACID);
+
+
+		ResidueType rt = cc.getResidueType();
+
+		if ( rt.equals(ResidueType.nonPolymer))
+			return false;
+
+		PolymerType pt = rt.getPolymerType();
+
+		return pt.equals(PolymerType.peptide);
+
+	}
+
+	@Override
+	public boolean isNucleotide() {
+
+		ChemComp cc = getChemComp();
+
+		if ( cc == null)
+			return  getType().equals(GroupType.NUCLEOTIDE);
+
+		ResidueType rt = cc.getResidueType();
+
+		if ( rt.equals(ResidueType.nonPolymer))
+			return false;
+
+		PolymerType pt = rt.getPolymerType();
+
+		return pt.equals(PolymerType.dna) ||
+				pt.equals(PolymerType.rna) ||
+				pt.equals(PolymerType.dnarna) ;
+
+
+	}
+
 
 	/**
 	 * {@inheritDoc}
@@ -603,5 +670,8 @@ public class HetatomImpl implements Group,Serializable {
 	public void setHetAtomInFile(boolean isHetAtomInFile) {
 		this.isHetAtomInFile = isHetAtomInFile;
 	}
+
+
+
 
 }
