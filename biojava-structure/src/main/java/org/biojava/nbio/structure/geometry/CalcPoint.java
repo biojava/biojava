@@ -94,9 +94,7 @@ public class CalcPoint {
 	 * Peter can you document this method? TODO
 	 * 
 	 * @param a
-	 *            point array centered at origin
 	 * @param b
-	 *            point array centered at origin
 	 * @return
 	 */
 	public static Matrix formMatrix(Point3d[] a, Point3d[] b) {
