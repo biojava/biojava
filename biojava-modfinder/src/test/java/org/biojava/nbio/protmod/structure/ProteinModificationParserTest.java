@@ -115,6 +115,8 @@ public class ProteinModificationParserTest extends TestCase {
 				{"2HGD",null}, // X9Q
 				{"3LF4",null}, // 0YG
 
+				// {"2BF9","AA0099"}, // TYC this one needs a fix in the CCD before it can work
+
 		};
 		return strucs;
 	}
@@ -334,7 +336,9 @@ public class ProteinModificationParserTest extends TestCase {
 	public void multiTest() throws IOException, StructureException {
 		for ( String[] name : strucs){
 			parserTest(name[0], (String)null);
-			parserTest(name[0], name[1]);
+
+			if ( name[1] != null)
+				parserTest(name[0], name[1]);
 
 		}
 	}
@@ -408,6 +412,7 @@ public class ProteinModificationParserTest extends TestCase {
 		for (ModifiedCompound mc : mcs) {
 			sb.append("Modification #");
 			sb.append(++i);
+			sb.append(" ").append(mc.getDescription()).append(" ").append(mc.getModification().getId());
 			sb.append(":\n");
 			sb.append(mc.getAtomLinkages());
 			sb.append('\n');
