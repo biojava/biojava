@@ -344,10 +344,7 @@ public class HetatomImpl implements Group,Serializable {
 
 		PolymerType pt = rt.getPolymerType();
 
-		return pt.equals(PolymerType.peptide) ||
-				pt.equals(PolymerType.dna) ||
-				pt.equals(PolymerType.rna) ||
-				pt.equals(PolymerType.dnarna);
+		return PolymerType.PROTEIN_ONLY.contains(pt) || PolymerType.POLYNUCLEOTIDE_ONLY.contains(pt);
 
 
 	}
@@ -368,7 +365,7 @@ public class HetatomImpl implements Group,Serializable {
 
 		PolymerType pt = rt.getPolymerType();
 
-		return pt.equals(PolymerType.peptide);
+		return PolymerType.PROTEIN_ONLY.contains(pt);
 
 	}
 
@@ -387,9 +384,7 @@ public class HetatomImpl implements Group,Serializable {
 
 		PolymerType pt = rt.getPolymerType();
 
-		return pt.equals(PolymerType.dna) ||
-				pt.equals(PolymerType.rna) ||
-				pt.equals(PolymerType.dnarna) ;
+		return PolymerType.POLYNUCLEOTIDE_ONLY.contains(pt);
 
 
 	}

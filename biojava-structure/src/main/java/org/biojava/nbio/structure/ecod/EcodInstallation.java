@@ -666,6 +666,12 @@ v1.4 - added seqid_range and headers (develop101)
 									//Contents changed in version 1.3
 									String fGroupName = fields[i++].intern();
 
+
+									hGroupName = clearStringQuotes(hGroupName);
+									tGroupName = clearStringQuotes(tGroupName);
+									fGroupName = clearStringQuotes(fGroupName);
+									xGroupName = clearStringQuotes(xGroupName);
+
 									//Column 14: Domain assembly status (if domain is member of assembly, partners' ecod domain ids listed)
 									//Column 15: Comma-separated value list of non-polymer entities within 4 A of at least one residue of domain
 									Long assemblyId = null;
@@ -731,6 +737,16 @@ v1.4 - added seqid_range and headers (develop101)
 					in.close();
 				}
 			}
+		}
+
+		private String clearStringQuotes(String name) {
+			if ( name.startsWith("\""))
+				name = name.substring(1);
+
+			if ( name.endsWith("\""))
+				name = name.substring(0,name.length()-1);
+
+			return name;
 		}
 
 		/**
