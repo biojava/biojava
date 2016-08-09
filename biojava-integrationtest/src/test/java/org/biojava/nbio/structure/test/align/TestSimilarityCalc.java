@@ -1,6 +1,5 @@
-package org.biojava.nbio.structure.gui;
+package org.biojava.nbio.structure.test.align;
 
-import junit.framework.TestCase;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureTools;
@@ -13,10 +12,14 @@ import org.biojava.nbio.structure.align.seq.SmithWaterman3Daligner;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.junit.Test;
 
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+
 /**
  * Created by andreas on 8/3/16.
  */
-public class TestSimilarityCalc extends TestCase{
+public class TestSimilarityCalc  {
 
     @Test
     public void testSimilarityDisplay(){
@@ -48,22 +51,7 @@ public class TestSimilarityCalc extends TestCase{
             afpChain.setName2(name2);
 
 
-
-            // get the scores
-            int ca1Length = afpChain.getCa1Length();
-            int ca2Length = afpChain.getCa2Length();
-
-            int blockNum = afpChain.getBlockNum();
-
-            int optLength = afpChain.getOptLength();
-            double totalRmsdOpt = afpChain.getTotalRmsdOpt();
-
-            double alignScore = afpChain.getAlignScore();
-            int alnLength = afpChain.getAlnLength();
-
             assertTrue(afpChain.getAlnLength() == 71);
-            int gapLen = afpChain.getGapLen();
-
 
             assertTrue(afpChain.getAlnLength() == 71);
             assertTrue(afpChain.getSimilarity() > .57);
@@ -75,18 +63,9 @@ public class TestSimilarityCalc extends TestCase{
             assertTrue("wrong similarity score : " + afpChain.getSimilarity(), afpChain.getSimilarity() > .57);
             assertTrue("wrong similarity score : " + afpChain.getSimilarity(), afpChain.getSimilarity() <= .6);
 
-
-            double similarity = afpChain.getSimilarity();
-            double identity = afpChain.getIdentity();
-
             assertTrue(afpChain.getSimilarity() > .58);
             assertTrue(afpChain.getSimilarity() < .59);
             assertTrue("similarity score is " + afpChain.getSimilarity()  , afpChain.getSimilarity() > .46);
-
-
-
-
-
 
 
         } catch (Exception e){
