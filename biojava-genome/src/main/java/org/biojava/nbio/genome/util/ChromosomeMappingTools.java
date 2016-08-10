@@ -39,7 +39,7 @@ public class ChromosomeMappingTools {
         return formatExonStructureReverse(chromosomePosition);
 
     }
-    
+
 
     private static String formatExonStructureForward(GeneChromosomePosition chromPos) {
 
