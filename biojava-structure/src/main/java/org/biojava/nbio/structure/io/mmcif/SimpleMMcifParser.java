@@ -1021,23 +1021,6 @@ public class SimpleMMcifParser implements MMcifParser {
 		}
 
 	}
-	
-	private void produceWarning(String key, String val, Class<?> c, Set<String> warnings) {
-
-		String warning = "Trying to set field " + key + " in "+ c.getName() +" found in file, but no corresponding field could be found in model class (value:" + val + ")";
-		String warnkey = key+"-"+c.getName();
-		// Suppress duplicate warnings or attempts to store empty data
-		if( val.equals("?") || val.equals(".") || ( warnings != null && warnings.contains(warnkey)) ) {
-			logger.debug(warning);
-		} else {
-			logger.warn(warning);
-		}
-
-		if(warnings != null) {
-			warnings.add(warnkey);
-		}
-
-	}
 
 	public void triggerGeneric(String category, List<String> loopFields, List<String> lineData){
 		for(MMcifConsumer c : consumers){

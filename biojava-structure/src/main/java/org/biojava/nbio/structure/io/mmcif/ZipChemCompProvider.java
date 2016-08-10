@@ -167,7 +167,7 @@ public class ZipChemCompProvider implements ChemCompProvider{
 		final File [] files = new File[1];
 		Path cif = m_tempDir.resolve("chemcomp").resolve(recordName + ".cif.gz");
 		files[0] = cif.toFile();
-		if (files != null) {
+		if (files[0] != null) {
 			addToZipFileSystem(m_zipFile, files, m_zipRootDir);
 			if (m_removeCif) for (File f : files) f.delete();
 		}
