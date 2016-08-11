@@ -42,8 +42,6 @@ import org.biojava.nbio.structure.contact.AtomContactSet;
 import org.biojava.nbio.structure.contact.Grid;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.PDBFileParser;
-import org.biojava.nbio.structure.io.mmcif.chem.PolymerType;
-import org.biojava.nbio.structure.io.mmcif.chem.ResidueType;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.biojava.nbio.structure.io.util.FileDownloadUtils;
 import org.slf4j.Logger;
@@ -1612,12 +1610,9 @@ public class StructureTools {
 
 			ChemComp cc = g.getChemComp();
 
-			if (ResidueType.lPeptideLinking.equals(cc.getResidueType())
-					|| PolymerType.PROTEIN_ONLY.contains(cc.getPolymerType())
-					|| PolymerType.POLYNUCLEOTIDE_ONLY.contains(cc
-							.getPolymerType())) {
+			if ( g.isPolymeric())
 				continue;
-			}
+
 			if (!g.isWater()) {
 				groups.add(g);
 			}
@@ -1803,13 +1798,11 @@ public class StructureTools {
 
 			ChemComp cc = g.getChemComp();
 
-			ResidueType resType = cc.getResidueType();
-			PolymerType polType = cc.getPolymerType();
+			if ( 	g.isPolymeric() &&
+					!g.isHetAtomInFile() ) {
 
-			if ( (	resType == ResidueType.lPeptideLinking || 
-					PolymerType.PROTEIN_ONLY.contains(polType) || 
-					PolymerType.POLYNUCLEOTIDE_ONLY.contains(polType) ) && 
-					!g.isHetAtomInFile() ) {								// important: the aminoacid or nucleotide residue can be in 
+				// important: the aminoacid or nucleotide residue can be in Atom records
+
 				return false;
 			}
 
