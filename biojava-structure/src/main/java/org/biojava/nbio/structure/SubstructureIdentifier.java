@@ -245,16 +245,15 @@ public class SubstructureIdentifier implements Serializable, StructureIdentifier
 					if(pdbresnum1 == null && pdbresnum2 == null) {
 						groups = chain.getAtomGroups();
 					} else {
-//						// Trim extra residues off the range
-//						Atom[] allAtoms = StructureTools.getRepresentativeAtomArray(chain);
-//						AtomPositionMap map = new AtomPositionMap(allAtoms);
-//						ResidueRange trimmed = map.trimToValidResidues(
-//								new ResidueRange(chain.getChainID(),
-//										pdbresnum1, pdbresnum2));
-//						if (trimmed != null) {
-//							pdbresnum1 = trimmed.getStart();
-//							pdbresnum2 = trimmed.getEnd();
-//						}
+						// Trim extra residues off the range
+						Atom[] allAtoms = StructureTools.getRepresentativeAtomArray(chain);
+						AtomPositionMap map = new AtomPositionMap(allAtoms);
+						ResidueRange trimmed = map.trimToValidResidues(
+								new ResidueRange(chain.getId(),pdbresnum1, pdbresnum2));
+						if (trimmed != null) {
+							pdbresnum1 = trimmed.getStart();
+							pdbresnum2 = trimmed.getEnd();
+						}
 						groups = Arrays.asList(chain.getGroupsByPDB(pdbresnum1, pdbresnum2));
 					}
 

@@ -262,6 +262,20 @@ public class StructureToolsTest extends TestCase {
 			fail("Illegal range '"+range+"'. Should throw IllegalArgumentException");
 		} catch(IllegalArgumentException ex) {} //expected
 	}
+	
+	@SuppressWarnings("deprecation")
+	public void testSubrangeTrimming() throws StructureException {
+		String range;
+		Structure substr;
+		Chain chain;
+
+		range = "A:-10-500";
+		substr = StructureTools.getSubRanges(structure2, range);
+		assertEquals("Wrong number of chains in "+range, 1, substr.size());
+		chain = substr.getChainByIndex(0);
+		assertEquals("Did not find the expected number of residues in "+range, 408, chain.getAtomLength() );
+
+	}
 
 	public void testRevisedConvention() throws IOException, StructureException{
 
