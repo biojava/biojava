@@ -199,6 +199,20 @@ public class BoundingBox implements Serializable {
 		return true;
 
 	}
+	
+	/**
+	 * Check if a given point falls within this box
+	 * @param atom
+	 * @return
+	 */
+	public boolean contains(Atom atom) {
+		double x = atom.getX();
+		double y = atom.getY();
+		double z = atom.getZ();
+		return xmin <= x && x <= xmax
+				&& ymin <= y && y <= ymax
+				&& zmin <= z && z <= zmax;
+	}
 
 	public void translate(Vector3d translation) {
 		xmin+=translation.x;
