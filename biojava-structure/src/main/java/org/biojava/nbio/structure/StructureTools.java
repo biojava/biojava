@@ -345,7 +345,7 @@ public class StructureTools {
 	}
 
 	/**
-	 * Convert all atoms of the structure (first model) into an Atom array
+	 * Convert all atoms of the structure (all models) into an Atom array
 	 *
 	 * @param s
 	 *            input structure
@@ -361,9 +361,27 @@ public class StructureTools {
 		}
 		return atoms.toArray(new Atom[atoms.size()]);
 	}
+	/**
+	 * Convert all atoms of the structure (specified model) into an Atom array
+	 *
+	 * @param s
+	 *            input structure
+	 * @return all atom array
+	 */
+	public static final Atom[] getAllAtomArray(Structure s, int model) {
+		List<Atom> atoms = new ArrayList<Atom>();
+
+		AtomIterator iter = new AtomIterator(s,model);
+		while (iter.hasNext()) {
+			Atom a = iter.next();
+			atoms.add(a);
+		}
+		return atoms.toArray(new Atom[atoms.size()]);
+
+	}
 
 	/**
-	 * Returns and array of all atoms of the chain (first model), including
+	 * Returns and array of all atoms of the chain, including
 	 * Hydrogens (if present) and all HETATOMs. Waters are not included.
 	 *
 	 * @param c
