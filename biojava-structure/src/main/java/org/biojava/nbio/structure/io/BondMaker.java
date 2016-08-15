@@ -454,7 +454,10 @@ public class BondMaker {
 				if (g==null)
 					throw new StructureException("Could not find altLoc code "+altLoc+" in group "+resSeq+iCode+" of chain "+ chainID);
 			}
-			outMap.put(i,g.getAtom(name));
+			Atom a = g.getAtom(name);
+			if (a!=null){
+				outMap.put(i,a);
+			}
 		}
 		return outMap;
 	}
