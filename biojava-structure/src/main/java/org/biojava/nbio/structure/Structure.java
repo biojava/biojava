@@ -415,7 +415,7 @@ public interface Structure extends Cloneable {
 	 * @param authId name of a chain that should be returned
 	 * @return Chain the requested chain
 	 * @throws StructureException
-	 * @Deprecated use {@link #getPolyChainsByPDB(String)} or {@link #getNonPolyChainsByPDB(String)} instead
+	 * @Deprecated use {@link #getPolyChainByPDB(String)} or {@link #getNonPolyChainsByPDB(String)} instead
 	 */
 	@Deprecated
 	Chain findChain(String authId) throws StructureException;
@@ -426,7 +426,7 @@ public interface Structure extends Cloneable {
 	 * @param modelnr the number of the model to use
 	 * @return Chain the requested chain
 	 * @throws StructureException
-	 * @Deprecated use {@link #getPolyChainsByPDB(String, int)} or {@link #getNonPolyChainsByPDB(String, int)} instead
+	 * @Deprecated use {@link #getPolyChainByPDB(String, int)} or {@link #getNonPolyChainsByPDB(String, int)} instead
 	 */
 	@Deprecated
 	Chain findChain(String authId, int modelnr) throws StructureException;
@@ -489,7 +489,7 @@ public interface Structure extends Cloneable {
 	 * @param authId the author id (chainName, public chain id)
 	 * @return the Chain that matches the authId
 	 * @throws StructureException if chain can't be found
-	 * @deprecated use {@link #getPolyChainsByPDB(String)} instead
+	 * @deprecated use {@link #getPolyChainByPDB(String)} instead
 	 */
 	@Deprecated 
 	Chain getChainByPDB(String authId) throws StructureException;
@@ -504,7 +504,7 @@ public interface Structure extends Cloneable {
 	 * @param modelIdx the index of the required model (0-based)
 	 * @return the Chain that matches the authId in the model
 	 * @throws StructureException if chain can't be found
-	 * @deprecated use {@link #getPolyChainsByPDB(String,int)} instead
+	 * @deprecated use {@link #getPolyChainByPDB(String,int)} instead
 	 */
 	@Deprecated
 	Chain getChainByPDB(String authId, int modelIdx) throws StructureException;

@@ -201,6 +201,24 @@ public class StructureToolsTest extends TestCase {
 		chain = substr.getChainByIndex(0);
 		assertEquals("Did not find the expected number of residues in "+range, 1, chain.getAtomLength() );
 
+		
+		// negative residues
+		range = "A:-3";
+		substr = StructureTools.getSubRanges(structure2, range);
+		assertEquals("Wrong number of chains in "+range, 1, substr.size());
+		chain = substr.getChainByIndex(0);
+		assertEquals("Did not find the expected number of residues in "+range, 1, chain.getAtomLength() );
+		range = "A:-3--1";
+		substr = StructureTools.getSubRanges(structure2, range);
+		assertEquals("Wrong number of chains in "+range, 1, substr.size());
+		chain = substr.getChainByIndex(0);
+		assertEquals("Did not find the expected number of residues in "+range, 3, chain.getAtomLength() );
+		range = "A:-3-1";
+		substr = StructureTools.getSubRanges(structure2, range);
+		assertEquals("Wrong number of chains in "+range, 1, substr.size());
+		chain = substr.getChainByIndex(0);
+		assertEquals("Did not find the expected number of residues in "+range, 4, chain.getAtomLength() );
+		
 		// Special '-' case
 		range = "-";
 		substr = StructureTools.getSubRanges(structure2, range);

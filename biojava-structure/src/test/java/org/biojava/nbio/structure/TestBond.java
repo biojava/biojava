@@ -54,6 +54,16 @@ public class TestBond {
 	}
 
 	@Test
+	public void testStructConnModels() throws IOException, StructureException {
+		Structure s = StructureIO.getStructure("1cdr");
+		Group groupOne = s.getPolyChain("A",1).getGroupByPDB(new ResidueNumber("A", 18, ' '));
+		Group groupTwo = s.getPolyChain("B",1).getGroupByPDB(new ResidueNumber("A", 78, ' '));
+		Atom atomOne = groupOne.getAtom("ND2");
+		Atom atomTwo = groupTwo.getAtom("C1");
+		assertTrue(areBonded(atomOne, atomTwo));
+	}
+
+	@Test
 	public void testIntraResidueBonds() throws StructureException, IOException {
 
 
@@ -175,7 +185,7 @@ public class TestBond {
 		assertEquals(testMissingBonds("4txr"),0);
 		assertEquals(testMissingBonds("3nvd"),0);
 	}
-	
+
 	/**
 	 * Test whether these partial occupancy hydrogens are bonded to the residue.
 	 * @throws StructureException 
@@ -250,7 +260,7 @@ public class TestBond {
 	public void test1BDX() throws IOException, StructureException {
 		StructureIO.getStructure("1BDX");
 	}
-	
+
 	/**
 	 * Test that all the atoms in deuterated structures are bonded.
 	 * @throws IOException
@@ -264,7 +274,7 @@ public class TestBond {
 		// All H/D2,H/D3 errors
 		assertEquals(testMissingBonds("5E5J"),13);
 	}
-	
+
 	/**
 	 * Test this weird case - with missing Oxygen atoms, alternate locations on Deuterium 
 	 * and terminal hydrogens.

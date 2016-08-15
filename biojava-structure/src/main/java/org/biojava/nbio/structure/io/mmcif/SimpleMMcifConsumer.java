@@ -721,7 +721,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			}
 
 			// we'll only add seqres chains that are polymeric or unknown
-			if (type==null || (type!=null && type==EntityType.POLYMER) ) {
+			if (type==null || type==EntityType.POLYMER ) {
 				seqResChains.add(seqres);	
 			}
 
@@ -1317,6 +1317,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 					ncsOperators.toArray(new Matrix4d[ncsOperators.size()]));
 		}
 	}
+
 
 	/** This method will return the parsed protein structure, once the parsing has been finished
 	 *

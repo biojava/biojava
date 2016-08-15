@@ -222,26 +222,21 @@ public class SubstructureIdentifier implements Serializable, StructureIdentifier
 						if(s.size() != 1) {
 							// SCOP 1.71 uses this for some proteins with multiple chains
 							// Print a warning in this ambiguous case
-							logger.warn("Multiple possible chains match '_'. Using chain {}",chain.getChainID());
+							logger.warn("Multiple possible chains match '_'. Using chain {}",chain.getId());
 						}
 					} else {
 						// Explicit chain
-						try {
-							chain = s.getChainByPDB(chainId,modelNr);
-						} catch(StructureException e) {
+							chain = s.getPolyChainByPDB(chainId,modelNr);
+						if( chain == null ) {
 							// Chain not found
 							// Maybe it was a chain index, masquerading as a chainName?
 							try {
 								int chainNum = Integer.parseInt(chainId);
-								try {
-									chain = s.getChainByIndex(modelNr, chainNum);
-									logger.warn("No chain found for {}. Interpretting it as an index, using chain {} instead",chainId,chain.getChainID());
-								} catch(Exception e2) { //we don't care what gets thrown here -sbliven
-									throw e; // Nope, not an index. Throw the original exception
-								}
+								chain = s.getChainByIndex(modelNr, chainNum);
+								logger.warn("No chain found for {}. Interpretting it as an index, using chain {} instead",chainId,chain.getId());
 							} catch(NumberFormatException e3) {
 								// Not an index. Throw the original exception
-								throw e;
+								throw new StructureException(String.format("Unrecognized chain %s in %s",chainId,getIdentifier()));
 							}
 						}
 					}
@@ -267,13 +262,9 @@ public class SubstructureIdentifier implements Serializable, StructureIdentifier
 					
 					// Reuse prevChain
 					if ( prevChainId != null && prevChainId.equals(chain.getName())) {
-						c = newS.getChainByPDB(prevChainId,modelNr);
+						c = newS.getPolyChainByPDB(prevChainId,modelNr);
 					} else {
-						try {
-							c = newS.getChainByPDB(chain.getName(),modelNr);
-						} catch (StructureException e){
-							// chain not in structure yet...
-						}
+						c = newS.getPolyChainByPDB(chain.getName(),modelNr);
 					}
 					// Create new chain
 					if ( c == null) {
@@ -291,7 +282,7 @@ public class SubstructureIdentifier implements Serializable, StructureIdentifier
 						c.addGroup(g);
 					}
 
-					prevChainId = c.getChainID();
+					prevChainId = c.getId();
 				} // end range
 			}
 		} // end modelNr
