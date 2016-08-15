@@ -411,7 +411,13 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 		}
 		if(currentGroupType.toUpperCase().contains("D-GAMMA-PEPTIDE")){
 			return 0;
-		}		
+		}
+		if(currentGroupType.toUpperCase().contains("D-BETA-PEPTIDE")){
+			return 0;
+		}	
+                if(currentGroupType.toUpperCase().contains("D-PEPTIDE")){
+                        return 0;
+                }
 		if(currentGroupType.toUpperCase().contains("PEPTIDE")){
 			return 1;
 		}
