@@ -426,6 +426,10 @@
 							<exclude>demo/DemoFATCAT.class</exclude>
 							<exclude>org/biojava/nbio/structure/align/ce/CECalculator.class</exclude>
 						</excludes>
+						<ignores>
+							<ignore>org.biojava.nbio.structure.io.mmcif.MMCIFFileTools</ignore>
+							<ignore>demo.*</ignore>
+						</ignores>
 					</instrumentation>
 				</configuration>
 				<executions>
