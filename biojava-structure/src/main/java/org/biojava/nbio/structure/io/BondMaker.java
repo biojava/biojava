@@ -281,8 +281,10 @@ public class BondMaker {
 				if(a.containsKey(i) && b.containsKey(i)){
 					// TODO determine what the actual bond order of this bond is; for
 					// now, we're assuming they're single bonds
-					Bond ssbond =  new BondImpl(a.get(i), b.get(i), 1);
-					structure.addSSBond(ssbond);
+					if(!a.get(i).equals(b.get(i))){
+						Bond ssbond =  new BondImpl(a.get(i), b.get(i), 1);
+						structure.addSSBond(ssbond);
+					}
 				}
 			}
 
@@ -322,7 +324,9 @@ public class BondMaker {
 				if(a.containsKey(i) && b.containsKey(i)){
 					// TODO determine what the actual bond order of this bond is; for
 					// now, we're assuming they're single bonds
-					new BondImpl(a.get(i), b.get(i), 1);
+					if(!a.get(i).equals(b.get(i))){
+						new BondImpl(a.get(i), b.get(i), 1);
+					}
 				}
 			}
 		}catch (StructureException e) {
@@ -336,7 +340,7 @@ public class BondMaker {
 		}
 	}
 
-	
+
 	public void formBondsFromStructConn(List<StructConn> structConn) {
 
 		final String symop = "1_555"; // For now - accept bonds within origin asymmetric unit.
@@ -413,7 +417,9 @@ public class BondMaker {
 			for(int i=0; i<structure.nrModels(); i++){
 				Bond bond = null;
 				if(a1.containsKey(i) && a2.containsKey(i)){
-					bond = new BondImpl(a1.get(i), a2.get(i), 1);
+					if(!a1.get(i).equals(a2.get(i))){
+						bond = new BondImpl(a1.get(i), a2.get(i), 1);
+					}
 				}
 				if(bond!=null){
 					if (conn.getConn_type_id().equals("disulf")) {
@@ -448,7 +454,10 @@ public class BondMaker {
 				if (g==null)
 					throw new StructureException("Could not find altLoc code "+altLoc+" in group "+resSeq+iCode+" of chain "+ chainID);
 			}
-			outMap.put(i,g.getAtom(name));
+			Atom a = g.getAtom(name);
+			if (a!=null){
+				outMap.put(i,a);
+			}
 		}
 		return outMap;
 	}

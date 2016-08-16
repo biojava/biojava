@@ -228,7 +228,37 @@ public class TestBond {
 			}
 		}
 		return nonBondedCounter;
+	}
 
+	private int testBondedToSelf(String pdbId) throws IOException, StructureException {
+		Structure inputStructure = StructureIO.getStructure(pdbId);
+		int bondedToSelf =0;
+		for(int i=0;i<inputStructure.nrModels();i++){
+			for(Chain c: inputStructure.getChains(i)){
+				for(Group g: c.getAtomGroups()){
+					// Skip single atom groups
+					if(g.size()<=1){
+						continue;
+					}
+					// Get all the atoms
+					List<Atom> atomsList = new ArrayList<>(g.getAtoms());
+					for(Group altLocOne: g.getAltLocs()){
+						atomsList.addAll(altLocOne.getAtoms());
+					}
+					// Check they all have bonds
+					for(Atom a: atomsList){
+						if(a.getBonds()!=null){
+						for(Bond b: a.getBonds()){
+							if(b.getAtomA().equals(b.getAtomB())){
+								bondedToSelf+=1;
+							}
+						}
+						}
+					}
+				}
+			}
+		}
+		return bondedToSelf;
 	}
 
 
@@ -263,8 +293,8 @@ public class TestBond {
 
 	/**
 	 * Test that all the atoms in deuterated structures are bonded.
-	 * @throws IOException
-	 * @throws StructureException
+	 * @throws IOException an error getting the required file
+	 * @throws StructureException an error parsing the required file
 	 */
 	@Test
 	public void testDeuterated() throws IOException, StructureException {
@@ -278,12 +308,25 @@ public class TestBond {
 	/**
 	 * Test this weird case - with missing Oxygen atoms, alternate locations on Deuterium 
 	 * and terminal hydrogens.
-	 * @throws IOException
-	 * @throws StructureException
+	 * @throws IOException an error getting the required file
+	 * @throws StructureException an error parsing the required file
 	 */
 	@Test
 	public void testWeirdCase() throws IOException, StructureException {
 		assertEquals(testMissingBonds("1IU6"),6);
+	}
+
+
+	/**
+	 * Test that Sulphur atoms are not found to be bonded to themselves
+	 * @throws IOException an error getting the required file
+	 * @throws StructureException an error parsing the required file
+	 */
+	@Test
+	public void testSSBonds() throws IOException, StructureException {
+		for(String pdbCode : new String[]{"3ZXW","1NTY", "4H2I", "2K6D", "2MLM"}){
+			assertEquals(testBondedToSelf(pdbCode),0);
+		}
 	}
 
 }
