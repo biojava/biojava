@@ -293,8 +293,8 @@ public class TestBond {
 
 	/**
 	 * Test that all the atoms in deuterated structures are bonded.
-	 * @throws IOException
-	 * @throws StructureException
+	 * @throws IOException an error getting the required file
+	 * @throws StructureException an error parsing the required file
 	 */
 	@Test
 	public void testDeuterated() throws IOException, StructureException {
@@ -308,8 +308,8 @@ public class TestBond {
 	/**
 	 * Test this weird case - with missing Oxygen atoms, alternate locations on Deuterium 
 	 * and terminal hydrogens.
-	 * @throws IOException
-	 * @throws StructureException
+	 * @throws IOException an error getting the required file
+	 * @throws StructureException an error parsing the required file
 	 */
 	@Test
 	public void testWeirdCase() throws IOException, StructureException {
@@ -317,9 +317,14 @@ public class TestBond {
 	}
 
 
+	/**
+	 * Test that Sulphur atoms are not found to be bonded to them selves
+	 * @throws IOException an error getting the required file
+	 * @throws StructureException an error parsing the required file
+	 */
 	@Test
 	public void testSSBonds() throws IOException, StructureException {
-		for(String pdbCode : new String[]{"3ZXW",	"1NTY", "4H2I", "2K6D", "2MLM"}){
+		for(String pdbCode : new String[]{"3ZXW","1NTY", "4H2I", "2K6D", "2MLM"}){
 			assertEquals(testBondedToSelf(pdbCode),0);
 		}
 	}
