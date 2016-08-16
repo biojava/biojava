@@ -1,5 +1,7 @@
 # <img src="https://raw.githubusercontent.com/biojava/biojava.github.io/master/images/logo/logo_favicon_100.png"/> Welcome to BioJava
 
+[![Join the chat at https://gitter.im/biojava/biojava](https://badges.gitter.im/biojava/biojava.svg)](https://gitter.im/biojava/biojava?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![Build Status](https://travis-ci.org/biojava/biojava.svg?branch=master)](https://travis-ci.org/biojava/biojava) [![Dependency Status](http://www.versioneye.com/user/projects/5776f02568ee07004137f521/badge.svg?style=flat)](http://www.versioneye.com/user/projects/5776f02568ee07004137f521) [![Version](http://img.shields.io/badge/version-4.2.3-blue.svg?style=flat)](https://github.com/biojava/biojava/releases/tag/biojava-4.2.3) [![License](http://img.shields.io/badge/license-LGPL_2.1-blue.svg?style=flat)](https://github.com/biojava/biojava/blob/master/LICENSE)
 
 
