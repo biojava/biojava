@@ -1,6 +1,8 @@
 package org.biojava.nbio.structure.io.mmtf;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.file.Path;
 
 import org.biojava.nbio.structure.Structure;
@@ -45,6 +47,24 @@ public class MmtfActions {
 		new MmtfStructureWriter(structure, writerToEncoder);
 		// Now write this data to file
 		WriterUtils.writeDataToFile(writerToEncoder, path);
+	}
+	
+	/**
+	 * Write a Structure object to an {@link OutputStream}
+	 * @param structure the Structure to write
+	 * @return the {@link OutputStream} of the MMTF structure
+	 * @throws IOException an error transferring the byte[]
+	 */
+	public static OutputStream writeToOutputStream(Structure structure) throws IOException{
+		// Set up this writer
+		AdapterToStructureData writerToEncoder = new AdapterToStructureData();
+		// Get the writer - this is what people implement
+		new MmtfStructureWriter(structure, writerToEncoder);
+		// Now write this data to file
+		byte[] outputBytes = WriterUtils.getDataAsByteArr(writerToEncoder);
+		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(outputBytes.length);
+		byteArrayOutputStream.write(outputBytes,0,outputBytes.length);
+		return byteArrayOutputStream;
 	}
 
 	
