@@ -318,7 +318,7 @@ public class TestBond {
 
 
 	/**
-	 * Test that Sulphur atoms are not found to be bonded to them selves
+	 * Test that Sulphur atoms are not found to be bonded to themselves
 	 * @throws IOException an error getting the required file
 	 * @throws StructureException an error parsing the required file
 	 */
