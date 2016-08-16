@@ -52,7 +52,7 @@ public class MmtfActions {
 	/**
 	 * Write a Structure object to an {@link OutputStream}
 	 * @param structure the Structure to write
-	 * @param the {@link OutputStream} to write to
+	 * @param outputStream the {@link OutputStream} to write to
 	 * @throws IOException an error transferring the byte[]
 	 */
 	public void writeToOutputStream(Structure structure, OutputStream outputStream) throws IOException{
