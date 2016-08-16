@@ -52,19 +52,17 @@ public class MmtfActions {
 	/**
 	 * Write a Structure object to an {@link OutputStream}
 	 * @param structure the Structure to write
-	 * @return the {@link OutputStream} of the MMTF structure
+	 * @param the {@link OutputStream} to write to
 	 * @throws IOException an error transferring the byte[]
 	 */
-	public static OutputStream writeToOutputStream(Structure structure) throws IOException{
+	public void writeToOutputStream(Structure structure, OutputStream outputStream) throws IOException{
 		// Set up this writer
 		AdapterToStructureData writerToEncoder = new AdapterToStructureData();
 		// Get the writer - this is what people implement
 		new MmtfStructureWriter(structure, writerToEncoder);
 		// Now write this data to file
 		byte[] outputBytes = WriterUtils.getDataAsByteArr(writerToEncoder);
-		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(outputBytes.length);
-		byteArrayOutputStream.write(outputBytes,0,outputBytes.length);
-		return byteArrayOutputStream;
+		outputStream.write(outputBytes,0,outputBytes.length);
 	}
 
 	
