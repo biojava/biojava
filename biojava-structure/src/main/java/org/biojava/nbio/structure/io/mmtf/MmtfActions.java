@@ -55,7 +55,7 @@ public class MmtfActions {
 	 * @param outputStream the {@link OutputStream} to write to
 	 * @throws IOException an error transferring the byte[]
 	 */
-	public void writeToOutputStream(Structure structure, OutputStream outputStream) throws IOException{
+	public static void writeToOutputStream(Structure structure, OutputStream outputStream) throws IOException{
 		// Set up this writer
 		AdapterToStructureData writerToEncoder = new AdapterToStructureData();
 		// Get the writer - this is what people implement
