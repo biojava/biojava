@@ -1833,7 +1833,7 @@ public class PDBFileParser  {
 			// parse element from element field
 			String elementSymbol = line.substring(76, 78).trim();
 			if (elementSymbol.isEmpty()) {
-				logger.warn("Element column was empty for atom {} {}. Assigning atom element "
+				logger.info("Element column was empty for atom {} {}. Assigning atom element "
 						+ "from Chemical Component Dictionary information", fullname.trim(), pdbnumber);
 			} else {
 			
