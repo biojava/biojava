@@ -900,7 +900,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				if (entityId==null) {
 					// this can happen for instance if the cif file didn't have _struct_asym category at all
 					// and thus we have no asymId2entityId mapping at all
-					logger.warn("No entity id could be found for chain {}", chain.getId());
+					logger.info("No entity id could be found for chain {}", chain.getId());
 					continue;
 				}
 				int eId = Integer.parseInt(entityId);
@@ -1054,7 +1054,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				if (atomChain == null) {
 					// most likely there's no observed residues at all for the seqres chain: can't map
 					// e.g. 3zyb: chains with asym_id L,M,N,O,P have no observed residues
-					logger.warn("Could not map SEQRES chain with asym_id={} to any ATOM chain. Most likely there's no observed residues in the chain.",
+					logger.info("Could not map SEQRES chain with asym_id={} to any ATOM chain. Most likely there's no observed residues in the chain.",
 							seqResChain.getId());
 					continue;
 				}
