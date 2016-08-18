@@ -92,12 +92,12 @@ public class GenbankCookbookTest {
 
 		LinkedHashMap<String, DNASequence> dnaSequences = GenbankReaderHelper.readGenbankDNASequence(dnaResource.getInputStream());
 		for (DNASequence sequence : dnaSequences.values()) {
-			logger.info("DNA Sequence: {}", sequence.getSequenceAsString());
+			logger.debug("DNA Sequence: {}", sequence.getSequenceAsString());
 		}
 
 		LinkedHashMap<String, ProteinSequence> protSequences = GenbankReaderHelper.readGenbankProteinSequence(protResource.getInputStream());
 		for (ProteinSequence sequence : protSequences.values()) {
-			logger.info("Protein Sequence: {}", sequence.getSequenceAsString());
+			logger.debug("Protein Sequence: {}", sequence.getSequenceAsString());
 		}
 		/*
 		 * Method 3: With the GenbankReader Object
@@ -111,7 +111,7 @@ public class GenbankCookbookTest {
 		);
 		dnaSequences = dnaReader.process();
 
-		logger.info("DNA Sequence: {}", dnaSequences);
+		logger.debug("DNA Sequence: {}", dnaSequences);
 
 
 		GenbankReader<ProteinSequence, AminoAcidCompound> protReader = new GenbankReader<ProteinSequence, AminoAcidCompound>(
@@ -121,7 +121,7 @@ public class GenbankCookbookTest {
 		);
 		protSequences = protReader.process();
 
-		logger.info("Protein Sequence: {}", protSequences);
+		logger.debug("Protein Sequence: {}", protSequences);
 
 	}
 
