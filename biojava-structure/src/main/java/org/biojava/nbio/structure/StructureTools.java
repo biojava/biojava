@@ -1688,7 +1688,8 @@ public class StructureTools {
 	 * @see #getPredominantGroupType(Chain)
 	 */
 	public static boolean isProtein(Chain c) {
-		return getPredominantGroupType(c) == GroupType.AMINOACID;
+
+		return c.isProtein();
 	}
 
 	/**
@@ -1699,7 +1700,7 @@ public class StructureTools {
 	 * @see #getPredominantGroupType(Chain)
 	 */
 	public static boolean isNucleicAcid(Chain c) {
-		return getPredominantGroupType(c) == GroupType.NUCLEOTIDE;
+		return c.isNucleicAcid();
 	}
 
 	/**
@@ -1721,54 +1722,7 @@ public class StructureTools {
 	 * @return
 	 */
 	public static GroupType getPredominantGroupType(Chain c) {
-		int sizeAminos = c.getAtomGroups(GroupType.AMINOACID).size();
-		int sizeNucleotides = c.getAtomGroups(GroupType.NUCLEOTIDE).size();
-		List<Group> hetAtoms = c.getAtomGroups(GroupType.HETATM);
-		int sizeHetatoms = hetAtoms.size();
-		int sizeWaters = 0;
-		for (Group g : hetAtoms) {
-			if (g.isWater())
-				sizeWaters++;
-		}
-		int sizeHetatomsWithoutWater = sizeHetatoms - sizeWaters;
-
-		int fullSize = sizeAminos + sizeNucleotides + sizeHetatomsWithoutWater;
-
-		if ((double) sizeAminos / (double) fullSize > RATIO_RESIDUES_TO_TOTAL)
-			return GroupType.AMINOACID;
-
-		if ((double) sizeNucleotides / (double) fullSize > RATIO_RESIDUES_TO_TOTAL)
-			return GroupType.NUCLEOTIDE;
-
-		if ((double) (sizeHetatomsWithoutWater) / (double) fullSize > RATIO_RESIDUES_TO_TOTAL)
-			return GroupType.HETATM;
-
-		// finally if neither condition works, we try based on majority, but log
-		// it
-		GroupType max;
-		if (sizeNucleotides > sizeAminos) {
-			if (sizeNucleotides > sizeHetatomsWithoutWater) {
-				max = GroupType.NUCLEOTIDE;
-			} else {
-				max = GroupType.HETATM;
-			}
-		} else {
-			if (sizeAminos > sizeHetatomsWithoutWater) {
-				max = GroupType.AMINOACID;
-			} else {
-				max = GroupType.HETATM;
-			}
-		}
-		logger.debug(
-				"Ratio of residues to total for chain with asym_id {} is below {}. Assuming it is a {} chain. "
-						+ "Counts: # aa residues: {}, # nuc residues: {}, # non-water het residues: {}, # waters: {}, "
-						+ "ratio aa/total: {}, ratio nuc/total: {}",
-						c.getId(), RATIO_RESIDUES_TO_TOTAL, max, sizeAminos,
-						sizeNucleotides, sizeHetatomsWithoutWater, sizeWaters,
-						(double) sizeAminos / (double) fullSize,
-						(double) sizeNucleotides / (double) fullSize);
-
-		return max;
+		return c.getPredominantGroupType();
 	}
 
 	/**
@@ -1778,11 +1732,7 @@ public class StructureTools {
 	 * @return
 	 */
 	public static boolean isChainWaterOnly(Chain c) {
-		for (Group g : c.getAtomGroups()) {
-			if (!g.isWater())
-				return false;
-		}
-		return true;
+		return c.isWaterOnly();
 	}
 
 	/**
@@ -1794,20 +1744,7 @@ public class StructureTools {
 	 */
 	public static boolean isChainPureNonPolymer(Chain c) {
 
-		for (Group g : c.getAtomGroups()) {
-
-			ChemComp cc = g.getChemComp();
-
-			if ( 	g.isPolymeric() &&
-					!g.isHetAtomInFile() ) {
-
-				// important: the aminoacid or nucleotide residue can be in Atom records
-
-				return false;
-			}
-
-		}
-		return true;
+		return c.isPureNonPolymer();
 	}
 
 	/**
