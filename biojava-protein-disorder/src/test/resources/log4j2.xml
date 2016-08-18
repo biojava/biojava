@@ -11,7 +11,7 @@
             <AppenderRef ref="Console"/>
         </Logger>
         -->
-        <Root level="info">
+        <root level="warn">
             <AppenderRef ref="Console"/>
         </Root>
     </Loggers>

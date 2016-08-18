@@ -15,7 +15,7 @@
         <Logger name="org.biojava.nbio.core.sequence.location.InsdcParserTest" level="debug" />
         -->
         
-        <Root level="info">
+        <Root level="warn">
             <AppenderRef ref="Console"/>
         </Root>
     </Loggers>
