@@ -1681,11 +1681,7 @@ public class StructureTools {
 	}
 
 	/**
-	 * Tell whether given chain is a protein chain
-	 *
-	 * @param c
-	 * @return true if protein, false if nucleotide or ligand
-	 * @see #getPredominantGroupType(Chain)
+	 * @deprecated  use {@link Chain#isProtein()} instead.
 	 */
 	public static boolean isProtein(Chain c) {
 
@@ -1693,54 +1689,27 @@ public class StructureTools {
 	}
 
 	/**
-	 * Tell whether given chain is DNA or RNA
-	 *
-	 * @param c
-	 * @return true if nucleic acid, false if protein or ligand
-	 * @see #getPredominantGroupType(Chain)
-	 */
+	 * @deprecated use {@link Chain#isNucleicAcid()} instead.
+ 	 */
 	public static boolean isNucleicAcid(Chain c) {
 		return c.isNucleicAcid();
 	}
 
 	/**
-	 * Get the predominant {@link GroupType} for a given Chain, following these
-	 * rules: <li>if the ratio of number of residues of a certain
-	 * {@link GroupType} to total non-water residues is above the threshold
-	 * {@value #RATIO_RESIDUES_TO_TOTAL}, then that {@link GroupType} is
-	 * returned</li> <li>if there is no {@link GroupType} that is above the
-	 * threshold then the {@link GroupType} with most members is chosen, logging
-	 * it</li>
-	 * <p>
-	 * See also {@link ChemComp#getPolymerType()} and
-	 * {@link ChemComp#getResidueType()} which follow the PDB chemical component
-	 * dictionary and provide a much more accurate description of groups and
-	 * their linking.
-	 * </p>
-	 *
-	 * @param c
-	 * @return
+	 * @deprecated use {@link Chain#getPredominantGroupType()} instead.
 	 */
 	public static GroupType getPredominantGroupType(Chain c) {
 		return c.getPredominantGroupType();
 	}
 
 	/**
-	 * Returns true if the given chain is composed of water molecules only
-	 *
-	 * @param c
-	 * @return
+	 * @deprecated use {@link Chain#isWaterOnly()} instead.
 	 */
 	public static boolean isChainWaterOnly(Chain c) {
 		return c.isWaterOnly();
 	}
 
-	/**
-	 * Returns true if the given chain is composed of non-polymeric (including water) groups only. 
-	 * To be used at parsing time only.
-	 *
-	 * @param c
-	 * @return
+	/** @deprecated  use {@link Chain#isPureNonPolymer()} instead.
 	 */
 	public static boolean isChainPureNonPolymer(Chain c) {
 
