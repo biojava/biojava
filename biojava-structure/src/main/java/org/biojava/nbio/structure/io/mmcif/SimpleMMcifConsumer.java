@@ -819,7 +819,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 					for (BiologicalAssemblyTransformation transf:transformations) {
 						Chain c = structure.getChain(transf.getChainId());
 						if (c==null) {
-							logger.warn("Could not find asym id {} specified in struct_assembly_gen", transf.getChainId());
+							logger.info("Could not find asym id {} specified in struct_assembly_gen", transf.getChainId());
 							continue;
 						}
 						if (c.getEntityType() == EntityType.POLYMER &&
@@ -918,7 +918,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				if (entityInfo==null) {
 					// Supports the case where the only chain members were from non-polymeric entity that is missing.
 					// Solved by creating a new Compound(entity) to which this chain will belong.
-					logger.warn("Could not find an Entity for entity_id {}, for chain id {}, creating a new Entity.",
+					logger.info("Could not find an Entity for entity_id {}, for chain id {}, creating a new Entity.",
 							eId, chain.getId());
 					entityInfo = new EntityInfo();
 					entityInfo.setMolId(eId);
@@ -1637,7 +1637,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		r.setChainId(sref.getPdbx_strand_id());
 		StructRef structRef = getStructRef(sref.getRef_id());
 		if (structRef == null){
-			logger.warn("could not find StructRef " + sref.getRef_id() + " for StructRefSeq " + sref);
+			logger.info("could not find StructRef " + sref.getRef_id() + " for StructRefSeq " + sref);
 		} else {
 			r.setDatabase(structRef.getDb_name());
 			r.setDbIdCode(structRef.getDb_code());
