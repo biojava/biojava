@@ -106,7 +106,7 @@ public class SymmetryTools {
 			double nResFromMainDiag, double[] gradientPolyCoeff,
 			double gradientExpCoeff) {
 
-		if (unpenalizedScore == Double.NaN)
+		if (Double.isNaN(unpenalizedScore))
 			return 0; // what else?
 
 		// We can actually return a positive value if this is high enough
