@@ -287,7 +287,7 @@ public class CoxInfo {
 	public static String fmt(Double d, int precision, int pad) {
 		if(d == null)
 			return "";
-		if(d == Double.NaN)
+		if(Double.isNaN(d))
 			return "";
 		String value = "";
 		DecimalFormat dfe = new DecimalFormat("0.00E0");
