@@ -22,6 +22,8 @@ package org.biojava.nbio.core.search.io;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
+
 import org.biojava.nbio.core.sequence.template.Sequence;
 
 /**
@@ -130,7 +132,10 @@ public abstract class Hit implements Iterable<Hsp>{
 
 			@Override
 			public Hsp next() {
-				return hsps.get(current++);
+                if(!hasNext()){
+                    throw new NoSuchElementException();
+                }
+                return hsps.get(current++);
 			}
 
 			@Override

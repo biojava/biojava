@@ -24,6 +24,7 @@ import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.GroupIterator;
 import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.scop.ScopDatabase;
 import org.biojava.nbio.structure.scop.ScopDomain;
@@ -31,6 +32,7 @@ import org.biojava.nbio.structure.scop.ScopFactory;
 import org.biojava.nbio.structure.scop.ScopInstallation;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -44,7 +46,7 @@ public class ScopTest {
 	boolean debug = false;
 
 	@Test
-	public void testLocalScop(){
+	public void testLocalScop() throws IOException, StructureException{ 
 
 		if ( debug ){
 			System.out.println("local");
@@ -90,7 +92,7 @@ public class ScopTest {
 	}
 
 
-	private void runSCOPTests(){
+	private void runSCOPTests() throws IOException, StructureException {
 
 		ScopDatabase scop = ScopFactory.getSCOP(ScopFactory.VERSION_1_75);
 
@@ -121,9 +123,9 @@ public class ScopTest {
 		ScopDomain d2 = domains1cdg.get(0);
 		assertEquals("Wrong SCOP Id", "d1cdga1", d2.getScopId());
 		AtomCache cache = new AtomCache();
-		try {
-			Structure s = cache.getStructureForDomain(d2);
-			/*
+		
+		Structure s = cache.getStructureForDomain(d2);
+		/*
 			The actual SCOP description is A:496-581.
 			HET    MAL  A 688      23
 			HET    MAL  A 689      23
@@ -131,18 +133,15 @@ public class ScopTest {
 			HET     CA  A 691       1
 			HET     CA  A 692       1
 			Thus, the two hetero-atoms are out of range.
-			*/
-			// t
-			//checkRange(s,"A:496-581");
-			// now with ligands!
-			checkRange(s,"A:496-692");
+		 */
+		// t
+		//checkRange(s,"A:496-581");
+		// now with ligands!
+		checkRange(s,"A:496-692");
 
 
 
-		} catch (Exception e){
-			e.printStackTrace();
-			fail(e.getMessage());
-		}
+
 
 
 		// check a domain with multiple ranges
@@ -150,20 +149,16 @@ public class ScopTest {
 		assertTrue(domains1xzp.size() ==4 );
 
 
-		try {
+		
 
+		s = cache.getStructureForDomain(domains1xzp.get(0)); 
 
-			Structure s = cache.getStructureForDomain(domains1xzp.get(0));
+		Chain a = s.getPolyChainByPDB("A");
 
-			Chain a = s.getChainByPDB("A");
+		// since biojava 5.0, there's no ligands in the polymer chains: thus we substract 3 SO4 molecules present in chain A
+		assertEquals(176 -3,a.getAtomGroups().size());
 
-			// now with ligands...
-			assertEquals(176,a.getAtomGroups().size());
-
-		}catch (Exception e){
-			e.printStackTrace();
-			fail(e.getMessage());
-		}
+		
 
 		// check insertion codes
 
@@ -172,17 +167,13 @@ public class ScopTest {
 		ScopDomain target = scop.getDomainByScopID("d2bq6a1");
 
 		assertNotNull(target);
-		try {
-			Structure s = cache.getStructureForDomain(target);
+		
+		s = cache.getStructureForDomain(target);
 
-			Chain a = s.getChainByPDB("A");
-			assertEquals(a.getAtomGroups().size(),52);
-			checkRange(s,"A:1A-49");
+		a = s.getPolyChainByPDB("A");
+		assertEquals(a.getAtomGroups().size(),52);
+		checkRange(s,"A:1A-49");
 
-		}catch (Exception e){
-			e.printStackTrace();
-			fail(e.getMessage());
-		}
 	}
 
 	private void checkRange(Structure s, String range) {
@@ -194,7 +185,7 @@ public class ScopTest {
 		}
 		assertNotNull(g1);
 		assertNotNull(g2);
-		String chainId = g1.getChain().getChainID();
+		String chainId = g1.getChain().getName();
 		String rangeTest = chainId + ":"+ g1.getResidueNumber().toString()+"-"+ g2.getResidueNumber().toString();
 
 		assertEquals("The expected range and the detected range don't match!", range, rangeTest);

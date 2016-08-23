@@ -21,13 +21,14 @@
 
 package org.biojava.nbio.structure.symmetry.core;
 
-import org.biojava.nbio.structure.symmetry.geometry.SuperPosition;
+import org.biojava.nbio.structure.geometry.SuperPosition;
 import org.biojava.nbio.structure.symmetry.utils.PermutationGenerator;
 
 import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;

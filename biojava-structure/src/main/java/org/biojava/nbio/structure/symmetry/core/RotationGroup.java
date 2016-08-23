@@ -193,7 +193,7 @@ public class RotationGroup {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Rotations: " + rotations.size() + "\n");
 		for (Rotation s: rotations) {
-			sb.append(s.toString() + "\n");
+			sb.append(s.toString()).append("\n");
 		}
 		return sb.toString();
 	}

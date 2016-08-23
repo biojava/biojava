@@ -51,6 +51,7 @@ public interface MMcifConsumer {
 	 */
 	public void newAtomSite(AtomSite atom);
 	public void newEntity(Entity entity);
+	public void newEntityPoly(EntityPoly entityPoly);
 	public void newEntityPolySeq(EntityPolySeq epolseq);
 	public void newStructAsym(StructAsym sasym);
 	public void setStruct(Struct struct);

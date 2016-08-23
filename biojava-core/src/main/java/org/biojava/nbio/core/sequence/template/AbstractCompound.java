@@ -126,6 +126,6 @@ public void setMolecularWeight(Float molecularWeight) {
 			return false;
 		}
 		AbstractCompound them = (AbstractCompound) compound;
-		return this.base.toString().equalsIgnoreCase(them.base.toString());
+		return this.base.equalsIgnoreCase(them.base);
 	}
 }

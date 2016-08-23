@@ -23,7 +23,7 @@
  */
 package org.biojava.nbio.structure;
 
-import org.biojava.nbio.structure.align.util.HTTPConnectionTools;
+import org.biojava.nbio.structure.align.util.URLConnectionTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.*;
@@ -686,7 +686,7 @@ public class PDBStatus {
 		String urlStr = String.format("http://%s/pdb/rest/getCurrent",serverName);
 		URL u = new URL(urlStr);
 
-		InputStream stream = HTTPConnectionTools.getInputStream(u, 60000);
+		InputStream stream = URLConnectionTools.getInputStream(u, 60000);
 
 		if (stream != null) {
 			BufferedReader reader = new BufferedReader(

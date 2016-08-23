@@ -178,6 +178,29 @@ public interface Group {
 	 */
 	public boolean hasAminoAtoms() ;
 
+
+	/** tests in the Chemical Component Dictionary, if this group is a polymeric group
+	 *
+	 * @return true if a polymeric group
+	 */
+	public boolean isPolymeric();
+
+
+	/** Tests in the Chemical Component Dictionary, if this group is an amino acid
+	 *
+	 * @return true if an amino acid
+     */
+	public boolean isAminoAcid();
+
+
+	/** Tests in the Chemical Component Dictionary, if this group is a nucleotide
+	 *
+	 * @return true if a nucleotide
+     */
+	public boolean isNucleotide();
+
+
+
 	/**
 	 * Properties of this amino acid. Currently available properties are:
 	 * phi
@@ -269,8 +292,7 @@ public interface Group {
 
 	/**
 	 * Utility method for returning the chainId of the Group or null if no
-	 * Chain has been set. This replaces the need to use the expression
-	 * group.getChain().getId()
+	 * Chain has been set. This is equivalent to calling getChain().getId()
 	 * @since 3.0
 	 * @return  the ID of the chain
 	 */
@@ -335,4 +357,20 @@ public interface Group {
 	 * @return the string of the MDL molblock
 	 */
 	public String toSDF();
+	
+	/**
+	 * Tells whether the group is annotated as HETATM in the file.
+	 * To be used only at parsing time to be able to infer that a
+	 * polymeric group is in a ligand chain or not.
+	 * @return
+	 */
+	public boolean isHetAtomInFile();
+	
+	/**
+	 * Sets the field isHetAtomInFile which is intented only for 
+	 * helping in infering if a polymeric group is in a ligand chain
+	 * or in a polymeric chain.
+	 * @param isHetAtomInFile
+	 */
+	public void setHetAtomInFile(boolean isHetAtomInFile);
 }

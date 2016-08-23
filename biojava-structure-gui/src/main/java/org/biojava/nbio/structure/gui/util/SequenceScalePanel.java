@@ -317,7 +317,7 @@ extends JPanel{
 					g2D.fillRect(xpos, y+2, aminosize, y+lineH);
 					g2D.setColor(SCALE_COLOR);
 					if ( scale < SEQUENCE_SHOW)
-						g2D.drawString(""+(i+1),xpos,y+DEFAULT_Y_STEP);
+						g2D.drawString(String.valueOf(i+1), xpos, y+DEFAULT_Y_STEP);
 				}
 
 			}else if  ( ((i+1)%50) == 0 ) {
@@ -326,7 +326,7 @@ extends JPanel{
 					g2D.fillRect(xpos,y+2, aminosize, y+lineH);
 					g2D.setColor(SCALE_COLOR);
 					if ( scale < SEQUENCE_SHOW)
-						g2D.drawString(""+(i+1),xpos,y+DEFAULT_Y_STEP);
+						g2D.drawString(String.valueOf(i+1), xpos, y+DEFAULT_Y_STEP);
 
 				}
 
@@ -336,7 +336,7 @@ extends JPanel{
 					g2D.fillRect(xpos, y+2, aminosize, y+lineH);
 					g2D.setColor(SCALE_COLOR);
 					if ( scale < SEQUENCE_SHOW)
-						g2D.drawString(""+(i+1),xpos,y+DEFAULT_Y_STEP);
+						g2D.drawString(String.valueOf(i+1), xpos, y+DEFAULT_Y_STEP);
 
 				}
 			}
@@ -347,7 +347,7 @@ extends JPanel{
 		if ( endpos >= length-1) {
 
 			int endPanel = coordManager.getPanelPos(endpos);
-			g2D.drawString(""+length,endPanel+10,y+DEFAULT_Y_STEP);
+			g2D.drawString(String.valueOf(length), endPanel+10,y+DEFAULT_Y_STEP);
 		}
 
 		return y ;

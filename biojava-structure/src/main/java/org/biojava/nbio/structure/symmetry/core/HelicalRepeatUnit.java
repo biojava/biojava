@@ -20,9 +20,9 @@
  */
 package org.biojava.nbio.structure.symmetry.core;
 
-import org.biojava.nbio.structure.symmetry.geometry.SuperPosition;
-
+import org.biojava.nbio.structure.geometry.CalcPoint;
 import javax.vecmath.Point3d;
+
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -149,14 +149,14 @@ private List<Point3d[]> calcRepeatUnits() {
 			Point3d[] x = new Point3d[coords.size()];
 			coords.toArray(x);
 //			repeatTraces.add(x); // make sure we don't accidently change the original coordinates
-			repeatTraces.add(SuperPosition.clonePoint3dArray(x));
+			repeatTraces.add(CalcPoint.clonePoint3dArray(x));
 		}
 	} else {
 		List<Integer> sequenceClusterIds = subunits.getSequenceClusterIds();
 		for (int i = 0; i < subunits.getSubunitCount(); i++) {
 			if (sequenceClusterIds.get(i) == 0) {
 				Point3d[] x = subunits.getTraces().get(i);
-				repeatTraces.add(SuperPosition.clonePoint3dArray(x));
+				repeatTraces.add(CalcPoint.clonePoint3dArray(x));
 			}
 		}
 	}

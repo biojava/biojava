@@ -32,7 +32,7 @@ public final class IcosahedralSampler {
 
 	// this class cannot be instantiated
 	private IcosahedralSampler() {
-	};
+	}
 
 	public static int getSphereCount() {
 		return orientations.length;

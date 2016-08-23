@@ -55,8 +55,9 @@ public class StructureToolsTest extends TestCase {
 
 		assertEquals("structure does not contain one chain ", 1 ,structure.size());
 
-		Chain chain = structure.getChain(0);
-		assertEquals("Wrong number of residues.",123,chain.getAtomLength());
+		// since biojava 5, chains contain either only polymers or only nonpolymers: here we get the first protein chain with 58 residues
+		Chain chain = structure.getChainByIndex(0);
+		assertEquals("Wrong number of residues.",58,chain.getAtomLength());
 
 		inStream.close();
 
@@ -103,12 +104,12 @@ public class StructureToolsTest extends TestCase {
 
 		Structure hivA = cache.getStructure("1hiv.A");
 		Atom[] caSa = StructureTools.getRepresentativeAtomArray(hivA);
-		Atom[] caCa = StructureTools.getRepresentativeAtomArray(hivA.getChain(0));
+		Atom[] caCa = StructureTools.getRepresentativeAtomArray(hivA.getChainByIndex(0));
 		assertEquals("did not find the same number of Atoms from structure and from chain..",
 				caSa.length,caCa.length);
 		Structure hivB = cache.getStructure("1hiv.B");
 		Atom[] caSb = StructureTools.getRepresentativeAtomArray(hivB);
-		Atom[] caCb = StructureTools.getRepresentativeAtomArray(hivB.getChain(0));
+		Atom[] caCb = StructureTools.getRepresentativeAtomArray(hivB.getChainByIndex(0));
 		assertEquals("did not find the same number of Atoms from structure and from chain..",
 				caSb.length,caCb.length);
 		//Both chains have to be the same size (A and B)
@@ -136,7 +137,7 @@ public class StructureToolsTest extends TestCase {
 		substr = StructureTools.getSubRanges(structure2, range);
 		assertEquals("Wrong number of chains in "+range, 1, substr.size());
 
-		chain = substr.getChain(0);
+		chain = substr.getChainByIndex(0);
 
 		assertEquals("Did not find the expected number of residues in "+range, 5, chain.getAtomLength() );
 
@@ -145,9 +146,10 @@ public class StructureToolsTest extends TestCase {
 		substr = StructureTools.getSubRanges(structure2, range);
 		assertEquals("Wrong number of chains in "+range, 1, substr.size());
 
-		chain = substr.getChain(0);
+		chain = substr.getChainByIndex(0);
 
-		assertEquals("Did not find the expected number of residues in "+range, 411, chain.getAtomLength() );
+		// since biojava 5, chains contain either only polymers or only nonpolymers: here we get the first protein chain with 408 residues
+		assertEquals("Did not find the expected number of residues in "+range, 408, chain.getAtomLength() );
 		//assertEquals("subrange doesn't equal original chain A.", structure2.getChainByPDB("A"), chain);
 
 		// full chains
@@ -155,9 +157,10 @@ public class StructureToolsTest extends TestCase {
 		substr = StructureTools.getSubRanges(structure2, range);
 		assertEquals("Wrong number of chains in "+range, 1, substr.size());
 
-		chain = substr.getChain(0);
+		chain = substr.getChainByIndex(0);
 
-		assertEquals("Did not find the expected number of residues in "+range, 411, chain.getAtomLength() );
+		// since biojava 5, chains contain either only polymers or only nonpolymers: here we get the first protein chain with 408 residues
+		assertEquals("Did not find the expected number of residues in "+range, 408, chain.getAtomLength() );
 		//assertEquals("subrange doesn't equal original chain A.", structure2.getChainByPDB("A"), chain);
 
 		// combined ranges
@@ -165,10 +168,10 @@ public class StructureToolsTest extends TestCase {
 		substr = StructureTools.getSubRanges(structure2, range);
 		assertEquals("Wrong number of chains in "+range, 2, substr.size());
 
-		chain = substr.getChain(0);
+		chain = substr.getChainByIndex(0);
 		assertEquals("Did not find the expected number of residues in first chain of "+range, 5, chain.getAtomLength() );
 
-		chain = substr.getChain(1);
+		chain = substr.getChainByIndex(1);
 		assertEquals("Did not find the expected number of residues in second chain of "+range, 5, chain.getAtomLength() );
 
 		// combined ranges
@@ -176,10 +179,11 @@ public class StructureToolsTest extends TestCase {
 		substr = StructureTools.getSubRanges(structure2, range);
 		assertEquals("Wrong number of chains in "+range, 2, substr.size());
 
-		chain = substr.getChain(0);
-		assertEquals("Did not find the expected number of residues in first chain of "+range, 411, chain.getAtomLength() );
+		// since biojava 5, chains contain either only polymers or only nonpolymers: here we get the first protein chain with 408 residues
+		chain = substr.getChainByIndex(0);
+		assertEquals("Did not find the expected number of residues in first chain of "+range, 408, chain.getAtomLength() );
 
-		chain = substr.getChain(1);
+		chain = substr.getChainByIndex(1);
 		assertEquals("Did not find the expected number of residues in second chain of "+range, 5, chain.getAtomLength() );
 
 		// parentheses
@@ -187,16 +191,34 @@ public class StructureToolsTest extends TestCase {
 		substr = StructureTools.getSubRanges(structure2, range);
 		assertEquals("Wrong number of chains in "+range, 1, substr.size());
 
-		chain = substr.getChain(0);
+		chain = substr.getChainByIndex(0);
 		assertEquals("Did not find the expected number of residues in "+range, 5, chain.getAtomLength() );
 
 		// single residue
 		range = "A:3";
 		substr = StructureTools.getSubRanges(structure2, range);
 		assertEquals("Wrong number of chains in "+range, 1, substr.size());
-		chain = substr.getChain(0);
+		chain = substr.getChainByIndex(0);
 		assertEquals("Did not find the expected number of residues in "+range, 1, chain.getAtomLength() );
 
+		
+		// negative residues
+		range = "A:-3";
+		substr = StructureTools.getSubRanges(structure2, range);
+		assertEquals("Wrong number of chains in "+range, 1, substr.size());
+		chain = substr.getChainByIndex(0);
+		assertEquals("Did not find the expected number of residues in "+range, 1, chain.getAtomLength() );
+		range = "A:-3--1";
+		substr = StructureTools.getSubRanges(structure2, range);
+		assertEquals("Wrong number of chains in "+range, 1, substr.size());
+		chain = substr.getChainByIndex(0);
+		assertEquals("Did not find the expected number of residues in "+range, 3, chain.getAtomLength() );
+		range = "A:-3-1";
+		substr = StructureTools.getSubRanges(structure2, range);
+		assertEquals("Wrong number of chains in "+range, 1, substr.size());
+		chain = substr.getChainByIndex(0);
+		assertEquals("Did not find the expected number of residues in "+range, 4, chain.getAtomLength() );
+		
 		// Special '-' case
 		range = "-";
 		substr = StructureTools.getSubRanges(structure2, range);
@@ -207,17 +229,19 @@ public class StructureToolsTest extends TestCase {
 		substr = StructureTools.getSubRanges(structure, range);
 		assertEquals("Wrong number of chains in "+range, 1, substr.size());
 
-		chain = substr.getChain(0);
-		assertEquals("Did not find the expected number of residues in first chain of "+range, 123, chain.getAtomLength() );
+		// since biojava 5, chains contain either only polymers or only nonpolymers: here we get the first protein chain with 58 residues
+		chain = substr.getChainByIndex(0);
+		assertEquals("Did not find the expected number of residues in first chain of "+range, 58, chain.getAtomLength() );
 
 		// Test single-chain syntax in a multi-chain structure. Should give chain A.
 		range = "_:";
 		substr = StructureTools.getSubRanges(structure2, range);
 		assertEquals("Wrong number of chains in "+range, 1, substr.size());
 
-		chain = substr.getChain(0);
+		// since biojava 5, chains contain either only polymers or only nonpolymers: here we get the first protein chain with 408 residues
+		chain = substr.getChainByIndex(0);
 		assertEquals("Chain _ not converted to chain A.","A",chain.getChainID());
-		assertEquals("Did not find the expected number of residues in first chain of "+range, 411, chain.getAtomLength() );
+		assertEquals("Did not find the expected number of residues in first chain of "+range, 408, chain.getAtomLength() );
 
 		try {
 			// Illegal chain name
@@ -262,8 +286,8 @@ public class StructureToolsTest extends TestCase {
 		s = cache.getStructure(name9);
 
 		assertTrue(s.getChains().size() == 1);
-		Chain c = s.getChainByPDB(chainId);
-		assertEquals(c.getChainID(),chainId);
+		Chain c = s.getPolyChainByPDB(chainId);
+		assertEquals(c.getName(),chainId);
 		Atom[] ca = StructureTools.getRepresentativeAtomArray(s);
 		assertEquals(83,ca.length);
 
@@ -330,7 +354,7 @@ public class StructureToolsTest extends TestCase {
 		substr = StructureTools.getSubRanges(structure2, range);
 		assertEquals("Wrong number of chains in "+range, 1, substr.size());
 
-		chain = substr.getChain(0);
+		chain = substr.getChainByIndex(0);
 
 		// Note residue 0 is missing from 1lnl
 		assertEquals("Did not find the expected number of residues in "+range, 10, chain.getAtomLength() );
@@ -340,7 +364,7 @@ public class StructureToolsTest extends TestCase {
 		substr = StructureTools.getSubRanges(structure2, range);
 		assertEquals("Wrong number of chains in "+range, 1, substr.size());
 
-		chain = substr.getChain(0);
+		chain = substr.getChainByIndex(0);
 
 		assertEquals("Did not find the expected number of residues in "+range, 3, chain.getAtomLength() );
 
@@ -349,7 +373,7 @@ public class StructureToolsTest extends TestCase {
 		substr = StructureTools.getSubRanges(structure2, range);
 		assertEquals("Wrong number of chains in "+range, 1, substr.size());
 
-		chain = substr.getChain(0);
+		chain = substr.getChainByIndex(0);
 
 		assertEquals("Did not find the expected number of residues in "+range, 4, chain.getAtomLength() );
 
@@ -358,7 +382,7 @@ public class StructureToolsTest extends TestCase {
 		substr = StructureTools.getSubRanges(structure2, range);
 		assertEquals("Wrong number of chains in "+range, 1, substr.size());
 
-		chain = substr.getChain(0);
+		chain = substr.getChainByIndex(0);
 
 		assertEquals("Did not find the expected number of residues in "+range, 6, chain.getAtomLength() );
 
@@ -368,10 +392,10 @@ public class StructureToolsTest extends TestCase {
 		substr = StructureTools.getSubRanges(structure2, range);
 		assertEquals("Wrong number of chains in "+range, 2, substr.size());
 
-		chain = substr.getChain(0);
+		chain = substr.getChainByIndex(0);
 		assertEquals("Did not find the expected number of residues in first chain of "+range, 5, chain.getAtomLength() );
 
-		chain = substr.getChain(1);
+		chain = substr.getChainByIndex(1);
 		assertEquals("Did not find the expected number of residues in second chain of "+range, 5, chain.getAtomLength() );
 
 	}
@@ -391,7 +415,7 @@ public class StructureToolsTest extends TestCase {
 		substr = StructureTools.getSubRanges(structure3, range);
 		assertEquals("Wrong number of chains in "+range, 1, substr.size());
 
-		chain = substr.getChain(0);
+		chain = substr.getChainByIndex(0);
 
 		assertEquals("Did not find the expected number of residues in "+range, 4, chain.getAtomLength() );
 
@@ -401,7 +425,7 @@ public class StructureToolsTest extends TestCase {
 		substr = StructureTools.getSubRanges(structure3, range);
 		assertEquals("Wrong number of chains in "+range, 1, substr.size());
 
-		chain = substr.getChain(0);
+		chain = substr.getChainByIndex(0);
 
 		assertEquals("Did not find the expected number of residues in "+range, 3, chain.getAtomLength() );
 
@@ -410,7 +434,7 @@ public class StructureToolsTest extends TestCase {
 		substr = StructureTools.getSubRanges(structure3, range);
 		assertEquals("Wrong number of chains in "+range, 1, substr.size());
 
-		chain = substr.getChain(0);
+		chain = substr.getChainByIndex(0);
 
 		assertEquals("Did not find the expected number of residues in "+range, 3, chain.getAtomLength() );
 
@@ -419,7 +443,7 @@ public class StructureToolsTest extends TestCase {
 		substr = StructureTools.getSubRanges(structure3, range);
 		assertEquals("Wrong number of chains in "+range, 1, substr.size());
 
-		chain = substr.getChain(0);
+		chain = substr.getChainByIndex(0);
 
 		assertEquals("Did not find the expected number of residues in "+range, 12, chain.getAtomLength() );
 
@@ -428,7 +452,7 @@ public class StructureToolsTest extends TestCase {
 		substr = StructureTools.getSubRanges(structure3, range);
 		assertEquals("Wrong number of chains in "+range, 1, substr.size());
 
-		chain = substr.getChain(0);
+		chain = substr.getChainByIndex(0);
 
 		assertEquals("Did not find the expected number of residues in "+range, 8, chain.getAtomLength() );
 	}

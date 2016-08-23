@@ -74,7 +74,7 @@ implements StructureAlignment  {
 
 	@Override
 	public String getVersion() {
-		return versionNr+"";
+		return String.valueOf(versionNr);
 	}
 
 	public String printHelp() {

@@ -75,7 +75,7 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 		AminoAcidCompoundSet aaSet = new AminoAcidCompoundSet();
 		char[] seq = getSequence(sequence.toString(), true);//ignore case
 		for(char aa:seq){
-			AminoAcidCompound c = aaSet.getCompoundForString(aa + "");
+			AminoAcidCompound c = aaSet.getCompoundForString(String.valueOf(aa));
 			if(Constraints.aa2MolecularWeight.containsKey(c)){
 				value += Constraints.aa2MolecularWeight.get(c);
 			}
@@ -263,7 +263,7 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 		AminoAcidCompoundSet aaSet = new AminoAcidCompoundSet();
 		char[] seq = this.getSequence(sequence.toString(), true);
 		for(char aa:seq){
-			AminoAcidCompound c = aaSet.getCompoundForString(aa + "");
+			AminoAcidCompound c = aaSet.getCompoundForString(String.valueOf(aa));
 			if(Constraints.aa2Hydrophathicity.containsKey(c)){
 				total += Constraints.aa2Hydrophathicity.get(c);
 				validLength++;
@@ -322,7 +322,7 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 	//
 	// Ct Nt Sm Sc Sn
 	//
-	private final double cPk[][] = {
+	private final double[][] cPk = {
 			{3.55, 7.59, 0.0},  // A
 			{3.55, 7.50, 0.0},  // B
 			{3.55, 7.50, 9.00}, // C
@@ -365,7 +365,7 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 		//
 		// Compute the amino-acid composition.
 		//
-		int comp[] = new int[26];
+		int[] comp = new int[26];
 		for(int i = 0; i < sequence.length(); i++){
 			int index = sequence.charAt(i) - 'A';
 			if(index < 0 || index >= 26) continue;
@@ -430,7 +430,7 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 		//
 		// Compute the amino-acid composition.
 		//
-		int comp[] = new int[26];
+		int[] comp = new int[26];
 		for(int i = 0; i < sequence.length(); i++){
 			int index = sequence.charAt(i) - 'A';
 			if(index < 0 || index >= 26) continue;
@@ -444,7 +444,7 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 		return getNetChargeExpasy(comp, nTermResidue, cTermResidue, pHPoint);
 	}
 
-	private double getNetChargeExpasy(int comp[], int nTermResidue, int cTermResidue, double ph){
+	private double getNetChargeExpasy(int[] comp, int nTermResidue, int cTermResidue, double ph){
 		double cter = 0.0;
 		if(cTermResidue >= 0 && cTermResidue < 26) cter = exp10(-cPk[cTermResidue][0]) / (exp10(-cPk[cTermResidue][0]) + exp10(-ph));
 		double nter = 0.0;
@@ -477,13 +477,13 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 		AminoAcidCompoundSet aaSet = new AminoAcidCompoundSet();
 
 		double nTerminalCharge = 0.0;
-		AminoAcidCompound nTermCompound = aaSet.getCompoundForString(nTerminalChar + "");
+		AminoAcidCompound nTermCompound = aaSet.getCompoundForString(String.valueOf(nTerminalChar));
 		if(Constraints.aa2NTerminalPka.containsKey(nTermCompound)){
 			nTerminalCharge = this.getPosCharge(Constraints.aa2NTerminalPka.get(nTermCompound), ph);
 		}
 
 		double cTerminalCharge = 0.0;
-		AminoAcidCompound cTermCompound = aaSet.getCompoundForString(cTerminalChar + "");
+		AminoAcidCompound cTermCompound = aaSet.getCompoundForString(String.valueOf(cTerminalChar));
 		if(Constraints.aa2CTerminalPka.containsKey(cTermCompound)){
 			cTerminalCharge = this.getNegCharge(Constraints.aa2CTerminalPka.get(cTermCompound), ph);
 		}
@@ -548,7 +548,7 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 		double counter = 0.0;
 		char[] seq = this.getSequence(sequence.getSequenceAsString(), true);
 		for(char aa:seq){
-			if(aminoAcidCode.getShortName().equals(aa + "")){
+			if(aminoAcidCode.getShortName().equals(String.valueOf(aa))){
 				counter++;
 			}
 		}
@@ -566,7 +566,7 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 		char[] seq = this.getSequence(sequence.toString(), true);
 		for(char aa:seq){
 			if(PeptideProperties.standardAASet.contains(aa)){
-				AminoAcidCompound compound = aaSet.getCompoundForString(aa + "");
+				AminoAcidCompound compound = aaSet.getCompoundForString(String.valueOf(aa));
 				aa2Composition.put(compound, aa2Composition.get(compound) + 1.0);
 				validLength++;
 			}

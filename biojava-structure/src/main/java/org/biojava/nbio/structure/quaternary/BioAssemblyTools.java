@@ -130,7 +130,7 @@ public class BioAssemblyTools {
 	}
 
 	public static double[][]  getBiologicalMoleculeBounds(Structure asymStructure,List<BiologicalAssemblyTransformation> transformations) {
-		final double coordinateBounds[][] = new double[2][3];
+		final double[][] coordinateBounds = new double[2][3];
 		coordinateBounds[0][0] = Double.MAX_VALUE;  // min x
 		coordinateBounds[0][1] = Double.MAX_VALUE;  // min y
 		coordinateBounds[0][2] = Double.MAX_VALUE;  // min z
@@ -145,9 +145,7 @@ public class BioAssemblyTools {
 		for ( Atom a : atoms) {
 
 			Chain c = a.getGroup().getChain();
-			String intChainID = c.getInternalChainID();
-			if ( intChainID == null)
-				intChainID = c.getChainID();
+			String intChainID = c.getId();
 
 			for (BiologicalAssemblyTransformation m: transformations) {
 				if ( ! m.getChainId().equals(intChainID))
@@ -188,7 +186,7 @@ public class BioAssemblyTools {
 
 		org.biojava.nbio.structure.Atom[] atoms = StructureTools.getAllAtomArray(s);
 		int atomCount = atoms.length;
-		final double coordinateBounds[][] = new double[2][3];
+		final double[][] coordinateBounds = new double[2][3];
 		if ( atomCount <= 0 ) {
 			return coordinateBounds;
 		}
@@ -294,9 +292,7 @@ public class BioAssemblyTools {
 		{
 			Atom atom = atoms[i];
 			Chain chain = atom.getGroup().getChain();
-			String intChainID = chain.getInternalChainID();
-			if ( intChainID == null)
-				intChainID = chain.getChainID();
+			String intChainID = chain.getId();
 
 
 			for (BiologicalAssemblyTransformation m: transformations) {
@@ -370,7 +366,8 @@ public class BioAssemblyTools {
 		for ( Chain c : orig.getChains()){
 
 			Chain c1 = new ChainImpl();
-			c1.setChainID(c.getChainID());
+			c1.setId(c.getId());
+			c1.setName(c.getName());
 			s.addChain(c1);
 
 			for (Group g : c.getAtomGroups()){

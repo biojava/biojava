@@ -300,5 +300,11 @@ public class ChemCompConsumer implements MMcifConsumer {
 	public void newStructSite(StructSite site) {
 		// TODO
 	}
+
+	@Override
+	public void newEntityPoly(EntityPoly entityPoly) {
+		// TODO Auto-generated method stub
+		
+	}
 }
 

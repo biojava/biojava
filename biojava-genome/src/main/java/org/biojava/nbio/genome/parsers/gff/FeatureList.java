@@ -22,6 +22,7 @@ package org.biojava.nbio.genome.parsers.gff;
 
 import org.biojava.nbio.core.sequence.DNASequence;
 
+import java.io.Serializable;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -467,7 +468,8 @@ public class FeatureList extends ArrayList<FeatureI> {
 	/**
 	 * used by sort routine
 	 */
-	private class FeatureComparator implements Comparator<FeatureI> {
+	private class FeatureComparator implements Comparator<FeatureI>, Serializable {
+        private static final long serialVersionUID = 1;
 
 		@Override
 		public int compare(FeatureI a, FeatureI b) {
@@ -488,7 +490,7 @@ public class FeatureList extends ArrayList<FeatureI> {
 	 * whose seqnames differ.
 	 */
 	public FeatureList sortByStart() {
-		FeatureI array[] = toArray(new FeatureI[1]);
+		FeatureI[] array = toArray(new FeatureI[1]);
 
 		Arrays.sort(array, new FeatureComparator());
 
@@ -501,7 +503,7 @@ public class FeatureList extends ArrayList<FeatureI> {
 	 */
 	// FIXME features may have a null location() !!
 	@Deprecated
-	static public void main(String args[]) {
+	static public void main(String[] args) {
 	}
 
 

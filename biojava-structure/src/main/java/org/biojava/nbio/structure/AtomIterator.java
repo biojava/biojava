@@ -41,10 +41,10 @@ public class AtomIterator implements Iterator<Atom> {
 
 	private final static Logger logger = LoggerFactory.getLogger(AtomIterator.class);
 
-	Structure structure     ;
-	Group     group         ;
-	int current_atom_pos    ;
-	GroupIterator groupiter ;
+	private Structure structure     ;
+	private Group     group         ;
+	private int current_atom_pos    ;
+	private GroupIterator groupiter ;
 
 	/**
 	 * Constructs an AtomIterator object.

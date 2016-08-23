@@ -49,7 +49,8 @@ public class SiteTest extends TestCase {
 		//SITE     2 AC1  6 HOH H 464  HOH H 497
 		//groups for site CAT
 		Chain chain = new ChainImpl();
-		chain.setChainID("H");
+		chain.setName("H");
+		chain.setId("H");
 		Group his57 = new AminoAcidImpl();
 		//            his57.setPDBCode("57");
 		his57.setResidueNumber("H", 57, ' ');
@@ -232,10 +233,6 @@ public class SiteTest extends TestCase {
 		List<Group> result = bindingSite.getGroups();
 		Group arg221 = result.get(0);
 		ResidueNumber testResNum = new ResidueNumber("H", 221, 'A');
-//        testResNum.setChainId("H");
-//        testResNum.setSeqNum(221);
-//        testResNum.setInsCode("A");
-//        System.out.println(arg221);
 		assertEquals(testResNum, arg221.getResidueNumber());
 		//test the chainId is also set
 		assertEquals("H", arg221.getChainId());

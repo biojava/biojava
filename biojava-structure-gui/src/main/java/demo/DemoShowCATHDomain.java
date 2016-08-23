@@ -40,7 +40,7 @@ public class DemoShowCATHDomain {
 	private static final String DEFAULT_SCRIPT ="select * ; cartoon on; spacefill off; wireframe off; select ligands; wireframe on; spacefill on;";
 	private static final String[] colors = new String[]{"red","green","blue","yellow"};
 
-	public static void main(String args[]){
+	public static void main(String[] args){
 
 		UserConfiguration config = new UserConfiguration();
 		config.setPdbFilePath("/tmp/");

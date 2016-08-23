@@ -98,7 +98,7 @@ public class TestURLIdentifier {
 		full = id.loadStructure(cache);
 		assertNotNull(full);
 		reduced = id.reduce(full);
-		assertEquals("wrong length for chainId=A", 94, StructureTools.getRepresentativeAtomArray(reduced).length);
+		assertEquals("wrong length for chainName=A", 94, StructureTools.getRepresentativeAtomArray(reduced).length);
 
 		try {
 			url = new URL("http://www.rcsb.org/pdb/files/1B8G.pdb.gz");

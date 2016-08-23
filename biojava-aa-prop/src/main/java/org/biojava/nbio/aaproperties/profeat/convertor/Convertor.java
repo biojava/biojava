@@ -81,7 +81,7 @@ public abstract class Convertor {
 		String convertedSequence = "";
 		String uppercaseSequence = sequence.getSequenceAsString().toUpperCase();
 		for(int x = 0; x < uppercaseSequence.length(); x++){
-			convertedSequence += convert(uppercaseSequence.charAt(x));
+			convertedSequence += String.valueOf(convert(uppercaseSequence.charAt(x)));
 		}
 		return convertedSequence;
 	}

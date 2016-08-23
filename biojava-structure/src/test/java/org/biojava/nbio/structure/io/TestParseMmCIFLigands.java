@@ -49,7 +49,8 @@ public class TestParseMmCIFLigands {
 	@Test
 	public void testLigandConnections()throws IOException, StructureException {
 		AtomCache cache = new AtomCache();
-
+		// This needs MMCIF
+		cache.setUseMmCif(true);
 		StructureIO.setAtomCache(cache);
 
 		cache.setUseMmCif(true);
@@ -91,7 +92,8 @@ public class TestParseMmCIFLigands {
 	@Test
 	public void testMultipleConformations()throws IOException, StructureException {
 		AtomCache cache = new AtomCache();
-
+		// This needs MMCIF
+		cache.setUseMmCif(true);
 		StructureIO.setAtomCache(cache);
 
 		cache.setUseMmCif(true);

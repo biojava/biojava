@@ -117,11 +117,11 @@ public class TestCloning {
 
 		for ( Chain chain : s.getChains()) {
 
-			Chain test = c.getChainByPDB(chain.getChainID());
+			Chain test = c.getChain(chain.getId());
 
-			assertEquals("Could not correctly clone seqres for chain " + chain.getChainID() , chain.getSeqResLength(),test.getSeqResLength());
+			assertEquals("Could not correctly clone seqres for chain " + chain.getId() , chain.getSeqResLength(),test.getSeqResLength());
 
-			assertEquals("Could not correctly clone atom records for chain " + chain.getChainID() , chain.getAtomLength(),test.getAtomLength());
+			assertEquals("Could not correctly clone atom records for chain " + chain.getId() , chain.getAtomLength(),test.getAtomLength());
 
 			Iterator<Group> it = test.getAtomGroups().iterator();
 			for (Group g : chain.getAtomGroups()) {
@@ -129,6 +129,12 @@ public class TestCloning {
 				//if (g.hasAltLoc()) {
 				//	System.out.println(g.toString());
 				//}
+				assertEquals(g.getAltLocs().size(), testGroup.getAltLocs().size());
+			}
+			
+			it = test.getSeqResGroups().iterator();
+			for (Group g: chain.getSeqResGroups()) {
+				Group testGroup = it.next();
 				assertEquals(g.getAltLocs().size(), testGroup.getAltLocs().size());
 			}
 		}

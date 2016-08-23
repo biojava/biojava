@@ -206,42 +206,37 @@ public class SubstructureIdentifier implements Serializable, StructureIdentifier
 				// Restrict residues
 				for( ResidueRange range: getResidueRanges()) {
 
-					String chainId = range.getChainId();
+					String chainId = range.getChainName();
 					ResidueNumber pdbresnum1 = range.getStart();
 					ResidueNumber pdbresnum2 = range.getEnd();
 
 					Chain chain;
 					if(chainId.equals("_") ) {
 						// Handle special case of "_" chain for single-chain proteins
-						chain = s.getChain(modelNr,0);
+						chain = s.getChainByIndex(modelNr,0);
 						if(pdbresnum1 != null)
-							pdbresnum1.setChainId(chain.getChainID());
+							pdbresnum1.setChainName(chain.getName());
 						if(pdbresnum2 != null)
-							pdbresnum2.setChainId(chain.getChainID());
+							pdbresnum2.setChainName(chain.getName());
 
 						if(s.size() != 1) {
 							// SCOP 1.71 uses this for some proteins with multiple chains
 							// Print a warning in this ambiguous case
-							logger.warn("Multiple possible chains match '_'. Using chain {}",chain.getChainID());
+							logger.warn("Multiple possible chains match '_'. Using chain {}",chain.getId());
 						}
 					} else {
 						// Explicit chain
-						try {
-							chain = s.getChainByPDB(chainId,modelNr);
-						} catch(StructureException e) {
+							chain = s.getPolyChainByPDB(chainId,modelNr);
+						if( chain == null ) {
 							// Chain not found
-							// Maybe it was a chain index, masquerading as a chainId?
+							// Maybe it was a chain index, masquerading as a chainName?
 							try {
 								int chainNum = Integer.parseInt(chainId);
-								try {
-									chain = s.getChain(modelNr, chainNum);
-									logger.warn("No chain found for {}. Interpretting it as an index, using chain {} instead",chainId,chain.getChainID());
-								} catch(Exception e2) { //we don't care what gets thrown here -sbliven
-									throw e; // Nope, not an index. Throw the original exception
-								}
+								chain = s.getChainByIndex(modelNr, chainNum);
+								logger.warn("No chain found for {}. Interpretting it as an index, using chain {} instead",chainId,chain.getId());
 							} catch(NumberFormatException e3) {
 								// Not an index. Throw the original exception
-								throw e;
+								throw new StructureException(String.format("Unrecognized chain %s in %s",chainId,getIdentifier()));
 							}
 						}
 					}
@@ -266,20 +261,17 @@ public class SubstructureIdentifier implements Serializable, StructureIdentifier
 					Chain c = null;
 					
 					// Reuse prevChain
-					if ( prevChainId != null && prevChainId.equals(chain.getChainID())) {
-						c = newS.getChainByPDB(prevChainId,modelNr);
+					if ( prevChainId != null && prevChainId.equals(chain.getName())) {
+						c = newS.getPolyChainByPDB(prevChainId,modelNr);
 					} else {
-						try {
-							c = newS.getChainByPDB(chain.getChainID(),modelNr);
-						} catch (StructureException e){
-							// chain not in structure yet...
-						}
+						c = newS.getPolyChainByPDB(chain.getName(),modelNr);
 					}
 					// Create new chain
 					if ( c == null) {
 						// first chain...
 						c = new ChainImpl();
-						c.setChainID(chain.getChainID());
+						c.setId(chain.getId());
+						c.setName(chain.getName());
 						newS.addChain(c,modelNr);
 						c.setSeqResGroups(chain.getSeqResGroups());
 						c.setSeqMisMatches(chain.getSeqMisMatches());
@@ -290,7 +282,7 @@ public class SubstructureIdentifier implements Serializable, StructureIdentifier
 						c.addGroup(g);
 					}
 
-					prevChainId = c.getChainID();
+					prevChainId = c.getId();
 				} // end range
 			}
 		} // end modelNr

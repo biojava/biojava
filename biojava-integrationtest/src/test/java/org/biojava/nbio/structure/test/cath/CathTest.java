@@ -137,7 +137,7 @@ public class CathTest extends TestCase{
 //
 //			assertTrue(segments.size() > 0);
 //
-//			if ( n.getChainId().equals("A")) {
+//			if ( n.getChainName().equals("A")) {
 //				for (CathSegment s : segments){
 //					assertEquals(s.getStart(),"1");
 //					assertEquals(s.getStop(),"141");

@@ -70,10 +70,10 @@ public class MyTestHelper
 			structure2 = pdbpars.getStructureById(pdb2);
 
 			//structure1 = pdbpars.getStructureById("1cdg");
-			Chain c1 = structure1.getChainByPDB(chain1);
+			Chain c1 = structure1.getPolyChainByPDB(chain1);
 
 			//structure2 = pdbpars.getStructureById("2aaa");
-			Chain c2 = structure2.getChainByPDB(chain2);
+			Chain c2 = structure2.getPolyChainByPDB(chain2);
 
 			Structure s3 = new StructureImpl();
 			s3.addChain(c1);

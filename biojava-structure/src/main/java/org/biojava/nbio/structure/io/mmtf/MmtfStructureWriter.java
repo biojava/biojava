@@ -28,19 +28,16 @@ public class MmtfStructureWriter {
 
 
 	private StructureAdapterInterface mmtfDecoderInterface;
-	private Structure structure;
-
 
 	/**
-	 * Function to pass data from Biojava structure 
-	 * to another generic output type.Loops through the data 
+	 * Pass data from Biojava structure  to another generic output type. Loops through the data 
 	 * structure and calls all the set functions.
+	 * @param structure the input {@link Structure} to write
 	 * @param dataTransferInterface the generic interface that 
 	 * implements all the set methods.
 	 */
-	public MmtfStructureWriter(Structure data, StructureAdapterInterface dataTransferInterface) {
+	public MmtfStructureWriter(Structure structure, StructureAdapterInterface dataTransferInterface) {
 		this.mmtfDecoderInterface = dataTransferInterface;
-		this.structure = data;
 		// Reset structure to consider altloc groups with the same residue number but different group names as seperate groups
 		MmtfUtils.fixMicroheterogenity(structure);
 		// Get the chain name to index map
@@ -55,13 +52,9 @@ public class MmtfStructureWriter {
 		// Get the header and the xtal info.
 		PDBHeader pdbHeader = structure.getPDBHeader();
 		PDBCrystallographicInfo xtalInfo = pdbHeader.getCrystallographicInfo();
-		// TODO Get release date information
-		String releaseDate = null;
-		// TODO Get the Rwork
-		float rWork = 1.0f;
-		mmtfDecoderInterface.setHeaderInfo(pdbHeader.getRfree(), rWork, pdbHeader.getResolution(), pdbHeader.getTitle(), MmtfUtils.dateToIsoString(pdbHeader.getDepDate()), 
-				releaseDate, MmtfUtils.techniquesToStringArray(pdbHeader.getExperimentalTechniques()));
-		mmtfDecoderInterface.setXtalInfo(MmtfUtils.getSpaceGroupAsString(xtalInfo.getSpaceGroup()), MmtfUtils.getUnitCellAsArray(xtalInfo));
+		mmtfDecoderInterface.setHeaderInfo(pdbHeader.getRfree(), pdbHeader.getRwork(), pdbHeader.getResolution(), pdbHeader.getTitle(), MmtfUtils.dateToIsoString(pdbHeader.getDepDate()), 
+				MmtfUtils.dateToIsoString(pdbHeader.getModDate()), MmtfUtils.techniquesToStringArray(pdbHeader.getExperimentalTechniques()));
+		mmtfDecoderInterface.setXtalInfo(MmtfUtils.getSpaceGroupAsString(xtalInfo.getSpaceGroup()), MmtfUtils.getUnitCellAsArray(xtalInfo), MmtfUtils.getNcsAsArray(xtalInfo.getNcsOperators()));
 		// Store the bioassembly data
 		storeBioassemblyInformation(chainIdToIndexMap, pdbHeader.getBioAssemblies());
 		// Store the entity data
@@ -75,15 +68,13 @@ public class MmtfStructureWriter {
 				Chain chain = modelChains.get(chainInModelIndex);
 				List<Group> groups = chain.getAtomGroups();
 				List<Group> sequenceGroups = chain.getSeqResGroups();
-				mmtfDecoderInterface.setChainInfo(chain.getChainID(), chain.getInternalChainID(), groups.size());
+				mmtfDecoderInterface.setChainInfo(chain.getId(), chain.getName(), groups.size());
 				for(int groupInChainIndex=0; groupInChainIndex<groups.size(); groupInChainIndex++){
-					// Get the major compy of this group
 					Group group = groups.get(groupInChainIndex);
 					List<Atom> atomsInGroup = MmtfUtils.getAtomsForGroup(group);
-					// Get the group type
 					ChemComp chemComp = group.getChemComp();
 					Character insCode = group.getResidueNumber().getInsCode();
-					if(insCode==null){
+					if(insCode==null || insCode.equals(' ')){
 						insCode=MmtfStructure.UNAVAILABLE_CHAR_VALUE;
 					}
 					char singleLetterCode = 'X';
@@ -91,12 +82,14 @@ public class MmtfStructureWriter {
 						singleLetterCode = chemComp.getOne_letter_code().charAt(0);
 					}
 					mmtfDecoderInterface.setGroupInfo(group.getPDBName(), group.getResidueNumber().getSeqNum(), insCode.charValue(), 
-							chemComp.getType(), atomsInGroup.size(), MmtfUtils.getNumBondsInGroup(atomsInGroup), singleLetterCode,
+							chemComp.getType().toUpperCase(), atomsInGroup.size(), MmtfUtils.getNumBondsInGroup(atomsInGroup), singleLetterCode,
 							sequenceGroups.indexOf(group), MmtfUtils.getSecStructType(group));
 					for (Atom atom : atomsInGroup){
 						char altLoc = MmtfStructure.UNAVAILABLE_CHAR_VALUE;
 						if(atom.getAltLoc()!=null){
-							altLoc=atom.getAltLoc().charValue();
+							if(atom.getAltLoc().charValue()!=' '){
+								altLoc=atom.getAltLoc().charValue();
+							}
 						}
 						mmtfDecoderInterface.setAtomInfo(atom.getName(), atom.getPDBserial(), altLoc, (float) atom.getX(), 
 								(float) atom.getY(), (float) atom.getZ(), atom.getOccupancy(), 
@@ -166,22 +159,25 @@ public class MmtfStructureWriter {
 			if (entityChains.isEmpty()){
 				// Error mapping chain to entity
 				System.err.println("ERROR MAPPING CHAIN TO ENTITY: "+description);
+				mmtfDecoderInterface.setEntityInfo(new int[0], "", description, type);
 				continue;
 			}
-			int[] chainIndices = new int[entityChains.size()];
-			for (int i=0; i<entityChains.size(); i++) {
-				chainIndices[i] = allChains.indexOf(entityChains.get(i));
-			}
-			Chain chain = entityChains.get(0);
-			ChainImpl chainImpl;
-			if (chain instanceof ChainImpl){
-			chainImpl = (ChainImpl) entityChains.get(0);
-			}
 			else{
-				throw new RuntimeException();
+				int[] chainIndices = new int[entityChains.size()];
+				for (int i=0; i<entityChains.size(); i++) {
+					chainIndices[i] = allChains.indexOf(entityChains.get(i));
+				}
+				Chain chain = entityChains.get(0);
+				ChainImpl chainImpl;
+				if (chain instanceof ChainImpl){
+					chainImpl = (ChainImpl) entityChains.get(0);
+				}
+				else{
+					throw new RuntimeException();
+				}
+				String sequence = chainImpl.getSeqResOneLetterSeq();
+				mmtfDecoderInterface.setEntityInfo(chainIndices, sequence, description, type);
 			}
-			String sequence = chainImpl.getSeqResOneLetterSeq();
-			mmtfDecoderInterface.setEntityInfo(chainIndices, sequence, description, type);
 		}		
 	}
 
@@ -196,9 +192,9 @@ public class MmtfStructureWriter {
 		for (Entry<Integer, BioAssemblyInfo> entry : inputBioAss.entrySet()) {
 			Map<double[], int[]> transformMap = MmtfUtils.getTransformMap(entry.getValue(), chainIdToIndexMap);
 			for(Entry<double[], int[]> transformEntry : transformMap.entrySet()) {
-				mmtfDecoderInterface.setBioAssemblyTrans(bioAssemblyIndex, transformEntry.getValue(), transformEntry.getKey());
+				mmtfDecoderInterface.setBioAssemblyTrans(bioAssemblyIndex, transformEntry.getValue(), transformEntry.getKey(), entry.getKey().toString());
 			}
-			bioAssemblyIndex+=1;
+			bioAssemblyIndex++;
 		}
 	}
 

@@ -23,7 +23,7 @@
  */
 package org.biojava.nbio.structure.symmetry.jmolScript;
 
-import org.biojava.nbio.structure.symmetry.core.HelixAxisAligner;
+import org.biojava.nbio.structure.symmetry.axis.HelixAxisAligner;
 import org.biojava.nbio.structure.symmetry.core.Subunits;
 import org.jcolorbrewer.ColorBrewer;
 
@@ -633,7 +633,7 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 		s.append(color);
 		s.append(";");
 		s.append("font echo 24 sanserif;");
-		s.append("echo "+ text);
+		s.append("echo ").append(text);
 		s.append(";");
 		return s.toString();
 	}

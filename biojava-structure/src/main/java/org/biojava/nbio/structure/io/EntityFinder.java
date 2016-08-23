@@ -60,10 +60,8 @@ import java.util.TreeSet;
  */
 public class EntityFinder {
 
-	private Structure s;
-
 	private static final Logger logger = LoggerFactory.getLogger(EntityFinder.class);
-
+	
 	/**
 	 * Above this ratio of mismatching residue types for same residue numbers we
 	 * consider the 2 chains to have mismatching residue numbers and warn about it
@@ -81,32 +79,28 @@ public class EntityFinder {
 	 */
 	public static final double GAP_COVERAGE_THRESHOLD = 0.3;
 
-
-	public EntityFinder(Structure s) {
-		this.s = s;
-	}
-
+	
+	
+	
 	/**
 	 * Utility method that employs some heuristics to find the {@link EntityInfo}s
-	 * for this Structure in case the information is missing in PDB/mmCIF file
+	 * for the polymeric chains given in constructor. 
+	 * To be used in case the information is missing in PDB/mmCIF file 
 	 * @return
 	 */
-	public List<EntityInfo> findEntities() {
+	public static List<EntityInfo> findPolyEntities(List<List<Chain>> polyModels) {
+		TreeMap<String,EntityInfo> chainIds2entities = findEntitiesFromAlignment(polyModels);
 
-		TreeMap<String,EntityInfo> chainIds2entities = findCompoundsFromAlignment();
+		List<EntityInfo> entities = findUniqueEntities(chainIds2entities);
 
-		List<EntityInfo> compounds = findUniqueCompounds(chainIds2entities);
-
-		createPurelyNonPolyCompounds(compounds);
-
-		return compounds;
+		return entities;
 	}
 
 	/**
 	 * Utility method to obtain a list of unique entities from the chainIds2entities map
 	 * @return
 	 */
-	private static List<EntityInfo> findUniqueCompounds(TreeMap<String,EntityInfo> chainIds2entities) {
+	private static List<EntityInfo> findUniqueEntities(TreeMap<String,EntityInfo> chainIds2entities) {
 
 		List<EntityInfo> list = new ArrayList<EntityInfo>();
 
@@ -123,45 +117,78 @@ public class EntityFinder {
 		return list;
 	}
 
-	private void createPurelyNonPolyCompounds(List<EntityInfo> compounds) {
+	/**
+	 * Given all chains of all models find entities for the nonpolymers and water chains within them,
+	 * assigning entity ids, types and descriptions to them. The result is written back to the passed entities List.
+	 * @param nonPolyModels
+	 * @param waterModels
+	 * @param entities
+	 */
+	public static void createPurelyNonPolyEntities(List<List<Chain>> nonPolyModels, List<List<Chain>> waterModels, List<EntityInfo> entities) {
 
-		List<Chain> pureNonPolymerChains = new ArrayList<Chain>();
-		for (int i=0;i<s.getChains().size();i++) {
-			if (StructureTools.isChainPureNonPolymer(s.getChain(i))) {
-				pureNonPolymerChains.add(s.getChain(i));
-			}
-		}
-
-		if (!pureNonPolymerChains.isEmpty()) {
-
-			int maxMolId = 0; // if we have no compounds at all we just use 0, so that first assignment is 1
-			if (!compounds.isEmpty()) {
-				Collections.max(compounds, new Comparator<EntityInfo>() {
-					@Override
-					public int compare(EntityInfo o1, EntityInfo o2) {
-						return new Integer(o1.getMolId()).compareTo(o2.getMolId());
-					}
-				}).getMolId();
-			}
-
-			int molId = maxMolId + 1;
-			// for the purely non-polymeric chains we assign additional compounds
-			for (Chain c: pureNonPolymerChains) {
-				EntityInfo comp = new EntityInfo();
-				comp.addChain(c);
-				comp.setMolId(molId);
-				if (StructureTools.isChainWaterOnly(c)) {
-					comp.setType(EntityType.WATER);
-				} else {
-					comp.setType(EntityType.NONPOLYMER);
+		if (nonPolyModels.isEmpty()) return;
+		
+		// let's find first the max entity id to assign entity ids to the newly found entities
+		int maxMolId = 0;
+		if (!entities.isEmpty()) {
+			maxMolId = Collections.max(entities, new Comparator<EntityInfo>() {
+				@Override
+				public int compare(EntityInfo o1, EntityInfo o2) {
+					return new Integer(o1.getMolId()).compareTo(o2.getMolId());
 				}
-				logger.warn("Chain {} is purely non-polymeric, will assign a new Compound (entity) to it (entity id {})", c.getChainID(), molId);
-				molId++;
-
-				compounds.add(comp);
-			}
-
+			}).getMolId();
 		}
+		// we go one over the max
+		int molId = maxMolId + 1;
+				
+		if (!nonPolyModels.get(0).isEmpty()) {
+			List<EntityInfo> nonPolyEntities = new ArrayList<>();
+			
+			for (List<Chain> model:nonPolyModels) {
+				for (Chain c: model) {
+					// we assume there's only 1 group per non-poly chain
+					String molecPdbName = c.getAtomGroup(0).getPDBName();
+
+					EntityInfo nonPolyEntity = findNonPolyEntityWithDescription(molecPdbName, nonPolyEntities);
+					if (nonPolyEntity == null) {
+						nonPolyEntity = new EntityInfo();
+						nonPolyEntity.setDescription(molecPdbName);
+						nonPolyEntity.setType(EntityType.NONPOLYMER);
+						nonPolyEntity.setMolId(molId++);
+						nonPolyEntities.add(nonPolyEntity);
+
+					}
+					nonPolyEntity.addChain(c);
+					c.setEntityInfo(nonPolyEntity);				
+				}
+			}
+			entities.addAll(nonPolyEntities);
+		}
+		
+		if (!waterModels.get(0).isEmpty()) {
+			EntityInfo waterEntity = new EntityInfo();
+			waterEntity.setType(EntityType.WATER);
+			waterEntity.setDescription("water");
+			waterEntity.setMolId(molId);
+
+			for (List<Chain> model:waterModels) { 
+				for (Chain waterChain:model) {
+					waterEntity.addChain(waterChain);
+					waterChain.setEntityInfo(waterEntity);
+				}
+			}
+			entities.add(waterEntity);
+			
+		}
+		
+		
+	}
+	
+	private static EntityInfo findNonPolyEntityWithDescription(String description, List<EntityInfo> nonPolyEntities) {
+		for (EntityInfo e:nonPolyEntities) {
+			if (e.getDescription().equals(description)) return e;
+		}
+		return null;
 	}
 
 
@@ -188,7 +215,7 @@ public class EntityFinder {
 				Group g2 = c2.getGroupByPDB(g1.getResidueNumber());
 				if (!g2.getPDBName().equals(g1.getPDBName())) {
 					logger.debug("Mismatch of residues between chains {},{} for residue number {}: {} {}",
-							c1.getChainID(),c2.getChainID(),g1.getResidueNumber(), g1.getPDBName(), g2.getPDBName());
+							c1.getId(),c2.getId(),g1.getResidueNumber(), g1.getPDBName(), g2.getPDBName());
 					return false;
 				}
 			} catch (StructureException e) {
@@ -200,7 +227,7 @@ public class EntityFinder {
 
 		if ((double)countNonExisting/(double)c1AtomGroups.size() > RATIO_GAPS_FOR_MISMATCH) {
 			logger.debug("More than {} of the residues ({} out of {}) are not present in chain {} when comparing by residue numbers to chain {}.",
-					RATIO_GAPS_FOR_MISMATCH, countNonExisting, c1AtomGroups.size(), c2.getChainID(), c1.getChainID());
+					RATIO_GAPS_FOR_MISMATCH, countNonExisting, c1AtomGroups.size(), c2.getId(), c1.getId());
 			return false;
 		}
 
@@ -209,23 +236,20 @@ public class EntityFinder {
 
 
 
-	private TreeMap<String,EntityInfo> findCompoundsFromAlignment() {
+	private static TreeMap<String,EntityInfo> findEntitiesFromAlignment(List<List<Chain>> polyModels) {
 
-		// first we determine which chains to consider: anything not looking
-		// polymeric (protein or nucleotide chain) should be discarded
+
+
+		TreeMap<String, EntityInfo> chainIds2entities = new TreeMap<String,EntityInfo>();
+
+		if (polyModels.isEmpty()) return chainIds2entities;
+		
 		Set<Integer> polyChainIndices = new TreeSet<Integer>();
-		List<Chain> pureNonPolymerChains = new ArrayList<Chain>();
-		for (int i=0;i<s.getChains().size();i++) {
-			if (StructureTools.isChainPureNonPolymer(s.getChain(i))) {
-				pureNonPolymerChains.add(s.getChain(i));
-			} else {
-				polyChainIndices.add(i);
-			}
+		for (int i=0;i<polyModels.get(0).size();i++) {
+			polyChainIndices.add(i);
 		}
 
-
-		TreeMap<String, EntityInfo> chainIds2compounds = new TreeMap<String,EntityInfo>();
-
+		
 		int molId = 1;
 
 		outer:
@@ -234,8 +258,8 @@ public class EntityFinder {
 
 					if (j<=i) continue;
 
-					Chain c1 = s.getChain(i);
-					Chain c2 = s.getChain(j);
+					Chain c1 = polyModels.get(0).get(i);
+					Chain c2 = polyModels.get(0).get(j);
 
 					Map<Integer,Integer> positionIndex1 = new HashMap<Integer, Integer>();
 					Map<Integer,Integer> positionIndex2 = new HashMap<Integer, Integer>();
@@ -288,75 +312,90 @@ public class EntityFinder {
 					double gapCov2 = (double) numGaps2 / (double) seq2Length;
 
 					logger.debug("Alignment for chain pair {},{}: identity: {}, gap coverage 1: {}, gap coverage 2: {}",
-							c1.getChainID(), c2.getChainID(), String.format("%4.2f",identity), String.format("%4.2f",gapCov1), String.format("%4.2f",gapCov2));
+							c1.getId(), c2.getId(), String.format("%4.2f",identity), String.format("%4.2f",gapCov1), String.format("%4.2f",gapCov2));
 					logger.debug("\n"+pair.toString(100));
 
 					if (identity > IDENTITY_THRESHOLD && gapCov1<GAP_COVERAGE_THRESHOLD && gapCov2<GAP_COVERAGE_THRESHOLD) {
-						if (	!chainIds2compounds.containsKey(c1.getChainID()) &&
-								!chainIds2compounds.containsKey(c2.getChainID())) {
-							logger.debug("Creating Compound with chains {},{}",c1.getChainID(),c2.getChainID());
+						if (	!chainIds2entities.containsKey(c1.getId()) &&
+								!chainIds2entities.containsKey(c2.getId())) {
+							logger.debug("Creating Compound with chains {},{}",c1.getId(),c2.getId());
 
 							EntityInfo ent = new EntityInfo();
 							ent.addChain(c1);
 							ent.addChain(c2);
 							ent.setMolId(molId++);
 							ent.setType(EntityType.POLYMER);
-							chainIds2compounds.put(c1.getChainID(), ent);
-							chainIds2compounds.put(c2.getChainID(), ent);
+							c1.setEntityInfo(ent);
+							c2.setEntityInfo(ent);
+							chainIds2entities.put(c1.getId(), ent);
+							chainIds2entities.put(c2.getId(), ent);
 
 
 						} else {
-							EntityInfo ent = chainIds2compounds.get(c1.getChainID());
+							EntityInfo ent = chainIds2entities.get(c1.getId());
 
 							if (ent==null) {
-								logger.debug("Adding chain {} to entity {}",c1.getChainID(),c2.getChainID());
-								ent = chainIds2compounds.get(c2.getChainID());
+								logger.debug("Adding chain {} to entity {}",c1.getId(),c2.getId());
+								ent = chainIds2entities.get(c2.getId());
 								ent.addChain(c1);
-								chainIds2compounds.put(c1.getChainID(), ent);
+								c1.setEntityInfo(ent);
+								chainIds2entities.put(c1.getId(), ent);
 
 							} else {
-								logger.debug("Adding chain {} to entity {}",c2.getChainID(),c1.getChainID());
+								logger.debug("Adding chain {} to entity {}",c2.getId(),c1.getId());
 								ent.addChain(c2);
-								chainIds2compounds.put(c2.getChainID(), ent);
+								c2.setEntityInfo(ent);
+								chainIds2entities.put(c2.getId(), ent);
 
 							}
 						}
 						if (!areResNumbersAligned(c1, c2)) {
 							logger.warn("Including 100% identical chains {},{} in same Compound, although they have misaligned residue numbers",
-									c1.getChainID(),c2.getChainID());
+									c1.getId(),c2.getId());
 						}
 					}
 
 					if (identity>1) {
 						logger.warn("Identity for chains {},{} above 1. {} identicals out of {} non-gap-aligned residues (identity {})",
-								c1.getChainID(),c2.getChainID(),pair.getNumIdenticals(),nonGaps,identity);
+								c1.getId(),c2.getId(),pair.getNumIdenticals(),nonGaps,identity);
 						logger.warn("\n"+pair.toString(100));
 					}
 
-					if (chainIds2compounds.size()==polyChainIndices.size()) // we've got all chains in entities
+					if (chainIds2entities.size()==polyChainIndices.size()) // we've got all chains in entities
 						break outer;
 				}
 			}
 
-		// anything not in a Compound will be its own Compound
+		// anything not in an Entity will be its own Entity
 		for (int i:polyChainIndices) {
-			Chain c = s.getChain(i);
-			if (!chainIds2compounds.containsKey(c.getChainID())) {
-				logger.debug("Creating a 1-member Compound for chain {}",c.getChainID());
+			Chain c = polyModels.get(0).get(i);
+			if (!chainIds2entities.containsKey(c.getId())) {
+				logger.debug("Creating a 1-member Compound for chain {}",c.getId());
 
 				EntityInfo ent = new EntityInfo();
 				ent.addChain(c);
 				ent.setMolId(molId++);
+				c.setEntityInfo(ent); 
 
-				chainIds2compounds.put(c.getChainID(),ent);
+				chainIds2entities.put(c.getId(),ent);
 			}
+		}
+		
+		// now that we've found the entities for first model, let's do the same for the rest of the models
+		
+		for (int i=1;i<polyModels.size();i++) {
+			for (Chain chain : polyModels.get(i)) {
+				EntityInfo e = chainIds2entities.get(chain.getId());
+				chain.setEntityInfo(e);
+				e.addChain(chain);
+ 			}
 		}
 
 
-		return chainIds2compounds;
+		return chainIds2entities;
 	}
 
-	private SequencePair<ProteinSequence, AminoAcidCompound> alignProtein(ProteinSequence s1, ProteinSequence s2) {
+	private static SequencePair<ProteinSequence, AminoAcidCompound> alignProtein(ProteinSequence s1, ProteinSequence s2) {
 		SubstitutionMatrix<AminoAcidCompound> matrix = SubstitutionMatrixHelper.getIdentity();
 
 		GapPenalty penalty = new SimpleGapPenalty(8, 1);
@@ -367,7 +406,7 @@ public class EntityFinder {
 		return nw.getPair();
 	}
 
-	private SequencePair<DNASequence, NucleotideCompound> alignDNA(DNASequence s1, DNASequence s2) {
+	private static SequencePair<DNASequence, NucleotideCompound> alignDNA(DNASequence s1, DNASequence s2) {
 		SubstitutionMatrix<NucleotideCompound> matrix = SubstitutionMatrixHelper.getNuc4_4();
 
 		GapPenalty penalty = new SimpleGapPenalty(8, 1);
@@ -378,7 +417,7 @@ public class EntityFinder {
 		return nw.getPair();
 	}
 
-	private SequencePair<RNASequence, NucleotideCompound> alignRNA(RNASequence s1, RNASequence s2) {
+	private static SequencePair<RNASequence, NucleotideCompound> alignRNA(RNASequence s1, RNASequence s2) {
 		SubstitutionMatrix<NucleotideCompound> matrix = SubstitutionMatrixHelper.getNuc4_4();
 
 		GapPenalty penalty = new SimpleGapPenalty(8, 1);
@@ -419,7 +458,7 @@ public class EntityFinder {
 		return numGaps;
 	}
 
-	private boolean isProteinSequence(String str) {
+	private static boolean isProteinSequence(String str) {
 		try {
 			new ProteinSequence(str);
 		} catch (CompoundNotFoundException e) {
@@ -429,7 +468,7 @@ public class EntityFinder {
 		return true;
 	}
 
-	private boolean isDNASequence(String str) {
+	private static boolean isDNASequence(String str) {
 		try {
 			new DNASequence(str);
 		} catch (CompoundNotFoundException e) {
@@ -439,7 +478,7 @@ public class EntityFinder {
 		return true;
 	}
 
-	private boolean isRNASequence(String str) {
+	private static boolean isRNASequence(String str) {
 		try {
 			new RNASequence(str);
 		} catch (CompoundNotFoundException e) {
@@ -455,7 +494,7 @@ public class EntityFinder {
 	 * @param str
 	 * @return
 	 */
-	private ProteinSequence getProteinSequence(String str) {
+	private static ProteinSequence getProteinSequence(String str) {
 		try {
 			ProteinSequence s = new ProteinSequence(str);
 			return s;
@@ -471,7 +510,7 @@ public class EntityFinder {
 	 * @param str
 	 * @return
 	 */
-	private DNASequence getDNASequence(String str) {
+	private static DNASequence getDNASequence(String str) {
 		try {
 			DNASequence s = new DNASequence(str);
 			return s;
@@ -487,7 +526,7 @@ public class EntityFinder {
 	 * @param str
 	 * @return
 	 */
-	private RNASequence getRNASequence(String str) {
+	private static RNASequence getRNASequence(String str) {
 		try {
 			RNASequence s = new RNASequence(str);
 			return s;

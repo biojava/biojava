@@ -97,14 +97,14 @@ public class ResidueRangeAndLength extends ResidueRange {
 		ResidueRange rr = parse(s);
 		ResidueNumber start = rr.getStart();
 
-		String chain = rr.getChainId();
+		String chain = rr.getChainName();
 
 		// handle special "_" chain
 		if(chain == null || chain.equals("_")) {
 			ResidueNumber first = map.getNavMap().firstKey();
-			chain = first.getChainId();
+			chain = first.getChainName();
 			// Quick check for additional chains. Not guaranteed if the atoms are out of order.
-			if( ! map.getNavMap().lastKey().getChainId().equals(chain) ) {
+			if( ! map.getNavMap().lastKey().getChainName().equals(chain) ) {
 				logger.warn("Multiple possible chains match '_'. Using chain {}",chain);
 			}
 		}
@@ -120,8 +120,8 @@ public class ResidueRangeAndLength extends ResidueRange {
 		}
 
 		// Replace '_'
-		start.setChainId(chain);
-		end.setChainId(chain);
+		start.setChainName(chain);
+		end.setChainName(chain);
 
 		// Now fix any errors and calculate the length
 		return map.trimToValidResidues(new ResidueRange(chain, start, end));

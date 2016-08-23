@@ -24,6 +24,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.NoSuchElementException;
+
 import org.biojava.nbio.core.sequence.template.Sequence;
 
 /**
@@ -168,7 +170,10 @@ public abstract class Result implements Iterable<Hit>{
 
 			@Override
 			public Hit next() {
-				return hits.get(currentResult++);
+                if(!hasNext()){
+                    throw new NoSuchElementException();
+                }
+                return hits.get(currentResult++);
 			}
 
 			@Override

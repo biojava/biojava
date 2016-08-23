@@ -183,6 +183,10 @@ public class AminoAcidImpl extends HetatomImpl implements AminoAcid, Serializabl
 				n.addAltLoc(nAltLocGroup);
 			}
 		}
+		
+		if (chemComp!=null)
+			n.setChemComp(chemComp);
+
 
 		return n;
 	}

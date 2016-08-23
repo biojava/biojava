@@ -22,6 +22,8 @@ package org.biojava.nbio.structure.symmetry.geometry;
 
 import javax.vecmath.Matrix3d;
 import javax.vecmath.Point3d;
+
+import org.biojava.nbio.structure.geometry.CalcPoint;
 import java.util.Arrays;
 import java.util.List;
 
@@ -108,7 +110,7 @@ public class Tetrahedron implements Polyhedron {
 		tetrahedron[1] = new Point3d( x,  0, -z);
 		tetrahedron[2] = new Point3d( 0, -x,  z);
 		tetrahedron[3] = new Point3d( 0,  x,  z);
-		Point3d centroid = SuperPosition.centroid(tetrahedron);
+		Point3d centroid = CalcPoint.centroid(tetrahedron);
 
 		// rotate tetrahedron to align one vertex with the +z axis
 		Matrix3d m = new Matrix3d();

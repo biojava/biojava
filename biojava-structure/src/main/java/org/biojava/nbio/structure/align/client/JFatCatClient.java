@@ -25,7 +25,7 @@ import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.fatcat.FatCatRigid;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.util.AtomCache;
-import org.biojava.nbio.structure.align.util.HTTPConnectionTools;
+import org.biojava.nbio.structure.align.util.URLConnectionTools;
 import org.biojava.nbio.structure.align.util.ResourceManager;
 import org.biojava.nbio.structure.align.xml.*;
 import org.slf4j.Logger;
@@ -111,7 +111,7 @@ public class JFatCatClient {
 			URL url = new URL(u);
 			//System.out.println("has result ? ..."  + url);
 
-			InputStream stream = HTTPConnectionTools.getInputStream(url,timeout);
+			InputStream stream = URLConnectionTools.getInputStream(url,timeout);
 
 			String xml = null;
 
@@ -144,7 +144,7 @@ public class JFatCatClient {
 			String u = String.format(serverURL,URLEncoder.encode(method,"UTF-8"),name1,name2) ;
 			URL url = new URL(u);
 
-			InputStream stream = HTTPConnectionTools.getInputStream(url,timeout);
+			InputStream stream = URLConnectionTools.getInputStream(url,timeout);
 
 			String xml = null;
 
@@ -182,7 +182,7 @@ public class JFatCatClient {
 			logger.info("requesting alignment from server..."  + url);
 			// have a short timeout for this...
 			// 5 sec
-			InputStream stream = HTTPConnectionTools.getInputStream(url,timeout);
+			InputStream stream = URLConnectionTools.getInputStream(url,timeout);
 
 			String xml = null;
 
@@ -248,7 +248,7 @@ public class JFatCatClient {
 		while (! submitted ){
 			try {
 				URL url = new URL(u);
-				InputStream response = HTTPConnectionTools.doPOST(url, multiXML,timeout);
+				InputStream response = URLConnectionTools.doPOST(url, multiXML,timeout);
 				responseS = convertStreamToString(response);
 				submitted = true;
 				if (! responseS.contains("OK"))
@@ -315,7 +315,7 @@ public class JFatCatClient {
 
 			URL url = new URL(u);
 
-			InputStream response = HTTPConnectionTools.doPOST(url, xml,timeout);
+			InputStream response = URLConnectionTools.doPOST(url, xml,timeout);
 
 			logger.debug("got response: {}", convertStreamToString(response));
 
@@ -353,7 +353,7 @@ public class JFatCatClient {
 		URL serverUrl = new URL(urlS);
 		// we are very tolerant with requesting a set of pairs, since we probably depend on getting it to get work started...
 		// 1 min...
-		InputStream stream = HTTPConnectionTools.getInputStream(serverUrl,timeout);
+		InputStream stream = URLConnectionTools.getInputStream(serverUrl,timeout);
 		String xml = null;
 
 		if ( stream != null) {
@@ -387,7 +387,7 @@ public class JFatCatClient {
 		try {
 			URL url = new URL(u);
 
-			InputStream stream = HTTPConnectionTools.getInputStream(url,timeout);
+			InputStream stream = URLConnectionTools.getInputStream(url,timeout);
 
 			String xml = null;
 

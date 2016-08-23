@@ -124,18 +124,18 @@ public class DemoChangeChemCompProvider {
 
 			// loop chain
 			for (Chain ch : struc.getModel(i)) {
-				if (! ch.getChainID().equals("A") )
+				if (! ch.getName().equals("A") )
 					continue;
-				System.out.println(pdbid + ">>>" + ch.getChainID() + ">>>"
+				System.out.println(pdbid + ">>>" + ch.getName() + ">>>"
 						+ ch.getAtomSequence());
-				System.out.println(pdbid + ">>>" + ch.getChainID() + ">>>"
+				System.out.println(pdbid + ">>>" + ch.getName() + ">>>"
 						+ ch.getSeqResSequence());
 				// Test the getAtomGroups() and getSeqResGroups() method
 
 				List<Group> group = ch.getSeqResGroups();
 				int seqPos = 0;
 				for (Group gp : group) {
-					System.out.println(ch.getChainID() + ":"+seqPos + ":" + gp.getResidueNumber() + ":"
+					System.out.println(ch.getName() + ":"+seqPos + ":" + gp.getResidueNumber() + ":"
 							+ gp.getPDBName() + " " + gp.getType());
 					seqPos++;
 				}

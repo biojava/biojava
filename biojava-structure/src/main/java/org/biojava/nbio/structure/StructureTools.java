@@ -689,14 +689,15 @@ public class StructureTools {
 
 			Chain newChain = null;
 			for (Chain c : model) {
-				if (c.getChainID().equals(parentC.getChainID())) {
+				if (c.getName().equals(parentC.getName())) {
 					newChain = c;
 					break;
 				}
 			}
 			if (newChain == null) {
 				newChain = new ChainImpl();
-				newChain.setChainID(parentC.getChainID());
+				newChain.setId(parentC.getId());
+				newChain.setName(parentC.getName());
 				model.add(newChain);
 			}
 
@@ -734,14 +735,14 @@ public class StructureTools {
 
 			Chain newChain = null;
 			for (Chain c : model) {
-				if (c.getChainID().equals(parentC.getChainID())) {
+				if (c.getName().equals(parentC.getName())) {
 					newChain = c;
 					break;
 				}
 			}
 			if (newChain == null) {
 				newChain = new ChainImpl();
-				newChain.setChainID(parentC.getChainID());
+				newChain.setName(parentC.getName());
 				model.add(newChain);
 			}
 
@@ -775,12 +776,14 @@ public class StructureTools {
 			if (c == null) {
 				c = new ChainImpl();
 				Chain orig = a.getGroup().getChain();
-				c.setChainID(orig.getChainID());
+				c.setId(orig.getId());
+				c.setName(orig.getName());
 			} else {
 				Chain orig = a.getGroup().getChain();
-				if (!orig.getChainID().equals(prevChainId)) {
+				if (!orig.getId().equals(prevChainId)) {
 					c = new ChainImpl();
-					c.setChainID(orig.getChainID());
+					c.setId(orig.getId());
+					c.setName(orig.getName());
 				}
 			}
 
@@ -799,12 +802,14 @@ public class StructureTools {
 			if (c == null) {
 				c = new ChainImpl();
 				Chain orig = a.getGroup().getChain();
-				c.setChainID(orig.getChainID());
+				c.setId(orig.getId());
+				c.setName(orig.getName());
 			} else {
 				Chain orig = a.getGroup().getChain();
-				if (!orig.getChainID().equals(prevChainId)) {
+				if (!orig.getId().equals(prevChainId)) {
 					c = new ChainImpl();
-					c.setChainID(orig.getChainID());
+					c.setId(orig.getId());
+					c.setName(orig.getName());
 				}
 			}
 
@@ -1025,7 +1030,7 @@ public class StructureTools {
 
 	/**
 	 * Reduce a structure to provide a smaller representation . Only takes the
-	 * first model of the structure. If chainId is provided only return a
+	 * first model of the structure. If chainName is provided only return a
 	 * structure containing that Chain ID. Converts lower case chain IDs to
 	 * upper case if structure does not contain a chain with that ID.
 	 *
@@ -1050,7 +1055,6 @@ public class StructureTools {
 		newS.setSites(s.getSites());
 		newS.setBiologicalAssembly(s.isBiologicalAssembly());
 		newS.setEntityInfos(s.getEntityInfos());
-		newS.setConnections(s.getConnections());
 		newS.setSSBonds(s.getSSBonds());
 		newS.setSites(s.getSites());
 
@@ -1119,7 +1123,6 @@ public class StructureTools {
 		newStructure.setSites(s.getSites());
 		newStructure.setBiologicalAssembly(s.isBiologicalAssembly());
 		newStructure.setEntityInfos(s.getEntityInfos());
-		newStructure.setConnections(s.getConnections());
 		newStructure.setSSBonds(s.getSSBonds());
 		newStructure.setSites(s.getSites());
 		newStructure.setCrystallographicInfo(s.getCrystallographicInfo());
@@ -1138,7 +1141,7 @@ public class StructureTools {
 		}
 		Chain c = null;
 
-		c = s.getChain(0, chainNr);
+		c = s.getChainByIndex(0, chainNr);
 
 		newStructure.addChain(c);
 
@@ -1242,7 +1245,7 @@ public class StructureTools {
 			throw new IllegalArgumentException("Null argument(s).");
 		}
 
-		Chain chain = struc.findChain(pdbResNum.getChainId());
+		Chain chain = struc.findChain(pdbResNum.getChainName());
 
 		return chain.getGroupByPDB(pdbResNum);
 	}
@@ -1762,10 +1765,10 @@ public class StructureTools {
 			}
 		}
 		logger.debug(
-				"Ratio of residues to total for chain {} is below {}. Assuming it is a {} chain. "
+				"Ratio of residues to total for chain with asym_id {} is below {}. Assuming it is a {} chain. "
 						+ "Counts: # aa residues: {}, # nuc residues: {}, # non-water het residues: {}, # waters: {}, "
 						+ "ratio aa/total: {}, ratio nuc/total: {}",
-						c.getChainID(), RATIO_RESIDUES_TO_TOTAL, max, sizeAminos,
+						c.getId(), RATIO_RESIDUES_TO_TOTAL, max, sizeAminos,
 						sizeNucleotides, sizeHetatomsWithoutWater, sizeWaters,
 						(double) sizeAminos / (double) fullSize,
 						(double) sizeNucleotides / (double) fullSize);
@@ -1780,17 +1783,16 @@ public class StructureTools {
 	 * @return
 	 */
 	public static boolean isChainWaterOnly(Chain c) {
-		boolean waterOnly = true;
 		for (Group g : c.getAtomGroups()) {
 			if (!g.isWater())
-				waterOnly = false;
-			break;
+				return false;
 		}
-		return waterOnly;
+		return true;
 	}
 
 	/**
-	 * Returns true if the given chain is composed of non-polymeric groups only
+	 * Returns true if the given chain is composed of non-polymeric (including water) groups only. 
+	 * To be used at parsing time only.
 	 *
 	 * @param c
 	 * @return
@@ -1798,16 +1800,25 @@ public class StructureTools {
 	public static boolean isChainPureNonPolymer(Chain c) {
 
 		for (Group g : c.getAtomGroups()) {
-			if (g.getType() == GroupType.AMINOACID
-					|| g.getType() == GroupType.NUCLEOTIDE)
+
+			ChemComp cc = g.getChemComp();
+
+			ResidueType resType = cc.getResidueType();
+			PolymerType polType = cc.getPolymerType();
+
+			if ( (	resType == ResidueType.lPeptideLinking || 
+					PolymerType.PROTEIN_ONLY.contains(polType) || 
+					PolymerType.POLYNUCLEOTIDE_ONLY.contains(polType) ) && 
+					!g.isHetAtomInFile() ) {								// important: the aminoacid or nucleotide residue can be in 
 				return false;
+			}
 
 		}
 		return true;
 	}
 
 	/**
-	 * Cleans up the structure's alternate location groups. All alternate location groups should have all atoms (except in the case of microheterogenity.
+	 * Cleans up the structure's alternate location groups. All alternate location groups should have all atoms (except in the case of microheterogenity) or when a deuetuim exiss.
 	 * Ensure that all the alt loc groups have all the atoms in the main group
 	 * @param structure The Structure to be cleaned up
 	 */
@@ -1819,8 +1830,15 @@ public class StructureTools {
 						for ( Atom groupAtom : group.getAtoms()) {
 							// If this alt loc doesn't have this atom
 							if (! altLocGroup.hasAtom(groupAtom.getName())) {
+								// Fix for microheterogenity
 								if (altLocGroup.getPDBName().equals(group.getPDBName())) {
-									altLocGroup.addAtom(groupAtom);
+									// If it's a Hydrogen then we check for it's Deuterated brother
+									if(hasDeuteratedEquiv(groupAtom, altLocGroup)){
+										
+									}
+									else{
+										altLocGroup.addAtom(groupAtom);
+									}
 								}
 							}
 						}
@@ -1829,7 +1847,7 @@ public class StructureTools {
 			}
 		}
 	}
-	
+
 	/**
 	 * Expands the NCS operators in the given Structure adding new chains as needed.
 	 * The new chains are assigned ids of the form: original_chain_id+ncs_operator_index+"n"
@@ -1838,14 +1856,14 @@ public class StructureTools {
 	public static void expandNcsOps(Structure structure) {
 		PDBCrystallographicInfo xtalInfo = structure.getCrystallographicInfo();
 		if (xtalInfo ==null) return;
-		
+
 		if (xtalInfo.getNcsOperators()==null || xtalInfo.getNcsOperators().length==0) return;
-		
+
 		List<Chain> chainsToAdd = new ArrayList<>();
 		int i = 0;
 		for (Matrix4d m:xtalInfo.getNcsOperators()) {
 			i++;
-			
+
 			for (Chain c:structure.getChains()) {
 				Chain clonedChain = (Chain)c.clone();
 				String newChainId = c.getChainID()+i+"n";
@@ -1857,12 +1875,12 @@ public class StructureTools {
 				c.getEntityInfo().addChain(clonedChain);
 			}
 		}
-		
+
 		for (Chain c:chainsToAdd) {
 			structure.addChain(c);
 		}
 	}
-	
+
 	/**
 	 * Auxiliary method to reset chain ids of residue numbers in a chain.
 	 * Used when cloning chains and resetting their ids: one needs to take care of 
@@ -1878,5 +1896,40 @@ public class StructureTools {
 			if (g.getResidueNumber()==null) continue;
 			g.setResidueNumber(newChainId, g.getResidueNumber().getSeqNum(), g.getResidueNumber().getInsCode());
 		}
+	}
+
+	/**
+	 * Check to see if an Deuterated atom has a non deuterated brother in the group.
+	 * @param atom the input atom that is putatively deuterium
+	 * @param currentGroup the group the atom is in
+	 * @return true if the atom is deuterated and it's hydrogen equive exists.
+	 */
+	public static boolean hasNonDeuteratedEquiv(Atom atom, Group currentGroup) {
+		if(atom.getElement()==Element.D && currentGroup.hasAtom(replaceFirstChar(atom.getName(),'D', 'H'))) {
+			// If it's deuterated and has a non-deuterated brother
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * Check to see if a Hydorgen has a  Deuterated brother in the group.
+	 * @param atom the input atom that is putatively hydorgen
+	 * @param currentGroup the group the atom is in
+	 * @return true if the atom is hydrogen and it's Deuterium equiv exists.
+	 */
+	public static boolean hasDeuteratedEquiv(Atom atom, Group currentGroup) {
+		if(atom.getElement()==Element.H && currentGroup.hasAtom(replaceFirstChar(atom.getName(),'H', 'D'))) {
+			// If it's hydrogen and has a deuterated brother
+			return true;
+		}
+		return false;
+	}
+
+	private static String replaceFirstChar(String name, char c, char d) {
+		if(name.charAt(0)==c){
+			return name.replaceFirst(String.valueOf(c), String.valueOf(d));
+		}
+		return name;
 	}
 }

@@ -29,7 +29,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 
-/** An iterator over all groups of a structure.
+/** 
+ * An iterator over all groups of a structure.
  * @author Andreas Prlic
  * @since 1.4
  * @version %I% %G%
@@ -37,10 +38,10 @@ import java.util.NoSuchElementException;
 
 public class GroupIterator implements Iterator<Group> {
 
-	Structure structure   ;
-	int current_model_pos ;
-	int current_chain_pos ;
-	int current_group_pos ;
+	private Structure structure   ;
+	private int current_model_pos ;
+	private int current_chain_pos ;
+	private int current_group_pos ;
 
 	/**
 	 * Constructs a GroupIterator object.

@@ -208,7 +208,7 @@ public class NCBIQBlastAlignmentProperties implements RemotePairwiseAlignmentPro
 	 * <b>WARNING!!</b> At this point, the method does not verify the validity of your choice; for example, word size of
 	 * greater than 5 with blastp returns error messages from QBlast. Word size range depends on the algorithm chosen.
 	 * <p>
-	 * More at http://www.ncbi.nlm.nih.gov/staff/tao/URLAPI/new/node74.html
+	 * More at https://www.ncbi.nlm.nih.gov/staff/tao/URLAPI/new/node74.html
 	 * <p>
 	 * Blastall equivalent: -W
 	 *

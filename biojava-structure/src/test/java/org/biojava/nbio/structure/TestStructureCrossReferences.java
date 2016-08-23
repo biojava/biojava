@@ -211,7 +211,7 @@ public class TestStructureCrossReferences {
 				int count = 0;
 				for (int modelNr=0;modelNr<s.nrModels();modelNr++) {
 					// the chain must be matched by 1 and only 1 chain from all models
-					Chain cFromStruc = s.getChainByPDB(c.getChainID(), modelNr);
+					Chain cFromStruc = s.getChain(c.getId(), modelNr);
 					if (cFromStruc==c) count++;
 				}
 				assertEquals("Only 1 chain must match the compound chain for all models",1,count);

@@ -21,7 +21,10 @@
 package org.biojava.nbio.structure.align.util;
 
 import org.biojava.nbio.structure.*;
+import org.biojava.nbio.structure.align.AFPTwister;
 import org.biojava.nbio.structure.align.ce.CECalculator;
+import org.biojava.nbio.structure.align.fatcat.FatCatFlexible;
+import org.biojava.nbio.structure.align.fatcat.FatCatRigid;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.xml.AFPChainXMLParser;
 import org.biojava.nbio.structure.jama.Matrix;
@@ -590,8 +593,8 @@ public class AlignmentTools {
 
 		String[][][] pdbAln = new String[1][2][alnLen];
 		for(int i=0;i<alnLen;i++) {
-			pdbAln[0][0][i] = aligned1[i].getChainId()+":"+aligned1[i];
-			pdbAln[0][1][i] = aligned2[i].getChainId()+":"+aligned2[i];
+			pdbAln[0][0][i] = aligned1[i].getChainName()+":"+aligned1[i];
+			pdbAln[0][1][i] = aligned2[i].getChainName()+":"+aligned2[i];
 		}
 
 		a.setPdbAln(pdbAln);
@@ -1163,8 +1166,8 @@ public class AlignmentTools {
 				ResidueNumber rn1 = ca1[res1].getGroup().getResidueNumber();
 				ResidueNumber rn2 = ca2[res2].getGroup().getResidueNumber();
 
-				String node1 = name1+rn1.getChainId()+rn1.toString();
-				String node2 = name2+rn2.getChainId()+rn2.toString();
+				String node1 = name1+rn1.getChainName()+rn1.toString();
+				String node2 = name2+rn2.getChainName()+rn2.toString();
 
 				out.write(String.format("%s\t%s\t%s\n",node1, alignmentInteraction, node2));
 			}
@@ -1172,10 +1175,10 @@ public class AlignmentTools {
 
 		// Print first backbone edges
 		ResidueNumber rn = ca1[0].getGroup().getResidueNumber();
-		String last = name1+rn.getChainId()+rn.toString();
+		String last = name1+rn.getChainName()+rn.toString();
 		for(int i=1;i<ca1.length;i++) {
 			rn = ca1[i].getGroup().getResidueNumber();
-			String curr = name1+rn.getChainId()+rn.toString();
+			String curr = name1+rn.getChainName()+rn.toString();
 			out.write(String.format("%s\t%s\t%s\n",last, backboneInteraction, curr));
 			last = curr;
 		}
@@ -1188,14 +1191,183 @@ public class AlignmentTools {
 				(ca1.length>0 && ca1[0].getGroup()!=null && ca2[0].getGroup()!=null &&
 						!ca1[0].getGroup().getResidueNumber().equals(ca2[0].getGroup().getResidueNumber()) ) ) {
 			rn = ca2[0].getGroup().getResidueNumber();
-			last = name2+rn.getChainId()+rn.toString();
+			last = name2+rn.getChainName()+rn.toString();
 			for(int i=1;i<ca2.length;i++) {
 				rn = ca2[i].getGroup().getResidueNumber();
-				String curr = name2+rn.getChainId()+rn.toString();
+				String curr = name2+rn.getChainName()+rn.toString();
 				out.write(String.format("%s\t%s\t%s\n",last, backboneInteraction, curr));
 				last = curr;
 			}
 		}
 	}
+	
 
+
+	/** get an artificial List of chains containing the Atoms and groups.
+	 * Does NOT rotate anything.
+	 * @param ca
+	 * @return a list of Chains that is built up from the Atoms in the ca array
+	 * @throws StructureException
+	 */
+	public static final List<Chain> getAlignedModel(Atom[] ca){
+
+		List<Chain> model = new ArrayList<Chain>();
+		for ( Atom a: ca){
+
+			Group g = a.getGroup();
+			Chain parentC = g.getChain();
+
+			Chain newChain = null;
+			for ( Chain c :  model) {
+				if ( c.getId().equals(parentC.getId())){
+					newChain = c;
+					break;
+				}
+			}
+			if ( newChain == null){
+
+				newChain = new ChainImpl();
+
+				newChain.setId(parentC.getId());
+
+				model.add(newChain);
+			}
+
+			newChain.addGroup(g);
+
+		}
+
+		return model;
+	}
+
+
+	/** Get an artifical Structure containing both chains.
+	 * Does NOT rotate anything
+	 * @param ca1
+	 * @param ca2
+	 * @return a structure object containing two models, one for each set of Atoms.
+	 * @throws StructureException
+	 */
+	public static final Structure getAlignedStructure(Atom[] ca1, Atom[] ca2) throws StructureException{
+
+		/* Previous implementation commented
+
+		Structure s = new StructureImpl();
+
+
+		List<Chain>model1 = getAlignedModel(ca1);
+		List<Chain>model2 = getAlignedModel(ca2);
+		s.addModel(model1);
+		s.addModel(model2);
+
+		return s;*/
+
+		Structure s = new StructureImpl();
+
+		List<Chain>model1 = getAlignedModel(ca1);
+		s.addModel(model1);
+		List<Chain> model2 = getAlignedModel(ca2);
+		s.addModel(model2);
+
+		return s;
+	}
+
+	/** Rotate the Atoms/Groups so they are aligned for the 3D visualisation
+	 *
+	 * @param afpChain
+	 * @param ca1
+	 * @param ca2
+	 * @return an array of Groups that are transformed for 3D display
+	 * @throws StructureException
+	 */
+	public static Group[] prepareGroupsForDisplay(AFPChain afpChain, Atom[] ca1, Atom[] ca2) throws StructureException{
+
+
+		if ( afpChain.getBlockRotationMatrix().length == 0 ) {
+			// probably the alignment is too short!
+			System.err.println("No rotation matrix found to rotate 2nd structure!");
+			afpChain.setBlockRotationMatrix(new Matrix[]{Matrix.identity(3, 3)});
+			afpChain.setBlockShiftVector(new Atom[]{new AtomImpl()});
+		}
+
+		// List of groups to be rotated according to the alignment
+		Group[] twistedGroups = new Group[ ca2.length];
+
+		//int blockNum = afpChain.getBlockNum();
+
+		int i = -1;
+
+		// List of groups from the structure not included in ca2 (e.g. ligands)
+		// Will be rotated according to first block
+		List<Group> hetatms2 = StructureTools.getUnalignedGroups(ca2);
+
+		if (  (afpChain.getAlgorithmName().equals(FatCatRigid.algorithmName) ) || (afpChain.getAlgorithmName().equals(FatCatFlexible.algorithmName) ) ){
+
+			for (Atom a: ca2){
+				i++;
+				twistedGroups[i]=a.getGroup();
+
+			}
+
+			twistedGroups = AFPTwister.twistOptimized(afpChain, ca1, ca2);
+
+		//} else  if  (( blockNum == 1 ) || (afpChain.getAlgorithmName().equals(CeCPMain.algorithmName))) {
+		} else {
+
+			Matrix m   =  afpChain.getBlockRotationMatrix()[ 0];
+			Atom shift =  afpChain.getBlockShiftVector()   [ 0 ];
+
+			shiftCA2(afpChain, ca2, m,shift, twistedGroups);
+
+		}
+
+		if ( afpChain.getBlockNum() > 0){
+
+			// Superimpose ligands relative to the first block
+			if( hetatms2.size() > 0 ) {
+
+				if ( afpChain.getBlockRotationMatrix().length > 0 ) {
+
+					Matrix m1      = afpChain.getBlockRotationMatrix()[0];
+					//m1.print(3,3);
+					Atom   vector1 = afpChain.getBlockShiftVector()[0];
+					//System.out.println("shift vector:" + vector1);
+
+					for ( Group g : hetatms2){
+						Calc.rotate(g, m1);
+						Calc.shift(g,vector1);
+					}
+				}
+			}
+		}
+
+		return twistedGroups;
+	}
+
+	/** only shift CA positions.
+	*
+	*/
+	public static void shiftCA2(AFPChain afpChain, Atom[] ca2,  Matrix m, Atom shift, Group[] twistedGroups) {
+
+		int i = -1;
+		for (Atom a: ca2){
+			i++;
+			Group g = a.getGroup();
+
+			Calc.rotate(g,m);
+			Calc.shift(g, shift);
+
+			if (g.hasAltLoc()){
+			 for (Group alt: g.getAltLocs()){
+				 for (Atom alta : alt.getAtoms()){
+					 if ( g.getAtoms().contains(alta))
+						 continue;
+					 Calc.rotate(alta,m);
+					 Calc.shift(alta,shift);
+				 }
+			 }
+			}
+			twistedGroups[i]=g;
+		}
+	}
 }

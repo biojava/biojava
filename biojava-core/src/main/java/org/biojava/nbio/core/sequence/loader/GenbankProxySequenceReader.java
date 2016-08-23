@@ -56,7 +56,7 @@ public class GenbankProxySequenceReader<C extends Compound> extends StringProxyS
 
 	private final static Logger logger = LoggerFactory.getLogger(GenbankProxySequenceReader.class);
 
-	private static final String eutilBaseURL = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/"; //
+	private static final String eutilBaseURL = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/"; //
 	private String genbankDirectoryCache = null;
 	private GenbankSequenceParser<AbstractSequence<C>, C> genbankParser;
 	private GenericGenbankHeaderParser<AbstractSequence<C>, C> headerParser;

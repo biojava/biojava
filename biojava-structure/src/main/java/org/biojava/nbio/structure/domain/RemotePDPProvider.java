@@ -40,7 +40,7 @@ import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.SubstructureIdentifier;
 import org.biojava.nbio.structure.align.client.JFatCatClient;
 import org.biojava.nbio.structure.align.util.AtomCache;
-import org.biojava.nbio.structure.align.util.HTTPConnectionTools;
+import org.biojava.nbio.structure.align.util.URLConnectionTools;
 import org.biojava.nbio.structure.scop.server.XMLUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -115,7 +115,7 @@ public class RemotePDPProvider extends SerializableCache<String,SortedSet<String
 		try {
 			URL u = new URL(server + "getRepresentativePDPDomains");
 			logger.info("Fetching {}",u);
-			InputStream response = HTTPConnectionTools.getInputStream(u);
+			InputStream response = URLConnectionTools.getInputStream(u);
 			String xml = JFatCatClient.convertStreamToString(response);
 			results  = AssignmentXMLSerializer.fromXML(xml);
 
@@ -188,7 +188,7 @@ public class RemotePDPProvider extends SerializableCache<String,SortedSet<String
 			if (shouldRequestDomainRanges){
 				URL u = new URL(server + "getPDPDomain?pdpId="+pdpDomainName);
 				logger.info("Fetching {}",u);
-				InputStream response = HTTPConnectionTools.getInputStream(u);
+				InputStream response = URLConnectionTools.getInputStream(u);
 				String xml = JFatCatClient.convertStreamToString(response);
 				domainRanges = XMLUtil.getDomainRangesFromXML(xml);
 				if ( domainRanges != null)
@@ -248,7 +248,7 @@ public class RemotePDPProvider extends SerializableCache<String,SortedSet<String
 		try {
 			URL u = new URL(server + "getPDPDomainNamesForPDB?pdbId="+pdbId);
 			logger.info("Fetching {}",u);
-			InputStream response = HTTPConnectionTools.getInputStream(u);
+			InputStream response = URLConnectionTools.getInputStream(u);
 			String xml = JFatCatClient.convertStreamToString(response);
 			results  = XMLUtil.getDomainRangesFromXML(xml);
 

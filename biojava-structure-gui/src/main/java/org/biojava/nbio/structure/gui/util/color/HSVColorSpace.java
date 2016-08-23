@@ -32,7 +32,7 @@ public class HSVColorSpace extends ColorSpace {
 
 	private static final long serialVersionUID = 8324413992279510075L;
 
-	public static void main(String args[]) {
+	public static void main(String[] args) {
 		HSVColorSpace csHSV = new HSVColorSpace();
 		ColorSpace csRGB = ColorSpace.getInstance(CS_sRGB);
 		Color c;

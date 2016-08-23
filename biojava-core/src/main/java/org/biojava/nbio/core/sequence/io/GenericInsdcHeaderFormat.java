@@ -186,7 +186,7 @@ public class GenericInsdcHeaderFormat<S extends AbstractSequence<C>, C extends C
 				if(f.getLocations().getStrand() != Strand.NEGATIVE) {
 					StringBuilder sb = new StringBuilder();
 					Formatter formatter = new Formatter(sb,Locale.US);
-					formatter.format("Inconsistent strands: %r for parent, %r for child", feature.getLocations().getStrand(), f.getLocations().getStrand());
+					formatter.format("Inconsistent strands: %s for parent, %s for child", feature.getLocations().getStrand(), f.getLocations().getStrand());
 					String output = formatter.toString();
 					formatter.close();
 					throw new RuntimeException(output);

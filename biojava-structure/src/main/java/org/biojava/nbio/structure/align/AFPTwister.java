@@ -3,7 +3,7 @@
  * Yuzhen Ye & Adam Godzik (2003)
  * Flexible structure alignment by chaining aligned fragment pairs allowing twists.
  * Bioinformatics vol.19 suppl. 2. ii246-ii255.
- * http://www.ncbi.nlm.nih.gov/pubmed/14534198
+ * https://www.ncbi.nlm.nih.gov/pubmed/14534198
  * </pre>
  *
  * Thanks to Yuzhen Ye and A. Godzik for granting permission to freely use and redistribute this code.
@@ -330,7 +330,7 @@ public class AFPTwister
 			Chain newChain = null;
 
 			for( Chain c: model){
-				if (c.getChainID().equals(parentC.getChainID())){
+				if (c.getName().equals(parentC.getName())){
 					newChain = c;
 					break;
 				}
@@ -338,7 +338,7 @@ public class AFPTwister
 
 			if ( newChain == null){
 				newChain = new ChainImpl();
-				newChain.setChainID(parentC.getChainID());
+				newChain.setName(parentC.getName());
 				model.add(newChain);
 			}
 

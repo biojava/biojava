@@ -25,6 +25,8 @@ package org.biojava.nbio.structure;
 
 import org.biojava.nbio.structure.io.GroupToSDF;
 import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
+import org.biojava.nbio.structure.io.mmcif.chem.PolymerType;
+import org.biojava.nbio.structure.io.mmcif.chem.ResidueType;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,6 +71,8 @@ public class HetatomImpl implements Group,Serializable {
 	protected List<Atom> atoms ;
 
 	private Chain parent;
+	
+	private boolean isHetAtomInFile;
 
 	/**
 	 * Behaviors for how to balance memory vs. performance.
@@ -88,7 +92,7 @@ public class HetatomImpl implements Group,Serializable {
 
 	private Map<String,Atom> atomNameLookup;
 
-	private ChemComp chemComp ;
+	protected ChemComp chemComp ;
 
 	private List<Group> altLocs;
 
@@ -243,7 +247,6 @@ public class HetatomImpl implements Group,Serializable {
 		else {
 			/** This is the performance penalty we pay for NOT using the atomnameLookup in PerformanceBehaviour.LESS_MEMORY_SLOWER_PERFORMANCE
 			 */
-
 			for (Atom a : atoms) {
 				if (a.getName().equals(name)) {
 					return a;
@@ -326,6 +329,66 @@ public class HetatomImpl implements Group,Serializable {
 
 	}
 
+	@Override
+	public boolean isPolymeric() {
+
+		ChemComp cc = getChemComp();
+
+		if ( cc == null)
+			return getType().equals(GroupType.AMINOACID) || getType().equals(GroupType.NUCLEOTIDE);
+
+		ResidueType rt = cc.getResidueType();
+
+		if ( rt.equals(ResidueType.nonPolymer))
+			return false;
+
+		PolymerType pt = rt.getPolymerType();
+
+		return PolymerType.PROTEIN_ONLY.contains(pt) || PolymerType.POLYNUCLEOTIDE_ONLY.contains(pt);
+
+
+	}
+
+	@Override
+	public boolean isAminoAcid() {
+
+		ChemComp cc = getChemComp();
+
+		if ( cc == null)
+			return getType().equals(GroupType.AMINOACID);
+
+
+		ResidueType rt = cc.getResidueType();
+
+		if ( rt.equals(ResidueType.nonPolymer))
+			return false;
+
+		PolymerType pt = rt.getPolymerType();
+
+		return PolymerType.PROTEIN_ONLY.contains(pt);
+
+	}
+
+	@Override
+	public boolean isNucleotide() {
+
+		ChemComp cc = getChemComp();
+
+		if ( cc == null)
+			return  getType().equals(GroupType.NUCLEOTIDE);
+
+		ResidueType rt = cc.getResidueType();
+
+		if ( rt.equals(ResidueType.nonPolymer))
+			return false;
+
+		PolymerType pt = rt.getPolymerType();
+
+		return PolymerType.POLYNUCLEOTIDE_ONLY.contains(pt);
+
+
+	}
+
 
 	/**
 	 * {@inheritDoc}
@@ -402,6 +465,9 @@ public class HetatomImpl implements Group,Serializable {
 				n.addAltLoc(nAltLocGroup);
 			}
 		}
+		
+		if (chemComp!=null)
+			n.setChemComp(chemComp);
 
 		return n;
 	}
@@ -443,10 +509,10 @@ public class HetatomImpl implements Group,Serializable {
 	@Override
 	public void setChain(Chain chain) {
 		this.parent = chain;
-		//TODO: setChain(), getChainId() and ResidueNumber.set/getChainId() are
+		//TODO: setChain(), getChainName() and ResidueNumber.set/getChainName() are
 		//duplicating functionality at present and could give different values.
 		if (residueNumber != null) {
-			residueNumber.setChainId(chain.getChainID());
+			residueNumber.setChainName(chain.getName());
 		}
 
 	}
@@ -467,7 +533,7 @@ public class HetatomImpl implements Group,Serializable {
 		if (parent == null) {
 			return "";
 		}
-		return parent.getChainID();
+		return parent.getId();
 	}
 
 	/**
@@ -589,6 +655,18 @@ public class HetatomImpl implements Group,Serializable {
 		GroupToSDF gts = new GroupToSDF();
 		return gts.getText(this);
 	}
+
+	@Override
+	public boolean isHetAtomInFile() {
+		return isHetAtomInFile;
+	}
+	
+	@Override
+	public void setHetAtomInFile(boolean isHetAtomInFile) {
+		this.isHetAtomInFile = isHetAtomInFile;
+	}
+
+
 
 
 }

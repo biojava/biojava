@@ -843,7 +843,7 @@ public class MultipleMcOptimizer implements Callable<MultipleAlignment> {
 		writer.append("Step,Length,RMSD,Score\n");
 
 		for (int i = 0; i < lengthHistory.size(); i++) {
-			writer.append("" + (i * 100));
+			writer.append(String.valueOf(i * 100));
 			writer.append("," + lengthHistory.get(i));
 			writer.append("," + rmsdHistory.get(i));
 			writer.append("," + scoreHistory.get(i) + "\n");

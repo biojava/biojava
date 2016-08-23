@@ -247,6 +247,12 @@ public class SimpleSequencePairTest {
 		assertEquals(global.getNumIdenticals(), 2);
 		assertEquals(local.getNumIdenticals(), 2);
 	}
+	
+	@Test
+	public void testGetPercentageOfIdentity() {
+		assertEquals(global.getPercentageOfIdentity(), 1.0, 0.01);
+		assertEquals(local.getPercentageOfIdentity(), 1.0, 0.01);
+	}
 
 	@Test
 	public void testGetNumSimilars() {

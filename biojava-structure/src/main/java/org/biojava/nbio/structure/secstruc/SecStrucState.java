@@ -257,7 +257,7 @@ public class SecStrucState extends SecStrucInfo {
 
 		// AA
 		char aaLetter = StructureTools.get1LetterCode(parent.getPDBName());
-		buf.append(aaLetter + "  ");
+		buf.append(aaLetter).append("  ");
 
 		// STRUCTURE
 		buf.append(type).append(" ");
@@ -284,11 +284,11 @@ public class SecStrucState extends SecStrucInfo {
 		}
 		// TODO a clever way to do this?
 		if (bp1 < 10)
-			buf.append("   " + bp1);
+			buf.append("   ").append(bp1);
 		else if (bp1 < 100)
-			buf.append("  " + bp1);
+			buf.append("  ").append(bp1);
 		else if (bp1 < 1000)
-			buf.append(" " + bp1);
+			buf.append(" ").append(bp1);
 		else
 			buf.append(bp1);
 
@@ -300,11 +300,11 @@ public class SecStrucState extends SecStrucInfo {
 				bp2 = bridge2.partner2 + 1;
 		}
 		if (bp2 < 10)
-			buf.append("   " + bp2);
+			buf.append("   ").append(bp2);
 		else if (bp2 < 100)
-			buf.append("  " + bp2);
+			buf.append("  ").append(bp2);
 		else if (bp2 < 1000)
-			buf.append(" " + bp2);
+			buf.append(" ").append(bp2);
 		else
 			buf.append(bp2);
 

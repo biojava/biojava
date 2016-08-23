@@ -71,7 +71,7 @@ public class TestHeaderOnly {
 		Assert.assertEquals(false, doSeqResHaveAtoms(sPDB));
 
 		for (Chain c : sPDB.getChains()) {
-			System.out.println(c.getChainID() + ":" + getSequenceString(c.getSeqResGroups()));
+			System.out.println(c.getId() + ":" + getSequenceString(c.getSeqResGroups()));
 		}
 
 		// Test 2: with mmCIF
@@ -81,7 +81,7 @@ public class TestHeaderOnly {
 		Assert.assertEquals(false, doSeqResHaveAtoms(sCIF));
 
 		for (Chain c : sCIF.getChains()) {
-			System.out.println(c.getChainID() + ":" + getSequenceString(c.getSeqResGroups()));
+			System.out.println(c.getId() + ":" + getSequenceString(c.getSeqResGroups()));
 		}
 	}
 
@@ -245,7 +245,7 @@ public class TestHeaderOnly {
 		// 247-251 is gap
 		for (int i = 246; i < 251; i++) shouldMatch[i] = false;
 
-		Chain c = s.findChain("C");
+		Chain c = s.getPolyChainByPDB("C");
 
 		List<Group> seqres = c.getSeqResGroups();
 

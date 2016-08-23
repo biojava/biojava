@@ -7,7 +7,7 @@ import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Chain;
 
 /**
- * Class to store the summary data for a given structure
+ * Class to store the summary data for a given structure.
  * @author Anthony Bradley
  *
  */
@@ -19,49 +19,51 @@ public class MmtfSummaryDataBean {
 	private int numBonds;
 	
 	/**
-	 * @return the allChains
+	 * @return the list of chains (in all models) in the structure
 	 */
 	public List<Chain> getAllChains() {
 		return allChains;
 	}
 	/**
-	 * @param allChains the allChains to set
+	 * @param allChains the list of chains (in all models) in the structure
 	 */
 	public void setAllChains(List<Chain> allChains) {
 		this.allChains = allChains;
 	}
 	/**
-	 * @return the allAtoms
+	 * @return the list of atoms (in all models) in the structure
 	 */
 	public List<Atom> getAllAtoms() {
 		return allAtoms;
 	}
 	/**
-	 * @param allAtoms the allAtoms to set
+	 * @param allAtoms the list of atoms (in all models) in the structure
 	 */
 	public void setAllAtoms(List<Atom> allAtoms) {
 		this.allAtoms = allAtoms;
 	}
 	/**
-	 * @return the numBonds
+	 * @return the number of covalent bonds in the structure
 	 */
 	public int getNumBonds() {
 		return numBonds;
 	}
 	/**
-	 * @param numBonds the numBonds to set
+	 * @param numBonds the number of covalent bonds in the structure
 	 */
 	public void setNumBonds(int numBonds) {
 		this.numBonds = numBonds;
 	}
 	/**
-	 * @return the chainIdToIndexMap
+	 * @return the map of chain ids (strings asymId) to the index of that chain in the allChains list. 
+	 * This only applies for the first model in the structure.
 	 */
 	public Map<String, Integer> getChainIdToIndexMap() {
 		return chainIdToIndexMap;
 	}
 	/**
-	 * @param chainIdToIndexMap the chainIdToIndexMap to set
+	 * @param chainIdToIndexMap the map of chain ids (strings asymId) to the index of that chain in the allChains list. 
+	 * This only applies for the first model in the structure.
 	 */
 	public void setChainIdToIndexMap(Map<String, Integer> chainIdToIndexMap) {
 		this.chainIdToIndexMap = chainIdToIndexMap;

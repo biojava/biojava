@@ -58,7 +58,7 @@ public class HasResultXMLConverter
 		PrettyXMLWriter xml = new PrettyXMLWriter(writer);
 
 		xml.openTag("alignment");
-		xml.attribute("hasResult", hasResult+"");
+		xml.attribute("hasResult", String.valueOf(hasResult));
 		xml.closeTag("alignment");
 		xml.close();
 		return swriter.toString();

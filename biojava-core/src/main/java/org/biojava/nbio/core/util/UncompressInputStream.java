@@ -481,7 +481,7 @@ public boolean markSupported() {
 
 	private static final boolean debugTiming = false;
 
-	public static void main(String args[]) throws Exception {
+	public static void main(String[] args) throws Exception {
 		if (args.length != 1) {
 			logger.info("Usage: UncompressInputStream <file>");
 			System.exit(1);

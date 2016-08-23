@@ -103,7 +103,7 @@ public class MultipleAlignmentWriter {
 			int blockNr = MultipleAlignmentTools.getBlockForSequencePosition(
 					alignment, mapSeqToStruct, pos);
 			if (blockNr != -1) {
-				blockNumbers = blockNumbers.concat("" + (blockNr + 1));
+				blockNumbers = blockNumbers.concat(String.valueOf(blockNr + 1));
 			} else
 				blockNumbers = blockNumbers.concat(" ");
 		}
@@ -175,7 +175,8 @@ public class MultipleAlignmentWriter {
 								.toString());
 						residueGroup.append('\t');
 						residueGroup.append(atom.getGroup().getChain()
-								.getChainID());
+				// ABradley - I'm assuming Auth Id's here 04/05/16
+								.getName());
 						residueGroup.append('\t');
 						residueGroup.append(atom.getGroup().getPDBName());
 						residueGroup.append('\t');
@@ -328,7 +329,7 @@ public class MultipleAlignmentWriter {
 		String tPdbId = canon.getPdbId();
 		String tChain = null;
 		for(ResidueRange range : canon.getResidueRanges()) {
-			tChain = range.getChainId();
+			tChain = range.getChainName();
 			break;
 		}
 

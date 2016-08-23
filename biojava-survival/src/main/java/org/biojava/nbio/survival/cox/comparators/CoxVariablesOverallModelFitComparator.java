@@ -23,13 +23,15 @@ package org.biojava.nbio.survival.cox.comparators;
 import org.biojava.nbio.survival.cox.CoxInfo;
 import org.biojava.nbio.survival.cox.CoxVariables;
 
+import java.io.Serializable;
 import java.util.Comparator;
 
 /**
  *
  * @author Scooter Willis <willishf at gmail dot com>
  */
-public class CoxVariablesOverallModelFitComparator implements Comparator<CoxVariables> {
+public class CoxVariablesOverallModelFitComparator implements Comparator<CoxVariables>, Serializable {
+    private static final long serialVersionUID = 1;
 
 	String variables = "";
 
