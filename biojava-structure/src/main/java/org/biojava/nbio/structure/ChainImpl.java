@@ -728,6 +728,99 @@ public class ChainImpl implements Chain, Serializable {
 		if (getEntityInfo()==null) return null;
 		return getEntityInfo().getType();
 	}
-	
+
+	@Override
+	public boolean isWaterOnly() {
+		for (Group g : getAtomGroups()) {
+			if (!g.isWater())
+				return false;
+		}
+		return true;
+	}
+
+	@Override
+	public boolean isPureNonPolymer() {
+		for (Group g : getAtomGroups()) {
+
+			ChemComp cc = g.getChemComp();
+
+			if ( 	g.isPolymeric() &&
+					!g.isHetAtomInFile() ) {
+
+				// important: the aminoacid or nucleotide residue can be in Atom records
+
+				return false;
+			}
+
+		}
+		return true;
+	}
+
+	@Override
+	public GroupType getPredominantGroupType(){
+
+		double RATIO_RESIDUES_TO_TOTAL = StructureTools.RATIO_RESIDUES_TO_TOTAL;
+
+		int sizeAminos = getAtomGroups(GroupType.AMINOACID).size();
+		int sizeNucleotides = getAtomGroups(GroupType.NUCLEOTIDE).size();
+		List<Group> hetAtoms = getAtomGroups(GroupType.HETATM);
+		int sizeHetatoms = hetAtoms.size();
+		int sizeWaters = 0;
+		for (Group g : hetAtoms) {
+			if (g.isWater())
+				sizeWaters++;
+		}
+		int sizeHetatomsWithoutWater = sizeHetatoms - sizeWaters;
+
+		int fullSize = sizeAminos + sizeNucleotides + sizeHetatomsWithoutWater;
+
+		if ((double) sizeAminos / (double) fullSize > StructureTools.RATIO_RESIDUES_TO_TOTAL)
+			return GroupType.AMINOACID;
+
+		if ((double) sizeNucleotides / (double) fullSize > RATIO_RESIDUES_TO_TOTAL)
+			return GroupType.NUCLEOTIDE;
+
+		if ((double) (sizeHetatomsWithoutWater) / (double) fullSize > RATIO_RESIDUES_TO_TOTAL)
+			return GroupType.HETATM;
+
+		// finally if neither condition works, we try based on majority, but log
+		// it
+		GroupType max;
+		if (sizeNucleotides > sizeAminos) {
+			if (sizeNucleotides > sizeHetatomsWithoutWater) {
+				max = GroupType.NUCLEOTIDE;
+			} else {
+				max = GroupType.HETATM;
+			}
+		} else {
+			if (sizeAminos > sizeHetatomsWithoutWater) {
+				max = GroupType.AMINOACID;
+			} else {
+				max = GroupType.HETATM;
+			}
+		}
+		logger.debug(
+				"Ratio of residues to total for chain with asym_id {} is below {}. Assuming it is a {} chain. "
+						+ "Counts: # aa residues: {}, # nuc residues: {}, # non-water het residues: {}, # waters: {}, "
+						+ "ratio aa/total: {}, ratio nuc/total: {}",
+				getId(), RATIO_RESIDUES_TO_TOTAL, max, sizeAminos,
+				sizeNucleotides, sizeHetatomsWithoutWater, sizeWaters,
+				(double) sizeAminos / (double) fullSize,
+				(double) sizeNucleotides / (double) fullSize);
+
+		return max;
+	}
+
+	@Override
+	public  boolean isProtein() {
+		return getPredominantGroupType() == GroupType.AMINOACID;
+	}
+
+	@Override
+	public  boolean isNucleicAcid() {
+		return getPredominantGroupType() == GroupType.NUCLEOTIDE;
+	}
+
+
 }
 

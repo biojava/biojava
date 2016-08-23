@@ -74,7 +74,7 @@ public class TestParseMmCIFLigands {
 		for (Chain c:s.getChains()) {
 			for (Group g:c.getAtomGroups()) {
 				if (!g.isWater() && !PolymerType.ALL_POLYMER_TYPES.contains(g.getChemComp().getPolymerType())) {
-					System.out.println(g);
+
 					for (Atom a:g.getAtoms()) {
 						if (a.getBonds()!=null) count++;
 					}

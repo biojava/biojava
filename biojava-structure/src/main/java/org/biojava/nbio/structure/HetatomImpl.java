@@ -344,7 +344,9 @@ public class HetatomImpl implements Group,Serializable {
 
 		PolymerType pt = rt.getPolymerType();
 
-		return PolymerType.PROTEIN_ONLY.contains(pt) || PolymerType.POLYNUCLEOTIDE_ONLY.contains(pt);
+		return PolymerType.PROTEIN_ONLY.contains(pt) ||
+				PolymerType.POLYNUCLEOTIDE_ONLY.contains(pt) ||
+				ResidueType.lPeptideLinking.equals(rt);
 
 
 	}

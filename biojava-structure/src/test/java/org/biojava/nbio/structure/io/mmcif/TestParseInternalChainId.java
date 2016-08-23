@@ -25,9 +25,6 @@ public class TestParseInternalChainId {
 
 		Structure s = cache.getStructure("2I13");
 
-		System.out.println(s);
-
-
 		assertEquals(6, s.getPolyChains().size());
 		assertEquals(15, s.getNonPolyChains().size());
 		assertEquals(6, s.getWaterChains().size());
@@ -50,12 +47,10 @@ public class TestParseInternalChainId {
 		Chain[] proteinChains = new Chain[]{asymE,asymF};
 
 		for ( Chain c : proteinChains){
-			System.out.println(c);
 			assertNotNull("Chain is null!",c);
 		}
 
 		for ( Chain c : nucleicChains){
-			System.out.println(c);
 			assertNotNull("Chain is null!", c);
 		}
 
