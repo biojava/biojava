@@ -31,6 +31,7 @@ import java.lang.reflect.Modifier;
 public final class FastqTest
 	extends TestCase
 {
+
 	public void testConstructor()
 	{
 		Fastq fastq = new Fastq("description", "sequence", "quality_", FastqVariant.FASTQ_SANGER);

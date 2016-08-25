@@ -128,7 +128,7 @@ public class GenbankReaderTest {
 
 
 		Assert.assertTrue(proteinSequences.size() == 1);
-		logger.info("protein sequences: {}", proteinSequences);
+		logger.debug("protein sequences: {}", proteinSequences);
 
 		ProteinSequence protein = new ArrayList<ProteinSequence>(proteinSequences.values()).get(0);
 

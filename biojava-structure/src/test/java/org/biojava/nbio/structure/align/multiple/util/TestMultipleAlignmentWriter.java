@@ -220,7 +220,7 @@ public class TestMultipleAlignmentWriter {
 
 		String result = MultipleAlignmentWriter.
 				toTransformMatrices(alignment2);
-		System.out.println(result);
+
 
 		FileReader file = new FileReader(
 				"src/test/resources/testMSTA2.transforms");

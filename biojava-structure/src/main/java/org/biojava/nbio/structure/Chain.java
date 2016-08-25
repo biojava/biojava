@@ -25,6 +25,7 @@ package org.biojava.nbio.structure;
 
 import org.biojava.nbio.core.sequence.template.Sequence;
 import org.biojava.nbio.structure.io.FileParsingParameters;
+import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 
 import java.util.List;
 
@@ -277,7 +278,7 @@ public interface Chain {
 	/**
 	 * Returns the sequence of amino acids as it has been provided in the ATOM records.
 	 * Non-standard residues will be present in the string only if the property
-	 * {@value PDBFileReader.LOAD_CHEM_COMP_PROPERTY} has been set.
+	 * {@value org.biojava.nbio.structure.io.PDBFileReader.LOAD_CHEM_COMP_PROPERTY} has been set.
 	 * @return amino acid sequence as string
 	 * @see #getSeqResSequence()
 	 */
@@ -413,5 +414,53 @@ public interface Chain {
 	 * @return
 	 * @see EntityType
 	 */
-	EntityType getEntityType(); 
+	EntityType getEntityType();
+
+	/** Tests if a chain is consisting of water molecules only
+	 *
+	 * @return true if there are only solvent molecules in this chain.
+     */
+	 public boolean isWaterOnly();
+
+	/**  Returns true if the given chain is composed of non-polymeric (including water) groups only.
+	 *
+ 	 * @return true if only non-polymeric groups in this chain.
+     */
+	public boolean isPureNonPolymer();
+
+	/**
+	 * Get the predominant {@link GroupType} for a given Chain, following these
+	 * rules: <li>if the ratio of number of residues of a certain
+	 * {@link GroupType} to total non-water residues is above the threshold
+	 * {@value #org.biojava.nbio.structure.StructureTools.RATIO_RESIDUES_TO_TOTAL}, then that {@link GroupType} is
+	 * returned</li> <li>if there is no {@link GroupType} that is above the
+	 * threshold then the {@link GroupType} with most members is chosen, logging
+	 * it</li>
+	 * <p>
+	 * See also {@link ChemComp#getPolymerType()} and
+	 * {@link ChemComp#getResidueType()} which follow the PDB chemical component
+	 * dictionary and provide a much more accurate description of groups and
+	 * their linking.
+	 * </p>
+	 *
+	 * @return
+	 */
+	public GroupType getPredominantGroupType();
+
+	/**
+	 * Tell whether given chain is a protein chain
+	 *
+
+	 * @return true if protein, false if nucleotide or ligand
+	 * @see #getPredominantGroupType()
+	 */
+	public  boolean isProtein();
+
+	/**
+	 * Tell whether given chain is DNA or RNA
+	 *
+	 * @return true if nucleic acid, false if protein or ligand
+	 * @see #getPredominantGroupType()
+	 */
+	public  boolean isNucleicAcid();
 }

@@ -399,6 +399,48 @@
 				<version>3.9.2</version>
 			</plugin>
 
+			<!-- code coverage plugin -->
+			<plugin>
+				<groupId>org.eluder.coveralls</groupId>
+				<artifactId>coveralls-maven-plugin</artifactId>
+				<version>4.2.0</version>
+				<!--<configuration>-->
+					<!--<repoToken>YOURTOKENGOESHERE</repoToken>-->
+				<!--</configuration>-->
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>cobertura-maven-plugin</artifactId>
+				<version>2.7</version>
+				<configuration>
+					<check>true</check>
+					<format>xml</format>
+					<maxmem>256m</maxmem>
+					<!-- aggregated reports for multi-module projects -->
+					<aggregate>true</aggregate>
+
+					<instrumentation>
+						<excludes>
+							<exclude>org/biojava/nbio/structure/io/mmcif/MMCIFFileTools.class</exclude>
+							<exclude>org/biojava/nbio/structure/symmetry/utils/SymmetryTools.class</exclude>
+							<exclude>demo/DemoFATCAT.class</exclude>
+							<exclude>org/biojava/nbio/structure/align/ce/CECalculator.class</exclude>
+						</excludes>
+						<ignores>
+							<ignore>org.biojava.nbio.structure.io.mmcif.MMCIFFileTools*</ignore>
+							<ignore>demo.*</ignore>
+						</ignores>
+					</instrumentation>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>clean</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
 		</plugins>
 
 		<extensions>
@@ -408,6 +450,8 @@
 				<version>2.6</version>
 			</extension>
 		</extensions>
+
+
 
 	</build>
 
@@ -553,6 +597,8 @@
 							</arguments>
 						</configuration>
 					</plugin>
+
+
 				</plugins>
 			</build>
 		</profile>
@@ -609,8 +655,8 @@
 		<system>Github</system>
 		<url>https://github.com/biojava/biojava/issues</url>
 	</issueManagement>
-	<ciManagement>
-		<system>CruiseControl</system>
-		<url>http://ccpublic.rcsb.org/</url>
-	</ciManagement>
+		<ciManagement>
+			<system>Travis</system>
+			<url>https://travis-ci.org/biojava/biojava</url>
+		</ciManagement>
 </project>
