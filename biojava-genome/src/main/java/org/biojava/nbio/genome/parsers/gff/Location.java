@@ -311,10 +311,10 @@ public class Location implements Iterable<Location>
 		if (b1 >= a2) {
 			// b starts after a ends
 			return null;
-		} else if (b1 < a2 && b2 < a2) {
-			// b starts after a and ends before a ends
+		} else if (b1 < a2 && b2 <= a2) {
+			// b starts after a starts and ends before or at where a ends
 			return new Location(b1, b2);
-		} else if (a2 < b2) {
+		} else if (b1 >= a1 && a2 <= b2) {
 			// b starts after a but extends after the end of a
 			return new Location(b1, a2);
 		}
