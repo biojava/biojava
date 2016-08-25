@@ -26,6 +26,7 @@ package org.biojava.nbio.core.sequence.io;
 import org.biojava.nbio.core.sequence.Strand;
 import org.biojava.nbio.core.sequence.features.FeatureInterface;
 import org.biojava.nbio.core.sequence.features.Qualifier;
+import org.biojava.nbio.core.sequence.location.template.AbstractLocation;
 import org.biojava.nbio.core.sequence.location.template.Point;
 import org.biojava.nbio.core.sequence.template.AbstractSequence;
 import org.biojava.nbio.core.sequence.template.Compound;
@@ -220,7 +221,7 @@ public class GenericInsdcHeaderFormat<S extends AbstractSequence<C>, C extends C
 
 	private String _insdc_location_string_ignoring_strand_and_subfeatures(
 			//SequenceLocation<AbstractSequence<C>, C> sequenceLocation,
-						org.biojava.nbio.core.sequence.location.template.AbstractLocation sequenceLocation,
+						AbstractLocation sequenceLocation,
 			int record_length) {
 	/*
 	if location.ref:
