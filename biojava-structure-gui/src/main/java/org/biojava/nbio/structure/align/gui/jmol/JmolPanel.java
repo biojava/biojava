@@ -117,8 +117,8 @@ implements ActionListener
 	public void setStructure(Structure s)
 	{
 		this.structure = s;
-		String pdb = s.toPDB();
-		viewer.openStringInline(pdb);
+		String serialized = s.toMMCIF();
+		viewer.openStringInline(serialized);
 		evalString("save STATE state_1");
 	}
 
