@@ -41,6 +41,7 @@ import org.biojava.nbio.structure.align.util.ResourceManager;
 import org.biojava.nbio.structure.jama.Matrix;
 import org.jcolorbrewer.ColorBrewer;
 import org.jmol.api.JmolViewer;
+import org.jmol.viewer.Viewer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -102,7 +103,7 @@ implements MouseMotionListener, MouseListener, WindowListener, ActionListener {
 	public void setAtoms(Atom[] atoms){
 		Structure s = new StructureImpl();
 		Chain c = new ChainImpl();
-		c.setChainID("A");
+		c.setId("A");
 		for (Atom a: atoms){
 			c.addGroup(a.getGroup());
 		}
@@ -219,7 +220,7 @@ implements MouseMotionListener, MouseListener, WindowListener, ActionListener {
 		int pos = viewer.findNearestAtomIndex( e.getX(), e.getY() );
 		if ( pos == -1 ) { return ; }
 
-		String atomInfo = viewer.getAtomInfo(pos);
+		String atomInfo = ((Viewer) viewer).getAtomInfo(pos);
 		text.setText(atomInfo);
 
 	}
@@ -243,7 +244,7 @@ implements MouseMotionListener, MouseListener, WindowListener, ActionListener {
 		int pos = viewer.findNearestAtomIndex(e.getX(), e.getY());
 		if (pos == -1) return;
 
-		String atomInfo = viewer.getAtomInfo(pos);
+		String atomInfo = ((Viewer) viewer).getAtomInfo(pos);
 		status.setText("clicked: " + atomInfo);
 		AtomInfo ai = AtomInfoParser.parse(atomInfo);
 
