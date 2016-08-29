@@ -24,17 +24,17 @@
 
 package org.biojava.nbio.structure.align.gui.jmol;
 
-import org.jmol.api.JmolStatusListener;
-import org.jmol.constant.EnumCallback;
-
-import javax.swing.*;
-
-import java.util.Hashtable;
 import java.util.Map;
 
-public class MyJmolStatusListener implements JmolStatusListener {
+import javax.swing.JTextField;
 
-	private boolean verbose = false;
+import org.jmol.api.JmolStatusListener;
+import org.jmol.c.CBK;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class MyJmolStatusListener implements JmolStatusListener {
+	private static final Logger logger = LoggerFactory.getLogger(MyJmolStatusListener.class);
 
 	JTextField status;
 	public MyJmolStatusListener(){
@@ -46,33 +46,30 @@ public class MyJmolStatusListener implements JmolStatusListener {
 
 	@Override
 	public String createImage(String arg0, String arg1, Object arg2, int arg3) {
-		// TODO Auto-generated method stub
-		return null;
+		return null; //Cancelled
 	}
 
 	@Override
 	public String eval(String arg0) {
-		if(verbose) System.out.println("eval " + arg0);
+		logger.debug("eval {}",arg0);
 		return null;
 	}
 
 	@Override
 	public float[][] functionXY(String arg0, int arg1, int arg2) {
-		if(verbose) System.out.println("XY " + arg0 + " " + arg1 + " " + arg2);
-		return null;
+		logger.debug("XY {} {} {}",arg0,arg1, arg2);
+		return null; //Ignore isosurface commands
 	}
 
 	@Override
 	public float[][][] functionXYZ(String arg0, int arg1, int arg2, int arg3) {
-		// TODO Auto-generated method stub
-		return null;
+		logger.debug("XYZ {} {} {} {}",arg0,arg1, arg2, arg3);
+		return null; //Ignore isosurface commands
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public Hashtable getRegistryInfo() {
-		// TODO Auto-generated method stub
-		return null;
+	public Map<String, Object> getRegistryInfo() {
+		return null; //Ignore
 	}
 
 	@Override
@@ -87,79 +84,48 @@ public class MyJmolStatusListener implements JmolStatusListener {
 	}
 
 	public boolean notifyEnabled(int arg0) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public void setCallbackFunction(String arg0, String arg1) {
-		if(verbose) System.out.println("callback:" + arg0 + " " + arg1);
+		logger.debug("callback: {} {}", arg0, arg1);
 		status.setText(arg0 + " " + arg1);
-
 	}
 
 	public String dialogAsk(String arg0, String arg1) {
-		// TODO Auto-generated method stub
-		if(verbose) System.out.println("dialogAsk");
-		return null;
+		logger.debug("dialogAsk {} {}",arg0,arg1);
+		return null; //Ignore
 	}
 
 	public void handlePopupMenu(int arg0, int arg1) {
-		// TODO Auto-generated method stub
-		if(verbose) System.out.println("handlePopupMenu");
+		logger.debug("handlePopupMenu {} {}",arg0,arg1);
 	}
 
 	public void showConsole(boolean arg0) {
-
-		// TODO Auto-generated method stub
-		if(verbose) System.out.println("showConsole");
-
+		logger.debug("showConsole {}",arg0);
 	}
 
 
-	@Override
-	public void notifyCallback(EnumCallback arg0, Object[] arg1) {
-		// TODO Auto-generated method stub
 
+	@Override
+	public void notifyCallback(CBK message, Object[] data) {
 	}
 
-
 	@Override
-	public boolean notifyEnabled(EnumCallback arg0) {
-		// TODO Auto-generated method stub
+	public boolean notifyEnabled(CBK type) {
 		return false;
 	}
 
-
 	@Override
-	public Map<String, Object> getProperty(String arg0) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-
 	public Map<String, Object> getJSpecViewProperty(String arg0) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 
 	@Override
-	public void resizeInnerPanel(String data) {
-		// TODO Auto-generated method stub
-
+	public int[] resizeInnerPanel(String data) {
+		return null;
 	}
-
-	public boolean isVerbose() {
-		return verbose;
-	}
-
-	public void setVerbose(boolean verbose) {
-		this.verbose = verbose;
-	}
-
-
-
 
 }
