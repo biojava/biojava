@@ -42,7 +42,7 @@
         <dependency>
             <groupId>net.sourceforge.jmol</groupId>
             <artifactId>jmol</artifactId>
-            <version>14.6.1_2016.08.20</version>
+            <version>14.6.2_2016.08.28</version>
         </dependency>
         <!-- logging dependencies (managed by parent pom, don't set versions or
             scopes here) -->
