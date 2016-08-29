@@ -133,6 +133,7 @@ public class SymmetryDisplay {
 			jmol.evalString(printSymmetryGroup(symmResult));
 			jmol.evalString(printSymmetryAxes(symmResult));
 			jmol.setTitle(getSymmTitle(symmResult));
+			jmol.evalString("save STATE state_1");
 			return jmol;
 		} else {
 			// Show the optimal self-alignment
@@ -144,6 +145,7 @@ public class SymmetryDisplay {
 					cloned);
 			RotationAxis axis = new RotationAxis(symmResult.getSelfAlignment());
 			jmol.evalString(axis.getJmolScript(symmResult.getAtoms()));
+			jmol.evalString("save STATE state_1");
 			return jmol;
 		}
 	}
