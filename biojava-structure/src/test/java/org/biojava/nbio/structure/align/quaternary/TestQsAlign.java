@@ -37,7 +37,6 @@ public class TestQsAlign {
 
 		assertEquals(result.length(), 4);
 		assertEquals(result.getRelation(), QsRelation.EQUIVALENT);
-		assertEquals(result.getAlignedSubunits1(), result.getAlignedSubunits2());
 		assertEquals(result.getRmsd(), 0.0, 0.01);
 
 	}
