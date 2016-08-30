@@ -204,6 +204,7 @@ public class TestSuperPositionQCP {
 		set1[15] = new Point3d(-22.748293, -43.813946, 32.14434);
 
 		Point3d[] set2 = CalcPoint.clonePoint3dArray(set1);
+		CalcPoint.transform(transform, set2);
 
 		// Use SP superposition to obtain the RMSD
 		long spStart = System.nanoTime();
