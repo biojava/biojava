@@ -1833,7 +1833,7 @@ public class PDBFileParser  {
 			// parse element from element field
 			String elementSymbol = line.substring(76, 78).trim();
 			if (elementSymbol.isEmpty()) {
-				logger.warn("Element column was empty for atom {} {}. Assigning atom element "
+				logger.info("Element column was empty for atom {} {}. Assigning atom element "
 						+ "from Chemical Component Dictionary information", fullname.trim(), pdbnumber);
 			} else {
 			
@@ -1841,13 +1841,13 @@ public class PDBFileParser  {
 					element = Element.valueOfIgnoreCase(elementSymbol);
 					guessElement = false;
 				}  catch (IllegalArgumentException e){
-					logger.warn("Element {} of atom {} {} was not recognised. Assigning atom element "
+					logger.info("Element {} of atom {} {} was not recognised. Assigning atom element "
 							+ "from Chemical Component Dictionary information", elementSymbol, 
 							fullname.trim(), pdbnumber);
 				}
 			}
 		} else {
-			logger.warn("Missformatted PDB file: element column of atom {} {} is not present. "
+			logger.info("Missformatted PDB file: element column of atom {} {} is not present. "
 					+ "Assigning atom element from Chemical Component Dictionary information",
 					fullname.trim(), pdbnumber);
 		}
@@ -1861,14 +1861,14 @@ public class PDBFileParser  {
 					}
 				}
 				if (elementSymbol == null) {
-					logger.warn("Atom name {} was not found in the Chemical Component Dictionary information of {}. "
+					logger.info("Atom name {} was not found in the Chemical Component Dictionary information of {}. "
 							+ "Assigning generic element R to it", fullname.trim(), currentGroup.getPDBName());
 				} else {
 					try {
 						element = Element.valueOfIgnoreCase(elementSymbol);
 					} catch (IllegalArgumentException e) {
 						// this can still happen for cases like UNK
-						logger.warn("Element symbol {} found in chemical component dictionary for Atom {} {} could not be recognised as a known element. "
+						logger.info("Element symbol {} found in chemical component dictionary for Atom {} {} could not be recognised as a known element. "
 								+ "Assigning generic element R to it", elementSymbol, fullname.trim(), pdbnumber);
 					}
 				}			

@@ -42,8 +42,6 @@ import org.biojava.nbio.structure.contact.AtomContactSet;
 import org.biojava.nbio.structure.contact.Grid;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.PDBFileParser;
-import org.biojava.nbio.structure.io.mmcif.chem.PolymerType;
-import org.biojava.nbio.structure.io.mmcif.chem.ResidueType;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.biojava.nbio.structure.io.util.FileDownloadUtils;
 import org.slf4j.Logger;
@@ -1612,12 +1610,9 @@ public class StructureTools {
 
 			ChemComp cc = g.getChemComp();
 
-			if (ResidueType.lPeptideLinking.equals(cc.getResidueType())
-					|| PolymerType.PROTEIN_ONLY.contains(cc.getPolymerType())
-					|| PolymerType.POLYNUCLEOTIDE_ONLY.contains(cc
-							.getPolymerType())) {
+			if ( g.isPolymeric())
 				continue;
-			}
+
 			if (!g.isWater()) {
 				groups.add(g);
 			}
@@ -1686,135 +1681,39 @@ public class StructureTools {
 	}
 
 	/**
-	 * Tell whether given chain is a protein chain
-	 *
-	 * @param c
-	 * @return true if protein, false if nucleotide or ligand
-	 * @see #getPredominantGroupType(Chain)
+	 * @deprecated  use {@link Chain#isProtein()} instead.
 	 */
 	public static boolean isProtein(Chain c) {
-		return getPredominantGroupType(c) == GroupType.AMINOACID;
+
+		return c.isProtein();
 	}
 
 	/**
-	 * Tell whether given chain is DNA or RNA
-	 *
-	 * @param c
-	 * @return true if nucleic acid, false if protein or ligand
-	 * @see #getPredominantGroupType(Chain)
-	 */
+	 * @deprecated use {@link Chain#isNucleicAcid()} instead.
+ 	 */
 	public static boolean isNucleicAcid(Chain c) {
-		return getPredominantGroupType(c) == GroupType.NUCLEOTIDE;
+		return c.isNucleicAcid();
 	}
 
 	/**
-	 * Get the predominant {@link GroupType} for a given Chain, following these
-	 * rules: <li>if the ratio of number of residues of a certain
-	 * {@link GroupType} to total non-water residues is above the threshold
-	 * {@value #RATIO_RESIDUES_TO_TOTAL}, then that {@link GroupType} is
-	 * returned</li> <li>if there is no {@link GroupType} that is above the
-	 * threshold then the {@link GroupType} with most members is chosen, logging
-	 * it</li>
-	 * <p>
-	 * See also {@link ChemComp#getPolymerType()} and
-	 * {@link ChemComp#getResidueType()} which follow the PDB chemical component
-	 * dictionary and provide a much more accurate description of groups and
-	 * their linking.
-	 * </p>
-	 *
-	 * @param c
-	 * @return
+	 * @deprecated use {@link Chain#getPredominantGroupType()} instead.
 	 */
 	public static GroupType getPredominantGroupType(Chain c) {
-		int sizeAminos = c.getAtomGroups(GroupType.AMINOACID).size();
-		int sizeNucleotides = c.getAtomGroups(GroupType.NUCLEOTIDE).size();
-		List<Group> hetAtoms = c.getAtomGroups(GroupType.HETATM);
-		int sizeHetatoms = hetAtoms.size();
-		int sizeWaters = 0;
-		for (Group g : hetAtoms) {
-			if (g.isWater())
-				sizeWaters++;
-		}
-		int sizeHetatomsWithoutWater = sizeHetatoms - sizeWaters;
-
-		int fullSize = sizeAminos + sizeNucleotides + sizeHetatomsWithoutWater;
-
-		if ((double) sizeAminos / (double) fullSize > RATIO_RESIDUES_TO_TOTAL)
-			return GroupType.AMINOACID;
-
-		if ((double) sizeNucleotides / (double) fullSize > RATIO_RESIDUES_TO_TOTAL)
-			return GroupType.NUCLEOTIDE;
-
-		if ((double) (sizeHetatomsWithoutWater) / (double) fullSize > RATIO_RESIDUES_TO_TOTAL)
-			return GroupType.HETATM;
-
-		// finally if neither condition works, we try based on majority, but log
-		// it
-		GroupType max;
-		if (sizeNucleotides > sizeAminos) {
-			if (sizeNucleotides > sizeHetatomsWithoutWater) {
-				max = GroupType.NUCLEOTIDE;
-			} else {
-				max = GroupType.HETATM;
-			}
-		} else {
-			if (sizeAminos > sizeHetatomsWithoutWater) {
-				max = GroupType.AMINOACID;
-			} else {
-				max = GroupType.HETATM;
-			}
-		}
-		logger.debug(
-				"Ratio of residues to total for chain with asym_id {} is below {}. Assuming it is a {} chain. "
-						+ "Counts: # aa residues: {}, # nuc residues: {}, # non-water het residues: {}, # waters: {}, "
-						+ "ratio aa/total: {}, ratio nuc/total: {}",
-						c.getId(), RATIO_RESIDUES_TO_TOTAL, max, sizeAminos,
-						sizeNucleotides, sizeHetatomsWithoutWater, sizeWaters,
-						(double) sizeAminos / (double) fullSize,
-						(double) sizeNucleotides / (double) fullSize);
-
-		return max;
+		return c.getPredominantGroupType();
 	}
 
 	/**
-	 * Returns true if the given chain is composed of water molecules only
-	 *
-	 * @param c
-	 * @return
+	 * @deprecated use {@link Chain#isWaterOnly()} instead.
 	 */
 	public static boolean isChainWaterOnly(Chain c) {
-		for (Group g : c.getAtomGroups()) {
-			if (!g.isWater())
-				return false;
-		}
-		return true;
+		return c.isWaterOnly();
 	}
 
-	/**
-	 * Returns true if the given chain is composed of non-polymeric (including water) groups only. 
-	 * To be used at parsing time only.
-	 *
-	 * @param c
-	 * @return
+	/** @deprecated  use {@link Chain#isPureNonPolymer()} instead.
 	 */
 	public static boolean isChainPureNonPolymer(Chain c) {
 
-		for (Group g : c.getAtomGroups()) {
-
-			ChemComp cc = g.getChemComp();
-
-			ResidueType resType = cc.getResidueType();
-			PolymerType polType = cc.getPolymerType();
-
-			if ( (	resType == ResidueType.lPeptideLinking || 
-					PolymerType.PROTEIN_ONLY.contains(polType) || 
-					PolymerType.POLYNUCLEOTIDE_ONLY.contains(polType) ) && 
-					!g.isHetAtomInFile() ) {								// important: the aminoacid or nucleotide residue can be in 
-				return false;
-			}
-
-		}
-		return true;
+		return c.isPureNonPolymer();
 	}
 
 	/**

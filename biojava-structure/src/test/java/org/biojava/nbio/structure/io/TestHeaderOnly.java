@@ -40,8 +40,13 @@ import org.biojava.nbio.structure.io.mmcif.SimpleMMcifParser;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.junit.Assert;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TestHeaderOnly {
+
+	private static final Logger logger = LoggerFactory.getLogger(TestHeaderOnly.class);
+
 
 	private final String pdbID = "1REP";
 
@@ -69,20 +74,14 @@ public class TestHeaderOnly {
 		Structure sPDB = StructureIO.getStructure(pdbID);
 
 		Assert.assertEquals(false, doSeqResHaveAtoms(sPDB));
-
-		for (Chain c : sPDB.getChains()) {
-			System.out.println(c.getId() + ":" + getSequenceString(c.getSeqResGroups()));
-		}
-
+		
 		// Test 2: with mmCIF
 		cache.setUseMmCif(true);
 
 		Structure sCIF = StructureIO.getStructure(pdbID);
 		Assert.assertEquals(false, doSeqResHaveAtoms(sCIF));
 
-		for (Chain c : sCIF.getChains()) {
-			System.out.println(c.getId() + ":" + getSequenceString(c.getSeqResGroups()));
-		}
+		
 	}
 
 	/**
@@ -144,7 +143,7 @@ public class TestHeaderOnly {
 		}
 		long stop = System.nanoTime();
 		double diff = (stop - start) / 1000000000.0;
-		System.out.println(String.format("[%s] Elapsed time: %.3f s", s.getIdentifier(), diff));
+		logger.info(String.format("[%s] Elapsed time: %.3f s", s.getIdentifier(), diff));
 	}
 
 	// Test using local files.
@@ -160,7 +159,7 @@ public class TestHeaderOnly {
 		FileParsingParameters params = new FileParsingParameters();
 		params.setHeaderOnly(true);  // Flip this true/false to compare parsing speed.
 
-		System.out.println("Testing PDB parsing speed");
+		logger.info("Testing PDB parsing speed");
 		PDBFileParser pdbpars = new PDBFileParser();
 		pdbpars.setFileParsingParameters(params);
 		//pdbpars.setLoadChemCompInfo(true);
@@ -168,20 +167,20 @@ public class TestHeaderOnly {
 		Structure s1 = pdbpars.parsePDBFile(pdbStream) ;
 		long stop = System.nanoTime();
 		double diff = (stop - start) / 1000000000.0;
-		System.out.println(String.format("[%s] Elapsed time: %.3f s", s1.getIdentifier(), diff));
+		logger.info(String.format("[%s] Elapsed time: %.3f s", s1.getIdentifier(), diff));
 
 		MMcifParser mmcifpars = new SimpleMMcifParser();
 		SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
 		consumer.setFileParsingParameters(params);
 		mmcifpars.addMMcifConsumer(consumer);
 
-		System.out.println("Testing mmCIF parsing speed");
+		logger.info("Testing mmCIF parsing speed");
 		start = System.nanoTime();
 		mmcifpars.parse(cifStream) ;
 		Structure s2 = consumer.getStructure();
 		stop = System.nanoTime();
 		diff = (stop - start) / 1000000000.0;
-		System.out.println(String.format("[%s] Elapsed time: %.3f s", s2.getIdentifier(), diff));
+		logger.info(String.format("[%s] Elapsed time: %.3f s", s2.getIdentifier(), diff));
 
 		/* Running from an SSD..
 		 * PDB .165s (all atom) -> 0.009s (only header)  95% faster.

@@ -32,20 +32,6 @@ public final class FastqTest
 	extends TestCase
 {
 
-	public void testImmutable()
-	{
-		Class<Fastq> cls = Fastq.class;
-		assertTrue(Modifier.isPublic(cls.getModifiers()));
-		assertTrue(Modifier.isFinal(cls.getModifiers()));
-		Field[] fields = cls.getDeclaredFields();
-		for (Field field : fields)
-		{
-			assertTrue(Modifier.isPrivate(field.getModifiers()));
-			assertTrue(Modifier.isFinal(field.getModifiers()) ||
-					(Modifier.isVolatile(field.getModifiers()) && Modifier.isTransient(field.getModifiers())));
-		}
-	}
-
 	public void testConstructor()
 	{
 		Fastq fastq = new Fastq("description", "sequence", "quality_", FastqVariant.FASTQ_SANGER);

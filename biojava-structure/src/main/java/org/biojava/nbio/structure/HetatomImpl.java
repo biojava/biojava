@@ -25,6 +25,8 @@ package org.biojava.nbio.structure;
 
 import org.biojava.nbio.structure.io.GroupToSDF;
 import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
+import org.biojava.nbio.structure.io.mmcif.chem.PolymerType;
+import org.biojava.nbio.structure.io.mmcif.chem.ResidueType;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -327,6 +329,68 @@ public class HetatomImpl implements Group,Serializable {
 
 	}
 
+	@Override
+	public boolean isPolymeric() {
+
+		ChemComp cc = getChemComp();
+
+		if ( cc == null)
+			return getType().equals(GroupType.AMINOACID) || getType().equals(GroupType.NUCLEOTIDE);
+
+		ResidueType rt = cc.getResidueType();
+
+		if ( rt.equals(ResidueType.nonPolymer))
+			return false;
+
+		PolymerType pt = rt.getPolymerType();
+
+		return PolymerType.PROTEIN_ONLY.contains(pt) ||
+				PolymerType.POLYNUCLEOTIDE_ONLY.contains(pt) ||
+				ResidueType.lPeptideLinking.equals(rt);
+
+
+	}
+
+	@Override
+	public boolean isAminoAcid() {
+
+		ChemComp cc = getChemComp();
+
+		if ( cc == null)
+			return getType().equals(GroupType.AMINOACID);
+
+
+		ResidueType rt = cc.getResidueType();
+
+		if ( rt.equals(ResidueType.nonPolymer))
+			return false;
+
+		PolymerType pt = rt.getPolymerType();
+
+		return PolymerType.PROTEIN_ONLY.contains(pt);
+
+	}
+
+	@Override
+	public boolean isNucleotide() {
+
+		ChemComp cc = getChemComp();
+
+		if ( cc == null)
+			return  getType().equals(GroupType.NUCLEOTIDE);
+
+		ResidueType rt = cc.getResidueType();
+
+		if ( rt.equals(ResidueType.nonPolymer))
+			return false;
+
+		PolymerType pt = rt.getPolymerType();
+
+		return PolymerType.POLYNUCLEOTIDE_ONLY.contains(pt);
+
+
+	}
+
 
 	/**
 	 * {@inheritDoc}
@@ -603,5 +667,8 @@ public class HetatomImpl implements Group,Serializable {
 	public void setHetAtomInFile(boolean isHetAtomInFile) {
 		this.isHetAtomInFile = isHetAtomInFile;
 	}
+
+
+
 
 }

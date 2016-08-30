@@ -159,22 +159,25 @@ public class MmtfStructureWriter {
 			if (entityChains.isEmpty()){
 				// Error mapping chain to entity
 				System.err.println("ERROR MAPPING CHAIN TO ENTITY: "+description);
+				mmtfDecoderInterface.setEntityInfo(new int[0], "", description, type);
 				continue;
 			}
-			int[] chainIndices = new int[entityChains.size()];
-			for (int i=0; i<entityChains.size(); i++) {
-				chainIndices[i] = allChains.indexOf(entityChains.get(i));
-			}
-			Chain chain = entityChains.get(0);
-			ChainImpl chainImpl;
-			if (chain instanceof ChainImpl){
-				chainImpl = (ChainImpl) entityChains.get(0);
-			}
 			else{
-				throw new RuntimeException();
+				int[] chainIndices = new int[entityChains.size()];
+				for (int i=0; i<entityChains.size(); i++) {
+					chainIndices[i] = allChains.indexOf(entityChains.get(i));
+				}
+				Chain chain = entityChains.get(0);
+				ChainImpl chainImpl;
+				if (chain instanceof ChainImpl){
+					chainImpl = (ChainImpl) entityChains.get(0);
+				}
+				else{
+					throw new RuntimeException();
+				}
+				String sequence = chainImpl.getSeqResOneLetterSeq();
+				mmtfDecoderInterface.setEntityInfo(chainIndices, sequence, description, type);
 			}
-			String sequence = chainImpl.getSeqResOneLetterSeq();
-			mmtfDecoderInterface.setEntityInfo(chainIndices, sequence, description, type);
 		}		
 	}
 

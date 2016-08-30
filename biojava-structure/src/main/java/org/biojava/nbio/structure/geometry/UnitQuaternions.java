@@ -162,13 +162,11 @@ public class UnitQuaternions {
 
 	/**
 	 * Calculate the relative quaternion orientation of two arrays of points.
-	 * The arrays of points need to be centered at the origin. To center the
-	 * points use {@link CalcPoint#center(Point3d[])}.
 	 * 
 	 * @param a
-	 *            point array, centered at origin
+	 *            point array
 	 * @param b
-	 *            point array, centered at origin
+	 *            point array
 	 * @return a unit quaternion representing the relative orientation
 	 */
 	public static Quat4d relativeOrientation(Point3d[] a, Point3d[] b) {
