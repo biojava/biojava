@@ -27,6 +27,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -34,6 +36,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.contact.AtomContactSet;
 import org.biojava.nbio.structure.contact.Grid;
@@ -148,6 +151,11 @@ public class StructureTools {
 	 * character of the chain (protein/nucleotide)
 	 */
 	public static final double RATIO_RESIDUES_TO_TOTAL = 0.95;
+
+	/**
+	 * Threshold for plausible binding of a ligand to the selected substructure
+	 */
+	public static final double DEFAULT_LIGAND_PROXIMITY_CUTOFF = 7;
 
 	// there is a file format change in PDB 3.0 and nucleotides are being
 	// renamed
@@ -453,6 +461,47 @@ public class StructureTools {
 			}
 		}
 		return unadded;
+	}
+
+	/**
+	 * Finds all ligand groups from the target which fall within the cutoff distance
+	 * of some atom from the query set.
+	 * 
+	 * @param target Set of groups
+	 * @param query
+	 * @param cutoff
+	 * @return
+	 * @see StructureTools#DEFAULT_LIGAND_PROXIMITY_CUTOFF
+	 */
+	public static List<Group> getLigandsByProximity(Collection<Group> target, Atom[] query, double cutoff) {
+		// Geometric hashing of the reduced structure
+		Grid grid = new Grid(cutoff);
+		grid.addAtoms(query);
+
+		List<Group> ligands = new ArrayList<>();
+		for(Group g :target ) {
+			// don't worry about waters
+			if(g.isWater()) {
+				continue;
+			}
+
+			ChemComp chemComp = g.getChemComp();
+			if(chemComp != null && chemComp.isStandard() ) {
+				// Polymers aren't ligands
+				continue;
+			}
+
+			// It is a ligand!
+
+			// Check that it's within cutoff of something in reduced
+			List<Atom> groupAtoms = g.getAtoms();
+			if( ! grid.hasAnyContact(groupAtoms)) {
+				continue;
+			}
+
+			ligands.add(g);
+		}
+		return ligands;
 	}
 
 	/**

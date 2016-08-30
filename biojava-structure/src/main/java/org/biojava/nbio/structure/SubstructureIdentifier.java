@@ -76,8 +76,6 @@ public class SubstructureIdentifier implements Serializable, StructureIdentifier
 
 	private static final Logger logger = LoggerFactory.getLogger(SubstructureIdentifier.class);
 	
-	// Threshold for plausible binding of a ligand to the selected substructure
-	private static final double DEFAULT_LIGAND_PROXIMITY_CUTOFF = 7;
 
 	private final String pdbId;
 	private final List<ResidueRange> ranges;
@@ -300,7 +298,7 @@ public class SubstructureIdentifier implements Serializable, StructureIdentifier
 				} // end range
 			}
 			
-			copyLigandsByProximity(s,newS, DEFAULT_LIGAND_PROXIMITY_CUTOFF, modelNr, modelNr);
+			copyLigandsByProximity(s,newS, StructureTools.DEFAULT_LIGAND_PROXIMITY_CUTOFF, modelNr, modelNr);
 		} // end modelNr
 
 		return newS;
@@ -323,14 +321,35 @@ public class SubstructureIdentifier implements Serializable, StructureIdentifier
 		return cache.getStructureForPdbId(pdb);
 	}
 
-	static void copyLigandsByProximity(Structure full, Structure reduced) {
+	/**
+	 * Supplements the reduced structure with ligands from the full structure based on
+	 * a distance cutoff. Ligand groups are moved (destructively) from full to reduced
+	 * if they fall within the cutoff of any atom in the reduced structure.
+	 * The {@link StructureTools#DEFAULT_LIGAND_PROXIMITY_CUTOFF default cutoff}
+	 * (currently 7Å) is used.
+	 * @param full Structure containing all ligands
+	 * @param reduced Structure with a subset of the polymer groups from full
+	 * @see StructureTools#getLigandsByProximity(java.util.Collection, Atom[], double)
+	 */
+	protected static void copyLigandsByProximity(Structure full, Structure reduced) {
 		// Normal case where all models should be copied from full to reduced
 		assert full.nrModels() >= reduced.nrModels();
 		for(int model = 0; model< reduced.nrModels(); model++) {
-			copyLigandsByProximity(full, reduced, DEFAULT_LIGAND_PROXIMITY_CUTOFF, model, model);
+			copyLigandsByProximity(full, reduced, StructureTools.DEFAULT_LIGAND_PROXIMITY_CUTOFF, model, model);
 		}
 	}
-	static void copyLigandsByProximity(Structure full, Structure reduced, double cutoff, int fromModel, int toModel) {
+	/**
+	 * Supplements the reduced structure with ligands from the full structure based on
+	 * a distance cutoff. Ligand groups are moved (destructively) from full to reduced
+	 * if they fall within the cutoff of any atom in the reduced structure.
+	 * @param full Structure containing all ligands
+	 * @param reduced Structure with a subset of the polymer groups from full
+	 * @param cutoff Distance cutoff (Å)
+	 * @param fromModel source model in full
+	 * @param toModel destination model in reduced
+	 * @see StructureTools#getLigandsByProximity(java.util.Collection, Atom[], double)
+	 */
+	protected static void copyLigandsByProximity(Structure full, Structure reduced, double cutoff, int fromModel, int toModel) {
 		// Geometric hashing of the reduced structure
 		Grid grid = new Grid(cutoff);
 		grid.addAtoms(StructureTools.getAllAtomArray(reduced,toModel));
@@ -393,4 +412,5 @@ public class SubstructureIdentifier implements Serializable, StructureIdentifier
 		}
 			
 	}
+
 }
