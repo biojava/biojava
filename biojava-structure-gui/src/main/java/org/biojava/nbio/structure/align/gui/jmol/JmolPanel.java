@@ -24,12 +24,33 @@
 
 package org.biojava.nbio.structure.align.gui.jmol;
 
-import org.biojava.nbio.structure.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
+import java.text.DecimalFormat;
+import java.util.List;
+
+import javax.swing.JComboBox;
+
+import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.Calc;
+import org.biojava.nbio.structure.Group;
+import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.gui.JPrintPanel;
 import org.biojava.nbio.structure.domain.LocalProteinDomainParser;
 import org.biojava.nbio.structure.domain.pdp.Domain;
 import org.biojava.nbio.structure.domain.pdp.Segment;
 import org.biojava.nbio.structure.gui.util.color.ColorUtils;
+import org.biojava.nbio.structure.io.mmtf.MmtfActions;
 import org.biojava.nbio.structure.jama.Matrix;
 import org.biojava.nbio.structure.scop.ScopDatabase;
 import org.biojava.nbio.structure.scop.ScopDomain;
@@ -41,14 +62,6 @@ import org.jmol.api.JmolViewer;
 import org.jmol.util.LoggerInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.swing.*;
-
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.text.DecimalFormat;
-import java.util.List;
 
 
 public class JmolPanel
@@ -114,11 +127,28 @@ implements ActionListener
 		viewer.evalString(rasmolScript);
 	}
 
-	public void setStructure(Structure s)
+	public void setStructure(final Structure s)
 	{
 		this.structure = s;
-		String serialized = s.toMMCIF();
-		viewer.openStringInline(serialized);
+		try (
+				PipedOutputStream out = new PipedOutputStream();
+				// Viewer requires a BufferedInputStream for reflection
+				InputStream in = new BufferedInputStream(new PipedInputStream(out));
+				) {
+			new Thread((Runnable)() -> {
+				try {
+					MmtfActions.writeToOutputStream(s,out);
+				} catch (Exception e) {
+					logger.error("Error generating MMTF output for {}",
+							s.getStructureIdentifier()==null ? s.getStructureIdentifier().getIdentifier() : s.getName(), e);
+				}
+			}).start();
+			viewer.openReader(null, in);
+		} catch (IOException e) {
+			logger.error("Error transfering {} to Jmol",
+					s.getStructureIdentifier()==null ? s.getStructureIdentifier().getIdentifier() : s.getName(), e);
+		}
+
 		evalString("save STATE state_1");
 	}
 
