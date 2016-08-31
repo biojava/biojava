@@ -764,11 +764,7 @@ public class Calc {
 	}
 
 	/**
-<<<<<<< HEAD
 	 * Returns the centroid of the set of atoms.
-=======
-	 * Returns the center of mass of the set of atoms.
->>>>>>> refs/heads/quaternion
 	 * 
 	 * @param atomSet
 	 *            a set of Atoms
@@ -799,6 +795,14 @@ public class Calc {
 
 	}
 
+	/**
+	 * Returns the center of mass of the set of atoms. Atomic masses of the
+	 * Atoms are used.
+	 * 
+	 * @param atomSet
+	 *            a set of Atoms
+	 * @return an Atom representing the center of mass
+	 */
 	public static Atom centerOfMass(Atom[] points) {
 		Atom center = new AtomImpl();
 
