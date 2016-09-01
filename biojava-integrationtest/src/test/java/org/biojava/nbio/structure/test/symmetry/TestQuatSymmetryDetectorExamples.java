@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  */
-package org.biojava.nbio.structure.symmetry.core;
+package org.biojava.nbio.structure.test.symmetry;
 
 import static org.junit.Assert.*;
 
@@ -37,14 +37,14 @@ import org.biojava.nbio.structure.symmetry.core.QuatSymmetryResults;
 import org.junit.Test;
 
 /**
- * Test the algorithm for symmetry detection on a variety of structures with
- * different symmetries.
+ * Test the {@link QuatSymmetryDetector} algorithm for symmetry detection on a
+ * variety of structures with different symmetries.
  * 
  * @author Peter Rose
  * @author Aleix Lafita
  *
  */
-public class TestQuatSymmetryDetector {
+public class TestQuatSymmetryDetectorExamples {
 
 	/**
 	 * An NMR multi-model entry: 1B4C
@@ -56,12 +56,12 @@ public class TestQuatSymmetryDetector {
 	public void testNMR() throws IOException, StructureException {
 
 		Structure pdb = StructureIO.getStructure("BIO:1b4c:1");
-		
+
 		SubunitClustererParameters clusterParams = new SubunitClustererParameters();
 		QuatSymmetryParameters symmParams = new QuatSymmetryParameters();
 		QuatSymmetryResults symmetry = QuatSymmetryDetector.calcGlobalSymmetry(
 				pdb, symmParams, clusterParams);
-		
+
 		// C2 symmetry non pseudosymmetric
 		assertEquals("C2", symmetry.getSymmetry());
 		assertEquals("A2", symmetry.getStoichiometry());

@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  */
-package org.biojava.nbio.structure.cluster;
+package org.biojava.nbio.structure.test.cluster;
 
 import static org.junit.Assert.*;
 
@@ -28,6 +28,10 @@ import java.util.List;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
+import org.biojava.nbio.structure.cluster.SubunitCluster;
+import org.biojava.nbio.structure.cluster.SubunitClusterer;
+import org.biojava.nbio.structure.cluster.SubunitClustererMethod;
+import org.biojava.nbio.structure.cluster.SubunitClustererParameters;
 import org.junit.Test;
 
 /**
@@ -37,7 +41,7 @@ import org.junit.Test;
  * @author Aleix Lafita
  *
  */
-public class TestSubunitClusterer {
+public class TestSubunitClustererExamples {
 
 	/**
 	 * Test modified residues: 1HIV

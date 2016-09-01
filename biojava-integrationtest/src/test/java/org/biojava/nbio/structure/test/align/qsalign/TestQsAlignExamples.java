@@ -1,4 +1,4 @@
-package org.biojava.nbio.structure.align.quaternary;
+package org.biojava.nbio.structure.test.align.qsalign;
 
 import static org.junit.Assert.*;
 
@@ -7,6 +7,10 @@ import java.io.IOException;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
+import org.biojava.nbio.structure.align.quaternary.QsAlign;
+import org.biojava.nbio.structure.align.quaternary.QsAlignParameters;
+import org.biojava.nbio.structure.align.quaternary.QsAlignResult;
+import org.biojava.nbio.structure.align.quaternary.QsRelation;
 import org.biojava.nbio.structure.cluster.SubunitClustererParameters;
 import org.junit.Test;
 
@@ -18,7 +22,7 @@ import org.junit.Test;
  * @since 5.0.0
  *
  */
-public class TestQsAlign {
+public class TestQsAlignExamples {
 
 	/**
 	 * Identity: test hemoglobin (4HHB) against itself.
