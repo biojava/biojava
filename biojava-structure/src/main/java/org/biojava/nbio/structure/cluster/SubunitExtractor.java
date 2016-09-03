@@ -68,31 +68,24 @@ public class SubunitExtractor {
 		// The extracted subunit container
 		List<Subunit> subunits = new ArrayList<Subunit>();
 
-		// Biological assemblies require all models
-		int models = 1;
-		if (structure.isBiologicalAssembly())
-			models = structure.nrModels();
+		
+		for (Chain c : structure.getChains()) {
 
-		logger.info("Protein models used in calculation: " + models);
+			// Only take protein chains
+			if (c.isProtein()) {
+				Atom[] ca = StructureTools.getRepresentativeAtomArray(c);
+				logger.debug("Chain " + c.getId() + "; CA Atoms: "
+						+ ca.length + "; SEQRES: " + c.getSeqResSequence());
+				subunits.add(new Subunit(ca, c.getName(), null, structure));
 
-		for (int i = 0; i < models; i++) {
-			for (Chain c : structure.getChains(i)) {
-
-				// Only take protein chains
-				if (StructureTools.isProtein(c)) {
-					Atom[] ca = StructureTools.getRepresentativeAtomArray(c);
-					logger.info("Chain " + c.getId() + "; CA Atoms: "
-							+ ca.length + "; SEQRES: " + c.getSeqResSequence());
-					subunits.add(new Subunit(ca, c.getName(), null, structure));
-
-				}
 			}
 		}
+		
 
 		// Calculate the minimum length of a Subunit
 		int adjustedMinLen = calcAdjustedMinimumSequenceLength(subunits,
 				absMinLen, fraction, minLen);
-		logger.info("Adjusted minimum sequence length: " + adjustedMinLen);
+		logger.debug("Adjusted minimum sequence length: " + adjustedMinLen);
 
 		// Filter out short Subunits
 		for (int s = subunits.size() - 1; s >= 0; s--) {
