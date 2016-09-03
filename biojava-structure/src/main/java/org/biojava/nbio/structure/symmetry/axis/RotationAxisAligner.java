@@ -25,7 +25,7 @@ import org.biojava.nbio.structure.geometry.SuperPosition;
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetryResults;
 import org.biojava.nbio.structure.symmetry.core.Rotation;
 import org.biojava.nbio.structure.symmetry.core.RotationGroup;
-import org.biojava.nbio.structure.symmetry.core.Subunits;
+import org.biojava.nbio.structure.symmetry.core.QuatSymmetrySubunits;
 
 import javax.vecmath.*;
 
@@ -36,7 +36,7 @@ public class RotationAxisAligner extends AxisAligner{
 	private static final Vector3d Y_AXIS = new Vector3d(0,1,0);
 	private static final Vector3d Z_AXIS = new Vector3d(0,0,1);
 
-	private Subunits subunits = null;
+	private QuatSymmetrySubunits subunits = null;
 	private RotationGroup rotationGroup = null;
 
 	private Matrix4d transformationMatrix = new Matrix4d();
@@ -53,7 +53,7 @@ public class RotationAxisAligner extends AxisAligner{
 	boolean modified = true;
 
 	public RotationAxisAligner(QuatSymmetryResults results) {
-		this.subunits = results.getSubunits();
+		this.subunits = new QuatSymmetrySubunits(results.getSubunitClusters());
 		this.rotationGroup = results.getRotationGroup();
 
 		if (subunits == null) {
@@ -181,7 +181,7 @@ public class RotationAxisAligner extends AxisAligner{
 	}
 
 	@Override
-	public Subunits getSubunits() {
+	public QuatSymmetrySubunits getSubunits() {
 		return subunits;
 	}
 

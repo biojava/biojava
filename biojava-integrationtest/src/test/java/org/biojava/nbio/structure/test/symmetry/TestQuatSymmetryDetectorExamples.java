@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  */
-package org.biojava.nbio.structure.symmetry.core;
+package org.biojava.nbio.structure.test.symmetry;
 
 import static org.junit.Assert.*;
 
@@ -37,14 +37,14 @@ import org.biojava.nbio.structure.symmetry.core.QuatSymmetryResults;
 import org.junit.Test;
 
 /**
- * Test the algorithm for symmetry detection on a variety of structures with
- * different symmetries.
+ * Test the {@link QuatSymmetryDetector} algorithm for symmetry detection on a
+ * variety of structures with different symmetries.
  * 
  * @author Peter Rose
  * @author Aleix Lafita
  *
  */
-public class TestQuatSymmetryDetector {
+public class TestQuatSymmetryDetectorExamples {
 
 	/**
 	 * An NMR multi-model entry: 1B4C
@@ -56,16 +56,16 @@ public class TestQuatSymmetryDetector {
 	public void testNMR() throws IOException, StructureException {
 
 		Structure pdb = StructureIO.getStructure("BIO:1b4c:1");
-		
+
 		SubunitClustererParameters clusterParams = new SubunitClustererParameters();
 		QuatSymmetryParameters symmParams = new QuatSymmetryParameters();
 		QuatSymmetryResults symmetry = QuatSymmetryDetector.calcGlobalSymmetry(
 				pdb, symmParams, clusterParams);
-		
+
 		// C2 symmetry non pseudosymmetric
 		assertEquals("C2", symmetry.getSymmetry());
-		assertEquals("A2", symmetry.getSubunits().getStoichiometry());
-		assertFalse(symmetry.getSubunits().isPseudoStoichiometric());
+		assertEquals("A2", symmetry.getStoichiometry());
+		assertFalse(symmetry.isPseudoStoichiometric());
 
 	}
 
@@ -89,7 +89,7 @@ public class TestQuatSymmetryDetector {
 
 		// C2 symmetry
 		assertEquals("C2", symmetry.getSymmetry());
-		assertEquals("A2B2", symmetry.getSubunits().getStoichiometry());
+		assertEquals("A2B2", symmetry.getStoichiometry());
 
 		// Use pseudosymmetry (structural clustering)
 		clusterParams.setClustererMethod(SubunitClustererMethod.STRUCTURE);
@@ -98,7 +98,7 @@ public class TestQuatSymmetryDetector {
 
 		// D2 pseudo-symmetry
 		assertEquals("D2", symmetry.getSymmetry());
-		assertEquals("A4", symmetry.getSubunits().getStoichiometry());
+		assertEquals("A4", symmetry.getStoichiometry());
 	}
 
 	/**
@@ -120,7 +120,7 @@ public class TestQuatSymmetryDetector {
 
 		// C1 global symmetry
 		assertEquals("C1", symmetry.getSymmetry());
-		assertEquals("A5B5C", symmetry.getSubunits().getStoichiometry());
+		assertEquals("A5B5C", symmetry.getStoichiometry());
 
 		// Local symmetry
 		List<QuatSymmetryResults> localSymm = QuatSymmetryDetector
@@ -133,8 +133,8 @@ public class TestQuatSymmetryDetector {
 		assertEquals("C5", localSymm.get(2).getSymmetry());
 
 		// Two A5 and one A5B5 stoichiometries as local symmetry
-		List<String> stoich = localSymm.stream().map(
-				t -> t.getSubunits().getStoichiometry()).collect(Collectors.toList());
+		List<String> stoich = localSymm.stream().map(t -> t.getStoichiometry())
+				.collect(Collectors.toList());
 
 		assertTrue(stoich.contains("A5"));
 		assertTrue(stoich.contains("A5B5"));
@@ -151,10 +151,11 @@ public class TestQuatSymmetryDetector {
 
 		Structure pdb = StructureIO.getStructure("BIO:4e3e:1");
 
-		// Internal symmetry analysis
+		// Internal symmetry analysis, use structural clustering
 		SubunitClustererParameters cp = new SubunitClustererParameters();
-		cp.setClustererMethod(SubunitClustererMethod.INTERNAL_SYMMETRY);
-		cp.setCoverageThreshold(0.8); // Lower coverage for internal symm
+		cp.setClustererMethod(SubunitClustererMethod.STRUCTURE);
+		cp.setInternalSymmetry(true);
+		cp.setCoverageThreshold(0.75); // Lower coverage for internal symm
 
 		QuatSymmetryParameters symmParams = new QuatSymmetryParameters();
 		QuatSymmetryResults symmetry = QuatSymmetryDetector.calcGlobalSymmetry(
@@ -162,10 +163,10 @@ public class TestQuatSymmetryDetector {
 
 		// D2 combined internal and quaternary symmetry
 		assertEquals("D3", symmetry.getSymmetry());
-		assertEquals("A6", symmetry.getSubunits().getStoichiometry());
+		assertEquals("A6", symmetry.getStoichiometry());
 
 	}
-	
+
 	/**
 	 * A structure with helical symmetry: 1B47
 	 * 
@@ -184,7 +185,29 @@ public class TestQuatSymmetryDetector {
 
 		// H symmetry A3 stoichiometry
 		assertEquals("H", symmetry.getSymmetry());
-		assertEquals("A3", symmetry.getSubunits().getStoichiometry());
+		assertEquals("A3", symmetry.getStoichiometry());
+
+	}
+
+	/**
+	 * A structure with local helical symmetry: 5JLF
+	 * 
+	 * @throws IOException
+	 * @throws StructureException
+	 */
+	@Test
+	public void testHelicalLocal() throws IOException, StructureException {
+
+		Structure pdb = StructureIO.getStructure("BIO:5JLF:1");
+
+		SubunitClustererParameters cp = new SubunitClustererParameters();
+		QuatSymmetryParameters symmParams = new QuatSymmetryParameters();
+		List<QuatSymmetryResults> results = QuatSymmetryDetector
+				.calcLocalSymmetries(pdb, symmParams, cp);
+
+		// H symmetry A5 stoichiometry
+		assertEquals("H", results.get(0).getSymmetry());
+		assertEquals("A5", results.get(0).getStoichiometry());
 
 	}
 }

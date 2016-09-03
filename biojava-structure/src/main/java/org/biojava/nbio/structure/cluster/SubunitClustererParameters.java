@@ -44,6 +44,7 @@ public class SubunitClustererParameters implements Serializable {
 	private double coverageThreshold = 0.75;
 
 	private SubunitClustererMethod clustererMethod = SubunitClustererMethod.STRUCTURE;
+	private boolean internalSymmetry = false;
 
 	/**
 	 * Get the minimum number of residues of a subunits to be considered in the
@@ -210,6 +211,33 @@ public class SubunitClustererParameters implements Serializable {
 		this.clustererMethod = method;
 	}
 
+	/**
+	 * The internal symmetry option divides each {@link Subunit} of each
+	 * {@link SubunitCluster} into its internally symmetric repeats.
+	 * <p>
+	 * The {@link SubunitClustererMethod#STRUCTURE} must be chosen to consider
+	 * internal symmetry, otherwise this parameter will be ignored.
+	 * 
+	 * @return true if internal symmetry is considered, false otherwise
+	 */
+	public boolean isInternalSymmetry() {
+		return internalSymmetry;
+	}
+
+	/**
+	 * The internal symmetry option divides each {@link Subunit} of each
+	 * {@link SubunitCluster} into its internally symmetric repeats.
+	 * <p>
+	 * The {@link SubunitClustererMethod#STRUCTURE} must be chosen to consider
+	 * internal symmetry, otherwise this parameter will be ignored.
+	 * 
+	 * @param internalSymmetry
+	 *            true if internal symmetry is considered, false otherwise
+	 */
+	public void setInternalSymmetry(boolean internalSymmetry) {
+		this.internalSymmetry = internalSymmetry;
+	}
+
 	@Override
 	public String toString() {
 		return "SubunitClustererParameters [minimumSequenceLength="
@@ -220,7 +248,7 @@ public class SubunitClustererParameters implements Serializable {
 				+ ", sequenceIdentityThreshold=" + sequenceIdentityThreshold
 				+ ", rmsdThreshold=" + rmsdThreshold + ", coverageThreshold="
 				+ coverageThreshold + ", clustererMethod=" + clustererMethod
-				+ "]";
+				+ ", internalSymmetry=" + internalSymmetry + "]";
 	}
 
 }

@@ -61,7 +61,7 @@ public class DemoQuatSymmetryJmol {
 	public static void main(String[] args) throws IOException,
 			StructureException {
 
-		String name = "4hhb";
+		String name = "1VYM";
 
 		// Download the biological assembly
 		AtomCache cache = new AtomCache();
@@ -92,10 +92,10 @@ public class DemoQuatSymmetryJmol {
 	private static void showResults(Structure s, String name,
 			QuatSymmetryResults results) {
 
-		String title = name + ": " + results.getSubunits().getStoichiometry()
+		String title = name + ": " + results.getStoichiometry()
 				+ ", " + results.getSymmetry();
 
-		if (results.getSubunits().isPseudoSymmetric())
+		if (results.isPseudosymmetric())
 			title += ", pseudosymmetric";
 
 		if (results.isLocal())

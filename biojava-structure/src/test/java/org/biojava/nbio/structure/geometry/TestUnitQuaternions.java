@@ -8,6 +8,7 @@ import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Quat4d;
+import javax.vecmath.Vector3d;
 
 import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.Structure;
@@ -140,8 +141,9 @@ public class TestUnitQuaternions {
 	@Test
 	public void testOrientationMetricIncrement() throws IOException,
 			StructureException {
-		
-		// The rotation increment will be Pi/10, Pi/15 and Pi/12 degrees in X,Y and Z
+
+		// The rotation increment will be Pi/10, Pi/15 and Pi/12 degrees in X,Y
+		// and Z
 		Matrix4d transform = new Matrix4d();
 		transform.rotX(Math.PI / 10);
 		transform.rotY(Math.PI / 12);
@@ -160,43 +162,77 @@ public class TestUnitQuaternions {
 		// Their orientation is equal at this stage
 		double m0 = UnitQuaternions.orientationMetric(cloud, cloud2);
 		assertEquals(m0, 0.0, 0.001);
-		
+
 		// Assert it keeps incrementing every time transform is applied
 		CalcPoint.transform(transform, cloud2);
 		double m1 = UnitQuaternions.orientationMetric(cloud, cloud2);
 		assertTrue(m1 > m0);
-		
+
 		CalcPoint.transform(transform, cloud2);
 		double m2 = UnitQuaternions.orientationMetric(cloud, cloud2);
 		assertTrue(m2 > m1);
-		
+
 		CalcPoint.transform(transform, cloud2);
 		double m3 = UnitQuaternions.orientationMetric(cloud, cloud2);
 		assertTrue(m3 > m2);
-		
+
 		CalcPoint.transform(transform, cloud2);
 		double m4 = UnitQuaternions.orientationMetric(cloud, cloud2);
 		assertTrue(m4 > m3);
-		
+
 		CalcPoint.transform(transform, cloud2);
 		double m5 = UnitQuaternions.orientationMetric(cloud, cloud2);
 		assertTrue(m5 > m4);
-		
+
 		CalcPoint.transform(transform, cloud2);
 		double m6 = UnitQuaternions.orientationMetric(cloud, cloud2);
 		assertTrue(m6 > m5);
-		
+
 		CalcPoint.transform(transform, cloud2);
 		double m7 = UnitQuaternions.orientationMetric(cloud, cloud2);
 		assertTrue(m7 > m6);
-		
+
 		CalcPoint.transform(transform, cloud2);
 		double m8 = UnitQuaternions.orientationMetric(cloud, cloud2);
 		assertTrue(m8 > m7);
-		
+
 		CalcPoint.transform(transform, cloud2);
 		double m9 = UnitQuaternions.orientationMetric(cloud, cloud2);
 		assertTrue(m9 > m8);
+	}
+
+	/**
+	 * Test {@link UnitQuaternions#relativeOrientation(Point3d[], Point3d[])} on
+	 * a real structure. Test recovering of the angle applied.
+	 * 
+	 * @throws StructureException
+	 * @throws IOException
+	 */
+	@Test
+	public void testRelativeOrientation() throws IOException,
+			StructureException {
+
+		// Get points from a structure.
+		Structure pdb = StructureIO.getStructure("4hhb.A");
+		Point3d[] cloud = Calc.atomsToPoints(StructureTools
+				.getRepresentativeAtomArray(pdb));
+		Point3d[] cloud2 = CalcPoint.clonePoint3dArray(cloud);
+		
+		// Test orientation angle equal to 0 at this point
+		double angle = UnitQuaternions.orientationAngle(cloud, cloud2, false);
+		assertEquals(angle, 0, 0.001);
+		
+		// Apply a 30 degree rotation to cloud 2
+		AxisAngle4d axis = new AxisAngle4d(new Vector3d(1,1,1), Math.PI / 6);
+		Matrix4d transform = new Matrix4d();
+		transform.set(axis);
+		
+		CalcPoint.transform(transform, cloud2);
+		angle = UnitQuaternions.orientationAngle(cloud, cloud2, false);
+		angle = Math.min(Math.abs(2 * Math.PI - angle), angle);
+		
+		// Test that angle was recovered
+		assertEquals(angle, Math.PI / 6, 0.001);
 	}
 
 }

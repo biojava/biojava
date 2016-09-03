@@ -33,7 +33,7 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
 /**
- * Utility operations on Atoms, AminoAcids, etc.
+ * Utility operations on Atoms, AminoAcids, Matrices, Point3d, etc.
  * <p>
  * Currently the coordinates of an Atom are stored as an array of size 3
  * (double[3]). It would be more powerful to use Point3d from javax.vecmath.
@@ -41,6 +41,7 @@ import javax.vecmath.Vector3d;
  * Class.
  *
  * @author Andreas Prlic
+ * @author Aleix Lafita
  * @since 1.4
  * @version %I% %G%
  */
@@ -763,7 +764,7 @@ public class Calc {
 	}
 
 	/**
-	 * Returns the center of mass of the set of atoms.
+	 * Returns the centroid of the set of atoms.
 	 * 
 	 * @param atomSet
 	 *            a set of Atoms
@@ -794,6 +795,14 @@ public class Calc {
 
 	}
 
+	/**
+	 * Returns the center of mass of the set of atoms. Atomic masses of the
+	 * Atoms are used.
+	 * 
+	 * @param atomSet
+	 *            a set of Atoms
+	 * @return an Atom representing the center of mass
+	 */
 	public static Atom centerOfMass(Atom[] points) {
 		Atom center = new AtomImpl();
 

@@ -42,7 +42,7 @@ import java.util.Set;
  * @author Peter
  */
 public class RotationSolver implements QuatSymmetrySolver {
-	private Subunits subunits = null;
+	private QuatSymmetrySubunits subunits = null;
 	private QuatSymmetryParameters parameters = null;
 
 	private double distanceThreshold = 0.0f;
@@ -55,7 +55,7 @@ public class RotationSolver implements QuatSymmetrySolver {
 
 	private RotationGroup rotations = new RotationGroup();
 
-	public RotationSolver(Subunits subunits, QuatSymmetryParameters parameters) {
+	public RotationSolver(QuatSymmetrySubunits subunits, QuatSymmetryParameters parameters) {
 		if (subunits.getSubunitCount()== 2) {
 			throw new IllegalArgumentException("RotationSolver cannot be applied to subunits with 2 centers");
 		}
@@ -241,7 +241,7 @@ public class RotationSolver implements QuatSymmetrySolver {
 	}
 
 	private boolean isAllowedPermutation(List<Integer> permutation) {
-		List<Integer> seqClusterId = subunits.getSequenceClusterIds();
+		List<Integer> seqClusterId = subunits.getClusterIds();
 		for (int i = 0; i < permutation.size(); i++) {
 			int j = permutation.get(i);
 			if (seqClusterId.get(i) != seqClusterId.get(j)) {

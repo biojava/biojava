@@ -106,8 +106,7 @@ public class QuatSymmetryDetector {
 	 */
 	public static QuatSymmetryResults calcGlobalSymmetry(
 			List<SubunitCluster> clusters, QuatSymmetryParameters symmParams) {
-		Subunits subunits = new Subunits(clusters);
-		return calcQuatSymmetry(subunits, symmParams);
+		return calcQuatSymmetry(clusters, symmParams);
 	}
 
 	/**
@@ -188,7 +187,7 @@ public class QuatSymmetryDetector {
 			return localSymmetries;
 
 		// If there are less than 3 or more than maximum Subunits return empty
-		Subunits subunits = new Subunits(clusters);
+		QuatSymmetrySubunits subunits = new QuatSymmetrySubunits(clusters);
 		if (subunits.getSubunitCount() < 3
 				|| subunits.getSubunitCount() > symmParams
 						.getMaximumLocalSubunits())
@@ -239,7 +238,7 @@ public class QuatSymmetryDetector {
 					cluster);
 			QuatSymmetryResults localResult = calcGlobalSymmetry(localClusters,
 					symmParams);
-			
+
 			if (!localResult.getSymmetry().equals("C1")) {
 				localResult.setLocal(true);
 				localSymmetries.add(localResult);
@@ -251,8 +250,10 @@ public class QuatSymmetryDetector {
 		return localSymmetries;
 	}
 
-	private static QuatSymmetryResults calcQuatSymmetry(Subunits subunits,
-			QuatSymmetryParameters parameters) {
+	private static QuatSymmetryResults calcQuatSymmetry(
+			List<SubunitCluster> clusters, QuatSymmetryParameters parameters) {
+
+		QuatSymmetrySubunits subunits = new QuatSymmetrySubunits(clusters);
 
 		if (subunits.getSubunitCount() == 0)
 			return null;
@@ -276,14 +277,14 @@ public class QuatSymmetryDetector {
 			rotationGroup = solver.getSymmetryOperations();
 		}
 
-		QuatSymmetryResults results = new QuatSymmetryResults(subunits,
+		QuatSymmetryResults results = new QuatSymmetryResults(clusters,
 				rotationGroup, method);
 
-		// asymmetric structures cannot be pseudosymmetric
 		String symmetry = results.getSymmetry();
-		if (symmetry.equals("C1")) {
-			subunits.setPseudoSymmetric(false);
-		}
+
+		// asymmetric structures cannot be pseudosymmetric
+		if (symmetry.equals("C1"))
+			results.setPseudosymmetric(false);
 
 		// Check structures with Cn symmetry (n = 1, ...) for helical symmetry
 		if (symmetry.startsWith("C")) {
@@ -308,7 +309,7 @@ public class QuatSymmetryDetector {
 						|| (!symmetry.equals("C1") && deltaRmsd <= parameters
 								.getHelixRmsdThreshold())) {
 					method = SymmetryPerceptionMethod.ROTO_TRANSLATION;
-					results = new QuatSymmetryResults(subunits, helixLayers,
+					results = new QuatSymmetryResults(clusters, helixLayers,
 							method);
 				}
 			}

@@ -43,7 +43,7 @@ public class QuatSuperpositionScorer {
 	 * @param permutations permutation that determines which subunits are superposed
 	 * @return
 	 */
-	public static QuatSymmetryScores calcScores(Subunits subunits, Matrix4d transformation, List<Integer> permutation) {
+	public static QuatSymmetryScores calcScores(QuatSymmetrySubunits subunits, Matrix4d transformation, List<Integer> permutation) {
 		QuatSymmetryScores scores = new QuatSymmetryScores();
 
 		double minTm = Double.MAX_VALUE;
@@ -117,7 +117,7 @@ public class QuatSuperpositionScorer {
 		return scores;
 	}
 
-	private static void calcIntrasubunitScores(Subunits subunits, Matrix4d transformation, List<Integer> permutation, QuatSymmetryScores scores) {
+	private static void calcIntrasubunitScores(QuatSymmetrySubunits subunits, Matrix4d transformation, List<Integer> permutation, QuatSymmetryScores scores) {
 		double totalSumTm = 0;
 		double totalSumDsq = 0;
 		double totalLength = 0;
