@@ -17,6 +17,9 @@ public class SuperPositions {
 
 	private static SuperPositionAbstract superposer = new SuperPositionQuat(
 			false);
+	
+	/** Prevent instantiation */
+	private SuperPositions(){}
 
 	/**
 	 * Use the {@link SuperPosition#superpose(Point3d[], Point3d[])} method of

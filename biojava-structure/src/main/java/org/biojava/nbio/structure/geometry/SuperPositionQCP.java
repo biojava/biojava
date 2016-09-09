@@ -193,10 +193,6 @@ public final class SuperPositionQCP extends SuperPositionAbstract {
 		transformationCalculated = false;
 	}
 
-	public void setCentered(boolean centered) {
-		this.centered = centered;
-	}
-
 	/**
      * Return the RMSD of the superposition of input coordinate set y onto x.
      * Note, this is the fasted way to calculate an RMSD without actually
@@ -213,7 +209,7 @@ public final class SuperPositionQCP extends SuperPositionAbstract {
 
     @Override
     public Matrix4d superpose(Point3d[] fixed, Point3d[] moved) {
-    	set(fixed, moved);
+    	set(moved, fixed);
 		getRotationMatrix();
 		if (!centered) {
 			calcTransformation();
@@ -232,7 +228,7 @@ public final class SuperPositionQCP extends SuperPositionAbstract {
      * @return
      */
     public Matrix4d weightedSuperpose(Point3d[] fixed, Point3d[] moved, double[] weight) {
-    	set(fixed, moved, weight);
+    	set(moved, fixed, weight);
     	getRotationMatrix();
 		if (!centered) {
 			calcTransformation();
@@ -577,7 +573,7 @@ public final class SuperPositionQCP extends SuperPositionAbstract {
 
 	@Override
 	public double getRmsd(Point3d[] fixed, Point3d[] moved) {
-		set(fixed, moved);
+		set(moved, fixed);
 		return getRmsd();
 	}
 	
@@ -588,7 +584,7 @@ public final class SuperPositionQCP extends SuperPositionAbstract {
 	 * @return weighted RMSD.
 	 */
 	public double getWeightedRmsd(Point3d[] fixed, Point3d[] moved, double[] weight) {
-		set(fixed, moved, weight);
+		set(moved, fixed, weight);
 		return getRmsd();
 	}
 

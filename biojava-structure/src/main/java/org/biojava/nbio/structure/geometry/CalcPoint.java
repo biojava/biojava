@@ -93,8 +93,8 @@ public class CalcPoint {
 	/**
 	 * Peter can you document this method? TODO
 	 * 
-	 * @param a
-	 * @param b
+	 * @param moved
+	 * @param fixed
 	 * @return
 	 */
 	public static Matrix formMatrix(Point3d[] a, Point3d[] b) {

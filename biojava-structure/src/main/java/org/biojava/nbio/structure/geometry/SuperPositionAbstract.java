@@ -39,14 +39,6 @@ public abstract class SuperPositionAbstract implements SuperPosition {
 	}
 
 	/**
-	 * @return true if the point arrays are centered at the origin (faster),
-	 *         false otherwise
-	 */
-	public boolean getCentered() {
-		return centered;
-	}
-
-	/**
 	 * @param centered
 	 *            true if the point arrays are centered at the origin (faster),
 	 *            false otherwise
