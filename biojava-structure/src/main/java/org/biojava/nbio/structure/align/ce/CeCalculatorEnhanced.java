@@ -30,6 +30,7 @@ import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.model.AFP;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.util.AFPAlignmentDisplay;
+import org.biojava.nbio.structure.geometry.SuperPositionSVD;
 import org.biojava.nbio.structure.jama.Matrix;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
@@ -1966,7 +1967,7 @@ nBestTrace=nTrace;
 		Atom[] cod2 = getAtoms(pro2,  strLen,true);
 
 		assert(cod1.length == cod2.length);
-		SVDSuperimposer svd = new SVDSuperimposer(cod1, cod2);
+		SuperPositionSVD svd = new SuperPositionSVD(cod1, cod2);
 
 		Matrix matrix = svd.getRotation();
 
@@ -1999,7 +2000,7 @@ nBestTrace=nTrace;
 		//			jmol2.evalString("select * ; wireframe off; spacefill off;  backbone on; color chain; select ligand;color cpk; wireframe 40;spacefill 120;  ");
 		//			jmol2.setTitle("calCaRmsd - pdb2");
 		//		}
-		return SVDSuperimposer.getRMS(cod1, cod2);
+		return SuperPositionSVD.getRMS(cod1, cod2);
 
 	}
 

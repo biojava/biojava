@@ -28,6 +28,7 @@ package org.biojava.nbio.structure.align.fatcat.calc;
 
 
 import org.biojava.nbio.structure.*;
+import org.biojava.nbio.structure.geometry.SuperPositionSVD;
 import org.biojava.nbio.structure.jama.Matrix;
 
 
@@ -257,7 +258,7 @@ public class StructureAlignmentOptimizer
 		}
 
 		//superimpose the equivalent residues
-		SVDSuperimposer svd = new SVDSuperimposer(tmp1, tmp2);
+		SuperPositionSVD svd = new SuperPositionSVD(tmp1, tmp2);
 
 		Matrix    m = svd.getRotation();
 		Atom      t = svd.getTranslation();
@@ -271,7 +272,7 @@ public class StructureAlignmentOptimizer
 
 		// weird, why does it take the RMSD before the rotation?
 		// the rmsd is only for the subset contained in the tmp arrays.
-		rmsd = SVDSuperimposer.getRMS(tmp1,tmp2);
+		rmsd = SuperPositionSVD.getRMS(tmp1,tmp2);
 
 		//System.err.println("rmsd after superimpose by set: " + rmsd);
 

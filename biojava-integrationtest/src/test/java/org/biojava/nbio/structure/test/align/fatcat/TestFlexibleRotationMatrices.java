@@ -25,6 +25,7 @@
 package org.biojava.nbio.structure.test.align.fatcat;
 
 import junit.framework.TestCase;
+
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.StructureAlignment;
 import org.biojava.nbio.structure.align.fatcat.FatCatFlexible;
@@ -34,6 +35,7 @@ import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.align.xml.AFPChainXMLConverter;
 import org.biojava.nbio.structure.align.xml.AFPChainXMLParser;
+import org.biojava.nbio.structure.geometry.SuperPositionSVD;
 import org.biojava.nbio.structure.jama.Matrix;
 
 import java.io.IOException;
@@ -200,7 +202,7 @@ public class TestFlexibleRotationMatrices extends TestCase{
 		// calc RMSD
 
 
-		double rmsdFile = SVDSuperimposer.getRMS(blockSet1, blockSet2);
+		double rmsdFile = SuperPositionSVD.getRMS(blockSet1, blockSet2);
 
 		// this is the value from the file. it never seems to match precisely, probably is calculated from initial block.
 		// we can't reproduce the initial block, since we don;t serialize it.
@@ -209,7 +211,7 @@ public class TestFlexibleRotationMatrices extends TestCase{
 
 		// THIS IS CALCULATING THE "correct" rotation matrix, that should be in the file
 
-		SVDSuperimposer svd = new SVDSuperimposer(blockSet1, blockSet2copy);
+		SuperPositionSVD svd = new SuperPositionSVD(blockSet1, blockSet2copy);
 		//double rmsdForce = SVDSuperimposer.getRMS(atomSet1, atomSet2);
 		Matrix m = svd.getRotation();
 		Atom   s  = svd.getTranslation();
@@ -231,7 +233,7 @@ public class TestFlexibleRotationMatrices extends TestCase{
 			Calc.rotate(a, m);
 			Calc.shift( a, s);
 		}
-		double rmsd3 = SVDSuperimposer.getRMS(blockSet1,blockSet2copy);
+		double rmsd3 = SuperPositionSVD.getRMS(blockSet1,blockSet2copy);
 
 		assertTrue("The RMSD values don;t match after rotation / shift for block " + blockNr + "! should be: " + rmsd3 + " but found: " +rmsdFile, compareRmsd(rmsd3, rmsdFile));
 

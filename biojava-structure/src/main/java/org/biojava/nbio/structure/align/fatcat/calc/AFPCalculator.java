@@ -29,6 +29,7 @@ package org.biojava.nbio.structure.align.fatcat.calc;
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.model.AFP;
 import org.biojava.nbio.structure.align.model.AFPChain;
+import org.biojava.nbio.structure.geometry.SuperPositionSVD;
 import org.biojava.nbio.structure.jama.Matrix;
 
 import java.util.ArrayList;
@@ -199,7 +200,7 @@ public class AFPCalculator
 
 			}
 
-			SVDSuperimposer svd = new SVDSuperimposer(catmp1, catmp2);
+			SuperPositionSVD svd = new SuperPositionSVD(catmp1, catmp2);
 
 			m = svd.getRotation();
 			t = svd.getTranslation();
@@ -210,7 +211,7 @@ public class AFPCalculator
 
 			}
 
-			rmsd = SVDSuperimposer.getRMS(catmp1,catmp2);
+			rmsd = SuperPositionSVD.getRMS(catmp1,catmp2);
 
 		return rmsd;
 	}

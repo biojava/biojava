@@ -22,6 +22,7 @@ package org.biojava.nbio.structure.align.util;
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.ce.GuiWrapper;
 import org.biojava.nbio.structure.align.model.AFPChain;
+import org.biojava.nbio.structure.geometry.SuperPositionSVD;
 import org.biojava.nbio.structure.jama.Matrix;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,7 +66,7 @@ public class AFPAlignmentDisplay
 		Atom[] a1 = getAlignedAtoms1(afpChain,ca1);
 		Atom[] a2 = getAlignedAtoms2(afpChain,ca2);
 
-		SVDSuperimposer svd = new SVDSuperimposer(a1,a2);
+		SuperPositionSVD svd = new SuperPositionSVD(a1,a2);
 
 		return svd.getRotation();
 
@@ -77,7 +78,7 @@ public class AFPAlignmentDisplay
 		Atom[] a1 = getAlignedAtoms1(afpChain,ca1);
 		Atom[] a2 = getAlignedAtoms2(afpChain,ca2);
 
-		SVDSuperimposer svd = new SVDSuperimposer(a1,a2);
+		SuperPositionSVD svd = new SuperPositionSVD(a1,a2);
 
 		return svd.getTranslation();
 

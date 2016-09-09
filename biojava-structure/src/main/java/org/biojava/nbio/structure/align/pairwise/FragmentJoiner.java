@@ -24,11 +24,11 @@ package org.biojava.nbio.structure.align.pairwise;
 
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Calc;
-import org.biojava.nbio.structure.SVDSuperimposer;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.StrucAligParameters;
 import org.biojava.nbio.structure.align.helper.AlignTools;
 import org.biojava.nbio.structure.align.helper.JointFragments;
+import org.biojava.nbio.structure.geometry.SuperPositionSVD;
 import org.biojava.nbio.structure.jama.Matrix;
 
 import java.io.Serializable;
@@ -314,7 +314,7 @@ public class FragmentJoiner {
 			Calc.shift(a, atom);
 		}
 
-		rms = SVDSuperimposer.getRMS(ca1subset,ca2subset);
+		rms = SuperPositionSVD.getRMS(ca1subset,ca2subset);
 
 		return rms;
 	}

@@ -229,6 +229,7 @@ public class TestUnitQuaternions {
 		
 		CalcPoint.transform(transform, cloud);
 		angle = UnitQuaternions.orientationAngle(cloud, cloud2, false);
+		angle = Math.min(Math.abs(2 * Math.PI - angle), angle);
 		
 		// Test that angle was recovered
 		assertEquals(angle, Math.PI / 6, 0.001);

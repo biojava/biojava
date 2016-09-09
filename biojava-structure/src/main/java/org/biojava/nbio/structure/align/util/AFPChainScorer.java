@@ -27,9 +27,9 @@ package org.biojava.nbio.structure.align.util;
 
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Calc;
-import org.biojava.nbio.structure.SVDSuperimposer;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.model.AFPChain;
+import org.biojava.nbio.structure.geometry.SuperPositionSVD;
 import org.biojava.nbio.structure.jama.Matrix;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,7 +79,7 @@ public class AFPChainScorer {
 			ca2aligned = (Atom[]) resizeArray(ca2aligned, pos);
 		}
 		//Superimpose
-		SVDSuperimposer svd = new SVDSuperimposer(ca1aligned, ca2aligned);
+		SuperPositionSVD svd = new SuperPositionSVD(ca1aligned, ca2aligned);
 		Matrix matrix = svd.getRotation();
 		Atom shift = svd.getTranslation();
 
@@ -88,7 +88,7 @@ public class AFPChainScorer {
 			Calc.shift(a, shift);
 		}
 
-		return SVDSuperimposer.getTMScore(ca1aligned, ca2aligned, ca1.length, ca2.length);
+		return SuperPositionSVD.getTMScore(ca1aligned, ca2aligned, ca1.length, ca2.length);
 
 	}
 

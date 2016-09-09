@@ -22,7 +22,7 @@
 package org.biojava.nbio.structure.symmetry.core;
 
 import org.biojava.nbio.structure.geometry.CalcPoint;
-import org.biojava.nbio.structure.geometry.SuperPosition;
+import org.biojava.nbio.structure.geometry.SuperPositionQuat;
 
 import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Matrix4d;
@@ -80,7 +80,7 @@ public class C2RotationSolver implements QuatSymmetrySolver {
 
 		AxisAngle4d axisAngle = new AxisAngle4d();
 
-		Matrix4d transformation = SuperPosition.superposeAtOrigin(x, y, axisAngle);
+		Matrix4d transformation = SuperPositionQuat.superposeAtOrigin(x, y, axisAngle);
 
 		// if rmsd or angle deviation is above threshold, stop
 		double angleThresholdRadians = Math.toRadians(parameters.getAngleThreshold());

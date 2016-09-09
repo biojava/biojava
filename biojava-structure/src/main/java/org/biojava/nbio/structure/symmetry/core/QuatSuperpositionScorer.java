@@ -21,7 +21,7 @@
 
 package org.biojava.nbio.structure.symmetry.core;
 
-import org.biojava.nbio.structure.geometry.SuperPosition;
+import org.biojava.nbio.structure.geometry.SuperPositionQuat;
 
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
@@ -150,7 +150,7 @@ public class QuatSuperpositionScorer {
 			}
 
 			// superpose individual subunits
-			SuperPosition.superposeWithTranslation(trans, orig);
+			SuperPositionQuat.superposeWithTranslation(trans, orig);
 			for (int j = 0; j < orig.length; j++) {
 				double dSq = orig[j].distanceSquared(trans[j]);
 			   sumTm += 1.0/(1.0 + dSq/d0Sq);

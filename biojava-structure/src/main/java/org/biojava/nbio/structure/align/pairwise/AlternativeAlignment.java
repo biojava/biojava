@@ -28,6 +28,7 @@ import org.biojava.nbio.structure.align.StrucAligParameters;
 import org.biojava.nbio.structure.align.helper.AligMatEl;
 import org.biojava.nbio.structure.align.helper.IndexPair;
 import org.biojava.nbio.structure.align.helper.JointFragments;
+import org.biojava.nbio.structure.geometry.SuperPositionSVD;
 import org.biojava.nbio.structure.jama.Matrix;
 
 import java.io.Serializable;
@@ -776,13 +777,13 @@ public class AlternativeAlignment implements Serializable{
 			ca2subset[i] = (Atom) ca2[pos2].clone();
 		}
 
-		SVDSuperimposer svd = new SVDSuperimposer(ca1subset,ca2subset);
+		SuperPositionSVD svd = new SuperPositionSVD(ca1subset,ca2subset);
 		this.currentRotMatrix  = svd.getRotation();
 		this.currentTranMatrix = svd.getTranslation();
 		//currentRotMatrix.print(3,3);
 		if ( getRMS) {
 			rotateShiftAtoms(ca2subset);
-			this.rms = SVDSuperimposer.getRMS(ca1subset,ca2subset);
+			this.rms = SuperPositionSVD.getRMS(ca1subset,ca2subset);
 		}
 
 

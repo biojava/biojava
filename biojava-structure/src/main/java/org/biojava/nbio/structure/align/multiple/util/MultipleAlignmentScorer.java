@@ -26,9 +26,9 @@ import java.util.List;
 
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Calc;
-import org.biojava.nbio.structure.SVDSuperimposer;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
+import org.biojava.nbio.structure.geometry.SuperPositionSVD;
 import org.biojava.nbio.structure.jama.Matrix;
 
 /**
@@ -289,7 +289,7 @@ public class MultipleAlignmentScorer {
 					ref = Arrays.copyOf(ref, nonNullLen);
 					aln = Arrays.copyOf(aln, nonNullLen);
 				}
-				sumTM += SVDSuperimposer.getTMScore(ref, aln, lengths.get(r1),
+				sumTM += SuperPositionSVD.getTMScore(ref, aln, lengths.get(r1),
 						lengths.get(r2));
 				comparisons++;
 			}
@@ -368,7 +368,7 @@ public class MultipleAlignmentScorer {
 				ref = Arrays.copyOf(ref, nonNullLen);
 				aln = Arrays.copyOf(aln, nonNullLen);
 			}
-			sumTM += SVDSuperimposer.getTMScore(ref, aln,
+			sumTM += SuperPositionSVD.getTMScore(ref, aln,
 					lengths.get(reference), lengths.get(r));
 			comparisons++;
 		}

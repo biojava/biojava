@@ -21,6 +21,7 @@
 package org.biojava.nbio.structure.test;
 
 import org.biojava.nbio.structure.*;
+import org.biojava.nbio.structure.geometry.SuperPositionSVD;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.PDBFileParser;
 import org.biojava.nbio.structure.io.SSBondImpl;
@@ -267,7 +268,7 @@ public class StructureTest {
 		atoms2[2] = g2.getAtom("CB");
 
 
-		SVDSuperimposer svds = new SVDSuperimposer(atoms1,atoms2);
+		SuperPositionSVD svds = new SuperPositionSVD(atoms1,atoms2);
 
 
 		Matrix rotMatrix = svds.getRotation();

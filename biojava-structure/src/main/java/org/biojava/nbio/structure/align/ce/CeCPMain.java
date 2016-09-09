@@ -29,6 +29,7 @@ import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.util.AFPAlignmentDisplay;
 import org.biojava.nbio.structure.align.util.ConfigurationException;
+import org.biojava.nbio.structure.geometry.SuperPositionSVD;
 import org.biojava.nbio.structure.jama.Matrix;
 
 import java.lang.reflect.InvocationTargetException;
@@ -492,7 +493,7 @@ public class CeCPMain extends CeMain {
 
 		if(alignLen>0) {
 			// superimpose
-			SVDSuperimposer svd = new SVDSuperimposer(atoms1, atoms2);
+			SuperPositionSVD svd = new SuperPositionSVD(atoms1, atoms2);
 
 			Matrix matrix = svd.getRotation();
 			Atom shift = svd.getTranslation();
@@ -503,8 +504,8 @@ public class CeCPMain extends CeMain {
 			}
 
 			//and get overall rmsd
-			rmsd = SVDSuperimposer.getRMS(atoms1, atoms2);
-			tmScore = SVDSuperimposer.getTMScore(atoms1, atoms2, ca1.length, ca2len);
+			rmsd = SuperPositionSVD.getRMS(atoms1, atoms2);
+			tmScore = SuperPositionSVD.getTMScore(atoms1, atoms2, ca1.length, ca2len);
 
 			// set all block rotations to the overall rotation
 			// It's not well documented if this is the expected behavior, but

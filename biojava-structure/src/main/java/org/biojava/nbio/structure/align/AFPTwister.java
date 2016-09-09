@@ -29,6 +29,7 @@ package org.biojava.nbio.structure.align;
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.model.AFP;
 import org.biojava.nbio.structure.align.model.AFPChain;
+import org.biojava.nbio.structure.geometry.SuperPositionSVD;
 import org.biojava.nbio.structure.jama.Matrix;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -249,7 +250,7 @@ public class AFPTwister
 		Matrix r;
 		Atom t;
 
-		SVDSuperimposer svd = new SVDSuperimposer(cod1, cod2);
+		SuperPositionSVD svd = new SuperPositionSVD(cod1, cod2);
 
 		r = svd.getRotation();
 		t = svd.getTranslation();
@@ -374,7 +375,7 @@ public class AFPTwister
 			logger.info("length of atoms  == 0!");
 			return 99;
 		}
-		SVDSuperimposer svd = new SVDSuperimposer(cod1, cod2);
+		SuperPositionSVD svd = new SuperPositionSVD(cod1, cod2);
 
 		r = svd.getRotation();
 		t = svd.getTranslation();
@@ -385,7 +386,7 @@ public class AFPTwister
 			Calc.shift(a.getGroup(),  t);
 		}
 
-		return SVDSuperimposer.getRMS(cod1, cod2);
+		return SuperPositionSVD.getRMS(cod1, cod2);
 	}
 
 	/**

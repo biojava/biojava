@@ -29,12 +29,12 @@ import org.biojava.nbio.core.alignment.template.SubstitutionMatrix;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.Group;
-import org.biojava.nbio.structure.SVDSuperimposer;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.model.AFP;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.util.AFPAlignmentDisplay;
+import org.biojava.nbio.structure.geometry.SuperPositionSVD;
 import org.biojava.nbio.structure.jama.Matrix;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
@@ -1912,7 +1912,7 @@ nBestTrace=nTrace;
 		Atom[] cod2 = getAtoms(pro2,  strLen,true);
 
 		assert(cod1.length == cod2.length);
-		SVDSuperimposer svd = new SVDSuperimposer(cod1, cod2);
+		SuperPositionSVD svd = new SuperPositionSVD(cod1, cod2);
 
 		Matrix matrix = svd.getRotation();
 		Atom shift = svd.getTranslation();
@@ -1925,7 +1925,7 @@ nBestTrace=nTrace;
 			Calc.rotate(a.getGroup(), matrix);
 			Calc.shift(a.getGroup(),  shift);
 		}
-		return SVDSuperimposer.getRMS(cod1, cod2);
+		return SuperPositionSVD.getRMS(cod1, cod2);
 
 	}
 

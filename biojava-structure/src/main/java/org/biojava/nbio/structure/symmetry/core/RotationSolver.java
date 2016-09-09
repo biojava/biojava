@@ -22,7 +22,7 @@
 package org.biojava.nbio.structure.symmetry.core;
 
 import org.biojava.nbio.structure.geometry.MomentsOfInertia;
-import org.biojava.nbio.structure.geometry.SuperPosition;
+import org.biojava.nbio.structure.geometry.SuperPositionQuat;
 import org.biojava.nbio.structure.symmetry.geometry.DistanceBox;
 import org.biojava.nbio.structure.symmetry.geometry.SphereSampler;
 
@@ -168,8 +168,8 @@ public class RotationSolver implements QuatSymmetrySolver {
 
 		// get optimal transformation and axisangle by superimposing subunits
 		AxisAngle4d axisAngle = new AxisAngle4d();
-		Matrix4d transformation = SuperPosition.superposeAtOrigin(transformedCoords, originalCoords, axisAngle);
-		double subunitRmsd 		= SuperPosition.rmsd(transformedCoords, originalCoords);
+		Matrix4d transformation = SuperPositionQuat.superposeAtOrigin(transformedCoords, originalCoords, axisAngle);
+		double subunitRmsd 		= SuperPositionQuat.rmsd(transformedCoords, originalCoords);
 
 		if (subunitRmsd < parameters.getRmsdThreshold()) {
 			combineWithTranslation(transformation);

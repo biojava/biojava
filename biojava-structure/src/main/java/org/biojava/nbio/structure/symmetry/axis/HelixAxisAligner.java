@@ -21,7 +21,7 @@
 package org.biojava.nbio.structure.symmetry.axis;
 
 import org.biojava.nbio.structure.geometry.MomentsOfInertia;
-import org.biojava.nbio.structure.geometry.SuperPosition;
+import org.biojava.nbio.structure.geometry.SuperPositionQuat;
 import org.biojava.nbio.structure.symmetry.core.Helix;
 import org.biojava.nbio.structure.symmetry.core.HelixLayers;
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetryResults;
@@ -483,8 +483,8 @@ public class HelixAxisAligner extends AxisAligner {
 		Point3d[] ref = new Point3d[2];
 		ref[0] = new Point3d(referenceVectors[0]);
 		ref[1] = new Point3d(referenceVectors[1]);
-		if (SuperPosition.rmsd(axes, ref) > 0.1) {
-			System.out.println("Warning: AxisTransformation: axes alignment is off. RMSD: " + SuperPosition.rmsd(axes, ref));
+		if (SuperPositionQuat.rmsd(axes, ref) > 0.1) {
+			System.out.println("Warning: AxisTransformation: axes alignment is off. RMSD: " + SuperPositionQuat.rmsd(axes, ref));
 		}
 
 		return m2;

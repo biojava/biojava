@@ -27,6 +27,7 @@ import org.biojava.nbio.structure.align.ce.GuiWrapper;
 import org.biojava.nbio.structure.align.helper.AlignTools;
 import org.biojava.nbio.structure.align.helper.JointFragments;
 import org.biojava.nbio.structure.align.pairwise.*;
+import org.biojava.nbio.structure.geometry.SuperPositionSVD;
 import org.biojava.nbio.structure.io.PDBFileParser;
 import org.biojava.nbio.structure.io.PDBFileReader;
 import org.biojava.nbio.structure.jama.Matrix;
@@ -474,7 +475,7 @@ public class StructurePairAligner {
 						f.setCenter1(center1);
 						f.setCenter2(center2);
 
-						SVDSuperimposer svd = new SVDSuperimposer(catmp1,catmp2);
+						SuperPositionSVD svd = new SuperPositionSVD(catmp1,catmp2);
 						Matrix rotmat = svd.getRotation();
 						f.setRot(rotmat);
 

@@ -21,7 +21,7 @@
 package org.biojava.nbio.structure.symmetry.core;
 
 import org.biojava.nbio.structure.geometry.CalcPoint;
-import org.biojava.nbio.structure.geometry.SuperPosition;
+import org.biojava.nbio.structure.geometry.SuperPositionQuat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -97,10 +97,10 @@ public class HelixSolver {
 			// permutation
 			h1 = CalcPoint.clonePoint3dArray(repeatUnits.get(pair[0]));
 			h2 = CalcPoint.clonePoint3dArray(repeatUnits.get(pair[1]));
-			Matrix4d transformation = SuperPosition.superposeWithTranslation(
+			Matrix4d transformation = SuperPositionQuat.superposeWithTranslation(
 					h1, h2);
 
-			double rmsd = SuperPosition.rmsd(h1, h2);
+			double rmsd = SuperPositionQuat.rmsd(h1, h2);
 			double rise = getRise(transformation,
 					repeatUnitCenters.get(pair[0]),
 					repeatUnitCenters.get(pair[1]));
@@ -185,9 +185,9 @@ public class HelixSolver {
 			// calculate subunit rmsd if at least 3 subunits are available
 			double subunitRmsd = 0;
 			if (point1.size() > 2) {
-				transformation = SuperPosition.superposeWithTranslation(h1, h2);
+				transformation = SuperPositionQuat.superposeWithTranslation(h1, h2);
 
-				subunitRmsd = SuperPosition.rmsd(h1, h2);
+				subunitRmsd = SuperPositionQuat.rmsd(h1, h2);
 				rise = getRise(transformation, repeatUnitCenters.get(pair[0]),
 						repeatUnitCenters.get(pair[1]));
 				angle = getAngle(transformation);
@@ -229,13 +229,13 @@ public class HelixSolver {
 			point1.toArray(h1);
 			point2.toArray(h2);
 			Point3d[] h3 = CalcPoint.clonePoint3dArray(h1);
-			transformation = SuperPosition.superposeWithTranslation(h1, h2);
+			transformation = SuperPositionQuat.superposeWithTranslation(h1, h2);
 
 			Point3d xtrans = CalcPoint.centroid(h3);
 
 			xtrans.negate();
 
-			double traceRmsd = SuperPosition.rmsd(h1, h2);
+			double traceRmsd = SuperPositionQuat.rmsd(h1, h2);
 
 			rise = getRise(transformation, repeatUnitCenters.get(pair[0]),
 					repeatUnitCenters.get(pair[1]));
