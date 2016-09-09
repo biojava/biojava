@@ -107,20 +107,13 @@ import org.slf4j.LoggerFactory;
  * @author Peter Rose (adopted to Java)
  * @author Aleix Lafita (adopted to Java) 
  */
-public final class SuperPositionQCP {
+public final class SuperPositionQCP extends SuperPositionAbstract {
 	
 	private static final Logger logger = LoggerFactory
 			.getLogger(SuperPositionQCP.class);
 
-	/**
-	 * The required eigenvector precission
-	 */
-	private static final double EVEC_PREC = 1E-6;
-	
-	/**
-	 * The required eigenvalue precission
-	 */
-	private static final double EVAL_PREC = 1E-11;
+	private double EVEC_PREC = 1E-6;
+	private double EVAL_PREC = 1E-11;
 
 	private Point3d[] x;
 	private Point3d[] y;
@@ -145,20 +138,30 @@ public final class SuperPositionQCP {
 	private boolean transformationCalculated = false;
 	private boolean centered = false;
 
-    /**
-     * Default constructor
-     */
-    public SuperPositionQCP() {
-    	this.centered = false;
+	/**
+	 * Default constructor for the quaternion based superposition algorithm.
+	 * 
+	 * @param centered
+	 *            true if the point arrays are centered at the origin (faster),
+	 *            false otherwise
+	 */
+    public SuperPositionQCP(boolean centered) {
+    	super(centered);
     }
     
     /**
-     * Constructor with option to set centered flag. This constructor
-     * should be used if both coordinate input set have been centered at the origin.
-     * @param centered if set true, the input coordinates are already centered at the origin
+     * Constructor with option to set the precision values.
+     * 
+     * @param centered
+	 *            true if the point arrays are centered at the origin (faster),
+	 *            false otherwise
+     * @param evec_prec required eigenvector precision
+     * @param eval_prec required eigenvalue precision
      */
-    public SuperPositionQCP(boolean centered) {
-		this.centered = centered;
+    public SuperPositionQCP(boolean centered, double evec_prec, double eval_prec) {
+    	super(centered);
+    	EVEC_PREC = evec_prec;
+    	EVAL_PREC = eval_prec;
 	}
 
 	/**
@@ -167,7 +170,7 @@ public final class SuperPositionQCP {
      * @param x 3d points of reference coordinate set
      * @param y 3d points of coordinate set for superposition
      */
-	public void set(Point3d[] x, Point3d[] y) {
+	private void set(Point3d[] x, Point3d[] y) {
 		this.x = x;
 		this.y = y;
 		rmsdCalculated = false;
@@ -182,7 +185,7 @@ public final class SuperPositionQCP {
      * @param y 3d points of coordinate set for superposition
      * @param weight a weight in the inclusive range [0,1] for each point
      */
-	public void set(Point3d[] x, Point3d[] y, double[] weight) {
+	private void set(Point3d[] x, Point3d[] y, double[] weight) {
 		this.x = x;
 		this.y = y;
 		this.weight = weight;
@@ -201,19 +204,16 @@ public final class SuperPositionQCP {
      * calculations are only performed if necessary.
      * @return root mean square deviation for superposition of y onto x
      */
-	public double getRmsd() {
+	private double getRmsd() {
 		if (!rmsdCalculated) {
 			calcRmsd(x, y);
 		}
 		return rmsd;
 	}
 
-    /**
-     * Returns a 4x4 transformation matrix that transforms the y coordinates onto the x coordinates.
-     * The calculation is performed "lazy", meaning calculations are only performed if necessary.
-     * @return 4x4 transformation matrix to transform y coordinates onto x
-     */
-	public Matrix4d getTransformationMatrix() {
+    @Override
+    public Matrix4d superpose(Point3d[] fixed, Point3d[] moved) {
+    	set(fixed, moved);
 		getRotationMatrix();
 		if (!centered) {
 			calcTransformation();
@@ -222,23 +222,32 @@ public final class SuperPositionQCP {
 		}
 		return transformation;
 	}
+    
+    /**
+     * Weighted superposition.
+     * 
+     * @param fixed
+     * @param moved
+     * @param weight array of weigths for each equivalent point position
+     * @return
+     */
+    public Matrix4d weightedSuperpose(Point3d[] fixed, Point3d[] moved, double[] weight) {
+    	set(fixed, moved, weight);
+    	getRotationMatrix();
+		if (!centered) {
+			calcTransformation();
+		} else {
+			transformation.set(rotmat);
+		}
+		return transformation;
+    }
 
-	public Matrix3d getRotationMatrix() {
+	private Matrix3d getRotationMatrix() {
 		getRmsd();
 		if (!transformationCalculated) {
 			calcRotationMatrix();
 		}
 		return rotmat;
-	}
-
-    /**
-     * Returns the transformed (superposed) y coordinates
-     * TODO this is actually returning a transformation of the x coordinates, we should review if that's correct and change it if not
-     * @return transformed y coordinates
-     */
-	public Point3d[] getTransformedCoordinates() {
-		CalcPoint.transform(transformation, x);
-		return x;
 	}
 
     /**
@@ -564,6 +573,23 @@ public final class SuperPositionQCP {
 		rotmat.m22 = a2 - x2 - y2 + z2;
 
 		return 1;
+	}
+
+	@Override
+	public double getRmsd(Point3d[] fixed, Point3d[] moved) {
+		set(fixed, moved);
+		return getRmsd();
+	}
+	
+	/** 
+	 * @param fixed
+	 * @param moved
+	 * @param weight array of weigths for each equivalent point position
+	 * @return weighted RMSD.
+	 */
+	public double getWeightedRmsd(Point3d[] fixed, Point3d[] moved, double[] weight) {
+		set(fixed, moved, weight);
+		return getRmsd();
 	}
 
 }
