@@ -184,6 +184,10 @@ public class AtomCache {
 		fetchBehavior = config.getFetchBehavior();
 		obsoleteBehavior = config.getObsoleteBehavior();
 		useMmCif = config.getFileFormat().equals( UserConfiguration.MMCIF_FORMAT );
+
+		if ( useMmCif)
+			useMmtf = false;
+
 	}
 
 	/**
@@ -936,6 +940,14 @@ public class AtomCache {
 		
 	}
 
+	/** Returns useMmtf flag
+	 *
+	 * @return true if will load data via mmtf file format
+     */
+	public boolean isUseMmtf(){
+		return this.useMmtf;
+	}
+
 	private boolean checkLoading(String name) {
 		return currentlyLoading.contains(name);
 
@@ -1014,11 +1026,14 @@ public class AtomCache {
 
 		Structure s;
 		if (useMmtf) {
+			logger.debug("loading from mmtf");
 			s = loadStructureFromMmtfByPdbId(pdbId);
 		}
 		else if (useMmCif) {
+			logger.debug("loading from mmcif");
 			s = loadStructureFromCifByPdbId(pdbId);
 		} else {
+			logger.debug("loading from pdb");
 			s = loadStructureFromPdbByPdbId(pdbId);
 		}
 		return s;
