@@ -21,16 +21,16 @@
 package org.biojava.nbio.structure.test;
 
 import org.biojava.nbio.structure.*;
-import org.biojava.nbio.structure.geometry.SuperPositionSVD;
+import org.biojava.nbio.structure.geometry.SuperPositions;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.PDBFileParser;
 import org.biojava.nbio.structure.io.SSBondImpl;
-import org.biojava.nbio.structure.jama.Matrix;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Set;
+
+import javax.vecmath.Matrix4d;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -42,8 +42,6 @@ import static org.junit.Assert.*;
  * @author Andreas Prlic
  * @since 1.5
  */
-
-
 public class StructureTest {
 
 	private static Structure structure;
@@ -267,18 +265,12 @@ public class StructureTest {
 		atoms2[1] = g2.getAtom("CA");
 		atoms2[2] = g2.getAtom("CB");
 
+		Matrix4d transform = SuperPositions.superpose(
+				Calc.atomsToPoints(atoms1), Calc.atomsToPoints(atoms2));
 
-		SuperPositionSVD svds = new SuperPositionSVD(atoms1,atoms2);
+		Group newGroup = (Group) g2.clone();
 
-
-		Matrix rotMatrix = svds.getRotation();
-		Atom   tran      = svds.getTranslation();
-
-		Group newGroup = (Group)g2.clone();
-
-		Calc.rotate(newGroup,rotMatrix);
-
-		Calc.shift(newGroup,tran);
+		Calc.transform(newGroup, transform);
 
 		Atom ca1    =       g1.getAtom("CA");
 		Atom oldca2 =       g2.getAtom("CA");

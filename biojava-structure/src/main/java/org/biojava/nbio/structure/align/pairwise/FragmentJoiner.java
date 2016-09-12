@@ -28,7 +28,6 @@ import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.StrucAligParameters;
 import org.biojava.nbio.structure.align.helper.AlignTools;
 import org.biojava.nbio.structure.align.helper.JointFragments;
-import org.biojava.nbio.structure.geometry.SuperPositionSVD;
 import org.biojava.nbio.structure.jama.Matrix;
 
 import java.io.Serializable;
@@ -314,7 +313,7 @@ public class FragmentJoiner {
 			Calc.shift(a, atom);
 		}
 
-		rms = SuperPositionSVD.getRMS(ca1subset,ca2subset);
+		rms = Calc.rmsd(ca1subset,ca2subset);
 
 		return rms;
 	}

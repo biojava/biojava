@@ -27,9 +27,10 @@
 package org.biojava.nbio.structure.align.fatcat.calc;
 
 
+import javax.vecmath.Matrix4d;
+
 import org.biojava.nbio.structure.*;
-import org.biojava.nbio.structure.geometry.SuperPositionSVD;
-import org.biojava.nbio.structure.jama.Matrix;
+import org.biojava.nbio.structure.geometry.SuperPositions;
 
 
 
@@ -258,33 +259,19 @@ public class StructureAlignmentOptimizer
 		}
 
 		//superimpose the equivalent residues
-		SuperPositionSVD svd = new SuperPositionSVD(tmp1, tmp2);
+		Matrix4d trans = SuperPositions.superpose(Calc.atomsToPoints(tmp1), 
+				Calc.atomsToPoints(tmp2));
 
-		Matrix    m = svd.getRotation();
-		Atom      t = svd.getTranslation();
-
-		for (Atom a: tmp2) {
-
-			Calc.rotate(a,m);
-			Calc.shift(a,t);
-
-		}
+		Calc.transform(tmp2, trans);
 
 		// weird, why does it take the RMSD before the rotation?
 		// the rmsd is only for the subset contained in the tmp arrays.
-		rmsd = SuperPositionSVD.getRMS(tmp1,tmp2);
+		rmsd = Calc.rmsd(tmp1,tmp2);
 
 		//System.err.println("rmsd after superimpose by set: " + rmsd);
 
 		//transform structure 2 according to the superimposition of the equivalent residues
-		for (i = 0 ; i< cod2.length; i++) {
-			Atom a = cod2[i];
-			Calc.rotate(a,m);
-			Calc.shift(a,t);
-
-		}
-
-
+		Calc.transform(cod2, trans);
 
 //      for(i = 0; i < equLen; i ++)    {
 //         try {
@@ -293,9 +280,7 @@ public class StructureAlignmentOptimizer
 //            e.printStackTrace();
 //         }
 //      }
-
-
-
+		
 	}
 
 

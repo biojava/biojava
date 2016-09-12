@@ -22,13 +22,16 @@ package org.biojava.nbio.structure.align.util;
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.ce.GuiWrapper;
 import org.biojava.nbio.structure.align.model.AFPChain;
-import org.biojava.nbio.structure.geometry.SuperPositionSVD;
+import org.biojava.nbio.structure.geometry.Matrices;
+import org.biojava.nbio.structure.geometry.SuperPositions;
 import org.biojava.nbio.structure.jama.Matrix;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
+
+import javax.vecmath.Matrix4d;
 
 
 public class AFPAlignmentDisplay
@@ -66,9 +69,10 @@ public class AFPAlignmentDisplay
 		Atom[] a1 = getAlignedAtoms1(afpChain,ca1);
 		Atom[] a2 = getAlignedAtoms2(afpChain,ca2);
 
-		SuperPositionSVD svd = new SuperPositionSVD(a1,a2);
-
-		return svd.getRotation();
+		Matrix4d trans = SuperPositions.superpose(Calc.atomsToPoints(a1), 
+				Calc.atomsToPoints(a2));
+		
+		return Matrices.getRotationJAMA(trans);
 
 	}
 
@@ -78,9 +82,10 @@ public class AFPAlignmentDisplay
 		Atom[] a1 = getAlignedAtoms1(afpChain,ca1);
 		Atom[] a2 = getAlignedAtoms2(afpChain,ca2);
 
-		SuperPositionSVD svd = new SuperPositionSVD(a1,a2);
-
-		return svd.getTranslation();
+		Matrix4d trans = SuperPositions.superpose(Calc.atomsToPoints(a1), 
+				Calc.atomsToPoints(a2));
+		
+		return Calc.getTranslationVector(trans);
 
 	}
 

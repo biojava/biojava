@@ -10,13 +10,16 @@ import org.biojava.nbio.structure.jama.Matrix;
  * Matrices contains static methods to operate and transform matrices used in 3D
  * geometry (transformation matrices and rotation matrices).
  * <p>
- * This class complements and extends the functionallity of vecmath and jama.
+ * This class complements and extends the functionallity of vecmath and JAMA.
  * 
  * @author Aleix Lafita
  * @since 5.0.0
  *
  */
 public class Matrices {
+	
+	/** Prevent instantiation */
+	private Matrices(){}
 
 	/**
 	 * Convert a transformation matrix into a JAMA rotation matrix. Because the

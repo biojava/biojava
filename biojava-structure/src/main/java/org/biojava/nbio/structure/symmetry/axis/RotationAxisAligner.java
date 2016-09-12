@@ -20,18 +20,24 @@
  */
 package org.biojava.nbio.structure.symmetry.axis;
 
+import org.biojava.nbio.structure.geometry.CalcPoint;
 import org.biojava.nbio.structure.geometry.MomentsOfInertia;
-import org.biojava.nbio.structure.geometry.SuperPositionQuat;
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetryResults;
 import org.biojava.nbio.structure.symmetry.core.Rotation;
 import org.biojava.nbio.structure.symmetry.core.RotationGroup;
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetrySubunits;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.vecmath.*;
 
 import java.util.*;
 
 public class RotationAxisAligner extends AxisAligner{
+	
+	private static final Logger logger = LoggerFactory
+			.getLogger(RotationAxisAligner.class);
+	
 	private static final Vector3d X_AXIS = new Vector3d(1,0,0);
 	private static final Vector3d Y_AXIS = new Vector3d(0,1,0);
 	private static final Vector3d Z_AXIS = new Vector3d(0,0,1);
@@ -463,8 +469,9 @@ public class RotationAxisAligner extends AxisAligner{
 		Point3d[] ref = new Point3d[2];
 		ref[0] = new Point3d(referenceVectors[0]);
 		ref[1] = new Point3d(referenceVectors[1]);
-		if (SuperPositionQuat.rmsd(axes, ref) > 0.1) {
-			System.out.println("Warning: AxisTransformation: axes alignment is off. RMSD: " + SuperPositionQuat.rmsd(axes, ref));
+		if (CalcPoint.rmsd(axes, ref) > 0.1) {
+			logger.warn("AxisTransformation: axes alignment is off. RMSD: " 
+					+ CalcPoint.rmsd(axes, ref));
 		}
 
 		return m2;

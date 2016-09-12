@@ -27,7 +27,9 @@ import org.biojava.nbio.structure.align.fatcat.FatCatFlexible;
 import org.biojava.nbio.structure.align.fatcat.FatCatRigid;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.xml.AFPChainXMLParser;
+import org.biojava.nbio.structure.geometry.Matrices;
 import org.biojava.nbio.structure.geometry.SuperPositionSVD;
+import org.biojava.nbio.structure.geometry.SuperPositions;
 import org.biojava.nbio.structure.jama.Matrix;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +40,8 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.vecmath.Matrix4d;
 
 /**
  * Methods for analyzing and manipulating AFPChains and for
@@ -900,9 +904,13 @@ public class AlignmentTools {
 		}
 
 		//Superimpose the two structures in correspondance to the new alignment
-		SuperPositionSVD svd = new SuperPositionSVD(ca1aligned, ca2aligned);
-		Matrix matrix = svd.getRotation();
-		Atom shift = svd.getTranslation();
+		Matrix4d trans = SuperPositions.superpose(Calc.atomsToPoints(ca1aligned), 
+				Calc.atomsToPoints(ca2aligned));
+
+		Matrix matrix = Matrices.getRotationJAMA(trans);
+		Atom shift = Calc.getTranslationVector(trans);
+		
+		
 		Matrix[] blockMxs = new Matrix[afpChain.getBlockNum()];
 		Arrays.fill(blockMxs, matrix);
 		afpChain.setBlockRotationMatrix(blockMxs);
@@ -916,8 +924,8 @@ public class AlignmentTools {
 		}
 
 		//Calculate the RMSD and TM score for the new alignment
-		double rmsd = SuperPositionSVD.getRMS(ca1aligned, ca2aligned);
-		double tmScore = SuperPositionSVD.getTMScore(ca1aligned, ca2aligned, ca1.length, ca2.length);
+		double rmsd = Calc.rmsd(ca1aligned, ca2aligned);
+		double tmScore = Calc.getTMScore(ca1aligned, ca2aligned, ca1.length, ca2.length);
 		afpChain.setTotalRmsdOpt(rmsd);
 		afpChain.setTMScore(tmScore);
 
@@ -945,16 +953,17 @@ public class AlignmentTools {
 				ca2block = (Atom[]) resizeArray(ca2block, position);
 			}
 			//Superimpose the two block structures
-			SuperPositionSVD svdb = new SuperPositionSVD(ca1block, ca2block);
-			Matrix matrixb = svdb.getRotation();
-			Atom shiftb = svdb.getTranslation();
-			for (Atom a : ca2block) {
-				Calc.rotate(a, matrixb);
-				Calc.shift(a, shiftb);
-			}
+			Matrix4d transb = SuperPositions.superpose(Calc.atomsToPoints(ca1block), 
+					Calc.atomsToPoints(ca2block));
+
+			Matrix matrixb = Matrices.getRotationJAMA(trans);
+			Atom shiftb = Calc.getTranslationVector(trans);
+			
+			Calc.transform(ca2block, transb);
+			
 			//Calculate the RMSD and TM score for the block
-			double rmsdb = SuperPositionSVD.getRMS(ca1block, ca2block);
-			double tmScoreb = SuperPositionSVD.getTMScore(ca1block, ca2block, ca1.length, ca2.length);
+			double rmsdb = Calc.rmsd(ca1block, ca2block);
+			double tmScoreb = Calc.getTMScore(ca1block, ca2block, ca1.length, ca2.length);
 			blockRMSD[k] = rmsdb;
 			blockScore[k] = tmScoreb;
 		}

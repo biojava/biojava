@@ -21,7 +21,8 @@
 
 package org.biojava.nbio.structure.symmetry.core;
 
-import org.biojava.nbio.structure.geometry.SuperPositionQuat;
+import org.biojava.nbio.structure.geometry.CalcPoint;
+import org.biojava.nbio.structure.geometry.SuperPositions;
 import org.biojava.nbio.structure.symmetry.utils.PermutationGenerator;
 
 import javax.vecmath.AxisAngle4d;
@@ -189,9 +190,26 @@ public class SystematicSolver implements QuatSymmetrySolver {
 
 		int fold = PermutationGroup.getOrder(permutation);
 		// get optimal transformation and axisangle by superimposing subunits
+		Matrix4d transformation = SuperPositions.superposeAndTransformAtOrigin(
+				originalCoords, transformedCoords);
 		AxisAngle4d axisAngle = new AxisAngle4d();
-		Matrix4d transformation = SuperPositionQuat.superposeAtOrigin(transformedCoords, originalCoords, axisAngle);
-		double subunitRmsd = SuperPositionQuat.rmsd(transformedCoords, originalCoords);
+		
+		// TODO Peter what is this piece of code doing? - Aleix 09.2016
+		axisAngle.set(transformation);
+		Vector3d axis = new Vector3d(axisAngle.x, axisAngle.y, axisAngle.z);
+		if (axis.lengthSquared() < 1.0E-6) {
+			axisAngle.x = 0;
+			axisAngle.y = 0;
+			axisAngle.z = 1;
+			axisAngle.angle = 0;
+		} else {
+			axis.normalize();
+			axisAngle.x = axis.x;
+			axisAngle.y = axis.y;
+			axisAngle.z = axis.z;
+		}
+		
+		double subunitRmsd = CalcPoint.rmsd(transformedCoords, originalCoords);
 
 		if (subunitRmsd <parameters.getRmsdThreshold()) {
 			// transform to original coordinate system

@@ -32,10 +32,12 @@ import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.AFPTwister;
 import org.biojava.nbio.structure.align.model.AFP;
 import org.biojava.nbio.structure.align.model.AFPChain;
-import org.biojava.nbio.structure.geometry.SuperPositionSVD;
+import org.biojava.nbio.structure.geometry.SuperPositions;
 import org.biojava.nbio.structure.jama.Matrix;
 
 import java.util.List;
+
+import javax.vecmath.Matrix4d;
 
 /** a class to chain AFPs to an alignment
  *
@@ -698,18 +700,10 @@ public class AFPChainer
 	 */
 	private static double getRmsd(Atom[] catmp1, Atom[] catmp2) throws StructureException{
 
-		SuperPositionSVD svd = new SuperPositionSVD(catmp1, catmp2);
+		Matrix4d trans = SuperPositions.superpose(Calc.atomsToPoints(catmp1), 
+				Calc.atomsToPoints(catmp2));
 
-		Matrix m = svd.getRotation();
-		Atom t = svd.getTranslation();
-
-		for (Atom a : catmp2){
-			Calc.rotate(a,m);
-			Calc.shift(a,t);
-
-		}
-
-		double rmsd = SuperPositionSVD.getRMS(catmp1,catmp2);
+		Calc.transform(catmp2, trans);
 
 		//   if ( showAlig) {
 		//      StructureAlignmentJmol jmol = new StructureAlignmentJmol();
@@ -746,9 +740,7 @@ public class AFPChainer
 		//      jmol.evalString("model 0;");
 		//   }
 
-
-		return rmsd;
-
+		return Calc.rmsd(catmp1,catmp2);
 	}
 
 }

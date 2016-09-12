@@ -88,32 +88,6 @@ public final class SuperPositionQuat extends SuperPositionAbstract {
 
 	}
 
-	@Deprecated
-	public static Matrix4d superposeAtOrigin(Point3d[] x, Point3d[] y,
-			AxisAngle4d axisAngle) {
-		Quat4d q = UnitQuaternions.relativeOrientation(x, y);
-		Matrix4d rotTrans = new Matrix4d();
-		rotTrans.setIdentity();
-		rotTrans.set(q);
-		axisAngle.set(q);
-		Vector3d axis = new Vector3d(axisAngle.x, axisAngle.y, axisAngle.z);
-		if (axis.lengthSquared() < 1.0E-6) {
-			// System.err.println("Error: SuperPosition.superposeAtOrigin: axis vector undefined!");
-			axisAngle.x = 0;
-			axisAngle.y = 0;
-			axisAngle.z = 1;
-			axisAngle.angle = 0;
-		} else {
-			axis.normalize();
-			axisAngle.x = axis.x;
-			axisAngle.y = axis.y;
-			axisAngle.z = axis.z;
-		}
-		CalcPoint.transform(rotTrans, x);
-
-		return rotTrans;
-	}
-
 	@Override
 	public double getRmsd(Point3d[] x, Point3d[] y) {
 		Point3d[] yclone = CalcPoint.clonePoint3dArray(y);

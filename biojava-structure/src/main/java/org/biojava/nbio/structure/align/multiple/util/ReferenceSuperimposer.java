@@ -33,6 +33,7 @@ import org.biojava.nbio.structure.align.multiple.Block;
 import org.biojava.nbio.structure.align.multiple.BlockSet;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.geometry.SuperPositionSVD;
+import org.biojava.nbio.structure.geometry.SuperPositions;
 
 /**
  * Superimposes each structure in a {@link MultipleAlignment} onto a reference
@@ -150,9 +151,9 @@ public class ReferenceSuperimposer implements MultipleSuperimposer {
 				array2 = StructureTools.cloneAtomArray(array2);
 
 				//From the superimposer we obtain the rotation and translation
-				SuperPositionSVD svd = new SuperPositionSVD(array1, array2);
-				Calc.transform(array2, svd.getTransformation());
-				transforms.add(svd.getTransformation());
+				Matrix4d trans = SuperPositions.superpose(Calc.atomsToPoints(array1), 
+						Calc.atomsToPoints(array2));
+				transforms.add(trans);
 			}
 			//Set transformation of the BlockSet
 			bs.setTransformations(transforms);
