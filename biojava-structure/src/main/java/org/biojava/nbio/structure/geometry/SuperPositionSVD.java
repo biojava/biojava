@@ -135,7 +135,7 @@ public class SuperPositionSVD extends SuperPositionAbstract {
 		Matrix cb_tmp = centroidB.times(rot);
 		Matrix tran = centroidA.minus(cb_tmp);
 		
-		return Calc.getTransformation(rot, tran);
+		return Matrices.getTransformation(rot, tran);
 
 	}
 

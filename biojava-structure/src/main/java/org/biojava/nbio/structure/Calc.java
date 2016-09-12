@@ -23,6 +23,7 @@
 package org.biojava.nbio.structure;
 
 import org.biojava.nbio.structure.geometry.CalcPoint;
+import org.biojava.nbio.structure.geometry.Matrices;
 import org.biojava.nbio.structure.geometry.SuperPositionSVD;
 import org.biojava.nbio.structure.jama.Matrix;
 import org.slf4j.Logger;
@@ -998,7 +999,7 @@ public class Calc {
 		SuperPositionSVD svd = new SuperPositionSVD(false);
 
 		Matrix4d transform = svd.superpose(arr1, arr2);
-		Matrix rotMatrix = getRotationMatrix(transform);
+		Matrix rotMatrix = Matrices.getRotationJAMA(transform);
 		Atom tranMatrix = getTranslationVector(transform);
 		
 		Calc.rotate(aCB, rotMatrix);
@@ -1191,23 +1192,6 @@ public class Calc {
 	 * @param rot
 	 *            3x3 Rotation matrix
 	 * @param trans
-	 *            3x1 Translation matrix
-	 * @return 4x4 transformation matrix
-	 */
-	public static Matrix4d getTransformation(Matrix rot, Matrix trans) {
-		return new Matrix4d(new Matrix3d(rot.getColumnPackedCopy()),
-				new Vector3d(trans.getColumnPackedCopy()), 1.0);
-	}
-
-	/**
-	 * Convert JAMA rotation and translation to a Vecmath transformation matrix.
-	 * Because the JAMA matrix is a pre-multiplication matrix and the Vecmath
-	 * matrix is a post-multiplication one, the rotation matrix is transposed to
-	 * ensure that the transformation they produce is the same.
-	 *
-	 * @param rot
-	 *            3x3 Rotation matrix
-	 * @param trans
 	 *            3x1 translation vector in Atom coordinates
 	 * @return 4x4 transformation matrix
 	 */
@@ -1215,30 +1199,9 @@ public class Calc {
 		return new Matrix4d(new Matrix3d(rot.getColumnPackedCopy()),
 				new Vector3d(trans.getCoords()), 1.0);
 	}
-
+	
 	/**
-	 * Convert Vecmath transformation into a JAMA rotation matrix. Because the
-	 * JAMA matrix is a pre-multiplication matrix and the Vecmath matrix is a
-	 * post-multiplication one, the rotation matrix is transposed to ensure that
-	 * the transformation they produce is the same.
-	 *
-	 * @param transform
-	 *            Matrix4d with transposed rotation matrix
-	 * @return
-	 */
-	public static Matrix getRotationMatrix(Matrix4d transform) {
-
-		Matrix rot = new Matrix(3, 3);
-		for (int i = 0; i < 3; i++) {
-			for (int j = 0; j < 3; j++) {
-				rot.set(j, i, transform.getElement(i, j)); // transposed
-			}
-		}
-		return rot;
-	}
-
-	/**
-	 * Extract the translational vector of a Vecmath transformation.
+	 * Extract the translational vector as an Atom of a transformation matrix.
 	 *
 	 * @param transform
 	 *            Matrix4d
