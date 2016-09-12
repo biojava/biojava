@@ -48,7 +48,7 @@ public class SuperPositions {
 	public static Matrix4d superposeAndTransform(Point3d[] fixed,
 			Point3d[] moved) {
 		superposer.setCentered(false);
-		return superposer.superpose(fixed, moved);
+		return superposer.superposeAndTransform(fixed, moved);
 	}
 
 	/**
@@ -59,7 +59,7 @@ public class SuperPositions {
 	public static Matrix4d superposeAndTransformAtOrigin(Point3d[] fixed,
 			Point3d[] moved) {
 		superposer.setCentered(true);
-		return superposer.superpose(fixed, moved);
+		return superposer.superposeAndTransform(fixed, moved);
 	}
 
 	/**
