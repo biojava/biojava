@@ -22,12 +22,13 @@
 package org.biojava.nbio.structure.symmetry.core;
 
 import org.biojava.nbio.structure.geometry.CalcPoint;
-import org.biojava.nbio.structure.geometry.SuperPositions;
+import org.biojava.nbio.structure.geometry.UnitQuaternions;
 import org.biojava.nbio.structure.symmetry.utils.PermutationGenerator;
 
 import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
+import javax.vecmath.Quat4d;
 import javax.vecmath.Vector3d;
 
 import java.util.ArrayList;
@@ -189,13 +190,16 @@ public class SystematicSolver implements QuatSymmetrySolver {
 		}
 
 		int fold = PermutationGroup.getOrder(permutation);
-		// get optimal transformation and axisangle by superimposing subunits
-		Matrix4d transformation = SuperPositions.superposeAndTransformAtOrigin(
+		
+		// TODO implement this piece of code using at origin superposition
+		Quat4d quat = UnitQuaternions.relativeOrientation(
 				originalCoords, transformedCoords);
 		AxisAngle4d axisAngle = new AxisAngle4d();
+		Matrix4d transformation = new Matrix4d();
 		
-		// TODO Peter what is this piece of code doing? - Aleix 09.2016
-		axisAngle.set(transformation);
+		transformation.set(quat);
+		axisAngle.set(quat);
+		
 		Vector3d axis = new Vector3d(axisAngle.x, axisAngle.y, axisAngle.z);
 		if (axis.lengthSquared() < 1.0E-6) {
 			axisAngle.x = 0;
@@ -208,6 +212,8 @@ public class SystematicSolver implements QuatSymmetrySolver {
 			axisAngle.y = axis.y;
 			axisAngle.z = axis.z;
 		}
+		
+		CalcPoint.transform(transformation, transformedCoords);
 		
 		double subunitRmsd = CalcPoint.rmsd(transformedCoords, originalCoords);
 

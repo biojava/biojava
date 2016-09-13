@@ -22,11 +22,12 @@
 package org.biojava.nbio.structure.symmetry.core;
 
 import org.biojava.nbio.structure.geometry.CalcPoint;
-import org.biojava.nbio.structure.geometry.SuperPositions;
+import org.biojava.nbio.structure.geometry.UnitQuaternions;
 
 import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
+import javax.vecmath.Quat4d;
 import javax.vecmath.Vector3d;
 
 import java.util.ArrayList;
@@ -78,12 +79,15 @@ public class C2RotationSolver implements QuatSymmetrySolver {
 		Point3d[] y = CalcPoint.clonePoint3dArray(traces.get(1));
 		CalcPoint.translate(new Point3d(trans), y);
 
-		Matrix4d transformation = SuperPositions.superposeAndTransformAtOrigin(
-				y, x);
+		// TODO implement this piece of code using at origin superposition
+		Quat4d quat = UnitQuaternions.relativeOrientation(
+				x, y);
 		AxisAngle4d axisAngle = new AxisAngle4d();
+		Matrix4d transformation = new Matrix4d();
 		
-		// TODO Peter what is this piece of code doing? - Aleix 09.2016
-		axisAngle.set(transformation);
+		transformation.set(quat);
+		axisAngle.set(quat);
+		
 		Vector3d axis = new Vector3d(axisAngle.x, axisAngle.y, axisAngle.z);
 		if (axis.lengthSquared() < 1.0E-6) {
 			axisAngle.x = 0;
@@ -96,6 +100,8 @@ public class C2RotationSolver implements QuatSymmetrySolver {
 			axisAngle.y = axis.y;
 			axisAngle.z = axis.z;
 		}
+		
+		CalcPoint.transform(transformation, y);
 
 		// if rmsd or angle deviation is above threshold, stop
 		double angleThresholdRadians = Math.toRadians(parameters.getAngleThreshold());

@@ -68,9 +68,30 @@ public class TestQuatSymmetryDetectorExamples {
 		assertFalse(symmetry.isPseudoStoichiometric());
 
 	}
+	
+	/** 
+	 * Test a dihedral symmetry: 2VML 
+	 */
+	@Test
+	public void testDihedral() throws IOException, StructureException {
+
+		Structure pdb = StructureIO.getStructure("BIO:2vml:1");
+
+		SubunitClustererParameters clusterParams = new SubunitClustererParameters();
+		clusterParams.setClustererMethod(SubunitClustererMethod.SEQUENCE);
+		QuatSymmetryParameters symmParams = new QuatSymmetryParameters();
+		QuatSymmetryResults symmetry = QuatSymmetryDetector.calcGlobalSymmetry(
+				pdb, symmParams, clusterParams);
+
+		// D3 symmetry non pseudosymmetric
+		assertEquals("D3", symmetry.getSymmetry());
+		assertEquals("A6B6", symmetry.getStoichiometry());
+
+	}
 
 	/**
 	 * Hemoglobin has both symmetry and pseudosymmetry: 4HHB
+	 * TODO pseudosymmetry in hemoglobin fails
 	 * 
 	 * @throws StructureException
 	 * @throws IOException
