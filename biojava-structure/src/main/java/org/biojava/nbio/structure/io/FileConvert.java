@@ -410,6 +410,10 @@ public class FileConvert {
 
 
 		Character  altLoc = a.getAltLoc()           ;
+		
+		if ( altLoc == null)
+			altLoc = ' ';
+		
 		String resseq = "" ;
 		if ( hasInsertionCode(pdbcode) )
 			resseq     = String.format("%5s",pdbcode);
