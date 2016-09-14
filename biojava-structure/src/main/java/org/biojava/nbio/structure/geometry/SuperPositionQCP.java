@@ -112,8 +112,8 @@ public final class SuperPositionQCP extends SuperPositionAbstract {
 	private static final Logger logger = LoggerFactory
 			.getLogger(SuperPositionQCP.class);
 
-	private double EVEC_PREC = 1E-6;
-	private double EVAL_PREC = 1E-11;
+	private double evec_prec = 1E-6;
+	private double eval_prec = 1E-11;
 
 	private Point3d[] x;
 	private Point3d[] y;
@@ -160,8 +160,8 @@ public final class SuperPositionQCP extends SuperPositionAbstract {
      */
     public SuperPositionQCP(boolean centered, double evec_prec, double eval_prec) {
     	super(centered);
-    	EVEC_PREC = evec_prec;
-    	EVAL_PREC = eval_prec;
+    	this.evec_prec = evec_prec;
+    	this.eval_prec = eval_prec;
 	}
 
 	/**
@@ -438,7 +438,7 @@ public final class SuperPositionQCP extends SuperPositionAbstract {
 			double delta = ((a * mxEigenV + c0) / (2.0 * x2 * mxEigenV + b + a));
 			mxEigenV -= delta;
 
-			if (Math.abs(mxEigenV - oldg) < Math.abs(EVAL_PREC*mxEigenV))
+			if (Math.abs(mxEigenV - oldg) < Math.abs(eval_prec*mxEigenV))
 				break;
 		}
 
@@ -493,14 +493,14 @@ public final class SuperPositionQCP extends SuperPositionAbstract {
 		 * commented block will never be activated. To be absolutely safe this
 		 * should be uncommented, but it is most likely unnecessary.
 		 */
-		if (qsqr < EVEC_PREC) {
+		if (qsqr < evec_prec) {
 			q1 = a12 * a3344_4334 - a13 * a3244_4234 + a14 * a3243_4233;
 			q2 = -a11 * a3344_4334 + a13 * a3144_4134 - a14 * a3143_4133;
 			q3 = a11 * a3244_4234 - a12 * a3144_4134 + a14 * a3142_4132;
 			q4 = -a11 * a3243_4233 + a12 * a3143_4133 - a13 * a3142_4132;
 			qsqr = q1 * q1 + q2 * q2 + q3 * q3 + q4 * q4;
 
-			if (qsqr < EVEC_PREC) {
+			if (qsqr < evec_prec) {
 				double a1324_1423 = a13 * a24 - a14 * a23, a1224_1422 = a12
 						* a24 - a14 * a22;
 				double a1223_1322 = a12 * a23 - a13 * a22, a1124_1421 = a11
@@ -514,7 +514,7 @@ public final class SuperPositionQCP extends SuperPositionAbstract {
 				q4 = -a41 * a1223_1322 + a42 * a1123_1321 - a43 * a1122_1221;
 				qsqr = q1 * q1 + q2 * q2 + q3 * q3 + q4 * q4;
 
-				if (qsqr < EVEC_PREC) {
+				if (qsqr < evec_prec) {
 					q1 = a32 * a1324_1423 - a33 * a1224_1422 + a34 * a1223_1322;
 					q2 = -a31 * a1324_1423 + a33 * a1124_1421 - a34
 							* a1123_1321;
@@ -523,7 +523,7 @@ public final class SuperPositionQCP extends SuperPositionAbstract {
 							* a1122_1221;
 					qsqr = q1 * q1 + q2 * q2 + q3 * q3 + q4 * q4;
 
-					if (qsqr < EVEC_PREC) {
+					if (qsqr < evec_prec) {
 						/*
 						 * if qsqr is still too small, return the identity
 						 * matrix.
