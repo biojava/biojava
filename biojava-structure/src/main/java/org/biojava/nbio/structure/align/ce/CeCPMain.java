@@ -29,12 +29,16 @@ import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.util.AFPAlignmentDisplay;
 import org.biojava.nbio.structure.align.util.ConfigurationException;
+import org.biojava.nbio.structure.geometry.Matrices;
+import org.biojava.nbio.structure.geometry.SuperPositions;
 import org.biojava.nbio.structure.jama.Matrix;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import javax.vecmath.Matrix4d;
 
 /**
  * A wrapper for {@link CeMain} which sets default parameters to be appropriate for finding
@@ -491,20 +495,20 @@ public class CeCPMain extends CeMain {
 		Atom[] blockShifts = new Atom[blocks.size()];
 
 		if(alignLen>0) {
+			
 			// superimpose
-			SVDSuperimposer svd = new SVDSuperimposer(atoms1, atoms2);
+			Matrix4d trans = SuperPositions.superpose(Calc.atomsToPoints(atoms1), 
+					Calc.atomsToPoints(atoms2));
 
-			Matrix matrix = svd.getRotation();
-			Atom shift = svd.getTranslation();
+			Matrix matrix = Matrices.getRotationJAMA(trans);
+			Atom shift = Calc.getTranslationVector(trans);
 
-			for( Atom a : atoms2 ) {
-				Calc.rotate(a.getGroup(), matrix);
-				Calc.shift(a, shift);
-			}
+			for( Atom a : atoms2 ) 
+				Calc.transform(a.getGroup(), trans);
 
 			//and get overall rmsd
-			rmsd = SVDSuperimposer.getRMS(atoms1, atoms2);
-			tmScore = SVDSuperimposer.getTMScore(atoms1, atoms2, ca1.length, ca2len);
+			rmsd = Calc.rmsd(atoms1, atoms2);
+			tmScore = Calc.getTMScore(atoms1, atoms2, ca1.length, ca2len);
 
 			// set all block rotations to the overall rotation
 			// It's not well documented if this is the expected behavior, but

@@ -23,6 +23,8 @@
 package org.biojava.nbio.structure;
 
 import org.biojava.nbio.structure.geometry.CalcPoint;
+import org.biojava.nbio.structure.geometry.Matrices;
+import org.biojava.nbio.structure.geometry.SuperPositionSVD;
 import org.biojava.nbio.structure.jama.Matrix;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -992,13 +994,14 @@ public class Calc {
 		arr2[1] = amino.getCA();
 		arr2[2] = amino.getC();
 
-		// ok now we got the two arrays, do a SVD:
+		// ok now we got the two arrays, do a Superposition:
 
-		SVDSuperimposer svd = new SVDSuperimposer(arr2, arr1);
+		SuperPositionSVD svd = new SuperPositionSVD(false);
 
-		Matrix rotMatrix = svd.getRotation();
-		Atom tranMatrix = svd.getTranslation();
-
+		Matrix4d transform = svd.superpose(arr1, arr2);
+		Matrix rotMatrix = Matrices.getRotationJAMA(transform);
+		Atom tranMatrix = getTranslationVector(transform);
+		
 		Calc.rotate(aCB, rotMatrix);
 
 		Atom virtualCB = Calc.add(aCB, tranMatrix);
@@ -1189,23 +1192,6 @@ public class Calc {
 	 * @param rot
 	 *            3x3 Rotation matrix
 	 * @param trans
-	 *            3x1 Translation matrix
-	 * @return 4x4 transformation matrix
-	 */
-	public static Matrix4d getTransformation(Matrix rot, Matrix trans) {
-		return new Matrix4d(new Matrix3d(rot.getColumnPackedCopy()),
-				new Vector3d(trans.getColumnPackedCopy()), 1.0);
-	}
-
-	/**
-	 * Convert JAMA rotation and translation to a Vecmath transformation matrix.
-	 * Because the JAMA matrix is a pre-multiplication matrix and the Vecmath
-	 * matrix is a post-multiplication one, the rotation matrix is transposed to
-	 * ensure that the transformation they produce is the same.
-	 *
-	 * @param rot
-	 *            3x3 Rotation matrix
-	 * @param trans
 	 *            3x1 translation vector in Atom coordinates
 	 * @return 4x4 transformation matrix
 	 */
@@ -1213,30 +1199,9 @@ public class Calc {
 		return new Matrix4d(new Matrix3d(rot.getColumnPackedCopy()),
 				new Vector3d(trans.getCoords()), 1.0);
 	}
-
+	
 	/**
-	 * Convert Vecmath transformation into a JAMA rotation matrix. Because the
-	 * JAMA matrix is a pre-multiplication matrix and the Vecmath matrix is a
-	 * post-multiplication one, the rotation matrix is transposed to ensure that
-	 * the transformation they produce is the same.
-	 *
-	 * @param transform
-	 *            Matrix4d with transposed rotation matrix
-	 * @return
-	 */
-	public static Matrix getRotationMatrix(Matrix4d transform) {
-
-		Matrix rot = new Matrix(3, 3);
-		for (int i = 0; i < 3; i++) {
-			for (int j = 0; j < 3; j++) {
-				rot.set(j, i, transform.getElement(i, j)); // transposed
-			}
-		}
-		return rot;
-	}
-
-	/**
-	 * Extract the translational vector of a Vecmath transformation.
+	 * Extract the translational vector as an Atom of a transformation matrix.
 	 *
 	 * @param transform
 	 *            Matrix4d
@@ -1263,5 +1228,128 @@ public class Calc {
 			points[i] = new Point3d(atoms[i].getCoords());
 		}
 		return points;
+	}
+
+	/**
+	 * Calculate the RMSD of two Atom arrays, already superposed.
+	 * 
+	 * @param x
+	 *            array of Atoms superposed to y
+	 * @param y
+	 *            array of Atoms superposed to x
+	 * @return RMSD
+	 */
+	public static double rmsd(Atom[] x, Atom[] y) {
+		return CalcPoint.rmsd(atomsToPoints(x), atomsToPoints(y));
+	}
+
+	/**
+	 * Calculate the TM-Score for the superposition.
+	 *
+	 * <em>Normalizes by the <strong>maximum</strong>-length structure (that is, {@code max\{len1,len2\}}) rather than the minimum.</em>
+	 *
+	 * Atom sets must be superposed.
+	 *
+	 * <p>
+	 * Citation:<br/>
+	 * <i>Zhang Y and Skolnick J (2004). "Scoring function for automated
+	 * assessment of protein structure template quality". Proteins 57: 702 -
+	 * 710.</i>
+	 *
+	 * @param atomSet1
+	 *            atom array 1
+	 * @param atomSet2
+	 *            atom array 2
+	 * @param len1
+	 *            The full length of the protein supplying atomSet1
+	 * @param len2
+	 *            The full length of the protein supplying atomSet2
+	 * @return The TM-Score
+	 * @throws StructureException
+	 * @see {@link #getTMScore(Atom[], Atom[], int, int)}, which normalizes by
+	 *      the minimum length
+	 */
+	public static double getTMScoreAlternate(Atom[] atomSet1, Atom[] atomSet2,
+			int len1, int len2) throws StructureException {
+		if (atomSet1.length != atomSet2.length) {
+			throw new StructureException(
+					"The two atom sets are not of same length!");
+		}
+		if (atomSet1.length > len1) {
+			throw new StructureException(
+					"len1 must be greater or equal to the alignment length!");
+		}
+		if (atomSet2.length > len2) {
+			throw new StructureException(
+					"len2 must be greater or equal to the alignment length!");
+		}
+
+		int Lmax = Math.max(len1, len2);
+		int Laln = atomSet1.length;
+
+		double d0 = 1.24 * Math.cbrt(Lmax - 15.) - 1.8;
+		double d0sq = d0 * d0;
+
+		double sum = 0;
+		for (int i = 0; i < Laln; i++) {
+			double d = Calc.getDistance(atomSet1[i], atomSet2[i]);
+			sum += 1. / (1 + d * d / d0sq);
+		}
+
+		return sum / Lmax;
+	}
+
+	/**
+	 * Calculate the TM-Score for the superposition.
+	 *
+	 * <em>Normalizes by the <strong>minimum</strong>-length structure (that is, {@code min\{len1,len2\}}).</em>
+	 *
+	 * Atom sets must be pre-rotated.
+	 *
+	 * <p>
+	 * Citation:<br/>
+	 * <i>Zhang Y and Skolnick J (2004). "Scoring function for automated
+	 * assessment of protein structure template quality". Proteins 57: 702 -
+	 * 710.</i>
+	 *
+	 * @param atomSet1
+	 *            atom array 1
+	 * @param atomSet2
+	 *            atom array 2
+	 * @param len1
+	 *            The full length of the protein supplying atomSet1
+	 * @param len2
+	 *            The full length of the protein supplying atomSet2
+	 * @return The TM-Score
+	 * @throws StructureException
+	 */
+	public static double getTMScore(Atom[] atomSet1, Atom[] atomSet2, int len1,
+			int len2) throws StructureException {
+		if (atomSet1.length != atomSet2.length) {
+			throw new StructureException(
+					"The two atom sets are not of same length!");
+		}
+		if (atomSet1.length > len1) {
+			throw new StructureException(
+					"len1 must be greater or equal to the alignment length!");
+		}
+		if (atomSet2.length > len2) {
+			throw new StructureException(
+					"len2 must be greater or equal to the alignment length!");
+		}
+
+		int Lmin = Math.min(len1, len2);
+		int Laln = atomSet1.length;
+
+		double d0 = 1.24 * Math.cbrt(Lmin - 15.) - 1.8;
+		double d0sq = d0 * d0;
+
+		double sum = 0;
+		for (int i = 0; i < Laln; i++) {
+			double d = Calc.getDistance(atomSet1[i], atomSet2[i]);
+			sum += 1. / (1 + d * d / d0sq);
+		}
+
+		return sum / Lmin;
 	}
 }

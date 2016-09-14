@@ -29,6 +29,7 @@ package org.biojava.nbio.structure.align.fatcat.calc;
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.model.AFP;
 import org.biojava.nbio.structure.align.model.AFPChain;
+import org.biojava.nbio.structure.geometry.SuperPositions;
 import org.biojava.nbio.structure.jama.Matrix;
 
 import java.util.ArrayList;
@@ -180,39 +181,26 @@ public class AFPCalculator
 
 	}
 
-	private static final double getRmsd(Atom[] ca1, Atom[] ca2, int fragLen, int p1, int p2, Matrix m, Atom t) throws StructureException {
+	private static final double getRmsd(Atom[] ca1, Atom[] ca2, int fragLen, 
+			int p1, int p2, Matrix m, Atom t) throws StructureException {
 
 
 		double rmsd = 99.9;
-			Atom[] catmp1 = getFragment(ca1, p1, fragLen,false);
-			Atom[] catmp2 = getFragment(ca2, p2, fragLen,true); // clone the atoms for fragment 2 so we can manipulate them...
+		Atom[] catmp1 = getFragment(ca1, p1, fragLen,false);
+		Atom[] catmp2 = getFragment(ca2, p2, fragLen,false);
 
-			if ( catmp1 == null) {
-				System.err.println("could not get fragment for ca1 " + p1 + " " + fragLen );
-				return rmsd;
+		if ( catmp1 == null) {
+			System.err.println("could not get fragment for ca1 " + p1 + " " + fragLen );
+			return rmsd;
+		}
 
-			}
+		if ( catmp2 == null) {
+			System.err.println("could not get fragment for ca2 " + p2 + " " + fragLen );
+			return rmsd;
+		}
 
-			if ( catmp2 == null) {
-				System.err.println("could not get fragment for ca2 " + p2 + " " + fragLen );
-				return rmsd;
-
-			}
-
-			SVDSuperimposer svd = new SVDSuperimposer(catmp1, catmp2);
-
-			m = svd.getRotation();
-			t = svd.getTranslation();
-
-			for (Atom a : catmp2){
-				Calc.rotate(a,m);
-				Calc.shift(a,t);
-
-			}
-
-			rmsd = SVDSuperimposer.getRMS(catmp1,catmp2);
-
-		return rmsd;
+		return SuperPositions.getRmsd(Calc.atomsToPoints(catmp1), 
+				Calc.atomsToPoints(catmp2));
 	}
 
 	/** get a continue subset of Atoms based by the starting position and the length
@@ -223,7 +211,8 @@ public class AFPCalculator
 	 * @param clone: returns a copy of the atom (in case the coordinate get manipulated...)
 	 * @return an Atom[] array
 	 */
-	private static final Atom[] getFragment(Atom[] caall, int pos, int fragmentLength , boolean clone){
+	private static final Atom[] getFragment(Atom[] caall, int pos, int fragmentLength , 
+			boolean clone){
 
 		if ( pos+fragmentLength > caall.length)
 			return null;

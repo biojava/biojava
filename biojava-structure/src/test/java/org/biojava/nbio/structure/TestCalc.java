@@ -25,6 +25,7 @@ import static org.junit.Assert.*;
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
 
+import org.biojava.nbio.structure.geometry.Matrices;
 import org.biojava.nbio.structure.jama.Matrix;
 import org.junit.Test;
 
@@ -121,7 +122,7 @@ public class TestCalc {
 
 		//Sample transform: calc transposes automatically the matrix
 		//because it is a pre-multiplication rotation matrix
-		Matrix sampleR = Calc.getRotationMatrix(getSampleTransform());
+		Matrix sampleR = Matrices.getRotationJAMA(getSampleTransform());
 		Atom sampleT = Calc.getTranslationVector(getSampleTransform());
 		Calc.rotate(atom, sampleR);
 		Calc.shift(atom, sampleT);

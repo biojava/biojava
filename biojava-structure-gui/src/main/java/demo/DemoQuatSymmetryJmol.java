@@ -61,7 +61,7 @@ public class DemoQuatSymmetryJmol {
 	public static void main(String[] args) throws IOException,
 			StructureException {
 
-		String name = "1VYM";
+		String name = "2vml";
 
 		// Download the biological assembly
 		AtomCache cache = new AtomCache();
@@ -72,7 +72,6 @@ public class DemoQuatSymmetryJmol {
 		SubunitClustererParameters cp = new SubunitClustererParameters();
 		cp.setClustererMethod(SubunitClustererMethod.SEQUENCE); // normal
 		// cp.setClustererMethod(SubunitClustererMethod.STRUCTURE); // pseudo
-		// cp.setClustererMethod(SubunitClustererMethod.INTERNAL_SYMMETRY);
 		cp.setCoverageThreshold(0.9);
 
 		// Calculate and display the global symmetry

@@ -26,6 +26,7 @@ import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.contact.Pair;
+import org.biojava.nbio.structure.geometry.Matrices;
 import org.biojava.nbio.structure.jama.Matrix;
 
 import javax.vecmath.AxisAngle4d;
@@ -175,7 +176,7 @@ public final class RotationAxis {
 	 */
 	public RotationAxis(Matrix4d transform) {
 
-		Matrix rot = Calc.getRotationMatrix(transform);
+		Matrix rot = Matrices.getRotationJAMA(transform);
 		Atom transl = Calc.getTranslationVector(transform);
 		init(rot,transl);
 	}
