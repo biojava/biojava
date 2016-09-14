@@ -94,6 +94,7 @@ public class AsaCalculator {
 	}
 
 
+	private Point3d[] atomCoords;
 	private Atom[] atoms;
 	private double[] radii;
 	private double probe;
@@ -115,12 +116,13 @@ public class AsaCalculator {
 	 */
 	public AsaCalculator(Structure structure, double probe, int nSpherePoints, int nThreads, boolean hetAtoms) {
 		this.atoms = StructureTools.getAllNonHAtomArray(structure, hetAtoms);
+		this.atomCoords = Calc.atomsToPoints(atoms);
 		this.probe = probe;
 		this.nThreads = nThreads;
 
 		// initialising the radii by looking them up through AtomRadii
-		radii = new double[atoms.length];
-		for (int i=0;i<atoms.length;i++) {
+		radii = new double[atomCoords.length];
+		for (int i=0;i<atomCoords.length;i++) {
 			radii[i] = getRadius(atoms[i]);
 		}
 
@@ -142,6 +144,7 @@ public class AsaCalculator {
 	 */
 	public AsaCalculator(Atom[] atoms, double probe, int nSpherePoints, int nThreads) {
 		this.atoms = atoms;
+		this.atomCoords = Calc.atomsToPoints(atoms);
 		this.probe = probe;
 		this.nThreads = nThreads;
 
@@ -163,6 +166,41 @@ public class AsaCalculator {
 	}
 
 	/**
+	 * Constructs a new AsaCalculator. Subsequently call {@link #calcSingleAsa(int)} 
+	 * to calculate the atom ASAs. The given radius parameter will be taken as the radius for
+	 * all points given. No ASA calculation per group will be possible with this constructor, so
+	 * usage of {@link #getGroupAsas()} will result in a NullPointerException.
+	 * @param atomCoords
+	 * 				the coordinates representing the center of atoms
+	 * @param probe 
+	 * 				the probe size
+	 * @param nSpherePoints 
+	 * 				the number of points to be used in generating the spherical
+	 * 				dot-density, the more points the more accurate (and slower) calculation
+	 * @param nThreads 
+	 * 				the number of parallel threads to use for the calculation
+	 * @param radius 
+	 * 				the radius that will be assign to all given coordinates
+	 */
+	public AsaCalculator(Point3d[] atomCoords, double probe, int nSpherePoints, int nThreads, double radius) {
+		this.atoms = null;
+		this.atomCoords = atomCoords;
+		this.probe = probe;
+		this.nThreads = nThreads;
+
+		// initialising the radii to the given radius for all atoms
+		radii = new double[atomCoords.length];
+		for (int i=0;i<atomCoords.length;i++) {
+			radii[i] = radius;
+		}
+
+		// initialising the sphere points to sample
+		spherePoints = generateSpherePoints(nSpherePoints);
+
+		cons = 4.0 * Math.PI / nSpherePoints;
+	}
+
+	/**
 	 * Calculates ASA for all atoms and return them as a GroupAsa
 	 * array (one element per residue in structure) containing ASAs per residue
 	 * and per atom.
@@ -175,7 +213,7 @@ public class AsaCalculator {
 
 		double[] asasPerAtom = calculateAsas();
 
-		for (int i=0;i<atoms.length;i++) {
+		for (int i=0;i<atomCoords.length;i++) {
 			Group g = atoms[i].getGroup();
 			if (!asas.containsKey(g.getResidueNumber())) {
 				GroupAsa groupAsa = new GroupAsa(g);
@@ -198,10 +236,10 @@ public class AsaCalculator {
 	 */
 	public double[] calculateAsas() {
 
-		double[] asas = new double[atoms.length];
+		double[] asas = new double[atomCoords.length];
 
 		if (nThreads<=1) { // (i.e. it will also be 1 thread if 0 or negative number specified)
-			for (int i=0;i<atoms.length;i++) {
+			for (int i=0;i<atomCoords.length;i++) {
 				asas[i] = calcSingleAsa(i);
 			}
 
@@ -246,7 +284,7 @@ public class AsaCalculator {
 			ExecutorService threadPool = Executors.newFixedThreadPool(nThreads);
 
 
-			for (int i=0;i<atoms.length;i++) {
+			for (int i=0;i<atomCoords.length;i++) {
 				threadPool.submit(new AsaCalcWorker(i,asas));
 			}
 
@@ -289,12 +327,12 @@ public class AsaCalculator {
 
 		double radius = radii[k] + probe + probe;
 
-		for (int i=0;i<atoms.length;i++) {
+		for (int i=0;i<atomCoords.length;i++) {
 			if (i==k) continue;
 
 			double dist = 0;
 
-			dist = Calc.getDistance(atoms[i], atoms[k]);
+			dist = atomCoords[i].distance(atomCoords[k]);
 
 			if (dist < radius + radii[i]) {
 				neighbor_indices.add(i);
@@ -306,7 +344,7 @@ public class AsaCalculator {
 	}
 
 	private double calcSingleAsa(int i) {
-		Atom atom_i = atoms[i];
+		Point3d atom_i = atomCoords[i];
 		ArrayList<Integer> neighbor_indices = findNeighborIndices(i);
 		int n_neighbor = neighbor_indices.size();
 		int j_closest_neighbor = 0;
@@ -316,9 +354,9 @@ public class AsaCalculator {
 
 		for (Point3d point: spherePoints){
 			boolean is_accessible = true;
-			Point3d test_point = new Point3d(point.x*radius + atom_i.getX(),
-					point.y*radius + atom_i.getY(),
-					point.z*radius + atom_i.getZ());
+			Point3d test_point = new Point3d(point.x*radius + atom_i.x,
+					point.y*radius + atom_i.y,
+					point.z*radius + atom_i.z);
 
 			int[] cycled_indices = new int[n_neighbor];
 			int arind = 0;
@@ -332,9 +370,9 @@ public class AsaCalculator {
 			}
 
 			for (int j: cycled_indices) {
-				Atom atom_j = atoms[neighbor_indices.get(j)];
+				Point3d atom_j = atomCoords[neighbor_indices.get(j)];
 				double r = radii[neighbor_indices.get(j)] + probe;
-				double diff_sq = test_point.distanceSquared(new Point3d(atom_j.getCoords()));
+				double diff_sq = test_point.distanceSquared(atom_j);
 				if (diff_sq < r*r) {
 					j_closest_neighbor = j;
 					is_accessible = false;

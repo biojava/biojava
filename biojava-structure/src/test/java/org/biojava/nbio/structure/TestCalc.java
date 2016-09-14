@@ -116,7 +116,7 @@ public class TestCalc {
 		Calc.shift(atom, identT);
 
 		Point3d expected = new Point3d(1.0, 1.0, 1.0);
-		Point3d actual = new Point3d(atom.getCoords());
+		Point3d actual = atom.getCoordsAsPoint3d();
 
 		assertEquals(expected, actual);
 
@@ -128,7 +128,7 @@ public class TestCalc {
 		Calc.shift(atom, sampleT);
 
 		expected = new Point3d(2.0, 7.0, -1.3);
-		actual = new Point3d(atom.getCoords());
+		actual = atom.getCoordsAsPoint3d();
 
 		assertEquals(expected, actual);
 	}
@@ -144,7 +144,7 @@ public class TestCalc {
 		Calc.transform(atom, ident);
 
 		Point3d expected = new Point3d(1.0, 1.0, 1.0);
-		Point3d actual = new Point3d(atom.getCoords());
+		Point3d actual = atom.getCoordsAsPoint3d();
 
 		assertEquals(expected, actual);
 
@@ -153,7 +153,7 @@ public class TestCalc {
 		Calc.transform(atom, sample);
 
 		expected = new Point3d(2.0, 7.0, -1.3);
-		actual = new Point3d(atom.getCoords());
+		actual = atom.getCoordsAsPoint3d();
 
 		assertEquals(expected, actual);
 	}

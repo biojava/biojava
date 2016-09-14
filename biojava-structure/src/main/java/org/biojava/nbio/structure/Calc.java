@@ -190,8 +190,8 @@ public class Calc {
 	 */
 	public static final double angle(Atom a, Atom b) {
 
-		Vector3d va = new Vector3d(a.getCoords());
-		Vector3d vb = new Vector3d(b.getCoords());
+		Vector3d va = new Vector3d(a.getCoordsAsPoint3d());
+		Vector3d vb = new Vector3d(b.getCoordsAsPoint3d());
 
 		return Math.toDegrees(va.angle(vb));
 
@@ -1197,7 +1197,7 @@ public class Calc {
 	 */
 	public static Matrix4d getTransformation(Matrix rot, Atom trans) {
 		return new Matrix4d(new Matrix3d(rot.getColumnPackedCopy()),
-				new Vector3d(trans.getCoords()), 1.0);
+				new Vector3d(trans.getCoordsAsPoint3d()), 1.0);
 	}
 	
 	/**
@@ -1225,7 +1225,7 @@ public class Calc {
 	public static Point3d[] atomsToPoints(Atom[] atoms) {
 		Point3d[] points = new Point3d[atoms.length];
 		for (int i = 0; i < atoms.length; i++) {
-			points[i] = new Point3d(atoms[i].getCoords());
+			points[i] = atoms[i].getCoordsAsPoint3d();
 		}
 		return points;
 	}
