@@ -26,7 +26,7 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetryResults;
-import org.biojava.nbio.structure.symmetry.core.Subunits;
+import org.biojava.nbio.structure.symmetry.core.QuatSymmetrySubunits;
 
 import java.util.List;
 
@@ -87,7 +87,7 @@ public abstract class AxisAligner {
 
 	public abstract Point3d getCentroid();
 
-	public abstract Subunits getSubunits();
+	public abstract QuatSymmetrySubunits getSubunits();
 
 	public abstract List<List<Integer>> getOrbits();
 

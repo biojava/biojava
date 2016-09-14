@@ -28,10 +28,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HelixExtender {
-	private Subunits subunits = null;
+	private QuatSymmetrySubunits subunits = null;
 	private Helix helix = null;
 
-	public HelixExtender(Subunits subunits, Helix helix) {
+	public HelixExtender(QuatSymmetrySubunits subunits, Helix helix) {
 		this.subunits = subunits;
 		this.helix = helix;
 	}

@@ -44,13 +44,13 @@ public class HelixSolver {
 	private static final Logger logger = LoggerFactory
 			.getLogger(HelixSolver.class);
 
-	private Subunits subunits = null;
+	private QuatSymmetrySubunits subunits = null;
 	private int fold = 1;
 	private HelixLayers helixLayers = new HelixLayers();
 	private QuatSymmetryParameters parameters = null;
 	boolean modified = true;
 
-	public HelixSolver(Subunits subunits, int fold,
+	public HelixSolver(QuatSymmetrySubunits subunits, int fold,
 			QuatSymmetryParameters parameters) {
 		this.subunits = subunits;
 		this.fold = fold;
@@ -232,6 +232,7 @@ public class HelixSolver {
 			transformation = SuperPosition.superposeWithTranslation(h1, h2);
 
 			Point3d xtrans = CalcPoint.centroid(h3);
+
 			xtrans.negate();
 
 			double traceRmsd = SuperPosition.rmsd(h1, h2);
@@ -355,7 +356,7 @@ public class HelixSolver {
 				.pow(this.parameters.getRmsdThreshold(), 2);
 
 		List<Point3d> centers = subunits.getOriginalCenters();
-		List<Integer> seqClusterId = subunits.getSequenceClusterIds();
+		List<Integer> seqClusterId = subunits.getClusterIds();
 
 		List<Integer> permutations = new ArrayList<Integer>(centers.size());
 		double[] dSqs = new double[centers.size()];

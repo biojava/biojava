@@ -391,7 +391,7 @@ public class DistanceMatrixCalculator {
 		// Need to import PAM1 matrix to biojava TODO
 		//SubstitutionMatrix<AminoAcidCompound> PAM1 = SubstitutionMatrixHelper.getPAM250();
 
-		return null;
+		throw new IllegalStateException("PAM ML distance calculation not implemented!");
 	}
 
 	/**
@@ -445,20 +445,6 @@ public class DistanceMatrixCalculator {
 		}
 
 		return DM;
-	}
-
-	/**
-	 * The joint sequence-structure distance (d<sub>SS</sub>) is a combination
-	 * of the sequence-based and the structure-based distances.
-	 *
-	 * @param rmsdMat
-	 *            RMSD matrix for all structure pairs (symmetric matrix)
-	 * @return DistanceMatrix
-	 */
-	public static <C extends Sequence<D>, D extends Compound> DistanceMatrix jointSeqStrucDistance(
-			double[][] rmsdMat) {
-		// TODO
-		return null;
 	}
 
 }

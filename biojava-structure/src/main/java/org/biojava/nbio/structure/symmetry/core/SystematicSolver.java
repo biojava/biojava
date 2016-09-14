@@ -40,7 +40,7 @@ import java.util.Set;
  * @author Peter
  */
 public class SystematicSolver implements QuatSymmetrySolver {
-	private Subunits subunits = null;
+	private QuatSymmetrySubunits subunits = null;
 	private QuatSymmetryParameters parameters = null;
 
 	private Point3d[] originalCoords = null;
@@ -50,7 +50,7 @@ public class SystematicSolver implements QuatSymmetrySolver {
 	private Matrix4d centroidInverse = new Matrix4d();
 	private Set<List<Integer>> hashCodes = new HashSet<List<Integer>>();
 
-	public SystematicSolver(Subunits subunits, QuatSymmetryParameters parameters) {
+	public SystematicSolver(QuatSymmetrySubunits subunits, QuatSymmetryParameters parameters) {
 		if (subunits.getSubunitCount()== 2) {
 			throw new IllegalArgumentException("SystematicSolver cannot be applied to subunits with 2 centers");
 		}
@@ -171,7 +171,7 @@ public class SystematicSolver implements QuatSymmetrySolver {
 	}
 
 	private boolean isAllowedPermuation(List<Integer> permutation) {
-		List<Integer> seqClusterId = subunits.getSequenceClusterIds();
+		List<Integer> seqClusterId = subunits.getClusterIds();
 		for (int i = 0; i < permutation.size(); i++) {
 			int j = permutation.get(i);
 			if (seqClusterId.get(i) != seqClusterId.get(j)) {
