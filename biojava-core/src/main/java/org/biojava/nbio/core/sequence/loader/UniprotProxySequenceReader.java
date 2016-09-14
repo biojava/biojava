@@ -368,6 +368,13 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 		for (Element element : keyWordElementList) {
 			Element fullNameElement = XMLHelper.selectSingleElement(element, "fullName");
 			aliasList.add(fullNameElement.getTextContent());
+			Element shortNameElement = XMLHelper.selectSingleElement(element, "shortName");
+			if(null != shortNameElement) {
+				String shortName = shortNameElement.getTextContent();
+				if(null != shortName && !shortName.trim().isEmpty()) {
+					aliasList.add(shortName);
+				}
+			}
 		}
 
 		return aliasList;
