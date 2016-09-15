@@ -21,7 +21,7 @@
 package org.biojava.nbio.structure.symmetry.core;
 
 import org.biojava.nbio.structure.geometry.CalcPoint;
-import org.biojava.nbio.structure.geometry.SuperPosition;
+import org.biojava.nbio.structure.geometry.SuperPositions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,13 +44,13 @@ public class HelixSolver {
 	private static final Logger logger = LoggerFactory
 			.getLogger(HelixSolver.class);
 
-	private Subunits subunits = null;
+	private QuatSymmetrySubunits subunits = null;
 	private int fold = 1;
 	private HelixLayers helixLayers = new HelixLayers();
 	private QuatSymmetryParameters parameters = null;
 	boolean modified = true;
 
-	public HelixSolver(Subunits subunits, int fold,
+	public HelixSolver(QuatSymmetrySubunits subunits, int fold,
 			QuatSymmetryParameters parameters) {
 		this.subunits = subunits;
 		this.fold = fold;
@@ -90,17 +90,14 @@ public class HelixSolver {
 			logger.debug("HelixSolver: pair: " + Arrays.toString(pair));
 			
 			int contacts = entry.getValue();
-			Point3d[] h1 = null;
-			Point3d[] h2 = null;
+			Point3d[] h1 = CalcPoint.clonePoint3dArray(repeatUnits.get(pair[0]));
+			Point3d[] h2 = CalcPoint.clonePoint3dArray(repeatUnits.get(pair[1]));
 
 			// trial superposition of repeat unit pairs to get a seed
 			// permutation
-			h1 = CalcPoint.clonePoint3dArray(repeatUnits.get(pair[0]));
-			h2 = CalcPoint.clonePoint3dArray(repeatUnits.get(pair[1]));
-			Matrix4d transformation = SuperPosition.superposeWithTranslation(
-					h1, h2);
+			Matrix4d transformation = SuperPositions.superposeAndTransform(h2, h1);
 
-			double rmsd = SuperPosition.rmsd(h1, h2);
+			double rmsd = CalcPoint.rmsd(h1, h2);
 			double rise = getRise(transformation,
 					repeatUnitCenters.get(pair[0]),
 					repeatUnitCenters.get(pair[1]));
@@ -185,9 +182,9 @@ public class HelixSolver {
 			// calculate subunit rmsd if at least 3 subunits are available
 			double subunitRmsd = 0;
 			if (point1.size() > 2) {
-				transformation = SuperPosition.superposeWithTranslation(h1, h2);
+				transformation = SuperPositions.superposeAndTransform(h2, h1);
 
-				subunitRmsd = SuperPosition.rmsd(h1, h2);
+				subunitRmsd = CalcPoint.rmsd(h1, h2);
 				rise = getRise(transformation, repeatUnitCenters.get(pair[0]),
 						repeatUnitCenters.get(pair[1]));
 				angle = getAngle(transformation);
@@ -229,12 +226,13 @@ public class HelixSolver {
 			point1.toArray(h1);
 			point2.toArray(h2);
 			Point3d[] h3 = CalcPoint.clonePoint3dArray(h1);
-			transformation = SuperPosition.superposeWithTranslation(h1, h2);
+			transformation = SuperPositions.superposeAndTransform(h2, h1);
 
 			Point3d xtrans = CalcPoint.centroid(h3);
+
 			xtrans.negate();
 
-			double traceRmsd = SuperPosition.rmsd(h1, h2);
+			double traceRmsd = CalcPoint.rmsd(h1, h2);
 
 			rise = getRise(transformation, repeatUnitCenters.get(pair[0]),
 					repeatUnitCenters.get(pair[1]));
@@ -355,7 +353,7 @@ public class HelixSolver {
 				.pow(this.parameters.getRmsdThreshold(), 2);
 
 		List<Point3d> centers = subunits.getOriginalCenters();
-		List<Integer> seqClusterId = subunits.getSequenceClusterIds();
+		List<Integer> seqClusterId = subunits.getClusterIds();
 
 		List<Integer> permutations = new ArrayList<Integer>(centers.size());
 		double[] dSqs = new double[centers.size()];

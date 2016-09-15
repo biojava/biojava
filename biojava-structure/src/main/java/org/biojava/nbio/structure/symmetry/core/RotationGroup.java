@@ -30,7 +30,7 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- *
+ * @see http://en.wikipedia.org/wiki/Rotation_group_SO(3)
  * @author Peter
  */
 public class RotationGroup {

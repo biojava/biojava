@@ -49,7 +49,9 @@ public class SubunitClusterer {
 	public static List<SubunitCluster> cluster(Structure structure,
 			SubunitClustererParameters params) {
 		List<Subunit> subunits = SubunitExtractor.extractSubunits(structure,
-				params);
+				params.getAbsoluteMinimumSequenceLength(),
+				params.getMinimumSequenceLengthFraction(),
+				params.getMinimumSequenceLength());
 		return cluster(subunits, params);
 	}
 
@@ -110,7 +112,7 @@ public class SubunitClusterer {
 			}
 		}
 
-		if (params.getClustererMethod() == SubunitClustererMethod.STRUCTURE)
+		if (!params.isInternalSymmetry())
 			return clusters;
 
 		// Now divide clusters by their INTERNAL SYMMETRY
@@ -124,7 +126,7 @@ public class SubunitClusterer {
 						e.getMessage());
 			}
 		}
-		
+
 		// After internal symmetry merge again by structural similarity
 		// Use case: C8 propeller with 3 chains with 3+3+2 repeats each
 		for (int c1 = 0; c1 < clusters.size(); c1++) {
@@ -140,7 +142,6 @@ public class SubunitClusterer {
 				}
 			}
 		}
-		
 
 		return clusters;
 	}

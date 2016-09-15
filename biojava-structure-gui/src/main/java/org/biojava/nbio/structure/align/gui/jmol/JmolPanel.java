@@ -24,12 +24,33 @@
 
 package org.biojava.nbio.structure.align.gui.jmol;
 
-import org.biojava.nbio.structure.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
+import java.text.DecimalFormat;
+import java.util.List;
+
+import javax.swing.JComboBox;
+
+import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.Calc;
+import org.biojava.nbio.structure.Group;
+import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.gui.JPrintPanel;
 import org.biojava.nbio.structure.domain.LocalProteinDomainParser;
 import org.biojava.nbio.structure.domain.pdp.Domain;
 import org.biojava.nbio.structure.domain.pdp.Segment;
 import org.biojava.nbio.structure.gui.util.color.ColorUtils;
+import org.biojava.nbio.structure.io.mmtf.MmtfActions;
 import org.biojava.nbio.structure.jama.Matrix;
 import org.biojava.nbio.structure.scop.ScopDatabase;
 import org.biojava.nbio.structure.scop.ScopDomain;
@@ -38,20 +59,17 @@ import org.jmol.adapter.smarter.SmarterJmolAdapter;
 import org.jmol.api.JmolAdapter;
 import org.jmol.api.JmolStatusListener;
 import org.jmol.api.JmolViewer;
-import org.jmol.util.Logger;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.text.DecimalFormat;
-import java.util.List;
+import org.jmol.util.LoggerInterface;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class JmolPanel
 extends JPrintPanel
 implements ActionListener
 {
+	private static final Logger logger = LoggerFactory.getLogger(JmolPanel.class);
+	
 	private static final long serialVersionUID = -3661941083797644242L;
 
 	private JmolViewer viewer;
@@ -62,13 +80,13 @@ implements ActionListener
 
 	Structure structure;
 
-	private boolean verbose = false;
-
 	public JmolPanel() {
 		super();
 		statusListener = new MyJmolStatusListener();
 		adapter = new SmarterJmolAdapter();
-		Logger.setLogLevel( verbose?Logger.LEVEL_INFO:Logger.LEVEL_ERROR);
+		JmolLoggerAdapter jmolLogger = new JmolLoggerAdapter(LoggerFactory.getLogger(org.jmol.api.JmolViewer.class));
+		org.jmol.util.Logger.setLogger(jmolLogger);
+		org.jmol.util.Logger.setLogLevel( jmolLogger.getLogLevel() );
 		viewer = JmolViewer.allocateViewer(this,
 				adapter,
 				null,null,null,null,
@@ -109,11 +127,28 @@ implements ActionListener
 		viewer.evalString(rasmolScript);
 	}
 
-	public void setStructure(Structure s)
+	public void setStructure(final Structure s)
 	{
 		this.structure = s;
-		String pdb = s.toPDB();
-		viewer.openStringInline(pdb);
+		try (
+				PipedOutputStream out = new PipedOutputStream();
+				// Viewer requires a BufferedInputStream for reflection
+				InputStream in = new BufferedInputStream(new PipedInputStream(out));
+				) {
+			new Thread((Runnable)() -> {
+				try {
+					MmtfActions.writeToOutputStream(s,out);
+				} catch (Exception e) {
+					logger.error("Error generating MMTF output for {}",
+							s.getStructureIdentifier()==null ? s.getStructureIdentifier().getIdentifier() : s.getName(), e);
+				}
+			}).start();
+			viewer.openReader(null, in);
+		} catch (IOException e) {
+			logger.error("Error transfering {} to Jmol",
+					s.getStructureIdentifier()==null ? s.getStructureIdentifier().getIdentifier() : s.getName(), e);
+		}
+
 		evalString("save STATE state_1");
 	}
 
@@ -173,7 +208,8 @@ implements ActionListener
 			return;
 		}
 
-		JComboBox source = (JComboBox) event.getSource();
+		@SuppressWarnings("unchecked")
+		JComboBox<String> source = (JComboBox<String>) event.getSource();
 		String value = source.getSelectedItem().toString();
 		evalString("save selection; ");
 
@@ -267,7 +303,7 @@ implements ActionListener
 			List<String>ranges = domain.getRanges();
 
 			for (String range : ranges){
-				if(verbose) System.out.println(range);
+				logger.debug(range);
 				String[] spl = range.split(":");
 				String script = " select  ";
 				if ( spl.length > 1 )
@@ -276,7 +312,7 @@ implements ActionListener
 					script += "*" + spl[0]+"/1;";
 				script += " color [" + c1.getRed() + ","+c1.getGreen() + "," +c1.getBlue()+"];";
 				script += " color cartoon [" + c1.getRed() + ","+c1.getGreen() + "," +c1.getBlue()+"] ;";
-				if(verbose) System.out.println(script);
+				logger.debug(script);
 				evalString(script);
 
 			}
@@ -286,7 +322,7 @@ implements ActionListener
 	}
 
 	private void colorByPDP() {
-		if(verbose) System.out.println("colorByPDP");
+		logger.debug("colorByPDP");
 		if ( structure == null)
 			return;
 
@@ -310,13 +346,13 @@ implements ActionListener
 					int end = s.getTo();
 					Group startG = ca[start].getGroup();
 					Group endG = ca[end].getGroup();
-					if(verbose) System.out.println("   Segment: " +startG.getResidueNumber() +":" + startG.getChainId() + " - " + endG.getResidueNumber()+":"+endG.getChainId() + " " + s);
+					logger.debug("   Segment: " +startG.getResidueNumber() +":" + startG.getChainId() + " - " + endG.getResidueNumber()+":"+endG.getChainId() + " " + s);
 					String j1 = startG.getResidueNumber()+"";
 					String j2 = endG.getResidueNumber()+":"+endG.getChainId();
 					String script = " select  " +j1 +"-" +j2 +"/1;";
 					script += " color [" + c1.getRed() + ","+c1.getGreen() + "," +c1.getBlue()+"];";
 					script += " color cartoon [" + c1.getRed() + ","+c1.getGreen() + "," +c1.getBlue()+"] ;";
-					if(verbose) System.out.println(script);
+					logger.debug(script);
 					evalString(script);
 				}
 
@@ -356,15 +392,55 @@ implements ActionListener
 		adapter = null;
 	}
 
-	public boolean isVerbose() {
-		return verbose;
-	}
-
-	public void setVerbose(boolean verbose) {
-		this.verbose = verbose;
-		if(statusListener instanceof MyJmolStatusListener) {
-			((MyJmolStatusListener)statusListener).setVerbose(verbose);
+	public static class JmolLoggerAdapter implements LoggerInterface {
+		private Logger slf;
+		public JmolLoggerAdapter(Logger slf) {
+			this.slf=slf;
+		}
+		public int getLogLevel() {
+			if( slf.isTraceEnabled() )
+				return org.jmol.util.Logger.LEVEL_MAX;
+			if( slf.isDebugEnabled() )
+				return org.jmol.util.Logger.LEVEL_DEBUG;
+			if( slf.isInfoEnabled() )
+				return org.jmol.util.Logger.LEVEL_INFO;
+			if( slf.isWarnEnabled() )
+				return org.jmol.util.Logger.LEVEL_WARN;
+			if( slf.isErrorEnabled() )
+				return org.jmol.util.Logger.LEVEL_ERROR;
+			throw new IllegalStateException("Unknown SLF4J error level");
+		}
+		@Override
+		public void debug(String txt) {
+			slf.debug(txt);
+		}
+		@Override
+		public void info(String txt) {
+			slf.info(txt);
+		}
+		@Override
+		public void warn(String txt) {
+			slf.warn(txt);
+		}
+		@Override
+		public void warnEx(String txt, Throwable e) {
+			slf.warn(txt,e);
+		}
+		@Override
+		public void error(String txt) {
+			slf.error(txt);
+		}
+		@Override
+		public void errorEx(String txt, Throwable e) {
+			slf.error(txt,e);
+		}
+		@Override
+		public void fatal(String txt) {
+			slf.error(txt);
+		}
+		@Override
+		public void fatalEx(String txt, Throwable e) {
+			slf.error(txt,e);
 		}
 	}
-
 }

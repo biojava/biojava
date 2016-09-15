@@ -24,7 +24,6 @@ import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
-import org.biojava.nbio.structure.align.util.AtomCache;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -64,18 +63,12 @@ public class TestHardBioUnits {
 
 		//System.out.println(bioAssembly.toPDB());
 
-		assertEquals(bioAssembly.nrModels(), 2);
+		assertEquals(1, bioAssembly.nrModels());
 
-		assertTrue(bioAssembly.getChains().size() > 0);
+		assertEquals(2, bioAssembly.getPolyChains().size());
 
-		// Check that one model has Chain B and the other has chain G
-		Chain g = bioAssembly.getPolyChainByPDB("G", 0);
-		Chain b = bioAssembly.getPolyChainByPDB("B", 1);
-		// Anthony Bradley - I think the model numbering here is arbitrary???
-		if(g==null){
-			g = bioAssembly.getPolyChainByPDB("G", 1);
-			b = bioAssembly.getPolyChainByPDB("B", 0);
-		}
+		Chain g = bioAssembly.getPolyChainByPDB("G_1");
+		Chain b = bioAssembly.getPolyChainByPDB("B_2");
 		
 		assertNotNull(g);
 
@@ -85,8 +78,6 @@ public class TestHardBioUnits {
 
 		assertFalse(bioAssembly.hasChain("H"));
 
-		assertEquals(1,bioAssembly.getPolyChains(0).size());
-		assertEquals(1,bioAssembly.getPolyChains(1).size());
 
 
 	}

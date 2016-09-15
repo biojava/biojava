@@ -24,7 +24,7 @@
 package org.biojava.nbio.structure.symmetry.jmolScript;
 
 import org.biojava.nbio.structure.symmetry.axis.HelixAxisAligner;
-import org.biojava.nbio.structure.symmetry.core.Subunits;
+import org.biojava.nbio.structure.symmetry.core.QuatSymmetrySubunits;
 import org.jcolorbrewer.ColorBrewer;
 
 import javax.vecmath.*;
@@ -401,7 +401,7 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 	 */
 	@Override
 	public String colorBySubunit() {
-		Subunits subunits = helixAxisAligner.getSubunits();
+		QuatSymmetrySubunits subunits = helixAxisAligner.getSubunits();
 		List<Integer> modelNumbers = subunits.getModelNumbers();
 		List<String> chainIds = subunits.getChainIds();
 		List<List<Integer>> orbits = helixAxisAligner.getOrbits();
@@ -440,11 +440,11 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 	 */
 	@Override
 	public String colorBySequenceCluster() {
-		Subunits subunits = helixAxisAligner.getSubunits();
+		QuatSymmetrySubunits subunits = helixAxisAligner.getSubunits();
 		int n = subunits.getSubunitCount();
 		List<Integer> modelNumbers = subunits.getModelNumbers();
 		List<String> chainIds = subunits.getChainIds();
-		List<Integer> seqClusterIds = subunits.getSequenceClusterIds();
+		List<Integer> seqClusterIds = subunits.getClusterIds();
 		int clusters = Collections.max(seqClusterIds) + 1;
 		Color[] col = ColorBrewer.BrBG.getColorPalette(clusters);
 		Color4f[] colors = ColorConverter.convertColor4f(col);
@@ -475,10 +475,10 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 	public String colorBySymmetry() {
 		List<List<Integer>> units = helixAxisAligner.getHelixLayers().getByLargestContacts().getLayerLines();
 		units = orientLayerLines(units);
-		Subunits subunits = helixAxisAligner.getSubunits();
+		QuatSymmetrySubunits subunits = helixAxisAligner.getSubunits();
 		List<Integer> modelNumbers = subunits.getModelNumbers();
 		List<String> chainIds = subunits.getChainIds();
-		List<Integer> clusterIds = subunits.getSequenceClusterIds();
+		List<Integer> clusterIds = subunits.getClusterIds();
 		int clusterCount = Collections.max(clusterIds) + 1;
 
 		Map<Color4f, List<String>> colorMap = new HashMap<Color4f, List<String>>();

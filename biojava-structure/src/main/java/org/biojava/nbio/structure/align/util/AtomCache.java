@@ -71,7 +71,7 @@ public class AtomCache {
 	 * The default output bioassembly style: if true the bioassemblies are multimodel,
 	 * if false the bioassemblies are flat with renamed chains for symmetry-partners.
 	 */
-	public static final boolean DEFAULT_BIOASSEMBLY_STYLE = true;
+	public static final boolean DEFAULT_BIOASSEMBLY_STYLE = false;
 
 	public static final String BIOL_ASSEMBLY_IDENTIFIER = "BIO:";
 	public static final String CHAIN_NR_SYMBOL = ":";

@@ -29,18 +29,21 @@ import org.biojava.nbio.core.alignment.template.SubstitutionMatrix;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.Group;
-import org.biojava.nbio.structure.SVDSuperimposer;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.model.AFP;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.util.AFPAlignmentDisplay;
+import org.biojava.nbio.structure.geometry.Matrices;
+import org.biojava.nbio.structure.geometry.SuperPositions;
 import org.biojava.nbio.structure.jama.Matrix;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.vecmath.Matrix4d;
 
 
 
@@ -1906,26 +1909,26 @@ nBestTrace=nTrace;
 	 * @return RMSD
 	 * @throws StructureException
 	 */
-	public double calc_rmsd(Atom[] pro1, Atom[] pro2, int strLen, boolean storeTransform) throws StructureException {
+	public double calc_rmsd(Atom[] pro1, Atom[] pro2, int strLen, 
+			boolean storeTransform) throws StructureException {
 
 		Atom[] cod1 = getAtoms(pro1,  strLen,false);
 		Atom[] cod2 = getAtoms(pro2,  strLen,true);
 
-		assert(cod1.length == cod2.length);
-		SVDSuperimposer svd = new SVDSuperimposer(cod1, cod2);
+		Matrix4d trans = SuperPositions.superpose(Calc.atomsToPoints(cod1), 
+				Calc.atomsToPoints(cod2));
 
-		Matrix matrix = svd.getRotation();
-		Atom shift = svd.getTranslation();
+		Matrix matrix = Matrices.getRotationJAMA(trans);
+		Atom shift = Calc.getTranslationVector(trans);
 
 		if ( storeTransform) {
-			r=matrix;
+			r = matrix;
 			t = shift;
 		}
-		for (Atom a : cod2){
-			Calc.rotate(a.getGroup(), matrix);
-			Calc.shift(a.getGroup(),  shift);
-		}
-		return SVDSuperimposer.getRMS(cod1, cod2);
+		for (Atom a : cod2)
+			Calc.transform(a.getGroup(), trans);
+			
+		return Calc.rmsd(cod1, cod2);
 
 	}
 

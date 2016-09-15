@@ -30,24 +30,33 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-public class SubunitGraph {
+/**
+ * Calculates the contact Graph of a set of Subunits, defined as Point arrays.
+ * The contact graph is an Undirected Graph with a node for each Subunit and an
+ * edge for each interface (contact region) between two nodes.
+ * 
+ * @author Peter Rose
+ * @author Aleix Lafita
+ *
+ */
+public class SubunitContactGraph {
 
 	private static final Logger logger = LoggerFactory
-			.getLogger(SubunitGraph.class);
+			.getLogger(SubunitContactGraph.class);
 
 	private static final double DISTANCE_CUTOFF = 8;
 	private static final int MIN_CONTACTS = 10;
-	private List<Point3d[]> caCoords = null;
 
-	public SubunitGraph(List<Point3d[]> caCoords) {
-		this.caCoords = caCoords;
+	private SubunitContactGraph() {
 	}
 
-	public UndirectedGraph<Integer, DefaultEdge> getProteinGraph() {
+	public static UndirectedGraph<Integer, DefaultEdge> calculateGraph(
+			List<Point3d[]> caCoords) {
 		int n = caCoords.size();
 
 		// add vertex for each chain center
-		UndirectedGraph<Integer, DefaultEdge> graph = new SimpleGraph<Integer, DefaultEdge>(DefaultEdge.class);
+		UndirectedGraph<Integer, DefaultEdge> graph = new SimpleGraph<Integer, DefaultEdge>(
+				DefaultEdge.class);
 		for (int i = 0; i < n; i++) {
 			graph.addVertex(i);
 		}
@@ -55,8 +64,10 @@ public class SubunitGraph {
 		// add edges if there are 10 or more contact of Calpha atoms
 		for (int i = 0; i < n - 1; i++) {
 			for (int j = i + 1; j < n; j++) {
-				int numContacts = calcContactNumber(caCoords.get(i), caCoords.get(j));
-				logger.debug("Calpha contacts between subunits {},{}: {}", i, j, numContacts);
+				int numContacts = calcContactNumber(caCoords.get(i),
+						caCoords.get(j));
+				logger.debug("Calpha contacts between subunits {},{}: {}", i,
+						j, numContacts);
 				if (numContacts >= MIN_CONTACTS) {
 					graph.addEdge(i, j);
 				}
@@ -66,7 +77,7 @@ public class SubunitGraph {
 		return graph;
 	}
 
-	private int calcContactNumber(Point3d[] a, Point3d[] b) {
+	private static int calcContactNumber(Point3d[] a, Point3d[] b) {
 		double distCutoffSq = DISTANCE_CUTOFF * DISTANCE_CUTOFF;
 		int contacts = 0;
 		for (Point3d pa : a) {

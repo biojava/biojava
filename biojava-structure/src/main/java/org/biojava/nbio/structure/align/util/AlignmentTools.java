@@ -27,6 +27,9 @@ import org.biojava.nbio.structure.align.fatcat.FatCatFlexible;
 import org.biojava.nbio.structure.align.fatcat.FatCatRigid;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.xml.AFPChainXMLParser;
+import org.biojava.nbio.structure.geometry.Matrices;
+import org.biojava.nbio.structure.geometry.SuperPositionSVD;
+import org.biojava.nbio.structure.geometry.SuperPositions;
 import org.biojava.nbio.structure.jama.Matrix;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +40,8 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.vecmath.Matrix4d;
 
 /**
  * Methods for analyzing and manipulating AFPChains and for
@@ -277,7 +282,7 @@ public class AlignmentTools {
 	 * @return
 	 */
 	public static int getSymmetryOrder(Map<Integer, Integer> alignment,
-			final int maxSymmetry, final float minimumMetricChange) {
+									   final int maxSymmetry, final float minimumMetricChange) {
 		return getSymmetryOrder(alignment, new IdentityMap<Integer>(), maxSymmetry, minimumMetricChange);
 	}
 	/**
@@ -316,7 +321,7 @@ public class AlignmentTools {
 	 * @see IdentityMap For a simple identity function
 	 */
 	public static int getSymmetryOrder(Map<Integer, Integer> alignment, Map<Integer,Integer> identity,
-			final int maxSymmetry, final float minimumMetricChange) {
+									   final int maxSymmetry, final float minimumMetricChange) {
 		List<Integer> preimage = new ArrayList<Integer>(alignment.keySet()); // currently unmodified
 		List<Integer> image = new ArrayList<Integer>(preimage);
 
@@ -561,7 +566,7 @@ public class AlignmentTools {
 	 * @see AlignmentTools#replaceOptAln(AFPChain, Atom[], Atom[], Map)
 	 */
 	public static AFPChain createAFPChain(Atom[] ca1, Atom[] ca2,
-			ResidueNumber[] aligned1, ResidueNumber[] aligned2 ) throws StructureException {
+										  ResidueNumber[] aligned1, ResidueNumber[] aligned2 ) throws StructureException {
 		//input validation
 		int alnLen = aligned1.length;
 		if(alnLen != aligned2.length) {
@@ -747,7 +752,7 @@ public class AlignmentTools {
 	 * @see AlignmentTools#createAFPChain(Atom[], Atom[], ResidueNumber[], ResidueNumber[])
 	 */
 	public static AFPChain replaceOptAln(AFPChain afpChain, Atom[] ca1, Atom[] ca2,
-			Map<Integer, Integer> alignment) throws StructureException {
+										 Map<Integer, Integer> alignment) throws StructureException {
 
 		// Determine block lengths
 		// Sort ca1 indices, then start a new block whenever ca2 indices aren't
@@ -812,7 +817,7 @@ public class AlignmentTools {
 	 * @throws StructureException if an error occured during superposition
 	 */
 	public static AFPChain replaceOptAln(AFPChain afpChain, Atom[] ca1, Atom[] ca2,
-			int blockNum, int[] optLens, int[][][] optAln) throws StructureException {
+										 int blockNum, int[] optLens, int[][][] optAln) throws StructureException {
 		int optLength = 0;
 		for( int blk=0;blk<blockNum;blk++) {
 			optLength += optLens[blk];
@@ -873,87 +878,6 @@ public class AlignmentTools {
 		// create new arrays for the subset of atoms in the alignment.
 		Atom[] ca1aligned = new Atom[afpChain.getOptLength()];
 		Atom[] ca2aligned = new Atom[afpChain.getOptLength()];
-
-		SVDSuperimposer svd = getSuperimposer(afpChain,ca1,ca2, ca1aligned,ca2aligned);
-		Matrix matrix = svd.getRotation();
-		Atom shift = svd.getTranslation();
-		Matrix[] blockMxs = new Matrix[afpChain.getBlockNum()];
-		Arrays.fill(blockMxs, matrix);
-		afpChain.setBlockRotationMatrix(blockMxs);
-		Atom[] blockShifts = new Atom[afpChain.getBlockNum()];
-		Arrays.fill(blockShifts, shift);
-		afpChain.setBlockShiftVector(blockShifts);
-
-		for (Atom a : ca2aligned) {
-			Calc.rotate(a, matrix);
-			Calc.shift(a, shift);
-		}
-
-		//Calculate the RMSD and TM score for the new alignment
-		double rmsd = SVDSuperimposer.getRMS(ca1aligned, ca2aligned);
-		double tmScore = SVDSuperimposer.getTMScore(ca1aligned, ca2aligned, ca1.length, ca2.length);
-		afpChain.setTotalRmsdOpt(rmsd);
-		afpChain.setTMScore(tmScore);
-
-		int[] blockLens = afpChain.getOptLen();
-		int[][][] optAln = afpChain.getOptAln();
-
-		//Calculate the RMSD and TM score for every block of the new alignment
-		double[] blockRMSD = new double[afpChain.getBlockNum()];
-		double[] blockScore = new double[afpChain.getBlockNum()];
-
-		for (int k=0; k<afpChain.getBlockNum(); k++){
-			//Create the atom arrays corresponding to the aligned residues in the block
-			Atom[] ca1block = new Atom[afpChain.getOptLen()[k]];
-			Atom[] ca2block = new Atom[afpChain.getOptLen()[k]];
-			int position=0;
-			for(int i=0;i<blockLens[k];i++) {
-				int pos1 = optAln[k][0][i];
-				int pos2 = optAln[k][1][i];
-				Atom a1 = ca1[pos1];
-				Atom a2 = (Atom) ca2[pos2].clone();
-				ca1block[position] = a1;
-				ca2block[position] = a2;
-				position++;
-			}
-			if (position != afpChain.getOptLen()[k]){
-				//logger.warn("AFPChainScorer getTMScore: Problems reconstructing block alignment! nr of loaded atoms is " + pos + " but should be " + afpChain.getOptLen()[k]);
-				// we need to resize the array, because we allocated too many atoms earlier on.
-				ca1block = (Atom[]) resizeArray(ca1block, position);
-				ca2block = (Atom[]) resizeArray(ca2block, position);
-			}
-			//Superimpose the two block structures
-			SVDSuperimposer svdb = new SVDSuperimposer(ca1block, ca2block);
-			Matrix matrixb = svdb.getRotation();
-			Atom shiftb = svdb.getTranslation();
-			for (Atom a : ca2block) {
-				Calc.rotate(a, matrixb);
-				Calc.shift(a, shiftb);
-			}
-			//Calculate the RMSD and TM score for the block
-			double rmsdb = SVDSuperimposer.getRMS(ca1block, ca2block);
-			double tmScoreb = SVDSuperimposer.getTMScore(ca1block, ca2block, ca1.length, ca2.length);
-			blockRMSD[k] = rmsdb;
-			blockScore[k] = tmScoreb;
-		}
-		afpChain.setOptRmsd(blockRMSD);
-		afpChain.setBlockRmsd(blockRMSD);
-		afpChain.setBlockScore(blockScore);
-	}
-
-
-	/** Superposes two sets of atoms, based on the optimal alignment contained in the afpChain object. Updates the coordinates in the ca1aligned and ca2aligned atom arrays.
-	 *
-	 * @param afpChain
-	 * @param ca1
-	 * @param ca2
-	 * @param ca1aligned
-	 * @param ca2aligned
-	 * @return
-     * @throws StructureException
-     */
-	public static SVDSuperimposer getSuperimposer(AFPChain afpChain, Atom[] ca1, Atom[] ca2,
-												  Atom[]ca1aligned, Atom[] ca2aligned) throws StructureException {
 		int pos=0;
 		int[] blockLens = afpChain.getOptLen();
 		int[][][] optAln = afpChain.getOptAln();
@@ -980,9 +904,72 @@ public class AlignmentTools {
 		}
 
 		//Superimpose the two structures in correspondance to the new alignment
-		SVDSuperimposer svd = new SVDSuperimposer(ca1aligned, ca2aligned);
+		Matrix4d trans = SuperPositions.superpose(Calc.atomsToPoints(ca1aligned),
+				Calc.atomsToPoints(ca2aligned));
 
-		return svd;
+		Matrix matrix = Matrices.getRotationJAMA(trans);
+		Atom shift = Calc.getTranslationVector(trans);
+
+
+		Matrix[] blockMxs = new Matrix[afpChain.getBlockNum()];
+		Arrays.fill(blockMxs, matrix);
+		afpChain.setBlockRotationMatrix(blockMxs);
+		Atom[] blockShifts = new Atom[afpChain.getBlockNum()];
+		Arrays.fill(blockShifts, shift);
+		afpChain.setBlockShiftVector(blockShifts);
+
+		for (Atom a : ca2aligned) {
+			Calc.rotate(a, matrix);
+			Calc.shift(a, shift);
+		}
+
+		//Calculate the RMSD and TM score for the new alignment
+		double rmsd = Calc.rmsd(ca1aligned, ca2aligned);
+		double tmScore = Calc.getTMScore(ca1aligned, ca2aligned, ca1.length, ca2.length);
+		afpChain.setTotalRmsdOpt(rmsd);
+		afpChain.setTMScore(tmScore);
+
+		//Calculate the RMSD and TM score for every block of the new alignment
+		double[] blockRMSD = new double[afpChain.getBlockNum()];
+		double[] blockScore = new double[afpChain.getBlockNum()];
+		for (int k=0; k<afpChain.getBlockNum(); k++){
+			//Create the atom arrays corresponding to the aligned residues in the block
+			Atom[] ca1block = new Atom[afpChain.getOptLen()[k]];
+			Atom[] ca2block = new Atom[afpChain.getOptLen()[k]];
+			int position=0;
+			for(int i=0;i<blockLens[k];i++) {
+				int pos1 = optAln[k][0][i];
+				int pos2 = optAln[k][1][i];
+				Atom a1 = ca1[pos1];
+				Atom a2 = (Atom) ca2[pos2].clone();
+				ca1block[position] = a1;
+				ca2block[position] = a2;
+				position++;
+			}
+			if (position != afpChain.getOptLen()[k]){
+				logger.warn("AFPChainScorer getTMScore: Problems reconstructing block alignment! nr of loaded atoms is " + pos + " but should be " + afpChain.getOptLen()[k]);
+				// we need to resize the array, because we allocated too many atoms earlier on.
+				ca1block = (Atom[]) resizeArray(ca1block, position);
+				ca2block = (Atom[]) resizeArray(ca2block, position);
+			}
+			//Superimpose the two block structures
+			Matrix4d transb = SuperPositions.superpose(Calc.atomsToPoints(ca1block),
+					Calc.atomsToPoints(ca2block));
+
+			Matrix matrixb = Matrices.getRotationJAMA(trans);
+			Atom shiftb = Calc.getTranslationVector(trans);
+
+			Calc.transform(ca2block, transb);
+
+			//Calculate the RMSD and TM score for the block
+			double rmsdb = Calc.rmsd(ca1block, ca2block);
+			double tmScoreb = Calc.getTMScore(ca1block, ca2block, ca1.length, ca2.length);
+			blockRMSD[k] = rmsdb;
+			blockScore[k] = tmScoreb;
+		}
+		afpChain.setOptRmsd(blockRMSD);
+		afpChain.setBlockRmsd(blockRMSD);
+		afpChain.setBlockScore(blockScore);
 	}
 
 	/**
@@ -1168,8 +1155,8 @@ public class AlignmentTools {
 	 * @throws IOException
 	 */
 	public static void alignmentToSIF(Writer out,AFPChain afpChain,
-			Atom[] ca1,Atom[] ca2, String backboneInteraction,
-			String alignmentInteraction) throws IOException {
+									  Atom[] ca1,Atom[] ca2, String backboneInteraction,
+									  String alignmentInteraction) throws IOException {
 
 		//out.write("Res1\tInteraction\tRes2\n");
 		String name1 = afpChain.getName1();
@@ -1223,7 +1210,7 @@ public class AlignmentTools {
 			}
 		}
 	}
-	
+
 
 
 	/** get an artificial List of chains containing the Atoms and groups.
@@ -1334,7 +1321,7 @@ public class AlignmentTools {
 
 			twistedGroups = AFPTwister.twistOptimized(afpChain, ca1, ca2);
 
-		//} else  if  (( blockNum == 1 ) || (afpChain.getAlgorithmName().equals(CeCPMain.algorithmName))) {
+			//} else  if  (( blockNum == 1 ) || (afpChain.getAlgorithmName().equals(CeCPMain.algorithmName))) {
 		} else {
 
 			Matrix m   =  afpChain.getBlockRotationMatrix()[ 0];
@@ -1368,8 +1355,8 @@ public class AlignmentTools {
 	}
 
 	/** only shift CA positions.
-	*
-	*/
+	 *
+	 */
 	public static void shiftCA2(AFPChain afpChain, Atom[] ca2,  Matrix m, Atom shift, Group[] twistedGroups) {
 
 		int i = -1;
@@ -1381,14 +1368,14 @@ public class AlignmentTools {
 			Calc.shift(g, shift);
 
 			if (g.hasAltLoc()){
-			 for (Group alt: g.getAltLocs()){
-				 for (Atom alta : alt.getAtoms()){
-					 if ( g.getAtoms().contains(alta))
-						 continue;
-					 Calc.rotate(alta,m);
-					 Calc.shift(alta,shift);
-				 }
-			 }
+				for (Group alt: g.getAltLocs()){
+					for (Atom alta : alt.getAtoms()){
+						if ( g.getAtoms().contains(alta))
+							continue;
+						Calc.rotate(alta,m);
+						Calc.shift(alta,shift);
+					}
+				}
 			}
 			twistedGroups[i]=g;
 		}
