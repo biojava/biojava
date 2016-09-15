@@ -222,12 +222,12 @@ public class TestUnitQuaternions {
 		double angle = UnitQuaternions.orientationAngle(cloud, cloud2, false);
 		assertEquals(angle, 0, 0.001);
 		
-		// Apply a 30 degree rotation to cloud 2
+		// Apply a 30 degree rotation to cloud
 		AxisAngle4d axis = new AxisAngle4d(new Vector3d(1,1,1), Math.PI / 6);
 		Matrix4d transform = new Matrix4d();
 		transform.set(axis);
 		
-		CalcPoint.transform(transform, cloud2);
+		CalcPoint.transform(transform, cloud);
 		angle = UnitQuaternions.orientationAngle(cloud, cloud2, false);
 		angle = Math.min(Math.abs(2 * Math.PI - angle), angle);
 		

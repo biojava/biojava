@@ -27,12 +27,13 @@ import javax.vecmath.Matrix4d;
 
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Calc;
-import org.biojava.nbio.structure.SVDSuperimposer;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.multiple.Block;
 import org.biojava.nbio.structure.align.multiple.BlockSet;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
+import org.biojava.nbio.structure.geometry.SuperPositionSVD;
+import org.biojava.nbio.structure.geometry.SuperPositions;
 
 /**
  * Superimposes each structure in a {@link MultipleAlignment} onto a reference
@@ -42,7 +43,7 @@ import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
  * there is only one {@link BlockSet}, and a superposition for every BlockSet
  * in case there is more than one (flexible alignment).
  * <p>
- * This class uses the {@link SVDSuperimposer} algorithm.
+ * This class uses the {@link SuperPositionSVD} algorithm.
  *
  * @author Spencer Bliven
  * @author Aleix Lafita
@@ -150,9 +151,9 @@ public class ReferenceSuperimposer implements MultipleSuperimposer {
 				array2 = StructureTools.cloneAtomArray(array2);
 
 				//From the superimposer we obtain the rotation and translation
-				SVDSuperimposer svd = new SVDSuperimposer(array1, array2);
-				Calc.transform(array2, svd.getTransformation());
-				transforms.add(svd.getTransformation());
+				Matrix4d trans = SuperPositions.superpose(Calc.atomsToPoints(array1), 
+						Calc.atomsToPoints(array2));
+				transforms.add(trans);
 			}
 			//Set transformation of the BlockSet
 			bs.setTransformations(transforms);

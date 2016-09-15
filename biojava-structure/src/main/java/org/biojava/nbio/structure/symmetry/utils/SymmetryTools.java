@@ -36,7 +36,6 @@ import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.ChainImpl;
 import org.biojava.nbio.structure.Group;
-import org.biojava.nbio.structure.SVDSuperimposer;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIdentifier;
@@ -59,6 +58,7 @@ import org.biojava.nbio.structure.align.multiple.util.MultipleSuperimposer;
 import org.biojava.nbio.structure.cluster.Subunit;
 import org.biojava.nbio.structure.cluster.SubunitClustererMethod;
 import org.biojava.nbio.structure.cluster.SubunitClustererParameters;
+import org.biojava.nbio.structure.geometry.SuperPositions;
 import org.biojava.nbio.structure.jama.Matrix;
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetryDetector;
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetryParameters;
@@ -909,8 +909,9 @@ public class SymmetryTools {
 
 				// Calculate the new transformation information
 				if (arr1.length > 0 && arr2.length > 0) {
-					SVDSuperimposer svd = new SVDSuperimposer(arr1, arr2);
-					Matrix4d axis = svd.getTransformation();
+					Matrix4d axis = SuperPositions.superpose(
+							Calc.atomsToPoints(arr1), 
+							Calc.atomsToPoints(arr2));
 					axes.updateAxis(level, axis);
 				}
 
