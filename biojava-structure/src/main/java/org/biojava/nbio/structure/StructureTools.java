@@ -36,6 +36,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.vecmath.Matrix4d;
+import javax.vecmath.Point3d;
 
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.contact.AtomContactSet;
@@ -496,6 +497,35 @@ public class StructureTools {
 			}
 		}
 		return atoms.toArray(new Atom[atoms.size()]);
+	}
+	
+	/**
+	 * Returns and array of all non-Hydrogen atoms coordinates in the given Chain,
+	 * optionally including HET atoms or not Waters are not included.
+	 *
+	 * @param c
+	 * @param hetAtoms
+	 *            if true HET atoms are included in array, if false they are not
+	 * @return
+	 */
+	public static final Point3d[] getAllNonHCoordsArray(Chain c, boolean hetAtoms) {
+		List<Point3d> atoms = new ArrayList<Point3d>();
+
+		for (Group g : c.getAtomGroups()) {
+			if (g.isWater())
+				continue;
+			for (Atom a : g.getAtoms()) {
+
+				if (a.getElement() == Element.H)
+					continue;
+
+				if (!hetAtoms && g.getType().equals(GroupType.HETATM))
+					continue;
+
+				atoms.add(a.getCoordsAsPoint3d());
+			}
+		}
+		return atoms.toArray(new Point3d[atoms.size()]);
 	}
 
 	/**

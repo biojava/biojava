@@ -31,10 +31,25 @@ import org.biojava.nbio.structure.Calc;
 
 
 /**
- * A grid to be used for calculating atom contacts through spatial hashing algorithm.
- *
+ * A grid to be used for calculating atom contacts through a spatial hashing algorithm.
+ * <p>
  * The grid is composed of cells of size of the cutoff so that the distances that need to be calculated
  * are reduced to those within each cell and to the neighbouring cells.
+ * <p>
+ * Usage, for generic 3D points:
+ * <pre>
+ *  Point3d[] points = ...;
+ *  Grid grid = new Grid(8.0);
+ *  grid.addCoords(points);
+ *  List&lt;Contact&gt; contacts = getIndicesContacts();
+ * </pre>
+ * Usage, for atoms:
+ * <pre>
+ *  Atom[] atoms = ...;
+ *  Grid grid = new Grid(8.0);
+ *  grid.addCoords(atoms);
+ *  AtomContactSet contacts = getAtomContacts();
+ * </pre> 
  *
  * @author Jose Duarte
  *
@@ -67,8 +82,9 @@ public class Grid {
 	private boolean noOverlap; // if the 2 sets of atoms are found not to overlap then this is set to true
 
 	/**
-	 * Creates a <code>Grid</code>, the cutoff is in Angstroms and can
-	 * be specified to a precision of 0.01A
+	 * Creates a <code>Grid</code>, the cutoff is in the same units as the coordinates
+	 * (Angstroms if they are atom coordinates) and can
+	 * be specified to a precision of 0.01.
 	 * @param cutoff
 	 */
 	public Grid(double cutoff) {
@@ -157,6 +173,98 @@ public class Grid {
 	public void addAtoms(Atom[] atoms, BoundingBox bounds) {
 		this.iAtoms = Calc.atomsToPoints(atoms);
 		this.iAtomObjects = atoms;
+
+		if (bounds!=null) {
+			this.ibounds = bounds;
+		} else {
+			this.ibounds = new BoundingBox(iAtoms);
+		}
+
+		this.jAtoms = null;
+		this.jAtomObjects = null;
+		this.jbounds = null;
+
+		fillGrid();
+	}
+	
+	/**
+	 * Adds the i and j coordinates and fills the grid. Their bounds will be computed.
+	 * Subsequent call to {@link #getIndicesContacts()} will produce the 
+	 * contacts, i.e. the set of points within distance cutoff.
+	 * 
+	 * Subsequent calls to method {@link #getAtomContacts()} will produce a NullPointerException 
+	 * since this only adds coordinates and no atom information.
+	 * @param iAtoms
+	 * @param jAtoms
+	 */
+	public void addCoords(Point3d[] iAtoms, Point3d[] jAtoms) {
+		addCoords(iAtoms, null, jAtoms, null);
+	}
+
+	/**
+	 * Adds the i and j coordinates and fills the grid, passing their bounds (array of size 6 with x,y,z minima and x,y,z maxima)
+	 * This way the bounds don't need to be recomputed.
+	 * Subsequent call to {@link #getIndicesContacts()} will produce the 
+	 * contacts, i.e. the set of points within distance cutoff.
+	 * 
+	 * Subsequent calls to method {@link #getAtomContacts()} will produce a NullPointerException 
+	 * since this only adds coordinates and no atom information.
+	 * @param iAtoms
+	 * @param icoordbounds
+	 * @param jAtoms
+	 * @param jcoordbounds
+	 */
+	public void addCoords(Point3d[] iAtoms, BoundingBox icoordbounds, Point3d[] jAtoms, BoundingBox jcoordbounds) {
+		this.iAtoms = iAtoms;
+		this.iAtomObjects = null;
+
+		if (icoordbounds!=null) {
+			this.ibounds = icoordbounds;
+		} else {
+			this.ibounds = new BoundingBox(this.iAtoms);
+		}
+
+		this.jAtoms = jAtoms;
+		this.jAtomObjects = null;
+
+		if (jAtoms==iAtoms) {
+			this.jbounds=ibounds;
+		} else {
+			if (jcoordbounds!=null) {
+				this.jbounds = jcoordbounds;
+			} else {
+				this.jbounds = new BoundingBox(this.jAtoms);
+
+			}
+		}
+
+		fillGrid();
+	}
+
+	/**
+	 * Adds a set of coordinates, subsequent call to {@link #getIndicesContacts()} will produce the 
+	 * contacts, i.e. the set of points within distance cutoff.
+	 * The bounding box of the atoms will be computed based on input array.
+	 * Subsequent calls to method {@link #getAtomContacts()} will produce a NullPointerException 
+	 * since this only adds coordinates and no atom information.
+	 * @param atoms
+	 */
+	public void addCoords(Point3d[] atoms) {
+		addCoords(atoms, (BoundingBox) null);
+	}
+
+	/**
+	 * Adds a set of coordinates, subsequent call to {@link #getIndicesContacts()} will produce the 
+	 * contacts, i.e. the set of points within distance cutoff.
+	 * The bounds calculated elsewhere can be passed, or if null they are computed.
+	 * Subsequent calls to method {@link #getAtomContacts()} will produce a NullPointerException 
+	 * since this only adds coordinates and no atom information.
+	 * @param atoms
+	 * @param bounds
+	 */
+	public void addCoords(Point3d[] atoms, BoundingBox bounds) {
+		this.iAtoms = atoms;
+		this.iAtomObjects = null;
 
 		if (bounds!=null) {
 			this.ibounds = bounds;
