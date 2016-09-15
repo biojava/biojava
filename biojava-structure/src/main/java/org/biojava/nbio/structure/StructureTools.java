@@ -1280,7 +1280,7 @@ public class StructureTools {
 		}
 		grid.addAtoms(atoms);
 
-		return grid.getContacts();
+		return grid.getAtomContacts();
 	}
 
 	/**
@@ -1319,7 +1319,7 @@ public class StructureTools {
 
 		grid.addAtoms(atoms);
 
-		return grid.getContacts();
+		return grid.getAtomContacts();
 	}
 
 	/**
@@ -1341,7 +1341,7 @@ public class StructureTools {
 
 		grid.addAtoms(atoms);
 
-		return grid.getContacts();
+		return grid.getAtomContacts();
 	}
 
 	/**
@@ -1376,7 +1376,7 @@ public class StructureTools {
 		}
 		grid.addAtoms(atoms1, atoms2);
 
-		return grid.getContacts();
+		return grid.getAtomContacts();
 	}
 
 	/**
