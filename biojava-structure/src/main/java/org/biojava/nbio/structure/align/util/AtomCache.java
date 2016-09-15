@@ -1037,9 +1037,6 @@ public class AtomCache {
 			reader.setObsoleteBehavior(obsoleteBehavior);
 			Structure structure = reader.getStructureById(pdbId.toLowerCase());
 			return structure;
-					
-					
-		
 	}
 
 	protected Structure loadStructureFromCifByPdbId(String pdbId) throws IOException, StructureException {
