@@ -46,6 +46,7 @@ public class UserConfiguration
 
 	public static final String PDB_FORMAT   = "PDB";
 	public static final String MMCIF_FORMAT = "mmCif";
+	public static final String MMTF_FORMAT  = "mmtf";
 
 	public static final String TMP_DIR = "java.io.tmpdir";
 
@@ -97,7 +98,7 @@ public class UserConfiguration
 		// note that in initCacheFilePath, we set to the provided one (if readable) or to the same as pdbFilePath
 		cacheFilePath = initCacheFilePath();
 
-		fileFormat = MMCIF_FORMAT;
+		fileFormat = MMTF_FORMAT;
 	}
 
 	private String initPdbFilePath() {

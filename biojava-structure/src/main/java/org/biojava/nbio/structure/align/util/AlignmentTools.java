@@ -282,7 +282,7 @@ public class AlignmentTools {
 	 * @return
 	 */
 	public static int getSymmetryOrder(Map<Integer, Integer> alignment,
-			final int maxSymmetry, final float minimumMetricChange) {
+									   final int maxSymmetry, final float minimumMetricChange) {
 		return getSymmetryOrder(alignment, new IdentityMap<Integer>(), maxSymmetry, minimumMetricChange);
 	}
 	/**
@@ -321,7 +321,7 @@ public class AlignmentTools {
 	 * @see IdentityMap For a simple identity function
 	 */
 	public static int getSymmetryOrder(Map<Integer, Integer> alignment, Map<Integer,Integer> identity,
-			final int maxSymmetry, final float minimumMetricChange) {
+									   final int maxSymmetry, final float minimumMetricChange) {
 		List<Integer> preimage = new ArrayList<Integer>(alignment.keySet()); // currently unmodified
 		List<Integer> image = new ArrayList<Integer>(preimage);
 
@@ -566,7 +566,7 @@ public class AlignmentTools {
 	 * @see AlignmentTools#replaceOptAln(AFPChain, Atom[], Atom[], Map)
 	 */
 	public static AFPChain createAFPChain(Atom[] ca1, Atom[] ca2,
-			ResidueNumber[] aligned1, ResidueNumber[] aligned2 ) throws StructureException {
+										  ResidueNumber[] aligned1, ResidueNumber[] aligned2 ) throws StructureException {
 		//input validation
 		int alnLen = aligned1.length;
 		if(alnLen != aligned2.length) {
@@ -752,7 +752,7 @@ public class AlignmentTools {
 	 * @see AlignmentTools#createAFPChain(Atom[], Atom[], ResidueNumber[], ResidueNumber[])
 	 */
 	public static AFPChain replaceOptAln(AFPChain afpChain, Atom[] ca1, Atom[] ca2,
-			Map<Integer, Integer> alignment) throws StructureException {
+										 Map<Integer, Integer> alignment) throws StructureException {
 
 		// Determine block lengths
 		// Sort ca1 indices, then start a new block whenever ca2 indices aren't
@@ -817,7 +817,7 @@ public class AlignmentTools {
 	 * @throws StructureException if an error occured during superposition
 	 */
 	public static AFPChain replaceOptAln(AFPChain afpChain, Atom[] ca1, Atom[] ca2,
-			int blockNum, int[] optLens, int[][][] optAln) throws StructureException {
+										 int blockNum, int[] optLens, int[][][] optAln) throws StructureException {
 		int optLength = 0;
 		for( int blk=0;blk<blockNum;blk++) {
 			optLength += optLens[blk];
@@ -904,13 +904,13 @@ public class AlignmentTools {
 		}
 
 		//Superimpose the two structures in correspondance to the new alignment
-		Matrix4d trans = SuperPositions.superpose(Calc.atomsToPoints(ca1aligned), 
+		Matrix4d trans = SuperPositions.superpose(Calc.atomsToPoints(ca1aligned),
 				Calc.atomsToPoints(ca2aligned));
 
 		Matrix matrix = Matrices.getRotationJAMA(trans);
 		Atom shift = Calc.getTranslationVector(trans);
-		
-		
+
+
 		Matrix[] blockMxs = new Matrix[afpChain.getBlockNum()];
 		Arrays.fill(blockMxs, matrix);
 		afpChain.setBlockRotationMatrix(blockMxs);
@@ -953,14 +953,14 @@ public class AlignmentTools {
 				ca2block = (Atom[]) resizeArray(ca2block, position);
 			}
 			//Superimpose the two block structures
-			Matrix4d transb = SuperPositions.superpose(Calc.atomsToPoints(ca1block), 
+			Matrix4d transb = SuperPositions.superpose(Calc.atomsToPoints(ca1block),
 					Calc.atomsToPoints(ca2block));
 
 			Matrix matrixb = Matrices.getRotationJAMA(trans);
 			Atom shiftb = Calc.getTranslationVector(trans);
-			
+
 			Calc.transform(ca2block, transb);
-			
+
 			//Calculate the RMSD and TM score for the block
 			double rmsdb = Calc.rmsd(ca1block, ca2block);
 			double tmScoreb = Calc.getTMScore(ca1block, ca2block, ca1.length, ca2.length);
@@ -1155,8 +1155,8 @@ public class AlignmentTools {
 	 * @throws IOException
 	 */
 	public static void alignmentToSIF(Writer out,AFPChain afpChain,
-			Atom[] ca1,Atom[] ca2, String backboneInteraction,
-			String alignmentInteraction) throws IOException {
+									  Atom[] ca1,Atom[] ca2, String backboneInteraction,
+									  String alignmentInteraction) throws IOException {
 
 		//out.write("Res1\tInteraction\tRes2\n");
 		String name1 = afpChain.getName1();
@@ -1210,7 +1210,7 @@ public class AlignmentTools {
 			}
 		}
 	}
-	
+
 
 
 	/** get an artificial List of chains containing the Atoms and groups.
@@ -1321,7 +1321,7 @@ public class AlignmentTools {
 
 			twistedGroups = AFPTwister.twistOptimized(afpChain, ca1, ca2);
 
-		//} else  if  (( blockNum == 1 ) || (afpChain.getAlgorithmName().equals(CeCPMain.algorithmName))) {
+			//} else  if  (( blockNum == 1 ) || (afpChain.getAlgorithmName().equals(CeCPMain.algorithmName))) {
 		} else {
 
 			Matrix m   =  afpChain.getBlockRotationMatrix()[ 0];
@@ -1355,8 +1355,8 @@ public class AlignmentTools {
 	}
 
 	/** only shift CA positions.
-	*
-	*/
+	 *
+	 */
 	public static void shiftCA2(AFPChain afpChain, Atom[] ca2,  Matrix m, Atom shift, Group[] twistedGroups) {
 
 		int i = -1;
@@ -1368,14 +1368,14 @@ public class AlignmentTools {
 			Calc.shift(g, shift);
 
 			if (g.hasAltLoc()){
-			 for (Group alt: g.getAltLocs()){
-				 for (Atom alta : alt.getAtoms()){
-					 if ( g.getAtoms().contains(alta))
-						 continue;
-					 Calc.rotate(alta,m);
-					 Calc.shift(alta,shift);
-				 }
-			 }
+				for (Group alt: g.getAltLocs()){
+					for (Atom alta : alt.getAtoms()){
+						if ( g.getAtoms().contains(alta))
+							continue;
+						Calc.rotate(alta,m);
+						Calc.shift(alta,shift);
+					}
+				}
 			}
 			twistedGroups[i]=g;
 		}
