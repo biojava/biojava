@@ -20,14 +20,16 @@
  */
 package org.biojava.nbio.structure.io;
 
-import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.util.AtomCache;
-import org.biojava.nbio.structure.geometry.SuperPositionSVD;
+import org.biojava.nbio.structure.geometry.CalcPoint;
+import org.biojava.nbio.structure.geometry.SuperPosition;
+import org.biojava.nbio.structure.geometry.SuperPositionQCP;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -38,6 +40,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.vecmath.Matrix4d;
+import javax.vecmath.Point3d;
 
 public class TestHardBioUnits {
 
@@ -153,8 +156,8 @@ public class TestHardBioUnits {
 		Structure original = StructureIO.getStructure(pdbId);
 		
 		
-		Atom[] atomsOrigChainG = StructureTools.getAtomCAArray(original.getPolyChainByPDB("G")); 
-		Atom[] atomsOrigChainB = StructureTools.getAtomCAArray(original.getPolyChainByPDB("B"));
+		Point3d[] atomsOrigChainG = Calc.atomsToPoints(StructureTools.getAtomCAArray(original.getPolyChainByPDB("G"))); 
+		Point3d[] atomsOrigChainB = Calc.atomsToPoints(StructureTools.getAtomCAArray(original.getPolyChainByPDB("B")));
 		
 		List<Chain> bioAssemblyChains = bioAssembly.getPolyChains();
 		Chain transfChainB = null;
@@ -168,18 +171,21 @@ public class TestHardBioUnits {
 		assertNotNull(transfChainB);
 		assertNotNull(transfChainG);
 		
-		Atom[] atomsTransfChainG = StructureTools.getAtomCAArray(transfChainG);
-		Atom[] atomsTransfChainB = StructureTools.getAtomCAArray(transfChainB); 
+		Point3d[] atomsTransfChainG = Calc.atomsToPoints(StructureTools.getAtomCAArray(transfChainG));
+		Point3d[] atomsTransfChainB = Calc.atomsToPoints(StructureTools.getAtomCAArray(transfChainB)); 
 		
-		SuperPositionSVD ssvd = new SuperPositionSVD(false);
+		SuperPosition sqcp = new SuperPositionQCP(false);
 		
 		// operator 1 is the identity, trace should be == 3
-		Matrix4d m1 = ssvd.superpose(atomsOrigChainG, atomsTransfChainG);		
-		assertEquals(3.0, m1.m00 + m1.m11 + m1.m22, 0.00001);		
+		Matrix4d m1 = sqcp.superposeAndTransform(atomsOrigChainG, atomsTransfChainG);		
+		assertEquals(3.0, m1.m00 + m1.m11 + m1.m22, 0.00001);	
+		assertEquals(0.0, CalcPoint.rmsd(atomsOrigChainG, atomsTransfChainG), 0.00001);
+		
 		
 		// operator 2 is a 2-fold, trace should be == -1
-		Matrix4d m2 = ssvd.superpose(atomsOrigChainB, atomsTransfChainB);
+		Matrix4d m2 = sqcp.superposeAndTransform(atomsOrigChainB, atomsTransfChainB);
 		assertEquals(-1.0, m2.m00 + m2.m11 + m2.m22, 0.00001);
+		assertEquals(0.0, CalcPoint.rmsd(atomsOrigChainB, atomsTransfChainB), 0.00001);
 
 		
 	}
