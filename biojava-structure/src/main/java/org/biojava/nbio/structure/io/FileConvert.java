@@ -405,9 +405,10 @@ public class FileConvert {
 		String serial     = String.format("%5d",seri);
 		String fullName   = formatAtomName(a);
 
-
-
-		Character  altLoc = a.getAltLoc()           ;
+		Character  altLoc = a.getAltLoc();		
+		if ( altLoc == null)
+			altLoc = ' ';
+		
 		String resseq = "" ;
 		if ( hasInsertionCode(pdbcode) )
 			resseq     = String.format("%5s",pdbcode);
