@@ -40,6 +40,7 @@ import org.biojava.nbio.structure.io.LocalPDBDirectory.FetchBehavior;
 import org.biojava.nbio.structure.io.LocalPDBDirectory.ObsoleteBehavior;
 import org.biojava.nbio.structure.io.mmtf.MmtfActions;
 import org.biojava.nbio.structure.io.MMCIFFileReader;
+import org.biojava.nbio.structure.io.MMTFFileReader;
 import org.biojava.nbio.structure.io.PDBFileReader;
 import org.biojava.nbio.structure.io.util.FileDownloadUtils;
 import org.biojava.nbio.structure.quaternary.BiologicalAssemblyBuilder;
@@ -1040,13 +1041,17 @@ public class AtomCache {
 	}
 
 	/**
-	 * 
-	 * @param pdbId
-	 * @return
-	 * @throws IOException
+	 * Load a {@link Structure} from MMTF either from the local file system.
+	 * @param pdbId the input PDB id
+	 * @return the {@link Structure} object of the parsed structure
+	 * @throws IOException error reading from Web or file system
 	 */
 	private Structure loadStructureFromMmtfByPdbId(String pdbId) throws IOException {
-		return MmtfActions.readFromWeb(pdbId);
+			MMTFFileReader reader = new MMTFFileReader();
+			reader.setFetchBehavior(fetchBehavior);
+			reader.setObsoleteBehavior(obsoleteBehavior);
+			Structure structure = reader.getStructureById(pdbId.toLowerCase());
+			return structure;
 	}
 
 	protected Structure loadStructureFromCifByPdbId(String pdbId) throws IOException, StructureException {
@@ -1057,9 +1062,7 @@ public class AtomCache {
 			MMCIFFileReader reader = new MMCIFFileReader(path);
 			reader.setFetchBehavior(fetchBehavior);
 			reader.setObsoleteBehavior(obsoleteBehavior);
-
 			reader.setFileParsingParameters(params);
-
 			s = reader.getStructureById(pdbId.toLowerCase());
 
 		} finally {
