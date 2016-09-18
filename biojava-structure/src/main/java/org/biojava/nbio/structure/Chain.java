@@ -66,6 +66,7 @@ public interface Chain {
 	 *
 	 * @return the asymId
 	 * @see #setId(String)
+	 * @see #getName()
 	 */
 	String getId() ;
 
@@ -90,6 +91,7 @@ public interface Chain {
 	 * Get the 'public' authId (chain ID in PDB file)
 	 *
 	 * @return the authId for this chain.
+	 * @see #getId()
      */
 	String getName();
 
