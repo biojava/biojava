@@ -169,7 +169,8 @@ public class HetatomImpl implements Group,Serializable {
 	public void addAtom(Atom atom){
 		atom.setGroup(this);
 		atoms.add(atom);
-		if (atom.getCoords() != null){
+		// TODO this check is useless, coords are always !=null since they are initialized to 0,0,0 in AtomImpl constructor. We need to review this - JD 2016-09-14
+		if (atom.getCoordsAsPoint3d() != null){
 			// we have got coordinates!
 			setPDBFlag(true);
 		}

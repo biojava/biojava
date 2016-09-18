@@ -78,7 +78,7 @@ public class QuatSymmetrySubunits {
 				// Convert atoms to points
 				Point3d[] points = new Point3d[atoms.length];
 				for (int i = 0; i < atoms.length; i++)
-					points[i] = new Point3d(atoms[i].getCoords());
+					points[i] = atoms[i].getCoordsAsPoint3d();
 
 				caCoords.add(points);
 			}

@@ -173,7 +173,7 @@ public class SecStrucCalc {
 		}
 		else{
 			grid.addAtoms(atoms);
-			contactSet = grid.getContacts();
+			contactSet = grid.getAtomContacts();
 		}
 	}
 

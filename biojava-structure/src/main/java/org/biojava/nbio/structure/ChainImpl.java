@@ -759,7 +759,7 @@ public class ChainImpl implements Chain, Serializable {
 	@Override
 	public GroupType getPredominantGroupType(){
 
-		double RATIO_RESIDUES_TO_TOTAL = StructureTools.RATIO_RESIDUES_TO_TOTAL;
+		double ratioResiduesToTotal = StructureTools.RATIO_RESIDUES_TO_TOTAL;
 
 		int sizeAminos = getAtomGroups(GroupType.AMINOACID).size();
 		int sizeNucleotides = getAtomGroups(GroupType.NUCLEOTIDE).size();
@@ -774,13 +774,13 @@ public class ChainImpl implements Chain, Serializable {
 
 		int fullSize = sizeAminos + sizeNucleotides + sizeHetatomsWithoutWater;
 
-		if ((double) sizeAminos / (double) fullSize > StructureTools.RATIO_RESIDUES_TO_TOTAL)
+		if ((double) sizeAminos / (double) fullSize > ratioResiduesToTotal)
 			return GroupType.AMINOACID;
 
-		if ((double) sizeNucleotides / (double) fullSize > RATIO_RESIDUES_TO_TOTAL)
+		if ((double) sizeNucleotides / (double) fullSize > ratioResiduesToTotal)
 			return GroupType.NUCLEOTIDE;
 
-		if ((double) (sizeHetatomsWithoutWater) / (double) fullSize > RATIO_RESIDUES_TO_TOTAL)
+		if ((double) (sizeHetatomsWithoutWater) / (double) fullSize > ratioResiduesToTotal)
 			return GroupType.HETATM;
 
 		// finally if neither condition works, we try based on majority, but log
@@ -803,7 +803,7 @@ public class ChainImpl implements Chain, Serializable {
 				"Ratio of residues to total for chain with asym_id {} is below {}. Assuming it is a {} chain. "
 						+ "Counts: # aa residues: {}, # nuc residues: {}, # non-water het residues: {}, # waters: {}, "
 						+ "ratio aa/total: {}, ratio nuc/total: {}",
-				getId(), RATIO_RESIDUES_TO_TOTAL, max, sizeAminos,
+				getId(), ratioResiduesToTotal, max, sizeAminos,
 				sizeNucleotides, sizeHetatomsWithoutWater, sizeWaters,
 				(double) sizeAminos / (double) fullSize,
 				(double) sizeNucleotides / (double) fullSize);
