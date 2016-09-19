@@ -70,7 +70,7 @@ public class SuperPositionSVD extends SuperPositionAbstract {
 		double[][] centAcoords = new double[][] { { cena.x, cena.y, cena.z } };
 		Matrix centroidA = new Matrix(centAcoords);
 
-		double[][] centBcoords = new double[][] { { cenb.x, cenb.x, cenb.x } };
+		double[][] centBcoords = new double[][] { { cenb.x, cenb.y, cenb.z } };
 		Matrix centroidB = new Matrix(centBcoords);
 
 		// center at centroid

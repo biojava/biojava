@@ -121,9 +121,9 @@ public class TestSuperPosition {
 					cloud1.get(c).length, svdTime, quatTime, qcpTime));
 
 			// Check that the transformation matrix was recovered
-			assertTrue(transform.epsilonEquals(svdTransform, 0.01));
-			assertTrue(transform.epsilonEquals(quatTransform, 0.01));
-			assertTrue(transform.epsilonEquals(qcpTransform, 0.01));
+			assertTrue(transform.epsilonEquals(svdTransform, 0.05));
+			assertTrue(transform.epsilonEquals(quatTransform, 0.05));
+			assertTrue(transform.epsilonEquals(qcpTransform, 0.05));
 		}
 
 	}

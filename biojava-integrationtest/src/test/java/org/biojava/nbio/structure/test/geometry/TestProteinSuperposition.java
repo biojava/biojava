@@ -34,25 +34,13 @@ public class TestProteinSuperposition {
 		chain2 = Calc.atomsToPoints(StructureTools.getAtomCAArray(clonedChainA));
 		
 	}
-	
-	private Point3d[] clonePoints(Point3d[] points) {
-		Point3d[] newpoints = new Point3d[points.length];
-		for (int i=0;i<points.length;i++) {
-			newpoints[i] = new Point3d(points[i]);
-		}
-		return newpoints;
-	}
 
 	@Test
 	public void testSuperpositionSVD()  {
 		
 		SuperPosition sup = new SuperPositionSVD(false);
 		
-		// making sure tests are independent by cloning
-		Point3d[] points1 = clonePoints(chain1);
-		Point3d[] points2 = clonePoints(chain2);
-		
-		double rmsd = sup.getRmsd(points1, points2);
+		double rmsd = sup.getRmsd(chain1, chain2);
 		
 		assertEquals(0.0, rmsd, 0.0001);
 	}
@@ -62,11 +50,7 @@ public class TestProteinSuperposition {
 		
 		SuperPosition sup = new SuperPositionQCP(false);
 		
-		// making sure tests are independent by cloning
-		Point3d[] points1 = clonePoints(chain1);
-		Point3d[] points2 = clonePoints(chain2);
-		
-		double rmsd = sup.getRmsd(points1, points2);
+		double rmsd = sup.getRmsd(chain1, chain2);
 		
 		assertEquals(0.0, rmsd, 0.0001);
 	}
@@ -76,11 +60,7 @@ public class TestProteinSuperposition {
 		
 		SuperPosition sup = new SuperPositionQuat(false);
 		
-		// making sure tests are independent by cloning
-		Point3d[] points1 = clonePoints(chain1);
-		Point3d[] points2 = clonePoints(chain2);
-		
-		double rmsd = sup.getRmsd(points1, points2);
+		double rmsd = sup.getRmsd(chain1, chain2);
 		
 		assertEquals(0.0, rmsd, 0.0001);
 	}
