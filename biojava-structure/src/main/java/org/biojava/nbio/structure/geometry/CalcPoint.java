@@ -2,6 +2,7 @@ package org.biojava.nbio.structure.geometry;
 
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
+import javax.vecmath.Vector3d;
 
 import org.biojava.nbio.structure.jama.Matrix;
 
@@ -28,7 +29,7 @@ public class CalcPoint {
 	public static void center(Point3d[] x) {
 		Point3d center = centroid(x);
 		center.negate();
-		translate(center, x);
+		translate(new Vector3d(center), x);
 	}
 
 	/**
@@ -52,8 +53,8 @@ public class CalcPoint {
 	 * 
 	 * @param rotTrans
 	 *            4x4 transformation matrix
-	 * @param array
-	 *            of points. Point objects will be modified
+	 * @param x
+	 *            array of points. Point objects will be modified
 	 */
 	public static void transform(Matrix4d rotTrans, Point3d[] x) {
 		for (Point3d p : x) {
@@ -64,12 +65,12 @@ public class CalcPoint {
 	/**
 	 * Translate all points with a translation vector.
 	 * 
-	 * @param rotTrans
-	 *            4x4 transformation matrix
-	 * @param array
-	 *            of points. Point objects will be modified
+	 * @param trans
+	 *            the translation vector to apply
+	 * @param x
+	 *            array of points. Point objects will be modified
 	 */
-	public static void translate(Point3d trans, Point3d[] x) {
+	public static void translate(Vector3d trans, Point3d[] x) {
 		for (Point3d p : x) {
 			p.add(trans);
 		}
@@ -90,7 +91,7 @@ public class CalcPoint {
 		return clone;
 	}
 
-	/**
+	/*
 	 * Peter can you document this method? TODO
 	 * 
 	 * @param moved
