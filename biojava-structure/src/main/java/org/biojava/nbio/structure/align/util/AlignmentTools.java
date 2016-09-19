@@ -28,7 +28,6 @@ import org.biojava.nbio.structure.align.fatcat.FatCatRigid;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.xml.AFPChainXMLParser;
 import org.biojava.nbio.structure.geometry.Matrices;
-import org.biojava.nbio.structure.geometry.SuperPositionSVD;
 import org.biojava.nbio.structure.geometry.SuperPositions;
 import org.biojava.nbio.structure.jama.Matrix;
 import org.slf4j.Logger;
@@ -855,7 +854,8 @@ public class AlignmentTools {
 	 *  contains much of the same code, but stores results in a CECalculator
 	 *  instance rather than an AFPChain
 	 */
-	public static void updateSuperposition(AFPChain afpChain, Atom[] ca1, Atom[] ca2) throws StructureException {
+	public static void updateSuperposition(AFPChain afpChain, Atom[] ca1, 
+			Atom[] ca2) throws StructureException {
 
 		//Update ca information, because the atom array might also be changed
 		afpChain.setCa1Length(ca1.length);
@@ -878,30 +878,8 @@ public class AlignmentTools {
 		// create new arrays for the subset of atoms in the alignment.
 		Atom[] ca1aligned = new Atom[afpChain.getOptLength()];
 		Atom[] ca2aligned = new Atom[afpChain.getOptLength()];
-		int pos=0;
-		int[] blockLens = afpChain.getOptLen();
-		int[][][] optAln = afpChain.getOptAln();
-		assert(afpChain.getBlockNum() <= optAln.length);
-
-		for (int block=0; block < afpChain.getBlockNum(); block++) {
-			for(int i=0;i<blockLens[block];i++) {
-				int pos1 = optAln[block][0][i];
-				int pos2 = optAln[block][1][i];
-				Atom a1 = ca1[pos1];
-				Atom a2 = (Atom) ca2[pos2].clone();
-				ca1aligned[pos] = a1;
-				ca2aligned[pos] = a2;
-				pos++;
-			}
-		}
-
-		// this can happen when we load an old XML serialization which did not support modern ChemComp representation of modified residues.
-		if (pos != afpChain.getOptLength()){
-			logger.warn("AFPChainScorer getTMScore: Problems reconstructing alignment! nr of loaded atoms is " + pos + " but should be " + afpChain.getOptLength());
-			// we need to resize the array, because we allocated too many atoms earlier on.
-			ca1aligned = (Atom[]) resizeArray(ca1aligned, pos);
-			ca2aligned = (Atom[]) resizeArray(ca2aligned, pos);
-		}
+		
+		fillAlignedAtomArrays(afpChain, ca1, ca2, ca1aligned, ca2aligned);
 
 		//Superimpose the two structures in correspondance to the new alignment
 		Matrix4d trans = SuperPositions.superpose(Calc.atomsToPoints(ca1aligned),
@@ -909,7 +887,6 @@ public class AlignmentTools {
 
 		Matrix matrix = Matrices.getRotationJAMA(trans);
 		Atom shift = Calc.getTranslationVector(trans);
-
 
 		Matrix[] blockMxs = new Matrix[afpChain.getBlockNum()];
 		Arrays.fill(blockMxs, matrix);
@@ -928,6 +905,9 @@ public class AlignmentTools {
 		double tmScore = Calc.getTMScore(ca1aligned, ca2aligned, ca1.length, ca2.length);
 		afpChain.setTotalRmsdOpt(rmsd);
 		afpChain.setTMScore(tmScore);
+		
+		int[] blockLens = afpChain.getOptLen();
+		int[][][] optAln = afpChain.getOptAln();
 
 		//Calculate the RMSD and TM score for every block of the new alignment
 		double[] blockRMSD = new double[afpChain.getBlockNum()];
@@ -947,7 +927,7 @@ public class AlignmentTools {
 				position++;
 			}
 			if (position != afpChain.getOptLen()[k]){
-				logger.warn("AFPChainScorer getTMScore: Problems reconstructing block alignment! nr of loaded atoms is " + pos + " but should be " + afpChain.getOptLen()[k]);
+				logger.warn("AFPChainScorer getTMScore: Problems reconstructing block alignment! nr of loaded atoms is " + position + " but should be " + afpChain.getOptLen()[k]);
 				// we need to resize the array, because we allocated too many atoms earlier on.
 				ca1block = (Atom[]) resizeArray(ca1block, position);
 				ca2block = (Atom[]) resizeArray(ca2block, position);
@@ -956,8 +936,8 @@ public class AlignmentTools {
 			Matrix4d transb = SuperPositions.superpose(Calc.atomsToPoints(ca1block),
 					Calc.atomsToPoints(ca2block));
 
-			Matrix matrixb = Matrices.getRotationJAMA(trans);
-			Atom shiftb = Calc.getTranslationVector(trans);
+			blockMxs[k] = Matrices.getRotationJAMA(trans);
+			blockShifts[k] = Calc.getTranslationVector(trans);
 
 			Calc.transform(ca2block, transb);
 
@@ -1379,5 +1359,43 @@ public class AlignmentTools {
 			}
 			twistedGroups[i]=g;
 		}
+	}
+	
+	/**
+	 * Fill the aligned Atom arrays with the equivalent residues in the afpChain.
+	 * @param afpChain
+	 * @param ca1
+	 * @param ca2
+	 * @param ca1aligned
+	 * @param ca2aligned
+	 */
+	public static void fillAlignedAtomArrays(AFPChain afpChain, Atom[] ca1, 
+			Atom[] ca2, Atom[] ca1aligned, Atom[] ca2aligned) {
+		
+		int pos=0;
+		int[] blockLens = afpChain.getOptLen();
+		int[][][] optAln = afpChain.getOptAln();
+		assert(afpChain.getBlockNum() <= optAln.length);
+
+		for (int block=0; block < afpChain.getBlockNum(); block++) {
+			for(int i=0;i<blockLens[block];i++) {
+				int pos1 = optAln[block][0][i];
+				int pos2 = optAln[block][1][i];
+				Atom a1 = ca1[pos1];
+				Atom a2 = (Atom) ca2[pos2].clone();
+				ca1aligned[pos] = a1;
+				ca2aligned[pos] = a2;
+				pos++;
+			}
+		}
+
+		// this can happen when we load an old XML serialization which did not support modern ChemComp representation of modified residues.
+		if (pos != afpChain.getOptLength()){
+			logger.warn("AFPChainScorer getTMScore: Problems reconstructing alignment! nr of loaded atoms is " + pos + " but should be " + afpChain.getOptLength());
+			// we need to resize the array, because we allocated too many atoms earlier on.
+			ca1aligned = (Atom[]) resizeArray(ca1aligned, pos);
+			ca2aligned = (Atom[]) resizeArray(ca2aligned, pos);
+		}
+		
 	}
 }
