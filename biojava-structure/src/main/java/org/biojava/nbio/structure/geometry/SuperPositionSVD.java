@@ -25,8 +25,6 @@ package org.biojava.nbio.structure.geometry;
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
 
-import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.jama.Matrix;
 import org.biojava.nbio.structure.jama.SingularValueDecomposition;
 
@@ -53,10 +51,6 @@ public class SuperPositionSVD extends SuperPositionAbstract {
 	 */
 	public SuperPositionSVD(boolean centered) {
 		super(centered);
-	}
-
-	public Matrix4d superpose(Atom[] fixed, Atom[] moved) {
-		return superpose(Calc.atomsToPoints(fixed), Calc.atomsToPoints(moved));
 	}
 
 	@Override
