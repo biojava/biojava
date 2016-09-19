@@ -1361,6 +1361,14 @@ public class AlignmentTools {
 		}
 	}
 	
+	/**
+	 * Fill the aligned Atom arrays with the equivalent residues in the afpChain.
+	 * @param afpChain
+	 * @param ca1
+	 * @param ca2
+	 * @param ca1aligned
+	 * @param ca2aligned
+	 */
 	public static void fillAlignedAtomArrays(AFPChain afpChain, Atom[] ca1, 
 			Atom[] ca2, Atom[] ca1aligned, Atom[] ca2aligned) {
 		
