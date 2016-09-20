@@ -998,7 +998,7 @@ public class Calc {
 
 		SuperPositionSVD svd = new SuperPositionSVD(false);
 
-		Matrix4d transform = svd.superpose(arr1, arr2);
+		Matrix4d transform = svd.superpose(Calc.atomsToPoints(arr1), Calc.atomsToPoints(arr2));
 		Matrix rotMatrix = Matrices.getRotationJAMA(transform);
 		Atom tranMatrix = getTranslationVector(transform);
 		

@@ -75,9 +75,9 @@ public class C2RotationSolver implements QuatSymmetrySolver {
 //		SuperPosition.center(y);
 
 		Point3d[] x = CalcPoint.clonePoint3dArray(traces.get(0));
-		CalcPoint.translate(new Point3d(trans), x);
+		CalcPoint.translate(trans, x);
 		Point3d[] y = CalcPoint.clonePoint3dArray(traces.get(1));
-		CalcPoint.translate(new Point3d(trans), y);
+		CalcPoint.translate(trans, y);
 
 		// TODO implement this piece of code using at origin superposition
 		Quat4d quat = UnitQuaternions.relativeOrientation(

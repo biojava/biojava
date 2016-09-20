@@ -25,20 +25,24 @@ import org.slf4j.LoggerFactory;
  * algorithm for RMSD and Superposition calculations.
  * 
  * @author Aleix Lafita
+ * @author Jose Duarte
  * @since 5.0.0
  *
  */
 public class TestSuperPosition {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(TestSuperPosition.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(TestSuperPosition.class);
 
-	private List<Point3d[]> cloud1;
-	private List<Point3d[]> cloud2;
+	private static List<Point3d[]> cloud1;
+	private static List<Point3d[]> cloud2;
 
-	private AxisAngle4d rotAxis;
-	private Vector3d translation;
-	private Matrix4d transform;
+	// the transformation to apply to cloud points 1 that needs to be recovered by the superposition code
+	private static final AxisAngle4d rotAxis = new AxisAngle4d(0.440, 0.302, 0.845, 1.570);
+	private static final Vector3d translation = new Vector3d(0.345, 2.453, 5.324);;
+	private static Matrix4d transform;
+		
+	// a translation to apply to cloud point 2 for the rmsd test only
+	private static final Vector3d translation2 = new Vector3d(1.32, -1.03, 6.28);
 
 	/**
 	 * Generate two clouds of random points of different sizes to test
@@ -54,8 +58,6 @@ public class TestSuperPosition {
 
 		Random rnd = new Random(0);
 
-		rotAxis = new AxisAngle4d(0.440, 0.302, 0.845, 1.570);
-		translation = new Vector3d(0.345, 2.453, 5.324);
 		transform = new Matrix4d();
 		transform.set(rotAxis);
 		transform.setTranslation(translation);
@@ -82,10 +84,15 @@ public class TestSuperPosition {
 			CalcPoint.center(c1);
 			CalcPoint.center(c2);
 
-			CalcPoint.transform(transform, c1);
+			CalcPoint.transform(transform, c1);			
 
 			cloud1.add(c1);
 			cloud2.add(c2);
+					
+			Point3d centroid1 = CalcPoint. centroid(c1);
+			Point3d centroid2 = CalcPoint. centroid(c2);
+			LOGGER.debug("Centroid c1 (size %d): (%.2f, %.2f, %.2f)\n", size, centroid1.x, centroid1.y, centroid1.z);
+			LOGGER.debug("Centroid c2 (size %d): (%.2f, %.2f, %.2f)\n", size, centroid2.x, centroid2.y, centroid2.z);
 		}
 
 	}
@@ -116,14 +123,14 @@ public class TestSuperPosition {
 			Matrix4d qcpTransform = qcp.superpose(cloud1.get(c), cloud2.get(c));
 			long qcpTime = (System.nanoTime() - qcpStart) / 1000;
 
-			logger.error(String.format("Transformation Matrix %d points: "
+			LOGGER.info(String.format("Transformation Matrix %d points: "
 					+ "SVD time %d us, SP time: %d us, QCP time: %d us",
 					cloud1.get(c).length, svdTime, quatTime, qcpTime));
 
 			// Check that the transformation matrix was recovered
-			assertTrue(transform.epsilonEquals(svdTransform, 0.01));
-			assertTrue(transform.epsilonEquals(quatTransform, 0.01));
-			assertTrue(transform.epsilonEquals(qcpTransform, 0.01));
+			assertTrue(transform.epsilonEquals(svdTransform, 0.05));
+			assertTrue(transform.epsilonEquals(quatTransform, 0.05));
+			assertTrue(transform.epsilonEquals(qcpTransform, 0.05));
 		}
 
 	}
@@ -133,6 +140,16 @@ public class TestSuperPosition {
 	 */
 	@Test
 	public void testRMSD() {
+		
+		// for the rmsd test we first make sure that both cloud points are not centered in origin so that the centering is tested too
+		// first cloud points are already centered, we translate cloud2 only
+		for (int c=0; c<cloud2.size(); c++) {
+			CalcPoint.translate(translation2, cloud2.get(c));
+			
+			Point3d centroid2 = CalcPoint. centroid(cloud2.get(c));			
+			LOGGER.debug("Centroid c2 (index %d): (%.2f, %.2f, %.2f)\n", c, centroid2.x, centroid2.y, centroid2.z);
+		}
+		
 
 		for (int c = 0; c < cloud1.size(); c++) {
 
@@ -154,11 +171,12 @@ public class TestSuperPosition {
 			double qcprmsd = qcp.getRmsd(cloud1.get(c), cloud2.get(c));
 			long qcpTime = (System.nanoTime() - qcpStart) / 1000;
 
-			logger.error(String.format("RMSD %d points: SVD time %d us, "
+			LOGGER.info(String.format("RMSD %d points: SVD time %d us, "
 					+ "Quat time: %d us, QCP time: %d us", cloud1.get(c).length,
 					svdTime, quatTime, qcpTime));
 
 			// Check that the returned RMSDs are equal
+			assertEquals(quatrmsd, qcprmsd, 0.001);
 			assertEquals(svdrmsd, quatrmsd, 0.001);
 			assertEquals(svdrmsd, qcprmsd, 0.001);
 		}

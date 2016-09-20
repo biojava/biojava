@@ -59,12 +59,12 @@ public final class SuperPositionQuat extends SuperPositionAbstract {
 		Point3d[] xref = CalcPoint.clonePoint3dArray(fixed);
 		Point3d xtrans = CalcPoint.centroid(xref);
 		xtrans.negate();
-		CalcPoint.translate(xtrans, xref);
+		CalcPoint.translate(new Vector3d(xtrans), xref);
 
 		Point3d[] yref = CalcPoint.clonePoint3dArray(moved);
 		Point3d ytrans = CalcPoint.centroid(yref);
 		ytrans.negate();
-		CalcPoint.translate(ytrans, yref);
+		CalcPoint.translate(new Vector3d(ytrans), yref);
 
 		// calculate rotational component (rotation around origin)
 		Quat4d q = UnitQuaternions.relativeOrientation(xref, yref);

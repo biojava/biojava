@@ -24,9 +24,8 @@ package org.biojava.nbio.structure.geometry;
 
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
+import javax.vecmath.Vector3d;
 
-import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.jama.Matrix;
 import org.biojava.nbio.structure.jama.SingularValueDecomposition;
 
@@ -55,10 +54,6 @@ public class SuperPositionSVD extends SuperPositionAbstract {
 		super(centered);
 	}
 
-	public Matrix4d superpose(Atom[] fixed, Atom[] moved) {
-		return superpose(Calc.atomsToPoints(fixed), Calc.atomsToPoints(moved));
-	}
-
 	@Override
 	public Matrix4d superpose(Point3d[] fixed, Point3d[] moved) {
 
@@ -70,7 +65,7 @@ public class SuperPositionSVD extends SuperPositionAbstract {
 		double[][] centAcoords = new double[][] { { cena.x, cena.y, cena.z } };
 		Matrix centroidA = new Matrix(centAcoords);
 
-		double[][] centBcoords = new double[][] { { cenb.x, cenb.x, cenb.x } };
+		double[][] centBcoords = new double[][] { { cenb.x, cenb.y, cenb.z } };
 		Matrix centroidB = new Matrix(centBcoords);
 
 		// center at centroid
@@ -79,10 +74,10 @@ public class SuperPositionSVD extends SuperPositionAbstract {
 		cenb.negate();
 
 		Point3d[] ats1 = CalcPoint.clonePoint3dArray(fixed);
-		CalcPoint.translate(cena, ats1);
+		CalcPoint.translate(new Vector3d(cena), ats1);
 
 		Point3d[] ats2 = CalcPoint.clonePoint3dArray(moved);
-		CalcPoint.translate(cenb, ats2);
+		CalcPoint.translate(new Vector3d(cenb), ats2);
 
 		double[][] coordSet1 = new double[ats1.length][3];
 		double[][] coordSet2 = new double[ats2.length][3];
