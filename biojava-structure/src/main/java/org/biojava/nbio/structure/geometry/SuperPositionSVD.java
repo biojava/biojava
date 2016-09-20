@@ -24,6 +24,7 @@ package org.biojava.nbio.structure.geometry;
 
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
+import javax.vecmath.Vector3d;
 
 import org.biojava.nbio.structure.jama.Matrix;
 import org.biojava.nbio.structure.jama.SingularValueDecomposition;
@@ -73,10 +74,10 @@ public class SuperPositionSVD extends SuperPositionAbstract {
 		cenb.negate();
 
 		Point3d[] ats1 = CalcPoint.clonePoint3dArray(fixed);
-		CalcPoint.translate(cena, ats1);
+		CalcPoint.translate(new Vector3d(cena), ats1);
 
 		Point3d[] ats2 = CalcPoint.clonePoint3dArray(moved);
-		CalcPoint.translate(cenb, ats2);
+		CalcPoint.translate(new Vector3d(cenb), ats2);
 
 		double[][] coordSet1 = new double[ats1.length][3];
 		double[][] coordSet2 = new double[ats2.length][3];

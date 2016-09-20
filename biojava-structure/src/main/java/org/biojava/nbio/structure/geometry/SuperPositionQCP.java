@@ -261,13 +261,13 @@ public final class SuperPositionQCP extends SuperPositionAbstract {
 			xtrans = CalcPoint.centroid(xref);
 			logger.debug("x centroid: " + xtrans);
 			xtrans.negate();
-			CalcPoint.translate(xtrans, xref);
+			CalcPoint.translate(new Vector3d(xtrans), xref);
 
 			yref = CalcPoint.clonePoint3dArray(y);
 			ytrans = CalcPoint.centroid(yref);
 			logger.debug("y centroid: " + ytrans);
 			ytrans.negate();
-			CalcPoint.translate(ytrans, yref);
+			CalcPoint.translate(new Vector3d(ytrans), yref);
 			innerProduct(yref, xref);
 		}
 		calcRmsd(wsum);
