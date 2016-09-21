@@ -1,9 +1,7 @@
 package org.biojava.nbio.genome.util;
 
-
 import com.google.common.collect.Range;
 
-import org.biojava.nbio.core.sequence.ProteinSequence;
 import org.biojava.nbio.genome.parsers.genename.ChromPos;
 import org.biojava.nbio.genome.parsers.genename.GeneChromosomePosition;
 
@@ -13,8 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *  A class that take care of the painful mapping
+ *  A class that can map chromosomal positions to mRNA (coding sequence) positions.
+ *
+ *  @author Andreas Prlic
  */
+
 public class ChromosomeMappingTools {
 
     public static final boolean debug = false;
@@ -1025,7 +1026,7 @@ public class ChromosomeMappingTools {
 //
 
     /**
-     * I have a genomic coordinate, where is it in the Gene?
+     * I have a genomic coordinate, where is it on the mRNA
      *
      * @param coordinate
      * @param chromosomePosition
@@ -1237,7 +1238,7 @@ public class ChromosomeMappingTools {
     }
 
     /**
-     * Get the chromosome position mapped onto the mrna CDS transcript position (needs to be divided by 3 to get protein coordinate)
+     * Get the chromosome position mapped onto the mRNA CDS transcript position (needs to be divided by 3 to get protein coordinate)
      *
      * @param exonStarts
      * @param exonEnds
