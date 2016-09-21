@@ -1,8 +1,6 @@
 package org.biojava.nbio.structure.io.mmtf;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,6 +15,9 @@ import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
+import org.biojava.nbio.structure.align.util.AtomCache;
+import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
+import org.biojava.nbio.structure.io.mmcif.DownloadChemCompProvider;
 import org.junit.Test;
 import org.rcsb.mmtf.decoder.StructureDataToAdapter;
 import org.rcsb.mmtf.encoder.AdapterToStructureData;
@@ -35,6 +36,12 @@ public class TestMmtfRoundTrip {
 	 */
 	@Test
 	public void testRoundTrip() throws IOException, StructureException {
+		AtomCache cache = new AtomCache();
+		cache.setUseMmCif(true);
+		ChemCompGroupFactory.setChemCompProvider(new DownloadChemCompProvider());
+		
+		
+		StructureIO.setAtomCache(cache);
 		Structure structure = StructureIO.getStructure("4CUP");
 		AdapterToStructureData writerToEncoder = new AdapterToStructureData();
 		new MmtfStructureWriter(structure, writerToEncoder);
@@ -73,6 +80,7 @@ public class TestMmtfRoundTrip {
 				Chain chainTwo = chainsTwo.get(j);
 				// Check they have the same chain id
 				assertEquals(chainOne.getId(), chainTwo.getId());
+				checkSeqresGroups(chainOne, chainTwo);
 				List<Group> groupsOne = chainOne.getAtomGroups();
 				List<Group> groupsTwo = chainTwo.getAtomGroups();
 				if(groupsOne.size()!=groupsTwo.size()){
@@ -84,12 +92,12 @@ public class TestMmtfRoundTrip {
 					Group groupOne = groupsOne.get(k);
 					Group groupTwo = groupsTwo.get(k);
 					// Check if the groups are of the same type
-					if(groupOne.getType().equals(groupTwo.getType())==false){
+					if(!groupOne.getType().equals(groupTwo.getType())){
 						System.out.println("Error - diff group type: "+structOne.getPDBCode());
 						System.out.println(groupOne.getPDBName() + " and type: "+groupOne.getType());
 						System.out.println(groupTwo.getPDBName() + " and type: "+groupTwo.getType());;
 					}
-					// Check the single letter amino aicd is correct
+					// Check the single letter amino acid is correct
 					if(groupOne.getChemComp().getOne_letter_code().length()==1 && groupTwo.getChemComp().getOne_letter_code().length()==1){
 						if(!groupOne.getChemComp().getOne_letter_code().equals(groupTwo.getChemComp().getOne_letter_code())){
 							System.out.println(groupOne.getPDBName());
@@ -97,6 +105,7 @@ public class TestMmtfRoundTrip {
 						assertEquals(groupOne.getChemComp().getOne_letter_code(), groupTwo.getChemComp().getOne_letter_code());
 					}
 					assertEquals(groupOne.getType(), groupTwo.getType());
+					assertEquals(groupOne.getPDBName(), groupTwo.getPDBName());
 					assertEquals(groupOne.getResidueNumber().getSeqNum(), groupTwo.getResidueNumber().getSeqNum());
 					assertEquals(groupOne.getResidueNumber().getInsCode(), groupTwo.getResidueNumber().getInsCode());
 					assertEquals(groupOne.getResidueNumber().getChainName(), groupTwo.getResidueNumber().getChainName());
@@ -133,15 +142,15 @@ public class TestMmtfRoundTrip {
 					for(int l=0;l<atomsOne.size();l++){
 						Atom atomOne = atomsOne.get(l);
 						Atom atomTwo = atomsTwo.get(l);
-						assertTrue(atomOne.getGroup().getPDBName().equals(atomTwo.getGroup().getPDBName()));
-						assertTrue(atomOne.getCharge()==atomTwo.getCharge());
+						assertEquals(atomOne.getGroup().getPDBName(), atomTwo.getGroup().getPDBName());
+						assertEquals(atomOne.getCharge(), atomTwo.getCharge());
 						// Check the coords are the same to three db
 						assertArrayEquals(atomOne.getCoords(), atomTwo.getCoords(), 0.0009999999);
 						assertEquals(atomOne.getTempFactor(), atomTwo.getTempFactor(), 0.009999999);
 						assertEquals(atomOne.getOccupancy(), atomTwo.getOccupancy(), 0.009999999);
-						assertTrue(atomOne.getElement()==atomTwo.getElement());
-						assertTrue(atomOne.getName().equals(atomTwo.getName()));
-						assertTrue(atomOne.getAltLoc()==atomTwo.getAltLoc());
+						assertEquals(atomOne.getElement(), atomTwo.getElement());
+						assertEquals(atomOne.getName(),atomTwo.getName());
+						assertEquals(atomOne.getAltLoc(), atomTwo.getAltLoc());
 						if(i==0){
 							if(atomOne.getBonds()==null){
 								if(atomTwo.getBonds()!=null){
@@ -237,4 +246,28 @@ public class TestMmtfRoundTrip {
 
 	}
 
+	private void checkSeqresGroups(Chain chainOne, Chain chainTwo) {
+		
+		assertEquals(chainOne.getSeqResGroups().size(), chainTwo.getSeqResGroups().size());
+		
+		for (int i=0; i<chainOne.getSeqResGroups().size(); i++) {
+			Group gOne = chainOne.getSeqResGroup(i);
+			Group gTwo = chainTwo.getSeqResGroup(i);
+			assertNotNull(gOne.getChemComp());
+			assertNotNull(gTwo.getChemComp());
+			assertEquals(gOne.getChemComp().getOne_letter_code(), gTwo.getChemComp().getOne_letter_code());
+			
+			assertEquals(gOne.getResidueNumber(), gTwo.getResidueNumber());
+			//assertEquals(gOne.getPDBName(), gTwo.getPDBName());
+		}
+		
+		// this is to test issue #517: a null pointer happens if the group hasn't been cloned (including the chem comp associated to it)
+		Chain clonedChain = (Chain)chainTwo.clone();
+		assertEquals(chainTwo.getSeqResGroups().size(), clonedChain.getSeqResGroups().size());
+		for (int i=0; i<clonedChain.getSeqResGroups().size(); i++) {
+			Group g = clonedChain.getSeqResGroup(i);
+			assertNotNull(g.getChemComp());
+			
+		}
+	}
 }

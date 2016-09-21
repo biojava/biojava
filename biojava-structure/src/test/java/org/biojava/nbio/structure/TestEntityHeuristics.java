@@ -240,15 +240,6 @@ public class TestEntityHeuristics {
 
 		Structure s = pdbpars.parsePDBFile(inStream) ;
 
-		System.out.println("Entities for file: "+fileName);
-		for (EntityInfo ent:s.getEntityInfos()) {
-			System.out.print(ent.getRepresentative().getName()+":");
-			for (Chain c:ent.getChains()) {
-				System.out.print(" "+c.getName());
-			}
-			System.out.println();
-		}
-
 		return s;
 	}
 

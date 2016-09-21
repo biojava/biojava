@@ -341,7 +341,18 @@ public final class StructureUtil {
 	 * @return
 	 */
 	public static List<Group> getAminoAcids(Chain chain) {
-		return chain.getAtomGroups(GroupType.AMINOACID);
+
+		List<Group> gs = new ArrayList<>();
+
+		for ( Group g : chain.getAtomGroups()){
+
+			if ( g.isAminoAcid())
+				gs.add(g);
+
+		}
+
+		return gs;
+
 	}
 
 }

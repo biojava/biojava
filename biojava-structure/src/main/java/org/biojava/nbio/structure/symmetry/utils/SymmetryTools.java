@@ -24,16 +24,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Matrix4d;
+
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.ChainImpl;
 import org.biojava.nbio.structure.Group;
-import org.biojava.nbio.structure.SVDSuperimposer;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIdentifier;
@@ -56,6 +58,7 @@ import org.biojava.nbio.structure.align.multiple.util.MultipleSuperimposer;
 import org.biojava.nbio.structure.cluster.Subunit;
 import org.biojava.nbio.structure.cluster.SubunitClustererMethod;
 import org.biojava.nbio.structure.cluster.SubunitClustererParameters;
+import org.biojava.nbio.structure.geometry.SuperPositions;
 import org.biojava.nbio.structure.jama.Matrix;
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetryDetector;
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetryParameters;
@@ -69,15 +72,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Utility methods for the internal symmetry identification and manipulation.
- * <p>
- * Methods include: blank out regions of DP Matrix, build symmetry graphs, get
- * rotation symmetry angles, split repeats in quaternary structure chains,
- * convert between symmetry formats (full, repeats, rotations), determine if two
- * symmetry axes are equivalent, get groups from representative Atoms.
+ * Utility methods for symmetry (quaternary and internal) detection and result
+ * manipulation.
  *
  * @author Spencer Bliven
  * @author Aleix Lafita
+ * @author Peter Rose
  *
  */
 public class SymmetryTools {
@@ -106,7 +106,7 @@ public class SymmetryTools {
 			double nResFromMainDiag, double[] gradientPolyCoeff,
 			double gradientExpCoeff) {
 
-		if (unpenalizedScore == Double.NaN)
+		if (Double.isNaN(unpenalizedScore))
 			return 0; // what else?
 
 		// We can actually return a positive value if this is high enough
@@ -732,7 +732,8 @@ public class SymmetryTools {
 
 		// Obtain the subunits of the repeats
 		List<Atom[]> atoms = toRepeatsAlignment(result).getAtomArrays();
-		List<Subunit> subunits = atoms.stream().map(a -> new Subunit(a))
+		List<Subunit> subunits = atoms.stream()
+				.map(a -> new Subunit(a, null, null, null))
 				.collect(Collectors.toList());
 
 		// The clustering thresholds are set to 0 so that all always merged
@@ -741,11 +742,11 @@ public class SymmetryTools {
 		cp.setRmsdThreshold(10.0);
 		cp.setCoverageThreshold(0.0);
 		cp.setSequenceIdentityThreshold(1.1); // avoid using sequence cluster
-		
+
 		QuatSymmetryParameters sp = new QuatSymmetryParameters();
 
-		QuatSymmetryResults gSymmetry = QuatSymmetryDetector.calcGlobalSymmetry(
-				subunits, sp, cp);
+		QuatSymmetryResults gSymmetry = QuatSymmetryDetector
+				.calcGlobalSymmetry(subunits, sp, cp);
 
 		return gSymmetry;
 	}
@@ -908,8 +909,9 @@ public class SymmetryTools {
 
 				// Calculate the new transformation information
 				if (arr1.length > 0 && arr2.length > 0) {
-					SVDSuperimposer svd = new SVDSuperimposer(arr1, arr2);
-					Matrix4d axis = svd.getTransformation();
+					Matrix4d axis = SuperPositions.superpose(
+							Calc.atomsToPoints(arr1), 
+							Calc.atomsToPoints(arr2));
 					axes.updateAxis(level, axis);
 				}
 
@@ -972,6 +974,43 @@ public class SymmetryTools {
 			return atomList.toArray(new Atom[0]);
 		}
 
+	}
+
+	/**
+	 * Find valid symmetry orders for a given stoichiometry. For instance, an
+	 * A6B4 protein would give [1,2] because (A6B4)1 and (A3B2)2 are valid
+	 * decompositions.
+	 * 
+	 * @param stoichiometry
+	 *            List giving the number of copies in each Subunit cluster
+	 * @return The common factors of the stoichiometry
+	 */
+	public static List<Integer> getValidFolds(List<Integer> stoichiometry) {
+
+		List<Integer> denominators = new ArrayList<Integer>();
+
+		if (stoichiometry.isEmpty())
+			return denominators;
+
+		int nChains = Collections.max(stoichiometry);
+
+		// Remove duplicate stoichiometries
+		Set<Integer> nominators = new TreeSet<Integer>(stoichiometry);
+
+		// find common denominators
+		for (int d = 1; d <= nChains; d++) {
+			boolean isDivisable = true;
+			for (Integer n : nominators) {
+				if (n % d != 0) {
+					isDivisable = false;
+					break;
+				}
+			}
+			if (isDivisable) {
+				denominators.add(d);
+			}
+		}
+		return denominators;
 	}
 
 }

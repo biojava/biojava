@@ -21,11 +21,13 @@
 
 package org.biojava.nbio.structure.symmetry.core;
 
-import org.biojava.nbio.structure.symmetry.geometry.SuperPosition;
+import org.biojava.nbio.structure.geometry.CalcPoint;
+import org.biojava.nbio.structure.geometry.UnitQuaternions;
 
 import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
+import javax.vecmath.Quat4d;
 import javax.vecmath.Vector3d;
 
 import java.util.ArrayList;
@@ -37,7 +39,7 @@ import java.util.List;
  * @author Peter
  */
 public class C2RotationSolver implements QuatSymmetrySolver {
-	private Subunits subunits = null;
+	private QuatSymmetrySubunits subunits = null;
 	private QuatSymmetryParameters parameters = null;
 	private Vector3d centroid = new Vector3d();
 	private Matrix4d centroidInverse = new Matrix4d();
@@ -45,7 +47,7 @@ public class C2RotationSolver implements QuatSymmetrySolver {
 	private RotationGroup rotations = new RotationGroup();
 
 
-	public C2RotationSolver(Subunits subunits, QuatSymmetryParameters parameters) {
+	public C2RotationSolver(QuatSymmetrySubunits subunits, QuatSymmetryParameters parameters) {
 		if (subunits.getSubunitCount() != 2) {
 			throw new IllegalArgumentException("C2RotationSolver can only be applied to cases with 2 centers");
 		}
@@ -72,14 +74,34 @@ public class C2RotationSolver implements QuatSymmetrySolver {
 //		Point3d[] y = SuperPosition.clonePoint3dArray(traces.get(1));
 //		SuperPosition.center(y);
 
-		Point3d[] x = SuperPosition.clonePoint3dArray(traces.get(0));
-		SuperPosition.translate(new Point3d(trans), x);
-		Point3d[] y = SuperPosition.clonePoint3dArray(traces.get(1));
-		SuperPosition.translate(new Point3d(trans), y);
+		Point3d[] x = CalcPoint.clonePoint3dArray(traces.get(0));
+		CalcPoint.translate(trans, x);
+		Point3d[] y = CalcPoint.clonePoint3dArray(traces.get(1));
+		CalcPoint.translate(trans, y);
 
+		// TODO implement this piece of code using at origin superposition
+		Quat4d quat = UnitQuaternions.relativeOrientation(
+				x, y);
 		AxisAngle4d axisAngle = new AxisAngle4d();
-
-		Matrix4d transformation = SuperPosition.superposeAtOrigin(x, y, axisAngle);
+		Matrix4d transformation = new Matrix4d();
+		
+		transformation.set(quat);
+		axisAngle.set(quat);
+		
+		Vector3d axis = new Vector3d(axisAngle.x, axisAngle.y, axisAngle.z);
+		if (axis.lengthSquared() < 1.0E-6) {
+			axisAngle.x = 0;
+			axisAngle.y = 0;
+			axisAngle.z = 1;
+			axisAngle.angle = 0;
+		} else {
+			axis.normalize();
+			axisAngle.x = axis.x;
+			axisAngle.y = axis.y;
+			axisAngle.z = axis.z;
+		}
+		
+		CalcPoint.transform(transformation, y);
 
 		// if rmsd or angle deviation is above threshold, stop
 		double angleThresholdRadians = Math.toRadians(parameters.getAngleThreshold());

@@ -37,22 +37,6 @@ public enum SubunitClustererMethod {
 	 * sequence and structure clustering differ, the cluster contains
 	 * pseudosymmetry (by definition).
 	 */
-	STRUCTURE,
+	STRUCTURE;
 
-	/**
-	 * The INTERNAL SYMMETRY clustering method uses the residue sequence and the
-	 * coordinates of its Atom representatives of the {@link Subunit} to
-	 * calculate sequence and structure alignments.
-	 * <p>
-	 * Two {@link Subunit} with sufficient sequence identity and coverage are
-	 * clustered together. Additionally, two {@link Subunit} with sufficient
-	 * structural similarity and coverage are clustered together. If the
-	 * sequence and structure clustering differ, the {@link SubunitCluster}
-	 * contains pseudosymmetry (by definition).
-	 * <p>
-	 * In a final step, internal symmetry of each {@link SubunitCluster} is
-	 * analyzed. If the {@link SubunitCluster} is internally symmetric, each
-	 * {@link Subunit} is divided into its internally symmetric repeats.
-	 */
-	INTERNAL_SYMMETRY;
 }

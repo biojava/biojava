@@ -525,10 +525,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		if ( ! currentGroup.hasAtom(atomName)) {
 			// Unless it's microheterogenity https://github.com/rcsb/codec-devel/issues/81
 			if (currentGroup.getPDBName().equals(a.getGroup().getPDBName())) {
-				if(StructureTools.hasNonDeuteratedEquiv(a,currentGroup)){
-					
-				}
-				else{
+				if(!StructureTools.hasNonDeuteratedEquiv(a,currentGroup)){
 					currentGroup.addAtom(a);
 				}
 			}
@@ -724,7 +721,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			}
 
 			// we'll only add seqres chains that are polymeric or unknown
-			if (type==null || (type!=null && type==EntityType.POLYMER) ) {
+			if (type==null || type==EntityType.POLYMER ) {
 				seqResChains.add(seqres);	
 			}
 
@@ -822,7 +819,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 					for (BiologicalAssemblyTransformation transf:transformations) {
 						Chain c = structure.getChain(transf.getChainId());
 						if (c==null) {
-							logger.warn("Could not find asym id {} specified in struct_assembly_gen", transf.getChainId());
+							logger.info("Could not find asym id {} specified in struct_assembly_gen", transf.getChainId());
 							continue;
 						}
 						if (c.getEntityType() == EntityType.POLYMER &&
@@ -903,7 +900,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				if (entityId==null) {
 					// this can happen for instance if the cif file didn't have _struct_asym category at all
 					// and thus we have no asymId2entityId mapping at all
-					logger.warn("No entity id could be found for chain {}", chain.getId());
+					logger.info("No entity id could be found for chain {}", chain.getId());
 					continue;
 				}
 				int eId = Integer.parseInt(entityId);
@@ -921,7 +918,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				if (entityInfo==null) {
 					// Supports the case where the only chain members were from non-polymeric entity that is missing.
 					// Solved by creating a new Compound(entity) to which this chain will belong.
-					logger.warn("Could not find an Entity for entity_id {}, for chain id {}, creating a new Entity.",
+					logger.info("Could not find an Entity for entity_id {}, for chain id {}, creating a new Entity.",
 							eId, chain.getId());
 					entityInfo = new EntityInfo();
 					entityInfo.setMolId(eId);
@@ -1057,7 +1054,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				if (atomChain == null) {
 					// most likely there's no observed residues at all for the seqres chain: can't map
 					// e.g. 3zyb: chains with asym_id L,M,N,O,P have no observed residues
-					logger.warn("Could not map SEQRES chain with asym_id={} to any ATOM chain. Most likely there's no observed residues in the chain.",
+					logger.info("Could not map SEQRES chain with asym_id={} to any ATOM chain. Most likely there's no observed residues in the chain.",
 							seqResChain.getId());
 					continue;
 				}
@@ -1320,6 +1317,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 					ncsOperators.toArray(new Matrix4d[ncsOperators.size()]));
 		}
 	}
+
 
 	/** This method will return the parsed protein structure, once the parsing has been finished
 	 *
@@ -1639,7 +1637,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		r.setChainId(sref.getPdbx_strand_id());
 		StructRef structRef = getStructRef(sref.getRef_id());
 		if (structRef == null){
-			logger.warn("could not find StructRef " + sref.getRef_id() + " for StructRefSeq " + sref);
+			logger.info("could not find StructRef " + sref.getRef_id() + " for StructRefSeq " + sref);
 		} else {
 			r.setDatabase(structRef.getDb_name());
 			r.setDbIdCode(structRef.getDb_code());

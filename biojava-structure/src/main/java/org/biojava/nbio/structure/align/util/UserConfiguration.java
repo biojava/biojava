@@ -31,6 +31,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 
 /** A container to persist config to the file system
@@ -45,6 +46,7 @@ public class UserConfiguration
 
 	public static final String PDB_FORMAT   = "PDB";
 	public static final String MMCIF_FORMAT = "mmCif";
+	public static final String MMTF_FORMAT  = "mmtf";
 
 	public static final String TMP_DIR = "java.io.tmpdir";
 
@@ -61,6 +63,7 @@ public class UserConfiguration
 
 	private String fileFormat;
 
+	private static AtomicBoolean warningShown = new AtomicBoolean(false);
 
 
 	/**
@@ -95,7 +98,7 @@ public class UserConfiguration
 		// note that in initCacheFilePath, we set to the provided one (if readable) or to the same as pdbFilePath
 		cacheFilePath = initCacheFilePath();
 
-		fileFormat = MMCIF_FORMAT;
+		fileFormat = MMTF_FORMAT;
 	}
 
 	private String initPdbFilePath() {
@@ -148,9 +151,15 @@ public class UserConfiguration
 
 			} else {
 				path = System.getProperty(TMP_DIR);
-				logger.warn("Could not read dir from system property {} or environment variable {}, "
-						+ "using system's temp directory {}",
-						propertyName, propertyName, path);
+
+				if ( ! warningShown.get()) {
+
+					logger.warn("Could not read dir from system property {} or environment variable {}, "
+									+ "using system's temp directory {}",
+							propertyName, propertyName, path);
+
+					warningShown.set(true);
+				}
 
 				System.setProperty(propertyName,path);
 			}

@@ -78,7 +78,7 @@ public class UnitCellBoundingBox {
 		List<Chain> polyChains = s.getPolyChains();
 		int j = 0;
 		for (Chain polyChain : polyChains) {
-			chainBbs[i][j] = new BoundingBox(StructureTools.getAllNonHAtomArray(polyChain, includeHetAtoms));
+			chainBbs[i][j] = new BoundingBox(StructureTools.getAllNonHCoordsArray(polyChain, includeHetAtoms));
 			j++;
 		}
 		auBbs[i] = new BoundingBox(chainBbs[i]);

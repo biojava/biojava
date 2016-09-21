@@ -21,16 +21,37 @@
 package org.biojava.nbio.structure.contact;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.vecmath.Point3d;
+
 import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.Calc;
 
 
 /**
- * A grid to be used for calculating atom contacts through geometric hashing algorithm.
- *
+ * A grid to be used for calculating atom contacts through a spatial hashing algorithm.
+ * <p>
  * The grid is composed of cells of size of the cutoff so that the distances that need to be calculated
  * are reduced to those within each cell and to the neighbouring cells.
+ * <p>
+ * Usage, for generic 3D points:
+ * <pre>
+ *  Point3d[] points = ...;
+ *  Grid grid = new Grid(8.0);
+ *  grid.addCoords(points);
+ *  List&lt;Contact&gt; contacts = getIndicesContacts();
+ * </pre>
+ * Usage, for atoms:
+ * <pre>
+ *  Atom[] atoms = ...;
+ *  Grid grid = new Grid(8.0);
+ *  grid.addCoords(atoms);
+ *  AtomContactSet contacts = getAtomContacts();
+ * </pre> 
  *
- * @author duarte_j
+ * @author Jose Duarte
  *
  */
 public class Grid {
@@ -45,8 +66,11 @@ public class Grid {
 	private double cutoff;
 	private int cellSize;
 
-	private Atom[] iAtoms;
-	private Atom[] jAtoms;
+	private Point3d[] iAtoms;
+	private Point3d[] jAtoms;
+	
+	private Atom[] iAtomObjects;
+	private Atom[] jAtomObjects;
 
 	// the bounds in int grid coordinates
 	private int[] bounds;
@@ -58,8 +82,9 @@ public class Grid {
 	private boolean noOverlap; // if the 2 sets of atoms are found not to overlap then this is set to true
 
 	/**
-	 * Creates a <code>Grid</code>, the cutoff is in Angstroms and can
-	 * be specified to a precision of 0.01A
+	 * Creates a <code>Grid</code>, the cutoff is in the same units as the coordinates
+	 * (Angstroms if they are atom coordinates) and can
+	 * be specified to a precision of 0.01.
 	 * @param cutoff
 	 */
 	public Grid(double cutoff) {
@@ -86,6 +111,7 @@ public class Grid {
 
 	/**
 	 * Adds the i and j atoms and fills the grid. Their bounds will be computed.
+	 * Subsequent call to {@link #getIndicesContacts()} or {@link #getAtomContacts()} will produce the interatomic contacts.
 	 * @param iAtoms
 	 * @param jAtoms
 	 */
@@ -96,21 +122,24 @@ public class Grid {
 	/**
 	 * Adds the i and j atoms and fills the grid, passing their bounds (array of size 6 with x,y,z minima and x,y,z maxima)
 	 * This way the bounds don't need to be recomputed.
+	 * Subsequent call to {@link #getIndicesContacts()} or {@link #getAtomContacts()} will produce the interatomic contacts.
 	 * @param iAtoms
 	 * @param icoordbounds
 	 * @param jAtoms
 	 * @param jcoordbounds
 	 */
 	public void addAtoms(Atom[] iAtoms, BoundingBox icoordbounds, Atom[] jAtoms, BoundingBox jcoordbounds) {
-		this.iAtoms = iAtoms;
+		this.iAtoms = Calc.atomsToPoints(iAtoms);
+		this.iAtomObjects = iAtoms;
 
 		if (icoordbounds!=null) {
 			this.ibounds = icoordbounds;
 		} else {
-			this.ibounds = new BoundingBox(iAtoms);
+			this.ibounds = new BoundingBox(this.iAtoms);
 		}
 
-		this.jAtoms = jAtoms;
+		this.jAtoms = Calc.atomsToPoints(jAtoms);
+		this.jAtomObjects = jAtoms;
 
 		if (jAtoms==iAtoms) {
 			this.jbounds=ibounds;
@@ -118,7 +147,7 @@ public class Grid {
 			if (jcoordbounds!=null) {
 				this.jbounds = jcoordbounds;
 			} else {
-				this.jbounds = new BoundingBox(jAtoms);
+				this.jbounds = new BoundingBox(this.jAtoms);
 
 			}
 		}
@@ -127,7 +156,7 @@ public class Grid {
 	}
 
 	/**
-	 * Adds a set of atoms, subsequent call to getContacts will produce the interatomic contacts.
+	 * Adds a set of atoms, subsequent call to {@link #getIndicesContacts()} or {@link #getAtomContacts()} will produce the interatomic contacts.
 	 * The bounding box of the atoms will be computed based on input array
 	 * @param atoms
 	 */
@@ -136,13 +165,14 @@ public class Grid {
 	}
 
 	/**
-	 * Adds a set of atoms, subsequent call to getContacts will produce the interatomic contacts.
+	 * Adds a set of atoms, subsequent call to {@link #getIndicesContacts()} or {@link #getAtomContacts()} will produce the interatomic contacts.
 	 * The bounds calculated elsewhere can be passed, or if null they are computed.
 	 * @param atoms
 	 * @param bounds
 	 */
 	public void addAtoms(Atom[] atoms, BoundingBox bounds) {
-		this.iAtoms = atoms;
+		this.iAtoms = Calc.atomsToPoints(atoms);
+		this.iAtomObjects = atoms;
 
 		if (bounds!=null) {
 			this.ibounds = bounds;
@@ -151,6 +181,99 @@ public class Grid {
 		}
 
 		this.jAtoms = null;
+		this.jAtomObjects = null;
+		this.jbounds = null;
+
+		fillGrid();
+	}
+	
+	/**
+	 * Adds the i and j coordinates and fills the grid. Their bounds will be computed.
+	 * Subsequent call to {@link #getIndicesContacts()} will produce the 
+	 * contacts, i.e. the set of points within distance cutoff.
+	 * 
+	 * Subsequent calls to method {@link #getAtomContacts()} will produce a NullPointerException 
+	 * since this only adds coordinates and no atom information.
+	 * @param iAtoms
+	 * @param jAtoms
+	 */
+	public void addCoords(Point3d[] iAtoms, Point3d[] jAtoms) {
+		addCoords(iAtoms, null, jAtoms, null);
+	}
+
+	/**
+	 * Adds the i and j coordinates and fills the grid, passing their bounds (array of size 6 with x,y,z minima and x,y,z maxima)
+	 * This way the bounds don't need to be recomputed.
+	 * Subsequent call to {@link #getIndicesContacts()} will produce the 
+	 * contacts, i.e. the set of points within distance cutoff.
+	 * 
+	 * Subsequent calls to method {@link #getAtomContacts()} will produce a NullPointerException 
+	 * since this only adds coordinates and no atom information.
+	 * @param iAtoms
+	 * @param icoordbounds
+	 * @param jAtoms
+	 * @param jcoordbounds
+	 */
+	public void addCoords(Point3d[] iAtoms, BoundingBox icoordbounds, Point3d[] jAtoms, BoundingBox jcoordbounds) {
+		this.iAtoms = iAtoms;
+		this.iAtomObjects = null;
+
+		if (icoordbounds!=null) {
+			this.ibounds = icoordbounds;
+		} else {
+			this.ibounds = new BoundingBox(this.iAtoms);
+		}
+
+		this.jAtoms = jAtoms;
+		this.jAtomObjects = null;
+
+		if (jAtoms==iAtoms) {
+			this.jbounds=ibounds;
+		} else {
+			if (jcoordbounds!=null) {
+				this.jbounds = jcoordbounds;
+			} else {
+				this.jbounds = new BoundingBox(this.jAtoms);
+
+			}
+		}
+
+		fillGrid();
+	}
+
+	/**
+	 * Adds a set of coordinates, subsequent call to {@link #getIndicesContacts()} will produce the 
+	 * contacts, i.e. the set of points within distance cutoff.
+	 * The bounding box of the atoms will be computed based on input array.
+	 * Subsequent calls to method {@link #getAtomContacts()} will produce a NullPointerException 
+	 * since this only adds coordinates and no atom information.
+	 * @param atoms
+	 */
+	public void addCoords(Point3d[] atoms) {
+		addCoords(atoms, (BoundingBox) null);
+	}
+
+	/**
+	 * Adds a set of coordinates, subsequent call to {@link #getIndicesContacts()} will produce the 
+	 * contacts, i.e. the set of points within distance cutoff.
+	 * The bounds calculated elsewhere can be passed, or if null they are computed.
+	 * Subsequent calls to method {@link #getAtomContacts()} will produce a NullPointerException 
+	 * since this only adds coordinates and no atom information.
+	 * @param atoms
+	 * @param bounds
+	 */
+	public void addCoords(Point3d[] atoms, BoundingBox bounds) {
+		this.iAtoms = atoms;
+		this.iAtomObjects = null;
+
+		if (bounds!=null) {
+			this.ibounds = bounds;
+		} else {
+			this.ibounds = new BoundingBox(iAtoms);
+		}
+
+		this.jAtoms = null;
+		this.jAtomObjects = null;
 		this.jbounds = null;
 
 		fillGrid();
@@ -162,7 +285,7 @@ public class Grid {
 	 * Checks also if the i and j grid overlap, i.e. the enclosing bounds of
 	 * the 2 grids (i and j) are no more than one cell size apart. If they don't
 	 * overlap then they are too far apart so there's nothing to calculate, we set
-	 * the noOverlap flag and then {@link #getContacts()} will do no calculation at all.
+	 * the noOverlap flag and then {@link #getIndicesContacts()} will do no calculation at all.
 	 */
 	private void fillGrid() {
 
@@ -179,13 +302,13 @@ public class Grid {
 		                    [1+(bounds[5]-bounds[2])/cellSize];
 
 		int i = 0;
-		for (Atom atom:iAtoms) {
+		for (Point3d atom:iAtoms) {
 
-			int xind = xintgrid2xgridindex(getFloor(atom.getX()));
-			int yind = yintgrid2ygridindex(getFloor(atom.getY()));
-			int zind = zintgrid2zgridindex(getFloor(atom.getZ()));
+			int xind = xintgrid2xgridindex(getFloor(atom.x));
+			int yind = yintgrid2ygridindex(getFloor(atom.y));
+			int zind = zintgrid2zgridindex(getFloor(atom.z));
 			if (cells[xind][yind][zind]==null) {
-				cells[xind][yind][zind] = new GridCell();
+				cells[xind][yind][zind] = new GridCell(this);
 			}
 			cells[xind][yind][zind].addIindex(i);
 			i++;
@@ -194,13 +317,13 @@ public class Grid {
 		if (jAtoms==null) return;
 
 		int j = 0;
-		for (Atom atom:jAtoms) {
+		for (Point3d atom:jAtoms) {
 
-			int xind = xintgrid2xgridindex(getFloor(atom.getX()));
-			int yind = yintgrid2ygridindex(getFloor(atom.getY()));
-			int zind = zintgrid2zgridindex(getFloor(atom.getZ()));
+			int xind = xintgrid2xgridindex(getFloor(atom.x));
+			int yind = yintgrid2ygridindex(getFloor(atom.y));
+			int zind = zintgrid2zgridindex(getFloor(atom.z));
 			if (cells[xind][yind][zind]==null) {
-				cells[xind][yind][zind] = new GridCell();
+				cells[xind][yind][zind] = new GridCell(this);
 			}
 			cells[xind][yind][zind].addJindex(j);
 			j++;
@@ -253,13 +376,51 @@ public class Grid {
 	 * if jAtoms is null, then contacts are within the iAtoms.
 	 * @return
 	 */
-	public AtomContactSet getContacts() {
+	public AtomContactSet getAtomContacts() {
 
 		AtomContactSet contacts = new AtomContactSet(cutoff);
 
+		List<Contact> list = getIndicesContacts();
+
+		if (jAtomObjects == null) {
+			for (Contact cont : list) {
+				contacts.add(new AtomContact(new Pair<Atom>(iAtomObjects[cont.getI()],iAtomObjects[cont.getJ()]),cont.getDistance()));
+			}
+
+		} else {
+			for (Contact cont : list) {
+				contacts.add(new AtomContact(new Pair<Atom>(iAtomObjects[cont.getI()],jAtomObjects[cont.getJ()]),cont.getDistance()));
+			}
+		}
+
+		return contacts;
+	}
+	
+	/**
+	 * Returns all contacts, i.e. all atoms that are within the cutoff distance.
+	 * If both iAtoms and jAtoms are defined then contacts are between iAtoms and jAtoms,
+	 * if jAtoms is null, then contacts are within the iAtoms.
+	 * @return
+	 * @deprecated use {@link #getAtomContacts()} instead
+	 */	
+	@Deprecated
+	public AtomContactSet getContacts() {
+		return getAtomContacts();
+	}
+	
+	/**
+	 * Returns all contacts, i.e. all atoms that are within the cutoff distance, as simple Contact objects containing the atom indices pairs and the distance.
+	 * If both iAtoms and jAtoms are defined then contacts are between iAtoms and jAtoms,
+	 * if jAtoms is null, then contacts are within the iAtoms.
+	 * @return
+	 */
+	public List<Contact> getIndicesContacts() {
+
+		List<Contact> list = new ArrayList<>();
+
 		// if the 2 sets of atoms are not overlapping they are too far away and no need to calculate anything
 		// this won't apply if there's only one set of atoms (iAtoms), where we would want all-to-all contacts
-		if (noOverlap) return contacts;
+		if (noOverlap) return list;
 
 
 		for (int xind=0;xind<cells.length;xind++) {
@@ -269,7 +430,7 @@ public class Grid {
 					GridCell thisCell = cells[xind][yind][zind];
 					if (thisCell==null) continue;
 
-					contacts.addAll(thisCell.getContactsWithinCell(iAtoms, jAtoms, cutoff));
+					list.addAll(thisCell.getContactsWithinCell());
 
 					// distances of points from this box to all neighbouring boxes: 26 iterations (26 neighbouring boxes)
 					for (int x=xind-1;x<=xind+1;x++) {
@@ -280,7 +441,7 @@ public class Grid {
 								if (x>=0 && x<cells.length && y>=0 && y<cells[x].length && z>=0 && z<cells[x][y].length) {
 									if (cells[x][y][z] == null) continue;
 
-									contacts.addAll(thisCell.getContactsToOtherCell(cells[x][y][z], iAtoms, jAtoms, cutoff));
+									list.addAll(thisCell.getContactsToOtherCell(cells[x][y][z]));
 								}
 							}
 						}
@@ -289,7 +450,7 @@ public class Grid {
 			}
 		}
 
-		return contacts;
+		return list;
 	}
 
 	public double getCutoff() {
@@ -303,6 +464,14 @@ public class Grid {
 	 */
 	public boolean isNoOverlap() {
 		return noOverlap;
+	}
+	
+	protected Point3d[] getIAtoms() {
+		return iAtoms;
+	}
+	
+	protected Point3d[] getJAtoms() {
+		return jAtoms;
 	}
 
 }

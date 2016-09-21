@@ -24,7 +24,6 @@ package org.biojava.nbio.structure.align.pairwise;
 
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Calc;
-import org.biojava.nbio.structure.SVDSuperimposer;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.StrucAligParameters;
 import org.biojava.nbio.structure.align.helper.AlignTools;
@@ -314,7 +313,7 @@ public class FragmentJoiner {
 			Calc.shift(a, atom);
 		}
 
-		rms = SVDSuperimposer.getRMS(ca1subset,ca2subset);
+		rms = Calc.rmsd(ca1subset,ca2subset);
 
 		return rms;
 	}

@@ -21,14 +21,16 @@
 
 package org.biojava.nbio.structure.symmetry.core;
 
+import org.biojava.nbio.structure.geometry.CalcPoint;
+import org.biojava.nbio.structure.geometry.MomentsOfInertia;
+import org.biojava.nbio.structure.geometry.UnitQuaternions;
 import org.biojava.nbio.structure.symmetry.geometry.DistanceBox;
-import org.biojava.nbio.structure.symmetry.geometry.MomentsOfInertia;
 import org.biojava.nbio.structure.symmetry.geometry.SphereSampler;
-import org.biojava.nbio.structure.symmetry.geometry.SuperPosition;
 
 import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
+import javax.vecmath.Quat4d;
 import javax.vecmath.Vector3d;
 
 import java.util.ArrayList;
@@ -42,7 +44,7 @@ import java.util.Set;
  * @author Peter
  */
 public class RotationSolver implements QuatSymmetrySolver {
-	private Subunits subunits = null;
+	private QuatSymmetrySubunits subunits = null;
 	private QuatSymmetryParameters parameters = null;
 
 	private double distanceThreshold = 0.0f;
@@ -55,7 +57,7 @@ public class RotationSolver implements QuatSymmetrySolver {
 
 	private RotationGroup rotations = new RotationGroup();
 
-	public RotationSolver(Subunits subunits, QuatSymmetryParameters parameters) {
+	public RotationSolver(QuatSymmetrySubunits subunits, QuatSymmetryParameters parameters) {
 		if (subunits.getSubunitCount()== 2) {
 			throw new IllegalArgumentException("RotationSolver cannot be applied to subunits with 2 centers");
 		}
@@ -166,10 +168,31 @@ public class RotationSolver implements QuatSymmetrySolver {
 
 		int fold = PermutationGroup.getOrder(permutation);
 
-		// get optimal transformation and axisangle by superimposing subunits
+		// get optimal transformation and axisangle by subunit superposition
+		// TODO implement this piece of code using at origin superposition
+		Quat4d quat = UnitQuaternions.relativeOrientation(
+				originalCoords, transformedCoords);
 		AxisAngle4d axisAngle = new AxisAngle4d();
-		Matrix4d transformation = SuperPosition.superposeAtOrigin(transformedCoords, originalCoords, axisAngle);
-		double subunitRmsd 		= SuperPosition.rmsd(transformedCoords, originalCoords);
+		Matrix4d transformation = new Matrix4d();
+		
+		transformation.set(quat);
+		axisAngle.set(quat);
+		
+		Vector3d axis = new Vector3d(axisAngle.x, axisAngle.y, axisAngle.z);
+		if (axis.lengthSquared() < 1.0E-6) {
+			axisAngle.x = 0;
+			axisAngle.y = 0;
+			axisAngle.z = 1;
+			axisAngle.angle = 0;
+		} else {
+			axis.normalize();
+			axisAngle.x = axis.x;
+			axisAngle.y = axis.y;
+			axisAngle.z = axis.z;
+		}
+		
+		CalcPoint.transform(transformation, transformedCoords);
+		double subunitRmsd = CalcPoint.rmsd(transformedCoords, originalCoords);
 
 		if (subunitRmsd < parameters.getRmsdThreshold()) {
 			combineWithTranslation(transformation);
@@ -241,7 +264,7 @@ public class RotationSolver implements QuatSymmetrySolver {
 	}
 
 	private boolean isAllowedPermutation(List<Integer> permutation) {
-		List<Integer> seqClusterId = subunits.getSequenceClusterIds();
+		List<Integer> seqClusterId = subunits.getClusterIds();
 		for (int i = 0; i < permutation.size(); i++) {
 			int j = permutation.get(i);
 			if (seqClusterId.get(i) != seqClusterId.get(j)) {
@@ -252,7 +275,6 @@ public class RotationSolver implements QuatSymmetrySolver {
 	}
 	/**
 	 * Adds translational component to rotation matrix
-	 * @param rotTrans
 	 * @param rotation
 	 * @return
 	 */

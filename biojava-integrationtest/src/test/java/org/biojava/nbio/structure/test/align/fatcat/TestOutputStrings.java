@@ -208,7 +208,7 @@ public class TestOutputStrings extends TestCase
 
 		String originalOutput ="Align 1buzA.pdb 116 with 1aliA.pdb 446" +newline +
 		"Twists 1 ini-len 64 ini-rmsd 3.12 opt-equ 88 opt-rmsd 3.34 chain-rmsd 5.32 Score 103.72 align-len 199 gaps 111 (55.78%)" +newline +
-		"P-value 3.26e-01 Afp-num 15578 Identity 3.52% Similarity 14.57%" +newline +
+		"P-value 3.26e-01 Afp-num 15578 Identity 6.25% Similarity 25.89%" +newline +
 		"Block  0 afp  1 score 23.14 rmsd  0.76 gap 0 (0.00%)" +newline +
 		"Block  1 afp  7 score 100.08 rmsd  3.32 gap 17 (0.23%)" +newline +
 		"" +newline +
@@ -327,7 +327,7 @@ public class TestOutputStrings extends TestCase
 
 		String originalOutput="Align 1a64A.pdb 94 with 1hngB.pdb 175" +newline +
 		"Twists 1 ini-len 88 ini-rmsd 1.84 opt-equ 94 opt-rmsd 0.64 chain-rmsd 20.77 Score 235.94 align-len 96 gaps 2 (2.08%)" +newline +
-		"P-value 4.23e-13 Afp-num 6497 Identity 96.88% Similarity 97.92%" +newline +
+		"P-value 4.23e-13 Afp-num 6497 Identity 98.94% Similarity 100.00%" +newline +
 		"Block  0 afp  5 score 118.80 rmsd  0.75 gap 0 (0.00%)" +newline +
 		"Block  1 afp  6 score 143.14 rmsd  0.46 gap 0 (0.00%)" +newline +
 		"" +newline +
@@ -508,7 +508,7 @@ public class TestOutputStrings extends TestCase
 
 		String originalOutput="Align 1a21A.pdb 194 with 1hwgC.pdb 191" +newline +
 		"Twists 1 ini-len 120 ini-rmsd 3.04 opt-equ 150 opt-rmsd 2.96 chain-rmsd 4.21 Score 233.34 align-len 210 gaps 60 (28.57%)" +newline +
-		"P-value 1.15e-05 Afp-num 12696 Identity 9.52% Similarity 19.05%" +newline +
+		"P-value 1.15e-05 Afp-num 12696 Identity 11.98% Similarity 23.95%" +newline +
 		"Block  0 afp  4 score 66.42 rmsd  2.03 gap 6 (0.16%)" +newline +
 		"Block  1 afp 11 score 184.29 rmsd  3.24 gap 69 (0.44%)" +newline +
 		"" +newline +

@@ -61,7 +61,7 @@ public class DemoQuatSymmetryJmol {
 	public static void main(String[] args) throws IOException,
 			StructureException {
 
-		String name = "4hhb";
+		String name = "2vml";
 
 		// Download the biological assembly
 		AtomCache cache = new AtomCache();
@@ -72,7 +72,6 @@ public class DemoQuatSymmetryJmol {
 		SubunitClustererParameters cp = new SubunitClustererParameters();
 		cp.setClustererMethod(SubunitClustererMethod.SEQUENCE); // normal
 		// cp.setClustererMethod(SubunitClustererMethod.STRUCTURE); // pseudo
-		// cp.setClustererMethod(SubunitClustererMethod.INTERNAL_SYMMETRY);
 		cp.setCoverageThreshold(0.9);
 
 		// Calculate and display the global symmetry
@@ -92,10 +91,10 @@ public class DemoQuatSymmetryJmol {
 	private static void showResults(Structure s, String name,
 			QuatSymmetryResults results) {
 
-		String title = name + ": " + results.getSubunits().getStoichiometry()
+		String title = name + ": " + results.getStoichiometry()
 				+ ", " + results.getSymmetry();
 
-		if (results.getSubunits().isPseudoSymmetric())
+		if (results.isPseudosymmetric())
 			title += ", pseudosymmetric";
 
 		if (results.isLocal())

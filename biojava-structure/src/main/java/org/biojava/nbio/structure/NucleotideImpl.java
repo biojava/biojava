@@ -93,29 +93,5 @@ public class NucleotideImpl extends HetatomImpl implements Group, Serializable, 
 
 	}
 
-	@Override
-	public Object clone(){
-		NucleotideImpl n = new NucleotideImpl();
-
-		n.setPDBFlag(has3D());
-		n.setResidueNumber(getResidueNumber());
-
-		n.setPDBName(getPDBName());
-
-		// copy the atoms
-		for (Atom atom1 : atoms) {
-			Atom atom = (Atom) atom1.clone();
-			n.addAtom(atom);
-			atom.setGroup(n);
-		}
-
-		// copying the alt loc groups if present, otherwise they stay null
-		if (getAltLocs()!=null && !getAltLocs().isEmpty()) {
-			for (Group altLocGroup:this.getAltLocs()) {
-				Group nAltLocGroup = (Group)altLocGroup.clone();
-				n.addAltLoc(nAltLocGroup);
-			}
-		}
-		return n;
-	}
+	// no need to implement clone here, it's already in super class
 }

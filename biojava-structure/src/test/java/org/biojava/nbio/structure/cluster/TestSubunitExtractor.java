@@ -28,7 +28,6 @@ import java.util.List;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
-import org.biojava.nbio.structure.align.util.AtomCache;
 import org.junit.Test;
 
 /**
@@ -50,17 +49,13 @@ public class TestSubunitExtractor {
 	public void testCollagen() throws StructureException, IOException {
 
 		Structure s = StructureIO.getStructure("1A3I");
-		SubunitClustererParameters params = new SubunitClustererParameters();
 
-		List<Subunit> subunits = SubunitExtractor.extractSubunits(s, params);
+		List<Subunit> subunits = SubunitExtractor.extractSubunits(s, 5, 0.75, 20);
 
 		// We expect all 3 subunits to be returned
 		assertEquals(subunits.size(), 3);
 
-		params.setMinimumSequenceLength(9);
-		params.setAbsoluteMinimumSequenceLength(8);
-
-		subunits = SubunitExtractor.extractSubunits(s, params);
+		subunits = SubunitExtractor.extractSubunits(s, 8, 0.75, 9);
 
 		// Now we expect only the long Subunit to be returned
 		assertEquals(subunits.size(), 1);
@@ -74,9 +69,8 @@ public class TestSubunitExtractor {
 	public void testHistone() throws StructureException, IOException {
 
 		Structure s = StructureIO.getStructure("5B2I");
-		SubunitClustererParameters params = new SubunitClustererParameters();
 
-		List<Subunit> subunits = SubunitExtractor.extractSubunits(s, params);
+		List<Subunit> subunits = SubunitExtractor.extractSubunits(s, 5, 0.75, 20);
 
 		// We expect all 8 histone subunits to be returned
 		assertEquals(subunits.size(), 8);
@@ -91,13 +85,9 @@ public class TestSubunitExtractor {
 	@Test
 	public void testBioAssembly() throws StructureException, IOException {
 
-		AtomCache cache = new AtomCache(); // TODO change to StructureIO
-		cache.setUseMmCif(true);
-		Structure s = cache.getStructure("BIO:4E3E:1");
+		Structure s = StructureIO.getStructure("BIO:4E3E:1");
 
-		SubunitClustererParameters params = new SubunitClustererParameters();
-
-		List<Subunit> subunits = SubunitExtractor.extractSubunits(s, params);
+		List<Subunit> subunits = SubunitExtractor.extractSubunits(s, 5, 0.75, 20);
 
 		// We expect all 3 equal double hot-dog subunits to be returned
 		assertEquals(subunits.size(), 3);

@@ -20,6 +20,7 @@
  */
 package org.biojava.nbio.structure.align.gui.jmol;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -40,6 +41,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuBar;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import org.biojava.nbio.structure.Atom;
@@ -56,6 +58,7 @@ import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentTools;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentWriter;
 import org.biojava.nbio.structure.align.webstart.AligUIManager;
+import org.biojava.nbio.structure.gui.WrapLayout;
 import org.biojava.nbio.structure.jama.Matrix;
 import org.forester.archaeopteryx.Archaeopteryx;
 import org.forester.phylogeny.Phylogeny;
@@ -137,14 +140,13 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 		});
 
 		Container contentPane = frame.getContentPane();
-		Box vBox = Box.createVerticalBox();
 
 		jmolPanel.addMouseMotionListener(this);
 		jmolPanel.addMouseListener(this);
-		jmolPanel
-				.setPreferredSize(new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT));
+		jmolPanel.setPreferredSize(new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT));
+		contentPane.add(jmolPanel,BorderLayout.CENTER);
 
-		vBox.add(jmolPanel);
+		Box vBox = Box.createVerticalBox();
 
 		// / USER SCRIPTING COMMAND
 		JTextField field = new JTextField();
@@ -162,8 +164,10 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 		// / STRUCTURE SELECTION
 		if (multAln != null) {
 
-			Box hBox00 = Box.createHorizontalBox();
-			hBox00.setMaximumSize(new Dimension(Short.MAX_VALUE, 30));
+			JPanel modelSelection = new JPanel();
+			modelSelection.setLayout(new WrapLayout(WrapLayout.LEFT));
+			modelSelection.setSize(new Dimension(DEFAULT_WIDTH,30));
+			vBox.add(modelSelection);
 			
 			JButton show = new JButton("Show Only: ");
 			show.addActionListener(new ActionListener() {
@@ -184,27 +188,16 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 					jmolPanel.executeCmd(cmd + " restore selection;");
 				}
 			});
-			hBox00.add(show);
-			hBox00.add(Box.createGlue());
-			vBox.add(hBox00);
+			modelSelection.add(show);
 		
-			// A line of structures of maximum 5
-			for (int line = 0; line < 1 + (multAln.size() / 5); line++) {
-				Box hBox0 = Box.createHorizontalBox();
-				hBox0.setMaximumSize(new Dimension(Short.MAX_VALUE, 30));
-
-				for (int str = line * 5; str < Math.min((line + 1) * 5,
-						multAln.size()); str++) {
-					JCheckBox structureSelection = new JCheckBox(multAln
-							.getEnsemble().getStructureIdentifiers().get(str)
-							.getIdentifier());
-					hBox0.add(structureSelection);
-					hBox0.add(Box.createGlue());
-					structureSelection.setSelected(true);
-					selectedStructures.add(structureSelection);
-				}
-
-				vBox.add(hBox0);
+			// Check boxes for all models
+			for(int str = 0; str < multAln.size();str++) {
+				JCheckBox structureSelection = new JCheckBox(multAln
+						.getEnsemble().getStructureIdentifiers().get(str)
+						.getIdentifier());
+				modelSelection.add(structureSelection);
+				structureSelection.setSelected(true);
+				selectedStructures.add(structureSelection);
 			}
 		}
 
@@ -214,21 +207,20 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 
 		String[] styles = new String[] { "Cartoon", "Backbone", "CPK",
 				"Ball and Stick", "Ligands", "Ligands and Pocket" };
-		JComboBox style = new JComboBox(styles);
+		JComboBox<String> style = new JComboBox<>(styles);
 
 		hBox1.setMaximumSize(new Dimension(Short.MAX_VALUE, 30));
 
 		hBox1.add(new JLabel("Style"));
 		hBox1.add(style);
 		vBox.add(hBox1);
-		contentPane.add(vBox);
 
 		style.addActionListener(jmolPanel);
 
 		String[] colorModes = new String[] { "Secondary Structure", "By Chain",
 				"Rainbow", "By Element", "By Amino Acid", "Hydrophobicity",
 				"Suggest Domains", "Show SCOP Domains" };
-		JComboBox jcolors = new JComboBox(colorModes);
+		JComboBox<String> jcolors = new JComboBox<>(colorModes);
 		jcolors.addActionListener(jmolPanel);
 
 		hBox1.add(Box.createGlue());
@@ -236,13 +228,14 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 		hBox1.add(jcolors);
 
 		String[] cPalette = { "Spectral", "Set1", "Set2", "Pastel" };
-		JComboBox palette = new JComboBox(cPalette);
+		JComboBox<String> palette = new JComboBox<>(cPalette);
 
 		palette.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				JComboBox source = (JComboBox) e.getSource();
+				@SuppressWarnings("unchecked")
+				JComboBox<String> source = (JComboBox<String>) e.getSource();
 				String value = source.getSelectedItem().toString();
 				evalString("save selection; select *; color grey; "
 						+ "select ligand; color CPK;");
@@ -268,6 +261,7 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 
 		// / CHECK BOXES
 		Box hBox2 = Box.createHorizontalBox();
+		hBox2.setMaximumSize(new Dimension(Short.MAX_VALUE, 30));
 
 		JButton resetDisplay = new JButton("Reset Display");
 		resetDisplay.addActionListener(new ActionListener() {
@@ -337,7 +331,7 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 
 		vBox.add(hBox);
 
-		contentPane.add(vBox);
+		contentPane.add(vBox,BorderLayout.SOUTH);
 		MyJmolStatusListener li = (MyJmolStatusListener) jmolPanel
 				.getStatusListener();
 

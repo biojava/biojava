@@ -60,7 +60,7 @@ public class TestStructureCrossReferences {
 
 		Structure structure = StructureIO.getStructure(PDBCODE1);
 
-		System.out.println("Testing references in mmCIF loading with NO alignSeqRes");
+		//System.out.println("Testing references in mmCIF loading with NO alignSeqRes");
 		doFullTest(structure, emptySeqRes);
 
 		structure = StructureIO.getStructure(PDBCODE2); // an NMR entry with 2 chains
@@ -83,7 +83,7 @@ public class TestStructureCrossReferences {
 
 		Structure structure = StructureIO.getStructure(PDBCODE1);
 
-		System.out.println("Testing references in mmCIF loading with alignSeqRes");
+		//System.out.println("Testing references in mmCIF loading with alignSeqRes");
 		doFullTest(structure, emptySeqRes);
 
 		structure = StructureIO.getStructure(PDBCODE2); // an NMR entry with 2 chains
@@ -127,7 +127,7 @@ public class TestStructureCrossReferences {
 
 		StructureIO.setAtomCache(cache);
 
-		System.out.println("Testing references in PDB loading with alignSeqRes");
+		//System.out.println("Testing references in PDB loading with alignSeqRes");
 		Structure structure = StructureIO.getStructure(PDBCODE1);
 
 		doFullTest(structure, emptySeqRes);
@@ -145,7 +145,7 @@ public class TestStructureCrossReferences {
 
 	private void doFullTest(Structure structure, boolean emptySeqRes) throws StructureException {
 
-		System.out.println("Testing references in original structure");
+		//System.out.println("Testing references in original structure");
 
 		testStructureRefs(structure, emptySeqRes);
 		logger.debug("Original structure mem hashCode: {}",System.identityHashCode(structure));
@@ -156,26 +156,26 @@ public class TestStructureCrossReferences {
 
 		assertNotSame(structure, structureCopy);
 
-		System.out.println("Testing references in cloned structure");
+		//System.out.println("Testing references in cloned structure");
 
 		testStructureRefs(structureCopy, emptySeqRes);
 
 		logger.debug("Original structure mem hashCode after cloning: {}",System.identityHashCode(structure));
 
 
-		System.out.println("Testing references in original structure after having cloned it");
+		//System.out.println("Testing references in original structure after having cloned it");
 		// we test again the original after cloning it, perhaps some references were mixed while cloning
 		// there is a bug in ChainImpl.clone() that mixes them up!
 		testStructureRefs(structure, emptySeqRes);
 
 
-		System.out.println("Testing references of chain clones");
+		//System.out.println("Testing references of chain clones");
 		for (Chain c:structure.getChains()) {
 			Chain clonedChain = (Chain) c.clone();
 			testChainRefs(clonedChain, emptySeqRes);
 		}
 
-		System.out.println("Testing references in atom arrays");
+		//System.out.println("Testing references in atom arrays");
 		for (Chain c:structure.getChains()) {
 			Atom[] atomArray = StructureTools.getAllAtomArray(c);
 			testAtomArrayRefs(atomArray, c);
@@ -190,7 +190,7 @@ public class TestStructureCrossReferences {
 			testInterfaceRefs(structure, interf);
 		}
 
-		System.out.println("Testing references in original structure after getUniqueInterfaces");
+		//System.out.println("Testing references in original structure after getUniqueInterfaces");
 		testStructureRefs(structure, emptySeqRes);
 	}
 

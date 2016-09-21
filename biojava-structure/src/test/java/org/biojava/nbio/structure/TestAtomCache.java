@@ -212,4 +212,66 @@ public class TestAtomCache {
 
 	}
 
+
+	@Test
+	public void testSettingFileParsingType(){
+
+		AtomCache cache = new AtomCache();
+
+		//test defaults
+
+		// by default we either use mmtf or mmcif, but not both.
+		assertNotEquals(cache.isUseMmtf(), cache.isUseMmCif());
+
+		// first is mmtf, second is mmcif
+		testFlags(cache,true,false);
+
+		// now change the values
+
+		cache.setUseMmCif(true);
+
+		testFlags(cache,false,true);
+
+		cache.setUseMmtf(true);
+
+		testFlags(cache,true,false);
+
+		// this sets to use PDB!
+		cache.setUseMmCif(false);
+
+		testFlags(cache,false,false);
+
+		// back to defaults
+		cache.setUseMmtf(true);
+
+		testFlags(cache,true,false);
+
+
+		// back to parsing PDB
+		cache.setUseMmtf(false);
+
+		testFlags(cache,false,false);
+
+
+
+	}
+
+
+	/** test the flags for parsing in the atom cache
+	 *
+	 * @param cache
+	 * @param useMmTf
+	 * @param useMmCif
+     */
+	private void testFlags(AtomCache cache ,boolean useMmTf, boolean useMmCif) {
+
+		assertEquals("flag for parsing mmtf is set to " + cache.isUseMmtf() + " but should be " + useMmTf,
+				cache.isUseMmtf(), useMmTf);
+		assertEquals("flag for parsing mmcif is set to " + cache.isUseMmCif() + " but should be set to " + useMmCif,
+				cache.isUseMmCif(), useMmCif);
+
+
+
+	}
+
 }

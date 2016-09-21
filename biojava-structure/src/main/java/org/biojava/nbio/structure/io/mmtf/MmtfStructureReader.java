@@ -29,6 +29,7 @@ import org.biojava.nbio.structure.PDBHeader;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureImpl;
 import org.biojava.nbio.structure.StructureTools;
+import org.biojava.nbio.structure.io.mmcif.chem.PolymerType;
 import org.biojava.nbio.structure.io.mmcif.chem.ResidueType;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.biojava.nbio.structure.quaternary.BioAssemblyInfo;
@@ -185,7 +186,8 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 			char insertionCode, String chemCompType, int atomCount, int bondCount,
 			char singleLetterCode, int sequenceIndexId, int secStructType) {
 		// Get the polymer type
-		int polymerType = getGroupTypIndicator(chemCompType);
+		ResidueType residueType = ResidueType.getResidueTypeFromString(chemCompType);
+		int polymerType = getGroupTypIndicator(residueType.polymerType);
 		switch (polymerType) {
 		case 1:
 			AminoAcid aa = new AminoAcidImpl();
@@ -204,7 +206,6 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 		ChemComp chemComp = new ChemComp();
 		chemComp.setOne_letter_code(String.valueOf(singleLetterCode));
 		chemComp.setType(chemCompType.toUpperCase());
-		ResidueType residueType = ResidueType.getResidueTypeFromString(chemCompType);
 		chemComp.setResidueType(residueType);
 		chemComp.setPolymerType(residueType.polymerType);
 		group.setChemComp(chemComp);
@@ -282,9 +283,13 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 
 		// IF the main group doesn't have this atom
 		if (!group.hasAtom(atom.getName())) {
+			
 			// If it's not a microheterogenity case
 			if (group.getPDBName().equals(atom.getGroup().getPDBName())) {
-				group.addAtom(atom);
+				// And it's not a deuterated case.  'nanoheterogenity'
+				if(!StructureTools.hasNonDeuteratedEquiv(atom,group)){
+					group.addAtom(atom);
+				}
 			}
 		}
 		atomsInGroup.add(atom);
@@ -396,24 +401,14 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 	 * @param currentGroup
 	 * @return The type of group. (0,1 or 2) depending on whether it is an amino aicd (1), nucleic acid (2) or ligand (0)
 	 */
-	private int getGroupTypIndicator(String currentGroupType) {
-		// At the moment - peptide like is a HETATM group (consistent with biojava)
-		if("PEPTIDE-LIKE".equalsIgnoreCase(currentGroupType)){
-			return 0;
-		}
-		// Again to correspond with Biojava - but I suspect we really want this to be 1
-		if("D-PEPTIDE LINKING".equalsIgnoreCase(currentGroupType)){
-			return 0;
-		}
-		if(currentGroupType.toUpperCase().contains("PEPTIDE")){
+	private int getGroupTypIndicator(PolymerType polymerType) {
+		if(PolymerType.PROTEIN_ONLY.contains(polymerType)){
 			return 1;
 		}
-		if(currentGroupType.toUpperCase().contains("DNA") || currentGroupType.toUpperCase().contains("RNA")){
+		if(PolymerType.POLYNUCLEOTIDE_ONLY.contains(polymerType)){
 			return 2;
 		}
-		else{
-			return 0;
-		}
+		return 0;
 	}
 
 

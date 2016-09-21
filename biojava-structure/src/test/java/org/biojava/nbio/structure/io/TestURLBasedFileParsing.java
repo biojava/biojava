@@ -39,10 +39,7 @@ public class TestURLBasedFileParsing {
 
 		String u = "http://ftp.wwpdb.org/pub/pdb/data/biounit/mmCIF/divided/nw/4nwr-assembly1.cif.gz";
 
-
 		Structure s = StructureIO.getStructure(u);
-
-		System.out.println(s);
 
 		assertNotNull(s);
 
