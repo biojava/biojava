@@ -156,7 +156,7 @@ public class StructureTools {
 	/**
 	 * Threshold for plausible binding of a ligand to the selected substructure
 	 */
-	public static final double DEFAULT_LIGAND_PROXIMITY_CUTOFF = 7;
+	public static final double DEFAULT_LIGAND_PROXIMITY_CUTOFF = 5;
 
 	// there is a file format change in PDB 3.0 and nucleotides are being
 	// renamed
