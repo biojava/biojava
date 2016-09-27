@@ -690,6 +690,9 @@ public class StructureImpl implements Structure, Serializable {
 	@Override
 	public Chain getChainByPDB(String chainId)
 			throws StructureException{
+		if(nrModels() < 1 ) {
+			throw new StructureException("No chains are present.");
+		}
 		return getChainByPDB(chainId,0);
 	}
 

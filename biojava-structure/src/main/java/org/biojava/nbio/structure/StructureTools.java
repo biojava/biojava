@@ -504,6 +504,77 @@ public class StructureTools {
 		}
 		return ligands;
 	}
+	
+	/**
+	 * Expand a set of atoms into all groups from the same structure.
+	 * 
+	 * If the structure is set, only the first atom is used (assuming all
+	 * atoms come from the same original structure).
+	 * If the atoms aren't linked to a structure (for instance, for cloned atoms),
+	 * searches all chains of all atoms for groups.
+	 * @param atoms Sample of atoms
+	 * @return All groups from all chains accessible from the input atoms
+	 */
+	public static Set<Group> getAllGroupsFromSubset(Atom[] atoms) {
+		return getAllGroupsFromSubset(atoms,null);
+	}
+	/**
+	 * Expand a set of atoms into all groups from the same structure.
+	 * 
+	 * If the structure is set, only the first atom is used (assuming all
+	 * atoms come from the same original structure).
+	 * If the atoms aren't linked to a structure (for instance, for cloned atoms),
+	 * searches all chains of all atoms for groups.
+	 * @param atoms Sample of atoms
+	 * @param types Type of groups to return (useful for getting only ligands, for instance).
+	 *  Null gets all groups.
+	 * @return All groups from all chains accessible from the input atoms
+	 */
+	public static Set<Group> getAllGroupsFromSubset(Atom[] atoms,GroupType types) {
+		// Get the full structure
+		Structure s = null;
+		if (atoms.length > 0) {
+			Group g = atoms[0].getGroup();
+			if (g != null) {
+				Chain c = g.getChain();
+				if (c != null) {
+					s = c.getStructure();
+				}
+			}
+		}
+		// Collect all groups from the structure
+		Set<Chain> allChains = new HashSet<>();
+		if( s != null ) {
+			allChains.addAll(s.getChains());
+		}
+		// In case the structure wasn't set, need to use ca chains too
+		for(Atom a : atoms) {
+			Group g = a.getGroup();
+			if(g != null) {
+				Chain c = g.getChain();
+				if( c != null ) {
+					allChains.add(c);
+				}
+			}
+		}
+
+		if(allChains.isEmpty() ) {
+			return Collections.emptySet();
+		}
+		
+		// Extract all ligand groups
+		Set<Group> full = new HashSet<>();
+		for(Chain c : allChains) {
+			if(types == null) {
+				full.addAll(c.getAtomGroups());
+			} else {
+				full.addAll(c.getAtomGroups(types));
+			}
+		}
+
+		return full;
+	}
+
 
 	/**
 	 * Returns and array of all non-Hydrogen atoms in the given Structure,
