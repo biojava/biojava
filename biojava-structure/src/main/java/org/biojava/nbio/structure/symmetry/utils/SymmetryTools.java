@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Matrix4d;
@@ -34,6 +35,7 @@ import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.ChainImpl;
 import org.biojava.nbio.structure.Group;
+import org.biojava.nbio.structure.GroupType;
 import org.biojava.nbio.structure.SVDSuperimposer;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
@@ -510,7 +512,8 @@ public class SymmetryTools {
 					+ "is not refined, repeats cannot be defined");
 
 		int order = symmetry.getMultipleAlignment().size();
-		Atom[] atoms = StructureTools.cloneAtomArray(symmetry.getAtoms());
+		Atom[] atoms = symmetry.getAtoms();
+		Set<Group> allGroups = StructureTools.getAllGroupsFromSubset(atoms, GroupType.HETATM);
 		List<StructureIdentifier> repeatsId = symmetry.getRepeatsID();
 		List<Structure> repeats = new ArrayList<Structure>(order);
 
@@ -523,22 +526,83 @@ public class SymmetryTools {
 			Block align = symmetry.getMultipleAlignment().getBlock(0);
 
 			// Get the start and end of the repeat
+			// Repeats are always sequential blocks
 			int res1 = align.getStartResidue(i);
 			int res2 = align.getFinalResidue(i);
-
-			Atom[] repeat = Arrays.copyOfRange(atoms, res1, res2 + 1);
-
-			Chain newCh = new ChainImpl();
-			newCh.setChainID(repeat[0].getGroup().getChainId());
-
-			for (int k = 0; k < repeat.length; k++) {
-				Group g = (Group) repeat[k].getGroup().clone();
-				newCh.addGroup(g);
+			
+			// All atoms from the repeat, used for ligand search
+			// AA have an average of 8.45 atoms, so guess capacity with that
+			List<Atom> repeat = new ArrayList<>(Math.max(9*(res2-res1+1),9));
+			// speedy chain lookup
+			Chain prevChain = null;
+			for(int k=res1;k<=res2; k++) {
+				Group g = atoms[k].getGroup();
+				prevChain = addGroupToStructure(s, g, prevChain,true);
+				repeat.addAll(g.getAtoms());
 			}
-			s.addChain(newCh);
+
+			
+			List<Group> ligands = StructureTools.getLigandsByProximity(
+					allGroups,
+					repeat.toArray(new Atom[repeat.size()]),
+					StructureTools.DEFAULT_LIGAND_PROXIMITY_CUTOFF);
+			
+			logger.warn("Adding {} ligands to {}",ligands.size(), symmetry.getMultipleAlignment().getStructureIdentifier(i));
+			for( Group ligand : ligands) {
+				prevChain = addGroupToStructure(s, ligand, prevChain,true);
+			}
+
 			repeats.add(s);
 		}
 		return repeats;
+	}
+
+	/**
+	 * Adds a particular group to a structure. A new chain will be created if necessary.
+	 * 
+	 * <p>When adding multiple groups, pass the return value of one call as the
+	 * chainGuess parameter of the next call for efficiency.
+	 * <pre>
+	 * Chain guess = null;
+	 * for(Group g : groups) {
+	 *     guess = addGroupToStructure(s, g, guess );
+	 * }
+	 * </pre>
+	 * @param s structure to receive the group
+	 * @param g group to add
+	 * @param chainGuess (optional) If not null, should be a chain from s. Used
+	 *  to improve performance when adding many groups from the same chain
+	 * @param clone Indicates whether the input group should be cloned before
+	 *  being added to the new chain
+	 * @return the chain g was added to
+	 */
+	public static Chain addGroupToStructure(Structure s, Group g, Chain chainGuess, boolean clone ) {
+		// Find or create the chain
+		String chainId = g.getChainId();
+		assert !chainId.isEmpty();
+		Chain chain;
+		if(chainGuess != null && chainGuess.getChainID() == chainId) {
+			// previously guessed chain
+			chain = chainGuess;
+		} else {
+			// Try to guess
+			try {
+				chain = s.getChainByPDB(chainId);
+			} catch (StructureException e) {
+				// no chain found
+				chain = new ChainImpl();
+				chain.setChainID(chainId);
+				s.addChain(chain);
+			}
+		}
+		
+		// Add cloned group
+		if(clone) {
+			g = (Group)g.clone();
+		}
+		chain.addGroup(g);
+		
+		return chain;
 	}
 
 	/**

@@ -306,13 +306,17 @@ public class StructureImpl implements Structure, Serializable {
 
 	/**
 	 * {@inheritDoc}
+	 * @deprecated
 	 */
+	@Deprecated
 	@Override
 	public void      setConnections(List<Map<String,Integer>> conns) { connections = conns ; }
 
 	/**
 	 * {@inheritDoc}
+	 * @deprecated
 	 */
+	@Deprecated
 	@Override
 	public List<Map<String,Integer>> getConnections()                { return connections ;}
 
@@ -630,6 +634,9 @@ public class StructureImpl implements Structure, Serializable {
 	@Override
 	public Chain getChainByPDB(String chainId)
 			throws StructureException{
+		if(nrModels() < 1 ) {
+			throw new StructureException("No chains are present.");
+		}
 		return getChainByPDB(chainId,0);
 	}
 
