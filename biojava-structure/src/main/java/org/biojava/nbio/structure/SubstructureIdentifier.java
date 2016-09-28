@@ -287,9 +287,10 @@ public class SubstructureIdentifier implements Serializable, StructureIdentifier
 
 					prevChainId = c.getId();
 				} // end range
+
+				// Transfer any close ligands
+				copyLigandsByProximity(s,newS, StructureTools.DEFAULT_LIGAND_PROXIMITY_CUTOFF, modelNr, modelNr);
 			}
-			
-			copyLigandsByProximity(s,newS, StructureTools.DEFAULT_LIGAND_PROXIMITY_CUTOFF, modelNr, modelNr);
 		} // end modelNr
 
 		return newS;
@@ -317,7 +318,7 @@ public class SubstructureIdentifier implements Serializable, StructureIdentifier
 	 * a distance cutoff. Ligand groups are moved (destructively) from full to reduced
 	 * if they fall within the cutoff of any atom in the reduced structure.
 	 * The {@link StructureTools#DEFAULT_LIGAND_PROXIMITY_CUTOFF default cutoff}
-	 * (currently 7Å) is used.
+	 * is used.
 	 * @param full Structure containing all ligands
 	 * @param reduced Structure with a subset of the polymer groups from full
 	 * @see StructureTools#getLigandsByProximity(java.util.Collection, Atom[], double)
@@ -344,6 +345,8 @@ public class SubstructureIdentifier implements Serializable, StructureIdentifier
 		// Geometric hashing of the reduced structure
 		Grid grid = new Grid(cutoff);
 		Atom[] nonwaters = StructureTools.getAllNonHAtomArray(reduced,true,toModel);
+		if( nonwaters.length < 1 )
+			return;
 		grid.addAtoms(nonwaters);
 
 		
