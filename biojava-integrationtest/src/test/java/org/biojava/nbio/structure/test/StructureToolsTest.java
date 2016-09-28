@@ -104,18 +104,21 @@ public class StructureToolsTest extends TestCase {
 		Structure hivA = cache.getStructure("1hiv.A");
 		Atom[] caSa = StructureTools.getRepresentativeAtomArray(hivA);
 		Atom[] caCa = StructureTools.getRepresentativeAtomArray(hivA.getChain(0));
+		//TODO Residue 67 is PTM. In BioJava 4 this is treated as a ligand, so it
+		//     gets added to caSa. In BioJava 5 this should be fixed, so they
+		//     should match again.
 		assertEquals("did not find the same number of Atoms from structure and from chain..",
-				caSa.length,caCa.length);
+				caSa.length-1,caCa.length);
 		Structure hivB = cache.getStructure("1hiv.B");
 		Atom[] caSb = StructureTools.getRepresentativeAtomArray(hivB);
 		Atom[] caCb = StructureTools.getRepresentativeAtomArray(hivB.getChain(0));
 		assertEquals("did not find the same number of Atoms from structure and from chain..",
-				caSb.length,caCb.length);
+				caSb.length-1,caCb.length);
 		//Both chains have to be the same size (A and B)
-		assertEquals(caSa.length,99);
+		assertEquals(99,caSa.length-1);
 		assertEquals("did not find the same number of Atoms in both chains...",
-				caSa.length,caCb.length);
-		assertEquals(caSa.length, 99);
+				caSa.length-1,caCb.length);
+		assertEquals(99,caSa.length-1);
 
 		ChemCompGroupFactory.setChemCompProvider(provider);
 	}
@@ -389,7 +392,9 @@ public class StructureToolsTest extends TestCase {
 		// range including insertion
 		range = "H:35-37"; //includes 36A
 		substr = StructureTools.getSubRanges(structure3, range);
-		assertEquals("Wrong number of chains in "+range, 1, substr.size());
+		// Because we are loading from PDB, TYS I:363 is recognized as a ligand
+		// rather than a PTM, so it gets included here
+		assertEquals("Wrong number of chains in "+range, 2, substr.size());
 
 		chain = substr.getChain(0);
 
@@ -399,7 +404,7 @@ public class StructureToolsTest extends TestCase {
 		// end with insertion
 		range = "H:35-36A";
 		substr = StructureTools.getSubRanges(structure3, range);
-		assertEquals("Wrong number of chains in "+range, 1, substr.size());
+		assertEquals("Wrong number of chains in "+range, 2, substr.size());
 
 		chain = substr.getChain(0);
 
@@ -415,7 +420,7 @@ public class StructureToolsTest extends TestCase {
 		assertEquals("Did not find the expected number of residues in "+range, 3, chain.getAtomLength() );
 
 		// within insertion
-		range = "L:14-14K"; //includes 36A
+		range = "L:14-14K";
 		substr = StructureTools.getSubRanges(structure3, range);
 		assertEquals("Wrong number of chains in "+range, 1, substr.size());
 
@@ -424,7 +429,7 @@ public class StructureToolsTest extends TestCase {
 		assertEquals("Did not find the expected number of residues in "+range, 12, chain.getAtomLength() );
 
 		// within insertion
-		range = "L:14C-14J"; //includes 36A
+		range = "L:14C-14J";
 		substr = StructureTools.getSubRanges(structure3, range);
 		assertEquals("Wrong number of chains in "+range, 1, substr.size());
 

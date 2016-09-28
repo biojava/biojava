@@ -75,15 +75,15 @@ public class TestAtomCache {
 		String name1= "4hhb";
 		Structure s = cache.getStructure(name1);
 		assertNotNull(s);
-		assertTrue(s.getChains().size() == 4);
+		assertEquals(4,s.getChains().size());
 
 		String name2 = "4hhb.C";
 		String chainId2 = "C";
 		s = cache.getStructure(name2);
 
-		assertTrue(s.getChains().size() == 1);
+		assertEquals(1,s.getChains().size());
 		Chain c = s.getChainByPDB(chainId2);
-		assertEquals(c.getChainID(),chainId2);
+		assertEquals(chainId2,c.getChainID());
 
 
 		// Colon separators removed in BioJava 4.1.0
@@ -91,7 +91,6 @@ public class TestAtomCache {
 		try {
 			s = cache.getStructure(name2b);
 			fail("Invalid structure format");
-		} catch(IOException e) {
 		} catch(StructureException e) {
 		}
 
@@ -101,28 +100,28 @@ public class TestAtomCache {
 		String chainId3 = "B";
 		s = cache.getStructure(name3);
 		assertNotNull(s);
-		assertTrue(s.getChains().size() == 1);
+		assertEquals(1,s.getChains().size());
 
 		c = s.getChainByPDB(chainId3);
-		assertEquals(c.getChainID(),chainId3);
+		assertEquals(chainId3,c.getChainID());
 
 
 		String name4 = "4hhb.A:10-20,B:10-20,C:10-20";
 		s = cache.getStructure(name4);
 		assertNotNull(s);
 
-		assertEquals(s.getChains().size(), 3);
+		assertEquals(3,s.getChains().size());
 
 		c = s.getChainByPDB("B");
-		assertEquals(c.getAtomLength(),11);
+		assertEquals(11,c.getAtomLength());
 
 		String name5 = "4hhb.(A:10-20,A:30-40)";
 		s =cache.getStructure(name5);
 		assertNotNull(s);
 
-		assertEquals(s.getChains().size(),1 );
+		assertEquals(1,s.getChains().size() );
 		c = s.getChainByPDB("A");
-		assertEquals(c.getAtomLength(),22);
+		assertEquals(23,c.getAtomLength());
 
 		try {
 			// This syntax used to work, since the first paren is treated as a separator
@@ -135,9 +134,9 @@ public class TestAtomCache {
 		String name8 = "4hhb.(C)";
 		s = cache.getStructure(name8);
 
-		assertTrue(s.getChains().size() == 1);
+		assertEquals(1,s.getChains().size());
 		c = s.getChainByPDB(chainId2);
-		assertEquals(c.getChainID(),chainId2);
+		assertEquals(chainId2,c.getChainID());
 
 	}
 
