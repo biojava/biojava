@@ -352,7 +352,8 @@ public class SubstructureIdentifier implements Serializable, StructureIdentifier
 	protected static void copyLigandsByProximity(Structure full, Structure reduced, double cutoff, int fromModel, int toModel) {
 		// Geometric hashing of the reduced structure
 		Grid grid = new Grid(cutoff);
-		grid.addAtoms(StructureTools.getAllAtomArray(reduced,toModel));
+		Atom[] nonwaters = StructureTools.getAllNonHAtomArray(reduced,true,toModel);
+		grid.addAtoms(nonwaters);
 
 		
 		// Find ligands from full structure

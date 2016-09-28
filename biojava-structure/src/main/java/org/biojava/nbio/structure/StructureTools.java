@@ -467,10 +467,10 @@ public class StructureTools {
 	 * Finds all ligand groups from the target which fall within the cutoff distance
 	 * of some atom from the query set.
 	 * 
-	 * @param target Set of groups
-	 * @param query
-	 * @param cutoff
-	 * @return
+	 * @param target Set of groups including the ligands
+	 * @param query Atom selection
+	 * @param cutoff Distance from query atoms to consider, in angstroms
+	 * @return All groups from the target with at least one atom within cutoff of a query atom
 	 * @see StructureTools#DEFAULT_LIGAND_PROXIMITY_CUTOFF
 	 */
 	public static List<Group> getLigandsByProximity(Collection<Group> target, Atom[] query, double cutoff) {
@@ -585,9 +585,26 @@ public class StructureTools {
 	 * @return
 	 */
 	public static final Atom[] getAllNonHAtomArray(Structure s, boolean hetAtoms) {
+		AtomIterator iter = new AtomIterator(s);
+		return getAllNonHAtomArray(s, hetAtoms, iter);
+	}
+	/**
+	 * Returns and array of all non-Hydrogen atoms in the given Structure,
+	 * optionally including HET atoms or not. Waters are not included.
+	 *
+	 * @param s
+	 * @param hetAtoms
+	 *            if true HET atoms are included in array, if false they are not
+	 * @param modelNr Model number to draw atoms from
+	 * @return
+	 */
+	public static final Atom[] getAllNonHAtomArray(Structure s, boolean hetAtoms, int modelNr) {
+		AtomIterator iter = new AtomIterator(s,modelNr);
+		return getAllNonHAtomArray(s, hetAtoms, iter);
+	}
+	private static final Atom[] getAllNonHAtomArray(Structure s, boolean hetAtoms, AtomIterator iter) {
 		List<Atom> atoms = new ArrayList<Atom>();
 
-		AtomIterator iter = new AtomIterator(s);
 		while (iter.hasNext()) {
 			Atom a = iter.next();
 			if (a.getElement() == Element.H)
