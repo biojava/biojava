@@ -1,0 +1,51 @@
+LOCUS       E01172                   246 bp    DNA     linear   PAT 04-NOV-2005
+DEFINITION  Synthetic DNA encoding a polypeptide eliciting antibody against
+            AIDS virus and/or reacting with AIDS-antibody.
+ACCESSION   E01172
+VERSION     E01172.1  GI:2169431
+KEYWORDS    JP 1987099398-A/1.
+SOURCE      synthetic construct
+  ORGANISM  synthetic construct
+            other sequences; artificial sequences.
+REFERENCE   1  (bases 1 to 246)
+  AUTHORS   Buiruherumu,B., Ururitsuhi,S., Yan,M. and Deietoritsuhi,S.
+  TITLE     NOVEL POLYPEPTIDE
+  JOURNAL   Patent: JP 1987099398-A 1 08-MAY-1987;
+            F HOFFMANN LA ROCHE & CO AG
+COMMENT     OS   Artificial gene
+            OC   Artificial sequence; Genes.
+            OS   AIDS virus
+            PN   JP 1987099398-A/1
+            PD   08-MAY-1987
+            PF   16-OCT-1986 JP 1986246454
+            PR   17-OCT-1985 GB 85   8525615
+            PI   BUIRUHERUMU BANBUARUSU, URURITSUHI SERUTA, YAN MOUSU, PI
+            DEIETORITSUHI SUTEYUUBAA
+            PC   C07K7/10,A61K35/74,A61K37/02,A61K39/21,C07H21/04,C07K15/12, PC
+            C12N1/20,
+            PC   C12N15/00,C12P21/02,G01N33/569//G01N33/577,(C12P21/02, PC
+            C12R1:19),(C12P21/02,
+            PC   C12R1:125),C07K99:00;
+            CC   strandedness: Double;
+            CC   topology: Linear;
+            CC   hypothetical: No;
+            CC   anti-sense: No;
+            FH   Key             Location/Qualifiers
+            FH
+            FT   CDS             >1..<245
+            FT                   /gene='ENV(80)'
+            FT                   /product='polypeptide eliciting antibody  FT
+            against AIDS virus
+            FT                   and/or reacting with AIDS-antibody'.
+FEATURES             Location/Qualifiers
+     source          1..246
+                     /organism="synthetic construct"
+                     /mol_type="unassigned DNA"
+                     /db_xref="taxon:32630"
+ORIGIN
+        1 gatccgaagc tcaacagcat ctgctgcaac tcactgtttg gggtatcaaa cagctccagg
+       61 ctcgaattct ggctgttgaa cgttacctga aagatcaaca gctcctgggt atctggggct
+      121 gcagtggtaa actcatctgc actactgctg ttccttggaa tgcttcttgg tctaataagc
+      181 ttctggaaca gatctggaat aacatgactt ggatggagtg ggaccgtgaa atcaacaatt
+      241 acactg
+//
