@@ -243,6 +243,8 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
                     reference.setReferenceType(PublicationReference.ReferenceType.PATENT);
                 } else if (title.startsWith("Direct Submission")) {
                     reference.setReferenceType(PublicationReference.ReferenceType.DIRECT_SUBMISSION);
+                } else {
+                    reference.setReferenceType(PublicationReference.ReferenceType.UNKNOWN);
                 }
                 reference.setJournal(journal);
                 references.add(reference);
