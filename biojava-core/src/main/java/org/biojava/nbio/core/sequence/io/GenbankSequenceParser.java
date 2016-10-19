@@ -48,6 +48,7 @@ import org.biojava.nbio.core.sequence.template.CompoundSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.xml.transform.Source;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.*;
@@ -60,6 +61,8 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
     private GenericGenbankHeaderParser<S, C> headerParser;
     private String header;
     private String accession;
+    private String source;
+    private String organism;
     public LinkedHashMap<String, ArrayList<DBReferenceInfo>> mapDB;
     /**
      * this data structure collects list of features extracted from the
@@ -208,7 +211,16 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
                 }
             } else if (sectionKey.equals(KEYWORDS_TAG)) {
             } else if (sectionKey.equals(SOURCE_TAG)) {
-                // ignore - can get all this from the first feature
+                if (section.size() == 2) {
+                    String[] source = section.get(0);
+                    if (source.length == 2) {
+                        this.source = source[1];
+                    }
+                    String[] organism = section.get(1);
+                    if (organism.length == 2) {
+                        this.organism = organism[1].replace("\n", " ");
+                    }
+                }
             } else if (sectionKey.equals(REFERENCE_TAG)) {
 
                 PublicationReference reference = new PublicationReference();
@@ -466,4 +478,8 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
     public CompoundSet<?> getCompoundType() {
         return compoundType;
     }
+
+    public String getSource() { return source; }
+
+    public String getOrganism() { return organism; }
 }

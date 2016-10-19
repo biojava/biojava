@@ -7,8 +7,10 @@ package org.biojava.nbio.core.sequence.io;
 import org.biojava.nbio.core.sequence.DNASequence;
 import org.biojava.nbio.core.sequence.compound.DNACompoundSet;
 import org.biojava.nbio.core.sequence.compound.NucleotideCompound;
+import org.biojava.nbio.core.sequence.features.FeatureInterface;
 import org.biojava.nbio.core.sequence.features.PublicationReference;
 import org.biojava.nbio.core.sequence.features.PublicationReferenceAuthor;
+import org.biojava.nbio.core.sequence.template.AbstractSequence;
 import org.junit.*;
 
 import java.io.InputStream;
@@ -160,6 +162,7 @@ public class GenBankReferenceTest {
 
         assertEquals(1, dnaSequences.size());
         DNASequence result = dnaSequences.values().iterator().next();
+        List<FeatureInterface<AbstractSequence<NucleotideCompound>, NucleotideCompound>> features = result.getFeatures();
 
         inStream.close();
     }

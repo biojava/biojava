@@ -57,6 +57,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
     private CompoundSet<C> compoundSet;
     private AnnotationType annotationType = AnnotationType.UNKNOWN;
     private String description;
+    private String organism;
     private String originalHeader;
     private Collection<Object> userCollection;
     private Integer bioBegin = null;
@@ -649,5 +650,11 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
         this.keywords = keywords;
     }
 
+    public String getOrganism() {
+        return organism;
+    }
 
+    public void setOrganism(String organism) {
+        this.organism = organism;
+    }
 }
