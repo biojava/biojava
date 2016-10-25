@@ -59,6 +59,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
     private String description;
     private String organism;
     private String originalHeader;
+    private String comment;
     private Collection<Object> userCollection;
     private Integer bioBegin = null;
     private Integer bioEnd = null;
@@ -656,5 +657,13 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 
     public void setOrganism(String organism) {
         this.organism = organism;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 }

@@ -63,6 +63,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
     private String accession;
     private String source;
     private String organism;
+    private String comment;
     public LinkedHashMap<String, ArrayList<DBReferenceInfo>> mapDB;
     /**
      * this data structure collects list of features extracted from the
@@ -218,26 +219,33 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
                     }
                     String[] organism = section.get(1);
                     if (organism.length == 2) {
-                        this.organism = organism[1].replace("\n", " ");
+                        this.organism = organism[1];
                     }
                 }
             } else if (sectionKey.equals(REFERENCE_TAG)) {
 
                 PublicationReference reference = new PublicationReference();
-
-                String authorsString = section.get(1)[1];
-                Matcher matcher = authorsPattern.matcher(authorsString);
-
-                while (matcher.find()) {
-                    String fullName = matcher.group();
-                    String[] names = fullName.split(",");
-                    String lastName = names[0];
-                    String firstName = names[1];
-                    PublicationReferenceAuthor author = new PublicationReferenceAuthor();
-                    author.setFirstName(firstName);
-                    author.setLastName(lastName);
-                    author.setFullName(firstName + " " + lastName);
-                    reference.getAuthors().add(author);
+                String[] authorSection = section.get(1);
+                if (authorSection.length > 1) {
+                    if (AUTHORS_TAG.equals(authorSection[0])) {
+                        Matcher matcher = authorsPattern.matcher(authorSection[1]);
+                        while (matcher.find()) {
+                            String fullName = matcher.group();
+                            String[] names = fullName.split(",");
+                            String lastName = names[0];
+                            String firstName = names[1];
+                            PublicationReferenceAuthor author = new PublicationReferenceAuthor();
+                            author.setFirstName(firstName);
+                            author.setLastName(lastName);
+                            author.setFullName(firstName + " " + lastName);
+                            reference.getAuthors().add(author);
+                        }
+                    } else if (CONSORTIUM_TAG.equals(authorSection[0])) {
+                        String fullName = authorSection[1];
+                        PublicationReferenceAuthor author = new PublicationReferenceAuthor();
+                        author.setFullName(fullName);
+                        reference.getAuthors().add(author);
+                    }
                 }
 
                 String title = section.get(2)[1];
@@ -245,7 +253,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
                 reference.setTitle(title);
 
                 String journal = section.get(3)[1];
-                journal = journal.replace("\n", "");
+                journal = journal.replace("\n", " ");
 
                 if (section.size() == 5) {
                     reference.setReferenceType(PublicationReference.ReferenceType.PUBMED);
@@ -264,7 +272,12 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 
             } else if (sectionKey.equals(COMMENT_TAG)) {
                 // Set up some comments
-                headerParser.setComment(section.get(0)[1]);
+                String comment = section.get(0)[1];
+                if (comment != null) {
+                    String cleaned = comment.replace("\n", " ");
+                    headerParser.setComment(cleaned);
+                    this.comment = cleaned;
+                }
             } else if (sectionKey.equals(FEATURE_TAG)) {
                 // starting from second line of input, start a new feature whenever we come across
                 // a key that does not start with /
@@ -347,7 +360,8 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
                     log.info("found unknown section key: " + sectionKey);
                 }
             }
-        } while (!sectionKey.equals(END_SEQUENCE_TAG));
+        }
+        while (!sectionKey.equals(END_SEQUENCE_TAG));
         return seqData;
     }
 
@@ -479,7 +493,15 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
         return compoundType;
     }
 
-    public String getSource() { return source; }
+    public String getSource() {
+        return source;
+    }
 
-    public String getOrganism() { return organism; }
+    public String getOrganism() {
+        return organism;
+    }
+
+    public String getComment() {
+        return comment;
+    }
 }

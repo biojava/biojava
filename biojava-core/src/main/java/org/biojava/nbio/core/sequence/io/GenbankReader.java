@@ -154,7 +154,7 @@ public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
 			sequence.setKeywords(genbankParser.getKeyWords());
 			sequence.setSource(genbankParser.getSource());
 			sequence.setOrganism(genbankParser.getOrganism());
-
+			sequence.setComment(genbankParser.getComment());
 
 			// add features to new sequence
 			for (String k: genbankParser.getFeatures().keySet()){
