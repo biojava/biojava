@@ -45,6 +45,8 @@ import org.biojava.nbio.structure.contact.AtomContactSet;
 import org.biojava.nbio.structure.contact.Grid;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.PDBFileParser;
+import org.biojava.nbio.structure.io.mmcif.chem.PolymerType;
+import org.biojava.nbio.structure.io.mmcif.chem.ResidueType;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.biojava.nbio.structure.io.util.FileDownloadUtils;
 import org.slf4j.Logger;
@@ -503,6 +505,69 @@ public class StructureTools {
 			ligands.add(g);
 		}
 		return ligands;
+	}
+	
+	/**
+	 * Adds a particular group to a structure. A new chain will be created if necessary.
+	 * 
+	 * <p>When adding multiple groups, pass the return value of one call as the
+	 * chainGuess parameter of the next call for efficiency.
+	 * <pre>
+	 * Chain guess = null;
+	 * for(Group g : groups) {
+	 *     guess = addGroupToStructure(s, g, guess );
+	 * }
+	 * </pre>
+	 * @param s structure to receive the group
+	 * @param g group to add
+	 * @param chainGuess (optional) If not null, should be a chain from s. Used
+	 *  to improve performance when adding many groups from the same chain
+	 * @param clone Indicates whether the input group should be cloned before
+	 *  being added to the new chain
+	 * @return the chain g was added to
+	 */
+	public static Chain addGroupToStructure(Structure s, Group g, Chain chainGuess, boolean clone ) {
+		// Find or create the chain
+		String chainId = g.getChainId();
+		assert !chainId.isEmpty();
+		Chain chain;
+		if(chainGuess != null && chainGuess.getId() == chainId) {
+			// previously guessed chain
+			chain = chainGuess;
+		} else {
+			// Try to guess
+			chain = s.getChain(chainId);
+			if(chain == null) {
+				// no chain found
+				chain = new ChainImpl();
+				chain.setId(chainId);
+				chain.setName(g.getChain().getName());
+				s.addChain(chain);
+			}
+		}
+		
+		// Add cloned group
+		if(clone) {
+			g = (Group)g.clone();
+		}
+		chain.addGroup(g);
+		
+		return chain;
+	}
+
+	/**
+	 * Add a list of groups to a new structure. Chains will be automatically
+	 * created in the new structure as needed.
+	 * @param s structure to receive the group
+	 * @param g group to add
+	 * @param clone Indicates whether the input groups should be cloned before
+	 *  being added to the new chain
+	 */
+	public static void addGroupsToStructure(Structure s, Collection<Group> groups, boolean clone) {
+		Chain chainGuess = null;
+		for(Group g : groups) {
+			chainGuess = addGroupToStructure(s, g, chainGuess, clone);
+		}
 	}
 	
 	/**
