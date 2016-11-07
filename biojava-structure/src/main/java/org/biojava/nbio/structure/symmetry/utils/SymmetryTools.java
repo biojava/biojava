@@ -34,7 +34,6 @@ import javax.vecmath.Matrix4d;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.Chain;
-import org.biojava.nbio.structure.ChainImpl;
 import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.GroupType;
 import org.biojava.nbio.structure.Structure;
@@ -536,7 +535,7 @@ public class SymmetryTools {
 			Chain prevChain = null;
 			for(int k=res1;k<=res2; k++) {
 				Group g = atoms[k].getGroup();
-				prevChain = StructureTools.addGroupToStructure(s, g, prevChain,true);
+				prevChain = StructureTools.addGroupToStructure(s, g, 0, prevChain,true);
 				repeat.addAll(g.getAtoms());
 			}
 
@@ -548,7 +547,7 @@ public class SymmetryTools {
 			
 			logger.warn("Adding {} ligands to {}",ligands.size(), symmetry.getMultipleAlignment().getStructureIdentifier(i));
 			for( Group ligand : ligands) {
-				prevChain = StructureTools.addGroupToStructure(s, ligand, prevChain,true);
+				prevChain = StructureTools.addGroupToStructure(s, ligand, 0, prevChain,true);
 			}
 
 			repeats.add(s);

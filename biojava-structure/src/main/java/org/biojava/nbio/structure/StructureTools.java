@@ -45,8 +45,6 @@ import org.biojava.nbio.structure.contact.AtomContactSet;
 import org.biojava.nbio.structure.contact.Grid;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.PDBFileParser;
-import org.biojava.nbio.structure.io.mmcif.chem.PolymerType;
-import org.biojava.nbio.structure.io.mmcif.chem.ResidueType;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.biojava.nbio.structure.io.util.FileDownloadUtils;
 import org.slf4j.Logger;
@@ -488,8 +486,7 @@ public class StructureTools {
 				continue;
 			}
 
-			ChemComp chemComp = g.getChemComp();
-			if(chemComp != null && chemComp.isStandard() ) {
+			if(g.isPolymeric() ) {
 				// Polymers aren't ligands
 				continue;
 			}
@@ -526,33 +523,52 @@ public class StructureTools {
 	 *  being added to the new chain
 	 * @return the chain g was added to
 	 */
-	public static Chain addGroupToStructure(Structure s, Group g, Chain chainGuess, boolean clone ) {
-		// Find or create the chain
-		String chainId = g.getChainId();
-		assert !chainId.isEmpty();
-		Chain chain;
-		if(chainGuess != null && chainGuess.getId() == chainId) {
-			// previously guessed chain
-			chain = chainGuess;
-		} else {
-			// Try to guess
-			chain = s.getChain(chainId);
-			if(chain == null) {
-				// no chain found
-				chain = new ChainImpl();
-				chain.setId(chainId);
-				chain.setName(g.getChain().getName());
-				s.addChain(chain);
+	public static Chain addGroupToStructure(Structure s, Group g, int model, Chain chainGuess, boolean clone ) {
+		synchronized(s) {
+			// Find or create the chain
+			String chainId = g.getChainId();
+			assert !chainId.isEmpty();
+			Chain chain;
+			if(chainGuess != null && chainGuess.getId() == chainId) {
+				// previously guessed chain
+				chain = chainGuess;
+			} else {
+				// Try to guess
+				chain = s.getChain(chainId, model);
+				if(chain == null) {
+					// no chain found
+					chain = new ChainImpl();
+					chain.setId(chainId);
+
+					Chain oldChain = g.getChain();
+					chain.setName(oldChain.getName());
+
+					EntityInfo oldEntityInfo = oldChain.getEntityInfo();
+
+					EntityInfo newEntityInfo = s.getEntityById(oldEntityInfo.getMolId());
+					if( newEntityInfo == null ) {
+						newEntityInfo = new EntityInfo(oldEntityInfo);
+						s.addEntityInfo(newEntityInfo);
+					}
+					newEntityInfo.addChain(chain);
+					chain.setEntityInfo(newEntityInfo);
+					
+					// TODO Do the seqres need to be cloned too? -SB 2016-10-7
+					chain.setSeqResGroups(oldChain.getSeqResGroups());
+					chain.setSeqMisMatches(oldChain.getSeqMisMatches());
+					
+					s.addChain(chain,model);
+				}
 			}
+
+			// Add cloned group
+			if(clone) {
+				g = (Group)g.clone();
+			}
+			chain.addGroup(g);
+
+			return chain;
 		}
-		
-		// Add cloned group
-		if(clone) {
-			g = (Group)g.clone();
-		}
-		chain.addGroup(g);
-		
-		return chain;
 	}
 
 	/**
@@ -563,10 +579,10 @@ public class StructureTools {
 	 * @param clone Indicates whether the input groups should be cloned before
 	 *  being added to the new chain
 	 */
-	public static void addGroupsToStructure(Structure s, Collection<Group> groups, boolean clone) {
+	public static void addGroupsToStructure(Structure s, Collection<Group> groups, int model, boolean clone) {
 		Chain chainGuess = null;
 		for(Group g : groups) {
-			chainGuess = addGroupToStructure(s, g, chainGuess, clone);
+			chainGuess = addGroupToStructure(s, g, model, chainGuess, clone);
 		}
 	}
 	
@@ -1492,7 +1508,7 @@ public class StructureTools {
 			throw new IllegalArgumentException("Null argument(s).");
 		}
 
-		Chain chain = struc.findChain(pdbResNum.getChainName());
+		Chain chain = struc.getPolyChainByPDB(pdbResNum.getChainName());
 
 		return chain.getGroupByPDB(pdbResNum);
 	}
@@ -1857,8 +1873,6 @@ public class StructureTools {
 		List<Group> groups = new ArrayList<Group>();
 		for (Group g : allGroups) {
 
-			ChemComp cc = g.getChemComp();
-
 			if ( g.isPolymeric())
 				continue;
 
@@ -1932,6 +1946,7 @@ public class StructureTools {
 	/**
 	 * @deprecated  use {@link Chain#isProtein()} instead.
 	 */
+	@Deprecated
 	public static boolean isProtein(Chain c) {
 
 		return c.isProtein();
@@ -1940,6 +1955,7 @@ public class StructureTools {
 	/**
 	 * @deprecated use {@link Chain#isNucleicAcid()} instead.
  	 */
+	@Deprecated
 	public static boolean isNucleicAcid(Chain c) {
 		return c.isNucleicAcid();
 	}
@@ -1947,6 +1963,7 @@ public class StructureTools {
 	/**
 	 * @deprecated use {@link Chain#getPredominantGroupType()} instead.
 	 */
+	@Deprecated
 	public static GroupType getPredominantGroupType(Chain c) {
 		return c.getPredominantGroupType();
 	}
@@ -1954,12 +1971,14 @@ public class StructureTools {
 	/**
 	 * @deprecated use {@link Chain#isWaterOnly()} instead.
 	 */
+	@Deprecated
 	public static boolean isChainWaterOnly(Chain c) {
 		return c.isWaterOnly();
 	}
 
 	/** @deprecated  use {@link Chain#isPureNonPolymer()} instead.
 	 */
+	@Deprecated
 	public static boolean isChainPureNonPolymer(Chain c) {
 
 		return c.isPureNonPolymer();
@@ -2014,10 +2033,11 @@ public class StructureTools {
 
 			for (Chain c:structure.getChains()) {
 				Chain clonedChain = (Chain)c.clone();
-				String newChainId = c.getChainID()+i+"n";
-				clonedChain.setChainID(newChainId);
-				clonedChain.setInternalChainID(newChainId);
-				setChainIdsInResidueNumbers(clonedChain, newChainId);
+				String newChainId = c.getId()+i+"n";
+				String newChainName = c.getName()+i+"n";
+				clonedChain.setId(newChainId);
+				clonedChain.setName(newChainName);
+				setChainIdsInResidueNumbers(clonedChain, newChainName);
 				Calc.transform(clonedChain, m);
 				chainsToAdd.add(clonedChain);
 				c.getEntityInfo().addChain(clonedChain);
@@ -2034,15 +2054,15 @@ public class StructureTools {
 	 * Used when cloning chains and resetting their ids: one needs to take care of 
 	 * resetting the ids within residue numbers too.
 	 * @param c
-	 * @param newChainId
+	 * @param newChainName
 	 */
-	private static void setChainIdsInResidueNumbers(Chain c, String newChainId) {
+	private static void setChainIdsInResidueNumbers(Chain c, String newChainName) {
 		for (Group g:c.getAtomGroups()) {
-			g.setResidueNumber(newChainId, g.getResidueNumber().getSeqNum(), g.getResidueNumber().getInsCode());
+			g.setResidueNumber(newChainName, g.getResidueNumber().getSeqNum(), g.getResidueNumber().getInsCode());
 		}
 		for (Group g:c.getSeqResGroups()) {
 			if (g.getResidueNumber()==null) continue;
-			g.setResidueNumber(newChainId, g.getResidueNumber().getSeqNum(), g.getResidueNumber().getInsCode());
+			g.setResidueNumber(newChainName, g.getResidueNumber().getSeqNum(), g.getResidueNumber().getInsCode());
 		}
 	}
 

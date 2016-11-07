@@ -105,21 +105,18 @@ public class StructureToolsTest extends TestCase {
 		Structure hivA = cache.getStructure("1hiv.A");
 		Atom[] caSa = StructureTools.getRepresentativeAtomArray(hivA);
 		Atom[] caCa = StructureTools.getRepresentativeAtomArray(hivA.getChainByIndex(0));
-		//TODO Residue 67 is PTM. In BioJava 4 this is treated as a ligand, so it
-		//     gets added to caSa. In BioJava 5 this should be fixed, so they
-		//     should match again.
 		assertEquals("did not find the same number of Atoms from structure and from chain..",
-				caSa.length-1,caCa.length);
+				caSa.length,caCa.length);
 		Structure hivB = cache.getStructure("1hiv.B");
 		Atom[] caSb = StructureTools.getRepresentativeAtomArray(hivB);
 		Atom[] caCb = StructureTools.getRepresentativeAtomArray(hivB.getChainByIndex(0));
 		assertEquals("did not find the same number of Atoms from structure and from chain..",
-				caSb.length-1,caCb.length);
+				caSb.length,caCb.length);
 		//Both chains have to be the same size (A and B)
-		assertEquals(99,caSa.length-1);
+		assertEquals(99,caSa.length);
 		assertEquals("did not find the same number of Atoms in both chains...",
-				caSa.length-1,caCb.length);
-		assertEquals(99,caSa.length-1);
+				caSa.length,caCb.length);
+		assertEquals(99,caSa.length);
 
 		ChemCompGroupFactory.setChemCompProvider(provider);
 	}
@@ -273,22 +270,26 @@ public class StructureToolsTest extends TestCase {
 
 		String name11 = "4hhb.A";
 		Structure s = cache.getStructure(name11);
-		assertTrue(s.getChains().size() == 1);
+		assertEquals(1,s.getPolyChains().size());
+		assertEquals(3,s.getChains().size()); // protein, HEM, water
 
 
 		String name12 = "4hhb.A:";
 		s = cache.getStructure(name12);
-		assertTrue(s.getChains().size() == 1);
+		assertEquals(1,s.getPolyChains().size());
+		assertEquals(3,s.getChains().size());
 
 		String name13 = "4hhb.A_";
 		s = cache.getStructure(name13);
-		assertTrue(s.getChains().size() == 1);
+		assertEquals(1,s.getPolyChains().size());
+		assertEquals(3,s.getChains().size());
 
 		String name9 = "4hhb.C_1-83";
 		String chainId = "C";
 		s = cache.getStructure(name9);
+		assertEquals(1,s.getPolyChains().size());
+		assertEquals(2,s.getChains().size()); // drops waters
 
-		assertTrue(s.getChains().size() == 1);
 		Chain c = s.getPolyChainByPDB(chainId);
 		assertEquals(c.getName(),chainId);
 		Atom[] ca = StructureTools.getRepresentativeAtomArray(s);
@@ -296,7 +297,8 @@ public class StructureToolsTest extends TestCase {
 
 		String name10 = "4hhb.C_1-83,A_1-10";
 		s = cache.getStructure(name10);
-		assertTrue(s.getChains().size() == 2);
+		assertEquals(2,s.getPolyChains().size());
+		assertEquals(3,s.getChains().size()); // Includes C heme
 		ca = StructureTools.getRepresentativeAtomArray(s);
 		assertEquals(93, ca.length);
 
@@ -416,9 +418,7 @@ public class StructureToolsTest extends TestCase {
 		// range including insertion
 		range = "H:35-37"; //includes 36A
 		substr = StructureTools.getSubRanges(structure3, range);
-		// Because we are loading from PDB, TYS I:363 is recognized as a ligand
-		// rather than a PTM, so it gets included here
-		assertEquals("Wrong number of chains in "+range, 2, substr.size());
+		assertEquals("Wrong number of chains in "+range, 1, substr.size());
 
 		chain = substr.getChainByIndex(0);
 
@@ -428,7 +428,7 @@ public class StructureToolsTest extends TestCase {
 		// end with insertion
 		range = "H:35-36A";
 		substr = StructureTools.getSubRanges(structure3, range);
-		assertEquals("Wrong number of chains in "+range, 2, substr.size());
+		assertEquals("Wrong number of chains in "+range, 1, substr.size());
 
 		chain = substr.getChainByIndex(0);
 

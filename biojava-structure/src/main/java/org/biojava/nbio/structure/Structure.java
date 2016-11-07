@@ -722,7 +722,7 @@ public interface Structure extends Cloneable {
 	 * Request a particular entity by its entity id (mol id in legacy PDB format)
 	 *
 	 * @param entityId the number of the entity
-	 * @return an entity 
+	 * @return an entity, or null if the molId was not found
 	 */	
 	EntityInfo getEntityById(int entityId);
 

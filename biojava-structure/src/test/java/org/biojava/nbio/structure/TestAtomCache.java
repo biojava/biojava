@@ -81,10 +81,17 @@ public class TestAtomCache {
 		String chainId2 = "C";
 		s = cache.getStructure(name2);
 
-		assertEquals(1,s.getChains().size());
+		assertEquals(1,s.getPolyChains().size());
+		// Chain name 'C' corresponds to three IDs: C (141 res), I (1 HEM), and M (59 water)
+		assertEquals(3,s.getChains().size());
 		Chain c = s.getPolyChainByPDB(chainId2);
 		assertEquals(chainId2,c.getName());
-
+		
+		// Number of groups: Polymer + water + ligand
+		assertEquals(141,c.getAtomLength());
+		assertEquals(141, s.getChainByIndex(0).getAtomLength());
+		assertEquals(1, s.getChainByIndex(1).getAtomLength());
+		assertEquals(59, s.getChainByIndex(2).getAtomLength());
 
 		// Colon separators removed in BioJava 4.1.0
 		String name2b = "4hhb:A";
@@ -100,7 +107,7 @@ public class TestAtomCache {
 		String chainId3 = "B";
 		s = cache.getStructure(name3);
 		assertNotNull(s);
-		assertEquals(1,s.getChains().size());
+		assertEquals(1,s.getPolyChains().size());
 
 		c = s.getPolyChainByPDB(chainId3);
 		assertEquals(chainId3,c.getName());
@@ -110,6 +117,7 @@ public class TestAtomCache {
 		s = cache.getStructure(name4);
 		assertNotNull(s);
 
+		assertEquals(3,s.getPolyChains().size());
 		assertEquals(3,s.getChains().size());
 
 		c = s.getPolyChainByPDB("B");
@@ -119,9 +127,11 @@ public class TestAtomCache {
 		s =cache.getStructure(name5);
 		assertNotNull(s);
 
-		assertEquals(1,s.getChains().size() );
+		assertEquals(1,s.getPolyChains().size() );
+		// two chains: A (22 res), and G (1 HEM)
+		assertEquals(2,s.getChains().size() );
 		c = s.getPolyChainByPDB("A");
-		assertEquals(23,c.getAtomLength());
+		assertEquals(22,c.getAtomLength());
 
 		try {
 			// This syntax used to work, since the first paren is treated as a separator
@@ -134,7 +144,7 @@ public class TestAtomCache {
 		String name8 = "4hhb.(C)";
 		s = cache.getStructure(name8);
 
-		assertEquals(1,s.getChains().size());
+		assertEquals(1,s.getPolyChains().size());
 		c = s.getPolyChainByPDB(chainId2);
 		assertEquals(chainId2,c.getName());
 
