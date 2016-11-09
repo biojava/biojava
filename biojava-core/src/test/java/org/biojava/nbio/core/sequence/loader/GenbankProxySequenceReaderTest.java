@@ -99,9 +99,10 @@ public class GenbankProxySequenceReaderTest {
 		logger.info("accession id: {}", seq.getAccession().getID());
 		Assert.assertNotNull(seq.getAccession().getID());
 		// test GID number
-		Assert.assertEquals(gi, seq.getAccession().getIdentifier());
-		logger.info("found identifier '{}'", seq.getAccession().getIdentifier());
-
+		if( seq.getAccession().getIdentifier() != null) { // GI: in header now optional. See #596
+			Assert.assertEquals(gi, seq.getAccession().getIdentifier());
+			logger.info("found identifier '{}'", seq.getAccession().getIdentifier());
+		}
 		// test taxonomy id
 		logger.info("taxonomy id: {}", seq.getTaxonomy().getID());
 		Assert.assertNotNull(seq.getTaxonomy().getID());
