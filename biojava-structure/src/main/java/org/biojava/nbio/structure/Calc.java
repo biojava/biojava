@@ -22,17 +22,21 @@
  */
 package org.biojava.nbio.structure;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import javax.vecmath.Matrix3d;
+import javax.vecmath.Matrix4d;
+import javax.vecmath.Point3d;
+import javax.vecmath.Vector3d;
+
 import org.biojava.nbio.structure.geometry.CalcPoint;
 import org.biojava.nbio.structure.geometry.Matrices;
 import org.biojava.nbio.structure.geometry.SuperPositionSVD;
 import org.biojava.nbio.structure.jama.Matrix;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.vecmath.Matrix3d;
-import javax.vecmath.Matrix4d;
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
 
 /**
  * Utility operations on Atoms, AminoAcids, Matrices, Point3d, etc.
@@ -1226,6 +1230,20 @@ public class Calc {
 		Point3d[] points = new Point3d[atoms.length];
 		for (int i = 0; i < atoms.length; i++) {
 			points[i] = atoms[i].getCoordsAsPoint3d();
+		}
+		return points;
+	}
+	/**
+	 * Convert an array of atoms into an array of vecmath points
+	 * 
+	 * @param atoms
+	 *            list of atoms
+	 * @return list of Point3ds storing the x,y,z coordinates of each atom
+	 */
+	public static List<Point3d> atomsToPoints(Collection<Atom> atoms) {
+		ArrayList<Point3d> points = new ArrayList<>(atoms.size());
+		for (Atom atom : atoms) {
+			points.add(atom.getCoordsAsPoint3d());
 		}
 		return points;
 	}

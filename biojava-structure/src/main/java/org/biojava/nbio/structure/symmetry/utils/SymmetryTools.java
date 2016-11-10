@@ -34,8 +34,8 @@ import javax.vecmath.Matrix4d;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.Chain;
-import org.biojava.nbio.structure.ChainImpl;
 import org.biojava.nbio.structure.Group;
+import org.biojava.nbio.structure.GroupType;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIdentifier;
@@ -510,7 +510,8 @@ public class SymmetryTools {
 					+ "is not refined, repeats cannot be defined");
 
 		int order = symmetry.getMultipleAlignment().size();
-		Atom[] atoms = StructureTools.cloneAtomArray(symmetry.getAtoms());
+		Atom[] atoms = symmetry.getAtoms();
+		Set<Group> allGroups = StructureTools.getAllGroupsFromSubset(atoms, GroupType.HETATM);
 		List<StructureIdentifier> repeatsId = symmetry.getRepeatsID();
 		List<Structure> repeats = new ArrayList<Structure>(order);
 
@@ -523,19 +524,32 @@ public class SymmetryTools {
 			Block align = symmetry.getMultipleAlignment().getBlock(0);
 
 			// Get the start and end of the repeat
+			// Repeats are always sequential blocks
 			int res1 = align.getStartResidue(i);
 			int res2 = align.getFinalResidue(i);
-
-			Atom[] repeat = Arrays.copyOfRange(atoms, res1, res2 + 1);
-
-			Chain newCh = new ChainImpl();
-			newCh.setId(repeat[0].getGroup().getChainId());
-
-			for (int k = 0; k < repeat.length; k++) {
-				Group g = (Group) repeat[k].getGroup().clone();
-				newCh.addGroup(g);
+			
+			// All atoms from the repeat, used for ligand search
+			// AA have an average of 8.45 atoms, so guess capacity with that
+			List<Atom> repeat = new ArrayList<>(Math.max(9*(res2-res1+1),9));
+			// speedy chain lookup
+			Chain prevChain = null;
+			for(int k=res1;k<=res2; k++) {
+				Group g = atoms[k].getGroup();
+				prevChain = StructureTools.addGroupToStructure(s, g, 0, prevChain,true);
+				repeat.addAll(g.getAtoms());
 			}
-			s.addChain(newCh);
+
+			
+			List<Group> ligands = StructureTools.getLigandsByProximity(
+					allGroups,
+					repeat.toArray(new Atom[repeat.size()]),
+					StructureTools.DEFAULT_LIGAND_PROXIMITY_CUTOFF);
+			
+			logger.warn("Adding {} ligands to {}",ligands.size(), symmetry.getMultipleAlignment().getStructureIdentifier(i));
+			for( Group ligand : ligands) {
+				prevChain = StructureTools.addGroupToStructure(s, ligand, 0, prevChain,true);
+			}
+
 			repeats.add(s);
 		}
 		return repeats;
