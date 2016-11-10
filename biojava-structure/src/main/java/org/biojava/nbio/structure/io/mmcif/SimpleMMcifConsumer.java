@@ -1643,9 +1643,17 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			r.setDbIdCode(structRef.getDb_code());
 		}
 
-
-		int seqbegin = Integer.parseInt(sref.getPdbx_auth_seq_align_beg());
-		int seqend   = Integer.parseInt(sref.getPdbx_auth_seq_align_end());
+		int seqbegin;
+		int seqend;
+		try{
+			seqbegin = Integer.parseInt(sref.getPdbx_auth_seq_align_beg());
+			seqend   = Integer.parseInt(sref.getPdbx_auth_seq_align_end());
+		}
+		catch(NumberFormatException e){
+			logger.info("Couldn't parse sequence alignment positions.");
+			logger.debug(e.toString());
+			return;
+		}
 		Character begin_ins_code = new Character(sref.getPdbx_seq_align_beg_ins_code().charAt(0));
 		Character end_ins_code   = new Character(sref.getPdbx_seq_align_end_ins_code().charAt(0));
 
