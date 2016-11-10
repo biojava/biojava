@@ -29,7 +29,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * A chainName, a start residue, and an end residue.
+ * A chainName, a start residue, and an end residue. The chainName is matched
+ * to {@link Chain#getName()}, so for mmCIF files it indicates the authorId
+ * rather than the asymId.
  *
  * Chain may be null when referencing a single-chainName structure; for multi-chainName
  * structures omitting the chainName is an error. Start and/or end may also be null,
@@ -50,10 +52,10 @@ public class ResidueRange {
 			"(?:" + //begin range, this is a "non-capturing group"
 				"(?::|_|:$|_$|$)" + //colon or underscore, could be at the end of a line, another non-capt. group.
 				"(?:"+ // another non capturing group for the residue range
-					"([-+]?[0-9]+[A-Za-z]?)" + // first residue
+					"([-+]?[0-9]+[A-Za-z]?|\\^)?" + // first residue
 					"(?:" +
-						"\\s*-\\s*" + // -
-						"([-+]?[0-9]+[A-Za-z]?)" + // second residue
+						"\\s*(-)\\s*" + // hyphen indicates a range was intended
+						"([-+]?[0-9]+[A-Za-z]?|\\$)?" + // second residue
 					")?+"+
 				")?+"+
 			")?" + //end range
@@ -74,10 +76,12 @@ public class ResidueRange {
 	 *
 	 * <p>Examples:
 	 * <ul>
-	 * <li><code>A.5-100</code>
+	 * <li><code>A:5-100</code>
 	 * <li><code>A_5-100</code>
 	 * <li><code>A_-5</code>
-	 * <li><code>A.-12I-+12I
+	 * <li><code>A:-12I-+12I</code>
+	 * <li><code>A:^-$</code>
+	 * </ul>
 	 *
 	 * @param s   residue string to parse
 	 * @return The unique ResidueRange corresponding to {@code s}
@@ -90,16 +94,22 @@ public class ResidueRange {
 			try {
 				chain = matcher.group(1);
 				if (matcher.group(2) != null) {
-					start = ResidueNumber.fromString(matcher.group(2));
-					start.setChainName(chain);
-					if(matcher.group(3) == null) {
-						// single-residue range
-						end = start;
-					} else {
-						end = ResidueNumber.fromString(matcher.group(3));
-						end.setChainName(chain);
+					// ^ indicates first res (start==null)
+					if(!"^".equals(matcher.group(2)) ) {
+						start = ResidueNumber.fromString(matcher.group(2));
+						start.setChainName(chain);
 					}
 				}
+				if(matcher.group(3) == null) {
+					// single-residue range
+					end = start;
+				} else
+					// $ indicates last res (end==null)
+					if( matcher.group(4) != null && !"$".equals(matcher.group(4)) ){
+						end = ResidueNumber.fromString(matcher.group(4));
+						end.setChainName(chain);
+					}
+
 				return new ResidueRange(chain, start, end);
 			} catch (IllegalStateException e) {
 				throw new IllegalArgumentException("Range " + s + " was not valid", e);
