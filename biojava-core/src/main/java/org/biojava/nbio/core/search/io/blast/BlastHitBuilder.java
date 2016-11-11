@@ -21,8 +21,10 @@
 package org.biojava.nbio.core.search.io.blast;
 
 
-import org.biojava.nbio.core.search.io.Hsp;
 import java.util.List;
+
+import org.biojava.nbio.core.search.io.Hsp;
+import org.biojava.nbio.core.sequence.template.Compound;
 import org.biojava.nbio.core.sequence.template.Sequence;
 
 /**
@@ -33,55 +35,55 @@ import org.biojava.nbio.core.sequence.template.Sequence;
  *
  * @author Paolo Pavan
  */
-public class BlastHitBuilder {
+public class BlastHitBuilder<S extends Sequence<C>,C extends Compound> {
 	private int hitNum;
 	private String hitId;
 	private String hitDef;
 	private String hitAccession;
 	private int hitLen;
-	private Sequence hitSequence;
-	private List<Hsp> hsps;
+	private S hitSequence;
+	private List<Hsp<S,C>> hsps;
 
 	public BlastHitBuilder() {
 	}
 
-	public BlastHitBuilder setHitNum(int hitNum) {
+	public BlastHitBuilder<S, C> setHitNum(int hitNum) {
 		this.hitNum = hitNum;
 		return this;
 	}
 
-	public BlastHitBuilder setHitId(String hitId) {
+	public BlastHitBuilder<S, C> setHitId(String hitId) {
 		this.hitId = hitId;
 		return this;
 	}
 
-	public BlastHitBuilder setHitDef(String hitDef) {
+	public BlastHitBuilder<S, C> setHitDef(String hitDef) {
 		this.hitDef = hitDef;
 		return this;
 	}
 
-	public BlastHitBuilder setHitAccession(String hitAccession) {
+	public BlastHitBuilder<S, C> setHitAccession(String hitAccession) {
 		this.hitAccession = hitAccession;
 		return this;
 	}
 
-	public BlastHitBuilder setHitLen(int hitLen) {
+	public BlastHitBuilder<S, C> setHitLen(int hitLen) {
 		this.hitLen = hitLen;
 		return this;
 	}
 
-	public BlastHitBuilder setHitSequence(Sequence s) {
+	public BlastHitBuilder<S, C> setHitSequence(S s) {
 		this.hitSequence = s;
 		return this;
 	}
 
-	public BlastHitBuilder setHsps(List<Hsp> hsps) {
+	public BlastHitBuilder<S, C> setHsps(List<Hsp<S,C>> hsps) {
 		this.hsps = hsps;
 		return this;
 	}
 
-	public BlastHit createBlastHit() {
-		return new BlastHit(hitNum, hitId, hitDef, hitAccession, hitLen, hsps, hitSequence);
+	public BlastHit<S,C> createBlastHit() {
+		return new BlastHit<>(hitNum, hitId, hitDef, hitAccession, hitLen, hsps, hitSequence);
 	}
 
 }

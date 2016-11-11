@@ -20,19 +20,24 @@
  */
 package org.biojava.nbio.core.search.io.blast;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.biojava.nbio.core.search.io.Hit;
 import org.biojava.nbio.core.search.io.Hsp;
+import org.biojava.nbio.core.search.io.HspTest;
 import org.biojava.nbio.core.search.io.Result;
+import org.biojava.nbio.core.sequence.DNASequence;
+import org.biojava.nbio.core.sequence.compound.NucleotideCompound;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
@@ -65,7 +70,7 @@ public class BlastTabularParserTest {
 	@Test
 	public void testGetFileExtensions() {
 		System.out.println("getFileExtensions");
-		BlastTabularParser instance = new BlastTabularParser();
+		BlastTabularParser<DNASequence,NucleotideCompound> instance = new BlastTabularParser<>(HspTest.buildDNASeq);
 
 		List<String> expResult = new ArrayList<String>();
 		expResult.add("blasttabular");
@@ -82,7 +87,7 @@ public class BlastTabularParserTest {
 	public void testSetFile() {
 		System.out.println("setFile");
 		File f = null;
-		BlastTabularParser instance = new BlastTabularParser();
+		BlastTabularParser<DNASequence,NucleotideCompound> instance = new BlastTabularParser<>(HspTest.buildDNASeq);
 		instance.setFile(f);
 	}
 
@@ -103,19 +108,19 @@ public class BlastTabularParserTest {
 	@Test
 	public void testCreateObjects() throws Exception {
 		System.out.println("createObjects");
-		Result expRes1;
-		Hit expHit1res1;
-		Hsp expHsp1hit1res1;
+		Result<DNASequence,NucleotideCompound> expRes1;
+		Hit<DNASequence,NucleotideCompound> expHit1res1;
+		Hsp<DNASequence,NucleotideCompound> expHsp1hit1res1;
 
-		String resource = "/org/biojava/nbio/core/search/io/blast/small-blastreport.blasttxt";
+		String resource = "/org/biojava/nbio/core/search/io/blast/small-blastreport.blast.txt";
 		File file = getFileForResource(resource);
 
-		BlastTabularParser instance = new BlastTabularParser();
+		BlastTabularParser<DNASequence,NucleotideCompound> instance = new BlastTabularParser<>(HspTest.buildDNASeq);
 		instance.setFile(file);
 
-		List<Result> results = instance.createObjects(1e-10);
+		List<Result<DNASequence,NucleotideCompound>> results = instance.createObjects(1e-10);
 
-		BlastHsp hsp1Hit1Res1 = new BlastHspBuilder()
+		BlastHsp<DNASequence,NucleotideCompound> hsp1Hit1Res1 = new BlastHspBuilder()
 				.setHspNum(1)
 				.setPercentageIdentity(100.0/100)
 				.setHspAlignLen(1567)
@@ -127,9 +132,9 @@ public class BlastTabularParserTest {
 				.setHspQueryTo(617875)
 				.setHspEvalue(0)
 				.setHspBitScore(2894)
-				.createBlastHsp();
+				.createBlastHsp(HspTest.buildDNASeq);
 
-		BlastHsp hsp1Hit1Res2 = new BlastHspBuilder()
+		BlastHsp<DNASequence,NucleotideCompound> hsp1Hit1Res2 = new BlastHspBuilder()
 				.setHspNum(1)
 				.setPercentageIdentity(100.0/100)
 				.setHspAlignLen(1567)
@@ -141,20 +146,20 @@ public class BlastTabularParserTest {
 				.setHspQueryTo(1277133)
 				.setHspEvalue(0)
 				.setHspBitScore(2894)
-				.createBlastHsp();
+				.createBlastHsp(HspTest.buildDNASeq);
 
-		List<Hsp> hsplist = new ArrayList<Hsp>();
+		List<Hsp<DNASequence,NucleotideCompound>> hsplist = new ArrayList<>();
 		hsplist.add(hsp1Hit1Res1);
 		hsplist.add(hsp1Hit1Res2);
 
-		BlastHit hit1Res1 = new BlastHitBuilder()
+		BlastHit<DNASequence,NucleotideCompound> hit1Res1 = new BlastHitBuilder<DNASequence,NucleotideCompound>()
 				.setHitDef("CP000411")
 				.setHsps(hsplist)
 				.createBlastHit();
-		List<Hit> hitlist = new ArrayList<Hit>();
+		List<Hit<DNASequence,NucleotideCompound>> hitlist = new ArrayList<>();
 		hitlist.add(hit1Res1);
 
-		BlastResult res1 = new BlastResultBuilder()
+		BlastResult<DNASequence,NucleotideCompound> res1 = new BlastResultBuilder<DNASequence,NucleotideCompound>()
 				.setQueryID("CP000411_-_16S_rRNA")
 				.setQueryDef("CP000411_-_16S_rRNA")
 				.setHits(hitlist)
@@ -176,10 +181,10 @@ public class BlastTabularParserTest {
 
 		File file2 = getFileForResource(resource2);
 
-		BlastTabularParser instance2 = new BlastTabularParser();
+		BlastTabularParser<DNASequence,NucleotideCompound> instance2 = new BlastTabularParser<>(HspTest.buildDNASeq);
 		instance2.setFile(file2);
 
-		List<Result> results2 = instance2.createObjects(1e-10);
+		List<Result<DNASequence,NucleotideCompound>> results2 = instance2.createObjects(1e-10);
 		expRes1 = results2.get(0);
 		expHit1res1 = expRes1.iterator().next();
 		expHsp1hit1res1 = expHit1res1.iterator().next();
@@ -195,7 +200,7 @@ public class BlastTabularParserTest {
 				.setHspHitTo(391)
 				.setHspEvalue(4e-19)
 				.setHspBitScore(95.6)
-				.createBlastHsp();
+				.createBlastHsp(HspTest.buildDNASeq);
 
 		// results test
 		assertEquals(expRes1.getQueryID(), "1_759_906_F3");

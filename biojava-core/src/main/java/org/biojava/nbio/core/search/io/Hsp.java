@@ -20,25 +20,12 @@
  */
 package org.biojava.nbio.core.search.io;
 
-import java.util.ArrayList;
-import java.util.List;
-import org.biojava.nbio.core.alignment.SimpleAlignedSequence;
-import org.biojava.nbio.core.alignment.SimpleSequencePair;
-import org.biojava.nbio.core.alignment.template.AlignedSequence.Step;
 import org.biojava.nbio.core.alignment.template.SequencePair;
-import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
-import org.biojava.nbio.core.sequence.DNASequence;
-import org.biojava.nbio.core.sequence.ProteinSequence;
-import org.biojava.nbio.core.sequence.RNASequence;
-import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
-import org.biojava.nbio.core.sequence.compound.DNACompoundSet;
 import org.biojava.nbio.core.sequence.template.Compound;
 import org.biojava.nbio.core.sequence.template.Sequence;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
- * This class models a search Hsp.
+ * This class models a search high scoring pair (HSP).
  * You will retrieve a list of this using iterator of a Hit
  *
  * Designed by Paolo Pavan.
@@ -50,7 +37,7 @@ import org.slf4j.LoggerFactory;
  */
 
 public abstract class Hsp <S extends Sequence<C>, C extends Compound> {
-	private static final Logger logger = LoggerFactory.getLogger(Hsp.class);
+	//private static final Logger logger = LoggerFactory.getLogger(Hsp.class);
 	private Integer hspNum;
 	private Double hspBitScore;
 	private Integer hspScore;
@@ -65,20 +52,13 @@ public abstract class Hsp <S extends Sequence<C>, C extends Compound> {
 	private Integer hspPositive;
 	private Integer hspGaps;
 	private Integer hspAlignLen;
-	private String hspQseq;
-	private String hspHseq;
-	private String hspIdentityString;
 	private Double percentageIdentity = null;
 	private Integer mismatchCount = null;
-	private SimpleSequencePair<S, C> returnAln;
+	private SequencePair<S, C> alignment;
 
 	@Override
 	public int hashCode() {
-		int hash = 5;
-		hash = 67 * hash + (this.hspQseq != null ? this.hspQseq.hashCode() : 0);
-		hash = 67 * hash + (this.hspHseq != null ? this.hspHseq.hashCode() : 0);
-		hash = 67 * hash + (this.hspIdentityString != null ? this.hspIdentityString.hashCode() : 0);
-		return hash;
+		return alignment.hashCode();
 	}
 	/**
 	 * Experimental.
@@ -98,60 +78,41 @@ public abstract class Hsp <S extends Sequence<C>, C extends Compound> {
 			return false;
 		}
 		final Hsp<?, ?> other = (Hsp<?, ?>) obj;
-		if ((this.hspQseq == null) ? (other.hspQseq != null) : !this.hspQseq.equals(other.hspQseq)) {
-			return false;
-		}
-		if ((this.hspHseq == null) ? (other.hspHseq != null) : !this.hspHseq.equals(other.hspHseq)) {
-			return false;
-		}
-		if ((this.hspIdentityString == null) ? (other.hspIdentityString != null) : !this.hspIdentityString.equals(other.hspIdentityString)) {
-			return false;
-		}
-		return true;
+		return alignment.equals(other.alignment);
 	}
 
 	public SequencePair<S,C> getAlignment(){
-		if (returnAln != null) return returnAln;
-
-		SimpleAlignedSequence<S,C> alignedQuery, alignedHit;
-		// queryFrom e hitTo?
-		int numBefore, numAfter;
-
-		alignedQuery = new SimpleAlignedSequence(getSequence(hspQseq), getAlignmentsSteps(hspQseq));
-		alignedHit = new SimpleAlignedSequence(getSequence(hspHseq), getAlignmentsSteps(hspHseq));
-
-		returnAln = new SimpleSequencePair<S, C>(alignedQuery, alignedHit);
-
-		return returnAln;
+		return alignment;
 	}
 
-	private Sequence getSequence(String gappedSequenceString){
-		if (gappedSequenceString == null) return null;
-
-		Sequence returnSeq = null;
-		String sequenceString = gappedSequenceString.replace("-", "");
-
-		try {
-			if (sequenceString.matches("^[ACTG]+$"))
-				returnSeq = new DNASequence(sequenceString, DNACompoundSet.getDNACompoundSet());
-			else if (sequenceString.matches("^[ACUG]+$"))
-				returnSeq = new RNASequence(sequenceString, DNACompoundSet.getDNACompoundSet());
-			else
-				returnSeq = new ProteinSequence(sequenceString, AminoAcidCompoundSet.getAminoAcidCompoundSet());
-		} catch (CompoundNotFoundException ex) {
-			logger.error("Unexpected error, could not find compound when creating Sequence object from Hsp", ex);
-		}
-		return returnSeq;
-	}
-
-	private List<Step> getAlignmentsSteps(String gappedSequenceString){
-		List<Step> returnList = new ArrayList<Step>();
-
-		for (char c: gappedSequenceString.toCharArray()){
-			if (c=='-') returnList.add(Step.GAP); else returnList.add(Step.COMPOUND);
-		}
-		return returnList;
-	}
+//	private static Class<? extends Sequence<?>> guessSequenceType(String gappedSequenceString) {
+//		String sequenceString = gappedSequenceString.replace("-", "");
+//
+//		if (sequenceString.matches("^[ACTG]+$"))
+//			return DNASequence.class;
+//		else if (sequenceString.matches("^[ACUG]+$"))
+//			return RNASequence.class;
+//		else
+//			return ProteinSequence.class;
+//	}
+//	private static Sequence<?> getSequence(String gappedSequenceString){
+//		if (gappedSequenceString == null) return null;
+//
+//		Sequence<?> returnSeq = null;
+//		String sequenceString = gappedSequenceString.replace("-", "");
+//
+//		try {
+//			if (sequenceString.matches("^[ACTG]+$"))
+//				returnSeq = new DNASequence(sequenceString, DNACompoundSet.getDNACompoundSet());
+//			else if (sequenceString.matches("^[ACUG]+$"))
+//				returnSeq = new RNASequence(sequenceString, DNACompoundSet.getDNACompoundSet());
+//			else
+//				returnSeq = new ProteinSequence(sequenceString, AminoAcidCompoundSet.getAminoAcidCompoundSet());
+//		} catch (CompoundNotFoundException ex) {
+//			logger.error("Unexpected error, could not find compound when creating Sequence object from Hsp", ex);
+//		}
+//		return returnSeq;
+//	}
 
 	public int getHspNum() {
 		return hspNum;
@@ -208,27 +169,6 @@ public abstract class Hsp <S extends Sequence<C>, C extends Compound> {
 	public int getHspAlignLen() {
 		return hspAlignLen;
 	}
-	/**
-	 * HSP aligned query sequence string
-	 * @return
-	 */
-	public String getHspQseq() {
-		return hspQseq;
-	}
-	/**
-	 * HSP aligned hit sequence string
-	 * @return
-	 */
-	public String getHspHseq() {
-		return hspHseq;
-	}
-	/**
-	 * Identity string representing correspondence between aligned residues
-	 * @return
-	 */
-	public String getHspIdentityString() {
-		return hspIdentityString;
-	}
 
 	public Double getPercentageIdentity() {
 		if (percentageIdentity != null) return percentageIdentity;
@@ -242,7 +182,12 @@ public abstract class Hsp <S extends Sequence<C>, C extends Compound> {
 		return null;
 	}
 
-	public Hsp(int hspNum, double hspBitScore, int hspScore, double hspEvalue, int hspQueryFrom, int hspQueryTo, int hspHitFrom, int hspHitTo, int hspQueryFrame, int hspHitFrame, int hspIdentity, int hspPositive, int hspGaps, int hspAlignLen, String hspQseq, String hspHseq, String hspIdentityString, Double percentageIdentity, Integer mismatchCount) {
+	public Hsp(int hspNum, double hspBitScore, int hspScore, double hspEvalue,
+			int hspQueryFrom, int hspQueryTo, int hspHitFrom, int hspHitTo,
+			int hspQueryFrame, int hspHitFrame, int hspIdentity, int hspPositive,
+			int hspGaps, int hspAlignLen, 
+			SequencePair<S,C> alignment, 
+			Double percentageIdentity, Integer mismatchCount) {
 		this.hspNum = hspNum;
 		this.hspBitScore = hspBitScore;
 		this.hspScore = hspScore;
@@ -257,12 +202,13 @@ public abstract class Hsp <S extends Sequence<C>, C extends Compound> {
 		this.hspPositive = hspPositive;
 		this.hspGaps = hspGaps;
 		this.hspIdentity = hspAlignLen;
-		this.hspQseq = hspQseq;
-		this.hspHseq = hspHseq;
-		this.hspIdentityString = hspIdentityString;
+		this.alignment = alignment;
 		this.percentageIdentity = percentageIdentity;
 		this.mismatchCount = mismatchCount;
 
+		if(this.alignment == null) {
+			throw new NullPointerException("Null alignment");
+		}
 		// sanity check
 		if (percentageIdentity != null && (percentageIdentity < 0 || percentageIdentity >1))
 			throw new IllegalArgumentException("Percentage identity must be between 0 and 1");

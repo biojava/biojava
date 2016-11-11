@@ -20,6 +20,17 @@
  */
 package org.biojava.nbio.core.search.io.blast;
 
+import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import org.biojava.nbio.core.alignment.SimpleAlignedSequence;
+import org.biojava.nbio.core.alignment.SimpleSequencePair;
+import org.biojava.nbio.core.alignment.template.AlignedSequence.Step;
+import org.biojava.nbio.core.alignment.template.SequencePair;
+import org.biojava.nbio.core.sequence.template.Compound;
+import org.biojava.nbio.core.sequence.template.Sequence;
+
 /**
  * Designed by Paolo Pavan.
  * You may want to find my contacts on Github and LinkedIn for code info
@@ -30,6 +41,8 @@ package org.biojava.nbio.core.search.io.blast;
  */
 
 public class BlastHspBuilder {
+	//private static final org.slf4j.Logger logger = LoggerFactory.getLogger(BlastHspBuilder.class);
+
 	private int hspNum;
 	private double hspBitScore;
 	private int hspScore;
@@ -147,8 +160,73 @@ public class BlastHspBuilder {
 		this.mismatchCount = mismatchCount;
 		return this;
 	}
-	public BlastHsp createBlastHsp() {
-		return new BlastHsp(hspNum, hspBitScore, hspScore, hspEvalue, hspQueryFrom, hspQueryTo, hspHitFrom, hspHitTo, hspQueryFrame, hspHitFrame, hspIdentity, hspPositive, hspGaps, hspAlignLen, hspQseq, hspHseq, hspIdentityString, percentageIdentity, mismatchCount);
+
+	public <S extends Sequence<C>,C extends Compound>
+	BlastHsp<S,C> createBlastHsp(Function<String,S> buildSeq) {
+		SequencePair<S,C> aln = buildSequencePair(buildSeq, hspQseq, hspHseq, hspIdentityString );
+		return new BlastHsp<>(hspNum, hspBitScore, hspScore, hspEvalue, hspQueryFrom, hspQueryTo, hspHitFrom, hspHitTo,
+				hspQueryFrame, hspHitFrame, hspIdentity, hspPositive, hspGaps, hspAlignLen, aln, percentageIdentity, mismatchCount);
+	}
+	
+	private static <S extends Sequence<C>,C extends Compound>
+	SequencePair<S, C> buildSequencePair(Function<String, S> buildSeq,
+			String query, String hit, String gaps) {
+		S q = buildSeq.apply(query);
+		S h = buildSeq.apply(hit);
+		List<Step> steps = getAlignmentsSteps(gaps);
+		return new SimpleSequencePair<>(
+				new SimpleAlignedSequence<>(q, steps),
+				new SimpleAlignedSequence<>(h, steps));
 	}
 
+	private static List<Step> getAlignmentsSteps(String gapped){
+		return gapped.chars()
+				.mapToObj((chr) -> (char)chr == '-' ? Step.GAP : Step.COMPOUND )
+				.collect(Collectors.toList());
+	}
+
+//	private static SequencePair<?, ?> buildSequencePair(String query, String hit, String gaps) {
+//		String concat = query+hit;
+//		concat = concat.replace("-", "");
+//		
+//		try {
+//			if (concat.matches("^[ACTG]+$")) {
+//				DNASequence q = new DNASequence(query, DNACompoundSet.getDNACompoundSet());
+//				DNASequence h = new DNASequence(hit, DNACompoundSet.getDNACompoundSet());
+//				List<Step> steps = getAlignmentsSteps(gaps);
+//				return new SimpleSequencePair<>(
+//						new SimpleAlignedSequence<>(q, steps),
+//						new SimpleAlignedSequence<>(h, steps));
+//			} else if (concat.matches("^[ACUG]+$")) {
+//				RNASequence q = new RNASequence(query, RNACompoundSet.getRNACompoundSet());
+//				RNASequence h = new RNASequence(hit, RNACompoundSet.getRNACompoundSet());
+//				List<Step> steps = getAlignmentsSteps(gaps);
+//				return new SimpleSequencePair<>(
+//						new SimpleAlignedSequence<>(q, steps),
+//						new SimpleAlignedSequence<>(h, steps));
+//			} else { 
+//				ProteinSequence q = new ProteinSequence(query, AminoAcidCompoundSet.getAminoAcidCompoundSet());
+//				ProteinSequence h = new ProteinSequence(hit, AminoAcidCompoundSet.getAminoAcidCompoundSet());
+//				List<Step> steps = getAlignmentsSteps(gaps);
+//				return new SimpleSequencePair<>(
+//						new SimpleAlignedSequence<>(q, steps),
+//						new SimpleAlignedSequence<>(h, steps));
+//			}
+//		} catch (CompoundNotFoundException ex) {
+//			logger.error("Unexpected error, could not find compound when creating Sequence object from Hsp", ex);
+//		}
+//		return null;
+//	}
+//
+//
+//	private static Class<? extends Sequence<?>> guessSequenceType(String gappedSequenceString) {
+//		String sequenceString = gappedSequenceString.replace("-", "");
+//
+//		if (sequenceString.matches("^[ACTG]+$"))
+//			return DNASequence.class;
+//		else if (sequenceString.matches("^[ACUG]+$"))
+//			return RNASequence.class;
+//		else
+//			return ProteinSequence.class;
+//	}
 }
