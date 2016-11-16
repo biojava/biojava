@@ -22,6 +22,8 @@ package org.biojava.nbio.structure.contact;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import javax.vecmath.Point3d;
@@ -451,6 +453,43 @@ public class Grid {
 		}
 
 		return list;
+	}
+
+	/**
+	 * Fast determination of whether any atoms from a given set fall within
+	 * the cutoff of iAtoms. If {@link #addAtoms(Atom[], Atom[])} was called
+	 * with two sets of atoms, contacts to either set are considered.
+	 * @param atoms
+	 * @return
+	 */
+	public boolean hasAnyContact(Point3d[] atoms) {
+		return hasAnyContact(Arrays.asList(atoms));
+	}
+	public boolean hasAnyContact(Collection<Point3d> atoms) {
+		for(Point3d atom : atoms) {
+			// Calculate Grid cell for the atom
+			int xind = xintgrid2xgridindex(getFloor(atom.x));
+			int yind = yintgrid2ygridindex(getFloor(atom.y));
+			int zind = zintgrid2zgridindex(getFloor(atom.z));
+
+			// Consider 3x3x3 grid of cells around point
+			for (int x=xind-1;x<=xind+1;x++) {
+				if( x<0 || cells.length<=x) continue;
+				for (int y=yind-1;y<=yind+1;y++) {
+					if( y<0 || cells[x].length<=y ) continue;
+					for (int z=zind-1;z<=zind+1;z++) {
+						if( z<0 || cells[x][y].length<=z ) continue;
+						
+						GridCell cell = cells[x][y][z];
+						// Check for contacts in this cell
+						if(cell != null && cell.hasContactToAtom(iAtoms, jAtoms, atom, cutoff)) {
+							return true;
+						}
+					}
+				}
+			}
+		}
+		return false;
 	}
 
 	public double getCutoff() {

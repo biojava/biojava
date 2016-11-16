@@ -203,36 +203,37 @@ public class StructureImpl implements Structure, Serializable {
 
 		// first we need to gather all groups with the author id chainName: polymers, non-polymers and waters
 		Chain polyChain = getPolyChainByPDB(chainName, modelnr);
-		List<Group> groups = new ArrayList<>();
+		if(polyChain != null) {
+			List<Group> groups = new ArrayList<>();
 
-		groups.addAll(polyChain.getAtomGroups());
-
-
-		// there can be more thatn one non-poly chain for a given author id
-		for (Chain chain: getNonPolyChainsByPDB(chainName, modelnr)) {
-			groups.addAll(chain.getAtomGroups());
-		}
-		
-		Chain water = getWaterChainByPDB(chainName, modelnr);
-		
-		if (water!=null)
-			groups.addAll(water.getAtomGroups());
-		
+			groups.addAll(polyChain.getAtomGroups());
 
 
-		// now iterate over all groups 
-		// in order to find the amino acid that has this pdbRenum.
+			// there can be more than one non-poly chain for a given author id
+			for (Chain chain: getNonPolyChainsByPDB(chainName, modelnr)) {
+				groups.addAll(chain.getAtomGroups());
+			}
 
-		for (Group g : groups) {
-			String rnum = g.getResidueNumber().toString();
-			//System.out.println(g + " >" + rnum + "< >" + pdbResnum + "<");
-			// we only mutate amino acids
-			// and ignore hetatoms and nucleotides in this case
-			if (rnum.equals(pdbResnum)) {
-				return g;
+			Chain water = getWaterChainByPDB(chainName, modelnr);
+
+			if (water!=null)
+				groups.addAll(water.getAtomGroups());
+
+
+
+			// now iterate over all groups 
+			// in order to find the amino acid that has this pdbRenum.
+
+			for (Group g : groups) {
+				String rnum = g.getResidueNumber().toString();
+				//System.out.println(g + " >" + rnum + "< >" + pdbResnum + "<");
+				// we only mutate amino acids
+				// and ignore hetatoms and nucleotides in this case
+				if (rnum.equals(pdbResnum)) {
+					return g;
+				}
 			}
 		}
-
 		throw new StructureException("could not find group " + pdbResnum +
 				" in chain " + chainName);
 	}
@@ -690,6 +691,9 @@ public class StructureImpl implements Structure, Serializable {
 	@Override
 	public Chain getChainByPDB(String chainId)
 			throws StructureException{
+		if(nrModels() < 1 ) {
+			throw new StructureException("No chains are present.");
+		}
 		return getChainByPDB(chainId,0);
 	}
 

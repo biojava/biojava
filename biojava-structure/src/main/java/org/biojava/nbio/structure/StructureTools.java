@@ -27,6 +27,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -150,6 +152,11 @@ public class StructureTools {
 	 * character of the chain (protein/nucleotide)
 	 */
 	public static final double RATIO_RESIDUES_TO_TOTAL = 0.95;
+
+	/**
+	 * Threshold for plausible binding of a ligand to the selected substructure
+	 */
+	public static final double DEFAULT_LIGAND_PROXIMITY_CUTOFF = 5;
 
 	// there is a file format change in PDB 3.0 and nucleotides are being
 	// renamed
@@ -345,7 +352,7 @@ public class StructureTools {
 	}
 
 	/**
-	 * Convert all atoms of the structure (first model) into an Atom array
+	 * Convert all atoms of the structure (all models) into an Atom array
 	 *
 	 * @param s
 	 *            input structure
@@ -361,9 +368,27 @@ public class StructureTools {
 		}
 		return atoms.toArray(new Atom[atoms.size()]);
 	}
+	/**
+	 * Convert all atoms of the structure (specified model) into an Atom array
+	 *
+	 * @param s
+	 *            input structure
+	 * @return all atom array
+	 */
+	public static final Atom[] getAllAtomArray(Structure s, int model) {
+		List<Atom> atoms = new ArrayList<Atom>();
+
+		AtomIterator iter = new AtomIterator(s,model);
+		while (iter.hasNext()) {
+			Atom a = iter.next();
+			atoms.add(a);
+		}
+		return atoms.toArray(new Atom[atoms.size()]);
+
+	}
 
 	/**
-	 * Returns and array of all atoms of the chain (first model), including
+	 * Returns and array of all atoms of the chain, including
 	 * Hydrogens (if present) and all HETATOMs. Waters are not included.
 	 *
 	 * @param c
@@ -440,6 +465,199 @@ public class StructureTools {
 	}
 
 	/**
+	 * Finds all ligand groups from the target which fall within the cutoff distance
+	 * of some atom from the query set.
+	 * 
+	 * @param target Set of groups including the ligands
+	 * @param query Atom selection
+	 * @param cutoff Distance from query atoms to consider, in angstroms
+	 * @return All groups from the target with at least one atom within cutoff of a query atom
+	 * @see StructureTools#DEFAULT_LIGAND_PROXIMITY_CUTOFF
+	 */
+	public static List<Group> getLigandsByProximity(Collection<Group> target, Atom[] query, double cutoff) {
+		// Geometric hashing of the reduced structure
+		Grid grid = new Grid(cutoff);
+		grid.addAtoms(query);
+
+		List<Group> ligands = new ArrayList<>();
+		for(Group g :target ) {
+			// don't worry about waters
+			if(g.isWater()) {
+				continue;
+			}
+
+			if(g.isPolymeric() ) {
+				// Polymers aren't ligands
+				continue;
+			}
+
+			// It is a ligand!
+
+			// Check that it's within cutoff of something in reduced
+			List<Atom> groupAtoms = g.getAtoms();
+			if( ! grid.hasAnyContact(Calc.atomsToPoints(groupAtoms))) {
+				continue;
+			}
+
+			ligands.add(g);
+		}
+		return ligands;
+	}
+	
+	/**
+	 * Adds a particular group to a structure. A new chain will be created if necessary.
+	 * 
+	 * <p>When adding multiple groups, pass the return value of one call as the
+	 * chainGuess parameter of the next call for efficiency.
+	 * <pre>
+	 * Chain guess = null;
+	 * for(Group g : groups) {
+	 *     guess = addGroupToStructure(s, g, guess );
+	 * }
+	 * </pre>
+	 * @param s structure to receive the group
+	 * @param g group to add
+	 * @param chainGuess (optional) If not null, should be a chain from s. Used
+	 *  to improve performance when adding many groups from the same chain
+	 * @param clone Indicates whether the input group should be cloned before
+	 *  being added to the new chain
+	 * @return the chain g was added to
+	 */
+	public static Chain addGroupToStructure(Structure s, Group g, int model, Chain chainGuess, boolean clone ) {
+		synchronized(s) {
+			// Find or create the chain
+			String chainId = g.getChainId();
+			assert !chainId.isEmpty();
+			Chain chain;
+			if(chainGuess != null && chainGuess.getId() == chainId) {
+				// previously guessed chain
+				chain = chainGuess;
+			} else {
+				// Try to guess
+				chain = s.getChain(chainId, model);
+				if(chain == null) {
+					// no chain found
+					chain = new ChainImpl();
+					chain.setId(chainId);
+
+					Chain oldChain = g.getChain();
+					chain.setName(oldChain.getName());
+
+					EntityInfo oldEntityInfo = oldChain.getEntityInfo();
+
+					EntityInfo newEntityInfo = s.getEntityById(oldEntityInfo.getMolId());
+					if( newEntityInfo == null ) {
+						newEntityInfo = new EntityInfo(oldEntityInfo);
+						s.addEntityInfo(newEntityInfo);
+					}
+					newEntityInfo.addChain(chain);
+					chain.setEntityInfo(newEntityInfo);
+					
+					// TODO Do the seqres need to be cloned too? -SB 2016-10-7
+					chain.setSeqResGroups(oldChain.getSeqResGroups());
+					chain.setSeqMisMatches(oldChain.getSeqMisMatches());
+					
+					s.addChain(chain,model);
+				}
+			}
+
+			// Add cloned group
+			if(clone) {
+				g = (Group)g.clone();
+			}
+			chain.addGroup(g);
+
+			return chain;
+		}
+	}
+
+	/**
+	 * Add a list of groups to a new structure. Chains will be automatically
+	 * created in the new structure as needed.
+	 * @param s structure to receive the group
+	 * @param g group to add
+	 * @param clone Indicates whether the input groups should be cloned before
+	 *  being added to the new chain
+	 */
+	public static void addGroupsToStructure(Structure s, Collection<Group> groups, int model, boolean clone) {
+		Chain chainGuess = null;
+		for(Group g : groups) {
+			chainGuess = addGroupToStructure(s, g, model, chainGuess, clone);
+		}
+	}
+	
+	/**
+	 * Expand a set of atoms into all groups from the same structure.
+	 * 
+	 * If the structure is set, only the first atom is used (assuming all
+	 * atoms come from the same original structure).
+	 * If the atoms aren't linked to a structure (for instance, for cloned atoms),
+	 * searches all chains of all atoms for groups.
+	 * @param atoms Sample of atoms
+	 * @return All groups from all chains accessible from the input atoms
+	 */
+	public static Set<Group> getAllGroupsFromSubset(Atom[] atoms) {
+		return getAllGroupsFromSubset(atoms,null);
+	}
+	/**
+	 * Expand a set of atoms into all groups from the same structure.
+	 * 
+	 * If the structure is set, only the first atom is used (assuming all
+	 * atoms come from the same original structure).
+	 * If the atoms aren't linked to a structure (for instance, for cloned atoms),
+	 * searches all chains of all atoms for groups.
+	 * @param atoms Sample of atoms
+	 * @param types Type of groups to return (useful for getting only ligands, for instance).
+	 *  Null gets all groups.
+	 * @return All groups from all chains accessible from the input atoms
+	 */
+	public static Set<Group> getAllGroupsFromSubset(Atom[] atoms,GroupType types) {
+		// Get the full structure
+		Structure s = null;
+		if (atoms.length > 0) {
+			Group g = atoms[0].getGroup();
+			if (g != null) {
+				Chain c = g.getChain();
+				if (c != null) {
+					s = c.getStructure();
+				}
+			}
+		}
+		// Collect all groups from the structure
+		Set<Chain> allChains = new HashSet<>();
+		if( s != null ) {
+			allChains.addAll(s.getChains());
+		}
+		// In case the structure wasn't set, need to use ca chains too
+		for(Atom a : atoms) {
+			Group g = a.getGroup();
+			if(g != null) {
+				Chain c = g.getChain();
+				if( c != null ) {
+					allChains.add(c);
+				}
+			}
+		}
+
+		if(allChains.isEmpty() ) {
+			return Collections.emptySet();
+		}
+		
+		// Extract all ligand groups
+		Set<Group> full = new HashSet<>();
+		for(Chain c : allChains) {
+			if(types == null) {
+				full.addAll(c.getAtomGroups());
+			} else {
+				full.addAll(c.getAtomGroups(types));
+			}
+		}
+
+		return full;
+	}
+
+
+	/**
 	 * Returns and array of all non-Hydrogen atoms in the given Structure,
 	 * optionally including HET atoms or not. Waters are not included.
 	 *
@@ -449,9 +667,26 @@ public class StructureTools {
 	 * @return
 	 */
 	public static final Atom[] getAllNonHAtomArray(Structure s, boolean hetAtoms) {
+		AtomIterator iter = new AtomIterator(s);
+		return getAllNonHAtomArray(s, hetAtoms, iter);
+	}
+	/**
+	 * Returns and array of all non-Hydrogen atoms in the given Structure,
+	 * optionally including HET atoms or not. Waters are not included.
+	 *
+	 * @param s
+	 * @param hetAtoms
+	 *            if true HET atoms are included in array, if false they are not
+	 * @param modelNr Model number to draw atoms from
+	 * @return
+	 */
+	public static final Atom[] getAllNonHAtomArray(Structure s, boolean hetAtoms, int modelNr) {
+		AtomIterator iter = new AtomIterator(s,modelNr);
+		return getAllNonHAtomArray(s, hetAtoms, iter);
+	}
+	private static final Atom[] getAllNonHAtomArray(Structure s, boolean hetAtoms, AtomIterator iter) {
 		List<Atom> atoms = new ArrayList<Atom>();
 
-		AtomIterator iter = new AtomIterator(s);
 		while (iter.hasNext()) {
 			Atom a = iter.next();
 			if (a.getElement() == Element.H)
@@ -1273,7 +1508,7 @@ public class StructureTools {
 			throw new IllegalArgumentException("Null argument(s).");
 		}
 
-		Chain chain = struc.findChain(pdbResNum.getChainName());
+		Chain chain = struc.getPolyChainByPDB(pdbResNum.getChainName());
 
 		return chain.getGroupByPDB(pdbResNum);
 	}
@@ -1638,8 +1873,6 @@ public class StructureTools {
 		List<Group> groups = new ArrayList<Group>();
 		for (Group g : allGroups) {
 
-			ChemComp cc = g.getChemComp();
-
 			if ( g.isPolymeric())
 				continue;
 
@@ -1713,6 +1946,7 @@ public class StructureTools {
 	/**
 	 * @deprecated  use {@link Chain#isProtein()} instead.
 	 */
+	@Deprecated
 	public static boolean isProtein(Chain c) {
 
 		return c.isProtein();
@@ -1721,6 +1955,7 @@ public class StructureTools {
 	/**
 	 * @deprecated use {@link Chain#isNucleicAcid()} instead.
  	 */
+	@Deprecated
 	public static boolean isNucleicAcid(Chain c) {
 		return c.isNucleicAcid();
 	}
@@ -1728,6 +1963,7 @@ public class StructureTools {
 	/**
 	 * @deprecated use {@link Chain#getPredominantGroupType()} instead.
 	 */
+	@Deprecated
 	public static GroupType getPredominantGroupType(Chain c) {
 		return c.getPredominantGroupType();
 	}
@@ -1735,12 +1971,14 @@ public class StructureTools {
 	/**
 	 * @deprecated use {@link Chain#isWaterOnly()} instead.
 	 */
+	@Deprecated
 	public static boolean isChainWaterOnly(Chain c) {
 		return c.isWaterOnly();
 	}
 
 	/** @deprecated  use {@link Chain#isPureNonPolymer()} instead.
 	 */
+	@Deprecated
 	public static boolean isChainPureNonPolymer(Chain c) {
 
 		return c.isPureNonPolymer();
@@ -1795,10 +2033,11 @@ public class StructureTools {
 
 			for (Chain c:structure.getChains()) {
 				Chain clonedChain = (Chain)c.clone();
-				String newChainId = c.getChainID()+i+"n";
-				clonedChain.setChainID(newChainId);
-				clonedChain.setInternalChainID(newChainId);
-				setChainIdsInResidueNumbers(clonedChain, newChainId);
+				String newChainId = c.getId()+i+"n";
+				String newChainName = c.getName()+i+"n";
+				clonedChain.setId(newChainId);
+				clonedChain.setName(newChainName);
+				setChainIdsInResidueNumbers(clonedChain, newChainName);
 				Calc.transform(clonedChain, m);
 				chainsToAdd.add(clonedChain);
 				c.getEntityInfo().addChain(clonedChain);
@@ -1815,15 +2054,15 @@ public class StructureTools {
 	 * Used when cloning chains and resetting their ids: one needs to take care of 
 	 * resetting the ids within residue numbers too.
 	 * @param c
-	 * @param newChainId
+	 * @param newChainName
 	 */
-	private static void setChainIdsInResidueNumbers(Chain c, String newChainId) {
+	private static void setChainIdsInResidueNumbers(Chain c, String newChainName) {
 		for (Group g:c.getAtomGroups()) {
-			g.setResidueNumber(newChainId, g.getResidueNumber().getSeqNum(), g.getResidueNumber().getInsCode());
+			g.setResidueNumber(newChainName, g.getResidueNumber().getSeqNum(), g.getResidueNumber().getInsCode());
 		}
 		for (Group g:c.getSeqResGroups()) {
 			if (g.getResidueNumber()==null) continue;
-			g.setResidueNumber(newChainId, g.getResidueNumber().getSeqNum(), g.getResidueNumber().getInsCode());
+			g.setResidueNumber(newChainName, g.getResidueNumber().getSeqNum(), g.getResidueNumber().getInsCode());
 		}
 	}
 
