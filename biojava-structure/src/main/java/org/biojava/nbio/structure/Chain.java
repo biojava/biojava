@@ -165,8 +165,8 @@ public interface Chain {
 	/** 
 	 * Get all groups that are located between two PDB residue numbers.
 	 *
-	 * @param pdbresnumStart PDB residue number of start
-	 * @param pdbresnumEnd PDB residue number of end
+	 * @param pdbresnumStart PDB residue number of start. If null, defaults to the chain start.
+	 * @param pdbresnumEnd PDB residue number of end. If null, defaults to the chain end.
 	 * @return Groups in between. or throws a StructureException if either start or end can not be found,
 	 * @throws StructureException
 	 */
@@ -179,8 +179,8 @@ public interface Chain {
 	 * of groups as specified by the DBREF records - these frequently are rather inaccurate.
 	 *
 	 *
-	 * @param pdbresnumStart PDB residue number of start
-	 * @param pdbresnumEnd PDB residue number of end
+	 * @param pdbresnumStart PDB residue number of start. If null, defaults to the chain start.
+	 * @param pdbresnumEnd PDB residue number of end. If null, defaults to the chain end.
 	 * @param ignoreMissing ignore missing groups in this range.
 	 * @return Groups in between. or throws a StructureException if either start or end can not be found,
 	 * @throws StructureException

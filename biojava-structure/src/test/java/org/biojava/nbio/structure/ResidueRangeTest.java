@@ -265,10 +265,35 @@ public class ResidueRangeTest {
 		ResidueRange.parse("-");
 	}
 
-	@Test(expected=IllegalArgumentException.class)
+	@Test
 	public void testPartialRange() throws IOException, StructureException {
+		String rangeStr = "C_1023-";
+		ResidueRange range = ResidueRange.parse(rangeStr);
+		assertEquals(rangeStr,1023,(int)range.getStart().getSeqNum());
+		assertNull(rangeStr,range.getEnd());
+
+		rangeStr = "C_-";
+		range = ResidueRange.parse(rangeStr);
+		assertNull(rangeStr,range.getStart());
+		assertNull(rangeStr,range.getEnd());
+		
+		rangeStr = "A_-+55";
+		range = ResidueRange.parse(rangeStr);
+		assertNull(rangeStr,range.getStart());
+		assertEquals(rangeStr,55,(int)range.getEnd().getSeqNum());
+
+	}
+	@Test
+	public void testPartialRangeLength() throws IOException, StructureException {
 		AtomPositionMap map = new AtomPositionMap(cache.getAtoms("2eke"));
-		ResidueRangeAndLength.parse("C_1023-", map);
+		String rangeStr = "C_1023-";
+		ResidueRangeAndLength range = ResidueRangeAndLength.parse(rangeStr, map);
+		
+		assertEquals(rangeStr,1023,(int)range.getStart().getSeqNum());
+		assertEquals(rangeStr,1095,(int)range.getEnd().getSeqNum());
+		assertEquals(rangeStr, 73, range.getLength());
+		
+		
 	}
 
 	/**
@@ -338,20 +363,42 @@ public class ResidueRangeTest {
 				"3A:1-100", // Weird chain name
 				"_", "_:1-10", "__-2--1", "__", // catch-all chain
 				"A:-3-+1","A:-3-+1","A:+1-6", // Positive numbers ok, although weird
+				"A:1-","A:1S-","A:--5","A:-+5", // Partial ranges
 		};
 		for (String s : yes) {
 			assertTrue(s + " was not considered a valid range format",
 					ResidueRange.RANGE_REGEX.matcher(s).matches());
 		}
 		// invalid ranges
-		String[] no = new String[] { "A_1-", "A_1S-", "A_1-100-",
-				"A_-10-1000_", "", "-", "___", "__:",
-				"A:1-","A:--5","A:-+5", // Partial ranges
+		String[] no = new String[] {  "A_1-100-",
+				 "", "-", "___", "__:","A_-10-1000_",
+				
 		};
 		for (String s : no) {
 			assertFalse(s + " was considered a valid range format",
 					ResidueRange.RANGE_REGEX.matcher(s).matches());
 		}
+	}
+	
+	@Test
+	public void testTerminalSymbols() {
+		String rangeStr;
+		ResidueRange range;
+		
+		rangeStr = "A:1-$";
+		range = ResidueRange.parse(rangeStr);
+		assertEquals(rangeStr,1,(int)range.getStart().getSeqNum());
+		assertNull(rangeStr,range.getEnd());
+		
+		rangeStr = "A:^-1";
+		range = ResidueRange.parse(rangeStr);
+		assertNull(rangeStr,range.getStart());
+		assertEquals(rangeStr,1,(int)range.getEnd().getSeqNum());
+		
+		rangeStr = "A:^-$";
+		range = ResidueRange.parse(rangeStr);
+		assertNull(rangeStr,range.getStart());
+		assertNull(rangeStr,range.getEnd());
 	}
 
 }

@@ -391,6 +391,41 @@ public class StructureToolsTest extends TestCase {
 
 		assertEquals("Did not find the expected number of residues in "+range, 6, chain.getAtomLength() );
 
+		// partial ranges
+		range = "A:-+1";
+		substr = StructureTools.getSubRanges(structure2, range);
+		assertEquals("Wrong number of chains in "+range, 1, substr.size());
+		chain = substr.getChainByIndex(0);
+		assertEquals("Did not find the expected number of residues in "+range, 4, chain.getAtomLength() );
+		
+		range = "A:--1";
+		substr = StructureTools.getSubRanges(structure2, range);
+		assertEquals("Wrong number of chains in "+range, 1, substr.size());
+		chain = substr.getChainByIndex(0);
+		assertEquals("Did not find the expected number of residues in "+range, 3, chain.getAtomLength() );
+
+		range = "A:^-+1";
+		substr = StructureTools.getSubRanges(structure2, range);
+		assertEquals("Wrong number of chains in "+range, 1, substr.size());
+		chain = substr.getChainByIndex(0);
+		assertEquals("Did not find the expected number of residues in "+range, 4, chain.getAtomLength() );
+		
+		range = "A:^-$";
+		substr = StructureTools.getSubRanges(structure2, range);
+		assertEquals("Wrong number of chains in "+range, 1, substr.getPolyChains().size());
+		chain = substr.getPolyChains().get(0);
+		
+		range = "A:400-";
+		substr = StructureTools.getSubRanges(structure2, range);
+		assertEquals("Wrong number of chains in "+range, 1, substr.size());
+		chain = substr.getChainByIndex(0);
+		assertEquals("Did not find the expected number of residues in "+range, 6, chain.getAtomLength() );
+
+		range = "A:400-$";
+		substr = StructureTools.getSubRanges(structure2, range);
+		assertEquals("Wrong number of chains in "+range, 1, substr.size());
+		chain = substr.getChainByIndex(0);
+		assertEquals("Did not find the expected number of residues in "+range, 6, chain.getAtomLength() );
 
 		// whitespace
 		range = "A:3-7, B:8-12";
