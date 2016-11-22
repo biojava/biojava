@@ -10,6 +10,8 @@ package org.biojava.nbio.structure.io.mmcif.model;
 public class AtomSites extends AbstractBean {
 	
 	String entry_id;
+	
+	// to my knowledge this field is not used - JD 2016-11-22
 	String Cartn_transform_axes;
 	
 	@CIFLabel(label="fract_transf_matrix[1][1]")
@@ -50,6 +52,43 @@ public class AtomSites extends AbstractBean {
 
 	@CIFLabel(label="fract_transf_vector[3]")
 	String fract_transf_vector3;
+	
+	// these fields are unusual but appear in some entries like 5e5j - JD 2016-11-22
+	@CIFLabel(label="Cartn_transf_matrix[1][1]")
+	String Cartn_transf_matrix11;
+
+	@CIFLabel(label="Cartn_transf_matrix[1][2]")
+	String Cartn_transf_matrix12;
+
+	@CIFLabel(label="Cartn_transf_matrix[1][3]")
+	String Cartn_transf_matrix13;
+
+	@CIFLabel(label="Cartn_transf_matrix[2][1]")
+	String Cartn_transf_matrix21;
+
+	@CIFLabel(label="Cartn_transf_matrix[2][2]")
+	String Cartn_transf_matrix22;
+
+	@CIFLabel(label="Cartn_transf_matrix[2][3]")
+	String Cartn_transf_matrix23;
+
+	@CIFLabel(label="Cartn_transf_matrix[3][1]")
+	String Cartn_transf_matrix31;
+
+	@CIFLabel(label="Cartn_transf_matrix[3][2]")
+	String Cartn_transf_matrix32;
+
+	@CIFLabel(label="Cartn_transf_matrix[3][3]")
+	String Cartn_transf_matrix33;
+	
+	@CIFLabel(label="Cartn_transf_vector[1]")
+	String Cartn_transf_vector1;
+
+	@CIFLabel(label="Cartn_transf_vector[2]")
+	String Cartn_transf_vector2;
+
+	@CIFLabel(label="Cartn_transf_vector[3]")
+	String Cartn_transf_vector3;
 
 	
 	public String getEntry_id() {
@@ -213,6 +252,150 @@ public class AtomSites extends AbstractBean {
 	 */
 	public void setFract_transf_vector3(String fract_transf_vector3) {
 		this.fract_transf_vector3 = fract_transf_vector3;
+	}
+	/**
+	 * @return the cartn_transf_matrix11
+	 */
+	public String getCartn_transf_matrix11() {
+		return Cartn_transf_matrix11;
+	}
+	/**
+	 * @param cartn_transf_matrix11 the cartn_transf_matrix11 to set
+	 */
+	public void setCartn_transf_matrix11(String cartn_transf_matrix11) {
+		Cartn_transf_matrix11 = cartn_transf_matrix11;
+	}
+	/**
+	 * @return the cartn_transf_matrix12
+	 */
+	public String getCartn_transf_matrix12() {
+		return Cartn_transf_matrix12;
+	}
+	/**
+	 * @param cartn_transf_matrix12 the cartn_transf_matrix12 to set
+	 */
+	public void setCartn_transf_matrix12(String cartn_transf_matrix12) {
+		Cartn_transf_matrix12 = cartn_transf_matrix12;
+	}
+	/**
+	 * @return the cartn_transf_matrix13
+	 */
+	public String getCartn_transf_matrix13() {
+		return Cartn_transf_matrix13;
+	}
+	/**
+	 * @param cartn_transf_matrix13 the cartn_transf_matrix13 to set
+	 */
+	public void setCartn_transf_matrix13(String cartn_transf_matrix13) {
+		Cartn_transf_matrix13 = cartn_transf_matrix13;
+	}
+	/**
+	 * @return the cartn_transf_matrix21
+	 */
+	public String getCartn_transf_matrix21() {
+		return Cartn_transf_matrix21;
+	}
+	/**
+	 * @param cartn_transf_matrix21 the cartn_transf_matrix21 to set
+	 */
+	public void setCartn_transf_matrix21(String cartn_transf_matrix21) {
+		Cartn_transf_matrix21 = cartn_transf_matrix21;
+	}
+	/**
+	 * @return the cartn_transf_matrix22
+	 */
+	public String getCartn_transf_matrix22() {
+		return Cartn_transf_matrix22;
+	}
+	/**
+	 * @param cartn_transf_matrix22 the cartn_transf_matrix22 to set
+	 */
+	public void setCartn_transf_matrix22(String cartn_transf_matrix22) {
+		Cartn_transf_matrix22 = cartn_transf_matrix22;
+	}
+	/**
+	 * @return the cartn_transf_matrix23
+	 */
+	public String getCartn_transf_matrix23() {
+		return Cartn_transf_matrix23;
+	}
+	/**
+	 * @param cartn_transf_matrix23 the cartn_transf_matrix23 to set
+	 */
+	public void setCartn_transf_matrix23(String cartn_transf_matrix23) {
+		Cartn_transf_matrix23 = cartn_transf_matrix23;
+	}
+	/**
+	 * @return the cartn_transf_matrix31
+	 */
+	public String getCartn_transf_matrix31() {
+		return Cartn_transf_matrix31;
+	}
+	/**
+	 * @param cartn_transf_matrix31 the cartn_transf_matrix31 to set
+	 */
+	public void setCartn_transf_matrix31(String cartn_transf_matrix31) {
+		Cartn_transf_matrix31 = cartn_transf_matrix31;
+	}
+	/**
+	 * @return the cartn_transf_matrix32
+	 */
+	public String getCartn_transf_matrix32() {
+		return Cartn_transf_matrix32;
+	}
+	/**
+	 * @param cartn_transf_matrix32 the cartn_transf_matrix32 to set
+	 */
+	public void setCartn_transf_matrix32(String cartn_transf_matrix32) {
+		Cartn_transf_matrix32 = cartn_transf_matrix32;
+	}
+	/**
+	 * @return the cartn_transf_matrix33
+	 */
+	public String getCartn_transf_matrix33() {
+		return Cartn_transf_matrix33;
+	}
+	/**
+	 * @param cartn_transf_matrix33 the cartn_transf_matrix33 to set
+	 */
+	public void setCartn_transf_matrix33(String cartn_transf_matrix33) {
+		Cartn_transf_matrix33 = cartn_transf_matrix33;
+	}
+	/**
+	 * @return the cartn_transf_vector1
+	 */
+	public String getCartn_transf_vector1() {
+		return Cartn_transf_vector1;
+	}
+	/**
+	 * @param cartn_transf_vector1 the cartn_transf_vector1 to set
+	 */
+	public void setCartn_transf_vector1(String cartn_transf_vector1) {
+		Cartn_transf_vector1 = cartn_transf_vector1;
+	}
+	/**
+	 * @return the cartn_transf_vector2
+	 */
+	public String getCartn_transf_vector2() {
+		return Cartn_transf_vector2;
+	}
+	/**
+	 * @param cartn_transf_vector2 the cartn_transf_vector2 to set
+	 */
+	public void setCartn_transf_vector2(String cartn_transf_vector2) {
+		Cartn_transf_vector2 = cartn_transf_vector2;
+	}
+	/**
+	 * @return the cartn_transf_vector3
+	 */
+	public String getCartn_transf_vector3() {
+		return Cartn_transf_vector3;
+	}
+	/**
+	 * @param cartn_transf_vector3 the cartn_transf_vector3 to set
+	 */
+	public void setCartn_transf_vector3(String cartn_transf_vector3) {
+		Cartn_transf_vector3 = cartn_transf_vector3;
 	}
 
 }
