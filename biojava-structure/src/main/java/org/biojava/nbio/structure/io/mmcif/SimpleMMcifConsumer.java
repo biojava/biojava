@@ -1286,7 +1286,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			PDBCrystallographicInfo crystalInfo = structure.getCrystallographicInfo();
 			
 			boolean nonStd = false;
-			if (!crystalInfo.getCrystalCell().checkScaleMatrix(parsedScaleMatrix)) {
+			if (crystalInfo.getCrystalCell()!=null && !crystalInfo.getCrystalCell().checkScaleMatrix(parsedScaleMatrix)) {
 				nonStd = true;
 			}
 			
