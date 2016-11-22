@@ -40,6 +40,7 @@ import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.io.MMCIFFileReader;
 import org.biojava.nbio.structure.io.StructureIOFile;
 import org.biojava.nbio.structure.io.mmcif.model.AtomSite;
+import org.biojava.nbio.structure.io.mmcif.model.AtomSites;
 import org.biojava.nbio.structure.io.mmcif.model.AuditAuthor;
 import org.biojava.nbio.structure.io.mmcif.model.CIFLabel;
 import org.biojava.nbio.structure.io.mmcif.model.Cell;
@@ -675,6 +676,12 @@ public class SimpleMMcifParser implements MMcifParser {
 					StructNcsOper.class.getName(), 
 					loopFields, lineData, loopWarnings);
 			triggerNewStructNcsOper(sNcsOper);
+		} else if ( category.equals("_atom_sites")) {
+			
+			AtomSites atomSites = (AtomSites) buildObject(
+					AtomSites.class.getName(),
+					loopFields, lineData, loopWarnings);
+			triggerNewAtomSites(atomSites);
 
 		} else if ( category.equals("_struct_ref")){
 			StructRef sref  = (StructRef) buildObject(
@@ -891,6 +898,12 @@ public class SimpleMMcifParser implements MMcifParser {
 			c.newStructNcsOper(sNcsOper);
 		}
 
+	}
+	
+	public void triggerNewAtomSites(AtomSites atomSites) {
+		for(MMcifConsumer c : consumers){
+			c.newAtomSites(atomSites);
+		}
 	}
 
 	/**

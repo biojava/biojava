@@ -95,6 +95,11 @@ public class MetalBondConsumer implements MMcifConsumer{
     public void newStructNcsOper(StructNcsOper sNcsOper) {
 
     }
+    
+    @Override 
+    public void newAtomSites(AtomSites atomSites) {
+    	
+    }
 
     @Override
     public void newStructRef(StructRef sref) {
