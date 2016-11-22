@@ -46,6 +46,7 @@ import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.GroupType;
 import org.biojava.nbio.structure.HetatomImpl;
 import org.biojava.nbio.structure.NucleotideImpl;
+import org.biojava.nbio.structure.PDBCrystallographicInfo;
 import org.biojava.nbio.structure.PDBHeader;
 import org.biojava.nbio.structure.ResidueNumber;
 import org.biojava.nbio.structure.SeqMisMatch;
@@ -151,7 +152,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	private List<StructRefSeqDif> sequenceDifs;
 	private List<StructSiteGen> structSiteGens;
 	
-	private AtomSites atomSites;
+	private Matrix4d parsedScaleMatrix;
 
 
 
@@ -846,6 +847,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		}
 
 		setStructNcsOps();
+		
+		setCrystallographicInfoMetadata();
 
 
 		Map<String,List<SeqMisMatch>> misMatchMap = new HashMap<String, List<SeqMisMatch>>();
@@ -1320,6 +1323,20 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 					ncsOperators.toArray(new Matrix4d[ncsOperators.size()]));
 		}
 	}
+	
+	private void setCrystallographicInfoMetadata() {
+		if (parsedScaleMatrix!=null) {
+			
+			PDBCrystallographicInfo crystalInfo = structure.getCrystallographicInfo();
+			
+			boolean nonStd = false;
+			if (!crystalInfo.getCrystalCell().checkScaleMatrix(parsedScaleMatrix)) {
+				nonStd = true;
+			}
+			
+			crystalInfo.setNonStandardCoordFrameConvention(nonStd); 
+		}
+	}
 
 
 	/** This method will return the parsed protein structure, once the parsing has been finished
@@ -1573,9 +1590,13 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	public void newSymmetry(Symmetry symmetry) {
 		String spaceGroup = symmetry.getSpace_group_name_H_M();
 		SpaceGroup sg = SymoplibParser.getSpaceGroup(spaceGroup);
-		if (sg==null) logger.warn("Space group '"+spaceGroup+"' not recognised as a standard space group");
-
-		structure.getPDBHeader().getCrystallographicInfo().setSpaceGroup(sg);
+		if (sg==null) {
+			logger.warn("Space group '"+spaceGroup+"' not recognised as a standard space group");
+			structure.getPDBHeader().getCrystallographicInfo().setNonStandardSg(true);
+		} else {
+			structure.getPDBHeader().getCrystallographicInfo().setSpaceGroup(sg);
+			structure.getPDBHeader().getCrystallographicInfo().setNonStandardSg(false);
+		}
 	}
 
 	@Override
@@ -1584,7 +1605,22 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	}
 	
 	public void newAtomSites(AtomSites atomSites) {
-		this.atomSites = atomSites;
+		
+		try {
+			Matrix4d m = new Matrix4d(
+				Double.parseDouble(atomSites.getFract_transf_matrix11()), Double.parseDouble(atomSites.getFract_transf_matrix12()), Double.parseDouble(atomSites.getFract_transf_matrix13()), Double.parseDouble(atomSites.getFract_transf_vector1()),
+				Double.parseDouble(atomSites.getFract_transf_matrix21()), Double.parseDouble(atomSites.getFract_transf_matrix22()), Double.parseDouble(atomSites.getFract_transf_matrix23()), Double.parseDouble(atomSites.getFract_transf_vector2()),
+				Double.parseDouble(atomSites.getFract_transf_matrix31()), Double.parseDouble(atomSites.getFract_transf_matrix32()), Double.parseDouble(atomSites.getFract_transf_matrix33()), Double.parseDouble(atomSites.getFract_transf_vector3()),
+				0,0,0,1);
+
+			parsedScaleMatrix = m;
+		
+		} catch (NumberFormatException e) {
+			logger.warn("Some values in _atom_sites.fract_transf_matrix or _atom_sites.fract_transf_vector could not be parsed as numbers. Can't check whether coordinate frame convention is correct! Error: {}", e.getMessage());
+			structure.getPDBHeader().getCrystallographicInfo().setNonStandardCoordFrameConvention(false);
+			
+			// in this case parsedScaleMatrix stays null and can't be used in documentEnd()
+		}
 	}
 
 	@Override
@@ -1903,11 +1939,6 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	public List<PdbxStructOperList> getStructOpers() {
 		return structOpers;
 	}
-
-	public AtomSites getAtomSites() {
-		return atomSites;
-	}
-
 
 	@Override
 	public void newPdbxStrucAssembly(PdbxStructAssembly strucAssembly) {
