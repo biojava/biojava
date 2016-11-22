@@ -61,6 +61,7 @@ import org.biojava.nbio.structure.io.EntityFinder;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.SeqRes2AtomAligner;
 import org.biojava.nbio.structure.io.mmcif.model.AtomSite;
+import org.biojava.nbio.structure.io.mmcif.model.AtomSites;
 import org.biojava.nbio.structure.io.mmcif.model.AuditAuthor;
 import org.biojava.nbio.structure.io.mmcif.model.Cell;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
@@ -149,6 +150,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	private List<StructNcsOper> structNcsOper;
 	private List<StructRefSeqDif> sequenceDifs;
 	private List<StructSiteGen> structSiteGens;
+	
+	private AtomSites atomSites;
 
 
 
@@ -1579,6 +1582,10 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	public void newStructNcsOper(StructNcsOper sNcsOper) {
 		structNcsOper.add(sNcsOper);
 	}
+	
+	public void newAtomSites(AtomSites atomSites) {
+		this.atomSites = atomSites;
+	}
 
 	@Override
 	public void newStructRef(StructRef sref) {
@@ -1897,6 +1904,9 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		return structOpers;
 	}
 
+	public AtomSites getAtomSites() {
+		return atomSites;
+	}
 
 
 	@Override
