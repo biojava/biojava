@@ -102,18 +102,31 @@ public class CrystalBuilder {
 		if (structure.isCrystallographic()) {
 
 			this.isCrystallographic = true;
+
 			// we need to check space group not null for the cases where the entry is crystallographic but
 			// the space group is not a standard one recognized by biojava, e.g. 1mnk (SG: 'I 21')
-			if (this.crystallographicInfo.getSpaceGroup()==null) {
-				logger.warn("Could not find a space group, will only calculate asymmetric unit interfaces.");
+			if (this.crystallographicInfo.isNonStandardSg()) {
+				logger.warn("Space group is non-standard, will only calculate asymmetric unit interfaces.");
+				this.isCrystallographic = false;
+
+			} else if (this.crystallographicInfo.getSpaceGroup()==null) { 			
+				// just in case we still check for space group null (a user pdb file could potentially be crystallographic and have no space group)			
+				logger.warn("Space group is null, will only calculate asymmetric unit interfaces.");
 				this.isCrystallographic = false;
 			} else {
 				this.numOperatorsSg = this.crystallographicInfo.getSpaceGroup().getMultiplicity();
 			}
+			
 			// we need to check crystal cell not null for the rare cases where the entry is crystallographic but
 			// the crystal cell is not given, e.g. 2i68, 2xkm, 4bpq
 			if (this.crystallographicInfo.getCrystalCell()==null) {
 				logger.warn("Could not find a crystal cell definition, will only calculate asymmetric unit interfaces.");
+				this.isCrystallographic = false;
+			}
+			
+			// check for cases like 4hhb that are in a non-standard coordinate frame convention, see https://github.com/eppic-team/owl/issues/4
+			if (this.crystallographicInfo.isNonStandardCoordFrameConvention()) {
+				logger.warn("Non-standard coordinate frame convention, will only calculate asymmetric unit interfaces.");
 				this.isCrystallographic = false;
 			}
 
