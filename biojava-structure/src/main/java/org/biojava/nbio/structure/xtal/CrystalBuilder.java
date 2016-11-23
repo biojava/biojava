@@ -129,6 +129,7 @@ public class CrystalBuilder {
 			if (this.crystallographicInfo.isNonStandardCoordFrameConvention()) {
 				logger.warn("Non-standard coordinate frame convention, will only calculate asymmetric unit interfaces.");
 				this.isCrystallographic = false;
+				this.numOperatorsSg = 1; // we force here to 1 or otherwise it gets filled from sg above
 			}
 
 		} else {
