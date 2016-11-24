@@ -112,7 +112,7 @@ public class BlastTabularParserTest {
 		Hit<DNASequence,NucleotideCompound> expHit1res1;
 		Hsp<DNASequence,NucleotideCompound> expHsp1hit1res1;
 
-		String resource = "/org/biojava/nbio/core/search/io/blast/small-blastreport.blast.txt";
+		String resource = "/org/biojava/nbio/core/search/io/blast/small-blastreport.blasttxt";
 		File file = getFileForResource(resource);
 
 		BlastTabularParser<DNASequence,NucleotideCompound> instance = new BlastTabularParser<>(HspTest.buildDNASeq);
