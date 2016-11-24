@@ -1502,8 +1502,13 @@ public class PDBFileParser  {
 		}
 
 		SpaceGroup sg = SymoplibParser.getSpaceGroup(spaceGroup);
-		if (sg==null) logger.warn("Space group '"+spaceGroup+"' not recognised as a standard space group");
-		crystallographicInfo.setSpaceGroup(sg);
+		if (sg==null) {
+			logger.warn("Space group '"+spaceGroup+"' not recognised as a standard space group");
+			crystallographicInfo.setNonStandardSg(true);
+		} else {
+			crystallographicInfo.setSpaceGroup(sg);
+			crystallographicInfo.setNonStandardSg(false);
+		}
 	}
 
 	/**
