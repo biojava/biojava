@@ -220,8 +220,8 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
 		return Collections.unmodifiableList(tempList);
 	}
 
-	@Override
-	public List<AlignedSequence<S, C>> getAlignedSequences(S... sequences) {
+	@Override @SafeVarargs
+	public final List<AlignedSequence<S, C>> getAlignedSequences(S... sequences) {
 		List<AlignedSequence<S, C>> tempList = new ArrayList<AlignedSequence<S, C>>();
 		for (S s : sequences) {
 			tempList.add(getAlignedSequence(s));
@@ -572,6 +572,37 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
 
 		short val = matrix.getValue(aa1,aa2);
 		return val > 0;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((list == null) ? 0 : list.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		SimpleProfile<?,?> other = (SimpleProfile<?,?>) obj;
+		if (list == null) {
+			if (other.list != null)
+				return false;
+		} else if (!list.equals(other.list))
+			return false;
+		return true;
 	}
 
 }

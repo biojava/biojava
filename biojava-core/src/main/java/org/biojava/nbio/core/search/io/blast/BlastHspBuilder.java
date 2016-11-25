@@ -171,6 +171,9 @@ public class BlastHspBuilder {
 	private static <S extends Sequence<C>,C extends Compound>
 	SequencePair<S, C> buildSequencePair(Function<String, S> buildSeq,
 			String query, String hit, String gaps) {
+		if(query == null || hit == null || gaps == null) {
+			return null;
+		}
 		S q = buildSeq.apply(query);
 		S h = buildSeq.apply(hit);
 		List<Step> steps = getAlignmentsSteps(gaps);

@@ -71,7 +71,7 @@ public interface Location extends Iterable<Location>, Accessioned {
 	/**
 	 * Gives access to the sub locations for this location. However this does
 	 * not return sub-locations of sub-locations. For that functionality use
-	 * {@link #getAllSubLocations()}.
+	 * {@link #getRelevantSubLocations()}.
 	 *
 	 * @return A list of a single level of sub-locations
 	 */

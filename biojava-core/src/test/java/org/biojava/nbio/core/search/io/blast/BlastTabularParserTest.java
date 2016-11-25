@@ -129,13 +129,13 @@ public class BlastTabularParserTest {
 				.setHspQueryFrom(1)
 				.setHspQueryTo(1567)
 				.setHspHitFrom(616309)
-				.setHspQueryTo(617875)
+				.setHspHitTo(617875)
 				.setHspEvalue(0)
 				.setHspBitScore(2894)
 				.createBlastHsp(HspTest.buildDNASeq);
 
 		BlastHsp<DNASequence,NucleotideCompound> hsp1Hit1Res2 = new BlastHspBuilder()
-				.setHspNum(1)
+				.setHspNum(2)
 				.setPercentageIdentity(100.0/100)
 				.setHspAlignLen(1567)
 				.setMismatchCount(0)
@@ -143,7 +143,7 @@ public class BlastTabularParserTest {
 				.setHspQueryFrom(1)
 				.setHspQueryTo(1567)
 				.setHspHitFrom(1278699)
-				.setHspQueryTo(1277133)
+				.setHspHitTo(1277133)
 				.setHspEvalue(0)
 				.setHspBitScore(2894)
 				.createBlastHsp(HspTest.buildDNASeq);
@@ -169,12 +169,12 @@ public class BlastTabularParserTest {
 		expHit1res1 = expRes1.iterator().next();
 		expHsp1hit1res1 = expHit1res1.iterator().next();
 
-		// results test
-		assertEquals(expRes1, res1);
-		// hit test
-		assertEquals(expHit1res1, hit1Res1);
 		// hsp test
 		assertEquals(expHsp1hit1res1, hsp1Hit1Res1);
+		// hit test
+		assertEquals(expHit1res1, hit1Res1);
+		// results test
+		assertEquals(expRes1, res1);
 
 
 		String resource2 = "/org/biojava/nbio/core/search/io/blast/testBlastTabularReport.txt";
@@ -190,6 +190,7 @@ public class BlastTabularParserTest {
 		expHsp1hit1res1 = expHit1res1.iterator().next();
 
 		hsp1Hit1Res1 = new BlastHspBuilder()
+				.setHspNum(1)
 				.setPercentageIdentity(100.00/100)
 				.setHspAlignLen(48)
 				.setMismatchCount(0)

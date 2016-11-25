@@ -36,6 +36,7 @@ import org.biojava.nbio.core.search.io.Hit;
 import org.biojava.nbio.core.search.io.Hsp;
 import org.biojava.nbio.core.search.io.Result;
 import org.biojava.nbio.core.search.io.ResultFactory;
+import org.biojava.nbio.core.search.io.SearchIO;
 import org.biojava.nbio.core.sequence.template.Compound;
 import org.biojava.nbio.core.sequence.template.Sequence;
 
@@ -88,6 +89,15 @@ public class BlastTabularParser<S extends Sequence<C>,C extends Compound> implem
 	private String bitScore     ;
 	private Function<String,S> buildSeq;
 
+	/**
+	 * We need a no-argument constructor for use as a service. However this is dangerously non-typesafe.
+	 * Worse, it has to be public for the reflection to work.
+	 * @deprected Not typesafe. Do not use except by reflection.
+	 */
+	@Deprecated
+	public BlastTabularParser() {
+		this( (seq) -> (S)SearchIO.getSequence(seq) );
+	}
 	public BlastTabularParser(Function<String,S> buildSeq) {
 		this.buildSeq = buildSeq;
 	}
@@ -149,6 +159,7 @@ public class BlastTabularParser<S extends Sequence<C>,C extends Compound> implem
 						}
 						BlastHspBuilder hspBuilder = new BlastHspBuilder();
 						hspBuilder
+							.setHspNum(hsps.size()+1)
 							.setHspAlignLen(new Integer(alnLength))
 							.setHspGaps(new Integer(gapOpenCount))
 							.setHspQueryFrom(new Integer(queryStart))

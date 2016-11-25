@@ -37,6 +37,7 @@ import org.biojava.nbio.core.sequence.template.Sequence;
  */
 
 public abstract class Hsp <S extends Sequence<C>, C extends Compound> {
+
 	//private static final Logger logger = LoggerFactory.getLogger(Hsp.class);
 	private Integer hspNum;
 	private Double hspBitScore;
@@ -58,28 +59,126 @@ public abstract class Hsp <S extends Sequence<C>, C extends Compound> {
 
 	@Override
 	public int hashCode() {
-		return alignment.hashCode();
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((alignment == null) ? 0 : alignment.hashCode());
+		result = prime * result + ((hspAlignLen == null) ? 0 : hspAlignLen.hashCode());
+		result = prime * result + ((hspBitScore == null) ? 0 : hspBitScore.hashCode());
+		result = prime * result + ((hspEvalue == null) ? 0 : hspEvalue.hashCode());
+		result = prime * result + ((hspGaps == null) ? 0 : hspGaps.hashCode());
+		result = prime * result + ((hspHitFrame == null) ? 0 : hspHitFrame.hashCode());
+		result = prime * result + ((hspHitFrom == null) ? 0 : hspHitFrom.hashCode());
+		result = prime * result + ((hspHitTo == null) ? 0 : hspHitTo.hashCode());
+		result = prime * result + ((hspIdentity == null) ? 0 : hspIdentity.hashCode());
+		result = prime * result + ((hspNum == null) ? 0 : hspNum.hashCode());
+		result = prime * result + ((hspPositive == null) ? 0 : hspPositive.hashCode());
+		result = prime * result + ((hspQueryFrame == null) ? 0 : hspQueryFrame.hashCode());
+		result = prime * result + ((hspQueryFrom == null) ? 0 : hspQueryFrom.hashCode());
+		result = prime * result + ((hspQueryTo == null) ? 0 : hspQueryTo.hashCode());
+		result = prime * result + ((hspScore == null) ? 0 : hspScore.hashCode());
+		result = prime * result + ((mismatchCount == null) ? 0 : mismatchCount.hashCode());
+		result = prime * result + ((percentageIdentity == null) ? 0 : percentageIdentity.hashCode());
+		return result;
 	}
-	/**
-	 * Experimental.
-	 * Wants to implement conceptual comparisons of search results.
-	 * Fields unrelated to search are deliberately not considered.
-	 *
-	 * In HSP case, alignment representation strings are considered.
-	 * @return true if HSP alignments are the same,
-	 * false otherwise or if alignment strings are undetermined
-	 */
+
+
 	@Override
 	public boolean equals(Object obj) {
-		if (obj == null) {
+		if (this == obj)
+			return true;
+		if (obj == null)
 			return false;
-		}
-		if (getClass() != obj.getClass()) {
+		if (getClass() != obj.getClass())
 			return false;
-		}
-		final Hsp<?, ?> other = (Hsp<?, ?>) obj;
-		return alignment.equals(other.alignment);
+		Hsp<?,?> other = (Hsp<?,?>) obj;
+		if (alignment == null) {
+			if (other.alignment != null)
+				return false;
+		} else if (!alignment.equals(other.alignment))
+			return false;
+		if (hspAlignLen == null) {
+			if (other.hspAlignLen != null)
+				return false;
+		} else if (!hspAlignLen.equals(other.hspAlignLen))
+			return false;
+		if (hspBitScore == null) {
+			if (other.hspBitScore != null)
+				return false;
+		} else if (!hspBitScore.equals(other.hspBitScore))
+			return false;
+		if (hspEvalue == null) {
+			if (other.hspEvalue != null)
+				return false;
+		} else if (!hspEvalue.equals(other.hspEvalue))
+			return false;
+		if (hspGaps == null) {
+			if (other.hspGaps != null)
+				return false;
+		} else if (!hspGaps.equals(other.hspGaps))
+			return false;
+		if (hspHitFrame == null) {
+			if (other.hspHitFrame != null)
+				return false;
+		} else if (!hspHitFrame.equals(other.hspHitFrame))
+			return false;
+		if (hspHitFrom == null) {
+			if (other.hspHitFrom != null)
+				return false;
+		} else if (!hspHitFrom.equals(other.hspHitFrom))
+			return false;
+		if (hspHitTo == null) {
+			if (other.hspHitTo != null)
+				return false;
+		} else if (!hspHitTo.equals(other.hspHitTo))
+			return false;
+		if (hspIdentity == null) {
+			if (other.hspIdentity != null)
+				return false;
+		} else if (!hspIdentity.equals(other.hspIdentity))
+			return false;
+		if (hspNum == null) {
+			if (other.hspNum != null)
+				return false;
+		} else if (!hspNum.equals(other.hspNum))
+			return false;
+		if (hspPositive == null) {
+			if (other.hspPositive != null)
+				return false;
+		} else if (!hspPositive.equals(other.hspPositive))
+			return false;
+		if (hspQueryFrame == null) {
+			if (other.hspQueryFrame != null)
+				return false;
+		} else if (!hspQueryFrame.equals(other.hspQueryFrame))
+			return false;
+		if (hspQueryFrom == null) {
+			if (other.hspQueryFrom != null)
+				return false;
+		} else if (!hspQueryFrom.equals(other.hspQueryFrom))
+			return false;
+		if (hspQueryTo == null) {
+			if (other.hspQueryTo != null)
+				return false;
+		} else if (!hspQueryTo.equals(other.hspQueryTo))
+			return false;
+		if (hspScore == null) {
+			if (other.hspScore != null)
+				return false;
+		} else if (!hspScore.equals(other.hspScore))
+			return false;
+		if (mismatchCount == null) {
+			if (other.mismatchCount != null)
+				return false;
+		} else if (!mismatchCount.equals(other.mismatchCount))
+			return false;
+		if (percentageIdentity == null) {
+			if (other.percentageIdentity != null)
+				return false;
+		} else if (!percentageIdentity.equals(other.percentageIdentity))
+			return false;
+		return true;
 	}
+
 
 	public SequencePair<S,C> getAlignment(){
 		return alignment;
@@ -206,9 +305,6 @@ public abstract class Hsp <S extends Sequence<C>, C extends Compound> {
 		this.percentageIdentity = percentageIdentity;
 		this.mismatchCount = mismatchCount;
 
-		if(this.alignment == null) {
-			throw new NullPointerException("Null alignment");
-		}
 		// sanity check
 		if (percentageIdentity != null && (percentageIdentity < 0 || percentageIdentity >1))
 			throw new IllegalArgumentException("Percentage identity must be between 0 and 1");

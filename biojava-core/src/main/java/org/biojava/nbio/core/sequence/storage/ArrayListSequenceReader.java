@@ -248,8 +248,8 @@ public class ArrayListSequenceReader<C extends Compound> implements SequenceRead
 	 * @param compounds
 	 * @return
 	 */
-	@Override
-	public int countCompounds(C... compounds) {
+	@Override @SafeVarargs
+	public final int countCompounds(C... compounds) {
 		return SequenceMixin.countCompounds(this, compounds);
 	}
 

@@ -243,8 +243,8 @@ public class SimpleAlignedSequence<S extends Sequence<C>, C extends Compound> im
 
 	// methods for Sequence
 
-	@Override
-	public int countCompounds(C... compounds) {
+	@Override @SafeVarargs
+	public final int countCompounds(C... compounds) {
 		int count = 0;
 		List<C> search = Arrays.asList(compounds);
 		for (C compound : getAsList()) {
@@ -398,5 +398,51 @@ public class SimpleAlignedSequence<S extends Sequence<C>, C extends Compound> im
 		
 		double coverage = getLength() - getNumGapPositions();
 		return coverage / getOriginalSequence().getLength();
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + length;
+		result = prime * result + ((location == null) ? 0 : location.hashCode());
+		result = prime * result + numAfter;
+		result = prime * result + numBefore;
+		result = prime * result + ((original == null) ? 0 : original.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		SimpleAlignedSequence<?,?> other = (SimpleAlignedSequence<?,?>) obj;
+		if (length != other.length)
+			return false;
+		if (location == null) {
+			if (other.location != null)
+				return false;
+		} else if (!location.equals(other.location))
+			return false;
+		if (numAfter != other.numAfter)
+			return false;
+		if (numBefore != other.numBefore)
+			return false;
+		if (original == null) {
+			if (other.original != null)
+				return false;
+		} else if (!original.equals(other.original))
+			return false;
+		return true;
 	}
 }

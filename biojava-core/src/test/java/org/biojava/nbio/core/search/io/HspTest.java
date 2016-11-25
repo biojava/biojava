@@ -28,6 +28,7 @@ import java.util.function.Function;
 import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.core.search.io.blast.BlastHspBuilder;
 import org.biojava.nbio.core.sequence.DNASequence;
+import org.biojava.nbio.core.sequence.compound.AmbiguityDNACompoundSet;
 import org.biojava.nbio.core.sequence.compound.NucleotideCompound;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -44,7 +45,7 @@ public class HspTest {
 
 	public static Function<String, DNASequence> buildDNASeq = (seq) -> {
 		try {
-			return new DNASequence(seq);
+			return new DNASequence(seq, AmbiguityDNACompoundSet.getDNACompoundSet());
 		} catch (CompoundNotFoundException ex) {
 			fail(ex.getMessage());
 			return null;

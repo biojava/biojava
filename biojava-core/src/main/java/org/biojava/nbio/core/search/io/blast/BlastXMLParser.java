@@ -26,6 +26,7 @@ import org.biojava.nbio.core.search.io.Hit;
 import org.biojava.nbio.core.search.io.Hsp;
 import org.biojava.nbio.core.search.io.Result;
 import org.biojava.nbio.core.search.io.ResultFactory;
+import org.biojava.nbio.core.search.io.SearchIO;
 
 import java.io.File;
 import java.io.IOException;
@@ -67,6 +68,15 @@ public class BlastXMLParser<S extends Sequence<C>,C extends Compound> implements
 	private Map<String,S> queryReferencesMap, databaseReferencesMap;
 	private Function<String,S> buildSeq;
 
+	/**
+	 * We need a no-argument constructor for use as a service. However this is dangerously non-typesafe.
+	 * Worse, it has to be public for the reflection to work.
+	 * @deprected Not typesafe. Do not use except by reflection.
+	 */
+	@Deprecated
+	public BlastXMLParser() {
+		this( (seq) -> (S)SearchIO.getSequence(seq) );
+	}
 	public BlastXMLParser(Function<String,S> buildSeq) {
 		this.buildSeq = buildSeq;
 	}
