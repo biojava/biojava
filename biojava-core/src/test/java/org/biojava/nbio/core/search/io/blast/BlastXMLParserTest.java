@@ -33,9 +33,9 @@ import java.util.function.Function;
 import org.biojava.nbio.core.search.io.Hit;
 import org.biojava.nbio.core.search.io.Hsp;
 import org.biojava.nbio.core.search.io.Result;
-import org.biojava.nbio.core.search.io.SearchIO;
 import org.biojava.nbio.core.sequence.template.Compound;
 import org.biojava.nbio.core.sequence.template.Sequence;
+import org.biojava.nbio.core.util.SequenceTools;
 import org.junit.Test;
 
 /**
@@ -62,11 +62,9 @@ public class BlastXMLParserTest {
 	public void testCreateObjectsUntyped() throws Exception {
 		
 		// Because types need to be consistent, use a helper method for wildcard capture
-		testCreateObjectsUntypedHelper((seq) -> SearchIO.getSequence(seq));
+		testCreateObjectsUntypedHelper(SequenceTools::getSequenceFromString);
 	}
 	public <S extends Sequence<C>,C extends Compound> void testCreateObjectsUntypedHelper(Function<String, S> buildSeq) throws Exception {
-		System.out.println("createObjects");
-		
 		String resource = "/org/biojava/nbio/core/search/io/blast/small-blastreport.blastxml";
 		
 		
@@ -142,7 +140,7 @@ public class BlastXMLParserTest {
 		// hsp test
 		assertEquals(expHsp1hit1res1, hsp1hit1res1);
 	}
-	
+
 	private <S extends Sequence<C>, C extends Compound>
 	List<Result<S, C>> getResults(File file, Function<String,S> buildSeq) throws IOException, ParseException {
 		BlastXMLParser<S,C> instance = new BlastXMLParser<>(buildSeq);

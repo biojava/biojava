@@ -21,13 +21,6 @@
 package org.biojava.nbio.core.search.io.blast;
 
 
-import org.biojava.nbio.core.alignment.template.SequencePair;
-import org.biojava.nbio.core.search.io.Hit;
-import org.biojava.nbio.core.search.io.Hsp;
-import org.biojava.nbio.core.search.io.Result;
-import org.biojava.nbio.core.search.io.ResultFactory;
-import org.biojava.nbio.core.search.io.SearchIO;
-
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
@@ -40,8 +33,14 @@ import java.util.function.Function;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathException;
 
+import org.biojava.nbio.core.alignment.template.SequencePair;
+import org.biojava.nbio.core.search.io.Hit;
+import org.biojava.nbio.core.search.io.Hsp;
+import org.biojava.nbio.core.search.io.Result;
+import org.biojava.nbio.core.search.io.ResultFactory;
 import org.biojava.nbio.core.sequence.template.Compound;
 import org.biojava.nbio.core.sequence.template.Sequence;
+import org.biojava.nbio.core.util.SequenceTools;
 import org.biojava.nbio.core.util.XMLHelper;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -73,9 +72,10 @@ public class BlastXMLParser<S extends Sequence<C>,C extends Compound> implements
 	 * Worse, it has to be public for the reflection to work.
 	 * @deprected Not typesafe. Do not use except by reflection.
 	 */
+	@SuppressWarnings("unchecked")
 	@Deprecated
 	public BlastXMLParser() {
-		this( (seq) -> (S)SearchIO.getSequence(seq) );
+		this( (seq) -> (S)SequenceTools.getSequenceFromString(seq) );
 	}
 	public BlastXMLParser(Function<String,S> buildSeq) {
 		this.buildSeq = buildSeq;

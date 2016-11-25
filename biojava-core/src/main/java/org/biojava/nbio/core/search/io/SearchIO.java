@@ -29,16 +29,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.ServiceLoader;
 
-import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
-import org.biojava.nbio.core.sequence.DNASequence;
-import org.biojava.nbio.core.sequence.ProteinSequence;
-import org.biojava.nbio.core.sequence.RNASequence;
-import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
-import org.biojava.nbio.core.sequence.compound.DNACompoundSet;
-import org.biojava.nbio.core.sequence.compound.RNACompoundSet;
-import org.biojava.nbio.core.sequence.template.Sequence;
-import org.slf4j.LoggerFactory;
-
 /**
  * Designed by Paolo Pavan.
  * You may want to find my contacts on Github and LinkedIn for code info
@@ -46,10 +36,12 @@ import org.slf4j.LoggerFactory;
  * https://github.com/paolopavan
  *
  * @author Paolo Pavan
+ * @deprecated This class uses SPI to instantiate ResultFactory instances (e.g. BLAST parsers). This is not type safe
+ * and should be avoided wherever possible.
  */
-
+@Deprecated
 public class SearchIO implements Iterable<Result<?,?>>{
-	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(SearchIO.class);
+	//private static final org.slf4j.Logger logger = LoggerFactory.getLogger(SearchIO.class);
 	static private HashMap<String,ResultFactory<?,?>> extensionFactoryAssociation;
 
 	final private ResultFactory<?,?> factory;
@@ -196,30 +188,6 @@ public class SearchIO implements Iterable<Result<?,?>>{
 				throw new UnsupportedOperationException("The remove operation is not supported by this iterator");
 			}
 		};
-	}
-	
-	/**
-	 * General method to create a sequence (of unknown type) from a string
-	 * @param gappedSequenceString
-	 * @return
-	 */
-	public static Sequence<?> getSequence(String gappedSequenceString){
-		if (gappedSequenceString == null) return null;
-
-		Sequence<?> returnSeq = null;
-		String sequenceString = gappedSequenceString.replace("-", "");
-
-		try {
-			if (sequenceString.matches("^[ACTG]+$"))
-				returnSeq = new DNASequence(sequenceString, DNACompoundSet.getDNACompoundSet());
-			else if (sequenceString.matches("^[ACUG]+$"))
-				returnSeq = new RNASequence(sequenceString, RNACompoundSet.getRNACompoundSet());
-			else
-				returnSeq = new ProteinSequence(sequenceString, AminoAcidCompoundSet.getAminoAcidCompoundSet());
-		} catch (CompoundNotFoundException ex) {
-			logger.error("Unexpected error, could not find compound when creating Sequence object from Hsp", ex);
-		}
-		return returnSeq;
 	}
 
 }

@@ -32,13 +32,14 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.function.Function;
 import java.util.logging.Logger;
+
 import org.biojava.nbio.core.search.io.Hit;
 import org.biojava.nbio.core.search.io.Hsp;
 import org.biojava.nbio.core.search.io.Result;
 import org.biojava.nbio.core.search.io.ResultFactory;
-import org.biojava.nbio.core.search.io.SearchIO;
 import org.biojava.nbio.core.sequence.template.Compound;
 import org.biojava.nbio.core.sequence.template.Sequence;
+import org.biojava.nbio.core.util.SequenceTools;
 
 /**
  * Designed by Paolo Pavan.
@@ -94,9 +95,10 @@ public class BlastTabularParser<S extends Sequence<C>,C extends Compound> implem
 	 * Worse, it has to be public for the reflection to work.
 	 * @deprected Not typesafe. Do not use except by reflection.
 	 */
+	@SuppressWarnings("unchecked")
 	@Deprecated
 	public BlastTabularParser() {
-		this( (seq) -> (S)SearchIO.getSequence(seq) );
+		this( (seq) -> (S)SequenceTools.getSequenceFromString(seq) );
 	}
 	public BlastTabularParser(Function<String,S> buildSeq) {
 		this.buildSeq = buildSeq;

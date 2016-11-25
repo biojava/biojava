@@ -41,8 +41,9 @@ import static org.junit.Assert.*;
  * https://github.com/paolopavan
  *
  * @author Paolo Pavan
+ * @deprecated Avoid using SearchIO due to type safety
  */
-
+@Deprecated
 public class SearchIOTest {
 
 	public SearchIOTest() {
