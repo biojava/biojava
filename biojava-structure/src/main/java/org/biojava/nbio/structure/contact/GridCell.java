@@ -65,7 +65,7 @@ public class GridCell {
 	 * Calculates all distances of atoms within this cell returning those that are within the given cutoff
 	 * as a list of Contacts containing the indices of the pair and the calculated distance.
 	 * 
-	 * If {@link Grid#getIAtoms()} is null, distances are within the iAtoms only
+	 * If {@link Grid#getJAtoms()} is null, distances are within the iAtoms only
 	 * @return
 	 */
 	public List<Contact> getContactsWithinCell(){

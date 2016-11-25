@@ -547,9 +547,10 @@ public class CrystalCell implements Serializable {
 	 */
 	public boolean checkScaleMatrix(Matrix4d scaleMatrix) {
 
+		Matrix3d mtranspose = getMTranspose();
 		for (int i=0;i<3;i++) {
 			for (int j=0;j<3;j++) {
-				if (!deltaComp(getMTranspose().getElement(i, j),scaleMatrix.getElement(i, j))) {
+				if (!deltaComp(mtranspose.getElement(i, j),scaleMatrix.getElement(i, j))) {
 					//System.out.println("Our value   ("+i+","+j+"): "+getM().getElement(i,j));
 					//System.out.println("Their value ("+i+","+j+"): "+scaleMatrix.getElement(i,j));
 					return false;

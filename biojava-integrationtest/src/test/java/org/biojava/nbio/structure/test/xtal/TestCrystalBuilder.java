@@ -18,18 +18,19 @@
  *      http://www.biojava.org/
  *
  */
-package org.biojava.nbio.structure.xtal;
+package org.biojava.nbio.structure.test.xtal;
 
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.contact.StructureInterfaceList;
+import org.biojava.nbio.structure.xtal.CrystalBuilder;
 import org.junit.Test;
 
 import java.io.IOException;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class TestCrystalBuilder {
 
@@ -42,7 +43,7 @@ public class TestCrystalBuilder {
 
 		StructureIO.setAtomCache(cache);
 
-		cache.setUseMmCif(false);
+		cache.setUseMmCif(true);
 		Structure s1 = StructureIO.getStructure("1NMR");
 
 		CrystalBuilder cb = new CrystalBuilder(s1);
@@ -60,7 +61,7 @@ public class TestCrystalBuilder {
 
 		StructureIO.setAtomCache(cache);
 
-		cache.setUseMmCif(false);
+		cache.setUseMmCif(true);
 		Structure s1 = StructureIO.getStructure("1B8G");
 		CrystalBuilder cb = new CrystalBuilder(s1);
 		StructureInterfaceList interfaces = cb.getUniqueInterfaces(5.5);
@@ -78,7 +79,7 @@ public class TestCrystalBuilder {
 
 		StructureIO.setAtomCache(cache);
 
-		cache.setUseMmCif(false);
+		cache.setUseMmCif(true);
 		Structure s1 = StructureIO.getStructure("2MFZ");
 		CrystalBuilder cb = new CrystalBuilder(s1);
 		StructureInterfaceList interfaces = cb.getUniqueInterfaces(5.5);
@@ -95,7 +96,7 @@ public class TestCrystalBuilder {
 
 		StructureIO.setAtomCache(cache);
 
-		cache.setUseMmCif(false);
+		cache.setUseMmCif(true);
 		Structure s1 = StructureIO.getStructure("4MF8");
 		CrystalBuilder cb = new CrystalBuilder(s1);
 		StructureInterfaceList interfaces = cb.getUniqueInterfaces(5.5);
@@ -115,11 +116,30 @@ public class TestCrystalBuilder {
 
 		StructureIO.setAtomCache(cache);
 
-		cache.setUseMmCif(false);
+		cache.setUseMmCif(true);
 		Structure s1 = StructureIO.getStructure("2H2Z");
 		CrystalBuilder cb = new CrystalBuilder(s1);
 		StructureInterfaceList interfaces = cb.getUniqueInterfaces(5.5);
 		assertTrue(interfaces.size()>=3);
 
 	}
+	
+	@Test
+	public void test4HHB() throws IOException, StructureException {
+
+		// 4hhb is a very old entry with a non-standard coordinate frame convention, we should calculate only AU contacts
+		
+		AtomCache cache = new AtomCache();
+
+		StructureIO.setAtomCache(cache);
+
+		cache.setUseMmCif(true);
+		Structure s1 = StructureIO.getStructure("4HHB");
+		CrystalBuilder cb = new CrystalBuilder(s1);
+		StructureInterfaceList interfaces = cb.getUniqueInterfaces(5.5);
+		// 5 interfaces in the AU: the 4 of the tetramer + 1 cross-interface 
+		assertEquals(5, interfaces.size());
+
+	}
+
 }
