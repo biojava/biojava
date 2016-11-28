@@ -638,7 +638,6 @@
 		<module>biojava-core</module>
 		<module>biojava-alignment</module>
 		<module>biojava-structure</module>
-		<module>biojava-integrationtest</module>
 		<module>biojava-structure-gui</module>
 		<module>biojava-sequencing</module>
 		<module>biojava-genome</module>
@@ -648,6 +647,8 @@
 		<module>biojava-aa-prop</module>
 		<module>biojava-survival</module>
 		<module>biojava-ontology</module>
+		<!-- Keep integration tests last  -->
+		<module>biojava-integrationtest</module>
 	</modules>
 	<inceptionYear>2000</inceptionYear>
 	<issueManagement>
