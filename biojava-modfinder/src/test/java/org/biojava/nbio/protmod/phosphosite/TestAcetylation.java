@@ -24,6 +24,9 @@ public class TestAcetylation extends TestCase {
 
         try {
             File localDir = ds.getLocalDir();
+            if ( ! localDir.exists())
+                localDir.mkdir();
+            
             int slashIndex = f.lastIndexOf("/");
 
             String fileName = f.substring(slashIndex);
