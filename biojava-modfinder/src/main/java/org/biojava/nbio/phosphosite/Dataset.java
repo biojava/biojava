@@ -154,7 +154,7 @@ public class Dataset {
 
 	}
 
-	private void downloadFile(URL u, File localFile) throws IOException {
+	public void downloadFile(URL u, File localFile) throws IOException {
 
 		System.out.println("Downloading " + u);
 
@@ -234,6 +234,7 @@ public class Dataset {
 
 				List<Site> sites = Site.parseSites(f);
 
+				System.out.println("Got " + sites.size() + " sites");
 				for (Site s : sites) {
 					if (s.getUniprot().equals("P50225") || s.getUniprot().equals("P48025")) {
 						System.out.println(s);
