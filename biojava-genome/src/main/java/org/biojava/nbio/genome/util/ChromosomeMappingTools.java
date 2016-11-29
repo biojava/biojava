@@ -13,8 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *  A class that take care of the painful mapping
+ *  A class that can map chromosomal positions to mRNA (coding sequence) positions.
+ *
+ *  @author Andreas Prlic
  */
+
 public class ChromosomeMappingTools {
 
     private static final Logger logger = LoggerFactory.getLogger(ChromosomeMappingTools.class);
@@ -915,7 +918,7 @@ public class ChromosomeMappingTools {
 //
 
     /**
-     * I have a genomic coordinate, where is it in the Gene?
+     * I have a genomic coordinate, where is it on the mRNA
      *
      * @param coordinate
      * @param chromosomePosition
@@ -1132,7 +1135,7 @@ public class ChromosomeMappingTools {
     }
 
     /**
-     * Get the chromosome position mapped onto the mrna CDS transcript position (needs to be divided by 3 to get protein coordinate)
+     * Get the chromosome position mapped onto the mRNA CDS transcript position (needs to be divided by 3 to get protein coordinate)
      *
      * @param exonStarts
      * @param exonEnds
