@@ -2017,6 +2017,8 @@ public class PDBFileParser  {
 
 	/** safes repeating a few lines ... */
 	private Integer conect_helper (String line,int start,int end) {
+		if (line.length() < end) return null;
+		
 		String sbond = line.substring(start,end).trim();
 		int bond  = -1 ;
 		Integer b = null ;
@@ -2343,7 +2345,15 @@ public class PDBFileParser  {
 	private void pdb_LINK_Handler(String line) {
 
 		if (params.isHeaderOnly()) return;
+		
+		// Check for the minimal set of fields.
+		if (line.length()<56) {
+			logger.info("LINK line has length under 56. Ignoring it.");
+			return;
+		}
 
+		int len = line.length();
+		
 		String name1 = line.substring(12, 16).trim();
 		String altLoc1 = line.substring(16, 17).trim();
 		String resName1 = line.substring(17, 20).trim();
@@ -2356,10 +2366,13 @@ public class PDBFileParser  {
 		String resName2 = line.substring(47, 50).trim();
 		String chainID2 = line.substring(51, 52).trim();
 		String resSeq2 = line.substring(52, 56).trim();
-		String iCode2 = line.substring(56, 57).trim();
+		String iCode2 = null;  // Might get trimmed if blank.
+		if (len > 56) iCode2 = line.substring(56, 57).trim();
 
-		String sym1 = line.substring(59, 65).trim();
-		String sym2 = line.substring(66, 72).trim();
+		String sym1 = null;
+		if (len > 64) sym1 = line.substring(59, 65).trim();
+		String sym2 = null;
+		if (len > 71) sym2 = line.substring(66, 72).trim();
 
 //		System.err.println("LINK");
 //		System.err.println("\tName: " + name1);
@@ -2690,54 +2703,54 @@ public class PDBFileParser  {
 
 			String recordName = line.substring (0, 6).trim ();
 
-			if (recordName.equals("ATOM"))
-				pdb_ATOM_Handler(line);
-			else if (recordName.equals("SEQRES"))
-				pdb_SEQRES_Handler(line);
-			else if (recordName.equals("HETATM"))
-				pdb_ATOM_Handler(line);
-			else if (recordName.equals("MODEL"))
-				pdb_MODEL_Handler(line);
-			else if (recordName.equals("HEADER"))
-				pdb_HEADER_Handler(line);
-			else if (recordName.equals("AUTHOR"))
-				pdb_AUTHOR_Handler(line);
-			else if (recordName.equals("TITLE"))
-				pdb_TITLE_Handler(line);
-			else if (recordName.equals("SOURCE"))
-				sourceLines.add(line); //pdb_SOURCE_Handler
-			else if (recordName.equals("COMPND"))
-				compndLines.add(line); //pdb_COMPND_Handler
-			else if (recordName.equals("JRNL"))
-				pdb_JRNL_Handler(line);
-			else if (recordName.equals("EXPDTA"))
-				pdb_EXPDTA_Handler(line);
-			else if (recordName.equals("CRYST1"))
-				pdb_CRYST1_Handler(line);
-			else if (recordName.startsWith("MTRIX"))
-				pdb_MTRIXn_Handler(line);
-			else if (recordName.equals("REMARK"))
-				pdb_REMARK_Handler(line);
-			else if (recordName.equals("CONECT"))
-				pdb_CONECT_Handler(line);
-			else if (recordName.equals("REVDAT"))
-				pdb_REVDAT_Handler(line);
-			else if (recordName.equals("DBREF"))
-				pdb_DBREF_Handler(line);
-			else if (recordName.equals("SITE"))
-				pdb_SITE_Handler(line);
-			else if (recordName.equals("SSBOND"))
-				pdb_SSBOND_Handler(line);
-			else if (recordName.equals("LINK"))
-				pdb_LINK_Handler(line);
-			else if ( params.isParseSecStruc()) {
-				if ( recordName.equals("HELIX") ) pdb_HELIX_Handler (  line ) ;
-				else if (recordName.equals("SHEET")) pdb_SHEET_Handler(line ) ;
-				else if (recordName.equals("TURN")) pdb_TURN_Handler(   line ) ;
-			}
-			else {
-				// this line type is not supported, yet.
-				// we ignore it
+			try {
+				if (recordName.equals("ATOM"))
+					pdb_ATOM_Handler(line);
+				else if (recordName.equals("SEQRES"))
+					pdb_SEQRES_Handler(line);
+				else if (recordName.equals("HETATM"))
+					pdb_ATOM_Handler(line);
+				else if (recordName.equals("MODEL"))
+					pdb_MODEL_Handler(line);
+				else if (recordName.equals("HEADER"))
+					pdb_HEADER_Handler(line);
+				else if (recordName.equals("AUTHOR"))
+					pdb_AUTHOR_Handler(line);
+				else if (recordName.equals("TITLE"))
+					pdb_TITLE_Handler(line);
+				else if (recordName.equals("SOURCE"))
+					sourceLines.add(line); //pdb_SOURCE_Handler
+				else if (recordName.equals("COMPND"))
+					compndLines.add(line); //pdb_COMPND_Handler
+				else if (recordName.equals("JRNL"))
+					pdb_JRNL_Handler(line);
+				else if (recordName.equals("EXPDTA"))
+					pdb_EXPDTA_Handler(line);
+				else if (recordName.equals("CRYST1"))
+					pdb_CRYST1_Handler(line);
+				else if (recordName.startsWith("MTRIX"))
+					pdb_MTRIXn_Handler(line);
+				else if (recordName.equals("REMARK"))
+					pdb_REMARK_Handler(line);
+				else if (recordName.equals("CONECT"))
+					pdb_CONECT_Handler(line);
+				else if (recordName.equals("REVDAT"))
+					pdb_REVDAT_Handler(line);
+				else if (recordName.equals("DBREF"))
+					pdb_DBREF_Handler(line);
+				else if (recordName.equals("SITE"))
+					pdb_SITE_Handler(line);
+				else if (recordName.equals("SSBOND"))
+					pdb_SSBOND_Handler(line);
+				else if (recordName.equals("LINK"))
+					pdb_LINK_Handler(line);
+				else if ( params.isParseSecStruc()) {
+					if ( recordName.equals("HELIX") ) pdb_HELIX_Handler (  line ) ;
+					else if (recordName.equals("SHEET")) pdb_SHEET_Handler(line ) ;
+					else if (recordName.equals("TURN")) pdb_TURN_Handler(   line ) ;
+				}
+			} catch (StringIndexOutOfBoundsException ex) {
+				logger.info("Unable to parse [" + line + "]");
 			}
 
 
