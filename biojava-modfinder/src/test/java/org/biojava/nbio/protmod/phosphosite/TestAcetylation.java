@@ -1,41 +1,80 @@
 package org.biojava.nbio.protmod.phosphosite;
 
-import junit.framework.TestCase;
+
 import org.biojava.nbio.phosphosite.Dataset;
 import org.biojava.nbio.phosphosite.Site;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
-/**
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+/** Makes sure there is a local installation of the Acetyaltion site file from Phosphosite and
+ * tests if it can get parsed by the parser.
+ *
  * Created by andreas on 11/29/16.
  */
-public class TestAcetylation extends TestCase {
+public class TestAcetylation  {
 
 
-    /** Tests that the acetylation file can get downloaded and parsed
+    /** Make sure an Acetylation file is available locally.
+     * Downloads from Phosphosite if needed.
      *
      */
-    public void testAcetylation() {
-        String f = Dataset.ACETYLATION;
+    @Before
+    public void setUp(){
 
         Dataset ds = new Dataset();
 
+        String f = Dataset.ACETYLATION;
+
+        File localFile = getLocalFileName(f);
+
         try {
-            File localDir = ds.getLocalDir();
-            if ( ! localDir.exists())
-                localDir.mkdir();
-            
-            int slashIndex = f.lastIndexOf("/");
-
-            String fileName = f.substring(slashIndex);
-
-            File localFile = new File(localDir + "/" + fileName);
-
             if (!localFile.exists()) {
                 ds.downloadFile(new URL(f), localFile);
             }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /** returns the local file name where the Acetylation file will get cached locally.
+     *
+     * @param phosphoSiteFileLocation location of file at PhosphoSitePlus.
+     * @return a File pointing to the location of the locally cached file.
+     */
+    private File getLocalFileName(String phosphoSiteFileLocation){
+
+        Dataset ds = new Dataset();
+        File localDir = ds.getLocalDir();
+        if ( ! localDir.exists()) {
+            boolean success = localDir.mkdir();
+            if ( ! success)
+                fail("Could not create directory " + localDir.getAbsolutePath());
+        }
+
+        int slashIndex = phosphoSiteFileLocation.lastIndexOf("/");
+
+        String fileName = phosphoSiteFileLocation.substring(slashIndex);
+
+        return new File(localDir + "/" + fileName);
+    }
+
+    /** Tests that the acetylation file can get parsed without problems.
+     *
+     */
+    @Test
+    public void testAcetylation() {
+
+        try {
+
+            File localFile = getLocalFileName(Dataset.ACETYLATION);
 
             List<Site> sites = Site.parseSites(localFile);
 
