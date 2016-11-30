@@ -65,7 +65,8 @@ public class Site {
 
 
 		while ((line = buf.readLine()) != null){
-			if ( line.startsWith("GENE")) {
+			if ( line.startsWith("GENE") ||
+					line.startsWith("PROTEIN")) {
 
 				headerFields = parseHeaderFields(line);
 
