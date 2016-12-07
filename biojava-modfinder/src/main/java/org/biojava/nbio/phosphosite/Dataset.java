@@ -21,10 +21,14 @@
 package org.biojava.nbio.phosphosite;
 
 import org.biojava.nbio.structure.align.util.AtomCache;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.URL;
 import java.nio.channels.FileChannel;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,6 +47,7 @@ import java.util.List;
  */
 public class Dataset {
 
+	private static final Logger logger = LoggerFactory.getLogger(Dataset.class);
 
 	public static final String ACETYLATION = "http://www.phosphosite.org/downloads/Acetylation_site_dataset.gz";
 
@@ -110,8 +115,8 @@ public class Dataset {
 
 	public void download(){
 
-		System.out.println("Downloading data from www.phosposite.org. Data is under CC-BY-NC-SA license. Please link to site and cite: ");
-		System.out.println("Hornbeck PV, Kornhauser JM, Tkachev S, Zhang B, Skrzypek E, Murray B, Latham V, Sullivan M (2012) PhosphoSitePlus: a comprehensive resource for investigating the structure and function of experimentally determined post-translational modifications in man and mouse. Nucleic Acids Res. 40(Database issue), D261–70.");
+		logger.warn("Downloading data from www.phosposite.org. Data is under CC-BY-NC-SA license. Please link to site and cite: ");
+		logger.warn("Hornbeck PV, Kornhauser JM, Tkachev S, Zhang B, Skrzypek E, Murray B, Latham V, Sullivan M (2012) PhosphoSitePlus: a comprehensive resource for investigating the structure and function of experimentally determined post-translational modifications in man and mouse. Nucleic Acids Res. 40(Database issue), D261–70.");
 
 		File dir = getLocalDir();
 
@@ -154,9 +159,9 @@ public class Dataset {
 
 	}
 
-	private void downloadFile(URL u, File localFile) throws IOException {
+	public void downloadFile(URL u, File localFile) throws IOException {
 
-		System.out.println("Downloading " + u);
+		logger.info("Downloading " + u);
 
 		File tmp = File.createTempFile("tmp","phosphosite");
 
@@ -185,37 +190,8 @@ public class Dataset {
 	public static void copyFile(File src, File dst) throws IOException
 	{
 
-		// TODO: upgrade to Java 7:
+		Files.copy(src.toPath(), dst.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
-		// Files.copy(src.toPath(), dst.toPath(), StandardCopyOption.REPLACE_EXISTING);
-
-
-
-		long p = 0, dp, size;
-		FileChannel in = null, out = null;
-
-		try
-		{
-			if (!dst.exists()) dst.createNewFile();
-
-			in = new FileInputStream(src).getChannel();
-			out = new FileOutputStream(dst).getChannel();
-			size = in.size();
-
-			while ((dp = out.transferFrom(in, p, size)) > 0)
-			{
-				p += dp;
-			}
-		}
-		finally {
-			try
-			{
-				if (out != null) out.close();
-			}
-			finally {
-				if (in != null) in.close();
-			}
-		}
 	}
 
 
@@ -227,16 +203,16 @@ public class Dataset {
 
 		try {
 
-
 			for (File f : ds.getLocalFiles()) {
 
-				System.out.println(f.getAbsoluteFile());
+				logger.info(f.getAbsolutePath());
 
 				List<Site> sites = Site.parseSites(f);
 
+				logger.info("Got " + sites.size() + " sites");
 				for (Site s : sites) {
 					if (s.getUniprot().equals("P50225") || s.getUniprot().equals("P48025")) {
-						System.out.println(s);
+						logger.info(s.toString());
 					}
 				}
 
