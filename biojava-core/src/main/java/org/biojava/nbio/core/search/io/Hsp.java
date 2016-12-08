@@ -146,7 +146,7 @@ public abstract class Hsp <S extends Sequence<C>, C extends Compound> {
                 if (sequenceString.matches("^[ACTG]+$")) 
                     returnSeq = new DNASequence(sequenceString, DNACompoundSet.getDNACompoundSet());
                 else if (sequenceString.matches("^[ACUG]+$"))
-                    returnSeq = new RNASequence(sequenceString, DNACompoundSet.getDNACompoundSet());
+                    returnSeq = new RNASequence(sequenceString, RNACompoundSet.getRNACompoundSet());
                 else
                     returnSeq = new ProteinSequence(sequenceString, AminoAcidCompoundSet.getAminoAcidCompoundSet());
             }
