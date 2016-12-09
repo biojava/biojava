@@ -69,9 +69,12 @@ public abstract class Hsp <S extends Sequence<C>, C extends Compound> {
     private final String hspQseq;
     private final String hspHseq;
     private final String hspIdentityString;
-    private final Double percentageIdentity = null;
-    private final Integer mismatchCount = null;
-    private final SimpleSequencePair<S, C> returnAln;
+    private final Double percentageIdentity;
+    private final Integer mismatchCount;
+    /**
+     * Singleton, lazy computed
+    **/
+    private SimpleSequencePair<S, C> returnAln;
     private final S sequence;
     private final C compound;
 
@@ -128,27 +131,30 @@ public abstract class Hsp <S extends Sequence<C>, C extends Compound> {
         return returnAln;
     }
     
-    private Sequence getSequence(String gappedSequenceString){
+    @SuppressWarnings("unchecked")
+    private Sequence<C> getSequence(String gappedSequenceString){
         if (gappedSequenceString == null) return null;
         
-        Sequence returnSeq = null;
+        //Sequence<C> returnSeq = null;
+        S returnSeq = null;
         String sequenceString = gappedSequenceString.replace("-", "");
         
         try {
+            // these casting are unavoidable risky operations due to the guess made on sequence string.
             if (sequence instanceof DNASequence) 
-                returnSeq = new DNASequence(sequenceString, DNACompoundSet.getDNACompoundSet());
+                returnSeq = (S) new DNASequence(sequenceString, DNACompoundSet.getDNACompoundSet());
             else if (sequence instanceof RNASequence)
-                returnSeq = new RNASequence(sequenceString, RNACompoundSet.getRNACompoundSet());
+                returnSeq = (S) new RNASequence(sequenceString, RNACompoundSet.getRNACompoundSet());
             else if (sequence instanceof ProteinSequence)
-                returnSeq = new ProteinSequence(sequenceString, AminoAcidCompoundSet.getAminoAcidCompoundSet());
+                returnSeq = (S) new ProteinSequence(sequenceString, AminoAcidCompoundSet.getAminoAcidCompoundSet());
             else if (sequence == null){
                 // try to guess
                 if (sequenceString.matches("^[ACTG]+$")) 
-                    returnSeq = new DNASequence(sequenceString, DNACompoundSet.getDNACompoundSet());
+                    returnSeq = (S) new DNASequence(sequenceString, DNACompoundSet.getDNACompoundSet());
                 else if (sequenceString.matches("^[ACUG]+$"))
-                    returnSeq = new RNASequence(sequenceString, RNACompoundSet.getRNACompoundSet());
+                    returnSeq = (S) new RNASequence(sequenceString, RNACompoundSet.getRNACompoundSet());
                 else
-                    returnSeq = new ProteinSequence(sequenceString, AminoAcidCompoundSet.getAminoAcidCompoundSet());
+                    returnSeq = (S) new ProteinSequence(sequenceString, AminoAcidCompoundSet.getAminoAcidCompoundSet());
             }
             // else it is a non considered case
             else throw new IllegalStateException();
@@ -270,7 +276,7 @@ public abstract class Hsp <S extends Sequence<C>, C extends Compound> {
         this.hspIdentity = hspIdentity;
         this.hspPositive = hspPositive;
         this.hspGaps = hspGaps;
-        this.hspIdentity = hspAlignLen;
+        this.hspAlignLen = hspAlignLen;
         this.hspQseq = hspQseq;
         this.hspHseq = hspHseq;
         this.hspIdentityString = hspIdentityString;

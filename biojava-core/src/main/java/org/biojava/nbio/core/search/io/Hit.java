@@ -22,6 +22,7 @@ package org.biojava.nbio.core.search.io;
 
 import java.util.Iterator;
 import java.util.List;
+import org.biojava.nbio.core.sequence.template.Compound;
 import org.biojava.nbio.core.sequence.template.Sequence;
 
 /**
@@ -35,7 +36,7 @@ import org.biojava.nbio.core.sequence.template.Sequence;
  * @author Paolo Pavan
  */
 
-public abstract class Hit implements Iterable<Hsp>{
+public abstract class Hit implements Iterable<Hsp<?,?>>{
     private final int hitNum;
     private final String hitId;
     private final String hitDef;
@@ -44,12 +45,12 @@ public abstract class Hit implements Iterable<Hsp>{
      * the length of the hit sequence
      */
     private final int hitLen;
-    private final List<Hsp> hsps;
-    private Sequence hitSequence;
+    private final List<Hsp<?,?>> hsps;
+    private final Sequence<?> hitSequence;
     
     
 
-    public Hit(int hitNum, String hitId, String hitDef, String hitAccession, int hitLen, List<Hsp> hsps, Sequence hitSequence) {
+    public Hit(int hitNum, String hitId, String hitDef, String hitAccession, int hitLen, List<Hsp<?,?>> hsps, Sequence<?> hitSequence) {
         this.hitNum = hitNum;
         this.hitId = hitId;
         this.hitDef = hitDef;
@@ -115,13 +116,13 @@ public abstract class Hit implements Iterable<Hsp>{
      * it was used before the parsing with SearchIO
      * @return Sequence object
      */
-    public Sequence getHitSequence() {
+    public Sequence<?> getHitSequence() {
         return hitSequence;
     }
     
     @Override
-    public Iterator<Hsp> iterator() {
-        return new Iterator<Hsp>() {
+    public Iterator<Hsp<?,?>> iterator() {
+        return new Iterator<Hsp<?,?>>() {
             int current = 0;
             @Override
             public boolean hasNext() {
@@ -129,7 +130,7 @@ public abstract class Hit implements Iterable<Hsp>{
             }
 
             @Override
-            public Hsp next() {
+            public Hsp<?,?> next() {
                 return hsps.get(current++);
             }
 

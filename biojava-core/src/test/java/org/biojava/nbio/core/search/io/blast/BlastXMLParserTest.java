@@ -27,6 +27,10 @@ import java.util.List;
 import org.biojava.nbio.core.search.io.Hit;
 import org.biojava.nbio.core.search.io.Hsp;
 import org.biojava.nbio.core.search.io.Result;
+import org.biojava.nbio.core.sequence.DNASequence;
+import org.biojava.nbio.core.sequence.ProteinSequence;
+import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
+import org.biojava.nbio.core.sequence.compound.NucleotideCompound;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -67,7 +71,7 @@ public class BlastXMLParserTest {
     public void testSetFile() {
         System.out.println("setFile");
         File f = null;
-        BlastXMLParser instance = new BlastXMLParser();
+        BlastXMLParser<ProteinSequence,AminoAcidCompound> instance = new BlastXMLParser<ProteinSequence,AminoAcidCompound>();
         instance.setFile(f);
     }
 
@@ -82,7 +86,7 @@ public class BlastXMLParserTest {
         URL resourceURL = getClass().getResource(resource);
         File file = new File(resourceURL.getFile());
         
-        BlastXMLParser instance = new BlastXMLParser();
+        BlastXMLParser<DNASequence,NucleotideCompound> instance = new BlastXMLParser<DNASequence,NucleotideCompound>();
         instance.setFile(file);
         
         //instance.setQueryReferences(null);
@@ -90,7 +94,7 @@ public class BlastXMLParserTest {
         List<Result> result = instance.createObjects(1e-10);
         
         // test with random manual selected results
-        BlastHsp hsp1hit1res1 = new BlastHspBuilder()
+        BlastHsp<DNASequence,NucleotideCompound> hsp1hit1res1 = new BlastHspBuilder<DNASequence,NucleotideCompound>()
                 .setHspNum(1)
                 .setHspBitScore(2894.82)
                 .setHspScore(1567)
@@ -109,10 +113,11 @@ public class BlastXMLParserTest {
                 .setHspHseq("TTAAATTGAGAGTTTGATCCTGGCTCAGGATGAACGCTGGTGGCGTGCCTAATACATGCAAGTCGTACGCTAGCCGCTGAATTGATCCTTCGGGTGAAGTGAGGCAATGACTAGAGTGGCGAACTGGTGAGTAACACGTAAGAAACCTGCCCTTTAGTGGGGGATAACATTTGGAAACAGATGCTAATACCGCGTAACAACAAATCACACATGTGATCTGTTTGAAAGGTCCTTTTGGATCGCTAGAGGATGGTCTTGCGGCGTATTAGCTTGTTGGTAGGGTAGAAGCCTACCAAGGCAATGATGCGTAGCCGAGTTGAGAGACTGGCCGGCCACATTGGGACTGAGACACTGCCCAAACTCCTACGGGAGGCTGCAGTAGGGAATTTTCCGCAATGCACGAAAGTGTGACGGAGCGACGCCGCGTGTGTGATGAAGGCTTTCGGGTCGTAAAGCACTGTTGTAAGGGAAGAATAACTGAATTCAGAGAAAGTTTTCAGCTTGACGGTACCTTACCAGAAAGGGATGGCTAAATACGTGCCAGCAGCCGCGGTAATACGTATGTCCCGAGCGTTATCCGGATTTATTGGGCGTAAAGCGAGCGCAGACGGTTTATTAAGTCTGATGTGAAATCCCGAGGCCCAACCTCGGAACTGCATTGGAAACTGATTTACTTGAGTGCGATAGAGGCAAGTGGAACTCCATGTGTAGCGGTGAAATGCGTAGATATGTGGAAGAACACCAGTGGCGAAAGCGGCTTGCTAGATCGTAACTGACGTTGAGGCTCGAAAGTATGGGTAGCAAACGGGATTAGATACCCCGGTAGTCCATACCGTAAACGATGGGTGCTAGTTGTTAAGAGGTTTCCGCCTCCTAGTGACGTAGCAAACGCATTAAGCACCCCGCCTGAGGAGTACGGCCGCAAGGCTAAAACTTAAAGGAATTGACGGGGACCCGCACAAGCGGTGGAGCATGTGGTTTAATTCGAAGATACGCGAAAAACCTTACCAGGTCTTGACATACCAATGATCGCTTTTGTAATGAAAGCTTTTCTTCGGAACATTGGATACAGGTGGTGCATGGTCGTCGTCAGCTCGTGTCGTGAGATGTTGGGTTAAGTCCCGCAACGAGCGCAACCCTTGTTATTAGTTGCCAGCATTTAGTTGGGCACTCTAATGAGACTGCCGGTGATAAACCGGAGGAAGGTGGGGACGACGTCAGATCATCATGCCCCTTATGACCTGGGCAACACACGTGCTACAATGGGAAGTACAACGAGTCGCAAACCGGCGACGGTAAGCTAATCTCTTAAAACTTCTCTCAGTTCGGACTGGAGTCTGCAACTCGACTCCACGAAGGCGGAATCGCTAGTAATCGCGAATCAGCATGTCGCGGTGAATACGTTCCCGGGTCTTGTACACACCGCCCGTCAAATCATGGGAGTCGGAAGTACCCAAAGTCGCTTGGCTAACTTTTAGAGGCCGGTGCCTAAGGTAAAATCGATGACTGGGATTAAGTCGTAACAAGGTAGCCGTAGGAGAACCTGCGGCTGGATCACCTCCTTTCT")
                 .setHspIdentityString("|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||")
                 .createBlastHsp();
-        List<Hsp> hsplist = new ArrayList<Hsp>();
+        List<Hsp<DNASequence,NucleotideCompound>> hsplist = new ArrayList<Hsp<DNASequence,NucleotideCompound>>();
         hsplist.add(hsp1hit1res1);
         hsplist.add(hsp1hit1res1);
         
+        // do not type
         BlastHit hit1res1 = new BlastHitBuilder()
                 .setHitNum(1)
                 .setHitId("gnl|BL_ORD_ID|2006")
@@ -136,7 +141,7 @@ public class BlastXMLParserTest {
         
         Result expRes1 = result.get(0);
         Hit expHit1res1 = expRes1.iterator().next();
-        Hsp expHsp1hit1res1 = expHit1res1.iterator().next();
+        Hsp<?,?> expHsp1hit1res1 = expHit1res1.iterator().next();
         
         // result not testable without all hits and hsp
         //assertEquals(expRes1, res1);

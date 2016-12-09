@@ -59,16 +59,17 @@ import org.xml.sax.SAXException;
  *
  * @author Paolo Pavan
  */
-public class BlastXMLParser implements ResultFactory {
+public class BlastXMLParser <S extends Sequence<C>, C extends Compound> implements ResultFactory  <S,C>{
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(Hsp.class);
     Document blastDoc = null;
     private File targetFile;
-    private List<Sequence> queryReferences, databaseReferences;
-    private Map<String,Sequence> queryReferencesMap, databaseReferencesMap;
+    private List<S> queryReferences, databaseReferences;
+    private Map<String,S> queryReferencesMap, databaseReferencesMap;
     
     public BlastXMLParser() {
         
     }
+    @Override
     public void setFile(File f){
         targetFile = f;
     }
@@ -87,6 +88,9 @@ public class BlastXMLParser implements ResultFactory {
         logger.info("Read finished");
     }
     
+    @Override
+    //@SuppressWarnings("unchecked")
+    //@SuppressWarnings("rawtypes")
     public List<Result> createObjects(double maxEScore) throws IOException, ParseException {
         if (targetFile == null) throw new IllegalStateException("File to be parsed not specified.");
         
@@ -97,7 +101,7 @@ public class BlastXMLParser implements ResultFactory {
         
         ArrayList<Result> resultsCollection;
         ArrayList<Hit> hitsCollection;
-        ArrayList<Hsp> hspsCollection;
+        ArrayList<Hsp<S,C>> hspsCollection;
         
         try {
             // select top level elements
@@ -144,6 +148,7 @@ public class BlastXMLParser implements ResultFactory {
 
                 hitsCollection = new ArrayList<Hit>();
                 for (Element hitElement : hitList) {
+                    // deliberately not parametrized
                     BlastHitBuilder blastHitBuilder = new BlastHitBuilder();
                     blastHitBuilder
                         .setHitNum(new Integer(XMLHelper.selectSingleElement(hitElement, "Hit_num").getTextContent()))
@@ -152,6 +157,7 @@ public class BlastXMLParser implements ResultFactory {
                         .setHitAccession(XMLHelper.selectSingleElement(hitElement, "Hit_accession").getTextContent())
                         .setHitLen(new Integer(XMLHelper.selectSingleElement(hitElement, "Hit_len").getTextContent()));
                     
+                    // deliberately not parametrized (see above)
                     if (databaseReferences != null) blastHitBuilder.setHitSequence(databaseReferencesMap.get(
                         XMLHelper.selectSingleElement(hitElement, "Hit_id").getTextContent()
                     ));
@@ -159,7 +165,7 @@ public class BlastXMLParser implements ResultFactory {
                     Element hithspsElement = XMLHelper.selectSingleElement(hitElement, "Hit_hsps");
                     ArrayList<Element> hspList = XMLHelper.selectElements(hithspsElement, "Hsp");
 
-                    hspsCollection = new ArrayList<Hsp>();
+                    hspsCollection = new ArrayList<Hsp<S,C>>();
                     for (Element hspElement : hspList) {
                         Double evalue = new Double(XMLHelper.selectSingleElement(hspElement, "Hsp_evalue").getTextContent());
 
@@ -168,7 +174,7 @@ public class BlastXMLParser implements ResultFactory {
                             int hspNum = new Integer(XMLHelper.selectSingleElement(hspElement, "Hsp_num").getTextContent());
                             String hspQuerySeq = XMLHelper.selectSingleElement(hspElement, "Hsp_qseq").getTextContent();
                             String hspHitSeq = XMLHelper.selectSingleElement(hspElement, "Hsp_hseq").getTextContent();
-                            BlastHspBuilder blastHspBuilder = new BlastHspBuilder();
+                            BlastHspBuilder<S,C> blastHspBuilder = new BlastHspBuilder<S,C>();
                             blastHspBuilder
                                 .setHspNum(hspNum)
                                 .setHspBitScore(new Double(XMLHelper.selectSingleElement(hspElement, "Hsp_bit-score").getTextContent()))
@@ -188,16 +194,16 @@ public class BlastXMLParser implements ResultFactory {
                                 .setHspHseq(hspHitSeq)
                                 .setHspIdentityString(XMLHelper.selectSingleElement(hspElement, "Hsp_midline").getTextContent());
                             
-                            Sequence s;
+                            S s;
                             CompoundSet c;
                             String querySequenceString = hspQuerySeq.replace("-", "");
                             try {
                                 if (isDNA) {
                                     c = DNACompoundSet.getDNACompoundSet();
-                                    s = new DNASequence(hspQuerySeq, c);
+                                    s = (S)new DNASequence(hspQuerySeq, c);
                                 } else {
                                     c = AminoAcidCompoundSet.getAminoAcidCompoundSet();
-                                    s = new ProteinSequence(hspQuerySeq, c);
+                                    s = (S)new ProteinSequence(hspQuerySeq, c);
                                 }
                                 
                                 blastHspBuilder.setSequence(s);
@@ -211,6 +217,7 @@ public class BlastXMLParser implements ResultFactory {
                         }
                     }
                     // finally set the computed hsp collection and create Hit object
+                    // (deliberately not parametrized, see above)
                     blastHitBuilder.setHsps(hspsCollection);
                     hitsCollection.add(blastHitBuilder.createBlastHit());
                 }
@@ -226,6 +233,7 @@ public class BlastXMLParser implements ResultFactory {
         return resultsCollection;
     }
     
+    @Override
     public List<String> getFileExtensions(){
         ArrayList<String> extensions = new ArrayList<String>(1);
         extensions.add("blastxml");
@@ -233,12 +241,12 @@ public class BlastXMLParser implements ResultFactory {
     }
 
     @Override
-    public void setQueryReferences(List<Sequence> sequences) {
+    public void setQueryReferences(List<S> sequences) {
         queryReferences = sequences;
     }
 
     @Override
-    public void setDatabaseReferences(List<Sequence> sequences) {
+    public void setDatabaseReferences(List<S> sequences) {
         databaseReferences = sequences;
     }
     
@@ -247,7 +255,7 @@ public class BlastXMLParser implements ResultFactory {
      */
     private void mapIds() {
         if (queryReferences != null) {
-            queryReferencesMap = new HashMap<String,Sequence>(queryReferences.size());
+            queryReferencesMap = new HashMap<String,S>(queryReferences.size());
             for (int counter=0; counter < queryReferences.size() ; counter ++){
                 String id = "Query_"+(counter+1);
                 queryReferencesMap.put(id, queryReferences.get(counter));
@@ -255,7 +263,7 @@ public class BlastXMLParser implements ResultFactory {
         }
         
         if (databaseReferences != null) {
-            databaseReferencesMap = new HashMap<String,Sequence>(databaseReferences.size());
+            databaseReferencesMap = new HashMap<String,S>(databaseReferences.size());
             for (int counter=0; counter < databaseReferences.size() ; counter ++){
                 // this is strange: while Query_id are 1 based, Hit (database) id are 0 based
                 String id = "gnl|BL_ORD_ID|"+(counter);
@@ -271,15 +279,15 @@ public class BlastXMLParser implements ResultFactory {
 }
 
 
-class BlastHsp extends org.biojava.nbio.core.search.io.Hsp {
-    public BlastHsp(int hspNum, double hspBitScore, int hspScore, double hspEvalue, int hspQueryFrom, int hspQueryTo, int hspHitFrom, int hspHitTo, int hspQueryFrame, int hspHitFrame, int hspIdentity, int hspPositive, int hspGaps, int hspAlignLen, String hspQseq, String hspHseq, String hspIdentityString, Double percentageIdentity, Integer mismatchCount, Sequence s, Compound c) {
+class BlastHsp<S extends Sequence<C>, C extends Compound> extends org.biojava.nbio.core.search.io.Hsp<S,C> {
+    public BlastHsp(int hspNum, double hspBitScore, int hspScore, double hspEvalue, int hspQueryFrom, int hspQueryTo, int hspHitFrom, int hspHitTo, int hspQueryFrame, int hspHitFrame, int hspIdentity, int hspPositive, int hspGaps, int hspAlignLen, String hspQseq, String hspHseq, String hspIdentityString, Double percentageIdentity, Integer mismatchCount, S s, C c) {
         super(hspNum, hspBitScore, hspScore, hspEvalue, hspQueryFrom, hspQueryTo, hspHitFrom, hspHitTo, hspQueryFrame, hspHitFrame, hspIdentity, hspPositive, hspGaps, hspAlignLen, hspQseq, hspHseq, hspIdentityString, percentageIdentity, mismatchCount, s, c);
     }
     
 }
 
 class BlastHit extends org.biojava.nbio.core.search.io.Hit {
-    public BlastHit(int hitNum, String hitId, String hitDef, String hitAccession, int hitLen, List<Hsp> hitHsps, Sequence hitSequence) {
+    public BlastHit(int hitNum, String hitId, String hitDef, String hitAccession, int hitLen, List<Hsp<?,?>> hitHsps, Sequence<?> hitSequence) {
         super(hitNum, hitId, hitDef, hitAccession, hitLen, hitHsps, hitSequence);
     }
     

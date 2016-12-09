@@ -58,113 +58,113 @@ public class BlastHspBuilder<S extends Sequence<C>, C extends Compound> {
     public BlastHspBuilder() {
     }
 
-    public BlastHspBuilder setHspNum(int hspNum) {
+    public BlastHspBuilder<S,C> setHspNum(int hspNum) {
         this.hspNum = hspNum;
         return this;
     }
 
-    public BlastHspBuilder setHspBitScore(double hspBitScore) {
+    public BlastHspBuilder<S,C> setHspBitScore(double hspBitScore) {
         this.hspBitScore = hspBitScore;
         return this;
     }
 
-    public BlastHspBuilder setHspScore(int hspScore) {
+    public BlastHspBuilder<S,C> setHspScore(int hspScore) {
         this.hspScore = hspScore;
         return this;
     }
 
-    public BlastHspBuilder setHspEvalue(double hspEvalue) {
+    public BlastHspBuilder<S,C> setHspEvalue(double hspEvalue) {
         this.hspEvalue = hspEvalue;
         return this;
     }
 
-    public BlastHspBuilder setHspQueryFrom(int hspQueryFrom) {
+    public BlastHspBuilder<S,C> setHspQueryFrom(int hspQueryFrom) {
         this.hspQueryFrom = hspQueryFrom;
         return this;
     }
 
-    public BlastHspBuilder setHspQueryTo(int hspQueryTo) {
+    public BlastHspBuilder<S,C> setHspQueryTo(int hspQueryTo) {
         this.hspQueryTo = hspQueryTo;
         return this;
     }
 
-    public BlastHspBuilder setHspHitFrom(int hspHitFrom) {
+    public BlastHspBuilder<S,C> setHspHitFrom(int hspHitFrom) {
         this.hspHitFrom = hspHitFrom;
         return this;
     }
 
-    public BlastHspBuilder setHspHitTo(int hspHitTo) {
+    public BlastHspBuilder<S,C> setHspHitTo(int hspHitTo) {
         this.hspHitTo = hspHitTo;
         return this;
     }
 
-    public BlastHspBuilder setHspQueryFrame(int hspQueryFrame) {
+    public BlastHspBuilder<S,C> setHspQueryFrame(int hspQueryFrame) {
         this.hspQueryFrame = hspQueryFrame;
         return this;
     }
 
-    public BlastHspBuilder setHspHitFrame(int hspHitFrame) {
+    public BlastHspBuilder<S,C> setHspHitFrame(int hspHitFrame) {
         this.hspHitFrame = hspHitFrame;
         return this;
     }
 
-    public BlastHspBuilder setHspIdentity(int hspIdentity) {
+    public BlastHspBuilder<S,C> setHspIdentity(int hspIdentity) {
         this.hspIdentity = hspIdentity;
         return this;
     }
 
-    public BlastHspBuilder setHspPositive(int hspPositive) {
+    public BlastHspBuilder<S,C> setHspPositive(int hspPositive) {
         this.hspPositive = hspPositive;
         return this;
     }
 
-    public BlastHspBuilder setHspGaps(int hspGaps) {
+    public BlastHspBuilder<S,C> setHspGaps(int hspGaps) {
         this.hspGaps = hspGaps;
         return this;
     }
 
-    public BlastHspBuilder setHspAlignLen(int hspAlignLen) {
+    public BlastHspBuilder<S,C> setHspAlignLen(int hspAlignLen) {
         this.hspAlignLen = hspAlignLen;
         return this;
     }
 
-    public BlastHspBuilder setHspQseq(String hspQseq) {
+    public BlastHspBuilder<S,C> setHspQseq(String hspQseq) {
         this.hspQseq = hspQseq;
         return this;
     }
 
-    public BlastHspBuilder setHspHseq(String hspHseq) {
+    public BlastHspBuilder<S,C> setHspHseq(String hspHseq) {
         this.hspHseq = hspHseq;
         return this;
     }
 
-    public BlastHspBuilder setHspIdentityString(String hspIdentityString) {
+    public BlastHspBuilder<S,C> setHspIdentityString(String hspIdentityString) {
         this.hspIdentityString = hspIdentityString;
         return this;
     }
 
-    public BlastHspBuilder setPercentageIdentity(Double percentageIdentity) {
+    public BlastHspBuilder<S,C> setPercentageIdentity(Double percentageIdentity) {
         this.percentageIdentity = percentageIdentity;
         return this;
     }
 
-    public BlastHspBuilder setMismatchCount(Integer mismatchCount) {
+    public BlastHspBuilder<S,C> setMismatchCount(Integer mismatchCount) {
         this.mismatchCount = mismatchCount;
         return this;
     }
 
-    public BlastHspBuilder setSequence(S sequence) {
+    public BlastHspBuilder<S,C> setSequence(S sequence) {
         this.sequence = sequence;
         return this;
     }
 
-    public BlastHspBuilder setCompound(C compound) {
+    public BlastHspBuilder<S,C> setCompound(C compound) {
         this.compound = compound;
         return this;
     }
     
-    public BlastHsp createBlastHsp() {
-        return new BlastHsp(hspNum, hspBitScore, hspScore, hspEvalue, hspQueryFrom, hspQueryTo, hspHitFrom, hspHitTo, hspQueryFrame, hspHitFrame, hspIdentity, hspPositive, hspGaps, hspAlignLen, hspQseq, hspHseq, hspIdentityString, percentageIdentity, mismatchCount, sequence, compound);
+    public BlastHsp<S,C> createBlastHsp() {
+        return new BlastHsp<S,C>(hspNum, hspBitScore, hspScore, hspEvalue, hspQueryFrom, hspQueryTo, hspHitFrom, hspHitTo, hspQueryFrame, hspHitFrame, hspIdentity, hspPositive, hspGaps, hspAlignLen, hspQseq, hspHseq, hspIdentityString, percentageIdentity, mismatchCount, sequence, compound);
     }
     
 }

@@ -35,6 +35,7 @@ import org.biojava.nbio.core.search.io.Hit;
 import org.biojava.nbio.core.search.io.Hsp;
 import org.biojava.nbio.core.search.io.Result;
 import org.biojava.nbio.core.search.io.ResultFactory;
+import org.biojava.nbio.core.sequence.template.Compound;
 import org.biojava.nbio.core.sequence.template.Sequence;
 
 /**
@@ -46,7 +47,7 @@ import org.biojava.nbio.core.sequence.template.Sequence;
  * @author Paolo Pavan
  */
 
-public class BlastTabularParser implements ResultFactory {
+public class BlastTabularParser <S extends Sequence<C>, C extends Compound> implements ResultFactory  <S,C> {
     private final String blastReference = 
             "Zheng Zhang, Scott Schwartz, Lukas Wagner, and Webb Miller (2000), A greedy algorithm for aligning DNA sequences&quot;, J Comput Biol 2000; 7(1-2):203-14.";
     /**
@@ -131,7 +132,7 @@ public class BlastTabularParser implements ResultFactory {
                 while (currentQueryId.equals(queryId) && lineNumber < fileLinesCount){
                     BlastHitBuilder hitBuilder = new BlastHitBuilder();
                     
-                    List<Hsp> hsps = new ArrayList<Hsp>();
+                    List<Hsp<S,C>> hsps = new ArrayList<Hsp<S,C>>();
                     
                     String currentSubjectId=subjectId;
                     while (currentSubjectId.equals(subjectId) && lineNumber < fileLinesCount){
@@ -140,7 +141,7 @@ public class BlastTabularParser implements ResultFactory {
                             lineNumber++;
                             continue;
                         }
-                        BlastHspBuilder hspBuilder = new BlastHspBuilder();
+                        BlastHspBuilder<S,C> hspBuilder = new BlastHspBuilder<S,C>();
                         hspBuilder
                             .setHspAlignLen(new Integer(alnLength))
                             .setHspGaps(new Integer(gapOpenCount))
@@ -227,7 +228,7 @@ public class BlastTabularParser implements ResultFactory {
      * @param sequences 
      */
     @Override
-    public void setQueryReferences(List<Sequence> sequences) {
+    public void setQueryReferences(List<S> sequences) {
         throw new UnsupportedOperationException("Not supported for this parser.");
     }
     /**
@@ -237,7 +238,7 @@ public class BlastTabularParser implements ResultFactory {
      * @param sequences 
      */
     @Override
-    public void setDatabaseReferences(List<Sequence> sequences) {
+    public void setDatabaseReferences(List<S> sequences) {
         throw new UnsupportedOperationException("Not supported for this parser.");
     }
      /**
