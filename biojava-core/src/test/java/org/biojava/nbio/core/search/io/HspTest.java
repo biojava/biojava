@@ -41,7 +41,7 @@ import static org.junit.Assert.*;
 
 public class HspTest {
     
-    Hsp hspImpl = new BlastHspBuilder()
+    Hsp<DNASequence,NucleotideCompound> hspImpl = new BlastHspBuilder<DNASequence,NucleotideCompound>()
                 .setHspNum(1)
                 .setHspBitScore(377.211)
                 .setHspEvalue(8.04143e-093)
@@ -59,7 +59,7 @@ public class HspTest {
                 .setHspIdentityString("||||||||| |||||||||||||||||| ||||||||| |||||||||||||||||||||||| |||||||| |||||||||||||||||||||||  |||||||  |||||||||||||||||||||||||||||||||||| |||||||||||||||||||||||||||||||||| ||||||||| ||||||| |||||||||||||||||||||||| |||||")
                 .createBlastHsp();
     
-    Hsp uncompleteHsp = new BlastHspBuilder()
+    Hsp<DNASequence,NucleotideCompound> uncompleteHsp = new BlastHspBuilder<DNASequence,NucleotideCompound>()
                 .setPercentageIdentity(100.00/100)
                 .setHspAlignLen(48)
                 .setMismatchCount(0)
@@ -101,7 +101,7 @@ public class HspTest {
         int expResult;
         int result;
         
-        instance = new BlastHspBuilder()
+        instance = new BlastHspBuilder<DNASequence,NucleotideCompound>()
                 .setHspNum(1)
                 .setHspBitScore(377.211)
                 .setHspEvalue(8.04143e-093)
@@ -123,7 +123,7 @@ public class HspTest {
         result = instance.hashCode();
         assertEquals(expResult, result);
         
-        instance = new BlastHspBuilder()
+        instance = new BlastHspBuilder<DNASequence,NucleotideCompound>()
                 .setPercentageIdentity(100.00/100)
                 .setHspAlignLen(48)
                 .setMismatchCount(0)
@@ -140,7 +140,7 @@ public class HspTest {
         result = instance.hashCode();
         assertEquals(expResult, result);
         
-        Hsp uncompleteHsp2 = new BlastHspBuilder()
+        Hsp<DNASequence,NucleotideCompound> uncompleteHsp2 = new BlastHspBuilder<DNASequence,NucleotideCompound>()
                 .setPercentageIdentity(100.00/100)
                 .setHspAlignLen(48)
                 .setMismatchCount(0)
@@ -163,7 +163,7 @@ public class HspTest {
     public void testEquals() {
         System.out.println("equals");
         Object o;
-        o = new BlastHspBuilder()
+        o = new BlastHspBuilder<DNASequence,NucleotideCompound>()
                 .setHspNum(1)
                 .setHspBitScore(377.211)
                 .setHspEvalue(8.04143e-093)
@@ -180,13 +180,13 @@ public class HspTest {
                 .setHspHseq("CTGACGACAACCATGCACCACCTGTCTCAACTTTCCCC-GAAGGGCACCTAATGTATCTCTACTTCGTTAGTTGGATGTCAAGACCTGGTAAGGTT-CTTCGCGTTGCTTCGAATTAAACCACATACTCCACTGCTTGTGCGGGCCCCCGTCAATTCCTTTGAGTTTCAACCTTGCGGTCGTACTCCCCAGGTGGATTACTTATTGTGTTAACTCCGGCACAGAAGG")
                 .setHspIdentityString("||||||||| |||||||||||||||||| ||||||||| |||||||||||||||||||||||| |||||||| |||||||||||||||||||||||  |||||||  |||||||||||||||||||||||||||||||||||| |||||||||||||||||||||||||||||||||| ||||||||| ||||||| |||||||||||||||||||||||| |||||")
                 .createBlastHsp();
-        Hsp instance = hspImpl;
+        Hsp<DNASequence,NucleotideCompound> instance = hspImpl;
         
         assertEquals(o, instance);
         
         // example of Hsp retrieved from uncomplete report.
         // (Those HSP may come from a tabular format, for example)
-        o = new BlastHspBuilder()
+        o = new BlastHspBuilder<DNASequence,NucleotideCompound>()
                 .setPercentageIdentity(100.00/100)
                 .setHspAlignLen(48)
                 .setMismatchCount(0)
@@ -224,7 +224,7 @@ public class HspTest {
         assertEquals(expResult, result);
         
         // test for type checking
-        Hsp<DNASequence,NucleotideCompound> o1 = new BlastHspBuilder()
+        Hsp<DNASequence,NucleotideCompound> o1 = new BlastHspBuilder<DNASequence,NucleotideCompound>()
                 .setHspNum(1)
                 .setHspBitScore(377.211)
                 .setHspEvalue(8.04143e-093)
@@ -248,7 +248,7 @@ public class HspTest {
         assertEquals(expResult, result1);
         
         // this is still valid:
-        SequencePair aln2 = o1.getAlignment();
+        SequencePair<DNASequence,NucleotideCompound> aln2 = o1.getAlignment();
         String result2 = aln2.toString();
         assertEquals(expResult, result2);
         
@@ -256,7 +256,7 @@ public class HspTest {
         //SequencePair<ProteinSequence,AminoAcidCompound> alignment4 = o1.getAlignment();
         
         // test for not specified sequence type at construction time
-        Hsp<DNASequence,NucleotideCompound> o2 = new BlastHspBuilder()
+        Hsp<DNASequence,NucleotideCompound> o2 = new BlastHspBuilder<DNASequence,NucleotideCompound>()
                 .setHspNum(1)
                 .setHspBitScore(377.211)
                 .setHspEvalue(8.04143e-093)

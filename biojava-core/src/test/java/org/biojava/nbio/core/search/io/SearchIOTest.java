@@ -23,6 +23,8 @@ package org.biojava.nbio.core.search.io;
 import java.io.File;
 import java.net.URL;
 import org.biojava.nbio.core.search.io.blast.BlastXMLParser;
+import org.biojava.nbio.core.sequence.DNASequence;
+import org.biojava.nbio.core.sequence.compound.NucleotideCompound;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -84,7 +86,7 @@ public class SearchIOTest {
         URL resourceURL = getClass().getResource(resource);
         File file = new File(resourceURL.getFile());
         
-        ResultFactory blastResultFactory = new BlastXMLParser();
+        ResultFactory<DNASequence,NucleotideCompound> blastResultFactory = new BlastXMLParser<DNASequence,NucleotideCompound>();
         final SearchIO instance;
         try {
             instance = new SearchIO(file, blastResultFactory);
@@ -102,7 +104,7 @@ public class SearchIOTest {
         URL resourceURL = getClass().getResource(resource);
         File file = new File(resourceURL.getFile());
         
-        ResultFactory blastResultFactory = new BlastXMLParser();
+        ResultFactory<DNASequence,NucleotideCompound> blastResultFactory = new BlastXMLParser<DNASequence,NucleotideCompound>();
         final SearchIO instance;
         try {
             instance = new SearchIO(file, blastResultFactory, 10e-10);
