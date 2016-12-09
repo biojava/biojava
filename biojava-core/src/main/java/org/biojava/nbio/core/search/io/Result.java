@@ -39,20 +39,20 @@ import org.biojava.nbio.core.sequence.template.Sequence;
  */
 
 public abstract class Result implements Iterable<Hit>{
-    private String program;
-    private String version;
-    private String reference;
-    private String dbFile;
+    private final String program;
+    private final String version;
+    private final String reference;
+    private final String dbFile;
 
-    private HashMap<String,String> programSpecificParameters;
+    private final HashMap<String,String> programSpecificParameters;
     
-    private int iterationNumber;
-    private String queryID;
-    private String queryDef;
-    private int queryLength;
-    private Sequence querySequence;
-    private List<Hit> hits;
-    private int hitCounter = -1;
+    private final int iterationNumber;
+    private final String queryID;
+    private final String queryDef;
+    private final int queryLength;
+    private final Sequence<?> querySequence;
+    private final List<Hit> hits;
+    private final int hitCounter = -1;
 
     public Result(String program, String version, String reference, String dbFile, HashMap<String, String> programSpecificParameters, int iterationNumber, String queryID, String queryDef, int queryLength, List<Hit> hits, Sequence querySequence) {
         this.program = program;

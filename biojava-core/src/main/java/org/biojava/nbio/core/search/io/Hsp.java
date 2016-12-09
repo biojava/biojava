@@ -52,28 +52,28 @@ import org.slf4j.LoggerFactory;
 
 public abstract class Hsp <S extends Sequence<C>, C extends Compound> {
     private static final Logger logger = LoggerFactory.getLogger(Hsp.class);
-    private Integer hspNum;
-    private Double hspBitScore;
-    private Integer hspScore;
-    private Double hspEvalue;
-    private Integer hspQueryFrom;
-    private Integer hspQueryTo;
-    private Integer hspHitFrom;
-    private Integer hspHitTo;
-    private Integer hspQueryFrame;
-    private Integer hspHitFrame;
-    private Integer hspIdentity;
-    private Integer hspPositive;
-    private Integer hspGaps;
-    private Integer hspAlignLen;
-    private String hspQseq;
-    private String hspHseq;
-    private String hspIdentityString;
-    private Double percentageIdentity = null;
-    private Integer mismatchCount = null;
-    private SimpleSequencePair<S, C> returnAln;
-    private S sequence;
-    private C compound;
+    private final Integer hspNum;
+    private final Double hspBitScore;
+    private final Integer hspScore;
+    private final Double hspEvalue;
+    private final Integer hspQueryFrom;
+    private final Integer hspQueryTo;
+    private final Integer hspHitFrom;
+    private final Integer hspHitTo;
+    private final Integer hspQueryFrame;
+    private final Integer hspHitFrame;
+    private final Integer hspIdentity;
+    private final Integer hspPositive;
+    private final Integer hspGaps;
+    private final Integer hspAlignLen;
+    private final String hspQseq;
+    private final String hspHseq;
+    private final String hspIdentityString;
+    private final Double percentageIdentity = null;
+    private final Integer mismatchCount = null;
+    private final SimpleSequencePair<S, C> returnAln;
+    private final S sequence;
+    private final C compound;
 
     @Override
     public int hashCode() {
@@ -84,8 +84,8 @@ public abstract class Hsp <S extends Sequence<C>, C extends Compound> {
         return hash;
     }
     /**
-     * Experimental.
-     * Wants to implement conceptual comparisons of search results.
+     * 
+     * implements comparison of HSP alignments.
      * Fields unrelated to search are deliberately not considered.
      * 
      * In HSP case, alignment representation strings are considered.
