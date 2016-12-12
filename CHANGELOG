@@ -2,3 +2,39 @@ BioJava 5.0.0
 =============
 
 - For short structure selections (e.g. 1abc.A:1-100), ligands within 5A will be included
+
+
+BioJava 4.2.5 
+=============
+
+release date: December 7th 2016
+
+This release contains [30](https://github.com/biojava/biojava/compare/biojava-4.2.4...biojava-4.2.5) commits from 7 contributors.
+
+### Bug fixes
+
+* Fix for new phosphositeplus.org format, #610
+* org.biojava.nbio.genome.parsers.gff.Location union() and intersect() now work correctly, #355
+* Minor addition of crystallographic metadata fields to handle legacy PDB entries
+* Jmol interchange format is now mmCIF, allowing for multiletter chain ids
+* Update to latest jmol 14.6.2_2016.08.28
+* A few minor bug fixes
+
+BioJava 4.2.4
+=============
+
+This release contains over [17](https://github.com/biojava/biojava/compare/biojava-4.2.3...biojava-4.2.4) commits from 4 contributors.
+
+release date: July 29th
+
+### Bug fixes
+
+* NCBI links now using https (see [NCBI's announcement](http://www.ncbi.nlm.nih.gov/news/06-10-2016-ncbi-https/) )
+* CATH links redirected to new server http://release.cathdb.info/
+* SCOP default location now points to the Berkeley server after demise of Scop at MRC LMB
+* Fixed important bug in mmCIF writing where structures with multiple models were written with identical coordinates
+* Fixed bug in Group cloning where chemical components weren't cloned
+* Added utility class for Chromosome mapping
+
+
+
