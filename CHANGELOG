@@ -1,4 +1,0 @@
-BioJava 5.0.0
-=============
-
-- For short structure selections (e.g. 1abc.A:1-100), ligands within 5A will be included

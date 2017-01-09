@@ -14,7 +14,8 @@ import java.util.List;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-/** Makes sure there is a local installation of the Acetyaltion site file from Phosphosite and
+
+/** Makes sure there is a local installation of the Acetylation site file from Phosphosite and
  * tests if it can get parsed by the parser.
  *
  * Created by andreas on 11/29/16.
@@ -27,7 +28,7 @@ public class TestAcetylation  {
      *
      */
     @Before
-    public void setUp(){
+    public void setUp() throws IOException{
 
         Dataset ds = new Dataset();
 
@@ -35,13 +36,10 @@ public class TestAcetylation  {
 
         File localFile = getLocalFileName(f);
 
-        try {
-            if (!localFile.exists()) {
-                ds.downloadFile(new URL(f), localFile);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (!localFile.exists()) {
+            ds.downloadFile(new URL(f), localFile);
         }
+
     }
 
     /** returns the local file name where the Acetylation file will get cached locally.
@@ -70,26 +68,19 @@ public class TestAcetylation  {
      *
      */
     @Test
-    public void testAcetylation() {
+    public void testAcetylation() throws IOException {
 
-        try {
+        File localFile = getLocalFileName(Dataset.ACETYLATION);
 
-            File localFile = getLocalFileName(Dataset.ACETYLATION);
+        List<Site> sites = Site.parseSites(localFile);
 
-            List<Site> sites = Site.parseSites(localFile);
+        assertTrue(sites.size() > 0);
 
-            assertTrue(sites.size() > 0);
+        for (Site s : sites) {
 
-            for (Site s : sites) {
+            assertTrue(s.getResidue() != null);
 
-                assertTrue(s.getResidue() != null);
-
-            }
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            fail(e.getMessage());
         }
+
     }
 }
