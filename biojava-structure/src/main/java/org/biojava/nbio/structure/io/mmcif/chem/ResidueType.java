@@ -115,13 +115,17 @@ public enum ResidueType implements Serializable {
 	public static ResidueType getResidueTypeFromString(String chem_comp_type)
 	{
 
+		// Almost all calls to this method are for L-peptide linking. Use this knowledge for a shortcut.
+
+		if ( chem_comp_type.equalsIgnoreCase(lPeptideLinking.chem_comp_type) )
+			return lPeptideLinking;
+
 		ResidueType rtype = lookupTable.get(chem_comp_type);
 		if ( rtype != null)
 			return rtype;
 
 		/** Unfortunately it can be guaranteed that chem_comp_type case sensitivity is preserved.
 		 * E.g. mmtf has it all upper-case. As such we need to do a second check
-		 *
 		 */
 		rtype = lookupTable.get(chem_comp_type.toLowerCase());
 		if ( rtype != null)
@@ -129,6 +133,7 @@ public enum ResidueType implements Serializable {
 
 
 
+		// preserving previous behaviour. Not sure if this is really necessary?
 		for(ResidueType rt : ResidueType.values())
 		{
 			if(rt.chem_comp_type.equalsIgnoreCase(chem_comp_type))
