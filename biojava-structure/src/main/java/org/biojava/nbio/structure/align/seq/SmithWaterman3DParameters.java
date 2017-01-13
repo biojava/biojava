@@ -68,7 +68,7 @@ public class SmithWaterman3DParameters implements ConfigStrucAligParams {
 		List<String> params = new ArrayList<String>();
 		params.add("GapOpen");
 		params.add("GapExtend");
-		params.add("MaxRMSD");
+		params.add("MaxRmsd");
 		params.add("MinLen");
 		
 		return params;
@@ -90,7 +90,7 @@ public class SmithWaterman3DParameters implements ConfigStrucAligParams {
 	public void reset() {
 		gapOpen = (short) 8;
 		gapExtend = (short) 1;
-		maxRmsd = 10.0;
+		maxRmsd = 99;
 		minLen = 30;
 
 	}
@@ -111,7 +111,7 @@ public class SmithWaterman3DParameters implements ConfigStrucAligParams {
 		this.gapOpen = gapOpen;
 	}
 
-	public double getMaxRmsd() {
+	public Double getMaxRmsd() {
 		return maxRmsd;
 	}
 
@@ -119,7 +119,7 @@ public class SmithWaterman3DParameters implements ConfigStrucAligParams {
 		this.maxRmsd = maxRmsd;
 	}
 
-	public int getMinLen() {
+	public Integer getMinLen() {
 		return minLen;
 	}
 

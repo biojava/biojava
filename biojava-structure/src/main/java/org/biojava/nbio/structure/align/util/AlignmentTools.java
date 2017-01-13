@@ -1462,7 +1462,7 @@ public class AlignmentTools {
 					"Block index requested (%d) is higher than the total number of AFPChain blocks (%d).",
 					block, afpChain.getBlockNum()));
 		}
-		if (afpChain.getBlockSize()[block] <= pos) {
+		if (afpChain.getOptAln()[block][0].length <= pos) {
 			throw new IndexOutOfBoundsException(String.format(
 					"Position index requested (%d) is higher than the total number of aligned position in the AFPChain block (%d).",
 					block, afpChain.getBlockSize()[block]));
