@@ -449,7 +449,7 @@ public class AsaCalculator {
 					else if (atomCode.equals("CG")) return TETRAHEDRAL_CARBON_VDW;
 
 				default:
-					logger.warn("Unexpected carbon atom "+atomCode+" for aminoacid "+aa+", assigning its standard vdw radius");
+					logger.info("Unexpected carbon atom "+atomCode+" for aminoacid "+aa+", assigning its standard vdw radius");
 					return Element.C.getVDWRadius();
 				}
 			}
@@ -457,12 +457,8 @@ public class AsaCalculator {
 			// not any of the expected atoms
 		} else {
 			// non standard aas, (e.g. MSE, LLP) will always have this problem,
-			// thus we log at info level for them, at warn for others
-			if (amino.getChemComp()!=null && amino.getChemComp().isStandard()) {
-				logger.warn("Unexpected atom "+atomCode+" for aminoacid "+aa+ " ("+amino.getPDBName()+"), assigning its standard vdw radius");
-			} else {
-				logger.info("Unexpected atom "+atomCode+" for aminoacid "+aa+ " ("+amino.getPDBName()+"), assigning its standard vdw radius");
-			}
+			logger.info("Unexpected atom "+atomCode+" for aminoacid "+aa+ " ("+amino.getPDBName()+"), assigning its standard vdw radius");
+			
 
 			return atom.getElement().getVDWRadius();
 		}
@@ -487,7 +483,7 @@ public class AsaCalculator {
 
 		if (atom.getElement()==Element.O) return OXIGEN_VDW;
 
-		logger.warn("Unexpected atom "+atom.getName()+" for nucleotide "+nuc.getPDBName()+", assigning its standard vdw radius");
+		logger.info("Unexpected atom "+atom.getName()+" for nucleotide "+nuc.getPDBName()+", assigning its standard vdw radius");
 		return atom.getElement().getVDWRadius();
 	}
 
