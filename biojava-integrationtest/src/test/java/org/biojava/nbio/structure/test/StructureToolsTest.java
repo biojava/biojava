@@ -494,6 +494,11 @@ public class StructureToolsTest {
 		assertEquals(98,atoms.length);
 	}
 
+	/**
+	 * See https://github.com/biojava/biojava/issues/631
+	 * @throws StructureException
+	 * @throws IOException
+	 */
 	@Test
 	public void testGetRepresentativeAtomsDna() throws StructureException, IOException {
 	
