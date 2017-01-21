@@ -699,12 +699,17 @@ public class Calc {
 
 
 
-	/** Returns the center  of mass of the set of atoms.
+	/** 
+	 * Returns the center  of mass of the set of atoms.
 	 * @param atomSet a set of Atoms
 	 * @return an Atom representing the Centroid of the set of atoms
 	 */
 	public static final Atom getCentroid(Atom[] atomSet){
 
+		// if we don't catch this case, the centroid returned is (NaN,NaN,NaN), which can cause lots of problems down the line
+		if (atomSet.length==0) 
+			throw new IllegalArgumentException("Atom array has length 0, can't calculate centroid!");
+		
 		double[] coords = new double[3];
 
 		coords[0] = 0;
