@@ -549,7 +549,7 @@ public class StructureToolsTest {
 	@Test
 	public void testGetRepresentativeAtomsProtein() throws StructureException, IOException {
 		Structure s = StructureIO.getStructure("1smt");
-		Chain c = s.getChain(0);
+		Chain c = s.getChainByIndex(0);
 		Atom[] atoms = StructureTools.getRepresentativeAtomArray(c);
 		assertEquals(98,atoms.length);
 		
@@ -562,7 +562,7 @@ public class StructureToolsTest {
 	public void testGetRepresentativeAtomsDna() throws StructureException, IOException {
 	
 		Structure s = StructureIO.getStructure("2pvi");
-		Chain c = s.getChainByPDB("C");
+		Chain c = s.getPolyChainByPDB("C");
 		Atom[] atoms = StructureTools.getRepresentativeAtomArray(c); // chain C (1st nucleotide chain)
 		// actually it should be 13, but at the moment one of the nucleotides is not caught correctly because it's non-standard
 		assertEquals(12,atoms.length);
