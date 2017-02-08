@@ -363,6 +363,13 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 		for (Element element : keyWordElementList) {
 			Element fullNameElement = XMLHelper.selectSingleElement(element, "fullName");
 			aliasList.add(fullNameElement.getTextContent());
+			Element shortNameElement = XMLHelper.selectSingleElement(element, "shortName");
+			if(null != shortNameElement) {
+				String shortName = shortNameElement.getTextContent();
+				if(null != shortName && !shortName.trim().isEmpty()) {
+					aliasList.add(shortName);
+				}
+			}
 		}
 		keyWordElementList = XMLHelper.selectElements(proteinElement, "recommendedName");
 		for (Element element : keyWordElementList) {
@@ -374,6 +381,13 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 				if(null != shortName && !shortName.trim().isEmpty()) {
 					aliasList.add(shortName);
 				}
+			}
+		}
+		Element cdAntigen = XMLHelper.selectSingleElement(proteinElement, "cdAntigenName");
+		if(null != cdAntigen) {
+			String cdAntigenName = cdAntigen.getTextContent();
+			if(null != cdAntigenName && !cdAntigenName.trim().isEmpty()) {
+				aliasList.add(cdAntigenName);
 			}
 		}
 
@@ -392,12 +406,13 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 		}
 		Element uniprotElement = uniprotDoc.getDocumentElement();
 		Element entryElement = XMLHelper.selectSingleElement(uniprotElement, "entry");
-		Element proteinElement = XMLHelper.selectSingleElement(entryElement, "gene");
-		ArrayList<Element> keyWordElementList = XMLHelper.selectElements(proteinElement, "name");
-		for (Element element : keyWordElementList) {
-			aliasList.add(element.getTextContent());
+		ArrayList<Element> proteinElements = XMLHelper.selectElements(entryElement, "gene");
+		for(Element proteinElement : proteinElements) {
+			ArrayList<Element> keyWordElementList = XMLHelper.selectElements(proteinElement, "name");
+			for (Element element : keyWordElementList) {
+				aliasList.add(element.getTextContent());
+			}
 		}
-
 		return aliasList;
 	}
 
