@@ -125,14 +125,18 @@ public class UnitQuaternions {
 	 * The arrays of points need to be centered at the origin. To center the
 	 * points use {@link CalcPoint#center(Point3d[])}.
 	 * 
-	 * @param a
-	 *            array of Point3d, centered at origin
-	 * @param b
-	 *            array of Point3d, centered at origin
-	 * @return the angle in radians of the relative orientation of the points
+	 * @param fixed
+	 *            array of Point3d, centered at origin. Original coordinates
+	 *            will not be modified.
+	 * @param moved
+	 *            array of Point3d, centered at origin. Original coordinates
+	 *            will not be modified.
+	 * @return the angle in radians of the relative orientation of the points,
+	 *         angle to rotate moved to bring it to the same orientation as
+	 *         fixed.
 	 */
-	public static double orientationAngle(Point3d[] a, Point3d[] b) {
-		Quat4d q = relativeOrientation(a, b);
+	public static double orientationAngle(Point3d[] fixed, Point3d[] moved) {
+		Quat4d q = relativeOrientation(fixed, moved);
 		return angle(q);
 	}
 
@@ -141,36 +145,39 @@ public class UnitQuaternions {
 	 * Equivalent to {@link #angle(Quat4d)} of the unit quaternion obtained by
 	 * {@link #relativeOrientation(Point3d[], Point3d[])}.
 	 * 
-	 * @param a
-	 *            array of Point3d
-	 * @param b
-	 *            array of Point3d
+	 * @param fixed
+	 *            array of Point3d. Original coordinates will not be modified.
+	 * @param moved
+	 *            array of Point3d. Original coordinates will not be modified.
 	 * @param centered
 	 *            true if the points are already centered at the origin
-	 * @return the angle in radians of the relative orientation of the points
+	 * @return the angle in radians of the relative orientation of the points,
+	 *         angle to rotate moved to bring it to the same orientation as
+	 *         fixed.
 	 */
-	public static double orientationAngle(Point3d[] a, Point3d[] b,
+	public static double orientationAngle(Point3d[] fixed, Point3d[] moved,
 			boolean centered) {
 		if (!centered) {
-			a = CalcPoint.clonePoint3dArray(a);
-			b = CalcPoint.clonePoint3dArray(b);
-			CalcPoint.center(a);
-			CalcPoint.center(b);
+			fixed = CalcPoint.clonePoint3dArray(fixed);
+			moved = CalcPoint.clonePoint3dArray(moved);
+			CalcPoint.center(fixed);
+			CalcPoint.center(moved);
 		}
-		return orientationAngle(a, b);
+		return orientationAngle(fixed, moved);
 	}
 
 	/**
 	 * Calculate the relative quaternion orientation of two arrays of points.
 	 * 
-	 * @param a
-	 *            point array
-	 * @param b
-	 *            point array
-	 * @return a unit quaternion representing the relative orientation
+	 * @param fixed
+	 *            point array, coordinates will not be modified
+	 * @param moved
+	 *            point array, coordinates will not be modified
+	 * @return a unit quaternion representing the relative orientation, to
+	 *         rotate moved to bring it to the same orientation as fixed.
 	 */
-	public static Quat4d relativeOrientation(Point3d[] a, Point3d[] b) {
-		Matrix m = CalcPoint.formMatrix(a, b);
+	public static Quat4d relativeOrientation(Point3d[] fixed, Point3d[] moved) {
+		Matrix m = CalcPoint.formMatrix(moved, fixed); // inverse
 		EigenvalueDecomposition eig = m.eig();
 		double[][] v = eig.getV().getArray();
 		Quat4d q = new Quat4d(v[1][3], v[2][3], v[3][3], v[0][3]);

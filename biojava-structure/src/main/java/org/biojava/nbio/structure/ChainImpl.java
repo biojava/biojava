@@ -340,58 +340,60 @@ public class ChainImpl implements Chain, Serializable {
 	}
 
 	@Override
-	@Deprecated // TODO dmyersturnbull: why is this deprecated if it's declared in Chain?
 	public Group[] getGroupsByPDB(ResidueNumber start, ResidueNumber end, boolean ignoreMissing)
 			throws StructureException {
-
-		if (! ignoreMissing )
-			return getGroupsByPDB(start, end);
+		// Short-circut for include all groups
+		if(start == null && end == null) {
+			return groups.toArray(new Group[groups.size()]);
+		}
 
 
 		List<Group> retlst = new ArrayList<>();
 
-		String pdbresnumStart = start.toString();
-		String pdbresnumEnd   = end.toString();
+		boolean adding, foundStart;
+		if( start == null ) {
+			// start with first group
+			adding = true;
+			foundStart = true;
+		} else {
+			adding = false;
+			foundStart = false;
+		}
 
-		int startPos = start.getSeqNum();
-		int endPos   = end.getSeqNum();
-
-		boolean adding = false;
-		boolean foundStart = false;
-
+		
 		for (Group g: groups){
 
-			if ( g.getResidueNumber().toString().equals(pdbresnumStart)) {
+			// Check for start
+			if (!adding && start.equalsPositional(g.getResidueNumber())) {
 				adding = true;
 				foundStart = true;
 			}
 
-			if ( ! (foundStart && adding) ) {
+			// Check if past start
+			if ( ignoreMissing && ! (foundStart && adding) ) {
+				ResidueNumber pos = g.getResidueNumber();
 
-
-				int pos = g.getResidueNumber().getSeqNum();
-
-				if ( pos >= startPos) {
+				if ( start != null && start.compareToPositional(pos) <= 0) {
 					foundStart = true;
 					adding = true;
 				}
-
-
 			}
 
 			if ( adding)
 				retlst.add(g);
 
-			if ( g.getResidueNumber().toString().equals(pdbresnumEnd)) {
+			// check for end
+			if ( end != null && end.equalsPositional(g.getResidueNumber())) {
 				if ( ! adding)
-					throw new StructureException("did not find start PDB residue number " + pdbresnumStart + " in chain " + authId);
+					throw new StructureException("did not find start PDB residue number " + start + " in chain " + authId);
 				adding = false;
 				break;
 			}
-			if (adding){
+			// check if past end
+			if ( ignoreMissing && adding && end != null){
 
-				int pos = g.getResidueNumber().getSeqNum();
-				if (pos >= endPos) {
+				ResidueNumber pos = g.getResidueNumber();
+				if ( end.compareToPositional(pos) <= 0) {
 					adding = false;
 					break;
 				}
@@ -400,7 +402,10 @@ public class ChainImpl implements Chain, Serializable {
 		}
 
 		if ( ! foundStart){
-			throw new StructureException("did not find start PDB residue number " + pdbresnumStart + " in chain " + authId);
+			throw new StructureException("did not find start PDB residue number " + start + " in chain " + authId);
+		}
+		if ( end != null && adding && !ignoreMissing) {
+			throw new StructureException("did not find end PDB residue number " + end + " in chain " + authId);
 		}
 
 
@@ -432,42 +437,7 @@ public class ChainImpl implements Chain, Serializable {
 	@Override
 	public Group[] getGroupsByPDB(ResidueNumber start, ResidueNumber end)
 			throws StructureException {
-
-		String pdbresnumStart = start.toString();
-		String pdbresnumEnd   = end.toString();
-
-		List<Group> retlst = new ArrayList<>();
-
-		Iterator<Group> iter = groups.iterator();
-		boolean adding = false;
-		boolean foundStart = false;
-
-		while ( iter.hasNext()){
-			Group g = iter.next();
-			if ( g.getResidueNumber().toString().equals(pdbresnumStart)) {
-				adding = true;
-				foundStart = true;
-			}
-
-			if ( adding)
-				retlst.add(g);
-
-			if ( g.getResidueNumber().toString().equals(pdbresnumEnd)) {
-				if ( ! adding)
-					throw new StructureException("did not find start PDB residue number " + pdbresnumStart + " in chain " + authId);
-				adding = false;
-				break;
-			}
-		}
-
-		if ( ! foundStart){
-			throw new StructureException("did not find start PDB residue number " + pdbresnumStart + " in chain " + authId);
-		}
-		if ( adding) {
-			throw new StructureException("did not find end PDB residue number " + pdbresnumEnd + " in chain " + authId);
-		}
-
-		return retlst.toArray(new Group[retlst.size()] );
+		return getGroupsByPDB(start, end, false);
 	}
 
 
@@ -759,7 +729,7 @@ public class ChainImpl implements Chain, Serializable {
 	@Override
 	public GroupType getPredominantGroupType(){
 
-		double RATIO_RESIDUES_TO_TOTAL = StructureTools.RATIO_RESIDUES_TO_TOTAL;
+		double ratioResiduesToTotal = StructureTools.RATIO_RESIDUES_TO_TOTAL;
 
 		int sizeAminos = getAtomGroups(GroupType.AMINOACID).size();
 		int sizeNucleotides = getAtomGroups(GroupType.NUCLEOTIDE).size();
@@ -774,13 +744,13 @@ public class ChainImpl implements Chain, Serializable {
 
 		int fullSize = sizeAminos + sizeNucleotides + sizeHetatomsWithoutWater;
 
-		if ((double) sizeAminos / (double) fullSize > StructureTools.RATIO_RESIDUES_TO_TOTAL)
+		if ((double) sizeAminos / (double) fullSize > ratioResiduesToTotal)
 			return GroupType.AMINOACID;
 
-		if ((double) sizeNucleotides / (double) fullSize > RATIO_RESIDUES_TO_TOTAL)
+		if ((double) sizeNucleotides / (double) fullSize > ratioResiduesToTotal)
 			return GroupType.NUCLEOTIDE;
 
-		if ((double) (sizeHetatomsWithoutWater) / (double) fullSize > RATIO_RESIDUES_TO_TOTAL)
+		if ((double) (sizeHetatomsWithoutWater) / (double) fullSize > ratioResiduesToTotal)
 			return GroupType.HETATM;
 
 		// finally if neither condition works, we try based on majority, but log
@@ -803,7 +773,7 @@ public class ChainImpl implements Chain, Serializable {
 				"Ratio of residues to total for chain with asym_id {} is below {}. Assuming it is a {} chain. "
 						+ "Counts: # aa residues: {}, # nuc residues: {}, # non-water het residues: {}, # waters: {}, "
 						+ "ratio aa/total: {}, ratio nuc/total: {}",
-				getId(), RATIO_RESIDUES_TO_TOTAL, max, sizeAminos,
+				getId(), ratioResiduesToTotal, max, sizeAminos,
 				sizeNucleotides, sizeHetatomsWithoutWater, sizeWaters,
 				(double) sizeAminos / (double) fullSize,
 				(double) sizeNucleotides / (double) fullSize);

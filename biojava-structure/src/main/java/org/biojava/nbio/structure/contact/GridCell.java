@@ -20,28 +20,29 @@
  */
 package org.biojava.nbio.structure.contact;
 
-import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.Calc;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.vecmath.Point3d;
+
 
 /**
- * A grid cell to be used in contact calculation via geometric hashing algorithm.
+ * A grid cell to be used in contact calculation via spatial hashing algorithm.
  *
- * @author duarte_j
+ * @author Jose Duarte
  *
  */
 public class GridCell {
 
 
+	private Grid grid;
 	private ArrayList<Integer> iIndices;
 	private ArrayList<Integer> jIndices;
 
-	public GridCell(){
+	public GridCell(Grid parent){
 		iIndices = new ArrayList<Integer>();
 		jIndices = new ArrayList<Integer>();
+		this.grid = parent;
 	}
 
 	public void addIindex(int serial){
@@ -62,22 +63,25 @@ public class GridCell {
 
 	/**
 	 * Calculates all distances of atoms within this cell returning those that are within the given cutoff
-	 * as a list of AtomContacts
-	 * @param iAtoms the first set of atoms to which the iIndices correspond
-	 * @param jAtoms the second set of atoms to which the jIndices correspond, if null distances are within the iAtoms only
-	 * @param cutoff
+	 * as a list of Contacts containing the indices of the pair and the calculated distance.
+	 * 
+	 * If {@link Grid#getJAtoms()} is null, distances are within the iAtoms only
 	 * @return
 	 */
-	public List<AtomContact> getContactsWithinCell(Atom[] iAtoms, Atom[] jAtoms, double cutoff){
+	public List<Contact> getContactsWithinCell(){
 
-		List<AtomContact> contacts = new ArrayList<AtomContact>();
+		List<Contact> contacts = new ArrayList<Contact>();
+		
+		Point3d[] iAtoms = grid.getIAtoms();
+		Point3d[] jAtoms = grid.getJAtoms();
+		double cutoff = grid.getCutoff();
 
 		if (jAtoms==null) {
 			for (int i:iIndices) {
 				for (int j:iIndices) {
 					if (j>i) {
-						double distance = Calc.getDistance(iAtoms[i], iAtoms[j]);
-						if (distance<cutoff) contacts.add(new AtomContact(new Pair<Atom>(iAtoms[i],iAtoms[j]),distance));
+						double distance = iAtoms[i].distance(iAtoms[j]);
+						if (distance<cutoff) contacts.add(new Contact(i, j, distance));
 					}
 				}
 			}
@@ -85,8 +89,8 @@ public class GridCell {
 		} else {
 			for (int i:iIndices) {
 				for (int j:jIndices) {
-					double distance = Calc.getDistance(iAtoms[i], jAtoms[j]);
-					if (distance<cutoff) contacts.add(new AtomContact(new Pair<Atom>(iAtoms[i],jAtoms[j]),distance));
+					double distance = iAtoms[i].distance(jAtoms[j]);
+					if (distance<cutoff) contacts.add(new Contact(i, j, distance));
 				}
 			}
 		}
@@ -96,24 +100,30 @@ public class GridCell {
 
 	/**
 	 * Calculates all distances of atoms between this cell and the given cell returning those that are
-	 * within the given cutoff as a list of AtomContacts
+	 * within the given cutoff as a list of Contacts containing the indices of the pair and the calculated distance.
+	 * 
 	 * @param otherCell
-	 * @param iAtoms the first set of atoms to which the iIndices correspond
-	 * @param jAtoms the second set of atoms to which the jIndices correspond, if null distances are within the iAtoms only
+	 * @param iAtoms the first set of atom coordinates to which the iIndices correspond
+	 * @param jAtoms the second set of atom coordinates to which the jIndices correspond, if null distances are within the iAtoms only
 	 * @param cutoff
 	 * @return
 	 */
-	public List<AtomContact> getContactsToOtherCell(GridCell otherCell , Atom[] iAtoms, Atom[] jAtoms, double cutoff){
+	public List<Contact> getContactsToOtherCell(GridCell otherCell){
 
-		List<AtomContact> contacts = new ArrayList<AtomContact>();
+		List<Contact> contacts = new ArrayList<Contact>();
 
+		Point3d[] iAtoms = grid.getIAtoms();
+		Point3d[] jAtoms = grid.getJAtoms();
+		double cutoff = grid.getCutoff();
+
+		
 		if (jAtoms==null) {
 
 			for (int i:iIndices) {
 				for (int j:otherCell.iIndices) {
 					if (j>i) {
-						double distance = Calc.getDistance(iAtoms[i], iAtoms[j]);
-						if (distance<cutoff) contacts.add(new AtomContact(new Pair<Atom>(iAtoms[i],iAtoms[j]),distance));
+						double distance = iAtoms[i].distance(iAtoms[j]);
+						if (distance<cutoff) contacts.add(new Contact(i, j, distance));
 					}
 				}
 			}
@@ -122,8 +132,8 @@ public class GridCell {
 
 			for (int i:iIndices) {
 				for (int j:otherCell.jIndices) {
-					double distance = Calc.getDistance(iAtoms[i], jAtoms[j]);
-					if (distance<cutoff) contacts.add(new AtomContact(new Pair<Atom>(iAtoms[i],jAtoms[j]),distance));
+					double distance = iAtoms[i].distance(jAtoms[j]);
+					if (distance<cutoff) contacts.add(new Contact(i, j, distance));
 				}
 			}
 
@@ -131,5 +141,38 @@ public class GridCell {
 
 		return contacts;
 	}
+	
+	/**
+	 * Tests whether any atom in this cell has a contact with the specified query atom
+	 * @param iAtoms the first set of atoms to which the iIndices correspond
+	 * @param jAtoms the second set of atoms to which the jIndices correspond, or null
+	 * @param query test point
+	 * @param cutoff
+	 * @return
+	 */
+	public boolean hasContactToAtom(Point3d[] iAtoms, Point3d[] jAtoms, Point3d query, double cutoff) {
+		for( int i : iIndices ) {
+			double distance = iAtoms[i].distance(query);
+			if( distance<cutoff)
+				return true;
+		}
+		if (jAtoms!=null) {
+			for( int i : jIndices ) {
+				double distance = jAtoms[i].distance(query);
+				if( distance<cutoff)
+					return true;
+			}
+		}
+		return false;
+	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return String.format("GridCell [%d iAtoms,%d jAtoms]",iIndices.size(),jIndices==null?"-":jIndices.size());
+	}
+
+	
 }

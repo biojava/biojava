@@ -535,6 +535,9 @@ public interface Structure extends Cloneable {
 	/** 
 	 * Retrieve a polymeric Chain based on the 'internal' chain
 	 * id (asymId) for the first model
+	 * 
+	 * <p>See {@link #getPolyChainByPDB(String)} for a similar
+	 * method using the chain name (authId).
 	 * @param asymId the asymId (chainId)
 	 * @return a polymeric Chain or null if it can't be found
 	 * @since 5.0 
@@ -544,6 +547,9 @@ public interface Structure extends Cloneable {
 	/** 
 	 * Retrieve a polymeric Chain based on the 'internal' chain
 	 * id (asymId) for the given model index
+	 * 
+	 * <p>See {@link #getPolyChainByPDB(String, int)} for a similar
+	 * method using the chain name (authId).
 	 * @param asymId the asymId (chainId)
 	 * @param modelIdx the index of the required model (0-based)
 	 * @return a polymeric Chain or null if it can't be found
@@ -554,6 +560,9 @@ public interface Structure extends Cloneable {
 	/** 
 	 * Retrieve a polymeric Chain based on the 'public' chain
 	 * name (authId) for the first model
+	 * 
+	 * <p>See {@link #getPolyChain(String)} for a similar
+	 * method using the chain id (asymId).
 	 * @param authId the author id (chainName, public chain id)
 	 * @return a polymeric Chain or null if it can't be found
 	 * @since 5.0 
@@ -562,11 +571,15 @@ public interface Structure extends Cloneable {
 	
 	/** 
 	 * Retrieve a polymeric Chain based on the 'public' chain
-	 * name (authId) for the given model index
+	 * name (authId) for the given model index.
+	 * 
+	 * <p>See {@link #getPolyChain(String, int)} for a similar
+	 * method using the chain id (asymId).
 	 * @param authId the author id (chainName, public chain id)
 	 * @param modelIdx the index of the required model (0-based)
 	 * @return a polymeric Chain or null if it can't be found
 	 * @since 5.0 
+	 * 
 	 */
 	Chain getPolyChainByPDB(String authId, int modelIdx);
 
@@ -702,13 +715,14 @@ public interface Structure extends Cloneable {
 	 * @return a entityInfo
 	 * @deprecated use {@link #getEntityById(int)} instead
 	 */
+	@Deprecated
 	EntityInfo getCompoundById(int entityId);
 
 	/**
 	 * Request a particular entity by its entity id (mol id in legacy PDB format)
 	 *
 	 * @param entityId the number of the entity
-	 * @return an entity 
+	 * @return an entity, or null if the molId was not found
 	 */	
 	EntityInfo getEntityById(int entityId);
 

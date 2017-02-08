@@ -53,7 +53,7 @@ public class TestSecStrucCalc {
 
 		//List of names to test the DSSP prediction
 		List<String> names = Arrays.asList(
-				"5pti", "1tim", "4hhb", "1how", "4i4q", "2k4t");
+				"5pti", "1tim", "4hhb", "1how", "4i4q", "2k4t", "1deu");
 		SecStrucCalc sec = new SecStrucCalc();
 		//Predict with BioJava the SS -> Anthony has moved this out of the loop.
 		//SecStrucCalc does not need to be reinitialised every time

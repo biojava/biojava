@@ -25,8 +25,11 @@ import org.biojava.nbio.structure.PDBStatus;
 import org.biojava.nbio.structure.PDBStatus.Status;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
 import org.biojava.nbio.structure.io.util.FileDownloadUtils;
+import org.rcsb.mmtf.decoder.ReaderUtils;
+import org.rcsb.mmtf.utils.CodecUtils;
 import org.biojava.nbio.core.util.InputStreamProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -544,8 +547,15 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 		File dir = getDir(pdbId,obsolete);
 		File realFile = new File(dir,getFilename(pdbId));
 
-		String ftp = String.format("%s%s/%s/%s",
-				serverName, pathOnServer, pdbId.substring(1,3).toLowerCase(), getFilename(pdbId));
+		String ftp;
+		
+		if (getFilename(pdbId).endsWith(".mmtf.gz")){
+			ftp = ReaderUtils.getUrl(pdbId);
+		}
+		else{
+			ftp = String.format("%s%s/%s/%s",
+			serverName, pathOnServer, pdbId.substring(1,3).toLowerCase(), getFilename(pdbId));
+		}
 
 		URL url = new URL(ftp);
 
@@ -569,8 +579,6 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 
 		logger.info("Fetching " + ftp);
 		logger.info("Writing to "+ realFile);
-
-
 
 		FileDownloadUtils.downloadFile(url, realFile);
 

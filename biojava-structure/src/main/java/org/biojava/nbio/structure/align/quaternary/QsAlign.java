@@ -11,7 +11,6 @@ import javax.vecmath.Matrix4d;
 
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Calc;
-import org.biojava.nbio.structure.SVDSuperimposer;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureTools;
@@ -30,6 +29,7 @@ import org.biojava.nbio.structure.cluster.SubunitClusterer;
 import org.biojava.nbio.structure.cluster.SubunitClustererParameters;
 import org.biojava.nbio.structure.cluster.SubunitExtractor;
 import org.biojava.nbio.structure.contact.Pair;
+import org.biojava.nbio.structure.geometry.SuperPositions;
 import org.biojava.nbio.structure.geometry.UnitQuaternions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -180,7 +180,7 @@ public class QsAlign {
 						}
 
 						// 3- Check the RMSD condition
-						double rmsd = SVDSuperimposer.getRMS(atoms1, atoms2c);
+						double rmsd = Calc.rmsd(atoms1, atoms2c);
 						if (rmsd > aParams.getMaxRmsd()) {
 							logger.debug(String.format("Subunit matching %d "
 									+ "vs %d of cluster %d could not be "
@@ -354,9 +354,8 @@ public class QsAlign {
 		Pair<Atom[]> pair = getAlignedAtomsForClusterSubunitMap(clusters,
 				clusterSubunitMap);
 
-		SVDSuperimposer svd = new SVDSuperimposer(pair.getFirst(),
-				pair.getSecond());
-		return svd.getTransformation();
+		return SuperPositions.superpose(Calc.atomsToPoints(pair.getFirst()), 
+				Calc.atomsToPoints(pair.getSecond()));
 
 	}
 }

@@ -41,21 +41,35 @@ public class AtomIterator implements Iterator<Atom> {
 
 	private final static Logger logger = LoggerFactory.getLogger(AtomIterator.class);
 
-	private Structure structure     ;
 	private Group     group         ;
 	private int current_atom_pos    ;
 	private GroupIterator groupiter ;
 
 	/**
-	 * Constructs an AtomIterator object.
+	 * Constructs an AtomIterator object over all models
 	 *
 	 * @param struct  a Structure object
 	 */
 	public AtomIterator(Structure struct) {
-		structure = struct;
 		current_atom_pos = -1 ;
 
-		groupiter = new GroupIterator(structure) ;
+		groupiter = new GroupIterator(struct) ;
+		if ( groupiter.hasNext() ) {
+			group = groupiter.next() ;
+		}
+		else
+			group = null ;
+	}
+	
+	/**
+	 * Constructs an AtomIterator object over a single model
+	 *
+	 * @param struct  a Structure object
+	 */
+	public AtomIterator(Structure struct,int modelNr) {
+		current_atom_pos = -1 ;
+
+		groupiter = new GroupIterator(struct,modelNr) ;
 		if ( groupiter.hasNext() ) {
 			group = groupiter.next() ;
 		}
@@ -86,12 +100,9 @@ public class AtomIterator implements Iterator<Atom> {
 	 * @param g  a Group object
 	 */
 	public AtomIterator(Group g) {
-		structure = null;
 		group = g ;
 		current_atom_pos = -1 ;
 		groupiter = null ;
-
-
 	}
 
 	/** Is there a next atom ?

@@ -46,6 +46,7 @@ import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.GroupType;
 import org.biojava.nbio.structure.HetatomImpl;
 import org.biojava.nbio.structure.NucleotideImpl;
+import org.biojava.nbio.structure.PDBCrystallographicInfo;
 import org.biojava.nbio.structure.PDBHeader;
 import org.biojava.nbio.structure.ResidueNumber;
 import org.biojava.nbio.structure.SeqMisMatch;
@@ -61,6 +62,7 @@ import org.biojava.nbio.structure.io.EntityFinder;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.SeqRes2AtomAligner;
 import org.biojava.nbio.structure.io.mmcif.model.AtomSite;
+import org.biojava.nbio.structure.io.mmcif.model.AtomSites;
 import org.biojava.nbio.structure.io.mmcif.model.AuditAuthor;
 import org.biojava.nbio.structure.io.mmcif.model.Cell;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
@@ -149,6 +151,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	private List<StructNcsOper> structNcsOper;
 	private List<StructRefSeqDif> sequenceDifs;
 	private List<StructSiteGen> structSiteGens;
+	
+	private Matrix4d parsedScaleMatrix;
 
 
 
@@ -843,6 +847,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		}
 
 		setStructNcsOps();
+		
+		setCrystallographicInfoMetadata();
 
 
 		Map<String,List<SeqMisMatch>> misMatchMap = new HashMap<String, List<SeqMisMatch>>();
@@ -1317,6 +1323,20 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 					ncsOperators.toArray(new Matrix4d[ncsOperators.size()]));
 		}
 	}
+	
+	private void setCrystallographicInfoMetadata() {
+		if (parsedScaleMatrix!=null) {
+			
+			PDBCrystallographicInfo crystalInfo = structure.getCrystallographicInfo();
+			
+			boolean nonStd = false;
+			if (crystalInfo.getCrystalCell()!=null && !crystalInfo.getCrystalCell().checkScaleMatrix(parsedScaleMatrix)) {
+				nonStd = true;
+			}
+			
+			crystalInfo.setNonStandardCoordFrameConvention(nonStd); 
+		}
+	}
 
 
 	/** This method will return the parsed protein structure, once the parsing has been finished
@@ -1570,14 +1590,37 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	public void newSymmetry(Symmetry symmetry) {
 		String spaceGroup = symmetry.getSpace_group_name_H_M();
 		SpaceGroup sg = SymoplibParser.getSpaceGroup(spaceGroup);
-		if (sg==null) logger.warn("Space group '"+spaceGroup+"' not recognised as a standard space group");
-
-		structure.getPDBHeader().getCrystallographicInfo().setSpaceGroup(sg);
+		if (sg==null) {
+			logger.warn("Space group '"+spaceGroup+"' not recognised as a standard space group");
+			structure.getPDBHeader().getCrystallographicInfo().setNonStandardSg(true);
+		} else {
+			structure.getPDBHeader().getCrystallographicInfo().setSpaceGroup(sg);
+			structure.getPDBHeader().getCrystallographicInfo().setNonStandardSg(false);
+		}
 	}
 
 	@Override
 	public void newStructNcsOper(StructNcsOper sNcsOper) {
 		structNcsOper.add(sNcsOper);
+	}
+	
+	public void newAtomSites(AtomSites atomSites) {
+		
+		try {
+			Matrix4d m = new Matrix4d(
+				Double.parseDouble(atomSites.getFract_transf_matrix11()), Double.parseDouble(atomSites.getFract_transf_matrix12()), Double.parseDouble(atomSites.getFract_transf_matrix13()), Double.parseDouble(atomSites.getFract_transf_vector1()),
+				Double.parseDouble(atomSites.getFract_transf_matrix21()), Double.parseDouble(atomSites.getFract_transf_matrix22()), Double.parseDouble(atomSites.getFract_transf_matrix23()), Double.parseDouble(atomSites.getFract_transf_vector2()),
+				Double.parseDouble(atomSites.getFract_transf_matrix31()), Double.parseDouble(atomSites.getFract_transf_matrix32()), Double.parseDouble(atomSites.getFract_transf_matrix33()), Double.parseDouble(atomSites.getFract_transf_vector3()),
+				0,0,0,1);
+
+			parsedScaleMatrix = m;
+		
+		} catch (NumberFormatException e) {
+			logger.warn("Some values in _atom_sites.fract_transf_matrix or _atom_sites.fract_transf_vector could not be parsed as numbers. Can't check whether coordinate frame convention is correct! Error: {}", e.getMessage());
+			structure.getPDBHeader().getCrystallographicInfo().setNonStandardCoordFrameConvention(false);
+			
+			// in this case parsedScaleMatrix stays null and can't be used in documentEnd()
+		}
 	}
 
 	@Override
@@ -1643,9 +1686,17 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			r.setDbIdCode(structRef.getDb_code());
 		}
 
-
-		int seqbegin = Integer.parseInt(sref.getPdbx_auth_seq_align_beg());
-		int seqend   = Integer.parseInt(sref.getPdbx_auth_seq_align_end());
+		int seqbegin;
+		int seqend;
+		try{
+			seqbegin = Integer.parseInt(sref.getPdbx_auth_seq_align_beg());
+			seqend   = Integer.parseInt(sref.getPdbx_auth_seq_align_end());
+		}
+		catch(NumberFormatException e){
+			logger.info("Couldn't parse sequence alignment positions.");
+			logger.debug(e.toString());
+			return;
+		}
 		Character begin_ins_code = new Character(sref.getPdbx_seq_align_beg_ins_code().charAt(0));
 		Character end_ins_code   = new Character(sref.getPdbx_seq_align_end_ins_code().charAt(0));
 
@@ -1888,8 +1939,6 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	public List<PdbxStructOperList> getStructOpers() {
 		return structOpers;
 	}
-
-
 
 	@Override
 	public void newPdbxStrucAssembly(PdbxStructAssembly strucAssembly) {

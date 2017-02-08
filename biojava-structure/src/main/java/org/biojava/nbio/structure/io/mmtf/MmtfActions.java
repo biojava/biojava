@@ -1,7 +1,7 @@
 package org.biojava.nbio.structure.io.mmtf;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Path;
 
@@ -77,6 +77,20 @@ public class MmtfActions {
 		MmtfStructureReader mmtfStructureReader = new MmtfStructureReader();
 		// Do the inflation
 		new StructureDataToAdapter(new GenericDecoder(ReaderUtils.getDataFromUrl(pdbId)), mmtfStructureReader);
+		// Get the structue
+		return mmtfStructureReader.getStructure();
+	}
+
+	/**
+	 * Read a Biojava structure from an {@link InputStream}
+	 * @param inStream the {@link InputStream} to read from
+	 * @return the parsed {@link Structure}
+	 */
+	public static Structure readFromInputStream(InputStream inStream) {
+		// Get the reader - this is the bit that people need to implement.
+		MmtfStructureReader mmtfStructureReader = new MmtfStructureReader();
+		// Do the inflation
+		new StructureDataToAdapter(new GenericDecoder(ReaderUtils.getDataFromInputStream(inStream)), mmtfStructureReader);
 		// Get the structue
 		return mmtfStructureReader.getStructure();
 	}
