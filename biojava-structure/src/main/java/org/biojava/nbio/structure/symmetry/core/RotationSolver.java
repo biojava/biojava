@@ -95,7 +95,7 @@ public class RotationSolver implements QuatSymmetrySolver {
 
 		List<Double> angles = getAngles();
 
-		 for (int i = 0; i < sphereCount; i++) {
+		for (int i = 0; i < sphereCount; i++) {
 			SphereSampler.getAxisAngle(i, sphereAngle);
 
 			for (double angle : angles) {
@@ -225,25 +225,21 @@ public class RotationSolver implements QuatSymmetrySolver {
 			return false;
 		}
 
-		// get fold and make sure there is only one E (fold=1) permutation
-		int fold = PermutationGroup.getOrder(permutation);
-		if (rotations.getOrder() > 1 && fold == 1) {
-			return false;
-		}
-
-		if (fold == 0 || subunits.getSubunitCount() % fold != 0) {
-			return false;
-		}
-
 		// if this permutation is a duplicate, returns false
 		return hashCodes.add(permutation);
 	}
 
+	/**
+	 * The permutation must map all subunits onto an equivalent subunit
+	 * and no subunit onto itself
+	 * @param permutation
+	 * @return
+	 */
 	private boolean isAllowedPermutation(List<Integer> permutation) {
 		List<Integer> seqClusterId = subunits.getSequenceClusterIds();
 		for (int i = 0; i < permutation.size(); i++) {
 			int j = permutation.get(i);
-			if (seqClusterId.get(i) != seqClusterId.get(j)) {
+			if (i == j || seqClusterId.get(i) != seqClusterId.get(j)) {
 				return false;
 			}
 		}
