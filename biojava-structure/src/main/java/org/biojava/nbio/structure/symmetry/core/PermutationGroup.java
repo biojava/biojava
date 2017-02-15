@@ -23,6 +23,7 @@ package org.biojava.nbio.structure.symmetry.core;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -30,7 +31,7 @@ import java.util.Set;
  *
  * @author Peter
  */
-public class PermutationGroup {
+public class PermutationGroup implements Iterable<List<Integer>> {
 	List<List<Integer>> permutations = new ArrayList<List<Integer>>();
 
 	public void addPermutation(List<Integer> permutation) {
@@ -138,6 +139,11 @@ public class PermutationGroup {
 	@Override
 	public int hashCode() {
 	    return getGroupTable().hashCode();
+	}
+
+	@Override
+	public Iterator<List<Integer>> iterator() {
+		return permutations.iterator();
 	}
 
 	@Override

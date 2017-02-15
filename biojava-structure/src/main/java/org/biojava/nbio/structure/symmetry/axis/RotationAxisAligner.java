@@ -331,7 +331,7 @@ public class RotationAxisAligner extends AxisAligner{
 		}
 		Collections.reverse(orbit.subList(1,  orbit.size()));
 		if (orbit.get(1) != index2) {
-			System.err.println("Warning: alignWithReferenceAxis failed");
+			logger.warn("alignWithReferenceAxis failed");
 		}
 //		System.out.println("Orbit2: " + orbit);
 		return orbit;
@@ -644,7 +644,7 @@ public class RotationAxisAligner extends AxisAligner{
 			int index = p0.indexOf(current);
 			int next = p1.get(index);
 			if (!orbit.contains(next)) {
-				System.err.println("deconvolute: inconsistency in permuation. Returning original order");
+				logger.warn("deconvolute: inconsistency in permuation. Returning original order");
 				return orbit;
 			}
 			inRotationOrder.add(next);
@@ -687,7 +687,7 @@ public class RotationAxisAligner extends AxisAligner{
 		}
 
 		if (referenceVector == null) {
-			System.err.println("Warning: no reference vector found. Using y-axis.");
+			logger.warn("no reference vector found. Using y-axis.");
 			referenceVector = new Vector3d(Y_AXIS);
 		}
 		// make sure reference vector is perpendicular principal roation vector
