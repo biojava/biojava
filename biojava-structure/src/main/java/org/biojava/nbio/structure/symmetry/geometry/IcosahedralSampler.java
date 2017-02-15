@@ -24,9 +24,12 @@ import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Quat4d;
 
 /**
- *
+ * Represents an even coverage of quaternion space by 60 points. This grid is
+ * defined by the vertices of one half of a hexacosichoron (600-cell). It
+ * approximates all possible orientations to within 44.48 degrees.
  * @author Peter
  */
+// This would be better named HexacosichoronSampler, since it's sampling 4D space. -SB
 public final class IcosahedralSampler {
 	private static Quat4d quat = new Quat4d();
 
@@ -39,7 +42,7 @@ public final class IcosahedralSampler {
 	}
 
 	public static Quat4d getQuat4d(int index) {
-		Quat4d q = new Quat4d(orientations[index]);
+		Quat4d q = new Quat4d(orientations[index]); //ignores 5th element
 		return q;
 	}
 
@@ -48,10 +51,12 @@ public final class IcosahedralSampler {
 		axisAngle.set(quat);
 	}
 
-//	# Orientation set c600v, number = 60, radius = 44.48 degrees
-//	# $Id: c600v.quat 6102 2006-02-21 19:45:40Z ckarney $
-//	# For more information, eee http://charles.karney.info/orientation/
-//	format quaternion
+	//	# Orientation set c600v, number = 60, radius = 44.48 degrees
+	//	# $Id: c600v.quat 6102 2006-02-21 19:45:40Z ckarney $
+	//	# For more information, eee http://charles.karney.info/orientation/
+	//	format quaternion
+	// The fifth column gives a weighting factor. Since the 600-cell is regular, all
+	// orientations cover an equal fraction of orientation space and have equal weight.
 	private static double[][] orientations = {
 	{1.000000000f, 0.000000000f, 0.000000000f, 0.000000000f, 1.000000f},
 	{0.000000000f, 1.000000000f, 0.000000000f, 0.000000000f, 1.000000f},
