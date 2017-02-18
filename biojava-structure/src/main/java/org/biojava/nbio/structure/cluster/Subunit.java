@@ -57,7 +57,7 @@ public class Subunit {
 	 * Atoms were obtained.
 	 * 
 	 * @param repAtoms
-	 *            representative Atoms. It cannot be null
+	 *            representative Atoms. It cannot be null or empty
 	 * @param name
 	 *            String field that identifies the Subunit. It can be null
 	 * @param identifier
@@ -71,6 +71,9 @@ public class Subunit {
 		if (reprAtoms == null)
 			throw new IllegalArgumentException(
 					"Representative Atom Array of the Subunit is null");
+		if (reprAtoms.length==0)
+			throw new IllegalArgumentException(
+					"Representative Atom Array of the Subunit has 0 length");
 
 		this.reprAtoms = reprAtoms;
 		this.name = name;
