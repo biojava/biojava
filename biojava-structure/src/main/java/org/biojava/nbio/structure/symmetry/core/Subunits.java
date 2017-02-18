@@ -65,6 +65,12 @@ public class Subunits {
 	 * @param modelNumbers Model number for the subunit
 	 */
 	public Subunits(List<Point3d[]> caCoords, List<Integer> sequenceClusterIds, List<Boolean> pseudoStoichiometry, List<Double> minSequenceIdentity, List<Double> maxSequenceIdentity, List<Integer> folds, List<String> chainIds, List<Integer> modelNumbers) {
+		
+		for (int i=0; i<caCoords.size(); i++) {
+			if (caCoords.get(i).length==0) 
+				throw new IllegalArgumentException("0-length coordinate array in subunit coordinates with index " +i+". Can't calculate quaternary symmetry for empty coordinates.");
+		}
+		
 		this.caCoords = caCoords;
 		this.sequenceClusterIds = sequenceClusterIds;
 		this.pseudoStoichiometry = pseudoStoichiometry;
