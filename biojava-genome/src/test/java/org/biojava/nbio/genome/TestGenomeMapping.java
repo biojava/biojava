@@ -16,7 +16,7 @@ import java.util.zip.GZIPInputStream;
 /**
  * Created by andreas on 7/19/16.
  */
-public class TestGenomeMapping extends TestCase{
+public class TestGenomeMapping extends TestCase {
 
     private static final String geneChromosomeFile = "http://cdn.rcsb.org/gene/hg38/geneChromosome38.tsf.gz";
 
@@ -27,10 +27,7 @@ public class TestGenomeMapping extends TestCase{
         super.setUp();
         InputStream input = new GZIPInputStream(new URL(geneChromosomeFile).openStream());
         gcps = GeneChromosomePositionParser.getChromosomeMappings(input);
-
-
     }
-
 
     @Test
     public void testAK1() {
@@ -147,5 +144,35 @@ public class TestGenomeMapping extends TestCase{
         assertTrue("Exon " + exonNr + " boundary "+ exon.lowerEndpoint()  + " does not match " +start , exon.lowerEndpoint().equals(start));
         assertTrue("Exon " + exonNr + " boundary " + exon.upperEndpoint() + " does not match " + stop, exon.upperEndpoint().equals(stop));
 
+    }
+    
+    @Test
+	/** Test to make sure the reverse mapping of a genomic coordinate handles border cases
+	 * 
+	 * @author Yana Valasatava
+	 */
+    public void testReverseMappingForExonBoundaries() {
+    	
+    	String geneName = "BCL11B"; // gene on the reverse DNA strand 
+    	String genebankId = "NM_138576"; // GeneBank ID for the transcript used for testing (ENST00000357195)
+    	
+    	int posExonStart = 99174151; // starting position of the first base in a coding region (1st exon)
+    	int posExonEnd = 99176195; // ending position of the first base in a coding region (1st exon)
+    	
+    	for (GeneChromosomePosition gcp : gcps) {
+    		
+    		if ( !gcp.getGeneName().equals(geneName) )
+    			continue;
+    		if ( !gcp.getGenebankId().equals(genebankId) )
+    			continue;
+    		
+    		int cdsSE = ChromosomeMappingTools.getCDSPosForChromosomeCoordinate(posExonStart-1, gcp);
+    		assertEquals(cdsSE, -1);
+    		
+    		int cdsEE = ChromosomeMappingTools.getCDSPosForChromosomeCoordinate(posExonEnd+1, gcp);
+    		assertEquals(cdsEE, -1);
+    		
+    		break;
+		}	
     }
 }

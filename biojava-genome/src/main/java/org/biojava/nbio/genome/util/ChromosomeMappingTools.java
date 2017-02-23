@@ -927,7 +927,7 @@ public class ChromosomeMappingTools {
     public static int getCDSPosForChromosomeCoordinate(int coordinate, GeneChromosomePosition chromosomePosition) {
 
         if ( chromosomePosition.getOrientation() == '+')
-            return getCDSPosForward(coordinate,
+        	return getCDSPosForward(coordinate,
                     chromosomePosition.getExonStarts(),
                     chromosomePosition.getExonEnds(),
                     chromosomePosition.getCdsStart(),
@@ -938,7 +938,6 @@ public class ChromosomeMappingTools {
                 chromosomePosition.getExonEnds(),
                 chromosomePosition.getCdsStart(),
                 chromosomePosition.getCdsEnd());
-
     }
 
 
@@ -1148,10 +1147,20 @@ public class ChromosomeMappingTools {
         boolean inCoding = false;
         int codingLength = 0;
 
-
         logger.debug("looking for CDS position for " +chromPos);
+        
+        if ( chromPos <  cdsStart+1 ) {
+            logger.debug(chromPos + " < " + cdsStart+1 );
+            return -1; // this is not in a coding region!
+        }
 
+        if ( chromPos >  cdsEnd+1 ) {
+            logger.debug(chromPos + " > " + cdsEnd+1 );
+            return -1; // this is not in a coding region!
+        }
+        
         int lengthExons = 0;
+        
         // map forward
         for (int i = 0; i < exonStarts.size(); i++) {
 
@@ -1226,7 +1235,7 @@ public class ChromosomeMappingTools {
 
         }
 
-        //logger.debug("length exons: " + lengthExons);
+        logger.debug("length exons: " + lengthExons);
         //return codingLength - 3;
 
         // could not map!
