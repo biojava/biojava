@@ -141,18 +141,34 @@ public class TestGenomeMapping extends TestCase {
 
 	private void validateExon(int exonNr, int start, int stop, List<Range<Integer>> cdsranges) {
 
-		Range exon = cdsranges.get(exonNr);
+		Range<Integer> exon = cdsranges.get(exonNr);
 		assertTrue("Exon " + exonNr + " boundary "+ exon.lowerEndpoint()  + " does not match " +start , exon.lowerEndpoint().equals(start));
 		assertTrue("Exon " + exonNr + " boundary " + exon.upperEndpoint() + " does not match " + stop, exon.upperEndpoint().equals(stop));
 
 	}
 
-	@Test
-	/** Test to make sure the mapping tool correctly retrieves the mRNA position for a gene 
+	/** Get the position of the nucleotide base corresponding to the position of that base on the mRNA sequence 
+	 * for a gene living on the reverse DNA strand. 
+	 * 
+	 * @author Yana Valasatava
+	 */
+	private int getPositionInmRNA(String geneName, String genebankId, int posChrom) {
+		for (GeneChromosomePosition gcp : gcps) {	
+			if ( gcp.getGeneName().equals(geneName) ) {
+				if ( gcp.getGenebankId().equals(genebankId) ) {
+					return ChromosomeMappingTools.getCDSPosForChromosomeCoordinate(posChrom, gcp);
+				}
+			}	
+		}
+		return -1;
+	}
+	
+	/** Make sure the mapping tool correctly retrieves the mRNA position for a gene 
 	 * living on the forward DNA strand for different chromosome positions. 
 	 * 
 	 * @author Yana Valasatava
 	 */
+	@Test
 	public void testForwardMappingPositions() {
 
 		String geneName = "HORMAD2"; // gene on the forward DNA strand 
@@ -190,13 +206,13 @@ public class TestGenomeMapping extends TestCase {
 			}
 		}
 	}
-	
-	@Test
-	/** Test to make sure the mapping tool correctly retrieves the mRNA position for a gene 
+		
+	/** Make sure the mapping tool correctly retrieves the mRNA position for a gene 
 	 * living on the reverse DNA strand for different chromosome positions. 
 	 * 
 	 * @author Yana Valasatava
 	 */
+	@Test
 	public void testReverseMappingPositions() {
 
 		String geneName = "BCL11B"; // gene on the reverse DNA strand 
@@ -235,12 +251,12 @@ public class TestGenomeMapping extends TestCase {
 		}
 	}
 
-	@Test
 	/** Test to make sure the mapping tool correctly identify that position falls outside the coding region 
 	 * for a gene living on the forward DNA strand.
 	 * 
 	 * @author Yana Valasatava
 	 */
+	@Test
 	public void testForwardMappingForExonBoundaries() {
 
 		String geneName = "HBA1"; // gene on the reverse DNA strand 
@@ -249,29 +265,19 @@ public class TestGenomeMapping extends TestCase {
 		int posExonStart = 176717; // starting position of the first base in a coding region (1st exon)
 		int posExonEnd = 176811; // ending position of the first base in a coding region (1st exon)
 
-		for (GeneChromosomePosition gcp : gcps) {
+		int cdsSE = getPositionInmRNA(geneName, genebankId, posExonStart-1);
+		assertEquals(cdsSE, -1);
 
-			if ( !gcp.getGeneName().equals(geneName) )
-				continue;
-			if ( !gcp.getGenebankId().equals(genebankId) )
-				continue;
-
-			int cdsSE = ChromosomeMappingTools.getCDSPosForChromosomeCoordinate(posExonStart-1, gcp);
-			assertEquals(cdsSE, -1);
-
-			int cdsEE = ChromosomeMappingTools.getCDSPosForChromosomeCoordinate(posExonEnd+1, gcp);
-			assertEquals(cdsEE, -1);
-
-			break;
-		}	
+		int cdsEE = getPositionInmRNA(geneName, genebankId, posExonEnd+1);
+		assertEquals(cdsEE, -1);
 	}
-	
-	@Test
+		
 	/** Test to make sure the mapping tool correctly identify that position falls outside the coding region 
 	 * for a gene living on the reverse DNA strand.
 	 * 
 	 * @author Yana Valasatava
 	 */
+	@Test
 	public void testReverseMappingForExonBoundaries() {
 
 		String geneName = "BCL11B"; // gene on the reverse DNA strand 
@@ -279,38 +285,31 @@ public class TestGenomeMapping extends TestCase {
 
 		int posExonStart = 99174151; // starting position of the first base in a coding region (1st exon)
 		int posExonEnd = 99176195; // ending position of the first base in a coding region (1st exon)
-
-		for (GeneChromosomePosition gcp : gcps) {
-
-			if ( !gcp.getGeneName().equals(geneName) )
-				continue;
-			if ( !gcp.getGenebankId().equals(genebankId) )
-				continue;
-
-			int cdsSE = ChromosomeMappingTools.getCDSPosForChromosomeCoordinate(posExonStart-1, gcp);
-			assertEquals(cdsSE, -1);
-
-			int cdsEE = ChromosomeMappingTools.getCDSPosForChromosomeCoordinate(posExonEnd+1, gcp);
-			assertEquals(cdsEE, -1);
-
-			break;
-		}	
+		
+		int cdsSE = getPositionInmRNA(geneName, genebankId, posExonStart-1);
+		assertEquals(cdsSE, -1);
+		
+		int cdsEE = getPositionInmRNA(geneName, genebankId, posExonEnd+1);
+		assertEquals(cdsEE, -1);	
 	}
 	
-	/** Get the position of the nucleotide base corresponding to the position of that base on the mRNA sequence 
-	 * for a gene living on the reverse DNA strand. 
+	/** Test to make sure the mapping tool correctly converts the genetic position to a position on mRNA 
+	 * when multiple UTR regions are consecutive.
 	 * 
 	 * @author Yana Valasatava
 	 */
-	private int getPositionInmRNA(String geneName, String genebankId, int posChrom) {
-		for (GeneChromosomePosition gcp : gcps) {	
-			if ( !gcp.getGeneName().equals(geneName) )
-				continue;
-			if ( !gcp.getGenebankId().equals(genebankId) )
-				continue;       		
-			return ChromosomeMappingTools.getCDSPosForChromosomeCoordinate(posChrom, gcp);
-		}
-		return -1;
+	@Test
+	public void testMappingCromosomePosTomRNAMultiUTRs() {
+
+		String geneName = "ILK"; // gene on the reverse DNA strand 
+		String genebankId = "NM_001278442"; // GeneBank ID for the transcript used for testing (ENST00000532063)
+
+		int chromPos = 6608760;
+		int mRNAPos = 16;
+				
+		int cds = getPositionInmRNA(geneName, genebankId, chromPos);
+		assertEquals(cds, mRNAPos);
+		
 	}
 }
 
