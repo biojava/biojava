@@ -927,7 +927,7 @@ public class ChromosomeMappingTools {
     public static int getCDSPosForChromosomeCoordinate(int coordinate, GeneChromosomePosition chromosomePosition) {
 
         if ( chromosomePosition.getOrientation() == '+')
-            return getCDSPosForward(coordinate,
+        	return getCDSPosForward(coordinate,
                     chromosomePosition.getExonStarts(),
                     chromosomePosition.getExonEnds(),
                     chromosomePosition.getCdsStart(),
@@ -938,301 +938,139 @@ public class ChromosomeMappingTools {
                 chromosomePosition.getExonEnds(),
                 chromosomePosition.getCdsStart(),
                 chromosomePosition.getCdsEnd());
-
     }
-
-
-    public static int getCDSPosReverse(int chromPos, List<Integer> exonStarts, List<Integer> exonEnds,
-                                       int cdsStart, int cdsEnd) {
-        boolean inCoding = false;
-        int codingLength = 0;
-
-        if (cdsEnd < cdsStart) {
-            int tmp = cdsEnd;
-            cdsEnd = cdsStart;
-            cdsStart = tmp;
-        }
-
-        logger.debug("looking for CDS position for " +format(chromPos));
-
-
-        if ( chromPos <  cdsStart+1 ) {
-            // this is not in a coding region!
-
-            logger.debug(chromPos + " < " + cdsStart+1 );
-            return -1;
-        }
-
-        if ( chromPos >  cdsEnd+1 ) {
-            // this is not in a coding region!
-
-            logger.debug(chromPos + " > " + cdsEnd+1 );
-            return -1;
-        }
-
-        int lengthExons = 0;
-
-        // map reverse
-        for (int i = exonStarts.size() - 1; i >= 0; i--) {
-
-            logger.debug("Reverse Exon #" + (i+1) + "/" + exonStarts.size());
-            int end = exonStarts.get(i);
-            int start = exonEnds.get(i);
-
-            if (end < start) {
-                int tmp = end;
-                end = start;
-                start = tmp;
-            }
-            lengthExons += end - start;
-
-
-            logger.debug("     is " + format(chromPos) + " part of Reverse exon? s:" + format(start+1) + " - e:" + format(end) + " | " + (end - start+1));
-            logger.debug("     CDS start: " + format(cdsStart+1) + "-" + format(cdsEnd) + " coding length counter:" + codingLength);
-
-
-
-            if (start+1 <= cdsEnd && end >= cdsEnd ) {
-
-                // first exon with UTR
-
-                inCoding = true;
-
-                int tmpstart = start;
-                if (start < cdsStart) {
-                    tmpstart = cdsStart;
-                }
-
-
-                logger.debug(" --- codingLength " + codingLength +
-                        " s:" +
-                        format(tmpstart+1) +
-                        " e:" +
-                        format(cdsEnd) +
-                        " p:" +
-                        format(chromPos) + " tmp: " + (chromPos - cdsStart));
-
-                logger.debug("check: " + (codingLength + cdsEnd - tmpstart+1) + " ==?? " + format(chromPos));
-
-                int tmp = cdsEnd - chromPos ;
-                // if (codingLength + cdsEnd - tmpstart >= chromPos) {
-                //if (end >= chromPos && start + (end-start) >= chromPos) {
-                // if (codingLength + cdsEnd - tmpstart >= chromPos) {
-                if ( chromPos >= start +1 && chromPos <= end){
-
-
-                    logger.debug(" -> found position in UTR exon:  P: " + format(chromPos) + " s:" + format(tmpstart+1) + " l:" + format(tmp) + " cdsS:" + format(cdsStart+1) + " cdsE:" + format(cdsEnd)  + " codingL:" + codingLength);
-                    return codingLength + tmp;
-                }
-
-
-                logger.debug("     codinglength " + codingLength + " + " + (cdsEnd - tmpstart ) );
-
-                // do not add 1 here
-                codingLength += (cdsEnd - tmpstart );
-
-                boolean debug = logger.isDebugEnabled();
-
-                if (debug) {
-                    StringBuffer b = new StringBuffer();
-                    b.append("     UTR         :" + format(cdsEnd + 1) + " - " + format(end) + newline);
-                    if (tmpstart == start)
-                        b.append(" ->  ");
-                    else
-                        b.append(" <-> ");
-                    b.append("Reverse Exon        :" + format(tmpstart+1) + " - " + (cdsEnd) + " | " + format(cdsEnd - tmpstart) + " - " + codingLength + " | " + (codingLength % 3) + newline);
-
-                    logger.debug(b.toString());
-
-                    // single exon with UTR on both ends
-                    if (tmpstart != start)
-                        logger.debug("     UTR         :" + format(cdsStart - 1) + " - " + format(start));
-                }
-            } else if (start <= cdsStart && end >= cdsStart) {
-
-                // terminal exon with UTR
-                inCoding = false;
-
-
-                logger.debug(format(start  + codingLength + end - cdsStart) + " ?? " + format(chromPos));
-                // (start  + codingLength + end - cdsStart >= chromPos &&
-                if (( start+1 <= chromPos) && ( end >= chromPos)) {
-
-                    //int tmp =  end - cdsStart ;
-//                    int tmp =  chromPos - cdsStart ;
-//                    int l = end - cdsStart;
-                    int tmp = end-chromPos ;
-                    if  ( tmp > end -cdsStart) {
-                        tmp = end-cdsStart ;
-
-                        logger.debug("Adjust tmp to " + tmp);
-                    }
-
-
-
-                    logger.debug(  codingLength + " | " + (end -chromPos) + " | " + (end - cdsStart) );
-                    logger.debug(" <-  Exon        : " + format(cdsStart) + " - " + format(end) + " | " + format(end - cdsStart +1) + " | ");
-                    logger.debug("     UTR         : " + format(start+1) + " - " + format(cdsStart ));
-                    logger.debug(" <- YYY found position noncoding exon:  #" + (i+1) + " "  + format(chromPos) + " s:" + format(start) + " tmp: " + format(tmp) + " cdsStart" + format(cdsStart) + " cdl:" + codingLength + " " + format(cdsEnd));
-
-                    return codingLength + tmp;
-                }
-
-
-                logger.debug("     codinglength " + codingLength + " + " + (end - cdsStart) );
-                codingLength += (end - cdsStart+1);
-
-                logger.debug(" <-  Exon        : " + format(cdsStart+1) + " - " + format(end) + " | " + format(end - cdsStart) + " | " + codingLength + " | " + (codingLength % 3));
-                logger.debug("     UTR         : " + format(start+1) + " - " + format(cdsStart ));
-
-            } else if (inCoding) {
-                // standard coding exon
-                // if (codingLength + end - start >= chromPos) {
-                if ( chromPos >= start+1 && chromPos <= end) {
-
-                    int tmp = end -chromPos  ;
-                    if ( tmp > (end-start+1)) {
-
-                        tmp = (end - start+1);
-
-                        logger.debug("Adjusting tmp to " + tmp);
-                    }
-
-
-                    logger.debug(" -> found position in reverse coding exon:  #" + (i+1) + " chromPos:"  + format(chromPos) + " start:" + format(start+1) + " end:" + format(end) + " tmp:" + tmp + " cdsStart:" + cdsStart + " codingLength:" + codingLength);
-
-                    return codingLength+tmp;
-                }
-
-                // full exon is coding
-
-                logger.debug("     codinglength " + codingLength + " + " + (end - start) );
-                // don't add 1
-                codingLength += (end - start);
-
-                logger.debug("     Exon        : " + format(start+1) + " - " + format(end) + " | " + format(end - start) + " | " + codingLength + " | " + (codingLength % 3));
-            } else {
-                // e.g. see UBQLN3
-
-                logger.debug(" no translation! cdl:" + codingLength);
-
-            }
-
-            //if ( inCoding )
-            //	logger.debug("     exon phase at end:" + ((codingLength) % 3));
-
-            logger.debug("     coding length: " + codingLength + "(phase:" + (codingLength % 3) + ") CDS POS trying to map:" + chromPos);
-
-
-        }
-
-        logger.debug("length exons: " + lengthExons);
-        // could not map, or map over the full length??
-
-
-        return -1;
-
-    }
-
-    /**
-     * Get the chromosome position mapped onto the mRNA CDS transcript position (needs to be divided by 3 to get protein coordinate)
-     *
-     * @param exonStarts
-     * @param exonEnds
-     * @param cdsStart
-     * @param cdsEnd
-     * @return
-     */
+    
+	/** Converts the genetic coordinate to the position of the nucleotide on the mRNA sequence for a gene 
+	 * living on the forward DNA strand.
+	 * 
+	 * @param chromPos The genetic coordinate on a chromosome 
+     * @param exonStarts The list holding the genetic coordinates pointing to the start positions of the exons (including UTR regions)  
+     * @param exonEnds The list holding the genetic coordinates pointing to the end positions of the exons (including UTR regions)
+     * @param cdsStart The start position of a coding region
+     * @param cdsEnd The end position of a coding region
+     * 
+     * @return the position of the nucleotide base on the mRNA sequence corresponding to the input genetic coordinate (base 1)
+	 * 
+	 * @author Yana Valasatava
+	 */
     public static int getCDSPosForward(int chromPos, List<Integer> exonStarts, List<Integer> exonEnds,
-                                       int cdsStart, int cdsEnd) {
-        boolean inCoding = false;
-        int codingLength = 0;
-
-
-        logger.debug("looking for CDS position for " +chromPos);
-
-        int lengthExons = 0;
-        // map forward
-        for (int i = 0; i < exonStarts.size(); i++) {
-
-
-            // start can include UTR
-            int start = exonStarts.get(i);
-            int end = exonEnds.get(i);
-
-            lengthExons += end - start;
-
-
-            logger.debug("forward exon: " + (start+1) + " - " + end + " | " + (end - start) + " ? overlaps with " + format(chromPos));
-
-            if (start +1 <= cdsStart +1 && end >= cdsStart+1) {
-
-                if (end >= chromPos) {
-                    // we are reaching our target position
-                    // -1 is important  here...
-                    int tmp = chromPos - cdsStart -1;
-
-
-                    logger.debug("cdl:" + codingLength + " | " + tmp);
-                    logger.debug(" -> found position in UTR exon:  " + chromPos + " " + format(start) + " " + format(tmp) + " " + cdsStart + " " + codingLength);
-
-                    return codingLength + tmp;
-                }
-                inCoding = true;
-                codingLength += (end - cdsStart);
-
-                logger.debug("     UTR         : " + format(start) + " - " + (cdsStart ));
-                logger.debug(" ->  Exon        : " + format(cdsStart+1) + " - " + format(end) + " | " + format(end - cdsStart) + " | " + codingLength + " | " + (codingLength % 3));
-
-            } else if (start <= cdsEnd && end >= cdsEnd) {
-                //logger.debug(" <-- CDS end at: " + cdsEnd );
-                inCoding = false;
-                if (cdsEnd >= chromPos && (start +1 <= chromPos)) {
-                    int tmp =  chromPos - start -1 ;
-
-
-                    logger.debug(" -> cdsForward found position in non coding exon#"+i+":  " + chromPos + " " + format(start+1) + " " + format(tmp) + " " + cdsStart   + " " + codingLength);
-                    return codingLength + tmp ;
-                }
-                codingLength += (cdsEnd - start);
-
-                logger.debug(" <-  Exon        : " + format(start+1) + " - " + format(cdsEnd) + " | " + format(cdsEnd - start+1) + " | " + codingLength + " | " + (codingLength % 3));
-                logger.debug("     UTR         : " + format(cdsEnd + 1) + " - " + format(end));
-
-
-            } else if (inCoding) {
-
-                if (end >= chromPos && (start +1 <=chromPos)) {
-
-                    int tmp = chromPos-start-1 ;
-
-
-                    logger.debug(codingLength + " | " + tmp);
-                    logger.debug(" -> found position in coding exon #" + (i + 1) + ":  " + format(chromPos) + " " + format(start + 1) + " " + format(tmp) + " " + cdsStart + " " + codingLength);
-
-
-                    return codingLength + tmp ;
-                }
-                // full exon is coding
-                codingLength += (end - start);
-
-                logger.debug("     Exon        :" + format(start) + " - " + format(end) + " | " + format(end - start) + " | " + codingLength + " | " + (codingLength % 3));
-            }
-            //			if ( inCoding )
-            //				logger.debug("exon phase at end:" + (codingLength % 3));
-            //
-            //			logger.debug("   coding length: " + codingLength);
-
-
+            int cdsStart, int cdsEnd) {
+    	
+    	// the genetic coordinate is not in a coding region
+        if ( (chromPos < (cdsStart+1) ) || ( chromPos > (cdsEnd+1) ) ) {
+        	logger.debug("The "+format(chromPos)+" position is not in a coding region");
+            return -1;
         }
+        
+        logger.debug("looking for CDS position for " +format(chromPos));
+        
+        // remove exons that are fully landed in UTRs
+        List<Integer> tmpS = new ArrayList<Integer>(exonStarts);
+        List<Integer> tmpE = new ArrayList<Integer>(exonEnds);
+        
+        int j=0;
+        for (int i = 0; i < tmpS.size(); i++) {
+        	if ( ( tmpE.get(i) < cdsStart) || ( tmpS.get(i) > cdsEnd) ) {
+        		exonStarts.remove(j);
+        		exonEnds.remove(j);
+        	}
+        	else {
+        		j++;
+        	}
+        }
+        
+        // remove untranslated regions from exons
+        int nExons = exonStarts.size();
+        exonStarts.remove(0);
+        exonStarts.add(0, cdsStart);
+        exonEnds.remove(nExons-1);
+        exonEnds.add(cdsEnd);
+        
+        int codingLength = 0;
+        int lengthExon = 0;
+        
+        // map the genetic coordinate on a stretch of a reverse strand
+        for (int i = 0; i < nExons; i++) {
+        	
+		    int start = exonStarts.get(i);
+		    int end = exonEnds.get(i);
+		    
+		    lengthExon = end - start;
 
-        //logger.debug("length exons: " + lengthExons);
-        //return codingLength - 3;
-
-        // could not map!
-
+		    if (start+1 <= chromPos && end >= chromPos ) {
+		    	return codingLength + (chromPos-start);
+		    }
+	        else { 
+	        	codingLength += lengthExon;
+	        }
+        }
         return -1;
     }
-
-
+    
+	/** Converts the genetic coordinate to the position of the nucleotide on the mRNA sequence for a gene 
+	 * living on the reverse DNA strand.
+	 * 
+	 * @param chromPos The genetic coordinate on a chromosome 
+     * @param exonStarts The list holding the genetic coordinates pointing to the start positions of the exons (including UTR regions)  
+     * @param exonEnds The list holding the genetic coordinates pointing to the end positions of the exons (including UTR regions)
+     * @param cdsStart The start position of a coding region
+     * @param cdsEnd The end position of a coding region
+     * 
+     * @return the position of the nucleotide base on the mRNA sequence corresponding to the input genetic coordinate (base 1)
+	 * 
+	 * @author Yana Valasatava
+	 */
+    public static int getCDSPosReverse(int chromPos, List<Integer> exonStarts, List<Integer> exonEnds,
+            int cdsStart, int cdsEnd) {
+    	
+    	// the genetic coordinate is not in a coding region
+        if ( (chromPos < (cdsStart+1)) || ( chromPos > (cdsEnd+1) ) ) {
+        	logger.debug("The "+format(chromPos)+" position is not in a coding region");
+            return -1;
+        }
+        
+        logger.debug("looking for CDS position for " +format(chromPos));
+        
+        // remove exons that are fully landed in UTRs
+        List<Integer> tmpS = new ArrayList<Integer>(exonStarts);
+        List<Integer> tmpE = new ArrayList<Integer>(exonEnds);
+        
+        int j=0;
+        for (int i = tmpS.size() - 1; i >= 0; i--) {
+        	if ( ( tmpE.get(i) < cdsStart) || ( tmpS.get(i) > cdsEnd) ) {
+        		exonStarts.remove(j);
+        		exonEnds.remove(j);
+        	}
+        	else {
+        		j++;
+        	}
+        }
+        
+        // remove untranslated regions from exons
+        int nExons = exonStarts.size();
+        exonStarts.remove(0);
+        exonStarts.add(0, cdsStart);
+        exonEnds.remove(nExons-1);
+        exonEnds.add(cdsEnd);
+        
+        int codingLength = 0;
+        int lengthExon = 0;
+        
+        // map the genetic coordinate on a stretch of a reverse strand
+        for (int i = nExons - 1; i >= 0; i--) {
+        	
+		    int start = exonStarts.get(i);
+		    int end = exonEnds.get(i);
+		    
+		    lengthExon = end - start;
+		    // +1 offset to be a base 1
+		    if (start+1 <= chromPos && end >= chromPos ) {
+		    	return codingLength + (end-chromPos+1);
+		    }
+	        else { 
+	        	codingLength += lengthExon;
+	        }
+        }
+        return -1;
+    }
 }
