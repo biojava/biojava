@@ -23,6 +23,8 @@ package org.biojava.nbio.ws.hmmer;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.biojava.nbio.core.sequence.ProteinSequence;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -31,14 +33,17 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 
-/** Makes remote calls to the HMMER web service at the EBI web site and returns Pfam domain annotations for an input protein sequence.
+/** 
+ * Makes remote calls to the HMMER web service at the EBI web site and returns Pfam domain annotations for an input protein sequence.
  *
  * @author Andreas Prlic
  * @since 3.0.3
  */
 public class RemoteHmmerScan implements HmmerScan {
 
-	public static String HMMER_SERVICE = "http://www.ebi.ac.uk/Tools/hmmer/search/hmmscan";
+	private static final Logger LOGGER = LoggerFactory.getLogger(RemoteHmmerScan.class);
+	
+	public static final String HMMER_SERVICE = "http://www.ebi.ac.uk/Tools/hmmer/search/hmmscan";
 
 	public RemoteHmmerScan(){
 
@@ -54,7 +59,8 @@ public class RemoteHmmerScan implements HmmerScan {
 
 	}
 
-	/** Scans a protein sequence for Pfam profile matches.
+	/** 
+	 * Scans a protein sequence for Pfam profile matches.
 	 *
 	 * @param sequence
 	 * @param serviceLocation
@@ -68,7 +74,7 @@ public class RemoteHmmerScan implements HmmerScan {
 		postContent.append("hmmdb=pfam");
 
 
-		// by default hmmscan runs with the HMMER3 cut_ga parameter enabled, the "gathering freshold", which depends on
+		// by default hmmscan runs with the HMMER3 cut_ga parameter enabled, the "gathering threshold", which depends on
 		// the cutoffs defined in the underlying HMM files.
 		// to request a different cutoff by e-value this could be enabled:
 		//postContent.append("&E=1");
@@ -86,7 +92,7 @@ public class RemoteHmmerScan implements HmmerScan {
 		connection.setRequestMethod("POST");
 		connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 
-		connection.setRequestProperty("Accept:","application/json");
+		connection.setRequestProperty("Accept","application/json");
 
 		connection.setRequestProperty("Content-Length", "" +
 				Integer.toString(postContent.toString().getBytes().length));
@@ -99,13 +105,12 @@ public class RemoteHmmerScan implements HmmerScan {
 		wr.close ();
 
 
-//		//Now get the redirect URL
+		//Now get the redirect URL
 		URL respUrl = new URL( connection.getHeaderField( "Location" ));
 
 		int responseCode = connection.getResponseCode();
 		if ( responseCode == 500){
-			System.err.println("something went wrong!" + serviceLocation);
-			System.err.println(connection.getResponseMessage());
+			LOGGER.warn("Got 500 response code for URL {}. Response message: {}.", serviceLocation, connection.getResponseMessage());	
 		}
 
 		HttpURLConnection connection2 = (HttpURLConnection) respUrl.openConnection();
@@ -122,7 +127,6 @@ public class RemoteHmmerScan implements HmmerScan {
 
 		StringBuffer result = new StringBuffer();
 		while ((inputLine = in.readLine()) != null) {
-			//System.out.println(inputLine);
 			result.append(inputLine);
 		}
 
@@ -141,7 +145,6 @@ public class RemoteHmmerScan implements HmmerScan {
 
 			for(int i =0 ; i < hits.size() ; i++){
 				JSONObject hit = hits.getJSONObject(i);
-				//System.out.println("hit: "+ hit);
 
 				HmmerResult hmmResult = new HmmerResult();
 
@@ -170,13 +173,8 @@ public class RemoteHmmerScan implements HmmerScan {
 				SortedSet<HmmerDomain> domains = new TreeSet<HmmerDomain>();
 				for ( int j= 0 ; j < hmmdomains.size() ; j++){
 					JSONObject d = hmmdomains.getJSONObject(j);
-					//System.out.println(d);
 					Integer is_included = getInteger(d.get("is_included"));
 					if ( is_included == 0) {
-//						System.out.println("  excluding: " + d.get("alihmmdesc") + " " + d.get("alihmmname") + " " +
-//								hit.get("evalue") + " " +
-//								d.get("alisqfrom") + " " +
-//								d.get("alisqto"));
 						continue;
 					}
 
@@ -184,21 +182,12 @@ public class RemoteHmmerScan implements HmmerScan {
 					// this filters out multiple hits to the same clan
 					Integer outcompeted = getInteger(d.get("outcompeted"));
 					if ( outcompeted != null && outcompeted == 1) {
-//						System.out.println("  outcompeted: " + d.get("alihmmdesc") + " " + d.get("alihmmname")+ " " +
-//								hit.get("evalue") + " " +
-//								d.get("alisqfrom") + " " +
-//								d.get("alisqto")
-//						);
 						continue;
 					}
 
 					Integer significant = getInteger(d.get("significant"));
 
 					if (  significant != 1) {
-//						System.out.println("  not significant: " + d.get("alihmmdesc") + " " + d.get("alihmmname")+ " " +
-//								hit.get("evalue") + " " +
-//								d.get("alisqfrom") + " " +
-//								d.get("alisqto"));
 						continue;
 					}
 
@@ -224,8 +213,8 @@ public class RemoteHmmerScan implements HmmerScan {
 
 				results.add(hmmResult);
 			}
-		} catch (Exception e){
-			e.printStackTrace();
+		} catch (NumberFormatException e){
+			LOGGER.warn("Could not parse number in Hmmer web service json response: {}", e.getMessage());
 		}
 
 		return results;
