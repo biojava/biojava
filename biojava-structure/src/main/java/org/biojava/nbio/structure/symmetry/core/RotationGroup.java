@@ -27,13 +27,14 @@ import javax.vecmath.Vector3d;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 /**
- *
+ * @see http://en.wikipedia.org/wiki/Rotation_group_SO(3)
  * @author Peter
  */
-public class RotationGroup {
+public class RotationGroup implements Iterable<Rotation> {
 	private List<Rotation> rotations = new ArrayList<Rotation>();
 	private int principalAxisIndex = 0;
 	private int higherOrderRotationAxis = 0;
@@ -193,7 +194,7 @@ public class RotationGroup {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Rotations: " + rotations.size() + "\n");
 		for (Rotation s: rotations) {
-			sb.append(s.toString() + "\n");
+			sb.append(s.toString()).append("\n");
 		}
 		return sb.toString();
 	}
@@ -368,5 +369,10 @@ public class RotationGroup {
 				return delta;
 			}
 		});
+	}
+
+	@Override
+	public Iterator<Rotation> iterator() {
+		return rotations.iterator();
 	}
 }

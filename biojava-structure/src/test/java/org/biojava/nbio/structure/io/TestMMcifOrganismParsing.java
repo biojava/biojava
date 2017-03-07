@@ -25,6 +25,7 @@ package org.biojava.nbio.structure.io;
 
 
 import org.biojava.nbio.structure.EntityInfo;
+import org.biojava.nbio.structure.EntityType;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
@@ -92,7 +93,7 @@ public class TestMMcifOrganismParsing {
 		assertTrue(s.getEntityInfos().size() > 0);
 
 		for ( EntityInfo c : s.getEntityInfos()) {
-			if(c.getType().equals("polymer")) { 
+			if(EntityType.POLYMER.equals(c.getType())) { 
 				assertNotNull(c.getOrganismTaxId());
 				if(pdbId.equals("3zd6")){
 					if(c.getMolId()==2) {

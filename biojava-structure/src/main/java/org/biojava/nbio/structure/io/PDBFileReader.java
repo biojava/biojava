@@ -27,7 +27,6 @@ package org.biojava.nbio.structure.io;
 
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.EntityInfo;
-import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
 import java.io.IOException;
@@ -152,17 +151,13 @@ public class PDBFileReader extends LocalPDBDirectory {
 				List<Chain> chains = comp.getChains();
 				System.out.print(">Chains :" );
 				for (Chain c : chains){
-					System.out.print(c.getChainID() + " " );
+					System.out.print(c.getId() + " " );
 				}
 				System.out.println();
 				if ( chains.size() > 0)	{
 					System.out.println(chains.get(0).getAtomSequence());
 					System.out.println(chains.get(0).getSeqResSequence());
-					System.out.print("  Atom Ligands: ");
-
-					for ( Group g: chains.get(0).getAtomLigands()){
-						System.out.print( g.getPDBName() + " ");
-					}
+					
 
 					System.out.println(" ");
 				}

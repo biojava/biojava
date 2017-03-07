@@ -22,6 +22,8 @@ package org.biojava.nbio.structure.align.util;
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.ce.GuiWrapper;
 import org.biojava.nbio.structure.align.model.AFPChain;
+import org.biojava.nbio.structure.geometry.Matrices;
+import org.biojava.nbio.structure.geometry.SuperPositions;
 import org.biojava.nbio.structure.jama.Matrix;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,32 +31,34 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
+import javax.vecmath.Matrix4d;
+
 
 public class AFPAlignmentDisplay
 {
 	private static final Logger logger = LoggerFactory.getLogger(AFPAlignmentDisplay.class);
 
 	private static final int[][] aaMatrix = new int[][] {{6,0,-2,-3,-2,0,-1,0,-2,-2,-2,-2,-2,-3,-4,-4,-3,-3,-3,-2,-4},
-		{0,4,-1,0,0,1,-2,-2,-1,-1,-1,-2,-1,0,-1,-1,-1,-2,-2,-3,-4},
-		{-2,-1,7,-3,-1,-1,-1,-2,-1,-1,-1,-2,-2,-2,-3,-3,-2,-4,-3,-4,-4},
-		{-3,0,-3,9,-1,-1,-3,-3,-4,-3,-3,-3,-3,-1,-1,-1,-1,-2,-2,-2,-4},
-		{-2,0,-1,-1,5,1,-1,0,-1,-1,-1,-2,-1,0,-1,-1,-1,-2,-2,-2,-4},
-		{0,1,-1,-1,1,4,0,1,0,0,0,-1,-1,-2,-2,-2,-1,-2,-2,-3,-4},
-		{-1,-2,-1,-3,-1,0,6,1,2,0,-1,-1,-2,-3,-3,-4,-3,-3,-3,-4,-4},
-		{0,-2,-2,-3,0,1,1,6,0,0,0,1,0,-3,-3,-3,-2,-3,-2,-4,-4},
-		{-2,-1,-1,-4,-1,0,2,0,5,2,1,0,0,-2,-3,-3,-2,-3,-2,-3,-4},
-		{-2,-1,-1,-3,-1,0,0,0,2,5,1,0,1,-2,-3,-2,0,-3,-1,-2,-4},
-		{-2,-1,-1,-3,-1,0,-1,0,1,1,5,-1,2,-2,-3,-2,-1,-3,-2,-3,-4},
-		{-2,-2,-2,-3,-2,-1,-1,1,0,0,-1,8,0,-3,-3,-3,-2,-1,2,-2,-4},
-		{-2,-1,-2,-3,-1,-1,-2,0,0,1,2,0,5,-3,-3,-2,-1,-3,-2,-3,-4},
-		{-3,0,-2,-1,0,-2,-3,-3,-2,-2,-2,-3,-3,4,3,1,1,-1,-1,-3,-4},
-		{-4,-1,-3,-1,-1,-2,-3,-3,-3,-3,-3,-3,-3,3,4,2,1,0,-1,-3,-4},
-		{-4,-1,-3,-1,-1,-2,-4,-3,-3,-2,-2,-3,-2,1,2,4,2,0,-1,-2,-4},
-		{-3,-1,-2,-1,-1,-1,-3,-2,-2,0,-1,-2,-1,1,1,2,5,0,-1,-1,-4},
-		{-3,-2,-4,-2,-2,-2,-3,-3,-3,-3,-3,-1,-3,-1,0,0,0,6,3,1,-4},
-		{-3,-2,-3,-2,-2,-2,-3,-2,-2,-1,-2,2,-2,-1,-1,-1,-1,3,7,2,-4},
-		{-2,-3,-4,-2,-2,-3,-4,-4,-3,-2,-3,-2,-3,-3,-3,-2,-1,1,2,11,-4},
-		{-4,-4,-4,-4,-4,-4,-4,-4,-4,-4,-4,-4,-4,-4,-4,-4,-4,-4,-4,-4,1}};
+			{0,4,-1,0,0,1,-2,-2,-1,-1,-1,-2,-1,0,-1,-1,-1,-2,-2,-3,-4},
+			{-2,-1,7,-3,-1,-1,-1,-2,-1,-1,-1,-2,-2,-2,-3,-3,-2,-4,-3,-4,-4},
+			{-3,0,-3,9,-1,-1,-3,-3,-4,-3,-3,-3,-3,-1,-1,-1,-1,-2,-2,-2,-4},
+			{-2,0,-1,-1,5,1,-1,0,-1,-1,-1,-2,-1,0,-1,-1,-1,-2,-2,-2,-4},
+			{0,1,-1,-1,1,4,0,1,0,0,0,-1,-1,-2,-2,-2,-1,-2,-2,-3,-4},
+			{-1,-2,-1,-3,-1,0,6,1,2,0,-1,-1,-2,-3,-3,-4,-3,-3,-3,-4,-4},
+			{0,-2,-2,-3,0,1,1,6,0,0,0,1,0,-3,-3,-3,-2,-3,-2,-4,-4},
+			{-2,-1,-1,-4,-1,0,2,0,5,2,1,0,0,-2,-3,-3,-2,-3,-2,-3,-4},
+			{-2,-1,-1,-3,-1,0,0,0,2,5,1,0,1,-2,-3,-2,0,-3,-1,-2,-4},
+			{-2,-1,-1,-3,-1,0,-1,0,1,1,5,-1,2,-2,-3,-2,-1,-3,-2,-3,-4},
+			{-2,-2,-2,-3,-2,-1,-1,1,0,0,-1,8,0,-3,-3,-3,-2,-1,2,-2,-4},
+			{-2,-1,-2,-3,-1,-1,-2,0,0,1,2,0,5,-3,-3,-2,-1,-3,-2,-3,-4},
+			{-3,0,-2,-1,0,-2,-3,-3,-2,-2,-2,-3,-3,4,3,1,1,-1,-1,-3,-4},
+			{-4,-1,-3,-1,-1,-2,-3,-3,-3,-3,-3,-3,-3,3,4,2,1,0,-1,-3,-4},
+			{-4,-1,-3,-1,-1,-2,-4,-3,-3,-2,-2,-3,-2,1,2,4,2,0,-1,-2,-4},
+			{-3,-1,-2,-1,-1,-1,-3,-2,-2,0,-1,-2,-1,1,1,2,5,0,-1,-1,-4},
+			{-3,-2,-4,-2,-2,-2,-3,-3,-3,-3,-3,-1,-3,-1,0,0,0,6,3,1,-4},
+			{-3,-2,-3,-2,-2,-2,-3,-2,-2,-1,-2,2,-2,-1,-1,-1,-1,3,7,2,-4},
+			{-2,-3,-4,-2,-2,-3,-4,-4,-3,-2,-3,-2,-3,-3,-3,-2,-1,1,2,11,-4},
+			{-4,-4,-4,-4,-4,-4,-4,-4,-4,-4,-4,-4,-4,-4,-4,-4,-4,-4,-4,-4,1}};
 
 	private static Character[] aa1 = new Character[]{  'G',   'A',   'P',   'C',   'T',   'S','D',   'N',   'E',   'Q',   'K',   'H',   'R', 'V',   'I',   'L',   'M',   'F',   'Y',   'W', '-'};
 
@@ -65,9 +69,10 @@ public class AFPAlignmentDisplay
 		Atom[] a1 = getAlignedAtoms1(afpChain,ca1);
 		Atom[] a2 = getAlignedAtoms2(afpChain,ca2);
 
-		SVDSuperimposer svd = new SVDSuperimposer(a1,a2);
-
-		return svd.getRotation();
+		Matrix4d trans = SuperPositions.superpose(Calc.atomsToPoints(a1), 
+				Calc.atomsToPoints(a2));
+		
+		return Matrices.getRotationJAMA(trans);
 
 	}
 
@@ -77,9 +82,10 @@ public class AFPAlignmentDisplay
 		Atom[] a1 = getAlignedAtoms1(afpChain,ca1);
 		Atom[] a2 = getAlignedAtoms2(afpChain,ca2);
 
-		SVDSuperimposer svd = new SVDSuperimposer(a1,a2);
-
-		return svd.getTranslation();
+		Matrix4d trans = SuperPositions.superpose(Calc.atomsToPoints(a1), 
+				Calc.atomsToPoints(a2));
+		
+		return Calc.getTranslationVector(trans);
 
 	}
 
@@ -330,21 +336,37 @@ public class AFPAlignmentDisplay
 		}
 
 		int     i;
+		int eqr = 0;
 
+		int count = 0;
 		for(i = 0; i < alnLength; i ++) {
 
-				if(seq1[i] == seq2[i])  {
+			//System.out.println(i + " " + count + " " + seq1[i] + " " + seq2[i]);
+			// ignore gaps
+			if(seq1[i] == '-' || seq1[i] == '*' || seq1[i] == '.' ||
+					seq2[i] == '-' || seq2[i] == '*' || seq2[i] == '.' )
+				continue ;
 
-					identity += 1.0;
-				} else if(seq1[i] == '-' || seq1[i] == '*' || seq1[i] == '.' ||
-						seq2[i] == '-' || seq2[i] == '*' || seq2[i] == '.' ) {
-				} else if(aaScore(seq1[i], seq2[i]) > 0)  similarity += 1.0;
+			eqr++;
+
+			if(seq1[i] == seq2[i])  {
+
+				identity   += 1.0;
+				similarity += 1.0;
+				count++;
+
+			} else if(aaScore(seq1[i], seq2[i]) > 0) {
+
+				similarity += 1.0;
+				count++;
+
+			}
 		}
 
 
 		if ( alnLength > 0){
-			similarity = (identity + similarity) / alnLength;
-			identity = identity/alnLength;
+			similarity = (similarity) / eqr;
+			identity = identity/eqr;
 		}
 		Map<String, Double> m = new HashMap<String, Double>();
 		m.put("similarity", similarity);
@@ -366,7 +388,7 @@ public class AFPAlignmentDisplay
 	 * @throws IllegalAccessException If an error occurs when invoking jmol
 	 */
 	public static Structure createArtificalStructure(AFPChain afpChain, Atom[] ca1,
-			Atom[] ca2) throws ClassNotFoundException, NoSuchMethodException,
+													 Atom[] ca2) throws ClassNotFoundException, NoSuchMethodException,
 			InvocationTargetException, IllegalAccessException
 	{
 

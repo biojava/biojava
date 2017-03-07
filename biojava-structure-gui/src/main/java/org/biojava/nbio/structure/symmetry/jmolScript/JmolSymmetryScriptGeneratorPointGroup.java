@@ -23,10 +23,10 @@
  */
 package org.biojava.nbio.structure.symmetry.jmolScript;
 
+import org.biojava.nbio.structure.symmetry.axis.RotationAxisAligner;
 import org.biojava.nbio.structure.symmetry.core.Rotation;
-import org.biojava.nbio.structure.symmetry.core.RotationAxisAligner;
 import org.biojava.nbio.structure.symmetry.core.RotationGroup;
-import org.biojava.nbio.structure.symmetry.core.Subunits;
+import org.biojava.nbio.structure.symmetry.core.QuatSymmetrySubunits;
 import org.biojava.nbio.structure.symmetry.geometry.Polyhedron;
 import org.jcolorbrewer.ColorBrewer;
 
@@ -292,7 +292,7 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 	 */
 	@Override
 	public String colorBySubunit() {
-		Subunits subunits = rotationAxisAligner.getSubunits();
+		QuatSymmetrySubunits subunits = rotationAxisAligner.getSubunits();
 		List<Integer> modelNumbers = subunits.getModelNumbers();
 		List<String> chainIds = subunits.getChainIds();
 		List<List<Integer>> orbits = rotationAxisAligner.getOrbits();
@@ -348,11 +348,11 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 	 */
 	@Override
 	public String colorBySequenceCluster() {
-		Subunits subunits = rotationAxisAligner.getSubunits();
+		QuatSymmetrySubunits subunits = rotationAxisAligner.getSubunits();
 		int n = subunits.getSubunitCount();
 		List<Integer> modelNumbers = subunits.getModelNumbers();
 		List<String> chainIds = subunits.getChainIds();
-		List<Integer> seqClusterIds = subunits.getSequenceClusterIds();
+		List<Integer> seqClusterIds = subunits.getClusterIds();
 		int clusters = Collections.max(seqClusterIds) + 1;
 		Color[] col = ColorBrewer.BrBG.getColorPalette(clusters);
 		Color4f[] colors = ColorConverter.convertColor4f(col);
@@ -380,7 +380,7 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 	public String colorBySymmetry() {
 		// TODO needs some refactoring
 		String pointGroup = rotationGroup.getPointGroup();
-		Subunits subunits = rotationAxisAligner.getSubunits();
+		QuatSymmetrySubunits subunits = rotationAxisAligner.getSubunits();
 		List<Integer> modelNumbers = subunits.getModelNumbers();
 		List<String> chainIds = subunits.getChainIds();
 		List<List<Integer>> orbits = rotationAxisAligner.getOrbits();
@@ -524,7 +524,7 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 	}
 
 	private Map<Color4f, List<String>> getCnColorMap() {
-		Subunits subunits = rotationAxisAligner.getSubunits();
+		QuatSymmetrySubunits subunits = rotationAxisAligner.getSubunits();
 		List<Integer> modelNumbers = subunits.getModelNumbers();
 		List<String> chainIds = subunits.getChainIds();
 		List<List<Integer>> orbits = rotationAxisAligner.getOrbits();
@@ -757,7 +757,7 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 		p2 = new Point3d(axis);
 		p2.scaleAdd(1.01*radius, center);
 
-		if (drawPolygon == true) {
+		if (drawPolygon) {
 			double polygonRadius = getMeanExtension() * 0.06;
 			if (n == 2) {
 				referenceAxis = getAligmentVector(p1, axis);
@@ -995,7 +995,7 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 		s.append(color);
 		s.append(";");
 		s.append("font echo 24 sanserif;");
-		s.append("echo "+ text);
+		s.append("echo ").append(text);
 		//s.append("echo Point group ");
 		//s.append(rotationGroup.getPointGroup());
 		s.append(";");

@@ -42,7 +42,7 @@ public class TestParseMmCIFFeatures {
 	@Test
 	public void testSSBond()throws IOException, StructureException {
 		AtomCache cache = new AtomCache();
-
+		
 		StructureIO.setAtomCache(cache);
 
 		cache.setUseMmCif(true);
@@ -97,9 +97,9 @@ public class TestParseMmCIFFeatures {
 		assertDisulfideBond("A", "A", 23, 88, bonds.get(1));
 
 		// check that we have the bonds correctly assigned to both atom and its altgroup atom
-		Group g = sCif.getChainByPDB("A").getGroupByPDB(new ResidueNumber("A", 23, ' '));
+		Group g = sCif.getPolyChainByPDB("A").getGroupByPDB(new ResidueNumber("A", 23, ' '));
 		Group altG = g.getAltLocGroup('B');
-		Group g2 = sCif.getChainByPDB("A").getGroupByPDB(new ResidueNumber("A", 88, ' '));
+		Group g2 = sCif.getPolyChainByPDB("A").getGroupByPDB(new ResidueNumber("A", 88, ' '));
 		List<Bond> bs = g.getAtom("SG").getBonds();
 		Bond b = null;
 		for (Bond bn:bs){
@@ -142,6 +142,12 @@ public class TestParseMmCIFFeatures {
 
 	@Test
 	public void testSites()throws IOException, StructureException {
+
+		AtomCache cache = new AtomCache();
+
+		StructureIO.setAtomCache(cache);
+
+		cache.setUseMmCif(true);
 		Structure sCif = StructureIO.getStructure("4HHB");
 
 		assertNotNull(sCif);
@@ -171,6 +177,11 @@ public class TestParseMmCIFFeatures {
 
 	@Test
 	public void testSites1a4w()throws IOException, StructureException {
+		AtomCache cache = new AtomCache();
+
+		StructureIO.setAtomCache(cache);
+
+		cache.setUseMmCif(true);
 		Structure sCif = StructureIO.getStructure("1A4W");
 
 		assertNotNull(sCif);

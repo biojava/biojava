@@ -195,25 +195,4 @@ public class MultipleAlignmentJmolDisplay  {
 		return jmol;
 	}
 
-	/**
-	 * Get an artifical Structure containing a different model for every
-	 * input structure, so that the alignment result can be viewed in Jmol.
-	 * The Atoms have to be rotated beforehand.
-	 *
-	 * @param atomArrays an array of Atoms for every aligned structure
-	 * @return a structure object containing a set of models,
-	 * 			one for each input array of Atoms.
-	 * @throws StructureException
-	 */
-	public static final Structure getAlignedStructure(List<Atom[]> atomArrays)
-			throws StructureException {
-
-		Structure s = new StructureImpl();
-		for (int i=0; i<atomArrays.size(); i++){
-			List<Chain> model = DisplayAFP.getAlignedModel(atomArrays.get(i));
-			s.addModel(model);
-		}
-		return s;
-	}
-
 }

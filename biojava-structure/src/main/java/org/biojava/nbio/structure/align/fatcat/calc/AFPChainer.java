@@ -3,7 +3,7 @@
  * Yuzhen Ye & Adam Godzik (2003)
  * Flexible structure alignment by chaining aligned fragment pairs allowing twists.
  * Bioinformatics vol.19 suppl. 2. ii246-ii255.
- * http://www.ncbi.nlm.nih.gov/pubmed/14534198
+ * https://www.ncbi.nlm.nih.gov/pubmed/14534198
  * </pre>
  *
  * Thanks to Yuzhen Ye and A. Godzik for granting permission to freely use and redistribute this code.
@@ -28,14 +28,16 @@ package org.biojava.nbio.structure.align.fatcat.calc;
 
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Calc;
-import org.biojava.nbio.structure.SVDSuperimposer;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.AFPTwister;
 import org.biojava.nbio.structure.align.model.AFP;
 import org.biojava.nbio.structure.align.model.AFPChain;
+import org.biojava.nbio.structure.geometry.SuperPositions;
 import org.biojava.nbio.structure.jama.Matrix;
 
 import java.util.List;
+
+import javax.vecmath.Matrix4d;
 
 /** a class to chain AFPs to an alignment
  *
@@ -542,7 +544,7 @@ public class AFPChainer
 		int     a, b;
 		afpChain.setChainLen( 0);
 		int chainLen       = afpChain.getChainLen();
-		int block2Afp[]    = afpChain.getBlock2Afp();
+		int[] block2Afp = afpChain.getBlock2Afp();
 
 
 		double[] blockRmsd = afpChain.getBlockRmsd();
@@ -698,18 +700,10 @@ public class AFPChainer
 	 */
 	private static double getRmsd(Atom[] catmp1, Atom[] catmp2) throws StructureException{
 
-		SVDSuperimposer svd = new SVDSuperimposer(catmp1, catmp2);
+		Matrix4d trans = SuperPositions.superpose(Calc.atomsToPoints(catmp1), 
+				Calc.atomsToPoints(catmp2));
 
-		Matrix m = svd.getRotation();
-		Atom t = svd.getTranslation();
-
-		for (Atom a : catmp2){
-			Calc.rotate(a,m);
-			Calc.shift(a,t);
-
-		}
-
-		double rmsd = SVDSuperimposer.getRMS(catmp1,catmp2);
+		Calc.transform(catmp2, trans);
 
 		//   if ( showAlig) {
 		//      StructureAlignmentJmol jmol = new StructureAlignmentJmol();
@@ -746,9 +740,7 @@ public class AFPChainer
 		//      jmol.evalString("model 0;");
 		//   }
 
-
-		return rmsd;
-
+		return Calc.rmsd(catmp1,catmp2);
 	}
 
 }

@@ -875,7 +875,7 @@ public class GeneFeatureHelper {
 		return geneSequenceHashMap;
 	}
 
-	public static void main(String args[]) throws Exception {
+	public static void main(String[] args) throws Exception {
 /*        if (false) {
 			LinkedHashMap<String, ChromosomeSequence> chromosomeSequenceList = GeneFeatureHelper.loadFastaAddGeneFeaturesFromGeneMarkGTF(new File("Scaffolds.fna"), new File("genemark_hmm.gtf"));
 			LinkedHashMap<String, ProteinSequence> proteinSequenceList = GeneFeatureHelper.getProteinSequences(chromosomeSequenceList.values());

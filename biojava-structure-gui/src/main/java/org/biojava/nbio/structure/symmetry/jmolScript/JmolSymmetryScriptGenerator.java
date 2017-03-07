@@ -20,9 +20,9 @@
  */
 package org.biojava.nbio.structure.symmetry.jmolScript;
 
-import org.biojava.nbio.structure.symmetry.core.AxisAligner;
-import org.biojava.nbio.structure.symmetry.core.HelixAxisAligner;
-import org.biojava.nbio.structure.symmetry.core.RotationAxisAligner;
+import org.biojava.nbio.structure.symmetry.axis.AxisAligner;
+import org.biojava.nbio.structure.symmetry.axis.HelixAxisAligner;
+import org.biojava.nbio.structure.symmetry.axis.RotationAxisAligner;
 
 import javax.vecmath.Color4f;
 import javax.vecmath.Matrix4d;

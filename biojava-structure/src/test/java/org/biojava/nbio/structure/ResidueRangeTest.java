@@ -56,7 +56,7 @@ public class ResidueRangeTest {
 	public void testWholeChainBasic() {
 		String range = "B:";
 		ResidueRange rr = ResidueRange.parse(range);
-		assertEquals("Wrong chain Id", "B", rr.getChainId());
+		assertEquals("Wrong chain Id", "B", rr.getChainName());
 		assertNull("Start residue should be null", rr.getStart());
 		assertNull("End residue should be null", rr.getEnd());
 	}
@@ -70,7 +70,7 @@ public class ResidueRangeTest {
 		ResidueRange rr = ResidueRangeAndLength.parse(range, map);
 		ResidueNumber start = new ResidueNumber("B", 1, null);
 		ResidueNumber end = new ResidueNumber("B", 30, null);
-		assertEquals("Wrong chain Id", "B", rr.getChainId());
+		assertEquals("Wrong chain Id", "B", rr.getChainName());
 		assertEquals("Wrong start", start, rr.getStart());
 		assertEquals("Wrong end", end, rr.getEnd());
 	}
@@ -81,7 +81,7 @@ public class ResidueRangeTest {
 		AtomPositionMap map = new AtomPositionMap(cache.getAtoms(pdbId));
 		String range = "B:";
 		ResidueRange rr = ResidueRangeAndLength.parse(range, map);
-		assertEquals("Wrong chain Id", "B", rr.getChainId());
+		assertEquals("Wrong chain Id", "B", rr.getChainName());
 		assertEquals("Wrong start", new ResidueNumber("B",1,null),rr.getStart());
 		assertEquals("Wrong end", new ResidueNumber("B",30,null),rr.getEnd());
 	}
@@ -112,7 +112,7 @@ public class ResidueRangeTest {
 		for (int i = 0; i < ids.length; i++) {
 			ResidueRangeAndLength rr = new ResidueRangeAndLength(chains[i],
 					starts[i], ends[i], lengths[i]);
-			assertEquals("The chain is incorrect", chains[i], rr.getChainId());
+			assertEquals("The chain is incorrect", chains[i], rr.getChainName());
 			assertEquals("The start is incorrect", starts[i], rr.getStart());
 			assertEquals("The end is incorrect", ends[i], rr.getEnd());
 			assertEquals("The length is incorrect", lengths[i], rr.getLength());
@@ -213,22 +213,22 @@ public class ResidueRangeTest {
 		rangeStr = "AB,A1,ABCD_1-55,NotAG00dID:-5-1R";
 		ranges = ResidueRange.parseMultiple(rangeStr);
 		range = ranges.get(0);
-		assertEquals("Error parsing " + rangeStr, "AB", range.getChainId());
+		assertEquals("Error parsing " + rangeStr, "AB", range.getChainName());
 		assertNull("Error parsing " + rangeStr, range.getStart());
 		assertNull("Error parsing " + rangeStr, range.getEnd());
 		range = ranges.get(1);
-		assertEquals("Error parsing " + rangeStr, "A1", range.getChainId());
+		assertEquals("Error parsing " + rangeStr, "A1", range.getChainName());
 		assertNull("Error parsing " + rangeStr, range.getStart());
 		assertNull("Error parsing " + rangeStr, range.getEnd());
 		range = ranges.get(2);
-		assertEquals("Error parsing " + rangeStr, "ABCD", range.getChainId());
+		assertEquals("Error parsing " + rangeStr, "ABCD", range.getChainName());
 		assertEquals("Error parsing " + rangeStr, new ResidueNumber("ABCD", 1,
 				null), range.getStart());
 		assertEquals("Error parsing " + rangeStr, new ResidueNumber("ABCD", 55,
 				null), range.getEnd());
 		range = ranges.get(3);
 		assertEquals("Error parsing " + rangeStr, "NotAG00dID",
-				range.getChainId());
+				range.getChainName());
 		assertEquals("Error parsing " + rangeStr, new ResidueNumber(
 				"NotAG00dID", -5, null), range.getStart());
 		assertEquals("Error parsing " + rangeStr, new ResidueNumber(
@@ -238,21 +238,21 @@ public class ResidueRangeTest {
 		rangeStr = "_,__,_:1-5,_:+1-+5";
 		ranges = ResidueRange.parseMultiple(rangeStr);
 		range = ranges.get(0);
-		assertEquals("Error parsing " + rangeStr, "_", range.getChainId());
+		assertEquals("Error parsing " + rangeStr, "_", range.getChainName());
 		assertNull("Error parsing " + rangeStr, range.getStart());
 		assertNull("Error parsing " + rangeStr, range.getEnd());
 		range = ranges.get(1);
-		assertEquals("Error parsing " + rangeStr, "_", range.getChainId());
+		assertEquals("Error parsing " + rangeStr, "_", range.getChainName());
 		assertNull("Error parsing " + rangeStr, range.getStart());
 		assertNull("Error parsing " + rangeStr, range.getEnd());
 		range = ranges.get(2);
-		assertEquals("Error parsing " + rangeStr, "_", range.getChainId());
+		assertEquals("Error parsing " + rangeStr, "_", range.getChainName());
 		assertEquals("Error parsing " + rangeStr, new ResidueNumber("_", 1,
 				null), range.getStart());
 		assertEquals("Error parsing " + rangeStr, new ResidueNumber("_", 5,
 				null), range.getEnd());
 		range = ranges.get(3);
-		assertEquals("Error parsing " + rangeStr, "_", range.getChainId());
+		assertEquals("Error parsing " + rangeStr, "_", range.getChainName());
 		assertEquals("Error parsing " + rangeStr, new ResidueNumber("_", 1,
 				null), range.getStart());
 		assertEquals("Error parsing " + rangeStr, new ResidueNumber("_", 5,
@@ -265,10 +265,35 @@ public class ResidueRangeTest {
 		ResidueRange.parse("-");
 	}
 
-	@Test(expected=IllegalArgumentException.class)
+	@Test
 	public void testPartialRange() throws IOException, StructureException {
+		String rangeStr = "C_1023-";
+		ResidueRange range = ResidueRange.parse(rangeStr);
+		assertEquals(rangeStr,1023,(int)range.getStart().getSeqNum());
+		assertNull(rangeStr,range.getEnd());
+
+		rangeStr = "C_-";
+		range = ResidueRange.parse(rangeStr);
+		assertNull(rangeStr,range.getStart());
+		assertNull(rangeStr,range.getEnd());
+		
+		rangeStr = "A_-+55";
+		range = ResidueRange.parse(rangeStr);
+		assertNull(rangeStr,range.getStart());
+		assertEquals(rangeStr,55,(int)range.getEnd().getSeqNum());
+
+	}
+	@Test
+	public void testPartialRangeLength() throws IOException, StructureException {
 		AtomPositionMap map = new AtomPositionMap(cache.getAtoms("2eke"));
-		ResidueRangeAndLength.parse("C_1023-", map);
+		String rangeStr = "C_1023-";
+		ResidueRangeAndLength range = ResidueRangeAndLength.parse(rangeStr, map);
+		
+		assertEquals(rangeStr,1023,(int)range.getStart().getSeqNum());
+		assertEquals(rangeStr,1095,(int)range.getEnd().getSeqNum());
+		assertEquals(rangeStr, 73, range.getLength());
+		
+		
 	}
 
 	/**
@@ -308,21 +333,21 @@ public class ResidueRangeTest {
 		rangeStr = "_,__,_:52-58";
 		ranges = ResidueRangeAndLength.parseMultiple(rangeStr, map);
 		range = ranges.get(0);
-		assertEquals("Error parsing " + rangeStr, "A", range.getChainId());
+		assertEquals("Error parsing " + rangeStr, "A", range.getChainName());
 		assertEquals("Error parsing " + rangeStr, new ResidueNumber("A",8,null),range.getStart());
 		assertEquals("Error parsing " + rangeStr, new ResidueNumber("A",161,null),range.getEnd());
 		range = ranges.get(1);
-		assertEquals("Error parsing " + rangeStr, "A", range.getChainId());
+		assertEquals("Error parsing " + rangeStr, "A", range.getChainName());
 		assertEquals("Error parsing " + rangeStr, new ResidueNumber("A",8,null),range.getStart());
 		assertEquals("Error parsing " + rangeStr, new ResidueNumber("A",161,null),range.getEnd());
 		range = ranges.get(2);
-		assertEquals("Error parsing " + rangeStr, "A", range.getChainId());
+		assertEquals("Error parsing " + rangeStr, "A", range.getChainName());
 		assertEquals("Error parsing " + rangeStr, new ResidueNumber("A", 52,null), range.getStart());
 		assertEquals("Error parsing " + rangeStr, new ResidueNumber("A", 58,null), range.getEnd());
 
 		// wildcards not converted without the map
 		ResidueRange range2 = ResidueRange.parse("_");
-		assertEquals("Error parsing " + rangeStr, "_", range2.getChainId());
+		assertEquals("Error parsing " + rangeStr, "_", range2.getChainName());
 		assertNull("Error parsing " + rangeStr,range2.getStart());
 		assertNull("Error parsing " + rangeStr,range2.getEnd());
 
@@ -338,20 +363,42 @@ public class ResidueRangeTest {
 				"3A:1-100", // Weird chain name
 				"_", "_:1-10", "__-2--1", "__", // catch-all chain
 				"A:-3-+1","A:-3-+1","A:+1-6", // Positive numbers ok, although weird
+				"A:1-","A:1S-","A:--5","A:-+5", // Partial ranges
 		};
 		for (String s : yes) {
 			assertTrue(s + " was not considered a valid range format",
 					ResidueRange.RANGE_REGEX.matcher(s).matches());
 		}
 		// invalid ranges
-		String[] no = new String[] { "A_1-", "A_1S-", "A_1-100-",
-				"A_-10-1000_", "", "-", "___", "__:",
-				"A:1-","A:--5","A:-+5", // Partial ranges
+		String[] no = new String[] {  "A_1-100-",
+				 "", "-", "___", "__:","A_-10-1000_",
+				
 		};
 		for (String s : no) {
 			assertFalse(s + " was considered a valid range format",
 					ResidueRange.RANGE_REGEX.matcher(s).matches());
 		}
+	}
+	
+	@Test
+	public void testTerminalSymbols() {
+		String rangeStr;
+		ResidueRange range;
+		
+		rangeStr = "A:1-$";
+		range = ResidueRange.parse(rangeStr);
+		assertEquals(rangeStr,1,(int)range.getStart().getSeqNum());
+		assertNull(rangeStr,range.getEnd());
+		
+		rangeStr = "A:^-1";
+		range = ResidueRange.parse(rangeStr);
+		assertNull(rangeStr,range.getStart());
+		assertEquals(rangeStr,1,(int)range.getEnd().getSeqNum());
+		
+		rangeStr = "A:^-$";
+		range = ResidueRange.parse(rangeStr);
+		assertNull(rangeStr,range.getStart());
+		assertNull(rangeStr,range.getEnd());
 	}
 
 }

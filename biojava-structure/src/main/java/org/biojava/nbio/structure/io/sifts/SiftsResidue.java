@@ -107,7 +107,7 @@ public class SiftsResidue implements Serializable{
 	@Override
 	public String toString() {
 		return "SiftsResidue [pdbResNum=" + pdbResNum + ", pdbResName="
-				+ pdbResName + ", chainId=" + chainId + ", uniProtResName="
+				+ pdbResName + ", chainName=" + chainId + ", uniProtResName="
 				+ uniProtResName + ", uniProtPos=" + uniProtPos
 				+ ", naturalPos=" + naturalPos + ", seqResName=" + seqResName
 				+ ", pdbId=" + pdbId + ", uniProtAccessionId="

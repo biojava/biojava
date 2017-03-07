@@ -25,6 +25,7 @@
 package org.biojava.nbio.structure.test.align.fatcat;
 
 import junit.framework.TestCase;
+
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.StructureAlignment;
 import org.biojava.nbio.structure.align.StructureAlignmentFactory;
@@ -171,7 +172,7 @@ public class FlipAFPChainTest extends TestCase {
 
 		assertTrue(catmp1.length == afpChain.getNrEQR());
 
-		return SVDSuperimposer.getRMS(catmp1,catmp2);
+		return Calc.rmsd(catmp1,catmp2);
 	}
 
 	public static void rotateAtoms2(AFPChain afpChain,Atom[] ca2){

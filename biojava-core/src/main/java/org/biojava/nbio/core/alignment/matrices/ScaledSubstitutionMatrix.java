@@ -144,7 +144,7 @@ public class ScaledSubstitutionMatrix implements
 		}
 
 		if ( scale != 1)
-			s.append("# Matrix scaled by a factor of " + scale + newline );
+			s.append("# Matrix scaled by a factor of ").append(scale).append(newline);
 		s.append(getMatrixAsString());
 		return s.toString();
 	}

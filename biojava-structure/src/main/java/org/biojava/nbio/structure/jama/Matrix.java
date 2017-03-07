@@ -165,7 +165,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
 	@exception  IllegalArgumentException Array length must be a multiple of m.
 	*/
 
-	public Matrix (double vals[], int m) {
+	public Matrix (double[] vals, int m) {
 		this.m = m;
 		n = (m != 0 ? vals.length/m : 0);
 		if (m*n != vals.length) {
@@ -1048,7 +1048,7 @@ public static Matrix read (BufferedReader input) throws java.io.IOException {
 		} while (tokenizer.nextToken() == StreamTokenizer.TT_WORD);
 
 		int n = v.size();  // Now we've got the number of columns!
-		double row[] = new double[n];
+		double[] row = new double[n];
 		for (int j=0; j<n; j++)  // extract the elements of the 1st row.
 			row[j]=((Double)v.elementAt(j)).doubleValue();
 		v.removeAllElements();
@@ -1060,7 +1060,7 @@ public static Matrix read (BufferedReader input) throws java.io.IOException {
 			do {
 				if (j >= n) throw new java.io.IOException
 					("Row " + v.size() + " is too long.");
-				row[j++] = Double.valueOf(tokenizer.sval).doubleValue();
+				row[j++] = Double.parseDouble(tokenizer.sval);
 			} while (tokenizer.nextToken() == StreamTokenizer.TT_WORD);
 			if (j < n) throw new java.io.IOException
 				("Row " + v.size() + " is too short.");

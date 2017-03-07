@@ -33,8 +33,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -189,36 +191,32 @@ public class BondMaker {
 		for (int modelInd=0; modelInd<structure.nrModels(); modelInd++){
 			for (Chain chain : structure.getChains(modelInd)) {
 				List<Group> groups = chain.getAtomGroups();
-
 				for (Group mainGroup : groups) {
 					// atoms with no residue number don't have atom information
 					if (mainGroup.getResidueNumber() == null) {
 						continue;
 					}
-
 					// Now add support for altLocGroup
 					List<Group> totList = new ArrayList<Group>();
 					totList.add(mainGroup);
 					for(Group altLoc: mainGroup.getAltLocs()){
 						totList.add(altLoc);
 					}
+
+
 					// Now iterate through this list
 					for(Group group : totList){
 
-						ChemComp aminoChemComp = ChemCompGroupFactory.getChemComp(group
-								.getPDBName());
+						ChemComp aminoChemComp = ChemCompGroupFactory.getChemComp(group.getPDBName());
 
 						for (ChemCompBond chemCompBond : aminoChemComp.getBonds()) {
-
-							Atom a = group.getAtom(chemCompBond.getAtom_id_1());
-							Atom b = group.getAtom(chemCompBond.getAtom_id_2());
+							Atom a = getAtom(chemCompBond.getAtom_id_1(), group);
+							Atom b = getAtom(chemCompBond.getAtom_id_2(), group);
 							if ( a != null && b != null){
-
 								int bondOrder = chemCompBond.getNumericalBondOrder();
-
 								new BondImpl(a, b, bondOrder);
-							} else  {
-
+							} 
+							else{
 								// Some of the atoms were missing. That's fine, there's
 								// nothing to do in this case.
 							}
@@ -226,9 +224,24 @@ public class BondMaker {
 					}
 				}
 			}
+
 		}
 	}
 
+	private Atom getAtom(String atomId, Group group) {
+		Atom a = group.getAtom(atomId);
+		// Check for deuteration
+		if(a==null && atomId.startsWith("H")) {
+			a = group.getAtom(atomId.replaceFirst("H", "D"));
+			// Check it is actually deuterated
+			if(a!=null){
+				if(!a.getElement().equals(Element.D)){
+					a=null;
+				}
+			}
+		}
+		return a;
+	}
 
 	private void trimBondLists() {
 		for (int modelInd=0; modelInd<structure.nrModels(); modelInd++){
@@ -250,28 +263,31 @@ public class BondMaker {
 	 * @param disulfideBonds
 	 */
 	public void formDisulfideBonds(List<SSBondImpl> disulfideBonds) {
-		List<Bond> bonds = new ArrayList<>();
 		for (SSBondImpl disulfideBond : disulfideBonds) {
-			Bond bond = formDisulfideBond(disulfideBond);
-			if (bond!=null) bonds.add(bond);
+			formDisulfideBond(disulfideBond);
 		}
-		structure.setSSBonds(bonds);
 	}
 
-	private Bond formDisulfideBond(SSBondImpl disulfideBond) {
+	private void formDisulfideBond(SSBondImpl disulfideBond) {
 		try {
-			Atom a = getAtomFromRecord("SG", "", "CYS",
+			Map<Integer, Atom> a = getAtomFromRecord("SG", "", "CYS",
 					disulfideBond.getChainID1(), disulfideBond.getResnum1(),
 					disulfideBond.getInsCode1());
-			Atom b = getAtomFromRecord("SG", "", "CYS",
+			Map<Integer, Atom> b = getAtomFromRecord("SG", "", "CYS",
 					disulfideBond.getChainID2(), disulfideBond.getResnum2(),
 					disulfideBond.getInsCode2());
 
-			Bond ssbond = new BondImpl(a, b, 1);
+			for(int i=0; i<structure.nrModels(); i++){
+				if(a.containsKey(i) && b.containsKey(i)){
+					// TODO determine what the actual bond order of this bond is; for
+					// now, we're assuming they're single bonds
+					if(!a.get(i).equals(b.get(i))){
+						Bond ssbond =  new BondImpl(a.get(i), b.get(i), 1);
+						structure.addSSBond(ssbond);
+					}
+				}
+			}
 
-			structure.addSSBond(ssbond);
-
-			return ssbond;
 
 		} catch (StructureException e) {
 			// Note, in Calpha only mode the CYS SG's are not present.
@@ -280,8 +296,6 @@ public class BondMaker {
 			} else {
 				logger.debug("Could not find atoms specified in SSBOND record while parsing in parseCAonly mode.");
 			}
-
-			return null;
 		}
 	}
 
@@ -296,20 +310,26 @@ public class BondMaker {
 			return;
 
 		try {
-			Atom a = getAtomFromRecord(linkRecord.getName1(),
+			Map<Integer, Atom> a = getAtomFromRecord(linkRecord.getName1(),
 					linkRecord.getAltLoc1(), linkRecord.getResName1(),
 					linkRecord.getChainID1(), linkRecord.getResSeq1(),
 					linkRecord.getiCode1());
 
-			Atom b = getAtomFromRecord(linkRecord.getName2(),
+			Map<Integer, Atom> b = getAtomFromRecord(linkRecord.getName2(),
 					linkRecord.getAltLoc2(), linkRecord.getResName2(),
 					linkRecord.getChainID2(), linkRecord.getResSeq2(),
 					linkRecord.getiCode2());
 
-			// TODO determine what the actual bond order of this bond is; for
-			// now, we're assuming they're single bonds
-			new BondImpl(a, b, 1);
-		} catch (StructureException e) {
+			for(int i=0; i<structure.nrModels(); i++){
+				if(a.containsKey(i) && b.containsKey(i)){
+					// TODO determine what the actual bond order of this bond is; for
+					// now, we're assuming they're single bonds
+					if(!a.get(i).equals(b.get(i))){
+						new BondImpl(a.get(i), b.get(i), 1);
+					}
+				}
+			}
+		}catch (StructureException e) {
 			// Note, in Calpha only mode the link atoms may not be present.
 			if (! params.isParseCAOnly()) {
 				logger.warn("Could not find atoms specified in LINK record: {}",linkRecord.toString());
@@ -319,6 +339,7 @@ public class BondMaker {
 
 		}
 	}
+
 
 	public void formBondsFromStructConn(List<StructConn> structConn) {
 
@@ -331,14 +352,10 @@ public class BondMaker {
 			if (!BOND_TYPES_TO_PARSE.contains(conn.getConn_type_id())) continue;
 			String chainId1;
 			String chainId2;
-			if(params.isUseInternalChainId()){
-				chainId1 = conn.getPtnr1_label_asym_id();
-				chainId2 = conn.getPtnr2_label_asym_id();
-			}
-			else{
-				chainId1 = conn.getPtnr1_auth_asym_id();
-				chainId2 = conn.getPtnr2_auth_asym_id();
-			}
+
+			chainId1 = conn.getPtnr1_label_asym_id();
+			chainId2 = conn.getPtnr2_label_asym_id();
+
 			String insCode1 = "";
 			if (!conn.getPdbx_ptnr1_PDB_ins_code().equals("?")) insCode1 = conn.getPdbx_ptnr1_PDB_ins_code();
 			String insCode2 = "";
@@ -366,8 +383,8 @@ public class BondMaker {
 			String altLocStr1 = altLoc1.isEmpty()? "" : "(alt loc "+altLoc1+")";
 			String altLocStr2 = altLoc2.isEmpty()? "" : "(alt loc "+altLoc2+")";
 
-			Atom a1 = null;
-			Atom a2 = null;
+			Map<Integer,Atom> a1 = null;
+			Map<Integer,Atom> a2 = null;
 
 			try {
 				a1 = getAtomFromRecord(atomName1, altLoc1, resName1, chainId1, seqId1, insCode1);
@@ -397,10 +414,18 @@ public class BondMaker {
 			}
 
 			// assuming order 1 for all bonds, no information is provided by struct_conn
-			Bond bond = new BondImpl(a1, a2, 1);
-
-			if (conn.getConn_type_id().equals("disulf")) {
-				ssbonds.add(bond);
+			for(int i=0; i<structure.nrModels(); i++){
+				Bond bond = null;
+				if(a1.containsKey(i) && a2.containsKey(i)){
+					if(!a1.get(i).equals(a2.get(i))){
+						bond = new BondImpl(a1.get(i), a2.get(i), 1);
+					}
+				}
+				if(bond!=null){
+					if (conn.getConn_type_id().equals("disulf")) {
+						ssbonds.add(bond);
+					}
+				}
 			}
 
 		}
@@ -409,24 +434,31 @@ public class BondMaker {
 		structure.setSSBonds(ssbonds);
 	}
 
-	private Atom getAtomFromRecord(String name, String altLoc, String resName, String chainID, String resSeq, String iCode)
+	private Map<Integer,Atom> getAtomFromRecord(String name, String altLoc, String resName, String chainID, String resSeq, String iCode)
 			throws StructureException {
 
 		if (iCode==null || iCode.isEmpty()) {
 			iCode = " "; // an insertion code of ' ' is ignored
 		}
-		Chain chain = structure.getChainByPDB(chainID);
+		Map<Integer, Atom> outMap = new HashMap<>();
 		ResidueNumber resNum = new ResidueNumber(chainID, Integer.parseInt(resSeq), iCode.charAt(0));
-		Group group = chain.getGroupByPDB(resNum);
 
-		Group g = group;
-		// there is an alternate location
-		if (!altLoc.isEmpty()) {
-			g = group.getAltLocGroup(altLoc.charAt(0));
-			if (g==null)
-				throw new StructureException("Could not find altLoc code "+altLoc+" in group "+resSeq+iCode+" of chain "+ chainID);
+		for (int i=0; i<structure.nrModels(); i++){
+			Chain chain = structure.getChain(chainID,i);
+			Group group = chain.getGroupByPDB(resNum);
+
+			Group g = group;
+			// there is an alternate location
+			if (!altLoc.isEmpty()) {
+				g = group.getAltLocGroup(altLoc.charAt(0));
+				if (g==null)
+					throw new StructureException("Could not find altLoc code "+altLoc+" in group "+resSeq+iCode+" of chain "+ chainID);
+			}
+			Atom a = g.getAtom(name);
+			if (a!=null){
+				outMap.put(i,a);
+			}
 		}
-
-		return g.getAtom(name);
+		return outMap;
 	}
 }

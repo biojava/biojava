@@ -34,7 +34,7 @@ import java.util.Set;
  * chain, residue ranges and status (manual or automatic classification).
  * <p>
  * For detailed explanation about the ECOD information see the original article
- * at: http://www.ncbi.nlm.nih.gov/pmc/articles/PMC4256011.
+ * at: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4256011.
  * <pre>
  * Cheng H, Schaeffer RD, Liao Y, et al. 
  * ECOD: An Evolutionary Classification of Protein Domains. 
@@ -292,7 +292,7 @@ Column 15: Comma-separated value list of non-polymer entities within 4 A of at l
 		return "EcodDomain [uid=" + uid + ", domainId=" + domainId
 				+ ", manual=" + manual + ", xGroup=" + xGroup + ", hGroup="
 				+ hGroup + ", tGroup=" + tGroup + ", fGroup="+ fGroup + ", pdbId=" + pdbId
-				+ ", chainId=" + chainId + ", range=" + range
+				+ ", chainName=" + chainId + ", range=" + range
 				+ ", architectureName=" + architectureName + ", xGroupName="
 				+ xGroupName + ", hGroupName=" + hGroupName + ", tGroupName="
 				+ tGroupName + ", fGroupName=" + fGroupName + ", assemblyId="

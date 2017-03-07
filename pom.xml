@@ -37,8 +37,9 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.build.targetEncoding>UTF-8</project.build.targetEncoding>
 		<maxmem>512M</maxmem>
-		<slf4j.version>1.7.20</slf4j.version>
-		<log4j.version>2.5</log4j.version>
+		<mmtf.version>1.0.3</mmtf.version>
+		<slf4j.version>1.7.21</slf4j.version>
+		<log4j.version>2.6.1</log4j.version>
 	</properties>
 	<scm>
 		<connection>scm:git:git://github.com/biojava/biojava.git</connection>
@@ -78,6 +79,9 @@
 		<developer>
 			<name>Andy Yates</name>
 		</developer>
+                <developer>
+                        <name>Anthony Bradley</name>
+                </developer>
 		<developer>
 			<name>Carmelo Foti</name>
 		</developer>
@@ -153,7 +157,7 @@
 				</plugin>
 				<plugin>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.3</version>
+					<version>3.5.1</version>
 					<configuration>
 						<source>${jdk.version}</source>
 						<target>${jdk.version}</target>
@@ -165,6 +169,10 @@
 				</plugin>
 				<plugin>
 					<artifactId>maven-jar-plugin</artifactId>
+					<!-- warning: before upgrading to a newer version of this plugin
+					      there are some config changes required.
+					      see https://github.com/biojava/biojava/issues/531
+					      -->
 					<version>2.6</version>
 				</plugin>
 				<plugin>
@@ -173,7 +181,7 @@
 				</plugin>
 				<plugin>
 					<artifactId>maven-source-plugin</artifactId>
-					<version>2.4</version>
+					<version>3.0.1</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-failsafe-plugin</artifactId>
@@ -194,19 +202,23 @@
 					<artifactId>maven-release-plugin</artifactId>
 					<version>2.5.3</version>
 					<configuration>
-						<tagBase>svn+ssh://dev.open-bio.org/home/svn-repositories/biojava/biojava-live/tags</tagBase>
 						<remoteTagging>true</remoteTagging>
 						<preparationGoals>clean install</preparationGoals>
 						<autoVersionSubmodules>true</autoVersionSubmodules>
+
 						<!-- work around for GPG hanging issue http://jira.codehaus.org/browse/MGPG-9 -->
 						<mavenExecutorId>forked-path</mavenExecutorId>
+
+						<!-- needed for jenkins release plugin -->
+						<useReleaseProfile>true</useReleaseProfile>
+						<arguments>-Pgpg-release</arguments>
 					</configuration>
 
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-javadoc-plugin</artifactId>
-					<version>2.10.3</version>
+					<version>2.10.4</version>
 					<configuration>
 					                       <additionalparam>-Xdoclint:none</additionalparam>
 				
@@ -221,7 +233,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-shade-plugin</artifactId>
-					<version>2.4.2</version>
+					<version>2.4.3</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-assembly-plugin</artifactId>
@@ -265,7 +277,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-resources-plugin</artifactId>
-					<version>2.7</version>
+					<version>3.0.1</version>
 				</plugin>
 
 				<plugin>
@@ -298,7 +310,7 @@
 			<plugin>
 				<groupId>org.sonatype.plugins</groupId>
 				<artifactId>nexus-staging-maven-plugin</artifactId>
-				<version>1.6.6</version>
+				<version>1.6.7</version>
 				<extensions>true</extensions>
 				<configuration>
 					<serverId>ossrh</serverId>
@@ -384,7 +396,49 @@
 			<plugin>
 				<groupId>com.versioneye</groupId>
 				<artifactId>versioneye-maven-plugin</artifactId>
-				<version>3.5.1</version>
+				<version>3.9.2</version>
+			</plugin>
+
+			<!-- code coverage plugin -->
+			<plugin>
+				<groupId>org.eluder.coveralls</groupId>
+				<artifactId>coveralls-maven-plugin</artifactId>
+				<version>4.2.0</version>
+				<!--<configuration>-->
+					<!--<repoToken>YOURTOKENGOESHERE</repoToken>-->
+				<!--</configuration>-->
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>cobertura-maven-plugin</artifactId>
+				<version>2.7</version>
+				<configuration>
+					<check>true</check>
+					<format>xml</format>
+					<maxmem>256m</maxmem>
+					<!-- aggregated reports for multi-module projects -->
+					<aggregate>true</aggregate>
+
+					<instrumentation>
+						<excludes>
+							<exclude>org/biojava/nbio/structure/io/mmcif/MMCIFFileTools.class</exclude>
+							<exclude>org/biojava/nbio/structure/symmetry/utils/SymmetryTools.class</exclude>
+							<exclude>demo/DemoFATCAT.class</exclude>
+							<exclude>org/biojava/nbio/structure/align/ce/CECalculator.class</exclude>
+						</excludes>
+						<ignores>
+							<ignore>org.biojava.nbio.structure.io.mmcif.MMCIFFileTools*</ignore>
+							<ignore>demo.*</ignore>
+						</ignores>
+					</instrumentation>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>clean</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 
 		</plugins>
@@ -396,6 +450,8 @@
 				<version>2.6</version>
 			</extension>
 		</extensions>
+
+
 
 	</build>
 
@@ -447,7 +503,7 @@
 		<plugins>
 			<plugin>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.10.1</version>
+				<version>2.10.4</version>
 				<configuration>
 					<aggregate>true</aggregate>
 					<breakiterator>true</breakiterator>
@@ -460,7 +516,7 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-project-info-reports-plugin</artifactId>
-				<version>2.8.1</version>
+				<version>2.9</version>
 				<reportSets>
 					<reportSet>
 						<reports>
@@ -541,6 +597,8 @@
 							</arguments>
 						</configuration>
 					</plugin>
+
+
 				</plugins>
 			</build>
 		</profile>
@@ -578,10 +636,8 @@
 	<modules>
 
 		<module>biojava-core</module>
-		<module>biojava-phylo</module>
 		<module>biojava-alignment</module>
 		<module>biojava-structure</module>
-		<module>biojava-integrationtest</module>
 		<module>biojava-structure-gui</module>
 		<module>biojava-sequencing</module>
 		<module>biojava-genome</module>
@@ -591,14 +647,16 @@
 		<module>biojava-aa-prop</module>
 		<module>biojava-survival</module>
 		<module>biojava-ontology</module>
+		<!-- Keep integration tests last  -->
+		<module>biojava-integrationtest</module>
 	</modules>
 	<inceptionYear>2000</inceptionYear>
 	<issueManagement>
 		<system>Github</system>
 		<url>https://github.com/biojava/biojava/issues</url>
 	</issueManagement>
-	<ciManagement>
-		<system>CruiseControl</system>
-		<url>http://ccpublic.rcsb.org/</url>
-	</ciManagement>
+		<ciManagement>
+			<system>Travis</system>
+			<url>https://travis-ci.org/biojava/biojava</url>
+		</ciManagement>
 </project>

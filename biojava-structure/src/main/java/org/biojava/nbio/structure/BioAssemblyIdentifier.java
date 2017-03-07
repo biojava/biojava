@@ -67,13 +67,12 @@ public class BioAssemblyIdentifier implements StructureIdentifier {
 	@Override
 	public Structure loadStructure(AtomCache cache) throws StructureException,
 			IOException {
-		return cache.getBiologicalAssembly(pdbCode, biolNr);
+		return cache.getBiologicalAssembly(pdbCode, biolNr, AtomCache.DEFAULT_BIOASSEMBLY_STYLE);
 	}
 
 	@Override
 	public SubstructureIdentifier toCanonical() throws StructureException {
-		// null pdbCode indicates that the structure can't be loaded by AtomCache
-		return new SubstructureIdentifier(null, new ArrayList<ResidueRange>());
+		return new SubstructureIdentifier(pdbCode, new ArrayList<ResidueRange>());
 	}
 
 	@Override

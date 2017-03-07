@@ -228,7 +228,7 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
 
 				String accession = m.group(1);
 				Strand s = versus == 1 ? Strand.POSITIVE : Strand.NEGATIVE;
-				int start = new Integer(m.group(3));
+				int start = Integer.parseInt(m.group(3));
 				int end = m.group(6) == null ? start : new Integer(m.group(6));
 
 				if (featureGlobalStart > start) {
@@ -296,7 +296,7 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
 		return returnStrand;
 	}
 
-	public static void main(String args[]){
+	public static void main(String[] args){
 		String[] testStrings = {
 			"J00194.1:100..202",
 			"A00001.5:34..45",

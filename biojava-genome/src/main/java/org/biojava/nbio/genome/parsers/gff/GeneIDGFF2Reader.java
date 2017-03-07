@@ -202,7 +202,7 @@ public class GeneIDGFF2Reader {
 	}
 
 
-	public static void main(String args[]) throws Exception {
+	public static void main(String[] args) throws Exception {
 
 		FeatureList listGenes = GeneIDGFF2Reader.read("/Users/Scooter/scripps/dyadic/analysis/454Scaffolds/genemark_hmm.gtf");
 

@@ -161,7 +161,7 @@ public class GenbankReaderHelper {
 		return dnaSequences;
 	}
 
-	public static void main(String args[]) throws Exception {
+	public static void main(String[] args) throws Exception {
 
 		LinkedHashMap<String, DNASequence> dnaSequences = GenbankReaderHelper.readGenbankDNASequence(new File("src/test/resources/NM_000266.gb"), true);
 		for (DNASequence sequence : dnaSequences.values()) {

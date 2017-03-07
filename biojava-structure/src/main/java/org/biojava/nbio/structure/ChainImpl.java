@@ -56,20 +56,19 @@ public class ChainImpl implements Chain, Serializable {
 	/**
 	 * The default chain identifier used to be an empty space
 	 */
-	public static String DEFAULT_CHAIN_ID = "A";
+	private static final String DEFAULT_CHAIN_ID = "A";
 
 	private String swissprot_id ;
-	private String chainID ; // the chain identifier as in PDB files
+	private String authId; // the 'public' chain identifier as assigned by authors in PDB files
 
 	private List <Group> groups;
 	private List<Group> seqResGroups;
 
-	private Long id;
-	private EntityInfo mol;
+	private EntityInfo entity;
 	private Structure parent;
 
 	private Map<String, Integer> pdbResnumMap;
-	private String internalChainID; // the chain identifier used in mmCIF files
+	private String asymId; // the 'internal' chain identifier as used in mmCIF files
 
 
 	private List<SeqMisMatch> seqMisMatches = null;
@@ -79,12 +78,12 @@ public class ChainImpl implements Chain, Serializable {
 	public ChainImpl() {
 		super();
 
-		chainID = DEFAULT_CHAIN_ID;
-		groups = new ArrayList<Group>() ;
+		authId = DEFAULT_CHAIN_ID;
+		groups = new ArrayList<>() ;
 
-		seqResGroups = new ArrayList<Group>();
-		pdbResnumMap = new HashMap<String,Integer>();
-		internalChainID = null;
+		seqResGroups = new ArrayList<>();
+		pdbResnumMap = new HashMap<>();
+		asymId = null;
 
 	}
 
@@ -92,17 +91,29 @@ public class ChainImpl implements Chain, Serializable {
 	 *
 	 */
 	@Override
-	public Long getId() {
-		return id;
+	public String getId() {
+		return asymId;
 	}
 
 	/** {@inheritDoc}
 	 *
 	 */
 	@Override
-	public void setId(Long id) {
-		this.id = id;
+	public void setId(String asymId) {
+		this.asymId = asymId;
 	}
+
+	/** {@inheritDoc}
+	 *
+	 */
+	@Override
+	public String getName() { return authId; }
+
+	/** {@inheritDoc}
+	 *
+	 */
+	@Override
+	public void setName(String authId) { this.authId = authId; }
 
 	/** {@inheritDoc}
 	 *
@@ -141,7 +152,6 @@ public class ChainImpl implements Chain, Serializable {
 	@Deprecated
 	public Structure getParent() {
 
-
 		return getStructure();
 	}
 
@@ -154,14 +164,14 @@ public class ChainImpl implements Chain, Serializable {
 		ChainImpl n = new ChainImpl();
 		// copy chain data:
 
-		n.setChainID( getChainID());
+		n.setId(getId());
+		n.setName(getName());
 		n.setSwissprotId ( getSwissprotId());
 
 		// NOTE the EntityInfo will be reset at the parent level (Structure) if cloning is happening from parent level
 		// here we don't deep-copy it and just keep the same reference, in case the cloning is happening at the Chain level only
-		n.setEntityInfo(this.mol);
+		n.setEntityInfo(this.entity);
 
-		n.setInternalChainID(internalChainID);
 
 		for (Group group : groups) {
 			Group g = (Group) group.clone();
@@ -169,20 +179,18 @@ public class ChainImpl implements Chain, Serializable {
 			g.setChain(n);
 		}
 
-
-
 		if (seqResGroups!=null){
 
-			List<Group> tmpSeqRes = new ArrayList<Group>();
+			List<Group> tmpSeqRes = new ArrayList<>();
 
 			// cloning seqres and atom groups is ugly, due to their
 			// nested relationship (some of the atoms can be in the seqres, but not all)
 
 			for (Group seqResGroup : seqResGroups) {
 
-				int i = findMathingGroupIndex(groups, seqResGroup);
+				int i = groups.indexOf(seqResGroup);
 
-				Group g = null;
+				Group g ;
 
 				if (i!=-1) {
 					// group found in atom groups, we get the equivalent reference from the newly cloned atom groups
@@ -198,27 +206,15 @@ public class ChainImpl implements Chain, Serializable {
 			n.setSeqResGroups(tmpSeqRes);
 		}
 
-
 		return n ;
 	}
-
-	private static int findMathingGroupIndex(List<Group> atomGroups, Group g) {
-		int i = 0;
-		for (Group atomGroup: atomGroups) {
-			if (g==atomGroup) return i;
-			i++;
-		}
-		return -1;
-	}
-
-
 
 	/** {@inheritDoc}
 	 *
 	 */
 	@Override
 	public void setEntityInfo(EntityInfo mol) {
-		this.mol = mol;
+		this.entity = mol;
 	}
 
 	/** {@inheritDoc}
@@ -226,7 +222,7 @@ public class ChainImpl implements Chain, Serializable {
 	 */
 	@Override
 	public EntityInfo getEntityInfo() {
-		return this.mol;
+		return this.entity;
 	}
 
 	/** set the Swissprot id of this chains .
@@ -313,7 +309,7 @@ public class ChainImpl implements Chain, Serializable {
 	@Override
 	public List<Group> getAtomGroups(GroupType type){
 
-		List<Group> tmp = new ArrayList<Group>() ;
+		List<Group> tmp = new ArrayList<>() ;
 		for (Group g : groups) {
 			if (g.getType().equals(type)) {
 				tmp.add(g);
@@ -344,65 +340,60 @@ public class ChainImpl implements Chain, Serializable {
 	}
 
 	@Override
-	@Deprecated // TODO dmyersturnbull: why is this deprecated if it's declared in Chain?
 	public Group[] getGroupsByPDB(ResidueNumber start, ResidueNumber end, boolean ignoreMissing)
 			throws StructureException {
-
-		if (! ignoreMissing )
-			return getGroupsByPDB(start, end);
-
-
-		List<Group> retlst = new ArrayList<Group>();
-
-		String pdbresnumStart = start.toString();
-		String pdbresnumEnd   = end.toString();
+		// Short-circut for include all groups
+		if(start == null && end == null) {
+			return groups.toArray(new Group[groups.size()]);
+		}
 
 
-		int startPos = Integer.MIN_VALUE;
-		int endPos   = Integer.MAX_VALUE;
+		List<Group> retlst = new ArrayList<>();
 
+		boolean adding, foundStart;
+		if( start == null ) {
+			// start with first group
+			adding = true;
+			foundStart = true;
+		} else {
+			adding = false;
+			foundStart = false;
+		}
 
-		startPos = start.getSeqNum();
-		endPos   = end.getSeqNum();
-
-
-
-		boolean adding = false;
-		boolean foundStart = false;
-
+		
 		for (Group g: groups){
 
-			if ( g.getResidueNumber().toString().equals(pdbresnumStart)) {
+			// Check for start
+			if (!adding && start.equalsPositional(g.getResidueNumber())) {
 				adding = true;
 				foundStart = true;
 			}
 
-			if ( ! (foundStart && adding) ) {
+			// Check if past start
+			if ( ignoreMissing && ! (foundStart && adding) ) {
+				ResidueNumber pos = g.getResidueNumber();
 
-
-				int pos = g.getResidueNumber().getSeqNum();
-
-				if ( pos >= startPos) {
+				if ( start != null && start.compareToPositional(pos) <= 0) {
 					foundStart = true;
 					adding = true;
 				}
-
-
 			}
 
 			if ( adding)
 				retlst.add(g);
 
-			if ( g.getResidueNumber().toString().equals(pdbresnumEnd)) {
+			// check for end
+			if ( end != null && end.equalsPositional(g.getResidueNumber())) {
 				if ( ! adding)
-					throw new StructureException("did not find start PDB residue number " + pdbresnumStart + " in chain " + chainID);
+					throw new StructureException("did not find start PDB residue number " + start + " in chain " + authId);
 				adding = false;
 				break;
 			}
-			if (adding){
+			// check if past end
+			if ( ignoreMissing && adding && end != null){
 
-				int pos = g.getResidueNumber().getSeqNum();
-				if (pos >= endPos) {
+				ResidueNumber pos = g.getResidueNumber();
+				if ( end.compareToPositional(pos) <= 0) {
 					adding = false;
 					break;
 				}
@@ -411,7 +402,10 @@ public class ChainImpl implements Chain, Serializable {
 		}
 
 		if ( ! foundStart){
-			throw new StructureException("did not find start PDB residue number " + pdbresnumStart + " in chain " + chainID);
+			throw new StructureException("did not find start PDB residue number " + start + " in chain " + authId);
+		}
+		if ( end != null && adding && !ignoreMissing) {
+			throw new StructureException("did not find end PDB residue number " + end + " in chain " + authId);
 		}
 
 
@@ -432,7 +426,7 @@ public class ChainImpl implements Chain, Serializable {
 			Integer pos = pdbResnumMap.get(pdbresnum);
 			return groups.get(pos);
 		} else {
-			throw new StructureException("unknown PDB residue number " + pdbresnum + " in chain " + chainID);
+			throw new StructureException("unknown PDB residue number " + pdbresnum + " in chain " + authId);
 		}
 	}
 
@@ -443,42 +437,7 @@ public class ChainImpl implements Chain, Serializable {
 	@Override
 	public Group[] getGroupsByPDB(ResidueNumber start, ResidueNumber end)
 			throws StructureException {
-
-		String pdbresnumStart = start.toString();
-		String pdbresnumEnd   = end.toString();
-
-		List<Group> retlst = new ArrayList<Group>();
-
-		Iterator<Group> iter = groups.iterator();
-		boolean adding = false;
-		boolean foundStart = false;
-
-		while ( iter.hasNext()){
-			Group g = iter.next();
-			if ( g.getResidueNumber().toString().equals(pdbresnumStart)) {
-				adding = true;
-				foundStart = true;
-			}
-
-			if ( adding)
-				retlst.add(g);
-
-			if ( g.getResidueNumber().toString().equals(pdbresnumEnd)) {
-				if ( ! adding)
-					throw new StructureException("did not find start PDB residue number " + pdbresnumStart + " in chain " + chainID);
-				adding = false;
-				break;
-			}
-		}
-
-		if ( ! foundStart){
-			throw new StructureException("did not find start PDB residue number " + pdbresnumStart + " in chain " + chainID);
-		}
-		if ( adding) {
-			throw new StructureException("did not find end PDB residue number " + pdbresnumEnd + " in chain " + chainID);
-		}
-
-		return retlst.toArray(new Group[retlst.size()] );
+		return getGroupsByPDB(start, end, false);
 	}
 
 
@@ -496,14 +455,14 @@ public class ChainImpl implements Chain, Serializable {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void   setChainID(String nam) { chainID = nam;   }
+	public void   setChainID(String asymId) { this.asymId = asymId;   }
 
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String getChainID()           {	return chainID;  }
+	public String getChainID()           {	return this.asymId;  }
 
 
 
@@ -514,10 +473,10 @@ public class ChainImpl implements Chain, Serializable {
 	public String toString(){
 		String newline = System.getProperty("line.separator");
 		StringBuilder str = new StringBuilder();
-		str.append("Chain >").append(getChainID()).append("<").append(newline);
-		if ( mol != null ){
-			if ( mol.getDescription() != null){
-				str.append(mol.getDescription()).append(newline);
+		str.append("Chain asymId:").append(getChainID()).append(" authId:").append(getName()).append(newline);
+		if ( entity != null ){
+			if ( entity.getDescription() != null){
+				str.append(entity.getDescription()).append(newline);
 			}
 		}
 		str.append("total SEQRES length: ").append(getSeqResGroups().size()).append(" total ATOM length:")
@@ -650,7 +609,7 @@ public class ChainImpl implements Chain, Serializable {
 	 */
 	@Override
 	public List<Group> getSeqResGroups(GroupType type) {
-		List<Group> tmp = new ArrayList<Group>() ;
+		List<Group> tmp = new ArrayList<>() ;
 		for (Group g : seqResGroups) {
 			if (g.getType().equals(type)) {
 				tmp.add(g);
@@ -679,10 +638,6 @@ public class ChainImpl implements Chain, Serializable {
 		this.seqResGroups = groups;
 	}
 
-	protected void addSeqResGroup(Group g){
-		seqResGroups.add(g);
-	}
-
 
 	/** {@inheritDoc}
 	 *
@@ -698,7 +653,7 @@ public class ChainImpl implements Chain, Serializable {
 	 */
 	@Override
 	public List<Group> getAtomLigands(){
-		List<Group> ligands = new ArrayList<Group>();
+		List<Group> ligands = new ArrayList<>();
 
 		for (Group g : groups)
 			if (!seqResGroups.contains(g) && !g.isWater())
@@ -709,12 +664,12 @@ public class ChainImpl implements Chain, Serializable {
 
 	@Override
 	public String getInternalChainID() {
-		return internalChainID;
+		return asymId;
 	}
 
 	@Override
 	public void setInternalChainID(String internalChainID) {
-		this.internalChainID = internalChainID;
+		this.asymId = internalChainID;
 
 	}
 
@@ -737,5 +692,105 @@ public class ChainImpl implements Chain, Serializable {
 	public List<SeqMisMatch> getSeqMisMatches() {
 		return seqMisMatches;
 	}
+	
+	@Override
+	public EntityType getEntityType() {
+		if (getEntityInfo()==null) return null;
+		return getEntityInfo().getType();
+	}
+
+	@Override
+	public boolean isWaterOnly() {
+		for (Group g : getAtomGroups()) {
+			if (!g.isWater())
+				return false;
+		}
+		return true;
+	}
+
+	@Override
+	public boolean isPureNonPolymer() {
+		for (Group g : getAtomGroups()) {
+
+			ChemComp cc = g.getChemComp();
+
+			if ( 	g.isPolymeric() &&
+					!g.isHetAtomInFile() ) {
+
+				// important: the aminoacid or nucleotide residue can be in Atom records
+
+				return false;
+			}
+
+		}
+		return true;
+	}
+
+	@Override
+	public GroupType getPredominantGroupType(){
+
+		double ratioResiduesToTotal = StructureTools.RATIO_RESIDUES_TO_TOTAL;
+
+		int sizeAminos = getAtomGroups(GroupType.AMINOACID).size();
+		int sizeNucleotides = getAtomGroups(GroupType.NUCLEOTIDE).size();
+		List<Group> hetAtoms = getAtomGroups(GroupType.HETATM);
+		int sizeHetatoms = hetAtoms.size();
+		int sizeWaters = 0;
+		for (Group g : hetAtoms) {
+			if (g.isWater())
+				sizeWaters++;
+		}
+		int sizeHetatomsWithoutWater = sizeHetatoms - sizeWaters;
+
+		int fullSize = sizeAminos + sizeNucleotides + sizeHetatomsWithoutWater;
+
+		if ((double) sizeAminos / (double) fullSize > ratioResiduesToTotal)
+			return GroupType.AMINOACID;
+
+		if ((double) sizeNucleotides / (double) fullSize > ratioResiduesToTotal)
+			return GroupType.NUCLEOTIDE;
+
+		if ((double) (sizeHetatomsWithoutWater) / (double) fullSize > ratioResiduesToTotal)
+			return GroupType.HETATM;
+
+		// finally if neither condition works, we try based on majority, but log
+		// it
+		GroupType max;
+		if (sizeNucleotides > sizeAminos) {
+			if (sizeNucleotides > sizeHetatomsWithoutWater) {
+				max = GroupType.NUCLEOTIDE;
+			} else {
+				max = GroupType.HETATM;
+			}
+		} else {
+			if (sizeAminos > sizeHetatomsWithoutWater) {
+				max = GroupType.AMINOACID;
+			} else {
+				max = GroupType.HETATM;
+			}
+		}
+		logger.debug(
+				"Ratio of residues to total for chain with asym_id {} is below {}. Assuming it is a {} chain. "
+						+ "Counts: # aa residues: {}, # nuc residues: {}, # non-water het residues: {}, # waters: {}, "
+						+ "ratio aa/total: {}, ratio nuc/total: {}",
+				getId(), ratioResiduesToTotal, max, sizeAminos,
+				sizeNucleotides, sizeHetatomsWithoutWater, sizeWaters,
+				(double) sizeAminos / (double) fullSize,
+				(double) sizeNucleotides / (double) fullSize);
+
+		return max;
+	}
+
+	@Override
+	public  boolean isProtein() {
+		return getPredominantGroupType() == GroupType.AMINOACID;
+	}
+
+	@Override
+	public  boolean isNucleicAcid() {
+		return getPredominantGroupType() == GroupType.NUCLEOTIDE;
+	}
+
+
 }
 

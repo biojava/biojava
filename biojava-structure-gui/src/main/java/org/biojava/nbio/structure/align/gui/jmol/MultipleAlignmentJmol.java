@@ -20,6 +20,7 @@
  */
 package org.biojava.nbio.structure.align.gui.jmol;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -40,6 +41,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuBar;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import org.biojava.nbio.structure.Atom;
@@ -48,14 +50,15 @@ import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIdentifier;
 import org.biojava.nbio.structure.align.gui.MenuCreator;
-import org.biojava.nbio.structure.align.gui.MultipleAlignmentJmolDisplay;
 import org.biojava.nbio.structure.align.gui.MultipleAlignmentGUI;
+import org.biojava.nbio.structure.align.gui.MultipleAlignmentJmolDisplay;
 import org.biojava.nbio.structure.align.multiple.Block;
 import org.biojava.nbio.structure.align.multiple.BlockSet;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentTools;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentWriter;
 import org.biojava.nbio.structure.align.webstart.AligUIManager;
+import org.biojava.nbio.structure.gui.WrapLayout;
 import org.biojava.nbio.structure.jama.Matrix;
 import org.forester.archaeopteryx.Archaeopteryx;
 import org.forester.phylogeny.Phylogeny;
@@ -78,8 +81,7 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 	private JCheckBox colorByBlocks;
 	private List<JCheckBox> selectedStructures;
 
-	private static final String LIGAND_DISPLAY_SCRIPT =
-			"select ligand; wireframe 40; spacefill 120; color CPK;";
+	private static final String LIGAND_DISPLAY_SCRIPT = "select ligand; wireframe 40; spacefill 120; color CPK;";
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(MultipleAlignmentJmol.class);
@@ -138,14 +140,13 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 		});
 
 		Container contentPane = frame.getContentPane();
-		Box vBox = Box.createVerticalBox();
 
 		jmolPanel.addMouseMotionListener(this);
 		jmolPanel.addMouseListener(this);
-		jmolPanel
-				.setPreferredSize(new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT));
+		jmolPanel.setPreferredSize(new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT));
+		contentPane.add(jmolPanel,BorderLayout.CENTER);
 
-		vBox.add(jmolPanel);
+		Box vBox = Box.createVerticalBox();
 
 		// / USER SCRIPTING COMMAND
 		JTextField field = new JTextField();
@@ -162,17 +163,21 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 
 		// / STRUCTURE SELECTION
 		if (multAln != null) {
-			Box hBox0 = Box.createHorizontalBox();
-			hBox0.setMaximumSize(new Dimension(Short.MAX_VALUE, 30));
 
+			JPanel modelSelection = new JPanel();
+			modelSelection.setLayout(new WrapLayout(WrapLayout.LEFT));
+			modelSelection.setSize(new Dimension(DEFAULT_WIDTH,30));
+			vBox.add(modelSelection);
+			
 			JButton show = new JButton("Show Only: ");
 			show.addActionListener(new ActionListener() {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					jmolPanel.evalString("save selection;");
-					String cmd = getJmolString(multAln, transformedAtoms,
-							colorPalette, colorByBlocks.isSelected());
+					String cmd = getJmolString(multAln,
+							transformedAtoms, colorPalette,
+							colorByBlocks.isSelected());
 					cmd += "; restrict ";
 					for (int st = 0; st < multAln.size(); st++) {
 						if (selectedStructures.get(st).isSelected()) {
@@ -183,21 +188,17 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 					jmolPanel.executeCmd(cmd + " restore selection;");
 				}
 			});
-
-			hBox0.add(show);
-			hBox0.add(Box.createGlue());
-
-			for (int str = 0; str < multAln.size(); str++) {
+			modelSelection.add(show);
+		
+			// Check boxes for all models
+			for(int str = 0; str < multAln.size();str++) {
 				JCheckBox structureSelection = new JCheckBox(multAln
 						.getEnsemble().getStructureIdentifiers().get(str)
 						.getIdentifier());
-				hBox0.add(structureSelection);
-				hBox0.add(Box.createGlue());
+				modelSelection.add(structureSelection);
 				structureSelection.setSelected(true);
 				selectedStructures.add(structureSelection);
 			}
-
-			vBox.add(hBox0);
 		}
 
 		// / COMBO BOXES
@@ -206,21 +207,20 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 
 		String[] styles = new String[] { "Cartoon", "Backbone", "CPK",
 				"Ball and Stick", "Ligands", "Ligands and Pocket" };
-		JComboBox style = new JComboBox(styles);
+		JComboBox<String> style = new JComboBox<>(styles);
 
 		hBox1.setMaximumSize(new Dimension(Short.MAX_VALUE, 30));
 
 		hBox1.add(new JLabel("Style"));
 		hBox1.add(style);
 		vBox.add(hBox1);
-		contentPane.add(vBox);
 
 		style.addActionListener(jmolPanel);
 
 		String[] colorModes = new String[] { "Secondary Structure", "By Chain",
 				"Rainbow", "By Element", "By Amino Acid", "Hydrophobicity",
 				"Suggest Domains", "Show SCOP Domains" };
-		JComboBox jcolors = new JComboBox(colorModes);
+		JComboBox<String> jcolors = new JComboBox<>(colorModes);
 		jcolors.addActionListener(jmolPanel);
 
 		hBox1.add(Box.createGlue());
@@ -228,13 +228,14 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 		hBox1.add(jcolors);
 
 		String[] cPalette = { "Spectral", "Set1", "Set2", "Pastel" };
-		JComboBox palette = new JComboBox(cPalette);
+		JComboBox<String> palette = new JComboBox<>(cPalette);
 
 		palette.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				JComboBox source = (JComboBox) e.getSource();
+				@SuppressWarnings("unchecked")
+				JComboBox<String> source = (JComboBox<String>) e.getSource();
 				String value = source.getSelectedItem().toString();
 				evalString("save selection; select *; color grey; "
 						+ "select ligand; color CPK;");
@@ -330,7 +331,7 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 
 		vBox.add(hBox);
 
-		contentPane.add(vBox);
+		contentPane.add(vBox,BorderLayout.SOUTH);
 		MyJmolStatusListener li = (MyJmolStatusListener) jmolPanel
 				.getStatusListener();
 
@@ -353,22 +354,9 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 					return;
 				}
 			}
-			PDBHeader header = new PDBHeader();
-			String title = multAln.getEnsemble().getAlgorithmName() + " V."
-					+ multAln.getEnsemble().getVersion() + " : ";
-
-			for (StructureIdentifier name : multAln.getEnsemble()
-					.getStructureIdentifiers()) {
-				title += name.getIdentifier() + " ";
-			}
-			Structure artificial = MultipleAlignmentJmolDisplay
-					.getAlignedStructure(transformedAtoms);
-
-			artificial.setPDBHeader(header);
+			Structure artificial = MultipleAlignmentTools.toMultimodelStructure(multAln, transformedAtoms);
 			setStructure(artificial);
-			header.setTitle(title);
-			logger.info(title);
-
+			logger.info(artificial.getPDBHeader().getTitle());
 		} catch (StructureException e) {
 			e.printStackTrace();
 		}
@@ -414,12 +402,12 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 				// Kimura, Structural and Fractional Dissimilarity Score
 				Phylogeny kimura = MultipleAlignmentTools
 						.getKimuraTree(multAln);
-				Phylogeny sdm = MultipleAlignmentTools
-						.getHSDMTree(multAln);
+				Phylogeny sdm = MultipleAlignmentTools.getHSDMTree(multAln);
 				// Phylogeny structural = MultipleAlignmentTools
-				//		.getStructuralTree(multAln);
+				// .getStructuralTree(multAln);
 
-				Archaeopteryx.createApplication(new Phylogeny[] { kimura, sdm });
+				Archaeopteryx
+						.createApplication(new Phylogeny[] { kimura, sdm });
 			}
 		} catch (Exception e) {
 			logger.error("Could not complete display option.", e);

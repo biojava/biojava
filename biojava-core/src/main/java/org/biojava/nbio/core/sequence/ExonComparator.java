@@ -23,6 +23,7 @@
 
 package org.biojava.nbio.core.sequence;
 
+import java.io.Serializable;
 import java.util.Comparator;
 
 
@@ -31,8 +32,8 @@ import java.util.Comparator;
  * where a negative stranded gene should go the other direction. Need to think about this?
  * @author Scooter Willis <willishf at gmail dot com>
  */
-public class ExonComparator implements Comparator<ExonSequence>{
-
+public class ExonComparator implements Comparator<ExonSequence>, Serializable{
+    private static final long serialVersionUID = 1;
 
 	@Override
 	public int compare(ExonSequence o1, ExonSequence o2) {

@@ -30,12 +30,31 @@ import javax.xml.bind.annotation.XmlElement;
 import java.io.Serializable;
 import java.util.Arrays;
 
+/**
+ * The bean for pdbx_struct_oper_list category
+ * <pre>
+ * _pdbx_struct_oper_list.id 
+ * _pdbx_struct_oper_list.type 
+ * _pdbx_struct_oper_list.symmetry_operation
+ * _pdbx_struct_oper_list.matrix[1][1] 
+ * _pdbx_struct_oper_list.matrix[1][2] 
+ * _pdbx_struct_oper_list.matrix[1][3] 
+ * _pdbx_struct_oper_list.vector[1] 
+ * _pdbx_struct_oper_list.matrix[2][1] 
+ * _pdbx_struct_oper_list.matrix[2][2] 
+ * _pdbx_struct_oper_list.matrix[2][3] 
+ * _pdbx_struct_oper_list.vector[2] 
+ * _pdbx_struct_oper_list.matrix[3][1] 
+ * _pdbx_struct_oper_list.matrix[3][2] 
+ * _pdbx_struct_oper_list.matrix[3][3] 
+ * _pdbx_struct_oper_list.vector[3] 
+ * _pdbx_struct_oper_list.name 
+ * </pre>
+ */
 @XmlAccessorType(XmlAccessType.PROPERTY)
 public class PdbxStructOperList implements Serializable{
 
-	/**
-	 *
-	 */
+	
 	private static final long serialVersionUID = 8933552854747969787L;
 
 	@Override
@@ -48,14 +67,53 @@ public class PdbxStructOperList implements Serializable{
 	private String id;
 
 	private String type;
+	
+	private String symmetry_operation;
+	
+	@CIFLabel(label="matrix[1][1]")
+	String matrix11;
+	@CIFLabel(label="matrix[1][2]")
+	String matrix12;
+	@CIFLabel(label="matrix[1][3]")
+	String matrix13;
+	
+	@CIFLabel(label="vector[1]")
+	String vector1;
 
+	@CIFLabel(label="matrix[2][1]")
+	String matrix21;
+	@CIFLabel(label="matrix[2][2]")
+	String matrix22;
+	@CIFLabel(label="matrix[2][3]")
+	String matrix23;
+	
+	@CIFLabel(label="vector[2]")
+	String vector2;
+	
+	@CIFLabel(label="matrix[3][1]")
+	String matrix31;
+	@CIFLabel(label="matrix[3][2]")
+	String matrix32;
+	@CIFLabel(label="matrix[3][3]")
+	String matrix33;
+	
+	@CIFLabel(label="vector[3]")
+	String vector3;
+
+	String name;
+	
+	
+	// from here fields that are not in the cif category
+	
+	@IgnoreField
 	private Matrix matrix;
 
-
+	@IgnoreField
 	private double[] vector;
 
 	public PdbxStructOperList(){
 		matrix =  Matrix.identity(3,3);
+		vector = new double[3];
 
 	}
 	@XmlAttribute
@@ -91,35 +149,66 @@ public class PdbxStructOperList implements Serializable{
 		this.id = id;
 	}
 
-	public void setMatrix11(double val){
-		matrix.set(0,0,val);
+	public void setMatrix11(String val){
+		matrix.set(0,0,Double.parseDouble(val));
 	}
-	public void setMatrix21(double val){
-		matrix.set(1,0,val);
+	public void setMatrix21(String val){
+		matrix.set(1,0,Double.parseDouble(val));
 	}
-	public void setMatrix31(double val){
-		matrix.set(2,0,val);
-	}
-
-	public void setMatrix12(double val){
-		matrix.set(0,1,val);
-	}
-	public void setMatrix22(double val){
-		matrix.set(1,1,val);
-	}
-	public void setMatrix32(double val){
-		matrix.set(2,1,val);
-	}
-	public void setMatrix13(double val){
-		matrix.set(0,2,val);
-	}
-	public void setMatrix23(double val){
-		matrix.set(1,2,val);
-	}
-	public void setMatrix33(double val){
-		matrix.set(2,2,val);
+	public void setMatrix31(String val){
+		matrix.set(2,0,Double.parseDouble(val));
 	}
 
+	public void setMatrix12(String val){
+		matrix.set(0,1,Double.parseDouble(val));
+	}
+	public void setMatrix22(String val){
+		matrix.set(1,1,Double.parseDouble(val));
+	}
+	public void setMatrix32(String val){
+		matrix.set(2,1,Double.parseDouble(val));
+	}
+	public void setMatrix13(String val){
+		matrix.set(0,2,Double.parseDouble(val));
+	}
+	public void setMatrix23(String val){
+		matrix.set(1,2,Double.parseDouble(val));
+	}
+	public void setMatrix33(String val){
+		matrix.set(2,2,Double.parseDouble(val));
+	}
+	
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getVector1() {
+		return vector1;
+	}
+	public void setVector1(String vector1) {
+		vector[0] = Double.parseDouble(vector1);
+	}
+	public String getVector2() {
+		return vector2;
+	}
+	public void setVector2(String vector2) {
+		vector[1] = Double.parseDouble(vector2);
+	}
+	public String getVector3() {
+		return vector3;
+	}
+	public void setVector3(String vector3) {
+		vector[2] = Double.parseDouble(vector3);
+	}
+	public String getName() {
+		return name;
+	}
+	public String getSymmetry_operation() {
+		return symmetry_operation;
+	}
+	public void setSymmetry_operation(String symmetry_operation) {
+		this.symmetry_operation = symmetry_operation;
+	}
 	@XmlElement
 	public double getMatrix11(){
 		return matrix.get(0,0);

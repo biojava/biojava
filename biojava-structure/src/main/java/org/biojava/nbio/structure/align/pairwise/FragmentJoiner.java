@@ -24,13 +24,13 @@ package org.biojava.nbio.structure.align.pairwise;
 
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Calc;
-import org.biojava.nbio.structure.SVDSuperimposer;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.StrucAligParameters;
 import org.biojava.nbio.structure.align.helper.AlignTools;
 import org.biojava.nbio.structure.align.helper.JointFragments;
 import org.biojava.nbio.structure.jama.Matrix;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -313,7 +313,7 @@ public class FragmentJoiner {
 			Calc.shift(a, atom);
 		}
 
-		rms = SVDSuperimposer.getRMS(ca1subset,ca2subset);
+		rms = Calc.rmsd(ca1subset,ca2subset);
 
 		return rms;
 	}
@@ -535,7 +535,8 @@ public class FragmentJoiner {
 
 
 class JointFragmentsComparator
-		  implements Comparator<JointFragments> {
+		  implements Comparator<JointFragments>, Serializable {
+    private static final long serialVersionUID = 1;
 
 	@Override
 	public int compare(JointFragments one, JointFragments two) {

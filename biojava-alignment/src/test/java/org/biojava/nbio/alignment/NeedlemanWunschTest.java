@@ -77,7 +77,7 @@ public class NeedlemanWunschTest {
 
 		PairwiseSequenceAligner<DNASequence, NucleotideCompound> aligner = Alignments.getPairwiseAligner(a, b, Alignments.PairwiseSequenceAlignerType.GLOBAL, new SimpleGapPenalty(gop, gep), mx);
 		SequencePair<DNASequence, NucleotideCompound> pair = aligner.getPair();
-		System.out.println(pair); // prints the alignment above
+
 
 		int nMatches = "--CGTATATATCGCGCGCGCGATATATATATCT-TCTCTAAAAAAA".length() - 2 - 4;
 		double expectedScore = nMatches * match

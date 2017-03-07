@@ -22,8 +22,6 @@
  */
 package org.biojava.nbio.structure.test;
 
-import junit.framework.TestCase;
-
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.FileParsingParameters;
@@ -31,18 +29,21 @@ import org.biojava.nbio.structure.io.PDBFileParser;
 import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
 import org.biojava.nbio.structure.io.mmcif.ChemCompProvider;
 import org.biojava.nbio.structure.io.mmcif.DownloadChemCompProvider;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
 
 import static org.junit.Assume.assumeNoException;
+import static org.junit.Assert.*;
 
-public class StructureToolsTest extends TestCase {
+public class StructureToolsTest {
 
 	Structure structure, structure2, structure3, structure4;
 
-	@Override
-	protected void setUp() throws IOException
+	@Before
+	public void setUp() throws IOException
 	{
 		InputStream inStream = this.getClass().getResourceAsStream("/5pti.pdb");
 		assertNotNull(inStream);
@@ -55,8 +56,9 @@ public class StructureToolsTest extends TestCase {
 
 		assertEquals("structure does not contain one chain ", 1 ,structure.size());
 
-		Chain chain = structure.getChain(0);
-		assertEquals("Wrong number of residues.",123,chain.getAtomLength());
+		// since biojava 5, chains contain either only polymers or only nonpolymers: here we get the first protein chain with 58 residues
+		Chain chain = structure.getChainByIndex(0);
+		assertEquals("Wrong number of residues.",58,chain.getAtomLength());
 
 		inStream.close();
 
@@ -85,12 +87,13 @@ public class StructureToolsTest extends TestCase {
 		inStream.close();
 	}
 
-
+	@Test
 	public void testGetCAAtoms(){
 		Atom[] cas = StructureTools.getRepresentativeAtomArray(structure);
 		assertEquals("did not find the expected number of Atoms (58), but got " + cas.length,58,cas.length);
 	}
 
+	@Test
 	public void testGetAtomsConsistency() throws IOException, StructureException{
 
 		//Save the existing ChemCompProvider
@@ -103,28 +106,30 @@ public class StructureToolsTest extends TestCase {
 
 		Structure hivA = cache.getStructure("1hiv.A");
 		Atom[] caSa = StructureTools.getRepresentativeAtomArray(hivA);
-		Atom[] caCa = StructureTools.getRepresentativeAtomArray(hivA.getChain(0));
+		Atom[] caCa = StructureTools.getRepresentativeAtomArray(hivA.getChainByIndex(0));
 		assertEquals("did not find the same number of Atoms from structure and from chain..",
 				caSa.length,caCa.length);
 		Structure hivB = cache.getStructure("1hiv.B");
 		Atom[] caSb = StructureTools.getRepresentativeAtomArray(hivB);
-		Atom[] caCb = StructureTools.getRepresentativeAtomArray(hivB.getChain(0));
+		Atom[] caCb = StructureTools.getRepresentativeAtomArray(hivB.getChainByIndex(0));
 		assertEquals("did not find the same number of Atoms from structure and from chain..",
 				caSb.length,caCb.length);
 		//Both chains have to be the same size (A and B)
-		assertEquals(caSa.length,99);
+		assertEquals(99,caSa.length);
 		assertEquals("did not find the same number of Atoms in both chains...",
 				caSa.length,caCb.length);
-		assertEquals(caSa.length, 99);
+		assertEquals(99,caSa.length);
 
 		ChemCompGroupFactory.setChemCompProvider(provider);
 	}
 
+	@Test
 	public void testGetNrAtoms(){
 		int length = StructureTools.getNrAtoms(structure);
 		assertEquals("did not find the expected number of Atoms (1087), but got " + length,1087,length);
 	}
 
+	@Test
 	@SuppressWarnings("deprecation")
 	public void testGetSubRanges() throws StructureException {
 		String range;
@@ -136,7 +141,7 @@ public class StructureToolsTest extends TestCase {
 		substr = StructureTools.getSubRanges(structure2, range);
 		assertEquals("Wrong number of chains in "+range, 1, substr.size());
 
-		chain = substr.getChain(0);
+		chain = substr.getChainByIndex(0);
 
 		assertEquals("Did not find the expected number of residues in "+range, 5, chain.getAtomLength() );
 
@@ -145,9 +150,10 @@ public class StructureToolsTest extends TestCase {
 		substr = StructureTools.getSubRanges(structure2, range);
 		assertEquals("Wrong number of chains in "+range, 1, substr.size());
 
-		chain = substr.getChain(0);
+		chain = substr.getChainByIndex(0);
 
-		assertEquals("Did not find the expected number of residues in "+range, 411, chain.getAtomLength() );
+		// since biojava 5, chains contain either only polymers or only nonpolymers: here we get the first protein chain with 408 residues
+		assertEquals("Did not find the expected number of residues in "+range, 408, chain.getAtomLength() );
 		//assertEquals("subrange doesn't equal original chain A.", structure2.getChainByPDB("A"), chain);
 
 		// full chains
@@ -155,9 +161,10 @@ public class StructureToolsTest extends TestCase {
 		substr = StructureTools.getSubRanges(structure2, range);
 		assertEquals("Wrong number of chains in "+range, 1, substr.size());
 
-		chain = substr.getChain(0);
+		chain = substr.getChainByIndex(0);
 
-		assertEquals("Did not find the expected number of residues in "+range, 411, chain.getAtomLength() );
+		// since biojava 5, chains contain either only polymers or only nonpolymers: here we get the first protein chain with 408 residues
+		assertEquals("Did not find the expected number of residues in "+range, 408, chain.getAtomLength() );
 		//assertEquals("subrange doesn't equal original chain A.", structure2.getChainByPDB("A"), chain);
 
 		// combined ranges
@@ -165,10 +172,10 @@ public class StructureToolsTest extends TestCase {
 		substr = StructureTools.getSubRanges(structure2, range);
 		assertEquals("Wrong number of chains in "+range, 2, substr.size());
 
-		chain = substr.getChain(0);
+		chain = substr.getChainByIndex(0);
 		assertEquals("Did not find the expected number of residues in first chain of "+range, 5, chain.getAtomLength() );
 
-		chain = substr.getChain(1);
+		chain = substr.getChainByIndex(1);
 		assertEquals("Did not find the expected number of residues in second chain of "+range, 5, chain.getAtomLength() );
 
 		// combined ranges
@@ -176,10 +183,11 @@ public class StructureToolsTest extends TestCase {
 		substr = StructureTools.getSubRanges(structure2, range);
 		assertEquals("Wrong number of chains in "+range, 2, substr.size());
 
-		chain = substr.getChain(0);
-		assertEquals("Did not find the expected number of residues in first chain of "+range, 411, chain.getAtomLength() );
+		// since biojava 5, chains contain either only polymers or only nonpolymers: here we get the first protein chain with 408 residues
+		chain = substr.getChainByIndex(0);
+		assertEquals("Did not find the expected number of residues in first chain of "+range, 408, chain.getAtomLength() );
 
-		chain = substr.getChain(1);
+		chain = substr.getChainByIndex(1);
 		assertEquals("Did not find the expected number of residues in second chain of "+range, 5, chain.getAtomLength() );
 
 		// parentheses
@@ -187,16 +195,34 @@ public class StructureToolsTest extends TestCase {
 		substr = StructureTools.getSubRanges(structure2, range);
 		assertEquals("Wrong number of chains in "+range, 1, substr.size());
 
-		chain = substr.getChain(0);
+		chain = substr.getChainByIndex(0);
 		assertEquals("Did not find the expected number of residues in "+range, 5, chain.getAtomLength() );
 
 		// single residue
 		range = "A:3";
 		substr = StructureTools.getSubRanges(structure2, range);
 		assertEquals("Wrong number of chains in "+range, 1, substr.size());
-		chain = substr.getChain(0);
+		chain = substr.getChainByIndex(0);
 		assertEquals("Did not find the expected number of residues in "+range, 1, chain.getAtomLength() );
 
+		
+		// negative residues
+		range = "A:-3";
+		substr = StructureTools.getSubRanges(structure2, range);
+		assertEquals("Wrong number of chains in "+range, 1, substr.size());
+		chain = substr.getChainByIndex(0);
+		assertEquals("Did not find the expected number of residues in "+range, 1, chain.getAtomLength() );
+		range = "A:-3--1";
+		substr = StructureTools.getSubRanges(structure2, range);
+		assertEquals("Wrong number of chains in "+range, 1, substr.size());
+		chain = substr.getChainByIndex(0);
+		assertEquals("Did not find the expected number of residues in "+range, 3, chain.getAtomLength() );
+		range = "A:-3-1";
+		substr = StructureTools.getSubRanges(structure2, range);
+		assertEquals("Wrong number of chains in "+range, 1, substr.size());
+		chain = substr.getChainByIndex(0);
+		assertEquals("Did not find the expected number of residues in "+range, 4, chain.getAtomLength() );
+		
 		// Special '-' case
 		range = "-";
 		substr = StructureTools.getSubRanges(structure2, range);
@@ -207,17 +233,19 @@ public class StructureToolsTest extends TestCase {
 		substr = StructureTools.getSubRanges(structure, range);
 		assertEquals("Wrong number of chains in "+range, 1, substr.size());
 
-		chain = substr.getChain(0);
-		assertEquals("Did not find the expected number of residues in first chain of "+range, 123, chain.getAtomLength() );
+		// since biojava 5, chains contain either only polymers or only nonpolymers: here we get the first protein chain with 58 residues
+		chain = substr.getChainByIndex(0);
+		assertEquals("Did not find the expected number of residues in first chain of "+range, 58, chain.getAtomLength() );
 
 		// Test single-chain syntax in a multi-chain structure. Should give chain A.
 		range = "_:";
 		substr = StructureTools.getSubRanges(structure2, range);
 		assertEquals("Wrong number of chains in "+range, 1, substr.size());
 
-		chain = substr.getChain(0);
+		// since biojava 5, chains contain either only polymers or only nonpolymers: here we get the first protein chain with 408 residues
+		chain = substr.getChainByIndex(0);
 		assertEquals("Chain _ not converted to chain A.","A",chain.getChainID());
-		assertEquals("Did not find the expected number of residues in first chain of "+range, 411, chain.getAtomLength() );
+		assertEquals("Did not find the expected number of residues in first chain of "+range, 408, chain.getAtomLength() );
 
 		try {
 			// Illegal chain name
@@ -239,6 +267,7 @@ public class StructureToolsTest extends TestCase {
 		} catch(IllegalArgumentException ex) {} //expected
 	}
 
+	@Test
 	public void testRevisedConvention() throws IOException, StructureException{
 
 		AtomCache cache = new AtomCache();
@@ -246,30 +275,35 @@ public class StructureToolsTest extends TestCase {
 
 		String name11 = "4hhb.A";
 		Structure s = cache.getStructure(name11);
-		assertTrue(s.getChains().size() == 1);
+		assertEquals(1,s.getPolyChains().size());
+		assertEquals(3,s.getChains().size()); // protein, HEM, water
 
 
 		String name12 = "4hhb.A:";
 		s = cache.getStructure(name12);
-		assertTrue(s.getChains().size() == 1);
+		assertEquals(1,s.getPolyChains().size());
+		assertEquals(3,s.getChains().size());
 
 		String name13 = "4hhb.A_";
 		s = cache.getStructure(name13);
-		assertTrue(s.getChains().size() == 1);
+		assertEquals(1,s.getPolyChains().size());
+		assertEquals(3,s.getChains().size());
 
 		String name9 = "4hhb.C_1-83";
 		String chainId = "C";
 		s = cache.getStructure(name9);
+		assertEquals(1,s.getPolyChains().size());
+		assertEquals(2,s.getChains().size()); // drops waters
 
-		assertTrue(s.getChains().size() == 1);
-		Chain c = s.getChainByPDB(chainId);
-		assertEquals(c.getChainID(),chainId);
+		Chain c = s.getPolyChainByPDB(chainId);
+		assertEquals(c.getName(),chainId);
 		Atom[] ca = StructureTools.getRepresentativeAtomArray(s);
 		assertEquals(83,ca.length);
 
 		String name10 = "4hhb.C_1-83,A_1-10";
 		s = cache.getStructure(name10);
-		assertTrue(s.getChains().size() == 2);
+		assertEquals(2,s.getPolyChains().size());
+		assertEquals(3,s.getChains().size()); // Includes C heme
 		ca = StructureTools.getRepresentativeAtomArray(s);
 		assertEquals(93, ca.length);
 
@@ -319,6 +353,7 @@ public class StructureToolsTest extends TestCase {
 	 * Test some subranges that we used to have problems with
 	 * @throws StructureException
 	 */
+	@Test
 	@SuppressWarnings("deprecation")
 	public void testGetSubRangesExtended() throws StructureException {
 		String range;
@@ -330,7 +365,7 @@ public class StructureToolsTest extends TestCase {
 		substr = StructureTools.getSubRanges(structure2, range);
 		assertEquals("Wrong number of chains in "+range, 1, substr.size());
 
-		chain = substr.getChain(0);
+		chain = substr.getChainByIndex(0);
 
 		// Note residue 0 is missing from 1lnl
 		assertEquals("Did not find the expected number of residues in "+range, 10, chain.getAtomLength() );
@@ -340,7 +375,7 @@ public class StructureToolsTest extends TestCase {
 		substr = StructureTools.getSubRanges(structure2, range);
 		assertEquals("Wrong number of chains in "+range, 1, substr.size());
 
-		chain = substr.getChain(0);
+		chain = substr.getChainByIndex(0);
 
 		assertEquals("Did not find the expected number of residues in "+range, 3, chain.getAtomLength() );
 
@@ -349,7 +384,7 @@ public class StructureToolsTest extends TestCase {
 		substr = StructureTools.getSubRanges(structure2, range);
 		assertEquals("Wrong number of chains in "+range, 1, substr.size());
 
-		chain = substr.getChain(0);
+		chain = substr.getChainByIndex(0);
 
 		assertEquals("Did not find the expected number of residues in "+range, 4, chain.getAtomLength() );
 
@@ -358,20 +393,55 @@ public class StructureToolsTest extends TestCase {
 		substr = StructureTools.getSubRanges(structure2, range);
 		assertEquals("Wrong number of chains in "+range, 1, substr.size());
 
-		chain = substr.getChain(0);
+		chain = substr.getChainByIndex(0);
 
 		assertEquals("Did not find the expected number of residues in "+range, 6, chain.getAtomLength() );
 
+		// partial ranges
+		range = "A:-+1";
+		substr = StructureTools.getSubRanges(structure2, range);
+		assertEquals("Wrong number of chains in "+range, 1, substr.size());
+		chain = substr.getChainByIndex(0);
+		assertEquals("Did not find the expected number of residues in "+range, 4, chain.getAtomLength() );
+
+		range = "A:--1";
+		substr = StructureTools.getSubRanges(structure2, range);
+		assertEquals("Wrong number of chains in "+range, 1, substr.size());
+		chain = substr.getChainByIndex(0);
+		assertEquals("Did not find the expected number of residues in "+range, 3, chain.getAtomLength() );
+
+		range = "A:^-+1";
+		substr = StructureTools.getSubRanges(structure2, range);
+		assertEquals("Wrong number of chains in "+range, 1, substr.size());
+		chain = substr.getChainByIndex(0);
+		assertEquals("Did not find the expected number of residues in "+range, 4, chain.getAtomLength() );
+		
+		range = "A:^-$";
+		substr = StructureTools.getSubRanges(structure2, range);
+		assertEquals("Wrong number of chains in "+range, 1, substr.getPolyChains().size());
+		chain = substr.getPolyChains().get(0);
+		
+		range = "A:400-";
+		substr = StructureTools.getSubRanges(structure2, range);
+		assertEquals("Wrong number of chains in "+range, 1, substr.size());
+		chain = substr.getChainByIndex(0);
+		assertEquals("Did not find the expected number of residues in "+range, 6, chain.getAtomLength() );
+
+		range = "A:400-$";
+		substr = StructureTools.getSubRanges(structure2, range);
+		assertEquals("Wrong number of chains in "+range, 1, substr.size());
+		chain = substr.getChainByIndex(0);
+		assertEquals("Did not find the expected number of residues in "+range, 6, chain.getAtomLength() );
 
 		// whitespace
 		range = "A:3-7, B:8-12";
 		substr = StructureTools.getSubRanges(structure2, range);
 		assertEquals("Wrong number of chains in "+range, 2, substr.size());
 
-		chain = substr.getChain(0);
+		chain = substr.getChainByIndex(0);
 		assertEquals("Did not find the expected number of residues in first chain of "+range, 5, chain.getAtomLength() );
 
-		chain = substr.getChain(1);
+		chain = substr.getChainByIndex(1);
 		assertEquals("Did not find the expected number of residues in second chain of "+range, 5, chain.getAtomLength() );
 
 	}
@@ -380,6 +450,7 @@ public class StructureToolsTest extends TestCase {
 	 * Test insertion codes
 	 * @throws StructureException
 	 */
+	@Test
 	@SuppressWarnings("deprecation")
 	public void testGetSubRangesInsertionCodes() throws StructureException {
 		String range;
@@ -391,7 +462,7 @@ public class StructureToolsTest extends TestCase {
 		substr = StructureTools.getSubRanges(structure3, range);
 		assertEquals("Wrong number of chains in "+range, 1, substr.size());
 
-		chain = substr.getChain(0);
+		chain = substr.getChainByIndex(0);
 
 		assertEquals("Did not find the expected number of residues in "+range, 4, chain.getAtomLength() );
 
@@ -401,7 +472,7 @@ public class StructureToolsTest extends TestCase {
 		substr = StructureTools.getSubRanges(structure3, range);
 		assertEquals("Wrong number of chains in "+range, 1, substr.size());
 
-		chain = substr.getChain(0);
+		chain = substr.getChainByIndex(0);
 
 		assertEquals("Did not find the expected number of residues in "+range, 3, chain.getAtomLength() );
 
@@ -410,25 +481,25 @@ public class StructureToolsTest extends TestCase {
 		substr = StructureTools.getSubRanges(structure3, range);
 		assertEquals("Wrong number of chains in "+range, 1, substr.size());
 
-		chain = substr.getChain(0);
+		chain = substr.getChainByIndex(0);
 
 		assertEquals("Did not find the expected number of residues in "+range, 3, chain.getAtomLength() );
 
 		// within insertion
-		range = "L:14-14K"; //includes 36A
+		range = "L:14-14K";
 		substr = StructureTools.getSubRanges(structure3, range);
 		assertEquals("Wrong number of chains in "+range, 1, substr.size());
 
-		chain = substr.getChain(0);
+		chain = substr.getChainByIndex(0);
 
 		assertEquals("Did not find the expected number of residues in "+range, 12, chain.getAtomLength() );
 
 		// within insertion
-		range = "L:14C-14J"; //includes 36A
+		range = "L:14C-14J";
 		substr = StructureTools.getSubRanges(structure3, range);
 		assertEquals("Wrong number of chains in "+range, 1, substr.size());
 
-		chain = substr.getChain(0);
+		chain = substr.getChainByIndex(0);
 
 		assertEquals("Did not find the expected number of residues in "+range, 8, chain.getAtomLength() );
 	}
@@ -437,6 +508,7 @@ public class StructureToolsTest extends TestCase {
 		//TODO
 	}
 
+	@Test
 	public void testCAmmCIF() throws StructureException {
 
 		//Save the existing ChemCompProvider
@@ -473,5 +545,36 @@ public class StructureToolsTest extends TestCase {
 
 		ChemCompGroupFactory.setChemCompProvider(provider);
 	}
+	
+	@Test
+	public void testGetRepresentativeAtomsProtein() throws StructureException, IOException {
+		Structure s = StructureIO.getStructure("1smt");
+		Chain c = s.getChainByIndex(0);
+		Atom[] atoms = StructureTools.getRepresentativeAtomArray(c);
+		assertEquals(98,atoms.length);
+		
+		Chain clonedChain = (Chain)c.clone();
+		atoms = StructureTools.getRepresentativeAtomArray(clonedChain); 
+		assertEquals(98,atoms.length);
+	}
 
+	/**
+	 * See https://github.com/biojava/biojava/issues/631
+	 * @throws StructureException
+	 * @throws IOException
+	 */
+	@Test
+	public void testGetRepresentativeAtomsDna() throws StructureException, IOException {
+	
+		Structure s = StructureIO.getStructure("2pvi");
+		Chain c = s.getPolyChainByPDB("C");
+		Atom[] atoms = StructureTools.getRepresentativeAtomArray(c); // chain C (1st nucleotide chain)
+		// actually it should be 13, but at the moment one of the nucleotides is not caught correctly because it's non-standard
+		assertEquals(12,atoms.length);
+		
+		Chain clonedChain = (Chain)c.clone();
+		atoms = StructureTools.getRepresentativeAtomArray(clonedChain); // chain C (1st nucleotide chain)
+		assertEquals(12,atoms.length);
+		
+	}
 }

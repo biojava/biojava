@@ -208,9 +208,9 @@ public class HelixLayers {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("Helices: " + size() + "\n");
+		sb.append("Helices: ").append(size()).append("\n");
 		for (Helix s: helices) {
-			sb.append(s.toString() + "\n");
+			sb.append(s.toString()).append("\n");
 		}
 		return sb.toString();
 	}

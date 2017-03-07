@@ -21,10 +21,11 @@
 
 package org.biojava.nbio.structure.symmetry.core;
 
-import org.biojava.nbio.structure.symmetry.geometry.SuperPosition;
+import org.biojava.nbio.structure.geometry.SuperPositions;
 
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
+
 import java.util.List;
 
 /**
@@ -42,7 +43,7 @@ public class QuatSuperpositionScorer {
 	 * @param permutations permutation that determines which subunits are superposed
 	 * @return
 	 */
-	public static QuatSymmetryScores calcScores(Subunits subunits, Matrix4d transformation, List<Integer> permutation) {
+	public static QuatSymmetryScores calcScores(QuatSymmetrySubunits subunits, Matrix4d transformation, List<Integer> permutation) {
 		QuatSymmetryScores scores = new QuatSymmetryScores();
 
 		double minTm = Double.MAX_VALUE;
@@ -116,7 +117,7 @@ public class QuatSuperpositionScorer {
 		return scores;
 	}
 
-	private static void calcIntrasubunitScores(Subunits subunits, Matrix4d transformation, List<Integer> permutation, QuatSymmetryScores scores) {
+	private static void calcIntrasubunitScores(QuatSymmetrySubunits subunits, Matrix4d transformation, List<Integer> permutation, QuatSymmetryScores scores) {
 		double totalSumTm = 0;
 		double totalSumDsq = 0;
 		double totalLength = 0;
@@ -149,7 +150,7 @@ public class QuatSuperpositionScorer {
 			}
 
 			// superpose individual subunits
-			SuperPosition.superposeWithTranslation(trans, orig);
+			SuperPositions.superposeAndTransform(orig, trans);
 			for (int j = 0; j < orig.length; j++) {
 				double dSq = orig[j].distanceSquared(trans[j]);
 			   sumTm += 1.0/(1.0 + dSq/d0Sq);

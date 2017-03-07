@@ -20,10 +20,10 @@
  */
 package org.biojava.nbio.structure.contact;
 
-import org.biojava.nbio.structure.Atom;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 import java.io.Serializable;
 import java.util.Arrays;
@@ -34,7 +34,7 @@ import java.util.Arrays;
  *
  * See http://en.wikipedia.org/wiki/Bounding_volume
  *
- * @author duarte_j
+ * @author Jose Duarte
  *
  */
 public class BoundingBox implements Serializable {
@@ -72,26 +72,26 @@ public class BoundingBox implements Serializable {
 	 * Constructs a BoundingBox by calculating maxs and mins of given array of atoms.
 	 * @param atoms
 	 */
-	public BoundingBox (Atom[] atoms) {
+	public BoundingBox (Point3d[] atoms) {
 
 		if (atoms.length==0) logger.error("Error! Empty list of atoms");
 
-		xmax = atoms[0].getX();
+		xmax = atoms[0].x;
 		xmin = xmax;
-		ymax = atoms[0].getY();
+		ymax = atoms[0].y;
 		ymin = ymax;
-		zmax = atoms[0].getZ();
+		zmax = atoms[0].z;
 		zmin = zmax;
 
 		for(int i=1;i<atoms.length;i++) {
-			if(atoms[i].getX() > xmax) xmax = atoms[i].getX();
-			else if(atoms[i].getX() < xmin) xmin = atoms[i].getX();
+			if(atoms[i].x > xmax) xmax = atoms[i].x;
+			else if(atoms[i].x < xmin) xmin = atoms[i].x;
 
-			if(atoms[i].getY() > ymax) ymax = atoms[i].getY();
-			else if(atoms[i].getY() < ymin) ymin = atoms[i].getY();
+			if(atoms[i].y > ymax) ymax = atoms[i].y;
+			else if(atoms[i].y < ymin) ymin = atoms[i].y;
 
-			if(atoms[i].getZ() > zmax) zmax = atoms[i].getZ();
-			else if(atoms[i].getZ() < zmin) zmin = atoms[i].getZ();
+			if(atoms[i].z > zmax) zmax = atoms[i].z;
+			else if(atoms[i].z < zmin) zmin = atoms[i].z;
 		}
 
 	}
@@ -198,6 +198,20 @@ public class BoundingBox implements Serializable {
 
 		return true;
 
+	}
+	
+	/**
+	 * Check if a given point falls within this box
+	 * @param atom
+	 * @return
+	 */
+	public boolean contains(Point3d atom) {
+		double x = atom.x;
+		double y = atom.y;
+		double z = atom.z;
+		return xmin <= x && x <= xmax
+				&& ymin <= y && y <= ymax
+				&& zmin <= z && z <= zmax;
 	}
 
 	public void translate(Vector3d translation) {

@@ -45,11 +45,12 @@ public class DemoMMCIFReader
 
 		demo.loadSimple();
 
-		//demo.loadFromDirectAccess();
+		demo.loadFromDirectAccess();
 
 	}
 
-	/** A basic example how to load an mmCif file and get a Structure object
+	/** 
+	 * A basic example how to load an mmCif file and get a Structure object
 	 *
 	 */
 	public void loadSimple(){
@@ -71,7 +72,8 @@ public class DemoMMCIFReader
 	}
 
 
-	/** An example demonstrating how to directly use the mmCif file parsing classes. This could potentially be used
+	/**
+	 * An example demonstrating how to directly use the mmCif file parsing classes. This could potentially be used
 	 * to use the parser to populate a data-structure that is different from the biojava-structure data model.
 	 *
 	 */
@@ -82,19 +84,22 @@ public class DemoMMCIFReader
 
 		try {
 			Structure s = pdbreader.getStructureById(pdbId);
+			
+			System.out.println("Getting chain H of 1A4W");
 
-			Chain h = s.getChainByPDB("H");
+			List<Chain> hs = s.getNonPolyChainsByPDB("H");
 
-			List<Group> ligands = h.getAtomLigands();
+			Chain h = hs.get(0);
+			List<Group> ligands = h.getAtomGroups();
 
-			System.out.println("These ligands have been found in chain " + h.getChainID());
+			System.out.println("These ligands have been found in chain " + h.getName());
 
 			for (Group l:ligands){
 				System.out.println(l);
 			}
 
 			System.out.println("Accessing QWE directly: ");
-			Group qwe = h.getGroupByPDB(new ResidueNumber("H",373,null));
+			Group qwe = s.getNonPolyChainsByPDB("H").get(2).getGroupByPDB(new ResidueNumber("H",373,null));
 
 			System.out.println(qwe.getChemComp());
 

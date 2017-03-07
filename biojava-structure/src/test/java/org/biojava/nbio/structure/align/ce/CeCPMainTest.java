@@ -385,6 +385,8 @@ public class CeCPMainTest extends TestCase {
 	private Atom[] makeDummyCA(int len) throws PDBParseException {
 		Atom[] ca1;
 		Chain chain1 = new ChainImpl();
+		chain1.setId("A");
+		chain1.setName("A");
 		//Some dummy Atoms. Just check they're unique
 		ca1 = new Atom[len];
 		for(int i=0;i<len;i++) {

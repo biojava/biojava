@@ -41,7 +41,7 @@ public class TestParseOnAsymId {
 		AtomCache cache = new AtomCache();
 		cache.setUseMmCif(true);
 		FileParsingParameters params = cache.getFileParsingParams();
-		params.setUseInternalChainId(true);
+
 		cache.setFileParsingParams(params);
 		StructureIO.setAtomCache(cache);
 		// Set the test lists
@@ -55,29 +55,12 @@ public class TestParseOnAsymId {
 		assertEquals(6,chainList.size());
 		for(int i=0; i<chainList.size();i++){
 			Chain c = chainList.get(i);
-			authChainListTest[i] = c.getInternalChainID();
-			asymChainListTest[i] = c.getChainID();
+			authChainListTest[i] = c.getName();
+			asymChainListTest[i] = c.getId();
 		}
 		// Now check both lists are the same
 		assertArrayEquals(authChainListTest, authChainList);
 		assertArrayEquals(asymChainListTest, asymChainList);
-
-
-		params.setUseInternalChainId(false);
-		Structure bioJavaStructDiff = StructureIO.getStructure("4cup");
-		List<Chain> chainListDiff = bioJavaStructDiff.getChains();
-		assertEquals(1,chainListDiff.size());
-
-		String[] authChainListTestDiff = new String[1];
-		String[] asymChainListTestDiff = new String[1];
-		for(int i=0; i<chainListDiff.size();i++){
-			Chain c = chainListDiff.get(i);
-			authChainListTestDiff[i] = c.getInternalChainID();
-			asymChainListTestDiff[i] = c.getChainID();
-		}
-		assertArrayEquals(authChainListTestDiff, asymChainListTestDiff);
-		assertArrayEquals(new String[] {"A"}, asymChainListTestDiff);
-
 	}
 
 }

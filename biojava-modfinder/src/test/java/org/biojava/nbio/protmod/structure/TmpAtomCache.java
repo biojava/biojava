@@ -36,6 +36,7 @@ public class TmpAtomCache
 		FileParsingParameters params = new FileParsingParameters();
 		params.setAlignSeqRes(true);
 		params.setParseSecStruc(false);
+		params.setCreateAtomBonds(true);
 		cache.setFetchBehavior(FetchBehavior.FETCH_REMEDIATED);
 		cache.setFileParsingParams(params);
 	}

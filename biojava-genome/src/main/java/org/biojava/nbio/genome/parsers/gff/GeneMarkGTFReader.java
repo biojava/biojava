@@ -194,7 +194,7 @@ public class GeneMarkGTFReader {
 	}
  */
 
-	public static void main(String args[]) throws Exception {
+	public static void main(String[] args) throws Exception {
 
 		FeatureList listGenes = GeneMarkGTFReader.read("/Users/Scooter/scripps/dyadic/analysis/454Scaffolds/genemark_hmm.gtf");
 

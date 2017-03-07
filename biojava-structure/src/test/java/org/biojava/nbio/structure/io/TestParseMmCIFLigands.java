@@ -49,7 +49,8 @@ public class TestParseMmCIFLigands {
 	@Test
 	public void testLigandConnections()throws IOException, StructureException {
 		AtomCache cache = new AtomCache();
-
+		// This needs MMCIF
+		cache.setUseMmCif(true);
 		StructureIO.setAtomCache(cache);
 
 		cache.setUseMmCif(true);
@@ -73,7 +74,7 @@ public class TestParseMmCIFLigands {
 		for (Chain c:s.getChains()) {
 			for (Group g:c.getAtomGroups()) {
 				if (!g.isWater() && !PolymerType.ALL_POLYMER_TYPES.contains(g.getChemComp().getPolymerType())) {
-					System.out.println(g);
+
 					for (Atom a:g.getAtoms()) {
 						if (a.getBonds()!=null) count++;
 					}
@@ -91,7 +92,8 @@ public class TestParseMmCIFLigands {
 	@Test
 	public void testMultipleConformations()throws IOException, StructureException {
 		AtomCache cache = new AtomCache();
-
+		// This needs MMCIF
+		cache.setUseMmCif(true);
 		StructureIO.setAtomCache(cache);
 
 		cache.setUseMmCif(true);

@@ -48,7 +48,7 @@ public class ColorUtils
 		int i = -1;
 		for ( Color color : colorWheel){
 			i++;
-			float af[] = Color.RGBtoHSB(color.getRed(),color.getGreen(),color.getBlue(), null);
+			float[] af = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
 			System.out.println("position "  + i + "  " + af[0] + " " + af[1] + " " + af[2]);
 			//System.out.println(rotateHue(color, 0.1f));
 		}
@@ -66,7 +66,7 @@ public class ColorUtils
 	 */
 	public static Color rotateHue (Color color, float fraction) {
 
-		float af[] = Color.RGBtoHSB(color.getRed(),color.getGreen(),color.getBlue(), null);
+		float[] af = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
 
 		float hue = af[0];
 		float saturation = af[1];
@@ -80,9 +80,9 @@ public class ColorUtils
 
 	public static Color getIntermediate(Color start, Color end, int stepSize, int position ){
 
-		float af1[] = Color.RGBtoHSB(start.getRed(),start.getGreen(),start.getBlue(), null);
+		float[] af1 = Color.RGBtoHSB(start.getRed(), start.getGreen(), start.getBlue(), null);
 
-		float af2[] = Color.RGBtoHSB(end.getRed(),end.getGreen(),end.getBlue(), null);
+		float[] af2 = Color.RGBtoHSB(end.getRed(), end.getGreen(), end.getBlue(), null);
 
 		float hue1 = af1[0];
 		float hue2 = af2[0];

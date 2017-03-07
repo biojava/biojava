@@ -250,20 +250,20 @@ public class CeSymm {
 		result.setStructureId(id);
 
 		// Determine the symmetry Type or get the one in params
-		if (params.getSymmType() == SymmetryType.AUTO) {
+		SymmetryType type = params.getSymmType();
+		if (type == SymmetryType.AUTO) {
 			if (result.getSelfAlignment().getBlockNum() == 1) {
-				result.setType(SymmetryType.OPEN);
+				type = SymmetryType.OPEN;
 				logger.info("Open Symmetry detected");
 			} else {
-				result.setType(SymmetryType.CLOSED);
+				type = SymmetryType.CLOSED;
 				logger.info("Close Symmetry detected");
 			}
-		} else
-			result.setType(params.getSymmType());
+		}
 
 		// Do not try the refinement if the self-alignment is not significant
 		if (optimalAFP.getTMScore() < params.getUnrefinedScoreThreshold()){
-			result.setSymmOrder(1);
+			result.setNumRepeats(1);
 			return result;
 		}
 
@@ -278,7 +278,7 @@ public class CeSymm {
 				break;
 			case SEQUENCE_FUNCTION:
 				// Does not work for OPEN alignments
-				if (result.getType() == SymmetryType.CLOSED) {
+				if (type == SymmetryType.CLOSED) {
 					orderDetector = new SequenceFunctionOrderDetector(
 							params.getMaxSymmOrder(), 0.4f);
 					order = orderDetector.calculateOrder(
@@ -287,7 +287,7 @@ public class CeSymm {
 				}
 			case ANGLE:
 				// Does not work for OPEN alignments
-				if (result.getType() == SymmetryType.CLOSED) {
+				if (type == SymmetryType.CLOSED) {
 					orderDetector = new AngleOrderDetectorPlus(
 							params.getMaxSymmOrder());
 					order = orderDetector.calculateOrder(
@@ -300,7 +300,7 @@ public class CeSymm {
 						atoms);
 				break;
 			}
-			result.setSymmOrder(order);
+			result.setNumRepeats(order);
 			
 			// REFINEMENT
 			SymmetryRefiner refiner = null;
@@ -309,7 +309,7 @@ public class CeSymm {
 				return result;
 			case SEQUENCE_FUNCTION:
 				// Does not work for OPEN alignments
-				if (result.getType() == SymmetryType.CLOSED) {
+				if (type == SymmetryType.CLOSED) {
 					refiner = new SequenceFunctionRefiner();
 					break;
 				}
@@ -323,7 +323,7 @@ public class CeSymm {
 
 			// Refinement succeeded, store results
 			result.setMultipleAlignment(msa);
-			result.setSymmOrder(msa.size());
+			result.setNumRepeats(msa.size());
 			result.setRefined(true);
 
 		} catch (RefinerFailedException e) {
@@ -331,41 +331,13 @@ public class CeSymm {
 			return result;
 		}
 
-		// STEP 4: determine the symmetry axis and its repeat dependencies
+		// STEP 4: symmetry axes
 		SymmetryAxes axes = new SymmetryAxes();
 		int order = result.getMultipleAlignment().size();
 		Matrix4d axis = result.getMultipleAlignment().getBlockSet(0)
 				.getTransformations().get(1);
-
-		List<List<Integer>> superposition = new ArrayList<List<Integer>>();
-		List<Integer> chain1 = new ArrayList<Integer>();
-		List<Integer> chain2 = new ArrayList<Integer>();
-		superposition.add(chain1);
-		superposition.add(chain2);
-		List<Integer> repeatTrans = new ArrayList<Integer>();
-
-		switch (result.getType()) {
-		case CLOSED:
-
-			for (int bk = 0; bk < order; bk++) {
-				chain1.add(bk);
-				chain2.add((bk + 1) % order);
-				repeatTrans.add(bk);
-			}
-			axes.addAxis(axis, superposition, repeatTrans, order);
-			break;
-
-		default: // case OPEN:
-
-			repeatTrans.add(0);
-			for (int bk = 0; bk < order - 1; bk++) {
-				chain1.add(bk);
-				chain2.add(bk + 1);
-				repeatTrans.add(bk + 1);
-			}
-			axes.addAxis(axis, superposition, repeatTrans, order);
-			break;
-		}
+		axes.addAxis(axis, order, type);
+		
 		result.setAxes(axes);
 		return result;
 	}

@@ -54,7 +54,7 @@ public class TestSeqResParsing {
 		s = StructureIO.getStructure(pdbID);
 		assertNotNull(s);
 		assertTrue(s.getChains().size() > 0);
-		Chain c = s.getChain(0);
+		Chain c = s.getChainByIndex(0);
 
 		assertTrue(c.getSeqResGroups().size() > 2);
 

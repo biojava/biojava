@@ -196,7 +196,7 @@ public class DBRef implements PDBRecord, Serializable{
 
 	/** The chain ID of the corresponding chain.
 	 *
-	 * @return chainId the ID of the corresponding chain.
+	 * @return chainName the ID of the corresponding chain.
 	 */
 	public String getChainId() {
 		return chainId;

@@ -25,6 +25,8 @@ package org.biojava.nbio.structure.cath;
 
 import org.biojava.nbio.structure.align.util.UserConfiguration;
 import org.biojava.nbio.structure.io.util.FileDownloadUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.biojava.nbio.core.util.InputStreamProvider;
 
 import java.io.*;
@@ -41,41 +43,41 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class CathInstallation implements CathDatabase{
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(CathInstallation.class);
+	
 	public static final String DEFAULT_VERSION = CathFactory.DEFAULT_VERSION;
 
-	String cathVersion;
+	public static final String domainListFileName = "cath-domain-list-v%s.txt"; 
+	public static final String domainDescriptionFileName = "cath-domain-description-file-v%s.txt";
+	public static final String nodeListFileName = "cath-names-v%s.txt";
+	public static final String domallFileName = "cath-domain-boundaries-v%s.txt";
+	
+	public static final String CATH_DOWNLOAD_URL                     = "http://download.cathdb.info/cath/releases/";
+	public static final String CATH_DOWNLOAD_ALL_RELEASES_DIR        = "all-releases";
+	public static final String CATH_DOWNLOAD_CLASSIFICATION_DATA_DIR = "cath-classification-data";
 
-	public static final String domainListFileName = "CathDomainList";
-	public static final String domainDescriptionFileName = "CathDomainDescriptionFile";
-	public static final String nodeListFileName = "CathNames";
-	public static final String domallFileName = "CathDomall";
+	public static final String NEWLINE = System.getProperty("line.separator");;
+	public static final String FILESPLIT = System.getProperty("file.separator");;
 
-	public static final String CATH_DOWNLOAD = "http://release.cathdb.info/";
+	
+	private String cathVersion;
 
-	String cathDownloadUrl;
-
-	public static final String NEWLINE;
-	public static final String FILESPLIT ;
-
-	static {
-		NEWLINE     = System.getProperty("line.separator");
-		FILESPLIT   = System.getProperty("file.separator");
-	}
-
+	private String cathDownloadUrl;
+	
 	private String cacheLocation ;
 
-	AtomicBoolean installedDomainList;
-	AtomicBoolean installedDomainDescription;
-	AtomicBoolean installedNodeList;
-	AtomicBoolean installedDomall;
+	private AtomicBoolean installedDomainList;
+	private AtomicBoolean installedDomainDescription;
+	private AtomicBoolean installedNodeList;
+	private AtomicBoolean installedDomall;
 
-	final boolean useCathDomainDescriptionFile;
-	final boolean parseCathFragments;
+	private final boolean useCathDomainDescriptionFile;
+	private final boolean parseCathFragments;
 
-	Map<String, List<CathDomain>> pdbMap;
-	Map<String, CathDomain> domainMap;
-	Map<String, CathNode> cathTree;
-	Map<String, List<CathFragment>> fragmentMap;
+	private Map<String, List<CathDomain>> pdbMap;
+	private Map<String, CathDomain> domainMap;
+	private Map<String, CathNode> cathTree;
+	private Map<String, List<CathFragment>> fragmentMap;
 
 
 
@@ -91,7 +93,7 @@ public class CathInstallation implements CathDatabase{
 		installedDomall = new AtomicBoolean(false);
 
 		cathVersion = DEFAULT_VERSION;
-		cathDownloadUrl = CATH_DOWNLOAD;
+		cathDownloadUrl = CATH_DOWNLOAD_URL;
 
 		pdbMap = new HashMap<String, List<CathDomain>>();
 		domainMap = new HashMap<String ,CathDomain>();
@@ -110,19 +112,29 @@ public class CathInstallation implements CathDatabase{
 	}
 
 	public String getDomainListFileName() {
-		return cacheLocation + domainListFileName + ".v" + cathVersion;
+		return cacheLocation + buildFileName(domainListFileName);
 	}
 
 	public String getDomainDescriptionFileName() {
-		return cacheLocation + domainDescriptionFileName + ".v" + cathVersion;
+		return cacheLocation + buildFileName(domainDescriptionFileName);
 	}
 
 	public String getNodeListFileName() {
-		return cacheLocation + nodeListFileName + ".v" + cathVersion;
+		return cacheLocation + buildFileName(nodeListFileName);
 	}
 
 	public String getDomallFileName() {
-		return cacheLocation + domallFileName + ".v" + cathVersion;
+		return cacheLocation + buildFileName(domallFileName);
+	}
+	
+	private String buildFileName(String fileNameTemplate) {
+		return String.format(fileNameTemplate, cathVersion);
+	}
+	
+	private String buildUrl(String remoteFileName) {
+		String remoteFileNameWithVer =  buildFileName(remoteFileName);
+		String releasesDir = CATH_DOWNLOAD_ALL_RELEASES_DIR;
+		return cathDownloadUrl + releasesDir + "/v" + cathVersion + "/" + CATH_DOWNLOAD_CLASSIFICATION_DATA_DIR + "/" + remoteFileNameWithVer;
 	}
 
 	public String getCathDownloadUrl() {
@@ -418,7 +430,7 @@ public class CathInstallation implements CathDatabase{
 				try {
 					cathDescription.setDate( dateFormat.parse( line.substring(10) ) );
 				} catch (ParseException e) {
-					e.printStackTrace();
+					LOGGER.error(e.getMessage(), e);
 				}
 			} else if ( line.startsWith("NAME") ) {
 				name.append( line.substring(10) );
@@ -622,7 +634,7 @@ public class CathInstallation implements CathDatabase{
 		}
 	}
 
-	protected void downloadFileFromRemote(URL remoteURL, File localFile) throws FileNotFoundException, IOException{
+	protected void downloadFileFromRemote(URL remoteURL, File localFile) throws IOException{
 //        System.out.println("downloading " + remoteURL + " to: " + localFile);
 
 		long timeS = System.currentTimeMillis();
@@ -653,7 +665,7 @@ public class CathInstallation implements CathDatabase{
 			disp = disp / 1024.0;
 		}
 		long timeE = System.currentTimeMillis();
-		System.out.println("downloaded " + String.format("%.1f",disp) + unit  + " in " + (timeE - timeS)/1000 + " sec.");
+		LOGGER.info("Downloaded file {} ({}) to local file {} in {} sec.", remoteURL, String.format("%.1f",disp) + unit, localFile, (timeE - timeS)/1000);
 	}
 
 	private boolean domainDescriptionFileAvailable(){
@@ -680,25 +692,25 @@ public class CathInstallation implements CathDatabase{
 		return f.exists();
 	}
 
-	protected void downloadDomainListFile() throws FileNotFoundException, IOException{
+	protected void downloadDomainListFile() throws IOException{
 		String remoteFilename = domainListFileName;
-		URL url = new URL(cathDownloadUrl + "v" + cathVersion + "/" + remoteFilename);
+		URL url = new URL(buildUrl(remoteFilename)); 
 		String localFileName = getDomainListFileName();
 		File localFile = new File(localFileName);
 		downloadFileFromRemote(url, localFile);
 	}
 
-	protected void downloadDomainDescriptionFile() throws FileNotFoundException, IOException{
+	protected void downloadDomainDescriptionFile() throws IOException{
 		String remoteFilename = domainDescriptionFileName;
-		URL url = new URL(cathDownloadUrl + "v" + cathVersion + "/" + remoteFilename);
+		URL url = new URL(buildUrl(remoteFilename));
 		String localFileName = getDomainDescriptionFileName();
 		File localFile = new File(localFileName);
 		downloadFileFromRemote(url, localFile);
 	}
 
-	protected void downloadNodeListFile() throws FileNotFoundException, IOException{
+	protected void downloadNodeListFile() throws IOException{
 		String remoteFilename = nodeListFileName;
-		URL url = new URL(cathDownloadUrl + "v" + cathVersion + "/" + remoteFilename);
+		URL url = new URL(buildUrl(remoteFilename));
 		String localFileName = getNodeListFileName();
 		File localFile = new File(localFileName);
 		downloadFileFromRemote(url, localFile);
@@ -706,7 +718,7 @@ public class CathInstallation implements CathDatabase{
 
 	protected void downloadDomallFile() throws IOException {
 		String remoteFileName = domallFileName;
-		URL url = new URL(cathDownloadUrl + "v" + cathVersion + "/" + remoteFileName);
+		URL url = new URL(buildUrl(remoteFileName));
 		String localFileName = getDomallFileName();
 		File localFile = new File(localFileName);
 		downloadFileFromRemote(url, localFile);
@@ -719,7 +731,7 @@ public class CathInstallation implements CathDatabase{
 			try {
 				downloadDomainListFile();
 			} catch (Exception e){
-				e.printStackTrace();
+				LOGGER.error("Could not download CATH domain list file. Error: {}", e.getMessage());
 				installedDomainList.set(false);
 				return;
 			}
@@ -728,7 +740,7 @@ public class CathInstallation implements CathDatabase{
 		try {
 			parseCathDomainList();
 		} catch (Exception e){
-			e.printStackTrace();
+			LOGGER.error(e.getMessage(), e);
 			installedDomainList.set(false);
 			return;
 		}
@@ -742,7 +754,7 @@ public class CathInstallation implements CathDatabase{
 			try {
 				downloadDomainDescriptionFile();
 			} catch (Exception e){
-				e.printStackTrace();
+				LOGGER.error("Could not download CATH domain description file. Error: {}", e.getMessage());
 				installedDomainDescription.set(false);
 				return;
 			}
@@ -751,7 +763,7 @@ public class CathInstallation implements CathDatabase{
 		try {
 			parseCathDomainDescriptionFile();
 		} catch (Exception e){
-			e.printStackTrace();
+			LOGGER.error(e.getMessage(), e);
 			installedDomainDescription.set(false);
 			return;
 		}
@@ -765,7 +777,7 @@ public class CathInstallation implements CathDatabase{
 			try {
 				downloadNodeListFile();
 			} catch (Exception e){
-				e.printStackTrace();
+				LOGGER.error("Could not download CATH node list file. Error: {}", e.getMessage());
 				installedNodeList.set(false);
 				return;
 			}
@@ -774,7 +786,7 @@ public class CathInstallation implements CathDatabase{
 		try {
 			parseCathNames();
 		} catch (Exception e){
-			e.printStackTrace();
+			LOGGER.error(e.getMessage(), e);
 			installedNodeList.set(false);
 			return;
 		}
@@ -795,7 +807,7 @@ public class CathInstallation implements CathDatabase{
 			try {
 				downloadDomallFile();
 			} catch (Exception e) {
-				e.printStackTrace();
+				LOGGER.error("Could not download CATH domain all file. Error: {}", e.getMessage());
 				installedDomall.set(false);
 				return;
 			}
@@ -804,7 +816,7 @@ public class CathInstallation implements CathDatabase{
 		try {
 			parseCathDomall();
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error(e.getMessage(), e);
 			installedDomall.set(false);
 			return;
 		}
@@ -814,5 +826,6 @@ public class CathInstallation implements CathDatabase{
 	public void setCathVersion(String cathVersion) {
 		this.cathVersion = cathVersion;
 	}
+	
 
 }

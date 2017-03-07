@@ -39,6 +39,8 @@ public class Cell extends AbstractBean {
 	String angle_alpha_esd;
 	String angle_beta_esd;
 	String angle_gamma_esd;
+	
+	String volume;
 
 	public String getEntry_id() {
 		return entry_id;
@@ -129,6 +131,12 @@ public class Cell extends AbstractBean {
 	}
 	public void setAngle_gamma_esd(String angle_gamma_esd) {
 		this.angle_gamma_esd = angle_gamma_esd;
+	}
+	public String getVolume() {
+		return volume;
+	}
+	public void setVolume(String volume) {
+		this.volume = volume;
 	}
 
 

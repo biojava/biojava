@@ -285,7 +285,7 @@ public class AfpChainWriter
 					int block = -1 ;
 					if ( cl != ' ') {
 						try {
-							block = Integer.parseInt(cl+"");
+							block = Integer.parseInt(String.valueOf(cl));
 						} catch (Exception e){
 							//
 						}
@@ -384,7 +384,7 @@ public class AfpChainWriter
 
 	}
 
-	private static void printScoresInLines(AFPChain afpChain, int blockNum, int optLength, double totalRmsdOpt, double alignScore,
+	public static void printScoresInLines(AFPChain afpChain, int blockNum, int optLength, double totalRmsdOpt, double alignScore,
 			int alnLength, int gapLen, double identity, double similarity, StringBuffer txt)
 	{
 		if ( blockNum - 1 > 0) {
@@ -503,9 +503,7 @@ public class AfpChainWriter
 
 	}
 
-
-
-	private static String toPrettyAlignment(AFPChain afpChain, Atom[] ca1, Atom[] ca2, boolean showHTML, boolean showAlignmentBlock) {
+	public static String toPrettyAlignment(AFPChain afpChain, Atom[] ca1, Atom[] ca2, boolean showHTML, boolean showAlignmentBlock) {
 		String name1 = afpChain.getName1();
 		String name2 = afpChain.getName2();
 		int ca1Length = afpChain.getCa1Length();
@@ -677,13 +675,13 @@ public class AfpChainWriter
 
 				pairs.append(atom1.getGroup().getResidueNumber().toString());
 				pairs.append('\t');
-				pairs.append(atom1.getGroup().getChain().getChainID());
+				pairs.append(atom1.getGroup().getChain().getName());
 				pairs.append('\t');
 				pairs.append(atom1.getGroup().getPDBName());
 				pairs.append('\t');
 				pairs.append(atom2.getGroup().getResidueNumber().toString());
 				pairs.append('\t');
-				pairs.append(atom2.getGroup().getChain().getChainID());
+				pairs.append(atom2.getGroup().getChain().getName());
 				pairs.append('\t');
 				pairs.append(atom2.getGroup().getPDBName());
 				pairs.append('\n');
@@ -1039,7 +1037,7 @@ public class AfpChainWriter
 		if ( g!= null){
 			Chain c = g.getChain();
 			if (c != null){
-				return g.getResidueNumber().toString()+":" + c.getChainID() ;
+				return g.getResidueNumber().toString()+":" + c.getName() ;
 				//return g.getPDBCode()+":" + c.getName() + "." + getOneLetter(g) ;
 			}
 		}
@@ -1117,7 +1115,7 @@ public class AfpChainWriter
 
 			String origString = "orig";
 			if ( blockNr > 0)
-				origString = (blockNr)+"";
+				origString = String.valueOf(blockNr);
 
 
 			txt.append(String.format("     X"+(blockNr+1)+" = (%9.6f)*X"+ origString +" + (%9.6f)*Y"+ origString +" + (%9.6f)*Z"+ origString +" + (%12.6f)",m.get(0,0),m.get(1,0), m.get(2,0), shift.getX()));

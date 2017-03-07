@@ -27,10 +27,9 @@ import java.io.Serializable;
 
 
 /**
- *
- *  A nucleotide group is almost the same as a Hetatm group.
- *  @see HetatomImpl
- *  @see AminoAcidImpl
+ * A nucleotide group is almost the same as a Hetatm group.
+ * @see HetatomImpl
+ * @see AminoAcidImpl
  * @author Andreas Prlic
  * @since 1.4
  * @version %I% %G%
@@ -94,10 +93,12 @@ public class NucleotideImpl extends HetatomImpl implements Group, Serializable, 
 
 	}
 
+	// note we need to implement a clone here, despite there's one in super class already,
+	// that's due to issue https://github.com/biojava/biojava/issues/631 - JD 2017-01-21
 	@Override
-	public Object clone(){
-		NucleotideImpl n = new NucleotideImpl();
+	public Object clone() {
 
+		NucleotideImpl n = new NucleotideImpl();
 		n.setPDBFlag(has3D());
 		n.setResidueNumber(getResidueNumber());
 
@@ -117,6 +118,11 @@ public class NucleotideImpl extends HetatomImpl implements Group, Serializable, 
 				n.addAltLoc(nAltLocGroup);
 			}
 		}
+		
+		if (chemComp!=null)
+			n.setChemComp(chemComp);
+
+
 		return n;
 	}
 }

@@ -397,7 +397,7 @@ public class SurvFitKM {
 		}
 		ArrayList<Integer> zz = new ArrayList<Integer>();
 		for (int i = 0; i < events.size(); i++) {
-			if (events.get(i) == true) {
+			if (events.get(i)) {
 				zz.add(i + 1);
 			}
 		}

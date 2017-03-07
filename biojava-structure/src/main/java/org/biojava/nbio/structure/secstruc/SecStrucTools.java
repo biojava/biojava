@@ -67,6 +67,17 @@ public class SecStrucTools {
 		return listSSI;
 	}
 
+
+	public static void assignSecStruc( Structure s,List<SecStrucInfo> listSSI){
+
+		for ( SecStrucInfo ssi : listSSI){
+
+			ssi.getGroup().setProperty(Group.SEC_STRUC,ssi);
+
+		}
+
+	}
+
 	/**
 	 * Obtain the List of secondary structure elements (SecStrucElement) of a
 	 * Structure.

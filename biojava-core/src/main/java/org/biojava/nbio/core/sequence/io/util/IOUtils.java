@@ -276,7 +276,7 @@ public class IOUtils {
 	 * @return formatted String
 	 */
 	public static String getPDBCharacter(boolean web, char c1, char c2, boolean similar, char c) {
-		String s = c + "";
+		String s = String.valueOf(c);
 		return getPDBString(web, c1, c2, similar, s, s, s, s);
 	}
 

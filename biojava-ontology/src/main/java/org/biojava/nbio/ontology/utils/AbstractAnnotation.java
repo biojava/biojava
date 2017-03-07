@@ -140,11 +140,11 @@ public abstract class AbstractAnnotation
 		Iterator i = prop.keySet().iterator();
 		if(i.hasNext()) {
 			Object key = i.next();
-			sb.append(key + "=" + prop.get(key));
+			sb.append(key).append("=").append(prop.get(key));
 		}
 		while(i.hasNext()) {
 			Object key = i.next();
-			sb.append("," + key + "=" + prop.get(key));
+			sb.append(",").append(key).append("=").append(prop.get(key));
 		}
 		sb.append("}");
 		return sb.substring(0);

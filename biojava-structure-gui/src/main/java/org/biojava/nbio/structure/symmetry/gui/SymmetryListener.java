@@ -66,13 +66,16 @@ public class SymmetryListener implements ActionListener {
 		try {
 			if (cmd.equals("Repeats Superposition")) {
 				MultipleAlignmentJmol j = SymmetryDisplay.displayRepeats(symm);
-				String s = SymmetryDisplay.printSymmetryAxes(symm);
+				String s = SymmetryDisplay.printSymmetryAxes(symm, false);
 				j.evalString(s);
+				j.evalString("save STATE state_1");
+
 
 			} else if (cmd.equals("Multiple Structure Alignment")) {
 				MultipleAlignmentJmol j = SymmetryDisplay.displayFull(symm);
 				String s = SymmetryDisplay.printSymmetryAxes(symm);
 				j.evalString(s);
+				j.evalString("save STATE state_1");
 
 			} else if (cmd.equals("Optimal Self Alignment")) {
 				Atom[] cloned = StructureTools.cloneAtomArray(symm.getAtoms());

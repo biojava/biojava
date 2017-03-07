@@ -57,7 +57,7 @@ import java.util.*;
  * </ul>
  *
  * Taken from <a
- * href="http://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi?mode=c"
+ * href="https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi?mode=c"
  * >NCBI</a> with slight modification and put into the classpath resource.
  *
  * Takes in an ID, name, amino acid string and the locations of amino acids
@@ -65,7 +65,7 @@ import java.util.*;
  * position strings that correspond to the amino acid string or if you are using
  * the default IUPAC codes you can use the hardcoded ones which are consistent
  * amongst all <a
- * href="http://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi?mode=c"> codon
+ * href="https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi?mode=c"> codon
  * tables</a>.
  *
  * The generated {@link IUPACTable} objects do not parse the data further until

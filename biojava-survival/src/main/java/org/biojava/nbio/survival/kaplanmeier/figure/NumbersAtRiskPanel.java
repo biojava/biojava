@@ -117,7 +117,7 @@ public class NumbersAtRiskPanel extends JPanel {
 				if(value == null){
 					nrisk = "";
 				}else{
-					nrisk = value.intValue() + "";
+					nrisk = String.valueOf(value.intValue());
 				}
 				if(time == 0.0){
 					 g2.drawString(nrisk , xvalue, row);

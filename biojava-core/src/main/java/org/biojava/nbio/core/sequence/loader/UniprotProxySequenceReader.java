@@ -337,10 +337,21 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 
 	/**
 	 * Pull uniprot protein aliases associated with this sequence
+	 * Provided for backwards compatibility now that we support both
+	 * gene and protein aliases via separate methods.
 	 * @return
 	 * @throws XPathExpressionException
 	 */
 	public ArrayList<String> getAliases() throws XPathExpressionException {
+
+		return getProteinAliases();
+	}
+	/**
+	 * Pull uniprot protein aliases associated with this sequence
+	 * @return
+	 * @throws XPathExpressionException
+	 */
+	public ArrayList<String> getProteinAliases() throws XPathExpressionException {
 		ArrayList<String> aliasList = new ArrayList<String>();
 		if (uniprotDoc == null) {
 			return aliasList;
@@ -352,8 +363,56 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 		for (Element element : keyWordElementList) {
 			Element fullNameElement = XMLHelper.selectSingleElement(element, "fullName");
 			aliasList.add(fullNameElement.getTextContent());
+			Element shortNameElement = XMLHelper.selectSingleElement(element, "shortName");
+			if(null != shortNameElement) {
+				String shortName = shortNameElement.getTextContent();
+				if(null != shortName && !shortName.trim().isEmpty()) {
+					aliasList.add(shortName);
+				}
+			}
+		}
+		keyWordElementList = XMLHelper.selectElements(proteinElement, "recommendedName");
+		for (Element element : keyWordElementList) {
+			Element fullNameElement = XMLHelper.selectSingleElement(element, "fullName");
+			aliasList.add(fullNameElement.getTextContent());
+			Element shortNameElement = XMLHelper.selectSingleElement(element, "shortName");
+			if(null != shortNameElement) {
+				String shortName = shortNameElement.getTextContent();
+				if(null != shortName && !shortName.trim().isEmpty()) {
+					aliasList.add(shortName);
+				}
+			}
+		}
+		Element cdAntigen = XMLHelper.selectSingleElement(proteinElement, "cdAntigenName");
+		if(null != cdAntigen) {
+			String cdAntigenName = cdAntigen.getTextContent();
+			if(null != cdAntigenName && !cdAntigenName.trim().isEmpty()) {
+				aliasList.add(cdAntigenName);
+			}
 		}
 
+		return aliasList;
+	}
+
+	/**
+	 * Pull uniprot gene aliases associated with this sequence
+	 * @return
+	 * @throws XPathExpressionException
+	 */
+	public ArrayList<String> getGeneAliases() throws XPathExpressionException {
+		ArrayList<String> aliasList = new ArrayList<String>();
+		if (uniprotDoc == null) {
+			return aliasList;
+		}
+		Element uniprotElement = uniprotDoc.getDocumentElement();
+		Element entryElement = XMLHelper.selectSingleElement(uniprotElement, "entry");
+		ArrayList<Element> proteinElements = XMLHelper.selectElements(entryElement, "gene");
+		for(Element proteinElement : proteinElements) {
+			ArrayList<Element> keyWordElementList = XMLHelper.selectElements(proteinElement, "name");
+			for (Element element : keyWordElementList) {
+				aliasList.add(element.getTextContent());
+			}
+		}
 		return aliasList;
 	}
 

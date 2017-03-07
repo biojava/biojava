@@ -22,7 +22,7 @@ package org.biojava.nbio.structure.rcsb;
 
 import org.biojava.nbio.structure.align.client.JFatCatClient;
 import org.biojava.nbio.structure.align.client.StructureName;
-import org.biojava.nbio.structure.align.util.HTTPConnectionTools;
+import org.biojava.nbio.structure.align.util.URLConnectionTools;
 import org.biojava.nbio.structure.align.xml.RepresentativeXMLConverter;
 
 import java.io.BufferedReader;
@@ -67,7 +67,7 @@ public class GetRepresentatives {
 
 			URL u = new URL(clusterUrl + sequenceIdentity);
 
-			InputStream stream = HTTPConnectionTools.getInputStream(u, 60000);
+			InputStream stream = URLConnectionTools.getInputStream(u, 60000);
 
 			String xml = null;
 
@@ -101,7 +101,7 @@ public class GetRepresentatives {
 
 			URL u = new URL(allUrl);
 
-			InputStream stream = HTTPConnectionTools.getInputStream(u, 60000);
+			InputStream stream = URLConnectionTools.getInputStream(u, 60000);
 
 			if (stream != null) {
 				BufferedReader reader = new BufferedReader(

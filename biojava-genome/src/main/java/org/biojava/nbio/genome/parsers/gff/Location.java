@@ -286,34 +286,41 @@ public class Location implements Iterable<Location>
 	}
 
 	/**
-	* Return the intersection, or null if no overlap.
-	*
-	 * @param other The location to intersect.
-	 * @return The maximal location that is contained by both. Returns null if no overlap!
-	 * @throws IllegalArgumentException Locations are on opposite strands.
-	*/
-	public Location intersection( Location other )
-	{
-		if( isSameStrand( other ) )
-		{
-			int start= ( mStart > other.mStart)? mStart: other.mStart;	//pick larger
-			int end= ( mEnd < other.mEnd)? mEnd: other.mEnd;	//pick smaller
-
-			if( start <= end )
-			{
-				return new Location( start, end );
-			}
-			else
-			{
-				return null;
-			}
+	 * Return the intersection, or null if no overlap.
+	 *
+	 * @param other
+	 *            The location to intersect.
+	 * @return The maximal location that is contained by both. Returns null if
+	 *         no overlap!
+	 * @throws IllegalArgumentException
+	 *             Locations are on opposite strands.
+	 */
+	public Location intersection(Location other) {
+		if (isSameStrand(other)) {
+			return intersect(mStart, mEnd, other.mStart, other.mEnd);
+		} else {
+			throw new IllegalArgumentException("Locations are on opposite strands.");
 		}
-		else
-		{
-			throw new IllegalArgumentException( "Locations are on opposite strands." );
-		}
-
 	}
+	
+	private Location intersect(int a1, int a2, int b1, int b2) {
+		if (a1 > b1) {
+			return intersect(b1, b2, a1, a2);
+		}
+		// Safe to assume a1 <= b1
+		if (b1 >= a2) {
+			// b starts after a ends
+			return null;
+		} else if (b1 < a2 && b2 <= a2) {
+			// b starts after a starts and ends before or at where a ends
+			return new Location(b1, b2);
+		} else if (b1 >= a1 && a2 <= b2) {
+			// b starts after a but extends after the end of a
+			return new Location(b1, a2);
+		}
+		return null;
+	}	
+
 
 	/**
 	 * Get starting index (origin 0).
@@ -906,7 +913,7 @@ public class Location implements Iterable<Location>
 	 */
 	@Deprecated
 	@SuppressWarnings("unused")
-	public static void main( String args[] )
+	public static void main(String[] args )
 	throws Exception
 	{
 		Location p3_7= new Location( 3, 7 );

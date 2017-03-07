@@ -92,7 +92,7 @@ public class SurvivalInfo implements Comparable<SurvivalInfo> {
 		status = e;
 
 		data.put(variable, d);
-		originalMetaData.put(variable, d + "");
+		originalMetaData.put(variable, String.valueOf(d));
 	}
 
 

@@ -27,7 +27,7 @@ package org.biojava.nbio.ws.alignment.qblast;
  * Output parameters accepted by QBlast service. <br/>
  * Not all are mandatory. Certain parameters only work with a subset of other parameters in the list.
  * <p/>
- * Taken from <a href=http://www.ncbi.nlm.nih.gov/staff/tao/URLAPI/new/node9.html>Blast URL API</a>
+ * Taken from <a href=https://www.ncbi.nlm.nih.gov/staff/tao/URLAPI/new/node9.html>Blast URL API</a>
  *
  * @author Gediminas Rimsa
  */

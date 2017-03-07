@@ -51,6 +51,7 @@ public interface MMcifConsumer {
 	 */
 	public void newAtomSite(AtomSite atom);
 	public void newEntity(Entity entity);
+	public void newEntityPoly(EntityPoly entityPoly);
 	public void newEntityPolySeq(EntityPolySeq epolseq);
 	public void newStructAsym(StructAsym sasym);
 	public void setStruct(Struct struct);
@@ -61,6 +62,7 @@ public interface MMcifConsumer {
 	public void newCell(Cell cell);
 	public void newSymmetry(Symmetry symmetry);
 	public void newStructNcsOper(StructNcsOper sNcsOper);
+	public void newAtomSites(AtomSites atomSites);
 	public void newStructRef(StructRef sref);
 	public void newStructRefSeq(StructRefSeq sref);
 	public void newStructRefSeqDif(StructRefSeqDif sref);

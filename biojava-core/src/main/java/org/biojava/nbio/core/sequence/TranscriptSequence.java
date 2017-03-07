@@ -181,7 +181,7 @@ public class TranscriptSequence extends DNASequence {
 
 			DNASequence dnaCodingSequence = null;
 			try {
-				dnaCodingSequence = new DNASequence(codingSequence.toString().toUpperCase());
+				dnaCodingSequence = new DNASequence(codingSequence.toUpperCase());
 			} catch (CompoundNotFoundException e) {
 				// if I understand this should not happen, please correct if I'm wrong - JD 2014-10-24
 				logger.error("Could not create DNA coding sequence, {}. This is most likely a bug.", e.getMessage());

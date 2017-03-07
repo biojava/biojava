@@ -31,6 +31,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.biojava.nbio.structure.align.util.AtomCache;
+import org.biojava.nbio.structure.contact.Grid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,6 +74,7 @@ public class SubstructureIdentifier implements Serializable, StructureIdentifier
 	private static final long serialVersionUID = 1L;
 
 	private static final Logger logger = LoggerFactory.getLogger(SubstructureIdentifier.class);
+	
 
 	private final String pdbId;
 	private final List<ResidueRange> ranges;
@@ -160,6 +162,13 @@ public class SubstructureIdentifier implements Serializable, StructureIdentifier
 	 *
 	 * <p>The returned structure will be a shallow copy of the input, with shared
 	 * Chains, Residues, etc.
+	 * 
+	 * <p>Ligands are handled in a special way. If a full chain is selected
+	 * (e.g. '1ABC.A') then any waters and ligands with matching chain name are
+	 * included. If a residue range is present ('1ABC.A:1-100') then any
+	 * ligands (technically non-water non-polymer atoms) within
+	 * {@link StructureTools#DEFAULT_LIGAND_PROXIMITY_CUTOFF} of the selected
+	 * range are included, regardless of chain.
 	 * @param input A full structure, e.g. as loaded from the PDB. The structure
 	 * ID should match that returned by getPdbId().
 	 * @return
@@ -181,16 +190,14 @@ public class SubstructureIdentifier implements Serializable, StructureIdentifier
 		newS.getPDBHeader().setDescription(
 				"sub-range " + ranges + " of "  + newS.getPDBCode() + " "
 						+ s.getPDBHeader().getDescription());
+		newS.setEntityInfos(new ArrayList<>());
 		// TODO The following should be only copied for atoms which are present in the range.
-		newS.setEntityInfos(s.getEntityInfos());
 		newS.setSSBonds(s.getSSBonds());
 		newS.setSites(s.getSites());
 
 		newS.setStructureIdentifier(this);
 
 		for( int modelNr=0;modelNr<s.nrModels();modelNr++) {
-			String prevChainId = null;
-
 
 			// Construct new model
 			newS.addModel(new ArrayList<Chain>());
@@ -206,91 +213,66 @@ public class SubstructureIdentifier implements Serializable, StructureIdentifier
 				// Restrict residues
 				for( ResidueRange range: getResidueRanges()) {
 
-					String chainId = range.getChainId();
+					String chainName = range.getChainName();
 					ResidueNumber pdbresnum1 = range.getStart();
 					ResidueNumber pdbresnum2 = range.getEnd();
 
-					Chain chain;
-					if(chainId.equals("_") ) {
+//					StructureTools.addGroupsToStructure(newS, groups, modelNr, false);
+					Chain polyChain; //polymer
+					if(chainName.equals("_") ) {
 						// Handle special case of "_" chain for single-chain proteins
-						chain = s.getChain(modelNr,0);
+						polyChain = s.getPolyChains(modelNr).get(0);
+						chainName = polyChain.getName();
 						if(pdbresnum1 != null)
-							pdbresnum1.setChainId(chain.getChainID());
+							pdbresnum1.setChainName(chainName);
 						if(pdbresnum2 != null)
-							pdbresnum2.setChainId(chain.getChainID());
+							pdbresnum2.setChainName(chainName);
 
-						if(s.size() != 1) {
+						if(s.getPolyChains().size() != 1) {
 							// SCOP 1.71 uses this for some proteins with multiple chains
 							// Print a warning in this ambiguous case
-							logger.warn("Multiple possible chains match '_'. Using chain {}",chain.getChainID());
+							logger.warn("Multiple possible chains match '_'. Using chain {}",chainName);
 						}
 					} else {
 						// Explicit chain
-						try {
-							chain = s.getChainByPDB(chainId,modelNr);
-						} catch(StructureException e) {
+						polyChain = s.getPolyChainByPDB(chainName,modelNr);
+						if( polyChain == null ) {
 							// Chain not found
-							// Maybe it was a chain index, masquerading as a chainId?
+							// Maybe it was a chain index, masquerading as a chainName?
 							try {
-								int chainNum = Integer.parseInt(chainId);
-								try {
-									chain = s.getChain(modelNr, chainNum);
-									logger.warn("No chain found for {}. Interpretting it as an index, using chain {} instead",chainId,chain.getChainID());
-								} catch(Exception e2) { //we don't care what gets thrown here -sbliven
-									throw e; // Nope, not an index. Throw the original exception
-								}
+								int chainNum = Integer.parseInt(chainName);
+								polyChain = s.getChainByIndex(modelNr, chainNum);
+								chainName = polyChain.getName();
+								if(pdbresnum1 != null)
+									pdbresnum1.setChainName(chainName);
+								if(pdbresnum2 != null)
+									pdbresnum2.setChainName(chainName);
+								logger.warn("No chain found for {}. Interpretting it as an index, using chain {} instead",chainName,polyChain.getId());
 							} catch(NumberFormatException e3) {
 								// Not an index. Throw the original exception
-								throw e;
+								throw new StructureException(String.format("Unrecognized chain %s in %s",chainName,getIdentifier()));
 							}
 						}
 					}
 
-					List<Group> groups;
 					if(pdbresnum1 == null && pdbresnum2 == null) {
-						groups = chain.getAtomGroups();
-					} else {
-//						// Trim extra residues off the range
-//						Atom[] allAtoms = StructureTools.getRepresentativeAtomArray(chain);
-//						AtomPositionMap map = new AtomPositionMap(allAtoms);
-//						ResidueRange trimmed = map.trimToValidResidues(
-//								new ResidueRange(chain.getChainID(),
-//										pdbresnum1, pdbresnum2));
-//						if (trimmed != null) {
-//							pdbresnum1 = trimmed.getStart();
-//							pdbresnum2 = trimmed.getEnd();
-//						}
-						groups = Arrays.asList(chain.getGroupsByPDB(pdbresnum1, pdbresnum2));
-					}
-
-					Chain c = null;
-					
-					// Reuse prevChain
-					if ( prevChainId != null && prevChainId.equals(chain.getChainID())) {
-						c = newS.getChainByPDB(prevChainId,modelNr);
-					} else {
-						try {
-							c = newS.getChainByPDB(chain.getChainID(),modelNr);
-						} catch (StructureException e){
-							// chain not in structure yet...
+						// Include all atoms with matching chainName
+						StructureTools.addGroupsToStructure(newS, polyChain.getAtomGroups(), modelNr, false);
+						for(Chain chain : s.getNonPolyChainsByPDB(chainName, modelNr) ) {
+							StructureTools.addGroupsToStructure(newS, chain.getAtomGroups(), modelNr, false);
 						}
+						Chain waters = s.getWaterChainByPDB(chainName, modelNr);
+						if( waters != null) {
+							StructureTools.addGroupsToStructure(newS, waters.getAtomGroups(), modelNr, false);
+						}
+						
+						// TODO do we need to prune SeqRes down to the atoms present? -SB 2016-10-7
+					} else {
+						// Include polymer range and any proximal ligands
+						List<Group> polygroups = Arrays.asList(polyChain.getGroupsByPDB(pdbresnum1, pdbresnum2));
+						StructureTools.addGroupsToStructure(newS, polygroups, modelNr, false);
+						copyLigandsByProximity(s,newS, StructureTools.DEFAULT_LIGAND_PROXIMITY_CUTOFF, modelNr, modelNr);
 					}
-					// Create new chain
-					if ( c == null) {
-						// first chain...
-						c = new ChainImpl();
-						c.setChainID(chain.getChainID());
-						newS.addChain(c,modelNr);
-						c.setSeqResGroups(chain.getSeqResGroups());
-						c.setSeqMisMatches(chain.getSeqMisMatches());
-					} 
-
-					// add the groups to the chain:
-					for ( Group g: groups) {
-						c.addGroup(g);
-					}
-
-					prevChainId = c.getChainID();
 				} // end range
 			}
 		} // end modelNr
@@ -313,6 +295,71 @@ public class SubstructureIdentifier implements Serializable, StructureIdentifier
 		if(pdb == null)
 			return null;
 		return cache.getStructureForPdbId(pdb);
+	}
+
+	/**
+	 * Supplements the reduced structure with ligands from the full structure based on
+	 * a distance cutoff. Ligand groups are moved (destructively) from full to reduced
+	 * if they fall within the cutoff of any atom in the reduced structure.
+	 * The {@link StructureTools#DEFAULT_LIGAND_PROXIMITY_CUTOFF default cutoff}
+	 * is used.
+	 * @param full Structure containing all ligands
+	 * @param reduced Structure with a subset of the polymer groups from full
+	 * @see StructureTools#getLigandsByProximity(java.util.Collection, Atom[], double)
+	 */
+	protected static void copyLigandsByProximity(Structure full, Structure reduced) {
+		// Normal case where all models should be copied from full to reduced
+		assert full.nrModels() >= reduced.nrModels();
+		for(int model = 0; model< reduced.nrModels(); model++) {
+			copyLigandsByProximity(full, reduced, StructureTools.DEFAULT_LIGAND_PROXIMITY_CUTOFF, model, model);
+		}
+	}
+	/**
+	 * Supplements the reduced structure with ligands from the full structure based on
+	 * a distance cutoff. Ligand groups are moved (destructively) from full to reduced
+	 * if they fall within the cutoff of any atom in the reduced structure.
+	 * @param full Structure containing all ligands
+	 * @param reduced Structure with a subset of the polymer groups from full
+	 * @param cutoff Distance cutoff (Å)
+	 * @param fromModel source model in full
+	 * @param toModel destination model in reduced
+	 * @see StructureTools#getLigandsByProximity(java.util.Collection, Atom[], double)
+	 */
+	protected static void copyLigandsByProximity(Structure full, Structure reduced, double cutoff, int fromModel, int toModel) {
+		// Geometric hashing of the reduced structure
+		Grid grid = new Grid(cutoff);
+		Atom[] nonwaters = StructureTools.getAllNonHAtomArray(reduced,true,toModel);
+		if( nonwaters.length < 1 )
+			return;
+		grid.addAtoms(nonwaters);
+
+		full.getNonPolyChains(fromModel).stream() //potential ligand chains
+		.flatMap((chain) -> chain.getAtomGroups().stream() ) // potential ligand groups
+		.filter( (g) -> !g.isWater() ) // ignore waters
+		.filter( (g) -> !g.isPolymeric() ) // already shouldn't be polymeric, but filter anyways
+		.filter( (g) -> grid.hasAnyContact(Calc.atomsToPoints(g.getAtoms())) ) // must contact reduced
+		.sequential() // Keeps ligands from the same chain together if possible
+		.reduce((Chain)null, // reduction updates the chain guess
+				(guess, g ) -> {
+					boolean wasAdded;
+					try {
+						// Check that it's not in reduced already
+						wasAdded = reduced.findGroup(g.getChainId(),
+								g.getResidueNumber().toString(), toModel) != null;
+					} catch (StructureException e) {
+						// not found
+						wasAdded = false;
+					}
+					if( !wasAdded ) {
+						// Add the ligand to reduced
+						// note this is not idempotent, but it is synchronized on reduced
+						logger.info("Adding ligand group {} {} by proximity",g.getPDBName(), g.getResidueNumber().toPDB());
+						return StructureTools.addGroupToStructure(reduced, g, toModel, guess, false);
+					}
+					return guess;
+				},
+				// update to the new guess
+				(oldGuess, newGuess) -> newGuess );
 	}
 
 }

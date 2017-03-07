@@ -29,6 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -100,7 +101,7 @@ public class SecStrucCalc {
 	private Atom[] atoms;
 	// Added by Anthony - to speed up intergroup calculations
 	private AtomContactSet contactSet;
-	private Map<String, Integer> indResMap;
+	private Map<ResidueNumber, Integer> indResMap;
 	public SecStrucCalc(){
 		ladders = new ArrayList<Ladder>();
 		bridges = new ArrayList<BetaBridge>();
@@ -118,33 +119,36 @@ public class SecStrucCalc {
 	public List<SecStrucState> calculate(Structure s, boolean assign)
 			throws StructureException {
 
-		// Reinitialise the global vars
-		ladders = new ArrayList<Ladder>();
-		bridges = new ArrayList<BetaBridge>();
-		groups = initGroupArray(s);
-		// Initialise the contact set for this structure
-		initContactSet();
-		if (groups.length < 5) {
-			// not enough groups to do anything
-			throw new StructureException("Not enough backbone groups in the"
-					+ " Structure to calculate the secondary structure ("
-					+ groups.length+" given, minimum 5)" );
-		}
-
-		calculateHAtoms();
-		calculateHBonds();
-		calculateDihedralAngles();
-		calculateTurns();
-		buildHelices();
-		detectBends();
-		detectStrands();
 		List<SecStrucState> secstruc = new ArrayList<SecStrucState>();
-		for (SecStrucGroup sg : groups){
-			SecStrucState ss = (SecStrucState)
-					sg.getProperty(Group.SEC_STRUC);
-			//Add to return list and assign to original if flag is true
-			secstruc.add(ss);
-			if (assign) sg.getOriginal().setProperty(Group.SEC_STRUC, ss);
+		for(int i=0; i<s.nrModels(); i++) {
+			// Reinitialise the global vars
+			ladders = new ArrayList<Ladder>();
+			bridges = new ArrayList<BetaBridge>();
+			groups = initGroupArray(s, i);
+			// Initialise the contact set for this structure
+			initContactSet();
+			if (groups.length < 5) {
+				// not enough groups to do anything
+				throw new StructureException("Not enough backbone groups in the"
+						+ " Structure to calculate the secondary structure ("
+						+ groups.length+" given, minimum 5)" );
+			}
+
+			calculateHAtoms();
+			calculateHBonds();
+			calculateDihedralAngles();
+			calculateTurns();
+			buildHelices();
+			detectBends();
+			detectStrands();
+
+			for (SecStrucGroup sg : groups){
+				SecStrucState ss = (SecStrucState)
+						sg.getProperty(Group.SEC_STRUC);
+				// Add to return list and assign to original if flag is true
+				secstruc.add(ss);
+				if (assign) sg.getOriginal().setProperty(Group.SEC_STRUC, ss);
+			}
 		}
 		return secstruc;
 	}
@@ -157,10 +161,10 @@ public class SecStrucCalc {
 		// Initialise an array of atoms
 		atoms = new Atom[groups.length];
 		// Remake this local var
-		indResMap = new HashMap<String, Integer>();
+		indResMap = new HashMap<>();
 		for (int i=0 ; i < groups.length ; i++){
 			SecStrucGroup one = groups[i];
-			indResMap.put(one.getResidueNumber().getChainId()+one.getResidueNumber().getSeqNum(), i);
+			indResMap.put(one.getResidueNumber(), i);
 			atoms[i] = one.getCA();
 		}
 		Grid grid = new Grid(CA_MIN_DIST);
@@ -168,8 +172,8 @@ public class SecStrucCalc {
 			contactSet = new AtomContactSet(CA_MIN_DIST);
 		}
 		else{
-		grid.addAtoms(atoms);
-		contactSet = grid.getContacts();
+			grid.addAtoms(atoms);
+			contactSet = grid.getAtomContacts();
 		}
 	}
 
@@ -429,8 +433,8 @@ public class SecStrucCalc {
 			Group g1 = ac.getPair().getFirst().getGroup();
 			Group g2 = ac.getPair().getSecond().getGroup();
 			// Get the indices
-			int i = indResMap.get(g1.getResidueNumber().getChainId()+g1.getResidueNumber().getSeqNum());
-			int j = indResMap.get(g2.getResidueNumber().getChainId()+g2.getResidueNumber().getSeqNum());
+			int i = indResMap.get(g1.getResidueNumber());
+			int j = indResMap.get(g2.getResidueNumber());
 			// If i>j switch them over
 			if(i>j){
 				// Switch them over
@@ -487,22 +491,22 @@ public class SecStrucCalc {
 
 
 		for(Pair<Integer> p: outList){
-				int i = p.getFirst();
-				int j = p.getSecond();
-				BridgeType btype = null;
-				// Now do the bonding
-				if ((isBonded(i-1,j) && isBonded(j,i+1)) ||
-						(isBonded(j-1,i) && isBonded(i,j+1))) {
-					btype = BridgeType.parallel;
-				}
-				else if ((isBonded(i,j) && isBonded(j,i)) ||
-						(isBonded(i-1,j+1) && (isBonded(j-1,i+1)))) {
-					btype = BridgeType.antiparallel;
-				}
-				if (btype != null){
-					registerBridge(i, j, btype);
-				}
+			int i = p.getFirst();
+			int j = p.getSecond();
+			BridgeType btype = null;
+			// Now do the bonding
+			if ((isBonded(i-1,j) && isBonded(j,i+1)) ||
+					(isBonded(j-1,i) && isBonded(i,j+1))) {
+				btype = BridgeType.parallel;
 			}
+			else if ((isBonded(i,j) && isBonded(j,i)) ||
+					(isBonded(i-1,j+1) && (isBonded(j-1,i+1)))) {
+				btype = BridgeType.antiparallel;
+			}
+			if (btype != null){
+				registerBridge(i, j, btype);
+			}
+		}
 
 
 	}
@@ -676,6 +680,14 @@ public class SecStrucCalc {
 	}
 
 	@Override
+	public int hashCode() {
+	    final int prime = 31;
+	    int result = 1;
+	    result = prime * result + Arrays.hashCode(atoms);
+	    return result;
+	}
+
+	@Override
 	public boolean equals(Object o){
 
 		if (!(o instanceof SecStrucCalc)) return false;
@@ -692,10 +704,10 @@ public class SecStrucCalc {
 		}
 	}
 
-	private static SecStrucGroup[] initGroupArray(Structure s) {
+	private static SecStrucGroup[] initGroupArray(Structure s, int modelId) {
 		List<SecStrucGroup> groupList = new ArrayList<SecStrucGroup>();
-
-		for ( Chain c : s.getChains()){
+		// 
+		for ( Chain c : s.getChains(modelId)){
 
 			for (Group g : c.getAtomGroups()){
 
@@ -729,6 +741,7 @@ public class SecStrucCalc {
 					groupList.add(sg);
 				}
 			}
+
 		}
 		return groupList.toArray(new SecStrucGroup[groupList.size()]);
 	}
@@ -772,8 +785,8 @@ public class SecStrucCalc {
 			Group g1 = pair.getFirst().getGroup();
 			Group g2 = pair.getSecond().getGroup();
 			// Now I need to get the index of the Group in the list groups
-			int i = indResMap.get(g1.getResidueNumber().getChainId()+g1.getResidueNumber().getSeqNum());
-			int j = indResMap.get(g2.getResidueNumber().getChainId()+g2.getResidueNumber().getSeqNum());
+			int i = indResMap.get(g1.getResidueNumber());
+			int j = indResMap.get(g2.getResidueNumber());
 			// Now check this
 			checkAddHBond(i,j);
 			//"backwards" hbonds are not allowed
@@ -959,8 +972,8 @@ public class SecStrucCalc {
 	 * has to be i.
 	 * DSSP defines H-Bonds if the energy < -500 cal/mol.
 	 *
-	 * @param one group one
-	 * @param two group two
+	 * @param i group one
+	 * @param j group two
 	 * @return flag if the two are forming an Hbond
 	 */
 	private boolean isBonded(int i, int j) {
@@ -1041,7 +1054,7 @@ public class SecStrucCalc {
 	}
 
 	private void buildHelices(){
-
+		
 		//Alpha-helix (i+4), 3-10-helix (i+3), Pi-helix (i+5)
 		checkSetHelix(4, SecStrucType.helix4);
 		checkSetHelix(3, SecStrucType.helix3);
