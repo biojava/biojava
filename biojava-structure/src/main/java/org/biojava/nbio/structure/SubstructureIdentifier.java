@@ -31,6 +31,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.biojava.nbio.structure.align.util.AtomCache;
+import org.biojava.nbio.structure.contact.Grid;
+import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,6 +75,7 @@ public class SubstructureIdentifier implements Serializable, StructureIdentifier
 	private static final long serialVersionUID = 1L;
 
 	private static final Logger logger = LoggerFactory.getLogger(SubstructureIdentifier.class);
+	
 
 	private final String pdbId;
 	private final List<ResidueRange> ranges;
@@ -293,6 +296,9 @@ public class SubstructureIdentifier implements Serializable, StructureIdentifier
 
 					prevChainId = c.getChainID();
 				} // end range
+
+				// Transfer any close ligands
+				copyLigandsByProximity(s,newS, StructureTools.DEFAULT_LIGAND_PROXIMITY_CUTOFF, modelNr, modelNr);
 			}
 		} // end modelNr
 
@@ -314,6 +320,101 @@ public class SubstructureIdentifier implements Serializable, StructureIdentifier
 		if(pdb == null)
 			return null;
 		return cache.getStructureForPdbId(pdb);
+	}
+
+	/**
+	 * Supplements the reduced structure with ligands from the full structure based on
+	 * a distance cutoff. Ligand groups are moved (destructively) from full to reduced
+	 * if they fall within the cutoff of any atom in the reduced structure.
+	 * The {@link StructureTools#DEFAULT_LIGAND_PROXIMITY_CUTOFF default cutoff}
+	 * is used.
+	 * @param full Structure containing all ligands
+	 * @param reduced Structure with a subset of the polymer groups from full
+	 * @see StructureTools#getLigandsByProximity(java.util.Collection, Atom[], double)
+	 */
+	protected static void copyLigandsByProximity(Structure full, Structure reduced) {
+		// Normal case where all models should be copied from full to reduced
+		assert full.nrModels() >= reduced.nrModels();
+		for(int model = 0; model< reduced.nrModels(); model++) {
+			copyLigandsByProximity(full, reduced, StructureTools.DEFAULT_LIGAND_PROXIMITY_CUTOFF, model, model);
+		}
+	}
+	/**
+	 * Supplements the reduced structure with ligands from the full structure based on
+	 * a distance cutoff. Ligand groups are moved (destructively) from full to reduced
+	 * if they fall within the cutoff of any atom in the reduced structure.
+	 * @param full Structure containing all ligands
+	 * @param reduced Structure with a subset of the polymer groups from full
+	 * @param cutoff Distance cutoff (Å)
+	 * @param fromModel source model in full
+	 * @param toModel destination model in reduced
+	 * @see StructureTools#getLigandsByProximity(java.util.Collection, Atom[], double)
+	 */
+	protected static void copyLigandsByProximity(Structure full, Structure reduced, double cutoff, int fromModel, int toModel) {
+		// Geometric hashing of the reduced structure
+		Grid grid = new Grid(cutoff);
+		Atom[] nonwaters = StructureTools.getAllNonHAtomArray(reduced,true,toModel);
+		if( nonwaters.length < 1 )
+			return;
+		grid.addAtoms(nonwaters);
+
+		
+		// Find ligands from full structure
+		for(Chain fullChain : full.getModel(fromModel)) {
+			String chainId = fullChain.getChainID();
+			Chain reducedChain = null;
+
+			for(Group g :fullChain.getAtomGroups() ) {
+				
+				// don't worry about waters
+				if(g.isWater()) {
+					continue;
+				}
+				
+				ChemComp chemComp = g.getChemComp();
+				if(chemComp != null && chemComp.isStandard() ) {
+					// Polymers aren't ligands
+					continue;
+				}
+				
+				// It is a ligand
+				// Check that it's within cutoff of something in reduced
+				List<Atom> groupAtoms = g.getAtoms();
+				if( ! grid.hasAnyContact(groupAtoms)) {
+					continue;
+				}
+				
+				// Check that it's not in reduced already
+				try {
+					if( reduced.findGroup(g.getChainId(), g.getResidueNumber().toString(), toModel) != null)
+						continue;
+				} catch (StructureException e) {
+					// not found
+				}
+				
+				// Find or create reducedChain
+				if(reducedChain == null) {
+					try {
+						reducedChain = reduced.findChain(chainId, toModel);
+					} catch( StructureException e) {
+						//chain not yet in structure
+					}
+				}
+				if(reducedChain == null) {
+					// create chain
+					reducedChain = new ChainImpl();
+					reducedChain.setChainID(chainId);
+					reduced.addChain(reducedChain,toModel);
+					reducedChain.setSeqResGroups(fullChain.getSeqResGroups());
+					reducedChain.setSeqMisMatches(fullChain.getSeqMisMatches());
+				}
+				
+				// Add group
+				logger.info("Adding ligand group {} {} by proximity",g.getPDBName(), g.getResidueNumber().toPDB());
+				reducedChain.addGroup(g);
+			}
+		}
+			
 	}
 
 }

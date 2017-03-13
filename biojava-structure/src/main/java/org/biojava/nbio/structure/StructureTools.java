@@ -27,6 +27,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -34,6 +36,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.contact.AtomContactSet;
 import org.biojava.nbio.structure.contact.Grid;
@@ -148,6 +151,11 @@ public class StructureTools {
 	 * character of the chain (protein/nucleotide)
 	 */
 	public static final double RATIO_RESIDUES_TO_TOTAL = 0.95;
+
+	/**
+	 * Threshold for plausible binding of a ligand to the selected substructure
+	 */
+	public static final double DEFAULT_LIGAND_PROXIMITY_CUTOFF = 5;
 
 	// there is a file format change in PDB 3.0 and nucleotides are being
 	// renamed
@@ -343,7 +351,7 @@ public class StructureTools {
 	}
 
 	/**
-	 * Convert all atoms of the structure (first model) into an Atom array
+	 * Convert all atoms of the structure (all models) into an Atom array
 	 *
 	 * @param s
 	 *            input structure
@@ -359,9 +367,27 @@ public class StructureTools {
 		}
 		return atoms.toArray(new Atom[atoms.size()]);
 	}
+	/**
+	 * Convert all atoms of the structure (specified model) into an Atom array
+	 *
+	 * @param s
+	 *            input structure
+	 * @return all atom array
+	 */
+	public static final Atom[] getAllAtomArray(Structure s, int model) {
+		List<Atom> atoms = new ArrayList<Atom>();
+
+		AtomIterator iter = new AtomIterator(s,model);
+		while (iter.hasNext()) {
+			Atom a = iter.next();
+			atoms.add(a);
+		}
+		return atoms.toArray(new Atom[atoms.size()]);
+
+	}
 
 	/**
-	 * Returns and array of all atoms of the chain (first model), including
+	 * Returns and array of all atoms of the chain, including
 	 * Hydrogens (if present) and all HETATOMs. Waters are not included.
 	 *
 	 * @param c
@@ -438,6 +464,118 @@ public class StructureTools {
 	}
 
 	/**
+	 * Finds all ligand groups from the target which fall within the cutoff distance
+	 * of some atom from the query set.
+	 * 
+	 * @param target Set of groups including the ligands
+	 * @param query Atom selection
+	 * @param cutoff Distance from query atoms to consider, in angstroms
+	 * @return All groups from the target with at least one atom within cutoff of a query atom
+	 * @see StructureTools#DEFAULT_LIGAND_PROXIMITY_CUTOFF
+	 */
+	public static List<Group> getLigandsByProximity(Collection<Group> target, Atom[] query, double cutoff) {
+		// Geometric hashing of the reduced structure
+		Grid grid = new Grid(cutoff);
+		grid.addAtoms(query);
+
+		List<Group> ligands = new ArrayList<>();
+		for(Group g :target ) {
+			// don't worry about waters
+			if(g.isWater()) {
+				continue;
+			}
+
+			ChemComp chemComp = g.getChemComp();
+			if(chemComp != null && chemComp.isStandard() ) {
+				// Polymers aren't ligands
+				continue;
+			}
+
+			// It is a ligand!
+
+			// Check that it's within cutoff of something in reduced
+			List<Atom> groupAtoms = g.getAtoms();
+			if( ! grid.hasAnyContact(groupAtoms)) {
+				continue;
+			}
+
+			ligands.add(g);
+		}
+		return ligands;
+	}
+	
+	/**
+	 * Expand a set of atoms into all groups from the same structure.
+	 * 
+	 * If the structure is set, only the first atom is used (assuming all
+	 * atoms come from the same original structure).
+	 * If the atoms aren't linked to a structure (for instance, for cloned atoms),
+	 * searches all chains of all atoms for groups.
+	 * @param atoms Sample of atoms
+	 * @return All groups from all chains accessible from the input atoms
+	 */
+	public static Set<Group> getAllGroupsFromSubset(Atom[] atoms) {
+		return getAllGroupsFromSubset(atoms,null);
+	}
+	/**
+	 * Expand a set of atoms into all groups from the same structure.
+	 * 
+	 * If the structure is set, only the first atom is used (assuming all
+	 * atoms come from the same original structure).
+	 * If the atoms aren't linked to a structure (for instance, for cloned atoms),
+	 * searches all chains of all atoms for groups.
+	 * @param atoms Sample of atoms
+	 * @param types Type of groups to return (useful for getting only ligands, for instance).
+	 *  Null gets all groups.
+	 * @return All groups from all chains accessible from the input atoms
+	 */
+	public static Set<Group> getAllGroupsFromSubset(Atom[] atoms,GroupType types) {
+		// Get the full structure
+		Structure s = null;
+		if (atoms.length > 0) {
+			Group g = atoms[0].getGroup();
+			if (g != null) {
+				Chain c = g.getChain();
+				if (c != null) {
+					s = c.getStructure();
+				}
+			}
+		}
+		// Collect all groups from the structure
+		Set<Chain> allChains = new HashSet<>();
+		if( s != null ) {
+			allChains.addAll(s.getChains());
+		}
+		// In case the structure wasn't set, need to use ca chains too
+		for(Atom a : atoms) {
+			Group g = a.getGroup();
+			if(g != null) {
+				Chain c = g.getChain();
+				if( c != null ) {
+					allChains.add(c);
+				}
+			}
+		}
+
+		if(allChains.isEmpty() ) {
+			return Collections.emptySet();
+		}
+		
+		// Extract all ligand groups
+		Set<Group> full = new HashSet<>();
+		for(Chain c : allChains) {
+			if(types == null) {
+				full.addAll(c.getAtomGroups());
+			} else {
+				full.addAll(c.getAtomGroups(types));
+			}
+		}
+
+		return full;
+	}
+
+
+	/**
 	 * Returns and array of all non-Hydrogen atoms in the given Structure,
 	 * optionally including HET atoms or not. Waters are not included.
 	 *
@@ -447,9 +585,26 @@ public class StructureTools {
 	 * @return
 	 */
 	public static final Atom[] getAllNonHAtomArray(Structure s, boolean hetAtoms) {
+		AtomIterator iter = new AtomIterator(s);
+		return getAllNonHAtomArray(s, hetAtoms, iter);
+	}
+	/**
+	 * Returns and array of all non-Hydrogen atoms in the given Structure,
+	 * optionally including HET atoms or not. Waters are not included.
+	 *
+	 * @param s
+	 * @param hetAtoms
+	 *            if true HET atoms are included in array, if false they are not
+	 * @param modelNr Model number to draw atoms from
+	 * @return
+	 */
+	public static final Atom[] getAllNonHAtomArray(Structure s, boolean hetAtoms, int modelNr) {
+		AtomIterator iter = new AtomIterator(s,modelNr);
+		return getAllNonHAtomArray(s, hetAtoms, iter);
+	}
+	private static final Atom[] getAllNonHAtomArray(Structure s, boolean hetAtoms, AtomIterator iter) {
 		List<Atom> atoms = new ArrayList<Atom>();
 
-		AtomIterator iter = new AtomIterator(s);
 		while (iter.hasNext()) {
 			Atom a = iter.next();
 			if (a.getElement() == Element.H)

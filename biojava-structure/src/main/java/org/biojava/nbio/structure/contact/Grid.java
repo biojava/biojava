@@ -21,6 +21,9 @@
 package org.biojava.nbio.structure.contact;
 
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.biojava.nbio.structure.Atom;
 
 
@@ -292,6 +295,44 @@ public class Grid {
 		return contacts;
 	}
 
+	/**
+	 * Fast determination of whether any atoms from a given set fall within
+	 * the cutoff of iAtoms. If {@link #addAtoms(Atom[], Atom[])} was called
+	 * with two sets of atoms, contacts to either set are considered.
+	 * @param atoms
+	 * @return
+	 */
+	public boolean hasAnyContact(Atom[] atoms) {
+		return hasAnyContact(Arrays.asList(atoms));
+	}
+	public boolean hasAnyContact(List<Atom> atoms) {
+		for(Atom atom : atoms) {
+
+			// Calculate Grid cell for the atom
+			int xind = xintgrid2xgridindex(getFloor(atom.getX()));
+			int yind = yintgrid2ygridindex(getFloor(atom.getY()));
+			int zind = zintgrid2zgridindex(getFloor(atom.getZ()));
+
+			// Consider 3x3x3 grid of cells around point
+			for (int x=xind-1;x<=xind+1;x++) {
+				if( x<0 || cells.length<=x) continue;
+				for (int y=yind-1;y<=yind+1;y++) {
+					if( y<0 || cells[x].length<=y ) continue;
+					for (int z=zind-1;z<=zind+1;z++) {
+						if( z<0 || cells[x][y].length<=z ) continue;
+						
+						GridCell cell = cells[x][y][z];
+						// Check for contacts in this cell
+						if(cell != null && cell.hasContactToAtom(iAtoms, jAtoms, atom, cutoff)) {
+							return true;
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
+
 	public double getCutoff() {
 		return cutoff;
 	}
@@ -304,5 +345,6 @@ public class Grid {
 	public boolean isNoOverlap() {
 		return noOverlap;
 	}
+	
 
 }

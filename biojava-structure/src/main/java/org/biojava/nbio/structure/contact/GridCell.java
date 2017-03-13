@@ -131,5 +131,38 @@ public class GridCell {
 
 		return contacts;
 	}
+	
+	/**
+	 * Tests whether any atom in this cell has a contact with the specified query atom
+	 * @param iAtoms the first set of atoms to which the iIndices correspond
+	 * @param jAtoms the second set of atoms to which the jIndices correspond, or null
+	 * @param query test point
+	 * @param cutoff
+	 * @return
+	 */
+	public boolean hasContactToAtom(Atom[] iAtoms, Atom[] jAtoms, Atom query, double cutoff) {
+		for( int i : iIndices ) {
+			double distance = Calc.getDistance(iAtoms[i], query);
+			if( distance<cutoff)
+				return true;
+		}
+		if (jAtoms!=null) {
+			for( int i : jIndices ) {
+				double distance = Calc.getDistance(jAtoms[i], query);
+				if( distance<cutoff)
+					return true;
+			}
+		}
+		return false;
+	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return String.format("GridCell [%d iAtoms,%d jAtoms]",iIndices.size(),jIndices==null?"-":jIndices.size());
+	}
+
+	
 }
