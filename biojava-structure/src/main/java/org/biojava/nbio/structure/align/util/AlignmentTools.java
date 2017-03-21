@@ -1425,11 +1425,16 @@ public class AlignmentTools {
 
 		for (int b = 0; b < optAln.length; b++) {
 			for (int p = 0; p < optAln[b][0].length; p++) {
+				Atom ca2clone = ca2[optAln[b][1][p]];
+				Calc.rotate(ca2clone, afpChain.getBlockRotationMatrix()[b]);
+				Calc.shift(ca2clone, afpChain.getBlockShiftVector()[b]);
+				
 				double distance = Calc.getDistance(ca1[optAln[b][0][p]],
-						ca2[optAln[b][1][p]]);
+						ca2clone);
 				if (distance > maxDistance) {
 					maxBlock = b;
 					maxPos = p;
+					maxDistance = distance;
 				}
 			}
 		}
@@ -1479,8 +1484,8 @@ public class AlignmentTools {
 			if (p == pos)
 				continue;
 
-			newPos0[position] = optAln[block][0][position];
-			newPos1[position] = optAln[block][1][position];
+			newPos0[position] = optAln[block][0][p];
+			newPos1[position] = optAln[block][1][p];
 
 			position++;
 		}

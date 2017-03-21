@@ -71,8 +71,7 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
 
 	/**
 	 *  version history:
-	 *  1.1 - Added more parameters to the command line, including maximum RMSD 
-	 *  		and minimum length
+	 *  1.1 - Added a maxRMSD and minLen parameters
 	 *  1.0 - Initial version
 	 */
 	private static final String version = "1.1";
@@ -147,7 +146,7 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
 		afpChain = convert(ca1,ca2,pair, smithWaterman);
 		
 		// Perform an iterative dropping of the columns
-		while (afpChain.getAlnLength() > params.getMinLen()
+		while (afpChain.getOptLength() > params.getMinLen()
 				&& afpChain.getTotalRmsdOpt() > params.getMaxRmsd()) {
 			afpChain = AlignmentTools.deleteHighestDistanceColumn(afpChain, ca1, ca2);
 		}
