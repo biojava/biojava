@@ -161,7 +161,8 @@ public class MultipleAlignmentEnsembleImpl extends AbstractScoresCache
 		this();
 		// Copy all the creation and algorithm information
 		atomArrays = Arrays.asList(ca1, ca2);
-		if (afp.getName1() != null && afp.getName2() != null) {
+		if (afp.getName1() != null && !afp.getName1().isEmpty() &&
+				afp.getName2() != null && !afp.getName2().isEmpty()) {
 			structureIdentifiers = Arrays.<StructureIdentifier> asList(
 					new StructureName(afp.getName1()),
 					new StructureName(afp.getName2()));

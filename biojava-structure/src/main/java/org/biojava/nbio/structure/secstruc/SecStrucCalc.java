@@ -101,7 +101,7 @@ public class SecStrucCalc {
 	private Atom[] atoms;
 	// Added by Anthony - to speed up intergroup calculations
 	private AtomContactSet contactSet;
-	private Map<String, Integer> indResMap;
+	private Map<ResidueNumber, Integer> indResMap;
 	public SecStrucCalc(){
 		ladders = new ArrayList<Ladder>();
 		bridges = new ArrayList<BetaBridge>();
@@ -161,10 +161,10 @@ public class SecStrucCalc {
 		// Initialise an array of atoms
 		atoms = new Atom[groups.length];
 		// Remake this local var
-		indResMap = new HashMap<String, Integer>();
+		indResMap = new HashMap<>();
 		for (int i=0 ; i < groups.length ; i++){
 			SecStrucGroup one = groups[i];
-			indResMap.put(one.getResidueNumber().getChainName()+one.getResidueNumber().getSeqNum(), i);
+			indResMap.put(one.getResidueNumber(), i);
 			atoms[i] = one.getCA();
 		}
 		Grid grid = new Grid(CA_MIN_DIST);
@@ -433,8 +433,8 @@ public class SecStrucCalc {
 			Group g1 = ac.getPair().getFirst().getGroup();
 			Group g2 = ac.getPair().getSecond().getGroup();
 			// Get the indices
-			int i = indResMap.get(g1.getResidueNumber().getChainName()+g1.getResidueNumber().getSeqNum());
-			int j = indResMap.get(g2.getResidueNumber().getChainName()+g2.getResidueNumber().getSeqNum());
+			int i = indResMap.get(g1.getResidueNumber());
+			int j = indResMap.get(g2.getResidueNumber());
 			// If i>j switch them over
 			if(i>j){
 				// Switch them over
@@ -785,8 +785,8 @@ public class SecStrucCalc {
 			Group g1 = pair.getFirst().getGroup();
 			Group g2 = pair.getSecond().getGroup();
 			// Now I need to get the index of the Group in the list groups
-			int i = indResMap.get(g1.getResidueNumber().getChainName()+g1.getResidueNumber().getSeqNum());
-			int j = indResMap.get(g2.getResidueNumber().getChainName()+g2.getResidueNumber().getSeqNum());
+			int i = indResMap.get(g1.getResidueNumber());
+			int j = indResMap.get(g2.getResidueNumber());
 			// Now check this
 			checkAddHBond(i,j);
 			//"backwards" hbonds are not allowed
@@ -1054,7 +1054,7 @@ public class SecStrucCalc {
 	}
 
 	private void buildHelices(){
-
+		
 		//Alpha-helix (i+4), 3-10-helix (i+3), Pi-helix (i+5)
 		checkSetHelix(4, SecStrucType.helix4);
 		checkSetHelix(3, SecStrucType.helix3);
