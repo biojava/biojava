@@ -11,8 +11,8 @@ import java.util.stream.Stream;
  */
 public class AminoAcidProperties {
 
-	private static final Set<String> negChargedAAs = Stream.of("D", "E", "K", "R", "H").collect(Collectors.toSet());
-	private static final Set<String> posChargedAAs = Stream.of("D", "E", "K", "R", "H").collect(Collectors.toSet());
+	private static final Set<String> negChargedAAs = Stream.of("D", "E").collect(Collectors.toSet());
+	private static final Set<String> posChargedAAs = Stream.of("K", "R", "H").collect(Collectors.toSet());
 	private static final Set<String> polarAAs = Stream.of("D", "E", "K", "R", "H", "N", "Q", "S", "T", "Y")
 			.collect(Collectors.toSet());
 	
@@ -25,10 +25,10 @@ public class AminoAcidProperties {
 	 * @return true if amino acid is charged
 	 */
 	public static final boolean isCharged(char aa) {
-		if (negChargedAAs.contains(aa)) {
+		if (negChargedAAs.contains(String.valueOf(aa))) {
 			return true;
 		}
-		else if (posChargedAAs.contains(aa)) {
+		else if (posChargedAAs.contains(String.valueOf(aa))) {
 			return true;
 		}
 		return false;
@@ -43,10 +43,10 @@ public class AminoAcidProperties {
 	 * @return the charge of amino acid (1 if positively charged, -1 if negatively charged, 0 if not charged)
 	 */
 	public static final int getChargeOfAminoAcid(char aa) {
-		if (negChargedAAs.contains(aa)) {
+		if (negChargedAAs.contains(String.valueOf(aa))) {
 			return -1;
 		}
-		else if (posChargedAAs.contains(aa)) {
+		else if (posChargedAAs.contains(String.valueOf(aa))) {
 			return 1;
 		}
 		return 0;
@@ -79,7 +79,7 @@ public class AminoAcidProperties {
 	 * @return true if amino acid is polar
 	 */
 	public static final boolean isPolar(char aa) {
-		if (polarAAs.contains(aa)) {
+		if (polarAAs.contains(String.valueOf(aa))) {
 			return true;
 		}
 		return false;
@@ -93,7 +93,7 @@ public class AminoAcidProperties {
 	 * @return the polarity of amino acid (1 if polar, 0 if not polar)
 	 */
 	public static final int getPolarityOfAminoAcid(char aa) {
-		if (polarAAs.contains(aa)) {
+		if (polarAAs.contains(String.valueOf(aa))) {
 			return 1;
 		}
 		return 0;
@@ -114,5 +114,11 @@ public class AminoAcidProperties {
 			polarity[i] = getPolarityOfAminoAcid(aa);
 		}
 		return polarity;
+	}
+	
+	public static void main(String[] args) {
+		System.out.println(getChargeOfAminoAcid('D'));
+		System.out.println(getChargeOfAminoAcid('K'));
+		System.out.println(getChargeOfAminoAcid('A'));
 	}
 }
