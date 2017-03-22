@@ -564,7 +564,7 @@ public class PeptideProperties {
 	 * 		a protein sequence consisting of non-ambiguous characters only
 	 * @return the array of charges of amino acids in the protein (1 if amino acid is positively charged, -1 if negatively charged, 0 if not charged)
 	 */
-	public static final int[] getChargesOfAminoAcidsInProtein(String sequence) {
+	public static final int[] getChargesOfAminoAcids(String sequence) {
 		int[] charges = new int[sequence.length()];
 		for ( int i=0; i < sequence.length(); i++ ) {
 			char aa = sequence.toCharArray()[i];
@@ -580,7 +580,7 @@ public class PeptideProperties {
 	 * 		a protein sequence consisting of non-ambiguous characters only 
 	 * @return the array of polarity of amino acids in the protein (1 if amino acid is polar, 0 if not)
 	 */
-	public static final int[] getPolarityOfAminoAcidsInProtein(String sequence) {	
+	public static final int[] getPolarityOfAminoAcids(String sequence) {	
 		int[] polarity = new int[sequence.length()];
 		for ( int i=0; i < sequence.length(); i++ ) {
 			char aa = sequence.toCharArray()[i];
