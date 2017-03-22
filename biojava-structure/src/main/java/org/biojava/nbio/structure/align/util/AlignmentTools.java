@@ -1398,4 +1398,101 @@ public class AlignmentTools {
 		}
 		
 	}
+	
+	/**
+	 * Find the alignment position with the highest atomic distance between the
+	 * equivalent atomic positions of the arrays and remove it from the
+	 * alignment.
+	 * 
+	 * @param afpChain
+	 *            original alignment, will be modified
+	 * @param ca1
+	 *            atom array, will not be modified
+	 * @param ca2
+	 *            atom array, will not be modified
+	 * @return the original alignment, with the alignment position at the
+	 *         highest distance removed
+	 * @throws StructureException
+	 */
+	public static AFPChain deleteHighestDistanceColumn(AFPChain afpChain,
+			Atom[] ca1, Atom[] ca2) throws StructureException {
+
+		int[][][] optAln = afpChain.getOptAln();
+
+		int maxBlock = 0;
+		int maxPos = 0;
+		double maxDistance = Double.MIN_VALUE;
+
+		for (int b = 0; b < optAln.length; b++) {
+			for (int p = 0; p < optAln[b][0].length; p++) {
+				Atom ca2clone = ca2[optAln[b][1][p]];
+				Calc.rotate(ca2clone, afpChain.getBlockRotationMatrix()[b]);
+				Calc.shift(ca2clone, afpChain.getBlockShiftVector()[b]);
+				
+				double distance = Calc.getDistance(ca1[optAln[b][0][p]],
+						ca2clone);
+				if (distance > maxDistance) {
+					maxBlock = b;
+					maxPos = p;
+					maxDistance = distance;
+				}
+			}
+		}
+
+		return deleteColumn(afpChain, ca1, ca2, maxBlock, maxPos);
+	}
+
+	/**
+	 * Delete an alignment position from the original alignment object.
+	 * 
+	 * @param afpChain
+	 *            original alignment, will be modified
+	 * @param ca1
+	 *            atom array, will not be modified
+	 * @param ca2
+	 *            atom array, will not be modified
+	 * @param block
+	 *            block of the alignment position
+	 * @param pos
+	 *            position index in the block
+	 * @return the original alignment, with the alignment position removed
+	 * @throws StructureException
+	 */
+	public static AFPChain deleteColumn(AFPChain afpChain, Atom[] ca1,
+			Atom[] ca2, int block, int pos) throws StructureException {
+
+		// Check validity of the inputs
+		if (afpChain.getBlockNum() <= block) {
+			throw new IndexOutOfBoundsException(String.format(
+					"Block index requested (%d) is higher than the total number of AFPChain blocks (%d).",
+					block, afpChain.getBlockNum()));
+		}
+		if (afpChain.getOptAln()[block][0].length <= pos) {
+			throw new IndexOutOfBoundsException(String.format(
+					"Position index requested (%d) is higher than the total number of aligned position in the AFPChain block (%d).",
+					block, afpChain.getBlockSize()[block]));
+		}
+		
+		int[][][] optAln = afpChain.getOptAln();
+
+		int[] newPos0 = new int[optAln[block][0].length - 1];
+		int[] newPos1 = new int[optAln[block][1].length - 1];
+
+		int position = 0;
+		for (int p = 0; p < optAln[block][0].length; p++) {
+
+			if (p == pos)
+				continue;
+
+			newPos0[position] = optAln[block][0][p];
+			newPos1[position] = optAln[block][1][p];
+
+			position++;
+		}
+
+		optAln[block][0] = newPos0;
+		optAln[block][1] = newPos1;
+
+		return AlignmentTools.replaceOptAln(optAln, afpChain, ca1, ca2);
+	}
 }
