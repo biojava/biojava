@@ -20,8 +20,7 @@ public class AminoAcidProperties {
 	 * At pH=7, two are negative charged: aspartic acid (Asp, D) and glutamic acid (Glu, E) (acidic side chains), 
 	 * and three are positive charged: lysine (Lys, K), arginine (Arg, R) and histidine (His, H) (basic side chains).
 	 * 
-	 * @param aa The one-letter amino acid code
-	 * 
+	 * @param aa The one-letter amino acid code 
 	 * @return true if amino acid is charged
 	 */
 	public static final boolean isCharged(char aa) {
@@ -38,8 +37,7 @@ public class AminoAcidProperties {
 	 * Returns the charge of amino acid. At pH=7, two are negative charged: aspartic acid (Asp, D) and glutamic acid (Glu, E) (acidic side chains), 
 	 * and three are positive charged: lysine (Lys, K), arginine (Arg, R) and histidine (His, H) (basic side chains).
 	 * 
-	 * @param aa The one-letter amino acid code
-	 * 
+	 * @param aa The one-letter amino acid code 
 	 * @return the charge of amino acid (1 if positively charged, -1 if negatively charged, 0 if not charged)
 	 */
 	public static final int getChargeOfAminoAcid(char aa) {
@@ -51,31 +49,11 @@ public class AminoAcidProperties {
 		}
 		return 0;
 	}
-
-	/**
-	 * Returns the array of charges of each amino acid in a protein. At pH=7, two are negative charged: aspartic acid (Asp, D) and glutamic acid (Glu, E) (acidic side chains), 
-	 * and three are positive charged: lysine (Lys, K), arginine (Arg, R) and histidine (His, H) (basic side chains).
-	 * 
-	 * @param aa The one-letter amino acid code
-	 * 
-	 * @return the array of charges of amino acids in the protein (1 if amino acid is positively charged, 
-	 * -1 if negatively charged, 0 if not charged)
-	 */
-	public static final int[] getChargesOfAminoAcidsInProtein(String protein) {
-		
-		int[] charges = new int[protein.length()];
-		for ( int i=0; i < protein.length(); i++ ) {
-			char aa = protein.toCharArray()[i];
-			charges[i] = getChargeOfAminoAcid(aa);
-		}
-		return charges;
-	}
 	
 	/**
-	 * There are 10 polar amino acids: D, E, H, K, R, N, Q, S, T, Y, that are polar.
+	 * There are 10 amino acids: D, E, H, K, R, N, Q, S, T, Y, that are polar.
 	 * 
-	 * @param aa The one-letter amino acid code
-	 * 
+	 * @param aa The one-letter amino acid code 
 	 * @return true if amino acid is polar
 	 */
 	public static final boolean isPolar(char aa) {
@@ -86,10 +64,9 @@ public class AminoAcidProperties {
 	}
 	
 	/**
-	 * There are 10 polar amino acids: D, E, H, K, R, N, Q, S, T, Y, that are polar.
+	 * There are 10 amino acids: D, E, H, K, R, N, Q, S, T, Y, that are polar.
 	 * 
 	 * @param aa The one-letter amino acid code
-	 * 
 	 * @return the polarity of amino acid (1 if polar, 0 if not polar)
 	 */
 	public static final int getPolarityOfAminoAcid(char aa) {
@@ -97,28 +74,5 @@ public class AminoAcidProperties {
 			return 1;
 		}
 		return 0;
-	}
-	
-	/**
-	 * Returns the array of polarity of each amino acid in a protein.
-	 * 
-	 * @param aa The one-letter amino acid code
-	 * 
-	 * @return the array of polarity of amino acids in the protein (1 if amino acid is polar, 0 if not)
-	 */
-	public static final int[] getPolarityOfAminoAcidsInProtein(String protein) {
-		
-		int[] polarity = new int[protein.length()];
-		for ( int i=0; i < protein.length(); i++ ) {
-			char aa = protein.toCharArray()[i];
-			polarity[i] = getPolarityOfAminoAcid(aa);
-		}
-		return polarity;
-	}
-	
-	public static void main(String[] args) {
-		System.out.println(getChargeOfAminoAcid('D'));
-		System.out.println(getChargeOfAminoAcid('K'));
-		System.out.println(getChargeOfAminoAcid('A'));
 	}
 }
