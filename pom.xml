@@ -71,6 +71,10 @@
 			</properties>
 		</developer>
 		<developer>
+			<id>lafita</id>
+			<name>Aleix Lafita</name>
+		</developer>
+		<developer>
 			<name>Amr AL-HOSSARY</name>
 		</developer>
 		<developer>
@@ -79,9 +83,9 @@
 		<developer>
 			<name>Andy Yates</name>
 		</developer>
-                <developer>
-                        <name>Anthony Bradley</name>
-                </developer>
+      	<developer>
+            <name>Anthony Bradley</name>
+      	</developer>
 		<developer>
 			<name>Carmelo Foti</name>
 		</developer>
