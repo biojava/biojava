@@ -1145,7 +1145,7 @@ public class ChromosomeMappingTools {
 	public String getTranscriptSequence(List<Integer> exonStarts, List<Integer> exonEnds, int codingStart, int codingEnd, Character orientation) throws IOException, CompoundNotFoundException {
 
 		List<Range<Integer>> cdsRegion;
-		if (orientation.equals("-")) {
+		if (orientation.equals('-')) {
 			cdsRegion = getCDSRegionsReverse(exonStarts, exonEnds, codingStart, codingEnd);
 		}
 		else {
@@ -1157,12 +1157,12 @@ public class ChromosomeMappingTools {
 			int length = range.upperEndpoint() - range.lowerEndpoint();
 			transcription += parser.loadFragment(range.lowerEndpoint(), length);
 		}
-		if (orientation.equals("-")) {
+		if (orientation.equals('-')) {
 			transcription = new StringBuilder(transcription).reverse().toString();
 			DNASequence dna = new DNASequence(transcription);
 			SequenceView<NucleotideCompound> compliment = dna.getComplement();
 			transcription = compliment.getSequenceAsString();
 		}
-		return transcription;
+		return transcription.toUpperCase();
 	}
 }
