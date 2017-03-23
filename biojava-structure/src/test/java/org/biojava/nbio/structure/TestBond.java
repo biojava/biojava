@@ -299,7 +299,7 @@ public class TestBond {
 	@Test
 	public void testDeuterated() throws IOException, StructureException {
 		// The terminal Hydrogen D3 - is missing (from the CCD)
-		assertEquals(testMissingBonds("1GKT"),1);
+		assertEquals(testMissingBonds("1GKT"),2);
 		assertEquals(testMissingBonds("1IO5"),2);
 		// All H/D2,H/D3 errors
 		assertEquals(testMissingBonds("5E5J"),13);
