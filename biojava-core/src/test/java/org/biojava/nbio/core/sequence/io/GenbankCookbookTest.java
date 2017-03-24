@@ -64,6 +64,7 @@ public class GenbankCookbookTest {
 	/**
 	 * Test of process method, of class GenbankReader.
 	 */
+	@Ignore
 	@Test
 	public void testProcess() throws Throwable {
 		/*

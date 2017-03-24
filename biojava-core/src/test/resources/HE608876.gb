@@ -1,0 +1,92 @@
+LOCUS       HE608876                2257 bp    mRNA    linear   INV 07-NOV-2011
+DEFINITION  Cancer pagurus mRNA for putative DEAD-box ATP-dependent RNA
+            helicase (ddx gene).
+ACCESSION   HE608876
+VERSION     HE608876.1  GI:356483014
+KEYWORDS    .
+SOURCE      Cancer pagurus (edible crab)
+  ORGANISM  Cancer pagurus
+            Eukaryota; Metazoa; Ecdysozoa; Arthropoda; Crustacea; Malacostraca;
+            Eumalacostraca; Eucarida; Decapoda; Pleocyemata; Brachyura;
+            Eubrachyura; Cancroidea; Cancridae; Cancer.
+REFERENCE   1
+  AUTHORS   Hoppes,J.L., Hauton,C. and Hawkins,L.E.
+  TITLE     Immune gene expression of Cancer pagurus haemocytes exposed to the
+            dinoflagellate parasite Hematodinium sp. in vitro
+  JOURNAL   Unpublished
+REFERENCE   2  (bases 1 to 2257)
+  AUTHORS   Hoppes,J.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (25-OCT-2011) to the INSDC. University of Southampton,
+            School of Ocean and Earth Sciences, European Way, SO14 3ZH, UNITED
+            KINGDOM
+REFERENCE   3  (bases 1 to 2257)
+  AUTHORS   Hoppes,J. and Kleen,M.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (25-OCT-2011) to the INSDC. University of Southampton,
+            School of Ocean and Earth Sciences, European Way, SO14 3ZH, UNITED
+            KINGDOM
+FEATURES             Location/Qualifiers
+     source          1..2257
+                     /organism="Cancer pagurus"
+                     /mol_type="mRNA"
+                     /db_xref="taxon:6755"
+                     /tissue_type="haemocytes"
+     gene            1..2257
+                     /gene="ddx"
+     CDS             176..1819
+                     /gene="ddx"
+                     /codon_start=1
+                     /product="putative DEAD-box ATP-dependent RNA helicase"
+                     /protein_id="CCE46010.1"
+                     /db_xref="GI:356483015"
+                     /translation="MSYRSRRSRSRSRSRSRDRDRRRDRDDWGGSRGGWGSGGGGRPS
+                     LKGRQPGERLRKPRWDLTKLTPFEKNFYQPTPTVIARSPYEVEKYRTDKEITLRGRNI
+                     PNPIQYFGDYNFPDYVMAEIRRQGYEHPTPIQGQGWPISLQGRDFVGIAQTGSGKTLG
+                     YILPAIVHINHQPYLERGDGPIALILAPTRELAQQILTVAQDYGTSSKIRPTCVFGGA
+                     PKGPQIRDLERGVEICIATPGRLIDFLEAGKTNLRRTTYLVLDEADRMLDMGFEPQIR
+                     KIVDQIRPDRQTLMWSATWPKEVRNLAEDFLKDYIQLNVGSLSLAANHNILQIVDVYQ
+                     EIEKDTKLRQLLNEMAQEKANKTIIFIETKRKVEDVTRGLRSTGWPAMCIHGDKSQQE
+                     RDWVLSEFRSGRAPILVATDVAARGLDVDDVKFVINYDYPSCSEDYVHRIGRTGRSDK
+                     TGTAYTFFTADNCKQAKDLIEVLKEANQVVNPRLYEIMDMARGGGGKGRNRWRGRDDD
+                     RRGGFGRDRDRDRGRMGGSSSGSGGGSRNGYSNGNGYAY"
+ORIGIN
+        1 aagcagtggt atcaacgcag agtacgcggg ggacgacggt gagactgaac ggtggcagaa
+       61 gctcccgact cacctctatt tcaacctgaa ttacacccta aattcataaa ggaaaagcat
+      121 caactattta tttattcaaa caacgtgaac atatagtgta aaacaaacca acacgatgtc
+      181 gtacagaagt cgcaggtctc ggtcccgttc tcgttctcgt tcccgtgacc gcgaccgtcg
+      241 gcgtgatagg gatgattggg gcggctctcg aggaggctgg ggttctggtg gaggtggtcg
+      301 gccatcactt aaagggagac agcctggtga gcgcctgcgt aaaccgagat gggacttgac
+      361 caagctcacc ccctttgaga agaacttcta ccagcccact ccaactgtca ttgctcgttc
+      421 accttatgag gtggaaaagt acagaactga caaagagatc actctacgag gaagaaatat
+      481 ccccaacccg attcagtatt ttggtgacta caactttcct gattacgtca tggctgagat
+      541 ccgaagacag ggatacgagc accccactcc aattcagggt cagggatggc ccatctctct
+      601 ccaaggaagg gacttcgttg gcattgcaca gactggctca ggaaaaacat tgggttacat
+      661 tctgcctgcc attgtacaca ttaaccatca gccatatcta gagcgtggag atggccccat
+      721 tgccctgata ctagctccta ctagggaatt agcacagcag atcttgacag ttgcacaaga
+      781 ctatggtacc tcatccaaga tccgacccac ctgcgtgttt ggaggtgcac caaagggacc
+      841 acaaattcgt gacctcgaga gaggagttga gatctgcatt gctactccag gtcgacttat
+      901 tgacttcctg gaagctggca agacaaacct tcggcgtact acgtacctgg ttttggatga
+      961 agctgaccgt atgcttgata tgggttttga accacaaatt aggaaaattg tagatcagat
+     1021 taggcctgac agacaaacac ttatgtggtc tgcaacatgg cccaaggagg tgaggaatct
+     1081 cgctgaagac tttctcaagg actacatcca actgaatgtt ggctcccttt cccttgctgc
+     1141 aaaccacaac attctccaga ttgtggatgt ataccaggaa atagaaaagg atacaaagct
+     1201 gcgtcagttg ctcaatgaga tggcgcagga gaaggctaac aagactataa tctttatcga
+     1261 aacgaagagg aaggtggagg atgttactcg ggggttgagg agtactggat ggcctgctat
+     1321 gtgtatccat ggtgataaat cacaacaaga gcgagactgg gtcttaagtg aattccgatc
+     1381 agggcgggcc ccaatcctag tggccactga tgtagctgct cgcggcttag atgtggatga
+     1441 tgtgaagttt gtcatcaact acgactaccc atcatgctct gaggactatg ttcatcggat
+     1501 tggtcgaact ggccgatcag acaagactgg aacagcctac acatttttca ctgctgacaa
+     1561 ctgcaagcaa gccaaagatc tgattgaagt gttgaaagaa gcaaatcaag ttgttaatcc
+     1621 acgactctac gagataatgg atatggctcg tggtggtgga ggcaaaggcc gtaatcgctg
+     1681 gaggggccgt gatgacgaca ggcggggagg atttggacgg gaccgtgacc gtgatcgtgg
+     1741 ccgcatgggt ggtagtagta gtggtagtgg tggtggttca aggaacggct acagcaatgg
+     1801 aaatggatat gcttactgaa gcccgggccg gaggtgaccg cttaccgctg caccatcccc
+     1861 tttctaggag attagaggtt gcgcacgtta ccactaagta cttgacaggc ctggttgtca
+     1921 agggtaggga aaagttcggc tcaccccatc ataagtgtgc ggatacctgc gccattcctc
+     1981 cttgtctacg ggactgctgt ctgcttaagc caacgacgtc attgttagta aacctcactg
+     2041 tccaaaagcc agtcaagtca gcatgtcttt tttttcttta ttttttttgc ccccaaacca
+     2101 aatattccat tgtctgtagg aaggaattct ttctagtttt tttgttacac tgtatagaca
+     2161 ttatttttca atcattttga aggattttgt gtatggacca ataaactttg taaccctctg
+     2221 aataaaataa cattgagtaa aaaaaaaaaa aaaaaaa
+//

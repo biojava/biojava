@@ -36,6 +36,7 @@ import org.biojava.nbio.core.sequence.compound.DNACompoundSet;
 import org.biojava.nbio.core.sequence.compound.NucleotideCompound;
 import org.biojava.nbio.core.sequence.features.AbstractFeature;
 import org.biojava.nbio.core.sequence.features.DBReferenceInfo;
+import org.biojava.nbio.core.sequence.features.PublicationReference;
 import org.biojava.nbio.core.sequence.io.template.SequenceCreatorInterface;
 import org.biojava.nbio.core.sequence.io.template.SequenceHeaderParserInterface;
 import org.biojava.nbio.core.sequence.template.AbstractSequence;
@@ -45,6 +46,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  * Use GenbankReaderHelper as an example of how to use this class where GenbankReaderHelper should be the
@@ -148,6 +150,12 @@ public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
 			S sequence = (S) sequenceCreator.getSequence(seqString, 0);
 			genbankParser.getSequenceHeaderParser().parseHeader(genbankParser.getHeader(), sequence);
 
+			sequence.setPublicationReference(genbankParser.getPublicationReferences());
+			sequence.setKeywords(genbankParser.getKeyWords());
+			sequence.setSource(genbankParser.getSource());
+			sequence.setOrganism(genbankParser.getOrganism());
+			sequence.setComment(genbankParser.getComment());
+
 			// add features to new sequence
 			for (String k: genbankParser.getFeatures().keySet()){
 				for (AbstractFeature f: genbankParser.getFeatures(k)){
@@ -162,6 +170,8 @@ public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
 				DBReferenceInfo q = dbQualifier.get(0);
 				sequence.setTaxonomy(new TaxonomyID(q.getDatabase()+":"+q.getId(), DataSource.GENBANK));
 			}
+
+
 
 			sequences.put(sequence.getAccession().getID(), sequence);
 		}
