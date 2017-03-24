@@ -41,6 +41,7 @@ import java.util.List;
  */
 public class SimpleLocation extends AbstractLocation {
 
+	private static final long serialVersionUID = -4280810134598713477L;
 	private static final List<Location> EMPTY_LOCS = Collections.emptyList();
 
 	public SimpleLocation(int start, int end) {

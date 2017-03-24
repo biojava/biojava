@@ -20,14 +20,28 @@
  */
 package org.biojava.nbio.core.util;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.core.sequence.DNASequence;
 import org.biojava.nbio.core.sequence.ProteinSequence;
+import org.biojava.nbio.core.sequence.RNASequence;
+import org.biojava.nbio.core.sequence.compound.AmbiguityDNACompoundSet;
+import org.biojava.nbio.core.sequence.compound.AmbiguityDNARNAHybridCompoundSet;
+import org.biojava.nbio.core.sequence.compound.AmbiguityRNACompoundSet;
+import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
+import org.biojava.nbio.core.sequence.compound.DNACompoundSet;
+import org.biojava.nbio.core.sequence.compound.RNACompoundSet;
+import org.biojava.nbio.core.sequence.template.CompoundSet;
 import org.biojava.nbio.core.sequence.template.Sequence;
+import org.slf4j.LoggerFactory;
 
 public class SequenceTools {
+	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(SequenceTools.class);
 
 	protected static final String NUCLEOTIDE_LETTERS = "GCTAUXN";
+
 
 	/**
 	 * Cyclically permute the characters in {@code string} <em>forward</em> by {@code n} elements.
@@ -71,6 +85,12 @@ public class SequenceTools {
 		}
 	}
 
+	/**
+	 * Calculate the percentage of GCTAUXN in the sequence.
+	 * Note that this omits some of the more esoteric ambiguity codes
+	 * @param sequence
+	 * @return
+	 */
 	public static int percentNucleotideSequence(String sequence)
 	{
 			if (sequence == null || sequence.length() == 0) return 0;
@@ -80,7 +100,7 @@ public class SequenceTools {
 
 			for (int i = 0; i < l; i++)
 			{
-					if (NUCLEOTIDE_LETTERS.indexOf(sequence.charAt(i)) < 0)
+					if (NUCLEOTIDE_LETTERS.indexOf(sequence.charAt(i)) < 0 )
 					{
 							continue;
 					}
@@ -89,30 +109,55 @@ public class SequenceTools {
 			return (100 * n) / l;
 	}
 
+	/**
+	 * Check if a sequence consists entirely of nucleotides (including all ambiguous codes)
+	 * @param sequence
+	 * @return
+	 */
 	public static boolean isNucleotideSequence(String sequence)
 	{
-			if (sequence == null || sequence.length() == 0) return false;
-
-			int l = sequence.length();
-			for (int i = 0; i < l; i++)
-			{
-					if (NUCLEOTIDE_LETTERS.indexOf(sequence.charAt(i)) < 0)
-					{
-							return false;
-					}
-			}
-			return true;
+			return isCompatibleSequence(sequence, AmbiguityDNARNAHybridCompoundSet.getDNARNAHybridCompoundSet());
 	}
+	/**
+	 * Check if a sequence constists entirely of letters compatible with the specified compound set
+	 * @param sequence
+	 * @param set
+	 * @return
+	 */
+	public static boolean isCompatibleSequence(String sequence, CompoundSet<?> set) {
+		if (sequence == null || sequence.length() == 0) return false;
 
-	public Sequence<?> getSequenceFromString(String sequence) throws CompoundNotFoundException {
+		Set<String> validLetters = set
+				.getAllCompounds().stream()
+				.map((nuc) -> nuc.getShortName())
+				.collect(Collectors.toSet());
+		return sequence.chars().allMatch((chr) -> validLetters.contains(chr) );
+	}
+	/**
+	 * General method to create a sequence (of unknown type) from a string. Gaps are ignored.
+	 * @param gappedSequenceString
+	 * @return
+	 */
+	public static Sequence<?> getSequenceFromString(String gappedSequenceString){
+		if (gappedSequenceString == null) return null;
 
+		String sequenceString = gappedSequenceString.replace("-", "");
 
-		if( isNucleotideSequence(sequence)) {
-			return  new DNASequence(sequence);
-		} else {
-			return new ProteinSequence(sequence);
+		try {
+			if( isCompatibleSequence(sequenceString, DNACompoundSet.getDNACompoundSet()))
+				return new DNASequence(sequenceString, DNACompoundSet.getDNACompoundSet());
+			else if( isCompatibleSequence(sequenceString, RNACompoundSet.getRNACompoundSet()))
+				return new RNASequence(sequenceString, RNACompoundSet.getRNACompoundSet());
+			if( isCompatibleSequence(sequenceString, AmbiguityDNACompoundSet.getDNACompoundSet()))
+				return new DNASequence(sequenceString, AmbiguityDNACompoundSet.getDNACompoundSet());
+			else if( isCompatibleSequence(sequenceString, AmbiguityRNACompoundSet.getRNACompoundSet()))
+				return new RNASequence(sequenceString, AmbiguityRNACompoundSet.getRNACompoundSet());
+			else
+				return new ProteinSequence(sequenceString, AminoAcidCompoundSet.getAminoAcidCompoundSet());
+		} catch( CompoundNotFoundException e) {
+			// Should never happen, since ProteinSequence accepts all 26 letters
+			logger.error("Unrecognized compound");
+			return null;
 		}
-
 	}
-
 }

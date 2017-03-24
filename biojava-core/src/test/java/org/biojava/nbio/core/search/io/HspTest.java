@@ -20,53 +20,41 @@
  */
 package org.biojava.nbio.core.search.io;
 
-import org.biojava.nbio.core.alignment.template.SequencePair;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
+import java.util.function.Function;
+
+import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.core.search.io.blast.BlastHspBuilder;
 import org.biojava.nbio.core.sequence.DNASequence;
+import org.biojava.nbio.core.sequence.compound.AmbiguityDNACompoundSet;
 import org.biojava.nbio.core.sequence.compound.NucleotideCompound;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  * @author Paolo Pavan
  */
 
 public class HspTest {
+	//private static final Logger logger = LoggerFactory.getLogger(HspTest.class);
 
-	Hsp hspImpl = new BlastHspBuilder()
-				.setHspNum(1)
-				.setHspBitScore(377.211)
-				.setHspEvalue(8.04143e-093)
-				.setHspQueryFrom(1)
-				.setHspQueryTo(224)
-				.setHspHitFrom(1035)
-				.setHspHitTo(811)
-				.setHspQueryFrame(-1)
-				.setHspIdentity(213)
-				.setHspPositive(213)
-				.setHspGaps(5)
-				.setHspAlignLen(227)
-				.setHspQseq("CTGACGACAGCCATGCACCACCTGTCTCGACTTTCCCCCGAAGGGCACCTAATGTATCTCTACCTCGTTAGTCGGATGTCAAGACCTGGTAAGGTTTTTTCGCGTATCTTCGAATTAAACCACATACTCCACTGCTTGTGCGG-CCCCCGTCAATTCCTTTGAGTTTCAACCTTGCGGCCGTACTCCC-AGGTGGA-TACTTATTGTGTTAACTCCGGCACGGAAGG")
-				.setHspHseq("CTGACGACAACCATGCACCACCTGTCTCAACTTTCCCC-GAAGGGCACCTAATGTATCTCTACTTCGTTAGTTGGATGTCAAGACCTGGTAAGGTT-CTTCGCGTTGCTTCGAATTAAACCACATACTCCACTGCTTGTGCGGGCCCCCGTCAATTCCTTTGAGTTTCAACCTTGCGGTCGTACTCCCCAGGTGGATTACTTATTGTGTTAACTCCGGCACAGAAGG")
-				.setHspIdentityString("||||||||| |||||||||||||||||| ||||||||| |||||||||||||||||||||||| |||||||| |||||||||||||||||||||||  |||||||  |||||||||||||||||||||||||||||||||||| |||||||||||||||||||||||||||||||||| ||||||||| ||||||| |||||||||||||||||||||||| |||||")
-				.createBlastHsp();
+	public static Function<String, DNASequence> buildDNASeq = (seq) -> {
+		try {
+			return new DNASequence(seq, AmbiguityDNACompoundSet.getDNACompoundSet());
+		} catch (CompoundNotFoundException ex) {
+			fail(ex.getMessage());
+			return null;
+		}
+	};
 
-	Hsp uncompleteHsp = new BlastHspBuilder()
-				.setPercentageIdentity(100.00/100)
-				.setHspAlignLen(48)
-				.setMismatchCount(0)
-				.setHspGaps(0)
-				.setHspQueryFrom(1)
-				.setHspQueryTo(48)
-				.setHspHitFrom(344)
-				.setHspHitTo(391)
-				.setHspEvalue(4e-19)
-				.setHspBitScore(95.6)
-				.createBlastHsp();
+
+	Hsp<DNASequence, NucleotideCompound> hspImpl;
+	Hsp<DNASequence, NucleotideCompound> uncompleteHsp;
 
 	public HspTest() {
 	}
@@ -81,6 +69,42 @@ public class HspTest {
 
 	@Before
 	public void setUp() {
+		try {
+			hspImpl = new BlastHspBuilder()
+			.setHspNum(1)
+			.setHspBitScore(377.211)
+			.setHspEvalue(8.04143e-093)
+			.setHspQueryFrom(1)
+			.setHspQueryTo(224)
+			.setHspHitFrom(1035)
+			.setHspHitTo(811)
+			.setHspQueryFrame(-1)
+			.setHspIdentity(213)
+			.setHspPositive(213)
+			.setHspGaps(5)
+			.setHspAlignLen(227)
+			.setHspQseq("CTGACGACAGCCATGCACCACCTGTCTCGACTTTCCCCCGAAGGGCACCTAATGTATCTCTACCTCGTTAGTCGGATGTCAAGACCTGGTAAGGTTTTTTCGCGTATCTTCGAATTAAACCACATACTCCACTGCTTGTGCGG-CCCCCGTCAATTCCTTTGAGTTTCAACCTTGCGGCCGTACTCCC-AGGTGGA-TACTTATTGTGTTAACTCCGGCACGGAAGG")
+			.setHspHseq("CTGACGACAACCATGCACCACCTGTCTCAACTTTCCCC-GAAGGGCACCTAATGTATCTCTACTTCGTTAGTTGGATGTCAAGACCTGGTAAGGTT-CTTCGCGTTGCTTCGAATTAAACCACATACTCCACTGCTTGTGCGGGCCCCCGTCAATTCCTTTGAGTTTCAACCTTGCGGTCGTACTCCCCAGGTGGATTACTTATTGTGTTAACTCCGGCACAGAAGG")
+			.setHspIdentityString("||||||||| |||||||||||||||||| ||||||||| |||||||||||||||||||||||| |||||||| |||||||||||||||||||||||  |||||||  |||||||||||||||||||||||||||||||||||| |||||||||||||||||||||||||||||||||| ||||||||| ||||||| |||||||||||||||||||||||| |||||")
+			.createBlastHsp( buildDNASeq );
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		uncompleteHsp = new BlastHspBuilder()
+		.setPercentageIdentity(100.00/100)
+		.setHspAlignLen(48)
+		.setMismatchCount(0)
+		.setHspGaps(0)
+		.setHspQueryFrom(1)
+		.setHspQueryTo(48)
+		.setHspHitFrom(344)
+		.setHspHitTo(391)
+		.setHspEvalue(4e-19)
+		.setHspBitScore(95.6)
+		.createBlastHsp( buildDNASeq );
+
 	}
 
 	@After
@@ -89,11 +113,12 @@ public class HspTest {
 
 	/**
 	 * Test of hashCode method, of class Hsp.
+	 * @throws CompoundNotFoundException 
 	 */
 	@Test
 	public void testHashCode() {
 		System.out.println("hashCode");
-		Hsp instance;
+		Hsp<DNASequence, NucleotideCompound> instance;
 		int expResult;
 		int result;
 
@@ -113,7 +138,7 @@ public class HspTest {
 				.setHspQseq("CTGACGACAGCCATGCACCACCTGTCTCGACTTTCCCCCGAAGGGCACCTAATGTATCTCTACCTCGTTAGTCGGATGTCAAGACCTGGTAAGGTTTTTTCGCGTATCTTCGAATTAAACCACATACTCCACTGCTTGTGCGG-CCCCCGTCAATTCCTTTGAGTTTCAACCTTGCGGCCGTACTCCC-AGGTGGA-TACTTATTGTGTTAACTCCGGCACGGAAGG")
 				.setHspHseq("CTGACGACAACCATGCACCACCTGTCTCAACTTTCCCC-GAAGGGCACCTAATGTATCTCTACTTCGTTAGTTGGATGTCAAGACCTGGTAAGGTT-CTTCGCGTTGCTTCGAATTAAACCACATACTCCACTGCTTGTGCGGGCCCCCGTCAATTCCTTTGAGTTTCAACCTTGCGGTCGTACTCCCCAGGTGGATTACTTATTGTGTTAACTCCGGCACAGAAGG")
 				.setHspIdentityString("||||||||| |||||||||||||||||| ||||||||| |||||||||||||||||||||||| |||||||| |||||||||||||||||||||||  |||||||  |||||||||||||||||||||||||||||||||||| |||||||||||||||||||||||||||||||||| ||||||||| ||||||| |||||||||||||||||||||||| |||||")
-				.createBlastHsp();
+				.createBlastHsp( buildDNASeq );
 
 		expResult = hspImpl.hashCode();
 		result = instance.hashCode();
@@ -130,13 +155,13 @@ public class HspTest {
 				.setHspHitTo(391)
 				.setHspEvalue(4e-19)
 				.setHspBitScore(95.6)
-				.createBlastHsp();
+				.createBlastHsp( buildDNASeq );
 
 		expResult = uncompleteHsp.hashCode();
 		result = instance.hashCode();
 		assertEquals(expResult, result);
 
-		Hsp uncompleteHsp2 = new BlastHspBuilder()
+		Hsp<DNASequence, NucleotideCompound> uncompleteHsp2 = new BlastHspBuilder()
 				.setPercentageIdentity(100.00/100)
 				.setHspAlignLen(48)
 				.setMismatchCount(0)
@@ -147,18 +172,19 @@ public class HspTest {
 				.setHspHitTo(391)
 				.setHspEvalue(4e-19)
 				.setHspBitScore(95.6)
-				.createBlastHsp();
+				.createBlastHsp( buildDNASeq );
 
 		assertEquals(uncompleteHsp.hashCode(), uncompleteHsp2.hashCode());
 	}
 
 	/**
 	 * Test of equals method, of class Hsp.
+	 * @throws CompoundNotFoundException 
 	 */
 	@Test
 	public void testEquals() {
 		System.out.println("equals");
-		Object o;
+		Hsp<DNASequence, NucleotideCompound> o;
 		o = new BlastHspBuilder()
 				.setHspNum(1)
 				.setHspBitScore(377.211)
@@ -175,8 +201,8 @@ public class HspTest {
 				.setHspQseq("CTGACGACAGCCATGCACCACCTGTCTCGACTTTCCCCCGAAGGGCACCTAATGTATCTCTACCTCGTTAGTCGGATGTCAAGACCTGGTAAGGTTTTTTCGCGTATCTTCGAATTAAACCACATACTCCACTGCTTGTGCGG-CCCCCGTCAATTCCTTTGAGTTTCAACCTTGCGGCCGTACTCCC-AGGTGGA-TACTTATTGTGTTAACTCCGGCACGGAAGG")
 				.setHspHseq("CTGACGACAACCATGCACCACCTGTCTCAACTTTCCCC-GAAGGGCACCTAATGTATCTCTACTTCGTTAGTTGGATGTCAAGACCTGGTAAGGTT-CTTCGCGTTGCTTCGAATTAAACCACATACTCCACTGCTTGTGCGGGCCCCCGTCAATTCCTTTGAGTTTCAACCTTGCGGTCGTACTCCCCAGGTGGATTACTTATTGTGTTAACTCCGGCACAGAAGG")
 				.setHspIdentityString("||||||||| |||||||||||||||||| ||||||||| |||||||||||||||||||||||| |||||||| |||||||||||||||||||||||  |||||||  |||||||||||||||||||||||||||||||||||| |||||||||||||||||||||||||||||||||| ||||||||| ||||||| |||||||||||||||||||||||| |||||")
-				.createBlastHsp();
-		Hsp instance = hspImpl;
+				.createBlastHsp( buildDNASeq );
+		Hsp<DNASequence, NucleotideCompound> instance = hspImpl;
 
 		assertEquals(o, instance);
 
@@ -193,31 +219,8 @@ public class HspTest {
 				.setHspHitTo(391)
 				.setHspEvalue(4e-19)
 				.setHspBitScore(95.6)
-				.createBlastHsp();
+				.createBlastHsp( buildDNASeq );
 
 		assertEquals(uncompleteHsp, o);
 	}
-
-	/**
-	 * Test of getAlignment method, of class Hsp.
-	 */
-	@Test
-	public void testGetAlignment() {
-		System.out.println("getAlignment");
-
-		SequencePair<DNASequence, NucleotideCompound> aln = hspImpl.getAlignment();
-
-		StringBuilder s = new StringBuilder();
-		s.append(hspImpl.getHspQseq());
-		s.append(String.format("%n"));
-		s.append(hspImpl.getHspHseq());
-		s.append(String.format("%n"));
-
-		String expResult = s.toString();
-
-		String result = aln.toString();
-
-		assertEquals(expResult, result);
-	}
-
 }

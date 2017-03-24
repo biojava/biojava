@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import org.biojava.nbio.core.sequence.template.Compound;
 import org.biojava.nbio.core.sequence.template.Sequence;
 
 /**
@@ -37,7 +38,7 @@ import org.biojava.nbio.core.sequence.template.Sequence;
  * @author Paolo Pavan
  */
 
-public abstract class Hit implements Iterable<Hsp>{
+public abstract class Hit<S extends Sequence<C>,C extends Compound> implements Iterable<Hsp<S,C>>{
 	private final int hitNum;
 	private final String hitId;
 	private final String hitDef;
@@ -46,12 +47,12 @@ public abstract class Hit implements Iterable<Hsp>{
 	 * the length of the hit sequence
 	 */
 	private final int hitLen;
-	private final List<Hsp> hsps;
-	private Sequence hitSequence;
+	private final List<Hsp<S,C>> hsps;
+	private S hitSequence;
 
 
 
-	public Hit(int hitNum, String hitId, String hitDef, String hitAccession, int hitLen, List<Hsp> hsps, Sequence hitSequence) {
+	public Hit(int hitNum, String hitId, String hitDef, String hitAccession, int hitLen, List<Hsp<S,C>> hsps, S hitSequence) {
 		this.hitNum = hitNum;
 		this.hitId = hitId;
 		this.hitDef = hitDef;
@@ -81,14 +82,15 @@ public abstract class Hit implements Iterable<Hsp>{
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		final Hit other = (Hit) obj;
+		final Hit<?,?> other = (Hit<?,?>) obj;
 		if (this.hitLen != other.hitLen) {
 			return false;
 		}
-		if (this.hsps != other.hsps && (this.hsps == null || !this.hsps.equals(other.hsps))) {
-			return false;
+		if( this.hsps == null ) {
+			return other.hsps == null;
+		} else {
+			return this.hsps.equals(other.hsps);
 		}
-		return true;
 	}
 
 	public int getHitNum() {
@@ -117,13 +119,13 @@ public abstract class Hit implements Iterable<Hsp>{
 	 * it was used before the parsing with SearchIO
 	 * @return Sequence object
 	 */
-	public Sequence getHitSequence() {
+	public S getHitSequence() {
 		return hitSequence;
 	}
 
 	@Override
-	public Iterator<Hsp> iterator() {
-		return new Iterator<Hsp>() {
+	public Iterator<Hsp<S,C>> iterator() {
+		return new Iterator<Hsp<S,C>>() {
 			int current = 0;
 			@Override
 			public boolean hasNext() {
@@ -131,7 +133,7 @@ public abstract class Hit implements Iterable<Hsp>{
 			}
 
 			@Override
-			public Hsp next() {
+			public Hsp<S,C> next() {
                 if(!hasNext()){
                     throw new NoSuchElementException();
                 }

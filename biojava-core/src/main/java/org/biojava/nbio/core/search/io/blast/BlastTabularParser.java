@@ -30,12 +30,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
+import java.util.function.Function;
 import java.util.logging.Logger;
+
 import org.biojava.nbio.core.search.io.Hit;
 import org.biojava.nbio.core.search.io.Hsp;
 import org.biojava.nbio.core.search.io.Result;
 import org.biojava.nbio.core.search.io.ResultFactory;
+import org.biojava.nbio.core.sequence.template.Compound;
 import org.biojava.nbio.core.sequence.template.Sequence;
+import org.biojava.nbio.core.util.SequenceTools;
 
 /**
  * Designed by Paolo Pavan.
@@ -46,7 +50,7 @@ import org.biojava.nbio.core.sequence.template.Sequence;
  * @author Paolo Pavan
  */
 
-public class BlastTabularParser implements ResultFactory {
+public class BlastTabularParser<S extends Sequence<C>,C extends Compound> implements ResultFactory<S,C> {
 	private final String blastReference =
 			"Zheng Zhang, Scott Schwartz, Lukas Wagner, and Webb Miller (2000), A greedy algorithm for aligning DNA sequences&quot;, J Comput Biol 2000; 7(1-2):203-14.";
 	/**
@@ -84,6 +88,21 @@ public class BlastTabularParser implements ResultFactory {
 	private String subjectEnd   ;
 	private String evalue       ;
 	private String bitScore     ;
+	private Function<String,S> buildSeq;
+
+	/**
+	 * We need a no-argument constructor for use as a service. However this is dangerously non-typesafe.
+	 * Worse, it has to be public for the reflection to work.
+	 * @deprected Not typesafe. Do not use except by reflection.
+	 */
+	@SuppressWarnings("unchecked")
+	@Deprecated
+	public BlastTabularParser() {
+		this( (seq) -> (S)SequenceTools.getSequenceFromString(seq) );
+	}
+	public BlastTabularParser(Function<String,S> buildSeq) {
+		this.buildSeq = buildSeq;
+	}
 
 
 	@Override
@@ -100,8 +119,8 @@ public class BlastTabularParser implements ResultFactory {
 	}
 
 	@Override
-	public List<Result> createObjects(double maxEScore) throws IOException, ParseException {
-		List<Result> results = new ArrayList<Result>();
+	public List<Result<S,C>> createObjects(double maxEScore) throws IOException, ParseException {
+		List<Result<S,C>> results = new ArrayList<>();
 
 		log.info("Query for hits");
 		LineNumberReader  lnr = new LineNumberReader(new FileReader(targetFile));
@@ -117,7 +136,7 @@ public class BlastTabularParser implements ResultFactory {
 		int lineNumber=0;
 		while (lineNumber < fileLinesCount){
 			try {
-				BlastResultBuilder resultBuilder = new BlastResultBuilder();
+				BlastResultBuilder<S,C> resultBuilder = new BlastResultBuilder<>();
 				resultBuilder
 						.setQueryID(queryId)
 						.setDbFile(databaseFile)
@@ -125,13 +144,13 @@ public class BlastTabularParser implements ResultFactory {
 						.setQueryDef(queryName)
 						.setReference(blastReference);
 
-				List<Hit> hits = new ArrayList<Hit>();
+				List<Hit<S,C>> hits = new ArrayList<>();
 
 				String currentQueryId = queryId;
 				while (currentQueryId.equals(queryId) && lineNumber < fileLinesCount){
-					BlastHitBuilder hitBuilder = new BlastHitBuilder();
+					BlastHitBuilder<S,C> hitBuilder = new BlastHitBuilder<>();
 
-					List<Hsp> hsps = new ArrayList<Hsp>();
+					List<Hsp<S,C>> hsps = new ArrayList<>();
 
 					String currentSubjectId=subjectId;
 					while (currentSubjectId.equals(subjectId) && lineNumber < fileLinesCount){
@@ -142,6 +161,7 @@ public class BlastTabularParser implements ResultFactory {
 						}
 						BlastHspBuilder hspBuilder = new BlastHspBuilder();
 						hspBuilder
+							.setHspNum(hsps.size()+1)
 							.setHspAlignLen(new Integer(alnLength))
 							.setHspGaps(new Integer(gapOpenCount))
 							.setHspQueryFrom(new Integer(queryStart))
@@ -152,7 +172,7 @@ public class BlastTabularParser implements ResultFactory {
 							.setHspBitScore(new Double(bitScore))
 							.setPercentageIdentity(new Double(percIdentity)/100)
 							.setMismatchCount(new Integer(mismatchCount));
-						hsps.add(hspBuilder.createBlastHsp());
+						hsps.add(hspBuilder.createBlastHsp(buildSeq));
 						if (scanner.hasNext()) line = fetchData(scanner);
 						lineNumber++;
 					}
@@ -216,7 +236,7 @@ public class BlastTabularParser implements ResultFactory {
 	}
 
 	@Override
-	public void storeObjects(List<Result> results) throws IOException, ParseException {
+	public void storeObjects(List<Result<S,C>> results) throws IOException, ParseException {
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
@@ -227,7 +247,7 @@ public class BlastTabularParser implements ResultFactory {
 	 * @param sequences
 	 */
 	@Override
-	public void setQueryReferences(List<Sequence> sequences) {
+	public void setQueryReferences(List<S> sequences) {
 		throw new UnsupportedOperationException("Not supported for this parser.");
 	}
 	/**
@@ -237,7 +257,7 @@ public class BlastTabularParser implements ResultFactory {
 	 * @param sequences
 	 */
 	@Override
-	public void setDatabaseReferences(List<Sequence> sequences) {
+	public void setDatabaseReferences(List<S> sequences) {
 		throw new UnsupportedOperationException("Not supported for this parser.");
 	}
 	 /**

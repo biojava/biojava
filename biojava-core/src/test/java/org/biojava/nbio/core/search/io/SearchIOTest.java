@@ -22,12 +22,16 @@ package org.biojava.nbio.core.search.io;
 
 import java.io.File;
 import java.net.URL;
+
 import org.biojava.nbio.core.search.io.blast.BlastXMLParser;
+import org.biojava.nbio.core.sequence.DNASequence;
+import org.biojava.nbio.core.sequence.compound.NucleotideCompound;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
 import static org.junit.Assert.*;
 
 /**
@@ -37,8 +41,9 @@ import static org.junit.Assert.*;
  * https://github.com/paolopavan
  *
  * @author Paolo Pavan
+ * @deprecated Avoid using SearchIO due to type safety
  */
-
+@Deprecated
 public class SearchIOTest {
 
 	public SearchIOTest() {
@@ -68,9 +73,8 @@ public class SearchIOTest {
 		URL resourceURL = getClass().getResource(resource);
 		File file = new File(resourceURL.getFile());
 
-		final SearchIO instance;
 		try {
-			instance = new SearchIO(file);
+			new SearchIO(file);
 		} catch (Exception e) {
 			fail("test failed:\n"+e.getMessage());
 		}
@@ -84,10 +88,9 @@ public class SearchIOTest {
 		URL resourceURL = getClass().getResource(resource);
 		File file = new File(resourceURL.getFile());
 
-		ResultFactory blastResultFactory = new BlastXMLParser();
-		final SearchIO instance;
+		ResultFactory<DNASequence, NucleotideCompound> blastResultFactory = new BlastXMLParser<>(HspTest.buildDNASeq);
 		try {
-			instance = new SearchIO(file, blastResultFactory);
+			new SearchIO(file, blastResultFactory);
 		} catch (Exception e) {
 			fail("test failed:\n"+e.getMessage());
 		}
@@ -102,10 +105,9 @@ public class SearchIOTest {
 		URL resourceURL = getClass().getResource(resource);
 		File file = new File(resourceURL.getFile());
 
-		ResultFactory blastResultFactory = new BlastXMLParser();
-		final SearchIO instance;
+		BlastXMLParser<DNASequence, NucleotideCompound> blastResultFactory = new BlastXMLParser<>(HspTest.buildDNASeq);
 		try {
-			instance = new SearchIO(file, blastResultFactory, 10e-10);
+			new SearchIO(file, blastResultFactory, 10e-10);
 		} catch (Exception e) {
 			fail("test failed:\n"+e.getMessage());
 		}

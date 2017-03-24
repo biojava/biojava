@@ -23,9 +23,10 @@ package org.biojava.nbio.core.search.io;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
+import org.biojava.nbio.core.sequence.template.Compound;
 import org.biojava.nbio.core.sequence.template.Sequence;
 
 /**
@@ -40,7 +41,7 @@ import org.biojava.nbio.core.sequence.template.Sequence;
  * @author Paolo Pavan
  */
 
-public abstract class Result implements Iterable<Hit>{
+public abstract class Result<S extends Sequence<C>,C extends Compound> implements Iterable<Hit<S,C>>{
 	private String program;
 	private String version;
 	private String reference;
@@ -52,11 +53,11 @@ public abstract class Result implements Iterable<Hit>{
 	private String queryID;
 	private String queryDef;
 	private int queryLength;
-	private Sequence querySequence;
-	private List<Hit> hits;
+	private S querySequence;
+	private List<Hit<S,C>> hits;
 	private int hitCounter = -1;
 
-	public Result(String program, String version, String reference, String dbFile, HashMap<String, String> programSpecificParameters, int iterationNumber, String queryID, String queryDef, int queryLength, List<Hit> hits, Sequence querySequence) {
+	public Result(String program, String version, String reference, String dbFile, HashMap<String, String> programSpecificParameters, int iterationNumber, String queryID, String queryDef, int queryLength, List<Hit<S,C>> hits, S querySequence) {
 		this.program = program;
 		this.version = version;
 		this.reference = reference;
@@ -93,18 +94,19 @@ public abstract class Result implements Iterable<Hit>{
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		final Result other = (Result) obj;
+		final Result<?, ?> other = (Result<?, ?>) obj;
 		if ((this.queryID == null) ? (other.queryID != null) : !this.queryID.equals(other.queryID)) {
 			return false;
 		}
 		if ((this.queryDef == null) ? (other.queryDef != null) : !this.queryDef.equals(other.queryDef)) {
 			return false;
 		}
-		if (this.hits != other.hits && (this.hits == null || !this.hits.equals(other.hits))) {
-			return false;
+		if( this.hits == null ) {
+			return other.hits == null;
 		}
-		return true;
+		return this.hits.equals(other.hits);
 	}
+	
 
 	public int getIterationNumber() {
 		return iterationNumber;
@@ -155,13 +157,13 @@ public abstract class Result implements Iterable<Hit>{
 	 * it was used before the parsing with SearchIO
 	 * @return Sequence object
 	 */
-	public Sequence getQuerySequence() {
+	public S getQuerySequence() {
 		return querySequence;
 	}
 
 	@Override
-	public Iterator<Hit> iterator() {
-		return new Iterator<Hit>() {
+	public Iterator<Hit<S,C>> iterator() {
+		return new Iterator<Hit<S,C>>() {
 			int currentResult = 0;
 			@Override
 			public boolean hasNext() {
@@ -169,7 +171,7 @@ public abstract class Result implements Iterable<Hit>{
 			}
 
 			@Override
-			public Hit next() {
+			public Hit<S,C> next() {
                 if(!hasNext()){
                     throw new NoSuchElementException();
                 }

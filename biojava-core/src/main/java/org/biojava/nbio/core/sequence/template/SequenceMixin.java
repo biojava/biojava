@@ -59,6 +59,7 @@ public class SequenceMixin {
 	 * @param <C> The type of compound we are looking for
 	 * @return The number of times the given compounds appear in this Sequence
 	 */
+	@SafeVarargs
 	public static <C extends Compound> int countCompounds(
 			Sequence<C> sequence, C... compounds) {
 		int count = 0;

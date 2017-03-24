@@ -26,8 +26,8 @@ import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ServiceLoader;
 import java.util.NoSuchElementException;
+import java.util.ServiceLoader;
 
 /**
  * Designed by Paolo Pavan.
@@ -36,12 +36,15 @@ import java.util.NoSuchElementException;
  * https://github.com/paolopavan
  *
  * @author Paolo Pavan
+ * @deprecated This class uses SPI to instantiate ResultFactory instances (e.g. BLAST parsers). This is not type safe
+ * and should be avoided wherever possible.
  */
+@Deprecated
+public class SearchIO implements Iterable<Result<?,?>>{
+	//private static final org.slf4j.Logger logger = LoggerFactory.getLogger(SearchIO.class);
+	static private HashMap<String,ResultFactory<?,?>> extensionFactoryAssociation;
 
-public class SearchIO implements Iterable<Result>{
-	static private HashMap<String,ResultFactory> extensionFactoryAssociation;
-
-	final private ResultFactory factory;
+	final private ResultFactory<?,?> factory;
 	final private File file;
 
 	/**
@@ -53,7 +56,7 @@ public class SearchIO implements Iterable<Result>{
 	 * contains one object per query sequence describing search results.
 	 * Sometime also referred as Iterations.
 	 */
-	private List<Result> results;
+	private List<Result<?,?>> results;
 
 	private final String NOT_SUPPORTED_FILE_EXCEPTION =
 			"This extension is not associated with any parser. You can try to specify a ResultFactory object.";
@@ -81,7 +84,7 @@ public class SearchIO implements Iterable<Result>{
 	 * @throws java.io.IOException for file access related issues
 	 * @throws java.text.ParseException for file format related issues
 	 */
-	public SearchIO (File f, ResultFactory factory) throws IOException, ParseException{
+	public SearchIO (File f, ResultFactory<?,?> factory) throws IOException, ParseException{
 		file = f;
 		this.factory = factory;
 		if (file.exists()) readResults();
@@ -97,7 +100,7 @@ public class SearchIO implements Iterable<Result>{
 	 * @throws java.io.IOException for file access related issues
 	 * @throws java.text.ParseException for file format related issues
 	 */
-	public SearchIO(File f, ResultFactory factory, double maxEvalue) throws IOException, ParseException{
+	public SearchIO(File f, ResultFactory<?,?> factory, double maxEvalue) throws IOException, ParseException{
 		file = f;
 		this.factory = factory;
 		this.evalueThreshold = maxEvalue;
@@ -113,7 +116,8 @@ public class SearchIO implements Iterable<Result>{
 	 */
 	private void readResults() throws IOException, ParseException {
 		factory.setFile(file);
-		results = factory.createObjects(evalueThreshold);
+		// Deliberately type-unsafe cast -SB
+		results = (List<Result<?,?>>)(Object)factory.createObjects(evalueThreshold);
 	}
 
 	/**
@@ -138,11 +142,11 @@ public class SearchIO implements Iterable<Result>{
 	 * to default extensions of known ResultFactory implementing classes
 	 * @return the guessed factory
 	 */
-	private ResultFactory guessFactory(File f){
+	private ResultFactory<?,?> guessFactory(File f){
 		if (extensionFactoryAssociation == null){
-			extensionFactoryAssociation = new HashMap<String, ResultFactory>();
+			extensionFactoryAssociation = new HashMap<>();
 			ServiceLoader<ResultFactory> impl = ServiceLoader.load(ResultFactory.class);
-			for (ResultFactory loadedImpl : impl) {
+			for (ResultFactory<?,?> loadedImpl : impl) {
 				List<String> fileExtensions = loadedImpl.getFileExtensions();
 				for (String ext: fileExtensions) extensionFactoryAssociation.put(ext, loadedImpl);
 			}
@@ -163,8 +167,8 @@ public class SearchIO implements Iterable<Result>{
 	}
 
 	@Override
-	public Iterator<Result> iterator() {
-		return new Iterator<Result>() {
+	public Iterator<Result<?,?>> iterator() {
+		return new Iterator<Result<?,?>>() {
 			int currentResult = 0;
 			@Override
 			public boolean hasNext() {
@@ -172,7 +176,7 @@ public class SearchIO implements Iterable<Result>{
 			}
 
 			@Override
-			public Result next() {
+			public Result<?,?> next() {
                 if(!hasNext()){
                     throw new NoSuchElementException();
                 }
@@ -185,4 +189,5 @@ public class SearchIO implements Iterable<Result>{
 			}
 		};
 	}
+
 }

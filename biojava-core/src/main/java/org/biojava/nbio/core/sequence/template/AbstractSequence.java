@@ -130,7 +130,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 			}
 			// success of next statement guaranteed because source is a compulsory field
 			//DBReferenceInfo dbQualifier = (DBReferenceInfo)ff.get("source").get(0).getQualifiers().get("db_xref");
-			ArrayList<DBReferenceInfo> dbQualifiers = (ArrayList)ff.get("source").get(0).getQualifiers().get("db_xref");
+			ArrayList<DBReferenceInfo> dbQualifiers = (ArrayList<DBReferenceInfo>)ff.get("source").get(0).getQualifiers().get("db_xref");
 			DBReferenceInfo dbQualifier = dbQualifiers.get(0);
 
 			if (dbQualifier != null) this.setTaxonomy(new TaxonomyID(dbQualifier.getDatabase()+":"+dbQualifier.getId(), DataSource.UNKNOWN));
@@ -647,8 +647,8 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 	 * @param compounds
 	 * @return
 	 */
-	@Override
-	public int countCompounds(C... compounds) {
+	@Override @SafeVarargs
+	public final int countCompounds(C... compounds) {
 		return SequenceMixin.countCompounds(this, compounds);
 	}
 
@@ -659,6 +659,49 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 	@Override
 	public SequenceView<C> getInverse() {
 		return SequenceMixin.inverse(this);
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((accession == null) ? 0 : accession.hashCode());
+		result = prime * result + ((features == null) ? 0 : features.hashCode());
+		result = prime * result + ((sequenceStorage == null) ? 0 : sequenceStorage.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		AbstractSequence<?> other = (AbstractSequence<?>) obj;
+		if (accession == null) {
+			if (other.accession != null)
+				return false;
+		} else if (!accession.equals(other.accession))
+			return false;
+		if (features == null) {
+			if (other.features != null)
+				return false;
+		} else if (!features.equals(other.features))
+			return false;
+		if (sequenceStorage == null) {
+			if (other.sequenceStorage != null)
+				return false;
+		} else if (!sequenceStorage.equals(other.sequenceStorage))
+			return false;
+		return true;
 	}
 
 	//TODO needs equals and hashcode
