@@ -2,6 +2,7 @@ package org.biojava.nbio.genome.util;
 
 import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.core.sequence.DNASequence;
+import org.biojava.nbio.core.sequence.ProteinSequence;
 import org.biojava.nbio.core.sequence.RNASequence;
 
 public class ProteinMappingTools {
@@ -12,9 +13,9 @@ public class ProteinMappingTools {
     * 
     * @return the protein sequence
     */
-	public String convertDNAtoProteinSequence(String dnaSequence) throws CompoundNotFoundException {
+	public ProteinSequence convertDNAtoProteinSequence(String dnaSequence) throws CompoundNotFoundException {
 		DNASequence dna = new DNASequence(dnaSequence);
 		RNASequence mRNA = dna.getRNASequence();
-		return mRNA.getProteinSequence().toString();
+		return mRNA.getProteinSequence();
 	}
 }
