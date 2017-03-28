@@ -159,8 +159,8 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 	/**
 	 * @param bioBegin the bioBegin to set
 	 */
-	public void setBioBegin(Integer begin) {
-		this.bioBegin = begin;
+	public void setBioBegin(Integer bioBegin) {
+		this.bioBegin = bioBegin;
 	}
 
 	/**
@@ -177,8 +177,8 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 	/**
 	 * @param bioEnd the bioEnd to set
 	 */
-	public void setBioEnd(Integer end) {
-		this.bioEnd = end;
+	public void setBioEnd(Integer bioEnd) {
+		this.bioEnd = bioEnd;
 	}
 
 	/**
@@ -207,7 +207,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 	}
 
 	/**
-	 * @param annotation the annotation to set
+	 * @param annotationType the annotation to set
 	 */
 	public void setAnnotationType(AnnotationType annotationType) {
 		this.annotationType = annotationType;
@@ -342,7 +342,6 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 
 	/**
 	 * Return features at a sequence position
-	 * @param featureType
 	 * @param bioSequencePosition
 	 * @return
 	 */
@@ -493,7 +492,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 	}
 
 	/**
-	 * @param species the species to set
+	 * @param taxonomy the species to set
 	 */
 	public void setTaxonomy(TaxonomyID taxonomy) {
 		this.taxonomy = taxonomy;
@@ -518,6 +517,35 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 
 	public void setCompoundSet(CompoundSet<C> compoundSet) {
 		this.compoundSet = compoundSet;
+	}
+
+
+	public boolean equals(Sequence<C> other){
+		if ( other.getCompoundSet() != getCompoundSet())
+			return false;
+
+
+		List<C> rawCompounds = getAsList();
+		List<C> otherCompounds = other.getAsList();
+
+		if ( rawCompounds.size() != otherCompounds.size())
+			return false;
+
+		for (int i = 0 ; i < rawCompounds.size() ; i++){
+			Compound myCompound = rawCompounds.get(i);
+			Compound otherCompound = otherCompounds.get(i);
+			if ( ! myCompound.equalsIgnoreCase(otherCompound))
+				return false;
+		}
+
+		return true;
+
+
+	}
+
+	public int hashCode(){
+		String s = getSequenceAsString();
+		return s.hashCode();
 	}
 
 	@Override
@@ -552,8 +580,8 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 
 	/**
 	 *
-	 * @param begin
-	 * @param end
+	 * @param bioStart
+	 * @param bioEnd
 	 * @param strand
 	 * @return
 	 */
@@ -579,7 +607,8 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 	 */
 	@Override
 	public List<C> getAsList() {
-		return SequenceMixin.toList(this);
+
+		return sequenceStorage.getAsList();
 	}
 
 	/**
@@ -661,5 +690,5 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 		return SequenceMixin.inverse(this);
 	}
 
-	//TODO needs equals and hashcode
+
 }

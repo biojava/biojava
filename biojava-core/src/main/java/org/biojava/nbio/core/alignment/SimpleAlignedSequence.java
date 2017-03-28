@@ -270,6 +270,19 @@ public class SimpleAlignedSequence<S extends Sequence<C>, C extends Compound> im
 	}
 
 	@Override
+	public boolean equals(Sequence<C>other){
+		if ( original.getAsList().size() != other.getAsList().size())
+			return false;
+
+		for ( int i = 0 ; i< original.getAsList().size() ; i++){
+			if ( ! original.getAsList().get(i).equalsIgnoreCase(other.getAsList().get(i)))
+				return false;
+		}
+
+		return true;
+	}
+
+	@Override
 	public C getCompoundAt(int alignmentIndex) {
 		return alignmentIndex >= 1 && alignmentIndex <= length && isGap(alignmentIndex) ?
 				getCompoundSet().getCompoundForString(gap) :

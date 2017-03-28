@@ -72,6 +72,11 @@ public class SequenceProxyView<C extends Compound> implements SequenceView<C> {
 	}
 
 	@Override
+	public boolean equals(Sequence<C> other) {
+		return sequence.equals(other);
+	}
+
+	@Override
 	public C getCompoundAt(int position) {
 		return getViewedSequence().getCompoundAt((getBioStart() + position) - 1);
 	}
