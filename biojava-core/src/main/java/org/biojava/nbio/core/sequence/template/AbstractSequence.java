@@ -520,6 +520,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 		this.compoundSet = compoundSet;
 	}
 
+	@Override
 	public boolean equals(Object o){
 
 		if(! Equals.classEqual(this, o)) {
@@ -547,6 +548,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 		return true;
 	}
 
+	@Override
 	public int hashCode(){
 		String s = getSequenceAsString();
 		return s.hashCode();

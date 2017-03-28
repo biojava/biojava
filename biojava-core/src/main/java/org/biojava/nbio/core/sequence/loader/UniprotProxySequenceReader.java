@@ -257,6 +257,12 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 		return true;
 	}
 
+	@Override
+	public int hashCode(){
+		String s = getSequenceAsString();
+		return s.hashCode();
+	}
+
 	/**
 	 *
 	 * @return

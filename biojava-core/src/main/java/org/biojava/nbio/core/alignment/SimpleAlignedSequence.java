@@ -270,7 +270,7 @@ public class SimpleAlignedSequence<S extends Sequence<C>, C extends Compound> im
 		return compounds;
 	}
 
-
+	@Override
 	public boolean equals(Object o){
 
 		if(! Equals.classEqual(this, o)) {
@@ -278,7 +278,6 @@ public class SimpleAlignedSequence<S extends Sequence<C>, C extends Compound> im
 		}
 
 		Sequence<C> other = (Sequence<C>)o;
-
 		if ( original.getAsList().size() != other.getAsList().size())
 			return false;
 
@@ -286,21 +285,13 @@ public class SimpleAlignedSequence<S extends Sequence<C>, C extends Compound> im
 			if ( ! original.getAsList().get(i).equalsIgnoreCase(other.getAsList().get(i)))
 				return false;
 		}
-
 		return true;
 	}
 
 	@Override
-	public boolean equals(Sequence<C>other){
-		if ( original.getAsList().size() != other.getAsList().size())
-			return false;
-
-		for ( int i = 0 ; i< original.getAsList().size() ; i++){
-			if ( ! original.getAsList().get(i).equalsIgnoreCase(other.getAsList().get(i)))
-				return false;
-		}
-
-		return true;
+	public int hashCode(){
+		String s = getSequenceAsString();
+		return s.hashCode();
 	}
 
 	@Override

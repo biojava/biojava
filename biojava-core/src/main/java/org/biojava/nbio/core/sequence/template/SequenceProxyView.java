@@ -72,7 +72,7 @@ public class SequenceProxyView<C extends Compound> implements SequenceView<C> {
 		return SequenceMixin.toList(this);
 	}
 
-
+	@Override
 	public boolean equals(Object o) {
 
 		if(! Equals.classEqual(this, o)) {
@@ -81,13 +81,13 @@ public class SequenceProxyView<C extends Compound> implements SequenceView<C> {
 
 		Sequence<C> other = (Sequence<C>)o;
 
-
 		return sequence.equals(other);
 	}
 
 	@Override
-	public boolean equals(Sequence<C> other) {
-		return sequence.equals(other);
+	public int hashCode(){
+		String s = getSequenceAsString();
+		return s.hashCode();
 	}
 
 	@Override

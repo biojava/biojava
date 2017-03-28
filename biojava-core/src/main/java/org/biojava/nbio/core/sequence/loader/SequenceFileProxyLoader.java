@@ -227,11 +227,8 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
 		}
 
 		Sequence<C> other = (Sequence<C>)o;
-
-
 		if ( other.getCompoundSet() != getCompoundSet())
 			return false;
-
 
 		List<C> rawCompounds = getAsList();
 		List<C> otherCompounds = other.getAsList();
@@ -245,9 +242,13 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
 			if ( ! myCompound.equalsIgnoreCase(otherCompound))
 				return false;
 		}
-
 		return true;
+	}
 
+	@Override
+	public int hashCode(){
+		String s = getSequenceAsString();
+		return s.hashCode();
 	}
 
 	/**

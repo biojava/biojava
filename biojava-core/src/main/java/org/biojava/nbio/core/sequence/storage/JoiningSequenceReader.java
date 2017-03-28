@@ -300,42 +300,15 @@ public class JoiningSequenceReader<C extends Compound> implements ProxySequenceR
 	}
 
 	@Override
-	public boolean equals(Sequence<C> other) {
-
-		if ( other.getCompoundSet() != getCompoundSet())
-			return false;
-
-
-		List<C> rawCompounds = getAsList();
-		List<C> otherCompounds = other.getAsList();
-
-		if ( rawCompounds.size() != otherCompounds.size())
-			return false;
-
-		for (int i = 0 ; i < rawCompounds.size() ; i++){
-			Compound myCompound = rawCompounds.get(i);
-			Compound otherCompound = otherCompounds.get(i);
-			if ( ! myCompound.equalsIgnoreCase(otherCompound))
-				return false;
-		}
-
-		return true;
-	}
-
-
-	public boolean equals(Sequence<C> o) {
-
+	public boolean equals(Object o) {
 
 		if(! Equals.classEqual(this, o)) {
 			return false;
 		}
 
 		Sequence<C> other = (Sequence<C>)o;
-
-
 		if ( other.getCompoundSet() != getCompoundSet())
 			return false;
-
 
 		List<C> rawCompounds = getAsList();
 		List<C> otherCompounds = other.getAsList();
@@ -349,10 +322,14 @@ public class JoiningSequenceReader<C extends Compound> implements ProxySequenceR
 			if ( ! myCompound.equalsIgnoreCase(otherCompound))
 				return false;
 		}
-
 		return true;
 	}
 
+	@Override
+	public int hashCode(){
+		String s = getSequenceAsString();
+		return s.hashCode();
+	}
 
 	@Override
 	public int getIndexOf(C compound) {

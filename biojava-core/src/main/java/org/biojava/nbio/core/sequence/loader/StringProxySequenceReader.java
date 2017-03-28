@@ -162,7 +162,7 @@ public class StringProxySequenceReader<C extends Compound> implements ProxySeque
 		return SequenceMixin.inverse(this);
 	}
 
-
+	@Override
 	public boolean equals(Object o){
 
 		if(! Equals.classEqual(this, o)) {
@@ -170,10 +170,8 @@ public class StringProxySequenceReader<C extends Compound> implements ProxySeque
 		}
 
 		Sequence<C> other = (Sequence<C>)o;
-
 		if ( other.getCompoundSet() != getCompoundSet())
 			return false;
-
 
 		List<C> rawCompounds = getAsList();
 		List<C> otherCompounds = other.getAsList();
@@ -187,9 +185,12 @@ public class StringProxySequenceReader<C extends Compound> implements ProxySeque
 			if ( ! myCompound.equalsIgnoreCase(otherCompound))
 				return false;
 		}
-
 		return true;
+	}
 
-
+	@Override
+	public int hashCode(){
+		String s = getSequenceAsString();
+		return s.hashCode();
 	}
 }
