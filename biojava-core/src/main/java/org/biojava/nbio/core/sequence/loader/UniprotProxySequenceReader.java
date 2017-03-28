@@ -36,6 +36,7 @@ import org.biojava.nbio.core.sequence.features.DatabaseReferenceInterface;
 import org.biojava.nbio.core.sequence.features.FeaturesKeyWordInterface;
 import org.biojava.nbio.core.sequence.storage.SequenceAsStringHelper;
 import org.biojava.nbio.core.sequence.template.*;
+import org.biojava.nbio.core.util.Equals;
 import org.biojava.nbio.core.util.XMLHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -231,10 +232,15 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 	}
 
 	@Override
-	public boolean equals(Sequence<C> other){
+	public boolean equals(Object o){
+
+		if(! Equals.classEqual(this, o)) {
+			return false;
+		}
+
+		Sequence<C> other = (Sequence<C>)o;
 		if ( other.getCompoundSet() != getCompoundSet())
 			return false;
-
 
 		List<C> rawCompounds = getAsList();
 		List<C> otherCompounds = other.getAsList();
@@ -248,10 +254,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 			if ( ! myCompound.equalsIgnoreCase(otherCompound))
 				return false;
 		}
-
 		return true;
-
-
 	}
 
 	/**
