@@ -37,6 +37,7 @@ import org.biojava.nbio.core.sequence.location.SequenceLocation;
 import org.biojava.nbio.core.sequence.location.SimpleLocation;
 import org.biojava.nbio.core.sequence.location.template.Location;
 import org.biojava.nbio.core.sequence.storage.ArrayListSequenceReader;
+import org.biojava.nbio.core.util.Equals;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -520,7 +521,14 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 	}
 
 
-	public boolean equals(Sequence<C> other){
+	public boolean equals(Object o){
+
+		if(! Equals.classEqual(this, o)) {
+			return false;
+		}
+
+		Sequence<C> other = (Sequence<C>)o;
+
 		if ( other.getCompoundSet() != getCompoundSet())
 			return false;
 

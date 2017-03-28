@@ -30,6 +30,7 @@ import org.biojava.nbio.core.sequence.AccessionID;
 import org.biojava.nbio.core.sequence.Strand;
 import org.biojava.nbio.core.sequence.storage.SequenceAsStringHelper;
 import org.biojava.nbio.core.sequence.template.*;
+import org.biojava.nbio.core.util.Equals;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -161,8 +162,15 @@ public class StringProxySequenceReader<C extends Compound> implements ProxySeque
 		return SequenceMixin.inverse(this);
 	}
 
-	@Override
-	public boolean equals(Sequence<C> other){
+
+	public boolean equals(Object o){
+
+		if(! Equals.classEqual(this, o)) {
+			return false;
+		}
+
+		Sequence<C> other = (Sequence<C>)o;
+
 		if ( other.getCompoundSet() != getCompoundSet())
 			return false;
 

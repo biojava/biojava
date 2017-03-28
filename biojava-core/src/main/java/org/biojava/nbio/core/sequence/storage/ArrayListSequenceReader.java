@@ -85,17 +85,6 @@ public class ArrayListSequenceReader<C extends Compound> implements SequenceRead
 		return getSequenceAsString(1, getLength(), Strand.POSITIVE);
 	}
 
-	public boolean equals(Sequence<C>other){
-		if ( parsedCompounds.size() != other.getAsList().size())
-			return false;
-
-		for ( int i = 0 ; i< parsedCompounds.size() ; i++){
-			if ( ! parsedCompounds.get(i).equalsIgnoreCase(other.getAsList().get(i)))
-				return false;
-		}
-
-		return true;
-	}
 
 	/**
 	 *
