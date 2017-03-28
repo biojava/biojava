@@ -199,17 +199,6 @@ public class BitSequenceReader<C extends Compound> implements ProxySequenceReade
 		return false;
 	}
 
-	public boolean equals(Sequence<C> o){
-
-			if(Equals.classEqual(this, o)) {
-				@SuppressWarnings("unchecked")
-				BitSequenceReader<C> that = (BitSequenceReader<C>)o;
-				return  Equals.equal(this.accession, that.accession) &&
-						Equals.equal(this.worker, that.worker);
-			}
-			return false;
-
-	}
 
 	/**
 	 * The logic of working with a bit has been separated out into this class

@@ -31,6 +31,7 @@ import org.biojava.nbio.core.sequence.Strand;
 import org.biojava.nbio.core.sequence.io.template.SequenceParserInterface;
 import org.biojava.nbio.core.sequence.storage.SequenceAsStringHelper;
 import org.biojava.nbio.core.sequence.template.*;
+import org.biojava.nbio.core.util.Equals;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -219,7 +220,14 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
 	}
 
 	@Override
-	public boolean equals(Sequence<C> other) {
+	public boolean equals(Object o) {
+
+		if(! Equals.classEqual(this, o)) {
+			return false;
+		}
+
+		Sequence<C> other = (Sequence<C>)o;
+
 
 		if ( other.getCompoundSet() != getCompoundSet())
 			return false;

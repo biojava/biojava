@@ -23,6 +23,7 @@ package org.biojava.nbio.core.sequence.storage;
 import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.core.sequence.AccessionID;
 import org.biojava.nbio.core.sequence.template.*;
+import org.biojava.nbio.core.util.Equals;
 
 import java.util.*;
 
@@ -298,8 +299,16 @@ public class JoiningSequenceReader<C extends Compound> implements ProxySequenceR
 		return SequenceMixin.toList(this);
 	}
 
-	@Override
-	public boolean equals(Sequence<C> other) {
+
+	public boolean equals(Sequence<C> o) {
+
+
+		if(! Equals.classEqual(this, o)) {
+			return false;
+		}
+
+		Sequence<C> other = (Sequence<C>)o;
+
 
 		if ( other.getCompoundSet() != getCompoundSet())
 			return false;
