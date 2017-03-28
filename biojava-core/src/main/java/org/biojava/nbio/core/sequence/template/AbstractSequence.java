@@ -539,8 +539,6 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 		}
 
 		return true;
-
-
 	}
 
 	public int hashCode(){

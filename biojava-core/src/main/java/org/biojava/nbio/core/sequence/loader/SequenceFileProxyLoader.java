@@ -242,6 +242,12 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
 
 	}
 
+	@Override
+	public int hashCode(){
+		String s = getSequenceAsString();
+		return s.hashCode();
+	}
+
 	/**
 	 *
 	 * @param bioBegin
