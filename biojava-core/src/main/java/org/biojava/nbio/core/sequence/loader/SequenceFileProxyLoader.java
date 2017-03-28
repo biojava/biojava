@@ -218,6 +218,30 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
 
 	}
 
+	@Override
+	public boolean equals(Sequence<C> other) {
+
+		if ( other.getCompoundSet() != getCompoundSet())
+			return false;
+
+
+		List<C> rawCompounds = getAsList();
+		List<C> otherCompounds = other.getAsList();
+
+		if ( rawCompounds.size() != otherCompounds.size())
+			return false;
+
+		for (int i = 0 ; i < rawCompounds.size() ; i++){
+			Compound myCompound = rawCompounds.get(i);
+			Compound otherCompound = otherCompounds.get(i);
+			if ( ! myCompound.equalsIgnoreCase(otherCompound))
+				return false;
+		}
+
+		return true;
+
+	}
+
 	/**
 	 *
 	 * @param bioBegin

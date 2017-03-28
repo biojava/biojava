@@ -79,6 +79,10 @@ public interface Sequence<C extends Compound> extends Iterable<C>, Accessioned {
 	 */
 	public List<C> getAsList();
 
+	public boolean equals(Sequence<C> other);
+
+	public int hashCode();
+
 	/**
 	 * Returns a portion of the sequence from the different positions. This is
 	 * indexed from 1

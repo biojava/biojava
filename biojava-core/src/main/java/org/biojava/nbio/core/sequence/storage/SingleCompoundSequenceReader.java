@@ -210,4 +210,14 @@ public class SingleCompoundSequenceReader<C extends Compound> implements ProxySe
 		}
 		return false;
 	}
+
+	public boolean equals(Sequence<C> o) {
+		if(Equals.classEqual(this, o)) {
+			SingleCompoundSequenceReader<C> that = (SingleCompoundSequenceReader<C>)o;
+			return  Equals.equal(compound, that.compound) &&
+					Equals.equal(compoundSet, that.compoundSet) &&
+					Equals.equal(length, that.length);
+		}
+		return false;
+	}
 }
