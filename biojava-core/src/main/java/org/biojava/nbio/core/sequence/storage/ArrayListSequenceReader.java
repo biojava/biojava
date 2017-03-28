@@ -85,6 +85,7 @@ public class ArrayListSequenceReader<C extends Compound> implements SequenceRead
 		return getSequenceAsString(1, getLength(), Strand.POSITIVE);
 	}
 
+
 	/**
 	 *
 	 * @param begin
