@@ -37,7 +37,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.build.targetEncoding>UTF-8</project.build.targetEncoding>
 		<maxmem>512M</maxmem>
-		<mmtf.version>1.0.3</mmtf.version>
+		<mmtf.version>1.0.5</mmtf.version>
 		<slf4j.version>1.7.21</slf4j.version>
 		<log4j.version>2.6.1</log4j.version>
 	</properties>

@@ -85,8 +85,9 @@ public class MmtfActions {
 	 * Read a Biojava structure from an {@link InputStream}
 	 * @param inStream the {@link InputStream} to read from
 	 * @return the parsed {@link Structure}
+	 * @throws IOException
 	 */
-	public static Structure readFromInputStream(InputStream inStream) {
+	public static Structure readFromInputStream(InputStream inStream) throws IOException {
 		// Get the reader - this is the bit that people need to implement.
 		MmtfStructureReader mmtfStructureReader = new MmtfStructureReader();
 		// Do the inflation
