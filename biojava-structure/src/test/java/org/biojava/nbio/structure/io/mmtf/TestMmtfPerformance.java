@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -30,24 +31,7 @@ public class TestMmtfPerformance {
 
     private static final Logger logger = LoggerFactory.getLogger(TestMmtfPerformance.class);
 
-
-//    @Test
-//    public void test3J3Q() throws IOException{
-//
-////        AllChemCompProvider cc = new AllChemCompProvider();
-////        ChemCompGroupFactory.setChemCompProvider(cc);
-//
-//        long timeS = System.currentTimeMillis();
-//        ClassLoader classLoader = getClass().getClassLoader();
-//        Structure structure = MmtfActions.readFromFile((Paths.get(classLoader.getResource("org/biojava/nbio/structure/io/mmtf/3J3Q.mmtf").getPath())));
-//        assertEquals(structure.getPDBCode(),"3J3Q");
-//        //assertEquals(structure.getChains().size(),6);
-//        long timeE = System.currentTimeMillis();
-//
-//        System.out.println("time to load from local file: " + (timeE - timeS) + " ms.");
-//
-//    }
-
+    private static final int NUMBER_OF_REPEATS = 10;
 
     // Returns the contents of the file in a byte array.
     public static byte[] getBytesFromFile(File file) throws IOException {
@@ -93,51 +77,59 @@ public class TestMmtfPerformance {
     }
 
 
-    /** loads both pdb and mmtf file for 4CUP in memory and compares parsing performance.
-     * That means any IO is excluded from the measurement and we really compare raw parsing speed.
-     *
-     * @throws IOException
-     */
+    public byte[] getByteArrayFromInputStream(InputStream is) throws IOException {
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+
+        int nRead;
+        byte[] data = new byte[16384];
+
+        while ((nRead = is.read(data, 0, data.length)) != -1) {
+            buffer.write(data, 0, nRead);
+        }
+
+        buffer.flush();
+
+        return buffer.toByteArray();
+
+    }
+
     @Test
-    public void test4CUP() throws IOException{
+    public void test3HBX() throws Exception{
+        String pdbId = "3HBX";
 
-        ClassLoader classLoader = getClass().getClassLoader();
+        URL url = new URL("https://files.rcsb.org/download/"+pdbId+".pdb.gz");
 
-        Path p = Paths.get(classLoader.getResource("org/biojava/nbio/structure/io/mmtf/4CUP.mmtf").getPath());
-        byte[] mmtfBytes = Files.readAllBytes(p);
-
-        InputStream mmtfIS = new ByteArrayInputStream(mmtfBytes);
-
-        long mmtfStart = System.currentTimeMillis();
-        Structure structure = MmtfActions.readFromInputStream(mmtfIS);
-        long mmtfEnd = System.currentTimeMillis();
-
-        assertEquals(structure.getPDBCode(), "4CUP");
-        assertEquals(structure.getChains().size(), 6);
-
-
-        ///end of mmtf parsing. Now we parse PDB:
-
-
-        Path path = Paths.get(classLoader.getResource("org/biojava/nbio/structure/io/4cup.pdb.gz").getPath());
-
-        InputStream is = new GZIPInputStream(Files.newInputStream(path));
-
-        String pdbFile = convertStreamToString(is);
+        String pdbFile = convertStreamToString(new GZIPInputStream(url.openStream()));
 
         long pdbStart = System.currentTimeMillis();
+
         PDBFileParser parser = new PDBFileParser();
 
-        Structure s = parser.parsePDBFile(new ByteArrayInputStream(pdbFile.getBytes()));
+        for ( int i =0 ; i< NUMBER_OF_REPEATS ; i++) {
 
+            Structure pdbStructure = parser.parsePDBFile(new ByteArrayInputStream(pdbFile.getBytes()));
+        }
         long pdbEnd = System.currentTimeMillis();
 
-        //todo: add mmcif for comparison
 
-        logger.warn("time to parse mmtf:" + (mmtfEnd-mmtfStart));
-        logger.warn("time to parse PDB: " + (pdbEnd-pdbStart));
+        URL mmtfURL = new URL("https://mmtf.rcsb.org/v1.0/full/" + pdbId + ".mmtf.gz");
 
-        assertTrue( "It should not be the case, but it is faster to parse a PDB file ("+(pdbEnd -pdbStart)+" ms.) than MMTF ("+( mmtfEnd-mmtfStart)+" ms.)!",( pdbEnd -pdbStart) > ( mmtfEnd-mmtfStart));
 
+        byte[] mmtfdata = getByteArrayFromInputStream(new GZIPInputStream((mmtfURL.openStream())));
+
+        long mmtfStart = System.currentTimeMillis();
+
+        for ( int i =0 ; i< NUMBER_OF_REPEATS ; i++) {
+            Structure mmtfStructure = MmtfActions.readFromInputStream(new ByteArrayInputStream(mmtfdata));
+        }
+        long mmtfEnd = System.currentTimeMillis();
+
+        long timeMMTF = (mmtfEnd-mmtfStart);
+        long timePDB = (pdbEnd-pdbStart);
+        logger.warn("average time to parse mmtf: " + (timeMMTF/NUMBER_OF_REPEATS));
+        logger.warn("average time to parse PDB : " + (timePDB/NUMBER_OF_REPEATS));
+//
+        assertTrue( "It should not be the case, but it is faster to parse a PDB file ("+timePDB+" ms.) than MMTF ("+( timeMMTF)+" ms.)!",( timePDB) > ( timeMMTF));
+//
     }
 }
