@@ -13,9 +13,19 @@ public class ProteinMappingTools {
     * 
     * @return the protein sequence
     */
-	public ProteinSequence convertDNAtoProteinSequence(String dnaSequence) throws CompoundNotFoundException {
+	public static ProteinSequence convertDNAtoProteinSequence(String dnaSequence) throws CompoundNotFoundException {
 		DNASequence dna = new DNASequence(dnaSequence);
-		RNASequence mRNA = dna.getRNASequence();
+		return convertDNAtoProteinSequence(dna);
+	}
+
+	/** Converts the DNA sequence to protein sequence.
+	 *
+	 * @param dnaSequence the DNA sequence
+	 *
+	 * @return the protein sequence
+	 */
+	public static ProteinSequence convertDNAtoProteinSequence(DNASequence dnaSequence) throws CompoundNotFoundException {
+		RNASequence mRNA = dnaSequence.getRNASequence();
 		return mRNA.getProteinSequence();
 	}
 }
