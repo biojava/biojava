@@ -2,6 +2,7 @@ package org.biojava.nbio.structure.io.mmtf;
 
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureIO;
+import org.biojava.nbio.structure.TestStructureCrossReferences;
 import org.biojava.nbio.structure.io.PDBFileParser;
 import org.biojava.nbio.structure.io.mmcif.AllChemCompProvider;
 import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
@@ -9,15 +10,18 @@ import org.biojava.nbio.structure.io.mmcif.ChemCompProvider;
 import org.junit.Test;
 import org.rcsb.mmtf.dataholders.MmtfStructure;
 import org.rcsb.mmtf.decoder.ReaderUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.zip.GZIPInputStream;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -25,52 +29,107 @@ import static org.junit.Assert.assertTrue;
  */
 public class TestMmtfPerformance {
 
-//    @Test
-//    public void test3J3Q() throws IOException{
-//
-////        AllChemCompProvider cc = new AllChemCompProvider();
-////        ChemCompGroupFactory.setChemCompProvider(cc);
-//
-//        long timeS = System.currentTimeMillis();
-//        ClassLoader classLoader = getClass().getClassLoader();
-//        Structure structure = MmtfActions.readFromFile((Paths.get(classLoader.getResource("org/biojava/nbio/structure/io/mmtf/3J3Q.mmtf").getPath())));
-//        assertEquals(structure.getPDBCode(),"3J3Q");
-//        //assertEquals(structure.getChains().size(),6);
-//        long timeE = System.currentTimeMillis();
-//
-//        System.out.println("time to load from local file: " + (timeE - timeS) + " ms.");
-//
-//    }
+    private static final Logger logger = LoggerFactory.getLogger(TestMmtfPerformance.class);
+
+    private static final int NUMBER_OF_REPEATS = 10;
+
+    // Returns the contents of the file in a byte array.
+    public static byte[] getBytesFromFile(File file) throws IOException {
+        // Get the size of the file
+        long length = file.length();
+
+        // You cannot create an array using a long type.
+        // It needs to be an int type.
+        // Before converting to an int type, check
+        // to ensure that file is not larger than Integer.MAX_VALUE.
+        if (length > Integer.MAX_VALUE) {
+            // File is too large
+            throw new IOException("File is too large!");
+        }
+
+        // Create the byte array to hold the data
+        byte[] bytes = new byte[(int)length];
+
+        // Read in the bytes
+        int offset = 0;
+        int numRead = 0;
+
+        InputStream is = new FileInputStream(file);
+        try {
+            while (offset < bytes.length
+                    && (numRead=is.read(bytes, offset, bytes.length-offset)) >= 0) {
+                offset += numRead;
+            }
+        } finally {
+            is.close();
+        }
+
+        // Ensure all the bytes have been read in
+        if (offset < bytes.length) {
+            throw new IOException("Could not completely read file "+file.getName());
+        }
+        return bytes;
+    }
+
+    static String convertStreamToString(java.io.InputStream is) {
+        java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
+        return s.hasNext() ? s.next() : "";
+    }
+
+
+    public byte[] getByteArrayFromInputStream(InputStream is) throws IOException {
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+
+        int nRead;
+        byte[] data = new byte[16384];
+
+        while ((nRead = is.read(data, 0, data.length)) != -1) {
+            buffer.write(data, 0, nRead);
+        }
+
+        buffer.flush();
+
+        return buffer.toByteArray();
+
+    }
 
     @Test
-    public void test4CUP() throws IOException{
+    public void test3HBX() throws Exception{
+        String pdbId = "3HBX";
 
-        long timeS = System.currentTimeMillis();
+        URL url = new URL("https://files.rcsb.org/download/"+pdbId+".pdb.gz");
 
-        ClassLoader classLoader = getClass().getClassLoader();
-        Structure structure = MmtfActions.readFromFile((Paths.get(classLoader.getResource("org/biojava/nbio/structure/io/mmtf/4CUP.mmtf").getPath())));
+        String pdbFile = convertStreamToString(new GZIPInputStream(url.openStream()));
 
-        assertEquals(structure.getPDBCode(),"4CUP");
-        assertEquals(structure.getChains().size(),6);
-
-        long timeE = System.currentTimeMillis();
-
-        Path path = Paths.get(classLoader.getResource("org/biojava/nbio/structure/io/4cup.pdb").getPath());
-
-        InputStream is = Files.newInputStream(path);
+        long pdbStart = System.currentTimeMillis();
 
         PDBFileParser parser = new PDBFileParser();
 
-        Structure s = parser.parsePDBFile(is);
+        for ( int i =0 ; i< NUMBER_OF_REPEATS ; i++) {
 
-        long timeF = System.currentTimeMillis();
+            Structure pdbStructure = parser.parsePDBFile(new ByteArrayInputStream(pdbFile.getBytes()));
+        }
+        long pdbEnd = System.currentTimeMillis();
 
-        //todo: add mmcif for comparison
 
-//        System.out.println("time to parse mmtf:" + (timeE-timeS));
-//        System.out.println("time to parse PDB: " + (timeF-timeE));
+        URL mmtfURL = new URL("https://mmtf.rcsb.org/v1.0/full/" + pdbId + ".mmtf.gz");
 
-        assertTrue( "It should not be the case, but it is faster to parse a PDB file ("+(timeF -timeE)+" ms.) than MMTF ("+( timeE-timeS)+" ms.)!",( timeF -timeE) > ( timeE-timeS));
 
+        byte[] mmtfdata = getByteArrayFromInputStream(new GZIPInputStream((mmtfURL.openStream())));
+
+        long mmtfStart = System.currentTimeMillis();
+
+        for ( int i =0 ; i< NUMBER_OF_REPEATS ; i++) {
+            Structure mmtfStructure = MmtfActions.readFromInputStream(new ByteArrayInputStream(mmtfdata));
+        }
+        long mmtfEnd = System.currentTimeMillis();
+
+        long timeMMTF = (mmtfEnd-mmtfStart);
+        long timePDB = (pdbEnd-pdbStart);
+        logger.warn("average time to parse mmtf: " + (timeMMTF/NUMBER_OF_REPEATS));
+        logger.warn("average time to parse PDB : " + (timePDB/NUMBER_OF_REPEATS));
+//
+        assertTrue( "It should not be the case, but it is faster to parse a PDB file ("+timePDB+" ms.) than MMTF ("+( timeMMTF)+" ms.)!",( timePDB) > ( timeMMTF));
+//
     }
 }
