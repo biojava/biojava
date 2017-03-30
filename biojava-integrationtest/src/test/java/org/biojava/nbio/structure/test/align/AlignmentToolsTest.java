@@ -443,4 +443,5 @@ public class AlignmentToolsTest extends TestCase {
 			return true;
 		}
 	}
+	
 }

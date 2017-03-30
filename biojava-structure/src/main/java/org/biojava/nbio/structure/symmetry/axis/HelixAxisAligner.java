@@ -613,7 +613,7 @@ public class HelixAxisAligner extends AxisAligner {
 		referenceVector = getReferenceAxisCylic();
 
 		if (referenceVector == null) {
-			System.err.println("Warning: no reference vector found. Using y-axis.");
+			logger.warn("no reference vector found. Using y-axis.");
 			referenceVector = new Vector3d(Y_AXIS);
 		}
 		// make sure reference vector is perpendicular principal roation vector
@@ -629,7 +629,7 @@ public class HelixAxisAligner extends AxisAligner {
 			vector2.negate();
 		}
 		if (Math.abs(dot) < 0.00001) {
-			System.out.println("HelixAxisAligner: Warning: reference axis parallel");
+			logger.info("HelixAxisAligner: reference axis parallel");
 		}
 		vector2.cross(vector1, vector2);
 //		System.out.println("Intermed. refVector: " + vector2);

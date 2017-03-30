@@ -31,6 +31,7 @@ import org.biojava.nbio.core.sequence.location.SimpleLocation;
 import org.biojava.nbio.core.sequence.location.template.Location;
 import org.biojava.nbio.core.sequence.location.template.Point;
 import org.biojava.nbio.core.sequence.template.*;
+import org.biojava.nbio.core.util.Equals;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -267,6 +268,30 @@ public class SimpleAlignedSequence<S extends Sequence<C>, C extends Compound> im
 			compounds.add(getCompoundAt(i));
 		}
 		return compounds;
+	}
+
+	@Override
+	public boolean equals(Object o){
+
+		if(! Equals.classEqual(this, o)) {
+			return false;
+		}
+
+		Sequence<C> other = (Sequence<C>)o;
+		if ( original.getAsList().size() != other.getAsList().size())
+			return false;
+
+		for ( int i = 0 ; i< original.getAsList().size() ; i++){
+			if ( ! original.getAsList().get(i).equalsIgnoreCase(other.getAsList().get(i)))
+				return false;
+		}
+		return true;
+	}
+
+	@Override
+	public int hashCode(){
+		String s = getSequenceAsString();
+		return s.hashCode();
 	}
 
 	@Override
