@@ -2,5 +2,13 @@ language: java
 jdk:
   - oraclejdk8
 sudo: false
-#after_success:
+
+env:
+  global:
+  - SONATYPE_USERNAME=andreas.prlic
+  - secure: "dyPI9ho1rYmWgiSQ188IM9qDshDY+RRiNxV1ZVzRhRW1hAQpSve6H/Peq6xCnSxR9FnUEIZkm7in8RLCV2fv18ELNuHhuKOMvVd0WN7kxiygyw0dzL66Ub7PBfTOvR75gs1wYoUg3oIDQtlLmHsWhUfS6Bbc0cQwuFK4EkVd9UE="
+
+
+after_success:
+- "[[ $TRAVIS_BRANCH == \"master\" ]] && { mvn deploy --settings travis-settings.xml -DskipTests=true -B };"
 #  - mvn clean cobertura:cobertura coveralls:report
