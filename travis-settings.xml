@@ -1,4 +1,4 @@
-<!-- settings.xml for auto-deploy of SNAPSHOT builds using Travis-CI -->
+<!-- travis-settings.xml for auto-deploy of SNAPSHOT builds using Travis-CI -->
 <servers>
     <server>
         <!-- Maven Central Deployment -->
