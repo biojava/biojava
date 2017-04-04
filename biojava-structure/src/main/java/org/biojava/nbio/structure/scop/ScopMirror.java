@@ -20,7 +20,7 @@
  */
 package org.biojava.nbio.structure.scop;
 
-import org.biojava.nbio.structure.io.util.FileDownloadUtils;
+import org.biojava.nbio.core.util.FileDownloadUtils;
 
 import java.net.URI;
 import java.net.URISyntaxException;
