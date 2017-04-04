@@ -32,7 +32,7 @@ public class SimpleTwoBitFileProvider {
     public static URL getTwoBitURL(String genomeAssembly) throws MalformedURLException {
 
         String url="";
-        if (genomeAssembly.equals("hg37")) {
+        if (genomeAssembly.equals("hg19")) {
             url = "http://cdn.rcsb.org//gene/hg37/hg19.2bit";
         }
         else if (genomeAssembly.equals("hg38")) {
