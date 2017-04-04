@@ -4,7 +4,8 @@ jdk:
 sudo: false
 env:
   global:
-  - SONATYPE_USERNAME=andreas.prlic
-  - secure: WhzGfxxCv55eIGa5bjBw1TTpQjg0P8QEs6dK493j9a89m1NqXNpveB2suhWGbItJlHg/DZUJxssCDKwkrtcTpc0/C9V8FMb8ImDlsMwluQywfY+r8mewDWnHEYGG2M4Bk5BVzYcq25acs2FahFigMVdWz8X2R5497yYI9yUid4U=
+    - SONATYPE_USERNAME=andreas.prlic
+    - secure: WhzGfxxCv55eIGa5bjBw1TTpQjg0P8QEs6dK493j9a89m1NqXNpveB2suhWGbItJlHg/DZUJxssCDKwkrtcTpc0/C9V8FMb8ImDlsMwluQywfY+r8mewDWnHEYGG2M4Bk5BVzYcq25acs2FahFigMVdWz8X2R5497yYI9yUid4U=
 after_success:
- - "[[ $TRAVIS_BRANCH == \"master\" ]] && { mvn deploy --settings travis-settings.xml -DskipTests=true -B };"
+  - "[[ $TRAVIS_BRANCH == \"master\" ]] && { mvn deploy --settings travis-settings.xml -DskipTests=true -B ; };"
+
