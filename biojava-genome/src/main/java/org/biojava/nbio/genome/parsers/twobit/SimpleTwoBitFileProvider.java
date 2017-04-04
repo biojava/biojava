@@ -1,6 +1,9 @@
 package org.biojava.nbio.genome.parsers.twobit;
 
+import org.biojava.nbio.core.util.FileDownloadUtils;
+
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -9,19 +12,19 @@ import java.net.URL;
  */
 public class SimpleTwoBitFileProvider {
 
-    private File twoBitFileLocalLocation;
-    private String genomeAssembly;
-
-    public SimpleTwoBitFileProvider(File twoBitFileLocalLocation, String genomeAssembly) throws MalformedURLException {
-
-        this.twoBitFileLocalLocation = twoBitFileLocalLocation;
-        this.genomeAssembly = genomeAssembly;
+    public static void downloadIfNoTwoBitFileExists(File twoBitFileLocalLocation, String genomeAssembly) throws IOException {
 
         if ( ! twoBitFileLocalLocation.exists() ) {
 
+            // download to a temporary file
+            File tmp = File.createTempFile("",".2bit");
             URL twoBitFileURL = getTwoBitURL(genomeAssembly);
 
+            // 2bit files are large and take a while to download
+            FileDownloadUtils.downloadFile(twoBitFileURL, tmp);
 
+            // after the download rename
+            tmp.renameTo(twoBitFileLocalLocation);
 
         }
     }
