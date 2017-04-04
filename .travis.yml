@@ -10,5 +10,6 @@ env:
 
 
 after_success:
--  mvn deploy --settings travis-settings.xml -DskipTests=true -B 
+-  mvn deploy --settings travis-settings.xml -DskipTests=true -B
+- "[[ $TRAVIS_BRANCH == \"master\" ]] && { mvn deploy --settings travis-settings.xml -DskipTests=true -B };"
 #  - mvn clean cobertura:cobertura coveralls:report
