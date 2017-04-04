@@ -48,7 +48,7 @@ import org.biojava.nbio.structure.domain.PDPDomain;
 import org.biojava.nbio.structure.domain.PDPProvider;
 import org.biojava.nbio.structure.domain.RemotePDPProvider;
 import org.biojava.nbio.structure.ecod.EcodFactory;
-import org.biojava.nbio.structure.io.util.FileDownloadUtils;
+import org.biojava.nbio.core.util.FileDownloadUtils;
 import org.biojava.nbio.structure.scop.ScopDatabase;
 import org.biojava.nbio.structure.scop.ScopDomain;
 import org.biojava.nbio.structure.scop.ScopFactory;
