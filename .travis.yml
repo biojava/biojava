@@ -2,6 +2,9 @@ language: java
 jdk:
  - oraclejdk8
 sudo: false
+cache:
+  directories:
+   - $HOME/.m2
 env:
   global:
     - SONATYPE_USERNAME=andreas.prlic
