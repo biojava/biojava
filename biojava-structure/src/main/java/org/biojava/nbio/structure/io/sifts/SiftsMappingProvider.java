@@ -98,10 +98,13 @@ public class SiftsMappingProvider {
 		}
 		File dest = new File( hashDir, pdbId + ".sifts.xml.gz");
 
+		logger.debug("testing SIFTS file " + dest.getAbsolutePath());
+
+
 		if ( ! dest.exists()){
 			String u = String.format(fileLoc,pdbId);
 			URL url = new URL(u);
-			logger.info("Downloading SIFTS file {} to {}",url,dest);
+			logger.debug("Downloading SIFTS file {} to {}",url,dest);
 			FileDownloadUtils.downloadFile(url, dest);
 		}
 
