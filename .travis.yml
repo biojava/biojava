@@ -8,10 +8,6 @@ cache:
 before_install:
   - if [ ! -z "$GPG_SECRET_KEYS" ]; then echo $GPG_SECRET_KEYS | base64 --decode | $GPG_EXECUTABLE --import; fi
   - if [ ! -z "$GPG_OWNERTRUST"  ]; then echo $GPG_OWNERTRUST  | base64 --decode | $GPG_EXECUTABLE --import-ownertrust; fi   
-env:
-  global:
-    - secure: WhzGfxxCv55eIGa5bjBw1TTpQjg0P8QEs6dK493j9a89m1NqXNpveB2suhWGbItJlHg/DZUJxssCDKwkrtcTpc0/C9V8FMb8ImDlsMwluQywfY+r8mewDWnHEYGG2M4Bk5BVzYcq25acs2FahFigMVdWz8X2R5497yYI9yUid4U=
-    - secure: nalVj2BhXl5gk/a72TokrEqLkZLcMOYvxrugGRzwnHhZOyb0POJQ3OlcdjKGCushReEzvSE1jNQbzt8Bjq6/JnkFxpB3pDcwz00nJRabW8sZumDb4tkbKXluWyYuiks4b2qRBZ2Eu3sNiG1vJj9ffRM7Vj8OJAZTL5ZZgx9dj7o=
 after_success:
   - "[[ $TRAVIS_BRANCH == \"master\" ]] && { mvn deploy --settings travis-settings.xml -DskipTests=true -B ; };"
 
