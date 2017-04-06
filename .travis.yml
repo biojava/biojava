@@ -5,6 +5,9 @@ sudo: false
 cache:
   directories:
    - $HOME/.m2
+before_install:
+  - if [ ! -z "$GPG_SECRET_KEYS" ]; then echo $GPG_SECRET_KEYS | base64 --decode | $GPG_EXECUTABLE --import; fi
+  - if [ ! -z "$GPG_OWNERTRUST"  ]; then echo $GPG_OWNERTRUST  | base64 --decode | $GPG_EXECUTABLE --import-ownertrust; fi   
 env:
   global:
     - secure: WhzGfxxCv55eIGa5bjBw1TTpQjg0P8QEs6dK493j9a89m1NqXNpveB2suhWGbItJlHg/DZUJxssCDKwkrtcTpc0/C9V8FMb8ImDlsMwluQywfY+r8mewDWnHEYGG2M4Bk5BVzYcq25acs2FahFigMVdWz8X2R5497yYI9yUid4U=
