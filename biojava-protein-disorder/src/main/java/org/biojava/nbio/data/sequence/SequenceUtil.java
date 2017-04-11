@@ -63,20 +63,20 @@ public final class SequenceUtil {
 	/**
 	 * Valid Amino acids
 	 */
-	public static final Pattern AA = Pattern.compile("[ARNDCQEGHILKMFPSTWYV]+",
+	public static final Pattern AA = Pattern.compile("[ARNDCQEGHILKMFPSTWYVUO]+",
 		Pattern.CASE_INSENSITIVE);
 
 	/**
 	 * inversion of AA pattern
 	 */
 	public static final Pattern NON_AA = Pattern.compile(
-		"[^ARNDCQEGHILKMFPSTWYVX]+", Pattern.CASE_INSENSITIVE);
+		"[^ARNDCQEGHILKMFPSTWYVXUO]+", Pattern.CASE_INSENSITIVE);
 
 	/**
-	 * Same as AA pattern but with two additional letters - XU
+	 * Same as AA pattern but with one additional letters - X
 	 */
 	public static final Pattern AMBIGUOUS_AA = Pattern.compile(
-		"[ARNDCQEGHILKMFPSTWYVXU]+", Pattern.CASE_INSENSITIVE);
+		"[ARNDCQEGHILKMFPSTWYVXUO]+", Pattern.CASE_INSENSITIVE);
 
 	/**
 	 * Nucleotides a, t, g, c, u

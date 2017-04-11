@@ -945,22 +945,22 @@ public class ChromosomeMappingTools {
     
     /** Extracts the exons boundaries in CDS coordinates corresponding to the forward DNA strand.
     *
-    * @param exonStarts The list holding the genetic coordinates pointing to the start positions of the exons (including UTR regions)  
-    * @param exonEnds The list holding the genetic coordinates pointing to the end positions of the exons (including UTR regions)
+    * @param origExonStarts The list holding the genetic coordinates pointing to the start positions of the exons (including UTR regions)
+    * @param origExonEnds The list holding the genetic coordinates pointing to the end positions of the exons (including UTR regions)
     * @param cdsStart The start position of a coding region
     * @param cdsEnd The end position of a coding region
     * 
     * @return the list of genetic positions corresponding to the exons boundaries in CDS coordinates
    */
-    public static List<Range<Integer>> getCDSRegions(List<Integer> exonStarts, List<Integer> exonEnds, int cdsStart, int cdsEnd) {
+    public static List<Range<Integer>> getCDSRegions(List<Integer> origExonStarts, List<Integer> origExonEnds, int cdsStart, int cdsEnd) {
     	
         // remove exons that are fully landed in UTRs
-        List<Integer> tmpS = new ArrayList<Integer>(exonStarts);
-        List<Integer> tmpE = new ArrayList<Integer>(exonEnds);
+        List<Integer> exonStarts = new ArrayList<Integer>(origExonStarts);
+        List<Integer> exonEnds = new ArrayList<Integer>(origExonEnds);
         
         int j=0;
-        for (int i = 0; i < tmpS.size(); i++) {
-        	if ( ( tmpE.get(i) < cdsStart) || ( tmpS.get(i) > cdsEnd) ) {
+        for (int i = 0; i < origExonStarts.size(); i++) {
+        	if ( ( origExonEnds.get(i) < cdsStart) || ( origExonStarts.get(i) > cdsEnd) ) {
         		exonStarts.remove(j);
         		exonEnds.remove(j);
         	}

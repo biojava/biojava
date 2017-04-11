@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
@@ -310,6 +311,45 @@ public class TestGenomeMapping extends TestCase {
 		int cds = getPositionInmRNA(geneName, genebankId, chromPos);
 		assertEquals(cds, mRNAPos);
 		
+	}
+
+	@Test
+	public void testGenomeMappingToolGetCDSRanges(){
+
+		List<Integer> lst1 = new ArrayList(Arrays.asList( new Integer[]{86346823, 86352858, 86354529}));
+		List<Integer> lst2 = new ArrayList(Arrays.asList(new Integer[]{86348878, 86352984, 86354692}));
+
+		Integer cdsStart=86348749, cdsEnd=86387027;
+
+		List<Range<Integer>> result = ChromosomeMappingTools.getCDSRegions(lst1,lst2,cdsStart,cdsEnd);
+
+		// makes sure the first list does not get  changed;
+		assertTrue(lst1.get(0) == 86346823);
+
+
+		assertTrue(result.get(0).lowerEndpoint() == 86348749);
+		assertTrue(result.get(1).lowerEndpoint() == 86352858);
+		assertTrue(result.get(2).lowerEndpoint() == 86354529);
+
+		assertTrue(result.get(0).upperEndpoint() == 86348878);
+		assertTrue(result.get(1).upperEndpoint() == 86352984);
+		assertTrue(result.get(2).upperEndpoint() == 86387027);
+
+	}
+
+	@Test
+	public void testGenomeMappingToolGetCDSRangesSERINC2(){
+
+		List<Integer> lst1 = new ArrayList(Arrays.asList( new Integer[]{31413812, 31415872, 31423692}));
+		List<Integer> lst2 = new ArrayList(Arrays.asList(new Integer[]{31414777, 31415907, 31423854}));
+
+		Integer cdsStart=31423818, cdsEnd=31434199;
+
+		List<Range<Integer>> result = ChromosomeMappingTools.getCDSRegions(lst1,lst2,cdsStart,cdsEnd);
+
+		// makes sure the first list does not get  changed;
+		assertTrue(result.get(0).lowerEndpoint() == 31423818);
+
 	}
 }
 
