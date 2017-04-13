@@ -47,6 +47,18 @@ public interface AlignedSequence<S extends Sequence<C>, C extends Compound> exte
 	 */
 	void clearCache();
 
+	/** Returns the alignment.
+	 *
+	 * @return the alignment
+	 */
+	int[] getAlignmentFromSequence();
+
+	/** Returns the sequence positions at each alignment index
+	 *
+	 * @return array of the sequence positions
+	 */
+	int[] getSequenceFromAlignment();
+
 	/**
 	 * Returns the column index within an alignment corresponding to the given index in the original {@link Sequence}.
 	 * Both indices are 1-indexed and inclusive.

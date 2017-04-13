@@ -61,7 +61,9 @@ public class SimpleAlignedSequence<S extends Sequence<C>, C extends Compound> im
 	// cached (lazily initialized)
 	private int numGaps = -1;
 	private int numGapPositions = -1;
-	private int[] alignmentFromSequence, sequenceFromAlignment;
+
+	private int[] alignmentFromSequence;
+	private int[] sequenceFromAlignment;
 
 	/**
 	 * Creates an {@link AlignedSequence} for the given {@link Sequence} in a global alignment.
@@ -133,25 +135,35 @@ public class SimpleAlignedSequence<S extends Sequence<C>, C extends Compound> im
 		sequenceFromAlignment = null;
 	}
 
+	private void setAlignmentFromSequence() {
+		alignmentFromSequence = new int[original.getLength()];
+		int s = 1, a = 1;
+		for (int i = 0; i < numBefore; i++, s++) {
+			alignmentFromSequence[s - 1] = a;
+		}
+		for (; s <= alignmentFromSequence.length && a <= length; s++, a++) {
+			while (a <= length && isGap(a)) {
+				a++;
+			}
+			alignmentFromSequence[s - 1] = a;
+		}
+		a--;
+		for (int i = 0; i < numAfter; i++, s++) {
+			alignmentFromSequence[s - 1] = a;
+		}
+	}
+
+	@Override
+	public int[] getAlignmentFromSequence() {
+		if (alignmentFromSequence == null)
+			setAlignmentFromSequence();
+		return alignmentFromSequence;
+	}
+
 	@Override
 	public int getAlignmentIndexAt(int sequenceIndex) {
-		if (alignmentFromSequence == null) {
-			alignmentFromSequence = new int[original.getLength()];
-			int s = 1, a = 1;
-			for (int i = 0; i < numBefore; i++, s++) {
-				alignmentFromSequence[s - 1] = a;
-			}
-			for (; s <= alignmentFromSequence.length && a <= length; s++, a++) {
-				while (a <= length && isGap(a)) {
-					a++;
-				}
-				alignmentFromSequence[s - 1] = a;
-			}
-			a--;
-			for (int i = 0; i < numAfter; i++, s++) {
-				alignmentFromSequence[s - 1] = a;
-			}
-		}
+		if (alignmentFromSequence == null)
+			setAlignmentFromSequence();
 		return alignmentFromSequence[sequenceIndex - 1];
 	}
 
@@ -198,21 +210,31 @@ public class SimpleAlignedSequence<S extends Sequence<C>, C extends Compound> im
 		return 1;
 	}
 
+	private void setSequenceFromAlignment() {
+		sequenceFromAlignment = new int[length];
+		int a = 1, s = numBefore + 1;
+		for (int i = 0; i < getStart().getPosition(); i++, a++) {
+			sequenceFromAlignment[a - 1] = s;
+		}
+		for (; a <= length; a++) {
+			if (!isGap(a)) {
+				s++;
+			}
+			sequenceFromAlignment[a - 1] = s;
+		}
+	}
+
+	@Override
+	public int[] getSequenceFromAlignment() {
+		if (sequenceFromAlignment == null)
+			setSequenceFromAlignment();
+		return sequenceFromAlignment;
+	}
+
 	@Override
 	public int getSequenceIndexAt(int alignmentIndex) {
-		if (sequenceFromAlignment == null) {
-			sequenceFromAlignment = new int[length];
-			int a = 1, s = numBefore + 1;
-			for (int i = 0; i < getStart().getPosition(); i++, a++) {
-				sequenceFromAlignment[a - 1] = s;
-			}
-			for (; a <= length; a++) {
-				if (!isGap(a)) {
-					s++;
-				}
-				sequenceFromAlignment[a - 1] = s;
-			}
-		}
+		if (sequenceFromAlignment == null)
+			setSequenceFromAlignment();
 		return sequenceFromAlignment[alignmentIndex - 1];
 	}
 
