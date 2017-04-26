@@ -1,22 +1,18 @@
 package org.biojava.nbio.genome.util;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
+import com.google.common.collect.Range;
 import org.biojava.nbio.core.sequence.DNASequence;
 import org.biojava.nbio.core.sequence.compound.NucleotideCompound;
 import org.biojava.nbio.core.sequence.template.SequenceView;
 import org.biojava.nbio.genome.parsers.genename.ChromPos;
 import org.biojava.nbio.genome.parsers.genename.GeneChromosomePosition;
-import org.biojava.nbio.genome.parsers.twobit.TwoBitParser;
+import org.biojava.nbio.genome.parsers.twobit.TwoBitFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.Range;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *  A class that can map chromosomal positions to mRNA (coding sequence) positions.
@@ -33,8 +29,7 @@ public class ChromosomeMappingTools {
     public static final String CHROMOSOME = "CHROMOSOME";
     public static final String CDS = "CDS";
     
-	private TwoBitParser parser;
-	
+
     /** Pretty print the details of a GeneChromosomePosition to a String
      *
      * @param chromosomePosition
@@ -284,8 +279,7 @@ public class ChromosomeMappingTools {
      * @param cdsEnd
      * @return
      */
-    public static ChromPos getChromPosReverse(int cdsPos, List<Integer> exonStarts,
-                                              List<Integer> exonEnds, int cdsStart, int cdsEnd) {
+    public static ChromPos getChromPosReverse(int cdsPos, List<Integer> exonStarts, List<Integer> exonEnds, int cdsStart, int cdsEnd) {
 
         boolean inCoding = false;
         int codingLength = 0;
@@ -317,10 +311,8 @@ public class ChromosomeMappingTools {
 
             if (start+1 <= cdsEnd && end >= cdsEnd) {
 
-
                 // FIRST EXON
                 inCoding = true;
-
 
                 int tmpstart = start;
                 if (start < cdsStart) {
@@ -333,23 +325,16 @@ public class ChromosomeMappingTools {
                 logger.debug("First Exon    | " + (check) + " | " + format(start+1) + " " + format(end) + " | " + (cdsEnd - tmpstart) + " | " + cdsPos );
 
 
-                if ( ( check > cdsPos)  )
-                {
-
+                if ( ( check > cdsPos)  )  {
                     int tmp = cdsPos - codingLength ;
-
-
                     logger.debug(" -> found position in UTR exon:  " + format(cdsPos) + " " + format(tmpstart+1) + " tmp:" + format(tmp) + " cs:" + format(cdsStart+1) + " ce:" + format(cdsEnd) + " cl:" + codingLength);
-
                     return new ChromPos((cdsEnd - tmp), -1) ;
                 }
-
 
                 // don't add 1 here
                 codingLength += (cdsEnd - tmpstart );
 
                 boolean debug = logger.isDebugEnabled();
-
 
                 if ( debug ) {
 
@@ -392,46 +377,34 @@ public class ChromosomeMappingTools {
 
             } else if (inCoding) {
 
-
                 if (codingLength + end - start -1  >= cdsPos) {
 
                     int tmp = cdsPos - codingLength ;
 
                     if ( tmp > (end - start ) ) {
-
                         tmp = (end - start );
-
                         logger.debug("changing tmp to " + tmp);
-
                     }
-
                     logger.debug("     " + cdsPos + " " + codingLength + " | " + (cdsPos - codingLength) + " | " + (end -start) + " | " + tmp);
                     logger.debug("     Exon        : " + format(start+1) + " - " + format(end) + " | " + format(end - start) + " | " + codingLength + " | " + (codingLength % 3));
                     logger.debug(" ->  RRR found position coding exon:  " + cdsPos + " " + format(start+1) + " " + format(end) + " " + tmp + " " + format(cdsStart+1) + " " + codingLength);
 
                     return new ChromPos((end - tmp),cdsPos %3);
                 }
-
                 // full exon is coding
                 codingLength += (end - start) ;
 
                 logger.debug("     Exon        : " + format(start+1) + " - " + format(end) + " | " + format(end - start+1) + " | " + codingLength + " | " + (codingLength % 3));
             } else {
                 // e.g. see UBQLN3
-
                 logger.debug(" no translation!");
             }
-
-
             logger.debug("     coding length: " + codingLength + "(phase:" + (codingLength % 3) + ") CDS POS trying to map:" + cdsPos);
-
-
         }
 
         logger.debug("length exons: " + lengthExons);
         // could not map, or map over the full length??
         return new ChromPos(-1,-1);
-
 
     }
 
@@ -444,8 +417,7 @@ public class ChromosomeMappingTools {
      * @param cdsEnd
      * @return
      */
-    public static ChromPos getChromPosForward(int cdsPos, List<Integer> exonStarts, List<Integer> exonEnds,
-                                              int cdsStart, int cdsEnd) {
+    public static ChromPos getChromPosForward(int cdsPos, List<Integer> exonStarts, List<Integer> exonEnds, int cdsStart, int cdsEnd) {
         boolean inCoding = false;
         int codingLength = 0;
 
@@ -453,13 +425,11 @@ public class ChromosomeMappingTools {
         // map forward
         for (int i = 0; i < exonStarts.size(); i++) {
 
-
             // start can include UTR
             int start = exonStarts.get(i);
             int end = exonEnds.get(i);
 
             lengthExons += end - start;
-
 
             if (start <= cdsStart +1 && end >= cdsStart+1) {
                 // first exon with UTR
@@ -488,7 +458,6 @@ public class ChromosomeMappingTools {
                 if (codingLength + (cdsEnd - start-1) >= cdsPos) {
                     int tmp = cdsPos - codingLength;
 
-
                     logger.debug(" <-  Exon        : " + format(start+1) + " - " + format(cdsEnd) + " | " + format(cdsEnd - start) + " | " + codingLength + " | " + (codingLength % 3));
                     logger.debug("     UTR         : " + format(cdsEnd + 1) + " - " + format(end));
                     logger.debug( codingLength + " | " + tmp + " | " + format(start+1));
@@ -510,7 +479,6 @@ public class ChromosomeMappingTools {
                     // we are within the range of this exon
                     int tmp = cdsPos - codingLength ;
 
-
                     logger.debug("     Exon        : " + format(start+1) + " - " + format(end) + " | " + format(end - start) + " | " + tmp + " | " + codingLength);
                     logger.debug(" -> found chr position in coding exon #" + (i+1) + ":  cdsPos:" + format(cdsPos) + " s:" + format(start) + "-" + format(end) + " tmp:" + format(tmp) + " cdsStart:" + format(cdsStart) + " codingLength:" + codingLength);
 
@@ -521,19 +489,7 @@ public class ChromosomeMappingTools {
 
                 logger.debug("     Exon        : " + format(start+1) + " - " + format(end) + " | " + format(end - start) + " | " + codingLength + " | " + (codingLength % 3));
             }
-            //			if ( inCoding )
-            //				logger.debug("exon phase at end:" + (codingLength % 3));
-            //
-            //			logger.debug("   coding length: " + codingLength);
-
-
         }
-
-        //logger.debug("length exons: " + lengthExons);
-        //return codingLength - 3;
-
-        // could not map!
-
         return new ChromPos(-1,-1);
     }
 
@@ -546,8 +502,7 @@ public class ChromosomeMappingTools {
      * @param cdsEnd
      * @return
      */
-    public static int getCDSLengthReverse(List<Integer> exonStarts,
-                                          List<Integer> exonEnds, int cdsStart, int cdsEnd) {
+    public static int getCDSLengthReverse(List<Integer> exonStarts, List<Integer> exonEnds, int cdsStart, int cdsEnd) {
 
         boolean inCoding = false;
         int codingLength = 0;
@@ -575,7 +530,6 @@ public class ChromosomeMappingTools {
 
             if (start <= cdsEnd && end >= cdsEnd) {
                 inCoding = true;
-
 
                 int tmpstart = start;
                 if (start < cdsStart) {
@@ -605,25 +559,18 @@ public class ChromosomeMappingTools {
                 inCoding = false;
                 codingLength += (end - cdsStart);
 
-
                 logger.debug(" <-  Exon        : " + (cdsStart+1) + " - " + end + " | " + (end - cdsStart) + " | " + (codingLength-3)  + " | " + (codingLength % 3));
                 logger.debug("     UTR         : " + start + " - " + (cdsStart ));
-
-
 
             } else if (inCoding) {
                 // full exon is coding
                 codingLength += (end - start);
-
                 logger.debug("     Exon        : " + start + " - " + end + " | " + (end - start) + " | " + codingLength + " | " + (codingLength % 3));
             } else {
                 // e.g. see UBQLN3
-
                 logger.debug(" no translation!");
             }
-
         }
-
         logger.debug("length exons: " + lengthExons + " codin length: " + (codingLength - 3));
         return codingLength - 3;
     }
@@ -637,8 +584,7 @@ public class ChromosomeMappingTools {
      * @param cdsEnd
      * @return
      */
-    public static int getCDSLengthForward(List<Integer> exonStarts, List<Integer> exonEnds,
-                                          int cdsStart, int cdsEnd) {
+    public static int getCDSLengthForward(List<Integer> exonStarts, List<Integer> exonEnds, int cdsStart, int cdsEnd) {
         boolean inCoding = false;
         int codingLength = 0;
 
@@ -649,7 +595,6 @@ public class ChromosomeMappingTools {
             int start = exonStarts.get(i);
             int end = exonEnds.get(i);
             lengthExons += end - start;
-
 
             logger.debug("forward exon: " + (start+1) + " - " + end + " | " + (end - start));
 
@@ -669,15 +614,12 @@ public class ChromosomeMappingTools {
                 logger.debug(" <-  Exon        : " + (start +1)+ " - " + cdsEnd + " | " + (cdsEnd - start+1) + " | " + codingLength + " | " + (codingLength % 3));
                 logger.debug("     UTR         : " + cdsEnd + 1 + " - " + end);
 
-
             } else if (inCoding) {
                 // full exon is coding
                 codingLength += (end - start);
 
                 logger.debug("     Exon        :" + (start+1) + " - " + end + " | " + (end - start+1) + " | " + codingLength + " | " + (codingLength % 3));
             }
-
-
         }
 
         logger.debug("length exons: " + Integer.toString(lengthExons));
@@ -708,8 +650,7 @@ public class ChromosomeMappingTools {
         return getCDSExonRangesReverse(chromPos,CHROMOSOME);
     }
 
-    private static List<Range<Integer>> getCDSExonRangesReverse(GeneChromosomePosition chromPos,
-                                                                String responseType) {
+    private static List<Range<Integer>> getCDSExonRangesReverse(GeneChromosomePosition chromPos, String responseType) {
 
         List<Integer> exonStarts = chromPos.getExonStarts();
         List<Integer> exonEnds   = chromPos.getExonEnds();
@@ -730,7 +671,6 @@ public class ChromosomeMappingTools {
         java.lang.StringBuffer s =null;
 
         boolean debug = logger.isDebugEnabled();
-
 
         if ( debug)
             s = new StringBuffer();
@@ -754,7 +694,6 @@ public class ChromosomeMappingTools {
 
             if (start <= cdsEnd && end >= cdsEnd) {
                 inCoding = true;
-
 
                 int tmpstart = start;
                 if (start < cdsStart) {
@@ -803,11 +742,8 @@ public class ChromosomeMappingTools {
                     s.append("     UTR         : ").append(format(start + 1)).append(" - ").append(format(cdsStart));
                     s.append(newline);
                 }
-
-
             } else if (inCoding) {
                 // full exon is coding
-
                 Range<Integer> r;
                 if ( responseType.equals(CDS))
                     r = Range.closed(codingLength,codingLength+(end-start));
@@ -837,13 +773,11 @@ public class ChromosomeMappingTools {
         return data;
     }
 
-    private static List<Range<Integer>> getCDSExonRangesForward(GeneChromosomePosition chromPos,
-                                                                String responseType) {
+    private static List<Range<Integer>> getCDSExonRangesForward(GeneChromosomePosition chromPos, String responseType) {
 
         List<Range<Integer>> data = new ArrayList<>();
         List<Integer> exonStarts = chromPos.getExonStarts();
         List<Integer> exonEnds   = chromPos.getExonEnds();
-
 
         int cdsStart = chromPos.getCdsStart();
         int cdsEnd   = chromPos.getCdsEnd();
@@ -860,8 +794,6 @@ public class ChromosomeMappingTools {
 
                 inCoding = true;
                 codingLength += (end - cdsStart);
-//
-
 
                 Range<Integer> r;
                 if ( responseType.equals(CDS))
@@ -874,7 +806,6 @@ public class ChromosomeMappingTools {
                 //logger.debug(" <-- CDS end at: " + cdsEnd );
                 inCoding = false;
 
-
                 Range<Integer> r;
                 if ( responseType.equals(CDS))
                     r = Range.closed(codingLength,codingLength+(cdsEnd-start));
@@ -885,7 +816,6 @@ public class ChromosomeMappingTools {
 
             } else if (inCoding) {
                 // full exon is coding
-
                 Range<Integer> r;
                 if ( responseType.equals(CDS))
                     r = Range.closed(codingLength,codingLength+(end-start));
@@ -893,14 +823,11 @@ public class ChromosomeMappingTools {
                     r = Range.closed(start,end);
                 data.add(r);
                 codingLength += (end - start);
-
             }
-
         }
-
         return data;
     }
-//
+
     /**
      * I have a genomic coordinate, where is it on the mRNA
      *
@@ -949,7 +876,7 @@ public class ChromosomeMappingTools {
         logger.debug("looking for CDS position for " +format(chromPos));
         
         // map the genetic coordinates of coding region on a stretch of a reverse strand
-        List<Range<Integer>> cdsRegions = getCDSRegionsForward(exonStarts, exonEnds, cdsStart, cdsEnd);
+        List<Range<Integer>> cdsRegions = getCDSRegions(exonStarts, exonEnds, cdsStart, cdsEnd);
         
         int codingLength = 0;
         int lengthExon = 0;
@@ -995,7 +922,7 @@ public class ChromosomeMappingTools {
         logger.debug("looking for CDS position for " +format(chromPos));
                 
         // map the genetic coordinate on a stretch of a reverse strand
-        List<Range<Integer>> cdsRegions = getCDSRegionsReverse(exonStarts, exonEnds, cdsStart, cdsEnd);
+        List<Range<Integer>> cdsRegions = getCDSRegions(exonStarts, exonEnds, cdsStart, cdsEnd);
         
         int codingLength = 0;
         int lengthExon = 0;
@@ -1016,89 +943,24 @@ public class ChromosomeMappingTools {
         return -1;
     }
     
-	/** 
-	 *  Reads a genome from a locally stored .2bit file.
-	 */
-	public void readGenome(File file) throws Exception {
-		this.parser = new TwoBitParser(file);
-	}
-	
-	/** Sets a chromosome for TwoBitParser.
-	 * 
-	 * @param chr The chromosome name (e.g. chr21)
-	 */
-	public void setChromosome(String chr) throws Exception {
-		parser.close();
-		String[] names = parser.getSequenceNames();
-		for(int i=0;i<names.length;i++) {
-			if ( names[i].equalsIgnoreCase(chr) ) {
-				parser.setCurrentSequence(names[i]);
-				break;
-			}
-		}
-	}
-	
-    /** Extracts the exons boundaries in CDS coordinates for genes living on the reverse DNA strand.
-     *
-     * @param exonStarts The list holding the genetic coordinates pointing to the start positions of the exons (including UTR regions)  
-     * @param exonEnds The list holding the genetic coordinates pointing to the end positions of the exons (including UTR regions)
-     * @param cdsStart The start position of a coding region
-     * @param cdsEnd The end position of a coding region
-     * 
-     * @return the list of genetic positions corresponding to the exons boundaries in CDS coordinates
-    */
-    public static List<Range<Integer>> getCDSRegionsReverse(List<Integer> exonStarts, List<Integer> exonEnds,
-            int cdsStart, int cdsEnd) {
-
-        // remove exons that are fully landed in UTRs
-        List<Integer> tmpS = new ArrayList<Integer>(exonStarts);
-        List<Integer> tmpE = new ArrayList<Integer>(exonEnds);
-        
-        int j=0;
-        for (int i = 0; i < tmpS.size(); i++) {
-        	if ( ( tmpE.get(i) < cdsStart) || ( tmpS.get(i) > cdsEnd) ) {
-        		exonStarts.remove(j);
-        		exonEnds.remove(j);
-        	}
-        	else {
-        		j++;
-        	}
-        }
-        
-        // remove untranslated regions from exons
-        int nExons = exonStarts.size();
-        exonStarts.remove(0);
-        exonStarts.add(0, cdsStart);
-        exonEnds.remove(nExons-1);
-        exonEnds.add(cdsEnd);
-        
-        List<Range<Integer>> cdsRegion = new ArrayList<Range<Integer>>();
-        for ( int i=0; i<nExons; i++ ) {
-        	Range<Integer> r = Range.closed(exonStarts.get(i), exonEnds.get(i));
-        	cdsRegion.add(r);
-        }
-		return cdsRegion;
-    }
-    
-    /** Extracts the exons boundaries in CDS coordinates for genes living on the forward DNA strand.
+    /** Extracts the exons boundaries in CDS coordinates corresponding to the forward DNA strand.
     *
-    * @param exonStarts The list holding the genetic coordinates pointing to the start positions of the exons (including UTR regions)  
-    * @param exonEnds The list holding the genetic coordinates pointing to the end positions of the exons (including UTR regions)
+    * @param origExonStarts The list holding the genetic coordinates pointing to the start positions of the exons (including UTR regions)
+    * @param origExonEnds The list holding the genetic coordinates pointing to the end positions of the exons (including UTR regions)
     * @param cdsStart The start position of a coding region
     * @param cdsEnd The end position of a coding region
     * 
     * @return the list of genetic positions corresponding to the exons boundaries in CDS coordinates
    */
-    public static List<Range<Integer>> getCDSRegionsForward(List<Integer> exonStarts, List<Integer> exonEnds,
-            int cdsStart, int cdsEnd) {
+    public static List<Range<Integer>> getCDSRegions(List<Integer> origExonStarts, List<Integer> origExonEnds, int cdsStart, int cdsEnd) {
     	
         // remove exons that are fully landed in UTRs
-        List<Integer> tmpS = new ArrayList<Integer>(exonStarts);
-        List<Integer> tmpE = new ArrayList<Integer>(exonEnds);
+        List<Integer> exonStarts = new ArrayList<Integer>(origExonStarts);
+        List<Integer> exonEnds = new ArrayList<Integer>(origExonEnds);
         
         int j=0;
-        for (int i = 0; i < tmpS.size(); i++) {
-        	if ( ( tmpE.get(i) < cdsStart) || ( tmpS.get(i) > cdsEnd) ) {
+        for (int i = 0; i < origExonStarts.size(); i++) {
+        	if ( ( origExonEnds.get(i) < cdsStart) || ( origExonStarts.get(i) > cdsEnd) ) {
         		exonStarts.remove(j);
         		exonEnds.remove(j);
         	}
@@ -1124,16 +986,18 @@ public class ChromosomeMappingTools {
     
     /** Extracts the DNA sequence transcribed from the input genetic coordinates.
     *
+    * @param twoBitFacade the facade that provide an access to a 2bit file
     * @param gcp The container with chromosomal positions
     * 
     * @return the DNA sequence transcribed from the input genetic coordinates
    */
-    public String getTranscriptSequence(GeneChromosomePosition gcp) throws IOException, CompoundNotFoundException {
-    	return getTranscriptSequence(gcp.getExonStarts(), gcp.getExonEnds(), gcp.getCdsStart(), gcp.getCdsEnd(), gcp.getOrientation());
+    public static DNASequence getTranscriptDNASequence(TwoBitFacade twoBitFacade, GeneChromosomePosition gcp) throws Exception {
+    	return getTranscriptDNASequence(twoBitFacade,gcp.getChromosome(),gcp.getExonStarts(), gcp.getExonEnds(), gcp.getCdsStart(), gcp.getCdsEnd(), gcp.getOrientation());
     }
     
     /** Extracts the DNA sequence transcribed from the input genetic coordinates.
     *
+    * @param chromosome the name of the chromosome
     * @param exonStarts The list holding the genetic coordinates pointing to the start positions of the exons (including UTR regions)  
     * @param exonEnds The list holding the genetic coordinates pointing to the end positions of the exons (including UTR regions)
     * @param cdsStart The start position of a coding region
@@ -1142,27 +1006,21 @@ public class ChromosomeMappingTools {
     * 
     * @return the DNA sequence transcribed from the input genetic coordinates
     */
-	public String getTranscriptSequence(List<Integer> exonStarts, List<Integer> exonEnds, int codingStart, int codingEnd, Character orientation) throws IOException, CompoundNotFoundException {
+	public static DNASequence getTranscriptDNASequence(TwoBitFacade twoBitFacade, String chromosome, List<Integer> exonStarts, List<Integer> exonEnds, int cdsStart, int cdsEnd, Character orientation) throws Exception {
 
-		List<Range<Integer>> cdsRegion;
-		if (orientation.equals("-")) {
-			cdsRegion = getCDSRegionsReverse(exonStarts, exonEnds, codingStart, codingEnd);
-		}
-		else {
-			cdsRegion = getCDSRegionsForward(exonStarts, exonEnds, codingStart, codingEnd);
-		}
+		List<Range<Integer>> cdsRegion = getCDSRegions(exonStarts, exonEnds, cdsStart, cdsEnd);
 
-		String transcription = "";
+		String dnaSequence = "";
 		for (Range<Integer> range : cdsRegion) {
-			int length = range.upperEndpoint() - range.lowerEndpoint();
-			transcription += parser.loadFragment(range.lowerEndpoint(), length);
+			String exonSequence = twoBitFacade.getSequence(chromosome,range.lowerEndpoint(), range.upperEndpoint());
+            dnaSequence += exonSequence;
 		}
-		if (orientation.equals("-")) {
-			transcription = new StringBuilder(transcription).reverse().toString();
-			DNASequence dna = new DNASequence(transcription);
+		if (orientation.equals('-')) {
+            dnaSequence = new StringBuilder(dnaSequence).reverse().toString();
+			DNASequence dna = new DNASequence(dnaSequence);
 			SequenceView<NucleotideCompound> compliment = dna.getComplement();
-			transcription = compliment.getSequenceAsString();
+            dnaSequence = compliment.getSequenceAsString();
 		}
-		return transcription;
+		return new DNASequence(dnaSequence.toUpperCase());
 	}
 }

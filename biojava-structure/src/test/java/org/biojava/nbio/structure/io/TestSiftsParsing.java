@@ -25,12 +25,11 @@
 package org.biojava.nbio.structure.io;
 
 import junit.framework.TestCase;
-import org.biojava.nbio.structure.io.sifts.SiftsEntity;
-import org.biojava.nbio.structure.io.sifts.SiftsMappingProvider;
-import org.biojava.nbio.structure.io.sifts.SiftsResidue;
-import org.biojava.nbio.structure.io.sifts.SiftsSegment;
+import org.biojava.nbio.structure.io.sifts.*;
 
+import java.io.InputStream;
 import java.util.List;
+import java.util.zip.GZIPInputStream;
 
 public class TestSiftsParsing extends TestCase {
 
@@ -116,8 +115,18 @@ public class TestSiftsParsing extends TestCase {
 	}
 
 	public void test4DOU(){
+
+		// get file from test resource folder, since the file from EBI seems to have issues (on 20170405).
+
 		try {
-			List<SiftsEntity> entities = SiftsMappingProvider.getSiftsMapping("4dou");
+
+			InputStream inStream = new GZIPInputStream(this.getClass().getResourceAsStream("/org/biojava/nbio/structure/io/4dou.sifts.xml.gz"));
+
+			SiftsXMLParser parser = new SiftsXMLParser();
+
+			parser.parseXmlFile(inStream);
+
+			List<SiftsEntity> entities =  parser.getEntities();
 
 			assertNotNull(entities);
 
@@ -127,7 +136,7 @@ public class TestSiftsParsing extends TestCase {
 				//System.out.println(e.getEntityId() + " " +e.getType());
 
 				//	4DOU has 3 segments
-				assertTrue(e.getSegments().size() == 3);
+				assertTrue("SiftsEntity does not have 3 segments, but " + e.getSegments().size(),e.getSegments().size() == 3);
 
 				// test segment 1:
 
