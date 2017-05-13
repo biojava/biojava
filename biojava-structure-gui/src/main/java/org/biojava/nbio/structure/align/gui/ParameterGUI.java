@@ -285,15 +285,45 @@ public class ParameterGUI extends JFrame{
 			Object data = null;
 
 			if ( type == Integer.class){
-				data = Integer.parseInt(value);
+				try  
+				  {  
+					data = Integer.parseInt(value);  
+				  }  
+				  catch(NumberFormatException nfe)  
+				  {  
+				  }
 			} else if ( type == Double.class){
-				data = Double.parseDouble(value);
+				try  
+				  {  
+					data = Double.parseDouble(value);  
+				  }  
+				  catch(NumberFormatException nfe)  
+				  {  
+				  }
 			} else if ( type == Float.class) {
-				data = Float.parseFloat(value);
+				try  
+				  {  
+					data = Float.parseFloat(value); 
+				  }  
+				  catch(NumberFormatException nfe)  
+				  {  
+				  }
 			} else if ( type == Boolean.class) {
-				data = Boolean.parseBoolean(value);
+				try  
+				  {  
+					data = Boolean.parseBoolean(value); 
+				  }  
+				  catch(NumberFormatException nfe)  
+				  {  
+				  }
 			} else if ( type == Short.class) {
-				data = Short.parseShort(value);
+				try  
+				  {  
+					data = Short.parseShort(value); 
+				  }  
+				  catch(NumberFormatException nfe)  
+				  {  
+				  }
 			} else if ( type == String[].class) {
 				data = value.split(" ");
 			} else if ( type.isEnum() ) {
