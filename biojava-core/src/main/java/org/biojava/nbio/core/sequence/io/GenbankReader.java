@@ -122,8 +122,8 @@ public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
 	 * time before the first result is available.<br>
 	 * <b>N.B.</b>
 	 * <ul>
-	 * <li>This method ca't be called after calling its NO-ARGUMENT twin.</li>
-	 * <li>remember to close the underlying resource when you are done.</li>
+	 * <li>This method can't be called after calling its NO-ARGUMENT twin.</li>
+	 * <li>remember to close the underlying resource when you are done, by using {@link #close()}.</li>
 	 * </ul>
 	 * @see #process()
 	 * @author Amr AL-Hossary
@@ -136,7 +136,7 @@ public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
 	 */
 	public LinkedHashMap<String,S> process(int max) throws IOException, CompoundNotFoundException {
 		LinkedHashMap<String,S> sequences = new LinkedHashMap<String,S>();
-		@SuppressWarnings("unchecked")
+		
 		int i=0;
 		BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
 		while(true) {
@@ -145,6 +145,7 @@ public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
 			String seqString = genbankParser.getSequence(br, 0);
 			//reached end of file?
 			if(seqString==null) break;
+			@SuppressWarnings("unchecked")
 			S sequence = (S) sequenceCreator.getSequence(seqString, 0);
 			genbankParser.getSequenceHeaderParser().parseHeader(genbankParser.getHeader(), sequence);
 
@@ -165,8 +166,6 @@ public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
 
 			sequences.put(sequence.getAccession().getID(), sequence);
 		}
-		br.close();
-		close();
 		return sequences;
 	}
 
