@@ -40,6 +40,8 @@ import org.biojava.nbio.core.sequence.io.template.SequenceCreatorInterface;
 import org.biojava.nbio.core.sequence.io.template.SequenceHeaderParserInterface;
 import org.biojava.nbio.core.sequence.template.AbstractSequence;
 import org.biojava.nbio.core.sequence.template.Compound;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -55,20 +57,28 @@ public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
 
 	private SequenceCreatorInterface<C> sequenceCreator;
 	private GenbankSequenceParser<S,C> genbankParser;
-	private InputStream inputStream;
+	private BufferedReader bufferedReader;
+	private boolean closed;
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+	public boolean isClosed() {
+		return closed;
+	}
 
 	/**
 	 * If you are going to use FileProxyProteinSequenceCreator then do not use this constructor because we need details about
 	 * local file offsets for quick reads. InputStreams does not give you the name of the stream to access quickly via file seek. A seek in
 	 * an inputstream is forced to read all the data so you don't gain anything.
-	 * @param br
+	 * @param is
 	 * @param headerParser
 	 * @param sequenceCreator
 	 */
-	public GenbankReader(InputStream is, SequenceHeaderParserInterface<S,C> headerParser, SequenceCreatorInterface<C> sequenceCreator) {
+	public GenbankReader(final InputStream is, final SequenceHeaderParserInterface<S,C> headerParser,
+						 final SequenceCreatorInterface<C> sequenceCreator) {
 		this.sequenceCreator = sequenceCreator;
-		this.inputStream = is;
-		genbankParser = new GenbankSequenceParser<S,C>();
+		bufferedReader = new BufferedReader(new InputStreamReader(is));
+		genbankParser = new GenbankSequenceParser<>();
+		closed = false;
 	}
 
 	/**
@@ -85,14 +95,14 @@ public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
 	 * 	method denies read access to the file.
 	 */
 	public GenbankReader(
-			File file,
-			SequenceHeaderParserInterface<S,C> headerParser,
-			SequenceCreatorInterface<C> sequenceCreator
+			final File file,
+			final SequenceHeaderParserInterface<S,C> headerParser,
+			final SequenceCreatorInterface<C> sequenceCreator
 			) throws FileNotFoundException {
 
-		inputStream = new FileInputStream(file);
+		this.bufferedReader = new BufferedReader(new FileReader(file));
 		this.sequenceCreator = sequenceCreator;
-		genbankParser = new GenbankSequenceParser<S,C>();
+		genbankParser = new GenbankSequenceParser<>();
 	}
 
 	/**
@@ -108,8 +118,7 @@ public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
 	 * @throws CompoundNotFoundException
 	 */
 	public LinkedHashMap<String,S> process() throws IOException, CompoundNotFoundException {
-		LinkedHashMap<String,S> sequences = process(-1);
-		return sequences;
+		return process(-1);
 	}
 
 	/**
@@ -122,7 +131,7 @@ public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
 	 * time before the first result is available.<br>
 	 * <b>N.B.</b>
 	 * <ul>
-	 * <li>This method ca't be called after calling its NO-ARGUMENT twin.</li>
+	 * <li>This method can't be called after calling its NO-ARGUMENT twin.</li>
 	 * <li>remember to close the underlying resource when you are done.</li>
 	 * </ul>
 	 * @see #process()
@@ -134,17 +143,17 @@ public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
 	 * @throws IOException
 	 * @throws CompoundNotFoundException
 	 */
-	public LinkedHashMap<String,S> process(int max) throws IOException, CompoundNotFoundException {
-		LinkedHashMap<String,S> sequences = new LinkedHashMap<String,S>();
+	public LinkedHashMap<String,S> process(final int max) throws IOException, CompoundNotFoundException {
+		LinkedHashMap<String,S> sequences = new LinkedHashMap<>();
 		@SuppressWarnings("unchecked")
 		int i=0;
-		BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
 		while(true) {
 			if(max>0 && i>=max) break;
 			i++;
-			String seqString = genbankParser.getSequence(br, 0);
+			String seqString = genbankParser.getSequence(bufferedReader, 0);
 			//reached end of file?
 			if(seqString==null) break;
+            @SuppressWarnings("unchecked")
 			S sequence = (S) sequenceCreator.getSequence(seqString, 0);
 			genbankParser.getSequenceHeaderParser().parseHeader(genbankParser.getHeader(), sequence);
 
@@ -165,32 +174,41 @@ public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
 
 			sequences.put(sequence.getAccession().getID(), sequence);
 		}
-		br.close();
-		close();
+
+		if (max < 0) {
+			close();
+		}
+
 		return sequences;
 	}
 
-	public void close() throws IOException {
-		inputStream.close();
+	public void close() {
+		try {
+			bufferedReader.close();
+			this.closed = true;
+		} catch (IOException e) {
+			logger.error("Couldn't close the reader. {}", e.getMessage());
+			this.closed = false;
+		}
 	}
 
 	public static void main(String[] args) throws Exception {
 		String proteinFile = "src/test/resources/BondFeature.gb";
 		FileInputStream is = new FileInputStream(proteinFile);
 
-		GenbankReader<ProteinSequence, AminoAcidCompound> proteinReader = new GenbankReader<ProteinSequence, AminoAcidCompound>(is, new GenericGenbankHeaderParser<ProteinSequence,AminoAcidCompound>(), new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
+		GenbankReader<ProteinSequence, AminoAcidCompound> proteinReader = new GenbankReader<>(is, new GenericGenbankHeaderParser<>(), new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
 		LinkedHashMap<String,ProteinSequence> proteinSequences = proteinReader.process();
 		System.out.println(proteinSequences);
 
 		String inputFile = "src/test/resources/NM_000266.gb";
 		is = new FileInputStream(inputFile);
-		GenbankReader<DNASequence, NucleotideCompound> dnaReader = new GenbankReader<DNASequence, NucleotideCompound>(is, new GenericGenbankHeaderParser<DNASequence,NucleotideCompound>(), new DNASequenceCreator(DNACompoundSet.getDNACompoundSet()));
+		GenbankReader<DNASequence, NucleotideCompound> dnaReader = new GenbankReader<>(is, new GenericGenbankHeaderParser<>(), new DNASequenceCreator(DNACompoundSet.getDNACompoundSet()));
 		LinkedHashMap<String,DNASequence> dnaSequences = dnaReader.process();
 		System.out.println(dnaSequences);
 
 		String crazyFile = "src/test/resources/CraftedFeature.gb";
 		is = new FileInputStream(crazyFile);
-		GenbankReader<DNASequence, NucleotideCompound> crazyReader = new GenbankReader<DNASequence, NucleotideCompound>(is, new GenericGenbankHeaderParser<DNASequence,NucleotideCompound>(), new DNASequenceCreator(DNACompoundSet.getDNACompoundSet()));
+		GenbankReader<DNASequence, NucleotideCompound> crazyReader = new GenbankReader<>(is, new GenericGenbankHeaderParser<>(), new DNASequenceCreator(DNACompoundSet.getDNACompoundSet()));
 		LinkedHashMap<String,DNASequence> crazyAnnotatedSequences = crazyReader.process();
 
 		is.close();
