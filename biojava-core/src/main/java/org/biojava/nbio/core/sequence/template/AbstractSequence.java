@@ -73,6 +73,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 			new ArrayList<FeatureInterface<AbstractSequence<C>, C>>();
 	private LinkedHashMap<String, ArrayList<FeatureInterface<AbstractSequence<C>, C>>> groupedFeatures =
 			new LinkedHashMap<String, ArrayList<FeatureInterface<AbstractSequence<C>, C>>>();
+	private List<String> comments = new ArrayList<>();
 
 	public AbstractSequence() {
 	}
@@ -425,6 +426,22 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 			features = new ArrayList<FeatureInterface<AbstractSequence<C>, C>>();
 		}
 		return features;
+	}
+
+	/**
+	 *
+	 * @return comments
+	 */
+	public List<String> getComments() {
+		return comments;
+	}
+
+	/**
+	 * Set comments.
+	 * @param comments
+	 */
+	public void setComments(List<String> comments) {
+		this.comments = comments;
 	}
 
 	/**

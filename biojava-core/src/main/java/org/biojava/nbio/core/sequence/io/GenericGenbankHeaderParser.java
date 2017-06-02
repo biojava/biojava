@@ -52,6 +52,7 @@ public class GenericGenbankHeaderParser<S extends AbstractSequence<C>, C extends
 		sequence.setOriginalHeader(header);
 		sequence.setAccession(new AccessionID(accession, DataSource.GENBANK, version, identifier));
 		sequence.setDescription(description);
+		sequence.setComments(comments);
 	}
 
 	/**

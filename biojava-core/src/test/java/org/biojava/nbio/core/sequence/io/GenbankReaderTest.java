@@ -46,6 +46,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
 /**
@@ -95,6 +96,19 @@ public class GenbankReaderTest {
 				);
 
 		LinkedHashMap<String, ProteinSequence> proteinSequences = genbankProtein.process();
+
+		assertThat(proteinSequences.get("NP_000257").getComments().get(0),is(
+				"VALIDATED REFSEQ: This record has undergone validation or\n" +
+				"preliminary review. The reference sequence was derived from\n" +
+				"AL034370.1, X65882.1 and BE139596.1.\n" +
+				"Summary: NDP is the genetic locus identified as harboring mutations\n" +
+				"that result in Norrie disease. Norrie disease is a rare genetic\n" +
+				"disorder characterized by bilateral congenital blindness that is\n" +
+				"caused by a vascularized mass behind each lens due to a\n" +
+				"maldeveloped retina (pseudoglioma).\n" +
+				"Publication Note:  This RefSeq record includes a subset of the\n" +
+				"publications that are available for this gene. Please see the\n" +
+				"Entrez Gene record to access additional publications."));
 
 		assertNotNull(proteinSequences);
 		assertEquals(1, proteinSequences.size());
