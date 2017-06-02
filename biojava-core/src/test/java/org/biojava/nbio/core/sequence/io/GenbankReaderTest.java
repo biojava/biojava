@@ -46,157 +46,170 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
 /**
- *
  * @author Scooter Willis <willishf at gmail dot com>
  * @author Jacek Grzebyta
  * @author Philippe Soares
  */
 public class GenbankReaderTest {
 
-	private final static Logger logger = LoggerFactory.getLogger(GenbankReaderTest.class);
+    private final static Logger logger = LoggerFactory.getLogger(GenbankReaderTest.class);
 
-	public GenbankReaderTest() {
-	}
+    public GenbankReaderTest() {
+    }
 
-	@BeforeClass
-	public static void setUpClass() throws Exception {
-	}
+    @BeforeClass
+    public static void setUpClass() throws Exception {
+    }
 
-	@AfterClass
-	public static void tearDownClass() throws Exception {
-	}
+    @AfterClass
+    public static void tearDownClass() throws Exception {
+    }
 
-	@Before
-	public void setUp() {
-	}
+    @Before
+    public void setUp() {
+    }
 
-	@After
-	public void tearDown() {
-	}
+    @After
+    public void tearDown() {
+    }
 
-	/**
-	 * Test of process method, of class GenbankReader.
-	 */
-	@Test
-	public void testProcess() throws Exception {
+    /**
+     * Test of process method, of class GenbankReader.
+     */
+    @Test
+    public void testProcess() throws Exception {
 
-		logger.info("process protein");
-		InputStream inStream = this.getClass().getResourceAsStream("/BondFeature.gb");
-		assertNotNull(inStream);
+        logger.info("process protein");
+        InputStream inStream = this.getClass().getResourceAsStream("/BondFeature.gb");
+        assertNotNull(inStream);
 
-		GenbankReader<ProteinSequence, AminoAcidCompound> genbankProtein
-				= new GenbankReader<>(
-						inStream,
-						new GenericGenbankHeaderParser<>(),
-						new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet())
-				);
+        GenbankReader<ProteinSequence, AminoAcidCompound> genbankProtein
+                = new GenbankReader<>(
+                inStream,
+                new GenericGenbankHeaderParser<>(),
+                new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet())
+        );
 
-		LinkedHashMap<String, ProteinSequence> proteinSequences = genbankProtein.process();
+        LinkedHashMap<String, ProteinSequence> proteinSequences = genbankProtein.process();
 
-		assertNotNull(proteinSequences);
-		assertEquals(1, proteinSequences.size());
+        assertThat(proteinSequences.get("NP_000257").getComments().get(0), is(
+                "VALIDATED REFSEQ: This record has undergone validation or\n" +
+                        "preliminary review. The reference sequence was derived from\n" +
+                        "AL034370.1, X65882.1 and BE139596.1.\n" +
+                        "Summary: NDP is the genetic locus identified as harboring mutations\n" +
+                        "that result in Norrie disease. Norrie disease is a rare genetic\n" +
+                        "disorder characterized by bilateral congenital blindness that is\n" +
+                        "caused by a vascularized mass behind each lens due to a\n" +
+                        "maldeveloped retina (pseudoglioma).\n" +
+                        "Publication Note:  This RefSeq record includes a subset of the\n" +
+                        "publications that are available for this gene. Please see the\n" +
+                        "Entrez Gene record to access additional publications."));
 
-		ProteinSequence proteinSequence = proteinSequences.get("NP_000257");
-		assertNotNull(proteinSequences.get("NP_000257"));
-		assertEquals("NP_000257", proteinSequence.getAccession().getID());
-		assertEquals("4557789", proteinSequence.getAccession().getIdentifier());
-		assertEquals("GENBANK", proteinSequence.getAccession().getDataSource().name());
-		assertEquals(1, proteinSequence.getAccession().getVersion().intValue());
-		assertTrue(genbankProtein.isClosed());
+        assertNotNull(proteinSequences);
+        assertEquals(1, proteinSequences.size());
 
-		logger.info("process DNA");
-		inStream = this.getClass().getResourceAsStream("/NM_000266.gb");
-		assertNotNull(inStream);
+        ProteinSequence proteinSequence = proteinSequences.get("NP_000257");
+        assertNotNull(proteinSequences.get("NP_000257"));
+        assertEquals("NP_000257", proteinSequence.getAccession().getID());
+        assertEquals("4557789", proteinSequence.getAccession().getIdentifier());
+        assertEquals("GENBANK", proteinSequence.getAccession().getDataSource().name());
+        assertEquals(1, proteinSequence.getAccession().getVersion().intValue());
+        assertTrue(genbankProtein.isClosed());
 
-		GenbankReader<DNASequence, NucleotideCompound> genbankDNA
-				= new GenbankReader<>(
-						inStream,
-						new GenericGenbankHeaderParser<>(),
-						new DNASequenceCreator(DNACompoundSet.getDNACompoundSet())
-				);
-		LinkedHashMap<String, DNASequence> dnaSequences = genbankDNA.process();
+        logger.info("process DNA");
+        inStream = this.getClass().getResourceAsStream("/NM_000266.gb");
+        assertNotNull(inStream);
 
-		assertNotNull(dnaSequences);
-		assertEquals(1, dnaSequences.size());
+        GenbankReader<DNASequence, NucleotideCompound> genbankDNA
+                = new GenbankReader<>(
+                inStream,
+                new GenericGenbankHeaderParser<>(),
+                new DNASequenceCreator(DNACompoundSet.getDNACompoundSet())
+        );
+        LinkedHashMap<String, DNASequence> dnaSequences = genbankDNA.process();
 
-		DNASequence dnaSequence = dnaSequences.get("NM_000266");
-		assertNotNull(dnaSequences.get("NM_000266"));
-		assertEquals("NM_000266", dnaSequence.getAccession().getID());
-		assertEquals("223671892", dnaSequence.getAccession().getIdentifier());
-		assertEquals("GENBANK", dnaSequence.getAccession().getDataSource().name());
-		assertEquals(3, dnaSequence.getAccession().getVersion().intValue());
-		assertTrue(genbankDNA.isClosed());
-	}
+        assertNotNull(dnaSequences);
+        assertEquals(1, dnaSequences.size());
 
-	/**
-	 * Test the process method with a number of sequences to be read at each call.
-	 * The underlying {@link InputStream} should remain open until the last call.
-	 */
-	@Test
-	public void testPartialProcess() throws IOException, CompoundNotFoundException, NoSuchFieldException {
-		InputStream inStream = this.getClass().getResourceAsStream("/two-dnaseqs.gb");
+        DNASequence dnaSequence = dnaSequences.get("NM_000266");
+        assertNotNull(dnaSequences.get("NM_000266"));
+        assertEquals("NM_000266", dnaSequence.getAccession().getID());
+        assertEquals("223671892", dnaSequence.getAccession().getIdentifier());
+        assertEquals("GENBANK", dnaSequence.getAccession().getDataSource().name());
+        assertEquals(3, dnaSequence.getAccession().getVersion().intValue());
+        assertTrue(genbankDNA.isClosed());
+    }
 
-		GenbankReader<DNASequence, NucleotideCompound> genbankDNA
-				= new GenbankReader<>(
-				inStream,
-				new GenericGenbankHeaderParser<>(),
-				new DNASequenceCreator(DNACompoundSet.getDNACompoundSet())
-		);
+    /**
+     * Test the process method with a number of sequences to be read at each call.
+     * The underlying {@link InputStream} should remain open until the last call.
+     */
+    @Test
+    public void testPartialProcess() throws IOException, CompoundNotFoundException, NoSuchFieldException {
+        InputStream inStream = this.getClass().getResourceAsStream("/two-dnaseqs.gb");
 
-		// First call to process(1) returns the first sequence
-		LinkedHashMap<String, DNASequence> dnaSequences = genbankDNA.process(1);
+        GenbankReader<DNASequence, NucleotideCompound> genbankDNA
+                = new GenbankReader<>(
+                inStream,
+                new GenericGenbankHeaderParser<>(),
+                new DNASequenceCreator(DNACompoundSet.getDNACompoundSet())
+        );
 
-		assertNotNull(dnaSequences);
-		assertEquals(1, dnaSequences.size());
-		assertNotNull(dnaSequences.get("vPetite"));
+        // First call to process(1) returns the first sequence
+        LinkedHashMap<String, DNASequence> dnaSequences = genbankDNA.process(1);
 
-		// Second call to process(1) returns the second sequence
-		dnaSequences = genbankDNA.process(1);
-		assertNotNull(dnaSequences);
-		assertEquals(1, dnaSequences.size());
-		assertNotNull(dnaSequences.get("sbFDR"));
+        assertNotNull(dnaSequences);
+        assertEquals(1, dnaSequences.size());
+        assertNotNull(dnaSequences.get("vPetite"));
 
-		assertFalse(genbankDNA.isClosed());
-		genbankDNA.close();
-		assertTrue(genbankDNA.isClosed());
+        // Second call to process(1) returns the second sequence
+        dnaSequences = genbankDNA.process(1);
+        assertNotNull(dnaSequences);
+        assertEquals(1, dnaSequences.size());
+        assertNotNull(dnaSequences.get("sbFDR"));
 
-	}
+        assertFalse(genbankDNA.isClosed());
+        genbankDNA.close();
+        assertTrue(genbankDNA.isClosed());
 
-	@Test
-	public void CDStest() throws Exception {
-		logger.info("CDS Test");
+    }
 
-		InputStream inStream = this.getClass().getResourceAsStream("/BondFeature.gb");
-		assertNotNull(inStream);
+    @Test
+    public void CDStest() throws Exception {
+        logger.info("CDS Test");
 
-		GenbankReader<ProteinSequence, AminoAcidCompound> GenbankProtein
-				= new GenbankReader<>(
-						inStream,
-						new GenericGenbankHeaderParser<>(),
-						new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet())
-				);
-		LinkedHashMap<String, ProteinSequence> proteinSequences = GenbankProtein.process();
-		inStream.close();
+        InputStream inStream = this.getClass().getResourceAsStream("/BondFeature.gb");
+        assertNotNull(inStream);
+
+        GenbankReader<ProteinSequence, AminoAcidCompound> GenbankProtein
+                = new GenbankReader<>(
+                inStream,
+                new GenericGenbankHeaderParser<>(),
+                new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet())
+        );
+        LinkedHashMap<String, ProteinSequence> proteinSequences = GenbankProtein.process();
+        inStream.close();
 
 
-		Assert.assertTrue(proteinSequences.size() == 1);
-		logger.debug("protein sequences: {}", proteinSequences);
+        Assert.assertTrue(proteinSequences.size() == 1);
+        logger.debug("protein sequences: {}", proteinSequences);
 
-		ProteinSequence protein = new ArrayList<>(proteinSequences.values()).get(0);
+        ProteinSequence protein = new ArrayList<>(proteinSequences.values()).get(0);
 
-		FeatureInterface<AbstractSequence<AminoAcidCompound>, AminoAcidCompound> cdsFeature = protein.getFeaturesByType("CDS").get(0);
-		String codedBy = cdsFeature.getQualifiers().get("coded_by").get(0).getValue();
-		Map<String, List<Qualifier>> quals = cdsFeature.getQualifiers();
-		List<Qualifier> dbrefs = quals.get("db_xref");
+        FeatureInterface<AbstractSequence<AminoAcidCompound>, AminoAcidCompound> cdsFeature = protein.getFeaturesByType("CDS").get(0);
+        String codedBy = cdsFeature.getQualifiers().get("coded_by").get(0).getValue();
+        Map<String, List<Qualifier>> quals = cdsFeature.getQualifiers();
+        List<Qualifier> dbrefs = quals.get("db_xref");
 
-		Assert.assertNotNull(codedBy);
-		Assert.assertTrue(!codedBy.isEmpty());
-		assertEquals(codedBy, "NM_000266.2:503..904");
-		assertEquals(5, dbrefs.size());
+        Assert.assertNotNull(codedBy);
+        Assert.assertTrue(!codedBy.isEmpty());
+        assertEquals(codedBy, "NM_000266.2:503..904");
+        assertEquals(5, dbrefs.size());
 
-	}
+    }
 
 }
