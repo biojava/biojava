@@ -7,59 +7,38 @@ package org.biojava.nbio.core.sequence.reference;
  */
 public class GenbankReference extends AbstractReference {
 
-    /**
-     * The authors are a list of Inventors that retrieved from the Reference section.
-     */
     private String authors;
 
-    /**
-     * The title that retrieved from the Reference section.
-     */
     private String title;
 
-    /**
-     * The journal usually contains the Publication Number, Publication Date and Assignee
-     */
     private String journal;
 
-    /**
-     * @return
-     */
+    @Override
     public String getAuthors() {
         return authors;
     }
 
-    /**
-     * @param authors
-     */
+    @Override
     public void setAuthors(String authors) {
         this.authors = authors;
     }
 
-    /**
-     * @return
-     */
+    @Override
     public String getTitle() {
         return title;
     }
 
-    /**
-     * @param title
-     */
+    @Override
     public void setTitle(String title) {
         this.title = title;
     }
 
-    /**
-     * @return
-     */
+    @Override
     public String getJournal() {
         return journal;
     }
 
-    /**
-     * @param journal
-     */
+    @Override
     public void setJournal(String journal) {
         this.journal = journal;
     }
