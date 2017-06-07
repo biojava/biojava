@@ -26,10 +26,13 @@ package org.biojava.nbio.core.sequence.io;
 import org.biojava.nbio.core.exceptions.ParserException;
 import org.biojava.nbio.core.sequence.AccessionID;
 import org.biojava.nbio.core.sequence.io.template.SequenceHeaderParserInterface;
+import org.biojava.nbio.core.sequence.reference.AbstractReference;
 import org.biojava.nbio.core.sequence.template.AbstractSequence;
 import org.biojava.nbio.core.sequence.template.Compound;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import org.biojava.nbio.core.sequence.DataSource;
 
 public class GenericGenbankHeaderParser<S extends AbstractSequence<C>, C extends Compound> implements SequenceHeaderParserInterface<S,C> {
@@ -40,7 +43,8 @@ public class GenericGenbankHeaderParser<S extends AbstractSequence<C>, C extends
 	@SuppressWarnings("unused")
 	private int version;
 	private boolean versionSeen;
-	private ArrayList<String> comments = new ArrayList<String>();
+	private ArrayList<String> comments = new ArrayList<>();
+	private List<AbstractReference> references = new ArrayList<>();
 
 	/**
 	 * Parse the header and set the values in the sequence
@@ -53,6 +57,7 @@ public class GenericGenbankHeaderParser<S extends AbstractSequence<C>, C extends
 		sequence.setAccession(new AccessionID(accession, DataSource.GENBANK, version, identifier));
 		sequence.setDescription(description);
 		sequence.setComments(comments);
+		sequence.setReferences(references);
 	}
 
 	/**
@@ -129,4 +134,8 @@ public class GenericGenbankHeaderParser<S extends AbstractSequence<C>, C extends
 		if (comment==null) throw new ParserException("Comment cannot be null");
 		this.comments.add(comment);
 	}
+
+	public void addReference(AbstractReference abstractReference){
+	    this.references.add(abstractReference);
+    }
 }

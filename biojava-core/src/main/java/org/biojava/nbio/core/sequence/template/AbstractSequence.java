@@ -36,6 +36,7 @@ import org.biojava.nbio.core.sequence.loader.UniprotProxySequenceReader;
 import org.biojava.nbio.core.sequence.location.SequenceLocation;
 import org.biojava.nbio.core.sequence.location.SimpleLocation;
 import org.biojava.nbio.core.sequence.location.template.Location;
+import org.biojava.nbio.core.sequence.reference.AbstractReference;
 import org.biojava.nbio.core.sequence.storage.ArrayListSequenceReader;
 import org.biojava.nbio.core.util.Equals;
 import org.slf4j.Logger;
@@ -74,6 +75,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 	private LinkedHashMap<String, ArrayList<FeatureInterface<AbstractSequence<C>, C>>> groupedFeatures =
 			new LinkedHashMap<String, ArrayList<FeatureInterface<AbstractSequence<C>, C>>>();
 	private List<String> comments = new ArrayList<>();
+	private List<AbstractReference> references;
 
 	public AbstractSequence() {
 	}
@@ -320,6 +322,22 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 	 */
 	public void setSequenceScore(Double sequenceScore) {
 		this.sequenceScore = sequenceScore;
+	}
+
+	/**
+	 *
+	 * @return
+	 */
+	public List<AbstractReference> getReferences() {
+		return references;
+	}
+
+	/**
+	 *
+	 * @param references
+	 */
+	public void setReferences(List<AbstractReference> references) {
+		this.references = references;
 	}
 
 	/**
