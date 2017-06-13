@@ -1,6 +1,7 @@
 package org.biojava.nbio.core.sequence.reference;
 
 /**
+ * @since 5.0.0
  * @Author Jim Tang
  */
 public interface ReferenceInterface {
