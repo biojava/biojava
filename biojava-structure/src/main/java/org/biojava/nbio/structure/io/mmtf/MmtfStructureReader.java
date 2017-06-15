@@ -486,8 +486,10 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 		pdbHeader.setRfree(rFree);
 		pdbHeader.setRwork(rWork);
 		// Now loop through the techniques and add them in
-		for (String techniqueStr : experimentalMethods) {
-			pdbHeader.setExperimentalTechnique(techniqueStr);
+		if (experimentalMethods!=null) {
+			for (String techniqueStr : experimentalMethods) {
+				pdbHeader.setExperimentalTechnique(techniqueStr);
+			}
 		}
 		// Set the dates
 		if(depositionDate!=null){
