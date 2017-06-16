@@ -45,6 +45,7 @@ import org.biojava.nbio.core.sequence.io.template.SequenceParserInterface;
 import org.biojava.nbio.core.sequence.location.InsdcParser;
 import org.biojava.nbio.core.sequence.location.template.AbstractLocation;
 import org.biojava.nbio.core.sequence.location.template.Location;
+import org.biojava.nbio.core.sequence.reference.GenbankReference;
 import org.biojava.nbio.core.sequence.template.AbstractSequence;
 import org.biojava.nbio.core.sequence.template.Compound;
 import org.biojava.nbio.core.sequence.template.CompoundSet;
@@ -214,6 +215,19 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 			} else if (sectionKey.equals(SOURCE_TAG)) {
 				// ignore - can get all this from the first feature
 			} else if (sectionKey.equals(REFERENCE_TAG)) {
+                if (!section.isEmpty()) {
+                    GenbankReference genbankReference = new GenbankReference();
+                    for (String[] ref : section) {
+                        if (ref[0].equals(AUTHORS_TAG)) {
+                            genbankReference.setAuthors(ref[1]);
+                        } else if (ref[0].equals(TITLE_TAG)) {
+                            genbankReference.setTitle(ref[1]);
+                        } else if (ref[0].equals(JOURNAL_TAG)) {
+                            genbankReference.setJournal(ref[1]);
+                        }
+                    }
+                    headerParser.addReference(genbankReference);
+                }
 			} else if (sectionKey.equals(COMMENT_TAG)) {
 				// Set up some comments
 				headerParser.setComment(section.get(0)[1]);

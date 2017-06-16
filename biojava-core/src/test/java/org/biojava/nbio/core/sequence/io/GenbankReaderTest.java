@@ -110,6 +110,16 @@ public class GenbankReaderTest {
 				"publications that are available for this gene. Please see the\n" +
 				"Entrez Gene record to access additional publications."));
 
+		assertThat(proteinSequences.get("NP_000257").getReferences().size(),is(11));
+		assertThat(proteinSequences.get("NP_000257").getReferences().get(0).getAuthors(),
+				is("Lev,D., Weigl,Y., Hasan,M., Gak,E., Davidovich,M., Vinkler,C.,\n" +
+						"Leshinsky-Silver,E., Lerman-Sagie,T. and Watemberg,N."));
+		assertThat(proteinSequences.get("NP_000257").getReferences().get(1).getTitle(),
+				is("Novel mutations in Norrie disease gene in Japanese patients with\n" +
+						"Norrie disease and familial exudative vitreoretinopathy"));
+		assertThat(proteinSequences.get("NP_000257").getReferences().get(10).getJournal(),
+				is("Nat. Genet. 1 (3), 199-203 (1992)"));
+
 		assertNotNull(proteinSequences);
 		assertEquals(1, proteinSequences.size());
 
