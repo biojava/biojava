@@ -62,6 +62,25 @@ public class DSSPParser {
 	 * Parse a DSSP output file and return the secondary structure
 	 * annotation as a List of {@link SecStrucState} objects.
 	 *
+	 * @param dsspIs an InputStream to a DSSP file
+	 * @param structure Structure object associated to the dssp
+	 * @param assign assigns the SS to the structure if true
+	 * @return a List of SS annotation objects
+	 * @throws StructureException
+	 * @throws IOException
+	 */
+	public static List<SecStrucState> parseInputStream(InputStream dsspIs,
+			Structure structure, boolean assign)
+					throws IOException, StructureException {
+			
+		BufferedReader reader = new BufferedReader(new InputStreamReader(dsspIs));
+		return generalParse(reader, structure, assign);
+	}
+
+	/**
+	 * Parse a DSSP output file and return the secondary structure
+	 * annotation as a List of {@link SecStrucState} objects.
+	 *
 	 * @param dsspPath path to the DSSP file to parse
 	 * @param structure Structure object associated to the dssp
 	 * @param assign assigns the SS to the structure if true

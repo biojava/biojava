@@ -23,6 +23,7 @@ package org.biojava.nbio.structure.secstruc;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.zip.GZIPInputStream;
 
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
@@ -66,7 +67,8 @@ public class TestSecStrucCalc {
 			List<SecStrucState> biojava = sec.calculate(structure, true);
 
 			//Download the original DSSP implementation output
-			List<SecStrucState> dssp = DSSPParser.fetch(name, structure, false);
+			List<SecStrucState> dssp = DSSPParser.parseInputStream(new GZIPInputStream(
+					this.getClass().getResourceAsStream("/org/biojava/nbio/structure/secstruc/"+name+".dssp.gz")), structure, false);
 
 			assertEquals("SS assignment lengths do not match",
 					biojava.size(), dssp.size()*structure.nrModels());
@@ -103,8 +105,10 @@ public class TestSecStrucCalc {
 		List<SecStrucState> biojava = sec.calculate(structure, true);
 
 		// Download the original DSSP implementation output
-		List<SecStrucState> dssp = DSSPParser.fetch(pdbId,cache.getStructure(pdbId), false);
-		dssp.addAll(DSSPParser.fetch(pdbIdTwo, cache.getStructure(pdbIdTwo), false));
+		List<SecStrucState> dssp = DSSPParser.parseInputStream(new GZIPInputStream(
+				this.getClass().getResourceAsStream("/org/biojava/nbio/structure/secstruc/"+pdbId+".dssp.gz")),cache.getStructure(pdbId), false);
+		dssp.addAll(DSSPParser.parseInputStream(new GZIPInputStream(
+				this.getClass().getResourceAsStream("/org/biojava/nbio/structure/secstruc/"+pdbIdTwo+".dssp.gz")), cache.getStructure(pdbIdTwo), false));
 		
 		assertEquals("SS assignment lengths do not match",
 				biojava.size(), dssp.size());
