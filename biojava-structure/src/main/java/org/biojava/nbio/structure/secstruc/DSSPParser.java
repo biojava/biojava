@@ -118,7 +118,7 @@ public class DSSPParser {
 		URL url = new URL("http://files.rcsb.org/dssp/" + 
 				pdb.toLowerCase().substring(1, 3) + "/" + 
 				pdb.toLowerCase() + "/" +
-				pdb + ".dssp.gz");
+				pdb.toLowerCase() + ".dssp.gz");
 		InputStream in = new GZIPInputStream(url.openStream());
 		Reader read = new InputStreamReader(in);
 		BufferedReader reader = new BufferedReader(read);
