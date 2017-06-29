@@ -81,7 +81,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-
 /**
  * This class implements the actual PDB file parsing. Do not access it directly, but
  * via the PDBFileReader class.
@@ -673,11 +672,24 @@ public class PDBFileParser  {
 	 */
 	private void pdb_REVDAT_Handler(String line) {
 
-		// only keep the first...
-		Date modDate = pdbHeader.getModDate();
+		// keep the first as release date and the last as modification date
+		Date relDate = pdbHeader.getRelDate();
 
-		if ( modDate==null || modDate.equals(new Date(0)) ) {
-			// modDate is still uninitialized
+		if ( relDate == null || relDate.equals(new Date(0)) ) {
+			
+			// release date is still uninitialized
+			String releaseDate = line.substring (13, 22).trim() ;
+
+			try {
+				Date dep = dateFormat.parse(releaseDate);
+				pdbHeader.setModDate(dep);
+			} catch (ParseException e){
+				logger.info("Could not parse modification date string '"+releaseDate+"'. Will continue without modification date");
+			}
+
+		} else {
+			
+			// set as the latest modification date
 			String modificationDate = line.substring (13, 22).trim() ;
 
 			try {
@@ -686,7 +698,6 @@ public class PDBFileParser  {
 			} catch (ParseException e){
 				logger.info("Could not parse modification date string '"+modificationDate+"'. Will continue without modification date");
 			}
-
 		}
 	}
 
