@@ -19,13 +19,14 @@ import org.rcsb.mmtf.api.StructureAdapterInterface;
 import org.rcsb.mmtf.dataholders.MmtfStructure;
 
 /**
- * Class to take Biojava structure data and covert to the DataApi for encoding. 
+ * Class to take Biojava structure data and covert to the DataApi for encoding.
  * Must implement all the functions in {@link StructureAdapterInterface}.
+ * 
  * @author Anthony Bradley
+ * @since 5.0
  *
  */
 public class MmtfStructureWriter {
-
 
 	private StructureAdapterInterface mmtfDecoderInterface;
 

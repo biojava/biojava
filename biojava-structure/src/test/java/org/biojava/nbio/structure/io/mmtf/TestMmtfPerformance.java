@@ -1,31 +1,23 @@
 package org.biojava.nbio.structure.io.mmtf;
 
 import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureIO;
-import org.biojava.nbio.structure.TestStructureCrossReferences;
 import org.biojava.nbio.structure.io.PDBFileParser;
-import org.biojava.nbio.structure.io.mmcif.AllChemCompProvider;
-import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
-import org.biojava.nbio.structure.io.mmcif.ChemCompProvider;
 import org.junit.Test;
-import org.rcsb.mmtf.dataholders.MmtfStructure;
-import org.rcsb.mmtf.decoder.ReaderUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.zip.GZIPInputStream;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Created by andreas on 1/9/17.
+ * Test the performance of MMTF format in BioJava.
+ * 
+ * @author Andreas Prlic
+ * on 1/9/17.
+ * 
  */
 public class TestMmtfPerformance {
 
@@ -35,6 +27,7 @@ public class TestMmtfPerformance {
 
     // Returns the contents of the file in a byte array.
     public static byte[] getBytesFromFile(File file) throws IOException {
+    	
         // Get the size of the file
         long length = file.length();
 

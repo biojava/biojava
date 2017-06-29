@@ -1,6 +1,5 @@
 package org.biojava.nbio.structure.io.mmtf;
 
-
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -38,8 +37,10 @@ import org.biojava.nbio.structure.quaternary.BiologicalAssemblyTransformation;
 import org.biojava.nbio.structure.xtal.BravaisLattice;
 import org.biojava.nbio.structure.xtal.CrystalCell;
 import org.biojava.nbio.structure.xtal.SpaceGroup;
+
 /**
- * Test the MMTF utils class
+ * Test the MMTF utils class.
+ * 
  * @author Anthony Bradley
  *
  */
@@ -47,6 +48,7 @@ public class TestMmtfUtils {
 
 	/**
 	 * Integration test to see that the microheterogenity is being dealt with correctly.
+	 * 
 	 * @throws IOException
 	 * @throws StructureException
 	 */

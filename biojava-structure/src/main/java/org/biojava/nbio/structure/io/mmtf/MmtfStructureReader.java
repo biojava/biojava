@@ -47,6 +47,8 @@ import org.slf4j.LoggerFactory;
  * Should be ported to biojava code.
  *
  * @author Anthony Bradley
+ * @since 5.0
+ * 
  */
 public class MmtfStructureReader implements StructureAdapterInterface, Serializable {
 
