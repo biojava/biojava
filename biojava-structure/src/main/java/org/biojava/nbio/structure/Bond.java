@@ -20,6 +20,8 @@
  */
 package org.biojava.nbio.structure;
 
+import java.io.Serializable;
+
 /**
  * A simple bond -- it stores information about two atoms as well as information
  * about its bond order.
@@ -27,7 +29,7 @@ package org.biojava.nbio.structure;
  * @author Jules Jacobsen <jacobsen@ebi.ac.uk>
  * @author Ulysse Carion
  */
-public interface Bond {
+public interface Bond extends Serializable {
 
 	/**
 	 * Gets atom 'A' of this bond. There is no meaning to which atom is 'A' and

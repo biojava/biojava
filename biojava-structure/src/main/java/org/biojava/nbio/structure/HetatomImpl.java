@@ -31,7 +31,6 @@ import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -45,7 +44,7 @@ import java.util.*;
  * @version %I% %G%
  * @since 1.4
  */
-public class HetatomImpl implements Group,Serializable {
+public class HetatomImpl implements Group {
 
 	private static final Logger logger = LoggerFactory.getLogger(HetatomImpl.class);
 

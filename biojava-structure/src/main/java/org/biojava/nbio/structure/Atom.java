@@ -23,6 +23,7 @@
  */
 package org.biojava.nbio.structure;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.vecmath.Point3d;
@@ -41,7 +42,7 @@ import javax.vecmath.Point3d;
  * @since 1.4
  *
  */
-public interface Atom extends Cloneable, PDBRecord {
+public interface Atom extends Cloneable, PDBRecord, Serializable {
 
 	/**
 	 * Set atom name, e.g. "CA".

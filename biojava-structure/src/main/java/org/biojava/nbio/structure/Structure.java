@@ -26,6 +26,7 @@ package org.biojava.nbio.structure;
 import org.biojava.nbio.structure.io.FileConvert;
 import org.biojava.nbio.structure.io.PDBFileReader;
 
+import java.io.Serializable;
 import java.util.List;
 
 
@@ -165,7 +166,7 @@ import java.util.List;
  * @since 1.4
  * @version %I% %G%
  */
-public interface Structure extends Cloneable {
+public interface Structure extends Cloneable, Serializable {
 
 
 	/**
