@@ -1,7 +1,5 @@
 package org.biojava.nbio.structure;
 
-import java.io.Serializable;
-
 /**
  *  
  * The type of entity (polymer, non-polymer, water, macrolide)
@@ -19,7 +17,7 @@ import java.io.Serializable;
  * @author Jose Duarte
  *
  */
-public enum EntityType implements Serializable {
+public enum EntityType {
 
 	/**
 	 * Polymeric entities: poly-peptides and nucleotide chains

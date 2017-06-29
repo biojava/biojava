@@ -38,7 +38,7 @@ import javax.vecmath.Point3d;
  * @since 1.4
  * @version %I% %G%
  */
-public class AtomImpl implements Atom, PDBRecord {
+public class AtomImpl implements Atom {
 
 	private static final long serialVersionUID = -2258364127420562883L;
 

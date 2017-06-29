@@ -1,5 +1,6 @@
 package org.biojava.nbio.structure;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,8 +15,10 @@ import org.slf4j.LoggerFactory;
  * @author Andreas Prlic
  * @since 5.0
  */
-public class Model {
+public class Model implements Serializable {
 	
+	private static final long serialVersionUID = 5320613424668781882L;
+
 	private static final Logger logger = LoggerFactory.getLogger(Model.class);
 
     private List<Chain> polyChains;

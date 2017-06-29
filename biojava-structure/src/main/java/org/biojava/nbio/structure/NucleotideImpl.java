@@ -31,7 +31,7 @@ package org.biojava.nbio.structure;
  * @since 1.4
  * @version %I% %G%
  */
-public class NucleotideImpl extends HetatomImpl implements Group, Cloneable {
+public class NucleotideImpl extends HetatomImpl {
 
 	private static final long serialVersionUID = -7467726932980288712L;
 	/** this is a "nucleotide", a special occurance of a Hetatom. */

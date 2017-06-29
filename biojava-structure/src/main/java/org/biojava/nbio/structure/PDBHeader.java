@@ -41,7 +41,7 @@ import java.util.*;
  * @since 1.6
  *
  */
-public class PDBHeader implements PDBRecord, Serializable{
+public class PDBHeader implements PDBRecord {
 
 	private static final long serialVersionUID = -5834326174085429508L;
 
