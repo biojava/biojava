@@ -12,7 +12,7 @@ import org.biojava.nbio.structure.align.util.AtomCache;
 import org.junit.Test;
 
 /**
- * A class to test the parsing of R-work from files
+ * Test the parsing header informationof R-work from files
  * @author Anthony Bradley
  *
  */

@@ -672,31 +672,32 @@ public class PDBFileParser  {
 	 */
 	private void pdb_REVDAT_Handler(String line) {
 
-		// keep the first as release date and the last as modification date
-		Date relDate = pdbHeader.getRelDate();
+		// keep the first as latest modified date and the last as release date
+		Date modDate = pdbHeader.getModDate();
 
-		if ( relDate == null || relDate.equals(new Date(0)) ) {
+		if ( modDate == null || modDate.equals(new Date(0)) ) {
 			
-			// release date is still uninitialized
-			String releaseDate = line.substring (13, 22).trim() ;
-
-			try {
-				Date dep = dateFormat.parse(releaseDate);
-				pdbHeader.setModDate(dep);
-			} catch (ParseException e){
-				logger.info("Could not parse modification date string '"+releaseDate+"'. Will continue without modification date");
-			}
-
-		} else {
-			
-			// set as the latest modification date
+			// modified date is still uninitialized
 			String modificationDate = line.substring (13, 22).trim() ;
 
 			try {
 				Date dep = dateFormat.parse(modificationDate);
 				pdbHeader.setModDate(dep);
+				pdbHeader.setRelDate(dep);
 			} catch (ParseException e){
-				logger.info("Could not parse modification date string '"+modificationDate+"'. Will continue without modification date");
+				logger.info("Could not parse revision date string '"+modificationDate+"'. ");
+			}
+
+		} else {
+			
+			// set as the release date
+			String releaseDate = line.substring (13, 22).trim() ;
+
+			try {
+				Date dep = dateFormat.parse(releaseDate);
+				pdbHeader.setRelDate(dep);
+			} catch (ParseException e){
+				logger.info("Could not parse revision date string '"+releaseDate+"'. ");
 			}
 		}
 	}
