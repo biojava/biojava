@@ -304,14 +304,15 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 	 * face#setGroupBonds(int, int, int)
 	 */
 	@Override
-	public void setGroupBond(int indOne,
-			int indTwo, int bondOrder) {
-		// Get the atom
+	public void setGroupBond(int indOne, int indTwo, int bondOrder) {
+		
+		// Get the atoms
 		Atom atomOne = atomsInGroup.get(indOne);
 		Atom atomTwo = atomsInGroup.get(indTwo);
+		
 		// set the new bond
-		@SuppressWarnings("unused")
-		BondImpl bond = new BondImpl(atomOne, atomTwo, bondOrder);
+		new BondImpl(atomOne, atomTwo, bondOrder);
+		
 	}
 
 	/* (non-Javadoc)
@@ -319,14 +320,14 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 	 * Interface#setInterGroupBonds(int, int, int)
 	 */
 	@Override
-	public void setInterGroupBond(int indOne,
-			int indTwo, int bondOrder) {
-		// Get the atom
+	public void setInterGroupBond(int indOne, int indTwo, int bondOrder) {
+		
+		// Get the atoms
 		Atom atomOne = allAtoms[indOne];
 		Atom atomTwo = allAtoms[indTwo];
-		// set the new bond
-		@SuppressWarnings("unused")
-		BondImpl bond = new BondImpl(atomOne, atomTwo, bondOrder);
+		
+		// set the new bond (this 
+		new BondImpl(atomOne, atomTwo, bondOrder);
 	}
 
 
