@@ -647,7 +647,15 @@ public class SimpleMMcifParser implements MMcifParser {
 					loopFields, lineData, loopWarnings);
 
 			triggerNewDatabasePDBrevRecord(dbrev);
+			
+		// MMCIF version 5 dates
+		} else if ( category.equals("_pdbx_database_status")){
+			// TODO
 
+		// MMCIF version 5 dates
+		} else if ( category.equals("_pdbx_audit_revision_history")){
+			// TODO
+			
 		}else if (  category.equals("_database_PDB_remark")){
 			DatabasePDBremark remark = (DatabasePDBremark) buildObject(
 					DatabasePDBremark.class.getName(),
