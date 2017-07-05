@@ -101,7 +101,7 @@ public class TestURLIdentifier {
 		assertEquals("wrong length for chainId=A", 94, StructureTools.getRepresentativeAtomArray(reduced).length);
 
 		try {
-			url = new URL("http://www.rcsb.org/pdb/files/1B8G.pdb.gz");
+			url = new URL("http://files.rcsb.org/download/1B8G.pdb.gz");
 			id = new URLIdentifier(url);
 
 			full = id.loadStructure(cache);
