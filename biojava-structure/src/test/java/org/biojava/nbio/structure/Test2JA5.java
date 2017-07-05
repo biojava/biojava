@@ -20,9 +20,9 @@
  */
 package org.biojava.nbio.structure;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 
@@ -55,7 +55,7 @@ public class Test2JA5 {
 		// assertTrue(StructureTools.getNrAtoms(s1) == 0);
 
 		// SeqRes contains 15 chains, but since we cannot align Chain N to AtomGroups => 14.
-		assertTrue(s1.getChains().size() == 14);
+		assertEquals(14, s1.getChains().size());
 
 		Chain nChain = null;
 		try {
@@ -84,8 +84,8 @@ public class Test2JA5 {
 		// This is not applicable anymore, we need to parse atoms to have chains to match.
 		assertTrue(StructureTools.getNrAtoms(s1) == 0);
 
-		// All 15 seqres chains will be store.
-		assertTrue(s1.getChains().size() == 15);
+		// 2ja5 has been remediated on March 2017, now it has 14 chains in seqres matching the 14 chains in atoms (chain N has been removed)
+		assertEquals(14, s1.getChains().size());
 
 		Chain nChain = null;
 		try {
@@ -93,6 +93,6 @@ public class Test2JA5 {
 		} catch (StructureException e){
 			// this is expected here, since there is no chain N
 		}
-		assertNotNull(nChain);
+		assertNull(nChain);
 	}
 }
