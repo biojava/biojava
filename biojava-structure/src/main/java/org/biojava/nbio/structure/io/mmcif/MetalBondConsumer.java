@@ -259,4 +259,16 @@ public class MetalBondConsumer implements MMcifConsumer{
     public Map<String,List<MetalBondDistance>> getDefinitions(){
         return definitions;
     }
+
+	@Override
+	public void newPdbxAuditRevisionHistory(PdbxAuditRevisionHistory history) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void newPdbxDatabaseStatus(PdbxDatabaseStatus status) {
+		// TODO Auto-generated method stub
+		
+	}
 }
