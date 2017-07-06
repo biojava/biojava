@@ -1371,14 +1371,15 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 	@Override
 	public void newDatabasePDBrev(DatabasePDBrev dbrev) {
-		//System.out.println("got a database revision:" + dbrev);
+		
+		logger.debug("got a database revision:" + dbrev);
+		
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd",Locale.US);
 		PDBHeader header = structure.getPDBHeader();
 
 		if ( header == null) {
 			header = new PDBHeader();
 		}
-
 
 		if (dbrev.getNum().equals("1")){
 
@@ -1391,8 +1392,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			}
 
 			try {
-				Date mod = dateFormat.parse(dbrev.getDate());
-				header.setModDate(mod);
+				Date rel = dateFormat.parse(dbrev.getDate());
+				header.setRelDate(rel);
 
 			} catch (ParseException e){
 				logger.warn("Could not parse date string '{}', modification date will be unavailable", dbrev.getDate());
