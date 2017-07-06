@@ -479,9 +479,12 @@ public class MmtfUtils {
 	 * @param sequence the sequence of the construct
 	 */
 	public static void addSeqRes(Chain modelChain, String sequence) {
+		
 		List<Group> seqResGroups = modelChain.getSeqResGroups();
 		GroupType chainType = getChainType(modelChain.getAtomGroups());
+		
 		for(int i=0; i<sequence.length(); i++){
+			
 			char singleLetterCode = sequence.charAt(i);
 			Group group = null;
 			if(seqResGroups.size()<=i){
@@ -492,6 +495,7 @@ public class MmtfUtils {
 			if(group!=null){
 				continue;
 			}
+			
 			group = getSeqResGroup(modelChain, singleLetterCode, chainType);
 			addGroupAtId(seqResGroups, group, i);
 			seqResGroups.set(i, group);
