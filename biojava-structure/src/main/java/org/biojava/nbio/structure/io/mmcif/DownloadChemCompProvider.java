@@ -67,7 +67,7 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 
 	public static final String CHEM_COMP_CACHE_DIRECTORY = "chemcomp";
 
-	public static final String SERVER_LOCATION = "https://files.rcsb.org/ligands/download/";
+	public static final String SERVER_LOCATION = "http://files.rcsb.org/ligands/download/";
 
 
 	private static File path;
