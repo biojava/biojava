@@ -30,8 +30,8 @@ import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
 
-/** A class that provides a set of standard amino acids.
- *
+/** 
+ * A class that provides a set of standard amino acids.
  *
  *
  * @author Andreas Prlic
@@ -49,7 +49,6 @@ public final class StandardAminoAcid {
 	 * Cannot be instantiated.
 	 */
 	private StandardAminoAcid() {
-		super();
 	}
 
 	/**

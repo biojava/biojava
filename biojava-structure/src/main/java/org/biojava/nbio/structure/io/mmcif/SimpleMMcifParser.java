@@ -649,14 +649,16 @@ public class SimpleMMcifParser implements MMcifParser {
 					loopFields, lineData, loopWarnings);
 
 			triggerNewDatabasePDBrevRecord(dbrev);
-
+			
+    // MMCIF version 5 dates  
 		} else if ( category.equals("_pdbx_audit_revision_history")) {
 			PdbxAuditRevisionHistory history = (PdbxAuditRevisionHistory) buildObject(
 					PdbxAuditRevisionHistory.class.getName(),
 					loopFields, lineData, loopWarnings);
 
 			triggerNewPdbxAuditRevisionHistory(history);
-
+    
+    // MMCIF version 5 dates
 		} else if ( category.equals("_pdbx_database_status")) {
 			PdbxDatabaseStatus status = (PdbxDatabaseStatus) buildObject(
 					PdbxDatabaseStatus.class.getName(),

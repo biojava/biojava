@@ -22,9 +22,6 @@
  *
  */
 package org.biojava.nbio.structure;
-import java.io.Serializable;
-
-
 
 /**
  * A nucleotide group is almost the same as a Hetatm group.
@@ -34,7 +31,7 @@ import java.io.Serializable;
  * @since 1.4
  * @version %I% %G%
  */
-public class NucleotideImpl extends HetatomImpl implements Group, Serializable, Cloneable {
+public class NucleotideImpl extends HetatomImpl {
 
 	private static final long serialVersionUID = -7467726932980288712L;
 	/** this is a "nucleotide", a special occurance of a Hetatom. */

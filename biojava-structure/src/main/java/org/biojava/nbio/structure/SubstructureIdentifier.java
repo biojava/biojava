@@ -24,7 +24,6 @@
 package org.biojava.nbio.structure;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -69,7 +68,7 @@ import org.slf4j.LoggerFactory;
  * @author dmyersturnbull
  * @author Spencer Bliven
  */
-public class SubstructureIdentifier implements Serializable, StructureIdentifier {
+public class SubstructureIdentifier implements StructureIdentifier {
 
 	private static final long serialVersionUID = 1L;
 

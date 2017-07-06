@@ -63,6 +63,9 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class URLIdentifier implements StructureIdentifier {
+
+	private static final long serialVersionUID = -5161230822868926035L;
+
 	private static final Logger logger = LoggerFactory.getLogger(URLIdentifier.class);
 
 	// Used for guessing the PDB ID from the filename

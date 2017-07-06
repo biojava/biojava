@@ -23,7 +23,6 @@
 
 package org.biojava.nbio.structure.io;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,15 +31,12 @@ import org.biojava.nbio.structure.PDBRecord;
 
 /**
  * A simple bean to store disulfide bridge information, the SSBOND records in the PDB files.
- *
  * The two residues specified here are CYS residues that form a Disulfide bridge.
- *
- *
  *
  * @author Andreas Prlic
  *
  */
-public class SSBondImpl implements PDBRecord, Serializable, Cloneable {
+public class SSBondImpl implements PDBRecord, Cloneable {
 
 	private static final long serialVersionUID = -8663681100691188647L;
 
@@ -59,7 +55,6 @@ public class SSBondImpl implements PDBRecord, Serializable, Cloneable {
 
 	@Override
 	public String toPDB(){
-
 
 		StringBuffer buf = new StringBuffer();
 		toPDB(buf);

@@ -29,7 +29,7 @@ import java.util.List;
  * @author Jules Jacobsen
  * @since 1.7
  */
-public class JournalArticle implements Serializable{
+public class JournalArticle implements Serializable {
 
 	private static final long serialVersionUID = 5062668226159515468L;
 	private List<Author> authorList = new ArrayList<Author>();
