@@ -1430,8 +1430,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		if (history.getOrdinal().equals("1")){
 			try {
 				Date releaseDate = dateFormat.parse(history.getRevision_date());
-// TODO uncomment when setRelDate method has been implemented
-				// header.setRelDate(releaseDate));
+				header.setRelDate(releaseDate);
+				
 			} catch (ParseException e){
 				logger.warn("Could not parse date string '{}', release date will be unavailable", history.getRevision_date());
 			}

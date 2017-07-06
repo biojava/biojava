@@ -3,12 +3,16 @@ package org.biojava.nbio.structure.io.mmcif;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 import org.biojava.nbio.structure.PDBHeader;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.align.util.AtomCache;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -42,47 +46,45 @@ public class TestParseMmcifHeader {
 	 * Test parsing dates from MMCIF file version 4.
 	 */
 	@Test
-	public void testDatesV4() throws IOException, StructureException {
+	public void testDatesV4() throws IOException, StructureException, ParseException {
 		
 		ClassLoader classLoader = this.getClass().getClassLoader();
 		String file4 = classLoader.getResource("org/biojava/nbio/structure/io/mmcif/1stp_v4.cif").getPath();
-
 		Structure s = StructureIO.getStructure(file4);
-
-		// The latest modified year should be 2011
-		assertEquals(s.getPDBHeader().getModDate().getYear() + 1900, 2011);
-
-		// The release date should be october 1992
-		assertEquals(s.getPDBHeader().getRelDate().getMonth() + 1, 10);
-		assertEquals(s.getPDBHeader().getRelDate().getYear() + 1900, 1992);
 		
-		// The deposition date should be march 1992
-		assertEquals(s.getPDBHeader().getDepDate().getMonth() + 1, 3);
-		assertEquals(s.getPDBHeader().getDepDate().getYear() + 1900, 1992);
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd",Locale.US);
+		
+		Date modDate = dateFormat.parse("2011-07-13");
+		assertEquals(modDate, s.getPDBHeader().getModDate());
+
+		Date releaseDate = dateFormat.parse("1992-10-15");
+		assertEquals(releaseDate, s.getPDBHeader().getRelDate());
+		
+		Date depositionDate = dateFormat.parse("1992-03-12");
+		assertEquals(depositionDate, s.getPDBHeader().getDepDate());
 		
 	}
 	
 	/**
 	 * Test parsing dates from MMCIF file version 5.
 	 */
-	@Test @Ignore
-	public void testDatesV5() throws IOException, StructureException {
+	@Test
+	public void testDatesV5() throws IOException, StructureException, ParseException {
 		
 		ClassLoader classLoader = this.getClass().getClassLoader();
-		String file4 = classLoader.getResource("org/biojava/nbio/structure/io/mmcif/1stp_v5.cif").getPath();
-
-		Structure s = StructureIO.getStructure(file4);
-
-		// The latest modified year should be 2011
-		assertEquals(s.getPDBHeader().getModDate().getYear() + 1900, 2011);
-
-		// The release date should be october 1992
-		assertEquals(s.getPDBHeader().getRelDate().getMonth() + 1, 10);
-		assertEquals(s.getPDBHeader().getRelDate().getYear() + 1900, 1992);
+		String file5 = classLoader.getResource("org/biojava/nbio/structure/io/mmcif/1stp_v5.cif").getPath();
+		Structure s = StructureIO.getStructure(file5);
 		
-		// The deposition date should be march 1992
-		assertEquals(s.getPDBHeader().getDepDate().getMonth() + 1, 3);
-		assertEquals(s.getPDBHeader().getDepDate().getYear() + 1900, 1992);
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd",Locale.US);
+
+		Date modDate = dateFormat.parse("2011-07-13");
+		assertEquals(modDate, s.getPDBHeader().getModDate());
+
+		Date releaseDate = dateFormat.parse("1992-10-15");
+		assertEquals(releaseDate, s.getPDBHeader().getRelDate());
+		
+		Date depositionDate = dateFormat.parse("1992-03-12");
+		assertEquals(depositionDate, s.getPDBHeader().getDepDate());
 		
 
 	}
