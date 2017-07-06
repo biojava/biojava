@@ -1467,7 +1467,6 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			header = new PDBHeader();
 		}
 
-		// first entry in revision history is the release date
 		try {
 			Date depositionDate = dateFormat.parse(status.getRecvd_initial_deposition_date());
 			header.setDepDate(depositionDate);
