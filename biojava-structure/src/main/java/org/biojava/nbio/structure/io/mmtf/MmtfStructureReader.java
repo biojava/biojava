@@ -506,14 +506,13 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 		if(releaseDate!=null){
 			try {
 				Date relDate = formatter.parse(releaseDate);
-				pdbHeader.setModDate(relDate);
+				pdbHeader.setRelDate(relDate);
 			} catch (ParseException e) {
-				logger.warn("Could not parse date string '{}', release/modification date will be unavailable", releaseDate);
+				logger.warn("Could not parse date string '{}', release date will be unavailable", releaseDate);
 			}
 		}
 		else{
-			pdbHeader.setModDate(new Date(0));
+			pdbHeader.setRelDate(new Date(0));
 		}
-
 	}
 }
