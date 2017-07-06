@@ -23,7 +23,6 @@
  */
 package org.biojava.nbio.structure;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
@@ -43,7 +42,7 @@ import org.slf4j.LoggerFactory;
  * @since 1.4
  * @version %I% %G%
  */
-public class StructureImpl implements Structure, Serializable {
+public class StructureImpl implements Structure {
 
 	private static final long serialVersionUID = -8344837138032851348L;
 

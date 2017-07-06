@@ -20,7 +20,6 @@
  */
 package org.biojava.nbio.structure;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +30,7 @@ import java.util.List;
  * @author Jules Jacobsen <jacobsen@ebi.ac.uk>
  * @author Ulysse Carion
  */
-public class BondImpl implements Serializable, Bond {
+public class BondImpl implements Bond {
 
 	private static final long serialVersionUID = 8836120946858134380L;
 	private Atom atomA;

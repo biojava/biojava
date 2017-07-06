@@ -25,7 +25,6 @@ package org.biojava.nbio.structure;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.Formatter;
 import java.util.Locale;
@@ -38,7 +37,7 @@ import java.util.Locale;
  * @since 4:56:14 PM
  * @version %I% %G%
  */
-public class DBRef implements PDBRecord, Serializable{
+public class DBRef implements PDBRecord {
 
 	private final static Logger logger = LoggerFactory.getLogger(DBRef.class);
 
