@@ -211,6 +211,8 @@
 					<artifactId>maven-javadoc-plugin</artifactId>
 					<version>2.10.3</version>
 					<configuration>
+						<!-- we need to allow script in comments or otherwise we can't use google analytics js in footer below - JD 2017-06-06 -->
+						<additionalparam>--allow-script-in-comments</additionalparam>
 						<maxmemory>256m</maxmemory>
 						<footer>&lt;script src="http://www.google-analytics.com/urchin.js"
 							type="text/javascript"&gt;&lt;/script&gt;&lt;script
