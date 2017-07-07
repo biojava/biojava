@@ -1,6 +1,6 @@
 language: java
 jdk:
- - opendk8
+ - openjdk8
 sudo: false
 cache:
   directories:
