@@ -122,8 +122,6 @@ public class FastaReader<S extends Sequence<?>, C extends Compound> {
 	 * <ul>
 	 * <li>This method can't be called after calling its NO-ARGUMENT twin.</li>
 	 * <li>remember to close the underlying resource when you are done.</li>
-	 * <li>This method always return non-null hash map. When end-of-file is reached,
-	 * the number of sequences returned will be smaller than the number requested.</li>
 	 * </ul>
 	 * @see #process()
 	 * @author Amr AL-Hossary
@@ -219,7 +217,7 @@ public class FastaReader<S extends Sequence<?>, C extends Compound> {
 		this.line  = line;
 		this.header= header;
 
-		return sequences;
+		return max > -1 && sequences.isEmpty() ? null :  sequences;
 	}
 
 	public void close() throws IOException {
