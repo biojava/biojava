@@ -55,26 +55,27 @@ public class TestParseInternalChainId {
 		}
 
 
-		assertTrue(asymA.getId().equals("A"));
-		assertTrue(asymA.getName().equals("C"));
+		assertEquals("A", asymA.getId());
+		assertEquals("C", asymA.getName());
 
-		assertTrue(asymB.getId().equals("B"));
-		assertTrue(asymB.getName().equals("D"));
+		assertEquals("B", asymB.getId());
+		assertEquals("D", asymB.getName());
 
-		assertTrue(asymC.getId().equals("C"));
-		assertTrue(asymC.getName().equals("E"));
+		assertEquals("C", asymC.getId());
+		assertEquals("E", asymC.getName());
 
-		assertTrue(asymD.getId().equals("D"));
-		assertTrue(asymD.getName().equals("F"));
+		assertEquals("D", asymD.getId());
+		assertEquals("F", asymD.getName());
 
-		assertTrue(asymE.getId().equals("E"));
-		assertTrue(asymE.getName().equals("A"));
+		assertEquals("E", asymE.getId());
+		assertEquals("A", asymE.getName());
 
-		assertTrue(asymF.getId().equals("F"));
-		assertTrue(asymF.getName().equals("B"));
+		assertEquals("F", asymF.getId());
+		assertEquals("B", asymF.getName());
 
 		Chain chainG = s.getNonPolyChain("G");
-		assertTrue(chainG.getName().equals("A"));
+		// before mmcif v5, this used to be "A", now it's "C" - JD 2017-07-13
+		assertEquals("C", chainG.getName());
 
 	}
 

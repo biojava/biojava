@@ -55,8 +55,7 @@ public class TestQuaternaryStructureProviders {
 		// thus we can't test here the comparison between the 2
 		//testID("5LDH",2, 2); 
 		
-		// in 5ldh there's also PAU and XAU but those are ignored, see github issue #230
-		
+		// since v5 remediation there's 4 bioassemblies with numerical ids for 5ldh, no more PAU and XAU
 		boolean gotException = false;
 		try {
 			AtomCache cache = new AtomCache();
@@ -67,7 +66,7 @@ public class TestQuaternaryStructureProviders {
 			gotException = true;
 		}
 
-		assertTrue("Bioassembly 3 for PDB id 5LDH should fail with a StructureException!", gotException);
+		assertTrue("Bioassembly 3 for PDB id 5LDH should fail with a StructureException!", !gotException);
 
 		// bioassembly 2 does exist in mmcif file, let's check that
 		gotException = false;
@@ -102,7 +101,7 @@ public class TestQuaternaryStructureProviders {
 
 	@Test
 	public void testGetNrBioAssemblies5LDH() throws IOException, StructureException {
-		assertEquals("There should be only 2 bioassemblies for 5LDH, see github issue #230", 2, StructureIO.getBiologicalAssemblies("5LDH").size());
+		assertEquals("There should be 4 bioassemblies for 5LDH, see github issue #230", 4, StructureIO.getBiologicalAssemblies("5LDH").size());
 	}
 
 
