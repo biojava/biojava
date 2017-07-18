@@ -113,7 +113,7 @@ public class EcodInstallation implements EcodDatabase {
 	/**
 	 * @see EcodFactory#getEcodDatabase()
 	 */
-	EcodInstallation() {
+	public EcodInstallation() {
 		this( new UserConfiguration().getCacheFilePath(), DEFAULT_VERSION );
 	}
 	/**
