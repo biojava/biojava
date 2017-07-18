@@ -56,11 +56,11 @@ import java.util.logging.Logger;
 
 public class RCSBLigandsFactory {
 
-	private static final String HET_URL_STUB = "http://www.pdb.org/pdb/rest/describeHet?chemicalID=";
+	private static final String HET_URL_STUB = "http://www.rcsb.org/pdb/rest/describeHet?chemicalID=";
 
 	private static final Logger logger = Logger.getLogger(RCSBLigandsFactory.class.getPackage().getName());
 
-	private static final String PDB_URL_STUB = "http://www.pdb.org/pdb/rest/ligandInfo?structureId=";
+	private static final String PDB_URL_STUB = "http://www.rcsb.org/pdb/rest/ligandInfo?structureId=";
 
 	/**
 	 * @return A list of {@link RCSBLigand RCSBLigands} from the XML file loaded as {@code stream}. Prefer calling
