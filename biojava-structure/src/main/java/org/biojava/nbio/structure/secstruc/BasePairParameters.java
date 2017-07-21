@@ -11,6 +11,9 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import static java.lang.Math.*;
 
 /**
@@ -22,6 +25,8 @@ import static java.lang.Math.*;
  */
 public class BasePairParameters {
 
+    private static Logger log = LoggerFactory.getLogger(BasePairParameters.class);
+    
     private static String[] standardBases = new String[] {
             "SEQRES   1 A    1  A\n" +
                     "ATOM      2  N9    A A   1      -1.291   4.498   0.000\n" +
@@ -119,7 +124,7 @@ public class BasePairParameters {
                 }
 ;            }
         } catch (IOException|StructureException e) {
-            System.out.println("Error reading file from local drive or internet");
+            log.info("Error reading file from local drive or internet");
             structure = null;
         }
     }
@@ -166,7 +171,7 @@ public class BasePairParameters {
             for (int j = i+1; j < chains.size(); j++) {
                 String complement = complement(chains.get(j).getSeqResSequence(), false);
                 String match = longestCommonSubstring(c.getSeqResSequence(), complement);
-                //System.out.println(c.getSeqResSequence() + " " + chains.get(j).getSeqResSequence() + " " + match);
+                //log.info(c.getSeqResSequence() + " " + chains.get(j).getSeqResSequence() + " " + match);
                 int index1 = c.getSeqResSequence().indexOf(match);
                 int index2 = complement.length() - complement.indexOf(match) - 1;
                 for (int k = 0; k < match.length(); k++) {
@@ -182,12 +187,12 @@ public class BasePairParameters {
                     Atom a2 = g2.getAtom(ringMap.get(type2).get(0));
 
                     if (a1 == null) {
-                        System.out.println("Error processing " + g1.getPDBName() + " in " + pdbId);
+                        log.info("Error processing " + g1.getPDBName() + " in " + pdbId);
                         if (pairSequence.length() != 0 && pairSequence.charAt(pairSequence.length()-1) != ' ') pairSequence += ' ';
                         continue;
                     }
                     if (a2 == null) {
-                        System.out.println("Error processing " + g2.getPDBName() + " in " + pdbId);
+                        log.info("Error processing " + g2.getPDBName() + " in " + pdbId);
                         if (pairSequence.length() != 0 && pairSequence.charAt(pairSequence.length()-1) != ' ') pairSequence += ' ';
                         continue;
                     }
@@ -196,7 +201,7 @@ public class BasePairParameters {
                     double dy = a1.getY()-a2.getY();
                     double dz = a1.getZ()-a2.getZ();
                     double distance = Math.sqrt(dx*dx+dy*dy+dz*dz);
-                    //System.out.println("C8-C6 Distance (Å): " + distance);
+                    //log.info("C8-C6 Distance (Å): " + distance);
                     // could be a base pair
                     if (Math.abs(distance-10.0) < 2.0) {
                         boolean valid = true;
@@ -220,9 +225,9 @@ public class BasePairParameters {
                 }
                 if (pairSequence.length() != 0 && pairSequence.charAt(pairSequence.length()-1) != ' ') pairSequence += ' ';
             }
-            //System.out.println();
+            //log.info();
         }
-        System.out.println("Matched: " + pairSequence);
+        log.info("Matched: " + pairSequence);
         return result;
     }
 
@@ -270,11 +275,11 @@ public class BasePairParameters {
         }
         assert count == std2.getAtoms().size();
 
-        //    System.out.println(ref1);
+        //    log.info(ref1);
         Matrix4d temp = (Matrix4d)ref1.clone();
         Matrix4d temp2 = (Matrix4d)temp.clone();
         Matrix4d ref2 = sp.superposeAndTransform(pointact, pointref);
-        //    System.out.println(ref2);
+        //    log.info(ref2);
         double[][] v = new double[3][4];
         double[] y3 = new double[4];
         double[] z3 = new double[4];
