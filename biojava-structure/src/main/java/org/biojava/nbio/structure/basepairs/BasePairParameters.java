@@ -1,4 +1,4 @@
-package org.biojava.nbio.structure.secstruc;
+package org.biojava.nbio.structure.basepairs;
 
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.geometry.SuperPosition;
@@ -21,12 +21,21 @@ import static java.lang.Math.*;
  * This module calculates the el Hassan-Calladine Base Pairing and Base-pair Step Parameters
  * Citation: https://www.ncbi.nlm.nih.gov/pubmed/11601858
  *
- * Created by luke on 7/20/17.
+ * The method that might be overridden is findPairs(), this implementation is used for a large-scale
+ * analysis of the most proper helical regions in almost 4000 protein-DNA structures, almost
+ * 2000 structures containing only DNA, or almost 1300 structures containing only RNA. (as of 7/2017).
+ * Those who study tertiary structures for RNA folding would be better using their own method,
+ * because this is only looking for base pairs between separate strands.
+ *
+ * Created by luke czapla on 7/20/17.
  */
 public class BasePairParameters {
 
     private static Logger log = LoggerFactory.getLogger(BasePairParameters.class);
-    
+
+    // See URL http://ndbserver.rutgers.edu/ndbmodule/archives/reports/tsukuba/Table1.html
+    // and the paper cited at the top of this class (also as Table 1).
+    // These are hard-coded to avoid problems with resource paths.
     private static String[] standardBases = new String[] {
             "SEQRES   1 A    1  A\n" +
                     "ATOM      2  N9    A A   1      -1.291   4.498   0.000\n" +
@@ -68,17 +77,18 @@ public class BasePairParameters {
                     "END"
     };
 
-    private static String[] baseListDNA = {"A", "G", "T", "C"};
-    private static String[] baseListRNA = {"A", "G", "U", "C"};
+    // this is also hard-coded data about standard WC base pairs for both DNA and RNA
+    //private static String[] baseListDNA = {"A", "G", "T", "C"};
+    //private static String[] baseListRNA = {"A", "G", "U", "C"};
     private static Map<String, Integer> map;
     private static Map<Integer, List<String>> ringMap;
     static {
         map = new HashMap<>();
         map.put("DA", 0); map.put("ADE", 0); map.put("A", 0);
         map.put("DG", 1); map.put("GUA", 1); map.put("G", 1);
-        map.put("DT", 2); map.put("THY", 2); map.put("T", 2); //RNA lines: map.put("U", 2); map.put("URA", 2);
+        map.put("DT", 2); map.put("THY", 2); map.put("T", 2); map.put("U", 2); map.put("URA", 2);
         map.put("DC", 3); map.put("CYT", 3); map.put("C", 3);
-        // chemically modified bases, leaving out right now.
+        // chemically modified bases, leaving out to ignore (to treat as gaps) right now.
         //map.put("DZM", 0);
         //map.put("UCL", 2);
         //map.put("2DT", 2);
@@ -91,70 +101,108 @@ public class BasePairParameters {
    }
 
     private Structure structure;
-    private String pairSequence = "", pdbId = "";
-
+    private boolean useRNA = false;
     private double[] pairParameters;
+
+    // this is the main data that you want to get back out from the procedure.
+    private String pairSequence = "";
     private double[][] pairingParameters;
     private double[][] stepParameters;
 
 
-    // Either pass the name of a PDB file (ending in .pdb) or pass the pdbId
-    public BasePairParameters(String name) {
-        PDBFileReader pdbFileReader = new PDBFileReader();
-        pdbFileReader.setPath(".");
-        try {
-            if (name.contains(".pdb")) structure = pdbFileReader.getStructure(name);
-            else structure = StructureIO.getStructure(name);
-            pdbId = name.replace(".pdb", "");
-            List<Chain> nucleics = this.getNucleicChains(false);
-            List<Group[]> pairs = this.findPairs(nucleics);
-            pairingParameters = new double[pairs.size()][6];
-            stepParameters = new double[pairs.size()][6];
-            Matrix4d lastStep = null;
-            Matrix4d currentStep = null;
-            for (int i = 0; i < pairs.size(); i++) {
-                lastStep = currentStep;
-                currentStep = this.basePairReferenceFrame(pairs.get(i));
-                for (int j = 0; j < 6; j++) pairingParameters[i][j] = pairParameters[j];
-                if (i != 0) {
-                    lastStep.invert();
-                    lastStep.mul(currentStep);
-                    double[] sparms = calculatetp(lastStep);
-                    for (int j = 0; j < 6; j++) stepParameters[i][j] = sparms[j];
-                }
-;            }
-        } catch (IOException|StructureException e) {
-            log.info("Error reading file from local drive or internet");
-            structure = null;
+    /**
+     * Constructor takes a Structure object, finds base pair and base-pair step parameters
+     * for double-helical regions within the structure.
+     * @param structure The already-loaded structure to analyze.
+     * @param useRNA whether to look for canonical RNA pairs.  By default (false) it analyzes DNA.
+     * @param removeDups whether to only look for base-pair parameters for each unique sequence in
+     *  the structure (if set to <i>true</i>)
+     */
+    public BasePairParameters(Structure structure, boolean useRNA, boolean removeDups) {
+        this.structure = structure;
+        this.useRNA = useRNA;
+        if (structure == null) {
+            pairingParameters = null;
+            stepParameters = null;
+            return;
         }
+        List<Chain> nucleics = this.getNucleicChains(removeDups);
+        List<Group[]> pairs = this.findPairs(nucleics);
+        pairingParameters = new double[pairs.size()][6];
+        stepParameters = new double[pairs.size()][6];
+        Matrix4d lastStep = null;
+        Matrix4d currentStep = null;
+        for (int i = 0; i < pairs.size(); i++) {
+            lastStep = currentStep;
+            currentStep = this.basePairReferenceFrame(pairs.get(i));
+            for (int j = 0; j < 6; j++) pairingParameters[i][j] = pairParameters[j];
+            if (i != 0) {
+                lastStep.invert();
+                lastStep.mul(currentStep);
+                double[] sparms = calculatetp(lastStep);
+                for (int j = 0; j < 6; j++) stepParameters[i][j] = sparms[j];
+            }
+;       }
+
     }
 
+
+    /**
+     * Constructor takes a Structure object, finds base pair and base-pair step parameters
+     * for double-helical regions within the structure for only canonical DNA pairs.
+     * @param structure The already-loaded structure to analyze.
+     */
+    public BasePairParameters(Structure structure) {
+        this(structure, false, false);
+    }
+
+    /**
+     * This reports all the pair parameters, in the order of:
+     * buckle, propeller, opening (in degrees), shear, stagger, stretch (in Å).
+     * @return A double[][] with length equal to number of base pairs for rows, and 6 columns
+     */
     public double[][] getPairingParameters() {
         return pairingParameters;
     }
 
+    /**
+     * This reports all the base-pair step parameters, in the order of:
+     * tilt, roll, twist (in degrees), shift, slide, rise (in Å).
+     * @return A double[][] with length equal to number of base pairs (the first row 0 has no step
+     *  and therefore is six zeroes), and 6 columns.
+     */
     public double[][] getStepParameters() {
         return stepParameters;
     }
 
+    /**
+     * This returns the primary strand's sequence where parameters were found.
+     * There are spaces in the string anywhere there was a break in the helix or when
+     * it goes from one helix to another helix in the structure. (the "step" is still returned!)
+     * @return String of primary sequence with spaces between gaps and new helices.
+     */
     public String getPairSequence() {
         return pairSequence;
     }
 
+    /**
+     * This reports all the nucleic acid chains and has an option to remove duplicates if you
+     * are considering an analyze of only unique DNA or RNA helices in the Structure.
+     * @param removeDups If true, it will ignore duplicate chains
+     * @return A list of all the nucleic acid chains in order of the Structure
+     */
     public List<Chain> getNucleicChains(boolean removeDups) {
         if (structure == null) return new ArrayList<>();
         List<Chain> chains = structure.getChains();
         List<Chain> result = new ArrayList<>();
         for (Chain c: chains) {
-            //EntityInfo ei = c.getEntityInfo();
             if (c.isNucleicAcid()) {
                 result.add(c);
             }
-            //result.add(c);
         }
         if (removeDups) for (int i = 0; i < result.size(); i++) {
             for (int j = i+2; j < result.size(); j++) {
-                // remove double
+                // remove duplicate sequences (structures with two or more identical units)
                 if (result.get(i).getSeqResSequence().equals(result.get(j).getSeqResSequence())) {
                     result.remove(j);
                 }
@@ -164,12 +212,19 @@ public class BasePairParameters {
     }
 
 
+    /**
+     * This performs a search for base pairs in the structure.  The criteria is alignment of
+     * sequences and the canonical base pairs of DNA and RNA.
+     * @param chains The list of chains already found to be nucleic acids
+     * @return The list of corresponding Watson-Crick groups as pairs, element 0 is on the
+     *  forward strand and element 1 is on the reverse strand.
+     */
     public List<Group[]> findPairs(List<Chain> chains) {
         List<Group[]> result = new ArrayList<>();
         for (int i = 0; i < chains.size(); i++) {
             Chain c = chains.get(i);
             for (int j = i+1; j < chains.size(); j++) {
-                String complement = complement(chains.get(j).getSeqResSequence(), false);
+                String complement = complement(chains.get(j).getSeqResSequence(), useRNA);
                 String match = longestCommonSubstring(c.getSeqResSequence(), complement);
                 //log.info(c.getSeqResSequence() + " " + chains.get(j).getSeqResSequence() + " " + match);
                 int index1 = c.getSeqResSequence().indexOf(match);
@@ -187,12 +242,12 @@ public class BasePairParameters {
                     Atom a2 = g2.getAtom(ringMap.get(type2).get(0));
 
                     if (a1 == null) {
-                        log.info("Error processing " + g1.getPDBName() + " in " + pdbId);
+                        log.info("Error processing " + g1.getPDBName());
                         if (pairSequence.length() != 0 && pairSequence.charAt(pairSequence.length()-1) != ' ') pairSequence += ' ';
                         continue;
                     }
                     if (a2 == null) {
-                        log.info("Error processing " + g2.getPDBName() + " in " + pdbId);
+                        log.info("Error processing " + g2.getPDBName());
                         if (pairSequence.length() != 0 && pairSequence.charAt(pairSequence.length()-1) != ' ') pairSequence += ' ';
                         continue;
                     }
@@ -203,7 +258,7 @@ public class BasePairParameters {
                     double distance = Math.sqrt(dx*dx+dy*dy+dz*dz);
                     //log.info("C8-C6 Distance (Å): " + distance);
                     // could be a base pair
-                    if (Math.abs(distance-10.0) < 2.0) {
+                    if (Math.abs(distance-10.0) < 2.5) {
                         boolean valid = true;
                         for (String atomname : ringMap.get(type1)) {
                             Atom a = g1.getAtom(atomname);
@@ -230,7 +285,6 @@ public class BasePairParameters {
         log.info("Matched: " + pairSequence);
         return result;
     }
-
 
 
     public Matrix4d basePairReferenceFrame(Group[] pair) {
