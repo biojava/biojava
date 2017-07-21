@@ -26,7 +26,7 @@ public class TestBasePairParameters {
             structure = null;
             assertEquals(1, 2);
         }
-        BasePairParameters bp = new BasePairParameters(structure, false);
+        BasePairParameters bp = new BasePairParameters(structure, false, false);
         double[][] pairs = bp.getPairingParameters();
         double[][] steps = bp.getStepParameters();
         String sequence = bp.getPairSequence();
