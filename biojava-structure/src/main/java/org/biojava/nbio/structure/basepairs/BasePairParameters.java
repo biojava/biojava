@@ -74,14 +74,23 @@ public class BasePairParameters {
                     "ATOM      6  C4    C A   1       0.837   2.868   0.000\n" +
                     "ATOM      8  C5    C A   1       1.056   4.275   0.000\n" +
                     "ATOM      9  C6    C A   1      -0.023   5.068   0.000\n" +
-                    "END"
+                    "END",
+            "SEQRES   1 A    1  U\n" +
+                    "ATOM      2  N1    U A   1      -1.284   4.500   0.000\n" +
+                    "ATOM      3  C2    U A   1      -1.462   3.131   0.000\n" +
+                    "ATOM      5  N3    U A   1      -0.302   2.397   0.000\n" +
+                    "ATOM      6  C4    U A   1       0.989   2.884   0.000\n" +
+                    "ATOM      8  C5    U A   1       1.089   4.311   0.000\n" +
+                    "ATOM      9  C6    U A   1      -0.024   5.053   0.000\n"
     };
 
     // this is also hard-coded data about standard WC base pairs for both DNA and RNA
-    //private static String[] baseListDNA = {"A", "G", "T", "C"};
-    //private static String[] baseListRNA = {"A", "G", "U", "C"};
-    private static Map<String, Integer> map;
-    private static Map<Integer, List<String>> ringMap;
+    protected static String[] baseListDNA = {"A", "G", "T", "C"};
+    protected static String[] baseListRNA = {"A", "G", "U", "C"};
+    protected static Map<String, Integer> map;
+   // private static List<String> RNAspecific = Arrays.asList("U", "URA"),
+   //        DNAspecific = Arrays.asList("DC", "C", "CYT");
+    protected static Map<Integer, List<String>> ringMap;
     static {
         map = new HashMap<>();
         map.put("DA", 0); map.put("ADE", 0); map.put("A", 0);
@@ -100,14 +109,15 @@ public class BasePairParameters {
         ringMap.put(3, Arrays.asList("C6", "C2", "N3", "C4", "C5", "N1"));
    }
 
-    private Structure structure;
-    private boolean useRNA = false;
-    private double[] pairParameters;
+    protected Structure structure;
+    protected boolean useRNA = false;
+    protected double[] pairParameters;
 
     // this is the main data that you want to get back out from the procedure.
-    private String pairSequence = "";
-    private double[][] pairingParameters;
-    private double[][] stepParameters;
+    protected String pairSequence = "";
+    protected double[][] pairingParameters;
+    protected double[][] stepParameters;
+    protected List<String> pairingNames = new ArrayList<>();
 
 
     /**
@@ -186,6 +196,15 @@ public class BasePairParameters {
     }
 
     /**
+     * This returns the names of the pairs in terms of A, G, T/U, and C for each base pair group in the
+     * list.  The first character is the leading strand base and the second character is the complementary base
+     * @return
+     */
+    public List<String> getPairingNames() {
+        return pairingNames;
+    }
+
+    /**
      * This reports all the nucleic acid chains and has an option to remove duplicates if you
      * are considering an analyze of only unique DNA or RNA helices in the Structure.
      * @param removeDups If true, it will ignore duplicate chains
@@ -258,7 +277,7 @@ public class BasePairParameters {
                     double distance = Math.sqrt(dx*dx+dy*dy+dz*dz);
                     //log.info("C8-C6 Distance (Å): " + distance);
                     // could be a base pair
-                    if (Math.abs(distance-10.0) < 2.5) {
+                    if (Math.abs(distance-10.0) < 5.0) {
                         boolean valid = true;
                         for (String atomname : ringMap.get(type1)) {
                             Atom a = g1.getAtom(atomname);
@@ -269,11 +288,8 @@ public class BasePairParameters {
                             if (a == null) valid = false;
                         }
                         if (valid) {
-                            Group g3 = null;
-                            Group g4 = null;
-                            if (k + 1 < match.length()) g3 = c.getSeqResGroup(index1 + k + 1);
-                            if (k != 0) g4 = c.getSeqResGroup(index1 + k - 1);
-                            result.add(new Group[]{g1, g2, g3, g4});
+                            result.add(new Group[]{g1, g2});
+                            pairingNames.add((useRNA ? baseListRNA[type1]+baseListRNA[type2] : baseListDNA[type1]+baseListDNA[type2]));
                             pairSequence += c.getSeqResSequence().charAt(index1 + k);
                         } else if (pairSequence.length() != 0 && pairSequence.charAt(pairSequence.length()-1) != ' ') pairSequence += ' ';
                     } else if (pairSequence.length() != 0 && pairSequence.charAt(pairSequence.length()-1) != ' ') pairSequence += ' ';
@@ -424,8 +440,8 @@ public class BasePairParameters {
     public static char complementBase(char base, boolean RNA) {
         if (base == 'A' && RNA) return 'U';
         if (base == 'A') return 'T';
-        if (base == 'T') return 'A';
-        if (base == 'U') return 'A';
+        if (base == 'T' && !RNA) return 'A';
+        if (base == 'U' && RNA) return 'A';
         if (base == 'C') return 'G';
         if (base == 'G') return 'C';
         return ' ';

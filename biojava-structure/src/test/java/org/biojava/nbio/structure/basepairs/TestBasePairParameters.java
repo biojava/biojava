@@ -26,7 +26,7 @@ public class TestBasePairParameters {
             structure = null;
             assertEquals(1, 2);
         }
-        BasePairParameters bp = new BasePairParameters(structure, false, false);
+        BasePairParameters bp = new BasePairParameters(structure);
         double[][] pairs = bp.getPairingParameters();
         double[][] steps = bp.getStepParameters();
         String sequence = bp.getPairSequence();
@@ -49,6 +49,16 @@ public class TestBasePairParameters {
         assertEquals(steps[1][3], -0.873, 0.01);
         assertEquals(steps[1][4], -0.607, 0.01);
         assertEquals(steps[1][5], 3.070, 0.01);
+
+        try {
+            structure = StructureIO.getStructure("3PHP");
+        } catch (IOException|StructureException e) {
+            e.printStackTrace();
+            structure = null;
+            assertEquals(1, 2);
+        }
+        bp = new TertiaryBasePairParameters(structure, true, false);
+        assertEquals(bp.getPairingParameters().length, 8);
 
     }
 
