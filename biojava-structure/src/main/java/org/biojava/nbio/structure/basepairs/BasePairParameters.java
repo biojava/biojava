@@ -118,6 +118,7 @@ public class BasePairParameters {
     protected double[][] pairingParameters;
     protected double[][] stepParameters;
     protected List<String> pairingNames = new ArrayList<>();
+    protected List<Matrix4d> referenceFrames = new ArrayList<>();
 
 
     /**
@@ -140,11 +141,12 @@ public class BasePairParameters {
         List<Group[]> pairs = this.findPairs(nucleics);
         pairingParameters = new double[pairs.size()][6];
         stepParameters = new double[pairs.size()][6];
-        Matrix4d lastStep = null;
+        Matrix4d lastStep;
         Matrix4d currentStep = null;
         for (int i = 0; i < pairs.size(); i++) {
             lastStep = currentStep;
             currentStep = this.basePairReferenceFrame(pairs.get(i));
+            referenceFrames.add((Matrix4d)currentStep.clone());
             for (int j = 0; j < 6; j++) pairingParameters[i][j] = pairParameters[j];
             if (i != 0) {
                 lastStep.invert();
@@ -202,6 +204,10 @@ public class BasePairParameters {
      */
     public List<String> getPairingNames() {
         return pairingNames;
+    }
+
+    public List<Matrix4d> getReferenceFrames() {
+        return referenceFrames;
     }
 
     /**
@@ -355,14 +361,31 @@ public class BasePairParameters {
         double[] z3 = new double[4];
         ref2.getColumn(1, y3);
         ref2.getColumn(2, z3);
-        for (int i = 0; i < 3; i++) {
-            y3[i] *= -1.0;
-            z3[i] *= -1.0;
+        double[] z31 = new double[4];
+        ref1.getColumn(2, z31);
+        if (z3[0]*z31[0]+z3[1]*z31[1]+z3[2]*z31[2] < 0.0) {
+            for (int i = 0; i < 3; i++) {
+                y3[i] *= -1.0;
+                z3[i] *= -1.0;
+            }
         }
         ref2.setColumn(1, y3);
         ref2.setColumn(2, z3);
+
         temp.add(ref2);
         temp.mul(0.5);
+        double[] x3 = new double[4];
+        temp.getColumn(0, x3);
+        temp.getColumn(1, y3);
+        temp.getColumn(2, z3);
+        x3 = removeComponent(x3, z3);
+        x3 = removeComponent(x3, y3);
+        y3 = removeComponent(y3, z3);
+        temp.setColumn(0, x3);
+        temp.setColumn(1, y3);
+        temp.setColumn(2, z3);
+
+        // normalize the short, long, and normal axes
         for (int i = 0; i < 3; i++) {
             temp.getColumn(i, v[i]);
             double r = Math.sqrt(v[i][0] * v[i][0] + v[i][1] * v[i][1] + v[i][2] * v[i][2]);
@@ -455,6 +478,27 @@ public class BasePairParameters {
         return result;
     }
 
+    public static double[] cross(double[] a, double[] b) {
+        assert a.length >= 3 && b.length >= 3;
+        double[] result = new double[4];
+        result[0] = a[1]*b[2]-a[2]*b[1];
+        result[1] = a[2]*b[0]-a[0]*b[2];
+        result[2] = a[0]*b[1]-a[1]*b[0];
+        return result;
+    }
+
+    public static double[] removeComponent(double[] a, double[] b) {
+        double dot = 0;
+        double[] result = new double[4];
+        for (int i = 0; i < 3; i++) {
+            dot += a[i]*b[i];
+        }
+        for (int i = 0; i < 3; i++) {
+            result[i] = a[i]-dot*b[i];
+        }
+        return result;
+
+    }
 
     public static String longestCommonSubstring(String s1, String s2) {
         int start = 0;
