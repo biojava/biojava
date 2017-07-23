@@ -21,15 +21,18 @@ public class TertiaryBasePairParameters extends BasePairParameters {
     @Override
     public List<Group[]> findPairs(List<Chain> chains) {
         List<Group[]> result = new ArrayList<>();
+        boolean lastFoundPair = false;
         for (int i = 0; i < chains.size(); i++) {
             Chain c = chains.get(i);
-            String sequence = c.getSeqResSequence();
+            String sequence = c.getAtomSequence();
+            Integer type1, type2;
             for (int j = 0; j < sequence.length(); j++) {
-                for (int k = sequence.length()-1; k >= j + 4; k--) {
-                    Group g1 = c.getSeqResGroup(j);
-                    Group g2 = c.getSeqResGroup(k);
-                    Integer type1 = map.get(g1.getPDBName());
-                    Integer type2 = map.get(g2.getPDBName());
+                boolean foundPair = false;
+                for (int k = sequence.length()-1; k >= j + 3 && !foundPair; k--) {
+                    Group g1 = c.getAtomGroup(j);
+                    Group g2 = c.getAtomGroup(k);
+                    type1 = map.get(g1.getPDBName());
+                    type2 = map.get(g2.getPDBName());
                     if (type1 == null || type2 == null) continue;
                     Atom a1 = g1.getAtom("C1'");
                     Atom a2 = g2.getAtom("C1'");
@@ -46,7 +49,14 @@ public class TertiaryBasePairParameters extends BasePairParameters {
                     }
                     result.add(ga);
                     pairingNames.add(useRNA ? baseListRNA[type1]+baseListRNA[type2]: baseListDNA[type1]+baseListDNA[type2]);
+                    foundPair = true;
                 }
+                if (!foundPair && lastFoundPair) {
+                    if (pairSequence.length() > 0 && pairSequence.charAt(pairSequence.length()-1) != ' ')
+                        pairSequence += ' ';
+                }
+                if (foundPair) pairSequence += (c.getAtomSequence().charAt(j));
+                lastFoundPair = foundPair;
             }
         }
         result.addAll(super.findPairs(chains));

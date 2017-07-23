@@ -228,7 +228,7 @@ public class BasePairParameters {
         if (removeDups) for (int i = 0; i < result.size(); i++) {
             for (int j = i+2; j < result.size(); j++) {
                 // remove duplicate sequences (structures with two or more identical units)
-                if (result.get(i).getSeqResSequence().equals(result.get(j).getSeqResSequence())) {
+                if (result.get(i).getAtomSequence().equals(result.get(j).getAtomSequence())) {
                     result.remove(j);
                 }
             }
@@ -249,14 +249,14 @@ public class BasePairParameters {
         for (int i = 0; i < chains.size(); i++) {
             Chain c = chains.get(i);
             for (int j = i+1; j < chains.size(); j++) {
-                String complement = complement(chains.get(j).getSeqResSequence(), useRNA);
-                String match = longestCommonSubstring(c.getSeqResSequence(), complement);
-                //log.info(c.getSeqResSequence() + " " + chains.get(j).getSeqResSequence() + " " + match);
-                int index1 = c.getSeqResSequence().indexOf(match);
+                String complement = complement(chains.get(j).getAtomSequence(), useRNA);
+                String match = longestCommonSubstring(c.getAtomSequence(), complement);
+                //log.info(c.getAtomSequence() + " " + chains.get(j).getAtomSequence() + " " + match);
+                int index1 = c.getAtomSequence().indexOf(match);
                 int index2 = complement.length() - complement.indexOf(match) - 1;
                 for (int k = 0; k < match.length(); k++) {
-                    Group g1 = c.getSeqResGroup(index1+k);
-                    Group g2 = chains.get(j).getSeqResGroup(index2-k);
+                    Group g1 = c.getAtomGroup(index1+k);
+                    Group g2 = chains.get(j).getAtomGroup(index2-k);
                     Integer type1 = map.get(g1.getPDBName());
                     Integer type2 = map.get(g2.getPDBName());
                     if (type1 == null || type2 == null) {
@@ -296,7 +296,7 @@ public class BasePairParameters {
                         if (valid) {
                             result.add(new Group[]{g1, g2});
                             pairingNames.add((useRNA ? baseListRNA[type1]+baseListRNA[type2] : baseListDNA[type1]+baseListDNA[type2]));
-                            pairSequence += c.getSeqResSequence().charAt(index1 + k);
+                            pairSequence += c.getAtomSequence().charAt(index1 + k);
                         } else if (pairSequence.length() != 0 && pairSequence.charAt(pairSequence.length()-1) != ' ') pairSequence += ' ';
                     } else if (pairSequence.length() != 0 && pairSequence.charAt(pairSequence.length()-1) != ' ') pairSequence += ' ';
                 }
