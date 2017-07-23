@@ -58,7 +58,7 @@ public class TestBasePairParameters {
             assertEquals(1, 2);
         }
         bp = new TertiaryBasePairParameters(structure, true, false);
-        assertEquals(bp.getPairingParameters().length, 8);
+        assertEquals(9, bp.getPairingParameters().length);
 
     }
 
