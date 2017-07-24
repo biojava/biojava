@@ -10,7 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by luke on 7/22/17.
+ * Contributed to BioJava under it's LGPL
+ * Created by luke czapla on 7/22/17.
+ * This class also finds the base pairing and base-pair step parameters but has a broader definition
+ * of a base pair so that non-canonical-WC base pairs will be detected and reported.  This is useful
+ * for RNA that has folded into different regions.
  */
 public class TertiaryBasePairParameters extends BasePairParameters {
 
@@ -18,6 +22,12 @@ public class TertiaryBasePairParameters extends BasePairParameters {
         super(structure, RNA, removeDups);
     }
 
+    /**
+     * This is an alternative implementation of findPair() that looks for anything that would fit the
+     * criteria for a base-pair, useful for the context of tertiary structure of RNA.
+     * @param chains The list of chains already found to be nucleic acids
+     * @return
+     */
     @Override
     public List<Group[]> findPairs(List<Chain> chains) {
         List<Group[]> result = new ArrayList<>();

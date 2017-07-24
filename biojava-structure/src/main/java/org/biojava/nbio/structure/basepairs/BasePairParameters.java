@@ -36,7 +36,7 @@ public class BasePairParameters {
     // See URL http://ndbserver.rutgers.edu/ndbmodule/archives/reports/tsukuba/Table1.html
     // and the paper cited at the top of this class (also as Table 1).
     // These are hard-coded to avoid problems with resource paths.
-    private static String[] standardBases = new String[] {
+    public static String[] standardBases = new String[] {
             "SEQRES   1 A    1  A\n" +
                     "ATOM      2  N9    A A   1      -1.291   4.498   0.000\n" +
                     "ATOM      3  C8    A A   1       0.024   4.897   0.000\n" +
@@ -110,7 +110,9 @@ public class BasePairParameters {
    }
 
     protected Structure structure;
+    protected boolean canonical = true;
     protected boolean useRNA = false;
+    protected boolean nonredundant = false;
     protected double[] pairParameters;
 
     // this is the main data that you want to get back out from the procedure.
@@ -128,19 +130,50 @@ public class BasePairParameters {
      * @param useRNA whether to look for canonical RNA pairs.  By default (false) it analyzes DNA.
      * @param removeDups whether to only look for base-pair parameters for each unique sequence in
      *  the structure (if set to <i>true</i>)
+     * @param canonical Whether to consider only Watson-Crick base pairs
      */
-    public BasePairParameters(Structure structure, boolean useRNA, boolean removeDups) {
+    public BasePairParameters(Structure structure, boolean useRNA, boolean removeDups, boolean canonical) {
         this.structure = structure;
         this.useRNA = useRNA;
+        this.canonical = canonical;
+        this.nonredundant = removeDups;
+
+    }
+
+    public BasePairParameters(Structure structure, boolean useRNA, boolean removeDups) {
+        this(structure, useRNA, removeDups, false);
+    }
+
+    public BasePairParameters(Structure structure, boolean useRNA) {
+        this(structure, useRNA, false, false);
+    }
+
+    /**
+     * Constructor takes a Structure object, finds base pair and base-pair step parameters
+     * for double-helical regions within the structure for only canonical DNA pairs.
+     * @param structure The already-loaded structure to analyze.
+     */
+    public BasePairParameters(Structure structure) {
+        this(structure, false, false, true);
+    }
+
+
+    /**
+     * This is the main function call to extract all step parameters, pairing parameters, and sequence
+     * information from the Structure object provided to the constructor.
+     * @return This same object with the populated data, convenient for output
+     *  (e.g. <i>log.info(new BasePairParameters(structure).analyze());</i>)
+     */
+    public BasePairParameters analyze() {
         if (structure == null) {
             pairingParameters = null;
             stepParameters = null;
-            return;
+            return this;
         }
-        List<Chain> nucleics = this.getNucleicChains(removeDups);
+        List<Chain> nucleics = this.getNucleicChains(nonredundant);
         List<Group[]> pairs = this.findPairs(nucleics);
-        pairingParameters = new double[pairs.size()][6];
-        stepParameters = new double[pairs.size()][6];
+        this.pairingParameters = new double[pairs.size()][6];
+        this.stepParameters = new double[pairs.size()][6];
         Matrix4d lastStep;
         Matrix4d currentStep = null;
         for (int i = 0; i < pairs.size(); i++) {
@@ -154,19 +187,10 @@ public class BasePairParameters {
                 double[] sparms = calculatetp(lastStep);
                 for (int j = 0; j < 6; j++) stepParameters[i][j] = sparms[j];
             }
-;       }
-
+        }
+        return this;
     }
 
-
-    /**
-     * Constructor takes a Structure object, finds base pair and base-pair step parameters
-     * for double-helical regions within the structure for only canonical DNA pairs.
-     * @param structure The already-loaded structure to analyze.
-     */
-    public BasePairParameters(Structure structure) {
-        this(structure, false, false);
-    }
 
     /**
      * This reports all the pair parameters, in the order of:
@@ -190,7 +214,7 @@ public class BasePairParameters {
     /**
      * This returns the primary strand's sequence where parameters were found.
      * There are spaces in the string anywhere there was a break in the helix or when
-     * it goes from one helix to another helix in the structure. (the "step" is still returned!)
+     * it goes from one helix to another helix in the structure. (the "step" is still returned)
      * @return String of primary sequence with spaces between gaps and new helices.
      */
     public String getPairSequence() {
@@ -212,7 +236,7 @@ public class BasePairParameters {
 
     /**
      * This reports all the nucleic acid chains and has an option to remove duplicates if you
-     * are considering an analyze of only unique DNA or RNA helices in the Structure.
+     * are considering an analysis of only unique DNA or RNA helices in the Structure.
      * @param removeDups If true, it will ignore duplicate chains
      * @return A list of all the nucleic acid chains in order of the Structure
      */
@@ -235,7 +259,6 @@ public class BasePairParameters {
         }
         return result;
     }
-
 
     /**
      * This performs a search for base pairs in the structure.  The criteria is alignment of
@@ -309,6 +332,11 @@ public class BasePairParameters {
     }
 
 
+    /**
+     * Calculate the central frame (4x4 transformation matrix) of a single base pair.
+     * @param pair An array of the two groups that make a hypothetical pair
+     * @return The middle frame of the center of the base-pair formed
+     */
     public Matrix4d basePairReferenceFrame(Group[] pair) {
         Integer type1 = map.get(pair[0].getPDBName());
         Integer type2 = map.get(pair[1].getPDBName());
@@ -406,6 +434,23 @@ public class BasePairParameters {
 
     }
 
+
+    @Override
+    public String toString() {
+        if (getPairingParameters() == null) return "No data";
+        StringBuilder result = new StringBuilder(10000);
+        result.append(pairingParameters.length + " base pairs\n");
+        result.append("bp: buckle propeller opening shear stretch stagger tilt roll twist shift slide rise\n");
+        for (int i = 0; i < pairingParameters.length; i++) {
+            result.append(pairingNames.get(i)+": ");
+            for (int j = 0; j < 6; j++)
+                result.append(String.format("%5.4f", pairingParameters[i][j]) + " ");
+            for (int j = 0; j < 6; j++)
+                result.append(String.format("%5.4f", stepParameters[i][j]) + " ");
+            result.append("\n");
+        }
+        return result.toString();
+    }
 
 
     /**
@@ -519,4 +564,13 @@ public class BasePairParameters {
         return s1.substring(start, (start + max));
     }
 
+    protected static boolean match(char a, char b, boolean RNA) {
+        if (a == 'A' && b == 'T' && !RNA) return true;
+        if (a == 'A' && b == 'U' && RNA) return true;
+        if (a == 'T' && b == 'A' && !RNA) return true;
+        if (a == 'U' && b == 'A' && RNA) return true;
+        if (a == 'G' && b == 'C') return true;
+        if (a == 'C' && b == 'G') return true;
+        return false;
+    }
 }

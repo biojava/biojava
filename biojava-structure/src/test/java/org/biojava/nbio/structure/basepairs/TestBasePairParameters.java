@@ -27,11 +27,12 @@ public class TestBasePairParameters {
             assertEquals(1, 2);
         }
         BasePairParameters bp = new BasePairParameters(structure);
+        bp.analyze();
         double[][] pairs = bp.getPairingParameters();
         double[][] steps = bp.getStepParameters();
         String sequence = bp.getPairSequence();
 
-        assertEquals(sequence.trim().length(), 147);
+        assertEquals(bp.getPairingParameters().length, 147);
         // below all this set of comparator data was from an external program, 3DNA.
         // next three in degrees: buckle, propeller, opening
         assertEquals(pairs[0][0], -3.796, 0.1);
@@ -44,7 +45,7 @@ public class TestBasePairParameters {
         // next three in degrees: tilt, roll, twist
         assertEquals(steps[1][0], 2.354, 0.1);
         assertEquals(steps[1][1], 0.785, 0.1);
-        assertEquals(steps[1][2], 32.522, 1.0);
+        assertEquals(steps[1][2], 32.522, 0.5);
         // next three in Å, shift, slide, rise
         assertEquals(steps[1][3], -0.873, 0.01);
         assertEquals(steps[1][4], -0.607, 0.01);
@@ -57,8 +58,20 @@ public class TestBasePairParameters {
             structure = null;
             assertEquals(1, 2);
         }
-        bp = new TertiaryBasePairParameters(structure, true, false);
+        bp = new TertiaryBasePairParameters(structure, true, false).analyze();
         assertEquals(9, bp.getPairingParameters().length);
+
+        try {
+            structure = StructureIO.getStructure("1P71");
+        } catch (IOException|StructureException e) {
+            e.printStackTrace();
+            structure = null;
+            assertEquals(1, 2);
+        }
+
+        bp = new MismatchedBasePairParameters(structure, false, false, false).analyze();
+        assertEquals(17, bp.getPairingParameters().length);
+
 
     }
 
