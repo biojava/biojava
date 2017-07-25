@@ -36,13 +36,13 @@ public class TestBasePairParameters {
         assertEquals(bp.getStretch(0), -0.578, 0.02);
         assertEquals(bp.getStagger(0), -0.336, 0.02);
         // next three in degrees: tilt, roll, twist
-        assertEquals(bp.getTilt(0), 2.354, 0.1);
-        assertEquals(bp.getRoll(0), 0.785, 0.1);
-        assertEquals(bp.getTwist(0), 32.522, 0.5);
+        assertEquals(bp.getTilt(1), 2.354, 0.1);
+        assertEquals(bp.getRoll(1), 0.785, 0.1);
+        assertEquals(bp.getTwist(1), 32.522, 0.5);
         // next three in Å, shift, slide, rise
-        assertEquals(bp.getShift(0), -0.873, 0.02);
-        assertEquals(bp.getSlide(0), -0.607, 0.02);
-        assertEquals(bp.getRise(0), 3.070, 0.02);
+        assertEquals(bp.getShift(1), -0.873, 0.02);
+        assertEquals(bp.getSlide(1), -0.607, 0.02);
+        assertEquals(bp.getRise(1), 3.070, 0.02);
 
 
         structure = StructureIO.getStructure("3PHP");
