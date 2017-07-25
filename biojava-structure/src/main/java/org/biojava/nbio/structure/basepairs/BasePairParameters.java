@@ -1,6 +1,7 @@
 package org.biojava.nbio.structure.basepairs;
 
 import org.biojava.nbio.structure.*;
+import org.biojava.nbio.structure.contact.Pair;
 import org.biojava.nbio.structure.geometry.SuperPosition;
 import org.biojava.nbio.structure.geometry.SuperPositionQCP;
 import org.biojava.nbio.structure.io.PDBFileReader;
@@ -21,17 +22,22 @@ import static java.lang.Math.*;
  * This module calculates the el Hassan-Calladine Base Pairing and Base-pair Step Parameters
  * Citation: https://www.ncbi.nlm.nih.gov/pubmed/11601858
  *
- * The method that might be overridden is findPairs(), this implementation is used for a large-scale
+ * The method that is usually overridden is findPairs(), this implementation is used for a large-scale
  * analysis of the most proper helical regions in almost 4000 protein-DNA structures, almost
  * 2000 structures containing only DNA, or almost 1300 structures containing only RNA. (as of 7/2017).
- * Those who study tertiary structures for RNA folding would be better using their own method,
- * because this is only looking for base pairs between separate strands.
+ * Those who study tertiary structures for RNA folding should try using the TertiaryBasePairParameters,
+ * because this base class is only looking for base pairs between separate strands that exactly line up.
+ * To relax the lining up policy and allow for non-canonical base pairs, use the MismatchedBasePairParameters
+ * class.
  *
- * Created by luke czapla on 7/20/17.
+ * @author Luke Czapla
+ * @since 5.0.0-snapshot
+ *
  */
 public class BasePairParameters {
 
     private static Logger log = LoggerFactory.getLogger(BasePairParameters.class);
+
 
     // See URL http://ndbserver.rutgers.edu/ndbmodule/archives/reports/tsukuba/Table1.html
     // and the paper cited at the top of this class (also as Table 1).
@@ -171,7 +177,7 @@ public class BasePairParameters {
             return this;
         }
         List<Chain> nucleics = this.getNucleicChains(nonredundant);
-        List<Group[]> pairs = this.findPairs(nucleics);
+        List<Pair<Group>> pairs = this.findPairs(nucleics);
         this.pairingParameters = new double[pairs.size()][6];
         this.stepParameters = new double[pairs.size()][6];
         Matrix4d lastStep;
@@ -189,6 +195,17 @@ public class BasePairParameters {
             }
         }
         return this;
+    }
+
+
+
+    /**
+     * Returns the total number of base pairs that were found, after the call to analyze()
+     * @return An integer value, number of base pairs
+     */
+    public Integer getLength() {
+        if (structure == null || pairParameters == null) throw new IllegalArgumentException();
+        return pairingParameters.length;
     }
 
 
@@ -211,6 +228,7 @@ public class BasePairParameters {
         return stepParameters;
     }
 
+
     /**
      * This returns the primary strand's sequence where parameters were found.
      * There are spaces in the string anywhere there was a break in the helix or when
@@ -220,6 +238,7 @@ public class BasePairParameters {
     public String getPairSequence() {
         return pairSequence;
     }
+
 
     /**
      * This returns the names of the pairs in terms of A, G, T/U, and C for each base pair group in the
@@ -234,13 +253,14 @@ public class BasePairParameters {
         return referenceFrames;
     }
 
+
     /**
      * Return the buckle in degrees for the given base pair
      * @param bp the number of the base pair (starting with 0)
      * @return the value as a double (in degrees)
      */
     public Double getBuckle(int bp) {
-        if (bp < 0 || bp >= getPairingParameters().length) return null;
+        if (bp < 0 || bp >= getPairingParameters().length) throw new IllegalArgumentException();
         return pairingParameters[bp][0];
     }
 
@@ -250,7 +270,7 @@ public class BasePairParameters {
      * @return the value as a double (in degrees)
      */
     public Double getPropeller(int bp) {
-        if (bp < 0 || bp >= getPairingParameters().length) return null;
+        if (bp < 0 || bp >= getPairingParameters().length) throw new IllegalArgumentException();
         return pairingParameters[bp][1];
     }
 
@@ -260,7 +280,7 @@ public class BasePairParameters {
      * @return the value as a double (in degrees)
      */
     public Double getOpening(int bp) {
-        if (bp < 0 || bp >= getPairingParameters().length) return null;
+        if (bp < 0 || bp >= getPairingParameters().length) throw new IllegalArgumentException();
         return pairingParameters[bp][2];
     }
 
@@ -270,7 +290,7 @@ public class BasePairParameters {
      * @return the value as a double (in Å)
      */
     public Double getShear(int bp) {
-        if (bp < 0 || bp >= getPairingParameters().length) return null;
+        if (bp < 0 || bp >= getPairingParameters().length) throw new IllegalArgumentException();
         return pairingParameters[bp][3];
     }
 
@@ -280,7 +300,7 @@ public class BasePairParameters {
      * @return the value as a double (in Å)
      */
     public Double getStretch(int bp) {
-        if (bp < 0 || bp >= getPairingParameters().length) return null;
+        if (bp < 0 || bp >= getPairingParameters().length) throw new IllegalArgumentException();
         return pairingParameters[bp][4];
     }
 
@@ -290,7 +310,7 @@ public class BasePairParameters {
      * @return the value as a double (in Å)
      */
     public Double getStagger(int bp) {
-        if (bp < 0 || bp >= getPairingParameters().length) return null;
+        if (bp < 0 || bp >= getPairingParameters().length) throw new IllegalArgumentException();
         return pairingParameters[bp][5];
     }
 
@@ -300,7 +320,7 @@ public class BasePairParameters {
      * @return the value as a double (in degrees)
      */
     public Double getTilt(int bp) {
-        if (bp < 0 || bp >= getStepParameters().length) return null;
+        if (bp < 0 || bp >= getStepParameters().length) throw new IllegalArgumentException();
         return stepParameters[bp][0];
     }
 
@@ -310,7 +330,7 @@ public class BasePairParameters {
      * @return the value as a double (in degrees)
      */
     public Double getRoll(int bp) {
-        if (bp < 0 || bp >= getStepParameters().length) return null;
+        if (bp < 0 || bp >= getStepParameters().length) throw new IllegalArgumentException();
         return stepParameters[bp][1];
     }
 
@@ -320,7 +340,7 @@ public class BasePairParameters {
      * @return the value as a double (in degrees)
      */
     public Double getTwist(int bp) {
-        if (bp < 0 || bp >= getStepParameters().length) return null;
+        if (bp < 0 || bp >= getStepParameters().length) throw new IllegalArgumentException();
         return stepParameters[bp][2];
     }
 
@@ -330,7 +350,7 @@ public class BasePairParameters {
      * @return the value as a double (in Å)
      */
     public Double getShift(int bp) {
-        if (bp < 0 || bp >= getStepParameters().length) return null;
+        if (bp < 0 || bp >= getStepParameters().length) throw new IllegalArgumentException();
         return stepParameters[bp][3];
     }
 
@@ -340,7 +360,7 @@ public class BasePairParameters {
      * @return the value as a double (in Å)
      */
     public Double getSlide(int bp) {
-        if (bp < 0 || bp >= getStepParameters().length) return null;
+        if (bp < 0 || bp >= getStepParameters().length) throw new IllegalArgumentException();
         return stepParameters[bp][4];
     }
 
@@ -389,8 +409,8 @@ public class BasePairParameters {
      * @return The list of corresponding Watson-Crick groups as pairs, element 0 is on the
      *  forward strand and element 1 is on the reverse strand.
      */
-    public List<Group[]> findPairs(List<Chain> chains) {
-        List<Group[]> result = new ArrayList<>();
+    public List<Pair<Group>> findPairs(List<Chain> chains) {
+        List<Pair<Group>> result = new ArrayList<>();
         for (int i = 0; i < chains.size(); i++) {
             Chain c = chains.get(i);
             for (int j = i+1; j < chains.size(); j++) {
@@ -439,7 +459,7 @@ public class BasePairParameters {
                             if (a == null) valid = false;
                         }
                         if (valid) {
-                            result.add(new Group[]{g1, g2});
+                            result.add(new Pair<Group>(g1, g2));
                             pairingNames.add((useRNA ? baseListRNA[type1]+baseListRNA[type2] : baseListDNA[type1]+baseListDNA[type2]));
                             pairSequence += c.getAtomSequence().charAt(index1 + k);
                         } else if (pairSequence.length() != 0 && pairSequence.charAt(pairSequence.length()-1) != ' ') pairSequence += ' ';
@@ -459,9 +479,9 @@ public class BasePairParameters {
      * @param pair An array of the two groups that make a hypothetical pair
      * @return The middle frame of the center of the base-pair formed
      */
-    public Matrix4d basePairReferenceFrame(Group[] pair) {
-        Integer type1 = map.get(pair[0].getPDBName());
-        Integer type2 = map.get(pair[1].getPDBName());
+    public Matrix4d basePairReferenceFrame(Pair<Group> pair) {
+        Integer type1 = map.get(pair.getFirst().getPDBName());
+        Integer type2 = map.get(pair.getSecond().getPDBName());
         SuperPosition sp = new SuperPositionQCP(true);
         if (type1 == null || type2 == null) return null;
         PDBFileReader pdbFileReader = new PDBFileReader();
@@ -481,9 +501,9 @@ public class BasePairParameters {
         int count = 0;
 
         for (Atom a : std1.getAtoms()) {
-            if (pair[0].getAtom(a.getName()) == null) return null;
+            if (pair.getFirst().getAtom(a.getName()) == null) return null;
             pointref[count] = a.getCoordsAsPoint3d();
-            pointact[count] = pair[0].getAtom(a.getName()).getCoordsAsPoint3d();
+            pointact[count] = pair.getFirst().getAtom(a.getName()).getCoordsAsPoint3d();
             count++;
         }
         assert count == std1.getAtoms().size();
@@ -494,9 +514,9 @@ public class BasePairParameters {
 
         count = 0;
         for (Atom a : std2.getAtoms()) {
-            if (pair[1].getAtom(a.getName()) == null) return null;
+            if (pair.getSecond().getAtom(a.getName()) == null) return null;
             pointref[count] = a.getCoordsAsPoint3d();
-            pointact[count] = pair[1].getAtom(a.getName()).getCoordsAsPoint3d();
+            pointact[count] = pair.getSecond().getAtom(a.getName()).getCoordsAsPoint3d();
             count++;
         }
         assert count == std2.getAtoms().size();

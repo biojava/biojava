@@ -4,6 +4,7 @@ import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.contact.Pair;
 
 import javax.vecmath.Matrix4d;
 import java.util.ArrayList;
@@ -11,12 +12,16 @@ import java.util.List;
 
 /**
  * Contributed to BioJava under it's LGPL
- * Created by luke czapla on 7/22/17.
  * This class also finds the base pairing and base-pair step parameters but has a broader definition
  * of a base pair so that non-canonical-WC base pairs will be detected and reported.  This is useful
  * for RNA that has folded into different regions.
+ * @author Luke Czapla
+ * @since 5.0.0-snapshot
+ *
  */
 public class TertiaryBasePairParameters extends BasePairParameters {
+
+    protected static final double MaxStagger = 2.0, MaxPropeller = 60.0;
 
     public TertiaryBasePairParameters(Structure structure, boolean RNA, boolean removeDups) {
         super(structure, RNA, removeDups);
@@ -29,8 +34,8 @@ public class TertiaryBasePairParameters extends BasePairParameters {
      * @return
      */
     @Override
-    public List<Group[]> findPairs(List<Chain> chains) {
-        List<Group[]> result = new ArrayList<>();
+    public List<Pair<Group>> findPairs(List<Chain> chains) {
+        List<Pair<Group>> result = new ArrayList<>();
         boolean lastFoundPair = false;
         for (int i = 0; i < chains.size(); i++) {
             Chain c = chains.get(i);
@@ -49,12 +54,12 @@ public class TertiaryBasePairParameters extends BasePairParameters {
                     if (a1 == null || a2 == null) continue;
                     // C1'-C1' distance is one useful criteria
                     if (Math.abs(a1.getCoordsAsPoint3d().distance(a2.getCoordsAsPoint3d())-10.0) > 5.0) continue;
-                    Group[] ga = new Group[] {g1, g2};
+                    Pair<Group> ga = new Pair<>(g1, g2);
                     Matrix4d data = basePairReferenceFrame(ga);
                     // if the stagger is greater than 2 Å, it's not really paired.
-                    if (Math.abs(pairParameters[5]) > 2.0) continue;
+                    if (Math.abs(pairParameters[5]) > MaxStagger) continue;
                     // if the propeller is ridiculous it's also not that good of a pair.
-                    if (Math.abs(pairParameters[1]) > 60.0) {
+                    if (Math.abs(pairParameters[1]) > MaxPropeller) {
                         continue;
                     }
                     result.add(ga);

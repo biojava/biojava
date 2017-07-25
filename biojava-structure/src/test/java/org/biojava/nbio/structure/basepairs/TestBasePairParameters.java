@@ -12,7 +12,9 @@ import static org.junit.Assert.*;
 
 /**
  * Contributed to BioJava under it's LGPL
- * Created by luke czapla on 7/21/17.
+ * This class tests the implementations of the search for base pairs for different RCSB structures
+ * and uses 3DNA as a comparator program.
+ * @author Luke Czapla
  */
 public class TestBasePairParameters {
 
