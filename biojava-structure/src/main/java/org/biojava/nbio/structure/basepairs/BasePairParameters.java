@@ -235,6 +235,127 @@ public class BasePairParameters {
     }
 
     /**
+     * Return the buckle in degrees for the given base pair
+     * @param bp the number of the base pair (starting with 0)
+     * @return the value as a double (in degrees)
+     */
+    public Double getBuckle(int bp) {
+        if (bp < 0 || bp >= getPairingParameters().length) return null;
+        return pairingParameters[bp][0];
+    }
+
+    /**
+     * Return the propeller ("propeller-twist") in degrees for the given base pair
+     * @param bp the number of the base pair (starting with 0)
+     * @return the value as a double (in degrees)
+     */
+    public Double getPropeller(int bp) {
+        if (bp < 0 || bp >= getPairingParameters().length) return null;
+        return pairingParameters[bp][1];
+    }
+
+    /**
+     * Return the opening in degrees for the given base pair
+     * @param bp the number of the base pair (starting with 0)
+     * @return the value as a double (in degrees)
+     */
+    public Double getOpening(int bp) {
+        if (bp < 0 || bp >= getPairingParameters().length) return null;
+        return pairingParameters[bp][2];
+    }
+
+    /**
+     * Return the shear in Å for the given base pair
+     * @param bp the number of the base pair (starting with 0)
+     * @return the value as a double (in Å)
+     */
+    public Double getShear(int bp) {
+        if (bp < 0 || bp >= getPairingParameters().length) return null;
+        return pairingParameters[bp][3];
+    }
+
+    /**
+     * Return the stretch in Å for the given base pair
+     * @param bp the number of the base pair (starting with 0)
+     * @return the value as a double (in Å)
+     */
+    public Double getStretch(int bp) {
+        if (bp < 0 || bp >= getPairingParameters().length) return null;
+        return pairingParameters[bp][4];
+    }
+
+    /**
+     * Return the stagger in Å for the given base pair
+     * @param bp the number of the base pair (starting with 0)
+     * @return the value as a double (in Å)
+     */
+    public Double getStagger(int bp) {
+        if (bp < 0 || bp >= getPairingParameters().length) return null;
+        return pairingParameters[bp][5];
+    }
+
+    /**
+     * Return the tilt for the given base pair, relative to the one before it.
+     * @param bp the number of the base pair (starting with 0)
+     * @return the value as a double (in degrees)
+     */
+    public Double getTilt(int bp) {
+        if (bp < 0 || bp >= getStepParameters().length) return null;
+        return stepParameters[bp][0];
+    }
+
+    /**
+     * Return the roll for the given base pair, relative to the one before it.
+     * @param bp the number of the base pair (starting with 0)
+     * @return the value as a double (in degrees)
+     */
+    public Double getRoll(int bp) {
+        if (bp < 0 || bp >= getStepParameters().length) return null;
+        return stepParameters[bp][1];
+    }
+
+    /**
+     * Return the twist for the given base pair, relative to the one before it.
+     * @param bp the number of the base pair (starting with 0)
+     * @return the value as a double (in degrees)
+     */
+    public Double getTwist(int bp) {
+        if (bp < 0 || bp >= getStepParameters().length) return null;
+        return stepParameters[bp][2];
+    }
+
+    /**
+     * Return the shift for the given base pair, relative to the one before it.
+     * @param bp the number of the base pair (starting with 0)
+     * @return the value as a double (in Å)
+     */
+    public Double getShift(int bp) {
+        if (bp < 0 || bp >= getStepParameters().length) return null;
+        return stepParameters[bp][3];
+    }
+
+    /**
+     * Return the slide for the given base pair, relative to the one before it.
+     * @param bp the number of the base pair (starting with 0)
+     * @return the value as a double (in Å)
+     */
+    public Double getSlide(int bp) {
+        if (bp < 0 || bp >= getStepParameters().length) return null;
+        return stepParameters[bp][4];
+    }
+
+    /**
+     * Return the rise for the given base pair, relative to the one before it.
+     * @param bp the number of the base pair (starting with 0)
+     * @return the value as a double (in Å)
+     */
+    public Double getRise(int bp) {
+        if (bp < 0 || bp >= getStepParameters().length) return null;
+        return stepParameters[bp][5];
+    }
+
+
+    /**
      * This reports all the nucleic acid chains and has an option to remove duplicates if you
      * are considering an analysis of only unique DNA or RNA helices in the Structure.
      * @param removeDups If true, it will ignore duplicate chains
@@ -262,7 +383,8 @@ public class BasePairParameters {
 
     /**
      * This performs a search for base pairs in the structure.  The criteria is alignment of
-     * sequences and the canonical base pairs of DNA and RNA.
+     * sequences and the canonical base pairs of DNA or RNA. Use MismatchedBasePairParameters
+     * or TertiaryBasePairParameters for finding higher-order associations.
      * @param chains The list of chains already found to be nucleic acids
      * @return The list of corresponding Watson-Crick groups as pairs, element 0 is on the
      *  forward strand and element 1 is on the reverse strand.

@@ -11,67 +11,90 @@ import java.io.IOException;
 import static org.junit.Assert.*;
 
 /**
+ * Contributed to BioJava under it's LGPL
  * Created by luke czapla on 7/21/17.
  */
 public class TestBasePairParameters {
 
     @Test
-    public void testBasePair() {
+    public void testBasePair() throws IOException, StructureException {
 
-        Structure structure;
-        try {
-            structure = StructureIO.getStructure("1KX5");
-        } catch (IOException|StructureException e) {
-            e.printStackTrace();
-            structure = null;
-            assertEquals(1, 2);
-        }
+        Structure structure = StructureIO.getStructure("1KX5");
+
         BasePairParameters bp = new BasePairParameters(structure);
         bp.analyze();
-        double[][] pairs = bp.getPairingParameters();
-        double[][] steps = bp.getStepParameters();
         String sequence = bp.getPairSequence();
 
         assertEquals(bp.getPairingParameters().length, 147);
         // below all this set of comparator data was from an external program, 3DNA.
         // next three in degrees: buckle, propeller, opening
-        assertEquals(pairs[0][0], -3.796, 0.1);
-        assertEquals(pairs[0][1], 4.482, 0.1);
-        assertEquals(pairs[0][2], -0.730, 0.1);
+        assertEquals(bp.getBuckle(0), -3.796, 0.1);
+        assertEquals(bp.getPropeller(0), 4.482, 0.1);
+        assertEquals(bp.getOpening(0), -0.730, 0.1);
         // next three in Å: shear, stretch, stagger
-        assertEquals(pairs[0][3], -0.324, 0.01);
-        assertEquals(pairs[0][4], -0.578, 0.01);
-        assertEquals(pairs[0][5], -0.336, 0.01);
+        assertEquals(bp.getShear(0), -0.324, 0.02);
+        assertEquals(bp.getStretch(0), -0.578, 0.02);
+        assertEquals(bp.getStagger(0), -0.336, 0.02);
         // next three in degrees: tilt, roll, twist
-        assertEquals(steps[1][0], 2.354, 0.1);
-        assertEquals(steps[1][1], 0.785, 0.1);
-        assertEquals(steps[1][2], 32.522, 0.5);
+        assertEquals(bp.getTilt(0), 2.354, 0.1);
+        assertEquals(bp.getRoll(0), 0.785, 0.1);
+        assertEquals(bp.getTwist(0), 32.522, 0.5);
         // next three in Å, shift, slide, rise
-        assertEquals(steps[1][3], -0.873, 0.01);
-        assertEquals(steps[1][4], -0.607, 0.01);
-        assertEquals(steps[1][5], 3.070, 0.01);
+        assertEquals(bp.getShift(0), -0.873, 0.02);
+        assertEquals(bp.getSlide(0), -0.607, 0.02);
+        assertEquals(bp.getRise(0), 3.070, 0.02);
 
-        try {
-            structure = StructureIO.getStructure("3PHP");
-        } catch (IOException|StructureException e) {
-            e.printStackTrace();
-            structure = null;
-            assertEquals(1, 2);
-        }
+
+        structure = StructureIO.getStructure("3PHP");
         bp = new TertiaryBasePairParameters(structure, true, false).analyze();
         assertEquals(9, bp.getPairingParameters().length);
 
-        try {
-            structure = StructureIO.getStructure("1P71");
-        } catch (IOException|StructureException e) {
-            e.printStackTrace();
-            structure = null;
-            assertEquals(1, 2);
-        }
+        double[][] pairs = bp.getPairingParameters();
+        double[][] steps = bp.getStepParameters();
+
+        // test against values given by 3DNA, just using the raw arrays
+        assertEquals(pairs[4][0], 0.060, 0.1);
+        assertEquals(pairs[4][1], -9.323, 0.1);
+        assertEquals(pairs[4][2], -5.109, 0.1);
+        // next three in Å: shear, stretch, stagger
+        assertEquals(pairs[4][3], 0.126, 0.02);
+        assertEquals(pairs[4][4], -0.177, 0.02);
+        assertEquals(pairs[4][5], 0.273, 0.02);
+        // next three in degrees: tilt, roll, twist
+        assertEquals(steps[4][0], -1.456, 0.1);
+        assertEquals(steps[4][1], 6.583, 0.1);
+        assertEquals(steps[4][2], 33.234, 0.5);
+        // next three in Å, shift, slide, rise
+        assertEquals(steps[4][3], -0.735, 0.02);
+        assertEquals(steps[4][4], -0.978, 0.02);
+        assertEquals(steps[4][5], 3.491, 0.02);
+
+
+
+        structure = StructureIO.getStructure("1P71");
 
         bp = new MismatchedBasePairParameters(structure, false, false, false).analyze();
         assertEquals(17, bp.getPairingParameters().length);
 
+        pairs = bp.getPairingParameters();
+        steps = bp.getStepParameters();
+
+        // this was tested against 3DNA as well.
+        assertEquals(pairs[16][0], -11.822, 0.1);
+        assertEquals(pairs[16][1], -11.405, 0.1);
+        assertEquals(pairs[16][2], -9.669, 0.1);
+        // next three in Å: shear, stretch, stagger
+        assertEquals(pairs[16][3], 0.855, 0.02);
+        assertEquals(pairs[16][4], -0.276, 0.02);
+        assertEquals(pairs[16][5], -0.604, 0.02);
+        // next three in degrees: tilt, roll, twist
+        assertEquals(steps[16][0], 1.516, 0.1);
+        assertEquals(steps[16][1], 9.291, 0.1);
+        assertEquals(steps[16][2], 42.052, 1.0);
+        // next three in Å, shift, slide, rise
+        assertEquals(steps[16][3], -0.627, 0.02);
+        assertEquals(steps[16][4], -0.858, 0.02);
+        assertEquals(steps[16][5], 4.697, 0.02);
 
     }
 
