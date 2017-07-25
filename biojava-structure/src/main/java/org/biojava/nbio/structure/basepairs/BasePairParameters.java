@@ -370,7 +370,7 @@ public class BasePairParameters {
      * @return the value as a double (in Å)
      */
     public Double getRise(int bp) {
-        if (bp < 0 || bp >= getStepParameters().length) return null;
+        if (bp < 0 || bp >= getStepParameters().length) throw new IllegalArgumentException();
         return stepParameters[bp][5];
     }
 
