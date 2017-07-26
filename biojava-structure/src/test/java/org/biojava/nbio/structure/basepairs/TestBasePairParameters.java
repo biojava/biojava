@@ -27,7 +27,7 @@ public class TestBasePairParameters {
         bp.analyze();
         String sequence = bp.getPairSequence();
 
-        assertEquals(bp.getPairingParameters().length, 147);
+        assertEquals(147, bp.getLength());
         // below all this set of comparator data was from an external program, 3DNA.
         // next three in degrees: buckle, propeller, opening
         assertEquals(bp.getBuckle(0), -3.796, 0.1);
@@ -49,7 +49,7 @@ public class TestBasePairParameters {
 
         structure = StructureIO.getStructure("3PHP");
         bp = new TertiaryBasePairParameters(structure, true, false).analyze();
-        assertEquals(9, bp.getPairingParameters().length);
+        assertEquals(9, bp.getLength());
 
         double[][] pairs = bp.getPairingParameters();
         double[][] steps = bp.getStepParameters();
@@ -75,7 +75,7 @@ public class TestBasePairParameters {
         structure = StructureIO.getStructure("1P71");
 
         bp = new MismatchedBasePairParameters(structure, false, false, false).analyze();
-        assertEquals(17, bp.getPairingParameters().length);
+        assertEquals(17, bp.getLength());
 
         pairs = bp.getPairingParameters();
         steps = bp.getStepParameters();

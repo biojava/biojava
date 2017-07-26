@@ -202,7 +202,7 @@ public class BasePairParameters {
      * Returns the total number of base pairs that were found, after the call to analyze()
      * @return An integer value, number of base pairs
      */
-    public Integer getLength() {
+    public int getLength() {
         if (structure == null || pairParameters == null) throw new IllegalArgumentException();
         return pairingParameters.length;
     }
