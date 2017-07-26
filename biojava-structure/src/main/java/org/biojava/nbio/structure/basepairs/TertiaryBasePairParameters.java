@@ -21,7 +21,8 @@ import java.util.List;
  */
 public class TertiaryBasePairParameters extends BasePairParameters {
 
-    protected static final double MaxStagger = 2.0, MaxPropeller = 60.0;
+    // These are the criteria used to select proper base pairs.
+    protected static double MaxStagger = 2.0, MaxPropeller = 60.0;
 
     public TertiaryBasePairParameters(Structure structure, boolean RNA, boolean removeDups) {
         super(structure, RNA, removeDups);
@@ -29,9 +30,10 @@ public class TertiaryBasePairParameters extends BasePairParameters {
 
     /**
      * This is an alternative implementation of findPair() that looks for anything that would fit the
-     * criteria for a base-pair, useful for the context of tertiary structure of RNA.
+     * criteria for a base-pair, useful for the context of tertiary structure of RNA.  Intra-strand base pairs
+     * are found with this algorithm.
      * @param chains The list of chains already found to be nucleic acids
-     * @return
+     * @return A list of the Pair of groups that match the base pair criteria, including intra-strand groups.
      */
     @Override
     public List<Pair<Group>> findPairs(List<Chain> chains) {
@@ -53,7 +55,7 @@ public class TertiaryBasePairParameters extends BasePairParameters {
                     Atom a2 = g2.getAtom("C1'");
                     if (a1 == null || a2 == null) continue;
                     // C1'-C1' distance is one useful criteria
-                    if (Math.abs(a1.getCoordsAsPoint3d().distance(a2.getCoordsAsPoint3d())-10.0) > 5.0) continue;
+                    if (Math.abs(a1.getCoordsAsPoint3d().distance(a2.getCoordsAsPoint3d())-10.0) > 4.0) continue;
                     Pair<Group> ga = new Pair<>(g1, g2);
                     Matrix4d data = basePairReferenceFrame(ga);
                     // if the stagger is greater than 2 Å, it's not really paired.

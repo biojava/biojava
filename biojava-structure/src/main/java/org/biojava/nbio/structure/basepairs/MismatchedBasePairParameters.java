@@ -20,7 +20,8 @@ import java.util.List;
  */
 public class MismatchedBasePairParameters extends BasePairParameters {
 
-    protected static final double MaxStagger = 2.0, MaxShear = 5.0, MaxStretch = 5.0,
+    // These are the criteria used to select proper base pairs.
+    protected static double MaxStagger = 2.0, MaxShear = 5.0, MaxStretch = 5.0,
             MaxPropeller = 60.0;
 
     public MismatchedBasePairParameters(Structure structure, boolean RNA, boolean removeDups, boolean canonical) {
@@ -32,7 +33,7 @@ public class MismatchedBasePairParameters extends BasePairParameters {
     /**
      * This is an implementation for finding non-canonical base pairs when there may be missing or overhanging bases.
      * @param chains The list of chains already found to be nucleic acids
-     * @return The list of the atom groups (residues) that are pairs, a Group[2] array
+     * @return The list of the atom groups (residues) that are pairs, as a Pair of nucleic acid Groups
      */
     @Override
     public List<Pair<Group>> findPairs(List<Chain> chains) {
@@ -59,7 +60,7 @@ public class MismatchedBasePairParameters extends BasePairParameters {
                         Atom a2 = g2.getAtom("C1'");
                         if (a1 == null || a2 == null) continue;
                         // C1'-C1' distance is one useful criteria
-                        if (Math.abs(a1.getCoordsAsPoint3d().distance(a2.getCoordsAsPoint3d()) - 10.0) > 3.0) continue;
+                        if (Math.abs(a1.getCoordsAsPoint3d().distance(a2.getCoordsAsPoint3d()) - 10.0) > 4.0) continue;
                         Pair<Group> ga = new Pair<>(g1, g2);
                         Matrix4d data = basePairReferenceFrame(ga);
                         // if the stagger is greater than 2 Å, it's not really paired.

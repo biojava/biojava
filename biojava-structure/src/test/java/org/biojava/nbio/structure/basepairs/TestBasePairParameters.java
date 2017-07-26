@@ -72,7 +72,6 @@ public class TestBasePairParameters {
         assertEquals(steps[4][5], 3.491, 0.02);
 
 
-
         structure = StructureIO.getStructure("1P71");
 
         bp = new MismatchedBasePairParameters(structure, false, false, false).analyze();

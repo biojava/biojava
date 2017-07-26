@@ -38,7 +38,6 @@ public class BasePairParameters {
 
     private static Logger log = LoggerFactory.getLogger(BasePairParameters.class);
 
-
     // See URL http://ndbserver.rutgers.edu/ndbmodule/archives/reports/tsukuba/Table1.html
     // and the paper cited at the top of this class (also as Table 1).
     // These are hard-coded to avoid problems with resource paths.
@@ -406,8 +405,7 @@ public class BasePairParameters {
      * sequences and the canonical base pairs of DNA or RNA. Use MismatchedBasePairParameters
      * or TertiaryBasePairParameters for finding higher-order associations.
      * @param chains The list of chains already found to be nucleic acids
-     * @return The list of corresponding Watson-Crick groups as pairs, element 0 is on the
-     *  forward strand and element 1 is on the reverse strand.
+     * @return The list of corresponding Watson-Crick groups as pairs, as a Pair of nucleic acid Groups
      */
     public List<Pair<Group>> findPairs(List<Chain> chains) {
         List<Pair<Group>> result = new ArrayList<>();
@@ -448,7 +446,7 @@ public class BasePairParameters {
                     double distance = Math.sqrt(dx*dx+dy*dy+dz*dz);
                     //log.info("C8-C6 Distance (Å): " + distance);
                     // could be a base pair
-                    if (Math.abs(distance-10.0) < 5.0) {
+                    if (Math.abs(distance-10.0) < 4.0) {
                         boolean valid = true;
                         for (String atomname : ringMap.get(type1)) {
                             Atom a = g1.getAtom(atomname);
