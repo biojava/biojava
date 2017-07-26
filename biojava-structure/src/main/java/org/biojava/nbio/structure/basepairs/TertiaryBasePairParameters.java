@@ -1,3 +1,24 @@
+/*
+ *                    BioJava development code
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public Licence.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright for this code is held jointly by the individual
+ * authors.  These should be listed in @author doc comments.
+ *
+ * For more information on the BioJava project and its aims,
+ * or to join the biojava-l mailing list, visit the home page
+ * at:
+ *
+ *      http://www.biojava.org/
+ *
+ *
+ */
 package org.biojava.nbio.structure.basepairs;
 
 import org.biojava.nbio.structure.Atom;
@@ -12,10 +33,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Contributed to BioJava under it's LGPL
  * This class also finds the base pairing and base-pair step parameters but has a broader definition
  * of a base pair so that non-canonical-WC base pairs will be detected and reported.  This is useful
- * for RNA that has folded into different regions.
+ * for RNA that has folded into different regions, and higher order DNA structures.
  * @author Luke Czapla
  * @since 5.0.0
  *
@@ -85,14 +105,23 @@ public class TertiaryBasePairParameters extends BasePairParameters implements Se
         return MaxStagger;
     }
 
+    /**
+     *
+     * @param maxStagger The maximum stagger allowed to consider two bases paired
+     */
     public static void setMaxStagger(double maxStagger) {
         MaxStagger = maxStagger;
     }
+
 
     public static double getMaxPropeller() {
         return MaxPropeller;
     }
 
+    /**
+     *
+     * @param maxPropeller The maximum propeller (a.k.a. "propeller-twist") allowed to consider two bases paired
+     */
     public static void setMaxPropeller(double maxPropeller) {
         MaxPropeller = maxPropeller;
     }

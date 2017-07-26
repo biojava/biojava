@@ -1,3 +1,24 @@
+/*
+ *                    BioJava development code
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public Licence.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright for this code is held jointly by the individual
+ * authors.  These should be listed in @author doc comments.
+ *
+ * For more information on the BioJava project and its aims,
+ * or to join the biojava-l mailing list, visit the home page
+ * at:
+ *
+ *      http://www.biojava.org/
+ *
+ *
+ */
 package org.biojava.nbio.structure.basepairs;
 
 import org.biojava.nbio.structure.Atom;
@@ -12,7 +33,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Contributed to BioJava under its LGPL
  * This class allows for finding inter-strand base pairs that are not necessarily canonical Watson-Crick pairs.
  * The implementation of findPair is different than that of the base class.
  * @author Luke Czapla
@@ -66,6 +86,7 @@ public class MismatchedBasePairParameters extends BasePairParameters implements 
                         Matrix4d data = basePairReferenceFrame(ga);
                         // if the stagger is greater than 2 Å, it's not really paired.
                         if (Math.abs(pairParameters[5]) > MaxStagger) continue;
+                        // similarly, extreme shear and stretch is not a good base pair
                         if (Math.abs(pairParameters[3]) > MaxShear) continue;
                         if (Math.abs(pairParameters[4]) > MaxStretch) continue;
 

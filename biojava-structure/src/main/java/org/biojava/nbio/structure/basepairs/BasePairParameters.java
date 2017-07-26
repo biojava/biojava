@@ -1,3 +1,27 @@
+/*
+ *                    BioJava development code
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public Licence.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright for this code is held jointly by the individual
+ * authors.  These should be listed in @author doc comments.
+ *
+ * For more information on the BioJava project and its aims,
+ * or to join the biojava-l mailing list, visit the home page
+ * at:
+ *
+ *      http://www.biojava.org/
+ *
+ * Created on 07-20-2017
+ *
+ * @author Luke Czapla
+ *
+ */
 package org.biojava.nbio.structure.basepairs;
 
 import org.biojava.nbio.structure.*;
@@ -11,12 +35,20 @@ import javax.vecmath.Point3d;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.*;
+import java.util.List;
+import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static java.lang.Math.*;
+import static java.lang.Math.sin;
+import static java.lang.Math.cos;
+import static java.lang.Math.atan2;
+import static java.lang.Math.acos;
+import static java.lang.Math.PI;
 
 /**
  * Contributed to BioJava under its LGPL
@@ -104,11 +136,7 @@ public class BasePairParameters implements Serializable {
         map.put("DG", 1); map.put("GUA", 1); map.put("G", 1);
         map.put("DT", 2); map.put("THY", 2); map.put("T", 2); map.put("U", 2); map.put("URA", 2);
         map.put("DC", 3); map.put("CYT", 3); map.put("C", 3);
-        // chemically modified bases, leaving out to ignore (to treat as gaps) right now.
-        //map.put("DZM", 0);
-        //map.put("UCL", 2);
-        //map.put("2DT", 2);
-        //map.put("1CC", 3); map.put("5CM", 3);
+
         ringMap = new HashMap<>();
         ringMap.put(0, Arrays.asList("C8", "C2", "N3", "C4", "C5", "C6", "N7", "N1", "N9"));
         ringMap.put(1, Arrays.asList("C8", "C2", "N3", "C4", "C5", "C6", "N7", "N1", "N9"));
@@ -191,7 +219,7 @@ public class BasePairParameters implements Serializable {
             if (i != 0) {
                 lastStep.invert();
                 lastStep.mul(currentStep);
-                double[] sparms = calculatetp(lastStep);
+                double[] sparms = calculateTp(lastStep);
                 for (int j = 0; j < 6; j++) stepParameters[i][j] = sparms[j];
             }
         }
@@ -205,7 +233,7 @@ public class BasePairParameters implements Serializable {
      * @return An integer value, number of base pairs
      */
     public int getLength() {
-        if (structure == null || pairParameters == null) throw new IllegalArgumentException();
+        if (structure == null || pairParameters == null) throw new IllegalArgumentException("Base pair number is out of range.");
         return pairingParameters.length;
     }
 
@@ -261,7 +289,7 @@ public class BasePairParameters implements Serializable {
      * @return the value as a double (in degrees)
      */
     public Double getBuckle(int bp) {
-        if (bp < 0 || bp >= getPairingParameters().length) throw new IllegalArgumentException();
+        if (bp < 0 || bp >= getPairingParameters().length) throw new IllegalArgumentException("Base pair number is out of range.");
         return pairingParameters[bp][0];
     }
 
@@ -271,7 +299,7 @@ public class BasePairParameters implements Serializable {
      * @return the value as a double (in degrees)
      */
     public Double getPropeller(int bp) {
-        if (bp < 0 || bp >= getPairingParameters().length) throw new IllegalArgumentException();
+        if (bp < 0 || bp >= getPairingParameters().length) throw new IllegalArgumentException("Base pair number is out of range.");
         return pairingParameters[bp][1];
     }
 
@@ -281,7 +309,7 @@ public class BasePairParameters implements Serializable {
      * @return the value as a double (in degrees)
      */
     public Double getOpening(int bp) {
-        if (bp < 0 || bp >= getPairingParameters().length) throw new IllegalArgumentException();
+        if (bp < 0 || bp >= getPairingParameters().length) throw new IllegalArgumentException("Base pair number is out of range.");
         return pairingParameters[bp][2];
     }
 
@@ -291,7 +319,7 @@ public class BasePairParameters implements Serializable {
      * @return the value as a double (in Å)
      */
     public Double getShear(int bp) {
-        if (bp < 0 || bp >= getPairingParameters().length) throw new IllegalArgumentException();
+        if (bp < 0 || bp >= getPairingParameters().length) throw new IllegalArgumentException("Base pair number is out of range.");
         return pairingParameters[bp][3];
     }
 
@@ -301,7 +329,7 @@ public class BasePairParameters implements Serializable {
      * @return the value as a double (in Å)
      */
     public Double getStretch(int bp) {
-        if (bp < 0 || bp >= getPairingParameters().length) throw new IllegalArgumentException();
+        if (bp < 0 || bp >= getPairingParameters().length) throw new IllegalArgumentException("Base pair number is out of range.");
         return pairingParameters[bp][4];
     }
 
@@ -311,7 +339,7 @@ public class BasePairParameters implements Serializable {
      * @return the value as a double (in Å)
      */
     public Double getStagger(int bp) {
-        if (bp < 0 || bp >= getPairingParameters().length) throw new IllegalArgumentException();
+        if (bp < 0 || bp >= getPairingParameters().length) throw new IllegalArgumentException("Base pair number is out of range.");
         return pairingParameters[bp][5];
     }
 
@@ -321,7 +349,7 @@ public class BasePairParameters implements Serializable {
      * @return the value as a double (in degrees)
      */
     public Double getTilt(int bp) {
-        if (bp < 0 || bp >= getStepParameters().length) throw new IllegalArgumentException();
+        if (bp < 0 || bp >= getStepParameters().length) throw new IllegalArgumentException("Base pair number is out of range.");
         return stepParameters[bp][0];
     }
 
@@ -331,7 +359,7 @@ public class BasePairParameters implements Serializable {
      * @return the value as a double (in degrees)
      */
     public Double getRoll(int bp) {
-        if (bp < 0 || bp >= getStepParameters().length) throw new IllegalArgumentException();
+        if (bp < 0 || bp >= getStepParameters().length) throw new IllegalArgumentException("Base pair number is out of range.");
         return stepParameters[bp][1];
     }
 
@@ -341,7 +369,7 @@ public class BasePairParameters implements Serializable {
      * @return the value as a double (in degrees)
      */
     public Double getTwist(int bp) {
-        if (bp < 0 || bp >= getStepParameters().length) throw new IllegalArgumentException();
+        if (bp < 0 || bp >= getStepParameters().length) throw new IllegalArgumentException("Base pair number is out of range.");
         return stepParameters[bp][2];
     }
 
@@ -351,7 +379,7 @@ public class BasePairParameters implements Serializable {
      * @return the value as a double (in Å)
      */
     public Double getShift(int bp) {
-        if (bp < 0 || bp >= getStepParameters().length) throw new IllegalArgumentException();
+        if (bp < 0 || bp >= getStepParameters().length) throw new IllegalArgumentException("Base pair number is out of range.");
         return stepParameters[bp][3];
     }
 
@@ -361,7 +389,7 @@ public class BasePairParameters implements Serializable {
      * @return the value as a double (in Å)
      */
     public Double getSlide(int bp) {
-        if (bp < 0 || bp >= getStepParameters().length) throw new IllegalArgumentException();
+        if (bp < 0 || bp >= getStepParameters().length) throw new IllegalArgumentException("Base pair number is out of range.");
         return stepParameters[bp][4];
     }
 
@@ -371,7 +399,7 @@ public class BasePairParameters implements Serializable {
      * @return the value as a double (in Å)
      */
     public Double getRise(int bp) {
-        if (bp < 0 || bp >= getStepParameters().length) throw new IllegalArgumentException();
+        if (bp < 0 || bp >= getStepParameters().length) throw new IllegalArgumentException("Base pair number is out of range.");
         return stepParameters[bp][5];
     }
 
@@ -416,7 +444,9 @@ public class BasePairParameters implements Serializable {
             for (int j = i+1; j < chains.size(); j++) {
                 String complement = complement(chains.get(j).getAtomSequence(), useRNA);
                 String match = longestCommonSubstring(c.getAtomSequence(), complement);
-                //log.info(c.getAtomSequence() + " " + chains.get(j).getAtomSequence() + " " + match);
+                if (log.isDebugEnabled()) {
+                    log.debug(c.getAtomSequence() + " " + chains.get(j).getAtomSequence() + " " + match);
+                }
                 int index1 = c.getAtomSequence().indexOf(match);
                 int index2 = complement.length() - complement.indexOf(match) - 1;
                 for (int k = 0; k < match.length(); k++) {
@@ -521,11 +551,10 @@ public class BasePairParameters implements Serializable {
         }
         assert count == std2.getAtoms().size();
 
-        //    log.info(ref1);
         Matrix4d temp = (Matrix4d)ref1.clone();
         Matrix4d temp2 = (Matrix4d)temp.clone();
         Matrix4d ref2 = sp.superposeAndTransform(pointact, pointref);
-        //    log.info(ref2);
+
         double[][] v = new double[3][4];
         double[] y3 = new double[4];
         double[] z3 = new double[4];
@@ -568,7 +597,7 @@ public class BasePairParameters implements Serializable {
         // calculate pairing parameters: buckle, propeller, opening, shear, stretch, stagger
         temp2.invert();
         temp2.mul(ref2);
-        pairParameters = calculatetp(temp2);
+        pairParameters = calculateTp(temp2);
         for (int i = 0; i < 6; i++) pairParameters[i] *= -1;
 
         // return the central frame of the base pair
@@ -595,13 +624,14 @@ public class BasePairParameters implements Serializable {
     }
 
 
+    // The following methods are just helper classes for the rapid analyze of base-pair geometry.
     /**
-     * This method calculates pairing and step parameters from 4x4 transformation matrices
+     * This method calculates pairing and step parameters from 4x4 transformation matrices (used internally)
      * that come out as Matrix4d;
      * @param input the 4x4 matrix representing the transformation from strand II -> strand I or pair i to pair i+1
      * @return Six parameters as double[6]
      */
-    public static double[] calculatetp(Matrix4d input) {
+    public static double[] calculateTp(Matrix4d input) {
 
         double[][] A = new double[4][4];
         for (int i = 0; i < 4; i++) for (int j = 0; j < 4; j++) {
@@ -646,8 +676,13 @@ public class BasePairParameters implements Serializable {
 
     }
 
-
-    public static char complementBase(char base, boolean RNA) {
+    /**
+     * Return the complement of a base (used internally)
+     * @param base The letter of the base
+     * @param RNA Whether it is RNA (if false, it is DNA)
+     * @return The character representing the complement of the base
+     */
+    protected static char complementBase(char base, boolean RNA) {
         if (base == 'A' && RNA) return 'U';
         if (base == 'A') return 'T';
         if (base == 'T' && !RNA) return 'A';
@@ -657,7 +692,11 @@ public class BasePairParameters implements Serializable {
         return ' ';
     }
 
-    public static String complement(String sequence, boolean RNA) {
+    /**
+     * Simple helper method for quickly checking the complement of a sequence, see also DNASequence nad RNASequence classes
+     * for more extensively useful functions not used in this narrow context of structural biology of base pairs.  (Used internally)
+     */
+    private static String complement(String sequence, boolean RNA) {
         String result = "";
         for (int i = sequence.length() - 1; i >= 0; i--) {
             result += complementBase(sequence.charAt(i), RNA);
@@ -665,7 +704,14 @@ public class BasePairParameters implements Serializable {
         return result;
     }
 
-    public static double[] cross(double[] a, double[] b) {
+    /**
+     * 3D Vector cross product of two vectors as double arrays (used internally)
+     *
+     * @param a An array of length 3 or 4 (4th component is ignored)
+     * @param b An array of length 3 or 4 (4th component is ignored)
+     * @return The cross product of the vectors (just the first three components
+     */
+    private static double[] cross(double[] a, double[] b) {
         assert a.length >= 3 && b.length >= 3;
         double[] result = new double[4];
         result[0] = a[1]*b[2]-a[2]*b[1];
@@ -674,7 +720,13 @@ public class BasePairParameters implements Serializable {
         return result;
     }
 
-    public static double[] removeComponent(double[] a, double[] b) {
+    /**
+     * Remove any component of vector a that is along vector b (used internally)
+     * @param a The array (vector) to remove component from
+     * @param b The component array (vector) to remove from the first
+     * @return The original array a with any component along b removed from it.
+     */
+    private static double[] removeComponent(double[] a, double[] b) {
         double dot = 0;
         double[] result = new double[4];
         for (int i = 0; i < 3; i++) {
@@ -687,7 +739,13 @@ public class BasePairParameters implements Serializable {
 
     }
 
-    public static String longestCommonSubstring(String s1, String s2) {
+    /**
+     * Finds the longest common substring between two strings (used internally)
+     * @param s1 The first string
+     * @param s2 The second string
+     * @return The substring itself
+     */
+    private static String longestCommonSubstring(String s1, String s2) {
         int start = 0;
         int max = 0;
         for (int i = 0; i < s1.length(); i++) {
@@ -706,6 +764,13 @@ public class BasePairParameters implements Serializable {
         return s1.substring(start, (start + max));
     }
 
+    /**
+     * Return true if a is the complement of b (used internally)
+     * @param a First letter
+     * @param b Potential matching letter
+     * @param RNA Whether it is RNA (if false, DNA rules are used)
+     * @return True if the bases are complementary.
+     */
     protected static boolean match(char a, char b, boolean RNA) {
         if (a == 'A' && b == 'T' && !RNA) return true;
         if (a == 'A' && b == 'U' && RNA) return true;
