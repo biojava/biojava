@@ -10,6 +10,7 @@ import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.*;
 
 import org.slf4j.Logger;
@@ -34,8 +35,9 @@ import static java.lang.Math.*;
  * @since 5.0.0-snapshot
  *
  */
-public class BasePairParameters {
+public class BasePairParameters implements Serializable {
 
+    private static final long serialVersionUID = 6214502385L;
     private static Logger log = LoggerFactory.getLogger(BasePairParameters.class);
 
     // See URL http://ndbserver.rutgers.edu/ndbmodule/archives/reports/tsukuba/Table1.html
@@ -114,7 +116,7 @@ public class BasePairParameters {
         ringMap.put(3, Arrays.asList("C6", "C2", "N3", "C4", "C5", "N1"));
    }
 
-    protected Structure structure;
+    protected transient Structure structure;
     protected boolean canonical = true;
     protected boolean useRNA = false;
     protected boolean nonredundant = false;

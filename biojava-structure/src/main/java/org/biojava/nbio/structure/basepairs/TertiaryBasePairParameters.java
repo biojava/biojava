@@ -7,6 +7,7 @@ import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.contact.Pair;
 
 import javax.vecmath.Matrix4d;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +20,7 @@ import java.util.List;
  * @since 5.0.0-snapshot
  *
  */
-public class TertiaryBasePairParameters extends BasePairParameters {
+public class TertiaryBasePairParameters extends BasePairParameters implements Serializable {
 
     // These are the criteria used to select proper base pairs.
     protected static double MaxStagger = 2.0, MaxPropeller = 60.0;
