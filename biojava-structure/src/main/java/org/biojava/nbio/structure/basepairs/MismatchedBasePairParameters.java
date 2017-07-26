@@ -88,5 +88,35 @@ public class MismatchedBasePairParameters extends BasePairParameters {
         return result;
     }
 
+    public static double getMaxStagger() {
+        return MaxStagger;
+    }
 
+    public static void setMaxStagger(double maxStagger) {
+        MaxStagger = maxStagger;
+    }
+
+    public static double getMaxShear() {
+        return MaxShear;
+    }
+
+    public static void setMaxShear(double maxShear) {
+        MaxShear = maxShear;
+    }
+
+    public static double getMaxStretch() {
+        return MaxStretch;
+    }
+
+    public static void setMaxStretch(double maxStretch) {
+        MaxStretch = maxStretch;
+    }
+
+    public static double getMaxPropeller() {
+        return MaxPropeller;
+    }
+
+    public static void setMaxPropeller(double maxPropeller) {
+        MaxPropeller = maxPropeller;
+    }
 }

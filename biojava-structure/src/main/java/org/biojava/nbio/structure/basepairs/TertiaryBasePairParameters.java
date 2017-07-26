@@ -80,5 +80,19 @@ public class TertiaryBasePairParameters extends BasePairParameters {
         return result;
     }
 
+    public static double getMaxStagger() {
+        return MaxStagger;
+    }
 
+    public static void setMaxStagger(double maxStagger) {
+        MaxStagger = maxStagger;
+    }
+
+    public static double getMaxPropeller() {
+        return MaxPropeller;
+    }
+
+    public static void setMaxPropeller(double maxPropeller) {
+        MaxPropeller = maxPropeller;
+    }
 }
