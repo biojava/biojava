@@ -32,7 +32,7 @@ import static java.lang.Math.*;
  * class.
  *
  * @author Luke Czapla
- * @since 5.0.0-snapshot
+ * @since 5.0.0
  *
  */
 public class BasePairParameters implements Serializable {

@@ -17,7 +17,7 @@ import java.util.List;
  * of a base pair so that non-canonical-WC base pairs will be detected and reported.  This is useful
  * for RNA that has folded into different regions.
  * @author Luke Czapla
- * @since 5.0.0-snapshot
+ * @since 5.0.0
  *
  */
 public class TertiaryBasePairParameters extends BasePairParameters implements Serializable {

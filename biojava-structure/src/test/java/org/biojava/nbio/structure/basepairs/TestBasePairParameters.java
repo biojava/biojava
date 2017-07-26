@@ -13,8 +13,11 @@ import static org.junit.Assert.*;
 /**
  * Contributed to BioJava under it's LGPL
  * This class tests the implementations of the search for base pairs for different RCSB structures
- * and uses 3DNA as a comparator program.
+ * and the tests uses 3DNA as a comparator program. (other programs such as CURVES and NEWHELIX exist but
+ * this implementation is closest to that of 3DNA).
  * @author Luke Czapla
+ * @since 5.0.0
+ *
  */
 public class TestBasePairParameters {
 

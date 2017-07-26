@@ -16,7 +16,7 @@ import java.util.List;
  * This class allows for finding inter-strand base pairs that are not necessarily canonical Watson-Crick pairs.
  * The implementation of findPair is different than that of the base class.
  * @author Luke Czapla
- * @since 5.0.0-snapshot
+ * @since 5.0.0
  *
  */
 public class MismatchedBasePairParameters extends BasePairParameters implements Serializable {
