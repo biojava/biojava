@@ -17,9 +17,6 @@
  *
  *      http://www.biojava.org/
  *
- * Created on 07-20-2017
- *
- * @author Luke Czapla
  *
  */
 package org.biojava.nbio.structure.basepairs;

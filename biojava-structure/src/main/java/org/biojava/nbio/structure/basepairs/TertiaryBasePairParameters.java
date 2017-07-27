@@ -35,7 +35,8 @@ import java.util.List;
 /**
  * This class also finds the base pairing and base-pair step parameters but has a broader definition
  * of a base pair so that non-canonical-WC base pairs will be detected and reported.  This is useful
- * for RNA that has folded into different regions, and higher order DNA structures.
+ * for RNA that has folded into different regions, and into higher order DNA structures.  Intra-strand
+ * pairings are considered in this class (but in not the base class or MismatchedBasePairParameters class)
  * @author Luke Czapla
  * @since 5.0.0
  *
@@ -106,7 +107,7 @@ public class TertiaryBasePairParameters extends BasePairParameters implements Se
     }
 
     /**
-     *
+     * Set the maximum stagger allowed for a base pair, prior to analyze() call
      * @param maxStagger The maximum stagger allowed to consider two bases paired
      */
     public static void setMaxStagger(double maxStagger) {
@@ -119,7 +120,7 @@ public class TertiaryBasePairParameters extends BasePairParameters implements Se
     }
 
     /**
-     *
+     * Set the maximum propeller allowed for a base pair, prior to analyze() call
      * @param maxPropeller The maximum propeller (a.k.a. "propeller-twist") allowed to consider two bases paired
      */
     public static void setMaxPropeller(double maxPropeller) {
