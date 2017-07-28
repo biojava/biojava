@@ -64,5 +64,8 @@ public class TestStructureSerialization {
 		assertEquals(sin.getChains().size(), sout.getChains().size());
 		assertEquals(sin.getName(), sout.getName());
 		
+		// Test equal string representations
+		assertEquals(sin.toString(), sout.toString());
+		
 	}
 }
