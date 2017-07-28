@@ -72,7 +72,7 @@ public class BasePairParameters implements Serializable {
     // See URL http://ndbserver.rutgers.edu/ndbmodule/archives/reports/tsukuba/Table1.html
     // and the paper cited at the top of this class (also as Table 1).
     // These are hard-coded to avoid problems with resource paths.
-    public static String[] standardBases = new String[] {
+    public static final String[] STANDARD_BASES = new String[] {
             "SEQRES   1 A    1  A\n" +
                     "ATOM      2  N9    A A   1      -1.291   4.498   0.000\n" +
                     "ATOM      3  C8    A A   1       0.024   4.897   0.000\n" +
@@ -121,24 +121,24 @@ public class BasePairParameters implements Serializable {
     };
 
     // this is also hard-coded data about standard WC base pairs for both DNA and RNA
-    protected static String[] baseListDNA = {"A", "G", "T", "C"};
-    protected static String[] baseListRNA = {"A", "G", "U", "C"};
-    protected static Map<String, Integer> map;
+    protected static final String[] BASE_LIST_DNA = {"A", "G", "T", "C"};
+    protected static final String[] BASE_LIST_RNA = {"A", "G", "U", "C"};
+    protected static final Map<String, Integer> BASE_MAP;
    // private static List<String> RNAspecific = Arrays.asList("U", "URA"),
    //        DNAspecific = Arrays.asList("DC", "C", "CYT");
-    protected static Map<Integer, List<String>> ringMap;
+    protected static final Map<Integer, List<String>> RING_MAP;
     static {
-        map = new HashMap<>();
-        map.put("DA", 0); map.put("ADE", 0); map.put("A", 0);
-        map.put("DG", 1); map.put("GUA", 1); map.put("G", 1);
-        map.put("DT", 2); map.put("THY", 2); map.put("T", 2); map.put("U", 2); map.put("URA", 2);
-        map.put("DC", 3); map.put("CYT", 3); map.put("C", 3);
+        BASE_MAP = new HashMap<>();
+        BASE_MAP.put("DA", 0); BASE_MAP.put("ADE", 0); BASE_MAP.put("A", 0);
+        BASE_MAP.put("DG", 1); BASE_MAP.put("GUA", 1); BASE_MAP.put("G", 1);
+        BASE_MAP.put("DT", 2); BASE_MAP.put("THY", 2); BASE_MAP.put("T", 2); BASE_MAP.put("U", 2); BASE_MAP.put("URA", 2);
+        BASE_MAP.put("DC", 3); BASE_MAP.put("CYT", 3); BASE_MAP.put("C", 3);
 
-        ringMap = new HashMap<>();
-        ringMap.put(0, Arrays.asList("C8", "C2", "N3", "C4", "C5", "C6", "N7", "N1", "N9"));
-        ringMap.put(1, Arrays.asList("C8", "C2", "N3", "C4", "C5", "C6", "N7", "N1", "N9"));
-        ringMap.put(2, Arrays.asList("C6", "C2", "N3", "C4", "C5", "N1"));
-        ringMap.put(3, Arrays.asList("C6", "C2", "N3", "C4", "C5", "N1"));
+        RING_MAP = new HashMap<>();
+        RING_MAP.put(0, Arrays.asList("C8", "C2", "N3", "C4", "C5", "C6", "N7", "N1", "N9"));
+        RING_MAP.put(1, Arrays.asList("C8", "C2", "N3", "C4", "C5", "C6", "N7", "N1", "N9"));
+        RING_MAP.put(2, Arrays.asList("C6", "C2", "N3", "C4", "C5", "N1"));
+        RING_MAP.put(3, Arrays.asList("C6", "C2", "N3", "C4", "C5", "N1"));
    }
 
     protected transient Structure structure;
@@ -172,10 +172,22 @@ public class BasePairParameters implements Serializable {
 
     }
 
+    /**
+     * Constructor takes a Structure object, whether to use RNA, and whether to remove duplicate sequences.
+     * @param structure The already-loaded structure to analyze.
+     * @param useRNA if true, the RNA standard bases will be used.  Otherwise, if false, it will work on standard DNA bases.
+     * @param removeDups if true, duplicate sequences will not be considered.  This is for the analysis of X-ray structures from
+     *                   RCSB, where there may be identical or similar units.
+     */
     public BasePairParameters(Structure structure, boolean useRNA, boolean removeDups) {
         this(structure, useRNA, removeDups, false);
     }
 
+    /**
+     * Constructor takes a Structure object, and whether to use the RNA standard bases
+     * @param structure The already-loaded structure to analyze.
+     * @param useRNA if true, the RNA standard bases will be used.  Otherwise, if false, it will work on standard DNA bases.
+     */
     public BasePairParameters(Structure structure, boolean useRNA) {
         this(structure, useRNA, false, false);
     }
@@ -449,14 +461,14 @@ public class BasePairParameters implements Serializable {
                 for (int k = 0; k < match.length(); k++) {
                     Group g1 = c.getAtomGroup(index1+k);
                     Group g2 = chains.get(j).getAtomGroup(index2-k);
-                    Integer type1 = map.get(g1.getPDBName());
-                    Integer type2 = map.get(g2.getPDBName());
+                    Integer type1 = BASE_MAP.get(g1.getPDBName());
+                    Integer type2 = BASE_MAP.get(g2.getPDBName());
                     if (type1 == null || type2 == null) {
                         if (pairSequence.length() != 0 && pairSequence.charAt(pairSequence.length()-1) != ' ') pairSequence += ' ';
                         continue;
                     }
-                    Atom a1 = g1.getAtom(ringMap.get(type1).get(0));
-                    Atom a2 = g2.getAtom(ringMap.get(type2).get(0));
+                    Atom a1 = g1.getAtom(RING_MAP.get(type1).get(0));
+                    Atom a2 = g2.getAtom(RING_MAP.get(type2).get(0));
 
                     if (a1 == null) {
                         log.info("Error processing " + g1.getPDBName());
@@ -477,17 +489,17 @@ public class BasePairParameters implements Serializable {
                     // could be a base pair
                     if (Math.abs(distance-10.0) < 4.0) {
                         boolean valid = true;
-                        for (String atomname : ringMap.get(type1)) {
+                        for (String atomname : RING_MAP.get(type1)) {
                             Atom a = g1.getAtom(atomname);
                             if (a == null) valid = false;
                         }
-                        if (valid) for (String atomname: ringMap.get(type2)) {
+                        if (valid) for (String atomname: RING_MAP.get(type2)) {
                             Atom a = g2.getAtom(atomname);
                             if (a == null) valid = false;
                         }
                         if (valid) {
                             result.add(new Pair<Group>(g1, g2));
-                            pairingNames.add((useRNA ? baseListRNA[type1]+baseListRNA[type2] : baseListDNA[type1]+baseListDNA[type2]));
+                            pairingNames.add((useRNA ? BASE_LIST_RNA[type1]+ BASE_LIST_RNA[type2] : BASE_LIST_DNA[type1]+ BASE_LIST_DNA[type2]));
                             pairSequence += c.getAtomSequence().charAt(index1 + k);
                         } else if (pairSequence.length() != 0 && pairSequence.charAt(pairSequence.length()-1) != ' ') pairSequence += ' ';
                     } else if (pairSequence.length() != 0 && pairSequence.charAt(pairSequence.length()-1) != ' ') pairSequence += ' ';
@@ -507,15 +519,15 @@ public class BasePairParameters implements Serializable {
      * @return The middle frame of the center of the base-pair formed
      */
     public Matrix4d basePairReferenceFrame(Pair<Group> pair) {
-        Integer type1 = map.get(pair.getFirst().getPDBName());
-        Integer type2 = map.get(pair.getSecond().getPDBName());
+        Integer type1 = BASE_MAP.get(pair.getFirst().getPDBName());
+        Integer type2 = BASE_MAP.get(pair.getSecond().getPDBName());
         SuperPosition sp = new SuperPositionQCP(true);
         if (type1 == null || type2 == null) return null;
         PDBFileReader pdbFileReader = new PDBFileReader();
         Structure s1, s2;
         try {
-            s1 = pdbFileReader.getStructure(new ByteArrayInputStream(standardBases[type1].getBytes()));
-            s2 = pdbFileReader.getStructure(new ByteArrayInputStream(standardBases[type2].getBytes()));
+            s1 = pdbFileReader.getStructure(new ByteArrayInputStream(STANDARD_BASES[type1].getBytes()));
+            s2 = pdbFileReader.getStructure(new ByteArrayInputStream(STANDARD_BASES[type2].getBytes()));
         } catch (IOException e) {
             e.printStackTrace();
             return null;
