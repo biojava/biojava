@@ -74,8 +74,8 @@ public class MismatchedBasePairParameters extends BasePairParameters implements 
                         if (canonical && !BasePairParameters.match(sequence.charAt(m), sequence2.charAt(k), useRNA)) continue;
                         Group g1 = c.getAtomGroup(m);
                         Group g2 = c2.getAtomGroup(k);
-                        type1 = map.get(g1.getPDBName());
-                        type2 = map.get(g2.getPDBName());
+                        type1 = BASE_MAP.get(g1.getPDBName());
+                        type2 = BASE_MAP.get(g2.getPDBName());
                         if (type1 == null || type2 == null) continue;
                         Atom a1 = g1.getAtom("C1'");
                         Atom a2 = g2.getAtom("C1'");
@@ -95,7 +95,7 @@ public class MismatchedBasePairParameters extends BasePairParameters implements 
                             continue;
                         }
                         result.add(ga);
-                        pairingNames.add(useRNA ? baseListRNA[type1] + baseListRNA[type2] : baseListDNA[type1] + baseListDNA[type2]);
+                        pairingNames.add(useRNA ? BASE_LIST_RNA[type1] + BASE_LIST_RNA[type2] : BASE_LIST_DNA[type1] + BASE_LIST_DNA[type2]);
                         foundPair = true;
                     }
                     if (!foundPair && lastFoundPair) {
