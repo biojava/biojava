@@ -32,7 +32,7 @@ import java.io.ObjectOutputStream;
 import static org.junit.Assert.*;
 
 /**
- * Test the serialization of BioJava structure objects.
+ * Test the serialization and deserialization of BioJava structure objects.
  * 
  * @author Aleix Lafita
  *
@@ -43,6 +43,7 @@ public class TestStructureSerialization {
 	public void testSerializeStructure() throws IOException, StructureException, ClassNotFoundException {
 
 		PDBFileReader reader = new PDBFileReader();
+		reader.getFileParsingParameters().setParseSecStruc(true);
 		Structure sin = reader.getStructure("src/test/resources/2gox.pdb");
 
 		// Serialize the structure object and keep it in memory
@@ -58,7 +59,7 @@ public class TestStructureSerialization {
 		Structure sout = (Structure) objectIn.readObject();
 		objectIn.close();
 		
-		// Test some properties of the structures
+		// Test properties of the structures before and after serialization
 		assertEquals(sin.nrModels(), sout.nrModels());
 		assertEquals(sin.getChains().size(), sout.getChains().size());
 		assertEquals(sin.getName(), sout.getName());
