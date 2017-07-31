@@ -21,7 +21,10 @@
  */
 package org.biojava.nbio.structure.basepairs;
 
-import org.biojava.nbio.structure.*;
+import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.Chain;
+import org.biojava.nbio.structure.Group;
+import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.contact.Pair;
 import org.biojava.nbio.structure.geometry.SuperPosition;
 import org.biojava.nbio.structure.geometry.SuperPositionQCP;
