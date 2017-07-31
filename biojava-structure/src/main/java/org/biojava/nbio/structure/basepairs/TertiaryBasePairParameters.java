@@ -35,7 +35,7 @@ import java.util.List;
 /**
  * This class also finds the base pairing and base-pair step parameters but has a broader definition
  * of a base pair so that non-canonical-WC base pairs will be detected and reported.  This is useful
- * for RNA that has folded into different regions, and into higher order DNA structures.  Intra-strand
+ * for RNA that has folded into different regions, and for higher-order DNA structures.  Intra-strand
  * pairings are considered in this class (but in not the base class or MismatchedBasePairParameters class)
  * @author Luke Czapla
  * @since 5.0.0

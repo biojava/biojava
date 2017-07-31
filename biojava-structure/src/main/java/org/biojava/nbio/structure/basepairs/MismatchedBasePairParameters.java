@@ -34,7 +34,8 @@ import java.util.List;
 
 /**
  * This class allows for finding inter-strand base pairs that are not necessarily canonical Watson-Crick pairs.
- * The implementation of findPair is different than that of the base class.
+ * The implementation of findPair is different than that of the base class.  This class does not consider intra-strand
+ * base pairing and for that, the TertiaryBasePairParameters class should be used.
  * @author Luke Czapla
  * @since 5.0.0
  *
@@ -45,6 +46,15 @@ public class MismatchedBasePairParameters extends BasePairParameters implements 
     protected static double MaxStagger = 2.0, MaxShear = 5.0, MaxStretch = 5.0,
             MaxPropeller = 60.0;
 
+    /**
+     * This constructor is used to create the TertiaryBasePairParameters object.  The parent constructors are valid
+     * as well, but for this class, it makes the most sense to specify the exact parameters for the analysis.
+     * @param structure The Structure to analyze
+     * @param RNA Whether to analyze RNA (if false, it will analyze DNA)
+     * @param removeDups Whether to remove duplicate sequences (useful for RCSB data with redundant units).
+     * @param canonical Whether to only consider canonical Watson-Crick base pairs.  If false, any pairing will be identified
+     *                  as long it falls below the maximum values of stagger, shear, and stretch.
+     */
     public MismatchedBasePairParameters(Structure structure, boolean RNA, boolean removeDups, boolean canonical) {
 
         super(structure, RNA, removeDups, canonical);
@@ -53,8 +63,8 @@ public class MismatchedBasePairParameters extends BasePairParameters implements 
 
     /**
      * This is an implementation for finding non-canonical base pairs when there may be missing or overhanging bases.
-     * @param chains The list of chains already found to be nucleic acids
-     * @return The list of the atom groups (residues) that are pairs, as a Pair of nucleic acid Groups
+     * @param chains The list of chains already found to be nucleic acids.
+     * @return The list of the atom groups (residues) that are pairs, as a Pair of nucleic acid Groups.
      */
     @Override
     public List<Pair<Group>> findPairs(List<Chain> chains) {

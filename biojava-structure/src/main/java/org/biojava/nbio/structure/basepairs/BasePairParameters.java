@@ -48,17 +48,17 @@ import static java.lang.Math.acos;
 import static java.lang.Math.PI;
 
 /**
- * Contributed to BioJava under its LGPL
- * This module calculates the el Hassan-Calladine Base Pairing and Base-pair Step Parameters
+ * This module calculates the el Hassan-Calladine Base Pairing and Base-pair Step Parameters for any nucleic
+ * acid containing structure that has the information about the core base-pair rings.
  * Citation: https://www.ncbi.nlm.nih.gov/pubmed/11601858
  *
- * The method that is usually overridden is findPairs(), this implementation is used for a large-scale
+ * The method that is usually overridden is findPairs(), this base implementation is used for a large-scale
  * analysis of the most proper helical regions in almost 4000 protein-DNA structures, almost
  * 2000 structures containing only DNA, or almost 1300 structures containing only RNA. (as of 7/2017).
- * Those who study tertiary structures for RNA folding should try using the TertiaryBasePairParameters,
+ * Those who study tertiary structures for RNA folding should use the TertiaryBasePairParameters,
  * because this base class is only looking for base pairs between separate strands that exactly line up.
  * To relax the lining up policy and allow for non-canonical base pairs, use the MismatchedBasePairParameters
- * class.
+ * class, which will not consider intra-strand base pairing.
  *
  * @author Luke Czapla
  * @since 5.0.0
@@ -147,7 +147,7 @@ public class BasePairParameters implements Serializable {
     protected boolean nonredundant = false;
     protected double[] pairParameters;
 
-    // this is the main data that you want to get back out from the procedure.
+    // this is the main data that the user wants to get back out from the procedure.
     protected String pairSequence = "";
     protected double[][] pairingParameters;
     protected double[][] stepParameters;
@@ -156,7 +156,7 @@ public class BasePairParameters implements Serializable {
 
 
     /**
-     * Constructor takes a Structure object, finds base pair and base-pair step parameters
+     * This constructor takes a Structure object, finds base pair and base-pair step parameters
      * for double-helical regions within the structure.
      * @param structure The already-loaded structure to analyze.
      * @param useRNA whether to look for canonical RNA pairs.  By default (false) it analyzes DNA.
@@ -173,7 +173,7 @@ public class BasePairParameters implements Serializable {
     }
 
     /**
-     * Constructor takes a Structure object, whether to use RNA, and whether to remove duplicate sequences.
+     * This constructor takes a Structure object, whether to use RNA, and whether to remove duplicate sequences.
      * @param structure The already-loaded structure to analyze.
      * @param useRNA if true, the RNA standard bases will be used.  Otherwise, if false, it will work on standard DNA bases.
      * @param removeDups if true, duplicate sequences will not be considered.  This is for the analysis of X-ray structures from
@@ -184,7 +184,7 @@ public class BasePairParameters implements Serializable {
     }
 
     /**
-     * Constructor takes a Structure object, and whether to use the RNA standard bases
+     * This constructor takes a Structure object, and whether to use the RNA standard bases.
      * @param structure The already-loaded structure to analyze.
      * @param useRNA if true, the RNA standard bases will be used.  Otherwise, if false, it will work on standard DNA bases.
      */
@@ -193,7 +193,7 @@ public class BasePairParameters implements Serializable {
     }
 
     /**
-     * Constructor takes a Structure object, finds base pair and base-pair step parameters
+     * This constructor takes a Structure object, finds base pair and base-pair step parameters
      * for double-helical regions within the structure for only canonical DNA pairs.
      * @param structure The already-loaded structure to analyze.
      */
@@ -203,7 +203,7 @@ public class BasePairParameters implements Serializable {
 
 
     /**
-     * This is the main function call to extract all step parameters, pairing parameters, and sequence
+     * This method is the main function call to extract all step parameters, pairing parameters, and sequence
      * information from the Structure object provided to the constructor.
      * @return This same object with the populated data, convenient for output
      *  (e.g. <i>log.info(new BasePairParameters(structure).analyze());</i>)
@@ -238,17 +238,17 @@ public class BasePairParameters implements Serializable {
 
 
     /**
-     * Returns the total number of base pairs that were found, after the call to analyze()
+     * This method returns the total number of base pairs that were found, used after the call to analyze().
      * @return An integer value, number of base pairs
      */
     public int getLength() {
-        if (structure == null || pairParameters == null) throw new IllegalArgumentException("Base pair number is out of range.");
+        if (structure == null || pairParameters == null) throw new IllegalArgumentException("This structure is not analyzed or not initialized.");
         return pairingParameters.length;
     }
 
 
     /**
-     * This reports all the pair parameters, in the order of:
+     * This method reports all the pair parameters, in the order of:
      * buckle, propeller, opening (in degrees), shear, stagger, stretch (in Å).
      * @return A double[][] with length equal to number of base pairs for rows, and 6 columns
      */
@@ -257,7 +257,7 @@ public class BasePairParameters implements Serializable {
     }
 
     /**
-     * This reports all the base-pair step parameters, in the order of:
+     * This method reports all the base-pair step parameters, in the order of:
      * tilt, roll, twist (in degrees), shift, slide, rise (in Å).
      * @return A double[][] with length equal to number of base pairs (the first row 0 has no step
      *  and therefore is six zeroes), and 6 columns.
@@ -268,7 +268,7 @@ public class BasePairParameters implements Serializable {
 
 
     /**
-     * This returns the primary strand's sequence where parameters were found.
+     * This method returns the primary strand's sequence where parameters were found.
      * There are spaces in the string anywhere there was a break in the helix or when
      * it goes from one helix to another helix in the structure. (the "step" is still returned)
      * @return String of primary sequence with spaces between gaps and new helices.
@@ -279,7 +279,7 @@ public class BasePairParameters implements Serializable {
 
 
     /**
-     * This returns the names of the pairs in terms of A, G, T/U, and C for each base pair group in the
+     * This method returns the names of the pairs in terms of A, G, T/U, and C for each base pair group in the
      * list.  The first character is the leading strand base and the second character is the complementary base
      * @return
      */
@@ -291,79 +291,87 @@ public class BasePairParameters implements Serializable {
         return referenceFrames;
     }
 
+    /**
+     * This method is an internal test that the base pair specified is within a valid range.  If not, it throws an exception
+     * with a message.
+     * @param bp The index of the base pair or base-pair step to return.
+     */
+    private void checkArgument(int bp) {
+        if (bp < 0 || bp >= getPairingParameters().length) throw new IllegalArgumentException("Base pair number is out of range.");
+    }
 
     /**
-     * Return the buckle in degrees for the given base pair
+     * This method returns the buckle in degrees for the given base pair
      * @param bp the number of the base pair (starting with 0)
      * @return the value as a double (in degrees)
      */
     public Double getBuckle(int bp) {
-        if (bp < 0 || bp >= getPairingParameters().length) throw new IllegalArgumentException("Base pair number is out of range.");
+        checkArgument(bp);
         return pairingParameters[bp][0];
     }
 
     /**
-     * Return the propeller ("propeller-twist") in degrees for the given base pair
+     * This method returns the propeller ("propeller-twist") in degrees for the given base pair
      * @param bp the number of the base pair (starting with 0)
      * @return the value as a double (in degrees)
      */
     public Double getPropeller(int bp) {
-        if (bp < 0 || bp >= getPairingParameters().length) throw new IllegalArgumentException("Base pair number is out of range.");
+        checkArgument(bp);
         return pairingParameters[bp][1];
     }
 
     /**
-     * Return the opening in degrees for the given base pair
+     * This method returns the opening in degrees for the given base pair
      * @param bp the number of the base pair (starting with 0)
      * @return the value as a double (in degrees)
      */
     public Double getOpening(int bp) {
-        if (bp < 0 || bp >= getPairingParameters().length) throw new IllegalArgumentException("Base pair number is out of range.");
+        checkArgument(bp);
         return pairingParameters[bp][2];
     }
 
     /**
-     * Return the shear in Å for the given base pair
+     * This method returns the shear in Å for the given base pair
      * @param bp the number of the base pair (starting with 0)
      * @return the value as a double (in Å)
      */
     public Double getShear(int bp) {
-        if (bp < 0 || bp >= getPairingParameters().length) throw new IllegalArgumentException("Base pair number is out of range.");
+        checkArgument(bp);
         return pairingParameters[bp][3];
     }
 
     /**
-     * Return the stretch in Å for the given base pair
+     * This method returns the stretch in Å for the given base pair
      * @param bp the number of the base pair (starting with 0)
      * @return the value as a double (in Å)
      */
     public Double getStretch(int bp) {
-        if (bp < 0 || bp >= getPairingParameters().length) throw new IllegalArgumentException("Base pair number is out of range.");
+        checkArgument(bp);
         return pairingParameters[bp][4];
     }
 
     /**
-     * Return the stagger in Å for the given base pair
+     * This method returns the stagger in Å for the given base pair
      * @param bp the number of the base pair (starting with 0)
      * @return the value as a double (in Å)
      */
     public Double getStagger(int bp) {
-        if (bp < 0 || bp >= getPairingParameters().length) throw new IllegalArgumentException("Base pair number is out of range.");
+        checkArgument(bp);
         return pairingParameters[bp][5];
     }
 
     /**
-     * Return the tilt for the given base pair, relative to the one before it.
+     * This method returns the tilt for the given base pair, relative to the one before it.
      * @param bp the number of the base pair (starting with 0)
      * @return the value as a double (in degrees)
      */
     public Double getTilt(int bp) {
-        if (bp < 0 || bp >= getStepParameters().length) throw new IllegalArgumentException("Base pair number is out of range.");
+        checkArgument(bp);
         return stepParameters[bp][0];
     }
 
     /**
-     * Return the roll for the given base pair, relative to the one before it.
+     * This method returns the roll for the given base pair, relative to the one before it.
      * @param bp the number of the base pair (starting with 0)
      * @return the value as a double (in degrees)
      */
@@ -373,7 +381,7 @@ public class BasePairParameters implements Serializable {
     }
 
     /**
-     * Return the twist for the given base pair, relative to the one before it.
+     * This method returns the twist for the given base pair, relative to the one before it.
      * @param bp the number of the base pair (starting with 0)
      * @return the value as a double (in degrees)
      */
@@ -393,7 +401,7 @@ public class BasePairParameters implements Serializable {
     }
 
     /**
-     * Return the slide for the given base pair, relative to the one before it.
+     * This method returns the slide for the given base pair, relative to the one before it.
      * @param bp the number of the base pair (starting with 0)
      * @return the value as a double (in Å)
      */
@@ -403,7 +411,7 @@ public class BasePairParameters implements Serializable {
     }
 
     /**
-     * Return the rise for the given base pair, relative to the one before it.
+     * This method returns the rise for the given base pair, relative to the one before it.
      * @param bp the number of the base pair (starting with 0)
      * @return the value as a double (in Å)
      */
@@ -414,7 +422,7 @@ public class BasePairParameters implements Serializable {
 
 
     /**
-     * This reports all the nucleic acid chains and has an option to remove duplicates if you
+     * This method reports all the nucleic acid chains and has an option to remove duplicates if you
      * are considering an analysis of only unique DNA or RNA helices in the Structure.
      * @param removeDups If true, it will ignore duplicate chains
      * @return A list of all the nucleic acid chains in order of the Structure
@@ -440,7 +448,7 @@ public class BasePairParameters implements Serializable {
     }
 
     /**
-     * This performs a search for base pairs in the structure.  The criteria is alignment of
+     * This method performs a search for base pairs in the structure.  The criteria is alignment of
      * sequences and the canonical base pairs of DNA or RNA. Use MismatchedBasePairParameters
      * or TertiaryBasePairParameters for finding higher-order associations.
      * @param chains The list of chains already found to be nucleic acids
@@ -514,7 +522,7 @@ public class BasePairParameters implements Serializable {
 
 
     /**
-     * Calculate the central frame (4x4 transformation matrix) of a single base pair.
+     * This method calculates the central frame (4x4 transformation matrix) of a single base pair.
      * @param pair An array of the two groups that make a hypothetical pair
      * @return The middle frame of the center of the base-pair formed
      */
@@ -636,7 +644,7 @@ public class BasePairParameters implements Serializable {
     // The following methods are just helper classes for the rapid analyze of base-pair geometry.
     /**
      * This method calculates pairing and step parameters from 4x4 transformation matrices (used internally)
-     * that come out as Matrix4d;
+     * that comes out as a Matrix4d.
      * @param input the 4x4 matrix representing the transformation from strand II -> strand I or pair i to pair i+1
      * @return Six parameters as double[6]
      */
@@ -686,7 +694,7 @@ public class BasePairParameters implements Serializable {
     }
 
     /**
-     * Return the complement of a base (used internally)
+     * This method returns the complement of a base. (used internally)
      * @param base The letter of the base
      * @param RNA Whether it is RNA (if false, it is DNA)
      * @return The character representing the complement of the base
@@ -714,7 +722,7 @@ public class BasePairParameters implements Serializable {
     }
 
     /**
-     * 3D Vector cross product of two vectors as double arrays (used internally)
+     * This does a 3D Vector cross product of two vectors as double arrays. (used internally)
      *
      * @param a An array of length 3 or 4 (4th component is ignored)
      * @param b An array of length 3 or 4 (4th component is ignored)
@@ -730,7 +738,7 @@ public class BasePairParameters implements Serializable {
     }
 
     /**
-     * Remove any component of vector a that is along vector b (used internally)
+     * This method removes any component of vector a that is along vector b. (used internally)
      * @param a The array (vector) to remove component from
      * @param b The component array (vector) to remove from the first
      * @return The original array a with any component along b removed from it.
@@ -749,7 +757,7 @@ public class BasePairParameters implements Serializable {
     }
 
     /**
-     * Finds the longest common substring between two strings (used internally)
+     * This method finds the longest common substring between two strings. (used internally)
      * @param s1 The first string
      * @param s2 The second string
      * @return The substring itself
@@ -774,7 +782,7 @@ public class BasePairParameters implements Serializable {
     }
 
     /**
-     * Return true if a is the complement of b (used internally)
+     * This returns true if a is the complement of b, false otherwise. (used internally)
      * @param a First letter
      * @param b Potential matching letter
      * @param RNA Whether it is RNA (if false, DNA rules are used)
