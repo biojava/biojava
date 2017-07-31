@@ -120,34 +120,66 @@ public class MismatchedBasePairParameters extends BasePairParameters implements 
         return result;
     }
 
+    /**
+     * This method returns the maximum stagger between bases used as criteria for the characterization of two bases as being paired.
+     * @return the maximum propeller ("propeller-twist", in degrees) allowed.
+     */
     public static double getMaxStagger() {
         return MaxStagger;
     }
 
+    /**
+     * This method sets the maximum stagger allowed for a base pair, prior to analyze() call
+     * @param maxStagger The maximum propeller (in Å) allowed to consider two bases paired
+     */
     public static void setMaxStagger(double maxStagger) {
         MaxStagger = maxStagger;
     }
 
+    /**
+     * This method returns the maximum shear between bases used as criteria for the characterization of two bases as being paired.
+     * @return the maximum shear (in Å) allowed.
+     */
     public static double getMaxShear() {
         return MaxShear;
     }
 
+    /**
+     * This method sets the maximum shear allowed for a base pair, prior to analyze() call
+     * @param maxShear The maximum shear (in Å) allowed to consider two bases paired
+     */
     public static void setMaxShear(double maxShear) {
         MaxShear = maxShear;
     }
 
+    /**
+     * This method returns the maximum stretch between bases used as criteria for the characterization of two bases as being paired.
+     * @return the maximum stretch (in Å) allowed.
+     */
     public static double getMaxStretch() {
         return MaxStretch;
     }
 
+    /**
+     * This method sets the maximum stretch allowed for a base pair, prior to analyze() call.
+     * @param maxStretch The maximum stretch (in Å) allowed to consider two bases paired
+     */
     public static void setMaxStretch(double maxStretch) {
         MaxStretch = maxStretch;
     }
 
+    /**
+     * This method returns the maximum propeller twist between bases used as criteria for the characterization of two bases as being paired.
+     * @return the maximum propeller ("propeller-twist", in degrees) allowed.
+     */
     public static double getMaxPropeller() {
         return MaxPropeller;
     }
 
+    /**
+     * This method sets the maximum propeller allowed for a base pair, prior to analyze() call
+     * @param maxPropeller The maximum propeller ("propeller-twist", in degrees) allowed to consider two bases paired
+     */
     public static void setMaxPropeller(double maxPropeller) {
         MaxPropeller = maxPropeller;
     }

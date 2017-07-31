@@ -102,26 +102,33 @@ public class TertiaryBasePairParameters extends BasePairParameters implements Se
         return result;
     }
 
+    /**
+     * This method returns the maximum stagger between bases used as criteria for the characterization of two bases as being paired.
+     * @return the maximum stagger (in Å) allowed.
+     */
     public static double getMaxStagger() {
         return MaxStagger;
     }
 
     /**
-     * Set the maximum stagger allowed for a base pair, prior to analyze() call
-     * @param maxStagger The maximum stagger allowed to consider two bases paired
+     * This method sets the maximum stagger allowed for a base pair, prior to analyze() call
+     * @param maxStagger The maximum stagger (in Å) allowed to consider two bases paired
      */
     public static void setMaxStagger(double maxStagger) {
         MaxStagger = maxStagger;
     }
 
-
+    /**
+     * This method returns the maximum propeller twist between bases used as criteria for the characterization of two bases as being paired.
+     * @return the maximum propeller ("propeller-twist", in degrees) allowed.
+     */
     public static double getMaxPropeller() {
         return MaxPropeller;
     }
 
     /**
-     * Set the maximum propeller allowed for a base pair, prior to analyze() call
-     * @param maxPropeller The maximum propeller (a.k.a. "propeller-twist") allowed to consider two bases paired
+     * This method sets the maximum propeller allowed for a base pair, prior to analyze() call
+     * @param maxPropeller The maximum propeller ("propeller-twist", in degrees) allowed to consider two bases paired
      */
     public static void setMaxPropeller(double maxPropeller) {
         MaxPropeller = maxPropeller;
