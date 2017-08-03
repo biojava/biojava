@@ -55,7 +55,8 @@ public class TestQuatSymmetryDetectorExamples {
 	@Test
 	public void testNMR() throws IOException, StructureException {
 
-		Structure pdb = StructureIO.getStructure("BIO:1b4c:1");
+		// as of mmCIF v5 there's no bioassemblies for NMR entries, so now we use the AU (bioassembly 0) - JD 2017-08-02
+		Structure pdb = StructureIO.getStructure("BIO:1b4c:0");
 
 		SubunitClustererParameters clusterParams = new SubunitClustererParameters();
 		QuatSymmetryParameters symmParams = new QuatSymmetryParameters();
