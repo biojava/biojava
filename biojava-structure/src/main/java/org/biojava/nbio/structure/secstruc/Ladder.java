@@ -20,6 +20,8 @@
  */
 package org.biojava.nbio.structure.secstruc;
 
+import java.io.Serializable;
+
 /**
  * A Ladder is a set of one or more consecutive bridges of identical type. A
  * Bridge is a Ladder of length one.
@@ -28,8 +30,10 @@ package org.biojava.nbio.structure.secstruc;
  * @author Aleix Lafita
  *
  */
-public class Ladder {
+public class Ladder implements Serializable  {
 
+	private static final long serialVersionUID = -1658305503250364409L;
+	
 	int from; // start of the first strand
 	int to; // end of the first strand
 	int lfrom; // start of the second strand

@@ -18,6 +18,8 @@
  */
 package org.biojava.nbio.structure.secstruc;
 
+import java.io.Serializable;
+
 /**
  * Container that represents a hidrogen bond. It contains the energy of the bond
  * in cal/mol and the partner index.
@@ -26,8 +28,10 @@ package org.biojava.nbio.structure.secstruc;
  * @author Aleix Lafita
  *
  */
-public class HBond {
+public class HBond implements Serializable {
 
+	private static final long serialVersionUID = 8246764841329431337L;
+	
 	private double energy;
 	private int partner;
 
