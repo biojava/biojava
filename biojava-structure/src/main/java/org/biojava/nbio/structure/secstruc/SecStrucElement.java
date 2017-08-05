@@ -20,6 +20,8 @@
  */
 package org.biojava.nbio.structure.secstruc;
 
+import java.io.Serializable;
+
 import org.biojava.nbio.structure.ResidueNumber;
 import org.biojava.nbio.structure.ResidueRangeAndLength;
 
@@ -31,8 +33,10 @@ import org.biojava.nbio.structure.ResidueRangeAndLength;
  * @since 4.1.1
  *
  */
-public class SecStrucElement {
+public class SecStrucElement implements Serializable  {
 
+	private static final long serialVersionUID = -8485685793171396131L;
+	
 	private SecStrucType type;
 	private ResidueRangeAndLength range;
 	private int index;
