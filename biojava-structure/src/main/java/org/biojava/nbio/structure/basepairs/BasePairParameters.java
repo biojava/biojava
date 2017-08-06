@@ -144,7 +144,7 @@ public class BasePairParameters implements Serializable {
         RING_MAP.put(3, Arrays.asList("C6", "C2", "N3", "C4", "C5", "N1"));
    }
 
-    protected transient Structure structure;
+    protected Structure structure;
     protected boolean canonical = true;
     protected boolean useRNA = false;
     protected boolean nonredundant = false;
