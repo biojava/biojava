@@ -19,10 +19,7 @@ import org.junit.Test;
  */
 public class TestEntityNameAndType {
 
-	@Test
-	/**
-	 * 
-	 */
+	@Test	
 	public void testEntityId() throws IOException, StructureException {
 		
 		// Set up the atom cache to parse on Internal chain id
@@ -37,7 +34,7 @@ public class TestEntityNameAndType {
 		StructureIO.setAtomCache(cache);
 		// This is hte information we want to test against
 		String[] typeInformation = new String[] {"POLYMER", "NONPOLYMER", "NONPOLYMER", "NONPOLYMER", "NONPOLYMER", "WATER"};
-		String[] descriptionInformation = new String[] {"BROMODOMAIN ADJACENT TO ZINC FINGER DOMAIN PROTEIN 2B","4-FLUOROBENZAMIDOXIME",  "METHANOL", "METHANOL", "METHANOL", "water"};	
+		String[] descriptionInformation = new String[] {"BROMODOMAIN ADJACENT TO ZINC FINGER DOMAIN PROTEIN 2B","4-Fluorobenzamidoxime",  "METHANOL", "METHANOL", "METHANOL", "water"};	
 		
 		// Now some other information fields to test this data is collated correctly
 		String[] geneSourceSciName = new String[] {"HOMO SAPIENS", null, null, null, null, null};
@@ -74,8 +71,8 @@ public class TestEntityNameAndType {
 			chainCounter++;
 		}
 		// Now check they're both the same
-		assertArrayEquals(testDescInfo, descriptionInformation);
-		assertArrayEquals(testTypeInfo, typeInformation);
+		assertArrayEquals(descriptionInformation, testDescInfo);
+		assertArrayEquals(typeInformation, testTypeInfo);
 		// Now check these work too
 		assertArrayEquals(geneSourceSciName, testGeneSourceSciName);
 		assertArrayEquals(geneSourceTaxId, testGeneSourceTaxId);

@@ -35,7 +35,6 @@ import org.biojava.nbio.core.sequence.template.Sequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.Serializable;
 import java.util.*;
 
 
@@ -47,7 +46,7 @@ import java.util.*;
  * @author Jules Jacobsen
  * @since 1.4
  */
-public class ChainImpl implements Chain, Serializable {
+public class ChainImpl implements Chain {
 
 	private final static Logger logger = LoggerFactory.getLogger(ChainImpl.class);
 
@@ -712,7 +711,7 @@ public class ChainImpl implements Chain, Serializable {
 	public boolean isPureNonPolymer() {
 		for (Group g : getAtomGroups()) {
 
-			ChemComp cc = g.getChemComp();
+			//ChemComp cc = g.getChemComp();
 
 			if ( 	g.isPolymeric() &&
 					!g.isHetAtomInFile() ) {

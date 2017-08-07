@@ -57,7 +57,7 @@ public class TestBond {
 	public void testStructConnModels() throws IOException, StructureException {
 		Structure s = StructureIO.getStructure("1cdr");
 		Group groupOne = s.getPolyChain("A",1).getGroupByPDB(new ResidueNumber("A", 18, ' '));
-		Group groupTwo = s.getPolyChain("B",1).getGroupByPDB(new ResidueNumber("A", 78, ' '));
+		Group groupTwo = s.getNonPolyChain("B",1).getGroupByPDB(new ResidueNumber("A", 78, ' '));
 		Atom atomOne = groupOne.getAtom("ND2");
 		Atom atomTwo = groupTwo.getAtom("C1");
 		assertTrue(areBonded(atomOne, atomTwo));

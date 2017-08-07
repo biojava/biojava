@@ -52,7 +52,8 @@ import org.slf4j.LoggerFactory;
 /**
  * A class that provides some tool methods.
  *
- * @author Andreas Prlic, Jules Jacobsen
+ * @author Andreas Prlic
+ * @author Jules Jacobsen
  * @since 1.0
  */
 public class StructureTools {

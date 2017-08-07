@@ -27,8 +27,6 @@ import java.util.List;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.MMCIFFileReader;
 import org.biojava.nbio.structure.io.PDBFileReader;
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
 
 /**
  * A class that provides static access methods for easy lookup of protein structure related components

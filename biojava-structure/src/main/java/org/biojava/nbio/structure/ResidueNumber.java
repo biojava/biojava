@@ -27,7 +27,8 @@ package org.biojava.nbio.structure;
 import java.io.Serializable;
 import java.io.StringWriter;
 
-/** Everything that is needed to uniquely describe a residue position
+/** 
+ * Everything that is needed to uniquely describe a residue position
  *
  * @author Andreas Prlic
  *

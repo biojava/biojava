@@ -131,6 +131,10 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 			for(Chain modelChain : modelChainMap.values()){
 				structure.addChain(modelChain, i);
 				String sequence = chainSequenceMap.get(modelChain.getId());
+				if (sequence == null) {
+					logger.warn("Sequence is null for chain with asym_id {}. Most likely the chain is non-polymeric. Will not add seqres groups for it.", modelChain.getId());
+					continue;
+				}
 				MmtfUtils.addSeqRes(modelChain, sequence);
 			}
 		}
@@ -509,14 +513,13 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 		if(releaseDate!=null){
 			try {
 				Date relDate = formatter.parse(releaseDate);
-				pdbHeader.setModDate(relDate);
+				pdbHeader.setRelDate(relDate);
 			} catch (ParseException e) {
-				logger.warn("Could not parse date string '{}', release/modification date will be unavailable", releaseDate);
+				logger.warn("Could not parse date string '{}', release date will be unavailable", releaseDate);
 			}
 		}
 		else{
-			pdbHeader.setModDate(new Date(0));
+			pdbHeader.setRelDate(new Date(0));
 		}
-
 	}
 }

@@ -20,8 +20,6 @@
  * Created on 22.01.2007
  *
  */
-
-
 package org.biojava.nbio.structure;
 
 

@@ -27,6 +27,7 @@ import org.biojava.nbio.core.sequence.template.Sequence;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -48,7 +49,7 @@ import java.util.List;
  * @version %I% %G%
  * @since 1.4
  */
-public interface Chain {
+public interface Chain extends Serializable {
 
 	/** returns an identical copy of this Chain.
 	 * @return  an identical copy of this Chain

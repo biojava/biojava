@@ -32,7 +32,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
-
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.ChainImpl;
@@ -50,6 +49,12 @@ import org.biojava.nbio.structure.test.util.StringManipulationTestsHelper;
 import org.junit.Before;
 import org.junit.Test;
 
+/**
+ * Test the {@link PDBFileParser}.
+ * 
+ * @author Aleix Lafita
+ *
+ */
 public class PDBFileParserTest {
 
 	private static PDBFileParser parser;
@@ -555,8 +560,6 @@ public class PDBFileParserTest {
 	
 	/**
 	 * Test handling of missing Element column. Issue 537 in github.
-	 * @author Aleix Lafita
-	 * @throws IOException 
 	 */
 	@Test
 	public void testMissingElements() throws IOException {
@@ -626,5 +629,29 @@ public class PDBFileParserTest {
 		pdb = s.toPDB();
 		assertTrue("the Element column has not been filled correctly", pdb.equals(original));
 		
+	}
+	
+	/**
+	 * Test the parsing of release and last modified dates.
+	 */
+	@Test
+	public void testDates() throws IOException {
+		
+		String revisionDates = 
+		"REVDAT   5   13-JUL-11 1STP    1       VERSN                                    "+newline+
+		"REVDAT   4   24-FEB-09 1STP    1       VERSN                                    " + newline+
+		"REVDAT   3   01-APR-03 1STP    1       JRNL                                     " + newline+
+		"REVDAT   2   15-OCT-94 1STP    1       AUTHOR                                   " + newline+
+		"REVDAT   1   15-OCT-92 1STP    0                                                " + newline;
+	
+		BufferedReader br = new BufferedReader(new StringReader(revisionDates));
+		Structure s = parser.parsePDBFile(br);
+		
+		// The latest modified date should be 2011
+		assertEquals(s.getPDBHeader().getModDate().getYear() + 1900, 2011);
+		
+		// The release date should be 1992
+		assertEquals(s.getPDBHeader().getRelDate().getYear() + 1900, 1992);
+	
 	}
 }

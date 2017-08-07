@@ -79,8 +79,10 @@ import org.biojava.nbio.structure.io.mmcif.model.EntitySrcGen;
 import org.biojava.nbio.structure.io.mmcif.model.EntitySrcNat;
 import org.biojava.nbio.structure.io.mmcif.model.EntitySrcSyn;
 import org.biojava.nbio.structure.io.mmcif.model.Exptl;
+import org.biojava.nbio.structure.io.mmcif.model.PdbxAuditRevisionHistory;
 import org.biojava.nbio.structure.io.mmcif.model.PdbxChemCompDescriptor;
 import org.biojava.nbio.structure.io.mmcif.model.PdbxChemCompIdentifier;
+import org.biojava.nbio.structure.io.mmcif.model.PdbxDatabaseStatus;
 import org.biojava.nbio.structure.io.mmcif.model.PdbxEntityNonPoly;
 import org.biojava.nbio.structure.io.mmcif.model.PdbxNonPolyScheme;
 import org.biojava.nbio.structure.io.mmcif.model.PdbxPolySeqScheme;
@@ -1371,14 +1373,15 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 	@Override
 	public void newDatabasePDBrev(DatabasePDBrev dbrev) {
-		//System.out.println("got a database revision:" + dbrev);
+		
+		logger.debug("got a database revision:" + dbrev);
+		
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd",Locale.US);
 		PDBHeader header = structure.getPDBHeader();
 
 		if ( header == null) {
 			header = new PDBHeader();
 		}
-
 
 		if (dbrev.getNum().equals("1")){
 
@@ -1391,8 +1394,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			}
 
 			try {
-				Date mod = dateFormat.parse(dbrev.getDate());
-				header.setModDate(mod);
+				Date rel = dateFormat.parse(dbrev.getDate());
+				header.setRelDate(rel);
 
 			} catch (ParseException e){
 				logger.warn("Could not parse date string '{}', modification date will be unavailable", dbrev.getDate());
@@ -1408,6 +1411,67 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			} catch (ParseException e){
 				logger.warn("Could not parse date string '{}', modification date will be unavailable", dbrev.getDate());
 			}
+		}
+
+		structure.setPDBHeader(header);
+	}
+	
+	@Override
+	public void newPdbxAuditRevisionHistory(PdbxAuditRevisionHistory history) {
+		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd",Locale.US);
+		PDBHeader header = structure.getPDBHeader();
+
+		if ( header == null) {
+			header = new PDBHeader();
+		}
+
+        // first entry in revision history is the release date
+		if (history.getOrdinal().equals("1")){
+			try {
+				Date releaseDate = dateFormat.parse(history.getRevision_date());
+				header.setRelDate(releaseDate);
+				
+			} catch (ParseException e){
+				logger.warn("Could not parse date string '{}', release date will be unavailable", history.getRevision_date());
+			}
+		} else {
+			// all other dates are revision dates;
+			// since this method may be called multiple times,
+			// the last revision date will "stick"
+			try {
+				Date revisionDate = dateFormat.parse(history.getRevision_date());
+				header.setModDate(revisionDate);
+			} catch (ParseException e){
+				logger.warn("Could not parse date string '{}', revision date will be unavailable", history.getRevision_date());
+			}
+		}
+
+		structure.setPDBHeader(header);
+	}
+	
+	@Override
+	public void newPdbxDatabaseStatus(PdbxDatabaseStatus status) {
+
+		// the deposition date field is only available in mmCIF 5.0
+
+		if (status.getRecvd_initial_deposition_date() == null) {
+			// skip this method for older mmCIF versions
+			return;
+		}
+		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd",Locale.US);
+		PDBHeader header = structure.getPDBHeader();
+
+		if (header == null) {
+			header = new PDBHeader();
+		}
+
+		try {
+			Date depositionDate = dateFormat.parse(status.getRecvd_initial_deposition_date());
+			header.setDepDate(depositionDate);
+		} catch (ParseException e){
+			logger.warn("Could not parse date string '{}', deposition date will be unavailable", status.getRecvd_initial_deposition_date());
 		}
 
 		structure.setPDBHeader(header);

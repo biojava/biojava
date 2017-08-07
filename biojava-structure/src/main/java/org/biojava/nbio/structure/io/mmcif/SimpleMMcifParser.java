@@ -59,8 +59,10 @@ import org.biojava.nbio.structure.io.mmcif.model.EntitySrcNat;
 import org.biojava.nbio.structure.io.mmcif.model.EntitySrcSyn;
 import org.biojava.nbio.structure.io.mmcif.model.Exptl;
 import org.biojava.nbio.structure.io.mmcif.model.IgnoreField;
+import org.biojava.nbio.structure.io.mmcif.model.PdbxAuditRevisionHistory;
 import org.biojava.nbio.structure.io.mmcif.model.PdbxChemCompDescriptor;
 import org.biojava.nbio.structure.io.mmcif.model.PdbxChemCompIdentifier;
+import org.biojava.nbio.structure.io.mmcif.model.PdbxDatabaseStatus;
 import org.biojava.nbio.structure.io.mmcif.model.PdbxEntityNonPoly;
 import org.biojava.nbio.structure.io.mmcif.model.PdbxNonPolyScheme;
 import org.biojava.nbio.structure.io.mmcif.model.PdbxPolySeqScheme;
@@ -641,14 +643,30 @@ public class SimpleMMcifParser implements MMcifParser {
 
 			triggerNewDatabasePDBrev(dbrev);
 
-		} else if ( category.equals("_database_PDB_rev_record")){
+		} else if ( category.equals("_database_PDB_rev_record")) {
 			DatabasePdbrevRecord dbrev = (DatabasePdbrevRecord) buildObject(
 					DatabasePdbrevRecord.class.getName(),
 					loopFields, lineData, loopWarnings);
 
 			triggerNewDatabasePDBrevRecord(dbrev);
+			
+    // MMCIF version 5 dates  
+		} else if ( category.equals("_pdbx_audit_revision_history")) {
+			PdbxAuditRevisionHistory history = (PdbxAuditRevisionHistory) buildObject(
+					PdbxAuditRevisionHistory.class.getName(),
+					loopFields, lineData, loopWarnings);
 
-		}else if (  category.equals("_database_PDB_remark")){
+			triggerNewPdbxAuditRevisionHistory(history);
+    
+    // MMCIF version 5 dates
+		} else if ( category.equals("_pdbx_database_status")) {
+			PdbxDatabaseStatus status = (PdbxDatabaseStatus) buildObject(
+					PdbxDatabaseStatus.class.getName(),
+					loopFields, lineData, loopWarnings);
+
+			triggerNewPdbxDatabaseStatus(status);
+
+		}else if (  category.equals("_database_PDB_remark")) {
 			DatabasePDBremark remark = (DatabasePDBremark) buildObject(
 					DatabasePDBremark.class.getName(),
 					loopFields, lineData, loopWarnings);
@@ -1102,6 +1120,19 @@ public class SimpleMMcifParser implements MMcifParser {
 			c.newAuditAuthor(aa);
 		}
 	}
+	
+	private void triggerNewPdbxAuditRevisionHistory(PdbxAuditRevisionHistory history) {
+		for(MMcifConsumer c : consumers){
+			c.newPdbxAuditRevisionHistory(history);
+		}
+	}
+	
+	private void triggerNewPdbxDatabaseStatus(PdbxDatabaseStatus status) {
+		for(MMcifConsumer c : consumers){
+			c.newPdbxDatabaseStatus(status);
+		}
+	}
+	
 	private void triggerNewDatabasePDBrev(DatabasePDBrev dbrev){
 		for(MMcifConsumer c : consumers){
 			c.newDatabasePDBrev(dbrev);

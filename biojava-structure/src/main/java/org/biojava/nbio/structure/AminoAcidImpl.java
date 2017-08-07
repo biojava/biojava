@@ -23,8 +23,6 @@
  */
 package org.biojava.nbio.structure;
 
-import java.io.Serializable;
-
 /**
  * AminoAcid inherits most from Hetatom.  Adds a few AminoAcid
  * specific methods.
@@ -34,7 +32,7 @@ import java.io.Serializable;
  * @version %I% %G%
  *
  */
-public class AminoAcidImpl extends HetatomImpl implements AminoAcid, Serializable {
+public class AminoAcidImpl extends HetatomImpl implements AminoAcid {
 
 	private static final long serialVersionUID = -6018854413829044230L;
 
