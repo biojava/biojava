@@ -24,22 +24,16 @@ package org.biojava.nbio.ontology;
 
 import junit.framework.TestCase;
 import org.biojava.nbio.ontology.io.OboParser;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.text.ParseException;
 import java.util.Set;
 
 import static org.biojava.nbio.ontology.obo.OboFileHandler.NAMESPACE;
 
 public class TestParseOBO extends TestCase {
 
-	private static final Logger logger = LoggerFactory.getLogger(TestParseOBO.class);
-
-	public void testNamespace(){
+	public void testNamespace() throws IOException, ParseException {
 
 		String testTermEntry = "\n[Term]\n" +
                 "id: SO:0000691\n" +
@@ -54,30 +48,17 @@ public class TestParseOBO extends TestCase {
                 "is_a: SO:0100011 ! cleaved_peptide_region\n\n";
 
         OboParser parser = new OboParser();
+        InputStream inStream = new ByteArrayInputStream(testTermEntry.getBytes());
 
-		try {
+		assertNotNull(inStream);
 
-
-            InputStream inStream = new ByteArrayInputStream(testTermEntry.getBytes());
-
-			assertNotNull(inStream);
-
-			BufferedReader oboFile = new BufferedReader ( new InputStreamReader ( inStream ) );
-
-			Ontology ontology;
-
-			ontology = parser.parseOBO(oboFile, "so-xp/subsets/biosapiens",
+		BufferedReader oboFile = new BufferedReader ( new InputStreamReader ( inStream ) );
+		Ontology ontology = parser.parseOBO(oboFile, "so-xp/subsets/biosapiens",
                     "snippet from biosapiens protein feature ontology");
-			Set<Term> keys = ontology.getTerms();
+		Set<Term> keys = ontology.getTerms();
 
-			assertTrue(keys.size() > 1);
-			assertTrue(ontology.getTerm("SO:0000691").getAnnotation().containsProperty(NAMESPACE));
-            assertEquals("sequence",ontology.getTerm("SO:0000691").getAnnotation().getProperty(NAMESPACE));
-
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			logger.error("Exception: ", e);
-			fail(e.getMessage());
-		}
+		assertTrue(keys.size() > 1);
+		assertTrue(ontology.getTerm("SO:0000691").getAnnotation().containsProperty(NAMESPACE));
+        assertEquals("sequence",ontology.getTerm("SO:0000691").getAnnotation().getProperty(NAMESPACE));
 	}
 }
