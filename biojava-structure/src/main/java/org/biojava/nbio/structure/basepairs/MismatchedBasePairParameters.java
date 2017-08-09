@@ -28,7 +28,6 @@ import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.contact.Pair;
 
 import javax.vecmath.Matrix4d;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,9 +41,16 @@ import java.util.List;
  */
 public class MismatchedBasePairParameters extends BasePairParameters {
 
+    public static final double DEFAULT_MAX_STAGGER = 2.0;
+    public static final double DEFAULT_MAX_PROPELLER = 60.0;
+    public static final double DEFAULT_MAX_SHEAR = 5.0;
+    public static final double DEFAULT_MAX_STRETCH = 5.0;
+
     // These are the criteria used to select proper base pairs.
-    protected static double maxStagger = 2.0, maxShear = 5.0, maxStretch = 5.0,
-            maxPropeller = 60.0;
+    private double maxStagger = DEFAULT_MAX_STAGGER,
+            maxShear = DEFAULT_MAX_SHEAR,
+            maxStretch = DEFAULT_MAX_STRETCH,
+            maxPropeller = DEFAULT_MAX_PROPELLER;
 
     /**
      * This constructor is used to create the TertiaryBasePairParameters object.  The parent constructors are valid
@@ -124,7 +130,7 @@ public class MismatchedBasePairParameters extends BasePairParameters {
      * This method returns the maximum stagger between bases used as criteria for the characterization of two bases as being paired.
      * @return the maximum propeller ("propeller-twist", in degrees) allowed.
      */
-    public static double getMaxStagger() {
+    public double getMaxStagger() {
         return maxStagger;
     }
 
@@ -132,7 +138,7 @@ public class MismatchedBasePairParameters extends BasePairParameters {
      * This method sets the maximum stagger allowed for a base pair, prior to analyze() call
      * @param maxStagger The maximum propeller (in Å) allowed to consider two bases paired
      */
-    public static void setMaxStagger(double maxStagger) {
+    public void setMaxStagger(double maxStagger) {
         maxStagger = maxStagger;
     }
 
@@ -140,7 +146,7 @@ public class MismatchedBasePairParameters extends BasePairParameters {
      * This method returns the maximum shear between bases used as criteria for the characterization of two bases as being paired.
      * @return the maximum shear (in Å) allowed.
      */
-    public static double getMaxShear() {
+    public double getMaxShear() {
         return maxShear;
     }
 
@@ -148,7 +154,7 @@ public class MismatchedBasePairParameters extends BasePairParameters {
      * This method sets the maximum shear allowed for a base pair, prior to analyze() call
      * @param maxShear The maximum shear (in Å) allowed to consider two bases paired
      */
-    public static void setMaxShear(double maxShear) {
+    public void setMaxShear(double maxShear) {
         maxShear = maxShear;
     }
 
@@ -156,7 +162,7 @@ public class MismatchedBasePairParameters extends BasePairParameters {
      * This method returns the maximum stretch between bases used as criteria for the characterization of two bases as being paired.
      * @return the maximum stretch (in Å) allowed.
      */
-    public static double getMaxStretch() {
+    public double getMaxStretch() {
         return maxStretch;
     }
 
@@ -172,7 +178,7 @@ public class MismatchedBasePairParameters extends BasePairParameters {
      * This method returns the maximum propeller twist between bases used as criteria for the characterization of two bases as being paired.
      * @return the maximum propeller ("propeller-twist", in degrees) allowed.
      */
-    public static double getMaxPropeller() {
+    public double getMaxPropeller() {
         return maxPropeller;
     }
 
@@ -180,7 +186,7 @@ public class MismatchedBasePairParameters extends BasePairParameters {
      * This method sets the maximum propeller allowed for a base pair, prior to analyze() call
      * @param maxPropeller The maximum propeller ("propeller-twist", in degrees) allowed to consider two bases paired
      */
-    public static void setMaxPropeller(double maxPropeller) {
+    public void setMaxPropeller(double maxPropeller) {
         maxPropeller = maxPropeller;
     }
 }
