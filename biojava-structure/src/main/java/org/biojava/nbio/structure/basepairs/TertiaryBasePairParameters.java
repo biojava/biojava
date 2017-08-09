@@ -117,7 +117,7 @@ public class TertiaryBasePairParameters extends BasePairParameters {
      * @param maxStagger The maximum stagger (in Å) allowed to consider two bases paired
      */
     public void setMaxStagger(double maxStagger) {
-        maxStagger = maxStagger;
+        this.maxStagger = maxStagger;
     }
 
     /**
@@ -133,6 +133,6 @@ public class TertiaryBasePairParameters extends BasePairParameters {
      * @param maxPropeller The maximum propeller ("propeller-twist", in degrees) allowed to consider two bases paired
      */
     public void setMaxPropeller(double maxPropeller) {
-        maxPropeller = maxPropeller;
+        this.maxPropeller = maxPropeller;
     }
 }

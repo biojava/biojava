@@ -139,7 +139,7 @@ public class MismatchedBasePairParameters extends BasePairParameters {
      * @param maxStagger The maximum propeller (in Å) allowed to consider two bases paired
      */
     public void setMaxStagger(double maxStagger) {
-        maxStagger = maxStagger;
+        this.maxStagger = maxStagger;
     }
 
     /**
@@ -155,7 +155,7 @@ public class MismatchedBasePairParameters extends BasePairParameters {
      * @param maxShear The maximum shear (in Å) allowed to consider two bases paired
      */
     public void setMaxShear(double maxShear) {
-        maxShear = maxShear;
+        this.maxShear = maxShear;
     }
 
     /**
@@ -170,8 +170,8 @@ public class MismatchedBasePairParameters extends BasePairParameters {
      * This method sets the maximum stretch allowed for a base pair, prior to analyze() call.
      * @param maxStretch The maximum stretch (in Å) allowed to consider two bases paired
      */
-    public static void setMaxStretch(double maxStretch) {
-        maxStretch = maxStretch;
+    public void setMaxStretch(double maxStretch) {
+        this.maxStretch = maxStretch;
     }
 
     /**
@@ -187,6 +187,6 @@ public class MismatchedBasePairParameters extends BasePairParameters {
      * @param maxPropeller The maximum propeller ("propeller-twist", in degrees) allowed to consider two bases paired
      */
     public void setMaxPropeller(double maxPropeller) {
-        maxPropeller = maxPropeller;
+        this.maxPropeller = maxPropeller;
     }
 }
