@@ -43,8 +43,8 @@ import java.util.List;
 public class MismatchedBasePairParameters extends BasePairParameters {
 
     // These are the criteria used to select proper base pairs.
-    protected static double MaxStagger = 2.0, MaxShear = 5.0, MaxStretch = 5.0,
-            MaxPropeller = 60.0;
+    protected static double maxStagger = 2.0, maxShear = 5.0, maxStretch = 5.0,
+            maxPropeller = 60.0;
 
     /**
      * This constructor is used to create the TertiaryBasePairParameters object.  The parent constructors are valid
@@ -95,13 +95,13 @@ public class MismatchedBasePairParameters extends BasePairParameters {
                         Pair<Group> ga = new Pair<>(g1, g2);
                         Matrix4d data = basePairReferenceFrame(ga);
                         // if the stagger is greater than 2 Å, it's not really paired.
-                        if (Math.abs(pairParameters[5]) > MaxStagger) continue;
+                        if (Math.abs(pairParameters[5]) > maxStagger) continue;
                         // similarly, extreme shear and stretch is not a good base pair
-                        if (Math.abs(pairParameters[3]) > MaxShear) continue;
-                        if (Math.abs(pairParameters[4]) > MaxStretch) continue;
+                        if (Math.abs(pairParameters[3]) > maxShear) continue;
+                        if (Math.abs(pairParameters[4]) > maxStretch) continue;
 
                         // if the propeller is ridiculous it's also not that good of a pair.
-                        if (Math.abs(pairParameters[1]) > MaxPropeller) {
+                        if (Math.abs(pairParameters[1]) > maxPropeller) {
                             continue;
                         }
                         result.add(ga);
@@ -125,7 +125,7 @@ public class MismatchedBasePairParameters extends BasePairParameters {
      * @return the maximum propeller ("propeller-twist", in degrees) allowed.
      */
     public static double getMaxStagger() {
-        return MaxStagger;
+        return maxStagger;
     }
 
     /**
@@ -133,7 +133,7 @@ public class MismatchedBasePairParameters extends BasePairParameters {
      * @param maxStagger The maximum propeller (in Å) allowed to consider two bases paired
      */
     public static void setMaxStagger(double maxStagger) {
-        MaxStagger = maxStagger;
+        maxStagger = maxStagger;
     }
 
     /**
@@ -141,7 +141,7 @@ public class MismatchedBasePairParameters extends BasePairParameters {
      * @return the maximum shear (in Å) allowed.
      */
     public static double getMaxShear() {
-        return MaxShear;
+        return maxShear;
     }
 
     /**
@@ -149,7 +149,7 @@ public class MismatchedBasePairParameters extends BasePairParameters {
      * @param maxShear The maximum shear (in Å) allowed to consider two bases paired
      */
     public static void setMaxShear(double maxShear) {
-        MaxShear = maxShear;
+        maxShear = maxShear;
     }
 
     /**
@@ -157,7 +157,7 @@ public class MismatchedBasePairParameters extends BasePairParameters {
      * @return the maximum stretch (in Å) allowed.
      */
     public static double getMaxStretch() {
-        return MaxStretch;
+        return maxStretch;
     }
 
     /**
@@ -165,7 +165,7 @@ public class MismatchedBasePairParameters extends BasePairParameters {
      * @param maxStretch The maximum stretch (in Å) allowed to consider two bases paired
      */
     public static void setMaxStretch(double maxStretch) {
-        MaxStretch = maxStretch;
+        maxStretch = maxStretch;
     }
 
     /**
@@ -173,7 +173,7 @@ public class MismatchedBasePairParameters extends BasePairParameters {
      * @return the maximum propeller ("propeller-twist", in degrees) allowed.
      */
     public static double getMaxPropeller() {
-        return MaxPropeller;
+        return maxPropeller;
     }
 
     /**
@@ -181,6 +181,6 @@ public class MismatchedBasePairParameters extends BasePairParameters {
      * @param maxPropeller The maximum propeller ("propeller-twist", in degrees) allowed to consider two bases paired
      */
     public static void setMaxPropeller(double maxPropeller) {
-        MaxPropeller = maxPropeller;
+        maxPropeller = maxPropeller;
     }
 }

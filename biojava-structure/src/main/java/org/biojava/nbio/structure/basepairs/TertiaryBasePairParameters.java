@@ -44,7 +44,7 @@ import java.util.List;
 public class TertiaryBasePairParameters extends BasePairParameters {
 
     // These are the criteria used to select proper base pairs.
-    protected static double MaxStagger = 2.0, MaxPropeller = 60.0;
+    protected static double maxStagger = 2.0, maxPropeller = 60.0;
 
     public TertiaryBasePairParameters(Structure structure, boolean RNA, boolean removeDups) {
         super(structure, RNA, removeDups);
@@ -81,9 +81,9 @@ public class TertiaryBasePairParameters extends BasePairParameters {
                     Pair<Group> ga = new Pair<>(g1, g2);
                     Matrix4d data = basePairReferenceFrame(ga);
                     // if the stagger is greater than 2 Å, it's not really paired.
-                    if (Math.abs(pairParameters[5]) > MaxStagger) continue;
+                    if (Math.abs(pairParameters[5]) > maxStagger) continue;
                     // if the propeller is ridiculous it's also not that good of a pair.
-                    if (Math.abs(pairParameters[1]) > MaxPropeller) {
+                    if (Math.abs(pairParameters[1]) > maxPropeller) {
                         continue;
                     }
                     result.add(ga);
@@ -107,7 +107,7 @@ public class TertiaryBasePairParameters extends BasePairParameters {
      * @return the maximum stagger (in Å) allowed.
      */
     public static double getMaxStagger() {
-        return MaxStagger;
+        return maxStagger;
     }
 
     /**
@@ -115,7 +115,7 @@ public class TertiaryBasePairParameters extends BasePairParameters {
      * @param maxStagger The maximum stagger (in Å) allowed to consider two bases paired
      */
     public static void setMaxStagger(double maxStagger) {
-        MaxStagger = maxStagger;
+        maxStagger = maxStagger;
     }
 
     /**
@@ -123,7 +123,7 @@ public class TertiaryBasePairParameters extends BasePairParameters {
      * @return the maximum propeller ("propeller-twist", in degrees) allowed.
      */
     public static double getMaxPropeller() {
-        return MaxPropeller;
+        return maxPropeller;
     }
 
     /**
@@ -131,6 +131,6 @@ public class TertiaryBasePairParameters extends BasePairParameters {
      * @param maxPropeller The maximum propeller ("propeller-twist", in degrees) allowed to consider two bases paired
      */
     public static void setMaxPropeller(double maxPropeller) {
-        MaxPropeller = maxPropeller;
+        maxPropeller = maxPropeller;
     }
 }
