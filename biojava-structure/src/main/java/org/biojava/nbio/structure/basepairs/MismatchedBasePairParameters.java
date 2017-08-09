@@ -40,7 +40,7 @@ import java.util.List;
  * @since 5.0.0
  *
  */
-public class MismatchedBasePairParameters extends BasePairParameters implements Serializable {
+public class MismatchedBasePairParameters extends BasePairParameters {
 
     // These are the criteria used to select proper base pairs.
     protected static double MaxStagger = 2.0, MaxShear = 5.0, MaxStretch = 5.0,
