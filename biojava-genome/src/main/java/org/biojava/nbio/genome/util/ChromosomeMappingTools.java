@@ -28,7 +28,11 @@ public class ChromosomeMappingTools {
 
     public static final String CHROMOSOME = "CHROMOSOME";
     public static final String CDS = "CDS";
-    
+
+    public static int base = 1;
+    public static void setCoordinateSystem(int baseInt) {
+        base = baseInt;
+    }
 
     /** Pretty print the details of a GeneChromosomePosition to a String
      *
@@ -202,24 +206,11 @@ public class ChromosomeMappingTools {
      */
     public static int getCDSLength(GeneChromosomePosition chromPos) {
 
-        logger.debug(chromPos.toString());
-
-        logger.debug("chromosomal information: ");
-
-        logger.debug("Gene:" + chromPos.getGeneName());
-        logger.debug("  Transcription (including UTRs): " + chromPos.getTranscriptionStart() + " - " + chromPos.getTranscriptionEnd() + " (length:" + (chromPos.getTranscriptionEnd() - chromPos.getTranscriptionStart()) + ")");
-        logger.debug("  Orientation: " + chromPos.getOrientation());
-        logger.debug("  CDS: " + (chromPos.getCdsStart()) + " - " + chromPos.getCdsEnd() + " (length: " + (chromPos.getCdsEnd() - chromPos.getCdsStart()) + ")");
-
-
         List<Integer> exonStarts = chromPos.getExonStarts();
         List<Integer> exonEnds = chromPos.getExonEnds();
 
-        logger.debug("Exons:" + exonStarts.size());
-
         int cdsStart = chromPos.getCdsStart();
         int cdsEnd = chromPos.getCdsEnd();
-
 
         int codingLength;
         if (chromPos.getOrientation().equals('+'))
@@ -511,6 +502,7 @@ public class ChromosomeMappingTools {
             cdsEnd = cdsStart;
             cdsStart = tmp;
         }
+        cdsStart = cdsStart + base;
 
         // map reverse
         for (int i = exonStarts.size() - 1; i >= 0; i--) {
@@ -523,6 +515,7 @@ public class ChromosomeMappingTools {
                 end = start;
                 start = tmp;
             }
+            start = start + base;
 
             if ((start < cdsStart && end < cdsStart) || (start > cdsEnd && end > cdsEnd))
                 continue;
@@ -535,7 +528,7 @@ public class ChromosomeMappingTools {
 
             codingLength += (end - start + 1);
         }
-        return codingLength;
+        return codingLength - 3;
     }
 
     /**
@@ -553,21 +546,21 @@ public class ChromosomeMappingTools {
 
         for (int i = 0; i < exonStarts.size(); i++) {
 
-            int start = exonStarts.get(i);
+            int start = exonStarts.get(i)+base;
             int end = exonEnds.get(i);
 
-            if ( (start < cdsStart && end < cdsStart) || (start > cdsEnd && end > cdsEnd) )
+            if ( (start < cdsStart+base && end < cdsStart) || (start > cdsEnd && end > cdsEnd) )
                 continue;
 
-            if (start < cdsStart)
-                start = cdsStart;
+            if (start < cdsStart+base)
+                start = cdsStart+base;
 
             if (end > cdsEnd)
                 end = cdsEnd;
 
             codingLength += (end - start + 1);
         }
-        return codingLength;
+        return codingLength - 3;
     }
 
     /** Extracts the exon boundaries in CDS coordinates. (needs to be divided by 3 to get AA positions)
@@ -810,7 +803,7 @@ public class ChromosomeMappingTools {
             int cdsStart, int cdsEnd) {
     	
     	// the genetic coordinate is not in a coding region
-        if ( (chromPos < (cdsStart+1) ) || ( chromPos > (cdsEnd+1) ) ) {
+        if ( (chromPos < (cdsStart+base) ) || ( chromPos > (cdsEnd+base) ) ) {
         	logger.debug("The "+format(chromPos)+" position is not in a coding region");
             return -1;
         }
@@ -829,7 +822,7 @@ public class ChromosomeMappingTools {
 		    
 		    lengthExon = end - start;
 
-		    if (start+1 <= chromPos && end >= chromPos ) {
+		    if (start+base <= chromPos && end >= chromPos ) {
 		    	return codingLength + (chromPos-start);
 		    }
 	        else { 
@@ -856,7 +849,7 @@ public class ChromosomeMappingTools {
             int cdsStart, int cdsEnd) {
     	
     	// the genetic coordinate is not in a coding region
-        if ( (chromPos < (cdsStart+1)) || ( chromPos > (cdsEnd+1) ) ) {
+        if ( (chromPos < (cdsStart+base)) || ( chromPos > (cdsEnd+base) ) ) {
         	logger.debug("The "+format(chromPos)+" position is not in a coding region");
             return -1;
         }
@@ -875,7 +868,7 @@ public class ChromosomeMappingTools {
 		    
 		    lengthExon = end - start;
 		    // +1 offset to be a base 1
-		    if (start+1 <= chromPos && end >= chromPos ) {
+		    if (start+base <= chromPos && end >= chromPos ) {
 		    	return codingLength + (end-chromPos+1);
 		    }
 	        else { 
