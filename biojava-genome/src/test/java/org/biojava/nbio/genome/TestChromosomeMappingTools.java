@@ -48,9 +48,9 @@ public class TestChromosomeMappingTools {
         List<Integer> exonStarts = new ArrayList<>(Arrays.asList(70, 50, 10));
         List<Integer> exonEnds = new ArrayList<>(Arrays.asList(80, 60, 20));
         int cdsStart = 75;
-        int cdsEnd = 55;
+        int cdsEnd = 50;
 
-        int cdsDesired = 12;
+        int cdsDesired = 17;
         int cdsTest = ChromosomeMappingTools.getCDSLengthReverse(exonStarts, exonEnds, cdsStart, cdsEnd);
 
         assertEquals(cdsDesired, cdsTest);
