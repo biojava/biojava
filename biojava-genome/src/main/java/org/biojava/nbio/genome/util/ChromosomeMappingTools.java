@@ -504,7 +504,6 @@ public class ChromosomeMappingTools {
      */
     public static int getCDSLengthReverse(List<Integer> exonStarts, List<Integer> exonEnds, int cdsStart, int cdsEnd) {
 
-        boolean inCoding = false;
         int codingLength = 0;
 
         if (cdsEnd < cdsStart) {
@@ -512,8 +511,6 @@ public class ChromosomeMappingTools {
             cdsEnd = cdsStart;
             cdsStart = tmp;
         }
-
-        int lengthExons = 0;
 
         // map reverse
         for (int i = exonStarts.size() - 1; i >= 0; i--) {
@@ -526,53 +523,19 @@ public class ChromosomeMappingTools {
                 end = start;
                 start = tmp;
             }
-            lengthExons += end - start;
 
-            if (start <= cdsEnd && end >= cdsEnd) {
-                inCoding = true;
+            if ((start < cdsStart && end < cdsStart) || (start > cdsEnd && end > cdsEnd))
+                continue;
 
-                int tmpstart = start;
-                if (start < cdsStart) {
-                    tmpstart = cdsStart;
-                }
-                codingLength += (cdsEnd - tmpstart);
+            if (start < cdsStart)
+                start = cdsStart;
 
-                boolean debug = logger.isDebugEnabled();
+            if (end > cdsEnd)
+                end = cdsEnd;
 
-                if ( debug) {
-
-                    StringBuffer b = new StringBuffer();
-
-                    b.append("     UTR         :" + (cdsEnd + 1) + " - " + (end) + newline);
-                    if (tmpstart == start)
-                        b.append(" ->  ");
-                    else
-                        b.append(" <-> ");
-                    b.append("Exon        :" + tmpstart + " - " + cdsEnd + " | " + (cdsEnd - tmpstart) + " | " + codingLength + " | " + (codingLength % 3) + newline);
-                    // single exon with UTR on both ends
-                    if (tmpstart != start)
-                        b.append("     UTR         :" + (cdsStart - 1) + " - " + start  + newline);
-                    logger.debug(b.toString());
-
-                }
-            } else if (start <= cdsStart && end >= cdsStart) {
-                inCoding = false;
-                codingLength += (end - cdsStart);
-
-                logger.debug(" <-  Exon        : " + (cdsStart+1) + " - " + end + " | " + (end - cdsStart) + " | " + (codingLength-3)  + " | " + (codingLength % 3));
-                logger.debug("     UTR         : " + start + " - " + (cdsStart ));
-
-            } else if (inCoding) {
-                // full exon is coding
-                codingLength += (end - start);
-                logger.debug("     Exon        : " + start + " - " + end + " | " + (end - start) + " | " + codingLength + " | " + (codingLength % 3));
-            } else {
-                // e.g. see UBQLN3
-                logger.debug(" no translation!");
-            }
+            codingLength += (end - start + 1);
         }
-        logger.debug("length exons: " + lengthExons + " codin length: " + (codingLength - 3));
-        return codingLength - 3;
+        return codingLength;
     }
 
     /**
@@ -585,47 +548,26 @@ public class ChromosomeMappingTools {
      * @return
      */
     public static int getCDSLengthForward(List<Integer> exonStarts, List<Integer> exonEnds, int cdsStart, int cdsEnd) {
-        boolean inCoding = false;
+
         int codingLength = 0;
 
-        int lengthExons = 0;
-        // map forward
         for (int i = 0; i < exonStarts.size(); i++) {
 
             int start = exonStarts.get(i);
             int end = exonEnds.get(i);
-            lengthExons += end - start;
 
-            logger.debug("forward exon: " + (start+1) + " - " + end + " | " + (end - start));
+            if ( (start < cdsStart && end < cdsStart) || (start > cdsEnd && end > cdsEnd) )
+                continue;
 
-            if (start+1 <= cdsStart +1 && end >= cdsStart+1) {
+            if (start < cdsStart)
+                start = cdsStart;
 
-                inCoding = true;
-                codingLength += (end - cdsStart);
+            if (end > cdsEnd)
+                end = cdsEnd;
 
-                logger.debug("     UTR         : " + start + " - " + (cdsStart ));
-                logger.debug(" ->  Exon        : " + (cdsStart+1) + " - " + end + " | " + (end - cdsStart+1) + " | " + codingLength + " | " + (codingLength % 3));
-
-            } else if (start+1 <= cdsEnd && end >= cdsEnd) {
-
-                inCoding = false;
-                codingLength += (cdsEnd - start);
-
-                logger.debug(" <-  Exon        : " + (start +1)+ " - " + cdsEnd + " | " + (cdsEnd - start+1) + " | " + codingLength + " | " + (codingLength % 3));
-                logger.debug("     UTR         : " + cdsEnd + 1 + " - " + end);
-
-            } else if (inCoding) {
-                // full exon is coding
-                codingLength += (end - start);
-
-                logger.debug("     Exon        :" + (start+1) + " - " + end + " | " + (end - start+1) + " | " + codingLength + " | " + (codingLength % 3));
-            }
+            codingLength += (end - start + 1);
         }
-
-        logger.debug("length exons: " + Integer.toString(lengthExons));
-        logger.debug("CDS length:" + Integer.toString((codingLength-3)));
-
-        return codingLength-3 ;
+        return codingLength;
     }
 
     /** Extracts the exon boundaries in CDS coordinates. (needs to be divided by 3 to get AA positions)
