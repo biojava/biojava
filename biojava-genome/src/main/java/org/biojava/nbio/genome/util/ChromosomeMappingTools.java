@@ -29,7 +29,7 @@ public class ChromosomeMappingTools {
     public static final String CHROMOSOME = "CHROMOSOME";
     public static final String CDS = "CDS";
 
-    public static int base = 1;
+    private static int base = 1;
     public static void setCoordinateSystem(int baseInt) {
         base = baseInt;
     }

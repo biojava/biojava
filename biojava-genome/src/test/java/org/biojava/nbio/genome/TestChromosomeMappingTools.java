@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static junitx.framework.ComparableAssert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by Yana Valasatava on 8/14/17.
