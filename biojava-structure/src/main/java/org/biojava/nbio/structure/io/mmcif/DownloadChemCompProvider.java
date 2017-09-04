@@ -42,6 +42,7 @@ import java.util.zip.GZIPOutputStream;
 import org.biojava.nbio.core.util.InputStreamProvider;
 import org.biojava.nbio.structure.align.util.HTTPConnectionTools;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
+import org.biojava.nbio.structure.io.LocalPDBDirectory;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -343,6 +344,12 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 		String fileName = getLocalFileName(recordName);
 
 		File f = new File(fileName);
+
+		// delete files that are too short to have contents
+		if( f.length() < LocalPDBDirectory.MIN_PDB_FILE_SIZE ) {
+			f.delete();
+			return false;
+		}
 
 		return f.exists();
 

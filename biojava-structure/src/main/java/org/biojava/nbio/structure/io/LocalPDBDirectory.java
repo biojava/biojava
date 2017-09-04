@@ -127,6 +127,9 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 
 	protected static final String lineSplit = System.getProperty("file.separator");
 
+	/** Minimum size for a valid file, in bytes */
+	public static final long MIN_PDB_FILE_SIZE = 40;
+
 	private File path;
 	private List<String> extensions;
 
@@ -687,6 +690,14 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 				for(String ex : getExtensions() ){
 					File f = new File(searchdir,prefix + pdbId.toLowerCase() + ex) ;
 					if ( f.exists()) {
+						// delete files that are too short to have contents
+						if( f.length() < MIN_PDB_FILE_SIZE ) {
+							boolean success = f.delete();
+							if( ! success) {
+								return null;
+							}
+							assert(!f.exists());
+						}
 						return f;
 					}
 				}
