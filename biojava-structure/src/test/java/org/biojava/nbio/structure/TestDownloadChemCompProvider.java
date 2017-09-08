@@ -20,6 +20,7 @@
  */
 package org.biojava.nbio.structure;
 
+import org.biojava.nbio.core.util.FlatFileCache;
 import org.biojava.nbio.structure.io.mmcif.DownloadChemCompProvider;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.junit.Test;
@@ -67,6 +68,10 @@ public class TestDownloadChemCompProvider {
 		// just in case the we did get garbage, let's clean up
 		file.delete();
 		
+		// very important: we have a memory cache of files, we need to reset it not to pollute the cache for later tests
+		FlatFileCache ffc = FlatFileCache.getInstance();
+		ffc.clear();
+		
 		assertNotNull(cc);
 		
 		assertNotNull(cc.getName());
@@ -95,6 +100,10 @@ public class TestDownloadChemCompProvider {
 		
 		file.delete();
 		
+		// very important: we have a memory cache of files, we need to reset it not to pollute the cache for later tests
+		FlatFileCache ffc = FlatFileCache.getInstance();
+		ffc.clear();
+		
 		// we couldn't parse, thus there should be no content
 		assertNull(cc.getName());
 		
@@ -121,6 +130,10 @@ public class TestDownloadChemCompProvider {
 		assertTrue(file.exists());
 		
 		file.delete();
+		
+		// very important: we have a memory cache of files, we need to reset it not to pollute the cache for later tests
+		FlatFileCache ffc = FlatFileCache.getInstance();
+		ffc.clear();
 		
 		assertNull(cc.getName());
 		
