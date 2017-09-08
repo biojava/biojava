@@ -72,8 +72,7 @@ public class InputStreamProvider {
 		String prop = System.getProperty(CACHE_PROPERTY);
 		if ( prop != null && prop.equals("true")) {
 			cacheRawFiles = true;
-			// init the singleton
-			FlatFileCache.getInstance();
+
 		}
 
 	}

@@ -69,8 +69,7 @@ public class TestDownloadChemCompProvider {
 		file.delete();
 		
 		// very important: we have a memory cache of files, we need to reset it not to pollute the cache for later tests
-		FlatFileCache ffc = FlatFileCache.getInstance();
-		ffc.clear();
+		FlatFileCache.clear();
 		
 		assertNotNull(cc);
 		
@@ -101,8 +100,7 @@ public class TestDownloadChemCompProvider {
 		file.delete();
 		
 		// very important: we have a memory cache of files, we need to reset it not to pollute the cache for later tests
-		FlatFileCache ffc = FlatFileCache.getInstance();
-		ffc.clear();
+		FlatFileCache.clear();
 		
 		// we couldn't parse, thus there should be no content
 		assertNull(cc.getName());
@@ -116,6 +114,7 @@ public class TestDownloadChemCompProvider {
 	@Test
 	public void testIfWeCachedGarbageWeCanDetectIt() throws IOException {
 		// see #703
+		// TODO this test for the moment only asserts that we get an empty chemcomp, since we can't detect bad cached files yet
 		
 		File file = new File(DownloadChemCompProvider.getLocalFileName("HEM"));
 		
@@ -132,8 +131,7 @@ public class TestDownloadChemCompProvider {
 		file.delete();
 		
 		// very important: we have a memory cache of files, we need to reset it not to pollute the cache for later tests
-		FlatFileCache ffc = FlatFileCache.getInstance();
-		ffc.clear();
+		FlatFileCache.clear();
 		
 		assertNull(cc.getName());
 		

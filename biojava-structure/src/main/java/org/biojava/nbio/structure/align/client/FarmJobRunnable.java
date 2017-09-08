@@ -611,7 +611,7 @@ public class FarmJobRunnable implements Runnable {
 		if ( progressListeners != null)
 			notifySubmittingAlignments(results.size(), msg);
 		logger.info("{}: Sent {} results to server. job status: {}", userName, results.size(), counter);
-		logger.info("{}: fileCache size: {}", userName, FlatFileCache.getInstance().size());
+		logger.info("{}: fileCache size: {}", userName, FlatFileCache.size());
 	}
 
 
