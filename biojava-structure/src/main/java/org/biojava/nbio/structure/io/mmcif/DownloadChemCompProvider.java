@@ -29,7 +29,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Files;
@@ -49,14 +48,15 @@ import org.slf4j.LoggerFactory;
 
 
 
-/** This provider of chemical components can download and cache chemical component definition files from the RCSB PDB web site.
- *  It is the default way to access these definitions.
- *  If this provider is called he first time, it will download and install all chemical
- *  component definitions in a local directory.
- *  Once the definition files have been installed, it has quick startup time and low memory requirements.
+/** 
+ * This provider of chemical components can download and cache chemical component definition files from the RCSB PDB web site.
+ * It is the default way to access these definitions.
+ * If this provider is called he first time, it will download and install all chemical
+ * component definitions in a local directory.
+ * Once the definition files have been installed, it has quick startup time and low memory requirements.
  *
- *  An alternative provider, that keeps all definitions in memory is the {@link AllChemCompProvider}. Another provider, that
- *  does not require any network access, but only can support a limited set of chemical component definitions, is the {@link ReducedChemCompProvider}.
+ * An alternative provider, that keeps all definitions in memory is the {@link AllChemCompProvider}. Another provider, that
+ * does not require any network access, but only can support a limited set of chemical component definitions, is the {@link ReducedChemCompProvider}.
  *
  *
  * @author Andreas Prlic
@@ -310,7 +310,8 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 
 	}
 
-	/** Returns the file name that contains the definition for this {@link ChemComp}
+	/** 
+	 * Returns the file name that contains the definition for this {@link ChemComp}
 	 *
 	 * @param recordName the ID of the {@link ChemComp}
 	 * @return full path to the file
@@ -359,6 +360,7 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 		File newFile;
 		try{
 			newFile = File.createTempFile("chemcomp"+recordName, "cif");
+			logger.debug("Will write chem comp file to temp file {}", newFile.toString());
 		}
 		catch(IOException e){
 			logger.error("Could not write to temp directory {} to create the chemical component download temp file", System.getProperty("java.io.tmpdir"));
@@ -379,7 +381,6 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 
 		try {
 			url = new URL(u);
-			
 			URLConnection uconn = URLConnectionTools.openURLConnection(url);
 
 			try( PrintWriter pw = new PrintWriter(new GZIPOutputStream(new FileOutputStream(newFile)));
