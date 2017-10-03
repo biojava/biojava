@@ -5,8 +5,8 @@ package org.biojava.nbio.genome.parsers.genename;
  */
 public class ChromPos {
 
-    int pos;
-    int phase;
+	private int pos;
+	private int phase;
 
     public int getPhase() {
         return phase;

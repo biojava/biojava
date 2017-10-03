@@ -27,21 +27,19 @@ import java.io.Serializable;
 import java.util.List;
 
 public class GeneChromosomePosition implements Comparable<GeneChromosomePosition>, Serializable{
-	/**
-	 *
-	 */
+
 	private static final long serialVersionUID = -6886306238993367835L;
-	String geneName;
-	String genebankId;
-	String chromosome;
-	Character orientation;
-	Integer transcriptionStart;
-	Integer transcriptionEnd;
-	Integer cdsStart;
-	Integer cdsEnd;
+	private String geneName;
+	private String genebankId;
+	private String chromosome;
+	private Character orientation;
+	private Integer transcriptionStart;
+	private Integer transcriptionEnd;
+	private Integer cdsStart;
+	private Integer cdsEnd;
 	int exonCount;
-	List<Integer> exonStarts;
-	List<Integer> exonEnds;
+	private List<Integer> exonStarts;
+	private List<Integer> exonEnds;
 
 	public String getGeneName() {
 		return geneName;
