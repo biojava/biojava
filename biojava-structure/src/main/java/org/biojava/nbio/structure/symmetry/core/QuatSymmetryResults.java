@@ -22,14 +22,14 @@
  */
 package org.biojava.nbio.structure.symmetry.core;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.cluster.Subunit;
 import org.biojava.nbio.structure.cluster.SubunitCluster;
 import org.biojava.nbio.structure.cluster.SubunitClusterUtils;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Holds the results of quaternary symmetry perception obtained with
@@ -111,14 +111,17 @@ public class QuatSymmetryResults {
 	public List<SubunitCluster> getSubunitClusters() {
 		return Collections.unmodifiableList(clusters);
 	}
-	
+
 	/**
 	 * Returns the List of Subunits used to calculate symmetry.
 	 *
 	 * @return an unmodifiable view of the List
 	 */
 	public List<Subunit> getSubunits() {
-		return Collections.unmodifiableList(subunits);
+		if (subunits != null)
+			return Collections.unmodifiableList(subunits);
+		else
+			return Collections.unmodifiableList(new ArrayList<>());
 	}
 	
 	/**

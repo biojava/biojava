@@ -187,6 +187,9 @@ public class ChainImpl implements Chain {
 
 			for (Group seqResGroup : seqResGroups) {
 
+				if (seqResGroup==null)
+					continue;
+
 				int i = groups.indexOf(seqResGroup);
 
 				Group g ;
