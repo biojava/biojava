@@ -87,12 +87,13 @@ public class TestQuatSymmetryDetectorExamples {
 		// D3 symmetry non pseudosymmetric
 		assertEquals("D3", symmetry.getSymmetry());
 		assertEquals("A6B6", symmetry.getStoichiometry());
+		assertFalse(symmetry.isPseudoStoichiometric());
+
 
 	}
 
 	/**
 	 * Hemoglobin has both symmetry and pseudosymmetry: 4HHB
-	 * TODO pseudosymmetry in hemoglobin fails
 	 * 
 	 * @throws StructureException
 	 * @throws IOException
@@ -121,6 +122,7 @@ public class TestQuatSymmetryDetectorExamples {
 		// D2 pseudo-symmetry
 		assertEquals("D2", symmetry.getSymmetry());
 		assertEquals("A4", symmetry.getStoichiometry());
+		assertTrue(symmetry.isPseudoStoichiometric());
 	}
 
 	/**

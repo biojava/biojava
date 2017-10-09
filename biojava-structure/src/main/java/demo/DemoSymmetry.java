@@ -45,7 +45,7 @@ public class DemoSymmetry {
 		
 		
 		
-		System.out.println(globalResults.getSymmetry() + (globalResults.isPseudosymmetric()?"(pseudo)":""));
+		System.out.println(globalResults.getSymmetry() + (globalResults.isPseudoStoichiometric()?"(pseudo)":""));
 		
 		System.out.println("There are "+globalResults.getSubunitClusters().size()+" subunit clusters");
 		int i = 1;
@@ -68,7 +68,7 @@ public class DemoSymmetry {
 		
 		
 		
-		System.out.println(globalResults.getSymmetry() + (globalResults.isPseudosymmetric()?"(pseudo)":""));
+		System.out.println(globalResults.getSymmetry() + (globalResults.isPseudoStoichiometric()?"(pseudo)":""));
 		
 		System.out.println("There are "+globalResults.getSubunitClusters().size()+" subunit clusters");
 		i = 1;

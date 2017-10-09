@@ -282,10 +282,6 @@ public class QuatSymmetryDetector {
 
 		String symmetry = results.getSymmetry();
 
-		// asymmetric structures cannot be pseudosymmetric
-		if (symmetry.equals("C1"))
-			results.setPseudosymmetric(false);
-
 		// Check structures with Cn symmetry (n = 1, ...) for helical symmetry
 		if (symmetry.startsWith("C")) {
 			HelixSolver hc = new HelixSolver(subunits,
