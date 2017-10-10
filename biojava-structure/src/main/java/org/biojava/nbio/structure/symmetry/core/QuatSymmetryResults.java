@@ -98,6 +98,11 @@ public class QuatSymmetryResults {
 		this.clusters = clusters;
 		this.stoichiometry = SubunitClusterUtils
 				.getStoichiometryString(clusters);
+		
+		subunits = new ArrayList<Subunit>();
+		for (SubunitCluster c : clusters) {
+			subunits.addAll(c.getSubunits());
+		}
 
 		this.helixLayers = helixLayers;
 		this.method = method;
@@ -117,11 +122,8 @@ public class QuatSymmetryResults {
 	 *
 	 * @return an unmodifiable view of the List
 	 */
-	public List<Subunit> getSubunits() {
-		if (subunits != null)
-			return Collections.unmodifiableList(subunits);
-		else
-			return Collections.unmodifiableList(new ArrayList<>());
+	public List<Subunit> getSubunits() {		
+		return Collections.unmodifiableList(subunits);		
 	}
 	
 	/**
