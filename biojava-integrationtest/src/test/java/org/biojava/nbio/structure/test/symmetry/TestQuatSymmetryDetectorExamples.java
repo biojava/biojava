@@ -87,12 +87,13 @@ public class TestQuatSymmetryDetectorExamples {
 		// D3 symmetry non pseudosymmetric
 		assertEquals("D3", symmetry.getSymmetry());
 		assertEquals("A6B6", symmetry.getStoichiometry());
+		assertFalse(symmetry.isPseudoStoichiometric());
+
 
 	}
 
 	/**
 	 * Hemoglobin has both symmetry and pseudosymmetry: 4HHB
-	 * TODO pseudosymmetry in hemoglobin fails
 	 * 
 	 * @throws StructureException
 	 * @throws IOException
@@ -121,6 +122,7 @@ public class TestQuatSymmetryDetectorExamples {
 		// D2 pseudo-symmetry
 		assertEquals("D2", symmetry.getSymmetry());
 		assertEquals("A4", symmetry.getStoichiometry());
+		assertTrue(symmetry.isPseudoStoichiometric());
 	}
 
 	/**
@@ -231,5 +233,28 @@ public class TestQuatSymmetryDetectorExamples {
 		assertEquals("H", results.get(0).getSymmetry());
 		assertEquals("A5", results.get(0).getStoichiometry());
 
+	}
+	
+	/**
+	 * A structure with very similar entities (clustering at 95% seq id): 4DZ8
+	 * @throws IOException
+	 * @throws StructureException
+	 */
+	@Test
+	public void testPseudoIdentity95() throws IOException, StructureException {
+		Structure pdb = StructureIO.getStructure("BIO:4DZ8:1");
+
+		SubunitClustererParameters cp = new SubunitClustererParameters();
+		cp.setClustererMethod(SubunitClustererMethod.IDENTITY);
+		QuatSymmetryParameters symmParams = new QuatSymmetryParameters();
+
+		QuatSymmetryResults symmetry = QuatSymmetryDetector.calcGlobalSymmetry(
+				pdb, symmParams, cp);
+
+		assertEquals("C2", symmetry.getSymmetry());
+		assertEquals("A2", symmetry.getStoichiometry());
+		assertFalse(symmetry.isPseudoStoichiometric());
+		assertEquals(SubunitClustererMethod.IDENTITY, symmetry.getSubunitClusters().get(0).getClustererMethod());
+		
 	}
 }

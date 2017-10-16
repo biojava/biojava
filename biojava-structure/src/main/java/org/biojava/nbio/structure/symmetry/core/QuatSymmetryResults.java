@@ -56,7 +56,6 @@ public class QuatSymmetryResults {
 	private SymmetryPerceptionMethod method;
 	private RotationGroup rotationGroup;
 	private HelixLayers helixLayers;
-	private boolean pseudosymmetric = false;
 
 	// TODO we should unify rotational and roto-translational results
 
@@ -212,26 +211,6 @@ public class QuatSymmetryResults {
 		this.local = local;
 	}
 
-	/**
-	 * A symmetry result is pseudosymmetric when using pseudostoichiometry
-	 * extended the symmetry over the
-	 * 
-	 * @return true is pseudosymmetric, false otherwise
-	 */
-	public boolean isPseudosymmetric() {
-		return pseudosymmetric;
-	}
-
-	/**
-	 * A symmetry result is pseudosymmetric when using pseudostoichiometry
-	 * extended the symmetry over the
-	 * 
-	 * @param pseudosymmetric true if pseudosymmetric, false otherwise
-	 */
-	public void setPseudosymmetric(boolean pseudosymmetric) {
-		this.pseudosymmetric = pseudosymmetric;
-	}
-	
 	public Structure getStructure() {
 		return structure;
 	}
