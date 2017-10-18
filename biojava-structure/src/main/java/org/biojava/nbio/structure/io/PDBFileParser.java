@@ -2750,7 +2750,7 @@ public class PDBFileParser  {
 					else if (recordName.equals("TURN")) pdb_TURN_Handler(   line ) ;
 				}
 			} catch (StringIndexOutOfBoundsException ex) {
-				logger.info("Unable to parse [" + line + "]");
+				logger.warn("Unable to parse [" + line + "]");
 			}
 
 

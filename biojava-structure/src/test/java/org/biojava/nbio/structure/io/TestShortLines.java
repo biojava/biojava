@@ -14,9 +14,6 @@ import org.junit.Test;
 
 /**
  * This class will test parsing short CONECT lines.
- * <p>(c) 2016 DNASTAR, Inc.</p>
- * @since Nov 30, 2016
- * @author larsonm
  */
 public class TestShortLines {
 	
