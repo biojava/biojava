@@ -211,24 +211,28 @@ public class SimpleMMcifParser implements MMcifParser {
 		Set<String> loopWarnings = new HashSet<String>(); // used only to reduce logging statements
 
 		String category = null;
-
-
-		// the first line is a data_PDBCODE line, test if this looks like a mmcif file
-		line = buf.readLine();
-		if (line == null || !line.startsWith(MMCIF_TOP_HEADER)){
-			logger.error("This does not look like a valid mmCIF file! The first line should start with 'data_', but is: '" + line+"'");
-			triggerDocumentEnd();
-			return;
-		}
+		
+		boolean foundHeader = false;
 
 		while ( (line = buf.readLine ()) != null ){
 
 			if (line.isEmpty() || line.startsWith(COMMENT_CHAR)) continue;
 
+			if (!foundHeader) {
+				// the first non-comment line is a data_PDBCODE line, test if this looks like a mmcif file
+				if (line.startsWith(MMCIF_TOP_HEADER)){
+					foundHeader = true;
+					continue;
+				} else {
+					triggerDocumentEnd();
+					throw new IOException("This does not look like a valid mmCIF file! The first line should start with 'data_', but is: '" + line+"'");
+				}
+			}
+
 			logger.debug(inLoop + " " + line);
 
 			if (line.startsWith(MMCIF_TOP_HEADER)){
-				// either first line in file, or beginning of new section
+				// either first line in file, or beginning of new section (data block in CIF parlance)
 				if ( inLoop) {
 					//System.out.println("new data and in loop: " + line);
 					inLoop = false;

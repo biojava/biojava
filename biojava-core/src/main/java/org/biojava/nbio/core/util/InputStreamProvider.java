@@ -65,7 +65,6 @@ public class InputStreamProvider {
 
 	private boolean cacheRawFiles ;
 
-	FlatFileCache cache ;
 	public InputStreamProvider() {
 		super();
 		cacheRawFiles = false;
@@ -73,7 +72,7 @@ public class InputStreamProvider {
 		String prop = System.getProperty(CACHE_PROPERTY);
 		if ( prop != null && prop.equals("true")) {
 			cacheRawFiles = true;
-			cache = FlatFileCache.getInstance();
+
 		}
 
 	}
