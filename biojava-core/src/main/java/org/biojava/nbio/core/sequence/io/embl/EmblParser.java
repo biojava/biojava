@@ -14,6 +14,8 @@ public class EmblParser {
     private String ProjectIdentifier;
     private String OrGanelle;
     private String createdDate;
+    private String featureHeader;
+    private String featureTable;
     private String lastUpdatedDate;
     private String sequenceDescription;
     private List<String> keyword = new LinkedList<>();
@@ -134,10 +136,27 @@ public class EmblParser {
                     organismClassification = lineInfo;
                 else if (lineIdentifier.equals("OG"))
                     OrGanelle = lineInfo;
-                else if (lineIdentifier.equals("RN") || lineIdentifier.equals("RP") || lineIdentifier.equals("RX")
-                        || lineIdentifier.equals("RG") || lineIdentifier.equals("RA")
-                        || lineIdentifier.equals("RT") || lineIdentifier.equals("RL"))
-                    emblReferencePopulating(lineIdentifier, lineInfo);
+                else if (lineIdentifier.equals("RN") || lineIdentifier.equals("RP")
+                        || lineIdentifier.equals("RX") || lineIdentifier.equals("RG")
+                        || lineIdentifier.equals("RA") || lineIdentifier.equals("RT")
+                        || lineIdentifier.equals("RL"))
+                    populateEmblReference(lineIdentifier, lineInfo);
+                else if (lineIdentifier.equals("DR"))
+                    databaseCrossReference = lineInfo;
+                else if (lineIdentifier.equals("AH"))
+                    assemblyHeader = lineInfo;
+                else if (lineIdentifier.equals("AS"))
+                    assemblyInformation = lineInfo;
+                else if (lineIdentifier.equals("CO"))
+                    CON = lineInfo;
+                else if (lineIdentifier.equals("FH"))
+                    featureHeader = lineInfo;
+                else if (lineIdentifier.equals("FT"))
+                    featureTable = lineInfo;
+                else if (lineIdentifier.equals("SQ"))
+                    sequenceHeader = lineInfo;
+                else if (lineIdentifier.equals("  "))
+                    populateSequence(line);
 
 
             }
@@ -148,7 +167,11 @@ public class EmblParser {
         }
     }
 
-    private void emblReferencePopulating(String lineIdentifier, String lineInfo) {
+    private void populateSequence(String line) {
+
+    }
+
+    private void populateEmblReference(String lineIdentifier, String lineInfo) {
         if (lineIdentifier.equals("RN"))
             emblReference.setReferenceNumber(lineInfo);
         else if (lineIdentifier.equals("RP"))
