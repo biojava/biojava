@@ -43,7 +43,8 @@ public class TestQuatSymmetryDetection {
 
 	private static final Logger logger = LoggerFactory.getLogger(TestQuatSymmetryDetection.class);
 
-	@Test
+	// TODO as of mmCIF v5 there's no bioassemblies for NMR entries, so we should use the AU (bioassembly 0). This is fixed in the 5.0 branch (master) - JD 2017-10-18
+	//@Test
 	public void test1b4c() throws Exception {
 		// an NMR multi-model entry
 		FileParsingParameters params = new FileParsingParameters();
