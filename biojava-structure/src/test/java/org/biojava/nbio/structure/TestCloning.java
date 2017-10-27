@@ -27,6 +27,7 @@ package org.biojava.nbio.structure;
 
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.List;
 
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.FileParsingParameters;
@@ -146,5 +147,24 @@ public class TestCloning {
 		assertEquals(allAtoms.length,allAtomsCloned.length);
 
 	}
+	
+	@Test
+    public void testBondCloning() throws IOException, StructureException {
+
+            AtomCache cache = new AtomCache();
+            cache.setUseMmCif(true);
+
+            FileParsingParameters params = cache.getFileParsingParams();
+            params.setCreateAtomBonds(true);
+            cache.setFileParsingParams(params);
+
+            Structure s = cache.getStructure("2I13");
+            List<Bond> bonds = s.getNonPolyChain("G").getAtomGroup(0).getAtom(0).getBonds();
+            assertNotNull(bonds);
+
+            Structure s2 = s.clone();
+            bonds = s2.getNonPolyChain("G").getAtomGroup(0).getAtom(0).getBonds();
+            assertNotNull(bonds);
+    }
 
 }
