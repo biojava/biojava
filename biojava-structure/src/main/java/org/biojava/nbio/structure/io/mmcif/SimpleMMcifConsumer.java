@@ -1603,13 +1603,9 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	 */
 	@Override
 	public void newStructRefSeq(StructRefSeq sref) {
-		//if (DEBUG)
-		//	System.out.println(sref);
 		DBRef r = new DBRef();
 
 
-		//if (DEBUG)
-		//	System.out.println( " " + sref.getPdbx_PDB_id_code() + " " + sref.getPdbx_db_accession());
 		r.setIdCode(sref.getPdbx_PDB_id_code());
 		r.setDbAccession(sref.getPdbx_db_accession());
 		r.setDbIdCode(sref.getPdbx_db_accession());
@@ -1617,15 +1613,23 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		r.setChainId(sref.getPdbx_strand_id());
 		StructRef structRef = getStructRef(sref.getRef_id());
 		if (structRef == null){
-			logger.warn("could not find StructRef " + sref.getRef_id() + " for StructRefSeq " + sref);
+			logger.info("could not find StructRef " + sref.getRef_id() + " for StructRefSeq " + sref);
 		} else {
 			r.setDatabase(structRef.getDb_name());
 			r.setDbIdCode(structRef.getDb_code());
 		}
+		
+		int seqbegin;
+		int seqend;
+		try{
+			seqbegin = Integer.parseInt(sref.getPdbx_auth_seq_align_beg());
+			seqend   = Integer.parseInt(sref.getPdbx_auth_seq_align_end());
+		}
+		catch(NumberFormatException e){
+			logger.warn("Couldn't parse sequence alignment positions: {}", e.getMessage());
+			return;
+		}
 
-
-		int seqbegin = Integer.parseInt(sref.getPdbx_auth_seq_align_beg());
-		int seqend   = Integer.parseInt(sref.getPdbx_auth_seq_align_end());
 		Character begin_ins_code = new Character(sref.getPdbx_seq_align_beg_ins_code().charAt(0));
 		Character end_ins_code   = new Character(sref.getPdbx_seq_align_end_ins_code().charAt(0));
 
