@@ -731,7 +731,8 @@ public class BasePairParameters implements Serializable {
      * @param b An array of length 3 or 4 (4th component is ignored)
      * @return The cross product of the vectors (just the first three components
      */
-    private static double[] cross(double[] a, double[] b) {
+    @SuppressWarnings("unused")
+	private static double[] cross(double[] a, double[] b) {
         assert a.length >= 3 && b.length >= 3;
         double[] result = new double[4];
         result[0] = a[1]*b[2]-a[2]*b[1];

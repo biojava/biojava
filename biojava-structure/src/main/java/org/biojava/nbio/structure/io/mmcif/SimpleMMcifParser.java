@@ -1048,7 +1048,7 @@ public class SimpleMMcifParser implements MMcifParser {
 		if( val.equals("?") || val.equals(".") || ( warnings != null && warnings.contains(warnkey)) ) {
 			logger.debug(warning);
 		} else {
-			logger.warn(warning);
+			logger.info(warning);
 		}
 
 		if(warnings != null) {

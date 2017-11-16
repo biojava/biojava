@@ -931,7 +931,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 					entityInfo = new EntityInfo();
 					entityInfo.setMolId(eId);
 					entityInfo.addChain(chain);
-					if (StructureTools.isChainWaterOnly(chain)) {
+					if (chain.isWaterOnly()) {
 						entityInfo.setType(EntityType.WATER);
 					} else {
 						entityInfo.setType(EntityType.NONPOLYMER);
@@ -970,10 +970,10 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				for (Chain c:model) {
 
 					// we only have entities for polymeric chains, all others are ignored for assigning entities
-					if (StructureTools.isChainWaterOnly(c)) {
+					if (c.isWaterOnly()) {
 						waterChains.add(c);
 
-					} else if (StructureTools.isChainPureNonPolymer(c)) {
+					} else if (c.isPureNonPolymer()) {
 						nonPolyChains.add(c);
 
 					} else {
@@ -1730,13 +1730,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	 */
 	@Override
 	public void newStructRefSeq(StructRefSeq sref) {
-		//if (DEBUG)
-		//	System.out.println(sref);
 		DBRef r = new DBRef();
 
-
-		//if (DEBUG)
-		//	System.out.println( " " + sref.getPdbx_PDB_id_code() + " " + sref.getPdbx_db_accession());
 		r.setIdCode(sref.getPdbx_PDB_id_code());
 		r.setDbAccession(sref.getPdbx_db_accession());
 		r.setDbIdCode(sref.getPdbx_db_accession());

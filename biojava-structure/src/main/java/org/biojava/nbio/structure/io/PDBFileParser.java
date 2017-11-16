@@ -3140,10 +3140,10 @@ public class PDBFileParser  {
 			for (Chain c:model) {
 
 				// we only have entities for polymeric chains, all others are ignored for assigning entities
-				if (StructureTools.isChainWaterOnly(c)) {
+				if (c.isWaterOnly()) {
 					waterChains.add(c);
 
-				} else if (StructureTools.isChainPureNonPolymer(c)) {
+				} else if (c.isPureNonPolymer()) {
 					nonPolyChains.add(c);
 
 				} else {
