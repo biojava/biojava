@@ -1752,8 +1752,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			seqend   = Integer.parseInt(sref.getPdbx_auth_seq_align_end());
 		}
 		catch(NumberFormatException e){
-			logger.info("Couldn't parse sequence alignment positions.");
-			logger.debug(e.toString());
+			// this happens in a few entries, annotation error? e.g. 6eoj
+			logger.warn("Couldn't parse pdbx_auth_seq_align_beg/end in _struct_ref_seq. Will not store dbref alignment info for accession {}. Error: {}", r.getDbAccession(), e.getMessage());
 			return;
 		}
 		Character begin_ins_code = new Character(sref.getPdbx_seq_align_beg_ins_code().charAt(0));
