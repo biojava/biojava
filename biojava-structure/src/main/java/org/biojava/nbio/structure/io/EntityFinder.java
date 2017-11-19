@@ -194,8 +194,8 @@ public class EntityFinder {
 
 	private static boolean areResNumbersAligned(Chain c1, Chain c2) {
 
-		boolean isC1prot = StructureTools.isProtein(c1);
-		boolean isC2prot = StructureTools.isProtein(c2);
+		boolean isC1prot = c1.isProtein();
+		boolean isC2prot = c2.isProtein();
 
 		// different kind of chain: we won't try to align them
 		if (isC1prot != isC2prot ) return false;

@@ -671,8 +671,8 @@ public class AlternativeAlignment implements Serializable{
 			Chain c1 = p1.getChain();
 			Chain c2 = p2.getChain();
 
-			String cid1 = c1.getChainID();
-			String cid2 = c2.getChainID();
+			String cid1 = c1.getId();
+			String cid2 = c2.getId();
 
 			String pdb1 = p1.getResidueNumber().toString();
 			String pdb2 = p2.getResidueNumber().toString();

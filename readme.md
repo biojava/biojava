@@ -25,7 +25,7 @@ If you are using Maven you can add the BioJava repository by adding the followin
       <dependency>
         <groupId>org.biojava</groupId>
         <artifactId>biojava-core</artifactId>
-        <version>4.2.8</version>
+        <version>4.2.9</version>
       </dependency>
       <!-- other biojava jars as needed -->
     </dependencies>

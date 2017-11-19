@@ -15,7 +15,7 @@ import java.util.Map;
 public class MetalBondConsumer implements MMcifConsumer{
 
 
-    Map<String,List<MetalBondDistance>> definitions = new HashMap();
+    Map<String,List<MetalBondDistance>> definitions = new HashMap<>();
 
     @Override
     public void documentStart() {
@@ -28,7 +28,7 @@ public class MetalBondConsumer implements MMcifConsumer{
         // minimize memory consumption
 
         for  (List<MetalBondDistance> d : definitions.values()){
-            ArrayList<MetalBondDistance> a = (ArrayList)d;
+            ArrayList<MetalBondDistance> a = (ArrayList<MetalBondDistance>)d;
 
             a.trimToSize();
         }

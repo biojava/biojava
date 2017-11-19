@@ -931,7 +931,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 					entityInfo = new EntityInfo();
 					entityInfo.setMolId(eId);
 					entityInfo.addChain(chain);
-					if (StructureTools.isChainWaterOnly(chain)) {
+					if (chain.isWaterOnly()) {
 						entityInfo.setType(EntityType.WATER);
 					} else {
 						entityInfo.setType(EntityType.NONPOLYMER);
@@ -970,10 +970,10 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				for (Chain c:model) {
 
 					// we only have entities for polymeric chains, all others are ignored for assigning entities
-					if (StructureTools.isChainWaterOnly(c)) {
+					if (c.isWaterOnly()) {
 						waterChains.add(c);
 
-					} else if (StructureTools.isChainPureNonPolymer(c)) {
+					} else if (c.isPureNonPolymer()) {
 						nonPolyChains.add(c);
 
 					} else {
@@ -1730,13 +1730,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	 */
 	@Override
 	public void newStructRefSeq(StructRefSeq sref) {
-		//if (DEBUG)
-		//	System.out.println(sref);
 		DBRef r = new DBRef();
 
-
-		//if (DEBUG)
-		//	System.out.println( " " + sref.getPdbx_PDB_id_code() + " " + sref.getPdbx_db_accession());
 		r.setIdCode(sref.getPdbx_PDB_id_code());
 		r.setDbAccession(sref.getPdbx_db_accession());
 		r.setDbIdCode(sref.getPdbx_db_accession());
@@ -1757,8 +1752,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			seqend   = Integer.parseInt(sref.getPdbx_auth_seq_align_end());
 		}
 		catch(NumberFormatException e){
-			logger.info("Couldn't parse sequence alignment positions.");
-			logger.debug(e.toString());
+			// this happens in a few entries, annotation error? e.g. 6eoj
+			logger.warn("Couldn't parse pdbx_auth_seq_align_beg/end in _struct_ref_seq. Will not store dbref alignment info for accession {}. Error: {}", r.getDbAccession(), e.getMessage());
 			return;
 		}
 		Character begin_ins_code = new Character(sref.getPdbx_seq_align_beg_ins_code().charAt(0));

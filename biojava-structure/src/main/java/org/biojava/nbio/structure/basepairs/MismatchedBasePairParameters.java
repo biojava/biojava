@@ -41,7 +41,9 @@ import java.util.List;
  */
 public class MismatchedBasePairParameters extends BasePairParameters {
 
-    public static final double DEFAULT_MAX_STAGGER = 2.0;
+	private static final long serialVersionUID = 2837124340169886674L;
+	
+	public static final double DEFAULT_MAX_STAGGER = 2.0;
     public static final double DEFAULT_MAX_PROPELLER = 60.0;
     public static final double DEFAULT_MAX_SHEAR = 5.0;
     public static final double DEFAULT_MAX_STRETCH = 5.0;
