@@ -26,7 +26,7 @@ public class EmblParser {
     private String assemblyInformation;
     private String CON;
     private String sequenceHeader;
-    private StringBuilder sequence;
+    private StringBuilder sequence = new StringBuilder("");
 
     public EmblId getEmblId() {
         return emblId;
@@ -114,51 +114,51 @@ public class EmblParser {
             String lineIdentifier;
             String lineInfo;
             try (BufferedReader bufferedReader = new BufferedReader(fileReader)) {
-                while (bufferedReader.readLine() != null)
-                    line = bufferedReader.readLine();
-                lineInfo = line.substring(2);
-                lineIdentifier = line.substring(0, 2);
-                if (lineIdentifier.equals("ID"))
-                    populateID(line);
-                else if (lineIdentifier.equals("AC"))
-                    populateAccessionNumber(line);
-                else if (lineIdentifier.equals("DT") && line.contains("Created"))
-                    createdDate = lineInfo;
-                else if (lineIdentifier.equals("DT") && line.contains("updated"))
-                    lastUpdatedDate = lineInfo;
-                else if (lineIdentifier.equals("DE"))
-                    sequenceDescription = lineInfo;
-                else if (lineIdentifier.equals("KW"))
-                    keyword.add(lineInfo);
-                else if (lineIdentifier.equals("OS"))
-                    organismSpecies = lineInfo;
-                else if (lineIdentifier.equals("OC"))
-                    organismClassification = lineInfo;
-                else if (lineIdentifier.equals("OG"))
-                    OrGanelle = lineInfo;
-                else if (lineIdentifier.equals("RN") || lineIdentifier.equals("RP")
-                        || lineIdentifier.equals("RX") || lineIdentifier.equals("RG")
-                        || lineIdentifier.equals("RA") || lineIdentifier.equals("RT")
-                        || lineIdentifier.equals("RL"))
-                    populateEmblReference(lineIdentifier, lineInfo);
-                else if (lineIdentifier.equals("DR"))
-                    databaseCrossReference = lineInfo;
-                else if (lineIdentifier.equals("AH"))
-                    assemblyHeader = lineInfo;
-                else if (lineIdentifier.equals("AS"))
-                    assemblyInformation = lineInfo;
-                else if (lineIdentifier.equals("CO"))
-                    CON = lineInfo;
-                else if (lineIdentifier.equals("FH"))
-                    featureHeader = lineInfo;
-                else if (lineIdentifier.equals("FT"))
-                    featureTable = lineInfo;
-                else if (lineIdentifier.equals("SQ"))
-                    sequenceHeader = lineInfo;
-                else if (lineIdentifier.equals("  "))
-                    populateSequence(line);
+                while ((line = bufferedReader.readLine()) != null) {
+                    lineInfo = line.substring(0,2);
+                    lineIdentifier = line.substring(0, 2);
+                    if (lineIdentifier.equals("ID"))
+                        populateID(line);
+                    else if (lineIdentifier.equals("AC"))
+                        populateAccessionNumber(line);
+                    else if (lineIdentifier.equals("DT") && line.contains("Created"))
+                        createdDate = lineInfo;
+                    else if (lineIdentifier.equals("DT") && line.contains("updated"))
+                        lastUpdatedDate = lineInfo;
+                    else if (lineIdentifier.equals("DE"))
+                        sequenceDescription = lineInfo;
+                    else if (lineIdentifier.equals("KW"))
+                        keyword.add(lineInfo);
+                    else if (lineIdentifier.equals("OS"))
+                        organismSpecies = lineInfo;
+                    else if (lineIdentifier.equals("OC"))
+                        organismClassification = lineInfo;
+                    else if (lineIdentifier.equals("OG"))
+                        OrGanelle = lineInfo;
+                    else if (lineIdentifier.equals("RN") || lineIdentifier.equals("RP")
+                            || lineIdentifier.equals("RX") || lineIdentifier.equals("RG")
+                            || lineIdentifier.equals("RA") || lineIdentifier.equals("RT")
+                            || lineIdentifier.equals("RL"))
+                        populateEmblReference(lineIdentifier, lineInfo);
+                    else if (lineIdentifier.equals("DR"))
+                        databaseCrossReference = lineInfo;
+                    else if (lineIdentifier.equals("AH"))
+                        assemblyHeader = lineInfo;
+                    else if (lineIdentifier.equals("AS"))
+                        assemblyInformation = lineInfo;
+                    else if (lineIdentifier.equals("CO"))
+                        CON = lineInfo;
+                    else if (lineIdentifier.equals("FH"))
+                        featureHeader = lineInfo;
+                    else if (lineIdentifier.equals("FT"))
+                        featureTable = lineInfo;
+                    else if (lineIdentifier.equals("SQ"))
+                        sequenceHeader = lineInfo;
+                    else if (lineIdentifier.equals("  ") && !lineIdentifier.equals("//"))
+                        populateSequence(line);
 
 
+                }
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -168,7 +168,9 @@ public class EmblParser {
     }
 
     private void populateSequence(String line) {
-
+                String sequenceLine = line.replace(" ","").
+                        replaceAll("[0-9]","");
+                sequence.append(sequenceLine);
     }
 
     private void populateEmblReference(String lineIdentifier, String lineInfo) {
