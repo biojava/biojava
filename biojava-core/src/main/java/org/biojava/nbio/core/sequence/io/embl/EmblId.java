@@ -1,6 +1,11 @@
 package org.biojava.nbio.core.sequence.io.embl;
 
+/**
+ * This class should parse the data of embl file identification
+ * @author Noor Aldeen Al Mbaidin
+ */
 public class EmblId {
+
 
     private String PrimaryAccession;
     private String SequenceVersion;

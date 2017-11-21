@@ -1,5 +1,9 @@
 package org.biojava.nbio.core.sequence.io.embl;
 
+/**
+ * This class should parse the data of embl file reference
+ * @author Noor Aldeen Al Mbaidin
+ */
 public class EmblReference {
 
     private String referenceNumber;

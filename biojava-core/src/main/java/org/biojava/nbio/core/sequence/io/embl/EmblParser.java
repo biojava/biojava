@@ -5,6 +5,10 @@ import java.io.*;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * This class should parse the data of embl file
+ * @author Noor Aldeen Al Mbaidin
+ */
 public class EmblParser {
 
     private File file;
@@ -27,6 +31,7 @@ public class EmblParser {
     private String CON;
     private String sequenceHeader;
     private StringBuilder sequence = new StringBuilder("");
+
 
     public EmblId getEmblId() {
         return emblId;

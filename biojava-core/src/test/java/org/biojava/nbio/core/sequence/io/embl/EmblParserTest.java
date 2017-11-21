@@ -3,7 +3,10 @@ package org.biojava.nbio.core.sequence.io.embl;
 import org.junit.Test;
 
 import java.io.File;
-
+/**
+ * This class should test the parser of EmblParser class
+ * @author Noor Aldeen Al Mbaidin
+ */
 public class EmblParserTest {
 
     @Test(expected = NullPointerException.class)
