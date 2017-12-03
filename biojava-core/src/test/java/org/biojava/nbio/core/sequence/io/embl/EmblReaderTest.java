@@ -1,5 +1,6 @@
 package org.biojava.nbio.core.sequence.io.embl;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -13,24 +14,31 @@ import java.io.IOException;
  */
 public class EmblReaderTest {
 
-    private EmblReader emblReader;
-
-    @Before
-    public void setUp() {
-        emblReader = new EmblReader();
-    }
 
     @Test(expected = NullPointerException.class)
     public void givenNullFileParameterWhenProcessEmblFileThenThrowException() throws IOException {
         File file = null;
-        emblReader.process(file);
+        EmblReader.process(file);
 
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void givenDirectoryWhenProcessEmblFileThenThrowException() throws IOException {
         File file = new File("./src/test/resources");
-        emblReader.process(file);
+        EmblReader.process(file);
+    }
+
+    @Test
+    public void givenAnEmilFileWhenProcessEmilFileThanTheSequenceShouldReturnAsExpected() throws IOException {
+        File file = new File("./src/test/resources/test.embl");
+        EmblRecord emblRecord = EmblReader.process(file);
+        Assert.assertEquals("acaagatgccattgtcccccggcctcctgctgctg" +
+                "ctgctctccggggccacggccaccgctgccctgcccctggagggtggccccaccggcc" +
+                "gagacagcgagcatatgcaggaagcggcaggaataaggaaaagcagcctcctgactttcc" +
+                "tcgcttggtggtttgagtggacctcccaggccagtgccgggcccctcataggagaggaagc" +
+                "tcgggaggtggccaggcggcaggaaggcgcacccccccagcaatccgcgcgccgggacagaa" +
+                "tgccctgcaggaacttcttctggaagaccttctcctcctgcaaataaaacctcacccatgaatgc" +
+                "tcacgcaagtttaattacagacctgaa",emblRecord.getSequence());
     }
 
 

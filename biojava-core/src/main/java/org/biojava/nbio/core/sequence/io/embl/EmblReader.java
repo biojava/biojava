@@ -92,6 +92,7 @@ public class EmblReader {
                           emblRecord.setKeyword(keyword);
                           emblRecord.setEmblReference(emblReference);
                           emblRecord.setAccessionNumber(accessionNumber);
+                          emblRecord.setSequence(sequence.toString());
                     }
 
                 }
