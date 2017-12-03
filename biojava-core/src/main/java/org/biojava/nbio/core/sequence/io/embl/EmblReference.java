@@ -10,6 +10,7 @@ package org.biojava.nbio.core.sequence.io.embl;
  */
 public class EmblReference {
 
+    
     private String referenceNumber;
     private String referenceComment;
     private String referencePosition;
