@@ -79,7 +79,7 @@ public class EmblReader {
                     else if (lineIdentifier.equals("AS"))
                         emblRecord.setAssemblyInformation(lineInfo);
                     else if (lineIdentifier.equals("CO"))
-                        emblRecord.setCON(lineInfo);
+                        emblRecord.setConstructedSequence(lineInfo);
                     else if (lineIdentifier.equals("FH"))
                         emblRecord.setFeatureHeader(lineInfo);
                     else if (lineIdentifier.equals("FT"))

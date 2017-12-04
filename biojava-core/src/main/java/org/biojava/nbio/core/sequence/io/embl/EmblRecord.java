@@ -28,7 +28,7 @@ public class EmblRecord {
     private String databaseCrossReference;
     private String assemblyHeader;
     private String assemblyInformation;
-    private String CON;
+    private String constructedSequence;
     private String sequenceHeader;
     private String sequence;
 
@@ -256,12 +256,12 @@ public class EmblRecord {
      * chromosomes, genomes and other long sequences constructed from segment entries.
      * @return String
      */
-    public String getCON() {
-        return CON;
+    public String getConstructedSequence() {
+        return constructedSequence;
     }
 
-    public void setCON(String CON) {
-        this.CON = CON;
+    public void setConstructedSequence(String constructedSequence) {
+        this.constructedSequence = constructedSequence;
     }
 
     /**
