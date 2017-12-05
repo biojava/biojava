@@ -1,3 +1,23 @@
+/*
+ *                    BioJava development code
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public Licence.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright for this code is held jointly by the individual
+ * authors.  These should be listed in @author doc comments.
+ *
+ * For more information on the BioJava project and its aims,
+ * or to join the biojava-l mailing list, visit the home page
+ * at:
+ *
+ *      http://www.biojava.org/
+ *
+ */
 package org.biojava.nbio.core.sequence.io.embl;
 
 import java.util.LinkedList;
@@ -6,14 +26,15 @@ import java.util.List;
 
 /**
  * this class contains the parsed data of embl file
- * @since 5.0.0
+ *
  * @author Noor Aldeen Al Mbaidin
+ * @since 5.0.0
  */
 
 public class EmblRecord {
 
-    private EmblId emblId = new EmblId();
-    private EmblReference emblReference;
+    private EmblId emblId;
+    private List<EmblReference> emblReference;
     private List<String> accessionNumber = new LinkedList<>();
     private String projectIdentifier;
     private String orGanelle;
@@ -42,6 +63,7 @@ public class EmblRecord {
      * 5. Data class
      * 6. Taxonomic division
      * 7. Sequence length
+     *
      * @return EmblId
      */
     public EmblId getEmblId() {
@@ -57,19 +79,21 @@ public class EmblRecord {
      * These lines comprise the literature citations within the database.
      * The citations provide access to the papers from which the data has been
      * abstracted.
+     *
      * @return EmblReference
      */
-    public EmblReference getEmblReference() {
+    public List<EmblReference> getEmblReference() {
         return emblReference;
     }
 
-    public void setEmblReference(EmblReference emblReference) {
+    public void setEmblReference(List<EmblReference> emblReference) {
         this.emblReference = emblReference;
     }
 
     /**
      * The AC (Accession number) line lists the accession numbers associated with
      * the entry.
+     *
      * @return List<String>
      */
     public List<String> getAccessionNumber() {
@@ -81,7 +105,6 @@ public class EmblRecord {
     }
 
     /**
-     *
      * @return String
      */
     public String getProjectIdentifier() {
@@ -95,6 +118,7 @@ public class EmblRecord {
     /**
      * The OG (OrGanelle) linetype indicates the sub-cellular location of non-nuclear
      * sequences.
+     *
      * @return String
      */
     public String getOrGanelle() {
@@ -107,6 +131,7 @@ public class EmblRecord {
 
     /**
      * The DT  line shows when an entry first appeared in the database
+     *
      * @return String
      */
     public String getCreatedDate() {
@@ -120,6 +145,7 @@ public class EmblRecord {
     /**
      * The FH (Feature Header) lines are present only to improve readability of
      * an entry when it is printed or displayed on a terminal screen.
+     *
      * @return String
      */
     public String getFeatureHeader() {
@@ -134,6 +160,7 @@ public class EmblRecord {
      * The FT (Feature Table) lines provide a mechanism for the annotation of the
      * sequence data. Regions or sites in the sequence which are of interest are
      * listed in the table.
+     *
      * @return String
      */
     public String getFeatureTable() {
@@ -146,6 +173,7 @@ public class EmblRecord {
 
     /**
      * The DT (DaTe) line shows when an entry was last updated in the database.
+     *
      * @return String
      */
     public String getLastUpdatedDate() {
@@ -161,6 +189,7 @@ public class EmblRecord {
      * sequence stored. This may include the designations of genes for which the
      * sequence codes, the region of the genome from which it is derived, or other
      * information which helps to identify the sequence.
+     *
      * @return String
      */
     public String getSequenceDescription() {
@@ -175,6 +204,7 @@ public class EmblRecord {
      * The KW (KeyWord) lines provide information which can be used to generate
      * cross-reference indexes of the sequence entries based on functional,
      * structural, or other categories deemed important.
+     *
      * @return List<String>
      */
     public List<String> getKeyword() {
@@ -190,6 +220,7 @@ public class EmblRecord {
      * the organism which was the source of the stored sequence. In most
      * cases this is done by giving the Latin genus and species designations,
      * followed (in parentheses) by the preferred common name in English where known.
+     *
      * @return String
      */
     public String getOrganismSpecies() {
@@ -203,6 +234,7 @@ public class EmblRecord {
     /**
      * The OC (Organism Classification) lines contain the taxonomic classification
      * Of the source organism
+     *
      * @return String
      */
     public String getOrganismClassification() {
@@ -216,6 +248,7 @@ public class EmblRecord {
     /**
      * The DR (Database Cross-reference) line cross-references other databases which
      * contain information related to the entry in which the DR line appears.
+     *
      * @return String
      */
     public String getDatabaseCrossReference() {
@@ -228,6 +261,7 @@ public class EmblRecord {
 
     /**
      * The AH (Assembly Header) line provides column headings for the assembly information.
+     *
      * @return String
      */
     public String getAssemblyHeader() {
@@ -241,6 +275,7 @@ public class EmblRecord {
     /**
      * The AS (Assembly Information) lines provide information on the composition of
      * a TPA or TSA sequence.
+     *
      * @return String
      */
     public String getAssemblyInformation() {
@@ -254,6 +289,7 @@ public class EmblRecord {
     /**
      * Con(structed) sequences in the CON data classes represent complete
      * chromosomes, genomes and other long sequences constructed from segment entries.
+     *
      * @return String
      */
     public String getConstructedSequence() {
@@ -267,6 +303,7 @@ public class EmblRecord {
     /**
      * The SQ (SeQuence header) line marks the beginning of the sequence data and
      * Gives a summary of its content.
+     *
      * @return String
      */
     public String getSequenceHeader() {
@@ -279,6 +316,7 @@ public class EmblRecord {
 
     /**
      * The Sequence Data Line
+     *
      * @return String
      */
     public String getSequence() {
@@ -288,4 +326,5 @@ public class EmblRecord {
     public void setSequence(String sequence) {
         this.sequence = sequence;
     }
+
 }
