@@ -579,6 +579,11 @@ public class Calc {
 			for (Atom atom : g.getAtoms()) {
 				transform(atom, m);
 			}
+			for (Group altG : g.getAltLocs()) {
+				for (Atom atom : altG.getAtoms()) {
+					transform(atom, m);
+				}				
+			}
 		}
 	}
 
