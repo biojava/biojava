@@ -156,6 +156,53 @@ public class TestCalc {
 
 		assertEquals(expected, actual);
 	}
+	
+	/**
+	 * Issue https://github.com/biojava/biojava/issues/715
+	 */
+	@Test
+	public void testChainTransform() {
+		Group g = new AminoAcidImpl();
+		Atom a = new AtomImpl();
+		a.setName("CA");
+		a.setX(1);
+		a.setY(1);
+		a.setZ(1);
+		g.addAtom(a);
+		Group altLocG = new AminoAcidImpl();
+		Atom a2 = new AtomImpl();
+		a2.setName("CA");
+		a2.setX(2);
+		a2.setY(2);
+		a2.setZ(2);
+		altLocG.addAtom(a2);
+		
+		g.addAltLoc(altLocG);
+		
+		Chain c = new ChainImpl();
+		c.addGroup(g);
+		
+		Matrix4d m = new Matrix4d(1,0,0,1, 0,1,0,0, 0,0,1,0, 0,0,0,1); // shift of 1 in x axis
+ 		Calc.transform(c, m);
+ 		
+ 		Group thegroup = c.getAtomGroup(0);
+ 		Group thealtlocgroup = thegroup.getAltLocs().get(0);
+ 		
+ 		Atom atom1 = thegroup.getAtom("CA");
+ 		Atom atom2 = thealtlocgroup.getAtom("CA");
+ 		
+ 		// x should be shitfted by 1
+ 		assertEquals(2, atom1.getX(), 0.00001);
+ 		assertEquals(1, atom1.getY(), 0.00001);
+ 		assertEquals(1, atom1.getZ(), 0.00001);
+ 		
+ 		// x should be shitfted by 1
+ 		assertEquals(3, atom2.getX(), 0.00001);
+ 		assertEquals(2, atom2.getY(), 0.00001);
+ 		assertEquals(2, atom2.getZ(), 0.00001);
+
+ 		
+	}
 
 	private static Atom getAtom(double x, double y, double z) {
 		Atom a = new AtomImpl();
