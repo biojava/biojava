@@ -601,12 +601,14 @@ public class Calc {
 	 * @param v
 	 */
 	public static final void translate(Group group, Vector3d v) {
-		AtomIterator iter = new AtomIterator(group);
 
-		while (iter.hasNext()) {
-			Atom atom = iter.next();
+		for (Atom atom : group.getAtoms()) {
 			translate(atom, v);
-
+		}
+		for (Group altG : group.getAltLocs()) {
+			for (Atom atom : altG.getAtoms()) {
+				translate(atom, v);
+			}				
 		}
 	}
 
@@ -620,9 +622,7 @@ public class Calc {
 	public static final void translate(Chain chain, Vector3d v) {
 
 		for (Group g : chain.getAtomGroups()) {
-			for (Atom atom : g.getAtoms()) {
-				translate(atom, v);
-			}
+			translate(g, v);
 		}
 	}
 
@@ -634,12 +634,11 @@ public class Calc {
 	 * @param v
 	 */
 	public static final void translate(Structure structure, Vector3d v) {
-		AtomIterator iter = new AtomIterator(structure);
-
-		while (iter.hasNext()) {
-			Atom atom = iter.next();
-			translate(atom, v);
-
+		
+		for (int n=0; n<structure.nrModels();n++) {
+			for (Chain c : structure.getChains(n)) {
+				translate(c, v);
+			}
 		}
 	}
 
