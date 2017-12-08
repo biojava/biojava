@@ -450,7 +450,8 @@ public class Calc {
 	 * @param t transformation Matrix4d
 	 */
 	public static void transform(Atom[] ca, Matrix4d t) {
-		for (Atom atom : ca) Calc.transform(atom, t);
+		for (Atom atom : ca)
+			Calc.transform(atom, t);
 	}
 
 	/**
@@ -479,13 +480,14 @@ public class Calc {
 	 * @param group
 	 * @param m
 	 */
-	public static final void transform (Group group, Matrix4d m) {
-		AtomIterator iter = new AtomIterator(group) ;
-
-		while (iter.hasNext()) {
-			Atom atom = iter.next() ;
-			transform(atom,m);
-
+	public static final void transform(Group group, Matrix4d m) {
+		for (Atom atom : group.getAtoms()) {
+			transform(atom, m);
+		}
+		for (Group altG : group.getAltLocs()) {
+			for (Atom atom : altG.getAtoms()) {
+				transform(atom, m);
+			}				
 		}
 	}
 
@@ -497,13 +499,11 @@ public class Calc {
 	 * @param structure
 	 * @param m
 	 */
-	public static final void transform (Structure structure, Matrix4d m) {
-		AtomIterator iter = new AtomIterator(structure) ;
-
-		while (iter.hasNext()) {
-			Atom atom = iter.next() ;
-			transform(atom,m);
-
+	public static final void transform(Structure structure, Matrix4d m) {
+		for (int n=0; n<structure.nrModels();n++) {
+			for (Chain c : structure.getChains(n)) {
+				transform(c, m);
+			}
 		}
 	}
 
@@ -517,15 +517,8 @@ public class Calc {
 	 */
 	public static final void transform (Chain chain, Matrix4d m) {
 
-		for (Group g:chain.getAtomGroups()) {
-			for (Atom atom: g.getAtoms()) {
-				transform(atom,m);
-			}
-			for (Group altG : g.getAltLocs()) {
-				for (Atom atom : altG.getAtoms()) {
-					transform(atom, m);
-				}				
-			}
+		for (Group g : chain.getAtomGroups()) {
+			transform(g, m);
 		}
 	}
 

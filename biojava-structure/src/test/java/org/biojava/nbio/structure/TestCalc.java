@@ -204,12 +204,93 @@ public class TestCalc {
  		
 	}
 
-	private static Atom getAtom(double x, double y, double z) {
+	/**
+	 * Issue https://github.com/biojava/biojava/issues/715
+	 */
+	@Test
+	public void testStructureTransform() throws StructureException {
+		Group g = new AminoAcidImpl();
+		Atom a = getAtom("CA", 1, 1, 1);
+		g.addAtom(a);
+		Group altLocG = new AminoAcidImpl();
+		Atom a2 = getAtom("CA", 2, 2, 2);
+		altLocG.addAtom(a2);
+		
+		g.addAltLoc(altLocG);
+		
+		Chain c1 = new ChainImpl();
+		c1.addGroup(g);
+		c1.setChainID("A");
+		
+		Group gc2 = new AminoAcidImpl();
+		Atom ac2 = getAtom("CA", 3, 3, 3);
+		gc2.addAtom(ac2);
+		Group altLocGc2 = new AminoAcidImpl();
+		Atom ac22 = getAtom("CA", 4, 4, 4);
+		altLocGc2.addAtom(ac22);
+		
+		gc2.addAltLoc(altLocGc2);
+		
+		Chain c2 = new ChainImpl();
+		c2.addGroup(gc2);
+		c2.setChainID("B");
+		
+		Structure s = new StructureImpl();
+		s.addChain(c1);
+		s.addChain(c2);
+		
+		
+		Matrix4d m = new Matrix4d(1,0,0,1, 0,1,0,0, 0,0,1,0, 0,0,0,1); // shift of 1 in x axis
+ 		Calc.transform(s, m);
+ 		
+ 		// testing 1st chain
+ 		Group thegroup = s.getChainByPDB("A").getAtomGroup(0);
+ 		Group thealtlocgroup = thegroup.getAltLocs().get(0);
+ 		
+ 		Atom atom1 = thegroup.getAtom("CA");
+ 		Atom atom2 = thealtlocgroup.getAtom("CA");
+ 		
+ 		// x should be shitfted by 1
+ 		assertEquals(2, atom1.getX(), 0.00001);
+ 		assertEquals(1, atom1.getY(), 0.00001);
+ 		assertEquals(1, atom1.getZ(), 0.00001);
+ 		
+ 		// x should be shitfted by 1
+ 		assertEquals(3, atom2.getX(), 0.00001);
+ 		assertEquals(2, atom2.getY(), 0.00001);
+ 		assertEquals(2, atom2.getZ(), 0.00001);
+
+ 		// testing 2nd chain
+ 		thegroup = s.getChainByPDB("B").getAtomGroup(0);
+ 		thealtlocgroup = thegroup.getAltLocs().get(0);
+ 		
+ 		atom1 = thegroup.getAtom("CA");
+ 		atom2 = thealtlocgroup.getAtom("CA");
+ 		
+ 		// x should be shitfted by 1
+ 		assertEquals(4, atom1.getX(), 0.00001);
+ 		assertEquals(3, atom1.getY(), 0.00001);
+ 		assertEquals(3, atom1.getZ(), 0.00001);
+ 		
+ 		// x should be shitfted by 1
+ 		assertEquals(5, atom2.getX(), 0.00001);
+ 		assertEquals(4, atom2.getY(), 0.00001);
+ 		assertEquals(4, atom2.getZ(), 0.00001);
+
+ 		
+	}
+
+	private static Atom getAtom(String name, double x, double y, double z) {
 		Atom a = new AtomImpl();
 		a.setX(x);
 		a.setY(y);
 		a.setZ(z);
+		a.setName(name);
 		return a;
+	}
+	
+	private static Atom getAtom(double x, double y, double z) {
+		return getAtom(null, x, y, z);
 	}
 
 	private static Matrix4d getSampleTransform(){
