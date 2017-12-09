@@ -542,9 +542,7 @@ public class Calc {
 			transform(atom, m);
 		}
 		for (Group altG : group.getAltLocs()) {
-			for (Atom atom : altG.getAtoms()) {
-				transform(atom, m);
-			}				
+			transform(altG, m);
 		}
 	}
 
@@ -606,9 +604,7 @@ public class Calc {
 			translate(atom, v);
 		}
 		for (Group altG : group.getAltLocs()) {
-			for (Atom atom : altG.getAtoms()) {
-				translate(atom, v);
-			}				
+			translate(altG, v);
 		}
 	}
 
