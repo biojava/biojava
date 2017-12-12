@@ -538,12 +538,11 @@ public class Calc {
 	 * @param m
 	 */
 	public static final void transform(Group group, Matrix4d m) {
-		AtomIterator iter = new AtomIterator(group);
-
-		while (iter.hasNext()) {
-			Atom atom = iter.next();
+		for (Atom atom : group.getAtoms()) {
 			transform(atom, m);
-
+		}
+		for (Group altG : group.getAltLocs()) {
+			transform(altG, m);
 		}
 	}
 
@@ -556,12 +555,10 @@ public class Calc {
 	 * @param m
 	 */
 	public static final void transform(Structure structure, Matrix4d m) {
-		AtomIterator iter = new AtomIterator(structure);
-
-		while (iter.hasNext()) {
-			Atom atom = iter.next();
-			transform(atom, m);
-
+		for (int n=0; n<structure.nrModels();n++) {
+			for (Chain c : structure.getChains(n)) {
+				transform(c, m);
+			}
 		}
 	}
 
@@ -576,9 +573,7 @@ public class Calc {
 	public static final void transform(Chain chain, Matrix4d m) {
 
 		for (Group g : chain.getAtomGroups()) {
-			for (Atom atom : g.getAtoms()) {
-				transform(atom, m);
-			}
+			transform(g, m);
 		}
 	}
 
@@ -604,12 +599,12 @@ public class Calc {
 	 * @param v
 	 */
 	public static final void translate(Group group, Vector3d v) {
-		AtomIterator iter = new AtomIterator(group);
 
-		while (iter.hasNext()) {
-			Atom atom = iter.next();
+		for (Atom atom : group.getAtoms()) {
 			translate(atom, v);
-
+		}
+		for (Group altG : group.getAltLocs()) {
+			translate(altG, v);
 		}
 	}
 
@@ -623,9 +618,7 @@ public class Calc {
 	public static final void translate(Chain chain, Vector3d v) {
 
 		for (Group g : chain.getAtomGroups()) {
-			for (Atom atom : g.getAtoms()) {
-				translate(atom, v);
-			}
+			translate(g, v);
 		}
 	}
 
@@ -637,12 +630,11 @@ public class Calc {
 	 * @param v
 	 */
 	public static final void translate(Structure structure, Vector3d v) {
-		AtomIterator iter = new AtomIterator(structure);
-
-		while (iter.hasNext()) {
-			Atom atom = iter.next();
-			translate(atom, v);
-
+		
+		for (int n=0; n<structure.nrModels();n++) {
+			for (Chain c : structure.getChains(n)) {
+				translate(c, v);
+			}
 		}
 	}
 
