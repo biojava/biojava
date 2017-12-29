@@ -19,7 +19,7 @@
  *
  * @since 3.0.2
  */
-package org.biojava.nbio.structure.io.util;
+package org.biojava.nbio.core.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

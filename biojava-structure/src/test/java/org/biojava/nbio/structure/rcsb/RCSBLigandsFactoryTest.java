@@ -69,7 +69,7 @@ public class RCSBLigandsFactoryTest {
 		assertEquals("CA", ligands.get(0).getLigands().get(0).getId());
 		assertEquals(2, ligands.get(1).getLigands().size());
 		assertEquals("HEM", ligands.get(1).getLigands().get(0).getId());
-		assertEquals("C34 H32 FE N4 O4", ligands.get(1).getLigands().get(0).getFormula());
+		assertEquals("C34 H32 Fe N4 O4", ligands.get(1).getLigands().get(0).getFormula());
 		assertEquals("O4 P -3", ligands.get(1).getLigands().get(1).getFormula());
 	}
 

@@ -150,10 +150,10 @@ public class AtomCacheTest {
 		assertEquals(expectedLengthA, a.getAtomGroups().size());
 
 
-		assertTrue(structure.hasNonPolyChain("M"));
-		assertTrue(structure.hasNonPolyChain("N"));
+		assertTrue(structure.hasNonPolyChain("G"));
+		assertTrue(structure.hasNonPolyChain("H"));
 
-		Chain copper  = structure.getNonPolyChain("M");
+		Chain copper  = structure.getNonPolyChain("I");
 		assertEquals(1,copper.getAtomGroups().size());
 
 	}

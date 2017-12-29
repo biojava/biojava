@@ -51,7 +51,8 @@ public class Test2JA5 {
 		// This is not applicable anymore, we need to parse atoms to have chains to match.
 		// assertTrue(StructureTools.getNrAtoms(s1) == 0);
 
-		// SeqRes contains 15 chains, but since we cannot align Chain N to AtomGroups => 14.
+		// SeqRes contains 14 chains, but since we cannot align Chain N to AtomGroups => 14.
+		// 2ja5 has been remediated on March 2017, now it has 14 chains in seqres matching the 14 chains in atoms (chain N has been removed)
 		assertEquals(14, s1.getPolyChains().size());
 
 		Chain nChain = s1.getPolyChain("N");
@@ -80,11 +81,11 @@ public class Test2JA5 {
 		// This is not applicable anymore, we need to parse atoms to have chains to match.
 		assertEquals(0, StructureTools.getNrAtoms(s1));
 
-		// All 15 seqres chains will be store.
-		assertEquals(15, s1.getPolyChains().size());
+		// 2ja5 has been remediated on March 2017, now it has 14 chains in seqres matching the 14 chains in atoms (chain N has been removed)
+		assertEquals(14, s1.getPolyChains().size());
 
 		Chain nChain = s1.getPolyChainByPDB("N");
 		
-		assertNotNull(nChain);
+		assertNull(nChain);
 	}
 }

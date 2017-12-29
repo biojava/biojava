@@ -25,7 +25,6 @@ import org.biojava.nbio.structure.quaternary.BioAssemblyInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.DateFormat;
@@ -35,13 +34,14 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 
-/** A class that contains PDB Header information.
+/** 
+ * A class that contains PDB Header information.
  *
  * @author Andreas Prlic
  * @since 1.6
  *
  */
-public class PDBHeader implements PDBRecord, Serializable{
+public class PDBHeader implements PDBRecord {
 
 	private static final long serialVersionUID = -5834326174085429508L;
 
@@ -53,15 +53,14 @@ public class PDBHeader implements PDBRecord, Serializable{
 	private String classification;
 
 	private Date depDate;
+	private Date relDate;
 	private Date modDate;
 
 	private Set<ExperimentalTechnique> techniques;
 	private PDBCrystallographicInfo crystallographicInfo;
 
 	private float resolution;
-
 	private float rFree;
-	
 	private float rWork;
 
 	private JournalArticle journalArticle;
@@ -84,10 +83,13 @@ public class PDBHeader implements PDBRecord, Serializable{
 
 		depDate = new Date(0);
 		modDate = new Date(0);
+		relDate = new Date(0);
 		dateFormat = new SimpleDateFormat("dd-MMM-yy",Locale.US);
+		
 		resolution = DEFAULT_RESOLUTION;
 		rFree = DEFAULT_RFREE;
 		rWork = DEFAULT_RFREE;
+		
 		bioAssemblies = new HashMap<Integer, BioAssemblyInfo>();
 		crystallographicInfo = new PDBCrystallographicInfo();
 
@@ -471,10 +473,20 @@ public class PDBHeader implements PDBRecord, Serializable{
 		this.classification = classification;
 	}
 
+	/**
+	 * Return the deposition date of the structure in the PDB.
+	 * 
+	 * @return the deposition date
+	 */
 	public Date getDepDate() {
 		return depDate;
 	}
 
+	/**
+	 * The deposition date of the structure in the PDB
+	 * 
+	 * @param depDate the deposition date
+	 */
 	public void setDepDate(Date depDate) {
 		this.depDate = depDate;
 	}
@@ -535,12 +547,41 @@ public class PDBHeader implements PDBRecord, Serializable{
 		this.rFree = rFree;
 	}
 
+	/**
+	 * Return the latest modification date of the structure.
+	 * 
+	 * @return the latest modification date
+	 */
 	public Date getModDate() {
 		return modDate;
 	}
 
+	/**
+	 * The latest modification date of the structure.
+	 * 
+	 * @param modDate the latest modification date
+	 */
 	public void setModDate(Date modDate) {
 		this.modDate = modDate;
+	}
+	
+	/**
+	 * Return the release date of the structure in the PDB.
+	 * 
+	 * @return the release date
+	 */
+	public Date getRelDate() {
+		return relDate;
+	}
+
+	/**
+	 * 
+	 * The release date of the structure in the PDB.
+	 * 
+	 * @param relDate the release date
+	 */
+	public void setRelDate(Date relDate) {
+		this.relDate = relDate;
 	}
 
 	public String getTitle() {

@@ -22,14 +22,14 @@
  */
 package org.biojava.nbio.structure.symmetry.core;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.cluster.Subunit;
 import org.biojava.nbio.structure.cluster.SubunitCluster;
 import org.biojava.nbio.structure.cluster.SubunitClusterUtils;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Holds the results of quaternary symmetry perception obtained with
@@ -56,7 +56,6 @@ public class QuatSymmetryResults {
 	private SymmetryPerceptionMethod method;
 	private RotationGroup rotationGroup;
 	private HelixLayers helixLayers;
-	private boolean pseudosymmetric = false;
 
 	// TODO we should unify rotational and roto-translational results
 
@@ -98,6 +97,11 @@ public class QuatSymmetryResults {
 		this.clusters = clusters;
 		this.stoichiometry = SubunitClusterUtils
 				.getStoichiometryString(clusters);
+		
+		subunits = new ArrayList<Subunit>();
+		for (SubunitCluster c : clusters) {
+			subunits.addAll(c.getSubunits());
+		}
 
 		this.helixLayers = helixLayers;
 		this.method = method;
@@ -111,14 +115,14 @@ public class QuatSymmetryResults {
 	public List<SubunitCluster> getSubunitClusters() {
 		return Collections.unmodifiableList(clusters);
 	}
-	
+
 	/**
 	 * Returns the List of Subunits used to calculate symmetry.
 	 *
 	 * @return an unmodifiable view of the List
 	 */
-	public List<Subunit> getSubunits() {
-		return Collections.unmodifiableList(subunits);
+	public List<Subunit> getSubunits() {		
+		return Collections.unmodifiableList(subunits);		
 	}
 	
 	/**
@@ -207,26 +211,6 @@ public class QuatSymmetryResults {
 		this.local = local;
 	}
 
-	/**
-	 * A symmetry result is pseudosymmetric when using pseudostoichiometry
-	 * extended the symmetry over the
-	 * 
-	 * @return true is pseudosymmetric, false otherwise
-	 */
-	public boolean isPseudosymmetric() {
-		return pseudosymmetric;
-	}
-
-	/**
-	 * A symmetry result is pseudosymmetric when using pseudostoichiometry
-	 * extended the symmetry over the
-	 * 
-	 * @param pseudosymmetric true if pseudosymmetric, false otherwise
-	 */
-	public void setPseudosymmetric(boolean pseudosymmetric) {
-		this.pseudosymmetric = pseudosymmetric;
-	}
-	
 	public Structure getStructure() {
 		return structure;
 	}

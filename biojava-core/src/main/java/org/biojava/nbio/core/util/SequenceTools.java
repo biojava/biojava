@@ -115,4 +115,23 @@ public class SequenceTools {
 
 	}
 
+	/** A method to check whether an array of sequences contains at least two sequences having an equal length.
+	 *
+	 * @param sequences the array of {@link org.biojava.nbio.core.sequence.ProteinSequence} sequences
+	 * @return true if any two sequences are of an equal length
+	 */
+	public static boolean equalLengthSequences(ProteinSequence[] sequences) {
+
+		for (int i=0; i<sequences.length-1; i++) {
+			if (sequences[i]==null)
+				continue;
+			for (int j=i+1; j<sequences.length; j++) {
+				if (sequences[j]==null)
+					continue;
+				if (sequences[i].getLength() == sequences[j].getLength())
+					return true;
+			}
+		}
+		return false;
+	}
 }

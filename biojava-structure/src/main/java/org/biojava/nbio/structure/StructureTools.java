@@ -45,15 +45,15 @@ import org.biojava.nbio.structure.contact.AtomContactSet;
 import org.biojava.nbio.structure.contact.Grid;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.PDBFileParser;
-import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
-import org.biojava.nbio.structure.io.util.FileDownloadUtils;
+import org.biojava.nbio.core.util.FileDownloadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * A class that provides some tool methods.
  *
- * @author Andreas Prlic, Jules Jacobsen
+ * @author Andreas Prlic
+ * @author Jules Jacobsen
  * @since 1.0
  */
 public class StructureTools {

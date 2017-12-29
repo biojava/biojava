@@ -56,7 +56,7 @@ public class SubunitClusterUtils {
 
 	/**
 	 * A pseudostoichiometric {@link SubunitCluster} was obtained using the
-	 * {@link SubunitClustererMethod#STRUCTURE} similarity.
+	 * {@link SubunitClustererMethod#STRUCTURE} or {@link SubunitClustererMethod#SEQUENCE} similarity.
 	 * 
 	 * @param clusters
 	 * @return true if any of the clusters is pseudostoichiometric, false
@@ -65,7 +65,8 @@ public class SubunitClusterUtils {
 	public static boolean isPseudoStoichiometric(List<SubunitCluster> clusters) {
 
 		for (SubunitCluster c : clusters) {
-			if (c.getClustererMethod() == SubunitClustererMethod.STRUCTURE)
+			if (c.getClustererMethod() == SubunitClustererMethod.STRUCTURE ||
+				c.getClustererMethod() == SubunitClustererMethod.SEQUENCE)
 				return true;
 		}
 		return false;

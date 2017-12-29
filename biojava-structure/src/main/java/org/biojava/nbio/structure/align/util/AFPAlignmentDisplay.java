@@ -338,6 +338,7 @@ public class AFPAlignmentDisplay
 		int     i;
 		int eqr = 0;
 
+		@SuppressWarnings("unused")
 		int count = 0;
 		for(i = 0; i < alnLength; i ++) {
 

@@ -20,7 +20,6 @@
 
 package org.biojava.nbio.structure;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -37,7 +36,7 @@ import java.util.Locale;
  * @author Amr AL-Hossary
  * @author Jules Jacobsen
  */
-public class Site implements PDBRecord, Serializable, Comparable<Site> {
+public class Site implements PDBRecord, Comparable<Site> {
 
 	private static final long serialVersionUID = -4577047072916341237L;
 	private static final String lineEnd = System.getProperty("line.separator");

@@ -31,6 +31,7 @@ import java.io.StringReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.GZIPInputStream;
 
 import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.ResidueNumber;
@@ -57,6 +58,25 @@ public class DSSPParser {
 
 	private static final Logger logger =
 			LoggerFactory.getLogger(DSSPParser.class);
+
+	/**
+	 * Parse a DSSP output file and return the secondary structure
+	 * annotation as a List of {@link SecStrucState} objects.
+	 *
+	 * @param dsspIs an InputStream to a DSSP file
+	 * @param structure Structure object associated to the dssp
+	 * @param assign assigns the SS to the structure if true
+	 * @return a List of SS annotation objects
+	 * @throws StructureException
+	 * @throws IOException
+	 */
+	public static List<SecStrucState> parseInputStream(InputStream dsspIs,
+			Structure structure, boolean assign)
+					throws IOException, StructureException {
+			
+		BufferedReader reader = new BufferedReader(new InputStreamReader(dsspIs));
+		return generalParse(reader, structure, assign);
+	}
 
 	/**
 	 * Parse a DSSP output file and return the secondary structure
@@ -95,8 +115,11 @@ public class DSSPParser {
 			Structure structure, boolean assign)
 					throws IOException, StructureException {
 
-		InputStream in = new URL("http://www.rcsb.org/pdb/files/"+
-				pdb+".dssp").openStream();
+		URL url = new URL("http://files.rcsb.org/dssp/" + 
+				pdb.toLowerCase().substring(1, 3) + "/" + 
+				pdb.toLowerCase() + "/" +
+				pdb.toLowerCase() + ".dssp.gz");
+		InputStream in = new GZIPInputStream(url.openStream());
 		Reader read = new InputStreamReader(in);
 		BufferedReader reader = new BufferedReader(read);
 		return generalParse(reader, structure, assign);

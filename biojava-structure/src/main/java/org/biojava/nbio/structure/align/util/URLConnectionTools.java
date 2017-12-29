@@ -45,7 +45,7 @@ import java.util.zip.GZIPInputStream;
 public class URLConnectionTools {
 
 	/** The default connection timeout in ms - 15 seconds*/
-	public static final int    DEFAULT_CONNECTION_TIMEOUT = 15000;
+	public static final int    DEFAULT_CONNECTION_TIMEOUT = 30000;
 
 	/**
 	 * Open HttpURLConnection. Recommended way to open URL connections in Java 1.7 and 1.8.

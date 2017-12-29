@@ -94,7 +94,7 @@ public class DemoQuatSymmetryJmol {
 		String title = name + ": " + results.getStoichiometry()
 				+ ", " + results.getSymmetry();
 
-		if (results.isPseudosymmetric())
+		if (results.isPseudoStoichiometric())
 			title += ", pseudosymmetric";
 
 		if (results.isLocal())

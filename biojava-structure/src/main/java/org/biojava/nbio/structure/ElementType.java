@@ -23,8 +23,6 @@
 
 package org.biojava.nbio.structure;
 
-import java.io.Serializable;
-
 /**
  * ElementType is an enumeration of the types of elements found in the periodic table.
  * Each element type is further classified into Metal, Metalloid, and Non-Metal.
@@ -36,7 +34,7 @@ import java.io.Serializable;
  * @since 3.0
  */
 
-public enum ElementType implements Serializable {
+public enum ElementType {
 
 	METALLOID(false),
 	OTHER_NONMETAL(false),

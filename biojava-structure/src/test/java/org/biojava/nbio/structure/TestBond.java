@@ -57,7 +57,7 @@ public class TestBond {
 	public void testStructConnModels() throws IOException, StructureException {
 		Structure s = StructureIO.getStructure("1cdr");
 		Group groupOne = s.getPolyChain("A",1).getGroupByPDB(new ResidueNumber("A", 18, ' '));
-		Group groupTwo = s.getPolyChain("B",1).getGroupByPDB(new ResidueNumber("A", 78, ' '));
+		Group groupTwo = s.getNonPolyChain("B",1).getGroupByPDB(new ResidueNumber("A", 78, ' '));
 		Atom atomOne = groupOne.getAtom("ND2");
 		Atom atomTwo = groupTwo.getAtom("C1");
 		assertTrue(areBonded(atomOne, atomTwo));
@@ -299,7 +299,7 @@ public class TestBond {
 	@Test
 	public void testDeuterated() throws IOException, StructureException {
 		// The terminal Hydrogen D3 - is missing (from the CCD)
-		assertEquals(testMissingBonds("1GKT"),1);
+		assertEquals(testMissingBonds("1GKT"),2);
 		assertEquals(testMissingBonds("1IO5"),2);
 		// All H/D2,H/D3 errors
 		assertEquals(testMissingBonds("5E5J"),13);

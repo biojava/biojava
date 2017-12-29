@@ -36,6 +36,8 @@ import org.slf4j.LoggerFactory;
  */
 public class SecStrucState extends SecStrucInfo {
 
+	private static final long serialVersionUID = -5549430890272724340L;
+
 	private static final Logger logger = LoggerFactory
 			.getLogger(SecStrucState.class);
 

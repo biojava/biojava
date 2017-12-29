@@ -26,6 +26,7 @@
 package org.biojava.nbio.core.sequence.template;
 
 import org.biojava.nbio.core.sequence.AccessionID;
+import org.biojava.nbio.core.util.Equals;
 
 import java.util.Iterator;
 import java.util.List;
@@ -69,6 +70,24 @@ public class SequenceProxyView<C extends Compound> implements SequenceView<C> {
 	@Override
 	public List<C> getAsList() {
 		return SequenceMixin.toList(this);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+
+		if(! Equals.classEqual(this, o)) {
+			return false;
+		}
+
+		Sequence<C> other = (Sequence<C>)o;
+
+		return sequence.equals(other);
+	}
+
+	@Override
+	public int hashCode(){
+		String s = getSequenceAsString();
+		return s.hashCode();
 	}
 
 	@Override

@@ -68,16 +68,22 @@ public class SubunitClusterer {
 		for (Subunit s : subunits)
 			clusters.add(new SubunitCluster(s));
 
-		// Now merge clusters by IDENTITY
+		// Now merge clusters by 95% IDENTITY
 		for (int c1 = 0; c1 < clusters.size(); c1++) {
 			for (int c2 = clusters.size() - 1; c2 > c1; c2--) {
-				if (clusters.get(c1).mergeIdentical(clusters.get(c2)))
-					clusters.remove(c2);
+				try {
+					if (clusters.get(c1).mergeIdentity95(clusters.get(c2)))
+						clusters.remove(c2);
+				} catch (CompoundNotFoundException e) {
+					logger.warn("Could not merge by Identity95. {}",
+							e.getMessage());
+				}
 			}
 		}
 
 		if (params.getClustererMethod() == SubunitClustererMethod.IDENTITY)
 			return clusters;
+		
 
 		// Now merge clusters by SEQUENCE similarity
 		for (int c1 = 0; c1 < clusters.size(); c1++) {

@@ -81,7 +81,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-
 /**
  * This class implements the actual PDB file parsing. Do not access it directly, but
  * via the PDBFileReader class.
@@ -673,20 +672,33 @@ public class PDBFileParser  {
 	 */
 	private void pdb_REVDAT_Handler(String line) {
 
-		// only keep the first...
+		// keep the first as latest modified date and the last as release date
 		Date modDate = pdbHeader.getModDate();
 
-		if ( modDate==null || modDate.equals(new Date(0)) ) {
-			// modDate is still uninitialized
+		if ( modDate == null || modDate.equals(new Date(0)) ) {
+			
+			// modified date is still uninitialized
 			String modificationDate = line.substring (13, 22).trim() ;
 
 			try {
 				Date dep = dateFormat.parse(modificationDate);
 				pdbHeader.setModDate(dep);
+				pdbHeader.setRelDate(dep);
 			} catch (ParseException e){
-				logger.info("Could not parse modification date string '"+modificationDate+"'. Will continue without modification date");
+				logger.info("Could not parse revision date string '"+modificationDate+"'. ");
 			}
 
+		} else {
+			
+			// set as the release date
+			String releaseDate = line.substring (13, 22).trim() ;
+
+			try {
+				Date dep = dateFormat.parse(releaseDate);
+				pdbHeader.setRelDate(dep);
+			} catch (ParseException e){
+				logger.info("Could not parse revision date string '"+releaseDate+"'. ");
+			}
 		}
 	}
 
@@ -3128,10 +3140,10 @@ public class PDBFileParser  {
 			for (Chain c:model) {
 
 				// we only have entities for polymeric chains, all others are ignored for assigning entities
-				if (StructureTools.isChainWaterOnly(c)) {
+				if (c.isWaterOnly()) {
 					waterChains.add(c);
 
-				} else if (StructureTools.isChainPureNonPolymer(c)) {
+				} else if (c.isPureNonPolymer()) {
 					nonPolyChains.add(c);
 
 				} else {

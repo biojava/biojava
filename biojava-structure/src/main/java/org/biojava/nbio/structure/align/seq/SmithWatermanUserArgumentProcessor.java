@@ -20,19 +20,19 @@
  */
 package org.biojava.nbio.structure.align.seq;
 
-
 import org.biojava.nbio.structure.align.StructureAlignment;
 import org.biojava.nbio.structure.align.ce.AbstractUserArgumentProcessor;
 import org.biojava.nbio.structure.align.ce.StartupParameters;
-
-
 
 public class SmithWatermanUserArgumentProcessor extends AbstractUserArgumentProcessor{
 
 
 	protected static class SmithWatermanStartupParams extends StartupParameters {
+		
 		private short gapOpen;
 		private short gapExtend;
+		private double maxRmsd;
+		private int minLen;
 
 		public SmithWatermanStartupParams() {
 			super();
@@ -54,12 +54,30 @@ public class SmithWatermanUserArgumentProcessor extends AbstractUserArgumentProc
 			this.gapExtend = gapExtend;
 		}
 
+		
+		public double getMaxRmsd() {
+			return maxRmsd;
+		}
+
+		public void setMaxRmsd(double maxRmsd) {
+			this.maxRmsd = maxRmsd;
+		}
+
+		public int getMinLen() {
+			return minLen;
+		}
+
+		public void setMinLen(int minLen) {
+			this.minLen = minLen;
+		}
+
 		@Override
 		public String toString() {
 			StringBuilder builder = new StringBuilder();
 			builder.append("SmithWatermanStartupParams [gapOpen=")
 			.append(gapOpen).append(", gapExtend=").append(gapExtend)
-			.append("]");
+			.append("]").append(", maxRmsd=").append(maxRmsd)
+			.append(", minLen=").append(minLen).append("]");
 			return builder.toString();
 		}
 	}
@@ -77,13 +95,15 @@ public class SmithWatermanUserArgumentProcessor extends AbstractUserArgumentProc
 		StructureAlignment alignment = getAlgorithm();
 
 		SmithWaterman3DParameters p = (SmithWaterman3DParameters) alignment.getParameters();
-		SmithWatermanStartupParams startup = (SmithWatermanStartupParams)params;
+		SmithWatermanStartupParams startup = (SmithWatermanStartupParams) params;
 
 		if ( p == null)
 			p = new SmithWaterman3DParameters();
 
 		p.setGapExtend(startup.getGapExtend());
 		p.setGapOpen(startup.getGapOpen());
+		p.setMaxRmsd(startup.getMaxRmsd());
+		p.setMinLen(startup.getMinLen());
 
 		return p;
 	}
@@ -100,7 +120,5 @@ public class SmithWatermanUserArgumentProcessor extends AbstractUserArgumentProc
 	protected StartupParameters getStartupParametersInstance() {
 		return new SmithWatermanStartupParams();
 	}
-
-
 
 }

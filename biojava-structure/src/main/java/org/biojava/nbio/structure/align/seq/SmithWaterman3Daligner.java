@@ -20,7 +20,6 @@
  */
 package org.biojava.nbio.structure.align.seq;
 
-
 import org.biojava.nbio.alignment.Alignments;
 import org.biojava.nbio.alignment.Alignments.PairwiseSequenceAlignerType;
 import org.biojava.nbio.alignment.SimpleGapPenalty;
@@ -41,6 +40,7 @@ import org.biojava.nbio.structure.align.ce.ConfigStrucAligParams;
 import org.biojava.nbio.structure.align.ce.UserArgumentProcessor;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.util.AFPAlignmentDisplay;
+import org.biojava.nbio.structure.align.util.AlignmentTools;
 import org.biojava.nbio.structure.align.util.ConfigurationException;
 import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.core.sequence.ProteinSequence;
@@ -50,10 +50,17 @@ import org.biojava.nbio.core.sequence.template.Compound;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
-/** provides a 3D superimposition based on the sequence alignment
- *
+/**
+ * Provides a 3D superimposition of two structures based on their sequence
+ * alignment.
+ * <p>
+ * This algorithm includes a final step to iteratively drop columns of the
+ * alignment until a maximum RMSD threshold of the superimposition, or the
+ * minimum alignment length theshold, are fulfilled, similar to what pymol align
+ * algorithm does.
+ * 
  * @author Andreas Prlic
+ * @author Aleix Lafita
  *
  */
 public class SmithWaterman3Daligner extends AbstractStructureAlignment implements StructureAlignment {
@@ -64,11 +71,11 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
 
 	/**
 	 *  version history:
-	 *  1.1 - Added more parameters to the command line, including -maxOptRMSD
+	 *  1.1 - Added a maxRMSD and minLen parameters
 	 *  1.0 - Initial version
 	 */
 	private static final String version = "1.1";
-	SmithWaterman3DParameters params;
+	private SmithWaterman3DParameters params;
 
 	public static void main(String[] args) throws ConfigurationException {
 		//args = new String[]{"-pdb1","1cdg.A","-pdb2","1tim.A","-pdbFilePath","/tmp/","-show3d","-printFatCat"};
@@ -101,44 +108,48 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
 		AFPChain afpChain = new AFPChain(algorithmName);
 
 
-			// covert input to sequences
-			String seq1 = StructureTools.convertAtomsToSeq(ca1);
-			String seq2 = StructureTools.convertAtomsToSeq(ca2);
+		// covert input to sequences
+		String seq1 = StructureTools.convertAtomsToSeq(ca1);
+		String seq2 = StructureTools.convertAtomsToSeq(ca2);
 
-			ProteinSequence s1 = null;
-			ProteinSequence s2 = null;
+		ProteinSequence s1 = null;
+		ProteinSequence s2 = null;
 
-			try {
-				s1 = new ProteinSequence(seq1);
-				s2 = new ProteinSequence(seq2);
-			} catch (CompoundNotFoundException e){
+		try {
+			s1 = new ProteinSequence(seq1);
+			s2 = new ProteinSequence(seq2);
+		} catch (CompoundNotFoundException e){
 
-				throw new StructureException(e.getMessage(),e);
-			}
+			throw new StructureException(e.getMessage(),e);
+		}
 
-			// default blosum62
-			SubstitutionMatrix<AminoAcidCompound> matrix = SubstitutionMatrixHelper.getBlosum65();
+		// default blosum62
+		SubstitutionMatrix<AminoAcidCompound> matrix = SubstitutionMatrixHelper.getBlosum65();
 
-			GapPenalty penalty = new SimpleGapPenalty();
+		GapPenalty penalty = new SimpleGapPenalty();
 
-			penalty.setOpenPenalty(params.getGapOpen());
-			penalty.setExtensionPenalty(params.getGapExtend());
+		penalty.setOpenPenalty(params.getGapOpen());
+		penalty.setExtensionPenalty(params.getGapExtend());
 
-			PairwiseSequenceAligner<ProteinSequence, AminoAcidCompound> smithWaterman =
-				Alignments.getPairwiseAligner(s1, s2, PairwiseSequenceAlignerType.LOCAL, penalty, matrix);
+		PairwiseSequenceAligner<ProteinSequence, AminoAcidCompound> smithWaterman =
+			Alignments.getPairwiseAligner(s1, s2, PairwiseSequenceAlignerType.LOCAL, penalty, matrix);
 
-			SequencePair<ProteinSequence, AminoAcidCompound> pair = smithWaterman.getPair();
+		SequencePair<ProteinSequence, AminoAcidCompound> pair = smithWaterman.getPair();
 
-			if (pair.getTarget().toString().isEmpty() || pair.getQuery().toString().isEmpty()) {
-				throw new StructureException("Empty alignment for sequences "+s1+" and "+s2);
-			}
+		if (pair.getTarget().toString().isEmpty() || pair.getQuery().toString().isEmpty()) {
+			throw new StructureException("Empty alignment for sequences "+s1+" and "+s2);
+		}
 
-			logger.debug("Smith-Waterman alignment is: "+pair.toString(100));
+		logger.debug("Smith-Waterman alignment is: "+pair.toString(100));
 
-			// convert to a 3D alignment...
-			afpChain = convert(ca1,ca2,pair, smithWaterman);
-
-
+		// convert to a 3D alignment...
+		afpChain = convert(ca1,ca2,pair, smithWaterman);
+		
+		// Perform an iterative dropping of the columns
+		while (afpChain.getOptLength() > params.getMinLen()
+				&& afpChain.getTotalRmsdOpt() > params.getMaxRmsd()) {
+			afpChain = AlignmentTools.deleteHighestDistanceColumn(afpChain, ca1, ca2);
+		}
 
 		return afpChain;
 	}
@@ -332,7 +343,5 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
 			throw new IllegalArgumentException("provided parameter object is not of type SmithWaterman3DParameters");
 		params = (SmithWaterman3DParameters)parameters;
 	}
-
-
 
 }

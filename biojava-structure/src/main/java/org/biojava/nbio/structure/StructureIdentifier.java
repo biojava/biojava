@@ -24,6 +24,7 @@
 package org.biojava.nbio.structure;
 
 import java.io.IOException;
+import java.io.Serializable;
 
 import org.biojava.nbio.structure.align.util.AtomCache;
 
@@ -42,7 +43,7 @@ import org.biojava.nbio.structure.align.util.AtomCache;
  * @author dmyersturnbull
  * @author Spencer Bliven
  */
-public interface StructureIdentifier {
+public interface StructureIdentifier extends Serializable {
 
 	/**
 	 * Get the String form of this identifier.

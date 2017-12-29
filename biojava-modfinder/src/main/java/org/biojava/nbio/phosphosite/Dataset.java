@@ -26,7 +26,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.URL;
-import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
@@ -49,19 +48,19 @@ public class Dataset {
 
 	private static final Logger logger = LoggerFactory.getLogger(Dataset.class);
 
-	public static final String ACETYLATION = "http://www.phosphosite.org/downloads/Acetylation_site_dataset.gz";
+	public static final String ACETYLATION = "https://www.phosphosite.org/downloads/Acetylation_site_dataset.gz";
 
-	public static final String DISEASE_ASSOC = "http://www.phosphosite.org/downloads/Disease-associated_sites.gz";
+	public static final String DISEASE_ASSOC = "https://www.phosphosite.org/downloads/Disease-associated_sites.gz";
 
-	public static final String METHYLATION = "http://www.phosphosite.org/downloads/Methylation_site_dataset.gz";
+	public static final String METHYLATION = "https://www.phosphosite.org/downloads/Methylation_site_dataset.gz";
 
-	public static final String PHOSPHORYLATION = "http://www.phosphosite.org/downloads/Phosphorylation_site_dataset.gz";
+	public static final String PHOSPHORYLATION = "https://www.phosphosite.org/downloads/Phosphorylation_site_dataset.gz";
 
-	public static final String REGULATORY = "http://www.phosphosite.org/downloads/Regulatory_sites.gz";
+	public static final String REGULATORY = "https://www.phosphosite.org/downloads/Regulatory_sites.gz";
 
-	public static final String SUMOYLATION = "http://www.phosphosite.org/downloads/Sumoylation_site_dataset.gz";
+	public static final String SUMOYLATION = "https://www.phosphosite.org/downloads/Sumoylation_site_dataset.gz";
 
-	public static final String UBIQUITINATION = "http://www.phosphosite.org/downloads/Ubiquitination_site_dataset.gz";
+	public static final String UBIQUITINATION = "https://www.phosphosite.org/downloads/Ubiquitination_site_dataset.gz";
 
 
 	public Dataset(){

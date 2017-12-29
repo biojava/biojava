@@ -145,6 +145,29 @@ public class SubunitCluster {
 
 	/**
 	 * Merges the other SubunitCluster into this one if their representatives
+	 * sequences are more than 0.95 identical on 0.95 of coverage.
+	 * <p>
+	 * The sequence alignment is performed using Smith Waterman, default linear
+	 * {@link SimpleGapPenalty} and BLOSUM62 as scoring matrix.
+	 * 
+	 * @param other
+	 *            SubunitCluster
+	 * @return true if the SubunitClusters were merged, false otherwise
+	 * @throws CompoundNotFoundException
+	 */
+	public boolean mergeIdentity95(SubunitCluster other) throws CompoundNotFoundException {
+		boolean merged = mergeSequence(other, 0.95, 0.95,
+				PairwiseSequenceAlignerType.LOCAL, new SimpleGapPenalty(),
+				SubstitutionMatrixHelper.getBlosum62());
+		
+		if (merged) {
+			this.method = SubunitClustererMethod.IDENTITY;
+		}
+		return merged;
+	}
+
+	/**
+	 * Merges the other SubunitCluster into this one if their representatives
 	 * sequences are similar (higher sequence identity and coverage than the
 	 * thresholds).
 	 * <p>

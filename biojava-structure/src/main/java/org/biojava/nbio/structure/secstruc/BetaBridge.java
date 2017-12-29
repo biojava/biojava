@@ -20,6 +20,8 @@
  */
 package org.biojava.nbio.structure.secstruc;
 
+import java.io.Serializable;
+
 /**
  * Container that represents a beta Bridge between two residues. It contains the
  * two partner indices and the type of the bridge. For consistency, partner1 is
@@ -28,8 +30,10 @@ package org.biojava.nbio.structure.secstruc;
  * @author Aleix Lafita
  *
  */
-public class BetaBridge {
+public class BetaBridge implements Serializable {
 
+	private static final long serialVersionUID = -5097435425455958487L;
+	
 	BridgeType type;
 	int partner1;
 	int partner2;

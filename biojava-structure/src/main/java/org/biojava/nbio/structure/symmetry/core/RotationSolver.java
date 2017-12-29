@@ -21,11 +21,12 @@
 
 package org.biojava.nbio.structure.symmetry.core;
 
-import org.biojava.nbio.structure.geometry.CalcPoint;
-import org.biojava.nbio.structure.geometry.MomentsOfInertia;
-import org.biojava.nbio.structure.geometry.UnitQuaternions;
-import org.biojava.nbio.structure.symmetry.geometry.DistanceBox;
-import org.biojava.nbio.structure.symmetry.geometry.SphereSampler;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Matrix4d;
@@ -33,10 +34,11 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Quat4d;
 import javax.vecmath.Vector3d;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import org.biojava.nbio.structure.geometry.CalcPoint;
+import org.biojava.nbio.structure.geometry.MomentsOfInertia;
+import org.biojava.nbio.structure.geometry.UnitQuaternions;
+import org.biojava.nbio.structure.symmetry.geometry.DistanceBox;
+import org.biojava.nbio.structure.symmetry.geometry.SphereSampler;
 
 
 /**
@@ -53,7 +55,8 @@ public class RotationSolver implements QuatSymmetrySolver {
 	private Matrix4d centroidInverse = new Matrix4d();
 	private Point3d[] originalCoords = null;
 	private Point3d[] transformedCoords = null;
-	private Set<List<Integer>> hashCodes = new HashSet<List<Integer>>();
+	// Cache whether a permutation is invalid (null) vs has been added to rotations
+	private Map<List<Integer>,Rotation> evaluatedPermutations = new HashMap<>();
 
 	private RotationGroup rotations = new RotationGroup();
 
@@ -98,9 +101,14 @@ public class RotationSolver implements QuatSymmetrySolver {
 
 		List<Double> angles = getAngles();
 
-		 for (int i = 0; i < sphereCount; i++) {
+		for (int i = 0; i < sphereCount; i++) {
+			// Sampled orientation
+			//TODO The SphereSampler samples 4D orientation space. We really
+			// only need to sample 3D unit vectors, since we use limited
+			// angles. -SB
 			SphereSampler.getAxisAngle(i, sphereAngle);
 
+			// Each valid rotation angle
 			for (double angle : angles) {
 				// apply rotation
 				sphereAngle.angle = angle;
@@ -116,14 +124,14 @@ public class RotationSolver implements QuatSymmetrySolver {
 				List<Integer> permutation = getPermutation();
 	//              System.out.println("Rotation Solver: permutation: " + i + ": " + permutation);
 
-				boolean isValidPermuation = isValidPermutation(permutation);
-				if (! isValidPermuation) {
-					continue;
+				// check if novel
+				if ( evaluatedPermutations.containsKey(permutation)) {
+					continue; //either invalid or already added
 				}
 
-				boolean newPermutation = evaluatePermutation(permutation);
-				if (newPermutation) {
-					completeRotationGroup();
+				Rotation newPermutation = isValidPermutation(permutation);
+				if (newPermutation != null) {
+					completeRotationGroup(newPermutation);
 				}
 
 				// check if all symmetry operations have been found.
@@ -134,33 +142,84 @@ public class RotationSolver implements QuatSymmetrySolver {
 		}
 	}
 
-	private void completeRotationGroup() {
+	/**
+	 * Combine current rotations to make all possible permutations.
+	 * If these are all valid, add them to the rotations
+	 * @param additionalRots Additional rotations we are considering adding to this.rotations
+	 * @return whether the rotations were valid and added
+	 */
+	private boolean completeRotationGroup(Rotation... additionalRots) {
 		PermutationGroup g = new PermutationGroup();
-		for (int i = 0; i < rotations.getOrder(); i++) {
-			Rotation s = rotations.getRotation(i);
+		for (Rotation s : rotations) {
 			g.addPermutation(s.getPermutation());
+		}
+		for( Rotation s : additionalRots) {
+			g.addPermutation(s.getPermutation());
+			// inputs should not have been added already
+			assert evaluatedPermutations.get(s.getPermutation()) == null;
 		}
 		g.completeGroup();
 
 		// the group is complete, nothing to do
-		if (g.getOrder() == rotations.getOrder()) {
-			return;
+		if (g.getOrder() == rotations.getOrder()+additionalRots.length) {
+			for( Rotation s : additionalRots) {
+				addRotation(s);
+			}
+			return true;
 		}
 
 		// try to complete the group
-		for (int i = 0; i < g.getOrder(); i++) {
-			List<Integer> permutation = g.getPermutation(i);
-
-			boolean isValidPermutation = isValidPermutation(permutation);
-			if (isValidPermutation) {
-
-					// perform permutation of subunits
-				evaluatePermutation(permutation);
+		List<Rotation> newRots = new ArrayList<>(g.getOrder());
+		// First, quick check for whether they're allowed
+		for (List<Integer> permutation : g) {
+			if( evaluatedPermutations.containsKey(permutation)) {
+				Rotation rot = evaluatedPermutations.get(permutation);
+				if( rot == null ) {
+					return false;
+				}
+			} else {
+				if( ! isAllowedPermutation(permutation)) {
+					return false;
+				}
 			}
 		}
+		// Slower check including the superpositions
+		for (List<Integer> permutation : g) {
+			Rotation rot;
+			if( evaluatedPermutations.containsKey(permutation)) {
+				rot = evaluatedPermutations.get(permutation);
+			} else {
+				rot = isValidPermutation(permutation);
+			}
+
+			if( rot == null ) {
+				// if any induced rotation is invalid, abort
+				return false;
+			}
+			if(!evaluatedPermutations.containsKey(permutation)){ //novel
+				newRots.add(rot);
+			}
+		}
+		// Add rotations
+		for( Rotation rot : newRots) {
+			addRotation(rot);
+		}
+		return true;
 	}
 
-	private boolean evaluatePermutation(List<Integer> permutation) {
+	private void addRotation(Rotation rot) {
+		evaluatedPermutations.put(rot.getPermutation(),rot);
+		rotations.addRotation(rot);
+	}
+
+	/**
+	 * Superimpose subunits based on the given permutation. Then check whether
+	 * the superposition passes RMSD thresholds and create a Rotation to
+	 * represent it if so.
+	 * @param permutation A list specifying which subunits should be aligned by the current transformation
+	 * @return A Rotation representing the permutation, or null if the superposition did not meet thresholds.
+	 */
+	private Rotation superimposePermutation(List<Integer> permutation) {
 		// permutate subunits
 		for (int j = 0, n = subunits.getSubunitCount(); j < n; j++) {
 			transformedCoords[j].set(originalCoords[permutation.get(j)]);
@@ -200,17 +259,20 @@ public class RotationSolver implements QuatSymmetrySolver {
 			// evaluate superposition of CA traces
 			QuatSymmetryScores scores = QuatSuperpositionScorer.calcScores(subunits, transformation, permutation);
 			if (scores.getRmsd() < 0.0 || scores.getRmsd() > parameters.getRmsdThreshold()) {
-				return false;
+				return null;
 			}
 
 			scores.setRmsdCenters(subunitRmsd);
 			Rotation symmetryOperation = createSymmetryOperation(permutation, transformation, axisAngle, fold, scores);
-			rotations.addRotation(symmetryOperation);
-			return true;
+			return symmetryOperation;
 		}
-		return false;
+		return null;
 	}
 
+	/**
+	 * Get valid rotation angles given the number of subunits
+	 * @return The rotation angle corresponding to each fold of {@link Subunits#getFolds()}
+	 */
 	private List<Double> getAngles() {
 		int n = subunits.getSubunitCount();
 		// for spherical symmetric cases, n cannot be higher than 60
@@ -234,44 +296,53 @@ public class RotationSolver implements QuatSymmetrySolver {
 		return m.getSymmetryClass(0.05) == MomentsOfInertia.SymmetryClass.SYMMETRIC;
 	}
 
-	private boolean isValidPermutation(List<Integer> permutation) {
-		 if (permutation.size() == 0) {
-			 return false;
-		 }
+	/**
+	 * Checks if a particular permutation is allowed and superimposes well.
+	 * Caches results.
+	 * @param permutation
+	 * @return null if invalid, or a rotation if valid
+	 */
+	private Rotation isValidPermutation(List<Integer> permutation) {
+		if (permutation.size() == 0) {
+			return null;
+		}
 
-		 // if this permutation is a duplicate, return false
-		if (hashCodes.contains(permutation)) {
-			return false;
+		// cached value
+		if (evaluatedPermutations.containsKey(permutation)) {
+			return evaluatedPermutations.get(permutation);
 		}
 
 		// check if permutation is allowed
 		if (! isAllowedPermutation(permutation)) {
-			return false;
+			evaluatedPermutations.put(permutation, null);
+			return null;
 		}
 
-		// get fold and make sure there is only one E (fold=1) permutation
-		int fold = PermutationGroup.getOrder(permutation);
-		if (rotations.getOrder() > 1 && fold == 1) {
-			return false;
-		}
-
-		if (fold == 0 || subunits.getSubunitCount() % fold != 0) {
-			return false;
-		}
-
-		// if this permutation is a duplicate, returns false
-		return hashCodes.add(permutation);
+		// check if superimposes
+		Rotation rot = superimposePermutation(permutation);
+		return rot;
 	}
 
+	/**
+	 * The permutation must map all subunits onto an equivalent subunit
+	 * and no subunit onto itself
+	 * @param permutation
+	 * @return
+	 */
 	private boolean isAllowedPermutation(List<Integer> permutation) {
 		List<Integer> seqClusterId = subunits.getClusterIds();
+		int selfaligned = 0;
 		for (int i = 0; i < permutation.size(); i++) {
 			int j = permutation.get(i);
-			if (seqClusterId.get(i) != seqClusterId.get(j)) {
+			if ( seqClusterId.get(i) != seqClusterId.get(j)) {
 				return false;
 			}
+			if(i == j ) {
+				selfaligned++;
+			}
 		}
-		return true;
+		// either identity (all self aligned) or all unique
+		return selfaligned == 0 || selfaligned == permutation.size();
 	}
 	/**
 	 * Adds translational component to rotation matrix
@@ -283,7 +354,7 @@ public class RotationSolver implements QuatSymmetrySolver {
 		rotation.mul(rotation, centroidInverse);
 	}
 
-	private Rotation createSymmetryOperation(List<Integer> permutation, Matrix4d transformation, AxisAngle4d axisAngle, int fold, QuatSymmetryScores scores) {
+	private static Rotation createSymmetryOperation(List<Integer> permutation, Matrix4d transformation, AxisAngle4d axisAngle, int fold, QuatSymmetryScores scores) {
 		Rotation s = new Rotation();
 		s.setPermutation(new ArrayList<Integer>(permutation));
 		s.setTransformation(new Matrix4d(transformation));
@@ -322,6 +393,11 @@ public class RotationSolver implements QuatSymmetrySolver {
 		return distanceThreshold;
 	}
 
+	/**
+	 * Compare this.transformedCoords with the original coords. For each
+	 * subunit, return the transformed subunit with the closest position.
+	 * @return A list mapping each subunit to the closest transformed subunit
+	 */
 	private List<Integer> getPermutation() {
 		List<Integer> permutation = new ArrayList<Integer>(transformedCoords.length);
 		double sum = 0.0f;

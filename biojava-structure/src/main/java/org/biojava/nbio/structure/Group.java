@@ -25,6 +25,7 @@ package org.biojava.nbio.structure;
 
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -51,7 +52,7 @@ import java.util.Map;
  * @version %I% %G%
  *
  */
-public interface Group {
+public interface Group extends Serializable {
 
 	/** Group property key for secondary structure annotation */
 	public static final String SEC_STRUC = "secstruc";
