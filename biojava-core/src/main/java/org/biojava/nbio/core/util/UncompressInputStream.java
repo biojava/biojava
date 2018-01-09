@@ -381,8 +381,7 @@ public class UncompressInputStream extends FilterInputStream {
 
 	@Override
 	public synchronized long skip(long num) throws IOException {
-		return Math.max(0, 
-			read(new byte[(int) num], 0, (int) num));
+		return Math.max(0, read(new byte[(int) num]);
 	}
 
 
