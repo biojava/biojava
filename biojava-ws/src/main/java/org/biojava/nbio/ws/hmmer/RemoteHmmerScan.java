@@ -43,7 +43,7 @@ public class RemoteHmmerScan implements HmmerScan {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(RemoteHmmerScan.class);
 	
-	public static final String HMMER_SERVICE = "http://www.ebi.ac.uk/Tools/hmmer/search/hmmscan";
+	public static final String HMMER_SERVICE = "https://www.ebi.ac.uk/Tools/hmmer/search/hmmscan";
 
 	public RemoteHmmerScan(){
 
