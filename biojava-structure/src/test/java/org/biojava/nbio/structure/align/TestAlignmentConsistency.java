@@ -1,6 +1,5 @@
 package org.biojava.nbio.structure.align;
 
-import junit.framework.TestCase;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.StructureException;
@@ -9,14 +8,17 @@ import org.biojava.nbio.structure.align.ce.CeMain;
 import org.biojava.nbio.structure.align.fatcat.FatCatRigid;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.util.AtomCache;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-public class TestAlignmentConsistency extends TestCase {
+public class TestAlignmentConsistency {
 
 	// Check that indices of the aligned residues are unique
+	@Test
 	public void testDuplicateIndices() throws IOException, StructureException {
 		String[] algorithmIDs = {CeMain.algorithmName, FatCatRigid.algorithmName};
 
