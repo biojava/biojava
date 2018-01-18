@@ -208,11 +208,13 @@ public class SimpleSequencePair<S extends Sequence<C>, C extends Compound>
 	}
 
 	@Override
-	public double getPercentageOfIdentity() {
+	public double getPercentageOfIdentity(boolean countGaps) {
 		double seqid = getNumIdenticals();
-		double length = getLength()
-				- getAlignedSequence(1).getNumGapPositions()
-				- getAlignedSequence(2).getNumGapPositions();
+		double length = getLength();
+		if (!countGaps) {
+			length = length - getAlignedSequence(1).getNumGapPositions()
+					- getAlignedSequence(2).getNumGapPositions();
+		}
 		return seqid / length;
 	}
 

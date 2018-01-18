@@ -79,12 +79,12 @@ public class TestSubunitClustererExamples {
 		assertEquals(clusters.get(0).length(), 141);
 		assertEquals(clusters.get(1).length(), 146);
 		assertEquals(clusters.get(0).getClustererMethod(),
-				SubunitClustererMethod.IDENTITY);
+				SubunitClustererMethod.SEQUENCE);
 		assertEquals(clusters.get(1).getClustererMethod(),
-				SubunitClustererMethod.IDENTITY);
+				SubunitClustererMethod.SEQUENCE);
 
 		params.setClustererMethod(SubunitClustererMethod.STRUCTURE);
-		params.setRmsdThreshold(3.0);
+		params.setRMSDThreshold(3.0);
 
 		clusters = SubunitClusterer.cluster(s, params);
 
@@ -105,7 +105,7 @@ public class TestSubunitClustererExamples {
 
 		SubunitClustererParameters params = new SubunitClustererParameters();
 		params.setClustererMethod(SubunitClustererMethod.SEQUENCE);
-		params.setCoverageThreshold(0.8);
+		params.setSequenceCoverageThreshold(0.8);
 
 		List<SubunitCluster> clusters = SubunitClusterer.cluster(s, params);
 
@@ -114,11 +114,12 @@ public class TestSubunitClustererExamples {
 		assertEquals(clusters.get(0).size(), 3);
 		assertEquals(clusters.get(0).length(), 351);
 		assertEquals(clusters.get(0).getClustererMethod(),
-				SubunitClustererMethod.IDENTITY);
+				SubunitClustererMethod.SEQUENCE);
 
 		params.setClustererMethod(SubunitClustererMethod.STRUCTURE);
+		params.setStructureCoverageThreshold(0.8);
 		params.setInternalSymmetry(true);
-		params.setRmsdThreshold(3.0);
+		params.setRMSDThreshold(3.0);
 
 		clusters = SubunitClusterer.cluster(s, params);
 

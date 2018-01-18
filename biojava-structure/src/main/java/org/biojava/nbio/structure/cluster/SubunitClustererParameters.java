@@ -20,6 +20,8 @@
  */
 package org.biojava.nbio.structure.cluster;
 
+import org.biojava.nbio.structure.align.ce.CeMain;
+
 import java.io.Serializable;
 
 /**
@@ -39,13 +41,62 @@ public class SubunitClustererParameters implements Serializable {
 	private int absoluteMinimumSequenceLength = 5;
 	private double minimumSequenceLengthFraction = 0.75;
 
-	private double sequenceIdentityThreshold = 0.95;
+	// "local" metrics are separately scoring
+	// SubunitClustererMethod.SEQUENCE: sequence identity of a local alignment (normalised by the number of
+	// aligned residues) and sequence coverage of the alignment
+	// SubunitClustererMethod.STRUCTURE: RMSD of the aligned substructures and structure coverage of the alignment
+	// require two respective thresholds for each method
+
+	// "global" metrics are scoring
+	// SubunitClustererMethod.SEQUENCE: sequence identity of a global alignment (normalised by the number of columns)
+	// SubunitClustererMethod.STRUCTURE: TMScore of the aligned structures (normalised by the larger structure)
+	// require one threshold for each method
+	private boolean useGlobalMetrics;
+	private double sequenceIdentityThreshold;
+	private double sequenceCoverageThreshold = 0.75;
+
 	private double rmsdThreshold = 3.0;
-	private double coverageThreshold = 0.75;
+	private double structureCoverageThreshold = 0.75;
+	private double tmThreshold = 0.5;
 
 	private SubunitClustererMethod clustererMethod = SubunitClustererMethod.STRUCTURE;
+
+	private String superpositionAlgorithm = CeMain.algorithmName;
+	private boolean optimizeAlignment = true;
+
+	private boolean useSequenceCoverage;
+	private boolean useRMSD;
+	private boolean useStructureCoverage;
+	private boolean useTMScore;
+
 	private boolean internalSymmetry = false;
 
+	// subunits aligned with these or better scores will be considered "identical"
+	private static final double hcSequenceIdentityLocal = 0.95;
+	private static final double hcSequenceCoverageLocal = 0.75;
+	private static final double hcSequenceIdentityGlobal = 0.85;
+
+	public SubunitClustererParameters() {
+		this(false); // initialize with local metrics by default
+	}
+
+	public SubunitClustererParameters(boolean iUseGlobalMetrics) {
+		useGlobalMetrics = iUseGlobalMetrics;
+
+		if (useGlobalMetrics) {
+			sequenceIdentityThreshold = hcSequenceIdentityGlobal;
+			useSequenceCoverage = false;
+			useRMSD = false;
+			useStructureCoverage = false;
+			useTMScore = true;
+		} else {
+			sequenceIdentityThreshold = hcSequenceIdentityLocal;
+			useSequenceCoverage = true;
+			useRMSD = true;
+			useStructureCoverage = true;
+			useTMScore = false;
+		}
+	}
 	/**
 	 * Get the minimum number of residues of a subunits to be considered in the
 	 * clusters.
@@ -154,12 +205,32 @@ public class SubunitClustererParameters implements Serializable {
 	}
 
 	/**
+	 * The minimum coverage of the sequence alignment between two subunits to be
+	 * clustered together.
+	 *
+	 * @return sequenceCoverageThreshold
+	 */
+	public double getSequenceCoverageThreshold() {
+		return sequenceCoverageThreshold;
+	}
+
+	/**
+	 * The minimum coverage of the sequence alignment between two subunits to be
+	 * clustered together.
+	 *
+	 * @param sequenceCoverageThreshold
+	 */
+	public void setSequenceCoverageThreshold(double sequenceCoverageThreshold) {
+		this.sequenceCoverageThreshold = sequenceCoverageThreshold;
+	}
+
+	/**
 	 * Structure similarity threshold (measured with RMSD) to consider for the
 	 * structural subunit clustering.
 	 * 
 	 * @return rmsdThreshold
 	 */
-	public double getRmsdThreshold() {
+	public double getRMSDThreshold() {
 		return rmsdThreshold;
 	}
 
@@ -169,34 +240,54 @@ public class SubunitClustererParameters implements Serializable {
 	 * 
 	 * @param rmsdThreshold
 	 */
-	public void setRmsdThreshold(double rmsdThreshold) {
+	public void setRMSDThreshold(double rmsdThreshold) {
 		this.rmsdThreshold = rmsdThreshold;
 	}
 
 	/**
-	 * The minimum coverage of the sequence alignment between two subunits to be
-	 * clustered together.
-	 * 
-	 * @return coverageThreshold
+	 * Structure similarity threshold (measured with TMScore) to consider for the
+	 * structural subunit clustering.
+	 *
+	 * @return tmThreshold
 	 */
-	public double getCoverageThreshold() {
-		return coverageThreshold;
+	public double getTMThreshold() {
+		return tmThreshold;
 	}
 
 	/**
-	 * The minimum coverage of the sequence alignment between two subunits to be
-	 * clustered together.
-	 * 
-	 * @param coverageThreshold
+	 * Structure similarity threshold (measured with TMScore) to consider for the
+	 * structural subunit clustering.
+	 *
+	 * @param tmThreshold
 	 */
-	public void setCoverageThreshold(double coverageThreshold) {
-		this.coverageThreshold = coverageThreshold;
+	public void setTMThreshold(double tmThreshold) {
+		this.tmThreshold = tmThreshold;
+	}
+
+	/**
+	 * The minimum coverage of the structure alignment between two subunits to be
+	 * clustered together.
+	 *
+	 * @return structureCoverageThreshold
+	 */
+	public double getStructureCoverageThreshold() {
+		return structureCoverageThreshold;
+	}
+
+	/**
+	 * The minimum coverage of the structure alignment between two subunits to be
+	 * clustered together.
+	 *
+	 * @param structureCoverageThreshold
+	 */
+	public void setStructureCoverageThreshold(double structureCoverageThreshold) {
+		this.structureCoverageThreshold = structureCoverageThreshold;
 	}
 
 	/**
 	 * Method to cluster subunits.
-	 * 
-	 * @return ChainClustererMethod
+	 *
+	 * @return clustererMethod
 	 */
 	public SubunitClustererMethod getClustererMethod() {
 		return clustererMethod;
@@ -205,7 +296,7 @@ public class SubunitClustererParameters implements Serializable {
 	/**
 	 * Method to cluster subunits.
 	 * 
-	 * @param SubunitClustererMethod
+	 * @param method
 	 */
 	public void setClustererMethod(SubunitClustererMethod method) {
 		this.clustererMethod = method;
@@ -247,8 +338,154 @@ public class SubunitClustererParameters implements Serializable {
 				+ minimumSequenceLengthFraction
 				+ ", sequenceIdentityThreshold=" + sequenceIdentityThreshold
 				+ ", rmsdThreshold=" + rmsdThreshold + ", coverageThreshold="
-				+ coverageThreshold + ", clustererMethod=" + clustererMethod
+				+ sequenceCoverageThreshold + ", clustererMethod=" + clustererMethod
 				+ ", internalSymmetry=" + internalSymmetry + "]";
 	}
+
+	/**
+	 * Method to superpose subunits (i.e., structural aligner).
+	 *
+	 * @return superpositionAlgorithm
+	 */
+	public String getSuperpositionAlgorithm() {
+		return superpositionAlgorithm;
+	}
+
+	/**
+	 * Method to cluster subunits.
+	 *
+	 * @param superpositionAlgorithm
+	 */
+	public void setSuperpositionAlgorithm(String superpositionAlgorithm) {
+		this.superpositionAlgorithm = superpositionAlgorithm;
+	}
+
+	/**
+	 * Whether the alignment algorithm should try its best to optimize the alignment,
+	 * or we are happy with a quick and dirty result. Effect depends on implementation
+	 * of the specific algorithm's method.	 *
+	 *
+	 * @return optimizeAlignment
+	 */
+	public boolean isOptimizeAlignment() {
+		return optimizeAlignment;
+	}
+
+	/**
+	 * Whether the alignment algorithm should try its best to optimize the alignment,
+	 * or we are happy with a quick and dirty result. Effect depends on implementation
+	 * of the specific algorithm's method.	 *
+	 *
+	 * @param optimizeAlignment
+	 */
+	public void setOptimizeAlignment(boolean optimizeAlignment) {
+		this.optimizeAlignment = optimizeAlignment;
+	}
+
+	/**
+	 * Use RMSD for evaluating structure similarity
+	 *
+	 * @return useRMSD
+	 */
+	public boolean isUseRMSD() { return useRMSD; }
+
+	/**
+	 * Use RMSD for evaluating structure similarity
+	 *
+	 * @param useRMSD
+	 */
+	public void setUseRMSD(boolean useRMSD) {
+		this.useRMSD = useRMSD;
+	}
+
+	/**
+	 * Use TMScore for evaluating structure similarity
+	 *
+	 * @return useTMScore
+	 */
+	public boolean isUseTMScore() {
+		return useTMScore;
+	}
+
+	/**
+	 * Use TMScore for evaluating structure similarity
+	 *
+	 * @param useTMScore
+	 */
+	public void setUseTMScore(boolean useTMScore) {
+		this.useTMScore = useTMScore;
+	}
+
+	/**
+	 * Use sequence coverage for evaluating sequence similarity
+	 *
+	 * @return useSequenceCoverage
+	 */
+	public boolean isUseSequenceCoverage() {
+		return useSequenceCoverage;
+	}
+
+	/**
+	 * Use sequence coverage for evaluating sequence similarity
+	 *
+	 * @param useSequenceCoverage
+	 */
+	public void setUseSequenceCoverage(boolean useSequenceCoverage) {
+		this.useSequenceCoverage = useSequenceCoverage;
+	}
+
+	/**
+	 * Use structure coverage for evaluating sequence similarity
+	 *
+	 * @return useStructureCoverage
+	 */
+	public boolean isUseStructureCoverage() {
+		return useStructureCoverage;
+	}
+
+	/**
+	 * Use structure coverage for evaluating sequence similarity
+	 *
+	 * @param useStructureCoverage
+	 */
+	public void setUseStructureCoverage(boolean useStructureCoverage) {
+		this.useStructureCoverage = useStructureCoverage;
+	}
+
+	/**
+	 * Use metrics calculated relative to the whole sequence or structure,
+	 * rather than the aligned part only
+	 *
+	 * @return useGlobalMetrics
+	 */
+	public boolean isUseGlobalMetrics() {
+		return useGlobalMetrics;
+	}
+
+	/**
+	 * Use metrics calculated relative to the whole sequence or structure,
+	 * rather than the aligned part only
+	 *
+	 * @param useGlobalMetrics
+	 */
+	public void setUseGlobalMetrics(boolean useGlobalMetrics) {
+		this.useGlobalMetrics = useGlobalMetrics;
+	}
+
+	/**
+	 * Whether the subunits can be considered "identical" by sequence alignment
+	 *
+	 * @param sequenceIdentity
+	 * @param sequenceCoverage
+	 * @return true if the sequence alignment scores are equal to
+	 * or better than the predefined "high confidence" scores, false otherwise.
+	 */
+	public boolean isHighConfidenceScores(double sequenceIdentity, double sequenceCoverage) {
+		if (useGlobalMetrics)
+			return sequenceIdentity>=hcSequenceIdentityGlobal;
+		else
+			return sequenceIdentity>=hcSequenceIdentityLocal && sequenceCoverage >= hcSequenceCoverageLocal;
+	}
+
 
 }

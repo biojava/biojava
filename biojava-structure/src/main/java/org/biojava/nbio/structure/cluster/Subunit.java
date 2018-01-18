@@ -56,7 +56,7 @@ public class Subunit {
 	 * and/or a name and stores a reference to the Structure from which the
 	 * Atoms were obtained.
 	 * 
-	 * @param repAtoms
+	 * @param reprAtoms
 	 *            representative Atoms. It cannot be null or empty
 	 * @param name
 	 *            String field that identifies the Subunit. It can be null

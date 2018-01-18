@@ -83,10 +83,9 @@ public class QsAlign {
 					continue;
 
 				// Use structural alignment to match the subunit clusters
-				if (c1.get(i).mergeStructure(c2.get(j),
-						cParams.getRmsdThreshold(),
-						cParams.getCoverageThreshold(), aParams.getAligner()))
+				if (c1.get(i).mergeStructure(c2.get(j),cParams)) {
 					clusterMap.put(i, j);
+				}
 			}
 		}
 

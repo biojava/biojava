@@ -11,13 +11,6 @@ package org.biojava.nbio.structure.cluster;
 public enum SubunitClustererMethod {
 
 	/**
-	 * The IDENTITY clustering method uses the residue sequence of the
-	 * {@link Subunit}. Two {@link Subunit} with exactly the same sequence will
-	 * be clustered together.
-	 */
-	IDENTITY,
-
-	/**
 	 * The SEQUENCE clustering method uses the residue sequence of the
 	 * {@link Subunit} to calculate sequence alignments.
 	 * <p>
@@ -37,6 +30,7 @@ public enum SubunitClustererMethod {
 	 * sequence and structure clustering differ, the cluster contains
 	 * pseudosymmetry (by definition).
 	 */
-	STRUCTURE;
+	STRUCTURE
 
 }
+

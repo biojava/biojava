@@ -71,6 +71,13 @@ public class CeParameters implements ConfigStrucAligParams  {
 	protected boolean showAFPRanges;
 	protected int  sideChainScoringType;
 
+	// whether to perform final optimisation of the alignment (slow),
+	// which "attempts  to  increase the  alignment  length
+	// found  previously  while  keeping  the r.m.s.d.  at
+	// about  the  same  level" (Shindyalov and Bourne, 1998)
+	// may not be needed for some applications
+	private boolean optimizeAlignment;
+
 	protected static final double DEFAULT_GAP_OPEN = 5.0;
 	protected static final double DEFAULT_GAP_EXTENSION = 0.5;
 	protected static final double DISTANCE_INCREMENT = 0.5;
@@ -105,7 +112,6 @@ public class CeParameters implements ConfigStrucAligParams  {
 	}
 
 
-
 	@Override
 	public void reset(){
 		winSize = 8;
@@ -123,6 +129,7 @@ public class CeParameters implements ConfigStrucAligParams  {
 
 		maxNrIterationsForOptimization = Integer.MAX_VALUE;
 		seqWeight = 0;
+		optimizeAlignment = true;
 	}
 
 	/** The window size to look at
@@ -418,6 +425,12 @@ public class CeParameters implements ConfigStrucAligParams  {
 	}
 
 
+	public boolean isOptimizeAlignment() {
+		return optimizeAlignment;
+	}
 
+	public void setOptimizeAlignment(boolean optimizeAlignment) {
+		this.optimizeAlignment = optimizeAlignment;
+	}
 
 }

@@ -753,8 +753,8 @@ public class SymmetryTools {
 		// The clustering thresholds are set to 0 so that all always merged
 		SubunitClustererParameters cp = new SubunitClustererParameters();
 		cp.setClustererMethod(SubunitClustererMethod.STRUCTURE);
-		cp.setRmsdThreshold(10.0);
-		cp.setCoverageThreshold(0.0);
+		cp.setRMSDThreshold(10.0);
+		cp.setStructureCoverageThreshold(0.0);
 		cp.setSequenceIdentityThreshold(1.1); // avoid using sequence cluster
 
 		QuatSymmetryParameters sp = new QuatSymmetryParameters();

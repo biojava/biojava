@@ -60,7 +60,7 @@ public class FatCatParameters implements ConfigStrucAligParams
 	double resScore;
 	double fragScore;
 	int sparse;
-
+	boolean optimizeAlignment; //whether to do post-processing to improve the alignment
 	public FatCatParameters(){
 		reset();
 	}
@@ -91,6 +91,7 @@ public class FatCatParameters implements ConfigStrucAligParams
 		resScore = 3.0; //on average, the score for each well-matched residue pair
 		fragScore = resScore * fragLen; //the score for each well-matched fragment
 		sparse = 0;
+		optimizeAlignment = true; //No effect at the moment
 	}
 
 
@@ -455,4 +456,11 @@ public class FatCatParameters implements ConfigStrucAligParams
 
 	}
 
+	public boolean isOptimizeAlignment() {
+		return optimizeAlignment;
+	}
+
+	public void setOptimizeAlignment(boolean optimizeAlignment) {
+		this.optimizeAlignment = optimizeAlignment;
+	}
 }
