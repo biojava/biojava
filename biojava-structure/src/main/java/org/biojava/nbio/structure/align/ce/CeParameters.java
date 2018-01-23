@@ -71,11 +71,11 @@ public class CeParameters implements ConfigStrucAligParams  {
 	protected boolean showAFPRanges;
 	protected int  sideChainScoringType;
 
-	// whether to perform final optimisation of the alignment (slow),
-	// which "attempts  to  increase the  alignment  length
-	// found  previously  while  keeping  the r.m.s.d.  at
-	// about  the  same  level" (Shindyalov and Bourne, 1998)
-	// may not be needed for some applications
+	/**
+	 * Whether the CE algorithm should extend the best found trace with dynamic programming,
+	 * while keeping RMSD at about the same level. (Shindyalov and Bourne, 1998)
+	 * This is useful for edge cases with remote homology, but can be slow for large structures.
+	 */
 	private boolean optimizeAlignment;
 
 	protected static final double DEFAULT_GAP_OPEN = 5.0;
@@ -425,10 +425,24 @@ public class CeParameters implements ConfigStrucAligParams  {
 	}
 
 
+	/**
+	 * Whether the CE algorithm should extend the best found trace with dynamic programming,
+	 * while keeping RMSD at about the same level. This is useful for edge cases with remote homology,
+	 * but can be slow for large structures.
+	 *
+	 * @return optimizeAlignment
+	 */
 	public boolean isOptimizeAlignment() {
 		return optimizeAlignment;
 	}
 
+	/**
+	 * Whether the CE algorithm should extend the best found trace with dynamic programming,
+	 * while keeping RMSD at about the same level. This is useful for edge cases with remote homology,
+	 * but can be slow for large structures.
+	 *
+	 * @param optimizeAlignment
+	 */
 	public void setOptimizeAlignment(boolean optimizeAlignment) {
 		this.optimizeAlignment = optimizeAlignment;
 	}

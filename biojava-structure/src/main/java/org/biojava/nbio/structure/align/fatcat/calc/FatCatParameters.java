@@ -456,10 +456,24 @@ public class FatCatParameters implements ConfigStrucAligParams
 
 	}
 
+	/**
+	 * Whether the alignment algorithm should try its best to optimize the alignment,
+	 * or we are happy with a quick and dirty result.
+	 * NB: Not implemented in jFatCat
+	 *
+	 * @return optimizeAlignment
+	 */
 	public boolean isOptimizeAlignment() {
 		return optimizeAlignment;
 	}
 
+	/**
+	 * Whether the alignment algorithm should try its best to optimize the alignment,
+	 * or we are happy with a quick and dirty result.
+	 * NB: Not implemented in jFatCat
+	 *
+	 * @param optimizeAlignment
+	 */
 	public void setOptimizeAlignment(boolean optimizeAlignment) {
 		this.optimizeAlignment = optimizeAlignment;
 	}

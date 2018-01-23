@@ -1282,8 +1282,7 @@ public class Calc {
 	 * @return The TM-Score
 	 * @throws StructureException
 	 */
-	public static double getTMScore(Atom[] atomSet1, Atom[] atomSet2,
-											 int len1, int len2) throws StructureException {
+	public static double getTMScore(Atom[] atomSet1, Atom[] atomSet2, int len1, int len2) throws StructureException {
 		return getTMScore(atomSet1, atomSet2, len1, len2,true);
 	}
 

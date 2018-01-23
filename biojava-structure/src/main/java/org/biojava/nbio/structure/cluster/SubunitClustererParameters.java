@@ -41,16 +41,6 @@ public class SubunitClustererParameters implements Serializable {
 	private int absoluteMinimumSequenceLength = 5;
 	private double minimumSequenceLengthFraction = 0.75;
 
-	// "local" metrics are separately scoring
-	// SubunitClustererMethod.SEQUENCE: sequence identity of a local alignment (normalised by the number of
-	// aligned residues) and sequence coverage of the alignment
-	// SubunitClustererMethod.STRUCTURE: RMSD of the aligned substructures and structure coverage of the alignment
-	// require two respective thresholds for each method
-
-	// "global" metrics are scoring
-	// SubunitClustererMethod.SEQUENCE: sequence identity of a global alignment (normalised by the number of columns)
-	// SubunitClustererMethod.STRUCTURE: TMScore of the aligned structures (normalised by the larger structure)
-	// require one threshold for each method
 	private boolean useGlobalMetrics;
 	private double sequenceIdentityThreshold;
 	private double sequenceCoverageThreshold = 0.75;
@@ -71,17 +61,34 @@ public class SubunitClustererParameters implements Serializable {
 
 	private boolean internalSymmetry = false;
 
-	// subunits aligned with these or better scores will be considered "identical"
+	/**
+	 * Subunits aligned with these or better scores will be considered "identical".
+	 */
 	private static final double hcSequenceIdentityLocal = 0.95;
 	private static final double hcSequenceCoverageLocal = 0.75;
 	private static final double hcSequenceIdentityGlobal = 0.85;
 
-	public SubunitClustererParameters() {
-		this(false); // initialize with local metrics by default
-	}
-
-	public SubunitClustererParameters(boolean iUseGlobalMetrics) {
-		useGlobalMetrics = iUseGlobalMetrics;
+	/**
+	 * "Local" metrics are scoring
+	 * SubunitClustererMethod.SEQUENCE: sequence identity of a local alignment
+	 *                                  (normalised by the number of aligned residues)
+	 *                                  sequence coverage of the alignment
+	 *                                  (normalised by the length of the longer sequence)
+	 * SubunitClustererMethod.STRUCTURE: RMSD of the aligned substructures
+	 *                                   and structure coverage of the alignment
+	 *                                   (normalised by the length of the larger structure)
+	 * Two thresholds for each method are required.
+	 *
+	 * "Global" metrics are scoring
+	 * SubunitClustererMethod.SEQUENCE: sequence identity of a global alignment
+	 *                                  (normalised by the length of the alignment)
+	 * SubunitClustererMethod.STRUCTURE: TMScore of the aligned structures
+	 *                                  (normalised by the length of the larger structure)
+	 * One threshold for each method is required.
+	 *
+	 */
+	public SubunitClustererParameters(boolean useGlobalMetrics) {
+		this.useGlobalMetrics = useGlobalMetrics;
 
 		if (useGlobalMetrics) {
 			sequenceIdentityThreshold = hcSequenceIdentityGlobal;
@@ -97,6 +104,14 @@ public class SubunitClustererParameters implements Serializable {
 			useTMScore = false;
 		}
 	}
+
+	/**
+	 * Initialize with "local" metrics by default.
+	 */
+	public SubunitClustererParameters() {
+		this(false);
+	}
+
 	/**
 	 * Get the minimum number of residues of a subunits to be considered in the
 	 * clusters.
@@ -473,12 +488,16 @@ public class SubunitClustererParameters implements Serializable {
 	}
 
 	/**
-	 * Whether the subunits can be considered "identical" by sequence alignment
+	 * Whether the subunits can be considered "identical" by sequence alignment.
+	 * For local sequence alignment (normalized by the number of aligned pairs)
+	 * this means 0.95 or higher identity and 0.75 or higher coverage.
+	 * For global sequence alignment (normalised by the alignment length)
+	 * this means 0.85 or higher sequence identity.
 	 *
 	 * @param sequenceIdentity
 	 * @param sequenceCoverage
 	 * @return true if the sequence alignment scores are equal to
-	 * or better than the predefined "high confidence" scores, false otherwise.
+	 * or better than the "high confidence" scores, false otherwise.
 	 */
 	public boolean isHighConfidenceScores(double sequenceIdentity, double sequenceCoverage) {
 		if (useGlobalMetrics)
