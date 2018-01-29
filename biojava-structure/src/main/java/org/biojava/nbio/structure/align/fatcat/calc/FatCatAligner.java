@@ -35,6 +35,7 @@ import org.biojava.nbio.structure.align.fatcat.FatCat;
 import org.biojava.nbio.structure.align.model.AFP;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.util.AFPAlignmentDisplay;
+import org.biojava.nbio.structure.align.util.AFPChainScorer;
 
 import java.util.List;
 
@@ -190,6 +191,8 @@ public class FatCatAligner
 		afpChain.setProbability(probability);
 		double normAlignScore = sig.calNS(params,afpChain);
 		afpChain.setNormAlignScore(normAlignScore);
+		double tmScore = AFPChainScorer.getTMScore(afpChain, ca1, ca2,false);
+		afpChain.setTMScore(tmScore);
 
 		/*
 

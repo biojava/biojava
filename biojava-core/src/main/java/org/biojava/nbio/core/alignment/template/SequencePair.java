@@ -99,12 +99,14 @@ public interface SequencePair<S extends Sequence<C>, C extends Compound> extends
 	
 	/**
 	 * Returns the percentage of identity between the two sequences in the alignment as a fraction between 0 and 1.
-	 * This is equivalent to {@link #getNumIdenticals()} / {@link #getLength()}. Gap positions are exluded 
-	 * from the calculation.
 	 *
+	 * @param countGaps
+	 * 		If true, gap positions are counted as mismatches, i.e., the percentage is normalized by the alignment length.
+	 * 		If false, gap positions are not counted, i.e. the percentage is normalized by the number of aligned residue pairs.
+	 *      See May (2004). "Percent sequence identity: the need to be explicit."
 	 * @return the percentage of sequence identity as a fraction in [0,1]
 	 */
-	double getPercentageOfIdentity();
+	double getPercentageOfIdentity(boolean countGaps);
 
 	/**
 	 * Returns the number of indices for which both the query and target sequences have a similar {@link Compound}.

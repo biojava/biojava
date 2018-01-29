@@ -72,7 +72,7 @@ public class DemoQuatSymmetryJmol {
 		SubunitClustererParameters cp = new SubunitClustererParameters();
 		cp.setClustererMethod(SubunitClustererMethod.SEQUENCE); // normal
 		// cp.setClustererMethod(SubunitClustererMethod.STRUCTURE); // pseudo
-		cp.setCoverageThreshold(0.9);
+		cp.setSequenceCoverageThreshold(0.9);
 
 		// Calculate and display the global symmetry
 		QuatSymmetryResults globalSymmetry = QuatSymmetryDetector

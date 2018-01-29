@@ -68,31 +68,14 @@ public class SubunitClusterer {
 		for (Subunit s : subunits)
 			clusters.add(new SubunitCluster(s));
 
-		// Now merge clusters by 95% IDENTITY
+		// Now merge clusters by SEQUENCE
 		for (int c1 = 0; c1 < clusters.size(); c1++) {
 			for (int c2 = clusters.size() - 1; c2 > c1; c2--) {
 				try {
-					if (clusters.get(c1).mergeIdentity95(clusters.get(c2)))
+					if (clusters.get(c1).mergeSequence(clusters.get(c2),params)) {
 						clusters.remove(c2);
-				} catch (CompoundNotFoundException e) {
-					logger.warn("Could not merge by Identity95. {}",
-							e.getMessage());
-				}
-			}
-		}
+					}
 
-		if (params.getClustererMethod() == SubunitClustererMethod.IDENTITY)
-			return clusters;
-		
-
-		// Now merge clusters by SEQUENCE similarity
-		for (int c1 = 0; c1 < clusters.size(); c1++) {
-			for (int c2 = clusters.size() - 1; c2 > c1; c2--) {
-				try {
-					if (clusters.get(c1).mergeSequence(clusters.get(c2),
-							params.getSequenceIdentityThreshold(),
-							params.getCoverageThreshold()))
-						clusters.remove(c2);
 				} catch (CompoundNotFoundException e) {
 					logger.warn("Could not merge by Sequence. {}",
 							e.getMessage());
@@ -103,17 +86,15 @@ public class SubunitClusterer {
 		if (params.getClustererMethod() == SubunitClustererMethod.SEQUENCE)
 			return clusters;
 
-		// Now merge clusters by STRUCTURAL similarity
+		// Now merge clusters by STRUCTURE
 		for (int c1 = 0; c1 < clusters.size(); c1++) {
 			for (int c2 = clusters.size() - 1; c2 > c1; c2--) {
 				try {
-					if (clusters.get(c1).mergeStructure(clusters.get(c2),
-							params.getRmsdThreshold(),
-							params.getCoverageThreshold()))
+					if (clusters.get(c1).mergeStructure(clusters.get(c2),params)) {
 						clusters.remove(c2);
+					}
 				} catch (StructureException e) {
-					logger.warn("Could not merge by Structure. {}",
-							e.getMessage());
+					logger.warn("Could not merge by Structure. {}", e.getMessage());
 				}
 			}
 		}
@@ -124,9 +105,7 @@ public class SubunitClusterer {
 		// Now divide clusters by their INTERNAL SYMMETRY
 		for (int c = 0; c < clusters.size(); c++) {
 			try {
-				clusters.get(c).divideInternally(params.getCoverageThreshold(),
-						params.getRmsdThreshold(),
-						params.getMinimumSequenceLength());
+				clusters.get(c).divideInternally(params);
 			} catch (StructureException e) {
 				logger.warn("Error analyzing internal symmetry. {}",
 						e.getMessage());
@@ -138,9 +117,7 @@ public class SubunitClusterer {
 		for (int c1 = 0; c1 < clusters.size(); c1++) {
 			for (int c2 = clusters.size() - 1; c2 > c1; c2--) {
 				try {
-					if (clusters.get(c1).mergeStructure(clusters.get(c2),
-							params.getRmsdThreshold(),
-							params.getCoverageThreshold()))
+					if (clusters.get(c1).mergeStructure(clusters.get(c2),params))
 						clusters.remove(c2);
 				} catch (StructureException e) {
 					logger.warn("Could not merge by Structure. {}",

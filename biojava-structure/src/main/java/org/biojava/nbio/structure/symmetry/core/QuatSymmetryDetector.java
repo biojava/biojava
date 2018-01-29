@@ -198,7 +198,7 @@ public class QuatSymmetryDetector {
 
 		// Calculate the power Set of the clusters
 		Set<Set<SubunitCluster>> powerSet = new PowerSet<SubunitCluster>()
-				.powerSet(new HashSet<SubunitCluster>(clusters));
+				.powerSet(new LinkedHashSet<SubunitCluster>(clusters));
 
 		int combinations = 1;
 		for (Set<SubunitCluster> cluster : powerSet) {

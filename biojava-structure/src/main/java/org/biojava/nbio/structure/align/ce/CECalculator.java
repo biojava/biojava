@@ -34,6 +34,7 @@ import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.model.AFP;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.util.AFPAlignmentDisplay;
+import org.biojava.nbio.structure.align.util.AFPChainScorer;
 import org.biojava.nbio.structure.geometry.Matrices;
 import org.biojava.nbio.structure.geometry.SuperPositions;
 import org.biojava.nbio.structure.jama.Matrix;
@@ -921,6 +922,8 @@ nBestTrace=nTrace;
 
 		convertAfpChain(afpChain, ca1, ca2);
 		AFPAlignmentDisplay.getAlign(afpChain, ca1, ca2);
+		double tmScore = AFPChainScorer.getTMScore(afpChain, ca1, ca2,false);
+		afpChain.setTMScore(tmScore);
 	}
 
 
@@ -1155,11 +1158,8 @@ nBestTrace=nTrace;
 
 		afpChain.setAfpSet(afpSet);
 
-
-
-
 		//System.out.println("z:"+z + " zThr" + zThr+ " bestTraceScore " + bestTraceScore + " " + nGaps );
-		if(z>=zThr) {
+		if(params.isOptimizeAlignment() && z>=zThr) {
 			nGaps = optimizeSuperposition(afpChain,nse1, nse2, strLen, rmsd, ca1, ca2,nGaps,strBuf1,strBuf2);
 			//	      if(isPrint) {
 			//		/*
@@ -1183,6 +1183,7 @@ nBestTrace=nTrace;
 					align_se2[lcmp+l]=bestTrace2[k]+l;
 				}
 				lali_x_+=bestTraceLen[k];
+				lcmp+=bestTraceLen[k];
 				if(k<nBestTrace-1) {
 					if(bestTrace1[k]+bestTraceLen[k]!=bestTrace1[k+1])
 						for(int l=bestTrace1[k]+bestTraceLen[k]; l<bestTrace1[k+1]; l++) {
@@ -1199,6 +1200,7 @@ nBestTrace=nTrace;
 				}
 			}
 			nAtom=lali_x_;
+			afpChain.setTotalRmsdOpt(afpChain.getTotalRmsdIni());
 		}
 
 		timeEnd = System.currentTimeMillis();

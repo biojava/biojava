@@ -1,8 +1,5 @@
 package org.biojava.nbio.structure.align.quaternary;
 
-import org.biojava.nbio.structure.align.StructureAlignment;
-import org.biojava.nbio.structure.align.ce.CeMain;
-
 /**
  * The parameter bean for the {@link QsAlign} algorithm.
  * 
@@ -15,8 +12,6 @@ public class QsAlignParameters {
 	private double dCutoff = 10.0;
 	private double maxRmsd = 10.0;
 	private double maxOrientationAngle = Math.PI / 6; // 30 degree
-
-	private StructureAlignment aligner = new CeMain();
 
 	/**
 	 * The maximum allowed distance between the centroids of two equivalent
@@ -75,26 +70,6 @@ public class QsAlignParameters {
 	 */
 	public void setMaxOrientationAngle(double maxOrientationAngle) {
 		this.maxOrientationAngle = maxOrientationAngle;
-	}
-
-	/**
-	 * The structural alignment algorithm used to compare the clusters of
-	 * Subunits.
-	 * 
-	 * @return aligner
-	 */
-	public StructureAlignment getAligner() {
-		return aligner;
-	}
-
-	/**
-	 * The structural alignment algorithm used to compare the clusters of
-	 * Subunits.
-	 * 
-	 * @param aligner
-	 */
-	public void setAligner(StructureAlignment aligner) {
-		this.aligner = aligner;
 	}
 
 }
