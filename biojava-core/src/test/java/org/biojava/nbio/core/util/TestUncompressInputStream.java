@@ -17,7 +17,7 @@ public class TestUncompressInputStream {
 	 * </code>
 	 * The original compress_test.txt contains text {@value #TEXT_IN_FILE} 
 	 */
-	private static final String TEST_FILE = "org/biojava/nbio/core/util/compress_test.txt.lzc";
+	private static final String TEST_FILE = "org/biojava/nbio/core/util/compress_test.txt.Z";
 	private static final String TEXT_IN_FILE = "Test of biojava uncompress.\n";
 	
 	private static final String BIGGER_TEST_FILE = "org/biojava/nbio/core/util/build-copy.xml.Z";
@@ -37,16 +37,16 @@ public class TestUncompressInputStream {
 		baos = new ByteArrayOutputStream();
 		UncompressInputStream.uncompress(is, baos);
 
-                ByteArrayOutputStream obaos = new ByteArrayOutputStream();
-                try (BufferedInputStream oin = new BufferedInputStream(
-                            this.getClass().getClassLoader()
-                                .getResourceAsStream(ORIG_OF_BIGGER_TEST_FILE));) {
-                    byte[] buf = new byte[100000];
-                    int len;
-                    while ((len = oin.read(buf)) >= 0)
-                        obaos.write(buf, 0, len);
-                }
-                
-                Assert.assertArrayEquals(baos.toByteArray(), obaos.toByteArray());
+		ByteArrayOutputStream obaos = new ByteArrayOutputStream();
+		try (BufferedInputStream oin = new BufferedInputStream(
+				this.getClass().getClassLoader()
+				.getResourceAsStream(ORIG_OF_BIGGER_TEST_FILE));) {
+			byte[] buf = new byte[100000];
+			int len;
+			while ((len = oin.read(buf)) >= 0)
+				obaos.write(buf, 0, len);
+		}
+
+		Assert.assertArrayEquals(baos.toByteArray(), obaos.toByteArray());
 	}
 }
