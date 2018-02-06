@@ -82,9 +82,9 @@ public class SubunitClusterer {
 				}
 			}
 		}
-
-		if (params.getClustererMethod() == SubunitClustererMethod.SEQUENCE)
-			return clusters;
+		if (params.getClustererMethod() == SubunitClustererMethod.SEQUENCE) {
+			return SubunitClusterUtils.orderByStoichiometry(clusters);
+		}
 
 		// Now merge clusters by STRUCTURE
 		for (int c1 = 0; c1 < clusters.size(); c1++) {
@@ -99,8 +99,9 @@ public class SubunitClusterer {
 			}
 		}
 
-		if (!params.isInternalSymmetry())
-			return clusters;
+		if (!params.isInternalSymmetry()) {
+			return SubunitClusterUtils.orderByStoichiometry(clusters);
+		}
 
 		// Now divide clusters by their INTERNAL SYMMETRY
 		for (int c = 0; c < clusters.size(); c++) {
@@ -126,6 +127,6 @@ public class SubunitClusterer {
 			}
 		}
 
-		return clusters;
+		return SubunitClusterUtils.orderByStoichiometry(clusters);
 	}
 }
