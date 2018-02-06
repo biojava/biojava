@@ -35,10 +35,10 @@ public class SubunitClusterUtils {
 
 		// List number of members in each cluster
 		List<Integer> stoichiometries =
-				clusters.stream().
-						map(SubunitCluster::size).
-						sorted().
-						collect(Collectors.toList());
+			clusters.stream().
+				map(SubunitCluster::size).
+				sorted().
+				collect(Collectors.toList());
 
 		Collections.reverse(stoichiometries);
 
@@ -75,11 +75,11 @@ public class SubunitClusterUtils {
 		String alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
 		List<SubunitCluster> clustersSorted =
-				clusters.stream().
-						sorted(Comparator.
-								comparing(SubunitCluster::size).
-								reversed()).
-						collect(Collectors.toList());
+			clusters.stream().
+				sorted(Comparator.
+					comparing(SubunitCluster::size).
+					reversed()).
+				collect(Collectors.toList());
 
 		for (int i = 0; i < clustersSorted.size(); i++) {
 			int ind = i % alpha.length();

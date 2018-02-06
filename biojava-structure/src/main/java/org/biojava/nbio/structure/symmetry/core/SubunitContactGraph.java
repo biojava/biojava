@@ -22,6 +22,7 @@ package org.biojava.nbio.structure.symmetry.core;
 
 import javax.vecmath.Point3d;
 
+import org.jgrapht.Graph;
 import org.jgrapht.UndirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleGraph;
@@ -50,12 +51,12 @@ public class SubunitContactGraph {
 	private SubunitContactGraph() {
 	}
 
-	public static UndirectedGraph<Integer, DefaultEdge> calculateGraph(
+	public static Graph<Integer, DefaultEdge> calculateGraph(
 			List<Point3d[]> caCoords) {
 		int n = caCoords.size();
 
 		// add vertex for each chain center
-		UndirectedGraph<Integer, DefaultEdge> graph = new SimpleGraph<Integer, DefaultEdge>(
+		Graph<Integer, DefaultEdge> graph = new SimpleGraph<Integer, DefaultEdge>(
 				DefaultEdge.class);
 		for (int i = 0; i < n; i++) {
 			graph.addVertex(i);

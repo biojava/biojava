@@ -54,8 +54,8 @@ public class QuatSymmetryResults {
 
 	// Information about the symmetry
 	private SymmetryPerceptionMethod method;
-	private RotationGroup rotationGroup;
 	private HelixLayers helixLayers;
+	private RotationGroup rotationGroup = new RotationGroup();
 
 	// TODO we should unify rotational and roto-translational results
 
@@ -105,6 +105,14 @@ public class QuatSymmetryResults {
 
 		this.helixLayers = helixLayers;
 		this.method = method;
+	}
+
+
+	public boolean isSupersededBy(QuatSymmetryResults other) {
+		if (this.rotationGroup.getOrder() <= other.rotationGroup.getOrder() && other.subunits.containsAll(this.subunits)) {
+			return true;
+		}
+		return false;
 	}
 
 	/**

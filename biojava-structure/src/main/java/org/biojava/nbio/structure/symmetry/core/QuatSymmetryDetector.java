@@ -23,15 +23,17 @@
 package org.biojava.nbio.structure.symmetry.core;
 
 import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.cluster.Subunit;
-import org.biojava.nbio.structure.cluster.SubunitCluster;
-import org.biojava.nbio.structure.cluster.SubunitClusterer;
-import org.biojava.nbio.structure.cluster.SubunitClustererParameters;
-import org.biojava.nbio.structure.symmetry.utils.PowerSet;
+import org.biojava.nbio.structure.cluster.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.jgrapht.alg.clique.CliqueMinimalSeparatorDecomposition;
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.AsSubgraph;
+import org.jgrapht.Graph;
+
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Detects the symmetry (global, pseudo, internal and local) of protein
@@ -109,6 +111,7 @@ public class QuatSymmetryDetector {
 		return calcQuatSymmetry(clusters, symmParams);
 	}
 
+
 	/**
 	 * Returns a List of LOCAL symmetry results. This means that a subset of the
 	 * {@link SubunitCluster} is left out of the symmetry calculation. Each
@@ -130,8 +133,8 @@ public class QuatSymmetryDetector {
 	public static List<QuatSymmetryResults> calcLocalSymmetries(
 			Structure structure, QuatSymmetryParameters symmParams,
 			SubunitClustererParameters clusterParams) {
-		List<SubunitCluster> clusters = SubunitClusterer.cluster(structure,
-				clusterParams);
+
+		List<SubunitCluster> clusters = SubunitClusterer.cluster(structure, clusterParams);
 		return calcLocalSymmetries(clusters, symmParams);
 	}
 
@@ -156,8 +159,8 @@ public class QuatSymmetryDetector {
 	public static List<QuatSymmetryResults> calcLocalSymmetries(
 			List<Subunit> subunits, QuatSymmetryParameters symmParams,
 			SubunitClustererParameters clusterParams) {
-		List<SubunitCluster> clusters = SubunitClusterer.cluster(subunits,
-				clusterParams);
+
+		List<SubunitCluster> clusters = SubunitClusterer.cluster(subunits, clusterParams);
 		return calcLocalSymmetries(clusters, symmParams);
 	}
 
@@ -177,78 +180,256 @@ public class QuatSymmetryDetector {
 	 * @return List of LOCAL quaternary structure symmetry results. Empty if
 	 *         none.
 	 */
-	public static List<QuatSymmetryResults> calcLocalSymmetries(
-			List<SubunitCluster> clusters, QuatSymmetryParameters symmParams) {
 
-		List<QuatSymmetryResults> localSymmetries = new ArrayList<QuatSymmetryResults>();
+	public static List<QuatSymmetryResults> calcLocalSymmetries(List<SubunitCluster> clusters, QuatSymmetryParameters symmParams) {
 
-		// If it is homomeric return empty
-		if (clusters.size() < 2)
+		symmParams.setLocalTimeStart(System.nanoTime());
+
+		Set<Set<Integer>> knownResults = new HashSet<>();
+		List<QuatSymmetryResults> outputSymmetries = new ArrayList<>();
+
+		List<SubunitCluster> nontrivialClusters =
+				clusters.stream().
+					filter(cluster -> (cluster.size()>1)).
+					collect(Collectors.toList());
+
+		QuatSymmetrySubunits allSubunits = new QuatSymmetrySubunits(nontrivialClusters);
+
+		if (allSubunits.getSubunitCount() < 2)
+			return outputSymmetries;
+
+		Graph<Integer, DefaultEdge> graph = SubunitContactGraph.calculateGraph(allSubunits.getTraces());
+
+		List<Integer> allSubunitIds = new ArrayList<>(graph.vertexSet());
+		Collections.sort(allSubunitIds);
+		List<Integer> allSubunitClusterIds = allSubunits.getClusterIds();
+
+		Map<Integer, List<Integer>> clusterIdToSubunitIds =
+				allSubunitIds.stream().
+					collect(Collectors.
+						groupingBy(allSubunitClusterIds::get, Collectors.toList()));
+
+		List<QuatSymmetryResults> redundantSymmetries = new ArrayList<>();
+		if (clusters.size()>1) {
+			List<QuatSymmetryResults> clusterSymmetries =
+					calcLocalSymmetriesCluster(nontrivialClusters, clusterIdToSubunitIds,symmParams, knownResults);
+			redundantSymmetries.addAll(clusterSymmetries);
+		}
+
+		List<QuatSymmetryResults> graphSymmetries = calcLocalSymmetriesGraph(nontrivialClusters,
+																			allSubunitClusterIds,
+																			clusterIdToSubunitIds,
+																			symmParams,
+																			knownResults,
+																			graph);
+
+		redundantSymmetries.addAll(graphSymmetries);
+
+		redundantSymmetries =
+				redundantSymmetries.stream().
+					sorted(Comparator.
+						comparing((QuatSymmetryResults r) -> r.getRotationGroup().getOrder()).
+						thenComparing(r -> r.getSubunitCount()).reversed()).
+					collect(Collectors.toList());
+
+		for (QuatSymmetryResults redundantSymmetry:redundantSymmetries) {
+			if (outputSymmetries.stream().
+					noneMatch(redundantSymmetry::isSupersededBy)) {
+				outputSymmetries.add(redundantSymmetry);
+			}
+		}
+
+		double time = (System.nanoTime() - symmParams.getLocalTimeStart()) / 1000000000;
+		if (time > symmParams.getLocalTimeLimit()) {
+			logger.warn("Exceeded time limit for local symmetry "
+					+ "calculations. {} seconds elapsed. "
+					+ "Local symmetry results may be incomplete.", time);
+		}
+		return outputSymmetries;
+	}
+
+	private static List<QuatSymmetryResults> calcLocalSymmetriesCluster(List<SubunitCluster> nontrivialClusters,
+	                                                                    Map<Integer, List<Integer>> clusterIdToSubunitIds,
+	                                                                    QuatSymmetryParameters symmParams,
+	                                                                    Set<Set<Integer>> knownResults) {
+
+		List<QuatSymmetryResults> clusterSymmetries = new ArrayList<>();
+
+		// find solutions for single clusters
+		for (int i=0;i<nontrivialClusters.size();i++) {
+			SubunitCluster nontrivialCluster = nontrivialClusters.get(i);
+			QuatSymmetryResults localResult =
+					calcQuatSymmetry(Collections.singletonList(nontrivialCluster),symmParams);
+
+			if(localResult!=null && !localResult.getSymmetry().equals("C1")) {
+				localResult.setLocal(true);
+				clusterSymmetries.add(localResult);
+				Set<Integer> knownResult = new HashSet<>(clusterIdToSubunitIds.get(i));
+				knownResults.add(knownResult);
+			}
+		}
+
+		// group clusters by symmetries found, in case they all share axes and have the same number of subunits
+		Map<String, Map<Integer,List<QuatSymmetryResults>>> groupedSymmetries =
+				clusterSymmetries.stream().
+					collect(Collectors.
+						groupingBy(QuatSymmetryResults::getSymmetry,Collectors.
+							groupingBy(QuatSymmetryResults::getSubunitCount,Collectors.toList())));
+
+		for (Map<Integer,List<QuatSymmetryResults>> symmetriesByGroup: groupedSymmetries.values()) {
+			for (List<QuatSymmetryResults> symmetriesBySubunits: symmetriesByGroup.values()) {
+
+				List<SubunitCluster> clustersGroup =
+						symmetriesBySubunits.stream().
+							map(r -> r.getSubunitClusters().get(0)).
+							collect(Collectors.toList());
+
+				if (clustersGroup.size() < 2) {
+					continue;
+				}
+
+				QuatSymmetryResults localResult = calcQuatSymmetry(clustersGroup,symmParams);
+
+				if(localResult!=null && !localResult.getSymmetry().equals("C1")) {
+					localResult.setLocal(true);
+					clusterSymmetries.add(localResult);
+					// find subunit ids in this cluster list
+					Set<Integer> knownResult = new HashSet<>();
+					for (SubunitCluster cluster: clustersGroup) {
+						int i = nontrivialClusters.indexOf(cluster);
+						knownResult.addAll(clusterIdToSubunitIds.get(i));
+					}
+					knownResults.add(knownResult);
+				}
+			}
+		}
+		return clusterSymmetries;
+	}
+
+
+	private static List<QuatSymmetryResults> calcLocalSymmetriesGraph(final List<SubunitCluster> allClusters,
+	                                                                  final List<Integer> allSubunitClusterIds,
+	                                                                  final Map<Integer, List<Integer>> clusterIdToSubunitIds,
+	                                                                  QuatSymmetryParameters symmParams,
+	                                                                  Set<Set<Integer>> knownResults,
+	                                                                  Graph<Integer, DefaultEdge> graph) {
+
+		List<QuatSymmetryResults> localSymmetries = new ArrayList<>();
+
+		double time = (System.nanoTime() - symmParams.getLocalTimeStart()) / 1000000000;
+		if (time > symmParams.getLocalTimeLimit()) {
 			return localSymmetries;
+		}
 
-		// If there are less than 3 or more than maximum Subunits return empty
-		QuatSymmetrySubunits subunits = new QuatSymmetrySubunits(clusters);
-		if (subunits.getSubunitCount() < 3
-				|| subunits.getSubunitCount() > symmParams
-						.getMaximumLocalSubunits())
-			return localSymmetries;
+		// calc components of a (sub-)graph
+		CliqueMinimalSeparatorDecomposition<Integer, DefaultEdge> cmsd =
+				new CliqueMinimalSeparatorDecomposition<>(graph);
 
-		// Start local symmetry calculations
-		long start = System.nanoTime();
+		Set<Set<Integer>> graphComponents =
+				cmsd.getAtoms().stream().
+					filter(component -> component.size()>1).
+					collect(Collectors.toSet());
 
-		// Calculate the power Set of the clusters
-		Set<Set<SubunitCluster>> powerSet = new PowerSet<SubunitCluster>()
-				.powerSet(new LinkedHashSet<SubunitCluster>(clusters));
+		//subtract known results
+		graphComponents.removeAll(knownResults);
 
-		int combinations = 1;
-		for (Set<SubunitCluster> cluster : powerSet) {
+		for (Set<Integer> graphComponent: graphComponents) {
+			knownResults.add(graphComponent);
 
-			// Break if time limit passed
-			double time = (System.nanoTime() - start) / 1000000000;
-			if (time > symmParams.getLocalTimeLimit()) {
-				logger.warn("Exceeded time limit for local symmetry "
-						+ "calculations. {} seconds elapsed. "
-						+ "Local symmetry results may be incomplete.", time);
-				break;
-			}
+			List<Integer> usedSubunitIds = new ArrayList<>(graphComponent);
+			Collections.sort(usedSubunitIds);
+			List<SubunitCluster> localClusters =
+					trimSubunitClusters(allClusters, allSubunitClusterIds, clusterIdToSubunitIds, usedSubunitIds);
 
-			// Break if maximum number of results exceeded
-			if (localSymmetries.size() > symmParams.getMaximumLocalResults()) {
-				logger.warn("Exceeded maximum number of local symmetry "
-						+ "results. {} results calculated. "
-						+ "Local symmetry results may be incomplete.",
-						localSymmetries.size());
-				break;
-			}
-
-			// Break if maximum number of tried combinations exceeded
-			if (combinations > symmParams.getMaximumLocalCombinations()) {
-				logger.warn("Exceeded maximum number of local combinations."
-						+ " {} combinations tried. "
-						+ "Local symmetry results may be incomplete.",
-						combinations);
-				break;
-			}
-
-			// Do not use empty set or identity set
-			if (cluster.size() == 0 || cluster.size() == clusters.size())
+			if (localClusters.size()==0) {
 				continue;
+			}
 
-			List<SubunitCluster> localClusters = new ArrayList<SubunitCluster>(
-					cluster);
-			QuatSymmetryResults localResult = calcGlobalSymmetry(localClusters,
-					symmParams);
+			//NB: usedSubunitIds might have changed when trimming clusters
+			Set<Integer> usedSubunitIdsSet = new HashSet<>(usedSubunitIds);
+			if(!graphComponent.equals(usedSubunitIdsSet)) {
+				if(knownResults.contains(usedSubunitIdsSet)) {
+					continue;
+				} else {
+					knownResults.add(usedSubunitIdsSet);
+				}
+			}
 
-			if (!localResult.getSymmetry().equals("C1")) {
+			QuatSymmetryResults localResult = calcQuatSymmetry(localClusters,symmParams);
+			if(localResult!=null && !localResult.getSymmetry().equals("C1")) {
 				localResult.setLocal(true);
 				localSymmetries.add(localResult);
+				continue;
 			}
 
-			combinations++;
+			if (usedSubunitIds.size() < 3) {
+				continue;
+			}
+
+			for (Integer removeSubunitId: usedSubunitIds) {
+
+				Set<Integer> prunedGraphVertices = new HashSet<>(usedSubunitIds);
+				prunedGraphVertices.remove(removeSubunitId);
+				if (knownResults.contains(prunedGraphVertices)) {
+					continue;
+				}
+				knownResults.add(prunedGraphVertices);
+
+				Graph<Integer, DefaultEdge> subGraph = new AsSubgraph<>(graph,prunedGraphVertices);
+
+				List<QuatSymmetryResults> localSubSymmetries = calcLocalSymmetriesGraph(allClusters,
+																						allSubunitClusterIds,
+																						clusterIdToSubunitIds,
+																						symmParams,
+																						knownResults,
+																						subGraph);
+				localSymmetries.addAll(localSubSymmetries);
+			}
+
 		}
 
 		return localSymmetries;
 	}
+
+	private static List<SubunitCluster> trimSubunitClusters(List<SubunitCluster> allClusters,
+	                                                        List<Integer> allSubunitClusterIds,
+	                                                        Map<Integer, List<Integer>> clusterIdToSubunitIds,
+	                                                        List<Integer> usedSubunitIds) {
+		List<SubunitCluster> localClusters = new ArrayList<>();
+
+		Set<Integer> usedClusterIds =
+				usedSubunitIds.stream().
+					map(allSubunitClusterIds::get).
+					distinct().
+					collect(Collectors.toSet());
+
+		// for each used cluster, remove unused subunits
+		for(Integer usedClusterId:usedClusterIds) {
+			SubunitCluster originalCluster = allClusters.get(usedClusterId);
+			List<Integer> allSubunitIdsInCluster = clusterIdToSubunitIds.get(usedClusterId);
+
+			//subunit numbering is global for the entire graph
+			// make it zero-based for the inside of a cluster
+			int minSUValue = Collections.min(allSubunitIdsInCluster);
+			List<Integer> usedSubunitIdsInCluster = new ArrayList<>(allSubunitIdsInCluster);
+			usedSubunitIdsInCluster.retainAll(usedSubunitIds);
+
+			List<Integer> subunitsToRetain =
+					usedSubunitIdsInCluster.stream().
+						map(i -> i-minSUValue).
+						collect(Collectors.toList());
+
+			if (subunitsToRetain.size()>1) {
+				SubunitCluster filteredCluster = new SubunitCluster(originalCluster, subunitsToRetain);
+				localClusters.add(filteredCluster);
+			} else {
+				// if the cluster ends up having only 1 subunit, remove it from further processing
+				usedSubunitIds.removeAll(usedSubunitIdsInCluster);
+			}
+		}
+		return localClusters;
+	}
+
 
 	private static QuatSymmetryResults calcQuatSymmetry(
 			List<SubunitCluster> clusters, QuatSymmetryParameters parameters) {

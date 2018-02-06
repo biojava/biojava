@@ -49,14 +49,9 @@ public class QuatSymmetryParameters implements Serializable {
 	private double minimumHelixRise = 1.0;
 	private double minimumHelixAngle = 5.0; // min helix angle to differentiate
 											// it from a translational repeat
-	private int maximumLocalCombinations = 50000; // max number of combinations
-													// to try for local symmetry
-													// calculation
-	private int maximumLocalResults = 1000;
-	private int maximumLocalSubunits = 20; // maximum number of subunits for
-											// local symmetry calculations
 	private double localTimeLimit = 120; // time limit for local calculations in
 											// seconds
+	private double localTimeStart; // time when the local calculations started
 	private boolean onTheFly = true;
 
 	/**
@@ -121,44 +116,6 @@ public class QuatSymmetryParameters implements Serializable {
 		this.minimumHelixAngle = minimumHelixAngle;
 	}
 
-	public int getMaximumLocalCombinations() {
-		return maximumLocalCombinations;
-	}
-
-	public void setMaximumLocalCombinations(int maximumLocalCombinations) {
-		this.maximumLocalCombinations = maximumLocalCombinations;
-	}
-
-	/**
-	 * @return the maximumLocalResults
-	 */
-	public int getMaximumLocalResults() {
-		return maximumLocalResults;
-	}
-
-	/**
-	 * @return the maximumLocalSubunits
-	 */
-	public int getMaximumLocalSubunits() {
-		return maximumLocalSubunits;
-	}
-
-	/**
-	 * @param maximumLocalSubunits
-	 *            the maximumLocalSubunits to set
-	 */
-	public void setMaximumLocalSubunits(int maximumLocalSubunits) {
-		this.maximumLocalSubunits = maximumLocalSubunits;
-	}
-
-	/**
-	 * @param maximumLocalResults
-	 *            the maximumLocalResults to set
-	 */
-	public void setMaximumLocalResults(int maximumLocalResults) {
-		this.maximumLocalResults = maximumLocalResults;
-	}
-
 	/**
 	 * @return the localTimeLimit
 	 */
@@ -172,6 +129,21 @@ public class QuatSymmetryParameters implements Serializable {
 	 */
 	public void setLocalTimeLimit(double localTimeLimit) {
 		this.localTimeLimit = localTimeLimit;
+	}
+
+	/**
+	 * @return the localTimeStart
+	 */
+	public double getLocalTimeStart() {
+		return localTimeStart;
+	}
+
+	/**
+	 * @param localTimeStart
+	 *            the time when local calculations started
+	 */
+	public void setLocalTimeStart(double localTimeStart) {
+		this.localTimeStart = localTimeStart;
 	}
 
 	/**
@@ -202,10 +174,9 @@ public class QuatSymmetryParameters implements Serializable {
 				+ ", helixRmsdToRiseRatio=" + helixRmsdToRiseRatio
 				+ ", minimumHelixRise=" + minimumHelixRise
 				+ ", minimumHelixAngle=" + minimumHelixAngle
-				+ ", maximumLocalCombinations=" + maximumLocalCombinations
-				+ ", maximumLocalResults=" + maximumLocalResults
-				+ ", maximumLocalSubunits=" + maximumLocalSubunits
+				+ ", localTimeStart=" + localTimeStart
 				+ ", localTimeLimit=" + localTimeLimit + ", onTheFly="
 				+ onTheFly + "]";
 	}
+
 }
