@@ -151,17 +151,11 @@ public class TestQuatSymmetryDetectorExamples {
 				.calcLocalSymmetries(pdb, symmParams, clusterParams);
 
 		// C5 local symmetry excluding chain A
-		assertEquals(localSymm.size(), 3);
+		assertEquals(1, localSymm.size());
 		assertEquals("C5", localSymm.get(0).getSymmetry());
-		assertEquals("C5", localSymm.get(1).getSymmetry());
-		assertEquals("C5", localSymm.get(2).getSymmetry());
 
-		// Two A5 and one A5B5 stoichiometries as local symmetry
-		List<String> stoich = localSymm.stream().map(t -> t.getStoichiometry())
-				.collect(Collectors.toList());
-
-		assertTrue(stoich.contains("A5"));
-		assertTrue(stoich.contains("A5B5"));
+		// One A5B5 stoichiometries as local symmetry
+		assertEquals("A5B5", localSymm.get(0).getStoichiometry());
 	}
 
 	/**
