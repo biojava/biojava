@@ -24,6 +24,8 @@ package org.biojava.nbio.structure.symmetry.core;
 
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.cluster.*;
+import org.jgrapht.graph.DefaultDirectedGraph;
+import org.jgrapht.traverse.TopologicalOrderIterator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -186,8 +188,7 @@ public class QuatSymmetryDetector {
 		symmParams.setLocalTimeStart(System.nanoTime());
 
 		Set<Set<Integer>> knownResults = new HashSet<>();
-		List<QuatSymmetryResults> outputSymmetries = new ArrayList<>();
-
+		//more than one subunit per cluster required for symmetry
 		List<SubunitCluster> nontrivialClusters =
 				clusters.stream().
 					filter(cluster -> (cluster.size()>1)).
@@ -196,7 +197,7 @@ public class QuatSymmetryDetector {
 		QuatSymmetrySubunits allSubunits = new QuatSymmetrySubunits(nontrivialClusters);
 
 		if (allSubunits.getSubunitCount() < 2)
-			return outputSymmetries;
+			return new ArrayList<>();
 
 		Graph<Integer, DefaultEdge> graph = SubunitContactGraph.calculateGraph(allSubunits.getTraces());
 
@@ -204,18 +205,23 @@ public class QuatSymmetryDetector {
 		Collections.sort(allSubunitIds);
 		List<Integer> allSubunitClusterIds = allSubunits.getClusterIds();
 
+		// since clusters are rearranged and trimmed, we need a reference to the original data
+		// to maintain consistent IDs of clusters and subunits across all solutions
 		Map<Integer, List<Integer>> clusterIdToSubunitIds =
 				allSubunitIds.stream().
 					collect(Collectors.
 						groupingBy(allSubunitClusterIds::get, Collectors.toList()));
 
 		List<QuatSymmetryResults> redundantSymmetries = new ArrayList<>();
+		// first, find symmetries for single clusters and their groups
+		// grouping is done based on symmetries found (i.e., no exhaustive permutation search is performed)
 		if (clusters.size()>1) {
 			List<QuatSymmetryResults> clusterSymmetries =
 					calcLocalSymmetriesCluster(nontrivialClusters, clusterIdToSubunitIds,symmParams, knownResults);
 			redundantSymmetries.addAll(clusterSymmetries);
 		}
-
+		//find symmetries for groups based on connectivity of subunits
+		// disregarding initial clustering
 		List<QuatSymmetryResults> graphSymmetries = calcLocalSymmetriesGraph(nontrivialClusters,
 																			allSubunitClusterIds,
 																			clusterIdToSubunitIds,
@@ -225,19 +231,16 @@ public class QuatSymmetryDetector {
 
 		redundantSymmetries.addAll(graphSymmetries);
 
-		redundantSymmetries =
-				redundantSymmetries.stream().
-					sorted(Comparator.
-						comparing((QuatSymmetryResults r) -> r.getRotationGroup().getOrder()).
-						thenComparing(r -> r.getSubunitCount()).reversed()).
-					collect(Collectors.toList());
+		// find symmetries which are not superseded by any other symmetry
+		// e.g., we have global stoichiometry of A3B3C,
+		// the local symmetries found are C3 with stoichiometries A3, B3, A3B3;
+		// then output only A3B3.
 
-		for (QuatSymmetryResults redundantSymmetry:redundantSymmetries) {
-			if (outputSymmetries.stream().
-					noneMatch(redundantSymmetry::isSupersededBy)) {
-				outputSymmetries.add(redundantSymmetry);
-			}
-		}
+		List<QuatSymmetryResults> outputSymmetries =
+				redundantSymmetries.stream().
+					filter(a -> redundantSymmetries.stream().
+						noneMatch(b -> a!=b && a.isSupersededBy(b))).
+						collect(Collectors.toList());
 
 		double time = (System.nanoTime() - symmParams.getLocalTimeStart()) / 1000000000;
 		if (time > symmParams.getLocalTimeLimit()) {
@@ -255,7 +258,7 @@ public class QuatSymmetryDetector {
 
 		List<QuatSymmetryResults> clusterSymmetries = new ArrayList<>();
 
-		// find solutions for single clusters
+		// find solutions for single clusters first
 		for (int i=0;i<nontrivialClusters.size();i++) {
 			SubunitCluster nontrivialCluster = nontrivialClusters.get(i);
 			QuatSymmetryResults localResult =
@@ -265,6 +268,8 @@ public class QuatSymmetryDetector {
 				localResult.setLocal(true);
 				clusterSymmetries.add(localResult);
 				Set<Integer> knownResult = new HashSet<>(clusterIdToSubunitIds.get(i));
+				// since symmetry is found,
+				// do not try graph decomposition of this set of subunits later
 				knownResults.add(knownResult);
 			}
 		}
@@ -287,7 +292,7 @@ public class QuatSymmetryDetector {
 				if (clustersGroup.size() < 2) {
 					continue;
 				}
-
+				//check if grouped clusters also have symmetry
 				QuatSymmetryResults localResult = calcQuatSymmetry(clustersGroup,symmParams);
 
 				if(localResult!=null && !localResult.getSymmetry().equals("C1")) {
@@ -299,6 +304,8 @@ public class QuatSymmetryDetector {
 						int i = nontrivialClusters.indexOf(cluster);
 						knownResult.addAll(clusterIdToSubunitIds.get(i));
 					}
+					// since symmetry is found,
+					// do not try graph decomposition of this set of subunits later
 					knownResults.add(knownResult);
 				}
 			}
@@ -316,21 +323,23 @@ public class QuatSymmetryDetector {
 
 		List<QuatSymmetryResults> localSymmetries = new ArrayList<>();
 
+		// do not go any deeper into recursion if over the time limit
 		double time = (System.nanoTime() - symmParams.getLocalTimeStart()) / 1000000000;
 		if (time > symmParams.getLocalTimeLimit()) {
 			return localSymmetries;
 		}
 
-		// calc components of a (sub-)graph
+		// extract components of a (sub-)graph
 		CliqueMinimalSeparatorDecomposition<Integer, DefaultEdge> cmsd =
 				new CliqueMinimalSeparatorDecomposition<>(graph);
 
+		// only consider components with more than 1 vertex (subunit)
 		Set<Set<Integer>> graphComponents =
 				cmsd.getAtoms().stream().
 					filter(component -> component.size()>1).
 					collect(Collectors.toSet());
 
-		//subtract known results
+		//do not go into what has already been explored
 		graphComponents.removeAll(knownResults);
 
 		for (Set<Integer> graphComponent: graphComponents) {
@@ -338,6 +347,7 @@ public class QuatSymmetryDetector {
 
 			List<Integer> usedSubunitIds = new ArrayList<>(graphComponent);
 			Collections.sort(usedSubunitIds);
+			// get clusters which contain only subunits in the current component
 			List<SubunitCluster> localClusters =
 					trimSubunitClusters(allClusters, allSubunitClusterIds, clusterIdToSubunitIds, usedSubunitIds);
 
@@ -346,6 +356,8 @@ public class QuatSymmetryDetector {
 			}
 
 			//NB: usedSubunitIds might have changed when trimming clusters
+			// if a subunit belongs to a cluster with no other subunits,
+			// it is removed inside trimSubunitClusters
 			Set<Integer> usedSubunitIdsSet = new HashSet<>(usedSubunitIds);
 			if(!graphComponent.equals(usedSubunitIdsSet)) {
 				if(knownResults.contains(usedSubunitIdsSet)) {
@@ -363,11 +375,12 @@ public class QuatSymmetryDetector {
 			}
 
 			if (usedSubunitIds.size() < 3) {
+				// cannot decompose this component any further
 				continue;
 			}
 
 			for (Integer removeSubunitId: usedSubunitIds) {
-
+				// try removing subunits one by one and decompose the sub-graph recursively
 				Set<Integer> prunedGraphVertices = new HashSet<>(usedSubunitIds);
 				prunedGraphVertices.remove(removeSubunitId);
 				if (knownResults.contains(prunedGraphVertices)) {

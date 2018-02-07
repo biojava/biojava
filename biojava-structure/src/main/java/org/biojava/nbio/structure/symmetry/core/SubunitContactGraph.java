@@ -46,7 +46,7 @@ public class SubunitContactGraph {
 			.getLogger(SubunitContactGraph.class);
 
 	private static final double DISTANCE_CUTOFF = 8;
-	private static final int MIN_CONTACTS = 10;
+	private static final int MIN_CONTACTS = 5;
 
 	private SubunitContactGraph() {
 	}
