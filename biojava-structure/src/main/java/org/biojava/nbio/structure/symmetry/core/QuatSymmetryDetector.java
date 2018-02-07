@@ -24,8 +24,6 @@ package org.biojava.nbio.structure.symmetry.core;
 
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.cluster.*;
-import org.jgrapht.graph.DefaultDirectedGraph;
-import org.jgrapht.traverse.TopologicalOrderIterator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
