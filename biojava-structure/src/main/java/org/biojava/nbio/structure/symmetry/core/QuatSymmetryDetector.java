@@ -22,8 +22,12 @@
  */
 package org.biojava.nbio.structure.symmetry.core;
 
+import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.cluster.*;
+import org.biojava.nbio.structure.contact.BoundingBox;
+import org.biojava.nbio.structure.contact.Grid;
+import org.jgrapht.graph.SimpleGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,6 +36,7 @@ import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.AsSubgraph;
 import org.jgrapht.Graph;
 
+import javax.vecmath.Point3d;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -51,6 +56,9 @@ public class QuatSymmetryDetector {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(QuatSymmetryDetector.class);
+
+	private static final double CONTACT_GRAPH_DISTANCE_CUTOFF = 8;
+	private static final int CONTACT_GRAPH_MIN_CONTACTS = 5;
 
 	/** Prevent instantiation **/
 	private QuatSymmetryDetector() {
@@ -197,7 +205,7 @@ public class QuatSymmetryDetector {
 		if (allSubunits.getSubunitCount() < 2)
 			return new ArrayList<>();
 
-		Graph<Integer, DefaultEdge> graph = SubunitContactGraph.calculateGraph(allSubunits.getTraces());
+		Graph<Integer, DefaultEdge> graph = initContactGraph(nontrivialClusters);
 
 		List<Integer> allSubunitIds = new ArrayList<>(graph.vertexSet());
 		Collections.sort(allSubunitIds);
@@ -247,6 +255,46 @@ public class QuatSymmetryDetector {
 					+ "Local symmetry results may be incomplete.", time);
 		}
 		return outputSymmetries;
+	}
+
+
+	private static  Graph<Integer, DefaultEdge> initContactGraph(List<SubunitCluster> clusters){
+
+		Graph<Integer, DefaultEdge> graph = new SimpleGraph<>(DefaultEdge.class);
+
+		// extract Ca coords from every subunit of every cluster.
+		// all subunit coords are used for contact evaluation,
+		// not only the aligned equivalent residues
+		List <Point3d[]> clusterSubunitCoords =
+				clusters.stream().
+					flatMap(c -> c.getSubunits().stream()).
+						map(r -> Calc.atomsToPoints(r.getRepresentativeAtoms())).
+						collect(Collectors.toList());
+
+		for (int i = 0; i < clusterSubunitCoords.size(); i++) {
+			graph.addVertex(i);
+		}
+
+		// pre-compute bounding boxes
+		List<BoundingBox> boundingBoxes = new ArrayList<>();
+		clusterSubunitCoords.forEach(c -> boundingBoxes.add(new BoundingBox(c)));
+
+		for (int i = 0; i < clusterSubunitCoords.size() - 1; i++) {
+			Point3d[] coords1 = clusterSubunitCoords.get(i);
+			BoundingBox bb1 = boundingBoxes.get(i);
+
+			for (int j = i + 1; j < clusterSubunitCoords.size(); j++) {
+				Point3d[] coords2 = clusterSubunitCoords.get(j);
+				BoundingBox bb2 = boundingBoxes.get(j);
+				Grid grid = new Grid(CONTACT_GRAPH_DISTANCE_CUTOFF);
+				grid.addCoords(coords1, bb1, coords2, bb2);
+
+				if (grid.getIndicesContacts().size() >= CONTACT_GRAPH_MIN_CONTACTS) {
+					graph.addEdge(i, j);
+				}
+			}
+		}
+		return graph;
 	}
 
 	private static List<QuatSymmetryResults> calcLocalSymmetriesCluster(List<SubunitCluster> nontrivialClusters,
