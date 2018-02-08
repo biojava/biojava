@@ -57,7 +57,16 @@ public class QuatSymmetryDetector {
 	private static final Logger logger = LoggerFactory
 			.getLogger(QuatSymmetryDetector.class);
 
+
+	/**
+	 * Maximal distance between Calpha atoms of residues of different subunits
+	 * to establish a residue contact.
+	 */
 	private static final double CONTACT_GRAPH_DISTANCE_CUTOFF = 8;
+	/**
+	 * The minimal number of residue contacts between subunits to consider
+	 * them connected and add an edge to the contact graph.
+	 */
 	private static final int CONTACT_GRAPH_MIN_CONTACTS = 5;
 
 	/** Prevent instantiation **/
@@ -191,9 +200,7 @@ public class QuatSymmetryDetector {
 
 	public static List<QuatSymmetryResults> calcLocalSymmetries(List<SubunitCluster> clusters, QuatSymmetryParameters symmParams) {
 
-		symmParams.setLocalTimeStart(System.nanoTime());
-
-		Set<Set<Integer>> knownResults = new HashSet<>();
+		Set<Set<Integer>> knownCombinations = new HashSet<>();
 		//more than one subunit per cluster required for symmetry
 		List<SubunitCluster> nontrivialClusters =
 				clusters.stream().
@@ -223,7 +230,7 @@ public class QuatSymmetryDetector {
 		// grouping is done based on symmetries found (i.e., no exhaustive permutation search is performed)
 		if (clusters.size()>1) {
 			List<QuatSymmetryResults> clusterSymmetries =
-					calcLocalSymmetriesCluster(nontrivialClusters, clusterIdToSubunitIds,symmParams, knownResults);
+					calcLocalSymmetriesCluster(nontrivialClusters, clusterIdToSubunitIds,symmParams, knownCombinations);
 			redundantSymmetries.addAll(clusterSymmetries);
 		}
 		//find symmetries for groups based on connectivity of subunits
@@ -232,7 +239,7 @@ public class QuatSymmetryDetector {
 																			allSubunitClusterIds,
 																			clusterIdToSubunitIds,
 																			symmParams,
-																			knownResults,
+																			knownCombinations,
 																			graph);
 
 		redundantSymmetries.addAll(graphSymmetries);
@@ -248,12 +255,10 @@ public class QuatSymmetryDetector {
 						noneMatch(b -> a!=b && a.isSupersededBy(b))).
 						collect(Collectors.toList());
 
-		double time = (System.nanoTime() - symmParams.getLocalTimeStart()) / 1000000000;
-		if (time > symmParams.getLocalTimeLimit()) {
-			logger.warn("Exceeded time limit for local symmetry "
-					+ "calculations. {} seconds elapsed. "
-					+ "Local symmetry results may be incomplete.", time);
+		if(symmParams.isLocalLimitsExceeded(knownCombinations)) {
+			logger.warn("Exceeded calculation limits for local symmetry detection. The results may be incomplete.");
 		}
+
 		return outputSymmetries;
 	}
 
@@ -300,7 +305,7 @@ public class QuatSymmetryDetector {
 	private static List<QuatSymmetryResults> calcLocalSymmetriesCluster(List<SubunitCluster> nontrivialClusters,
 	                                                                    Map<Integer, List<Integer>> clusterIdToSubunitIds,
 	                                                                    QuatSymmetryParameters symmParams,
-	                                                                    Set<Set<Integer>> knownResults) {
+	                                                                    Set<Set<Integer>> knownCombinations) {
 
 		List<QuatSymmetryResults> clusterSymmetries = new ArrayList<>();
 
@@ -316,7 +321,7 @@ public class QuatSymmetryDetector {
 				Set<Integer> knownResult = new HashSet<>(clusterIdToSubunitIds.get(i));
 				// since symmetry is found,
 				// do not try graph decomposition of this set of subunits later
-				knownResults.add(knownResult);
+				knownCombinations.add(knownResult);
 			}
 		}
 
@@ -352,7 +357,7 @@ public class QuatSymmetryDetector {
 					}
 					// since symmetry is found,
 					// do not try graph decomposition of this set of subunits later
-					knownResults.add(knownResult);
+					knownCombinations.add(knownResult);
 				}
 			}
 		}
@@ -364,17 +369,15 @@ public class QuatSymmetryDetector {
 	                                                                  final List<Integer> allSubunitClusterIds,
 	                                                                  final Map<Integer, List<Integer>> clusterIdToSubunitIds,
 	                                                                  QuatSymmetryParameters symmParams,
-	                                                                  Set<Set<Integer>> knownResults,
+	                                                                  Set<Set<Integer>> knownCombinations,
 	                                                                  Graph<Integer, DefaultEdge> graph) {
 
 		List<QuatSymmetryResults> localSymmetries = new ArrayList<>();
 
-		// do not go any deeper into recursion if over the time limit
-		double time = (System.nanoTime() - symmParams.getLocalTimeStart()) / 1000000000;
-		if (time > symmParams.getLocalTimeLimit()) {
+		// do not go any deeper into recursion if over the time/combinations limit
+		if(symmParams.isLocalLimitsExceeded(knownCombinations)) {
 			return localSymmetries;
 		}
-
 		// extract components of a (sub-)graph
 		CliqueMinimalSeparatorDecomposition<Integer, DefaultEdge> cmsd =
 				new CliqueMinimalSeparatorDecomposition<>(graph);
@@ -386,10 +389,10 @@ public class QuatSymmetryDetector {
 					collect(Collectors.toSet());
 
 		//do not go into what has already been explored
-		graphComponents.removeAll(knownResults);
+		graphComponents.removeAll(knownCombinations);
 
 		for (Set<Integer> graphComponent: graphComponents) {
-			knownResults.add(graphComponent);
+			knownCombinations.add(graphComponent);
 
 			List<Integer> usedSubunitIds = new ArrayList<>(graphComponent);
 			Collections.sort(usedSubunitIds);
@@ -406,10 +409,10 @@ public class QuatSymmetryDetector {
 			// it is removed inside trimSubunitClusters
 			Set<Integer> usedSubunitIdsSet = new HashSet<>(usedSubunitIds);
 			if(!graphComponent.equals(usedSubunitIdsSet)) {
-				if(knownResults.contains(usedSubunitIdsSet)) {
+				if(knownCombinations.contains(usedSubunitIdsSet)) {
 					continue;
 				} else {
-					knownResults.add(usedSubunitIdsSet);
+					knownCombinations.add(usedSubunitIdsSet);
 				}
 			}
 
@@ -429,10 +432,10 @@ public class QuatSymmetryDetector {
 				// try removing subunits one by one and decompose the sub-graph recursively
 				Set<Integer> prunedGraphVertices = new HashSet<>(usedSubunitIds);
 				prunedGraphVertices.remove(removeSubunitId);
-				if (knownResults.contains(prunedGraphVertices)) {
+				if (knownCombinations.contains(prunedGraphVertices)) {
 					continue;
 				}
-				knownResults.add(prunedGraphVertices);
+				knownCombinations.add(prunedGraphVertices);
 
 				Graph<Integer, DefaultEdge> subGraph = new AsSubgraph<>(graph,prunedGraphVertices);
 
@@ -440,7 +443,7 @@ public class QuatSymmetryDetector {
 																						allSubunitClusterIds,
 																						clusterIdToSubunitIds,
 																						symmParams,
-																						knownResults,
+																						knownCombinations,
 																						subGraph);
 				localSymmetries.addAll(localSubSymmetries);
 			}

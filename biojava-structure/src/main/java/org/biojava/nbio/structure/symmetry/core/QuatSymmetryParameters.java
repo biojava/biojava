@@ -21,6 +21,7 @@
 package org.biojava.nbio.structure.symmetry.core;
 
 import java.io.Serializable;
+import java.util.Set;
 
 /**
  * The QuatSymmetryParameters specify the options used for the detection of
@@ -49,9 +50,14 @@ public class QuatSymmetryParameters implements Serializable {
 	private double minimumHelixRise = 1.0;
 	private double minimumHelixAngle = 5.0; // min helix angle to differentiate
 											// it from a translational repeat
+	private int maximumLocalCombinations = 10000; // max number of combinations
+													// to try for local symmetry
+													// calculation
 	private double localTimeLimit = 120; // time limit for local calculations in
 											// seconds
-	private double localTimeStart; // time when the local calculations started
+	private double localTimeStart = -1; // time when the local calculations started
+										// if set (>0), local time limit will be used
+
 	private boolean onTheFly = true;
 
 	/**
@@ -116,6 +122,14 @@ public class QuatSymmetryParameters implements Serializable {
 		this.minimumHelixAngle = minimumHelixAngle;
 	}
 
+	public int getMaximumLocalCombinations() {
+		return maximumLocalCombinations;
+	}
+
+	public void setMaximumLocalCombinations(int maximumLocalCombinations) {
+		this.maximumLocalCombinations = maximumLocalCombinations;
+	}
+
 	/**
 	 * @return the localTimeLimit
 	 */
@@ -142,8 +156,30 @@ public class QuatSymmetryParameters implements Serializable {
 	 * @param localTimeStart
 	 *            the time when local calculations started
 	 */
-	public void setLocalTimeStart(double localTimeStart) {
+	public void useLocalTimeLimit(double localTimeStart) {
 		this.localTimeStart = localTimeStart;
+	}
+
+	/**
+	 * @param combinations
+	 *            a set of combinations considered fo far by the local
+	 *            symmetry search
+	 * @return true, if the number of combinations
+	 */
+	public boolean isLocalLimitsExceeded(Set combinations) {
+		if(combinations.size()>maximumLocalCombinations) {
+			return true;
+		}
+		return isLocalLimitsExceeded();
+	}
+
+	public boolean isLocalLimitsExceeded() {
+		//use the time limit only if the start time was set
+		if (localTimeStart < 0) {
+			return false;
+		}
+		double elapsedTime = (System.nanoTime() - localTimeStart) / 1000000000;
+		return elapsedTime > localTimeLimit;
 	}
 
 	/**
@@ -174,6 +210,7 @@ public class QuatSymmetryParameters implements Serializable {
 				+ ", helixRmsdToRiseRatio=" + helixRmsdToRiseRatio
 				+ ", minimumHelixRise=" + minimumHelixRise
 				+ ", minimumHelixAngle=" + minimumHelixAngle
+				+ ", maximumLocalCombinations=" + maximumLocalCombinations
 				+ ", localTimeStart=" + localTimeStart
 				+ ", localTimeLimit=" + localTimeLimit + ", onTheFly="
 				+ onTheFly + "]";
