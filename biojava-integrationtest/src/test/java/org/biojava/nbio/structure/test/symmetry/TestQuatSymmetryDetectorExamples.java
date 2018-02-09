@@ -24,7 +24,6 @@ import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
