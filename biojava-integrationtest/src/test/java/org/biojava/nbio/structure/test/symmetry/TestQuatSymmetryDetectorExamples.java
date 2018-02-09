@@ -23,12 +23,14 @@ package org.biojava.nbio.structure.test.symmetry;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
+import org.biojava.nbio.structure.cluster.SubunitCluster;
+import org.biojava.nbio.structure.cluster.SubunitClusterer;
 import org.biojava.nbio.structure.cluster.SubunitClustererMethod;
 import org.biojava.nbio.structure.cluster.SubunitClustererParameters;
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetryDetector;
@@ -126,7 +128,7 @@ public class TestQuatSymmetryDetectorExamples {
 	}
 
 	/**
-	 * A structure with no global symmetry, but local symmetry: 4P2C
+	 * A selection of structures with no global symmetry, but local symmetry
 	 * 
 	 * @throws IOException
 	 * @throws StructureException
@@ -134,28 +136,130 @@ public class TestQuatSymmetryDetectorExamples {
 	@Test
 	public void testLocal() throws IOException, StructureException {
 
-		Structure pdb = StructureIO.getStructure("BIO:4p2c:1");
+		List<String> testIds = new ArrayList<>();
+		List<String> testStoichiometries = new ArrayList<>();
+		List<Map<String,String>> testLocalSymmetries = new ArrayList<>();
+		Map<String,String> localSymmetries;
 
-		// Global Symmetry
-		SubunitClustererParameters clusterParams = new SubunitClustererParameters();
+		testIds.add("BIO:5NUQ:1");
+			testStoichiometries.add("A3B");
+			localSymmetries = new HashMap<>();
+				localSymmetries.put("A3","C3");
+			testLocalSymmetries.add(localSymmetries);
+
+		testIds.add("BIO:4P2C:1");
+			testStoichiometries.add("A5B5C");
+			localSymmetries = new HashMap<>();
+				localSymmetries.put("A5B5","C5");
+			testLocalSymmetries.add(localSymmetries);
+
+		testIds.add("BIO:3J96:1");
+			testStoichiometries.add("A6B4CDE");
+			localSymmetries = new HashMap<>();
+				localSymmetries.put("B4","C4");
+			testLocalSymmetries.add(localSymmetries);
+
+		testIds.add("BIO:5WVK:1");
+			testStoichiometries.add("A2B2C2D2E2F2G2H2I2J2K2L2M2N2OPQRSTUVWXYZabcdef");
+			localSymmetries = new HashMap<>();
+				localSymmetries.put("A2B2C2D2E2F2G2H2I2J2K2L2M2N2","C2");
+			testLocalSymmetries.add(localSymmetries);
+
+		testIds.add("BIO:5LUF:1");
+			testStoichiometries.add("A9B6C3D3E3F2G2H2I2J2K2L2M2N2O2PQRSTUVWXYZabcdefg");
+			localSymmetries = new HashMap<>();
+				localSymmetries.put("F2G2H2I2J2K2L2M2N2O2","C2");
+			testLocalSymmetries.add(localSymmetries);
+
+		testIds.add("BIO:5JXT:1");
+			testStoichiometries.add("A16");
+			localSymmetries = new HashMap<>();
+				localSymmetries.put("A8","D2");
+			testLocalSymmetries.add(localSymmetries);
+
+		testIds.add("BIO:3R8R:1");
+			testStoichiometries.add("A12");
+			localSymmetries = new HashMap<>();
+				localSymmetries.put("A10","D5");
+			testLocalSymmetries.add(localSymmetries);
+
+		testIds.add("BIO:1O18:1");
+			testStoichiometries.add("A14B6C5D5");
+			localSymmetries = new HashMap<>();
+				localSymmetries.put("A14","H");
+			testLocalSymmetries.add(localSymmetries);
+
+		testIds.add("BIO:4A8A:1");
+			testStoichiometries.add("A12B");
+			localSymmetries = new HashMap<>();
+				localSymmetries.put("A12","T");
+			testLocalSymmetries.add(localSymmetries);
+
+		testIds.add("BIO:5DN6:1");
+			testStoichiometries.add("A12B3C3DEFGHIJKL");
+			localSymmetries = new HashMap<>();
+				localSymmetries.put("B3C3","C3");
+				localSymmetries.put("A12","C12");
+			testLocalSymmetries.add(localSymmetries);
+
+		testIds.add("BIO:5FL7:1");
+			testStoichiometries.add("A10B3C3DE");
+			localSymmetries = new HashMap<>();
+				localSymmetries.put("B3C3","C3");
+				localSymmetries.put("A10","C10");
+			testLocalSymmetries.add(localSymmetries);
+
+		testIds.add("BIO:2OF5:1");
+			testStoichiometries.add("A7B5");
+			localSymmetries = new HashMap<>();
+				localSymmetries.put("A7","H");
+				localSymmetries.put("A5B5","H");
+			testLocalSymmetries.add(localSymmetries);
+
+		testIds.add("BIO:6EM9:1");
+			testStoichiometries.add("A8B2");
+			localSymmetries = new HashMap<>();
+				localSymmetries.put("B2","C2");
+				localSymmetries.put("A7","H");
+			testLocalSymmetries.add(localSymmetries);
+
+		testIds.add("BIO:4NTP:1");
+			testStoichiometries.add("A16");
+			localSymmetries = new HashMap<>();
+				localSymmetries.put("A2","C2");
+				localSymmetries.put("A6","D3");
+			testLocalSymmetries.add(localSymmetries);
+
+		testIds.add("BIO:3JC9:1");
+			testStoichiometries.add("A12B12C12D12E12F12G5H2");
+			localSymmetries = new HashMap<>();
+				localSymmetries.put("A12C12D12E12F12H2","C2");
+				localSymmetries.put("A12B12C12D12E12F12","C12");
+				localSymmetries.put("G5","H");
+			testLocalSymmetries.add(localSymmetries);
+
 		QuatSymmetryParameters symmParams = new QuatSymmetryParameters();
-		QuatSymmetryResults symmetry = QuatSymmetryDetector.calcGlobalSymmetry(
-				pdb, symmParams, clusterParams);
+		SubunitClustererParameters clusterParams = new SubunitClustererParameters(true);
+		clusterParams.setClustererMethod(SubunitClustererMethod.SEQUENCE);
+		clusterParams.setSequenceIdentityThreshold(0.75);
 
-		// C1 global symmetry
-		assertEquals("C1", symmetry.getSymmetry());
-		assertEquals("A5B5C", symmetry.getStoichiometry());
+		for(int iTest = 0; iTest<testIds.size();iTest++) {
+			Structure pdb = StructureIO.getStructure(testIds.get(iTest));
+			List<SubunitCluster> clusters = SubunitClusterer.cluster(pdb,clusterParams);
 
-		// Local symmetry
-		List<QuatSymmetryResults> localSymm = QuatSymmetryDetector
-				.calcLocalSymmetries(pdb, symmParams, clusterParams);
+			// no global symmetry
+			QuatSymmetryResults globalSymmetry = QuatSymmetryDetector.calcGlobalSymmetry(clusters,symmParams);
+			assertEquals("C1", globalSymmetry.getSymmetry());
+			assertEquals(testStoichiometries.get(iTest), globalSymmetry.getStoichiometry());
 
-		// C5 local symmetry excluding chain A
-		assertEquals(1, localSymm.size());
-		assertEquals("C5", localSymm.get(0).getSymmetry());
+			List<QuatSymmetryResults> foundLocal = QuatSymmetryDetector.calcLocalSymmetries(clusters, symmParams);
+			Map<String,String> refLocal = testLocalSymmetries.get(iTest);
 
-		// One A5B5 stoichiometries as local symmetry
-		assertEquals("A5B5", localSymm.get(0).getStoichiometry());
+			for (QuatSymmetryResults local:foundLocal) {
+				assertTrue(refLocal.keySet().contains(local.getStoichiometry()));
+				assertEquals(refLocal.get(local.getStoichiometry()),local.getSymmetry());
+			}
+		}
 	}
 
 	/**
