@@ -82,7 +82,33 @@ public class SubunitCluster {
 	private boolean pseudoStoichiometric = false;
 
 	/**
-	 * A SubunitCluster is always initialized with a single Subunit. To obtain a
+	 * A letter that is assigned to this cluster in stoichiometry.
+	*/
+	private String alpha = "";
+
+	/**
+	 * A letter that is assigned to this cluster in stoichiometry.
+	 *
+	 * @return alpha
+	 *          String
+	 */
+
+	public String getAlpha() {
+		return alpha;
+	}
+
+	/**
+	 * A letter that is assigned to this cluster in stoichiometry.
+	 *
+	 * @param  alpha
+	 *          String
+	 */
+	public void setAlpha(String alpha) {
+		this.alpha = alpha;
+	}
+
+	/**
+	 * A constructor from a single Subunit. To obtain a
 	 * SubunitCluster with multiple Subunits, initialize different
 	 * SubunitClusters and merge them.
 	 * 
@@ -99,6 +125,33 @@ public class SubunitCluster {
 		subunitEQR.add(identity);
 
 		representative = 0;
+	}
+
+	/**
+	 * A copy constructor with the possibility of removing subunits.
+	 * No re-clustering is done.
+	 *
+	 * @param other
+	 *            reference SubunitCluster
+	 * @param subunitsToRetain
+	 *            which subunits to copy to this cluster
+	 */
+	public SubunitCluster(SubunitCluster other, List<Integer> subunitsToRetain) {
+		method = other.method;
+		pseudoStoichiometric = other.pseudoStoichiometric;
+		for (int i = 0; i < other.subunits.size(); i++) {
+			if(subunitsToRetain.contains(i)) {
+				subunits.add(other.subunits.get(i));
+				subunitEQR.add(other.subunitEQR.get(i));
+			}
+		}
+		representative = 0;
+		for (int i=1; i<subunits.size(); i++) {
+			if (subunits.get(i).size() > subunits.get(representative).size()) {
+				representative = i;
+			}
+		}
+		setAlpha(other.getAlpha());
 	}
 
 	/**

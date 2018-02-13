@@ -54,8 +54,8 @@ public class QuatSymmetryResults {
 
 	// Information about the symmetry
 	private SymmetryPerceptionMethod method;
-	private RotationGroup rotationGroup;
 	private HelixLayers helixLayers;
+	private RotationGroup rotationGroup = new RotationGroup();
 
 	// TODO we should unify rotational and roto-translational results
 
@@ -105,6 +105,47 @@ public class QuatSymmetryResults {
 
 		this.helixLayers = helixLayers;
 		this.method = method;
+	}
+
+	/**
+	 * Determine if this symmetry result is a subset of the other Symmetry result.
+	 * Checks the following conditions:
+	 * - 'Other' includes all subunits of 'this'.
+	 * - 'Other' has the same or higher order than 'this'.
+	 *
+	 * Special treatment for the helical symmetry:
+	 * - 'Other' includes all subunits of 'this'.
+	 * - 'this' may be Cn, as well as H
+	 *
+	 *  Note that isSupersededBy establishes a partial order, i.e. for some
+	 *  symmetries A and B, neither A.isSupersededBy(B) nor B.isSupersededBy(A)
+	 *  may be true.
+	 *
+	 * @param other
+	 *            QuatSymmetryResults
+	 *
+	 * @return true if other supersedes this, false otherwise
+	 */
+
+	public boolean isSupersededBy(QuatSymmetryResults other) {
+		if(other.getSymmetry().startsWith("H")) {
+			if(this.getSymmetry().startsWith("C") || this.getSymmetry().startsWith("H")) {
+				if (other.subunits.containsAll(this.subunits)) {
+					return true;
+				}
+			}
+			return false;
+		}
+
+		if (this.getSymmetry().startsWith("H")) {
+			return false;
+		}
+
+		if (this.rotationGroup.getOrder() <= other.rotationGroup.getOrder() &&
+				other.subunits.containsAll(this.subunits)) {
+			return true;
+		}
+		return false;
 	}
 
 	/**
