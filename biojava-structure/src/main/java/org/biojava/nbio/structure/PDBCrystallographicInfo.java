@@ -170,7 +170,7 @@ public class PDBCrystallographicInfo implements Serializable {
 	}
 
 	/**
-	 * Get the NCS operators.
+	 * Get the NCS operators in orthonormal basis by default.
 	 * Some PDB files contain NCS operators necessary to create the full AU.
 	 * Usually this happens for viral proteins.
 	 * See http://www.wwpdb.org/documentation/format33/sect8.html#MTRIXn .
@@ -180,7 +180,30 @@ public class PDBCrystallographicInfo implements Serializable {
 	 * @return the operators or null if no operators present
 	 */
 	public Matrix4d[] getNcsOperators() {
-		return ncsOperators;
+		return getNcsOperators(true);
+	}
+
+	/**
+	 * Get the NCS operators.
+	 * @param orthonormalBasis
+	 *        if true, return the NCS operators as they are recorded.
+	 *        If false, convert them to the crystal basis first.
+	 * @return the operators or null if no operators present
+	 */
+	public Matrix4d[] getNcsOperators(boolean orthonormalBasis) {
+		if(orthonormalBasis) {
+			return ncsOperators;
+		}
+
+		if(ncsOperators==null || ncsOperators.length == 0) {
+			return null;
+		}
+
+		Matrix4d[] ncsOperatorsCrystal = new Matrix4d[ncsOperators.length];
+		for(int i=0;i<ncsOperators.length;i++) {
+			ncsOperatorsCrystal[i] = cell.transfToCrystal(ncsOperators[i]);
+		}
+		return ncsOperatorsCrystal;
 	}
 
 	/**

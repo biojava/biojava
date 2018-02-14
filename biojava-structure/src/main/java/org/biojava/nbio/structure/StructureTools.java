@@ -2018,8 +2018,10 @@ public class StructureTools {
 	/**
 	 * Expands the NCS operators in the given Structure adding new chains as needed.
 	 * The new chains are assigned ids of the form: original_chain_id+ncs_operator_index+"n"
+	 * @deprecated use {@link SpaceGroup#extendNCS()} instead.
 	 * @param structure
 	 */
+	@Deprecated
 	public static void expandNcsOps(Structure structure) {
 		PDBCrystallographicInfo xtalInfo = structure.getCrystallographicInfo();
 		if (xtalInfo ==null) return;

@@ -110,14 +110,23 @@ public class CrystalBuilder {
 				logger.warn("Space group is non-standard, will only calculate asymmetric unit interfaces.");
 				this.isCrystallographic = false;
 
-			} else if (this.crystallographicInfo.getSpaceGroup()==null) { 			
+			} else if (this.crystallographicInfo.getSpaceGroup()==null) {
 				// just in case we still check for space group null (a user pdb file could potentially be crystallographic and have no space group)			
 				logger.warn("Space group is null, will only calculate asymmetric unit interfaces.");
 				this.isCrystallographic = false;
 			} else {
 				this.numOperatorsSg = this.crystallographicInfo.getSpaceGroup().getMultiplicity();
 			}
-			
+
+			Matrix4d[] ncsOperators = this.crystallographicInfo.getNcsOperators(false);
+
+			if (ncsOperators != null && ncsOperators.length > 0) {
+				SpaceGroup sg = new SpaceGroup(this.crystallographicInfo.getSpaceGroup());
+				sg.extendNCS(ncsOperators);
+				this.crystallographicInfo.setSpaceGroup(sg);
+				this.numOperatorsSg = this.crystallographicInfo.getSpaceGroup().getMultiplicity();
+			}
+
 			// we need to check crystal cell not null for the rare cases where the entry is crystallographic but
 			// the crystal cell is not given, e.g. 2i68, 2xkm, 4bpq
 			if (this.crystallographicInfo.getCrystalCell()==null) {
@@ -228,7 +237,7 @@ public class CrystalBuilder {
 
 		Matrix4d[] ops = null;
 		if (isCrystallographic) {
-			ops = structure.getCrystallographicInfo().getTransformationsOrthonormal();
+			ops = crystallographicInfo.getTransformationsOrthonormal();
 		} else {
 			ops = new Matrix4d[1];
 			ops[0] = new Matrix4d(IDENTITY);

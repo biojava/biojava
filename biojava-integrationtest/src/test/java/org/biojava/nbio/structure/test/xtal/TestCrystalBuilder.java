@@ -105,6 +105,30 @@ public class TestCrystalBuilder {
 	}
 
 	@Test
+	public void test1AUY() throws IOException, StructureException {
+		// a virus with NCS operators
+		AtomCache cache = new AtomCache();
+		StructureIO.setAtomCache(cache);
+		cache.setUseMmCif(true);
+		Structure s1 = StructureIO.getStructure("1AUY");
+		CrystalBuilder cb = new CrystalBuilder(s1);
+		StructureInterfaceList interfaces = cb.getUniqueInterfaces(5.5);
+		assertTrue(interfaces.size()==12);
+	}
+
+	@Test
+	public void test1A37() throws IOException, StructureException {
+		// a smaller structure with NCS operators
+		AtomCache cache = new AtomCache();
+		StructureIO.setAtomCache(cache);
+		cache.setUseMmCif(true);
+		Structure s1 = StructureIO.getStructure("1A37");
+		CrystalBuilder cb = new CrystalBuilder(s1);
+		StructureInterfaceList interfaces = cb.getUniqueInterfaces(5.5);
+		assertTrue(interfaces.size()==14);
+	}
+
+	@Test
 	public void test2H2Z() throws IOException, StructureException {
 
 		// a crystallographic structure C 1 2 1.
