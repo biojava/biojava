@@ -1,12 +1,79 @@
 BioJava 5.0.0
 =============
 
-unreleased
+unreleased. Notes are WIP
 
-- For short structure selections (e.g. 1abc.A:1-100), ligands within 5A will be included
+* For short structure selections (e.g. 1abc.A:1-100), ligands within 5A will be included
+
+Breaking API changes
+* org.biojava.nbio.structure.Compound -> org.biojava.nbio.structure.EntityInfo
+* org.biojava.nbio.structure.io.util.FileDownloadUtils -> org.biojava.nbio.core.util.FileDownloadUtils
+* org.biojava.nbio.structure.symmetry.core.AxisAligner -> org.biojava.nbio.structure.symmetry.axis.AxisAligner
+* org.biojava.nbio.structure.symmetry.core.Subunits -> refactored into serveral classes in org.biojava.nbio.structure.cluster: Subunit, SubunitCluster, SubunitClusterer
 
 
-BioJava 4.2.5 
+
+BioJava 4.2.11
+==============
+
+release date: January 11th 2018
+This release contains [3](https://github.com/biojava/biojava/compare/biojava-4.2.10...biojava-4.2.11) commits from 1 contributor.
+
+### Bug fixes
+- Updated hmmer scan web service URL to https.
+
+BioJava 4.2.10
+==============
+
+release date: December 11th 2017
+This release contains [7](https://github.com/biojava/biojava/compare/biojava-4.2.9...biojava-4.2.10) commits from 2 contributors.
+
+### Bug fixes
+- Fixed issue #659
+- Fixed issue #715
+
+BioJava 4.2.9
+=============
+
+release date: October 19th 2017
+This release contains [15](https://github.com/biojava/biojava/compare/biojava-4.2.8...biojava-4.2.9) commits from 2 contributors.
+
+### Bug fixes
+- Some fixes to PDB file parsing CONECT/LINK records
+- Updated URLs for external resources
+
+
+BioJava 4.2.8
+=============
+
+release date: July 6th 2017
+This release contains [15](https://github.com/biojava/biojava/compare/biojava-4.2.7...biojava-4.2.8) commits from 3 contributors.
+
+### Bug fixes
+- Small additions to AlignedSequence in core module to better support pipelines that use 4.2.x
+- URLs adapted to latest RCSB PDB convention #682
+
+BioJava 4.2.7
+=============
+
+release date: March 7th 2017
+This release contains [8](https://github.com/biojava/biojava/compare/biojava-4.2.6...biojava-4.2.7) commits from 4 contributors.
+
+### Bug fixes
+- Fix for hmmer web service in biojava-ws #640
+- Fix in chromosome mapping tool #636
+
+BioJava 4.2.6
+=============
+
+release date: February 17th 2017
+This release contains [12](https://github.com/biojava/biojava/compare/biojava-4.2.5...biojava-4.2.6) commits from 4 contributors.
+
+### Bug fixes
+* Fix for problem in chain cloning, #631
+* Several bug fixes and better error check in quaternary symmetry detection code
+
+BioJava 4.2.5
 =============
 
 release date: December 7th 2016
@@ -82,7 +149,7 @@ Biojava-structure
 - Substructures now contain seqres groups (isse #449)
 - Structures containing insertion codes are now written correctly to mmCIF
 - AtomCache now uses the correct default parsing parameters (issue #455)
-- Fixed problem with some atom charges that weren't being added 
+- Fixed problem with some atom charges that weren't being added
 - CATH updated to 4.0.0
 - Better ECOD javadocs (issue #452)
 
@@ -143,12 +210,3 @@ Biojava-Phylo
 -   update the forester version to have the correct NJ tree constructor
     AND
 -   correct some of the tree evaluator statistics.
-
-
-
-
-
-
-
-
-
