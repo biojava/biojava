@@ -48,7 +48,7 @@ public class TestCrystalBuilder {
 
 		CrystalBuilder cb = new CrystalBuilder(s1);
 		StructureInterfaceList interfaces = cb.getUniqueInterfaces(5.5);
-		assertTrue(interfaces.size()==0);
+		assertEquals(0,interfaces.size());
 
 	}
 
@@ -65,7 +65,7 @@ public class TestCrystalBuilder {
 		Structure s1 = StructureIO.getStructure("1B8G");
 		CrystalBuilder cb = new CrystalBuilder(s1);
 		StructureInterfaceList interfaces = cb.getUniqueInterfaces(5.5);
-		assertTrue(interfaces.size()>1);
+		assertEquals(8,interfaces.size());
 
 
 	}
@@ -83,7 +83,7 @@ public class TestCrystalBuilder {
 		Structure s1 = StructureIO.getStructure("2MFZ");
 		CrystalBuilder cb = new CrystalBuilder(s1);
 		StructureInterfaceList interfaces = cb.getUniqueInterfaces(5.5);
-		assertTrue(interfaces.size()==1);
+		assertEquals(1,interfaces.size());
 
 	}
 
@@ -100,7 +100,7 @@ public class TestCrystalBuilder {
 		Structure s1 = StructureIO.getStructure("4MF8");
 		CrystalBuilder cb = new CrystalBuilder(s1);
 		StructureInterfaceList interfaces = cb.getUniqueInterfaces(5.5);
-		assertTrue(interfaces.size()>3);
+		assertEquals(17,interfaces.size());
 
 	}
 
@@ -113,7 +113,7 @@ public class TestCrystalBuilder {
 		Structure s1 = StructureIO.getStructure("1AUY");
 		CrystalBuilder cb = new CrystalBuilder(s1);
 		StructureInterfaceList interfaces = cb.getUniqueInterfaces(5.5);
-		assertTrue(interfaces.size()==12);
+		assertEquals(12,interfaces.size());
 	}
 
 	@Test
@@ -125,7 +125,7 @@ public class TestCrystalBuilder {
 		Structure s1 = StructureIO.getStructure("1A37");
 		CrystalBuilder cb = new CrystalBuilder(s1);
 		StructureInterfaceList interfaces = cb.getUniqueInterfaces(5.5);
-		assertTrue(interfaces.size()==14);
+		assertEquals(14,interfaces.size());
 	}
 
 	@Test
@@ -144,7 +144,7 @@ public class TestCrystalBuilder {
 		Structure s1 = StructureIO.getStructure("2H2Z");
 		CrystalBuilder cb = new CrystalBuilder(s1);
 		StructureInterfaceList interfaces = cb.getUniqueInterfaces(5.5);
-		assertTrue(interfaces.size()>=3);
+		assertEquals(3,interfaces.size());
 
 	}
 	

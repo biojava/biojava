@@ -87,62 +87,80 @@ public class CrystalBuilder {
 
 	private ArrayList<CrystalTransform> visited;
 
-	private boolean isCrystallographic;
-
-
+	private boolean searchBeyondAU;
+	private Matrix4d[] ops;
 
 	public CrystalBuilder(Structure structure) {
 		this.structure = structure;
-
 		this.crystallographicInfo = structure.getCrystallographicInfo();
-
 		this.numPolyChainsAu = structure.getPolyChains().size();
-		this.numOperatorsSg = 1;
 
-
+		this.searchBeyondAU = false;
 		if (structure.isCrystallographic()) {
 
-			this.isCrystallographic = true;
+			this.searchBeyondAU = true;
 
 			// we need to check space group not null for the cases where the entry is crystallographic but
 			// the space group is not a standard one recognized by biojava, e.g. 1mnk (SG: 'I 21')
 			if (this.crystallographicInfo.isNonStandardSg()) {
 				logger.warn("Space group is non-standard, will only calculate asymmetric unit interfaces.");
-				this.isCrystallographic = false;
-
-			} else if (this.crystallographicInfo.getSpaceGroup()==null) {
-				// just in case we still check for space group null (a user pdb file could potentially be crystallographic and have no space group)			
-				logger.warn("Space group is null, will only calculate asymmetric unit interfaces.");
-				this.isCrystallographic = false;
-			} else {
-				this.numOperatorsSg = this.crystallographicInfo.getSpaceGroup().getMultiplicity();
+				this.searchBeyondAU = false;
 			}
 
-			Matrix4d[] ncsOperators = this.crystallographicInfo.getNcsOperators(false);
-
-			if (ncsOperators != null && ncsOperators.length > 0) {
-				SpaceGroup sg = new SpaceGroup(this.crystallographicInfo.getSpaceGroup());
-				sg.extendNCS(ncsOperators);
-				this.crystallographicInfo.setSpaceGroup(sg);
-				this.numOperatorsSg = this.crystallographicInfo.getSpaceGroup().getMultiplicity();
+			// just in case we still check for space group null (a user pdb file could potentially be crystallographic and have no space group)
+			if (this.crystallographicInfo.getSpaceGroup()==null) {
+				logger.warn("Space group is null, will only calculate asymmetric unit interfaces.");
+				this.searchBeyondAU = false;
 			}
 
 			// we need to check crystal cell not null for the rare cases where the entry is crystallographic but
 			// the crystal cell is not given, e.g. 2i68, 2xkm, 4bpq
 			if (this.crystallographicInfo.getCrystalCell()==null) {
 				logger.warn("Could not find a crystal cell definition, will only calculate asymmetric unit interfaces.");
-				this.isCrystallographic = false;
+				this.searchBeyondAU = false;
 			}
-			
+
 			// check for cases like 4hhb that are in a non-standard coordinate frame convention, see https://github.com/eppic-team/owl/issues/4
 			if (this.crystallographicInfo.isNonStandardCoordFrameConvention()) {
 				logger.warn("Non-standard coordinate frame convention, will only calculate asymmetric unit interfaces.");
-				this.isCrystallographic = false;
-				this.numOperatorsSg = 1; // we force here to 1 or otherwise it gets filled from sg above
+				this.searchBeyondAU = false;
 			}
 
-		} else {
-			this.isCrystallographic = false;
+		}
+
+		if (this.crystallographicInfo.hasNcsOperators()) {
+			SpaceGroup sg;
+			Matrix4d[] ncsOperators;
+			if(!this.searchBeyondAU) {
+				// cell information does not exist or invalid
+				// make a P1
+				ncsOperators = this.crystallographicInfo.getNcsOperators(true);
+				sg = new SpaceGroup(1, 1, 1, "P1", "P 1", BravaisLattice.TRICLINIC);
+				sg.addTransformation("X,Y,Z");
+			} else {
+				ncsOperators = this.crystallographicInfo.getNcsOperators(false);
+				sg = new SpaceGroup(this.crystallographicInfo.getSpaceGroup());
+			}
+			sg.extendNCS(ncsOperators);
+			this.crystallographicInfo.setSpaceGroup(sg);
+		}
+
+		if (this.searchBeyondAU) {
+			// explore the crystal
+			this.numOperatorsSg = this.crystallographicInfo.getSpaceGroup().getMultiplicity();
+			this.ops = this.crystallographicInfo.getTransformationsOrthonormal();
+		}
+		// else, look for contacts within AU only
+		else if (this.crystallographicInfo.hasNcsOperators()) {
+			// use symmetry operators to reconstruct the full AU
+			this.numOperatorsSg = this.crystallographicInfo.getSpaceGroup().getMultiplicity();
+			this.ops = this.crystallographicInfo.getTransformationsCrystal();
+		}
+		else {
+			// look for contacts within structure as given
+			this.numOperatorsSg = 1;
+			this.ops = new Matrix4d[1];
+			this.ops[0] = new Matrix4d(IDENTITY);
 		}
 
 		this.numCells = DEF_NUM_CELLS;
@@ -234,15 +252,6 @@ public class CrystalBuilder {
 		int skippedChainsNoOverlap = 0;
 		int skippedSelfEquivalent = 0;
 
-
-		Matrix4d[] ops = null;
-		if (isCrystallographic) {
-			ops = crystallographicInfo.getTransformationsOrthonormal();
-		} else {
-			ops = new Matrix4d[1];
-			ops[0] = new Matrix4d(IDENTITY);
-		}
-
 		// The bounding boxes of all AUs of the unit cell
 		UnitCellBoundingBox bbGrid = new UnitCellBoundingBox(numOperatorsSg, numPolyChainsAu);;
 		// we calculate all the bounds of each of the asym units, those will then be reused and translated
@@ -250,7 +259,7 @@ public class CrystalBuilder {
 
 
 		// if not crystallographic there's no search to do in other cells, only chains within "AU" will be checked
-		if (!isCrystallographic) numCells = 0;
+		if (!searchBeyondAU) numCells = 0;
 
 		boolean verbose = logger.isDebugEnabled();
 
