@@ -114,6 +114,13 @@ public class TestCrystalBuilder {
 		CrystalBuilder cb = new CrystalBuilder(s1);
 		StructureInterfaceList interfaces = cb.getUniqueInterfaces(5.5);
 		assertEquals(12,interfaces.size());
+		// kill the cell info to simulate incorrect and/or missing
+		s1.getCrystallographicInfo().setCrystalCell(null);
+		cb = new CrystalBuilder(s1);
+		interfaces = cb.getUniqueInterfaces(5.5);
+		//same number of interfaces should be found
+		// from ncs operators
+		assertEquals(12,interfaces.size());
 	}
 
 	@Test
