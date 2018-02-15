@@ -24,13 +24,21 @@ public enum SubunitClustererMethod {
 	 * coordinates of its Atom representatives of the {@link Subunit} to
 	 * calculate sequence and structure alignments.
 	 * <p>
+	 * Two {@link Subunit} with sufficient structural similarity and coverage
+	 * are clustered together.
+	 */
+	STRUCTURE,
+	/**
+	 * The SEQUENCE_STRUCTURE clustering method uses the residue sequence and the
+	 * coordinates of its Atom representatives of the {@link Subunit} to
+	 * calculate sequence and structure alignments.
+	 * <p>
 	 * Two {@link Subunit} with sufficient sequence identity and coverage are
 	 * clustered together. Additionally, two {@link Subunit} with sufficient
 	 * structural similarity and coverage are clustered together. If the
 	 * sequence and structure clustering differ, the cluster contains
 	 * pseudosymmetry (by definition).
 	 */
-	STRUCTURE
-
+	SEQUENCE_STRUCTURE
 }
 

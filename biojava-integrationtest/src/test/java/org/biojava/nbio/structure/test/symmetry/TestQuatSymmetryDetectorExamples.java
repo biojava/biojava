@@ -274,7 +274,7 @@ public class TestQuatSymmetryDetectorExamples {
 
 		// Internal symmetry analysis, use structural clustering
 		SubunitClustererParameters cp = new SubunitClustererParameters();
-		cp.setClustererMethod(SubunitClustererMethod.STRUCTURE);
+		cp.setClustererMethod(SubunitClustererMethod.SEQUENCE_STRUCTURE);
 		cp.setInternalSymmetry(true);
 		cp.setStructureCoverageThreshold(0.75); // Lower coverage for internal symm
 

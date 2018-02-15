@@ -83,7 +83,7 @@ public class TestSubunitClustererExamples {
 		assertEquals(clusters.get(1).getClustererMethod(),
 				SubunitClustererMethod.SEQUENCE);
 
-		params.setClustererMethod(SubunitClustererMethod.STRUCTURE);
+		params.setClustererMethod(SubunitClustererMethod.SEQUENCE_STRUCTURE);
 		params.setRMSDThreshold(3.0);
 
 		clusters = SubunitClusterer.cluster(s, params);
@@ -116,7 +116,7 @@ public class TestSubunitClustererExamples {
 		assertEquals(clusters.get(0).getClustererMethod(),
 				SubunitClustererMethod.SEQUENCE);
 
-		params.setClustererMethod(SubunitClustererMethod.STRUCTURE);
+		params.setClustererMethod(SubunitClustererMethod.SEQUENCE_STRUCTURE);
 		params.setStructureCoverageThreshold(0.8);
 		params.setInternalSymmetry(true);
 		params.setRMSDThreshold(3.0);

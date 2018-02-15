@@ -755,7 +755,6 @@ public class SymmetryTools {
 		cp.setClustererMethod(SubunitClustererMethod.STRUCTURE);
 		cp.setRMSDThreshold(10.0);
 		cp.setStructureCoverageThreshold(0.0);
-		cp.setSequenceIdentityThreshold(1.1); // avoid using sequence cluster
 
 		QuatSymmetryParameters sp = new QuatSymmetryParameters();
 
