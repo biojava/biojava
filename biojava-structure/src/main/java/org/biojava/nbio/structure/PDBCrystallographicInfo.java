@@ -169,8 +169,31 @@ public class PDBCrystallographicInfo implements Serializable {
 		return transfs;
 	}
 
+
 	/**
-	 * Get the NCS operators.
+	 * Gets all symmetry transformation operators corresponding to this structure's space group
+	 * (including the identity, at index 0) expressed in the crystal basis. Using PDB axes
+	 * convention (NCODE=1).
+	 * @return an array of size {@link SpaceGroup#getNumOperators()}
+	 */
+	public Matrix4d[] getTransformationsCrystal() {
+		Matrix4d[] transfs = new Matrix4d[this.getSpaceGroup().getNumOperators()];
+		for (int i=0;i<this.getSpaceGroup().getNumOperators();i++) {
+			transfs[i] = this.getSpaceGroup().getTransformation(i);
+		}
+		return transfs;
+	}
+
+	/**
+	 * @return true if the PDB structure file contains NCS operators,
+	 *         false otherwise
+	 */
+	public boolean hasNcsOperators() {
+		return ncsOperators!= null && ncsOperators.length>0;
+	}
+
+	/**
+	 * Get the NCS operators in orthonormal basis by default.
 	 * Some PDB files contain NCS operators necessary to create the full AU.
 	 * Usually this happens for viral proteins.
 	 * See http://www.wwpdb.org/documentation/format33/sect8.html#MTRIXn .
@@ -180,7 +203,32 @@ public class PDBCrystallographicInfo implements Serializable {
 	 * @return the operators or null if no operators present
 	 */
 	public Matrix4d[] getNcsOperators() {
-		return ncsOperators;
+		return getNcsOperators(true);
+	}
+
+	/**
+	 * Get the NCS operators.
+	 * @param orthonormalBasis
+	 *        if true, return the NCS operators as they are recorded.
+	 *        If false, convert them to the crystal basis first.
+	 * @return the operators or null if no operators present
+	 */
+	public Matrix4d[] getNcsOperators(boolean orthonormalBasis) {
+		if(orthonormalBasis) {
+			return ncsOperators;
+		}
+
+		if(ncsOperators==null || ncsOperators.length == 0) {
+			return null;
+		}
+		if(cell==null) {
+			throw new IllegalArgumentException("Cannot transform to the crystal basis if there is no cell.");
+		}
+		Matrix4d[] ncsOperatorsCrystal = new Matrix4d[ncsOperators.length];
+		for(int i=0;i<ncsOperators.length;i++) {
+			ncsOperatorsCrystal[i] = cell.transfToCrystal(ncsOperators[i]);
+		}
+		return ncsOperatorsCrystal;
 	}
 
 	/**

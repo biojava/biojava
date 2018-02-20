@@ -42,6 +42,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -74,7 +75,7 @@ public class SpaceGroup implements Serializable {
 
 	private static final Pattern nonEnantPat = Pattern.compile("[-abcmnd]");
 
-	protected static final double DELTA=0.0000001;
+	protected static final double DELTA=0.00001;
 
 	private  int id;
 	private  int multiplicity;
@@ -90,6 +91,12 @@ public class SpaceGroup implements Serializable {
 	private int[] axisTypes; // indices of array are transformIds
 
 	private BravaisLattice bravLattice;
+	/**
+	 * specifies whether this space group has been extended with NCS operators.
+	 * beware, that number of transformations, etc. changes (times number of NCSs),
+	 * and it is not a 'true' space group any more.
+	 */
+	private boolean ncsExtended = false;
 
 	@SuppressWarnings("unused")
 	private SpaceGroup(){
@@ -103,10 +110,23 @@ public class SpaceGroup implements Serializable {
 		this.primitiveMultiplicity = primitiveMultiplicity;
 		this.shortSymbol = shortSymbol;
 		this.altShortSymbol = altShortSymbol;
-		transformations = new ArrayList<Matrix4d>(multiplicity);
-		transfAlgebraic = new ArrayList<String>(multiplicity);
+		transformations = new ArrayList<>(multiplicity);
+		transfAlgebraic = new ArrayList<>(multiplicity);
 		cellTranslations = new Vector3d[multiplicity/primitiveMultiplicity];
 		this.bravLattice = bravLattice;
+	}
+
+	public SpaceGroup(SpaceGroup other) {
+		this.id = other.id;
+		this.multiplicity = other.multiplicity;
+		this.primitiveMultiplicity = other.primitiveMultiplicity;
+		this.shortSymbol = other.shortSymbol;
+		this.altShortSymbol = other.altShortSymbol;
+		this.transformations = new ArrayList<>(other.transformations);
+		this.transfAlgebraic = new ArrayList<>(other.transfAlgebraic);
+		this.cellTranslations = new Vector3d[multiplicity/primitiveMultiplicity];
+		this.bravLattice = other.bravLattice;
+		this.ncsExtended = other.ncsExtended;
 	}
 
 	/**
@@ -277,6 +297,42 @@ public class SpaceGroup implements Serializable {
 			transfs.add(transformations.get(i));
 		}
 		return transfs;
+	}
+
+	/**
+	 * 'Inject' the NCS transformations into the regular transformations of this group.
+	 * This way, the unit cell of the proteins with NCS operators (typically viruses),
+	 * may be generated in the same way as for the regular proteins.
+	 * See CrystalBuilder for a usage example.
+	 * @param ncsOperators
+	 *          NCS operators, must be in the same basis as the space group transformations
+	 * @return
+	 */
+	public void extendNCS(Matrix4d[] ncsOperators) {
+		List<Matrix4d> opsNCS = new ArrayList<>();
+
+		Matrix4d opsId = new Matrix4d();
+		opsId.setIdentity();
+		opsNCS.add(opsId);
+		opsNCS.addAll(Arrays.asList(ncsOperators));
+
+		List<Matrix4d> opsCombined = new ArrayList<>();
+
+		for (Matrix4d transformation: transformations) {
+			for (Matrix4d opNCS: opsNCS) {
+				Matrix4d combined = new Matrix4d(transformation);
+				combined.mul(opNCS);
+				opsCombined.add(combined);
+			}
+		}
+		transformations = opsCombined;
+		transfAlgebraic.clear();
+		transformations.forEach(r->transfAlgebraic.add(getAlgebraicFromMatrix(r)));
+		multiplicity = multiplicity*opsNCS.size();
+		primitiveMultiplicity = primitiveMultiplicity*opsNCS.size();
+		cellTranslations = null;
+		initializeCellTranslations();
+		ncsExtended = true;
 	}
 
 	private void calcRotAxesAndAngles() {
@@ -718,5 +774,11 @@ public class SpaceGroup implements Serializable {
 		this.bravLattice = bravLattice;
 	}
 
+	/**
+	 * @return true if this space group has been extended with NCS operators.
+	 */
+	public boolean isNCSExtended() {
+		return ncsExtended;
+	}
 }
 

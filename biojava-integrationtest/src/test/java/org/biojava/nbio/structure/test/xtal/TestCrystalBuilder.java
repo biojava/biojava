@@ -48,7 +48,7 @@ public class TestCrystalBuilder {
 
 		CrystalBuilder cb = new CrystalBuilder(s1);
 		StructureInterfaceList interfaces = cb.getUniqueInterfaces(5.5);
-		assertTrue(interfaces.size()==0);
+		assertEquals(0,interfaces.size());
 
 	}
 
@@ -65,7 +65,7 @@ public class TestCrystalBuilder {
 		Structure s1 = StructureIO.getStructure("1B8G");
 		CrystalBuilder cb = new CrystalBuilder(s1);
 		StructureInterfaceList interfaces = cb.getUniqueInterfaces(5.5);
-		assertTrue(interfaces.size()>1);
+		assertEquals(8,interfaces.size());
 
 
 	}
@@ -83,7 +83,7 @@ public class TestCrystalBuilder {
 		Structure s1 = StructureIO.getStructure("2MFZ");
 		CrystalBuilder cb = new CrystalBuilder(s1);
 		StructureInterfaceList interfaces = cb.getUniqueInterfaces(5.5);
-		assertTrue(interfaces.size()==1);
+		assertEquals(1,interfaces.size());
 
 	}
 
@@ -100,8 +100,39 @@ public class TestCrystalBuilder {
 		Structure s1 = StructureIO.getStructure("4MF8");
 		CrystalBuilder cb = new CrystalBuilder(s1);
 		StructureInterfaceList interfaces = cb.getUniqueInterfaces(5.5);
-		assertTrue(interfaces.size()>3);
+		assertEquals(17,interfaces.size());
 
+	}
+
+	@Test
+	public void test1AUY() throws IOException, StructureException {
+		// a virus with NCS operators
+		AtomCache cache = new AtomCache();
+		StructureIO.setAtomCache(cache);
+		cache.setUseMmCif(true);
+		Structure s1 = StructureIO.getStructure("1AUY");
+		CrystalBuilder cb = new CrystalBuilder(s1);
+		StructureInterfaceList interfaces = cb.getUniqueInterfaces(5.5);
+		assertEquals(12,interfaces.size());
+		// kill the cell info to simulate incorrect and/or missing
+		s1.getCrystallographicInfo().setCrystalCell(null);
+		cb = new CrystalBuilder(s1);
+		interfaces = cb.getUniqueInterfaces(5.5);
+		//same number of interfaces should be found
+		// from ncs operators
+		assertEquals(12,interfaces.size());
+	}
+
+	@Test
+	public void test1A37() throws IOException, StructureException {
+		// a smaller structure with NCS operators
+		AtomCache cache = new AtomCache();
+		StructureIO.setAtomCache(cache);
+		cache.setUseMmCif(true);
+		Structure s1 = StructureIO.getStructure("1A37");
+		CrystalBuilder cb = new CrystalBuilder(s1);
+		StructureInterfaceList interfaces = cb.getUniqueInterfaces(5.5);
+		assertEquals(14,interfaces.size());
 	}
 
 	@Test
@@ -120,7 +151,7 @@ public class TestCrystalBuilder {
 		Structure s1 = StructureIO.getStructure("2H2Z");
 		CrystalBuilder cb = new CrystalBuilder(s1);
 		StructureInterfaceList interfaces = cb.getUniqueInterfaces(5.5);
-		assertTrue(interfaces.size()>=3);
+		assertEquals(3,interfaces.size());
 
 	}
 	
