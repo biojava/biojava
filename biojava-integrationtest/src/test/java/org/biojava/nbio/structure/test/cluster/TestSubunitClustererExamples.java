@@ -32,6 +32,7 @@ import org.biojava.nbio.structure.cluster.SubunitCluster;
 import org.biojava.nbio.structure.cluster.SubunitClusterer;
 import org.biojava.nbio.structure.cluster.SubunitClustererMethod;
 import org.biojava.nbio.structure.cluster.SubunitClustererParameters;
+import org.biojava.nbio.structure.symmetry.core.Stoichiometry;
 import org.junit.Test;
 
 /**
@@ -53,12 +54,59 @@ public class TestSubunitClustererExamples {
 		SubunitClustererParameters params = new SubunitClustererParameters();
 		params.setClustererMethod(SubunitClustererMethod.SEQUENCE);
 
-		List<SubunitCluster> clusters = SubunitClusterer.cluster(s, params);
+		List<SubunitCluster> clusters = SubunitClusterer.cluster(s, params).getClusters();
 
 		// We expect a single cluster with length 99
 		assertEquals(clusters.size(), 1);
 		assertEquals(clusters.get(0).length(), 99);
 	}
+
+
+	/**
+	 * A couple of structures with large number of subunits
+	 *
+	 * @throws IOException
+	 * @throws StructureException
+	 */
+
+	@Test
+	public void testStoichiometry() throws IOException, StructureException {
+
+		SubunitClustererParameters clusterParams = new SubunitClustererParameters(true);
+		clusterParams.setClustererMethod(SubunitClustererMethod.SEQUENCE);
+		clusterParams.setSequenceIdentityThreshold(0.75);
+
+		Structure structure = StructureIO.getStructure("BIO:5WVK:1");
+
+		Stoichiometry composition = SubunitClusterer.cluster(structure,clusterParams);
+		// default alphabet and strategy
+		assertEquals("A2B2C2D2E2F2G2H2I2J2K2L2M2N2OPQRSTUVWXYZabcdef",composition.toString());
+		// nothing should change
+		composition.setStrategy(Stoichiometry.StringOverflowStrategy.DOUBLE);
+		assertEquals("A2B2C2D2E2F2G2H2I2J2K2L2M2N2OPQRSTUVWXYZabcdef",composition.toString());
+		// nothing should change
+		composition.setStrategy(Stoichiometry.StringOverflowStrategy.QUESTIONMARK);
+		assertEquals("A2B2C2D2E2F2G2H2I2J2K2L2M2N2OPQRSTUVWXYZabcdef",composition.toString());
+
+		// now make the alphabet shorter to force changes in representation
+		composition.setAlphabet("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+
+		composition.setStrategy(Stoichiometry.StringOverflowStrategy.DOUBLE);
+		assertEquals("AA2AB2AC2AD2AE2AF2AG2AH2AI2AJ2AK2AL2AM2AN2AO1AP1AQ1AR1AS1AT1AU1AV1AW1AX1AY1AZ1" +
+						"BA1BB1BC1BD1BE1BF1",
+				composition.toString());
+
+		composition.setStrategy(Stoichiometry.StringOverflowStrategy.QUESTIONMARK);
+		assertEquals("A2B2C2D2E2F2G2H2I2J2K2L2M2N2OPQRSTUVWXYZ??????",
+				composition.toString());
+
+		// back to default
+		composition.setStrategy(Stoichiometry.StringOverflowStrategy.CYCLE);
+		assertEquals("A2B2C2D2E2F2G2H2I2J2K2L2M2N2OPQRSTUVWXYZABCDEF",
+				composition.toString());
+
+	}
+
 
 	/**
 	 * Test pseudostoichiometry: 4HHB
@@ -72,7 +120,7 @@ public class TestSubunitClustererExamples {
 		params.setClustererMethod(SubunitClustererMethod.SEQUENCE);
 		params.setSequenceIdentityThreshold(0.95);
 
-		List<SubunitCluster> clusters = SubunitClusterer.cluster(s, params);
+		List<SubunitCluster> clusters = SubunitClusterer.cluster(s, params).getClusters();
 
 		// We expect two SEQUENCE clusters with length 141 and 146
 		assertEquals(clusters.size(), 2);
@@ -86,7 +134,7 @@ public class TestSubunitClustererExamples {
 		params.setClustererMethod(SubunitClustererMethod.SEQUENCE_STRUCTURE);
 		params.setRMSDThreshold(3.0);
 
-		clusters = SubunitClusterer.cluster(s, params);
+		clusters = SubunitClusterer.cluster(s, params).getClusters();
 
 		// We expect a single STRUCTURE cluster with length 140
 		assertEquals(clusters.size(), 1);
@@ -107,7 +155,7 @@ public class TestSubunitClustererExamples {
 		params.setClustererMethod(SubunitClustererMethod.SEQUENCE);
 		params.setSequenceCoverageThreshold(0.8);
 
-		List<SubunitCluster> clusters = SubunitClusterer.cluster(s, params);
+		List<SubunitCluster> clusters = SubunitClusterer.cluster(s, params).getClusters();
 
 		// We expect one SEQUENCE cluster with 3 Subunits of length 351
 		assertEquals(clusters.size(), 1);
@@ -121,7 +169,7 @@ public class TestSubunitClustererExamples {
 		params.setInternalSymmetry(true);
 		params.setRMSDThreshold(3.0);
 
-		clusters = SubunitClusterer.cluster(s, params);
+		clusters = SubunitClusterer.cluster(s, params).getClusters();
 
 		// We expect a single INTERNAL_SYMMETRY cluster with 6 Subunits
 		assertEquals(clusters.size(), 1);

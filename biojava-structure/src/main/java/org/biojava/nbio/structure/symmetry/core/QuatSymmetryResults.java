@@ -25,7 +25,6 @@ package org.biojava.nbio.structure.symmetry.core;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.cluster.Subunit;
 import org.biojava.nbio.structure.cluster.SubunitCluster;
-import org.biojava.nbio.structure.cluster.SubunitClusterUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,11 +44,11 @@ public class QuatSymmetryResults {
 	private Structure structure;
 
 	// Information about the clustering process
-	private List<SubunitCluster> clusters;
+	private Stoichiometry stoichiometry;
 	private boolean local = false;
 
 	// Cached properties
-	private String stoichiometry;
+	private List<SubunitCluster> clusters;
 	private List<Subunit> subunits;
 
 	// Information about the symmetry
@@ -62,18 +61,17 @@ public class QuatSymmetryResults {
 	/**
 	 * Constructor for rotational symmetries.
 	 * 
-	 * @param clusters
-	 *            List of SubunitCluster used to calculate symmetry
+	 * @param stoichiometry
+	 *            Stoichiometry used to calculate symmetry
 	 * @param rotationGroup
 	 * @param method
 	 */
-	public QuatSymmetryResults(List<SubunitCluster> clusters,
+	public QuatSymmetryResults(Stoichiometry stoichiometry,
 			RotationGroup rotationGroup, SymmetryPerceptionMethod method) {
 
-		this.clusters = clusters;
-		this.stoichiometry = SubunitClusterUtils
-				.getStoichiometryString(clusters);
-		
+		this.stoichiometry = stoichiometry;
+		this.clusters = stoichiometry.getClusters();
+
 		subunits = new ArrayList<Subunit>();
 		for (SubunitCluster c : clusters) {
 			subunits.addAll(c.getSubunits());
@@ -86,17 +84,16 @@ public class QuatSymmetryResults {
 	/**
 	 * Constructor for roto-translational symmetries.
 	 * 
-	 * @param clusters
-	 *            List of SubunitCluster used to calculate symmetry
+	 * @param stoichiometry
+	 *            Stoichiometry used to calculate symmetry
 	 * @param helixLayers
 	 * @param method
 	 */
-	public QuatSymmetryResults(List<SubunitCluster> clusters,
+	public QuatSymmetryResults(Stoichiometry stoichiometry,
 			HelixLayers helixLayers, SymmetryPerceptionMethod method) {
 
-		this.clusters = clusters;
-		this.stoichiometry = SubunitClusterUtils
-				.getStoichiometryString(clusters);
+		this.stoichiometry = stoichiometry;
+		this.clusters = stoichiometry.getClusters();
 		
 		subunits = new ArrayList<Subunit>();
 		for (SubunitCluster c : clusters) {
@@ -223,12 +220,12 @@ public class QuatSymmetryResults {
 		return new QuatSymmetryScores();
 	}
 
-	public String getStoichiometry() {
+	public Stoichiometry getStoichiometry() {
 		return stoichiometry;
 	}
 
 	public boolean isPseudoStoichiometric() {
-		return SubunitClusterUtils.isPseudoStoichiometric(clusters);
+		return stoichiometry.isPseudoStoichiometric();
 	}
 
 	/**

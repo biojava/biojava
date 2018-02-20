@@ -11,8 +11,9 @@ import java.util.stream.Collectors;
  * 
  * @author Aleix Lafita
  * @since 5.0.0
- *
+ * @deprecated Use {@link org.biojava.nbio.structure.symmetry.core.Stoichiometry} instead.
  */
+@Deprecated
 public class SubunitClusterUtils {
 
 	/** Prevent instantiation **/
@@ -93,7 +94,7 @@ public class SubunitClusterUtils {
 	 * A pseudostoichiometric {@link SubunitCluster} was obtained using the
 	 * {@link SubunitClustererMethod#STRUCTURE} similarity,
 	 * or {@link SubunitClustererMethod#SEQUENCE} similarity with low scores.
-	 * 
+	 *
 	 * @param clusters
 	 * @return true if any of the clusters is pseudostoichiometric, false
 	 *         otherwise

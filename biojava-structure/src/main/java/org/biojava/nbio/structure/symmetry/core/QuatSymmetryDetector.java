@@ -88,9 +88,8 @@ public class QuatSymmetryDetector {
 	public static QuatSymmetryResults calcGlobalSymmetry(Structure structure,
 			QuatSymmetryParameters symmParams,
 			SubunitClustererParameters clusterParams) {
-		List<SubunitCluster> clusters = SubunitClusterer.cluster(structure,
-				clusterParams);
-		return calcGlobalSymmetry(clusters, symmParams);
+		Stoichiometry composition = SubunitClusterer.cluster(structure, clusterParams);
+		return calcGlobalSymmetry(composition, symmParams);
 	}
 
 	/**
@@ -108,24 +107,24 @@ public class QuatSymmetryDetector {
 	public static QuatSymmetryResults calcGlobalSymmetry(
 			List<Subunit> subunits, QuatSymmetryParameters symmParams,
 			SubunitClustererParameters clusterParams) {
-		List<SubunitCluster> clusters = SubunitClusterer.cluster(subunits,
+		Stoichiometry composition = SubunitClusterer.cluster(subunits,
 				clusterParams);
-		return calcGlobalSymmetry(clusters, symmParams);
+		return calcGlobalSymmetry(composition, symmParams);
 	}
 
 	/**
 	 * Calculate GLOBAL symmetry results. This means that all {@link Subunit}
 	 * are included in the symmetry.
 	 *
-	 * @param clusters
-	 *            list of {@link SubunitCluster}
+	 * @param composition
+	 *            {@link Stoichiometry} object that contains clustering results
 	 * @param symmParams
 	 *            quaternary symmetry parameters
 	 * @return GLOBAL quaternary structure symmetry results
 	 */
 	public static QuatSymmetryResults calcGlobalSymmetry(
-			List<SubunitCluster> clusters, QuatSymmetryParameters symmParams) {
-		return calcQuatSymmetry(clusters, symmParams);
+			Stoichiometry composition, QuatSymmetryParameters symmParams) {
+		return calcQuatSymmetry(composition, symmParams);
 	}
 
 
@@ -151,8 +150,8 @@ public class QuatSymmetryDetector {
 			Structure structure, QuatSymmetryParameters symmParams,
 			SubunitClustererParameters clusterParams) {
 
-		List<SubunitCluster> clusters = SubunitClusterer.cluster(structure, clusterParams);
-		return calcLocalSymmetries(clusters, symmParams);
+		Stoichiometry composition = SubunitClusterer.cluster(structure, clusterParams);
+		return calcLocalSymmetries(composition, symmParams);
 	}
 
 	/**
@@ -177,8 +176,8 @@ public class QuatSymmetryDetector {
 			List<Subunit> subunits, QuatSymmetryParameters symmParams,
 			SubunitClustererParameters clusterParams) {
 
-		List<SubunitCluster> clusters = SubunitClusterer.cluster(subunits, clusterParams);
-		return calcLocalSymmetries(clusters, symmParams);
+		Stoichiometry composition = SubunitClusterer.cluster(subunits, clusterParams);
+		return calcLocalSymmetries(composition, symmParams);
 	}
 
 	/**
@@ -190,33 +189,34 @@ public class QuatSymmetryDetector {
 	 * heteromeric (belongs to more than 1 subunit cluster); (3) more than 2
 	 * subunits (heteromers with just 2 chains cannot have local symmetry)
 	 *
-	 * @param clusters
-	 *            list of {@link SubunitCluster}
+	 * @param globalComposition
+	 *            {@link Stoichiometry} object that contains global clustering results
 	 * @param symmParams
 	 *            quaternary symmetry parameters
 	 * @return List of LOCAL quaternary structure symmetry results. Empty if
 	 *         none.
 	 */
 
-	public static List<QuatSymmetryResults> calcLocalSymmetries(List<SubunitCluster> clusters, QuatSymmetryParameters symmParams) {
+	public static List<QuatSymmetryResults> calcLocalSymmetries(Stoichiometry globalComposition, QuatSymmetryParameters symmParams) {
 
 		Set<Set<Integer>> knownCombinations = new HashSet<>();
+		List<SubunitCluster> clusters = globalComposition.getClusters();
 		//more than one subunit per cluster required for symmetry
 		List<SubunitCluster> nontrivialClusters =
 				clusters.stream().
 					filter(cluster -> (cluster.size()>1)).
 					collect(Collectors.toList());
 
-		QuatSymmetrySubunits allSubunits = new QuatSymmetrySubunits(nontrivialClusters);
-
-		if (allSubunits.getSubunitCount() < 2)
+		QuatSymmetrySubunits consideredSubunits = new QuatSymmetrySubunits(nontrivialClusters);
+		if (consideredSubunits.getSubunitCount() < 2)
 			return new ArrayList<>();
 
 		Graph<Integer, DefaultEdge> graph = initContactGraph(nontrivialClusters);
+		Stoichiometry nontrivialComposition = new Stoichiometry(nontrivialClusters,false);
 
 		List<Integer> allSubunitIds = new ArrayList<>(graph.vertexSet());
 		Collections.sort(allSubunitIds);
-		List<Integer> allSubunitClusterIds = allSubunits.getClusterIds();
+		List<Integer> allSubunitClusterIds = consideredSubunits.getClusterIds();
 
 		// since clusters are rearranged and trimmed, we need a reference to the original data
 		// to maintain consistent IDs of clusters and subunits across all solutions
@@ -229,13 +229,14 @@ public class QuatSymmetryDetector {
 		// first, find symmetries for single clusters and their groups
 		// grouping is done based on symmetries found (i.e., no exhaustive permutation search is performed)
 		if (clusters.size()>1) {
+
 			List<QuatSymmetryResults> clusterSymmetries =
-					calcLocalSymmetriesCluster(nontrivialClusters, clusterIdToSubunitIds,symmParams, knownCombinations);
+					calcLocalSymmetriesCluster(nontrivialComposition, clusterIdToSubunitIds,symmParams, knownCombinations);
 			redundantSymmetries.addAll(clusterSymmetries);
 		}
 		//find symmetries for groups based on connectivity of subunits
 		// disregarding initial clustering
-		List<QuatSymmetryResults> graphSymmetries = calcLocalSymmetriesGraph(nontrivialClusters,
+		List<QuatSymmetryResults> graphSymmetries = calcLocalSymmetriesGraph(nontrivialComposition,
 																			allSubunitClusterIds,
 																			clusterIdToSubunitIds,
 																			symmParams,
@@ -302,7 +303,7 @@ public class QuatSymmetryDetector {
 		return graph;
 	}
 
-	private static List<QuatSymmetryResults> calcLocalSymmetriesCluster(List<SubunitCluster> nontrivialClusters,
+	private static List<QuatSymmetryResults> calcLocalSymmetriesCluster(Stoichiometry nontrivialComposition,
 	                                                                    Map<Integer, List<Integer>> clusterIdToSubunitIds,
 	                                                                    QuatSymmetryParameters symmParams,
 	                                                                    Set<Set<Integer>> knownCombinations) {
@@ -310,10 +311,9 @@ public class QuatSymmetryDetector {
 		List<QuatSymmetryResults> clusterSymmetries = new ArrayList<>();
 
 		// find solutions for single clusters first
-		for (int i=0;i<nontrivialClusters.size();i++) {
-			SubunitCluster nontrivialCluster = nontrivialClusters.get(i);
+		for (int i=0;i<nontrivialComposition.numberOfComponents();i++) {
 			QuatSymmetryResults localResult =
-					calcQuatSymmetry(Collections.singletonList(nontrivialCluster),symmParams);
+					calcQuatSymmetry(nontrivialComposition.getComponent(i),symmParams);
 
 			if(localResult!=null && !localResult.getSymmetry().equals("C1")) {
 				localResult.setLocal(true);
@@ -335,24 +335,24 @@ public class QuatSymmetryDetector {
 		for (Map<Integer,List<QuatSymmetryResults>> symmetriesByGroup: groupedSymmetries.values()) {
 			for (List<QuatSymmetryResults> symmetriesBySubunits: symmetriesByGroup.values()) {
 
-				List<SubunitCluster> clustersGroup =
+				Stoichiometry groupComposition =
 						symmetriesBySubunits.stream().
-							map(r -> r.getSubunitClusters().get(0)).
-							collect(Collectors.toList());
+							map(QuatSymmetryResults::getStoichiometry).
+								reduce(Stoichiometry::combineWith).get();
 
-				if (clustersGroup.size() < 2) {
+				if (groupComposition.numberOfComponents() < 2) {
 					continue;
 				}
 				//check if grouped clusters also have symmetry
-				QuatSymmetryResults localResult = calcQuatSymmetry(clustersGroup,symmParams);
+				QuatSymmetryResults localResult = calcQuatSymmetry(groupComposition,symmParams);
 
 				if(localResult!=null && !localResult.getSymmetry().equals("C1")) {
 					localResult.setLocal(true);
 					clusterSymmetries.add(localResult);
 					// find subunit ids in this cluster list
 					Set<Integer> knownResult = new HashSet<>();
-					for (SubunitCluster cluster: clustersGroup) {
-						int i = nontrivialClusters.indexOf(cluster);
+					for (SubunitCluster cluster: groupComposition.getClusters()) {
+						int i = nontrivialComposition.getClusters().indexOf(cluster);
 						knownResult.addAll(clusterIdToSubunitIds.get(i));
 					}
 					// since symmetry is found,
@@ -365,7 +365,7 @@ public class QuatSymmetryDetector {
 	}
 
 
-	private static List<QuatSymmetryResults> calcLocalSymmetriesGraph(final List<SubunitCluster> allClusters,
+	private static List<QuatSymmetryResults> calcLocalSymmetriesGraph(final Stoichiometry globalComposition,
 	                                                                  final List<Integer> allSubunitClusterIds,
 	                                                                  final Map<Integer, List<Integer>> clusterIdToSubunitIds,
 	                                                                  QuatSymmetryParameters symmParams,
@@ -397,10 +397,10 @@ public class QuatSymmetryDetector {
 			List<Integer> usedSubunitIds = new ArrayList<>(graphComponent);
 			Collections.sort(usedSubunitIds);
 			// get clusters which contain only subunits in the current component
-			List<SubunitCluster> localClusters =
-					trimSubunitClusters(allClusters, allSubunitClusterIds, clusterIdToSubunitIds, usedSubunitIds);
+			Stoichiometry localStoichiometry =
+					trimSubunitClusters(globalComposition, allSubunitClusterIds, clusterIdToSubunitIds, usedSubunitIds);
 
-			if (localClusters.size()==0) {
+			if (localStoichiometry.numberOfComponents()==0) {
 				continue;
 			}
 
@@ -416,7 +416,7 @@ public class QuatSymmetryDetector {
 				}
 			}
 
-			QuatSymmetryResults localResult = calcQuatSymmetry(localClusters,symmParams);
+			QuatSymmetryResults localResult = calcQuatSymmetry(localStoichiometry,symmParams);
 			if(localResult!=null && !localResult.getSymmetry().equals("C1")) {
 				localResult.setLocal(true);
 				localSymmetries.add(localResult);
@@ -439,7 +439,7 @@ public class QuatSymmetryDetector {
 
 				Graph<Integer, DefaultEdge> subGraph = new AsSubgraph<>(graph,prunedGraphVertices);
 
-				List<QuatSymmetryResults> localSubSymmetries = calcLocalSymmetriesGraph(allClusters,
+				List<QuatSymmetryResults> localSubSymmetries = calcLocalSymmetriesGraph(globalComposition,
 																						allSubunitClusterIds,
 																						clusterIdToSubunitIds,
 																						symmParams,
@@ -453,10 +453,11 @@ public class QuatSymmetryDetector {
 		return localSymmetries;
 	}
 
-	private static List<SubunitCluster> trimSubunitClusters(List<SubunitCluster> allClusters,
+	private static Stoichiometry trimSubunitClusters(Stoichiometry globalComposition,
 	                                                        List<Integer> allSubunitClusterIds,
 	                                                        Map<Integer, List<Integer>> clusterIdToSubunitIds,
 	                                                        List<Integer> usedSubunitIds) {
+		List<SubunitCluster> globalClusters = globalComposition.getClusters();
 		List<SubunitCluster> localClusters = new ArrayList<>();
 
 		Set<Integer> usedClusterIds =
@@ -467,7 +468,7 @@ public class QuatSymmetryDetector {
 
 		// for each used cluster, remove unused subunits
 		for(Integer usedClusterId:usedClusterIds) {
-			SubunitCluster originalCluster = allClusters.get(usedClusterId);
+			SubunitCluster originalCluster = globalClusters.get(usedClusterId);
 			List<Integer> allSubunitIdsInCluster = clusterIdToSubunitIds.get(usedClusterId);
 
 			//subunit numbering is global for the entire graph
@@ -489,14 +490,13 @@ public class QuatSymmetryDetector {
 				usedSubunitIds.removeAll(usedSubunitIdsInCluster);
 			}
 		}
-		return localClusters;
+		return new Stoichiometry(localClusters,false);
 	}
 
 
-	private static QuatSymmetryResults calcQuatSymmetry(
-			List<SubunitCluster> clusters, QuatSymmetryParameters parameters) {
+	private static QuatSymmetryResults calcQuatSymmetry(Stoichiometry composition, QuatSymmetryParameters parameters) {
 
-		QuatSymmetrySubunits subunits = new QuatSymmetrySubunits(clusters);
+		QuatSymmetrySubunits subunits = new QuatSymmetrySubunits(composition.getClusters());
 
 		if (subunits.getSubunitCount() == 0)
 			return null;
@@ -520,7 +520,7 @@ public class QuatSymmetryDetector {
 			rotationGroup = solver.getSymmetryOperations();
 		}
 
-		QuatSymmetryResults results = new QuatSymmetryResults(clusters,
+		QuatSymmetryResults results = new QuatSymmetryResults(composition,
 				rotationGroup, method);
 
 		String symmetry = results.getSymmetry();
@@ -548,7 +548,7 @@ public class QuatSymmetryDetector {
 						|| (!symmetry.equals("C1") && deltaRmsd <= parameters
 								.getHelixRmsdThreshold())) {
 					method = SymmetryPerceptionMethod.ROTO_TRANSLATION;
-					results = new QuatSymmetryResults(clusters, helixLayers,
+					results = new QuatSymmetryResults(composition, helixLayers,
 							method);
 				}
 			}
