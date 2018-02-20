@@ -49,7 +49,7 @@ public class SubunitClustererParameters implements Serializable {
 	private double structureCoverageThreshold = 0.75;
 	private double tmThreshold = 0.5;
 
-	private SubunitClustererMethod clustererMethod = SubunitClustererMethod.STRUCTURE;
+	private SubunitClustererMethod clustererMethod = SubunitClustererMethod.SEQUENCE_STRUCTURE;
 
 	private String superpositionAlgorithm = CeMain.algorithmName;
 	private boolean optimizeAlignment = true;
