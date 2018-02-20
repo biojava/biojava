@@ -164,12 +164,6 @@ public class TestQuatSymmetryDetectorExamples {
 				localSymmetries.put("A2B2C2D2E2F2G2H2I2J2K2L2M2N2","C2");
 			testLocalSymmetries.add(localSymmetries);
 
-		testIds.add("BIO:5LUF:1");
-			testStoichiometries.add("A9B6C3D3E3F2G2H2I2J2K2L2M2N2O2PQRSTUVWXYZabcdefg");
-			localSymmetries = new HashMap<>();
-				localSymmetries.put("F2G2H2I2J2K2L2M2N2O2","C2");
-			testLocalSymmetries.add(localSymmetries);
-
 		testIds.add("BIO:5JXT:1");
 			testStoichiometries.add("A16");
 			localSymmetries = new HashMap<>();
