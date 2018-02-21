@@ -259,16 +259,15 @@ public class Stoichiometry {
 	 */
 	@Override
 	public String toString() {
-		String formula =
-				orderedClusters.stream().
-					map((SubunitCluster r)-> {
-						String output = r.getAlpha();
-						if(output.length()>1 || r.size()>1)
-							output+=r.size();
-						return output;
-					}).collect(Collectors.joining());
+		StringBuilder formula = new StringBuilder();
 
-		return formula;
+		orderedClusters.forEach((SubunitCluster r) -> {
+			formula.append(r.getAlpha());
+			if(r.getAlpha().length()>1 || r.size()>1)
+				formula.append(r.size());
+		});
+
+		return formula.toString();
 	}
 
 	/**
