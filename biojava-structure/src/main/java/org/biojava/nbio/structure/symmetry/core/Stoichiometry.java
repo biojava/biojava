@@ -4,6 +4,7 @@ import org.biojava.nbio.structure.cluster.SubunitCluster;
 import org.biojava.nbio.structure.cluster.SubunitClustererMethod;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -34,7 +35,11 @@ public class Stoichiometry {
 		 * this forces us to specify number of subunits for every subunit (e.g., AA1AB1AC1...).
 		 * This strategy will not work correctly if there are more than alphabet.length^2 subunit clusters.
 		 */
-		DOUBLE
+		DOUBLE,
+		/**
+		 * The strategy is defined via an external function, we do not have to do anything.
+		 */
+		CUSTOM
 	}
 
 	/**
@@ -48,6 +53,10 @@ public class Stoichiometry {
 	 */
 	private StringOverflowStrategy strategy = StringOverflowStrategy.CYCLE;
 
+	/**
+	 * Full customisation of the string generation is supported via an external function
+	 */
+	private Function<List<SubunitCluster>,String> customStringGenerator = null;
 	/**
 	 * Subunit clusters that define this stoichiometry.
 	 */
@@ -117,7 +126,32 @@ public class Stoichiometry {
 		}
 	}
 
+	/**
+	 * Constructor for Stoichiometry.
+	 *
+	 * @param clusters
+	 *            List of {@link SubunitCluster} that defines assembly composition.
+	 * @param customStringGenerator
+	 *            A function which produces a string for a composition (list of subunit clusters).
+	 */
+	public Stoichiometry(List<SubunitCluster> clusters, Function<List<SubunitCluster>,String> customStringGenerator) {
+		this(clusters,StringOverflowStrategy.CUSTOM,false);
+		this.customStringGenerator = customStringGenerator;
+	}
+
+
+	/**
+	 * Reassign alpha-strings for each cluster according to the current strategy.
+	 * Has no effect if custom string generator is used.
+	 */
+	public void resetAlphas() {
+		doResetAlphas();
+	}
+
 	private void doResetAlphas() {
+		if(strategy == StringOverflowStrategy.CUSTOM) {
+			return;
+		}
 		for (int i = 0; i < this.orderedClusters.size(); i++) {
 			this.orderedClusters.get(i).setAlpha(generateAlpha(i));
 		}
@@ -156,6 +190,9 @@ public class Stoichiometry {
 				}
 				break;
 
+			case CUSTOM:
+				throw new IllegalStateException("Alphas should be handled by the custom generator function.");
+
 			default:
 				key = "?";
 				if(clusterInd<alphabet.length()) {
@@ -181,24 +218,20 @@ public class Stoichiometry {
 
 	/**
 	 * Make a combined Stoichiometry object of <i>this</> and the <i>other</>.
-	 * All clusters are assumed to be distinct, so the alphas will be reset in case of repeats.
 	 * The combined list of clusters will be ordered by the number of subunits.
 	 * @return new {@link Stoichiometry} object.
 	 */
 	public Stoichiometry combineWith(Stoichiometry other) {
-		List<SubunitCluster> combinedClusters = new ArrayList<>();
+		Set<SubunitCluster> combinedClusters = new LinkedHashSet<>();
 		combinedClusters.addAll(this.orderedClusters);
 		combinedClusters.addAll(other.orderedClusters);
 
-		// check that there is no alpha duplication
-		Set<String> thisAlpha = this.orderedClusters.stream().map(SubunitCluster::getAlpha).collect(Collectors.toSet());
-		Set<String> otherAlpha = other.orderedClusters.stream().map(SubunitCluster::getAlpha).collect(Collectors.toSet());
-		boolean resetAlphas = true;
-		if(Collections.disjoint(thisAlpha,otherAlpha)) {
-			resetAlphas = false;
+		Stoichiometry combinedStoichiometry;
+		if (this.strategy == StringOverflowStrategy.CUSTOM) {
+			combinedStoichiometry = new Stoichiometry(new ArrayList<>(combinedClusters),this.customStringGenerator);
+		} else {
+			combinedStoichiometry = new Stoichiometry(new ArrayList<>(combinedClusters),this.strategy,false);
 		}
-		Stoichiometry combinedStoichiometry = new Stoichiometry(combinedClusters,this.strategy,resetAlphas);
-
 		return combinedStoichiometry;
 	}
 
@@ -229,11 +262,26 @@ public class Stoichiometry {
 	 *          of clusters exceeds number of letters in the alphabet.
 	 */
 	public void setStrategy(StringOverflowStrategy strategy) {
+		if(strategy==StringOverflowStrategy.CUSTOM) {
+			throw new IllegalArgumentException("Set this strategy by providing a function of the type Function<List<SubunitCluster>,String>.");
+		}
+
 		if(this.strategy != strategy) {
 			this.strategy = strategy;
 			if(orderedClusters.size()>alphabet.length())
 				doResetAlphas();
 		}
+	}
+
+
+	/**
+	 * Let a user-defined function handle the entire string representation of a stoichiometry.
+	 * @param customStringGenerator
+	 *          A function which accepts a list of subunit clusters and returns a string.
+	 */
+	public void setCustomStringGenerator(Function<List<SubunitCluster>,String> customStringGenerator) {
+		this.strategy = StringOverflowStrategy.CUSTOM;
+		this.customStringGenerator = customStringGenerator;
 	}
 
 	/**
@@ -259,6 +307,14 @@ public class Stoichiometry {
 	 */
 	@Override
 	public String toString() {
+
+		if(strategy == StringOverflowStrategy.CUSTOM) {
+			if(customStringGenerator == null) {
+				throw new IllegalStateException("The strategy is CUSTOM, yet the string generator function is not defined.");
+			}
+			return customStringGenerator.apply(orderedClusters);
+		}
+
 		StringBuilder formula = new StringBuilder();
 
 		orderedClusters.forEach((SubunitCluster r) -> {

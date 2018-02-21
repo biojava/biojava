@@ -24,6 +24,8 @@ import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
@@ -105,6 +107,43 @@ public class TestSubunitClustererExamples {
 		assertEquals("A2B2C2D2E2F2G2H2I2J2K2L2M2N2OPQRSTUVWXYZABCDEF",
 				composition.toString());
 
+		// manipulations with composition subsets
+		Stoichiometry a2 = composition.getComponent(0);
+		assertEquals("A2",a2.toString());
+		Stoichiometry b2 = composition.getComponent(1);
+		assertEquals("B2",b2.toString());
+		Stoichiometry c2 = composition.getComponent(2);
+		assertEquals("C2",c2.toString());
+		Stoichiometry z = composition.getComponent(25);
+		assertEquals("Z",z.toString());
+
+		Stoichiometry b2c2 = b2.combineWith(c2);
+		assertEquals("B2C2",b2c2.toString());
+
+		Stoichiometry a2z = a2.combineWith(z);
+		assertEquals("A2Z",a2z.toString());
+
+		// result must be ordered by subunit count
+		Stoichiometry a2b2z = a2z.combineWith(b2);
+		assertEquals("A2B2Z",a2b2z.toString());
+
+		//overlapping clusters counted once
+		Stoichiometry a2b2c2z = a2b2z.combineWith(b2c2);
+		assertEquals("A2B2C2Z",a2b2c2z.toString());
+
+		// custom string representation, comma-separated subunit counts
+		Function<List<SubunitCluster>,String> numbersOnly =
+				l-> l.stream().
+					map(SubunitCluster::size).
+					map(String::valueOf).
+					collect(Collectors.joining(", "));
+
+		a2b2c2z.setCustomStringGenerator(numbersOnly);
+		assertEquals("2, 2, 2, 1", a2b2c2z.toString());
+
+		composition.setCustomStringGenerator(numbersOnly);
+		assertEquals("2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1",
+				composition.toString());
 	}
 
 
