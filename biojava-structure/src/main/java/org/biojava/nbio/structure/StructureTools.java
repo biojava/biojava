@@ -2019,7 +2019,9 @@ public class StructureTools {
 	 * Expands the NCS operators in the given Structure adding new chains as needed.
 	 * The new chains are assigned ids of the form: original_chain_id+ncs_operator_index+"n"
 	 * @param structure
+	 * @deprecated use {@link org.biojava.nbio.structure.xtal.CrystalBuilder#expandNcsOps(Structure, Map, Map)} instead.
 	 */
+	@Deprecated
 	public static void expandNcsOps(Structure structure) {
 		PDBCrystallographicInfo xtalInfo = structure.getCrystallographicInfo();
 		if (xtalInfo ==null) return;
@@ -2051,7 +2053,7 @@ public class StructureTools {
 
 	/**
 	 * Auxiliary method to reset chain ids of residue numbers in a chain.
-	 * Used when cloning chains and resetting their ids: one needs to take care of 
+	 * Used when cloning chains and resetting their ids: one needs to take care of
 	 * resetting the ids within residue numbers too.
 	 * @param c
 	 * @param newChainName

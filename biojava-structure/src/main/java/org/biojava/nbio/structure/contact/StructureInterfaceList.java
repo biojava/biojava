@@ -21,14 +21,7 @@
 package org.biojava.nbio.structure.contact;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
 
 import org.biojava.nbio.core.util.SingleLinkageClusterer;
 import org.biojava.nbio.structure.Atom;
@@ -76,11 +69,11 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 
 	private List<StructureInterface> list;
 
-	private List<StructureInterfaceCluster> clusters;
-
+	private List<StructureInterfaceCluster> clusters = null;
+	private List<StructureInterfaceCluster> clustersNcs = null;
 
 	public StructureInterfaceList() {
-		this.list = new ArrayList<StructureInterface>();
+		this.list = new ArrayList<>();
 	}
 
 	public void add(StructureInterface interf) {
@@ -194,6 +187,62 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 			interf.setId(i);
 			i++;
 		}
+	}
+
+	/**
+	 * Get the interface clusters for this StructureInterfaceList grouped by NCS-equivalence.
+	 * This means that for any two interfaces in the same cluster:
+	 * 1. The chains forming the first interface are NCS-copies of the chains forming the second interface, in any order.
+	 * 2. Relative orientation of the chains is preserved, i.e. the contacts are identical.
+	 * @return list of {@link StructureInterfaceCluster} objects.
+	 */
+	public List<StructureInterfaceCluster> getClustersNcs() {
+		return clustersNcs;
+	}
+
+	/**
+	 * Add an interface to the list, possibly defining it as NCS-equivalent to an interface already in the list.
+	 * Used to build up the NCS clustering.
+	 * @param interfaceNew
+	 *          an interface to be added to the list.
+	 * @param interfaceRef
+	 *          interfaceNew will be added to the cluster which contains interfaceRef.
+	 *          If interfaceRef is null, new cluster will be created for interfaceNew.
+	 */
+
+	public void addNcsEquivalent(StructureInterface interfaceNew, StructureInterface interfaceRef) {
+
+		this.add(interfaceNew);
+		if (clustersNcs == null) {
+			clustersNcs = new ArrayList<>();
+		}
+
+		if (interfaceRef == null) {
+
+			StructureInterfaceCluster newCluster = new StructureInterfaceCluster();
+			newCluster.addMember(interfaceNew);
+			clustersNcs.add(newCluster);
+			return;
+		}
+
+		Optional<StructureInterfaceCluster> clusterRef =
+				clustersNcs.stream().
+					filter(r->r.getMembers().stream().
+						anyMatch(c -> c.equals(interfaceRef))).
+						findFirst();
+
+		if (clusterRef.isPresent()) {
+			clusterRef.get().addMember(interfaceNew);
+			return;
+		}
+
+		logger.warn("The specified reference interface, if not null, should have been added to this set previously. " +
+				"Creating new cluster and adding both interfaces. This is likely a bug.");
+		this.add(interfaceRef);
+		StructureInterfaceCluster newCluster = new StructureInterfaceCluster();
+		newCluster.addMember(interfaceRef);
+		newCluster.addMember(interfaceNew);
+		clustersNcs.add(newCluster);
 	}
 
 	/**
