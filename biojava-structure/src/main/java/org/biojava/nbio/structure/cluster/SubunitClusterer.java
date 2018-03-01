@@ -26,6 +26,7 @@ import java.util.List;
 import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.symmetry.core.Stoichiometry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,7 +47,7 @@ public class SubunitClusterer {
 	private SubunitClusterer() {
 	}
 
-	public static List<SubunitCluster> cluster(Structure structure,
+	public static Stoichiometry cluster(Structure structure,
 			SubunitClustererParameters params) {
 		List<Subunit> subunits = SubunitExtractor.extractSubunits(structure,
 				params.getAbsoluteMinimumSequenceLength(),
@@ -55,14 +56,14 @@ public class SubunitClusterer {
 		return cluster(subunits, params);
 	}
 
-	public static List<SubunitCluster> cluster(List<Subunit> subunits,
+	public static Stoichiometry cluster(List<Subunit> subunits,
 			SubunitClustererParameters params) {
 
 		// The collection of clusters to return
 		List<SubunitCluster> clusters = new ArrayList<SubunitCluster>();
 
 		if (subunits.size() == 0)
-			return clusters;
+			return new Stoichiometry(clusters);
 
 		// First generate a new cluster for each Subunit
 		for (Subunit s : subunits)
@@ -128,6 +129,6 @@ public class SubunitClusterer {
 			}
 		}
 
-		return SubunitClusterUtils.orderByStoichiometry(clusters);
+		return new Stoichiometry(clusters);
 	}
 }

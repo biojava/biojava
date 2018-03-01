@@ -69,8 +69,9 @@ public class QsAlign {
 		QsAlignResult result = new QsAlignResult(s1, s2);
 
 		// SETP 1: cluster each group of subunits O(N^2*L^2) - intra
-		List<SubunitCluster> c1 = SubunitClusterer.cluster(s1, cParams);
-		List<SubunitCluster> c2 = SubunitClusterer.cluster(s2, cParams);
+
+		List<SubunitCluster> c1 = SubunitClusterer.cluster(s1, cParams).getClusters();
+		List<SubunitCluster> c2 = SubunitClusterer.cluster(s2, cParams).getClusters();
 
 		// STEP 2: match each subunit cluster between groups O(N^2*L^2) - inter
 		Map<Integer, Integer> clusterMap = new HashMap<Integer, Integer>();
