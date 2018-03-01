@@ -102,6 +102,7 @@ public class CrystalBuilder {
 	 *          chain names mapped to the original chain names (pre-NCS extension)
 	 * @param chainNcsOps
 	 *          chain names mapped to the ncs operators that was used to generate them
+	 * @since 5.0.0
 	 */
 	public CrystalBuilder(Structure structure, Map<String,String> chainOrigNames, Map<String,Matrix4d> chainNcsOps) {
 		this(structure);
@@ -164,6 +165,7 @@ public class CrystalBuilder {
 
 	/**
 	 * @return true if this CrystalBuilder is NCS-aware.
+	 * @since 5.0.0
 	 */
 	public boolean hasNcsOps() {
 		return chainNcsOps != null;
@@ -438,8 +440,6 @@ public class CrystalBuilder {
 		// transformation to bring chain j near X_i: M_i^(-1) * Cn * M_j
 		// transformation to bring chain i near X_j: (Cn * M_j)^(-1) * M_i = (M_i^(-1) * Cn * M_j)^(-1)
 
-		if(chainNcsOps.get(chainIName) == null)
-			return null;
 		Matrix4d mChainIInv = new Matrix4d(chainNcsOps.get(chainIName));
 		mChainIInv.invert();
 
@@ -559,6 +559,7 @@ public class CrystalBuilder {
 	 *          new chain names mapped to the original chain names
 	 * @param chainNcsOps
 	 *          new chain names mapped to the ncs operators that was used to generate them
+	 * @since 5.0.0
 	 */
 	public static void expandNcsOps(Structure structure, Map<String,String> chainOrigNames, Map<String,Matrix4d> chainNcsOps) {
 		PDBCrystallographicInfo xtalInfo = structure.getCrystallographicInfo();

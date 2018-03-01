@@ -195,6 +195,7 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 	 * 1. The chains forming the first interface are NCS-copies of the chains forming the second interface, in any order.
 	 * 2. Relative orientation of the chains is preserved, i.e. the contacts are identical.
 	 * @return list of {@link StructureInterfaceCluster} objects.
+	 * @since 5.0.0
 	 */
 	public List<StructureInterfaceCluster> getClustersNcs() {
 		return clustersNcs;
@@ -208,8 +209,8 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 	 * @param interfaceRef
 	 *          interfaceNew will be added to the cluster which contains interfaceRef.
 	 *          If interfaceRef is null, new cluster will be created for interfaceNew.
+	 * @since 5.0.0
 	 */
-
 	public void addNcsEquivalent(StructureInterface interfaceNew, StructureInterface interfaceRef) {
 
 		this.add(interfaceNew);
@@ -218,7 +219,6 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 		}
 
 		if (interfaceRef == null) {
-
 			StructureInterfaceCluster newCluster = new StructureInterfaceCluster();
 			newCluster.addMember(interfaceNew);
 			clustersNcs.add(newCluster);
