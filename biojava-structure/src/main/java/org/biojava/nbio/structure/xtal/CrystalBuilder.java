@@ -593,14 +593,12 @@ public class CrystalBuilder {
 				chainsToAdd.add(clonedChain);
 				c.getEntityInfo().addChain(clonedChain);
 
-				chainOrigNames.put(newChainName,c.getId());
+				chainOrigNames.put(newChainName,cOrigName);
 				chainNcsOps.put(newChainName,m);
 			}
-			c.setName(cOrigName+0+"n");
-			c.setId(cOrigId+0+"n");
 
-			chainNcsOps.put(c.getName(),identity);
-			chainOrigNames.put(c.getName(),cOrigId);
+			chainNcsOps.put(cOrigName,identity);
+			chainOrigNames.put(cOrigName,cOrigName);
 		}
 
 		chainsToAdd.forEach(structure::addChain);
