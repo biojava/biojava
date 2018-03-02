@@ -2154,7 +2154,7 @@ public class PDBFileParser  {
 
 		DBRef dbref = new DBRef();
 		String idCode      = line.substring(7,11);
-		String chainId     = line.substring(12,13);
+		String chainName     = line.substring(12,13);
 		String seqBegin    = line.substring(14,18);
 		String insertBegin = line.substring(18,19);
 		String seqEnd      = line.substring(20,24);
@@ -2173,7 +2173,7 @@ public class PDBFileParser  {
 			dbinsEnd       = " ";
 
 		dbref.setIdCode(idCode);
-		dbref.setChainId(chainId);
+		dbref.setChainName(chainName);
 		dbref.setSeqBegin(intFromString(seqBegin));
 		dbref.setInsertBegin(insertBegin.charAt(0));
 		dbref.setSeqEnd(intFromString(seqEnd));

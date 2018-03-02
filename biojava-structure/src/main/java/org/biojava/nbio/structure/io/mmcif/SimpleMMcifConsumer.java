@@ -1736,7 +1736,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		r.setDbAccession(sref.getPdbx_db_accession());
 		r.setDbIdCode(sref.getPdbx_db_accession());
 
-		r.setChainId(sref.getPdbx_strand_id());
+		r.setChainName(sref.getPdbx_strand_id());
 		StructRef structRef = getStructRef(sref.getRef_id());
 		if (structRef == null){
 			logger.info("could not find StructRef " + sref.getRef_id() + " for StructRefSeq " + sref);
