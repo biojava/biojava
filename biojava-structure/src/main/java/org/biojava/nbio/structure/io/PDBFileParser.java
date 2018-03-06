@@ -1468,9 +1468,9 @@ public class PDBFileParser  {
 	 * </pre>
 	 */
 	private void pdb_CRYST1_Handler(String line) {
-		// for badly formatted files (e.g. phenix-produced ones), there's no z and the min length is 63
-		if (line.length() < 63) {
-			logger.warn("CRYST1 record has fewer than 63 columns: will ignore it");
+		// for badly formatted files (e.g. phenix-produced ones), there's no z and the min length is 58 (e.g. for SG 'P 1')
+		if (line.length() < 58) {
+			logger.warn("CRYST1 record has fewer than 58 columns: will ignore it");
 			return;
 		}
 
