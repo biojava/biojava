@@ -2016,57 +2016,6 @@ public class StructureTools {
 	}
 
 	/**
-	 * Expands the NCS operators in the given Structure adding new chains as needed.
-	 * The new chains are assigned ids of the form: original_chain_id+ncs_operator_index+"n"
-	 * @param structure
-	 */
-	public static void expandNcsOps(Structure structure) {
-		PDBCrystallographicInfo xtalInfo = structure.getCrystallographicInfo();
-		if (xtalInfo ==null) return;
-
-		if (xtalInfo.getNcsOperators()==null || xtalInfo.getNcsOperators().length==0) return;
-
-		List<Chain> chainsToAdd = new ArrayList<>();
-		int i = 0;
-		for (Matrix4d m:xtalInfo.getNcsOperators()) {
-			i++;
-
-			for (Chain c:structure.getChains()) {
-				Chain clonedChain = (Chain)c.clone();
-				String newChainId = c.getId()+i+"n";
-				String newChainName = c.getName()+i+"n";
-				clonedChain.setId(newChainId);
-				clonedChain.setName(newChainName);
-				setChainIdsInResidueNumbers(clonedChain, newChainName);
-				Calc.transform(clonedChain, m);
-				chainsToAdd.add(clonedChain);
-				c.getEntityInfo().addChain(clonedChain);
-			}
-		}
-
-		for (Chain c:chainsToAdd) {
-			structure.addChain(c);
-		}
-	}
-
-	/**
-	 * Auxiliary method to reset chain ids of residue numbers in a chain.
-	 * Used when cloning chains and resetting their ids: one needs to take care of 
-	 * resetting the ids within residue numbers too.
-	 * @param c
-	 * @param newChainName
-	 */
-	private static void setChainIdsInResidueNumbers(Chain c, String newChainName) {
-		for (Group g:c.getAtomGroups()) {
-			g.setResidueNumber(newChainName, g.getResidueNumber().getSeqNum(), g.getResidueNumber().getInsCode());
-		}
-		for (Group g:c.getSeqResGroups()) {
-			if (g.getResidueNumber()==null) continue;
-			g.setResidueNumber(newChainName, g.getResidueNumber().getSeqNum(), g.getResidueNumber().getInsCode());
-		}
-	}
-
-	/**
 	 * Check to see if an Deuterated atom has a non deuterated brother in the group.
 	 * @param atom the input atom that is putatively deuterium
 	 * @param currentGroup the group the atom is in
