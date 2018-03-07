@@ -1756,8 +1756,16 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			logger.warn("Couldn't parse pdbx_auth_seq_align_beg/end in _struct_ref_seq. Will not store dbref alignment info for accession {}. Error: {}", r.getDbAccession(), e.getMessage());
 			return;
 		}
-		Character begin_ins_code = new Character(sref.getPdbx_seq_align_beg_ins_code().charAt(0));
-		Character end_ins_code   = new Character(sref.getPdbx_seq_align_end_ins_code().charAt(0));
+		
+		Character begin_ins_code = ' ';
+		if (sref.getPdbx_seq_align_beg_ins_code() != null ) {
+		    begin_ins_code = new Character(sref.getPdbx_seq_align_beg_ins_code().charAt(0));
+		}
+		
+		Character end_ins_code = ' ';
+		if (sref.getPdbx_seq_align_end_ins_code() != null) {
+		    end_ins_code = new Character(sref.getPdbx_seq_align_end_ins_code().charAt(0));
+		}
 
 		if (begin_ins_code == '?')
 			begin_ins_code = ' ';
@@ -1773,8 +1781,16 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 		int dbseqbegin = Integer.parseInt(sref.getDb_align_beg());
 		int dbseqend   = Integer.parseInt(sref.getDb_align_end());
-		Character db_begin_in_code = new Character(sref.getPdbx_db_align_beg_ins_code().charAt(0));
-		Character db_end_in_code   = new Character(sref.getPdbx_db_align_end_ins_code().charAt(0));
+		
+		Character db_begin_in_code = ' ';
+		if (sref.getPdbx_db_align_beg_ins_code() != null) {
+		    db_begin_in_code = new Character(sref.getPdbx_db_align_beg_ins_code().charAt(0));
+		}
+		
+		Character db_end_in_code = ' ';
+		if (sref.getPdbx_db_align_end_ins_code() != null) {
+		    db_end_in_code = new Character(sref.getPdbx_db_align_end_ins_code().charAt(0));
+		}
 
 		if (db_begin_in_code == '?')
 			db_begin_in_code = ' ';
