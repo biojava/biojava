@@ -28,10 +28,7 @@ import org.biojava.nbio.core.sequence.features.FeatureInterface;
 import org.biojava.nbio.core.sequence.features.QualityFeature;
 import org.biojava.nbio.core.sequence.features.QuantityFeature;
 import org.biojava.nbio.core.sequence.template.AbstractSequence;
-import org.biojava.nbio.genome.io.fastq.Fastq;
-import org.biojava.nbio.genome.io.fastq.FastqBuilder;
-import org.biojava.nbio.genome.io.fastq.FastqTools;
-import org.biojava.nbio.genome.io.fastq.FastqVariant;
+
 
 import java.util.ArrayList;
 import java.util.Collection;

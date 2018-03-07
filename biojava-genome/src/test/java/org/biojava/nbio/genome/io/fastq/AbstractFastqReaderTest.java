@@ -28,10 +28,6 @@ import java.io.InputStream;
 import java.io.StringReader;
 import java.net.URL;
 
-import org.biojava.nbio.genome.io.fastq.Fastq;
-import org.biojava.nbio.genome.io.fastq.FastqReader;
-import org.biojava.nbio.genome.io.fastq.FastqWriter;
-import org.biojava.nbio.genome.io.fastq.ParseListener;
 
 /**
  * Abstract unit test for implementations of FastqReader.

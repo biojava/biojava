@@ -22,8 +22,6 @@ package org.biojava.nbio.genome.io.fastq;
 
 import static org.biojava.nbio.genome.io.fastq.FastqVariant.*;
 
-import org.biojava.nbio.genome.io.fastq.FastqVariant;
-
 import junit.framework.TestCase;
 
 /**

@@ -20,11 +20,6 @@
  */
 package org.biojava.nbio.genome.io.fastq;
 
-import org.biojava.nbio.genome.io.fastq.Fastq;
-import org.biojava.nbio.genome.io.fastq.FastqBuilder;
-import org.biojava.nbio.genome.io.fastq.FastqVariant;
-import org.biojava.nbio.genome.io.fastq.FastqWriter;
-import org.biojava.nbio.genome.io.fastq.SolexaFastqWriter;
 
 /**
  * Unit test for SolexaFastqWriter.

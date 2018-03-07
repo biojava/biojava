@@ -24,10 +24,6 @@ import junit.framework.TestCase;
 
 import java.io.StringReader;
 
-import org.biojava.nbio.genome.io.fastq.Fastq;
-import org.biojava.nbio.genome.io.fastq.FastqVariant;
-import org.biojava.nbio.genome.io.fastq.StreamListener;
-import org.biojava.nbio.genome.io.fastq.StreamingFastqParser;
 
 /**
  * Unit test for StreamingFastqParser.

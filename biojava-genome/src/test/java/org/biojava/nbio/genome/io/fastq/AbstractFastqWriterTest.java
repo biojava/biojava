@@ -28,8 +28,6 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.biojava.nbio.genome.io.fastq.Fastq;
-import org.biojava.nbio.genome.io.fastq.FastqWriter;
 
 /**
  * Abstract unit test for implementations of FastqWriter.

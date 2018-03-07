@@ -24,13 +24,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
-import org.biojava.nbio.genome.io.fastq.Fastq;
-import org.biojava.nbio.genome.io.fastq.FastqBuilder;
-import org.biojava.nbio.genome.io.fastq.FastqReader;
-import org.biojava.nbio.genome.io.fastq.FastqVariant;
-import org.biojava.nbio.genome.io.fastq.FastqWriter;
-import org.biojava.nbio.genome.io.fastq.SolexaFastqReader;
-import org.biojava.nbio.genome.io.fastq.SolexaFastqWriter;
 
 /**
  * Unit test for SolexaFastqReader.

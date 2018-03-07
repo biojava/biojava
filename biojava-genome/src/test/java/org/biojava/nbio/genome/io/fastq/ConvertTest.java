@@ -25,16 +25,6 @@ import java.io.FileWriter;
 import java.util.List;
 import java.util.Map;
 
-import org.biojava.nbio.genome.io.fastq.Fastq;
-import org.biojava.nbio.genome.io.fastq.FastqReader;
-import org.biojava.nbio.genome.io.fastq.FastqVariant;
-import org.biojava.nbio.genome.io.fastq.FastqWriter;
-import org.biojava.nbio.genome.io.fastq.IlluminaFastqReader;
-import org.biojava.nbio.genome.io.fastq.IlluminaFastqWriter;
-import org.biojava.nbio.genome.io.fastq.SangerFastqReader;
-import org.biojava.nbio.genome.io.fastq.SangerFastqWriter;
-import org.biojava.nbio.genome.io.fastq.SolexaFastqReader;
-import org.biojava.nbio.genome.io.fastq.SolexaFastqWriter;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
