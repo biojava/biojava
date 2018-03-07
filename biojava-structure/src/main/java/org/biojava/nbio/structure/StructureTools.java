@@ -37,7 +37,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
 
 import org.biojava.nbio.structure.align.util.AtomCache;

@@ -63,6 +63,7 @@ public class Stoichiometry {
 	private List<SubunitCluster> orderedClusters = new ArrayList<>();
 
 	/** Prevent instantiation **/
+	@SuppressWarnings("unused")
 	private Stoichiometry() {
 	}
 
