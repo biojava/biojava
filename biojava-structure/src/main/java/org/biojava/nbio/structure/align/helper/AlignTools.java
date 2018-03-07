@@ -26,10 +26,15 @@ import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.AtomImpl;
 import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.jama.Matrix;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AlignTools {
+	
+	private static final Logger logger = LoggerFactory.getLogger(AlignTools.class);
 
-	/** get a subset of Atoms based by their positions
+	/** 
+	 * Get a subset of Atoms based by their positions
 	 *
 	 * @param caall
 	 * @param idx an array where each element is a position of all the Atoms to return
@@ -46,11 +51,12 @@ public class AlignTools {
 		return subset;
 	}
 
-	/** get a continue subset of Atoms based by the starting position and the length
+	/** 
+	 * Get a continue subset of Atoms based by the starting position and the length
 	 *
 	 * @param caall
-	 * @param pos ... the start position
-	 * @param fragmentLength .. the length of the subset to extract.
+	 * @param pos the start position
+	 * @param fragmentLength the length of the subset to extract.
 	 * @return an Atom[] array
 	 */
 	public static Atom[] getFragment(Atom[] caall, int pos, int fragmentLength){
@@ -68,12 +74,13 @@ public class AlignTools {
 	}
 
 
-	/** get a continue subset of Atoms based by the starting position and the length
+	/** 
+	 * Get a continue subset of Atoms based by the starting position and the length
 	 * does not clone the original atoms.
 	 *
 	 * @param caall
-	 * @param pos ... the start position
-	 * @param fragmentLength .. the length of the subset to extract.
+	 * @param pos the start position
+	 * @param fragmentLength the length of the subset to extract.
 	 * @return an Atom[] array
 	 */
 	public static Atom[] getFragmentNoClone(Atom[] caall, int pos, int fragmentLength){
@@ -90,7 +97,8 @@ public class AlignTools {
 
 	}
 
-	/** get the centroid for the set of atoms starting fromposition pos, length fragmentLenght
+	/** 
+	 * Get the centroid for the set of atoms starting from position pos, length fragmentLenght
 	 *
 	 * @param ca
 	 * @param pos
@@ -101,7 +109,7 @@ public class AlignTools {
 		Atom center = new AtomImpl();
 
 		if ( pos+fragmentLength > ca.length) {
-			System.err.println("pos ("+pos+"), fragL ("+fragmentLength +") > ca.length"+ca.length);
+			logger.info("pos ("+pos+"), fragL ("+fragmentLength +") > ca.length"+ca.length);
 			return center;
 		}
 
@@ -111,7 +119,8 @@ public class AlignTools {
 	}
 
 
-	/* Get distances along diagonal k from coordinate array coords.
+	/**
+	 * Get distances along diagonal k from coordinate array coords.
 	 *
 	 * @param atoms set of atoms to be used
 	 * @param k number of diagonal to be used
