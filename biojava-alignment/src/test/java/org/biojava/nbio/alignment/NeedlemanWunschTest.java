@@ -27,7 +27,6 @@ import org.biojava.nbio.core.alignment.matrices.SimpleSubstitutionMatrix;
 import org.biojava.nbio.core.alignment.matrices.SubstitutionMatrixHelper;
 import org.biojava.nbio.alignment.template.GapPenalty;
 import org.biojava.nbio.alignment.template.PairwiseSequenceAligner;
-import org.biojava.nbio.core.alignment.template.SequencePair;
 import org.biojava.nbio.core.alignment.template.SubstitutionMatrix;
 import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.core.sequence.DNASequence;
@@ -76,7 +75,7 @@ public class NeedlemanWunschTest {
 // The two alignments should have the same score. The bottom one is the one the aligner found.
 
 		PairwiseSequenceAligner<DNASequence, NucleotideCompound> aligner = Alignments.getPairwiseAligner(a, b, Alignments.PairwiseSequenceAlignerType.GLOBAL, new SimpleGapPenalty(gop, gep), mx);
-		SequencePair<DNASequence, NucleotideCompound> pair = aligner.getPair();
+		//SequencePair<DNASequence, NucleotideCompound> pair = aligner.getPair();
 
 
 		int nMatches = "--CGTATATATCGCGCGCGCGATATATATATCT-TCTCTAAAAAAA".length() - 2 - 4;

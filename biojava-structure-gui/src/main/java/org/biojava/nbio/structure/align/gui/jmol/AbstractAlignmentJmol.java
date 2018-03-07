@@ -103,7 +103,7 @@ implements MouseMotionListener, MouseListener, WindowListener, ActionListener {
 	public void setAtoms(Atom[] atoms){
 		Structure s = new StructureImpl();
 		Chain c = new ChainImpl();
-		c.setChainID("A");
+		c.setId("A");
 		for (Atom a: atoms){
 			c.addGroup(a.getGroup());
 		}

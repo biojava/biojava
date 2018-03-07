@@ -45,10 +45,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.PDBHeader;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.StructureIdentifier;
 import org.biojava.nbio.structure.align.gui.MenuCreator;
 import org.biojava.nbio.structure.align.gui.MultipleAlignmentGUI;
 import org.biojava.nbio.structure.align.gui.MultipleAlignmentJmolDisplay;
