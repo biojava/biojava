@@ -646,7 +646,6 @@
 		<module>biojava-alignment</module>
 		<module>biojava-structure</module>
 		<module>biojava-structure-gui</module>
-		<module>biojava-sequencing</module>
 		<module>biojava-genome</module>
 		<module>biojava-modfinder</module>
 		<module>biojava-ws</module>
