@@ -34,7 +34,7 @@ import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.util.AlignmentTools;
 import org.biojava.nbio.structure.symmetry.utils.SymmetryTools;
-import org.jgrapht.UndirectedGraph;
+import org.jgrapht.Graph;
 import org.jgrapht.alg.ConnectivityInspector;
 import org.jgrapht.graph.DefaultEdge;
 
@@ -59,7 +59,7 @@ public class GraphComponentRefiner implements SymmetryRefiner {
 			throws StructureException, RefinerFailedException {
 
 		// Construct the alignment graph with jgrapht
-		UndirectedGraph<Integer, DefaultEdge> graph = SymmetryTools
+		Graph<Integer, DefaultEdge> graph = SymmetryTools
 				.buildSymmetryGraph(selfAlignment);
 
 		// Find the maximally connected components of the graph

@@ -65,7 +65,7 @@ import org.biojava.nbio.structure.symmetry.core.QuatSymmetryParameters;
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetryResults;
 import org.biojava.nbio.structure.symmetry.internal.CeSymmResult;
 import org.biojava.nbio.structure.symmetry.internal.SymmetryAxes;
-import org.jgrapht.UndirectedGraph;
+import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleGraph;
 import org.slf4j.Logger;
@@ -474,10 +474,10 @@ public class SymmetryTools {
 	 *
 	 * @return alignment Graph
 	 */
-	public static UndirectedGraph<Integer, DefaultEdge> buildSymmetryGraph(
+	public static Graph<Integer, DefaultEdge> buildSymmetryGraph(
 			AFPChain selfAlignment) {
 
-		UndirectedGraph<Integer, DefaultEdge> graph = new SimpleGraph<Integer, DefaultEdge>(
+		Graph<Integer, DefaultEdge> graph = new SimpleGraph<Integer, DefaultEdge>(
 				DefaultEdge.class);
 
 		for (int i = 0; i < selfAlignment.getOptAln().length; i++) {
