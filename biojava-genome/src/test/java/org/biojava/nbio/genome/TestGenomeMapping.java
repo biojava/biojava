@@ -316,8 +316,8 @@ public class TestGenomeMapping extends TestCase {
 	@Test
 	public void testGenomeMappingToolGetCDSRanges(){
 
-		List<Integer> lst1 = new ArrayList(Arrays.asList( new Integer[]{86346823, 86352858, 86354529}));
-		List<Integer> lst2 = new ArrayList(Arrays.asList(new Integer[]{86348878, 86352984, 86354692}));
+		List<Integer> lst1 = new ArrayList<>(Arrays.asList( new Integer[]{86346823, 86352858, 86354529}));
+		List<Integer> lst2 = new ArrayList<>(Arrays.asList(new Integer[]{86348878, 86352984, 86354692}));
 
 		Integer cdsStart=86348749, cdsEnd=86387027;
 
@@ -340,8 +340,8 @@ public class TestGenomeMapping extends TestCase {
 	@Test
 	public void testGenomeMappingToolGetCDSRangesSERINC2(){
 
-		List<Integer> lst1 = new ArrayList(Arrays.asList( new Integer[]{31413812, 31415872, 31423692}));
-		List<Integer> lst2 = new ArrayList(Arrays.asList(new Integer[]{31414777, 31415907, 31423854}));
+		List<Integer> lst1 = new ArrayList<>(Arrays.asList( new Integer[]{31413812, 31415872, 31423692}));
+		List<Integer> lst2 = new ArrayList<>(Arrays.asList(new Integer[]{31414777, 31415907, 31423854}));
 
 		Integer cdsStart=31423818, cdsEnd=31434199;
 

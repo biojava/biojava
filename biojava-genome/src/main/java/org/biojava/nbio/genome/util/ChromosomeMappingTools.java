@@ -96,24 +96,6 @@ public class ChromosomeMappingTools {
         return s.toString();
     }
 
-    private static String showGenePosLink(GeneChromosomePosition chromPos, Integer pos ) {
-
-        String spos = format(pos);
-
-        StringBuffer buf = new StringBuffer();
-        buf.append("<a href=\"/pdb/gene/");
-        buf.append(chromPos.getGeneName());
-        buf.append("?chromosome=");
-        buf.append(chromPos.getChromosome());
-        buf.append("&range=");
-        buf.append(pos);
-        buf.append("\">");
-        buf.append(spos);
-        buf.append("</a>");
-
-        return buf.toString();
-    }
-
     private static String formatExonStructureReverse(GeneChromosomePosition chromPos) {
         StringWriter s = new StringWriter();
 
@@ -412,7 +394,8 @@ public class ChromosomeMappingTools {
         boolean inCoding = false;
         int codingLength = 0;
 
-        int lengthExons = 0;
+        @SuppressWarnings("unused")
+		int lengthExons = 0;
         // map forward
         for (int i = 0; i < exonStarts.size(); i++) {
 
@@ -610,7 +593,8 @@ public class ChromosomeMappingTools {
         if ( debug)
             s = new StringBuffer();
 
-        int lengthExons = 0;
+        @SuppressWarnings("unused")
+		int lengthExons = 0;
 
         // map reverse
         for (int i = exonStarts.size() - 1; i >= 0; i--) {
