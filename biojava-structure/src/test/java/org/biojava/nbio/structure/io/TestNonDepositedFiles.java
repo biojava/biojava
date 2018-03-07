@@ -413,11 +413,11 @@ public class TestNonDepositedFiles {
 	/**
 	 * Some PDB files coming from phenix or other software can have a CRYST1 line without z and not padded with white-spaces 
 	 * for the space group column.
-	 * @throws Exception
+	 * @throws IOException
 	 * @since 5.0.0
 	 */
 	@Test
-	public void testCryst1Parsing() throws Exception {
+	public void testCryst1Parsing() throws IOException {
 		String cryst1Line = "CRYST1   11.111   11.111  111.111  70.00  80.00  60.00 P 1";
 		Structure s;
 		PDBFileParser pdbPars = new PDBFileParser();
