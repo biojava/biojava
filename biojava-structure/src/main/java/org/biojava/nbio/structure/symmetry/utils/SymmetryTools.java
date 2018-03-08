@@ -42,7 +42,7 @@ import org.biojava.nbio.structure.StructureIdentifier;
 import org.biojava.nbio.structure.StructureImpl;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.ce.CECalculator;
-import org.biojava.nbio.structure.align.helper.AlignTools;
+import org.biojava.nbio.structure.align.helper.AlignUtils;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.multiple.Block;
 import org.biojava.nbio.structure.align.multiple.BlockImpl;
@@ -65,7 +65,7 @@ import org.biojava.nbio.structure.symmetry.core.QuatSymmetryParameters;
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetryResults;
 import org.biojava.nbio.structure.symmetry.internal.CeSymmResult;
 import org.biojava.nbio.structure.symmetry.internal.SymmetryAxes;
-import org.jgrapht.UndirectedGraph;
+import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleGraph;
 import org.slf4j.Logger;
@@ -337,8 +337,8 @@ public class SymmetryTools {
 	public static Matrix getDkMatrix(Atom[] ca1, Atom[] ca2, int k,
 			int fragmentLength) {
 
-		double[] dist1 = AlignTools.getDiagonalAtK(ca1, k);
-		double[] dist2 = AlignTools.getDiagonalAtK(ca2, k);
+		double[] dist1 = AlignUtils.getDiagonalAtK(ca1, k);
+		double[] dist2 = AlignUtils.getDiagonalAtK(ca2, k);
 
 		int rows = ca1.length - fragmentLength - k + 1;
 		int cols = ca2.length - fragmentLength - k + 1;
@@ -474,10 +474,10 @@ public class SymmetryTools {
 	 *
 	 * @return alignment Graph
 	 */
-	public static UndirectedGraph<Integer, DefaultEdge> buildSymmetryGraph(
+	public static Graph<Integer, DefaultEdge> buildSymmetryGraph(
 			AFPChain selfAlignment) {
 
-		UndirectedGraph<Integer, DefaultEdge> graph = new SimpleGraph<Integer, DefaultEdge>(
+		Graph<Integer, DefaultEdge> graph = new SimpleGraph<Integer, DefaultEdge>(
 				DefaultEdge.class);
 
 		for (int i = 0; i < selfAlignment.getOptAln().length; i++) {

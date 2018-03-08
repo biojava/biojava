@@ -83,7 +83,9 @@ public class TertiaryBasePairParameters extends BasePairParameters {
                     // C1'-C1' distance is one useful criteria
                     if (Math.abs(a1.getCoordsAsPoint3d().distance(a2.getCoordsAsPoint3d())-10.0) > 4.0) continue;
                     Pair<Group> ga = new Pair<>(g1, g2);
-                    Matrix4d data = basePairReferenceFrame(ga);
+                    // TODO is this call needed?? JD 2018-03-07
+                    @SuppressWarnings("unused")
+					Matrix4d data = basePairReferenceFrame(ga);
                     // if the stagger is greater than 2 Å, it's not really paired.
                     if (Math.abs(pairParameters[5]) > maxStagger) continue;
                     // if the propeller is ridiculous it's also not that good of a pair.

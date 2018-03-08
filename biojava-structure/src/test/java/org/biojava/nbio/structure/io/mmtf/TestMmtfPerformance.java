@@ -1,27 +1,14 @@
 package org.biojava.nbio.structure.io.mmtf;
 
-import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureIO;
-import org.biojava.nbio.structure.TestStructureCrossReferences;
 import org.biojava.nbio.structure.io.PDBFileParser;
-import org.biojava.nbio.structure.io.mmcif.AllChemCompProvider;
-import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
-import org.biojava.nbio.structure.io.mmcif.ChemCompProvider;
 import org.junit.Test;
-import org.rcsb.mmtf.dataholders.MmtfStructure;
-import org.rcsb.mmtf.decoder.ReaderUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.zip.GZIPInputStream;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -72,8 +59,11 @@ public class TestMmtfPerformance {
     }
 
     static String convertStreamToString(java.io.InputStream is) {
-        java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
-        return s.hasNext() ? s.next() : "";
+    	try (
+        java.util.Scanner s = new java.util.Scanner(is)){
+    		return s.useDelimiter("\\A").hasNext() ? s.next() : "";
+    	}
+        
     }
 
 
@@ -117,13 +107,13 @@ public class TestMmtfPerformance {
         for ( int i =0 ; i< NUMBER_OF_REPEATS ; i++) {
 
             long mmtfStart = System.nanoTime();
-            Structure mmtfStructure = MmtfActions.readFromInputStream(new ByteArrayInputStream(mmtfdata));
+			MmtfActions.readFromInputStream(new ByteArrayInputStream(mmtfdata));
             long mmtfEnd = System.nanoTime();
 
 
 
             long pdbStart = System.nanoTime();
-            Structure pdbStructure = parser.parsePDBFile(new ByteArrayInputStream(pdbBytes));
+            parser.parsePDBFile(new ByteArrayInputStream(pdbBytes));
             long pdbEnd = System.nanoTime();
 
             totalTimePDB += (pdbEnd - pdbStart);
@@ -139,8 +129,8 @@ public class TestMmtfPerformance {
 
         logger.warn("average time to parse mmtf: " + timeMMTF/(1000*1000) + " ms.");
         logger.warn("average time to parse PDB : " + timePDB/(1000*1000) + " ms. ");
-//
+
         assertTrue( "It should not be the case, but it is faster to parse a PDB file ("+timePDB+" ns.) than MMTF ("+( timeMMTF)+" ns.)!",( timePDB) > ( timeMMTF));
-//
+
     }
 }

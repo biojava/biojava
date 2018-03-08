@@ -29,9 +29,14 @@ import org.biojava.nbio.structure.jama.Matrix;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class AlignTools {
+/**
+ * Low level helper methods for CE and FATCAT algorithms. 
+ * 
+ * @author Andreas Prlic
+ */
+public class AlignUtils {
 	
-	private static final Logger logger = LoggerFactory.getLogger(AlignTools.class);
+	private static final Logger logger = LoggerFactory.getLogger(AlignUtils.class);
 
 	/** 
 	 * Get a subset of Atoms based by their positions

@@ -21,7 +21,6 @@
  */
 package org.biojava.nbio.structure.basepairs;
 
-import org.biojava.nbio.core.sequence.compound.NucleotideCompound;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
@@ -49,7 +48,7 @@ public class TestBasePairParameters {
 
         BasePairParameters bp = new BasePairParameters(structure);
         bp.analyze();
-        String sequence = bp.getPairSequence();
+        //String sequence = bp.getPairSequence();
 
         assertEquals(147, bp.getLength());
         // below all this set of comparator data was from an external program, 3DNA.

@@ -26,7 +26,7 @@ import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.StrucAligParameters;
-import org.biojava.nbio.structure.align.helper.AlignTools;
+import org.biojava.nbio.structure.align.helper.AlignUtils;
 import org.biojava.nbio.structure.align.helper.JointFragments;
 import org.biojava.nbio.structure.jama.Matrix;
 
@@ -225,9 +225,9 @@ public class FragmentJoiner {
 		int[] idx1 = ali.getIdx1();
 		int[] idx2 = ali.getIdx2();
 
-		Atom[] ca1subset = AlignTools.getFragmentFromIdxList(aa1, idx1);
+		Atom[] ca1subset = AlignUtils.getFragmentFromIdxList(aa1, idx1);
 
-		Atom[] ca2subset = AlignTools.getFragmentFromIdxList(aa3,idx2);
+		Atom[] ca2subset = AlignUtils.getFragmentFromIdxList(aa3,idx2);
 
 		double density = getDensity(ca1subset, ca2subset);
 
@@ -299,9 +299,9 @@ public class FragmentJoiner {
 		int[] idx1 = ali.getIdx1();
 		int[] idx2 = ali.getIdx2();
 
-		Atom[] ca1subset = AlignTools.getFragmentFromIdxList(ca1, idx1);
+		Atom[] ca1subset = AlignUtils.getFragmentFromIdxList(ca1, idx1);
 
-		Atom[] ca2subset = AlignTools.getFragmentFromIdxList(ca2,idx2);
+		Atom[] ca2subset = AlignUtils.getFragmentFromIdxList(ca2,idx2);
 
 		ali.calculateSuperpositionByIdx(ca1,ca2);
 

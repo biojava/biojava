@@ -75,7 +75,7 @@
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 			<scope>compile</scope>
-			<version>19.0</version>
+			<version>24.0-jre</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>

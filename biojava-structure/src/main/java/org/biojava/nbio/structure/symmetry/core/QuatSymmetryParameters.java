@@ -166,7 +166,7 @@ public class QuatSymmetryParameters implements Serializable {
 	 *            symmetry search
 	 * @return true, if the number of combinations
 	 */
-	public boolean isLocalLimitsExceeded(Set combinations) {
+	public boolean isLocalLimitsExceeded(Set<?> combinations) {
 		if(combinations.size()>maximumLocalCombinations) {
 			return true;
 		}
