@@ -19,10 +19,6 @@
     </license>
   </licenses>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.build.targetEncoding>UTF-8</project.build.targetEncoding>
-  </properties>
   <dependencies>
     <dependency>
       <groupId>junit</groupId>

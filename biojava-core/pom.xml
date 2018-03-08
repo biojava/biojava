@@ -63,10 +63,6 @@
     		<artifactId>log4j-core</artifactId>
   		</dependency>
 	</dependencies>
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.build.targetEncoding>UTF-8</project.build.targetEncoding>
-	</properties>
 </project>
 
 

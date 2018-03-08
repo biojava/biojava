@@ -98,8 +98,6 @@
 	</dependencies>
 
 	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.build.targetEncoding>UTF-8</project.build.targetEncoding>
 		<maven.build.timestamp.format>yyyyMMdd-HHmm</maven.build.timestamp.format>
 		<timestamp>${maven.build.timestamp}</timestamp>
 	</properties>
