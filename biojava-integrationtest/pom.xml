@@ -68,6 +68,32 @@ mvn verify</description>
           </execution>
         </executions>
       </plugin>
+      <!-- integrationtest module shouldn't create a jar file (it would be empty). 
+      		Recipe from https://stackoverflow.com/questions/2188746/what-is-the-best-way-to-avoid-maven-jar
+      		- JD 2018-03-08 -->
+      <plugin>
+        <artifactId>maven-jar-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>default-jar</id>
+            <phase>none</phase>
+            <configuration>
+              <finalName>unwanted</finalName>
+              <classifier>unwanted</classifier>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-install-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>default-install</id>
+            <phase>none</phase>
+          </execution>
+        </executions>
+      </plugin>
+      
     </plugins>
   </build>
  
