@@ -34,7 +34,8 @@ public class ChromosomeMappingTools {
         base = baseInt;
     }
 
-    /** Pretty print the details of a GeneChromosomePosition to a String
+    /** 
+     * Pretty print the details of a GeneChromosomePosition to a String
      *
      * @param chromosomePosition
      * @return
@@ -203,7 +204,7 @@ public class ChromosomeMappingTools {
     }
 
     /**
-     * maps the position of a CDS nucleotide back to the genome
+     * Maps the position of a CDS nucleotide back to the genome
      *
      * @param cdsNucleotidePosition
      * @return a ChromPos object
@@ -234,7 +235,8 @@ public class ChromosomeMappingTools {
 
     }
 
-    /** returns a nicely formatted representation of the position
+    /** 
+     * Returns a nicely formatted representation of the position
      *
      * @param chromosomePosition
      * @return
@@ -546,7 +548,8 @@ public class ChromosomeMappingTools {
         return codingLength - 3;
     }
 
-    /** Extracts the exon boundaries in CDS coordinates. (needs to be divided by 3 to get AA positions)
+    /** 
+     * Extracts the exon boundaries in CDS coordinates. (needs to be divided by 3 to get AA positions)
      *
      * @param chromPos
      * @return
@@ -593,8 +596,7 @@ public class ChromosomeMappingTools {
         if ( debug)
             s = new StringBuffer();
 
-        @SuppressWarnings("unused")
-		int lengthExons = 0;
+		//int lengthExons = 0;
 
         // map reverse
         for (int i = exonStarts.size() - 1; i >= 0; i--) {
@@ -607,7 +609,7 @@ public class ChromosomeMappingTools {
                 end = start;
                 start = tmp;
             }
-            lengthExons += end - start;
+            //lengthExons += end - start;
             //s.append("Reverse exon: " + end + " - " + start + " | " + (end - start));
             //s.append(newline);
 
@@ -770,7 +772,8 @@ public class ChromosomeMappingTools {
                 chromosomePosition.getCdsEnd());
     }
     
-	/** Converts the genetic coordinate to the position of the nucleotide on the mRNA sequence for a gene 
+	/** 
+	 * Converts the genetic coordinate to the position of the nucleotide on the mRNA sequence for a gene 
 	 * living on the forward DNA strand.
 	 * 
 	 * @param chromPos The genetic coordinate on a chromosome 
@@ -816,7 +819,8 @@ public class ChromosomeMappingTools {
         return -1;
     }
     
-	/** Converts the genetic coordinate to the position of the nucleotide on the mRNA sequence for a gene 
+	/** 
+	 * Converts the genetic coordinate to the position of the nucleotide on the mRNA sequence for a gene 
 	 * living on the reverse DNA strand.
 	 * 
 	 * @param chromPos The genetic coordinate on a chromosome 
@@ -862,15 +866,16 @@ public class ChromosomeMappingTools {
         return -1;
     }
     
-    /** Extracts the exons boundaries in CDS coordinates corresponding to the forward DNA strand.
-    *
-    * @param origExonStarts The list holding the genetic coordinates pointing to the start positions of the exons (including UTR regions)
-    * @param origExonEnds The list holding the genetic coordinates pointing to the end positions of the exons (including UTR regions)
-    * @param cdsStart The start position of a coding region
-    * @param cdsEnd The end position of a coding region
-    * 
-    * @return the list of genetic positions corresponding to the exons boundaries in CDS coordinates
-   */
+    /** 
+     * Extracts the exons boundaries in CDS coordinates corresponding to the forward DNA strand.
+     *
+     * @param origExonStarts The list holding the genetic coordinates pointing to the start positions of the exons (including UTR regions)
+     * @param origExonEnds The list holding the genetic coordinates pointing to the end positions of the exons (including UTR regions)
+     * @param cdsStart The start position of a coding region
+     * @param cdsEnd The end position of a coding region
+     * 
+     * @return the list of genetic positions corresponding to the exons boundaries in CDS coordinates
+     */
     public static List<Range<Integer>> getCDSRegions(List<Integer> origExonStarts, List<Integer> origExonEnds, int cdsStart, int cdsEnd) {
     	
         // remove exons that are fully landed in UTRs
@@ -903,28 +908,30 @@ public class ChromosomeMappingTools {
 		return cdsRegion;
     }
     
-    /** Extracts the DNA sequence transcribed from the input genetic coordinates.
-    *
-    * @param twoBitFacade the facade that provide an access to a 2bit file
-    * @param gcp The container with chromosomal positions
-    * 
-    * @return the DNA sequence transcribed from the input genetic coordinates
-   */
+    /** 
+     * Extracts the DNA sequence transcribed from the input genetic coordinates.
+     *
+     * @param twoBitFacade the facade that provide an access to a 2bit file
+     * @param gcp The container with chromosomal positions
+     * 
+     * @return the DNA sequence transcribed from the input genetic coordinates
+     */
     public static DNASequence getTranscriptDNASequence(TwoBitFacade twoBitFacade, GeneChromosomePosition gcp) throws Exception {
     	return getTranscriptDNASequence(twoBitFacade,gcp.getChromosome(),gcp.getExonStarts(), gcp.getExonEnds(), gcp.getCdsStart(), gcp.getCdsEnd(), gcp.getOrientation());
     }
     
-    /** Extracts the DNA sequence transcribed from the input genetic coordinates.
-    *
-    * @param chromosome the name of the chromosome
-    * @param exonStarts The list holding the genetic coordinates pointing to the start positions of the exons (including UTR regions)  
-    * @param exonEnds The list holding the genetic coordinates pointing to the end positions of the exons (including UTR regions)
-    * @param cdsStart The start position of a coding region
-    * @param cdsEnd The end position of a coding region
-    * @param orientation The orientation of the strand where the gene is living
-    * 
-    * @return the DNA sequence transcribed from the input genetic coordinates
-    */
+    /** 
+     * Extracts the DNA sequence transcribed from the input genetic coordinates.
+     *
+     * @param chromosome the name of the chromosome
+     * @param exonStarts The list holding the genetic coordinates pointing to the start positions of the exons (including UTR regions)  
+     * @param exonEnds The list holding the genetic coordinates pointing to the end positions of the exons (including UTR regions)
+     * @param cdsStart The start position of a coding region
+     * @param cdsEnd The end position of a coding region
+     * @param orientation The orientation of the strand where the gene is living
+     * 
+     * @return the DNA sequence transcribed from the input genetic coordinates
+     */
 	public static DNASequence getTranscriptDNASequence(TwoBitFacade twoBitFacade, String chromosome, List<Integer> exonStarts, List<Integer> exonEnds, int cdsStart, int cdsEnd, Character orientation) throws Exception {
 
 		List<Range<Integer>> cdsRegion = getCDSRegions(exonStarts, exonEnds, cdsStart, cdsEnd);

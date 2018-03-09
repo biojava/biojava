@@ -22,7 +22,7 @@
 /**
  * FASTQ and variants sequence format I/O.
  *
- * <br><br>
+ * <p>
  * To read from an Illumina variant FASTQ sequence file:
  * <pre>
  * FastqReader reader = new IlluminaFastqReader();
@@ -32,7 +32,7 @@
  * }
  * </pre>
  *
- * To write to an Sanger variant FASTQ sequence file:
+ * To write to a Sanger variant FASTQ sequence file:
  * <pre>
  * Collection&lt;Fastq&gt; fastq = ...;
  * SangerFastqWriter writer = new SangerFastqWriter();
@@ -43,13 +43,19 @@
  * its variants, and how they are handled in O|B|F projects,
  * see:
  *
- * <br><br>
+ * <p>
+ * 
  * <a href="http://dx.doi.org/10.1093/nar/gkp1137">The Sanger FASTQ file format for sequences
- * with quality scores, and the Solexa/Illumina FASTQ variants</a><br>
+ * with quality scores, and the Solexa/Illumina FASTQ variants</a>
+ * <p>
  * Peter J. A. Cock (Biopython), Christopher J. Fields (BioPerl), Naohisa Goto (BioRuby),
  * Michael L. Heuer (BioJava) and Peter M. Rice (EMBOSS).<br>
  * Nucleic Acids Research, <a href="http://dx.doi.org/10.1093/nar/gkp1137">doi:10.1093/nar/gkp1137</a>
  *
+ * <p>
+ * Moved from org.biojava.nbio.sequencing (biojava-sequencing module) in 5.0.0
+ * 
  * @since 3.0.3
+ * 
  */
 package org.biojava.nbio.genome.io.fastq;
