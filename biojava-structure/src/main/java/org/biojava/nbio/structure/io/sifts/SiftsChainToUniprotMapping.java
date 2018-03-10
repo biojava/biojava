@@ -59,7 +59,7 @@ public class SiftsChainToUniprotMapping {
 	private final static Logger logger = LoggerFactory.getLogger(SiftsChainToUniprotMapping.class);
 
 
-	public static File DEFAULT_FILE;
+	protected static File DEFAULT_FILE;
 
 	private static final String DEFAULT_FILENAME = "pdb_chain_uniprot.tsv";
 	private static final URL DEFAULT_URL;
