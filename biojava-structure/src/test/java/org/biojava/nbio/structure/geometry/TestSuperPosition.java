@@ -21,8 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Test the Quaternion-Based Characteristic Polynomial {@link SuperPositionQCP}
- * algorithm for RMSD and Superposition calculations.
+ * Test and compare the different superposition methods implemented in BioJava.
  * 
  * @author Aleix Lafita
  * @author Jose Duarte
