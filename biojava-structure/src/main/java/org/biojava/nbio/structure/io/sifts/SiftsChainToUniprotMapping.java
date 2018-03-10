@@ -118,7 +118,7 @@ public class SiftsChainToUniprotMapping {
 	 * @return
 	 * @throws IOException
 	 */
-	public static SiftsChainToUniprotMapping build() throws IOException {
+	protected static SiftsChainToUniprotMapping build() throws IOException {
 		SiftsChainToUniprotMapping sifts = new SiftsChainToUniprotMapping();
 		BufferedReader br = new BufferedReader(new FileReader(DEFAULT_FILE));
 		String line = "";
