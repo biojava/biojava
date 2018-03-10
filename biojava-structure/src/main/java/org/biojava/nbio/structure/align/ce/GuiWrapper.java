@@ -153,32 +153,6 @@ public class GuiWrapper {
 
 	}
 
-	/**
-	 *
-	 * @param afpChain
-	 * @param ca1
-	 * @param ca2
-	 * @return
-	 * @throws ClassNotFoundException If an error occurs when invoking jmol
-	 * @throws NoSuchMethodException If an error occurs when invoking jmol
-	 * @throws InvocationTargetException If an error occurs when invoking jmol
-	 * @throws IllegalAccessException If an error occurs when invoking jmol
-	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public static Group[] prepareGroupsForDisplay(AFPChain afpChain, Atom[] ca1,
-			Atom[] ca2)
-					throws ClassNotFoundException, NoSuchMethodException,
-					InvocationTargetException, IllegalAccessException{
-		Class c = Class.forName(strucAlignmentDisplay);
-
-		Method display = c.getMethod("prepareGroupsForDisplay", new Class[]{AFPChain.class, Atom[].class,
-				Atom[].class});
-
-		Object groups = display.invoke(null, afpChain,ca1,ca2);
-
-		return (Group[]) groups;
-	}
-
 	@SuppressWarnings({ "rawtypes", "unchecked", "unused" })
 	public static Atom[] getAtomArray(Atom[] ca, List<Group> hetatoms, List<Group> nucs)
 			throws ClassNotFoundException, NoSuchMethodException,
