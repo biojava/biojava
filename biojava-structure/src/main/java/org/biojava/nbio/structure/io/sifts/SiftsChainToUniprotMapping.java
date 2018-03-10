@@ -49,7 +49,7 @@ import java.util.zip.GZIPInputStream;
  * SiftsChainEntry entry2 = sifts.getByChainId("1hiv", "A");
  * System.out.println(entry1.equals(entry2)); // true
  * </pre>
- *
+ * See SIFTS project documentation: https://www.ebi.ac.uk/pdbe/docs/sifts/
  * @author dmyersturnbull
  * @see SiftsChainEntry
  * @since 3.0.7
@@ -59,7 +59,7 @@ public class SiftsChainToUniprotMapping {
 	private final static Logger logger = LoggerFactory.getLogger(SiftsChainToUniprotMapping.class);
 
 
-	private static File DEFAULT_FILE;
+	public static File DEFAULT_FILE;
 
 	private static final String DEFAULT_FILENAME = "pdb_chain_uniprot.tsv";
 	private static final URL DEFAULT_URL;
@@ -113,7 +113,12 @@ public class SiftsChainToUniprotMapping {
 		}
 	}
 
-	private static SiftsChainToUniprotMapping build() throws IOException {
+	/**
+	 * Builds the mapping by reading SIFTS the tsv file set in {@link #DEFAULT_FILE} variable.
+	 * @return
+	 * @throws IOException
+	 */
+	public static SiftsChainToUniprotMapping build() throws IOException {
 		SiftsChainToUniprotMapping sifts = new SiftsChainToUniprotMapping();
 		BufferedReader br = new BufferedReader(new FileReader(DEFAULT_FILE));
 		String line = "";
