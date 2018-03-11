@@ -26,19 +26,30 @@ import java.util.List;
 
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.FileParsingParameters;
+import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
+import org.biojava.nbio.structure.io.mmcif.DownloadChemCompProvider;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.*;
 
 
 public class TestBond {
+	
+	private static final Logger logger = LoggerFactory.getLogger(TestBond.class);
 
 
 	private static AtomCache cache;
 
 	@BeforeClass
 	public static void setUp() {
+		
+		// important: without this the tests can fail when running in maven (but not in IDE)
+		// that's because it depends on the order on how tests were run - JD 2018-03-10
+		ChemCompGroupFactory.setChemCompProvider(new DownloadChemCompProvider()); 
+		
 		cache = new AtomCache();
 
 		cache.setUseMmCif(true);
@@ -221,6 +232,7 @@ public class TestBond {
 					// Check they all have bonds
 					for(Atom a: atomsList){
 						if(a.getBonds()==null){
+							logger.debug("Atom {}-{} has no bonds", a.getPDBserial(), a.getName());
 							nonBondedCounter++;
 						}
 					}

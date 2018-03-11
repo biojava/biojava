@@ -1046,15 +1046,17 @@ public class AtomCache {
 	 * @throws IOException error reading from Web or file system
 	 */
 	private Structure loadStructureFromMmtfByPdbId(String pdbId) throws IOException {
-			MMTFFileReader reader = new MMTFFileReader();
-			reader.setFetchBehavior(fetchBehavior);
-			reader.setObsoleteBehavior(obsoleteBehavior);
-			Structure structure = reader.getStructureById(pdbId.toLowerCase());
-			return structure;
+		logger.debug("Loading structure {} from mmtf file.", pdbId);
+		MMTFFileReader reader = new MMTFFileReader();
+		reader.setFetchBehavior(fetchBehavior);
+		reader.setObsoleteBehavior(obsoleteBehavior);
+		Structure structure = reader.getStructureById(pdbId.toLowerCase());
+		return structure;
 	}
 
 	protected Structure loadStructureFromCifByPdbId(String pdbId) throws IOException, StructureException {
 
+		logger.debug("Loading structure {} from mmCIF file {}.", pdbId, path);
 		Structure s;
 		flagLoading(pdbId);
 		try {
@@ -1073,6 +1075,7 @@ public class AtomCache {
 
 	protected Structure loadStructureFromPdbByPdbId(String pdbId) throws IOException, StructureException {
 
+		logger.debug("Loading structure {} from PDB file {}.", pdbId, path);
 		Structure s;
 		flagLoading(pdbId);
 		try {
