@@ -29,6 +29,7 @@ import org.biojava.nbio.structure.xtal.CrystalCell;
 import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.ComparisonFailure;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +44,7 @@ import static org.junit.Assert.*;
  * A test to make sure both PDB and mmCIF parsers can parse
  * properly large samples of the PDB.
  *
- * Will take very long to run, thus they are excluded by default in the pom.
+ * Will take very long to run, thus they are ignored by default.
  * To run them use, for the 1000 entries one:
  * <pre>
  * mvn -Dtest=TestLongPdbVsMmCifParsing#testLongPdbVsMmCif test
@@ -106,6 +107,7 @@ public class TestLongPdbVsMmCifParsing {
 		cache.setObsoleteBehavior(ObsoleteBehavior.THROW_EXCEPTION);
 	}
 
+	@Ignore
 	@Test
 	public void testLongPdbVsMmCif() throws IOException, StructureException {
 
@@ -115,6 +117,7 @@ public class TestLongPdbVsMmCifParsing {
 
 	}
 
+	@Ignore
 	@Test
 	public void testVeryLongPdbVsMmCif() throws IOException, StructureException {
 
@@ -124,6 +127,7 @@ public class TestLongPdbVsMmCifParsing {
 
 	}
 
+	@Ignore
 	@Test
 	public void testSingle() throws IOException, StructureException {
 		testAll(Arrays.asList("4kro"));

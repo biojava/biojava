@@ -362,14 +362,6 @@
 					<argLine>-Xmx1500M</argLine>
 					<reuseForks>false</reuseForks>
 					<forkCount>1</forkCount>
-
-					<excludes>
-						<!-- we exclude by default the long parsing tests, they will only be 
-							executed if explicitly called -->
-						<exclude>**/TestLongPdbVsMmCifParsing.java</exclude>
-						<exclude>**/TestAtomCachePerformance.java</exclude>
-						<exclude>**/EcodInstallationTest.java</exclude>
-					</excludes>
 				</configuration>
 			</plugin>
 

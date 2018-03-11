@@ -268,7 +268,7 @@ public class EcodInstallationTest {
 	 * Hierarchical field warnings are expected for versions prior to develop68.
 	 * @throws IOException
 	 */
-	//@Ignore // Very slow parsing test
+	@Ignore // Very slow parsing test
 	@Test
 	public void testAllVersions() throws IOException {
 		// List all versions
