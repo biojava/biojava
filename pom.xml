@@ -171,7 +171,7 @@
 				</plugin>
 				<plugin>
 					<artifactId>maven-dependency-plugin</artifactId>
-					<version>2.10</version>
+					<version>3.0.2</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-jar-plugin</artifactId>
@@ -179,11 +179,11 @@
 					      there are some config changes required.
 					      see https://github.com/biojava/biojava/issues/531
 					      -->
-					<version>2.6</version>
+					<version>3.0.2</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-scm-plugin</artifactId>
-					<version>1.9.4</version>
+					<version>1.9.5</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-source-plugin</artifactId>
@@ -191,7 +191,7 @@
 				</plugin>
 				<plugin>
 					<artifactId>maven-failsafe-plugin</artifactId>
-					<version>2.19.1</version>
+					<version>2.21.0</version>
 				</plugin>
 				<plugin>
 					<groupId>net.sf</groupId>
@@ -224,7 +224,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-javadoc-plugin</artifactId>
-					<version>2.10.4</version>
+					<version>3.0.0</version>
 					<configuration>
 					    <additionalparam>-Xdoclint:none</additionalparam>
 					    <!-- we need to allow script in comments or otherwise we can't use google analytics js in footer below - JD 2017-03-30 -->
@@ -242,11 +242,11 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-shade-plugin</artifactId>
-					<version>2.4.3</version>
+					<version>3.1.0</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-assembly-plugin</artifactId>
-					<version>2.6</version>
+					<version>3.1.0</version>
 					<configuration>
 						<descriptors>
 							<descriptor>src/main/assembly/assembly.xml</descriptor>
@@ -268,7 +268,7 @@
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>findbugs-maven-plugin</artifactId>
-					<version>3.0.3</version>
+					<version>3.0.5</version>
 				</plugin>
 
 				<plugin>
@@ -286,12 +286,12 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-resources-plugin</artifactId>
-					<version>3.0.1</version>
+					<version>3.0.2</version>
 				</plugin>
 
 				<plugin>
 					<artifactId>maven-enforcer-plugin</artifactId>
-					<version>1.4.1</version>
+					<version>3.0.0-M1</version>
 					<executions>
 						<execution>
 							<id>enforce-java</id>
@@ -307,6 +307,16 @@
 							</configuration>
 						</execution>
 					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-install-plugin</artifactId>
+					<version>2.5.2</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>2.21.0</version>
 				</plugin>
 
 			</plugins>
@@ -346,20 +356,12 @@
 
 			<!-- give more memory for junit tests -->
 			<plugin>
+				<groupId>org.apache.maven</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.19.1</version>
 				<configuration>
 					<argLine>-Xmx1500M</argLine>
 					<reuseForks>false</reuseForks>
 					<forkCount>1</forkCount>
-
-					<excludes>
-						<!-- we exclude by default the long parsing tests, they will only be 
-							executed if explicitly called -->
-						<exclude>**/TestLongPdbVsMmCifParsing.java</exclude>
-						<exclude>**/TestAtomCachePerformance.java</exclude>
-						<exclude>**/EcodInstallationTest.java</exclude>
-					</excludes>
 				</configuration>
 			</plugin>
 
@@ -512,7 +514,6 @@
 		<plugins>
 			<plugin>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.10.4</version>
 				<configuration>
 					<aggregate>true</aggregate>
 					<breakiterator>true</breakiterator>
@@ -544,7 +545,6 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>findbugs-maven-plugin</artifactId>
-				<version>3.0.3</version>
 			</plugin>
 
 			<plugin>

@@ -116,6 +116,9 @@ public class TestDownloadChemCompProvider {
 		// see #703
 		// TODO this test for the moment only asserts that we get an empty chemcomp, since we can't detect bad cached files yet
 		
+		// very important: we have a memory cache of files, we need to reset it 
+		FlatFileCache.clear();
+				
 		File file = new File(DownloadChemCompProvider.getLocalFileName("HEM"));
 		
 		PrintWriter pw = new PrintWriter(new GZIPOutputStream(new FileOutputStream(file)));
@@ -131,12 +134,10 @@ public class TestDownloadChemCompProvider {
 		file.delete();
 		
 		// very important: we have a memory cache of files, we need to reset it not to pollute the cache for later tests
+		// we've got to reset here before asserting, in case the assertion fails
 		FlatFileCache.clear();
 		
 		assertNull(cc.getName());
-		
-		
-		
 	}
 
 }

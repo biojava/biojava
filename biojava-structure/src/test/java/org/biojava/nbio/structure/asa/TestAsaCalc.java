@@ -24,6 +24,8 @@ import junit.framework.TestCase;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
+import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
+import org.biojava.nbio.structure.io.mmcif.DownloadChemCompProvider;
 
 import java.io.IOException;
 
@@ -39,6 +41,10 @@ public class TestAsaCalc extends TestCase {
 
 	public void testAsa3PIU() throws StructureException, IOException {
 
+		// important: without this the tests can fail when running in maven (but not in IDE)
+		// that's because it depends on the order on how tests were run - JD 2018-03-10
+		ChemCompGroupFactory.setChemCompProvider(new DownloadChemCompProvider()); 
+		
 		Structure structure = StructureIO.getStructure("3PIU");
 
 

@@ -26,19 +26,30 @@ import java.util.List;
 
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.FileParsingParameters;
+import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
+import org.biojava.nbio.structure.io.mmcif.DownloadChemCompProvider;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.*;
 
 
 public class TestBond {
+	
+	private static final Logger logger = LoggerFactory.getLogger(TestBond.class);
 
 
 	private static AtomCache cache;
 
 	@BeforeClass
 	public static void setUp() {
+		
+		// important: without this the tests can fail when running in maven (but not in IDE)
+		// that's because it depends on the order on how tests were run - JD 2018-03-10
+		ChemCompGroupFactory.setChemCompProvider(new DownloadChemCompProvider()); 
+		
 		cache = new AtomCache();
 
 		cache.setUseMmCif(true);
@@ -165,13 +176,13 @@ public class TestBond {
 	 */
 	@Test
 	public void testHeavyAtomBondMissing() throws IOException, StructureException {
-		assertEquals(testMissingBonds("3jtm"),0);
-		assertEquals(testMissingBonds("3jq8"),0);
-		assertEquals(testMissingBonds("3jq9"),0);
-		assertEquals(testMissingBonds("3i06"),0);
-		assertEquals(testMissingBonds("3nu3"),0);
-		assertEquals(testMissingBonds("3nu4"),0);
-		assertEquals(testMissingBonds("3nvd"),0);
+		assertEquals(0, countAtomsWithoutBonds("3jtm"));
+		assertEquals(0, countAtomsWithoutBonds("3jq8"));
+		assertEquals(0, countAtomsWithoutBonds("3jq9"));
+		assertEquals(0, countAtomsWithoutBonds("3i06"));
+		assertEquals(0, countAtomsWithoutBonds("3nu3"));
+		assertEquals(0, countAtomsWithoutBonds("3nu4"));
+		assertEquals(0, countAtomsWithoutBonds("3nvd"));
 	}
 
 
@@ -182,8 +193,8 @@ public class TestBond {
 	 */
 	@Test
 	public void testHydrogenToProteinBondMissing() throws IOException, StructureException {
-		assertEquals(testMissingBonds("4txr"),0);
-		assertEquals(testMissingBonds("3nvd"),0);
+		assertEquals(0, countAtomsWithoutBonds("4txr"));
+		assertEquals(0, countAtomsWithoutBonds("3nvd"));
 	}
 
 	/**
@@ -193,18 +204,19 @@ public class TestBond {
 	 */
 	@Test
 	public void testAltLocBondMissing() throws IOException, StructureException {
-		assertEquals(testMissingBonds("4cup"),0);
+		assertEquals(0, countAtomsWithoutBonds("4cup"));
 	}
 
 	/**
-	 * 
+	 * Loops through whole structure counting all atoms (in groups larger than 1 atom)
+	 * that have no bonds.
 	 * @throws IOException
 	 * @throws StructureException
 	 */
-	private int testMissingBonds(String pdbId) throws IOException, StructureException { 
+	private int countAtomsWithoutBonds(String pdbId) throws IOException, StructureException { 
 		Structure inputStructure = StructureIO.getStructure(pdbId);
 		// Loop through the structure
-		int nonBondedCounter =0;
+		int nonBondedCounter = 0;
 		for(int i=0;i<inputStructure.nrModels();i++){
 			for(Chain c: inputStructure.getChains(i)){
 				for(Group g: c.getAtomGroups()){
@@ -220,6 +232,7 @@ public class TestBond {
 					// Check they all have bonds
 					for(Atom a: atomsList){
 						if(a.getBonds()==null){
+							logger.debug("Atom {}-{} has no bonds", a.getPDBserial(), a.getName());
 							nonBondedCounter++;
 						}
 					}
@@ -230,7 +243,7 @@ public class TestBond {
 		return nonBondedCounter;
 	}
 
-	private int testBondedToSelf(String pdbId) throws IOException, StructureException {
+	private int countBondedToSelf(String pdbId) throws IOException, StructureException {
 		Structure inputStructure = StructureIO.getStructure(pdbId);
 		int bondedToSelf =0;
 		for(int i=0;i<inputStructure.nrModels();i++){
@@ -248,11 +261,11 @@ public class TestBond {
 					// Check they all have bonds
 					for(Atom a: atomsList){
 						if(a.getBonds()!=null){
-						for(Bond b: a.getBonds()){
-							if(b.getAtomA().equals(b.getAtomB())){
-								bondedToSelf+=1;
+							for(Bond b: a.getBonds()){
+								if(b.getAtomA().equals(b.getAtomB())){
+									bondedToSelf+=1;
+								}
 							}
-						}
 						}
 					}
 				}
@@ -299,10 +312,10 @@ public class TestBond {
 	@Test
 	public void testDeuterated() throws IOException, StructureException {
 		// The terminal Hydrogen D3 - is missing (from the CCD)
-		assertEquals(testMissingBonds("1GKT"),2);
-		assertEquals(testMissingBonds("1IO5"),2);
+		assertEquals(2, countAtomsWithoutBonds("1GKT"));
+		assertEquals(2, countAtomsWithoutBonds("1IO5"));
 		// All H/D2,H/D3 errors
-		assertEquals(testMissingBonds("5E5J"),13);
+		assertEquals(13, countAtomsWithoutBonds("5E5J"));
 	}
 
 	/**
@@ -313,7 +326,7 @@ public class TestBond {
 	 */
 	@Test
 	public void testWeirdCase() throws IOException, StructureException {
-		assertEquals(testMissingBonds("1IU6"),6);
+		assertEquals(6, countAtomsWithoutBonds("1IU6"));
 	}
 
 
@@ -325,7 +338,7 @@ public class TestBond {
 	@Test
 	public void testSSBonds() throws IOException, StructureException {
 		for(String pdbCode : new String[]{"3ZXW","1NTY", "4H2I", "2K6D", "2MLM"}){
-			assertEquals(testBondedToSelf(pdbCode),0);
+			assertEquals(0, countBondedToSelf(pdbCode));
 		}
 	}
 
