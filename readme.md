@@ -55,7 +55,7 @@ To use the latest builds from BioJava, you can add the following config your pro
 
 ### Mailing Lists
 
-BioJava has two main mailing lists. In order to avoid SPAM both lists only accept postings from list members. Anybody can become a list member, so please subscribe before you post. If you send without being subscribed your mail might get stuck in the moderation loop, which can cause several weeks of delay (no fun to read through all that spam).
+BioJava has one main mailing list. In order to avoid SPAM the list only accepts postings from list members. Anybody can become a list member, so please subscribe before you post. If you send without being subscribed your mail might get stuck in the moderation loop, which can cause several weeks of delay (no fun to read through all that spam).
 
 #### biojava-l general discussion list
 
@@ -65,9 +65,7 @@ This list is intended for general discussion, advice, questions, offers of help,
 
 #### biojava-dev developers list
  
-* [biojava-dev@biojava.org](http://lists.open-bio.org/mailman/listinfo/biojava-dev)
-
-This list is intended for more technical discussions about API design, bugs in git development code, performance issues and things that might not be of interest to the more casual user.
+A [dev mailing list](http://lists.open-bio.org/mailman/listinfo/biojava-dev) used to exist, but it has now been shut down. For dev discussions we now use github issues. Please search existing issues and if you don't find the answer to your question submit a new issue.
 
 ### Please cite
 
