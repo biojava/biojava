@@ -9,13 +9,5 @@
 		<root level="warn">
 			<appender-ref ref="Console"/>
 		</root>
-		<!--  
-		<Logger name="org.biojava.nbio.structure.io.BondMaker" level="debug" additivity="false">
-            <appender-ref ref="Console"/>
-        </Logger>
-        <Logger name="org.biojava.nbio.structure.align.util.AtomCache" level="debug" additivity="false">
-            <appender-ref ref="Console"/>
-        </Logger>
-        -->
 	</loggers>
 </configuration>
