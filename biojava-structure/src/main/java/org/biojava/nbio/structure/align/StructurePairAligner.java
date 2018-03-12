@@ -296,26 +296,6 @@ public class StructurePairAligner {
 	}
 
 	/**
-	 * check if debug mode is set on
-	 *
-	 * @return debug flag
-	 */
-	@Deprecated
-	public boolean isDebug() {
-		return false;
-	}
-
-	/**
-	 * set the debug flag
-	 *
-	 * @param debug
-	 *            flag
-	 */
-	@Deprecated
-	public void setDebug(boolean debug) {
-	}
-
-	/**
 	 * Calculate the alignment between the two full structures with default
 	 * parameters
 	 *

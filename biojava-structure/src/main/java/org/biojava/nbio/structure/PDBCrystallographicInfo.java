@@ -145,16 +145,6 @@ public class PDBCrystallographicInfo implements Serializable {
 	}
 
 	/**
-	 * Return the z, i.e. the multiplicity of the space group times the number of chains in asymmetric unit
-	 * @return 0
-	 * @deprecated As of 4.0, use {@link SpaceGroup#getMultiplicity()} and {@link Structure#size()}
-	 */
-	@Deprecated
-	public int getZ() {
-		return 0;
-	}
-
-	/**
 	 * Gets all symmetry transformation operators corresponding to this structure's space group
 	 * (including the identity, at index 0) expressed in the orthonormal basis. Using PDB axes
 	 * convention (NCODE=1).

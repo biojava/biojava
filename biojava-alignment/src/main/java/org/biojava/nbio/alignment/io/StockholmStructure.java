@@ -108,18 +108,6 @@ public class StockholmStructure {
 	}
 
 	/**
-	 * Actually this function should be called appendToSequence
-	 *
-	 * @param seqName
-	 * @param seqText
-	 * @deprecated Use {@link #appendToSequence(String,String)} instead
-	 */
-	@Deprecated
-	public void addSequence(String seqName, String seqText) {
-		appendToSequence(seqName, seqText);
-	}
-
-	/**
 	 * @param seqName
 	 * @param seqText
 	 */

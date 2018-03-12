@@ -922,21 +922,6 @@ public class StructureTools {
 	 * @param ca
 	 *            array of representative atoms, e.g. CA atoms
 	 * @return Atom array
-	 * @deprecated Use the better-named {@link #cloneAtomArray(Atom[])} instead
-	 */
-	@Deprecated
-	public static final Atom[] cloneCAArray(Atom[] ca) {
-		return cloneAtomArray(ca);
-	}
-
-	/**
-	 * Provides an equivalent copy of Atoms in a new array. Clones everything,
-	 * starting with parent groups and chains. The chain will only contain
-	 * groups that are part of the input array.
-	 *
-	 * @param ca
-	 *            array of representative atoms, e.g. CA atoms
-	 * @return Atom array
 	 * @since Biojava 4.1.0
 	 */
 	public static final Atom[] cloneAtomArray(Atom[] ca) {
@@ -1224,17 +1209,6 @@ public class StructureTools {
 	}
 
 	/**
-	 *
-	 * @param code3
-	 * @return
-	 * @deprecated Use {@link #get1LetterCodeAmino(String)} instead
-	 */
-	@Deprecated
-	public static final Character convert_3code_1code(String code3) {
-		return get1LetterCodeAmino(code3);
-	}
-
-	/**
 	 * Convert a three letter amino acid or nucleotide code into a single
 	 * character code. If the code does not correspond to an amino acid or
 	 * nucleotide, returns {@link #UNKNOWN_GROUP_LABEL}.
@@ -1356,113 +1330,6 @@ public class StructureTools {
 		}
 
 		return newS;
-	}
-
-	/**
-	 * Reduce a structure to provide a smaller representation. Only takes the
-	 * first model of the structure. If chainNr >=0 only takes the chain at that
-	 * position into account.
-	 *
-	 * @param s
-	 * @param chainNr
-	 *            can be -1 to request all chains of model 0, otherwise will
-	 *            only add chain at this position
-	 * @return Structure object
-	 * @since 3.0
-	 * @deprecated Use {@link StructureIdentifier#reduce(Structure)} instead (v. 4.2.0)
-	 */
-	@Deprecated
-	public static final Structure getReducedStructure(Structure s, int chainNr) {
-		// since we deal here with structure alignments,
-		// only use Model 1...
-
-		Structure newStructure = new StructureImpl();
-		newStructure.setPDBCode(s.getPDBCode());
-		newStructure.setPDBHeader(s.getPDBHeader());
-		newStructure.setName(s.getName());
-		newStructure.setSSBonds(s.getSSBonds());
-		newStructure.setDBRefs(s.getDBRefs());
-		newStructure.setSites(s.getSites());
-		newStructure.setBiologicalAssembly(s.isBiologicalAssembly());
-		newStructure.setEntityInfos(s.getEntityInfos());
-		newStructure.setSSBonds(s.getSSBonds());
-		newStructure.setSites(s.getSites());
-		newStructure.setCrystallographicInfo(s.getCrystallographicInfo());
-		newStructure.getPDBHeader().setDescription(
-				"subset of " + s.getPDBCode() + " "
-						+ s.getPDBHeader().getDescription());
-
-		if (chainNr < 0) {
-
-			// only get model 0
-			List<Chain> model0 = s.getModel(0);
-			for (Chain c : model0) {
-				newStructure.addChain(c);
-			}
-			return newStructure;
-		}
-		Chain c = null;
-
-		c = s.getChainByIndex(0, chainNr);
-
-		newStructure.addChain(c);
-
-		return newStructure;
-	}
-
-	/**
-	 * In addition to the functionality provided by
-	 * {@link #getReducedStructure(Structure, int)} and
-	 * {@link #getReducedStructure(Structure, String)}, also provides a way to
-	 * specify sub-regions of a structure with the following specification:
-	 *
-	 * <p>
-	 * <li>ranges can be surrounded by ( and ). (but will be removed).</li>
-	 * <li>ranges are specified as PDBresnum1 : PDBresnum2</li>
-	 *
-	 * <li>a list of ranges is separated by ,</li>
-	 * </p>
-	 * Example
-	 *
-	 * <pre>
-	 *  4GCR (A:1-83)
-	 *  1CDG (A:407-495,A:582-686)
-	 *  1CDG (A_407-495,A_582-686)
-	 * </pre>
-	 *
-	 * @param s
-	 *            The full structure
-	 * @param ranges
-	 *            A comma-separated list of ranges, optionally surrounded by
-	 *            parentheses
-	 * @return Substructure of s specified by ranges
-	 * @throws IllegalArgumentException for malformed range strings
-	 * @throws StructureException for errors when reducing the Structure
-	 * @deprecated Use {@link StructureIdentifier} instead (4.2.0)
-	 */
-	@Deprecated
-	public static final Structure getSubRanges(Structure s, String ranges )
-			throws StructureException
-	{
-		if (ranges == null || ranges.equals(""))
-			throw new IllegalArgumentException("ranges can't be null or empty");
-
-		ranges = ranges.trim();
-
-		if (ranges.startsWith("("))
-			ranges = ranges.substring(1);
-		if (ranges.endsWith(")")) {
-			ranges = ranges.substring(0, ranges.length() - 1);
-		}
-
-		// special case: '-' means 'everything'
-		if (ranges.equals("-")) {
-			return s;
-		}
-
-		List<ResidueRange> resRanges = ResidueRange.parseMultiple(ranges);
-		SubstructureIdentifier structId = new SubstructureIdentifier(null,resRanges);
-		return structId.reduce(s);
 	}
 
 	public static final String convertAtomsToSeq(Atom[] atoms) {

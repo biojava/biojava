@@ -164,16 +164,6 @@ public class AFPChain implements Serializable, Cloneable {
 	}
 
 	/**
-	 * Use the constructor with the algorithmName (design condition).
-	 * @see AFPChain#AFPChain(String)
-	 */
-	@Deprecated
-	public AFPChain(){
-		algorithmName = UNKNOWN_ALGORITHM;
-		init();
-	}
-
-	/**
 	 * Copy constructor
 	 * @param o AFPChain to duplicate
 	 */
@@ -358,28 +348,6 @@ public class AFPChain implements Serializable, Cloneable {
 			myResultsSimilarity2 = Math.round(similarity /(float) ca2Length * 100);
 		}
 		return myResultsSimilarity2;
-
-	}
-
-	/** get the coverage of protein 1 with the alignment
-	 *
-	 * @return percentage of coverage, between 0 and 100.
-	 * @deprecated use getCoverage1() instead
-	 */
-	@Deprecated
-	public int getSimilarity1(){
-		return getCoverage1();
-
-	}
-
-	/** get the coverage of protein 2 with the alignment
-	 *
-	 * @return percentage of coverage, between 0 and 100.
-	 * @deprecated use getCoverage2() instead
-	 */
-	@Deprecated
-	public int getSimilarity2(){
-		return getCoverage2();
 
 	}
 

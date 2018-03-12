@@ -28,7 +28,6 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
-import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Matrix4d;
 
 import org.biojava.nbio.structure.Atom;
@@ -693,45 +692,6 @@ public class SymmetryTools {
 	}
 
 	/**
-	 * Determines if two symmetry axis are equivalent inside the error
-	 * threshold. It only takes into account the direction of the vector where
-	 * the rotation is made: the angle and translation are not taken into
-	 * account.
-	 *
-	 * @param axis1
-	 * @param axis2
-	 * @param epsilon
-	 *            error allowed in the axis comparison
-	 * @return true if equivalent, false otherwise
-	 */
-	@Deprecated
-	public static boolean equivalentAxes(Matrix4d axis1, Matrix4d axis2,
-			double epsilon) {
-
-		AxisAngle4d rot1 = new AxisAngle4d();
-		rot1.set(axis1);
-		AxisAngle4d rot2 = new AxisAngle4d();
-		rot2.set(axis2);
-
-		// rot1.epsilonEquals(rot2, error); //that also compares angle
-		// L-infinite distance without comparing the angle (epsilonEquals)
-		List<Double> sameDir = new ArrayList<Double>();
-		sameDir.add(Math.abs(rot1.x - rot2.x));
-		sameDir.add(Math.abs(rot1.y - rot2.y));
-		sameDir.add(Math.abs(rot1.z - rot2.z));
-
-		List<Double> otherDir = new ArrayList<Double>();
-		otherDir.add(Math.abs(rot1.x + rot2.x));
-		otherDir.add(Math.abs(rot1.y + rot2.y));
-		otherDir.add(Math.abs(rot1.z + rot2.z));
-
-		Double error = Math.min(Collections.max(sameDir),
-				Collections.max(otherDir));
-
-		return error < epsilon;
-	}
-
-	/**
 	 * Given a symmetry result, it calculates the overall global symmetry,
 	 * factoring out the alignment and detection steps of
 	 * {@link QuatSymmetryDetector} algorithm.
@@ -762,79 +722,6 @@ public class SymmetryTools {
 				.calcGlobalSymmetry(subunits, sp, cp);
 
 		return gSymmetry;
-	}
-
-	/**
-	 * Returns true a symmetry multiple alignment has been refined, false
-	 * otherwise.
-	 * <p>
-	 * For a refined alignment only one Block with no repeated residues is
-	 * necessary. Sufficient condition is not tested (only known from the
-	 * algorithm or CeSymmResult).
-	 *
-	 * @param symm
-	 *            the symmetry alignment
-	 * @return true if the alignment is refined
-	 */
-	@Deprecated
-	public static boolean isRefined(MultipleAlignment symm) {
-
-		if (symm.getBlocks().size() > 1) {
-			return false;
-		} else if (symm.size() < 2)
-			return false;
-		else {
-			List<Integer> alreadySeen = new ArrayList<Integer>();
-			List<List<Integer>> align = symm.getBlock(0).getAlignRes();
-			for (int str = 0; str < symm.size(); str++) {
-				for (int res = 0; res < align.get(str).size(); res++) {
-					Integer residue = align.get(str).get(res);
-					if (residue == null)
-						continue;
-					if (alreadySeen.contains(residue)) {
-						return false;
-					} else {
-						alreadySeen.add(residue);
-					}
-				}
-			} // end of all repeats
-			return true;
-		}
-	}
-
-	/**
-	 * Returns true if the symmetry alignment is significant, false otherwise.
-	 * <p>
-	 * For a symmetry alignment to be significant, the alignment has to be
-	 * refined and the TM-score has to be higher than the threshold.
-	 * <p>
-	 * It is recommended to use the {@link CeSymmResult#isSignificant()} method
-	 * instead.
-	 *
-	 * @param msa
-	 * @param symmetryThreshold
-	 * @return
-	 * @throws StructureException
-	 */
-	@Deprecated
-	public static boolean isSignificant(MultipleAlignment msa,
-			double symmetryThreshold) throws StructureException {
-
-		// Order/refinement check
-		if (!SymmetryTools.isRefined(msa))
-			return false;
-
-		// TM-score cutoff
-		double tm = 0.0;
-		if (msa.getScore(MultipleAlignmentScorer.AVGTM_SCORE) == null)
-			tm = MultipleAlignmentScorer.getAvgTMScore(msa);
-		else
-			tm = msa.getScore(MultipleAlignmentScorer.AVGTM_SCORE);
-
-		if (tm < symmetryThreshold)
-			return false;
-
-		return true;
 	}
 
 	/**

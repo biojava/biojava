@@ -814,27 +814,6 @@ public class ScopInstallation implements LocalScopDatabase {
 
 	}
 
-
-	/**
-	 * Get the URL of the first scop mirror being used
-	 * @return
-	 */
-	@Deprecated
-	public String getScopDownloadURL() {
-		if(mirrors.size()<1) initScopURLs();
-		return mirrors.get(0).getRootURL();
-	}
-
-	/**
-	 * @param scopDownloadURL URL to load
-	 * @deprecated Use {@link #addMirror} instead
-	 */
-	@Deprecated
-	public void setScopDownloadURL(String scopDownloadURL) {
-		mirrors.clear();
-		mirrors.add(new ScopMirror(scopDownloadURL));
-	}
-
 	public void addMirror(String scopDownloadURL) {
 		mirrors.add(new ScopMirror(scopDownloadURL));
 	}

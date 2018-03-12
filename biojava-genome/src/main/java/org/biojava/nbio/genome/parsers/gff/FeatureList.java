@@ -498,16 +498,6 @@ public class FeatureList extends ArrayList<FeatureI> {
 	}
 
 	/**
-	 * @deprecated
-	 *
-	 */
-	// FIXME features may have a null location() !!
-	@Deprecated
-	static public void main(String[] args) {
-	}
-
-
-	/**
 	 * Add a list of attributes that will be used as indexes for queries
 	 * @param indexes  the List containing the attribute_id
 	 */

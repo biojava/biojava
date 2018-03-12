@@ -196,45 +196,6 @@ public class SymmetryAxes {
 	}
 
 	/**
-	 * Adds a new axis of symmetry.
-	 * The repeats that participate in this axis and their superposition
-	 * relation should also be indicated.
-	 *
-	 * @param axis the new axis of symmetry found
-	 * @param superposition repeats participating and superposition relation
-	 * @param repeats number of times the transformation is applied to every
-	 * 			repeat. index1=repeat, index2=times.
-	 * @param division number of parts that this axis divides the structure in
-	 *
-	 * @throws IllegalArgumentException if the repeat relation is in the
-	 * 			wrong format: should be double List of equal sizes.
-	 * @deprecated Use {@link #addAxis(Matrix4d, int, SymmetryType)} instead.
-	 *  Repeats and Superposition are now inferred automatically.
-	 */
-	@Deprecated
-	public void addAxis(Matrix4d axis, List<List<Integer>> superposition,
-			List<Integer> repeats, Integer division) {
-
-		//Check correct format of repeat relations
-		if (superposition.size() != 2){
-			throw new IllegalArgumentException(
-					"Wrong superposition format: should be double List.");
-		} else if (superposition.get(0).size() != superposition.get(1).size()){
-			throw new IllegalArgumentException(
-					"Wrong superposition format: not equal List sizes.");
-		}
-		// Now ignores superposition & repeats except to guess symmetry type
-		SymmetryType type;
-		// Closed if superposition has a circular permutation
-		List<Integer> superPos1 = superposition.get(1);
-		if(superPos1.get(0) > superPos1.get(superPos1.size()-1)) {
-			type = SymmetryType.CLOSED;
-		} else {
-			type = SymmetryType.OPEN;
-		}
-		this.addAxis(axis,division,type);
-	}
-	/**
 	 * Adds a new axis of symmetry to the bottom level of the tree
 	 *
 	 * @param axis the new axis of symmetry found

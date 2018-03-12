@@ -225,25 +225,6 @@ public class MMCIFFileTools {
 
 		return sb.toString();
 	}
-	/**
-	 * Converts a list of mmCIF beans (see {@link org.biojava.nbio.structure.io.mmcif.model} to
-	 * a String representing them in mmCIF loop format with one record per line.
-	 * @param list
-	 * @return
-	 * @deprecated The {@link #toMMCIF(List, Class)} provides compile-time type safety
-	 * @throws ClassCastException if not all list elements have the same type
-	 */
-	@Deprecated
-	@SuppressWarnings("unchecked")
-	public static <T> String toMMCIF(List<T> list) {
-		Class<T> klass = (Class<T>)list.get(0).getClass();
-		for(T t : list) {
-			if( klass != t.getClass() ) {
-				throw new ClassCastException("Not all loop elements have the same fields");
-			}
-		}
-		return toMMCIF(list,klass);
-	}
 
 	/**
 	 * Given a mmCIF bean produces a String representing it in mmCIF loop format as a single record line

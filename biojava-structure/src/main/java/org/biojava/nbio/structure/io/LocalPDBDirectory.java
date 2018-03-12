@@ -226,27 +226,6 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 		extensions.clear();
 	}
 
-	/**
-	 * @deprecated Use {@link #getFetchBehavior()}
-	 */
-	@Deprecated
-	public boolean isAutoFetch() {
-		return fetchBehavior != FetchBehavior.LOCAL_ONLY;
-	}
-
-	/**
-	 * @deprecated Use {@link #setFetchBehavior()}
-	 */
-	@Deprecated
-	public void setAutoFetch(boolean autoFetch) {
-		logger.warn("LocalPDBDirectory.setAutoFetch() is deprecated, please use LocalPDBDirectory.setFetchBehavior() instead. The option will be removed in upcoming releases");
-		if(autoFetch) {
-			setFetchBehavior(FetchBehavior.DEFAULT);
-		} else {
-			setFetchBehavior(FetchBehavior.LOCAL_ONLY);
-		}
-	}
-
 	@Override
 	public void setFileParsingParameters(FileParsingParameters params){
 		this.params= params;
@@ -451,7 +430,6 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	 * @throws IOException for errors downloading or writing, or if the
 	 *  fetchBehavior is {@link FetchBehavior#LOCAL_ONLY}
 	 */
-	@SuppressWarnings("deprecation") //for isUpdateRemediatedFiles()
 	protected File downloadStructure(String pdbId) throws IOException{
 		if ( pdbId.length() != 4)
 			throw new IOException("The provided ID does not look like a PDB ID : " + pdbId);
@@ -469,19 +447,6 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 		case FETCH_FILES:
 			// Use existing if present
 			if( existing != null) {
-				// Respect deprecated remediation parameter for backwards compatibility
-				if(getFileParsingParameters().isUpdateRemediatedFiles()) {
-					long lastModified = existing.lastModified();
-
-					if (lastModified < LAST_REMEDIATION_DATE) {
-						logger.warn("FileParsingParameters.setUpdateRemediatedFiles() is deprecated, please use LocalPDBDirectory.setFetchBehavior() instead. The option will be removed in upcoming releases");
-						// the file is too old, replace with newer version
-						logger.warn("Replacing file {} with latest remediated (remediation of {}) file from PDB.",
-								existing, LAST_REMEDIATION_DATE_STRING);
-						break;
-					}
-				}
-
 				return existing;
 			}
 			// existing is null, downloadStructure(String,String,boolean,File) will download it

@@ -27,8 +27,6 @@ package org.biojava.nbio.structure.io;
 import java.io.Serializable;
 
 import org.biojava.nbio.structure.AminoAcid;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A class that configures parameters that can be sent to the PDB file parsers
@@ -50,9 +48,6 @@ import org.slf4j.LoggerFactory;
  */
 public class FileParsingParameters implements Serializable
 {
-
-	private static final Logger logger = LoggerFactory.getLogger(FileParsingParameters.class);
-
 
 	private static final long serialVersionUID = 5878292315163939027L;
 
@@ -78,12 +73,6 @@ public class FileParsingParameters implements Serializable
 	 * Flag to parse header only
 	 */
 	private boolean headerOnly;
-
-
-	/**
-	 * Update locally cached files to the latest version of remediated files
-	 */
-	private boolean updateRemediatedFiles;
 
 	/**
 	 * The maximum number of atoms that will be parsed before the parser switches to a CA-only
@@ -134,7 +123,6 @@ public class FileParsingParameters implements Serializable
 
 		headerOnly = false;
 
-		updateRemediatedFiles = false;
 		fullAtomNames = null;
 
 		maxAtoms = MAX_ATOMS;
@@ -221,31 +209,6 @@ public class FileParsingParameters implements Serializable
 	 */
 	public void setAlignSeqRes(boolean alignSeqRes) {
 		this.alignSeqRes = alignSeqRes;
-	}
-
-	/** A flag if local files should be replaced with the latest version of remediated PDB files. Default: false
-	 *
-	 * @returns updateRemediatedFiles flag
-	 * @deprecated Properties which impact downloading and caching behavior
-	 *  have been moved to the {@link StructureIOFile} implementations.
-	 *  See {@link LocalPDBDirectory#getFetchBehavior()} (LocalPDBDirectory.FetchBehavior)}
-	 */
-	@Deprecated
-	public boolean isUpdateRemediatedFiles() {
-		return updateRemediatedFiles;
-	}
-
-	/** A flag if local files should be replaced with the latest version of remediated PDB files. Default: false
-	 *
-	 * @param updateRemediatedFiles
-	 * @deprecated Properties which impact downloading and caching behavior
-	 *  have been moved to the {@link StructureIOFile} implementations.
-	 *  See {@link LocalPDBDirectory#setFetchBehavior(LocalPDBDirectory.FetchBehavior)}
-	 */
-	@Deprecated
-	public void setUpdateRemediatedFiles(boolean updateRemediatedFiles) {
-		logger.warn("FileParsingParameters.setUpdateRemediatedFiles() is deprecated, please use LocalPDBDirectory.setFetchBehavior() instead. The option will be removed in upcoming releases");
-		this.updateRemediatedFiles = updateRemediatedFiles;
 	}
 
 	/**
