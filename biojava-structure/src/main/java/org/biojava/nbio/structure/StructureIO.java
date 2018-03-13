@@ -115,6 +115,11 @@ public class StructureIO {
 		cache = c;
 	}
 
+	public static AtomCache getAtomCache() {
+		return cache;
+	}
+
+
 	/**
 	 * Returns the first biological assembly that is available for the given PDB id.
 	 * <p>

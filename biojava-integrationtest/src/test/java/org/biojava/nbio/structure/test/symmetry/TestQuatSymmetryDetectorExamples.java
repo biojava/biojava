@@ -28,6 +28,7 @@ import java.util.*;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
+import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.cluster.SubunitClusterer;
 import org.biojava.nbio.structure.cluster.SubunitClustererMethod;
 import org.biojava.nbio.structure.cluster.SubunitClustererParameters;
@@ -139,6 +140,9 @@ public class TestQuatSymmetryDetectorExamples {
 	@Test
 	public void testLocal() throws IOException, StructureException {
 
+		AtomCache atomCache = new AtomCache();
+		atomCache.setUseMmtf(true);
+
 		List<String> testIds = new ArrayList<>();
 		List<String> testStoichiometries = new ArrayList<>();
 		List<Map<String,String>> testLocalSymmetries = new ArrayList<>();
@@ -227,14 +231,13 @@ public class TestQuatSymmetryDetectorExamples {
 				localSymmetries.put("A6","D3");
 			testLocalSymmetries.add(localSymmetries);
 
-		// temporarily commented out because it fails when running with maven, TODO debug and bring back - JD 2018-03-10
-//		testIds.add("BIO:3JC9:1");
-//			testStoichiometries.add("A12B12C12D12E12F12G5H2");
-//			localSymmetries = new HashMap<>();
-//				localSymmetries.put("A12C12D12E12F12H2","C2");
-//				localSymmetries.put("A12B12C12D12E12F12","C12");
-//				localSymmetries.put("G5","H");
-//			testLocalSymmetries.add(localSymmetries);
+		testIds.add("BIO:3JC9:1");
+			testStoichiometries.add("A12B12C12D12E12F12G5H2");
+			localSymmetries = new HashMap<>();
+				localSymmetries.put("A12C12D12E12F12H2","C2");
+				localSymmetries.put("A12B12C12D12E12F12","C12");
+				localSymmetries.put("G5","H");
+			testLocalSymmetries.add(localSymmetries);
 
 		QuatSymmetryParameters symmParams = new QuatSymmetryParameters();
 		SubunitClustererParameters clusterParams = new SubunitClustererParameters(true);
@@ -242,22 +245,28 @@ public class TestQuatSymmetryDetectorExamples {
 		clusterParams.setSequenceIdentityThreshold(0.75);
 
 		for(int iTest = 0; iTest<testIds.size();iTest++) {
-			logger.info(testIds.get(iTest));
-			Structure pdb = StructureIO.getStructure(testIds.get(iTest));
+			logger.info("Processing "+testIds.get(iTest));
+			Structure pdb = atomCache.getStructure(testIds.get(iTest));
 			Stoichiometry composition = SubunitClusterer.cluster(pdb,clusterParams);
 
 			// no global symmetry
 			QuatSymmetryResults globalSymmetry = QuatSymmetryDetector.calcGlobalSymmetry(composition,symmParams);
-			assertEquals("C1", globalSymmetry.getSymmetry());
-			assertEquals(testStoichiometries.get(iTest), globalSymmetry.getStoichiometry().toString());
+			assertEquals("Unexpected global symmetry in "+testIds.get(iTest),
+					"C1", globalSymmetry.getSymmetry());
+			assertEquals("Unexpected global stoichiometry in "+testIds.get(iTest),
+					testStoichiometries.get(iTest), globalSymmetry.getStoichiometry().toString());
 
 			List<QuatSymmetryResults> foundLocal = QuatSymmetryDetector.calcLocalSymmetries(composition, symmParams);
 			Map<String,String> refLocal = testLocalSymmetries.get(iTest);
 
 			for (QuatSymmetryResults local:foundLocal) {
-				logger.info(local.getStoichiometry().toString());
-				assertTrue(refLocal.keySet().contains(local.getStoichiometry().toString()));
-				assertEquals(refLocal.get(local.getStoichiometry().toString()),local.getSymmetry());
+				logger.info("Found stoichiometry "+local.getStoichiometry().toString()+" with symmetry "+local.getSymmetry());
+				assertTrue("Stoichiometry "+local.getStoichiometry().toString()+" not expected for "+testIds.get(iTest),
+						refLocal.keySet().contains(local.getStoichiometry().toString()));
+
+				assertEquals("Symmetry "+local.getSymmetry()+" with stoichiometry "+local.getStoichiometry().toString()+
+								" not expected for "+testIds.get(iTest),
+						refLocal.get(local.getStoichiometry().toString()),local.getSymmetry());
 			}
 		}
 	}
