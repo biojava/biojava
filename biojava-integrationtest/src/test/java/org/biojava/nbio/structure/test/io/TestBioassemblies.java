@@ -24,6 +24,8 @@ public class TestBioassemblies {
 	@Test
 	public void test1E17() throws IOException, StructureException {
 
+		AtomCache prevAtomCache = StructureIO.getAtomCache();
+
 		AtomCache cache = new AtomCache();
 		cache.setUseMmCif(true); 
 		StructureIO.setAtomCache(cache);		
@@ -43,7 +45,8 @@ public class TestBioassemblies {
 		// the bioassembly is a monomer
 		assertEquals(1, multiModelBioAssemblies.get(0).getPolyChains().size());
 		assertEquals(1, flattenedBioAssemblies.get(0).getPolyChains().size());
-		
+
+		StructureIO.setAtomCache(prevAtomCache);
 	}
 	
 	/**
@@ -54,6 +57,7 @@ public class TestBioassemblies {
 	@Test
 	public void test4TTX() throws IOException, StructureException {
 
+		AtomCache prevAtomCache = StructureIO.getAtomCache();
 		AtomCache cache = new AtomCache();
 		cache.setUseMmCif(true); 
 		StructureIO.setAtomCache(cache);		
@@ -79,8 +83,8 @@ public class TestBioassemblies {
 		
 		assertEquals(2, multiModelBioAssemblies.get(2).getPolyChains().size());
 		assertEquals(2, flattenedBioAssemblies.get(2).getPolyChains().size());
-		
-		
+
+		StructureIO.setAtomCache(prevAtomCache);
 
 	}
 	
@@ -91,6 +95,8 @@ public class TestBioassemblies {
 	 */
 	@Test
 	public void test4OPJ() throws IOException, StructureException {
+
+		AtomCache prevAtomCache = StructureIO.getAtomCache();
 		AtomCache cache = new AtomCache();
 		cache.setUseMmCif(true); 
 		StructureIO.setAtomCache(cache);		
@@ -144,6 +150,7 @@ public class TestBioassemblies {
 			assertTrue(c.getName().contains("_"));
 		}
 
+		StructureIO.setAtomCache(prevAtomCache);
 
 	}
 
