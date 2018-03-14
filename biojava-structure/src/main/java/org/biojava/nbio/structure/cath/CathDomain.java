@@ -164,16 +164,6 @@ public class CathDomain implements Serializable, StructureIdentifier {
 	}
 
 	/**
-	 * Returns a string of the form {@code PDBID.CHAIN}.
-	 * For example: {@code 1hiv.A}.
-	 * @deprecated This method is poorly named; use {@link #getThePdbId()} or {@link #getPdbIdAndChain()} instead
-	 */
-	@Deprecated
-	public String getPdbId() {
-		 return getPdbIdAndChain();
-	}
-
-	/**
 	 * Returns the PDB ID.
 	 */
 	public String getThePdbId() {

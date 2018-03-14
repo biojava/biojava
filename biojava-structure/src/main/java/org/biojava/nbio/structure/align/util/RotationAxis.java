@@ -120,17 +120,6 @@ public final class RotationAxis {
 	}
 
 	/**
-	 * Get the component of translation perpendicular to the axis of rotation.
-	 * This isn't particularly meaningful, but is calculated internally and
-	 * was useful for debugging.
-	 * @return
-	 */
-	@Deprecated
-	public Atom getOtherTranslation() {
-		return otherTranslation;
-	}
-
-	/**
 	 * Calculate the rotation axis for the first block of an AFPChain
 	 * @param afpChain
 	 * @throws StructureException

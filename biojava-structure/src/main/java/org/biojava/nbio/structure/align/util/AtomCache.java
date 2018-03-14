@@ -155,24 +155,6 @@ public class AtomCache {
 
 	}
 
-
-	/**
-	 * @param isSplit Ignored
-	 * @deprecated isSplit parameter is ignored (4.0.0)
-	 */
-	@Deprecated
-	public AtomCache(String pdbFilePath,boolean isSplit) {
-		this(pdbFilePath);
-	}
-	/**
-	 * @param isSplit Ignored
-	 * @deprecated isSplit parameter is ignored (4.0.0)
-	 */
-	@Deprecated
-	public AtomCache(String pdbFilePath, String cachePath,boolean isSplit) {
-		this(pdbFilePath,cachePath);
-	}
-
 	/**
 	 * Creates a new AtomCache object based on the provided UserConfiguration.
 	 *
@@ -681,59 +663,6 @@ public class AtomCache {
 	}
 
 	/**
-	 * Does the cache automatically download files that are missing from the local installation from the PDB FTP site?
-	 *
-	 * @return flag
-	 * @deprecated Use {@link #getFetchBehavior()}
-	 */
-	@Deprecated
-	public boolean isAutoFetch() {
-		return fetchBehavior != FetchBehavior.LOCAL_ONLY;
-	}
-
-	/**
-	 * <b>N.B.</b> This feature won't work unless the structure wasn't found & autoFetch is set to <code>true</code>.
-	 *
-	 * @return the fetchCurrent
-	 * @deprecated Use {@link FileParsingParameters#getObsoleteBehavior()} instead (4.0.0)
-	 */
-	@Deprecated
-	public boolean isFetchCurrent() {
-		return getObsoleteBehavior() == ObsoleteBehavior.FETCH_CURRENT;
-	}
-
-	/**
-	 * forces the cache to fetch the file if its status is OBSOLETE. This feature has a higher priority than
-	 * {@link #setFetchCurrent(boolean)}.<br>
-	 * <b>N.B.</b> This feature won't work unless the structure wasn't found & autoFetch is set to <code>true</code>.
-	 *
-	 * @return the fetchFileEvenIfObsolete
-	 * @author Amr AL-Hossary
-	 * @see #fetchCurrent
-	 * @since 3.0.2
-	 * @deprecated Use {@link FileParsingParameters#getObsoleteBehavior()} instead (4.0.0)
-	 */
-	@Deprecated
-	public boolean isFetchFileEvenIfObsolete() {
-		return getObsoleteBehavior() == ObsoleteBehavior.FETCH_OBSOLETE;
-	}
-
-
-	/**
-	 * Scop handling was changed in 4.2.0. For behaviour equivalent to
-	 * strictSCOP==true, use {@link ScopDatabase#getDomainByScopID(String)}.
-	 * For strictSCOP==False, create a {@link StructureName} or use
-	 * {@link StructureName#guessScopDomain(String, ScopDatabase)} explicitely.
-	 *
-	 * @return false; ignored
-	 * @deprecated since 4.2
-	 */
-	@Deprecated
-	public boolean isStrictSCOP() {
-		return false;
-	}
-
-	/**
 	 * Send a signal to the cache that the system is shutting down. Notifies underlying SerializableCache instances to
 	 * flush themselves...
 	 */
@@ -758,69 +687,12 @@ public class AtomCache {
 	}
 
 	/**
-	 * Does the cache automatically download files that are missing from the local installation from the PDB FTP site?
-	 *
-	 * @param autoFetch
-	 *            flag
-	 * @deprecated Use {@link #getFetchBehavior()}
-	 */
-	@Deprecated
-	public void setAutoFetch(boolean autoFetch) {
-		if(autoFetch) {
-			setFetchBehavior(FetchBehavior.DEFAULT);
-		} else {
-			setFetchBehavior(FetchBehavior.LOCAL_ONLY);
-		}
-	}
-
-	/**
 	 * set the location at which utility data should be cached.
 	 *
 	 * @param cachePath
 	 */
 	public void setCachePath(String cachePath) {
 		this.cachePath = cachePath;
-	}
-
-	/**
-	 * if enabled, the reader searches for the newest possible PDB ID, if not present in he local installation. The
-	 * {@link #setFetchFileEvenIfObsolete(boolean)} function has a higher priority than this function.<br>
-	 * <b>N.B.</b> This feature won't work unless the structure wasn't found & autoFetch is set to <code>true</code>.
-	 *
-	 * @param fetchCurrent
-	 *            the fetchCurrent to set
-	 * @author Amr AL-Hossary
-	 * @see #setFetchFileEvenIfObsolete(boolean)
-	 * @since 3.0.2
-	 * @deprecated Use {@link FileParsingParameters#setObsoleteBehavior()} instead (4.0.0)
-	 */
-	@Deprecated
-	public void setFetchCurrent(boolean fetchNewestCurrent) {
-		if(fetchNewestCurrent) {
-			setObsoleteBehavior(ObsoleteBehavior.FETCH_CURRENT);
-		} else {
-			if(getObsoleteBehavior() == ObsoleteBehavior.FETCH_CURRENT) {
-				setObsoleteBehavior(ObsoleteBehavior.DEFAULT);
-			}
-		}
-	}
-
-	/**
-	 * <b>N.B.</b> This feature won't work unless the structure wasn't found & autoFetch is set to <code>true</code>.
-	 *
-	 * @param fetchFileEvenIfObsolete
-	 *            the fetchFileEvenIfObsolete to set
-	 * @deprecated Use {@link FileParsingParameters#setObsoleteBehavior()} instead (4.0.0)
-	 */
-	@Deprecated
-	public void setFetchFileEvenIfObsolete(boolean fetchFileEvenIfObsolete) {
-		if(fetchFileEvenIfObsolete) {
-			setObsoleteBehavior(ObsoleteBehavior.FETCH_OBSOLETE);
-		} else {
-			if(getObsoleteBehavior() == ObsoleteBehavior.FETCH_OBSOLETE) {
-				setObsoleteBehavior(ObsoleteBehavior.DEFAULT);
-			}
-		}
 	}
 
 	public void setFileParsingParams(FileParsingParameters params) {
@@ -895,21 +767,6 @@ public class AtomCache {
 	public void setPdpprovider(PDPProvider pdpprovider) {
 		this.pdpprovider = pdpprovider;
 	}
-
-
-	/**
-	 * This method does nothing.
-	 *
-	 * Scop handling was changed in 4.2.0. For behaviour equivalent to
-	 * strictSCOP==true, use {@link ScopDatabase#getDomainByScopID(String)}.
-	 * For strictSCOP==False, create a {@link StructureName} or use
-	 * {@link StructureName#guessScopDomain(String, ScopDatabase)} explicitely.
-	 *
-	 * @param ignored Ignored
-	 * @deprecated Removed in 4.2.0
-	 */
-	@Deprecated
-	public void setStrictSCOP(boolean ignored) {}
 
 	/**
 	 * @return the useMmCif

@@ -33,7 +33,6 @@ import org.biojava.nbio.structure.jama.Matrix;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.lang.reflect.Method;
 
 
 /** a JPanel that can display a difference of distance matrix and paths that have been
@@ -294,49 +293,6 @@ public class JMatrixPanel extends JPanel{
 
 		}
 
-	}
-
-
-	@Deprecated
-	public float getSaturation() {
-		try {
-			Method getSaturation = cellColor.getClass().getMethod("getSaturation");
-			Float saturation = (Float)getSaturation.invoke(cellColor);
-			return saturation;
-		} catch (Exception e) {
-			throw new IllegalStateException("Error calling getSaturation() for "+cellColor.getClass());
-		}
-	}
-
-	@Deprecated
-	public void setSaturation(float saturation) {
-		try {
-			Method setSaturation = cellColor.getClass().getMethod("setSaturation",Float.TYPE);
-			setSaturation.invoke(cellColor);
-		} catch (Exception e) {
-			throw new IllegalStateException("Error calling setSaturation(float) for "+cellColor.getClass());
-		}
-	}
-
-	@Deprecated
-	public float getScalevalue() {
-		try {
-			Method getScalevalue = cellColor.getClass().getMethod("getScalevalue");
-			Float scalevalue = (Float)getScalevalue.invoke(cellColor);
-			return scalevalue;
-		} catch (Exception e) {
-			throw new IllegalStateException("Error calling getScalevalue() for "+cellColor.getClass());
-		}
-	}
-
-	@Deprecated
-	public void setScalevalue(float scalevalue) {
-		try{
-			Method setScalevalue = cellColor.getClass().getMethod("setScalevalue",Float.TYPE);
-			setScalevalue.invoke(cellColor);
-		} catch (Exception e) {
-			throw new IllegalStateException("Error calling setScalevalue(float) for "+cellColor.getClass());
-		}
 	}
 
 	/**

@@ -1850,11 +1850,7 @@ nBestTrace=nTrace;
 	}
 
 
-
-
 	private void rot_mol(Atom[] caA, Atom[] caB, int nse2, Matrix m , Atom shift) throws StructureException{
-
-
 
 		for(int l=0; l<nse2; l++) {
 			Atom a = caA[l];
@@ -1884,23 +1880,6 @@ nBestTrace=nTrace;
 	//			  }
 	//			}
 	//
-
-
-	/** superimpose and get rmsd
-	 *
-	 * @param pro1
-	 * @param pro2
-	 * @param strLen
-	 * @param storeTransform
-	 * @param show Ignored. Formerly displayed the superposition with jmol.
-	 * @return RMSD
-	 * @throws StructureException
-	 * @deprecated Use {@link #calc_rmsd(Atom[],Atom[],int,boolean)} instead
-	 */
-	@Deprecated
-	public double calc_rmsd(Atom[] pro1, Atom[] pro2, int strLen, boolean storeTransform, boolean show) throws StructureException {
-		return calc_rmsd(pro1, pro2, strLen, storeTransform);
-	}
 
 	/** superimpose and get rmsd
 	 *

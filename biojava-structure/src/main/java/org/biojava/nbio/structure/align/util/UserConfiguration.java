@@ -265,26 +265,6 @@ public class UserConfiguration
 		this.cacheFilePath = cacheFilePath;
 	}
 
-	/**
-	 * @deprecated Use {@link #getFetchBehavior()}
-	 */
-	@Deprecated
-	public boolean getAutoFetch() {
-		return fetchBehavior != FetchBehavior.LOCAL_ONLY;
-	}
-
-	/**
-	 * @deprecated Use {@link #getFetchBehavior()}
-	 */
-	@Deprecated
-	public void setAutoFetch(boolean autoFetch) {
-		if(autoFetch) {
-			setFetchBehavior(FetchBehavior.DEFAULT);
-		} else {
-			setFetchBehavior(FetchBehavior.LOCAL_ONLY);
-		}
-	}
-
 	public FetchBehavior getFetchBehavior() {
 		return fetchBehavior;
 	}
@@ -353,7 +333,13 @@ public class UserConfiguration
 	public static UserConfiguration fromStartupParams(StartupParameters params) {
 		UserConfiguration config = new UserConfiguration();
 		config.setPdbFilePath(params.getPdbFilePath());
-		config.setAutoFetch(params.isAutoFetch());
+		
+		if(params.isAutoFetch()) {
+			config.setFetchBehavior(FetchBehavior.DEFAULT);
+		} else {
+			config.setFetchBehavior(FetchBehavior.LOCAL_ONLY);
+		}
+		
 		// TODO support MMCif Files
 		config.setFileFormat(UserConfiguration.PDB_FORMAT);
 		return config;
