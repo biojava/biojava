@@ -8,6 +8,7 @@ xargs grep -Li 'copyright' |
 while read file; do
     echo "$file"
     cat $BASEDIR/../HEADER.txt > tmp.java
+    echo >> tmp.java
     cat "$file" >> tmp.java
     mv tmp.java "$file"
 done
