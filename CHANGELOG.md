@@ -1,17 +1,42 @@
 BioJava 5.0.0
 =============
 
-unreleased. Notes are WIP
+This release contains [n](https://github.com/biojava/biojava/compare/biojava-4.2.11...biojava-5.0.0) commits from n contributors.
 
+Requires Java 8 or newer.
+
+### New features
+
+#### biojava-structure
+* The data structures to represent 3D macromolecules now follow the mmCIF data model.
+* [mmtf format](http://mmtf.rcsb.org/) support
+* Symmetry detection algorithms overhaul: better symmetry detection for tertiary and quaternary structure levels.
+* New algorithms for base-pair geometry in nucleic acids.
+* New SuperPosition interface for different 3D-structure superposition algorithms, see `org.biojava.nbio.structure.geometry.SuperPosition`
+* Geometry-related API now more consistently based on vecmath interfaces.
+
+### Changed
 * For short structure selections (e.g. 1abc.A:1-100), ligands within 5A will be included
+* Symmetry expansion for bioassembly creation is now by default happening via adding new chains instead of new models. 
 
-Breaking API changes
-* org.biojava.nbio.structure.Compound -> org.biojava.nbio.structure.EntityInfo
-* org.biojava.nbio.structure.io.util.FileDownloadUtils -> org.biojava.nbio.core.util.FileDownloadUtils
-* org.biojava.nbio.structure.symmetry.core.AxisAligner -> org.biojava.nbio.structure.symmetry.axis.AxisAligner
-* org.biojava.nbio.structure.symmetry.core.Subunits -> refactored into serveral classes in org.biojava.nbio.structure.cluster: Subunit, SubunitCluster, SubunitClusterer
+### Breaking API changes
 
+* module biojava-phylo merged into biojava-alignment. The package namespace stays the same (`org.biojava.nbio.phylo`).
+* module biojava-sequencing merged into biojava-genome. Package `org.biojava.nbio.sequencing.io.fastq` is now `org.biojava.nbio.genome.io.fastq`
+* `org.biojava.nbio.structure.Compound` -> `org.biojava.nbio.structure.EntityInfo`
+* `org.biojava.nbio.structure.io.util.FileDownloadUtils` -> `org.biojava.nbio.core.util.FileDownloadUtils`
+* `org.biojava.nbio.structure.symmetry.core.AxisAligner` -> `org.biojava.nbio.structure.symmetry.axis.AxisAligner`
+* `org.biojava.nbio.structure.symmetry.core.Subunits` -> refactored into several classes in `org.biojava.nbio.structure.cluster`: Subunit, SubunitCluster, SubunitClusterer
+* `org.biojava.nbio.structure.align.helper.AlignTools` -> `org.biojava.nbio.structure.align.helper.AlignUtils`
+* All deprecations introduced in 4.0.0 or before were removed.
 
+### General
+
+* Javadocs improvements across the board.
+* All tests are now Junit4.
+
+### Bug fixes
+A very long list.
 
 BioJava 4.2.11
 ==============
