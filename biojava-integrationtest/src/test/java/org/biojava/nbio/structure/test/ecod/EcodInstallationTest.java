@@ -61,13 +61,14 @@ import org.slf4j.LoggerFactory;
 public class EcodInstallationTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(EcodInstallationTest.class);
-	private static final String VERSION = "develop133"; // Should be updated periodically
+	private static final String VERSION = "develop204"; // Should be updated periodically
 
 	// Info about known versions, for testing
 	private static final int DEVELOP_FIRST_VERSION = 124;
-	private static final int DEVELOP_LATEST_VERSTION = 136; // Should be updated periodically
+	private static final int DEVELOP_LATEST_VERSION = 204; // Should be updated periodically
 	//versions known to be unreleased
-	private static final List<Integer> DEVELOP_VERSIONS_BLACKLIST = Arrays.asList( 85, 107, 113, 125, 128, 131 );
+	private static final List<Integer> DEVELOP_VERSIONS_BLACKLIST = Arrays.asList( 85, 107, 113, 125, 128, 131,
+			147, 151, 162, 165, 176, 177, 181, 185, 197, 200, 202 );
 
 	static {
 		//System.setProperty("Log4jContextSelector", "org.apache.logging.log4j.core.async.AsyncLoggerContextSelector");
@@ -117,7 +118,10 @@ public class EcodInstallationTest {
 			expected = 483812; //version135 (stats file)
 			break;
 		case "develop136":
-			expected = 484847; //version136 (stats file)
+			expected = 484847; //version136 (stats file differs: 484463)
+			break;
+		case "develop204":
+			expected = 592427;
 			break;
 		default:
 			fail("Unrecognized version "+VERSION);
@@ -159,17 +163,27 @@ public class EcodInstallationTest {
 
 		ecodId = "e1lyw.1";
 		domain = ecod.getDomainsById(ecodId);
+		// fGroup reassigned around dev200
+		int fGroup;
+		String fGroupName;
+		if( ecod.getVersion().compareToIgnoreCase("develop200") < 0 ) {
+			fGroup = 2;
+			fGroupName = "EF00710";
+		} else {
+			fGroup = 43;
+			fGroupName = "Asp_C,Asp_N";
+		}
 		expected = new EcodDomain(
 				//				Long uid, String domainId, Boolean manual,
 				20669l, "e1lyw.1", false,
 				//				Integer xGroup, Integer hGroup, Integer tGroup, Integer fGroup, String pdbId,
-				1,1,1,2,"1lyw",
+				1,1,1,fGroup,"1lyw",
 				//				String chainName, String range, String seqId, String architectureName,
 				".", "A:3-97,B:106-346", "A:3-97,B:1-241", "beta barrels",
 				//				String xGroupName, String hGroupName, String tGroupName,
 				"cradle loop barrel", "RIFT-related","acid protease",
 				//				String fGroupName, Boolean isAssembly, List<String> ligands
-				"EF00710",
+				fGroupName,
 				20669l, Collections.singleton("EPE")
 				);
 		assertEquals(ecodId,expected,domain);
@@ -231,8 +245,16 @@ public class EcodInstallationTest {
 		List<EcodDomain> filtered;
 		Set<String> expected,actual;
 
+		// expected members through at least develop133
 		expected = new HashSet<String>(Arrays.asList(
 				"e4il6R1 e4pj0R1 e4pj0r1 e4ub6R1 e4ub8R1".split(" ") ));
+		// expanded by develop204
+		if( ecod.getVersion().compareToIgnoreCase("develop204") >= 0) {
+			expected.addAll(Arrays.asList(
+					("e5kafR1 e5kafr1 e5kaiR1 e5kair1 e5tisR1 e5tisr1 e5gthR1 e5gtiR1 "
+							+ "e5ws5R1 e5ws6R1 e5mx2R1 e5mx2r1").split(" ") ));
+		}
+
 		filtered = ecod.filterByHierarchy("6106.1.1");
 		actual = new HashSet<String>();
 		for(EcodDomain d : filtered) {
@@ -339,7 +361,7 @@ public class EcodInstallationTest {
 	 */
 	public static List<String> getKnownEcodVersions() {
 		// Parse version from latest.
-		int latestVersion = DEVELOP_LATEST_VERSTION;
+		int latestVersion = DEVELOP_LATEST_VERSION;
 		try {
 			EcodDatabase latest = EcodFactory.getEcodDatabase(EcodFactory.DEFAULT_VERSION);
 			String latestVersionStr;
@@ -349,7 +371,7 @@ public class EcodInstallationTest {
 				latestVersion = Integer.parseInt(match.group(1));
 			latest = null;
 		} catch (IOException e) {}
-		latestVersion = Math.max(latestVersion, DEVELOP_LATEST_VERSTION);
+		latestVersion = Math.max(latestVersion, DEVELOP_LATEST_VERSION);
 
 		List<String> versions = new ArrayList<>(latestVersion-DEVELOP_FIRST_VERSION+2);
 		for(int version=DEVELOP_FIRST_VERSION;version<=latestVersion;version++) {
