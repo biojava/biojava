@@ -23,8 +23,9 @@
 
 package org.biojava.nbio.ontology;
 
-import junit.framework.TestCase;
 import org.biojava.nbio.ontology.io.OboParser;
+import org.junit.Assert;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,10 +34,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Set;
 
-public class TestParseSBO extends TestCase {
+public class TestParseSBO {
 
 	private static final Logger logger = LoggerFactory.getLogger(TestParseSBO.class);
 
+	@Test
 	public void testSBO(){
 		OboParser parser = new OboParser();
 
@@ -45,7 +47,7 @@ public class TestParseSBO extends TestCase {
 
 			InputStream inStream = parser.getClass().getResourceAsStream("/ontology/SBO_OBO.obo");
 
-			assertNotNull(inStream);
+			Assert.assertNotNull(inStream);
 
 			BufferedReader oboFile = new BufferedReader ( new InputStreamReader ( inStream ) );
 
@@ -54,11 +56,11 @@ public class TestParseSBO extends TestCase {
 			ontology = parser.parseOBO(oboFile, "SBO", "systems biology representation");
 			Set<Term> keys = ontology.getTerms();
 
-			assertTrue(keys.size() >1200);
+			Assert.assertTrue(keys.size() > 1200);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			logger.error("Exception: ", e);
-			fail(e.getMessage());
+			Assert.fail(e.getMessage());
 		}
 	}
 }

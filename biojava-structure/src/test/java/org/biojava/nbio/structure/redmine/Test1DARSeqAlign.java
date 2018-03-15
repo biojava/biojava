@@ -37,7 +37,7 @@ import java.io.IOException;
  * @author Andreas Prlic
  *
  */
-public class test1DARSeqAlign {
+public class Test1DARSeqAlign {
 
 	@Test
 	public void test1DAR() throws StructureException, IOException {

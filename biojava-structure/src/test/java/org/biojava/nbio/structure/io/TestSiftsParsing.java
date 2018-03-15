@@ -24,81 +24,78 @@
 
 package org.biojava.nbio.structure.io;
 
-import junit.framework.TestCase;
 import org.biojava.nbio.structure.io.sifts.*;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.io.InputStream;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 
-public class TestSiftsParsing extends TestCase {
+public class TestSiftsParsing {
 
 
-	public void test4DIA(){
-		try {
-			List<SiftsEntity> entities = SiftsMappingProvider.getSiftsMapping("4DIA");
+	@Test
+	public void test4DIA() throws Exception {
+		List<SiftsEntity> entities = SiftsMappingProvider.getSiftsMapping("4DIA");
 
-			assertNotNull(entities);
+		Assert.assertNotNull(entities);
 
-			assertTrue(entities.size() == 1);
+		Assert.assertTrue(entities.size() == 1);
 
-			for (SiftsEntity e : entities){
-				//System.out.println(e.getEntityId() + " " +e.getType());
+		for (SiftsEntity e : entities) {
+			//System.out.println(e.getEntityId() + " " +e.getType());
 
 
-				assertTrue(e.getSegments().size() > 0 );
-				for ( SiftsSegment seg: e.getSegments()) {
-					assertTrue(seg.getResidues().size() > 0);
+			Assert.assertTrue(e.getSegments().size() > 0);
+			for (SiftsSegment seg : e.getSegments()) {
+				Assert.assertTrue(seg.getResidues().size() > 0);
 
-					for ( SiftsResidue res: seg.getResidues() ) {
+				for (SiftsResidue res : seg.getResidues()) {
 
-						if ( res.getUniProtResName() != null ) {
-							assertNotNull(res.getUniProtAccessionId() );
-							assertNotNull(res.getUniProtResName());
+					if (res.getUniProtResName() != null) {
+						Assert.assertNotNull(res.getUniProtAccessionId());
+						Assert.assertNotNull(res.getUniProtResName());
 
-							// test for github ticket #280
-							if ( res.getUniProtPos() == 129) {
+						// test for github ticket #280
+						if (res.getUniProtPos() == 129) {
 
-								assertTrue(res.getNotObserved());
-							}
-
+							Assert.assertTrue(res.getNotObserved());
 						}
+
 					}
 				}
-
 			}
 
-		} catch (Exception e){
-			e.printStackTrace();
-			fail(e.getMessage());
 		}
 
 
 	}
 
+	@Test
 	public void test4jn3(){
 		try {
 			List<SiftsEntity> entities = SiftsMappingProvider.getSiftsMapping("4jn3");
 
-			assertNotNull(entities);
+			Assert.assertNotNull(entities);
 
-			assertTrue(entities.size() == 2);
+			Assert.assertTrue(entities.size() == 2);
 
 			for (SiftsEntity e : entities){
 				//System.out.println(e.getEntityId() + " " +e.getType());
 
 
-				assertTrue(e.getSegments().size() > 0 );
+				Assert.assertTrue(e.getSegments().size() > 0);
 				for ( SiftsSegment seg: e.getSegments()) {
-					assertTrue(seg.getResidues().size() > 0);
+					Assert.assertTrue(seg.getResidues().size() > 0);
 					//System.out.println(seg.getResidues().size());
 					//System.out.println(" Segment: " + seg.getSegId() + " " + seg.getStart() + " " + seg.getEnd()) ;
 					//
 					for ( SiftsResidue res: seg.getResidues() ) {
 						//System.out.println("  " + res);
 						if ( res.getUniProtResName() != null ) {
-							assertNotNull(res.getUniProtAccessionId() );
-							assertNotNull(res.getUniProtResName());
+							Assert.assertNotNull(res.getUniProtAccessionId());
+							Assert.assertNotNull(res.getUniProtResName());
 
 						}
 					}
@@ -108,131 +105,119 @@ public class TestSiftsParsing extends TestCase {
 
 		} catch (Exception e){
 			e.printStackTrace();
-			fail(e.getMessage());
+			Assert.fail(e.getMessage());
 		}
 
 
 	}
 
-	public void test4DOU(){
+	@Test
+	public void test4DOU() throws Exception {
 
 		// get file from test resource folder, since the file from EBI seems to have issues (on 20170405).
 
-		try {
+		InputStream inStream = new GZIPInputStream(this.getClass().getResourceAsStream("/org/biojava/nbio/structure/io/4dou.sifts.xml.gz"));
 
-			InputStream inStream = new GZIPInputStream(this.getClass().getResourceAsStream("/org/biojava/nbio/structure/io/4dou.sifts.xml.gz"));
+		SiftsXMLParser parser = new SiftsXMLParser();
 
-			SiftsXMLParser parser = new SiftsXMLParser();
+		parser.parseXmlFile(inStream);
 
-			parser.parseXmlFile(inStream);
+		List<SiftsEntity> entities = parser.getEntities();
 
-			List<SiftsEntity> entities =  parser.getEntities();
+		Assert.assertNotNull(entities);
 
-			assertNotNull(entities);
+		Assert.assertTrue(entities.size() == 1);
 
-			assertTrue(entities.size() == 1);
+		for (SiftsEntity e : entities) {
+			//System.out.println(e.getEntityId() + " " +e.getType());
 
-			for (SiftsEntity e : entities){
-				//System.out.println(e.getEntityId() + " " +e.getType());
+			//	4DOU has 3 segments
+			Assert.assertTrue("SiftsEntity does not have 3 segments, but " + e.getSegments().size(), e.getSegments().size() == 3);
 
-				//	4DOU has 3 segments
-				assertTrue("SiftsEntity does not have 3 segments, but " + e.getSegments().size(),e.getSegments().size() == 3);
+			// test segment 1:
 
-				// test segment 1:
+			//SiftsSegment seg1 = e.getSegments().get(0);
+			//System.out.println(" Segment: " + seg1.getSegId() + " " + seg1.getStart() + " " + seg1.getEnd() + " res. size: " + seg1.getResidues().size());
+			//assertTrue(seg1.getResidues().size() == 17);
 
-				//SiftsSegment seg1 = e.getSegments().get(0);
-				//System.out.println(" Segment: " + seg1.getSegId() + " " + seg1.getStart() + " " + seg1.getEnd() + " res. size: " + seg1.getResidues().size());
-				//assertTrue(seg1.getResidues().size() == 17);
+			for (SiftsSegment seg : e.getSegments()) {
+				Assert.assertTrue(seg.getResidues().size() > 0);
 
-				for ( SiftsSegment seg: e.getSegments()) {
-					assertTrue(seg.getResidues().size() > 0);
+				//System.out.println(" Segment: " + seg.getSegId() + " " + seg.getStart() + " " + seg.getEnd() + " res. size: " + seg.getResidues().size()) ;
 
-					//System.out.println(" Segment: " + seg.getSegId() + " " + seg.getStart() + " " + seg.getEnd() + " res. size: " + seg.getResidues().size()) ;
-
-					for ( SiftsResidue res: seg.getResidues() ) {
+				for (SiftsResidue res : seg.getResidues()) {
 
 
-						if ( res.getUniProtResName() != null ) {
-							//System.out.println("  " + res);
-							assertNotNull(res.getUniProtAccessionId() );
-							assertNotNull(res.getUniProtResName());
-
-						}
-					}
-					//break;
-				}
-
-			}
-
-		} catch (Exception e){
-			e.printStackTrace();
-			fail(e.getMessage());
-		}
-
-
-	}
-
-	public void test4O6W(){
-		try {
-			List<SiftsEntity> entities = SiftsMappingProvider.getSiftsMapping("4O6W");
-
-			assertNotNull(entities);
-
-			assertTrue(entities.size() == 2);
-
-			int ecount = 0;
-			for (SiftsEntity e : entities){
-				ecount++;
-
-				// we only test the 2nd segment in entity #1
-				if ( ecount != 1)
-					continue;
-
-
-				assertTrue(e.getEntityId().equals("A"));
-				assertTrue(e.getType().equals("protein"));
-
-
-				//	4O6W A has 2 segments
-				assertTrue(e.getSegments().size() == 2);
-
-				// test segment 2:
-
-				SiftsSegment seg = e.getSegments().get(1);
-
-				//SiftsSegment seg1 = e.getSegments().get(0);
-				//System.out.println(" Segment: " + seg1.getSegId() + " " + seg1.getStart() + " " + seg1.getEnd() + " res. size: " + seg1.getResidues().size());
-				//assertTrue(seg1.getResidues().size() == 17);
-
-				assertTrue(seg.getResidues().size() > 0);
-
-
-				for ( SiftsResidue res: seg.getResidues() ) {
-
-
-
-					if ( res.getUniProtResName() != null ) {
+					if (res.getUniProtResName() != null) {
 						//System.out.println("  " + res);
-						assertNotNull(res.getUniProtAccessionId() );
-						assertNotNull(res.getUniProtResName());
-
-					}
-
-					if (res.getPdbResNum().equals("502")){
-
-						assertTrue(res.getNotObserved());
+						Assert.assertNotNull(res.getUniProtAccessionId());
+						Assert.assertNotNull(res.getUniProtResName());
 
 					}
 				}
 				//break;
 			}
 
-
-
-		} catch (Exception e){
-			e.printStackTrace();
-			fail(e.getMessage());
 		}
+
+
+	}
+
+	@Test
+	public void test4O6W() throws Exception {
+		List<SiftsEntity> entities = SiftsMappingProvider.getSiftsMapping("4O6W");
+
+		Assert.assertNotNull(entities);
+
+		Assert.assertTrue(entities.size() == 2);
+
+		int ecount = 0;
+		for (SiftsEntity e : entities) {
+			ecount++;
+
+			// we only test the 2nd segment in entity #1
+			if (ecount != 1)
+				continue;
+
+
+			Assert.assertTrue(e.getEntityId().equals("A"));
+			Assert.assertTrue(e.getType().equals("protein"));
+
+
+			//	4O6W A has 2 segments
+			Assert.assertTrue(e.getSegments().size() == 2);
+
+			// test segment 2:
+
+			SiftsSegment seg = e.getSegments().get(1);
+
+			//SiftsSegment seg1 = e.getSegments().get(0);
+			//System.out.println(" Segment: " + seg1.getSegId() + " " + seg1.getStart() + " " + seg1.getEnd() + " res. size: " + seg1.getResidues().size());
+			//assertTrue(seg1.getResidues().size() == 17);
+
+			Assert.assertTrue(seg.getResidues().size() > 0);
+
+
+			for (SiftsResidue res : seg.getResidues()) {
+
+
+				if (res.getUniProtResName() != null) {
+					//System.out.println("  " + res);
+					Assert.assertNotNull(res.getUniProtAccessionId());
+					Assert.assertNotNull(res.getUniProtResName());
+
+				}
+
+				if (res.getPdbResNum().equals("502")) {
+
+					Assert.assertTrue(res.getNotObserved());
+
+				}
+			}
+			//break;
+		}
+
+
 	}
 
 

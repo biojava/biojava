@@ -21,7 +21,6 @@
 
 package org.biojava.nbio.structure;
 
-import junit.framework.TestCase;
 import org.junit.*;
 
 import java.util.HashSet;
@@ -32,7 +31,7 @@ import java.util.Set;
  *
  * @author Jules Jacobsen <jacobsen@ebi.ac.uk>
  */
-public class ResidueNumberTest extends TestCase {
+public class ResidueNumberTest {
 
 	public ResidueNumberTest() {
 	}
@@ -45,12 +44,10 @@ public class ResidueNumberTest extends TestCase {
 	public static void tearDownClass() throws Exception {
 	}
 
-	@Override
 	@Before
 	public void setUp() {
 	}
 
-	@Override
 	@After
 	public void tearDown() {
 	}
@@ -64,7 +61,7 @@ public class ResidueNumberTest extends TestCase {
 		ResidueNumber instance = new ResidueNumber("A", 42, ' ');
 		String expResult = "A";
 		String result = instance.getChainName();
-		assertEquals(expResult, result);
+		Assert.assertEquals(expResult, result);
 	}
 
 	/**
@@ -76,7 +73,7 @@ public class ResidueNumberTest extends TestCase {
 		ResidueNumber instance = new ResidueNumber("A", 42, ' ');
 		Character expResult = ' ';
 		Character result = instance.getInsCode();
-		assertEquals(expResult, result);
+		Assert.assertEquals(expResult, result);
 	}
 
 	/**
@@ -88,7 +85,7 @@ public class ResidueNumberTest extends TestCase {
 		ResidueNumber instance = new ResidueNumber("A", 42, ' ');
 		Integer expResult = 42;
 		Integer result = instance.getSeqNum();
-		assertEquals(expResult, result);
+		Assert.assertEquals(expResult, result);
 
 	}
 
@@ -103,12 +100,12 @@ public class ResidueNumberTest extends TestCase {
 		ResidueNumber number2 = new ResidueNumber("A", 42, ' ');
 		boolean expResult = true;
 		boolean result = number2.equals(number1);
-		assertEquals(expResult, result);
+		Assert.assertEquals(expResult, result);
 
 		Set<ResidueNumber> numberSet= new HashSet<ResidueNumber>();
 		numberSet.add(number1);
 		numberSet.add(number2);
-		assertEquals(1, numberSet.size());
+		Assert.assertEquals(1, numberSet.size());
 
 	}
 
@@ -121,7 +118,7 @@ public class ResidueNumberTest extends TestCase {
 		ResidueNumber instance = new ResidueNumber("A", 42, ' ');
 		int expResult = 93290;
 		int result = instance.hashCode();
-		assertEquals(expResult, result);
+		Assert.assertEquals(expResult, result);
 	}
 
 	/**
@@ -133,7 +130,7 @@ public class ResidueNumberTest extends TestCase {
 		ResidueNumber instance = new ResidueNumber("A", 42, ' ');
 		String expResult = "42";
 		String result = instance.toString();
-		assertEquals(expResult, result);
+		Assert.assertEquals(expResult, result);
 
 	}
 
@@ -148,10 +145,10 @@ public class ResidueNumberTest extends TestCase {
 
 		String expResult = "A  42  ";
 		String result1 = instance.toPDB();
-		assertEquals(expResult, result1);
+		Assert.assertEquals(expResult, result1);
 
 		String result2 = instance2.toPDB();
-		assertEquals(expResult, result2);
+		Assert.assertEquals(expResult, result2);
 	}
 
 

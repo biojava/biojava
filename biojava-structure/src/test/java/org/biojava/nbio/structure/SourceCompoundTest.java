@@ -22,20 +22,21 @@
 
 package org.biojava.nbio.structure;
 
-import junit.framework.TestCase;
 import org.biojava.nbio.structure.io.PDBFileParser;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
 
-public class SourceCompoundTest extends TestCase{
+public class SourceCompoundTest {
 
 	private Structure getStructure(String fileName){
 
 		InputStream inStream = this.getClass().getResourceAsStream(fileName);
-		assertNotNull(inStream);
+		Assert.assertNotNull(inStream);
 
 		PDBFileParser pdbpars = new PDBFileParser();
 		Structure structure = null;
@@ -48,46 +49,48 @@ public class SourceCompoundTest extends TestCase{
 	}
 
 
+	@Test
 	public void testCompoundSourceStructure(){
 
 		Structure s2 = getStructure("/2gox.pdb");
 		// note since biojava 5.0 we are finding entities for all molecules even if
 		// the annotation is not present for them
 		// 2 protein entities and 1 water entity
-		assertEquals(3, s2.getEntityInfos().size());
+		Assert.assertEquals(3, s2.getEntityInfos().size());
 		for (EntityInfo compound : s2.getEntityInfos()){
 			if (compound.getMolId()==1) {
-				assertEquals("COMPLEMENT C3", compound.getDescription());
-				assertEquals("[A, C]", compound.getChainIds().toString());
-				assertEquals("FRAGMENT OF ALPHA CHAIN: RESIDUES 996-1287", compound.getFragment());
-				assertEquals("YES", compound.getEngineered());
-				assertEquals("YES", compound.getMutation());
-				assertEquals("HOMO SAPIENS", compound.getOrganismScientific());
-				assertEquals("HUMAN", compound.getOrganismCommon());
-				assertEquals("C3", compound.getGene());
-				assertEquals("ESCHERICHIA COLI", compound.getExpressionSystem());
-				assertEquals("BL21(DE3)", compound.getExpressionSystemStrain());
-				assertEquals("PLASMID", compound.getExpressionSystemVectorType());
-				assertEquals("PT7-", compound.getExpressionSystemPlasmid());
+				Assert.assertEquals("COMPLEMENT C3", compound.getDescription());
+				Assert.assertEquals("[A, C]", compound.getChainIds().toString());
+				Assert.assertEquals("FRAGMENT OF ALPHA CHAIN: RESIDUES 996-1287", compound.getFragment());
+				Assert.assertEquals("YES", compound.getEngineered());
+				Assert.assertEquals("YES", compound.getMutation());
+				Assert.assertEquals("HOMO SAPIENS", compound.getOrganismScientific());
+				Assert.assertEquals("HUMAN", compound.getOrganismCommon());
+				Assert.assertEquals("C3", compound.getGene());
+				Assert.assertEquals("ESCHERICHIA COLI", compound.getExpressionSystem());
+				Assert.assertEquals("BL21(DE3)", compound.getExpressionSystemStrain());
+				Assert.assertEquals("PLASMID", compound.getExpressionSystemVectorType());
+				Assert.assertEquals("PT7-", compound.getExpressionSystemPlasmid());
 			}
 			if (compound.getMolId()==2) {
-				assertEquals("FIBRINOGEN-BINDING PROTEIN", compound.getDescription());
-				assertEquals("[B, D]", compound.getChainIds().toString());
-				assertEquals("C-TERMINAL DOMAIN: RESIDUES 101-165", compound.getFragment());
-				assertEquals("YES", compound.getEngineered());
-				assertEquals("STAPHYLOCOCCUS AUREUS", compound.getOrganismScientific());
-				assertEquals("BACTERIA", compound.getOrganismCommon());
-				assertEquals("MU50 / ATCC 700699", compound.getStrain());
-				assertEquals("EFB", compound.getGene());
-				assertEquals("ESCHERICHIA COLI", compound.getExpressionSystem());
-				assertEquals("BL21(DE3)", compound.getExpressionSystemStrain());
-				assertEquals("PLASMID", compound.getExpressionSystemVectorType());
-				assertEquals("PT7HMT", compound.getExpressionSystemPlasmid());
+				Assert.assertEquals("FIBRINOGEN-BINDING PROTEIN", compound.getDescription());
+				Assert.assertEquals("[B, D]", compound.getChainIds().toString());
+				Assert.assertEquals("C-TERMINAL DOMAIN: RESIDUES 101-165", compound.getFragment());
+				Assert.assertEquals("YES", compound.getEngineered());
+				Assert.assertEquals("STAPHYLOCOCCUS AUREUS", compound.getOrganismScientific());
+				Assert.assertEquals("BACTERIA", compound.getOrganismCommon());
+				Assert.assertEquals("MU50 / ATCC 700699", compound.getStrain());
+				Assert.assertEquals("EFB", compound.getGene());
+				Assert.assertEquals("ESCHERICHIA COLI", compound.getExpressionSystem());
+				Assert.assertEquals("BL21(DE3)", compound.getExpressionSystemStrain());
+				Assert.assertEquals("PLASMID", compound.getExpressionSystemVectorType());
+				Assert.assertEquals("PT7HMT", compound.getExpressionSystemPlasmid());
 			}
 		}
 
 	}
 
+	@Test
 	public void testCOMPNDsectionFRAGMENT(){
 		Structure s2 = getStructure("/2gox.pdb");
 		Structure s4 = getStructure("/3cfy.pdb");
@@ -96,35 +99,37 @@ public class SourceCompoundTest extends TestCase{
 
 		for (EntityInfo compound : s2.getEntityInfos()) {
 			if (compound.getMolId()==1) {
-				assertEquals("FRAGMENT OF ALPHA CHAIN: RESIDUES 996-1287", compound.getFragment());
+				Assert.assertEquals("FRAGMENT OF ALPHA CHAIN: RESIDUES 996-1287", compound.getFragment());
 			}
 
 		}
 
 		for (EntityInfo compound : s4.getEntityInfos()) {
 			if (compound.getMolId()==1) {
-				assertEquals("SIGNAL RECEIVER DOMAIN: RESIDUES 2-128", compound.getFragment());
+				Assert.assertEquals("SIGNAL RECEIVER DOMAIN: RESIDUES 2-128", compound.getFragment());
 			}
 
 		}
 
 	}
 
+	@Test
 	public void testCOMPNDsectionCHAINS(){
 		Structure s3 = getStructure("/2pos.pdb");
 		// note since biojava 5.0 we are finding entities for all molecules even if
 		// the annotation is not present for them
 		// thus for 2pos.pdb we have 1 protein entity, but 3 non-polymer entities and 1 water entity
 		EntityInfo compound = s3.getEntityById(1);
-		assertEquals(5, s3.getEntityInfos().size());
-		assertEquals(1, compound.getMolId());
-		assertEquals("SYLVATICIN", compound.getDescription());
-		assertEquals("[A, B, C, D]", compound.getChainIds().toString());
-		assertEquals("PYTHIUM SYLVATICUM", compound.getOrganismScientific());
-		assertEquals("STRAIN 37", compound.getStrain());
+		Assert.assertEquals(5, s3.getEntityInfos().size());
+		Assert.assertEquals(1, compound.getMolId());
+		Assert.assertEquals("SYLVATICIN", compound.getDescription());
+		Assert.assertEquals("[A, B, C, D]", compound.getChainIds().toString());
+		Assert.assertEquals("PYTHIUM SYLVATICUM", compound.getOrganismScientific());
+		Assert.assertEquals("STRAIN 37", compound.getStrain());
 
 	}
 
+	@Test
 	public void testSOURCEsectionSTRAIN(){
 		Structure s4 = getStructure("/3cfy.pdb");
 		for (EntityInfo compound : s4.getEntityInfos()){
@@ -143,30 +148,31 @@ public class SourceCompoundTest extends TestCase{
 				System.out.println(compound.getExpressionSystemVector());
 				System.out.println(compound.getExpressionSystemPlasmid());
 				 */
-				assertEquals(1, compound.getMolId());
-				assertEquals("PUTATIVE LUXO REPRESSOR PROTEIN", compound.getDescription());
-				assertEquals("[A]", compound.getChainIds().toString());
-				assertEquals("SIGNAL RECEIVER DOMAIN: RESIDUES 2-128", compound.getFragment());
-				assertEquals("YES", compound.getEngineered());
-				assertEquals("VIBRIO PARAHAEMOLYTICUS RIMD 2210633", compound.getOrganismScientific());
-				assertEquals("BACTERIA", compound.getOrganismCommon());
-				assertEquals("RIMD 2210633 / SEROTYPE O3:K6", compound.getStrain());
-				assertEquals("VP1469", compound.getGene());
-				assertEquals("ESCHERICHIA COLI", compound.getExpressionSystem());
-				assertEquals("PLASMID", compound.getExpressionSystemVectorType());
-				assertEquals("PET", compound.getExpressionSystemVector());
-				assertEquals("BC-PSGX3(BC)", compound.getExpressionSystemPlasmid());
+				Assert.assertEquals(1, compound.getMolId());
+				Assert.assertEquals("PUTATIVE LUXO REPRESSOR PROTEIN", compound.getDescription());
+				Assert.assertEquals("[A]", compound.getChainIds().toString());
+				Assert.assertEquals("SIGNAL RECEIVER DOMAIN: RESIDUES 2-128", compound.getFragment());
+				Assert.assertEquals("YES", compound.getEngineered());
+				Assert.assertEquals("VIBRIO PARAHAEMOLYTICUS RIMD 2210633", compound.getOrganismScientific());
+				Assert.assertEquals("BACTERIA", compound.getOrganismCommon());
+				Assert.assertEquals("RIMD 2210633 / SEROTYPE O3:K6", compound.getStrain());
+				Assert.assertEquals("VP1469", compound.getGene());
+				Assert.assertEquals("ESCHERICHIA COLI", compound.getExpressionSystem());
+				Assert.assertEquals("PLASMID", compound.getExpressionSystemVectorType());
+				Assert.assertEquals("PET", compound.getExpressionSystemVector());
+				Assert.assertEquals("BC-PSGX3(BC)", compound.getExpressionSystemPlasmid());
 
 			}
 		}
 	}
 
+	@Test
 	public void testSOURCEsectionORGSCI(){
 		Structure s5 = getStructure("/3cdl.pdb");
 		for (EntityInfo compound : s5.getEntityInfos()){
 			if (compound.getMolId()==1) {
 				//System.out.println(compound.getOrganismScientific());
-				assertEquals("PSEUDOMONAS SYRINGAE PV. TOMATO STR. DC3000", compound.getOrganismScientific());
+				Assert.assertEquals("PSEUDOMONAS SYRINGAE PV. TOMATO STR. DC3000", compound.getOrganismScientific());
 			}
 		}
 	}
@@ -177,19 +183,21 @@ public class SourceCompoundTest extends TestCase{
 	 * This test makes sure that the tax id for the organism and expression
 	 * systems is set correctly.
 	 */
+	@Test
 	public void testSourceTaxIdVersion32File(){
 		Structure structure = getStructure("/3dl7_v32.pdb");
 
 		EntityInfo comp = structure.getEntityById(1);
 
-		assertEquals("10090", comp.getOrganismTaxId());
-		assertEquals("9606", comp.getExpressionSystemTaxId());
+		Assert.assertEquals("10090", comp.getOrganismTaxId());
+		Assert.assertEquals("9606", comp.getExpressionSystemTaxId());
 
 	}
 
 	/**
 	 * 3.2 format includes PMID and DOI in the JRNL section.
 	 */
+	@Test
 	public void testJournalRefs(){
 //        JRNL        AUTH   M.HAMMEL,G.SFYROERA,D.RICKLIN,P.MAGOTTI,
 //        JRNL        AUTH 2 J.D.LAMBRIS,B.V.GEISBRECHT
@@ -201,25 +209,25 @@ public class SourceCompoundTest extends TestCase{
 //        JRNL        DOI    10.1038/NI1450
 		Structure structure = getStructure("/2gox_v315.pdb");
 		//check that there really is an publication
-		assertTrue(structure.hasJournalArticle());
+		Assert.assertTrue(structure.hasJournalArticle());
 
 		if (structure.hasJournalArticle()) {
 			JournalArticle journal = structure.getJournalArticle();
 			List<Author> authorList = journal.getAuthorList();
 			Author firstAuthor = authorList.get(0);
 			//check the authors
-			assertEquals(6, authorList.size());
-			assertEquals("HAMMEL", firstAuthor.getSurname());
-			assertEquals("M.", firstAuthor.getInitials());
+			Assert.assertEquals(6, authorList.size());
+			Assert.assertEquals("HAMMEL", firstAuthor.getSurname());
+			Assert.assertEquals("M.", firstAuthor.getInitials());
 			//check the other publication details
-			assertEquals("A STRUCTURAL BASIS FOR COMPLEMENT INHIBITION BY STAPHYLOCOCCUS AUREUS.", journal.getTitle());
-			assertEquals("NAT.IMMUNOL.", journal.getJournalName());
-			assertEquals(2007, journal.getPublicationDate());
-			assertEquals("8", journal.getVolume());
-			assertEquals("430", journal.getStartPage());
-			assertEquals("ISSN 1529-2908", journal.getRefn());
-			assertEquals("17351618", journal.getPmid());
-			assertEquals("10.1038/NI1450", journal.getDoi());
+			Assert.assertEquals("A STRUCTURAL BASIS FOR COMPLEMENT INHIBITION BY STAPHYLOCOCCUS AUREUS.", journal.getTitle());
+			Assert.assertEquals("NAT.IMMUNOL.", journal.getJournalName());
+			Assert.assertEquals(2007, journal.getPublicationDate());
+			Assert.assertEquals("8", journal.getVolume());
+			Assert.assertEquals("430", journal.getStartPage());
+			Assert.assertEquals("ISSN 1529-2908", journal.getRefn());
+			Assert.assertEquals("17351618", journal.getPmid());
+			Assert.assertEquals("10.1038/NI1450", journal.getDoi());
 		}
 	}
 }

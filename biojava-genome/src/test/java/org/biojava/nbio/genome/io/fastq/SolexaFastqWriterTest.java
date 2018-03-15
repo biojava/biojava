@@ -21,6 +21,8 @@
 package org.biojava.nbio.genome.io.fastq;
 
 
+import org.junit.Test;
+
 /**
  * Unit test for SolexaFastqWriter.
  */
@@ -45,6 +47,7 @@ public final class SolexaFastqWriterTest
 			.build();
 	}
 
+	@Test
 	public void testConvertNotSolexaVariant() throws Exception
 	{
 		SolexaFastqWriter writer = new SolexaFastqWriter();

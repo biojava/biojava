@@ -25,24 +25,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import junit.framework.TestCase;
-
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.util.AlignmentTools;
-import org.biojava.nbio.structure.symmetry.internal.SequenceFunctionRefiner;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author blivens
  *
  */
-public class TestSingleRefiner extends TestCase {
+public class TestSingleRefiner {
 	List<Map<Integer, Integer>> alignments;
 	List<Integer> orders;
 	List<Map<Integer, Integer>> expecteds;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 
 		Map<Integer,Integer> align;
 		Map<Integer,Integer> expect;
@@ -207,7 +206,7 @@ public class TestSingleRefiner extends TestCase {
 		expect.put(	9,	3);
 		expecteds.add(expect);
 
-		assertEquals("Error with setup", alignments.size(), expecteds.size());
+		Assert.assertEquals("Error with setup", alignments.size(), expecteds.size());
 
 		/*
 		 * 6. Small cycles can be repaired. 3>5>7>5
@@ -243,6 +242,7 @@ public class TestSingleRefiner extends TestCase {
 		expecteds.add(expect);
 	}
 
+	@Test
 	public void testExpected() throws StructureException {
 
 		for(int i=0;i<alignments.size(); i++) {
@@ -254,7 +254,7 @@ public class TestSingleRefiner extends TestCase {
 				System.out.println("Actual: " + AlignmentTools.toConciseAlignmentString(align));
 				System.out.println("Expect: " + AlignmentTools.toConciseAlignmentString(expect));
 			}
-			assertEquals("Alignment " + i + " refinement wrong", expect, refined);
+			Assert.assertEquals("Alignment " + i + " refinement wrong", expect, refined);
 		}
 	}
 
@@ -265,11 +265,12 @@ public class TestSingleRefiner extends TestCase {
 	private void testAutomorphism(Map<Integer,Integer> align) {
 		for(Integer pre:align.keySet()) {
 			Integer post = align.get(pre);
-			assertNotNull("Not automorphic: f("+pre+") not defined",post);
-			assertTrue("not automorphic: f("+pre+") = "+post+" but f("+post+") undefined", align.containsKey(post));
+			Assert.assertNotNull("Not automorphic: f(" + pre + ") not defined", post);
+			Assert.assertTrue("not automorphic: f(" + pre + ") = " + post + " but f(" + post + ") undefined", align.containsKey(post));
 		}
 	}
 
+	@Test
 	public void testAutomorphism() throws StructureException {
 		for(int i=0;i<alignments.size(); i++) {
 			Map<Integer,Integer> align = alignments.get(i);
@@ -281,16 +282,17 @@ public class TestSingleRefiner extends TestCase {
 
 	private void testSymmetric(Map<Integer,Integer> align, int k) {
 		Map<Integer,Integer> alignK = AlignmentTools.applyAlignment(align, k);
-		assertEquals(align.size(), alignK.size()); // Assumption; Should be tested by AlignmentToolsTest
+		Assert.assertEquals(align.size(), alignK.size()); // Assumption; Should be tested by AlignmentToolsTest
 
 		int refinementNum = 0;
 		for(Integer res : alignK.keySet()) {
 			Integer resK = alignK.get(res);
-			assertEquals(String.format("Asymmetric alignment in #%d. f^%d(%d)=%d", refinementNum++, k, res, resK), res,
+			Assert.assertEquals(String.format("Asymmetric alignment in #%d. f^%d(%d)=%d", refinementNum++, k, res, resK), res,
 					resK);
 		}
 	}
 
+	@Test
 	public void testSymmetric() throws StructureException {
 		for(int i=0;i<alignments.size(); i++) {
 			Map<Integer,Integer> align = alignments.get(i);

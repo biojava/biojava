@@ -21,28 +21,29 @@
 package org.biojava.nbio.genome.io.fastq;
 
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * Unit test for FastqBuilder.
  */
-public final class FastqBuilderTest
-	extends TestCase
-{
+public final class FastqBuilderTest {
 
+	@Test
 	public void testConstructor()
 	{
 		FastqBuilder fastqBuilder = new FastqBuilder();
-		assertNotNull(fastqBuilder);
+		Assert.assertNotNull(fastqBuilder);
 	}
 
+	@Test
 	public void testBuildDefault()
 	{
 		try
 		{
 			FastqBuilder fastqBuilder = new FastqBuilder();
 			fastqBuilder.build();
-			fail("build default expected IllegalStateException");
+			Assert.fail("build default expected IllegalStateException");
 		}
 		catch (IllegalStateException e)
 		{
@@ -50,6 +51,7 @@ public final class FastqBuilderTest
 		}
 	}
 
+	@Test
 	public void testBuildNullDescription()
 	{
 		try
@@ -61,7 +63,7 @@ public final class FastqBuilderTest
 				.withVariant(FastqVariant.FASTQ_SOLEXA);
 
 			fastqBuilder.build();
-			fail("build null description expected IllegalArgumentException");
+			Assert.fail("build null description expected IllegalArgumentException");
 		}
 		catch (IllegalArgumentException e)
 		{
@@ -69,6 +71,7 @@ public final class FastqBuilderTest
 		}
 	}
 
+	@Test
 	public void testBuildNullSequence()
 	{
 		try
@@ -80,7 +83,7 @@ public final class FastqBuilderTest
 				.withVariant(FastqVariant.FASTQ_SOLEXA);
 
 			fastqBuilder.build();
-			fail("build null sequence expected IllegalArgumentException");
+			Assert.fail("build null sequence expected IllegalArgumentException");
 		}
 		catch (IllegalArgumentException e)
 		{
@@ -88,6 +91,7 @@ public final class FastqBuilderTest
 		}
 	}
 
+	@Test
 	public void testBuildNullAppendSequence()
 	{
 		try
@@ -99,7 +103,7 @@ public final class FastqBuilderTest
 				.withVariant(FastqVariant.FASTQ_SOLEXA);
 
 			fastqBuilder.build();
-			fail("build null append sequence expected IllegalArgumentException");
+			Assert.fail("build null append sequence expected IllegalArgumentException");
 		}
 		catch (IllegalArgumentException e)
 		{
@@ -107,6 +111,7 @@ public final class FastqBuilderTest
 		}
 	}
 
+	@Test
 	public void testBuildNullQuality()
 	{
 		try
@@ -118,7 +123,7 @@ public final class FastqBuilderTest
 				.withVariant(FastqVariant.FASTQ_SOLEXA);
 
 			fastqBuilder.build();
-			fail("build null quality expected IllegalArgumentException");
+			Assert.fail("build null quality expected IllegalArgumentException");
 		}
 		catch (IllegalArgumentException e)
 		{
@@ -126,6 +131,7 @@ public final class FastqBuilderTest
 		}
 	}
 
+	@Test
 	public void testBuildNullAppendQuality()
 	{
 		try
@@ -137,7 +143,7 @@ public final class FastqBuilderTest
 				.withVariant(FastqVariant.FASTQ_SOLEXA);
 
 			fastqBuilder.build();
-			fail("build null append quality expected IllegalArgumentException");
+			Assert.fail("build null append quality expected IllegalArgumentException");
 		}
 		catch (IllegalArgumentException e)
 		{
@@ -145,6 +151,7 @@ public final class FastqBuilderTest
 		}
 	}
 
+	@Test
 	public void testBuildNullVariant()
 	{
 		try
@@ -156,7 +163,7 @@ public final class FastqBuilderTest
 				.withVariant(null);
 
 			fastqBuilder.build();
-			fail("build null variant expected IllegalArgumentException");
+			Assert.fail("build null variant expected IllegalArgumentException");
 		}
 		catch (IllegalArgumentException e)
 		{
@@ -164,6 +171,7 @@ public final class FastqBuilderTest
 		}
 	}
 
+	@Test
 	public void testBuildMissingDescription()
 	{
 		try
@@ -174,7 +182,7 @@ public final class FastqBuilderTest
 				.withVariant(FastqVariant.FASTQ_SOLEXA);
 
 			fastqBuilder.build();
-			fail("build missing description expected IllegalStateException");
+			Assert.fail("build missing description expected IllegalStateException");
 		}
 		catch (IllegalStateException e)
 		{
@@ -182,6 +190,7 @@ public final class FastqBuilderTest
 		}
 	}
 
+	@Test
 	public void testBuildMissingSequence()
 	{
 		try
@@ -192,7 +201,7 @@ public final class FastqBuilderTest
 				.withVariant(FastqVariant.FASTQ_SOLEXA);
 
 			fastqBuilder.build();
-			fail("build missing sequence expected IllegalStateException");
+			Assert.fail("build missing sequence expected IllegalStateException");
 		}
 		catch (IllegalStateException e)
 		{
@@ -200,6 +209,7 @@ public final class FastqBuilderTest
 		}
 	}
 
+	@Test
 	public void testBuildMissingQuality()
 	{
 		try
@@ -210,7 +220,7 @@ public final class FastqBuilderTest
 				.withVariant(FastqVariant.FASTQ_SOLEXA);
 
 			fastqBuilder.build();
-			fail("build missing quality expected IllegalStateException");
+			Assert.fail("build missing quality expected IllegalStateException");
 		}
 		catch (IllegalStateException e)
 		{
@@ -218,6 +228,7 @@ public final class FastqBuilderTest
 		}
 	}
 
+	@Test
 	public void testBuildDefaultVariant()
 	{
 		FastqBuilder fastqBuilder = new FastqBuilder()
@@ -226,14 +237,15 @@ public final class FastqBuilderTest
 			.withQuality("quality_");
 
 		Fastq fastq = fastqBuilder.build();
-		assertEquals("description", fastqBuilder.getDescription());
-		assertTrue(fastqBuilder.sequenceAndQualityLengthsMatch());
-		assertEquals("description", fastq.getDescription());
-		assertEquals("sequence", fastq.getSequence());
-		assertEquals("quality_", fastq.getQuality());
-		assertEquals(FastqBuilder.DEFAULT_VARIANT, fastq.getVariant());
+		Assert.assertEquals("description", fastqBuilder.getDescription());
+		Assert.assertTrue(fastqBuilder.sequenceAndQualityLengthsMatch());
+		Assert.assertEquals("description", fastq.getDescription());
+		Assert.assertEquals("sequence", fastq.getSequence());
+		Assert.assertEquals("quality_", fastq.getQuality());
+		Assert.assertEquals(FastqBuilder.DEFAULT_VARIANT, fastq.getVariant());
 	}
 
+	@Test
 	public void testBuild()
 	{
 		FastqBuilder fastqBuilder = new FastqBuilder()
@@ -242,14 +254,15 @@ public final class FastqBuilderTest
 			.withQuality("quality_")
 			.withVariant(FastqVariant.FASTQ_SOLEXA);
 		Fastq fastq = fastqBuilder.build();
-		assertEquals("description", fastqBuilder.getDescription());
-		assertTrue(fastqBuilder.sequenceAndQualityLengthsMatch());
-		assertEquals("description", fastq.getDescription());
-		assertEquals("sequence", fastq.getSequence());
-		assertEquals("quality_", fastq.getQuality());
-		assertEquals(FastqVariant.FASTQ_SOLEXA, fastq.getVariant());
+		Assert.assertEquals("description", fastqBuilder.getDescription());
+		Assert.assertTrue(fastqBuilder.sequenceAndQualityLengthsMatch());
+		Assert.assertEquals("description", fastq.getDescription());
+		Assert.assertEquals("sequence", fastq.getSequence());
+		Assert.assertEquals("quality_", fastq.getQuality());
+		Assert.assertEquals(FastqVariant.FASTQ_SOLEXA, fastq.getVariant());
 	}
 
+	@Test
 	public void testBuildAppendSequence()
 	{
 		FastqBuilder fastqBuilder = new FastqBuilder()
@@ -259,14 +272,15 @@ public final class FastqBuilderTest
 			.withQuality("quality_")
 			.withVariant(FastqVariant.FASTQ_SOLEXA);
 		Fastq fastq = fastqBuilder.build();
-		assertEquals("description", fastqBuilder.getDescription());
-		assertTrue(fastqBuilder.sequenceAndQualityLengthsMatch());
-		assertEquals("description", fastq.getDescription());
-		assertEquals("sequence", fastq.getSequence());
-		assertEquals("quality_", fastq.getQuality());
-		assertEquals(FastqVariant.FASTQ_SOLEXA, fastq.getVariant());
+		Assert.assertEquals("description", fastqBuilder.getDescription());
+		Assert.assertTrue(fastqBuilder.sequenceAndQualityLengthsMatch());
+		Assert.assertEquals("description", fastq.getDescription());
+		Assert.assertEquals("sequence", fastq.getSequence());
+		Assert.assertEquals("quality_", fastq.getQuality());
+		Assert.assertEquals(FastqVariant.FASTQ_SOLEXA, fastq.getVariant());
 	}
 
+	@Test
 	public void testBuildAppendQuality()
 	{
 		FastqBuilder fastqBuilder = new FastqBuilder()
@@ -276,23 +290,25 @@ public final class FastqBuilderTest
 			.appendQuality("ity_")
 			.withVariant(FastqVariant.FASTQ_SOLEXA);
 		Fastq fastq = fastqBuilder.build();
-		assertEquals("description", fastqBuilder.getDescription());
-		assertTrue(fastqBuilder.sequenceAndQualityLengthsMatch());
-		assertEquals("description", fastq.getDescription());
-		assertEquals("sequence", fastq.getSequence());
-		assertEquals("quality_", fastq.getQuality());
-		assertEquals(FastqVariant.FASTQ_SOLEXA, fastq.getVariant());
+		Assert.assertEquals("description", fastqBuilder.getDescription());
+		Assert.assertTrue(fastqBuilder.sequenceAndQualityLengthsMatch());
+		Assert.assertEquals("description", fastq.getDescription());
+		Assert.assertEquals("sequence", fastq.getSequence());
+		Assert.assertEquals("quality_", fastq.getQuality());
+		Assert.assertEquals(FastqVariant.FASTQ_SOLEXA, fastq.getVariant());
 	}
 
+	@Test
 	public void testBuildNonMatchingSequenceQualityScoreLengthsBothNull()
 	{
 		FastqBuilder fastqBuilder = new FastqBuilder()
 			.withDescription("description")
 			.withVariant(FastqVariant.FASTQ_SOLEXA);
 
-		assertTrue(fastqBuilder.sequenceAndQualityLengthsMatch());
+		Assert.assertTrue(fastqBuilder.sequenceAndQualityLengthsMatch());
 	}
 
+	@Test
 	public void testBuildNonMatchingSequenceQualityScoreLengthsSequenceNull()
 	{
 		FastqBuilder fastqBuilder = new FastqBuilder()
@@ -300,9 +316,10 @@ public final class FastqBuilderTest
 			.withQuality("0123")
 			.withVariant(FastqVariant.FASTQ_SOLEXA);
 
-		assertEquals(false, fastqBuilder.sequenceAndQualityLengthsMatch());
+		Assert.assertEquals(false, fastqBuilder.sequenceAndQualityLengthsMatch());
 	}
 
+	@Test
 	public void testBuildNonMatchingSequenceQualityScoreLengthsQualityNull()
 	{
 		FastqBuilder fastqBuilder = new FastqBuilder()
@@ -310,9 +327,10 @@ public final class FastqBuilderTest
 			.withSequence("ACTG")
 			.withVariant(FastqVariant.FASTQ_SOLEXA);
 
-		assertEquals(false, fastqBuilder.sequenceAndQualityLengthsMatch());
+		Assert.assertEquals(false, fastqBuilder.sequenceAndQualityLengthsMatch());
 	}
 
+	@Test
 	public void testBuildNonMatchingSequenceQualityScoreLengths0()
 	{
 		try
@@ -324,7 +342,7 @@ public final class FastqBuilderTest
 				.withVariant(FastqVariant.FASTQ_SOLEXA);
 
 			fastqBuilder.build();
-			fail("build sequence length > quality length expected IllegalStateException");
+			Assert.fail("build sequence length > quality length expected IllegalStateException");
 		}
 		catch (IllegalStateException e)
 		{
@@ -332,6 +350,7 @@ public final class FastqBuilderTest
 		}
 	}
 
+	@Test
 	public void testBuildNonMatchingSequenceQualityScoreLengths1()
 	{
 		try
@@ -343,7 +362,7 @@ public final class FastqBuilderTest
 				.withVariant(FastqVariant.FASTQ_SOLEXA);
 
 			fastqBuilder.build();
-			fail("build sequence length < quality length expected IllegalStateException");
+			Assert.fail("build sequence length < quality length expected IllegalStateException");
 		}
 		catch (IllegalStateException e)
 		{
@@ -351,6 +370,7 @@ public final class FastqBuilderTest
 		}
 	}
 
+	@Test
 	public void testBuildMultiple()
 	{
 		FastqBuilder fastqBuilder = new FastqBuilder()
@@ -361,12 +381,12 @@ public final class FastqBuilderTest
 		for (int i = 0; i < 10; i++)
 		{
 			Fastq fastq = fastqBuilder.withSequence("sequence" + i).build();
-			assertEquals("description", fastqBuilder.getDescription());
-			assertTrue(fastqBuilder.sequenceAndQualityLengthsMatch());
-			assertEquals("description", fastq.getDescription());
-			assertEquals("sequence" + i, fastq.getSequence());
-			assertEquals("quality__", fastq.getQuality());
-			assertEquals(FastqVariant.FASTQ_SOLEXA, fastq.getVariant());
+			Assert.assertEquals("description", fastqBuilder.getDescription());
+			Assert.assertTrue(fastqBuilder.sequenceAndQualityLengthsMatch());
+			Assert.assertEquals("description", fastq.getDescription());
+			Assert.assertEquals("sequence" + i, fastq.getSequence());
+			Assert.assertEquals("quality__", fastq.getQuality());
+			Assert.assertEquals(FastqVariant.FASTQ_SOLEXA, fastq.getVariant());
 		}
 	}
 }

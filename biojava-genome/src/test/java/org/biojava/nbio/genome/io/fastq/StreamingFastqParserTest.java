@@ -20,7 +20,8 @@
  */
 package org.biojava.nbio.genome.io.fastq;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.io.StringReader;
 
@@ -28,9 +29,9 @@ import java.io.StringReader;
 /**
  * Unit test for StreamingFastqParser.
  */
-public class StreamingFastqParserTest extends TestCase
-{
+public class StreamingFastqParserTest {
 
+	@Test
 	public void testStreamNullReadable() throws Exception
 	{
 		try
@@ -41,7 +42,7 @@ public class StreamingFastqParserTest extends TestCase
 					// empty
 				}
 			});
-			fail("stream(null,,) expected IllegalArgumentException");
+			Assert.fail("stream(null,,) expected IllegalArgumentException");
 		}
 		catch (IllegalArgumentException e)
 		{
@@ -49,6 +50,7 @@ public class StreamingFastqParserTest extends TestCase
 		}
 	}
 
+	@Test
 	public void testStreamNullVariant() throws Exception
 	{
 		try
@@ -60,7 +62,7 @@ public class StreamingFastqParserTest extends TestCase
 					// empty
 				}
 			});
-			fail("stream(null,,) expected IllegalArgumentException");
+			Assert.fail("stream(null,,) expected IllegalArgumentException");
 		}
 		catch (IllegalArgumentException e)
 		{
@@ -68,13 +70,14 @@ public class StreamingFastqParserTest extends TestCase
 		}
 	}
 
+	@Test
 	public void testStreamNullListener() throws Exception
 	{
 		try
 		{
 			final String input = "";
 			StreamingFastqParser.stream(new StringReader(input), FastqVariant.FASTQ_SANGER, null);
-			fail("stream(null,,) expected IllegalArgumentException");
+			Assert.fail("stream(null,,) expected IllegalArgumentException");
 		}
 		catch (IllegalArgumentException e)
 		{

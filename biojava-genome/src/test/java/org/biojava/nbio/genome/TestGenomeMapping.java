@@ -22,10 +22,11 @@ package org.biojava.nbio.genome;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Range;
-import junit.framework.TestCase;
 import org.biojava.nbio.genome.parsers.genename.GeneChromosomePosition;
 import org.biojava.nbio.genome.parsers.genename.GeneChromosomePositionParser;
 import org.biojava.nbio.genome.util.ChromosomeMappingTools;
+import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.InputStream;
@@ -38,15 +39,14 @@ import java.util.zip.GZIPInputStream;
 /**
  * Created by andreas on 7/19/16.
  */
-public class TestGenomeMapping extends TestCase {
+public class TestGenomeMapping {
 
 	private static final String geneChromosomeFile = "http://cdn.rcsb.org/gene/hg38/geneChromosome38.tsf.gz";
 
 	private List<GeneChromosomePosition> gcps = null;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 		InputStream input = new GZIPInputStream(new URL(geneChromosomeFile).openStream());
 		gcps = GeneChromosomePositionParser.getChromosomeMappings(input);
 	}
@@ -55,8 +55,8 @@ public class TestGenomeMapping extends TestCase {
 	public void testAK1() {
 		String geneName = "AK1";
 
-		assertNotNull(gcps);
-		assertTrue("Problems with downloading refFlat file from UCSC browser ", gcps.size() > 100);
+		Assert.assertNotNull(gcps);
+		Assert.assertTrue("Problems with downloading refFlat file from UCSC browser ", gcps.size() > 100);
 
 		int uniProtLength = 194;
 
@@ -74,9 +74,9 @@ public class TestGenomeMapping extends TestCase {
 				if ( ! pos.getGenebankId().equals("NM_000476"))
 					continue;
 
-				assertTrue(pos.getGeneName().equals(geneName));
-				assertTrue(pos.getOrientation().equals('-'));
-				assertTrue(pos.getChromosome().equals("chr9"));
+				Assert.assertTrue(pos.getGeneName().equals(geneName));
+				Assert.assertTrue(pos.getOrientation().equals('-'));
+				Assert.assertTrue(pos.getChromosome().equals("chr9"));
 
 				List<Range<Integer>> cdsranges = ChromosomeMappingTools.getCDSExonRanges(pos);
 
@@ -90,14 +90,14 @@ public class TestGenomeMapping extends TestCase {
 
 				int cdslength = ChromosomeMappingTools.getCDSLength(pos);
 
-				assertTrue("CDS length should be 582, but is " + cdslength, cdslength == (uniProtLength *3));
+				Assert.assertTrue("CDS length should be 582, but is " + cdslength, cdslength == (uniProtLength * 3));
 
 				List<Range<Integer>> chromranges = ChromosomeMappingTools.getChromosomalRangesForCDS(pos);
 
 				// we are reverse strand. reverse the order
 				chromranges = Lists.reverse(chromranges);
 
-				assertTrue(chromranges.size() == 6);
+				Assert.assertTrue(chromranges.size() == 6);
 
 				// compare with https://www.ncbi.nlm.nih.gov/CCDS/CcdsBrowse.cgi?REQUEST=CCDS&DATA=CCDS6881
 				validateExon(0,127868008,127868076, chromranges  );
@@ -109,7 +109,7 @@ public class TestGenomeMapping extends TestCase {
 
 			}
 		} catch (Exception e) {
-			fail(e.getMessage());
+			Assert.fail(e.getMessage());
 		}
 	}
 
@@ -117,9 +117,9 @@ public class TestGenomeMapping extends TestCase {
 	public void testHBA(){
 
 		String geneName = "HBA1";
-		assertNotNull(gcps);
+		Assert.assertNotNull(gcps);
 
-		assertTrue("Problems with downloading refFlat file from UCSC browser ", gcps.size() > 100);
+		Assert.assertTrue("Problems with downloading refFlat file from UCSC browser ", gcps.size() > 100);
 
 		try {
 
@@ -129,16 +129,16 @@ public class TestGenomeMapping extends TestCase {
 				if ( ! pos.getGeneName().equals(geneName))
 					continue;
 
-				assertTrue(pos.getGeneName().equals("HBA1"));
-				assertTrue(pos.getGenebankId().equals("NM_000558"));
-				assertTrue(pos.getChromosome().equals("chr16"));
-				assertTrue(pos.getTranscriptionStart().equals(176650));
-				assertTrue(pos.getTranscriptionEnd().equals(177522));
-				assertTrue(pos.getOrientation().equals('+'));
+				Assert.assertTrue(pos.getGeneName().equals("HBA1"));
+				Assert.assertTrue(pos.getGenebankId().equals("NM_000558"));
+				Assert.assertTrue(pos.getChromosome().equals("chr16"));
+				Assert.assertTrue(pos.getTranscriptionStart().equals(176650));
+				Assert.assertTrue(pos.getTranscriptionEnd().equals(177522));
+				Assert.assertTrue(pos.getOrientation().equals('+'));
 
 				List<Range<Integer>> cdsranges = ChromosomeMappingTools.getCDSExonRanges(pos);
 
-				assertTrue(cdsranges.size() == 3);
+				Assert.assertTrue(cdsranges.size() == 3);
 
 				validateExon(0,0,95,cdsranges);
 				validateExon(1,95,300,cdsranges);
@@ -154,7 +154,7 @@ public class TestGenomeMapping extends TestCase {
 
 			}
 		} catch (Exception e){
-			fail(e.getMessage());
+			Assert.fail(e.getMessage());
 		}
 
 
@@ -163,8 +163,8 @@ public class TestGenomeMapping extends TestCase {
 	private void validateExon(int exonNr, int start, int stop, List<Range<Integer>> cdsranges) {
 
 		Range<Integer> exon = cdsranges.get(exonNr);
-		assertTrue("Exon " + exonNr + " boundary "+ exon.lowerEndpoint()  + " does not match " +start , exon.lowerEndpoint().equals(start));
-		assertTrue("Exon " + exonNr + " boundary " + exon.upperEndpoint() + " does not match " + stop, exon.upperEndpoint().equals(stop));
+		Assert.assertTrue("Exon " + exonNr + " boundary " + exon.lowerEndpoint() + " does not match " + start, exon.lowerEndpoint().equals(start));
+		Assert.assertTrue("Exon " + exonNr + " boundary " + exon.upperEndpoint() + " does not match " + stop, exon.upperEndpoint().equals(stop));
 
 	}
 
@@ -208,21 +208,21 @@ public class TestGenomeMapping extends TestCase {
 			    	posExonStart = 30093953; // ending position of the last exon coding region (on forward strand)
 			    	posInmRNA = 1; // base 1 position in mRNA sequence
 					cds = getPositionInmRNA(geneName, genebankId, posExonStart);
-					assertEquals(cds, posInmRNA);
+					Assert.assertEquals(cds, posInmRNA);
 					break;
 					
 				case "last1exon":
 			    	posExonStart = 30094003; // starting position of the last exon coding region (on forward strand)
 			    	posInmRNA = 51; // position in mRNA sequence equals to the length of the exon
 					cds = getPositionInmRNA(geneName, genebankId, posExonStart);
-					assertEquals(cds, posInmRNA);		
+					Assert.assertEquals(cds, posInmRNA);
 					break;
 				
 				case "last3exon":
 					posExonStart = 30103500; // starting position of the first base in a coding region (3rd exon)
 					posInmRNA = 257; // position in mRNA sequence equals to the sum length of the 3 last exons 
 					cds = getPositionInmRNA(geneName, genebankId, posExonStart);
-					assertEquals(cds, posInmRNA);
+					Assert.assertEquals(cds, posInmRNA);
 					break;
 			}
 		}
@@ -252,21 +252,21 @@ public class TestGenomeMapping extends TestCase {
 			    	posExonStart = 99271218; // ending position of the last exon coding region (on forward strand)
 			    	posInmRNA = 1; // base 1 position in mRNA sequence
 					cds = getPositionInmRNA(geneName, genebankId, posExonStart);
-					assertEquals(cds, posInmRNA);
+					Assert.assertEquals(cds, posInmRNA);
 					break;
 					
 				case "last1exon":
 			    	posExonStart = 99271161; // starting position of the last exon coding region (on forward strand)
 			    	posInmRNA = 58; // position in mRNA sequence equals to the length of the exon
 					cds = getPositionInmRNA(geneName, genebankId, posExonStart);
-					assertEquals(cds, posInmRNA);		
+					Assert.assertEquals(cds, posInmRNA);
 					break;
 				
 				case "last3exon":
 					posExonStart = 99231345; // starting position of the first base in a coding region (3rd exon)
 					posInmRNA = 640; // position in mRNA sequence equals to the sum length of the 3 last exons 
 					cds = getPositionInmRNA(geneName, genebankId, posExonStart);
-					assertEquals(cds, posInmRNA);
+					Assert.assertEquals(cds, posInmRNA);
 					break;
 			}
 		}
@@ -287,10 +287,10 @@ public class TestGenomeMapping extends TestCase {
 		int posExonEnd = 176811; // ending position of the first base in a coding region (1st exon)
 
 		int cdsSE = getPositionInmRNA(geneName, genebankId, posExonStart-1);
-		assertEquals(cdsSE, -1);
+		Assert.assertEquals(cdsSE, -1);
 
 		int cdsEE = getPositionInmRNA(geneName, genebankId, posExonEnd+1);
-		assertEquals(cdsEE, -1);
+		Assert.assertEquals(cdsEE, -1);
 	}
 		
 	/** Test to make sure the mapping tool correctly identify that position falls outside the coding region 
@@ -308,10 +308,10 @@ public class TestGenomeMapping extends TestCase {
 		int posExonEnd = 99176195; // ending position of the first base in a coding region (1st exon)
 		
 		int cdsSE = getPositionInmRNA(geneName, genebankId, posExonStart-1);
-		assertEquals(cdsSE, -1);
+		Assert.assertEquals(cdsSE, -1);
 		
 		int cdsEE = getPositionInmRNA(geneName, genebankId, posExonEnd+1);
-		assertEquals(cdsEE, -1);	
+		Assert.assertEquals(cdsEE, -1);
 	}
 	
 	/** Test to make sure the mapping tool correctly converts the genetic position to a position on mRNA 
@@ -329,7 +329,7 @@ public class TestGenomeMapping extends TestCase {
 		int mRNAPos = 16;
 				
 		int cds = getPositionInmRNA(geneName, genebankId, chromPos);
-		assertEquals(cds, mRNAPos);
+		Assert.assertEquals(cds, mRNAPos);
 		
 	}
 
@@ -344,16 +344,16 @@ public class TestGenomeMapping extends TestCase {
 		List<Range<Integer>> result = ChromosomeMappingTools.getCDSRegions(lst1,lst2,cdsStart,cdsEnd);
 
 		// makes sure the first list does not get  changed;
-		assertTrue(lst1.get(0) == 86346823);
+		Assert.assertTrue(lst1.get(0) == 86346823);
 
 
-		assertTrue(result.get(0).lowerEndpoint() == 86348749);
-		assertTrue(result.get(1).lowerEndpoint() == 86352858);
-		assertTrue(result.get(2).lowerEndpoint() == 86354529);
+		Assert.assertTrue(result.get(0).lowerEndpoint() == 86348749);
+		Assert.assertTrue(result.get(1).lowerEndpoint() == 86352858);
+		Assert.assertTrue(result.get(2).lowerEndpoint() == 86354529);
 
-		assertTrue(result.get(0).upperEndpoint() == 86348878);
-		assertTrue(result.get(1).upperEndpoint() == 86352984);
-		assertTrue(result.get(2).upperEndpoint() == 86387027);
+		Assert.assertTrue(result.get(0).upperEndpoint() == 86348878);
+		Assert.assertTrue(result.get(1).upperEndpoint() == 86352984);
+		Assert.assertTrue(result.get(2).upperEndpoint() == 86387027);
 
 	}
 
@@ -368,7 +368,7 @@ public class TestGenomeMapping extends TestCase {
 		List<Range<Integer>> result = ChromosomeMappingTools.getCDSRegions(lst1,lst2,cdsStart,cdsEnd);
 
 		// makes sure the first list does not get  changed;
-		assertTrue(result.get(0).lowerEndpoint() == 31423818);
+		Assert.assertTrue(result.get(0).lowerEndpoint() == 31423818);
 
 	}
 }

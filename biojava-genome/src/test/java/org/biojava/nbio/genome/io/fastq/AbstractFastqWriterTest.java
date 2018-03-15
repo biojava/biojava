@@ -20,7 +20,8 @@
  */
 package org.biojava.nbio.genome.io.fastq;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -32,9 +33,7 @@ import java.util.List;
 /**
  * Abstract unit test for implementations of FastqWriter.
  */
-public abstract class AbstractFastqWriterTest
-	extends TestCase
-{
+public abstract class AbstractFastqWriterTest {
 
 	/**
 	 * Create and return a new FASTQ formatted sequence suitable for testing.
@@ -50,18 +49,21 @@ public abstract class AbstractFastqWriterTest
 	 */
 	protected abstract FastqWriter createFastqWriter();
 
+	@Test
 	public void testCreateFastq()
 	{
 		Fastq fastq = createFastq();
-		assertNotNull(fastq);
+		Assert.assertNotNull(fastq);
 	}
 
+	@Test
 	public void testCreateFastqWriter()
 	{
 		FastqWriter writer = createFastqWriter();
-		assertNotNull(writer);
+		Assert.assertNotNull(writer);
 	}
 
+	@Test
 	public void testAppendVararg() throws Exception
 	{
 		FastqWriter writer = createFastqWriter();
@@ -69,16 +71,16 @@ public abstract class AbstractFastqWriterTest
 		Fastq fastq0 = createFastq();
 		Fastq fastq1 = createFastq();
 		Fastq fastq2 = createFastq();
-		assertSame(appendable, writer.append(appendable, fastq0));
-		assertSame(appendable, writer.append(appendable, fastq0, fastq1));
-		assertSame(appendable, writer.append(appendable, fastq0, fastq1, fastq2));
-		assertSame(appendable, writer.append(appendable, fastq0, fastq1, fastq2, null));
-		assertSame(appendable, writer.append(appendable, (Fastq) null));
+		Assert.assertSame(appendable, writer.append(appendable, fastq0));
+		Assert.assertSame(appendable, writer.append(appendable, fastq0, fastq1));
+		Assert.assertSame(appendable, writer.append(appendable, fastq0, fastq1, fastq2));
+		Assert.assertSame(appendable, writer.append(appendable, fastq0, fastq1, fastq2, null));
+		Assert.assertSame(appendable, writer.append(appendable, (Fastq) null));
 
 		try
 		{
 			writer.append((Appendable) null, fastq0);
-			fail("append(null,) expected IllegalArgumentException");
+			Assert.fail("append(null,) expected IllegalArgumentException");
 		}
 		catch (IllegalArgumentException e)
 		{
@@ -86,6 +88,7 @@ public abstract class AbstractFastqWriterTest
 		}
 	}
 
+	@Test
 	public void testAppendIterable() throws Exception
 	{
 		FastqWriter writer = createFastqWriter();
@@ -94,20 +97,20 @@ public abstract class AbstractFastqWriterTest
 		Fastq fastq1 = createFastq();
 		Fastq fastq2 = createFastq();
 		List<Fastq> list = new ArrayList<Fastq>();
-		assertSame(appendable, writer.append(appendable, list));
+		Assert.assertSame(appendable, writer.append(appendable, list));
 		list.add(fastq0);
-		assertSame(appendable, writer.append(appendable, list));
+		Assert.assertSame(appendable, writer.append(appendable, list));
 		list.add(fastq1);
-		assertSame(appendable, writer.append(appendable, list));
+		Assert.assertSame(appendable, writer.append(appendable, list));
 		list.add(fastq2);
-		assertSame(appendable, writer.append(appendable, list));
+		Assert.assertSame(appendable, writer.append(appendable, list));
 		list.add(null);
-		assertSame(appendable, writer.append(appendable, list));
+		Assert.assertSame(appendable, writer.append(appendable, list));
 
 		try
 		{
 			writer.append((Appendable) null, list);
-			fail("append(null,) expected IllegalArgumentException");
+			Assert.fail("append(null,) expected IllegalArgumentException");
 		}
 		catch (IllegalArgumentException e)
 		{
@@ -116,7 +119,7 @@ public abstract class AbstractFastqWriterTest
 		try
 		{
 			writer.append(appendable, (Iterable<Fastq>) null);
-			fail("append(,null) expected IllegalArgumentException");
+			Assert.fail("append(,null) expected IllegalArgumentException");
 		}
 		catch (IllegalArgumentException e)
 		{
@@ -124,6 +127,7 @@ public abstract class AbstractFastqWriterTest
 		}
 	}
 
+	@Test
 	public void testWriteFileVararg() throws Exception
 	{
 		FastqWriter writer = createFastqWriter();
@@ -144,7 +148,7 @@ public abstract class AbstractFastqWriterTest
 		try
 		{
 			writer.write((File) null, fastq0);
-			fail("append(null,) expected IllegalArgumentException");
+			Assert.fail("append(null,) expected IllegalArgumentException");
 		}
 		catch (IllegalArgumentException e)
 		{
@@ -152,6 +156,7 @@ public abstract class AbstractFastqWriterTest
 		}
 	}
 
+	@Test
 	public void testWriteFileIterable() throws Exception
 	{
 		FastqWriter writer = createFastqWriter();
@@ -183,7 +188,7 @@ public abstract class AbstractFastqWriterTest
 		try
 		{
 			writer.write((File) null, fastq0);
-			fail("append(null,) expected IllegalArgumentException");
+			Assert.fail("append(null,) expected IllegalArgumentException");
 		}
 		catch (IllegalArgumentException e)
 		{
@@ -192,7 +197,7 @@ public abstract class AbstractFastqWriterTest
 		try
 		{
 			writer.write(file5, (Iterable<Fastq>) null);
-			fail("append(,null) expected IllegalArgumentException");
+			Assert.fail("append(,null) expected IllegalArgumentException");
 		}
 		catch (IllegalArgumentException e)
 		{
@@ -200,6 +205,7 @@ public abstract class AbstractFastqWriterTest
 		}
 	}
 
+	@Test
 	public void testWriteOutputStreamVararg() throws Exception
 	{
 		FastqWriter writer = createFastqWriter();
@@ -216,7 +222,7 @@ public abstract class AbstractFastqWriterTest
 		try
 		{
 			writer.write((OutputStream) null, fastq0);
-			fail("append(null,) expected IllegalArgumentException");
+			Assert.fail("append(null,) expected IllegalArgumentException");
 		}
 		catch (IllegalArgumentException e)
 		{
@@ -224,6 +230,7 @@ public abstract class AbstractFastqWriterTest
 		}
 	}
 
+	@Test
 	public void testWriteOutputStreamIterable() throws Exception
 	{
 		FastqWriter writer = createFastqWriter();
@@ -245,7 +252,7 @@ public abstract class AbstractFastqWriterTest
 		try
 		{
 			writer.write((OutputStream) null, fastq0);
-			fail("append(null,) expected IllegalArgumentException");
+			Assert.fail("append(null,) expected IllegalArgumentException");
 		}
 		catch (IllegalArgumentException e)
 		{
@@ -254,7 +261,7 @@ public abstract class AbstractFastqWriterTest
 		try
 		{
 			writer.write(outputStream, (Iterable<Fastq>) null);
-			fail("append(,null) expected IllegalArgumentException");
+			Assert.fail("append(,null) expected IllegalArgumentException");
 		}
 		catch (IllegalArgumentException e)
 		{

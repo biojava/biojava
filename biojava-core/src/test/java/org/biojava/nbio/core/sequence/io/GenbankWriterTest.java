@@ -24,8 +24,8 @@
 package org.biojava.nbio.core.sequence.io;
 
 
-import junit.framework.TestCase;
 import org.biojava.nbio.core.sequence.DNASequence;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -39,7 +39,7 @@ import java.util.LinkedHashMap;
  * @author mckeee1
  *
  */
-public class GenbankWriterTest extends TestCase{
+public class GenbankWriterTest {
 
 
 	@Test
@@ -65,6 +65,6 @@ public class GenbankWriterTest extends TestCase{
 		 */
 		//dnaSequences = GenbankReaderHelper.readGenbankDNASequence( fragreader );
 		fragwriter.close();
-		assertEquals(seqs.get(0).getSequenceAsString(),dnaSequences.values().iterator().next().getSequenceAsString());
+		Assert.assertEquals(seqs.get(0).getSequenceAsString(), dnaSequences.values().iterator().next().getSequenceAsString());
 	}
 }
