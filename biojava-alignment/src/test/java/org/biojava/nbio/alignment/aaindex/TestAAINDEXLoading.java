@@ -21,15 +21,15 @@
 package org.biojava.nbio.alignment.aaindex;
 
 import org.biojava.nbio.core.alignment.matrices.ScaledSubstitutionMatrix;
-import junit.framework.TestCase;
 import org.biojava.nbio.core.alignment.matrices.SubstitutionMatrixHelper;
 import org.biojava.nbio.core.alignment.template.SubstitutionMatrix;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
+import org.junit.Assert;
+import org.junit.Test;
 
 
-
-public class TestAAINDEXLoading extends TestCase{
+public class TestAAINDEXLoading {
 /**
  *
  * M rows = ARNDCQEGHILKMFPSTWYV, cols = ARNDCQEGHILKMFPSTWYV
@@ -57,6 +57,7 @@ Y   -1.25   -0.75   -0.36   -1.21    0.13   -0.61   -1.64   -1.62   -0.12    0.0
 V    0.02   -1.52   -2.17   -2.02    0.34   -1.38   -1.84   -1.96   -0.35    1.94    0.81   -1.27    0.61    0.51   -1.11   -1.11    0.05   -1.09    0.21    2.05
 
  */
+	@Test
 	public void testSDMmatrix(){
 		String matrixName = "PRLA000101";
 
@@ -66,7 +67,7 @@ V    0.02   -1.52   -2.17   -2.02    0.34   -1.38   -1.84   -1.96   -0.35    1.9
 		if ( sdm instanceof ScaledSubstitutionMatrix) {
 			ScaledSubstitutionMatrix scaledSDM = (ScaledSubstitutionMatrix)sdm;
 			scale = scaledSDM.getScale();
-			assertEquals(100,scale);
+			Assert.assertEquals(100, scale);
 		}
 
 
@@ -78,20 +79,20 @@ V    0.02   -1.52   -2.17   -2.02    0.34   -1.38   -1.84   -1.96   -0.35    1.9
 		AminoAcidCompound n = aas.getCompoundForString("N");
 
 		short rn = sdm.getValue(r,n);
-		assertEquals(60,rn);
+		Assert.assertEquals(60, rn);
 
 		short nr = sdm.getValue(n,r);
-		assertEquals(rn,nr);
+		Assert.assertEquals(rn, nr);
 
 
 		short vv = sdm.getValue(v,v);
-		assertEquals(205,vv);
+		Assert.assertEquals(205, vv);
 
 		short vw = sdm.getValue(v,w);
-		assertEquals( -109,vw);
+		Assert.assertEquals(-109, vw);
 
 		short wv = sdm.getValue(w,v);
-		assertEquals(vw,wv);
+		Assert.assertEquals(vw, wv);
 
 
 
@@ -136,6 +137,7 @@ J   0.002   0.000   0.001   0.000   0.001   0.002   0.002   0.001   0.002   0.00
 	 *
 	 */
 
+	@Test
 	public void testOVEJ920104(){
 		String name = "OVEJ920104";
 		SubstitutionMatrix<AminoAcidCompound> max = SubstitutionMatrixHelper.getMatrixFromAAINDEX(name);
@@ -144,7 +146,7 @@ J   0.002   0.000   0.001   0.000   0.001   0.002   0.002   0.001   0.002   0.00
 			ScaledSubstitutionMatrix scaledMAX = (ScaledSubstitutionMatrix) max;
 			int scale = scaledMAX.getScale();
 
-			assertEquals(1000,scale);
+			Assert.assertEquals(1000, scale);
 		}
 
 		AminoAcidCompoundSet aas = AminoAcidCompoundSet.getAminoAcidCompoundSet();
@@ -156,20 +158,20 @@ J   0.002   0.000   0.001   0.000   0.001   0.002   0.002   0.001   0.002   0.00
 		AminoAcidCompound a = aas.getCompoundForString("A");
 
 		short ay = max.getValue(a,y);
-		assertEquals(35,ay);
+		Assert.assertEquals(35, ay);
 
 
 		short ya = max.getValue(y,a);
-		assertEquals(14,ya);
+		Assert.assertEquals(14, ya);
 
 		short minusa = max.getValue(minus, a);
-		assertEquals(86, minusa);
+		Assert.assertEquals(86, minusa);
 
 		short minusy = max.getValue(minus, y);
-		assertEquals( 48,minusy);
+		Assert.assertEquals(48, minusy);
 
 		short minusj = max.getValue(minus, j);
-		assertEquals( 91,minusj);
+		Assert.assertEquals(91, minusj);
 
 	}
 

@@ -23,11 +23,12 @@
 package org.biojava.nbio.structure.io;
 
 
-import junit.framework.TestCase;
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.core.sequence.ProteinSequence;
+import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -38,13 +39,13 @@ import java.util.Map;
  * @author Spencer Bliven
  *
  */
-public class StructureSequenceMatcherTest extends TestCase {
+public class StructureSequenceMatcherTest {
 
 	private Structure struct1;
 	private String[] pdbNum1;
 	private String seq1;
 
-	@Override
+	@Before
 	public void setUp() throws IOException, StructureException {
 		String name1 = "2PTC";
 
@@ -91,7 +92,7 @@ public class StructureSequenceMatcherTest extends TestCase {
 				//>2PTC:I|PDBID|CHAIN|SEQUENCE
 				"RPDFCLEPPYTGPCKARIIRYFYNAKAGLCQTFVYGGCRAKRNNFKSAEDCMRTCGGA";
 
-		assertTrue(seq1.length() == pdbNum1.length);
+		Assert.assertTrue(seq1.length() == pdbNum1.length);
 
 		/*// report some stats
 		System.out.println("The SEQRES and ATOM information is available via the chains:");
@@ -118,14 +119,14 @@ public class StructureSequenceMatcherTest extends TestCase {
 		ProteinSequence seq = new ProteinSequence(seq1.substring(30, 40));
 		Structure result = StructureSequenceMatcher.getSubstructureMatchingProteinSequence(seq, struct1);
 
-		assertEquals("Wrong number of groups", 10, StructureTools.getNrGroups(result));
-		assertEquals("Wrong number of chains", 1, result.getChains().size());
+		Assert.assertEquals("Wrong number of groups", 10, StructureTools.getNrGroups(result));
+		Assert.assertEquals("Wrong number of chains", 1, result.getChains().size());
 		int i = 0;
 		for (Group group : result.getChainByIndex(0).getAtomGroups()) {
-			assertTrue("Contains non-amino acid group", group instanceof AminoAcid);
+			Assert.assertTrue("Contains non-amino acid group", group instanceof AminoAcid);
 			AminoAcid aa = (AminoAcid) group;
 			char c = StructureTools.get1LetterCodeAmino(aa.getPDBName());
-			assertEquals("Wrong amino acid", seq.getSequenceAsString().charAt(i), c);
+			Assert.assertEquals("Wrong amino acid", seq.getSequenceAsString().charAt(i), c);
 			i++;
 		}
 	}
@@ -137,21 +138,21 @@ public class StructureSequenceMatcherTest extends TestCase {
 
 
 		// Test returned sequence
-		assertEquals("Unreported residues", seq1.length(), prot.getLength() );
-		assertEquals("Modified residues",seq1, prot.toString());
+		Assert.assertEquals("Unreported residues", seq1.length(), prot.getLength());
+		Assert.assertEquals("Modified residues", seq1, prot.toString());
 
 		// Test mapping
-		assertEquals("Missing residues in mapping",seq1.length(),groupIndexPos.size());
+		Assert.assertEquals("Missing residues in mapping", seq1.length(), groupIndexPos.size());
 
 		for(int res=0;res<seq1.length();res++) {
-			assertTrue("no mapping for group "+res,groupIndexPos.containsKey(res));
+			Assert.assertTrue("no mapping for group " + res, groupIndexPos.containsKey(res));
 			Group g = groupIndexPos.get(res);
 
 			ResidueNumber resnum = g.getResidueNumber();
 			Character aa = StructureTools.get1LetterCodeAmino(g.getPDBName());
-			assertEquals("Wrong PDB number at pos "+res,pdbNum1[res],resnum.toString());
-			assertEquals("Wrong Amino acid at pos "+res,
-					Character.valueOf(seq1.charAt(res)),aa);
+			Assert.assertEquals("Wrong PDB number at pos " + res, pdbNum1[res], resnum.toString());
+			Assert.assertEquals("Wrong Amino acid at pos " + res,
+					Character.valueOf(seq1.charAt(res)), aa);
 			//System.out.format("%4d %.5s %s\n", res,resnum.toString(),aa.toString());
 		}
 	}
@@ -201,23 +202,23 @@ public class StructureSequenceMatcherTest extends TestCase {
 		ProteinSequence seq = new ProteinSequence(sequenceStr);
 		ResidueNumber[] match = StructureSequenceMatcher.matchSequenceToStructure(seq, struct1);
 
-		assertEquals("Wrong length!",sequenceStr.length(),match.length);
+		Assert.assertEquals("Wrong length!", sequenceStr.length(), match.length);
 		for(int i=0;i<sequenceStr.length();i++) {
 			ResidueNumber res = match[i];
 			if( res == null) {
 				if(!(sequenceStr.charAt(i) == '-' || sequenceStr.charAt(i) == 'X' )) {
-					fail("Incorrectly marked as missing residue at pos "+i+" aa "+sequenceStr.charAt(i));
+					Assert.fail("Incorrectly marked as missing residue at pos " + i + " aa " + sequenceStr.charAt(i));
 				}
 			} else {
 				Group g = struct1.findGroup(res.getChainName(), res.toString());
-				assertNotNull(g);
+				Assert.assertNotNull(g);
 				String aa3 = g.getPDBName();
-				assertNotNull(aa3);
+				Assert.assertNotNull(aa3);
 				Character aa = StructureTools.get1LetterCodeAmino(aa3);
-				assertEquals("Wrong PDB number at position "+i,
-						correctResidues[i] ,g.getResidueNumber().toString());
-				assertEquals("Wrong amino acid at position "+i,
-						Character.valueOf(sequenceStr.charAt(i)),aa);
+				Assert.assertEquals("Wrong PDB number at position " + i,
+						correctResidues[i], g.getResidueNumber().toString());
+				Assert.assertEquals("Wrong amino acid at position " + i,
+						Character.valueOf(sequenceStr.charAt(i)), aa);
 			}
 		}
 	}
@@ -230,7 +231,7 @@ public class StructureSequenceMatcherTest extends TestCase {
 		ProteinSequence gappedProt = new ProteinSequence(gapped);
 		ProteinSequence ungappedProt = StructureSequenceMatcher.removeGaps(gappedProt);
 
-		assertEquals(ungapped,ungappedProt.getSequenceAsString());
+		Assert.assertEquals(ungapped, ungappedProt.getSequenceAsString());
 	}
 
 }

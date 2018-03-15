@@ -22,8 +22,9 @@
 
 package org.biojava.nbio.ontology;
 
-import junit.framework.TestCase;
 import org.biojava.nbio.ontology.io.OboParser;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.io.*;
 import java.text.ParseException;
@@ -31,8 +32,9 @@ import java.util.Set;
 
 import static org.biojava.nbio.ontology.obo.OboFileHandler.NAMESPACE;
 
-public class TestParseOBO extends TestCase {
+public class TestParseOBO {
 
+	@Test
 	public void testNamespace() throws IOException, ParseException {
 
 		String testTermEntry = "\n[Term]\n" +
@@ -50,15 +52,15 @@ public class TestParseOBO extends TestCase {
         OboParser parser = new OboParser();
         InputStream inStream = new ByteArrayInputStream(testTermEntry.getBytes());
 
-		assertNotNull(inStream);
+		Assert.assertNotNull(inStream);
 
 		BufferedReader oboFile = new BufferedReader ( new InputStreamReader ( inStream ) );
 		Ontology ontology = parser.parseOBO(oboFile, "so-xp/subsets/biosapiens",
                     "snippet from biosapiens protein feature ontology");
 		Set<Term> keys = ontology.getTerms();
 
-		assertTrue(keys.size() > 1);
-		assertTrue(ontology.getTerm("SO:0000691").getAnnotation().containsProperty(NAMESPACE));
-        assertEquals("sequence",ontology.getTerm("SO:0000691").getAnnotation().getProperty(NAMESPACE));
+		Assert.assertTrue(keys.size() > 1);
+		Assert.assertTrue(ontology.getTerm("SO:0000691").getAnnotation().containsProperty(NAMESPACE));
+        Assert.assertEquals("sequence", ontology.getTerm("SO:0000691").getAnnotation().getProperty(NAMESPACE));
 	}
 }

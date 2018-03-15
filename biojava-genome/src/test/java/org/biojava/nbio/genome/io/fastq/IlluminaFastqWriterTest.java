@@ -21,6 +21,8 @@
 package org.biojava.nbio.genome.io.fastq;
 
 
+import org.junit.Test;
+
 /**
  * Unit test for IlluminaFastqWriter.
  */
@@ -45,6 +47,7 @@ public final class IlluminaFastqWriterTest
 			.build();
 	}
 
+	@Test
 	public void testConvertNotIlluminaVariant() throws Exception
 	{
 		IlluminaFastqWriter writer = new IlluminaFastqWriter();

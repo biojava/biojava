@@ -18,12 +18,9 @@
  *      http://www.biojava.org/
  *
  */
-/**
- *
- */
+
 package org.biojava.nbio.structure.test.align.ce;
 
-import junit.framework.TestCase;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureTools;
@@ -32,6 +29,9 @@ import org.biojava.nbio.structure.align.ce.*;
 import org.biojava.nbio.structure.align.ce.CECPParameters.DuplicationHint;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.util.AtomCache;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -42,16 +42,15 @@ import java.util.Arrays;
  * @author Spencer Bliven
  *
  */
-public class OptimalCECPMainTest extends TestCase {
+public class OptimalCECPMainTest {
 
-	AtomCache cache = new AtomCache();
+	private AtomCache cache = new AtomCache();
 
 	/* (non-Javadoc)
 	 * @see junit.framework.TestCase#setUp()
 	 */
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 	}
 
 	/**
@@ -61,6 +60,7 @@ public class OptimalCECPMainTest extends TestCase {
 	 * @throws IOException
 	 * @throws StructureException
 	 */
+	@Test
 	public void testUnpermuted() throws IOException, StructureException {
 		String name1, name2;
 
@@ -79,7 +79,7 @@ public class OptimalCECPMainTest extends TestCase {
 		CeMain ce = new CeMain();
 		AFPChain nocp = ce.align(ca1,ca2);
 
-		assertEquals(nocp,cp0);
+		Assert.assertEquals(nocp, cp0);
 	}
 
 	/**
@@ -94,6 +94,7 @@ public class OptimalCECPMainTest extends TestCase {
 	 * @throws IllegalAccessException
 	 * @throws IllegalArgumentException
 	 */
+	@Test
 	public void testPermuteOptAlnUnpermuted() throws SecurityException, NoSuchMethodException, StructureException, IOException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 		//test private member using reflection
 		Method permuteOptAln = OptimalCECPMain.class.getDeclaredMethod(
@@ -116,7 +117,7 @@ public class OptimalCECPMainTest extends TestCase {
 
 		permuteOptAln.invoke(null, afpChain2, 0);
 
-		assertEquals("Permuting by 0 changed the alignment!",afpChain, afpChain2);
+		Assert.assertEquals("Permuting by 0 changed the alignment!", afpChain, afpChain2);
 	}
 
 	/**
@@ -129,6 +130,7 @@ public class OptimalCECPMainTest extends TestCase {
 	 * @throws IOException
 	 * @throws StructureException
 	 */
+	@Test
 	public void testOptimalAlignmentConsistency() throws IOException, StructureException {
 		String name1, name2;
 		OptimalCECPMain ce;
@@ -156,7 +158,7 @@ public class OptimalCECPMainTest extends TestCase {
 			Atom[] ca2clone = cache.getAtoms(name2);
 			afpChain = ce.alignPermuted(ca1, ca2clone, ce.getParameters(), cp);
 
-			assertEquals("Alignment "+cp+" differs.",afpChain, alignments[cp]);
+			Assert.assertEquals("Alignment " + cp + " differs.", afpChain, alignments[cp]);
 		}
 
 	}
@@ -165,6 +167,7 @@ public class OptimalCECPMainTest extends TestCase {
 	 * Tests private {@link OptimalCECPMain#permuteArray(Object[], int)}
 	 * @throws Exception
 	 */
+	@Test
 	public void testPermuteArray() throws Exception {
 		//test private member using reflection
 		Method permuteArray = OptimalCECPMain.class.getDeclaredMethod(
@@ -178,30 +181,30 @@ public class OptimalCECPMainTest extends TestCase {
 		String[] arrP;
 
 		arrP = Arrays.copyOf(arr0, arr0.length);
-		assertTrue("Shallow equals!",Arrays.deepEquals(arr0, arrP));
+		Assert.assertTrue("Shallow equals!", Arrays.deepEquals(arr0, arrP));
 		permuteArray.invoke(null, arrP, 0);
-		assertTrue(String.format("Permuting by 0 gave %s%s%s%s%s%s",(Object[])arrP),
+		Assert.assertTrue(String.format("Permuting by 0 gave %s%s%s%s%s%s", (Object[]) arrP),
 				Arrays.deepEquals(arr0, arrP));
 
 		arrP = Arrays.copyOf(arr0, arr0.length);
 		permuteArray.invoke(null, arrP, 1);
-		assertTrue(String.format("Permuting by 1 gave %s%s%s%s%s%s",(Object[])arrP),
+		Assert.assertTrue(String.format("Permuting by 1 gave %s%s%s%s%s%s", (Object[]) arrP),
 				Arrays.deepEquals(arr1, arrP));
 
 		arrP = Arrays.copyOf(arr0, arr0.length);
 		permuteArray.invoke(null, arrP, 5);
-		assertTrue(String.format("Permuting by 7 gave %s%s%s%s%s%s",(Object[])arrP),
+		Assert.assertTrue(String.format("Permuting by 7 gave %s%s%s%s%s%s", (Object[]) arrP),
 				Arrays.deepEquals(arr5, arrP));
 
 		arrP = Arrays.copyOf(arr0, arr0.length);
 		permuteArray.invoke(null, arrP, -1);
-		assertTrue(String.format("Permuting by -1 gave %s%s%s%s%s%s",(Object[])arrP),
+		Assert.assertTrue(String.format("Permuting by -1 gave %s%s%s%s%s%s", (Object[]) arrP),
 				Arrays.deepEquals(arr5, arrP));
 
 		try {
 			arrP = Arrays.copyOf(arr0, arr0.length);
 			permuteArray.invoke(null, arrP, 6);
-			fail("Illegal index. Should throw exception.");
+			Assert.fail("Illegal index. Should throw exception.");
 		} catch( InvocationTargetException e) {
 			if( ! (e.getCause() instanceof ArrayIndexOutOfBoundsException)) {
 				throw e;
@@ -212,6 +215,7 @@ public class OptimalCECPMainTest extends TestCase {
 	/**
 	 * Tests private {@link OptimalCECPMain#permuteOptAln(AFPChain, int)}
 	 */
+	@Test
 	public void testPermuteOptAln() throws Exception {
 		//test private member using reflection
 		Method permuteOptAln = OptimalCECPMain.class.getDeclaredMethod(
@@ -257,34 +261,34 @@ public class OptimalCECPMainTest extends TestCase {
 		//System.out.println(cpAlignment.toCE(ca1, ca2));
 		//printOptAln(cpAlignment);
 
-		assertNotNull(cpAlignment);
+		Assert.assertNotNull(cpAlignment);
 
 
 		int[] optLen = cpAlignment.getOptLen();
 		int[][][] optAln = cpAlignment.getOptAln();
 
 
-		assertEquals("Wrong total length",181,cpAlignment.getOptLength());
-		assertEquals("Wrong number of blocks",2, cpAlignment.getBlockNum());
-		assertEquals("Wrong block 0 length",63,optLen[0]);
-		assertEquals("Wrong block 1 length",118,optLen[1]);
+		Assert.assertEquals("Wrong total length", 181, cpAlignment.getOptLength());
+		Assert.assertEquals("Wrong number of blocks", 2, cpAlignment.getBlockNum());
+		Assert.assertEquals("Wrong block 0 length", 63, optLen[0]);
+		Assert.assertEquals("Wrong block 1 length", 118, optLen[1]);
 
 		//just test some key positions in each block
-		assertEquals("Wrong residue at start of block 0, protein 0",0,optAln[0][0][0]);
-		assertEquals("Wrong residue at start of block 0, protein 1",122,optAln[0][1][0]);
-		assertEquals("Wrong residue at end of block 0, protein 0",62,optAln[0][0][62]);
-		assertEquals("Wrong residue at end of block 0, protein 1",184,optAln[0][1][62]);
+		Assert.assertEquals("Wrong residue at start of block 0, protein 0", 0, optAln[0][0][0]);
+		Assert.assertEquals("Wrong residue at start of block 0, protein 1", 122, optAln[0][1][0]);
+		Assert.assertEquals("Wrong residue at end of block 0, protein 0", 62, optAln[0][0][62]);
+		Assert.assertEquals("Wrong residue at end of block 0, protein 1", 184, optAln[0][1][62]);
 
-		assertEquals("Wrong residue at start of block 1, protein 0",63,optAln[1][0][0]);
-		assertEquals("Wrong residue at start of block 1, protein 1",0,optAln[1][1][0]);
-		assertEquals("Wrong residue at pos 1 of block 1, protein 0",65,optAln[1][0][1]);
-		assertEquals("Wrong residue at pos 1 of block 1, protein 1",1,optAln[1][1][1]);
-		assertEquals("Wrong residue at pos 54 of block 1, protein 0",118,optAln[1][0][54]);
-		assertEquals("Wrong residue at pos 54 of block 1, protein 1",54,optAln[1][1][54]);
-		assertEquals("Wrong residue at pos 55 of block 1, protein 0",119,optAln[1][0][55]);
-		assertEquals("Wrong residue at pos 55 of block 1, protein 1",55,optAln[1][1][55]);
-		assertEquals("Wrong residue at end of block 1, protein 0",181,optAln[1][0][117]);
-		assertEquals("Wrong residue at end of block 1, protein 1",117,optAln[1][1][117]);
+		Assert.assertEquals("Wrong residue at start of block 1, protein 0", 63, optAln[1][0][0]);
+		Assert.assertEquals("Wrong residue at start of block 1, protein 1", 0, optAln[1][1][0]);
+		Assert.assertEquals("Wrong residue at pos 1 of block 1, protein 0", 65, optAln[1][0][1]);
+		Assert.assertEquals("Wrong residue at pos 1 of block 1, protein 1", 1, optAln[1][1][1]);
+		Assert.assertEquals("Wrong residue at pos 54 of block 1, protein 0", 118, optAln[1][0][54]);
+		Assert.assertEquals("Wrong residue at pos 54 of block 1, protein 1", 54, optAln[1][1][54]);
+		Assert.assertEquals("Wrong residue at pos 55 of block 1, protein 0", 119, optAln[1][0][55]);
+		Assert.assertEquals("Wrong residue at pos 55 of block 1, protein 1", 55, optAln[1][1][55]);
+		Assert.assertEquals("Wrong residue at end of block 1, protein 0", 181, optAln[1][0][117]);
+		Assert.assertEquals("Wrong residue at end of block 1, protein 1", 117, optAln[1][1][117]);
 
 
 		// permute! should align at 0,0
@@ -296,23 +300,23 @@ public class OptimalCECPMainTest extends TestCase {
 		optLen = cpAlignment.getOptLen();
 		optAln = cpAlignment.getOptAln();
 
-		assertEquals("Wrong total length",181,cpAlignment.getOptLength());
-		assertEquals("Wrong number of blocks",2, cpAlignment.getBlockNum());
-		assertEquals("Wrong block 0 length",63,optLen[0]);
-		assertEquals("Wrong block 1 length",118,optLen[1]);
+		Assert.assertEquals("Wrong total length", 181, cpAlignment.getOptLength());
+		Assert.assertEquals("Wrong number of blocks", 2, cpAlignment.getBlockNum());
+		Assert.assertEquals("Wrong block 0 length", 63, optLen[0]);
+		Assert.assertEquals("Wrong block 1 length", 118, optLen[1]);
 
 		//just test some key positions in each block
-		assertEquals("Wrong residue at start of block 0, protein 0",0,optAln[0][0][0]);
-		assertEquals("Wrong residue at start of block 0, protein 1",0,optAln[0][1][0]);
-		assertEquals("Wrong residue at end of block 0, protein 0",62,optAln[0][0][62]);
-		assertEquals("Wrong residue at end of block 0, protein 1",62,optAln[0][1][62]);
+		Assert.assertEquals("Wrong residue at start of block 0, protein 0", 0, optAln[0][0][0]);
+		Assert.assertEquals("Wrong residue at start of block 0, protein 1", 0, optAln[0][1][0]);
+		Assert.assertEquals("Wrong residue at end of block 0, protein 0", 62, optAln[0][0][62]);
+		Assert.assertEquals("Wrong residue at end of block 0, protein 1", 62, optAln[0][1][62]);
 
-		assertEquals("Wrong residue at start of block 1, protein 0",63,optAln[1][0][0]);
-		assertEquals("Wrong residue at start of block 1, protein 1",63,optAln[1][1][0]);
-		assertEquals("Wrong residue at pos 1 of block 1, protein 0",65,optAln[1][0][1]);
-		assertEquals("Wrong residue at pos 1 of block 1, protein 1",64,optAln[1][1][1]);
-		assertEquals("Wrong residue at end of block 1, protein 0",181,optAln[1][0][117]);
-		assertEquals("Wrong residue at end of block 1, protein 1",180,optAln[1][1][117]);
+		Assert.assertEquals("Wrong residue at start of block 1, protein 0", 63, optAln[1][0][0]);
+		Assert.assertEquals("Wrong residue at start of block 1, protein 1", 63, optAln[1][1][0]);
+		Assert.assertEquals("Wrong residue at pos 1 of block 1, protein 0", 65, optAln[1][0][1]);
+		Assert.assertEquals("Wrong residue at pos 1 of block 1, protein 1", 64, optAln[1][1][1]);
+		Assert.assertEquals("Wrong residue at end of block 1, protein 0", 181, optAln[1][0][117]);
+		Assert.assertEquals("Wrong residue at end of block 1, protein 1", 180, optAln[1][1][117]);
 
 
 		// undo permutation
@@ -324,27 +328,27 @@ public class OptimalCECPMainTest extends TestCase {
 		optLen = cpAlignment.getOptLen();
 		optAln = cpAlignment.getOptAln();
 
-		assertEquals("Wrong total length",181,cpAlignment.getOptLength());
-		assertEquals("Wrong number of blocks",2, cpAlignment.getBlockNum());
-		assertEquals("Wrong block 0 length",63,optLen[0]);
-		assertEquals("Wrong block 1 length",118,optLen[1]);
+		Assert.assertEquals("Wrong total length", 181, cpAlignment.getOptLength());
+		Assert.assertEquals("Wrong number of blocks", 2, cpAlignment.getBlockNum());
+		Assert.assertEquals("Wrong block 0 length", 63, optLen[0]);
+		Assert.assertEquals("Wrong block 1 length", 118, optLen[1]);
 
 		//just test some key positions in each block
-		assertEquals("Wrong residue at start of block 0, protein 0",0,optAln[0][0][0]);
-		assertEquals("Wrong residue at start of block 0, protein 1",122,optAln[0][1][0]);
-		assertEquals("Wrong residue at end of block 0, protein 0",62,optAln[0][0][62]);
-		assertEquals("Wrong residue at end of block 0, protein 1",184,optAln[0][1][62]);
+		Assert.assertEquals("Wrong residue at start of block 0, protein 0", 0, optAln[0][0][0]);
+		Assert.assertEquals("Wrong residue at start of block 0, protein 1", 122, optAln[0][1][0]);
+		Assert.assertEquals("Wrong residue at end of block 0, protein 0", 62, optAln[0][0][62]);
+		Assert.assertEquals("Wrong residue at end of block 0, protein 1", 184, optAln[0][1][62]);
 
-		assertEquals("Wrong residue at start of block 1, protein 0",63,optAln[1][0][0]);
-		assertEquals("Wrong residue at start of block 1, protein 1",0,optAln[1][1][0]);
-		assertEquals("Wrong residue at pos 1 of block 1, protein 0",65,optAln[1][0][1]);
-		assertEquals("Wrong residue at pos 1 of block 1, protein 1",1,optAln[1][1][1]);
-		assertEquals("Wrong residue at pos 54 of block 1, protein 0",118,optAln[1][0][54]);
-		assertEquals("Wrong residue at pos 54 of block 1, protein 1",54,optAln[1][1][54]);
-		assertEquals("Wrong residue at pos 55 of block 1, protein 0",119,optAln[1][0][55]);
-		assertEquals("Wrong residue at pos 55 of block 1, protein 1",55,optAln[1][1][55]);
-		assertEquals("Wrong residue at end of block 1, protein 0",181,optAln[1][0][117]);
-		assertEquals("Wrong residue at end of block 1, protein 1",117,optAln[1][1][117]);
+		Assert.assertEquals("Wrong residue at start of block 1, protein 0", 63, optAln[1][0][0]);
+		Assert.assertEquals("Wrong residue at start of block 1, protein 1", 0, optAln[1][1][0]);
+		Assert.assertEquals("Wrong residue at pos 1 of block 1, protein 0", 65, optAln[1][0][1]);
+		Assert.assertEquals("Wrong residue at pos 1 of block 1, protein 1", 1, optAln[1][1][1]);
+		Assert.assertEquals("Wrong residue at pos 54 of block 1, protein 0", 118, optAln[1][0][54]);
+		Assert.assertEquals("Wrong residue at pos 54 of block 1, protein 1", 54, optAln[1][1][54]);
+		Assert.assertEquals("Wrong residue at pos 55 of block 1, protein 0", 119, optAln[1][0][55]);
+		Assert.assertEquals("Wrong residue at pos 55 of block 1, protein 1", 55, optAln[1][1][55]);
+		Assert.assertEquals("Wrong residue at end of block 1, protein 0", 181, optAln[1][0][117]);
+		Assert.assertEquals("Wrong residue at end of block 1, protein 1", 117, optAln[1][1][117]);
 
 	}
 

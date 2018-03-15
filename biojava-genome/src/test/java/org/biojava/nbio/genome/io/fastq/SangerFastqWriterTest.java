@@ -21,6 +21,8 @@
 package org.biojava.nbio.genome.io.fastq;
 
 
+import org.junit.Test;
+
 /**
  * Unit test for SangerFastqWriter.
  */
@@ -45,6 +47,7 @@ public final class SangerFastqWriterTest
 			.build();
 	}
 
+	@Test
 	public void testConvertNotSangerVariant() throws Exception
 	{
 		SangerFastqWriter writer = new SangerFastqWriter();

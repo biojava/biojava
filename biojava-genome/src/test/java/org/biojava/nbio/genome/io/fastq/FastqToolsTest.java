@@ -20,7 +20,6 @@
  */
 package org.biojava.nbio.genome.io.fastq;
 
-import junit.framework.TestCase;
 import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.core.sequence.DNASequence;
 import org.biojava.nbio.core.sequence.compound.NucleotideCompound;
@@ -28,6 +27,8 @@ import org.biojava.nbio.core.sequence.features.FeatureInterface;
 import org.biojava.nbio.core.sequence.features.QualityFeature;
 import org.biojava.nbio.core.sequence.features.QuantityFeature;
 import org.biojava.nbio.core.sequence.template.AbstractSequence;
+import org.junit.Assert;
+import org.junit.Test;
 
 
 import java.util.ArrayList;
@@ -38,22 +39,23 @@ import java.util.List;
 /**
  * Unit test for FastqTools.
  */
-public final class FastqToolsTest extends TestCase
-{
+public final class FastqToolsTest {
 	private final FastqBuilder builder = new FastqBuilder().withDescription("foo").withSequence("ACTG").withQuality("ZZZZ");
 
+	@Test
 	public void testCreateDNASequence() throws CompoundNotFoundException
 	{
 		DNASequence sequence = FastqTools.createDNASequence(builder.build());
-		assertNotNull(sequence);
+		Assert.assertNotNull(sequence);
 	}
 
+	@Test
 	public void testCreateDNASequenceNullFastq() throws CompoundNotFoundException
 	{
 		try
 		{
 			FastqTools.createDNASequence(null);
-			fail("createDNASequence(null) expected IllegalArgumentException");
+			Assert.fail("createDNASequence(null) expected IllegalArgumentException");
 		}
 		catch (IllegalArgumentException e)
 		{
@@ -61,25 +63,27 @@ public final class FastqToolsTest extends TestCase
 		}
 	}
 
+	@Test
 	public void testCreateDNASequenceWithQualityScores() throws CompoundNotFoundException
 	{
 		DNASequence sequence = FastqTools.createDNASequenceWithQualityScores(builder.build());
-		assertNotNull(sequence);
+		Assert.assertNotNull(sequence);
 
 		List<FeatureInterface<AbstractSequence<NucleotideCompound>, NucleotideCompound>> features = sequence.getFeaturesByType("qualityScores");
-		assertNotNull(features);
-		assertEquals(1, features.size());
+		Assert.assertNotNull(features);
+		Assert.assertEquals(1, features.size());
 		QualityFeature<AbstractSequence<NucleotideCompound>, NucleotideCompound> qualityScores = (QualityFeature<AbstractSequence<NucleotideCompound>, NucleotideCompound>) features.get(0);
-		assertEquals(sequence.getLength(), qualityScores.getQualities().size());
-		assertEquals(sequence.getLength(), qualityScores.getLocations().getLength());
+		Assert.assertEquals(sequence.getLength(), qualityScores.getQualities().size());
+		Assert.assertEquals(sequence.getLength(), qualityScores.getLocations().getLength());
 	}
 
+	@Test
 	public void testCreateDNASequenceWithQualityScoresNullFastq() throws CompoundNotFoundException
 	{
 		try
 		{
 			FastqTools.createDNASequenceWithQualityScores(null);
-			fail("createDNASequenceWithQualityScores(null) expected IllegalArgumentException");
+			Assert.fail("createDNASequenceWithQualityScores(null) expected IllegalArgumentException");
 		}
 		catch (IllegalArgumentException e)
 		{
@@ -87,25 +91,27 @@ public final class FastqToolsTest extends TestCase
 		}
 	}
 
+	@Test
 	public void testCreateDNASequenceWithErrorProbabilies() throws CompoundNotFoundException
 	{
 		DNASequence sequence = FastqTools.createDNASequenceWithErrorProbabilities(builder.build());
-		assertNotNull(sequence);
+		Assert.assertNotNull(sequence);
 
 		List<FeatureInterface<AbstractSequence<NucleotideCompound>, NucleotideCompound>> features = sequence.getFeaturesByType("errorProbabilities");
-		assertNotNull(features);
-		assertEquals(1, features.size());
+		Assert.assertNotNull(features);
+		Assert.assertEquals(1, features.size());
 		QuantityFeature<AbstractSequence<NucleotideCompound>, NucleotideCompound> errorProbabilities = (QuantityFeature<AbstractSequence<NucleotideCompound>, NucleotideCompound>) features.get(0);
-		assertEquals(sequence.getLength(), errorProbabilities.getQuantities().size());
-		assertEquals(sequence.getLength(), errorProbabilities.getLocations().getLength());
+		Assert.assertEquals(sequence.getLength(), errorProbabilities.getQuantities().size());
+		Assert.assertEquals(sequence.getLength(), errorProbabilities.getLocations().getLength());
 	}
 
+	@Test
 	public void testCreateDNASequenceWithErrorProbabilitiesNullFastq() throws CompoundNotFoundException
 	{
 		try
 		{
 			FastqTools.createDNASequenceWithErrorProbabilities(null);
-			fail("createDNASequenceWithErrorProbabilities(null) expected IllegalArgumentException");
+			Assert.fail("createDNASequenceWithErrorProbabilities(null) expected IllegalArgumentException");
 		}
 		catch (IllegalArgumentException e)
 		{
@@ -113,32 +119,34 @@ public final class FastqToolsTest extends TestCase
 		}
 	}
 
+	@Test
 	public void testCreateDNASequenceWithQualityScoresAndErrorProbabilities() throws CompoundNotFoundException
 	{
 		DNASequence sequence = FastqTools.createDNASequenceWithQualityScoresAndErrorProbabilities(builder.build());
-		assertNotNull(sequence);
+		Assert.assertNotNull(sequence);
 
 		List<FeatureInterface<AbstractSequence<NucleotideCompound>, NucleotideCompound>> qualityScoresFeatures = sequence.getFeaturesByType("qualityScores");
-		assertNotNull(qualityScoresFeatures);
-		assertEquals(1, qualityScoresFeatures.size());
+		Assert.assertNotNull(qualityScoresFeatures);
+		Assert.assertEquals(1, qualityScoresFeatures.size());
 		QualityFeature<AbstractSequence<NucleotideCompound>, NucleotideCompound> qualityScores = (QualityFeature<AbstractSequence<NucleotideCompound>, NucleotideCompound>) qualityScoresFeatures.get(0);
-		assertEquals(sequence.getLength(), qualityScores.getQualities().size());
-		assertEquals(sequence.getLength(), qualityScores.getLocations().getLength());
+		Assert.assertEquals(sequence.getLength(), qualityScores.getQualities().size());
+		Assert.assertEquals(sequence.getLength(), qualityScores.getLocations().getLength());
 
 		List<FeatureInterface<AbstractSequence<NucleotideCompound>, NucleotideCompound>> errorProbabilitiesFeatures = sequence.getFeaturesByType("errorProbabilities");
-		assertNotNull(errorProbabilitiesFeatures);
-		assertEquals(1, errorProbabilitiesFeatures.size());
+		Assert.assertNotNull(errorProbabilitiesFeatures);
+		Assert.assertEquals(1, errorProbabilitiesFeatures.size());
 		QuantityFeature<AbstractSequence<NucleotideCompound>, NucleotideCompound> errorProbabilities = (QuantityFeature<AbstractSequence<NucleotideCompound>, NucleotideCompound>) errorProbabilitiesFeatures.get(0);
-		assertEquals(sequence.getLength(), errorProbabilities.getQuantities().size());
-		assertEquals(sequence.getLength(), errorProbabilities.getLocations().getLength());
+		Assert.assertEquals(sequence.getLength(), errorProbabilities.getQuantities().size());
+		Assert.assertEquals(sequence.getLength(), errorProbabilities.getLocations().getLength());
 	}
 
+	@Test
 	public void testCreateDNASequenceWithQualityScoresAndErrorProbabilitiesNullFastq() throws CompoundNotFoundException
 	{
 		try
 		{
 			FastqTools.createDNASequenceWithQualityScoresAndErrorProbabilities(null);
-			fail("createDNASequenceWithQualityScoresAndErrorProbabilities(null) expected IllegalArgumentException");
+			Assert.fail("createDNASequenceWithQualityScoresAndErrorProbabilities(null) expected IllegalArgumentException");
 		}
 		catch (IllegalArgumentException e)
 		{
@@ -146,20 +154,22 @@ public final class FastqToolsTest extends TestCase
 		}
 	}
 
+	@Test
 	public void testCreateQualityScores()
 	{
 		Fastq fastq = builder.build();
 		QualityFeature<AbstractSequence<NucleotideCompound>, NucleotideCompound> qualityScores = FastqTools.createQualityScores(fastq);
-		assertNotNull(qualityScores);
-		assertEquals(fastq.getSequence().length(), qualityScores.getQualities().size());
+		Assert.assertNotNull(qualityScores);
+		Assert.assertEquals(fastq.getSequence().length(), qualityScores.getQualities().size());
 	}
 
+	@Test
 	public void testCreateQualityScoresNullFastq()
 	{
 		try
 		{
 			FastqTools.createQualityScores(null);
-			fail("createQualityScores(null) expected IllegalArgumentException");
+			Assert.fail("createQualityScores(null) expected IllegalArgumentException");
 		}
 		catch (IllegalArgumentException e)
 		{
@@ -167,20 +177,22 @@ public final class FastqToolsTest extends TestCase
 		}
 	}
 
+	@Test
 	public void testCreateErrorProbabilities()
 	{
 		Fastq fastq = builder.build();
 		QuantityFeature<AbstractSequence<NucleotideCompound>, NucleotideCompound> errorProbabilities = FastqTools.createErrorProbabilities(fastq);
-		assertNotNull(errorProbabilities);
-		assertEquals(fastq.getSequence().length(), errorProbabilities.getQuantities().size());
+		Assert.assertNotNull(errorProbabilities);
+		Assert.assertEquals(fastq.getSequence().length(), errorProbabilities.getQuantities().size());
 	}
 
+	@Test
 	public void testCreateErrorProbabilitiesNullFastq()
 	{
 		try
 		{
 			FastqTools.createErrorProbabilities(null);
-			fail("createErrorProbabilities(null) expected IllegalArgumentException");
+			Assert.fail("createErrorProbabilities(null) expected IllegalArgumentException");
 		}
 		catch (IllegalArgumentException e)
 		{
@@ -188,25 +200,27 @@ public final class FastqToolsTest extends TestCase
 		}
 	}
 
+	@Test
 	public void testQualityScores()
 	{
 		Iterable<Number> qualityScores = FastqTools.qualityScores(builder.build());
-		assertNotNull(qualityScores);
+		Assert.assertNotNull(qualityScores);
 		int count = 0;
 		for (Number qualityScore : qualityScores)
 		{
-			assertNotNull(qualityScore);
+			Assert.assertNotNull(qualityScore);
 			count++;
 		}
-		assertEquals(4, count);
+		Assert.assertEquals(4, count);
 	}
 
+	@Test
 	public void testQualityScoresNullFastq()
 	{
 		try
 		{
 			FastqTools.qualityScores(null);
-			fail("qualityScores(null) expected IllegalArgumentException");
+			Assert.fail("qualityScores(null) expected IllegalArgumentException");
 		}
 		catch (IllegalArgumentException e)
 		{
@@ -214,22 +228,24 @@ public final class FastqToolsTest extends TestCase
 		}
 	}
 
+	@Test
 	public void testQualityScoresIntArray()
 	{
 		int[] qualityScores = new int[4];
 		FastqTools.qualityScores(builder.build(), qualityScores);
 		for (int i = 0; i < 4; i++)
 		{
-			assertTrue(qualityScores[i] != 0);
+			Assert.assertTrue(qualityScores[i] != 0);
 		}
 	}
 
+	@Test
 	public void testQualityScoresIntArrayNullFastq()
 	{
 		try
 		{
 			FastqTools.qualityScores(null, new int[0]);
-			fail("qualityScores(null, int[]) expected IllegalArgumentException");
+			Assert.fail("qualityScores(null, int[]) expected IllegalArgumentException");
 		}
 		catch (IllegalArgumentException e)
 		{
@@ -237,12 +253,13 @@ public final class FastqToolsTest extends TestCase
 		}
 	}
 
+	@Test
 	public void testQualityScoresNullIntArray()
 	{
 		try
 		{
 			FastqTools.qualityScores(builder.build(), null);
-			fail("qualityScores(fastq, null) expected IllegalArgumentException");
+			Assert.fail("qualityScores(fastq, null) expected IllegalArgumentException");
 		}
 		catch (IllegalArgumentException e)
 		{
@@ -250,12 +267,13 @@ public final class FastqToolsTest extends TestCase
 		}
 	}
 
+	@Test
 	public void testQualityScoresQualityScoresTooSmall()
 	{
 		try
 		{
 			FastqTools.qualityScores(builder.build(), new int[3]);
-			fail("expected IllegalArgumentException");
+			Assert.fail("expected IllegalArgumentException");
 		}
 		catch (IllegalArgumentException e)
 		{
@@ -263,12 +281,13 @@ public final class FastqToolsTest extends TestCase
 		}
 	}
 
+	@Test
 	public void testQualityScoresQualityScoresTooLarge()
 	{
 		try
 		{
 			FastqTools.qualityScores(builder.build(), new int[5]);
-			fail("expected IllegalArgumentException");
+			Assert.fail("expected IllegalArgumentException");
 		}
 		catch (IllegalArgumentException e)
 		{
@@ -276,25 +295,27 @@ public final class FastqToolsTest extends TestCase
 		}
 	}
 
+	@Test
 	public void testErrorProbabilities()
 	{
 		Iterable<Number> errorProbabilities = FastqTools.errorProbabilities(builder.build());
-		assertNotNull(errorProbabilities);
+		Assert.assertNotNull(errorProbabilities);
 		int count = 0;
 		for (Number errorProbability : errorProbabilities)
 		{
-			assertNotNull(errorProbability);
+			Assert.assertNotNull(errorProbability);
 			count++;
 		}
-		assertEquals(4, count);
+		Assert.assertEquals(4, count);
 	}
 
+	@Test
 	public void testErrorProbabilitiesNullFastq()
 	{
 		try
 		{
 			FastqTools.errorProbabilities(null);
-			fail("errorProbabilities(null) expected IllegalArgumentException");
+			Assert.fail("errorProbabilities(null) expected IllegalArgumentException");
 		}
 		catch (IllegalArgumentException e)
 		{
@@ -302,22 +323,24 @@ public final class FastqToolsTest extends TestCase
 		}
 	}
 
+	@Test
 	public void testErrorProbabilitiesDoubleArray()
 	{
 		double[] errorProbabilities = new double[4];
 		FastqTools.errorProbabilities(builder.build(), errorProbabilities);
 		for (int i = 0; i < 0; i++)
 		{
-			assertTrue(errorProbabilities[i] > 0.0d);
+			Assert.assertTrue(errorProbabilities[i] > 0.0d);
 		}
 	}
 
+	@Test
 	public void testErrorProbabilitiesDoubleArrayNullFastq()
 	{
 		try
 		{
 			FastqTools.errorProbabilities(null, new double[0]);
-			fail("errorProbabilities(null, double[]) expected IllegalArgumentException");
+			Assert.fail("errorProbabilities(null, double[]) expected IllegalArgumentException");
 		}
 		catch (IllegalArgumentException e)
 		{
@@ -325,12 +348,13 @@ public final class FastqToolsTest extends TestCase
 		}
 	}
 
+	@Test
 	public void testErrorProbabilitiesNullErrorProbabilities()
 	{
 		try
 		{
 			FastqTools.errorProbabilities(builder.build(), null);
-			fail("errorProbabilities(fastq, null) expected IllegalArgumentException");
+			Assert.fail("errorProbabilities(fastq, null) expected IllegalArgumentException");
 		}
 		catch (IllegalArgumentException e)
 		{
@@ -338,12 +362,13 @@ public final class FastqToolsTest extends TestCase
 		}
 	}
 
+	@Test
 	public void testErrorProbabilitiesErrorProbabilitiesTooSmall()
 	{
 		try
 		{
 			FastqTools.errorProbabilities(builder.build(), new double[3]);
-			fail("expected IllegalArgumentException");
+			Assert.fail("expected IllegalArgumentException");
 		}
 		catch (IllegalArgumentException e)
 		{
@@ -351,12 +376,13 @@ public final class FastqToolsTest extends TestCase
 		}
 	}
 
+	@Test
 	public void testErrorProbabilitiesErrorProbabilitiesTooLarge()
 	{
 		try
 		{
 			FastqTools.errorProbabilities(builder.build(), new double[5]);
-			fail("expected IllegalArgumentException");
+			Assert.fail("expected IllegalArgumentException");
 		}
 		catch (IllegalArgumentException e)
 		{
@@ -364,12 +390,13 @@ public final class FastqToolsTest extends TestCase
 		}
 	}
 
+	@Test
 	public void testConvertNullFastq()
 	{
 		try
 		{
 			FastqTools.convert(null, FastqVariant.FASTQ_SANGER);
-			fail("expected IllegalArgumentException");
+			Assert.fail("expected IllegalArgumentException");
 		}
 		catch (IllegalArgumentException e)
 		{
@@ -377,12 +404,13 @@ public final class FastqToolsTest extends TestCase
 		}
 	}
 
+	@Test
 	public void testConvertNullVariant()
 	{
 		try
 		{
 			FastqTools.convert(builder.build(), null);
-			fail("expected IllegalArgumentException");
+			Assert.fail("expected IllegalArgumentException");
 		}
 		catch (IllegalArgumentException e)
 		{
@@ -390,18 +418,20 @@ public final class FastqToolsTest extends TestCase
 		}
 	}
 
+	@Test
 	public void testConvertSameVariant()
 	{
 		Fastq fastq = builder.build();
-		assertEquals(fastq, FastqTools.convert(fastq, fastq.getVariant()));
+		Assert.assertEquals(fastq, FastqTools.convert(fastq, fastq.getVariant()));
 	}
 
+	@Test
 	public void testConvertQualitiesNullFastq()
 	{
 		try
 		{
 			FastqTools.convertQualities(null, FastqVariant.FASTQ_SANGER);
-			fail("expected IllegalArgumentException");
+			Assert.fail("expected IllegalArgumentException");
 		}
 		catch (IllegalArgumentException e)
 		{
@@ -409,12 +439,13 @@ public final class FastqToolsTest extends TestCase
 		}
 	}
 
+	@Test
 	public void testConvertQualitiesNullVariant()
 	{
 		try
 		{
 			FastqTools.convertQualities(builder.build(), null);
-			fail("expected IllegalArgumentException");
+			Assert.fail("expected IllegalArgumentException");
 		}
 		catch (IllegalArgumentException e)
 		{
@@ -422,58 +453,67 @@ public final class FastqToolsTest extends TestCase
 		}
 	}
 
+	@Test
 	public void testConvertQualitiesSameVariant()
 	{
 		Fastq fastq = builder.build();
-		assertEquals(fastq.getQuality(), FastqTools.convertQualities(fastq, fastq.getVariant()));
+		Assert.assertEquals(fastq.getQuality(), FastqTools.convertQualities(fastq, fastq.getVariant()));
 	}
 
+	@Test
 	public void testConvertQualitiesSangerToSolexa()
 	{
 		Fastq fastq = builder.build();
-		assertEquals("yyyy", FastqTools.convertQualities(fastq, FastqVariant.FASTQ_SOLEXA));
+		Assert.assertEquals("yyyy", FastqTools.convertQualities(fastq, FastqVariant.FASTQ_SOLEXA));
 	}
 
+	@Test
 	public void testConvertQualitiesSangerToIllumina()
 	{
 		Fastq fastq = builder.build();
-		assertEquals("yyyy", FastqTools.convertQualities(fastq, FastqVariant.FASTQ_ILLUMINA));
+		Assert.assertEquals("yyyy", FastqTools.convertQualities(fastq, FastqVariant.FASTQ_ILLUMINA));
 	}
 
+	@Test
 	public void testConvertQualitiesSolexaToSanger()
 	{
 		Fastq fastq = builder.withVariant(FastqVariant.FASTQ_SOLEXA).build();
-		assertEquals(";;;;", FastqTools.convertQualities(fastq, FastqVariant.FASTQ_SANGER));
+		Assert.assertEquals(";;;;", FastqTools.convertQualities(fastq, FastqVariant.FASTQ_SANGER));
 	}
 
+	@Test
 	public void testConvertQualitiesIlluminaToSanger()
 	{
 		Fastq fastq = builder.withVariant(FastqVariant.FASTQ_ILLUMINA).build();
-		assertEquals(";;;;", FastqTools.convertQualities(fastq, FastqVariant.FASTQ_SANGER));
+		Assert.assertEquals(";;;;", FastqTools.convertQualities(fastq, FastqVariant.FASTQ_SANGER));
 	}
 
+	@Test
 	public void testConvertQualitiesSolexaToIllumina()
 	{
 		Fastq fastq = builder.withVariant(FastqVariant.FASTQ_SOLEXA).build();
-		assertEquals("ZZZZ", FastqTools.convertQualities(fastq, FastqVariant.FASTQ_ILLUMINA));
+		Assert.assertEquals("ZZZZ", FastqTools.convertQualities(fastq, FastqVariant.FASTQ_ILLUMINA));
 	}
 
+	@Test
 	public void testConvertQualitiesIlluminaToSolexa()
 	{
 		Fastq fastq = builder.withVariant(FastqVariant.FASTQ_ILLUMINA).build();
-		assertEquals("ZZZZ", FastqTools.convertQualities(fastq, FastqVariant.FASTQ_SOLEXA));
+		Assert.assertEquals("ZZZZ", FastqTools.convertQualities(fastq, FastqVariant.FASTQ_SOLEXA));
 	}
 
+	@Test
 	public void testToList()
 	{
 		List<String> list = new ArrayList<String>();
-		assertSame(list, FastqTools.toList(list));
+		Assert.assertSame(list, FastqTools.toList(list));
 	}
 
+	@Test
 	public void testToListNotAList()
 	{
 		Collection<String> collection = new HashSet<String>();
-		assertTrue(FastqTools.toList(collection) instanceof List);
-		assertNotSame(collection, FastqTools.toList(collection));
+		Assert.assertTrue(FastqTools.toList(collection) instanceof List);
+		Assert.assertNotSame(collection, FastqTools.toList(collection));
 	}
 }

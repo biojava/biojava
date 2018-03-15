@@ -20,6 +20,9 @@
  */
 package org.biojava.nbio.genome.io.fastq;
 
+import org.junit.Test;
+import static org.junit.Assert.*;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -55,6 +58,7 @@ public final class IlluminaFastqReaderTest
 		return new IlluminaFastqWriter();
 	}
 
+	@Test
 	public void testValidateDescription() throws Exception
 	{
 		IlluminaFastqReader reader = new IlluminaFastqReader();
@@ -70,6 +74,7 @@ public final class IlluminaFastqReaderTest
 		}
 	}
 
+	@Test
 	public void testValidateRepeatDescription() throws Exception
 	{
 		IlluminaFastqReader reader = new IlluminaFastqReader();
@@ -85,6 +90,7 @@ public final class IlluminaFastqReaderTest
 		}
 	}
 
+	@Test
 	public void testWrappingAsIllumina() throws Exception
 	{
 		FastqReader reader = createFastqReader();
@@ -101,6 +107,7 @@ public final class IlluminaFastqReaderTest
 		inputStream.close();
 	}
 
+	@Test
 	public void testFullRangeAsIllumina() throws Exception
 	{
 		FastqReader reader = createFastqReader();
@@ -117,6 +124,7 @@ public final class IlluminaFastqReaderTest
 		inputStream.close();
 	}
 
+	@Test
 	public void testMiscDnaAsIllumina() throws Exception
 	{
 		FastqReader reader = createFastqReader();
@@ -133,6 +141,7 @@ public final class IlluminaFastqReaderTest
 		inputStream.close();
 	}
 
+	@Test
 	public void testMiscRnaAsIllumina() throws Exception
 	{
 		FastqReader reader = createFastqReader();
@@ -149,6 +158,7 @@ public final class IlluminaFastqReaderTest
 		inputStream.close();
 	}
 
+	@Test
 	public void testLongReadsAsIllumina() throws Exception
 	{
 		FastqReader reader = createFastqReader();

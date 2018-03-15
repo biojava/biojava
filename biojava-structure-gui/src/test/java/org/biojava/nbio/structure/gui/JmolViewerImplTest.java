@@ -22,30 +22,30 @@
 package org.biojava.nbio.structure.gui;
 
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  *
  * @author Jules
  */
-public class JmolViewerImplTest extends TestCase {
+public class JmolViewerImplTest {
 
-	public JmolViewerImplTest(String testName) {
-		super(testName);
+
+
+	@Before
+	public void setUp() throws Exception {
 	}
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@After
+	public void tearDown() throws Exception {
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
-	}
-
+	@Test
 	public void testMe(){
-	   assertTrue(true);
+	   Assert.assertTrue(true);
 	}
 
 //    /**

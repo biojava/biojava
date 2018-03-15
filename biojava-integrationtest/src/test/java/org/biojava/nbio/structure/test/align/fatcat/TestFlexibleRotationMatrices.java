@@ -24,8 +24,6 @@
 
 package org.biojava.nbio.structure.test.align.fatcat;
 
-import junit.framework.TestCase;
-
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.StructureAlignment;
 import org.biojava.nbio.structure.align.fatcat.FatCatFlexible;
@@ -38,6 +36,7 @@ import org.biojava.nbio.structure.align.xml.AFPChainXMLParser;
 import org.biojava.nbio.structure.geometry.Matrices;
 import org.biojava.nbio.structure.geometry.SuperPositions;
 import org.biojava.nbio.structure.jama.Matrix;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -45,8 +44,11 @@ import java.util.List;
 
 import javax.vecmath.Matrix4d;
 
-public class TestFlexibleRotationMatrices extends TestCase{
+import static org.junit.Assert.*;
 
+public class TestFlexibleRotationMatrices {
+
+	@Test
 	public void testFlexibleRotationMatrices(){
 
 		String name1 = "1a21.A";

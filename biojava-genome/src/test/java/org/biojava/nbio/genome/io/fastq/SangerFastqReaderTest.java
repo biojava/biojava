@@ -20,10 +20,13 @@
  */
 package org.biojava.nbio.genome.io.fastq;
 
+import org.junit.Test;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
+import static org.junit.Assert.*;
 
 /**
  * Unit test for SangerFastqReader.
@@ -70,6 +73,7 @@ public final class SangerFastqReaderTest
 		}
 	}
 
+	@Test
 	public void testValidateRepeatDescription() throws Exception
 	{
 		SangerFastqReader reader = new SangerFastqReader();
@@ -85,6 +89,7 @@ public final class SangerFastqReaderTest
 		}
 	}
 
+	@Test
 	public void testWrappingOriginal() throws Exception
 	{
 		FastqReader reader = createFastqReader();
@@ -101,6 +106,7 @@ public final class SangerFastqReaderTest
 		inputStream.close();
 	}
 
+	@Test
 	public void testWrappingAsSanger() throws Exception
 	{
 		FastqReader reader = createFastqReader();
@@ -117,6 +123,7 @@ public final class SangerFastqReaderTest
 		inputStream.close();
 	}
 
+	@Test
 	public void testFullRangeOriginal() throws Exception
 	{
 		FastqReader reader = createFastqReader();
@@ -133,6 +140,7 @@ public final class SangerFastqReaderTest
 		inputStream.close();
 	}
 
+	@Test
 	public void testFullRangeAsSanger() throws Exception
 	{
 		FastqReader reader = createFastqReader();
@@ -149,6 +157,7 @@ public final class SangerFastqReaderTest
 		inputStream.close();
 	}
 
+	@Test
 	public void testMiscDnaOriginal() throws Exception
 	{
 		FastqReader reader = createFastqReader();
@@ -165,6 +174,7 @@ public final class SangerFastqReaderTest
 		inputStream.close();
 	}
 
+	@Test
 	public void testMiscDnaAsSanger() throws Exception
 	{
 		FastqReader reader = createFastqReader();
@@ -181,6 +191,7 @@ public final class SangerFastqReaderTest
 		inputStream.close();
 	}
 
+	@Test
 	public void testMiscRnaOriginal() throws Exception
 	{
 		FastqReader reader = createFastqReader();
@@ -197,6 +208,7 @@ public final class SangerFastqReaderTest
 		inputStream.close();
 	}
 
+	@Test
 	public void testMiscRnaAsSanger() throws Exception
 	{
 		FastqReader reader = createFastqReader();
@@ -213,6 +225,7 @@ public final class SangerFastqReaderTest
 		inputStream.close();
 	}
 
+	@Test
 	public void testLongReadsOriginal() throws Exception
 	{
 		FastqReader reader = createFastqReader();
@@ -229,6 +242,7 @@ public final class SangerFastqReaderTest
 		inputStream.close();
 	}
 
+	@Test
 	public void testLongReadsAsSanger() throws Exception
 	{
 		FastqReader reader = createFastqReader();

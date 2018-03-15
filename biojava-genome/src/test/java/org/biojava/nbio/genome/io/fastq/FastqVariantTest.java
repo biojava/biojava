@@ -22,53 +22,58 @@ package org.biojava.nbio.genome.io.fastq;
 
 import static org.biojava.nbio.genome.io.fastq.FastqVariant.*;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * Unit test for FastqVariant.
  */
-public final class FastqVariantTest
-	extends TestCase
-{
+public final class FastqVariantTest {
 
+	@Test
 	public void testDescription()
 	{
 		for (FastqVariant variant : values())
 		{
-			assertNotNull(variant.getDescription());
+			Assert.assertNotNull(variant.getDescription());
 		}
 	}
 
+	@Test
 	public void testIsSanger()
 	{
-		assertTrue(FASTQ_SANGER.isSanger());
-		assertFalse(FASTQ_SOLEXA.isSanger());
-		assertFalse(FASTQ_ILLUMINA.isSanger());
+		Assert.assertTrue(FASTQ_SANGER.isSanger());
+		Assert.assertFalse(FASTQ_SOLEXA.isSanger());
+		Assert.assertFalse(FASTQ_ILLUMINA.isSanger());
 	}
 
+	@Test
 	public void testIsSolexa()
 	{
-		assertFalse(FASTQ_SANGER.isSolexa());
-		assertTrue(FASTQ_SOLEXA.isSolexa());
-		assertFalse(FASTQ_ILLUMINA.isSolexa());
+		Assert.assertFalse(FASTQ_SANGER.isSolexa());
+		Assert.assertTrue(FASTQ_SOLEXA.isSolexa());
+		Assert.assertFalse(FASTQ_ILLUMINA.isSolexa());
 	}
 
+	@Test
 	public void testIsIllumina()
 	{
-		assertFalse(FASTQ_SANGER.isIllumina());
-		assertFalse(FASTQ_SOLEXA.isIllumina());
-		assertTrue(FASTQ_ILLUMINA.isIllumina());
+		Assert.assertFalse(FASTQ_SANGER.isIllumina());
+		Assert.assertFalse(FASTQ_SOLEXA.isIllumina());
+		Assert.assertTrue(FASTQ_ILLUMINA.isIllumina());
 	}
 
+	@Test
 	public void testParseFastqVariant()
 	{
-		assertEquals(null, parseFastqVariant(null));
-		assertEquals(null, parseFastqVariant(""));
-		assertEquals(null, parseFastqVariant("not a valid FASTQ variant"));
-		assertEquals(FASTQ_SANGER, parseFastqVariant("FASTQ_SANGER"));
-		assertEquals(FASTQ_SANGER, parseFastqVariant("fastq-sanger"));
+		Assert.assertEquals(null, parseFastqVariant(null));
+		Assert.assertEquals(null, parseFastqVariant(""));
+		Assert.assertEquals(null, parseFastqVariant("not a valid FASTQ variant"));
+		Assert.assertEquals(FASTQ_SANGER, parseFastqVariant("FASTQ_SANGER"));
+		Assert.assertEquals(FASTQ_SANGER, parseFastqVariant("fastq-sanger"));
 	}
 
+	@Test
 	public void testQualityLessThanMinimumQualityScore()
 	{
 		for (FastqVariant variant : values())
@@ -76,7 +81,7 @@ public final class FastqVariantTest
 			try
 			{
 				variant.quality(variant.minimumQualityScore() - 1);
-				fail("expected IllegalArgumentException");
+				Assert.fail("expected IllegalArgumentException");
 			}
 			catch (IllegalArgumentException e)
 			{
@@ -85,6 +90,7 @@ public final class FastqVariantTest
 		}
 	}
 
+	@Test
 	public void testQualityMoreThanMaximumQualityScore()
 	{
 		for (FastqVariant variant : values())
@@ -92,7 +98,7 @@ public final class FastqVariantTest
 			try
 			{
 				variant.quality(variant.maximumQualityScore() + 1);
-				fail("expected IllegalArgumentException");
+				Assert.fail("expected IllegalArgumentException");
 			}
 			catch (IllegalArgumentException e)
 			{
@@ -101,13 +107,14 @@ public final class FastqVariantTest
 		}
 	}
 
+	@Test
 	public void testQualityQualityScoreRoundTrip()
 	{
 		for (FastqVariant variant : values())
 		{
 			for (int i = variant.minimumQualityScore(); i < (variant.maximumQualityScore() + 1); i++)
 			{
-				assertEquals(i, variant.qualityScore(variant.quality(i)));
+				Assert.assertEquals(i, variant.qualityScore(variant.quality(i)));
 			}
 		}
 	}

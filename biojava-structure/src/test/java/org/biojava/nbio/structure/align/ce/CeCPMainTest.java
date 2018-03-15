@@ -25,11 +25,11 @@ package org.biojava.nbio.structure.align.ce;
 
 //import static org.junit.Assert.*;
 
-import junit.framework.TestCase;
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.PDBParseException;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -41,7 +41,7 @@ import java.util.Arrays;
  * @author Spencer Bliven
  *
  */
-public class CeCPMainTest extends TestCase {
+public class CeCPMainTest {
 
 	@Test
 	public void testFilterDuplicateAFPs() throws Exception {
@@ -80,8 +80,8 @@ public class CeCPMainTest extends TestCase {
 
 		int[] expectedLen = new int[] { expected[0][0].length, expected[1][0].length };
 
-		assertTrue(Arrays.deepEquals(expected, align));
-		assertTrue(Arrays.equals(expectedLen, blkLen));
+		Assert.assertTrue(Arrays.deepEquals(expected, align));
+		Assert.assertTrue(Arrays.equals(expectedLen, blkLen));
 
 	}
 
@@ -128,8 +128,8 @@ public class CeCPMainTest extends TestCase {
 			params.setMinCPLength(minCPlength);
 			result = CeCPMain.filterDuplicateAFPs(afpChain, new CECalculator(null), ca1, ca2,params);
 
-			assertTrue("Wrong optAln for minCPlength="+minCPlength,Arrays.deepEquals(filteredAln, result.getOptAln()));
-			assertTrue("Wrong optLen for minCPlength="+minCPlength,Arrays.equals(filteredLen, result.getOptLen()));
+			Assert.assertTrue("Wrong optAln for minCPlength=" + minCPlength, Arrays.deepEquals(filteredAln, result.getOptAln()));
+			Assert.assertTrue("Wrong optLen for minCPlength=" + minCPlength, Arrays.equals(filteredLen, result.getOptLen()));
 	}
 
 		// For minCPlength=4, filtering changes
@@ -148,8 +148,8 @@ public class CeCPMainTest extends TestCase {
 
 		result = CeCPMain.filterDuplicateAFPs(afpChain, new CECalculator(null), ca1, ca2,params);
 
-		assertTrue("Wrong optAln for minCPlength="+params.getMinCPLength(),Arrays.deepEquals(filteredAln, result.getOptAln()));
-		assertTrue("Wrong optLen for minCPlength="+params.getMinCPLength(),Arrays.equals(filteredLen, result.getOptLen()));
+		Assert.assertTrue("Wrong optAln for minCPlength=" + params.getMinCPLength(), Arrays.deepEquals(filteredAln, result.getOptAln()));
+		Assert.assertTrue("Wrong optLen for minCPlength=" + params.getMinCPLength(), Arrays.equals(filteredLen, result.getOptLen()));
 
 		// For minCPlength=5, filtering changes
 		params.setMinCPLength(5);
@@ -163,14 +163,14 @@ public class CeCPMainTest extends TestCase {
 
 		result = CeCPMain.filterDuplicateAFPs(afpChain, new CECalculator(null), ca1, ca2,params);
 
-		assertTrue("Wrong optAln for minCPlength="+params.getMinCPLength(),Arrays.deepEquals(filteredAln, result.getOptAln()));
-		assertTrue("Wrong optLen for minCPlength="+params.getMinCPLength(),Arrays.equals(filteredLen, result.getOptLen()));
+		Assert.assertTrue("Wrong optAln for minCPlength=" + params.getMinCPLength(), Arrays.deepEquals(filteredAln, result.getOptAln()));
+		Assert.assertTrue("Wrong optLen for minCPlength=" + params.getMinCPLength(), Arrays.equals(filteredLen, result.getOptLen()));
 
 		params.setMinCPLength(7);
 		result = CeCPMain.filterDuplicateAFPs(afpChain, new CECalculator(null), ca1, ca2,params);
 
-		assertTrue("Wrong optAln for minCPlength="+params.getMinCPLength(),Arrays.deepEquals(filteredAln, result.getOptAln()));
-		assertTrue("Wrong optLen for minCPlength="+params.getMinCPLength(),Arrays.equals(filteredLen, result.getOptLen()));
+		Assert.assertTrue("Wrong optAln for minCPlength=" + params.getMinCPLength(), Arrays.deepEquals(filteredAln, result.getOptAln()));
+		Assert.assertTrue("Wrong optLen for minCPlength=" + params.getMinCPLength(), Arrays.equals(filteredLen, result.getOptLen()));
 
 		// Eventually, no alignment!
 		params.setMinCPLength(8);
@@ -180,8 +180,8 @@ public class CeCPMainTest extends TestCase {
 
 		result = CeCPMain.filterDuplicateAFPs(afpChain, new CECalculator(null), ca1, ca2,params);
 
-		assertTrue("Wrong optAln for minCPlength="+params.getMinCPLength(),Arrays.deepEquals(filteredAln, result.getOptAln()));
-		assertTrue("Wrong optLen for minCPlength="+params.getMinCPLength(),Arrays.equals(filteredLen, result.getOptLen()));
+		Assert.assertTrue("Wrong optAln for minCPlength=" + params.getMinCPLength(), Arrays.deepEquals(filteredAln, result.getOptAln()));
+		Assert.assertTrue("Wrong optLen for minCPlength=" + params.getMinCPLength(), Arrays.equals(filteredLen, result.getOptLen()));
 
 	}
 
@@ -227,8 +227,8 @@ public class CeCPMainTest extends TestCase {
 			params.setMinCPLength(minCPlength);
 			result = CeCPMain.filterDuplicateAFPs(afpChain, new CECalculator(null), ca1, ca2,params);
 
-			assertTrue("Wrong optAln for minCPlength="+params.getMinCPLength(),Arrays.deepEquals(filteredAln, result.getOptAln()));
-			assertTrue("Wrong optLen for minCPlength="+params.getMinCPLength(),Arrays.equals(filteredLen, result.getOptLen()));
+			Assert.assertTrue("Wrong optAln for minCPlength=" + params.getMinCPLength(), Arrays.deepEquals(filteredAln, result.getOptAln()));
+			Assert.assertTrue("Wrong optLen for minCPlength=" + params.getMinCPLength(), Arrays.equals(filteredLen, result.getOptLen()));
 		}
 
 		// For minCPlength=3, filtering changes
@@ -247,8 +247,8 @@ public class CeCPMainTest extends TestCase {
 
 		result = CeCPMain.filterDuplicateAFPs(afpChain, new CECalculator(null), ca1, ca2,params);
 
-		assertTrue("Wrong optAln for minCPlength="+params.getMinCPLength(),Arrays.deepEquals(filteredAln, result.getOptAln()));
-		assertTrue("Wrong optLen for minCPlength="+params.getMinCPLength(),Arrays.equals(filteredLen, result.getOptLen()));
+		Assert.assertTrue("Wrong optAln for minCPlength=" + params.getMinCPLength(), Arrays.deepEquals(filteredAln, result.getOptAln()));
+		Assert.assertTrue("Wrong optLen for minCPlength=" + params.getMinCPLength(), Arrays.equals(filteredLen, result.getOptLen()));
 
 		// For minCPlength=4, filtering changes
 		params.setMinCPLength(5);
@@ -262,14 +262,14 @@ public class CeCPMainTest extends TestCase {
 
 		result = CeCPMain.filterDuplicateAFPs(afpChain, new CECalculator(null), ca1, ca2,params);
 
-		assertTrue("Wrong optAln for minCPlength="+params.getMinCPLength(),Arrays.deepEquals(filteredAln, result.getOptAln()));
-		assertTrue("Wrong optLen for minCPlength="+params.getMinCPLength(),Arrays.equals(filteredLen, result.getOptLen()));
+		Assert.assertTrue("Wrong optAln for minCPlength=" + params.getMinCPLength(), Arrays.deepEquals(filteredAln, result.getOptAln()));
+		Assert.assertTrue("Wrong optLen for minCPlength=" + params.getMinCPLength(), Arrays.equals(filteredLen, result.getOptLen()));
 
 		params.setMinCPLength(8);
 		result = CeCPMain.filterDuplicateAFPs(afpChain, new CECalculator(null), ca1, ca2,params);
 
-		assertTrue("Wrong optAln for minCPlength="+params.getMinCPLength(),Arrays.deepEquals(filteredAln, result.getOptAln()));
-		assertTrue("Wrong optLen for minCPlength="+params.getMinCPLength(),Arrays.equals(filteredLen, result.getOptLen()));
+		Assert.assertTrue("Wrong optAln for minCPlength=" + params.getMinCPLength(), Arrays.deepEquals(filteredAln, result.getOptAln()));
+		Assert.assertTrue("Wrong optLen for minCPlength=" + params.getMinCPLength(), Arrays.equals(filteredLen, result.getOptLen()));
 
 		// Eventually, no alignment!
 		params.setMinCPLength(9);
@@ -279,8 +279,8 @@ public class CeCPMainTest extends TestCase {
 
 		result = CeCPMain.filterDuplicateAFPs(afpChain, new CECalculator(null), ca1, ca2,params);
 
-		assertTrue("Wrong optAln for minCPlength="+params.getMinCPLength(),Arrays.deepEquals(filteredAln, result.getOptAln()));
-		assertTrue("Wrong optLen for minCPlength="+params.getMinCPLength(),Arrays.equals(filteredLen, result.getOptLen()));
+		Assert.assertTrue("Wrong optAln for minCPlength=" + params.getMinCPLength(), Arrays.deepEquals(filteredAln, result.getOptAln()));
+		Assert.assertTrue("Wrong optLen for minCPlength=" + params.getMinCPLength(), Arrays.equals(filteredLen, result.getOptLen()));
 
 	}
 
@@ -317,61 +317,61 @@ public class CeCPMainTest extends TestCase {
 
 		minCPlength = 0;
 		cpRange = CeCPMain.calculateMinCP(block, block.length, ca2len, minCPlength);
-		assertEquals("Wrong minCPnterm for minCPlen="+minCPlength,11,cpRange.n);
-		assertEquals("Wrong minCPcterm for minCPlen="+minCPlength,8,cpRange.c);
+		Assert.assertEquals("Wrong minCPnterm for minCPlen=" + minCPlength, 11, cpRange.n);
+		Assert.assertEquals("Wrong minCPcterm for minCPlen=" + minCPlength, 8, cpRange.c);
 
 		minCPlength = 1;
 		cpRange = CeCPMain.calculateMinCP(block, block.length, ca2len, minCPlength);
-		assertEquals("Wrong minCPnterm for minCPlen="+minCPlength,8,cpRange.n);
-		assertEquals("Wrong minCPcterm for minCPlen="+minCPlength,11,cpRange.c);
+		Assert.assertEquals("Wrong minCPnterm for minCPlen=" + minCPlength, 8, cpRange.n);
+		Assert.assertEquals("Wrong minCPcterm for minCPlen=" + minCPlength, 11, cpRange.c);
 
 		minCPlength = 2;
 		cpRange = CeCPMain.calculateMinCP(block, block.length, ca2len, minCPlength);
-		assertEquals("Wrong minCPnterm for minCPlen="+minCPlength,6,cpRange.n);
-		assertEquals("Wrong minCPcterm for minCPlen="+minCPlength,12,cpRange.c);
+		Assert.assertEquals("Wrong minCPnterm for minCPlen=" + minCPlength, 6, cpRange.n);
+		Assert.assertEquals("Wrong minCPcterm for minCPlen=" + minCPlength, 12, cpRange.c);
 
 		minCPlength = 3;
 		cpRange = CeCPMain.calculateMinCP(block, block.length, ca2len, minCPlength);
-		assertEquals("Wrong minCPnterm for minCPlen="+minCPlength,5,cpRange.n);
-		assertEquals("Wrong minCPcterm for minCPlen="+minCPlength,14,cpRange.c);
+		Assert.assertEquals("Wrong minCPnterm for minCPlen=" + minCPlength, 5, cpRange.n);
+		Assert.assertEquals("Wrong minCPcterm for minCPlen=" + minCPlength, 14, cpRange.c);
 
 		minCPlength = 4;
 		cpRange = CeCPMain.calculateMinCP(block, block.length, ca2len, minCPlength);
-		assertEquals("Wrong minCPnterm for minCPlen="+minCPlength,4,cpRange.n);
-		assertEquals("Wrong minCPcterm for minCPlen="+minCPlength,15,cpRange.c);
+		Assert.assertEquals("Wrong minCPnterm for minCPlen=" + minCPlength, 4, cpRange.n);
+		Assert.assertEquals("Wrong minCPcterm for minCPlen=" + minCPlength, 15, cpRange.c);
 
 		minCPlength = 5;
 		cpRange = CeCPMain.calculateMinCP(block, block.length, ca2len, minCPlength);
-		assertEquals("Wrong minCPnterm for minCPlen="+minCPlength,-1,cpRange.n);
-		assertEquals("Wrong minCPcterm for minCPlen="+minCPlength,20,cpRange.c);
+		Assert.assertEquals("Wrong minCPnterm for minCPlen=" + minCPlength, -1, cpRange.n);
+		Assert.assertEquals("Wrong minCPcterm for minCPlen=" + minCPlength, 20, cpRange.c);
 
 		block = new int[] {0,9,10,19};
 		ca2len = 10;
 
 		minCPlength = 0;
 		cpRange = CeCPMain.calculateMinCP(block, block.length, ca2len, minCPlength);
-		assertEquals("Wrong minCPnterm for minCPlen="+minCPlength,10,cpRange.n);
-		assertEquals("Wrong minCPcterm for minCPlen="+minCPlength,9,cpRange.c);
+		Assert.assertEquals("Wrong minCPnterm for minCPlen=" + minCPlength, 10, cpRange.n);
+		Assert.assertEquals("Wrong minCPcterm for minCPlen=" + minCPlength, 9, cpRange.c);
 
 		minCPlength = 1;
 		cpRange = CeCPMain.calculateMinCP(block, block.length, ca2len, minCPlength);
-		assertEquals("Wrong minCPnterm for minCPlen="+minCPlength,9,cpRange.n);
-		assertEquals("Wrong minCPcterm for minCPlen="+minCPlength,10,cpRange.c);
+		Assert.assertEquals("Wrong minCPnterm for minCPlen=" + minCPlength, 9, cpRange.n);
+		Assert.assertEquals("Wrong minCPcterm for minCPlen=" + minCPlength, 10, cpRange.c);
 
 		minCPlength = 2;
 		cpRange = CeCPMain.calculateMinCP(block, block.length, ca2len, minCPlength);
-		assertEquals("Wrong minCPnterm for minCPlen="+minCPlength,0,cpRange.n);
-		assertEquals("Wrong minCPcterm for minCPlen="+minCPlength,19,cpRange.c);
+		Assert.assertEquals("Wrong minCPnterm for minCPlen=" + minCPlength, 0, cpRange.n);
+		Assert.assertEquals("Wrong minCPcterm for minCPlen=" + minCPlength, 19, cpRange.c);
 
 		minCPlength = 3;
 		cpRange = CeCPMain.calculateMinCP(block, block.length, ca2len, minCPlength);
-		assertEquals("Wrong minCPnterm for minCPlen="+minCPlength,-1,cpRange.n);
-		assertEquals("Wrong minCPcterm for minCPlen="+minCPlength,20,cpRange.c);
+		Assert.assertEquals("Wrong minCPnterm for minCPlen=" + minCPlength, -1, cpRange.n);
+		Assert.assertEquals("Wrong minCPcterm for minCPlen=" + minCPlength, 20, cpRange.c);
 
 		minCPlength = 4;
 		cpRange = CeCPMain.calculateMinCP(block, block.length, ca2len, minCPlength);
-		assertEquals("Wrong minCPnterm for minCPlen="+minCPlength,-1,cpRange.n);
-		assertEquals("Wrong minCPcterm for minCPlen="+minCPlength,20,cpRange.c);
+		Assert.assertEquals("Wrong minCPnterm for minCPlen=" + minCPlength, -1, cpRange.n);
+		Assert.assertEquals("Wrong minCPcterm for minCPlen=" + minCPlength, 20, cpRange.c);
 
 	}
 
@@ -402,6 +402,7 @@ public class CeCPMainTest extends TestCase {
 		return ca1;
 	}
 
+	@Test
 	public void testCECP1() throws IOException, StructureException{
 
 		String name1 = "PDP:3A2KAc";
@@ -425,7 +426,7 @@ public class CeCPMainTest extends TestCase {
 			System.out.println(calculator.getLcmp());
 			System.out.println(afpChain.toFatcat(ca1, ca2));
 		}
-		assertEquals(1,afpChain.getBlockNum());
+		Assert.assertEquals(1, afpChain.getBlockNum());
 
 
 	}

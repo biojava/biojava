@@ -22,89 +22,93 @@
 package org.biojava.nbio.structure;
 
 import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * Tests for Element class.
  *
  * @author Peter Rose
  * @since 3.0
- * @version %I% %G%
  */
-public class ElementTest extends TestCase {
+public class ElementTest {
 
+	@Test
 	public void testIsMetal() {
 		Element h = Element.H;
-		assertFalse(h.isMetal());
+		Assert.assertFalse(h.isMetal());
 		Element he = Element.He;
-		assertFalse(he.isMetal());
+		Assert.assertFalse(he.isMetal());
 		Element li = Element.Li;
-		assertTrue(li.isMetal());
+		Assert.assertTrue(li.isMetal());
 		Element be = Element.Be;
-		assertTrue(be.isMetal());
+		Assert.assertTrue(be.isMetal());
 		Element b = Element.B;
-		assertFalse(b.isMetal());
+		Assert.assertFalse(b.isMetal());
 		Element c = Element.C;
-		assertFalse(c.isMetal());
+		Assert.assertFalse(c.isMetal());
 		Element f = Element.F;
-		assertFalse(f.isMetal());
+		Assert.assertFalse(f.isMetal());
 		Element al = Element.Al;
-		assertTrue(al.isMetal());
+		Assert.assertTrue(al.isMetal());
 		Element sc = Element.Sc;
-		assertTrue(sc.isMetal());
+		Assert.assertTrue(sc.isMetal());
 		Element la = Element.La;
-		assertTrue(la.isMetal());
+		Assert.assertTrue(la.isMetal());
 		Element ac = Element.Ac;
-		assertTrue(ac.isMetal());
+		Assert.assertTrue(ac.isMetal());
 	};
 
+	@Test
 	public void testIsMetalloid() {
 		Element h = Element.H;
-		assertFalse(h.isMetalloid());
+		Assert.assertFalse(h.isMetalloid());
 		Element he = Element.He;
-		assertFalse(he.isMetalloid());
+		Assert.assertFalse(he.isMetalloid());
 		Element li = Element.Li;
-		assertFalse(li.isMetalloid());
+		Assert.assertFalse(li.isMetalloid());
 		Element be = Element.Be;
-		assertFalse(be.isMetalloid());
+		Assert.assertFalse(be.isMetalloid());
 		Element b = Element.B;
-		assertTrue(b.isMetalloid());
+		Assert.assertTrue(b.isMetalloid());
 		Element c = Element.C;
-		assertFalse(c.isMetalloid());
+		Assert.assertFalse(c.isMetalloid());
 		Element f = Element.F;
-		assertFalse(f.isMetalloid());
+		Assert.assertFalse(f.isMetalloid());
 		Element al = Element.Al;
-		assertFalse(al.isMetalloid());
+		Assert.assertFalse(al.isMetalloid());
 		Element sc = Element.Sc;
-		assertFalse(sc.isMetalloid());
+		Assert.assertFalse(sc.isMetalloid());
 		Element la = Element.La;
-		assertFalse(la.isMetalloid());
+		Assert.assertFalse(la.isMetalloid());
 		Element ac = Element.Ac;
-		assertFalse(ac.isMetalloid());
+		Assert.assertFalse(ac.isMetalloid());
 	}
 
+	@Test
 	public void testIsNonMetal() {
 		Element h = Element.H;
-		assertTrue(h.isNonMetal());
+		Assert.assertTrue(h.isNonMetal());
 		Element he = Element.He;
-		assertTrue(he.isNonMetal());
+		Assert.assertTrue(he.isNonMetal());
 		Element li = Element.Li;
-		assertFalse(li.isNonMetal());
+		Assert.assertFalse(li.isNonMetal());
 		Element be = Element.Be;
-		assertFalse(be.isNonMetal());
+		Assert.assertFalse(be.isNonMetal());
 		Element b = Element.B;
-		assertFalse(b.isNonMetal());
+		Assert.assertFalse(b.isNonMetal());
 		Element c = Element.C;
-		assertTrue(c.isNonMetal());
+		Assert.assertTrue(c.isNonMetal());
 		Element f = Element.F;
-		assertTrue(f.isNonMetal());
+		Assert.assertTrue(f.isNonMetal());
 		Element al = Element.Al;
-		assertFalse(al.isNonMetal());
+		Assert.assertFalse(al.isNonMetal());
 		Element sc = Element.Sc;
-		assertFalse(sc.isNonMetal());
+		Assert.assertFalse(sc.isNonMetal());
 		Element la = Element.La;
-		assertFalse(la.isNonMetal());
+		Assert.assertFalse(la.isNonMetal());
 		Element ac = Element.Ac;
-		assertFalse(ac.isNonMetal());
+		Assert.assertFalse(ac.isNonMetal());
 	}
 
 }

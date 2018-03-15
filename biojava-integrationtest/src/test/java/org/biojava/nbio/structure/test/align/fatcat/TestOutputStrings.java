@@ -20,12 +20,12 @@
 package org.biojava.nbio.structure.test.align.fatcat;
 
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 
-public class TestOutputStrings extends TestCase
-{
+public class TestOutputStrings {
 
-	static final String newline = System.getProperty("line.separator");
+	private static final String newline = System.getProperty("line.separator");
 
 	public void printFirstMismatch(String s1, String s2){
 		String[] spl1 = s1.split(newline);
@@ -72,7 +72,7 @@ public class TestOutputStrings extends TestCase
 
 	}
 
-	protected void printMismatch(String orig, String mine){
+	private void printMismatch(String orig, String mine){
 		System.err.println("The two provided strings are not identical.");
 		System.err.println("Original version");
 		System.err.println(orig);
@@ -199,6 +199,7 @@ public class TestOutputStrings extends TestCase
 //   }
 
 	// exact
+	@Test
 	public void test1buz1aliFlexible(){
 
 		String pdb1 = "1buz";
@@ -234,7 +235,7 @@ public class TestOutputStrings extends TestCase
 			String msg = "the created alignment images are not identical! ";
 			printMismatch(originalOutput,result);
 			printFirstMismatch(result, originalOutput);
-			fail(msg);
+			Assert.fail(msg);
 		}
 	}
 
@@ -319,6 +320,7 @@ public class TestOutputStrings extends TestCase
 
 
 
+	@Test
 	public void test1a641hngFlexible(){
 		String pdb1 = "1a64";
 		String chain1 = "A";
@@ -347,7 +349,7 @@ public class TestOutputStrings extends TestCase
 			String msg = "the created alignment images are not identical! ";
 			printMismatch(originalOutput,result);
 			printFirstMismatch(result, originalOutput);
-			fail(msg);
+			Assert.fail(msg);
 		}
 
 	}
@@ -499,6 +501,7 @@ public class TestOutputStrings extends TestCase
 
 
 	//exact
+	@Test
 	public void test1a211hwgFlexible(){
 
 		String pdb1 = "1a21";
@@ -535,7 +538,7 @@ public class TestOutputStrings extends TestCase
 			printMismatch(originalOutput,result);
 			printFirstMismatch(result, originalOutput);
 
-			fail(msg);
+			Assert.fail(msg);
 		}
 	}
 

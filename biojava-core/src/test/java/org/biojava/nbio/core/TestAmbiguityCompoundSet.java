@@ -20,7 +20,6 @@
  */
 package org.biojava.nbio.core;
 
-import junit.framework.TestCase;
 import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.core.sequence.DNASequence;
 import org.biojava.nbio.core.sequence.RNASequence;
@@ -31,6 +30,7 @@ import org.biojava.nbio.core.sequence.io.RNASequenceCreator;
 import org.biojava.nbio.core.sequence.template.CompoundSet;
 import org.biojava.nbio.core.sequence.template.Sequence;
 import org.biojava.nbio.core.sequence.transcription.DNAToRNATranslator;
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -39,38 +39,34 @@ import org.junit.Test;
  * Created by andreas on 12/4/15.
  */
 
-public class TestAmbiguityCompoundSet extends TestCase{
+public class TestAmbiguityCompoundSet {
 
 	@Test
-	public void testCompountSet(){
-		try {
+	public void testCompountSet() throws Exception {
 
-			CompoundSet<NucleotideCompound> dnaSet = AmbiguityDNACompoundSet.getDNACompoundSet();
-			CompoundSet<NucleotideCompound> rnaSet = AmbiguityRNACompoundSet.getRNACompoundSet();
+		CompoundSet<NucleotideCompound> dnaSet = AmbiguityDNACompoundSet.getDNACompoundSet();
+		CompoundSet<NucleotideCompound> rnaSet = AmbiguityRNACompoundSet.getRNACompoundSet();
 
-			DNASequence dna=new DNASequence("AGTCS", dnaSet);
+		DNASequence dna = new DNASequence("AGTCS", dnaSet);
 
-			assertEquals("AGTCS",dna.toString());
+		Assert.assertEquals("AGTCS", dna.toString());
 
-			RNASequence rna = dna.getRNASequence();
+		RNASequence rna = dna.getRNASequence();
 
-			rna = new RNASequence(dna.getSequenceAsString().replaceAll("T", "U"), AmbiguityRNACompoundSet.getRNACompoundSet()); //fails with missing compound S
+		rna = new RNASequence(dna.getSequenceAsString().replaceAll("T", "U"), AmbiguityRNACompoundSet.getRNACompoundSet()); //fails with missing compound S
 
-			assertEquals("AGUCS",rna.toString());
+		Assert.assertEquals("AGUCS", rna.toString());
 
-			/** now, do the translation also using the underlying API (should not be needed for a user)
-			 *
-			 */
-			DNAToRNATranslator translator = new DNAToRNATranslator(new RNASequenceCreator(rnaSet
-					),dnaSet,rnaSet,false);
+		/* now, do the translation also using the underlying API (should not be needed for a user)
+		 *
+		 */
+		DNAToRNATranslator translator = new DNAToRNATranslator(new RNASequenceCreator(rnaSet
+		), dnaSet, rnaSet, false);
 
-			Sequence<NucleotideCompound> translated = translator.createSequence(dna);
+		Sequence<NucleotideCompound> translated = translator.createSequence(dna);
 
-			assertEquals("AGUCS", translated.toString());
+		Assert.assertEquals("AGUCS", translated.toString());
 
-		} catch (CompoundNotFoundException e) {
-			e.printStackTrace();
-			fail(e.getMessage());
-		}
+
 	}
 }

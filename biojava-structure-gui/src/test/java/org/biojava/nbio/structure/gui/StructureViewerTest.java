@@ -21,8 +21,11 @@
 
 package org.biojava.nbio.structure.gui;
 
-import junit.framework.TestCase;
 import org.biojava.nbio.structure.Structure;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.awt.*;
 
@@ -30,25 +33,21 @@ import java.awt.*;
  *
  * @author Jules
  */
-public class StructureViewerTest extends TestCase {
+public class StructureViewerTest {
 
-	public StructureViewerTest(String testName) {
-		super(testName);
+
+	@Before
+	public void setUp() throws Exception {
 	}
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-	}
-
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	@After
+	public void tearDown() throws Exception {
 	}
 
 	/**
 	 * Test of setStructure method, of class StructureViewer.
 	 */
+	@Test
 	public void testSetStructure() {
 
 		if (  java.awt.GraphicsEnvironment.isHeadless())
@@ -63,6 +62,7 @@ public class StructureViewerTest extends TestCase {
 	/**
 	 * Test of repaint method, of class StructureViewer.
 	 */
+	@Test
 	public void testRepaint() {
 		if (  java.awt.GraphicsEnvironment.isHeadless())
 			return;
@@ -76,6 +76,7 @@ public class StructureViewerTest extends TestCase {
 	/**
 	 * Test of setSelection method, of class StructureViewer.
 	 */
+	@Test
 	public void testSetSelection() {
 		if (  java.awt.GraphicsEnvironment.isHeadless())
 			return;
@@ -90,6 +91,7 @@ public class StructureViewerTest extends TestCase {
 	/**
 	 * Test of getSelection method, of class StructureViewer.
 	 */
+	@Test
 	public void testGetSelection() {
 		if (  java.awt.GraphicsEnvironment.isHeadless())
 			return;
@@ -97,7 +99,7 @@ public class StructureViewerTest extends TestCase {
 		StructureViewer instance = new StructureViewerImpl();
 		Selection expResult = null;
 		Selection result = instance.getSelection();
-		assertEquals(expResult, result);
+		Assert.assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 	  //  fail("The test case is a prototype.");
 	}
@@ -105,6 +107,7 @@ public class StructureViewerTest extends TestCase {
 	/**
 	 * Test of setColor method, of class StructureViewer.
 	 */
+	@Test
 	public void testSetColor() {
 		if (  java.awt.GraphicsEnvironment.isHeadless())
 			return;
@@ -120,6 +123,7 @@ public class StructureViewerTest extends TestCase {
 	/**
 	 * Test of getColor method, of class StructureViewer.
 	 */
+	@Test
 	public void testGetColor() {
 		if (  java.awt.GraphicsEnvironment.isHeadless())
 			return;
@@ -127,7 +131,7 @@ public class StructureViewerTest extends TestCase {
 		StructureViewer instance = new StructureViewerImpl();
 		Color expResult = null;
 		Color result = instance.getColor();
-		assertEquals(expResult, result);
+		Assert.assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 	   // fail("The test case is a prototype.");
 	}
@@ -135,6 +139,7 @@ public class StructureViewerTest extends TestCase {
 	/**
 	 * Test of setStyle method, of class StructureViewer.
 	 */
+	@Test
 	public void testSetStyle() {
 		if (  java.awt.GraphicsEnvironment.isHeadless())
 			return;
@@ -149,6 +154,7 @@ public class StructureViewerTest extends TestCase {
 	/**
 	 * Test of clear method, of class StructureViewer.
 	 */
+	@Test
 	public void testClear() {
 		if (  java.awt.GraphicsEnvironment.isHeadless())
 			return;
@@ -161,6 +167,7 @@ public class StructureViewerTest extends TestCase {
 	/**
 	 * Test of setZoom method, of class StructureViewer.
 	 */
+	@Test
 	public void testSetZoom() {
 		if (  java.awt.GraphicsEnvironment.isHeadless())
 			return;

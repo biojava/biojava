@@ -20,9 +20,13 @@
  */
 package org.biojava.nbio.genome.io.fastq;
 
+import org.junit.Test;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+
+import static org.junit.Assert.*;
 
 
 /**
@@ -55,6 +59,7 @@ public final class SolexaFastqReaderTest
 		return new SolexaFastqWriter();
 	}
 
+	@Test
 	public void testValidateDescription() throws Exception
 	{
 		SolexaFastqReader reader = new SolexaFastqReader();
@@ -70,6 +75,7 @@ public final class SolexaFastqReaderTest
 		}
 	}
 
+	@Test
 	public void testValidateRepeatDescription() throws Exception
 	{
 		SolexaFastqReader reader = new SolexaFastqReader();
@@ -85,6 +91,7 @@ public final class SolexaFastqReaderTest
 		}
 	}
 
+	@Test
 	public void testWrappingAsSolexa() throws Exception
 	{
 		FastqReader reader = createFastqReader();
@@ -101,6 +108,7 @@ public final class SolexaFastqReaderTest
 		inputStream.close();
 	}
 
+	@Test
 	public void testFullRangeAsSolexa() throws Exception
 	{
 		FastqReader reader = createFastqReader();
@@ -117,6 +125,7 @@ public final class SolexaFastqReaderTest
 		inputStream.close();
 	}
 
+	@Test
 	public void testMiscDnaAsSolexa() throws Exception
 	{
 		FastqReader reader = createFastqReader();
@@ -133,6 +142,7 @@ public final class SolexaFastqReaderTest
 		inputStream.close();
 	}
 
+	@Test
 	public void testMiscRnaAsSolexa() throws Exception
 	{
 		FastqReader reader = createFastqReader();
@@ -149,6 +159,7 @@ public final class SolexaFastqReaderTest
 		inputStream.close();
 	}
 
+	@Test
 	public void testLongReadsAsSolexa() throws Exception
 	{
 		FastqReader reader = createFastqReader();

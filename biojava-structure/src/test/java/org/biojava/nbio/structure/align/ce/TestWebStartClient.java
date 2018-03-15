@@ -24,7 +24,6 @@
 
 package org.biojava.nbio.structure.align.ce;
 
-import junit.framework.TestCase;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.StructureAlignment;
@@ -36,15 +35,17 @@ import org.biojava.nbio.structure.align.xml.AFPChainFlipper;
 import org.biojava.nbio.structure.align.xml.AFPChainXMLConverter;
 import org.biojava.nbio.structure.align.xml.AFPChainXMLParser;
 import org.biojava.nbio.core.util.PrettyXMLWriter;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
 
-public class TestWebStartClient extends TestCase
-{
+public class TestWebStartClient {
 
+	@Test
 	@SuppressWarnings("unused")
 	public void testCPAlignment(){
 
@@ -61,7 +62,7 @@ public class TestWebStartClient extends TestCase
 			}
 		} catch (Exception e){
 			e.printStackTrace();
-			fail (e.getMessage());
+			Assert.fail(e.getMessage());
 		}
 	}
 
@@ -85,32 +86,32 @@ public class TestWebStartClient extends TestCase
 		afpChain.setName1(name1);
 		afpChain.setName2(name2);
 
-		assertNotNull(afpChain);
-		assertNotNull(afpChain.getAlgorithmName());
-		assertTrue(afpChain.getAlgorithmName().equals(algorithm.getAlgorithmName()));
+		Assert.assertNotNull(afpChain);
+		Assert.assertNotNull(afpChain.getAlgorithmName());
+		Assert.assertTrue(afpChain.getAlgorithmName().equals(algorithm.getAlgorithmName()));
 
 		String xml = AFPChainXMLConverter.toXML(afpChain,ca1,ca2);
 
 		/// SERVER part
 		String serverLocation = "http://beta.rcsb.org/pdb/rest/";
 		AFPChain afpServer = JFatCatClient.getAFPChainFromServer(serverLocation,algorithm.getAlgorithmName(), name1, name2, ca1, ca2, 5000);
-		assertNotNull(afpServer);
+		Assert.assertNotNull(afpServer);
 
-		assertTrue("Algorithm names don't match!", afpServer.getAlgorithmName().equals(algorithm.getAlgorithmName()));
-		assertTrue("Alignment blockNum < 1" , afpServer.getBlockNum() >= 1);
+		Assert.assertTrue("Algorithm names don't match!", afpServer.getAlgorithmName().equals(algorithm.getAlgorithmName()));
+		Assert.assertTrue("Alignment blockNum < 1", afpServer.getBlockNum() >= 1);
 
 		String xml2 = AFPChainXMLConverter.toXML(afpServer, ca1, ca2);
 		//System.err.println(" tmp disabled comparison of server and client XML, a minor rounding diff...");
-		assertEquals("The server and the locally calculated XML representations don;t match!", xml,xml2);
+		Assert.assertEquals("The server and the locally calculated XML representations don;t match!", xml, xml2);
 
 		AFPChain afpFlip = AFPChainFlipper.flipChain(afpChain);
 		String xmlFlipped = AFPChainXMLConverter.toXML(afpFlip, ca2, ca1);
 		//System.out.println(xmlFlipped);
 		AFPChain fromXmlFlipped = AFPChainXMLParser.fromXML(xmlFlipped, ca2, ca1);
-		assertEquals("The alignment lengths don't match", afpFlip.getNrEQR(), fromXmlFlipped.getNrEQR());
+		Assert.assertEquals("The alignment lengths don't match", afpFlip.getNrEQR(), fromXmlFlipped.getNrEQR());
 
 		String xmlFromFlippled = AFPChainXMLConverter.toXML(fromXmlFlipped,ca2,ca1);
-		assertEquals("The XML of the flipped and the recreated from that XML don't match!", xmlFlipped, xmlFromFlippled);
+		Assert.assertEquals("The XML of the flipped and the recreated from that XML don't match!", xmlFlipped, xmlFromFlippled);
 
 		AFPChain afpBackToOrig = AFPChainFlipper.flipChain(fromXmlFlipped);
 		//String xml5 = AFPChainXMLConverter.toXML(afpBackToOrig, ca1, ca2);
@@ -118,7 +119,7 @@ public class TestWebStartClient extends TestCase
 
 		String xmlShortOrig = getShortXML(afpChain,ca1, ca2);
 		String xmlShortFinal = getShortXML(afpBackToOrig, ca1, ca2);
-		assertEquals("The 2 x flipped alignment does not match the original", xmlShortOrig,xmlShortFinal);
+		Assert.assertEquals("The 2 x flipped alignment does not match the original", xmlShortOrig, xmlShortFinal);
 
 
 
