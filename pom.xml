@@ -177,9 +177,15 @@
 					<artifactId>maven-jar-plugin</artifactId>
 					<!-- warning: before upgrading to a newer version of this plugin
 					      there are some config changes required.
-					      see https://github.com/biojava/biojava/issues/531
+					      see https://github.com/biojava/biojava/issues/531 - AP 2016-07-07
 					      -->
-					<version>3.0.2</version>
+					<!-- I tried upgrading to 3.0.2 and then mvn release:perform fails with:
+					```
+					WARN  The requested profile "gpg-release" could not be activated because it does not exist.
+    				ERROR Failed to execute goal org.apache.maven.plugins:maven-gpg-plugin:1.6 ...
+    				```
+					- JD 2018-03-16 -->
+					<version>2.6</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-scm-plugin</artifactId>
