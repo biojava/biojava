@@ -7,17 +7,23 @@ Requires Java 8 or newer.
 
 ### New features
 
+#### biojava-alignment
+* New utlity methods for sequence alignment objects (gap, similarity and coverage).
+
 #### biojava-structure
 * The data structures to represent 3D macromolecules now follow the mmCIF data model.
-* [mmtf format](http://mmtf.rcsb.org/) support
+* [MMTF format](http://mmtf.rcsb.org/) support.
 * Symmetry detection algorithms overhaul: better symmetry detection for tertiary and quaternary structure levels.
+* New method and data structures for the clustering of protein subunits at the sequence and structure levels.
+* New method to align biological assemblies, see `org.biojava.nbio.structure.align.quaternary.QsAlign`.
 * New algorithms for base-pair geometry in nucleic acids.
-* New SuperPosition interface for different 3D-structure superposition algorithms, see `org.biojava.nbio.structure.geometry.SuperPosition`
+* New SuperPosition interface for different 3D-structure superposition algorithms, see `org.biojava.nbio.structure.geometry.SuperPosition`.
 * Geometry-related API now more consistently based on vecmath interfaces.
 
 ### Changed
 * For short structure selections (e.g. 1abc.A:1-100), ligands within 5A will be included
 * Symmetry expansion for bioassembly creation is now by default happening via adding new chains instead of new models. 
+* Make objects serializable for compatibility with big data frameworks (e.g. Spark).
 
 ### Breaking API changes
 
@@ -34,6 +40,7 @@ Requires Java 8 or newer.
 
 * Javadocs improvements across the board.
 * All tests are now Junit4.
+* Updated dependency versions (guava, slf4j, and log4j).
 
 ### Bug fixes
 A very long list.
@@ -188,26 +195,24 @@ release date: March 10th 2016
 
 This release contains over [750](https://github.com/biojava/biojava/compare/6f8d796fee92edbbcd001c33cdae4f15c5480741...biojava-4.2.0) commits from 16 contributors.
 
-### New Features
-
 BioJava 4.2.0 offers many new features, as well several bug-fixes.
-
-General  
 
 -   Requires Java 7
 -   Better logging with SLF4J
 
-Biojava-Core  
+### New Features
+
+#### biojava-core
 
 -   New SearchIO framework including blast xml parser
 
-Biojava-structure  
+#### biojava-structure
 
 -   Secondary structure assignment (DSSP compatible)
 -   Multiple Structure Alignments
     -   New MultipleStructureAlignment datastructure supporting flexible and order-independent alignments
     -   MultipleMC algorithm
-        -   Can use any pairwise StructureAlignment implementation
+        - Can use any pairwise StructureAlignment implementation
     -   serialize and parse multiple structure alignments as XML files, output as Text, FatCat, FASTA, Rotation Matrices, etc.
 -   More complete mmCIF and cif parsing
     -   Parse bonds, sites, charges
@@ -218,20 +223,19 @@ Biojava-structure
 -   Improved chemical component framework, now by default providing full chemical description by using DownloadChemCompProvider
 -   Optimised memory usage of Residue/Atoms
 
-Biojava-structure-gui  
+#### biojava-structure-gui  
 
 -   MultipleAlignmentGUI for visualizing Multiple Structure Alignments with Jmol
 -   SymmetryDisplay for visualizing internal symmetry
 
-Biojava-Phylo  
+#### biojava-phylo  
 
--   Use Forester 1.038
+-   Use `Forester 1.038`
 -   Significant bug fixes
--   use SubstitutionMatrices in the core module (instead of imported Jalview matrices),
--   use Sequence and Compound classes from the alignment module
--   provide some Wrapper methods to communicate with forester,
--   decouple distance matrix calculation from tree constructor,
--   provide methods for common distance matrix calculations and framework for user-defined distances,
+-   use `SubstitutionMatrices` in the core module (instead of imported Jalview matrices)
+-   use `Sequence` and `Compound` classes from the alignment module
+-   provide some Wrapper methods to communicate with forester
+-   decouple distance matrix calculation from tree constructor
+-   provide methods for common distance matrix calculations and framework for user-defined distances
 -   update the forester version to have the correct NJ tree constructor
-    AND
 -   correct some of the tree evaluator statistics.
