@@ -1,7 +1,7 @@
 BioJava 5.0.0
 =============
 
-This release contains [n](https://github.com/biojava/biojava/compare/biojava-4.2.11...biojava-5.0.0) commits from n contributors.
+This release contains [1,170 commits](https://github.com/biojava/biojava/compare/biojava-4.2.11...biojava-5.0.0) from 19 contributors.
 
 Requires Java 8 or newer.
 
