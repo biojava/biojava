@@ -362,9 +362,11 @@ public class BondMaker {
 			chainId2 = conn.getPtnr2_label_asym_id();
 
 			String insCode1 = "";
-			if (!conn.getPdbx_ptnr1_PDB_ins_code().equals("?")) insCode1 = conn.getPdbx_ptnr1_PDB_ins_code();
+			if (conn.getPdbx_ptnr1_PDB_ins_code() != null &&
+			        !conn.getPdbx_ptnr1_PDB_ins_code().equals("?")) insCode1 = conn.getPdbx_ptnr1_PDB_ins_code();
 			String insCode2 = "";
-			if (!conn.getPdbx_ptnr2_PDB_ins_code().equals("?")) insCode2 = conn.getPdbx_ptnr2_PDB_ins_code();
+			if (conn.getPdbx_ptnr2_PDB_ins_code() != null &&
+			        !conn.getPdbx_ptnr2_PDB_ins_code().equals("?")) insCode2 = conn.getPdbx_ptnr2_PDB_ins_code();
 
 			String seqId1 = conn.getPtnr1_auth_seq_id();
 			String seqId2 = conn.getPtnr2_auth_seq_id();
