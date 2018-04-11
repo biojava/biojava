@@ -224,13 +224,11 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-javadoc-plugin</artifactId>
-					<version>2.10.4</version>
+					<version>3.0.0</version>
 					<configuration>
-					    <additionalparam>-Xdoclint:none</additionalparam>
+					    <additionalJOptions>-Xdoclint:none</additionalJOptions>
 					    <!-- we need to allow script in comments or otherwise we can't use google analytics js in footer below - JD 2017-03-30 -->
-						<!-- Note: when I tried upgrading to javadoc-plugin 3.0.0, this option was ignored and the javadoc
-							generation fails with the javascript in footer error - JD 2018-03-15 -->
-						<additionalparam>--allow-script-in-comments</additionalparam>
+						<additionalJOption>--allow-script-in-comments</additionalJOption>
 						<maxmemory>256m</maxmemory>
 						<footer>
 							&lt;script src="http://www.google-analytics.com/urchin.js"
@@ -319,6 +317,11 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
 					<version>2.21.0</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-site-plugin</artifactId>
+					<version>3.7</version>
 				</plugin>
 
 			</plugins>
@@ -515,7 +518,7 @@
 					<aggregate>true</aggregate>
 					<breakiterator>true</breakiterator>
 					<quiet>true</quiet>
-					<source>1.7</source>
+					<source>1.8</source>
 					<verbose>false</verbose>
 					<linksource>true</linksource>
 
