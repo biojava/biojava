@@ -41,37 +41,20 @@ public class SiftsMappingProvider {
 	private final static Logger logger = LoggerFactory.getLogger(SiftsMappingProvider.class);
 
 
-	static String EBI_SIFTS_FILE_LOCATION = "ftp://ftp.ebi.ac.uk/pub/databases/msd/sifts/xml/%s.xml.gz";
+	private static final String EBI_SIFTS_FILE_LOCATION = "ftp://ftp.ebi.ac.uk/pub/databases/msd/sifts/xml/%s.xml.gz";
 
-	static String RCSB_SIFTS_FILE_LOCATION = "http://www.rcsb.org/pdb/files/%s.sifts.xml.gz";
-
-	static String fileLoc = EBI_SIFTS_FILE_LOCATION;
-
-	public static void main(String[] args){
-		try {
-			List<SiftsEntity> entities = getSiftsMapping("1gc1");
-
-			for (SiftsEntity e : entities){
-				System.out.println(e.getEntityId() + " " +e.getType());
-
-				for ( SiftsSegment seg: e.getSegments()) {
-					System.out.println(" Segment: " + seg.getSegId() + " " + seg.getStart() + " " + seg.getEnd()) ;
-
-					for ( SiftsResidue res: seg.getResidues() ) {
-						System.out.println("  " + res);
-					}
-				}
-
-			}
-		} catch (Exception e){
-			e.printStackTrace();
-		}
-	}
+	private static String fileLoc = EBI_SIFTS_FILE_LOCATION;
 
 	public static void setFileLocation(String myFileLocation){
 		fileLoc = myFileLocation;
 	}
 
+	/**
+	 * Return the SIFTS mappings by getting the info from individual SIFTS xml files at URL {@value EBI_SIFTS_FILE_LOCATION}
+	 * @param pdbId the pdb identifier
+	 * @return
+	 * @throws IOException if problems downloading or parsing the file
+	 */
 	public static List<SiftsEntity> getSiftsMapping(String pdbId) throws IOException{
 		// grab files from here:
 
