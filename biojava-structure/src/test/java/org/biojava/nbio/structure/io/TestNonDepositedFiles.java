@@ -180,8 +180,11 @@ public class TestNonDepositedFiles {
 		// single-model NMR entry, thus:
 		//assertTrue(s.isNmr());  // we can't detect it properly, because it's single model!
 		assertFalse(s.isCrystallographic()); // at least this we can detect from the unreasonable crystal cell
-		assertTrue(s.nrModels()==1);
+		assertEquals(1, s.nrModels());
 		assertNull(s.getPDBHeader().getExperimentalTechniques());
+
+		// testing that on single chain pdb files we assign an entity type, issue #767
+		assertEquals(EntityType.POLYMER, s.getEntityById(1).getType());
 	}
 
 	private void checkChains(Structure s) {
@@ -427,7 +430,6 @@ public class TestNonDepositedFiles {
 		assertEquals("P 1", s.getPDBHeader().getCrystallographicInfo().getSpaceGroup().getShortSymbol());
 	}
 
-	
 	private static int[] countEntityTypes(List<EntityInfo> entities) {
 		int countPoly = 0;
 		int countNonPoly = 0;

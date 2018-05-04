@@ -375,6 +375,7 @@ public class EntityFinder {
 				EntityInfo ent = new EntityInfo();
 				ent.addChain(c);
 				ent.setMolId(molId++);
+				ent.setType(EntityType.POLYMER);
 				c.setEntityInfo(ent); 
 
 				chainIds2entities.put(c.getId(),ent);
