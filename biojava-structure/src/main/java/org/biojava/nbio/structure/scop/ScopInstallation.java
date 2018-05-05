@@ -38,7 +38,8 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 
-/** This class provides access to the SCOP protein structure classification.
+/**
+ * This class provides access to the SCOP protein structure classification.
  *
  * For more information about SCOP see here:
  *  <ul>
@@ -61,7 +62,7 @@ public class ScopInstallation implements LocalScopDatabase {
 
 	private static final Logger logger = LoggerFactory.getLogger(ScopInstallation.class);
 
-	protected String scopVersion;
+	private String scopVersion;
 
 	// Stores URLs for cla, des, hie, and com files
 	private final List<ScopMirror> mirrors;
@@ -76,29 +77,24 @@ public class ScopInstallation implements LocalScopDatabase {
 	public static final String SCOP_DOWNLOAD = "http://scop.berkeley.edu/downloads/parse/";
 	public static final String SCOP_DOWNLOAD_ALTERNATE = "http://scop.berkeley.edu/downloads/parse/";
 
-	public static final String NEWLINE;
-	public static final String FILESPLIT ;
+	//public static final String NEWLINE = System.getProperty("line.separator");
+	public static final String FILESPLIT = System.getProperty("file.separator");
 
-	static {
+	private String cacheLocation ;
 
-		NEWLINE     = System.getProperty("line.separator");
-		FILESPLIT   = System.getProperty("file.separator");
-	}
+	private AtomicBoolean installedCla;
+	private AtomicBoolean installedDes;
+	private AtomicBoolean installedHie;
+	private AtomicBoolean installedCom;
 
-	String cacheLocation ;
-
-	AtomicBoolean installedCla;
-	AtomicBoolean installedDes;
-	AtomicBoolean installedHie;
-	AtomicBoolean installedCom;
-
-	Map<Integer, List<String>> commentsMap;
-	Map<String, List<ScopDomain>> domainMap;
-	Map<Integer, ScopDescription> sunidMap;
-	Map<Integer, ScopNode> scopTree;
+	private Map<Integer, List<String>> commentsMap;
+	private Map<String, List<ScopDomain>> domainMap;
+	private Map<Integer, ScopDescription> sunidMap;
+	private Map<Integer, ScopNode> scopTree;
 
 
-	/** Create a new SCOP installation.
+	/**
+	 * Create a new SCOP installation.
 	 *
 	 * @param cacheLocation where the SCOP files are stored. If they can't be found at that location they will get automatically downloaded and installed there.
 	 */
