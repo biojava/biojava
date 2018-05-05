@@ -32,6 +32,8 @@ import java.io.ByteArrayInputStream;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.net.URL;
+import java.io.InputStream;
 
 import org.biojava.nbio.core.sequence.compound.DNACompoundSet;
 import org.biojava.nbio.core.sequence.compound.NucleotideCompound;
@@ -92,6 +94,28 @@ public class ABITrace {
         bis.close();
         fis.close();
         baos.close();
+        bytes = baos.toByteArray();
+        initData(bytes);
+    }
+
+    /**
+     * The URL constructor opens an ABI file from any URL.
+     * @param ABIFile is a <code>java.net.URL</code> for an ABI trace file.
+     * @throws IOException if there is a problem reading from the URL.
+     * @throws IllegalArgumentException if the URL does not contain a valid ABI file.
+     */
+    public ABITrace( URL ABIFile ) throws IOException
+    {
+        byte[] bytes = null;
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        InputStream is = ABIFile.openStream();
+        BufferedInputStream bis = new BufferedInputStream(is);
+        int b;
+        while ((b = bis.read()) >= 0)
+        {
+            baos.write(b);
+        }
+        bis.close(); is.close(); baos.close();
         bytes = baos.toByteArray();
         initData(bytes);
     }

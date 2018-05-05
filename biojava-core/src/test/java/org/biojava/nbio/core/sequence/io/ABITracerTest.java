@@ -22,6 +22,7 @@
 package org.biojava.nbio.core.sequence.io;
 
 import java.io.File;
+import java.net.URL;
 import org.junit.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,12 +51,23 @@ public class ABITracerTest {
     }
 
     /**
-     * Test of process method, of class ABITracer.
+     * Test of local method, of class ABITracer.
      */
     @Test
-    public void testProcess() throws Exception {
-        logger.info("process");
+    public void testURL() throws Exception {
+        URL url = new URL("https://github.com/biopython/biopython/blob/master/Tests/Abi/3730.ab1");
+        Assert.assertNotNull(url);
+        ABITrace tracer = new ABITrace(url);
+        Assert.assertNotNull(tracer);
+    }
+
+    /**
+     * Test of local method, of class ABITracer.
+     */
+    @Test
+    public void testLocal() throws Exception {
         File file = new File("/3730.ab1");
+        Assert.assertNotNull(file);
         ABITrace tracer = new ABITrace(file);
         Assert.assertNotNull(tracer);
     }
