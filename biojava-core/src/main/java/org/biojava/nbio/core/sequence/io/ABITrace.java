@@ -35,6 +35,7 @@ import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.io.InputStream;
 
+import org.biojava.nbio.core.sequence.compound.ABITracerCompoundSet;
 import org.biojava.nbio.core.sequence.compound.DNACompoundSet;
 import org.biojava.nbio.core.sequence.compound.NucleotideCompound;
 import org.biojava.nbio.core.sequence.template.AbstractSequence;
@@ -162,11 +163,35 @@ public class ABITrace {
      */
     public AbstractSequence<NucleotideCompound> getSequence() throws CompoundNotFoundException {
         try {
-            DNASequenceCreator creator = new DNASequenceCreator(DNACompoundSet.getDNACompoundSet());
+            DNASequenceCreator creator = new DNASequenceCreator(ABITracerCompoundSet.getABITracerCompoundSet());
             return creator.getSequence(sequence, 0);
         } catch (Exception e) {
             // this should be impossible!
             throw new CompoundNotFoundException(e.toString());
+        }
+    }
+
+    /**
+     * Returns one of the four traces - all of the y-coordinate values,
+     * each of which correspond to a single x-coordinate relative to the
+     * position in the array, so that if element 4 in the array is 972, then
+     * x is 4 and y is 972 for that point.
+     *
+     * @param base  the DNA String to retrieve the trace values for
+     * @return an array of ints giving the entire trace for that base
+     * @throws CompoundNotFoundException if the base is not valid
+     */
+    public int[] getTrace (String base) throws CompoundNotFoundException {
+        if (base.equals("A")) {
+            return A;
+        } else if (base.equals("C")) {
+            return C;
+        } else if (base.equals("G")) {
+            return G;
+        } else if (base.equals("T")) {
+            return T;
+        } else {
+            throw new CompoundNotFoundException("Don't know base: " + base);
         }
     }
 
