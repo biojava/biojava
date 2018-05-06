@@ -24,12 +24,10 @@ package org.biojava.nbio.core.sequence.io;
 import java.io.File;
 import java.net.URL;
 import org.junit.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class ABITracerTest {
 
-    private final static Logger logger = LoggerFactory.getLogger(ABITracerTest.class);
+    private String filePath = System.getProperty("user.dir") + "/src/test/resources/3730.ab1";
 
     public ABITracerTest() {
     }
@@ -51,22 +49,24 @@ public class ABITracerTest {
     }
 
     /**
-     * Test of local method, of class ABITracer.
+     * Test of URL method, of class ABITracer.
      */
     @Test
     public void testURL() throws Exception {
-        URL url = new URL("https://github.com/biopython/biopython/blob/master/Tests/Abi/3730.ab1");
+        File file = new File(filePath);
+        Assert.assertNotNull(file);
+        URL url = file.toURI().toURL();
         Assert.assertNotNull(url);
         ABITrace tracer = new ABITrace(url);
         Assert.assertNotNull(tracer);
     }
 
     /**
-     * Test of local method, of class ABITracer.
+     * Test of Local file method, of class ABITracer.
      */
     @Test
     public void testLocal() throws Exception {
-        File file = new File("/3730.ab1");
+        File file = new File(filePath);
         Assert.assertNotNull(file);
         ABITrace tracer = new ABITrace(file);
         Assert.assertNotNull(tracer);

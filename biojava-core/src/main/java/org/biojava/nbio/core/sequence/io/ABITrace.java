@@ -91,9 +91,7 @@ public class ABITrace {
         while ((b = bis.read()) >= 0) {
             baos.write(b);
         }
-        bis.close();
-        fis.close();
-        baos.close();
+        bis.close(); fis.close(); baos.close();
         bytes = baos.toByteArray();
         initData(bytes);
     }
@@ -533,7 +531,7 @@ public class ABITrace {
             return true;
         } else {
             for (int i = 128; i <= 130; i++) {
-                ABI[i] = (char) TraceData[i];
+                ABI[i-128] = (char) TraceData[i];
             }
             if (ABI[0] == 'A' && (ABI[1] == 'B' && ABI[2] == 'I')) {
                 MacJunk = 128;
