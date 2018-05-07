@@ -36,41 +36,40 @@ import java.net.URL;
 import java.io.InputStream;
 
 import org.biojava.nbio.core.sequence.compound.ABITracerCompoundSet;
-import org.biojava.nbio.core.sequence.compound.DNACompoundSet;
 import org.biojava.nbio.core.sequence.compound.NucleotideCompound;
 import org.biojava.nbio.core.sequence.template.AbstractSequence;
 import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 
 /**
- * Title: ABITrace<br><br>
+ * Title: ABITrace<p><p>
  * ABITrace is a class for managing ABI file information,
  * it is capable of opening an ABI file and storing
  * the most important fields, which can be recalled as simple java types. It can also return
  * an image corresponding to the trace.
- * It has three constructors with input types <code>File, URL, and byte[]</code>.<br><br>
+ * It has three constructors with input types <code>File, URL, and byte[]</code>.<p><p>
  * ABI files contain two sets of basecall and sequence data, one that was originally
  * created programatically and the other, which is an editable copy. This version of this object
- * only references the original unedited data.<br>
+ * only references the original unedited data.<p>
  */
 public class ABITrace {
 
     //the next three lines are the important persistent data
     private String sequence;
-    private int A[], G[], C[], T[], Basecalls[], Qcalls[];
-    private int TraceLength, SeqLength;
+    private int A[], G[], C[], T[], baseCalls[], qCalls[];
+    private int traceLength, seqLength;
 
     //This is the actual file data.
-    private byte[] TraceData;
+    private byte[] traceData;
 
     private int maximum = 0;
 
     //the next four declaration lines comprise the file index information
-    private int MacJunk = 0; //sometimes when macintosh files are
+    private int macJunk = 0; //sometimes when macintosh files are
     //FTPed in binary form, they have 128 bytes
     //of crap pre-pended to them. This constant
     //allows ABITrace to handle that in a way that
     //is invisible to the user.
-    private static int AbsIndexBase = 26; //The file location of the Index pointer
+    private static final int absIndexBase = 26; //The file location of the Index pointer
     private int IndexBase, PLOC, PCON;
 
     //the next declaration is for the actual file pointers
@@ -83,38 +82,44 @@ public class ABITrace {
      * @throws IOException              if there is a problem reading the file.
      * @throws IllegalArgumentException if the file is not a valid ABI file.
      */
-    public ABITrace(File ABIFile) throws IOException {
-        byte[] bytes = null;
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    public ABITrace(File ABIFile) throws IOException
+    {
         FileInputStream fis = new FileInputStream(ABIFile);
         BufferedInputStream bis = new BufferedInputStream(fis);
-        int b;
-        while ((b = bis.read()) >= 0) {
-            baos.write(b);
-        }
-        bis.close(); fis.close(); baos.close();
-        bytes = baos.toByteArray();
-        initData(bytes);
+        ABITraceInit(bis);
+        fis.close();
     }
 
     /**
      * The URL constructor opens an ABI file from any URL.
+     *
      * @param ABIFile is a <code>java.net.URL</code> for an ABI trace file.
      * @throws IOException if there is a problem reading from the URL.
      * @throws IllegalArgumentException if the URL does not contain a valid ABI file.
      */
     public ABITrace( URL ABIFile ) throws IOException
     {
-        byte[] bytes = null;
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
         InputStream is = ABIFile.openStream();
         BufferedInputStream bis = new BufferedInputStream(is);
+        ABITraceInit(bis);
+        is.close();
+    }
+
+    /**
+     * Helper method for constructors
+     *
+     * @param bis - BufferedInputStream
+     * @throws IOException if there is a problem reading from the BufferedInputStream
+     */
+    private void ABITraceInit(BufferedInputStream bis) throws IOException{
+        byte[] bytes = null;
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
         int b;
         while ((b = bis.read()) >= 0)
         {
             baos.write(b);
         }
-        bis.close(); is.close(); baos.close();
+        bis.close(); baos.close();
         bytes = baos.toByteArray();
         initData(bytes);
     }
@@ -122,6 +127,7 @@ public class ABITrace {
     /**
      * The <code>byte[]</code> constructor parses an ABI file represented as a byte array.
      *
+     * @param  ABIFileData - byte array
      * @throws IllegalArgumentException if the data does not represent a valid ABI file.
      */
     public ABITrace(byte[] ABIFileData) {
@@ -130,45 +136,50 @@ public class ABITrace {
 
     /**
      * Returns the length of the sequence (number of bases) in this trace.
+     *
+     * @return int seqLength
      */
     public int getSequenceLength() {
-        return SeqLength;
+        return seqLength;
     }
 
     /**
      * Returns the length of the trace (number of x-coordinate points in the graph).
+     *
+     * @return int traceLength
      */
     public int getTraceLength() {
-        return TraceLength;
+        return traceLength;
     }
 
     /**
      * Returns an <code>int[]</code> array that represents the basecalls - each int in the
      * array corresponds to an x-coordinate point in the graph that is a peak (a base location).
+     *
+     * @return int[] Basecalls
      */
     public int[] getBasecalls() {
-        return Basecalls;
+        return baseCalls;
     }
 
     /**
      * Returns an <code>int[]</code> array that represents the quality - each int in the
      * array corresponds to an quality value 90-255) in the graph at a base location).
+     *
+     * @return int[] qCalls
      */
     public int[] getQcalls() {
-        return Qcalls;
+        return qCalls;
     }
 
     /**
      * Returns the original programmatically determined (unedited) sequence as a <code>AbstractSequence<NucleotideCompound></code>.
+     *
+     * @return AbstractSequence<NucleotideCompound> sequence
      */
     public AbstractSequence<NucleotideCompound> getSequence() throws CompoundNotFoundException {
-        try {
-            DNASequenceCreator creator = new DNASequenceCreator(ABITracerCompoundSet.getABITracerCompoundSet());
-            return creator.getSequence(sequence, 0);
-        } catch (Exception e) {
-            // this should be impossible!
-            throw new CompoundNotFoundException(e.toString());
-        }
+        DNASequenceCreator creator = new DNASequenceCreator(ABITracerCompoundSet.getABITracerCompoundSet());
+        return creator.getSequence(sequence, 0);
     }
 
     /**
@@ -177,7 +188,7 @@ public class ABITrace {
      * position in the array, so that if element 4 in the array is 972, then
      * x is 4 and y is 972 for that point.
      *
-     * @param base  the DNA String to retrieve the trace values for
+     * @param base - the DNA String to retrieve the trace values for
      * @return an array of ints giving the entire trace for that base
      * @throws CompoundNotFoundException if the base is not valid
      */
@@ -201,11 +212,12 @@ public class ABITrace {
      * of points in the trace (<code>getTraceLength()</code>). The entire trace is represented
      * in the returned image.
      *
-     * @param imageHeight is the desired height of the image in pixels.
-     * @param widthScale  indiates how many horizontal pixels to use to represent a single x-coordinate (try 2).
+     * @param imageHeight - desired height of the image in pixels.
+     * @param widthScale - how many horizontal pixels to use to represent a single x-coordinate (try 2).
+     * @return BufferedImage image
      */
     public BufferedImage getImage(int imageHeight, int widthScale) {
-        BufferedImage out = new BufferedImage(TraceLength * widthScale, imageHeight, BufferedImage.TYPE_BYTE_INDEXED);
+        BufferedImage out = new BufferedImage(traceLength * widthScale, imageHeight, BufferedImage.TYPE_BYTE_INDEXED);
         Graphics2D g = out.createGraphics();
         Color acolor = Color.green.darker();
         Color ccolor = Color.blue;
@@ -213,14 +225,14 @@ public class ABITrace {
         Color tcolor = Color.red;
         Color ncolor = Color.pink;
         double scale = calculateScale(imageHeight);
-        int[] bc = Basecalls;
+        int[] bc = baseCalls;
         char[] seq = sequence.toCharArray();
         g.setBackground(Color.white);
-        g.clearRect(0, 0, TraceLength * widthScale, imageHeight);
+        g.clearRect(0, 0, traceLength * widthScale, imageHeight);
         int here = 0;
         int basenum = 0;
         for (int q = 1; q <= 5; q++) {
-            for (int x = 0; x <= TraceLength - 2; x++) {
+            for (int x = 0; x <= traceLength - 2; x++) {
                 if (q == 1) {
                     g.setColor(acolor);
                     g.drawLine(2 * x, transmute(A[x], imageHeight, scale),
@@ -289,6 +301,11 @@ public class ABITrace {
     /**
      * Utility method to translate y coordinates from graph space (where up is greater)
      * to image space (where down is greater).
+     *
+     * @param ya
+     * @param height
+     * @param scale
+     * @return - translated y coordinates from graph space (where up is greater) to image space
      */
     private int transmute(int ya, int height, double scale) {
         return (height - 45 - (int) (ya * scale));
@@ -301,7 +318,8 @@ public class ABITrace {
      * Returns the scaling factor necessary to allow all of the traces to fit vertically
      * into the specified space.
      *
-     * @param - the required height in pixels.
+     * @param height - required height in pixels
+     * @return - scaling factor
      */
     private double calculateScale(int height) {
         double newScale = 0.0;
@@ -314,6 +332,8 @@ public class ABITrace {
     /**
      * Get the maximum height of any of the traces. The data is persisted for performance
      * in the event of multiple calls, but it initialized lazily.
+     *
+     * @return - maximum height of any of the traces
      */
     private int getMaximum() {
         if (maximum > 0) return maximum;
@@ -330,10 +350,11 @@ public class ABITrace {
     /**
      * Initialize all of the data fields for this object.
      *
+     * @param fileData - data for object
      * @throws IllegalArgumentException which will propagate to all of the constructors.
      */
     private void initData(byte[] fileData) {
-        TraceData = fileData;
+        traceData = fileData;
         if (isABI()) {
             setIndex();
             setBasecalls();
@@ -358,7 +379,7 @@ public class ABITrace {
         datas[3] = DATA12;
 
         for (int i = 0; i <= 3; i++) {
-            order[i] = (char) TraceData[FWO + i];
+            order[i] = (char) traceData[FWO + i];
         }
 
         for (int i = 0; i <= 3; i++) {
@@ -384,16 +405,16 @@ public class ABITrace {
             }
         }
 
-        A = new int[TraceLength];
-        C = new int[TraceLength];
-        G = new int[TraceLength];
-        T = new int[TraceLength];
+        A = new int[traceLength];
+        C = new int[traceLength];
+        G = new int[traceLength];
+        T = new int[traceLength];
 
         for (int i = 0; i <= 3; i++) {
-            byte[] qq = new byte[TraceLength * 2];
+            byte[] qq = new byte[traceLength * 2];
             getSubArray(qq, pointers[i]);
             DataInputStream dis = new DataInputStream(new ByteArrayInputStream(qq));
-            for (int x = 0; x <= TraceLength - 1; x++) {
+            for (int x = 0; x <= traceLength - 1; x++) {
                 try {
                     if (i == 0) A[x] = (int) dis.readShort();
                     if (i == 1) C[x] = (int) dis.readShort();
@@ -412,9 +433,9 @@ public class ABITrace {
      * Fetch the sequence from the trace data.
      */
     private void setSeq() {
-        char tempseq[] = new char[SeqLength];
-        for (int x = 0; x <= SeqLength - 1; ++x) {
-            tempseq[x] = (char) TraceData[PBAS2 + x];
+        char tempseq[] = new char[seqLength];
+        for (int x = 0; x <= seqLength - 1; ++x) {
+            tempseq[x] = (char) traceData[PBAS2 + x];
         }
         sequence = new String(tempseq);
     }
@@ -423,13 +444,13 @@ public class ABITrace {
      * Fetch the quality calls from the trace data.
      */
     private void setQcalls() {
-        Qcalls = new int[SeqLength];
-        byte[] qq = new byte[SeqLength];
+        qCalls = new int[seqLength];
+        byte[] qq = new byte[seqLength];
         getSubArray(qq, PCON);
         DataInputStream dis = new DataInputStream(new ByteArrayInputStream(qq));
-        for (int i = 0; i <= SeqLength - 1; ++i) {
+        for (int i = 0; i <= seqLength - 1; ++i) {
             try {
-                Qcalls[i] = (int) dis.readByte();
+                qCalls[i] = (int) dis.readByte();
             } catch (IOException e)//This shouldn't happen. If it does something must be seriously wrong.
             {
                 throw new IllegalStateException("Unexpected IOException encountered while manipulating internal streams.");
@@ -441,13 +462,13 @@ public class ABITrace {
      * Fetch the basecalls from the trace data.
      */
     private void setBasecalls() {
-        Basecalls = new int[SeqLength];
-        byte[] qq = new byte[SeqLength * 2];
+        baseCalls = new int[seqLength];
+        byte[] qq = new byte[seqLength * 2];
         getSubArray(qq, PLOC);
         DataInputStream dis = new DataInputStream(new ByteArrayInputStream(qq));
-        for (int i = 0; i <= SeqLength - 1; ++i) {
+        for (int i = 0; i <= seqLength - 1; ++i) {
             try {
-                Basecalls[i] = (int) dis.readShort();
+                baseCalls[i] = (int) dis.readShort();
             } catch (IOException e)//This shouldn't happen. If it does something must be seriously wrong.
             {
                 throw new IllegalStateException("Unexpected IOException encountered while manipulating internal streams.");
@@ -468,8 +489,8 @@ public class ABITrace {
         PLOCCounter = 0;
         PCONCounter = 0;
 
-        IndexBase = getIntAt(AbsIndexBase + MacJunk);
-        NumRecords = getIntAt(AbsIndexBase - 8 + MacJunk);
+        IndexBase = getIntAt(absIndexBase + macJunk);
+        NumRecords = getIntAt(absIndexBase - 8 + macJunk);
 
         for (int record = 0; record <= NumRecords - 1; record++) {
             getSubArray(RecNameArray, (IndexBase + (record * 28)));
@@ -504,19 +525,22 @@ public class ABITrace {
             }
 
         } //next record
-        TraceLength = getIntAt(DATA12 - 8);
-        SeqLength = getIntAt(PBAS2 - 4);
-        PLOC = getIntAt(PLOC) + MacJunk;
-        DATA9 = getIntAt(DATA9) + MacJunk;
-        DATA10 = getIntAt(DATA10) + MacJunk;
-        DATA11 = getIntAt(DATA11) + MacJunk;
-        DATA12 = getIntAt(DATA12) + MacJunk;
-        PBAS2 = getIntAt(PBAS2) + MacJunk;
-        PCON = getIntAt(PCON) + MacJunk;
+        traceLength = getIntAt(DATA12 - 8);
+        seqLength = getIntAt(PBAS2 - 4);
+        PLOC = getIntAt(PLOC) + macJunk;
+        DATA9 = getIntAt(DATA9) + macJunk;
+        DATA10 = getIntAt(DATA10) + macJunk;
+        DATA11 = getIntAt(DATA11) + macJunk;
+        DATA12 = getIntAt(DATA12) + macJunk;
+        PBAS2 = getIntAt(PBAS2) + macJunk;
+        PCON = getIntAt(PCON) + macJunk;
     }
 
     /**
      * Utility method to return an int beginning at <code>pointer</code> in the TraceData array.
+     *
+     * @param pointer - beginning of trace array
+     * @return - int beginning at pointer in trace array
      */
     private int getIntAt(int pointer) {
         int out = 0;
@@ -534,10 +558,13 @@ public class ABITrace {
 
     /**
      * A utility method which fills array b with data from the trace starting at traceDataOffset.
+     *
+     * @param b - trace byte array
+     * @param traceDataOffset - starting point
      */
     private void getSubArray(byte[] b, int traceDataOffset) {
         for (int x = 0; x <= b.length - 1; x++) {
-            b[x] = TraceData[traceDataOffset + x];
+            b[x] = traceData[traceDataOffset + x];
         }
     }
 
@@ -545,21 +572,23 @@ public class ABITrace {
      * Test to see if the file is ABI format by checking to see that the first three bytes
      * are "ABI". Also handle the special case where 128 bytes were prepended to the file
      * due to binary FTP from an older macintosh system.
+     *
+     * @return - if format of ABI file is correct
      */
     private boolean isABI() {
         char ABI[] = new char[4];
 
         for (int i = 0; i <= 2; i++) {
-            ABI[i] = (char) TraceData[i];
+            ABI[i] = (char) traceData[i];
         }
         if (ABI[0] == 'A' && (ABI[1] == 'B' && ABI[2] == 'I')) {
             return true;
         } else {
             for (int i = 128; i <= 130; i++) {
-                ABI[i-128] = (char) TraceData[i];
+                ABI[i-128] = (char) traceData[i];
             }
             if (ABI[0] == 'A' && (ABI[1] == 'B' && ABI[2] == 'I')) {
-                MacJunk = 128;
+                macJunk = 128;
                 return true;
             } else
                 return false;
