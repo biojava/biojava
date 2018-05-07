@@ -61,8 +61,6 @@ public class ABITrace {
     //This is the actual file data.
     private byte[] traceData;
 
-    private int maximum = 0;
-
     //the next four declaration lines comprise the file index information
     private int macJunk = 0; //sometimes when macintosh files are
     //FTPed in binary form, they have 128 bytes
@@ -70,7 +68,7 @@ public class ABITrace {
     //allows ABITrace to handle that in a way that
     //is invisible to the user.
     private static final int absIndexBase = 26; //The file location of the Index pointer
-    private int IndexBase, PLOC, PCON;
+    private int PLOC, PCON;
 
     //the next declaration is for the actual file pointers
     private int DATA9, DATA10, DATA11, DATA12, PBAS2, FWO;
@@ -336,7 +334,6 @@ public class ABITrace {
      * @return - maximum height of any of the traces
      */
     private int getMaximum() {
-        if (maximum > 0) return maximum;
         int max = 0;
         for (int x = 0; x <= T.length - 1; x++) {
             if (T[x] > max) max = T[x];
@@ -480,7 +477,7 @@ public class ABITrace {
      * Sets up all of the initial pointers to the important records in TraceData.
      */
     private void setIndex() {
-        int DataCounter, PBASCounter, PLOCCounter, PCONCounter, NumRecords;
+        int DataCounter, PBASCounter, PLOCCounter, PCONCounter, NumRecords, indexBase;
         byte[] RecNameArray = new byte[4];
         String RecName;
 
@@ -489,39 +486,39 @@ public class ABITrace {
         PLOCCounter = 0;
         PCONCounter = 0;
 
-        IndexBase = getIntAt(absIndexBase + macJunk);
+        indexBase = getIntAt(absIndexBase + macJunk);
         NumRecords = getIntAt(absIndexBase - 8 + macJunk);
 
         for (int record = 0; record <= NumRecords - 1; record++) {
-            getSubArray(RecNameArray, (IndexBase + (record * 28)));
+            getSubArray(RecNameArray, (indexBase + (record * 28)));
             RecName = new String(RecNameArray);
             if (RecName.equals("FWO_"))
-                FWO = IndexBase + (record * 28) + 20;
+                FWO = indexBase + (record * 28) + 20;
             if (RecName.equals("DATA")) {
                 ++DataCounter;
                 if (DataCounter == 9)
-                    DATA9 = IndexBase + (record * 28) + 20;
+                    DATA9 = indexBase + (record * 28) + 20;
                 if (DataCounter == 10)
-                    DATA10 = IndexBase + (record * 28) + 20;
+                    DATA10 = indexBase + (record * 28) + 20;
                 if (DataCounter == 11)
-                    DATA11 = IndexBase + (record * 28) + 20;
+                    DATA11 = indexBase + (record * 28) + 20;
                 if (DataCounter == 12)
-                    DATA12 = IndexBase + (record * 28) + 20;
+                    DATA12 = indexBase + (record * 28) + 20;
             }
             if (RecName.equals("PBAS")) {
                 ++PBASCounter;
                 if (PBASCounter == 2)
-                    PBAS2 = IndexBase + (record * 28) + 20;
+                    PBAS2 = indexBase + (record * 28) + 20;
             }
             if (RecName.equals("PLOC")) {
                 ++PLOCCounter;
                 if (PLOCCounter == 2)
-                    PLOC = IndexBase + (record * 28) + 20;
+                    PLOC = indexBase + (record * 28) + 20;
             }
             if (RecName.equals("PCON")) {
                 ++PCONCounter;
                 if (PCONCounter == 2)
-                    PCON = IndexBase + (record * 28) + 20;
+                    PCON = indexBase + (record * 28) + 20;
             }
 
         } //next record
