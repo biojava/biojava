@@ -30,12 +30,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
-import java.util.logging.Logger;
 import org.biojava.nbio.core.search.io.Hit;
 import org.biojava.nbio.core.search.io.Hsp;
 import org.biojava.nbio.core.search.io.Result;
 import org.biojava.nbio.core.search.io.ResultFactory;
 import org.biojava.nbio.core.sequence.template.Sequence;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Designed by Paolo Pavan.
@@ -60,7 +61,7 @@ public class BlastTabularParser implements ResultFactory {
 		IMPROVED,
 		LITERAL
 	}
-	private static final Logger log = Logger.getLogger(BlastTabularParser.class.getName());
+	private static final Logger log = LoggerFactory.getLogger(BlastTabularParser.class);
 
 
 	private File targetFile;
