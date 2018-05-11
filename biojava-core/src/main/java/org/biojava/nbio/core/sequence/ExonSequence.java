@@ -23,7 +23,6 @@
 package org.biojava.nbio.core.sequence;
 
 
-//import java.util.logging.Logger;
 
 /**
  * A gene contains a collection of Exon sequences

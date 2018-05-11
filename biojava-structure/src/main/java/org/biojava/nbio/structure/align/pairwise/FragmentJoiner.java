@@ -29,16 +29,18 @@ import org.biojava.nbio.structure.align.StrucAligParameters;
 import org.biojava.nbio.structure.align.helper.AlignUtils;
 import org.biojava.nbio.structure.align.helper.JointFragments;
 import org.biojava.nbio.structure.jama.Matrix;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.logging.Logger;
 
 
-/** Joins the initial Fragments together to larger Fragments
+/**
+ * Joins the initial Fragments together to larger Fragments
  *
  * @author Andreas Prlic
  * @author Peter Lackner
@@ -47,7 +49,7 @@ import java.util.logging.Logger;
  */
 public class FragmentJoiner {
 
-	public static Logger logger =  Logger.getLogger("org.biojava.nbio.structure.align");
+	public static final Logger logger =  LoggerFactory.getLogger(FragmentJoiner.class);
 
 	public FragmentJoiner() {
 		super();
@@ -283,7 +285,8 @@ public class FragmentJoiner {
 		return getRMS(a1,a3,ftmp);
 	}
 
-	/** get the RMS of the JointFragments pair frag
+	/**
+	 * Get the RMS of the JointFragments pair frag
 	 *
 	 * @param ca1 the array of all atoms of structure1
 	 * @param ca2 the array of all atoms of structure1
@@ -347,11 +350,8 @@ public class FragmentJoiner {
 
 	/**
 	 * Calculate the pairwise compatibility of fpairs.
-
-	 Iterates through a list of fpairs and joins them if
-	 they have compatible rotation and translation parameters.
-
-
+	 * Iterates through a list of fpairs and joins them if
+	 * they have compatible rotation and translation parameters.
 	 * @param fraglst FragmentPair[] array
 	 * @param angleDiff angle cutoff
 	 * @param fragCompatDist distance cutoff
@@ -375,10 +375,10 @@ public class FragmentJoiner {
 		List<JointFragments> fll = new ArrayList<JointFragments>();
 
 		double adiff = angleDiff * Math.PI / 180d;
-		logger.finer("addiff" + adiff);
+		logger.debug("addiff" + adiff);
 		//distance between two unit vectors with angle adiff
 		double ddiff = Math.sqrt(2.0-2.0*Math.cos(adiff));
-		logger.finer("ddiff" + ddiff);
+		logger.debug("ddiff" + ddiff);
 
 		// the fpairs in the flist have to be sorted with respect to their positions
 

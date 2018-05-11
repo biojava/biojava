@@ -27,6 +27,7 @@ import org.junit.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedHashMap;
 import java.util.logging.Level;
@@ -159,70 +160,54 @@ public class FastaReaderTest {
 	}
 
 	@Test
-	public void testSmallFasta(){
+	public void testSmallFasta() throws IOException {
 
-		try {
-			InputStream inStream  = this.getClass().getResourceAsStream("/test.fasta");
+		InputStream inStream = this.getClass().getResourceAsStream("/test.fasta");
 
-			FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = new FastaReader<ProteinSequence, AminoAcidCompound>(
-					inStream,
-					new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>(),
-					new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
+		FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = new FastaReader<ProteinSequence, AminoAcidCompound>(
+				inStream,
+				new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>(),
+				new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
 
-			LinkedHashMap<String, ProteinSequence> b;
+		LinkedHashMap<String, ProteinSequence> b;
 
-			int nrSeq = 0;
+		int nrSeq = 0;
 
-			while ((b = fastaReader.process(10)) != null) {
-				for (String key : b.keySet()) {
-					nrSeq++;
+		while ((b = fastaReader.process(10)) != null) {
+			for (String key : b.keySet()) {
+				nrSeq++;
 
-					// #282 would result in an endless loop
-					// this makes sure it has been fixed.
-					Assert.assertTrue("Looks like there is a problem with termination of processing of the FASTA file!", nrSeq < 15);
-				}
-
+				// #282 would result in an endless loop
+				// this makes sure it has been fixed.
+				Assert.assertTrue("Looks like there is a problem with termination of processing of the FASTA file!", nrSeq < 15);
 			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			java.util.logging.Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
 
-			Assert.fail(ex.getMessage());
 		}
+
 	}
 
 
 	@Test
-	public void testSmallFasta2(){
+	public void testSmallFasta2() throws IOException {
 
-		try {
-			InputStream inStream  = this.getClass().getResourceAsStream("/test.fasta");
+		InputStream inStream = this.getClass().getResourceAsStream("/test.fasta");
 
-			FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = new FastaReader<ProteinSequence, AminoAcidCompound>(
-					inStream,
-					new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>(),
-					new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
-
+		FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = new FastaReader<ProteinSequence, AminoAcidCompound>(
+				inStream,
+				new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>(),
+				new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
 
 
-			int nrSeq = 0;
+		int nrSeq = 0;
 
-			LinkedHashMap<String, ProteinSequence> b = fastaReader.process();
+		LinkedHashMap<String, ProteinSequence> b = fastaReader.process();
 
-			Assert.assertNotNull(b);
+		Assert.assertNotNull(b);
 
-			// #282 make sure that process() still works
+		// #282 make sure that process() still works
 
-			Assert.assertTrue(b.keySet().size() == 10);
-
-
+		Assert.assertEquals(10, b.keySet().size());
 
 
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			java.util.logging.Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
-
-			Assert.fail(ex.getMessage());
-		}
 	}
 }
