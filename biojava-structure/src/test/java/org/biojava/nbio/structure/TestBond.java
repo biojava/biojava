@@ -193,7 +193,30 @@ public class TestBond {
 	 */
 	@Test
 	public void testHydrogenToProteinBondMissing() throws IOException, StructureException {
-		assertEquals(0, countAtomsWithoutBonds("4txr"));
+//		assertEquals(0, countAtomsWithoutBonds("4txr"));
+//      This test has been commented out because of a data error in 4txr.cif:
+//	    On 2018-03-29 the hydrogen names for EDO were modified, however, the PDB structures were not updated 
+//	    (see snippets below). Note, the same issue may affect other ligands where atom names were updated.
+//      PWR filed a ticket with RCSB PDB on 2018-05-16.
+//	    TODO: uncomment test after data issue has been fixed.
+	    
+//	    edo.cif
+//	    _chem_comp.pdbx_modified_date 2018-03-29
+//	    ...
+//	    EDO H1 H1 H 0 1 N N N 40.269 18.578 -36.179 -0.626 0.552 -1.391 H1 EDO 5
+//	    EDO H2 H2 H 0 1 N N N 38.845 17.541 -35.829 -1.224 1.508 -0.013 H2 EDO 6
+//	    EDO H3 H3 H 0 1 N N N 40.451 16.981 -38.299 1.224 1.508 0.014 H3 EDO 7
+//	    EDO H4 H4 H 0 1 N N N 38.587 16.690 -39.453 2.328 -0.604 0.176 H4 EDO 8
+//	    EDO H5 H5 H 0 1 N N N 40.908 16.123 -36.247 -2.328 -0.604 -0.177 H5 EDO 9
+//	    EDO H6 H6 H 0 1 N N N 39.425 18.451 -38.410 0.626 0.551 1.391 H6 EDO 10
+//
+//	    4txr.cif
+//	    HETATM 4078 H H11 . EDO E 5 . ? -2.936 -17.609 18.748 1.00 14.13 ? 202 EDO A H11 1
+//	    HETATM 4079 H H12 . EDO E 5 . ? -1.441 -18.486 18.410 1.00 14.13 ? 202 EDO A H12 1
+//	    HETATM 4080 H HO1 . EDO E 5 . ? -3.099 -19.869 19.278 1.00 16.64 ? 202 EDO A HO1 1
+//	    HETATM 4081 H H21 . EDO E 5 . ? -2.090 -18.733 16.039 1.00 15.08 ? 202 EDO A H21 1
+//	    HETATM 4082 H H22 . EDO E 5 . ? -2.056 -17.033 16.508 1.00 15.08 ? 202 EDO A H22 1
+//	    HETATM 4083 H HO2 . EDO E 5 . ? -3.968 -17.575 15.297 1.00 15.81 ? 202 EDO A HO2 1
 		assertEquals(0, countAtomsWithoutBonds("3nvd"));
 	}
 
