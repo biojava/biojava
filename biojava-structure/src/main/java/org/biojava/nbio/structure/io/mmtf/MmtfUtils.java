@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -243,7 +244,7 @@ public class MmtfUtils {
 	 * @return the bioassembly information (as primitive types).
 	 */
 	public static Map<double[], int[]> getTransformMap(BioAssemblyInfo bioassemblyInfo, Map<String, Integer> chainIdToIndexMap) {
-		Map<Matrix4d, List<Integer>> matMap = new HashMap<>();
+	    Map<Matrix4d, List<Integer>> matMap = new LinkedHashMap<>();
 		List<BiologicalAssemblyTransformation> transforms = bioassemblyInfo.getTransforms();
 		for (BiologicalAssemblyTransformation transformation : transforms) {
 			Matrix4d transMatrix = transformation.getTransformationMatrix();
@@ -261,7 +262,8 @@ public class MmtfUtils {
 				matMap.put(transMatrix, chainIdList);
 			}
 		}
-		Map<double[], int[]> outMap = new HashMap<>();
+
+	    Map<double[], int[]> outMap = new LinkedHashMap<>();
 		for (Entry<Matrix4d, List<Integer>> entry : matMap.entrySet()) {
 			outMap.put(convertToDoubleArray(entry.getKey()), CodecUtils.convertToIntArray(entry.getValue()));
 		}
