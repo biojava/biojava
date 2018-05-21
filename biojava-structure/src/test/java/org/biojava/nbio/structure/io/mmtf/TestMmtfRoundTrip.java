@@ -20,13 +20,17 @@
  */
 package org.biojava.nbio.structure.io.mmtf;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Bond;
@@ -36,8 +40,11 @@ import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.align.util.AtomCache;
+import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
 import org.biojava.nbio.structure.io.mmcif.DownloadChemCompProvider;
+import org.biojava.nbio.structure.quaternary.BioAssemblyInfo;
+import org.biojava.nbio.structure.quaternary.BiologicalAssemblyTransformation;
 import org.junit.Test;
 import org.rcsb.mmtf.decoder.StructureDataToAdapter;
 import org.rcsb.mmtf.encoder.AdapterToStructureData;
@@ -57,17 +64,25 @@ public class TestMmtfRoundTrip {
 	@Test
 	public void testRoundTrip() throws IOException, StructureException {
 		AtomCache cache = new AtomCache();
+		FileParsingParameters params = new FileParsingParameters();
+        params.setParseBioAssembly(true);
+        cache.setFileParsingParams(params);
 		cache.setUseMmCif(true);
+	    StructureIO.setAtomCache(cache);
+		
 		ChemCompGroupFactory.setChemCompProvider(new DownloadChemCompProvider());
 		
-		
-		StructureIO.setAtomCache(cache);
-		Structure structure = StructureIO.getStructure("4CUP");
+		// test case for biojava issue #770, order of subunits
+	    Structure structure1 = StructureIO.getStructure("3BW1");
 		AdapterToStructureData writerToEncoder = new AdapterToStructureData();
-		new MmtfStructureWriter(structure, writerToEncoder);
+		new MmtfStructureWriter(structure1, writerToEncoder);
 		MmtfStructureReader mmtfStructureReader = new MmtfStructureReader();
 		new StructureDataToAdapter(writerToEncoder, mmtfStructureReader);
-		assertTrue(checkIfAtomsSame(structure,mmtfStructureReader.getStructure()));
+		Structure structure2 = mmtfStructureReader.getStructure();
+		
+		assertTrue(checkIfAtomsSame(structure1, structure2));
+		
+		checkBioAssemblies1(structure1, structure2);
 	}
 
 	/**
@@ -290,4 +305,36 @@ public class TestMmtfRoundTrip {
 			
 		}
 	}
+	
+	/**
+     * Checks consistency of bioassemblies
+     * @param structOne the first input structure
+     * @param structTwo the second input structure
+     */
+    private void checkBioAssemblies1(Structure structOne, Structure structTwo) throws IOException {
+        
+        Map<Integer, BioAssemblyInfo> expecteds = structOne.getPDBHeader().getBioAssemblies();
+        Map<Integer, BioAssemblyInfo> actuals = structTwo.getPDBHeader().getBioAssemblies();
+        assertEquals(expecteds.size(), actuals.size());
+        
+        assertEquals(new ArrayList<>(expecteds.keySet()), new ArrayList<>(actuals.keySet()));
+       
+        List<BioAssemblyInfo> assemblies1 = new ArrayList<>(expecteds.values());
+        List<BioAssemblyInfo> assemblies2 = new ArrayList<>(actuals.values());
+        
+        for (int i = 0; i < assemblies1.size(); i++) {
+            BioAssemblyInfo info1 = assemblies1.get(i);
+            BioAssemblyInfo info2 = assemblies2.get(i);
+            assertEquals(info1.getId(), info2.getId());
+            assertEquals(info1.getTransforms().size(), info2.getTransforms().size());
+
+            for (int j = 0; j < info1.getTransforms().size(); j++) {
+                BiologicalAssemblyTransformation trans1 = info1.getTransforms().get(j);
+                BiologicalAssemblyTransformation trans2 = info2.getTransforms().get(j);
+                
+                assertEquals(trans1.getChainId(), trans2.getChainId());
+                assertTrue(trans1.getTransformationMatrix().epsilonEquals(trans2.getTransformationMatrix(), 0.000001));
+            }
+        }
+    }
 }

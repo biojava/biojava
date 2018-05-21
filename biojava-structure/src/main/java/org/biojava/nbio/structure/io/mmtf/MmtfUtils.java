@@ -24,7 +24,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -413,7 +412,7 @@ public class MmtfUtils {
 		// Get all the atoms
 		List<Atom> theseAtoms = new ArrayList<>();
 		List<Chain> allChains = new ArrayList<>();
-		Map<String, Integer> chainIdToIndexMap = new HashMap<>();
+		Map<String, Integer> chainIdToIndexMap = new LinkedHashMap<>();
 		int chainCounter = 0;
 		int bondCount = 0;
 		mmtfSummaryDataBean.setAllAtoms(theseAtoms);

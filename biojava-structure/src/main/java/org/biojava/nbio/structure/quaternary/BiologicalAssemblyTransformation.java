@@ -51,7 +51,7 @@ import java.util.List;
  * @author Jose Duarte
  * @see CrystalTransform
  */
-public class BiologicalAssemblyTransformation implements Cloneable, Serializable {
+public class BiologicalAssemblyTransformation implements Cloneable, Comparable<BiologicalAssemblyTransformation>, Serializable {
 
 	private static final long serialVersionUID = -6388503076022480391L;
 
@@ -339,4 +339,9 @@ public class BiologicalAssemblyTransformation implements Cloneable, Serializable
 		return String.format("(%5.2f %5.2f %5.2f)", m.m03, m.m13, m.m23);
 	}
 
+    @Override
+    public int compareTo(BiologicalAssemblyTransformation other) {
+        int comp = this.chainId.compareTo(other.chainId);
+        return comp == 0 ? this.id.compareTo(other.id) : comp;
+    }
 }

@@ -24,6 +24,7 @@ import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -479,6 +480,8 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 			bioAssTrans.setTransformationMatrix(mat4d);
 			// Now add this
 			bioAssInfo.getTransforms().add(bioAssTrans);
+			// sort transformations into a unique order
+			Collections.sort(bioAssInfo.getTransforms());
 		}
 	}
 
