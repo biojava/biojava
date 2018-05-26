@@ -37,23 +37,40 @@ import java.util.Set;
 
 public class TestOboFileParsing {
 
-	private static final Logger logger = LoggerFactory.getLogger(TestOboFileParsing.class);
+    private static final Logger logger = LoggerFactory.getLogger(TestOboFileParsing.class);
 
-	@Test
-	public void testParsingBioSapiensOBO() throws Exception {
-		OboParser parser = new OboParser();
-		InputStream inStream = parser.getClass().getResourceAsStream("/ontology/biosapiens.obo");
+    @Test
+    public void testParsingBioSapiensOBO() throws Exception {
+        OboParser parser = new OboParser();
+        InputStream inStream = parser.getClass().getResourceAsStream("/ontology/biosapiens.obo");
 
-		Assert.assertNotNull(inStream);
+        Assert.assertNotNull(inStream);
 
-		BufferedReader oboFile = new BufferedReader ( new InputStreamReader ( inStream ) );
+        BufferedReader oboFile = new BufferedReader ( new InputStreamReader ( inStream ) );
 
-		Ontology ontology;
+        Ontology ontology;
 
-		ontology = parser.parseOBO(oboFile, "BioSapiens", "the BioSapiens ontology");
-		Set<Term> keys = ontology.getTerms();
+        ontology = parser.parseOBO(oboFile, "BioSapiens", "the BioSapiens ontology");
+        Set<Term> keys = ontology.getTerms();
 
-		Assert.assertTrue(keys.size() > 4000);
-	}
+        Assert.assertTrue(keys.size() > 4000);
+    }
+
+    @Test
+    public void testParsingHPOOBO() throws Exception {
+        OboParser parser = new OboParser();
+        InputStream inStream = parser.getClass().getResourceAsStream("/ontology/hp.obo");
+
+        Assert.assertNotNull(inStream);
+
+        BufferedReader oboFile = new BufferedReader ( new InputStreamReader ( inStream ) );
+
+        Ontology ontology;
+
+        ontology = parser.parseOBO(oboFile, "Human_phenotype", "the Human Phenotype ontology");
+        Set<Term> keys = ontology.getTerms();
+
+        Assert.assertTrue(keys.size() > 4000);
+    }
 
 }

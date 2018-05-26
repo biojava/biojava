@@ -66,6 +66,7 @@ public class OboFileHandler implements OboFileEventListener {
 	public static final String SUBSET       = "subset";
 	public static final String INTERSECTION_OF = "intersection_of";
 	public static final String NAMESPACE = "namespace";
+	public static final String REPLACED_BY = "replaced_by";
 
 
 	public static final String ALT_ID      = "alt_id";
@@ -172,10 +173,14 @@ public class OboFileHandler implements OboFileEventListener {
 				Annotation anno = currentTerm.getAnnotation();
 				anno.setProperty(ALT_ID, value);
 			}
-            else if (key.equals(NAMESPACE)){
-                Annotation anno = currentTerm.getAnnotation();
-                anno.setProperty(NAMESPACE, value);
-            }
+			else if (key.equals(NAMESPACE)){
+				Annotation anno = currentTerm.getAnnotation();
+				anno.setProperty(NAMESPACE, value);
+			}
+			else if (key.equals(REPLACED_BY)) {
+				Annotation anno = currentTerm.getAnnotation();
+				anno.setProperty(REPLACED_BY, value);
+			}
 
 			else {
 				//logger.info("unknown key {}", key);
