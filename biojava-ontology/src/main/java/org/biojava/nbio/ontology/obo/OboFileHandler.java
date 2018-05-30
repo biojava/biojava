@@ -136,6 +136,10 @@ public class OboFileHandler implements OboFileEventListener {
 				logger.warn("did not find ID for Term! ");
 				return;
 			}
+			if (key.equals(NAMESPACE)){
+				Annotation anno = currentTerm.getAnnotation();
+				anno.setProperty(NAMESPACE, value);
+			}
 			else if (key.equals(NAME)){
 				currentTerm.setDescription(value);
 			} else if (key.equals(DEF)){
@@ -172,10 +176,6 @@ public class OboFileHandler implements OboFileEventListener {
 			} else if (key.equals(ALT_ID)){
 				Annotation anno = currentTerm.getAnnotation();
 				anno.setProperty(ALT_ID, value);
-			}
-			else if (key.equals(NAMESPACE)){
-				Annotation anno = currentTerm.getAnnotation();
-				anno.setProperty(NAMESPACE, value);
 			}
 			else if (key.equals(REPLACED_BY)) {
 				Annotation anno = currentTerm.getAnnotation();
