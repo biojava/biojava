@@ -34,6 +34,8 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Set;
+import java.util.Iterator;
+import org.biojava.nbio.ontology.utils.Annotation;
 
 public class TestOboFileParsing {
 
@@ -69,8 +71,15 @@ public class TestOboFileParsing {
 
         ontology = parser.parseOBO(oboFile, "Human_phenotype", "the Human Phenotype ontology");
         Set<Term> keys = ontology.getTerms();
+        Iterator iter = keys.iterator();
 
-        Assert.assertTrue(keys.size() > 4000);
+        while (iter.hasNext()){
+            Term term = (Term) iter.next();
+            if(term.getName().equals("HP:0000057")) {
+                Annotation anno = term.getAnnotation();
+                Assert.assertTrue(anno.containsProperty("replaced_by"));
+                Assert.assertTrue(anno.getProperty("replaced_by").equals("HP:0008665"));
+            }
+        }
     }
-
 }
