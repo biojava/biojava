@@ -78,7 +78,7 @@ public class TestOboFileParsing {
 			if(term.getName().equals("HP:0000057")) {
 				Annotation anno = term.getAnnotation();
 				Assert.assertTrue(anno.containsProperty("replaced_by"));
-				Assert.assertTrue(anno.getProperty("replaced_by").equals("HP:0008665"));
+				Assert.assertEquals("HP:0008665", anno.getProperty("replaced_by"));
 			}
 		}
 	}
