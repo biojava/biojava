@@ -39,47 +39,48 @@ import org.biojava.nbio.ontology.utils.Annotation;
 
 public class TestOboFileParsing {
 
-    private static final Logger logger = LoggerFactory.getLogger(TestOboFileParsing.class);
+	private static final Logger logger = LoggerFactory.getLogger(TestOboFileParsing.class);
 
-    @Test
-    public void testParsingBioSapiensOBO() throws Exception {
-        OboParser parser = new OboParser();
-        InputStream inStream = parser.getClass().getResourceAsStream("/ontology/biosapiens.obo");
+	@Test
+	public void testParsingBioSapiensOBO() throws Exception {
+		OboParser parser = new OboParser();
+		InputStream inStream = parser.getClass().getResourceAsStream("/ontology/biosapiens.obo");
 
-        Assert.assertNotNull(inStream);
+		Assert.assertNotNull(inStream);
 
-        BufferedReader oboFile = new BufferedReader ( new InputStreamReader ( inStream ) );
+		BufferedReader oboFile = new BufferedReader ( new InputStreamReader ( inStream ) );
 
-        Ontology ontology;
+		Ontology ontology;
 
-        ontology = parser.parseOBO(oboFile, "BioSapiens", "the BioSapiens ontology");
-        Set<Term> keys = ontology.getTerms();
+		ontology = parser.parseOBO(oboFile, "BioSapiens", "the BioSapiens ontology");
+		Set<Term> keys = ontology.getTerms();
 
-        Assert.assertTrue(keys.size() > 4000);
-    }
+		Assert.assertTrue(keys.size() > 4000);
+	}
 
-    @Test
-    public void testParsingHPOOBO() throws Exception {
-        OboParser parser = new OboParser();
-        InputStream inStream = parser.getClass().getResourceAsStream("/ontology/hp.obo");
+	@Test
+	public void testParsingHPOOBO() throws Exception {
+		OboParser parser = new OboParser();
+		InputStream inStream = parser.getClass().getResourceAsStream("/ontology/hp.obo");
 
-        Assert.assertNotNull(inStream);
+		Assert.assertNotNull(inStream);
 
-        BufferedReader oboFile = new BufferedReader ( new InputStreamReader ( inStream ) );
+		BufferedReader oboFile = new BufferedReader ( new InputStreamReader ( inStream ) );
 
-        Ontology ontology;
+		Ontology ontology;
 
-        ontology = parser.parseOBO(oboFile, "Human_phenotype", "the Human Phenotype ontology");
-        Set<Term> keys = ontology.getTerms();
-        Iterator iter = keys.iterator();
+		ontology = parser.parseOBO(oboFile, "Human_phenotype", "the Human Phenotype ontology");
+		Set<Term> keys = ontology.getTerms();
+		Iterator iter = keys.iterator();
 
-        while (iter.hasNext()){
-            Term term = (Term) iter.next();
-            if(term.getName().equals("HP:0000057")) {
-                Annotation anno = term.getAnnotation();
-                Assert.assertTrue(anno.containsProperty("replaced_by"));
-                Assert.assertTrue(anno.getProperty("replaced_by").equals("HP:0008665"));
-            }
-        }
-    }
+		while (iter.hasNext()){
+			Term term = (Term) iter.next();
+			if(term.getName().equals("HP:0000057")) {
+				Annotation anno = term.getAnnotation();
+				Assert.assertTrue(anno.containsProperty("replaced_by"));
+				Assert.assertTrue(anno.getProperty("replaced_by").equals("HP:0008665"));
+			}
+		}
+	}
+
 }
