@@ -20,26 +20,48 @@
  */
 package org.biojava.nbio.structure.align.util;
 
-import org.biojava.nbio.structure.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.attribute.FileAttribute;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.zip.GZIPOutputStream;
+
+import org.biojava.nbio.structure.AtomPositionMap;
+import org.biojava.nbio.structure.Chain;
+import org.biojava.nbio.structure.Group;
+import org.biojava.nbio.structure.ResidueRangeAndLength;
+import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureIO;
+import org.biojava.nbio.structure.StructureIdentifier;
+import org.biojava.nbio.structure.StructureTools;
+import org.biojava.nbio.structure.SubstructureIdentifier;
 import org.biojava.nbio.structure.io.LocalPDBDirectory;
 import org.biojava.nbio.structure.io.LocalPDBDirectory.FetchBehavior;
 import org.biojava.nbio.structure.io.LocalPDBDirectory.ObsoleteBehavior;
+import org.biojava.nbio.structure.io.util.FileDownloadUtils;
 import org.biojava.nbio.structure.io.MMCIFFileReader;
 import org.biojava.nbio.structure.scop.ScopDatabase;
 import org.biojava.nbio.structure.scop.ScopFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.File;
-import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-
-import static org.junit.Assert.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -49,22 +71,30 @@ import static org.junit.Assert.*;
  */
 public class AtomCacheTest {
 
+	private static Logger logger = LoggerFactory.getLogger(AtomCacheTest.class);
 	private AtomCache cache;
 	private String previousPDB_DIR;
+	private String previousPDB_CACHE_DIR;
+	private AtomCache cleanCache = new AtomCache();
 
 	@Before
 	public void setUp() {
 		previousPDB_DIR = System.getProperty(UserConfiguration.PDB_DIR, null);
+		previousPDB_CACHE_DIR = System.getProperty(UserConfiguration.PDB_CACHE_DIR, null);
 		cache = new AtomCache();
 		cache.setObsoleteBehavior(ObsoleteBehavior.FETCH_OBSOLETE);
+		StructureIO.setAtomCache(cache);
 		// Use a fixed SCOP version for stability
 		ScopFactory.setScopDatabase(ScopFactory.VERSION_1_75B);
 	}
 
 	@After
 	public void tearDown() {
-		if (previousPDB_DIR != null)
+		if (previousPDB_DIR != null) {
 			System.setProperty(UserConfiguration.PDB_DIR, previousPDB_DIR);
+			System.setProperty(UserConfiguration.PDB_CACHE_DIR, previousPDB_CACHE_DIR);
+		}
+		StructureIO.setAtomCache(cleanCache);
 	}
 
 	/**
@@ -310,6 +340,82 @@ public class AtomCacheTest {
 		
 		assertEquals("Wrong SeqNum at first group in reduced",10,(int)chain.getAtomGroup(0).getResidueNumber().getSeqNum());
 
+	}
+	
+	/**
+	 * Test for #703 - Chemical component cache poisoning
+	 * 
+	 * Handle empty CIF files
+	 * @throws IOException
+	 * @throws StructureException
+	 */
+	@Test
+	public void testEmptyChemComp() throws IOException, StructureException {
+		Path tmpCache = Paths.get(System.getProperty("java.io.tmpdir"),"BIOJAVA_TEST_CACHE");
+		logger.info("Testing AtomCache at {}", tmpCache.toString());
+		System.setProperty(UserConfiguration.PDB_DIR, tmpCache.toString());
+		System.setProperty(UserConfiguration.PDB_CACHE_DIR, tmpCache.toString());
+
+		FileDownloadUtils.deleteDirectory(tmpCache);
+		Files.createDirectory(tmpCache);
+		try {
+			cache.setPath(tmpCache.toString());
+			cache.setCachePath(tmpCache.toString());
+			cache.setUseMmCif(true);
+			
+			// Create an empty chemcomp
+			Path sub = tmpCache.resolve(Paths.get("chemcomp", "ALA.cif.gz"));
+			Files.createDirectories(sub.getParent());
+			Files.createFile(sub);
+			assertTrue(Files.exists(sub));
+			assertEquals(0, Files.size(sub));
+			
+			Structure s = cache.getStructure("1A4W");
+			
+			assertNotNull(s);
+		} finally {
+			FileDownloadUtils.deleteDirectory(tmpCache);
+		}
+	}
+	
+	/**
+	 * Test for #703 - Chemical component cache poisoning
+	 * 
+	 * Handle empty CIF files
+	 * @throws IOException
+	 * @throws StructureException
+	 */
+	@Test
+	public void testEmptyGZChemComp() throws IOException, StructureException {
+		Path tmpCache = Paths.get(System.getProperty("java.io.tmpdir"),"BIOJAVA_TEST_CACHE");
+		logger.info("Testing AtomCache at {}", tmpCache.toString());
+		System.setProperty(UserConfiguration.PDB_DIR, tmpCache.toString());
+		System.setProperty(UserConfiguration.PDB_CACHE_DIR, tmpCache.toString());
+
+		FileDownloadUtils.deleteDirectory(tmpCache);
+		Files.createDirectory(tmpCache);
+		try {
+			cache.setPath(tmpCache.toString());
+			cache.setCachePath(tmpCache.toString());
+			cache.setUseMmCif(true);
+			
+			// Create an empty chemcomp
+			Path sub = tmpCache.resolve(Paths.get("chemcomp", "ALA.cif.gz"));
+			Files.createDirectories(sub.getParent());
+			try(GZIPOutputStream out = new GZIPOutputStream(new FileOutputStream(sub.toFile()))) {
+				// don't write anything
+				out.flush();
+			}
+			assertTrue(Files.exists(sub));
+			assertTrue(0 < Files.size(sub));
+			
+			Structure s = cache.getStructure("1A4W");
+			
+			assertNotNull(s);
+			
+		} finally {
+			FileDownloadUtils.deleteDirectory(tmpCache);
+		}
 	}
 	
 }
