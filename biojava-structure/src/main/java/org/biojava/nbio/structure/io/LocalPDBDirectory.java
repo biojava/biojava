@@ -127,8 +127,8 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 
 	protected static final String lineSplit = System.getProperty("file.separator");
 
-	/** Minimum size for a valid file, in bytes */
-	public static final long MIN_PDB_FILE_SIZE = 40;
+	/** Minimum size for a valid structure file (CIF or PDB), in bytes */
+	public static final long MIN_PDB_FILE_SIZE = 40;  // Empty gzip files are 20bytes. Add a few more for buffer.
 
 	private File path;
 	private List<String> extensions;

@@ -54,6 +54,9 @@ import org.biojava.nbio.structure.io.LocalPDBDirectory;
 import org.biojava.nbio.structure.io.LocalPDBDirectory.FetchBehavior;
 import org.biojava.nbio.structure.io.LocalPDBDirectory.ObsoleteBehavior;
 import org.biojava.nbio.structure.io.MMCIFFileReader;
+import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
+import org.biojava.nbio.structure.io.mmcif.ChemCompProvider;
+import org.biojava.nbio.structure.io.mmcif.DownloadChemCompProvider;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.biojava.nbio.structure.io.util.FileDownloadUtils;
 import org.biojava.nbio.structure.scop.ScopDatabase;
@@ -77,6 +80,7 @@ public class AtomCacheTest {
 	private String previousPDB_DIR;
 	private String previousPDB_CACHE_DIR;
 	private AtomCache cleanCache = new AtomCache();
+	private ChemCompProvider previousChemCompProvider = ChemCompGroupFactory.getChemCompProvider();
 
 	@Before
 	public void setUp() {
@@ -85,8 +89,10 @@ public class AtomCacheTest {
 		cache = new AtomCache();
 		cache.setObsoleteBehavior(ObsoleteBehavior.FETCH_OBSOLETE);
 		StructureIO.setAtomCache(cache);
+
 		// Use a fixed SCOP version for stability
 		ScopFactory.setScopDatabase(ScopFactory.VERSION_1_75B);
+		logger.warn("setUp()");
 	}
 
 	@After
@@ -96,6 +102,7 @@ public class AtomCacheTest {
 			System.setProperty(UserConfiguration.PDB_CACHE_DIR, previousPDB_CACHE_DIR);
 		}
 		StructureIO.setAtomCache(cleanCache);
+		ChemCompGroupFactory.setChemCompProvider(previousChemCompProvider);
 	}
 
 	/**
@@ -363,7 +370,8 @@ public class AtomCacheTest {
 			cache.setPath(tmpCache.toString());
 			cache.setCachePath(tmpCache.toString());
 			cache.setUseMmCif(true);
-			
+			ChemCompGroupFactory.setChemCompProvider(new DownloadChemCompProvider(tmpCache.toString()));
+
 			// Create an empty chemcomp
 			Path chemCompCif = tmpCache.resolve(Paths.get("chemcomp", "ATP.cif.gz"));
 			Files.createDirectories(chemCompCif.getParent());
@@ -381,6 +389,10 @@ public class AtomCacheTest {
 			// Load structure
 			Structure s = cache.getStructure("1ABC");
 			
+			// Should have re-downloaded the file
+			assertTrue(Files.size(chemCompCif) > LocalPDBDirectory.MIN_PDB_FILE_SIZE);
+			
+			// Structure should have valid ChemComp now
 			assertNotNull(s);
 			
 			Group g = s.getChainByPDB("A").getAtomGroup(0);
@@ -417,6 +429,8 @@ public class AtomCacheTest {
 			cache.setPath(tmpCache.toString());
 			cache.setCachePath(tmpCache.toString());
 			cache.setUseMmCif(true);
+			ChemCompGroupFactory.setChemCompProvider(new DownloadChemCompProvider(tmpCache.toString()));
+
 			
 			// Create an empty chemcomp
 			Path sub = tmpCache.resolve(Paths.get("chemcomp", "ATP.cif.gz"));
@@ -426,7 +440,7 @@ public class AtomCacheTest {
 				out.flush();
 			}
 			assertTrue(Files.exists(sub));
-			assertTrue(0 < Files.size(sub));
+			assertTrue(0 < Files.size(sub) && Files.size(sub) < LocalPDBDirectory.MIN_PDB_FILE_SIZE);
 			
 			// Copy stub file into place
 			Path testCif = tmpCache.resolve(Paths.get("data", "structures", "divided", "mmCIF", "ab","1abc.cif.gz"));
@@ -438,6 +452,10 @@ public class AtomCacheTest {
 			// Load structure
 			Structure s = cache.getStructure("1ABC");
 			
+			// Should have re-downloaded the file
+			assertTrue(Files.size(sub) > LocalPDBDirectory.MIN_PDB_FILE_SIZE);
+			
+			// Structure should have valid ChemComp
 			assertNotNull(s);
 			
 			Group g = s.getChainByPDB("A").getAtomGroup(0);
