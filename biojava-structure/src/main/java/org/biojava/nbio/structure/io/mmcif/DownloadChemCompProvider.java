@@ -50,13 +50,13 @@ import org.slf4j.LoggerFactory;
 
 /** 
  * This provider of chemical components can download and cache chemical component definition files from the RCSB PDB web site.
- * It is the default way to access these definitions.
- * If this provider is called he first time, it will download and install all chemical
- * component definitions in a local directory.
- * Once the definition files have been installed, it has quick startup time and low memory requirements.
+ *  It is the default way to access these definitions.
+ *  If this provider is called he first time, it will download and install all chemical
+ *  component definitions in a local directory.
+ *  Once the definition files have been installed, it has quick startup time and low memory requirements.
  *
- * An alternative provider, that keeps all definitions in memory is the {@link AllChemCompProvider}. Another provider, that
- * does not require any network access, but only can support a limited set of chemical component definitions, is the {@link ReducedChemCompProvider}.
+ *  An alternative provider, that keeps all definitions in memory is the {@link AllChemCompProvider}. Another provider, that
+ *  does not require any network access, but only can support a limited set of chemical component definitions, is the {@link ReducedChemCompProvider}.
  *
  *
  * @author Andreas Prlic
@@ -69,9 +69,9 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 	public static final String CHEM_COMP_CACHE_DIRECTORY = "chemcomp";
 
 	public static final String DEFAULT_SERVER_URL = "http://files.rcsb.org/ligands/download/";
-	
+
 	public static String serverBaseUrl = DEFAULT_SERVER_URL;
-	
+
 	/**
 	 * Use default RCSB server layout (true) or internal RCSB server layout (false)
 	 */
@@ -451,7 +451,7 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 			split();
 		} catch (IOException e) {
 			logger.error("Could not split all chem comp file into individual chemical component files. Error: {}",
-					e.getMessage());
+				 e.getMessage());
 			// no point in reporting time
 			loading.set(false);
 			return;
