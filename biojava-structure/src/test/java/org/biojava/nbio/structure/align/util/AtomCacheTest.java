@@ -29,10 +29,10 @@ import static org.junit.Assert.fail;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.attribute.FileAttribute;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -53,8 +53,9 @@ import org.biojava.nbio.structure.SubstructureIdentifier;
 import org.biojava.nbio.structure.io.LocalPDBDirectory;
 import org.biojava.nbio.structure.io.LocalPDBDirectory.FetchBehavior;
 import org.biojava.nbio.structure.io.LocalPDBDirectory.ObsoleteBehavior;
-import org.biojava.nbio.structure.io.util.FileDownloadUtils;
 import org.biojava.nbio.structure.io.MMCIFFileReader;
+import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
+import org.biojava.nbio.structure.io.util.FileDownloadUtils;
 import org.biojava.nbio.structure.scop.ScopDatabase;
 import org.biojava.nbio.structure.scop.ScopFactory;
 import org.junit.After;
@@ -364,17 +365,34 @@ public class AtomCacheTest {
 			cache.setUseMmCif(true);
 			
 			// Create an empty chemcomp
-			Path sub = tmpCache.resolve(Paths.get("chemcomp", "ALA.cif.gz"));
-			Files.createDirectories(sub.getParent());
-			Files.createFile(sub);
-			assertTrue(Files.exists(sub));
-			assertEquals(0, Files.size(sub));
+			Path chemCompCif = tmpCache.resolve(Paths.get("chemcomp", "ATP.cif.gz"));
+			Files.createDirectories(chemCompCif.getParent());
+			Files.createFile(chemCompCif);
+			assertTrue(Files.exists(chemCompCif));
+			assertEquals(0, Files.size(chemCompCif));
 			
-			Structure s = cache.getStructure("1A4W");
+			// Copy stub file into place
+			Path testCif = tmpCache.resolve(Paths.get("data", "structures", "divided", "mmCIF", "ab","1abc.cif.gz"));
+			Files.createDirectories(testCif.getParent());
+			URL resource = AtomCacheTest.class.getResource("/atp.cif.gz");
+			File src = new File(resource.getPath());
+			FileDownloadUtils.copy(src, testCif.toFile());
+			
+			// Load structure
+			Structure s = cache.getStructure("1ABC");
 			
 			assertNotNull(s);
+			
+			Group g = s.getChainByPDB("A").getAtomGroup(0);
+			assertTrue(g.getPDBName().equals("ATP"));
+			
+			// should be unknown
+			ChemComp chem = g.getChemComp();
+			assertNotNull(chem);
+			assertTrue(chem.getAtoms().size() > 0);
+			assertEquals("NON-POLYMER", chem.getType());
 		} finally {
-			FileDownloadUtils.deleteDirectory(tmpCache);
+//			FileDownloadUtils.deleteDirectory(tmpCache);
 		}
 	}
 	
@@ -387,6 +405,7 @@ public class AtomCacheTest {
 	 */
 	@Test
 	public void testEmptyGZChemComp() throws IOException, StructureException {
+		
 		Path tmpCache = Paths.get(System.getProperty("java.io.tmpdir"),"BIOJAVA_TEST_CACHE");
 		logger.info("Testing AtomCache at {}", tmpCache.toString());
 		System.setProperty(UserConfiguration.PDB_DIR, tmpCache.toString());
@@ -400,7 +419,7 @@ public class AtomCacheTest {
 			cache.setUseMmCif(true);
 			
 			// Create an empty chemcomp
-			Path sub = tmpCache.resolve(Paths.get("chemcomp", "ALA.cif.gz"));
+			Path sub = tmpCache.resolve(Paths.get("chemcomp", "ATP.cif.gz"));
 			Files.createDirectories(sub.getParent());
 			try(GZIPOutputStream out = new GZIPOutputStream(new FileOutputStream(sub.toFile()))) {
 				// don't write anything
@@ -409,12 +428,28 @@ public class AtomCacheTest {
 			assertTrue(Files.exists(sub));
 			assertTrue(0 < Files.size(sub));
 			
-			Structure s = cache.getStructure("1A4W");
+			// Copy stub file into place
+			Path testCif = tmpCache.resolve(Paths.get("data", "structures", "divided", "mmCIF", "ab","1abc.cif.gz"));
+			Files.createDirectories(testCif.getParent());
+			URL resource = AtomCacheTest.class.getResource("/atp.cif.gz");
+			File src = new File(resource.getPath());
+			FileDownloadUtils.copy(src, testCif.toFile());
+			
+			// Load structure
+			Structure s = cache.getStructure("1ABC");
 			
 			assertNotNull(s);
 			
+			Group g = s.getChainByPDB("A").getAtomGroup(0);
+			assertTrue(g.getPDBName().equals("ATP"));
+			
+			// should be unknown
+			ChemComp chem = g.getChemComp();
+			assertNotNull(chem);
+			assertTrue(chem.getAtoms().size() > 0);
+			assertEquals("NON-POLYMER", chem.getType());
 		} finally {
-			FileDownloadUtils.deleteDirectory(tmpCache);
+//			FileDownloadUtils.deleteDirectory(tmpCache);
 		}
 	}
 	

@@ -85,6 +85,8 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 		protectedIDs.add("AUX");
 		protectedIDs.add("NUL");
 	}
+	
+	private static ChemCompProvider fallback = null; // Fallback provider if the download fails
 
 	/** by default we will download only some of the files. User has to request that all files should be downloaded...
 	 *
@@ -272,7 +274,10 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 
 				ChemComp chemComp = dict.getChemComp(recordName);
 
-				return chemComp;
+				// May be null if the file was corrupt. Fall back on ReducedChemCompProvider in that case
+				if(chemComp != null) {
+					return chemComp;
+				}
 
 			} catch (IOException e) {
 
@@ -296,9 +301,11 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 
 		// see https://github.com/biojava/biojava/issues/315
 		// probably a network error happened. Try to use the ReducedChemCOmpProvider
-		ReducedChemCompProvider reduced = new ReducedChemCompProvider();
+		if( fallback == null) {
+			fallback = new ReducedChemCompProvider();
+		}
 
-		return reduced.getChemComp(recordName);
+		return fallback.getChemComp(recordName);
 
 	}
 

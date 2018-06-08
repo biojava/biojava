@@ -328,7 +328,13 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 		String recordName    = atom.getGroup_PDB();
 		String residueNumberS = atom.getAuth_seq_id();
-		Integer residueNrInt = Integer.parseInt(residueNumberS);
+		Integer residueNrInt;
+		if(residueNumberS != null) {
+			residueNrInt = Integer.parseInt(residueNumberS);
+		} else {
+			String label_seq_id = atom.getLabel_seq_id();
+			residueNrInt = Integer.parseInt(label_seq_id);
+		}
 
 		// the 3-letter name of the group:
 		String groupCode3    = atom.getLabel_comp_id();
