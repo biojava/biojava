@@ -35,6 +35,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Files;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -405,8 +406,9 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	 * Attempts to delete all versions of a structure from the local directory.
 	 * @param pdbId
 	 * @return True if one or more files were deleted
+	 * @throws IOException if the file cannot be deleted
 	 */
-	public boolean deleteStructure(String pdbId){
+	public boolean deleteStructure(String pdbId) throws IOException{
 		boolean deleted = false;
 		// Force getLocalFile to check in obsolete locations
 		ObsoleteBehavior obsolete = getObsoleteBehavior();
@@ -663,8 +665,9 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	 * Searches for previously downloaded files
 	 * @param pdbId
 	 * @return A file pointing to the existing file, or null if not found
+	 * @throws IOException If the file exists but is empty and can't be deleted
 	 */
-	public File getLocalFile(String pdbId) {
+	public File getLocalFile(String pdbId) throws IOException {
 
 		// Search for existing files
 
@@ -692,11 +695,8 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 					if ( f.exists()) {
 						// delete files that are too short to have contents
 						if( f.length() < MIN_PDB_FILE_SIZE ) {
-							boolean success = f.delete();
-							if( ! success) {
-								return null;
-							}
-							assert(!f.exists());
+							Files.delete(f.toPath());
+							return null;
 						}
 						return f;
 					}
@@ -708,9 +708,11 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	}
 
 	protected boolean checkFileExists(String pdbId){
-		File path =  getLocalFile(pdbId);
-		if ( path != null)
-			return true;
+		try {
+			File path =  getLocalFile(pdbId);
+			if ( path != null)
+				return true;
+		} catch(IOException e) {}
 		return false;
 	}
 

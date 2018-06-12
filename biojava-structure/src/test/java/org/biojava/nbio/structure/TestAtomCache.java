@@ -46,7 +46,7 @@ public class TestAtomCache {
 	private AtomCache cache;
 
 	@Before
-	public void setUp() {
+	public void setUp() throws IOException {
 		cache = new AtomCache();
 
 		// Delete files which were cached in previous tests

@@ -306,6 +306,7 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 			fallback = new ReducedChemCompProvider();
 		}
 
+		logger.warn("Falling back to ReducedChemCompProvider for {}. This could indicate a network error.", recordName);
 		return fallback.getChemComp(recordName);
 
 	}
@@ -347,6 +348,8 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 
 		// delete files that are too short to have contents
 		if( f.length() < LocalPDBDirectory.MIN_PDB_FILE_SIZE ) {
+			// Delete defensively.
+			// Note that if delete is unsuccessful, we re-download the file anyways
 			f.delete();
 			return false;
 		}

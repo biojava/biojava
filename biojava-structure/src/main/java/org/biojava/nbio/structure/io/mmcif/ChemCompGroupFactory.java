@@ -69,7 +69,7 @@ public class ChemCompGroupFactory {
 	 * code executed afterwards.
 	 * <p>
 	 * Changing the provider also resets the cache, so any groups
-	 * previously accessed will be re-downloaded and reread.
+	 * previously accessed will be reread or re-downloaded.
 	 *
 	 * @param provider
 	 */
@@ -85,7 +85,9 @@ public class ChemCompGroupFactory {
 	}
 	
 	/**
-	 * Force the cache to be reset.
+	 * Force the in-memory cache to be reset.
+	 * 
+	 * Note that the ChemCompProvider may have additional memory or disk caches that need to be cleared too.
 	 */
 	public static void clearCache() {
 		cache.clear();

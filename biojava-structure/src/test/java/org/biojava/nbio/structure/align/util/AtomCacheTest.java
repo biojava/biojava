@@ -404,7 +404,7 @@ public class AtomCacheTest {
 			assertTrue(chem.getAtoms().size() > 0);
 			assertEquals("NON-POLYMER", chem.getType());
 		} finally {
-//			FileDownloadUtils.deleteDirectory(tmpCache);
+			FileDownloadUtils.deleteDirectory(tmpCache);
 		}
 	}
 	
@@ -467,7 +467,7 @@ public class AtomCacheTest {
 			assertTrue(chem.getAtoms().size() > 0);
 			assertEquals("NON-POLYMER", chem.getType());
 		} finally {
-//			FileDownloadUtils.deleteDirectory(tmpCache);
+			FileDownloadUtils.deleteDirectory(tmpCache);
 		}
 	}
 	
