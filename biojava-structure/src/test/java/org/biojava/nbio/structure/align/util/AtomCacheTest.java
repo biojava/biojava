@@ -55,12 +55,12 @@ import org.biojava.nbio.structure.io.LocalPDBDirectory.FetchBehavior;
 import org.biojava.nbio.structure.io.LocalPDBDirectory.ObsoleteBehavior;
 import org.biojava.nbio.structure.io.MMCIFFileReader;
 import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
-import org.biojava.nbio.structure.io.mmcif.ChemCompProvider;
 import org.biojava.nbio.structure.io.mmcif.DownloadChemCompProvider;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.biojava.nbio.structure.io.util.FileDownloadUtils;
 import org.biojava.nbio.structure.scop.ScopDatabase;
 import org.biojava.nbio.structure.scop.ScopFactory;
+import org.biojava.nbio.structure.test.util.GlobalsHelper;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -77,32 +77,22 @@ public class AtomCacheTest {
 
 	private static Logger logger = LoggerFactory.getLogger(AtomCacheTest.class);
 	private AtomCache cache;
-	private String previousPDB_DIR;
-	private String previousPDB_CACHE_DIR;
-	private AtomCache cleanCache = new AtomCache();
-	private ChemCompProvider previousChemCompProvider = ChemCompGroupFactory.getChemCompProvider();
 
 	@Before
 	public void setUp() {
-		previousPDB_DIR = System.getProperty(UserConfiguration.PDB_DIR, null);
-		previousPDB_CACHE_DIR = System.getProperty(UserConfiguration.PDB_CACHE_DIR, null);
+		GlobalsHelper.pushState();
+		
 		cache = new AtomCache();
 		cache.setObsoleteBehavior(ObsoleteBehavior.FETCH_OBSOLETE);
 		StructureIO.setAtomCache(cache);
 
 		// Use a fixed SCOP version for stability
 		ScopFactory.setScopDatabase(ScopFactory.VERSION_1_75B);
-		logger.warn("setUp()");
 	}
 
 	@After
 	public void tearDown() {
-		if (previousPDB_DIR != null) {
-			System.setProperty(UserConfiguration.PDB_DIR, previousPDB_DIR);
-			System.setProperty(UserConfiguration.PDB_CACHE_DIR, previousPDB_CACHE_DIR);
-		}
-		StructureIO.setAtomCache(cleanCache);
-		ChemCompGroupFactory.setChemCompProvider(previousChemCompProvider);
+		GlobalsHelper.restoreState();
 	}
 
 	/**

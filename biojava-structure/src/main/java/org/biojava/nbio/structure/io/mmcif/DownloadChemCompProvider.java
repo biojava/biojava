@@ -95,25 +95,28 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 	boolean downloadAll = false;
 
 	public DownloadChemCompProvider(){
-		logger.debug("Initialising DownloadChemCompProvider");
-
-		// note that path is static, so this is just to make sure that all non-static methods will have path initialised
-		initPath();
+		this(null);
 	}
 
 	public DownloadChemCompProvider(String cacheFilePath){
 		logger.debug("Initialising DownloadChemCompProvider");
 
 		// note that path is static, so this is just to make sure that all non-static methods will have path initialised
-		path = new File(cacheFilePath);
+		if(cacheFilePath != null) {
+			path = new File(cacheFilePath);
+		}
 	}
 
-	private static void initPath(){
-
+	/**
+	 * Get this provider's cache path
+	 * @return
+	 */
+	public static File getPath(){
 		if (path==null) {
 			UserConfiguration config = new UserConfiguration();
 			path = new File(config.getCacheFilePath());
 		}
+		return path;
 	}
 
 	/**
@@ -130,7 +133,7 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 
 		// this makes sure there is a file separator between every component,
 		// if path has a trailing file separator or not, it will work for both cases
-		File dir = new File(path, CHEM_COMP_CACHE_DIRECTORY);
+		File dir = new File(getPath(), CHEM_COMP_CACHE_DIRECTORY);
 		File f = new File(dir, "components.cif.gz");
 
 		if ( ! f.exists()) {
@@ -164,7 +167,7 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 
 		logger.info("Installing individual chem comp files ...");
 
-		File dir = new File(path, CHEM_COMP_CACHE_DIRECTORY);
+		File dir = new File(getPath(), CHEM_COMP_CACHE_DIRECTORY);
 		File f = new File(dir, "components.cif.gz");
 
 
@@ -215,7 +218,7 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 	 */
 	private void writeID(String contents, String currentID) throws IOException{
 
-		String localName = DownloadChemCompProvider.getLocalFileName(currentID);
+		String localName = getLocalFileName(currentID);
 
 		try ( PrintWriter pw = new PrintWriter(new GZIPOutputStream(new FileOutputStream(localName))) ) {
 
@@ -322,16 +325,15 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 			recordName = "_" + recordName;
 		}
 
-		initPath();
-
-		File f = new File(path, CHEM_COMP_CACHE_DIRECTORY);
+		File f = new File(getPath(), CHEM_COMP_CACHE_DIRECTORY);
 		if (! f.exists()){
 			logger.info("Creating directory " + f);
 
 			boolean success = f.mkdir();
 			// we've checked in initPath that path is writable, so there's no need to check if it succeeds
 			// in the unlikely case that in the meantime it isn't writable at least we log an error
-			if (!success) logger.error("Directory {} could not be created",f);
+			if (!success)
+				logger.error("Directory {} could not be created",f);
 
 		}
 

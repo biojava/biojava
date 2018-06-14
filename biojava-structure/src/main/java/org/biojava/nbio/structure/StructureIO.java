@@ -119,6 +119,11 @@ public class StructureIO {
 	public static void setAtomCache(AtomCache c){
 		cache = c;
 	}
+	
+	public static AtomCache getAtomCache() {
+		checkInitAtomCache();
+		return cache;
+	}
 
 	/**
 	 * Returns the first biologicalAssembly that is available for a protein structure. For more documentation on quaternary structures see:
