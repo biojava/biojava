@@ -70,8 +70,17 @@ public final class GlobalsHelper {
 	 * Previous values can be restored with {@link #restoreState()}.
 	 * @param path
 	 */
-	public static void setPdbPath(String path) {
+	public static void setPdbPath(String path, String cachePath) {
 		pushState();
+		if(path == null || cachePath == null) {
+			UserConfiguration config = new UserConfiguration();
+			if(path == null) {
+				path = config.getPdbFilePath();
+			}
+			if(cachePath == null) {
+				cachePath = config.getCacheFilePath();
+			}
+		}
 		System.setProperty(UserConfiguration.PDB_DIR, path);
 		System.setProperty(UserConfiguration.PDB_CACHE_DIR, path);
 
@@ -90,8 +99,16 @@ public final class GlobalsHelper {
 	public static void restoreState() {
 		PathInfo paths = stack.removeFirst();
 		
-		System.setProperty(UserConfiguration.PDB_DIR, paths.pdbPath);
-		System.setProperty(UserConfiguration.PDB_CACHE_DIR, paths.pdbCachePath);
+		if(paths.pdbPath == null) {
+			System.clearProperty(UserConfiguration.PDB_DIR);
+		} else {
+			System.setProperty(UserConfiguration.PDB_DIR, paths.pdbPath);
+		}
+		if(paths.pdbCachePath == null) {
+			System.clearProperty(UserConfiguration.PDB_CACHE_DIR);
+		} else {
+			System.setProperty(UserConfiguration.PDB_CACHE_DIR, paths.pdbCachePath);
+		}
 
 		StructureIO.setAtomCache(paths.atomCache);
 		
