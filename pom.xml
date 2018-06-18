@@ -32,8 +32,8 @@
 		</license>
 	</licenses>
 	<properties>
-		<jdk.version>1.8</jdk.version>
-		<maven.enforcer.jdk-version>1.8</maven.enforcer.jdk-version>
+		<jdk.version>9</jdk.version>
+		<maven.enforcer.jdk-version>9</maven.enforcer.jdk-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.build.targetEncoding>UTF-8</project.build.targetEncoding>
 		<!-- needed for failsafe plugin in integrationtest module - JD 2018-03-08 -->
@@ -507,6 +507,11 @@
 				<artifactId>forester</artifactId>
 				<version>1.038</version>
 			</dependency>
+			<dependency>
+			    <groupId>javax.xml.bind</groupId>
+			    <artifactId>jaxb-api</artifactId>
+			    <version>2.3.0</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
@@ -518,7 +523,7 @@
 					<aggregate>true</aggregate>
 					<breakiterator>true</breakiterator>
 					<quiet>true</quiet>
-					<source>1.8</source>
+					<source>${jdk.version}</source>
 					<verbose>false</verbose>
 					<linksource>true</linksource>
 
