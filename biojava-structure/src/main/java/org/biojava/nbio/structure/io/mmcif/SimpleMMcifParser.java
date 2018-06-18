@@ -212,6 +212,9 @@ public class SimpleMMcifParser implements MMcifParser {
 
 		// the first line is a data_PDBCODE line, test if this looks like a mmcif file
 		line = buf.readLine();
+		while( line != null && (line.isEmpty() || line.startsWith(COMMENT_CHAR))) {
+			line = buf.readLine();
+		}
 		if (line == null || !line.startsWith(MMCIF_TOP_HEADER)){
 			logger.error("This does not look like a valid mmCIF file! The first line should start with 'data_', but is: '" + line+"'");
 			triggerDocumentEnd();

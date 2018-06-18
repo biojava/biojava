@@ -68,9 +68,8 @@ public class ChemCompGroupFactory {
 	 * again. Note that this change can have unexpected behavior of
 	 * code executed afterwards.
 	 * <p>
-	 * Changing the provider does not reset the cache, so Chemical
-	 * Component definitions already downloaded from previous providers
-	 * will be used. To reset the cache see {@link #getCache()).
+	 * Changing the provider also resets the cache, so any groups
+	 * previously accessed will be reread or re-downloaded.
 	 *
 	 * @param provider
 	 */
@@ -83,6 +82,15 @@ public class ChemCompGroupFactory {
 
 	public static ChemCompProvider getChemCompProvider(){
 		return chemCompProvider;
+	}
+	
+	/**
+	 * Force the in-memory cache to be reset.
+	 * 
+	 * Note that the ChemCompProvider may have additional memory or disk caches that need to be cleared too.
+	 */
+	public static void clearCache() {
+		cache.clear();
 	}
 
 	public static Group getGroupFromChemCompDictionary(String recordName) {
