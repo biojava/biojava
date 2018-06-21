@@ -174,6 +174,7 @@ public class ABITrace {
      * Returns the original programmatically determined (unedited) sequence as a <code>AbstractSequence<NucleotideCompound></code>.
      *
      * @return AbstractSequence<NucleotideCompound> sequence
+     * @throws org.biojava.nbio.core.exceptions.CompoundNotFoundException
      */
     public AbstractSequence<NucleotideCompound> getSequence() throws CompoundNotFoundException {
         DNASequenceCreator creator = new DNASequenceCreator(ABITracerCompoundSet.getABITracerCompoundSet());
@@ -191,16 +192,17 @@ public class ABITrace {
      * @throws CompoundNotFoundException if the base is not valid
      */
     public int[] getTrace (String base) throws CompoundNotFoundException {
-        if (base.equals("A")) {
-            return A;
-        } else if (base.equals("C")) {
-            return C;
-        } else if (base.equals("G")) {
-            return G;
-        } else if (base.equals("T")) {
-            return T;
-        } else {
-            throw new CompoundNotFoundException("Don't know base: " + base);
+        switch (base) {
+            case "A":
+                return A;
+            case "C":
+                return C;
+            case "G":
+                return G;
+            case "T":
+                return T;
+            default:
+                throw new CompoundNotFoundException("Don't know base: " + base);
         }
     }
 
@@ -294,6 +296,118 @@ public class ABITrace {
             }
         }
         return out;
+    }
+    
+    /**
+     * Returns a BufferedImage that represents the Reverse Complement counterpart of entire trace. The height can
+     * be set precisely in pixels, the width in pixels is determined by the
+     * scaling factor times the number of points in the trace
+     * (<code>getTraceLength()</code>). The entire trace is represented in the
+     * returned image.
+     *
+     * @param imageHeight is the desired height of the image in pixels.
+     * @param widthScale indiates how many horizontal pixels to use to represent
+     * a single x-coordinate (try 2).
+     * @return BufferedImage that represents the Reverse Complement counterpart of entire trace.
+     */
+    public BufferedImage getImageReverted(int imageHeight, int widthScale) {
+        BufferedImage out = new BufferedImage(traceLength * widthScale, imageHeight, BufferedImage.TYPE_BYTE_INDEXED);
+        Graphics2D g = out.createGraphics();
+        Color acolor = Color.green.darker();
+        Color ccolor = Color.blue;
+        Color gcolor = Color.black;
+        Color tcolor = Color.red;
+        Color ncolor = Color.pink;
+        double scale = calculateScale(imageHeight);
+        int[] bc = getSequenceReverted(baseCalls);
+        char[] seq = sequence.toCharArray();
+        int[] AR = getSequenceReverted(A);
+        int[] CR = getSequenceReverted(C);
+        int[] GR = getSequenceReverted(G);
+        int[] TR = getSequenceReverted(T);
+        g.setBackground(Color.white);
+        g.clearRect(0, 0, traceLength * widthScale, imageHeight);
+        int here = 0;
+        int basenum = 0;
+        for (int q = 1; q <= 5; q++) {
+            for (int x = 0; x <= traceLength - 2; x++) {
+                if (q == 1) {
+                    g.setColor(acolor);
+                    g.drawLine(widthScale * x, transmute(AR[x], imageHeight, scale),
+                            widthScale * (x + 1), transmute(AR[x + 1], imageHeight, scale));
+                }
+                if (q == 2) {
+                    g.setColor(ccolor);
+                    g.drawLine(widthScale * x, transmute(CR[x], imageHeight, scale),
+                            widthScale * (x + 1), transmute(CR[x + 1], imageHeight, scale));
+                }
+                if (q == 3) {
+                    g.setColor(tcolor);
+                    g.drawLine(widthScale * x, transmute(TR[x], imageHeight, scale),
+                            widthScale * (x + 1), transmute(TR[x + 1], imageHeight, scale));
+                }
+                if (q == 4) {
+                    g.setColor(gcolor);
+                    g.drawLine(widthScale * x, transmute(GR[x], imageHeight, scale),
+                            widthScale * (x + 1), transmute(GR[x + 1], imageHeight, scale));
+                }
+                if (q == 5) {
+                    if ((here > bc.length - 1) || (basenum > seq.length - 1)) {
+                        break;
+                    }
+                    if (traceLength-bc[here] == x) {
+                        g.drawLine(widthScale * x, transmute(-2, imageHeight, 1.0),
+                                widthScale * x, transmute(-7, imageHeight, 1.0));
+                        if ((basenum + 1) % 10 == 0) //if the basecount is divisible by ten add a number
+                        {
+                            g.drawLine(widthScale * x, transmute(-20, imageHeight, 1.0),
+                                    widthScale * x, transmute(-25, imageHeight, 1.0));
+                            g.drawString(Integer.toString(basenum + 1),
+                                    widthScale * x - 3, transmute(-36, imageHeight, 1.0));
+                        }
+                        switch (seq[basenum]) {
+                            case 'A':
+                            case 'a':
+                                g.setColor(acolor);
+                                break;
+                            case 'C':
+                            case 'c':
+                                g.setColor(ccolor);
+                                break;
+                            case 'G':
+                            case 'g':
+                                g.setColor(gcolor);
+                                break;
+                            case 'T':
+                            case 't':
+                                g.setColor(tcolor);
+                                break;
+                            default:
+                                g.setColor(ncolor);
+                        }
+                        g.setColor(Color.black);
+                        here++;
+                        basenum++;
+                    }
+                }
+            }
+        }
+        return out;
+    }
+    
+    /**
+     * Returns reverse representation of sequence.
+     * @param sequence
+     * @return 
+     */
+    private int[] getSequenceReverted(int[] sequence){
+        for (int i = 0; i < sequence.length/2; i++) {
+            int s = sequence[i];
+            sequence[i] = sequence[sequence.length - i - 1];
+            sequence[sequence.length - i - 1] = s;
+        }
+        
+        return sequence;
     }
 
     /**
@@ -423,7 +537,6 @@ public class ABITrace {
                 }
             }
         }
-        return;
     }
 
     /**
