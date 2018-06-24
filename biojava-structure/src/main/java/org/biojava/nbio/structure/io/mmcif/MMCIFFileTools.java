@@ -22,9 +22,7 @@ package org.biojava.nbio.structure.io.mmcif;
 
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Chain;
@@ -434,26 +432,29 @@ public class MMCIFFileTools {
 	 */
 	private static List<AtomSite> convertGroupToAtomSites(Group g, int model, String chainId, String internalChainId) {
 
-		List<AtomSite> list = new ArrayList<AtomSite>();
+		// The alt locs can have duplicates, since at parsing time we make sure that all alt loc groups have
+		// all atoms (see StructureTools#cleanUpAltLocs)
+		// Thus we have to remove duplicates here by using the atom id
+		Map<Integer, AtomSite> uniqueAtomSites = new LinkedHashMap<>();
 
 		int groupsize  = g.size();
 
 		for ( int atompos = 0 ; atompos < groupsize; atompos++) {
-			Atom a = null ;
-
-			a = g.getAtom(atompos);
+			Atom a = g.getAtom(atompos);
 			if ( a == null)
 				continue ;
 
-			list.add(convertAtomToAtomSite(a, model, chainId, internalChainId));
-
+			uniqueAtomSites.put(a.getPDBserial(), convertAtomToAtomSite(a, model, chainId, internalChainId));
 		}
+
 		if ( g.hasAltLoc()){
 			for (Group alt : g.getAltLocs() ) {
-				list.addAll(convertGroupToAtomSites(alt, model, chainId, internalChainId));
+				for (AtomSite atomSite : convertGroupToAtomSites(alt, model, chainId, internalChainId)) {
+					uniqueAtomSites.put(Integer.parseInt(atomSite.getId()), atomSite);
+				}
 			}
 		}
-		return list;
+		return new ArrayList<>(uniqueAtomSites.values());
 	}
 
 	/**

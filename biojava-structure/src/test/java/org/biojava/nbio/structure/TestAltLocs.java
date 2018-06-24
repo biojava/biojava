@@ -652,7 +652,9 @@ public class TestAltLocs {
 		assertEquals(1, c.getAtomGroups().size());
 		Group g = c.getAtomGroup(0);
 		assertEquals(11, g.size());
-		assertEquals(1, g.getAltLocs().size());
+
+		// there's the main group (. and A) plus the 2 alt loc groups (A and B). The alt locs will contain all the '.' atoms too
+		assertEquals(2, g.getAltLocs().size());
 
 		for (Atom a : g.getAtoms()) {
 			if (a.getName().equals("C") || a.getName().equals("N") || a.getName().equals("O") || a.getName().equals("CA") || a.getName().equals("CB"))
@@ -663,6 +665,14 @@ public class TestAltLocs {
 
 		assertEquals(11, g.getAltLocs().get(0).size());
 		for (Atom a : g.getAltLocs().get(0).getAtoms()) {
+			if (a.getName().equals("C") || a.getName().equals("N") || a.getName().equals("O") || a.getName().equals("CA") || a.getName().equals("CB"))
+				assertEquals(' ', a.getAltLoc().charValue());
+			else
+				assertEquals('A', a.getAltLoc().charValue());
+		}
+
+		assertEquals(11, g.getAltLocs().get(1).size());
+		for (Atom a : g.getAltLocs().get(1).getAtoms()) {
 			if (a.getName().equals("C") || a.getName().equals("N") || a.getName().equals("O") || a.getName().equals("CA") || a.getName().equals("CB"))
 				assertEquals(' ', a.getAltLoc().charValue());
 			else
