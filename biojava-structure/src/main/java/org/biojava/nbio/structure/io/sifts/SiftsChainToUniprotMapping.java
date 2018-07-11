@@ -66,7 +66,7 @@ public class SiftsChainToUniprotMapping {
 
 	static {
 		try {
-			DEFAULT_URL = new URL("ftp://ftp.ebi.ac.uk/pub/databases/msd/sifts/flatfiles/tsv/pdb_chain_uniprot.tsv.gz");
+			DEFAULT_URL = new URL("http://ftp.ebi.ac.uk/pub/databases/msd/sifts/flatfiles/tsv/pdb_chain_uniprot.tsv.gz");
 		} catch (MalformedURLException e) {
 			throw new RuntimeException(e);
 		}

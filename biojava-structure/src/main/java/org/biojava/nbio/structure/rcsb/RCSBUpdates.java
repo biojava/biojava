@@ -33,7 +33,7 @@ import java.util.Map;
 public class RCSBUpdates {
 
 	// The URL for acquiring the data
-	public static final String baseURL = "ftp://ftp.rcsb.org/pub/pdb/data/status/latest/";
+	public static final String baseURL = "http://ftp.rcsb.org/pub/pdb/data/status/latest/";
 
 	/**
 	 *
