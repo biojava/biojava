@@ -41,7 +41,7 @@ public class SiftsMappingProvider {
 	private final static Logger logger = LoggerFactory.getLogger(SiftsMappingProvider.class);
 
 
-	private static final String EBI_SIFTS_FILE_LOCATION = "ftp://ftp.ebi.ac.uk/pub/databases/msd/sifts/xml/%s.xml.gz";
+	private static final String EBI_SIFTS_FILE_LOCATION = "http://ftp.ebi.ac.uk/pub/databases/msd/sifts/xml/%s.xml.gz";
 
 	private static String fileLoc = EBI_SIFTS_FILE_LOCATION;
 
