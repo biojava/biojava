@@ -354,8 +354,8 @@ public interface Group extends Serializable {
 	 * </li>
 	 *
 	 * <p>
-	 * Note that all groups (main and altlocs) will contain all atoms, thus atoms from the default group
-	 * can appear duplicated in main and altloc groups.
+	 * Note that atoms with the default altloc (.) are included in all groups. Atoms with other altlocs (typically A, B, etc)
+	 * will be sorted into groups by altloc.
 	 * <p>
 	 * Thus it can happen that an altloc group duplicate the contents of the main group.
 	 *

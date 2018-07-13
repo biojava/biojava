@@ -596,7 +596,7 @@ public class TestAltLocs {
 	}
 
 	@Test
-	public void testMmcifWritingPartialAltlocs() throws IOException {
+	public void testMmcifConversionPartialAltlocs() throws IOException {
 		String mmcifData =
 				"data_test\n" +
 						"loop_\n" +
@@ -685,7 +685,7 @@ public class TestAltLocs {
 	}
 
 	@Test
-	public void testMmcifWritingAllAltlocs() throws IOException {
+	public void testMmcifConversionAllAltlocs() throws IOException {
 		String mmcifData =
 				"data_test\n" +
 						"loop_\n" +
