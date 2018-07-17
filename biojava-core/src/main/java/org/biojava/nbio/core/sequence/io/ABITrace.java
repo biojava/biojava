@@ -34,6 +34,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.io.InputStream;
+import java.util.Optional;
 
 import org.biojava.nbio.core.sequence.compound.ABITracerCompoundSet;
 import org.biojava.nbio.core.sequence.compound.NucleotideCompound;
@@ -174,6 +175,7 @@ public class ABITrace {
      * Returns the original programmatically determined (unedited) sequence as a <code>AbstractSequence<NucleotideCompound></code>.
      *
      * @return AbstractSequence<NucleotideCompound> sequence
+     * @throws org.biojava.nbio.core.exceptions.CompoundNotFoundException
      */
     public AbstractSequence<NucleotideCompound> getSequence() throws CompoundNotFoundException {
         DNASequenceCreator creator = new DNASequenceCreator(ABITracerCompoundSet.getABITracerCompoundSet());
@@ -191,16 +193,17 @@ public class ABITrace {
      * @throws CompoundNotFoundException if the base is not valid
      */
     public int[] getTrace (String base) throws CompoundNotFoundException {
-        if (base.equals("A")) {
-            return A;
-        } else if (base.equals("C")) {
-            return C;
-        } else if (base.equals("G")) {
-            return G;
-        } else if (base.equals("T")) {
-            return T;
-        } else {
-            throw new CompoundNotFoundException("Don't know base: " + base);
+        switch (base) {
+            case "A":
+                return A;
+            case "C":
+                return C;
+            case "G":
+                return G;
+            case "T":
+                return T;
+            default:
+                throw new CompoundNotFoundException("Don't know base: " + base);
         }
     }
 
@@ -212,9 +215,10 @@ public class ABITrace {
      *
      * @param imageHeight - desired height of the image in pixels.
      * @param widthScale - how many horizontal pixels to use to represent a single x-coordinate (try 2).
+     * @param isForward - if it has "true" value, the image is reverted.
      * @return BufferedImage image
      */
-    public BufferedImage getImage(int imageHeight, int widthScale) {
+    public BufferedImage getImage(int imageHeight, int widthScale, boolean isForward) {
         BufferedImage out = new BufferedImage(traceLength * widthScale, imageHeight, BufferedImage.TYPE_BYTE_INDEXED);
         Graphics2D g = out.createGraphics();
         Color acolor = Color.green.darker();
@@ -223,8 +227,12 @@ public class ABITrace {
         Color tcolor = Color.red;
         Color ncolor = Color.pink;
         double scale = calculateScale(imageHeight);
-        int[] bc = baseCalls;
+        int[] bc = isForward ? baseCalls : getSequenceReverted(baseCalls);
         char[] seq = sequence.toCharArray();
+        int[] AS = isForward ? A : getSequenceReverted(A);
+        int[] CS = isForward ? C : getSequenceReverted(C);
+        int[] GS = isForward ? G : getSequenceReverted(G);
+        int[] TS = isForward ? T:  getSequenceReverted(T);
         g.setBackground(Color.white);
         g.clearRect(0, 0, traceLength * widthScale, imageHeight);
         int here = 0;
@@ -233,27 +241,29 @@ public class ABITrace {
             for (int x = 0; x <= traceLength - 2; x++) {
                 if (q == 1) {
                     g.setColor(acolor);
-                    g.drawLine(2 * x, transmute(A[x], imageHeight, scale),
-                            2 * (x + 1), transmute(A[x + 1], imageHeight, scale));
+                    g.drawLine(2 * x, transmute(AS[x], imageHeight, scale),
+                            2 * (x + 1), transmute(AS[x + 1], imageHeight, scale));
                 }
                 if (q == 2) {
                     g.setColor(ccolor);
-                    g.drawLine(2 * x, transmute(C[x], imageHeight, scale),
-                            2 * (x + 1), transmute(C[x + 1], imageHeight, scale));
+                    g.drawLine(2 * x, transmute(CS[x], imageHeight, scale),
+                            2 * (x + 1), transmute(CS[x + 1], imageHeight, scale));
                 }
                 if (q == 3) {
                     g.setColor(tcolor);
-                    g.drawLine(2 * x, transmute(T[x], imageHeight, scale),
-                            2 * (x + 1), transmute(T[x + 1], imageHeight, scale));
+                    g.drawLine(2 * x, transmute(TS[x], imageHeight, scale),
+                            2 * (x + 1), transmute(TS[x + 1], imageHeight, scale));
                 }
                 if (q == 4) {
                     g.setColor(gcolor);
-                    g.drawLine(2 * x, transmute(G[x], imageHeight, scale),
-                            2 * (x + 1), transmute(G[x + 1], imageHeight, scale));
+                    g.drawLine(2 * x, transmute(GS[x], imageHeight, scale),
+                            2 * (x + 1), transmute(GS[x + 1], imageHeight, scale));
                 }
                 if (q == 5) {
                     if ((here > bc.length - 1) || (basenum > seq.length - 1)) break;
-                    if (bc[here] == x) {
+                    
+                    int hr = isForward ? bc[here] : traceLength-bc[here];
+                    if (hr == x) {
                         g.drawLine(2 * x, transmute(-2, imageHeight, 1.0),
                                 2 * x, transmute(-7, imageHeight, 1.0));
                         if ((basenum + 1) % 10 == 0) //if the basecount is divisible by ten
@@ -294,6 +304,21 @@ public class ABITrace {
             }
         }
         return out;
+    }
+    
+    /**
+     * Returns reverse representation of sequence.
+     * @param sequence
+     * @return 
+     */
+    private int[] getSequenceReverted(int[] sequence){
+        for (int i = 0; i < sequence.length/2; i++) {
+            int s = sequence[i];
+            sequence[i] = sequence[sequence.length - i - 1];
+            sequence[sequence.length - i - 1] = s;
+        }
+        
+        return sequence;
     }
 
     /**
@@ -423,7 +448,6 @@ public class ABITrace {
                 }
             }
         }
-        return;
     }
 
     /**
