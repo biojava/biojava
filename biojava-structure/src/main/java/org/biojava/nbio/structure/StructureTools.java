@@ -1842,7 +1842,8 @@ public class StructureTools {
 		return c.isWaterOnly();
 	}
 
-	/** @deprecated  use {@link Chain#isPureNonPolymer()} instead.
+	/**
+     * @deprecated  use {@link Chain#isPureNonPolymer()} instead.
 	 */
 	@Deprecated
 	public static boolean isChainPureNonPolymer(Chain c) {
@@ -1851,8 +1852,9 @@ public class StructureTools {
 	}
 
 	/**
-	 * Cleans up the structure's alternate location groups. All alternate location groups should have all atoms (except in the case of microheterogenity) or when a deuetuim exiss.
-	 * Ensure that all the alt loc groups have all the atoms in the main group
+	 * Cleans up the structure's alternate location (altloc) groups. All alternate location groups should have all atoms (except
+	 * in the case of microheterogenity) or when a deuterium exists.
+	 * Ensure that all the alt loc groups have all the atoms in the main group.
 	 * @param structure The Structure to be cleaned up
 	 */
 	public static void cleanUpAltLocs(Structure structure) {
@@ -1866,10 +1868,7 @@ public class StructureTools {
 								// Fix for microheterogenity
 								if (altLocGroup.getPDBName().equals(group.getPDBName())) {
 									// If it's a Hydrogen then we check for it's Deuterated brother
-									if(hasDeuteratedEquiv(groupAtom, altLocGroup)){
-										
-									}
-									else{
+									if(!hasDeuteratedEquiv(groupAtom, altLocGroup)){
 										altLocGroup.addAtom(groupAtom);
 									}
 								}
@@ -1896,7 +1895,7 @@ public class StructureTools {
 	}
 	
 	/**
-	 * Check to see if a Hydorgen has a  Deuterated brother in the group.
+	 * Check to see if a Hydrogen has a  Deuterated brother in the group.
 	 * @param atom the input atom that is putatively hydorgen
 	 * @param currentGroup the group the atom is in
 	 * @return true if the atom is hydrogen and it's Deuterium equiv exists.
@@ -1915,4 +1914,5 @@ public class StructureTools {
 		}
 		return name;
 	}
+
 }
