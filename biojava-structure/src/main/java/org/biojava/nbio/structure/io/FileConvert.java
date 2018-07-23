@@ -68,12 +68,14 @@ public class FileConvert {
 		d3.setMaximumIntegerDigits(4);
 		d3.setMinimumFractionDigits(3);
 		d3.setMaximumFractionDigits(3);
+		d3.setGroupingUsed(false);
 	}
 	public static DecimalFormat d2 = (DecimalFormat)NumberFormat.getInstance(Locale.US);
 	static {
 		d2.setMaximumIntegerDigits(3);
 		d2.setMinimumFractionDigits(2);
 		d2.setMaximumFractionDigits(2);
+		d2.setGroupingUsed(false);
 	}
 
 	private static final String newline = System.getProperty("line.separator");
@@ -405,9 +407,10 @@ public class FileConvert {
 		String serial     = String.format("%5d",seri);
 		String fullName   = formatAtomName(a);
 
-
-
-		Character  altLoc = a.getAltLoc()           ;
+		Character  altLoc = a.getAltLoc();		
+		if ( altLoc == null)
+			altLoc = ' ';
+		
 		String resseq = "" ;
 		if ( hasInsertionCode(pdbcode) )
 			resseq     = String.format("%5s",pdbcode);

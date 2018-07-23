@@ -20,10 +20,11 @@
  */
 package org.biojava.nbio.structure.test.util;
 
-import junit.framework.TestCase;
 import org.biojava.nbio.core.util.StringManipulationHelper;
+import org.junit.Assert;
+import org.junit.Test;
 
-public class StringManipulationTestsHelper extends TestCase {
+public class StringManipulationTestsHelper {
 
 	/**
 	 * Asserts that two strings are equal, line by line, ignoring any difference
@@ -36,7 +37,7 @@ public class StringManipulationTestsHelper extends TestCase {
 	 * @param actual
 	 */
 	public static void assertEqualsIgnoreEndline(String expected, String actual) {
-		assertTrue(StringManipulationHelper.equalsToIgnoreEndline(expected, actual));
+		Assert.assertTrue(StringManipulationHelper.equalsToIgnoreEndline(expected, actual));
 	}
 
 	/**
@@ -49,7 +50,7 @@ public class StringManipulationTestsHelper extends TestCase {
 	 * @param actualXml
 	 */
 	public static void assertEqualsXml(String expectedXml, String actualXml) {
-		assertTrue(StringManipulationHelper.equalsToXml(expectedXml, actualXml));
+		Assert.assertTrue(StringManipulationHelper.equalsToXml(expectedXml, actualXml));
 	}
 
 	/**
@@ -67,7 +68,8 @@ public class StringManipulationTestsHelper extends TestCase {
 		}
 	}
 
+	@Test
 	public void testNothing(){
-		assertTrue(true);
+		Assert.assertTrue(true);
 	}
 }

@@ -23,8 +23,10 @@ package org.biojava.nbio.structure.cluster;
 import org.biojava.nbio.alignment.Alignments;
 import org.biojava.nbio.alignment.Alignments.PairwiseSequenceAlignerType;
 import org.biojava.nbio.alignment.SimpleGapPenalty;
+import org.biojava.nbio.alignment.template.GapPenalty;
 import org.biojava.nbio.alignment.template.PairwiseSequenceAligner;
 import org.biojava.nbio.core.alignment.matrices.SubstitutionMatrixHelper;
+import org.biojava.nbio.core.alignment.template.SubstitutionMatrix;
 import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.core.sequence.ProteinSequence;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
@@ -32,24 +34,34 @@ import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.StructureAlignment;
 import org.biojava.nbio.structure.align.StructureAlignmentFactory;
-import org.biojava.nbio.structure.align.ce.CeMain;
+import org.biojava.nbio.structure.align.ce.ConfigStrucAligParams;
 import org.biojava.nbio.structure.align.model.AFPChain;
+import org.biojava.nbio.structure.align.multiple.Block;
+import org.biojava.nbio.structure.align.multiple.BlockImpl;
+import org.biojava.nbio.structure.align.multiple.BlockSet;
+import org.biojava.nbio.structure.align.multiple.BlockSetImpl;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsembleImpl;
+import org.biojava.nbio.structure.align.multiple.MultipleAlignmentImpl;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
-import org.biojava.nbio.structure.symmetry.core.Subunits;
+import org.biojava.nbio.structure.align.multiple.util.ReferenceSuperimposer;
+import org.biojava.nbio.structure.symmetry.core.QuatSymmetrySubunits;
 import org.biojava.nbio.structure.symmetry.internal.CESymmParameters;
 import org.biojava.nbio.structure.symmetry.internal.CeSymm;
 import org.biojava.nbio.structure.symmetry.internal.CeSymmResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
- * A SubunitCluster contains a set of equivalent {@link Subunits}, the set of
- * equivalent residues (EQR) between {@link Subunit} and a {@link Subunit}
- * representative. It also stores the method used for clustering.
+ * A SubunitCluster contains a set of equivalent {@link QuatSymmetrySubunits},
+ * the set of equivalent residues (EQR) between {@link Subunit} and a
+ * {@link Subunit} representative. It also stores the method used for
+ * clustering.
  * <p>
  * This class allows the comparison and merging of SubunitClusters.
  * 
@@ -65,10 +77,40 @@ public class SubunitCluster {
 	private List<Subunit> subunits = new ArrayList<Subunit>();
 	private List<List<Integer>> subunitEQR = new ArrayList<List<Integer>>();
 	private int representative = -1;
-	private SubunitClustererMethod method = SubunitClustererMethod.IDENTITY;
+
+	private SubunitClustererMethod method = SubunitClustererMethod.SEQUENCE;
+	private boolean pseudoStoichiometric = false;
 
 	/**
-	 * A SubunitCluster is always initialized with a single Subunit.
+	 * A letter that is assigned to this cluster in stoichiometry.
+	*/
+	private String alpha = "";
+
+	/**
+	 * A letter that is assigned to this cluster in stoichiometry.
+	 *
+	 * @return alpha
+	 *          String
+	 */
+
+	public String getAlpha() {
+		return alpha;
+	}
+
+	/**
+	 * A letter that is assigned to this cluster in stoichiometry.
+	 *
+	 * @param  alpha
+	 *          String
+	 */
+	public void setAlpha(String alpha) {
+		this.alpha = alpha;
+	}
+
+	/**
+	 * A constructor from a single Subunit. To obtain a
+	 * SubunitCluster with multiple Subunits, initialize different
+	 * SubunitClusters and merge them.
 	 * 
 	 * @param subunit
 	 *            initial Subunit
@@ -83,6 +125,42 @@ public class SubunitCluster {
 		subunitEQR.add(identity);
 
 		representative = 0;
+	}
+
+	/**
+	 * A copy constructor with the possibility of removing subunits.
+	 * No re-clustering is done.
+	 *
+	 * @param other
+	 *            reference SubunitCluster
+	 * @param subunitsToRetain
+	 *            which subunits to copy to this cluster
+	 */
+	public SubunitCluster(SubunitCluster other, List<Integer> subunitsToRetain) {
+		method = other.method;
+		pseudoStoichiometric = other.pseudoStoichiometric;
+		for (int i = 0; i < other.subunits.size(); i++) {
+			if(subunitsToRetain.contains(i)) {
+				subunits.add(other.subunits.get(i));
+				subunitEQR.add(other.subunitEQR.get(i));
+			}
+		}
+		representative = 0;
+		for (int i=1; i<subunits.size(); i++) {
+			if (subunits.get(i).size() > subunits.get(representative).size()) {
+				representative = i;
+			}
+		}
+		setAlpha(other.getAlpha());
+	}
+
+	/**
+	 * Subunits contained in the SubunitCluster.
+	 * 
+	 * @return an unmodifiable view of the original List
+	 */
+	public List<Subunit> getSubunits() {
+		return Collections.unmodifiableList(subunits);
 	}
 
 	/**
@@ -124,25 +202,61 @@ public class SubunitCluster {
 
 	/**
 	 * Merges the other SubunitCluster into this one if their representatives
-	 * sequences are similar (higher sequence identity and coverage than the
-	 * thresholds).
+	 * sequences are similar (according to the criteria in params).
 	 * <p>
-	 * The sequence alignment is performed using Smith Waterman, default linear
-	 * {@link SimpleGapPenalty} and BLOSUM62 as scoring matrix.
+	 * The sequence alignment is performed using linear {@link SimpleGapPenalty} and
+	 * BLOSUM62 as scoring matrix.
 	 * 
 	 * @param other
 	 *            SubunitCluster
-	 * @param minSeqid
-	 *            sequence identity threshold. Value in [0,1]. Values lower than
-	 *            0.7 are not recommended. Use {@link #mergeStructure} for lower
-	 *            values.
-	 * @param minCoverage
-	 *            coverage (alignment fraction) threshold. Value in [0,1].
+	 * @param params
+	 *            SubunitClustererParameters, with information whether to use local
+	 *            or global alignment, sequence identity and coverage thresholds.
+	 *            Threshold values lower than 0.7 are not recommended.
+	 *            Use {@link #mergeStructure} for lower values.
 	 * @return true if the SubunitClusters were merged, false otherwise
 	 * @throws CompoundNotFoundException
 	 */
-	public boolean mergeSequence(SubunitCluster other, double minSeqid,
-			double minCoverage) throws CompoundNotFoundException {
+
+	public boolean mergeSequence(SubunitCluster other, SubunitClustererParameters params) throws CompoundNotFoundException {
+		PairwiseSequenceAlignerType alignerType = PairwiseSequenceAlignerType.LOCAL;
+		if (params.isUseGlobalMetrics()) {
+			alignerType = PairwiseSequenceAlignerType.GLOBAL;
+		}
+		return mergeSequence(other, params,alignerType
+				, new SimpleGapPenalty(),
+				SubstitutionMatrixHelper.getBlosum62());
+	}
+
+	/**
+	 * Merges the other SubunitCluster into this one if their representatives
+	 * sequences are similar (according to the criteria in params).
+	 * <p>
+	 * The sequence alignment is performed using linear {@link SimpleGapPenalty} and
+	 * BLOSUM62 as scoring matrix.
+	 * 
+	 * @param other
+	 *            SubunitCluster
+	 * @param params
+	 *            {@link SubunitClustererParameters}, with information whether to use local
+	 *            or global alignment, sequence identity and coverage thresholds.
+	 *            Threshold values lower than 0.7 are not recommended.
+	 *            Use {@link #mergeStructure} for lower values.
+	 * @param alignerType
+	 *            parameter for the sequence alignment algorithm
+	 * @param gapPenalty
+	 *            parameter for the sequence alignment algorithm
+	 * @param subsMatrix
+	 *            parameter for the sequence alignment algorithm
+	 * @return true if the SubunitClusters were merged, false otherwise
+	 * @throws CompoundNotFoundException
+	 */
+
+	public boolean mergeSequence(SubunitCluster other, SubunitClustererParameters params,
+								 PairwiseSequenceAlignerType alignerType,
+								 GapPenalty gapPenalty,
+								 SubstitutionMatrix<AminoAcidCompound> subsMatrix)
+			throws CompoundNotFoundException {
 
 		// Extract the protein sequences as BioJava alignment objects
 		ProteinSequence thisSequence = this.subunits.get(this.representative)
@@ -150,34 +264,41 @@ public class SubunitCluster {
 		ProteinSequence otherSequence = other.subunits
 				.get(other.representative).getProteinSequence();
 
-		// Perform a Smith-Waterman alignment with BLOSUM62
+		// Perform the alignment with provided parameters
 		PairwiseSequenceAligner<ProteinSequence, AminoAcidCompound> aligner = Alignments
-				.getPairwiseAligner(thisSequence, otherSequence,
-						PairwiseSequenceAlignerType.LOCAL,
-						new SimpleGapPenalty(),
-						SubstitutionMatrixHelper.getBlosum62());
+				.getPairwiseAligner(thisSequence, otherSequence, alignerType,
+						gapPenalty, subsMatrix);
 
-		// Calculate real coverage (subtract gaps in both sequences)
-		double gaps1 = aligner.getPair().getAlignedSequence(1)
-				.getNumGapPositions();
-		double gaps2 = aligner.getPair().getAlignedSequence(2)
-				.getNumGapPositions();
-		double lengthAlignment = aligner.getPair().getLength();
-		double lengthThis = aligner.getQuery().getLength();
-		double lengthOther = aligner.getTarget().getLength();
-		double coverage = (lengthAlignment - gaps1 - gaps2)
-				/ Math.max(lengthThis, lengthOther);
+		double sequenceIdentity;
+		if(params.isUseGlobalMetrics()) {
+			sequenceIdentity = aligner.getPair().getPercentageOfIdentity(true);
+		} else {
+			sequenceIdentity = aligner.getPair().getPercentageOfIdentity(false);
+		}
 
-		if (coverage < minCoverage)
+		if (sequenceIdentity < params.getSequenceIdentityThreshold())
 			return false;
 
-		double seqid = aligner.getPair().getPercentageOfIdentity();
+		double sequenceCoverage = 0;
+		if(params.isUseSequenceCoverage()) {
+			// Calculate real coverage (subtract gaps in both sequences)
+			double gaps1 = aligner.getPair().getAlignedSequence(1)
+					.getNumGapPositions();
+			double gaps2 = aligner.getPair().getAlignedSequence(2)
+					.getNumGapPositions();
+			double lengthAlignment = aligner.getPair().getLength();
+			double lengthThis = aligner.getQuery().getLength();
+			double lengthOther = aligner.getTarget().getLength();
+			sequenceCoverage = (lengthAlignment - gaps1 - gaps2)
+					/ Math.max(lengthThis, lengthOther);
 
-		if (seqid < minSeqid)
-			return false;
+			if (sequenceCoverage < params.getSequenceCoverageThreshold())
+				return false;
+		}
 
-		logger.info("SubunitClusters are similar in sequence with {} sequence "
-				+ "identity and {} coverage", seqid, coverage);
+		logger.info(String.format("SubunitClusters are similar in sequence "
+						+ "with %.2f sequence identity and %.2f coverage", sequenceIdentity,
+				sequenceCoverage));
 
 		// If coverage and sequence identity sufficient, merge other and this
 		List<Integer> thisAligned = new ArrayList<Integer>();
@@ -221,7 +342,6 @@ public class SubunitCluster {
 					other.representative).get(t)))
 				otherRemove.add(t);
 		}
-
 		// Now remove unaligned columns, from end to start
 		Collections.sort(thisRemove);
 		Collections.reverse(thisRemove);
@@ -252,39 +372,50 @@ public class SubunitCluster {
 
 		this.method = SubunitClustererMethod.SEQUENCE;
 
+		pseudoStoichiometric = !params.isHighConfidenceScores(sequenceIdentity,sequenceCoverage);
+
 		return true;
 	}
 
 	/**
 	 * Merges the other SubunitCluster into this one if their representative
-	 * Atoms are structurally similar (lower RMSD and higher coverage than the
-	 * thresholds).
+	 * Atoms are structurally similar (according to the criteria in params).
 	 * <p>
-	 * The structure alignment is performed using FatCatRigid, with default
-	 * parameters.
-	 * 
+	 *
 	 * @param other
 	 *            SubunitCluster
-	 * @param maxRmsd
-	 *            RMSD threshold.
-	 * @param minCoverage
-	 *            coverage (alignment fraction) threshold. Value in [0,1].
+	 * @param params
+	 *            {@link SubunitClustererParameters}, with information on what alignment
+	 *            algorithm to use, RMSD/TMScore and structure coverage thresholds.
 	 * @return true if the SubunitClusters were merged, false otherwise
 	 * @throws StructureException
 	 */
-	public boolean mergeStructure(SubunitCluster other, double maxRmsd,
-			double minCoverage) throws StructureException {
 
-		// Perform a FatCat alignment with default parameters
-		StructureAlignment algorithm = StructureAlignmentFactory
-				.getAlgorithm(CeMain.algorithmName);
+	public boolean mergeStructure(SubunitCluster other, SubunitClustererParameters params) throws StructureException {
 
-		AFPChain afp = algorithm.align(this.subunits.get(this.representative)
+		StructureAlignment aligner = StructureAlignmentFactory.getAlgorithm(params.getSuperpositionAlgorithm());
+		ConfigStrucAligParams aligner_params = aligner.getParameters();
+
+		Method setOptimizeAlignment = null;
+		try {
+			setOptimizeAlignment = aligner_params.getClass().getMethod("setOptimizeAlignment", boolean.class);
+		} catch (NoSuchMethodException e) {
+			//alignment algorithm does not have an optimization switch, moving on
+		}
+		if (setOptimizeAlignment != null) {
+			try {
+				setOptimizeAlignment.invoke(aligner_params, params.isOptimizeAlignment());
+			} catch (IllegalAccessException|InvocationTargetException e) {
+				logger.warn("Could not set alignment optimisation switch");
+			}
+		}
+
+		AFPChain afp = aligner.align(this.subunits.get(this.representative)
 				.getRepresentativeAtoms(),
 				other.subunits.get(other.representative)
 						.getRepresentativeAtoms());
 
-		// Convert AFPChain to MultipleAlignment for convinience
+		// Convert AFPChain to MultipleAlignment for convenience
 		MultipleAlignment msa = new MultipleAlignmentEnsembleImpl(
 				afp,
 				this.subunits.get(this.representative).getRepresentativeAtoms(),
@@ -292,19 +423,27 @@ public class SubunitCluster {
 						.getRepresentativeAtoms(), false)
 				.getMultipleAlignment(0);
 
-		double coverage = Math.min(msa.getCoverages().get(0), msa
+		double structureCoverage = Math.min(msa.getCoverages().get(0), msa
 				.getCoverages().get(1));
-		if (coverage < minCoverage)
+
+		if(params.isUseStructureCoverage() && structureCoverage < params.getStructureCoverageThreshold()) {
 			return false;
+		}
 
 		double rmsd = afp.getTotalRmsdOpt();
-		if (rmsd > maxRmsd)
+		if (params.isUseRMSD() && rmsd > params.getRMSDThreshold()) {
 			return false;
+		}
 
-		logger.info("SubunitClusters are structurally similar with {} RMSD "
-				+ "and {} coverage", rmsd, coverage);
+		double tmScore = afp.getTMScore();
+		if (params.isUseTMScore() && tmScore < params.getTMThreshold()) {
+			return false;
+		}
 
-		// If RMSD is low and coverage sufficient merge clusters
+		logger.info(String.format("SubunitClusters are structurally similar with "
+				+ "%.2f RMSD %.2f coverage", rmsd, structureCoverage));
+
+		// Merge clusters
 		List<List<Integer>> alignedRes = msa.getBlock(0).getAlignRes();
 		List<Integer> thisAligned = new ArrayList<Integer>();
 		List<Integer> otherAligned = new ArrayList<Integer>();
@@ -377,6 +516,7 @@ public class SubunitCluster {
 		this.subunitEQR.addAll(other.subunitEQR);
 
 		this.method = SubunitClustererMethod.STRUCTURE;
+		pseudoStoichiometric = true;
 
 		return true;
 	}
@@ -386,43 +526,42 @@ public class SubunitCluster {
 	 * {@link Subunit} into the internal repeats (domains) if they are
 	 * internally symmetric.
 	 * 
-	 * @param coverageThreshold
+	 * @param clusterParams {@link SubunitClustererParameters} with fields used as follows:
+	 * structureCoverageThreshold
 	 *            the minimum coverage of all repeats in the Subunit
-	 * @param rmsdThreshold
+	 * rmsdThreshold
 	 *            the maximum allowed RMSD between the repeats
-	 * @param minSequenceLength
+	 * minimumSequenceLength
 	 *            the minimum length of the repeating units
 	 * @return true if the cluster was internally symmetric, false otherwise
 	 * @throws StructureException
 	 */
-	public boolean divideInternally(double coverageThreshold,
-			double rmsdThreshold, int minSequenceLength)
+	public boolean divideInternally(SubunitClustererParameters clusterParams)
 			throws StructureException {
 
-		CESymmParameters params = new CESymmParameters();
-		params.setMinCoreLength(minSequenceLength);
-		params.setGaps(false); // We want no gaps between the repeats
+		CESymmParameters cesym_params = new CESymmParameters();
+		cesym_params.setMinCoreLength(clusterParams.getMinimumSequenceLength());
+		cesym_params.setGaps(false); // We want no gaps between the repeats
 
 		// Analyze the internal symmetry of the representative subunit
 		CeSymmResult result = CeSymm.analyze(subunits.get(representative)
-				.getRepresentativeAtoms(), params);
+				.getRepresentativeAtoms(), cesym_params);
 
 		if (!result.isSignificant())
 			return false;
 
 		double rmsd = result.getMultipleAlignment().getScore(
 				MultipleAlignmentScorer.RMSD);
-		if (rmsd > rmsdThreshold)
+		if (rmsd > clusterParams.getRMSDThreshold())
 			return false;
 
 		double coverage = result.getMultipleAlignment().getCoverages().get(0)
 				* result.getNumRepeats();
-		if (coverage < coverageThreshold)
+		if (coverage < clusterParams.getStructureCoverageThreshold())
 			return false;
 
-		logger.info(
-				"SubunitCluster is internally symmetric with {} repeats, {} RMSD "
-						+ "and {} coverage", result.getNumRepeats(), rmsd,
+		logger.info("SubunitCluster is internally symmetric with {} repeats, "
+				+ "{} RMSD and {} coverage", result.getNumRepeats(), rmsd,
 				coverage);
 
 		// Divide if symmety was significant with RMSD and coverage sufficient
@@ -474,7 +613,9 @@ public class SubunitCluster {
 				Atom[] reprAtoms = Arrays.copyOfRange(subunits.get(s)
 						.getRepresentativeAtoms(), start, end + 1);
 
-				newSubunits.add(new Subunit(reprAtoms));
+				newSubunits.add(new Subunit(reprAtoms, subunits.get(s)
+						.getName(), subunits.get(s).getIdentifier(), subunits
+						.get(s).getStructure()));
 
 				// Recalculate equivalent residues
 				List<Integer> eqr = new ArrayList<Integer>();
@@ -495,8 +636,8 @@ public class SubunitCluster {
 				representative = s;
 		}
 
-		method = SubunitClustererMethod.INTERNAL_SYMMETRY;
-
+		method = SubunitClustererMethod.STRUCTURE;
+		pseudoStoichiometric = true;
 		return true;
 	}
 
@@ -531,26 +672,24 @@ public class SubunitCluster {
 
 		List<Atom[]> alignedAtoms = Collections.emptyList();
 
-		// Loop through all subunits and add only the aligned positions
-		for (int s = 0; s < subunits.size(); s++) {
-			Atom[] aligned = new Atom[length()];
-			for (int p = 0; p < length(); p++) {
-				aligned[p] = subunits.get(s).getRepresentativeAtoms()[subunitEQR
-						.get(s).get(p)];
-			}
-			alignedAtoms.add(aligned);
-		}
+		// Loop through all subunits and add the aligned positions
+		for (int s = 0; s < subunits.size(); s++)
+			alignedAtoms.add(getAlignedAtomsSubunit(s));
 
 		return alignedAtoms;
 	}
 
 	/**
+	 * @param index
+	 *            Subunit index in the Cluster
 	 * @return An Atom array of length {@link #length()} with the aligned Atoms
-	 *         from the selected Subunit in the cluster
+	 *         from the selected Subunit in the Cluster
 	 */
 	public Atom[] getAlignedAtomsSubunit(int index) {
 
 		Atom[] aligned = new Atom[subunitEQR.get(index).size()];
+
+		// Add only the aligned positions of the Subunit in the Cluster
 		for (int p = 0; p < subunitEQR.get(index).size(); p++) {
 			aligned[p] = subunits.get(index).getRepresentativeAtoms()[subunitEQR
 					.get(index).get(p)];
@@ -559,11 +698,53 @@ public class SubunitCluster {
 		return aligned;
 	}
 
+	/**
+	 * The multiple alignment is calculated from the equivalent residues in the
+	 * SubunitCluster. The alignment is recalculated every time the method is
+	 * called (no caching).
+	 * 
+	 * @return MultipleAlignment representation of the aligned residues in this
+	 *         Subunit Cluster
+	 * @throws StructureException
+	 */
+	public MultipleAlignment getMultipleAlignment() throws StructureException {
+
+		// Create a multiple alignment with the atom arrays of the Subunits
+		MultipleAlignment msa = new MultipleAlignmentImpl();
+		msa.setEnsemble(new MultipleAlignmentEnsembleImpl());
+		msa.getEnsemble().setAtomArrays(
+				subunits.stream().map(s -> s.getRepresentativeAtoms())
+						.collect(Collectors.toList()));
+
+		// Fill in the alignment information
+		BlockSet bs = new BlockSetImpl(msa);
+		Block b = new BlockImpl(bs);
+		b.setAlignRes(subunitEQR);
+
+		// Fill in the transformation matrices
+		new ReferenceSuperimposer(representative).superimpose(msa);
+
+		// Calculate some scores
+		MultipleAlignmentScorer.calculateScores(msa);
+
+		return msa;
+
+	}
+
 	@Override
 	public String toString() {
 		return "SubunitCluster [Size=" + size() + ", Length=" + length()
 				+ ", Representative=" + representative + ", Method=" + method
 				+ "]";
+	}
+
+	/**
+	 * @return true if this cluster is considered pseudo-stoichiometric (i.e.,
+	 * 		   was either clustered by structure, or by sequence with low scores),
+	 *         false otherwise.
+	 */
+	public boolean isPseudoStoichiometric() {
+		return pseudoStoichiometric;
 	}
 
 }

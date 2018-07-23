@@ -62,11 +62,14 @@ public interface MMcifConsumer {
 	public void newCell(Cell cell);
 	public void newSymmetry(Symmetry symmetry);
 	public void newStructNcsOper(StructNcsOper sNcsOper);
+	public void newAtomSites(AtomSites atomSites);
 	public void newStructRef(StructRef sref);
 	public void newStructRefSeq(StructRefSeq sref);
 	public void newStructRefSeqDif(StructRefSeqDif sref);
 	public void newStructSite(StructSite sref);
 	public void newStructSiteGen(StructSiteGen sref);
+	public void newPdbxAuditRevisionHistory(PdbxAuditRevisionHistory history);
+	public void newPdbxDatabaseStatus(PdbxDatabaseStatus status);
 	public void newPdbxPolySeqScheme(PdbxPolySeqScheme ppss);
 	public void newPdbxNonPolyScheme(PdbxNonPolyScheme ppss);
 	public void newPdbxEntityNonPoly(PdbxEntityNonPoly pen);

@@ -12,7 +12,7 @@
 	<groupId>org.biojava</groupId>
 	<artifactId>biojava</artifactId>
 	<packaging>pom</packaging>
-	<version>5.0.0-SNAPSHOT</version>
+	<version>5.1.0-SNAPSHOT</version>
 	<name>biojava</name>
 	<description>BioJava is an open-source project dedicated to providing a Java framework for processing biological
         data. It provides analytical and statistical routines, parsers for common file formats and allows the
@@ -36,10 +36,12 @@
 		<maven.enforcer.jdk-version>1.8</maven.enforcer.jdk-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.build.targetEncoding>UTF-8</project.build.targetEncoding>
+		<!-- needed for failsafe plugin in integrationtest module - JD 2018-03-08 -->
+    	<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<maxmem>512M</maxmem>
-		<mmtf.version>1.0.0</mmtf.version>
-		<slf4j.version>1.7.21</slf4j.version>
-		<log4j.version>2.6.1</log4j.version>
+		<mmtf.version>1.0.8</mmtf.version>
+		<slf4j.version>1.7.25</slf4j.version>
+		<log4j.version>2.6.2</log4j.version>
 	</properties>
 	<scm>
 		<connection>scm:git:git://github.com/biojava/biojava.git</connection>
@@ -71,6 +73,10 @@
 			</properties>
 		</developer>
 		<developer>
+			<id>lafita</id>
+			<name>Aleix Lafita</name>
+		</developer>
+		<developer>
 			<name>Amr AL-HOSSARY</name>
 		</developer>
 		<developer>
@@ -79,9 +85,9 @@
 		<developer>
 			<name>Andy Yates</name>
 		</developer>
-                <developer>
-                        <name>Anthony Bradley</name>
-                </developer>
+      	<developer>
+            <name>Anthony Bradley</name>
+      	</developer>
 		<developer>
 			<name>Carmelo Foti</name>
 		</developer>
@@ -157,7 +163,7 @@
 				</plugin>
 				<plugin>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.5.1</version>
+					<version>3.7.0</version>
 					<configuration>
 						<source>${jdk.version}</source>
 						<target>${jdk.version}</target>
@@ -165,7 +171,7 @@
 				</plugin>
 				<plugin>
 					<artifactId>maven-dependency-plugin</artifactId>
-					<version>2.10</version>
+					<version>3.0.2</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-jar-plugin</artifactId>
@@ -173,11 +179,11 @@
 					      there are some config changes required.
 					      see https://github.com/biojava/biojava/issues/531
 					      -->
-					<version>2.6</version>
+					<version>3.0.2</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-scm-plugin</artifactId>
-					<version>1.9.4</version>
+					<version>1.9.5</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-source-plugin</artifactId>
@@ -185,7 +191,7 @@
 				</plugin>
 				<plugin>
 					<artifactId>maven-failsafe-plugin</artifactId>
-					<version>2.19.1</version>
+					<version>2.21.0</version>
 				</plugin>
 				<plugin>
 					<groupId>net.sf</groupId>
@@ -218,26 +224,29 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-javadoc-plugin</artifactId>
-					<version>2.10.4</version>
+					<version>3.0.0</version>
 					<configuration>
-					                       <additionalparam>-Xdoclint:none</additionalparam>
-				
+					    <additionalJOptions>-Xdoclint:none</additionalJOptions>
+					    <!-- we need to allow script in comments or otherwise we can't use google analytics js in footer below - JD 2017-03-30 -->
+						<additionalJOption>--allow-script-in-comments</additionalJOption>
 						<maxmemory>256m</maxmemory>
-						<footer>&lt;script src="http://www.google-analytics.com/urchin.js"
+						<footer>
+							&lt;script src="http://www.google-analytics.com/urchin.js"
 							type="text/javascript"&gt;&lt;/script&gt;&lt;script
 							type="text/javascript"&gt;_uacct =
-							"UA-1326640-1";urchinTracker();&lt;/script&gt;</footer>
+							"UA-1326640-1";urchinTracker();&lt;/script&gt;
+						</footer>
 					</configuration>
 
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-shade-plugin</artifactId>
-					<version>2.4.3</version>
+					<version>3.1.0</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-assembly-plugin</artifactId>
-					<version>2.6</version>
+					<version>3.1.0</version>
 					<configuration>
 						<descriptors>
 							<descriptor>src/main/assembly/assembly.xml</descriptor>
@@ -259,7 +268,7 @@
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>findbugs-maven-plugin</artifactId>
-					<version>3.0.3</version>
+					<version>3.0.5</version>
 				</plugin>
 
 				<plugin>
@@ -277,12 +286,12 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-resources-plugin</artifactId>
-					<version>3.0.1</version>
+					<version>3.0.2</version>
 				</plugin>
 
 				<plugin>
 					<artifactId>maven-enforcer-plugin</artifactId>
-					<version>1.4.1</version>
+					<version>3.0.0-M1</version>
 					<executions>
 						<execution>
 							<id>enforce-java</id>
@@ -298,6 +307,21 @@
 							</configuration>
 						</execution>
 					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-install-plugin</artifactId>
+					<version>2.5.2</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>2.21.0</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-site-plugin</artifactId>
+					<version>3.7</version>
 				</plugin>
 
 			</plugins>
@@ -337,20 +361,12 @@
 
 			<!-- give more memory for junit tests -->
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.19.1</version>
 				<configuration>
 					<argLine>-Xmx1500M</argLine>
 					<reuseForks>false</reuseForks>
 					<forkCount>1</forkCount>
-
-					<excludes>
-						<!-- we exclude by default the long parsing tests, they will only be 
-							executed if explicitly called -->
-						<exclude>**/TestLongPdbVsMmCifParsing.java</exclude>
-						<exclude>**/TestAtomCachePerformance.java</exclude>
-						<exclude>**/EcodInstallationTest.java</exclude>
-					</excludes>
 				</configuration>
 			</plugin>
 
@@ -393,53 +409,48 @@
 				</configuration>
 			</plugin>
 
-			<plugin>
-				<groupId>com.versioneye</groupId>
-				<artifactId>versioneye-maven-plugin</artifactId>
-				<version>3.9.2</version>
-			</plugin>
-
 			<!-- code coverage plugin -->
-			<plugin>
-				<groupId>org.eluder.coveralls</groupId>
-				<artifactId>coveralls-maven-plugin</artifactId>
-				<version>4.2.0</version>
+			<!-- coveralls/cobertura seems outdated and has many problems, I think we need to use a different plugin. Commenting out - JD 2018-03-16 -->
+			<!--<plugin>-->
+				<!--<groupId>org.eluder.coveralls</groupId>-->
+				<!--<artifactId>coveralls-maven-plugin</artifactId>-->
+				<!--<version>4.2.0</version>-->
+				<!--&lt;!&ndash;<configuration>&ndash;&gt;-->
+					<!--&lt;!&ndash;<repoToken>YOURTOKENGOESHERE</repoToken>&ndash;&gt;-->
+				<!--&lt;!&ndash;</configuration>&ndash;&gt;-->
+			<!--</plugin>-->
+			<!--<plugin>-->
+				<!--<groupId>org.codehaus.mojo</groupId>-->
+				<!--<artifactId>cobertura-maven-plugin</artifactId>-->
+				<!--<version>2.7</version>-->
 				<!--<configuration>-->
-					<!--<repoToken>YOURTOKENGOESHERE</repoToken>-->
-				<!--</configuration>-->
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>cobertura-maven-plugin</artifactId>
-				<version>2.7</version>
-				<configuration>
-					<check>true</check>
-					<format>xml</format>
-					<maxmem>256m</maxmem>
-					<!-- aggregated reports for multi-module projects -->
-					<aggregate>true</aggregate>
+					<!--<check>true</check>-->
+					<!--<format>xml</format>-->
+					<!--<maxmem>256m</maxmem>-->
+					<!--&lt;!&ndash; aggregated reports for multi-module projects &ndash;&gt;-->
+					<!--<aggregate>true</aggregate>-->
 
-					<instrumentation>
-						<excludes>
-							<exclude>org/biojava/nbio/structure/io/mmcif/MMCIFFileTools.class</exclude>
-							<exclude>org/biojava/nbio/structure/symmetry/utils/SymmetryTools.class</exclude>
-							<exclude>demo/DemoFATCAT.class</exclude>
-							<exclude>org/biojava/nbio/structure/align/ce/CECalculator.class</exclude>
-						</excludes>
-						<ignores>
-							<ignore>org.biojava.nbio.structure.io.mmcif.MMCIFFileTools*</ignore>
-							<ignore>demo.*</ignore>
-						</ignores>
-					</instrumentation>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>clean</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
+					<!--<instrumentation>-->
+						<!--<excludes>-->
+							<!--<exclude>org/biojava/nbio/structure/io/mmcif/MMCIFFileTools.class</exclude>-->
+							<!--<exclude>org/biojava/nbio/structure/symmetry/utils/SymmetryTools.class</exclude>-->
+							<!--<exclude>demo/DemoFATCAT.class</exclude>-->
+							<!--<exclude>org/biojava/nbio/structure/align/ce/CECalculator.class</exclude>-->
+						<!--</excludes>-->
+						<!--<ignores>-->
+							<!--<ignore>org.biojava.nbio.structure.io.mmcif.MMCIFFileTools*</ignore>-->
+							<!--<ignore>demo.*</ignore>-->
+						<!--</ignores>-->
+					<!--</instrumentation>-->
+				<!--</configuration>-->
+				<!--<executions>-->
+					<!--<execution>-->
+						<!--<goals>-->
+							<!--<goal>clean</goal>-->
+						<!--</goals>-->
+					<!--</execution>-->
+				<!--</executions>-->
+			<!--</plugin>-->
 
 		</plugins>
 
@@ -503,12 +514,11 @@
 		<plugins>
 			<plugin>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.10.4</version>
 				<configuration>
 					<aggregate>true</aggregate>
 					<breakiterator>true</breakiterator>
 					<quiet>true</quiet>
-					<source>1.7</source>
+					<source>1.8</source>
 					<verbose>false</verbose>
 					<linksource>true</linksource>
 
@@ -535,7 +545,6 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>findbugs-maven-plugin</artifactId>
-				<version>3.0.3</version>
 			</plugin>
 
 			<plugin>
@@ -636,12 +645,9 @@
 	<modules>
 
 		<module>biojava-core</module>
-		<module>biojava-phylo</module>
 		<module>biojava-alignment</module>
 		<module>biojava-structure</module>
-		<module>biojava-integrationtest</module>
 		<module>biojava-structure-gui</module>
-		<module>biojava-sequencing</module>
 		<module>biojava-genome</module>
 		<module>biojava-modfinder</module>
 		<module>biojava-ws</module>
@@ -649,6 +655,8 @@
 		<module>biojava-aa-prop</module>
 		<module>biojava-survival</module>
 		<module>biojava-ontology</module>
+		<!-- Keep integration tests last  -->
+		<module>biojava-integrationtest</module>
 	</modules>
 	<inceptionYear>2000</inceptionYear>
 	<issueManagement>

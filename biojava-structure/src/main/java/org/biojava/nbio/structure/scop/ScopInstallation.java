@@ -27,7 +27,7 @@ package org.biojava.nbio.structure.scop;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
-import org.biojava.nbio.structure.io.util.FileDownloadUtils;
+import org.biojava.nbio.core.util.FileDownloadUtils;
 import org.biojava.nbio.core.util.InputStreamProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +38,8 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 
-/** This class provides access to the SCOP protein structure classification.
+/**
+ * This class provides access to the SCOP protein structure classification.
  *
  * For more information about SCOP see here:
  *  <ul>
@@ -61,7 +62,7 @@ public class ScopInstallation implements LocalScopDatabase {
 
 	private static final Logger logger = LoggerFactory.getLogger(ScopInstallation.class);
 
-	protected String scopVersion;
+	private String scopVersion;
 
 	// Stores URLs for cla, des, hie, and com files
 	private final List<ScopMirror> mirrors;
@@ -76,29 +77,24 @@ public class ScopInstallation implements LocalScopDatabase {
 	public static final String SCOP_DOWNLOAD = "http://scop.berkeley.edu/downloads/parse/";
 	public static final String SCOP_DOWNLOAD_ALTERNATE = "http://scop.berkeley.edu/downloads/parse/";
 
-	public static final String NEWLINE;
-	public static final String FILESPLIT ;
+	//public static final String NEWLINE = System.getProperty("line.separator");
+	public static final String FILESPLIT = System.getProperty("file.separator");
 
-	static {
+	private String cacheLocation ;
 
-		NEWLINE     = System.getProperty("line.separator");
-		FILESPLIT   = System.getProperty("file.separator");
-	}
+	private AtomicBoolean installedCla;
+	private AtomicBoolean installedDes;
+	private AtomicBoolean installedHie;
+	private AtomicBoolean installedCom;
 
-	String cacheLocation ;
-
-	AtomicBoolean installedCla;
-	AtomicBoolean installedDes;
-	AtomicBoolean installedHie;
-	AtomicBoolean installedCom;
-
-	Map<Integer, List<String>> commentsMap;
-	Map<String, List<ScopDomain>> domainMap;
-	Map<Integer, ScopDescription> sunidMap;
-	Map<Integer, ScopNode> scopTree;
+	private Map<Integer, List<String>> commentsMap;
+	private Map<String, List<ScopDomain>> domainMap;
+	private Map<Integer, ScopDescription> sunidMap;
+	private Map<Integer, ScopNode> scopTree;
 
 
-	/** Create a new SCOP installation.
+	/**
+	 * Create a new SCOP installation.
 	 *
 	 * @param cacheLocation where the SCOP files are stored. If they can't be found at that location they will get automatically downloaded and installed there.
 	 */
@@ -812,27 +808,6 @@ public class ScopInstallation implements LocalScopDatabase {
 		installedHie.set(false);
 		installedCom.set(false);
 
-	}
-
-
-	/**
-	 * Get the URL of the first scop mirror being used
-	 * @return
-	 */
-	@Deprecated
-	public String getScopDownloadURL() {
-		if(mirrors.size()<1) initScopURLs();
-		return mirrors.get(0).getRootURL();
-	}
-
-	/**
-	 * @param scopDownloadURL URL to load
-	 * @deprecated Use {@link #addMirror} instead
-	 */
-	@Deprecated
-	public void setScopDownloadURL(String scopDownloadURL) {
-		mirrors.clear();
-		mirrors.add(new ScopMirror(scopDownloadURL));
 	}
 
 	public void addMirror(String scopDownloadURL) {

@@ -20,7 +20,6 @@
  */
 package org.biojava.nbio.structure.test.io;
 
-
 import static org.junit.Assert.*;
 
 import java.io.IOException;
@@ -29,15 +28,16 @@ import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
 import org.junit.Test;
 
-
-
+/**
+ * Test StructureIO methods.
+ * 
+ */
 public class StructureIOTest {
 	
 	@Test
 	public void testStructureIO() throws IOException, StructureException {
 
 		String pdbId = "1gav";
-
 		int nrAssembls = StructureIO.getBiologicalAssemblies(pdbId).size();
 		assertEquals(1,nrAssembls);
 

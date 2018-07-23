@@ -1,3 +1,23 @@
+/*
+ *                    BioJava development code
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public Licence.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright for this code is held jointly by the individual
+ * authors.  These should be listed in @author doc comments.
+ *
+ * For more information on the BioJava project and its aims,
+ * or to join the biojava-l mailing list, visit the home page
+ * at:
+ *
+ *      http://www.biojava.org/
+ *
+ */
 package org.biojava.nbio.structure.cluster;
 
 /**
@@ -9,13 +29,6 @@ package org.biojava.nbio.structure.cluster;
  *
  */
 public enum SubunitClustererMethod {
-
-	/**
-	 * The IDENTITY clustering method uses the residue sequence of the
-	 * {@link Subunit}. Two {@link Subunit} with exactly the same sequence will
-	 * be clustered together.
-	 */
-	IDENTITY,
 
 	/**
 	 * The SEQUENCE clustering method uses the residue sequence of the
@@ -31,28 +44,21 @@ public enum SubunitClustererMethod {
 	 * coordinates of its Atom representatives of the {@link Subunit} to
 	 * calculate sequence and structure alignments.
 	 * <p>
-	 * Two {@link Subunit} with sufficient sequence identity and coverage are
-	 * clustered together. Additionally, two {@link Subunit} with sufficient
-	 * structural similarity and coverage are clustered together. If the
-	 * sequence and structure clustering differ, the cluster contains
-	 * pseudosymmetry (by definition).
+	 * Two {@link Subunit} with sufficient structural similarity and coverage
+	 * are clustered together.
 	 */
 	STRUCTURE,
-
 	/**
-	 * The INTERNAL SYMMETRY clustering method uses the residue sequence and the
+	 * The SEQUENCE_STRUCTURE clustering method uses the residue sequence and the
 	 * coordinates of its Atom representatives of the {@link Subunit} to
 	 * calculate sequence and structure alignments.
 	 * <p>
 	 * Two {@link Subunit} with sufficient sequence identity and coverage are
 	 * clustered together. Additionally, two {@link Subunit} with sufficient
 	 * structural similarity and coverage are clustered together. If the
-	 * sequence and structure clustering differ, the {@link SubunitCluster}
-	 * contains pseudosymmetry (by definition).
-	 * <p>
-	 * In a final step, internal symmetry of each {@link SubunitCluster} is
-	 * analyzed. If the {@link SubunitCluster} is internally symmetric, each
-	 * {@link Subunit} is divided into its internally symmetric repeats.
+	 * sequence and structure clustering differ, the cluster contains
+	 * pseudosymmetry (by definition).
 	 */
-	INTERNAL_SYMMETRY;
+	SEQUENCE_STRUCTURE
 }
+

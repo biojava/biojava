@@ -188,43 +188,36 @@ public class FastaReader<S extends Sequence<?>, C extends Compound> {
 			line = br.readLine();
 
 			if (line == null) {
-
-
-				// Fix for #282
-				if ( sequences.size() == 0 && max != -1) {
-					return null;
-				}
-
 				//i.e. EOF
-				String seq = sb.toString();
-				if ( seq.length() == 0) {
+				if ( sb.length() == 0 && header.length() != 0 ) {
 					logger.warn("Can't parse sequence {}. Got sequence of length 0!", sequenceIndex);
 					logger.warn("header: {}", header);
-				}
-				//logger.info("Sequence index=" + sequenceIndex + " " + fileIndex );
-				try {
-					@SuppressWarnings("unchecked")
-					S sequence = (S)sequenceCreator.getSequence(seq, sequenceIndex);
-					headerParser.parseHeader(header, sequence);
-					sequences.put(sequence.getAccession().getID(),sequence);
-					processedSequences++;
-				} catch (CompoundNotFoundException e) {
-					logger.warn("Sequence with header '{}' has unrecognised compounds ({}), it will be ignored",
-							header, e.getMessage());
+					header = null;
+				} else if ( sb.length() > 0 ) {
+					//logger.info("Sequence index=" + sequenceIndex + " " + fileIndex );
+					try {
+						@SuppressWarnings("unchecked")
+						S sequence = (S)sequenceCreator.getSequence(sb.toString(), sequenceIndex);
+						headerParser.parseHeader(header, sequence);
+						sequences.put(sequence.getAccession().getID(),sequence);
+						processedSequences++;
+						header = null;
+					} catch (CompoundNotFoundException e) {
+						logger.warn("Sequence with header '{}' has unrecognised compounds ({}), it will be ignored",
+								header, e.getMessage());
+					}
 				}
 				keepGoing = false;
 			}
 			if (max > -1 && processedSequences>=max) {
 				keepGoing=false;
 			}
-			if ( this.line == null)
-				keepGoing = false;
 		} while (keepGoing);
 
 		this.line  = line;
 		this.header= header;
 
-		return sequences;
+		return max > -1 && sequences.isEmpty() ? null :  sequences;
 	}
 
 	public void close() throws IOException {

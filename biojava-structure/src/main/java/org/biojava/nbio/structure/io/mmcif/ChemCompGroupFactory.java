@@ -146,6 +146,9 @@ public class ChemCompGroupFactory {
 			String parentId = cc.getMon_nstd_parent_comp_id() ;
 			if ( parentId == null)
 				return oneLetter;
+			// cases like OIM have multiple parents (comma separated), we shouldn't try grab a chemcomp for those strings
+			if (parentId.length()>3) 
+				return oneLetter;			
 			ChemComp parentCC = ChemCompGroupFactory.getChemComp(parentId);
 			if ( parentCC == null)
 				return oneLetter;

@@ -22,7 +22,6 @@
  */
 package org.biojava.nbio.structure.test.align;
 
-import junit.framework.TestCase;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
@@ -35,14 +34,17 @@ import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.util.AlignmentTools;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.align.xml.AFPChainXMLParser;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 
-public class AlignmentToolsTest extends TestCase {
+public class AlignmentToolsTest {
 
+	@Test
 	public void testIsSequential() throws StructureException, IOException {
 		AtomCache cache = new AtomCache();
 
@@ -62,15 +64,15 @@ public class AlignmentToolsTest extends TestCase {
 		ce = StructureAlignmentFactory.getAlgorithm(CeCPMain.algorithmName);
 		afpChain = ce.align(ca1,ca2);
 
-		assertFalse("CeCPMain should give non-sequential alignments (between blocks).",AlignmentTools.isSequentialAlignment(afpChain,false));
-		assertFalse("CeCPMain should give non-sequential alignments (within blocks).",AlignmentTools.isSequentialAlignment(afpChain,true));
+		Assert.assertFalse("CeCPMain should give non-sequential alignments (between blocks).", AlignmentTools.isSequentialAlignment(afpChain, false));
+		Assert.assertFalse("CeCPMain should give non-sequential alignments (within blocks).", AlignmentTools.isSequentialAlignment(afpChain, true));
 
 		// linear case
 		ce = StructureAlignmentFactory.getAlgorithm(CeMain.algorithmName);
 		afpChain = ce.align(ca1,ca2);
 
-		assertTrue("CeMain should give sequential alignments (within blocks).",AlignmentTools.isSequentialAlignment(afpChain,true));
-		assertTrue("CeMain should give sequential alignments (between blocks).",AlignmentTools.isSequentialAlignment(afpChain,false));
+		Assert.assertTrue("CeMain should give sequential alignments (within blocks).", AlignmentTools.isSequentialAlignment(afpChain, true));
+		Assert.assertTrue("CeMain should give sequential alignments (between blocks).", AlignmentTools.isSequentialAlignment(afpChain, false));
 
 		// now change the block interior a bit
 
@@ -83,11 +85,12 @@ public class AlignmentToolsTest extends TestCase {
 		optAln[0][1][2] = optAln[0][1][1];
 		optAln[0][1][1] = tmp;
 
-		assertTrue("Modifying block interior shouldn't effect block sequence.",AlignmentTools.isSequentialAlignment(afpChain,false));
-		assertFalse("Modifying block interior should be not sequential.",AlignmentTools.isSequentialAlignment(afpChain,true));
+		Assert.assertTrue("Modifying block interior shouldn't effect block sequence.", AlignmentTools.isSequentialAlignment(afpChain, false));
+		Assert.assertFalse("Modifying block interior should be not sequential.", AlignmentTools.isSequentialAlignment(afpChain, true));
 
 	}
 
+	@Test
 	public void testGetSymmetryOrderForMaps() {
 		int order;
 		final int maxSymmetry = 8;
@@ -107,7 +110,7 @@ public class AlignmentToolsTest extends TestCase {
 		Map<Integer,Integer> identity = new AlignmentTools.IdentityMap<Integer>();
 
 		order = AlignmentTools.getSymmetryOrder(alignment1, identity, maxSymmetry, minimumMetricChange);
-		assertEquals("Wrong order for alignment 1",3,order);
+		Assert.assertEquals("Wrong order for alignment 1", 3, order);
 
 		// sequential alignment. Should be order 1, but we report this as "no symmetry"
 		//TODO Change default return value in getSymmetry
@@ -117,7 +120,7 @@ public class AlignmentToolsTest extends TestCase {
 		}
 
 		order = AlignmentTools.getSymmetryOrder(alignment2, identity, maxSymmetry, minimumMetricChange);
-		assertEquals("Wrong order for alignment 2",1,order);
+		Assert.assertEquals("Wrong order for alignment 2", 1, order);
 
 		// now try to get symmetry order with an imperfect identity
 		Map<Integer,Integer> alignment3 = new HashMap<Integer,Integer>();
@@ -137,7 +140,7 @@ public class AlignmentToolsTest extends TestCase {
 
 
 		order = AlignmentTools.getSymmetryOrder(alignment3, identityMinus10, maxSymmetry, minimumMetricChange);
-		assertEquals("Wrong order for alignment 3 with I(x)=x-10",3,order);
+		Assert.assertEquals("Wrong order for alignment 3 with I(x)=x-10", 3, order);
 
 		/* These tests don't work because there are no paths longer than maxSymmetry, so they hit 0 error (NaN metric change)
 		//Stringent minimumMetric values cause it to miss the alignment
@@ -149,6 +152,7 @@ public class AlignmentToolsTest extends TestCase {
 		*/
 	}
 
+	@Test
 	public void testGuessSequentialAlignment() {
 		// noisy C3 alignment
 		Map<Integer,Integer> alignment1 = new HashMap<Integer,Integer>();
@@ -187,13 +191,14 @@ public class AlignmentToolsTest extends TestCase {
 		Map<Integer,Integer> result;
 
 		result = AlignmentTools.guessSequentialAlignment(alignment1, false);
-		assertEquals("Wrong forward alignment",sequentialForward,result);
+		Assert.assertEquals("Wrong forward alignment", sequentialForward, result);
 
 		result = AlignmentTools.guessSequentialAlignment(alignment1, true);
-		assertEquals("Wrong backward alignment",sequentialBackward,result);
+		Assert.assertEquals("Wrong backward alignment", sequentialBackward, result);
 	}
 
 
+	@Test
 	public void testGetSymmetryOrderWithCECP() throws IOException, StructureException {
 
 		String name1,name2;
@@ -243,9 +248,10 @@ public class AlignmentToolsTest extends TestCase {
 		//		alignmentTime/1000.,symmetryOrderTime/1000.,order);
 		//System.out.println();
 
-		assertEquals("Wrong order found for "+name1+" vs "+name2,trueOrder,order);
+		Assert.assertEquals("Wrong order found for " + name1 + " vs " + name2, trueOrder, order);
 	}
 
+	@Test
 	public void testApplyAlignment() {
 		// noisy C3 alignment
 		Map<Integer,Integer> alignment1 = new HashMap<Integer,Integer>();
@@ -272,9 +278,10 @@ public class AlignmentToolsTest extends TestCase {
 		//TODO handle nulls consistently. Either include all of them, or none.
 
 		Map<Integer,Integer> result1 = AlignmentTools.applyAlignment(alignment1,2);
-		assertEquals("Alignment1 incorrectly applied",image1,result1);
+		Assert.assertEquals("Alignment1 incorrectly applied", image1, result1);
 	}
 
+	@Test
 	public void testApplyAlignmentNonIdentical() {
 		// noisy C3 alignment
 		Map<Integer,Integer> alignment1 = new HashMap<Integer,Integer>();
@@ -304,9 +311,10 @@ public class AlignmentToolsTest extends TestCase {
 			identity1.put(i+10,i);
 		}
 		Map<Integer,Integer> result1 = AlignmentTools.applyAlignment(alignment1,identity1,2);
-		assertEquals("Alignment1 incorrectly applied with identity x->x-10",image1,result1);
+		Assert.assertEquals("Alignment1 incorrectly applied with identity x->x-10", image1, result1);
 	}
 
+	@Test
 	public void testToConciseAlignmentString() {
 		Map<Integer,Integer> test;
 		String result,expected;
@@ -320,7 +328,7 @@ public class AlignmentToolsTest extends TestCase {
 		expected = "1>2>3>4 7>8";
 
 		result = AlignmentTools.toConciseAlignmentString(test);
-		assertEquals((i++)+". Linear strings.",expected,result);
+		Assert.assertEquals((i++) + ". Linear strings.", expected, result);
 
 
 		test = new HashMap<Integer, Integer>();
@@ -331,7 +339,7 @@ public class AlignmentToolsTest extends TestCase {
 		expected = "1>2>3>1 7>7";
 
 		result = AlignmentTools.toConciseAlignmentString(test);
-		assertEquals((i++)+". Cycles.",expected,result);
+		Assert.assertEquals((i++) + ". Cycles.", expected, result);
 
 		test = new HashMap<Integer, Integer>();
 		test.put(1, 2);
@@ -341,7 +349,7 @@ public class AlignmentToolsTest extends TestCase {
 		expected = "1>2>3>1 7>7";
 
 		result = AlignmentTools.toConciseAlignmentString(test);
-		assertEquals((i++)+". Complex.",expected,result);
+		Assert.assertEquals((i++) + ". Complex.", expected, result);
 
 		test = new HashMap<Integer, Integer>();
 		test.put(1, 2);
@@ -358,7 +366,7 @@ public class AlignmentToolsTest extends TestCase {
 		expected = "1>2>3>4>5>6>7>3 8>4 9>11>10>9";
 
 		result = AlignmentTools.toConciseAlignmentString(test);
-		assertEquals((i++)+". Complex.",expected,result);
+		Assert.assertEquals((i++) + ". Complex.", expected, result);
 
 		//This test highlights a suboptimal case, where more paths are used than necessary.
 		test.remove(2);
@@ -366,7 +374,7 @@ public class AlignmentToolsTest extends TestCase {
 		expected = "1>2 3>4>5>6>7>3 8>4 9>11>10>9";
 
 		result = AlignmentTools.toConciseAlignmentString(test);
-		assertEquals((i++)+". Sub-optimal arrangement",expected,result);
+		Assert.assertEquals((i++) + ". Sub-optimal arrangement", expected, result);
 
 		Map <Integer,Double> test2 = new HashMap<Integer, Double>();
 		test2.put(1, 12.);
@@ -385,7 +393,7 @@ public class AlignmentToolsTest extends TestCase {
 		Map <Double, Integer> inverse = new OffsetMap(-10);
 
 		result = AlignmentTools.toConciseAlignmentString(test2,inverse);
-		assertEquals((i++)+". Inverse.",expected,result);
+		Assert.assertEquals((i++) + ". Inverse.", expected, result);
 
 
 	}
@@ -394,6 +402,7 @@ public class AlignmentToolsTest extends TestCase {
 	 * Tests that {@link AlignmentTools#updateSuperposition(AFPChain, Atom[], Atom[])} calculates the correct RMSD and TM-score for an AFPChain of 1 block.
 	 * TODO: Write a test with 2 blocks
 	 */
+	@Test
 	public void testUpdateSuperposition() throws IOException, StructureException {
 		Structure s = StructureTools.getStructure("31BI");
 		Atom[] ca1 = StructureTools.getRepresentativeAtomArray(s);
@@ -409,8 +418,8 @@ public class AlignmentToolsTest extends TestCase {
 		afpChain.setTMScore(-1);
 		afpChain.setTotalRmsdOpt(-1);
 		AlignmentTools.updateSuperposition(afpChain, ca1, ca2);
-		assertEquals("TM-score is wrong", 0.62779, afpChain.getTMScore(), 0.001);
-		assertEquals("RMSD is wrong", 2.50569, afpChain.getTotalRmsdOpt(), 0.001);
+		Assert.assertEquals("TM-score is wrong", 0.62779, afpChain.getTMScore(), 0.001);
+		Assert.assertEquals("RMSD is wrong", 2.50569, afpChain.getTotalRmsdOpt(), 0.001);
 	}
 
 	/**
@@ -443,4 +452,5 @@ public class AlignmentToolsTest extends TestCase {
 			return true;
 		}
 	}
+	
 }

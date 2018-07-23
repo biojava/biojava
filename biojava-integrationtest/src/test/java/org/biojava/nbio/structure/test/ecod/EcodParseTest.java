@@ -62,8 +62,8 @@ public class EcodParseTest {
 	private static final Logger logger = LoggerFactory.getLogger(EcodParseTest.class);
 
 	public static void main(String[] args) throws IOException {
-		String ecodVersion = "develop124";
-//		String ecodVersion = "latest";
+//		String ecodVersion = "develop124";
+		String ecodVersion = "latest";
 
 		int errors = testVersion(ecodVersion);
 		logger.info("Done. {} errors.",errors);

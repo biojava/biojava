@@ -29,7 +29,6 @@ import java.util.Set;
 import javax.vecmath.Matrix4d;
 
 import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.ResidueNumber;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIdentifier;
 import org.biojava.nbio.structure.align.multiple.Block;
@@ -45,7 +44,7 @@ import org.biojava.nbio.structure.secstruc.SecStrucType;
 import org.biojava.nbio.structure.symmetry.internal.CESymmParameters.RefineMethod;
 import org.biojava.nbio.structure.symmetry.internal.CESymmParameters.SymmetryType;
 import org.biojava.nbio.structure.symmetry.utils.SymmetryTools;
-import org.jgrapht.UndirectedGraph;
+import org.jgrapht.Graph;
 import org.jgrapht.alg.ConnectivityInspector;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleGraph;
@@ -76,7 +75,7 @@ public class CeSymmIterative {
 			.getLogger(CeSymmIterative.class);
 
 	private CESymmParameters params;
-	private UndirectedGraph<Integer, DefaultEdge> alignGraph; // cumulative
+	private Graph<Integer, DefaultEdge> alignGraph; // cumulative
 	private List<CeSymmResult> levels; // symmetry at each level
 
 	/**

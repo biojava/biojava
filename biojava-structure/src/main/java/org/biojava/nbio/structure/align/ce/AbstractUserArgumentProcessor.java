@@ -578,8 +578,9 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 	 * @throws NoSuchMethodException If an error occurs when invoking jmol
 	 * @throws InvocationTargetException If an error occurs when invoking jmol
 	 * @throws IllegalAccessException If an error occurs when invoking jmol
+	 * @throws StructureException 
 	 */
-	private void checkWriteFile( AFPChain afpChain, Atom[] ca1, Atom[] ca2, boolean dbsearch) throws IOException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException
+	private void checkWriteFile( AFPChain afpChain, Atom[] ca1, Atom[] ca2, boolean dbsearch) throws IOException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, StructureException
 			{
 		String output = null;
 		if ( params.isOutputPDB()){

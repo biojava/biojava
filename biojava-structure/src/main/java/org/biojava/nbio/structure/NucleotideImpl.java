@@ -22,9 +22,6 @@
  *
  */
 package org.biojava.nbio.structure;
-import java.io.Serializable;
-
-
 
 /**
  * A nucleotide group is almost the same as a Hetatm group.
@@ -34,7 +31,7 @@ import java.io.Serializable;
  * @since 1.4
  * @version %I% %G%
  */
-public class NucleotideImpl extends HetatomImpl implements Group, Serializable, Cloneable {
+public class NucleotideImpl extends HetatomImpl {
 
 	private static final long serialVersionUID = -7467726932980288712L;
 	/** this is a "nucleotide", a special occurance of a Hetatom. */
@@ -93,5 +90,36 @@ public class NucleotideImpl extends HetatomImpl implements Group, Serializable, 
 
 	}
 
-	// no need to implement clone here, it's already in super class
+	// note we need to implement a clone here, despite there's one in super class already,
+	// that's due to issue https://github.com/biojava/biojava/issues/631 - JD 2017-01-21
+	@Override
+	public Object clone() {
+
+		NucleotideImpl n = new NucleotideImpl();
+		n.setPDBFlag(has3D());
+		n.setResidueNumber(getResidueNumber());
+
+		n.setPDBName(getPDBName());
+
+		// copy the atoms
+		for (Atom atom1 : atoms) {
+			Atom atom = (Atom) atom1.clone();
+			n.addAtom(atom);
+			atom.setGroup(n);
+		}
+
+		// copying the alt loc groups if present, otherwise they stay null
+		if (getAltLocs()!=null && !getAltLocs().isEmpty()) {
+			for (Group altLocGroup:this.getAltLocs()) {
+				Group nAltLocGroup = (Group)altLocGroup.clone();
+				n.addAltLoc(nAltLocGroup);
+			}
+		}
+		
+		if (chemComp!=null)
+			n.setChemComp(chemComp);
+
+
+		return n;
+	}
 }

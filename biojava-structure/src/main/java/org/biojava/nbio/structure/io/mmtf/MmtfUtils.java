@@ -1,11 +1,31 @@
+/*
+ *                    BioJava development code
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public Licence.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright for this code is held jointly by the individual
+ * authors.  These should be listed in @author doc comments.
+ *
+ * For more information on the BioJava project and its aims,
+ * or to join the biojava-l mailing list, visit the home page
+ * at:
+ *
+ *      http://www.biojava.org/
+ *
+ */
 package org.biojava.nbio.structure.io.mmtf;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -223,7 +243,7 @@ public class MmtfUtils {
 	 * @return the bioassembly information (as primitive types).
 	 */
 	public static Map<double[], int[]> getTransformMap(BioAssemblyInfo bioassemblyInfo, Map<String, Integer> chainIdToIndexMap) {
-		Map<Matrix4d, List<Integer>> matMap = new HashMap<>();
+	    Map<Matrix4d, List<Integer>> matMap = new LinkedHashMap<>();
 		List<BiologicalAssemblyTransformation> transforms = bioassemblyInfo.getTransforms();
 		for (BiologicalAssemblyTransformation transformation : transforms) {
 			Matrix4d transMatrix = transformation.getTransformationMatrix();
@@ -241,7 +261,8 @@ public class MmtfUtils {
 				matMap.put(transMatrix, chainIdList);
 			}
 		}
-		Map<double[], int[]> outMap = new HashMap<>();
+
+	    Map<double[], int[]> outMap = new LinkedHashMap<>();
 		for (Entry<Matrix4d, List<Integer>> entry : matMap.entrySet()) {
 			outMap.put(convertToDoubleArray(entry.getKey()), CodecUtils.convertToIntArray(entry.getValue()));
 		}
@@ -391,7 +412,7 @@ public class MmtfUtils {
 		// Get all the atoms
 		List<Atom> theseAtoms = new ArrayList<>();
 		List<Chain> allChains = new ArrayList<>();
-		Map<String, Integer> chainIdToIndexMap = new HashMap<>();
+		Map<String, Integer> chainIdToIndexMap = new LinkedHashMap<>();
 		int chainCounter = 0;
 		int bondCount = 0;
 		mmtfSummaryDataBean.setAllAtoms(theseAtoms);

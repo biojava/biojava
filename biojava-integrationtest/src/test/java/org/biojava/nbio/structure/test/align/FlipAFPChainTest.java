@@ -24,7 +24,6 @@
 
 package org.biojava.nbio.structure.test.align;
 
-import junit.framework.TestCase;
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.StructureAlignment;
 import org.biojava.nbio.structure.align.StructureAlignmentFactory;
@@ -37,11 +36,15 @@ import org.biojava.nbio.structure.align.xml.AFPChainFlipper;
 import org.biojava.nbio.structure.align.xml.AFPChainXMLConverter;
 import org.biojava.nbio.structure.align.xml.AFPChainXMLParser;
 import org.biojava.nbio.structure.jama.Matrix;
+import org.junit.Test;
 
 import java.io.IOException;
 
-public class FlipAFPChainTest extends TestCase {
+import static org.junit.Assert.*;
 
+public class FlipAFPChainTest {
+
+	@Test
 	public void testFlippingMultiBlock(){
 
 		try {
@@ -57,6 +60,7 @@ public class FlipAFPChainTest extends TestCase {
 
 	}
 
+	@Test
 	public void testFlipping(){
 
 		try {
@@ -150,7 +154,7 @@ public class FlipAFPChainTest extends TestCase {
 
 		assertTrue(catmp1.length == afpChain.getNrEQR());
 
-		return SVDSuperimposer.getRMS(catmp1,catmp2);
+		return Calc.rmsd(catmp1,catmp2);
 	}
 
 	public static void rotateAtoms2(AFPChain afpChain,Atom[] ca2){
@@ -181,8 +185,8 @@ public class FlipAFPChainTest extends TestCase {
 	}
 
 
-	static final String newline = System.getProperty("line.separator");
-	public void printFirstMismatch(String s1, String s2){
+	private static final String newline = System.getProperty("line.separator");
+	private void printFirstMismatch(String s1, String s2){
 		String[] spl1 = s1.split(newline);
 		String[] spl2 = s2.split(newline);
 

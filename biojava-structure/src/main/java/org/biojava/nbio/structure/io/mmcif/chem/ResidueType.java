@@ -22,6 +22,8 @@
 package org.biojava.nbio.structure.io.mmcif.chem;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -72,10 +74,21 @@ public enum ResidueType implements Serializable {
 	nonPolymer(null, "non-polymer"),
 	otherChemComp(null, "other");
 
+
+	static Map<String,ResidueType> lookupTable = new HashMap<>();
+
+	static {
+
+		for (ResidueType rt : ResidueType.values() ) {
+				lookupTable.put(rt.chem_comp_type,rt);
+				lookupTable.put(rt.chem_comp_type.toLowerCase(),rt);
+		}
+	}
 	ResidueType(PolymerType pt, String chem_comp_type)
 	{
 		this.polymerType = pt;
 		this.chem_comp_type = chem_comp_type;
+
 	}
 
 	/**
@@ -94,12 +107,33 @@ public enum ResidueType implements Serializable {
 	 */
 	public final String chem_comp_type;
 
+	/** Get ResidueType by chem_comp_type
+	 *
+	 * @param chem_comp_type e.g. L-peptide linking
+	 * @return
+	 */
 	public static ResidueType getResidueTypeFromString(String chem_comp_type)
 	{
 
-		chem_comp_type = chem_comp_type.replaceAll("'", "");
-		chem_comp_type = chem_comp_type.replaceAll("\"", "");
+		// Almost all calls to this method are for L-peptide linking. Use this knowledge for a shortcut.
 
+		if ( chem_comp_type.equalsIgnoreCase(lPeptideLinking.chem_comp_type) )
+			return lPeptideLinking;
+
+		ResidueType rtype = lookupTable.get(chem_comp_type);
+		if ( rtype != null)
+			return rtype;
+
+		/** Unfortunately it can be guaranteed that chem_comp_type case sensitivity is preserved.
+		 * E.g. mmtf has it all upper-case. As such we need to do a second check
+		 */
+		rtype = lookupTable.get(chem_comp_type.toLowerCase());
+		if ( rtype != null)
+			return rtype;
+
+
+
+		// preserving previous behaviour. Not sure if this is really necessary?
 		for(ResidueType rt : ResidueType.values())
 		{
 			if(rt.chem_comp_type.equalsIgnoreCase(chem_comp_type))

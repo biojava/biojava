@@ -25,7 +25,7 @@
 package org.biojava.nbio.structure.io.sifts;
 
 import org.biojava.nbio.structure.align.util.AtomCache;
-import org.biojava.nbio.structure.io.util.FileDownloadUtils;
+import org.biojava.nbio.core.util.FileDownloadUtils;
 import org.biojava.nbio.core.util.InputStreamProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,37 +41,20 @@ public class SiftsMappingProvider {
 	private final static Logger logger = LoggerFactory.getLogger(SiftsMappingProvider.class);
 
 
-	static String EBI_SIFTS_FILE_LOCATION = "ftp://ftp.ebi.ac.uk/pub/databases/msd/sifts/xml/%s.xml.gz";
+	private static final String EBI_SIFTS_FILE_LOCATION = "http://ftp.ebi.ac.uk/pub/databases/msd/sifts/xml/%s.xml.gz";
 
-	static String RCSB_SIFTS_FILE_LOCATION = "http://www.rcsb.org/pdb/files/%s.sifts.xml.gz";
-
-	static String fileLoc = EBI_SIFTS_FILE_LOCATION;
-
-	public static void main(String[] args){
-		try {
-			List<SiftsEntity> entities = getSiftsMapping("1gc1");
-
-			for (SiftsEntity e : entities){
-				System.out.println(e.getEntityId() + " " +e.getType());
-
-				for ( SiftsSegment seg: e.getSegments()) {
-					System.out.println(" Segment: " + seg.getSegId() + " " + seg.getStart() + " " + seg.getEnd()) ;
-
-					for ( SiftsResidue res: seg.getResidues() ) {
-						System.out.println("  " + res);
-					}
-				}
-
-			}
-		} catch (Exception e){
-			e.printStackTrace();
-		}
-	}
+	private static String fileLoc = EBI_SIFTS_FILE_LOCATION;
 
 	public static void setFileLocation(String myFileLocation){
 		fileLoc = myFileLocation;
 	}
 
+	/**
+	 * Return the SIFTS mappings by getting the info from individual SIFTS xml files at URL {@value EBI_SIFTS_FILE_LOCATION}
+	 * @param pdbId the pdb identifier
+	 * @return
+	 * @throws IOException if problems downloading or parsing the file
+	 */
 	public static List<SiftsEntity> getSiftsMapping(String pdbId) throws IOException{
 		// grab files from here:
 
@@ -98,10 +81,13 @@ public class SiftsMappingProvider {
 		}
 		File dest = new File( hashDir, pdbId + ".sifts.xml.gz");
 
+		logger.debug("testing SIFTS file " + dest.getAbsolutePath());
+
+
 		if ( ! dest.exists()){
 			String u = String.format(fileLoc,pdbId);
 			URL url = new URL(u);
-			logger.info("Downloading SIFTS file {} to {}",url,dest);
+			logger.debug("Downloading SIFTS file {} to {}",url,dest);
 			FileDownloadUtils.downloadFile(url, dest);
 		}
 

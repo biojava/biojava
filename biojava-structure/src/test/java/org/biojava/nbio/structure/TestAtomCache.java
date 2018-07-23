@@ -75,23 +75,29 @@ public class TestAtomCache {
 		String name1= "4hhb";
 		Structure s = cache.getStructure(name1);
 		assertNotNull(s);
-		assertTrue(s.getPolyChains().size() == 4);
+		assertEquals(4,s.getPolyChains().size());
 
 		String name2 = "4hhb.C";
 		String chainId2 = "C";
 		s = cache.getStructure(name2);
 
-		assertTrue(s.getChains().size() == 1);
+		assertEquals(1,s.getPolyChains().size());
+		// Chain name 'C' corresponds to three IDs: C (141 res), I (1 HEM), and M (59 water)
+		assertEquals(3,s.getChains().size());
 		Chain c = s.getPolyChainByPDB(chainId2);
-		assertEquals(c.getName(),chainId2);
-
+		assertEquals(chainId2,c.getName());
+		
+		// Number of groups: Polymer + water + ligand
+		assertEquals(141,c.getAtomLength());
+		assertEquals(141, s.getChainByIndex(0).getAtomLength());
+		assertEquals(1, s.getChainByIndex(1).getAtomLength());
+		assertEquals(59, s.getChainByIndex(2).getAtomLength());
 
 		// Colon separators removed in BioJava 4.1.0
 		String name2b = "4hhb:A";
 		try {
 			s = cache.getStructure(name2b);
 			fail("Invalid structure format");
-		} catch(IOException e) {
 		} catch(StructureException e) {
 		}
 
@@ -101,28 +107,31 @@ public class TestAtomCache {
 		String chainId3 = "B";
 		s = cache.getStructure(name3);
 		assertNotNull(s);
-		assertTrue(s.getChains().size() == 1);
+		assertEquals(1,s.getPolyChains().size());
 
 		c = s.getPolyChainByPDB(chainId3);
-		assertEquals(c.getName(),chainId3);
+		assertEquals(chainId3,c.getName());
 
 
 		String name4 = "4hhb.A:10-20,B:10-20,C:10-20";
 		s = cache.getStructure(name4);
 		assertNotNull(s);
 
-		assertEquals(s.getChains().size(), 3);
+		assertEquals(3,s.getPolyChains().size());
+		assertEquals(3,s.getChains().size());
 
 		c = s.getPolyChainByPDB("B");
-		assertEquals(c.getAtomLength(),11);
+		assertEquals(11,c.getAtomLength());
 
 		String name5 = "4hhb.(A:10-20,A:30-40)";
 		s =cache.getStructure(name5);
 		assertNotNull(s);
 
-		assertEquals(s.getChains().size(),1 );
+		assertEquals(1,s.getPolyChains().size() );
+		// two chains: A (22 res), and G (1 HEM)
+		assertEquals(2,s.getChains().size() );
 		c = s.getPolyChainByPDB("A");
-		assertEquals(c.getAtomLength(),22);
+		assertEquals(22,c.getAtomLength());
 
 		try {
 			// This syntax used to work, since the first paren is treated as a separator
@@ -135,9 +144,9 @@ public class TestAtomCache {
 		String name8 = "4hhb.(C)";
 		s = cache.getStructure(name8);
 
-		assertTrue(s.getChains().size() == 1);
+		assertEquals(1,s.getPolyChains().size());
 		c = s.getPolyChainByPDB(chainId2);
-		assertEquals(c.getName(),chainId2);
+		assertEquals(chainId2,c.getName());
 
 	}
 
@@ -209,6 +218,68 @@ public class TestAtomCache {
 
 		s = cache.getStructure("1HHB");
 		assertEquals("Failed to get OBSOLETE file 1HHB.","1HHB", s.getPDBCode());
+
+	}
+
+
+	@Test
+	public void testSettingFileParsingType(){
+
+		AtomCache cache = new AtomCache();
+
+		//test defaults
+
+		// by default we either use mmtf or mmcif, but not both.
+		assertNotEquals(cache.isUseMmtf(), cache.isUseMmCif());
+
+		// first is mmtf, second is mmcif
+		testFlags(cache,true,false);
+
+		// now change the values
+
+		cache.setUseMmCif(true);
+
+		testFlags(cache,false,true);
+
+		cache.setUseMmtf(true);
+
+		testFlags(cache,true,false);
+
+		// this sets to use PDB!
+		cache.setUseMmCif(false);
+
+		testFlags(cache,false,false);
+
+		// back to defaults
+		cache.setUseMmtf(true);
+
+		testFlags(cache,true,false);
+
+
+		// back to parsing PDB
+		cache.setUseMmtf(false);
+
+		testFlags(cache,false,false);
+
+
+
+	}
+
+
+	/** test the flags for parsing in the atom cache
+	 *
+	 * @param cache
+	 * @param useMmTf
+	 * @param useMmCif
+     */
+	private void testFlags(AtomCache cache ,boolean useMmTf, boolean useMmCif) {
+
+		assertEquals("flag for parsing mmtf is set to " + cache.isUseMmtf() + " but should be " + useMmTf,
+				cache.isUseMmtf(), useMmTf);
+		assertEquals("flag for parsing mmcif is set to " + cache.isUseMmCif() + " but should be set to " + useMmCif,
+				cache.isUseMmCif(), useMmCif);
+
+
 
 	}
 

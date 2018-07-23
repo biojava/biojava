@@ -45,7 +45,7 @@ public class JmolTools {
 	public static void main(String[] args){
 
 		Chain c = new ChainImpl();
-		c.setChainID("X");
+		c.setId("X");
 
 		Group g = new AminoAcidImpl();
 		g.setResidueNumber(ResidueNumber.fromString("1A"));
@@ -76,7 +76,7 @@ public class JmolTools {
 				res1 = g1.getResidueNumber().toString();
 				Chain ch1 = g1.getChain();
 				if (ch1 != null)
-					chain1 = ch1.getChainID();
+					chain1 = ch1.getId();
 			}
 		}
 

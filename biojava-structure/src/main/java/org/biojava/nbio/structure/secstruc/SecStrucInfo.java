@@ -20,6 +20,8 @@
  */
 package org.biojava.nbio.structure.secstruc;
 
+import java.io.Serializable;
+
 import org.biojava.nbio.structure.Group;
 
 /**
@@ -31,7 +33,9 @@ import org.biojava.nbio.structure.Group;
  * @since 4.1.1
  *
  */
-public class SecStrucInfo {
+public class SecStrucInfo implements Serializable {
+
+	private static final long serialVersionUID = 4516925175715607227L;
 
 	/** Secondary strucuture assigned by the PDB author */
 	public static final String PDB_AUTHOR_ASSIGNMENT = "PDB_AUTHOR_ASSIGNMENT";

@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>biojava</artifactId>
 		<groupId>org.biojava</groupId>
-		<version>5.0.0-SNAPSHOT</version>
+		<version>5.1.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>biojava-alignment</artifactId>
 	<name>biojava-alignment</name>
@@ -47,7 +47,7 @@
 		<dependency>
 			<groupId>org.biojava</groupId>
 			<artifactId>biojava-core</artifactId>
-			<version>5.0.0-SNAPSHOT</version>
+			<version>5.1.0-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
@@ -72,11 +72,6 @@
   		<dependency>
     		<groupId>org.apache.logging.log4j</groupId>
     		<artifactId>log4j-core</artifactId>
-  		</dependency>
-  		<dependency>
-  			<groupId>org.biojava</groupId>
-  			<artifactId>biojava-phylo</artifactId>
-			<version>5.0.0-SNAPSHOT</version>
   		</dependency>
 	</dependencies>
 </project>

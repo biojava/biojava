@@ -40,6 +40,7 @@ import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.io.MMCIFFileReader;
 import org.biojava.nbio.structure.io.StructureIOFile;
 import org.biojava.nbio.structure.io.mmcif.model.AtomSite;
+import org.biojava.nbio.structure.io.mmcif.model.AtomSites;
 import org.biojava.nbio.structure.io.mmcif.model.AuditAuthor;
 import org.biojava.nbio.structure.io.mmcif.model.CIFLabel;
 import org.biojava.nbio.structure.io.mmcif.model.Cell;
@@ -58,8 +59,10 @@ import org.biojava.nbio.structure.io.mmcif.model.EntitySrcNat;
 import org.biojava.nbio.structure.io.mmcif.model.EntitySrcSyn;
 import org.biojava.nbio.structure.io.mmcif.model.Exptl;
 import org.biojava.nbio.structure.io.mmcif.model.IgnoreField;
+import org.biojava.nbio.structure.io.mmcif.model.PdbxAuditRevisionHistory;
 import org.biojava.nbio.structure.io.mmcif.model.PdbxChemCompDescriptor;
 import org.biojava.nbio.structure.io.mmcif.model.PdbxChemCompIdentifier;
+import org.biojava.nbio.structure.io.mmcif.model.PdbxDatabaseStatus;
 import org.biojava.nbio.structure.io.mmcif.model.PdbxEntityNonPoly;
 import org.biojava.nbio.structure.io.mmcif.model.PdbxNonPolyScheme;
 import org.biojava.nbio.structure.io.mmcif.model.PdbxPolySeqScheme;
@@ -208,24 +211,28 @@ public class SimpleMMcifParser implements MMcifParser {
 		Set<String> loopWarnings = new HashSet<String>(); // used only to reduce logging statements
 
 		String category = null;
-
-
-		// the first line is a data_PDBCODE line, test if this looks like a mmcif file
-		line = buf.readLine();
-		if (line == null || !line.startsWith(MMCIF_TOP_HEADER)){
-			logger.error("This does not look like a valid mmCIF file! The first line should start with 'data_', but is: '" + line+"'");
-			triggerDocumentEnd();
-			return;
-		}
+		
+		boolean foundHeader = false;
 
 		while ( (line = buf.readLine ()) != null ){
 
 			if (line.isEmpty() || line.startsWith(COMMENT_CHAR)) continue;
 
+			if (!foundHeader) {
+				// the first non-comment line is a data_PDBCODE line, test if this looks like a mmcif file
+				if (line.startsWith(MMCIF_TOP_HEADER)){
+					foundHeader = true;
+					continue;
+				} else {
+					triggerDocumentEnd();
+					throw new IOException("This does not look like a valid mmCIF file! The first line should start with 'data_', but is: '" + line+"'");
+				}
+			}
+
 			logger.debug(inLoop + " " + line);
 
 			if (line.startsWith(MMCIF_TOP_HEADER)){
-				// either first line in file, or beginning of new section
+				// either first line in file, or beginning of new section (data block in CIF parlance)
 				if ( inLoop) {
 					//System.out.println("new data and in loop: " + line);
 					inLoop = false;
@@ -640,14 +647,30 @@ public class SimpleMMcifParser implements MMcifParser {
 
 			triggerNewDatabasePDBrev(dbrev);
 
-		} else if ( category.equals("_database_PDB_rev_record")){
+		} else if ( category.equals("_database_PDB_rev_record")) {
 			DatabasePdbrevRecord dbrev = (DatabasePdbrevRecord) buildObject(
 					DatabasePdbrevRecord.class.getName(),
 					loopFields, lineData, loopWarnings);
 
 			triggerNewDatabasePDBrevRecord(dbrev);
+			
+    // MMCIF version 5 dates  
+		} else if ( category.equals("_pdbx_audit_revision_history")) {
+			PdbxAuditRevisionHistory history = (PdbxAuditRevisionHistory) buildObject(
+					PdbxAuditRevisionHistory.class.getName(),
+					loopFields, lineData, loopWarnings);
 
-		}else if (  category.equals("_database_PDB_remark")){
+			triggerNewPdbxAuditRevisionHistory(history);
+    
+    // MMCIF version 5 dates
+		} else if ( category.equals("_pdbx_database_status")) {
+			PdbxDatabaseStatus status = (PdbxDatabaseStatus) buildObject(
+					PdbxDatabaseStatus.class.getName(),
+					loopFields, lineData, loopWarnings);
+
+			triggerNewPdbxDatabaseStatus(status);
+
+		}else if (  category.equals("_database_PDB_remark")) {
 			DatabasePDBremark remark = (DatabasePDBremark) buildObject(
 					DatabasePDBremark.class.getName(),
 					loopFields, lineData, loopWarnings);
@@ -680,6 +703,12 @@ public class SimpleMMcifParser implements MMcifParser {
 					StructNcsOper.class.getName(), 
 					loopFields, lineData, loopWarnings);
 			triggerNewStructNcsOper(sNcsOper);
+		} else if ( category.equals("_atom_sites")) {
+			
+			AtomSites atomSites = (AtomSites) buildObject(
+					AtomSites.class.getName(),
+					loopFields, lineData, loopWarnings);
+			triggerNewAtomSites(atomSites);
 
 		} else if ( category.equals("_struct_ref")){
 			StructRef sref  = (StructRef) buildObject(
@@ -897,6 +926,12 @@ public class SimpleMMcifParser implements MMcifParser {
 		}
 
 	}
+	
+	public void triggerNewAtomSites(AtomSites atomSites) {
+		for(MMcifConsumer c : consumers){
+			c.newAtomSites(atomSites);
+		}
+	}
 
 	/**
 	 * Populates a bean object from  the {@link org.biojava.nbio.structure.io.mmcif.model} package, 
@@ -1013,7 +1048,7 @@ public class SimpleMMcifParser implements MMcifParser {
 		if( val.equals("?") || val.equals(".") || ( warnings != null && warnings.contains(warnkey)) ) {
 			logger.debug(warning);
 		} else {
-			logger.warn(warning);
+			logger.info(warning);
 		}
 
 		if(warnings != null) {
@@ -1089,6 +1124,19 @@ public class SimpleMMcifParser implements MMcifParser {
 			c.newAuditAuthor(aa);
 		}
 	}
+	
+	private void triggerNewPdbxAuditRevisionHistory(PdbxAuditRevisionHistory history) {
+		for(MMcifConsumer c : consumers){
+			c.newPdbxAuditRevisionHistory(history);
+		}
+	}
+	
+	private void triggerNewPdbxDatabaseStatus(PdbxDatabaseStatus status) {
+		for(MMcifConsumer c : consumers){
+			c.newPdbxDatabaseStatus(status);
+		}
+	}
+	
 	private void triggerNewDatabasePDBrev(DatabasePDBrev dbrev){
 		for(MMcifConsumer c : consumers){
 			c.newDatabasePDBrev(dbrev);

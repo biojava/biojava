@@ -27,6 +27,7 @@ import org.biojava.nbio.core.sequence.template.Sequence;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -48,7 +49,7 @@ import java.util.List;
  * @version %I% %G%
  * @since 1.4
  */
-public interface Chain {
+public interface Chain extends Serializable {
 
 	/** returns an identical copy of this Chain.
 	 * @return  an identical copy of this Chain
@@ -66,6 +67,7 @@ public interface Chain {
 	 *
 	 * @return the asymId
 	 * @see #setId(String)
+	 * @see #getName()
 	 */
 	String getId() ;
 
@@ -90,6 +92,7 @@ public interface Chain {
 	 * Get the 'public' authId (chain ID in PDB file)
 	 *
 	 * @return the authId for this chain.
+	 * @see #getId()
      */
 	String getName();
 
@@ -163,8 +166,8 @@ public interface Chain {
 	/** 
 	 * Get all groups that are located between two PDB residue numbers.
 	 *
-	 * @param pdbresnumStart PDB residue number of start
-	 * @param pdbresnumEnd PDB residue number of end
+	 * @param pdbresnumStart PDB residue number of start. If null, defaults to the chain start.
+	 * @param pdbresnumEnd PDB residue number of end. If null, defaults to the chain end.
 	 * @return Groups in between. or throws a StructureException if either start or end can not be found,
 	 * @throws StructureException
 	 */
@@ -177,8 +180,8 @@ public interface Chain {
 	 * of groups as specified by the DBREF records - these frequently are rather inaccurate.
 	 *
 	 *
-	 * @param pdbresnumStart PDB residue number of start
-	 * @param pdbresnumEnd PDB residue number of end
+	 * @param pdbresnumStart PDB residue number of start. If null, defaults to the chain start.
+	 * @param pdbresnumEnd PDB residue number of end. If null, defaults to the chain end.
 	 * @param ignoreMissing ignore missing groups in this range.
 	 * @return Groups in between. or throws a StructureException if either start or end can not be found,
 	 * @throws StructureException
@@ -278,7 +281,7 @@ public interface Chain {
 	/**
 	 * Returns the sequence of amino acids as it has been provided in the ATOM records.
 	 * Non-standard residues will be present in the string only if the property
-	 * {@value org.biojava.nbio.structure.io.PDBFileReader.LOAD_CHEM_COMP_PROPERTY} has been set.
+	 * {@value org.biojava.nbio.structure.io.PDBFileReader#LOAD_CHEM_COMP_PROPERTY} has been set.
 	 * @return amino acid sequence as string
 	 * @see #getSeqResSequence()
 	 */

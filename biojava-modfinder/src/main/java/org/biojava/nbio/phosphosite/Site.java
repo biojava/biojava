@@ -56,25 +56,26 @@ public class Site {
 
 		int proteinIndex = -1;
 		int uniprotIndex = -1;
-		int modTypeIndex = -1;
 		int residueIndex = -1;
 		int orgIndex     = -1;
 		int groupIndex   = -1;
+		int geneIndex    = -1;
 
 		boolean inHeader = true;
 
 
 		while ((line = buf.readLine()) != null){
-			if ( line.startsWith("PROTEIN")) {
+			if ( line.startsWith("GENE") ||
+					line.startsWith("PROTEIN")) {
 
 				headerFields = parseHeaderFields(line);
 
 				proteinIndex = headerFields.indexOf("PROTEIN");
 				uniprotIndex = headerFields.indexOf("ACC_ID");
-				modTypeIndex = headerFields.indexOf("MOD_TYPE");
 				residueIndex = headerFields.indexOf("MOD_RSD");
-				orgIndex     = headerFields.indexOf("ORG");
+				orgIndex     = headerFields.indexOf("ORGANISM");
 				groupIndex   = headerFields.indexOf("SITE_GRP_ID");
+				geneIndex 	 = headerFields.indexOf("GENE");
 
 				inHeader = false;
 				continue;
@@ -95,19 +96,25 @@ public class Site {
 
 			String protein = spl[proteinIndex];
 			String uniprot = spl[uniprotIndex];
-			//String geneSymb = spl[2];
-			//String chrLoc   = spl[3];
-			String modType = spl[modTypeIndex];
+
 			String residue = spl[residueIndex];
+
+			String[] resSpl = residue.split("-");
+			String modType = null;
+			if ( resSpl.length == 2) {
+
+				 modType = resSpl[1];
+			}
 			String group    = spl[groupIndex];
 
 			String organism = spl[orgIndex];
 
+			String geneSymb = spl[geneIndex];
+
 			Site s = new Site();
 			s.setProtein(protein);
 			s.setUniprot(uniprot);
-			//s.setGeneSymb(geneSymb);
-			//s.setChrLoc(chrLoc);
+			s.setGeneSymb(geneSymb);
 			s.setModType(modType);
 			s.setResidue(residue);
 			s.setGroup(group);

@@ -25,9 +25,10 @@ package org.biojava.nbio.structure;
 
 import org.biojava.nbio.structure.io.FileConvert;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.vecmath.Point3d;
 
 
 /**
@@ -37,7 +38,7 @@ import java.util.List;
  * @since 1.4
  * @version %I% %G%
  */
-public class AtomImpl implements Atom, Serializable, PDBRecord {
+public class AtomImpl implements Atom {
 
 	private static final long serialVersionUID = -2258364127420562883L;
 
@@ -47,11 +48,11 @@ public class AtomImpl implements Atom, Serializable, PDBRecord {
 	 */
 	public static final int BONDS_INITIAL_CAPACITY = 3;
 
-	private String name     ;
-	private Element element;
-	private double[] coords ;
-	private int pdbserial   ;
-	private short charge		;
+	private String name;
+	private Element element;	
+	private Point3d coords;
+	private int pdbserial;
+	private short charge;
 
 	private float occupancy ;
 	private float tempfactor;
@@ -62,15 +63,15 @@ public class AtomImpl implements Atom, Serializable, PDBRecord {
 	private List<Bond> bonds;
 
 	public AtomImpl () {
-		name       = null        ;
+		name       = null;
 		element    = Element.R;
-		coords     = new double[3];
-		occupancy  = 0.0f       ;
-		tempfactor = 0.0f       ;
+		coords	   = new Point3d();
+		occupancy  = 0.0f;
+		tempfactor = 0.0f;
 		altLoc 	   = 0;
 		parent     = null;
 		bonds      = null; // let's save some memory and let's not initialise this until it's needed - JD 2016-03-02
-		charge     = 0				;
+		charge     = 0;
 	}
 
 	/**
@@ -101,44 +102,60 @@ public class AtomImpl implements Atom, Serializable, PDBRecord {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void     setCoords( double[] c ) { coords = c   ; }
+	public void     setCoords( double[] c ) { 
+		coords = new Point3d(c); 
+	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public double[] getCoords()            { return coords ; }
+	public double[] getCoords() { 
+		double[] c = new double[3];
+		coords.get(c);
+		return c;		
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Point3d getCoordsAsPoint3d() {
+		return coords;
+	}
 
 	@Override
 	public void setX(double x) {
-		coords[0] = x ;
+		coords.x = x ;
 	}
+	
 	@Override
 	public void setY(double y) {
-		coords[1] = y ;
+		coords.y = y ;
 	}
+	
 	@Override
 	public void setZ(double z) {
-		coords[2] = z ;
+		coords.z = z ;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public double getX() { return coords[0]; }
+	public double getX() { return coords.x; }
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public double getY() { return coords[1]; }
+	public double getY() { return coords.y; }
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public double getZ() { return coords[2]; }
+	public double getZ() { return coords.z; }
 
 	/**
 	 * Set alternate Location.
@@ -167,7 +184,7 @@ public class AtomImpl implements Atom, Serializable, PDBRecord {
 
 	@Override
 	public String toString() {
-		return name + " " + element + " " + pdbserial + " " + coords[0] + " " + coords[1] + " " + coords[2];
+		return name + " " + element + " " + pdbserial + " " + coords.x + " " + coords.y + " " + coords.z;
 	}
 
 	@Override

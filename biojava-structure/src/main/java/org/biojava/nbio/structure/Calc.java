@@ -22,18 +22,24 @@
  */
 package org.biojava.nbio.structure;
 
-import org.biojava.nbio.structure.geometry.CalcPoint;
-import org.biojava.nbio.structure.jama.Matrix;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import javax.vecmath.Matrix3d;
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
+import org.biojava.nbio.structure.geometry.CalcPoint;
+import org.biojava.nbio.structure.geometry.Matrices;
+import org.biojava.nbio.structure.geometry.SuperPositionSVD;
+import org.biojava.nbio.structure.jama.Matrix;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
- * Utility operations on Atoms, AminoAcids, etc.
+ * Utility operations on Atoms, AminoAcids, Matrices, Point3d, etc.
  * <p>
  * Currently the coordinates of an Atom are stored as an array of size 3
  * (double[3]). It would be more powerful to use Point3d from javax.vecmath.
@@ -41,6 +47,7 @@ import javax.vecmath.Vector3d;
  * Class.
  *
  * @author Andreas Prlic
+ * @author Aleix Lafita
  * @since 1.4
  * @version %I% %G%
  */
@@ -187,8 +194,8 @@ public class Calc {
 	 */
 	public static final double angle(Atom a, Atom b) {
 
-		Vector3d va = new Vector3d(a.getCoords());
-		Vector3d vb = new Vector3d(b.getCoords());
+		Vector3d va = new Vector3d(a.getCoordsAsPoint3d());
+		Vector3d vb = new Vector3d(b.getCoordsAsPoint3d());
 
 		return Math.toDegrees(va.angle(vb));
 
@@ -531,12 +538,11 @@ public class Calc {
 	 * @param m
 	 */
 	public static final void transform(Group group, Matrix4d m) {
-		AtomIterator iter = new AtomIterator(group);
-
-		while (iter.hasNext()) {
-			Atom atom = iter.next();
+		for (Atom atom : group.getAtoms()) {
 			transform(atom, m);
-
+		}
+		for (Group altG : group.getAltLocs()) {
+			transform(altG, m);
 		}
 	}
 
@@ -549,12 +555,10 @@ public class Calc {
 	 * @param m
 	 */
 	public static final void transform(Structure structure, Matrix4d m) {
-		AtomIterator iter = new AtomIterator(structure);
-
-		while (iter.hasNext()) {
-			Atom atom = iter.next();
-			transform(atom, m);
-
+		for (int n=0; n<structure.nrModels();n++) {
+			for (Chain c : structure.getChains(n)) {
+				transform(c, m);
+			}
 		}
 	}
 
@@ -569,9 +573,7 @@ public class Calc {
 	public static final void transform(Chain chain, Matrix4d m) {
 
 		for (Group g : chain.getAtomGroups()) {
-			for (Atom atom : g.getAtoms()) {
-				transform(atom, m);
-			}
+			transform(g, m);
 		}
 	}
 
@@ -597,12 +599,12 @@ public class Calc {
 	 * @param v
 	 */
 	public static final void translate(Group group, Vector3d v) {
-		AtomIterator iter = new AtomIterator(group);
 
-		while (iter.hasNext()) {
-			Atom atom = iter.next();
+		for (Atom atom : group.getAtoms()) {
 			translate(atom, v);
-
+		}
+		for (Group altG : group.getAltLocs()) {
+			translate(altG, v);
 		}
 	}
 
@@ -616,9 +618,7 @@ public class Calc {
 	public static final void translate(Chain chain, Vector3d v) {
 
 		for (Group g : chain.getAtomGroups()) {
-			for (Atom atom : g.getAtoms()) {
-				translate(atom, v);
-			}
+			translate(g, v);
 		}
 	}
 
@@ -630,12 +630,11 @@ public class Calc {
 	 * @param v
 	 */
 	public static final void translate(Structure structure, Vector3d v) {
-		AtomIterator iter = new AtomIterator(structure);
-
-		while (iter.hasNext()) {
-			Atom atom = iter.next();
-			translate(atom, v);
-
+		
+		for (int n=0; n<structure.nrModels();n++) {
+			for (Chain c : structure.getChains(n)) {
+				translate(c, v);
+			}
 		}
 	}
 
@@ -763,13 +762,18 @@ public class Calc {
 	}
 
 	/**
-	 * Returns the center of mass of the set of atoms.
+	 * Returns the centroid of the set of atoms.
 	 * 
 	 * @param atomSet
 	 *            a set of Atoms
 	 * @return an Atom representing the Centroid of the set of atoms
 	 */
 	public static final Atom getCentroid(Atom[] atomSet) {
+		
+		// if we don't catch this case, the centroid returned is (NaN,NaN,NaN), which can cause lots of problems down the line
+		if (atomSet.length==0) 
+			throw new IllegalArgumentException("Atom array has length 0, can't calculate centroid!");
+
 
 		double[] coords = new double[3];
 
@@ -794,6 +798,14 @@ public class Calc {
 
 	}
 
+	/**
+	 * Returns the center of mass of the set of atoms. Atomic masses of the
+	 * Atoms are used.
+	 * 
+	 * @param points
+	 *            a set of Atoms
+	 * @return an Atom representing the center of mass
+	 */
 	public static Atom centerOfMass(Atom[] points) {
 		Atom center = new AtomImpl();
 
@@ -983,13 +995,14 @@ public class Calc {
 		arr2[1] = amino.getCA();
 		arr2[2] = amino.getC();
 
-		// ok now we got the two arrays, do a SVD:
+		// ok now we got the two arrays, do a Superposition:
 
-		SVDSuperimposer svd = new SVDSuperimposer(arr2, arr1);
+		SuperPositionSVD svd = new SuperPositionSVD(false);
 
-		Matrix rotMatrix = svd.getRotation();
-		Atom tranMatrix = svd.getTranslation();
-
+		Matrix4d transform = svd.superpose(Calc.atomsToPoints(arr1), Calc.atomsToPoints(arr2));
+		Matrix rotMatrix = Matrices.getRotationJAMA(transform);
+		Atom tranMatrix = getTranslationVector(transform);
+		
 		Calc.rotate(aCB, rotMatrix);
 
 		Atom virtualCB = Calc.add(aCB, tranMatrix);
@@ -1180,54 +1193,16 @@ public class Calc {
 	 * @param rot
 	 *            3x3 Rotation matrix
 	 * @param trans
-	 *            3x1 Translation matrix
-	 * @return 4x4 transformation matrix
-	 */
-	public static Matrix4d getTransformation(Matrix rot, Matrix trans) {
-		return new Matrix4d(new Matrix3d(rot.getColumnPackedCopy()),
-				new Vector3d(trans.getColumnPackedCopy()), 1.0);
-	}
-
-	/**
-	 * Convert JAMA rotation and translation to a Vecmath transformation matrix.
-	 * Because the JAMA matrix is a pre-multiplication matrix and the Vecmath
-	 * matrix is a post-multiplication one, the rotation matrix is transposed to
-	 * ensure that the transformation they produce is the same.
-	 *
-	 * @param rot
-	 *            3x3 Rotation matrix
-	 * @param trans
 	 *            3x1 translation vector in Atom coordinates
 	 * @return 4x4 transformation matrix
 	 */
 	public static Matrix4d getTransformation(Matrix rot, Atom trans) {
 		return new Matrix4d(new Matrix3d(rot.getColumnPackedCopy()),
-				new Vector3d(trans.getCoords()), 1.0);
+				new Vector3d(trans.getCoordsAsPoint3d()), 1.0);
 	}
-
+	
 	/**
-	 * Convert Vecmath transformation into a JAMA rotation matrix. Because the
-	 * JAMA matrix is a pre-multiplication matrix and the Vecmath matrix is a
-	 * post-multiplication one, the rotation matrix is transposed to ensure that
-	 * the transformation they produce is the same.
-	 *
-	 * @param transform
-	 *            Matrix4d with transposed rotation matrix
-	 * @return
-	 */
-	public static Matrix getRotationMatrix(Matrix4d transform) {
-
-		Matrix rot = new Matrix(3, 3);
-		for (int i = 0; i < 3; i++) {
-			for (int j = 0; j < 3; j++) {
-				rot.set(j, i, transform.getElement(i, j)); // transposed
-			}
-		}
-		return rot;
-	}
-
-	/**
-	 * Extract the translational vector of a Vecmath transformation.
+	 * Extract the translational vector as an Atom of a transformation matrix.
 	 *
 	 * @param transform
 	 *            Matrix4d
@@ -1251,8 +1226,125 @@ public class Calc {
 	public static Point3d[] atomsToPoints(Atom[] atoms) {
 		Point3d[] points = new Point3d[atoms.length];
 		for (int i = 0; i < atoms.length; i++) {
-			points[i] = new Point3d(atoms[i].getCoords());
+			points[i] = atoms[i].getCoordsAsPoint3d();
 		}
 		return points;
+	}
+	/**
+	 * Convert an array of atoms into an array of vecmath points
+	 * 
+	 * @param atoms
+	 *            list of atoms
+	 * @return list of Point3ds storing the x,y,z coordinates of each atom
+	 */
+	public static List<Point3d> atomsToPoints(Collection<Atom> atoms) {
+		ArrayList<Point3d> points = new ArrayList<>(atoms.size());
+		for (Atom atom : atoms) {
+			points.add(atom.getCoordsAsPoint3d());
+		}
+		return points;
+	}
+
+	/**
+	 * Calculate the RMSD of two Atom arrays, already superposed.
+	 * 
+	 * @param x
+	 *            array of Atoms superposed to y
+	 * @param y
+	 *            array of Atoms superposed to x
+	 * @return RMSD
+	 */
+	public static double rmsd(Atom[] x, Atom[] y) {
+		return CalcPoint.rmsd(atomsToPoints(x), atomsToPoints(y));
+	}
+
+	/**
+	 * Calculate the TM-Score for the superposition.
+	 *
+	 * <em>Normalizes by the <strong>minimum</strong>-length structure (that is, {@code min\{len1,len2\}}).</em>
+	 *
+	 * Atom sets must be pre-rotated.
+	 *
+	 * <p>
+	 * Citation:<br/>
+	 * <i>Zhang Y and Skolnick J (2004). "Scoring function for automated
+	 * assessment of protein structure template quality". Proteins 57: 702 -
+	 * 710.</i>
+	 *
+	 * @param atomSet1
+	 *            atom array 1
+	 * @param atomSet2
+	 *            atom array 2
+	 * @param len1
+	 *            The full length of the protein supplying atomSet1
+	 * @param len2
+	 *            The full length of the protein supplying atomSet2
+	 * @return The TM-Score
+	 * @throws StructureException
+	 */
+	public static double getTMScore(Atom[] atomSet1, Atom[] atomSet2, int len1, int len2) throws StructureException {
+		return getTMScore(atomSet1, atomSet2, len1, len2,true);
+	}
+
+	/**
+	 * Calculate the TM-Score for the superposition.
+	 *
+	 * Atom sets must be pre-rotated.
+	 *
+	 * <p>
+	 * Citation:<br/>
+	 * <i>Zhang Y and Skolnick J (2004). "Scoring function for automated
+	 * assessment of protein structure template quality". Proteins 57: 702 -
+	 * 710.</i>
+	 *
+	 * @param atomSet1
+	 *            atom array 1
+	 * @param atomSet2
+	 *            atom array 2
+	 * @param len1
+	 *            The full length of the protein supplying atomSet1
+	 * @param len2
+	 *            The full length of the protein supplying atomSet2
+	 * @param normalizeMin
+	 *            Whether to normalize by the <strong>minimum</strong>-length structure,
+	 *            that is, {@code min\{len1,len2\}}. If false, normalized by the {@code max\{len1,len2\}}).
+	 *
+	 * @return The TM-Score
+	 * @throws StructureException
+	 */
+	public static double getTMScore(Atom[] atomSet1, Atom[] atomSet2, int len1,
+			int len2, boolean normalizeMin) throws StructureException {
+		if (atomSet1.length != atomSet2.length) {
+			throw new StructureException(
+					"The two atom sets are not of same length!");
+		}
+		if (atomSet1.length > len1) {
+			throw new StructureException(
+					"len1 must be greater or equal to the alignment length!");
+		}
+		if (atomSet2.length > len2) {
+			throw new StructureException(
+					"len2 must be greater or equal to the alignment length!");
+		}
+
+		int Lnorm;
+		if (normalizeMin) {
+			Lnorm = Math.min(len1, len2);
+		} else {
+			Lnorm = Math.max(len1, len2);
+		}
+
+		int Laln = atomSet1.length;
+
+		double d0 = 1.24 * Math.cbrt(Lnorm - 15.) - 1.8;
+		double d0sq = d0 * d0;
+
+		double sum = 0;
+		for (int i = 0; i < Laln; i++) {
+			double d = Calc.getDistance(atomSet1[i], atomSet2[i]);
+			sum += 1. / (1 + d * d / d0sq);
+		}
+
+		return sum / Lnorm;
 	}
 }

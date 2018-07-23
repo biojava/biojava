@@ -23,6 +23,7 @@ package org.biojava.nbio.structure.secstruc;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.zip.GZIPInputStream;
 
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
@@ -53,7 +54,7 @@ public class TestSecStrucCalc {
 
 		//List of names to test the DSSP prediction
 		List<String> names = Arrays.asList(
-				"5pti", "1tim", "4hhb", "1how", "4i4q", "2k4t");
+				"5pti", "1tim", "4hhb", "1how", "4i4q", "2k4t", "1deu");
 		SecStrucCalc sec = new SecStrucCalc();
 		//Predict with BioJava the SS -> Anthony has moved this out of the loop.
 		//SecStrucCalc does not need to be reinitialised every time
@@ -66,7 +67,8 @@ public class TestSecStrucCalc {
 			List<SecStrucState> biojava = sec.calculate(structure, true);
 
 			//Download the original DSSP implementation output
-			List<SecStrucState> dssp = DSSPParser.fetch(name, structure, false);
+			List<SecStrucState> dssp = DSSPParser.parseInputStream(new GZIPInputStream(
+					this.getClass().getResourceAsStream("/org/biojava/nbio/structure/secstruc/"+name+".dssp.gz")), structure, false);
 
 			assertEquals("SS assignment lengths do not match",
 					biojava.size(), dssp.size()*structure.nrModels());
@@ -103,8 +105,10 @@ public class TestSecStrucCalc {
 		List<SecStrucState> biojava = sec.calculate(structure, true);
 
 		// Download the original DSSP implementation output
-		List<SecStrucState> dssp = DSSPParser.fetch(pdbId,cache.getStructure(pdbId), false);
-		dssp.addAll(DSSPParser.fetch(pdbIdTwo, cache.getStructure(pdbIdTwo), false));
+		List<SecStrucState> dssp = DSSPParser.parseInputStream(new GZIPInputStream(
+				this.getClass().getResourceAsStream("/org/biojava/nbio/structure/secstruc/"+pdbId+".dssp.gz")),cache.getStructure(pdbId), false);
+		dssp.addAll(DSSPParser.parseInputStream(new GZIPInputStream(
+				this.getClass().getResourceAsStream("/org/biojava/nbio/structure/secstruc/"+pdbIdTwo+".dssp.gz")), cache.getStructure(pdbIdTwo), false));
 		
 		assertEquals("SS assignment lengths do not match",
 				biojava.size(), dssp.size());

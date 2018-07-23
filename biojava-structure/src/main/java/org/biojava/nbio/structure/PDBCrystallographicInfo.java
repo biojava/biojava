@@ -48,6 +48,23 @@ public class PDBCrystallographicInfo implements Serializable {
 	 * are not stored.
 	 */
 	private Matrix4d[] ncsOperators;
+	
+	/**
+	 * Whether this structure has a non-standard space group not supported 
+	 * by Biojava. If this is true the sg member will be null.
+	 * @since 4.2.5
+	 */
+	private boolean nonStandardSg;
+	
+	/**
+	 * Whether this structure is non-standard coordinate frame convention, for which our scale matrix 
+	 * calculation and thus the crystal reconstruction will be incorrect.
+	 * There's ~ 200 old structures in the PDB affected by the non-standard frame problem, hopefully they will
+	 * be remediated in the future.
+	 * For more info see: https://github.com/eppic-team/owl/issues/4
+	 * @since 4.2.5
+	 */
+	private boolean nonStandardCoordFrameConvention;
 
 	public PDBCrystallographicInfo() {
 
@@ -128,16 +145,6 @@ public class PDBCrystallographicInfo implements Serializable {
 	}
 
 	/**
-	 * Return the z, i.e. the multiplicity of the space group times the number of chains in asymmetric unit
-	 * @return 0
-	 * @deprecated As of 4.0, use {@link SpaceGroup#getMultiplicity()} and {@link Structure#size()}
-	 */
-	@Deprecated
-	public int getZ() {
-		return 0;
-	}
-
-	/**
 	 * Gets all symmetry transformation operators corresponding to this structure's space group
 	 * (including the identity, at index 0) expressed in the orthonormal basis. Using PDB axes
 	 * convention (NCODE=1).
@@ -178,6 +185,45 @@ public class PDBCrystallographicInfo implements Serializable {
 	 */
 	public void setNcsOperators(Matrix4d[] ncsOperators) {
 		this.ncsOperators = ncsOperators;
+	}
+	
+	/**
+	 * Whether this structure has a non-standard space group not supported 
+	 * by Biojava. If this is true {@link #getSpaceGroup()} will be null.
+	 * @since 4.2.5
+	 */
+	public boolean isNonStandardSg() {
+		return nonStandardSg;
+	}
+	
+	/**
+	 * Set the non-standard space group field
+	 * @param nonStandardSg
+	 * @since 4.2.5
+	 */
+	public void setNonStandardSg(boolean nonStandardSg) {
+		this.nonStandardSg = nonStandardSg;
+	}
+	
+	/**
+	 * Whether this structure is non-standard coordinate frame convention, for which our scale matrix 
+	 * calculation and thus the crystal reconstruction will be incorrect.
+	 * There's ~ 200 old structures in the PDB affected by the non-standard frame problem, hopefully they will
+	 * be remediated in the future.
+	 * For more info see: https://github.com/eppic-team/owl/issues/4
+	 * @since 4.2.5
+	 */
+	public boolean isNonStandardCoordFrameConvention() {
+		return nonStandardCoordFrameConvention;
+	}
+	
+	/**
+	 * Set the non-standard coordinate frame convention field
+	 * @param nonStandardCoordFrameConvention
+	 * @since 4.2.5
+	 */
+	public void setNonStandardCoordFrameConvention(boolean nonStandardCoordFrameConvention) {
+		this.nonStandardCoordFrameConvention = nonStandardCoordFrameConvention;
 	}
 
 

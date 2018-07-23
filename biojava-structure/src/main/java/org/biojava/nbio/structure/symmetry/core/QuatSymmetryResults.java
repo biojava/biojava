@@ -22,8 +22,17 @@
  */
 package org.biojava.nbio.structure.symmetry.core;
 
+import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.cluster.Subunit;
+import org.biojava.nbio.structure.cluster.SubunitCluster;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 /**
- * Holds the results of quaternary symmetry perception.
+ * Holds the results of quaternary symmetry perception obtained with
+ * {@link QuatSymmetryDetector}.
  *
  * @author Peter Rose
  * @author Aleix Lafita
@@ -31,69 +40,164 @@ package org.biojava.nbio.structure.symmetry.core;
  */
 public class QuatSymmetryResults {
 
-	private Subunits subunits;
-	private RotationGroup rotationGroup;
-	private HelixLayers helixLayers;
-	private SymmetryPerceptionMethod method;
+	// Optional: the query Structure, if any
+	private Structure structure;
+
+	// Information about the clustering process
+	private Stoichiometry stoichiometry;
 	private boolean local = false;
 
-	public QuatSymmetryResults(Subunits subunits, RotationGroup rotationGroup,
-			SymmetryPerceptionMethod method) {
-		this.subunits = subunits;
+	// Cached properties
+	private List<SubunitCluster> clusters;
+	private List<Subunit> subunits;
+
+	// Information about the symmetry
+	private SymmetryPerceptionMethod method;
+	private HelixLayers helixLayers;
+	private RotationGroup rotationGroup = new RotationGroup();
+
+	// TODO we should unify rotational and roto-translational results
+
+	/**
+	 * Constructor for rotational symmetries.
+	 * 
+	 * @param stoichiometry
+	 *            Stoichiometry used to calculate symmetry
+	 * @param rotationGroup
+	 * @param method
+	 */
+	public QuatSymmetryResults(Stoichiometry stoichiometry,
+			RotationGroup rotationGroup, SymmetryPerceptionMethod method) {
+
+		this.stoichiometry = stoichiometry;
+		this.clusters = stoichiometry.getClusters();
+
+		subunits = new ArrayList<Subunit>();
+		for (SubunitCluster c : clusters) {
+			subunits.addAll(c.getSubunits());
+		}
+			
 		this.rotationGroup = rotationGroup;
 		this.method = method;
 	}
 
-	public QuatSymmetryResults(Subunits subunits, HelixLayers helixLayers,
-			SymmetryPerceptionMethod method) {
-		this.subunits = subunits;
+	/**
+	 * Constructor for roto-translational symmetries.
+	 * 
+	 * @param stoichiometry
+	 *            Stoichiometry used to calculate symmetry
+	 * @param helixLayers
+	 * @param method
+	 */
+	public QuatSymmetryResults(Stoichiometry stoichiometry,
+			HelixLayers helixLayers, SymmetryPerceptionMethod method) {
+
+		this.stoichiometry = stoichiometry;
+		this.clusters = stoichiometry.getClusters();
+		
+		subunits = new ArrayList<Subunit>();
+		for (SubunitCluster c : clusters) {
+			subunits.addAll(c.getSubunits());
+		}
+
 		this.helixLayers = helixLayers;
 		this.method = method;
 	}
 
 	/**
-	 * Returns protein subunit information that was used to determine symmetry
-	 * information
+	 * Determine if this symmetry result is a subset of the other Symmetry result.
+	 * Checks the following conditions:
+	 * - 'Other' includes all subunits of 'this'.
+	 * - 'Other' has the same or higher order than 'this'.
 	 *
-	 * @return
+	 * Special treatment for the helical symmetry:
+	 * - 'Other' includes all subunits of 'this'.
+	 * - 'this' may be Cn, as well as H
+	 *
+	 *  Note that isSupersededBy establishes a partial order, i.e. for some
+	 *  symmetries A and B, neither A.isSupersededBy(B) nor B.isSupersededBy(A)
+	 *  may be true.
+	 *
+	 * @param other
+	 *            QuatSymmetryResults
+	 *
+	 * @return true if other supersedes this, false otherwise
 	 */
-	public Subunits getSubunits() {
-		return subunits;
+
+	public boolean isSupersededBy(QuatSymmetryResults other) {
+		if(other.getSymmetry().startsWith("H")) {
+			if(this.getSymmetry().startsWith("C") || this.getSymmetry().startsWith("H")) {
+				if (other.subunits.containsAll(this.subunits)) {
+					return true;
+				}
+			}
+			return false;
+		}
+
+		if (this.getSymmetry().startsWith("H")) {
+			return false;
+		}
+
+		if (this.rotationGroup.getOrder() <= other.rotationGroup.getOrder() &&
+				other.subunits.containsAll(this.subunits)) {
+			return true;
+		}
+		return false;
 	}
 
 	/**
-	 * Returns rotation group (point group) information representing rotational
-	 * quaternary symmetry, see
-	 * http://en.wikipedia.org/wiki/Rotation_group_SO(3)
+	 * Returns the List of SubunitCluster used to calculate symmetry.
 	 *
-	 * @return rotation group
+	 * @return an unmodifiable view of the original List
+	 */
+	public List<SubunitCluster> getSubunitClusters() {
+		return Collections.unmodifiableList(clusters);
+	}
+
+	/**
+	 * Returns the List of Subunits used to calculate symmetry.
+	 *
+	 * @return an unmodifiable view of the List
+	 */
+	public List<Subunit> getSubunits() {		
+		return Collections.unmodifiableList(subunits);		
+	}
+	
+	/**
+	 * Return the number of Subunits involved in the symmetry.
+	 * 
+	 * @return the number of Subunits
+	 */
+	public int getSubunitCount() {
+		return subunits.size();
+	}
+	
+	/**
+	 * @return rotation group (point group) information representing rotational
+	 *         quaternary symmetry.
 	 */
 	public RotationGroup getRotationGroup() {
 		return rotationGroup;
 	}
 
 	/**
-	 * Returns helix layers (layer lines) as a list of helices that describe a
-	 * helical structure
+	 * @return helix layers (layer lines) as a list of helices that describe a
+	 *         helical structure.
 	 */
 	public HelixLayers getHelixLayers() {
 		return helixLayers;
 	}
 
 	/**
-	 * Returns the method used for symmetry perception.
-	 *
-	 * @return method
+	 * @return the method used for symmetry perception.
 	 */
 	public SymmetryPerceptionMethod getMethod() {
 		return method;
 	}
 
 	/**
-	 * Returns the symmetry group. For point groups returns the point group
-	 * symbol and for helical symmetry returns "H".
-	 * 
-	 * @return symmetry group symbol
+	 * @return the symmetry group symbol. For point groups returns the point
+	 *         group symbol and for helical symmetry returns "H".
 	 */
 	public String getSymmetry() {
 		if (helixLayers != null && helixLayers.size() > 0) {
@@ -104,6 +208,9 @@ public class QuatSymmetryResults {
 		return "";
 	}
 
+	/**
+	 * @return the quaternary scores as an object
+	 */
 	public QuatSymmetryScores getScores() {
 		if (helixLayers != null && helixLayers.size() > 0) {
 			return helixLayers.getScores();
@@ -113,23 +220,49 @@ public class QuatSymmetryResults {
 		return new QuatSymmetryScores();
 	}
 
-	public int getNucleicAcidChainCount() {
-		return subunits.getNucleicAcidChainCount();
+	public Stoichiometry getStoichiometry() {
+		return stoichiometry;
 	}
 
-	@Override
-	public String toString() {
-		return "QuatSymmetryResults [symmetry=" + getSymmetry()
-				+ ", stoichiometry=" + subunits.getStoichiometry()
-				+ ", method=" + method + ", local=" + local + "]";
+	public boolean isPseudoStoichiometric() {
+		return stoichiometry.isPseudoStoichiometric();
 	}
 
+	/**
+	 * A local result means that only a subset of the original Subunits was used
+	 * for symmetry determination.
+	 * 
+	 * @return true if local result, false otherwise
+	 */
 	public boolean isLocal() {
 		return local;
 	}
 
-	public void setLocal(boolean local) {
+	/**
+	 * A local result means that only a subset of the original Subunits was used
+	 * for symmetry determination.
+	 * 
+	 * @param local
+	 *            true if local result, false otherwise
+	 */
+	void setLocal(boolean local) {
 		this.local = local;
+	}
+
+	public Structure getStructure() {
+		return structure;
+	}
+
+	public void setStructure(Structure structure) {
+		this.structure = structure;
+	}
+
+	@Override
+	public String toString() {
+		return "QuatSymmetryResults [stoichiometry: " + getStoichiometry()
+				+ ", symmetry: " + getSymmetry() + ", pseudo-stoichiometric: "
+				+ isPseudoStoichiometric() + ", local: " + local + ", method: "
+				+ method + "]";
 	}
 
 }

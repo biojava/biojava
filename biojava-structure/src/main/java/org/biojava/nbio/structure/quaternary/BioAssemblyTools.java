@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.vecmath.Point3d;
+
 
 
 
@@ -150,10 +152,10 @@ public class BioAssemblyTools {
 			for (BiologicalAssemblyTransformation m: transformations) {
 				if ( ! m.getChainId().equals(intChainID))
 					continue;
-				double[] coords = a.getCoords();
-				transformedCoords[0] = coords[0];
-				transformedCoords[1] = coords[1];
-				transformedCoords[2] = coords[2];
+				Point3d coords = a.getCoordsAsPoint3d();
+				transformedCoords[0] = coords.x;
+				transformedCoords[1] = coords.y;
+				transformedCoords[2] = coords.z;
 
 				if (transformedCoords[0] < coordinateBounds[0][0] ) {
 					coordinateBounds[0][0] = transformedCoords[0];  // min x
@@ -184,7 +186,7 @@ public class BioAssemblyTools {
 	}
 	public static double[][] getAtomCoordinateBounds(Structure s){
 
-		org.biojava.nbio.structure.Atom[] atoms = StructureTools.getAllAtomArray(s);
+		Atom[] atoms = StructureTools.getAllAtomArray(s);
 		int atomCount = atoms.length;
 		final double[][] coordinateBounds = new double[2][3];
 		if ( atomCount <= 0 ) {
@@ -299,10 +301,10 @@ public class BioAssemblyTools {
 				if (!  m.getChainId().equals(intChainID))
 					continue;
 
-				double[] coords = atom.getCoords();
-				transformedCoordinate[0] = coords[0];
-				transformedCoordinate[1] = coords[1];
-				transformedCoordinate[2] = coords[2];
+				Point3d coords = atom.getCoordsAsPoint3d();
+				transformedCoordinate[0] = coords.x;
+				transformedCoordinate[1] = coords.y;
+				transformedCoordinate[2] = coords.z;
 				m.transformPoint(transformedCoordinate);
 				centroid[0] += transformedCoordinate[0];
 				centroid[1] += transformedCoordinate[1];
@@ -320,41 +322,8 @@ public class BioAssemblyTools {
 		return centroid;
 	}
 
-	/** reduce a structure to a Calpha representation only
-	 *
-	 * @param orig
-	 * @return
-	 * @deprecated Use the more generic {@link #getReducedStructure(Structure)}
-	 */
-	@Deprecated
-	public static Structure getReducedCAStructure(Structure orig){
-		Structure s = new StructureImpl();
-		s.setPDBHeader(orig.getPDBHeader());
-		for ( Chain c : orig.getChains()){
-
-			Chain c1 = new ChainImpl();
-			c1.setChainID(c.getChainID());
-			s.addChain(c1);
-
-			for (Group g : c.getAtomGroups()){
-
-				try {
-					Atom a = g.getAtom(StructureTools.CA_ATOM_NAME);
-					if ( a != null){
-
-						Group g1 = (Group)g.clone();
-						g1.clearAtoms();
-						g1.addAtom(a);
-						c1.addGroup(g1);
-
-					}
-				} catch (Exception e){}
-			}
-
-		}
-		return s;
-	}
-	/** reduce a structure to a single-atom representation (e.g. CA atoms
+	/** 
+	 * Reduce a structure to a single-atom representation (e.g. CA atoms)
 	 *
 	 * @param orig
 	 * @return
@@ -372,27 +341,26 @@ public class BioAssemblyTools {
 
 			for (Group g : c.getAtomGroups()){
 
-				try {
-					Atom a = null;
-					switch(g.getType()) {
-					case AMINOACID:
-						a = g.getAtom(StructureTools.CA_ATOM_NAME);
-						break;
-					case NUCLEOTIDE:
-						a = g.getAtom(StructureTools.NUCLEOTIDE_REPRESENTATIVE);
-						break;
-					default:
-						//omit group
-					}
-					if ( a != null){
+				Atom a = null;
+				switch(g.getType()) {
+				case AMINOACID:
+					a = g.getAtom(StructureTools.CA_ATOM_NAME);
+					break;
+				case NUCLEOTIDE:
+					a = g.getAtom(StructureTools.NUCLEOTIDE_REPRESENTATIVE);
+					break;
+				default:
+					//omit group
+				}
+				if ( a != null){
 
-						Group g1 = (Group)g.clone();
-						g1.clearAtoms();
-						g1.addAtom(a);
-						c1.addGroup(g1);
+					Group g1 = (Group)g.clone();
+					g1.clearAtoms();
+					g1.addAtom(a);
+					c1.addGroup(g1);
 
-					}
-				} catch (Exception e){}
+				}
+
 			}
 
 		}

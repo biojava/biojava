@@ -1,7 +1,27 @@
+/*
+ *                    BioJava development code
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public Licence.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright for this code is held jointly by the individual
+ * authors.  These should be listed in @author doc comments.
+ *
+ * For more information on the BioJava project and its aims,
+ * or to join the biojava-l mailing list, visit the home page
+ * at:
+ *
+ *      http://www.biojava.org/
+ *
+ */
 package org.biojava.nbio.structure.io.mmtf;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Path;
 
@@ -77,6 +97,21 @@ public class MmtfActions {
 		MmtfStructureReader mmtfStructureReader = new MmtfStructureReader();
 		// Do the inflation
 		new StructureDataToAdapter(new GenericDecoder(ReaderUtils.getDataFromUrl(pdbId)), mmtfStructureReader);
+		// Get the structue
+		return mmtfStructureReader.getStructure();
+	}
+
+	/**
+	 * Read a Biojava structure from an {@link InputStream}
+	 * @param inStream the {@link InputStream} to read from
+	 * @return the parsed {@link Structure}
+	 * @throws IOException
+	 */
+	public static Structure readFromInputStream(InputStream inStream) throws IOException {
+		// Get the reader - this is the bit that people need to implement.
+		MmtfStructureReader mmtfStructureReader = new MmtfStructureReader();
+		// Do the inflation
+		new StructureDataToAdapter(new GenericDecoder(ReaderUtils.getDataFromInputStream(inStream)), mmtfStructureReader);
 		// Get the structue
 		return mmtfStructureReader.getStructure();
 	}

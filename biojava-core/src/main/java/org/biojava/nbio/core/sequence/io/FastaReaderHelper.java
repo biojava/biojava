@@ -23,10 +23,12 @@ package org.biojava.nbio.core.sequence.io;
 
 import org.biojava.nbio.core.sequence.DNASequence;
 import org.biojava.nbio.core.sequence.ProteinSequence;
+import org.biojava.nbio.core.sequence.RNASequence;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava.nbio.core.sequence.compound.DNACompoundSet;
 import org.biojava.nbio.core.sequence.compound.NucleotideCompound;
+import org.biojava.nbio.core.sequence.compound.RNACompoundSet;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -61,6 +63,34 @@ public class FastaReaderHelper {
 						new FileProxyDNASequenceCreator(
 								file,
 								DNACompoundSet.getDNACompoundSet(),
+								new FastaSequenceParser()
+							)
+					);
+		return fastaProxyReader.process();
+
+	}
+
+	/**
+	 * Selecting lazySequenceLoad=true will parse the FASTA file and figure out the accessionid and offsets and return sequence objects
+	 * that can in the future read the sequence from the disk. This allows the loading of large fasta files where you are only interested
+	 * in one sequence based on accession id.
+	 * @param file
+	 * @param lazySequenceLoad
+	 * @return
+	 * @throws IOException
+	 */
+	public static LinkedHashMap<String, RNASequence> readFastaRNASequence(File file, boolean lazySequenceLoad) throws IOException {
+		if (!lazySequenceLoad) {
+			return readFastaRNASequence(file);
+		}
+
+		FastaReader<RNASequence, NucleotideCompound> fastaProxyReader =
+				new FastaReader<RNASequence, NucleotideCompound>(
+						file,
+						new GenericFastaHeaderParser<RNASequence, NucleotideCompound>(),
+						new FileProxyRNASequenceCreator(
+								file,
+								RNACompoundSet.getRNACompoundSet(),
 								new FastaSequenceParser()
 							)
 					);
@@ -128,6 +158,35 @@ public class FastaReaderHelper {
 		LinkedHashMap<String, DNASequence> dnaSequences = readFastaDNASequence(inStream);
 		inStream.close();
 		return dnaSequences;
+	}
+
+	/**
+	 * Read a fasta RNA sequence
+	 * @param inStream
+	 * @return
+	 * @throws IOException
+	 */
+	public static LinkedHashMap<String, RNASequence> readFastaRNASequence(
+			InputStream inStream) throws IOException {
+		FastaReader<RNASequence, NucleotideCompound> fastaReader = new FastaReader<RNASequence, NucleotideCompound>(
+				inStream,
+				new GenericFastaHeaderParser<RNASequence, NucleotideCompound>(),
+				new RNASequenceCreator(RNACompoundSet.getRNACompoundSet()));
+		return fastaReader.process();
+	}
+
+	/**
+	 *
+	 * @param file
+	 * @return
+	 * @throws IOException
+	 */
+	public static LinkedHashMap<String, RNASequence> readFastaRNASequence(
+			File file) throws IOException {
+		FileInputStream inStream = new FileInputStream(file);
+		LinkedHashMap<String, RNASequence> rnaSequences = readFastaRNASequence(inStream);
+		inStream.close();
+		return rnaSequences;
 	}
 
 	public static void main(String[] args) throws Exception {

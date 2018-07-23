@@ -52,10 +52,10 @@ import org.biojava.nbio.structure.AtomImpl;
 import org.biojava.nbio.structure.Author;
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.ChainImpl;
-import org.biojava.nbio.structure.EntityInfo;
-import org.biojava.nbio.structure.EntityType;
 import org.biojava.nbio.structure.DBRef;
 import org.biojava.nbio.structure.Element;
+import org.biojava.nbio.structure.EntityInfo;
+import org.biojava.nbio.structure.EntityType;
 import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.GroupIterator;
 import org.biojava.nbio.structure.HetatomImpl;
@@ -71,6 +71,7 @@ import org.biojava.nbio.structure.StructureImpl;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
 import org.biojava.nbio.structure.io.mmcif.model.ChemCompAtom;
+import org.biojava.nbio.structure.io.util.PDBTemporaryStorageUtils.LinkRecord;
 import org.biojava.nbio.structure.secstruc.SecStrucInfo;
 import org.biojava.nbio.structure.secstruc.SecStrucType;
 import org.biojava.nbio.structure.xtal.CrystalCell;
@@ -78,7 +79,6 @@ import org.biojava.nbio.structure.xtal.SpaceGroup;
 import org.biojava.nbio.structure.xtal.SymoplibParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 
 /**
@@ -186,6 +186,9 @@ public class PDBFileParser  {
 	private Map<String, List<ResidueNumber>> siteToResidueMap = new LinkedHashMap<String, List<ResidueNumber>>();
 
 	private List<SSBondImpl> ssbonds = new ArrayList<>();
+	
+    // for storing LINK until we have all the atoms parsed
+    private List<LinkRecord> linkRecords;
 
 	private Matrix4d currentNcsOp;
 	private List<Matrix4d> ncsOperators;
@@ -288,6 +291,8 @@ public class PDBFileParser  {
 		// set the correct max values for parsing...
 		loadMaxAtoms = params.getMaxAtoms();
 		atomCAThreshold = params.getAtomCaThreshold();
+		
+        linkRecords = new ArrayList<LinkRecord>();
 
 		blankChainIdsPresent = false;
 		
@@ -667,20 +672,33 @@ public class PDBFileParser  {
 	 */
 	private void pdb_REVDAT_Handler(String line) {
 
-		// only keep the first...
+		// keep the first as latest modified date and the last as release date
 		Date modDate = pdbHeader.getModDate();
 
-		if ( modDate==null || modDate.equals(new Date(0)) ) {
-			// modDate is still uninitialized
+		if ( modDate == null || modDate.equals(new Date(0)) ) {
+			
+			// modified date is still uninitialized
 			String modificationDate = line.substring (13, 22).trim() ;
 
 			try {
 				Date dep = dateFormat.parse(modificationDate);
 				pdbHeader.setModDate(dep);
+				pdbHeader.setRelDate(dep);
 			} catch (ParseException e){
-				logger.info("Could not parse modification date string '"+modificationDate+"'. Will continue without modification date");
+				logger.info("Could not parse revision date string '"+modificationDate+"'. ");
 			}
 
+		} else {
+			
+			// set as the release date
+			String releaseDate = line.substring (13, 22).trim() ;
+
+			try {
+				Date dep = dateFormat.parse(releaseDate);
+				pdbHeader.setRelDate(dep);
+			} catch (ParseException e){
+				logger.info("Could not parse revision date string '"+releaseDate+"'. ");
+			}
 		}
 	}
 
@@ -1450,9 +1468,9 @@ public class PDBFileParser  {
 	 * </pre>
 	 */
 	private void pdb_CRYST1_Handler(String line) {
-		// for badly formatted files (e.g. phenix-produced ones), there's no z and the min length is 63
-		if (line.length() < 63) {
-			logger.warn("CRYST1 record has fewer than 63 columns: will ignore it");
+		// for badly formatted files (e.g. phenix-produced ones), there's no z and the min length is 58 (e.g. for SG 'P 1')
+		if (line.length() < 58) {
+			logger.warn("CRYST1 record has fewer than 58 columns: will ignore it");
 			return;
 		}
 
@@ -1502,8 +1520,13 @@ public class PDBFileParser  {
 		}
 
 		SpaceGroup sg = SymoplibParser.getSpaceGroup(spaceGroup);
-		if (sg==null) logger.warn("Space group '"+spaceGroup+"' not recognised as a standard space group");
-		crystallographicInfo.setSpaceGroup(sg);
+		if (sg==null) {
+			logger.warn("Space group '"+spaceGroup+"' not recognised as a standard space group");
+			crystallographicInfo.setNonStandardSg(true);
+		} else {
+			crystallographicInfo.setSpaceGroup(sg);
+			crystallographicInfo.setNonStandardSg(false);
+		}
 	}
 
 	/**
@@ -1979,6 +2002,8 @@ public class PDBFileParser  {
 
 	/** safes repeating a few lines ... */
 	private Integer conect_helper (String line,int start,int end) {
+		if (line.length() < end) return null;
+		
 		String sbond = line.substring(start,end).trim();
 		int bond  = -1 ;
 		Integer b = null ;
@@ -2129,7 +2154,7 @@ public class PDBFileParser  {
 
 		DBRef dbref = new DBRef();
 		String idCode      = line.substring(7,11);
-		String chainId     = line.substring(12,13);
+		String chainName     = line.substring(12,13);
 		String seqBegin    = line.substring(14,18);
 		String insertBegin = line.substring(18,19);
 		String seqEnd      = line.substring(20,24);
@@ -2148,7 +2173,7 @@ public class PDBFileParser  {
 			dbinsEnd       = " ";
 
 		dbref.setIdCode(idCode);
-		dbref.setChainId(chainId);
+		dbref.setChainName(chainName);
 		dbref.setSeqBegin(intFromString(seqBegin));
 		dbref.setInsertBegin(insertBegin.charAt(0));
 		dbref.setSeqEnd(intFromString(seqEnd));
@@ -2232,7 +2257,72 @@ public class PDBFileParser  {
 
 
 	/**
-	 * Handler for the SITE records. 
+	 * Takes care of LINK records. These take the format of:
+	 *
+	 * <pre>
+	 * COLUMNS        DATA TYPE       FIELD       DEFINITION
+	 * --------------------------------------------------------------------------------
+	 *  1 -  6        Record name     "LINK  "
+	 * 13 - 16        Atom            name1       Atom name.
+	 * 17             Character       altLoc1     Alternate location indicator.
+	 * 18 - 20        Residue name    resName1    Residue name.
+	 * 22             Character       chainID1    Chain identifier.
+	 * 23 - 26        Integer         resSeq1     Residue sequence number.
+	 * 27             AChar           iCode1      Insertion code.
+	 * 43 - 46        Atom            name2       Atom name.
+	 * 47             Character       altLoc2     Alternate location indicator.
+	 * 48 - 50        Residue name    resName2    Residue name.
+	 * 52             Character       chainID2    Chain identifier.
+	 * 53 - 56        Integer         resSeq2     Residue sequence number.
+	 * 57             AChar           iCode2      Insertion code.
+	 * 60 - 65        SymOP           sym1        Symmetry operator for 1st atom.
+	 * 67 - 72        SymOP           sym2        Symmetry operator for 2nd atom.
+	 * </pre>
+	 *
+	 * (From http://www.wwpdb.org/documentation/format32/sect6.html#LINK)
+	 *
+	 * @param line the LINK record line to parse.
+	 */
+	private void pdb_LINK_Handler(String line) {
+
+		if (params.isHeaderOnly()) return;
+		
+		// Check for the minimal set of fields.
+		if (line.length()<56) {
+			logger.info("LINK line has length under 56. Ignoring it.");
+			return;
+		}
+
+		int len = line.length();
+		
+		String name1 = line.substring(12, 16).trim();
+		String altLoc1 = line.substring(16, 17).trim();
+		String resName1 = line.substring(17, 20).trim();
+		String chainID1 = line.substring(21, 22).trim();
+		String resSeq1 = line.substring(22, 26).trim();
+		String iCode1 = line.substring(26, 27).trim();
+
+		String name2 = line.substring(42, 46).trim();
+		String altLoc2 = line.substring(46, 47).trim();
+		String resName2 = line.substring(47, 50).trim();
+		String chainID2 = line.substring(51, 52).trim();
+		String resSeq2 = line.substring(52, 56).trim();
+		String iCode2 = null;  // Might get trimmed if blank.
+		if (len > 56) iCode2 = line.substring(56, 57).trim();
+
+		String sym1 = null;
+		if (len > 64) sym1 = line.substring(59, 65).trim();
+		String sym2 = null;
+		if (len > 71) sym2 = line.substring(66, 72).trim();
+
+		linkRecords.add(new LinkRecord(
+				name1, altLoc1, resName1, chainID1, resSeq1, iCode1,
+				name2, altLoc2, resName2, chainID2, resSeq2, iCode2,
+				sym1, sym2));
+	}
+
+	/**
+	 * Handler for the SITE records. <br>
 	 *
 	 * <pre>
 	 *
@@ -2515,6 +2605,7 @@ public class PDBFileParser  {
 		lengthCheck = -1;
 		atomCount = 0;
 		atomOverflow = false;
+		linkRecords = new ArrayList<LinkRecord>();
 		siteToResidueMap.clear();
 		
 		blankChainIdsPresent = false;
@@ -2548,57 +2639,57 @@ public class PDBFileParser  {
 			else
 				recordName = line.substring (0, 6).trim ();
 
-			if (recordName.equals("ATOM"))
-				pdb_ATOM_Handler(line);
-			else if (recordName.equals("SEQRES"))
-				pdb_SEQRES_Handler(line);
-			else if (recordName.equals("HETATM"))
-				pdb_ATOM_Handler(line);
-			else if (recordName.equals("MODEL"))
-				pdb_MODEL_Handler(line);
-			else if (recordName.equals("TER"))
-				pdb_TER_Handler();
-			else if (recordName.equals("HEADER"))
-				pdb_HEADER_Handler(line);
-			else if (recordName.equals("AUTHOR"))
-				pdb_AUTHOR_Handler(line);
-			else if (recordName.equals("TITLE"))
-				pdb_TITLE_Handler(line);
-			else if (recordName.equals("SOURCE"))
-				sourceLines.add(line); //pdb_SOURCE_Handler
-			else if (recordName.equals("COMPND"))
-				compndLines.add(line); //pdb_COMPND_Handler
-			else if (recordName.equals("JRNL"))
-				pdb_JRNL_Handler(line);
-			else if (recordName.equals("EXPDTA"))
-				pdb_EXPDTA_Handler(line);
-			else if (recordName.equals("CRYST1"))
-				pdb_CRYST1_Handler(line);
-			else if (recordName.startsWith("MTRIX"))
-				pdb_MTRIXn_Handler(line);
-			else if (recordName.equals("REMARK"))
-				pdb_REMARK_Handler(line);
-			else if (recordName.equals("CONECT"))
-				pdb_CONECT_Handler(line);
-			else if (recordName.equals("REVDAT"))
-				pdb_REVDAT_Handler(line);
-			else if (recordName.equals("DBREF"))
-				pdb_DBREF_Handler(line);
-			else if (recordName.equals("SITE"))
-				pdb_SITE_Handler(line);
-			else if (recordName.equals("SSBOND"))
-				pdb_SSBOND_Handler(line);
-			else if ( params.isParseSecStruc()) {
-				if ( recordName.equals("HELIX") ) pdb_HELIX_Handler (  line ) ;
-				else if (recordName.equals("SHEET")) pdb_SHEET_Handler(line ) ;
-				else if (recordName.equals("TURN")) pdb_TURN_Handler(   line ) ;
-			}
-			else {
-				// this line type is not supported, yet.
-				// we ignore it
-			}
-
-
+			try {
+				if (recordName.equals("ATOM"))
+					pdb_ATOM_Handler(line);
+				else if (recordName.equals("SEQRES"))
+					pdb_SEQRES_Handler(line);
+				else if (recordName.equals("HETATM"))
+					pdb_ATOM_Handler(line);
+				else if (recordName.equals("MODEL"))
+					pdb_MODEL_Handler(line);
+				else if (recordName.equals("TER"))
+					pdb_TER_Handler();
+				else if (recordName.equals("HEADER"))
+					pdb_HEADER_Handler(line);
+				else if (recordName.equals("AUTHOR"))
+					pdb_AUTHOR_Handler(line);
+				else if (recordName.equals("TITLE"))
+					pdb_TITLE_Handler(line);
+				else if (recordName.equals("SOURCE"))
+					sourceLines.add(line); //pdb_SOURCE_Handler
+				else if (recordName.equals("COMPND"))
+					compndLines.add(line); //pdb_COMPND_Handler
+				else if (recordName.equals("JRNL"))
+					pdb_JRNL_Handler(line);
+				else if (recordName.equals("EXPDTA"))
+					pdb_EXPDTA_Handler(line);
+				else if (recordName.equals("CRYST1"))
+					pdb_CRYST1_Handler(line);
+				else if (recordName.startsWith("MTRIX"))
+					pdb_MTRIXn_Handler(line);
+				else if (recordName.equals("REMARK"))
+					pdb_REMARK_Handler(line);
+				else if (recordName.equals("CONECT"))
+					pdb_CONECT_Handler(line);
+				else if (recordName.equals("REVDAT"))
+					pdb_REVDAT_Handler(line);
+				else if (recordName.equals("DBREF"))
+					pdb_DBREF_Handler(line);
+				else if (recordName.equals("SITE"))
+					pdb_SITE_Handler(line);
+				else if (recordName.equals("SSBOND"))
+					pdb_SSBOND_Handler(line);
+				else if (recordName.equals("LINK"))
+					pdb_LINK_Handler(line);
+				else if ( params.isParseSecStruc()) {
+					if ( recordName.equals("HELIX") ) pdb_HELIX_Handler (  line ) ;
+					else if (recordName.equals("SHEET")) pdb_SHEET_Handler(line ) ;
+					else if (recordName.equals("TURN")) pdb_TURN_Handler(   line ) ;
+				}
+			} catch (StringIndexOutOfBoundsException | NullPointerException ex) {
+				logger.info("Unable to parse [" + line + "]");
+			} 
 		}
 
 		makeCompounds(compndLines, sourceLines);
@@ -2676,6 +2767,13 @@ public class PDBFileParser  {
 	private void formBonds() {
 
 		BondMaker maker = new BondMaker(structure, params);
+		
+		// LINK records should be preserved, they are the way that
+		// inter-residue bonds are created for ligands such as trisaccharides, unusual polymers.
+        // The analogy in mmCIF is the _struct_conn record.
+		for (LinkRecord linkRecord : linkRecords) {
+            maker.formLinkRecordBond(linkRecord);
+        }
 
 		maker.formDisulfideBonds(ssbonds);
 
@@ -3042,10 +3140,10 @@ public class PDBFileParser  {
 			for (Chain c:model) {
 
 				// we only have entities for polymeric chains, all others are ignored for assigning entities
-				if (StructureTools.isChainWaterOnly(c)) {
+				if (c.isWaterOnly()) {
 					waterChains.add(c);
 
-				} else if (StructureTools.isChainPureNonPolymer(c)) {
+				} else if (c.isPureNonPolymer()) {
 					nonPolyChains.add(c);
 
 				} else {

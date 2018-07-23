@@ -65,8 +65,10 @@ public class TestSubunitCluster {
 		Atom[] reprAtoms = atoms.toArray(new Atom[atoms.size()]);
 
 		// Create two identical SubunitCluster
-		SubunitCluster sc1 = new SubunitCluster(new Subunit(reprAtoms));
-		SubunitCluster sc2 = new SubunitCluster(new Subunit(reprAtoms));
+		SubunitCluster sc1 = new SubunitCluster(new Subunit(reprAtoms,
+				"subunit 1", null, null));
+		SubunitCluster sc2 = new SubunitCluster(new Subunit(reprAtoms,
+				"subunit 2", null, null));
 
 		boolean merged = sc1.mergeIdentical(sc2);
 
@@ -88,7 +90,8 @@ public class TestSubunitCluster {
 		}
 		Atom[] reprAtoms2 = atoms2.toArray(new Atom[atoms2.size()]);
 
-		SubunitCluster sc3 = new SubunitCluster(new Subunit(reprAtoms2));
+		SubunitCluster sc3 = new SubunitCluster(new Subunit(reprAtoms2,
+				"subunit 1", null, null));
 
 		merged = sc1.mergeIdentical(sc3);
 
@@ -101,7 +104,7 @@ public class TestSubunitCluster {
 	}
 
 	/**
-	 * Test {@link SubunitCluster#mergeSequence(SubunitCluster, double, double)}
+	 * Test {@link SubunitCluster#mergeSequence(SubunitCluster, SubunitClustererParameters)}
 	 * 
 	 * @throws CompoundNotFoundException
 	 */
@@ -121,10 +124,14 @@ public class TestSubunitCluster {
 		Atom[] reprAtoms = atoms.toArray(new Atom[atoms.size()]);
 
 		// Create two identical SubunitCluster
-		SubunitCluster sc1 = new SubunitCluster(new Subunit(reprAtoms));
-		SubunitCluster sc2 = new SubunitCluster(new Subunit(reprAtoms));
-
-		boolean merged = sc1.mergeSequence(sc2, 0.9, 0.9);
+		SubunitCluster sc1 = new SubunitCluster(new Subunit(reprAtoms,
+				"subunit 1", null, null));
+		SubunitCluster sc2 = new SubunitCluster(new Subunit(reprAtoms,
+				"subunit 2", null, null));
+		SubunitClustererParameters clustererParameters = new SubunitClustererParameters();
+		clustererParameters.setSequenceIdentityThreshold(0.9);
+		clustererParameters.setSequenceCoverageThreshold(0.9);
+		boolean merged = sc1.mergeSequence(sc2, clustererParameters);
 
 		// Merged have to be true, and the merged SubunitCluster is sc1
 		assertTrue(merged);
@@ -144,9 +151,10 @@ public class TestSubunitCluster {
 		}
 		Atom[] reprAtoms2 = atoms2.toArray(new Atom[atoms2.size()]);
 
-		SubunitCluster sc3 = new SubunitCluster(new Subunit(reprAtoms2));
+		SubunitCluster sc3 = new SubunitCluster(new Subunit(reprAtoms2,
+				"subunit 3", null, null));
 
-		merged = sc1.mergeSequence(sc3, 0.9, 0.9);
+		merged = sc1.mergeSequence(sc3,clustererParameters);
 
 		// Merged have to be false, and Clusters result inmodified
 		assertFalse(merged);
@@ -174,9 +182,10 @@ public class TestSubunitCluster {
 		}
 		Atom[] reprAtoms3 = atoms3.toArray(new Atom[atoms3.size()]);
 
-		SubunitCluster sc4 = new SubunitCluster(new Subunit(reprAtoms3));
+		SubunitCluster sc4 = new SubunitCluster(new Subunit(reprAtoms3,
+				"subunit 4", null, null));
 
-		merged = sc1.mergeSequence(sc4, 0.9, 0.9);
+		merged = sc1.mergeSequence(sc4, clustererParameters);
 
 		// Merged have to be true, and the merged SubunitCluster is sc1
 		assertTrue(merged);
@@ -188,7 +197,7 @@ public class TestSubunitCluster {
 
 	/**
 	 * Test
-	 * {@link SubunitCluster#mergeStructure(SubunitCluster, double, double)}
+	 * {@link SubunitCluster#mergeStructure(SubunitCluster, SubunitClustererParameters)}
 	 * 
 	 * @throws StructureException
 	 * @throws IOException
@@ -201,20 +210,24 @@ public class TestSubunitCluster {
 		// Create one SubunitCluster for each chain
 		SubunitCluster sc1 = new SubunitCluster(
 				new Subunit(StructureTools.getRepresentativeAtomArray(s
-						.getChainByIndex(0))));
+						.getChainByIndex(0)), "chain 0", null, s));
 		SubunitCluster sc2 = new SubunitCluster(
 				new Subunit(StructureTools.getRepresentativeAtomArray(s
-						.getChainByIndex(1))));
+						.getChainByIndex(1)), "chain 1", null, s));
 		SubunitCluster sc3 = new SubunitCluster(
 				new Subunit(StructureTools.getRepresentativeAtomArray(s
-						.getChainByIndex(2))));
+						.getChainByIndex(2)), "chain 2", null, s));
 		SubunitCluster sc4 = new SubunitCluster(
 				new Subunit(StructureTools.getRepresentativeAtomArray(s
-						.getChainByIndex(3))));
+						.getChainByIndex(3)), "chain 3", null, s));
 
 		// Clusters 1 and 3 and 2 and 4 are identical
-		boolean merged13 = sc1.mergeStructure(sc3, 3.0, 0.9);
-		boolean merged24 = sc2.mergeStructure(sc4, 3.0, 0.9);
+		SubunitClustererParameters clustererParameters = new SubunitClustererParameters();
+		clustererParameters.setRMSDThreshold(3.0);
+		clustererParameters.setStructureCoverageThreshold(0.9);
+
+		boolean merged13 = sc1.mergeStructure(sc3,clustererParameters);
+		boolean merged24 = sc2.mergeStructure(sc4,clustererParameters);
 
 		// Merged have to be true, and the merged SubunitCluster is sc1
 		assertTrue(merged13);
@@ -229,19 +242,18 @@ public class TestSubunitCluster {
 				sc2.getAlignedAtomsSubunit(1).length);
 
 		// Now test for pseudosymmetry
-		boolean merged = sc1.mergeStructure(sc2, 3.0, 0.9);
+		boolean merged = sc1.mergeStructure(sc2, clustererParameters);
 
 		assertTrue(merged);
 		assertEquals(sc1.size(), 4);
 		assertEquals(sc1.length(), 140, 2);
 		assertEquals(sc1.getAlignedAtomsSubunit(0).length,
 				sc1.getAlignedAtomsSubunit(2).length);
-		
 
 	}
 
 	/**
-	 * Test {@link SubunitCluster#divideInternally(double, double, int)}
+	 * Test {@link SubunitCluster#divideInternally(SubunitClustererParameters)}
 	 * 
 	 * @throws StructureException
 	 * @throws IOException
@@ -254,10 +266,15 @@ public class TestSubunitCluster {
 		// Create a SubunitCluster for the chain
 		SubunitCluster sc1 = new SubunitCluster(
 				new Subunit(StructureTools.getRepresentativeAtomArray(s
-						.getChainByIndex(0))));
+						.getChainByIndex(0)), "chain 0", null, s));
+
+		SubunitClustererParameters clustererParameters = new SubunitClustererParameters();
+		clustererParameters.setStructureCoverageThreshold(0.8);
+		clustererParameters.setRMSDThreshold(3.0);
+		clustererParameters.setMinimumSequenceLength(20);
 
 		// Clusters should be merged by identity
-		boolean divided = sc1.divideInternally(0.8, 3.0, 20);
+		boolean divided = sc1.divideInternally(clustererParameters);
 
 		// Divided has to be true, and Subunit length shorter than half
 		assertTrue(divided);

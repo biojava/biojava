@@ -20,10 +20,6 @@
  */
 package org.biojava.nbio.genome.parsers.gff;
 
-import org.biojava.nbio.genome.App;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 
 /**
  * A location on a sequence.
@@ -72,16 +68,10 @@ import org.slf4j.LoggerFactory;
  */
 public class Location implements Iterable<Location>
 {
-	private static final Logger logger = LoggerFactory.getLogger(App.class);
-
+	
 	private int mStart;
 	private int mEnd;
 
-//	/**
-//	 */
-//	private Location()
-//	{
-//	}
 
 	/**
 	 * Construct new location from coordinates.
@@ -893,110 +883,6 @@ public class Location implements Iterable<Location>
 	private boolean isHealthy()
 	{
 		return ( mStart <= mEnd ) && (( mStart <= 0 && mEnd <= 0 ) || (mStart >= 0 && mEnd >= 0));
-	}
-
-	//shorthand for testing
-	static private Location L( int s, int e )
-	{
-	   return new Location( s, e );
-	}
-
-	@SuppressWarnings("unused")
-	static private Location R( int s, int e )
-	{
-	   return new Location( -e, -s );
-	}
-
-
-	/**
-	 * @deprecated
-	 */
-	@Deprecated
-	@SuppressWarnings("unused")
-	public static void main(String[] args )
-	throws Exception
-	{
-		Location p3_7= new Location( 3, 7 );
-		Location p16_19= new Location( 16, 19 );
-		Location p15_19= new Location( 15, 19 );
-		Location p15_16= new Location( 15, 16 );
-		Location p10_17= new Location( 10, 17 );
-		Location p10_12= new Location( 10, 12 );
-		Location p14_17= new Location( 14, 17 );
-		Location p14_14= new Location( 14, 14 );
-
-		Location r13_17= new Location( 13, 17 );
-		Location r21_25= new Location( 21, 25 );
-
-		Location r4_7= new Location( 4, 7 );
-		Location r2_5= new Location( 2, 5 );
-		Location r0_3= new Location( 0, 3 );
-		Location r5_8= new Location( 5, 8 );
-
-		//distance
-		assert L(14,14).distance( L(3,7) ) == 7;
-		assert L(3,7).distance( L(14,14) ) == 7;
-		assert L(1,4).distance( L(7, 10) ) == 3;
-
-		//union
-		assert p10_12.union( p14_17 ).equals( p10_17 );
-		assert p14_17.union( p10_12 ).equals( p10_17 );
-		assert p15_19.union( p15_16).equals( p15_19 );
-
-		//intersection
-		assert r13_17.union( r21_25 ).intersection( r21_25 ).equals( new Location( 21, 25 ));
-
-
-		//isBefore
-		assert r2_5.isBefore( r5_8 );
-		assert !r2_5.isBefore( r4_7 );
-
-		//isAfter
-		assert r5_8.isAfter( r2_5 );
-		assert !r5_8.isAfter( r4_7 );
-
-		//contains
-		assert p15_19.contains( p16_19 );
-
-		//overlaps
-		assert r2_5.overlaps( r4_7 );
-		assert r2_5.overlaps( r0_3 );
-		assert !r5_8.overlaps( r2_5 );
-		assert !r2_5.overlaps( r5_8 );
-
-
-		//prefix
-		assert L(2,20).prefix(1).equals( L(2,3));
-		assert L(2,20).prefix(-1).equals( L(2,19));
-		assert L(2,20).prefix( L(10,12)).equals( L(2,10));
-
-		//suffix
-		assert L(2,20).suffix(1).equals( L(3,20));
-		assert L(2,20).suffix(-1).equals( L(19,20));
-		assert L(2,20).suffix( L(10,12)).equals( L(12,20));
-
-
-		//upstream
-		//downstream
-
-		//startsBefore
-		//startsAfter
-		//endsBefore
-		//endsAfter
-
-		//equals
-
-		//percentoverlap
-
-
-		//plus
-		//minus
-		//isNegative
-		//oppposite
-
-		//fromBio, etc.
-
-		logger.info("JavaGene.Location Passed.");
 	}
 
 }

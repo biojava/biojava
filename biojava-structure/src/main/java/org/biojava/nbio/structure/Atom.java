@@ -25,6 +25,8 @@ package org.biojava.nbio.structure;
 
 import java.util.List;
 
+import javax.vecmath.Point3d;
+
 /**
  * A simple interface for an Atom.
  * The coordinates can be accessed via the
@@ -94,10 +96,21 @@ public interface Atom extends Cloneable, PDBRecord {
 
 	/**
 	 * Get the coordinates.
-	 * @return an array of doubles representing the coords value
+	 * @return a new array of doubles representing the coords value
 	 * @see #setCoords
+	 * @see #getCoordsAsPoint3d()
 	 */
 	public double[] getCoords() ;
+	
+	/**
+	 * Get the coordinates.
+	 * <p> 
+	 * Internally the coordinates are represented as Point3d so this 
+	 * is recommended over {@link #getCoords()}
+	 * @return a reference to the Point3d coordinates
+	 * @see #getCoords()
+	 */
+	public Point3d getCoordsAsPoint3d();	
 
 	/**
 	 * Set the X coordinate.

@@ -27,7 +27,8 @@ package org.biojava.nbio.structure;
 import java.io.Serializable;
 import java.io.StringWriter;
 
-/** Everything that is needed to uniquely describe a residue position
+/** 
+ * Everything that is needed to uniquely describe a residue position
  *
  * @author Andreas Prlic
  *
@@ -111,6 +112,35 @@ public class ResidueNumber implements Serializable, Comparable<ResidueNumber>
 
 		return true;
 	}
+	
+	/**
+	 * Check if the seqNum and insertion code are equivalent,
+	 * ignoring the chain
+	 * @param obj
+	 * @return
+	 */
+	public boolean equalsPositional(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ResidueNumber other = (ResidueNumber) obj;
+		if (insCode == null) {
+			if (other.insCode != null)
+				return false;
+		} else if (!insCode.equals(other.insCode))
+			return false;
+		if (seqNum == null) {
+			if (other.seqNum != null)
+				return false;
+		} else if (!seqNum.equals(other.seqNum))
+			return false;
+
+		return true;
+
+	}
 
 	@Override
 	public int hashCode() {
@@ -192,6 +222,9 @@ public class ResidueNumber implements Serializable, Comparable<ResidueNumber>
 	}
 
 
+	/**
+	 * Compare residue numbers by chain, sequence number, and insertion code
+	 */
 	@Override
 	public int compareTo(ResidueNumber other) {
 
@@ -205,6 +238,16 @@ public class ResidueNumber implements Serializable, Comparable<ResidueNumber>
 			return -1;
 		}
 
+		return compareToPositional(other);
+	}
+
+	/**
+	 * Compare residue numbers by sequence number and insertion code,
+	 * ignoring the chain
+	 * @param other
+	 * @return
+	 */
+	public int compareToPositional(ResidueNumber other) {
 		// sequence number
 		if (seqNum != null && other.seqNum != null) {
 			if (!seqNum.equals(other.seqNum)) return seqNum.compareTo(other.seqNum);

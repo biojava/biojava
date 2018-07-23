@@ -24,6 +24,10 @@ import junit.framework.TestCase;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
+import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
+import org.biojava.nbio.structure.io.mmcif.DownloadChemCompProvider;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.io.IOException;
 
@@ -34,11 +38,16 @@ import java.io.IOException;
  * @author duarte_j
  *
  */
-public class TestAsaCalc extends TestCase {
+public class TestAsaCalc {
 
 
+	@Test
 	public void testAsa3PIU() throws StructureException, IOException {
 
+		// important: without this the tests can fail when running in maven (but not in IDE)
+		// that's because it depends on the order on how tests were run - JD 2018-03-10
+		ChemCompGroupFactory.setChemCompProvider(new DownloadChemCompProvider()); 
+		
 		Structure structure = StructureIO.getStructure("3PIU");
 
 
@@ -61,12 +70,12 @@ public class TestAsaCalc extends TestCase {
 			//System.out.println(groupAsa.getGroup().getPDBName() + " " + groupAsa.getGroup().getResidueNumber() + " " + groupAsa.getAsaU());
 			totResidues+=groupAsa.getAsaU();
 
-			assertTrue(groupAsa.getRelativeAsaU()<=1.0);
+			Assert.assertTrue(groupAsa.getRelativeAsaU() <= 1.0);
 		}
 
-		assertEquals(totAtoms, totResidues,0.000001);
+		Assert.assertEquals(totAtoms, totResidues, 0.000001);
 
-		assertEquals(17462.0, totAtoms, 1.0);
+		Assert.assertEquals(17462.0, totAtoms, 1.0);
 
 	}
 }

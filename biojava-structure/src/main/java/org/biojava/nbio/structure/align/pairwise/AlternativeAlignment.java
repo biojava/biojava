@@ -28,12 +28,18 @@ import org.biojava.nbio.structure.align.StrucAligParameters;
 import org.biojava.nbio.structure.align.helper.AligMatEl;
 import org.biojava.nbio.structure.align.helper.IndexPair;
 import org.biojava.nbio.structure.align.helper.JointFragments;
+import org.biojava.nbio.structure.geometry.Matrices;
+import org.biojava.nbio.structure.geometry.SuperPositions;
 import org.biojava.nbio.structure.jama.Matrix;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.List;
-import java.util.logging.Logger;
+
+
+import javax.vecmath.Matrix4d;
 
 /**
  * Implements a class which handles one possible (alternative) solution.
@@ -52,42 +58,39 @@ import java.util.logging.Logger;
 public class AlternativeAlignment implements Serializable{
 
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = -6226717654562221241L;
 
-	int[] idx1;
-	int[] idx2;
-	String[] pdbresnum1;
-	String[] pdbresnum2;
+	private int[] idx1;
+	private int[] idx2;
+	private String[] pdbresnum1;
+	private String[] pdbresnum2;
 	//short[] alig1;
 	//short[] alig2;
 
-	int nfrags;
-	Atom center;
-	Matrix rot;
-	Atom tr;
+	private int nfrags;
+	private Atom center;
+	private Matrix rot;
+	private Atom tr;
 
 
 	// the scores...
-	int gaps0;
-	int eqr0;
-	int rms0;
-	int joined;
-	int percId;
-	int cluster;
-	float score;
-	IndexPair[] aligpath;
-	int fromia;
-	Matrix currentRotMatrix;
-	Atom currentTranMatrix;
+	private int gaps0;
+	private int eqr0;
+	private int rms0;
+	private int joined;
+	private int percId;
+	private int cluster;
+	private float score;
+	private IndexPair[] aligpath;
+	private int fromia;
+	private Matrix currentRotMatrix;
+	private Atom currentTranMatrix;
 
-	double rms;
+	private double rms;
 
-	Matrix distanceMatrix;
+	private Matrix distanceMatrix;
 
-	public static Logger logger =  Logger.getLogger("org.biojava.nbio.structure.align");
+	public static final Logger logger =  LoggerFactory.getLogger(AlternativeAlignment.class);
 
 
 	public AlternativeAlignment() {
@@ -315,7 +318,7 @@ public class AlternativeAlignment implements Serializable{
 		rotateShiftAtoms(ca3);
 
 		calcScores(ca1,ca2);
-		logger.fine("eqr " + eqr0 + " " + gaps0 + " "  +idx1[0] + " " +idx1[1]);
+		logger.debug("eqr " + eqr0 + " " + gaps0 + " "  +idx1[0] + " " +idx1[1]);
 
 		getPdbRegions(ca1,ca2);
 
@@ -667,8 +670,8 @@ public class AlternativeAlignment implements Serializable{
 			Chain c1 = p1.getChain();
 			Chain c2 = p2.getChain();
 
-			String cid1 = c1.getChainID();
-			String cid2 = c2.getChainID();
+			String cid1 = c1.getId();
+			String cid2 = c2.getId();
 
 			String pdb1 = p1.getResidueNumber().toString();
 			String pdb2 = p2.getResidueNumber().toString();
@@ -716,10 +719,11 @@ public class AlternativeAlignment implements Serializable{
 
 
 
-	/** Count the number of gaps in an alignment represented by idx1,idx2.
+	/**
+	 * Count the number of gaps in an alignment represented by idx1,idx2.
 	 *
-	 * @param idx1
-	 * @param idx2
+	 * @param i1
+	 * @param i2
 	 * @return the number of gaps in this alignment
 	 */
 	private int count_gaps(int[] i1, int[] i2){
@@ -776,13 +780,14 @@ public class AlternativeAlignment implements Serializable{
 			ca2subset[i] = (Atom) ca2[pos2].clone();
 		}
 
-		SVDSuperimposer svd = new SVDSuperimposer(ca1subset,ca2subset);
-		this.currentRotMatrix  = svd.getRotation();
-		this.currentTranMatrix = svd.getTranslation();
+		Matrix4d trans = SuperPositions.superpose(Calc.atomsToPoints(ca1subset), 
+				Calc.atomsToPoints(ca2subset));
+		this.currentRotMatrix  = Matrices.getRotationJAMA(trans);
+		this.currentTranMatrix = Calc.getTranslationVector(trans);
 		//currentRotMatrix.print(3,3);
 		if ( getRMS) {
 			rotateShiftAtoms(ca2subset);
-			this.rms = SVDSuperimposer.getRMS(ca1subset,ca2subset);
+			this.rms = Calc.rmsd(ca1subset,ca2subset);
 		}
 
 

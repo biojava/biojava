@@ -19,6 +19,8 @@
  */
 package org.biojava.nbio.structure.rcsb;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
@@ -27,8 +29,6 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Fetches information from <a href="http://www.pdb.org/pdb/software/rest.do#descPDB">RCSB's RESTful Web Service
@@ -56,11 +56,11 @@ import java.util.logging.Logger;
 
 public class RCSBLigandsFactory {
 
-	private static final String HET_URL_STUB = "http://www.pdb.org/pdb/rest/describeHet?chemicalID=";
+	private static final String HET_URL_STUB = "http://www.rcsb.org/pdb/rest/describeHet?chemicalID=";
 
-	private static final Logger logger = Logger.getLogger(RCSBLigandsFactory.class.getPackage().getName());
+	private static final Logger logger = LoggerFactory.getLogger(RCSBLigandsFactory.class);
 
-	private static final String PDB_URL_STUB = "http://www.pdb.org/pdb/rest/ligandInfo?structureId=";
+	private static final String PDB_URL_STUB = "http://www.rcsb.org/pdb/rest/ligandInfo?structureId=";
 
 	/**
 	 * @return A list of {@link RCSBLigand RCSBLigands} from the XML file loaded as {@code stream}. Prefer calling
@@ -92,7 +92,7 @@ public class RCSBLigandsFactory {
 		try {
 			data = ReadUtils.getNodes(stream);
 		} catch (IOException e) {
-			logger.log(Level.WARNING,"Couldn't parse XML", e);
+			logger.warn("Couldn't parse XML", e);
 			return null;
 		}
 
@@ -153,7 +153,7 @@ public class RCSBLigandsFactory {
 			URL url = new URL(HET_URL_STUB + sb.toString());
 			is = url.openConnection().getInputStream();
 		} catch (IOException e) {
-			logger.log(Level.WARNING,"Couldn't open connection", e);
+			logger.warn("Couldn't open connection", e);
 			return null;
 		}
 		return getFromHeteroAtomIds(is);
@@ -170,7 +170,7 @@ public class RCSBLigandsFactory {
 		try {
 			data = ReadUtils.getNodes(stream);
 		} catch (IOException e) {
-			logger.log(Level.WARNING,"Couldn't parse XML", e);
+			logger.warn("Couldn't parse XML", e);
 			return null;
 		}
 
@@ -216,7 +216,7 @@ public class RCSBLigandsFactory {
 			URL url = new URL(PDB_URL_STUB + pdbId);
 			is = url.openConnection().getInputStream();
 		} catch (IOException e) {
-			logger.log(Level.WARNING,"Couldn't open connection", e);
+			logger.warn("Couldn't open connection", e);
 			return null;
 		}
 		return getFromPdbId(is);
@@ -233,7 +233,7 @@ public class RCSBLigandsFactory {
 		try {
 			dataaa = ReadUtils.getNodes(stream);
 		} catch (IOException e) {
-			logger.log(Level.WARNING,"Couldn't parse XML", e);
+			logger.warn("Couldn't parse XML", e);
 			return null;
 		}
 
@@ -309,7 +309,7 @@ public class RCSBLigandsFactory {
 			URL url = new URL(PDB_URL_STUB + pdbId);
 			is = url.openConnection().getInputStream();
 		} catch (IOException e) {
-			logger.log(Level.WARNING,"Couldn't open connection", e);
+			logger.warn("Couldn't open connection", e);
 			return null;
 		}
 		return getFromPdbId(is);
@@ -332,7 +332,7 @@ public class RCSBLigandsFactory {
 			URL url = new URL(PDB_URL_STUB + sb.toString());
 			is = url.openConnection().getInputStream();
 		} catch (IOException e) {
-			logger.log(Level.WARNING,"Couldn't open connection", e);
+			logger.warn("Couldn't open connection", e);
 			return null;
 		}
 		return getFromPdbIds(is);

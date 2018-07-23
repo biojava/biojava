@@ -22,7 +22,6 @@
  */
 package org.biojava.nbio.structure;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,7 +39,7 @@ import java.util.Map;
  *
  */
 
-public enum Element implements Serializable {
+public enum Element {
 
 	// most frequently used elements first
 	H(1, 1, 39, 1.10f, 0.32f, 1, 1, 1, 1, 1, 1.008f, 0, 1, new int[] {1}, 2.20f, ElementType.OTHER_NONMETAL),

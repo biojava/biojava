@@ -133,6 +133,8 @@ public class AccessionID {
 
 	/**
 	 * In case if {@link #getID() } in not unique keeps the alternative id, eg. NCBI GI number.
+	 * 
+	 * This may null.
 	 *
 	 * @return
 	 */

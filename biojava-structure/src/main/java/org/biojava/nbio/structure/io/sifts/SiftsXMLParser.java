@@ -24,6 +24,8 @@
  */
 package org.biojava.nbio.structure.io.sifts;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -39,6 +41,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SiftsXMLParser {
+
+	private final static Logger logger = LoggerFactory.getLogger(SiftsXMLParser.class);
+
+
 
 	Document dom;
 	List<SiftsEntity> entities;
@@ -125,11 +131,13 @@ public class SiftsXMLParser {
 
 					SiftsSegment s = getSiftsSegment(el);
 
+					logger.debug("new segment: " + s);
 					entity.addSegment(s);
 
 				}
 			}
 
+			logger.debug("new SIFTS entity: " + entity);
 			return entity;
 		}
 

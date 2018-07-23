@@ -1,3 +1,23 @@
+/*
+ *                    BioJava development code
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public Licence.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright for this code is held jointly by the individual
+ * authors.  These should be listed in @author doc comments.
+ *
+ * For more information on the BioJava project and its aims,
+ * or to join the biojava-l mailing list, visit the home page
+ * at:
+ *
+ *      http://www.biojava.org/
+ *
+ */
 package org.biojava.nbio.structure.test.io;
 
 import static org.junit.Assert.*;
@@ -24,6 +44,8 @@ public class TestBioassemblies {
 	@Test
 	public void test1E17() throws IOException, StructureException {
 
+		AtomCache prevAtomCache = StructureIO.getAtomCache();
+
 		AtomCache cache = new AtomCache();
 		cache.setUseMmCif(true); 
 		StructureIO.setAtomCache(cache);		
@@ -43,7 +65,8 @@ public class TestBioassemblies {
 		// the bioassembly is a monomer
 		assertEquals(1, multiModelBioAssemblies.get(0).getPolyChains().size());
 		assertEquals(1, flattenedBioAssemblies.get(0).getPolyChains().size());
-		
+
+		StructureIO.setAtomCache(prevAtomCache);
 	}
 	
 	/**
@@ -54,6 +77,7 @@ public class TestBioassemblies {
 	@Test
 	public void test4TTX() throws IOException, StructureException {
 
+		AtomCache prevAtomCache = StructureIO.getAtomCache();
 		AtomCache cache = new AtomCache();
 		cache.setUseMmCif(true); 
 		StructureIO.setAtomCache(cache);		
@@ -79,8 +103,8 @@ public class TestBioassemblies {
 		
 		assertEquals(2, multiModelBioAssemblies.get(2).getPolyChains().size());
 		assertEquals(2, flattenedBioAssemblies.get(2).getPolyChains().size());
-		
-		
+
+		StructureIO.setAtomCache(prevAtomCache);
 
 	}
 	
@@ -91,6 +115,8 @@ public class TestBioassemblies {
 	 */
 	@Test
 	public void test4OPJ() throws IOException, StructureException {
+
+		AtomCache prevAtomCache = StructureIO.getAtomCache();
 		AtomCache cache = new AtomCache();
 		cache.setUseMmCif(true); 
 		StructureIO.setAtomCache(cache);		
@@ -144,6 +170,7 @@ public class TestBioassemblies {
 			assertTrue(c.getName().contains("_"));
 		}
 
+		StructureIO.setAtomCache(prevAtomCache);
 
 	}
 

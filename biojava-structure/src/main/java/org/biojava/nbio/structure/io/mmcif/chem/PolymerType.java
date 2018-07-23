@@ -22,10 +22,7 @@
 package org.biojava.nbio.structure.io.mmcif.chem;
 
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Enumerates the classification of polymers.
@@ -37,7 +34,6 @@ import java.util.Set;
  */
 public enum PolymerType implements Serializable
 {
-
 
 	/**
 	 * polypeptide(L)
@@ -94,6 +90,19 @@ public enum PolymerType implements Serializable
 	 */
 	unknown(null);
 
+	static Map<String,PolymerType> lookupTable = new HashMap<>();
+
+	static {
+
+		for (PolymerType rt : PolymerType.values() ) {
+				if ( rt == unknown)
+					continue;
+				lookupTable.put(rt.entity_poly_type,rt);
+				lookupTable.put(rt.entity_poly_type.toLowerCase(),rt);
+		}
+	}
+
+
 	PolymerType(String entity_poly_type)
 	{
 		this.entity_poly_type = entity_poly_type;
@@ -102,6 +111,19 @@ public enum PolymerType implements Serializable
 
 	public static PolymerType polymerTypeFromString(String polymerType)
 	{
+
+		if ( polymerType.equalsIgnoreCase(peptide.entity_poly_type))
+			return peptide;
+
+		PolymerType ptype = lookupTable.get(polymerType);
+		if ( ptype != null)
+			return ptype;
+
+		ptype = lookupTable.get(polymerType.toLowerCase());
+		if ( ptype != null)
+			return ptype;
+
+
 		for(PolymerType pt : PolymerType.values())
 		{
 			if(polymerType.equals(pt.entity_poly_type))

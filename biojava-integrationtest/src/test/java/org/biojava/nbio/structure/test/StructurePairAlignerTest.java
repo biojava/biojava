@@ -22,43 +22,43 @@
  */
 package org.biojava.nbio.structure.test;
 
-import junit.framework.TestCase;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.align.StructurePairAligner;
 import org.biojava.nbio.structure.align.pairwise.AlternativeAlignment;
 import org.biojava.nbio.structure.io.PDBFileParser;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
-import java.io.IOException;
 import java.io.InputStream;
 
-public class StructurePairAlignerTest extends TestCase {
+public class StructurePairAlignerTest {
 
-	Structure structure1;
-	Structure structure2;
+	private Structure structure1;
+	private Structure structure2;
 
-	@Override
-	protected void setUp()
+	@Before
+	public void setUp() throws Exception
 	{
 		InputStream inStream = this.getClass().getResourceAsStream("/5pti.pdb");
-		assertNotNull(inStream);
+		Assert.assertNotNull(inStream);
 		InputStream inStream2 = this.getClass().getResourceAsStream("/1tap.pdb");
-		assertNotNull(inStream2);
+		Assert.assertNotNull(inStream2);
 
 		PDBFileParser pdbpars = new PDBFileParser();
-		try {
-			structure1 = pdbpars.parsePDBFile(inStream) ;
-			structure2 = pdbpars.parsePDBFile(inStream2);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 
-		assertNotNull(structure1);
-		assertNotNull(structure2);
-		assertEquals("structure does not contain one chain ", 1 ,structure1.size());
+		structure1 = pdbpars.parsePDBFile(inStream) ;
+		structure2 = pdbpars.parsePDBFile(inStream2);
+
+
+		Assert.assertNotNull(structure1);
+		Assert.assertNotNull(structure2);
+		Assert.assertEquals("structure does not contain one chain ", 1, structure1.size());
 
 	}
 
 
+	@Test
 	public void testAlignStructureStructure() {
 		StructurePairAligner aligner = new StructurePairAligner();
 
@@ -68,26 +68,26 @@ public class StructurePairAlignerTest extends TestCase {
 			aligner.align(structure1,structure2);
 
 			AlternativeAlignment[] aligs = aligner.getAlignments();
-			assertEquals("the number of obtained alternative alignments is not correct",20, aligs.length);
+			Assert.assertEquals("the number of obtained alternative alignments is not correct", 20, aligs.length);
 			AlternativeAlignment a = aligs[0];
 
-			assertNotNull(a);
+			Assert.assertNotNull(a);
 
-			assertEquals("the expected nr of eq. residues is not correct.",47,a.getEqr());
+			Assert.assertEquals("the expected nr of eq. residues is not correct.", 47, a.getEqr());
 
 			// they are v. close, but not identical
-			assertTrue(a.getRmsd() < 4);
-			assertTrue(a.getRmsd() > 3);
-			assertTrue(a.getPercId() > 9);
-			assertTrue(a.getScore() > 140);
+			Assert.assertTrue(a.getRmsd() < 4);
+			Assert.assertTrue(a.getRmsd() > 3);
+			Assert.assertTrue(a.getPercId() > 9);
+			Assert.assertTrue(a.getScore() > 140);
 
 		} catch (Exception e){
 			msg = e.getMessage();
 			allFine = false;
 			e.printStackTrace();
 		}
-		assertTrue(allFine);
-		assertEquals("an error occured","" ,msg);
+		Assert.assertTrue(allFine);
+		Assert.assertEquals("an error occured", "", msg);
 
 
 

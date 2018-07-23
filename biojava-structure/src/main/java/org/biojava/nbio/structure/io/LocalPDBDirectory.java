@@ -26,7 +26,8 @@ import org.biojava.nbio.structure.PDBStatus.Status;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
-import org.biojava.nbio.structure.io.util.FileDownloadUtils;
+import org.biojava.nbio.core.util.FileDownloadUtils;
+import org.rcsb.mmtf.utils.CodecUtils;
 import org.biojava.nbio.core.util.InputStreamProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -223,27 +224,6 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	 */
 	public void clearExtensions(){
 		extensions.clear();
-	}
-
-	/**
-	 * @deprecated Use {@link #getFetchBehavior()}
-	 */
-	@Deprecated
-	public boolean isAutoFetch() {
-		return fetchBehavior != FetchBehavior.LOCAL_ONLY;
-	}
-
-	/**
-	 * @deprecated Use {@link #setFetchBehavior()}
-	 */
-	@Deprecated
-	public void setAutoFetch(boolean autoFetch) {
-		logger.warn("LocalPDBDirectory.setAutoFetch() is deprecated, please use LocalPDBDirectory.setFetchBehavior() instead. The option will be removed in upcoming releases");
-		if(autoFetch) {
-			setFetchBehavior(FetchBehavior.DEFAULT);
-		} else {
-			setFetchBehavior(FetchBehavior.LOCAL_ONLY);
-		}
 	}
 
 	@Override
@@ -450,7 +430,6 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	 * @throws IOException for errors downloading or writing, or if the
 	 *  fetchBehavior is {@link FetchBehavior#LOCAL_ONLY}
 	 */
-	@SuppressWarnings("deprecation") //for isUpdateRemediatedFiles()
 	protected File downloadStructure(String pdbId) throws IOException{
 		if ( pdbId.length() != 4)
 			throw new IOException("The provided ID does not look like a PDB ID : " + pdbId);
@@ -468,19 +447,6 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 		case FETCH_FILES:
 			// Use existing if present
 			if( existing != null) {
-				// Respect deprecated remediation parameter for backwards compatibility
-				if(getFileParsingParameters().isUpdateRemediatedFiles()) {
-					long lastModified = existing.lastModified();
-
-					if (lastModified < LAST_REMEDIATION_DATE) {
-						logger.warn("FileParsingParameters.setUpdateRemediatedFiles() is deprecated, please use LocalPDBDirectory.setFetchBehavior() instead. The option will be removed in upcoming releases");
-						// the file is too old, replace with newer version
-						logger.warn("Replacing file {} with latest remediated (remediation of {}) file from PDB.",
-								existing, LAST_REMEDIATION_DATE_STRING);
-						break;
-					}
-				}
-
 				return existing;
 			}
 			// existing is null, downloadStructure(String,String,boolean,File) will download it
@@ -544,8 +510,14 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 		File dir = getDir(pdbId,obsolete);
 		File realFile = new File(dir,getFilename(pdbId));
 
-		String ftp = String.format("%s%s/%s/%s",
-				serverName, pathOnServer, pdbId.substring(1,3).toLowerCase(), getFilename(pdbId));
+		String ftp;
+		
+		if (getFilename(pdbId).endsWith(".mmtf.gz")){			
+			ftp = CodecUtils.getMmtfEntryUrl(pdbId, true, false);
+		} else {
+			ftp = String.format("%s%s/%s/%s",
+			serverName, pathOnServer, pdbId.substring(1,3).toLowerCase(), getFilename(pdbId));
+		}
 
 		URL url = new URL(ftp);
 
@@ -569,8 +541,6 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 
 		logger.info("Fetching " + ftp);
 		logger.info("Writing to "+ realFile);
-
-
 
 		FileDownloadUtils.downloadFile(url, realFile);
 
@@ -718,7 +688,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 			name = DEFAULT_PDB_FILE_SERVER;
 			logger.debug("Using default PDB file server {}",name);
 		} else {
-			if (!name.startsWith("http://") && !name.startsWith("ftp://")) {
+			if (!name.startsWith("http://") && !name.startsWith("ftp://") && !name.startsWith("https://")) {
 				logger.warn("Server name {} read from system property {} does not have a leading protocol string. Adding http:// to it", name, PDB_FILE_SERVER_PROPERTY);
 				name = "http://"+name;
 			}

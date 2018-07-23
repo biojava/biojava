@@ -26,6 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -46,6 +47,7 @@ import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.GroupType;
 import org.biojava.nbio.structure.HetatomImpl;
 import org.biojava.nbio.structure.NucleotideImpl;
+import org.biojava.nbio.structure.PDBCrystallographicInfo;
 import org.biojava.nbio.structure.PDBHeader;
 import org.biojava.nbio.structure.ResidueNumber;
 import org.biojava.nbio.structure.SeqMisMatch;
@@ -61,6 +63,7 @@ import org.biojava.nbio.structure.io.EntityFinder;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.SeqRes2AtomAligner;
 import org.biojava.nbio.structure.io.mmcif.model.AtomSite;
+import org.biojava.nbio.structure.io.mmcif.model.AtomSites;
 import org.biojava.nbio.structure.io.mmcif.model.AuditAuthor;
 import org.biojava.nbio.structure.io.mmcif.model.Cell;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
@@ -77,8 +80,10 @@ import org.biojava.nbio.structure.io.mmcif.model.EntitySrcGen;
 import org.biojava.nbio.structure.io.mmcif.model.EntitySrcNat;
 import org.biojava.nbio.structure.io.mmcif.model.EntitySrcSyn;
 import org.biojava.nbio.structure.io.mmcif.model.Exptl;
+import org.biojava.nbio.structure.io.mmcif.model.PdbxAuditRevisionHistory;
 import org.biojava.nbio.structure.io.mmcif.model.PdbxChemCompDescriptor;
 import org.biojava.nbio.structure.io.mmcif.model.PdbxChemCompIdentifier;
+import org.biojava.nbio.structure.io.mmcif.model.PdbxDatabaseStatus;
 import org.biojava.nbio.structure.io.mmcif.model.PdbxEntityNonPoly;
 import org.biojava.nbio.structure.io.mmcif.model.PdbxNonPolyScheme;
 import org.biojava.nbio.structure.io.mmcif.model.PdbxPolySeqScheme;
@@ -149,6 +154,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	private List<StructNcsOper> structNcsOper;
 	private List<StructRefSeqDif> sequenceDifs;
 	private List<StructSiteGen> structSiteGens;
+	
+	private Matrix4d parsedScaleMatrix;
 
 
 
@@ -760,7 +767,6 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		// Now make sure all altlocgroups have all the atoms in all the groups
 		StructureTools.cleanUpAltLocs(structure);
 
-
 		// NOTE bonds and charges can only be done at this point that the chain id mapping is properly sorted out
 		if (!params.isHeaderOnly()) {
 			if ( params.shouldCreateAtomBonds()) {
@@ -785,7 +791,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 			// the more detailed mapping of chains to rotation operations happens in StructureIO...
 
-			Map<Integer,BioAssemblyInfo> bioAssemblies = new HashMap<Integer, BioAssemblyInfo>();
+			Map<Integer,BioAssemblyInfo> bioAssemblies = new LinkedHashMap<Integer, BioAssemblyInfo>();
 
 			for ( PdbxStructAssembly psa : strucAssemblies){
 
@@ -843,6 +849,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		}
 
 		setStructNcsOps();
+		
+		setCrystallographicInfoMetadata();
 
 
 		Map<String,List<SeqMisMatch>> misMatchMap = new HashMap<String, List<SeqMisMatch>>();
@@ -923,7 +931,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 					entityInfo = new EntityInfo();
 					entityInfo.setMolId(eId);
 					entityInfo.addChain(chain);
-					if (StructureTools.isChainWaterOnly(chain)) {
+					if (chain.isWaterOnly()) {
 						entityInfo.setType(EntityType.WATER);
 					} else {
 						entityInfo.setType(EntityType.NONPOLYMER);
@@ -962,10 +970,10 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				for (Chain c:model) {
 
 					// we only have entities for polymeric chains, all others are ignored for assigning entities
-					if (StructureTools.isChainWaterOnly(c)) {
+					if (c.isWaterOnly()) {
 						waterChains.add(c);
 
-					} else if (StructureTools.isChainPureNonPolymer(c)) {
+					} else if (c.isPureNonPolymer()) {
 						nonPolyChains.add(c);
 
 					} else {
@@ -1317,6 +1325,20 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 					ncsOperators.toArray(new Matrix4d[ncsOperators.size()]));
 		}
 	}
+	
+	private void setCrystallographicInfoMetadata() {
+		if (parsedScaleMatrix!=null) {
+			
+			PDBCrystallographicInfo crystalInfo = structure.getCrystallographicInfo();
+			
+			boolean nonStd = false;
+			if (crystalInfo.getCrystalCell()!=null && !crystalInfo.getCrystalCell().checkScaleMatrix(parsedScaleMatrix)) {
+				nonStd = true;
+			}
+			
+			crystalInfo.setNonStandardCoordFrameConvention(nonStd); 
+		}
+	}
 
 
 	/** This method will return the parsed protein structure, once the parsing has been finished
@@ -1351,14 +1373,15 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 	@Override
 	public void newDatabasePDBrev(DatabasePDBrev dbrev) {
-		//System.out.println("got a database revision:" + dbrev);
+		
+		logger.debug("got a database revision:" + dbrev);
+		
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd",Locale.US);
 		PDBHeader header = structure.getPDBHeader();
 
 		if ( header == null) {
 			header = new PDBHeader();
 		}
-
 
 		if (dbrev.getNum().equals("1")){
 
@@ -1371,8 +1394,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			}
 
 			try {
-				Date mod = dateFormat.parse(dbrev.getDate());
-				header.setModDate(mod);
+				Date rel = dateFormat.parse(dbrev.getDate());
+				header.setRelDate(rel);
 
 			} catch (ParseException e){
 				logger.warn("Could not parse date string '{}', modification date will be unavailable", dbrev.getDate());
@@ -1388,6 +1411,67 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			} catch (ParseException e){
 				logger.warn("Could not parse date string '{}', modification date will be unavailable", dbrev.getDate());
 			}
+		}
+
+		structure.setPDBHeader(header);
+	}
+	
+	@Override
+	public void newPdbxAuditRevisionHistory(PdbxAuditRevisionHistory history) {
+		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd",Locale.US);
+		PDBHeader header = structure.getPDBHeader();
+
+		if ( header == null) {
+			header = new PDBHeader();
+		}
+
+        // first entry in revision history is the release date
+		if (history.getOrdinal().equals("1")){
+			try {
+				Date releaseDate = dateFormat.parse(history.getRevision_date());
+				header.setRelDate(releaseDate);
+				
+			} catch (ParseException e){
+				logger.warn("Could not parse date string '{}', release date will be unavailable", history.getRevision_date());
+			}
+		} else {
+			// all other dates are revision dates;
+			// since this method may be called multiple times,
+			// the last revision date will "stick"
+			try {
+				Date revisionDate = dateFormat.parse(history.getRevision_date());
+				header.setModDate(revisionDate);
+			} catch (ParseException e){
+				logger.warn("Could not parse date string '{}', revision date will be unavailable", history.getRevision_date());
+			}
+		}
+
+		structure.setPDBHeader(header);
+	}
+	
+	@Override
+	public void newPdbxDatabaseStatus(PdbxDatabaseStatus status) {
+
+		// the deposition date field is only available in mmCIF 5.0
+
+		if (status.getRecvd_initial_deposition_date() == null) {
+			// skip this method for older mmCIF versions
+			return;
+		}
+		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd",Locale.US);
+		PDBHeader header = structure.getPDBHeader();
+
+		if (header == null) {
+			header = new PDBHeader();
+		}
+
+		try {
+			Date depositionDate = dateFormat.parse(status.getRecvd_initial_deposition_date());
+			header.setDepDate(depositionDate);
+		} catch (ParseException e){
+			logger.warn("Could not parse date string '{}', deposition date will be unavailable", status.getRecvd_initial_deposition_date());
 		}
 
 		structure.setPDBHeader(header);
@@ -1570,14 +1654,37 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	public void newSymmetry(Symmetry symmetry) {
 		String spaceGroup = symmetry.getSpace_group_name_H_M();
 		SpaceGroup sg = SymoplibParser.getSpaceGroup(spaceGroup);
-		if (sg==null) logger.warn("Space group '"+spaceGroup+"' not recognised as a standard space group");
-
-		structure.getPDBHeader().getCrystallographicInfo().setSpaceGroup(sg);
+		if (sg==null) {
+			logger.warn("Space group '"+spaceGroup+"' not recognised as a standard space group");
+			structure.getPDBHeader().getCrystallographicInfo().setNonStandardSg(true);
+		} else {
+			structure.getPDBHeader().getCrystallographicInfo().setSpaceGroup(sg);
+			structure.getPDBHeader().getCrystallographicInfo().setNonStandardSg(false);
+		}
 	}
 
 	@Override
 	public void newStructNcsOper(StructNcsOper sNcsOper) {
 		structNcsOper.add(sNcsOper);
+	}
+	
+	public void newAtomSites(AtomSites atomSites) {
+		
+		try {
+			Matrix4d m = new Matrix4d(
+				Double.parseDouble(atomSites.getFract_transf_matrix11()), Double.parseDouble(atomSites.getFract_transf_matrix12()), Double.parseDouble(atomSites.getFract_transf_matrix13()), Double.parseDouble(atomSites.getFract_transf_vector1()),
+				Double.parseDouble(atomSites.getFract_transf_matrix21()), Double.parseDouble(atomSites.getFract_transf_matrix22()), Double.parseDouble(atomSites.getFract_transf_matrix23()), Double.parseDouble(atomSites.getFract_transf_vector2()),
+				Double.parseDouble(atomSites.getFract_transf_matrix31()), Double.parseDouble(atomSites.getFract_transf_matrix32()), Double.parseDouble(atomSites.getFract_transf_matrix33()), Double.parseDouble(atomSites.getFract_transf_vector3()),
+				0,0,0,1);
+
+			parsedScaleMatrix = m;
+		
+		} catch (NumberFormatException e) {
+			logger.warn("Some values in _atom_sites.fract_transf_matrix or _atom_sites.fract_transf_vector could not be parsed as numbers. Can't check whether coordinate frame convention is correct! Error: {}", e.getMessage());
+			structure.getPDBHeader().getCrystallographicInfo().setNonStandardCoordFrameConvention(false);
+			
+			// in this case parsedScaleMatrix stays null and can't be used in documentEnd()
+		}
 	}
 
 	@Override
@@ -1623,18 +1730,13 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	 */
 	@Override
 	public void newStructRefSeq(StructRefSeq sref) {
-		//if (DEBUG)
-		//	System.out.println(sref);
 		DBRef r = new DBRef();
 
-
-		//if (DEBUG)
-		//	System.out.println( " " + sref.getPdbx_PDB_id_code() + " " + sref.getPdbx_db_accession());
 		r.setIdCode(sref.getPdbx_PDB_id_code());
 		r.setDbAccession(sref.getPdbx_db_accession());
 		r.setDbIdCode(sref.getPdbx_db_accession());
 
-		r.setChainId(sref.getPdbx_strand_id());
+		r.setChainName(sref.getPdbx_strand_id());
 		StructRef structRef = getStructRef(sref.getRef_id());
 		if (structRef == null){
 			logger.info("could not find StructRef " + sref.getRef_id() + " for StructRefSeq " + sref);
@@ -1643,11 +1745,27 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			r.setDbIdCode(structRef.getDb_code());
 		}
 
-
-		int seqbegin = Integer.parseInt(sref.getPdbx_auth_seq_align_beg());
-		int seqend   = Integer.parseInt(sref.getPdbx_auth_seq_align_end());
-		Character begin_ins_code = new Character(sref.getPdbx_seq_align_beg_ins_code().charAt(0));
-		Character end_ins_code   = new Character(sref.getPdbx_seq_align_end_ins_code().charAt(0));
+		int seqbegin;
+		int seqend;
+		try{
+			seqbegin = Integer.parseInt(sref.getPdbx_auth_seq_align_beg());
+			seqend   = Integer.parseInt(sref.getPdbx_auth_seq_align_end());
+		}
+		catch(NumberFormatException e){
+			// this happens in a few entries, annotation error? e.g. 6eoj
+			logger.warn("Couldn't parse pdbx_auth_seq_align_beg/end in _struct_ref_seq. Will not store dbref alignment info for accession {}. Error: {}", r.getDbAccession(), e.getMessage());
+			return;
+		}
+		
+		Character begin_ins_code = ' ';
+		if (sref.getPdbx_seq_align_beg_ins_code() != null ) {
+		    begin_ins_code = new Character(sref.getPdbx_seq_align_beg_ins_code().charAt(0));
+		}
+		
+		Character end_ins_code = ' ';
+		if (sref.getPdbx_seq_align_end_ins_code() != null) {
+		    end_ins_code = new Character(sref.getPdbx_seq_align_end_ins_code().charAt(0));
+		}
 
 		if (begin_ins_code == '?')
 			begin_ins_code = ' ';
@@ -1663,8 +1781,16 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 		int dbseqbegin = Integer.parseInt(sref.getDb_align_beg());
 		int dbseqend   = Integer.parseInt(sref.getDb_align_end());
-		Character db_begin_in_code = new Character(sref.getPdbx_db_align_beg_ins_code().charAt(0));
-		Character db_end_in_code   = new Character(sref.getPdbx_db_align_end_ins_code().charAt(0));
+		
+		Character db_begin_in_code = ' ';
+		if (sref.getPdbx_db_align_beg_ins_code() != null) {
+		    db_begin_in_code = new Character(sref.getPdbx_db_align_beg_ins_code().charAt(0));
+		}
+		
+		Character db_end_in_code = ' ';
+		if (sref.getPdbx_db_align_end_ins_code() != null) {
+		    db_end_in_code = new Character(sref.getPdbx_db_align_end_ins_code().charAt(0));
+		}
 
 		if (db_begin_in_code == '?')
 			db_begin_in_code = ' ';
@@ -1888,8 +2014,6 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	public List<PdbxStructOperList> getStructOpers() {
 		return structOpers;
 	}
-
-
 
 	@Override
 	public void newPdbxStrucAssembly(PdbxStructAssembly strucAssembly) {

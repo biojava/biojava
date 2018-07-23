@@ -23,18 +23,12 @@ package org.biojava.nbio.structure.align.gui;
 import java.util.List;
 
 import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.AtomImpl;
-import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureTools;
-import org.biojava.nbio.structure.align.AFPTwister;
-import org.biojava.nbio.structure.align.fatcat.FatCatFlexible;
-import org.biojava.nbio.structure.align.fatcat.FatCatRigid;
 import org.biojava.nbio.structure.align.gui.jmol.StructureAlignmentJmol;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.util.AlignmentTools;
-import org.biojava.nbio.structure.jama.Matrix;
 
 public class StructureAlignmentDisplay {
 

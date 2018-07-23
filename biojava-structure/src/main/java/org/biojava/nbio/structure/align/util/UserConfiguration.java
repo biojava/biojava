@@ -46,6 +46,7 @@ public class UserConfiguration
 
 	public static final String PDB_FORMAT   = "PDB";
 	public static final String MMCIF_FORMAT = "mmCif";
+	public static final String MMTF_FORMAT  = "mmtf";
 
 	public static final String TMP_DIR = "java.io.tmpdir";
 
@@ -97,7 +98,7 @@ public class UserConfiguration
 		// note that in initCacheFilePath, we set to the provided one (if readable) or to the same as pdbFilePath
 		cacheFilePath = initCacheFilePath();
 
-		fileFormat = MMCIF_FORMAT;
+		fileFormat = MMTF_FORMAT;
 	}
 
 	private String initPdbFilePath() {
@@ -264,26 +265,6 @@ public class UserConfiguration
 		this.cacheFilePath = cacheFilePath;
 	}
 
-	/**
-	 * @deprecated Use {@link #getFetchBehavior()}
-	 */
-	@Deprecated
-	public boolean getAutoFetch() {
-		return fetchBehavior != FetchBehavior.LOCAL_ONLY;
-	}
-
-	/**
-	 * @deprecated Use {@link #getFetchBehavior()}
-	 */
-	@Deprecated
-	public void setAutoFetch(boolean autoFetch) {
-		if(autoFetch) {
-			setFetchBehavior(FetchBehavior.DEFAULT);
-		} else {
-			setFetchBehavior(FetchBehavior.LOCAL_ONLY);
-		}
-	}
-
 	public FetchBehavior getFetchBehavior() {
 		return fetchBehavior;
 	}
@@ -352,7 +333,13 @@ public class UserConfiguration
 	public static UserConfiguration fromStartupParams(StartupParameters params) {
 		UserConfiguration config = new UserConfiguration();
 		config.setPdbFilePath(params.getPdbFilePath());
-		config.setAutoFetch(params.isAutoFetch());
+		
+		if(params.isAutoFetch()) {
+			config.setFetchBehavior(FetchBehavior.DEFAULT);
+		} else {
+			config.setFetchBehavior(FetchBehavior.LOCAL_ONLY);
+		}
+		
 		// TODO support MMCif Files
 		config.setFileFormat(UserConfiguration.PDB_FORMAT);
 		return config;

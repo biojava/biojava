@@ -27,8 +27,6 @@ import java.util.List;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.MMCIFFileReader;
 import org.biojava.nbio.structure.io.PDBFileReader;
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
 
 /**
  * A class that provides static access methods for easy lookup of protein structure related components
@@ -62,7 +60,7 @@ public class StructureIO {
 		pdbID         := [0-9][a-zA-Z0-9]{3}
 		chainID       := [a-zA-Z0-9]
 		scopID        := 'd' pdbID [a-z_][0-9_]
-		biol		  := 'BIOL:' pdbID [:]? [0-9]+
+		biol		  := 'BIO:' pdbID [:]? [0-9]+
 		pdp			  := 'PDP:' pdbID[A-Za-z0-9_]+
 		resNum        := [-+]?[0-9]+[A-Za-z]?
 
@@ -73,10 +71,10 @@ public class StructureIO {
 		4GCR.A_1-83 #one domain, by residue number
 		3AA0.A,B    #two chains treated as one structure
 		d2bq6a1     #scop domain
-		BIOL:1fah   #biological assembly nr 1 for 1fah
-		BIOL:1fah:0 #asym unit for 1fah
-		BIOL:1fah:1 #biological assembly nr 1 for 1fah
-		BIOL:1fah:2 #biological assembly nr 2 for 1fah
+		BIO:1fah   #biological assembly nr 1 for 1fah
+		BIO:1fah:0 #asym unit for 1fah
+		BIO:1fah:1 #biological assembly nr 1 for 1fah
+		BIO:1fah:2 #biological assembly nr 2 for 1fah
 
      * </pre>
 	 *
@@ -116,6 +114,11 @@ public class StructureIO {
 	public static void setAtomCache(AtomCache c){
 		cache = c;
 	}
+
+	public static AtomCache getAtomCache() {
+		return cache;
+	}
+
 
 	/**
 	 * Returns the first biological assembly that is available for the given PDB id.

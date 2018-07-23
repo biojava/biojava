@@ -31,7 +31,6 @@ import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -45,7 +44,7 @@ import java.util.*;
  * @version %I% %G%
  * @since 1.4
  */
-public class HetatomImpl implements Group,Serializable {
+public class HetatomImpl implements Group {
 
 	private static final Logger logger = LoggerFactory.getLogger(HetatomImpl.class);
 
@@ -169,7 +168,8 @@ public class HetatomImpl implements Group,Serializable {
 	public void addAtom(Atom atom){
 		atom.setGroup(this);
 		atoms.add(atom);
-		if (atom.getCoords() != null){
+		// TODO this check is useless, coords are always !=null since they are initialized to 0,0,0 in AtomImpl constructor. We need to review this - JD 2016-09-14
+		if (atom.getCoordsAsPoint3d() != null){
 			// we have got coordinates!
 			setPDBFlag(true);
 		}

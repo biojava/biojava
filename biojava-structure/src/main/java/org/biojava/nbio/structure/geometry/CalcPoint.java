@@ -1,7 +1,28 @@
+/*
+ *                    BioJava development code
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public Licence.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright for this code is held jointly by the individual
+ * authors.  These should be listed in @author doc comments.
+ *
+ * For more information on the BioJava project and its aims,
+ * or to join the biojava-l mailing list, visit the home page
+ * at:
+ *
+ *      http://www.biojava.org/
+ *
+ */
 package org.biojava.nbio.structure.geometry;
 
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
+import javax.vecmath.Vector3d;
 
 import org.biojava.nbio.structure.jama.Matrix;
 
@@ -28,7 +49,7 @@ public class CalcPoint {
 	public static void center(Point3d[] x) {
 		Point3d center = centroid(x);
 		center.negate();
-		translate(center, x);
+		translate(new Vector3d(center), x);
 	}
 
 	/**
@@ -52,8 +73,8 @@ public class CalcPoint {
 	 * 
 	 * @param rotTrans
 	 *            4x4 transformation matrix
-	 * @param array
-	 *            of points. Point objects will be modified
+	 * @param x
+	 *            array of points. Point objects will be modified
 	 */
 	public static void transform(Matrix4d rotTrans, Point3d[] x) {
 		for (Point3d p : x) {
@@ -64,12 +85,12 @@ public class CalcPoint {
 	/**
 	 * Translate all points with a translation vector.
 	 * 
-	 * @param rotTrans
-	 *            4x4 transformation matrix
-	 * @param array
-	 *            of points. Point objects will be modified
+	 * @param trans
+	 *            the translation vector to apply
+	 * @param x
+	 *            array of points. Point objects will be modified
 	 */
-	public static void translate(Point3d trans, Point3d[] x) {
+	public static void translate(Vector3d trans, Point3d[] x) {
 		for (Point3d p : x) {
 			p.add(trans);
 		}
@@ -90,11 +111,11 @@ public class CalcPoint {
 		return clone;
 	}
 
-	/**
+	/*
 	 * Peter can you document this method? TODO
 	 * 
-	 * @param a
-	 * @param b
+	 * @param moved
+	 * @param fixed
 	 * @return
 	 */
 	public static Matrix formMatrix(Point3d[] a, Point3d[] b) {
@@ -133,6 +154,157 @@ public class CalcPoint {
 		f[3][3] = zz - xx - yy;
 
 		return new Matrix(f);
+	}
+
+	/**
+	 * Returns the TM-Score for two superimposed sets of coordinates Yang Zhang
+	 * and Jeffrey Skolnick, PROTEINS: Structure, Function, and Bioinformatics
+	 * 57:702–710 (2004)
+	 * 
+	 * @param x
+	 *            coordinate set 1
+	 * @param y
+	 *            coordinate set 2
+	 * @param lengthNative
+	 *            total length of native sequence
+	 * @return
+	 */
+	public static double TMScore(Point3d[] x, Point3d[] y, int lengthNative) {
+		
+		if (x.length != y.length) {
+			throw new IllegalArgumentException(
+					"Point arrays are not of the same length.");
+		}
+		
+		double d0 = 1.24 * Math.cbrt(x.length - 15.0) - 1.8;
+		double d0Sq = d0 * d0;
+
+		double sum = 0;
+		for (int i = 0; i < x.length; i++) {
+			sum += 1.0 / (1.0 + x[i].distanceSquared(y[i]) / d0Sq);
+		}
+
+		return sum / lengthNative;
+	}
+
+	/*
+	 * Needs documentation!
+	 * 
+	 * @param x
+	 * 
+	 * @param y
+	 * 
+	 * @return
+	 */
+	public static double GTSlikeScore(Point3d[] x, Point3d[] y) {
+		
+		if (x.length != y.length) {
+			throw new IllegalArgumentException(
+					"Point arrays are not of the same length.");
+		}
+		
+		int contacts = 0;
+
+		for (Point3d px : x) {
+			double minDist = Double.MAX_VALUE;
+
+			for (Point3d py : y) {
+				minDist = Math.min(minDist, px.distanceSquared(py));
+			}
+
+			if (minDist > 64)
+				continue;
+			contacts++;
+
+			if (minDist > 16)
+				continue;
+			contacts++;
+
+			if (minDist > 4)
+				continue;
+			contacts++;
+
+			if (minDist > 1)
+				continue;
+			contacts++;
+		}
+
+		return contacts * 25.0 / x.length;
+	}
+
+	/**
+	 * Calculate the RMSD of two point arrays, already superposed.
+	 * 
+	 * @param x
+	 *            array of points superposed to y
+	 * @param y
+	 *            array of points superposed to x
+	 * @return RMSD
+	 */
+	public static double rmsd(Point3d[] x, Point3d[] y) {
+		
+		if (x.length != y.length) {
+			throw new IllegalArgumentException(
+					"Point arrays are not of the same length.");
+		}
+		
+		double sum = 0.0;
+		for (int i = 0; i < x.length; i++) {
+			sum += x[i].distanceSquared(y[i]);
+		}
+		return Math.sqrt(sum / x.length);
+	}
+
+	/*
+	 * Needs documentation!
+	 * 
+	 * @param x
+	 * 
+	 * @param y
+	 * 
+	 * @return
+	 */
+	public static double rmsdMin(Point3d[] x, Point3d[] y) {
+		
+		if (x.length != y.length) {
+			throw new IllegalArgumentException(
+					"Point arrays are not of the same length.");
+		}
+		
+		double sum = 0.0;
+		for (int i = 0; i < x.length; i++) {
+			double minDist = Double.MAX_VALUE;
+			for (int j = 0; j < y.length; j++) {
+				minDist = Math.min(minDist, x[i].distanceSquared(y[j]));
+			}
+			sum += minDist;
+		}
+		return Math.sqrt(sum / x.length);
+	}
+
+	/*
+	 * Needs documentation!
+	 * 
+	 * @param x
+	 * 
+	 * @param y
+	 * 
+	 * @param maxDistance
+	 * 
+	 * @return
+	 */
+	public static int contacts(Point3d[] x, Point3d[] y, double maxDistance) {
+		int contacts = 0;
+		for (int i = 0; i < x.length; i++) {
+			double minDist = Double.MAX_VALUE;
+			for (int j = 0; j < y.length; j++) {
+				minDist = Math.min(minDist, x[i].distanceSquared(y[j]));
+			}
+			if (minDist < maxDistance * maxDistance) {
+				contacts++;
+			}
+		}
+		return contacts;
 	}
 
 }

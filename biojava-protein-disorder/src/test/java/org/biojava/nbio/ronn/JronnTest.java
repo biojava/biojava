@@ -20,11 +20,16 @@
  */
 package org.biojava.nbio.ronn;
 
+import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
+import org.biojava.nbio.core.sequence.DNASequence;
+import org.biojava.nbio.core.sequence.ProteinSequence;
+import org.biojava.nbio.core.sequence.RNASequence;
 import org.biojava.nbio.data.sequence.FastaSequence;
 import org.biojava.nbio.ronn.Jronn.Range;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 
 public class JronnTest {
@@ -97,6 +102,47 @@ public class JronnTest {
 			} else {
 				System.setProperty(key, oldValue);
 			}
+		}
+	}
+
+	/** Test the user scenario when disorder scores are calculated over a sequence containing the selenocysteine (Sec) amino acid.
+	 *  The user has to manually convert the stop codons symbols ("*") to the "U" symbol and Jronn is expected to handle this sequence.
+	 *
+	 * @throws CompoundNotFoundException
+	 */
+
+	@Test
+	public void testStopCodons() throws CompoundNotFoundException {
+
+		// gene: DIO2, NM_001007023
+		String dnaString = "ATGGGCATCCTCAGCGTAGACTTGCTGATCACACTGCAAATTCTGCCAGTTTTTTTCTCCAACTGCCTCT" +
+				"TCCTGGCTCTCTATGACTCGGTCATTCTGCTCAAGCACGTGGTGCTGCTGTTGAGCCGCTCCAAGTCCAC" +
+				"TCGCGGAGAGTGGCGGCGCATGCTGACCTCAGAGGGACTGCGCTGCGTCTGGAAGAGCTTCCTCCTCGAT" +
+				"GCCTACAAACAGCTAAATTGTCCTCCATCAGGTTTTAGCAAAGATGGACACATTTTATGACTAGTATATG" +
+				"AAGCTTATAAAAGCAGACTACTGGTCTACTCACATTTGGATTTATGGATGGTGAAATTGGGTGAGGATGC" +
+				"CCCCAATTCCAGTGTGGTGCATGTCTCCAGTACAGAAGGAGGTGACAACAGTGGCAATGGTACCCAGGAG" +
+				"AAGATAGCTGAGGGAGCCACATGCCACCTTCTTGACTTTGCCAGCCCTGAGCGCCCACTAGTGGTCAACT" +
+				"TTGGCTCAGCCACTTGACCTCCTTTCACGAGCCAGCTGCCAGCCTTCCGCAAACTGGTGGAAGAGTTCTC" +
+				"CTCAGTGGCTGACTTCCTGCTGGTCTACATTGATGAGGCTCATCCATCAGATGGCTGGGCGATACCGGGG" +
+				"GACTCCTCTTTGTCTTTTGAGGTGAAGAAGCACCAGAACCAGGAAGATCGATGTGCAGCAGCCCAGCAGC" +
+				"TTCTGGAGCGTTTCTCCTTGCCGCCCCAGTGCCGAGTTGTGGCTGACCGCATGGACAATAACGCCAACAT" +
+				"AGCTTACGGGGTAGCCTTTGAACGTGTGTGCATTGTGCAGAGACAGAAAATTGCTTATCTGGGAGGAAAG" +
+				"GGCCCCTTCTCCTACAACCTTCAAGAAGTCCGGCATTGGCTGGAGAAGAATTTCAGCAAGAGATGAAAGA" +
+				"AAACTAGATTAGCTGGTTAA";
+
+		DNASequence dnaSequence = new DNASequence(dnaString);
+		RNASequence mRNA = dnaSequence.getRNASequence();
+		ProteinSequence protein = mRNA.getProteinSequence();
+
+		String proteinString = protein.getSequenceAsString();
+		// replace the symbol * (codon TGA) with U at amino acid
+		String proteinStringU = proteinString.replaceAll("\\*", "u");
+		FastaSequence fsequence = new FastaSequence("", proteinStringU);
+		try {
+			float[] rawProbabilityScores = Jronn.getDisorderScores(fsequence);
+		}
+		catch (Exception e) {
+			fail("Disorder scores calculation doesn't work");
 		}
 	}
 }

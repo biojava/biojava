@@ -25,10 +25,12 @@
 
 package org.biojava.nbio.protmod.structure;
 
-import junit.framework.TestCase;
 import org.biojava.nbio.protmod.ProteinModification;
 import org.biojava.nbio.protmod.ProteinModificationRegistry;
 import org.biojava.nbio.structure.*;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,13 +44,13 @@ import java.util.Set;
  * @author Jianjiong Gao
  * @since 3.0
  */
-public class ProteinModificationParserTest extends TestCase {
+public class ProteinModificationParserTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(ProteinModificationParserTest.class);
 
 	private String[][] strucs;
 
-	@Override
+	@Before
 	public void setUp() {
 		strucs = setUpShortTest();
 //		strucs = setUpLongTest();
@@ -329,6 +331,7 @@ public class ProteinModificationParserTest extends TestCase {
 		return strucs;
 	}
 
+	@Test
 	public void testParser() throws IOException, StructureException {
 		multiTest();
 	}
@@ -379,7 +382,7 @@ public class ProteinModificationParserTest extends TestCase {
 		parser.setRecordUnidentifiableCompounds(recordUnidentifiable);
 		//parser.setbondLengthTolerance(2);
 
-		assertFalse(mods.isEmpty());
+		Assert.assertFalse(mods.isEmpty());
 
 		parser.identify(struc, mods);
 
@@ -388,10 +391,10 @@ public class ProteinModificationParserTest extends TestCase {
 		if ( parser.getIdentifiedModifiedCompound().isEmpty() ){
 			String msg = "Did not identify any modified compounds for " + pdbId;
 			logger.warn(msg);
-			fail(msg);
+			Assert.fail(msg);
 		}
 
-		assertFalse("Did not identify any modified compounds for " + pdbId ,
+		Assert.assertFalse("Did not identify any modified compounds for " + pdbId,
 				parser.getIdentifiedModifiedCompound().isEmpty());
 
 		boolean print = false;
@@ -448,18 +451,19 @@ public class ProteinModificationParserTest extends TestCase {
 	 * Note: if you change this unit test, also change the cook book:
 	 * http://www.biojava.org/wiki/BioJava:CookBook3:ProtMod
 	 */
+	@Test
 	public void testCookBookTestCases() throws StructureException, IOException {
 		// identify all modificaitons from PDB:1CAD and print them
 		String pdbId = "1CAD";
 		Structure struc = TmpAtomCache.cache.getStructure(pdbId);
 		Set<ModifiedCompound> mcs = identifyAllModfications(struc);
-		assertFalse(mcs.isEmpty());
+		Assert.assertFalse(mcs.isEmpty());
 
 		// identify all phosphosites from PDB:3MVJ and print them
 		pdbId = "3MVJ";
 		struc = TmpAtomCache.cache.getStructure(pdbId);
 		List<ResidueNumber> psites = identifyPhosphosites(struc);
-		assertFalse(psites.isEmpty());
+		Assert.assertFalse(psites.isEmpty());
 	}
 
 	/**

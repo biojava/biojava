@@ -22,9 +22,7 @@ package org.biojava.nbio.structure.io.mmcif;
 
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Chain;
@@ -225,25 +223,6 @@ public class MMCIFFileTools {
 
 		return sb.toString();
 	}
-	/**
-	 * Converts a list of mmCIF beans (see {@link org.biojava.nbio.structure.io.mmcif.model} to
-	 * a String representing them in mmCIF loop format with one record per line.
-	 * @param list
-	 * @return
-	 * @deprecated The {@link #toMMCIF(List, Class)} provides compile-time type safety
-	 * @throws ClassCastException if not all list elements have the same type
-	 */
-	@Deprecated
-	@SuppressWarnings("unchecked")
-	public static <T> String toMMCIF(List<T> list) {
-		Class<T> klass = (Class<T>)list.get(0).getClass();
-		for(T t : list) {
-			if( klass != t.getClass() ) {
-				throw new ClassCastException("Not all loop elements have the same fields");
-			}
-		}
-		return toMMCIF(list,klass);
-	}
 
 	/**
 	 * Given a mmCIF bean produces a String representing it in mmCIF loop format as a single record line
@@ -355,25 +334,25 @@ public class MMCIFFileTools {
 	/**
 	 * Converts an Atom object to an {@link AtomSite} object.
 	 * @param a
-	 * @param model
-	 * @param chainId
-	 * @param internalChainId
+	 * @param model the model number for the output AtomSites
+	 * @param chainName the chain identifier (author id) for the output AtomSites
+	 * @param chainId the internal chain identifier (asym id) for the output AtomSites
 	 * @return
 	 */
-	public static AtomSite convertAtomToAtomSite(Atom a, int model, String chainId, String internalChainId) {
-		return convertAtomToAtomSite(a, model, chainId, internalChainId, a.getPDBserial());
+	public static AtomSite convertAtomToAtomSite(Atom a, int model, String chainName, String chainId) {
+		return convertAtomToAtomSite(a, model, chainName, chainId, a.getPDBserial());
 	}
 
 	/**
 	 * Converts an Atom object to an {@link AtomSite} object.
-	 * @param a
-	 * @param model
-	 * @param chainId
-	 * @param internalChainId
+	 * @param a the atom
+	 * @param model the model number for the output AtomSites
+	 * @param chainName the chain identifier (author id) for the output AtomSites
+	 * @param chainId the internal chain identifier (asym id) for the output AtomSites
 	 * @param atomId the atom id to be written to AtomSite
 	 * @return
 	 */
-	public static AtomSite convertAtomToAtomSite(Atom a, int model, String chainId, String internalChainId, int atomId) {
+	public static AtomSite convertAtomToAtomSite(Atom a, int model, String chainName, String chainId, int atomId) {
 
 		/*
 		ATOM 7    C CD  . GLU A 1 24  ? -10.109 15.374 38.853 1.00 50.05 ? ? ? ? ? ? 24  GLU A CD  1
@@ -425,7 +404,7 @@ public class MMCIFFileTools {
 		atomSite.setLabel_atom_id(a.getName());
 		atomSite.setLabel_alt_id(altLocStr);
 		atomSite.setLabel_comp_id(g.getPDBName());
-		atomSite.setLabel_asym_id(internalChainId);
+		atomSite.setLabel_asym_id(chainId);
 		atomSite.setLabel_entity_id(entityId);
 		atomSite.setLabel_seq_id(labelSeqId);
 		atomSite.setPdbx_PDB_ins_code(insCode);
@@ -436,7 +415,7 @@ public class MMCIFFileTools {
 		atomSite.setB_iso_or_equiv(FileConvert.d2.format(a.getTempFactor()));
 		atomSite.setAuth_seq_id(Integer.toString(g.getResidueNumber().getSeqNum()));
 		atomSite.setAuth_comp_id(g.getPDBName());
-		atomSite.setAuth_asym_id(chainId);
+		atomSite.setAuth_asym_id(chainName);
 		atomSite.setAuth_atom_id(a.getName());
 		atomSite.setPdbx_PDB_model_num(Integer.toString(model));
 
@@ -444,48 +423,54 @@ public class MMCIFFileTools {
 	}
 
 	/**
-	 * Converts a Group into a List of {@link AtomSite} objects
-	 * @param g
-	 * @param model
-	 * @param chainId
-	 * @param internalChainId
+	 * Converts a Group into a List of {@link AtomSite} objects.
+	 * Atoms in other altloc groups (different from the main group) are also included, removing possible duplicates
+	 * via using the atom identifier to assess uniqueness.
+	 * @param g the group
+	 * @param model the model number for the output AtomSites
+	 * @param chainName the chain identifier (author id) for the output AtomSites
+	 * @param chainId the internal chain identifier (asym id) for the output AtomSites
 	 * @return
 	 */
-	private static List<AtomSite> convertGroupToAtomSites(Group g, int model, String chainId, String internalChainId) {
+	public static List<AtomSite> convertGroupToAtomSites(Group g, int model, String chainName, String chainId) {
 
-		List<AtomSite> list = new ArrayList<AtomSite>();
+		// The alt locs can have duplicates, since at parsing time we make sure that all alt loc groups have
+		// all atoms (see StructureTools#cleanUpAltLocs)
+		// Thus we have to remove duplicates here by using the atom id
+		// See issue https://github.com/biojava/biojava/issues/778 and TestAltLocs.testMmcifWritingAllAltlocs/testMmcifWritingPartialAltlocs
+		Map<Integer, AtomSite> uniqueAtomSites = new LinkedHashMap<>();
 
 		int groupsize  = g.size();
 
 		for ( int atompos = 0 ; atompos < groupsize; atompos++) {
-			Atom a = null ;
-
-			a = g.getAtom(atompos);
+			Atom a = g.getAtom(atompos);
 			if ( a == null)
 				continue ;
 
-			list.add(convertAtomToAtomSite(a, model, chainId, internalChainId));
-
+			uniqueAtomSites.put(a.getPDBserial(), convertAtomToAtomSite(a, model, chainName, chainId));
 		}
+
 		if ( g.hasAltLoc()){
 			for (Group alt : g.getAltLocs() ) {
-				list.addAll(convertGroupToAtomSites(alt, model, chainId, internalChainId));
+				for (AtomSite atomSite : convertGroupToAtomSites(alt, model, chainName, chainId)) {
+					uniqueAtomSites.put(Integer.parseInt(atomSite.getId()), atomSite);
+				}
 			}
 		}
-		return list;
+		return new ArrayList<>(uniqueAtomSites.values());
 	}
 
 	/**
 	 * Converts a Chain into a List of {@link AtomSite} objects
-	 * @param c
-	 * @param model
-	 * @param authorId
-	 * @param asymId
+	 * @param c the chain
+	 * @param model the model number for the output AtomSites
+	 * @param chainName the chain identifier (author id) for the output AtomSites
+	 * @param chainId the internal chain identifier (asym id) for the output AtomSites
 	 * @return
 	 */
-	public static List<AtomSite> convertChainToAtomSites(Chain c, int model, String authorId, String asymId) {
+	public static List<AtomSite> convertChainToAtomSites(Chain c, int model, String chainName, String chainId) {
 
-		List<AtomSite> list = new ArrayList<AtomSite>();
+		List<AtomSite> list = new ArrayList<>();
 
 		if (c.getEntityInfo()==null) {
 			logger.warn("No Compound (entity) found for chain {}: entity_id will be set to 0, label_seq_id will be the same as auth_seq_id", c.getName());
@@ -495,7 +480,7 @@ public class MMCIFFileTools {
 
 			Group g= c.getAtomGroup(h);
 
-			list.addAll(convertGroupToAtomSites(g, model, authorId, asymId));
+			list.addAll(convertGroupToAtomSites(g, model, chainName, chainId));
 
 		}
 

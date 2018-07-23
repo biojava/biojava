@@ -1,3 +1,23 @@
+/*
+ *                    BioJava development code
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public Licence.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright for this code is held jointly by the individual
+ * authors.  These should be listed in @author doc comments.
+ *
+ * For more information on the BioJava project and its aims,
+ * or to join the biojava-l mailing list, visit the home page
+ * at:
+ *
+ *      http://www.biojava.org/
+ *
+ */
 package org.biojava.nbio.structure.io.mmcif;
 
 import org.biojava.nbio.structure.io.FileParsingParameters;
@@ -15,7 +35,7 @@ import java.util.Map;
 public class MetalBondConsumer implements MMcifConsumer{
 
 
-    Map<String,List<MetalBondDistance>> definitions = new HashMap();
+    Map<String,List<MetalBondDistance>> definitions = new HashMap<>();
 
     @Override
     public void documentStart() {
@@ -28,7 +48,7 @@ public class MetalBondConsumer implements MMcifConsumer{
         // minimize memory consumption
 
         for  (List<MetalBondDistance> d : definitions.values()){
-            ArrayList<MetalBondDistance> a = (ArrayList)d;
+            ArrayList<MetalBondDistance> a = (ArrayList<MetalBondDistance>)d;
 
             a.trimToSize();
         }
@@ -98,6 +118,11 @@ public class MetalBondConsumer implements MMcifConsumer{
     @Override
     public void newStructNcsOper(StructNcsOper sNcsOper) {
 
+    }
+    
+    @Override 
+    public void newAtomSites(AtomSites atomSites) {
+    	
     }
 
     @Override
@@ -254,4 +279,16 @@ public class MetalBondConsumer implements MMcifConsumer{
     public Map<String,List<MetalBondDistance>> getDefinitions(){
         return definitions;
     }
+
+	@Override
+	public void newPdbxAuditRevisionHistory(PdbxAuditRevisionHistory history) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void newPdbxDatabaseStatus(PdbxDatabaseStatus status) {
+		// TODO Auto-generated method stub
+		
+	}
 }

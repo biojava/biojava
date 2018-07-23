@@ -23,10 +23,12 @@ package org.biojava.nbio.core.sequence.io;
 
 import org.biojava.nbio.core.sequence.DNASequence;
 import org.biojava.nbio.core.sequence.ProteinSequence;
+import org.biojava.nbio.core.sequence.RNASequence;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava.nbio.core.sequence.compound.DNACompoundSet;
 import org.biojava.nbio.core.sequence.compound.NucleotideCompound;
+import org.biojava.nbio.core.sequence.compound.RNACompoundSet;
 import org.biojava.nbio.core.sequence.template.AbstractSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -99,6 +101,35 @@ public class GenbankReaderHelper {
 		return GenbankProxyReader.process();
 
 	}
+
+	/**
+	 * Selecting lazySequenceLoad=true will parse the Genbank file and figure out the accessionid and offsets and return sequence objects
+	 * that can in the future read the sequence from the disk. This allows the loading of large Genbank files where you are only interested
+	 * in one sequence based on accession id.
+	 * @param file
+	 * @param lazySequenceLoad
+	 * @return
+	 * @throws Exception
+	 */
+	public static LinkedHashMap<String, RNASequence> readGenbankRNASequence(File file, boolean lazySequenceLoad) throws Exception {
+		if (!lazySequenceLoad) {
+			return readGenbankRNASequence(file);
+		}
+
+		GenbankReader<RNASequence, NucleotideCompound> GenbankProxyReader =
+				new GenbankReader<RNASequence, NucleotideCompound>(
+						file,
+						new GenericGenbankHeaderParser<RNASequence, NucleotideCompound>(),
+						new FileProxyRNASequenceCreator(
+								file,
+								RNACompoundSet.getRNACompoundSet(),
+								new GenbankSequenceParser<AbstractSequence<NucleotideCompound>, NucleotideCompound>()
+							)
+					);
+		return GenbankProxyReader.process();
+
+	}
+
 	/**
 	 * Read a Genbank file containing amino acids with setup that would handle most
 	 * cases.
@@ -159,6 +190,34 @@ public class GenbankReaderHelper {
 		LinkedHashMap<String, DNASequence> dnaSequences = readGenbankDNASequence(inStream);
 		inStream.close();
 		return dnaSequences;
+	}
+	/**
+	 * Read a Genbank RNA sequence
+	 * @param inStream
+	 * @return
+	 * @throws Exception
+	 */
+	public static LinkedHashMap<String, RNASequence> readGenbankRNASequence(
+			InputStream inStream) throws Exception {
+		GenbankReader<RNASequence, NucleotideCompound> GenbankReader = new GenbankReader<RNASequence, NucleotideCompound>(
+				inStream,
+				new GenericGenbankHeaderParser<RNASequence, NucleotideCompound>(),
+				new RNASequenceCreator(RNACompoundSet.getRNACompoundSet()));
+		return GenbankReader.process();
+	}
+
+	/**
+	 *
+	 * @param file
+	 * @return
+	 * @throws Exception
+	 */
+	public static LinkedHashMap<String, RNASequence> readGenbankRNASequence(
+			File file) throws Exception {
+		FileInputStream inStream = new FileInputStream(file);
+		LinkedHashMap<String, RNASequence> rnaSequences = readGenbankRNASequence(inStream);
+		inStream.close();
+		return rnaSequences;
 	}
 
 	public static void main(String[] args) throws Exception {

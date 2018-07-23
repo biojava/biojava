@@ -148,21 +148,6 @@ public class StartupParameters {
 		this.pdb2 = pdb2;
 	}
 
-	/**
-	 * @return true
-	 * @deprecated Always returns true (4.0.0)
-	 */
-	@Deprecated
-	public boolean isPdbDirSplit() {
-		return true;
-	}
-	/**
-	 * @param pdbDirSplit Ignored
-	 * @deprecated Ignored (4.0.0)
-	 */
-	@Deprecated
-	public void setPdbDirSplit(boolean pdbDirSplit) {}
-
 	public boolean isPrintXML() {
 		return printXML;
 	}

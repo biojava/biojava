@@ -25,6 +25,7 @@ package org.biojava.nbio.structure;
 
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -51,7 +52,7 @@ import java.util.Map;
  * @version %I% %G%
  *
  */
-public interface Group {
+public interface Group extends Serializable {
 
 	/** Group property key for secondary structure annotation */
 	public static final String SEC_STRUC = "secstruc";
@@ -63,13 +64,14 @@ public interface Group {
 	public int size();
 
 	/**
-	 *  Return true or false, depending if this group has 3D coordinates or not.
+	 * Return true or false, depending if this group has 3D coordinates or not.
 	 *
 	 * @return true if Group has 3D coordinates
 	 */
 	public boolean has3D ();
 
-	/** Flag if group has 3D data .
+	/**
+	 * Flag if group has 3D data .
 	 *
 	 * @param flag  true to set flag that this Group has 3D coordinates
 	 */
@@ -83,13 +85,15 @@ public interface Group {
 	 */
 	public GroupType getType();
 
-	/** Add an atom to this group.
+	/**
+	 * Add an atom to this group.
 	 *
 	 * @param atom  an Atom object
 	 */
 	public void addAtom(Atom atom);
 
-	/** Get list of atoms.
+	/**
+	 * Get list of atoms.
 	 *
 	 * @return a List object representing the atoms
 	 * @see #setAtoms(List)
@@ -97,7 +101,8 @@ public interface Group {
 	public List<Atom> getAtoms() ;
 
 
-	/** Set the atoms of this group.
+	/**
+	 * Set the atoms of this group.
 	 * @see {@link Atom}
 	 * @param atoms a list of atoms
 	 */
@@ -179,21 +184,24 @@ public interface Group {
 	public boolean hasAminoAtoms() ;
 
 
-	/** tests in the Chemical Component Dictionary, if this group is a polymeric group
+	/**
+	 * Check if this group is a polymeric group, from the definition in Chemical Component Dictionary
 	 *
 	 * @return true if a polymeric group
 	 */
 	public boolean isPolymeric();
 
 
-	/** Tests in the Chemical Component Dictionary, if this group is an amino acid
+	/**
+	 * Check if this group is an aminoacid group, from the definition in Chemical Component Dictionary
 	 *
 	 * @return true if an amino acid
      */
 	public boolean isAminoAcid();
 
 
-	/** Tests in the Chemical Component Dictionary, if this group is a nucleotide
+	/**
+	 * Check if this group is a nucleotide group, from the definition in Chemical Component Dictionary
 	 *
 	 * @return true if a nucleotide
      */
@@ -212,23 +220,25 @@ public interface Group {
 	 */
 	public void setProperties(Map<String,Object> properties) ;
 
-	/** return properties.
+	/**
+	 * Return properties.
 	 * @see #setProperties
 	 *
 	 * @return a HashMap object representing the properties value
 	 */
 	public Map<String,Object> getProperties() ;
 
-	/** set a single property .
+	/**
+	 * Set a single property .
 	 *
 	 * @param key    a String
 	 * @param value  an Object
 	 * @see #getProperty
-
 	 */
 	public void setProperty(String key, Object value) ;
 
-	/** get a single property .
+	/**
+	 * Get a single property .
 	 *
 	 * @param key  a String
 	 * @return an Object
@@ -236,14 +246,16 @@ public interface Group {
 	 */
 	public Object getProperty(String key) ;
 
-	/** get an Atom Iterator.
+	/**
+	 * Get an Atom Iterator.
 	 *
 	 * @return an Iterator object
 	 */
 	public Iterator<Atom> iterator() ;
 
 
-	/** returns and identical copy of this Group object .
+	/**
+	 * Returns and identical copy of this Group object .
 	 * @return  and identical copy of this Group object
 	 */
 	public Object clone();
@@ -266,7 +278,7 @@ public interface Group {
 	public Chain getChain() ;
 
 	/**
-	 * returns a dynamically created ResidueNumber for the group - this
+	 * Returns a dynamically created ResidueNumber for the group - this
 	 * contains the chainId, resNum and insCode of the group.
 	 * @see ResidueNumber
 	 * @return ResidueNumber for the group.
@@ -275,13 +287,15 @@ public interface Group {
 	public ResidueNumber getResidueNumber();
 
 
-	/** sets the ResidueNumber for this Group
+	/**
+	 * Sets the ResidueNumber for this Group
 	 *
 	 * @param residueNumber the PDB residueNumber
 	 */
 	public void setResidueNumber(ResidueNumber residueNumber);
 
-	/** Utility method to temporarily set a chainID for a group, if a parent chain object does not exist yet.
+	/**
+	 * Utility method to temporarily set a chainID for a group, if a parent chain object does not exist yet.
 	 * Not recommended for general use other than parsing.
 	 *
 	 * @param chainId
@@ -293,46 +307,73 @@ public interface Group {
 	/**
 	 * Utility method for returning the chainId of the Group or null if no
 	 * Chain has been set. This is equivalent to calling getChain().getId()
+	 * 
+	 * Prior to version 5.0 this method returned the chain name.
 	 * @since 3.0
 	 * @return  the ID of the chain
 	 */
 	public String getChainId();
 
-	/** Set the Chemical Component that closer describes this group.
+	/**
+	 * Set the Chemical Component that closer describes this group.
 	 *
 	 * @param cc the chemical component
 	 */
 	public void setChemComp(ChemComp cc);
 
-	/** Get the chemical component that closer describes this group. If the information does not exist yet, fetches the information from PDB web site.
+	/**
+	 * Get the chemical component that closer describes this group. If the information does not exist yet, fetches the information from PDB web site.
 	 *
 	 * @return the Chemical Component definition for this Group.
 	 */
 	public ChemComp getChemComp();
 
 
-	/** Test if this group has alternate locations.
+	/**
+	 * Check if this group has alternate location groups.
 	 *
 	 * @return boolean flag if there are alternate locations.
+	 * @see #getAltLocs()
 	 */
 	public boolean hasAltLoc();
 
 
-	/** Get the list of alternate locations.
+	/**
+	 * Get the list of other alternate location groups.
+	 * <p>
+	 * The main group (this group) will contain the first altloc (be it the default '.' or 'A' or a mix of '.' and 'A').
+	 * <p>
+	 * This method will return the altloc groups that are not the main group, e.g.:
+	 *
+	 * <li> if '.' (default), 'A' and 'B' altlocs are present in file, the main group will contain
+	 * the default '.' and this method will return 2 altloc groups
+	 * </li>
+	 *
+	 * <li> if 'A' and 'B' are present in file without a default '.' group, then the main group will contain the 'A'
+	 * location whilst this method will return only 1 altloc group with the 'B' location
+	 * </li>
+	 *
+	 * <p>
+	 * Note that atoms with the default altloc (.) are included in all groups. Atoms with other altlocs (typically A, B, etc)
+	 * will be sorted into groups by altloc.
+	 * <p>
+	 * Thus it can happen that an altloc group duplicate the contents of the main group.
 	 *
 	 * @return List of other groups that are on alternate locations
 	 */
 	public List<Group> getAltLocs();
 
-	/** Add a group that is an alternate location for this group.
+	/**
+	 * Add a group that is an alternate location for this group.
 	 *
+	 * @param g the altloc group to add
 	 */
 	public void addAltLoc(Group g);
 
 	/**
 	 * Determines if this group is water.
 	 *
-	 * @see {@link GroupType#WATERNAMES}
+	 * @see GroupType#WATERNAMES
 	 * @return true if it's water, false otherwise.
 	 */
 	public boolean isWater();
@@ -346,7 +387,8 @@ public interface Group {
 	public Group getAltLocGroup(Character altLoc);
 
 
-	/** attempts to reduce the memory imprint of this group by trimming
+	/**
+	 * Attempts to reduce the memory imprint of this group by trimming
 	 * all internal Collection objects to the required size.
 	 *
 	 */

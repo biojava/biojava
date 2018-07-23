@@ -55,7 +55,7 @@ public class TestTitleParsing {
 
 
 		// we can only compare titles by first forcing lower case, since the cases don't coincide cif vs pdb
-		assertEquals(sPdb.getPDBHeader().getTitle().toLowerCase(),sCif.getPDBHeader().getTitle().toLowerCase());
+		assertEquals(sPdb.getPDBHeader().getTitle().toLowerCase().replace(" ", ""), sCif.getPDBHeader().getTitle().toLowerCase().replace(" ", ""));
 
 		assertEquals(1, sPdb.getPDBHeader().getExperimentalTechniques().size());
 		assertEquals(1, sCif.getPDBHeader().getExperimentalTechniques().size());

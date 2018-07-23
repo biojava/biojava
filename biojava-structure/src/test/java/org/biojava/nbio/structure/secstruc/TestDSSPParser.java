@@ -23,6 +23,7 @@ package org.biojava.nbio.structure.secstruc;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.zip.GZIPInputStream;
 
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
@@ -52,8 +53,8 @@ public class TestDSSPParser {
 			Structure s = cache.getStructure(name);
 
 			// Test loading from file
-			List<SecStrucState> file = DSSPParser.parseFile(
-					"src/test/resources/" + name + ".dssp", s, false);
+			List<SecStrucState> file = DSSPParser.parseInputStream(new GZIPInputStream(
+					this.getClass().getResourceAsStream("/org/biojava/nbio/structure/secstruc/"+name+".dssp.gz")), s, false);
 
 			// Test fetching from PDB
 			List<SecStrucState> pdb = DSSPParser.fetch(name, s, false);
@@ -81,4 +82,5 @@ public class TestDSSPParser {
 			}
 		}
 	}
+	
 }

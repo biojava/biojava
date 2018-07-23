@@ -27,6 +27,7 @@ import org.biojava.nbio.data.sequence.SequenceUtil;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -46,8 +47,12 @@ import java.util.TreeMap;
  * @since 3.0.2
  *
  */
-public class Jronn {
+public class Jronn implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8104272449130849946L;
 	// Load models
 	private static final ModelLoader loader = new ModelLoader();
 	static {

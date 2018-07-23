@@ -33,7 +33,7 @@ import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIdentifier;
 import org.biojava.nbio.structure.align.client.StructureName;
-import org.biojava.nbio.structure.align.helper.AlignTools;
+import org.biojava.nbio.structure.align.helper.AlignUtils;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
 import org.biojava.nbio.structure.align.util.AtomCache;
@@ -161,7 +161,8 @@ public class MultipleAlignmentEnsembleImpl extends AbstractScoresCache
 		this();
 		// Copy all the creation and algorithm information
 		atomArrays = Arrays.asList(ca1, ca2);
-		if (afp.getName1() != null && afp.getName2() != null) {
+		if (afp.getName1() != null && !afp.getName1().isEmpty() &&
+				afp.getName2() != null && !afp.getName2().isEmpty()) {
 			structureIdentifiers = Arrays.<StructureIdentifier> asList(
 					new StructureName(afp.getName1()),
 					new StructureName(afp.getName2()));
@@ -349,7 +350,7 @@ public class MultipleAlignmentEnsembleImpl extends AbstractScoresCache
 
 		for (int s = 0; s < size(); s++) {
 			Atom[] ca = atomArrays.get(s);
-			Matrix distMat = AlignTools.getDistanceMatrix(ca, ca);
+			Matrix distMat = AlignUtils.getDistanceMatrix(ca, ca);
 			distanceMatrix.add(distMat);
 		}
 	}

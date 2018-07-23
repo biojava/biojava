@@ -1,9 +1,30 @@
+/*
+ *                    BioJava development code
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public Licence.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright for this code is held jointly by the individual
+ * authors.  These should be listed in @author doc comments.
+ *
+ * For more information on the BioJava project and its aims,
+ * or to join the biojava-l mailing list, visit the home page
+ * at:
+ *
+ *      http://www.biojava.org/
+ *
+ */
 package org.biojava.nbio.structure.io.mmtf;
 
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -129,6 +150,10 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 			for(Chain modelChain : modelChainMap.values()){
 				structure.addChain(modelChain, i);
 				String sequence = chainSequenceMap.get(modelChain.getId());
+				if (sequence == null) {
+					logger.warn("Sequence is null for chain with asym_id {}. Most likely the chain is non-polymeric. Will not add seqres groups for it.", modelChain.getId());
+					continue;
+				}
 				MmtfUtils.addSeqRes(modelChain, sequence);
 			}
 		}
@@ -455,6 +480,8 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 			bioAssTrans.setTransformationMatrix(mat4d);
 			// Now add this
 			bioAssInfo.getTransforms().add(bioAssTrans);
+			// sort transformations into a unique order
+			Collections.sort(bioAssInfo.getTransforms());
 		}
 	}
 
@@ -486,8 +513,10 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 		pdbHeader.setRfree(rFree);
 		pdbHeader.setRwork(rWork);
 		// Now loop through the techniques and add them in
-		for (String techniqueStr : experimentalMethods) {
-			pdbHeader.setExperimentalTechnique(techniqueStr);
+		if (experimentalMethods!=null) {
+			for (String techniqueStr : experimentalMethods) {
+				pdbHeader.setExperimentalTechnique(techniqueStr);
+			}
 		}
 		// Set the dates
 		if(depositionDate!=null){
@@ -504,14 +533,13 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 		if(releaseDate!=null){
 			try {
 				Date relDate = formatter.parse(releaseDate);
-				pdbHeader.setModDate(relDate);
+				pdbHeader.setRelDate(relDate);
 			} catch (ParseException e) {
-				logger.warn("Could not parse date string '{}', release/modification date will be unavailable", releaseDate);
+				logger.warn("Could not parse date string '{}', release date will be unavailable", releaseDate);
 			}
 		}
 		else{
-			pdbHeader.setModDate(new Date(0));
+			pdbHeader.setRelDate(new Date(0));
 		}
-
 	}
 }

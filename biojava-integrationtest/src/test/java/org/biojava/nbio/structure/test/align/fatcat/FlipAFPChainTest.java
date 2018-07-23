@@ -24,7 +24,6 @@
 
 package org.biojava.nbio.structure.test.align.fatcat;
 
-import junit.framework.TestCase;
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.StructureAlignment;
 import org.biojava.nbio.structure.align.StructureAlignmentFactory;
@@ -41,11 +40,14 @@ import org.biojava.nbio.structure.align.xml.AFPChainFlipper;
 import org.biojava.nbio.structure.align.xml.AFPChainXMLConverter;
 import org.biojava.nbio.structure.align.xml.AFPChainXMLParser;
 import org.biojava.nbio.structure.jama.Matrix;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.io.IOException;
 
-public class FlipAFPChainTest extends TestCase {
+public class FlipAFPChainTest {
 
+	@Test
 	public void testFlipping(){
 		try {
 
@@ -73,7 +75,7 @@ public class FlipAFPChainTest extends TestCase {
 
 		} catch (Exception e){
 			e.printStackTrace();
-			fail(e.getMessage());
+			Assert.fail(e.getMessage());
 		}
 	}
 
@@ -99,35 +101,35 @@ public class FlipAFPChainTest extends TestCase {
 		//System.out.println(AFPChainXMLConverter.toXML(newC));
 		AFPChain flipped = AFPChainFlipper.flipChain(newC);
 
-		assertEquals(afpChain.getName1(), flipped.getName2());
-		assertEquals(afpChain.getName2(),flipped.getName1());
-		assertEquals(afpChain.getCa1Length(),flipped.getCa2Length());
-		assertEquals(afpChain.getCa2Length(),flipped.getCa1Length());
-		assertEquals(String.format("%.2f",afpChain.getTMScore()), String.format("%.2f",flipped.getTMScore()));
-		assertTrue(afpChain.getTMScore() != -1);
+		Assert.assertEquals(afpChain.getName1(), flipped.getName2());
+		Assert.assertEquals(afpChain.getName2(), flipped.getName1());
+		Assert.assertEquals(afpChain.getCa1Length(), flipped.getCa2Length());
+		Assert.assertEquals(afpChain.getCa2Length(), flipped.getCa1Length());
+		Assert.assertEquals(String.format("%.2f", afpChain.getTMScore()), String.format("%.2f", flipped.getTMScore()));
+		Assert.assertTrue(afpChain.getTMScore() != -1);
 
 		String xmlNew = AFPChainXMLConverter.toXML(flipped, ca2, ca1);
 		//System.out.println(xmlNew);
 		AFPChain backChain = AFPChainXMLParser.fromXML(xmlNew, ca2, ca1);
 		AFPChain origFlip  = AFPChainFlipper.flipChain(backChain);
 
-		assertNotNull("Got null, instead of an AFPChain object!", origFlip);
+		Assert.assertNotNull("Got null, instead of an AFPChain object!", origFlip);
 
-		assertNotNull("could not get nr. of eqr: ", afpChain.getNrEQR());
-		assertNotNull("could not get nr. of eqr: ", origFlip.getNrEQR());
+		Assert.assertNotNull("could not get nr. of eqr: ", afpChain.getNrEQR());
+		Assert.assertNotNull("could not get nr. of eqr: ", origFlip.getNrEQR());
 
-		assertTrue("The nr. of equivalent positions is not equal!", afpChain.getNrEQR() == origFlip.getNrEQR());
+		Assert.assertTrue("The nr. of equivalent positions is not equal!", afpChain.getNrEQR() == origFlip.getNrEQR());
 
 		Atom shift1 = afpChain.getBlockShiftVector()[0];
 		Atom shift2 = origFlip.getBlockShiftVector()[0];
 
-		assertTrue("The shift vectors are not similar!", Calc.getDistance(shift1, shift2) < 0.1);
+		Assert.assertTrue("The shift vectors are not similar!", Calc.getDistance(shift1, shift2) < 0.1);
 
 		//assert the RMSD in the flipped alignment is small
 		double rmsd1 = getRMSD(afpChain,ca1,ca2);
 		double rmsd2 = getRMSD(flipped,ca2,ca1);
 		//System.out.println("rmsd:" +rmsd1 + " " + rmsd2);
-		assertTrue("The RMSD are vastly different!", Math.abs(rmsd1-rmsd2) < 0.01);
+		Assert.assertTrue("The RMSD are vastly different!", Math.abs(rmsd1 - rmsd2) < 0.01);
 
 
 		// this can;t work any more because there is minor after comma mismatches..
@@ -139,7 +141,7 @@ public class FlipAFPChainTest extends TestCase {
 		AFPAlignmentDisplay.getAlign(origFlip, ca1, ca2);
 		String img1 = AfpChainWriter.toDBSearchResult(afpChain);
 		String img2 = AfpChainWriter.toDBSearchResult(origFlip);
-		assertEquals("The alignment images do not match!",img1,img2);
+		Assert.assertEquals("The alignment images do not match!", img1, img2);
 
 		//System.out.println(xml);
 		//System.out.println(xmlNew);
@@ -167,11 +169,11 @@ public class FlipAFPChainTest extends TestCase {
 		Atom[] catmp1 = AFPAlignmentDisplay.getAlignedAtoms1(afpChain, ca1);
 		Atom[] catmp2 = AFPAlignmentDisplay.getAlignedAtoms2(afpChain, ca2clone);
 
-		assertTrue(catmp1.length == catmp2.length);
+		Assert.assertTrue(catmp1.length == catmp2.length);
 
-		assertTrue(catmp1.length == afpChain.getNrEQR());
+		Assert.assertTrue(catmp1.length == afpChain.getNrEQR());
 
-		return SVDSuperimposer.getRMS(catmp1,catmp2);
+		return Calc.rmsd(catmp1,catmp2);
 	}
 
 	public static void rotateAtoms2(AFPChain afpChain,Atom[] ca2){

@@ -25,12 +25,13 @@
 package org.biojava.nbio.structure.align.util;
 
 
+import javax.vecmath.Matrix4d;
+
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Calc;
-import org.biojava.nbio.structure.SVDSuperimposer;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.model.AFPChain;
-import org.biojava.nbio.structure.jama.Matrix;
+import org.biojava.nbio.structure.geometry.SuperPositions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,6 +41,11 @@ public class AFPChainScorer {
 
 
 	public  static double getTMScore(AFPChain align, Atom[] ca1, Atom[] ca2) throws StructureException
+	{
+		return getTMScore(align, ca1, ca2, true);
+	}
+
+	public  static double getTMScore(AFPChain align, Atom[] ca1, Atom[] ca2, boolean normalizeMin) throws StructureException
 	{
 		if ( align.getNrEQR() == 0)
 			return -1;
@@ -79,17 +85,12 @@ public class AFPChainScorer {
 			ca2aligned = (Atom[]) resizeArray(ca2aligned, pos);
 		}
 		//Superimpose
-		SVDSuperimposer svd = new SVDSuperimposer(ca1aligned, ca2aligned);
-		Matrix matrix = svd.getRotation();
-		Atom shift = svd.getTranslation();
+		Matrix4d trans = SuperPositions.superpose(Calc.atomsToPoints(ca1aligned), 
+				Calc.atomsToPoints(ca2aligned));
 
-		for(Atom a : ca2aligned) {
-			Calc.rotate(a, matrix);
-			Calc.shift(a, shift);
-		}
+		Calc.transform(ca2aligned, trans);
 
-		return SVDSuperimposer.getTMScore(ca1aligned, ca2aligned, ca1.length, ca2.length);
-
+		return Calc.getTMScore(ca1aligned, ca2aligned, ca1.length, ca2.length, normalizeMin);
 	}
 
 	/**

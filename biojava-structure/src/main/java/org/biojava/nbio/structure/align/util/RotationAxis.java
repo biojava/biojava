@@ -26,6 +26,7 @@ import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.contact.Pair;
+import org.biojava.nbio.structure.geometry.Matrices;
 import org.biojava.nbio.structure.jama.Matrix;
 
 import javax.vecmath.AxisAngle4d;
@@ -119,17 +120,6 @@ public final class RotationAxis {
 	}
 
 	/**
-	 * Get the component of translation perpendicular to the axis of rotation.
-	 * This isn't particularly meaningful, but is calculated internally and
-	 * was useful for debugging.
-	 * @return
-	 */
-	@Deprecated
-	public Atom getOtherTranslation() {
-		return otherTranslation;
-	}
-
-	/**
 	 * Calculate the rotation axis for the first block of an AFPChain
 	 * @param afpChain
 	 * @throws StructureException
@@ -175,7 +165,7 @@ public final class RotationAxis {
 	 */
 	public RotationAxis(Matrix4d transform) {
 
-		Matrix rot = Calc.getRotationMatrix(transform);
+		Matrix rot = Matrices.getRotationJAMA(transform);
 		Atom transl = Calc.getTranslationVector(transform);
 		init(rot,transl);
 	}

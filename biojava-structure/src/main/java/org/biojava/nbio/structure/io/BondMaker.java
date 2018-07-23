@@ -102,6 +102,7 @@ public class BondMaker {
 	 * </li>
 	 */
 	public void makeBonds() {
+		logger.debug("Going to start making bonds");
 		formPeptideBonds();
 		formNucleotideBonds();
 		formIntraResidueBonds();
@@ -208,12 +209,16 @@ public class BondMaker {
 					for(Group group : totList){
 
 						ChemComp aminoChemComp = ChemCompGroupFactory.getChemComp(group.getPDBName());
+						logger.debug("chemcomp for residue {}-{} has {} atoms and {} bonds", 
+								group.getPDBName(), group.getResidueNumber(), aminoChemComp.getAtoms().size(), aminoChemComp.getBonds().size());
 
 						for (ChemCompBond chemCompBond : aminoChemComp.getBonds()) {
 							Atom a = getAtom(chemCompBond.getAtom_id_1(), group);
 							Atom b = getAtom(chemCompBond.getAtom_id_2(), group);
 							if ( a != null && b != null){
 								int bondOrder = chemCompBond.getNumericalBondOrder();
+								logger.debug("Forming bond between atoms {}-{} and {}-{} with bond order {}", 
+										a.getPDBserial(), a.getName(), b.getPDBserial(), b.getName(), bondOrder);
 								new BondImpl(a, b, bondOrder);
 							} 
 							else{
@@ -357,9 +362,11 @@ public class BondMaker {
 			chainId2 = conn.getPtnr2_label_asym_id();
 
 			String insCode1 = "";
-			if (!conn.getPdbx_ptnr1_PDB_ins_code().equals("?")) insCode1 = conn.getPdbx_ptnr1_PDB_ins_code();
+			if (conn.getPdbx_ptnr1_PDB_ins_code() != null &&
+			        !conn.getPdbx_ptnr1_PDB_ins_code().equals("?")) insCode1 = conn.getPdbx_ptnr1_PDB_ins_code();
 			String insCode2 = "";
-			if (!conn.getPdbx_ptnr2_PDB_ins_code().equals("?")) insCode2 = conn.getPdbx_ptnr2_PDB_ins_code();
+			if (conn.getPdbx_ptnr2_PDB_ins_code() != null &&
+			        !conn.getPdbx_ptnr2_PDB_ins_code().equals("?")) insCode2 = conn.getPdbx_ptnr2_PDB_ins_code();
 
 			String seqId1 = conn.getPtnr1_auth_seq_id();
 			String seqId2 = conn.getPtnr2_auth_seq_id();

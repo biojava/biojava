@@ -42,19 +42,32 @@ public class GroupIterator implements Iterator<Group> {
 	private int current_model_pos ;
 	private int current_chain_pos ;
 	private int current_group_pos ;
+	private boolean fixed_model   ;
+	
 
 	/**
-	 * Constructs a GroupIterator object.
+	 * Constructs a GroupIterator object over all models
 	 *
 	 * @param struct  a Structure object
 	 */
-
 	public GroupIterator (Structure struct) {
 		structure = struct     ;
 		current_model_pos = 0  ;
 		current_chain_pos = 0  ;
 		current_group_pos = -1 ;
-
+		fixed_model = false    ;
+	}
+	/**
+	 * Constructs a GroupIterator object over a specific model
+	 *
+	 * @param struct  a Structure object
+	 */
+	public GroupIterator (Structure struct, int modelNr) {
+		structure = struct     ;
+		current_model_pos = modelNr;
+		current_chain_pos = 0  ;
+		current_group_pos = -1 ;
+		fixed_model = true     ;
 	}
 
 
@@ -75,6 +88,7 @@ public class GroupIterator implements Iterator<Group> {
 		gr.setModelPos(this.getModelPos());
 		gr.setChainPos(this.getChainPos());
 		gr.setGroupPos(this.getGroupPos());
+		gr.fixed_model = this.fixed_model;
 		return gr ;
 
 	}
@@ -99,6 +113,8 @@ public class GroupIterator implements Iterator<Group> {
 		List<Chain> model = structure.getModel(tmp_model);
 
 		if (tmp_chain >= model.size()) {
+			if(fixed_model)
+				return false;
 			return hasSubGroup(tmp_model + 1, 0, 0);
 		}
 
@@ -164,6 +180,8 @@ public class GroupIterator implements Iterator<Group> {
 		List<Chain> model = structure.getModel(tmp_model);
 
 		if ( tmp_chain >= model.size() ){
+			if(fixed_model)
+				throw new NoSuchElementException("arrived at end of model!");
 			return getNextGroup(tmp_model+1,0,0);
 		}
 

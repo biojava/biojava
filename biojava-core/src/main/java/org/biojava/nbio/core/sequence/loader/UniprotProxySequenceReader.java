@@ -24,26 +24,6 @@
  */
 package org.biojava.nbio.core.sequence.loader;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.regex.Pattern;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPathExpressionException;
-
 import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.core.sequence.AccessionID;
 import org.biojava.nbio.core.sequence.DataSource;
@@ -55,18 +35,26 @@ import org.biojava.nbio.core.sequence.features.DBReferenceInfo;
 import org.biojava.nbio.core.sequence.features.DatabaseReferenceInterface;
 import org.biojava.nbio.core.sequence.features.FeaturesKeyWordInterface;
 import org.biojava.nbio.core.sequence.storage.SequenceAsStringHelper;
-import org.biojava.nbio.core.sequence.template.Compound;
-import org.biojava.nbio.core.sequence.template.CompoundSet;
-import org.biojava.nbio.core.sequence.template.ProxySequenceReader;
-import org.biojava.nbio.core.sequence.template.SequenceMixin;
-import org.biojava.nbio.core.sequence.template.SequenceProxyView;
-import org.biojava.nbio.core.sequence.template.SequenceView;
+import org.biojava.nbio.core.sequence.template.*;
+import org.biojava.nbio.core.util.Equals;
 import org.biojava.nbio.core.util.XMLHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPathExpressionException;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -88,7 +76,9 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 	private static final String TREMBLID_PATTERN = "[A-NR-Z][0-9]([A-Z][A-Z0-9]{2}[0-9]){1,2}";
 	public static final Pattern UP_AC_PATTERN = Pattern.compile("(" + SPID_PATTERN + "|" + TREMBLID_PATTERN + ")");
 
-	private static String uniprotbaseURL = "http://www.uniprot.org"; //"http://pir.uniprot.org";
+	public static final String DEFAULT_UNIPROT_BASE_URL = "https://www.uniprot.org";
+
+	private static String uniprotbaseURL = DEFAULT_UNIPROT_BASE_URL;
 	private static String uniprotDirectoryCache = null;
 	private String sequence;
 	private CompoundSet<C> compoundSet;
@@ -243,6 +233,38 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 		return this.parsedCompounds;
 	}
 
+	@Override
+	public boolean equals(Object o){
+
+		if(! Equals.classEqual(this, o)) {
+			return false;
+		}
+
+		Sequence<C> other = (Sequence<C>)o;
+		if ( other.getCompoundSet() != getCompoundSet())
+			return false;
+
+		List<C> rawCompounds = getAsList();
+		List<C> otherCompounds = other.getAsList();
+
+		if ( rawCompounds.size() != otherCompounds.size())
+			return false;
+
+		for (int i = 0 ; i < rawCompounds.size() ; i++){
+			Compound myCompound = rawCompounds.get(i);
+			Compound otherCompound = otherCompounds.get(i);
+			if ( ! myCompound.equalsIgnoreCase(otherCompound))
+				return false;
+		}
+		return true;
+	}
+
+	@Override
+	public int hashCode(){
+		String s = getSequenceAsString();
+		return s.hashCode();
+	}
+
 	/**
 	 *
 	 * @return
@@ -363,11 +385,32 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 		for (Element element : keyWordElementList) {
 			Element fullNameElement = XMLHelper.selectSingleElement(element, "fullName");
 			aliasList.add(fullNameElement.getTextContent());
+			Element shortNameElement = XMLHelper.selectSingleElement(element, "shortName");
+			if(null != shortNameElement) {
+				String shortName = shortNameElement.getTextContent();
+				if(null != shortName && !shortName.trim().isEmpty()) {
+					aliasList.add(shortName);
+				}
+			}
 		}
 		keyWordElementList = XMLHelper.selectElements(proteinElement, "recommendedName");
 		for (Element element : keyWordElementList) {
 			Element fullNameElement = XMLHelper.selectSingleElement(element, "fullName");
 			aliasList.add(fullNameElement.getTextContent());
+			Element shortNameElement = XMLHelper.selectSingleElement(element, "shortName");
+			if(null != shortNameElement) {
+				String shortName = shortNameElement.getTextContent();
+				if(null != shortName && !shortName.trim().isEmpty()) {
+					aliasList.add(shortName);
+				}
+			}
+		}
+		Element cdAntigen = XMLHelper.selectSingleElement(proteinElement, "cdAntigenName");
+		if(null != cdAntigen) {
+			String cdAntigenName = cdAntigen.getTextContent();
+			if(null != cdAntigenName && !cdAntigenName.trim().isEmpty()) {
+				aliasList.add(cdAntigenName);
+			}
 		}
 
 		return aliasList;
@@ -385,12 +428,13 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 		}
 		Element uniprotElement = uniprotDoc.getDocumentElement();
 		Element entryElement = XMLHelper.selectSingleElement(uniprotElement, "entry");
-		Element proteinElement = XMLHelper.selectSingleElement(entryElement, "gene");
-		ArrayList<Element> keyWordElementList = XMLHelper.selectElements(proteinElement, "name");
-		for (Element element : keyWordElementList) {
-			aliasList.add(element.getTextContent());
+		ArrayList<Element> proteinElements = XMLHelper.selectElements(entryElement, "gene");
+		for(Element proteinElement : proteinElements) {
+			ArrayList<Element> keyWordElementList = XMLHelper.selectElements(proteinElement, "name");
+			for (Element element : keyWordElementList) {
+				aliasList.add(element.getTextContent());
+			}
 		}
-
 		return aliasList;
 	}
 

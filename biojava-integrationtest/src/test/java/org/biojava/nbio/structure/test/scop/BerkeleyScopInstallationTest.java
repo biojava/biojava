@@ -48,6 +48,8 @@ public class BerkeleyScopInstallationTest extends ScopDatabaseTest {
 		for(String version : new String[] {
 				// All versions should pass, but comment most out for test performance.
 				ScopFactory.LATEST_VERSION,
+				ScopFactory.VERSION_2_0_6,
+				ScopFactory.VERSION_2_0_5,
 				//"1.75A",
 				//ScopFactory.VERSION_2_0_2,
 				ScopFactory.VERSION_1_75,
