@@ -72,8 +72,8 @@ public class TestForesterWrapper {
 		String expected = "";
 		for (ProteinSequence proteinSequence : proteinSequences.values()) {
 			msa.addAlignedSequence(proteinSequence);
-			expected += ">" + proteinSequence.getOriginalHeader() + "\n"
-					+ proteinSequence.toString() + "\n";
+			expected += ">" + proteinSequence.getOriginalHeader() + System.lineSeparator()
+					+ proteinSequence.toString() + System.lineSeparator();
 		}
 
 		// Convert the biojava MSA to a FASTA String
@@ -95,8 +95,8 @@ public class TestForesterWrapper {
 
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < fMsa.getNumberOfSequences(); i++) {
-			sb.append(">" + fMsa.getIdentifier(i) + "\n");
-			sb.append(fMsa.getSequenceAsString(i) + "\n");
+			sb.append(">" + fMsa.getIdentifier(i) + System.lineSeparator());
+			sb.append(fMsa.getSequenceAsString(i) + System.lineSeparator());
 		}
 		String forester = sb.toString();
 
