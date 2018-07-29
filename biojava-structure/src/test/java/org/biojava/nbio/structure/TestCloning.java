@@ -91,7 +91,7 @@ public class TestCloning {
 
 	/**
 	 * A Structure with alt locs, we make sure they are being cloned too
-	 * 
+	 *
 	 * @throws StructureException
 	 * @throws IOException
 	 */
@@ -161,16 +161,24 @@ public class TestCloning {
 		cache.setFileParsingParams(params);
 
 		final Structure s = cache.getStructure("2I13");
-		final List<Bond> bonds = s.getNonPolyChain("G").getAtomGroup(0).getAtom(0).getBonds();
+		List<Bond> bonds = s.getNonPolyChain("G").getAtomGroup(0).getAtom(0).getBonds();
 		assertNotNull(bonds);
 
-		final Structure s2 = s.clone();
-		final List<Bond> bonds2 = s2.getNonPolyChain("G").getAtomGroup(0).getAtom(0).getBonds();
+		Structure s2 = s.clone();
+		List<Bond> bonds2 = s2.getNonPolyChain("G").getAtomGroup(0).getAtom(0).getBonds();
 		assertNotNull(bonds2);
 
 		assertEquals(bonds.toString(), bonds2.toString());
 		// But the objects should be different as the atoms are clones
 		assertNotEquals(bonds.toArray(), bonds2.toArray());
+
+		// Also test for polymeric chains
+		bonds = s.getPolyChain("E").getAtomGroup(0).getAtom(0).getBonds();
+		assertNotNull(bonds);
+
+		s2 = s.clone();
+		bonds2 = s2.getPolyChain("E").getAtomGroup(0).getAtom(0).getBonds();
+		assertNotNull(bonds2);
 	}
 
 }

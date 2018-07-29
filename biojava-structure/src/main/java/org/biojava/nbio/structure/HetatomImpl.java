@@ -453,26 +453,8 @@ public class HetatomImpl implements Group {
 
 		n.setPDBName(getPDBName());
 
-		// copy the atoms
-		for (Atom atom1 : atoms) {
-			Atom atom = (Atom) atom1.clone();
-			n.addAtom(atom);
-			atom.setGroup(n);
-		}
-		//copy the bonds.
-		for (int i=0;i<atoms.size();i++) {
-			Atom atom1 = atoms.get(i);
-			List<Bond> bonds1 = atom1.getBonds();
-			if (bonds1 != null) {
-				for (Bond b : bonds1) {
-					int atomAIndex = atoms.indexOf(b.getAtomA());
-					int atomBIndex = atoms.indexOf(b.getAtomB());
-					// The order of the atoms are the same on the original and the cloned object, which we use here.
-					Bond newBond = new BondImpl(n.getAtom(atomAIndex), n.getAtom(atomBIndex), b.getBondOrder(), false);
-					n.getAtom(i).addBond(newBond);
-				}
-			}
-		}
+		//clone atoms and bonds.
+		cloneAtomsAndBonds(n);
 		
 		// copying the alt loc groups if present, otherwise they stay null
 		if (altLocs!=null) {
@@ -486,6 +468,30 @@ public class HetatomImpl implements Group {
 			n.setChemComp(chemComp);
 
 		return n;
+	}
+
+
+	protected void cloneAtomsAndBonds(Group newGroup) {
+		// copy the atoms
+		for (Atom atom1 : atoms) {
+			Atom atom = (Atom) atom1.clone();
+			newGroup.addAtom(atom);
+			atom.setGroup(newGroup);
+		}
+		// copy the bonds
+		for (int i=0;i<atoms.size();i++) {
+			Atom atom1 = atoms.get(i);
+			List<Bond> bonds1 = atom1.getBonds();
+			if (bonds1 != null) {
+				for (Bond b : bonds1) {
+					int atomAIndex = atoms.indexOf(b.getAtomA());
+					int atomBIndex = atoms.indexOf(b.getAtomB());
+					// The order of the atoms are the same on the original and the cloned object, which we use here.
+					Bond newBond = new BondImpl(newGroup.getAtom(atomAIndex), newGroup.getAtom(atomBIndex), b.getBondOrder(), false);
+					newGroup.getAtom(i).addBond(newBond);
+				}
+			}
+		}
 	}
 
 	/** the Hibernate database ID

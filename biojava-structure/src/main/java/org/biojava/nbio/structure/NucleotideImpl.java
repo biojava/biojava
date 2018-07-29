@@ -23,8 +23,6 @@
  */
 package org.biojava.nbio.structure;
 
-import java.util.List;
-
 /**
  * A nucleotide group is almost the same as a Hetatm group.
  * @see HetatomImpl
@@ -103,26 +101,8 @@ public class NucleotideImpl extends HetatomImpl {
 
 		n.setPDBName(getPDBName());
 
-		// copy the atoms
-		for (Atom atom1 : atoms) {
-			Atom atom = (Atom) atom1.clone();
-			n.addAtom(atom);
-			atom.setGroup(n);
-		}
-		//copy the bonds.
-		for (int i=0;i<atoms.size();i++) {
-			Atom atom1 = atoms.get(i);
-			List<Bond> bonds1 = atom1.getBonds();
-			if (bonds1 != null) {
-				for (Bond b : bonds1) {
-					int atomAIndex = atoms.indexOf(b.getAtomA());
-					int atomBIndex = atoms.indexOf(b.getAtomB());
-					// The order of the atoms are the same on the original and the cloned object, which we use here.
-					Bond newBond = new BondImpl(n.getAtom(atomAIndex), n.getAtom(atomBIndex), b.getBondOrder(), false);
-					n.getAtom(i).addBond(newBond);
-				}
-			}
-		}
+		//clone atoms and bonds.
+		cloneAtomsAndBonds(n);
 		
 		// copying the alt loc groups if present, otherwise they stay null
 		if (getAltLocs()!=null && !getAltLocs().isEmpty()) {
