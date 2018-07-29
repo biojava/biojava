@@ -459,7 +459,21 @@ public class HetatomImpl implements Group {
 			n.addAtom(atom);
 			atom.setGroup(n);
 		}
-
+		//copy the bonds.
+		for (int i=0;i<atoms.size();i++) {
+			Atom atom1 = atoms.get(i);
+			List<Bond> bonds1 = atom1.getBonds();
+			if (bonds1 != null) {
+				for (Bond b : bonds1) {
+					int atomAIndex = atoms.indexOf(b.getAtomA());
+					int atomBIndex = atoms.indexOf(b.getAtomB());
+					// The order of the atoms are the same on the original and the cloned object, which we use here.
+					Bond newBond = new BondImpl(n.getAtom(atomAIndex), n.getAtom(atomBIndex), b.getBondOrder(), false);
+					n.getAtom(i).addBond(newBond);
+				}
+			}
+		}
+		
 		// copying the alt loc groups if present, otherwise they stay null
 		if (altLocs!=null) {
 			for (Group altLocGroup:this.altLocs) {
