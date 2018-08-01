@@ -55,9 +55,9 @@ public class TestSubOptimalMSA {
 		Profile<DNASequence, NucleotideCompound> msa = Alignments
 				.getMultipleSequenceAlignment(sequences, gapP);
 
-		assertEquals("TTGGGGCCTCTAAACGGGGTCTT\n"
-				+ "TTGGGGCCTCTAAACGGG-TCTT\n"
-				+ "TTGGGGC-TCTAA-CGGG-TCTT\n",
+		assertEquals("TTGGGGCCTCTAAACGGGGTCTT" + System.lineSeparator()
+				+ "TTGGGGCCTCTAAACGGG-TCTT"    + System.lineSeparator()
+				+ "TTGGGGC-TCTAA-CGGG-TCTT"    + System.lineSeparator(),
 				msa.toString());
 
 		ConcurrencyTools.shutdown();
@@ -71,9 +71,9 @@ public class TestSubOptimalMSA {
 				.getMultipleSequenceAlignment(sequences, gapP);
 
 		// TODO test not passing (see issue 288 in github) - Aleix 03.2016
-		assertEquals("TTGGGGCCTCTAAACGGGGTCTT\n"
-				+ "TTGGGGCCTCTAAACGGG-TCTT\n"
-				+ "TTGGGGC-TCTAA-CGGG-TCTT\n",
+		assertEquals("TTGGGGCCTCTAAACGGGGTCTT" + System.lineSeparator()
+				+ "TTGGGGCCTCTAAACGGG-TCTT"    + System.lineSeparator()
+				+ "TTGGGGC-TCTAA-CGGG-TCTT"    + System.lineSeparator(),
 				msa.toString());
 
 		ConcurrencyTools.shutdown();
