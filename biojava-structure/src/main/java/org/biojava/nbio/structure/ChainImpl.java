@@ -637,7 +637,9 @@ public class ChainImpl implements Chain {
 	@Override
 	public void setSeqResGroups(List<Group> groups){
 		for (Group g: groups){
-			g.setChain(this);
+			if (g != null) {
+				g.setChain(this);
+			}
 		}
 		this.seqResGroups = groups;
 	}
