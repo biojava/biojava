@@ -144,8 +144,9 @@ public class BiologicalAssemblyBuilder {
 				// set sort order only if the two ids are identical
 				if (t1.getId().equals(t2.getId())) {
 					 return chainIds.indexOf(t1.getChainId()) - chainIds.indexOf(t2.getChainId());
+				} else {
+					return t1.getId().compareTo(t2.getId());
 				}
-			    return 0;
 		    }
 		});
 	}
