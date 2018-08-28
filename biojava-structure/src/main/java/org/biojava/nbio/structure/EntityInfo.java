@@ -28,13 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * An object to contain the info from the PDB header for a Molecule.
@@ -811,17 +805,19 @@ public class EntityInfo implements Serializable {
 	}
 
 	private List<Chain> getFirstModelChains() {
-		List<Chain> firstModel = new ArrayList<>();
-		outer:
-		for (String id: getChainIds()) {
-			for (Chain chain:chains) {
-				if (chain.getId().equals(id)) {
-					firstModel.add(chain);
-					break outer;
+
+		Map<String, Chain> firstModelChains = new LinkedHashMap<>();
+		Set<String> lookupChainIds = new HashSet<>(getChainIds());
+
+		for (Chain chain : chains) {
+			if (lookupChainIds.contains(chain.getId())) {
+				if (!firstModelChains.containsKey(chain.getId())) {
+					firstModelChains.put(chain.getId(), chain);
 				}
 			}
 		}
-		return firstModel;
+
+		return new ArrayList<>(firstModelChains.values());
 	}
 	
 	 /**
