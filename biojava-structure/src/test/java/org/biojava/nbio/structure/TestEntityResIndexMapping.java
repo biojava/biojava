@@ -24,14 +24,21 @@ import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.zip.GZIPInputStream;
 
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.PDBFileParser;
+import org.junit.Ignore;
 import org.junit.Test;
 
-public class TestCompoundResIndexMapping {
+/**
+ * Various tests for functionality in {@link EntityInfo} and {@link org.biojava.nbio.structure.io.EntityFinder}
+ * @author Jose Duarte
+ */
+public class TestEntityResIndexMapping {
 
 	private static final String PATH_TO_TEST_FILES = "/org/biojava/nbio/structure/io/";
 
@@ -67,7 +74,6 @@ public class TestCompoundResIndexMapping {
 		params.setAlignSeqRes(true);
 		cache.setFileParsingParams(params);
 
-
 		StructureIO.setAtomCache(cache);
 
 		cache.setUseMmCif(false);
@@ -78,7 +84,11 @@ public class TestCompoundResIndexMapping {
 		assertEquals("First residue in 1smtA "+chainA.getAtomGroup(0).toString()+" should map to 24 in SEQRES",24,i);
 		Chain chainB = s.getPolyChainByPDB("B");
 		i = chainB.getEntityInfo().getAlignedResIndex(chainB.getAtomGroup(0),chainB);
-		assertEquals("First residue in 1smtB "+chainA.getAtomGroup(0).toString()+" should map to 20 in SEQRES",20,i);
+		assertEquals("First residue in 1smtB "+chainB.getAtomGroup(0).toString()+" should map to 20 in SEQRES",20,i);
+
+		// group with seqres index 19 is observed in chain B but not in chain A, we should still get the index back from getAlignedResIndex
+		i = chainA.getEntityInfo().getAlignedResIndex(chainA.getSeqResGroup(19),chainA);
+		assertEquals("Seqres residue 20 in 1smtA "+chainA.getSeqResGroup(19).toString()+" should map to 20 in SEQRES",20,i);
 
 		checkAllResidues(s);
 	}
@@ -97,17 +107,25 @@ public class TestCompoundResIndexMapping {
 	}
 
 	// This doesn't work yet, since for raw files without a SEQRES, the seqres groups are not populated. Instead
-	// in that case Compound.getAlignedResIndex() returns residue numbers as given (without insertion codes) and
+	// in that case EntityInfo.getAlignedResIndex() returns residue numbers as given (without insertion codes) and
 	// thus in general residues will not be correctly aligned between different chains of same entity. This breaks
 	// cases like 3ddo (with no SEQRES records) where residue numbering is different in every chain of the one entity.
 	// see https://github.com/eppic-team/eppic/issues/39
-	//@Test
+	@Ignore
+	@Test
 	public void test3ddoRawNoSeqres() throws IOException, StructureException {
 
 		// 3ddo has 6 chains in 1 entity, all of them with different residue numbering (chain A is 1000+, chain B 2000+ ...)
 		Structure s = getStructure("3ddo_raw_noseqres.pdb.gz", true);
 
-		assertEquals(1,s.getEntityInfos().size());
+		List<EntityInfo> polyEntities = new ArrayList<>();
+		for (EntityInfo entityInfo : s.getEntityInfos()) {
+			if (entityInfo.getType() == EntityType.POLYMER) {
+				polyEntities.add(entityInfo);
+			}
+		}
+
+		assertEquals(1, polyEntities.size());
 
 		Chain chainA = s.getPolyChainByPDB("A");
 		Chain chainB = s.getPolyChainByPDB("B");
@@ -134,10 +152,17 @@ public class TestCompoundResIndexMapping {
 
 
 
-		// this should work either with or without setAlignSeqRes, since the mapping happens in CompoundFinder
+		// this should work either with or without setAlignSeqRes, since the mapping happens in EntityFinder
 		s = getStructure("3ddo_raw_noseqres.pdb.gz", false);
 
-		assertEquals(1,s.getEntityInfos().size());
+		polyEntities = new ArrayList<>();
+		for (EntityInfo entityInfo : s.getEntityInfos()) {
+			if (entityInfo.getType() == EntityType.POLYMER) {
+				polyEntities.add(entityInfo);
+			}
+		}
+
+		assertEquals(1, polyEntities.size());
 
 		chainA = s.getPolyChainByPDB("A");
 		chainB = s.getPolyChainByPDB("B");
