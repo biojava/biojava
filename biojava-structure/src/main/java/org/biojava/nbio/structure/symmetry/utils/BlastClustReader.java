@@ -20,6 +20,9 @@
  */
 package org.biojava.nbio.structure.symmetry.utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,21 +36,25 @@ public class BlastClustReader implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	private static final Logger logger = LoggerFactory.getLogger(BlastClustReader.class);
+
 	private int sequenceIdentity = 0;
-	private List<List<String>> clusters = new ArrayList<List<String>>();
-	private static final String coreUrl = "ftp://resources.rcsb.org/sequence/clusters/";
-	private static List<Integer> seqIdentities = Arrays.asList(30, 40, 50, 70, 90, 95, 100);
+	private List<List<String>> clusters = new ArrayList<>();
+	// https://cdn.rcsb.org/resources/sequence/clusters/bc-95.out
+	private static final String coreUrl = "https://cdn.rcsb.org/resources/sequence/clusters/";
+
+	private static final List<Integer> seqIdentities = Arrays.asList(30, 40, 50, 70, 90, 95, 100);
 
 	public BlastClustReader(int sequenceIdentity)  {
 		this.sequenceIdentity = sequenceIdentity;
 	}
 
-	public List<List<String>> getPdbChainIdClusters() {
+	public List<List<String>> getPdbChainIdClusters() throws IOException {
 		loadClusters(sequenceIdentity);
 		return clusters;
 	}
 
-	public Map<String,String> getRepresentatives(String pdbId) {
+	public Map<String,String> getRepresentatives(String pdbId) throws IOException {
 		loadClusters(sequenceIdentity);
 		String pdbIdUc = pdbId.toUpperCase();
 
@@ -64,7 +71,7 @@ public class BlastClustReader implements Serializable {
 		return representatives;
 	}
 
-	public String getRepresentativeChain(String pdbId, String chainId) {
+	public String getRepresentativeChain(String pdbId, String chainId) throws IOException {
 		loadClusters(sequenceIdentity);
 
 		String pdbChainId = pdbId.toUpperCase() + "." + chainId;
@@ -77,7 +84,7 @@ public class BlastClustReader implements Serializable {
 		return "";
 	}
 
-	public int indexOf(String pdbId, String chainId) {
+	public int indexOf(String pdbId, String chainId) throws IOException {
 		loadClusters(sequenceIdentity);
 
 		String pdbChainId = pdbId.toUpperCase() + "." + chainId;
@@ -91,7 +98,7 @@ public class BlastClustReader implements Serializable {
 		return -1;
 	}
 
-	public List<List<String>> getPdbChainIdClusters(String pdbId) {
+	public List<List<String>> getPdbChainIdClusters(String pdbId) throws IOException {
 		loadClusters(sequenceIdentity);
 		String pdbIdUpper = pdbId.toUpperCase();
 
@@ -107,7 +114,7 @@ public class BlastClustReader implements Serializable {
 		return matches;
 	}
 
-	public List<List<String>> getChainIdsInEntry(String pdbId) {
+	public List<List<String>> getChainIdsInEntry(String pdbId) throws IOException {
 		loadClusters(sequenceIdentity);
 
 		List<List<String>> matches = new ArrayList<List<String>>();
@@ -131,55 +138,36 @@ public class BlastClustReader implements Serializable {
 		return matches;
 	}
 
-	private void loadClusters(int sequenceIdentity) {
+	private void loadClusters(int sequenceIdentity) throws IOException {
 		// load clusters only once
 		if (clusters.size() > 0) {
 			return;
 		}
 
 		if (!seqIdentities.contains(sequenceIdentity)) {
-			System.err.println("Error: representative chains are not available for %sequence identity: "
-					+ sequenceIdentity);
+			logger.error("Representative chains are not available for %sequence identity: {}", sequenceIdentity);
 			return;
 		}
 
-		try {
-			URL u = new URL(coreUrl + "bc-" + sequenceIdentity + ".out");
-			InputStream stream = u.openStream();
-	//		URLConnection connection = u.openConnection();
-	//		connection.setConnectTimeout(60000);
-	//		InputStream stream = connection.getInputStream();
+		String urlString = coreUrl + "bc-" + sequenceIdentity + ".out";
+		URL u = new URL(urlString);
+		InputStream stream = u.openStream();
 
-			if (stream != null) {
-				BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+		if (stream != null) {
+			BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
 
-				String line = null;
-				try {
-					while ((line = reader.readLine()) != null) {
-						line = line.replaceAll("_", ".");
-						List<String> cluster = Arrays.asList(line.split(" "));
-						clusters.add(cluster);
-					}
-					reader.close();
-					stream.close();
-				} catch (IOException e) {
-					//e.printStackTrace();
-				} finally {
-//					try {
-//						System.out.println("closing reader");
-//						reader.close();
-//						stream.close();
-//					} catch (IOException e) {
-//						e.printStackTrace();
-//					}
-				}
+			String line = null;
+			while ((line = reader.readLine()) != null) {
+				line = line.replaceAll("_", ".");
+				List<String> cluster = Arrays.asList(line.split(" "));
+				clusters.add(cluster);
 			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
+			reader.close();
+			stream.close();
+		} else {
+			throw new IOException("Got null stream for URL " + urlString);
 		}
 
-		return;
 	}
 
 }
