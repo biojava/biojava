@@ -49,16 +49,16 @@ public class BlastClustReader implements Serializable {
 		this.sequenceIdentity = sequenceIdentity;
 	}
 
-	public List<List<String>> getPdbChainIdClusters() throws IOException {
+	public List<List<String>> getPdbChainIdClusters() {
 		loadClusters(sequenceIdentity);
 		return clusters;
 	}
 
-	public Map<String,String> getRepresentatives(String pdbId) throws IOException {
+	public Map<String,String> getRepresentatives(String pdbId) {
 		loadClusters(sequenceIdentity);
 		String pdbIdUc = pdbId.toUpperCase();
 
-		Map<String,String> representatives = new LinkedHashMap<String,String>();
+		Map<String,String> representatives = new LinkedHashMap<>();
 		for (List<String> cluster: clusters) {
 			// map fist match to representative
 			for (String chainId: cluster) {
@@ -71,7 +71,7 @@ public class BlastClustReader implements Serializable {
 		return representatives;
 	}
 
-	public String getRepresentativeChain(String pdbId, String chainId) throws IOException {
+	public String getRepresentativeChain(String pdbId, String chainId) {
 		loadClusters(sequenceIdentity);
 
 		String pdbChainId = pdbId.toUpperCase() + "." + chainId;
@@ -84,7 +84,7 @@ public class BlastClustReader implements Serializable {
 		return "";
 	}
 
-	public int indexOf(String pdbId, String chainId) throws IOException {
+	public int indexOf(String pdbId, String chainId) {
 		loadClusters(sequenceIdentity);
 
 		String pdbChainId = pdbId.toUpperCase() + "." + chainId;
@@ -98,7 +98,7 @@ public class BlastClustReader implements Serializable {
 		return -1;
 	}
 
-	public List<List<String>> getPdbChainIdClusters(String pdbId) throws IOException {
+	public List<List<String>> getPdbChainIdClusters(String pdbId) {
 		loadClusters(sequenceIdentity);
 		String pdbIdUpper = pdbId.toUpperCase();
 
@@ -114,7 +114,7 @@ public class BlastClustReader implements Serializable {
 		return matches;
 	}
 
-	public List<List<String>> getChainIdsInEntry(String pdbId) throws IOException {
+	public List<List<String>> getChainIdsInEntry(String pdbId) {
 		loadClusters(sequenceIdentity);
 
 		List<List<String>> matches = new ArrayList<List<String>>();
@@ -138,7 +138,7 @@ public class BlastClustReader implements Serializable {
 		return matches;
 	}
 
-	private void loadClusters(int sequenceIdentity) throws IOException {
+	private void loadClusters(int sequenceIdentity) {
 		// load clusters only once
 		if (clusters.size() > 0) {
 			return;
@@ -149,24 +149,30 @@ public class BlastClustReader implements Serializable {
 			return;
 		}
 
-		String urlString = coreUrl + "bc-" + sequenceIdentity + ".out";
-		URL u = new URL(urlString);
-		InputStream stream = u.openStream();
+        String urlString = coreUrl + "bc-" + sequenceIdentity + ".out";
 
-		if (stream != null) {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+		try {
 
-			String line = null;
-			while ((line = reader.readLine()) != null) {
-				line = line.replaceAll("_", ".");
-				List<String> cluster = Arrays.asList(line.split(" "));
-				clusters.add(cluster);
-			}
-			reader.close();
-			stream.close();
-		} else {
-			throw new IOException("Got null stream for URL " + urlString);
-		}
+            URL u = new URL(urlString);
+            InputStream stream = u.openStream();
+
+            if (stream != null) {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+
+                String line = null;
+                while ((line = reader.readLine()) != null) {
+                    line = line.replaceAll("_", ".");
+                    List<String> cluster = Arrays.asList(line.split(" "));
+                    clusters.add(cluster);
+                }
+                reader.close();
+                stream.close();
+            } else {
+                throw new IOException("Got null stream for URL " + urlString);
+            }
+        } catch (IOException e) {
+		    logger.error("Could not get sequence clusters from URL " + urlString + ". Error: " + e.getMessage());
+        }
 
 	}
 
