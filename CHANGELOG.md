@@ -1,3 +1,32 @@
+BioJava 5.1.0
+=============
+### New feature
+* ABI tracer ported from legacy biojava, #769, thanks @MaxGreil
+
+### Bug fixes
+* Performance improvement for secondary structure calculation, #789
+* Fixed issue #731
+* Improved alt locs docs and some fixes, #778
+* Jmol dep updated to 14.29.17
+* Fixed issue #712
+* Fixed issue #791
+* Fixed issue #797
+* Fixed issue #784
+
+BioJava 5.0.2
+=============
+### Bug fixes
+* Fixed issue #770
+* Upgraded to latest mmtf-java 1.0.8
+
+BioJava 5.0.1
+=============
+### Bug fixes
+* Fixed issue #767
+* Fixed issue #761
+* Pom fixes for mvn site
+* Some logging fixes
+
 BioJava 5.0.0
 =============
 
