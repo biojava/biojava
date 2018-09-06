@@ -112,7 +112,7 @@ public class AsaCalculator {
 	 * @param nThreads
 	 * @param hetAtoms if true HET residues are considered, if false they aren't, equivalent to
 	 * NACCESS' -h option
-	 * @see StructureTools.getAllNonHAtomArray
+	 * @see StructureTools#getAllNonHAtomArray
 	 */
 	public AsaCalculator(Structure structure, double probe, int nSpherePoints, int nThreads, boolean hetAtoms) {
 		this.atoms = StructureTools.getAllNonHAtomArray(structure, hetAtoms);
@@ -320,7 +320,7 @@ public class AsaCalculator {
 	 * Returns list of indices of atoms within probe distance to atom k.
 	 * @param k index of atom for which we want neighbor indices
 	 */
-	private ArrayList<Integer> findNeighborIndices(int k) {
+	private Integer[] findNeighborIndices(int k) {
 		// looking at a typical protein case, number of neighbours are from ~10 to ~50, with an average of ~30
 		// Thus 40 seems to be a good compromise for the starting capacity
 		ArrayList<Integer> neighbor_indices = new ArrayList<Integer>(40);
@@ -340,13 +340,15 @@ public class AsaCalculator {
 
 		}
 
-		return neighbor_indices;
+		Integer[] indicesArray = new Integer[neighbor_indices.size()];
+		indicesArray = neighbor_indices.toArray(indicesArray);
+		return indicesArray;
 	}
 
 	private double calcSingleAsa(int i) {
 		Point3d atom_i = atomCoords[i];
-		ArrayList<Integer> neighbor_indices = findNeighborIndices(i);
-		int n_neighbor = neighbor_indices.size();
+		Integer[] neighbor_indices = findNeighborIndices(i);
+		int n_neighbor = neighbor_indices.length;
 		int j_closest_neighbor = 0;
 		double radius = probe + radii[i];
 
@@ -370,8 +372,8 @@ public class AsaCalculator {
 			}
 
 			for (int j: cycled_indices) {
-				Point3d atom_j = atomCoords[neighbor_indices.get(j)];
-				double r = radii[neighbor_indices.get(j)] + probe;
+				Point3d atom_j = atomCoords[neighbor_indices[j]];
+				double r = radii[neighbor_indices[j]] + probe;
 				double diff_sq = test_point.distanceSquared(atom_j);
 				if (diff_sq < r*r) {
 					j_closest_neighbor = j;
@@ -388,7 +390,7 @@ public class AsaCalculator {
 
 	/**
 	 * Gets the radius for given amino acid and atom
-	 * @param aa
+	 * @param amino
 	 * @param atom
 	 * @return
 	 */
