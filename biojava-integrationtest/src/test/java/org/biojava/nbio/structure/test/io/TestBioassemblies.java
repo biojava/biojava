@@ -145,12 +145,11 @@ public class TestBioassemblies {
 		assertEquals(3, multiModelBioAssemblies.get(0).getPolyChains(0).size() + multiModelBioAssemblies.get(0).getPolyChains(1).size());
 		// 3 chains in flattened structure in bioassembly 1
 		assertEquals(3, flattenedBioAssemblies.get(0).getPolyChains().size());
-		
+
 		// 3 chains divided into 2 models in bioassembly 2
-		assertEquals(3, multiModelBioAssemblies.get(1).getPolyChains(0).size() + multiModelBioAssemblies.get(0).getPolyChains(1).size());
+		assertEquals(3, multiModelBioAssemblies.get(1).getPolyChains(0).size() + multiModelBioAssemblies.get(1).getPolyChains(1).size());
 		// 3 chains in flattened structure in bioassembly 2
 		assertEquals(3, flattenedBioAssemblies.get(1).getPolyChains().size());
-		
 
 		// chain ids and names don't contain underscores in multimodel
 		for (int modelIdx = 0; modelIdx<multiModelBioAssemblies.get(0).nrModels(); modelIdx++) {

@@ -1,3 +1,32 @@
+BioJava 5.1.0
+=============
+### New feature
+* ABI tracer ported from legacy biojava, #769, thanks @MaxGreil
+
+### Bug fixes
+* Performance improvement for secondary structure calculation, #789
+* Fixed issue #731
+* Improved alt locs docs and some fixes, #778
+* Jmol dep updated to 14.29.17
+* Fixed issue #712
+* Fixed issue #791
+* Fixed issue #797
+* Fixed issue #784
+
+BioJava 5.0.2
+=============
+### Bug fixes
+* Fixed issue #770
+* Upgraded to latest mmtf-java 1.0.8
+
+BioJava 5.0.1
+=============
+### Bug fixes
+* Fixed issue #767
+* Fixed issue #761
+* Pom fixes for mvn site
+* Some logging fixes
+
 BioJava 5.0.0
 =============
 
@@ -239,3 +268,98 @@ BioJava 4.2.0 offers many new features, as well several bug-fixes.
 -   provide methods for common distance matrix calculations and framework for user-defined distances
 -   update the forester version to have the correct NJ tree constructor
 -   correct some of the tree evaluator statistics.
+
+BioJava 4.1.0
+=============
+
+release date: June 24th 2015
+
+### New Features:
+
+- New algorithm for multiple structure alignments
+- Improved visualization of structural alignments in Jmol
+- Support for the ECOD protein classification
+- Better mmCIF support: limited write support, better parsing
+
+BioJava 4.0.0
+=============
+
+release date: January 30th 2015
+
+### New Features:
+
+- General
+  - Consistent error logging. SLF4J is used for logging and provides adaptors for all major 
+  logging implementations. (many contributors, including @benjamintboyle and @josemduarte)
+  - Improved handling of exceptions (@dmyersturnbull)
+  - Removed deprecated methods
+  - Expanded the BioJava tutorial (@andreasprlic, @josemduarte, and @sbliven)
+  - Updated dependencies where applicable
+  - Available on Maven Central (@andreasprlic and @heuermh)
+- biojava3-core
+  - Improved Genbank parser, including support for feature records, qualifiers, and nested 
+  locations. (@paolopavan and @jgrzebyta)
+- biojava3-structure
+  - Better support for crystallographic information, including crystallographic operators, 
+  unit cells, and protein-protein interfaces. (@josemduarte)
+  - Better organization of downloaded structure files (set using the PDB_DIR and PDB_CACHE_DIR 
+  environmental variables) (@sbliven)
+  - Better command-line tools for structure alignment (@sbliven)
+  - New algorithm for symmetry detection in biological assemblies (@pwrose)
+  - New algorithm for fast contact calculation, both intra-chain and inter-chain (@josemduarte)
+  - Support for Accessible Surface Area (ASA) calculation through and implementation of 
+  the Shrake & Rupley algorithm, both single-thread and parallel (memory permitting) (@josemduarte)
+  - Support for large structures (memory permitting) and multi-character chain IDs.
+  - Default to mmCIF file format, as recommended by the wwPDB
+
+This version is compatible with Java 6, 7, and 8.
+
+### Upgrading 
+Since we renamed all package names to be consistent across the whole project, 
+there will be import errors when upgrading to this version. These can automatically get resolved 
+by IDEs such as Eclipse or IntelliJ by selecting the Optimize Import menu item.
+
+BioJava 3.1.0
+=============
+
+release date: August 25th 2014
+
+While most development is going towards the upcoming 4.0.0 release, this release provides 
+bug fixes and a few new features:
+
+- CE-CP version 1.4, with additional parameters
+- Update to SCOPe 2.04
+- Improvements in FASTQ parsing
+- Fix bugs in PDB parsing
+- Minor fixes in structure alignments
+
+This version is compatible with Java 6 and 7.
+
+BioJava 3.0.8
+=============
+
+release date: March 25th 2014
+
+New Features:
+
+- New Genbank writer
+- New parser for Karyotype file from UCSC
+- New parser for Gene locations from UCSC
+- New parser for Gene names file from genenames.org
+- New module for Cox regression code for survival analysis
+- New calculation of accessible surface area (ASA)
+- New module for parsing .OBO files (ontologies)
+- Improved representation of SCOP and Berkeley-SCOP classifications
+ 
+BioJava 3.0.7
+=============
+
+release date: September 23rd 2013
+
+New features:
+
+- added a basic genbank parser 
+- fixed a problem when translating codons with N 
+- now can infer bonds in protein structures 
+- added support to parse mmcif records for organism and expression system 
+- many small bug fixes and improvements

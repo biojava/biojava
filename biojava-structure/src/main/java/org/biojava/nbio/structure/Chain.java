@@ -281,7 +281,7 @@ public interface Chain extends Serializable {
 	/**
 	 * Returns the sequence of amino acids as it has been provided in the ATOM records.
 	 * Non-standard residues will be present in the string only if the property
-	 * {@value org.biojava.nbio.structure.io.PDBFileReader.LOAD_CHEM_COMP_PROPERTY} has been set.
+	 * {@value org.biojava.nbio.structure.io.PDBFileReader#LOAD_CHEM_COMP_PROPERTY} has been set.
 	 * @return amino acid sequence as string
 	 * @see #getSeqResSequence()
 	 */

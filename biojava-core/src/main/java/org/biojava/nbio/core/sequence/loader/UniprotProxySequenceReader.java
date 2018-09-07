@@ -76,7 +76,9 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 	private static final String TREMBLID_PATTERN = "[A-NR-Z][0-9]([A-Z][A-Z0-9]{2}[0-9]){1,2}";
 	public static final Pattern UP_AC_PATTERN = Pattern.compile("(" + SPID_PATTERN + "|" + TREMBLID_PATTERN + ")");
 
-	private static String uniprotbaseURL = "http://www.uniprot.org"; //"http://pir.uniprot.org";
+	public static final String DEFAULT_UNIPROT_BASE_URL = "https://www.uniprot.org";
+
+	private static String uniprotbaseURL = DEFAULT_UNIPROT_BASE_URL;
 	private static String uniprotDirectoryCache = null;
 	private String sequence;
 	private CompoundSet<C> compoundSet;

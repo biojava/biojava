@@ -284,8 +284,9 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 
 			} catch (IOException e) {
 
-				logger.error("Could not parse chemical component file {}. Error: {}. "
-						+ "There will be no chemical component info available for {}", filename, e.getMessage(), recordName);
+				logger.warn(
+						"Could not download chemical component file {} for {}. Error: {}. Now trying to use the local chemical component definitions.",
+						filename, recordName, e.getMessage());
 
 			}
 			finally{

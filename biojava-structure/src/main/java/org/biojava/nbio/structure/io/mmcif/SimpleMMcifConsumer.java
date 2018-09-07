@@ -767,7 +767,6 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		// Now make sure all altlocgroups have all the atoms in all the groups
 		StructureTools.cleanUpAltLocs(structure);
 
-
 		// NOTE bonds and charges can only be done at this point that the chain id mapping is properly sorted out
 		if (!params.isHeaderOnly()) {
 			if ( params.shouldCreateAtomBonds()) {

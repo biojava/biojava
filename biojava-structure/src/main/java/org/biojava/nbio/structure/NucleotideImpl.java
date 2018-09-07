@@ -101,13 +101,9 @@ public class NucleotideImpl extends HetatomImpl {
 
 		n.setPDBName(getPDBName());
 
-		// copy the atoms
-		for (Atom atom1 : atoms) {
-			Atom atom = (Atom) atom1.clone();
-			n.addAtom(atom);
-			atom.setGroup(n);
-		}
-
+		//clone atoms and bonds.
+		cloneAtomsAndBonds(n);
+		
 		// copying the alt loc groups if present, otherwise they stay null
 		if (getAltLocs()!=null && !getAltLocs().isEmpty()) {
 			for (Group altLocGroup:this.getAltLocs()) {

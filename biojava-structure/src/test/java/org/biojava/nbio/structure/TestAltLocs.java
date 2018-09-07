@@ -23,13 +23,19 @@ package org.biojava.nbio.structure;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
+import org.biojava.nbio.structure.io.mmcif.MMCIFFileTools;
+import org.biojava.nbio.structure.io.mmcif.SimpleMMcifConsumer;
+import org.biojava.nbio.structure.io.mmcif.SimpleMMcifParser;
 import org.biojava.nbio.structure.io.mmcif.chem.PolymerType;
 import org.biojava.nbio.structure.io.mmcif.chem.ResidueType;
+import org.biojava.nbio.structure.io.mmcif.model.AtomSite;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.biojava.nbio.structure.io.mmcif.model.ChemCompBond;
 import org.junit.Test;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -85,7 +91,7 @@ public class TestAltLocs {
 
 		assertTrue("The group does not have an altLoc ", g.hasAltLoc());
 
-		assertTrue("The nr of altLocs is not 1, but " + g.getAltLocs().size(), g.getAltLocs().size() == 1);
+		assertEquals(1, g.getAltLocs().size());
 
 		assertEquals( g.getPDBName(), "KOR");
 
@@ -93,19 +99,17 @@ public class TestAltLocs {
 
 		assertEquals(altLocG.getPDBName(),"K1R");
 
-		assertEquals(275,groupCount);
+		assertEquals(275, groupCount);
 
 		// citric acid is now in its own chain
 
 		Chain b = s.getChain("B");
-		assertTrue(b.getAtomGroups().size() == 1);
-
+		assertEquals(1, b.getAtomGroups().size());
 
 		ResidueNumber resNum2 = ResidueNumber.fromString("265");
 
 		Group g2 = a.getGroupByPDB(resNum2);
 		assertTrue(g2.hasAltLoc());
-
 
 	}
 
@@ -127,8 +131,7 @@ public class TestAltLocs {
 
 		Atom[] caA = StructureTools.getRepresentativeAtomArray(a);
 
-		assertEquals(caA.length,141);
-
+		assertEquals(141, caA.length);
 
 	}
 
@@ -148,7 +151,6 @@ public class TestAltLocs {
 			ensureAllAtomsSameAltCode(altGroup, g);
 		}
 
-
 	}
 
 	@Test
@@ -165,7 +167,6 @@ public class TestAltLocs {
 		for ( Group altGroup : g.getAltLocs() ) {
 			ensureAllAtomsSameAltCode(altGroup, g);
 		}
-
 
 	}
 
@@ -208,6 +209,10 @@ public class TestAltLocs {
 	@Test
 	public void test1AAC() throws IOException, StructureException{
 
+		AtomCache cache = new AtomCache();
+		cache.setUseMmCif(false);
+		StructureIO.setAtomCache(cache);
+
 		Structure s = StructureIO.getStructure("1AAC");
 
 		Chain a = s.getPolyChainByPDB("A");
@@ -215,8 +220,9 @@ public class TestAltLocs {
 		Group g = a.getGroupByPDB( ResidueNumber.fromString("27"));
 		testCBAtomInMainGroup(g);
 
-		AtomCache cache = new AtomCache();
+		cache = new AtomCache();
 		cache.setUseMmCif(true);
+		StructureIO.setAtomCache(cache);
 
 		Structure s1 = cache.getStructure("1AAC");
 		Chain a1 = s1.getPolyChainByPDB("A");
@@ -224,20 +230,6 @@ public class TestAltLocs {
 		Group g1 = a1.getGroupByPDB( ResidueNumber.fromString("27"));
 
 		testCBAtomInMainGroup(g1);
-
-
-
-		//			int pos = 0;
-		//			for (Group alt: g.getAltLocs()) {
-		//				pos++;
-		//				System.out.println("altLoc: " + pos + " " + alt);
-		//				for (Atom atom : alt.getAtoms()) {
-		//					System.out.print(atom.toPDB());
-		//				}
-		//			}
-
-
-
 
 	}
 
@@ -248,7 +240,7 @@ public class TestAltLocs {
 
 		for (Atom atom : g.getAtoms()) {
 			//System.out.print(atom.toPDB());
-			if ( atom.getName().equals(StructureTools.CA_ATOM_NAME)){
+			if ( atom.getName().equals(StructureTools.CB_ATOM_NAME)){
 
 				cbInMain = true;
 				break;
@@ -316,7 +308,7 @@ public class TestAltLocs {
 			}
 		}
 
-		assertTrue(ca.length == caList.size());
+		assertEquals(ca.length, caList.size());
 
 	}
 
@@ -354,7 +346,7 @@ public class TestAltLocs {
 			for (Group g: c.getAtomGroups()){
 
 				for (Group altLocGroup:g.getAltLocs()) {
-					assertEquals(altLocGroup.size(), g.size());
+					assertEquals(g.size(), altLocGroup.size());
 				}
 			}
 		}
@@ -482,7 +474,7 @@ public class TestAltLocs {
 			}
 		}
 
-		assertTrue(ca.length == caList.size());
+		assertEquals(ca.length, caList.size());
 
 
 	}
@@ -534,7 +526,6 @@ public class TestAltLocs {
 
 					}
 
-
 				}
 				if (! caInMain && g.hasAtom(StructureTools.CA_ATOM_NAME)){
 					// g.hasAtom checks altLocs
@@ -545,7 +536,6 @@ public class TestAltLocs {
 		}
 
 		assertEquals(ca.length, caList.size());
-
 
 	}
 
@@ -592,7 +582,6 @@ public class TestAltLocs {
 
 					}
 
-
 				}
 				if (! caInMain && g.hasAtom(StructureTools.CA_ATOM_NAME)){
 					// g.hasAtom checks altLocs
@@ -604,6 +593,164 @@ public class TestAltLocs {
 
 		assertEquals(ca.length, caList.size());
 
+	}
+
+	@Test
+	public void testMmcifConversionPartialAltlocs() throws IOException {
+		String mmcifData =
+				"data_test\n" +
+						"loop_\n" +
+						"_atom_site.group_PDB \n" +
+						"_atom_site.id \n" +
+						"_atom_site.type_symbol \n" +
+						"_atom_site.label_atom_id \n" +
+						"_atom_site.label_alt_id \n" +
+						"_atom_site.label_comp_id \n" +
+						"_atom_site.label_asym_id \n" +
+						"_atom_site.label_entity_id \n" +
+						"_atom_site.label_seq_id \n" +
+						"_atom_site.pdbx_PDB_ins_code \n" +
+						"_atom_site.Cartn_x \n" +
+						"_atom_site.Cartn_y \n" +
+						"_atom_site.Cartn_z \n" +
+						"_atom_site.occupancy \n" +
+						"_atom_site.B_iso_or_equiv \n" +
+						"_atom_site.pdbx_formal_charge \n" +
+						"_atom_site.auth_seq_id \n" +
+						"_atom_site.auth_comp_id \n" +
+						"_atom_site.auth_asym_id \n" +
+						"_atom_site.auth_atom_id \n" +
+						"_atom_site.pdbx_PDB_model_num \n" +
+						"ATOM   102 N N   . ARG A 1 13 ? 9.889  23.379 13.115 1.00 6.57  ? 102  ARG A N   1\n" +
+						"ATOM   103 C CA  . ARG A 1 13 ? 9.540  23.003 14.482 1.00 7.05  ? 102  ARG A CA  1\n" +
+						"ATOM   104 C C   . ARG A 1 13 ? 10.407 23.758 15.489 1.00 6.88  ? 102  ARG A C   1\n" +
+						"ATOM   105 O O   . ARG A 1 13 ? 9.915  24.196 16.532 1.00 7.69  ? 102  ARG A O   1\n" +
+						"ATOM   106 C CB  . ARG A 1 13 ? 9.706  21.494 14.688 1.00 9.07  ? 102  ARG A CB  1\n" +
+						"ATOM   107 C CG  A ARG A 1 13 ? 8.757  20.644 13.854 0.50 14.39 ? 102  ARG A CG  1\n" +
+						"ATOM   108 C CG  B ARG A 1 13 ? 8.693  20.645 13.938 0.50 13.58 ? 102  ARG A CG  1\n" +
+						"ATOM   109 C CD  A ARG A 1 13 ? 9.109  19.164 13.950 0.50 18.14 ? 102  ARG A CD  1\n" +
+						"ATOM   110 C CD  B ARG A 1 13 ? 8.710  19.216 14.456 0.50 16.34 ? 102  ARG A CD  1\n" +
+						"ATOM   111 N NE  A ARG A 1 13 ? 8.983  18.644 15.310 0.50 20.72 ? 102  ARG A NE  1\n" +
+						"ATOM   112 N NE  B ARG A 1 13 ? 8.315  19.158 15.861 0.50 23.99 ? 102  ARG A NE  1\n" +
+						"ATOM   113 C CZ  A ARG A 1 13 ? 7.826  18.445 15.933 0.50 23.45 ? 102  ARG A CZ  1\n" +
+						"ATOM   114 C CZ  B ARG A 1 13 ? 8.404  18.072 16.622 0.50 24.56 ? 102  ARG A CZ  1\n" +
+						"ATOM   115 N NH1 A ARG A 1 13 ? 6.683  18.718 15.321 0.50 23.60 ? 102  ARG A NH1 1\n" +
+						"ATOM   116 N NH1 B ARG A 1 13 ? 8.881  16.942 16.118 0.50 28.42 ? 102  ARG A NH1 1\n" +
+						"ATOM   117 N NH2 A ARG A 1 13 ? 7.812  17.972 17.172 0.50 24.80 ? 102  ARG A NH2 1\n" +
+						"ATOM   118 N NH2 B ARG A 1 13 ? 8.013  18.115 17.888 0.50 26.52 ? 102  ARG A NH2 1\n";
+
+		SimpleMMcifParser parser = new SimpleMMcifParser();
+		SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
+		parser.addMMcifConsumer(consumer);
+
+		BufferedReader buf = new BufferedReader(new StringReader(mmcifData));
+		parser.parse(buf);
+		buf.close();
+
+		Structure s = consumer.getStructure();
+		Chain c = s.getPolyChains().get(0);
+		assertEquals(1, c.getAtomGroups().size());
+		Group g = c.getAtomGroup(0);
+		assertEquals(11, g.size());
+
+		// there's the main group (. and A) plus the 2 alt loc groups (A and B). The alt locs will contain all the '.' atoms too
+		assertEquals(2, g.getAltLocs().size());
+
+		for (Atom a : g.getAtoms()) {
+			if (a.getName().equals("C") || a.getName().equals("N") || a.getName().equals("O") || a.getName().equals("CA") || a.getName().equals("CB"))
+				assertEquals(' ', a.getAltLoc().charValue());
+			else
+				assertEquals('A', a.getAltLoc().charValue());
+		}
+
+		assertEquals(11, g.getAltLocs().get(0).size());
+		for (Atom a : g.getAltLocs().get(0).getAtoms()) {
+			if (a.getName().equals("C") || a.getName().equals("N") || a.getName().equals("O") || a.getName().equals("CA") || a.getName().equals("CB"))
+				assertEquals(' ', a.getAltLoc().charValue());
+			else
+				assertEquals('A', a.getAltLoc().charValue());
+		}
+
+		assertEquals(11, g.getAltLocs().get(1).size());
+		for (Atom a : g.getAltLocs().get(1).getAtoms()) {
+			if (a.getName().equals("C") || a.getName().equals("N") || a.getName().equals("O") || a.getName().equals("CA") || a.getName().equals("CB"))
+				assertEquals(' ', a.getAltLoc().charValue());
+			else
+				assertEquals('B', a.getAltLoc().charValue());
+		}
+
+		List<AtomSite> atomSites = MMCIFFileTools.convertChainToAtomSites(c, 1, "A", "A");
+		assertEquals(17, atomSites.size());
+
+	}
+
+	@Test
+	public void testMmcifConversionAllAltlocs() throws IOException {
+		String mmcifData =
+				"data_test\n" +
+						"loop_\n" +
+						"_atom_site.group_PDB \n" +
+						"_atom_site.id \n" +
+						"_atom_site.type_symbol \n" +
+						"_atom_site.label_atom_id \n" +
+						"_atom_site.label_alt_id \n" +
+						"_atom_site.label_comp_id \n" +
+						"_atom_site.label_asym_id \n" +
+						"_atom_site.label_entity_id \n" +
+						"_atom_site.label_seq_id \n" +
+						"_atom_site.pdbx_PDB_ins_code \n" +
+						"_atom_site.Cartn_x \n" +
+						"_atom_site.Cartn_y \n" +
+						"_atom_site.Cartn_z \n" +
+						"_atom_site.occupancy \n" +
+						"_atom_site.B_iso_or_equiv \n" +
+						"_atom_site.pdbx_formal_charge \n" +
+						"_atom_site.auth_seq_id \n" +
+						"_atom_site.auth_comp_id \n" +
+						"_atom_site.auth_asym_id \n" +
+						"_atom_site.auth_atom_id \n" +
+						"_atom_site.pdbx_PDB_model_num \n" +
+						"ATOM   204 N N   A PRO A 1 23 ? 15.057 31.425 23.772 0.50 3.09  ? 112  PRO A N   1 \n" +
+						"ATOM   205 N N   B PRO A 1 23 ? 14.762 31.778 23.217 0.50 15.25 ? 112  PRO A N   1 \n" +
+						"ATOM   206 C CA  A PRO A 1 23 ? 16.391 30.930 23.416 0.50 5.82  ? 112  PRO A CA  1 \n" +
+						"ATOM   207 C CA  B PRO A 1 23 ? 16.049 31.406 22.622 0.50 15.44 ? 112  PRO A CA  1 \n" +
+						"ATOM   208 C C   A PRO A 1 23 ? 17.360 30.580 24.546 0.50 6.73  ? 112  PRO A C   1 \n" +
+						"ATOM   209 C C   B PRO A 1 23 ? 16.971 30.922 23.734 0.50 15.04 ? 112  PRO A C   1 \n" +
+						"ATOM   210 O O   A PRO A 1 23 ? 18.566 30.784 24.409 0.50 10.00 ? 112  PRO A O   1 \n" +
+						"ATOM   211 O O   B PRO A 1 23 ? 18.076 31.430 23.925 0.50 14.61 ? 112  PRO A O   1 \n" +
+						"ATOM   212 C CB  A PRO A 1 23 ? 16.931 32.050 22.542 0.50 8.38  ? 112  PRO A CB  1 \n" +
+						"ATOM   213 C CB  B PRO A 1 23 ? 16.519 32.710 21.986 0.50 14.09 ? 112  PRO A CB  1 \n" +
+						"ATOM   214 C CG  A PRO A 1 23 ? 16.424 33.256 23.263 0.50 7.59  ? 112  PRO A CG  1 \n" +
+						"ATOM   215 C CG  B PRO A 1 23 ? 15.960 33.743 22.908 0.50 15.66 ? 112  PRO A CG  1 \n" +
+						"ATOM   216 C CD  A PRO A 1 23 ? 14.980 32.886 23.580 0.50 6.98  ? 112  PRO A CD  1 \n" +
+						"ATOM   217 C CD  B PRO A 1 23 ? 14.558 33.235 23.153 0.50 14.91 ? 112  PRO A CD  1 \n";
+
+		SimpleMMcifParser parser = new SimpleMMcifParser();
+		SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
+		parser.addMMcifConsumer(consumer);
+
+		BufferedReader buf = new BufferedReader(new StringReader(mmcifData));
+		parser.parse(buf);
+		buf.close();
+
+		Structure s = consumer.getStructure();
+		Chain c = s.getPolyChains().get(0);
+		assertEquals(1, c.getAtomGroups().size());
+
+		Group g = c.getAtomGroup(0);
+		assertEquals(7, g.size());
+
+		assertEquals(1, g.getAltLocs().size());
+
+		for (Atom a : g.getAtoms()) {
+			assertEquals('A', a.getAltLoc().charValue());
+		}
+		for (Atom a : g.getAltLocs().get(0).getAtoms()) {
+			assertEquals('B', a.getAltLoc().charValue());
+		}
+
+		List<AtomSite> atomSites = MMCIFFileTools.convertChainToAtomSites(c, 1, "A", "A");
+		assertEquals(14, atomSites.size());
 
 	}
 
