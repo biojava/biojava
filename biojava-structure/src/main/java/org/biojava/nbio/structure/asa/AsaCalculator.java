@@ -323,16 +323,14 @@ public class AsaCalculator {
 	private Integer[] findNeighborIndices(int k) {
 		// looking at a typical protein case, number of neighbours are from ~10 to ~50, with an average of ~30
 		// Thus 40 seems to be a good compromise for the starting capacity
-		ArrayList<Integer> neighbor_indices = new ArrayList<Integer>(40);
+		ArrayList<Integer> neighbor_indices = new ArrayList<>(40);
 
 		double radius = radii[k] + probe + probe;
 
 		for (int i=0;i<atomCoords.length;i++) {
 			if (i==k) continue;
 
-			double dist = 0;
-
-			dist = atomCoords[i].distance(atomCoords[k]);
+			double dist = atomCoords[i].distance(atomCoords[k]);
 
 			if (dist < radius + radii[i]) {
 				neighbor_indices.add(i);
