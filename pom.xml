@@ -176,10 +176,6 @@
 				</plugin>
 				<plugin>
 					<artifactId>maven-jar-plugin</artifactId>
-					<!-- warning: before upgrading to a newer version of this plugin
-					      there are some config changes required.
-					      see https://github.com/biojava/biojava/issues/531
-					      -->
 					<version>3.1.0</version>
 				</plugin>
 				<plugin>
