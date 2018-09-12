@@ -20,8 +20,6 @@
  */
 package org.biojava.nbio.core.sequence.io.embl;
 
-import jdk.nashorn.internal.ir.annotations.Immutable;
-
 /**
  * This class contains the processed data of embl file
  * Primary accession number
@@ -35,7 +33,6 @@ import jdk.nashorn.internal.ir.annotations.Immutable;
  * @author Noor Aldeen Al Mbaidin
  * @since 5.0.0
  */
-@Immutable
 public class EmblId {
 
 
