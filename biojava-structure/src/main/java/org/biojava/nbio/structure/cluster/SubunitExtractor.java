@@ -48,8 +48,8 @@ public class SubunitExtractor {
 
 	/**
 	 * Extract the information of each protein Chain in a Structure and converts
-	 * them into a List of Subunit. The name of the Subunits is set to the
-	 * {@link Chain#getName()}.
+	 * them into a List of Subunit. The name of the Subunits is set to
+	 * {@link Chain#getId()}.
 	 * 
 	 * 
 	 * @param structure
