@@ -48,8 +48,8 @@ public class SubunitExtractor {
 
 	/**
 	 * Extract the information of each protein Chain in a Structure and converts
-	 * them into a List of Subunit. The name of the Subunits is set to the
-	 * {@link Chain#getName()}.
+	 * them into a List of Subunit. The name of the Subunits is set to
+	 * {@link Chain#getId()}.
 	 * 
 	 * 
 	 * @param structure
@@ -75,7 +75,7 @@ public class SubunitExtractor {
 				logger.debug("Chain " + c.getId() + "; CA Atoms: " + ca.length + "; SEQRES: " + c.getSeqResSequence());
 				if (ca.length==0)
 					continue;
-				subunits.add(new Subunit(ca, c.getName(), null, structure));
+				subunits.add(new Subunit(ca, c.getId(), null, structure));
 			}
 		}
 

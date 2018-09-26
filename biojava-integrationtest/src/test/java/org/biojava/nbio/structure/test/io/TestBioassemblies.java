@@ -104,6 +104,41 @@ public class TestBioassemblies {
 		assertEquals(2, multiModelBioAssemblies.get(2).getPolyChains().size());
 		assertEquals(2, flattenedBioAssemblies.get(2).getPolyChains().size());
 
+		// all 3 flattened bioassemblies have operator id 1 in their new chain ids
+		assertEquals("1", flattenedBioAssemblies.get(0).getPolyChains().get(0).getId().split("_")[1]);
+		assertEquals("1", flattenedBioAssemblies.get(1).getPolyChains().get(0).getId().split("_")[1]);
+		assertEquals("1", flattenedBioAssemblies.get(2).getPolyChains().get(0).getId().split("_")[1]);
+
+		StructureIO.setAtomCache(prevAtomCache);
+
+	}
+
+
+	/**
+	 * A test for an entry with cartesian product in assembly operators
+	 * @throws StructureException
+	 * @throws IOException
+	 */
+	@Test
+	public void test1M4X() throws IOException, StructureException {
+
+		AtomCache prevAtomCache = StructureIO.getAtomCache();
+		AtomCache cache = new AtomCache();
+		cache.setUseMmCif(true);
+		StructureIO.setAtomCache(cache);
+
+		Structure flattenedBioAssembly5 = StructureIO.getBiologicalAssembly("1M4X" , 5);
+
+		// checking that we have 1 model only
+		assertEquals(1, flattenedBioAssembly5.nrModels());
+
+		// bioassembly 5 expands to 90 chains (3 chains x 5 operators x 6 operators), the expression is '(1-5)(61-88)'
+		assertEquals(90, flattenedBioAssembly5.getPolyChains().size());
+
+		// the operator ids are composed for this case, e.g. A_5x61
+		assertTrue(flattenedBioAssembly5.getPolyChains().get(0).getId().contains("x"));
+		assertEquals(2, flattenedBioAssembly5.getPolyChains().get(0).getId().split("_").length);
+
 		StructureIO.setAtomCache(prevAtomCache);
 
 	}

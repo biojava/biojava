@@ -423,7 +423,7 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 
 	/**
 	 * Get the type of group (0,1 or 2) depending on whether it is an amino aicd (1), nucleic acid (2) or ligand (0)
-	 * @param currentGroup
+	 * @param polymerType
 	 * @return The type of group. (0,1 or 2) depending on whether it is an amino aicd (1), nucleic acid (2) or ligand (0)
 	 */
 	private int getGroupTypIndicator(PolymerType polymerType) {
