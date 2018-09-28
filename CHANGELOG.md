@@ -1,3 +1,11 @@
+BioJava 5.1.1
+=============
+Note this is the first version of BioJava that will run under 9, 10 or 11 JREs. It is still fully compatible with Java 8.
+
+### Bug fixes
+* Chain identifiers for generated bioassemblies now more explicit, #801
+* Adapted BioJava to run under 9, 10 and 111 JREs, #804 
+
 BioJava 5.1.0
 =============
 ### New feature
