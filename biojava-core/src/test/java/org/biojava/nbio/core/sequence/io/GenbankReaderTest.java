@@ -238,9 +238,6 @@ public class GenbankReaderTest {
 			LinkedHashMap<String, DNASequence> dnaSequences = genbankDNA.process();
 			sequence = dnaSequences.values().iterator().next();
 		}
-		catch (Exception e) {
-			fail(e.getMessage());
-		}
 		finally {
 			try {
 				inputStream.close();
