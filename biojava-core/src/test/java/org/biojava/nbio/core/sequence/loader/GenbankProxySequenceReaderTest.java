@@ -45,7 +45,6 @@ import org.biojava.nbio.core.sequence.features.Qualifier;
  *
  * @author Jacek Grzebyta
  * @author Paolo Pavan
- * @see InfoTask
  */
 @RunWith(Parameterized.class)
 public class GenbankProxySequenceReaderTest {
@@ -77,7 +76,7 @@ public class GenbankProxySequenceReaderTest {
 	public void testFeatures() throws IOException, InterruptedException, CompoundNotFoundException {
 		logger.info("run test for protein: {}", gi);
 		GenbankProxySequenceReader<AminoAcidCompound> genbankReader
-				= new GenbankProxySequenceReader<AminoAcidCompound>(System.getProperty("java.io.tmpdir"),
+				= new GenbankProxySequenceReader<>(System.getProperty("java.io.tmpdir"),
 						this.gi,
 						AminoAcidCompoundSet.getAminoAcidCompoundSet());
 
@@ -93,7 +92,7 @@ public class GenbankProxySequenceReaderTest {
 		genbankReader.getHeaderParser().parseHeader(genbankReader.getHeader(), seq);
 
 		// test description
-		Assert.assertTrue(seq.getDescription() != null);
+		Assert.assertNotNull(seq.getDescription());
 
 		// test accession Id
 		logger.info("accession id: {}", seq.getAccession().getID());
@@ -121,6 +120,9 @@ public class GenbankProxySequenceReaderTest {
 			Assert.assertTrue(!codedBy.isEmpty());
 			logger.info("\t\tcoded_by: {}", codedBy);
 		}
+
+		// genbank has limits on requests per second, we need to give it some time for next test or otherwise we get 429 http error codes - JD 2018-12-14
+		Thread.sleep(500);
 	}
 
 	@Test
@@ -128,7 +130,7 @@ public class GenbankProxySequenceReaderTest {
 		logger.info("create protein sequence test for target {}", gi);
 
 		GenbankProxySequenceReader<AminoAcidCompound> genbankReader
-				= new GenbankProxySequenceReader<AminoAcidCompound>(System.getProperty("java.io.tmpdir"),
+				= new GenbankProxySequenceReader<>(System.getProperty("java.io.tmpdir"),
 						this.gi,
 						AminoAcidCompoundSet.getAminoAcidCompoundSet());
 
@@ -159,6 +161,9 @@ public class GenbankProxySequenceReaderTest {
 		} else {
 			logger.info("target {} has no CDS", gi);
 		}
+
+		// genbank has limits on requests per second, we need to give it some time for next test or otherwise we get 429 http error codes - JD 2018-12-14
+		Thread.sleep(500);
 
 	}
 }
