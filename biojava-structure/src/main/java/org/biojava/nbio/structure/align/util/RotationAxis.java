@@ -576,6 +576,12 @@ public final class RotationAxis {
 	 */
 	public static double getAngle(Matrix rotation) {
 		double c = (rotation.trace()-1)/2.0; //=cos(theta)
+		// c is sometimes slightly out of the [-1,1] range due to numerical instabilities
+		if( -1-1e-8 < c && c < -1 ) c = -1;
+		if( 1+1e-8 > c && c > 1 ) c = 1;
+		if( -1 > c || c > 1 ) {
+			throw new IllegalArgumentException("Input matrix is not a valid rotation matrix.");
+		}
 		return Math.acos(c);
 	}
 
@@ -592,7 +598,7 @@ public final class RotationAxis {
 	 * @param transform 4D transformation matrix. Translation components are ignored.
 	 * @return Angle, from 0 to PI
 	 */
-	public static double rotationAngle(Matrix4d transform) {
+	public static double getAngle(Matrix4d transform) {
 		// Calculate angle
 		double c = (transform.m00 + transform.m11 + transform.m22 - 1)/2.0; //=cos(theta)
 		// c is sometimes slightly out of the [-1,1] range due to numerical instabilities
@@ -603,12 +609,13 @@ public final class RotationAxis {
 		}
 		return Math.acos(c);
 	}
+	
 	/**
 	 * Quickly compute the rotation angle from a rotation matrix.
 	 * @param transform 3D rotation matrix
 	 * @return Angle, from 0 to PI
 	 */
-	public static double rotationAngle(Matrix3d transform) {
+	public static double getAngle(Matrix3d transform) {
 		// Calculate angle
 		double c = (transform.m00 + transform.m11 + transform.m22 - 1)/2.0; //=cos(theta)
 		// c is sometimes slightly out of the [-1,1] range due to numerical instabilities
