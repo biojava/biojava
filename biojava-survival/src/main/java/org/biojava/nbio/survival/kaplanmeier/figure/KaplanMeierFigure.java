@@ -898,14 +898,14 @@ public class KaplanMeierFigure extends JPanel {
 
 			ArrayList<String> titles = new ArrayList<String>();
 			titles.add("Line 1");
-			titles.add("line 2");
+			titles.add("Line 2");
 			kaplanMeierFigure.setSurvivalData(titles, survivalDataHashMap, true);
 
 			//   figureInfo.add("HR=2.1 95% CI(1.8-2.5)");
 			//   figureInfo.add("p-value=.001");
 			kaplanMeierFigure.setFigureLineInfo(figureInfo);
 
-			kaplanMeierFigure.savePNGKMNumRisk("/Users/Scooter/Downloads/test.png");
+			kaplanMeierFigure.savePNGKMNumRisk("test.png");
 
 		} catch (Exception e) {
 			e.printStackTrace();
