@@ -518,6 +518,7 @@ public class SymmetryTools {
 		for (int i = 0; i < order; i++) {
 
 			Structure s = new StructureImpl();
+			s.addModel(new ArrayList<Chain>(1));
 			s.setStructureIdentifier(repeatsId.get(i));
 
 			Block align = symmetry.getMultipleAlignment().getBlock(0);
