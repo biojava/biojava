@@ -233,36 +233,36 @@ public class ABITrace {
             for (int x = 0; x <= traceLength - 2; x++) {
                 if (q == 1) {
                     g.setColor(acolor);
-                    g.drawLine(2 * x, transmute(A[x], imageHeight, scale),
-                            2 * (x + 1), transmute(A[x + 1], imageHeight, scale));
+                    g.drawLine(widthScale * x, transmute(A[x], imageHeight, scale),
+                            widthScale * (x + 1), transmute(A[x + 1], imageHeight, scale));
                 }
                 if (q == 2) {
                     g.setColor(ccolor);
-                    g.drawLine(2 * x, transmute(C[x], imageHeight, scale),
-                            2 * (x + 1), transmute(C[x + 1], imageHeight, scale));
+                    g.drawLine(widthScale * x, transmute(C[x], imageHeight, scale),
+                            widthScale * (x + 1), transmute(C[x + 1], imageHeight, scale));
                 }
                 if (q == 3) {
                     g.setColor(tcolor);
-                    g.drawLine(2 * x, transmute(T[x], imageHeight, scale),
-                            2 * (x + 1), transmute(T[x + 1], imageHeight, scale));
+                    g.drawLine(widthScale * x, transmute(T[x], imageHeight, scale),
+                            widthScale * (x + 1), transmute(T[x + 1], imageHeight, scale));
                 }
                 if (q == 4) {
                     g.setColor(gcolor);
-                    g.drawLine(2 * x, transmute(G[x], imageHeight, scale),
-                            2 * (x + 1), transmute(G[x + 1], imageHeight, scale));
+                    g.drawLine(widthScale * x, transmute(G[x], imageHeight, scale),
+                            widthScale * (x + 1), transmute(G[x + 1], imageHeight, scale));
                 }
                 if (q == 5) {
                     if ((here > bc.length - 1) || (basenum > seq.length - 1)) break;
                     if (bc[here] == x) {
-                        g.drawLine(2 * x, transmute(-2, imageHeight, 1.0),
-                                2 * x, transmute(-7, imageHeight, 1.0));
+                        g.drawLine(widthScale * x, transmute(-2, imageHeight, 1.0),
+                                widthScale * x, transmute(-7, imageHeight, 1.0));
                         if ((basenum + 1) % 10 == 0) //if the basecount is divisible by ten
                         //add a number
                         {
-                            g.drawLine(2 * x, transmute(-20, imageHeight, 1.0),
-                                    2 * x, transmute(-25, imageHeight, 1.0));
+                            g.drawLine(widthScale * x, transmute(-20, imageHeight, 1.0),
+                                    widthScale * x, transmute(-25, imageHeight, 1.0));
                             g.drawString(Integer.toString(basenum + 1),
-                                    2 * x - 3, transmute(-36, imageHeight, 1.0));
+                                    widthScale * x - 3, transmute(-36, imageHeight, 1.0));
                         }
                         switch (seq[basenum]) {
                             case 'A':
@@ -285,7 +285,7 @@ public class ABITrace {
                                 g.setColor(ncolor);
                         }
                         g.drawChars(seq, basenum, 1,
-                                2 * x - 3, transmute(-18, imageHeight, 1.0));
+                                widthScale * x - 3, transmute(-18, imageHeight, 1.0));
                         g.setColor(Color.black);
                         here++;
                         basenum++;
