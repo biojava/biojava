@@ -104,6 +104,8 @@ public class AsaCalculator {
 	private double cons;
 	private List<Contact> contacts;
 
+	private boolean useSpatialHashingForNeighbors;
+
 	/**
 	 * Constructs a new AsaCalculator. Subsequently call {@link #calculateAsas()}
 	 * or {@link #getGroupAsas()} to calculate the ASAs
@@ -121,6 +123,8 @@ public class AsaCalculator {
 		this.atomCoords = Calc.atomsToPoints(atoms);
 		this.probe = probe;
 		this.nThreads = nThreads;
+
+		this.useSpatialHashingForNeighbors = true;
 
 		// initialising the radii by looking them up through AtomRadii
 		radii = new double[atomCoords.length];
@@ -149,6 +153,8 @@ public class AsaCalculator {
 		this.atomCoords = Calc.atomsToPoints(atoms);
 		this.probe = probe;
 		this.nThreads = nThreads;
+
+		this.useSpatialHashingForNeighbors = true;
 
 		for (Atom atom:atoms) {
 			if (atom.getElement()==Element.H)
@@ -189,6 +195,8 @@ public class AsaCalculator {
 		this.atomCoords = atomCoords;
 		this.probe = probe;
 		this.nThreads = nThreads;
+
+		this.useSpatialHashingForNeighbors = true;
 
 		// initialising the radii to the given radius for all atoms
 		radii = new double[atomCoords.length];
@@ -297,6 +305,10 @@ public class AsaCalculator {
 		}
 
 		return asas;
+	}
+
+	public void setUseSpatialHashingForNeighbors(boolean useSpatialHashingForNeighbors) {
+		this.useSpatialHashingForNeighbors = useSpatialHashingForNeighbors;
 	}
 
 	/**
@@ -408,7 +420,12 @@ public class AsaCalculator {
 
 	private double calcSingleAsa(int i) {
 		Point3d atom_i = atomCoords[i];
-		Integer[] neighbor_indices = findNeighborIndicesSpatialHashing(i);
+		Integer[] neighbor_indices;
+		if (useSpatialHashingForNeighbors) {
+			neighbor_indices = findNeighborIndicesSpatialHashing(i);
+		} else {
+			neighbor_indices = findNeighborIndices(i);
+		}
 		int n_neighbor = neighbor_indices.length;
 		int j_closest_neighbor = 0;
 		double radius = probe + radii[i];
