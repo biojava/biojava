@@ -158,4 +158,20 @@ public interface AlignedSequence<S extends Sequence<C>, C extends Compound> exte
 	 */
 	boolean isGap(int alignmentIndex);
 
+	/**
+	 * Returns number of gap positions (gap openings and extensions) in the sequence. This could be determined from the {@link Location}
+	 * information or from gap {@link Compound}s, which may not necessarily result in the same number.
+	 *
+	 * @return number of gap positions in the sequence
+	 */
+	int getNumGapPositions();
+
+	/**
+	 * Returns the coverage, as a fraction between 0 and 1, of this {@link AlignedSequence} with respect to the original sequence.
+	 * This is equivalent to ({@link #getLength()} - {@link #getNumGapPositions()}) / getOriginalSequence().getLength().
+	 *
+	 * @return coverage of the original sequence by the aligned sequence
+	 */
+	double getCoverage();
+
 }

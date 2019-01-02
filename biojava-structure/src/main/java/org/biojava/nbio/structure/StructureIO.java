@@ -114,6 +114,11 @@ public class StructureIO {
 	public static void setAtomCache(AtomCache c){
 		cache = c;
 	}
+	
+	public static AtomCache getAtomCache() {
+		checkInitAtomCache();
+		return cache;
+	}
 
 	public static AtomCache getAtomCache() {
 		return cache;

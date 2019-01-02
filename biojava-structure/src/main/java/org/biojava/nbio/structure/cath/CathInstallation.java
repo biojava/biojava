@@ -636,6 +636,7 @@ public class CathInstallation implements CathDatabase{
 
 	protected void downloadFileFromRemote(URL remoteURL, File localFile) throws IOException{
 //        System.out.println("downloading " + remoteURL + " to: " + localFile);
+		LOGGER.info("Downloading file {} to local file {}", remoteURL, localFile);
 
 		long timeS = System.currentTimeMillis();
 		File tempFile  = File.createTempFile(FileDownloadUtils.getFilePrefix(localFile), "."+ FileDownloadUtils.getFileExtension(localFile));
@@ -665,7 +666,7 @@ public class CathInstallation implements CathDatabase{
 			disp = disp / 1024.0;
 		}
 		long timeE = System.currentTimeMillis();
-		LOGGER.info("Downloaded file {} ({}) to local file {} in {} sec.", remoteURL, String.format("%.1f",disp) + unit, localFile, (timeE - timeS)/1000);
+		LOGGER.info("Downloaded {} in {} sec. to {}", String.format("%.1f",disp) + unit, (timeE - timeS)/1000, localFile);
 	}
 
 	private boolean domainDescriptionFileAvailable(){

@@ -20,26 +20,52 @@
  */
 package org.biojava.nbio.structure.align.util;
 
-import org.biojava.nbio.structure.*;
-import org.biojava.nbio.structure.io.LocalPDBDirectory;
-import org.biojava.nbio.structure.io.LocalPDBDirectory.FetchBehavior;
-import org.biojava.nbio.structure.io.LocalPDBDirectory.ObsoleteBehavior;
-import org.biojava.nbio.structure.io.MMCIFFileReader;
-import org.biojava.nbio.structure.scop.ScopDatabase;
-import org.biojava.nbio.structure.scop.ScopFactory;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.zip.GZIPOutputStream;
 
-import static org.junit.Assert.*;
+import org.biojava.nbio.structure.AtomPositionMap;
+import org.biojava.nbio.structure.Chain;
+import org.biojava.nbio.structure.Group;
+import org.biojava.nbio.structure.ResidueRangeAndLength;
+import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureIO;
+import org.biojava.nbio.structure.StructureIdentifier;
+import org.biojava.nbio.structure.StructureTools;
+import org.biojava.nbio.structure.SubstructureIdentifier;
+import org.biojava.nbio.structure.io.LocalPDBDirectory;
+import org.biojava.nbio.structure.io.LocalPDBDirectory.FetchBehavior;
+import org.biojava.nbio.structure.io.LocalPDBDirectory.ObsoleteBehavior;
+import org.biojava.nbio.structure.io.MMCIFFileReader;
+import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
+import org.biojava.nbio.structure.io.mmcif.DownloadChemCompProvider;
+import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
+import org.biojava.nbio.structure.io.util.FileDownloadUtils;
+import org.biojava.nbio.structure.scop.ScopDatabase;
+import org.biojava.nbio.structure.scop.ScopFactory;
+import org.biojava.nbio.structure.test.util.GlobalsHelper;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -49,22 +75,24 @@ import static org.junit.Assert.*;
  */
 public class AtomCacheTest {
 
+	private static Logger logger = LoggerFactory.getLogger(AtomCacheTest.class);
 	private AtomCache cache;
-	private String previousPDB_DIR;
 
 	@Before
 	public void setUp() {
-		previousPDB_DIR = System.getProperty(UserConfiguration.PDB_DIR, null);
+		GlobalsHelper.pushState();
+		
 		cache = new AtomCache();
 		cache.setObsoleteBehavior(ObsoleteBehavior.FETCH_OBSOLETE);
+		StructureIO.setAtomCache(cache);
+
 		// Use a fixed SCOP version for stability
 		ScopFactory.setScopDatabase(ScopFactory.VERSION_1_75B);
 	}
 
 	@After
 	public void tearDown() {
-		if (previousPDB_DIR != null)
-			System.setProperty(UserConfiguration.PDB_DIR, previousPDB_DIR);
+		GlobalsHelper.restoreState();
 	}
 
 	/**
@@ -323,6 +351,127 @@ public class AtomCacheTest {
 		
 		assertEquals("Wrong SeqNum at first group in reduced",10,(int)chain.getAtomGroup(0).getResidueNumber().getSeqNum());
 
+	}
+	
+	/**
+	 * Test for #703 - Chemical component cache poisoning
+	 * 
+	 * Handle empty CIF files
+	 * @throws IOException
+	 * @throws StructureException
+	 */
+	@Test
+	public void testEmptyChemComp() throws IOException, StructureException {
+		Path tmpCache = Paths.get(System.getProperty("java.io.tmpdir"),"BIOJAVA_TEST_CACHE");
+		logger.info("Testing AtomCache at {}", tmpCache.toString());
+		System.setProperty(UserConfiguration.PDB_DIR, tmpCache.toString());
+		System.setProperty(UserConfiguration.PDB_CACHE_DIR, tmpCache.toString());
+
+		FileDownloadUtils.deleteDirectory(tmpCache);
+		Files.createDirectory(tmpCache);
+		try {
+			cache.setPath(tmpCache.toString());
+			cache.setCachePath(tmpCache.toString());
+			cache.setUseMmCif(true);
+			ChemCompGroupFactory.setChemCompProvider(new DownloadChemCompProvider(tmpCache.toString()));
+
+			// Create an empty chemcomp
+			Path chemCompCif = tmpCache.resolve(Paths.get("chemcomp", "ATP.cif.gz"));
+			Files.createDirectories(chemCompCif.getParent());
+			Files.createFile(chemCompCif);
+			assertTrue(Files.exists(chemCompCif));
+			assertEquals(0, Files.size(chemCompCif));
+			
+			// Copy stub file into place
+			Path testCif = tmpCache.resolve(Paths.get("data", "structures", "divided", "mmCIF", "ab","1abc.cif.gz"));
+			Files.createDirectories(testCif.getParent());
+			URL resource = AtomCacheTest.class.getResource("/atp.cif.gz");
+			File src = new File(resource.getPath());
+			FileDownloadUtils.copy(src, testCif.toFile());
+			
+			// Load structure
+			Structure s = cache.getStructure("1ABC");
+			
+			// Should have re-downloaded the file
+			assertTrue(Files.size(chemCompCif) > LocalPDBDirectory.MIN_PDB_FILE_SIZE);
+			
+			// Structure should have valid ChemComp now
+			assertNotNull(s);
+			
+			Group g = s.getChainByPDB("A").getAtomGroup(0);
+			assertTrue(g.getPDBName().equals("ATP"));
+			
+			// should be unknown
+			ChemComp chem = g.getChemComp();
+			assertNotNull(chem);
+			assertTrue(chem.getAtoms().size() > 0);
+			assertEquals("NON-POLYMER", chem.getType());
+		} finally {
+			FileDownloadUtils.deleteDirectory(tmpCache);
+		}
+	}
+	
+	/**
+	 * Test for #703 - Chemical component cache poisoning
+	 * 
+	 * Handle empty CIF files
+	 * @throws IOException
+	 * @throws StructureException
+	 */
+	@Test
+	public void testEmptyGZChemComp() throws IOException, StructureException {
+		
+		Path tmpCache = Paths.get(System.getProperty("java.io.tmpdir"),"BIOJAVA_TEST_CACHE");
+		logger.info("Testing AtomCache at {}", tmpCache.toString());
+		System.setProperty(UserConfiguration.PDB_DIR, tmpCache.toString());
+		System.setProperty(UserConfiguration.PDB_CACHE_DIR, tmpCache.toString());
+
+		FileDownloadUtils.deleteDirectory(tmpCache);
+		Files.createDirectory(tmpCache);
+		try {
+			cache.setPath(tmpCache.toString());
+			cache.setCachePath(tmpCache.toString());
+			cache.setUseMmCif(true);
+			ChemCompGroupFactory.setChemCompProvider(new DownloadChemCompProvider(tmpCache.toString()));
+
+			
+			// Create an empty chemcomp
+			Path sub = tmpCache.resolve(Paths.get("chemcomp", "ATP.cif.gz"));
+			Files.createDirectories(sub.getParent());
+			try(GZIPOutputStream out = new GZIPOutputStream(new FileOutputStream(sub.toFile()))) {
+				// don't write anything
+				out.flush();
+			}
+			assertTrue(Files.exists(sub));
+			assertTrue(0 < Files.size(sub) && Files.size(sub) < LocalPDBDirectory.MIN_PDB_FILE_SIZE);
+			
+			// Copy stub file into place
+			Path testCif = tmpCache.resolve(Paths.get("data", "structures", "divided", "mmCIF", "ab","1abc.cif.gz"));
+			Files.createDirectories(testCif.getParent());
+			URL resource = AtomCacheTest.class.getResource("/atp.cif.gz");
+			File src = new File(resource.getPath());
+			FileDownloadUtils.copy(src, testCif.toFile());
+			
+			// Load structure
+			Structure s = cache.getStructure("1ABC");
+			
+			// Should have re-downloaded the file
+			assertTrue(Files.size(sub) > LocalPDBDirectory.MIN_PDB_FILE_SIZE);
+			
+			// Structure should have valid ChemComp
+			assertNotNull(s);
+			
+			Group g = s.getChainByPDB("A").getAtomGroup(0);
+			assertTrue(g.getPDBName().equals("ATP"));
+			
+			// should be unknown
+			ChemComp chem = g.getChemComp();
+			assertNotNull(chem);
+			assertTrue(chem.getAtoms().size() > 0);
+			assertEquals("NON-POLYMER", chem.getType());
+		} finally {
+			FileDownloadUtils.deleteDirectory(tmpCache);
+		}
 	}
 	
 }

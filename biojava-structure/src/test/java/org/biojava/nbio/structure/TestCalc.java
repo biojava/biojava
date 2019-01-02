@@ -324,7 +324,7 @@ public class TestCalc {
 		                                0.0,0.0,0.0,1.0});
 		return sample;
 	}
-	
+
 	private static Chain createDummyChain() {
 		Group g = new AminoAcidImpl();
 		Atom a = getAtom("CA", 1, 1, 1);

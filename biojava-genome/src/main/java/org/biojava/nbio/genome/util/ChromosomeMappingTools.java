@@ -417,7 +417,7 @@ public class ChromosomeMappingTools {
         int codingLength = 0;
 
         @SuppressWarnings("unused")
-		int lengthExons = 0;
+        int lengthExons = 0;
         // map forward
         for (int i = 0; i < exonStarts.size(); i++) {
 
@@ -565,7 +565,7 @@ public class ChromosomeMappingTools {
 
             codingLength += (end - start + 1);
         }
-        return codingLength - 3;
+        return codingLength-3 ;
     }
 
     /** 
@@ -791,19 +791,19 @@ public class ChromosomeMappingTools {
                 chromosomePosition.getCdsStart(),
                 chromosomePosition.getCdsEnd());
     }
-    
-	/** 
-	 * Converts the genetic coordinate to the position of the nucleotide on the mRNA sequence for a gene 
+
+	/**
+     * Converts the genetic coordinate to the position of the nucleotide on the mRNA sequence for a gene
 	 * living on the forward DNA strand.
-	 * 
-	 * @param chromPos The genetic coordinate on a chromosome 
-     * @param exonStarts The list holding the genetic coordinates pointing to the start positions of the exons (including UTR regions)  
+	 *
+	 * @param chromPos The genetic coordinate on a chromosome
+     * @param exonStarts The list holding the genetic coordinates pointing to the start positions of the exons (including UTR regions)
      * @param exonEnds The list holding the genetic coordinates pointing to the end positions of the exons (including UTR regions)
      * @param cdsStart The start position of a coding region
      * @param cdsEnd The end position of a coding region
-     * 
+     *
      * @return the position of the nucleotide base on the mRNA sequence corresponding to the input genetic coordinate (base 1)
-	 * 
+	 *
 	 * @author Yana Valasatava
 	 */
     public static int getCDSPosForward(int chromPos, List<Integer> exonStarts, List<Integer> exonEnds,
