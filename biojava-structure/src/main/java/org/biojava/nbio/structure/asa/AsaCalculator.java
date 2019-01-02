@@ -54,8 +54,11 @@ public class AsaCalculator {
 
 	private static final Logger logger = LoggerFactory.getLogger(AsaCalculator.class);
 
-	// Bosco uses as default 960, Shrake and Rupley seem to use in their paper 92 (not sure if this is actually the same parameter)
-	public static final int DEFAULT_N_SPHERE_POINTS = 960;
+	/**
+	 * The default value for number of sphere points to sample.
+	 * See this paper for a nice study on the effect of this parameter: https://f1000research.com/articles/5-189/v1
+	 */
+	public static final int DEFAULT_N_SPHERE_POINTS = 1000;
 	public static final double DEFAULT_PROBE_SIZE = 1.4;
 	public static final int DEFAULT_NTHREADS = 1;
 
@@ -112,10 +115,11 @@ public class AsaCalculator {
 	 * Constructs a new AsaCalculator. Subsequently call {@link #calculateAsas()}
 	 * or {@link #getGroupAsas()} to calculate the ASAs
 	 * Only non-Hydrogen atoms are considered in the calculation.
-	 * @param structure
-	 * @param probe
-	 * @param nSpherePoints
-	 * @param nThreads
+	 * @param structure the structure, all non-H atoms will be used
+	 * @param probe the probe size
+	 * @param nSpherePoints the number of points to be used in generating the spherical
+	 *                         dot-density, the more points the more accurate (and slower) calculation
+	 * @param nThreads the number of parallel threads to use for the calculation
 	 * @param hetAtoms if true HET residues are considered, if false they aren't, equivalent to
 	 * NACCESS' -h option
 	 * @see StructureTools#getAllNonHAtomArray
