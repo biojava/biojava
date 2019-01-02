@@ -104,7 +104,7 @@ public class AsaCalculator {
 	private int nThreads;
 	private Point3d[] spherePoints;
 	private double cons;
-	private List<Contact> contacts;
+	private int[][] neighborIndices;
 
 	private boolean useSpatialHashingForNeighbors;
 
@@ -250,6 +250,12 @@ public class AsaCalculator {
 
 		double[] asas = new double[atomCoords.length];
 
+		if (useSpatialHashingForNeighbors) {
+			neighborIndices = findNeighborIndicesSpatialHashing();
+		} else {
+			neighborIndices = findNeighborIndices();
+		}
+
 		if (nThreads<=1) { // (i.e. it will also be 1 thread if 0 or negative number specified)
 			for (int i=0;i<atomCoords.length;i++) {
 				asas[i] = calcSingleAsa(i);
@@ -333,69 +339,73 @@ public class AsaCalculator {
 	}
 
 	/**
-	 * Returns list of indices of atoms within probe distance to atom k.
-	 * @param k index of atom for which we want neighbor indices
-	 * @return the indices of neighboring atoms
+	 * Returns the 2-dimensional array with neighbor indices for every atom.
+	 * @return 2-dimensional array of size: n_atoms x n_neighbors_per_atom
 	 */
-	Integer[] findNeighborIndices(int k) {
-		// looking at a typical protein case, number of neighbours are from ~10 to ~50, with an average of ~30
-		// Thus 40 seems to be a good compromise for the starting capacity
-		ArrayList<Integer> neighbor_indices = new ArrayList<>(40);
+	int[][] findNeighborIndices() {
 
-		double radius = radii[k] + probe + probe;
+		int[][] nbsIndices = new int[atomCoords.length][];
 
-		for (int i=0;i<atomCoords.length;i++) {
-			if (i==k) continue;
+		for (int k=0; k<atomCoords.length; k++) {
+			double radius = radii[k] + probe + probe;
 
-			double dist = atomCoords[i].distance(atomCoords[k]);
+			List<Integer> thisNbIndices = new ArrayList<>();
 
-			if (dist < radius + radii[i]) {
-				neighbor_indices.add(i);
+			for (int i = 0; i < atomCoords.length; i++) {
+				if (i == k) continue;
+
+				double dist = atomCoords[i].distance(atomCoords[k]);
+
+				if (dist < radius + radii[i]) {
+					thisNbIndices.add(i);
+				}
 			}
 
+			int[] indicesArray = new int[thisNbIndices.size()];
+			for (int i=0;i<thisNbIndices.size();i++) indicesArray[i] = thisNbIndices.get(i);
+			nbsIndices[k] = indicesArray;
 		}
-
-		Integer[] indicesArray = new Integer[neighbor_indices.size()];
-		indicesArray = neighbor_indices.toArray(indicesArray);
-		return indicesArray;
+		return nbsIndices;
 	}
 
 	/**
-	 * Returns list of indices of atoms within probe distance to atom k,
+	 * Returns the 2-dimensional array with neighbor indices for every atom,
 	 * using spatial hashing to avoid all to all distance calculation.
-	 * @param k index of atom for which we want neighbor indices
-	 * @return the indices of neighboring atoms
+	 * @return 2-dimensional array of size: n_atoms x n_neighbors_per_atom
 	 */
-	Integer[] findNeighborIndicesSpatialHashing(int k) {
+	int[][] findNeighborIndicesSpatialHashing() {
 
-		if (contacts == null) {
-			contacts = calcContacts();
+		int[][] nbsIndices = new int[atomCoords.length][];
+
+		List<Contact> contactList = calcContacts();
+
+		for (int k=0; k<atomCoords.length; k++) {
+			double radius = radii[k] + probe + probe;
+
+			List<Integer> thisNbIndices = new ArrayList<>();
+
+			// TODO make this the outer loop
+			for (Contact contact : contactList) {
+				double dist = contact.getDistance();
+				int i;
+				if (contact.getJ() == k) {
+					i = contact.getI();
+				} else if (contact.getI() == k) {
+					i = contact.getJ();
+				} else {
+					continue;
+				}
+				if (dist < radius + radii[i]) {
+					thisNbIndices.add(i);
+				}
+			}
+
+			int[] indicesArray = new int[thisNbIndices.size()];
+			for (int i=0;i<thisNbIndices.size();i++) indicesArray[i] = thisNbIndices.get(i);
+			nbsIndices[k] = indicesArray;
 		}
 
-		// looking at a typical protein case, number of neighbours are from ~10 to ~50, with an average of ~30
-		// Thus 40 seems to be a good compromise for the starting capacity
-		ArrayList<Integer> neighbor_indices = new ArrayList<>(40);
-
-		double radius = radii[k] + probe + probe;
-
-		for (Contact contact : contacts) {
-			double dist = contact.getDistance();
-			int i;
-			if (contact.getJ() == k) {
-				i = contact.getI();
-			} else if (contact.getI() == k) {
-				i = contact.getJ();
-			} else {
-				continue;
-			}
-			if (dist < radius + radii[i]) {
-				neighbor_indices.add(i);
-			}
-		}
-
-		Integer[] indicesArray = new Integer[neighbor_indices.size()];
-		indicesArray = neighbor_indices.toArray(indicesArray);
-		return indicesArray;
+		return nbsIndices;
 	}
 
 	Point3d[] getAtomCoords() {
@@ -405,6 +415,7 @@ public class AsaCalculator {
 	private List<Contact> calcContacts() {
 		double maxRadius = maxValue(radii);
 		double cutoff = maxRadius + maxRadius + probe + probe;
+		logger.debug("Max radius is {}, cutoff is {}", maxRadius, cutoff);
 		Grid grid = new Grid(cutoff);
 		grid.addCoords(atomCoords);
 		return grid.getIndicesContacts();
@@ -422,13 +433,9 @@ public class AsaCalculator {
 
 	private double calcSingleAsa(int i) {
 		Point3d atom_i = atomCoords[i];
-		Integer[] neighbor_indices;
-		if (useSpatialHashingForNeighbors) {
-			neighbor_indices = findNeighborIndicesSpatialHashing(i);
-		} else {
-			neighbor_indices = findNeighborIndices(i);
-		}
-		int n_neighbor = neighbor_indices.length;
+
+		int n_neighbor = neighborIndices[i].length;
+		int[] neighbor_indices = neighborIndices[i];
 		int j_closest_neighbor = 0;
 		double radius = probe + radii[i];
 
@@ -579,7 +586,7 @@ public class AsaCalculator {
 	 *
 	 * If atom is neither part of a nucleotide nor of a standard aminoacid,
 	 * the default vdw radius for the element is returned. If atom is of
-	 * unknown type (element) the vdw radius of {@link #Element().N} is returned
+	 * unknown type (element) the vdw radius of {@link Element().N} is returned
 	 *
 	 * @param atom
 	 * @return

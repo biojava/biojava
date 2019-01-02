@@ -91,19 +91,21 @@ public class TestAsaCalc {
 				AsaCalculator.DEFAULT_PROBE_SIZE,
 				1000, 1, false);
 
+		int[][] allNbsSh = asaCalc.findNeighborIndicesSpatialHashing();
+
+		int[][] allNbs = asaCalc.findNeighborIndices();
+
 		for (int indexToTest =0; indexToTest < asaCalc.getAtomCoords().length; indexToTest++) {
 			//int indexToTest = 198;
-
-			Integer[] nbsSh = asaCalc.findNeighborIndicesSpatialHashing(indexToTest);
-
-			Integer[] nbs = asaCalc.findNeighborIndices(indexToTest);
+			int[] nbsSh = allNbsSh[indexToTest];
+			int[] nbs = allNbs[indexToTest];
 
 			int countNotInNbs = 0;
 			List<Integer> listOfMatchingIndices = new ArrayList<>();
 			for (int i = 0; i < nbsSh.length; i++) {
 				boolean contained = false;
 				for (int j = 0; j < nbs.length; j++) {
-					if (nbs[j].equals(nbsSh[i])) {
+					if (nbs[j] == nbsSh[i]) {
 						listOfMatchingIndices.add(j);
 						contained = true;
 						break;
@@ -142,7 +144,7 @@ public class TestAsaCalc {
 		Structure structure = StructureIO.getStructure("4F5X");
 		Chain c = structure.getPolyChainByPDB("W");
 		Atom[] atoms = StructureTools.getAllAtomArray(c);
-		System.out.printf("Total of %d atoms\n", atoms.length);
+		System.out.printf("Total of %d atoms. n(n-1)/2= %d \n", atoms.length, atoms.length*(atoms.length-1)/2);
 
 		int nThreads = 1;
 		// 1. WITH SPATIAL HASHING
@@ -164,6 +166,8 @@ public class TestAsaCalc {
 		double withSH = totAtoms;
 		System.out.printf("Total ASA is %6.2f \n", totAtoms);
 
+		//System.out.println("Distances calculated: " + asaCalc.distancesCalculated);
+
 
 		// 2. WITHOUT SPATIAL HASHING
 		start = System.currentTimeMillis();
@@ -182,6 +186,8 @@ public class TestAsaCalc {
 		}
 		double withoutSH = totAtoms;
 		System.out.printf("Total ASA is %6.2f \n", totAtoms);
+
+		//System.out.println("Distances calculated: " + asaCalc.distancesCalculated);
 
 		assertEquals(withoutSH, withSH, 0.000001);
 
