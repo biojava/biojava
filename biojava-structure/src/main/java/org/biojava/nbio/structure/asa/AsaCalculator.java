@@ -134,10 +134,7 @@ public class AsaCalculator {
 			radii[i] = getRadius(atoms[i]);
 		}
 
-		// initialising the sphere points to sample
-		spherePoints = generateSpherePoints(nSpherePoints);
-
-		cons = 4.0 * Math.PI / nSpherePoints;
+		initSpherePoints(nSpherePoints);
 	}
 
 	/**
@@ -169,10 +166,7 @@ public class AsaCalculator {
 			radii[i] = getRadius(atoms[i]);
 		}
 
-		// initialising the sphere points to sample
-		spherePoints = generateSpherePoints(nSpherePoints);
-
-		cons = 4.0 * Math.PI / nSpherePoints;
+		initSpherePoints(nSpherePoints);
 	}
 
 	/**
@@ -205,6 +199,13 @@ public class AsaCalculator {
 		for (int i=0;i<atomCoords.length;i++) {
 			radii[i] = radius;
 		}
+
+		initSpherePoints(nSpherePoints);
+	}
+
+	private void initSpherePoints(int nSpherePoints) {
+
+		logger.debug("Will use {} sphere points", nSpherePoints);
 
 		// initialising the sphere points to sample
 		spherePoints = generateSpherePoints(nSpherePoints);
@@ -250,6 +251,7 @@ public class AsaCalculator {
 
 		double[] asas = new double[atomCoords.length];
 
+		long start = System.currentTimeMillis();
 		if (useSpatialHashingForNeighbors) {
 			logger.debug("Will use spatial hashing to find neighbors");
 			neighborIndices = findNeighborIndicesSpatialHashing();
@@ -257,7 +259,10 @@ public class AsaCalculator {
 			logger.debug("Will not use spatial hashing to find neighbors");
 			neighborIndices = findNeighborIndices();
 		}
+		long end = System.currentTimeMillis();
+		logger.debug("Took {} s to find neighbors", (end-start)/1000.0);
 
+		start = System.currentTimeMillis();
 		if (nThreads<=1) { // (i.e. it will also be 1 thread if 0 or negative number specified)
 			logger.debug("Will use 1 thread for ASA calculation");
 			for (int i=0;i<atomCoords.length;i++) {
@@ -315,6 +320,8 @@ public class AsaCalculator {
 			while (!threadPool.isTerminated());
 
 		}
+		end = System.currentTimeMillis();
+		logger.debug("Took {} s to calculate all {} atoms ASAs (excluding neighbors calculation)", (end-start)/1000.0, atomCoords.length);
 
 		return asas;
 	}
