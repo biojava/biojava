@@ -544,10 +544,16 @@ public class StructureTools {
 
 					EntityInfo oldEntityInfo = oldChain.getEntityInfo();
 
-					EntityInfo newEntityInfo = s.getEntityById(oldEntityInfo.getMolId());
-					if( newEntityInfo == null ) {
-						newEntityInfo = new EntityInfo(oldEntityInfo);
+					EntityInfo newEntityInfo;
+					if(oldEntityInfo == null) {
+						newEntityInfo = new EntityInfo();
 						s.addEntityInfo(newEntityInfo);
+					} else {
+						newEntityInfo = s.getEntityById(oldEntityInfo.getMolId());
+						if( newEntityInfo == null ) {
+							newEntityInfo = new EntityInfo(oldEntityInfo);
+							s.addEntityInfo(newEntityInfo);
+						}
 					}
 					newEntityInfo.addChain(chain);
 					chain.setEntityInfo(newEntityInfo);
