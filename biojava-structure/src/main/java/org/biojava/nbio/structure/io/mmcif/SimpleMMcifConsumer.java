@@ -473,10 +473,10 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		}
 		// ANTHONY BRADLEY ADDED THIS -> WE ONLY WAN'T TO CHECK FOR ALT LOCS WHEN IT's NOT THE FIRST GROUP IN CHAIN
 		else{
-			// check if residue number is the same ...
-			// insertion code is part of residue number
+		// check if residue number is the same ...
+		// insertion code is part of residue number
 			if ( ! residueNumber.equals(currentGroup.getResidueNumber())) {
-				//System.out.println("end of residue: "+current_group.getPDBCode()+" "+residueNrInt);
+			//System.out.println("end of residue: "+current_group.getPDBCode()+" "+residueNrInt);
 				currentChain.addGroup(currentGroup);
 				currentGroup.trimToSize();
 				currentGroup = getNewGroup(recordName,aminoCode1,seq_id,groupCode3);
@@ -485,14 +485,14 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				currentGroup.setHetAtomInFile(isHetAtomInFile);
 
 
-			} else {
-				// same residueNumber, but altLocs...
-				// test altLoc
+		} else {
+			// same residueNumber, but altLocs...
+			// test altLoc
 
-				if ( ! altLoc.equals(' ') && ( ! altLoc.equals('.'))) {
+			if ( ! altLoc.equals(' ') && ( ! altLoc.equals('.'))) {
 					logger.debug("found altLoc! " + altLoc + " " + currentGroup + " " + altGroup);
-					altGroup = getCorrectAltLocGroup( altLoc,recordName,aminoCode1,groupCode3, seq_id);
-					if (altGroup.getChain()==null) {
+				altGroup = getCorrectAltLocGroup( altLoc,recordName,aminoCode1,groupCode3, seq_id);
+				if (altGroup.getChain()==null) {
 						altGroup.setChain(currentChain);
 					}
 				}
@@ -527,7 +527,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 
 		String atomName = a.getName();
-		// make sure that main group has all atoms 
+		// make sure that main group has all atoms
 		// GitHub issue: #76
 		if ( ! currentGroup.hasAtom(atomName)) {
 			// Unless it's microheterogenity https://github.com/rcsb/codec-devel/issues/81
@@ -729,7 +729,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 			// we'll only add seqres chains that are polymeric or unknown
 			if (type==null || type==EntityType.POLYMER ) {
-				seqResChains.add(seqres);	
+			seqResChains.add(seqres);
 			}
 
 			logger.debug(" seqres: " + asym.getId() + " " + seqres + "<") ;
@@ -1635,7 +1635,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 			if (!xtalCell.isCellReasonable()) {
 				// If the entry describes a structure determined by a technique other than X-ray crystallography,
-				// cell is (sometimes!) a = b = c = 1.0, alpha = beta = gamma = 90 degrees
+			    // cell is (sometimes!) a = b = c = 1.0, alpha = beta = gamma = 90 degrees
 				// if so we don't add and CrystalCell will be null
 				logger.debug("The crystal cell read from file does not have reasonable dimensions (at least one dimension is below {}), discarding it.",
 						CrystalCell.MIN_VALID_CELL_SIZE);
@@ -1744,7 +1744,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			r.setDatabase(structRef.getDb_name());
 			r.setDbIdCode(structRef.getDb_code());
 		}
-
+		
 		int seqbegin;
 		int seqend;
 		try{
@@ -2099,68 +2099,68 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		if (sites == null) sites = new ArrayList<Site>();
 
 		for (StructSiteGen siteGen : structSiteGens) {
-			// For each StructSiteGen, find the residues involved, if they exist then
-			String site_id = siteGen.getSite_id(); // multiple could be in same site.
-			if (site_id == null) site_id = "";
-			String comp_id = siteGen.getLabel_comp_id();  // PDBName
+				// For each StructSiteGen, find the residues involved, if they exist then
+				String site_id = siteGen.getSite_id(); // multiple could be in same site.
+				if (site_id == null) site_id = "";
+				String comp_id = siteGen.getLabel_comp_id();  // PDBName
 
-			// Assumption: the author chain ID and residue number for the site is consistent with the original
-			// author chain id and residue numbers.
+				// Assumption: the author chain ID and residue number for the site is consistent with the original
+				// author chain id and residue numbers.
 
 			String asymId = siteGen.getLabel_asym_id(); // chain name
 			String authId = siteGen.getAuth_asym_id(); // chain Id
-			String auth_seq_id = siteGen.getAuth_seq_id(); // Res num
+				String auth_seq_id = siteGen.getAuth_seq_id(); // Res num
 
-			String insCode = siteGen.getPdbx_auth_ins_code();
-			if ( insCode != null && insCode.equals("?"))
-				insCode = null;
+				String insCode = siteGen.getPdbx_auth_ins_code();
+				if ( insCode != null && insCode.equals("?"))
+					insCode = null;
 
-			// Look for asymID = chainID and seqID = seq_ID.  Check that comp_id matches the resname.
-			Group g = null;
-			try {
+				// Look for asymID = chainID and seqID = seq_ID.  Check that comp_id matches the resname.
+				Group g = null;
+				try {
 				Chain chain = structure.getChain(asymId);
 
-				if (null != chain) {
-					try {
-						Character insChar = null;
-						if (null != insCode && insCode.length() > 0) insChar = insCode.charAt(0);
+					if (null != chain) {
+						try {
+							Character insChar = null;
+							if (null != insCode && insCode.length() > 0) insChar = insCode.charAt(0);
 						g = chain.getGroupByPDB(new ResidueNumber(null, Integer.parseInt(auth_seq_id), insChar));
-					} catch (NumberFormatException e) {
+						} catch (NumberFormatException e) {
 						logger.warn("Could not lookup residue : " + authId + auth_seq_id);
+						}
 					}
-				}
-			} catch (StructureException e) {
-				logger.warn("Problem finding residue in site entry " + siteGen.getSite_id() + " - " + e.getMessage(), e.getMessage());
-			}
-
-			if (g != null) {
-				// 2. find the site_id, if not existing, create anew.
-				Site site = null;
-				for (Site asite: sites) {
-					if (site_id.equals(asite.getSiteID())) site = asite;
+				} catch (StructureException e) {
+					logger.warn("Problem finding residue in site entry " + siteGen.getSite_id() + " - " + e.getMessage(), e.getMessage());
 				}
 
-				boolean addSite = false;
+				if (g != null) {
+					// 2. find the site_id, if not existing, create anew.
+					Site site = null;
+					for (Site asite: sites) {
+						if (site_id.equals(asite.getSiteID())) site = asite;
+					}
 
-				// 3. add this residue to the site.
-				if (site == null) {
-					addSite = true;
-					site = new Site();
-					site.setSiteID(site_id);
-				}
+					boolean addSite = false;
 
-				List<Group> groups = site.getGroups();
-				if (groups == null) groups = new ArrayList<Group>();
+					// 3. add this residue to the site.
+					if (site == null) {
+						addSite = true;
+						site = new Site();
+						site.setSiteID(site_id);
+					}
 
-				// Check the self-consistency of the residue reference from auth_seq_id and chain_id
-				if (!comp_id.equals(g.getPDBName())) {
+					List<Group> groups = site.getGroups();
+					if (groups == null) groups = new ArrayList<Group>();
+
+					// Check the self-consistency of the residue reference from auth_seq_id and chain_id
+					if (!comp_id.equals(g.getPDBName())) {
 					logger.warn("comp_id doesn't match the residue at " + authId + " " + auth_seq_id + " - skipping");
-				} else {
-					groups.add(g);
-					site.setGroups(groups);
+					} else {
+						groups.add(g);
+						site.setGroups(groups);
+					}
+					if (addSite) sites.add(site);
 				}
-				if (addSite) sites.add(site);
-			}
 		}
 		structure.setSites(sites);
 	}

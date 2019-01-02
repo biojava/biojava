@@ -135,13 +135,13 @@ public class TestQuaternaryStructureProviders {
 
 
 		assertTrue(pMap.keySet().size()<= mMap.keySet().size());
-		
+
 		assertEquals(mmSize, mMap.get(bioMolecule).getMacromolecularSize());
 
 
 		for ( int k : pMap.keySet()) {
 			assertTrue(mMap.containsKey(k));
-			
+
 			BioAssemblyInfo pBioAssemb = pMap.get(k);
 			BioAssemblyInfo mBioAssemb = mMap.get(k);
 

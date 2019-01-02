@@ -211,7 +211,7 @@ public class SimpleMMcifParser implements MMcifParser {
 		Set<String> loopWarnings = new HashSet<String>(); // used only to reduce logging statements
 
 		String category = null;
-		
+
 		boolean foundHeader = false;
 
 		while ( (line = buf.readLine ()) != null ){
@@ -647,13 +647,13 @@ public class SimpleMMcifParser implements MMcifParser {
 
 			triggerNewDatabasePDBrev(dbrev);
 
-		} else if ( category.equals("_database_PDB_rev_record")) {
+		} else if ( category.equals("_database_PDB_rev_record")){
 			DatabasePdbrevRecord dbrev = (DatabasePdbrevRecord) buildObject(
 					DatabasePdbrevRecord.class.getName(),
 					loopFields, lineData, loopWarnings);
 
 			triggerNewDatabasePDBrevRecord(dbrev);
-			
+
     // MMCIF version 5 dates  
 		} else if ( category.equals("_pdbx_audit_revision_history")) {
 			PdbxAuditRevisionHistory history = (PdbxAuditRevisionHistory) buildObject(
@@ -670,7 +670,7 @@ public class SimpleMMcifParser implements MMcifParser {
 
 			triggerNewPdbxDatabaseStatus(status);
 
-		}else if (  category.equals("_database_PDB_remark")) {
+		}else if (  category.equals("_database_PDB_remark")){
 			DatabasePDBremark remark = (DatabasePDBremark) buildObject(
 					DatabasePDBremark.class.getName(),
 					loopFields, lineData, loopWarnings);
@@ -1068,7 +1068,7 @@ public class SimpleMMcifParser implements MMcifParser {
 			c.newEntity(entity);
 		}
 	}
-	
+
 	public void triggerNewEntityPoly(EntityPoly entityPoly) {
 		for(MMcifConsumer c : consumers){
 			c.newEntityPoly(entityPoly);

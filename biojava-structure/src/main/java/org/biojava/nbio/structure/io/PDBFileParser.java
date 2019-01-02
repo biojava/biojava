@@ -151,7 +151,7 @@ public class PDBFileParser  {
 	private Chain         currentChain;
 	private Group         currentGroup;
 
- 	private List<Chain>   seqResChains; // contains all the chains for the SEQRES records
+	private List<Chain>   seqResChains; // contains all the chains for the SEQRES records
 	//we're going to work on the assumption that the files are current -
 	//if the pdb_HEADER_Handler detects a legacy format, this will be changed to true.
 	//if true then lines will be truncated at 72 characters in certain cases
@@ -159,7 +159,7 @@ public class PDBFileParser  {
 	private boolean isLegacyFormat = false;
 
 	private boolean blankChainIdsPresent = false;
-	
+
 	// for re-creating the biological assembly
 	private PDBBioAssemblyParser bioAssemblyParser = null;
 
@@ -186,9 +186,9 @@ public class PDBFileParser  {
 	private Map<String, List<ResidueNumber>> siteToResidueMap = new LinkedHashMap<String, List<ResidueNumber>>();
 
 	private List<SSBondImpl> ssbonds = new ArrayList<>();
-	
-    // for storing LINK until we have all the atoms parsed
-    private List<LinkRecord> linkRecords;
+
+	// for storing LINK until we have all the atoms parsed
+	private List<LinkRecord> linkRecords;
 
 	private Matrix4d currentNcsOp;
 	private List<Matrix4d> ncsOperators;
@@ -253,7 +253,7 @@ public class PDBFileParser  {
 
 
 	private FileParsingParameters params;
-	
+
 	private boolean startOfMolecule;
 	private boolean startOfModel;
 
@@ -261,7 +261,7 @@ public class PDBFileParser  {
 		params = new FileParsingParameters();
 
 		allModels = new ArrayList<>();
-		structure     = null;
+		structure     = null           ;
 		currentModel  = null;
 		currentChain  = null;
 		currentGroup  = null;
@@ -285,14 +285,14 @@ public class PDBFileParser  {
 		atomCount = 0;
 		atomOverflow = false;
 		parseCAonly = false;
-		
+
 		// this SHOULD not be done
 		// DONOT:setFileParsingParameters(params);
 		// set the correct max values for parsing...
 		loadMaxAtoms = params.getMaxAtoms();
 		atomCAThreshold = params.getAtomCaThreshold();
-		
-        linkRecords = new ArrayList<LinkRecord>();
+
+		linkRecords = new ArrayList<LinkRecord>();
 
 		blankChainIdsPresent = false;
 		
@@ -675,7 +675,7 @@ public class PDBFileParser  {
 		// keep the first as latest modified date and the last as release date
 		Date modDate = pdbHeader.getModDate();
 
-		if ( modDate == null || modDate.equals(new Date(0)) ) {
+		if ( modDate==null || modDate.equals(new Date(0)) ) {
 			
 			// modified date is still uninitialized
 			String modificationDate = line.substring (13, 22).trim() ;
@@ -1027,7 +1027,7 @@ public class PDBFileParser  {
 				current_compound = new EntityInfo();
 
 				current_compound.setMolId(i);
-				
+
 				// we will set polymer for all defined compounds in PDB file (non-polymer compounds are not defined in header) - JD 2016-03-25
 				current_compound.setType(EntityType.POLYMER);
 
@@ -1547,7 +1547,7 @@ public class PDBFileParser  {
 	 *
 	 * </pre>
 	 * Note that we ignore operators with iGiven==1
-	 * 
+	 *
 	 * @param line
 	 */
 	private void pdb_MTRIXn_Handler(String line) {
@@ -1860,7 +1860,7 @@ public class PDBFileParser  {
 						+ "from Chemical Component Dictionary information", fullname.trim(), pdbnumber);
 			} else {
 			
-				try {
+			try {
 					element = Element.valueOfIgnoreCase(elementSymbol);
 					guessElement = false;
 				}  catch (IllegalArgumentException e){
@@ -1886,9 +1886,9 @@ public class PDBFileParser  {
 				if (elementSymbol == null) {
 					logger.info("Atom name {} was not found in the Chemical Component Dictionary information of {}. "
 							+ "Assigning generic element R to it", fullname.trim(), currentGroup.getPDBName());
-				} else {
-					try {
-						element = Element.valueOfIgnoreCase(elementSymbol);
+			} else {
+			try {
+				element = Element.valueOfIgnoreCase(elementSymbol);
 					} catch (IllegalArgumentException e) {
 						// this can still happen for cases like UNK
 						logger.info("Element symbol {} found in chemical component dictionary for Atom {} {} could not be recognised as a known element. "
@@ -1922,7 +1922,7 @@ public class PDBFileParser  {
 
 
 
-	}
+			}
 
 
 	private Group getCorrectAltLocGroup( Character altLoc,
@@ -2099,7 +2099,7 @@ public class PDBFileParser  {
 	private void pdb_MODEL_Handler(String line) {
 
 		if (params.isHeaderOnly()) return;
-		
+
 		// new model: we start a new molecule
 		startOfMolecule = true;
 		startOfModel = true;
@@ -2568,7 +2568,7 @@ public class PDBFileParser  {
 	 */
 	public  Structure parsePDBFile(BufferedReader buf)
 			throws IOException
-	{
+			{
 		// set the correct max values for parsing...
 		loadMaxAtoms = params.getMaxAtoms();
 		atomCAThreshold = params.getAtomCaThreshold();
@@ -2607,7 +2607,7 @@ public class PDBFileParser  {
 		atomOverflow = false;
 		linkRecords = new ArrayList<LinkRecord>();
 		siteToResidueMap.clear();
-		
+
 		blankChainIdsPresent = false;
 
 		parseCAonly = params.isParseCAOnly();
@@ -2689,7 +2689,7 @@ public class PDBFileParser  {
 				}
 			} catch (StringIndexOutOfBoundsException | NullPointerException ex) {
 				logger.info("Unable to parse [" + line + "]");
-			} 
+			}
 		}
 
 		makeCompounds(compndLines, sourceLines);
@@ -2712,7 +2712,7 @@ public class PDBFileParser  {
 
 		return structure;
 
-	}
+			}
 
 
 	/**
@@ -2767,13 +2767,13 @@ public class PDBFileParser  {
 	private void formBonds() {
 
 		BondMaker maker = new BondMaker(structure, params);
-		
+
 		// LINK records should be preserved, they are the way that
 		// inter-residue bonds are created for ligands such as trisaccharides, unusual polymers.
         // The analogy in mmCIF is the _struct_conn record.
 		for (LinkRecord linkRecord : linkRecords) {
-            maker.formLinkRecordBond(linkRecord);
-        }
+			maker.formLinkRecordBond(linkRecord);
+		}
 
 		maker.formDisulfideBonds(ssbonds);
 
@@ -2807,7 +2807,7 @@ public class PDBFileParser  {
 
 		
 		// header data
-		
+
 		Date modDate = pdbHeader.getModDate();
 		if ( modDate.equals(new Date(0)) ) {
 			// modification date = deposition date
@@ -2819,7 +2819,7 @@ public class PDBFileParser  {
 			}
 
 		}
-		
+
 		structure.setPDBHeader(pdbHeader);
 		structure.setCrystallographicInfo(crystallographicInfo);
 
@@ -2828,7 +2828,7 @@ public class PDBFileParser  {
 			buildjournalArticle();
 			pdbHeader.setJournalArticle(journalArticle);
 		}
-		
+
 		structure.setDBRefs(dbrefs);
 
 		// Only align if requested (default) and not when headerOnly mode with no Atoms.
@@ -2844,7 +2844,7 @@ public class PDBFileParser  {
 		}
 
 
-		
+
 		//associate the temporary Groups in the siteMap to the ones
 		if (!params.isHeaderOnly()) {
 			// Only can link SITES if Atom Groups were parsed.
@@ -3175,10 +3175,10 @@ public class PDBFileParser  {
 		if (!entities.isEmpty()) {
 			// if the file contained COMPOUND records then we can assign entities to the poly chains
 			for (EntityInfo comp : entities){
-				List<String> chainIds = compoundMolIds2chainIds.get(comp.getMolId());
-				if ( chainIds == null)
-					continue;
-				for ( String chainId : chainIds) {
+			List<String> chainIds = compoundMolIds2chainIds.get(comp.getMolId());
+			if ( chainIds == null)
+				continue;
+			for ( String chainId : chainIds) {
 
 					List<List<Chain>> models = findChains(chainId, polyModels);
 
@@ -3189,11 +3189,11 @@ public class PDBFileParser  {
 						}
 
 						if (matchingChains.isEmpty()) {
-							// usually if this happens something is wrong with the PDB header
-							// e.g. 2brd - there is no Chain A, although it is specified in the header
-							// Some bona-fide cases exist, e.g. 2ja5, chain N is described in SEQRES
-							// but the authors didn't observe in the density so it's completely missing
-							// from the ATOM lines
+					// usually if this happens something is wrong with the PDB header
+					// e.g. 2brd - there is no Chain A, although it is specified in the header
+					// Some bona-fide cases exist, e.g. 2ja5, chain N is described in SEQRES
+					// but the authors didn't observe in the density so it's completely missing
+					// from the ATOM lines
 							logger.warn("Could not find polymeric chain {} to link to entity {}. The chain will be missing in the entity.", chainId, comp.getMolId());
 						}
 					}
@@ -3225,11 +3225,11 @@ public class PDBFileParser  {
 			model.addAll(splitNonPolyModels.get(i));
 			model.addAll(waterModels.get(i));
 			structure.addModel(model);
-		}
+			}
 
 
 	}
-	
+
 	/**
 	 * Links the Sites in the siteMap to the Groups in the Structure via the
 	 * siteToResidueMap ResidueNumber.
@@ -3642,6 +3642,7 @@ public class PDBFileParser  {
 		// set the correct max values for parsing...
 		loadMaxAtoms = params.getMaxAtoms();
 		atomCAThreshold = params.getAtomCaThreshold();
+
 
 	}
 

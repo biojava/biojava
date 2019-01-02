@@ -63,8 +63,8 @@ public class TestShortLines {
 		
 		// After 4.2, CONECTS are deprecated, but there is not yet an implementation
 		// describing how CONECTS will be replaced - will Bonds be created?
-		// assertEquals(1, s.getConnections().size());
-		assertNotNull(s); 
+		//assertEquals(1, s.getConnections().size());
+		assertNotNull(s);
 	}
 	
 	@Test

@@ -86,7 +86,7 @@
 		<developer>
 			<name>Andy Yates</name>
 		</developer>
-      	<developer>
+		<developer>
             <name>Anthony Bradley</name>
       	</developer>
 		<developer>
@@ -319,6 +319,12 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-site-plugin</artifactId>
 					<version>3.7.1</version>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-deploy-plugin</artifactId>
+					<version>2.8.2</version>
 				</plugin>
 
 			</plugins>
@@ -680,8 +686,8 @@
 		<system>Github</system>
 		<url>https://github.com/biojava/biojava/issues</url>
 	</issueManagement>
-		<ciManagement>
+	<ciManagement>
 			<system>Travis</system>
 			<url>https://travis-ci.org/biojava/biojava</url>
-		</ciManagement>
+	</ciManagement>
 </project>
