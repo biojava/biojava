@@ -100,25 +100,16 @@ public class TestAsaCalc {
 			int[] nbsSh = allNbsSh[indexToTest];
 			int[] nbs = allNbs[indexToTest];
 
-			int countNotInNbs = 0;
 			List<Integer> listOfMatchingIndices = new ArrayList<>();
 			for (int i = 0; i < nbsSh.length; i++) {
-				boolean contained = false;
 				for (int j = 0; j < nbs.length; j++) {
 					if (nbs[j] == nbsSh[i]) {
 						listOfMatchingIndices.add(j);
-						contained = true;
 						break;
 					}
 				}
-				if (!contained) {
-					countNotInNbs++;
-				}
 			}
-
-			//System.out.println("In nbsSh but not in nbs: " + countNotInNbs);
-			//System.out.println("Number of matching indices: " + listOfMatchingIndices.size());
-
+			
 //		for (int i = 0; i<nbs.length; i++) {
 //			double dist = asaCalc.getAtomCoords()[i].distance(asaCalc.getAtomCoords()[indexToTest]);
 //			if (listOfMatchingIndices.contains(i)) {

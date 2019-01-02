@@ -251,17 +251,21 @@ public class AsaCalculator {
 		double[] asas = new double[atomCoords.length];
 
 		if (useSpatialHashingForNeighbors) {
+			logger.debug("Will use spatial hashing to find neighbors");
 			neighborIndices = findNeighborIndicesSpatialHashing();
 		} else {
+			logger.debug("Will not use spatial hashing to find neighbors");
 			neighborIndices = findNeighborIndices();
 		}
 
 		if (nThreads<=1) { // (i.e. it will also be 1 thread if 0 or negative number specified)
+			logger.debug("Will use 1 thread for ASA calculation");
 			for (int i=0;i<atomCoords.length;i++) {
 				asas[i] = calcSingleAsa(i);
 			}
 
 		} else {
+			logger.debug("Will use {} threads for ASA calculation", nThreads);
 			// NOTE the multithreaded calculation does not scale up well in some systems,
 			// why? I guess some memory/garbage collect problem? I tried increasing Xmx in pc8201 but didn't help
 
@@ -315,7 +319,13 @@ public class AsaCalculator {
 		return asas;
 	}
 
-	public void setUseSpatialHashingForNeighbors(boolean useSpatialHashingForNeighbors) {
+	/**
+	 * Set the useSpatialHashingForNeighbors flag to use spatial hashing to calculate neighbors (true) or all-to-all
+	 * distance calculation (false). Default is {@value DEFAULT_USE_SPATIAL_HASHING}.
+	 * Use for testing performance only.
+	 * @param useSpatialHashingForNeighbors the flag
+	 */
+	void setUseSpatialHashingForNeighbors(boolean useSpatialHashingForNeighbors) {
 		this.useSpatialHashingForNeighbors = useSpatialHashingForNeighbors;
 	}
 
@@ -344,12 +354,15 @@ public class AsaCalculator {
 	 */
 	int[][] findNeighborIndices() {
 
+		// looking at a typical protein case, number of neighbours are from ~10 to ~50, with an average of ~30
+		int initialCapacity = 60;
+
 		int[][] nbsIndices = new int[atomCoords.length][];
 
 		for (int k=0; k<atomCoords.length; k++) {
 			double radius = radii[k] + probe + probe;
 
-			List<Integer> thisNbIndices = new ArrayList<>();
+			List<Integer> thisNbIndices = new ArrayList<>(initialCapacity);
 
 			for (int i = 0; i < atomCoords.length; i++) {
 				if (i == k) continue;
@@ -372,26 +385,30 @@ public class AsaCalculator {
 	 * Returns the 2-dimensional array with neighbor indices for every atom,
 	 * using spatial hashing to avoid all to all distance calculation.
 	 * @return 2-dimensional array of size: n_atoms x n_neighbors_per_atom
+	 * @since 5.2.0
 	 */
 	int[][] findNeighborIndicesSpatialHashing() {
 
-		List<Contact> contactList = calcContacts();
-		Map<Integer, List<Integer>> indices = new HashMap<>();
-		for (Contact contact : contactList) {
+		// looking at a typical protein case, number of neighbours are from ~10 to ~50, with an average of ~30
+		int initialCapacity = 60;
 
+		List<Contact> contactList = calcContacts();
+		Map<Integer, List<Integer>> indices = new HashMap<>(atomCoords.length);
+		for (Contact contact : contactList) {
+			// note contacts are stored 1-way only, with j>i
 			int i = contact.getI();
 			int j = contact.getJ();
 
 			List<Integer> iIndices;
 			List<Integer> jIndices;
-			if (indices.get(i)==null) {
-				iIndices = new ArrayList<>();
+			if (!indices.containsKey(i)) {
+				iIndices = new ArrayList<>(initialCapacity);
 				indices.put(i, iIndices);
 			} else {
 				iIndices = indices.get(i);
 			}
-			if (indices.get(j)==null) {
-				jIndices = new ArrayList<>();
+			if (!indices.containsKey(j)) {
+				jIndices = new ArrayList<>(initialCapacity);
 				indices.put(j, jIndices);
 			} else {
 				jIndices = indices.get(j);
@@ -405,6 +422,7 @@ public class AsaCalculator {
 			}
 		}
 
+		// convert map to array for fast access
 		int[][] nbsIndices = new int[atomCoords.length][];
 		for (Map.Entry<Integer, List<Integer>> entry : indices.entrySet()) {
 			List<Integer> list = entry.getValue();
