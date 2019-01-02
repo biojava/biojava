@@ -21,12 +21,13 @@
 package org.biojava.nbio.structure.asa;
 
 import org.biojava.nbio.structure.*;
+import org.biojava.nbio.structure.contact.Contact;
+import org.biojava.nbio.structure.contact.Grid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.vecmath.Point3d;
-import java.util.ArrayList;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -101,6 +102,7 @@ public class AsaCalculator {
 	private int nThreads;
 	private Point3d[] spherePoints;
 	private double cons;
+	private List<Contact> contacts;
 
 	/**
 	 * Constructs a new AsaCalculator. Subsequently call {@link #calculateAsas()}
@@ -319,8 +321,9 @@ public class AsaCalculator {
 	/**
 	 * Returns list of indices of atoms within probe distance to atom k.
 	 * @param k index of atom for which we want neighbor indices
+	 * @return the indices of neighboring atoms
 	 */
-	private Integer[] findNeighborIndices(int k) {
+	Integer[] findNeighborIndices(int k) {
 		// looking at a typical protein case, number of neighbours are from ~10 to ~50, with an average of ~30
 		// Thus 40 seems to be a good compromise for the starting capacity
 		ArrayList<Integer> neighbor_indices = new ArrayList<>(40);
@@ -343,9 +346,69 @@ public class AsaCalculator {
 		return indicesArray;
 	}
 
+	/**
+	 * Returns list of indices of atoms within probe distance to atom k,
+	 * using spatial hashing to avoid all to all distance calculation.
+	 * @param k index of atom for which we want neighbor indices
+	 * @return the indices of neighboring atoms
+	 */
+	Integer[] findNeighborIndicesSpatialHashing(int k) {
+
+		if (contacts == null) {
+			contacts = calcContacts();
+		}
+
+		// looking at a typical protein case, number of neighbours are from ~10 to ~50, with an average of ~30
+		// Thus 40 seems to be a good compromise for the starting capacity
+		ArrayList<Integer> neighbor_indices = new ArrayList<>(40);
+
+		double radius = radii[k] + probe + probe;
+
+		for (Contact contact : contacts) {
+			double dist = contact.getDistance();
+			int i;
+			if (contact.getJ() == k) {
+				i = contact.getI();
+			} else if (contact.getI() == k) {
+				i = contact.getJ();
+			} else {
+				continue;
+			}
+			if (dist < radius + radii[i]) {
+				neighbor_indices.add(i);
+			}
+		}
+
+		Integer[] indicesArray = new Integer[neighbor_indices.size()];
+		indicesArray = neighbor_indices.toArray(indicesArray);
+		return indicesArray;
+	}
+
+	Point3d[] getAtomCoords() {
+		return atomCoords;
+	}
+
+	private List<Contact> calcContacts() {
+		double maxRadius = maxValue(radii);
+		double cutoff = maxRadius + maxRadius + probe + probe;
+		Grid grid = new Grid(cutoff);
+		grid.addCoords(atomCoords);
+		return grid.getIndicesContacts();
+	}
+
+	private static double maxValue(double[] array) {
+		double max = array[0];
+		for (int i = 0; i < array.length; i++) {
+			if (array[i] > max) {
+				max = array[i];
+			}
+		}
+		return max;
+	}
+
 	private double calcSingleAsa(int i) {
 		Point3d atom_i = atomCoords[i];
-		Integer[] neighbor_indices = findNeighborIndices(i);
+		Integer[] neighbor_indices = findNeighborIndicesSpatialHashing(i);
 		int n_neighbor = neighbor_indices.length;
 		int j_closest_neighbor = 0;
 		double radius = probe + radii[i];
