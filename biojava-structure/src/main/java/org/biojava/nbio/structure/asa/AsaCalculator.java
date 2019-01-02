@@ -59,6 +59,8 @@ public class AsaCalculator {
 	public static final double DEFAULT_PROBE_SIZE = 1.4;
 	public static final int DEFAULT_NTHREADS = 1;
 
+	public static final boolean DEFAULT_USE_SPATIAL_HASHING = true;
+
 
 
 	// Chothia's amino acid atoms vdw radii
@@ -124,7 +126,7 @@ public class AsaCalculator {
 		this.probe = probe;
 		this.nThreads = nThreads;
 
-		this.useSpatialHashingForNeighbors = true;
+		this.useSpatialHashingForNeighbors = DEFAULT_USE_SPATIAL_HASHING;
 
 		// initialising the radii by looking them up through AtomRadii
 		radii = new double[atomCoords.length];
@@ -154,7 +156,7 @@ public class AsaCalculator {
 		this.probe = probe;
 		this.nThreads = nThreads;
 
-		this.useSpatialHashingForNeighbors = true;
+		this.useSpatialHashingForNeighbors = DEFAULT_USE_SPATIAL_HASHING;
 
 		for (Atom atom:atoms) {
 			if (atom.getElement()==Element.H)
@@ -196,7 +198,7 @@ public class AsaCalculator {
 		this.probe = probe;
 		this.nThreads = nThreads;
 
-		this.useSpatialHashingForNeighbors = true;
+		this.useSpatialHashingForNeighbors = DEFAULT_USE_SPATIAL_HASHING;
 
 		// initialising the radii to the given radius for all atoms
 		radii = new double[atomCoords.length];
