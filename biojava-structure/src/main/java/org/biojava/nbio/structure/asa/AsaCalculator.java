@@ -221,7 +221,7 @@ public class AsaCalculator {
 	 */
 	public GroupAsa[] getGroupAsas() {
 
-		TreeMap<ResidueNumber, GroupAsa> asas = new TreeMap<ResidueNumber, GroupAsa>();
+		TreeMap<ResidueNumber, GroupAsa> asas = new TreeMap<>();
 
 		double[] asasPerAtom = calculateAsas();
 

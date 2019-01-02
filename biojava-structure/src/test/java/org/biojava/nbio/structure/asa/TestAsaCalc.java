@@ -141,18 +141,18 @@ public class TestAsaCalc {
 		// that's because it depends on the order on how tests were run - JD 2018-03-10
 		ChemCompGroupFactory.setChemCompProvider(new DownloadChemCompProvider());
 
-		Structure structure = StructureIO.getStructure("4F5X");
-		Chain c = structure.getPolyChainByPDB("W");
-		Atom[] atoms = StructureTools.getAllAtomArray(c);
+		Structure structure = StructureIO.getStructure("3HBX");
+		Atom[] atoms = StructureTools.getAllAtomArray(structure);
 		System.out.printf("Total of %d atoms. n(n-1)/2= %d \n", atoms.length, atoms.length*(atoms.length-1)/2);
 
 		int nThreads = 1;
-		// 1. WITH SPATIAL HASHING
+		int nSpherePoints = 100;
 
+		// 1. WITH SPATIAL HASHING
 		long start = System.currentTimeMillis();
 		AsaCalculator asaCalc = new AsaCalculator(atoms,
 				AsaCalculator.DEFAULT_PROBE_SIZE,
-				100, nThreads);
+				nSpherePoints, nThreads);
 		asaCalc.setUseSpatialHashingForNeighbors(true);
 
 		double[] asas = asaCalc.calculateAsas();
@@ -166,14 +166,12 @@ public class TestAsaCalc {
 		double withSH = totAtoms;
 		System.out.printf("Total ASA is %6.2f \n", totAtoms);
 
-		//System.out.println("Distances calculated: " + asaCalc.distancesCalculated);
-
 
 		// 2. WITHOUT SPATIAL HASHING
 		start = System.currentTimeMillis();
 		asaCalc = new AsaCalculator(atoms,
 				AsaCalculator.DEFAULT_PROBE_SIZE,
-				100, nThreads);
+				nSpherePoints, nThreads);
 		asaCalc.setUseSpatialHashingForNeighbors(false);
 
 		asas = asaCalc.calculateAsas();
@@ -187,7 +185,6 @@ public class TestAsaCalc {
 		double withoutSH = totAtoms;
 		System.out.printf("Total ASA is %6.2f \n", totAtoms);
 
-		//System.out.println("Distances calculated: " + asaCalc.distancesCalculated);
 
 		assertEquals(withoutSH, withSH, 0.000001);
 
