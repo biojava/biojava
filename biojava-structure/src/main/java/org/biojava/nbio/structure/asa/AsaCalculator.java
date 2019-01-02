@@ -375,34 +375,42 @@ public class AsaCalculator {
 	 */
 	int[][] findNeighborIndicesSpatialHashing() {
 
-		int[][] nbsIndices = new int[atomCoords.length][];
-
 		List<Contact> contactList = calcContacts();
+		Map<Integer, List<Integer>> indices = new HashMap<>();
+		for (Contact contact : contactList) {
 
-		for (int k=0; k<atomCoords.length; k++) {
-			double radius = radii[k] + probe + probe;
+			int i = contact.getI();
+			int j = contact.getJ();
 
-			List<Integer> thisNbIndices = new ArrayList<>();
-
-			// TODO make this the outer loop
-			for (Contact contact : contactList) {
-				double dist = contact.getDistance();
-				int i;
-				if (contact.getJ() == k) {
-					i = contact.getI();
-				} else if (contact.getI() == k) {
-					i = contact.getJ();
-				} else {
-					continue;
-				}
-				if (dist < radius + radii[i]) {
-					thisNbIndices.add(i);
-				}
+			List<Integer> iIndices;
+			List<Integer> jIndices;
+			if (indices.get(i)==null) {
+				iIndices = new ArrayList<>();
+				indices.put(i, iIndices);
+			} else {
+				iIndices = indices.get(i);
+			}
+			if (indices.get(j)==null) {
+				jIndices = new ArrayList<>();
+				indices.put(j, jIndices);
+			} else {
+				jIndices = indices.get(j);
 			}
 
-			int[] indicesArray = new int[thisNbIndices.size()];
-			for (int i=0;i<thisNbIndices.size();i++) indicesArray[i] = thisNbIndices.get(i);
-			nbsIndices[k] = indicesArray;
+			double radius = radii[i] + probe + probe;
+			double dist = contact.getDistance();
+			if (dist < radius + radii[j]) {
+				iIndices.add(j);
+				jIndices.add(i);
+			}
+		}
+
+		int[][] nbsIndices = new int[atomCoords.length][];
+		for (Map.Entry<Integer, List<Integer>> entry : indices.entrySet()) {
+			List<Integer> list = entry.getValue();
+			int[] indicesArray = new int[list.size()];
+			for (int i=0;i<entry.getValue().size();i++) indicesArray[i] = list.get(i);
+			nbsIndices[entry.getKey()] = indicesArray;
 		}
 
 		return nbsIndices;
