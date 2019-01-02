@@ -398,7 +398,7 @@ public class AtomCacheTest {
 			// Structure should have valid ChemComp now
 			assertNotNull(s);
 			
-			Group g = s.getChainByPDB("A").getAtomGroup(0);
+			Group g = s.getChain("A").getAtomGroup(0);
 			assertTrue(g.getPDBName().equals("ATP"));
 			
 			// should be unknown
@@ -461,7 +461,7 @@ public class AtomCacheTest {
 			// Structure should have valid ChemComp
 			assertNotNull(s);
 			
-			Group g = s.getChainByPDB("A").getAtomGroup(0);
+			Group g = s.getChain("A").getAtomGroup(0);
 			assertTrue(g.getPDBName().equals("ATP"));
 			
 			// should be unknown

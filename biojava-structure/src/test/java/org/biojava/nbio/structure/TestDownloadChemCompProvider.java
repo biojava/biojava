@@ -21,6 +21,7 @@
 package org.biojava.nbio.structure;
 
 import org.biojava.nbio.core.util.FlatFileCache;
+import org.biojava.nbio.structure.io.LocalPDBDirectory;
 import org.biojava.nbio.structure.io.mmcif.DownloadChemCompProvider;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.junit.Test;
@@ -122,7 +123,7 @@ public class TestDownloadChemCompProvider {
 		File file = new File(DownloadChemCompProvider.getLocalFileName("HEM"));
 		
 		PrintWriter pw = new PrintWriter(new GZIPOutputStream(new FileOutputStream(file)));
-		pw.println("A lot of garbage"); 
+		pw.println("This must produce a compressed file of at least LocalPDBDirectory.MIN_PDB_FILE_SIZE bytes to avoid deletion."); 
 		pw.close();		
 				
 		DownloadChemCompProvider prov = new DownloadChemCompProvider();
