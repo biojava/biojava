@@ -35,50 +35,50 @@ import java.io.IOException;
  */
 public class EmblReaderTest {
 
-    private String sequence;
+	private String sequence;
 
-    @Before
-    public void initObjects() {
-        sequence = "aaacaaaccaaatatggattttattgtagccatatttgctctgtttgttattagctcattcacaattacttcca" +
-                "caaatgcagttgaagcttctactcttcttgacataggtaacctgagtcggagcagttttcctcgtggcttcatctttggtgctggatcttcagcatac" +
-                "caatttgaaggtgcagtaaacgaaggcggtagaggaccaagtatttgggataccttcacccataaatatccagaaaaaataagggatggaagcaatgcaga" +
-                "catcacggttgaccaatatcaccgctacaaggaagatgttgggattatgaaggatcaaaatatggattcgtatagattctcaatctcttggccaagaatactcc" +
-                "caaagggaaagttgagcggaggcataaatcacgaaggaatcaaatattacaacaaccttatcaacgaactattggctaacggtatacaaccatttgtaactcttttt" +
-                "cattgggatcttccccaagtcttagaagatgagtatggtggtttcttaaactccggtgtaataaatgattttcgagactatacggatctttgcttcaaggaatttgga" +
-                "gatagagtgaggtattggagtactctaaatgagccatgggtgtttagcaattctggatatgcactaggaacaaatgcaccaggtcgatgttcggcctccaacgtggccaa" +
-                "gcctggtgattctggaacaggaccttatatagttacacacaatcaaattcttgctcatgcagaagctgtacatgtgtataagactaaataccaggcatatcaaaagggaaa" +
-                "gataggcataacgttggtatctaactggttaatgccacttgatgataatagcataccagatataaaggctgccgagagatcacttgacttccaatttggattgtttatggaac" +
-                "aattaacaacaggagattattctaagagcatgcggcgtatagttaaaaaccgattacctaagttctcaaaattcgaatcaagcctagtgaatggttcatttgattttattggtat" +
-                "aaactattactcttctagttatattagcaatgccccttcacatggcaatgccaaacccagttactcaacaaatcctatgaccaatatttcatttgaaaaacatgggatacc" +
-                "cttaggtccaagggctgcttcaatttggatatatgtttatccatatatgtttatccaagaggacttcgagatcttttgttacatattaaaaataaatataacaatcctgcaatt" +
-                "ttcaatcactgaaaatggtatgaatgaattcaacgatgcaacacttccagtagaagaagctcttttgaatacttacagaattgattactattaccgtcacttatactacattcgt" +
-                "tctgcaatcagggctggctcaaatgtgaagggtttttacgcatggtcatttttggactgtaatgaatggtttgcaggctttactgttcgttttggattaaactttgtagattaga" +
-                "aagatggattaaaaaggtaccctaagctttctgcccaatggtacaagaactttctcaaaagaaactagctagtattattaaaagaactttgtagtagattacagtacatcgtttg" +
-                "aagttgagttggtgcacctaattaaataaaagaggttactcttaacatatttttaggccattcgttgtgaagttgttaggctgttatttctattatactatgttgtagtaataa" +
-                "gtgcattgttgtaccagaagctatgatcataactataggttgatccttcatgtatcagtttgatgttgagaatactttgaattaaaagtctttttttatttttttaaaaaaaaaa" +
-                "aaaaaaaaaaaaaaaaaaa";
-    }
+	@Before
+	public void initObjects() {
+		sequence = "aaacaaaccaaatatggattttattgtagccatatttgctctgtttgttattagctcattcacaattacttcca" +
+				"caaatgcagttgaagcttctactcttcttgacataggtaacctgagtcggagcagttttcctcgtggcttcatctttggtgctggatcttcagcatac" +
+				"caatttgaaggtgcagtaaacgaaggcggtagaggaccaagtatttgggataccttcacccataaatatccagaaaaaataagggatggaagcaatgcaga" +
+				"catcacggttgaccaatatcaccgctacaaggaagatgttgggattatgaaggatcaaaatatggattcgtatagattctcaatctcttggccaagaatactcc" +
+				"caaagggaaagttgagcggaggcataaatcacgaaggaatcaaatattacaacaaccttatcaacgaactattggctaacggtatacaaccatttgtaactcttttt" +
+				"cattgggatcttccccaagtcttagaagatgagtatggtggtttcttaaactccggtgtaataaatgattttcgagactatacggatctttgcttcaaggaatttgga" +
+				"gatagagtgaggtattggagtactctaaatgagccatgggtgtttagcaattctggatatgcactaggaacaaatgcaccaggtcgatgttcggcctccaacgtggccaa" +
+				"gcctggtgattctggaacaggaccttatatagttacacacaatcaaattcttgctcatgcagaagctgtacatgtgtataagactaaataccaggcatatcaaaagggaaa" +
+				"gataggcataacgttggtatctaactggttaatgccacttgatgataatagcataccagatataaaggctgccgagagatcacttgacttccaatttggattgtttatggaac" +
+				"aattaacaacaggagattattctaagagcatgcggcgtatagttaaaaaccgattacctaagttctcaaaattcgaatcaagcctagtgaatggttcatttgattttattggtat" +
+				"aaactattactcttctagttatattagcaatgccccttcacatggcaatgccaaacccagttactcaacaaatcctatgaccaatatttcatttgaaaaacatgggatacc" +
+				"cttaggtccaagggctgcttcaatttggatatatgtttatccatatatgtttatccaagaggacttcgagatcttttgttacatattaaaaataaatataacaatcctgcaatt" +
+				"ttcaatcactgaaaatggtatgaatgaattcaacgatgcaacacttccagtagaagaagctcttttgaatacttacagaattgattactattaccgtcacttatactacattcgt" +
+				"tctgcaatcagggctggctcaaatgtgaagggtttttacgcatggtcatttttggactgtaatgaatggtttgcaggctttactgttcgttttggattaaactttgtagattaga" +
+				"aagatggattaaaaaggtaccctaagctttctgcccaatggtacaagaactttctcaaaagaaactagctagtattattaaaagaactttgtagtagattacagtacatcgtttg" +
+				"aagttgagttggtgcacctaattaaataaaagaggttactcttaacatatttttaggccattcgttgtgaagttgttaggctgttatttctattatactatgttgtagtaataa" +
+				"gtgcattgttgtaccagaagctatgatcataactataggttgatccttcatgtatcagtttgatgttgagaatactttgaattaaaagtctttttttatttttttaaaaaaaaaa" +
+				"aaaaaaaaaaaaaaaaaaa";
+	}
 
-    @Test(expected = NullPointerException.class)
-    public void givenNullFileParameterWhenProcessEmblFileThenThrowException() throws IOException {
-        File file = new File(this.getClass().getResource(null).getFile());
-        EmblReader.process(file);
+	@Test(expected = NullPointerException.class)
+	public void givenNullFileParameterWhenProcessEmblFileThenThrowException() throws IOException {
+		File file = new File(this.getClass().getResource(null).getFile());
+		EmblReader.process(file);
 
-    }
+	}
 
-    @Test(expected = IllegalArgumentException.class)
-    public void givenDirectoryWhenProcessEmblFileThenThrowException() throws IOException {
-        File file = new File(this.getClass().getResource("/")
-                .getPath());
-        EmblReader.process(file);
-    }
+	@Test(expected = IllegalArgumentException.class)
+	public void givenDirectoryWhenProcessEmblFileThenThrowException() throws IOException {
+		File file = new File(this.getClass().getResource("/")
+				.getPath());
+		EmblReader.process(file);
+	}
 
-    @Test
-    public void givenAnEmilFileWhenProcessEmilFileThanTheSequenceShouldReturnAsExpected() throws IOException {
-        File file = new File(this.getClass().getResource("/test.embl").getFile());
-        EmblRecord emblRecord = EmblReader.process(file);
-        Assert.assertEquals(sequence, emblRecord.getSequence());
-    }
+	@Test
+	public void givenAnEmilFileWhenProcessEmilFileThanTheSequenceShouldReturnAsExpected() throws IOException {
+		File file = new File(this.getClass().getResource("/test.embl").getFile());
+		EmblRecord emblRecord = EmblReader.process(file);
+		Assert.assertEquals(sequence, emblRecord.getSequence());
+	}
 
 
 }

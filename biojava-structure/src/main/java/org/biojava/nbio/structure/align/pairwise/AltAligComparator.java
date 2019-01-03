@@ -33,7 +33,7 @@ import java.util.Comparator;
  *
  */
 public class AltAligComparator implements Comparator<AlternativeAlignment>, Serializable {
-    private static final long serialVersionUID = 1;
+	private static final long serialVersionUID = 1;
 
 	public AltAligComparator() {
 		super();

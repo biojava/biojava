@@ -54,29 +54,29 @@ public class TestMmcifV5Changes {
 
 	}
 
-    @Test
+	@Test
 	public void testReleaseDate() throws ParseException {
 
-	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd",Locale.US);
-        Date releaseDate = dateFormat.parse("1992-10-15");
-	    assertEquals(releaseDate, s.getPDBHeader().getRelDate());
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd",Locale.US);
+		Date releaseDate = dateFormat.parse("1992-10-15");
+		assertEquals(releaseDate, s.getPDBHeader().getRelDate());
 	}
 
 	@Test
 	public void testDepositionDate() throws ParseException {
 
-	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd",Locale.US);
-        Date depositionDate = dateFormat.parse("1992-03-12");
-	    assertEquals(depositionDate, s.getPDBHeader().getDepDate());
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd",Locale.US);
+		Date depositionDate = dateFormat.parse("1992-03-12");
+		assertEquals(depositionDate, s.getPDBHeader().getDepDate());
 
 	}
 
 	@Test
 	public void testRevisionDate() throws ParseException {
 
-	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd",Locale.US);
-        Date depositionDate = dateFormat.parse("2011-07-13");
-	    assertEquals(depositionDate, s.getPDBHeader().getModDate());
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd",Locale.US);
+		Date depositionDate = dateFormat.parse("2011-07-13");
+		assertEquals(depositionDate, s.getPDBHeader().getModDate());
 
 	}
 

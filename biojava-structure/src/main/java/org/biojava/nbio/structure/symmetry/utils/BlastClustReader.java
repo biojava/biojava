@@ -149,30 +149,30 @@ public class BlastClustReader implements Serializable {
 			return;
 		}
 
-        String urlString = coreUrl + "bc-" + sequenceIdentity + ".out";
+		String urlString = coreUrl + "bc-" + sequenceIdentity + ".out";
 
 		try {
 
-            URL u = new URL(urlString);
-            InputStream stream = u.openStream();
+			URL u = new URL(urlString);
+			InputStream stream = u.openStream();
 
-            if (stream != null) {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+			if (stream != null) {
+				BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
 
-                String line = null;
-                while ((line = reader.readLine()) != null) {
-                    line = line.replaceAll("_", ".");
-                    List<String> cluster = Arrays.asList(line.split(" "));
-                    clusters.add(cluster);
-                }
-                reader.close();
-                stream.close();
-            } else {
-                throw new IOException("Got null stream for URL " + urlString);
-            }
-        } catch (IOException e) {
-		    logger.error("Could not get sequence clusters from URL " + urlString + ". Error: " + e.getMessage());
-        }
+				String line = null;
+				while ((line = reader.readLine()) != null) {
+					line = line.replaceAll("_", ".");
+					List<String> cluster = Arrays.asList(line.split(" "));
+					clusters.add(cluster);
+				}
+				reader.close();
+				stream.close();
+			} else {
+				throw new IOException("Got null stream for URL " + urlString);
+			}
+		} catch (IOException e) {
+			logger.error("Could not get sequence clusters from URL " + urlString + ". Error: " + e.getMessage());
+		}
 
 	}
 

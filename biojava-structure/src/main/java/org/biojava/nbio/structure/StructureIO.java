@@ -49,14 +49,14 @@ public class StructureIO {
 		Formal specification for how to specify the <i>name</i>:
 
 		name     := pdbID
-		               | pdbID '.' chainID
-		               | pdbID '.' range
-		               | scopID
-		               | biol
-		               | pdp
+					   | pdbID '.' chainID
+					   | pdbID '.' range
+					   | scopID
+					   | biol
+					   | pdp
 		range         := '('? range (',' range)? ')'?
-		               | chainID
-		               | chainID '_' resNum '-' resNum
+					   | chainID
+					   | chainID '_' resNum '-' resNum
 		pdbID         := [0-9][a-zA-Z0-9]{3}
 		chainID       := [a-zA-Z0-9]
 		scopID        := 'd' pdbID [a-z_][0-9_]
@@ -76,7 +76,7 @@ public class StructureIO {
 		BIO:1fah:1 #biological assembly nr 1 for 1fah
 		BIO:1fah:2 #biological assembly nr 2 for 1fah
 
-     * </pre>
+	 * </pre>
 	 *
 	 * With the additional set of rules:
 	 *

@@ -51,11 +51,11 @@ import org.junit.rules.TemporaryFolder;
  */
 public class TestBasicMmtf {
 
-    /**
-     * A test folder for testing writing files.
-     */
-    @Rule
-    public TemporaryFolder testFolder = new TemporaryFolder();
+	/**
+	 * A test folder for testing writing files.
+	 */
+	@Rule
+	public TemporaryFolder testFolder = new TemporaryFolder();
 
 
 	/**

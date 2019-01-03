@@ -41,57 +41,57 @@ import static org.junit.Assert.fail;
  */
 public class TestSimilarityCalc  {
 
-    @Test
-    public void testSimilarityDisplay(){
+	@Test
+	public void testSimilarityDisplay(){
 
-        String name1 = "1CDG.A";
-        String name2 = "1TIM.A";
+		String name1 = "1CDG.A";
+		String name2 = "1TIM.A";
 
-        AtomCache cache = new AtomCache();
+		AtomCache cache = new AtomCache();
 
-        Structure structure1 = null;
-        Structure structure2 = null;
+		Structure structure1 = null;
+		Structure structure2 = null;
 
-        try {
+		try {
 
-            StructureAlignment algorithm = StructureAlignmentFactory.getAlgorithm(SmithWaterman3Daligner.algorithmName);
+			StructureAlignment algorithm = StructureAlignmentFactory.getAlgorithm(SmithWaterman3Daligner.algorithmName);
 
-            SmithWaterman3DParameters params = new SmithWaterman3DParameters();
+			SmithWaterman3DParameters params = new SmithWaterman3DParameters();
 
-            structure1 = cache.getStructure(name1);
-            structure2 = cache.getStructure(name2);
+			structure1 = cache.getStructure(name1);
+			structure2 = cache.getStructure(name2);
 
-            Atom[] ca1 = StructureTools.getAtomCAArray(structure1);
-            Atom[] ca2 = StructureTools.getAtomCAArray(structure2);
-
-
-            AFPChain afpChain = algorithm.align(ca1, ca2, params);
-
-            afpChain.setName1(name1);
-            afpChain.setName2(name2);
+			Atom[] ca1 = StructureTools.getAtomCAArray(structure1);
+			Atom[] ca2 = StructureTools.getAtomCAArray(structure2);
 
 
-            assertTrue(afpChain.getAlnLength() == 71);
+			AFPChain afpChain = algorithm.align(ca1, ca2, params);
 
-            assertTrue(afpChain.getAlnLength() == 71);
-            assertTrue(afpChain.getSimilarity() > .57);
-            assertTrue(afpChain.getSimilarity() <= .6);
-
-            // this calls the internal invalidate method
-            afpChain.setOptAln(afpChain.getOptAln());
-
-            assertTrue("wrong similarity score : " + afpChain.getSimilarity(), afpChain.getSimilarity() > .57);
-            assertTrue("wrong similarity score : " + afpChain.getSimilarity(), afpChain.getSimilarity() <= .6);
-
-            assertTrue(afpChain.getSimilarity() > .58);
-            assertTrue(afpChain.getSimilarity() < .59);
-            assertTrue("similarity score is " + afpChain.getSimilarity()  , afpChain.getSimilarity() > .46);
+			afpChain.setName1(name1);
+			afpChain.setName2(name2);
 
 
-        } catch (Exception e){
+			assertTrue(afpChain.getAlnLength() == 71);
 
-            fail(e.getMessage());
-        }
+			assertTrue(afpChain.getAlnLength() == 71);
+			assertTrue(afpChain.getSimilarity() > .57);
+			assertTrue(afpChain.getSimilarity() <= .6);
 
-    }
+			// this calls the internal invalidate method
+			afpChain.setOptAln(afpChain.getOptAln());
+
+			assertTrue("wrong similarity score : " + afpChain.getSimilarity(), afpChain.getSimilarity() > .57);
+			assertTrue("wrong similarity score : " + afpChain.getSimilarity(), afpChain.getSimilarity() <= .6);
+
+			assertTrue(afpChain.getSimilarity() > .58);
+			assertTrue(afpChain.getSimilarity() < .59);
+			assertTrue("similarity score is " + afpChain.getSimilarity()  , afpChain.getSimilarity() > .46);
+
+
+		} catch (Exception e){
+
+			fail(e.getMessage());
+		}
+
+	}
 }

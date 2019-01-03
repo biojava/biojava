@@ -196,7 +196,7 @@ public interface Group extends Serializable {
 	 * Check if this group is an aminoacid group, from the definition in Chemical Component Dictionary
 	 *
 	 * @return true if an amino acid
-     */
+	 */
 	public boolean isAminoAcid();
 
 
@@ -204,7 +204,7 @@ public interface Group extends Serializable {
 	 * Check if this group is a nucleotide group, from the definition in Chemical Component Dictionary
 	 *
 	 * @return true if a nucleotide
-     */
+	 */
 	public boolean isNucleotide();
 
 

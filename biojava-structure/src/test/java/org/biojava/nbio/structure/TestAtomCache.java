@@ -271,7 +271,7 @@ public class TestAtomCache {
 	 * @param cache
 	 * @param useMmTf
 	 * @param useMmCif
-     */
+	 */
 	private void testFlags(AtomCache cache ,boolean useMmTf, boolean useMmCif) {
 
 		assertEquals("flag for parsing mmtf is set to " + cache.isUseMmtf() + " but should be " + useMmTf,

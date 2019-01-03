@@ -840,7 +840,7 @@ public class PDBFileParser  {
 	 records.
 	 11 - 70        String          title          Title of the experiment.
 	 * </pre>
-     *
+	 *
 	 */
 	private void pdb_TITLE_Handler(String line) {
 		String title;
@@ -1511,7 +1511,7 @@ public class PDBFileParser  {
 
 		if (!xtalCell.isCellReasonable()) {
 			// If the entry describes a structure determined by a technique other than X-ray crystallography,
-		    // CRYST1 contains a = b = c = 1.0, alpha = beta = gamma = 90 degrees, space group = P 1, and Z =1.
+			// CRYST1 contains a = b = c = 1.0, alpha = beta = gamma = 90 degrees, space group = P 1, and Z =1.
 			// if so we don't add the crystal cell and it remains null
 			logger.debug("The crystal cell read from file does not have reasonable dimensions (at least one dimension is below {}), discarding it.",
 					CrystalCell.MIN_VALID_CELL_SIZE);
@@ -2770,7 +2770,7 @@ public class PDBFileParser  {
 
 		// LINK records should be preserved, they are the way that
 		// inter-residue bonds are created for ligands such as trisaccharides, unusual polymers.
-        // The analogy in mmCIF is the _struct_conn record.
+		// The analogy in mmCIF is the _struct_conn record.
 		for (LinkRecord linkRecord : linkRecords) {
 			maker.formLinkRecordBond(linkRecord);
 		}

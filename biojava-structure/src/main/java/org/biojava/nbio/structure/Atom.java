@@ -243,7 +243,7 @@ public interface Atom extends Cloneable, PDBRecord {
 	 *
 	 * @param other
 	 * @return
-     */
+	 */
 	public boolean hasBond(Atom other);
 
 	/**

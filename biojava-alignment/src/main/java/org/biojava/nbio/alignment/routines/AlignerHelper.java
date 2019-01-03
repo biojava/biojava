@@ -209,7 +209,7 @@ public class AlignerHelper {
 			this.targetIndex = targetIndex;
 		}
 		public static class QueryIndexComparator implements Comparator<Anchor>, Serializable {
-            private static final long serialVersionUID = 1;
+			private static final long serialVersionUID = 1;
 
 			@Override
 			public int compare(Anchor o1, Anchor o2) {

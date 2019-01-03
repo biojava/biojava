@@ -65,15 +65,15 @@ public class TestMmtfRoundTrip {
 	public void testRoundTrip() throws IOException, StructureException {
 		AtomCache cache = new AtomCache();
 		FileParsingParameters params = new FileParsingParameters();
-        params.setParseBioAssembly(true);
-        cache.setFileParsingParams(params);
+		params.setParseBioAssembly(true);
+		cache.setFileParsingParams(params);
 		cache.setUseMmCif(true);
-	    StructureIO.setAtomCache(cache);
+		StructureIO.setAtomCache(cache);
 
 		ChemCompGroupFactory.setChemCompProvider(new DownloadChemCompProvider());
 
 		// test case for biojava issue #770, order of subunits
-	    Structure structure1 = StructureIO.getStructure("3BW1");
+		Structure structure1 = StructureIO.getStructure("3BW1");
 		AdapterToStructureData writerToEncoder = new AdapterToStructureData();
 		new MmtfStructureWriter(structure1, writerToEncoder);
 		MmtfStructureReader mmtfStructureReader = new MmtfStructureReader();
@@ -307,34 +307,34 @@ public class TestMmtfRoundTrip {
 	}
 
 	/**
-     * Checks consistency of bioassemblies
-     * @param structOne the first input structure
-     * @param structTwo the second input structure
-     */
-    private void checkBioAssemblies1(Structure structOne, Structure structTwo) throws IOException {
+	 * Checks consistency of bioassemblies
+	 * @param structOne the first input structure
+	 * @param structTwo the second input structure
+	 */
+	private void checkBioAssemblies1(Structure structOne, Structure structTwo) throws IOException {
 
-        Map<Integer, BioAssemblyInfo> expecteds = structOne.getPDBHeader().getBioAssemblies();
-        Map<Integer, BioAssemblyInfo> actuals = structTwo.getPDBHeader().getBioAssemblies();
-        assertEquals(expecteds.size(), actuals.size());
+		Map<Integer, BioAssemblyInfo> expecteds = structOne.getPDBHeader().getBioAssemblies();
+		Map<Integer, BioAssemblyInfo> actuals = structTwo.getPDBHeader().getBioAssemblies();
+		assertEquals(expecteds.size(), actuals.size());
 
-        assertEquals(new ArrayList<>(expecteds.keySet()), new ArrayList<>(actuals.keySet()));
+		assertEquals(new ArrayList<>(expecteds.keySet()), new ArrayList<>(actuals.keySet()));
 
-        List<BioAssemblyInfo> assemblies1 = new ArrayList<>(expecteds.values());
-        List<BioAssemblyInfo> assemblies2 = new ArrayList<>(actuals.values());
+		List<BioAssemblyInfo> assemblies1 = new ArrayList<>(expecteds.values());
+		List<BioAssemblyInfo> assemblies2 = new ArrayList<>(actuals.values());
 
-        for (int i = 0; i < assemblies1.size(); i++) {
-            BioAssemblyInfo info1 = assemblies1.get(i);
-            BioAssemblyInfo info2 = assemblies2.get(i);
-            assertEquals(info1.getId(), info2.getId());
-            assertEquals(info1.getTransforms().size(), info2.getTransforms().size());
+		for (int i = 0; i < assemblies1.size(); i++) {
+			BioAssemblyInfo info1 = assemblies1.get(i);
+			BioAssemblyInfo info2 = assemblies2.get(i);
+			assertEquals(info1.getId(), info2.getId());
+			assertEquals(info1.getTransforms().size(), info2.getTransforms().size());
 
-            for (int j = 0; j < info1.getTransforms().size(); j++) {
-                BiologicalAssemblyTransformation trans1 = info1.getTransforms().get(j);
-                BiologicalAssemblyTransformation trans2 = info2.getTransforms().get(j);
+			for (int j = 0; j < info1.getTransforms().size(); j++) {
+				BiologicalAssemblyTransformation trans1 = info1.getTransforms().get(j);
+				BiologicalAssemblyTransformation trans2 = info2.getTransforms().get(j);
 
-                assertEquals(trans1.getChainId(), trans2.getChainId());
-                assertTrue(trans1.getTransformationMatrix().epsilonEquals(trans2.getTransformationMatrix(), 0.000001));
-            }
-        }
-    }
+				assertEquals(trans1.getChainId(), trans2.getChainId());
+				assertTrue(trans1.getTransformationMatrix().epsilonEquals(trans2.getTransformationMatrix(), 0.000001));
+			}
+		}
+	}
 }

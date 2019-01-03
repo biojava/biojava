@@ -800,7 +800,7 @@ public class AtomCache {
 	/** Returns useMmtf flag
 	 *
 	 * @return true if will load data via mmtf file format
-     */
+	 */
 	public boolean isUseMmtf(){
 		return this.useMmtf;
 	}

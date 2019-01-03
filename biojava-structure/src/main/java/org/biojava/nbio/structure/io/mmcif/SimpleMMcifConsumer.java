@@ -1426,7 +1426,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			header = new PDBHeader();
 		}
 
-        // first entry in revision history is the release date
+	// first entry in revision history is the release date
 		if (history.getOrdinal().equals("1")){
 			try {
 				Date releaseDate = dateFormat.parse(history.getRevision_date());

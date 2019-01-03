@@ -54,23 +54,23 @@ public class DemoMmcifToPdbConverter
 
 	public static void convert(File inFile, File outFile) throws IOException {
 
-        MMcifParser parser = new SimpleMMcifParser();
+	MMcifParser parser = new SimpleMMcifParser();
 
-        SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
-        parser.addMMcifConsumer(consumer);
-        parser.parse(new BufferedReader(new InputStreamReader(new FileInputStream(inFile))));
+	SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
+	parser.addMMcifConsumer(consumer);
+	parser.parse(new BufferedReader(new InputStreamReader(new FileInputStream(inFile))));
 
-        // now get the protein structure.
-        Structure cifStructure = consumer.getStructure();
+	// now get the protein structure.
+	Structure cifStructure = consumer.getStructure();
 
-        // and write it out as PDB format
-        PrintWriter pr = new PrintWriter(outFile);
-        for (Chain c : cifStructure.getChains()) {
-        		// we can override the chain name, the mmCIF chain names might have more than 1 character
-        		c.setName(c.getName().substring(0, 1));
-        		pr.print(c.toPDB());
-        		pr.println("TER");
-        }
+	// and write it out as PDB format
+	PrintWriter pr = new PrintWriter(outFile);
+	for (Chain c : cifStructure.getChains()) {
+			// we can override the chain name, the mmCIF chain names might have more than 1 character
+			c.setName(c.getName().substring(0, 1));
+			pr.print(c.toPDB());
+			pr.println("TER");
+	}
 
 		pr.close();
 

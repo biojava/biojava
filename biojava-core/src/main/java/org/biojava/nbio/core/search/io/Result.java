@@ -170,10 +170,10 @@ public abstract class Result implements Iterable<Hit>{
 
 			@Override
 			public Hit next() {
-                if(!hasNext()){
-                    throw new NoSuchElementException();
-                }
-                return hits.get(currentResult++);
+				if(!hasNext()){
+					throw new NoSuchElementException();
+				}
+				return hits.get(currentResult++);
 			}
 
 			@Override

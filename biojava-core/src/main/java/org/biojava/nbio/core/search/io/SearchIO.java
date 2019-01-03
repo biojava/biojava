@@ -173,10 +173,10 @@ public class SearchIO implements Iterable<Result>{
 
 			@Override
 			public Result next() {
-                if(!hasNext()){
-                    throw new NoSuchElementException();
-                }
-                return results.get(currentResult++);
+				if(!hasNext()){
+					throw new NoSuchElementException();
+				}
+				return results.get(currentResult++);
 			}
 
 			@Override

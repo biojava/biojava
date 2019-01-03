@@ -28,39 +28,39 @@ package org.biojava.nbio.core.sequence.reference;
  */
 public class GenbankReference extends AbstractReference {
 
-    private String authors;
+	private String authors;
 
-    private String title;
+	private String title;
 
-    private String journal;
+	private String journal;
 
-    @Override
-    public String getAuthors() {
-        return authors;
-    }
+	@Override
+	public String getAuthors() {
+		return authors;
+	}
 
-    @Override
-    public void setAuthors(String authors) {
-        this.authors = authors;
-    }
+	@Override
+	public void setAuthors(String authors) {
+		this.authors = authors;
+	}
 
-    @Override
-    public String getTitle() {
-        return title;
-    }
+	@Override
+	public String getTitle() {
+		return title;
+	}
 
-    @Override
-    public void setTitle(String title) {
-        this.title = title;
-    }
+	@Override
+	public void setTitle(String title) {
+		this.title = title;
+	}
 
-    @Override
-    public String getJournal() {
-        return journal;
-    }
+	@Override
+	public String getJournal() {
+		return journal;
+	}
 
-    @Override
-    public void setJournal(String journal) {
-        this.journal = journal;
-    }
+	@Override
+	public void setJournal(String journal) {
+		this.journal = journal;
+	}
 }

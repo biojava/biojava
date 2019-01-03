@@ -339,9 +339,9 @@ public class BiologicalAssemblyTransformation implements Cloneable, Comparable<B
 		return String.format("(%5.2f %5.2f %5.2f)", m.m03, m.m13, m.m23);
 	}
 
-    @Override
-    public int compareTo(BiologicalAssemblyTransformation other) {
-        int comp = this.chainId.compareTo(other.chainId);
-        return comp == 0 ? this.id.compareTo(other.id) : comp;
-    }
+	@Override
+	public int compareTo(BiologicalAssemblyTransformation other) {
+		int comp = this.chainId.compareTo(other.chainId);
+		return comp == 0 ? this.id.compareTo(other.id) : comp;
+	}
 }

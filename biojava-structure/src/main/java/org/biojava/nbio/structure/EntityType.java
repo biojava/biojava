@@ -74,7 +74,7 @@ public enum EntityType {
 	 * Returns the type of the Entity as a String
 	 *
 	 * @return String representation of the entity type.
-     */
+	 */
 	public String getEntityType() {
 		return entityType;
 	}
@@ -91,7 +91,7 @@ public enum EntityType {
 	 *
 	 * @param entityType String value , should be one of "polymer","non-polymer","water","macrolide"
 	 * @return an EntityType object
-     */
+	 */
 	public static EntityType entityTypeFromString(String entityType)
 	{
 

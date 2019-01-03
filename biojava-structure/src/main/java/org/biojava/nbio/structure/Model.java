@@ -41,92 +41,92 @@ public class Model implements Serializable {
 
 	private static final Logger logger = LoggerFactory.getLogger(Model.class);
 
-    private List<Chain> polyChains;
-    private List<Chain> nonPolyChains;
-    private List<Chain> waterChains;
+	private List<Chain> polyChains;
+	private List<Chain> nonPolyChains;
+	private List<Chain> waterChains;
 
-    public Model(){
-        polyChains = new ArrayList<>();
-        nonPolyChains = new ArrayList<>();
-        waterChains = new ArrayList<>();
-    }
+	public Model(){
+		polyChains = new ArrayList<>();
+		nonPolyChains = new ArrayList<>();
+		waterChains = new ArrayList<>();
+	}
 
-    public List<Chain> getPolyChains() {
-        return polyChains;
-    }
+	public List<Chain> getPolyChains() {
+		return polyChains;
+	}
 
-    public List<Chain> getNonPolyChains() {
-        return nonPolyChains;
-    }
+	public List<Chain> getNonPolyChains() {
+		return nonPolyChains;
+	}
 
-    public List<Chain> getWaterChains() {
-    	return waterChains;
-    }
+	public List<Chain> getWaterChains() {
+		return waterChains;
+	}
 
-    /**
-     * Get all chains: polymeric, non-polymeric and water
-     * @return
-     */
-    public List<Chain> getChains(){
-        ArrayList<Chain> chains = new ArrayList<>();
+	/**
+	 * Get all chains: polymeric, non-polymeric and water
+	 * @return
+	 */
+	public List<Chain> getChains(){
+		ArrayList<Chain> chains = new ArrayList<>();
 
-        chains.addAll(polyChains);
-        chains.addAll(nonPolyChains);
-        chains.addAll(waterChains);
+		chains.addAll(polyChains);
+		chains.addAll(nonPolyChains);
+		chains.addAll(waterChains);
 
-        chains.trimToSize();
+		chains.trimToSize();
 
-        return chains;
-    }
+		return chains;
+	}
 
-    public void setChains(List<Chain> modelChains) {
+	public void setChains(List<Chain> modelChains) {
 
-        polyChains.clear();
-        nonPolyChains.clear();
-        waterChains.clear();
+		polyChains.clear();
+		nonPolyChains.clear();
+		waterChains.clear();
 
-        for (Chain c : modelChains){
-            addChain(c);
-        }
-    }
+		for (Chain c : modelChains){
+			addChain(c);
+		}
+	}
 
-    public void addChain(Chain c) {
-        EntityInfo info = c.getEntityInfo();
+	public void addChain(Chain c) {
+		EntityInfo info = c.getEntityInfo();
 
-        if ( info == null || info.getType() == null) {
-        	logger.info("No entity info could be found while adding chain with asym id {} (author id {}). Will consider it a polymer chain.", c.getId(), c.getName());
-            polyChains.add(c);
+		if ( info == null || info.getType() == null) {
+			logger.info("No entity info could be found while adding chain with asym id {} (author id {}). Will consider it a polymer chain.", c.getId(), c.getName());
+			polyChains.add(c);
 
-        } else if ( info.getType() == EntityType.POLYMER) {
-            polyChains.add(c);
+		} else if ( info.getType() == EntityType.POLYMER) {
+			polyChains.add(c);
 
-        } else if (info.getType() == EntityType.NONPOLYMER) {
-            nonPolyChains.add(c);
+		} else if (info.getType() == EntityType.NONPOLYMER) {
+			nonPolyChains.add(c);
 
-        } else if (info.getType() == EntityType.WATER) {
-        	waterChains.add(c);
+		} else if (info.getType() == EntityType.WATER) {
+			waterChains.add(c);
 
-        } else if (info.getType() == EntityType.MACROLIDE) {
-        	logger.warn("Chain with asym id {} (author id {}) has entity type 'macrolide', considering it non-polymeric", c.getId(), c.getName());
-        	nonPolyChains.add(c);
+		} else if (info.getType() == EntityType.MACROLIDE) {
+			logger.warn("Chain with asym id {} (author id {}) has entity type 'macrolide', considering it non-polymeric", c.getId(), c.getName());
+			nonPolyChains.add(c);
 
-        } else {
-        	logger.warn("Chain with asym id {} (author id {}) has unsupported entity type '{}'. Will not add it to the Structure.", c.getId(), c.getName(), info.getType().toString());
-        	// ignore it
+		} else {
+			logger.warn("Chain with asym id {} (author id {}) has unsupported entity type '{}'. Will not add it to the Structure.", c.getId(), c.getName(), info.getType().toString());
+			// ignore it
 
-        }
-    }
+		}
+	}
 
-    /**
-     * Returns the total number of chains in this model: polymeric, non-polymeric and water
-     * @return
-     */
-    public int size() {
-        return polyChains.size() + nonPolyChains.size() + waterChains.size();
-    }
+	/**
+	 * Returns the total number of chains in this model: polymeric, non-polymeric and water
+	 * @return
+	 */
+	public int size() {
+		return polyChains.size() + nonPolyChains.size() + waterChains.size();
+	}
 
-    @Override
-    public String toString() {
-    	return "["+polyChains.size()+" poly chains, "+nonPolyChains.size()+" non-poly chains, "+waterChains.size()+" water chains]";
-    }
+	@Override
+	public String toString() {
+		return "["+polyChains.size()+" poly chains, "+nonPolyChains.size()+" non-poly chains, "+waterChains.size()+" water chains]";
+	}
 }
