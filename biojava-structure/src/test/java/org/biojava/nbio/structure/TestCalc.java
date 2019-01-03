@@ -168,23 +168,23 @@ public class TestCalc {
 		Chain c = createDummyChain();
 
 		Matrix4d m = new Matrix4d(1,0,0,1, 0,1,0,0, 0,0,1,0, 0,0,0,1); // shift of 1 in x axis
- 		Calc.transform(c, m);
+		Calc.transform(c, m);
 
- 		Group thegroup = c.getAtomGroup(0);
- 		Group thealtlocgroup = thegroup.getAltLocs().get(0);
+		Group thegroup = c.getAtomGroup(0);
+		Group thealtlocgroup = thegroup.getAltLocs().get(0);
 
- 		Atom atom1 = thegroup.getAtom("CA");
- 		Atom atom2 = thealtlocgroup.getAtom("CA");
+		Atom atom1 = thegroup.getAtom("CA");
+		Atom atom2 = thealtlocgroup.getAtom("CA");
 
- 		// x should be shifted by 1
- 		assertEquals(2, atom1.getX(), 0.00001);
- 		assertEquals(1, atom1.getY(), 0.00001);
- 		assertEquals(1, atom1.getZ(), 0.00001);
+		// x should be shifted by 1
+		assertEquals(2, atom1.getX(), 0.00001);
+		assertEquals(1, atom1.getY(), 0.00001);
+		assertEquals(1, atom1.getZ(), 0.00001);
 
- 		// x should be shifted by 1
- 		assertEquals(3, atom2.getX(), 0.00001);
- 		assertEquals(2, atom2.getY(), 0.00001);
- 		assertEquals(2, atom2.getZ(), 0.00001);
+		// x should be shifted by 1
+		assertEquals(3, atom2.getX(), 0.00001);
+		assertEquals(2, atom2.getY(), 0.00001);
+		assertEquals(2, atom2.getZ(), 0.00001);
 
 
 	}
@@ -198,41 +198,41 @@ public class TestCalc {
 		Structure s = createDummyStructure();
 
 		Matrix4d m = new Matrix4d(1,0,0,1, 0,1,0,0, 0,0,1,0, 0,0,0,1); // shift of 1 in x axis
- 		Calc.transform(s, m);
+		Calc.transform(s, m);
 
- 		// testing 1st chain
- 		Group thegroup = s.getChain("A").getAtomGroup(0);
- 		Group thealtlocgroup = thegroup.getAltLocs().get(0);
+		// testing 1st chain
+		Group thegroup = s.getChain("A").getAtomGroup(0);
+		Group thealtlocgroup = thegroup.getAltLocs().get(0);
 
- 		Atom atom1 = thegroup.getAtom("CA");
- 		Atom atom2 = thealtlocgroup.getAtom("CA");
+		Atom atom1 = thegroup.getAtom("CA");
+		Atom atom2 = thealtlocgroup.getAtom("CA");
 
- 		// x should be shitfted by 1
- 		assertEquals(2, atom1.getX(), 0.00001);
- 		assertEquals(1, atom1.getY(), 0.00001);
- 		assertEquals(1, atom1.getZ(), 0.00001);
+		// x should be shitfted by 1
+		assertEquals(2, atom1.getX(), 0.00001);
+		assertEquals(1, atom1.getY(), 0.00001);
+		assertEquals(1, atom1.getZ(), 0.00001);
 
- 		// x should be shitfted by 1
- 		assertEquals(3, atom2.getX(), 0.00001);
- 		assertEquals(2, atom2.getY(), 0.00001);
- 		assertEquals(2, atom2.getZ(), 0.00001);
+		// x should be shitfted by 1
+		assertEquals(3, atom2.getX(), 0.00001);
+		assertEquals(2, atom2.getY(), 0.00001);
+		assertEquals(2, atom2.getZ(), 0.00001);
 
- 		// testing 2nd chain
- 		thegroup = s.getChain("B").getAtomGroup(0);
- 		thealtlocgroup = thegroup.getAltLocs().get(0);
+		// testing 2nd chain
+		thegroup = s.getChain("B").getAtomGroup(0);
+		thealtlocgroup = thegroup.getAltLocs().get(0);
 
- 		atom1 = thegroup.getAtom("CA");
- 		atom2 = thealtlocgroup.getAtom("CA");
+		atom1 = thegroup.getAtom("CA");
+		atom2 = thealtlocgroup.getAtom("CA");
 
- 		// x should be shitfted by 1
- 		assertEquals(4, atom1.getX(), 0.00001);
- 		assertEquals(3, atom1.getY(), 0.00001);
- 		assertEquals(3, atom1.getZ(), 0.00001);
+		// x should be shitfted by 1
+		assertEquals(4, atom1.getX(), 0.00001);
+		assertEquals(3, atom1.getY(), 0.00001);
+		assertEquals(3, atom1.getZ(), 0.00001);
 
- 		// x should be shitfted by 1
- 		assertEquals(5, atom2.getX(), 0.00001);
- 		assertEquals(4, atom2.getY(), 0.00001);
- 		assertEquals(4, atom2.getZ(), 0.00001);
+		// x should be shitfted by 1
+		assertEquals(5, atom2.getX(), 0.00001);
+		assertEquals(4, atom2.getY(), 0.00001);
+		assertEquals(4, atom2.getZ(), 0.00001);
 
 
 	}
@@ -242,23 +242,23 @@ public class TestCalc {
 		Chain c = createDummyChain();
 
 		Vector3d translation = new Vector3d(1, 0, 0);
- 		Calc.translate(c, translation);
+		Calc.translate(c, translation);
 
- 		Group thegroup = c.getAtomGroup(0);
- 		Group thealtlocgroup = thegroup.getAltLocs().get(0);
+		Group thegroup = c.getAtomGroup(0);
+		Group thealtlocgroup = thegroup.getAltLocs().get(0);
 
- 		Atom atom1 = thegroup.getAtom("CA");
- 		Atom atom2 = thealtlocgroup.getAtom("CA");
+		Atom atom1 = thegroup.getAtom("CA");
+		Atom atom2 = thealtlocgroup.getAtom("CA");
 
- 		// x should be shifted by 1
- 		assertEquals(2, atom1.getX(), 0.00001);
- 		assertEquals(1, atom1.getY(), 0.00001);
- 		assertEquals(1, atom1.getZ(), 0.00001);
+		// x should be shifted by 1
+		assertEquals(2, atom1.getX(), 0.00001);
+		assertEquals(1, atom1.getY(), 0.00001);
+		assertEquals(1, atom1.getZ(), 0.00001);
 
- 		// x should be shifted by 1
- 		assertEquals(3, atom2.getX(), 0.00001);
- 		assertEquals(2, atom2.getY(), 0.00001);
- 		assertEquals(2, atom2.getZ(), 0.00001);
+		// x should be shifted by 1
+		assertEquals(3, atom2.getX(), 0.00001);
+		assertEquals(2, atom2.getY(), 0.00001);
+		assertEquals(2, atom2.getZ(), 0.00001);
 	}
 
 	@Test
@@ -266,41 +266,41 @@ public class TestCalc {
 		Structure s = createDummyStructure();
 
 		Vector3d translation = new Vector3d(1, 0, 0);
- 		Calc.translate(s, translation);
+		Calc.translate(s, translation);
 
- 		// testing 1st chain
- 		Group thegroup = s.getChain("A").getAtomGroup(0);
- 		Group thealtlocgroup = thegroup.getAltLocs().get(0);
+		// testing 1st chain
+		Group thegroup = s.getChain("A").getAtomGroup(0);
+		Group thealtlocgroup = thegroup.getAltLocs().get(0);
 
- 		Atom atom1 = thegroup.getAtom("CA");
- 		Atom atom2 = thealtlocgroup.getAtom("CA");
+		Atom atom1 = thegroup.getAtom("CA");
+		Atom atom2 = thealtlocgroup.getAtom("CA");
 
- 		// x should be shitfted by 1
- 		assertEquals(2, atom1.getX(), 0.00001);
- 		assertEquals(1, atom1.getY(), 0.00001);
- 		assertEquals(1, atom1.getZ(), 0.00001);
+		// x should be shitfted by 1
+		assertEquals(2, atom1.getX(), 0.00001);
+		assertEquals(1, atom1.getY(), 0.00001);
+		assertEquals(1, atom1.getZ(), 0.00001);
 
- 		// x should be shitfted by 1
- 		assertEquals(3, atom2.getX(), 0.00001);
- 		assertEquals(2, atom2.getY(), 0.00001);
- 		assertEquals(2, atom2.getZ(), 0.00001);
+		// x should be shitfted by 1
+		assertEquals(3, atom2.getX(), 0.00001);
+		assertEquals(2, atom2.getY(), 0.00001);
+		assertEquals(2, atom2.getZ(), 0.00001);
 
- 		// testing 2nd chain
- 		thegroup = s.getChain("B").getAtomGroup(0);
- 		thealtlocgroup = thegroup.getAltLocs().get(0);
+		// testing 2nd chain
+		thegroup = s.getChain("B").getAtomGroup(0);
+		thealtlocgroup = thegroup.getAltLocs().get(0);
 
- 		atom1 = thegroup.getAtom("CA");
- 		atom2 = thealtlocgroup.getAtom("CA");
+		atom1 = thegroup.getAtom("CA");
+		atom2 = thealtlocgroup.getAtom("CA");
 
- 		// x should be shitfted by 1
- 		assertEquals(4, atom1.getX(), 0.00001);
- 		assertEquals(3, atom1.getY(), 0.00001);
- 		assertEquals(3, atom1.getZ(), 0.00001);
+		// x should be shitfted by 1
+		assertEquals(4, atom1.getX(), 0.00001);
+		assertEquals(3, atom1.getY(), 0.00001);
+		assertEquals(3, atom1.getZ(), 0.00001);
 
- 		// x should be shitfted by 1
- 		assertEquals(5, atom2.getX(), 0.00001);
- 		assertEquals(4, atom2.getY(), 0.00001);
- 		assertEquals(4, atom2.getZ(), 0.00001);
+		// x should be shitfted by 1
+		assertEquals(5, atom2.getX(), 0.00001);
+		assertEquals(4, atom2.getY(), 0.00001);
+		assertEquals(4, atom2.getZ(), 0.00001);
 	}
 
 	private static Atom getAtom(String name, double x, double y, double z) {

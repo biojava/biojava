@@ -27,12 +27,12 @@ import org.biojava.nbio.core.sequence.RNASequence;
 
 public class ProteinMappingTools {
 
-    /** Converts the DNA sequence to protein sequence.
-    *
-    * @param dnaSequence the DNA sequence
-    *
-    * @return the protein sequence
-    */
+	/** Converts the DNA sequence to protein sequence.
+	 *
+	 * @param dnaSequence the DNA sequence
+	 *
+	 * @return the protein sequence
+	 */
 	public static ProteinSequence convertDNAtoProteinSequence(String dnaSequence) throws CompoundNotFoundException {
 		DNASequence dna = new DNASequence(dnaSequence);
 		return convertDNAtoProteinSequence(dna);

@@ -38,15 +38,15 @@ public class TestStructWithMultiparentChemComp {
 		cache.setUseMmCif(true);
 		StructureIO.setAtomCache(cache);
 
- 		Structure s = StructureIO.getStructure("4q7u");
- 		assertNotNull(s);
- 		Chain c = s.getPolyChain("A");
+		Structure s = StructureIO.getStructure("4q7u");
+		assertNotNull(s);
+		Chain c = s.getPolyChain("A");
 
- 		String seq = c.getSeqResSequence();
- 		assertNotNull(seq);
- 		assertEquals(245, seq.length());
- 		assertFalse(seq.contains("?"));
- 		assertTrue(seq.contains("X"));
+		String seq = c.getSeqResSequence();
+		assertNotNull(seq);
+		assertEquals(245, seq.length());
+		assertFalse(seq.contains("?"));
+		assertTrue(seq.contains("X"));
 
 	}
 

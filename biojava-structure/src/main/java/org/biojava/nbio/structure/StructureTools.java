@@ -1826,7 +1826,7 @@ public class StructureTools {
 
 	/**
 	 * @deprecated use {@link Chain#isNucleicAcid()} instead.
- 	 */
+	 */
 	@Deprecated
 	public static boolean isNucleicAcid(Chain c) {
 		return c.isNucleicAcid();
@@ -1849,7 +1849,7 @@ public class StructureTools {
 	}
 
 	/**
-     * @deprecated  use {@link Chain#isPureNonPolymer()} instead.
+	 * @deprecated  use {@link Chain#isPureNonPolymer()} instead.
 	 */
 	@Deprecated
 	public static boolean isChainPureNonPolymer(Chain c) {

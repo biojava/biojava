@@ -389,7 +389,7 @@ public class EntityFinder {
 				EntityInfo e = chainIds2entities.get(chain.getId());
 				chain.setEntityInfo(e);
 				e.addChain(chain);
- 			}
+			}
 		}
 
 

@@ -76,7 +76,7 @@ public interface Chain extends Serializable {
 	 * Set the 'private' asymId (internal chain IDs in mmCif) for this chain.
 	 *
 	 * @param asymId the internal chain Id
-     */
+	 */
 	void setId(String asymId) ;
 
 
@@ -93,7 +93,7 @@ public interface Chain extends Serializable {
 	 *
 	 * @return the authId for this chain.
 	 * @see #getId()
-     */
+	 */
 	String getName();
 
 
@@ -422,13 +422,13 @@ public interface Chain extends Serializable {
 	/** Tests if a chain is consisting of water molecules only
 	 *
 	 * @return true if there are only solvent molecules in this chain.
-     */
-	 public boolean isWaterOnly();
+	 */
+	public boolean isWaterOnly();
 
 	/**  Returns true if the given chain is composed of non-polymeric (including water) groups only.
 	 *
- 	 * @return true if only non-polymeric groups in this chain.
-     */
+	 * @return true if only non-polymeric groups in this chain.
+	 */
 	public boolean isPureNonPolymer();
 
 	/**
@@ -453,7 +453,6 @@ public interface Chain extends Serializable {
 	/**
 	 * Tell whether given chain is a protein chain
 	 *
-
 	 * @return true if protein, false if nucleotide or ligand
 	 * @see #getPredominantGroupType()
 	 */

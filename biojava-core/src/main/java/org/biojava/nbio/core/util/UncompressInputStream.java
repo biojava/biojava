@@ -471,7 +471,7 @@ public class UncompressInputStream extends FilterInputStream {
 	 * Read a named file and uncompress it.
 	 * @param fileInName Name of compressed file.
 	 * @param out A destination for the result. It is closed after data is sent.
-         * @return number of bytes sent to the output stream,
+	 * @return number of bytes sent to the output stream,
 	 * @throws IOException for any error
 	 */
 	public static long uncompress(String fileInName, FileOutputStream out)
@@ -488,7 +488,7 @@ public class UncompressInputStream extends FilterInputStream {
 			logger.info("Decompressed {} bytes", total);
 			UncompressInputStream.logger.info("Time: {} seconds", (end - start) / 1000);
 		}
-                return total;
+		return total;
 	}
 
 	/**
@@ -518,7 +518,7 @@ public class UncompressInputStream extends FilterInputStream {
 	 * Reads a file, uncompresses it, and sends the result to stdout.
 	 * Also writes trivial statistics to stderr.
 	 * @param args An array with one String element, the name of the file to read.
- 	 * @throws IOException for any failure
+	 * @throws IOException for any failure
 	 */
 	public static void main(String[] args) throws Exception {
 		if (args.length != 1) {

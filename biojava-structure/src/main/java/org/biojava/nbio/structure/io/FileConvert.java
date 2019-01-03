@@ -244,7 +244,7 @@ public class FileConvert {
 
 					toPDB(g,str);
 
- 					waterGroupsExist = true;
+					waterGroupsExist = true;
 				}
 
 			}
