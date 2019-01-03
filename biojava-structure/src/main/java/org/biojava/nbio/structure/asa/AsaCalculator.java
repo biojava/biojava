@@ -37,17 +37,18 @@ import java.util.concurrent.Executors;
 /**
  * Class to calculate Accessible Surface Areas based on
  * the rolling ball algorithm by Shrake and Rupley.
- *
+ * <p>
  * The code is adapted from a python implementation at http://boscoh.com/protein/asapy
  * (now source is available at https://github.com/boscoh/asa).
  * Thanks to Bosco K. Ho for a great piece of code and for his fantastic blog.
- *
+ * <p>
  * See
  * Shrake, A., and J. A. Rupley. "Environment and Exposure to Solvent of Protein Atoms.
  * Lysozyme and Insulin." JMB (1973) 79:351-371.
  * Lee, B., and Richards, F.M. "The interpretation of Protein Structures: Estimation of
  * Static Accessibility" JMB (1971) 55:379-400
- * @author duarte_j
+ *
+ * @author Jose Duarte
  *
  */
 public class AsaCalculator {
@@ -396,7 +397,6 @@ public class AsaCalculator {
 	 * Returns the 2-dimensional array with neighbor indices for every atom,
 	 * using spatial hashing to avoid all to all distance calculation.
 	 * @return 2-dimensional array of size: n_atoms x n_neighbors_per_atom
-	 * @since 5.2.0
 	 */
 	int[][] findNeighborIndicesSpatialHashing() {
 
