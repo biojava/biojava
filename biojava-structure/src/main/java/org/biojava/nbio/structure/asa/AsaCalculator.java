@@ -63,7 +63,7 @@ public class AsaCalculator {
 	public static final double DEFAULT_PROBE_SIZE = 1.4;
 	public static final int DEFAULT_NTHREADS = 1;
 
-	public static final boolean DEFAULT_USE_SPATIAL_HASHING = true;
+	private static final boolean DEFAULT_USE_SPATIAL_HASHING = true;
 
 
 
