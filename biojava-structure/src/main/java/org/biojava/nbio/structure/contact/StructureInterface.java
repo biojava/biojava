@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Chain;
@@ -59,6 +61,8 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 	private static final long serialVersionUID = 1L;
 
 	private static final Logger logger = LoggerFactory.getLogger(StructureInterface.class);
+
+	private static final Pattern NCSCHAIN_NAME_REGEX = Pattern.compile("^([a-zA-Z]+)([0-9]+)?n?([0-9]+)?$");
 
 	/**
 	 * Interfaces with larger inverse self contact overlap score will be considered isologous
@@ -104,18 +108,18 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 			AtomContactSet contacts,
 			CrystalTransform firstTransf, CrystalTransform secondTransf) {
 
-		this.molecules = new Pair<Atom[]>(firstMolecule, secondMolecule);
-		this.moleculeIds = new Pair<String>(firstMoleculeId,secondMoleculeId);
+		this.molecules = new Pair<>(firstMolecule, secondMolecule);
+		this.moleculeIds = new Pair<>(firstMoleculeId,secondMoleculeId);
 		this.contacts = contacts;
-		this.transforms = new Pair<CrystalTransform>(firstTransf, secondTransf);
+		this.transforms = new Pair<>(firstTransf, secondTransf);
 	}
 
 	/**
 	 * Constructs an empty StructureInterface
 	 */
 	public StructureInterface() {
-		this.groupAsas1 = new TreeMap<ResidueNumber, GroupAsa>();
-		this.groupAsas2 = new TreeMap<ResidueNumber, GroupAsa>();
+		this.groupAsas1 = new TreeMap<>();
+		this.groupAsas2 = new TreeMap<>();
 	}
 
 	public int getId() {
@@ -133,7 +137,7 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 	 * @return
 	 */
 	public Pair<String> getCrystalIds() {
-		return new Pair<String>(
+		return new Pair<>(
 			moleculeIds.getFirst()+transforms.getFirst().getTransformId()+transforms.getFirst().getCrystalTranslation(),
 			moleculeIds.getSecond()+transforms.getSecond().getTransformId()+transforms.getSecond().getCrystalTranslation());
 	}
@@ -195,6 +199,66 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 
 	public void setTransforms(Pair<CrystalTransform> transforms) {
 		this.transforms = transforms;
+	}
+
+	/**
+	 * Set ASA collections by passing them externally.
+	 * To be used instead of {@link #setAsas(double[], double[], int, int, int)} to transfer ASA annotations
+	 * from another identical interface.
+	 * @param groupAsas1
+	 * @param groupAsas2
+	 * @param totalArea
+	 */
+	protected void setAsas(Map<ResidueNumber, GroupAsa> groupAsas1, Map<ResidueNumber, GroupAsa> groupAsas2, double totalArea) {
+		this.groupAsas1 = new TreeMap<>();
+		this.groupAsas2 = new TreeMap<>();
+		this.totalArea = totalArea;
+
+		for (Map.Entry<ResidueNumber, GroupAsa> entry : groupAsas1.entrySet()) {
+			ResidueNumber resNumber = entry.getKey();
+			GroupAsa groupAsa = entry.getValue();
+			Group g = findCorrespondingGroup(resNumber, true);
+			GroupAsa newGroupAsa = new GroupAsa(g);
+			newGroupAsa.setAsaC(groupAsa.getAsaC());
+			newGroupAsa.setAsaU(groupAsa.getAsaU());
+			this.groupAsas1.put(resNumber, newGroupAsa);
+		}
+		for (Map.Entry<ResidueNumber, GroupAsa> entry : groupAsas2.entrySet()) {
+			ResidueNumber resNumber = entry.getKey();
+			GroupAsa groupAsa = entry.getValue();
+			Group g = findCorrespondingGroup(resNumber, false);
+			GroupAsa newGroupAsa = new GroupAsa(g);
+			newGroupAsa.setAsaC(groupAsa.getAsaC());
+			newGroupAsa.setAsaU(groupAsa.getAsaU());
+			this.groupAsas2.put(resNumber, newGroupAsa);
+		}
+
+	}
+
+	private Group findCorrespondingGroup(ResidueNumber residueNumber, boolean first) {
+		Atom[] atoms;
+		if (first) {
+			atoms = molecules.getFirst();
+		} else {
+			atoms = molecules.getSecond();
+		}
+		for (Atom atom : atoms) {
+			ResidueNumber atomResNumber = atom.getGroup().getResidueNumber();
+			String atomOrigChainName = atomResNumber.getChainName();
+			Matcher m = NCSCHAIN_NAME_REGEX.matcher(atomOrigChainName);
+			if (m.matches())
+				atomOrigChainName = m.group(1);
+			String origChainName = residueNumber.getChainName();
+			m = NCSCHAIN_NAME_REGEX.matcher(origChainName);
+			if (m.matches())
+				origChainName = m.group(1);
+			if (atomResNumber.getSeqNum().equals(residueNumber.getSeqNum()) &&
+					(atomResNumber.getInsCode()!=null && atomResNumber.getInsCode().equals(residueNumber.getInsCode()) ) &&
+					atomOrigChainName.equals(origChainName)) {
+				return atom.getGroup();
+			}
+		}
+		return null;
 	}
 
 	protected void setAsas(double[] asas1, double[] asas2, int nSpherePoints, int nThreads, int cofactorSizeToUse) {

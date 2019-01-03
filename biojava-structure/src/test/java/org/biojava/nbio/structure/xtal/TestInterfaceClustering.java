@@ -24,7 +24,9 @@ import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
 import org.biojava.nbio.structure.Structure;
@@ -36,6 +38,8 @@ import org.biojava.nbio.structure.contact.StructureInterfaceList;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.PDBFileParser;
 import org.junit.Test;
+
+import javax.vecmath.Matrix4d;
 
 public class TestInterfaceClustering {
 
@@ -79,6 +83,36 @@ public class TestInterfaceClustering {
 		assertTrue("Interface 3 should be isologous",interfaces.get(3).isIsologous());
 
 
+
+	}
+
+	@Test
+	public void test1AUY() throws IOException, StructureException {
+
+		// 1AUY is a viral capsid with NCS ops
+
+		AtomCache cache = new AtomCache();
+		FileParsingParameters params = new FileParsingParameters();
+		params.setAlignSeqRes(true);
+		cache.setFileParsingParams(params);
+		cache.setUseMmCif(true);
+
+		StructureIO.setAtomCache(cache);
+
+		Structure s = StructureIO.getStructure("1AUY");
+
+		Map<String,String> chainOrigNames = new HashMap<>();
+		Map<String,Matrix4d> chainNcsOps = new HashMap<>();
+		CrystalBuilder.expandNcsOps(s,chainOrigNames,chainNcsOps);
+		CrystalBuilder cb = new CrystalBuilder(s, chainOrigNames, chainNcsOps);
+
+		StructureInterfaceList interfaces = cb.getUniqueInterfaces(5.5);
+		interfaces.calcAsas(100, 1, 0);
+		interfaces.removeInterfacesBelowArea();
+
+		List<StructureInterfaceCluster> clusters = interfaces.getClusters();
+
+		assertNotNull(interfaces.getClustersNcs());
 
 	}
 

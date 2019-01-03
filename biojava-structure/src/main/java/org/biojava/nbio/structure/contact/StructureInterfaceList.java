@@ -129,8 +129,20 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 		Map<String, Atom[]> uniqAsaChains = new TreeMap<>();
 		Map<String, double[]> chainAsas = new TreeMap<>();
 
+		List<StructureInterface> redundancyReducedList;
+		if (clustersNcs != null) {
+			redundancyReducedList = new ArrayList<>();
+			for (StructureInterfaceCluster ncsCluster : clustersNcs) {
+				// we use the first one in list as the only one needed to calculate ASAs. Then below we propagate to other members
+				redundancyReducedList.add(ncsCluster.getMembers().get(0));
+			}
+
+		} else {
+			redundancyReducedList = list;
+		}
+
 		// first we gather rotation-unique chains (in terms of AU id and transform id)
-		for (StructureInterface interf:list) {
+		for (StructureInterface interf:redundancyReducedList) {
 			String molecId1 = interf.getMoleculeIds().getFirst()+interf.getTransforms().getFirst().getTransformId();
 			String molecId2 = interf.getMoleculeIds().getSecond()+interf.getTransforms().getSecond().getTransformId();
 
@@ -159,12 +171,12 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 
 		logger.debug("Calculated uncomplexed ASA for {} orientation-unique chains. Time: {} s", uniqAsaChains.size(), ((end-start)/1000.0));
 
-		logger.debug ("Will calculate complexed ASA for {} pairwise complexes.", list.size());
+		logger.debug ("Will calculate complexed ASA for {} pairwise complexes.", redundancyReducedList.size());
 
 		start = System.currentTimeMillis();
 
 		// now we calculate the ASAs for each of the complexes
-		for (StructureInterface interf:list) {
+		for (StructureInterface interf:redundancyReducedList) {
 
 			String molecId1 = interf.getMoleculeIds().getFirst()+interf.getTransforms().getFirst().getTransformId();
 			String molecId2 = interf.getMoleculeIds().getSecond()+interf.getTransforms().getSecond().getTransformId();
@@ -176,8 +188,17 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 		}
 		end = System.currentTimeMillis();
 
-		logger.debug("Calculated complexes ASA for {} pairwise complexes. Time: {} s", list.size(), ((end-start)/1000.0));
+		logger.debug("Calculated complexes ASA for {} pairwise complexes. Time: {} s", redundancyReducedList.size(), ((end-start)/1000.0));
 
+		// now let's populate the NCS-redundant ones from the reference interface (first one in list)
+		if (clustersNcs!=null) {
+			for (StructureInterfaceCluster ncsCluster : clustersNcs) {
+				StructureInterface refInterf = ncsCluster.getMembers().get(0);
+				for (int i=1;i<ncsCluster.getMembers().size();i++) {
+					ncsCluster.getMembers().get(i).setAsas(refInterf.getFirstGroupAsas(), refInterf.getSecondGroupAsas(),refInterf.getTotalArea());
+				}
+			}
+		}
 
 		// finally we sort based on the ChainInterface.comparable() (based in interfaceArea)
 		sort();
@@ -300,7 +321,7 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 			return clusters;
 		}
 
-		clusters = new ArrayList<StructureInterfaceCluster>();
+		clusters = new ArrayList<>();
 
 		// nothing to do if we have no interfaces
 		if (list.size()==0) return clusters;
@@ -326,7 +347,7 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 
 		Map<Integer,Set<Integer>> clusteredIndices = slc.getClusters(contactOverlapScoreClusterCutoff);
 		for (int clusterIdx:clusteredIndices.keySet()) {
-			List<StructureInterface> members = new ArrayList<StructureInterface>();
+			List<StructureInterface> members = new ArrayList<>();
 			for (int idx:clusteredIndices.get(clusterIdx)) {
 				members.add(list.get(idx));
 			}
