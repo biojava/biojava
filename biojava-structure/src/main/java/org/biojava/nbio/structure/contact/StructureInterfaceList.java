@@ -133,7 +133,7 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 		if (clustersNcs != null) {
 			redundancyReducedList = new ArrayList<>();
 			for (StructureInterfaceCluster ncsCluster : clustersNcs) {
-				// we use the first one in list as the only one needed to calculate ASAs. Then below we propagate to other members
+				// we use the first one in list as the only one for which we calculate ASAs
 				redundancyReducedList.add(ncsCluster.getMembers().get(0));
 			}
 
@@ -189,16 +189,6 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 		end = System.currentTimeMillis();
 
 		logger.debug("Calculated complexes ASA for {} pairwise complexes. Time: {} s", redundancyReducedList.size(), ((end-start)/1000.0));
-
-		// now let's populate the NCS-redundant ones from the reference interface (first one in list)
-		if (clustersNcs!=null) {
-			for (StructureInterfaceCluster ncsCluster : clustersNcs) {
-				StructureInterface refInterf = ncsCluster.getMembers().get(0);
-				for (int i=1;i<ncsCluster.getMembers().size();i++) {
-					ncsCluster.getMembers().get(i).setAsas(refInterf.getFirstGroupAsas(), refInterf.getSecondGroupAsas(),refInterf.getTotalArea());
-				}
-			}
-		}
 
 		// finally we sort based on the ChainInterface.comparable() (based in interfaceArea)
 		sort();

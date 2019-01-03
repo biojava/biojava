@@ -22,8 +22,6 @@ package org.biojava.nbio.structure.contact;
 
 import java.io.Serializable;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Chain;
@@ -58,8 +56,6 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 	private static final long serialVersionUID = 1L;
 
 	private static final Logger logger = LoggerFactory.getLogger(StructureInterface.class);
-
-	private static final Pattern NCSCHAIN_NAME_REGEX = Pattern.compile("^([a-zA-Z]+)([0-9]+)?n?([0-9]+)?$");
 
 	/**
 	 * Interfaces with larger inverse self contact overlap score will be considered isologous
@@ -196,92 +192,6 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 
 	public void setTransforms(Pair<CrystalTransform> transforms) {
 		this.transforms = transforms;
-	}
-
-	/**
-	 * Set ASA collections by passing them externally.
-	 * To be used instead of {@link #setAsas(double[], double[], int, int, int)} to transfer ASA annotations
-	 * from another identical interface.
-	 * <p>
-	 * Note that the order of the 2 parameters does not need to match the order of the 2 partners in this interface.
-	 * They will be matched up based on chain names.
-	 * @param groupAsas1 the ASA values per group for one of the partners.
-	 * @param groupAsas2 the ASA values per group for the other partner
-	 * @param totalArea the total BSA for this interface
-	 */
-	void setAsas(Map<ResidueNumber, GroupAsa> groupAsas1, Map<ResidueNumber, GroupAsa> groupAsas2, double totalArea) {
-		this.groupAsas1 = new TreeMap<>();
-		this.groupAsas2 = new TreeMap<>();
-		this.totalArea = totalArea;
-
-		setAsasPartner(groupAsas1);
-		setAsasPartner(groupAsas2);
-	}
-
-	private void setAsasPartner(Map<ResidueNumber, GroupAsa> srcGroupAsas) {
-		String srcChainName = null;
-		ResidueNumber resNum = srcGroupAsas.values().iterator().next().getGroup().getResidueNumber();
-		Matcher m = NCSCHAIN_NAME_REGEX.matcher(resNum.getChainName());
-		if (m.matches())
-			srcChainName = m.group(1);
-
-		if (srcChainName == null) {
-			throw new IllegalArgumentException("Could not find base chainName from " + resNum.getChainName());
-		}
-		String tgtChainName1 = null;
-		m = NCSCHAIN_NAME_REGEX.matcher(moleculeIds.getFirst());
-		if (m.matches())
-			tgtChainName1 = m.group(1);
-
-		String tgtChainName2 = null;
-		m = NCSCHAIN_NAME_REGEX.matcher(moleculeIds.getSecond());
-		if (m.matches())
-			tgtChainName2 = m.group(1);
-
-		if (tgtChainName1 == null || tgtChainName2 == null) {
-			throw new RuntimeException("Regex could not match a chain name out of " + moleculeIds.getFirst() + " or " + moleculeIds.getSecond() + ". This is a bug!");
-		}
-
-		Atom[] atoms;
-		Map<ResidueNumber, GroupAsa> tgtGroupAsas;
-		if (srcChainName.equals(tgtChainName1)) {
-			atoms = molecules.getFirst();
-			tgtGroupAsas = groupAsas1;
-		} else if (srcChainName.equals(tgtChainName2)) {
-			atoms = molecules.getSecond();
-			tgtGroupAsas = groupAsas2;
-		} else {
-			throw new IllegalArgumentException("Passed srcGroupAsas chain name ("+srcChainName+") does not match molecule1 ("+tgtChainName1+") nor molecule2 ("+tgtChainName2+")");
-		}
-
-		Map<String, Group> lookup = createResidueLookup(atoms);
-
-		for (Map.Entry<ResidueNumber, GroupAsa> entry : srcGroupAsas.entrySet()) {
-			ResidueNumber resNumber = entry.getKey();
-			String key = Integer.toString(resNumber.getSeqNum());
-			if (resNumber.getInsCode()!=null)
-				key += "_" + resNumber.getInsCode();
-			GroupAsa groupAsa = entry.getValue();
-			Group g = lookup.get(key);
-			GroupAsa newGroupAsa = new GroupAsa(g);
-			newGroupAsa.setAsaC(groupAsa.getAsaC());
-			newGroupAsa.setAsaU(groupAsa.getAsaU());
-			tgtGroupAsas.put(resNumber, newGroupAsa);
-
-		}
-	}
-
-	private Map<String, Group> createResidueLookup(Atom[] atoms) {
-		Map<String, Group> lookup = new HashMap<>();
-		for (Atom atom : atoms) {
-			ResidueNumber resNumber = atom.getGroup().getResidueNumber();
-			String key = Integer.toString(resNumber.getSeqNum());
-			if (resNumber.getInsCode()!=null)
-				key += "_" + resNumber.getInsCode();
-			if (!lookup.containsKey(key))
-				lookup.put(key, atom.getGroup());
-		}
-		return lookup;
 	}
 
 	/**
