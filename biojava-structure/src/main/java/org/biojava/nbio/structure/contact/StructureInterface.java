@@ -209,8 +209,8 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 			throw new IllegalArgumentException("The size of ASAs of complex doesn't match that of ASAs 1 + ASAs 2");
 
 
-		groupAsas1 = new TreeMap<ResidueNumber, GroupAsa>();
-		groupAsas2 = new TreeMap<ResidueNumber, GroupAsa>();
+		groupAsas1 = new TreeMap<>();
+		groupAsas2 = new TreeMap<>();
 
 		this.totalArea = 0;
 

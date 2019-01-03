@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
 /**
  * A list of interfaces between 2 molecules (2 sets of atoms)
  *
- * @author duarte_j
+ * @author Jose Duarte
  *
  */
 public class StructureInterfaceList implements Serializable, Iterable<StructureInterface> {
@@ -126,8 +126,8 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 		// we get discrepancies (not very big but annoying) which lead to things like negative (small) bsa values
 
 
-		Map<String, Atom[]> uniqAsaChains = new TreeMap<String, Atom[]>();
-		Map<String, double[]> chainAsas = new TreeMap<String, double[]>();
+		Map<String, Atom[]> uniqAsaChains = new TreeMap<>();
+		Map<String, double[]> chainAsas = new TreeMap<>();
 
 		// first we gather rotation-unique chains (in terms of AU id and transform id)
 		for (StructureInterface interf:list) {
@@ -138,10 +138,14 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 			uniqAsaChains.put(molecId2, interf.getSecondAtomsForAsa(cofactorSizeToUse));
 		}
 
+		logger.debug("Will calculate uncomplexed ASA for {} orientation-unique chains.", uniqAsaChains.size());
+
 		long start = System.currentTimeMillis();
 
 		// we only need to calculate ASA for that subset (any translation of those will have same values)
 		for (String molecId:uniqAsaChains.keySet()) {
+
+			logger.debug("Calculating uncomplexed ASA for molecId {}, with {} atoms", molecId, uniqAsaChains.get(molecId).length);
 
 			AsaCalculator asaCalc = new AsaCalculator(uniqAsaChains.get(molecId),
 					AsaCalculator.DEFAULT_PROBE_SIZE, nSpherePoints, nThreads);
@@ -153,8 +157,9 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 		}
 		long end = System.currentTimeMillis();
 
-		logger.debug("Calculated uncomplexed ASA for "+uniqAsaChains.size()+" orientation-unique chains. "
-					+ "Time: "+((end-start)/1000.0)+" s");
+		logger.debug("Calculated uncomplexed ASA for {} orientation-unique chains. Time: {} s", uniqAsaChains.size(), ((end-start)/1000.0));
+
+		logger.debug ("Will calculate complexed ASA for {} pairwise complexes.", list.size());
 
 		start = System.currentTimeMillis();
 
@@ -164,13 +169,14 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 			String molecId1 = interf.getMoleculeIds().getFirst()+interf.getTransforms().getFirst().getTransformId();
 			String molecId2 = interf.getMoleculeIds().getSecond()+interf.getTransforms().getSecond().getTransformId();
 
+			logger.debug("Calculating complexed ASAs for interface {} between molecules {} and {}", interf.getId(), molecId1, molecId2);
+
 			interf.setAsas(chainAsas.get(molecId1), chainAsas.get(molecId2), nSpherePoints, nThreads, cofactorSizeToUse);
 
 		}
 		end = System.currentTimeMillis();
 
-		logger.debug("Calculated complexes ASA for "+list.size()+" pairwise complexes. "
-					+ "Time: "+((end-start)/1000.0)+" s");
+		logger.debug("Calculated complexes ASA for {} pairwise complexes. Time: {} s", list.size(), ((end-start)/1000.0));
 
 
 		// finally we sort based on the ChainInterface.comparable() (based in interfaceArea)

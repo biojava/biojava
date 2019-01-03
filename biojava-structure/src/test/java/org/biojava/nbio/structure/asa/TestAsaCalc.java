@@ -20,22 +20,22 @@
  */
 package org.biojava.nbio.structure.asa;
 
-import junit.framework.TestCase;
-import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.StructureIO;
+import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
 import org.biojava.nbio.structure.io.mmcif.DownloadChemCompProvider;
-import org.junit.Assert;
+import static org.junit.Assert.*;
+
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Testing of Accessible Surface Area calculations
  *
  *
- * @author duarte_j
+ * @author Jose Duarte
  *
  */
 public class TestAsaCalc {
@@ -70,12 +70,114 @@ public class TestAsaCalc {
 			//System.out.println(groupAsa.getGroup().getPDBName() + " " + groupAsa.getGroup().getResidueNumber() + " " + groupAsa.getAsaU());
 			totResidues+=groupAsa.getAsaU();
 
-			Assert.assertTrue(groupAsa.getRelativeAsaU() <= 1.0);
+			assertTrue(groupAsa.getRelativeAsaU() <= 1.0);
 		}
 
-		Assert.assertEquals(totAtoms, totResidues, 0.000001);
+		assertEquals(totAtoms, totResidues, 0.000001);
 
-		Assert.assertEquals(17462.0, totAtoms, 1.0);
+		assertEquals(17462.0, totAtoms, 1.0);
+
+	}
+
+	@Test
+	public void testNeighborIndicesFinding() throws StructureException, IOException {
+		// important: without this the tests can fail when running in maven (but not in IDE)
+		// that's because it depends on the order on how tests were run - JD 2018-03-10
+		ChemCompGroupFactory.setChemCompProvider(new DownloadChemCompProvider());
+
+		Structure structure = StructureIO.getStructure("3PIU");
+
+		AsaCalculator asaCalc = new AsaCalculator(structure,
+				AsaCalculator.DEFAULT_PROBE_SIZE,
+				1000, 1, false);
+
+		int[][] allNbsSh = asaCalc.findNeighborIndicesSpatialHashing();
+
+		int[][] allNbs = asaCalc.findNeighborIndices();
+
+		for (int indexToTest =0; indexToTest < asaCalc.getAtomCoords().length; indexToTest++) {
+			//int indexToTest = 198;
+			int[] nbsSh = allNbsSh[indexToTest];
+			int[] nbs = allNbs[indexToTest];
+
+			List<Integer> listOfMatchingIndices = new ArrayList<>();
+			for (int i = 0; i < nbsSh.length; i++) {
+				for (int j = 0; j < nbs.length; j++) {
+					if (nbs[j] == nbsSh[i]) {
+						listOfMatchingIndices.add(j);
+						break;
+					}
+				}
+			}
+			
+//		for (int i = 0; i<nbs.length; i++) {
+//			double dist = asaCalc.getAtomCoords()[i].distance(asaCalc.getAtomCoords()[indexToTest]);
+//			if (listOfMatchingIndices.contains(i)) {
+//				System.out.printf("Matching     - indices %d-%d: %5.2f\n", indexToTest, i, dist);
+//			} else {
+//				System.out.printf("Not matching - indices %d-%d: %5.2f\n", indexToTest, i, dist);
+//			}
+//		}
+
+			assertEquals(nbs.length, nbsSh.length);
+
+			assertEquals(nbs.length, listOfMatchingIndices.size());
+		}
+
+	}
+
+	@Test
+	public void testPerformance() throws StructureException, IOException {
+		// important: without this the tests can fail when running in maven (but not in IDE)
+		// that's because it depends on the order on how tests were run - JD 2018-03-10
+		ChemCompGroupFactory.setChemCompProvider(new DownloadChemCompProvider());
+
+		Structure structure = StructureIO.getStructure("3HBX");
+		Atom[] atoms = StructureTools.getAllAtomArray(structure);
+		System.out.printf("Total of %d atoms. n(n-1)/2= %d \n", atoms.length, atoms.length*(atoms.length-1)/2);
+
+		int nThreads = 1;
+		int nSpherePoints = 100;
+
+		// 1. WITH SPATIAL HASHING
+		long start = System.currentTimeMillis();
+		AsaCalculator asaCalc = new AsaCalculator(atoms,
+				AsaCalculator.DEFAULT_PROBE_SIZE,
+				nSpherePoints, nThreads);
+		asaCalc.setUseSpatialHashingForNeighbors(true);
+
+		double[] asas = asaCalc.calculateAsas();
+		long end = System.currentTimeMillis();
+		System.out.printf("ASA calculation took %6.2f s with spatial hashing\n", (end-start)/1000.0);
+
+		double totAtoms = 0;
+		for (double asa:asas) {
+			totAtoms += asa;
+		}
+		double withSH = totAtoms;
+		System.out.printf("Total ASA is %6.2f \n", totAtoms);
+
+
+		// 2. WITHOUT SPATIAL HASHING
+		start = System.currentTimeMillis();
+		asaCalc = new AsaCalculator(atoms,
+				AsaCalculator.DEFAULT_PROBE_SIZE,
+				nSpherePoints, nThreads);
+		asaCalc.setUseSpatialHashingForNeighbors(false);
+
+		asas = asaCalc.calculateAsas();
+		end = System.currentTimeMillis();
+		System.out.printf("ASA calculation took %6.2f s without spatial hashing\n", (end-start)/1000.0);
+
+		totAtoms = 0;
+		for (double asa:asas) {
+			totAtoms += asa;
+		}
+		double withoutSH = totAtoms;
+		System.out.printf("Total ASA is %6.2f \n", totAtoms);
+
+
+		assertEquals(withoutSH, withSH, 0.000001);
 
 	}
 }
