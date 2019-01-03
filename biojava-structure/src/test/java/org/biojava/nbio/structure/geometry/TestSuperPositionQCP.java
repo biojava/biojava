@@ -38,7 +38,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Test the Quaternion-Based Characteristic Polynomial {@link SuperPositionQCP}
  * algorithm for RMSD and Superposition calculations.
- * 
+ *
  * @author Aleix Lafita
  * @since 5.0.0
  *
@@ -141,7 +141,7 @@ public class TestSuperPositionQCP {
 		}
 
 		CalcPoint.transform(transform, c1);
-		
+
 		SuperPositionQCP qcp = new SuperPositionQCP(false);
 
 		// Step 1 calculate RMSD

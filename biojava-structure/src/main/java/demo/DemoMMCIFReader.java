@@ -49,7 +49,7 @@ public class DemoMMCIFReader
 
 	}
 
-	/** 
+	/**
 	 * A basic example how to load an mmCif file and get a Structure object
 	 *
 	 */
@@ -84,7 +84,7 @@ public class DemoMMCIFReader
 
 		try {
 			Structure s = pdbreader.getStructureById(pdbId);
-			
+
 			System.out.println("Getting chain H of 1A4W");
 
 			List<Chain> hs = s.getNonPolyChainsByPDB("H");

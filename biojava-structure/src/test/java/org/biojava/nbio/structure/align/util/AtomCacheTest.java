@@ -81,7 +81,7 @@ public class AtomCacheTest {
 	@Before
 	public void setUp() {
 		GlobalsHelper.pushState();
-		
+
 		cache = new AtomCache();
 		cache.setObsoleteBehavior(ObsoleteBehavior.FETCH_OBSOLETE);
 		StructureIO.setAtomCache(cache);
@@ -297,14 +297,14 @@ public class AtomCacheTest {
 		// normal structure
 		name = "1hh0";
 		id = new SubstructureIdentifier(name);
-		
+
 		full = id.loadStructure(cache);
 		assertEquals("Wrong number of models in full "+name,1,full.nrModels());
 		assertEquals("Wrong number of chains in full "+name,1,full.getChains().size());
 		chain = full.getChainByIndex(0);
 		seqres = chain.getSeqResGroups();
 		assertEquals("Wrong seqres length in full "+name,46,seqres.size());
-		
+
 		reduced = id.reduce(full);
 		assertEquals("Wrong number of models in reduced "+name,1,reduced.nrModels());
 		assertEquals("Wrong number of chains in reduced "+name,1,reduced.getChains().size());
@@ -315,14 +315,14 @@ public class AtomCacheTest {
 		// single chain
 		name = "1hh0.A";
 		id = new SubstructureIdentifier(name);
-		
+
 		full = id.loadStructure(cache);
 		assertEquals("Wrong number of models in full "+name,1,full.nrModels());
 		assertEquals("Wrong number of chains in full "+name,1,full.getChains().size());
 		chain = full.getChainByIndex(0);
 		seqres = chain.getSeqResGroups();
 		assertEquals("Wrong seqres length in full "+name,46,seqres.size());
-		
+
 		reduced = id.reduce(full);
 		assertEquals("Wrong number of models in reduced "+name,1,reduced.nrModels());
 		assertEquals("Wrong number of chains in reduced "+name,1,reduced.getChains().size());
@@ -333,7 +333,7 @@ public class AtomCacheTest {
 		// subrange
 		name = "1hh0.A:10-20";
 		id = new SubstructureIdentifier(name);
-		
+
 		full = id.loadStructure(cache);
 		assertEquals("Wrong number of models in full "+name,1,full.nrModels());
 		assertEquals("Wrong number of chains in full "+name,1,full.getChains().size());
@@ -348,14 +348,14 @@ public class AtomCacheTest {
 		chain = reduced.getChainByIndex(0);
 		seqres = chain.getSeqResGroups();
 		assertEquals("Wrong seqres length in reduced "+name,46,seqres.size());
-		
+
 		assertEquals("Wrong SeqNum at first group in reduced",10,(int)chain.getAtomGroup(0).getResidueNumber().getSeqNum());
 
 	}
-	
+
 	/**
 	 * Test for #703 - Chemical component cache poisoning
-	 * 
+	 *
 	 * Handle empty CIF files
 	 * @throws IOException
 	 * @throws StructureException
@@ -381,26 +381,26 @@ public class AtomCacheTest {
 			Files.createFile(chemCompCif);
 			assertTrue(Files.exists(chemCompCif));
 			assertEquals(0, Files.size(chemCompCif));
-			
+
 			// Copy stub file into place
 			Path testCif = tmpCache.resolve(Paths.get("data", "structures", "divided", "mmCIF", "ab","1abc.cif.gz"));
 			Files.createDirectories(testCif.getParent());
 			URL resource = AtomCacheTest.class.getResource("/atp.cif.gz");
 			File src = new File(resource.getPath());
 			FileDownloadUtils.copy(src, testCif.toFile());
-			
+
 			// Load structure
 			Structure s = cache.getStructure("1ABC");
-			
+
 			// Should have re-downloaded the file
 			assertTrue(Files.size(chemCompCif) > LocalPDBDirectory.MIN_PDB_FILE_SIZE);
-			
+
 			// Structure should have valid ChemComp now
 			assertNotNull(s);
-			
+
 			Group g = s.getChain("A").getAtomGroup(0);
 			assertTrue(g.getPDBName().equals("ATP"));
-			
+
 			// should be unknown
 			ChemComp chem = g.getChemComp();
 			assertNotNull(chem);
@@ -410,17 +410,17 @@ public class AtomCacheTest {
 			FileDownloadUtils.deleteDirectory(tmpCache);
 		}
 	}
-	
+
 	/**
 	 * Test for #703 - Chemical component cache poisoning
-	 * 
+	 *
 	 * Handle empty CIF files
 	 * @throws IOException
 	 * @throws StructureException
 	 */
 	@Test
 	public void testEmptyGZChemComp() throws IOException, StructureException {
-		
+
 		Path tmpCache = Paths.get(System.getProperty("java.io.tmpdir"),"BIOJAVA_TEST_CACHE");
 		logger.info("Testing AtomCache at {}", tmpCache.toString());
 		System.setProperty(UserConfiguration.PDB_DIR, tmpCache.toString());
@@ -434,7 +434,7 @@ public class AtomCacheTest {
 			cache.setUseMmCif(true);
 			ChemCompGroupFactory.setChemCompProvider(new DownloadChemCompProvider(tmpCache.toString()));
 
-			
+
 			// Create an empty chemcomp
 			Path sub = tmpCache.resolve(Paths.get("chemcomp", "ATP.cif.gz"));
 			Files.createDirectories(sub.getParent());
@@ -444,26 +444,26 @@ public class AtomCacheTest {
 			}
 			assertTrue(Files.exists(sub));
 			assertTrue(0 < Files.size(sub) && Files.size(sub) < LocalPDBDirectory.MIN_PDB_FILE_SIZE);
-			
+
 			// Copy stub file into place
 			Path testCif = tmpCache.resolve(Paths.get("data", "structures", "divided", "mmCIF", "ab","1abc.cif.gz"));
 			Files.createDirectories(testCif.getParent());
 			URL resource = AtomCacheTest.class.getResource("/atp.cif.gz");
 			File src = new File(resource.getPath());
 			FileDownloadUtils.copy(src, testCif.toFile());
-			
+
 			// Load structure
 			Structure s = cache.getStructure("1ABC");
-			
+
 			// Should have re-downloaded the file
 			assertTrue(Files.size(sub) > LocalPDBDirectory.MIN_PDB_FILE_SIZE);
-			
+
 			// Structure should have valid ChemComp
 			assertNotNull(s);
-			
+
 			Group g = s.getChain("A").getAtomGroup(0);
 			assertTrue(g.getPDBName().equals("ATP"));
-			
+
 			// should be unknown
 			ChemComp chem = g.getChemComp();
 			assertNotNull(chem);
@@ -473,5 +473,5 @@ public class AtomCacheTest {
 			FileDownloadUtils.deleteDirectory(tmpCache);
 		}
 	}
-	
+
 }

@@ -28,7 +28,7 @@ import org.biojava.nbio.structure.jama.Matrix;
 
 /**
  * Utility operations on Point3d.
- * 
+ *
  * @author Aleix Lafita
  * @since 5.0.0
  *
@@ -42,7 +42,7 @@ public class CalcPoint {
 	/**
 	 * Center a cloud of points. This means subtracting the {@lin
 	 * #centroid(Point3d[])} of the cloud to each point.
-	 * 
+	 *
 	 * @param x
 	 *            array of points. Point objects will be modified
 	 */
@@ -54,7 +54,7 @@ public class CalcPoint {
 
 	/**
 	 * Calculate the centroid of the point cloud.
-	 * 
+	 *
 	 * @param x
 	 *            array of points. Point objects will not be modified
 	 * @return centroid as Point3d
@@ -70,7 +70,7 @@ public class CalcPoint {
 
 	/**
 	 * Transform all points with a 4x4 transformation matrix.
-	 * 
+	 *
 	 * @param rotTrans
 	 *            4x4 transformation matrix
 	 * @param x
@@ -84,7 +84,7 @@ public class CalcPoint {
 
 	/**
 	 * Translate all points with a translation vector.
-	 * 
+	 *
 	 * @param trans
 	 *            the translation vector to apply
 	 * @param x
@@ -98,7 +98,7 @@ public class CalcPoint {
 
 	/**
 	 * Clone an array of points.
-	 * 
+	 *
 	 * @param x
 	 *            original array of points. Point objects will not be modified
 	 * @return new array of points, identical clone of x
@@ -113,7 +113,7 @@ public class CalcPoint {
 
 	/*
 	 * Peter can you document this method? TODO
-	 * 
+	 *
 	 * @param moved
 	 * @param fixed
 	 * @return
@@ -160,7 +160,7 @@ public class CalcPoint {
 	 * Returns the TM-Score for two superimposed sets of coordinates Yang Zhang
 	 * and Jeffrey Skolnick, PROTEINS: Structure, Function, and Bioinformatics
 	 * 57:702–710 (2004)
-	 * 
+	 *
 	 * @param x
 	 *            coordinate set 1
 	 * @param y
@@ -170,12 +170,12 @@ public class CalcPoint {
 	 * @return
 	 */
 	public static double TMScore(Point3d[] x, Point3d[] y, int lengthNative) {
-		
+
 		if (x.length != y.length) {
 			throw new IllegalArgumentException(
 					"Point arrays are not of the same length.");
 		}
-		
+
 		double d0 = 1.24 * Math.cbrt(x.length - 15.0) - 1.8;
 		double d0Sq = d0 * d0;
 
@@ -189,20 +189,20 @@ public class CalcPoint {
 
 	/*
 	 * Needs documentation!
-	 * 
+	 *
 	 * @param x
-	 * 
+	 *
 	 * @param y
-	 * 
+	 *
 	 * @return
 	 */
 	public static double GTSlikeScore(Point3d[] x, Point3d[] y) {
-		
+
 		if (x.length != y.length) {
 			throw new IllegalArgumentException(
 					"Point arrays are not of the same length.");
 		}
-		
+
 		int contacts = 0;
 
 		for (Point3d px : x) {
@@ -234,7 +234,7 @@ public class CalcPoint {
 
 	/**
 	 * Calculate the RMSD of two point arrays, already superposed.
-	 * 
+	 *
 	 * @param x
 	 *            array of points superposed to y
 	 * @param y
@@ -242,12 +242,12 @@ public class CalcPoint {
 	 * @return RMSD
 	 */
 	public static double rmsd(Point3d[] x, Point3d[] y) {
-		
+
 		if (x.length != y.length) {
 			throw new IllegalArgumentException(
 					"Point arrays are not of the same length.");
 		}
-		
+
 		double sum = 0.0;
 		for (int i = 0; i < x.length; i++) {
 			sum += x[i].distanceSquared(y[i]);
@@ -257,20 +257,20 @@ public class CalcPoint {
 
 	/*
 	 * Needs documentation!
-	 * 
+	 *
 	 * @param x
-	 * 
+	 *
 	 * @param y
-	 * 
+	 *
 	 * @return
 	 */
 	public static double rmsdMin(Point3d[] x, Point3d[] y) {
-		
+
 		if (x.length != y.length) {
 			throw new IllegalArgumentException(
 					"Point arrays are not of the same length.");
 		}
-		
+
 		double sum = 0.0;
 		for (int i = 0; i < x.length; i++) {
 			double minDist = Double.MAX_VALUE;
@@ -284,13 +284,13 @@ public class CalcPoint {
 
 	/*
 	 * Needs documentation!
-	 * 
+	 *
 	 * @param x
-	 * 
+	 *
 	 * @param y
-	 * 
+	 *
 	 * @param maxDistance
-	 * 
+	 *
 	 * @return
 	 */
 	public static int contacts(Point3d[] x, Point3d[] y, double maxDistance) {

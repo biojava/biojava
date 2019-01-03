@@ -39,8 +39,8 @@ import org.biojava.nbio.structure.cluster.SubunitClustererParameters;
  * <p>
  * Big oligomers: cytochrome bc1 complexes (1bcc, 1kb9, 1qcr), phycocyanin
  * (2VML, 2BV8), bacterial ribosome (1FJG, 4V54).
- * 
- * 
+ *
+ *
  * @author Aleix Lafita
  * @since 5.0.0
  *

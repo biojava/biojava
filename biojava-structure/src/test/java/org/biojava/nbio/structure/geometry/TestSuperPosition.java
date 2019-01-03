@@ -42,7 +42,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Test and compare the different superposition methods implemented in BioJava.
- * 
+ *
  * @author Aleix Lafita
  * @author Jose Duarte
  * @since 5.0.0
@@ -59,14 +59,14 @@ public class TestSuperPosition {
 	private static final AxisAngle4d rotAxis = new AxisAngle4d(0.440, 0.302, 0.845, 1.570);
 	private static final Vector3d translation = new Vector3d(0.345, 2.453, 5.324);;
 	private static Matrix4d transform;
-		
+
 	// a translation to apply to cloud point 2 for the rmsd test only
 	private static final Vector3d translation2 = new Vector3d(1.32, -1.03, 6.28);
 
 	/**
 	 * Generate two clouds of random points of different sizes to test
 	 * correctness and performance of superposition algorithms.
-	 * 
+	 *
 	 * @throws StructureException
 	 */
 	@Before
@@ -103,11 +103,11 @@ public class TestSuperPosition {
 			CalcPoint.center(c1);
 			CalcPoint.center(c2);
 
-			CalcPoint.transform(transform, c1);			
+			CalcPoint.transform(transform, c1);
 
 			cloud1.add(c1);
 			cloud2.add(c2);
-					
+
 			Point3d centroid1 = CalcPoint. centroid(c1);
 			Point3d centroid2 = CalcPoint. centroid(c2);
 			LOGGER.debug("Centroid c1 (size %d): (%.2f, %.2f, %.2f)\n", size, centroid1.x, centroid1.y, centroid1.z);
@@ -159,16 +159,16 @@ public class TestSuperPosition {
 	 */
 	@Test
 	public void testRMSD() {
-		
+
 		// for the rmsd test we first make sure that both cloud points are not centered in origin so that the centering is tested too
 		// first cloud points are already centered, we translate cloud2 only
 		for (int c=0; c<cloud2.size(); c++) {
 			CalcPoint.translate(translation2, cloud2.get(c));
-			
-			Point3d centroid2 = CalcPoint. centroid(cloud2.get(c));			
+
+			Point3d centroid2 = CalcPoint. centroid(cloud2.get(c));
 			LOGGER.debug("Centroid c2 (index %d): (%.2f, %.2f, %.2f)\n", c, centroid2.x, centroid2.y, centroid2.z);
 		}
-		
+
 
 		for (int c = 0; c < cloud1.size(); c++) {
 

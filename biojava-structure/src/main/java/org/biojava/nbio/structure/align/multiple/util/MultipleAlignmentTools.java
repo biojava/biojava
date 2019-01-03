@@ -820,7 +820,7 @@ public class MultipleAlignmentTools {
 		}
 		return msa;
 	}
-	
+
 	public static Structure toMultimodelStructure(MultipleAlignment multAln, List<Atom[]> transformedAtoms) throws StructureException {
 		PDBHeader header = new PDBHeader();
 		String title = multAln.getEnsemble().getAlgorithmName() + " V."
@@ -857,7 +857,7 @@ public class MultipleAlignmentTools {
 		}
 		return s;
 	}
-	
+
 	/**
 	 * Calculate the RMSD matrix of a MultipleAlignment, that is, entry (i,j) of
 	 * the matrix contains the RMSD between structures i and j.

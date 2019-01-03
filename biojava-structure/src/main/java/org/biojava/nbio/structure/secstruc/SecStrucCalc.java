@@ -705,7 +705,7 @@ public class SecStrucCalc {
 
 	private static SecStrucGroup[] initGroupArray(Structure s, int modelId) {
 		List<SecStrucGroup> groupList = new ArrayList<SecStrucGroup>();
-		// 
+		//
 		for ( Chain c : s.getChains(modelId)){
 
 			for (Group g : c.getAtomGroups()){
@@ -1049,7 +1049,7 @@ public class SecStrucCalc {
 	}
 
 	private void buildHelices(){
-		
+
 		//Alpha-helix (i+4), 3-10-helix (i+3), Pi-helix (i+5)
 		checkSetHelix(4, SecStrucType.helix4);
 		checkSetHelix(3, SecStrucType.helix3);

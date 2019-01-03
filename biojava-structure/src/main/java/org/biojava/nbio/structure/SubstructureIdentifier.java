@@ -73,7 +73,7 @@ public class SubstructureIdentifier implements StructureIdentifier {
 	private static final long serialVersionUID = 1L;
 
 	private static final Logger logger = LoggerFactory.getLogger(SubstructureIdentifier.class);
-	
+
 
 	private final String pdbId;
 	private final List<ResidueRange> ranges;
@@ -161,7 +161,7 @@ public class SubstructureIdentifier implements StructureIdentifier {
 	 *
 	 * <p>The returned structure will be a shallow copy of the input, with shared
 	 * Chains, Residues, etc.
-	 * 
+	 *
 	 * <p>Ligands are handled in a special way. If a full chain is selected
 	 * (e.g. '1ABC.A') then any waters and ligands with matching chain name are
 	 * included. If a residue range is present ('1ABC.A:1-100') then any
@@ -264,7 +264,7 @@ public class SubstructureIdentifier implements StructureIdentifier {
 						if( waters != null) {
 							StructureTools.addGroupsToStructure(newS, waters.getAtomGroups(), modelNr, false);
 						}
-						
+
 						// TODO do we need to prune SeqRes down to the atoms present? -SB 2016-10-7
 					} else {
 						// Include polymer range and any proximal ligands

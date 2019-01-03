@@ -61,20 +61,20 @@ public class TestMMCIFWriting {
 		// an NMR structure (multimodel) with 2 chains
 		testRoundTrip("2N3J");
 	}
-	
+
 	@Test
 	public void test1A2C() throws IOException, StructureException {
 		// a structure with insertion codes
-		testRoundTrip("1A2C");	
+		testRoundTrip("1A2C");
 	}
-	
+
 	private static class DemoBean {
 		@IgnoreField
 		String not_a_field;
-		
+
 		@SuppressWarnings("unused")//used by reflection
 		String default_field;
-		
+
 		@CIFLabel(label="custom_label")
 		String custom_field;
 
@@ -95,19 +95,19 @@ public class TestMMCIFWriting {
 		bean.setCustom_field("custom_field");
 		bean.setDefault_field(null);
 		bean.setNot_a_field("not_a_field");
-		
-		
+
+
 		// Test (1) should have custom_label (@CIFLabel)
 		//      (2) shouldn't have not_a_field (@IgnoreField)
 		String newline = System.getProperty("line.separator");
 		String mmcif = MMCIFFileTools.toMMCIF("_demo", bean);
-		String expected = 
+		String expected =
 				  "_demo.default_field   ?" + newline
 				+ "_demo.custom_label    custom_field" + newline
 				+ "#" + newline;
 		assertEquals(expected, mmcif);
 	}
-	
+
 	private static void testRoundTrip(String pdbId) throws IOException, StructureException {
 		AtomCache cache = new AtomCache();
 
@@ -155,10 +155,10 @@ public class TestMMCIFWriting {
 			assertEquals(originalStruct.getModel(i).size(), readStruct.getModel(i).size());
 		}
 
-		
-		
+
+
 		for (int modelIdx=0;modelIdx<originalStruct.nrModels();modelIdx++) {
-			
+
 			for (int i=0;i<originalStruct.getModel(modelIdx).size();i++) {
 				assertEquals(originalStruct.getChains().get(i).getAtomGroups().size(),
 								readStruct.getChains().get(i).getAtomGroups().size());
@@ -170,26 +170,26 @@ public class TestMMCIFWriting {
 				//assertEquals(origChain.getSeqResGroups().size(), readChain.getSeqResGroups().size());
 				assertEquals(origChain.getId(), readChain.getId());
 				assertEquals(origChain.getName(), readChain.getName());
-				
+
 				Atom[] origAtoms = StructureTools.getAllAtomArray(origChain);
 				Atom[] readAtoms = StructureTools.getAllAtomArray(readChain);
-				
+
 				assertEquals(origAtoms.length, readAtoms.length);
-				
+
 				for (int atomIdx=0;atomIdx<origAtoms.length;atomIdx++) {
-					
+
 					assertEquals("atom serials don't match for atom "+origAtoms[atomIdx].toString(),
 							origAtoms[atomIdx].getPDBserial(), readAtoms[atomIdx].getPDBserial());
-					
+
 					assertEquals("atom names don't match for atom "+origAtoms[atomIdx].toString(),
 							origAtoms[atomIdx].getName(), readAtoms[atomIdx].getName());
-					
+
 					assertEquals("atom elements don't match for atom "+origAtoms[atomIdx].toString(),
 							origAtoms[atomIdx].getElement(), readAtoms[atomIdx].getElement());
-					
+
 					assertEquals("x values don't match for atom "+origAtoms[atomIdx].toString(),
 							origAtoms[atomIdx].getX(), readAtoms[atomIdx].getX(),0.0001);
-					
+
 					assertEquals("y values don't match for atom "+origAtoms[atomIdx].toString(),
 							origAtoms[atomIdx].getY(), readAtoms[atomIdx].getY(),0.0001);
 

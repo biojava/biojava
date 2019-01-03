@@ -140,7 +140,7 @@ public class EntityInfo implements Serializable {
 		this.chains2pdbResNums2ResSerials = new HashMap<String, Map<ResidueNumber,Integer>>();
 
 		this.molId = c.molId;
-		
+
 		this.type = c.type;
 
 		this.refChainId = c.refChainId;
@@ -328,7 +328,7 @@ public class EntityInfo implements Serializable {
 			// still it can happen that a group is in ATOM in one chain but not in other of the same entity.
 			// This is what we try to find out here (analogously to what we do in initResSerialsMap() ):
 			if (resNum==null && c.getSeqResGroups()!=null && !c.getSeqResGroups().isEmpty()) {
-				
+
 				int index = c.getSeqResGroups().indexOf(g);
 
 				resNum = findResNumInOtherChains(index, c);
@@ -396,9 +396,9 @@ public class EntityInfo implements Serializable {
 
 		// note that getChains contains all chains from all models, we'll just use first model found and skip the others
 		for (Chain c: getFirstModelChains()) {
-			
-			if (c == chain) continue;			
-			
+
+			if (c == chain) continue;
+
 			Group seqResGroup = c.getSeqResGroup(i);
 
 			if (seqResGroup==null) {
@@ -819,7 +819,7 @@ public class EntityInfo implements Serializable {
 
 		return new ArrayList<>(firstModelChains.values());
 	}
-	
+
 	 /**
 	  * Add new Chain to this EntityInfo
 	  * @param chain
@@ -854,4 +854,3 @@ public class EntityInfo implements Serializable {
 		this.type = type;
 	}
 }
- 

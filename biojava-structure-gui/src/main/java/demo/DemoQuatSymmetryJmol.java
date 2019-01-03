@@ -51,10 +51,10 @@ import java.util.List;
  * Helical: 1B47
  * <p>
  * With internal symmetry: 4E3E, 1VYM
- * 
+ *
  * @author Peter Rose
  * @author Aleix Lafita
- * 
+ *
  */
 public class DemoQuatSymmetryJmol {
 

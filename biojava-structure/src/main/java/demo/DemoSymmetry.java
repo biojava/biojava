@@ -35,48 +35,48 @@ import org.biojava.nbio.structure.symmetry.core.QuatSymmetryResults;
 
 /**
  * A demo on how to use the quaternary symmetry detection algorithms.
- * 
+ *
  * @author Jose Duarte
  *
  */
 public class DemoSymmetry {
 
 	public static void main(String[] args) throws Exception {
-		
+
 		System.out.println("Getting all bioassemblies");
 		List<Structure> bioAssemblies = StructureIO.getBiologicalAssemblies("4hhb");
-		
-		for (Structure bioAssembly : bioAssemblies) {			
-			findQuatSym(bioAssembly);			
+
+		for (Structure bioAssembly : bioAssemblies) {
+			findQuatSym(bioAssembly);
 		}
-		
+
 
 	}
 
 	private static void findQuatSym(Structure bioAssembly) throws StructureException {
 
-		QuatSymmetryParameters symmParams = new QuatSymmetryParameters();		
-		
+		QuatSymmetryParameters symmParams = new QuatSymmetryParameters();
+
 		System.out.println("GLOBAL SYMMETRY, NO CLUSTERING");
 		SubunitClustererParameters clusterParams = new SubunitClustererParameters();
 		clusterParams.setSequenceIdentityThreshold(0.95);
 		clusterParams.setRMSDThreshold(0.0);
 		clusterParams.setClustererMethod(SubunitClustererMethod.SEQUENCE);
 
-		QuatSymmetryResults globalResults = QuatSymmetryDetector.calcGlobalSymmetry(bioAssembly, symmParams, clusterParams);	
-		
-		
-		
+		QuatSymmetryResults globalResults = QuatSymmetryDetector.calcGlobalSymmetry(bioAssembly, symmParams, clusterParams);
+
+
+
 		System.out.println(globalResults.getSymmetry() + (globalResults.isPseudoStoichiometric()?"(pseudo)":""));
-		
+
 		System.out.println("There are "+globalResults.getSubunitClusters().size()+" subunit clusters");
 		int i = 1;
 		for (SubunitCluster suc : globalResults.getSubunitClusters()) {
 			//System.out.println(suc.getClustererMethod());
 			MultipleAlignment ma = suc.getMultipleAlignment();
-						
+
 			System.out.printf("Cluster %d (clustered by %s), RMSD = %4.2f\n", i, suc.getClustererMethod(), ma.getScore("RMSD"));
-			
+
 			i++;
 		}
 

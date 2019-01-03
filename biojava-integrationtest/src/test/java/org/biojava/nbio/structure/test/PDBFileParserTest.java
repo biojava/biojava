@@ -51,7 +51,7 @@ import org.junit.Test;
 
 /**
  * Test the {@link PDBFileParser}.
- * 
+ *
  * @author Aleix Lafita
  *
  */
@@ -557,13 +557,13 @@ public class PDBFileParserTest {
 		assertTrue("the created PDB file does not match the input file", pdb.equals(atomLines));
 
 	}
-	
+
 	/**
 	 * Test handling of missing Element column. Issue 537 in github.
 	 */
 	@Test
 	public void testMissingElements() throws IOException {
-		
+
 		// A two residue structure without Element column
 		String missingElement =
 				"ATOM      1  N   ASP L   1A     11.095  19.341  20.188  1.00 30.14"+newline+
@@ -581,7 +581,7 @@ public class PDBFileParserTest {
 				"ATOM     13  CB  CYS L   1      12.117  14.468  20.771  1.00 21.77"+newline+
 				"ATOM     14  SG  CYS L   1      12.247  14.885  22.538  1.00 20.55"+newline+
 				"TER                                                               "+newline;
-		
+
 		// A two residue structure with empty Element column
 		String emptyElement =
 				"ATOM      1  N   ASP L   1A     11.095  19.341  20.188  1.00 30.14            "+newline+
@@ -599,7 +599,7 @@ public class PDBFileParserTest {
 				"ATOM     13  CB  CYS L   1      12.117  14.468  20.771  1.00 21.77            "+newline+
 				"ATOM     14  SG  CYS L   1      12.247  14.885  22.538  1.00 20.55            "+newline+
 				"TER                                                                             "+newline;
-		
+
 		String original =
 				"ATOM      1  N   ASP L   1A     11.095  19.341  20.188  1.00 30.14           N"+newline+
 				"ATOM      2  CA  ASP L   1A     10.070  18.634  19.379  1.00 28.34           C"+newline+
@@ -617,41 +617,41 @@ public class PDBFileParserTest {
 				"ATOM     14  SG  CYS L   1      12.247  14.885  22.538  1.00 20.55           S"+newline+
 				"TER                                                                             "+newline;
 
-		
+
 		BufferedReader br = new BufferedReader(new StringReader(missingElement));
 		Structure s = parser.parsePDBFile(br);
 		String pdb = s.toPDB();
 		assertTrue("the Element column has not been filled correctly", pdb.equals(original));
-		
-		
+
+
 		br = new BufferedReader(new StringReader(emptyElement));
 		s = parser.parsePDBFile(br);
 		pdb = s.toPDB();
 		assertTrue("the Element column has not been filled correctly", pdb.equals(original));
-		
+
 	}
-	
+
 	/**
 	 * Test the parsing of release and last modified dates.
 	 */
 	@Test
 	public void testDates() throws IOException {
-		
-		String revisionDates = 
+
+		String revisionDates =
 		"REVDAT   5   13-JUL-11 1STP    1       VERSN                                    "+newline+
 		"REVDAT   4   24-FEB-09 1STP    1       VERSN                                    " + newline+
 		"REVDAT   3   01-APR-03 1STP    1       JRNL                                     " + newline+
 		"REVDAT   2   15-OCT-94 1STP    1       AUTHOR                                   " + newline+
 		"REVDAT   1   15-OCT-92 1STP    0                                                " + newline;
-	
+
 		BufferedReader br = new BufferedReader(new StringReader(revisionDates));
 		Structure s = parser.parsePDBFile(br);
-		
+
 		// The latest modified date should be 2011
 		assertEquals(s.getPDBHeader().getModDate().getYear() + 1900, 2011);
-		
+
 		// The release date should be 1992
 		assertEquals(s.getPDBHeader().getRelDate().getYear() + 1900, 1992);
-	
+
 	}
 }

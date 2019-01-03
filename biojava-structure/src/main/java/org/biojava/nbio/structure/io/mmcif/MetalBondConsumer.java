@@ -35,260 +35,260 @@ import java.util.Map;
 public class MetalBondConsumer implements MMcifConsumer{
 
 
-    Map<String,List<MetalBondDistance>> definitions = new HashMap<>();
+	Map<String,List<MetalBondDistance>> definitions = new HashMap<>();
 
-    @Override
-    public void documentStart() {
-        definitions.clear();
-    }
+	@Override
+	public void documentStart() {
+		definitions.clear();
+	}
 
-    @Override
-    public void documentEnd() {
+	@Override
+	public void documentEnd() {
 
-        // minimize memory consumption
+		// minimize memory consumption
 
-        for  (List<MetalBondDistance> d : definitions.values()){
-            ArrayList<MetalBondDistance> a = (ArrayList<MetalBondDistance>)d;
+		for  (List<MetalBondDistance> d : definitions.values()){
+			ArrayList<MetalBondDistance> a = (ArrayList<MetalBondDistance>)d;
 
-            a.trimToSize();
-        }
+			a.trimToSize();
+		}
 
-    }
+	}
 
-    @Override
-    public void newAtomSite(AtomSite atom) {
+	@Override
+	public void newAtomSite(AtomSite atom) {
 
-    }
+	}
 
-    @Override
-    public void newEntity(Entity entity) {
+	@Override
+	public void newEntity(Entity entity) {
 
-    }
+	}
 
-    @Override
-    public void newEntityPoly(EntityPoly entityPoly) {
+	@Override
+	public void newEntityPoly(EntityPoly entityPoly) {
 
-    }
+	}
 
-    @Override
-    public void newEntityPolySeq(EntityPolySeq epolseq) {
+	@Override
+	public void newEntityPolySeq(EntityPolySeq epolseq) {
 
-    }
+	}
 
-    @Override
-    public void newStructAsym(StructAsym sasym) {
+	@Override
+	public void newStructAsym(StructAsym sasym) {
 
-    }
+	}
 
-    @Override
-    public void setStruct(Struct struct) {
+	@Override
+	public void setStruct(Struct struct) {
 
-    }
+	}
 
-    @Override
-    public void newDatabasePDBrev(DatabasePDBrev dbrev) {
+	@Override
+	public void newDatabasePDBrev(DatabasePDBrev dbrev) {
 
-    }
+	}
 
-    @Override
-    public void newDatabasePDBrevRecord(DatabasePdbrevRecord dbrev) {
+	@Override
+	public void newDatabasePDBrevRecord(DatabasePdbrevRecord dbrev) {
 
-    }
+	}
 
-    @Override
-    public void newDatabasePDBremark(DatabasePDBremark remark) {
+	@Override
+	public void newDatabasePDBremark(DatabasePDBremark remark) {
 
-    }
+	}
 
-    @Override
-    public void newExptl(Exptl exptl) {
+	@Override
+	public void newExptl(Exptl exptl) {
 
-    }
+	}
 
-    @Override
-    public void newCell(Cell cell) {
+	@Override
+	public void newCell(Cell cell) {
 
-    }
+	}
 
-    @Override
-    public void newSymmetry(Symmetry symmetry) {
+	@Override
+	public void newSymmetry(Symmetry symmetry) {
 
-    }
+	}
 
-    @Override
-    public void newStructNcsOper(StructNcsOper sNcsOper) {
+	@Override
+	public void newStructNcsOper(StructNcsOper sNcsOper) {
 
-    }
-    
-    @Override 
-    public void newAtomSites(AtomSites atomSites) {
-    	
-    }
+	}
 
-    @Override
-    public void newStructRef(StructRef sref) {
+	@Override
+	public void newAtomSites(AtomSites atomSites) {
 
-    }
+	}
 
-    @Override
-    public void newStructRefSeq(StructRefSeq sref) {
+	@Override
+	public void newStructRef(StructRef sref) {
 
-    }
+	}
 
-    @Override
-    public void newStructRefSeqDif(StructRefSeqDif sref) {
+	@Override
+	public void newStructRefSeq(StructRefSeq sref) {
 
-    }
+	}
 
-    @Override
-    public void newStructSite(StructSite sref) {
+	@Override
+	public void newStructRefSeqDif(StructRefSeqDif sref) {
 
-    }
+	}
 
-    @Override
-    public void newStructSiteGen(StructSiteGen sref) {
+	@Override
+	public void newStructSite(StructSite sref) {
 
-    }
+	}
 
-    @Override
-    public void newPdbxPolySeqScheme(PdbxPolySeqScheme ppss) {
+	@Override
+	public void newStructSiteGen(StructSiteGen sref) {
 
-    }
+	}
 
-    @Override
-    public void newPdbxNonPolyScheme(PdbxNonPolyScheme ppss) {
+	@Override
+	public void newPdbxPolySeqScheme(PdbxPolySeqScheme ppss) {
 
-    }
+	}
 
-    @Override
-    public void newPdbxEntityNonPoly(PdbxEntityNonPoly pen) {
+	@Override
+	public void newPdbxNonPolyScheme(PdbxNonPolyScheme ppss) {
 
-    }
+	}
 
-    @Override
-    public void newStructKeywords(StructKeywords kw) {
+	@Override
+	public void newPdbxEntityNonPoly(PdbxEntityNonPoly pen) {
 
-    }
+	}
 
-    @Override
-    public void newRefine(Refine r) {
+	@Override
+	public void newStructKeywords(StructKeywords kw) {
 
-    }
+	}
 
-    @Override
-    public void newChemComp(ChemComp c) {
+	@Override
+	public void newRefine(Refine r) {
 
-    }
+	}
 
-    @Override
-    public void newChemCompDescriptor(ChemCompDescriptor ccd) {
+	@Override
+	public void newChemComp(ChemComp c) {
 
-    }
+	}
 
-    @Override
-    public void newPdbxStructOperList(PdbxStructOperList structOper) {
+	@Override
+	public void newChemCompDescriptor(ChemCompDescriptor ccd) {
 
-    }
+	}
 
-    @Override
-    public void newPdbxStrucAssembly(PdbxStructAssembly strucAssembly) {
+	@Override
+	public void newPdbxStructOperList(PdbxStructOperList structOper) {
 
-    }
+	}
 
-    @Override
-    public void newPdbxStrucAssemblyGen(PdbxStructAssemblyGen strucAssembly) {
+	@Override
+	public void newPdbxStrucAssembly(PdbxStructAssembly strucAssembly) {
 
-    }
+	}
 
-    @Override
-    public void newChemCompAtom(ChemCompAtom atom) {
+	@Override
+	public void newPdbxStrucAssemblyGen(PdbxStructAssemblyGen strucAssembly) {
 
-    }
+	}
 
-    @Override
-    public void newPdbxChemCompIndentifier(PdbxChemCompIdentifier id) {
+	@Override
+	public void newChemCompAtom(ChemCompAtom atom) {
 
-    }
+	}
 
-    @Override
-    public void newChemCompBond(ChemCompBond bond) {
+	@Override
+	public void newPdbxChemCompIndentifier(PdbxChemCompIdentifier id) {
 
-    }
+	}
 
-    @Override
-    public void newPdbxChemCompDescriptor(PdbxChemCompDescriptor desc) {
+	@Override
+	public void newChemCompBond(ChemCompBond bond) {
 
-    }
+	}
 
-    @Override
-    public void newEntitySrcGen(EntitySrcGen entitySrcGen) {
+	@Override
+	public void newPdbxChemCompDescriptor(PdbxChemCompDescriptor desc) {
 
-    }
+	}
 
-    @Override
-    public void newEntitySrcNat(EntitySrcNat entitySrcNat) {
+	@Override
+	public void newEntitySrcGen(EntitySrcGen entitySrcGen) {
 
-    }
+	}
 
-    @Override
-    public void newEntitySrcSyn(EntitySrcSyn entitySrcSyn) {
+	@Override
+	public void newEntitySrcNat(EntitySrcNat entitySrcNat) {
 
-    }
+	}
 
-    @Override
-    public void newStructConn(StructConn structConn) {
+	@Override
+	public void newEntitySrcSyn(EntitySrcSyn entitySrcSyn) {
 
-    }
+	}
 
-    @Override
-    public void newAuditAuthor(AuditAuthor aa) {
+	@Override
+	public void newStructConn(StructConn structConn) {
 
-    }
+	}
 
-    @Override
-    public void newGenericData(String category, List<String> loopFields, List<String> lineData) {
+	@Override
+	public void newAuditAuthor(AuditAuthor aa) {
 
-        MetalBondDistance d = new MetalBondDistance();
+	}
 
-        d.setAtomType1(lineData.get(0));
-        d.setAtomType2(lineData.get(1));
-        d.setLowerLimit(Float.parseFloat(lineData.get(2)));
-        d.setUpperLimit(Float.parseFloat(lineData.get(3)));
+	@Override
+	public void newGenericData(String category, List<String> loopFields, List<String> lineData) {
 
-        List<MetalBondDistance> defs = definitions.get(d.getAtomType1());
+		MetalBondDistance d = new MetalBondDistance();
 
-        if ( defs == null){
-            defs = new ArrayList<>();
-            definitions.put(d.getAtomType1(),defs);
-        }
+		d.setAtomType1(lineData.get(0));
+		d.setAtomType2(lineData.get(1));
+		d.setLowerLimit(Float.parseFloat(lineData.get(2)));
+		d.setUpperLimit(Float.parseFloat(lineData.get(3)));
 
-        defs.add(d);
+		List<MetalBondDistance> defs = definitions.get(d.getAtomType1());
 
-    }
+		if ( defs == null){
+			defs = new ArrayList<>();
+			definitions.put(d.getAtomType1(),defs);
+		}
 
-    @Override
-    public void setFileParsingParameters(FileParsingParameters params) {
+		defs.add(d);
 
-    }
+	}
 
-    @Override
-    public FileParsingParameters getFileParsingParameters() {
-        return null;
-    }
+	@Override
+	public void setFileParsingParameters(FileParsingParameters params) {
 
-    public Map<String,List<MetalBondDistance>> getDefinitions(){
-        return definitions;
-    }
+	}
+
+	@Override
+	public FileParsingParameters getFileParsingParameters() {
+		return null;
+	}
+
+	public Map<String,List<MetalBondDistance>> getDefinitions(){
+		return definitions;
+	}
 
 	@Override
 	public void newPdbxAuditRevisionHistory(PdbxAuditRevisionHistory history) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void newPdbxDatabaseStatus(PdbxDatabaseStatus status) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

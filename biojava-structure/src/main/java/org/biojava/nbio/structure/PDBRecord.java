@@ -22,7 +22,7 @@ package org.biojava.nbio.structure;
 
 import java.io.Serializable;
 
-/** 
+/**
  * An interface implemented by all classes that represent PDB records.
  *
  * @author Andreas Prlic

@@ -60,7 +60,7 @@ public class QuatSymmetryResults {
 
 	/**
 	 * Constructor for rotational symmetries.
-	 * 
+	 *
 	 * @param stoichiometry
 	 *            Stoichiometry used to calculate symmetry
 	 * @param rotationGroup
@@ -76,14 +76,14 @@ public class QuatSymmetryResults {
 		for (SubunitCluster c : clusters) {
 			subunits.addAll(c.getSubunits());
 		}
-			
+
 		this.rotationGroup = rotationGroup;
 		this.method = method;
 	}
 
 	/**
 	 * Constructor for roto-translational symmetries.
-	 * 
+	 *
 	 * @param stoichiometry
 	 *            Stoichiometry used to calculate symmetry
 	 * @param helixLayers
@@ -94,7 +94,7 @@ public class QuatSymmetryResults {
 
 		this.stoichiometry = stoichiometry;
 		this.clusters = stoichiometry.getClusters();
-		
+
 		subunits = new ArrayList<Subunit>();
 		for (SubunitCluster c : clusters) {
 			subunits.addAll(c.getSubunits());
@@ -159,19 +159,19 @@ public class QuatSymmetryResults {
 	 *
 	 * @return an unmodifiable view of the List
 	 */
-	public List<Subunit> getSubunits() {		
-		return Collections.unmodifiableList(subunits);		
+	public List<Subunit> getSubunits() {
+		return Collections.unmodifiableList(subunits);
 	}
-	
+
 	/**
 	 * Return the number of Subunits involved in the symmetry.
-	 * 
+	 *
 	 * @return the number of Subunits
 	 */
 	public int getSubunitCount() {
 		return subunits.size();
 	}
-	
+
 	/**
 	 * @return rotation group (point group) information representing rotational
 	 *         quaternary symmetry.
@@ -231,7 +231,7 @@ public class QuatSymmetryResults {
 	/**
 	 * A local result means that only a subset of the original Subunits was used
 	 * for symmetry determination.
-	 * 
+	 *
 	 * @return true if local result, false otherwise
 	 */
 	public boolean isLocal() {
@@ -241,7 +241,7 @@ public class QuatSymmetryResults {
 	/**
 	 * A local result means that only a subset of the original Subunits was used
 	 * for symmetry determination.
-	 * 
+	 *
 	 * @param local
 	 *            true if local result, false otherwise
 	 */

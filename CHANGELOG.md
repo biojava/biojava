@@ -1,3 +1,16 @@
+BioJava Changelog
+-----------------
+
+BioJava 5.1.2
+=============
+This is a bug fix release.
+
+### Bug fixes
+* Fix broken tests #809 & ed7fb66
+* Add tests for new GenBank formats (confirmed that the parser worked) #811
+* Fix exceptions displaying CE-Symm results #816 #817
+* Merge in bug fixes from the 4.2.x series (4.2.6 through 4.2.12)
+
 BioJava 5.1.1
 =============
 Note this is the first version of BioJava that will run under 9, 10 or 11 JREs. It is still fully compatible with Java 8.

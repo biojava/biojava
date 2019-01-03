@@ -27,7 +27,7 @@ import java.io.Serializable;
 /**
  * The SubunitClustererParameters specifies the options used for the clustering
  * of the subunits in structures using the {@link SubunitClusterer}.
- * 
+ *
  * @author Peter Rose
  * @author Aleix Lafita
  * @since 5.0.0
@@ -115,7 +115,7 @@ public class SubunitClustererParameters implements Serializable {
 	/**
 	 * Get the minimum number of residues of a subunits to be considered in the
 	 * clusters.
-	 * 
+	 *
 	 * @return minimumSequenceLength
 	 */
 	public int getMinimumSequenceLength() {
@@ -125,7 +125,7 @@ public class SubunitClustererParameters implements Serializable {
 	/**
 	 * Set the minimum number of residues of a subunits to be considered in the
 	 * clusters.
-	 * 
+	 *
 	 * @param minimumSequenceLength
 	 */
 	public void setMinimumSequenceLength(int minimumSequenceLength) {
@@ -140,7 +140,7 @@ public class SubunitClustererParameters implements Serializable {
 	 * <p>
 	 * This adaptive feature allows the consideration of structures mainly
 	 * constructed by very short chains, such as collagen (1A3I)
-	 * 
+	 *
 	 * @return the absoluteMinimumSequenceLength
 	 */
 	public int getAbsoluteMinimumSequenceLength() {
@@ -155,7 +155,7 @@ public class SubunitClustererParameters implements Serializable {
 	 * <p>
 	 * This adaptive feature allows the consideration of structures mainly
 	 * constructed by very short chains, such as collagen (1A3I)
-	 * 
+	 *
 	 * @param absoluteMinimumSequenceLength
 	 */
 	public void setAbsoluteMinimumSequenceLength(
@@ -171,7 +171,7 @@ public class SubunitClustererParameters implements Serializable {
 	 * <p>
 	 * This adaptive feature allows the consideration of structures mainly
 	 * constructed by very short chains, such as collagen (1A3I)
-	 * 
+	 *
 	 * @return the minimumSequenceLengthFraction
 	 */
 	public double getMinimumSequenceLengthFraction() {
@@ -186,7 +186,7 @@ public class SubunitClustererParameters implements Serializable {
 	 * <p>
 	 * This adaptive feature allows the consideration of structures mainly
 	 * constructed by very short chains, such as collagen (1A3I)
-	 * 
+	 *
 	 * @param minimumSequenceLengthFraction
 	 */
 	public void setMinimumSequenceLengthFraction(
@@ -199,7 +199,7 @@ public class SubunitClustererParameters implements Serializable {
 	 * <p>
 	 * Two subunits with sequence identity equal or higher than the threshold
 	 * will be clustered together.
-	 * 
+	 *
 	 * @return sequenceIdentityThreshold
 	 */
 	public double getSequenceIdentityThreshold() {
@@ -212,7 +212,7 @@ public class SubunitClustererParameters implements Serializable {
 	 * <p>
 	 * Two subunits with sequence identity equal or higher than the threshold
 	 * will be clustered together.
-	 * 
+	 *
 	 * @param sequenceIdentityThreshold
 	 */
 	public void setSequenceIdentityThreshold(double sequenceIdentityThreshold) {
@@ -242,7 +242,7 @@ public class SubunitClustererParameters implements Serializable {
 	/**
 	 * Structure similarity threshold (measured with RMSD) to consider for the
 	 * structural subunit clustering.
-	 * 
+	 *
 	 * @return rmsdThreshold
 	 */
 	public double getRMSDThreshold() {
@@ -252,7 +252,7 @@ public class SubunitClustererParameters implements Serializable {
 	/**
 	 * Structure similarity threshold (measured with RMSD) to consider for the
 	 * structural subunit clustering.
-	 * 
+	 *
 	 * @param rmsdThreshold
 	 */
 	public void setRMSDThreshold(double rmsdThreshold) {
@@ -310,7 +310,7 @@ public class SubunitClustererParameters implements Serializable {
 
 	/**
 	 * Method to cluster subunits.
-	 * 
+	 *
 	 * @param method
 	 */
 	public void setClustererMethod(SubunitClustererMethod method) {
@@ -323,7 +323,7 @@ public class SubunitClustererParameters implements Serializable {
 	 * <p>
 	 * The {@link SubunitClustererMethod#STRUCTURE} must be chosen to consider
 	 * internal symmetry, otherwise this parameter will be ignored.
-	 * 
+	 *
 	 * @return true if internal symmetry is considered, false otherwise
 	 */
 	public boolean isInternalSymmetry() {
@@ -336,7 +336,7 @@ public class SubunitClustererParameters implements Serializable {
 	 * <p>
 	 * The {@link SubunitClustererMethod#STRUCTURE} must be chosen to consider
 	 * internal symmetry, otherwise this parameter will be ignored.
-	 * 
+	 *
 	 * @param internalSymmetry
 	 *            true if internal symmetry is considered, false otherwise
 	 */

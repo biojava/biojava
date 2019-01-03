@@ -330,7 +330,7 @@ public interface Structure extends Cloneable, Serializable {
 	 */
 	void setChains( int modelnr, List<Chain> chains);
 
-	/** 
+	/**
 	 * Return all polymeric chains for the first model
 	 *
 	 * @return all polymeric chains.
@@ -338,43 +338,43 @@ public interface Structure extends Cloneable, Serializable {
 	 */
 	List<Chain> getPolyChains();
 
-	/** 
+	/**
 	 * Return all polymeric chains for the given model index.
 	 * @param modelIdx the model index
 	 * @return all polymeric chains.
-	 * @since 5.0 
+	 * @since 5.0
 	 */
 	List<Chain> getPolyChains(int modelIdx);
 
-	/** 
+	/**
 	 * Return all non-polymeric chains for the first model
 	 *
 	 * @return all non-polymeric chains.
-	 * @since 5.0 
+	 * @since 5.0
 	 */
 	List<Chain> getNonPolyChains();
 
-	/** 
+	/**
 	 * Return all non-polymeric chains for the given model index.
 	 *
 	 * @param modelIdx the model index
 	 * @return all non-polymeric chains.
-	 * @since 5.0 
+	 * @since 5.0
 	 */
 	List<Chain> getNonPolyChains(int modelIdx);
 
 	/**
 	 * Return all water chains for the first model
 	 * @return
-	 * @since 5.0 
+	 * @since 5.0
 	 */
 	List<Chain> getWaterChains();
-	
+
 	/**
 	 * Return all water chains for the given model index
 	 * @param modelIdx
 	 * @return
-	 * @since 5.0 
+	 * @since 5.0
 	 */
 	List<Chain> getWaterChains(int modelIdx);
 
@@ -441,17 +441,17 @@ public interface Structure extends Cloneable, Serializable {
 	 */
 	boolean hasChain(String asymId);
 
-	/** 
+	/**
 	 * Check if a non polymeric chain with chainId asymId is contained in the structure.
 	 *
 	 * @param asymId the id of the chain
 	 * @return true if a nonpolymeric chain with the asymId is found
-	 * @since 5.0 
+	 * @since 5.0
 	 */
 	boolean hasNonPolyChain(String asymId);
 
 
-	/** 
+	/**
 	 * Check if a chain  with chain name authId is contained in the structure
 	 *
 	 * @param authId the chain name
@@ -484,7 +484,7 @@ public interface Structure extends Cloneable, Serializable {
 	/**
 	 * Request a chain by its public id (author id) for the first model.
 	 * Before 5.0 it returned a Chain that had both polymeric and non-polymeric groups
-	 * following the PDB-file data model. 
+	 * following the PDB-file data model.
 	 * Since 5.0 it only returns the polymeric part of the chain.
 	 *
 	 * @param authId the author id (chainName, public chain id)
@@ -492,15 +492,15 @@ public interface Structure extends Cloneable, Serializable {
 	 * @throws StructureException if chain can't be found
 	 * @deprecated use {@link #getPolyChainByPDB(String)} instead
 	 */
-	@Deprecated 
+	@Deprecated
 	Chain getChainByPDB(String authId) throws StructureException;
 
 	/**
 	 * Request a chain by its public id (author id) for the given model index.
 	 * Before 5.0 it returned a Chain that had both polymeric and non-polymeric groups
-	 * following the PDB-file data model. 
+	 * following the PDB-file data model.
 	 * Since 5.0 it only returns the polymeric part of the chain.
-	 * 
+	 *
 	 * @param authId the author id (chainName, public chain id)
 	 * @param modelIdx the index of the required model (0-based)
 	 * @return the Chain that matches the authId in the model
@@ -509,7 +509,7 @@ public interface Structure extends Cloneable, Serializable {
 	 */
 	@Deprecated
 	Chain getChainByPDB(String authId, int modelIdx) throws StructureException;
-	
+
 	/**
 	 * Retrieve a Chain (polymeric, non-polymeric or water) based on
 	 * the 'internal' chain id (asymId) for the first model
@@ -517,13 +517,13 @@ public interface Structure extends Cloneable, Serializable {
 	 * @return
 	 * @see #getPolyChain(String)
 	 * @see #getNonPolyChain(String)
-	 * @see #getWaterChain(String) 
+	 * @see #getWaterChain(String)
 	 */
 	Chain getChain(String asymId);
-	
+
 	/**
 	 * Retrieve a Chain (polymeric, non-polymeric or water) based on
-	 * the 'internal' chain id (asymId) for the given model index 
+	 * the 'internal' chain id (asymId) for the given model index
 	 * @param asymId the asymId (chainId)
 	 * @param modelIdx the index of the required model (0-based)
 	 * @return
@@ -532,94 +532,94 @@ public interface Structure extends Cloneable, Serializable {
 	 * @see #getWaterChain(String, int)
 	 */
 	Chain getChain(String asymId, int modelIdx);
-	
-	/** 
+
+	/**
 	 * Retrieve a polymeric Chain based on the 'internal' chain
 	 * id (asymId) for the first model
-	 * 
+	 *
 	 * <p>See {@link #getPolyChainByPDB(String)} for a similar
 	 * method using the chain name (authId).
 	 * @param asymId the asymId (chainId)
 	 * @return a polymeric Chain or null if it can't be found
-	 * @since 5.0 
+	 * @since 5.0
 	 */
 	Chain getPolyChain(String asymId);
 
-	/** 
+	/**
 	 * Retrieve a polymeric Chain based on the 'internal' chain
 	 * id (asymId) for the given model index
-	 * 
+	 *
 	 * <p>See {@link #getPolyChainByPDB(String, int)} for a similar
 	 * method using the chain name (authId).
 	 * @param asymId the asymId (chainId)
 	 * @param modelIdx the index of the required model (0-based)
 	 * @return a polymeric Chain or null if it can't be found
-	 * @since 5.0 
+	 * @since 5.0
 	 */
 	Chain getPolyChain(String asymId, int modelIdx);
 
-	/** 
+	/**
 	 * Retrieve a polymeric Chain based on the 'public' chain
 	 * name (authId) for the first model
-	 * 
+	 *
 	 * <p>See {@link #getPolyChain(String)} for a similar
 	 * method using the chain id (asymId).
 	 * @param authId the author id (chainName, public chain id)
 	 * @return a polymeric Chain or null if it can't be found
-	 * @since 5.0 
+	 * @since 5.0
 	 */
 	Chain getPolyChainByPDB(String authId);
-	
-	/** 
+
+	/**
 	 * Retrieve a polymeric Chain based on the 'public' chain
 	 * name (authId) for the given model index.
-	 * 
+	 *
 	 * <p>See {@link #getPolyChain(String, int)} for a similar
 	 * method using the chain id (asymId).
 	 * @param authId the author id (chainName, public chain id)
 	 * @param modelIdx the index of the required model (0-based)
 	 * @return a polymeric Chain or null if it can't be found
-	 * @since 5.0 
-	 * 
+	 * @since 5.0
+	 *
 	 */
 	Chain getPolyChainByPDB(String authId, int modelIdx);
 
 
-	/** 
+	/**
 	 * Retrieve a non-polymeric Chain based on the 'internal' chain
 	 * id (asymId) for the first model
 	 * @param asymId the asymId (chainId)
 	 * @return a non-polymeric chain or null if it can't be found
-	 * @since 5.0 
+	 * @since 5.0
 	 */
 	Chain getNonPolyChain(String asymId);
 
-	/** 
+	/**
 	 * Retrieve a non-polymeric Chain based on the 'internal' chain
 	 * id (asymId) for the given model index
 	 * @param asymId the asymId (chainId)
-	 * @param modelIdx the index of the required model (0-based) 
+	 * @param modelIdx the index of the required model (0-based)
 	 * @return a non-polymeric Chain or null if it can't be found
-	 * @since 5.0 
+	 * @since 5.0
 	 */
 	Chain getNonPolyChain(String asymId, int modelIdx);
 
-	/** 
+	/**
 	 * Retrieve all non-polymeric Chains corresponding to the given 'public' chain
-	 * name (authId) for the first model. 
+	 * name (authId) for the first model.
 	 * @param authId the author id (chainName, public chain id)
 	 * @return a list of non-polymeric Chains, if none found the list will be empty
-	 * @since 5.0 
+	 * @since 5.0
 	 */
 	List<Chain> getNonPolyChainsByPDB(String authId);
 
-	/** 
+	/**
 	 * Retrieve all non-polymeric Chains corresponding to the 'public' chain
 	 * name (authId) and the given model index.
 	 * @param authId the author id (chainName, public chain id)
 	 * @param modelIdx the index of the required model (0-based)
 	 * @return a list of non-polymeric Chains, if none found the list will be empty
-	 * @since 5.0 
+	 * @since 5.0
 	 */
 	List<Chain> getNonPolyChainsByPDB(String authId, int modelIdx);
 
@@ -628,26 +628,26 @@ public interface Structure extends Cloneable, Serializable {
 	 * for the first model
 	 * @param asymId the asymId (chainId)
 	 * @return a water Chain or null if it can't be found
-	 * @since 5.0 
+	 * @since 5.0
 	 */
 	Chain getWaterChain(String asymId);
-	
+
 	/**
 	 * Retrieve a water chain based on the 'internal' chain id (asymId)
 	 * for the given model index
 	 * @param asymId the asymId (chainId)
-	 * @param modelIdx the index of the required model (0-based) 
+	 * @param modelIdx the index of the required model (0-based)
 	 * @return
-	 * @since 5.0 
+	 * @since 5.0
 	 */
 	Chain getWaterChain(String asymId, int modelIdx);
-	
+
 	/**
 	 * Retrieve a water Chain based on the 'public' chain name (authId)
 	 * for the first model
 	 * @param authId the author id (chainName, public chain id)
 	 * @return
-	 * @since 5.0 
+	 * @since 5.0
 	 */
 	Chain getWaterChainByPDB(String authId);
 
@@ -657,10 +657,10 @@ public interface Structure extends Cloneable, Serializable {
 	 * @param authId the author id (chainName, public chain id)
 	 * @param modelIdx the index of the required model (0-based)
 	 * @return
-	 * @since 5.0 
+	 * @since 5.0
 	 */
 	Chain getWaterChainByPDB(String authId, int modelIdx);
-	
+
 
 	/**
 	 * Create a String that contains this Structure's contents in PDB file format.
@@ -724,7 +724,7 @@ public interface Structure extends Cloneable, Serializable {
 	 *
 	 * @param entityId the number of the entity
 	 * @return an entity, or null if the molId was not found
-	 */	
+	 */
 	EntityInfo getEntityById(int entityId);
 
 	/**

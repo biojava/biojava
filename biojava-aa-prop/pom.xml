@@ -29,7 +29,7 @@
                     </excludes>
                 </configuration>
             </plugin>
-            
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
@@ -46,7 +46,7 @@
 					</descriptorRefs>
 					<fileSets>
 						<fileSet>
-							<!-- TODO: use expresssions instead: ${project.build.sourceDirectory}, 
+							<!-- TODO: use expresssions instead: ${project.build.sourceDirectory},
 								etc -->
 							<directory>${project.basedir}/src</directory>
 							<useDefaultExcludes>true</useDefaultExcludes>
@@ -95,9 +95,9 @@
   		<dependency>
     		<groupId>org.apache.logging.log4j</groupId>
     		<artifactId>log4j-core</artifactId>
-  		</dependency>			
+  		</dependency>
 
-				
+
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>

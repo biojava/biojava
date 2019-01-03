@@ -46,7 +46,7 @@ public class SiftsChainToUniprotMappingTest {
 	public void test() throws IOException {
 		SiftsChainToUniprotMapping.DEFAULT_FILE = File.createTempFile("biojavaSiftsTest-", "");
 		SiftsChainToUniprotMapping.DEFAULT_FILE.deleteOnExit();
-		
+
 		BufferedReader br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("mock_sifts.tsv")));
 		PrintWriter pw = new PrintWriter(SiftsChainToUniprotMapping.DEFAULT_FILE);
 		String line;
@@ -54,7 +54,7 @@ public class SiftsChainToUniprotMappingTest {
 			pw.println(line);
 		pw.close();
 		br.close();
-		
+
 		SiftsChainToUniprotMapping sifts = SiftsChainToUniprotMapping.build();
 		SiftsChainEntry entry = sifts.getByChainId("1hiv", "A");
 		assertEquals("1hiv", entry.getPdbId());

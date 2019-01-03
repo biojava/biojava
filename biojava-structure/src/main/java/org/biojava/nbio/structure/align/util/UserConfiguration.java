@@ -333,13 +333,13 @@ public class UserConfiguration
 	public static UserConfiguration fromStartupParams(StartupParameters params) {
 		UserConfiguration config = new UserConfiguration();
 		config.setPdbFilePath(params.getPdbFilePath());
-		
+
 		if(params.isAutoFetch()) {
 			config.setFetchBehavior(FetchBehavior.DEFAULT);
 		} else {
 			config.setFetchBehavior(FetchBehavior.LOCAL_ONLY);
 		}
-		
+
 		// TODO support MMCif Files
 		config.setFileFormat(UserConfiguration.PDB_FORMAT);
 		return config;

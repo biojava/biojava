@@ -36,7 +36,7 @@ import org.biojava.nbio.structure.ResidueRangeAndLength;
 public class SecStrucElement implements Serializable  {
 
 	private static final long serialVersionUID = -8485685793171396131L;
-	
+
 	private SecStrucType type;
 	private ResidueRangeAndLength range;
 	private int index;

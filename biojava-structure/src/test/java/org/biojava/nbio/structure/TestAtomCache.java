@@ -86,7 +86,7 @@ public class TestAtomCache {
 		assertEquals(3,s.getChains().size());
 		Chain c = s.getPolyChainByPDB(chainId2);
 		assertEquals(chainId2,c.getName());
-		
+
 		// Number of groups: Polymer + water + ligand
 		assertEquals(141,c.getAtomLength());
 		assertEquals(141, s.getChainByIndex(0).getAtomLength());
@@ -202,7 +202,7 @@ public class TestAtomCache {
 	public void testFetchObsolete() throws IOException, StructureException {
 		cache.setFetchBehavior(FetchBehavior.FETCH_FILES);
 		cache.setObsoleteBehavior(ObsoleteBehavior.FETCH_OBSOLETE);
-		
+
 		Structure s;
 		cache.setUseMmtf(false);
 		cache.setUseMmCif(false);
@@ -271,7 +271,7 @@ public class TestAtomCache {
 	 * @param cache
 	 * @param useMmTf
 	 * @param useMmCif
-     */
+	 */
 	private void testFlags(AtomCache cache ,boolean useMmTf, boolean useMmCif) {
 
 		assertEquals("flag for parsing mmtf is set to " + cache.isUseMmtf() + " but should be " + useMmTf,

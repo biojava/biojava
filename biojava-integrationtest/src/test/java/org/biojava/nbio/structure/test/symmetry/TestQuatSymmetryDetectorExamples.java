@@ -43,7 +43,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Test the {@link QuatSymmetryDetector} algorithm for symmetry detection on a
  * variety of structures with different symmetries.
- * 
+ *
  * @author Peter Rose
  * @author Aleix Lafita
  *
@@ -51,10 +51,10 @@ import org.slf4j.LoggerFactory;
 public class TestQuatSymmetryDetectorExamples {
 
 	private static final Logger logger = LoggerFactory.getLogger(TestQuatSymmetryDetectorExamples.class);
-	
+
 	/**
 	 * An NMR multi-model entry: 1B4C
-	 * 
+	 *
 	 * @throws StructureException
 	 * @throws IOException
 	 */
@@ -75,9 +75,9 @@ public class TestQuatSymmetryDetectorExamples {
 		assertFalse(symmetry.isPseudoStoichiometric());
 
 	}
-	
-	/** 
-	 * Test a dihedral symmetry: 2VML 
+
+	/**
+	 * Test a dihedral symmetry: 2VML
 	 */
 	@Test
 	public void testDihedral() throws IOException, StructureException {
@@ -100,7 +100,7 @@ public class TestQuatSymmetryDetectorExamples {
 
 	/**
 	 * Hemoglobin has both symmetry and pseudosymmetry: 4HHB
-	 * 
+	 *
 	 * @throws StructureException
 	 * @throws IOException
 	 */
@@ -133,7 +133,7 @@ public class TestQuatSymmetryDetectorExamples {
 
 	/**
 	 * A selection of structures with no global symmetry, but local symmetry
-	 * 
+	 *
 	 * @throws IOException
 	 * @throws StructureException
 	 */
@@ -273,7 +273,7 @@ public class TestQuatSymmetryDetectorExamples {
 
 	/**
 	 * A structure with combined internal and quaternary symmetry: 4E3E
-	 * 
+	 *
 	 * @throws IOException
 	 * @throws StructureException
 	 */
@@ -300,7 +300,7 @@ public class TestQuatSymmetryDetectorExamples {
 
 	/**
 	 * A structure with helical symmetry: 1B47
-	 * 
+	 *
 	 * @throws IOException
 	 * @throws StructureException
 	 */
@@ -322,7 +322,7 @@ public class TestQuatSymmetryDetectorExamples {
 
 	/**
 	 * A structure with local helical symmetry: 5JLF
-	 * 
+	 *
 	 * @throws IOException
 	 * @throws StructureException
 	 */
@@ -341,7 +341,7 @@ public class TestQuatSymmetryDetectorExamples {
 		assertEquals("A5", results.get(0).getStoichiometry().toString());
 
 	}
-	
+
 	/**
 	 * A structure with very similar entities (clustering at 95% seq id): 4DZ8
 	 * @throws IOException
@@ -364,6 +364,6 @@ public class TestQuatSymmetryDetectorExamples {
 		assertEquals("A2", symmetry.getStoichiometry().toString());
 		assertFalse(symmetry.isPseudoStoichiometric());
 		assertEquals(SubunitClustererMethod.SEQUENCE, symmetry.getSubunitClusters().get(0).getClustererMethod());
-		
+
 	}
 }

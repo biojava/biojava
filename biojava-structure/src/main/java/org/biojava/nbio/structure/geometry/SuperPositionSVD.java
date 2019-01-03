@@ -39,13 +39,13 @@ import org.biojava.nbio.structure.jama.SingularValueDecomposition;
  * @author Aleix Lafita
  * @since 1.5
  * @version %I% %G%
- * 
+ *
  */
 public class SuperPositionSVD extends SuperPositionAbstract {
 
 	/**
 	 * Constructor for the SVD superposition algorithm.
-	 * 
+	 *
 	 * @param centered
 	 *            true if the point arrays are centered at the origin (faster),
 	 *            false otherwise
@@ -129,7 +129,7 @@ public class SuperPositionSVD extends SuperPositionAbstract {
 
 		Matrix cb_tmp = centroidB.times(rot);
 		Matrix tran = centroidA.minus(cb_tmp);
-		
+
 		return Matrices.getTransformation(rot, tran);
 
 	}

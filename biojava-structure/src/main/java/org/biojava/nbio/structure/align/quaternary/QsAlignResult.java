@@ -38,7 +38,7 @@ import org.biojava.nbio.structure.cluster.SubunitCluster;
  * Result of a Quaternary Structure Alignment {@link QsAlign}. The QsAlignResult
  * holds the original inputs of the algorithm and the results and scores of the
  * alignment.
- * 
+ *
  * @author Aleix Lafita
  * @since 5.0.0
  *
@@ -58,7 +58,7 @@ public class QsAlignResult {
 	/**
 	 * The Constructor of the result takes the same inputs as the
 	 * {@link QsAlign} algorithm.
-	 * 
+	 *
 	 * @param subunits1
 	 * @param subunits2
 	 */
@@ -74,7 +74,7 @@ public class QsAlignResult {
 
 	/**
 	 * Original Subunits of the first group.
-	 * 
+	 *
 	 * @return an unmodifiable view of the original List
 	 */
 	public List<Subunit> getSubunits1() {
@@ -83,7 +83,7 @@ public class QsAlignResult {
 
 	/**
 	 * Original Subunits of the second group.
-	 * 
+	 *
 	 * @return an unmodifiable view of the original List
 	 */
 	public List<Subunit> getSubunits2() {
@@ -92,7 +92,7 @@ public class QsAlignResult {
 
 	/**
 	 * Map of Subunit equivalencies from the first to the second group.
-	 * 
+	 *
 	 * @return an unmodifiable view of the original Map
 	 */
 	public Map<Integer, Integer> getSubunitMap() {
@@ -105,7 +105,7 @@ public class QsAlignResult {
 
 	/**
 	 * Map of Subunit equivalencies from the first to the second group.
-	 * 
+	 *
 	 * @param subunitMap
 	 */
 	public void setSubunitMap(Map<Integer, Integer> subunitMap) {
@@ -139,7 +139,7 @@ public class QsAlignResult {
 	/**
 	 * The length of the alignment is the number of Subunit equivalencies it
 	 * contains. This is equivalent to the size of the Subunit Map.
-	 * 
+	 *
 	 * @return length of the alignment
 	 */
 	public int length() {
@@ -157,7 +157,7 @@ public class QsAlignResult {
 	 * <p>
 	 * This is equivalent to
 	 * multipleAlignment.getBlockSet(0).getTransformations().get(1).
-	 * 
+	 *
 	 * @return Matrix4d
 	 */
 	public Matrix4d getTransform() {
@@ -172,7 +172,7 @@ public class QsAlignResult {
 	 * The RMSD between the equivalent residues of the equivalent Subunits after
 	 * superposition of the Subunit groups. This is equivalent to
 	 * multipleAlignment.getScore(MultipleAlignmentScorer.RMSD).
-	 * 
+	 *
 	 * @return rmsd
 	 */
 	public double getRmsd() {
@@ -188,7 +188,7 @@ public class QsAlignResult {
 	/**
 	 * The quaternary structure relation {@link QsRelation} between the two
 	 * groups of Subunits.
-	 * 
+	 *
 	 * @return relation
 	 */
 	public QsRelation getRelation() {
@@ -198,7 +198,7 @@ public class QsAlignResult {
 	/**
 	 * The quaternary structure relation {@link QsRelation} between the two
 	 * groups of Subunits.
-	 * 
+	 *
 	 * @param relation
 	 */
 	public void setRelation(QsRelation relation) {
@@ -208,7 +208,7 @@ public class QsAlignResult {
 	/**
 	 * The alignment that specifies the residue equivalencies of the equivalent
 	 * Subunits.
-	 * 
+	 *
 	 * @return alignment as a MultipleAlignment object
 	 */
 	public MultipleAlignment getAlignment() {
@@ -218,7 +218,7 @@ public class QsAlignResult {
 	/**
 	 * The alignment that specifies the residue equivalencies of the equivalent
 	 * Subunits.
-	 * 
+	 *
 	 * @param alignment
 	 *            a MultipleAlignment object
 	 */
@@ -229,7 +229,7 @@ public class QsAlignResult {
 	/**
 	 * Return the aligned subunits of the first Subunit group, in the alignment
 	 * order.
-	 * 
+	 *
 	 * @return a List of Subunits in the alignment order
 	 */
 	public List<Subunit> getAlignedSubunits1() {
@@ -245,7 +245,7 @@ public class QsAlignResult {
 	/**
 	 * Return the aligned subunits of the second Subunit group, in the alignment
 	 * order.
-	 * 
+	 *
 	 * @return a List of Subunits in the alignment order
 	 */
 	public List<Subunit> getAlignedSubunits2() {

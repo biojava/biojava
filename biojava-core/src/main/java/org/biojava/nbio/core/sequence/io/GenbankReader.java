@@ -153,7 +153,7 @@ public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
 			String seqString = genbankParser.getSequence(bufferedReader, 0);
 			//reached end of file?
 			if(seqString==null) break;
-            @SuppressWarnings("unchecked")
+			@SuppressWarnings("unchecked")
 			S sequence = (S) sequenceCreator.getSequence(seqString, 0);
 			genbankParser.getSequenceHeaderParser().parseHeader(genbankParser.getHeader(), sequence);
 

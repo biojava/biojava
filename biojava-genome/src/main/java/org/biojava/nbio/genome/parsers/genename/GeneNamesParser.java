@@ -35,7 +35,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-/** 
+/**
  * Parses a file from the www.genenames.org website that contains a mapping of human gene names to other databases
  *
  * @author Andreas Prlic

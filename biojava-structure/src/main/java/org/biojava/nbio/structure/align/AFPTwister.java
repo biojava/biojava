@@ -52,7 +52,7 @@ public class AFPTwister {
 	 * calculate the total rmsd of the blocks output a merged pdb file for both
 	 * proteins protein 1, in chain A protein 2 is twisted according to the
 	 * twists detected, in chain B
-	 * 
+	 *
 	 * @return twisted Groups
 	 */
 	public static Group[] twistPDB(AFPChain afpChain, Atom[] ca1, Atom[] ca2)

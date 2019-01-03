@@ -44,7 +44,7 @@
  * see:
  *
  * <p>
- * 
+ *
  * <a href="http://dx.doi.org/10.1093/nar/gkp1137">The Sanger FASTQ file format for sequences
  * with quality scores, and the Solexa/Illumina FASTQ variants</a>
  * <p>
@@ -54,8 +54,8 @@
  *
  * <p>
  * Moved from org.biojava.nbio.sequencing (biojava-sequencing module) in 5.0.0
- * 
+ *
  * @since 3.0.3
- * 
+ *
  */
 package org.biojava.nbio.genome.io.fastq;

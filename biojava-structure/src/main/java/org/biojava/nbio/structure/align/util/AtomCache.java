@@ -66,7 +66,7 @@ import org.slf4j.LoggerFactory;
 public class AtomCache {
 
 	private static final Logger logger = LoggerFactory.getLogger(AtomCache.class);
-	
+
 	/**
 	 * The default output bioassembly style: if true the bioassemblies are multimodel,
 	 * if false the bioassemblies are flat with renamed chains for symmetry-partners.
@@ -214,7 +214,7 @@ public class AtomCache {
 	public Atom[] getRepresentativeAtoms(String name) throws IOException, StructureException {
 		return getRepresentativeAtoms(new StructureName(name));
 	}
-	
+
 	public Atom[] getRepresentativeAtoms(StructureIdentifier name) throws IOException, StructureException {
 
 		Atom[] atoms = null;
@@ -229,9 +229,9 @@ public class AtomCache {
 
 		return atoms;
 	}
-	
+
 	/**
-	 * Returns the biological assembly for a given PDB ID and bioAssemblyId, by building the 
+	 * Returns the biological assembly for a given PDB ID and bioAssemblyId, by building the
 	 * assembly from the biounit annotations found in {@link Structure#getPDBHeader()}
 	 * <p>
 	 * Note, the number of available biological unit files
@@ -242,8 +242,8 @@ public class AtomCache {
 	 *            the PDB ID
 	 * @param bioAssemblyId
 	 *            the 1-based index of the biological assembly (0 gets the asymmetric unit)
-	 * @param multiModel if true the output Structure will be a multi-model one with one transformId per model, 
-	 * if false the outputStructure will be as the original with added chains with renamed asymIds (in the form originalAsymId_transformId and originalAuthId_transformId).             
+	 * @param multiModel if true the output Structure will be a multi-model one with one transformId per model,
+	 * if false the outputStructure will be as the original with added chains with renamed asymIds (in the form originalAsymId_transformId and originalAuthId_transformId).
 	 * @return a structure object
 	 * @throws IOException
 	 * @throws StructureException if biassemblyId < 0 or other problems while loading structure
@@ -257,20 +257,20 @@ public class AtomCache {
 			throw new StructureException("bioAssemblyID must be nonnegative: " + pdbId + " bioAssemblyId "
 					+ bioAssemblyId);
 		}
-		
+
 		boolean prevIsParseBioAssembly = getFileParsingParams().isParseBioAssembly();
-		
+
 		if (!getFileParsingParams().isParseBioAssembly()) {
 			getFileParsingParams().setParseBioAssembly(true);
 		}
-		
+
 		Structure asymUnit = getStructureForPdbId(pdbId);
-		
+
 		getFileParsingParams().setParseBioAssembly(prevIsParseBioAssembly);
-		
+
 		if (asymUnit.getPDBHeader() == null || asymUnit.getPDBHeader().getBioAssemblies()==null) {
 			logger.info("No bioassembly information found for {}, returning asymmetric unit as biological assembly", pdbId);
-			return asymUnit; 
+			return asymUnit;
 		}
 
 		// 0 ... asym unit
@@ -290,9 +290,9 @@ public class AtomCache {
 		if ( transformations == null || transformations.size() == 0){
 
 			throw new StructureException("Could not load transformations to recreate biological assembly id " + bioAssemblyId + " of " + pdbId);
-			
+
 		}
-		
+
 		BiologicalAssemblyBuilder builder = new BiologicalAssemblyBuilder();
 
 		// if we use mmcif or mmtf, then we need to pass useAsymIds=true
@@ -300,7 +300,7 @@ public class AtomCache {
 		if (useMmCif) useAsymIds = true;
 		if (useMmtf) useAsymIds = true;
 		return builder.rebuildQuaternaryStructure(asymUnit, transformations, useAsymIds, multiModel);
-		
+
 	}
 
 	/**
@@ -310,33 +310,33 @@ public class AtomCache {
 	 * <p>Biological assemblies can also be accessed using
 	 * <tt>getStructure("BIO:<i>[pdbId]</i>")</tt>
 	 * @param pdbId the PDB id
-	 * @param multiModel if true the output Structure will be a multi-model one with one transformId per model, 
-	 * if false the outputStructure will be as the original with added chains with renamed asymIds (in the form originalAsymId_transformId and originalAuthId_transformId).  
+	 * @param multiModel if true the output Structure will be a multi-model one with one transformId per model,
+	 * if false the outputStructure will be as the original with added chains with renamed asymIds (in the form originalAsymId_transformId and originalAuthId_transformId).
 	 * @return a structure object
 	 * @throws IOException
 	 * @throws StructureException
 	 * @since 4.2
 	 */
 	public Structure getBiologicalAssembly(String pdbId, boolean multiModel) throws StructureException, IOException {
-		
+
 		boolean prevIsParseBioAssembly = getFileParsingParams().isParseBioAssembly();
-		
+
 		if (!getFileParsingParams().isParseBioAssembly()) {
 			getFileParsingParams().setParseBioAssembly(true);
 		}
-		
+
 		Structure asymUnit = getStructureForPdbId(pdbId);
-		
+
 		getFileParsingParams().setParseBioAssembly(prevIsParseBioAssembly);
 
-		
+
 		if (asymUnit.getPDBHeader() == null || asymUnit.getPDBHeader().getBioAssemblies()==null) {
 			logger.info("No bioassembly information found for {}, returning asymmetric unit as biological assembly", pdbId);
-			return asymUnit; 
+			return asymUnit;
 		}
 
 		int bioAssemblyId = 1;
-		
+
 		// does it exist?
 		if (!asymUnit.getPDBHeader().getBioAssemblies().containsKey(bioAssemblyId)) {
 			return asymUnit;
@@ -349,9 +349,9 @@ public class AtomCache {
 		if ( transformations == null || transformations.size() == 0){
 
 			throw new StructureException("Could not load transformations to recreate biological assembly id " + bioAssemblyId + " of " + pdbId);
-			
+
 		}
-		
+
 		BiologicalAssemblyBuilder builder = new BiologicalAssemblyBuilder();
 
 		// if we use mmcif or mmtf, then we need to pass useAsymIds=true
@@ -359,42 +359,42 @@ public class AtomCache {
 		if (useMmCif) useAsymIds = true;
 		if (useMmtf) useAsymIds = true;
 		return builder.rebuildQuaternaryStructure(asymUnit, transformations, useAsymIds, multiModel);
-		
+
 	}
 
 	/**
 	 * Returns all biological assemblies for given PDB id.
 	 * @param pdbId
-	 * @param multiModel if true the output Structure will be a multi-model one with one transformId per model, 
-	 * if false the outputStructure will be as the original with added chains with renamed asymIds (in the form originalAsymId_transformId and originalAuthId_transformId).  
+	 * @param multiModel if true the output Structure will be a multi-model one with one transformId per model,
+	 * if false the outputStructure will be as the original with added chains with renamed asymIds (in the form originalAsymId_transformId and originalAuthId_transformId).
 	 * @return
 	 * @throws StructureException
 	 * @throws IOException
 	 * @since 5.0
 	 */
 	public List<Structure> getBiologicalAssemblies(String pdbId, boolean multiModel) throws StructureException, IOException {
-		
+
 		List<Structure> assemblies = new ArrayList<>();
-		
+
 		boolean prevIsParseBioAssembly = getFileParsingParams().isParseBioAssembly();
-		
+
 		if (!getFileParsingParams().isParseBioAssembly()) {
 			getFileParsingParams().setParseBioAssembly(true);
 		}
-		
+
 		Structure asymUnit = getStructureForPdbId(pdbId);
-		
+
 		getFileParsingParams().setParseBioAssembly(prevIsParseBioAssembly);
-		
+
 
 		if (asymUnit.getPDBHeader() == null || asymUnit.getPDBHeader().getBioAssemblies()==null) {
 			logger.info("No bioassembly information found for {}, returning asymmetric unit as the only biological assembly", pdbId);
 			assemblies.add(asymUnit);
-			return assemblies; 
+			return assemblies;
 		}
 
 
-		for (int bioAssemblyId : asymUnit.getPDBHeader().getBioAssemblies().keySet()) {	
+		for (int bioAssemblyId : asymUnit.getPDBHeader().getBioAssemblies().keySet()) {
 			List<BiologicalAssemblyTransformation> transformations =
 					asymUnit.getPDBHeader().getBioAssemblies().get(bioAssemblyId).getTransforms();
 
@@ -416,7 +416,7 @@ public class AtomCache {
 		}
 		return assemblies;
 	}
-	
+
 	/**
 	 * Returns the path that contains the caching file for utility data, such as domain definitions.
 	 *
@@ -784,7 +784,7 @@ public class AtomCache {
 		// Either way the user wants to use PDB or MMCIF
 		this.useMmtf = false;
 	}
-	
+
 	/**
 	 * Set whether to use mmtf.
 	 * @param useMmtf the input boolean to set
@@ -794,13 +794,13 @@ public class AtomCache {
 		if(useMmtf){
 			useMmCif=false;
 		}
-		
+
 	}
 
 	/** Returns useMmtf flag
 	 *
 	 * @return true if will load data via mmtf file format
-     */
+	 */
 	public boolean isUseMmtf(){
 		return this.useMmtf;
 	}

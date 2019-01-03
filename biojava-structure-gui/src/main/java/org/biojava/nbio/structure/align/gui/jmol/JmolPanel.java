@@ -69,7 +69,7 @@ extends JPrintPanel
 implements ActionListener
 {
 	private static final Logger logger = LoggerFactory.getLogger(JmolPanel.class);
-	
+
 	private static final long serialVersionUID = -3661941083797644242L;
 
 	private JmolViewer viewer;
@@ -126,11 +126,11 @@ implements ActionListener
 	public void executeCmd(String rasmolScript) {
 		viewer.evalString(rasmolScript);
 	}
-	
+
 	public void setStructure(final Structure s, boolean useMmtf) {
-		
+
 		this.structure = s;
-		
+
 		if (useMmtf) {
 			try (
 					PipedOutputStream out = new PipedOutputStream();
@@ -154,11 +154,11 @@ implements ActionListener
 			// Use mmCIF format
 			String serialized = s.toMMCIF();
 			viewer.openStringInline(serialized);
-			
+
 		}
-		
+
 		evalString("save STATE state_1");
-		
+
 	}
 
 	public void setStructure(final Structure s) {

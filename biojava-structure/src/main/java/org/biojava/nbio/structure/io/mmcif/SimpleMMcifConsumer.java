@@ -130,7 +130,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	/**
 	 * A temporary data structure to hold all parsed chains
 	 */
-	private ArrayList<List<Chain>> allModels; 
+	private ArrayList<List<Chain>> allModels;
 	/**
 	 * The current set of chains per model
 	 */
@@ -154,7 +154,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	private List<StructNcsOper> structNcsOper;
 	private List<StructRefSeqDif> sequenceDifs;
 	private List<StructSiteGen> structSiteGens;
-	
+
 	private Matrix4d parsedScaleMatrix;
 
 
@@ -166,7 +166,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	private Map<String,String> asymId2entityId;
 
 	/**
-	 * A map of asym ids (internal chain ids) to author ids extracted from 
+	 * A map of asym ids (internal chain ids) to author ids extracted from
 	 * the _entity_poly category. Used in header only parsing.
 	 */
 	private Map<String,String> asymId2authorId;
@@ -464,7 +464,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				altLoc = ' ';
 
 		}
-		// If it's the start of the new chain 
+		// If it's the start of the new chain
 		if ( startOfNewChain){
 			currentGroup = getNewGroup(recordName,aminoCode1,seq_id, groupCode3);
 			currentGroup.setResidueNumber(residueNumber);
@@ -540,7 +540,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		}
 	}
 
-	/** 
+	/**
 	 * Convert a mmCIF AtomSite object to a BioJava Atom object
 	 *
 	 * @param atom the mmmcif AtomSite record
@@ -646,7 +646,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		return altLocG;
 	}
 
-	/** 
+	/**
 	 * Start the parsing
 	 */
 	@Override
@@ -700,7 +700,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 		allModels.add(currentModel);
 
-		// this populates the asymId2authorId and asymId2entityId maps, needed in header only mode to get the mapping 
+		// this populates the asymId2authorId and asymId2entityId maps, needed in header only mode to get the mapping
 		// between the 2 chain identifiers.
 		initMaps();
 
@@ -713,7 +713,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			// to solve issue #160 (e.g. 3u7t)
 			seqres = removeSeqResHeterogeneity(seqres);
 			seqres.setId(asym.getId());
-			if (asymId2authorId.get(asym.getId()) !=null ){ 
+			if (asymId2authorId.get(asym.getId()) !=null ){
 				seqres.setName(asymId2authorId.get(asym.getId()));
 			} else {
 				seqres.setName(asym.getId());
@@ -832,11 +832,11 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 							// for entries like 4kro, sugars are annotated as polymers but we
 							// don't want them in the macromolecularSize count
 							!c.getEntityInfo().getDescription().contains("SUGAR") ) {
-								
+
 								mmSize++;
 							}
 					}
-					
+
 					BioAssemblyInfo bioAssembly = new BioAssemblyInfo();
 					bioAssembly.setId(bioAssemblyId);
 					bioAssembly.setMacromolecularSize(mmSize);
@@ -849,7 +849,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		}
 
 		setStructNcsOps();
-		
+
 		setCrystallographicInfoMetadata();
 
 
@@ -1152,10 +1152,10 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 	/**
 	 * Add any extra information to the entity information.
-	 * @param asym 
-	 * @param entityId 
-	 * @param entity 
-	 * @param entityInfo 
+	 * @param asym
+	 * @param entityId
+	 * @param entity
+	 * @param entityInfo
 	 */
 	private void addAncilliaryEntityData(StructAsym asym, int entityId, Entity entity, EntityInfo entityInfo) {
 		// Loop through each of the entity types and add the corresponding data
@@ -1184,7 +1184,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				continue;
 			addInfoFromESS(ess, entityId, entityInfo);
 
-		}		
+		}
 	}
 
 	/**
@@ -1278,15 +1278,15 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			}
 		}
 	}
-	
+
 	private void setStructNcsOps() {
-		
+
 		ArrayList<Matrix4d> ncsOperators = new ArrayList<Matrix4d>();
-		
+
 		for (StructNcsOper sNcsOper:structNcsOper) {
-			
+
 			if (!sNcsOper.getCode().equals("generate")) continue;
-			
+
 			try {
 				Matrix4d op = new Matrix4d();
 				op.setElement(3, 0, 0.0);
@@ -1312,31 +1312,31 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				op.setElement(2, 3, Double.parseDouble(sNcsOper.getVector3()));
 
 				ncsOperators.add(op);
-				
+
 			} catch (NumberFormatException e) {
-				logger.warn("Error parsing doubles in NCS operator list, skipping operator {}", structNcsOper.indexOf(sNcsOper)+1); 
+				logger.warn("Error parsing doubles in NCS operator list, skipping operator {}", structNcsOper.indexOf(sNcsOper)+1);
 			}
 
 		}
-		
+
 		// we only set it if not empty, otherwise remains null
 		if (ncsOperators.size()>0) {
 			structure.getCrystallographicInfo().setNcsOperators(
 					ncsOperators.toArray(new Matrix4d[ncsOperators.size()]));
 		}
 	}
-	
+
 	private void setCrystallographicInfoMetadata() {
 		if (parsedScaleMatrix!=null) {
-			
+
 			PDBCrystallographicInfo crystalInfo = structure.getCrystallographicInfo();
-			
+
 			boolean nonStd = false;
 			if (crystalInfo.getCrystalCell()!=null && !crystalInfo.getCrystalCell().checkScaleMatrix(parsedScaleMatrix)) {
 				nonStd = true;
 			}
-			
-			crystalInfo.setNonStandardCoordFrameConvention(nonStd); 
+
+			crystalInfo.setNonStandardCoordFrameConvention(nonStd);
 		}
 	}
 
@@ -1373,9 +1373,9 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 	@Override
 	public void newDatabasePDBrev(DatabasePDBrev dbrev) {
-		
+
 		logger.debug("got a database revision:" + dbrev);
-		
+
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd",Locale.US);
 		PDBHeader header = structure.getPDBHeader();
 
@@ -1415,10 +1415,10 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 		structure.setPDBHeader(header);
 	}
-	
+
 	@Override
 	public void newPdbxAuditRevisionHistory(PdbxAuditRevisionHistory history) {
-		
+
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd",Locale.US);
 		PDBHeader header = structure.getPDBHeader();
 
@@ -1426,12 +1426,12 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			header = new PDBHeader();
 		}
 
-        // first entry in revision history is the release date
+	// first entry in revision history is the release date
 		if (history.getOrdinal().equals("1")){
 			try {
 				Date releaseDate = dateFormat.parse(history.getRevision_date());
 				header.setRelDate(releaseDate);
-				
+
 			} catch (ParseException e){
 				logger.warn("Could not parse date string '{}', release date will be unavailable", history.getRevision_date());
 			}
@@ -1449,7 +1449,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 		structure.setPDBHeader(header);
 	}
-	
+
 	@Override
 	public void newPdbxDatabaseStatus(PdbxDatabaseStatus status) {
 
@@ -1459,7 +1459,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			// skip this method for older mmCIF versions
 			return;
 		}
-		
+
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd",Locale.US);
 		PDBHeader header = structure.getPDBHeader();
 
@@ -1667,9 +1667,9 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	public void newStructNcsOper(StructNcsOper sNcsOper) {
 		structNcsOper.add(sNcsOper);
 	}
-	
+
 	public void newAtomSites(AtomSites atomSites) {
-		
+
 		try {
 			Matrix4d m = new Matrix4d(
 				Double.parseDouble(atomSites.getFract_transf_matrix11()), Double.parseDouble(atomSites.getFract_transf_matrix12()), Double.parseDouble(atomSites.getFract_transf_matrix13()), Double.parseDouble(atomSites.getFract_transf_vector1()),
@@ -1678,11 +1678,11 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				0,0,0,1);
 
 			parsedScaleMatrix = m;
-		
+
 		} catch (NumberFormatException e) {
 			logger.warn("Some values in _atom_sites.fract_transf_matrix or _atom_sites.fract_transf_vector could not be parsed as numbers. Can't check whether coordinate frame convention is correct! Error: {}", e.getMessage());
 			structure.getPDBHeader().getCrystallographicInfo().setNonStandardCoordFrameConvention(false);
-			
+
 			// in this case parsedScaleMatrix stays null and can't be used in documentEnd()
 		}
 	}
@@ -1744,7 +1744,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			r.setDatabase(structRef.getDb_name());
 			r.setDbIdCode(structRef.getDb_code());
 		}
-		
+
 		int seqbegin;
 		int seqend;
 		try{
@@ -1756,12 +1756,12 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			logger.warn("Couldn't parse pdbx_auth_seq_align_beg/end in _struct_ref_seq. Will not store dbref alignment info for accession {}. Error: {}", r.getDbAccession(), e.getMessage());
 			return;
 		}
-		
+
 		Character begin_ins_code = ' ';
 		if (sref.getPdbx_seq_align_beg_ins_code() != null ) {
 		    begin_ins_code = new Character(sref.getPdbx_seq_align_beg_ins_code().charAt(0));
 		}
-		
+
 		Character end_ins_code = ' ';
 		if (sref.getPdbx_seq_align_end_ins_code() != null) {
 		    end_ins_code = new Character(sref.getPdbx_seq_align_end_ins_code().charAt(0));
@@ -1781,12 +1781,12 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 		int dbseqbegin = Integer.parseInt(sref.getDb_align_beg());
 		int dbseqend   = Integer.parseInt(sref.getDb_align_end());
-		
+
 		Character db_begin_in_code = ' ';
 		if (sref.getPdbx_db_align_beg_ins_code() != null) {
 		    db_begin_in_code = new Character(sref.getPdbx_db_align_beg_ins_code().charAt(0));
 		}
-		
+
 		Character db_end_in_code = ' ';
 		if (sref.getPdbx_db_align_end_ins_code() != null) {
 		    db_end_in_code = new Character(sref.getPdbx_db_align_end_ins_code().charAt(0));

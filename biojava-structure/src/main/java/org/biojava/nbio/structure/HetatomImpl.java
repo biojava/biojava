@@ -70,7 +70,7 @@ public class HetatomImpl implements Group {
 	protected List<Atom> atoms ;
 
 	private Chain parent;
-	
+
 	private boolean isHetAtomInFile;
 
 	/**
@@ -455,7 +455,7 @@ public class HetatomImpl implements Group {
 
 		//clone atoms and bonds.
 		cloneAtomsAndBonds(n);
-		
+
 		// copying the alt loc groups if present, otherwise they stay null
 		if (altLocs!=null) {
 			for (Group altLocGroup:this.altLocs) {
@@ -463,7 +463,7 @@ public class HetatomImpl implements Group {
 				n.addAltLoc(nAltLocGroup);
 			}
 		}
-		
+
 		if (chemComp!=null)
 			n.setChemComp(chemComp);
 
@@ -682,7 +682,7 @@ public class HetatomImpl implements Group {
 	public boolean isHetAtomInFile() {
 		return isHetAtomInFile;
 	}
-	
+
 	@Override
 	public void setHetAtomInFile(boolean isHetAtomInFile) {
 		this.isHetAtomInFile = isHetAtomInFile;

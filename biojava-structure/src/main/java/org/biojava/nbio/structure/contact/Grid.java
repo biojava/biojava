@@ -51,7 +51,7 @@ import org.biojava.nbio.structure.Calc;
  *  Grid grid = new Grid(8.0);
  *  grid.addCoords(atoms);
  *  AtomContactSet contacts = getAtomContacts();
- * </pre> 
+ * </pre>
  *
  * @author Jose Duarte
  *
@@ -70,7 +70,7 @@ public class Grid {
 
 	private Point3d[] iAtoms;
 	private Point3d[] jAtoms;
-	
+
 	private Atom[] iAtomObjects;
 	private Atom[] jAtomObjects;
 
@@ -188,13 +188,13 @@ public class Grid {
 
 		fillGrid();
 	}
-	
+
 	/**
 	 * Adds the i and j coordinates and fills the grid. Their bounds will be computed.
-	 * Subsequent call to {@link #getIndicesContacts()} will produce the 
+	 * Subsequent call to {@link #getIndicesContacts()} will produce the
 	 * contacts, i.e. the set of points within distance cutoff.
-	 * 
-	 * Subsequent calls to method {@link #getAtomContacts()} will produce a NullPointerException 
+	 *
+	 * Subsequent calls to method {@link #getAtomContacts()} will produce a NullPointerException
 	 * since this only adds coordinates and no atom information.
 	 * @param iAtoms
 	 * @param jAtoms
@@ -206,10 +206,10 @@ public class Grid {
 	/**
 	 * Adds the i and j coordinates and fills the grid, passing their bounds (array of size 6 with x,y,z minima and x,y,z maxima)
 	 * This way the bounds don't need to be recomputed.
-	 * Subsequent call to {@link #getIndicesContacts()} will produce the 
+	 * Subsequent call to {@link #getIndicesContacts()} will produce the
 	 * contacts, i.e. the set of points within distance cutoff.
-	 * 
-	 * Subsequent calls to method {@link #getAtomContacts()} will produce a NullPointerException 
+	 *
+	 * Subsequent calls to method {@link #getAtomContacts()} will produce a NullPointerException
 	 * since this only adds coordinates and no atom information.
 	 * @param iAtoms
 	 * @param icoordbounds
@@ -244,10 +244,10 @@ public class Grid {
 	}
 
 	/**
-	 * Adds a set of coordinates, subsequent call to {@link #getIndicesContacts()} will produce the 
+	 * Adds a set of coordinates, subsequent call to {@link #getIndicesContacts()} will produce the
 	 * contacts, i.e. the set of points within distance cutoff.
 	 * The bounding box of the atoms will be computed based on input array.
-	 * Subsequent calls to method {@link #getAtomContacts()} will produce a NullPointerException 
+	 * Subsequent calls to method {@link #getAtomContacts()} will produce a NullPointerException
 	 * since this only adds coordinates and no atom information.
 	 * @param atoms
 	 */
@@ -256,10 +256,10 @@ public class Grid {
 	}
 
 	/**
-	 * Adds a set of coordinates, subsequent call to {@link #getIndicesContacts()} will produce the 
+	 * Adds a set of coordinates, subsequent call to {@link #getIndicesContacts()} will produce the
 	 * contacts, i.e. the set of points within distance cutoff.
 	 * The bounds calculated elsewhere can be passed, or if null they are computed.
-	 * Subsequent calls to method {@link #getAtomContacts()} will produce a NullPointerException 
+	 * Subsequent calls to method {@link #getAtomContacts()} will produce a NullPointerException
 	 * since this only adds coordinates and no atom information.
 	 * @param atoms
 	 * @param bounds
@@ -397,19 +397,19 @@ public class Grid {
 
 		return contacts;
 	}
-	
+
 	/**
 	 * Returns all contacts, i.e. all atoms that are within the cutoff distance.
 	 * If both iAtoms and jAtoms are defined then contacts are between iAtoms and jAtoms,
 	 * if jAtoms is null, then contacts are within the iAtoms.
 	 * @return
 	 * @deprecated use {@link #getAtomContacts()} instead
-	 */	
+	 */
 	@Deprecated
 	public AtomContactSet getContacts() {
 		return getAtomContacts();
 	}
-	
+
 	/**
 	 * Returns all contacts, i.e. all atoms that are within the cutoff distance, as simple Contact objects containing the atom indices pairs and the distance.
 	 * If both iAtoms and jAtoms are defined then contacts are between iAtoms and jAtoms,
@@ -479,7 +479,7 @@ public class Grid {
 					if( y<0 || cells[x].length<=y ) continue;
 					for (int z=zind-1;z<=zind+1;z++) {
 						if( z<0 || cells[x][y].length<=z ) continue;
-						
+
 						GridCell cell = cells[x][y][z];
 						// Check for contacts in this cell
 						if(cell != null && cell.hasContactToAtom(iAtoms, jAtoms, atom, cutoff)) {
@@ -504,11 +504,11 @@ public class Grid {
 	public boolean isNoOverlap() {
 		return noOverlap;
 	}
-	
+
 	protected Point3d[] getIAtoms() {
 		return iAtoms;
 	}
-	
+
 	protected Point3d[] getJAtoms() {
 		return jAtoms;
 	}

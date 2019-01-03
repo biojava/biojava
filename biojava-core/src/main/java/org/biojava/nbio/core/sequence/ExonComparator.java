@@ -33,7 +33,7 @@ import java.util.Comparator;
  * @author Scooter Willis <willishf at gmail dot com>
  */
 public class ExonComparator implements Comparator<ExonSequence>, Serializable{
-    private static final long serialVersionUID = 1;
+	private static final long serialVersionUID = 1;
 
 	@Override
 	public int compare(ExonSequence o1, ExonSequence o2) {

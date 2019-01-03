@@ -30,7 +30,7 @@ import java.util.Comparator;
  * @author Scooter Willis <willishf at gmail dot com>
  */
 public class SurvivalInfoValueComparator implements Comparator<SurvivalInfo>, Serializable {
-    private static final long serialVersionUID = 1;
+	private static final long serialVersionUID = 1;
 
 	String variable = "";
 

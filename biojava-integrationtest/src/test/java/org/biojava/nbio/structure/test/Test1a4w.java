@@ -165,9 +165,9 @@ public class Test1a4w {
 		Chain c2 = s.getChainByIndex(1);
 		Assert.assertEquals("H", c2.getName());
 
-		
+
 		List<Group> hChainLigandGroups = new ArrayList<>();
-		
+
 		for (Chain ch : s.getNonPolyChains()) {
 			if (ch.getName().equals("H")) {
 				hChainLigandGroups.addAll(ch.getAtomGroups());
@@ -201,10 +201,10 @@ public class Test1a4w {
 		Chain c2 = structure.getChainByIndex(1);
 		Assert.assertEquals("H", c2.getName());
 
-		
+
 
 		List<Group> hChainLigandGroups = new ArrayList<>();
-		
+
 		for (Chain ch : structure.getNonPolyChains()) {
 			if (ch.getName().equals("H")) {
 				hChainLigandGroups.addAll(ch.getAtomGroups());
@@ -250,7 +250,7 @@ public class Test1a4w {
 			if (site.getSiteID().equals("AC3")) {
 				testSite = site;
 				for ( Group g : site.getGroups()){
-					// before biojava 5.0 we were asserting for same chain, but now the DAR residue is in its own nonpoly chain, can't do it anymore 
+					// before biojava 5.0 we were asserting for same chain, but now the DAR residue is in its own nonpoly chain, can't do it anymore
 					//assertEquals(c2, g.getChain());
 					String pdbName = g.getPDBName();
 					if ( pdbName.equals("DAR")) {
@@ -274,7 +274,7 @@ public class Test1a4w {
 
 		//System.out.println(ligands);
 		Assert.assertEquals("Did not find the correct nr of ligands in chain! ", 8, testSite.getGroups().size());
-		
+
 
 	}
 

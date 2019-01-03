@@ -169,7 +169,7 @@ public class AminoAcidImpl extends HetatomImpl implements AminoAcid {
 
 		//clone atoms and bonds.
 		cloneAtomsAndBonds(n);
-		
+
 		// copying the alt loc groups if present, otherwise they stay null
 		if (getAltLocs()!=null && !getAltLocs().isEmpty()) {
 			for (Group altLocGroup:this.getAltLocs()) {
@@ -177,7 +177,7 @@ public class AminoAcidImpl extends HetatomImpl implements AminoAcid {
 				n.addAltLoc(nAltLocGroup);
 			}
 		}
-		
+
 		if (chemComp!=null)
 			n.setChemComp(chemComp);
 

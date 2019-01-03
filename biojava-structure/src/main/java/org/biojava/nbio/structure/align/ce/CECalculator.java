@@ -1890,13 +1890,13 @@ nBestTrace=nTrace;
 	 * @return RMSD
 	 * @throws StructureException
 	 */
-	public double calc_rmsd(Atom[] pro1, Atom[] pro2, int strLen, 
+	public double calc_rmsd(Atom[] pro1, Atom[] pro2, int strLen,
 			boolean storeTransform) throws StructureException {
 
 		Atom[] cod1 = getAtoms(pro1,  strLen,false);
 		Atom[] cod2 = getAtoms(pro2,  strLen,true);
 
-		Matrix4d trans = SuperPositions.superpose(Calc.atomsToPoints(cod1), 
+		Matrix4d trans = SuperPositions.superpose(Calc.atomsToPoints(cod1),
 				Calc.atomsToPoints(cod2));
 
 		Matrix matrix = Matrices.getRotationJAMA(trans);
@@ -1908,7 +1908,7 @@ nBestTrace=nTrace;
 		}
 		for (Atom a : cod2)
 			Calc.transform(a.getGroup(), trans);
-			
+
 		return Calc.rmsd(cod1, cod2);
 
 	}

@@ -35,7 +35,7 @@ import org.junit.Test;
 
 /**
  * Test the superposition based on a sequence alignment on different cases.
- * 
+ *
  * @author Aleix Lafita
  *
  */
@@ -66,7 +66,7 @@ public class TestSmithWaterman3Daligner {
 
 		assertEquals("RMSD is wrong", 1.39, afpChain.getTotalRmsdOpt(), 0.005);
 		assertEquals("Length is wrong", 137, afpChain.getOptLength());
-		
+
 		// Restrict it to 1A RMSD (18 columns have to be dropped)
 		params.setMaxRmsd(1.0);
 
@@ -74,7 +74,7 @@ public class TestSmithWaterman3Daligner {
 
 		assertTrue("RMSD is above the threshold", afpChain.getTotalRmsdOpt() < 1.0);
 		assertEquals("Length is wrong", 119, afpChain.getOptLength());
-		
+
 		// Restrict it to 0A RMSD (the minimum length is relevant )
 		params.setMaxRmsd(0.0);
 		params.setMinLen(30);

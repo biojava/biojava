@@ -70,9 +70,9 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class MmtfUtils {
-	
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(MmtfUtils.class);
-	
+
 	/**
 	 * Set up the configuration parameters for BioJava.
 	 */
@@ -117,7 +117,7 @@ public class MmtfUtils {
 
 
 	/**
-	 * This sets all microheterogeneous groups 
+	 * This sets all microheterogeneous groups
 	 * (previously alternate location groups) as separate groups.
 	 * This is required because mmtf groups cannot have multiple HET codes.
 	 * @param bioJavaStruct
@@ -132,7 +132,7 @@ public class MmtfUtils {
 				List<Group> outGroups = new ArrayList<>();
 				for (Group g : c.getAtomGroups()) {
 					List<Group> removeList = new ArrayList<>();
-					for (Group altLoc : g.getAltLocs()) {	  
+					for (Group altLoc : g.getAltLocs()) {
 						// Check if they are not equal -> microheterogenity
 						if(! altLoc.getPDBName().equals(g.getPDBName())) {
 							// Now add this group to the main list
@@ -164,7 +164,7 @@ public class MmtfUtils {
 		}
 		catch(StructureException e) {
 			LOGGER.warn("Could not calculate secondary structure (error {}). Will try to get a DSSP file from the RCSB web server instead.", e.getMessage());
-			
+
 			try {
 				DSSPParser.fetch(bioJavaStruct.getPDBCode(), bioJavaStruct, true); //download from PDB the DSSP result
 			} catch(Exception bige){
@@ -318,7 +318,7 @@ public class MmtfUtils {
 		List<Group> altLocs = inputGroup.getAltLocs();
 		for(Group thisG: altLocs){
 			for(Atom a: thisG.getAtoms()){
-				if(uniqueAtoms.contains(a)){ 
+				if(uniqueAtoms.contains(a)){
 					continue;
 				}
 				theseAtoms.add(a);
@@ -334,7 +334,7 @@ public class MmtfUtils {
 	 */
 	public static int getNumBondsInGroup(List<Atom> atomsInGroup) {
 		int bondCounter = 0;
-		for(Atom atom : atomsInGroup) { 
+		for(Atom atom : atomsInGroup) {
 			if(atom.getBonds()==null){
 				continue;
 			}
@@ -423,13 +423,13 @@ public class MmtfUtils {
 			allChains.addAll(chains);
 			for (Chain chain : chains) {
 				String idOne = chain.getId();
-				if (!chainIdToIndexMap.containsKey(idOne)) { 
+				if (!chainIdToIndexMap.containsKey(idOne)) {
 					chainIdToIndexMap.put(idOne, chainCounter);
 				}
 				chainCounter++;
 				for (Group g : chain.getAtomGroups()) {
 					for(Atom atom: getAtomsForGroup(g)){
-						theseAtoms.add(atom);		
+						theseAtoms.add(atom);
 						// If both atoms are in the group
 						if (atom.getBonds()!=null){
 							bondCount+=atom.getBonds().size();
@@ -447,7 +447,7 @@ public class MmtfUtils {
 	/**
 	 * Get a list of N 4*4 matrices from a single list of doubles of length 16*N.
 	 * @param ncsOperMatrixList the input list of doubles
-	 * @return the list of 4*4 matrics 
+	 * @return the list of 4*4 matrics
 	 */
 	public static Matrix4d[] getNcsAsMatrix4d(double[][] ncsOperMatrixList) {
 		if(ncsOperMatrixList==null){
@@ -469,7 +469,7 @@ public class MmtfUtils {
 
 	/**
 	 * Get a list of length N*16 of a list of Matrix4d*N.
-	 * @param ncsOperators the {@link Matrix4d} list 
+	 * @param ncsOperators the {@link Matrix4d} list
 	 * @return the list of length N*16 of the list of matrices
 	 */
 	public static double[][] getNcsAsArray(Matrix4d[] ncsOperators) {
@@ -537,9 +537,9 @@ public class MmtfUtils {
 		}
 		if(sequenceIndexId>=0){
 			seqResGroups.set(sequenceIndexId, group);
-		}		
+		}
 	}
-	
+
 	private static Group getSeqResGroup(Chain modelChain, char singleLetterCode, GroupType type) {
 		if(type==GroupType.AMINOACID){
 			AminoAcidImpl a = new AminoAcidImpl();

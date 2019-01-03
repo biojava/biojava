@@ -325,7 +325,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 	}
 
 	/**
-     * @since 5.0.0
+	 * @since 5.0.0
 	 * @return the list of {@link AbstractReference}
 	 */
 	public List<AbstractReference> getReferences() {
@@ -334,7 +334,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 
 	/**
 	 * Set the list of {@link AbstractReference}
-     * @since 5.0.0
+	 * @since 5.0.0
 	 * @param references
 	 */
 	public void setReferences(List<AbstractReference> references) {

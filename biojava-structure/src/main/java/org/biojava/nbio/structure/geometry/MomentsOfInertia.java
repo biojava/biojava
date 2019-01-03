@@ -39,10 +39,10 @@ import java.util.List;
  * to change the body's rotation.
  * <p>
  * More in https://en.wikipedia.org/wiki/Moment_of_inertia.
- * 
+ *
  * @author Peter Rose
  * @author Aleix Lafita
- * 
+ *
  */
 public class MomentsOfInertia {
 
@@ -100,7 +100,7 @@ public class MomentsOfInertia {
 
 	/**
 	 * The principal axes of intertia
-	 * 
+	 *
 	 * @return
 	 */
 	public Vector3d[] getPrincipalAxes() {
@@ -120,7 +120,7 @@ public class MomentsOfInertia {
 	 * <p>
 	 * The orientation matrix indicates the rotation to bring the coordinate
 	 * axes to the principal axes, in this direction.
-	 * 
+	 *
 	 * @return the orientation Matrix as a Matrix3d object
 	 */
 	public Matrix3d getOrientationMatrix() {

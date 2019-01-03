@@ -36,75 +36,75 @@ package org.biojava.nbio.core.sequence.io.embl;
 public class EmblId {
 
 
-    private final String primaryAccession;
-    private final String sequenceVersion;
-    private final String topology;
-    private final String moleculeType;
-    private final String dataClass;
-    private final String taxonomicDivision;
-    private final String sequenceLength;
+	private final String primaryAccession;
+	private final String sequenceVersion;
+	private final String topology;
+	private final String moleculeType;
+	private final String dataClass;
+	private final String taxonomicDivision;
+	private final String sequenceLength;
 
-    public EmblId(String primaryAccession, String sequenceVersion, String topology,
-                  String moleculeType, String dataClass, String taxonomicDivision,
-                  String sequenceLength) {
-        this.primaryAccession = primaryAccession;
-        this.sequenceVersion = sequenceVersion;
-        this.topology = topology;
-        this.moleculeType = moleculeType;
-        this.dataClass = dataClass;
-        this.taxonomicDivision = taxonomicDivision;
-        this.sequenceLength = sequenceLength;
-    }
+	public EmblId(String primaryAccession, String sequenceVersion, String topology,
+				  String moleculeType, String dataClass, String taxonomicDivision,
+				  String sequenceLength) {
+		this.primaryAccession = primaryAccession;
+		this.sequenceVersion = sequenceVersion;
+		this.topology = topology;
+		this.moleculeType = moleculeType;
+		this.dataClass = dataClass;
+		this.taxonomicDivision = taxonomicDivision;
+		this.sequenceLength = sequenceLength;
+	}
 
-    /**
-     * @return String
-     */
-    public String getPrimaryAccession() {
-        return primaryAccession;
-    }
+	/**
+	 * @return String
+	 */
+	public String getPrimaryAccession() {
+		return primaryAccession;
+	}
 
-    /**
-     * return the sequence version
-     *
-     * @return String
-     */
-    public String getSequenceVersion() {
-        return sequenceVersion;
-    }
+	/**
+	 * return the sequence version
+	 *
+	 * @return String
+	 */
+	public String getSequenceVersion() {
+		return sequenceVersion;
+	}
 
-    public String getTopology() {
-        return topology;
-    }
+	public String getTopology() {
+		return topology;
+	}
 
-    /**
-     * Molecule type this represents the type of molecule as stored
-     *
-     * @return String
-     */
-    public String getMoleculeType() {
-        return moleculeType;
-    }
+	/**
+	 * Molecule type this represents the type of molecule as stored
+	 *
+	 * @return String
+	 */
+	public String getMoleculeType() {
+		return moleculeType;
+	}
 
-    public String getDataClass() {
-        return dataClass;
-    }
+	public String getDataClass() {
+		return dataClass;
+	}
 
-    /**
-     * @return String
-     */
-    public String getTaxonomicDivision() {
-        return taxonomicDivision;
-    }
+	/**
+	 * @return String
+	 */
+	public String getTaxonomicDivision() {
+		return taxonomicDivision;
+	}
 
-    /**
-     * Sequence length The last item on the ID line is the length of the
-     * sequence (the total number of bases in the sequence). This number includes
-     * base positions reported as present but undetermined (coded as "N").
-     *
-     * @return String
-     */
-    public String getSequenceLength() {
-        return sequenceLength;
-    }
+	/**
+	 * Sequence length The last item on the ID line is the length of the
+	 * sequence (the total number of bases in the sequence). This number includes
+	 * base positions reported as present but undetermined (coded as "N").
+	 *
+	 * @return String
+	 */
+	public String getSequenceLength() {
+		return sequenceLength;
+	}
 
 }

@@ -1,12 +1,12 @@
 /*
- *			BioJava development code
+ *                    BioJava development code
  *
  * This code may be freely distributed and modified under the
  * terms of the GNU Lesser General Public Licence.  This should
  * be distributed with the code.  If you do not have a copy,
  * see:
  *
- *	  http://www.gnu.org/copyleft/lesser.html
+ *      http://www.gnu.org/copyleft/lesser.html
  *
  * Copyright for this code is held jointly by the individual
  * authors.  These should be listed in @author doc comments.
@@ -15,14 +15,9 @@
  * or to join the biojava-l mailing list, visit the home page
  * at:
  *
- *	  http://www.biojava.org/
- *
- * Created on Jun 8, 2010
- * Author: Jianjiong Gao
- * Author: Peter W. Rose
+ *      http://www.biojava.org/
  *
  */
-
 package org.biojava.nbio.protmod.structure;
 
 import org.biojava.nbio.protmod.ProteinModification;
@@ -112,7 +107,7 @@ public class ProteinModificationParserTest {
 
 				{"1WCT","AA0179"},
 				{"2VH3","AA0459"},
-				
+
 				// Chromophores
 				{"2HGD",null}, // X9Q
 				{"3LF4",null}, // 0YG
@@ -321,12 +316,12 @@ public class ProteinModificationParserTest {
 				{"1TJB",null},
 				{"2V15",null},
 				{"2K61",null},
-				
+
 				// Chromophores
 				{"2HGD",null}, // X9Q
 				{"3LF4",null}, // 0YG
-				
-				
+
+
 		};
 		return strucs;
 	}
@@ -360,7 +355,7 @@ public class ProteinModificationParserTest {
 	private void parserTest(String pdbId, Set<ProteinModification> mods) throws IOException, StructureException {
 		Structure struc = TmpAtomCache.cache.getStructure(pdbId);
 /*
- //needed for testing 1G20
+		//needed for testing 1G20
 		if ( pdbId.equalsIgnoreCase("1G20")) {
 			Structure n = new StructureImpl();
 

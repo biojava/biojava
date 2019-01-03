@@ -28,24 +28,24 @@ public class ChromPos {
 	private int pos;
 	private int phase;
 
-    public int getPhase() {
-        return phase;
-    }
+	public int getPhase() {
+		return phase;
+	}
 
-    public void setPhase(int phase) {
-        this.phase = phase;
-    }
+	public void setPhase(int phase) {
+		this.phase = phase;
+	}
 
-    public int getPos() {
-        return pos;
-    }
+	public int getPos() {
+		return pos;
+	}
 
-    public void setPos(int pos) {
-        this.pos = pos;
-    }
+	public void setPos(int pos) {
+		this.pos = pos;
+	}
 
-    public ChromPos(int pos, int phase){
-        this.pos = pos;
-        this.phase = phase;
-    }
+	public ChromPos(int pos, int phase){
+		this.pos = pos;
+		this.phase = phase;
+	}
 }

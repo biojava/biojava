@@ -516,8 +516,8 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 		File realFile = new File(dir,getFilename(pdbId));
 
 		String ftp;
-		
-		if (getFilename(pdbId).endsWith(".mmtf.gz")){			
+
+		if (getFilename(pdbId).endsWith(".mmtf.gz")){
 			ftp = CodecUtils.getMmtfEntryUrl(pdbId, true, false);
 		} else {
 			ftp = String.format("%s%s/%s/%s",

@@ -74,36 +74,36 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
 
 	private Map<String, BlastJob> jobs = new HashMap<String, BlastJob>();
 
-    /** Constructs a service object that targets the public NCBI BLAST network
-     * service. 
-     */
+	/** Constructs a service object that targets the public NCBI BLAST network
+	 * service.
+	 */
 	public NCBIQBlastService() {
-        init(SERVICE_URL);
+		init(SERVICE_URL);
 	}
 
-    /** Constructs a service object which targets a custom NCBI BLAST network
-     * service (e.g.: an instance of BLAST in the cloud).
-     *
+	/** Constructs a service object which targets a custom NCBI BLAST network
+	 * service (e.g.: an instance of BLAST in the cloud).
+	 *
 	 * @param svcUrl : a {@code String} containing the base URL to send requests to,
-     *                 e.g.: http://host.my.cloud.service.provider.com/cgi-bin/blast.cgi
-     *
-     * @see <a href="https://blast.ncbi.nlm.nih.gov/Blast.cgi?PAGE_TYPE=BlastDocs&DOC_TYPE=CloudBlast">BLAST on the cloud documentation</a>
-     */
+	 *                 e.g.: http://host.my.cloud.service.provider.com/cgi-bin/blast.cgi
+	 *
+	 * @see <a href="https://blast.ncbi.nlm.nih.gov/Blast.cgi?PAGE_TYPE=BlastDocs&DOC_TYPE=CloudBlast">BLAST on the cloud documentation</a>
+	 */
 	public NCBIQBlastService(String svcUrl) {
-        init(svcUrl);
+		init(svcUrl);
 	}
 
-    /** Initialize the serviceUrl data member 
-     * @throws MalformedURLException on invalid URL
-     */
-    private void init(String svcUrl) {
+	/** Initialize the serviceUrl data member
+	 * @throws MalformedURLException on invalid URL
+	 */
+	private void init(String svcUrl) {
 		try {
 			serviceUrl = new URL(svcUrl);
 		} catch (MalformedURLException e) {
-            throw new RuntimeException("It looks like the URL for remote NCBI BLAST service (" 
-                                       + svcUrl + ") is wrong. Cause: " + e.getMessage(), e);
+			throw new RuntimeException("It looks like the URL for remote NCBI BLAST service ("
+									   + svcUrl + ") is wrong. Cause: " + e.getMessage(), e);
 		}
-    }
+	}
 
 	/**
 	 * A simple method to check the availability of the QBlast service. Sends {@code Info} command to QBlast

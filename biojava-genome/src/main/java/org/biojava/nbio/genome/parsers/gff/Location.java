@@ -68,7 +68,7 @@ package org.biojava.nbio.genome.parsers.gff;
  */
 public class Location implements Iterable<Location>
 {
-	
+
 	private int mStart;
 	private int mEnd;
 
@@ -292,7 +292,7 @@ public class Location implements Iterable<Location>
 			throw new IllegalArgumentException("Locations are on opposite strands.");
 		}
 	}
-	
+
 	private Location intersect(int a1, int a2, int b1, int b2) {
 		if (a1 > b1) {
 			return intersect(b1, b2, a1, a2);
@@ -309,7 +309,7 @@ public class Location implements Iterable<Location>
 			return new Location(b1, a2);
 		}
 		return null;
-	}	
+	}
 
 
 	/**

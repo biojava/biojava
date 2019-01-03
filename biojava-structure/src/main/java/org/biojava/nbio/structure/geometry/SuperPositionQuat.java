@@ -25,16 +25,16 @@ import javax.vecmath.*;
 /**
  * The SuperPositionQuat implements a quaternion based algorithm to superpose
  * arrays of Points in 3D.
- * 
+ *
  * @author Peter Rose
  * @author Aleix Lafita
- * 
+ *
  */
 public final class SuperPositionQuat extends SuperPositionAbstract {
 
 	/**
 	 * Constructor for the quaternion based superposition algorithm.
-	 * 
+	 *
 	 * @param centered
 	 *            true if the point arrays are centered at the origin (faster),
 	 *            false otherwise
@@ -47,7 +47,7 @@ public final class SuperPositionQuat extends SuperPositionAbstract {
 	public Matrix4d superpose(Point3d[] fixed, Point3d[] moved) {
 
 		checkInput(fixed, moved);
-		
+
 		if (centered) {
 			Quat4d q = UnitQuaternions.relativeOrientation(fixed, moved);
 			Matrix4d rotTrans = new Matrix4d();

@@ -209,7 +209,7 @@ public class BondMaker {
 					for(Group group : totList){
 
 						ChemComp aminoChemComp = ChemCompGroupFactory.getChemComp(group.getPDBName());
-						logger.debug("chemcomp for residue {}-{} has {} atoms and {} bonds", 
+						logger.debug("chemcomp for residue {}-{} has {} atoms and {} bonds",
 								group.getPDBName(), group.getResidueNumber(), aminoChemComp.getAtoms().size(), aminoChemComp.getBonds().size());
 
 						for (ChemCompBond chemCompBond : aminoChemComp.getBonds()) {
@@ -217,10 +217,10 @@ public class BondMaker {
 							Atom b = getAtom(chemCompBond.getAtom_id_2(), group);
 							if ( a != null && b != null){
 								int bondOrder = chemCompBond.getNumericalBondOrder();
-								logger.debug("Forming bond between atoms {}-{} and {}-{} with bond order {}", 
+								logger.debug("Forming bond between atoms {}-{} and {}-{} with bond order {}",
 										a.getPDBserial(), a.getName(), b.getPDBserial(), b.getName(), bondOrder);
 								new BondImpl(a, b, bondOrder);
-							} 
+							}
 							else{
 								// Some of the atoms were missing. That's fine, there's
 								// nothing to do in this case.

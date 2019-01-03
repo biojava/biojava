@@ -38,7 +38,7 @@ import org.biojava.nbio.structure.symmetry.core.QuatSymmetryDetector;
  * <p>
  * Currently used to calculate the possible LOCAL symmetries in
  * {@link QuatSymmetryDetector}.
- * 
+ *
  * @author Aleix Lafita
  * @since 5.0.0
  *

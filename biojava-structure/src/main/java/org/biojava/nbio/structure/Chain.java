@@ -72,15 +72,15 @@ public interface Chain extends Serializable {
 	String getId() ;
 
 
-	/** 
+	/**
 	 * Set the 'private' asymId (internal chain IDs in mmCif) for this chain.
 	 *
 	 * @param asymId the internal chain Id
-     */
+	 */
 	void setId(String asymId) ;
 
 
-	/** 
+	/**
 	 * Set the 'public' authId (chain ID in PDB file)
 	 *
 	 * @param authId the 'public' authId (chain ID in PDB file)
@@ -88,12 +88,12 @@ public interface Chain extends Serializable {
 	 */
 	void setName(String authId);
 
-	/** 
+	/**
 	 * Get the 'public' authId (chain ID in PDB file)
 	 *
 	 * @return the authId for this chain.
 	 * @see #getId()
-     */
+	 */
 	String getName();
 
 
@@ -163,7 +163,7 @@ public interface Chain extends Serializable {
 	 */
 	Group getGroupByPDB(ResidueNumber resNum) throws StructureException;
 
-	/** 
+	/**
 	 * Get all groups that are located between two PDB residue numbers.
 	 *
 	 * @param pdbresnumStart PDB residue number of start. If null, defaults to the chain start.
@@ -174,7 +174,7 @@ public interface Chain extends Serializable {
 	Group[] getGroupsByPDB(ResidueNumber pdbresnumStart, ResidueNumber pdbresnumEnd) throws StructureException;
 
 
-	/** 
+	/**
 	 * Get all groups that are located between two PDB residue numbers. In contrast to getGroupsByPDB
 	 * this method call ignores if the exact outer groups are not found. This is useful e.g. when requesting the range
 	 * of groups as specified by the DBREF records - these frequently are rather inaccurate.
@@ -347,7 +347,7 @@ public interface Chain extends Serializable {
 	@Deprecated
 	 void setParent(Structure parent) ;
 
-	/** 
+	/**
 	 * Sets the back-reference to its parent Structure.
 	 *
 	 * @param parent
@@ -380,7 +380,7 @@ public interface Chain extends Serializable {
 	 * Otherwise the Ligands could not correctly be identified.
 	 * @return list of Groups that are ligands
 	 * @deprecated since biojava 5.0 this does not apply anymore. Chains contain either
-	 * polymeric groups or non-polymeric groups 
+	 * polymeric groups or non-polymeric groups
 	 */
 	@Deprecated
 	List<Group> getAtomLigands();
@@ -398,20 +398,20 @@ public interface Chain extends Serializable {
 	String toMMCIF();
 
 
-	/** 
+	/**
 	 * Sets annotated sequence mismatches for this chain. This is based on the STRUCT_REF_SEQ_DIF mmCif category
 	 *
 	 * @param seqMisMatches
 	 */
 	void setSeqMisMatches(List<SeqMisMatch> seqMisMatches);
 
-	/** 
+	/**
 	 * Gets annotated sequence mismatches for this chain. This is based on the STRUCT_REF_SEQ_DIF mmCif category
 	 *
 	 * @returns a list of sequence mismatches (or null if none found)
 	 */
 	List<SeqMisMatch> getSeqMisMatches();
-	 
+
 	/**
 	 * Returns the EntityType of this chain. Equivalent to getEntityInfo().getType()
 	 * @return
@@ -422,13 +422,13 @@ public interface Chain extends Serializable {
 	/** Tests if a chain is consisting of water molecules only
 	 *
 	 * @return true if there are only solvent molecules in this chain.
-     */
-	 public boolean isWaterOnly();
+	 */
+	public boolean isWaterOnly();
 
 	/**  Returns true if the given chain is composed of non-polymeric (including water) groups only.
 	 *
- 	 * @return true if only non-polymeric groups in this chain.
-     */
+	 * @return true if only non-polymeric groups in this chain.
+	 */
 	public boolean isPureNonPolymer();
 
 	/**
@@ -453,7 +453,6 @@ public interface Chain extends Serializable {
 	/**
 	 * Tell whether given chain is a protein chain
 	 *
-
 	 * @return true if protein, false if nucleotide or ligand
 	 * @see #getPredominantGroupType()
 	 */

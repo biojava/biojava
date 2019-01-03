@@ -38,10 +38,10 @@ import java.util.stream.Collectors;
  * considered for symmetry detection. This class is a helper for the
  * {@link QuatSymmetryDetector} algorithm, since it calculates and caches the
  * {@link MomentsOfInertia} and the centroids of each Subunit.
- * 
+ *
  * @author Peter Rose
  * @author Aleix Lafita
- * 
+ *
  */
 public class QuatSymmetrySubunits {
 
@@ -59,7 +59,7 @@ public class QuatSymmetrySubunits {
 
 	/**
 	 * Converts the List of {@link SubunitCluster} to a Subunit object.
-	 * 
+	 *
 	 * @param clusters
 	 *            List of SubunitCluster
 	 */
@@ -102,11 +102,11 @@ public class QuatSymmetrySubunits {
 	 * This method is provisional and should only be used for coloring Subunits.
 	 * A new coloring schema has to be implemented to allow the coloring of
 	 * Subunits, without implying one Subunit = one Chain.
-	 * 
+	 *
 	 * @return A List of the Chain Ids of each Subunit
 	 */
 	public List<String> getChainIds() {
-		
+
 		List<String> chains = new ArrayList<String>(getSubunitCount());
 
 		// Loop through all subunits in the clusters and fill Lists
@@ -114,7 +114,7 @@ public class QuatSymmetrySubunits {
 			for (int s = 0; s < clusters.get(c).size(); s++)
 				chains.add(clusters.get(c).getSubunits().get(s).getName());
 		}
-		
+
 		return chains;
 	}
 
@@ -122,11 +122,11 @@ public class QuatSymmetrySubunits {
 	 * This method is provisional and should only be used for coloring Subunits.
 	 * A new coloring schema has to be implemented to allow the coloring of
 	 * Subunits, without implying one Subunit = one Chain.
-	 * 
+	 *
 	 * @return A List of the Model number of each Subunit
 	 */
 	public List<Integer> getModelNumbers() {
-		
+
 		List<Integer> models = new ArrayList<Integer>(getSubunitCount());
 
 		// Loop through all subunits in the clusters and fill Lists

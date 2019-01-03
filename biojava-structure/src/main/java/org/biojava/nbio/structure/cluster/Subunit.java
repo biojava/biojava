@@ -34,7 +34,7 @@ import org.biojava.nbio.structure.StructureTools;
  * <p>
  * The Subunit object can contain additional fields for identification and
  * annotation.
- * 
+ *
  * @author Aleix Lafita
  * @since 5.0.0
  *
@@ -55,7 +55,7 @@ public class Subunit {
 	 * Atoms of its residues. It can be identified with a StructureIdentifier
 	 * and/or a name and stores a reference to the Structure from which the
 	 * Atoms were obtained.
-	 * 
+	 *
 	 * @param reprAtoms
 	 *            representative Atoms. It cannot be null or empty
 	 * @param name
@@ -84,7 +84,7 @@ public class Subunit {
 	/**
 	 * Get all the representative Atoms of the Subunit. These Atoms are used for
 	 * clustering and displaying the Subunit.
-	 * 
+	 *
 	 * @return representative Atom[]
 	 */
 	public Atom[] getRepresentativeAtoms() {
@@ -93,7 +93,7 @@ public class Subunit {
 
 	/**
 	 * The size of a Subunit is the number of residues it contains.
-	 * 
+	 *
 	 * @return the size of the Subunit
 	 */
 	public int size() {
@@ -102,7 +102,7 @@ public class Subunit {
 
 	/**
 	 * Get the protein sequence of the Subunit as String.
-	 * 
+	 *
 	 * @return protein sequence String
 	 */
 	public String getProteinSequenceString() {
@@ -122,7 +122,7 @@ public class Subunit {
 
 	/**
 	 * Get the protein sequence of the Subunit.
-	 * 
+	 *
 	 * @return sequence ProteinSequence
 	 * @throws CompoundNotFoundException
 	 */
@@ -137,7 +137,7 @@ public class Subunit {
 
 	/**
 	 * The Name of a Subunit is a free-text field, user defined.
-	 * 
+	 *
 	 * @return the Subunit name
 	 */
 	public String getName() {
@@ -146,7 +146,7 @@ public class Subunit {
 
 	/**
 	 * The Name of a Subunit is a free-text field, user defined.
-	 * 
+	 *
 	 * @param name
 	 *            of the Subunit
 	 */
@@ -156,7 +156,7 @@ public class Subunit {
 
 	/**
 	 * The parent Structure from which the Subunit atoms were obtained.
-	 * 
+	 *
 	 * @return Structure object
 	 */
 	public Structure getStructure() {
@@ -165,7 +165,7 @@ public class Subunit {
 
 	/**
 	 * The standard identifier of the Subunit.
-	 * 
+	 *
 	 * @return StructureIdentifier object
 	 */
 	public StructureIdentifier getIdentifier() {

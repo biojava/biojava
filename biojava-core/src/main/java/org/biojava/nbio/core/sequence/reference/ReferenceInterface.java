@@ -26,46 +26,46 @@ package org.biojava.nbio.core.sequence.reference;
  */
 public interface ReferenceInterface {
 
-    /**
-     * Set the title that retrieved from Reference section.
-     *
-     * @param title
-     */
-    void setTitle(String title);
+	/**
+	 * Set the title that retrieved from Reference section.
+	 *
+	 * @param title
+	 */
+	void setTitle(String title);
 
-    /**
-     * Get the title that retrieved from Reference section.
-     *
-     * @return
-     */
-    String getTitle();
+	/**
+	 * Get the title that retrieved from Reference section.
+	 *
+	 * @return
+	 */
+	String getTitle();
 
-    /**
-     * Set the authors that retrieved from Reference section.
-     *
-     * @param authors
-     */
-    void setAuthors(String authors);
+	/**
+	 * Set the authors that retrieved from Reference section.
+	 *
+	 * @param authors
+	 */
+	void setAuthors(String authors);
 
-    /**
-     * Get the authors that retrieved from Reference section.
-     *
-     * @return
-     */
-    String getAuthors();
+	/**
+	 * Get the authors that retrieved from Reference section.
+	 *
+	 * @return
+	 */
+	String getAuthors();
 
-    /**
-     * Set the journal that retrieved from Reference section.
-     *
-     * @param journal
-     */
-    void setJournal(String journal);
+	/**
+	 * Set the journal that retrieved from Reference section.
+	 *
+	 * @param journal
+	 */
+	void setJournal(String journal);
 
-    /**
-     * Get the journal that retrieved from Reference section.
-     *
-     * @return
-     */
-    String getJournal();
+	/**
+	 * Get the journal that retrieved from Reference section.
+	 *
+	 * @return
+	 */
+	String getJournal();
 
 }

@@ -37,7 +37,7 @@ import org.slf4j.LoggerFactory;
  * <p>
  * The input consists of 2 Point3d arrays of equal length. The input coordinates
  * are not changed.
- * 
+ *
  * <pre>
  *    Point3d[] x = ...
  *    Point3d[] y = ...
@@ -46,7 +46,7 @@ import org.slf4j.LoggerFactory;
  * </pre>
  * <p>
  * or with weighting factors [0 - 1]]
- * 
+ *
  * <pre>
  *    double[] weights = ...
  *    qcp.set(x, y, weights);
@@ -55,19 +55,19 @@ import org.slf4j.LoggerFactory;
  * For maximum efficiency, create a SuperPositionQCP object once and reuse it.
  * <p>
  * A. Calculate rmsd only
- * 
+ *
  * <pre>
  * double rmsd = qcp.getRmsd();
  * </pre>
  * <p>
  * B. Calculate a 4x4 transformation (rotation and translation) matrix
- * 
+ *
  * <pre>
  * Matrix4d rottrans = qcp.getTransformationMatrix();
  * </pre>
  * <p>
  * C. Get transformated points (y superposed onto the reference x)
- * 
+ *
  * <pre>
  * Point3d[] ySuperposed = qcp.getTransformedCoordinates();
  * </pre>
@@ -101,7 +101,7 @@ import org.slf4j.LoggerFactory;
  * <p>
  * pliu24@its.jnj.com
  * <p>
- * 
+ *
  * @author Douglas L. Theobald (original C code)
  * @author Pu Liu (original C code)
  * @author Peter Rose (adopted to Java)
@@ -139,7 +139,7 @@ public final class SuperPositionQCP extends SuperPositionAbstract {
 
 	/**
 	 * Default constructor for the quaternion based superposition algorithm.
-	 * 
+	 *
 	 * @param centered
 	 *            true if the point arrays are centered at the origin (faster),
 	 *            false otherwise
@@ -150,7 +150,7 @@ public final class SuperPositionQCP extends SuperPositionAbstract {
 
 	/**
 	 * Constructor with option to set the precision values.
-	 * 
+	 *
 	 * @param centered
 	 *            true if the point arrays are centered at the origin (faster),
 	 *            false otherwise
@@ -168,7 +168,7 @@ public final class SuperPositionQCP extends SuperPositionAbstract {
 	/**
 	 * Sets the two input coordinate arrays. These input arrays must be of equal
 	 * length. Input coordinates are not modified.
-	 * 
+	 *
 	 * @param x
 	 *            3d points of reference coordinate set
 	 * @param y
@@ -184,7 +184,7 @@ public final class SuperPositionQCP extends SuperPositionAbstract {
 	/**
 	 * Sets the two input coordinate arrays and weight array. All input arrays
 	 * must be of equal length. Input coordinates are not modified.
-	 * 
+	 *
 	 * @param x
 	 *            3d points of reference coordinate set
 	 * @param y
@@ -205,7 +205,7 @@ public final class SuperPositionQCP extends SuperPositionAbstract {
 	 * Note, this is the fasted way to calculate an RMSD without actually
 	 * superposing the two sets. The calculation is performed "lazy", meaning
 	 * calculations are only performed if necessary.
-	 * 
+	 *
 	 * @return root mean square deviation for superposition of y onto x
 	 */
 	private double getRmsd() {
@@ -218,7 +218,7 @@ public final class SuperPositionQCP extends SuperPositionAbstract {
 
 	/**
 	 * Weighted superposition.
-	 * 
+	 *
 	 * @param fixed
 	 * @param moved
 	 * @param weight
@@ -248,7 +248,7 @@ public final class SuperPositionQCP extends SuperPositionAbstract {
 	/**
 	 * Calculates the RMSD value for superposition of y onto x. This requires
 	 * the coordinates to be precentered.
-	 * 
+	 *
 	 * @param x
 	 *            3d points of reference coordinate set
 	 * @param y
@@ -312,7 +312,7 @@ public final class SuperPositionQCP extends SuperPositionAbstract {
 	 * {@link #set(Point3d[], Point3d[], double[])}). It also calculates an
 	 * upper bound of the most positive root of the key matrix.
 	 * http://theobald.brandeis.edu/qcp/qcprot.c
-	 * 
+	 *
 	 * @param coords1
 	 * @param coords2
 	 * @return
@@ -598,11 +598,11 @@ public final class SuperPositionQCP extends SuperPositionAbstract {
 	/**
 	 * The QCP method can be used as a two-step calculation: first compute the
 	 * RMSD (fast) and then compute the superposition.
-	 * 
+	 *
 	 * This method assumes that the RMSD of two arrays of points has been
 	 * already calculated using {@link #getRmsd(Point3d[], Point3d[])} method
 	 * and calculates the transformation of the same two point arrays.
-	 * 
+	 *
 	 * @param fixed
 	 * @param moved
 	 * @return transformation matrix as a Matrix4d to superpose moved onto fixed

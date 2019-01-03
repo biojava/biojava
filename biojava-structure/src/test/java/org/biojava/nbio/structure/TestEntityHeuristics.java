@@ -120,7 +120,7 @@ public class TestEntityHeuristics {
 		for (EntityInfo e:s.getEntityInfos()) {
 			if (e.getType()==EntityType.POLYMER) polyEntities++;
 		}
-		
+
 		assertEquals(4, polyEntities);
 
 		Chain chainA = s.getPolyChainByPDB("A");
@@ -139,7 +139,7 @@ public class TestEntityHeuristics {
 		for (EntityInfo e:s.getEntityInfos()) {
 			if (e.getType()==EntityType.POLYMER) polyEntities++;
 		}
-		
+
 		assertEquals(4,polyEntities);
 
 		chainA = s.getPolyChainByPDB("A");

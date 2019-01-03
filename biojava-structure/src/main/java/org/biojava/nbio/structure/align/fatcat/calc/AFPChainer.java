@@ -700,7 +700,7 @@ public class AFPChainer
 	 */
 	private static double getRmsd(Atom[] catmp1, Atom[] catmp2) throws StructureException{
 
-		Matrix4d trans = SuperPositions.superpose(Calc.atomsToPoints(catmp1), 
+		Matrix4d trans = SuperPositions.superpose(Calc.atomsToPoints(catmp1),
 				Calc.atomsToPoints(catmp2));
 
 		Calc.transform(catmp2, trans);

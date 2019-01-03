@@ -186,7 +186,7 @@ public interface MultipleAlignment extends ScoresCache {
 	/**
 	 * Returns the number of non null positions (residues) of each structure in
 	 * the alignment. The values can be used to compute the coverages.
-	 * 
+	 *
 	 * @return List of residue counts for each structure
 	 */
 	public List<Integer> getAlignResCounts();
@@ -194,7 +194,7 @@ public interface MultipleAlignment extends ScoresCache {
 	/**
 	 * Returns the coverage of the alignment for each structure in the
 	 * alignment as a fraction between 0.0 and 1.0.
-	 * 
+	 *
 	 * @return List coverage for each structure
 	 */
 	public List<Double> getCoverages();

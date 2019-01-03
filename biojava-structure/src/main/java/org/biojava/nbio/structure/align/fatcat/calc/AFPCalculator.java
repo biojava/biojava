@@ -181,7 +181,7 @@ public class AFPCalculator
 
 	}
 
-	private static final double getRmsd(Atom[] ca1, Atom[] ca2, int fragLen, 
+	private static final double getRmsd(Atom[] ca1, Atom[] ca2, int fragLen,
 			int p1, int p2, Matrix m, Atom t) throws StructureException {
 
 
@@ -199,7 +199,7 @@ public class AFPCalculator
 			return rmsd;
 		}
 
-		return SuperPositions.getRmsd(Calc.atomsToPoints(catmp1), 
+		return SuperPositions.getRmsd(Calc.atomsToPoints(catmp1),
 				Calc.atomsToPoints(catmp2));
 	}
 
@@ -211,7 +211,7 @@ public class AFPCalculator
 	 * @param clone: returns a copy of the atom (in case the coordinate get manipulated...)
 	 * @return an Atom[] array
 	 */
-	private static final Atom[] getFragment(Atom[] caall, int pos, int fragmentLength , 
+	private static final Atom[] getFragment(Atom[] caall, int pos, int fragmentLength ,
 			boolean clone){
 
 		if ( pos+fragmentLength > caall.length)

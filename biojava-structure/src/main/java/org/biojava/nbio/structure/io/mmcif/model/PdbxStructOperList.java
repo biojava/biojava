@@ -29,28 +29,28 @@ import java.io.Serializable;
 /**
  * The bean for pdbx_struct_oper_list category
  * <pre>
- * _pdbx_struct_oper_list.id 
- * _pdbx_struct_oper_list.type 
+ * _pdbx_struct_oper_list.id
+ * _pdbx_struct_oper_list.type
  * _pdbx_struct_oper_list.symmetry_operation
- * _pdbx_struct_oper_list.matrix[1][1] 
- * _pdbx_struct_oper_list.matrix[1][2] 
- * _pdbx_struct_oper_list.matrix[1][3] 
- * _pdbx_struct_oper_list.vector[1] 
- * _pdbx_struct_oper_list.matrix[2][1] 
- * _pdbx_struct_oper_list.matrix[2][2] 
- * _pdbx_struct_oper_list.matrix[2][3] 
- * _pdbx_struct_oper_list.vector[2] 
- * _pdbx_struct_oper_list.matrix[3][1] 
- * _pdbx_struct_oper_list.matrix[3][2] 
- * _pdbx_struct_oper_list.matrix[3][3] 
- * _pdbx_struct_oper_list.vector[3] 
- * _pdbx_struct_oper_list.name 
+ * _pdbx_struct_oper_list.matrix[1][1]
+ * _pdbx_struct_oper_list.matrix[1][2]
+ * _pdbx_struct_oper_list.matrix[1][3]
+ * _pdbx_struct_oper_list.vector[1]
+ * _pdbx_struct_oper_list.matrix[2][1]
+ * _pdbx_struct_oper_list.matrix[2][2]
+ * _pdbx_struct_oper_list.matrix[2][3]
+ * _pdbx_struct_oper_list.vector[2]
+ * _pdbx_struct_oper_list.matrix[3][1]
+ * _pdbx_struct_oper_list.matrix[3][2]
+ * _pdbx_struct_oper_list.matrix[3][3]
+ * _pdbx_struct_oper_list.vector[3]
+ * _pdbx_struct_oper_list.name
  * </pre>
  */
 @XmlAccessorType(XmlAccessType.PROPERTY)
 public class PdbxStructOperList implements Serializable{
 
-	
+
 	private static final long serialVersionUID = 8933552854747969787L;
 
 	@Override
@@ -62,16 +62,16 @@ public class PdbxStructOperList implements Serializable{
 	private String id;
 
 	private String type;
-	
+
 	private String symmetry_operation;
-	
+
 	@CIFLabel(label="matrix[1][1]")
 	String matrix11;
 	@CIFLabel(label="matrix[1][2]")
 	String matrix12;
 	@CIFLabel(label="matrix[1][3]")
 	String matrix13;
-	
+
 	@CIFLabel(label="vector[1]")
 	String vector1;
 
@@ -81,23 +81,23 @@ public class PdbxStructOperList implements Serializable{
 	String matrix22;
 	@CIFLabel(label="matrix[2][3]")
 	String matrix23;
-	
+
 	@CIFLabel(label="vector[2]")
 	String vector2;
-	
+
 	@CIFLabel(label="matrix[3][1]")
 	String matrix31;
 	@CIFLabel(label="matrix[3][2]")
 	String matrix32;
 	@CIFLabel(label="matrix[3][3]")
 	String matrix33;
-	
+
 	@CIFLabel(label="vector[3]")
 	String vector3;
 
 	String name;
-	
-	
+
+
 	// from here fields that are not in the cif category
 
 
@@ -151,7 +151,7 @@ public class PdbxStructOperList implements Serializable{
 	public void setMatrix33(String val){
 		this.matrix33 =val;
 	}
-	
+
 	public void setName(String name) {
 		this.name = name;
 	}

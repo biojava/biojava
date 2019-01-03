@@ -322,7 +322,7 @@ public class BioAssemblyTools {
 		return centroid;
 	}
 
-	/** 
+	/**
 	 * Reduce a structure to a single-atom representation (e.g. CA atoms)
 	 *
 	 * @param orig

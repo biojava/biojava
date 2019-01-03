@@ -93,7 +93,7 @@ public class TestMMcifOrganismParsing {
 		assertTrue(s.getEntityInfos().size() > 0);
 
 		for ( EntityInfo c : s.getEntityInfos()) {
-			if(EntityType.POLYMER.equals(c.getType())) { 
+			if(EntityType.POLYMER.equals(c.getType())) {
 				assertNotNull(c.getOrganismTaxId());
 				if(pdbId.equals("3zd6")){
 					if(c.getMolId()==2) {
@@ -102,7 +102,7 @@ public class TestMMcifOrganismParsing {
 					}
 				}
 				assertEquals(c.getOrganismTaxId(), organismTaxId);
-			
+
 			}
 		}
 

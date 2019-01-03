@@ -64,10 +64,10 @@ import java.util.stream.Collectors;
  * clustering.
  * <p>
  * This class allows the comparison and merging of SubunitClusters.
- * 
+ *
  * @author Aleix Lafita
  * @since 5.0.0
- * 
+ *
  */
 public class SubunitCluster {
 
@@ -111,7 +111,7 @@ public class SubunitCluster {
 	 * A constructor from a single Subunit. To obtain a
 	 * SubunitCluster with multiple Subunits, initialize different
 	 * SubunitClusters and merge them.
-	 * 
+	 *
 	 * @param subunit
 	 *            initial Subunit
 	 */
@@ -156,7 +156,7 @@ public class SubunitCluster {
 
 	/**
 	 * Subunits contained in the SubunitCluster.
-	 * 
+	 *
 	 * @return an unmodifiable view of the original List
 	 */
 	public List<Subunit> getSubunits() {
@@ -166,7 +166,7 @@ public class SubunitCluster {
 	/**
 	 * Tells whether the other SubunitCluster contains exactly the same Subunit.
 	 * This is checked by String equality of their residue one-letter sequences.
-	 * 
+	 *
 	 * @param other
 	 *            SubunitCluster
 	 * @return true if the SubunitClusters are identical, false otherwise
@@ -182,7 +182,7 @@ public class SubunitCluster {
 	/**
 	 * Merges the other SubunitCluster into this one if it contains exactly the
 	 * same Subunit. This is checked by {@link #isIdenticalTo(SubunitCluster)}.
-	 * 
+	 *
 	 * @param other
 	 *            SubunitCluster
 	 * @return true if the SubunitClusters were merged, false otherwise
@@ -206,7 +206,7 @@ public class SubunitCluster {
 	 * <p>
 	 * The sequence alignment is performed using linear {@link SimpleGapPenalty} and
 	 * BLOSUM62 as scoring matrix.
-	 * 
+	 *
 	 * @param other
 	 *            SubunitCluster
 	 * @param params
@@ -234,7 +234,7 @@ public class SubunitCluster {
 	 * <p>
 	 * The sequence alignment is performed using linear {@link SimpleGapPenalty} and
 	 * BLOSUM62 as scoring matrix.
-	 * 
+	 *
 	 * @param other
 	 *            SubunitCluster
 	 * @param params
@@ -525,7 +525,7 @@ public class SubunitCluster {
 	 * Analyze the internal symmetry of the SubunitCluster and divide its
 	 * {@link Subunit} into the internal repeats (domains) if they are
 	 * internally symmetric.
-	 * 
+	 *
 	 * @param clusterParams {@link SubunitClustererParameters} with fields used as follows:
 	 * structureCoverageThreshold
 	 *            the minimum coverage of all repeats in the Subunit
@@ -702,7 +702,7 @@ public class SubunitCluster {
 	 * The multiple alignment is calculated from the equivalent residues in the
 	 * SubunitCluster. The alignment is recalculated every time the method is
 	 * called (no caching).
-	 * 
+	 *
 	 * @return MultipleAlignment representation of the aligned residues in this
 	 *         Subunit Cluster
 	 * @throws StructureException

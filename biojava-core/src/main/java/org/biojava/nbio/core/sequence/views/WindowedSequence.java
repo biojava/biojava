@@ -143,10 +143,10 @@ public class WindowedSequence<C extends Compound> implements Iterable<SequenceVi
 
 		@Override
 		public SequenceView<C> next() {
-            if(!hasNext()){
-                throw new NoSuchElementException();
-            }
-            SequenceView<C> v = seq.getSubSequence(currentIndex, currentIndex + offset);
+			if(!hasNext()){
+				throw new NoSuchElementException();
+			}
+			SequenceView<C> v = seq.getSubSequence(currentIndex, currentIndex + offset);
 			currentIndex = currentIndex + window;
 			return v;
 		}
