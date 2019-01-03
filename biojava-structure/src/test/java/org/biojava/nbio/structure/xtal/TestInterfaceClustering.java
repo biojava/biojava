@@ -33,6 +33,7 @@ import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.align.util.AtomCache;
+import org.biojava.nbio.structure.contact.StructureInterface;
 import org.biojava.nbio.structure.contact.StructureInterfaceCluster;
 import org.biojava.nbio.structure.contact.StructureInterfaceList;
 import org.biojava.nbio.structure.io.FileParsingParameters;
@@ -110,9 +111,15 @@ public class TestInterfaceClustering {
 		interfaces.calcAsas(100, 1, 0);
 		interfaces.removeInterfacesBelowArea();
 
+		assertNotNull(interfaces.getClustersNcs());
+
 		List<StructureInterfaceCluster> clusters = interfaces.getClusters();
 
-		assertNotNull(interfaces.getClustersNcs());
+		assertNotNull(clusters);
+
+		for (StructureInterface interf : interfaces) {
+			assertTrue(interf.getTotalArea()>0);
+		}
 
 	}
 
