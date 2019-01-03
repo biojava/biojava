@@ -21,10 +21,7 @@
 package org.biojava.nbio.structure.contact;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -257,10 +254,15 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 			throw new IllegalArgumentException("Passed srcGroupAsas chain name ("+srcChainName+") does not match molecule1 ("+tgtChainName1+") nor molecule2 ("+tgtChainName2+")");
 		}
 
+		Map<String, Group> lookup = createResidueLookup(atoms);
+
 		for (Map.Entry<ResidueNumber, GroupAsa> entry : srcGroupAsas.entrySet()) {
 			ResidueNumber resNumber = entry.getKey();
+			String key = Integer.toString(resNumber.getSeqNum());
+			if (resNumber.getInsCode()!=null)
+				key += "_" + resNumber.getInsCode();
 			GroupAsa groupAsa = entry.getValue();
-			Group g = findCorrespondingGroup(resNumber, atoms);
+			Group g = lookup.get(key);
 			GroupAsa newGroupAsa = new GroupAsa(g);
 			newGroupAsa.setAsaC(groupAsa.getAsaC());
 			newGroupAsa.setAsaU(groupAsa.getAsaU());
@@ -269,17 +271,17 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 		}
 	}
 
-	private Group findCorrespondingGroup(ResidueNumber residueNumber, Atom[] atoms) {
-
+	private Map<String, Group> createResidueLookup(Atom[] atoms) {
+		Map<String, Group> lookup = new HashMap<>();
 		for (Atom atom : atoms) {
-			ResidueNumber atomResNumber = atom.getGroup().getResidueNumber();
-
-			if (atomResNumber.getSeqNum().equals(residueNumber.getSeqNum()) &&
-					(atomResNumber.getInsCode()==null || atomResNumber.getInsCode().equals(residueNumber.getInsCode()) )) {
-				return atom.getGroup();
-			}
+			ResidueNumber resNumber = atom.getGroup().getResidueNumber();
+			String key = Integer.toString(resNumber.getSeqNum());
+			if (resNumber.getInsCode()!=null)
+				key += "_" + resNumber.getInsCode();
+			if (!lookup.containsKey(key))
+				lookup.put(key, atom.getGroup());
 		}
-		return null;
+		return lookup;
 	}
 
 	/**
