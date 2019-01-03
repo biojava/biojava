@@ -1,9 +1,11 @@
 BioJava Changelog
 -----------------
 
-BioJava 5.1.2
+BioJava 5.2.1
 =============
-This is a bug fix release.
+
+### New Feature
+* new algorithm for ASA computation. It is much faster on large molecules. #820
 
 ### Bug fixes
 * Fix broken tests #809 & ed7fb66
