@@ -205,11 +205,14 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 	 * Set ASA collections by passing them externally.
 	 * To be used instead of {@link #setAsas(double[], double[], int, int, int)} to transfer ASA annotations
 	 * from another identical interface.
-	 * @param groupAsas1
-	 * @param groupAsas2
-	 * @param totalArea
+	 * <p>
+	 * Note that the order of the 2 parameters does not need to match the order of the 2 partners in this interface.
+	 * They will be matched up based on chain names.
+	 * @param groupAsas1 the ASA values per group for one of the partners.
+	 * @param groupAsas2 the ASA values per group for the other partner
+	 * @param totalArea the total BSA for this interface
 	 */
-	protected void setAsas(Map<ResidueNumber, GroupAsa> groupAsas1, Map<ResidueNumber, GroupAsa> groupAsas2, double totalArea) {
+	void setAsas(Map<ResidueNumber, GroupAsa> groupAsas1, Map<ResidueNumber, GroupAsa> groupAsas2, double totalArea) {
 		this.groupAsas1 = new TreeMap<>();
 		this.groupAsas2 = new TreeMap<>();
 		this.totalArea = totalArea;
@@ -279,7 +282,16 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 		return null;
 	}
 
-	protected void setAsas(double[] asas1, double[] asas2, int nSpherePoints, int nThreads, int cofactorSizeToUse) {
+	/**
+	 * Set ASA annotations by passing the uncomplexed ASA values of the 2 partners.
+	 * This will calculate complexed ASA and set the ASA values in the member variables.
+	 * @param asas1 ASA values for atoms of partner 1
+	 * @param asas2 ASA values for atoms of partner 2
+	 * @param nSpherePoints the number of sphere points to be used for complexed ASA calculation
+	 * @param nThreads the number of threads to be used for complexed ASA calculation
+	 * @param cofactorSizeToUse the minimum size of cofactor molecule (non-chain HET atoms) that will be used in ASA calculation
+	 */
+	void setAsas(double[] asas1, double[] asas2, int nSpherePoints, int nThreads, int cofactorSizeToUse) {
 
 		Atom[] atoms = getAtomsForAsa(cofactorSizeToUse);
 		AsaCalculator asaCalc = new AsaCalculator(atoms,
