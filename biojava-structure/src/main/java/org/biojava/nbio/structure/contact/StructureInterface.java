@@ -214,47 +214,65 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 		this.groupAsas2 = new TreeMap<>();
 		this.totalArea = totalArea;
 
-		for (Map.Entry<ResidueNumber, GroupAsa> entry : groupAsas1.entrySet()) {
-			ResidueNumber resNumber = entry.getKey();
-			GroupAsa groupAsa = entry.getValue();
-			Group g = findCorrespondingGroup(resNumber, true);
-			GroupAsa newGroupAsa = new GroupAsa(g);
-			newGroupAsa.setAsaC(groupAsa.getAsaC());
-			newGroupAsa.setAsaU(groupAsa.getAsaU());
-			this.groupAsas1.put(resNumber, newGroupAsa);
-		}
-		for (Map.Entry<ResidueNumber, GroupAsa> entry : groupAsas2.entrySet()) {
-			ResidueNumber resNumber = entry.getKey();
-			GroupAsa groupAsa = entry.getValue();
-			Group g = findCorrespondingGroup(resNumber, false);
-			GroupAsa newGroupAsa = new GroupAsa(g);
-			newGroupAsa.setAsaC(groupAsa.getAsaC());
-			newGroupAsa.setAsaU(groupAsa.getAsaU());
-			this.groupAsas2.put(resNumber, newGroupAsa);
-		}
-
+		setAsasPartner(groupAsas1);
+		setAsasPartner(groupAsas2);
 	}
 
-	private Group findCorrespondingGroup(ResidueNumber residueNumber, boolean first) {
-		Atom[] atoms;
-		if (first) {
-			atoms = molecules.getFirst();
-		} else {
-			atoms = molecules.getSecond();
+	private void setAsasPartner(Map<ResidueNumber, GroupAsa> srcGroupAsas) {
+		String srcChainName = null;
+		ResidueNumber resNum = srcGroupAsas.values().iterator().next().getGroup().getResidueNumber();
+		Matcher m = NCSCHAIN_NAME_REGEX.matcher(resNum.getChainName());
+		if (m.matches())
+			srcChainName = m.group(1);
+
+		if (srcChainName == null) {
+			throw new IllegalArgumentException("Could not find base chainName from " + resNum.getChainName());
 		}
+		String tgtChainName1 = null;
+		m = NCSCHAIN_NAME_REGEX.matcher(moleculeIds.getFirst());
+		if (m.matches())
+			tgtChainName1 = m.group(1);
+
+		String tgtChainName2 = null;
+		m = NCSCHAIN_NAME_REGEX.matcher(moleculeIds.getSecond());
+		if (m.matches())
+			tgtChainName2 = m.group(1);
+
+		if (tgtChainName1 == null || tgtChainName2 == null) {
+			throw new RuntimeException("Regex could not match a chain name out of " + moleculeIds.getFirst() + " or " + moleculeIds.getSecond() + ". This is a bug!");
+		}
+
+		Atom[] atoms;
+		Map<ResidueNumber, GroupAsa> tgtGroupAsas;
+		if (srcChainName.equals(tgtChainName1)) {
+			atoms = molecules.getFirst();
+			tgtGroupAsas = groupAsas1;
+		} else if (srcChainName.equals(tgtChainName2)) {
+			atoms = molecules.getSecond();
+			tgtGroupAsas = groupAsas2;
+		} else {
+			throw new IllegalArgumentException("Passed srcGroupAsas chain name ("+srcChainName+") does not match molecule1 ("+tgtChainName1+") nor molecule2 ("+tgtChainName2+")");
+		}
+
+		for (Map.Entry<ResidueNumber, GroupAsa> entry : srcGroupAsas.entrySet()) {
+			ResidueNumber resNumber = entry.getKey();
+			GroupAsa groupAsa = entry.getValue();
+			Group g = findCorrespondingGroup(resNumber, atoms);
+			GroupAsa newGroupAsa = new GroupAsa(g);
+			newGroupAsa.setAsaC(groupAsa.getAsaC());
+			newGroupAsa.setAsaU(groupAsa.getAsaU());
+			tgtGroupAsas.put(resNumber, newGroupAsa);
+
+		}
+	}
+
+	private Group findCorrespondingGroup(ResidueNumber residueNumber, Atom[] atoms) {
+
 		for (Atom atom : atoms) {
 			ResidueNumber atomResNumber = atom.getGroup().getResidueNumber();
-			String atomOrigChainName = atomResNumber.getChainName();
-			Matcher m = NCSCHAIN_NAME_REGEX.matcher(atomOrigChainName);
-			if (m.matches())
-				atomOrigChainName = m.group(1);
-			String origChainName = residueNumber.getChainName();
-			m = NCSCHAIN_NAME_REGEX.matcher(origChainName);
-			if (m.matches())
-				origChainName = m.group(1);
+
 			if (atomResNumber.getSeqNum().equals(residueNumber.getSeqNum()) &&
-					(atomResNumber.getInsCode()!=null && atomResNumber.getInsCode().equals(residueNumber.getInsCode()) ) &&
-					atomOrigChainName.equals(origChainName)) {
+					(atomResNumber.getInsCode()==null || atomResNumber.getInsCode().equals(residueNumber.getInsCode()) )) {
 				return atom.getGroup();
 			}
 		}
