@@ -34,11 +34,11 @@ import javax.vecmath.*;
 import java.util.*;
 
 public class HelixAxisAligner extends AxisAligner {
-	
+
 	private static final Logger logger = LoggerFactory
 			.getLogger(HelixAxisAligner.class);
 
-	
+
 	private static final Vector3d Y_AXIS = new Vector3d(0,1,0);
 	private static final Vector3d Z_AXIS = new Vector3d(0,0,1);
 
@@ -492,7 +492,7 @@ public class HelixAxisAligner extends AxisAligner {
 		ref[0] = new Point3d(referenceVectors[0]);
 		ref[1] = new Point3d(referenceVectors[1]);
 		if (CalcPoint.rmsd(axes, ref) > 0.1) {
-			logger.warn("AxisTransformation: axes alignment is off. RMSD: " 
+			logger.warn("AxisTransformation: axes alignment is off. RMSD: "
 					+ CalcPoint.rmsd(axes, ref));
 		}
 

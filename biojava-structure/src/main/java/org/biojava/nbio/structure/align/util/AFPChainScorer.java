@@ -85,7 +85,7 @@ public class AFPChainScorer {
 			ca2aligned = (Atom[]) resizeArray(ca2aligned, pos);
 		}
 		//Superimpose
-		Matrix4d trans = SuperPositions.superpose(Calc.atomsToPoints(ca1aligned), 
+		Matrix4d trans = SuperPositions.superpose(Calc.atomsToPoints(ca1aligned),
 				Calc.atomsToPoints(ca2aligned));
 
 		Calc.transform(ca2aligned, trans);

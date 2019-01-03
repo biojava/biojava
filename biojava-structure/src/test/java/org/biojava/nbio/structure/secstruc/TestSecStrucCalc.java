@@ -80,7 +80,7 @@ public class TestSecStrucCalc {
 		}
 	}
 
-	
+
 	/**
 	 * Test that calculating the secondary structure for multi-model systems works.
 	 * Combine two PDBs into one multi-model system
@@ -101,7 +101,7 @@ public class TestSecStrucCalc {
 		Structure structureTwo = cache.getStructure(pdbIdTwo);
 		// Join them together
 		structure.addModel(structureTwo.getChains());
-		
+
 		List<SecStrucState> biojava = sec.calculate(structure, true);
 
 		// Download the original DSSP implementation output
@@ -109,7 +109,7 @@ public class TestSecStrucCalc {
 				this.getClass().getResourceAsStream("/org/biojava/nbio/structure/secstruc/"+pdbId+".dssp.gz")),cache.getStructure(pdbId), false);
 		dssp.addAll(DSSPParser.parseInputStream(new GZIPInputStream(
 				this.getClass().getResourceAsStream("/org/biojava/nbio/structure/secstruc/"+pdbIdTwo+".dssp.gz")), cache.getStructure(pdbIdTwo), false));
-		
+
 		assertEquals("SS assignment lengths do not match",
 				biojava.size(), dssp.size());
 

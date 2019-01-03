@@ -69,9 +69,9 @@ public class TestMmtfRoundTrip {
         cache.setFileParsingParams(params);
 		cache.setUseMmCif(true);
 	    StructureIO.setAtomCache(cache);
-		
+
 		ChemCompGroupFactory.setChemCompProvider(new DownloadChemCompProvider());
-		
+
 		// test case for biojava issue #770, order of subunits
 	    Structure structure1 = StructureIO.getStructure("3BW1");
 		AdapterToStructureData writerToEncoder = new AdapterToStructureData();
@@ -79,9 +79,9 @@ public class TestMmtfRoundTrip {
 		MmtfStructureReader mmtfStructureReader = new MmtfStructureReader();
 		new StructureDataToAdapter(writerToEncoder, mmtfStructureReader);
 		Structure structure2 = mmtfStructureReader.getStructure();
-		
+
 		assertTrue(checkIfAtomsSame(structure1, structure2));
-		
+
 		checkBioAssemblies1(structure1, structure2);
 	}
 
@@ -169,9 +169,9 @@ public class TestMmtfRoundTrip {
 						System.out.println(groupOne.getResidueNumber());
 						System.out.println(groupOne.getPDBName()+" vs "+groupTwo.getPDBName());
 						System.out.println(atomsOne.size()+" vs "+atomsTwo.size());
-						return false;           
+						return false;
 					}
-					// Now sort the atoms 
+					// Now sort the atoms
 					sortAtoms(atomsOne, atomsTwo);
 					// Now loop through the atoms
 					for(int l=0;l<atomsOne.size();l++){
@@ -214,7 +214,7 @@ public class TestMmtfRoundTrip {
 					}
 				}
 			}
-		} 
+		}
 		return true;
 	}
 	/**
@@ -237,7 +237,7 @@ public class TestMmtfRoundTrip {
 		atomsOne.sort(new Comparator<Atom>() {
 			@Override
 			public int compare(Atom o1, Atom o2) {
-				//  
+				//
 				if (o1.getPDBserial()<o2.getPDBserial()){
 					return -1;
 				}
@@ -249,7 +249,7 @@ public class TestMmtfRoundTrip {
 		atomsTwo.sort(new Comparator<Atom>() {
 			@Override
 			public int compare(Atom o1, Atom o2) {
-				//  
+				//
 				if (o1.getPDBserial()<o2.getPDBserial()){
 					return -1;
 				}
@@ -257,7 +257,7 @@ public class TestMmtfRoundTrip {
 					return 1;
 				}
 			}
-		});  		
+		});
 	}
 
 	/**
@@ -282,46 +282,46 @@ public class TestMmtfRoundTrip {
 	}
 
 	private void checkSeqresGroups(Chain chainOne, Chain chainTwo) {
-		
+
 		assertEquals(chainOne.getSeqResGroups().size(), chainTwo.getSeqResGroups().size());
-		
+
 		for (int i=0; i<chainOne.getSeqResGroups().size(); i++) {
 			Group gOne = chainOne.getSeqResGroup(i);
 			Group gTwo = chainTwo.getSeqResGroup(i);
 			assertNotNull(gOne.getChemComp());
 			assertNotNull(gTwo.getChemComp());
 			assertEquals(gOne.getChemComp().getOne_letter_code(), gTwo.getChemComp().getOne_letter_code());
-			
+
 			assertEquals(gOne.getResidueNumber(), gTwo.getResidueNumber());
 			//assertEquals(gOne.getPDBName(), gTwo.getPDBName());
 		}
-		
+
 		// this is to test issue #517: a null pointer happens if the group hasn't been cloned (including the chem comp associated to it)
 		Chain clonedChain = (Chain)chainTwo.clone();
 		assertEquals(chainTwo.getSeqResGroups().size(), clonedChain.getSeqResGroups().size());
 		for (int i=0; i<clonedChain.getSeqResGroups().size(); i++) {
 			Group g = clonedChain.getSeqResGroup(i);
 			assertNotNull(g.getChemComp());
-			
+
 		}
 	}
-	
+
 	/**
      * Checks consistency of bioassemblies
      * @param structOne the first input structure
      * @param structTwo the second input structure
      */
     private void checkBioAssemblies1(Structure structOne, Structure structTwo) throws IOException {
-        
+
         Map<Integer, BioAssemblyInfo> expecteds = structOne.getPDBHeader().getBioAssemblies();
         Map<Integer, BioAssemblyInfo> actuals = structTwo.getPDBHeader().getBioAssemblies();
         assertEquals(expecteds.size(), actuals.size());
-        
+
         assertEquals(new ArrayList<>(expecteds.keySet()), new ArrayList<>(actuals.keySet()));
-       
+
         List<BioAssemblyInfo> assemblies1 = new ArrayList<>(expecteds.values());
         List<BioAssemblyInfo> assemblies2 = new ArrayList<>(actuals.values());
-        
+
         for (int i = 0; i < assemblies1.size(); i++) {
             BioAssemblyInfo info1 = assemblies1.get(i);
             BioAssemblyInfo info2 = assemblies2.get(i);
@@ -331,7 +331,7 @@ public class TestMmtfRoundTrip {
             for (int j = 0; j < info1.getTransforms().size(); j++) {
                 BiologicalAssemblyTransformation trans1 = info1.getTransforms().get(j);
                 BiologicalAssemblyTransformation trans2 = info2.getTransforms().get(j);
-                
+
                 assertEquals(trans1.getChainId(), trans2.getChainId());
                 assertTrue(trans1.getTransformationMatrix().epsilonEquals(trans2.getTransformationMatrix(), 0.000001));
             }

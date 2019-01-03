@@ -205,11 +205,11 @@ public class CeSymmIterative {
 	 */
 	private CeSymmResult reconstructSymmResult(Atom[] atoms)
 			throws StructureException {
-		
+
 		// If one level, nothing to build or calculate
 		if (levels.size() == 1)
 			return levels.get(0);
-		
+
 		CeSymmResult result = new CeSymmResult();
 		result.setSelfAlignment(levels.get(0).getSelfAlignment());
 		result.setStructureId(levels.get(0).getStructureId());

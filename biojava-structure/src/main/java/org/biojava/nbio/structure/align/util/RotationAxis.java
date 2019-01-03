@@ -115,7 +115,7 @@ public final class RotationAxis {
 	public Vector3d getVector3dScrewTranslation() {
 		return new Vector3d(screwTranslation.getX(),screwTranslation.getY(),screwTranslation.getZ());
 	}
-	
+
 	public double getTranslation() {
 		return Calc.amount(screwTranslation);
 	}
@@ -403,7 +403,7 @@ public final class RotationAxis {
 		double uLen = Calc.scalarProduct(rotationAxis,rotationAxis);// Should be 1, but double check
 		min/=uLen;
 		max/=uLen;
-		
+
 		// Project the origin onto the axis. If the axis is undefined, use the center of mass
 		Atom axialPt;
 		if(rotationPos == null) {
@@ -452,7 +452,7 @@ public final class RotationAxis {
 		Pair<Atom> endPoints = getAxisEnds(atoms);
 		Atom axisMin = endPoints.getFirst();
 		Atom axisMax = endPoints.getSecond();
-		
+
 		StringWriter result = new StringWriter();
 
 		// set arrow heads to a reasonable length
@@ -592,7 +592,7 @@ public final class RotationAxis {
 	public boolean isDefined() {
 		return rotationPos != null;
 	}
-	
+
 	/**
 	 * Quickly compute the rotation angle from a rotation matrix.
 	 * @param transform 4D transformation matrix. Translation components are ignored.
@@ -609,7 +609,7 @@ public final class RotationAxis {
 		}
 		return Math.acos(c);
 	}
-	
+
 	/**
 	 * Quickly compute the rotation angle from a rotation matrix.
 	 * @param transform 3D rotation matrix

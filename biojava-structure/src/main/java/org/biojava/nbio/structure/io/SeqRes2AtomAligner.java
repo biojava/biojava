@@ -94,11 +94,11 @@ public class SeqRes2AtomAligner {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param seqRes
 	 * @param atomList
-	 * @param useChainId if true chainId (Chain.getId) is used for matching, 
-	 * if false chainName (Chain.getName) is used 
+	 * @param useChainId if true chainId (Chain.getId) is used for matching,
+	 * if false chainName (Chain.getName) is used
 	 * @return
 	 */
 	public static Chain getMatchingAtomRes(Chain seqRes, List<Chain> atomList, boolean useChainId)
@@ -106,7 +106,7 @@ public class SeqRes2AtomAligner {
 		Iterator<Chain> iter = atomList.iterator();
 		while(iter.hasNext()){
 			Chain atomChain = iter.next();
-			
+
 			String atomChainId = null;
 			String seqResChainId = null;
 			if (useChainId) {
@@ -115,9 +115,9 @@ public class SeqRes2AtomAligner {
 			} else {
 				atomChainId = atomChain.getName();
 				seqResChainId = seqRes.getName();
-				
+
 			}
-			
+
 			if ( atomChainId.equals(seqResChainId)){
 				return atomChain;
 			}
@@ -818,8 +818,8 @@ public class SeqRes2AtomAligner {
 	 * @param seqResChains
 	 */
 	public static void storeUnAlignedSeqRes(Structure structure, List<Chain> seqResChains, boolean headerOnly) {
-		
-		
+
+
 		if (headerOnly) {
 
 			List<Chain> atomChains = new ArrayList<>();
@@ -828,12 +828,12 @@ public class SeqRes2AtomAligner {
 				// Here we store chains with SEQRES instead of AtomGroups.
 				seqRes.setSeqResGroups(seqRes.getAtomGroups());
 				seqRes.setAtomGroups(new ArrayList<>()); // clear out the atom groups.
-				
+
 				atomChains.add(seqRes);
-				
+
 			}
 			structure.setChains(0, atomChains);
-			
+
 		} else {
 
 			for (int i = 0; i < structure.nrModels(); i++) {

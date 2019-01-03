@@ -32,7 +32,7 @@ import org.biojava.nbio.structure.symmetry.core.QuatSymmetryResults;
 public class DemoBioAssemblies {
 
 	public static void main(String[] args) throws Exception {
-		
+
 		// 1st method: get 1 bioassembly at a time, parses the file each time
 		System.out.println("Getting one bioassembly at a time");
 		Structure asymUnit = StructureIO.getStructure("2trx");
@@ -43,15 +43,15 @@ public class DemoBioAssemblies {
 			findQuatSym(bioAssembly);
 		}
 
-		
+
 		// 2nd method: get all bioassemblies at once, parses the file only once
 		System.out.println("Getting all bioassemblies");
 		List<Structure> bioAssemblies = StructureIO.getBiologicalAssemblies("2trx");
-		
-		for (Structure bioAssembly : bioAssemblies) {			
-			findQuatSym(bioAssembly);			
+
+		for (Structure bioAssembly : bioAssemblies) {
+			findQuatSym(bioAssembly);
 		}
-		
+
 
 	}
 

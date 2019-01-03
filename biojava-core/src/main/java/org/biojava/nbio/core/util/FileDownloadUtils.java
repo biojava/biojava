@@ -246,7 +246,7 @@ public class FileDownloadUtils {
 		connection.setConnectTimeout(timeout);
 		return connection;
 	}
-	
+
 	/**
 	 * Recursively delete a folder & contents
 	 *

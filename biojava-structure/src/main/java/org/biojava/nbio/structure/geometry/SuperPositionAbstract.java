@@ -26,7 +26,7 @@ import javax.vecmath.Point3d;
 /**
  * The SuperPositionAbstract contains common code shared by all SuperPosition
  * algorithm implementations.
- * 
+ *
  * @author Aleix Lafita
  * @since 5.0.0
  *
@@ -48,7 +48,7 @@ public abstract class SuperPositionAbstract implements SuperPosition {
 
 	/**
 	 * Check that the input to the superposition algorithms is valid.
-	 * 
+	 *
 	 * @param fixed
 	 * @param moved
 	 */

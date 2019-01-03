@@ -26,7 +26,7 @@ import java.util.Set;
 /**
  * The QuatSymmetryParameters specify the options used for the detection of
  * quaternary symmetry in structures using the {@link QuatSymmetryDetector}.
- * 
+ *
  * @author Peter Rose
  * @author Aleix Lafita
  *
@@ -184,7 +184,7 @@ public class QuatSymmetryParameters implements Serializable {
 
 	/**
 	 * On-the-fly Jmol bioassembly generation.
-	 * 
+	 *
 	 * @return true if Jmol on the fly bioassembly generation is used
 	 */
 	public boolean isOnTheFly() {
@@ -193,7 +193,7 @@ public class QuatSymmetryParameters implements Serializable {
 
 	/**
 	 * On-the-fly Jmol bioassembly generation.
-	 * 
+	 *
 	 * @param useJmolBioAssemblies
 	 *            true if Jmol on the fly bioassembly generation is used, false
 	 *            otherwise

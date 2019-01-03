@@ -49,7 +49,7 @@ import org.slf4j.LoggerFactory;
 
 
 
-/** 
+/**
  * This provider of chemical components can download and cache chemical component definition files from the RCSB PDB web site.
  *  It is the default way to access these definitions.
  *  If this provider is called he first time, it will download and install all chemical
@@ -70,9 +70,9 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 	public static final String CHEM_COMP_CACHE_DIRECTORY = "chemcomp";
 
 	public static final String DEFAULT_SERVER_URL = "http://files.rcsb.org/ligands/download/";
-	
+
 	public static String serverBaseUrl = DEFAULT_SERVER_URL;
-	
+
 	/**
 	 * Use default RCSB server layout (true) or internal RCSB server layout (false)
 	 */
@@ -94,7 +94,7 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 		protectedIDs.add("AUX");
 		protectedIDs.add("NUL");
 	}
-	
+
 	private static ChemCompProvider fallback = null; // Fallback provider if the download fails
 
 	/** by default we will download only some of the files. User has to request that all files should be downloaded...
@@ -323,7 +323,7 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 
 	}
 
-	/** 
+	/**
 	 * Returns the file name that contains the definition for this {@link ChemComp}
 	 *
 	 * @param recordName the ID of the {@link ChemComp}

@@ -37,7 +37,7 @@ public class MmtfSummaryDataBean {
 	private List<Chain> allChains;
 	private List<Atom> allAtoms;
 	private int numBonds;
-	
+
 	/**
 	 * @return the list of chains (in all models) in the structure
 	 */
@@ -75,14 +75,14 @@ public class MmtfSummaryDataBean {
 		this.numBonds = numBonds;
 	}
 	/**
-	 * @return the map of chain ids (strings asymId) to the index of that chain in the allChains list. 
+	 * @return the map of chain ids (strings asymId) to the index of that chain in the allChains list.
 	 * This only applies for the first model in the structure.
 	 */
 	public Map<String, Integer> getChainIdToIndexMap() {
 		return chainIdToIndexMap;
 	}
 	/**
-	 * @param chainIdToIndexMap the map of chain ids (strings asymId) to the index of that chain in the allChains list. 
+	 * @param chainIdToIndexMap the map of chain ids (strings asymId) to the index of that chain in the allChains list.
 	 * This only applies for the first model in the structure.
 	 */
 	public void setChainIdToIndexMap(Map<String, Integer> chainIdToIndexMap) {

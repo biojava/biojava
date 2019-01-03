@@ -36,10 +36,10 @@ import org.biojava.nbio.structure.scop.ScopFactory;
 
 /**
  * Helper class to manage all the global state changes in BioJava.
- * For instance, this should be used in tests before modifying PDB_PATH. 
- * 
+ * For instance, this should be used in tests before modifying PDB_PATH.
+ *
  * Used by tests during setup and teardown to ensure a clean environment
- * 
+ *
  * This class is a singleton.
  * @author Spencer Bliven
  *
@@ -53,7 +53,7 @@ public final class GlobalsHelper {
 		public final ChemCompProvider chemCompProvider;
 		public final String downloadChemCompProviderPath;
 		public final ScopDatabase scop;
-		
+
 		public PathInfo() {
 			pdbPath = System.getProperty(UserConfiguration.PDB_DIR, null);
 			pdbCachePath = System.getProperty(UserConfiguration.PDB_CACHE_DIR, null);
@@ -63,14 +63,14 @@ public final class GlobalsHelper {
 			scop = ScopFactory.getSCOP();
 		}
 	}
-	
+
 	// Saves defaults as stack
 	private static Deque<PathInfo> stack = new LinkedList<>();
 	static {
 		// Save default state
 		pushState();
 	}
-	
+
 	/**
 	 * GlobalsHelper should not be instantiated.
 	 */
@@ -83,10 +83,10 @@ public final class GlobalsHelper {
 		PathInfo paths = new PathInfo();
 		stack.addFirst(paths);
 	}
-	
+
 	/**
 	 * Sets a new PDB_PATH and PDB_CACHE_PATH consistently.
-	 * 
+	 *
 	 * Previous values can be restored with {@link #restoreState()}.
 	 * @param path
 	 */
@@ -106,19 +106,19 @@ public final class GlobalsHelper {
 
 		AtomCache cache = new AtomCache(path);
 		StructureIO.setAtomCache(cache);
-		
+
 		// Note side effect setting the path for all DownloadChemCompProvider due to static state
 		ChemCompProvider provider = new DownloadChemCompProvider(path);
 		ChemCompGroupFactory.setChemCompProvider(provider);
 	}
-	
+
 	/**
 	 * Restore global state to the previous settings
 	 * @throws NoSuchElementException if there is no prior state to restore
 	 */
 	public static void restoreState() {
 		PathInfo paths = stack.removeFirst();
-		
+
 		if(paths.pdbPath == null) {
 			System.clearProperty(UserConfiguration.PDB_DIR);
 		} else {
@@ -131,14 +131,14 @@ public final class GlobalsHelper {
 		}
 
 		StructureIO.setAtomCache(paths.atomCache);
-		
+
 		// Use side effect setting the path for all DownloadChemCompProvider due to static state
 		new DownloadChemCompProvider(paths.downloadChemCompProviderPath);
-		
+
 		ChemCompGroupFactory.setChemCompProvider(paths.chemCompProvider);
-		
+
 		ScopFactory.setScopDatabase(paths.scop);
 	}
-	
-	
+
+
 }

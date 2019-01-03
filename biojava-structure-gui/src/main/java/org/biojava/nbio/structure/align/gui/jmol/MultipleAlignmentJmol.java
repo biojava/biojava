@@ -166,7 +166,7 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 			modelSelection.setLayout(new WrapLayout(WrapLayout.LEFT));
 			modelSelection.setSize(new Dimension(DEFAULT_WIDTH,30));
 			vBox.add(modelSelection);
-			
+
 			JButton show = new JButton("Show Only: ");
 			show.addActionListener(new ActionListener() {
 
@@ -187,7 +187,7 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 				}
 			});
 			modelSelection.add(show);
-		
+
 			// Check boxes for all models
 			for(int str = 0; str < multAln.size();str++) {
 				JCheckBox structureSelection = new JCheckBox(multAln

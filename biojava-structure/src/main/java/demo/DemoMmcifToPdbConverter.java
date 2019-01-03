@@ -34,7 +34,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 
-/** 
+/**
  * An example of how to convert mmCIF file to PDB file
  *
  * @author Jose Duarte
@@ -53,13 +53,13 @@ public class DemoMmcifToPdbConverter
 
 
 	public static void convert(File inFile, File outFile) throws IOException {
-				 
+
         MMcifParser parser = new SimpleMMcifParser();
- 
-        SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();       
+
+        SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
         parser.addMMcifConsumer(consumer);
         parser.parse(new BufferedReader(new InputStreamReader(new FileInputStream(inFile))));
-        
+
         // now get the protein structure.
         Structure cifStructure = consumer.getStructure();
 
@@ -71,9 +71,9 @@ public class DemoMmcifToPdbConverter
         		pr.print(c.toPDB());
         		pr.println("TER");
         }
-        
+
 		pr.close();
-		
+
 
 	}
 }

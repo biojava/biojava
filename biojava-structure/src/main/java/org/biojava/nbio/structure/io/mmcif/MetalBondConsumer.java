@@ -119,10 +119,10 @@ public class MetalBondConsumer implements MMcifConsumer{
     public void newStructNcsOper(StructNcsOper sNcsOper) {
 
     }
-    
-    @Override 
+
+    @Override
     public void newAtomSites(AtomSites atomSites) {
-    	
+
     }
 
     @Override
@@ -283,12 +283,12 @@ public class MetalBondConsumer implements MMcifConsumer{
 	@Override
 	public void newPdbxAuditRevisionHistory(PdbxAuditRevisionHistory history) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void newPdbxDatabaseStatus(PdbxDatabaseStatus status) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

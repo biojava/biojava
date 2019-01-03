@@ -226,7 +226,7 @@ public class Calc {
 	 * Calculate the torsion angle, i.e. the angle between the normal vectors of
 	 * the two plains a-b-c and b-c-d. See
 	 * http://en.wikipedia.org/wiki/Dihedral_angle
-	 * 
+	 *
 	 * @param a
 	 *            an Atom object
 	 * @param b
@@ -359,7 +359,7 @@ public class Calc {
 	 *
 	 * If the matrix is indexed m[row][col], then the matrix will be
 	 * pre-multiplied (y=atom*M)
-	 * 
+	 *
 	 * @param atom
 	 *            atom to be rotated
 	 * @param m
@@ -580,7 +580,7 @@ public class Calc {
 	/**
 	 * Translates an atom object, given a Vector3d (i.e. the vecmath library
 	 * double-precision 3-d vector)
-	 * 
+	 *
 	 * @param atom
 	 * @param v
 	 */
@@ -594,7 +594,7 @@ public class Calc {
 	/**
 	 * Translates a group object, given a Vector3d (i.e. the vecmath library
 	 * double-precision 3-d vector)
-	 * 
+	 *
 	 * @param group
 	 * @param v
 	 */
@@ -611,7 +611,7 @@ public class Calc {
 	/**
 	 * Translates a chain object, given a Vector3d (i.e. the vecmath library
 	 * double-precision 3-d vector)
-	 * 
+	 *
 	 * @param chain
 	 * @param v
 	 */
@@ -625,12 +625,12 @@ public class Calc {
 	/**
 	 * Translates a Structure object, given a Vector3d (i.e. the vecmath library
 	 * double-precision 3-d vector)
-	 * 
+	 *
 	 * @param structure
 	 * @param v
 	 */
 	public static final void translate (Structure structure, Vector3d v) {
-		
+
 		for (int n=0; n<structure.nrModels();n++) {
 			for (Chain c : structure.getChains(n)) {
 				translate(c, v);
@@ -761,9 +761,9 @@ public class Calc {
 		}
 	}
 
-	/** 
+	/**
 	 * Returns the centroid of the set of atoms.
-	 * 
+	 *
 	 * @param atomSet
 	 *            a set of Atoms
 	 * @return an Atom representing the Centroid of the set of atoms
@@ -771,9 +771,9 @@ public class Calc {
 	public static final Atom getCentroid(Atom[] atomSet){
 
 		// if we don't catch this case, the centroid returned is (NaN,NaN,NaN), which can cause lots of problems down the line
-		if (atomSet.length==0) 
+		if (atomSet.length==0)
 			throw new IllegalArgumentException("Atom array has length 0, can't calculate centroid!");
-		
+
 
 		double[] coords = new double[3];
 
@@ -801,7 +801,7 @@ public class Calc {
 	/**
 	 * Returns the center of mass of the set of atoms. Atomic masses of the
 	 * Atoms are used.
-	 * 
+	 *
 	 * @param points
 	 *            a set of Atoms
 	 * @return an Atom representing the center of mass
@@ -822,7 +822,7 @@ public class Calc {
 
 	/**
 	 * Multiply elements of a by s (in place)
-	 * 
+	 *
 	 * @param a
 	 * @param s
 	 * @return the modified a
@@ -846,7 +846,7 @@ public class Calc {
 
 	/**
 	 * Multiply elements of a by s
-	 * 
+	 *
 	 * @param a
 	 * @param s
 	 * @return A new Atom with s*a
@@ -866,7 +866,7 @@ public class Calc {
 
 	/**
 	 * Perform linear transformation s*X+B, and store the result in b
-	 * 
+	 *
 	 * @param s
 	 *            Amount to scale x
 	 * @param x
@@ -892,7 +892,7 @@ public class Calc {
 	/**
 	 * Returns the Vector that needs to be applied to shift a set of atoms to
 	 * the Centroid.
-	 * 
+	 *
 	 * @param atomSet
 	 *            array of Atoms
 	 * @return the vector needed to shift the set of atoms to its geometric
@@ -908,7 +908,7 @@ public class Calc {
 	/**
 	 * Returns the Vector that needs to be applied to shift a set of atoms to
 	 * the Centroid, if the centroid is already known
-	 * 
+	 *
 	 * @param atomSet
 	 *            array of Atoms
 	 * @return the vector needed to shift the set of atoms to its geometric
@@ -929,7 +929,7 @@ public class Calc {
 
 	/**
 	 * Center the atoms at the Centroid.
-	 * 
+	 *
 	 * @param atomSet
 	 *            a set of Atoms
 	 * @return an Atom representing the Centroid of the set of atoms
@@ -944,7 +944,7 @@ public class Calc {
 
 	/**
 	 * Center the atoms at the Centroid, if the centroid is already know.
-	 * 
+	 *
 	 * @param atomSet
 	 *            a set of Atoms
 	 * @return an Atom representing the Centroid of the set of atoms
@@ -969,7 +969,7 @@ public class Calc {
 	 * creates a virtual C-beta atom. this might be needed when working with GLY
 	 *
 	 * thanks to Peter Lackner for a python template of this method.
-	 * 
+	 *
 	 * @param amino
 	 *            the amino acid for which a "virtual" CB atom should be
 	 *            calculated
@@ -1074,7 +1074,7 @@ public class Calc {
 	 * Coordinate System: right hand Positive angle: right hand Order of euler
 	 * angles: heading first, then attitude, then bank. matrix row column
 	 * ordering: [m00 m01 m02] [m10 m11 m12] [m20 m21 m22]
-	 * 
+	 *
 	 * @param heading
 	 *            in radians
 	 * @param attitude
@@ -1173,7 +1173,7 @@ public class Calc {
 
 	/**
 	 * Shift an array of atoms at once.
-	 * 
+	 *
 	 * @param ca
 	 *            array of Atoms to shift
 	 * @param b
@@ -1218,7 +1218,7 @@ public class Calc {
 
 	/**
 	 * Convert an array of atoms into an array of vecmath points
-	 * 
+	 *
 	 * @param atoms
 	 *            list of atoms
 	 * @return list of Point3ds storing the x,y,z coordinates of each atom
@@ -1232,7 +1232,7 @@ public class Calc {
 	}
 	/**
 	 * Convert an array of atoms into an array of vecmath points
-	 * 
+	 *
 	 * @param atoms
 	 *            list of atoms
 	 * @return list of Point3ds storing the x,y,z coordinates of each atom
@@ -1247,7 +1247,7 @@ public class Calc {
 
 	/**
 	 * Calculate the RMSD of two Atom arrays, already superposed.
-	 * 
+	 *
 	 * @param x
 	 *            array of Atoms superposed to y
 	 * @param y

@@ -22,7 +22,7 @@ package org.biojava.nbio.structure.align.quaternary;
 
 /**
  * The parameter bean for the {@link QsAlign} algorithm.
- * 
+ *
  * @author Aleix Lafita
  * @since 5.0.0
  *
@@ -36,7 +36,7 @@ public class QsAlignParameters {
 	/**
 	 * The maximum allowed distance between the centroids of two equivalent
 	 * Subunits, in A.
-	 * 
+	 *
 	 * @return dCutoff
 	 */
 	public double getdCutoff() {
@@ -46,7 +46,7 @@ public class QsAlignParameters {
 	/**
 	 * The maximum allowed distance between the centroids of two equivalent
 	 * Subunits, in A.
-	 * 
+	 *
 	 * @param dCutoff
 	 */
 	public void setdCutoff(double dCutoff) {
@@ -55,7 +55,7 @@ public class QsAlignParameters {
 
 	/**
 	 * The maximum allowed RMSD of the alignment, in A.
-	 * 
+	 *
 	 * @return maxRmsd
 	 */
 	public double getMaxRmsd() {
@@ -64,7 +64,7 @@ public class QsAlignParameters {
 
 	/**
 	 * The maximum allowed RMSD of the alignment, in A.
-	 * 
+	 *
 	 * @param maxRmsd
 	 */
 	public void setMaxRmsd(double maxRmsd) {
@@ -74,7 +74,7 @@ public class QsAlignParameters {
 	/**
 	 * The maximum orientation angle between two equivalent Subunits, in
 	 * radians. Range [0, Pi].
-	 * 
+	 *
 	 * @return the maximum orientation angle
 	 */
 	public double getMaxOrientationAngle() {
@@ -84,7 +84,7 @@ public class QsAlignParameters {
 	/**
 	 * The maximum orientation angle between two equivalent Subunits, in
 	 * radians. Range [0, Pi].
-	 * 
+	 *
 	 * @param maxOrientationAngle
 	 *            maximum orientation angle
 	 */

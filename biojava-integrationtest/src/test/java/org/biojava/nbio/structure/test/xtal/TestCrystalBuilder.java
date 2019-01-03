@@ -171,12 +171,12 @@ public class TestCrystalBuilder {
 		assertEquals(3,interfaces.size());
 
 	}
-	
+
 	@Test
 	public void test4HHB() throws IOException, StructureException {
 
 		// 4hhb is a very old entry with a non-standard coordinate frame convention, we should calculate only AU contacts
-		
+
 		AtomCache cache = new AtomCache();
 
 		StructureIO.setAtomCache(cache);
@@ -185,7 +185,7 @@ public class TestCrystalBuilder {
 		Structure s1 = StructureIO.getStructure("4HHB");
 		CrystalBuilder cb = new CrystalBuilder(s1);
 		StructureInterfaceList interfaces = cb.getUniqueInterfaces(5.5);
-		// 5 interfaces in the AU: the 4 of the tetramer + 1 cross-interface 
+		// 5 interfaces in the AU: the 4 of the tetramer + 1 cross-interface
 		assertEquals(5, interfaces.size());
 
 	}

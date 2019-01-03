@@ -34,8 +34,8 @@
                         <exclude>demo/**</exclude>
                     </excludes>
                 </configuration>
-            </plugin>		
-		
+            </plugin>
+
 		</plugins>
 	</build>
 	<dependencies>

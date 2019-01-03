@@ -103,7 +103,7 @@ public class NucleotideImpl extends HetatomImpl {
 
 		//clone atoms and bonds.
 		cloneAtomsAndBonds(n);
-		
+
 		// copying the alt loc groups if present, otherwise they stay null
 		if (getAltLocs()!=null && !getAltLocs().isEmpty()) {
 			for (Group altLocGroup:this.getAltLocs()) {
@@ -111,7 +111,7 @@ public class NucleotideImpl extends HetatomImpl {
 				n.addAltLoc(nAltLocGroup);
 			}
 		}
-		
+
 		if (chemComp!=null)
 			n.setChemComp(chemComp);
 

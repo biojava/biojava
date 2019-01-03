@@ -162,7 +162,7 @@ public class CoreSuperimposer implements MultipleSuperimposer {
 				array2 = StructureTools.cloneAtomArray(array2);
 
 				//From the superimposer we obtain the rotation and translation
-				Matrix4d trans = SuperPositions.superpose(Calc.atomsToPoints(array1), 
+				Matrix4d trans = SuperPositions.superpose(Calc.atomsToPoints(array1),
 						Calc.atomsToPoints(array2));
 				transforms.add(trans);
 			}

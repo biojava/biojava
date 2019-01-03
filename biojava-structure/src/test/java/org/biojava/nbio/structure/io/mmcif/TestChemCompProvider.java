@@ -184,10 +184,10 @@ public class TestChemCompProvider {
 		// Not wanted here for testing, but useful for cleaning up downloaded .cif.gz files.
 		// ZipChemCompProvider.purgeTempFiles(pdbdir.toString());
 	}
-	
+
 	@Test
 	public void testGetOneLetterCode() throws Exception {
-		
+
 		String oneLetter;
 
 		oneLetter = ChemCompGroupFactory.getOneLetterCode(ChemCompGroupFactory.getChemComp("ALA"));

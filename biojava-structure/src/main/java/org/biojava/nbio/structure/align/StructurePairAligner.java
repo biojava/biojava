@@ -57,72 +57,72 @@ import javax.vecmath.Matrix4d;
  *
  *
  * <h2>Example</h2>
- * 
+ *
  * <pre>
  *  public void run(){
- * 
+ *
  * 		// first load two example structures
  * 		{@link InputStream} inStream1 = this.getClass().getResourceAsStream("/files/5pti.pdb");
  * 		{@link InputStream} inStream2 = this.getClass().getResourceAsStream("/files/1tap.pdb");
- * 
+ *
  * 		{@link Structure} structure1 = null;
  * 		{@link Structure} structure2 = null;
- * 
+ *
  * 		{@link PDBFileParser} pdbpars = new {@link PDBFileParser}();
  * 		structure1 = pdbpars.parsePDBFile(inStream1) ;
  * 		structure2 = pdbpars.parsePDBFile(inStream2);
- * 
- * 
+ *
+ *
  * 		// calculate structure superimposition for two complete structures
  * 		{@link StructurePairAligner} aligner = new {@link StructurePairAligner}();
- * 
- * 
+ *
+ *
  * 			// align the full 2 structures with default parameters.
  * 			// see StructurePairAligner for more options and how to align
  * 			// any set of Atoms
  * 			aligner.align(structure1,structure2);
- * 
+ *
  * 			{@link AlternativeAlignment}[] aligs = aligner.getAlignments();
  * 			{@link AlternativeAlignment} a = aligs[0];
  * 			System.out.println(a);
- * 
+ *
  * 			//display the alignment in Jmol
- * 
+ *
  * 			// first get an artificial structure for the alignment
  * 			{@link Structure} artificial = a.getAlignedStructure(structure1, structure2);
- * 
- * 
+ *
+ *
  * 			// and then send it to Jmol (only will work if Jmol is in the Classpath)
- * 
+ *
  * 			BiojavaJmol jmol = new BiojavaJmol();
  * 			jmol.setTitle(artificial.getName());
  * 			jmol.setStructure(artificial);
- * 
+ *
  * 			// color the two structures
- * 
- * 
+ *
+ *
  * 			jmol.evalString("select *; backbone 0.4; wireframe off; spacefill off; " +
  * 					"select not protein and not solvent; spacefill on;");
  * 			jmol.evalString("select *"+"/1 ; color red; model 1; ");
- * 
- * 
+ *
+ *
  * 			// now color the equivalent residues ...
- * 
+ *
  * 			String[] pdb1 = a.getPDBresnum1();
  * 			for (String res : pdb1 ){
  * 				jmol.evalString("select " + res + "/1 ; backbone 0.6; color white;");
  * 			}
- * 
+ *
  * 			jmol.evalString("select *"+"/2; color blue; model 2;");
  * 			String[] pdb2 = a.getPDBresnum2();
  * 			for (String res :pdb2 ){
  * 				jmol.evalString("select " + res + "/2 ; backbone 0.6; color yellow;");
  * 			}
- * 
- * 
+ *
+ *
  * 			// now show both models again.
  * 			jmol.evalString("model 0;");
- * 
+ *
  * 	}
  * </pre>
  *
@@ -245,7 +245,7 @@ public class StructurePairAligner {
 	/**
 	 * get the results of step 1 - the FragmentPairs used for seeding the
 	 * alignment
-	 * 
+	 *
 	 * @return a FragmentPair[] array
 	 */
 
@@ -475,7 +475,7 @@ public class StructurePairAligner {
 					Matrix4d t = SuperPositions.superpose(
 							Calc.atomsToPoints(catmp1),
 							Calc.atomsToPoints(catmp2));
-					
+
 					Matrix rotmat = Matrices.getRotationJAMA(t);
 					f.setRot(rotmat);
 

@@ -33,7 +33,7 @@ import java.io.Serializable;
 public class BetaBridge implements Serializable {
 
 	private static final long serialVersionUID = -5097435425455958487L;
-	
+
 	BridgeType type;
 	int partner1;
 	int partner2;

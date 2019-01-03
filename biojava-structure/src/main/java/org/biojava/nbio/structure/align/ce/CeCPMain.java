@@ -495,15 +495,15 @@ public class CeCPMain extends CeMain {
 		Atom[] blockShifts = new Atom[blocks.size()];
 
 		if(alignLen>0) {
-			
+
 			// superimpose
-			Matrix4d trans = SuperPositions.superpose(Calc.atomsToPoints(atoms1), 
+			Matrix4d trans = SuperPositions.superpose(Calc.atomsToPoints(atoms1),
 					Calc.atomsToPoints(atoms2));
 
 			Matrix matrix = Matrices.getRotationJAMA(trans);
 			Atom shift = Calc.getTranslationVector(trans);
 
-			for( Atom a : atoms2 ) 
+			for( Atom a : atoms2 )
 				Calc.transform(a.getGroup(), trans);
 
 			//and get overall rmsd

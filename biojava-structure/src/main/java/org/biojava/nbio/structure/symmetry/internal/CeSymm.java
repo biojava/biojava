@@ -301,7 +301,7 @@ public class CeSymm {
 				break;
 			}
 			result.setNumRepeats(order);
-			
+
 			// REFINEMENT
 			SymmetryRefiner refiner = null;
 			switch (params.getRefineMethod()) {
@@ -337,7 +337,7 @@ public class CeSymm {
 		Matrix4d axis = result.getMultipleAlignment().getBlockSet(0)
 				.getTransformations().get(1);
 		axes.addAxis(axis, order, type);
-		
+
 		result.setAxes(axes);
 		return result;
 	}

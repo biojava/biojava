@@ -33,7 +33,7 @@ import java.io.Serializable;
 public class Ladder implements Serializable  {
 
 	private static final long serialVersionUID = -1658305503250364409L;
-	
+
 	int from; // start of the first strand
 	int to; // end of the first strand
 	int lfrom; // start of the second strand

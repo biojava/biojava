@@ -52,7 +52,7 @@ public class CAConverter {
 		return newChains;
 	}
 
-	/** 
+	/**
 	 * Convert a Chain to a new Chain containing C-alpha atoms only.
 	 *
 	 * @param chain to convert

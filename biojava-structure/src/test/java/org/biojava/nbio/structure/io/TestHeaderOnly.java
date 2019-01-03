@@ -74,14 +74,14 @@ public class TestHeaderOnly {
 		Structure sPDB = StructureIO.getStructure(pdbID);
 
 		Assert.assertEquals(false, doSeqResHaveAtoms(sPDB));
-		
+
 		// Test 2: with mmCIF
 		cache.setUseMmCif(true);
 
 		Structure sCIF = StructureIO.getStructure(pdbID);
 		Assert.assertEquals(false, doSeqResHaveAtoms(sCIF));
 
-		
+
 	}
 
 	/**

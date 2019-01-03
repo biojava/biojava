@@ -25,7 +25,7 @@
 					<debug>true</debug>
                 </configuration>
 			</plugin>
-			
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
@@ -34,7 +34,7 @@
 				    <excludes>
                         <exclude>demo/**</exclude>
                     </excludes>
-				
+
 					<descriptorRefs>
 						<descriptorRef>bin</descriptorRef>
 					</descriptorRefs>
@@ -51,7 +51,7 @@
 					</archive>
 				</configuration>
 			</plugin>
-			
+
 		</plugins>
 	</build>
 	<dependencies>
@@ -65,7 +65,7 @@
 			<artifactId>biojava-core</artifactId>
 			<version>5.1.2-SNAPSHOT</version>
 		</dependency>
-		<!-- logging dependencies (managed by parent pom, don't set versions or 
+		<!-- logging dependencies (managed by parent pom, don't set versions or
 			scopes here) -->
 		<dependency>
 			<groupId>org.slf4j</groupId>

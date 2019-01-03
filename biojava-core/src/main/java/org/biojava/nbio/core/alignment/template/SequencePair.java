@@ -96,7 +96,7 @@ public interface SequencePair<S extends Sequence<C>, C extends Compound> extends
 	 * @return the number of identical indices
 	 */
 	int getNumIdenticals();
-	
+
 	/**
 	 * Returns the percentage of identity between the two sequences in the alignment as a fraction between 0 and 1.
 	 *

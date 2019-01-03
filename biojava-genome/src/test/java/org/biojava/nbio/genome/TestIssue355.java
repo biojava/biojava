@@ -36,7 +36,7 @@ public class TestIssue355 {
 		assertEquals(51227320,union.bioStart());
 		assertEquals(51227382,union.bioEnd());
 	}
-	
+
 	@Test
 	public void testIssue2() {
 		Location l1 = Location.fromBio(100, 200, '+');

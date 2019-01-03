@@ -25,7 +25,7 @@ package org.biojava.nbio.genome.parsers.genename;
 
 import java.io.Serializable;
 
-/** 
+/**
  * A simple bean that contains gene name information as available from www.genenames.org
  *
  * @author Andreas Prlic
@@ -36,7 +36,7 @@ public class GeneName implements Serializable, Comparable<GeneName>{
 	// Chromosome, Accession Numbers, RefSeq IDs,Uniprot]
 
 	private static final long serialVersionUID = -7163977639324764020L;
-	
+
 	private String hgncId;
 	private String approvedSymbol;
 	private String approvedName;

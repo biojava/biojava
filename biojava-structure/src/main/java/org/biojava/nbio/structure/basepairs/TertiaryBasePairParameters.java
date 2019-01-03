@@ -43,7 +43,7 @@ import java.util.List;
 public class TertiaryBasePairParameters extends BasePairParameters {
 
 	private static final long serialVersionUID = 2556427111533466577L;
-	
+
 	public static final double DEFAULT_MAX_STAGGER = 2.0;
     public static final double DEFAULT_MAX_PROPELLER = 60.0;
     // These are the criteria used to select proper base pairs.

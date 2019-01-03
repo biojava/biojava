@@ -780,7 +780,7 @@ public class AlternativeAlignment implements Serializable{
 			ca2subset[i] = (Atom) ca2[pos2].clone();
 		}
 
-		Matrix4d trans = SuperPositions.superpose(Calc.atomsToPoints(ca1subset), 
+		Matrix4d trans = SuperPositions.superpose(Calc.atomsToPoints(ca1subset),
 				Calc.atomsToPoints(ca2subset));
 		this.currentRotMatrix  = Matrices.getRotationJAMA(trans);
 		this.currentTranMatrix = Calc.getTranslationVector(trans);

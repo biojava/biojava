@@ -113,27 +113,27 @@ public class RotationAxisTest {
 	@Test
 	public void testRotationAngle() {
 		final double tol = 1e-10;
-		
+
 		double angle;
 		AxisAngle4d axis;
 		Matrix4d trans;
 		double result;
-		
+
 		// positive
 		angle = .57 * Math.PI;
 		axis = new AxisAngle4d(3., -4., 5., angle);
 		trans = new Matrix4d();
 		trans.set(axis);
-		
+
 		result = RotationAxis.getAngle(trans);
 		assertEquals(angle, result, tol);
-		
+
 		// negative
 		angle = -.57 * Math.PI;
 		axis = new AxisAngle4d(3., -4., 5., angle);
 		trans = new Matrix4d();
 		trans.set(axis);
-		
+
 		result = RotationAxis.getAngle(trans);
 		assertEquals(Math.abs(angle), result, tol);
 

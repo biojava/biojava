@@ -46,8 +46,8 @@ public class TestAsaCalc {
 
 		// important: without this the tests can fail when running in maven (but not in IDE)
 		// that's because it depends on the order on how tests were run - JD 2018-03-10
-		ChemCompGroupFactory.setChemCompProvider(new DownloadChemCompProvider()); 
-		
+		ChemCompGroupFactory.setChemCompProvider(new DownloadChemCompProvider());
+
 		Structure structure = StructureIO.getStructure("3PIU");
 
 

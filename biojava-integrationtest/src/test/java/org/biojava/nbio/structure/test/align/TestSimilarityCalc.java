@@ -57,7 +57,7 @@ public class TestSimilarityCalc  {
             StructureAlignment algorithm = StructureAlignmentFactory.getAlgorithm(SmithWaterman3Daligner.algorithmName);
 
             SmithWaterman3DParameters params = new SmithWaterman3DParameters();
-            
+
             structure1 = cache.getStructure(name1);
             structure2 = cache.getStructure(name2);
 

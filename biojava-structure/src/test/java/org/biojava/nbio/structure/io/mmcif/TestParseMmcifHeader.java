@@ -37,7 +37,7 @@ import org.junit.Test;
 
 /**
  * Test parsing header information from MmCif files.
- * 
+ *
  * @author Anthony Bradley
  * @author Aleix Lafita
  *
@@ -67,34 +67,34 @@ public class TestParseMmcifHeader {
 	 */
 	@Test
 	public void testDatesV4() throws IOException, StructureException, ParseException {
-		
+
 		ClassLoader classLoader = this.getClass().getClassLoader();
 		String file4 = classLoader.getResource("org/biojava/nbio/structure/io/mmcif/1stp_v4.cif").getPath();
 		Structure s = StructureIO.getStructure(file4);
-		
+
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd",Locale.US);
-		
+
 		Date modDate = dateFormat.parse("2011-07-13");
 		assertEquals(modDate, s.getPDBHeader().getModDate());
 
 		Date releaseDate = dateFormat.parse("1992-10-15");
 		assertEquals(releaseDate, s.getPDBHeader().getRelDate());
-		
+
 		Date depositionDate = dateFormat.parse("1992-03-12");
 		assertEquals(depositionDate, s.getPDBHeader().getDepDate());
-		
+
 	}
-	
+
 	/**
 	 * Test parsing dates from MMCIF file version 5.
 	 */
 	@Test
 	public void testDatesV5() throws IOException, StructureException, ParseException {
-		
+
 		ClassLoader classLoader = this.getClass().getClassLoader();
 		String file5 = classLoader.getResource("org/biojava/nbio/structure/io/mmcif/1stp_v5.cif").getPath();
 		Structure s = StructureIO.getStructure(file5);
-		
+
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd",Locale.US);
 
 		Date modDate = dateFormat.parse("2011-07-13");
@@ -102,10 +102,10 @@ public class TestParseMmcifHeader {
 
 		Date releaseDate = dateFormat.parse("1992-10-15");
 		assertEquals(releaseDate, s.getPDBHeader().getRelDate());
-		
+
 		Date depositionDate = dateFormat.parse("1992-03-12");
 		assertEquals(depositionDate, s.getPDBHeader().getDepDate());
-		
+
 
 	}
 

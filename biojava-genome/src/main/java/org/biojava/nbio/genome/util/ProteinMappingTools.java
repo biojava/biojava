@@ -30,7 +30,7 @@ public class ProteinMappingTools {
     /** Converts the DNA sequence to protein sequence.
     *
     * @param dnaSequence the DNA sequence
-    * 
+    *
     * @return the protein sequence
     */
 	public static ProteinSequence convertDNAtoProteinSequence(String dnaSequence) throws CompoundNotFoundException {

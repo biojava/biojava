@@ -33,7 +33,7 @@ import org.biojava.nbio.structure.align.util.AtomCache;
 import org.junit.Test;
 
 public class TestWriteLargeCoordinatePDB {
-	
+
 	// This test checks that 'grouping' characters such as commas are not
 	// incorrectly introduced into formatted PDB coordinate fields.
 	// See FileConvert.d3 formatter.
@@ -51,7 +51,7 @@ public class TestWriteLargeCoordinatePDB {
 
 		// Example structure with large coordinates in PDB file.
 		Structure sPDB = StructureIO.getStructure("5D9Q");
-		
+
 		// If 48 column for a ATOM/HETATM has a comma, fail.
 		for (Group g : sPDB.getChain("K").getAtomGroups()) {
 			for (Atom a : g.getAtoms()) {
@@ -60,10 +60,10 @@ public class TestWriteLargeCoordinatePDB {
 				}
 			}
 		}
-		
+
 		//try (PrintWriter p = new PrintWriter(new FileWriter(new File("/tmp/test.pdb")))) {
 		//	p.print(sPDB.toPDB());
 		//}
 	}
-	
+
 }

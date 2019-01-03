@@ -44,14 +44,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class CathInstallation implements CathDatabase{
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CathInstallation.class);
-	
+
 	public static final String DEFAULT_VERSION = CathFactory.DEFAULT_VERSION;
 
-	public static final String domainListFileName = "cath-domain-list-v%s.txt"; 
+	public static final String domainListFileName = "cath-domain-list-v%s.txt";
 	public static final String domainDescriptionFileName = "cath-domain-description-file-v%s.txt";
 	public static final String nodeListFileName = "cath-names-v%s.txt";
 	public static final String domallFileName = "cath-domain-boundaries-v%s.txt";
-	
+
 	public static final String CATH_DOWNLOAD_URL                     = "http://download.cathdb.info/cath/releases/";
 	public static final String CATH_DOWNLOAD_ALL_RELEASES_DIR        = "all-releases";
 	public static final String CATH_DOWNLOAD_CLASSIFICATION_DATA_DIR = "cath-classification-data";
@@ -59,11 +59,11 @@ public class CathInstallation implements CathDatabase{
 	public static final String NEWLINE = System.getProperty("line.separator");;
 	public static final String FILESPLIT = System.getProperty("file.separator");;
 
-	
+
 	private String cathVersion;
 
 	private String cathDownloadUrl;
-	
+
 	private String cacheLocation ;
 
 	private AtomicBoolean installedDomainList;
@@ -126,11 +126,11 @@ public class CathInstallation implements CathDatabase{
 	public String getDomallFileName() {
 		return cacheLocation + buildFileName(domallFileName);
 	}
-	
+
 	private String buildFileName(String fileNameTemplate) {
 		return String.format(fileNameTemplate, cathVersion);
 	}
-	
+
 	private String buildUrl(String remoteFileName) {
 		String remoteFileNameWithVer =  buildFileName(remoteFileName);
 		String releasesDir = CATH_DOWNLOAD_ALL_RELEASES_DIR;
@@ -695,7 +695,7 @@ public class CathInstallation implements CathDatabase{
 
 	protected void downloadDomainListFile() throws IOException{
 		String remoteFilename = domainListFileName;
-		URL url = new URL(buildUrl(remoteFilename)); 
+		URL url = new URL(buildUrl(remoteFilename));
 		String localFileName = getDomainListFileName();
 		File localFile = new File(localFileName);
 		downloadFileFromRemote(url, localFile);
@@ -827,6 +827,6 @@ public class CathInstallation implements CathDatabase{
 	public void setCathVersion(String cathVersion) {
 		this.cathVersion = cathVersion;
 	}
-	
+
 
 }

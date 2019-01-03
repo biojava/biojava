@@ -59,7 +59,7 @@ public class TestBondFinding {
 		assertEquals(956, getInterBonds("2QWO"));
 		// Covalent ligand
 		assertEquals(2294, getInterBonds("4QDV"));
-		// DNA 
+		// DNA
 		assertEquals(22, getInterBonds("4XSN"));
 
 	}

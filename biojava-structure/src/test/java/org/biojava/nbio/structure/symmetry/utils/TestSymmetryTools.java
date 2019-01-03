@@ -29,7 +29,7 @@ import org.junit.Test;
 
 /**
  * Test the methods in {@link SymmetryTools} class.
- * 
+ *
  * @author Peter Rose
  * @author Aleix Lafita
  *

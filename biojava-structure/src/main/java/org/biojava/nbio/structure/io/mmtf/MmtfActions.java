@@ -38,12 +38,12 @@ import org.rcsb.mmtf.encoder.WriterUtils;
  *
  */
 public class MmtfActions {
-	
+
 	/**
 	 * Get a Structure object from a mmtf file.
 	 * @param filePath the mmtf file
 	 * @return a Structure object relating to the input byte array.
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public static Structure readFromFile(Path filePath) throws IOException {
 		// Get the reader - this is the bit that people need to implement.
@@ -53,7 +53,7 @@ public class MmtfActions {
 		// Get the structue
 		return mmtfStructureReader.getStructure();
 	}
-	
+
 	/**
 	 * Write a Structure object to a file.
 	 * @param structure the Structure to write
@@ -68,7 +68,7 @@ public class MmtfActions {
 		// Now write this data to file
 		WriterUtils.writeDataToFile(writerToEncoder, path);
 	}
-	
+
 	/**
 	 * Write a Structure object to an {@link OutputStream}
 	 * @param structure the Structure to write
@@ -85,12 +85,12 @@ public class MmtfActions {
 		outputStream.write(outputBytes,0,outputBytes.length);
 	}
 
-	
+
 	/**
 	 * Get a Biojava structure from the mmtf REST service.
 	 * @param pdbId the PDB code of the required structure
 	 * @return a Structure object relating to the input byte array
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public static Structure readFromWeb(String pdbId) throws IOException {
 		// Get the reader - this is the bit that people need to implement.

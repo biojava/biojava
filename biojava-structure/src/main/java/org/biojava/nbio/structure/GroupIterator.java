@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 
-/** 
+/**
  * An iterator over all groups of a structure.
  * @author Andreas Prlic
  * @since 1.4
@@ -43,7 +43,7 @@ public class GroupIterator implements Iterator<Group> {
 	private int current_chain_pos ;
 	private int current_group_pos ;
 	private boolean fixed_model   ;
-	
+
 
 	/**
 	 * Constructs a GroupIterator object over all models

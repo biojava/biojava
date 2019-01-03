@@ -33,7 +33,7 @@ import static org.junit.Assert.*;
 
 /**
  * Test the serialization and deserialization of BioJava structure objects.
- * 
+ *
  * @author Aleix Lafita
  *
  */
@@ -52,20 +52,20 @@ public class TestStructureSerialization {
 		objectOut.writeObject(sin);
 		objectOut.close();
 		byte[] bytes = baos.toByteArray();
-		
+
 		// Deserialize the bytes back into a structure object
 		ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
 		ObjectInputStream objectIn = new ObjectInputStream(bais);
 		Structure sout = (Structure) objectIn.readObject();
 		objectIn.close();
-		
+
 		// Test properties of the structures before and after serialization
 		assertEquals(sin.nrModels(), sout.nrModels());
 		assertEquals(sin.getChains().size(), sout.getChains().size());
 		assertEquals(sin.getName(), sout.getName());
-		
+
 		// Test equal string representations
 		assertEquals(sin.toString(), sout.toString());
-		
+
 	}
 }

@@ -171,7 +171,7 @@ public class BiologicalAssemblyTransformation implements Cloneable, Comparable<B
 		combined.setTransformationMatrix(transformation);
 		return combined;
 	}
-	
+
 	/**
 	 * Tells whether this transformation is in identity.
 	 * @return

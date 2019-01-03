@@ -442,7 +442,7 @@ public class SimpleAlignedSequence<S extends Sequence<C>, C extends Compound> im
 
 	@Override
 	public double getCoverage() {
-		
+
 		double coverage = getLength() - getNumGapPositions();
 		return coverage / getOriginalSequence().getLength();
 	}

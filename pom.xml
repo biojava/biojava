@@ -52,8 +52,8 @@
 		<tag>HEAD</tag>
 	</scm>
 
-	<!-- This section required for release at Maven Central. For a full list 
-		of Developers, please see https://github.com/orgs/biojava/members For a list 
+	<!-- This section required for release at Maven Central. For a full list
+		of Developers, please see https://github.com/orgs/biojava/members For a list
 		of contributors, please see https://github.com/biojava/biojava/graphs/contributors -->
 	<developers>
 		<developer>
@@ -586,8 +586,8 @@
 
 	<profiles>
 
-		<!-- Note: before you can use this build profile you need to set up an 
-			environment that contains correctly signed keys. Configure the keystore properties 
+		<!-- Note: before you can use this build profile you need to set up an
+			environment that contains correctly signed keys. Configure the keystore properties
 			and the profile in ~/.m2/settings.xml -->
 		<profile>
 			<id>codesigning</id>

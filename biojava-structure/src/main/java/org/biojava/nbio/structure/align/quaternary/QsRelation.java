@@ -23,7 +23,7 @@ package org.biojava.nbio.structure.align.quaternary;
 /**
  * The Quaternary Structure Relation describes the pairwise relation between two
  * quaternary structures.
- * 
+ *
  * @author Aleix Lafita
  * @since 5.0.0
  *

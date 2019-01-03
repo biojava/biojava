@@ -307,7 +307,7 @@ public interface Group extends Serializable {
 	/**
 	 * Utility method for returning the chainId of the Group or null if no
 	 * Chain has been set. This is equivalent to calling getChain().getId()
-	 * 
+	 *
 	 * Prior to version 5.0 this method returned the chain name.
 	 * @since 3.0
 	 * @return  the ID of the chain
@@ -399,7 +399,7 @@ public interface Group extends Serializable {
 	 * @return the string of the MDL molblock
 	 */
 	public String toSDF();
-	
+
 	/**
 	 * Tells whether the group is annotated as HETATM in the file.
 	 * To be used only at parsing time to be able to infer that a
@@ -407,9 +407,9 @@ public interface Group extends Serializable {
 	 * @return
 	 */
 	public boolean isHetAtomInFile();
-	
+
 	/**
-	 * Sets the field isHetAtomInFile which is intented only for 
+	 * Sets the field isHetAtomInFile which is intented only for
 	 * helping in infering if a polymeric group is in a ligand chain
 	 * or in a polymeric chain.
 	 * @param isHetAtomInFile

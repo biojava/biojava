@@ -35,7 +35,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 
-/** 
+/**
  * Makes sure there is a local installation of the Acetylation site file from Phosphosite and
  * tests if it can get parsed by the parser.
  *
@@ -44,7 +44,7 @@ import static org.junit.Assert.fail;
 public class TestAcetylation  {
 
 
-    /** 
+    /**
      * Make sure an Acetylation file is available locally.
      * Downloads from Phosphosite if needed.
      *
@@ -64,7 +64,7 @@ public class TestAcetylation  {
 
     }
 
-    /** 
+    /**
      * Returns the local file name where the Acetylation file will get cached locally.
      *
      * @param phosphoSiteFileLocation location of file at PhosphoSitePlus.
@@ -87,7 +87,7 @@ public class TestAcetylation  {
         return new File(localDir + "/" + fileName);
     }
 
-    /** 
+    /**
      * Tests that the acetylation file can get parsed without problems.
      *
      */

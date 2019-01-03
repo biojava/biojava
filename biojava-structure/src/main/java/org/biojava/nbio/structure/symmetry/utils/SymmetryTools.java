@@ -499,7 +499,7 @@ public class SymmetryTools {
 	 *            CeSymmResult
 	 * @throws StructureException
 	 * @result List of structures, by repeat index sequentially
-	 * 
+	 *
 	 */
 	public static List<Structure> divideStructure(CeSymmResult symmetry)
 			throws StructureException {
@@ -527,7 +527,7 @@ public class SymmetryTools {
 			// Repeats are always sequential blocks
 			int res1 = align.getStartResidue(i);
 			int res2 = align.getFinalResidue(i);
-			
+
 			// All atoms from the repeat, used for ligand search
 			// AA have an average of 8.45 atoms, so guess capacity with that
 			List<Atom> repeat = new ArrayList<>(Math.max(9*(res2-res1+1),9));
@@ -539,12 +539,12 @@ public class SymmetryTools {
 				repeat.addAll(g.getAtoms());
 			}
 
-			
+
 			List<Group> ligands = StructureTools.getLigandsByProximity(
 					allGroups,
 					repeat.toArray(new Atom[repeat.size()]),
 					StructureTools.DEFAULT_LIGAND_PROXIMITY_CUTOFF);
-			
+
 			logger.warn("Adding {} ligands to {}",ligands.size(), symmetry.getMultipleAlignment().getStructureIdentifier(i));
 			for( Group ligand : ligands) {
 				prevChain = StructureTools.addGroupToStructure(s, ligand, 0, prevChain,true);
@@ -811,7 +811,7 @@ public class SymmetryTools {
 				// Calculate the new transformation information
 				if (arr1.length > 0 && arr2.length > 0) {
 					Matrix4d axis = SuperPositions.superpose(
-							Calc.atomsToPoints(arr1), 
+							Calc.atomsToPoints(arr1),
 							Calc.atomsToPoints(arr2));
 					axes.updateAxis(level, axis);
 				}
@@ -854,7 +854,7 @@ public class SymmetryTools {
 	 * Returns the representative Atom Array of the first model, if the
 	 * structure is NMR, or the Array for each model, if it is a biological
 	 * assembly with multiple models.
-	 * 
+	 *
 	 * @param structure
 	 * @return representative Atom[]
 	 */
@@ -881,7 +881,7 @@ public class SymmetryTools {
 	 * Find valid symmetry orders for a given stoichiometry. For instance, an
 	 * A6B4 protein would give [1,2] because (A6B4)1 and (A3B2)2 are valid
 	 * decompositions.
-	 * 
+	 *
 	 * @param stoichiometry
 	 *            List giving the number of copies in each Subunit cluster
 	 * @return The common factors of the stoichiometry

@@ -60,7 +60,7 @@ public class AtomIterator implements Iterator<Atom> {
 		else
 			group = null ;
 	}
-	
+
 	/**
 	 * Constructs an AtomIterator object over a single model
 	 *

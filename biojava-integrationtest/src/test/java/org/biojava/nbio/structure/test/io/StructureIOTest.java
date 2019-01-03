@@ -30,10 +30,10 @@ import org.junit.Test;
 
 /**
  * Test StructureIO methods.
- * 
+ *
  */
 public class StructureIOTest {
-	
+
 	@Test
 	public void testStructureIO() throws IOException, StructureException {
 

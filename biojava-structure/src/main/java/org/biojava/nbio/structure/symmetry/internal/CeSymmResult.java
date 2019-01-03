@@ -246,7 +246,7 @@ public class CeSymmResult {
 	/**
 	 * Return a String describing the reasons for the CE-Symm final decision in
 	 * this particular result.
-	 * 
+	 *
 	 * @return String decision reason
 	 */
 	public String getReason() {

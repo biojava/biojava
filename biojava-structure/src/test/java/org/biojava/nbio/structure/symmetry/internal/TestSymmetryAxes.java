@@ -46,7 +46,7 @@ public class TestSymmetryAxes {
 		Matrix4d r90 = new Matrix4d();
 		r90.set(new AxisAngle4d(0, 0, 1, -Math.PI/2));
 		axes.addAxis(r90, 4, SymmetryType.CLOSED);
-		
+
 		// Level 2 is C2 along X
 		Matrix4d r180 = new Matrix4d();
 		r180.set(new AxisAngle4d(1, 0, 0, Math.PI));
@@ -96,7 +96,7 @@ public class TestSymmetryAxes {
 			axes.getRepeatRelation(1,1);
 			fail("Invalid firstRepeat");
 		} catch(IllegalArgumentException e) {}
-		
+
 		// Test Cyclic Form
 		relation = Arrays.asList(
 				Arrays.asList(0,2,4,6),
@@ -120,7 +120,7 @@ public class TestSymmetryAxes {
 			fail("Invalid firstRepeat");
 		} catch(IllegalArgumentException e) {}
 
-		
+
 		// Expected location of each repeat
 		Point3d[] repeats = new Point3d[] {
 				new Point3d(1,1,1),
@@ -147,9 +147,9 @@ public class TestSymmetryAxes {
 			m.transform(x);
 			assertTrue("Transformation "+i+" of "+repeats[i]+ "="+x+" not 1,1,1",x.epsilonEquals(repeats[0], 1e-5));
 		}
-		
+
 		Point3d x;
-		
+
 		List<Axis> symmetryAxes = axes.getSymmetryAxes();
 		assertEquals(5,symmetryAxes.size());
 		int axisNum = 0;
@@ -238,7 +238,7 @@ public class TestSymmetryAxes {
 			axes.getRepeatRelation(2);
 			fail("Invalid level");
 		} catch(IndexOutOfBoundsException e) {}
-		
+
 		// Test Cyclic Form
 		relation = Arrays.asList(
 				Arrays.asList(0,2,4,6),
@@ -262,7 +262,7 @@ public class TestSymmetryAxes {
 			fail("Invalid firstRepeat");
 		} catch(IllegalArgumentException e) {}
 
-		
+
 		// Expected location of each repeat
 		Point3d[] repeats = new Point3d[] {
 				new Point3d(-15,1,1),
@@ -290,9 +290,9 @@ public class TestSymmetryAxes {
 			m.transform(x);
 			assertTrue("Transformation "+i+" of "+repeats[i]+ "="+x+" not "+repeats[0],x.epsilonEquals(repeats[0], 1e-5));
 		}
-		
+
 		Point3d x;
-		
+
 		List<Axis> symmetryAxes = axes.getSymmetryAxes();
 		assertEquals(5,symmetryAxes.size());
 		int axisNum = 0;
@@ -323,5 +323,5 @@ public class TestSymmetryAxes {
 		assertTrue(String.format("SymmAxis %d of %s=%s not %s",axisNum,round(repeats[7]),round(x),round(repeats[6])),x.epsilonEquals(repeats[6], 1e-5));
 		axisNum++;
 	}
-	
+
 }

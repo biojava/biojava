@@ -33,10 +33,10 @@ import org.slf4j.LoggerFactory;
 /**
  * The SubunitClusterer takes as input a collection of {@link Subunit} and
  * returns a collection of {@link SubunitCluster}.
- * 
+ *
  * @author Aleix Lafita
  * @since 5.0.0
- * 
+ *
  */
 public class SubunitClusterer {
 

@@ -22,18 +22,18 @@ package org.biojava.nbio.structure.io.mmcif.model;
 
 /**
  * A class containing the _atom_sites data. Equivalent to the SCALE records in PDB files.
- * 
- * 
+ *
+ *
  * @author Jose Duarte
  *
  */
 public class AtomSites extends AbstractBean {
-	
+
 	String entry_id;
-	
+
 	// to my knowledge this field is not used - JD 2016-11-22
 	String Cartn_transform_axes;
-	
+
 	@CIFLabel(label="fract_transf_matrix[1][1]")
 	String fract_transf_matrix11;
 
@@ -52,7 +52,7 @@ public class AtomSites extends AbstractBean {
 
 	@CIFLabel(label="fract_transf_matrix[2][3]")
 	String fract_transf_matrix23;
-	
+
 
 	@CIFLabel(label="fract_transf_matrix[3][1]")
 	String fract_transf_matrix31;
@@ -66,13 +66,13 @@ public class AtomSites extends AbstractBean {
 
 	@CIFLabel(label="fract_transf_vector[1]")
 	String fract_transf_vector1;
-	
+
 	@CIFLabel(label="fract_transf_vector[2]")
 	String fract_transf_vector2;
 
 	@CIFLabel(label="fract_transf_vector[3]")
 	String fract_transf_vector3;
-	
+
 	// these fields are unusual but appear in some entries like 5e5j - JD 2016-11-22
 	@CIFLabel(label="Cartn_transf_matrix[1][1]")
 	String Cartn_transf_matrix11;
@@ -100,7 +100,7 @@ public class AtomSites extends AbstractBean {
 
 	@CIFLabel(label="Cartn_transf_matrix[3][3]")
 	String Cartn_transf_matrix33;
-	
+
 	@CIFLabel(label="Cartn_transf_vector[1]")
 	String Cartn_transf_vector1;
 
@@ -110,7 +110,7 @@ public class AtomSites extends AbstractBean {
 	@CIFLabel(label="Cartn_transf_vector[3]")
 	String Cartn_transf_vector3;
 
-	
+
 	public String getEntry_id() {
 		return entry_id;
 	}

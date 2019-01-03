@@ -75,7 +75,7 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
 	private Map<String, BlastJob> jobs = new HashMap<String, BlastJob>();
 
     /** Constructs a service object that targets the public NCBI BLAST network
-     * service. 
+     * service.
      */
 	public NCBIQBlastService() {
         init(SERVICE_URL);
@@ -93,14 +93,14 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
         init(svcUrl);
 	}
 
-    /** Initialize the serviceUrl data member 
+    /** Initialize the serviceUrl data member
      * @throws MalformedURLException on invalid URL
      */
     private void init(String svcUrl) {
 		try {
 			serviceUrl = new URL(svcUrl);
 		} catch (MalformedURLException e) {
-            throw new RuntimeException("It looks like the URL for remote NCBI BLAST service (" 
+            throw new RuntimeException("It looks like the URL for remote NCBI BLAST service ("
                                        + svcUrl + ") is wrong. Cause: " + e.getMessage(), e);
 		}
     }

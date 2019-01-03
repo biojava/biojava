@@ -47,7 +47,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-/** 
+/**
  * Methods to convert a structure object into different file formats.
  * @author Andreas Prlic
  * @since 1.4
@@ -108,7 +108,7 @@ public class FileConvert {
 		this.printConnections = printConnections;
 	}
 
-	/** 
+	/**
 	 * Prints the connections in PDB style
 	 *
 	 * Rewritten since 5.0 to use {@link Bond}s
@@ -122,14 +122,14 @@ public class FileConvert {
 			for (Group g:c.getAtomGroups()) {
 				for (Atom a:g.getAtoms()) {
 					if (a.getBonds()!=null) {
-						for (Bond b:a.getBonds()) {				//7890123456789012345678901234567890123456789012345678901234567890		
+						for (Bond b:a.getBonds()) {				//7890123456789012345678901234567890123456789012345678901234567890
 							str.append(String.format("CONECT%5d%5d                                                                "+newline, b.getAtomA().getPDBserial(), b.getAtomB().getPDBserial()));
 						}
 					}
 				}
 			}
 		}
-		
+
 		return str.toString();
 	}
 
@@ -190,16 +190,16 @@ public class FileConvert {
 			str.append("EXPDTA    NMR, "+ nrModels+" STRUCTURES"+newline) ;
 		}
 		for (int m = 0 ; m < nrModels ; m++) {
-			
-			
+
+
 			if ( nrModels>1 ) {
 				str.append("MODEL      " + (m+1)+ newline);
 			}
-			
+
 			List<Chain> polyChains = structure.getPolyChains(m);
 			List<Chain> nonPolyChains = structure.getNonPolyChains(m);
 			List<Chain> waterChains = structure.getWaterChains(m);
-			
+
 			for (Chain chain : polyChains) {
 
 				// do for all groups
@@ -215,7 +215,7 @@ public class FileConvert {
 				if (nrGroups > 0) str.append(String.format("%-80s","TER")).append(newline);
 
 			}
-			
+
 			boolean nonPolyGroupsExist = false;
 			for (Chain chain : nonPolyChains) {
 
@@ -226,7 +226,7 @@ public class FileConvert {
 					Group g= chain.getAtomGroup(h);
 
 					toPDB(g,str);
-					
+
 					nonPolyGroupsExist = true;
 				}
 
@@ -243,7 +243,7 @@ public class FileConvert {
 					Group g= chain.getAtomGroup(h);
 
 					toPDB(g,str);
-					
+
  					waterGroupsExist = true;
 				}
 
@@ -407,10 +407,10 @@ public class FileConvert {
 		String serial     = String.format("%5d",seri);
 		String fullName   = formatAtomName(a);
 
-		Character  altLoc = a.getAltLoc();		
+		Character  altLoc = a.getAltLoc();
 		if ( altLoc == null)
 			altLoc = ' ';
-		
+
 		String resseq = "" ;
 		if ( hasInsertionCode(pdbcode) )
 			resseq     = String.format("%5s",pdbcode);

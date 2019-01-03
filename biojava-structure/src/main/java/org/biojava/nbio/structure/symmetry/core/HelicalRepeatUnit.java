@@ -72,13 +72,13 @@ private void run() {
 }
 
 private List<Point3d> calcRepeatUnitCenters() {
-	
+
 	// TODO why do we use models here? it should not matter. Setting to 0 all
 	List<Integer> models = new ArrayList<Integer>(subunits.getSubunitCount());
 	for (int s = 0; s <subunits.getSubunitCount(); s++)
 		models.add(0);
 	Set<Integer> uniqueModels = new HashSet<Integer>(Arrays.asList(1));
-	
+
 	int modelCount = uniqueModels.size();
 	List<Integer> folds = this.subunits.getFolds();
 	int maxFold = folds.get(folds.size()-1);
@@ -133,14 +133,14 @@ private List<Point3d> calcRepeatUnitCenters() {
 }
 
 private List<Point3d[]> calcRepeatUnits() {
-	
+
 	// TODO why do we use models here? it should not matter. Setting to 0 all
 	List<Integer> models = new ArrayList<Integer>(
 			subunits.getSubunitCount());
 	for (int s = 0; s < subunits.getSubunitCount(); s++)
 		models.add(0);
 	Set<Integer> uniqueModels = new HashSet<Integer>(Arrays.asList(1));
-		
+
 	int modelCount = uniqueModels.size();
 	List<Integer> folds = this.subunits.getFolds();
 	int maxFold = folds.get(folds.size()-1);

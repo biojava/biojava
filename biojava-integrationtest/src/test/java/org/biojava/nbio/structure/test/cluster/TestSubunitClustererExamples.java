@@ -40,7 +40,7 @@ import org.junit.Test;
 /**
  * Test the {@link SubunitClusterer} clustering correctness on different real
  * structures with different types of chain clustering difficulties.
- * 
+ *
  * @author Aleix Lafita
  *
  */

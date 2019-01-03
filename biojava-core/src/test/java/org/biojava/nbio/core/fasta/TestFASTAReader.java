@@ -55,7 +55,7 @@ public class TestFASTAReader {
             if(fastaReader != null) fastaReader.close();
         }
 	}
-	
+
 	/**
 	 * Test file contains one sequence (P02768 from swissprot). Read the whole
 	 * file all at once by calling {@link FastaReader#process()} and verify that
@@ -67,17 +67,17 @@ public class TestFASTAReader {
     public void testProcessAll() throws Exception {
     	testProcessAll("org/biojava/nbio/core/fasta/P02768.fasta");
     }
-    
+
     /**
      * Same as {@link #testProcessAll()} but input files contains blank lines
-     * 
+     *
      * @throws Exception
      */
     @Test
     public void testProcessAllWithBlankLines() throws Exception {
     	testProcessAll("org/biojava/nbio/core/fasta/P02768_blank_lines.fasta");
     }
-    
+
     private void testProcess1(String path) throws Exception {
         ClasspathResource r = new ClasspathResource(path);
         FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = null ;
@@ -97,29 +97,29 @@ public class TestFASTAReader {
             if(fastaReader != null) fastaReader.close();
         }
     }
-    
+
 	/**
 	 * Test file contains one sequence (P02768 from swissprot). Read one
 	 * sequence at a time by calling {@link FastaReader#process(int)} and verify
 	 * that the first call get one sequence and the second call get none.
-	 * 
+	 *
 	 * @throws Exception
 	 */
     @Test
     public void testProcess1() throws Exception {
     	testProcess1("org/biojava/nbio/core/fasta/P02768.fasta");
     }
-    
+
     /**
      * Same as {@link #testProcess1()}, but input contains blank lines.
-     * 
+     *
      * @throws Exception
      */
     @Test
     public void testProcess1WithBlankLines() throws Exception {
     	testProcess1("org/biojava/nbio/core/fasta/P02768_blank_lines.fasta");
     }
-    
+
     private void testProcess2(String path) throws Exception {
         ClasspathResource r = new ClasspathResource(path);
         FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = null ;
@@ -144,12 +144,12 @@ public class TestFASTAReader {
             if(fastaReader != null) fastaReader.close();
         }
     }
-    
+
 	/**
 	 * Test file contains two sequences. Read one sequence at a time by calling
 	 * {@link FastaReader#process(int)} and verify that the first and second
 	 * call get one sequence each and the third call get none.
-	 * 
+	 *
 	 * @throws Exception
 	 */
     @Test

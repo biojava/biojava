@@ -180,7 +180,7 @@ public class ConfigPDBInstallPanel extends JPanel
 		String fileFormat = (String)fileType.getSelectedItem();
 		config.setFileFormat(fileFormat);
 
-		
+
 
 	}
 

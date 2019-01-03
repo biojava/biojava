@@ -61,7 +61,7 @@ public class PDBBioAssemblyParser {
 		    initialize();
 			currentBioMolecule = Integer.parseInt(line.substring(24).trim());
 
-		} 
+		}
 		// not parsing anymore the size (from biojava 5.0), thus this is not needed anymore
 		// eventually if needed this could be used to
 		// infer if bioassembly is author or software determined
@@ -70,7 +70,7 @@ public class PDBBioAssemblyParser {
 			// text can be :
 			// author determined biological unit
 			// software determined quaternary structure
-		//} 
+		//}
 		else if ( line.startsWith("REMARK 350 APPLY THE FOLLOWING TO CHAINS:")) {
 			currentChainIDs.clear();
 			addToCurrentChainList(line);
@@ -165,14 +165,14 @@ public class PDBBioAssemblyParser {
 		shift = new double[3];
 		modelNumber = 1;
 	}
-	
+
 	/**
 	 * Set the macromolecularSize fields of the parsed bioassemblies.
 	 * This can only be called after the full PDB file has been read so that
 	 * all the info for all bioassemblies has been gathered.
-	 * Note that an explicit method to set the field is necessary here because 
-	 * in PDB files the transformations contain only the author chain ids, corresponding 
-	 * to polymeric chains, whilst in mmCIF files the transformations 
+	 * Note that an explicit method to set the field is necessary here because
+	 * in PDB files the transformations contain only the author chain ids, corresponding
+	 * to polymeric chains, whilst in mmCIF files the transformations
 	 * contain all asym ids of both polymers and non-polymers.
 	 */
 	public void setMacromolecularSizes() {

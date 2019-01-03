@@ -22,7 +22,7 @@ package org.biojava.nbio.structure.io.mmcif.model;
 
 /**
  * Bean to hold data for _pdbx_audit_revision_history mmCIF category.
- * 
+ *
  * @author Peter Rose
  * @since 5.0
  */
@@ -32,7 +32,7 @@ public class PdbxAuditRevisionHistory extends AbstractBean {
 	private String major_revision;
 	private String minor_revision;
 	private String revision_date;
-	
+
 	public String getOrdinal() {
 		return ordinal;
 	}

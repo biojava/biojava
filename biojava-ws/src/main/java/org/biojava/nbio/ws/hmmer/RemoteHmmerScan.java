@@ -33,7 +33,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 
-/** 
+/**
  * Makes remote calls to the HMMER web service at the EBI web site and returns Pfam domain annotations for an input protein sequence.
  *
  * @author Andreas Prlic
@@ -42,7 +42,7 @@ import java.util.TreeSet;
 public class RemoteHmmerScan implements HmmerScan {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(RemoteHmmerScan.class);
-	
+
 	public static final String HMMER_SERVICE = "https://www.ebi.ac.uk/Tools/hmmer/search/hmmscan";
 
 	public RemoteHmmerScan(){
@@ -59,7 +59,7 @@ public class RemoteHmmerScan implements HmmerScan {
 
 	}
 
-	/** 
+	/**
 	 * Scans a protein sequence for Pfam profile matches.
 	 *
 	 * @param sequence
@@ -110,7 +110,7 @@ public class RemoteHmmerScan implements HmmerScan {
 
 		int responseCode = connection.getResponseCode();
 		if ( responseCode == 500){
-			LOGGER.warn("Got 500 response code for URL {}. Response message: {}.", serviceLocation, connection.getResponseMessage());	
+			LOGGER.warn("Got 500 response code for URL {}. Response message: {}.", serviceLocation, connection.getResponseMessage());
 		}
 
 		HttpURLConnection connection2 = (HttpURLConnection) respUrl.openConnection();

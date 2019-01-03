@@ -626,7 +626,7 @@ public class SimpleMMcifParser implements MMcifParser {
 		} else if (category.equals("_entity_poly")) {
 			EntityPoly ep = (EntityPoly) buildObject(EntityPoly.class.getName(), loopFields, lineData, loopWarnings);
 			triggerNewEntityPoly(ep);
-			
+
 		} else if ( category.equals("_struct")){
 
 			struct =  (Struct) buildObject(
@@ -654,14 +654,14 @@ public class SimpleMMcifParser implements MMcifParser {
 
 			triggerNewDatabasePDBrevRecord(dbrev);
 
-    // MMCIF version 5 dates  
+    // MMCIF version 5 dates
 		} else if ( category.equals("_pdbx_audit_revision_history")) {
 			PdbxAuditRevisionHistory history = (PdbxAuditRevisionHistory) buildObject(
 					PdbxAuditRevisionHistory.class.getName(),
 					loopFields, lineData, loopWarnings);
 
 			triggerNewPdbxAuditRevisionHistory(history);
-    
+
     // MMCIF version 5 dates
 		} else if ( category.equals("_pdbx_database_status")) {
 			PdbxDatabaseStatus status = (PdbxDatabaseStatus) buildObject(
@@ -700,11 +700,11 @@ public class SimpleMMcifParser implements MMcifParser {
 		} else if ( category.equals("_struct_ncs_oper")) {
 
 			StructNcsOper sNcsOper = (StructNcsOper) buildObject(
-					StructNcsOper.class.getName(), 
+					StructNcsOper.class.getName(),
 					loopFields, lineData, loopWarnings);
 			triggerNewStructNcsOper(sNcsOper);
 		} else if ( category.equals("_atom_sites")) {
-			
+
 			AtomSites atomSites = (AtomSites) buildObject(
 					AtomSites.class.getName(),
 					loopFields, lineData, loopWarnings);
@@ -926,7 +926,7 @@ public class SimpleMMcifParser implements MMcifParser {
 		}
 
 	}
-	
+
 	public void triggerNewAtomSites(AtomSites atomSites) {
 		for(MMcifConsumer c : consumers){
 			c.newAtomSites(atomSites);
@@ -934,12 +934,12 @@ public class SimpleMMcifParser implements MMcifParser {
 	}
 
 	/**
-	 * Populates a bean object from  the {@link org.biojava.nbio.structure.io.mmcif.model} package, 
+	 * Populates a bean object from  the {@link org.biojava.nbio.structure.io.mmcif.model} package,
 	 * from the data read from a CIF file.
-	 * It uses reflection to lookup the field and setter method names given the category 
-	 * found in the CIF file. 
+	 * It uses reflection to lookup the field and setter method names given the category
+	 * found in the CIF file.
 	 * <p>
-	 * Due to limitations in variable names in java, not all fields can have names 
+	 * Due to limitations in variable names in java, not all fields can have names
 	 * exactly as defined in the CIF categories. In those cases the {@link CIFLabel} tag
 	 * can be used in the field names to give the appropriate name that corresponds to the
 	 * CIF category, which is the name that will be then looked up here.
@@ -964,9 +964,9 @@ public class SimpleMMcifParser implements MMcifParser {
 		} catch (InstantiationException|ClassNotFoundException|IllegalAccessException e){
 			logger.error( "Error while constructing {}: {}", className, e.getMessage());
 			return null;
-		} 
+		}
 
-		// these methods get the fields but also looking at the IgnoreField and CIFLabel annotations 
+		// these methods get the fields but also looking at the IgnoreField and CIFLabel annotations
 		Field[] fields = MMCIFFileTools.getFields(c);
 		String[] names = MMCIFFileTools.getFieldNames(fields);
 
@@ -983,41 +983,41 @@ public class SimpleMMcifParser implements MMcifParser {
 		for (int i=0;i<fields.length;i++) {
 			names2fields.put(names[i], fields[i]);
 		}
-		
+
 		int pos = -1 ;
 		for (String key: loopFields){
 			pos++;
 
 			String val = lineData.get(pos);
-			
-			// we first start looking up the field which can be annotated with a CIFLabel if they 
+
+			// we first start looking up the field which can be annotated with a CIFLabel if they
 			// need alternative names (e.g. for field _symmetry.space_group_name_H-M, since hyphen is not allowed in var names in java)
 			Field field = names2fields.get(key);
-			
+
 			if (field == null) {
 				produceWarning(key, val, c, warnings);
 				continue;
 			}
 			// now we need to find the corresponding setter
-			// note that we can't use the field directly and then call Field.set() because many setters 
+			// note that we can't use the field directly and then call Field.set() because many setters
 			// have more functionality than just setting the value (e.g. some setters in ChemComp)
 
 			// building up the setter method name: need to upper case the first letter, leave the rest untouched
 			String setterMethodName = "set" + field.getName().substring(0,1).toUpperCase() + field.getName().substring(1, field.getName().length());
 
 			Method setter = methodMap.get(setterMethodName);
-			
+
 			if (setter==null) {
 				produceWarning(key, val, c, warnings);
 				continue;
 			}
-			
-			
 
-			// now we populate the object with the values by invoking the corresponding setter method,			
+
+
+			// now we populate the object with the values by invoking the corresponding setter method,
 			// note that all of the mmCif container classes have only one argument (they are beans)
 			Class<?>[] pType  = setter.getParameterTypes();
-			
+
 
 			try {
 				if ( pType[0].getName().equals(Integer.class.getName())) {
@@ -1025,21 +1025,21 @@ public class SimpleMMcifParser implements MMcifParser {
 
 						Integer intVal = Integer.parseInt(val);
 						setter.invoke(o, intVal);
-						
+
 					}
 				} else {
-					// default val is a String					
+					// default val is a String
 					setter.invoke(o, val);
 				}
 			} catch (IllegalAccessException|InvocationTargetException e) {
 				logger.error("Could not invoke setter {} with value {} for class {}", setterMethodName, val, className);
-			} 
+			}
 
 		}
 
 		return o;
 	}
-	
+
 	private void produceWarning(String key, String val, Class<?> c, Set<String> warnings) {
 
 		String warning = "Trying to set field " + key + " in "+ c.getName() +" found in file, but no corresponding field could be found in model class (value:" + val + ")";
@@ -1072,7 +1072,7 @@ public class SimpleMMcifParser implements MMcifParser {
 	public void triggerNewEntityPoly(EntityPoly entityPoly) {
 		for(MMcifConsumer c : consumers){
 			c.newEntityPoly(entityPoly);
-		}		
+		}
 	}
 
 	public void triggerNewEntityPolySeq(EntityPolySeq epolseq){
@@ -1124,19 +1124,19 @@ public class SimpleMMcifParser implements MMcifParser {
 			c.newAuditAuthor(aa);
 		}
 	}
-	
+
 	private void triggerNewPdbxAuditRevisionHistory(PdbxAuditRevisionHistory history) {
 		for(MMcifConsumer c : consumers){
 			c.newPdbxAuditRevisionHistory(history);
 		}
 	}
-	
+
 	private void triggerNewPdbxDatabaseStatus(PdbxDatabaseStatus status) {
 		for(MMcifConsumer c : consumers){
 			c.newPdbxDatabaseStatus(status);
 		}
 	}
-	
+
 	private void triggerNewDatabasePDBrev(DatabasePDBrev dbrev){
 		for(MMcifConsumer c : consumers){
 			c.newDatabasePDBrev(dbrev);

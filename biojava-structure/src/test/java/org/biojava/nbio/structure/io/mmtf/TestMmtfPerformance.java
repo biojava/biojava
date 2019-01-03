@@ -83,7 +83,7 @@ public class TestMmtfPerformance {
         java.util.Scanner s = new java.util.Scanner(is)){
     		return s.useDelimiter("\\A").hasNext() ? s.next() : "";
     	}
-        
+
     }
 
 

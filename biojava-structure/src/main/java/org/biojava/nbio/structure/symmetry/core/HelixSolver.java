@@ -34,8 +34,8 @@ import java.util.*;
 import java.util.Map.Entry;
 
 /**
- * 
- * 
+ *
+ *
  * @author Peter Rose
  *
  */
@@ -88,7 +88,7 @@ public class HelixSolver {
 		for (Entry<Integer[], Integer> entry : interactionMap.entrySet()) {
 			Integer[] pair = entry.getKey();
 			logger.debug("HelixSolver: pair: " + Arrays.toString(pair));
-			
+
 			int contacts = entry.getValue();
 			Point3d[] h1 = CalcPoint.clonePoint3dArray(repeatUnits.get(pair[0]));
 			Point3d[] h2 = CalcPoint.clonePoint3dArray(repeatUnits.get(pair[1]));
@@ -126,7 +126,7 @@ public class HelixSolver {
 			}
 			permutations.add(permutation);
 			logger.debug("Permutation: " + permutation);
-			
+
 
 			// keep track of which subunits are permuted
 			Set<Integer> permSet = new HashSet<Integer>();
@@ -281,7 +281,7 @@ public class HelixSolver {
 			helix.setContacts(contacts);
 			helix.setRepeatUnits(unit.getRepeatUnitIndices());
 			logger.debug("Layerlines: " + helix.getLayerLines());
-			
+
 			for (List<Integer> line : helix.getLayerLines()) {
 				maxLayerLineLength = Math.max(maxLayerLineLength, line.size());
 			}
@@ -344,7 +344,7 @@ public class HelixSolver {
 	 * Returns a permutation of subunit indices for the given helix
 	 * transformation. An index of -1 is used to indicate subunits that do not
 	 * superpose onto any other subunit.
-	 * 
+	 *
 	 * @param transformation
 	 * @return
 	 */
@@ -395,7 +395,7 @@ public class HelixSolver {
 	/**
 	 * Returns the rise of a helix given the subunit centers of two adjacent
 	 * subunits and the helix transformation
-	 * 
+	 *
 	 * @param transformation
 	 *            helix transformation
 	 * @param p1
@@ -415,7 +415,7 @@ public class HelixSolver {
 
 	/**
 	 * Returns the pitch angle of the helix
-	 * 
+	 *
 	 * @param transformation
 	 *            helix transformation
 	 * @return
@@ -426,7 +426,7 @@ public class HelixSolver {
 
 	/**
 	 * Returns the AxisAngle of the helix transformation
-	 * 
+	 *
 	 * @param transformation
 	 *            helix transformation
 	 * @return

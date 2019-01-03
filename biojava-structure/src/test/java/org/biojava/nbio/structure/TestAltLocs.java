@@ -170,7 +170,7 @@ public class TestAltLocs {
 
 	}
 
-	
+
 	/**
 	 * Test to check that all atoms have the same alt code (unless they're in the main group)
 	 * @param groupInputAltLocGroup The input alt loc group
@@ -181,19 +181,19 @@ public class TestAltLocs {
 		if (groupInputAltLocGroup == inputMainGroup) {
 			return;
 		}
-		
+
 		// Check that the atom group is the same size as the alt loc group (as long as it's not a case of microheterogenity
 		if (groupInputAltLocGroup.getPDBName().equals(inputMainGroup.getPDBName())){
 			assertEquals(groupInputAltLocGroup.getAtoms().size(), inputMainGroup.getAtoms().size());
 		}
 		Character defaultAltLoc = null;
 		for (Atom atom : groupInputAltLocGroup.getAtoms()) {
-			
+
 			// If this is in the original atom group just carry on
 			if (inputMainGroup.getAtoms().contains(atom)) {
 				continue;
 			}
-			
+
 			if ( defaultAltLoc == null) {
 				defaultAltLoc = atom.getAltLoc();
 
@@ -315,8 +315,8 @@ public class TestAltLocs {
 
 	/**
 	 * A test that all alternate location groups have the same number of atoms as the main group
-	 * @throws StructureException 
-	 * @throws IOException 
+	 * @throws StructureException
+	 * @throws IOException
 	 */
 	@Test
 	public void testAllAltLocsSameAtomsMainGroup() throws IOException, StructureException {
@@ -326,12 +326,12 @@ public class TestAltLocs {
 		doTestAllAltLocsSamAtomsMainGroup("3nvd");
 		doTestAllAltLocsSamAtomsMainGroup("4cup");
 	}
-	
+
 	/**
 	 * Actually perform the test to see all alt locs are the same size as the main group
-	 * @throws StructureException 
-	 * @throws IOException  
-	 * 
+	 * @throws StructureException
+	 * @throws IOException
+	 *
 	 */
 	private void doTestAllAltLocsSamAtomsMainGroup(String pdbId) throws IOException, StructureException {
 		AtomCache cache = new AtomCache();
@@ -351,11 +351,11 @@ public class TestAltLocs {
 			}
 		}
 	}
-	
+
 	/**
 	 * A test that adding bonds to atoms between groups - doesn't change the size of the groups
-	 * @throws StructureException 
-	 * @throws IOException 
+	 * @throws StructureException
+	 * @throws IOException
 	 */
 	@Test
 	public void testAddBondsDoesntChangeGroups() throws IOException, StructureException {
@@ -366,7 +366,7 @@ public class TestAltLocs {
 		cache.setFileParsingParams(params);
 		StructureIO.setAtomCache(cache);
 		Structure structure = StructureIO.getStructure("4CUP");
-		// Loop through and find 
+		// Loop through and find
 		for (Chain chain : structure.getChains()) {
 			List<Group> groups = chain.getAtomGroups();
 
@@ -397,7 +397,7 @@ public class TestAltLocs {
 						//
 						if(chemCompBond.getAtom_id_1().equals(atomA.getName())){
 							// Get the other atom in the group
-							for(Atom atomB : atomsList) { 
+							for(Atom atomB : atomsList) {
 								if(chemCompBond.getAtom_id_2().equals(atomB.getName())){
 									int bondOrder = chemCompBond.getNumericalBondOrder();
 									new BondImpl(atomA, atomB, bondOrder);
@@ -444,7 +444,7 @@ public class TestAltLocs {
 				for (Group altLocGroup:g.getAltLocs()) {
 					ensureAllAtomsSameAltCode(altLocGroup, g);
 					for (Atom a:altLocGroup.getAtoms()) {
-						// Check the atomsall have bonds 
+						// Check the atomsall have bonds
 						assertNotEquals(a.getBonds(),null);
 						assertNotEquals(a.getBonds().size(),0);
 

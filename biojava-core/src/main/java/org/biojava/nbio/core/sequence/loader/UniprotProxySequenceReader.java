@@ -495,20 +495,20 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 		fw.write(sb.toString());
 		fw.close();
 	}
-	
+
 	/**
 	 * Open a URL connection.
-	 * 
+	 *
 	 * Follows redirects.
 	 * @param url
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	private static HttpURLConnection openURLConnection(URL url) throws IOException {
 		// This method should be moved to a utility class in BioJava 5.0
-		
+
 		final int timeout = 5000;
 		final String useragent = "BioJava";
-		
+
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		conn.setRequestProperty("User-Agent", useragent);
 		conn.setInstanceFollowRedirects(true);
@@ -525,7 +525,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 			if(newUrl.equals(url.toString())) {
 				throw new IOException("Cyclic redirect detected at "+newUrl);
 			}
-			
+
 			// Preserve cookies
 			String cookies = conn.getHeaderField("Set-Cookie");
 
@@ -541,13 +541,13 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 			conn.setConnectTimeout(timeout);
 			conn.setReadTimeout(timeout);
 			conn.connect();
-			
+
 			status = conn.getResponseCode();
-			
+
 			logger.info("Redirecting from {} to {}", url, newUrl);
 		}
 		conn.connect();
-		
+
 		return conn;
 	}
 

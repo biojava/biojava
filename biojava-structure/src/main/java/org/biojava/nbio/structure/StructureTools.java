@@ -466,7 +466,7 @@ public class StructureTools {
 	/**
 	 * Finds all ligand groups from the target which fall within the cutoff distance
 	 * of some atom from the query set.
-	 * 
+	 *
 	 * @param target Set of groups including the ligands
 	 * @param query Atom selection
 	 * @param cutoff Distance from query atoms to consider, in angstroms
@@ -502,10 +502,10 @@ public class StructureTools {
 		}
 		return ligands;
 	}
-	
+
 	/**
 	 * Adds a particular group to a structure. A new chain will be created if necessary.
-	 * 
+	 *
 	 * <p>When adding multiple groups, pass the return value of one call as the
 	 * chainGuess parameter of the next call for efficiency.
 	 * <pre>
@@ -557,11 +557,11 @@ public class StructureTools {
 					}
 					newEntityInfo.addChain(chain);
 					chain.setEntityInfo(newEntityInfo);
-					
+
 					// TODO Do the seqres need to be cloned too? -SB 2016-10-7
 					chain.setSeqResGroups(oldChain.getSeqResGroups());
 					chain.setSeqMisMatches(oldChain.getSeqMisMatches());
-					
+
 					s.addChain(chain,model);
 				}
 			}
@@ -590,10 +590,10 @@ public class StructureTools {
 			chainGuess = addGroupToStructure(s, g, model, chainGuess, clone);
 		}
 	}
-	
+
 	/**
 	 * Expand a set of atoms into all groups from the same structure.
-	 * 
+	 *
 	 * If the structure is set, only the first atom is used (assuming all
 	 * atoms come from the same original structure).
 	 * If the atoms aren't linked to a structure (for instance, for cloned atoms),
@@ -606,7 +606,7 @@ public class StructureTools {
 	}
 	/**
 	 * Expand a set of atoms into all groups from the same structure.
-	 * 
+	 *
 	 * If the structure is set, only the first atom is used (assuming all
 	 * atoms come from the same original structure).
 	 * If the atoms aren't linked to a structure (for instance, for cloned atoms),
@@ -647,7 +647,7 @@ public class StructureTools {
 		if(allChains.isEmpty() ) {
 			return Collections.emptySet();
 		}
-		
+
 		// Extract all ligand groups
 		Set<Group> full = new HashSet<>();
 		for(Chain c : allChains) {
@@ -738,7 +738,7 @@ public class StructureTools {
 		}
 		return atoms.toArray(new Atom[atoms.size()]);
 	}
-	
+
 	/**
 	 * Returns and array of all non-Hydrogen atoms coordinates in the given Chain,
 	 * optionally including HET atoms or not Waters are not included.
@@ -1411,7 +1411,7 @@ public class StructureTools {
 			atoms = getAtomArray(chain, atomNames);
 		}
 		// If tha
-		if(atoms.length==0){ 
+		if(atoms.length==0){
 			logger.warn("No atoms found for buidling grid!");
 			return new AtomContactSet(cutoff);
 		}
@@ -1867,7 +1867,7 @@ public class StructureTools {
 		for (int i =0; i< structure.nrModels() ; i++){
 			for (Chain chain : structure.getModel(i)) {
 				for (Group group : chain.getAtomGroups()) {
-					for (Group altLocGroup : group.getAltLocs()) { 
+					for (Group altLocGroup : group.getAltLocs()) {
 						for ( Atom groupAtom : group.getAtoms()) {
 							// If this alt loc doesn't have this atom
 							if (! altLocGroup.hasAtom(groupAtom.getName())) {
@@ -1899,7 +1899,7 @@ public class StructureTools {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Check to see if a Hydrogen has a  Deuterated brother in the group.
 	 * @param atom the input atom that is putatively hydorgen
