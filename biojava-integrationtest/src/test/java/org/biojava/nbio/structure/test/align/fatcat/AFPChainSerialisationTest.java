@@ -221,7 +221,7 @@ public class AFPChainSerialisationTest
 
 
 	@org.junit.Test
-	public void testMulti() throws IOException, StructureException { 
+	public void testMulti() throws IOException, StructureException {
 		Atom[] ca1 = null;
 		Atom[] ca2 = null;
 		Atom[] ca3 = null;
@@ -253,7 +253,7 @@ public class AFPChainSerialisationTest
 		result2 = align(name3,name4,ca4, ca5,true);
 
 
-		
+
 
 		String xmlNew = "<multi>"+result1[1]+ result2[1] +"</multi>";
 		//System.out.println(xmlNew);
@@ -290,7 +290,7 @@ public class AFPChainSerialisationTest
 		assertEquals(fatcat2,result2[0]);
 		String xmlnew2 = AFPChainXMLConverter.toXML(new2, ca4, ca6);
 		assertEquals(xmlnew2,result2[1]);
-		
+
 
 
 	}

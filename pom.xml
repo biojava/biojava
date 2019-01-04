@@ -12,7 +12,7 @@
 	<groupId>org.biojava</groupId>
 	<artifactId>biojava</artifactId>
 	<packaging>pom</packaging>
-	<version>5.1.2-SNAPSHOT</version>
+	<version>5.2.1-SNAPSHOT</version>
 	<name>biojava</name>
 	<description>BioJava is an open-source project dedicated to providing a Java framework for processing biological
         data. It provides analytical and statistical routines, parsers for common file formats and allows the
@@ -52,8 +52,8 @@
 		<tag>HEAD</tag>
 	</scm>
 
-	<!-- This section required for release at Maven Central. For a full list 
-		of Developers, please see https://github.com/orgs/biojava/members For a list 
+	<!-- This section required for release at Maven Central. For a full list
+		of Developers, please see https://github.com/orgs/biojava/members For a list
 		of contributors, please see https://github.com/biojava/biojava/graphs/contributors -->
 	<developers>
 		<developer>
@@ -86,7 +86,7 @@
 		<developer>
 			<name>Andy Yates</name>
 		</developer>
-      	<developer>
+		<developer>
             <name>Anthony Bradley</name>
       	</developer>
 		<developer>
@@ -319,6 +319,12 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-site-plugin</artifactId>
 					<version>3.7.1</version>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-deploy-plugin</artifactId>
+					<version>2.8.2</version>
 				</plugin>
 
 			</plugins>
@@ -580,8 +586,8 @@
 
 	<profiles>
 
-		<!-- Note: before you can use this build profile you need to set up an 
-			environment that contains correctly signed keys. Configure the keystore properties 
+		<!-- Note: before you can use this build profile you need to set up an
+			environment that contains correctly signed keys. Configure the keystore properties
 			and the profile in ~/.m2/settings.xml -->
 		<profile>
 			<id>codesigning</id>
@@ -680,8 +686,8 @@
 		<system>Github</system>
 		<url>https://github.com/biojava/biojava/issues</url>
 	</issueManagement>
-		<ciManagement>
+	<ciManagement>
 			<system>Travis</system>
 			<url>https://travis-ci.org/biojava/biojava</url>
-		</ciManagement>
+	</ciManagement>
 </project>

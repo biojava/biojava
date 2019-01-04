@@ -22,7 +22,7 @@
 package org.biojava.nbio.structure.io.mmcif.model;
 
 
-/** 
+/**
  * Container for _entity_poly records
  *
  *

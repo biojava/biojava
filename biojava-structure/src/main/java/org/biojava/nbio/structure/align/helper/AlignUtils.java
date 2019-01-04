@@ -30,15 +30,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Low level helper methods for CE and FATCAT algorithms. 
- * 
+ * Low level helper methods for CE and FATCAT algorithms.
+ *
  * @author Andreas Prlic
  */
 public class AlignUtils {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(AlignUtils.class);
 
-	/** 
+	/**
 	 * Get a subset of Atoms based by their positions
 	 *
 	 * @param caall
@@ -56,7 +56,7 @@ public class AlignUtils {
 		return subset;
 	}
 
-	/** 
+	/**
 	 * Get a continue subset of Atoms based by the starting position and the length
 	 *
 	 * @param caall
@@ -79,7 +79,7 @@ public class AlignUtils {
 	}
 
 
-	/** 
+	/**
 	 * Get a continue subset of Atoms based by the starting position and the length
 	 * does not clone the original atoms.
 	 *
@@ -102,7 +102,7 @@ public class AlignUtils {
 
 	}
 
-	/** 
+	/**
 	 * Get the centroid for the set of atoms starting from position pos, length fragmentLenght
 	 *
 	 * @param ca

@@ -2,7 +2,7 @@
 	<parent>
 		<artifactId>biojava</artifactId>
 		<groupId>org.biojava</groupId>
-		<version>5.1.2-SNAPSHOT</version>
+		<version>5.2.1-SNAPSHOT</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>biojava-aa-prop</artifactId>
@@ -29,7 +29,7 @@
                     </excludes>
                 </configuration>
             </plugin>
-            
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
@@ -46,7 +46,7 @@
 					</descriptorRefs>
 					<fileSets>
 						<fileSet>
-							<!-- TODO: use expresssions instead: ${project.build.sourceDirectory}, 
+							<!-- TODO: use expresssions instead: ${project.build.sourceDirectory},
 								etc -->
 							<directory>${project.basedir}/src</directory>
 							<useDefaultExcludes>true</useDefaultExcludes>
@@ -70,12 +70,12 @@
 		<dependency>
 			<groupId>org.biojava</groupId>
 			<artifactId>biojava-core</artifactId>
-			<version>5.1.2-SNAPSHOT</version>
+			<version>5.2.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.biojava</groupId>
 			<artifactId>biojava-structure</artifactId>
-			<version>5.1.2-SNAPSHOT</version>
+			<version>5.2.1-SNAPSHOT</version>
 		</dependency>
 
 		<!-- logging dependencies (managed by parent pom, don't set versions or scopes here) -->
@@ -95,9 +95,9 @@
   		<dependency>
     		<groupId>org.apache.logging.log4j</groupId>
     		<artifactId>log4j-core</artifactId>
-  		</dependency>			
+  		</dependency>
 
-				
+
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>

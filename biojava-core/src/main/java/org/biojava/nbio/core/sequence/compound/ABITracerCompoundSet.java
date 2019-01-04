@@ -29,37 +29,37 @@ import org.biojava.nbio.core.sequence.template.AbstractNucleotideCompoundSet;
  */
 public class ABITracerCompoundSet extends AbstractNucleotideCompoundSet<NucleotideCompound> {
 
-    private static class InitaliseOnDemand {
-        public static final ABITracerCompoundSet INSTANCE = new ABITracerCompoundSet();
-    }
+	private static class InitaliseOnDemand {
+		public static final ABITracerCompoundSet INSTANCE = new ABITracerCompoundSet();
+	}
 
-    public static ABITracerCompoundSet getABITracerCompoundSet() {
-        return InitaliseOnDemand.INSTANCE;
-    }
+	public static ABITracerCompoundSet getABITracerCompoundSet() {
+		return InitaliseOnDemand.INSTANCE;
+	}
 
-    public ABITracerCompoundSet() {
-        addNucleotideCompound("A", "T");
-        addNucleotideCompound("T", "A");
-        addNucleotideCompound("G", "C");
-        addNucleotideCompound("C", "G");
-        addNucleotideCompound("N", "N");
-        addNucleotideCompound("K", "K");
-        addNucleotideCompound("Y", "Y");
-        addNucleotideCompound("R", "R");
-        addNucleotideCompound("-", "-");
-    }
+	public ABITracerCompoundSet() {
+		addNucleotideCompound("A", "T");
+		addNucleotideCompound("T", "A");
+		addNucleotideCompound("G", "C");
+		addNucleotideCompound("C", "G");
+		addNucleotideCompound("N", "N");
+		addNucleotideCompound("K", "K");
+		addNucleotideCompound("Y", "Y");
+		addNucleotideCompound("R", "R");
+		addNucleotideCompound("-", "-");
+	}
 
-    @Override
-    public NucleotideCompound newNucleotideCompound(String base, String complement, String... equivalents) {
-        if(equivalents.length == 0) {
-            return new NucleotideCompound(base, this, complement);
-        }
-        else {
-            NucleotideCompound[] compounds = new NucleotideCompound[equivalents.length];
-            for(int i=0; i<compounds.length; i++) {
-                compounds[i] = getCompoundForString(equivalents[i]);
-            }
-            return new NucleotideCompound(base, this, complement, compounds);
-        }
-    }
+	@Override
+	public NucleotideCompound newNucleotideCompound(String base, String complement, String... equivalents) {
+		if(equivalents.length == 0) {
+			return new NucleotideCompound(base, this, complement);
+		}
+		else {
+			NucleotideCompound[] compounds = new NucleotideCompound[equivalents.length];
+			for(int i=0; i<compounds.length; i++) {
+				compounds[i] = getCompoundForString(equivalents[i]);
+			}
+			return new NucleotideCompound(base, this, complement, compounds);
+		}
+	}
 }

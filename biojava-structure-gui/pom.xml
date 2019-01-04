@@ -3,7 +3,7 @@
     <parent>
         <artifactId>biojava</artifactId>
         <groupId>org.biojava</groupId>
-		<version>5.1.2-SNAPSHOT</version>
+		<version>5.2.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>biojava-structure-gui</artifactId>
@@ -27,13 +27,13 @@
         <dependency>
             <groupId>org.biojava</groupId>
             <artifactId>biojava-structure</artifactId>
-			<version>5.1.2-SNAPSHOT</version>
+			<version>5.2.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.biojava</groupId>
             <artifactId>biojava-core</artifactId>
-			<version>5.1.2-SNAPSHOT</version>
+			<version>5.2.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
 
@@ -76,7 +76,7 @@
     <build>
         <plugins>
 
-			<!-- Excluding demo package is required for avoiding namespace clashes 
+			<!-- Excluding demo package is required for avoiding namespace clashes
 				(demo package is in all modules) for signing the jar. See issue #387 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -87,7 +87,7 @@
                     </excludes>
                 </configuration>
             </plugin>
-        
+
         </plugins>
     </build>
 

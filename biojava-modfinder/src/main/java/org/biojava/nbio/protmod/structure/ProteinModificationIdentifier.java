@@ -802,7 +802,7 @@ public class ProteinModificationIdentifier {
 	 * @param matchedAtomsOfLinkages
 	 * @param mod
 	 * @param ret ModifiedCompound will be stored here
-     */
+	 */
 	private void assembleLinkages(List<List<Atom[]>> matchedAtomsOfLinkages,
 			ProteinModification mod, List<ModifiedCompound> ret) {
 		ModificationCondition condition = mod.getCondition();

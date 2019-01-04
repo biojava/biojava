@@ -169,10 +169,10 @@ public final class SphereSampler {
 		// The permuted (k,l,m) values together make a diagonal grid out to ±(5,5,5).
 		// The point spacing is distorted by the pind() function so that the
 		// projection of the points back to the 4-sphere will be more even.
-		
+
 		// This is the c48u309 lattice from Karney 2006, with a max error of 10.07
 		// degrees.
-		
+
 		List<Quat4d> grid = new ArrayList<Quat4d>();
 		int ncell1 = 0;
 		for (int n = 0; n < nent; ++n) { // for each tuple (k,l,m) above

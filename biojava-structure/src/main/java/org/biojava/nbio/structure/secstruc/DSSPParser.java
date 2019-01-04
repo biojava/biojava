@@ -73,7 +73,7 @@ public class DSSPParser {
 	public static List<SecStrucState> parseInputStream(InputStream dsspIs,
 			Structure structure, boolean assign)
 					throws IOException, StructureException {
-			
+
 		BufferedReader reader = new BufferedReader(new InputStreamReader(dsspIs));
 		return generalParse(reader, structure, assign);
 	}
@@ -115,8 +115,8 @@ public class DSSPParser {
 			Structure structure, boolean assign)
 					throws IOException, StructureException {
 
-		URL url = new URL("http://files.rcsb.org/dssp/" + 
-				pdb.toLowerCase().substring(1, 3) + "/" + 
+		URL url = new URL("http://files.rcsb.org/dssp/" +
+				pdb.toLowerCase().substring(1, 3) + "/" +
 				pdb.toLowerCase() + "/" +
 				pdb.toLowerCase() + ".dssp.gz");
 		InputStream in = new GZIPInputStream(url.openStream());

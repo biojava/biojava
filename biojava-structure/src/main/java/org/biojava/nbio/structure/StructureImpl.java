@@ -220,7 +220,7 @@ public class StructureImpl implements Structure {
 
 
 
-			// now iterate over all groups 
+			// now iterate over all groups
 			// in order to find the amino acid that has this pdbRenum.
 
 			for (Group g : groups) {
@@ -254,7 +254,7 @@ public class StructureImpl implements Structure {
 	public Chain findChain(String chainName, int modelnr) throws StructureException {
 
 		return getChainByPDB(chainName, modelnr);
-		
+
 	}
 
 
@@ -583,7 +583,7 @@ public class StructureImpl implements Structure {
 	}
 
 	@Override
-	public List<Chain> getPolyChains() { 
+	public List<Chain> getPolyChains() {
 		if (models.size()==0) {
 			return new ArrayList<>(0);
 		}
@@ -596,7 +596,7 @@ public class StructureImpl implements Structure {
 	}
 
 	@Override
-	public List<Chain> getNonPolyChains() { 
+	public List<Chain> getNonPolyChains() {
 		if (models.size()==0) {
 			return new ArrayList<>(0);
 		}
@@ -607,7 +607,7 @@ public class StructureImpl implements Structure {
 	public List<Chain> getNonPolyChains(int modelIdx) {
 		return models.get(modelIdx).getNonPolyChains();
 	}
-	
+
 	@Override
 	public List<Chain> getWaterChains() {
 		if (models.size()==0) {
@@ -656,11 +656,11 @@ public class StructureImpl implements Structure {
 			throws StructureException{
 
 		Chain c = getPolyChainByPDB(authId, modelnr);
-		
+
 		if (c==null ) {
-			throw new StructureException("Could not find chain with authId \"" + authId + "\"" + " for PDB id " + pdb_id + ", model "+modelnr);			
+			throw new StructureException("Could not find chain with authId \"" + authId + "\"" + " for PDB id " + pdb_id + ", model "+modelnr);
 		}
-		
+
 		return c;
 	}
 
@@ -701,7 +701,7 @@ public class StructureImpl implements Structure {
 		return getPolyChain(asymId, 0);
 
 	}
-	
+
 	@Override
 	public Chain getPolyChain(String asymId, int modelIdx) {
 		Model model = models.get(modelIdx);
@@ -721,14 +721,14 @@ public class StructureImpl implements Structure {
 	public Chain getNonPolyChain(String asymId) {
 		return getNonPolyChain(asymId, 0);
 	}
-	
+
 	@Override
 	public Chain getNonPolyChain(String asymId, int modelIdx) {
 		Model model = models.get(modelIdx);
 		if (model==null) {
 			return null;
 		}
-		
+
 		List<Chain> nonpolyChains = model.getNonPolyChains();
 		for (Chain c : nonpolyChains){
 			if (c.getId().equals(asymId))
@@ -763,7 +763,7 @@ public class StructureImpl implements Structure {
 	public List<Chain> getNonPolyChainsByPDB(String authId) {
 		return getNonPolyChainsByPDB(authId, 0);
 	}
-	
+
 	@Override
 	public List<Chain> getNonPolyChainsByPDB(String authId, int modelIdx) {
 		List<Chain> chains = new ArrayList<>();

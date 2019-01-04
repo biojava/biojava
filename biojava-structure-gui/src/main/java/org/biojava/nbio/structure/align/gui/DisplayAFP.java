@@ -137,7 +137,7 @@ public class DisplayAFP {
 	}
 
 
-	/** 
+	/**
 	 * Return the atom at alignment position aligPos. at the present only works with block 0
 	 * @param chainNr the number of the aligned pair. 0... first chain, 1... second chain.
 	 * @param afpChain an afpChain object

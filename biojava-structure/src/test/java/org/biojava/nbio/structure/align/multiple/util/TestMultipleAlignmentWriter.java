@@ -53,7 +53,7 @@ public class TestMultipleAlignmentWriter {
 	/**
 	 * Build the alignments in common for every writer output, so that they do
 	 * not have to be created each time.
-	 * 
+	 *
 	 * @throws IOException
 	 * @throws StructureException
 	 */

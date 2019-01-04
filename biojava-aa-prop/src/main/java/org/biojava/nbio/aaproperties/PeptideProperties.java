@@ -555,12 +555,12 @@ public class PeptideProperties {
 		}
 		return aaChar2Composition;
 	}
-	
+
 	/**
-	 * Returns the array of charges of each amino acid in a protein. At pH=7, two are negative charged: aspartic acid (Asp, D) and glutamic acid (Glu, E) (acidic side chains), 
+	 * Returns the array of charges of each amino acid in a protein. At pH=7, two are negative charged: aspartic acid (Asp, D) and glutamic acid (Glu, E) (acidic side chains),
 	 * and three are positive charged: lysine (Lys, K), arginine (Arg, R) and histidine (His, H) (basic side chains).
-	 * 
-	 * @param sequence 
+	 *
+	 * @param sequence
 	 * 		a protein sequence consisting of non-ambiguous characters only
 	 * @return the array of charges of amino acids in the protein (1 if amino acid is positively charged, -1 if negatively charged, 0 if not charged)
 	 */
@@ -572,15 +572,15 @@ public class PeptideProperties {
 		}
 		return charges;
 	}
-	
+
 	/**
 	 * Returns the array of polarity values of each amino acid in a protein sequence.
-	 * 
-	 * @param sequence 
-	 * 		a protein sequence consisting of non-ambiguous characters only 
+	 *
+	 * @param sequence
+	 * 		a protein sequence consisting of non-ambiguous characters only
 	 * @return the array of polarity of amino acids in the protein (1 if amino acid is polar, 0 if not)
 	 */
-	public static final int[] getPolarityOfAminoAcids(String sequence) {	
+	public static final int[] getPolarityOfAminoAcids(String sequence) {
 		int[] polarity = new int[sequence.length()];
 		for ( int i=0; i < sequence.length(); i++ ) {
 			char aa = sequence.toCharArray()[i];

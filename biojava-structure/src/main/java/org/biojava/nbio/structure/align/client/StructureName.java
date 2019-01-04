@@ -379,7 +379,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 	public String getChainId() {
 		return chainName;
 	}
-	
+
 	/**
 	 * Get the original form of the identifier
 	 */

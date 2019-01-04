@@ -452,5 +452,5 @@ public class AlignmentToolsTest {
 			return true;
 		}
 	}
-	
+
 }

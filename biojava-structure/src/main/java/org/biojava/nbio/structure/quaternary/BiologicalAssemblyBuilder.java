@@ -65,28 +65,28 @@ public class BiologicalAssemblyBuilder {
 	 * by adding symmetry partners as new models.
 	 * The output Structure will be different depending on the multiModel parameter:
 	 * <li>
-	 * the symmetry-expanded chains are added as new models, one per transformId. All original models but 
+	 * the symmetry-expanded chains are added as new models, one per transformId. All original models but
 	 * the first one are discarded.
 	 * </li>
 	 * <li>
-	 * as original with symmetry-expanded chains added with renamed chain ids and names (in the form 
+	 * as original with symmetry-expanded chains added with renamed chain ids and names (in the form
 	 * originalAsymId_transformId and originalAuthId_transformId)
 	 * </li>
 	 * @param asymUnit
 	 * @param transformations
-	 * @param useAsymIds if true use {@link Chain#getId()} to match the ids in the BiologicalAssemblyTransformation (needed if data read from mmCIF), 
+	 * @param useAsymIds if true use {@link Chain#getId()} to match the ids in the BiologicalAssemblyTransformation (needed if data read from mmCIF),
 	 * if false use {@link Chain#getName()} for the chain matching (needed if data read from PDB).
-	 * @param multiModel if true the output Structure will be a multi-model one with one transformId per model, 
-	 * if false the outputStructure will be as the original with added chains with renamed asymIds (in the form originalAsymId_transformId and originalAuthId_transformId). 
+	 * @param multiModel if true the output Structure will be a multi-model one with one transformId per model,
+	 * if false the outputStructure will be as the original with added chains with renamed asymIds (in the form originalAsymId_transformId and originalAuthId_transformId).
 	 * @return
 	 */
 	public Structure rebuildQuaternaryStructure(Structure asymUnit, List<BiologicalAssemblyTransformation> transformations, boolean useAsymIds, boolean multiModel) {
-		
+
 		// ensure that new chains are build in the same order as they appear in the asymmetric unit
 		orderTransformationsByChainId(asymUnit, transformations);
 
 		Structure s = asymUnit.clone();
-		
+
 
 		// this resets all models (not only the first one): this is important for NMR (multi-model)
 		// like that we can be sure we start with an empty structures and we add models or chains to it
@@ -95,7 +95,7 @@ public class BiologicalAssemblyBuilder {
 		for (BiologicalAssemblyTransformation transformation : transformations){
 
 			List<Chain> chainsToTransform = new ArrayList<>();
-			
+
 			// note: for NMR structures (or any multi-model) we use the first model only and throw away the rest
 			if (useAsymIds) {
 				Chain c = asymUnit.getChain(transformation.getChainId());
@@ -104,29 +104,29 @@ public class BiologicalAssemblyBuilder {
 				Chain polyC = asymUnit.getPolyChainByPDB(transformation.getChainId());
 				List<Chain> nonPolyCs = asymUnit.getNonPolyChainsByPDB(transformation.getChainId());
 				Chain waterC = asymUnit.getWaterChainByPDB(transformation.getChainId());
-				if (polyC!=null) 
+				if (polyC!=null)
 					chainsToTransform.add(polyC);
-				if (!nonPolyCs.isEmpty()) 
+				if (!nonPolyCs.isEmpty())
 					chainsToTransform.addAll(nonPolyCs);
-				if (waterC!=null) 
+				if (waterC!=null)
 					chainsToTransform.add(waterC);
 			}
-			
+
 			for (Chain c: chainsToTransform) {
 
 				Chain chain = (Chain)c.clone();
-				
+
 				Calc.transform(chain, transformation.getTransformationMatrix());
 
 				String transformId = transformation.getId();
 
 				// note that the Structure.addChain/Structure.addModel methods set the parent reference to the new Structure
-				
+
 				// TODO set entities properly in the new structures! at the moment they are a mess... - JD 2016-05-19
-				
-				if (multiModel) 
+
+				if (multiModel)
 					addChainMultiModel(s, chain, transformId);
-				else 
+				else
 					addChainFlattened(s, chain, transformId);
 
 			}
@@ -202,10 +202,10 @@ public class BiologicalAssemblyBuilder {
 		}
 
 	}
-	
+
 	/**
 	 * Adds a chain to the given structure to form a biological assembly,
-	 * adding the symmetry-expanded chains as new chains with renamed 
+	 * adding the symmetry-expanded chains as new chains with renamed
 	 * chain ids and names (in the form originalAsymId_transformId and originalAuthId_transformId).
 	 * @param s
 	 * @param newChain
@@ -214,7 +214,7 @@ public class BiologicalAssemblyBuilder {
 	private void addChainFlattened(Structure s, Chain newChain, String transformId) {
 		newChain.setId(newChain.getId()+"_"+transformId);
 		newChain.setName(newChain.getName()+"_"+transformId);
-		s.addChain(newChain);		
+		s.addChain(newChain);
 	}
 
 	/**

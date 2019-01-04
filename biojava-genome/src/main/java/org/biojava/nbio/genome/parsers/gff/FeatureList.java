@@ -469,7 +469,7 @@ public class FeatureList extends ArrayList<FeatureI> {
 	 * used by sort routine
 	 */
 	private class FeatureComparator implements Comparator<FeatureI>, Serializable {
-        private static final long serialVersionUID = 1;
+	private static final long serialVersionUID = 1;
 
 		@Override
 		public int compare(FeatureI a, FeatureI b) {

@@ -30,7 +30,7 @@ import org.biojava.nbio.ws.hmmer.RemoteHmmerScan;
 
 import java.util.SortedSet;
 
-/** 
+/**
  * The cookbook recipe for how to request Pfam annotations for a protein sequence using the Hmmer3 service
  *
  * @author Andreas Prlic
@@ -76,7 +76,7 @@ public class HmmerDemo {
 
 	}
 
-	/** 
+	/**
 	 * Fetch a protein sequence from the UniProt web site
 	 *
 	 * @param uniProtID

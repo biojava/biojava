@@ -358,7 +358,7 @@ public class TestNonDepositedFiles {
 		// pdb and mmcif should have same number of chains
 		assertEquals(s1.getChains().size(), s2.getChains().size());
 	}
-	
+
 	@Test
 	public void testWaterOnlyChainPdb() throws IOException {
 
@@ -381,7 +381,7 @@ public class TestNonDepositedFiles {
 		assertEquals(2,s1.getEntityInfos().size());
 
 	}
-	
+
 	@Test
 	public void testWaterOnlyChainCif() throws IOException {
 
@@ -406,15 +406,15 @@ public class TestNonDepositedFiles {
 
 		// checking that the water molecule was assigned an ad-hoc compound
 		assertEquals(2,s2.getEntityInfos().size());
-		
+
 		Chain cAsymId = s2.getWaterChain("E");
 		assertNotNull("Got null when looking for water-only chain with asym id E", cAsymId);
 		assertSame(c, cAsymId);
-		
+
 	}
-	
+
 	/**
-	 * Some PDB files coming from phenix or other software can have a CRYST1 line without z and not padded with white-spaces 
+	 * Some PDB files coming from phenix or other software can have a CRYST1 line without z and not padded with white-spaces
 	 * for the space group column.
 	 * @throws IOException
 	 * @since 5.0.0
@@ -439,8 +439,8 @@ public class TestNonDepositedFiles {
 			if (e.getType()==EntityType.NONPOLYMER) countNonPoly++;
 			if (e.getType()==EntityType.WATER) countWater++;
 		}
-		int[] counts = {countPoly, countNonPoly, countWater}; 
+		int[] counts = {countPoly, countNonPoly, countWater};
 		return counts;
-		
+
 	}
 }

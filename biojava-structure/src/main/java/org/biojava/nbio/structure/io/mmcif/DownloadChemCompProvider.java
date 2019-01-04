@@ -42,21 +42,22 @@ import java.util.zip.GZIPOutputStream;
 import org.biojava.nbio.core.util.InputStreamProvider;
 import org.biojava.nbio.structure.align.util.URLConnectionTools;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
+import org.biojava.nbio.structure.io.LocalPDBDirectory;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
 
-/** 
+/**
  * This provider of chemical components can download and cache chemical component definition files from the RCSB PDB web site.
- * It is the default way to access these definitions.
- * If this provider is called he first time, it will download and install all chemical
- * component definitions in a local directory.
- * Once the definition files have been installed, it has quick startup time and low memory requirements.
+ *  It is the default way to access these definitions.
+ *  If this provider is called he first time, it will download and install all chemical
+ *  component definitions in a local directory.
+ *  Once the definition files have been installed, it has quick startup time and low memory requirements.
  *
- * An alternative provider, that keeps all definitions in memory is the {@link AllChemCompProvider}. Another provider, that
- * does not require any network access, but only can support a limited set of chemical component definitions, is the {@link ReducedChemCompProvider}.
+ *  An alternative provider, that keeps all definitions in memory is the {@link AllChemCompProvider}. Another provider, that
+ *  does not require any network access, but only can support a limited set of chemical component definitions, is the {@link ReducedChemCompProvider}.
  *
  *
  * @author Andreas Prlic
@@ -69,9 +70,9 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 	public static final String CHEM_COMP_CACHE_DIRECTORY = "chemcomp";
 
 	public static final String DEFAULT_SERVER_URL = "http://files.rcsb.org/ligands/download/";
-	
+
 	public static String serverBaseUrl = DEFAULT_SERVER_URL;
-	
+
 	/**
 	 * Use default RCSB server layout (true) or internal RCSB server layout (false)
 	 */
@@ -94,31 +95,36 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 		protectedIDs.add("NUL");
 	}
 
+	private static ChemCompProvider fallback = null; // Fallback provider if the download fails
+
 	/** by default we will download only some of the files. User has to request that all files should be downloaded...
 	 *
 	 */
 	boolean downloadAll = false;
 
 	public DownloadChemCompProvider(){
-		logger.debug("Initialising DownloadChemCompProvider");
-
-		// note that path is static, so this is just to make sure that all non-static methods will have path initialised
-		initPath();
+		this(null);
 	}
 
 	public DownloadChemCompProvider(String cacheFilePath){
 		logger.debug("Initialising DownloadChemCompProvider");
 
 		// note that path is static, so this is just to make sure that all non-static methods will have path initialised
-		path = new File(cacheFilePath);
+		if(cacheFilePath != null) {
+			path = new File(cacheFilePath);
+		}
 	}
 
-	private static void initPath(){
-
+	/**
+	 * Get this provider's cache path
+	 * @return
+	 */
+	public static File getPath(){
 		if (path==null) {
 			UserConfiguration config = new UserConfiguration();
 			path = new File(config.getCacheFilePath());
 		}
+		return path;
 	}
 
 	/**
@@ -135,7 +141,7 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 
 		// this makes sure there is a file separator between every component,
 		// if path has a trailing file separator or not, it will work for both cases
-		File dir = new File(path, CHEM_COMP_CACHE_DIRECTORY);
+		File dir = new File(getPath(), CHEM_COMP_CACHE_DIRECTORY);
 		File f = new File(dir, "components.cif.gz");
 
 		if ( ! f.exists()) {
@@ -169,7 +175,7 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 
 		logger.info("Installing individual chem comp files ...");
 
-		File dir = new File(path, CHEM_COMP_CACHE_DIRECTORY);
+		File dir = new File(getPath(), CHEM_COMP_CACHE_DIRECTORY);
 		File f = new File(dir, "components.cif.gz");
 
 
@@ -220,7 +226,7 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 	 */
 	private void writeID(String contents, String currentID) throws IOException{
 
-		String localName = DownloadChemCompProvider.getLocalFileName(currentID);
+		String localName = getLocalFileName(currentID);
 
 		try ( PrintWriter pw = new PrintWriter(new GZIPOutputStream(new FileOutputStream(localName))) ) {
 
@@ -280,7 +286,10 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 
 				ChemComp chemComp = dict.getChemComp(recordName);
 
-				return chemComp;
+				// May be null if the file was corrupt. Fall back on ReducedChemCompProvider in that case
+				if(chemComp != null) {
+					return chemComp;
+				}
 
 			} catch (IOException e) {
 
@@ -305,13 +314,16 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 
 		// see https://github.com/biojava/biojava/issues/315
 		// probably a network error happened. Try to use the ReducedChemCOmpProvider
-		ReducedChemCompProvider reduced = new ReducedChemCompProvider();
+		if( fallback == null) {
+			fallback = new ReducedChemCompProvider();
+		}
 
-		return reduced.getChemComp(recordName);
+		logger.warn("Falling back to ReducedChemCompProvider for {}. This could indicate a network error.", recordName);
+		return fallback.getChemComp(recordName);
 
 	}
 
-	/** 
+	/**
 	 * Returns the file name that contains the definition for this {@link ChemComp}
 	 *
 	 * @param recordName the ID of the {@link ChemComp}
@@ -323,16 +335,15 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 			recordName = "_" + recordName;
 		}
 
-		initPath();
-
-		File f = new File(path, CHEM_COMP_CACHE_DIRECTORY);
+		File f = new File(getPath(), CHEM_COMP_CACHE_DIRECTORY);
 		if (! f.exists()){
 			logger.info("Creating directory " + f);
 
 			boolean success = f.mkdir();
 			// we've checked in initPath that path is writable, so there's no need to check if it succeeds
 			// in the unlikely case that in the meantime it isn't writable at least we log an error
-			if (!success) logger.error("Directory {} could not be created",f);
+			if (!success)
+				logger.error("Directory {} could not be created",f);
 
 		}
 
@@ -346,6 +357,14 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 		String fileName = getLocalFileName(recordName);
 
 		File f = new File(fileName);
+
+		// delete files that are too short to have contents
+		if( f.length() < LocalPDBDirectory.MIN_PDB_FILE_SIZE ) {
+			// Delete defensively.
+			// Note that if delete is unsuccessful, we re-download the file anyways
+			f.delete();
+			return false;
+		}
 
 		return f.exists();
 
@@ -452,7 +471,7 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 			split();
 		} catch (IOException e) {
 			logger.error("Could not split all chem comp file into individual chemical component files. Error: {}",
-					e.getMessage());
+				 e.getMessage());
 			// no point in reporting time
 			loading.set(false);
 			return;

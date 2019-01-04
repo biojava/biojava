@@ -40,7 +40,7 @@ import org.junit.Test;
 /**
  * Test the {@link SubunitCluster} merge and divide methods, one test specific
  * for each method.
- * 
+ *
  * @author Aleix Lafita
  *
  */
@@ -105,7 +105,7 @@ public class TestSubunitCluster {
 
 	/**
 	 * Test {@link SubunitCluster#mergeSequence(SubunitCluster, SubunitClustererParameters)}
-	 * 
+	 *
 	 * @throws CompoundNotFoundException
 	 */
 	@Test
@@ -198,7 +198,7 @@ public class TestSubunitCluster {
 	/**
 	 * Test
 	 * {@link SubunitCluster#mergeStructure(SubunitCluster, SubunitClustererParameters)}
-	 * 
+	 *
 	 * @throws StructureException
 	 * @throws IOException
 	 */
@@ -254,7 +254,7 @@ public class TestSubunitCluster {
 
 	/**
 	 * Test {@link SubunitCluster#divideInternally(SubunitClustererParameters)}
-	 * 
+	 *
 	 * @throws StructureException
 	 * @throws IOException
 	 */

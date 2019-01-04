@@ -59,7 +59,7 @@ import org.slf4j.LoggerFactory;
  * protein structures at the quaternary structure level (multiple chains or
  * subunits) and calculates the equivalent subunit matching and a residue-based
  * alignment, together with usual alignment quality scores.
- * 
+ *
  * @author Aleix Lafita
  * @since 5.0.0
  *
@@ -220,7 +220,7 @@ public class QsAlign {
 
 				clustSubunitMap.put(key, subunitMap);
 			}
-			
+
 			logger.info("Cluster Subunit Map: " + clustSubunitMap.toString());
 
 			// Unfold the nested map into subunit map and alignment
@@ -313,7 +313,7 @@ public class QsAlign {
 	 * gives the transformation of the complex.
 	 * <p>
 	 * Utility method to cumulative calculate the alignment Atoms.
-	 * 
+	 *
 	 * @param clusters
 	 *            List of SubunitClusters
 	 * @param clusterSubunitMap
@@ -358,7 +358,7 @@ public class QsAlign {
 	 * subunit matchings.
 	 * <p>
 	 * Utility method to cumulative calculate the alignment transformation.
-	 * 
+	 *
 	 * @param clusters
 	 *            List of SubunitClusters
 	 * @param clusterSubunitMap
@@ -374,7 +374,7 @@ public class QsAlign {
 		Pair<Atom[]> pair = getAlignedAtomsForClusterSubunitMap(clusters,
 				clusterSubunitMap);
 
-		return SuperPositions.superpose(Calc.atomsToPoints(pair.getFirst()), 
+		return SuperPositions.superpose(Calc.atomsToPoints(pair.getFirst()),
 				Calc.atomsToPoints(pair.getSecond()));
 
 	}

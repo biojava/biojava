@@ -63,7 +63,7 @@ public class AsaCalculator {
 	public static final double DEFAULT_PROBE_SIZE = 1.4;
 	public static final int DEFAULT_NTHREADS = 1;
 
-	public static final boolean DEFAULT_USE_SPATIAL_HASHING = true;
+	private static final boolean DEFAULT_USE_SPATIAL_HASHING = true;
 
 
 
@@ -175,20 +175,20 @@ public class AsaCalculator {
 	}
 
 	/**
-	 * Constructs a new AsaCalculator. Subsequently call {@link #calcSingleAsa(int)} 
+	 * Constructs a new AsaCalculator. Subsequently call {@link #calcSingleAsa(int)}
 	 * to calculate the atom ASAs. The given radius parameter will be taken as the radius for
 	 * all points given. No ASA calculation per group will be possible with this constructor, so
 	 * usage of {@link #getGroupAsas()} will result in a NullPointerException.
 	 * @param atomCoords
 	 * 				the coordinates representing the center of atoms
-	 * @param probe 
+	 * @param probe
 	 * 				the probe size
-	 * @param nSpherePoints 
+	 * @param nSpherePoints
 	 * 				the number of points to be used in generating the spherical
 	 * 				dot-density, the more points the more accurate (and slower) calculation
-	 * @param nThreads 
+	 * @param nThreads
 	 * 				the number of parallel threads to use for the calculation
-	 * @param radius 
+	 * @param radius
 	 * 				the radius that will be assign to all given coordinates
 	 */
 	public AsaCalculator(Point3d[] atomCoords, double probe, int nSpherePoints, int nThreads, double radius) {
@@ -584,7 +584,7 @@ public class AsaCalculator {
 		} else {
 			// non standard aas, (e.g. MSE, LLP) will always have this problem,
 			logger.info("Unexpected atom "+atomCode+" for aminoacid "+aa+ " ("+amino.getPDBName()+"), assigning its standard vdw radius");
-			
+
 
 			return atom.getElement().getVDWRadius();
 		}

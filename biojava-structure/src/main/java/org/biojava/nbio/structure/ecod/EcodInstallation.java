@@ -90,7 +90,7 @@ public class EcodInstallation implements EcodDatabase {
 
 	// Frequency of ECOD updates, in days. If non-null, redownloads "latest" if older than this.
 	private Integer updateFrequency = 14;
-	
+
 	/**
 	 * Use EcodFactory to create instances. The instantiation of multiple
 	 * installations at the same path can lead to race conditions when downloading
@@ -366,7 +366,7 @@ public class EcodInstallation implements EcodDatabase {
 
 			if (!f.exists() || f.length() <= 0 )
 				return false;
-			
+
 			// Re-download old copies of "latest"
 			if(updateFrequency != null && requestedVersion == DEFAULT_VERSION ) {
 				long mod = f.lastModified();

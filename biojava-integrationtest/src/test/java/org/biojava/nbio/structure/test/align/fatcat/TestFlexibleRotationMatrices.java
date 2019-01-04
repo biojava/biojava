@@ -211,7 +211,7 @@ public class TestFlexibleRotationMatrices {
 
 		// THIS IS CALCULATING THE "correct" rotation matrix, that should be in the file
 
-		Matrix4d transform = SuperPositions.superpose(Calc.atomsToPoints(blockSet1), 
+		Matrix4d transform = SuperPositions.superpose(Calc.atomsToPoints(blockSet1),
 				Calc.atomsToPoints(blockSet2copy));
 
 		//double rmsdForce = SVDSuperimposer.getRMS(atomSet1, atomSet2);

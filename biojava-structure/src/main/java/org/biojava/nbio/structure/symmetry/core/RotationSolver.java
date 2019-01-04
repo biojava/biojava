@@ -233,10 +233,10 @@ public class RotationSolver implements QuatSymmetrySolver {
 				originalCoords, transformedCoords);
 		AxisAngle4d axisAngle = new AxisAngle4d();
 		Matrix4d transformation = new Matrix4d();
-		
+
 		transformation.set(quat);
 		axisAngle.set(quat);
-		
+
 		Vector3d axis = new Vector3d(axisAngle.x, axisAngle.y, axisAngle.z);
 		if (axis.lengthSquared() < 1.0E-6) {
 			axisAngle.x = 0;
@@ -249,7 +249,7 @@ public class RotationSolver implements QuatSymmetrySolver {
 			axisAngle.y = axis.y;
 			axisAngle.z = axis.z;
 		}
-		
+
 		CalcPoint.transform(transformation, transformedCoords);
 		double subunitRmsd = CalcPoint.rmsd(transformedCoords, originalCoords);
 

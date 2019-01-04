@@ -33,7 +33,7 @@ import org.junit.Test;
 /**
  * Test the {@link SubunitExtractor} correctness on different real structures
  * with different types of difficulties.
- * 
+ *
  * @author Aleix Lafita
  *
  */
@@ -42,7 +42,7 @@ public class TestSubunitExtractor {
 	/**
 	 * Some collagen structures have very short Chains, so the minimum sequence
 	 * length is adjusted: 1A3I.
-	 * 
+	 *
 	 * @see SubunitClustererParameters#getMinimumSequenceLengthFraction()
 	 */
 	@Test

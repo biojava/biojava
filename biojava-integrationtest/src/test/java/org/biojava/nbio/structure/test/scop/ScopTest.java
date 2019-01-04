@@ -46,7 +46,7 @@ public class ScopTest {
 	boolean debug = false;
 
 	@Test
-	public void testLocalScop() throws IOException, StructureException{ 
+	public void testLocalScop() throws IOException, StructureException{
 
 		if ( debug ){
 			System.out.println("local");
@@ -123,7 +123,7 @@ public class ScopTest {
 		ScopDomain d2 = domains1cdg.get(0);
 		assertEquals("Wrong SCOP Id", "d1cdga1", d2.getScopId());
 		AtomCache cache = new AtomCache();
-		
+
 		Structure s = cache.getStructureForDomain(d2);
 		/*
 			The actual SCOP description is A:496-581.
@@ -149,16 +149,16 @@ public class ScopTest {
 		assertTrue(domains1xzp.size() ==4 );
 
 
-		
 
-		s = cache.getStructureForDomain(domains1xzp.get(0)); 
+
+		s = cache.getStructureForDomain(domains1xzp.get(0));
 
 		Chain a = s.getPolyChainByPDB("A");
 
 		// since biojava 5.0, there's no ligands in the polymer chains: thus we substract 3 SO4 molecules present in chain A
 		assertEquals(176 -3,a.getAtomGroups().size());
 
-		
+
 
 		// check insertion codes
 
@@ -167,7 +167,7 @@ public class ScopTest {
 		ScopDomain target = scop.getDomainByScopID("d2bq6a1");
 
 		assertNotNull(target);
-		
+
 		s = cache.getStructureForDomain(target);
 
 		a = s.getPolyChainByPDB("A");

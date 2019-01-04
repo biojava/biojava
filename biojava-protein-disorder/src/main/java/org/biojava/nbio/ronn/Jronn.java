@@ -50,7 +50,7 @@ import java.util.TreeMap;
 public class Jronn implements Serializable {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 8104272449130849946L;
 	// Load models

@@ -278,7 +278,7 @@ public class SymmOptimizer {
 
 			logger.debug(i + ": --prob: " + prob + ", --score: " + AS
 					+ ", --conv: " + conv);
-			
+
 			// Store as the optimal alignment if better
 			if (mcScore > optScore) {
 				optBlock = new ArrayList<List<Integer>>();
@@ -308,12 +308,12 @@ public class SymmOptimizer {
 
 			i++;
 		}
-		
+
 		// Use the optimal alignment of the trajectory
 		block = optBlock;
 		freePool = optFreePool;
 		mcScore = optScore;
-		
+
 		// Superimpose and calculate final scores
 		updateMultipleAlignment();
 		msa.putScore(MultipleAlignmentScorer.MC_SCORE, mcScore);

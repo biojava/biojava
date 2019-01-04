@@ -34,15 +34,15 @@ import org.junit.Test;
  */
 public class TestChargeAdder {
 
-	
+
 	/**
 	 * Test that it works on a very basic level.
-	 * @throws StructureException 
-	 * @throws IOException 
+	 * @throws StructureException
+	 * @throws IOException
 	 */
 	@Test
 	public void testBasic() throws IOException, StructureException {
-		
+
 		// Get the structure
 		Structure structure = StructureIO.getStructure("3AAE");
 		ChargeAdder.addCharges(structure);
@@ -58,14 +58,14 @@ public class TestChargeAdder {
 			}
 		}
 		// Check that the count is as excpected
-		assertEquals(425, chargeCount);	
+		assertEquals(425, chargeCount);
 	}
-	
-	
+
+
 	/**
 	 * Test that it can parse '?' values in the CCD.
-	 * @throws StructureException 
-	 * @throws IOException 
+	 * @throws StructureException
+	 * @throws IOException
 	 */
 	@Test
 	public void testQuestionMark() throws IOException, StructureException {
@@ -85,7 +85,7 @@ public class TestChargeAdder {
 		}
 		assertEquals(39, chargeCount);
 	}
-	
-	
-	
+
+
+
 }

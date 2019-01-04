@@ -75,7 +75,7 @@ public class BioAssemblyInfo implements Serializable {
 
 	/**
 	 * Returns the macromolecular size of this biological assembly, i.e.
-	 * the number of polymeric chains (protein or nucleotide chains, not sugars) 
+	 * the number of polymeric chains (protein or nucleotide chains, not sugars)
 	 * in the biological assembly.
 	 * @return
 	 */

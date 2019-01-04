@@ -80,10 +80,10 @@ implements Ontology {
 
 					@Override
 					public Object next() {
-                        if(!hasNext()){
-                            throw new NoSuchElementException();
-                        }
-                        return resolveInt(i++);
+						if(!hasNext()){
+							throw new NoSuchElementException();
+						}
+						return resolveInt(i++);
 					}
 
 					@Override

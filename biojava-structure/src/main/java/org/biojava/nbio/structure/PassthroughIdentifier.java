@@ -33,7 +33,7 @@ import org.biojava.nbio.structure.align.util.AtomCache;
 public class PassthroughIdentifier implements StructureIdentifier {
 
 	private static final long serialVersionUID = -2773111624414448950L;
-	
+
 	private String identifier;
 	public PassthroughIdentifier(String identifier) {
 		this.identifier = identifier;

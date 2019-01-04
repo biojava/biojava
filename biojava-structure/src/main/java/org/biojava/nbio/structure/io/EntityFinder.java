@@ -61,7 +61,7 @@ import java.util.TreeSet;
 public class EntityFinder {
 
 	private static final Logger logger = LoggerFactory.getLogger(EntityFinder.class);
-	
+
 	/**
 	 * Above this ratio of mismatching residue types for same residue numbers we
 	 * consider the 2 chains to have mismatching residue numbers and warn about it
@@ -79,13 +79,13 @@ public class EntityFinder {
 	 */
 	public static final double GAP_COVERAGE_THRESHOLD = 0.3;
 
-	
-	
-	
+
+
+
 	/**
 	 * Utility method that employs some heuristics to find the {@link EntityInfo}s
-	 * for the polymeric chains given in constructor. 
-	 * To be used in case the information is missing in PDB/mmCIF file 
+	 * for the polymeric chains given in constructor.
+	 * To be used in case the information is missing in PDB/mmCIF file
 	 * @return
 	 */
 	public static List<EntityInfo> findPolyEntities(List<List<Chain>> polyModels) {
@@ -127,7 +127,7 @@ public class EntityFinder {
 	public static void createPurelyNonPolyEntities(List<List<Chain>> nonPolyModels, List<List<Chain>> waterModels, List<EntityInfo> entities) {
 
 		if (nonPolyModels.isEmpty()) return;
-		
+
 		// let's find first the max entity id to assign entity ids to the newly found entities
 		int maxMolId = 0;
 		if (!entities.isEmpty()) {
@@ -140,10 +140,10 @@ public class EntityFinder {
 		}
 		// we go one over the max
 		int molId = maxMolId + 1;
-				
+
 		if (!nonPolyModels.get(0).isEmpty()) {
 			List<EntityInfo> nonPolyEntities = new ArrayList<>();
-			
+
 			for (List<Chain> model:nonPolyModels) {
 				for (Chain c: model) {
 					// we assume there's only 1 group per non-poly chain
@@ -159,31 +159,31 @@ public class EntityFinder {
 
 					}
 					nonPolyEntity.addChain(c);
-					c.setEntityInfo(nonPolyEntity);				
+					c.setEntityInfo(nonPolyEntity);
 				}
 			}
 			entities.addAll(nonPolyEntities);
 		}
-		
+
 		if (!waterModels.get(0).isEmpty()) {
 			EntityInfo waterEntity = new EntityInfo();
 			waterEntity.setType(EntityType.WATER);
 			waterEntity.setDescription("water");
 			waterEntity.setMolId(molId);
 
-			for (List<Chain> model:waterModels) { 
+			for (List<Chain> model:waterModels) {
 				for (Chain waterChain:model) {
 					waterEntity.addChain(waterChain);
 					waterChain.setEntityInfo(waterEntity);
 				}
 			}
 			entities.add(waterEntity);
-			
+
 		}
-		
-		
+
+
 	}
-	
+
 	private static EntityInfo findNonPolyEntityWithDescription(String description, List<EntityInfo> nonPolyEntities) {
 		for (EntityInfo e:nonPolyEntities) {
 			if (e.getDescription().equals(description)) return e;
@@ -243,13 +243,13 @@ public class EntityFinder {
 		TreeMap<String, EntityInfo> chainIds2entities = new TreeMap<String,EntityInfo>();
 
 		if (polyModels.isEmpty()) return chainIds2entities;
-		
+
 		Set<Integer> polyChainIndices = new TreeSet<Integer>();
 		for (int i=0;i<polyModels.get(0).size();i++) {
 			polyChainIndices.add(i);
 		}
 
-		
+
 		int molId = 1;
 
 		outer:
@@ -376,20 +376,20 @@ public class EntityFinder {
 				ent.addChain(c);
 				ent.setMolId(molId++);
 				ent.setType(EntityType.POLYMER);
-				c.setEntityInfo(ent); 
+				c.setEntityInfo(ent);
 
 				chainIds2entities.put(c.getId(),ent);
 			}
 		}
-		
+
 		// now that we've found the entities for first model, let's do the same for the rest of the models
-		
+
 		for (int i=1;i<polyModels.size();i++) {
 			for (Chain chain : polyModels.get(i)) {
 				EntityInfo e = chainIds2entities.get(chain.getId());
 				chain.setEntityInfo(e);
 				e.addChain(chain);
- 			}
+			}
 		}
 
 

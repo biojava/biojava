@@ -36,6 +36,6 @@ public class DemoMmtfWriter {
 		Structure structure = StructureIO.getStructure("4cup");
 		MmtfActions.writeToFile(structure, Paths.get("/tmp/4cup.mmtf"));
 	}
-	
-	
+
+
 }

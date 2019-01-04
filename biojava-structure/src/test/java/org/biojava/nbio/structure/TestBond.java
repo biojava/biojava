@@ -37,7 +37,7 @@ import static org.junit.Assert.*;
 
 
 public class TestBond {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(TestBond.class);
 
 
@@ -45,11 +45,11 @@ public class TestBond {
 
 	@BeforeClass
 	public static void setUp() {
-		
+
 		// important: without this the tests can fail when running in maven (but not in IDE)
 		// that's because it depends on the order on how tests were run - JD 2018-03-10
-		ChemCompGroupFactory.setChemCompProvider(new DownloadChemCompProvider()); 
-		
+		ChemCompGroupFactory.setChemCompProvider(new DownloadChemCompProvider());
+
 		cache = new AtomCache();
 
 		cache.setUseMmCif(true);
@@ -142,7 +142,7 @@ public class TestBond {
 	 * @throws IOException
 	 * @throws StructureException
 	 */
-	@Test 
+	@Test
 	public void testNucleotideBonds() throws IOException, StructureException {
 		Structure bio = StructureIO.getStructure("4y60");
 		for( Chain c : bio.getChains()) {
@@ -171,8 +171,8 @@ public class TestBond {
 
 	/**
 	 * Test whether these partial occupancy hydrogens are bonded to the residue.
-	 * @throws StructureException 
-	 * @throws IOException 
+	 * @throws StructureException
+	 * @throws IOException
 	 */
 	@Test
 	public void testHeavyAtomBondMissing() throws IOException, StructureException {
@@ -188,8 +188,8 @@ public class TestBond {
 
 	/**
 	 * Test whether these partial occupancy hydrogens are bonded to the residue.
-	 * @throws StructureException 
-	 * @throws IOException 
+	 * @throws StructureException
+	 * @throws IOException
 	 */
 	@Test
 	public void testHydrogenToProteinBondMissing() throws IOException, StructureException {
@@ -199,8 +199,8 @@ public class TestBond {
 
 	/**
 	 * Test whether these partial occupancy hydrogens are bonded to the residue.
-	 * @throws StructureException 
-	 * @throws IOException 
+	 * @throws StructureException
+	 * @throws IOException
 	 */
 	@Test
 	public void testAltLocBondMissing() throws IOException, StructureException {
@@ -213,7 +213,7 @@ public class TestBond {
 	 * @throws IOException
 	 * @throws StructureException
 	 */
-	private int countAtomsWithoutBonds(String pdbId) throws IOException, StructureException { 
+	private int countAtomsWithoutBonds(String pdbId) throws IOException, StructureException {
 		Structure inputStructure = StructureIO.getStructure(pdbId);
 		// Loop through the structure
 		int nonBondedCounter = 0;
@@ -319,7 +319,7 @@ public class TestBond {
 	}
 
 	/**
-	 * Test this weird case - with missing Oxygen atoms, alternate locations on Deuterium 
+	 * Test this weird case - with missing Oxygen atoms, alternate locations on Deuterium
 	 * and terminal hydrogens.
 	 * @throws IOException an error getting the required file
 	 * @throws StructureException an error parsing the required file

@@ -46,7 +46,7 @@ import org.slf4j.LoggerFactory;
 public class EcodFactory {
 
 	private static final Logger logger = LoggerFactory.getLogger(EcodFactory.class);
-	
+
 	public static final String DEFAULT_VERSION = EcodInstallation.DEFAULT_VERSION;
 
 	private static Map<String, SoftReference<EcodDatabase>> versionedEcodDBs =

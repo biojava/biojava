@@ -27,7 +27,7 @@ import javax.vecmath.Point3d;
  * The SuperPosition interface defines and documents the required methods for
  * any superpostion algorithm implementation, so that the input and expected
  * output are uniform.
- * 
+ *
  * @author Aleix Lafita
  * @since 5.0.0
  *
@@ -41,7 +41,7 @@ public interface SuperPosition {
 	 * The two point arrays have to be of the same length and the order of
 	 * points have to be the same, so that a specific position in the one array
 	 * is equivalent to the same position in the other array.
-	 * 
+	 *
 	 * @param fixed
 	 *            point array as reference, onto which the other point array is
 	 *            superposed. Original coordinates will not be modified.
@@ -61,7 +61,7 @@ public interface SuperPosition {
 	 * The two point arrays have to be of the same length and the order of
 	 * points have to be the same, so that a specific position in the one array
 	 * is equivalent to the same position in the other array.
-	 * 
+	 *
 	 * @param fixed
 	 *            point array as reference, onto which the other point array is
 	 *            superposed. Original coordinates will not be modified.
@@ -86,7 +86,7 @@ public interface SuperPosition {
 	 * The two point arrays have to be of the same length and the order of
 	 * points have to be the same, so that a specific position in the one array
 	 * is equivalent to the same position in the other array.
-	 * 
+	 *
 	 * @param x
 	 *            an array of points. Original coordinates will not be modified.
 	 * @param y

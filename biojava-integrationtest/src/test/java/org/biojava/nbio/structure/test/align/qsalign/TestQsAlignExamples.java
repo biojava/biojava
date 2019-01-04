@@ -37,7 +37,7 @@ import org.junit.Test;
 /**
  * Test the correctness of the {@link QsAlign} algorithm with some examples of
  * different levels of quaternary structure similarity.
- * 
+ *
  * @author Aleix Lafita
  * @since 5.0.0
  *
@@ -64,7 +64,7 @@ public class TestQsAlignExamples {
 		assertEquals(result.getRmsd(), 0.0, 0.01);
 
 	}
-	
+
 	/**
 	 * Different: test two completely different proteins (4HHB, 3IFV).
 	 */

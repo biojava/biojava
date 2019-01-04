@@ -39,7 +39,7 @@ import org.rcsb.mmtf.api.StructureAdapterInterface;
 import org.rcsb.mmtf.dataholders.MmtfStructure;
 
 /**
- * Class to take Biojava structure data and covert to the DataApi for encoding. 
+ * Class to take Biojava structure data and covert to the DataApi for encoding.
  * Must implement all the functions in {@link StructureAdapterInterface}.
  * @author Anthony Bradley
  *
@@ -50,10 +50,10 @@ public class MmtfStructureWriter {
 	private StructureAdapterInterface mmtfDecoderInterface;
 
 	/**
-	 * Pass data from Biojava structure  to another generic output type. Loops through the data 
+	 * Pass data from Biojava structure  to another generic output type. Loops through the data
 	 * structure and calls all the set functions.
 	 * @param structure the input {@link Structure} to write
-	 * @param dataTransferInterface the generic interface that 
+	 * @param dataTransferInterface the generic interface that
 	 * implements all the set methods.
 	 */
 	public MmtfStructureWriter(Structure structure, StructureAdapterInterface dataTransferInterface) {
@@ -72,7 +72,7 @@ public class MmtfStructureWriter {
 		// Get the header and the xtal info.
 		PDBHeader pdbHeader = structure.getPDBHeader();
 		PDBCrystallographicInfo xtalInfo = pdbHeader.getCrystallographicInfo();
-		mmtfDecoderInterface.setHeaderInfo(pdbHeader.getRfree(), pdbHeader.getRwork(), pdbHeader.getResolution(), pdbHeader.getTitle(), MmtfUtils.dateToIsoString(pdbHeader.getDepDate()), 
+		mmtfDecoderInterface.setHeaderInfo(pdbHeader.getRfree(), pdbHeader.getRwork(), pdbHeader.getResolution(), pdbHeader.getTitle(), MmtfUtils.dateToIsoString(pdbHeader.getDepDate()),
 				MmtfUtils.dateToIsoString(pdbHeader.getRelDate()), MmtfUtils.techniquesToStringArray(pdbHeader.getExperimentalTechniques()));
 		mmtfDecoderInterface.setXtalInfo(MmtfUtils.getSpaceGroupAsString(xtalInfo.getSpaceGroup()), MmtfUtils.getUnitCellAsArray(xtalInfo), MmtfUtils.getNcsAsArray(xtalInfo.getNcsOperators()));
 		// Store the bioassembly data
@@ -101,7 +101,7 @@ public class MmtfStructureWriter {
 					if (chemComp.getOne_letter_code().length()==1){
 						singleLetterCode = chemComp.getOne_letter_code().charAt(0);
 					}
-					mmtfDecoderInterface.setGroupInfo(group.getPDBName(), group.getResidueNumber().getSeqNum(), insCode.charValue(), 
+					mmtfDecoderInterface.setGroupInfo(group.getPDBName(), group.getResidueNumber().getSeqNum(), insCode.charValue(),
 							chemComp.getType().toUpperCase(), atomsInGroup.size(), MmtfUtils.getNumBondsInGroup(atomsInGroup), singleLetterCode,
 							sequenceGroups.indexOf(group), MmtfUtils.getSecStructType(group));
 					for (Atom atom : atomsInGroup){
@@ -111,8 +111,8 @@ public class MmtfStructureWriter {
 								altLoc=atom.getAltLoc().charValue();
 							}
 						}
-						mmtfDecoderInterface.setAtomInfo(atom.getName(), atom.getPDBserial(), altLoc, (float) atom.getX(), 
-								(float) atom.getY(), (float) atom.getZ(), atom.getOccupancy(), 
+						mmtfDecoderInterface.setAtomInfo(atom.getName(), atom.getPDBserial(), altLoc, (float) atom.getX(),
+								(float) atom.getY(), (float) atom.getZ(), atom.getOccupancy(),
 								atom.getTempFactor(), atom.getElement().toString(), atom.getCharge());
 						addBonds(atom, atomsInGroup, allAtoms);
 					}
@@ -152,11 +152,11 @@ public class MmtfStructureWriter {
 				Integer secondBondIndex = allAtoms.indexOf(other);
 				if(firstBondIndex>secondBondIndex){
 					// Don't add the same bond twice
-					int bondOrder = bond.getBondOrder();							
+					int bondOrder = bond.getBondOrder();
 					mmtfDecoderInterface.setInterGroupBond(firstBondIndex, secondBondIndex, bondOrder);
 				}
 			}
-		}		
+		}
 	}
 
 
@@ -198,7 +198,7 @@ public class MmtfStructureWriter {
 				String sequence = chainImpl.getSeqResOneLetterSeq();
 				mmtfDecoderInterface.setEntityInfo(chainIndices, sequence, description, type);
 			}
-		}		
+		}
 	}
 
 

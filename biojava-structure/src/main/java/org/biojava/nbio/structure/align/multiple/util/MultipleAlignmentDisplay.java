@@ -95,7 +95,7 @@ public class MultipleAlignmentDisplay {
 			// Assume all atoms are from the same structure
 			Structure displayS = atomArrays.get(i)[0].getGroup().getChain()
 					.getStructure().clone();
-			
+
 			// Get all the atoms and include ligands and hetatoms
 			Atom[] rotCA = StructureTools.getRepresentativeAtomArray(displayS);
 			List<Group> hetatms = StructureTools.getUnalignedGroups(rotCA);

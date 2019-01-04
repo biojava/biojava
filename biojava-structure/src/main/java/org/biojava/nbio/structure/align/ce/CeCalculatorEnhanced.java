@@ -1969,12 +1969,12 @@ nBestTrace=nTrace;
 		Atom[] cod1 = getAtoms(pro1,  strLen,false);
 		Atom[] cod2 = getAtoms(pro2,  strLen,true);
 
-		Matrix4d trans = SuperPositions.superpose(Calc.atomsToPoints(cod1), 
+		Matrix4d trans = SuperPositions.superpose(Calc.atomsToPoints(cod1),
 				Calc.atomsToPoints(cod2));
 
 		Matrix matrix = Matrices.getRotationJAMA(trans);
 		Atom shift = Calc.getTranslationVector(trans);
-		
+
 		if ( debug){
 			matrix.print(3,3);
 		}
@@ -1985,7 +1985,7 @@ nBestTrace=nTrace;
 		}
 		for (Atom a : cod2)
 			Calc.transform(a.getGroup(), trans);
-			
+
 		//Calc.rotate(a,r);
 		//Calc.shift(a,t);
 		//		if ( show){

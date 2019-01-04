@@ -276,10 +276,10 @@ public class MultipleAlignmentImpl extends AbstractScoresCache implements
 
 	@Override
 	public List<Double> getCoverages() {
-		
+
 		if (coverages != null)
 			return coverages;
-		
+
 		List<Integer> counts = getAlignResCounts();
 		coverages = new ArrayList<Double>(size());
 		for (int s = 0; s < size(); s++)

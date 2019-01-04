@@ -22,7 +22,7 @@ package org.biojava.nbio.structure.io.mmcif.model;
 
 /**
  * Bean to hold data for _pdbx_database_status mmCIF category.
- * 
+ *
  * @author Peter Rose
  * @since 5.0
  */
@@ -37,7 +37,7 @@ public class PdbxDatabaseStatus extends AbstractBean {
 	private String status_code_mr;
 	private String status_code_sf;
 	private String status_code_cs;
-	
+
 	public String getStatus_code() {
 		return status_code;
 	}
@@ -97,5 +97,5 @@ public class PdbxDatabaseStatus extends AbstractBean {
 	}
 	public void setStatus_code_cs(String status_code_cs) {
 		this.status_code_cs = status_code_cs;
-	}  
+	}
 }

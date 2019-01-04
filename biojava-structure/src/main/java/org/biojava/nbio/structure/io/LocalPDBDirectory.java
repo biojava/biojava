@@ -36,6 +36,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Files;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -127,6 +128,9 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	}
 
 	protected static final String lineSplit = System.getProperty("file.separator");
+
+	/** Minimum size for a valid structure file (CIF or PDB), in bytes */
+	public static final long MIN_PDB_FILE_SIZE = 40;  // Empty gzip files are 20bytes. Add a few more for buffer.
 
 	private File path;
 	private List<String> extensions;
@@ -382,8 +386,9 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	 * Attempts to delete all versions of a structure from the local directory.
 	 * @param pdbId
 	 * @return True if one or more files were deleted
+	 * @throws IOException if the file cannot be deleted
 	 */
-	public boolean deleteStructure(String pdbId){
+	public boolean deleteStructure(String pdbId) throws IOException{
 		boolean deleted = false;
 		// Force getLocalFile to check in obsolete locations
 		ObsoleteBehavior obsolete = getObsoleteBehavior();
@@ -401,7 +406,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 				// delete file
 				boolean success = existing.delete();
 				if(success) {
-					logger.info("Deleting "+existing.getAbsolutePath());
+					logger.debug("Deleting "+existing.getAbsolutePath());
 				}
 				deleted = deleted || success;
 
@@ -410,7 +415,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 				if(parent != null) {
 					success = parent.delete();
 					if(success) {
-						logger.info("Deleting "+parent.getAbsolutePath());
+						logger.debug("Deleting "+parent.getAbsolutePath());
 					}
 				}
 
@@ -511,8 +516,8 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 		File realFile = new File(dir,getFilename(pdbId));
 
 		String ftp;
-		
-		if (getFilename(pdbId).endsWith(".mmtf.gz")){			
+
+		if (getFilename(pdbId).endsWith(".mmtf.gz")){
 			ftp = CodecUtils.getMmtfEntryUrl(pdbId, true, false);
 		} else {
 			ftp = String.format("%s%s/%s/%s",
@@ -630,8 +635,9 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	 * Searches for previously downloaded files
 	 * @param pdbId
 	 * @return A file pointing to the existing file, or null if not found
+	 * @throws IOException If the file exists but is empty and can't be deleted
 	 */
-	public File getLocalFile(String pdbId) {
+	public File getLocalFile(String pdbId) throws IOException {
 
 		// Search for existing files
 
@@ -657,6 +663,11 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 				for(String ex : getExtensions() ){
 					File f = new File(searchdir,prefix + pdbId.toLowerCase() + ex) ;
 					if ( f.exists()) {
+						// delete files that are too short to have contents
+						if( f.length() < MIN_PDB_FILE_SIZE ) {
+							Files.delete(f.toPath());
+							return null;
+						}
 						return f;
 					}
 				}
@@ -667,9 +678,11 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	}
 
 	protected boolean checkFileExists(String pdbId){
-		File path =  getLocalFile(pdbId);
-		if ( path != null)
-			return true;
+		try {
+			File path =  getLocalFile(pdbId);
+			if ( path != null)
+				return true;
+		} catch(IOException e) {}
 		return false;
 	}
 

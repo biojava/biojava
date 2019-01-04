@@ -44,7 +44,7 @@ public class ParseFastaFileDemo {
 
 	}
 
-	/** 
+	/**
 	 * e.g. download ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_trembl.fasta.gz
 	 * and pass in path to local location of file
 	 *

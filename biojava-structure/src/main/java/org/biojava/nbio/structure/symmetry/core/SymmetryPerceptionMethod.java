@@ -22,7 +22,7 @@ package org.biojava.nbio.structure.symmetry.core;
 
 /**
  * Method used for symmetry perception in the {@link QuatSymmetryDetector}.
- * 
+ *
  * @author Aleix Lafita
  * @since 5.0.0
  *

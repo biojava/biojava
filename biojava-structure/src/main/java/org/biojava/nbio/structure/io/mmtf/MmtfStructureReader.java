@@ -308,7 +308,7 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 
 		// IF the main group doesn't have this atom
 		if (!group.hasAtom(atom.getName())) {
-			
+
 			// If it's not a microheterogenity case
 			if (group.getPDBName().equals(atom.getGroup().getPDBName())) {
 				// And it's not a deuterated case.  'nanoheterogenity'

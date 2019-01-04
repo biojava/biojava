@@ -132,10 +132,10 @@ public abstract class Hit implements Iterable<Hsp>{
 
 			@Override
 			public Hsp next() {
-                if(!hasNext()){
-                    throw new NoSuchElementException();
-                }
-                return hsps.get(current++);
+				if(!hasNext()){
+					throw new NoSuchElementException();
+				}
+				return hsps.get(current++);
 			}
 
 			@Override

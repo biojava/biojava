@@ -49,7 +49,7 @@ public class AtomImpl implements Atom {
 	public static final int BONDS_INITIAL_CAPACITY = 3;
 
 	private String name;
-	private Element element;	
+	private Element element;
 	private Point3d coords;
 	private int pdbserial;
 	private short charge;
@@ -102,20 +102,20 @@ public class AtomImpl implements Atom {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void     setCoords( double[] c ) { 
-		coords = new Point3d(c); 
+	public void     setCoords( double[] c ) {
+		coords = new Point3d(c);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public double[] getCoords() { 
+	public double[] getCoords() {
 		double[] c = new double[3];
 		coords.get(c);
-		return c;		
+		return c;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -128,12 +128,12 @@ public class AtomImpl implements Atom {
 	public void setX(double x) {
 		coords.x = x ;
 	}
-	
+
 	@Override
 	public void setY(double y) {
 		coords.y = y ;
 	}
-	
+
 	@Override
 	public void setZ(double z) {
 		coords.z = z ;

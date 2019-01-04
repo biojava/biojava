@@ -41,19 +41,19 @@ public class TestNcsOpsParsing {
 	 */
 	@Test
 	public void test1auy() throws IOException, StructureException {
-		
+
 		AtomCache cache = new AtomCache();
 		StructureIO.setAtomCache(cache);
 
 		Structure s = StructureIO.getStructure("1auy");
-		
+
 		Matrix4d[] ops = s.getPDBHeader().getCrystallographicInfo().getNcsOperators();
-		
+
 		assertNotNull(ops);
-		
+
 		// the given operator must not be in our list, only the "generate" operators
 		assertEquals(14, ops.length);
-		
+
 		for (Matrix4d op:ops) {
 			assertEquals(0, op.m30, 0.000001);
 			assertEquals(0, op.m31, 0.000001);
@@ -62,7 +62,7 @@ public class TestNcsOpsParsing {
 		}
 
 	}
-	
+
 	/**
 	 * A structure with struct_ncs_ops which is not a viral capsid
 	 * @throws IOException
@@ -74,16 +74,16 @@ public class TestNcsOpsParsing {
 		StructureIO.setAtomCache(cache);
 
 		Structure s = StructureIO.getStructure("1a37");
-		
+
 		Matrix4d[] ops = s.getPDBHeader().getCrystallographicInfo().getNcsOperators();
-		
+
 		assertNotNull(ops);
-		
+
 		// the given operator must not be in our list, only the "generate" operators
 		assertEquals(1, ops.length);
-		
+
 	}
-	
+
 	/**
 	 * A structure without struct_ncs_ops
 	 * @throws IOException
@@ -95,14 +95,14 @@ public class TestNcsOpsParsing {
 		StructureIO.setAtomCache(cache);
 
 		Structure s = StructureIO.getStructure("1smt");
-		
+
 		Matrix4d[] ops = s.getPDBHeader().getCrystallographicInfo().getNcsOperators();
-		
+
 		assertNull(ops);
-		
-		
-		
+
+
+
 	}
-	
+
 
 }

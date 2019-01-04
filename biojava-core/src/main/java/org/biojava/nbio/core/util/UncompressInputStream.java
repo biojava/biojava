@@ -80,18 +80,18 @@ import java.io.*;
  * @author  Fred Hansen (zweibieren@yahoo.com)
  * 	Fixed available() and the EOF condition for mainloop.
  * 	Also added some comments.
- * 
+ *
  * @version 1.0 2018/01/08
  * @author      Fred Hansen (zweibieren@yahoo.com)
  * 	added uncompress(InputStream,OutputStream)
  * 	    and called it from main(String[])
  * 	    and uncompress(String, FileOutputStream)
- * 	normalize indentation 
+ * 	normalize indentation
  * 	rewrite skip method
- * 	amend logging code in uncompress(String, FileOutputStream)  
+ * 	amend logging code in uncompress(String, FileOutputStream)
  */
 public class UncompressInputStream extends FilterInputStream {
-	private final static Logger logger 
+	private final static Logger logger
 		= LoggerFactory.getLogger(UncompressInputStream.class);
 
 	/**
@@ -137,12 +137,12 @@ public class UncompressInputStream extends FilterInputStream {
 	private int free_ent;
 
 	/* input buffer
-		The input stream must be considered in chunks 
+		The input stream must be considered in chunks
 		Each chunk is of length eight times the current code length.
 		Thus the chunk contains eight codes; NOT on byte boundaries.
 	*/
 	final private byte[] data = new byte[10000];
-	private int 
+	private int
 	    bit_pos = 0,  // current bitwise location in bitstream
 	    end = 0,      // index of next byte to fill in data
 	    got = 0;      // number of bytes gotten by most recent read()
@@ -192,7 +192,7 @@ public class UncompressInputStream extends FilterInputStream {
 		main_loop: do {
 			if (end < EXTRA) fill();
 
-			int bit_end = (got > 0) 
+			int bit_end = (got > 0)
 			    ?  (end - end % l_n_bits) << 3  	// set to a "chunk" boundary
 			    :  (end << 3) - (l_n_bits - 1);  	// no more data, set to last code
 
@@ -389,10 +389,10 @@ public class UncompressInputStream extends FilterInputStream {
 	public synchronized int available() throws IOException {
 		if (eof) return 0;
 		// the old code was:    return in.available();
-		// it fails because this.read() can return bytes 
+		// it fails because this.read() can return bytes
 		// even after in.available()  is zero
 		// -- zweibieren
-		int avail = in.available(); 
+		int avail = in.available();
 		return (avail == 0) ? 1 : avail;
 	}
 
@@ -471,10 +471,10 @@ public class UncompressInputStream extends FilterInputStream {
 	 * Read a named file and uncompress it.
 	 * @param fileInName Name of compressed file.
 	 * @param out A destination for the result. It is closed after data is sent.
-         * @return number of bytes sent to the output stream,
+	 * @return number of bytes sent to the output stream,
 	 * @throws IOException for any error
 	 */
-	public static long uncompress(String fileInName, FileOutputStream out) 
+	public static long uncompress(String fileInName, FileOutputStream out)
 			throws IOException {
 		long start = System.currentTimeMillis();
 		long total;
@@ -488,7 +488,7 @@ public class UncompressInputStream extends FilterInputStream {
 			logger.info("Decompressed {} bytes", total);
 			UncompressInputStream.logger.info("Time: {} seconds", (end - start) / 1000);
 		}
-                return total;
+		return total;
 	}
 
 	/**
@@ -498,7 +498,7 @@ public class UncompressInputStream extends FilterInputStream {
 	* @return number of bytes sent to the output stream
 	* @throws IOException for any error
 	*/
-	public static long uncompress(InputStream in, OutputStream out) 
+	public static long uncompress(InputStream in, OutputStream out)
 		throws IOException {
 		UncompressInputStream ucis = new UncompressInputStream(in);
 		long total = 0;
@@ -518,7 +518,7 @@ public class UncompressInputStream extends FilterInputStream {
 	 * Reads a file, uncompresses it, and sends the result to stdout.
 	 * Also writes trivial statistics to stderr.
 	 * @param args An array with one String element, the name of the file to read.
- 	 * @throws IOException for any failure
+	 * @throws IOException for any failure
 	 */
 	public static void main(String[] args) throws Exception {
 		if (args.length != 1) {

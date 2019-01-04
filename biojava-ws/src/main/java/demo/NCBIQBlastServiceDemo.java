@@ -42,11 +42,11 @@ public class NCBIQBlastServiceDemo {
 
 	public static void main(String[] args) {
 		NCBIQBlastService service = null;
-        if (args.length == 1) {
-            service = new NCBIQBlastService(args[0]);
-        } else {
-            service = new NCBIQBlastService();
-        }
+		if (args.length == 1) {
+			service = new NCBIQBlastService(args[0]);
+		} else {
+			service = new NCBIQBlastService();
+		}
 
 		// set alignment options
 		NCBIQBlastAlignmentProperties props = new NCBIQBlastAlignmentProperties();
