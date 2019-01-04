@@ -264,7 +264,9 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 
 	/**
 	 * Removes from this interface list all interfaces with areas
-	 * below the default cutoff area
+	 * below the default cutoff area.
+     * Note that this must be called after {@link #calcAsas(int, int, int)}, otherwise all areas would
+     * be 0 and thus all removed.
 	 * @see #DEFAULT_MINIMUM_INTERFACE_AREA
 	 */
 	public void removeInterfacesBelowArea() {
@@ -273,18 +275,26 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 
 	/**
 	 * Removes from this interface list all interfaces with areas
-	 * below the given cutoff area
-	 * @param area
+	 * below the given cutoff area.
+     * Note that this must be called after {@link #calcAsas(int, int, int)}, otherwise all areas would
+     * be 0 and thus all removed.
+	 * @param area the minimum interface buried surface area to keep. Interfaces below this value will be removed.
 	 */
 	public void removeInterfacesBelowArea(double area) {
 
-		list.removeIf(interf -> interf.getTotalArea() < area);
-		if (clustersNcs!=null) {
-			for (StructureInterfaceCluster ncsCluster : clustersNcs) {
-				ncsCluster.getMembers().removeIf(member -> member.getTotalArea() < area);
-			}
-			clustersNcs.removeIf(ncsCluster -> ncsCluster.getMembers().isEmpty());
-		}
+	    if (clustersNcs == null) {
+            list.removeIf(interf -> interf.getTotalArea() < area);
+        } else {
+            // note above we don't calculate areas for all members of ncs cluster but only for the first ones per cluster
+            List<StructureInterface> toRemove = new ArrayList<>();
+            for (StructureInterfaceCluster ncsCluster : clustersNcs) {
+                if (ncsCluster.getMembers().get(0).getTotalArea() < area) {
+                    toRemove.addAll(ncsCluster.getMembers());
+                }
+            }
+            list.removeIf(toRemove::contains);
+            clustersNcs.removeIf(ncsCluster -> toRemove.contains(ncsCluster.getMembers().get(0)));
+        }
 	}
 
 	/**

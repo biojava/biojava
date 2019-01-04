@@ -24,6 +24,7 @@ import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -87,6 +88,11 @@ public class TestInterfaceClustering {
 
 	}
 
+	/**
+	 * Test for NCS clustering in viral capsid structures that contain NCS operators.
+	 * @throws IOException
+	 * @throws StructureException
+	 */
 	@Test
 	public void test1AUY() throws IOException, StructureException {
 
@@ -109,9 +115,28 @@ public class TestInterfaceClustering {
 
 		StructureInterfaceList interfaces = cb.getUniqueInterfaces(5.5);
 		interfaces.calcAsas(100, 1, 0);
+
+		int numInterfacesShouldbeKept = 0;
+
+		List<StructureInterfaceCluster> ncsClusterShouldbeKept = new ArrayList<>();
+		for (StructureInterfaceCluster ncsCluster : interfaces.getClustersNcs()) {
+			if (ncsCluster.getMembers().get(0).getTotalArea()>=StructureInterfaceList.DEFAULT_MINIMUM_INTERFACE_AREA) {
+				//System.out.println("NCS cluster is above cutoff area and has "+ncsCluster.getMembers().size()+ " members");
+				ncsClusterShouldbeKept.add(ncsCluster);
+				numInterfacesShouldbeKept += ncsCluster.getMembers().size();
+			}
+		}
+
 		interfaces.removeInterfacesBelowArea();
 
 		assertNotNull(interfaces.getClustersNcs());
+
+		// making sure that removeInterfacesBelowArea does not throw away the members for which area wasn't calculated
+		for (StructureInterfaceCluster ncsCluster : ncsClusterShouldbeKept) {
+			assertTrue(interfaces.getClustersNcs().contains(ncsCluster));
+		}
+
+		assertEquals(numInterfacesShouldbeKept, interfaces.size());
 
 		List<StructureInterfaceCluster> clusters = interfaces.getClusters();
 
