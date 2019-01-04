@@ -277,12 +277,13 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 	 * @param area
 	 */
 	public void removeInterfacesBelowArea(double area) {
-		Iterator<StructureInterface> it = iterator();
-		while (it.hasNext()) {
-			StructureInterface interf = it.next();
-			if (interf.getTotalArea()<area) {
-				it.remove();
+
+		list.removeIf(interf -> interf.getTotalArea() < area);
+		if (clustersNcs!=null) {
+			for (StructureInterfaceCluster ncsCluster : clustersNcs) {
+				ncsCluster.getMembers().removeIf(member -> member.getTotalArea() < area);
 			}
+			clustersNcs.removeIf(ncsCluster -> ncsCluster.getMembers().isEmpty());
 		}
 	}
 
