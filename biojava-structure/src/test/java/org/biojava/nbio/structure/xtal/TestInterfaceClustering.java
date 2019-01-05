@@ -123,6 +123,12 @@ public class TestInterfaceClustering {
 
 		interfaces.calcAsas(100, 1, 0);
 
+		// after calculating ASAs we should have ids for all interfaces
+		for (StructureInterface interf : interfaces) {
+			assertTrue(interf.getId()>0);
+		}
+
+
 		int numInterfacesShouldbeKept = 0;
 
 		List<StructureInterfaceCluster> ncsClusterShouldbeKept = new ArrayList<>();

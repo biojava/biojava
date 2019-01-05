@@ -190,12 +190,23 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 
 		logger.debug("Calculated complexes ASA for {} pairwise complexes. Time: {} s", redundancyReducedList.size(), ((end-start)/1000.0));
 
+		// now let's populate the interface area value for the NCS-redundant ones from the reference interface (first one in list)
+		if (clustersNcs!=null) {
+			for (StructureInterfaceCluster ncsCluster : clustersNcs) {
+				StructureInterface refInterf = ncsCluster.getMembers().get(0);
+				for (int i=1;i<ncsCluster.getMembers().size();i++) {
+					ncsCluster.getMembers().get(i).setTotalArea(refInterf.getTotalArea());
+				}
+			}
+		}
+
 		// finally we sort based on the ChainInterface.comparable() (based in interfaceArea)
 		sort();
 	}
 
 	/**
 	 * Sorts the interface list and reassigns ids based on new sorting
+	 *
 	 */
 	public void sort() {
 		Collections.sort(list);
@@ -282,18 +293,10 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 	 */
 	public void removeInterfacesBelowArea(double area) {
 
-	    if (clustersNcs == null) {
-            list.removeIf(interf -> interf.getTotalArea() < area);
-        } else {
-            // note above we don't calculate areas for all members of ncs cluster but only for the first ones per cluster
-            List<StructureInterface> toRemove = new ArrayList<>();
-            for (StructureInterfaceCluster ncsCluster : clustersNcs) {
-                if (ncsCluster.getMembers().get(0).getTotalArea() < area) {
-                    toRemove.addAll(ncsCluster.getMembers());
-                }
-            }
-            list.removeIf(toRemove::contains);
-            clustersNcs.removeIf(ncsCluster -> toRemove.contains(ncsCluster.getMembers().get(0)));
+		list.removeIf(interf -> interf.getTotalArea() < area);
+
+	    if (clustersNcs != null) {
+	    	clustersNcs.removeIf(ncsCluster -> ncsCluster.getMembers().get(0).getTotalArea() < area);
         }
 	}
 
