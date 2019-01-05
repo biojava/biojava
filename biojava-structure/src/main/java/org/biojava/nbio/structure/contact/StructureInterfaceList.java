@@ -316,6 +316,7 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 	 * Calculate the interface clusters for this StructureInterfaceList
 	 * using a contact overlap score to measure the similarity of interfaces.
 	 * Subsequent calls will use the cached value without recomputing the clusters.
+	 * The clusters will be assigned ids by sorting descending by {@link StructureInterfaceCluster#getTotalArea()}
 	 * @param contactOverlapScoreClusterCutoff the contact overlap score above which a pair will be
 	 * clustered
 	 * @return
@@ -384,18 +385,14 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 		}
 
 		// now we sort by areas (descending) and assign ids based on that sorting
-		Collections.sort(clusters, new Comparator<StructureInterfaceCluster>() {
-			@Override
-			public int compare(StructureInterfaceCluster o1, StructureInterfaceCluster o2) {
-				return Double.compare(o2.getTotalArea(), o1.getTotalArea()); //note we invert so that sorting is descending
-			}
+		clusters.sort((o1, o2) -> {
+			return Double.compare(o2.getTotalArea(), o1.getTotalArea()); //note we invert so that sorting is descending
 		});
 		int id = 1;
 		for (StructureInterfaceCluster cluster:clusters) {
 			cluster.setId(id);
 			id++;
 		}
-
 
 		return clusters;
 	}
