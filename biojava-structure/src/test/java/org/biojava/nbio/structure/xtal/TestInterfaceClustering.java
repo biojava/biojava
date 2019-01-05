@@ -114,6 +114,13 @@ public class TestInterfaceClustering {
 		CrystalBuilder cb = new CrystalBuilder(s, chainOrigNames, chainNcsOps);
 
 		StructureInterfaceList interfaces = cb.getUniqueInterfaces(5.5);
+
+		List<StructureInterfaceCluster> clusters = interfaces.getClusters();
+
+		assertNotNull(clusters);
+
+		assertTrue(clusters.size()<=interfaces.size());
+
 		interfaces.calcAsas(100, 1, 0);
 
 		int numInterfacesShouldbeKept = 0;
@@ -127,6 +134,12 @@ public class TestInterfaceClustering {
 			}
 		}
 
+		clusters = interfaces.getClusters();
+
+		assertNotNull(clusters);
+
+		assertTrue(clusters.size()<=interfaces.size());
+
 		interfaces.removeInterfacesBelowArea();
 
 		assertNotNull(interfaces.getClustersNcs());
@@ -138,13 +151,11 @@ public class TestInterfaceClustering {
 
 		assertEquals(numInterfacesShouldbeKept, interfaces.size());
 
-		List<StructureInterfaceCluster> clusters = interfaces.getClusters();
+		clusters = interfaces.getClusters();
 
 		assertNotNull(clusters);
 
-		for (StructureInterface interf : interfaces) {
-			assertTrue(interf.getTotalArea()>0);
-		}
+		assertTrue(clusters.size()<=interfaces.size());
 
 	}
 

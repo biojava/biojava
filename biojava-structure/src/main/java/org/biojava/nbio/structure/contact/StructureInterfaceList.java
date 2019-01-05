@@ -357,8 +357,9 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 			double averageScore = 0.0;
 			int countPairs = 0;
 			for (int i=0;i<members.size();i++) {
+                int iIdx = list.indexOf(members.get(i));
 				for (int j=i+1;j<members.size();j++) {
-					averageScore += matrix[members.get(i).getId()-1][members.get(j).getId()-1];
+					averageScore += matrix[iIdx][list.indexOf(members.get(j))];
 					countPairs++;
 				}
 			}
