@@ -27,6 +27,7 @@ import org.biojava.nbio.core.util.SingleLinkageClusterer;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.asa.AsaCalculator;
+import org.biojava.nbio.structure.asa.GroupAsa;
 import org.biojava.nbio.structure.xtal.CrystalBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -196,6 +197,10 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 				StructureInterface refInterf = ncsCluster.getMembers().get(0);
 				for (int i=1;i<ncsCluster.getMembers().size();i++) {
 					ncsCluster.getMembers().get(i).setTotalArea(refInterf.getTotalArea());
+					// we add the reference interface GroupAsas as the GroupAsas for all other members, like that
+					// ResidueNumbers won't match in their chain ids, but otherwise all info is there without using a lot of memory
+					ncsCluster.getMembers().get(i).setFirstGroupAsas(refInterf.getFirstGroupAsas());
+					ncsCluster.getMembers().get(i).setSecondGroupAsas(refInterf.getSecondGroupAsas());
 				}
 			}
 		}

@@ -417,6 +417,14 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 		groupAsas1.put(groupAsa.getGroup().getResidueNumber(), groupAsa);
 	}
 
+	void setFirstGroupAsas(Map<ResidueNumber, GroupAsa> firstGroupAsas) {
+		this.groupAsas1 = firstGroupAsas;
+	}
+
+	void setSecondGroupAsas(Map<ResidueNumber, GroupAsa> secondGroupAsas) {
+		this.groupAsas2 = secondGroupAsas;
+	}
+
 	/**
 	 * Gets a map of ResidueNumbers to GroupAsas for all groups of second chain.
 	 * @return
