@@ -337,6 +337,7 @@ public class BioAssemblyTools {
 			Chain c1 = new ChainImpl();
 			c1.setId(c.getId());
 			c1.setName(c.getName());
+			c1.setEntityInfo(c.getEntityInfo());
 			s.addChain(c1);
 
 			for (Group g : c.getAtomGroups()){
