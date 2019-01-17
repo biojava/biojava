@@ -442,6 +442,13 @@ public class AsaCalculator {
 			nbsIndices[entry.getKey()] = indicesArray;
 		}
 
+		// important: some atoms might have no neighbors at all: we need to initialise to empty arrays
+		for (int i=0; i<nbsIndices.length; i++) {
+			if (nbsIndices[i] == null) {
+				nbsIndices[i] = new int[0];
+			}
+		}
+
 		return nbsIndices;
 	}
 

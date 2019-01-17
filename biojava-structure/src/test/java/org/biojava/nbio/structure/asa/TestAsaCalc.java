@@ -180,4 +180,45 @@ public class TestAsaCalc {
 		assertEquals(withoutSH, withSH, 0.000001);
 
 	}
+
+	@Test
+	public void testNoNeighborsIssue() throws StructureException, IOException {
+		// important: without this the tests can fail when running in maven (but not in IDE)
+		// that's because it depends on the order on how tests were run - JD 2018-03-10
+		ChemCompGroupFactory.setChemCompProvider(new DownloadChemCompProvider());
+
+		Structure structure = StructureIO.getStructure("1EMI");
+
+		// chain B, atom with index 35 does not have any neighbors. The calculation should not fail
+		Atom[] atoms = StructureTools.getAllNonHAtomArray(structure.getPolyChainByPDB("B"), false);
+
+		AsaCalculator asaCalc = new AsaCalculator(atoms,
+				AsaCalculator.DEFAULT_PROBE_SIZE,
+				1000, 1);
+
+		int[][] allNbsSh = asaCalc.findNeighborIndicesSpatialHashing();
+
+		int[][] allNbs = asaCalc.findNeighborIndices();
+
+		for (int indexToTest =0; indexToTest < asaCalc.getAtomCoords().length; indexToTest++) {
+			//int indexToTest = 198;
+			int[] nbsSh = allNbsSh[indexToTest];
+			int[] nbs = allNbs[indexToTest];
+
+			List<Integer> listOfMatchingIndices = new ArrayList<>();
+			for (int i = 0; i < nbsSh.length; i++) {
+				for (int j = 0; j < nbs.length; j++) {
+					if (nbs[j] == nbsSh[i]) {
+						listOfMatchingIndices.add(j);
+						break;
+					}
+				}
+			}
+
+			assertEquals(nbs.length, nbsSh.length);
+
+			assertEquals(nbs.length, listOfMatchingIndices.size());
+		}
+
+	}
 }
