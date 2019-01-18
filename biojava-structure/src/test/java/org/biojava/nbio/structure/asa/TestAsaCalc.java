@@ -20,7 +20,11 @@
  */
 package org.biojava.nbio.structure.asa;
 
-import org.biojava.nbio.structure.*;
+import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureIO;
+import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
 import org.biojava.nbio.structure.io.mmcif.DownloadChemCompProvider;
 import static org.junit.Assert.*;
@@ -219,6 +223,21 @@ public class TestAsaCalc {
 
 			assertEquals(nbs.length, listOfMatchingIndices.size());
 		}
+
+	}
+
+	@Test
+	public void testNoAtomsAsaCalc() {
+
+		// in case of no atoms at all, the calculation should not fail and return an empty array
+		Atom[] atoms = new Atom[0];
+
+		AsaCalculator asaCalc = new AsaCalculator(atoms,
+				AsaCalculator.DEFAULT_PROBE_SIZE,
+				1000, 1);
+		double[] asas = asaCalc.calculateAsas();
+		assertNotNull(asas);
+		assertEquals(0, asas.length);
 
 	}
 }
