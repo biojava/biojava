@@ -21,7 +21,10 @@
 package org.biojava.nbio.structure.contact;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Chain;
@@ -302,7 +305,7 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 	 * @return
 	 */
 	private static final Atom[] getAllNonHAtomArray(Atom[] m, int minSizeHetAtomToInclude) {
-		List<Atom> atoms = new ArrayList<Atom>();
+		List<Atom> atoms = new ArrayList<>();
 
 		for (Atom a:m){
 

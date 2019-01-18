@@ -21,13 +21,19 @@
 package org.biojava.nbio.structure.contact;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.TreeMap;
 
 import org.biojava.nbio.core.util.SingleLinkageClusterer;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.asa.AsaCalculator;
-import org.biojava.nbio.structure.asa.GroupAsa;
 import org.biojava.nbio.structure.xtal.CrystalBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -355,7 +361,7 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 
 		SingleLinkageClusterer slc = new SingleLinkageClusterer(matrix, true);
 
-		Map<Integer,Set<Integer>> clusteredIndices = slc.getClusters(contactOverlapScoreClusterCutoff);
+		Map<Integer, Set<Integer>> clusteredIndices = slc.getClusters(contactOverlapScoreClusterCutoff);
 		for (int clusterIdx:clusteredIndices.keySet()) {
 			List<StructureInterface> members = new ArrayList<>();
 			for (int idx:clusteredIndices.get(clusterIdx)) {
