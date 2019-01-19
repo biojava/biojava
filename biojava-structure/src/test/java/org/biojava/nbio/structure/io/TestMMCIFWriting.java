@@ -28,11 +28,19 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import org.biojava.nbio.structure.AminoAcidImpl;
 import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.AtomImpl;
 import org.biojava.nbio.structure.Chain;
+import org.biojava.nbio.structure.ChainImpl;
+import org.biojava.nbio.structure.Element;
+import org.biojava.nbio.structure.EntityInfo;
+import org.biojava.nbio.structure.Group;
+import org.biojava.nbio.structure.ResidueNumber;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
+import org.biojava.nbio.structure.StructureImpl;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.mmcif.MMCIFFileTools;
@@ -205,5 +213,72 @@ public class TestMMCIFWriting {
 				readStruct.getCrystallographicInfo().getSpaceGroup());
 
 
+	}
+
+	/**
+	 * Tests that structures containing symmetry mates with modified chain identifiers
+	 * can be written out correctly.
+	 */
+	@Test
+	public void testBiounitWriting()  {
+		Structure s = createDummyStructure();
+		String mmcif = s.toMMCIF();
+		System.out.println(mmcif);
+		assertNotNull(mmcif);
+		assertTrue(mmcif.length()>5);
+	}
+
+	private static Structure createDummyStructure() {
+		Group g = new AminoAcidImpl();
+		Atom a = getAtom("CA", Element.C, 1, 1, 1, 1);
+		g.addAtom(a);
+		g.setResidueNumber(new ResidueNumber("A", 1, null));
+		Group altLocG = new AminoAcidImpl();
+		Atom a2 = getAtom("CA", Element.C, 2, 2, 2, 2);
+		altLocG.addAtom(a2);
+		altLocG.setResidueNumber(new ResidueNumber("A", 1, null));
+
+		g.addAltLoc(altLocG);
+
+		Chain c1 = new ChainImpl();
+		c1.addGroup(g);
+		c1.setId("A");
+		EntityInfo entityInfo = new EntityInfo();
+		entityInfo.setMolId(1);
+		entityInfo.addChain(c1);
+		c1.setEntityInfo(entityInfo);
+
+		Group gc2 = new AminoAcidImpl();
+		Atom ac2 = getAtom("CA", Element.C, 3, 3, 3, 3);
+		gc2.addAtom(ac2);
+		gc2.setResidueNumber(new ResidueNumber("A_1", 1, null));
+
+		Group altLocGc2 = new AminoAcidImpl();
+		Atom ac22 = getAtom("CA", Element.C, 4, 4, 4, 4);
+		altLocGc2.addAtom(ac22);
+		altLocGc2.setResidueNumber(new ResidueNumber("A_1", 1, null));
+
+		gc2.addAltLoc(altLocGc2);
+
+		Chain c2 = new ChainImpl();
+		c2.addGroup(gc2);
+		c2.setId("A_1");
+		c2.setEntityInfo(entityInfo);
+
+		Structure s = new StructureImpl();
+		s.addChain(c1);
+		s.addChain(c2);
+		return s;
+	}
+
+	private static Atom getAtom(String name, Element e, int id, double x, double y, double z) {
+		Atom a = new AtomImpl();
+		a.setX(x);
+		a.setY(y);
+		a.setZ(z);
+		a.setPDBserial(id);
+		a.setName(name);
+		a.setElement(e);
+		return a;
 	}
 }

@@ -306,7 +306,12 @@ public class EntityInfo implements Serializable {
 
 		boolean contained = false;
 		for (Chain member:getChains()) {
-			if (c.getId().equals(member.getId())) {
+			// deal with sym mates
+			String origChainId = c.getId();
+			if (origChainId.contains("_")) {
+				origChainId = origChainId.substring(0, origChainId.indexOf('_'));
+			}
+			if (origChainId.equals(member.getId())) {
 				contained = true;
 				break;
 			}
