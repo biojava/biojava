@@ -3,13 +3,12 @@ package org.biojava.nbio.structure.test.io;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
-import org.biojava.nbio.structure.xtal.CrystalBuilder;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.HashMap;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class TestMMCIFWriting {
 
@@ -23,6 +22,8 @@ public class TestMMCIFWriting {
         Structure s = StructureIO.getBiologicalAssembly("6a63", 1);
         String mmcif = s.toMMCIF();
         assertNotNull(mmcif);
+        assertTrue(mmcif.contains("A_1"));
+        assertTrue(mmcif.contains("A_2"));
     }
 
 }

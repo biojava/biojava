@@ -24,7 +24,6 @@ package org.biojava.nbio.structure;
 
 
 import org.biojava.nbio.structure.io.FileParsingParameters;
-import org.biojava.nbio.structure.quaternary.BiologicalAssemblyBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
