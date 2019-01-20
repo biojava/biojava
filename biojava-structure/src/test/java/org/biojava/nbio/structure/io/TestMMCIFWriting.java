@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Arrays;
 
 import org.biojava.nbio.structure.AminoAcidImpl;
 import org.biojava.nbio.structure.Atom;
@@ -223,9 +224,10 @@ public class TestMMCIFWriting {
 	public void testBiounitWriting()  {
 		Structure s = createDummyStructure();
 		String mmcif = s.toMMCIF();
-		System.out.println(mmcif);
+		String[] lines = mmcif.split("\n");
+		long atomLines = Arrays.stream(lines).filter(l -> l.startsWith("ATOM")).count();
 		assertNotNull(mmcif);
-		assertTrue(mmcif.length()>5);
+		assertEquals(4, atomLines);
 	}
 
 	private static Structure createDummyStructure() {
