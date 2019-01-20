@@ -132,8 +132,6 @@ public class BiologicalAssemblyBuilder {
 
 				// note that the Structure.addChain/Structure.addModel methods set the parent reference to the new Structure
 
-				// TODO set entities properly in the new structures! at the moment they are a mess... - JD 2016-05-19
-
 				if (multiModel)
 					addChainMultiModel(s, chain, transformId);
 				else
@@ -211,6 +209,7 @@ public class BiologicalAssemblyBuilder {
 			s.addChain(newChain, modelCount-1);
 		}
 
+		newChain.getEntityInfo().addChain(newChain);
 	}
 
 	/**
@@ -225,6 +224,7 @@ public class BiologicalAssemblyBuilder {
 		newChain.setId(newChain.getId()+SYM_CHAIN_ID_SEPARATOR+transformId);
 		newChain.setName(newChain.getName()+SYM_CHAIN_ID_SEPARATOR+transformId);
 		s.addChain(newChain);
+		newChain.getEntityInfo().addChain(newChain);
 	}
 
 	/**

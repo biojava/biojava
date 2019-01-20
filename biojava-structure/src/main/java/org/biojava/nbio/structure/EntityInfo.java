@@ -230,7 +230,7 @@ public class EntityInfo implements Serializable {
 	 */
 	public Chain getRepresentative() {
 
-		List<String> chainIds = new ArrayList<String>();
+		List<String> chainIds = new ArrayList<>();
 		for (Chain chain:chains) {
 			chainIds.add(chain.getId());
 		}
@@ -276,12 +276,12 @@ public class EntityInfo implements Serializable {
 	 */
 	public List<String> getChainIds() {
 
-		Set<String> uniqChainIds = new TreeSet<String>();
+		Set<String> uniqChainIds = new TreeSet<>();
 		for (int i=0;i<getChains().size();i++) {
 			uniqChainIds.add(getChains().get(i).getId());
 		}
 
-		return new ArrayList<String>(uniqChainIds);
+		return new ArrayList<>(uniqChainIds);
 	}
 
 	/**
@@ -307,12 +307,7 @@ public class EntityInfo implements Serializable {
 
 		boolean contained = false;
 		for (Chain member:getChains()) {
-			// deal with sym mates
-			String origChainId = c.getId();
-			if (origChainId.contains(BiologicalAssemblyBuilder.SYM_CHAIN_ID_SEPARATOR)) {
-				origChainId = origChainId.substring(0, origChainId.indexOf('_'));
-			}
-			if (origChainId.equals(member.getId())) {
+			if (c.getId().equals(member.getId())) {
 				contained = true;
 				break;
 			}

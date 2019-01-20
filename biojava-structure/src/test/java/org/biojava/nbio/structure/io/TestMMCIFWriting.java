@@ -266,6 +266,7 @@ public class TestMMCIFWriting {
 		c2.addGroup(gc2);
 		c2.setId("A_1");
 		c2.setEntityInfo(entityInfo);
+		entityInfo.addChain(c2);
 
 		Structure s = new StructureImpl();
 		s.addChain(c1);
