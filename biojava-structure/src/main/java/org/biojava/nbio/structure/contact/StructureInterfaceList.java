@@ -29,6 +29,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.biojava.nbio.core.util.SingleLinkageClusterer;
 import org.biojava.nbio.structure.Atom;
@@ -48,6 +50,8 @@ import org.slf4j.LoggerFactory;
 public class StructureInterfaceList implements Serializable, Iterable<StructureInterface> {
 
 	private static final Logger logger = LoggerFactory.getLogger(StructureInterfaceList.class);
+
+	private static final Pattern NCSCHAIN_NAME_REGEX = Pattern.compile("^([a-zA-Z]+)([0-9]+)?n?([0-9]+)?$");
 
 	/**
 	 * Default minimum area for a contact between two chains to be considered a
@@ -201,18 +205,45 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 		if (clustersNcs!=null) {
 			for (StructureInterfaceCluster ncsCluster : clustersNcs) {
 				StructureInterface refInterf = ncsCluster.getMembers().get(0);
+				String refMolecId1 = refInterf.getMoleculeIds().getFirst();
 				for (int i=1;i<ncsCluster.getMembers().size();i++) {
-					ncsCluster.getMembers().get(i).setTotalArea(refInterf.getTotalArea());
-					// we add the reference interface GroupAsas as the GroupAsas for all other members, like that
-					// ResidueNumbers won't match in their chain ids, but otherwise all info is there without using a lot of memory
-					ncsCluster.getMembers().get(i).setFirstGroupAsas(refInterf.getFirstGroupAsas());
-					ncsCluster.getMembers().get(i).setSecondGroupAsas(refInterf.getSecondGroupAsas());
+					StructureInterface member = ncsCluster.getMembers().get(i);
+					member.setTotalArea(refInterf.getTotalArea());
+					String molecId1 = member.getMoleculeIds().getFirst();
+					if (areMolecIdsSameOrder(refMolecId1, molecId1)) {
+						// we add the reference interface GroupAsas as the GroupAsas for all other members, like that
+						// ResidueNumbers won't match in their chain ids, but otherwise all info is there without using a lot of memory
+						member.setFirstGroupAsas(refInterf.getFirstGroupAsas());
+						member.setSecondGroupAsas(refInterf.getSecondGroupAsas());
+					} else {
+						member.setFirstGroupAsas(refInterf.getSecondGroupAsas());
+						member.setSecondGroupAsas(refInterf.getFirstGroupAsas());
+					}
 				}
 			}
 		}
 
 		// finally we sort based on the ChainInterface.comparable() (based in interfaceArea)
 		sort();
+	}
+
+	private boolean areMolecIdsSameOrder(String refMolecId, String molecId) {
+		Matcher m = NCSCHAIN_NAME_REGEX.matcher(refMolecId);
+		String refMolecIdOrig = null;
+		String molecIdOrig = null;
+		if (m.matches()) {
+			refMolecIdOrig = m.group(1);
+		}
+		m = NCSCHAIN_NAME_REGEX.matcher(molecId);
+		if (m.matches()) {
+			molecIdOrig = m.group(1);
+		}
+		if (refMolecIdOrig == null || molecIdOrig == null) {
+			// warn and assume same order
+			logger.warn("The NCS chain id regex did not find original chain name out of {} or {}", refMolecId, molecId);
+			return true;
+		}
+		return (refMolecIdOrig.equals(molecIdOrig));
 	}
 
 	/**
