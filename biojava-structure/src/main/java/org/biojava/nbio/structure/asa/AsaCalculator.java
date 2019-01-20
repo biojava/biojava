@@ -442,6 +442,13 @@ public class AsaCalculator {
 			nbsIndices[entry.getKey()] = indicesArray;
 		}
 
+		// important: some atoms might have no neighbors at all: we need to initialise to empty arrays
+		for (int i=0; i<nbsIndices.length; i++) {
+			if (nbsIndices[i] == null) {
+				nbsIndices[i] = new int[0];
+			}
+		}
+
 		return nbsIndices;
 	}
 
@@ -450,22 +457,17 @@ public class AsaCalculator {
 	}
 
 	private List<Contact> calcContacts() {
-		double maxRadius = maxValue(radii);
+		if (atomCoords.length == 0)
+			return new ArrayList<>();
+		double maxRadius = 0;
+		OptionalDouble optionalDouble = Arrays.stream(radii).max();
+		if (optionalDouble.isPresent())
+			maxRadius = optionalDouble.getAsDouble();
 		double cutoff = maxRadius + maxRadius + probe + probe;
 		logger.debug("Max radius is {}, cutoff is {}", maxRadius, cutoff);
 		Grid grid = new Grid(cutoff);
 		grid.addCoords(atomCoords);
 		return grid.getIndicesContacts();
-	}
-
-	private static double maxValue(double[] array) {
-		double max = array[0];
-		for (int i = 0; i < array.length; i++) {
-			if (array[i] > max) {
-				max = array[i];
-			}
-		}
-		return max;
 	}
 
 	private double calcSingleAsa(int i) {

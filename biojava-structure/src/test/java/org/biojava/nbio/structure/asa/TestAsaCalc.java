@@ -20,7 +20,14 @@
  */
 package org.biojava.nbio.structure.asa;
 
-import org.biojava.nbio.structure.*;
+import org.biojava.nbio.structure.AminoAcidImpl;
+import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.AtomImpl;
+import org.biojava.nbio.structure.Element;
+import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureIO;
+import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
 import org.biojava.nbio.structure.io.mmcif.DownloadChemCompProvider;
 import static org.junit.Assert.*;
@@ -178,6 +185,77 @@ public class TestAsaCalc {
 
 
 		assertEquals(withoutSH, withSH, 0.000001);
+
+	}
+
+	@Test
+	public void testNoNeighborsIssue() {
+
+		Atom[] atoms = {
+				getAtom(1.0, 1.0, 1.0),
+				getAtom(10.0, 1.0, 1.0),
+				getAtom(13.0, 1.0, 1.0)
+		};
+
+		AsaCalculator asaCalc = new AsaCalculator(atoms,
+				AsaCalculator.DEFAULT_PROBE_SIZE,
+				1000, 1);
+
+		int[][] allNbsSh = asaCalc.findNeighborIndicesSpatialHashing();
+
+		int[][] allNbs = asaCalc.findNeighborIndices();
+
+		assertEquals(3, allNbs.length);
+		assertEquals(3, allNbsSh.length);
+
+		for (int indexToTest =0; indexToTest < asaCalc.getAtomCoords().length; indexToTest++) {
+			int[] nbsSh = allNbsSh[indexToTest];
+			int[] nbs = allNbs[indexToTest];
+
+			List<Integer> listOfMatchingIndices = new ArrayList<>();
+			for (int i = 0; i < nbsSh.length; i++) {
+				for (int j = 0; j < nbs.length; j++) {
+					if (nbs[j] == nbsSh[i]) {
+						listOfMatchingIndices.add(j);
+						break;
+					}
+				}
+			}
+
+			assertEquals(nbs.length, nbsSh.length);
+
+			assertEquals(nbs.length, listOfMatchingIndices.size());
+		}
+
+		// first atom should have no neighbors
+		assertEquals(0, allNbsSh[0].length);
+	}
+
+	private Atom getAtom(double x, double y, double z) {
+		Atom atom = new AtomImpl();
+		AminoAcidImpl g = new AminoAcidImpl();
+		g.setAminoType('A');
+		atom.setGroup(g);
+		atom.setName("CA");
+		atom.setElement(Element.C);
+		atom.setX(x);
+		atom.setY(y);
+		atom.setZ(z);
+		return atom;
+	}
+
+	@Test
+	public void testNoAtomsAsaCalc() {
+
+		// in case of no atoms at all, the calculation should not fail and return an empty array
+		Atom[] atoms = new Atom[0];
+
+		AsaCalculator asaCalc = new AsaCalculator(atoms,
+				AsaCalculator.DEFAULT_PROBE_SIZE,
+				1000, 1);
+		double[] asas = asaCalc.calculateAsas();
+		assertNotNull(asas);
+		assertEquals(0, asas.length);
 
 	}
 }
