@@ -24,6 +24,7 @@ package org.biojava.nbio.structure;
 
 
 import org.biojava.nbio.structure.io.FileParsingParameters;
+import org.biojava.nbio.structure.quaternary.BiologicalAssemblyBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -308,7 +309,7 @@ public class EntityInfo implements Serializable {
 		for (Chain member:getChains()) {
 			// deal with sym mates
 			String origChainId = c.getId();
-			if (origChainId.contains("_")) {
+			if (origChainId.contains(BiologicalAssemblyBuilder.SYM_CHAIN_ID_SEPARATOR)) {
 				origChainId = origChainId.substring(0, origChainId.indexOf('_'));
 			}
 			if (origChainId.equals(member.getId())) {
