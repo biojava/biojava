@@ -51,7 +51,7 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 
 	private static final Logger logger = LoggerFactory.getLogger(StructureInterfaceList.class);
 
-	private static final Pattern NCSCHAIN_NAME_REGEX = Pattern.compile("^([a-zA-Z]+)([0-9]+)?n?([0-9]+)?$");
+	private static final Pattern NCSCHAIN_NAME_REGEX = Pattern.compile("^([a-zA-Z]+)([0-9]+)?"+CrystalBuilder.NCS_CHAINID_SUFFIX_CHAR+"?([0-9]+)?$");
 
 	/**
 	 * Default minimum area for a contact between two chains to be considered a
