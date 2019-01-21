@@ -29,8 +29,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.biojava.nbio.core.util.SingleLinkageClusterer;
 import org.biojava.nbio.structure.Atom;
@@ -50,8 +48,6 @@ import org.slf4j.LoggerFactory;
 public class StructureInterfaceList implements Serializable, Iterable<StructureInterface> {
 
 	private static final Logger logger = LoggerFactory.getLogger(StructureInterfaceList.class);
-
-	private static final Pattern NCSCHAIN_NAME_REGEX = Pattern.compile("^([a-zA-Z]+)([0-9]+)?"+CrystalBuilder.NCS_CHAINID_SUFFIX_CHAR+"?([0-9]+)?$");
 
 	/**
 	 * Default minimum area for a contact between two chains to be considered a
@@ -82,6 +78,8 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 
 	private List<StructureInterfaceCluster> clusters = null;
 	private List<StructureInterfaceCluster> clustersNcs = null;
+
+	private Map<String, String> chainOrigNamesMap;
 
 	public StructureInterfaceList() {
 		this.list = new ArrayList<>();
@@ -203,6 +201,9 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 
 		// now let's populate the interface area value for the NCS-redundant ones from the reference interface (first one in list)
 		if (clustersNcs!=null) {
+			if (chainOrigNamesMap==null)  {
+				logger.warn("No chainOrigNamesMap is set. Considering NCS interfaces in same order as reference. This is likely a bug.");
+			}
 			for (StructureInterfaceCluster ncsCluster : clustersNcs) {
 				StructureInterface refInterf = ncsCluster.getMembers().get(0);
 				String refMolecId1 = refInterf.getMoleculeIds().getFirst();
@@ -228,21 +229,15 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 	}
 
 	private boolean areMolecIdsSameOrder(String refMolecId, String molecId) {
-		Matcher m = NCSCHAIN_NAME_REGEX.matcher(refMolecId);
-		String refMolecIdOrig = null;
-		String molecIdOrig = null;
-		if (m.matches()) {
-			refMolecIdOrig = m.group(1);
-		}
-		m = NCSCHAIN_NAME_REGEX.matcher(molecId);
-		if (m.matches()) {
-			molecIdOrig = m.group(1);
-		}
-		if (refMolecIdOrig == null || molecIdOrig == null) {
-			// warn and assume same order
-			logger.warn("The NCS chain id regex did not find original chain name out of {} or {}", refMolecId, molecId);
+
+		if (chainOrigNamesMap==null) {
+			// we've already warned above
 			return true;
 		}
+
+		String refMolecIdOrig = chainOrigNamesMap.get(refMolecId);
+		String molecIdOrig = chainOrigNamesMap.get(molecId);
+
 		return (refMolecIdOrig.equals(molecIdOrig));
 	}
 
@@ -313,6 +308,16 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 		newCluster.addMember(interfaceRef);
 		newCluster.addMember(interfaceNew);
 		clustersNcs.add(newCluster);
+	}
+
+	/**
+	 * Sets a map with mapping from NCS chain names to original chain names.
+	 * Necessary when {@link #addNcsEquivalent(StructureInterface, StructureInterface)} is used and NCS equivalent
+	 * interfaces exist in this list and their names need mapping when setting ASAs.
+	 * @param chainOrigNamesMap a map of NCS chain name to original chain name
+	 */
+	public void setChainOrigNamesMap(Map<String, String> chainOrigNamesMap) {
+		this.chainOrigNamesMap = chainOrigNamesMap;
 	}
 
 	/**

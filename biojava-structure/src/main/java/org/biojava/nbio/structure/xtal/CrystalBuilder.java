@@ -221,7 +221,10 @@ public class CrystalBuilder {
 			return set;
 		}
 
-
+		// pass the chainOrigNames map in NCS case so that StructureInterfaceList can deal with original to NCS chain names conversion
+		if (chainOrigNames!=null) {
+			set.setChainOrigNamesMap(chainOrigNames);
+		}
 
 		// initialising the visited ArrayList for keeping track of symmetry redundancy
 		initialiseVisited();

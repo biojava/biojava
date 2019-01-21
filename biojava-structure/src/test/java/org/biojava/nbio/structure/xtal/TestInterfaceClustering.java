@@ -34,6 +34,7 @@ import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.align.util.AtomCache;
+import org.biojava.nbio.structure.asa.GroupAsa;
 import org.biojava.nbio.structure.contact.StructureInterface;
 import org.biojava.nbio.structure.contact.StructureInterfaceCluster;
 import org.biojava.nbio.structure.contact.StructureInterfaceList;
@@ -106,7 +107,8 @@ public class TestInterfaceClustering {
 
 		StructureIO.setAtomCache(cache);
 
-		Structure s = StructureIO.getStructure("1AUY");
+		// 3vbr would be an example of capsids with several chains
+		Structure s = StructureIO.getStructure("1auy");
 
 		Map<String,String> chainOrigNames = new HashMap<>();
 		Map<String,Matrix4d> chainNcsOps = new HashMap<>();
@@ -163,6 +165,13 @@ public class TestInterfaceClustering {
 
 		assertTrue(clusters.size()<=interfaces.size());
 
+		for (StructureInterface interf : interfaces) {
+			GroupAsa groupAsa = interf.getFirstGroupAsas().values().iterator().next();
+			String expected = interf.getMoleculeIds().getFirst();
+			String actual = groupAsa.getGroup().getChain().getName();
+			// in 1auy this works always since there's only 1 chain. But it is useful in testing cases like 3vbr with serveral chains
+			assertEquals(expected.charAt(0), actual.charAt(0));
+		}
 	}
 
 
