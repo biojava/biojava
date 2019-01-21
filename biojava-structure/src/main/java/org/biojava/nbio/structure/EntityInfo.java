@@ -28,7 +28,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * An object to contain the info from the PDB header for a Molecule.
@@ -123,8 +131,8 @@ public class EntityInfo implements Serializable {
 	private Long id;
 
 	public EntityInfo () {
-		chains = new ArrayList<Chain>();
-		chains2pdbResNums2ResSerials = new HashMap<String, Map<ResidueNumber,Integer>>();
+		chains = new ArrayList<>();
+		chains2pdbResNums2ResSerials = new HashMap<>();
 		molId = -1;
 	}
 
@@ -135,9 +143,11 @@ public class EntityInfo implements Serializable {
 	 */
 	public EntityInfo (EntityInfo c) {
 
-		this.chains = new ArrayList<Chain>();
+	    this.id = c.id;
 
-		this.chains2pdbResNums2ResSerials = new HashMap<String, Map<ResidueNumber,Integer>>();
+		this.chains = new ArrayList<>();
+
+		this.chains2pdbResNums2ResSerials = new HashMap<>();
 
 		this.molId = c.molId;
 
