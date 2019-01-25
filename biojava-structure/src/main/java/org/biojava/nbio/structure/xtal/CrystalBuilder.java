@@ -44,6 +44,8 @@ import java.util.*;
 
 public class CrystalBuilder {
 
+	public static final String NCS_CHAINID_SUFFIX_CHAR = "n";
+
 	// Default number of cell neighbors to try in interface search (in 3 directions of space).
 	// In the search, only bounding box overlaps are tried, thus there's not so much overhead in adding
 	// more cells. We actually tested it and using numCells from 1 to 10 didn't change runtimes at all.
@@ -219,7 +221,10 @@ public class CrystalBuilder {
 			return set;
 		}
 
-
+		// pass the chainOrigNames map in NCS case so that StructureInterfaceList can deal with original to NCS chain names conversion
+		if (chainOrigNames!=null) {
+			set.setChainOrigNamesMap(chainOrigNames);
+		}
 
 		// initialising the visited ArrayList for keeping track of symmetry redundancy
 		initialiseVisited();
@@ -319,7 +324,7 @@ public class CrystalBuilder {
 
 						// 3) an operator can be "self redundant" if it is the inverse of itself (involutory, e.g. all pure 2-folds with no translation)
 						if (tt.isEquivalent(tt)) {
-							logger.debug("Transform "+tt+" is equivalent to itself, will skip half of i-chains to j-chains comparisons");
+							logger.debug("Transform {} is equivalent to itself, will skip half of i-chains to j-chains comparisons", tt.toString());
 							// in this case we can't skip the operator, but we can skip half of the matrix comparisons e.g. j>i
 							// we set a flag and do that within the loop below
 							selfEquivalent = true;
@@ -552,7 +557,7 @@ public class CrystalBuilder {
 
 	/**
 	 * Apply the NCS operators in the given Structure adding new chains as needed.
-	 * All chains are (re)assigned ids of the form: original_chain_id+ncs_operator_index+"n".
+	 * All chains are (re)assigned ids of the form: original_chain_id+ncs_operator_index+{@value #NCS_CHAINID_SUFFIX_CHAR}.
 	 * @param structure
 	 *          the structure to expand
 	 * @param chainOrigNames
@@ -583,8 +588,8 @@ public class CrystalBuilder {
 				Matrix4d m = ncsOps[iOperator];
 
 				Chain clonedChain = (Chain)c.clone();
-				String newChainId = cOrigId+(iOperator+1)+"n";
-				String newChainName = cOrigName+(iOperator+1)+"n";
+				String newChainId = cOrigId+(iOperator+1)+NCS_CHAINID_SUFFIX_CHAR;
+				String newChainName = cOrigName+(iOperator+1)+NCS_CHAINID_SUFFIX_CHAR;
 				clonedChain.setId(newChainId);
 				clonedChain.setName(newChainName);
 

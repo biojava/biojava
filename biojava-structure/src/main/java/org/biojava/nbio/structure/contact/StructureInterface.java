@@ -104,18 +104,18 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 			AtomContactSet contacts,
 			CrystalTransform firstTransf, CrystalTransform secondTransf) {
 
-		this.molecules = new Pair<Atom[]>(firstMolecule, secondMolecule);
-		this.moleculeIds = new Pair<String>(firstMoleculeId,secondMoleculeId);
+		this.molecules = new Pair<>(firstMolecule, secondMolecule);
+		this.moleculeIds = new Pair<>(firstMoleculeId,secondMoleculeId);
 		this.contacts = contacts;
-		this.transforms = new Pair<CrystalTransform>(firstTransf, secondTransf);
+		this.transforms = new Pair<>(firstTransf, secondTransf);
 	}
 
 	/**
 	 * Constructs an empty StructureInterface
 	 */
 	public StructureInterface() {
-		this.groupAsas1 = new TreeMap<ResidueNumber, GroupAsa>();
-		this.groupAsas2 = new TreeMap<ResidueNumber, GroupAsa>();
+		this.groupAsas1 = new TreeMap<>();
+		this.groupAsas2 = new TreeMap<>();
 	}
 
 	public int getId() {
@@ -133,7 +133,7 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 	 * @return
 	 */
 	public Pair<String> getCrystalIds() {
-		return new Pair<String>(
+		return new Pair<>(
 			moleculeIds.getFirst()+transforms.getFirst().getTransformId()+transforms.getFirst().getCrystalTranslation(),
 			moleculeIds.getSecond()+transforms.getSecond().getTransformId()+transforms.getSecond().getCrystalTranslation());
 	}
@@ -197,7 +197,16 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 		this.transforms = transforms;
 	}
 
-	protected void setAsas(double[] asas1, double[] asas2, int nSpherePoints, int nThreads, int cofactorSizeToUse) {
+	/**
+	 * Set ASA annotations by passing the uncomplexed ASA values of the 2 partners.
+	 * This will calculate complexed ASA and set the ASA values in the member variables.
+	 * @param asas1 ASA values for atoms of partner 1
+	 * @param asas2 ASA values for atoms of partner 2
+	 * @param nSpherePoints the number of sphere points to be used for complexed ASA calculation
+	 * @param nThreads the number of threads to be used for complexed ASA calculation
+	 * @param cofactorSizeToUse the minimum size of cofactor molecule (non-chain HET atoms) that will be used in ASA calculation
+	 */
+	void setAsas(double[] asas1, double[] asas2, int nSpherePoints, int nThreads, int cofactorSizeToUse) {
 
 		Atom[] atoms = getAtomsForAsa(cofactorSizeToUse);
 		AsaCalculator asaCalc = new AsaCalculator(atoms,
@@ -296,7 +305,7 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 	 * @return
 	 */
 	private static final Atom[] getAllNonHAtomArray(Atom[] m, int minSizeHetAtomToInclude) {
-		List<Atom> atoms = new ArrayList<Atom>();
+		List<Atom> atoms = new ArrayList<>();
 
 		for (Atom a:m){
 
@@ -409,6 +418,14 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 
 	public void setFirstGroupAsa(GroupAsa groupAsa) {
 		groupAsas1.put(groupAsa.getGroup().getResidueNumber(), groupAsa);
+	}
+
+	void setFirstGroupAsas(Map<ResidueNumber, GroupAsa> firstGroupAsas) {
+		this.groupAsas1 = firstGroupAsas;
+	}
+
+	void setSecondGroupAsas(Map<ResidueNumber, GroupAsa> secondGroupAsas) {
+		this.groupAsas2 = secondGroupAsas;
 	}
 
 	/**

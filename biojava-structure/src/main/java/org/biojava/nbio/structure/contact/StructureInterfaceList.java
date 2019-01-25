@@ -21,7 +21,14 @@
 package org.biojava.nbio.structure.contact;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.TreeMap;
 
 import org.biojava.nbio.core.util.SingleLinkageClusterer;
 import org.biojava.nbio.structure.Atom;
@@ -71,6 +78,8 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 
 	private List<StructureInterfaceCluster> clusters = null;
 	private List<StructureInterfaceCluster> clustersNcs = null;
+
+	private Map<String, String> chainOrigNamesMap;
 
 	public StructureInterfaceList() {
 		this.list = new ArrayList<>();
@@ -129,8 +138,20 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 		Map<String, Atom[]> uniqAsaChains = new TreeMap<>();
 		Map<String, double[]> chainAsas = new TreeMap<>();
 
+		List<StructureInterface> redundancyReducedList;
+		if (clustersNcs != null) {
+			redundancyReducedList = new ArrayList<>();
+			for (StructureInterfaceCluster ncsCluster : clustersNcs) {
+				// we use the first one in list as the only one for which we calculate ASAs
+				redundancyReducedList.add(ncsCluster.getMembers().get(0));
+			}
+
+		} else {
+			redundancyReducedList = list;
+		}
+
 		// first we gather rotation-unique chains (in terms of AU id and transform id)
-		for (StructureInterface interf:list) {
+		for (StructureInterface interf:redundancyReducedList) {
 			String molecId1 = interf.getMoleculeIds().getFirst()+interf.getTransforms().getFirst().getTransformId();
 			String molecId2 = interf.getMoleculeIds().getSecond()+interf.getTransforms().getSecond().getTransformId();
 
@@ -159,12 +180,12 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 
 		logger.debug("Calculated uncomplexed ASA for {} orientation-unique chains. Time: {} s", uniqAsaChains.size(), ((end-start)/1000.0));
 
-		logger.debug ("Will calculate complexed ASA for {} pairwise complexes.", list.size());
+		logger.debug ("Will calculate complexed ASA for {} pairwise complexes.", redundancyReducedList.size());
 
 		start = System.currentTimeMillis();
 
 		// now we calculate the ASAs for each of the complexes
-		for (StructureInterface interf:list) {
+		for (StructureInterface interf:redundancyReducedList) {
 
 			String molecId1 = interf.getMoleculeIds().getFirst()+interf.getTransforms().getFirst().getTransformId();
 			String molecId2 = interf.getMoleculeIds().getSecond()+interf.getTransforms().getSecond().getTransformId();
@@ -176,15 +197,53 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 		}
 		end = System.currentTimeMillis();
 
-		logger.debug("Calculated complexes ASA for {} pairwise complexes. Time: {} s", list.size(), ((end-start)/1000.0));
+		logger.debug("Calculated complexes ASA for {} pairwise complexes. Time: {} s", redundancyReducedList.size(), ((end-start)/1000.0));
 
+		// now let's populate the interface area value for the NCS-redundant ones from the reference interface (first one in list)
+		if (clustersNcs!=null) {
+			if (chainOrigNamesMap==null)  {
+				logger.warn("No chainOrigNamesMap is set. Considering NCS interfaces in same order as reference. This is likely a bug.");
+			}
+			for (StructureInterfaceCluster ncsCluster : clustersNcs) {
+				StructureInterface refInterf = ncsCluster.getMembers().get(0);
+				String refMolecId1 = refInterf.getMoleculeIds().getFirst();
+				for (int i=1;i<ncsCluster.getMembers().size();i++) {
+					StructureInterface member = ncsCluster.getMembers().get(i);
+					member.setTotalArea(refInterf.getTotalArea());
+					String molecId1 = member.getMoleculeIds().getFirst();
+					if (areMolecIdsSameOrder(refMolecId1, molecId1)) {
+						// we add the reference interface GroupAsas as the GroupAsas for all other members, like that
+						// ResidueNumbers won't match in their chain ids, but otherwise all info is there without using a lot of memory
+						member.setFirstGroupAsas(refInterf.getFirstGroupAsas());
+						member.setSecondGroupAsas(refInterf.getSecondGroupAsas());
+					} else {
+						member.setFirstGroupAsas(refInterf.getSecondGroupAsas());
+						member.setSecondGroupAsas(refInterf.getFirstGroupAsas());
+					}
+				}
+			}
+		}
 
 		// finally we sort based on the ChainInterface.comparable() (based in interfaceArea)
 		sort();
 	}
 
+	private boolean areMolecIdsSameOrder(String refMolecId, String molecId) {
+
+		if (chainOrigNamesMap==null) {
+			// we've already warned above
+			return true;
+		}
+
+		String refMolecIdOrig = chainOrigNamesMap.get(refMolecId);
+		String molecIdOrig = chainOrigNamesMap.get(molecId);
+
+		return (refMolecIdOrig.equals(molecIdOrig));
+	}
+
 	/**
 	 * Sorts the interface list and reassigns ids based on new sorting
+	 *
 	 */
 	public void sort() {
 		Collections.sort(list);
@@ -252,8 +311,20 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 	}
 
 	/**
+	 * Sets a map with mapping from NCS chain names to original chain names.
+	 * Necessary when {@link #addNcsEquivalent(StructureInterface, StructureInterface)} is used and NCS equivalent
+	 * interfaces exist in this list and their names need mapping when setting ASAs.
+	 * @param chainOrigNamesMap a map of NCS chain name to original chain name
+	 */
+	public void setChainOrigNamesMap(Map<String, String> chainOrigNamesMap) {
+		this.chainOrigNamesMap = chainOrigNamesMap;
+	}
+
+	/**
 	 * Removes from this interface list all interfaces with areas
-	 * below the default cutoff area
+	 * below the default cutoff area.
+     * Note that this must be called after {@link #calcAsas(int, int, int)}, otherwise all areas would
+     * be 0 and thus all removed.
 	 * @see #DEFAULT_MINIMUM_INTERFACE_AREA
 	 */
 	public void removeInterfacesBelowArea() {
@@ -262,17 +333,18 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 
 	/**
 	 * Removes from this interface list all interfaces with areas
-	 * below the given cutoff area
-	 * @param area
+	 * below the given cutoff area.
+     * Note that this must be called after {@link #calcAsas(int, int, int)}, otherwise all areas would
+     * be 0 and thus all removed.
+	 * @param area the minimum interface buried surface area to keep. Interfaces below this value will be removed.
 	 */
 	public void removeInterfacesBelowArea(double area) {
-		Iterator<StructureInterface> it = iterator();
-		while (it.hasNext()) {
-			StructureInterface interf = it.next();
-			if (interf.getTotalArea()<area) {
-				it.remove();
-			}
-		}
+
+		list.removeIf(interf -> interf.getTotalArea() < area);
+
+	    if (clustersNcs != null) {
+	    	clustersNcs.removeIf(ncsCluster -> ncsCluster.getMembers().get(0).getTotalArea() < area);
+        }
 	}
 
 	/**
@@ -291,6 +363,7 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 	 * Calculate the interface clusters for this StructureInterfaceList
 	 * using a contact overlap score to measure the similarity of interfaces.
 	 * Subsequent calls will use the cached value without recomputing the clusters.
+	 * The clusters will be assigned ids by sorting descending by {@link StructureInterfaceCluster#getTotalArea()}
 	 * @param contactOverlapScoreClusterCutoff the contact overlap score above which a pair will be
 	 * clustered
 	 * @return
@@ -300,7 +373,7 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 			return clusters;
 		}
 
-		clusters = new ArrayList<StructureInterfaceCluster>();
+		clusters = new ArrayList<>();
 
 		// nothing to do if we have no interfaces
 		if (list.size()==0) return clusters;
@@ -324,9 +397,9 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 
 		SingleLinkageClusterer slc = new SingleLinkageClusterer(matrix, true);
 
-		Map<Integer,Set<Integer>> clusteredIndices = slc.getClusters(contactOverlapScoreClusterCutoff);
+		Map<Integer, Set<Integer>> clusteredIndices = slc.getClusters(contactOverlapScoreClusterCutoff);
 		for (int clusterIdx:clusteredIndices.keySet()) {
-			List<StructureInterface> members = new ArrayList<StructureInterface>();
+			List<StructureInterface> members = new ArrayList<>();
 			for (int idx:clusteredIndices.get(clusterIdx)) {
 				members.add(list.get(idx));
 			}
@@ -335,8 +408,9 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 			double averageScore = 0.0;
 			int countPairs = 0;
 			for (int i=0;i<members.size();i++) {
+                int iIdx = list.indexOf(members.get(i));
 				for (int j=i+1;j<members.size();j++) {
-					averageScore += matrix[members.get(i).getId()-1][members.get(j).getId()-1];
+					averageScore += matrix[iIdx][list.indexOf(members.get(j))];
 					countPairs++;
 				}
 			}
@@ -358,18 +432,14 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 		}
 
 		// now we sort by areas (descending) and assign ids based on that sorting
-		Collections.sort(clusters, new Comparator<StructureInterfaceCluster>() {
-			@Override
-			public int compare(StructureInterfaceCluster o1, StructureInterfaceCluster o2) {
-				return Double.compare(o2.getTotalArea(), o1.getTotalArea()); //note we invert so that sorting is descending
-			}
+		clusters.sort((o1, o2) -> {
+			return Double.compare(o2.getTotalArea(), o1.getTotalArea()); //note we invert so that sorting is descending
 		});
 		int id = 1;
 		for (StructureInterfaceCluster cluster:clusters) {
 			cluster.setId(id);
 			id++;
 		}
-
 
 		return clusters;
 	}
