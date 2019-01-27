@@ -18,8 +18,8 @@ public class TestMMCIFWriting {
      * @throws StructureException
      */
     @Test
-    public void testBiounitWriting6a63() throws IOException, StructureException {
-        Structure s = StructureIO.getBiologicalAssembly("6a63", 1);
+    public void testBiounitWriting1STP() throws IOException, StructureException {
+        Structure s = StructureIO.getBiologicalAssembly("1STP", 1);
         String mmcif = s.toMMCIF();
         assertNotNull(mmcif);
         assertTrue(mmcif.contains("A_1"));
