@@ -23,6 +23,7 @@ package org.biojava.nbio.structure.quaternary;
 
 import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.Chain;
+import org.biojava.nbio.structure.EntityInfo;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.io.mmcif.model.PdbxStructAssembly;
 import org.biojava.nbio.structure.io.mmcif.model.PdbxStructAssemblyGen;
@@ -97,10 +98,11 @@ public class BiologicalAssemblyBuilder {
 
 		Structure s = asymUnit.clone();
 
-
+		Map<Integer, EntityInfo> entityInfoMap = new HashMap<>();
 		// this resets all models (not only the first one): this is important for NMR (multi-model)
 		// like that we can be sure we start with an empty structures and we add models or chains to it
 		s.resetModels();
+		s.setEntityInfos(new ArrayList<>());
 
 		for (BiologicalAssemblyTransformation transformation : transformations){
 
@@ -136,6 +138,17 @@ public class BiologicalAssemblyBuilder {
 					addChainMultiModel(s, chain, transformId);
 				else
 					addChainFlattened(s, chain, transformId);
+
+				EntityInfo entityInfo;
+				if (!entityInfoMap.containsKey(chain.getEntityInfo().getMolId())) {
+					entityInfo = new EntityInfo(chain.getEntityInfo());
+					entityInfoMap.put(chain.getEntityInfo().getMolId(), entityInfo);
+					s.addEntityInfo(entityInfo);
+				} else {
+					entityInfo = entityInfoMap.get(chain.getEntityInfo().getMolId());
+				}
+				chain.setEntityInfo(entityInfo);
+				entityInfo.addChain(chain);
 
 			}
 		}
@@ -209,7 +222,6 @@ public class BiologicalAssemblyBuilder {
 			s.addChain(newChain, modelCount-1);
 		}
 
-		newChain.getEntityInfo().addChain(newChain);
 	}
 
 	/**
@@ -224,7 +236,6 @@ public class BiologicalAssemblyBuilder {
 		newChain.setId(newChain.getId()+SYM_CHAIN_ID_SEPARATOR+transformId);
 		newChain.setName(newChain.getName()+SYM_CHAIN_ID_SEPARATOR+transformId);
 		s.addChain(newChain);
-		newChain.getEntityInfo().addChain(newChain);
 	}
 
 	/**
