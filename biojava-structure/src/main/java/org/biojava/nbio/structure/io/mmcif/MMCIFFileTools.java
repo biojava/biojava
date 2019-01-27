@@ -27,6 +27,7 @@ import java.util.*;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.Element;
+import org.biojava.nbio.structure.EntityType;
 import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.GroupType;
 import org.biojava.nbio.structure.Structure;
@@ -375,10 +376,13 @@ public class MMCIFFileTools {
 		String labelSeqId = Integer.toString(g.getResidueNumber().getSeqNum());
 		if (g.getChain()!=null && g.getChain().getEntityInfo()!=null) {
 			entityId = Integer.toString(g.getChain().getEntityInfo().getMolId());
-			labelSeqId = Integer.toString(g.getChain().getEntityInfo().getAlignedResIndex(g, g.getChain()));
+			if (g.getChain().getEntityInfo().getType() == EntityType.POLYMER) {
+				// this only makes sense for polymeric chains, non-polymer chains will never have seqres groups and there's no point in calling getAlignedResIndex
+				labelSeqId = Integer.toString(g.getChain().getEntityInfo().getAlignedResIndex(g, g.getChain()));
+			}
 		}
 
-		Character  altLoc = a.getAltLoc()           ;
+		Character  altLoc = a.getAltLoc();
 		String altLocStr;
 		if (altLoc==null || altLoc == ' ') {
 			altLocStr = MMCIF_DEFAULT_VALUE;
@@ -473,7 +477,7 @@ public class MMCIFFileTools {
 		List<AtomSite> list = new ArrayList<>();
 
 		if (c.getEntityInfo()==null) {
-			logger.warn("No Compound (entity) found for chain {}: entity_id will be set to 0, label_seq_id will be the same as auth_seq_id", c.getName());
+			logger.warn("No entity found for chain {}: entity_id will be set to 0, label_seq_id will be the same as auth_seq_id", c.getName());
 		}
 
 		for ( int h=0; h<c.getAtomLength();h++){

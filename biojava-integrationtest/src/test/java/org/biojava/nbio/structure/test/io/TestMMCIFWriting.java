@@ -26,4 +26,11 @@ public class TestMMCIFWriting {
         assertTrue(mmcif.contains("A_2"));
     }
 
+    @Test
+    public void testStructWriting1STP() throws IOException, StructureException {
+        Structure s = StructureIO.getStructure("1STP");
+        String mmcif = s.toMMCIF();
+        assertNotNull(mmcif);
+        assertTrue(mmcif.contains("A"));
+    }
 }

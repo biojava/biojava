@@ -294,9 +294,11 @@ public class EntityInfo implements Serializable {
 	}
 
 	/**
-	 * Given a Group g of Chain c (member of this EnityInfo) return the corresponding position in the
+	 * Given a Group g of Chain c (member of this EntityInfo) return the corresponding position in the
 	 * alignment of all member sequences (1-based numbering), i.e. the index (1-based) in the SEQRES sequence.
-	 * This allows for comparisons of residues belonging to different chains of the same EnityInfo (entity).
+	 * This allows for comparisons of residues belonging to different chains of the same EntityInfo (entity).
+	 * <p>
+	 * Note this method should only be used for entities of type {@link EntityType#POLYMER}
 	 * <p>
 	 * If {@link FileParsingParameters#setAlignSeqRes(boolean)} is not used or SEQRES not present, a mapping
 	 * will not be available and this method will return {@link ResidueNumber#getSeqNum()} for all residues, which
@@ -310,7 +312,7 @@ public class EntityInfo implements Serializable {
 	 * is returned as a fall-back, if the group is not found in the SEQRES groups then -1 is returned
 	 * for the given group and chain
 	 * @throws IllegalArgumentException if the given Chain is not a member of this EnityInfo
-	 * @see {@link Chain#getSeqResGroup(int)}
+	 * @see Chain#getSeqResGroup(int)
 	 */
 	public int getAlignedResIndex(Group g, Chain c) {
 
