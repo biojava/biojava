@@ -28,7 +28,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * An object to contain the info from the PDB header for a Molecule.
@@ -123,8 +131,8 @@ public class EntityInfo implements Serializable {
 	private Long id;
 
 	public EntityInfo () {
-		chains = new ArrayList<Chain>();
-		chains2pdbResNums2ResSerials = new HashMap<String, Map<ResidueNumber,Integer>>();
+		chains = new ArrayList<>();
+		chains2pdbResNums2ResSerials = new HashMap<>();
 		molId = -1;
 	}
 
@@ -135,9 +143,11 @@ public class EntityInfo implements Serializable {
 	 */
 	public EntityInfo (EntityInfo c) {
 
-		this.chains = new ArrayList<Chain>();
+	    this.id = c.id;
 
-		this.chains2pdbResNums2ResSerials = new HashMap<String, Map<ResidueNumber,Integer>>();
+		this.chains = new ArrayList<>();
+
+		this.chains2pdbResNums2ResSerials = new HashMap<>();
 
 		this.molId = c.molId;
 
@@ -229,7 +239,7 @@ public class EntityInfo implements Serializable {
 	 */
 	public Chain getRepresentative() {
 
-		List<String> chainIds = new ArrayList<String>();
+		List<String> chainIds = new ArrayList<>();
 		for (Chain chain:chains) {
 			chainIds.add(chain.getId());
 		}
@@ -275,18 +285,20 @@ public class EntityInfo implements Serializable {
 	 */
 	public List<String> getChainIds() {
 
-		Set<String> uniqChainIds = new TreeSet<String>();
+		Set<String> uniqChainIds = new TreeSet<>();
 		for (int i=0;i<getChains().size();i++) {
 			uniqChainIds.add(getChains().get(i).getId());
 		}
 
-		return new ArrayList<String>(uniqChainIds);
+		return new ArrayList<>(uniqChainIds);
 	}
 
 	/**
-	 * Given a Group g of Chain c (member of this EnityInfo) return the corresponding position in the
+	 * Given a Group g of Chain c (member of this EntityInfo) return the corresponding position in the
 	 * alignment of all member sequences (1-based numbering), i.e. the index (1-based) in the SEQRES sequence.
-	 * This allows for comparisons of residues belonging to different chains of the same EnityInfo (entity).
+	 * This allows for comparisons of residues belonging to different chains of the same EntityInfo (entity).
+	 * <p>
+	 * Note this method should only be used for entities of type {@link EntityType#POLYMER}
 	 * <p>
 	 * If {@link FileParsingParameters#setAlignSeqRes(boolean)} is not used or SEQRES not present, a mapping
 	 * will not be available and this method will return {@link ResidueNumber#getSeqNum()} for all residues, which
@@ -300,7 +312,7 @@ public class EntityInfo implements Serializable {
 	 * is returned as a fall-back, if the group is not found in the SEQRES groups then -1 is returned
 	 * for the given group and chain
 	 * @throws IllegalArgumentException if the given Chain is not a member of this EnityInfo
-	 * @see {@link Chain#getSeqResGroup(int)}
+	 * @see Chain#getSeqResGroup(int)
 	 */
 	public int getAlignedResIndex(Group g, Chain c) {
 

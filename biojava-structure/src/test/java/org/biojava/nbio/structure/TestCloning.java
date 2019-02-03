@@ -24,10 +24,6 @@
  */
 package org.biojava.nbio.structure;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
@@ -35,6 +31,8 @@ import java.util.List;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 public class TestCloning {
 
@@ -86,6 +84,45 @@ public class TestCloning {
 		final Structure c = s.clone();
 
 		compareCloned(s, c);
+
+	}
+
+	@Test
+	public void testBiounitEntitiesFlatChains() throws StructureException, IOException {
+		Structure s;
+		s = StructureIO.getBiologicalAssembly("1stp", 1);
+
+		EntityInfo entityFromStruct = s.getEntityById(1);
+		EntityInfo entityFromChain = s.getPolyChainByPDB("A_1").getEntityInfo();
+
+		assertSame(entityFromStruct, entityFromChain);
+
+		assertNull(s.getPolyChainByPDB("A"));
+
+		assertEquals(3, s.getEntityInfos().size());
+
+		assertEquals(4, entityFromStruct.getChains().size());
+		assertEquals(4, entityFromStruct.getChainIds().size());
+
+	}
+
+	@Test
+	public void testBiounitEntitiesMultimodel() throws StructureException, IOException {
+		Structure s;
+		s = StructureIO.getBiologicalAssembly("1stp", 1, true);
+
+		EntityInfo entityFromStruct = s.getEntityById(1);
+		EntityInfo entityFromChain = s.getPolyChainByPDB("A").getEntityInfo();
+
+		assertSame(entityFromStruct, entityFromChain);
+
+		assertNull(s.getPolyChainByPDB("A_1"));
+
+		assertEquals(3, s.getEntityInfos().size());
+
+		assertEquals(4, entityFromStruct.getChains().size());
+		// as per javadoc, getChainIds() returns the unique chain names only
+		assertEquals(1, entityFromStruct.getChainIds().size());
 
 	}
 

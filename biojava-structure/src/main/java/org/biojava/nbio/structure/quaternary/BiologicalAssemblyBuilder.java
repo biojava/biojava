@@ -23,6 +23,7 @@ package org.biojava.nbio.structure.quaternary;
 
 import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.Chain;
+import org.biojava.nbio.structure.EntityInfo;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.io.mmcif.model.PdbxStructAssembly;
 import org.biojava.nbio.structure.io.mmcif.model.PdbxStructAssemblyGen;
@@ -45,6 +46,16 @@ public class BiologicalAssemblyBuilder {
 
 	private static final Logger logger = LoggerFactory.getLogger(BiologicalAssemblyBuilder.class);
 
+	/**
+	 * The character separating the original chain identifier from the operator id.
+	 */
+	public static final String SYM_CHAIN_ID_SEPARATOR = "_";
+
+	/**
+	 * The character separating operator ids that are composed.
+	 */
+	public static final String COMPOSED_OPERATOR_SEPARATOR = "x";
+
 	private OperatorResolver operatorResolver;
 
 
@@ -54,7 +65,7 @@ public class BiologicalAssemblyBuilder {
 	 */
 	private Map<String, Matrix4d> allTransformations;
 
-	private List<String> modelIndex = new ArrayList<String>();
+	private List<String> modelIndex = new ArrayList<>();
 
 	public BiologicalAssemblyBuilder(){
 		init();
@@ -87,10 +98,11 @@ public class BiologicalAssemblyBuilder {
 
 		Structure s = asymUnit.clone();
 
-
+		Map<Integer, EntityInfo> entityInfoMap = new HashMap<>();
 		// this resets all models (not only the first one): this is important for NMR (multi-model)
 		// like that we can be sure we start with an empty structures and we add models or chains to it
 		s.resetModels();
+		s.setEntityInfos(new ArrayList<>());
 
 		for (BiologicalAssemblyTransformation transformation : transformations){
 
@@ -122,12 +134,21 @@ public class BiologicalAssemblyBuilder {
 
 				// note that the Structure.addChain/Structure.addModel methods set the parent reference to the new Structure
 
-				// TODO set entities properly in the new structures! at the moment they are a mess... - JD 2016-05-19
-
 				if (multiModel)
 					addChainMultiModel(s, chain, transformId);
 				else
 					addChainFlattened(s, chain, transformId);
+
+				EntityInfo entityInfo;
+				if (!entityInfoMap.containsKey(chain.getEntityInfo().getMolId())) {
+					entityInfo = new EntityInfo(chain.getEntityInfo());
+					entityInfoMap.put(chain.getEntityInfo().getMolId(), entityInfo);
+					s.addEntityInfo(entityInfo);
+				} else {
+					entityInfo = entityInfoMap.get(chain.getEntityInfo().getMolId());
+				}
+				chain.setEntityInfo(entityInfo);
+				entityInfo.addChain(chain);
 
 			}
 		}
@@ -194,7 +215,7 @@ public class BiologicalAssemblyBuilder {
 		if (modelCount == 0) {
 			s.addChain(newChain);
 		} else if (modelCount > s.nrModels()) {
-			List<Chain> newModel = new ArrayList<Chain>();
+			List<Chain> newModel = new ArrayList<>();
 			newModel.add(newChain);
 			s.addModel(newModel);
 		} else {
@@ -212,8 +233,8 @@ public class BiologicalAssemblyBuilder {
 	 * @param transformId
 	 */
 	private void addChainFlattened(Structure s, Chain newChain, String transformId) {
-		newChain.setId(newChain.getId()+"_"+transformId);
-		newChain.setName(newChain.getName()+"_"+transformId);
+		newChain.setId(newChain.getId()+SYM_CHAIN_ID_SEPARATOR+transformId);
+		newChain.setName(newChain.getName()+SYM_CHAIN_ID_SEPARATOR+transformId);
 		s.addChain(newChain);
 	}
 
@@ -271,7 +292,7 @@ public class BiologicalAssemblyBuilder {
 
 	private ArrayList<BiologicalAssemblyTransformation> getBioUnitTransformationsListBinaryOperators(String assemblyId, List<PdbxStructAssemblyGen> psags) {
 
-		ArrayList<BiologicalAssemblyTransformation> transformations = new ArrayList<BiologicalAssemblyTransformation>();
+		ArrayList<BiologicalAssemblyTransformation> transformations = new ArrayList<>();
 
 		List<OrderedPair<String>> operators = operatorResolver.getBinaryOperators();
 
@@ -298,7 +319,7 @@ public class BiologicalAssemblyBuilder {
 						composed.mul(original2);
 						BiologicalAssemblyTransformation transform = new BiologicalAssemblyTransformation();
 						transform.setChainId(chainId);
-						transform.setId(operator.getElement1() + "x" + operator.getElement2());
+						transform.setId(operator.getElement1() + COMPOSED_OPERATOR_SEPARATOR + operator.getElement2());
 						transform.setTransformationMatrix(composed);
 						transformations.add(transform);
 					}

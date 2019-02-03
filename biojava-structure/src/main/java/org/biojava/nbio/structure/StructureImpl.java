@@ -163,7 +163,7 @@ public class StructureImpl implements Structure {
 
 		// deep-copying of entityInfofos is tricky: there's cross references also in the Chains
 		// beware: if we copy the entityInfos we would also need to reset the references to entityInfos in the individual chains
-		List<EntityInfo> newEntityInfoList = new ArrayList<EntityInfo>();
+		List<EntityInfo> newEntityInfoList = new ArrayList<>();
 		for (EntityInfo entityInfo : this.entityInfos) {
 			EntityInfo newEntityInfo = new EntityInfo(entityInfo); // this sets everything but the chains
 			for (String asymId:entityInfo.getChainIds()) {
