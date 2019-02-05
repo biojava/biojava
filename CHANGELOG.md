@@ -3,6 +3,15 @@ BioJava Changelog
 
 BioJava 5.2.1
 =============
+### Bug fixes
+
+* 2 bugfixes in ASA calculation introduced in 5.2.0: calculation would fail when an atom had no neighbors or when supplying a 0-length atom array, #824
+* Fixes in bioassembly creation, where EntityInfo objects weren't correctly cloned and wired #825
+* More efficient interface ASA calculation in NCS cases #823
+* Add EntityInfo to reduced structure #822 
+
+BioJava 5.2.0
+=============
 
 ### New Feature
 * new algorithm for ASA computation. It is much faster on large molecules. #820
