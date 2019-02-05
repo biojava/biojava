@@ -538,7 +538,7 @@
 			<plugin>
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<configuration>
-					<aggregate>true</aggregate>
+					<goal>javadoc:aggregate</goal>
 					<breakiterator>true</breakiterator>
 					<quiet>true</quiet>
 					<source>${jdk.version}</source>
