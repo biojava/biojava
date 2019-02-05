@@ -23,6 +23,7 @@ package org.biojava.nbio.ws.hmmer;
 import java.util.SortedSet;
 
 import org.biojava.nbio.core.sequence.ProteinSequence;
+import org.junit.Ignore;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -35,6 +36,8 @@ public class TestRemoteHmmerScan {
 			"CVGDLAQAIGVSESAVSHQLRSLRNLRLVSYRKQGRHVYYQLQDHHIVALYQNALDHLQE" +
 			"CR";
 
+	// Ignoring not to depend on another external resource that goes down every so often. Can still be run manually
+	@Ignore
 	@Test
 	public void testHmmerWs() throws Exception {
 
