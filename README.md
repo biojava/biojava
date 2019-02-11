@@ -70,7 +70,7 @@ A [dev mailing list](http://lists.open-bio.org/mailman/listinfo/biojava-dev) use
 ### Please cite
 
 
-**BioJava: an open-source framework for bioinformatics in 2012**<br/>
-*Andreas Prlic; Andrew Yates; Spencer E. Bliven; Peter W. Rose; Julius Jacobsen; Peter V. Troshin; Mark Chapman; Jianjiong Gao; Chuan Hock Koh; Sylvain Foisy; Richard Holland; Gediminas Rimsa; Michael L. Heuer; H. Brandstatter-Muller; Philip E. Bourne; Scooter Willis* <br/>
-[Bioinformatics (2012) 28 (20): 2693-2695.](http://bioinformatics.oxfordjournals.org/content/28/20/2693.abstract) <br/>
-[![doi](http://img.shields.io/badge/doi-10.1093%2Fbioinformatics%2Fbts494-blue.svg?style=flat)](http://bioinformatics.oxfordjournals.org/content/28/20/2693.abstract) [![pubmed](http://img.shields.io/badge/pubmed-22877863-blue.svg?style=flat)](https://www.ncbi.nlm.nih.gov/pubmed/22877863)
+**BioJava 5: A community driven open-source bioinformatics library**<br/>
+*Aleix Lafita, Spencer Bliven, Andreas Prlić, Dmytro Guzenko, Peter W. Rose, Anthony Bradley, Paolo Pavan, Douglas Myers-Turnbull, Yana Valasatava, Michael Heuer, Matt Larson, Stephen K. Burley, Jose M. Duarte* <br/>
+[PLOS Computational Biology 15(2): e1006791](http://dx.plos.org/10.1371/journal.pcbi.1006791) <br/>
+[![doi](http://img.shields.io/badge/doi-10.1371%2Fjournal.pcbi.1006791-blue.svg?style=flat)](https://doi.org/10.1371/journal.pcbi.1006791)
