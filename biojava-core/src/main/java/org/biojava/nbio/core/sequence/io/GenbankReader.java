@@ -34,7 +34,6 @@ import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava.nbio.core.sequence.compound.DNACompoundSet;
 import org.biojava.nbio.core.sequence.compound.NucleotideCompound;
-import org.biojava.nbio.core.sequence.features.AbstractFeature;
 import org.biojava.nbio.core.sequence.features.DBReferenceInfo;
 import org.biojava.nbio.core.sequence.io.template.SequenceCreatorInterface;
 import org.biojava.nbio.core.sequence.io.template.SequenceHeaderParserInterface;
@@ -47,9 +46,10 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
- * Use GenbankReaderHelper as an example of how to use this class where GenbankReaderHelper should be the
+ * Use {@link GenbankReaderHelper} as an example of how to use this class where {@link GenbankReaderHelper} should be the
  * primary class used to read Genbank files
  *
  */
@@ -66,9 +66,9 @@ public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
 	}
 
 	/**
-	 * If you are going to use FileProxyProteinSequenceCreator then do not use this constructor because we need details about
-	 * local file offsets for quick reads. InputStreams does not give you the name of the stream to access quickly via file seek. A seek in
-	 * an inputstream is forced to read all the data so you don't gain anything.
+	 * If you are going to use {@link FileProxyProteinSequenceCreator} then do not use this constructor because we need details about
+	 * local file offsets for quick reads. {@link InputStream} does not give you the name of the stream to access quickly via file seek. A seek in
+	 * an {@link InputStream} is forced to read all the data so you don't gain anything.
 	 * @param is
 	 * @param headerParser
 	 * @param sequenceCreator
@@ -107,18 +107,21 @@ public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
 
 	/**
 	 * The parsing is done in this method.<br>
-	 * This method tries to process all the available Genbank records
+	 * This method will return all the available Genbank records
 	 * in the File or InputStream, closes the underlying resource,
 	 * and return the results in {@link LinkedHashMap}.<br>
-	 * You don't need to call {@link #close()} after calling this method.
+	 * You don't need to call {@link GenbankReader#close()} after calling this method.
 	 * @see #process(int)
 	 * @return {@link HashMap} containing all the parsed Genbank records
 	 * present, starting current fileIndex onwards.
 	 * @throws IOException
 	 * @throws CompoundNotFoundException
+	 * @throws OutOfMemoryError if the input resource is larger than the allocated heap.
 	 */
 	public LinkedHashMap<String,S> process() throws IOException, CompoundNotFoundException {
-		return process(-1);
+		LinkedHashMap<String,S> result = process(-1);
+		close();
+		return result;
 	}
 
 	/**
@@ -137,13 +140,16 @@ public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
 	 * @see #process()
 	 * @author Amr AL-Hossary
 	 * @since 3.0.6
-	 * @param max maximum number of records to return, <code>-1</code> for infinity.
+	 * @param max maximum number of records to return.
 	 * @return {@link HashMap} containing maximum <code>max</code> parsed Genbank records
 	 * present, starting current fileIndex onwards.
 	 * @throws IOException
 	 * @throws CompoundNotFoundException
 	 */
 	public LinkedHashMap<String,S> process(final int max) throws IOException, CompoundNotFoundException {
+
+		if(closed) throw new IOException("Cannot perform action: resource has been closed.");
+
 		LinkedHashMap<String,S> sequences = new LinkedHashMap<>();
 		@SuppressWarnings("unchecked")
 		int i=0;
@@ -158,12 +164,9 @@ public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
 			genbankParser.getSequenceHeaderParser().parseHeader(genbankParser.getHeader(), sequence);
 
 			// add features to new sequence
-			for (String k: genbankParser.getFeatures().keySet()){
-				for (AbstractFeature f: genbankParser.getFeatures(k)){
-					//f.getLocations().setSequence(sequence);  // can't set proper sequence source to features. It is actually needed? Don't think so...
-					sequence.addFeature(f);
-				}
-			}
+			genbankParser.getFeatures().values().stream()
+			.flatMap(List::stream)
+			.forEach(sequence::addFeature);
 
 			// add taxonomy ID to new sequence
 			ArrayList<DBReferenceInfo> dbQualifier = genbankParser.getDatabaseReferences().get("db_xref");
@@ -175,10 +178,6 @@ public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
 			sequences.put(sequence.getAccession().getID(), sequence);
 		}
 
-		if (max < 0) {
-			close();
-		}
-
 		return sequences;
 	}
 
@@ -187,11 +186,12 @@ public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
 			bufferedReader.close();
 			this.closed = true;
 		} catch (IOException e) {
-			logger.error("Couldn't close the reader. {}", e.getMessage());
+			logger.error("Couldn't close the reader.", e);
 			this.closed = false;
 		}
 	}
 
+	//TODO turn this into a test case?
 	public static void main(String[] args) throws Exception {
 		String proteinFile = "src/test/resources/BondFeature.gb";
 		FileInputStream is = new FileInputStream(proteinFile);
@@ -206,6 +206,7 @@ public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
 		LinkedHashMap<String,DNASequence> dnaSequences = dnaReader.process();
 		System.out.println(dnaSequences);
 
+		//TODO restore CraftedFeature.gb or delete this code
 		String crazyFile = "src/test/resources/CraftedFeature.gb";
 		is = new FileInputStream(crazyFile);
 		GenbankReader<DNASequence, NucleotideCompound> crazyReader = new GenbankReader<>(is, new GenericGenbankHeaderParser<>(), new DNASequenceCreator(DNACompoundSet.getDNACompoundSet()));
