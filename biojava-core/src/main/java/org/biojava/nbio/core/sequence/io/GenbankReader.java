@@ -26,14 +26,8 @@
 package org.biojava.nbio.core.sequence.io;
 
 import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
-import org.biojava.nbio.core.sequence.DNASequence;
 import org.biojava.nbio.core.sequence.DataSource;
-import org.biojava.nbio.core.sequence.ProteinSequence;
 import org.biojava.nbio.core.sequence.TaxonomyID;
-import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
-import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
-import org.biojava.nbio.core.sequence.compound.DNACompoundSet;
-import org.biojava.nbio.core.sequence.compound.NucleotideCompound;
 import org.biojava.nbio.core.sequence.features.DBReferenceInfo;
 import org.biojava.nbio.core.sequence.io.template.SequenceCreatorInterface;
 import org.biojava.nbio.core.sequence.io.template.SequenceHeaderParserInterface;
@@ -42,7 +36,13 @@ import org.biojava.nbio.core.sequence.template.Compound;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -148,7 +148,9 @@ public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
 	 */
 	public LinkedHashMap<String,S> process(final int max) throws IOException, CompoundNotFoundException {
 
-		if(closed) throw new IOException("Cannot perform action: resource has been closed.");
+		if(closed){
+			throw new IOException("Cannot perform action: resource has been closed.");
+		}
 
 		LinkedHashMap<String,S> sequences = new LinkedHashMap<>();
 		@SuppressWarnings("unchecked")
@@ -190,31 +192,5 @@ public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
 			this.closed = false;
 		}
 	}
-
-	//TODO turn this into a test case?
-	public static void main(String[] args) throws Exception {
-		String proteinFile = "src/test/resources/BondFeature.gb";
-		FileInputStream is = new FileInputStream(proteinFile);
-
-		GenbankReader<ProteinSequence, AminoAcidCompound> proteinReader = new GenbankReader<>(is, new GenericGenbankHeaderParser<>(), new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
-		LinkedHashMap<String,ProteinSequence> proteinSequences = proteinReader.process();
-		System.out.println(proteinSequences);
-
-		String inputFile = "src/test/resources/NM_000266.gb";
-		is = new FileInputStream(inputFile);
-		GenbankReader<DNASequence, NucleotideCompound> dnaReader = new GenbankReader<>(is, new GenericGenbankHeaderParser<>(), new DNASequenceCreator(DNACompoundSet.getDNACompoundSet()));
-		LinkedHashMap<String,DNASequence> dnaSequences = dnaReader.process();
-		System.out.println(dnaSequences);
-
-		//TODO restore CraftedFeature.gb or delete this code
-		String crazyFile = "src/test/resources/CraftedFeature.gb";
-		is = new FileInputStream(crazyFile);
-		GenbankReader<DNASequence, NucleotideCompound> crazyReader = new GenbankReader<>(is, new GenericGenbankHeaderParser<>(), new DNASequenceCreator(DNACompoundSet.getDNACompoundSet()));
-		LinkedHashMap<String,DNASequence> crazyAnnotatedSequences = crazyReader.process();
-
-		is.close();
-		System.out.println(crazyAnnotatedSequences);
-	}
-
 }
 
