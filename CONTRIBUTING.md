@@ -3,8 +3,13 @@ BioJava is composed of several submodules, one per broad bioinformatics topic.
 [biojava-core](https://github.com/biojava/biojava/tree/master/biojava-core) contains general core methods that are shared across different modules.
 
 ## Contributing
-- All contributions should happen through pull requests so that there is open reviewing. The master branch is protected,
-users can't push directly to it.
+- Fork the repo
+- On your fork branch off master (Ignore all other branches)
+- Submit pull request from your branch to the biojava/biojava master branch
+- If you are submitting a fix related to an existing issue be sure to include '#<issue number>' in the commit message to make processing your pull request easier.
+
+## Coding
+- Please use the provided formatting xml file in /development/eclipse (intellij users can import the formatter file)
 - Please add javadocs following standard java conventions. Javadocs are a must for public facing API methods.
 - Add `@author` tags to class javadocs.
 - Be sure to add `@since` tags whenever adding a new public-facing API method/field/class.
