@@ -37,7 +37,7 @@
 *.sto   text
 *.tsv   text
 *.txt   text
-*.xml   text
+*.xml   text eol=lf #Causing decompression test to fail when line endings in org/biojava/nbio/core/util/build.xml are crlf
 *.xsd   text
 *.yml   text
 
