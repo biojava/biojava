@@ -1,0 +1,83 @@
+LOCUS       AFP42651                 630 aa            linear   BCT 31-JAN-2014
+DEFINITION  Fatty-acid-CoA ligase FadD32 [Mycolicibacterium smegmatis MC2 155].
+ACCESSION   AFP42651
+VERSION     AFP42651.1
+DBLINK      BioProject: PRJNA38453
+            BioSample: SAMN02603392
+DBSOURCE    accession CP001663.1
+KEYWORDS    .
+SOURCE      Mycolicibacterium smegmatis MC2 155
+  ORGANISM  Mycolicibacterium smegmatis MC2 155
+            Bacteria; Actinobacteria; Corynebacteriales; Mycobacteriaceae;
+            Mycolicibacterium.
+REFERENCE   1  (residues 1 to 630)
+  AUTHORS   Perrodou,E., Deshayes,C., Muller,J., Schaeffer,C., Van
+            Dorsselaer,A., Ripp,R., Poch,O., Reyrat,J.M. and Lecompte,O.
+  TITLE     ICDS database: interrupted CoDing sequences in prokaryotic genomes
+  JOURNAL   Nucleic Acids Res. 34 (DATABASE ISSUE), D338-D343 (2006)
+   PUBMED   16381882
+REFERENCE   2  (residues 1 to 630)
+  AUTHORS   Deshayes,C., Perrodou,E., Gallien,S., Euphrasie,D., Schaeffer,C.,
+            Van-Dorsselaer,A., Poch,O., Lecompte,O. and Reyrat,J.M.
+  TITLE     Interrupted coding sequences in Mycobacterium smegmatis: authentic
+            mutations or sequencing errors?
+  JOURNAL   Genome Biol. 8 (2), R20 (2007)
+   PUBMED   17295914
+  REMARK    Publication Status: Online-Only
+REFERENCE   3  (residues 1 to 630)
+  AUTHORS   Gallien,S., Perrodou,E., Carapito,C., Deshayes,C., Reyrat,J.M., Van
+            Dorsselaer,A., Poch,O., Schaeffer,C. and Lecompte,O.
+  TITLE     Ortho-proteogenomics: multiple proteomes investigation through
+            orthology and a new MS-based protocol
+  JOURNAL   Genome Res. 19 (1), 128-135 (2009)
+   PUBMED   18955433
+REFERENCE   4  (residues 1 to 630)
+  AUTHORS   Reyrat,J.M., Perrodou,E., Deshayes,C., Euphrasie,D., Gagniere,N.,
+            Gallien,S., Jones,M., Kocincova,D., Poch,O., Quevillon,E., Ripp,R.,
+            Schaeffer,C., Singh,A., Van Dorsselaer,A. and Lecompte,O.
+  TITLE     Re-annotation of the genome sequence of Mycobacterium smegmatis
+  JOURNAL   Unpublished
+REFERENCE   5  (residues 1 to 630)
+  AUTHORS   Perrodou,E., Reyrat,J.M., Deshayes,C., Euphrasie,D., Gagniere,N.,
+            Gallien,S., Jones,M., Kocincova,D., Poch,O., Quevillon,E., Ripp,R.,
+            Schaeffer,C., Singh,A., Van Dorsselaer,A. and Lecompte,O.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (22-JUN-2009) Laboratory of Integrative Bioinformatics
+            and Genomics, Institute of Genetics and Molecular and Cellular
+            Biology, 1 rue Laurent Fries BP 10142, Illkirch Cedex 67404, France
+COMMENT     Method: conceptual translation.
+FEATURES             Location/Qualifiers
+     source          1..630
+                     /organism="Mycolicibacterium smegmatis MC2 155"
+                     /strain="MC2 155"
+                     /db_xref="taxon:246196"
+     Protein         1..630
+                     /product="Fatty-acid-CoA ligase FadD32"
+     Region          1..630
+                     /region_name="PRK07769"
+                     /note="long-chain-fatty-acid--CoA ligase; Validated"
+                     /db_xref="CDD:181109"
+     CDS             1..630
+                     /gene="fadD32"
+                     /locus_tag="MSMEI_6225"
+                     /coded_by="complement(CP001663.1:6463934..6465826)"
+                     /experiment="Nterminal peptide experimentally determined
+                     by amino acid sequencing after protein digestion"
+                     /note="GO_function: GO:0003824;
+                     GO_process: GO:0008152"
+                     /transl_table=11
+                     /db_xref="PFAM:PF00501"
+ORIGIN      
+        1 mpfhnpfikd gqikfpdgss ivahverwak vrgdklayrf ldfsterdgv prdltwaqfs
+       61 arnravaarl qqvtqpgdrv ailcpqnldy lvaffgalya griavplfdp sepghvgrlh
+      121 avldnchpsa ilttteaaeg vrkffrtrpa nqrprviavd avpddvastw vnpdepdett
+      181 iaylqytsgs triptgvqit hlnlatnvvq viealegeeg drglswlpff hdmglitall
+      241 apmighyftf mtpaafvrrp erwirelark egdtggtisv apnfafdhaa argvpkpgsp
+      301 pldlsnvkav lngsepisaa tvrrfneafg pfgfppkaik psyglaeatl fvsttpsaee
+      361 pkiitvdrdq lnsgrivevd adspkavaqa sagkvgiaew avivdaesat elpdgqvgei
+      421 wisgqnmgtg ywgkpeesva tfqnilksrt npshaegatd datwvrtgdy gafydgdlyi
+      481 tgrvkdlvii dgrnhypqdl eysaqeaska irtgyvaafs vpanqlpdev fenahsgikr
+      541 dpddtseqlv ivaerapgah kldigpitdd iraaiavrhg vtvrdvllta agaiprtssg
+      601 kigrracraa yldgslragk vandfpdatd
+//
+

@@ -1,0 +1,70 @@
+LOCUS       YP_001336026             324 aa            linear   CON 16-DEC-2014
+DEFINITION  lipid A biosynthesis (KDO)2-(lauroyl)-lipid IVA acyltransferase
+            [Klebsiella pneumoniae subsp. pneumoniae MGH 78578].
+ACCESSION   YP_001336026
+VERSION     YP_001336026.1
+DBLINK      BioProject: PRJNA57619
+DBSOURCE    REFSEQ: accession NC_009648.1
+KEYWORDS    RefSeq.
+SOURCE      Klebsiella pneumoniae subsp. pneumoniae MGH 78578
+  ORGANISM  Klebsiella pneumoniae subsp. pneumoniae MGH 78578
+            Bacteria; Proteobacteria; Gammaproteobacteria; Enterobacteriales;
+            Enterobacteriaceae; Klebsiella.
+REFERENCE   1  (residues 1 to 324)
+  CONSRTM   NCBI Genome Project
+  TITLE     Direct Submission
+  JOURNAL   Submitted (09-JUL-2007) National Center for Biotechnology
+            Information, NIH, Bethesda, MD 20894, USA
+REFERENCE   2  (residues 1 to 324)
+  AUTHORS   McClelland,M., Sanderson,E.K., Spieth,J., Clifton,W.S.,
+            Latreille,P., Sabo,A., Pepin,K., Bhonagiri,V., Porwollik,S., Ali,J.
+            and Wilson,R.K.
+  CONSRTM   The Klebsiella pneumonia Genome Sequencing Project
+  TITLE     Direct Submission
+  JOURNAL   Submitted (06-SEP-2006) Genetics, Genome Sequencing Center, 4444
+            Forest Park Parkway, St. Louis, MO 63108, USA
+COMMENT     VALIDATED REFSEQ: This record has undergone validation or
+            preliminary review. The reference sequence was derived from
+            ABR77796.
+            Method: conceptual translation.
+FEATURES             Location/Qualifiers
+     source          1..324
+                     /organism="Klebsiella pneumoniae subsp. pneumoniae MGH
+                     78578"
+                     /strain="ATCC 700721; MGH 78578"
+                     /sub_species="pneumoniae"
+                     /db_xref="ATCC:700721"
+                     /db_xref="taxon:272620"
+     Protein         1..324
+                     /product="lipid A biosynthesis (KDO)2-(lauroyl)-lipid IVA
+                     acyltransferase"
+                     /calculated_mol_wt=37353
+     Region          1..310
+                     /region_name="PRK08943"
+                     /note="lipid A biosynthesis (KDO)2-(lauroyl)-lipid IVA
+                     acyltransferase; Validated"
+                     /db_xref="CDD:236355"
+     Site            order(139,142,144,161..164,210..212)
+                     /site_type="other"
+                     /note="putative acyl-acceptor binding pocket"
+                     /db_xref="CDD:153246"
+     CDS             1..324
+                     /gene="msbB"
+                     /locus_tag="KPN_02370"
+                     /coded_by="complement(NC_009648.1:2595658..2596632)"
+                     /inference="ab initio prediction:Genemark:2.0"
+                     /inference="protein motif:Pfam:IPR004960"
+                     /note="Transfers myristate or laurate, activated on ACP,
+                     to the lipid IVA moiety of (KDO)2-(lauroyl)-lipid IVA"
+                     /transl_table=11
+                     /db_xref="GeneID:5340071"
+CONTIG      join(WP_002911442.1:1..324)
+ORIGIN      
+        1 metkknnief ipkfeksfll prywgawlgv fafagialtp psfrdpllgk lgrlvgrlak
+       61 ssrrraqinl lycfpeksey ereaiidamy asapqamvmm aelglrdpqk ilarvdwqgk
+      121 aiidemqrnn ekviflvpha wgvdipamlm asggqkmaam fhnqgnpvfd yvwntvrrrf
+      181 ggrmharndg ikpfiqsvrq gywgyylpdq dhgaehsefv dffatykatl paigrlmkvc
+      241 rarvvplfpv ydskthrltv lvrppmddll daddttiarr mneevevfvk phteqytwil
+      301 kllktrkpge iepykrkelf pkkk
+//
+
