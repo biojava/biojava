@@ -97,7 +97,14 @@ public class GenbankProxySequenceReaderTest {
 	 * @throws IOException when something goes wrong with copying the files.
 	 */
 	private void copyTestFileToWorkingDirectory(String filename) throws IOException {
-		String dest = System.getProperty("java.io.tmpdir") + filename;
+		String destRoot = System.getProperty("java.io.tmpdir");
+
+		//if the directory does not end with a slash or backslash then add one
+		if(!(destRoot.endsWith("/") || destRoot.endsWith("\\"))){
+			destRoot += destRoot.contains("/")? "/" : "\\";
+		}
+
+		String dest =  destRoot + filename;
 		String src = "org/biojava/nbio/core/sequence/GenbankProxySequenceReader/" + filename;
 
 		FileOutputStream destination = new FileOutputStream(new File(dest));
