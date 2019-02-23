@@ -20,7 +20,6 @@
  */
 package org.biojava.nbio.core.sequence.loader;
 
-import org.apache.commons.io.IOUtils;
 import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.core.sequence.ProteinSequence;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
@@ -79,7 +78,7 @@ public class GenbankProxySequenceReaderTest {
 
 	/**
 	 * In {@link GenbankProxySequenceReader} there is a check to see if the requested files are already in the temp
-	 * directory before attemting to retrieve them from the remote server. so simply copying the test files to the temp
+	 * directory before attempting to retrieve them from the remote server. so simply copying the test files to the temp
 	 * directory avoids calling out to the server and hitting a 429 status code from the server which fails the build.
 	 * @throws IOException
 	 */
@@ -107,11 +106,21 @@ public class GenbankProxySequenceReaderTest {
 		String dest =  destRoot + filename;
 		String src = "org/biojava/nbio/core/sequence/GenbankProxySequenceReader/" + filename;
 
+		//Remove any pre-existing files
+		File d = new File(dest);
+		d.delete();
+
 		FileOutputStream destination = new FileOutputStream(new File(dest));
 		InputStream source = this.getClass().getClassLoader().getResourceAsStream(src);
 
-		IOUtils.copy(source, destination);
+a		int read;
+		byte[] buffer = new byte[1024];
 
+		while((read = source.read(buffer)) > 0){
+			destination.write(buffer, 0, read);
+		}
+
+		destination.flush();
 		destination.close();
 		source.close();
 	}
