@@ -113,7 +113,7 @@ public class GenbankProxySequenceReaderTest {
 		FileOutputStream destination = new FileOutputStream(new File(dest));
 		InputStream source = this.getClass().getClassLoader().getResourceAsStream(src);
 
-a		int read;
+		int read;
 		byte[] buffer = new byte[1024];
 
 		while((read = source.read(buffer)) > 0){
