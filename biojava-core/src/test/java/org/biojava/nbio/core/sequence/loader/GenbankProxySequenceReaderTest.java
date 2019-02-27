@@ -40,6 +40,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -104,25 +106,18 @@ public class GenbankProxySequenceReaderTest {
 		}
 
 		String dest =  destRoot + filename;
-		String src = "org/biojava/nbio/core/sequence/GenbankProxySequenceReader/" + filename;
+		String src = "org/biojava/nbio/core/sequence/loader/" + filename;
 
 		//Remove any pre-existing files
 		File d = new File(dest);
 		d.delete();
 
-		FileOutputStream destination = new FileOutputStream(new File(dest));
-		InputStream source = this.getClass().getClassLoader().getResourceAsStream(src);
+		try(FileOutputStream destination = new FileOutputStream(d);
+		InputStream is = this.getClass().getClassLoader().getResourceAsStream(src);
+		ReadableByteChannel source = Channels.newChannel(is)) {
 
-		int read;
-		byte[] buffer = new byte[1024];
-
-		while((read = source.read(buffer)) > 0){
-			destination.write(buffer, 0, read);
+			destination.getChannel().transferFrom(source, 0, Long.MAX_VALUE);
 		}
-
-		destination.flush();
-		destination.close();
-		source.close();
 	}
 
 
