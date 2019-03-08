@@ -1,0 +1,87 @@
+LOCUS       NP_051038                123 aa            linear   PLN 26-MAR-2010
+DEFINITION  ribosomal protein S12 (chloroplast) [Arabidopsis thaliana].
+ACCESSION   NP_051038
+VERSION     NP_051038.1
+DBLINK      Project: 116
+            BioProject: PRJNA116
+DBSOURCE    REFSEQ: accession NC_000932.1
+KEYWORDS    RefSeq.
+SOURCE      chloroplast Arabidopsis thaliana (thale cress)
+  ORGANISM  Arabidopsis thaliana
+            Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta;
+            Spermatophyta; Magnoliophyta; eudicotyledons; Gunneridae;
+            Pentapetalae; rosids; malvids; Brassicales; Brassicaceae;
+            Camelineae; Arabidopsis.
+REFERENCE   1  (residues 1 to 123)
+  AUTHORS   Sato,S., Nakamura,Y., Kaneko,T., Asamizu,E. and Tabata,S.
+  TITLE     Complete structure of the chloroplast genome of Arabidopsis
+            thaliana
+  JOURNAL   DNA Res. 6 (5), 283-290 (1999)
+   PUBMED   10574454
+REFERENCE   2  (residues 1 to 123)
+  CONSRTM   NCBI Genome Project
+  TITLE     Direct Submission
+  JOURNAL   Submitted (07-APR-2000) National Center for Biotechnology
+            Information, NIH, Bethesda, MD 20894, USA
+REFERENCE   3  (residues 1 to 123)
+  AUTHORS   Nakamura,Y.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (09-SEP-1999) Laboratory of Gene Structure 2, Kazusa DNA
+            Research Institute, Yana 1532-3, Kisarazu, Chiba 292-0812, Japan
+COMMENT     REVIEWED REFSEQ: This record has been curated by NCBI staff. The
+            reference sequence was derived from BAA84409.
+            Method: conceptual translation.
+FEATURES             Location/Qualifiers
+     source          1..123
+                     /organism="Arabidopsis thaliana"
+                     /organelle="plastid:chloroplast"
+                     /db_xref="taxon:3702"
+                     /ecotype="Columbia"
+     Protein         1..123
+                     /product="ribosomal protein S12"
+                     /calculated_mol_wt=13633
+     Region          1..123
+                     /region_name="rps12"
+                     /note="ribosomal protein S12; CHL00051"
+                     /db_xref="CDD:176992"
+     Site            order(4..5,7..8,11..12)
+                     /site_type="other"
+                     /note="S17 interaction site [polypeptide binding]"
+                     /db_xref="CDD:239466"
+     Site            4
+                     /site_type="other"
+                     /note="S8 interaction site"
+                     /db_xref="CDD:239466"
+     Site            order(12..14,26,28..29,31,46..47,49..51,58,66,69..70,
+                     83..84,88..89,110)
+                     /site_type="other"
+                     /note="16S rRNA interaction site [nucleotide binding]"
+                     /db_xref="CDD:239466"
+     Site            order(43..44,88)
+                     /site_type="other"
+                     /note="streptomycin interaction site [chemical binding]"
+                     /db_xref="CDD:239466"
+     Site            44..45
+                     /site_type="other"
+                     /note="23S rRNA interaction site [nucleotide binding]"
+                     /db_xref="CDD:239466"
+     Site            order(45..50,70..78)
+                     /site_type="other"
+                     /note="aminoacyl-tRNA interaction site (A-site)
+                     [nucleotide binding]"
+                     /db_xref="CDD:239466"
+     CDS             1..123
+                     /gene="rps12"
+                     /locus_tag="ArthCp047"
+                     /coded_by="join(complement(NC_000932.1:69611..69724),
+                     NC_000932.1:139856..140087,NC_000932.1:140625..140650)"
+                     /trans_splicing
+                     /note="trans-spliced"
+                     /transl_table=11
+                     /db_xref="GeneID:844801"
+ORIGIN      
+        1 mptikqlirn trqpirnvtk spalrgcpqr rgtctrvyti tpkkpnsalr kvarvrltsg
+       61 feitayipgi ghnlqehsvv lvrggrvkdl pgvryhivrg tldavgvkdr qqgrskygvk
+      121 kpk
+//
+

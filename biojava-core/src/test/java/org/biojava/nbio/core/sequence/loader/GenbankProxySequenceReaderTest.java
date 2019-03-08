@@ -24,21 +24,27 @@ import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.core.sequence.ProteinSequence;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
+import org.biojava.nbio.core.sequence.features.AbstractFeature;
 import org.biojava.nbio.core.sequence.features.FeatureInterface;
+import org.biojava.nbio.core.sequence.features.Qualifier;
 import org.biojava.nbio.core.sequence.template.AbstractSequence;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import org.biojava.nbio.core.sequence.features.AbstractFeature;
-import org.biojava.nbio.core.sequence.features.Qualifier;
 
 /**
  * Testing example for issue #834
@@ -58,7 +64,7 @@ public class GenbankProxySequenceReaderTest {
 
 	@Parameterized.Parameters
 	public static Collection<String[]> getExamples() {
-		String[][] out = new String[][]{
+		String[][] accessorIds = new String[][]{
 			{"399235158"},
 			{"7525057"},
 			{"379015144"},
@@ -69,8 +75,51 @@ public class GenbankProxySequenceReaderTest {
 			{"254839678"}
 		};
 
-		return Arrays.asList(out);
+		return Arrays.asList(accessorIds);
 	}
+
+	/**
+	 * In {@link GenbankProxySequenceReader} there is a check to see if the requested files are already in the temp
+	 * directory before attempting to retrieve them from the remote server. so simply copying the test files to the temp
+	 * directory avoids calling out to the server and hitting a 429 status code from the server which fails the build.
+	 * @throws IOException
+	 */
+	@Before
+	public void copyTestFiles() throws IOException {
+		Collection<String[]> accessorIds = getExamples();
+		for (String[] arr: accessorIds) {
+			copyTestFileToWorkingDirectory(arr[0]+".gb");
+		}
+	}
+
+	/**
+	 * Convenience method for {@link GenbankProxySequenceReaderTest#copyTestFiles()}
+	 * @param filename name of the file to copy from the resource folder
+	 * @throws IOException when something goes wrong with copying the files.
+	 */
+	private void copyTestFileToWorkingDirectory(String filename) throws IOException {
+		String destRoot = System.getProperty("java.io.tmpdir");
+
+		//if the directory does not end with a slash or backslash then add one
+		if(!(destRoot.endsWith("/") || destRoot.endsWith("\\"))){
+			destRoot += destRoot.contains("/")? "/" : "\\";
+		}
+
+		String dest =  destRoot + filename;
+		String src = "org/biojava/nbio/core/sequence/loader/" + filename;
+
+		//Remove any pre-existing files
+		File d = new File(dest);
+		d.delete();
+
+		try(FileOutputStream destination = new FileOutputStream(d);
+		InputStream is = this.getClass().getClassLoader().getResourceAsStream(src);
+		ReadableByteChannel source = Channels.newChannel(is)) {
+
+			destination.getChannel().transferFrom(source, 0, Long.MAX_VALUE);
+		}
+	}
+
 
 	@Test
 	public void testFeatures() throws IOException, InterruptedException, CompoundNotFoundException {
@@ -120,9 +169,6 @@ public class GenbankProxySequenceReaderTest {
 			Assert.assertTrue(!codedBy.isEmpty());
 			logger.info("\t\tcoded_by: {}", codedBy);
 		}
-
-		// genbank has limits on requests per second, we need to give it some time for next test or otherwise we get 429 http error codes - JD 2018-12-14
-		Thread.sleep(500);
 	}
 
 	@Test
@@ -161,9 +207,5 @@ public class GenbankProxySequenceReaderTest {
 		} else {
 			logger.info("target {} has no CDS", gi);
 		}
-
-		// genbank has limits on requests per second, we need to give it some time for next test or otherwise we get 429 http error codes - JD 2018-12-14
-		Thread.sleep(500);
-
 	}
 }
