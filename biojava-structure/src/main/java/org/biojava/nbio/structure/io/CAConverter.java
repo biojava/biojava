@@ -35,29 +35,6 @@ import java.util.List;
 public class CAConverter {
 
 
-	/** Convert a List of chain objects to another List of chains, containing C-alpha atoms only.
-	 *
-	 * @param chains list of chains
-	 * @return a list of chains
-	 * @deprecated Use the more generic {@link #getRepresentativeAtomsOnly(List)} instead
-	 */
-	@Deprecated
-	public static List<Chain> getCAOnly(List<Chain> chains){
-		List<Chain> newChains = new ArrayList<Chain>();
-
-		for (Chain chain : chains){
-			Chain newChain = getCAOnly(chain);
-			newChains.add(newChain);
-
-		}
-
-		return newChains;
-
-
-
-	}
-
-
 	/** Convert a List of chain objects to another List of chains, containing Representative atoms only.
 	 *
 	 * @param chains list of chains
@@ -75,50 +52,7 @@ public class CAConverter {
 		return newChains;
 	}
 
-	/** 
-	 * Convert a Chain to a new Chain containing C-alpha atoms only.
-	 *
-	 * @param chain to convert
-	 * @return a new chain containing Amino acids with C-alpha only.
-	 * @deprecated Use the more generic {@link #getRepresentativeAtomsOnly(Chain)} instead
-	 */
-	@Deprecated
-	public static Chain getCAOnly(Chain chain){
-
-		Chain newChain = new ChainImpl();
-		newChain.setChainID(chain.getChainID());
-		newChain.setEntityInfo(chain.getEntityInfo());
-		newChain.setSwissprotId(chain.getSwissprotId());
-
-		List<Group> groups = chain.getAtomGroups();
-
-		grouploop:
-			for (Group g: groups){
-				List<Atom> atoms = g.getAtoms();
-
-				if ( ! (g instanceof AminoAcid))
-					continue;
-
-				for (Atom a : atoms){
-
-					if ( a.getName().equals(StructureTools.CA_ATOM_NAME) && a.getElement()==Element.C){
-						// we got a CA atom in this group!
-						AminoAcid n = new AminoAcidImpl();
-						n.setPDBName(g.getPDBName());
-						n.setResidueNumber(g.getResidueNumber());
-						n.addAtom(a);
-						newChain.addGroup(n);
-						continue grouploop;
-
-					}
-				}
-
-			}
-		return newChain;
-	}
-
-
-	/** 
+	/**
 	 * Convert a Chain to a new Chain containing C-alpha atoms only.
 	 *
 	 * @param chain to convert

@@ -29,11 +29,11 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 
-/** 
- * Provides a cache for storing multiple small files in memory. Can be used to e.g cache gzip compressed PDB files 
+/**
+ * Provides a cache for storing multiple small files in memory. Can be used to e.g cache gzip compressed PDB files
  * for avoiding disk IO bottlenecks.
  * Note this is just a wrapper for the singleton cache.
- * 
+ *
  * @author Andreas Prlic.
  *
  */
@@ -116,6 +116,6 @@ public class FlatFileCache {
 	   cache.clear();
 	}
 
-	
+
 
 }

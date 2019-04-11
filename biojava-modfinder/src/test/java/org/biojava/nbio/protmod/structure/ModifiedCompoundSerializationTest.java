@@ -24,12 +24,14 @@
 
 package org.biojava.nbio.protmod.structure;
 
-import junit.framework.TestCase;
 import org.biojava.nbio.protmod.ModificationCategory;
 import org.biojava.nbio.protmod.ProteinModificationRegistry;
 import org.biojava.nbio.protmod.io.ModifiedCompoundXMLConverter;
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.Structure;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +40,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class ModifiedCompoundSerializationTest extends TestCase {
+public class ModifiedCompoundSerializationTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(ModifiedCompoundSerializationTest.class);
 
@@ -46,7 +48,7 @@ public class ModifiedCompoundSerializationTest extends TestCase {
 
 	private String[][] strucs;
 
-	@Override
+	@Before
 	public void setUp() {
 		strucs = new String[1][1];
 
@@ -55,6 +57,7 @@ public class ModifiedCompoundSerializationTest extends TestCase {
 		//strucs = ProteinModificationParserTest.setUpLongTest();
 	}
 
+	@Test
 	public void testMulti() {
 		int count = 0;
 		for ( String[] name : strucs){
@@ -64,16 +67,18 @@ public class ModifiedCompoundSerializationTest extends TestCase {
 				count++;
 			} catch (Exception e){
 				logger.error("Failed after running {} serializations at PDB ID: {}", count, name[0], e);
-				fail(e.getMessage());
+				Assert.fail(e.getMessage());
 			}
 		}
 	}
 
+	@Test
 	public void test1CAD(){
 		String pdbId = "1CAD";
 		testXMLSerialization(pdbId);
 	}
 
+	@Test
 	public void test1a4w(){
 		String pdbId = "1a4w";
 		List<ModifiedCompound> all = testXMLSerialization(pdbId);
@@ -110,15 +115,16 @@ public class ModifiedCompoundSerializationTest extends TestCase {
 				logger.info(mc.toString());
 			}
 
-			assertEquals(ModificationCategory.CROSS_LINK_2, cat);
+			Assert.assertEquals(ModificationCategory.CROSS_LINK_2, cat);
 		}
 		} catch (Exception e){
 			logger.error("Exception: ", e);
-			fail(e.getMessage());
+			Assert.fail(e.getMessage());
 		}
 
 	}
 
+	@Test
 	public void test1UIS(){
 		String pdbId = "1UIS";
 		testXMLSerialization(pdbId);
@@ -129,6 +135,7 @@ public class ModifiedCompoundSerializationTest extends TestCase {
 	//		testXMLSerialization(pdbId);
 	//	}
 
+	@Test
 	public void test1CDG(){
 		String pdbId = "1CDG";
 		testXMLSerialization(pdbId);
@@ -155,7 +162,7 @@ public class ModifiedCompoundSerializationTest extends TestCase {
 					//logger.info( pdbId + " got XML: " + String.format("%n") + xml);
 					ModifiedCompound newMC = getModifiedCompoundFromXML(xml);
 					String xml2 = doXMLSerialization(newMC);
-					assertEquals(xml,xml2);
+					Assert.assertEquals(xml, xml2);
 					//logger.info(xml2);
 					//assertEquals("The two objects are not equal before and after XML serialization" , mc, newMC);
 					//logger.info(mc.getDescription());
@@ -168,7 +175,7 @@ public class ModifiedCompoundSerializationTest extends TestCase {
 			logger.error("Error when serializing {}", pdbId);
 			logger.error(currentMC.getDescription());
 			logger.error(xml, e);
-			fail(e.getMessage());
+			Assert.fail(e.getMessage());
 		}
 		xml = null;
 		currentMC =null;
@@ -184,17 +191,18 @@ public class ModifiedCompoundSerializationTest extends TestCase {
 		return ModifiedCompoundXMLConverter.toXML(mc);
 	}
 
+	@Test
 	public void testFlatFileParsing(){
 		InputStream inStream = this.getClass().getResourceAsStream("/org/biojava/nbio/protmod/parser/modifiedCompound.xml");
-		assertNotNull(inStream);
+		Assert.assertNotNull(inStream);
 		try {
 			String xml = convertStreamToString(inStream);
 			//logger.info(xml);
 			ModifiedCompound newMC = getModifiedCompoundFromXML(xml);
 
-			assertNotNull(newMC);
+			Assert.assertNotNull(newMC);
 		} catch (Exception e){
-			fail(e.getMessage());
+			Assert.fail(e.getMessage());
 		}
 
 	}

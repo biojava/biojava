@@ -364,7 +364,7 @@ public class ChainImpl implements Chain {
 			foundStart = false;
 		}
 
-		
+
 		for (Group g: groups){
 
 			// Check for start
@@ -566,7 +566,7 @@ public class ChainImpl implements Chain {
 		}
 		return str.toString();
 	}
-	
+
 	/**
 	 * Get the one letter sequence so that Sequence is guaranteed to
 	 * be the same length as seqResGroups.
@@ -637,7 +637,9 @@ public class ChainImpl implements Chain {
 	@Override
 	public void setSeqResGroups(List<Group> groups){
 		for (Group g: groups){
-			g.setChain(this);
+			if (g != null) {
+				g.setChain(this);
+			}
 		}
 		this.seqResGroups = groups;
 	}
@@ -696,7 +698,7 @@ public class ChainImpl implements Chain {
 	public List<SeqMisMatch> getSeqMisMatches() {
 		return seqMisMatches;
 	}
-	
+
 	@Override
 	public EntityType getEntityType() {
 		if (getEntityInfo()==null) return null;

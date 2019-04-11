@@ -469,7 +469,7 @@ public class FeatureList extends ArrayList<FeatureI> {
 	 * used by sort routine
 	 */
 	private class FeatureComparator implements Comparator<FeatureI>, Serializable {
-        private static final long serialVersionUID = 1;
+	private static final long serialVersionUID = 1;
 
 		@Override
 		public int compare(FeatureI a, FeatureI b) {
@@ -496,16 +496,6 @@ public class FeatureList extends ArrayList<FeatureI> {
 
 		return new FeatureList(Arrays.asList(array));
 	}
-
-	/**
-	 * @deprecated
-	 *
-	 */
-	// FIXME features may have a null location() !!
-	@Deprecated
-	static public void main(String[] args) {
-	}
-
 
 	/**
 	 * Add a list of attributes that will be used as indexes for queries

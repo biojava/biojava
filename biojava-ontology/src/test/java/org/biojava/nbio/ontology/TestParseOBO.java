@@ -22,8 +22,9 @@
 
 package org.biojava.nbio.ontology;
 
-import junit.framework.TestCase;
 import org.biojava.nbio.ontology.io.OboParser;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.io.*;
 import java.text.ParseException;
@@ -31,34 +32,35 @@ import java.util.Set;
 
 import static org.biojava.nbio.ontology.obo.OboFileHandler.NAMESPACE;
 
-public class TestParseOBO extends TestCase {
+public class TestParseOBO {
 
+	@Test
 	public void testNamespace() throws IOException, ParseException {
 
 		String testTermEntry = "\n[Term]\n" +
-                "id: SO:0000691\n" +
-                "name: cleaved_initiator_methionine \n" +
-                "namespace: sequence\n" +
-                "alt_id: BS:00067\n" +
-                "def: \"The initiator methionine that has been cleaved from a mature polypeptide sequence.\" [EBIBS:GAR]\n" +
-                "subset: biosapiens\n" +
-                "synonym: \"cleaved initiator methionine\" EXACT []\n" +
-                "synonym: \"init_met\" RELATED [uniprot:feature_type]\n" +
-                "synonym: \"initiator methionine\" RELATED []\n" +
-                "is_a: SO:0100011 ! cleaved_peptide_region\n\n";
+		"id: SO:0000691\n" +
+		"name: cleaved_initiator_methionine \n" +
+		"namespace: sequence\n" +
+		"alt_id: BS:00067\n" +
+		"def: \"The initiator methionine that has been cleaved from a mature polypeptide sequence.\" [EBIBS:GAR]\n" +
+		"subset: biosapiens\n" +
+		"synonym: \"cleaved initiator methionine\" EXACT []\n" +
+		"synonym: \"init_met\" RELATED [uniprot:feature_type]\n" +
+		"synonym: \"initiator methionine\" RELATED []\n" +
+		"is_a: SO:0100011 ! cleaved_peptide_region\n\n";
 
-        OboParser parser = new OboParser();
-        InputStream inStream = new ByteArrayInputStream(testTermEntry.getBytes());
+	OboParser parser = new OboParser();
+	InputStream inStream = new ByteArrayInputStream(testTermEntry.getBytes());
 
-		assertNotNull(inStream);
+		Assert.assertNotNull(inStream);
 
 		BufferedReader oboFile = new BufferedReader ( new InputStreamReader ( inStream ) );
 		Ontology ontology = parser.parseOBO(oboFile, "so-xp/subsets/biosapiens",
-                    "snippet from biosapiens protein feature ontology");
+		    "snippet from biosapiens protein feature ontology");
 		Set<Term> keys = ontology.getTerms();
 
-		assertTrue(keys.size() > 1);
-		assertTrue(ontology.getTerm("SO:0000691").getAnnotation().containsProperty(NAMESPACE));
-        assertEquals("sequence",ontology.getTerm("SO:0000691").getAnnotation().getProperty(NAMESPACE));
+		Assert.assertTrue(keys.size() > 1);
+		Assert.assertTrue(ontology.getTerm("SO:0000691").getAnnotation().containsProperty(NAMESPACE));
+	Assert.assertEquals("sequence", ontology.getTerm("SO:0000691").getAnnotation().getProperty(NAMESPACE));
 	}
 }

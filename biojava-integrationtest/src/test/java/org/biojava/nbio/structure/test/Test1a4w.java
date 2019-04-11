@@ -24,7 +24,6 @@
 
 package org.biojava.nbio.structure.test;
 
-import junit.framework.TestCase;
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.FileParsingParameters;
@@ -32,27 +31,29 @@ import org.biojava.nbio.structure.io.PDBFileParser;
 import org.biojava.nbio.structure.io.mmcif.MMcifParser;
 import org.biojava.nbio.structure.io.mmcif.SimpleMMcifConsumer;
 import org.biojava.nbio.structure.io.mmcif.SimpleMMcifParser;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Test1a4w extends TestCase{
+public class Test1a4w {
 
 	private static Structure structure = null;
 
 
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		// TODO Auto-generated method stub
-		super.setUp();
 
 		if ( structure != null )
 			return;
 
 		InputStream inStream = this.getClass().getResourceAsStream("/1a4w.pdb");
-		assertNotNull(inStream);
+		Assert.assertNotNull(inStream);
 
 		PDBFileParser pdbpars = new PDBFileParser();
 		FileParsingParameters params = new FileParsingParameters();
@@ -66,15 +67,16 @@ public class Test1a4w extends TestCase{
 
 
 
+	@Test
 	public void test1a4wPDBFile() throws IOException
 	{
 
 		//		structure = null;
 
 
-		assertNotNull(structure);
+		Assert.assertNotNull(structure);
 
-		assertEquals("structure does not contain 3 chains ", 3 ,structure.size());
+		Assert.assertEquals("structure does not contain 3 chains ", 3, structure.size());
 
 		testStructure(structure);
 
@@ -83,7 +85,7 @@ public class Test1a4w extends TestCase{
 		Structure structure2 = null;
 
 		InputStream inStream = this.getClass().getResourceAsStream("/1a4w.cif");
-		assertNotNull(inStream);
+		Assert.assertNotNull(inStream);
 
 		MMcifParser pdbpars = new SimpleMMcifParser();
 		SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
@@ -97,13 +99,13 @@ public class Test1a4w extends TestCase{
 
 
 
-		assertNotNull(structure2);
+		Assert.assertNotNull(structure2);
 
-		assertEquals("structure does not contain four chains ", 3 ,structure2.size());
+		Assert.assertEquals("structure does not contain four chains ", 3, structure2.size());
 
 		testStructure(structure2);
 
-		assertEquals(structure.getPDBHeader().toPDB().toLowerCase(),structure2.getPDBHeader().toPDB().toLowerCase());
+		Assert.assertEquals(structure.getPDBHeader().toPDB().toLowerCase(), structure2.getPDBHeader().toPDB().toLowerCase());
 
 		for ( int i = 0 ; i < 3 ; i++){
 			Chain c1 = structure.getChainByIndex(i);
@@ -116,55 +118,56 @@ public class Test1a4w extends TestCase{
 
 	private void testStructure(Structure structure){
 		List<Chain> chains = structure.getPolyChains();
-		assertEquals("1a4w should have 3 chains. " , 3 , chains.size());
+		Assert.assertEquals("1a4w should have 3 chains. ", 3, chains.size());
 
 		Chain a = chains.get(0);
-		assertEquals("1a4w first chain should be L. " , a.getName(), "L");
+		Assert.assertEquals("1a4w first chain should be L. ", a.getName(), "L");
 
 		Chain b = chains.get(1);
-		assertEquals("1a4w second chain should be H. " , b.getName(), "H");
+		Assert.assertEquals("1a4w second chain should be H. ", b.getName(), "H");
 
 		Chain c = chains.get(2);
-		assertEquals("1a4w third chain should be I. " , c.getName(), "I");
+		Assert.assertEquals("1a4w third chain should be I. ", c.getName(), "I");
 
 		//System.out.println(structure);
-		assertTrue("chain " + a.getName() + " length should be 26. was: " + a.getAtomGroups(GroupType.AMINOACID).size(), ( a.getAtomGroups(GroupType.AMINOACID).size() == 26 ) );
+		Assert.assertTrue("chain " + a.getName() + " length should be 26. was: " + a.getAtomGroups(GroupType.AMINOACID).size(), (a.getAtomGroups(GroupType.AMINOACID).size() == 26));
 
-		assertTrue("chain " + a.getName() + " seqres length should be 36. was: " + a.getSeqResLength(), a.getSeqResLength() == 36);
+		Assert.assertTrue("chain " + a.getName() + " seqres length should be 36. was: " + a.getSeqResLength(), a.getSeqResLength() == 36);
 
-		assertTrue("chain " + b.getName() + " length should be 248. was: " + b.getAtomGroups(GroupType.AMINOACID).size(), ( b.getAtomGroups(GroupType.AMINOACID).size() == 248 ) );
+		Assert.assertTrue("chain " + b.getName() + " length should be 248. was: " + b.getAtomGroups(GroupType.AMINOACID).size(), (b.getAtomGroups(GroupType.AMINOACID).size() == 248));
 
-		assertTrue("chain " + b.getName() + " seqres length should be 259. was: " + b.getSeqResLength(), b.getSeqResLength() == 259);
+		Assert.assertTrue("chain " + b.getName() + " seqres length should be 259. was: " + b.getSeqResLength(), b.getSeqResLength() == 259);
 
-		assertTrue("chain " + c.getName() + " length should be 9. was: " + c.getAtomGroups(GroupType.AMINOACID).size(), ( c.getAtomGroups(GroupType.AMINOACID).size() == 9 ) );
+		Assert.assertTrue("chain " + c.getName() + " length should be 9. was: " + c.getAtomGroups(GroupType.AMINOACID).size(), (c.getAtomGroups(GroupType.AMINOACID).size() == 9));
 
-		assertTrue("chain " + c.getName() + " seqres length should be 12. was: " + c.getSeqResLength(), c.getSeqResLength() == 12);
+		Assert.assertTrue("chain " + c.getName() + " seqres length should be 12. was: " + c.getSeqResLength(), c.getSeqResLength() == 12);
 
-		assertEquals("chain " + c.getName() + " seqres sequences is not correct!", "NGDFEEIPEEYL", c.getSeqResSequence());
+		Assert.assertEquals("chain " + c.getName() + " seqres sequences is not correct!", "NGDFEEIPEEYL", c.getSeqResSequence());
 	}
 
 	private void testEqualChains(Chain a,Chain b){
 
-		assertEquals("length of seqres " + a.getName() + " and "+b.getName()+" should be same. " , a.getSeqResLength(), b.getSeqResLength() );
-		assertEquals("length of atom "   + a.getName() + " and "+b.getName()+" should be same. " , a.getAtomGroups(GroupType.AMINOACID).size(), b.getAtomGroups(GroupType.AMINOACID).size());
-		assertEquals("sequences should be identical. " , a.getAtomSequence(),   b.getAtomSequence());
-		assertEquals("sequences should be identical. " , a.getSeqResSequence(), b.getSeqResSequence());
+		Assert.assertEquals("length of seqres " + a.getName() + " and " + b.getName() + " should be same. ", a.getSeqResLength(), b.getSeqResLength());
+		Assert.assertEquals("length of atom " + a.getName() + " and " + b.getName() + " should be same. ", a.getAtomGroups(GroupType.AMINOACID).size(), b.getAtomGroups(GroupType.AMINOACID).size());
+		Assert.assertEquals("sequences should be identical. ", a.getAtomSequence(), b.getAtomSequence());
+		Assert.assertEquals("sequences should be identical. ", a.getSeqResSequence(), b.getSeqResSequence());
 	}
 
-	public void testChemComps() throws IOException, StructureException { 
+	@Test
+	public void testChemComps() throws IOException, StructureException {
 		AtomCache cache = new AtomCache();
 		FileParsingParameters params = cache.getFileParsingParams();
 		params.setAlignSeqRes(true);
 		Structure s = cache.getStructure("1a4w");
 
-		assertEquals(3, s.getPolyChains().size());
+		Assert.assertEquals(3, s.getPolyChains().size());
 
 		Chain c2 = s.getChainByIndex(1);
-		assertEquals("H", c2.getName());
+		Assert.assertEquals("H", c2.getName());
 
-		
+
 		List<Group> hChainLigandGroups = new ArrayList<>();
-		
+
 		for (Chain ch : s.getNonPolyChains()) {
 			if (ch.getName().equals("H")) {
 				hChainLigandGroups.addAll(ch.getAtomGroups());
@@ -185,22 +188,23 @@ public class Test1a4w extends TestCase{
 				noWater = false;
 		}
 
-		assertTrue("Found water in ligands list!", noWater );
+		Assert.assertTrue("Found water in ligands list!", noWater);
 
-		assertTrue("Did not find QWE in ligands list!", darPresent);
+		Assert.assertTrue("Did not find QWE in ligands list!", darPresent);
 
-		assertEquals("Did not find the correct nr of ligands in chain! " , 3, hChainLigandGroups.size());
+		Assert.assertEquals("Did not find the correct nr of ligands in chain! ", 3, hChainLigandGroups.size());
 
 	}
 
+	@Test
 	public void testLigandLoading(){
 		Chain c2 = structure.getChainByIndex(1);
-		assertEquals("H", c2.getName());
+		Assert.assertEquals("H", c2.getName());
 
-		
+
 
 		List<Group> hChainLigandGroups = new ArrayList<>();
-		
+
 		for (Chain ch : structure.getNonPolyChains()) {
 			if (ch.getName().equals("H")) {
 				hChainLigandGroups.addAll(ch.getAtomGroups());
@@ -208,17 +212,18 @@ public class Test1a4w extends TestCase{
 		}
 
 		System.out.println("LIGANDS:" + hChainLigandGroups);
-		assertEquals("Did not find the correct nr of ligands in chain! " , 6,hChainLigandGroups.size());
+		Assert.assertEquals("Did not find the correct nr of ligands in chain! ", 6, hChainLigandGroups.size());
 
 		List<Group> lignads2 = StructureTools.filterLigands(hChainLigandGroups);
 
-		assertEquals("Did not get the same nr of ligands from different access methods! ",hChainLigandGroups.size(), lignads2.size());
+		Assert.assertEquals("Did not get the same nr of ligands from different access methods! ", hChainLigandGroups.size(), lignads2.size());
 
 	}
 
+	@Test
 	public void testSiteGroups(){
 
-		assertNotNull(structure);
+		Assert.assertNotNull(structure);
 
 		//			Structure s = TmpAtomCache.cache.getStructure("1a4w");
 
@@ -228,14 +233,14 @@ public class Test1a4w extends TestCase{
 		//				System.out.println("Chain: " + chain.getChainID());
 		//			}
 		Chain c2 = s.getChainByIndex(1);
-		assertEquals("H", c2.getName());
+		Assert.assertEquals("H", c2.getName());
 
 		//			if (s == null) {
 		//				System.out.println("No structure set");
 		//			}
 		List<Site> sites = s.getSites();
 		//System.out.println("sites " + sites);
-		assertEquals(7, sites.size());
+		Assert.assertEquals(7, sites.size());
 
 		boolean noWater = true;
 		boolean darPresent = false;
@@ -245,7 +250,7 @@ public class Test1a4w extends TestCase{
 			if (site.getSiteID().equals("AC3")) {
 				testSite = site;
 				for ( Group g : site.getGroups()){
-					// before biojava 5.0 we were asserting for same chain, but now the DAR residue is in its own nonpoly chain, can't do it anymore 
+					// before biojava 5.0 we were asserting for same chain, but now the DAR residue is in its own nonpoly chain, can't do it anymore
 					//assertEquals(c2, g.getChain());
 					String pdbName = g.getPDBName();
 					if ( pdbName.equals("DAR")) {
@@ -261,15 +266,15 @@ public class Test1a4w extends TestCase{
 		}
 
 
-		assertTrue("Found water in site list!", noWater );
+		Assert.assertTrue("Found water in site list!", noWater);
 
-		assertTrue("Did not find DAR in site list!", darPresent);
+		Assert.assertTrue("Did not find DAR in site list!", darPresent);
 
-		assertTrue("Did not find GLY in site list!", glyPresent);
+		Assert.assertTrue("Did not find GLY in site list!", glyPresent);
 
 		//System.out.println(ligands);
-		assertEquals("Did not find the correct nr of ligands in chain! " , 8, testSite.getGroups().size());
-		
+		Assert.assertEquals("Did not find the correct nr of ligands in chain! ", 8, testSite.getGroups().size());
+
 
 	}
 

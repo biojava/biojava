@@ -134,11 +134,11 @@ public interface BlockSet extends ScoresCache {
 	 * @see #size()
 	 */
 	public int getCoreLength();
-	
+
 	/**
 	 * Returns the number of non null positions (residues) of each structure in
 	 * the alignment Block Set. The values can be used to compute the coverages.
-	 * 
+	 *
 	 * @return List of residue counts for each structure
 	 */
 	public List<Integer> getAlignResCounts();

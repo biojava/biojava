@@ -30,55 +30,54 @@ import org.biojava.nbio.ws.hmmer.RemoteHmmerScan;
 
 import java.util.SortedSet;
 
-/** The cookbook recipe for how to request Pfam annotations for a protein sequence using the Hmmer3 service
+/**
+ * The cookbook recipe for how to request Pfam annotations for a protein sequence using the Hmmer3 service
  *
  * @author Andreas Prlic
  * @since 3.0.3
  */
 public class HmmerDemo {
 
-	public static void main(String[] args){
-
-		try {
-			// first we get a UniProt sequence
-			String uniProtID = "P08487";
-			ProteinSequence seq = getUniprot(uniProtID);
+	public static void main(String[] args) throws Exception {
 
 
-			// now we submit this sequence to the Hmmer web site
-			RemoteHmmerScan hmmer = new RemoteHmmerScan();
+		// first we get a UniProt sequence
+		String uniProtID = "P08487";
+		ProteinSequence seq = getUniprot(uniProtID);
 
-			SortedSet<HmmerResult> results = hmmer.scan(seq);
 
-			// and now let's print out the obtained annotations
+		// now we submit this sequence to the Hmmer web site
+		RemoteHmmerScan hmmer = new RemoteHmmerScan();
 
-			System.out.println(String.format("#\t%15s\t%10s\t%s\t%s\t%8s\t%s",
-					"Domain","ACC", "Start","End","eValue","Description"));
+		SortedSet<HmmerResult> results = hmmer.scan(seq);
 
-			int counter = 0;
-			for (HmmerResult hmmerResult : results) {
-				//System.out.println(hmmerResult);
+		// and now let's print out the obtained annotations
 
-				for ( HmmerDomain domain : hmmerResult.getDomains()) {
-					counter++;
-					System.out.println(String.format("%d\t%15s\t%10s\t%5d\t%5d\t%.2e\t%s",
-							counter,
-							hmmerResult.getName(), domain.getHmmAcc(),
-							domain.getSqFrom(),domain.getSqTo(),
-							domain.getEvalue(), hmmerResult.getDesc()
-							));
+		System.out.println(String.format("#\t%15s\t%10s\t%s\t%s\t%8s\t%s",
+				"Domain","ACC", "Start","End","eValue","Description"));
 
-				}
+		int counter = 0;
+		for (HmmerResult hmmerResult : results) {
+			//System.out.println(hmmerResult);
+
+			for ( HmmerDomain domain : hmmerResult.getDomains()) {
+				counter++;
+				System.out.println(String.format("%d\t%15s\t%10s\t%5d\t%5d\t%.2e\t%s",
+						counter,
+						hmmerResult.getName(), domain.getHmmAcc(),
+						domain.getSqFrom(),domain.getSqTo(),
+						domain.getEvalue(), hmmerResult.getDesc()
+						));
 
 			}
 
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
+
+
 	}
 
-	/** Fetch a protein sequence from the UniProt web site
+	/**
+	 * Fetch a protein sequence from the UniProt web site
 	 *
 	 * @param uniProtID
 	 * @return a Protein Sequence

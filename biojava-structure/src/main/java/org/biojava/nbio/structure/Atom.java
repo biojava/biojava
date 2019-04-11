@@ -101,16 +101,16 @@ public interface Atom extends Cloneable, PDBRecord {
 	 * @see #getCoordsAsPoint3d()
 	 */
 	public double[] getCoords() ;
-	
+
 	/**
 	 * Get the coordinates.
-	 * <p> 
-	 * Internally the coordinates are represented as Point3d so this 
+	 * <p>
+	 * Internally the coordinates are represented as Point3d so this
 	 * is recommended over {@link #getCoords()}
 	 * @return a reference to the Point3d coordinates
 	 * @see #getCoords()
 	 */
-	public Point3d getCoordsAsPoint3d();	
+	public Point3d getCoordsAsPoint3d();
 
 	/**
 	 * Set the X coordinate.
@@ -243,7 +243,7 @@ public interface Atom extends Cloneable, PDBRecord {
 	 *
 	 * @param other
 	 * @return
-     */
+	 */
 	public boolean hasBond(Atom other);
 
 	/**

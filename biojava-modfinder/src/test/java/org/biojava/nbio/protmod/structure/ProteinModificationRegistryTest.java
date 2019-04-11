@@ -24,8 +24,9 @@
 
 package org.biojava.nbio.protmod.structure;
 
-import junit.framework.TestCase;
 import org.biojava.nbio.protmod.*;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,7 +38,7 @@ import java.util.Set;
  * @author Jianjiong Gao
  * @since 3.0
  */
-public class ProteinModificationRegistryTest extends TestCase {
+public class ProteinModificationRegistryTest {
 
 	//private static final Logger logger = LoggerFactory.getLogger(ProteinModificationRegistryTest.class);
 
@@ -45,6 +46,7 @@ public class ProteinModificationRegistryTest extends TestCase {
 	 * Note: if you change this unit test, also change the cook book:
 	 * http://www.biojava.org/wiki/BioJava:CookBook3:AddProtMod
 	 */
+	@Test
 	public void testRegisterModification() {
 		// define the involved components, in this case two cystines (CYS)
 		List<Component> components = new ArrayList<Component>(2);
@@ -76,7 +78,7 @@ public class ProteinModificationRegistryTest extends TestCase {
 
 		//register the modification
 		ProteinModificationRegistry.register(mod);
-		assertNotNull(ProteinModificationRegistry.getById("0018_test"));
+		Assert.assertNotNull(ProteinModificationRegistry.getById("0018_test"));
 	}
 
 	/**
@@ -84,9 +86,10 @@ public class ProteinModificationRegistryTest extends TestCase {
 	 * Note: if you change this unit test, also change the cook book:
 		 * http://www.biojava.org/wiki/BioJava:CookBook3:SupportedProtMod
 	 */
+	@Test
 	public void testRegisterCommonModification() {
 		Set<ProteinModification> mods = ProteinModificationRegistry.allModifications();
-		assertTrue(mods!=null && !mods.isEmpty());
+		Assert.assertTrue(mods != null && !mods.isEmpty());
 
 //		logger.info("There are totally "+mods.size()
 //				+" protein modifications registered.");
@@ -98,40 +101,41 @@ public class ProteinModificationRegistryTest extends TestCase {
 	 * Note: if you change this unit test, also change the cook book:
 	 * http://www.biojava.org/wiki/BioJava:CookBook3:SupportedProtMod
 	 */
+	@Test
 	public void testGetBy() {
 		ProteinModification mod;
 		Set<ProteinModification> mods;
 
 		mod = ProteinModificationRegistry.getById("0001");
-		assertNotNull(mod);
+		Assert.assertNotNull(mod);
 
 		// a set of protein modifications by RESID ID
 		mods = ProteinModificationRegistry.getByResidId("AA0151");
-		assertNotNull(mods);
+		Assert.assertNotNull(mods);
 
 		// a set of protein modifications by PSI-MOD ID
 		mods = ProteinModificationRegistry.getByPsimodId("MOD:00305");
-		assertNotNull(mods);
+		Assert.assertNotNull(mods);
 
 		// a set of protein modifications by PDBCC ID
 		mods = ProteinModificationRegistry.getByPdbccId("SEP");
-		assertNotNull(mods);
+		Assert.assertNotNull(mods);
 
 		// a set of protein modifications by category
 		mods = ProteinModificationRegistry.getByCategory(ModificationCategory.ATTACHMENT);
-		assertNotNull(mods);
+		Assert.assertNotNull(mods);
 
 		// a set of protein modifications by occurrence type
 		mods = ProteinModificationRegistry.getByOccurrenceType(ModificationOccurrenceType.NATURAL);
-		assertNotNull(mods);
+		Assert.assertNotNull(mods);
 
 		// a set of protein modifications by a keyword
 		mods = ProteinModificationRegistry.getByKeyword("phosphoprotein");
-		assertNotNull(mods);
+		Assert.assertNotNull(mods);
 
 		// a set of protein modifications by involved components.
 		mods = ProteinModificationRegistry.getByComponent(Component.of("FAD"));
-		assertNotNull(mods);
+		Assert.assertNotNull(mods);
 	}
 
 //	/**

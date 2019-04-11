@@ -230,7 +230,7 @@ public class SecStrucCalc {
 
 	private void updateSheets() {
 
-		logger.debug(" got " +ladders.size() + "  ladders!");
+		logger.debug(" got {} ladders!", ladders.size());
 
 		for (Ladder ladder : ladders){
 			logger.debug(ladder.toString());
@@ -308,7 +308,7 @@ public class SecStrucCalc {
 				if (hasBulge(l1,l2)) {
 					l1.connectedTo = j;
 					l2.connectedFrom = i;
-					logger.debug("Bulge from " + i + " to " + j);
+					logger.debug("Bulge from {} to {}", i, j);
 				}
 			}
 		}
@@ -362,8 +362,7 @@ public class SecStrucCalc {
 		boolean b2 = getSecStrucState(j).addBridge(bridge);
 
 		if (!b1 && !b2)
-			logger.warn("Ignoring Bridge between residues" + i + " and " + j
-					+ ". DSSP assignment might differ.");
+			logger.warn("Ignoring Bridge between residues {} and {}. DSSP assignment might differ.", i, j);
 
 		bridges.add(bridge);
 	}
@@ -706,7 +705,7 @@ public class SecStrucCalc {
 
 	private static SecStrucGroup[] initGroupArray(Structure s, int modelId) {
 		List<SecStrucGroup> groupList = new ArrayList<SecStrucGroup>();
-		// 
+		//
 		for ( Chain c : s.getChains(modelId)){
 
 			for (Group g : c.getAtomGroups()){
@@ -799,11 +798,11 @@ public class SecStrucCalc {
 		SecStrucGroup one = groups[i];
 
 		if (one.getPDBName().equals("PRO")){
-			logger.debug("Ignore: PRO " + one.getResidueNumber());
+			logger.debug("Ignore: PRO {}", one.getResidueNumber());
 			return;
 		}
 		if (!one.hasAtom("H")) {
-			logger.debug("Residue "+one.getResidueNumber()+" has no H");
+			logger.debug("Residue {} has no H",one.getResidueNumber());
 			return;
 		}
 
@@ -817,7 +816,7 @@ public class SecStrucCalc {
 			logger.warn("Energy calculation failed", e);
 			return;
 		}
-		logger.debug("Energy between positions ("+i+","+j+"): "+energy);
+		logger.debug("Energy between positions ({},{}): ",i,j,energy);
 
 		trackHBondEnergy(i,j,energy);
 	}
@@ -848,12 +847,9 @@ public class SecStrucCalc {
 		double dho = Calc.getDistance(O,H);
 		double dnc = Calc.getDistance(C,N);
 
-		logger.debug("     cccc: " + one.getResidueNumber() +
-				" " + one.getPDBName() + " " +two.getResidueNumber()+
-				" " + two.getPDBName() + String.format(" O ("+
-						O.getPDBserial()+")..N ("+ N.getPDBserial()+
-						"):%4.1f  |  ho:%4.1f - hc:%4.1f + nc:%4.1f - no:%4.1f ",
-						dno,dho,dhc,dnc,dno));
+		logger.debug(" cccc: {} {} {} {} O ({})..N ({}):{}  |  ho:{} - hc:{} + nc:{} - no:{}",
+				one.getResidueNumber(),one.getPDBName(),two.getResidueNumber(),two.getPDBName(),
+				O.getPDBserial(),N.getPDBserial(),dno,dho,dhc,dnc,dno);
 
 		//there seems to be a contact!
 		if ( (dno < MINDIST) || (dhc < MINDIST) ||
@@ -866,8 +862,7 @@ public class SecStrucCalc {
 
 		double energy = e1 + e2;
 
-		logger.debug(String.format("      N (%d) O(%d): %4.1f : %4.2f ",
-				N.getPDBserial(),O.getPDBserial(), (float) dno, energy));
+		logger.debug(" N ({}) O({}): {} : {} ",N.getPDBserial(),O.getPDBserial(),(float) dno,energy);
 
 		//Avoid too strong energy
 		if (energy > HBONDLOWENERGY) return energy;
@@ -882,7 +877,7 @@ public class SecStrucCalc {
 	private  void trackHBondEnergy(int i, int j, double energy) {
 
 		if (groups[i].getPDBName().equals("PRO")) {
-			logger.debug("Ignore: PRO " + groups[i].getResidueNumber());
+			logger.debug("Ignore: PRO {}",groups[i].getResidueNumber());
 			return;
 		}
 
@@ -897,7 +892,7 @@ public class SecStrucCalc {
 
 		//Acceptor: N-H-->O
 		if (energy < acc1e) {
-			logger.debug(energy +"<"+acc1e);
+			logger.debug("{} < {}",energy,acc1e);
 			stateOne.setAccept2(stateOne.getAccept1());
 
 			HBond bond = new HBond();
@@ -907,7 +902,7 @@ public class SecStrucCalc {
 			stateOne.setAccept1(bond);
 
 		} else if ( energy < acc2e ) {
-			logger.debug(energy +"<"+acc2e);
+			logger.debug("{} < {}",energy,acc2e);
 
 			HBond bond = new HBond();
 			bond.setEnergy(energy);
@@ -919,7 +914,7 @@ public class SecStrucCalc {
 
 		//The other side of the bond: donor O-->N-H
 		if (energy <  don1e) {
-			logger.debug(energy +"<"+don1e);
+			logger.debug("{} < {}",energy,don1e);
 			stateTwo.setDonor2(stateTwo.getDonor1());
 
 			HBond bond = new HBond();
@@ -929,7 +924,7 @@ public class SecStrucCalc {
 			stateTwo.setDonor1(bond);
 
 		} else if ( energy < don2e ) {
-			logger.debug(energy +"<"+don2e);
+			logger.debug("{} < {}",energy,don2e);
 
 			HBond bond = new HBond();
 			bond.setEnergy(energy);
@@ -951,7 +946,7 @@ public class SecStrucCalc {
 
 				//Check for H bond from NH(i+n) to CO(i)
 				if (isBonded(i, i+turn)) {
-					logger.debug("Turn at ("+i+","+(i+turn)+") turn "+turn);
+					logger.debug("Turn at ({},{}) turn {}",i,(i+turn),turn);
 					getSecStrucState(i).setTurn('>', turn);
 					getSecStrucState(i+turn).setTurn('<', turn);
 					//Bracketed residues get the helix number
@@ -998,7 +993,7 @@ public class SecStrucCalc {
 				(acc2p == i && acc2e < HBONDHIGHENERGY);
 
 		if (hbond){
-			logger.debug("*** H-bond from CO of " + i + " to NH of " + j);
+			logger.debug("*** H-bond from CO of {} to NH of {}", i, j);
 			return true;
 		}
 		return false ;
@@ -1054,7 +1049,7 @@ public class SecStrucCalc {
 	}
 
 	private void buildHelices(){
-		
+
 		//Alpha-helix (i+4), 3-10-helix (i+3), Pi-helix (i+5)
 		checkSetHelix(4, SecStrucType.helix4);
 		checkSetHelix(3, SecStrucType.helix3);
@@ -1105,7 +1100,7 @@ public class SecStrucCalc {
 	private void checkSetHelix(int n, SecStrucType type){
 
 		int idx = n - 3;
-		logger.debug("Set helix " + type + " " + n + " " + idx);
+		logger.debug("Set helix {} {} {}", type, n, idx);
 
 		for (int i = 1; i < groups.length-n; i++) {
 

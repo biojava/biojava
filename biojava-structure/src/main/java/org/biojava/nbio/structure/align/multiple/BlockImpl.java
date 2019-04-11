@@ -184,10 +184,10 @@ public class BlockImpl extends AbstractScoresCache implements Serializable,
 
 	@Override
 	public List<Integer> getAlignResCounts() {
-		
+
 		if (alignResCounts != null)
 			return alignResCounts;
-		
+
 		alignResCounts = new ArrayList<Integer>(size());
 		for (int s = 0; s < size(); s++) {
 			int count = 0;

@@ -20,13 +20,6 @@
  */
 package org.biojava.nbio.core.sequence.io;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.core.sequence.DNASequence;
 import org.biojava.nbio.core.sequence.ProteinSequence;
@@ -46,8 +39,20 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 /**
  *
@@ -161,7 +166,7 @@ public class GenbankReaderTest {
 	 */
 	@Test
 	public void testPartialProcess() throws IOException, CompoundNotFoundException, NoSuchFieldException {
-		InputStream inStream = this.getClass().getResourceAsStream("/two-dnaseqs.gb");
+		CheckableInputStream inStream = new CheckableInputStream(this.getClass().getResourceAsStream("/two-dnaseqs.gb"));
 
 		GenbankReader<DNASequence, NucleotideCompound> genbankDNA
 				= new GenbankReader<>(
@@ -173,12 +178,14 @@ public class GenbankReaderTest {
 		// First call to process(1) returns the first sequence
 		LinkedHashMap<String, DNASequence> dnaSequences = genbankDNA.process(1);
 
+		assertFalse(inStream.isclosed());
 		assertNotNull(dnaSequences);
 		assertEquals(1, dnaSequences.size());
 		assertNotNull(dnaSequences.get("vPetite"));
 
 		// Second call to process(1) returns the second sequence
 		dnaSequences = genbankDNA.process(1);
+		assertFalse(inStream.isclosed());
 		assertNotNull(dnaSequences);
 		assertEquals(1, dnaSequences.size());
 		assertNotNull(dnaSequences.get("sbFDR"));
@@ -186,14 +193,14 @@ public class GenbankReaderTest {
 		assertFalse(genbankDNA.isClosed());
 		genbankDNA.close();
 		assertTrue(genbankDNA.isClosed());
-
+		assertTrue(inStream.isclosed());
 	}
 
 	@Test
 	public void CDStest() throws Exception {
 		logger.info("CDS Test");
 
-		InputStream inStream = this.getClass().getResourceAsStream("/BondFeature.gb");
+		CheckableInputStream inStream = new CheckableInputStream(this.getClass().getResourceAsStream("/BondFeature.gb"));
 		assertNotNull(inStream);
 
 		GenbankReader<ProteinSequence, AminoAcidCompound> GenbankProtein
@@ -203,7 +210,7 @@ public class GenbankReaderTest {
 						new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet())
 				);
 		LinkedHashMap<String, ProteinSequence> proteinSequences = GenbankProtein.process();
-		inStream.close();
+		assertTrue(inStream.isclosed());
 
 
 		Assert.assertTrue(proteinSequences.size() == 1);
@@ -223,4 +230,64 @@ public class GenbankReaderTest {
 
 	}
 
+	private DNASequence readGenbankResource(final String resource) throws Exception {
+		DNASequence sequence = null;
+		InputStream inputStream = null;
+		try {
+			inputStream = getClass().getResourceAsStream(resource);
+
+			GenbankReader<DNASequence, NucleotideCompound> genbankDNA
+				= new GenbankReader<>(
+					inputStream,
+					new GenericGenbankHeaderParser<>(),
+					new DNASequenceCreator(DNACompoundSet.getDNACompoundSet())
+					);
+			LinkedHashMap<String, DNASequence> dnaSequences = genbankDNA.process();
+			sequence = dnaSequences.values().iterator().next();
+		}
+		finally {
+			try {
+				inputStream.close();
+			}
+			catch (Exception e) {
+				// ignore
+			}
+		}
+		return sequence;
+	}
+
+	@Test
+	public void testNcbiExpandedAccessionFormats() throws Exception {
+		DNASequence header0 = readGenbankResource("/empty_header0.gb");
+		assertEquals("CP032762             5868661 bp    DNA     circular BCT 15-OCT-2018", header0.getOriginalHeader());
+
+		DNASequence header1 = readGenbankResource("/empty_header1.gb");
+		assertEquals("AZZZAA02123456789 9999999999 bp    DNA     linear   PRI 15-OCT-2018", header1.getOriginalHeader());
+
+		DNASequence header2 = readGenbankResource("/empty_header2.gb");
+		assertEquals("AZZZAA02123456789 10000000000 bp    DNA     linear   PRI 15-OCT-2018", header2.getOriginalHeader());
+	}
+
+	/**
+	 * Helper class to be able to verify the closed state of the input stream.
+	 */
+	private class CheckableInputStream extends BufferedInputStream {
+
+		private boolean closed;
+
+		CheckableInputStream(InputStream in) {
+			super(in);
+			closed = false;
+		}
+
+		@Override
+		public void close() throws IOException {
+			super.close();
+			closed = true;
+		}
+
+		boolean isclosed() {
+			return closed;
+		}
+	}
 }

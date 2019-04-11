@@ -1,3 +1,23 @@
+/*
+ *                    BioJava development code
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public Licence.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright for this code is held jointly by the individual
+ * authors.  These should be listed in @author doc comments.
+ *
+ * For more information on the BioJava project and its aims,
+ * or to join the biojava-l mailing list, visit the home page
+ * at:
+ *
+ *      http://www.biojava.org/
+ *
+ */
 package org.biojava.nbio.structure.io.mmtf;
 
 import static org.junit.Assert.assertEquals;
@@ -31,13 +51,13 @@ import org.junit.rules.TemporaryFolder;
  */
 public class TestBasicMmtf {
 
-    /**
-     * A test folder for testing writing files.
-     */
-    @Rule
-    public TemporaryFolder testFolder = new TemporaryFolder();
-	
-	
+	/**
+	 * A test folder for testing writing files.
+	 */
+	@Rule
+	public TemporaryFolder testFolder = new TemporaryFolder();
+
+
 	/**
 	 * Test that Biojava can read a file from the file system.
 	 * @throws IOException
@@ -49,10 +69,10 @@ public class TestBasicMmtf {
 		assertEquals(structure.getPDBCode(),"4CUP");
 		assertEquals(structure.getChains().size(),6);
 	}
-	
+
 	/**
 	 * Test the writing of Structure objects to a file.
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	@Test
 	public void testWrite() throws IOException {
@@ -64,7 +84,7 @@ public class TestBasicMmtf {
 		Chain chain = new ChainImpl();
 		chain.setId("A");
 		chain.setName("A");
-		Group group = new AminoAcidImpl(); 
+		Group group = new AminoAcidImpl();
 		group.setPDBName("FKF");
 		ChemComp chemComp = new ChemComp();
 		chemComp.setType("TYPfdl");
@@ -82,6 +102,6 @@ public class TestBasicMmtf {
 		group.setResidueNumber(residueNumber);
 		structure.addChain(chain);
 		File tempFile = testFolder.newFile("tmpfile");
-		MmtfActions.writeToFile(structure, tempFile.toPath());		
+		MmtfActions.writeToFile(structure, tempFile.toPath());
 	}
 }

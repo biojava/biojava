@@ -1,12 +1,12 @@
 /*
- *			BioJava development code
+ *                    BioJava development code
  *
  * This code may be freely distributed and modified under the
  * terms of the GNU Lesser General Public Licence.  This should
  * be distributed with the code.  If you do not have a copy,
  * see:
  *
- *	  http://www.gnu.org/copyleft/lesser.html
+ *      http://www.gnu.org/copyleft/lesser.html
  *
  * Copyright for this code is held jointly by the individual
  * authors.  These should be listed in @author doc comments.
@@ -15,20 +15,17 @@
  * or to join the biojava-l mailing list, visit the home page
  * at:
  *
- *	  http://www.biojava.org/
- *
- * Created on Jun 8, 2010
- * Author: Jianjiong Gao
- * Author: Peter W. Rose
+ *      http://www.biojava.org/
  *
  */
-
 package org.biojava.nbio.protmod.structure;
 
-import junit.framework.TestCase;
 import org.biojava.nbio.protmod.ProteinModification;
 import org.biojava.nbio.protmod.ProteinModificationRegistry;
 import org.biojava.nbio.structure.*;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,13 +39,13 @@ import java.util.Set;
  * @author Jianjiong Gao
  * @since 3.0
  */
-public class ProteinModificationParserTest extends TestCase {
+public class ProteinModificationParserTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(ProteinModificationParserTest.class);
 
 	private String[][] strucs;
 
-	@Override
+	@Before
 	public void setUp() {
 		strucs = setUpShortTest();
 //		strucs = setUpLongTest();
@@ -110,7 +107,7 @@ public class ProteinModificationParserTest extends TestCase {
 
 				{"1WCT","AA0179"},
 				{"2VH3","AA0459"},
-				
+
 				// Chromophores
 				{"2HGD",null}, // X9Q
 				{"3LF4",null}, // 0YG
@@ -319,16 +316,17 @@ public class ProteinModificationParserTest extends TestCase {
 				{"1TJB",null},
 				{"2V15",null},
 				{"2K61",null},
-				
+
 				// Chromophores
 				{"2HGD",null}, // X9Q
 				{"3LF4",null}, // 0YG
-				
-				
+
+
 		};
 		return strucs;
 	}
 
+	@Test
 	public void testParser() throws IOException, StructureException {
 		multiTest();
 	}
@@ -357,7 +355,7 @@ public class ProteinModificationParserTest extends TestCase {
 	private void parserTest(String pdbId, Set<ProteinModification> mods) throws IOException, StructureException {
 		Structure struc = TmpAtomCache.cache.getStructure(pdbId);
 /*
- //needed for testing 1G20
+		//needed for testing 1G20
 		if ( pdbId.equalsIgnoreCase("1G20")) {
 			Structure n = new StructureImpl();
 
@@ -379,7 +377,7 @@ public class ProteinModificationParserTest extends TestCase {
 		parser.setRecordUnidentifiableCompounds(recordUnidentifiable);
 		//parser.setbondLengthTolerance(2);
 
-		assertFalse(mods.isEmpty());
+		Assert.assertFalse(mods.isEmpty());
 
 		parser.identify(struc, mods);
 
@@ -388,10 +386,10 @@ public class ProteinModificationParserTest extends TestCase {
 		if ( parser.getIdentifiedModifiedCompound().isEmpty() ){
 			String msg = "Did not identify any modified compounds for " + pdbId;
 			logger.warn(msg);
-			fail(msg);
+			Assert.fail(msg);
 		}
 
-		assertFalse("Did not identify any modified compounds for " + pdbId ,
+		Assert.assertFalse("Did not identify any modified compounds for " + pdbId,
 				parser.getIdentifiedModifiedCompound().isEmpty());
 
 		boolean print = false;
@@ -448,18 +446,19 @@ public class ProteinModificationParserTest extends TestCase {
 	 * Note: if you change this unit test, also change the cook book:
 	 * http://www.biojava.org/wiki/BioJava:CookBook3:ProtMod
 	 */
+	@Test
 	public void testCookBookTestCases() throws StructureException, IOException {
 		// identify all modificaitons from PDB:1CAD and print them
 		String pdbId = "1CAD";
 		Structure struc = TmpAtomCache.cache.getStructure(pdbId);
 		Set<ModifiedCompound> mcs = identifyAllModfications(struc);
-		assertFalse(mcs.isEmpty());
+		Assert.assertFalse(mcs.isEmpty());
 
 		// identify all phosphosites from PDB:3MVJ and print them
 		pdbId = "3MVJ";
 		struc = TmpAtomCache.cache.getStructure(pdbId);
 		List<ResidueNumber> psites = identifyPhosphosites(struc);
-		assertFalse(psites.isEmpty());
+		Assert.assertFalse(psites.isEmpty());
 	}
 
 	/**

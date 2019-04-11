@@ -50,11 +50,11 @@ public class TestQuaternaryStructureProviders {
 	@Test
 	public void test5LDH() throws IOException, StructureException{
 		comparePdbVsMmcif("5LDH",1, 4);
-		
+
 		// the pdb file of 5ldh contains only 1 bioassembly, whilst the mmcif contains 2,
 		// thus we can't test here the comparison between the 2
-		//testID("5LDH",2, 2); 
-		
+		//testID("5LDH",2, 2);
+
 		// since v5 remediation there's 4 bioassemblies with numerical ids for 5ldh, no more PAU and XAU
 		boolean gotException = false;
 		try {
@@ -96,7 +96,7 @@ public class TestQuaternaryStructureProviders {
 	public void test1EI7() throws IOException, StructureException {
 
 		comparePdbVsMmcif("1ei7",1, 68);
-		
+
 	}
 
 	@Test
@@ -106,7 +106,7 @@ public class TestQuaternaryStructureProviders {
 
 
 	/**
-	 * Bioassembly tests for a single PDB entry 
+	 * Bioassembly tests for a single PDB entry
 	 * @param pdbId
 	 * @param bioMolecule the bio assembly identifier to test
 	 * @param mmSize the expected mmSize of given bioMolecule number
@@ -115,7 +115,7 @@ public class TestQuaternaryStructureProviders {
 	 */
 	private void comparePdbVsMmcif(String pdbId, int bioMolecule, int mmSize) throws IOException, StructureException{
 
-			
+
 		Structure pdbS = getPdbBioAssembly(pdbId, bioMolecule, true);
 
 		Structure mmcifS = getMmcifBioAssembly(pdbId, bioMolecule, true);
@@ -135,18 +135,18 @@ public class TestQuaternaryStructureProviders {
 
 
 		assertTrue(pMap.keySet().size()<= mMap.keySet().size());
-		
+
 		assertEquals(mmSize, mMap.get(bioMolecule).getMacromolecularSize());
 
 
 		for ( int k : pMap.keySet()) {
 			assertTrue(mMap.containsKey(k));
-			
+
 			BioAssemblyInfo pBioAssemb = pMap.get(k);
 			BioAssemblyInfo mBioAssemb = mMap.get(k);
 
 			assertEquals("Macromolecular sizes don't coincide!",pBioAssemb.getMacromolecularSize(), mBioAssemb.getMacromolecularSize());
-			
+
 			List<BiologicalAssemblyTransformation> pL = pBioAssemb.getTransforms();
 
 			// mmcif list can be longer due to the use of internal chain IDs
@@ -191,28 +191,28 @@ public class TestQuaternaryStructureProviders {
 		assertEquals(pdbA[0].toPDB(), mmcifA[0].toPDB());
 
 
-		
+
 
 	}
 
 	private Structure getPdbBioAssembly(String pdbId, int bioMolecule, boolean multiModel) throws IOException, StructureException {
 		// get bio assembly from PDB file
 		AtomCache cache = new AtomCache();
-		cache.setUseMmCif(false); 
-		StructureIO.setAtomCache(cache);		
+		cache.setUseMmCif(false);
+		StructureIO.setAtomCache(cache);
 		Structure pdbS = StructureIO.getBiologicalAssembly(pdbId, bioMolecule, multiModel);
 		return pdbS;
 	}
-	
+
 	private Structure getMmcifBioAssembly(String pdbId, int bioMolecule, boolean multiModel) throws IOException, StructureException {
 		// get bio assembly from mmcif file
 		AtomCache cache = new AtomCache();
-		cache.setUseMmCif(true); 
-		StructureIO.setAtomCache(cache);		
+		cache.setUseMmCif(true);
+		StructureIO.setAtomCache(cache);
 		Structure mmcifS = StructureIO.getBiologicalAssembly(pdbId, bioMolecule, multiModel);
 		return mmcifS;
 	}
-	
+
 
 
 }

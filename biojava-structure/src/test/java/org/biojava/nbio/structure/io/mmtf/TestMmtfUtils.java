@@ -1,3 +1,23 @@
+/*
+ *                    BioJava development code
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public Licence.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright for this code is held jointly by the individual
+ * authors.  These should be listed in @author doc comments.
+ *
+ * For more information on the BioJava project and its aims,
+ * or to join the biojava-l mailing list, visit the home page
+ * at:
+ *
+ *      http://www.biojava.org/
+ *
+ */
 package org.biojava.nbio.structure.io.mmtf;
 
 
@@ -123,7 +143,7 @@ public class TestMmtfUtils {
 			for (Chain c : chains) {
 				for (Group g : c.getAtomGroups()) {
 					for(Atom a: MmtfUtils.getAtomsForGroup(g)){
-						theseAtoms.add(a);					
+						theseAtoms.add(a);
 					}
 				}
 			}
@@ -178,7 +198,7 @@ public class TestMmtfUtils {
 	/**
 	 * Test the conversion of a matrix to an array of doubles.
 	 */
-	@Test 
+	@Test
 	public void testConvertToDoubleArray() {
 		Matrix4d matrix4d = new Matrix4d();
 		matrix4d.m00 = 0.0;
@@ -236,7 +256,7 @@ public class TestMmtfUtils {
 	public void testGetIsoDateString() {
 		Date inputDate = new Date();
 		inputDate.setTime(86500);
-		// One day after 
+		// One day after
 		assertEquals("1970-01-02",MmtfUtils.dateToIsoString(inputDate));
 	}
 
@@ -310,7 +330,7 @@ public class TestMmtfUtils {
 		new BondImpl(atomOne, atomThree, 2);
 		new BondImpl(atomOne, atomThree, 2);
 		// Make this bond twice with different orders
-		new BondImpl(atomTwo, atomThree, 2);		
+		new BondImpl(atomTwo, atomThree, 2);
 		new BondImpl(atomTwo, atomThree, 1);
 		assertEquals(3, MmtfUtils.getNumBondsInGroup(atoms));
 	}
@@ -339,11 +359,11 @@ public class TestMmtfUtils {
 		// Now test two null possibilities
 		Group newGroup = new AminoAcidImpl();
 		MmtfUtils.setSecStructType(newGroup, -1);
-		assertEquals(MmtfUtils.getSecStructType(newGroup), -1);	
+		assertEquals(MmtfUtils.getSecStructType(newGroup), -1);
 		// Now test two null possibilities
 		Group newerGroup = new AminoAcidImpl();
 		MmtfUtils.setSecStructType(newerGroup, 10);
-		assertEquals(MmtfUtils.getSecStructType(newerGroup), -1);	
+		assertEquals(MmtfUtils.getSecStructType(newerGroup), -1);
 	}
 
 	/**
@@ -396,8 +416,8 @@ public class TestMmtfUtils {
 	}
 
 	private Set<Atom> findDuplicates(List<Atom> listContainingDuplicates)
-	{ 
-		final Set<Atom> setToReturn = new HashSet<>(); 
+	{
+		final Set<Atom> setToReturn = new HashSet<>();
 		final Set<Atom> set1 = new HashSet<>();
 
 		for (Atom yourInt : listContainingDuplicates)
@@ -467,7 +487,7 @@ public class TestMmtfUtils {
 		Matrix4d[] matArr = MmtfUtils.getNcsAsMatrix4d(testData);
 		double[][] roundTrippedData = MmtfUtils.getNcsAsArray(matArr);
 		for(int i=0; i<testData.length; i++){
-			assertArrayEquals(testData[i], roundTrippedData[i], 0.0);		
+			assertArrayEquals(testData[i], roundTrippedData[i], 0.0);
 		}
 	}
 }

@@ -3,7 +3,7 @@
 	<parent>
 		<artifactId>biojava</artifactId>
 		<groupId>org.biojava</groupId>
-		<version>5.0.0-SNAPSHOT</version>
+		<version>5.2.2-SNAPSHOT</version>
 	</parent>
 	<artifactId>biojava-protein-disorder</artifactId>
 	<packaging>jar</packaging>
@@ -25,7 +25,7 @@
 					<debug>true</debug>
                 </configuration>
 			</plugin>
-			
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
@@ -34,7 +34,7 @@
 				    <excludes>
                         <exclude>demo/**</exclude>
                     </excludes>
-				
+
 					<descriptorRefs>
 						<descriptorRef>bin</descriptorRef>
 					</descriptorRefs>
@@ -51,7 +51,7 @@
 					</archive>
 				</configuration>
 			</plugin>
-			
+
 		</plugins>
 	</build>
 	<dependencies>
@@ -63,9 +63,9 @@
 		<dependency>
 			<groupId>org.biojava</groupId>
 			<artifactId>biojava-core</artifactId>
-			<version>5.0.0-SNAPSHOT</version>
+			<version>5.2.2-SNAPSHOT</version>
 		</dependency>
-		<!-- logging dependencies (managed by parent pom, don't set versions or 
+		<!-- logging dependencies (managed by parent pom, don't set versions or
 			scopes here) -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -83,6 +83,10 @@
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
+		</dependency>
+		<dependency>
+		    <groupId>javax.xml.bind</groupId>
+		    <artifactId>jaxb-api</artifactId>
 		</dependency>
 	</dependencies>
 

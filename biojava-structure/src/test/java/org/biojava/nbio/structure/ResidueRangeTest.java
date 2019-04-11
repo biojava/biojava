@@ -276,7 +276,7 @@ public class ResidueRangeTest {
 		range = ResidueRange.parse(rangeStr);
 		assertNull(rangeStr,range.getStart());
 		assertNull(rangeStr,range.getEnd());
-		
+
 		rangeStr = "A_-+55";
 		range = ResidueRange.parse(rangeStr);
 		assertNull(rangeStr,range.getStart());
@@ -288,12 +288,12 @@ public class ResidueRangeTest {
 		AtomPositionMap map = new AtomPositionMap(cache.getAtoms("2eke"));
 		String rangeStr = "C_1023-";
 		ResidueRangeAndLength range = ResidueRangeAndLength.parse(rangeStr, map);
-		
+
 		assertEquals(rangeStr,1023,(int)range.getStart().getSeqNum());
 		assertEquals(rangeStr,1095,(int)range.getEnd().getSeqNum());
 		assertEquals(rangeStr, 73, range.getLength());
-		
-		
+
+
 	}
 
 	/**
@@ -372,29 +372,29 @@ public class ResidueRangeTest {
 		// invalid ranges
 		String[] no = new String[] {  "A_1-100-",
 				 "", "-", "___", "__:","A_-10-1000_",
-				
+
 		};
 		for (String s : no) {
 			assertFalse(s + " was considered a valid range format",
 					ResidueRange.RANGE_REGEX.matcher(s).matches());
 		}
 	}
-	
+
 	@Test
 	public void testTerminalSymbols() {
 		String rangeStr;
 		ResidueRange range;
-		
+
 		rangeStr = "A:1-$";
 		range = ResidueRange.parse(rangeStr);
 		assertEquals(rangeStr,1,(int)range.getStart().getSeqNum());
 		assertNull(rangeStr,range.getEnd());
-		
+
 		rangeStr = "A:^-1";
 		range = ResidueRange.parse(rangeStr);
 		assertNull(rangeStr,range.getStart());
 		assertEquals(rangeStr,1,(int)range.getEnd().getSeqNum());
-		
+
 		rangeStr = "A:^-$";
 		range = ResidueRange.parse(rangeStr);
 		assertNull(rangeStr,range.getStart());

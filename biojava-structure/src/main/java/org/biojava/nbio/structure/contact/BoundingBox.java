@@ -199,7 +199,7 @@ public class BoundingBox implements Serializable {
 		return true;
 
 	}
-	
+
 	/**
 	 * Check if a given point falls within this box
 	 * @param atom

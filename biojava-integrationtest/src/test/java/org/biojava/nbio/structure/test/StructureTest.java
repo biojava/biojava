@@ -106,7 +106,7 @@ public class StructureTest {
 		assertEquals("pdb code not set!","5PTI",structure.getPDBCode());
 
 		// since biojava 5.0, we have 4 chains here: 1 protein, 2 non-poly (ligands), 1 water
-		
+
 		Chain c = structure.getChainByIndex(0);
 		assertEquals("did not find the expected 58 amino acids!",58,c.getAtomGroups(GroupType.AMINOACID).size());
 

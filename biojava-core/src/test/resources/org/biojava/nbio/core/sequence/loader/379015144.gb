@@ -1,0 +1,66 @@
+LOCUS       YP_005291380             338 aa            linear   CON 17-DEC-2014
+DEFINITION  leukocidin/hemolysin toxin family protein [Staphylococcus aureus
+            subsp. aureus VC40].
+ACCESSION   YP_005291380
+VERSION     YP_005291380.1
+DBLINK      BioProject: PRJNA88071
+DBSOURCE    REFSEQ: accession NC_016912.1
+KEYWORDS    RefSeq.
+SOURCE      Staphylococcus aureus subsp. aureus VC40
+  ORGANISM  Staphylococcus aureus subsp. aureus VC40
+            Bacteria; Firmicutes; Bacilli; Bacillales; Staphylococcus.
+REFERENCE   1  (residues 1 to 338)
+  AUTHORS   Sass,P., Berscheid,A., Jansen,A., Oedenkoven,M., Szekat,C.,
+            Strittmatter,A., Gottschalk,G. and Bierbaum,G.
+  TITLE     Genome sequence of Staphylococcus aureus VC40, a vancomycin- and
+            daptomycin-resistant strain, to study the genetics of development
+            of resistance to currently applied last-resort antibiotics
+  JOURNAL   J. Bacteriol. 194 (8), 2107-2108 (2012)
+   PUBMED   22461548
+REFERENCE   2  (residues 1 to 338)
+  CONSRTM   NCBI Genome Project
+  TITLE     Direct Submission
+  JOURNAL   Submitted (21-FEB-2012) National Center for Biotechnology
+            Information, NIH, Bethesda, MD 20894, USA
+REFERENCE   3  (residues 1 to 338)
+  AUTHORS   Sass,P., Berscheid,A., Jansen,A., Oedenkoven,M., Szekat,C.,
+            Strittmatter,A., Gottschalk,G. and Bierbaum,G.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (25-AUG-2011) Institute of Medical Microbiology,
+            Immunology and Parasitology, University of Bonn, Sigmund-Freud-Str.
+            25, Bonn 53105, Germany
+COMMENT     PROVISIONAL REFSEQ: This record has not yet been subject to final
+            NCBI review. The reference sequence is identical to AEZ37946.
+            Method: conceptual translation.
+FEATURES             Location/Qualifiers
+     source          1..338
+                     /organism="Staphylococcus aureus subsp. aureus VC40"
+                     /strain="VC40"
+                     /sub_species="aureus"
+                     /db_xref="taxon:1028799"
+                     /country="Germany"
+                     /collection_date="2002"
+                     /note="laboratory mutant selected for 60 microgram per ml
+                     vancomycin resistance"
+     Protein         1..338
+                     /product="leukocidin/hemolysin toxin family protein"
+                     /calculated_mol_wt=38555
+     Region          65..323
+                     /region_name="Leukocidin"
+                     /note="Leukocidin/Hemolysin toxin family; pfam07968"
+                     /db_xref="CDD:311773"
+     CDS             1..338
+                     /locus_tag="SAVC_08965"
+                     /coded_by="complement(NC_016912.1:1946987..1948003)"
+                     /transl_table=11
+                     /db_xref="GeneID:11869971"
+CONTIG      join(WP_000595324.1:1..338)
+ORIGIN      
+        1 mikqlcknit ictlalsttf tvlpatsfak inseikqvse knldgdtkmy trtattsdsq
+       61 knitqslqfn fltepnydke tvfikakgti gsglrildpn gywnstlrwp gsysvsiqnv
+      121 ddnnntnvtd fapknqdesr evkytygykt ggdfsinrgg ltgnitkesn ysetisyqqp
+      181 syrtlldqst shkgvgwkve ahlinnmghd htrqltndsd nrtkseifsl trngnlwakd
+      241 nftpkdkmpv tvsegfnpef lavmshdkkd kgksqfvvhy krsmdefkid wnrhgfwgyw
+      301 sgenhvdkke eklsalyevd wkthnvkfvk vlndnekk
+//
+

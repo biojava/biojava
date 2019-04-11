@@ -24,7 +24,7 @@ import java.util.Comparator;
 
 public class IdxComparator implements Comparator<int[]>, Serializable
 {
-    private static final long serialVersionUID = 1;
+	private static final long serialVersionUID = 1;
 
 	@Override
 	public int compare(int[] o1, int[] o2)

@@ -170,10 +170,10 @@ public class LocIterator implements Iterator<Location> {
 	@Override
 	public Location next()
 	{
-        if(!hasNext()){
-            throw new NoSuchElementException();
-        }
-        return next( mWindowSize, mIncrement );
+		if(!hasNext()){
+			throw new NoSuchElementException();
+		}
+		return next( mWindowSize, mIncrement );
 	}
 
 	/**

@@ -31,6 +31,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -129,8 +131,8 @@ public class EntityInfo implements Serializable {
 	private Long id;
 
 	public EntityInfo () {
-		chains = new ArrayList<Chain>();
-		chains2pdbResNums2ResSerials = new HashMap<String, Map<ResidueNumber,Integer>>();
+		chains = new ArrayList<>();
+		chains2pdbResNums2ResSerials = new HashMap<>();
 		molId = -1;
 	}
 
@@ -141,12 +143,14 @@ public class EntityInfo implements Serializable {
 	 */
 	public EntityInfo (EntityInfo c) {
 
-		this.chains = new ArrayList<Chain>();
+	    this.id = c.id;
 
-		this.chains2pdbResNums2ResSerials = new HashMap<String, Map<ResidueNumber,Integer>>();
+		this.chains = new ArrayList<>();
+
+		this.chains2pdbResNums2ResSerials = new HashMap<>();
 
 		this.molId = c.molId;
-		
+
 		this.type = c.type;
 
 		this.refChainId = c.refChainId;
@@ -235,7 +239,7 @@ public class EntityInfo implements Serializable {
 	 */
 	public Chain getRepresentative() {
 
-		List<String> chainIds = new ArrayList<String>();
+		List<String> chainIds = new ArrayList<>();
 		for (Chain chain:chains) {
 			chainIds.add(chain.getId());
 		}
@@ -281,18 +285,20 @@ public class EntityInfo implements Serializable {
 	 */
 	public List<String> getChainIds() {
 
-		Set<String> uniqChainIds = new TreeSet<String>();
+		Set<String> uniqChainIds = new TreeSet<>();
 		for (int i=0;i<getChains().size();i++) {
 			uniqChainIds.add(getChains().get(i).getId());
 		}
 
-		return new ArrayList<String>(uniqChainIds);
+		return new ArrayList<>(uniqChainIds);
 	}
 
 	/**
-	 * Given a Group g of Chain c (member of this EnityInfo) return the corresponding position in the
+	 * Given a Group g of Chain c (member of this EntityInfo) return the corresponding position in the
 	 * alignment of all member sequences (1-based numbering), i.e. the index (1-based) in the SEQRES sequence.
-	 * This allows for comparisons of residues belonging to different chains of the same EnityInfo (entity).
+	 * This allows for comparisons of residues belonging to different chains of the same EntityInfo (entity).
+	 * <p>
+	 * Note this method should only be used for entities of type {@link EntityType#POLYMER}
 	 * <p>
 	 * If {@link FileParsingParameters#setAlignSeqRes(boolean)} is not used or SEQRES not present, a mapping
 	 * will not be available and this method will return {@link ResidueNumber#getSeqNum()} for all residues, which
@@ -306,7 +312,7 @@ public class EntityInfo implements Serializable {
 	 * is returned as a fall-back, if the group is not found in the SEQRES groups then -1 is returned
 	 * for the given group and chain
 	 * @throws IllegalArgumentException if the given Chain is not a member of this EnityInfo
-	 * @see {@link Chain#getSeqResGroup(int)}
+	 * @see Chain#getSeqResGroup(int)
 	 */
 	public int getAlignedResIndex(Group g, Chain c) {
 
@@ -334,7 +340,7 @@ public class EntityInfo implements Serializable {
 			// still it can happen that a group is in ATOM in one chain but not in other of the same entity.
 			// This is what we try to find out here (analogously to what we do in initResSerialsMap() ):
 			if (resNum==null && c.getSeqResGroups()!=null && !c.getSeqResGroups().isEmpty()) {
-				
+
 				int index = c.getSeqResGroups().indexOf(g);
 
 				resNum = findResNumInOtherChains(index, c);
@@ -402,9 +408,9 @@ public class EntityInfo implements Serializable {
 
 		// note that getChains contains all chains from all models, we'll just use first model found and skip the others
 		for (Chain c: getFirstModelChains()) {
-			
-			if (c == chain) continue;			
-			
+
+			if (c == chain) continue;
+
 			Group seqResGroup = c.getSeqResGroup(i);
 
 			if (seqResGroup==null) {
@@ -811,19 +817,21 @@ public class EntityInfo implements Serializable {
 	}
 
 	private List<Chain> getFirstModelChains() {
-		List<Chain> firstModel = new ArrayList<>();
-		outer:
-		for (String id: getChainIds()) {
-			for (Chain chain:chains) {
-				if (chain.getId().equals(id)) {
-					firstModel.add(chain);
-					break outer;
+
+		Map<String, Chain> firstModelChains = new LinkedHashMap<>();
+		Set<String> lookupChainIds = new HashSet<>(getChainIds());
+
+		for (Chain chain : chains) {
+			if (lookupChainIds.contains(chain.getId())) {
+				if (!firstModelChains.containsKey(chain.getId())) {
+					firstModelChains.put(chain.getId(), chain);
 				}
 			}
 		}
-		return firstModel;
+
+		return new ArrayList<>(firstModelChains.values());
 	}
-	
+
 	 /**
 	  * Add new Chain to this EntityInfo
 	  * @param chain
@@ -858,4 +866,3 @@ public class EntityInfo implements Serializable {
 		this.type = type;
 	}
 }
- 

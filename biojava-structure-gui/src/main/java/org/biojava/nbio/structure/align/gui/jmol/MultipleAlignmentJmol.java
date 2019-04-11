@@ -45,10 +45,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.PDBHeader;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.StructureIdentifier;
 import org.biojava.nbio.structure.align.gui.MenuCreator;
 import org.biojava.nbio.structure.align.gui.MultipleAlignmentGUI;
 import org.biojava.nbio.structure.align.gui.MultipleAlignmentJmolDisplay;
@@ -168,7 +166,7 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 			modelSelection.setLayout(new WrapLayout(WrapLayout.LEFT));
 			modelSelection.setSize(new Dimension(DEFAULT_WIDTH,30));
 			vBox.add(modelSelection);
-			
+
 			JButton show = new JButton("Show Only: ");
 			show.addActionListener(new ActionListener() {
 
@@ -189,7 +187,7 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 				}
 			});
 			modelSelection.add(show);
-		
+
 			// Check boxes for all models
 			for(int str = 0; str < multAln.size();str++) {
 				JCheckBox structureSelection = new JCheckBox(multAln

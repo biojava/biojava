@@ -493,7 +493,7 @@ public class MultipleMcOptimizer implements Callable<MultipleAlignment> {
 			} else if (block.getAlignRes().get(str).get(rightRes) == null) {
 				// Choose the sequentially next residue of the known one
 				Integer residue = block.getAlignRes().get(str).get(leftRes) + 1;
-				if (freePool.contains(residue)) {
+				if (freePool.get(str).contains(residue)) {
 					block.getAlignRes().get(str).set(res, residue);
 					freePool.get(str).remove(residue);
 				} else
@@ -626,7 +626,7 @@ public class MultipleMcOptimizer implements Callable<MultipleAlignment> {
 			if (resR1 != null)
 				resR1 += 1;
 
-			if (freePool.contains(resR1)) {
+			if (freePool.get(str).contains(resR1)) {
 				if (rightBoundary1 == block.length() - 1) {
 					block.getAlignRes().get(str).add(resR1);
 				} else

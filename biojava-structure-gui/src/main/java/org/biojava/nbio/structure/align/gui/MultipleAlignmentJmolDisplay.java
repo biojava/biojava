@@ -30,10 +30,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JScrollPane;
 
 import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.Chain;
-import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.StructureImpl;
 import org.biojava.nbio.structure.align.gui.aligpanel.MultipleAligPanel;
 import org.biojava.nbio.structure.align.gui.aligpanel.MultipleStatusDisplay;
 import org.biojava.nbio.structure.align.gui.jmol.AbstractAlignmentJmol;
@@ -42,8 +39,8 @@ import org.biojava.nbio.structure.align.gui.jmol.MultipleAlignmentJmol;
 import org.biojava.nbio.structure.align.multiple.Block;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentDisplay;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
 
 /**
  * Utility Class that provides helper methods for the visualization of
@@ -60,8 +57,8 @@ import org.slf4j.LoggerFactory;
  */
 public class MultipleAlignmentJmolDisplay  {
 
-	private static final Logger logger =
-			LoggerFactory.getLogger(MultipleAlignmentJmolDisplay.class);
+	//private static final Logger logger =
+	//		LoggerFactory.getLogger(MultipleAlignmentJmolDisplay.class);
 
 	/**
 	 * Utility method used in the {@link MultipleAlignmentJmol} Frame,

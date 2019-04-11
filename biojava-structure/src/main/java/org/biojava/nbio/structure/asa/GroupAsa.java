@@ -97,8 +97,8 @@ public class GroupAsa implements Serializable {
 		this.g = g;
 
 		int groupNoHSize = getGroupNoHSize();
-		atomAsaUs = new ArrayList<Double>(groupNoHSize);
-		atomAsaCs = new ArrayList<Double>(groupNoHSize);
+		atomAsaUs = new ArrayList<>(groupNoHSize);
+		atomAsaCs = new ArrayList<>(groupNoHSize);
 	}
 
 	private int getGroupNoHSize() {

@@ -21,7 +21,6 @@
 
 package org.biojava.nbio.structure;
 
-import junit.framework.TestCase;
 import org.junit.*;
 
 import java.util.ArrayList;
@@ -32,9 +31,9 @@ import java.util.List;
  *
  * @author Jules Jacobsen <jacobsen@ebi.ac.uk>
  */
-public class HetatomImplTest extends TestCase{
+public class HetatomImplTest {
 
-	int bigTestNumber = 60000;
+	private int bigTestNumber = 60000;
 
 	public HetatomImplTest() {
 
@@ -48,11 +47,11 @@ public class HetatomImplTest extends TestCase{
 	public static void tearDownClass() throws Exception {
 	}
 
-	@Override @Before
+	@Before
 	public void setUp() {
 	}
 
-	@After @Override
+	@After
 	public void tearDown() {
 	}
 
@@ -482,7 +481,7 @@ public class HetatomImplTest extends TestCase{
 		instance.setChain(chain);
 		Chain expResult = chain;
 		Chain result = instance.getChain();
-		assertEquals(expResult, result);
+		Assert.assertEquals(expResult, result);
 	}
 
 	/**
@@ -500,7 +499,7 @@ public class HetatomImplTest extends TestCase{
 
 		String expResult = "A";
 		String result = instance.getChainId();
-		assertEquals(expResult, result);
+		Assert.assertEquals(expResult, result);
 	}
 
 	/**
@@ -514,7 +513,7 @@ public class HetatomImplTest extends TestCase{
 		instance.setResidueNumber(residueNumber);
 		ResidueNumber expResult = residueNumber;
 		ResidueNumber result = instance.getResidueNumber();
-		assertEquals(expResult, result);
+		Assert.assertEquals(expResult, result);
 
 	}
 
@@ -536,7 +535,7 @@ public class HetatomImplTest extends TestCase{
 			ResidueNumber resnum = group.getResidueNumber();
 			integers.add(resnum.getSeqNum());
 		}
-		assertEquals(bigTestNumber, integers.size());
+		Assert.assertEquals(bigTestNumber, integers.size());
 	}
 
 	@Test
@@ -551,7 +550,7 @@ public class HetatomImplTest extends TestCase{
 			resNumgroups.add(hetAtom);
 		}
 		int groupsSize = resNumgroups.size();
-		assertEquals(bigTestNumber, groupsSize);
+		Assert.assertEquals(bigTestNumber, groupsSize);
 	}
 
 	@Test
@@ -584,7 +583,7 @@ public class HetatomImplTest extends TestCase{
 		g.addAtom(N);
 		g.addAtom(O);
 
-		assertTrue(g.hasAminoAtoms());
+		Assert.assertTrue(g.hasAminoAtoms());
 
 		g = new HetatomImpl();
 		g.addAtom(CA);
@@ -593,7 +592,7 @@ public class HetatomImplTest extends TestCase{
 		g.addAtom(O);
 		g.addAtom(OXT);
 
-		assertTrue(g.hasAminoAtoms());
+		Assert.assertTrue(g.hasAminoAtoms());
 
 		g = new AminoAcidImpl();
 		g.addAtom(CA);
@@ -601,13 +600,13 @@ public class HetatomImplTest extends TestCase{
 		g.addAtom(N);
 		g.addAtom(O);
 
-		assertTrue(g.hasAminoAtoms());
+		Assert.assertTrue(g.hasAminoAtoms());
 
 		g = new HetatomImpl();
 		g.addAtom(CA);
 		g.addAtom(C);
 		g.addAtom(N);
-		assertFalse(g.hasAminoAtoms());
+		Assert.assertFalse(g.hasAminoAtoms());
 
 		g = new HetatomImpl();
 		g.addAtom(CA);
@@ -615,7 +614,7 @@ public class HetatomImplTest extends TestCase{
 		g.addAtom(N);
 		g.addAtom(OXT);
 
-		assertFalse(g.hasAminoAtoms());
+		Assert.assertFalse(g.hasAminoAtoms());
 
 	}
 }

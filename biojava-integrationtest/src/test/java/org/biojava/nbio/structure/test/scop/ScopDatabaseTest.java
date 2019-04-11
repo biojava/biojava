@@ -154,7 +154,10 @@ public abstract class ScopDatabaseTest {
 		node = scop.getScopNode(0); // root
 		assertEquals(tag,0,node.getSunid());
 		assertEquals(tag,-1,node.getParentSunid());
-		assertEquals(tag+"Wrong number of children",11,node.getChildren().size());
+		assertEquals(tag+"Wrong number of children",
+				// Class I (Artifacts) added in SCOP 2.06
+				scop.getScopVersion().compareToIgnoreCase( ScopFactory.VERSION_2_0_6) >= 0 ? 12 : 11,
+						node.getChildren().size());
 
 		node = scop.getScopNode(-1); // illegal
 		assertNull(tag,node);

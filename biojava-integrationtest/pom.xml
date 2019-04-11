@@ -4,7 +4,7 @@
   <parent>
     <artifactId>biojava</artifactId>
     <groupId>org.biojava</groupId>
-    <version>5.0.0-SNAPSHOT</version>
+    <version>5.2.2-SNAPSHOT</version>
   </parent>
   <artifactId>biojava-integrationtest</artifactId>
   <packaging>jar</packaging>
@@ -19,10 +19,6 @@
     </license>
   </licenses>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.build.targetEncoding>UTF-8</project.build.targetEncoding>
-  </properties>
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -32,7 +28,7 @@
     <dependency>
     	<groupId>org.biojava</groupId>
     	<artifactId>biojava-structure</artifactId>
-    	<version>5.0.0-SNAPSHOT</version>
+    	<version>5.2.2-SNAPSHOT</version>
     </dependency>
 		<!-- logging dependencies (managed by parent pom, don't set versions or scopes here) -->
 		<dependency>
@@ -51,7 +47,7 @@
   		<dependency>
     		<groupId>org.apache.logging.log4j</groupId>
     		<artifactId>log4j-core</artifactId>
-  		</dependency>			
+  		</dependency>
   </dependencies>
   <description>A module which only has the purpose to run slow running integration tests.
 
@@ -72,7 +68,46 @@ mvn verify</description>
           </execution>
         </executions>
       </plugin>
+      <!-- integrationtest module shouldn't create a jar file (it would be empty).
+      		Recipe from https://stackoverflow.com/questions/2188746/what-is-the-best-way-to-avoid-maven-jar
+      		- JD 2018-03-08 -->
+      <!-- I had to comment this out because the gpg plugin would error on trying to sign the inexistent jar when doing 'mvn release:perform' or 'mvn package gpg:sign',
+           see https://github.com/biojava/biojava/issues/727 - JD 2018-03-23
+            -->
+	<!--
+      <plugin>
+        <artifactId>maven-jar-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>default-jar</id>
+            <phase>none</phase>
+            <configuration>
+              <finalName>unwanted</finalName>
+              <classifier>unwanted</classifier>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-install-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>default-install</id>
+            <phase>none</phase>
+          </execution>
+        </executions>
+      </plugin>
+ 	-->
+ 	<!-- With this 'mvn deploy' should not publish the jar file. See https://github.com/biojava/biojava/issues/727 - JD 2018-03-23 -->
+	<plugin>
+		<groupId>org.apache.maven.plugins</groupId>
+		<artifactId>maven-deploy-plugin</artifactId>
+		<configuration>
+			<skip>true</skip>
+		</configuration>
+	</plugin>
+
     </plugins>
   </build>
- 
+
 </project>

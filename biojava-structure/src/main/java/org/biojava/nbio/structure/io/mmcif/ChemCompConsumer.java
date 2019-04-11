@@ -131,10 +131,10 @@ public class ChemCompConsumer implements MMcifConsumer {
 	public void newStructNcsOper(StructNcsOper sNcsOper) {
 
 	}
-	
+
 	@Override
 	public void newAtomSites(AtomSites atomSites) {
-		
+
 	}
 
 	@Override
@@ -309,19 +309,19 @@ public class ChemCompConsumer implements MMcifConsumer {
 	@Override
 	public void newEntityPoly(EntityPoly entityPoly) {
 
-		
+
 	}
 
 	@Override
 	public void newPdbxAuditRevisionHistory(PdbxAuditRevisionHistory history) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void newPdbxDatabaseStatus(PdbxDatabaseStatus status) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }
 

@@ -34,6 +34,7 @@ import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.model.AFP;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.util.AFPAlignmentDisplay;
+import org.biojava.nbio.structure.align.util.AFPChainScorer;
 import org.biojava.nbio.structure.geometry.Matrices;
 import org.biojava.nbio.structure.geometry.SuperPositions;
 import org.biojava.nbio.structure.jama.Matrix;
@@ -921,6 +922,8 @@ nBestTrace=nTrace;
 
 		convertAfpChain(afpChain, ca1, ca2);
 		AFPAlignmentDisplay.getAlign(afpChain, ca1, ca2);
+		double tmScore = AFPChainScorer.getTMScore(afpChain, ca1, ca2,false);
+		afpChain.setTMScore(tmScore);
 	}
 
 
@@ -1155,11 +1158,8 @@ nBestTrace=nTrace;
 
 		afpChain.setAfpSet(afpSet);
 
-
-
-
 		//System.out.println("z:"+z + " zThr" + zThr+ " bestTraceScore " + bestTraceScore + " " + nGaps );
-		if(z>=zThr) {
+		if(params.isOptimizeAlignment() && z>=zThr) {
 			nGaps = optimizeSuperposition(afpChain,nse1, nse2, strLen, rmsd, ca1, ca2,nGaps,strBuf1,strBuf2);
 			//	      if(isPrint) {
 			//		/*
@@ -1183,6 +1183,7 @@ nBestTrace=nTrace;
 					align_se2[lcmp+l]=bestTrace2[k]+l;
 				}
 				lali_x_+=bestTraceLen[k];
+				lcmp+=bestTraceLen[k];
 				if(k<nBestTrace-1) {
 					if(bestTrace1[k]+bestTraceLen[k]!=bestTrace1[k+1])
 						for(int l=bestTrace1[k]+bestTraceLen[k]; l<bestTrace1[k+1]; l++) {
@@ -1199,6 +1200,7 @@ nBestTrace=nTrace;
 				}
 			}
 			nAtom=lali_x_;
+			afpChain.setTotalRmsdOpt(afpChain.getTotalRmsdIni());
 		}
 
 		timeEnd = System.currentTimeMillis();
@@ -1848,11 +1850,7 @@ nBestTrace=nTrace;
 	}
 
 
-
-
 	private void rot_mol(Atom[] caA, Atom[] caB, int nse2, Matrix m , Atom shift) throws StructureException{
-
-
 
 		for(int l=0; l<nse2; l++) {
 			Atom a = caA[l];
@@ -1883,23 +1881,6 @@ nBestTrace=nTrace;
 	//			}
 	//
 
-
-	/** superimpose and get rmsd
-	 *
-	 * @param pro1
-	 * @param pro2
-	 * @param strLen
-	 * @param storeTransform
-	 * @param show Ignored. Formerly displayed the superposition with jmol.
-	 * @return RMSD
-	 * @throws StructureException
-	 * @deprecated Use {@link #calc_rmsd(Atom[],Atom[],int,boolean)} instead
-	 */
-	@Deprecated
-	public double calc_rmsd(Atom[] pro1, Atom[] pro2, int strLen, boolean storeTransform, boolean show) throws StructureException {
-		return calc_rmsd(pro1, pro2, strLen, storeTransform);
-	}
-
 	/** superimpose and get rmsd
 	 *
 	 * @param pro1
@@ -1909,13 +1890,13 @@ nBestTrace=nTrace;
 	 * @return RMSD
 	 * @throws StructureException
 	 */
-	public double calc_rmsd(Atom[] pro1, Atom[] pro2, int strLen, 
+	public double calc_rmsd(Atom[] pro1, Atom[] pro2, int strLen,
 			boolean storeTransform) throws StructureException {
 
 		Atom[] cod1 = getAtoms(pro1,  strLen,false);
 		Atom[] cod2 = getAtoms(pro2,  strLen,true);
 
-		Matrix4d trans = SuperPositions.superpose(Calc.atomsToPoints(cod1), 
+		Matrix4d trans = SuperPositions.superpose(Calc.atomsToPoints(cod1),
 				Calc.atomsToPoints(cod2));
 
 		Matrix matrix = Matrices.getRotationJAMA(trans);
@@ -1927,7 +1908,7 @@ nBestTrace=nTrace;
 		}
 		for (Atom a : cod2)
 			Calc.transform(a.getGroup(), trans);
-			
+
 		return Calc.rmsd(cod1, cod2);
 
 	}

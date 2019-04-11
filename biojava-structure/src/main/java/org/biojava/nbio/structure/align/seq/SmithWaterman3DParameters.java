@@ -47,7 +47,7 @@ public class SmithWaterman3DParameters implements ConfigStrucAligParams {
 		params.add("The Gap extension penalty");
 		params.add("The maximum RMSD of superposition allowed");
 		params.add("The minimum alignment length allowed");
-		
+
 		// TODO Auto-generated method stub
 		return params;
 	}
@@ -59,7 +59,7 @@ public class SmithWaterman3DParameters implements ConfigStrucAligParams {
 		params.add("Gap Extension");
 		params.add("Maximum RMSD");
 		params.add("Minimum Alignment Length");
-		
+
 		return params;
 	}
 
@@ -70,7 +70,7 @@ public class SmithWaterman3DParameters implements ConfigStrucAligParams {
 		params.add("GapExtend");
 		params.add("MaxRmsd");
 		params.add("MinLen");
-		
+
 		return params;
 	}
 

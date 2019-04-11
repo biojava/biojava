@@ -121,7 +121,7 @@ public class AtomPositionMap {
 	 *            The value type
 	 */
 	private static class ValueComparator<T, V extends Comparable<V>> implements Comparator<T>, Serializable {
-        private static final long serialVersionUID = 1;
+	private static final long serialVersionUID = 1;
 
 		private Map<T, V> map;
 

@@ -29,7 +29,7 @@ import java.util.Comparator;
 
 
 	public class CDSComparator implements Comparator<CDSSequence>, Serializable{
-        private static final long serialVersionUID = 1;
+	private static final long serialVersionUID = 1;
 
 /**
  * Used to sort two CDSSequences where Negative Strand makes it tough

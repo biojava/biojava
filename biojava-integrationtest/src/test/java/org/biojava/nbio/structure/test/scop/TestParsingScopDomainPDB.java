@@ -24,16 +24,18 @@
 
 package org.biojava.nbio.structure.test.scop;
 
-import junit.framework.TestCase;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.io.PDBFileParser;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.net.URL;
 
-public class TestParsingScopDomainPDB extends TestCase{
+public class TestParsingScopDomainPDB {
 
 
+	@Test
 	public void testd1gena(){
 
 		try {
@@ -44,11 +46,11 @@ public class TestParsingScopDomainPDB extends TestCase{
 			Structure s = p.parsePDBFile(u.openStream());
 
 			//System.out.println(s);
-			assertTrue(StructureTools.getAllAtomArray(s).length > 100);
+			Assert.assertTrue(StructureTools.getAllAtomArray(s).length > 100);
 		} catch (Exception e){
 
 			e.printStackTrace();
-			fail(e.getMessage());
+			Assert.fail(e.getMessage());
 		}
 	}
 }

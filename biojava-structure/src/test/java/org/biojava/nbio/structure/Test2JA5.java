@@ -56,7 +56,7 @@ public class Test2JA5 {
 		assertEquals(14, s1.getPolyChains().size());
 
 		Chain nChain = s1.getPolyChain("N");
-		
+
 		assertNotNull(nChain);
 
 		Chain chain = s1.getPolyChainByPDB("N");
@@ -85,7 +85,7 @@ public class Test2JA5 {
 		assertEquals(14, s1.getPolyChains().size());
 
 		Chain nChain = s1.getPolyChainByPDB("N");
-		
+
 		assertNull(nChain);
 	}
 }

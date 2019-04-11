@@ -164,19 +164,6 @@ implements ModifiedCompound, Serializable, Comparable<ModifiedCompound> {
 		}
 	}
 
-	/**
-	 *
-	 * @return the original modification ID.
-	 * @deprecated use getModification().getId()
-	 */
-	@Deprecated
-	public String getOriginalModificationId() {
-		if (originalModification==null)
-			return null;
-
-		return originalModification.getId();
-	}
-
 	@Override
 	public Set<StructureGroup> getGroups() {
 		if ( groups == null)

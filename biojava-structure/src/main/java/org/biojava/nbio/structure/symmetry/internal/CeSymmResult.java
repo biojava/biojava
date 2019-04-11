@@ -81,7 +81,7 @@ public class CeSymmResult {
 		// If the refinement was attempted
 		if (params.getRefineMethod() != RefineMethod.NOT_REFINED) {
 			// Check for minimum length
-			if (multipleAlignment.getCoreLength() < params.getMinCoreLength())
+			if (multipleAlignment == null || multipleAlignment.getCoreLength() < params.getMinCoreLength())
 				return false;
 			// Allow 90% of original TM-Score theshold
 			if (multipleAlignment.getScore(MultipleAlignmentScorer.AVGTM_SCORE) < params
@@ -246,7 +246,7 @@ public class CeSymmResult {
 	/**
 	 * Return a String describing the reasons for the CE-Symm final decision in
 	 * this particular result.
-	 * 
+	 *
 	 * @return String decision reason
 	 */
 	public String getReason() {

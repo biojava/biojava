@@ -20,7 +20,6 @@
  */
 package org.biojava.nbio.genome;
 
-import junit.framework.TestCase;
 import junitx.framework.FileAssert;
 import org.biojava.nbio.genome.parsers.gff.FeatureList;
 import org.biojava.nbio.genome.parsers.gff.GFF3Reader;
@@ -29,6 +28,9 @@ import org.biojava.nbio.core.sequence.ChromosomeSequence;
 import org.biojava.nbio.core.sequence.GeneSequence;
 import org.biojava.nbio.core.sequence.ProteinSequence;
 import org.biojava.nbio.core.sequence.io.FastaWriterHelper;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,24 +43,19 @@ import java.util.LinkedHashMap;
  *
  * @author Scooter Willis <willishf at gmail dot com>
  */
-public class GeneFeatureHelperTest extends TestCase {
+public class GeneFeatureHelperTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(GeneFeatureHelperTest.class);
 
-	public GeneFeatureHelperTest(String testName) {
-		super(testName);
+	@Before
+	public void setUp() throws Exception {
 	}
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@After
+	public void tearDown() throws Exception {
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
-	}
-
+	@Test
 	public void testZeroLocation() throws Exception {
 
 		@SuppressWarnings("unused")
@@ -71,6 +68,7 @@ public class GeneFeatureHelperTest extends TestCase {
 	 * @throws Exception
 	 */
 
+	@Test
 	public void testLoadFastaAddGeneFeaturesFromUpperCaseExonFastaFile() throws Exception {
 		// logger.info("loadFastaAddGeneFeaturesFromUpperCaseExonFastaFile");
 		File fastaSequenceFile = new File("src/test/resources/volvox_all.fna");
@@ -92,6 +90,7 @@ public class GeneFeatureHelperTest extends TestCase {
 	/**
 	 * Test of outputFastaSequenceLengthGFF3 method, of class GeneFeatureHelper.
 	 */
+	@Test
 	public void testOutputFastaSequenceLengthGFF3() throws Exception {
 		// logger.info("outputFastaSequenceLengthGFF3");
 
@@ -110,6 +109,7 @@ public class GeneFeatureHelperTest extends TestCase {
 	 * @throws Exception
 	 */
 
+	@Test
 	public void testAddGFF3Note() throws Exception {
 		LinkedHashMap<String, ChromosomeSequence> chromosomeSequenceList = GeneFeatureHelper
 				.loadFastaAddGeneFeaturesFromGmodGFF3(new File("src/test/resources/volvox_all.fna"), new File(
@@ -125,6 +125,7 @@ public class GeneFeatureHelperTest extends TestCase {
 	 * incorrect without a validated test case. Could not find anyone providing a gff3 test case with expected protein
 	 * output.
 	 */
+	@Test
 	public void testGetProteinSequences() throws Exception {
 		LinkedHashMap<String, ChromosomeSequence> chromosomeSequenceList = GeneFeatureHelper
 				.loadFastaAddGeneFeaturesFromGmodGFF3(new File("src/test/resources/volvox_all.fna"), new File(
@@ -144,6 +145,7 @@ public class GeneFeatureHelperTest extends TestCase {
 	/**
 	 * Test of getGeneSequences method, of class GeneFeatureHelper.
 	 */
+	@Test
 	public void testGetGeneSequences() throws Exception {
 		// logger.info("getGeneSequences");
 		LinkedHashMap<String, ChromosomeSequence> chromosomeSequenceList = GeneFeatureHelper

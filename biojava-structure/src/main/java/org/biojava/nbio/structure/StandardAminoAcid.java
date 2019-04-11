@@ -30,7 +30,7 @@ import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
 
-/** 
+/**
  * A class that provides a set of standard amino acids.
  *
  *

@@ -44,7 +44,7 @@ import org.biojava.nbio.structure.secstruc.SecStrucType;
 import org.biojava.nbio.structure.symmetry.internal.CESymmParameters.RefineMethod;
 import org.biojava.nbio.structure.symmetry.internal.CESymmParameters.SymmetryType;
 import org.biojava.nbio.structure.symmetry.utils.SymmetryTools;
-import org.jgrapht.UndirectedGraph;
+import org.jgrapht.Graph;
 import org.jgrapht.alg.ConnectivityInspector;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleGraph;
@@ -75,7 +75,7 @@ public class CeSymmIterative {
 			.getLogger(CeSymmIterative.class);
 
 	private CESymmParameters params;
-	private UndirectedGraph<Integer, DefaultEdge> alignGraph; // cumulative
+	private Graph<Integer, DefaultEdge> alignGraph; // cumulative
 	private List<CeSymmResult> levels; // symmetry at each level
 
 	/**
@@ -205,11 +205,11 @@ public class CeSymmIterative {
 	 */
 	private CeSymmResult reconstructSymmResult(Atom[] atoms)
 			throws StructureException {
-		
+
 		// If one level, nothing to build or calculate
 		if (levels.size() == 1)
 			return levels.get(0);
-		
+
 		CeSymmResult result = new CeSymmResult();
 		result.setSelfAlignment(levels.get(0).getSelfAlignment());
 		result.setStructureId(levels.get(0).getStructureId());

@@ -21,19 +21,20 @@
 package org.biojava.nbio.structure.gui;
 
 
-import junit.framework.TestCase;
 import org.biojava.nbio.structure.Structure;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  *
  * @author Jules
  */
-public class ViewerTest extends TestCase {
+public class ViewerTest {
 	StructureViewer viewer;
 	Structure structure;
 
-	@Override
-	protected void setUp(){
+	@Before
+	public void setUp(){
 //		if (  java.awt.GraphicsEnvironment.isHeadless())
 //    		return;
 //		//viewer = new OpenAstexViewer();
@@ -50,6 +51,7 @@ public class ViewerTest extends TestCase {
 	/**
 	 * then load a PDB file.
 	 */
+	@Test
 	public void testStructureLoad(){
 
 //		if (  java.awt.GraphicsEnvironment.isHeadless())

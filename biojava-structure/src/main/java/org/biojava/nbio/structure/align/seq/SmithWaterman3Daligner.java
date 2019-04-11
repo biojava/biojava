@@ -58,7 +58,7 @@ import org.slf4j.LoggerFactory;
  * alignment until a maximum RMSD threshold of the superimposition, or the
  * minimum alignment length theshold, are fulfilled, similar to what pymol align
  * algorithm does.
- * 
+ *
  * @author Andreas Prlic
  * @author Aleix Lafita
  *
@@ -144,7 +144,7 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
 
 		// convert to a 3D alignment...
 		afpChain = convert(ca1,ca2,pair, smithWaterman);
-		
+
 		// Perform an iterative dropping of the columns
 		while (afpChain.getOptLength() > params.getMinLen()
 				&& afpChain.getTotalRmsdOpt() > params.getMaxRmsd()) {

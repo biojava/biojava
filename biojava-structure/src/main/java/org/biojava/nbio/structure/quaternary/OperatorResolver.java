@@ -24,7 +24,8 @@ import java.util.Collections;
 import java.util.List;
 
 
-/** A class to resolve the operators for transformations
+/**
+ * A class to resolve the operators for transformations
  *
  * @author Peter Rose
  *

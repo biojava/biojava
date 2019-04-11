@@ -259,7 +259,7 @@ public class StructureAlignmentOptimizer
 		}
 
 		//superimpose the equivalent residues
-		Matrix4d trans = SuperPositions.superpose(Calc.atomsToPoints(tmp1), 
+		Matrix4d trans = SuperPositions.superpose(Calc.atomsToPoints(tmp1),
 				Calc.atomsToPoints(tmp2));
 
 		Calc.transform(tmp2, trans);
@@ -280,7 +280,7 @@ public class StructureAlignmentOptimizer
 //            e.printStackTrace();
 //         }
 //      }
-		
+
 	}
 
 

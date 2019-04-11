@@ -20,6 +20,9 @@
  */
 package org.biojava.nbio.structure.symmetry.utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,10 +36,14 @@ public class BlastClustReader implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	private static final Logger logger = LoggerFactory.getLogger(BlastClustReader.class);
+
 	private int sequenceIdentity = 0;
-	private List<List<String>> clusters = new ArrayList<List<String>>();
-	private static final String coreUrl = "ftp://resources.rcsb.org/sequence/clusters/";
-	private static List<Integer> seqIdentities = Arrays.asList(30, 40, 50, 70, 90, 95, 100);
+	private List<List<String>> clusters = new ArrayList<>();
+	// https://cdn.rcsb.org/resources/sequence/clusters/bc-95.out
+	private static final String coreUrl = "https://cdn.rcsb.org/resources/sequence/clusters/";
+
+	private static final List<Integer> seqIdentities = Arrays.asList(30, 40, 50, 70, 90, 95, 100);
 
 	public BlastClustReader(int sequenceIdentity)  {
 		this.sequenceIdentity = sequenceIdentity;
@@ -51,7 +58,7 @@ public class BlastClustReader implements Serializable {
 		loadClusters(sequenceIdentity);
 		String pdbIdUc = pdbId.toUpperCase();
 
-		Map<String,String> representatives = new LinkedHashMap<String,String>();
+		Map<String,String> representatives = new LinkedHashMap<>();
 		for (List<String> cluster: clusters) {
 			// map fist match to representative
 			for (String chainId: cluster) {
@@ -138,48 +145,35 @@ public class BlastClustReader implements Serializable {
 		}
 
 		if (!seqIdentities.contains(sequenceIdentity)) {
-			System.err.println("Error: representative chains are not available for %sequence identity: "
-					+ sequenceIdentity);
+			logger.error("Representative chains are not available for %sequence identity: {}", sequenceIdentity);
 			return;
 		}
 
+		String urlString = coreUrl + "bc-" + sequenceIdentity + ".out";
+
 		try {
-			URL u = new URL(coreUrl + "bc-" + sequenceIdentity + ".out");
+
+			URL u = new URL(urlString);
 			InputStream stream = u.openStream();
-	//		URLConnection connection = u.openConnection();
-	//		connection.setConnectTimeout(60000);
-	//		InputStream stream = connection.getInputStream();
 
 			if (stream != null) {
 				BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
 
 				String line = null;
-				try {
-					while ((line = reader.readLine()) != null) {
-						line = line.replaceAll("_", ".");
-						List<String> cluster = Arrays.asList(line.split(" "));
-						clusters.add(cluster);
-					}
-					reader.close();
-					stream.close();
-				} catch (IOException e) {
-					//e.printStackTrace();
-				} finally {
-//					try {
-//						System.out.println("closing reader");
-//						reader.close();
-//						stream.close();
-//					} catch (IOException e) {
-//						e.printStackTrace();
-//					}
+				while ((line = reader.readLine()) != null) {
+					line = line.replaceAll("_", ".");
+					List<String> cluster = Arrays.asList(line.split(" "));
+					clusters.add(cluster);
 				}
+				reader.close();
+				stream.close();
+			} else {
+				throw new IOException("Got null stream for URL " + urlString);
 			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (IOException e) {
+			logger.error("Could not get sequence clusters from URL " + urlString + ". Error: " + e.getMessage());
 		}
 
-		return;
 	}
 
 }

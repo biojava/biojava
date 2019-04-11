@@ -24,6 +24,8 @@
  */
 package org.biojava.nbio.structure.rcsb;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -34,8 +36,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Package-level static utilities for parsing XML.
@@ -43,7 +43,7 @@ import java.util.logging.Logger;
  */
 public class ReadUtils {
 
-	private static final Logger logger = Logger.getLogger(ReadUtils.class.getPackage().getName());
+	private static final Logger logger = LoggerFactory.getLogger(ReadUtils.class);
 
 	// this IS needed
 	private static boolean documentBuilderFactorySet = false;
@@ -75,7 +75,7 @@ public class ReadUtils {
 		try {
 			builder = builderFactory.newDocumentBuilder();
 		} catch (ParserConfigurationException e) {
-			logger.log(Level.WARNING,"Couldn't configure parser", e);
+			logger.warn("Couldn't configure parser", e);
 			stream.close();
 			throw new IOException(e);
 		}
@@ -94,7 +94,7 @@ public class ReadUtils {
 		try {
 			return Double.parseDouble(s);
 		} catch (NumberFormatException e) {
-			logger.log(Level.WARNING,s + " is not a floating-point number", e);
+			logger.warn(s + " is not a floating-point number", e);
 		}
 		return null;
 	}
@@ -104,7 +104,7 @@ public class ReadUtils {
 		try {
 			return Integer.parseInt(s);
 		} catch (NumberFormatException e) {
-			logger.log(Level.WARNING,s + " is not an integer", e);
+			logger.warn(s + " is not an integer", e);
 		}
 		return null;
 	}

@@ -32,7 +32,7 @@ import java.util.Comparator;
  * @author Scooter Willis <willishf at gmail dot com>
  */
 public class SequenceComparator implements Comparator<AbstractSequence<?>>, Serializable{
-    private static final long serialVersionUID = 1;
+	private static final long serialVersionUID = 1;
 
 	@Override
 	public int compare(AbstractSequence<?> o1, AbstractSequence<?> o2) {

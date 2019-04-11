@@ -1,6 +1,28 @@
+/*
+ *                    BioJava development code
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public Licence.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright for this code is held jointly by the individual
+ * authors.  These should be listed in @author doc comments.
+ *
+ * For more information on the BioJava project and its aims,
+ * or to join the biojava-l mailing list, visit the home page
+ * at:
+ *
+ *      http://www.biojava.org/
+ *
+ */
 package org.biojava.nbio.structure.geometry;
 
 import static org.junit.Assert.*;
+
+import java.util.Random;
 
 import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Matrix4d;
@@ -16,15 +38,14 @@ import org.slf4j.LoggerFactory;
 /**
  * Test the Quaternion-Based Characteristic Polynomial {@link SuperPositionQCP}
  * algorithm for RMSD and Superposition calculations.
- * 
+ *
  * @author Aleix Lafita
  * @since 5.0.0
  *
  */
 public class TestSuperPositionQCP {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(TestSuperPositionQCP.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(TestSuperPosition.class);
 
 	/**
 	 * Test case proposed by Peter Rose from his observations about quaternary
@@ -74,11 +95,74 @@ public class TestSuperPositionQCP {
 		double qcprmsd = algorithm.getRmsd(set1, set2);
 		long qcpTime = (System.nanoTime() - qcpStart) / 1000;
 
-		logger.info(String.format("RMSD Symmetry: Quat time: %d us"
-				+ ", QCP time: %d us", quatTime, qcpTime));
+		LOGGER.info(String.format("RMSD Symmetry: Quat time: %d us" + ", QCP time: %d us", quatTime, qcpTime));
 
 		// Check that the returned RMSDs are equal
 		assertEquals(quatrmsd, qcprmsd, 0.001);
+
+	}
+
+	/**
+	 * Test case proposed by Peter Rose to check the alternative use of QCP,
+	 * where first the RMSD is checked before obtaining the transformation
+	 * matrix, in order to speed up large-scale calculations.
+	 */
+	@Test
+	public void testAlternativeUsageQCP() {
+
+		// Transformation applied to cloud points 1 that needs to be recovered
+		// by the superposition method
+		AxisAngle4d rotAxis = new AxisAngle4d(0.440, 0.302, 0.845, 1.570);
+		Vector3d translation = new Vector3d(0.345, 2.453, 5.324);
+
+		Matrix4d transform = new Matrix4d();
+		transform.set(rotAxis);
+		transform.setTranslation(translation);
+
+		// Generate a random artificial array of points
+		Random rnd = new Random(0);
+
+		transform = new Matrix4d();
+		transform.set(rotAxis);
+		transform.setTranslation(translation);
+
+		Point3d[] c1 = new Point3d[500];
+		Point3d[] c2 = new Point3d[500];
+
+		for (int p = 0; p < 500; p++) {
+
+			Point3d a = new Point3d(rnd.nextInt(100), rnd.nextInt(50), rnd.nextInt(150));
+			c1[p] = a;
+
+			// Add some noise to the second point
+			Point3d b = new Point3d(a.x + rnd.nextDouble(), a.y + rnd.nextDouble(), a.z + rnd.nextDouble());
+			c2[p] = b;
+
+		}
+
+		CalcPoint.transform(transform, c1);
+
+		SuperPositionQCP qcp = new SuperPositionQCP(false);
+
+		// Step 1 calculate RMSD
+		long start = System.nanoTime() / 1000;
+		qcp.getRmsd(c1, c2);
+		long rmsdTime = (System.nanoTime() / 1000 - start);
+
+		// Step 2 Obtain the matrix after RMSD
+		Matrix4d trans1 = qcp.superposeAfterRmsd();
+		long trans1time = (System.nanoTime() / 1000 - start) - rmsdTime;
+
+		// Now obtain the matrix from scratch
+		Matrix4d trans2 = qcp.superpose(c1, c2);
+		long trans2time = (System.nanoTime() / 1000 - start) - trans1time;
+
+		LOGGER.info(String.format(
+				"Time for RMSD: %d us, superposition after RMSD: %d us, and superposition from scratch: %d us",
+				rmsdTime, trans1time, trans2time));
+
+		// Check the results are the same
+		assertTrue(trans1.epsilonEquals(trans2, 0.05));
 
 	}
 

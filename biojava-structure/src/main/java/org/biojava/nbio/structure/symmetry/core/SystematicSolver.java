@@ -190,16 +190,16 @@ public class SystematicSolver implements QuatSymmetrySolver {
 		}
 
 		int fold = PermutationGroup.getOrder(permutation);
-		
+
 		// TODO implement this piece of code using at origin superposition
 		Quat4d quat = UnitQuaternions.relativeOrientation(
 				originalCoords, transformedCoords);
 		AxisAngle4d axisAngle = new AxisAngle4d();
 		Matrix4d transformation = new Matrix4d();
-		
+
 		transformation.set(quat);
 		axisAngle.set(quat);
-		
+
 		Vector3d axis = new Vector3d(axisAngle.x, axisAngle.y, axisAngle.z);
 		if (axis.lengthSquared() < 1.0E-6) {
 			axisAngle.x = 0;
@@ -212,9 +212,9 @@ public class SystematicSolver implements QuatSymmetrySolver {
 			axisAngle.y = axis.y;
 			axisAngle.z = axis.z;
 		}
-		
+
 		CalcPoint.transform(transformation, transformedCoords);
-		
+
 		double subunitRmsd = CalcPoint.rmsd(transformedCoords, originalCoords);
 
 		if (subunitRmsd <parameters.getRmsdThreshold()) {

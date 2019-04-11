@@ -31,7 +31,7 @@ import java.io.Serializable;
 public class HBond implements Serializable {
 
 	private static final long serialVersionUID = 8246764841329431337L;
-	
+
 	private double energy;
 	private int partner;
 

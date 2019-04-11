@@ -91,28 +91,28 @@ public class TestLocation {
 		assertEquals(L(12,20), L(2,20).suffix( L(10,12)));
 
 	}
-	
+
 	@Test
 	public void testLocationIntersections() {
 		// One inside another
 		Location r21_25 = new Location( 21, 25 );
 		Location r1_100 = new Location(1, 100 );
-		
+
 		assertEquals(r21_25, r21_25.intersection( r1_100));
 		assertEquals(r21_25, r1_100.intersection( r21_25));
-		
+
 		// Non overlapping
 		Location r10_100 = new Location(10, 100 );
 		Location r1_9 = new Location( 1, 9 );
-		
+
 		assertNull(r10_100.intersection( r1_9));
 		assertNull(r1_9.intersection( new Location( 9, 10 )));
-		
+
 		// Partially overlappping
 		Location r1_25 = new Location( 1, 25 );
 		Location r21_100 = new Location(21, 100 );
 		assertEquals(r21_25, r1_25.intersection( r21_100));
-		assertEquals(r21_25, r21_100.intersection( r1_25));		
+		assertEquals(r21_25, r21_100.intersection( r1_25));
 	}
 
 	//shorthand for testing

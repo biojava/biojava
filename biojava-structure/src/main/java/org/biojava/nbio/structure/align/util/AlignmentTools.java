@@ -854,7 +854,7 @@ public class AlignmentTools {
 	 *  contains much of the same code, but stores results in a CECalculator
 	 *  instance rather than an AFPChain
 	 */
-	public static void updateSuperposition(AFPChain afpChain, Atom[] ca1, 
+	public static void updateSuperposition(AFPChain afpChain, Atom[] ca1,
 			Atom[] ca2) throws StructureException {
 
 		//Update ca information, because the atom array might also be changed
@@ -878,7 +878,7 @@ public class AlignmentTools {
 		// create new arrays for the subset of atoms in the alignment.
 		Atom[] ca1aligned = new Atom[afpChain.getOptLength()];
 		Atom[] ca2aligned = new Atom[afpChain.getOptLength()];
-		
+
 		fillAlignedAtomArrays(afpChain, ca1, ca2, ca1aligned, ca2aligned);
 
 		//Superimpose the two structures in correspondance to the new alignment
@@ -905,7 +905,7 @@ public class AlignmentTools {
 		double tmScore = Calc.getTMScore(ca1aligned, ca2aligned, ca1.length, ca2.length);
 		afpChain.setTotalRmsdOpt(rmsd);
 		afpChain.setTMScore(tmScore);
-		
+
 		int[] blockLens = afpChain.getOptLen();
 		int[][][] optAln = afpChain.getOptAln();
 
@@ -1360,7 +1360,7 @@ public class AlignmentTools {
 			twistedGroups[i]=g;
 		}
 	}
-	
+
 	/**
 	 * Fill the aligned Atom arrays with the equivalent residues in the afpChain.
 	 * @param afpChain
@@ -1369,9 +1369,9 @@ public class AlignmentTools {
 	 * @param ca1aligned
 	 * @param ca2aligned
 	 */
-	public static void fillAlignedAtomArrays(AFPChain afpChain, Atom[] ca1, 
+	public static void fillAlignedAtomArrays(AFPChain afpChain, Atom[] ca1,
 			Atom[] ca2, Atom[] ca1aligned, Atom[] ca2aligned) {
-		
+
 		int pos=0;
 		int[] blockLens = afpChain.getOptLen();
 		int[][][] optAln = afpChain.getOptAln();
@@ -1396,14 +1396,14 @@ public class AlignmentTools {
 			ca1aligned = (Atom[]) resizeArray(ca1aligned, pos);
 			ca2aligned = (Atom[]) resizeArray(ca2aligned, pos);
 		}
-		
+
 	}
-	
+
 	/**
 	 * Find the alignment position with the highest atomic distance between the
 	 * equivalent atomic positions of the arrays and remove it from the
 	 * alignment.
-	 * 
+	 *
 	 * @param afpChain
 	 *            original alignment, will be modified
 	 * @param ca1
@@ -1428,7 +1428,7 @@ public class AlignmentTools {
 				Atom ca2clone = ca2[optAln[b][1][p]];
 				Calc.rotate(ca2clone, afpChain.getBlockRotationMatrix()[b]);
 				Calc.shift(ca2clone, afpChain.getBlockShiftVector()[b]);
-				
+
 				double distance = Calc.getDistance(ca1[optAln[b][0][p]],
 						ca2clone);
 				if (distance > maxDistance) {
@@ -1444,7 +1444,7 @@ public class AlignmentTools {
 
 	/**
 	 * Delete an alignment position from the original alignment object.
-	 * 
+	 *
 	 * @param afpChain
 	 *            original alignment, will be modified
 	 * @param ca1
@@ -1472,7 +1472,7 @@ public class AlignmentTools {
 					"Position index requested (%d) is higher than the total number of aligned position in the AFPChain block (%d).",
 					block, afpChain.getBlockSize()[block]));
 		}
-		
+
 		int[][][] optAln = afpChain.getOptAln();
 
 		int[] newPos0 = new int[optAln[block][0].length - 1];

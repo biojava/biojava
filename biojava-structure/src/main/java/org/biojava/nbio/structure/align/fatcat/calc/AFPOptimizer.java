@@ -64,7 +64,6 @@ public class AFPOptimizer
 
 		if(optAln == null)      {
 			optAln     = new int[maxTra+1][2][minLen];
-			afpChain.setOptAln(optAln);
 			optLen     = new int[maxTra+1];
 			afpChain.setOptLen(optLen);
 			optRmsd    = new double[maxTra+1];
@@ -143,6 +142,17 @@ public class AFPOptimizer
 
 		long optEnd = System.currentTimeMillis();
 		if(debug)       System.out.println("complete AlignOpt " + (optEnd-optStart) +"\n");
+
+		if(optLength < minLen) {
+			int[][][] optAln_trim = new int[maxTra + 1][2][optLength];
+			for (i = 0; i < maxTra + 1; i ++) {
+				System.arraycopy(optAln[i][0], 0, optAln_trim[i][0], 0, optLength);
+				System.arraycopy(optAln[i][1], 0, optAln_trim[i][1], 0, optLength);
+			}
+			afpChain.setOptAln(optAln_trim);
+		} else {
+			afpChain.setOptAln(optAln);
+		}
 
 		afpChain.setBlockNum(blockNum);
 		afpChain.setOptLength(optLength);

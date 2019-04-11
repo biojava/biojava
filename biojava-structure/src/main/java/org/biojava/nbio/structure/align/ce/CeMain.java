@@ -33,7 +33,8 @@ import org.biojava.nbio.structure.align.StructureAlignment;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.jama.Matrix;
 
-/** The main class of the Java implementation of the Combinatorial Extension Algorithm (CE),
+/**
+ * The main class of the Java implementation of the Combinatorial Extension Algorithm (CE),
  * as has been originally developed by I. Shindyalov and P.Bourne (1998).
  * The original CE paper is available from here: <a href="http://peds.oxfordjournals.org/cgi/content/short/11/9/739">http://peds.oxfordjournals.org/cgi/content/short/11/9/739</a>
  *

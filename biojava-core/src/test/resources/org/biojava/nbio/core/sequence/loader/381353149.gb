@@ -1,0 +1,187 @@
+LOCUS       4AE1_B                   535 aa            linear   BCT 10-OCT-2012
+DEFINITION  Chain B, Diphtheria Toxin.
+ACCESSION   4AE1_B
+VERSION     4AE1_B
+DBSOURCE    pdb: molecule 4AE1, chain 66, release Apr 18, 2012;
+            deposition: Jan 4, 2012;
+            class: Toxin;
+            source: Mmdb_id: 98378, Pdb_id 1: 4AE1;
+            Exp. method: X-Ray Diffraction.
+KEYWORDS    .
+SOURCE      Corynebacterium diphtheriae
+  ORGANISM  Corynebacterium diphtheriae
+            Bacteria; Actinobacteria; Corynebacteriales; Corynebacteriaceae;
+            Corynebacterium.
+REFERENCE   1  (residues 1 to 535)
+  AUTHORS   Malito,E., Bursulaya,B., Chen,C., Surdo,P.L., Picchianti,M.,
+            Balducci,E., Biancucci,M., Brock,A., Berti,F., Bottomley,M.J.,
+            Nissum,M., Costantino,P., Rappuoli,R. and Spraggon,G.
+  TITLE     Structural basis for lack of toxicity of the diphtheria toxin
+            mutant CRM197
+  JOURNAL   Proc. Natl. Acad. Sci. U.S.A. 109 (14), 5229-5234 (2012)
+   PUBMED   22431623
+REFERENCE   2  (residues 1 to 535)
+  AUTHORS   Malito,E. and Spraggon,G.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (04-JAN-2012)
+COMMENT     Crystal Structure Of Diphtheria Toxin Mutant Crm197 In Complex With
+            Nicotinamide.
+FEATURES             Location/Qualifiers
+     source          1..535
+                     /organism="Corynebacterium diphtheriae"
+                     /db_xref="taxon:1717"
+     Region          1..187
+                     /region_name="Diphtheria_C"
+                     /note="Diphtheria toxin, C domain; pfam02763"
+                     /db_xref="CDD:280859"
+     Region          1..171
+                     /region_name="Domain 4"
+                     /note="NCBI Domains"
+     SecStr          10..15
+                     /sec_str_type="sheet"
+                     /note="strand 28"
+     SecStr          16..22
+                     /sec_str_type="sheet"
+                     /note="strand 29"
+     Site            order(20..24,27,31,34..36,38,53..55,65,148)
+                     /site_type="other"
+                     /note="nad+ binding pocket [chemical binding]"
+                     /db_xref="CDD:238651"
+     SecStr          54..57
+                     /sec_str_type="sheet"
+                     /note="strand 30"
+     SecStr          65..68
+                     /sec_str_type="sheet"
+                     /note="strand 31"
+     SecStr          78..86
+                     /sec_str_type="sheet"
+                     /note="strand 32"
+     SecStr          87..94
+                     /sec_str_type="sheet"
+                     /note="strand 33"
+     SecStr          99..106
+                     /sec_str_type="helix"
+                     /note="helix 11"
+     SecStr          120..127
+                     /sec_str_type="helix"
+                     /note="helix 12"
+     SecStr          132..139
+                     /sec_str_type="sheet"
+                     /note="strand 34"
+     SecStr          147..152
+                     /sec_str_type="sheet"
+                     /note="strand 35"
+     SecStr          159..167
+                     /sec_str_type="sheet"
+                     /note="strand 36"
+     Region          172..382
+                     /region_name="Domain 5"
+                     /note="NCBI Domains"
+     SecStr          176..183
+                     /sec_str_type="helix"
+                     /note="helix 13"
+     Bond            bond(186,201)
+                     /bond_type="disulfide"
+     Region          200..379
+                     /region_name="Diphtheria_T"
+                     /note="Diphtheria toxin, T domain; pfam02764"
+                     /db_xref="CDD:280860"
+     SecStr          206..223
+                     /sec_str_type="helix"
+                     /note="helix 14"
+     SecStr          224..232
+                     /sec_str_type="helix"
+                     /note="helix 15"
+     SecStr          240..254
+                     /sec_str_type="helix"
+                     /note="helix 16"
+     SecStr          260..268
+                     /sec_str_type="helix"
+                     /note="helix 17"
+     SecStr          275..288
+                     /sec_str_type="helix"
+                     /note="helix 18"
+     SecStr          297..304
+                     /sec_str_type="helix"
+                     /note="helix 19"
+     SecStr          315..318
+                     /sec_str_type="sheet"
+                     /note="strand 37"
+     SecStr          319..322
+                     /sec_str_type="sheet"
+                     /note="strand 38"
+     SecStr          326..343
+                     /sec_str_type="helix"
+                     /note="helix 20"
+     SecStr          359..376
+                     /sec_str_type="helix"
+                     /note="helix 21"
+     Region          381..534
+                     /region_name="Diphtheria_R"
+                     /note="Diphtheria toxin, R domain; pfam01324"
+                     /db_xref="CDD:279642"
+     Region          383..535
+                     /region_name="Domain 6"
+                     /note="NCBI Domains"
+     SecStr          388..392
+                     /sec_str_type="sheet"
+                     /note="strand 39"
+     SecStr          393..399
+                     /sec_str_type="sheet"
+                     /note="strand 40"
+     SecStr          404..408
+                     /sec_str_type="sheet"
+                     /note="strand 41"
+     SecStr          409..413
+                     /sec_str_type="sheet"
+                     /note="strand 42"
+     SecStr          414..423
+                     /sec_str_type="sheet"
+                     /note="strand 43"
+     SecStr          424..427
+                     /sec_str_type="sheet"
+                     /note="strand 44"
+     SecStr          428..436
+                     /sec_str_type="sheet"
+                     /note="strand 45"
+     SecStr          440..444
+                     /sec_str_type="sheet"
+                     /note="strand 46"
+     SecStr          447..453
+                     /sec_str_type="sheet"
+                     /note="strand 47"
+     SecStr          455..465
+                     /sec_str_type="sheet"
+                     /note="strand 48"
+     Bond            bond(461,471)
+                     /bond_type="disulfide"
+     SecStr          467..475
+                     /sec_str_type="sheet"
+                     /note="strand 49"
+     SecStr          478..481
+                     /sec_str_type="sheet"
+                     /note="strand 50"
+     SecStr          484..494
+                     /sec_str_type="sheet"
+                     /note="strand 51"
+     SecStr          495..498
+                     /sec_str_type="sheet"
+                     /note="strand 52"
+     SecStr          507..514
+                     /sec_str_type="sheet"
+                     /note="strand 53"
+     SecStr          524..535
+                     /sec_str_type="sheet"
+                     /note="strand 54"
+ORIGIN      
+        1 gaddvvdssk sfvmenfssy hgtkpgyvds iqkgiqkpks gtqgnydddw kefystdnky
+       61 daagysvdne nplsgkaggv vkvtypgltk vlalkvdnae tikkelglsl teplmeqvgt
+      121 eefikrfgdg asrvvlslpf aegsssveyi nnweqakals veleinfetr gkrgqdamye
+      181 ymaqacagnr vrrsvgssls cinldwdvir dktktkiesl kehgpiknkm sespnktvse
+      241 ekakqyleef hqtalehpel selktvtgtn pvfaganyaa wavnvaqvid setadnlekt
+      301 taalsilpgi gsvmgiadga vhhnteeiva qsialsslmv aqaiplvgel vdigfaaynf
+      361 vesiinlfqv vhnsynrpay spghktqpfl hdgyavswnt vedsiirtgf qgesghdiki
+      421 taentplpia gvllptipgk ldvnkskthi svngrkirmr craidgdvtf crpkspvyvg
+      481 ngvhanlhva fhrsssekih sneissdsig vlgyqktvdh tkvnsklslf feiks
+//
+

@@ -76,7 +76,9 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 	private static final String TREMBLID_PATTERN = "[A-NR-Z][0-9]([A-Z][A-Z0-9]{2}[0-9]){1,2}";
 	public static final Pattern UP_AC_PATTERN = Pattern.compile("(" + SPID_PATTERN + "|" + TREMBLID_PATTERN + ")");
 
-	private static String uniprotbaseURL = "http://www.uniprot.org"; //"http://pir.uniprot.org";
+	public static final String DEFAULT_UNIPROT_BASE_URL = "https://www.uniprot.org";
+
+	private static String uniprotbaseURL = DEFAULT_UNIPROT_BASE_URL;
 	private static String uniprotDirectoryCache = null;
 	private String sequence;
 	private CompoundSet<C> compoundSet;
@@ -494,6 +496,61 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 		fw.close();
 	}
 
+	/**
+	 * Open a URL connection.
+	 *
+	 * Follows redirects.
+	 * @param url
+	 * @throws IOException
+	 */
+	private static HttpURLConnection openURLConnection(URL url) throws IOException {
+		// This method should be moved to a utility class in BioJava 5.0
+
+		final int timeout = 5000;
+		final String useragent = "BioJava";
+
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		conn.setRequestProperty("User-Agent", useragent);
+		conn.setInstanceFollowRedirects(true);
+		conn.setConnectTimeout(timeout);
+		conn.setReadTimeout(timeout);
+
+		int status = conn.getResponseCode();
+		while (status == HttpURLConnection.HTTP_MOVED_TEMP
+				|| status == HttpURLConnection.HTTP_MOVED_PERM
+				|| status == HttpURLConnection.HTTP_SEE_OTHER) {
+			// Redirect!
+			String newUrl = conn.getHeaderField("Location");
+
+			if(newUrl.equals(url.toString())) {
+				throw new IOException("Cyclic redirect detected at "+newUrl);
+			}
+
+			// Preserve cookies
+			String cookies = conn.getHeaderField("Set-Cookie");
+
+			// open the new connection again
+			url = new URL(newUrl);
+			conn.disconnect();
+			conn = (HttpURLConnection) url.openConnection();
+			if(cookies != null) {
+				conn.setRequestProperty("Cookie", cookies);
+			}
+			conn.addRequestProperty("User-Agent", useragent);
+			conn.setInstanceFollowRedirects(true);
+			conn.setConnectTimeout(timeout);
+			conn.setReadTimeout(timeout);
+			conn.connect();
+
+			status = conn.getResponseCode();
+
+			logger.info("Redirecting from {} to {}", url, newUrl);
+		}
+		conn.connect();
+
+		return conn;
+	}
+
 	private StringBuilder fetchUniprotXML(String uniprotURL)
 			throws IOException, CompoundNotFoundException {
 
@@ -502,11 +559,9 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 		int attempt = 5;
 		List<String> errorCodes = new ArrayList<String>();
 		while(attempt > 0) {
-			HttpURLConnection uniprotConnection = (HttpURLConnection) uniprot.openConnection();
-			uniprotConnection.setRequestProperty("User-Agent", "BioJava");
-			uniprotConnection.connect();
+			HttpURLConnection uniprotConnection = openURLConnection(uniprot);
 			int statusCode = uniprotConnection.getResponseCode();
-			if (statusCode == 200) {
+			if (statusCode == HttpURLConnection.HTTP_OK) {
 				BufferedReader in = new BufferedReader(
 						new InputStreamReader(
 						uniprotConnection.getInputStream()));

@@ -1,3 +1,23 @@
+/*
+ *                    BioJava development code
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public Licence.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright for this code is held jointly by the individual
+ * authors.  These should be listed in @author doc comments.
+ *
+ * For more information on the BioJava project and its aims,
+ * or to join the biojava-l mailing list, visit the home page
+ * at:
+ *
+ *      http://www.biojava.org/
+ *
+ */
 package org.biojava.nbio.structure.test.align.seq;
 
 import static org.junit.Assert.*;
@@ -15,7 +35,7 @@ import org.junit.Test;
 
 /**
  * Test the superposition based on a sequence alignment on different cases.
- * 
+ *
  * @author Aleix Lafita
  *
  */
@@ -46,7 +66,7 @@ public class TestSmithWaterman3Daligner {
 
 		assertEquals("RMSD is wrong", 1.39, afpChain.getTotalRmsdOpt(), 0.005);
 		assertEquals("Length is wrong", 137, afpChain.getOptLength());
-		
+
 		// Restrict it to 1A RMSD (18 columns have to be dropped)
 		params.setMaxRmsd(1.0);
 
@@ -54,7 +74,7 @@ public class TestSmithWaterman3Daligner {
 
 		assertTrue("RMSD is above the threshold", afpChain.getTotalRmsdOpt() < 1.0);
 		assertEquals("Length is wrong", 119, afpChain.getOptLength());
-		
+
 		// Restrict it to 0A RMSD (the minimum length is relevant )
 		params.setMaxRmsd(0.0);
 		params.setMinLen(30);

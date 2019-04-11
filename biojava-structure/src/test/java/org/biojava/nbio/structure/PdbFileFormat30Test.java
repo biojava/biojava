@@ -59,7 +59,7 @@ public class PdbFileFormat30Test {
 		assertEquals("structure does not contain the right number of nucleotides ", shouldNr ,nrNuc);
 
 		List<EntityInfo> compounds= s.getEntityInfos();
-		// from Biojava 5.0 on we are creating entities whenever an entity is found to be without an assigned compound 
+		// from Biojava 5.0 on we are creating entities whenever an entity is found to be without an assigned compound
 		// in the file, for polymer entities, nonpolymer entities and water entities.
 		// For this file: 1 dna polymeric entity, 1 MG nonpolymeric entity, 1 water
 		// see issues https://github.com/biojava/biojava/issues/305 and https://github.com/biojava/biojava/pull/394
@@ -86,8 +86,8 @@ public class PdbFileFormat30Test {
 		assertEquals("structure does not contain the right number of nucleotides ", shouldNr , nrNuc);
 
 		List<EntityInfo> compounds= s.getEntityInfos();
-		// from Biojava 5.0 on we are creating entities whenever an entity is found to be without an assigned compound 
-		// in the file, for polymer entities, nonpolymer entities and water entities. 
+		// from Biojava 5.0 on we are creating entities whenever an entity is found to be without an assigned compound
+		// in the file, for polymer entities, nonpolymer entities and water entities.
 		// For this entry: we have 1 dna polymeric entity, 1 FLO nonpoly entity, 1 MO6 nonpoly entity, 1 water entity
 		// see issues https://github.com/biojava/biojava/issues/305 and https://github.com/biojava/biojava/pull/394
 		assertEquals(4, compounds.size());
@@ -163,7 +163,7 @@ public class PdbFileFormat30Test {
 		assertTrue(isChainNameInEntity(mol,"h"));
 		assertTrue(isChainNameInEntity(mol,"i"));
 	}
-	
+
 	private boolean isChainNameInEntity(EntityInfo e, String chainName) {
 		for (Chain c:e.getChains()) {
 			if (c.getName().equals(chainName)) return true;
