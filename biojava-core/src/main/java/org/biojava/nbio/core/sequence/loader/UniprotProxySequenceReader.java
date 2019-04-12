@@ -114,7 +114,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 	public UniprotProxySequenceReader(Document document, CompoundSet<C> compoundSet) throws CompoundNotFoundException {
 		setCompoundSet(compoundSet);
 		uniprotDoc = document;
-		String seq = this.getSequence(uniprotDoc);
+		String seq = this.getSequence(uniprotDoc).replaceAll("\\s","");
 		setContents(seq);
 	}
 	/**
@@ -385,11 +385,13 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 		for (Element element : keyWordElementList) {
 			Element fullNameElement = XMLHelper.selectSingleElement(element, "fullName");
 			aliasList.add(fullNameElement.getTextContent());
-			Element shortNameElement = XMLHelper.selectSingleElement(element, "shortName");
-			if(null != shortNameElement) {
-				String shortName = shortNameElement.getTextContent();
-				if(null != shortName && !shortName.trim().isEmpty()) {
-					aliasList.add(shortName);
+			ArrayList<Element> shortNameElements = XMLHelper.selectElements(element, "shortName");
+			for(Element shortNameElement : shortNameElements) {
+				if(null != shortNameElement) {
+					String shortName = shortNameElement.getTextContent();
+					if(null != shortName && !shortName.trim().isEmpty()) {
+						aliasList.add(shortName);
+					}
 				}
 			}
 		}
@@ -397,11 +399,13 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 		for (Element element : keyWordElementList) {
 			Element fullNameElement = XMLHelper.selectSingleElement(element, "fullName");
 			aliasList.add(fullNameElement.getTextContent());
-			Element shortNameElement = XMLHelper.selectSingleElement(element, "shortName");
-			if(null != shortNameElement) {
-				String shortName = shortNameElement.getTextContent();
-				if(null != shortName && !shortName.trim().isEmpty()) {
-					aliasList.add(shortName);
+			ArrayList<Element> shortNameElements = XMLHelper.selectElements(element, "shortName");
+			for(Element shortNameElement : shortNameElements) {
+				if(null != shortNameElement) {
+					String shortName = shortNameElement.getTextContent();
+					if(null != shortName && !shortName.trim().isEmpty()) {
+						aliasList.add(shortName);
+					}
 				}
 			}
 		}
