@@ -106,6 +106,8 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 
 	/**
 	 * The xml is passed in as a DOM object so we know everything about the protein.
+	 * Some uniprot records contain white space in the sequence. We must strip it out so setContents doesn't fail.
+	 * TODO add simmilar logic to the other constructors
 	 *  If an error occurs throw an exception. We could have a bad uniprot id
 	 * @param document
 	 * @param compoundSet
@@ -149,6 +151,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 	public void setContents(String sequence) throws CompoundNotFoundException {
 		// Horrendously inefficient - pretty much the way the old BJ did things.
 		// TODO Should be optimised.
+		// NOTE This chokes on whitespace in the sequence, so whitespace is stripped by the caller
 		this.sequence = sequence;
 		this.parsedCompounds.clear();
 		for (int i = 0; i < sequence.length();) {
@@ -381,6 +384,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 		Element uniprotElement = uniprotDoc.getDocumentElement();
 		Element entryElement = XMLHelper.selectSingleElement(uniprotElement, "entry");
 		Element proteinElement = XMLHelper.selectSingleElement(entryElement, "protein");
+		// An alternativeName can contain multiple fullNames and multiple shortNames, so we are careful to catch them all
 		ArrayList<Element> keyWordElementList = XMLHelper.selectElements(proteinElement, "alternativeName");
 		for (Element element : keyWordElementList) {
 			Element fullNameElement = XMLHelper.selectSingleElement(element, "fullName");
@@ -395,6 +399,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 				}
 			}
 		}
+		// recommendedName seems to allow only one fullName, to be on the safe side, we double check for multiple shortNames for the recommendedName
 		keyWordElementList = XMLHelper.selectElements(proteinElement, "recommendedName");
 		for (Element element : keyWordElementList) {
 			Element fullNameElement = XMLHelper.selectSingleElement(element, "fullName");
