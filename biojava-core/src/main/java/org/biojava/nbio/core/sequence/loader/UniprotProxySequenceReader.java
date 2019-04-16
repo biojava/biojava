@@ -106,8 +106,6 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 
 	/**
 	 * The xml is passed in as a DOM object so we know everything about the protein.
-	 * Some uniprot records contain white space in the sequence. We must strip it out so setContents doesn't fail.
-	 * TODO add simmilar logic to the other constructors
 	 *  If an error occurs throw an exception. We could have a bad uniprot id
 	 * @param document
 	 * @param compoundSet
@@ -116,7 +114,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 	public UniprotProxySequenceReader(Document document, CompoundSet<C> compoundSet) throws CompoundNotFoundException {
 		setCompoundSet(compoundSet);
 		uniprotDoc = document;
-		String seq = this.getSequence(uniprotDoc).replaceAll("\\s","");
+		String seq = this.getSequence(uniprotDoc);
 		setContents(seq);
 	}
 	/**
@@ -144,6 +142,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 
 	/**
 	 * Once the sequence is retrieved set the contents and make sure everything this is valid
+	 * Some uniprot records contain white space in the sequence. We must strip it out so setContents doesn't fail.
 	 * @param sequence
 	 * @throws CompoundNotFoundException
 	 */
@@ -151,8 +150,8 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 	public void setContents(String sequence) throws CompoundNotFoundException {
 		// Horrendously inefficient - pretty much the way the old BJ did things.
 		// TODO Should be optimised.
-		// NOTE This chokes on whitespace in the sequence, so whitespace is stripped by the caller
-		this.sequence = sequence;
+		// NOTE This chokes on whitespace in the sequence, so whitespace is stripped
+		this.sequence = sequence.replaceAll("\\s","");
 		this.parsedCompounds.clear();
 		for (int i = 0; i < sequence.length();) {
 			String compoundStr = null;
