@@ -164,9 +164,9 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 					String lengthUnits = m.group(2);
 					String type = m.group(5);
 
-					if (lengthUnits..equalsIgnoreCase("aa")) {
+					if (lengthUnits.equalsIgnoreCase("aa")) {
 						compoundType = AminoAcidCompoundSet.getAminoAcidCompoundSet();
-					} else if (lengthUnits..equalsIgnoreCase("bp")) {
+					} else if (lengthUnits.equalsIgnoreCase("bp")) {
 						if (type != null) {
 							if (type.contains("RNA")) {
 								compoundType = RNACompoundSet.getRNACompoundSet();
