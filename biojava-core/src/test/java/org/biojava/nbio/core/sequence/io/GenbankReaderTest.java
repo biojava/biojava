@@ -255,6 +255,33 @@ public class GenbankReaderTest {
 		}
 		return sequence;
 	}
+	
+	private ProteinSequence readGenbankProteinResource(final String resource) throws Exception {
+		ProteinSequence sequence = null;
+		InputStream inputStream = null;
+		try {
+			inputStream = getClass().getResourceAsStream(resource);
+
+			GenbankReader<ProteinSequence, AminoAcidCompound> genbankProtein
+					= new GenbankReader<>(
+							inputStream,
+							new GenericGenbankHeaderParser<>(),
+							new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet())
+					);
+
+			LinkedHashMap<String, ProteinSequence> proteinSequences = genbankProtein.process();
+			sequence = proteinSequences.values().iterator().next();
+		}
+		finally {
+			try {
+				inputStream.close();
+			}
+			catch (Exception e) {
+				// ignore
+			}
+		}
+		return sequence;
+	}
 
 	@Test
 	public void testNcbiExpandedAccessionFormats() throws Exception {
@@ -266,6 +293,43 @@ public class GenbankReaderTest {
 
 		DNASequence header2 = readGenbankResource("/empty_header2.gb");
 		assertEquals("AZZZAA02123456789 10000000000 bp    DNA     linear   PRI 15-OCT-2018", header2.getOriginalHeader());
+	}
+	
+	@Test
+	public void testLegacyLocusCompatable() throws Exception {
+		
+		// Testing opening a genbank file with uppercase units, strand and topology
+		DNASequence header0 = readGenbankResource("/uppercase_locus0.gb");
+		assertEquals("ABC12.3_DE   7071 BP DS-DNA   CIRCULAR  SYN       22-JUL-1994", header0.getOriginalHeader());
+		
+		// Testing uppercase SS strand
+		DNASequence header1 = readGenbankResource("/uppercase_locus1.gb");
+		assertEquals("ABC12.3_DE   7071 BP SS-DNA   CIRCULAR  SYN       13-JUL-1994", header1.getOriginalHeader());
+		
+		// Testing uppercase MS strand
+		DNASequence header2 = readGenbankResource("/uppercase_locus2.gb");
+		assertEquals("ABC12.3_DE   7071 BP MS-DNA   CIRCULAR  SYN       13-JUL-1994", header2.getOriginalHeader());
+		
+		// Testing uppercase LINEAR topology
+		DNASequence header3 = readGenbankResource("/uppercase_locus3.gb");
+		assertEquals("ABC12.3_DE   7071 BP DNA   LINEAR    SYN       22-JUL-1994", header3.getOriginalHeader());
+		
+		// Testing uppercase units with no strand or topology
+		DNASequence header4 = readGenbankResource("/uppercase_locus4.gb");
+		assertEquals("ABC12.3_DE   7071 BP DNA             SYN       13-JUL-1994", header4.getOriginalHeader());
+		
+		// Testing uppercase units with no strand, topology, division or date
+		DNASequence header5 = readGenbankResource("/uppercase_locus5.gb");
+		assertEquals("ABC12.3_DE   7071 BP DNA", header5.getOriginalHeader());
+		
+		// Testing uppercase units with no strand, molecule type, topology, division or date
+		DNASequence header6 = readGenbankResource("/uppercase_locus6.gb");
+		assertEquals("ABC12.3_DE   7071 BP", header6.getOriginalHeader());
+		
+		// Testing uppercase protein units
+		ProteinSequence header7 = readGenbankProteinResource("/uppercase_locus7.gb");
+		assertEquals("ABC12.3_DE   7071 AA Protein", header7.getOriginalHeader());
+		
 	}
 
 	/**
