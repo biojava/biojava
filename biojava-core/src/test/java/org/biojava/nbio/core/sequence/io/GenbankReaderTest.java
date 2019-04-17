@@ -301,34 +301,42 @@ public class GenbankReaderTest {
 		// Testing opening a genbank file with uppercase units, strand and topology
 		DNASequence header0 = readGenbankResource("/uppercase_locus0.gb");
 		assertEquals("ABC12.3_DE   7071 BP DS-DNA   CIRCULAR  SYN       22-JUL-1994", header0.getOriginalHeader());
+		assertEquals("ABC12.3_DE", header0.getAccession().getID());
 		
 		// Testing uppercase SS strand
 		DNASequence header1 = readGenbankResource("/uppercase_locus1.gb");
 		assertEquals("ABC12.3_DE   7071 BP SS-DNA   CIRCULAR  SYN       13-JUL-1994", header1.getOriginalHeader());
+		assertEquals("ABC12.3_DE", header1.getAccession().getID());
 		
 		// Testing uppercase MS strand
 		DNASequence header2 = readGenbankResource("/uppercase_locus2.gb");
 		assertEquals("ABC12.3_DE   7071 BP MS-DNA   CIRCULAR  SYN       13-JUL-1994", header2.getOriginalHeader());
+		assertEquals("ABC12.3_DE", header2.getAccession().getID());
 		
 		// Testing uppercase LINEAR topology
 		DNASequence header3 = readGenbankResource("/uppercase_locus3.gb");
 		assertEquals("ABC12.3_DE   7071 BP DNA   LINEAR    SYN       22-JUL-1994", header3.getOriginalHeader());
+		assertEquals("ABC12.3_DE", header3.getAccession().getID());
 		
 		// Testing uppercase units with no strand or topology
 		DNASequence header4 = readGenbankResource("/uppercase_locus4.gb");
 		assertEquals("ABC12.3_DE   7071 BP DNA             SYN       13-JUL-1994", header4.getOriginalHeader());
+		assertEquals("ABC12.3_DE", header4.getAccession().getID());
 		
 		// Testing uppercase units with no strand, topology, division or date
 		DNASequence header5 = readGenbankResource("/uppercase_locus5.gb");
 		assertEquals("ABC12.3_DE   7071 BP DNA", header5.getOriginalHeader());
+		assertEquals("ABC12.3_DE", header5.getAccession().getID());
 		
 		// Testing uppercase units with no strand, molecule type, topology, division or date
 		DNASequence header6 = readGenbankResource("/uppercase_locus6.gb");
 		assertEquals("ABC12.3_DE   7071 BP", header6.getOriginalHeader());
+		assertEquals("ABC12.3_DE", header6.getAccession().getID());
 		
 		// Testing uppercase protein units
 		ProteinSequence header7 = readGenbankProteinResource("/uppercase_locus7.gb");
 		assertEquals("ABC12.3_DE   7071 AA Protein", header7.getOriginalHeader());
+		assertEquals("ABC12.3_DE", header7.getAccession().getID());
 		
 	}
 
