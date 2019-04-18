@@ -256,6 +256,32 @@ public class GenbankReaderTest {
 		return sequence;
 	}
 	
+	private RNASequence readGenbankRNAResource(final String resource) throws Exception {
+		RNASequence sequence = null;
+		InputStream inputStream = null;
+		try {
+			inputStream = getClass().getResourceAsStream(resource);
+
+			GenbankReader<RNASequence, NucleotideCompound> genbankRNA
+				= new GenbankReader<>(
+					inputStream,
+					new GenericGenbankHeaderParser<>(),
+					new RNASequenceCreator(RNACompoundSet.getRNACompoundSet())
+					);
+			LinkedHashMap<String, RNASequence> rnaSequences = genbankRNA.process();
+			sequence = rnaSequences.values().iterator().next();
+		}
+		finally {
+			try {
+				inputStream.close();
+			}
+			catch (Exception e) {
+				// ignore
+			}
+		}
+		return sequence;
+	}
+	
 	private ProteinSequence readGenbankProteinResource(final String resource) throws Exception {
 		ProteinSequence sequence = null;
 		InputStream inputStream = null;
@@ -282,6 +308,34 @@ public class GenbankReaderTest {
 		}
 		return sequence;
 	}
+	
+	private AbstractSequence<?> readUnknownGenbankResource(final String resource) throws Exception {
+		InputStream inputStream = null;
+		
+		try {
+			inputStream = getClass().getResourceAsStream(resource);
+			GenbankSequenceParser genbankParser = new GenbankSequenceParser();
+			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+			String seqString = genbankParser.getSequence(bufferedReader, 0);
+			String compoundSet = genbankParser.getCompoundType().getClass().getSimpleName();
+			
+			if (compoundSet.equals("AminoAcidCompoundSet")) {
+				return readGenbankProteinResource(resource);
+			} else if (compoundSet.equals("RNACompoundSet")) {
+				return readGenbankRNAResource(resource);
+			} else {
+				return readGenbankResource(resource);
+			}
+		}
+		finally {
+			try {
+				inputStream.close();
+			}
+			catch (Exception e) {
+				// ignore
+			}
+		}
+	}
 
 	@Test
 	public void testNcbiExpandedAccessionFormats() throws Exception {
@@ -299,44 +353,51 @@ public class GenbankReaderTest {
 	public void testLegacyLocusCompatable() throws Exception {
 		
 		// Testing opening a genbank file with uppercase units, strand and topology
-		DNASequence header0 = readGenbankResource("/uppercase_locus0.gb");
+		AbstractSequence header0 = readUnknownGenbankResource("/uppercase_locus0.gb");
 		assertEquals("ABC12.3_DE   7071 BP DS-DNA   CIRCULAR  SYN       22-JUL-1994", header0.getOriginalHeader());
 		assertEquals("ABC12.3_DE", header0.getAccession().getID());
+		assertEquals("DNACompoundSet", header0.getCompoundSet().getClass().getSimpleName());
 		
 		// Testing uppercase SS strand
-		DNASequence header1 = readGenbankResource("/uppercase_locus1.gb");
+		AbstractSequence header1 = readUnknownGenbankResource("/uppercase_locus1.gb");
 		assertEquals("ABC12.3_DE   7071 BP SS-DNA   CIRCULAR  SYN       13-JUL-1994", header1.getOriginalHeader());
 		assertEquals("ABC12.3_DE", header1.getAccession().getID());
+		assertEquals("DNACompoundSet", header0.getCompoundSet().getClass().getSimpleName());
 		
 		// Testing uppercase MS strand
-		DNASequence header2 = readGenbankResource("/uppercase_locus2.gb");
+		AbstractSequence header2 = readUnknownGenbankResource("/uppercase_locus2.gb");
 		assertEquals("ABC12.3_DE   7071 BP MS-DNA   CIRCULAR  SYN       13-JUL-1994", header2.getOriginalHeader());
 		assertEquals("ABC12.3_DE", header2.getAccession().getID());
+		assertEquals("DNACompoundSet", header0.getCompoundSet().getClass().getSimpleName());
 		
 		// Testing uppercase LINEAR topology
-		DNASequence header3 = readGenbankResource("/uppercase_locus3.gb");
+		AbstractSequence header3 = readUnknownGenbankResource("/uppercase_locus3.gb");
 		assertEquals("ABC12.3_DE   7071 BP DNA   LINEAR    SYN       22-JUL-1994", header3.getOriginalHeader());
 		assertEquals("ABC12.3_DE", header3.getAccession().getID());
+		assertEquals("DNACompoundSet", header0.getCompoundSet().getClass().getSimpleName());
 		
 		// Testing uppercase units with no strand or topology
-		DNASequence header4 = readGenbankResource("/uppercase_locus4.gb");
-		assertEquals("ABC12.3_DE   7071 BP DNA             SYN       13-JUL-1994", header4.getOriginalHeader());
+		AbstractSequence header4 = readUnknownGenbankResource("/uppercase_locus4.gb");
+		assertEquals("ABC12.3_DE   7071 BP RNA             SYN       13-JUL-1994", header4.getOriginalHeader());
 		assertEquals("ABC12.3_DE", header4.getAccession().getID());
+		assertEquals("RNACompoundSet", header4.getCompoundSet().getClass().getSimpleName());
 		
 		// Testing uppercase units with no strand, topology, division or date
-		DNASequence header5 = readGenbankResource("/uppercase_locus5.gb");
+		AbstractSequence header5 = readUnknownGenbankResource("/uppercase_locus5.gb");
 		assertEquals("ABC12.3_DE   7071 BP DNA", header5.getOriginalHeader());
 		assertEquals("ABC12.3_DE", header5.getAccession().getID());
 		
 		// Testing uppercase units with no strand, molecule type, topology, division or date
-		DNASequence header6 = readGenbankResource("/uppercase_locus6.gb");
+		AbstractSequence header6 = readUnknownGenbankResource("/uppercase_locus6.gb");
 		assertEquals("ABC12.3_DE   7071 BP", header6.getOriginalHeader());
 		assertEquals("ABC12.3_DE", header6.getAccession().getID());
+		assertEquals("DNACompoundSet", header0.getCompoundSet().getClass().getSimpleName());
 		
 		// Testing uppercase protein units
-		ProteinSequence header7 = readGenbankProteinResource("/uppercase_locus7.gb");
+		AbstractSequence header7 = readUnknownGenbankResource("/uppercase_locus7.gb");
 		assertEquals("ABC12.3_DE   7071 AA Protein", header7.getOriginalHeader());
 		assertEquals("ABC12.3_DE", header7.getAccession().getID());
+		assertEquals("AminoAcidCompoundSet", header7.getCompoundSet().getClass().getSimpleName());
 		
 	}
 
