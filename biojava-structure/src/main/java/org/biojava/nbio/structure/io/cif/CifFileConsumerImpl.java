@@ -55,6 +55,15 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+/**
+ * An implementation of a CifFileConsumer for BioJava. Will process the information provided by a CifFile instance and
+ * use it to build up a {@link Structure} object. The implementation is for the most part really close to that in
+ * {@link org.biojava.nbio.structure.io.mmcif.SimpleMMcifConsumer} and associated classes. The main difference is that
+ * all internally used model classes are generated from the MMCIF schema and a standardized interface to CifFile data is
+ * provided. This allows to readily parse files in CIF format as well as binary CIF (BCIF) format.
+ * @author Sebastian Bittrich <sebastian.bittrich@rcsb.org>
+ * @since 5.2.1
+ */
 public class CifFileConsumerImpl implements CifFileConsumer<Structure> {
     private static final Logger logger = LoggerFactory.getLogger(CifFileConsumerImpl.class);
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
@@ -395,25 +404,25 @@ public class CifFileConsumerImpl implements CifFileConsumer<Structure> {
     public void consumeAtomSites(AtomSites atomSites) {
         try {
             parsedScaleMatrix = new Matrix4d(
-                Double.parseDouble(atomSites.getColumn("fract_transf_matrix[1][1]").getStringData(0)),
-                Double.parseDouble(atomSites.getColumn("fract_transf_matrix[1][2]").getStringData(0)),
-                Double.parseDouble(atomSites.getColumn("fract_transf_matrix[1][3]").getStringData(0)),
-                Double.parseDouble(atomSites.getColumn("fract_transf_vector[1]").getStringData(0)),
+                    atomSites.getFractTransfMatrix11().get(),
+                    atomSites.getFractTransfMatrix12().get(),
+                    atomSites.getFractTransfMatrix13().get(),
+                    atomSites.getFractTransfVector1().get(),
 
-                Double.parseDouble(atomSites.getColumn("fract_transf_matrix[2][1]").getStringData(0)),
-                Double.parseDouble(atomSites.getColumn("fract_transf_matrix[2][2]").getStringData(0)),
-                Double.parseDouble(atomSites.getColumn("fract_transf_matrix[2][3]").getStringData(0)),
-                Double.parseDouble(atomSites.getColumn("fract_transf_vector[2]").getStringData(0)),
+                    atomSites.getFractTransfMatrix21().get(),
+                    atomSites.getFractTransfMatrix22().get(),
+                    atomSites.getFractTransfMatrix23().get(),
+                    atomSites.getFractTransfVector2().get(),
 
-                Double.parseDouble(atomSites.getColumn("fract_transf_matrix[3][1]").getStringData(0)),
-                Double.parseDouble(atomSites.getColumn("fract_transf_matrix[3][2]").getStringData(0)),
-                Double.parseDouble(atomSites.getColumn("fract_transf_matrix[3][3]").getStringData(0)),
-                Double.parseDouble(atomSites.getColumn("fract_transf_vector[3]").getStringData(0)),
+                    atomSites.getFractTransfMatrix31().get(),
+                    atomSites.getFractTransfMatrix32().get(),
+                    atomSites.getFractTransfMatrix33().get(),
+                    atomSites.getFractTransfVector3().get(),
 
-                0,
-                0,
-                0,
-                1
+                    0,
+                    0,
+                    0,
+                    1
             );
         } catch (NumberFormatException e) {
             logger.warn("Some values in _atom_sites.fract_transf_matrix or _atom_sites.fract_transf_vector could not " +
@@ -428,8 +437,8 @@ public class CifFileConsumerImpl implements CifFileConsumer<Structure> {
         for (int rowIndex = 0; rowIndex < auditAuthor.getRowCount(); rowIndex++) {
             String name = auditAuthor.getColumn("name").getStringData(rowIndex);
 
-            StringBuffer last = new StringBuffer();
-            StringBuffer initials = new StringBuffer();
+            StringBuilder last = new StringBuilder();
+            StringBuilder initials = new StringBuilder();
             boolean afterComma = false;
             for (char c : name.toCharArray()) {
                 if (c == ' ') {
@@ -526,15 +535,13 @@ public class CifFileConsumerImpl implements CifFileConsumer<Structure> {
                     // line contains ANGSTROM info...
                     String resolution = line.substring(i - 5, i).trim();
                     // convert string to float
-                    float res = 99;
                     try {
-                        res = Float.parseFloat(resolution);
+                        float res = Float.parseFloat(resolution);
+                        pdbHeader.setResolution(res);
                     } catch (NumberFormatException e) {
                         logger.info("could not parse resolution from line and ignoring it {}", line);
                         return;
                     }
-
-                    pdbHeader.setResolution(res);
                 }
             }
         }
@@ -925,13 +932,13 @@ public class CifFileConsumerImpl implements CifFileConsumer<Structure> {
                 return;
             }
 
-            Character beginInsCode = ' ';
+            char beginInsCode = ' ';
             String pdbxSeqAlignBegInsCode = structRefSeq.getColumn("pdbx_seq_align_beg_ins_code").getStringData(rowIndex);
             if (pdbxSeqAlignBegInsCode.length() > 0) {
                 beginInsCode = pdbxSeqAlignBegInsCode.charAt(0);
             }
 
-            Character endInsCode = ' ';
+            char endInsCode = ' ';
             String pdbxSeqAlignEndInsCode = structRefSeq.getColumn("pdbx_seq_align_end_ins_code").getStringData(rowIndex);
             if (pdbxSeqAlignEndInsCode.length() > 0) {
                 endInsCode = pdbxSeqAlignEndInsCode.charAt(0);
@@ -952,7 +959,7 @@ public class CifFileConsumerImpl implements CifFileConsumer<Structure> {
             int dbSeqBegin = Integer.parseInt(structRefSeq.getColumn("db_align_beg").getStringData(rowIndex));
             int dbSeqEnd = Integer.parseInt(structRefSeq.getColumn("db_align_end").getStringData(rowIndex));
 
-            Character dbBeginInsCode = ' ';
+            char dbBeginInsCode = ' ';
             Column pdbxDbAlignBegInsCodeCol = structRefSeq.getColumn("pdbx_db_align_beg_ins_code");
             if (pdbxDbAlignBegInsCodeCol.isDefined()) {
                 String pdbxDbAlignBegInsCode = pdbxDbAlignBegInsCodeCol.getStringData(rowIndex);
@@ -961,7 +968,7 @@ public class CifFileConsumerImpl implements CifFileConsumer<Structure> {
                 }
             }
 
-            Character dbEndInsCode = ' ';
+            char dbEndInsCode = ' ';
             Column pdbxDbAlignEndInsCodeCol = structRefSeq.getColumn("pdbx_db_align_end_ins_code");
             if (pdbxDbAlignEndInsCodeCol.isDefined()) {
                 String pdbxDbAlignEndInsCode = pdbxDbAlignEndInsCodeCol.getStringData(rowIndex);
@@ -1249,7 +1256,7 @@ public class CifFileConsumerImpl implements CifFileConsumer<Structure> {
                 .filter(i -> entity.getId().get(i).equals(entityId))
                 .mapToObj(i -> entity.getType().get(i))
                 .findFirst()
-                .get();
+                .orElseThrow(() -> new NoSuchElementException("could not find entity with id " + entityId));
     }
 
     private String getEntityDescription(String entityId) {
@@ -1257,7 +1264,7 @@ public class CifFileConsumerImpl implements CifFileConsumer<Structure> {
                 .filter(i -> entity.getId().get(i).equals(entityId))
                 .mapToObj(i -> entity.getPdbxDescription().get(i))
                 .findFirst()
-                .get();
+                .orElseThrow(() -> new NoSuchElementException("could not find entity with id " + entityId));
     }
 
     private void addEntity(int asymRowIndex, String entityId, String pdbxDescription, String type) {
@@ -1361,17 +1368,17 @@ public class CifFileConsumerImpl implements CifFileConsumer<Structure> {
             try {
                 Matrix4d operator = new Matrix4d();
 
-                operator.setElement(0, 0, Double.parseDouble(structNcsOper.getMatrix().get(rowIndex * 9)));
-                operator.setElement(0, 1, Double.parseDouble(structNcsOper.getMatrix().get(rowIndex * 9 + 1)));
-                operator.setElement(0, 2, Double.parseDouble(structNcsOper.getMatrix().get(rowIndex * 9 + 2)));
+                operator.setElement(0, 0, structNcsOper.getMatrix11().get(rowIndex));
+                operator.setElement(0, 1, structNcsOper.getMatrix12().get(rowIndex));
+                operator.setElement(0, 2, structNcsOper.getMatrix13().get(rowIndex));
 
-                operator.setElement(1, 0, Double.parseDouble(structNcsOper.getMatrix().get(rowIndex * 9 + 3)));
-                operator.setElement(1, 1, Double.parseDouble(structNcsOper.getMatrix().get(rowIndex * 9 + 4)));
-                operator.setElement(1, 2, Double.parseDouble(structNcsOper.getMatrix().get(rowIndex * 9 + 5)));
+                operator.setElement(1, 0, structNcsOper.getMatrix21().get(rowIndex));
+                operator.setElement(1, 1, structNcsOper.getMatrix22().get(rowIndex));
+                operator.setElement(1, 2, structNcsOper.getMatrix23().get(rowIndex));
 
-                operator.setElement(2, 0, Double.parseDouble(structNcsOper.getMatrix().get(rowIndex * 9 + 6)));
-                operator.setElement(2, 1, Double.parseDouble(structNcsOper.getMatrix().get(rowIndex * 9 + 7)));
-                operator.setElement(2, 2, Double.parseDouble(structNcsOper.getMatrix().get(rowIndex * 9 + 8)));
+                operator.setElement(2, 0, structNcsOper.getMatrix31().get(rowIndex));
+                operator.setElement(2, 1, structNcsOper.getMatrix32().get(rowIndex));
+                operator.setElement(2, 2, structNcsOper.getMatrix33().get(rowIndex));
 
                 operator.setElement(3, 0, 0);
                 operator.setElement(3, 1, 0);
@@ -1401,20 +1408,19 @@ public class CifFileConsumerImpl implements CifFileConsumer<Structure> {
             pdbxStructOperList.setSymmetry_operation(structOpers.getSymmetryOperation().get(rowIndex));
             pdbxStructOperList.setType(structOpers.getType().get(rowIndex));
 
-            pdbxStructOperList.setMatrix11(structOpers.getMatrix().get(rowIndex * 9));
-            pdbxStructOperList.setMatrix12(structOpers.getMatrix().get(rowIndex * 9 + 1));
-            pdbxStructOperList.setMatrix13(structOpers.getMatrix().get(rowIndex * 9 + 2));
-            pdbxStructOperList.setMatrix21(structOpers.getMatrix().get(rowIndex * 9 + 3));
-            pdbxStructOperList.setMatrix22(structOpers.getMatrix().get(rowIndex * 9 + 4));
-            pdbxStructOperList.setMatrix23(structOpers.getMatrix().get(rowIndex * 9 + 5));
-            pdbxStructOperList.setMatrix31(structOpers.getMatrix().get(rowIndex * 9 + 6));
-            pdbxStructOperList.setMatrix32(structOpers.getMatrix().get(rowIndex * 9 + 7));
-            pdbxStructOperList.setMatrix33(structOpers.getMatrix().get(rowIndex * 9 + 8));
+            pdbxStructOperList.setMatrix11(String.valueOf(structOpers.getMatrix11().get(rowIndex)));
+            pdbxStructOperList.setMatrix12(String.valueOf(structOpers.getMatrix12().get(rowIndex)));
+            pdbxStructOperList.setMatrix13(String.valueOf(structOpers.getMatrix13().get(rowIndex)));
+            pdbxStructOperList.setMatrix21(String.valueOf(structOpers.getMatrix21().get(rowIndex)));
+            pdbxStructOperList.setMatrix22(String.valueOf(structOpers.getMatrix22().get(rowIndex)));
+            pdbxStructOperList.setMatrix23(String.valueOf(structOpers.getMatrix23().get(rowIndex)));
+            pdbxStructOperList.setMatrix31(String.valueOf(structOpers.getMatrix31().get(rowIndex)));
+            pdbxStructOperList.setMatrix32(String.valueOf(structOpers.getMatrix32().get(rowIndex)));
+            pdbxStructOperList.setMatrix33(String.valueOf(structOpers.getMatrix33().get(rowIndex)));
 
-            pdbxStructOperList.setVector1(structOpers.getVector().get(rowIndex * 3));
-            pdbxStructOperList.setVector2(structOpers.getVector().get(rowIndex * 3 + 1));
-            pdbxStructOperList.setVector3(structOpers.getVector().get(rowIndex * 3 + 2));
-            // TODO function to convert Matrix into Matrix
+            pdbxStructOperList.setVector1(String.valueOf(structOpers.getVector1().get(rowIndex)));
+            pdbxStructOperList.setVector2(String.valueOf(structOpers.getVector2().get(rowIndex)));
+            pdbxStructOperList.setVector3(String.valueOf(structOpers.getVector3().get(rowIndex)));
 
             re.add(pdbxStructOperList);
         }

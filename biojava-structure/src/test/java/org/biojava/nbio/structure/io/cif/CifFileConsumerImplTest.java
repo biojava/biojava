@@ -1,7 +1,7 @@
 package org.biojava.nbio.structure.io.cif;
 
 import org.biojava.nbio.structure.*;
-import org.biojava.nbio.structure.io.CIFFileReader;
+import org.biojava.nbio.structure.io.CifFileReader;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.PDBFileParser;
 import org.junit.Test;
@@ -70,7 +70,7 @@ public class CifFileConsumerImplTest {
         InputStream inStream = this.getClass().getResourceAsStream(fileName);
         assertNotNull("Could not find file " + fileName + ". Config problem?" , inStream);
 
-        CIFFileReader reader = new CIFFileReader();
+        CifFileReader reader = new CifFileReader();
 
         FileParsingParameters params = new FileParsingParameters();
         params.setHeaderOnly(headerOnly);

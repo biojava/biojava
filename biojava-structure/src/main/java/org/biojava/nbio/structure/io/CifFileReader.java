@@ -10,16 +10,21 @@ import org.rcsb.cif.model.CifFile;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class CIFFileReader extends LocalPDBDirectory {
+/**
+ * Parse CifFile instances and allow to store them locally.
+ * @author Sebastian Bittrich <sebastian.bittrich@rcsb.org>
+ * @since 5.2.1
+ */
+public class CifFileReader extends LocalPDBDirectory {
     // TODO paths are meaningless for now
     public static final String[] BCIF_SPLIT_DIR = new String[] { "data", "structures", "divided", "bcif" };
     public static final String[] BCIF_OBSOLETE_DIR = new String[] { "data", "structures", "obsolete", "bcif" };
 
-    public CIFFileReader() {
+    public CifFileReader() {
         this(null);
     }
 
-    public CIFFileReader(String path) {
+    public CifFileReader(String path) {
         super(path);
         // TODO
         addExtension(".cif");
@@ -68,7 +73,6 @@ public class CIFFileReader extends LocalPDBDirectory {
         Block cifBlock = cifFile.getBlocks().get(0);
 
         // TODO maybe integrate rogue categories into Cif schema
-        // TODO rethink way to access missing categories
         consumer.consumeAuditAuthor(cifBlock.getCategory("audit_author"));
         consumer.consumeAtomSite(cifBlock.getAtomSite());
         consumer.consumeAtomSites(cifBlock.getAtomSites());
