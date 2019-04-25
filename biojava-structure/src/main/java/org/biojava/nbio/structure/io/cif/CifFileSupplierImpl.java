@@ -22,8 +22,6 @@ import java.util.stream.Collector;
  * @since 5.2.1
  */
 class CifFileSupplierImpl implements CifFileSupplier<Structure> {
-
-
     @Override
     public CifFile get(Structure structure) {
         // for now BioJava only considered 3 categories for create a Cif representation of a structure
@@ -47,27 +45,27 @@ class CifFileSupplierImpl implements CifFileSupplier<Structure> {
         if (crystalCell != null) {
             // set cell category
             blockBuilder.enterCategory("cell")
-                    .enterColumn("length_a")
+                    .enterFloatColumn("length_a")
                     .floatValues(crystalCell.getA())
                     .leaveColumn()
 
-                    .enterColumn("length_b")
+                    .enterFloatColumn("length_b")
                     .floatValues(crystalCell.getB())
                     .leaveColumn()
 
-                    .enterColumn("length_c")
+                    .enterFloatColumn("length_c")
                     .floatValues(crystalCell.getC())
                     .leaveColumn()
 
-                    .enterColumn("angle_alpha")
+                    .enterFloatColumn("angle_alpha")
                     .floatValues(crystalCell.getAlpha())
                     .leaveColumn()
 
-                    .enterColumn("angle_beta")
+                    .enterFloatColumn("angle_beta")
                     .floatValues(crystalCell.getBeta())
                     .leaveColumn()
 
-                    .enterColumn("angle_gamma")
+                    .enterFloatColumn("angle_gamma")
                     .floatValues(crystalCell.getGamma())
                     .leaveColumn()
                     .leaveCategory();
@@ -76,7 +74,7 @@ class CifFileSupplierImpl implements CifFileSupplier<Structure> {
         if (spaceGroup != null) {
             // set symmetry category
             blockBuilder.enterCategory("symmetry")
-                    .enterColumn("space_group_name_H-M")
+                    .enterStrColumn("space_group_name_H-M")
                     .stringValues(spaceGroup.getShortSymbol())
                     .leaveColumn()
                     .leaveCategory();
@@ -200,29 +198,28 @@ class CifFileSupplierImpl implements CifFileSupplier<Structure> {
         private final Column.StrColumnBuilder authAsymId;
         private final Column.StrColumnBuilder authAtomId;
         private final Column.IntColumnBuilder pdbxPDBModelNum;
-        private int atomId = 1;
 
         AtomSiteCollector() {
-            this.groupPDB = Column.enterStrColumn("group_PDB");
-            this.id = Column.enterIntColumn("id");
-            this.typeSymbol = Column.enterStrColumn("type_symbol");
-            this.labelAtomId = Column.enterStrColumn("label_atom_id");
-            this.labelAltId = Column.enterStrColumn("label_alt_id");
-            this.labelCompId = Column.enterStrColumn("label_comp_id");
-            this.labelAsymId = Column.enterStrColumn("label_asym_id");
-            this.labelEntityId = Column.enterStrColumn("label_entity_id");
-            this.labelSeqId = Column.enterIntColumn("label_seq_id");
-            this.pdbxPDBInsCode = Column.enterStrColumn("pdbx_PDB_ins_code");
-            this.cartnX = Column.enterFloatColumn("Cartn_x");
-            this.cartnY = Column.enterFloatColumn("Cartn_y");
-            this.cartnZ = Column.enterFloatColumn("Cartn_z");
-            this.occupancy = Column.enterFloatColumn("occupancy");
-            this.bIsoOrEquiv = Column.enterFloatColumn("B_iso_or_equiv");
-            this.authSeqId = Column.enterIntColumn("auth_seq_id");
-            this.authCompId = Column.enterStrColumn("auth_comp_id");
-            this.authAsymId = Column.enterStrColumn("auth_asym_id");
-            this.authAtomId = Column.enterStrColumn("auth_atom_id");
-            this.pdbxPDBModelNum = Column.enterIntColumn("pdbx_PDB_model_num");
+            this.groupPDB = Column.enterStrColumn("atom_site", "group_PDB");
+            this.id = Column.enterIntColumn("atom_site", "id");
+            this.typeSymbol = Column.enterStrColumn("atom_site", "type_symbol");
+            this.labelAtomId = Column.enterStrColumn("atom_site", "label_atom_id");
+            this.labelAltId = Column.enterStrColumn("atom_site", "label_alt_id");
+            this.labelCompId = Column.enterStrColumn("atom_site", "label_comp_id");
+            this.labelAsymId = Column.enterStrColumn("atom_site", "label_asym_id");
+            this.labelEntityId = Column.enterStrColumn("atom_site", "label_entity_id");
+            this.labelSeqId = Column.enterIntColumn("atom_site", "label_seq_id");
+            this.pdbxPDBInsCode = Column.enterStrColumn("atom_site", "pdbx_PDB_ins_code");
+            this.cartnX = Column.enterFloatColumn("atom_site", "Cartn_x");
+            this.cartnY = Column.enterFloatColumn("atom_site", "Cartn_y");
+            this.cartnZ = Column.enterFloatColumn("atom_site", "Cartn_z");
+            this.occupancy = Column.enterFloatColumn("atom_site", "occupancy");
+            this.bIsoOrEquiv = Column.enterFloatColumn("atom_site", "B_iso_or_equiv");
+            this.authSeqId = Column.enterIntColumn("atom_site", "auth_seq_id");
+            this.authCompId = Column.enterStrColumn("atom_site", "auth_comp_id");
+            this.authAsymId = Column.enterStrColumn("atom_site", "auth_asym_id");
+            this.authAtomId = Column.enterStrColumn("atom_site", "auth_atom_id");
+            this.pdbxPDBModelNum = Column.enterIntColumn("atom_site", "pdbx_PDB_model_num");
         }
 
         @Override
@@ -275,8 +272,6 @@ class CifFileSupplierImpl implements CifFileSupplier<Structure> {
             authAsymId.stringValues(wrappedAtom.getChainName());
             authAtomId.stringValues(atom.getName());
             pdbxPDBModelNum.intValues(wrappedAtom.getModel());
-
-            atomId++;
         }
 
         AtomSiteCollector combine(AtomSiteCollector other) {

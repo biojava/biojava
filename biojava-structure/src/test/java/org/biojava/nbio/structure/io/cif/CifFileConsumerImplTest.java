@@ -1,7 +1,10 @@
 package org.biojava.nbio.structure.io.cif;
 
 import org.biojava.nbio.structure.*;
+import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.*;
+import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
+import org.biojava.nbio.structure.io.mmcif.DownloadChemCompProvider;
 import org.junit.Test;
 import org.rcsb.cif.CifReader;
 import org.rcsb.cif.model.CifFile;
@@ -23,6 +26,63 @@ import static org.junit.Assert.*;
 
 public class CifFileConsumerImplTest {
     // TODO use test resources provided by integration-test module
+
+    @Test
+    public void testEntityId() throws IOException, StructureException {
+        // Set up the atom cache to parse on Internal chain id
+        AtomCache cache = new AtomCache();
+        cache.setUseCif(true);
+        FileParsingParameters params = cache.getFileParsingParams();
+
+        DownloadChemCompProvider cc = new DownloadChemCompProvider();
+        ChemCompGroupFactory.setChemCompProvider(cc);
+        cc.checkDoFirstInstall();
+        cache.setFileParsingParams(params);
+        StructureIO.setAtomCache(cache);
+        // This is hte information we want to test against
+        String[] typeInformation = new String[] {"POLYMER", "NONPOLYMER", "NONPOLYMER", "NONPOLYMER", "NONPOLYMER", "WATER"};
+        String[] descriptionInformation = new String[] {"BROMODOMAIN ADJACENT TO ZINC FINGER DOMAIN PROTEIN 2B","4-Fluorobenzamidoxime",  "METHANOL", "METHANOL", "METHANOL", "water"};
+
+        // Now some other information fields to test this data is collated correctly
+        String[] geneSourceSciName = new String[] {"HOMO SAPIENS", null, null, null, null, null};
+        String[] geneSourceTaxId = new String[] {"9606", null, null, null, null, null};
+        String[] hostOrganismSciName = new String[] {"ESCHERICHIA COLI", null, null, null, null, null};
+        String[] hostOrganismTaxId = new String[] {"469008", null, null, null, null, null};
+
+        /// TODO GET ALL THE ENTITY INFORMATION REQUIRED FOR 4CUP
+        // Get this structure
+        Structure bioJavaStruct = StructureIO.getStructure("4cup");
+        String[] testTypeInfo = new String[6];
+        String[] testDescInfo = new String[6];
+
+        String[] testGeneSourceSciName = new String[6];
+        String[] testGeneSourceTaxId = new String[6];
+        String[] testHostOrganismSciName = new String[6];
+        String[] testHostOrganismTaxId = new String[6];
+
+        // Now loop through the structure
+        int chainCounter = 0;
+        for (Chain c: bioJavaStruct.getChains()) {
+            // Now get the entity information we want to test
+            EntityInfo thisCmpd = c.getEntityInfo();
+            testTypeInfo[chainCounter] = thisCmpd.getType().toString();
+            testDescInfo[chainCounter] = thisCmpd.getDescription();
+            testGeneSourceSciName[chainCounter] =  thisCmpd.getOrganismScientific();
+            testGeneSourceTaxId[chainCounter] = thisCmpd.getOrganismTaxId();
+            testHostOrganismSciName[chainCounter] = thisCmpd.getExpressionSystem();
+            testHostOrganismTaxId[chainCounter] = thisCmpd.getExpressionSystemTaxId();
+
+            chainCounter++;
+        }
+        // Now check they're both the same
+        assertArrayEquals(descriptionInformation, testDescInfo);
+        assertArrayEquals(typeInformation, testTypeInfo);
+        // Now check these work too
+        assertArrayEquals(geneSourceSciName, testGeneSourceSciName);
+        assertArrayEquals(geneSourceTaxId, testGeneSourceTaxId);
+        assertArrayEquals(hostOrganismSciName, testHostOrganismSciName);
+        assertArrayEquals(hostOrganismTaxId, testHostOrganismTaxId);
+    }
 
     /**
      * Test parsing dates from MMCIF file version 4.
@@ -64,8 +124,6 @@ public class CifFileConsumerImplTest {
 
         Date depositionDate = dateFormat.parse("1992-03-12");
         assertEquals(depositionDate, s.getPDBHeader().getDepDate());
-
-
     }
 
     /**

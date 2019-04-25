@@ -38,7 +38,6 @@ import org.junit.Test;
  *
  */
 public class TestEntityNameAndType {
-
 	@Test
 	public void testEntityId() throws IOException, StructureException {
 
