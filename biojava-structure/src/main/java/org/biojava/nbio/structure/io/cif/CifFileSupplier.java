@@ -8,7 +8,7 @@ import org.rcsb.cif.model.CifFile;
  * @author Sebastian Bittrich <sebastian.bittrich@rcsb.org>
  * @since 5.2.1
  */
-public interface CifFileSupplier<S> {
+interface CifFileSupplier<S> {
     /**
      * Convert some model instance describing structure information to a CifFile instance.
      * @param container the source of structure information

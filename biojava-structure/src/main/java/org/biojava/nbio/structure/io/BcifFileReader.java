@@ -9,13 +9,13 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Parse CifFile instances and provide capabilities to store them locally.
+ * Parse BcifFile instances and provide capabilities to store them locally.
  * @author Sebastian Bittrich <sebastian.bittrich@rcsb.org>
  * @since 5.2.1
  */
-public class CifFileReader extends LocalPDBDirectory {
-    public static final String[] CIF_SPLIT_DIR    = new String[] { "data", "structures", "divided", "mmCIF" };
-    public static final String[] CIF_OBSOLETE_DIR = new String[] { "data", "structures", "obsolete", "mmCIF" };
+public class BcifFileReader extends LocalPDBDirectory {
+    public static final String[] CIF_SPLIT_DIR = new String[] { "data", "structures", "divided", "bcif" };
+    public static final String[] CIF_OBSOLETE_DIR = new String[] { "data", "structures", "obsolete", "bcif" };
 
     /**
      * Constructs a new CifFileReader, initializing the extensions member variable.
@@ -23,7 +23,7 @@ public class CifFileReader extends LocalPDBDirectory {
      * i.e. to system property/environment variable {@link UserConfiguration#PDB_DIR}.
      * Both autoFetch and splitDir are initialized to false
      */
-    public CifFileReader() {
+    public BcifFileReader() {
         this(null);
     }
 
@@ -31,22 +31,20 @@ public class CifFileReader extends LocalPDBDirectory {
      * Constructs a new PDBFileReader, initializing the extensions member variable.
      * The path is initialized to the given path, both autoFetch and splitDir are initialized to false.
      */
-    public CifFileReader(String path) {
+    public BcifFileReader(String path) {
         super(path);
-        addExtension(".cif");
-        addExtension(".mmcif");
-        addExtension(".cif.gz");
-        addExtension(".mmcif.gz");
+        addExtension(".bcif");
+        addExtension(".bcif.gz");
     }
 
     @Override
-    public Structure getStructure(InputStream inStream) throws IOException{
-        return CifFileConverter.convert(CifReader.parseText(inStream), getFileParsingParameters());
+    public Structure getStructure(InputStream inStream) throws IOException {
+        return CifFileConverter.convert(CifReader.parseBinary(inStream), getFileParsingParameters());
     }
 
     @Override
     protected String getFilename(String pdbId) {
-        return pdbId.toLowerCase() + ".cif.gz";
+        return pdbId.toLowerCase() + ".bcif.gz";
     }
 
     @Override

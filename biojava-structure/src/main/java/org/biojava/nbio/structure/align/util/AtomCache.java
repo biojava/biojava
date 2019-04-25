@@ -35,12 +35,9 @@ import org.biojava.nbio.structure.cath.CathDomain;
 import org.biojava.nbio.structure.cath.CathFactory;
 import org.biojava.nbio.structure.domain.PDPProvider;
 import org.biojava.nbio.structure.domain.RemotePDPProvider;
-import org.biojava.nbio.structure.io.FileParsingParameters;
+import org.biojava.nbio.structure.io.*;
 import org.biojava.nbio.structure.io.LocalPDBDirectory.FetchBehavior;
 import org.biojava.nbio.structure.io.LocalPDBDirectory.ObsoleteBehavior;
-import org.biojava.nbio.structure.io.MMCIFFileReader;
-import org.biojava.nbio.structure.io.MMTFFileReader;
-import org.biojava.nbio.structure.io.PDBFileReader;
 import org.biojava.nbio.core.util.FileDownloadUtils;
 import org.biojava.nbio.structure.quaternary.BiologicalAssemblyBuilder;
 import org.biojava.nbio.structure.quaternary.BiologicalAssemblyTransformation;
@@ -96,8 +93,17 @@ public class AtomCache {
 
 	private String path;
 
-	private boolean useMmCif;
-	private boolean useMmtf;
+	/**
+	 * The format for structure data to use.
+	 */
+	private Format format;
+	enum Format {
+		PDB,
+		MMCIF,
+		MMTF,
+		CIF,
+		BCIF
+	}
 
 	/**
 	 * Default AtomCache constructor.
@@ -150,9 +156,7 @@ public class AtomCache {
 		currentlyLoading.clear();
 		params = new FileParsingParameters();
 
-		setUseMmCif(false);
 		setUseMmtf(true);
-
 	}
 
 	/**
@@ -165,11 +169,10 @@ public class AtomCache {
 		this(config.getPdbFilePath(), config.getCacheFilePath());
 		fetchBehavior = config.getFetchBehavior();
 		obsoleteBehavior = config.getObsoleteBehavior();
-		useMmCif = config.getFileFormat().equals( UserConfiguration.MMCIF_FORMAT );
 
-		if ( useMmCif)
-			useMmtf = false;
-
+		if (config.getFileFormat().equals(UserConfiguration.MMCIF_FORMAT)) {
+			format = Format.MMCIF;
+		}
 	}
 
 	/**
@@ -297,8 +300,7 @@ public class AtomCache {
 
 		// if we use mmcif or mmtf, then we need to pass useAsymIds=true
 		boolean useAsymIds = false;
-		if (useMmCif) useAsymIds = true;
-		if (useMmtf) useAsymIds = true;
+		if (format != Format.PDB) useAsymIds = true;
 		return builder.rebuildQuaternaryStructure(asymUnit, transformations, useAsymIds, multiModel);
 
 	}
@@ -356,8 +358,7 @@ public class AtomCache {
 
 		// if we use mmcif or mmtf, then we need to pass useAsymIds=true
 		boolean useAsymIds = false;
-		if (useMmCif) useAsymIds = true;
-		if (useMmtf) useAsymIds = true;
+		if (format != Format.PDB) useAsymIds = true;
 		return builder.rebuildQuaternaryStructure(asymUnit, transformations, useAsymIds, multiModel);
 
 	}
@@ -409,8 +410,7 @@ public class AtomCache {
 
 			// if we use mmcif or mmtf, then we need to pass useAsymIds=true
 			boolean useAsymIds = false;
-			if (useMmCif) useAsymIds = true;
-			if (useMmtf) useAsymIds = true;
+			if (format != Format.PDB) useAsymIds = true;
 			Structure s = builder.rebuildQuaternaryStructure(asymUnit, transformations, useAsymIds, multiModel);
 			assemblies.add(s);
 		}
@@ -772,7 +772,7 @@ public class AtomCache {
 	 * @return the useMmCif
 	 */
 	public boolean isUseMmCif() {
-		return useMmCif;
+		return format == Format.MMCIF;
 	}
 
 	/**
@@ -780,9 +780,9 @@ public class AtomCache {
 	 *            the useMmCif to set
 	 */
 	public void setUseMmCif(boolean useMmCif) {
-		this.useMmCif = useMmCif;
-		// Either way the user wants to use PDB or MMCIF
-		this.useMmtf = false;
+		if (useMmCif) {
+			this.format = Format.MMCIF;
+		}
 	}
 
 	/**
@@ -790,11 +790,9 @@ public class AtomCache {
 	 * @param useMmtf the input boolean to set
 	 */
 	public void setUseMmtf(boolean useMmtf) {
-		this.useMmtf = useMmtf;
-		if(useMmtf){
-			useMmCif=false;
+		if (useMmtf) {
+			this.format = Format.MMTF;
 		}
-
 	}
 
 	/** Returns useMmtf flag
@@ -802,7 +800,61 @@ public class AtomCache {
 	 * @return true if will load data via mmtf file format
 	 */
 	public boolean isUseMmtf(){
-		return this.useMmtf;
+		return this.format == Format.MMTF;
+	}
+
+	/**
+	 * The PDB flag.
+	 * @return true if legacy PDB parsing will be employed
+	 */
+	public boolean isUsePdb() {
+		return this.format == Format.PDB;
+	}
+
+	/**
+	 * The experimental Bcif flag.
+	 * @return true if experimental Bcif parsing will be employed
+	 */
+	public boolean isUseBcif() {
+		return this.format == Format.BCIF;
+	}
+
+	/**
+	 * The experimental Cif flag.
+	 * @return true if experimental Cif parsing will be employed
+	 */
+	public boolean isUseCif() {
+		return this.format == Format.CIF;
+	}
+
+	/**
+	 * Use the experimental Bcif parser to acquire structure data.
+	 * @param useBcif use?
+	 */
+	public void setUseBcif(boolean useBcif) {
+		if (useBcif) {
+			this.format = Format.BCIF;
+		}
+	}
+
+	/**
+	 * Use the experimental Cif parser to acquire structure data.
+	 * @param useCif use?
+	 */
+	public void setUseCif(boolean useCif) {
+		if (useCif) {
+			this.format = Format.CIF;
+		}
+	}
+
+	/**
+	 * Use the legacy PDB format to acquire structure data.
+	 * @param usePdb use?
+	 */
+	public void usePdb(boolean usePdb) {
+		if (usePdb) {
+			this.format = Format.PDB;
+		}
 	}
 
 	private boolean checkLoading(String name) {
@@ -881,19 +933,25 @@ public class AtomCache {
 
 		}
 
-		Structure s;
-		if (useMmtf) {
-			logger.debug("loading from mmtf");
-			s = loadStructureFromMmtfByPdbId(pdbId);
+		switch (format) {
+			case MMTF:
+				logger.debug("loading from mmtf");
+				return loadStructureFromMmtfByPdbId(pdbId);
+			case MMCIF:
+				logger.debug("loading from mmcif");
+				return loadStructureFromCifByPdbId(pdbId);
+			case CIF:
+				logger.debug("loading from experimental cif");
+				return loadStructureFromExperimentalCifByPdbId(pdbId);
+			case PDB:
+				logger.debug("loading from pdb");
+				return loadStructureFromPdbByPdbId(pdbId);
+			case BCIF:
+				logger.debug("loading from bcif");
+				return loadStructureFromBcifByPdbId(pdbId);
+			default:
+				throw new IllegalArgumentException("no strategy implemented for format " + format);
 		}
-		else if (useMmCif) {
-			logger.debug("loading from mmcif");
-			s = loadStructureFromCifByPdbId(pdbId);
-		} else {
-			logger.debug("loading from pdb");
-			s = loadStructureFromPdbByPdbId(pdbId);
-		}
-		return s;
 	}
 
 	/**
@@ -909,6 +967,22 @@ public class AtomCache {
 		reader.setObsoleteBehavior(obsoleteBehavior);
 		Structure structure = reader.getStructureById(pdbId.toLowerCase());
 		return structure;
+	}
+
+	private Structure loadStructureFromBcifByPdbId(String pdbId) throws IOException {
+		logger.debug("Loading structure {} from Bcif file.", pdbId);
+		BcifFileReader reader = new BcifFileReader();
+		reader.setFetchBehavior(fetchBehavior);
+		reader.setObsoleteBehavior(obsoleteBehavior);
+		return reader.getStructureById(pdbId.toLowerCase());
+	}
+
+	private Structure loadStructureFromExperimentalCifByPdbId(String pdbId) throws IOException {
+		logger.debug("Loading structure {} experimentally from Cif file.", pdbId);
+		CifFileReader reader = new CifFileReader();
+		reader.setFetchBehavior(fetchBehavior);
+		reader.setObsoleteBehavior(obsoleteBehavior);
+		return reader.getStructureById(pdbId.toLowerCase());
 	}
 
 	protected Structure loadStructureFromCifByPdbId(String pdbId) throws IOException, StructureException {

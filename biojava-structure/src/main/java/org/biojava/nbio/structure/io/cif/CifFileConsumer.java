@@ -41,7 +41,7 @@ import org.rcsb.cif.model.symmetry.Symmetry;
  * @author Sebastian Bittrich <sebastian.bittrich@rcsb.org>
  * @since 5.2.1
  */
-public interface CifFileConsumer<S> {
+interface CifFileConsumer<S> {
     /**
      * Setup routine which initializes a new container.
      */

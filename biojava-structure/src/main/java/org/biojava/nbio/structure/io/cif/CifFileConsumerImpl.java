@@ -64,7 +64,7 @@ import java.util.stream.IntStream;
  * @author Sebastian Bittrich <sebastian.bittrich@rcsb.org>
  * @since 5.2.1
  */
-public class CifFileConsumerImpl implements CifFileConsumer<Structure> {
+class CifFileConsumerImpl implements CifFileConsumer<Structure> {
     private static final Logger logger = LoggerFactory.getLogger(CifFileConsumerImpl.class);
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
 
@@ -402,6 +402,11 @@ public class CifFileConsumerImpl implements CifFileConsumer<Structure> {
 
     @Override
     public void consumeAtomSites(AtomSites atomSites) {
+        // no atom sites present
+        if (!atomSites.isDefined() || atomSites.getRowCount() == 0) {
+            return;
+        }
+
         try {
             parsedScaleMatrix = new Matrix4d(
                     atomSites.getFractTransfMatrix11().get(),
@@ -472,7 +477,7 @@ public class CifFileConsumerImpl implements CifFileConsumer<Structure> {
 
     @Override
     public void consumeCell(Cell cell) {
-        if (!cell.isDefined()) {
+        if (!cell.isDefined() || cell.getRowCount() == 0) {
             return;
         }
 
@@ -855,8 +860,13 @@ public class CifFileConsumerImpl implements CifFileConsumer<Structure> {
 
     @Override
     public void consumeStruct(Struct struct) {
-        pdbHeader.setTitle(struct.getTitle().get());
-        pdbHeader.setIdCode(struct.getEntryId().get());
+        if (struct.isDefined() && struct.getTitle().isDefined()) {
+            pdbHeader.setTitle(struct.getTitle().get());
+        }
+
+        if (struct.isDefined() && struct.getEntryId().isDefined()) {
+            pdbHeader.setIdCode(struct.getEntryId().get());
+        }
     }
 
     @Override
