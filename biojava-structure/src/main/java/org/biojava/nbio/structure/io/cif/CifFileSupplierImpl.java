@@ -9,8 +9,9 @@ import org.rcsb.cif.model.CifFile;
 import org.rcsb.cif.model.Column;
 import org.rcsb.cif.model.atomsite.AtomSite;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collector;
@@ -21,6 +22,8 @@ import java.util.stream.Collector;
  * @since 5.2.1
  */
 class CifFileSupplierImpl implements CifFileSupplier<Structure> {
+
+
     @Override
     public CifFile get(Structure structure) {
         // for now BioJava only considered 3 categories for create a Cif representation of a structure
@@ -30,13 +33,8 @@ class CifFileSupplierImpl implements CifFileSupplier<Structure> {
         // symmetry
         SpaceGroup spaceGroup = structure.getPDBHeader().getCrystallographicInfo().getSpaceGroup();
         // atom_site
-        AtomSite atomSite = structure.getChains()
-                .stream()
-                .map(Chain::getAtomGroups)
-                .flatMap(Collection::stream)
-                .map(Group::getAtoms)
-                .flatMap(Collection::stream)
-                .collect(toAtomSite());
+        List<WrappedAtom> wrappedAtoms = collectWrappedAtoms(structure);
+        AtomSite atomSite = wrappedAtoms.stream().collect(toAtomSite());
 
         Block.BlockBuilder blockBuilder = CifFile.enterFile()
                 .enterBlock(structure.getPDBCode());
@@ -87,14 +85,101 @@ class CifFileSupplierImpl implements CifFileSupplier<Structure> {
         return blockBuilder.leaveBlock().leaveFile();
     }
 
-    private static Collector<Atom, ?, AtomSite> toAtomSite() {
+    private static List<WrappedAtom> collectWrappedAtoms(Structure structure) {
+        List<WrappedAtom> wrappedAtoms = new ArrayList<>();
+
+        for (int modelIndex = 0; modelIndex < structure.nrModels(); modelIndex++) {
+            final int model = modelIndex + 1;
+            for (Chain chain : structure.getChains(modelIndex)) {
+                final String chainName = chain.getName();
+                final String chainId = chain.getId();
+                for (Group group : chain.getAtomGroups()) {
+                    // The alt locs can have duplicates, since at parsing time we make sure that all alt loc groups have
+                    // all atoms (see StructureTools#cleanUpAltLocs)
+                    // Thus we have to remove duplicates here by using the atom id
+                    // See issue https://github.com/biojava/biojava/issues/778 and
+                    // TestAltLocs.testMmcifWritingAllAltlocs/testMmcifWritingPartialAltlocs
+                    Map<Integer, WrappedAtom> uniqueAtoms = new LinkedHashMap<>();
+                    for (int atomIndex = 0; atomIndex < group.size(); atomIndex++) {
+                        Atom atom = group.getAtom(atomIndex);
+                        if (atom == null) {
+                            continue;
+                        }
+
+                        uniqueAtoms.put(atom.getPDBserial(), new WrappedAtom(chain, model, chainName, chainId, atom, atom.getPDBserial()));
+                    }
+
+                    if (group.hasAltLoc()) {
+                        for (Group alt : group.getAltLocs()) {
+                            for (int atomIndex = 0; atomIndex < alt.size(); atomIndex++) {
+                                Atom atom = alt.getAtom(atomIndex);
+                                if (atom == null) {
+                                    continue;
+                                }
+
+                                uniqueAtoms.put(atom.getPDBserial(), new WrappedAtom(chain, model, chainName, chainId, atom, atom.getPDBserial()));
+                            }
+                        }
+                    }
+
+                    wrappedAtoms.addAll(uniqueAtoms.values());
+                }
+            }
+        }
+
+        return wrappedAtoms;
+    }
+
+    static class WrappedAtom {
+        private final Chain chain;
+        private final int model;
+        private final String chainName;
+        private final String chainId;
+        private final Atom atom;
+        private final int atomId;
+
+        public WrappedAtom(Chain chain, int model, String chainName, String chainId, Atom atom, int atomId) {
+            this.chain = chain;
+            this.model = model;
+            this.chainName = chainName;
+            this.chainId = chainId;
+            this.atom = atom;
+            this.atomId = atomId;
+        }
+
+        public Chain getChain() {
+            return chain;
+        }
+
+        public int getModel() {
+            return model;
+        }
+
+        public String getChainName() {
+            return chainName;
+        }
+
+        public String getChainId() {
+            return chainId;
+        }
+
+        public Atom getAtom() {
+            return atom;
+        }
+
+        public int getAtomId() {
+            return atomId;
+        }
+    }
+
+    private static Collector<WrappedAtom, ?, AtomSite> toAtomSite() {
         return Collector.of(AtomSiteCollector::new,
                 AtomSiteCollector::accept,
                 AtomSiteCollector::combine,
                 AtomSiteCollector::get);
     }
 
-    static class AtomSiteCollector implements Consumer<Atom> {
+    static class AtomSiteCollector implements Consumer<WrappedAtom> {
         private final Column.StrColumnBuilder groupPDB;
         private final Column.IntColumnBuilder id;
         private final Column.StrColumnBuilder typeSymbol;
@@ -141,12 +226,13 @@ class CifFileSupplierImpl implements CifFileSupplier<Structure> {
         }
 
         @Override
-        public void accept(Atom atom) {
+        public void accept(WrappedAtom wrappedAtom) {
+            Atom atom = wrappedAtom.getAtom();
             Group group = atom.getGroup();
             Chain chain = group.getChain();
 
             groupPDB.stringValues(group.getType().equals(GroupType.HETATM) ? "HETATM" : "ATOM");
-            id.intValues(atomId);
+            id.intValues(wrappedAtom.getAtomId());
             Element element = atom.getElement();
             typeSymbol.stringValues(element.equals(Element.R) ? "X" : element.toString().toUpperCase());
             labelAtomId.stringValues(atom.getName());
@@ -157,13 +243,14 @@ class CifFileSupplierImpl implements CifFileSupplier<Structure> {
                 labelAltId.stringValues(String.valueOf(altLoc));
             }
             labelCompId.stringValues(group.getPDBName());
-            labelAsymId.stringValues(chain.getId());
+            labelAsymId.stringValues(wrappedAtom.getChainId());
             String entityId = "0";
             int seqId = group.getResidueNumber().getSeqNum();
             if (chain.getEntityInfo() != null) {
                 entityId = Integer.toString(chain.getEntityInfo().getMolId());
                 if (chain.getEntityInfo().getType() == EntityType.POLYMER) {
-                    // this only makes sense for polymeric chains, non-polymer chains will never have seqres groups and there's no point in calling getAlignedResIndex
+                    // this only makes sense for polymeric chains, non-polymer chains will never have seqres groups and
+                    // there's no point in calling getAlignedResIndex
                     seqId = chain.getEntityInfo().getAlignedResIndex(group, chain);
                 }
             }
@@ -185,11 +272,10 @@ class CifFileSupplierImpl implements CifFileSupplier<Structure> {
             bIsoOrEquiv.floatValues(atom.getTempFactor());
             authSeqId.intValues(group.getResidueNumber().getSeqNum());
             authCompId.stringValues(group.getPDBName());
-            authAsymId.stringValues(chain.getId());
+            authAsymId.stringValues(wrappedAtom.getChainName());
             authAtomId.stringValues(atom.getName());
-            pdbxPDBModelNum.intValues(1);
+            pdbxPDBModelNum.intValues(wrappedAtom.getModel());
 
-            // TODO respect symmetry
             atomId++;
         }
 

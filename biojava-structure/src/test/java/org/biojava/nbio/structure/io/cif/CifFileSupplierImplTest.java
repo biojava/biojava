@@ -57,6 +57,7 @@ public class CifFileSupplierImplTest {
 
         FileWriter fw = new FileWriter(outputFile);
         String cif = new TextCifWriter().compose(CifFileConverter.convert(originalStruct));
+        System.out.println(cif);
         fw.write(cif);
         fw.close();
 
