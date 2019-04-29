@@ -11,6 +11,7 @@ import org.rcsb.cif.CifWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.util.Arrays;
 
@@ -40,18 +41,8 @@ public class CifFileSupplierImplTest {
     }
 
     private static void testRoundTrip(String pdbId) throws IOException, StructureException {
-        AtomCache cache = new AtomCache();
-
-        StructureIO.setAtomCache(cache);
-
-        cache.setUseCif(true);
-
-        FileParsingParameters params = new FileParsingParameters();
-        params.setAlignSeqRes(true);
-        cache.setFileParsingParams(params);
-
-        assertTrue(StructureIO.getAtomCache().isUseCif());
-        Structure originalStruct = StructureIO.getStructure(pdbId);
+        Structure originalStruct = CifFileConverter.convert(CifReader.readText(new URL("https://files.rcsb.org/download/" + pdbId
+                + ".cif").openStream()));
 
         File outputFile = File.createTempFile("biojava_testing_", ".cif");
         outputFile.deleteOnExit();
