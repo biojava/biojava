@@ -1,8 +1,9 @@
-package org.biojava.nbio.structure.io.cif;
+package org.biojava.nbio.structure.test.io.cif;
 
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.FileParsingParameters;
+import org.biojava.nbio.structure.io.cif.CifFileConverter;
 import org.junit.Test;
 import org.rcsb.cif.CifReader;
 import org.rcsb.cif.CifWriter;
