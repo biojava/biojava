@@ -30,28 +30,27 @@ public class CifFileConverter {
         consumer.prepare();
 
         // feed individual categories to consumer
-        Block cifBlock = cifFile.getBlocks().get(0);
+        Block cifBlock = cifFile.getFirstBlock();
 
-        // TODO maybe integrate rogue categories into Cif schema
-        consumer.consumeAuditAuthor(cifBlock.getCategory("audit_author"));
+        consumer.consumeAuditAuthor(cifBlock.getAuditAuthor());
         consumer.consumeAtomSite(cifBlock.getAtomSite());
         consumer.consumeAtomSites(cifBlock.getAtomSites());
         consumer.consumeCell(cifBlock.getCell());
         consumer.consumeChemComp(cifBlock.getChemComp());
         consumer.consumeChemCompBond(cifBlock.getChemCompBond());
-        consumer.consumeDatabasePDBremark(cifBlock.getCategory("database_PDB_remark"));
-        consumer.consumeDatabasePDBrev(cifBlock.getCategory("database_PDB_rev"));
-        consumer.consumeDatabasePDBrevRecord(cifBlock.getCategory("database_PDB_rev_record"));
+        consumer.consumeDatabasePDBremark(cifBlock.getDatabasePDBRemark());
+        consumer.consumeDatabasePDBrev(cifBlock.getDatabasePDBRev());
+        consumer.consumeDatabasePDBrevRecord(cifBlock.getDatabasePDBRevRecord());
         consumer.consumeEntity(cifBlock.getEntity());
         consumer.consumeEntityPoly(cifBlock.getEntityPoly());
-        consumer.consumeEntitySrcGen(cifBlock.getCategory("entity_src_gen"));
-        consumer.consumeEntitySrcNat(cifBlock.getCategory("entity_src_nat"));
-        consumer.consumeEntitySrcSyn(cifBlock.getCategory("entity_src_syn"));
+        consumer.consumeEntitySrcGen(cifBlock.getEntitySrcGen());
+        consumer.consumeEntitySrcNat(cifBlock.getEntitySrcNat());
+        consumer.consumeEntitySrcSyn(cifBlock.getPdbxEntitySrcSyn());
         consumer.consumeEntityPolySeq(cifBlock.getEntityPolySeq());
         consumer.consumeExptl(cifBlock.getExptl());
-        consumer.consumePdbxAuditRevisionHistory(cifBlock.getCategory("pdbx_audit_revision_history"));
+        consumer.consumePdbxAuditRevisionHistory(cifBlock.getPdbxAuditRevisionHistory());
         consumer.consumePdbxChemCompIdentifier(cifBlock.getPdbxChemCompIdentifier());
-        consumer.consumePdbxDatabaseStatus(cifBlock.getCategory("pdbx_database_status"));
+        consumer.consumePdbxDatabaseStatus(cifBlock.getPdbxDatabaseStatus());
         consumer.consumePdbxEntityDescriptor(cifBlock.getPdbxEntityDescriptor());
         consumer.consumePdbxMolecule(cifBlock.getPdbxMolecule());
         consumer.consumePdbxMoleculeFeatures(cifBlock.getPdbxMoleculeFeatures());
@@ -63,7 +62,7 @@ public class CifFileConverter {
         consumer.consumePdbxStructAssemblyGen(cifBlock.getPdbxStructAssemblyGen());
         consumer.consumePdbxStructModResidue(cifBlock.getPdbxStructModResidue());
         consumer.consumePdbxStructOperList(cifBlock.getPdbxStructOperList());
-        consumer.consumeRefine(cifBlock.getCategory("refine"));
+        consumer.consumeRefine(cifBlock.getRefine());
         consumer.consumeStruct(cifBlock.getStruct());
         consumer.consumeStructAsym(cifBlock.getStructAsym());
         consumer.consumeStructConf(cifBlock.getStructConf());
@@ -71,9 +70,9 @@ public class CifFileConverter {
         consumer.consumeStructConnType(cifBlock.getStructConnType());
         consumer.consumeStructKeywords(cifBlock.getStructKeywords());
         consumer.consumeStructNcsOper(cifBlock.getStructNcsOper());
-        consumer.consumeStructRef(cifBlock.getCategory("struct_ref"));
-        consumer.consumeStructRefSeq(cifBlock.getCategory("struct_ref_seq"));
-        consumer.consumeStructRefSeqDif(cifBlock.getCategory("struct_ref_seq_dif"));
+        consumer.consumeStructRef(cifBlock.getStructRef());
+        consumer.consumeStructRefSeq(cifBlock.getStructRefSeq());
+        consumer.consumeStructRefSeqDif(cifBlock.getStructRefSeqDif());
         consumer.consumeStructSheetRange(cifBlock.getStructSheetRange());
         consumer.consumeStructSite(cifBlock.getStructSite());
         consumer.consumeStructSiteGen(cifBlock.getStructSiteGen());

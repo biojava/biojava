@@ -3,11 +3,9 @@ package org.biojava.nbio.structure.io.cif;
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.xtal.CrystalCell;
 import org.biojava.nbio.structure.xtal.SpaceGroup;
-import org.rcsb.cif.model.Block;
 import org.rcsb.cif.model.Category;
 import org.rcsb.cif.model.CifFile;
-import org.rcsb.cif.model.Column;
-import org.rcsb.cif.model.atomsite.AtomSite;
+import org.rcsb.cif.model.builder.*;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -32,9 +30,9 @@ class CifFileSupplierImpl implements CifFileSupplier<Structure> {
         SpaceGroup spaceGroup = structure.getPDBHeader().getCrystallographicInfo().getSpaceGroup();
         // atom_site
         List<WrappedAtom> wrappedAtoms = collectWrappedAtoms(structure);
-        AtomSite atomSite = wrappedAtoms.stream().collect(toAtomSite());
+        Category atomSite = wrappedAtoms.stream().collect(toAtomSite());
 
-        Block.BlockBuilder blockBuilder = CifFile.enterFile()
+        BlockBuilder blockBuilder = new CifBuilder()
                 .enterBlock(structure.getPDBCode());
 
         if (atomSite.isDefined() && atomSite.getRowCount() > 0) {
@@ -44,38 +42,38 @@ class CifFileSupplierImpl implements CifFileSupplier<Structure> {
 
         if (crystalCell != null) {
             // set cell category
-            blockBuilder.enterCategory("cell")
-                    .enterFloatColumn("length_a")
-                    .floatValues(crystalCell.getA())
+            blockBuilder.enterCell()
+                    .enterLengthA()
+                    .add(crystalCell.getA())
                     .leaveColumn()
 
-                    .enterFloatColumn("length_b")
-                    .floatValues(crystalCell.getB())
+                    .enterLengthB()
+                    .add(crystalCell.getB())
                     .leaveColumn()
 
-                    .enterFloatColumn("length_c")
-                    .floatValues(crystalCell.getC())
+                    .enterLengthC()
+                    .add(crystalCell.getC())
                     .leaveColumn()
 
-                    .enterFloatColumn("angle_alpha")
-                    .floatValues(crystalCell.getAlpha())
+                    .enterAngleAlpha()
+                    .add(crystalCell.getAlpha())
                     .leaveColumn()
 
-                    .enterFloatColumn("angle_beta")
-                    .floatValues(crystalCell.getBeta())
+                    .enterAngleBeta()
+                    .add(crystalCell.getBeta())
                     .leaveColumn()
 
-                    .enterFloatColumn("angle_gamma")
-                    .floatValues(crystalCell.getGamma())
+                    .enterAngleGamma()
+                    .add(crystalCell.getGamma())
                     .leaveColumn()
                     .leaveCategory();
         }
 
         if (spaceGroup != null) {
             // set symmetry category
-            blockBuilder.enterCategory("symmetry")
-                    .enterStrColumn("space_group_name_H-M")
-                    .stringValues(spaceGroup.getShortSymbol())
+            blockBuilder.enterSymmetry()
+                    .enterSpaceGroupNameH_M()
+                    .add(spaceGroup.getShortSymbol())
                     .leaveColumn()
                     .leaveCategory();
         }
@@ -170,7 +168,7 @@ class CifFileSupplierImpl implements CifFileSupplier<Structure> {
         }
     }
 
-    private static Collector<WrappedAtom, ?, AtomSite> toAtomSite() {
+    private static Collector<WrappedAtom, ?, Category> toAtomSite() {
         return Collector.of(AtomSiteCollector::new,
                 AtomSiteCollector::accept,
                 AtomSiteCollector::combine,
@@ -178,48 +176,49 @@ class CifFileSupplierImpl implements CifFileSupplier<Structure> {
     }
 
     static class AtomSiteCollector implements Consumer<WrappedAtom> {
-        private final Column.StrColumnBuilder groupPDB;
-        private final Column.IntColumnBuilder id;
-        private final Column.StrColumnBuilder typeSymbol;
-        private final Column.StrColumnBuilder labelAtomId;
-        private final Column.StrColumnBuilder labelAltId;
-        private final Column.StrColumnBuilder labelCompId;
-        private final Column.StrColumnBuilder labelAsymId;
-        private final Column.StrColumnBuilder labelEntityId;
-        private final Column.IntColumnBuilder labelSeqId;
-        private final Column.StrColumnBuilder pdbxPDBInsCode;
-        private final Column.FloatColumnBuilder cartnX;
-        private final Column.FloatColumnBuilder cartnY;
-        private final Column.FloatColumnBuilder cartnZ;
-        private final Column.FloatColumnBuilder occupancy;
-        private final Column.FloatColumnBuilder bIsoOrEquiv;
-        private final Column.IntColumnBuilder authSeqId;
-        private final Column.StrColumnBuilder authCompId;
-        private final Column.StrColumnBuilder authAsymId;
-        private final Column.StrColumnBuilder authAtomId;
-        private final Column.IntColumnBuilder pdbxPDBModelNum;
+        private final StrColumnBuilder<CategoryBuilder> groupPDB;
+        private final IntColumnBuilder<CategoryBuilder> id;
+        private final StrColumnBuilder<CategoryBuilder> typeSymbol;
+        private final StrColumnBuilder<CategoryBuilder> labelAtomId;
+        private final StrColumnBuilder<CategoryBuilder> labelAltId;
+        private final StrColumnBuilder<CategoryBuilder> labelCompId;
+        private final StrColumnBuilder<CategoryBuilder> labelAsymId;
+        private final StrColumnBuilder<CategoryBuilder> labelEntityId;
+        private final IntColumnBuilder<CategoryBuilder> labelSeqId;
+        private final StrColumnBuilder<CategoryBuilder> pdbxPDBInsCode;
+        private final FloatColumnBuilder<CategoryBuilder> cartnX;
+        private final FloatColumnBuilder<CategoryBuilder> cartnY;
+        private final FloatColumnBuilder<CategoryBuilder> cartnZ;
+        private final FloatColumnBuilder<CategoryBuilder> occupancy;
+        private final FloatColumnBuilder<CategoryBuilder> bIsoOrEquiv;
+        private final IntColumnBuilder<CategoryBuilder> authSeqId;
+        private final StrColumnBuilder<CategoryBuilder> authCompId;
+        private final StrColumnBuilder<CategoryBuilder> authAsymId;
+        private final StrColumnBuilder<CategoryBuilder> authAtomId;
+        private final IntColumnBuilder<CategoryBuilder> pdbxPDBModelNum;
 
         AtomSiteCollector() {
-            this.groupPDB = Column.enterStrColumn("atom_site", "group_PDB");
-            this.id = Column.enterIntColumn("atom_site", "id");
-            this.typeSymbol = Column.enterStrColumn("atom_site", "type_symbol");
-            this.labelAtomId = Column.enterStrColumn("atom_site", "label_atom_id");
-            this.labelAltId = Column.enterStrColumn("atom_site", "label_alt_id");
-            this.labelCompId = Column.enterStrColumn("atom_site", "label_comp_id");
-            this.labelAsymId = Column.enterStrColumn("atom_site", "label_asym_id");
-            this.labelEntityId = Column.enterStrColumn("atom_site", "label_entity_id");
-            this.labelSeqId = Column.enterIntColumn("atom_site", "label_seq_id");
-            this.pdbxPDBInsCode = Column.enterStrColumn("atom_site", "pdbx_PDB_ins_code");
-            this.cartnX = Column.enterFloatColumn("atom_site", "Cartn_x");
-            this.cartnY = Column.enterFloatColumn("atom_site", "Cartn_y");
-            this.cartnZ = Column.enterFloatColumn("atom_site", "Cartn_z");
-            this.occupancy = Column.enterFloatColumn("atom_site", "occupancy");
-            this.bIsoOrEquiv = Column.enterFloatColumn("atom_site", "B_iso_or_equiv");
-            this.authSeqId = Column.enterIntColumn("atom_site", "auth_seq_id");
-            this.authCompId = Column.enterStrColumn("atom_site", "auth_comp_id");
-            this.authAsymId = Column.enterStrColumn("atom_site", "auth_asym_id");
-            this.authAtomId = Column.enterStrColumn("atom_site", "auth_atom_id");
-            this.pdbxPDBModelNum = Column.enterIntColumn("atom_site", "pdbx_PDB_model_num");
+            // TODO this doesn't really make the case for the builder ;)
+            this.groupPDB = new StrColumnBuilder<>("atom_site", "group_PDB", null);
+            this.id = new IntColumnBuilder<>("atom_site", "id", null);
+            this.typeSymbol = new StrColumnBuilder<>("atom_site", "type_symbol", null);
+            this.labelAtomId = new StrColumnBuilder<>("atom_site", "label_atom_id", null);
+            this.labelAltId = new StrColumnBuilder<>("atom_site", "label_alt_id", null);
+            this.labelCompId = new StrColumnBuilder<>("atom_site", "label_comp_id", null);
+            this.labelAsymId = new StrColumnBuilder<>("atom_site", "label_asym_id", null);
+            this.labelEntityId = new StrColumnBuilder<>("atom_site", "label_entity_id", null);
+            this.labelSeqId = new IntColumnBuilder<>("atom_site", "label_seq_id", null);
+            this.pdbxPDBInsCode = new StrColumnBuilder<>("atom_site", "pdbx_PDB_ins_code", null);
+            this.cartnX = new FloatColumnBuilder<>("atom_site", "Cartn_x", null);
+            this.cartnY = new FloatColumnBuilder<>("atom_site", "Cartn_y", null);
+            this.cartnZ = new FloatColumnBuilder<>("atom_site", "Cartn_z", null);
+            this.occupancy = new FloatColumnBuilder<>("atom_site", "occupancy", null);
+            this.bIsoOrEquiv = new FloatColumnBuilder<>("atom_site", "B_iso_or_equiv", null);
+            this.authSeqId = new IntColumnBuilder<>("atom_site", "auth_seq_id", null);
+            this.authCompId = new StrColumnBuilder<>("atom_site", "auth_comp_id", null);
+            this.authAsymId = new StrColumnBuilder<>("atom_site", "auth_asym_id", null);
+            this.authAtomId = new StrColumnBuilder<>("atom_site", "auth_atom_id", null);
+            this.pdbxPDBModelNum = new IntColumnBuilder<>("atom_site", "pdbx_PDB_model_num", null);
         }
 
         @Override
@@ -228,19 +227,19 @@ class CifFileSupplierImpl implements CifFileSupplier<Structure> {
             Group group = atom.getGroup();
             Chain chain = group.getChain();
 
-            groupPDB.stringValues(group.getType().equals(GroupType.HETATM) ? "HETATM" : "ATOM");
-            id.intValues(wrappedAtom.getAtomId());
+            groupPDB.add(group.getType().equals(GroupType.HETATM) ? "HETATM" : "ATOM");
+            id.add(wrappedAtom.getAtomId());
             Element element = atom.getElement();
-            typeSymbol.stringValues(element.equals(Element.R) ? "X" : element.toString().toUpperCase());
-            labelAtomId.stringValues(atom.getName());
+            typeSymbol.add(element.equals(Element.R) ? "X" : element.toString().toUpperCase());
+            labelAtomId.add(atom.getName());
             Character altLoc = atom.getAltLoc();
             if (altLoc == null || altLoc == ' ') {
                 labelAltId.markNextNotPresent();
             } else {
-                labelAltId.stringValues(String.valueOf(altLoc));
+                labelAltId.add(String.valueOf(altLoc));
             }
-            labelCompId.stringValues(group.getPDBName());
-            labelAsymId.stringValues(wrappedAtom.getChainId());
+            labelCompId.add(group.getPDBName());
+            labelAsymId.add(wrappedAtom.getChainId());
             String entityId = "0";
             int seqId = group.getResidueNumber().getSeqNum();
             if (chain.getEntityInfo() != null) {
@@ -251,8 +250,8 @@ class CifFileSupplierImpl implements CifFileSupplier<Structure> {
                     seqId = chain.getEntityInfo().getAlignedResIndex(group, chain);
                 }
             }
-            labelEntityId.stringValues(entityId);
-            labelSeqId.intValues(seqId);
+            labelEntityId.add(entityId);
+            labelSeqId.add(seqId);
             String insCode = "";
             if (group.getResidueNumber().getInsCode() != null ) {
                 insCode = Character.toString(group.getResidueNumber().getInsCode());
@@ -260,18 +259,18 @@ class CifFileSupplierImpl implements CifFileSupplier<Structure> {
             if (insCode.isEmpty()) {
                 pdbxPDBInsCode.markNextUnknown();
             } else {
-                pdbxPDBInsCode.stringValues(insCode);
+                pdbxPDBInsCode.add(insCode);
             }
-            cartnX.floatValues(atom.getX());
-            cartnY.floatValues(atom.getY());
-            cartnZ.floatValues(atom.getZ());
-            occupancy.floatValues(atom.getOccupancy());
-            bIsoOrEquiv.floatValues(atom.getTempFactor());
-            authSeqId.intValues(group.getResidueNumber().getSeqNum());
-            authCompId.stringValues(group.getPDBName());
-            authAsymId.stringValues(wrappedAtom.getChainName());
-            authAtomId.stringValues(atom.getName());
-            pdbxPDBModelNum.intValues(wrappedAtom.getModel());
+            cartnX.add(atom.getX());
+            cartnY.add(atom.getY());
+            cartnZ.add(atom.getZ());
+            occupancy.add(atom.getOccupancy());
+            bIsoOrEquiv.add(atom.getTempFactor());
+            authSeqId.add(group.getResidueNumber().getSeqNum());
+            authCompId.add(group.getPDBName());
+            authAsymId.add(wrappedAtom.getChainName());
+            authAtomId.add(atom.getName());
+            pdbxPDBModelNum.add(wrappedAtom.getModel());
         }
 
         AtomSiteCollector combine(AtomSiteCollector other) {
@@ -279,35 +278,29 @@ class CifFileSupplierImpl implements CifFileSupplier<Structure> {
         }
         
         @SuppressWarnings("Duplicates")
-        AtomSite get() {
-            Map<String, Column> columns = new LinkedHashMap<>();
-            put(columns, groupPDB.build());
-            put(columns, groupPDB.build());
-            put(columns, id.build());
-            put(columns, typeSymbol.build());
-            put(columns, labelAtomId.build());
-            put(columns, labelAltId.build());
-            put(columns, labelCompId.build());
-            put(columns, labelAsymId.build());
-            put(columns, labelEntityId.build());
-            put(columns, labelSeqId.build());
-            put(columns, pdbxPDBInsCode.build());
-            put(columns, cartnX.build());
-            put(columns, cartnY.build());
-            put(columns, cartnZ.build());
-            put(columns, occupancy.build());
-            put(columns, bIsoOrEquiv.build());
-            put(columns, authSeqId.build());
-            put(columns, authCompId.build());
-            put(columns, authAsymId.build());
-            put(columns, authAtomId.build());
-            put(columns, pdbxPDBModelNum.build());
-
-            return (AtomSite) Category.enterCategory("atom_site", columns, null).build();
-        }
-
-        private void put(Map<String, Column> columns, Column column) {
-            columns.put(column.getColumnName(), column);
+        Category get() {
+            return new CategoryBuilder("atom_site", null)
+                    .addColumn(groupPDB.build())
+                    .addColumn(id.build())
+                    .addColumn(typeSymbol.build())
+                    .addColumn(labelAtomId.build())
+                    .addColumn(labelAltId.build())
+                    .addColumn(labelCompId.build())
+                    .addColumn(labelAsymId.build())
+                    .addColumn(labelEntityId.build())
+                    .addColumn(labelSeqId.build())
+                    .addColumn(pdbxPDBInsCode.build())
+                    .addColumn(cartnX.build())
+                    .addColumn(cartnY.build())
+                    .addColumn(cartnZ.build())
+                    .addColumn(occupancy.build())
+                    .addColumn(bIsoOrEquiv.build())
+                    .addColumn(authSeqId.build())
+                    .addColumn(authCompId.build())
+                    .addColumn(authAsymId.build())
+                    .addColumn(authAtomId.build())
+                    .addColumn(pdbxPDBModelNum.build())
+                    .build();
         }
     }
 }

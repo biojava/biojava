@@ -519,6 +519,9 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 
 		if (getFilename(pdbId).endsWith(".mmtf.gz")){
 			ftp = CodecUtils.getMmtfEntryUrl(pdbId, true, false);
+		} else if (getFilename(pdbId).endsWith(".bcif")) {
+			// TODO need to change at some point?
+			ftp = "https://webchem.ncbr.muni.cz/ModelServer/static/bcif/" + pdbId;
 		} else {
 			ftp = String.format("%s%s/%s/%s",
 			serverName, pathOnServer, pdbId.substring(1,3).toLowerCase(), getFilename(pdbId));

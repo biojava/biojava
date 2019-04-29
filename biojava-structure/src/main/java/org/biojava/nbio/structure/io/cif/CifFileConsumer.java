@@ -1,38 +1,50 @@
 package org.biojava.nbio.structure.io.cif;
 
-import org.rcsb.cif.model.Category;
-import org.rcsb.cif.model.atomsite.AtomSite;
-import org.rcsb.cif.model.atomsites.AtomSites;
-import org.rcsb.cif.model.cell.Cell;
-import org.rcsb.cif.model.chemcomp.ChemComp;
-import org.rcsb.cif.model.chemcompbond.ChemCompBond;
-import org.rcsb.cif.model.entity.Entity;
-import org.rcsb.cif.model.entitypoly.EntityPoly;
-import org.rcsb.cif.model.entitypolyseq.EntityPolySeq;
-import org.rcsb.cif.model.exptl.Exptl;
-import org.rcsb.cif.model.pdbxchemcompidentifier.PdbxChemCompIdentifier;
-import org.rcsb.cif.model.pdbxentitydescriptor.PdbxEntityDescriptor;
-import org.rcsb.cif.model.pdbxmolecule.PdbxMolecule;
-import org.rcsb.cif.model.pdbxmoleculefeatures.PdbxMoleculeFeatures;
-import org.rcsb.cif.model.pdbxnonpolyscheme.PdbxNonpolyScheme;
-import org.rcsb.cif.model.pdbxreferenceentitylink.PdbxReferenceEntityLink;
-import org.rcsb.cif.model.pdbxreferenceentitylist.PdbxReferenceEntityList;
-import org.rcsb.cif.model.pdbxreferenceentitypolylink.PdbxReferenceEntityPolyLink;
-import org.rcsb.cif.model.pdbxstructassembly.PdbxStructAssembly;
-import org.rcsb.cif.model.pdbxstructassemblygen.PdbxStructAssemblyGen;
-import org.rcsb.cif.model.pdbxstructmodresidue.PdbxStructModResidue;
-import org.rcsb.cif.model.pdbxstructoperlist.PdbxStructOperList;
-import org.rcsb.cif.model.struct.Struct;
-import org.rcsb.cif.model.structasym.StructAsym;
-import org.rcsb.cif.model.structconf.StructConf;
-import org.rcsb.cif.model.structconn.StructConn;
-import org.rcsb.cif.model.structconntype.StructConnType;
-import org.rcsb.cif.model.structkeywords.StructKeywords;
-import org.rcsb.cif.model.structncsoper.StructNcsOper;
-import org.rcsb.cif.model.structsheetrange.StructSheetRange;
-import org.rcsb.cif.model.structsite.StructSite;
-import org.rcsb.cif.model.structsitegen.StructSiteGen;
-import org.rcsb.cif.model.symmetry.Symmetry;
+import org.rcsb.cif.model.generated.atomsite.AtomSite;
+import org.rcsb.cif.model.generated.atomsites.AtomSites;
+import org.rcsb.cif.model.generated.auditauthor.AuditAuthor;
+import org.rcsb.cif.model.generated.cell.Cell;
+import org.rcsb.cif.model.generated.chemcomp.ChemComp;
+import org.rcsb.cif.model.generated.chemcompbond.ChemCompBond;
+import org.rcsb.cif.model.generated.databasepdbremark.DatabasePDBRemark;
+import org.rcsb.cif.model.generated.databasepdbrev.DatabasePDBRev;
+import org.rcsb.cif.model.generated.databasepdbrevrecord.DatabasePDBRevRecord;
+import org.rcsb.cif.model.generated.entity.Entity;
+import org.rcsb.cif.model.generated.entitypoly.EntityPoly;
+import org.rcsb.cif.model.generated.entitypolyseq.EntityPolySeq;
+import org.rcsb.cif.model.generated.entitysrcgen.EntitySrcGen;
+import org.rcsb.cif.model.generated.entitysrcnat.EntitySrcNat;
+import org.rcsb.cif.model.generated.exptl.Exptl;
+import org.rcsb.cif.model.generated.pdbxauditrevisionhistory.PdbxAuditRevisionHistory;
+import org.rcsb.cif.model.generated.pdbxchemcompidentifier.PdbxChemCompIdentifier;
+import org.rcsb.cif.model.generated.pdbxdatabasestatus.PdbxDatabaseStatus;
+import org.rcsb.cif.model.generated.pdbxentitydescriptor.PdbxEntityDescriptor;
+import org.rcsb.cif.model.generated.pdbxentitysrcsyn.PdbxEntitySrcSyn;
+import org.rcsb.cif.model.generated.pdbxmolecule.PdbxMolecule;
+import org.rcsb.cif.model.generated.pdbxmoleculefeatures.PdbxMoleculeFeatures;
+import org.rcsb.cif.model.generated.pdbxnonpolyscheme.PdbxNonpolyScheme;
+import org.rcsb.cif.model.generated.pdbxreferenceentitylink.PdbxReferenceEntityLink;
+import org.rcsb.cif.model.generated.pdbxreferenceentitylist.PdbxReferenceEntityList;
+import org.rcsb.cif.model.generated.pdbxreferenceentitypolylink.PdbxReferenceEntityPolyLink;
+import org.rcsb.cif.model.generated.pdbxstructassembly.PdbxStructAssembly;
+import org.rcsb.cif.model.generated.pdbxstructassemblygen.PdbxStructAssemblyGen;
+import org.rcsb.cif.model.generated.pdbxstructmodresidue.PdbxStructModResidue;
+import org.rcsb.cif.model.generated.pdbxstructoperlist.PdbxStructOperList;
+import org.rcsb.cif.model.generated.refine.Refine;
+import org.rcsb.cif.model.generated.struct.Struct;
+import org.rcsb.cif.model.generated.structasym.StructAsym;
+import org.rcsb.cif.model.generated.structconf.StructConf;
+import org.rcsb.cif.model.generated.structconn.StructConn;
+import org.rcsb.cif.model.generated.structconntype.StructConnType;
+import org.rcsb.cif.model.generated.structkeywords.StructKeywords;
+import org.rcsb.cif.model.generated.structncsoper.StructNcsOper;
+import org.rcsb.cif.model.generated.structref.StructRef;
+import org.rcsb.cif.model.generated.structrefseq.StructRefSeq;
+import org.rcsb.cif.model.generated.structrefseqdif.StructRefSeqDif;
+import org.rcsb.cif.model.generated.structsheetrange.StructSheetRange;
+import org.rcsb.cif.model.generated.structsite.StructSite;
+import org.rcsb.cif.model.generated.structsitegen.StructSiteGen;
+import org.rcsb.cif.model.generated.symmetry.Symmetry;
 
 /**
  * Defines a rather generic interface which allows to populate some data structure with data parsed from a CIF file.
@@ -63,7 +75,7 @@ interface CifFileConsumer<S> {
      * Consume a particular Cif category.
      * @param auditAuthor data
      */
-    void consumeAuditAuthor(Category auditAuthor);
+    void consumeAuditAuthor(AuditAuthor auditAuthor);
 
     /**
      * Consume a particular Cif category.
@@ -87,19 +99,19 @@ interface CifFileConsumer<S> {
      * Consume a particular Cif category.
      * @param databasePDBremark data
      */
-    void consumeDatabasePDBremark(Category databasePDBremark);
+    void consumeDatabasePDBremark(DatabasePDBRemark databasePDBremark);
 
     /**
      * Consume a particular Cif category.
      * @param databasePDBrev data
      */
-    void consumeDatabasePDBrev(Category databasePDBrev);
+    void consumeDatabasePDBrev(DatabasePDBRev databasePDBrev);
 
     /**
      * Consume a particular Cif category.
      * @param databasePDBrevRecord data
      */
-    void consumeDatabasePDBrevRecord(Category databasePDBrevRecord);
+    void consumeDatabasePDBrevRecord(DatabasePDBRevRecord databasePDBrevRecord);
 
     /**
      * Consume a particular Cif category.
@@ -117,19 +129,19 @@ interface CifFileConsumer<S> {
      * Consume a particular Cif category.
      * @param entitySrcGen data
      */
-    void consumeEntitySrcGen(Category entitySrcGen);
+    void consumeEntitySrcGen(EntitySrcGen entitySrcGen);
 
     /**
      * Consume a particular Cif category.
      * @param entitySrcNat data
      */
-    void consumeEntitySrcNat(Category entitySrcNat);
+    void consumeEntitySrcNat(EntitySrcNat entitySrcNat);
 
     /**
      * Consume a particular Cif category.
      * @param entitySrcSyn data
      */
-    void consumeEntitySrcSyn(Category entitySrcSyn);
+    void consumeEntitySrcSyn(PdbxEntitySrcSyn entitySrcSyn);
 
     /**
      * Consume a particular Cif category.
@@ -147,7 +159,7 @@ interface CifFileConsumer<S> {
      * Consume a particular Cif category.
      * @param pdbxAuditRevisionHistory data
      */
-    void consumePdbxAuditRevisionHistory(Category pdbxAuditRevisionHistory);
+    void consumePdbxAuditRevisionHistory(PdbxAuditRevisionHistory pdbxAuditRevisionHistory);
 
     /**
      * Consume a particular Cif category.
@@ -159,7 +171,7 @@ interface CifFileConsumer<S> {
      * Consume a particular Cif category.
      * @param pdbxDatabaseStatus data
      */
-    void consumePdbxDatabaseStatus(Category pdbxDatabaseStatus);
+    void consumePdbxDatabaseStatus(PdbxDatabaseStatus pdbxDatabaseStatus);
 
     /**
      * Consume a particular Cif category.
@@ -231,7 +243,7 @@ interface CifFileConsumer<S> {
      * Consume a particular Cif category.
      * @param refine data
      */
-    void consumeRefine(Category refine);
+    void consumeRefine(Refine refine);
 
     /**
      * Consume a particular Cif category.
@@ -279,19 +291,19 @@ interface CifFileConsumer<S> {
      * Consume a particular Cif category.
      * @param structRef data
      */
-    void consumeStructRef(Category structRef);
+    void consumeStructRef(StructRef structRef);
 
     /**
      * Consume a particular Cif category.
      * @param structRefSeq data
      */
-    void consumeStructRefSeq(Category structRefSeq);
+    void consumeStructRefSeq(StructRefSeq structRefSeq);
 
     /**
      * Consume a particular Cif category.
      * @param structRefSeqDif data
      */
-    void consumeStructRefSeqDif(Category structRefSeqDif);
+    void consumeStructRefSeqDif(StructRefSeqDif structRefSeqDif);
 
     /**
      * Consume a particular Cif category.

@@ -4,8 +4,8 @@ import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.junit.Test;
-import org.rcsb.cif.text.TextCifReader;
-import org.rcsb.cif.text.TextCifWriter;
+import org.rcsb.cif.CifReader;
+import org.rcsb.cif.CifWriter;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -56,12 +56,11 @@ public class CifFileSupplierImplTest {
         outputFile.deleteOnExit();
 
         FileWriter fw = new FileWriter(outputFile);
-        String cif = new TextCifWriter().compose(CifFileConverter.convert(originalStruct));
-        System.out.println(cif);
+        String cif = CifWriter.composeText(CifFileConverter.convert(originalStruct));
         fw.write(cif);
         fw.close();
 
-        Structure readStruct = CifFileConverter.convert(new TextCifReader().parse(Files.newInputStream(outputFile.toPath())));
+        Structure readStruct = CifFileConverter.convert(CifReader.readText(Files.newInputStream(outputFile.toPath())));
 
         assertNotNull(readStruct);
         assertEquals(originalStruct.getChains().size(), readStruct.getChains().size());
@@ -122,7 +121,7 @@ public class CifFileSupplierImplTest {
     @Test
     public void testBiounitWriting()  {
         Structure s = createDummyStructure();
-        String mmcif = new TextCifWriter().compose(CifFileConverter.convert(s));
+        String mmcif = CifWriter.composeText(CifFileConverter.convert(s));
         String[] lines = mmcif.split("\n");
         long atomLines = Arrays.stream(lines).filter(l -> l.startsWith("ATOM")).count();
         assertNotNull(mmcif);

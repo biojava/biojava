@@ -2,8 +2,10 @@ package org.biojava.nbio.structure.io.cif;
 
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.io.*;
+// TODO detach the impl from the redundant mmCIF impl
 import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
 import org.biojava.nbio.structure.io.mmcif.model.DatabasePdbrevRecord;
+import org.biojava.nbio.structure.io.mmcif.model.EntitySrcSyn;
 import org.biojava.nbio.structure.quaternary.BioAssemblyInfo;
 import org.biojava.nbio.structure.quaternary.BiologicalAssemblyBuilder;
 import org.biojava.nbio.structure.quaternary.BiologicalAssemblyTransformation;
@@ -12,39 +14,57 @@ import org.biojava.nbio.structure.xtal.SpaceGroup;
 import org.biojava.nbio.structure.xtal.SymoplibParser;
 import org.rcsb.cif.model.Category;
 import org.rcsb.cif.model.Column;
-import org.rcsb.cif.model.atomsite.*;
-import org.rcsb.cif.model.atomsites.AtomSites;
-import org.rcsb.cif.model.cell.Cell;
-import org.rcsb.cif.model.chemcomp.ChemComp;
-import org.rcsb.cif.model.chemcompbond.ChemCompBond;
-import org.rcsb.cif.model.entity.Entity;
-import org.rcsb.cif.model.entitypoly.EntityPoly;
-import org.rcsb.cif.model.entitypolyseq.EntityPolySeq;
-import org.rcsb.cif.model.exptl.Exptl;
-import org.rcsb.cif.model.pdbxchemcompidentifier.PdbxChemCompIdentifier;
-import org.rcsb.cif.model.pdbxentitydescriptor.PdbxEntityDescriptor;
-import org.rcsb.cif.model.pdbxmolecule.PdbxMolecule;
-import org.rcsb.cif.model.pdbxmoleculefeatures.PdbxMoleculeFeatures;
-import org.rcsb.cif.model.pdbxnonpolyscheme.PdbxNonpolyScheme;
-import org.rcsb.cif.model.pdbxreferenceentitylink.PdbxReferenceEntityLink;
-import org.rcsb.cif.model.pdbxreferenceentitylist.PdbxReferenceEntityList;
-import org.rcsb.cif.model.pdbxreferenceentitypolylink.PdbxReferenceEntityPolyLink;
-import org.rcsb.cif.model.pdbxstructassembly.PdbxStructAssembly;
-import org.rcsb.cif.model.pdbxstructassemblygen.PdbxStructAssemblyGen;
-import org.rcsb.cif.model.pdbxstructmodresidue.PdbxStructModResidue;
-import org.rcsb.cif.model.pdbxstructoperlist.PdbxStructOperList;
-import org.rcsb.cif.model.struct.Struct;
-import org.rcsb.cif.model.structasym.StructAsym;
-import org.rcsb.cif.model.structconf.StructConf;
-import org.rcsb.cif.model.structconn.StructConn;
-import org.rcsb.cif.model.structconntype.StructConnType;
-import org.rcsb.cif.model.structkeywords.PdbxKeywords;
-import org.rcsb.cif.model.structkeywords.StructKeywords;
-import org.rcsb.cif.model.structncsoper.StructNcsOper;
-import org.rcsb.cif.model.structsheetrange.StructSheetRange;
-import org.rcsb.cif.model.structsite.StructSite;
-import org.rcsb.cif.model.structsitegen.StructSiteGen;
-import org.rcsb.cif.model.symmetry.Symmetry;
+import org.rcsb.cif.model.generated.atomsite.*;
+import org.rcsb.cif.model.generated.atomsites.AtomSites;
+import org.rcsb.cif.model.generated.auditauthor.AuditAuthor;
+import org.rcsb.cif.model.generated.cell.Cell;
+import org.rcsb.cif.model.generated.chemcomp.ChemComp;
+import org.rcsb.cif.model.generated.chemcompbond.ChemCompBond;
+import org.rcsb.cif.model.generated.databasepdbremark.DatabasePDBRemark;
+import org.rcsb.cif.model.generated.databasepdbrev.DatabasePDBRev;
+import org.rcsb.cif.model.generated.databasepdbrevrecord.DatabasePDBRevRecord;
+import org.rcsb.cif.model.generated.entity.Entity;
+import org.rcsb.cif.model.generated.entitypoly.EntityPoly;
+import org.rcsb.cif.model.generated.entitypolyseq.EntityPolySeq;
+import org.rcsb.cif.model.generated.entitysrcgen.EntitySrcGen;
+import org.rcsb.cif.model.generated.entitysrcnat.EntitySrcNat;
+import org.rcsb.cif.model.generated.exptl.Exptl;
+import org.rcsb.cif.model.generated.pdbxauditrevisionhistory.PdbxAuditRevisionHistory;
+import org.rcsb.cif.model.generated.pdbxchemcompidentifier.PdbxChemCompIdentifier;
+import org.rcsb.cif.model.generated.pdbxdatabasestatus.PdbxDatabaseStatus;
+import org.rcsb.cif.model.generated.pdbxdatabasestatus.RecvdInitialDepositionDate;
+import org.rcsb.cif.model.generated.pdbxentitydescriptor.PdbxEntityDescriptor;
+import org.rcsb.cif.model.generated.pdbxentitysrcsyn.PdbxEntitySrcSyn;
+import org.rcsb.cif.model.generated.pdbxmolecule.PdbxMolecule;
+import org.rcsb.cif.model.generated.pdbxmoleculefeatures.PdbxMoleculeFeatures;
+import org.rcsb.cif.model.generated.pdbxnonpolyscheme.PdbxNonpolyScheme;
+import org.rcsb.cif.model.generated.pdbxreferenceentitylink.PdbxReferenceEntityLink;
+import org.rcsb.cif.model.generated.pdbxreferenceentitylist.PdbxReferenceEntityList;
+import org.rcsb.cif.model.generated.pdbxreferenceentitypolylink.PdbxReferenceEntityPolyLink;
+import org.rcsb.cif.model.generated.pdbxstructassembly.PdbxStructAssembly;
+import org.rcsb.cif.model.generated.pdbxstructassemblygen.PdbxStructAssemblyGen;
+import org.rcsb.cif.model.generated.pdbxstructmodresidue.PdbxStructModResidue;
+import org.rcsb.cif.model.generated.pdbxstructoperlist.PdbxStructOperList;
+import org.rcsb.cif.model.generated.refine.LsRFactorRFree;
+import org.rcsb.cif.model.generated.refine.LsRFactorRWork;
+import org.rcsb.cif.model.generated.refine.Refine;
+import org.rcsb.cif.model.generated.struct.Struct;
+import org.rcsb.cif.model.generated.structasym.StructAsym;
+import org.rcsb.cif.model.generated.structconf.StructConf;
+import org.rcsb.cif.model.generated.structconn.StructConn;
+import org.rcsb.cif.model.generated.structconntype.StructConnType;
+import org.rcsb.cif.model.generated.structkeywords.PdbxKeywords;
+import org.rcsb.cif.model.generated.structkeywords.StructKeywords;
+import org.rcsb.cif.model.generated.structncsoper.StructNcsOper;
+import org.rcsb.cif.model.generated.structref.StructRef;
+import org.rcsb.cif.model.generated.structrefseq.PdbxDbAlignBegInsCode;
+import org.rcsb.cif.model.generated.structrefseq.PdbxDbAlignEndInsCode;
+import org.rcsb.cif.model.generated.structrefseq.StructRefSeq;
+import org.rcsb.cif.model.generated.structrefseqdif.StructRefSeqDif;
+import org.rcsb.cif.model.generated.structsheetrange.StructSheetRange;
+import org.rcsb.cif.model.generated.structsite.StructSite;
+import org.rcsb.cif.model.generated.structsitegen.StructSiteGen;
+import org.rcsb.cif.model.generated.symmetry.Symmetry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -79,9 +99,9 @@ class CifFileConsumerImpl implements CifFileConsumer<Structure> {
 
     private Entity entity;
     private EntityPoly entityPoly;
-    private Category entitySrcGen;
-    private Category entitySrcNat;
-    private Category entitySrcSyn;
+    private EntitySrcGen entitySrcGen;
+    private EntitySrcNat entitySrcNat;
+    private PdbxEntitySrcSyn entitySrcSyn;
     private List<Chain> seqResChains;
     private PdbxStructAssembly structAssembly;
     private PdbxStructAssemblyGen structAssemblyGen;
@@ -89,8 +109,8 @@ class CifFileConsumerImpl implements CifFileConsumer<Structure> {
     private StructConn structConn;
     private StructNcsOper structNcsOper;
     private PdbxStructOperList structOpers;
-    private Category structRef;
-    private Category structRefSeqDif;
+    private StructRef structRef;
+    private StructRefSeqDif structRefSeqDif;
     private StructSiteGen structSiteGen;
 
     private Map<String, String> asymId2entityId;
@@ -438,9 +458,9 @@ class CifFileConsumerImpl implements CifFileConsumer<Structure> {
     }
 
     @Override
-    public void consumeAuditAuthor(Category auditAuthor) {
+    public void consumeAuditAuthor(AuditAuthor auditAuthor) {
         for (int rowIndex = 0; rowIndex < auditAuthor.getRowCount(); rowIndex++) {
-            String name = auditAuthor.getColumn("name").getStringData(rowIndex);
+            String name = auditAuthor.getName().get(rowIndex);
 
             StringBuilder last = new StringBuilder();
             StringBuilder initials = new StringBuilder();
@@ -529,11 +549,11 @@ class CifFileConsumerImpl implements CifFileConsumer<Structure> {
     }
 
     @Override
-    public void consumeDatabasePDBremark(Category databasePDBremark) {
+    public void consumeDatabasePDBremark(DatabasePDBRemark databasePDBremark) {
         for (int rowIndex = 0; rowIndex < databasePDBremark.getRowCount(); rowIndex++) {
-            String id = databasePDBremark.getColumn("id").getStringData(rowIndex);
-            if ("2".equals(id)) {
-                String line = databasePDBremark.getColumn("text").getStringData(rowIndex);
+            int id = databasePDBremark.getId().get(rowIndex);
+            if (id == 2) {
+                String line = databasePDBremark.getText().get(rowIndex);
                 int i = line.indexOf("ANGSTROM");
 
                 if (i > 5) {
@@ -553,12 +573,12 @@ class CifFileConsumerImpl implements CifFileConsumer<Structure> {
     }
 
     @Override
-    public void consumeDatabasePDBrev(Category databasePDBrev) {
+    public void consumeDatabasePDBrev(DatabasePDBRev databasePDBrev) {
         logger.debug("got a database revision:" + databasePDBrev);
 
         for (int rowIndex = 0; rowIndex < databasePDBrev.getRowCount(); rowIndex++) {
-            if ("1".equals(databasePDBrev.getColumn("num").getStringData(rowIndex))) {
-                String dateOriginal = databasePDBrev.getColumn("date_original").getStringData(rowIndex);
+            if (databasePDBrev.getNum().get(rowIndex) == 1) {
+                String dateOriginal = databasePDBrev.getDateOriginal().get(rowIndex);
                 try {
                     Date dep = DATE_FORMAT.parse(dateOriginal);
                     pdbHeader.setDepDate(dep);
@@ -567,7 +587,7 @@ class CifFileConsumerImpl implements CifFileConsumer<Structure> {
                             dateOriginal);
                 }
 
-                String date = databasePDBrev.getColumn("date").getStringData(rowIndex);
+                String date = databasePDBrev.getDate().get(rowIndex);
                 try {
                     Date rel = DATE_FORMAT.parse(date);
                     pdbHeader.setRelDate(rel);
@@ -575,7 +595,7 @@ class CifFileConsumerImpl implements CifFileConsumer<Structure> {
                     logger.warn("Could not parse date string '{}', modification date will be unavailable", date);
                 }
             } else {
-                String dbrev = databasePDBrev.getColumn("date").getStringData(rowIndex);
+                String dbrev = databasePDBrev.getDate().get(rowIndex);
                 try {
                     Date mod = DATE_FORMAT.parse(dbrev);
                     pdbHeader.setModDate(mod);
@@ -587,7 +607,7 @@ class CifFileConsumerImpl implements CifFileConsumer<Structure> {
     }
 
     @Override
-    public void consumeDatabasePDBrevRecord(Category databasePDBrevRecord) {
+    public void consumeDatabasePDBrevRecord(DatabasePDBRevRecord databasePDBrevRecord) {
         List<DatabasePdbrevRecord> revRecords = pdbHeader.getRevisionRecords();
         if (revRecords == null) {
             revRecords = new ArrayList<>();
@@ -620,17 +640,17 @@ class CifFileConsumerImpl implements CifFileConsumer<Structure> {
     }
 
     @Override
-    public void consumeEntitySrcGen(Category entitySrcGen) {
+    public void consumeEntitySrcGen(EntitySrcGen entitySrcGen) {
         this.entitySrcGen = entitySrcGen;
     }
 
     @Override
-    public void consumeEntitySrcNat(Category entitySrcNat) {
+    public void consumeEntitySrcNat(EntitySrcNat entitySrcNat) {
         this.entitySrcNat = entitySrcNat;
     }
 
     @Override
-    public void consumeEntitySrcSyn(Category entitySrcSyn) {
+    public void consumeEntitySrcSyn(PdbxEntitySrcSyn entitySrcSyn) {
         this.entitySrcSyn = entitySrcSyn;
     }
 
@@ -700,26 +720,26 @@ class CifFileConsumerImpl implements CifFileConsumer<Structure> {
     }
 
     @Override
-    public void consumePdbxAuditRevisionHistory(Category pdbxAuditRevisionHistory) {
+    public void consumePdbxAuditRevisionHistory(PdbxAuditRevisionHistory pdbxAuditRevisionHistory) {
         for (int rowIndex = 0; rowIndex < pdbxAuditRevisionHistory.getRowCount(); rowIndex++) {
             // first entry in revision history is the release date
-            if ("1".equals(pdbxAuditRevisionHistory.getColumn("ordinal").getStringData(rowIndex))) {
-                String release = pdbxAuditRevisionHistory.getColumn("revision_date").getStringData(rowIndex);
+            if (pdbxAuditRevisionHistory.getOrdinal().get(rowIndex) == 1) {
+                String release = pdbxAuditRevisionHistory.getRevisionDate().get(rowIndex);
                 try {
                     Date releaseDate = DATE_FORMAT.parse(release);
                     pdbHeader.setRelDate(releaseDate);
-                } catch (ParseException e){
+                } catch (ParseException e) {
                     logger.warn("Could not parse date string '{}', release date will be unavailable", release);
                 }
             } else {
                 // all other dates are revision dates;
                 // since this method may be called multiple times,
                 // the last revision date will "stick"
-                String revision = pdbxAuditRevisionHistory.getColumn("revision_date").getStringData(rowIndex);
+                String revision = pdbxAuditRevisionHistory.getRevisionDate().get(rowIndex);
                 try {
                     Date revisionDate = DATE_FORMAT.parse(revision);
                     pdbHeader.setModDate(revisionDate);
-                } catch (ParseException e){
+                } catch (ParseException e) {
                     logger.warn("Could not parse date string '{}', revision date will be unavailable", revision);
                 }
             }
@@ -732,12 +752,12 @@ class CifFileConsumerImpl implements CifFileConsumer<Structure> {
     }
 
     @Override
-    public void consumePdbxDatabaseStatus(Category pdbxDatabaseStatus) {
+    public void consumePdbxDatabaseStatus(PdbxDatabaseStatus pdbxDatabaseStatus) {
         for (int rowIndex = 0; rowIndex < pdbxDatabaseStatus.getRowCount(); rowIndex++) {
             // the deposition date field is only available in mmCIF 5.0
-            Column col = pdbxDatabaseStatus.getColumn("recvd_initial_deposition_date");
+            RecvdInitialDepositionDate col = pdbxDatabaseStatus.getRecvdInitialDepositionDate();
             if (col.isDefined()) {
-                String deposition = col.getStringData(rowIndex);
+                String deposition = col.get(rowIndex);
 
                 try {
                     Date depositionDate = DATE_FORMAT.parse(deposition);
@@ -805,55 +825,42 @@ class CifFileConsumerImpl implements CifFileConsumer<Structure> {
     }
 
     @Override
-    public void consumeRefine(Category refine) {
+    public void consumeRefine(Refine refine) {
         for (int rowIndex = 0; rowIndex < refine.getRowCount(); rowIndex++) {
             // RESOLUTION
             // in very rare cases (for instance hybrid methods x-ray + neutron diffraction, e.g. 3ins, 4n9m)
             // there are 2 resolution values, one for each method
             // we take the last one found so that behaviour is like in PDB file parsing
-            String lsDResHigh = refine.getColumn("ls_d_res_high").getStringData(rowIndex);
+            double lsDResHigh = refine.getLsDResHigh().get(rowIndex);
             if (pdbHeader.getResolution() != PDBHeader.DEFAULT_RESOLUTION) {
                 logger.warn("More than 1 resolution value present, will use last one {} and discard previous {}",
                         lsDResHigh, String.format("%4.2f",pdbHeader.getResolution()));
             }
-            try {
-                pdbHeader.setResolution(Float.parseFloat(lsDResHigh));
-            } catch (NumberFormatException e) {
-                logger.info("Could not parse resolution from {} {}", lsDResHigh, e.getMessage());
-            }
+            pdbHeader.setResolution((float) lsDResHigh);
 
-            String lsRFactorRFree = refine.getColumn("ls_R_factor_R_free").getStringData(rowIndex);
+            LsRFactorRFree lsRFactorRFree = refine.getLsRFactorRFree();
             // RFREE
             if (pdbHeader.getRfree() != PDBHeader.DEFAULT_RFREE) {
                 logger.warn("More than 1 Rfree value present, will use last one {} and discard previous {}",
                         lsRFactorRFree, String.format("%4.2f",pdbHeader.getRfree()));
             }
-            if (lsRFactorRFree.isEmpty()) {
+            if (lsRFactorRFree.isDefined()) {
+                pdbHeader.setRfree((float) lsRFactorRFree.get(rowIndex));
+            } else {
                 // some entries like 2ifo haven't got this field at all
                 logger.info("_refine.ls_R_factor_R_free not present, not parsing Rfree value");
-            } else {
-                try {
-                    pdbHeader.setRfree(Float.parseFloat(lsRFactorRFree));
-                } catch (NumberFormatException e) {
-                    // no rfree present ('?') is very usual, that's why we set it to debug
-                    logger.debug("Could not parse Rfree from string '{}'", lsRFactorRFree);
-                }
             }
 
             // RWORK
-            String lsRFactorRWork = refine.getColumn("ls_R_factor_R_work").getStringData(rowIndex);
+            LsRFactorRWork lsRFactorRWork = refine.getLsRFactorRWork();
             if(pdbHeader.getRwork() != PDBHeader.DEFAULT_RFREE) {
                 logger.warn("More than 1 R work value present, will use last one {} and discard previous {} ",
                         lsRFactorRWork, String.format("%4.2f",pdbHeader.getRwork()));
             }
-            if (lsRFactorRWork.isEmpty()) {
-                logger.info("_refine.ls_R_factor_R_work not present, not parsing R-work value");
+            if (lsRFactorRWork.isDefined()) {
+                pdbHeader.setRwork((float) lsRFactorRWork.get(rowIndex));
             } else {
-                try {
-                    pdbHeader.setRwork(Float.parseFloat(lsRFactorRWork));
-                } catch (NumberFormatException e) {
-                    logger.debug("Could not parse R-work from string '{}'", lsRFactorRWork);
-                }
+                logger.info("_refine.ls_R_factor_R_work not present, not parsing R-work value");
             }
         }
     }
@@ -892,6 +899,7 @@ class CifFileConsumerImpl implements CifFileConsumer<Structure> {
     @Override
     public void consumeStructKeywords(StructKeywords structKeywords) {
         PdbxKeywords pdbxKeywords = structKeywords.getPdbxKeywords();
+        // TODO what is the correct format for these?
         pdbHeader.setDescription(pdbxKeywords.values().collect(Collectors.joining(", ")));
         pdbHeader.setClassification(pdbxKeywords.values().collect(Collectors.joining(", ")));
     }
@@ -902,29 +910,29 @@ class CifFileConsumerImpl implements CifFileConsumer<Structure> {
     }
 
     @Override
-    public void consumeStructRef(Category structRef) {
+    public void consumeStructRef(StructRef structRef) {
         this.structRef = structRef;
     }
 
     @Override
-    public void consumeStructRefSeq(Category structRefSeq) {
+    public void consumeStructRefSeq(StructRefSeq structRefSeq) {
         for (int rowIndex = 0; rowIndex < structRefSeq.getRowCount(); rowIndex++) {
-            String refId = structRefSeq.getColumn("ref_id").getStringData(rowIndex);
+            String refId = structRefSeq.getRefId().get(rowIndex);
 
             DBRef dbRef = new DBRef();
 
-            dbRef.setIdCode(structRefSeq.getColumn("pdbx_PDB_id_code").getStringData(rowIndex));
-            dbRef.setDbAccession(structRefSeq.getColumn("pdbx_db_accession").getStringData(rowIndex));
-            dbRef.setDbIdCode(structRefSeq.getColumn("pdbx_db_accession").getStringData(rowIndex));
-            dbRef.setChainName(structRefSeq.getColumn("pdbx_strand_id").getStringData(rowIndex));
+            dbRef.setIdCode(structRefSeq.getPdbxPDBIdCode().get(rowIndex));
+            dbRef.setDbAccession(structRefSeq.getPdbxDbAccession().get(rowIndex));
+            dbRef.setDbIdCode(structRefSeq.getPdbxDbAccession().get(rowIndex));
+            dbRef.setChainName(structRefSeq.getPdbxStrandId().get(rowIndex));
 
             OptionalInt structRefRowIndex = IntStream.range(0, structRef.getRowCount())
-                    .filter(i -> structRef.getColumn("id").getStringData(i).equals(refId))
+                    .filter(i -> structRef.getId().get(i).equals(refId))
                     .findFirst();
 
             if (structRefRowIndex.isPresent()) {
-                dbRef.setDatabase(structRef.getColumn("db_name").getStringData(structRefRowIndex.getAsInt()));
-                dbRef.setDbIdCode(structRef.getColumn("db_code").getStringData(structRefRowIndex.getAsInt()));
+                dbRef.setDatabase(structRef.getDbName().get(structRefRowIndex.getAsInt()));
+                dbRef.setDbIdCode(structRef.getDbCode().get(structRefRowIndex.getAsInt()));
             } else {
                 logger.info("could not find StructRef `{} for StructRefSeq {}", refId, rowIndex);
             }
@@ -933,8 +941,8 @@ class CifFileConsumerImpl implements CifFileConsumer<Structure> {
             int seqEnd;
 
             try {
-                seqBegin = Integer.parseInt(structRefSeq.getColumn("pdbx_auth_seq_align_beg").getStringData(rowIndex));
-                seqEnd = Integer.parseInt(structRefSeq.getColumn("pdbx_auth_seq_align_end").getStringData(rowIndex));
+                seqBegin = Integer.parseInt(structRefSeq.getPdbxAuthSeqAlignBeg().get(rowIndex));
+                seqEnd = Integer.parseInt(structRefSeq.getPdbxAuthSeqAlignEnd().get(rowIndex));
             } catch (NumberFormatException e) {
                 // this happens in a few entries, annotation error? e.g. 6eoj
                 logger.warn("Couldn't parse pdbx_auth_seq_align_beg/end in _struct_ref_seq. Will not store dbref " +
@@ -943,13 +951,13 @@ class CifFileConsumerImpl implements CifFileConsumer<Structure> {
             }
 
             char beginInsCode = ' ';
-            String pdbxSeqAlignBegInsCode = structRefSeq.getColumn("pdbx_seq_align_beg_ins_code").getStringData(rowIndex);
+            String pdbxSeqAlignBegInsCode = structRefSeq.getPdbxSeqAlignBegInsCode().get(rowIndex);
             if (pdbxSeqAlignBegInsCode.length() > 0) {
                 beginInsCode = pdbxSeqAlignBegInsCode.charAt(0);
             }
 
             char endInsCode = ' ';
-            String pdbxSeqAlignEndInsCode = structRefSeq.getColumn("pdbx_seq_align_end_ins_code").getStringData(rowIndex);
+            String pdbxSeqAlignEndInsCode = structRefSeq.getPdbxSeqAlignEndInsCode().get(rowIndex);
             if (pdbxSeqAlignEndInsCode.length() > 0) {
                 endInsCode = pdbxSeqAlignEndInsCode.charAt(0);
             }
@@ -966,22 +974,22 @@ class CifFileConsumerImpl implements CifFileConsumer<Structure> {
             dbRef.setSeqEnd(seqEnd);
             dbRef.setInsertEnd(endInsCode);
 
-            int dbSeqBegin = Integer.parseInt(structRefSeq.getColumn("db_align_beg").getStringData(rowIndex));
-            int dbSeqEnd = Integer.parseInt(structRefSeq.getColumn("db_align_end").getStringData(rowIndex));
+            int dbSeqBegin = structRefSeq.getDbAlignBeg().get(rowIndex);
+            int dbSeqEnd = structRefSeq.getDbAlignEnd().get(rowIndex);
 
             char dbBeginInsCode = ' ';
-            Column pdbxDbAlignBegInsCodeCol = structRefSeq.getColumn("pdbx_db_align_beg_ins_code");
+            PdbxDbAlignBegInsCode pdbxDbAlignBegInsCodeCol = structRefSeq.getPdbxDbAlignBegInsCode();
             if (pdbxDbAlignBegInsCodeCol.isDefined()) {
-                String pdbxDbAlignBegInsCode = pdbxDbAlignBegInsCodeCol.getStringData(rowIndex);
+                String pdbxDbAlignBegInsCode = pdbxDbAlignBegInsCodeCol.get(rowIndex);
                 if (pdbxDbAlignBegInsCode.length() > 0) {
                     dbBeginInsCode = pdbxDbAlignBegInsCode.charAt(0);
                 }
             }
 
             char dbEndInsCode = ' ';
-            Column pdbxDbAlignEndInsCodeCol = structRefSeq.getColumn("pdbx_db_align_end_ins_code");
+            PdbxDbAlignEndInsCode pdbxDbAlignEndInsCodeCol = structRefSeq.getPdbxDbAlignEndInsCode();
             if (pdbxDbAlignEndInsCodeCol.isDefined()) {
-                String pdbxDbAlignEndInsCode = pdbxDbAlignEndInsCodeCol.getStringData(rowIndex);
+                String pdbxDbAlignEndInsCode = pdbxDbAlignEndInsCodeCol.get(rowIndex);
                 if (pdbxDbAlignEndInsCode.length() > 0) {
                     dbEndInsCode = pdbxDbAlignEndInsCode.charAt(0);
                 }
@@ -1012,7 +1020,7 @@ class CifFileConsumerImpl implements CifFileConsumer<Structure> {
     }
 
     @Override
-    public void consumeStructRefSeqDif(Category structRefSeqDif) {
+    public void consumeStructRefSeqDif(StructRefSeqDif structRefSeqDif) {
         this.structRefSeqDif = structRefSeqDif;
     }
 

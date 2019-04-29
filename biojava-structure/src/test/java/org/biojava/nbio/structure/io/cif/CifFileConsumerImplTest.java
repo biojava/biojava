@@ -1,10 +1,7 @@
 package org.biojava.nbio.structure.io.cif;
 
 import org.biojava.nbio.structure.*;
-import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.*;
-import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
-import org.biojava.nbio.structure.io.mmcif.DownloadChemCompProvider;
 import org.junit.Test;
 import org.rcsb.cif.CifReader;
 import org.rcsb.cif.model.CifFile;
@@ -27,70 +24,13 @@ import static org.junit.Assert.*;
 public class CifFileConsumerImplTest {
     // TODO use test resources provided by integration-test module
 
-    @Test
-    public void testEntityId() throws IOException, StructureException {
-        // Set up the atom cache to parse on Internal chain id
-        AtomCache cache = new AtomCache();
-        cache.setUseCif(true);
-        FileParsingParameters params = cache.getFileParsingParams();
-
-        DownloadChemCompProvider cc = new DownloadChemCompProvider();
-        ChemCompGroupFactory.setChemCompProvider(cc);
-        cc.checkDoFirstInstall();
-        cache.setFileParsingParams(params);
-        StructureIO.setAtomCache(cache);
-        // This is hte information we want to test against
-        String[] typeInformation = new String[] {"POLYMER", "NONPOLYMER", "NONPOLYMER", "NONPOLYMER", "NONPOLYMER", "WATER"};
-        String[] descriptionInformation = new String[] {"BROMODOMAIN ADJACENT TO ZINC FINGER DOMAIN PROTEIN 2B","4-Fluorobenzamidoxime",  "METHANOL", "METHANOL", "METHANOL", "water"};
-
-        // Now some other information fields to test this data is collated correctly
-        String[] geneSourceSciName = new String[] {"HOMO SAPIENS", null, null, null, null, null};
-        String[] geneSourceTaxId = new String[] {"9606", null, null, null, null, null};
-        String[] hostOrganismSciName = new String[] {"ESCHERICHIA COLI", null, null, null, null, null};
-        String[] hostOrganismTaxId = new String[] {"469008", null, null, null, null, null};
-
-        /// TODO GET ALL THE ENTITY INFORMATION REQUIRED FOR 4CUP
-        // Get this structure
-        Structure bioJavaStruct = StructureIO.getStructure("4cup");
-        String[] testTypeInfo = new String[6];
-        String[] testDescInfo = new String[6];
-
-        String[] testGeneSourceSciName = new String[6];
-        String[] testGeneSourceTaxId = new String[6];
-        String[] testHostOrganismSciName = new String[6];
-        String[] testHostOrganismTaxId = new String[6];
-
-        // Now loop through the structure
-        int chainCounter = 0;
-        for (Chain c: bioJavaStruct.getChains()) {
-            // Now get the entity information we want to test
-            EntityInfo thisCmpd = c.getEntityInfo();
-            testTypeInfo[chainCounter] = thisCmpd.getType().toString();
-            testDescInfo[chainCounter] = thisCmpd.getDescription();
-            testGeneSourceSciName[chainCounter] =  thisCmpd.getOrganismScientific();
-            testGeneSourceTaxId[chainCounter] = thisCmpd.getOrganismTaxId();
-            testHostOrganismSciName[chainCounter] = thisCmpd.getExpressionSystem();
-            testHostOrganismTaxId[chainCounter] = thisCmpd.getExpressionSystemTaxId();
-
-            chainCounter++;
-        }
-        // Now check they're both the same
-        assertArrayEquals(descriptionInformation, testDescInfo);
-        assertArrayEquals(typeInformation, testTypeInfo);
-        // Now check these work too
-        assertArrayEquals(geneSourceSciName, testGeneSourceSciName);
-        assertArrayEquals(geneSourceTaxId, testGeneSourceTaxId);
-        assertArrayEquals(hostOrganismSciName, testHostOrganismSciName);
-        assertArrayEquals(hostOrganismTaxId, testHostOrganismTaxId);
-    }
-
     /**
      * Test parsing dates from MMCIF file version 4.
      */
     @Test
     public void testDatesV4() throws IOException, ParseException {
-        InputStream inputStream = getClass().getResourceAsStream("org/biojava/nbio/structure/io/mmcif/1stp_v4.cif");
-        Objects.requireNonNull(inputStream, "could not acquire test resource org/biojava/nbio/structure/io/mmcif/1stp_v4.cif");
+        InputStream inputStream = getClass().getResourceAsStream("/org/biojava/nbio/structure/io/mmcif/1stp_v4.cif");
+        Objects.requireNonNull(inputStream, "could not acquire test resource /org/biojava/nbio/structure/io/mmcif/1stp_v4.cif");
         Structure s = new CifFileReader().getStructure(inputStream);
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
@@ -110,8 +50,8 @@ public class CifFileConsumerImplTest {
      */
     @Test
     public void testDatesV5() throws IOException, ParseException {
-        InputStream inputStream = getClass().getResourceAsStream("org/biojava/nbio/structure/io/mmcif/1stp_v5.cif");
-        Objects.requireNonNull(inputStream, "could not acquire test resource org/biojava/nbio/structure/io/mmcif/1stp_v5.cif");
+        InputStream inputStream = getClass().getResourceAsStream("/org/biojava/nbio/structure/io/mmcif/1stp_v5.cif");
+        Objects.requireNonNull(inputStream, "could not acquire test resource /org/biojava/nbio/structure/io/mmcif/1stp_v5.cif");
         Structure s = new CifFileReader().getStructure(inputStream);
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
@@ -193,7 +133,6 @@ public class CifFileConsumerImplTest {
 
     @Test
     public void testWaterOnlyChainCif() throws IOException {
-
         // following file is cut-down versions of 4a10
         InputStream cifStream = new GZIPInputStream(getClass().getResourceAsStream("/org/biojava/nbio/structure/io/4a10_short.cif.gz"));
 
@@ -268,7 +207,7 @@ public class CifFileConsumerImplTest {
                 "7 1S32 . D . GB  30268542 MET 1 'INTIATING METHIONINE' ? ? 7\n"+
                 "8 1S32 . H . GB  30268542 MET 1 'INTIATING METHIONINE' ? ? 8\n" +
                 "#" ;
-        CifFile cifFile = CifReader.parseText(new ByteArrayInputStream(mmcifStr.getBytes()));
+        CifFile cifFile = CifReader.readText(new ByteArrayInputStream(mmcifStr.getBytes()));
         Column column = cifFile.getFirstBlock().getCategory("struct_ref_seq_dif").getColumn("seq_num");
 
         assertNotNull(column);
@@ -330,7 +269,7 @@ public class CifFileConsumerImplTest {
     private void comparePDB2cif(String id, String chainId) throws IOException {
         String fileName = binary ? "/" + id + ".bcif" : "/" + id + ".cif";
         System.out.println(fileName);
-        InputStream inStream = this.getClass().getResourceAsStream(fileName);
+        InputStream inStream = getClass().getResourceAsStream(fileName);
         assertNotNull("Could not find file " + fileName + ". Config problem?" , inStream);
 
         LocalPDBDirectory reader = binary ? new BcifFileReader() : new CifFileReader();

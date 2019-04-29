@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Parse CifFile instances and provide capabilities to store them locally.
+ * Parse text Cif files and provide capabilities to store them locally.
  * @author Sebastian Bittrich <sebastian.bittrich@rcsb.org>
  * @since 5.2.1
  */
@@ -28,7 +28,7 @@ public class CifFileReader extends LocalPDBDirectory {
     }
 
     /**
-     * Constructs a new PDBFileReader, initializing the extensions member variable.
+     * Constructs a new CifFileReader, initializing the extensions member variable.
      * The path is initialized to the given path, both autoFetch and splitDir are initialized to false.
      */
     public CifFileReader(String path) {
@@ -41,7 +41,7 @@ public class CifFileReader extends LocalPDBDirectory {
 
     @Override
     public Structure getStructure(InputStream inStream) throws IOException{
-        return CifFileConverter.convert(CifReader.parseText(inStream), getFileParsingParameters());
+        return CifFileConverter.convert(CifReader.readText(inStream), getFileParsingParameters());
     }
 
     @Override

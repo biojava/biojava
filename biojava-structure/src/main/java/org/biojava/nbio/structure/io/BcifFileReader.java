@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Parse BcifFile instances and provide capabilities to store them locally.
+ * Parse binary Cif files and provide capabilities to store them locally.
  * @author Sebastian Bittrich <sebastian.bittrich@rcsb.org>
  * @since 5.2.1
  */
@@ -18,7 +18,7 @@ public class BcifFileReader extends LocalPDBDirectory {
     public static final String[] CIF_OBSOLETE_DIR = new String[] { "data", "structures", "obsolete", "bcif" };
 
     /**
-     * Constructs a new CifFileReader, initializing the extensions member variable.
+     * Constructs a new BcifFileReader, initializing the extensions member variable.
      * The path is initialized in the same way as {@link UserConfiguration},
      * i.e. to system property/environment variable {@link UserConfiguration#PDB_DIR}.
      * Both autoFetch and splitDir are initialized to false
@@ -28,7 +28,7 @@ public class BcifFileReader extends LocalPDBDirectory {
     }
 
     /**
-     * Constructs a new PDBFileReader, initializing the extensions member variable.
+     * Constructs a new BcifFileReader, initializing the extensions member variable.
      * The path is initialized to the given path, both autoFetch and splitDir are initialized to false.
      */
     public BcifFileReader(String path) {
@@ -39,12 +39,12 @@ public class BcifFileReader extends LocalPDBDirectory {
 
     @Override
     public Structure getStructure(InputStream inStream) throws IOException {
-        return CifFileConverter.convert(CifReader.parseBinary(inStream), getFileParsingParameters());
+        return CifFileConverter.convert(CifReader.readBinary(inStream), getFileParsingParameters());
     }
 
     @Override
     protected String getFilename(String pdbId) {
-        return pdbId.toLowerCase() + ".bcif.gz";
+        return pdbId.toLowerCase() + ".bcif";
     }
 
     @Override
