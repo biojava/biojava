@@ -9,21 +9,62 @@ import org.rcsb.cif.CifReader;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Stream;
+import java.util.zip.GZIPInputStream;
 
 import static org.junit.Assert.*;
 
 public class CifFileConsumerImplTest {
+    /**
+     * java.lang.NumberFormatException: multiple points have been thrown.
+     */
     @Test
-    public void test2z4j() {
-        
+    @Ignore("ignored for now as Bcif file source may change - currently using local files")
+    public void testNumberFormat() {
+        Stream.of("1z4s", "4hec", "1dzw", "2y28").forEach(pdbId -> {
+            System.out.println(pdbId);
+            Structure cif = loadLocalCif(pdbId);
+            assertNumberFormat(cif);
+            Structure bcif = loadLocalBcif(pdbId);
+            assertNumberFormat(bcif);
+        });
+    }
+
+    private Structure loadLocalCif(String pdbId) {
+        try {
+            String middle = pdbId.substring(1, 3);
+            return CifFileConverter.convert(CifReader.readText(new GZIPInputStream(Files.newInputStream(Paths.get("/var/pdb/" + middle + "/" + pdbId + ".cif.gz")))));
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    private Structure loadLocalBcif(String pdbId) {
+        try {
+            String middle = pdbId.substring(1, 3);
+            return CifFileConverter.convert(CifReader.readBinary(Files.newInputStream(Paths.get("/var/bcif/" + middle + "/" + pdbId + ".bcif"))));
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    private void assertNumberFormat(Structure structure) {
+        PDBHeader header = structure.getPDBHeader();
+        assertNotNull(header);
+        Date relDate = header.getRelDate();
+        assertNotNull(relDate);
+        Date modDate = header.getModDate();
+        assertNotNull(modDate);
     }
 
     @Test
-    @Ignore
+    @Ignore("ignore long-running test, do run to track performance")
     public void parseEntireArchive() throws IOException {
         AtomicInteger counter = new AtomicInteger(0);
         AtomicInteger failed = new AtomicInteger(0);

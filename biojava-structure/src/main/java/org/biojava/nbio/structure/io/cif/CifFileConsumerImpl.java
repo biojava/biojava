@@ -2,17 +2,17 @@ package org.biojava.nbio.structure.io.cif;
 
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.io.*;
-// TODO detach the impl from the redundant mmCIF impl
 import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
 import org.biojava.nbio.structure.io.mmcif.model.DatabasePdbrevRecord;
-import org.biojava.nbio.structure.io.mmcif.model.EntitySrcSyn;
 import org.biojava.nbio.structure.quaternary.BioAssemblyInfo;
 import org.biojava.nbio.structure.quaternary.BiologicalAssemblyBuilder;
 import org.biojava.nbio.structure.quaternary.BiologicalAssemblyTransformation;
 import org.biojava.nbio.structure.xtal.CrystalCell;
 import org.biojava.nbio.structure.xtal.SpaceGroup;
 import org.biojava.nbio.structure.xtal.SymoplibParser;
-import org.rcsb.cif.model.*;
+import org.rcsb.cif.model.FloatColumn;
+import org.rcsb.cif.model.IntColumn;
+import org.rcsb.cif.model.StrColumn;
 import org.rcsb.cif.model.generated.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +23,8 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
+// TODO detach the impl from the redundant mmCIF impl
 
 /**
  * An implementation of a CifFileConsumer for BioJava. Will process the information provided by a CifFile instance and
@@ -566,13 +568,13 @@ class CifFileConsumerImpl implements CifFileConsumer<Structure> {
         revRecords.addAll(convert(databasePDBrevRecord));
     }
 
-    private List<DatabasePdbrevRecord> convert(Category databasePDBrevRecord) {
+    private List<DatabasePdbrevRecord> convert(DatabasePDBRevRecord databasePDBrevRecord) {
         List<DatabasePdbrevRecord> revRecords = new ArrayList<>();
         for (int rowIndex = 0; rowIndex < databasePDBrevRecord.getRowCount(); rowIndex++) {
             DatabasePdbrevRecord revRecord = new DatabasePdbrevRecord();
-            revRecord.setDetails(databasePDBrevRecord.getColumn("details").getStringData(rowIndex));
-            revRecord.setRev_num(databasePDBrevRecord.getColumn("rev_num").getStringData(rowIndex));
-            revRecord.setType(databasePDBrevRecord.getColumn("type").getStringData(rowIndex));
+            revRecord.setDetails(databasePDBrevRecord.getDetails().get(rowIndex));
+            revRecord.setRev_num(databasePDBrevRecord.getRevNum().getStringData(rowIndex));
+            revRecord.setType(databasePDBrevRecord.getType().get(rowIndex));
             revRecords.add(revRecord);
         }
         return revRecords;
@@ -825,6 +827,7 @@ class CifFileConsumerImpl implements CifFileConsumer<Structure> {
 
         if (struct.isDefined() && struct.getEntryId().isDefined()) {
             pdbHeader.setIdCode(struct.getEntryId().get());
+            structure.setPDBCode(struct.getEntryId().get());
         }
     }
 
