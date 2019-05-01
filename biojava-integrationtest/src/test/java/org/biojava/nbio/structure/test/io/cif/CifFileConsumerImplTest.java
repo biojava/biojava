@@ -2,26 +2,65 @@ package org.biojava.nbio.structure.test.io.cif;
 
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.io.*;
+import org.biojava.nbio.structure.io.cif.CifFileConverter;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.rcsb.cif.CifReader;
-import org.rcsb.cif.model.CifFile;
-import org.rcsb.cif.model.Column;
-import org.rcsb.cif.model.ValueKind;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.zip.GZIPInputStream;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.*;
 
 public class CifFileConsumerImplTest {
+    @Test
+    public void test2z4j() {
+        
+    }
+
+    @Test
+    @Ignore
+    public void parseEntireArchive() throws IOException {
+        AtomicInteger counter = new AtomicInteger(0);
+        AtomicInteger failed = new AtomicInteger(0);
+        long start = System.nanoTime();
+        int chunkSize = 250;
+
+        Files.walk(Paths.get(
+                // change to your own paths
+//                "/var/pdb/" // cif
+                "/var/bcif/" // bcif
+        ))
+                .parallel()
+                .filter(path -> !Files.isDirectory(path))
+                .forEach(path -> {
+                    int count = counter.incrementAndGet();
+                    if (count % chunkSize == 0) {
+                        long end_chunk = System.nanoTime();
+                        System.out.println("[" + count + "] @ " + (((end_chunk - start) /
+                                1_000 / count) + " µs per structure"));
+                    }
+
+                    try {
+                        // the work is to obtain the CifFile instance and convert into a BioJava structure
+//                        CifFileConverter.convert(CifReader.readText(Files.newInputStream(path))); // cif
+                        CifFileConverter.convert(CifReader.readBinary(Files.newInputStream(path))); // bcif
+                    } catch (Exception e) {
+                        System.err.println("failed for " + path.toFile().getAbsolutePath());
+                        e.printStackTrace();
+                        failed.incrementAndGet();
+                    }
+                });
+
+        long end = System.nanoTime();
+        System.out.println((end - start) / 1_000_000_000 + " s");
+        System.out.println("failed for " + failed.intValue() + " structures");
+    }
+
     private static boolean headerOnly;
     private static boolean binary;
 

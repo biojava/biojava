@@ -12,59 +12,8 @@ import org.biojava.nbio.structure.quaternary.BiologicalAssemblyTransformation;
 import org.biojava.nbio.structure.xtal.CrystalCell;
 import org.biojava.nbio.structure.xtal.SpaceGroup;
 import org.biojava.nbio.structure.xtal.SymoplibParser;
-import org.rcsb.cif.model.Category;
-import org.rcsb.cif.model.Column;
-import org.rcsb.cif.model.generated.atomsite.*;
-import org.rcsb.cif.model.generated.atomsites.AtomSites;
-import org.rcsb.cif.model.generated.auditauthor.AuditAuthor;
-import org.rcsb.cif.model.generated.cell.Cell;
-import org.rcsb.cif.model.generated.chemcomp.ChemComp;
-import org.rcsb.cif.model.generated.chemcompbond.ChemCompBond;
-import org.rcsb.cif.model.generated.databasepdbremark.DatabasePDBRemark;
-import org.rcsb.cif.model.generated.databasepdbrev.DatabasePDBRev;
-import org.rcsb.cif.model.generated.databasepdbrevrecord.DatabasePDBRevRecord;
-import org.rcsb.cif.model.generated.entity.Entity;
-import org.rcsb.cif.model.generated.entitypoly.EntityPoly;
-import org.rcsb.cif.model.generated.entitypolyseq.EntityPolySeq;
-import org.rcsb.cif.model.generated.entitysrcgen.EntitySrcGen;
-import org.rcsb.cif.model.generated.entitysrcnat.EntitySrcNat;
-import org.rcsb.cif.model.generated.exptl.Exptl;
-import org.rcsb.cif.model.generated.pdbxauditrevisionhistory.PdbxAuditRevisionHistory;
-import org.rcsb.cif.model.generated.pdbxchemcompidentifier.PdbxChemCompIdentifier;
-import org.rcsb.cif.model.generated.pdbxdatabasestatus.PdbxDatabaseStatus;
-import org.rcsb.cif.model.generated.pdbxdatabasestatus.RecvdInitialDepositionDate;
-import org.rcsb.cif.model.generated.pdbxentitydescriptor.PdbxEntityDescriptor;
-import org.rcsb.cif.model.generated.pdbxentitysrcsyn.PdbxEntitySrcSyn;
-import org.rcsb.cif.model.generated.pdbxmolecule.PdbxMolecule;
-import org.rcsb.cif.model.generated.pdbxmoleculefeatures.PdbxMoleculeFeatures;
-import org.rcsb.cif.model.generated.pdbxnonpolyscheme.PdbxNonpolyScheme;
-import org.rcsb.cif.model.generated.pdbxreferenceentitylink.PdbxReferenceEntityLink;
-import org.rcsb.cif.model.generated.pdbxreferenceentitylist.PdbxReferenceEntityList;
-import org.rcsb.cif.model.generated.pdbxreferenceentitypolylink.PdbxReferenceEntityPolyLink;
-import org.rcsb.cif.model.generated.pdbxstructassembly.PdbxStructAssembly;
-import org.rcsb.cif.model.generated.pdbxstructassemblygen.PdbxStructAssemblyGen;
-import org.rcsb.cif.model.generated.pdbxstructmodresidue.PdbxStructModResidue;
-import org.rcsb.cif.model.generated.pdbxstructoperlist.PdbxStructOperList;
-import org.rcsb.cif.model.generated.refine.LsRFactorRFree;
-import org.rcsb.cif.model.generated.refine.LsRFactorRWork;
-import org.rcsb.cif.model.generated.refine.Refine;
-import org.rcsb.cif.model.generated.struct.Struct;
-import org.rcsb.cif.model.generated.structasym.StructAsym;
-import org.rcsb.cif.model.generated.structconf.StructConf;
-import org.rcsb.cif.model.generated.structconn.StructConn;
-import org.rcsb.cif.model.generated.structconntype.StructConnType;
-import org.rcsb.cif.model.generated.structkeywords.PdbxKeywords;
-import org.rcsb.cif.model.generated.structkeywords.StructKeywords;
-import org.rcsb.cif.model.generated.structncsoper.StructNcsOper;
-import org.rcsb.cif.model.generated.structref.StructRef;
-import org.rcsb.cif.model.generated.structrefseq.PdbxDbAlignBegInsCode;
-import org.rcsb.cif.model.generated.structrefseq.PdbxDbAlignEndInsCode;
-import org.rcsb.cif.model.generated.structrefseq.StructRefSeq;
-import org.rcsb.cif.model.generated.structrefseqdif.StructRefSeqDif;
-import org.rcsb.cif.model.generated.structsheetrange.StructSheetRange;
-import org.rcsb.cif.model.generated.structsite.StructSite;
-import org.rcsb.cif.model.generated.structsitegen.StructSiteGen;
-import org.rcsb.cif.model.generated.symmetry.Symmetry;
+import org.rcsb.cif.model.*;
+import org.rcsb.cif.model.generated.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -145,30 +94,30 @@ class CifFileConsumerImpl implements CifFileConsumer<Structure> {
             return;
         }
 
-        LabelAsymId labelAsymId = atomSite.getLabelAsymId();
-        AuthAsymId authAsymId = atomSite.getAuthAsymId();
+        StrColumn labelAsymId = atomSite.getLabelAsymId();
+        StrColumn authAsymId = atomSite.getAuthAsymId();
 
-        GroupPDB groupPDB = atomSite.getGroupPDB();
-        AuthSeqId authSeqId = atomSite.getAuthSeqId();
+        StrColumn groupPDB = atomSite.getGroupPDB();
+        IntColumn authSeqId = atomSite.getAuthSeqId();
 
-        LabelCompId labelCompId = atomSite.getLabelCompId();
+        StrColumn labelCompId = atomSite.getLabelCompId();
 
-        Id id = atomSite.getId();
-        LabelAtomId labelAtomId = atomSite.getLabelAtomId();
+        IntColumn id = atomSite.getId();
+        StrColumn labelAtomId = atomSite.getLabelAtomId();
 
-        CartnX cartnX = atomSite.getCartnX();
-        CartnY cartnY = atomSite.getCartnY();
-        CartnZ cartnZ = atomSite.getCartnZ();
+        FloatColumn cartnX = atomSite.getCartnX();
+        FloatColumn cartnY = atomSite.getCartnY();
+        FloatColumn cartnZ = atomSite.getCartnZ();
 
-        Occupancy occupancy = atomSite.getOccupancy();
-        BIsoOrEquiv bIsoOrEquiv = atomSite.getBIsoOrEquiv();
+        FloatColumn occupancy = atomSite.getOccupancy();
+        FloatColumn bIsoOrEquiv = atomSite.getBIsoOrEquiv();
 
-        LabelAltId labelAltId = atomSite.getLabelAltId();
-        TypeSymbol typeSymbol = atomSite.getTypeSymbol();
+        StrColumn labelAltId = atomSite.getLabelAltId();
+        StrColumn typeSymbol = atomSite.getTypeSymbol();
 
-        PdbxPDBInsCode pdbxPDBInsCode = atomSite.getPdbxPDBInsCode();
-        LabelSeqId labelSeqId = atomSite.getLabelSeqId();
-        PdbxPDBModelNum pdbx_pdb_model_num = atomSite.getPdbxPDBModelNum();
+        StrColumn pdbxPDBInsCode = atomSite.getPdbxPDBInsCode();
+        IntColumn labelSeqId = atomSite.getLabelSeqId();
+        IntColumn pdbx_pdb_model_num = atomSite.getPdbxPDBModelNum();
 
         for (int atomIndex = 0; atomIndex < atomSite.getRowCount(); atomIndex++) {
             boolean startOfNewChain = false;
@@ -726,6 +675,7 @@ class CifFileConsumerImpl implements CifFileConsumer<Structure> {
             if (pdbxAuditRevisionHistory.getOrdinal().get(rowIndex) == 1) {
                 String release = pdbxAuditRevisionHistory.getRevisionDate().get(rowIndex);
                 try {
+                    // TODO java.lang.NumberFormatException: multiple points - failed for /var/bcif/z4/1z4s.bcif, failed for /var/bcif/he/4hec.bcif
                     Date releaseDate = DATE_FORMAT.parse(release);
                     pdbHeader.setRelDate(releaseDate);
                 } catch (ParseException e) {
@@ -737,6 +687,7 @@ class CifFileConsumerImpl implements CifFileConsumer<Structure> {
                 // the last revision date will "stick"
                 String revision = pdbxAuditRevisionHistory.getRevisionDate().get(rowIndex);
                 try {
+                    // TODO java.lang.NumberFormatException: multiple points - failed for /var/bcif/dz/1dzw.bcif, failed for /var/bcif/y2/2y28.bcif
                     Date revisionDate = DATE_FORMAT.parse(revision);
                     pdbHeader.setModDate(revisionDate);
                 } catch (ParseException e) {
@@ -755,11 +706,12 @@ class CifFileConsumerImpl implements CifFileConsumer<Structure> {
     public void consumePdbxDatabaseStatus(PdbxDatabaseStatus pdbxDatabaseStatus) {
         for (int rowIndex = 0; rowIndex < pdbxDatabaseStatus.getRowCount(); rowIndex++) {
             // the deposition date field is only available in mmCIF 5.0
-            RecvdInitialDepositionDate col = pdbxDatabaseStatus.getRecvdInitialDepositionDate();
-            if (col.isDefined()) {
-                String deposition = col.get(rowIndex);
+            StrColumn recvdInitialDepositionDate = pdbxDatabaseStatus.getRecvdInitialDepositionDate();
+            if (recvdInitialDepositionDate.isDefined()) {
+                String deposition = recvdInitialDepositionDate.get(rowIndex);
 
                 try {
+                    // TODO failed for /var/bcif/z4/2z4j.bcif java.lang.NumberFormatException: For input string: ".202717E4202717E4"
                     Date depositionDate = DATE_FORMAT.parse(deposition);
                     pdbHeader.setDepDate(depositionDate);
                 } catch (ParseException e) {
@@ -838,7 +790,7 @@ class CifFileConsumerImpl implements CifFileConsumer<Structure> {
             }
             pdbHeader.setResolution((float) lsDResHigh);
 
-            LsRFactorRFree lsRFactorRFree = refine.getLsRFactorRFree();
+            FloatColumn lsRFactorRFree = refine.getLsRFactorRFree();
             // RFREE
             if (pdbHeader.getRfree() != PDBHeader.DEFAULT_RFREE) {
                 logger.warn("More than 1 Rfree value present, will use last one {} and discard previous {}",
@@ -852,7 +804,7 @@ class CifFileConsumerImpl implements CifFileConsumer<Structure> {
             }
 
             // RWORK
-            LsRFactorRWork lsRFactorRWork = refine.getLsRFactorRWork();
+            FloatColumn lsRFactorRWork = refine.getLsRFactorRWork();
             if(pdbHeader.getRwork() != PDBHeader.DEFAULT_RFREE) {
                 logger.warn("More than 1 R work value present, will use last one {} and discard previous {} ",
                         lsRFactorRWork, String.format("%4.2f",pdbHeader.getRwork()));
@@ -898,7 +850,7 @@ class CifFileConsumerImpl implements CifFileConsumer<Structure> {
 
     @Override
     public void consumeStructKeywords(StructKeywords structKeywords) {
-        PdbxKeywords pdbxKeywords = structKeywords.getPdbxKeywords();
+        StrColumn pdbxKeywords = structKeywords.getPdbxKeywords();
         // TODO what is the correct format for these?
         pdbHeader.setDescription(pdbxKeywords.values().collect(Collectors.joining(", ")));
         pdbHeader.setClassification(pdbxKeywords.values().collect(Collectors.joining(", ")));
@@ -978,7 +930,7 @@ class CifFileConsumerImpl implements CifFileConsumer<Structure> {
             int dbSeqEnd = structRefSeq.getDbAlignEnd().get(rowIndex);
 
             char dbBeginInsCode = ' ';
-            PdbxDbAlignBegInsCode pdbxDbAlignBegInsCodeCol = structRefSeq.getPdbxDbAlignBegInsCode();
+            StrColumn pdbxDbAlignBegInsCodeCol = structRefSeq.getPdbxDbAlignBegInsCode();
             if (pdbxDbAlignBegInsCodeCol.isDefined()) {
                 String pdbxDbAlignBegInsCode = pdbxDbAlignBegInsCodeCol.get(rowIndex);
                 if (pdbxDbAlignBegInsCode.length() > 0) {
@@ -987,7 +939,7 @@ class CifFileConsumerImpl implements CifFileConsumer<Structure> {
             }
 
             char dbEndInsCode = ' ';
-            PdbxDbAlignEndInsCode pdbxDbAlignEndInsCodeCol = structRefSeq.getPdbxDbAlignEndInsCode();
+            StrColumn pdbxDbAlignEndInsCodeCol = structRefSeq.getPdbxDbAlignEndInsCode();
             if (pdbxDbAlignEndInsCodeCol.isDefined()) {
                 String pdbxDbAlignEndInsCode = pdbxDbAlignEndInsCodeCol.get(rowIndex);
                 if (pdbxDbAlignEndInsCode.length() > 0) {
@@ -1157,6 +1109,7 @@ class CifFileConsumerImpl implements CifFileConsumer<Structure> {
             SeqRes2AtomAligner.storeUnAlignedSeqRes(structure, seqResChains, params.isHeaderOnly());
         }
 
+        // TODO java.lang.NullPointerException - failed for /var/bcif/hm/2hmz.bcif
         // Now make sure all altlocgroups have all the atoms in all the groups
         StructureTools.cleanUpAltLocs(structure);
 

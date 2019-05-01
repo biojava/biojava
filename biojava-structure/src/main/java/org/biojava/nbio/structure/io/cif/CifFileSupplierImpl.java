@@ -276,8 +276,7 @@ class CifFileSupplierImpl implements CifFileSupplier<Structure> {
         AtomSiteCollector combine(AtomSiteCollector other) {
             throw new UnsupportedOperationException("impl by calling addAll for all collection - not feeling like writing that code");
         }
-        
-        @SuppressWarnings("Duplicates")
+
         Category get() {
             return new CategoryBuilder("atom_site", null)
                     .addColumn(groupPDB.build())

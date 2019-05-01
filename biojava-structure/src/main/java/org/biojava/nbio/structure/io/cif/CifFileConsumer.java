@@ -1,50 +1,6 @@
 package org.biojava.nbio.structure.io.cif;
 
-import org.rcsb.cif.model.generated.atomsite.AtomSite;
-import org.rcsb.cif.model.generated.atomsites.AtomSites;
-import org.rcsb.cif.model.generated.auditauthor.AuditAuthor;
-import org.rcsb.cif.model.generated.cell.Cell;
-import org.rcsb.cif.model.generated.chemcomp.ChemComp;
-import org.rcsb.cif.model.generated.chemcompbond.ChemCompBond;
-import org.rcsb.cif.model.generated.databasepdbremark.DatabasePDBRemark;
-import org.rcsb.cif.model.generated.databasepdbrev.DatabasePDBRev;
-import org.rcsb.cif.model.generated.databasepdbrevrecord.DatabasePDBRevRecord;
-import org.rcsb.cif.model.generated.entity.Entity;
-import org.rcsb.cif.model.generated.entitypoly.EntityPoly;
-import org.rcsb.cif.model.generated.entitypolyseq.EntityPolySeq;
-import org.rcsb.cif.model.generated.entitysrcgen.EntitySrcGen;
-import org.rcsb.cif.model.generated.entitysrcnat.EntitySrcNat;
-import org.rcsb.cif.model.generated.exptl.Exptl;
-import org.rcsb.cif.model.generated.pdbxauditrevisionhistory.PdbxAuditRevisionHistory;
-import org.rcsb.cif.model.generated.pdbxchemcompidentifier.PdbxChemCompIdentifier;
-import org.rcsb.cif.model.generated.pdbxdatabasestatus.PdbxDatabaseStatus;
-import org.rcsb.cif.model.generated.pdbxentitydescriptor.PdbxEntityDescriptor;
-import org.rcsb.cif.model.generated.pdbxentitysrcsyn.PdbxEntitySrcSyn;
-import org.rcsb.cif.model.generated.pdbxmolecule.PdbxMolecule;
-import org.rcsb.cif.model.generated.pdbxmoleculefeatures.PdbxMoleculeFeatures;
-import org.rcsb.cif.model.generated.pdbxnonpolyscheme.PdbxNonpolyScheme;
-import org.rcsb.cif.model.generated.pdbxreferenceentitylink.PdbxReferenceEntityLink;
-import org.rcsb.cif.model.generated.pdbxreferenceentitylist.PdbxReferenceEntityList;
-import org.rcsb.cif.model.generated.pdbxreferenceentitypolylink.PdbxReferenceEntityPolyLink;
-import org.rcsb.cif.model.generated.pdbxstructassembly.PdbxStructAssembly;
-import org.rcsb.cif.model.generated.pdbxstructassemblygen.PdbxStructAssemblyGen;
-import org.rcsb.cif.model.generated.pdbxstructmodresidue.PdbxStructModResidue;
-import org.rcsb.cif.model.generated.pdbxstructoperlist.PdbxStructOperList;
-import org.rcsb.cif.model.generated.refine.Refine;
-import org.rcsb.cif.model.generated.struct.Struct;
-import org.rcsb.cif.model.generated.structasym.StructAsym;
-import org.rcsb.cif.model.generated.structconf.StructConf;
-import org.rcsb.cif.model.generated.structconn.StructConn;
-import org.rcsb.cif.model.generated.structconntype.StructConnType;
-import org.rcsb.cif.model.generated.structkeywords.StructKeywords;
-import org.rcsb.cif.model.generated.structncsoper.StructNcsOper;
-import org.rcsb.cif.model.generated.structref.StructRef;
-import org.rcsb.cif.model.generated.structrefseq.StructRefSeq;
-import org.rcsb.cif.model.generated.structrefseqdif.StructRefSeqDif;
-import org.rcsb.cif.model.generated.structsheetrange.StructSheetRange;
-import org.rcsb.cif.model.generated.structsite.StructSite;
-import org.rcsb.cif.model.generated.structsitegen.StructSiteGen;
-import org.rcsb.cif.model.generated.symmetry.Symmetry;
+import org.rcsb.cif.model.generated.*;
 
 /**
  * Defines a rather generic interface which allows to populate some data structure with data parsed from a CIF file.

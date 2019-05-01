@@ -1,7 +1,13 @@
 package org.biojava.nbio.structure.io.cif;
 
-import org.biojava.nbio.structure.*;
-import org.biojava.nbio.structure.io.*;
+import org.biojava.nbio.structure.Chain;
+import org.biojava.nbio.structure.EntityInfo;
+import org.biojava.nbio.structure.EntityType;
+import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.io.CifFileReader;
+import org.biojava.nbio.structure.io.FileParsingParameters;
+import org.biojava.nbio.structure.io.PDBFileParser;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.rcsb.cif.CifReader;
 import org.rcsb.cif.model.CifFile;
@@ -11,12 +17,17 @@ import org.rcsb.cif.model.ValueKind;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Stream;
 import java.util.zip.GZIPInputStream;
 
 import static org.junit.Assert.*;

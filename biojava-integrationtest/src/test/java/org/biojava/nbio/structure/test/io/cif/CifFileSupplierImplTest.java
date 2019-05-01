@@ -1,8 +1,6 @@
 package org.biojava.nbio.structure.test.io.cif;
 
 import org.biojava.nbio.structure.*;
-import org.biojava.nbio.structure.align.util.AtomCache;
-import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.cif.CifFileConverter;
 import org.junit.Test;
 import org.rcsb.cif.CifReader;
@@ -15,11 +13,12 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.util.Arrays;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class CifFileSupplierImplTest {
     @Test
-    public void test1SMT() throws IOException, StructureException {
+    public void test1SMT() throws IOException {
         // an x-ray structure
         testRoundTrip("1SMT");
     }
@@ -29,18 +28,18 @@ public class CifFileSupplierImplTest {
      * @throws IOException propagated
      */
     @Test
-    public void test2N3J() throws IOException, StructureException {
+    public void test2N3J() throws IOException {
         // an NMR structure (multimodel) with 2 chains
         testRoundTrip("2N3J");
     }
 
     @Test
-    public void test1A2C() throws IOException, StructureException {
+    public void test1A2C() throws IOException {
         // a structure with insertion codes
         testRoundTrip("1A2C");
     }
 
-    private static void testRoundTrip(String pdbId) throws IOException, StructureException {
+    private static void testRoundTrip(String pdbId) throws IOException {
         Structure originalStruct = CifFileConverter.convert(CifReader.readText(new URL("https://files.rcsb.org/download/" + pdbId
                 + ".cif").openStream()));
 
