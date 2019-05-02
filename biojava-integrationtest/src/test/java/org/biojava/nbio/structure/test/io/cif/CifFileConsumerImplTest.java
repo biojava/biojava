@@ -12,28 +12,34 @@ import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Stream;
+import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
 
 import static org.junit.Assert.*;
 
 public class CifFileConsumerImplTest {
-    /**
-     * java.lang.NumberFormatException: multiple points have been thrown.
-     */
     @Test
     @Ignore("ignored for now as Bcif file source may change - currently using local files")
-    public void testNumberFormat() {
-        Stream.of("1z4s", "4hec", "1dzw", "2y28").forEach(pdbId -> {
-            System.out.println(pdbId);
-            Structure cif = loadLocalCif(pdbId);
-            assertNumberFormat(cif);
-            Structure bcif = loadLocalBcif(pdbId);
-            assertNumberFormat(bcif);
-        });
+    public void testFailingEntries() {
+        Pattern.compile(", ").splitAsStream("4he8, 1z4u, 4fp1, 1blc, 4cit, 2y2y, 4exq, 2n0f, 2d9o, 2v16, 1kqv, " +
+                "1bwo, 2k2g, 1qhd, 5mhj, 2dn3, 5pq8, 5cay, 6ms1, 2vhu, 2gi0, 3swe, 3daz, 5yel, 2pxp, 4uis, 3cs1, 3in5," +
+                " 1sl3, 4hjc, 3hj2, 5kpi, 1gyq, 1yq8, 4yqz, 1ox3, 2pls, 1vne, 4q02, 1dtt, 1jau, 5h3b, 5sxk, 4el7, 5q7w," +
+                " 4zuz, 1n6i, 1dhg, 3dhe, 2gpo, 5if7, 5ld8, 1jhz, 4fr3, 1r6u, 3hdl, 5fse, 1iho, 1t10, 2oc6, 3czx, 3b3o," +
+                " 5i6w, 2ecv, 4l2x, 441d, 2i0x, 1xq4, 3tbb, 4mmz, 1qew, 6i16, 1t8d, 5w7r, 6gm1, 1s7u, 2qp3, 1cf3, 4myb," +
+                " 1omh, 1zog, 2b68, 1nqb, 1t7k")
+                .parallel()
+                .forEach(pdbId -> {
+                    System.out.println(pdbId);
+                    Structure cif = loadLocalCif(pdbId);
+                    assertNumberFormat(cif);
+                    Structure bcif = loadLocalBcif(pdbId);
+                    assertNumberFormat(bcif);
+                });
     }
 
     private Structure loadLocalCif(String pdbId) {
@@ -63,13 +69,21 @@ public class CifFileConsumerImplTest {
         assertNotNull(modDate);
     }
 
+    /**
+     * Performance diary;
+     *
+     * 05/01/19 - ciftools v0.3.0, parallel, bcif, non-gzipped, 12 worker threads
+     * 918 s for 151079 structures, 6073 µs per structure, failed for 0 entries
+     *
+     * @throws IOException propagated
+     */
     @Test
     @Ignore("ignore long-running test, do run to track performance")
     public void parseEntireArchive() throws IOException {
         AtomicInteger counter = new AtomicInteger(0);
-        AtomicInteger failed = new AtomicInteger(0);
         long start = System.nanoTime();
         int chunkSize = 250;
+        List<String> failed = Collections.synchronizedList(new ArrayList<>());
 
         Files.walk(Paths.get(
                 // change to your own paths
@@ -93,13 +107,14 @@ public class CifFileConsumerImplTest {
                     } catch (Exception e) {
                         System.err.println("failed for " + path.toFile().getAbsolutePath());
                         e.printStackTrace();
-                        failed.incrementAndGet();
+                        failed.add(path.toFile().getName().split("\\.")[0]);
                     }
                 });
 
         long end = System.nanoTime();
         System.out.println((end - start) / 1_000_000_000 + " s");
-        System.out.println("failed for " + failed.intValue() + " structures");
+        System.out.println("failed for " + failed.size() + " structures");
+        System.out.println("failed ids: " + failed);
     }
 
     private static boolean headerOnly;

@@ -18,8 +18,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.vecmath.Matrix4d;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -37,7 +40,10 @@ import java.util.stream.IntStream;
  */
 class CifFileConsumerImpl implements CifFileConsumer<Structure> {
     private static final Logger logger = LoggerFactory.getLogger(CifFileConsumerImpl.class);
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+    private static final DateTimeFormatter DATE_FORMAT = new DateTimeFormatterBuilder()
+            .parseCaseInsensitive()
+            .appendPattern("yyyy-MM-dd")
+            .toFormatter(Locale.US);
 
     private Structure structure;
     private Chain currentChain;
@@ -524,6 +530,10 @@ class CifFileConsumerImpl implements CifFileConsumer<Structure> {
         }
     }
 
+    private Date convert(LocalDate localDate) {
+        return Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+    }
+
     @Override
     public void consumeDatabasePDBrev(DatabasePDBRev databasePDBrev) {
         logger.debug("got a database revision:" + databasePDBrev);
@@ -531,29 +541,13 @@ class CifFileConsumerImpl implements CifFileConsumer<Structure> {
         for (int rowIndex = 0; rowIndex < databasePDBrev.getRowCount(); rowIndex++) {
             if (databasePDBrev.getNum().get(rowIndex) == 1) {
                 String dateOriginal = databasePDBrev.getDateOriginal().get(rowIndex);
-                try {
-                    Date dep = DATE_FORMAT.parse(dateOriginal);
-                    pdbHeader.setDepDate(dep);
-                } catch (ParseException e){
-                    logger.warn("Could not parse date string '{}', deposition date will be unavailable",
-                            dateOriginal);
-                }
+                pdbHeader.setDepDate(convert(LocalDate.parse(dateOriginal, DATE_FORMAT)));
 
                 String date = databasePDBrev.getDate().get(rowIndex);
-                try {
-                    Date rel = DATE_FORMAT.parse(date);
-                    pdbHeader.setRelDate(rel);
-                } catch (ParseException e){
-                    logger.warn("Could not parse date string '{}', modification date will be unavailable", date);
-                }
+                pdbHeader.setRelDate(convert(LocalDate.parse(date, DATE_FORMAT)));
             } else {
                 String dbrev = databasePDBrev.getDate().get(rowIndex);
-                try {
-                    Date mod = DATE_FORMAT.parse(dbrev);
-                    pdbHeader.setModDate(mod);
-                } catch (ParseException e){
-                    logger.warn("Could not parse date string '{}', modification date will be unavailable", dbrev);
-                }
+                pdbHeader.setModDate(convert(LocalDate.parse(dbrev, DATE_FORMAT)));
             }
         }
     }
@@ -677,23 +671,13 @@ class CifFileConsumerImpl implements CifFileConsumer<Structure> {
             // first entry in revision history is the release date
             if (pdbxAuditRevisionHistory.getOrdinal().get(rowIndex) == 1) {
                 String release = pdbxAuditRevisionHistory.getRevisionDate().get(rowIndex);
-                try {
-                    Date releaseDate = DATE_FORMAT.parse(release);
-                    pdbHeader.setRelDate(releaseDate);
-                } catch (ParseException e) {
-                    logger.warn("Could not parse date string '{}', release date will be unavailable", release);
-                }
+                pdbHeader.setRelDate(convert(LocalDate.parse(release, DATE_FORMAT)));
             } else {
                 // all other dates are revision dates;
                 // since this method may be called multiple times,
                 // the last revision date will "stick"
                 String revision = pdbxAuditRevisionHistory.getRevisionDate().get(rowIndex);
-                try {
-                    Date revisionDate = DATE_FORMAT.parse(revision);
-                    pdbHeader.setModDate(revisionDate);
-                } catch (ParseException e) {
-                    logger.warn("Could not parse date string '{}', revision date will be unavailable", revision);
-                }
+                pdbHeader.setModDate(convert(LocalDate.parse(revision, DATE_FORMAT)));
             }
         }
     }
@@ -710,13 +694,7 @@ class CifFileConsumerImpl implements CifFileConsumer<Structure> {
             StrColumn recvdInitialDepositionDate = pdbxDatabaseStatus.getRecvdInitialDepositionDate();
             if (recvdInitialDepositionDate.isDefined()) {
                 String deposition = recvdInitialDepositionDate.get(rowIndex);
-
-                try {
-                    Date depositionDate = DATE_FORMAT.parse(deposition);
-                    pdbHeader.setDepDate(depositionDate);
-                } catch (ParseException e) {
-                    logger.warn("Could not parse date string '{}', deposition date will be unavailable", deposition);
-                }
+                pdbHeader.setDepDate(convert(LocalDate.parse(deposition, DATE_FORMAT)));
             }
         }
     }
@@ -784,6 +762,7 @@ class CifFileConsumerImpl implements CifFileConsumer<Structure> {
             // there are 2 resolution values, one for each method
             // we take the last one found so that behaviour is like in PDB file parsing
             double lsDResHigh = refine.getLsDResHigh().get(rowIndex);
+            // TODO this could use a check to keep reasonable values - 1.5 may be overwritten by 0.0
             if (pdbHeader.getResolution() != PDBHeader.DEFAULT_RESOLUTION) {
                 logger.warn("More than 1 resolution value present, will use last one {} and discard previous {}",
                         lsDResHigh, String.format("%4.2f",pdbHeader.getResolution()));
