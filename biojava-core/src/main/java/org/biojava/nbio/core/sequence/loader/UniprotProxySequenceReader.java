@@ -142,6 +142,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 
 	/**
 	 * Once the sequence is retrieved set the contents and make sure everything this is valid
+	 * Some uniprot records contain white space in the sequence. We must strip it out so setContents doesn't fail.
 	 * @param sequence
 	 * @throws CompoundNotFoundException
 	 */
@@ -149,7 +150,8 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 	public void setContents(String sequence) throws CompoundNotFoundException {
 		// Horrendously inefficient - pretty much the way the old BJ did things.
 		// TODO Should be optimised.
-		this.sequence = sequence;
+		// NOTE This chokes on whitespace in the sequence, so whitespace is stripped
+		this.sequence = sequence.replaceAll("\\s","");
 		this.parsedCompounds.clear();
 		for (int i = 0; i < sequence.length();) {
 			String compoundStr = null;
@@ -381,27 +383,33 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 		Element uniprotElement = uniprotDoc.getDocumentElement();
 		Element entryElement = XMLHelper.selectSingleElement(uniprotElement, "entry");
 		Element proteinElement = XMLHelper.selectSingleElement(entryElement, "protein");
+		// An alternativeName can contain multiple fullNames and multiple shortNames, so we are careful to catch them all
 		ArrayList<Element> keyWordElementList = XMLHelper.selectElements(proteinElement, "alternativeName");
 		for (Element element : keyWordElementList) {
 			Element fullNameElement = XMLHelper.selectSingleElement(element, "fullName");
 			aliasList.add(fullNameElement.getTextContent());
-			Element shortNameElement = XMLHelper.selectSingleElement(element, "shortName");
-			if(null != shortNameElement) {
-				String shortName = shortNameElement.getTextContent();
-				if(null != shortName && !shortName.trim().isEmpty()) {
-					aliasList.add(shortName);
+			ArrayList<Element> shortNameElements = XMLHelper.selectElements(element, "shortName");
+			for(Element shortNameElement : shortNameElements) {
+				if(null != shortNameElement) {
+					String shortName = shortNameElement.getTextContent();
+					if(null != shortName && !shortName.trim().isEmpty()) {
+						aliasList.add(shortName);
+					}
 				}
 			}
 		}
+		// recommendedName seems to allow only one fullName, to be on the safe side, we double check for multiple shortNames for the recommendedName
 		keyWordElementList = XMLHelper.selectElements(proteinElement, "recommendedName");
 		for (Element element : keyWordElementList) {
 			Element fullNameElement = XMLHelper.selectSingleElement(element, "fullName");
 			aliasList.add(fullNameElement.getTextContent());
-			Element shortNameElement = XMLHelper.selectSingleElement(element, "shortName");
-			if(null != shortNameElement) {
-				String shortName = shortNameElement.getTextContent();
-				if(null != shortName && !shortName.trim().isEmpty()) {
-					aliasList.add(shortName);
+			ArrayList<Element> shortNameElements = XMLHelper.selectElements(element, "shortName");
+			for(Element shortNameElement : shortNameElements) {
+				if(null != shortNameElement) {
+					String shortName = shortNameElement.getTextContent();
+					if(null != shortName && !shortName.trim().isEmpty()) {
+						aliasList.add(shortName);
+					}
 				}
 			}
 		}
