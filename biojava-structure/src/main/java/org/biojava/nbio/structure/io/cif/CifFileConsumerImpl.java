@@ -1110,15 +1110,6 @@ class CifFileConsumerImpl implements CifFileConsumer<Structure> {
             SeqRes2AtomAligner.storeUnAlignedSeqRes(structure, seqResChains, params.isHeaderOnly());
         }
 
-        structure.getChains()
-                .stream()
-                .map(Chain::getAtomGroups)
-                .flatMap(Collection::stream)
-                .filter(Group::hasAltLoc)
-                .map(Group::getAltLocs)
-                .flatMap(Collection::stream)
-                .forEach(System.out::println);
-
         // Now make sure all altlocgroups have all the atoms in all the groups
         StructureTools.cleanUpAltLocs(structure);
 
