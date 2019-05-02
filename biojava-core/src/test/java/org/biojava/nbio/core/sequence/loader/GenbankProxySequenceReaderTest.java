@@ -169,6 +169,10 @@ public class GenbankProxySequenceReaderTest {
 			Assert.assertTrue(!codedBy.isEmpty());
 			logger.info("\t\tcoded_by: {}", codedBy);
 		}
+
+		// genbank has limits on requests per second, we need to give it some time for next test or otherwise we get 429 http error codes - JD 2018-12-14
+		// See https://github.com/biojava/biojava/issues/837
+		Thread.sleep(500);
 	}
 
 	@Test
@@ -207,5 +211,10 @@ public class GenbankProxySequenceReaderTest {
 		} else {
 			logger.info("target {} has no CDS", gi);
 		}
+
+		// genbank has limits on requests per second, we need to give it some time for next test or otherwise we get 429 http error codes - JD 2018-12-14
+		// See https://github.com/biojava/biojava/issues/837
+		Thread.sleep(500);
+
 	}
 }
