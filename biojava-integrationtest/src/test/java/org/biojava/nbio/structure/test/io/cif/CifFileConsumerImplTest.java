@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,100 +24,6 @@ import java.util.zip.GZIPInputStream;
 import static org.junit.Assert.*;
 
 public class CifFileConsumerImplTest {
-    @Test
-    @Ignore("ignored for now as Bcif file source may change - currently using local files")
-    public void testFailingEntries() {
-        Pattern.compile(", ").splitAsStream("4he8, 1z4u, 4fp1, 1blc, 4cit, 2y2y, 4exq, 2n0f, 2d9o, 2v16, 1kqv, " +
-                "1bwo, 2k2g, 1qhd, 5mhj, 2dn3, 5pq8, 5cay, 6ms1, 2vhu, 2gi0, 3swe, 3daz, 5yel, 2pxp, 4uis, 3cs1, 3in5," +
-                " 1sl3, 4hjc, 3hj2, 5kpi, 1gyq, 1yq8, 4yqz, 1ox3, 2pls, 1vne, 4q02, 1dtt, 1jau, 5h3b, 5sxk, 4el7, 5q7w," +
-                " 4zuz, 1n6i, 1dhg, 3dhe, 2gpo, 5if7, 5ld8, 1jhz, 4fr3, 1r6u, 3hdl, 5fse, 1iho, 1t10, 2oc6, 3czx, 3b3o," +
-                " 5i6w, 2ecv, 4l2x, 441d, 2i0x, 1xq4, 3tbb, 4mmz, 1qew, 6i16, 1t8d, 5w7r, 6gm1, 1s7u, 2qp3, 1cf3, 4myb," +
-                " 1omh, 1zog, 2b68, 1nqb, 1t7k")
-                .parallel()
-                .forEach(pdbId -> {
-                    System.out.println(pdbId);
-                    Structure cif = loadLocalCif(pdbId);
-                    assertNumberFormat(cif);
-                    Structure bcif = loadLocalBcif(pdbId);
-                    assertNumberFormat(bcif);
-                });
-    }
-
-    private Structure loadLocalCif(String pdbId) {
-        try {
-            String middle = pdbId.substring(1, 3);
-            return CifFileConverter.convert(CifReader.readText(new GZIPInputStream(Files.newInputStream(Paths.get("/var/pdb/" + middle + "/" + pdbId + ".cif.gz")))));
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
-    }
-
-    private Structure loadLocalBcif(String pdbId) {
-        try {
-            String middle = pdbId.substring(1, 3);
-            return CifFileConverter.convert(CifReader.readBinary(Files.newInputStream(Paths.get("/var/bcif/" + middle + "/" + pdbId + ".bcif"))));
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
-    }
-
-    private void assertNumberFormat(Structure structure) {
-        PDBHeader header = structure.getPDBHeader();
-        assertNotNull(header);
-        Date relDate = header.getRelDate();
-        assertNotNull(relDate);
-        Date modDate = header.getModDate();
-        assertNotNull(modDate);
-    }
-
-    /**
-     * Performance diary;
-     *
-     * 05/01/19 - ciftools v0.3.0, parallel, bcif, non-gzipped, 12 worker threads
-     * 918 s for 151079 structures, 6073 µs per structure, failed for 0 entries
-     *
-     * @throws IOException propagated
-     */
-    @Test
-    @Ignore("ignore long-running test, do run to track performance")
-    public void parseEntireArchive() throws IOException {
-        AtomicInteger counter = new AtomicInteger(0);
-        long start = System.nanoTime();
-        int chunkSize = 250;
-        List<String> failed = Collections.synchronizedList(new ArrayList<>());
-
-        Files.walk(Paths.get(
-                // change to your own paths
-//                "/var/pdb/" // cif
-                "/var/bcif/" // bcif
-        ))
-                .parallel()
-                .filter(path -> !Files.isDirectory(path))
-                .forEach(path -> {
-                    int count = counter.incrementAndGet();
-                    if (count % chunkSize == 0) {
-                        long end_chunk = System.nanoTime();
-                        System.out.println("[" + count + "] @ " + (((end_chunk - start) /
-                                1_000 / count) + " µs per structure"));
-                    }
-
-                    try {
-                        // the work is to obtain the CifFile instance and convert into a BioJava structure
-//                        CifFileConverter.convert(CifReader.readText(Files.newInputStream(path))); // cif
-                        CifFileConverter.convert(CifReader.readBinary(Files.newInputStream(path))); // bcif
-                    } catch (Exception e) {
-                        System.err.println("failed for " + path.toFile().getAbsolutePath());
-                        e.printStackTrace();
-                        failed.add(path.toFile().getName().split("\\.")[0]);
-                    }
-                });
-
-        long end = System.nanoTime();
-        System.out.println((end - start) / 1_000_000_000 + " s");
-        System.out.println("failed for " + failed.size() + " structures");
-        System.out.println("failed ids: " + failed);
-    }
-
     private static boolean headerOnly;
     private static boolean binary;
 
@@ -198,7 +105,7 @@ public class CifFileConsumerImplTest {
                 pdbStructure.isNmr(),
                 cifStructure.isNmr());
 
-        if ( pdbStructure.isNmr()){
+        if (pdbStructure.isNmr()){
             assertEquals(id + ": the nr of NMR models is not the same!",
                     pdbStructure.nrModels(),
                     pdbStructure.nrModels());
@@ -273,13 +180,15 @@ public class CifFileConsumerImplTest {
         assertEquals(pdbId1 + ":" + g1 + " - " + pdbId2 + ":"+ g2, g1.getAltLocs().size(), g2.getAltLocs().size());
         assertEquals(pdbId1 + ":" + g1 + " - " + pdbId2 + ":"+ g2, g1.getAtoms().size(), g2.getAtoms().size());
 
-        if (g1.has3D()){
+        if (g1.has3D()) {
             Atom a1 = g1.getAtom(0);
             Atom a2 = g2.getAtom(0);
-            if ( a1 == null)
+            if (a1 == null) {
                 fail("could not get atom for group " + g1);
-            if (a2 == null)
+            }
+            if (a2 == null) {
                 fail("could not get atom for group " + g2);
+            }
             assertEquals(a1.getX(),a2.getX(), 0.0001);
             assertEquals(a1.getOccupancy(), a2.getOccupancy(), 0.0001);
             assertEquals(a1.getTempFactor(), a2.getTempFactor(), 0.0001);
@@ -287,7 +196,7 @@ public class CifFileConsumerImplTest {
         }
     }
 
-    private void checkNMR(Structure s){
+    private void checkNMR(Structure s) {
         assertTrue(s.isNmr());
         int models = s.nrModels();
         assertTrue(models > 0);
@@ -296,10 +205,10 @@ public class CifFileConsumerImplTest {
         // compare with all others
         for (int i = 1 ; i < models; i++){
             List<Chain> modelX = s.getModel(i);
-            assertEquals(model0.size(),modelX.size());
+            assertEquals(model0.size(), modelX.size());
 
             // compare lengths:
-            for (int j=0 ; j< model0.size(); j++){
+            for (int j = 0 ; j < model0.size(); j++){
                 Chain c1 = model0.get(j);
                 Chain cx = modelX.get(j);
                 assertEquals(c1.getAtomLength(), cx.getAtomLength());
@@ -309,5 +218,140 @@ public class CifFileConsumerImplTest {
                 assertEquals(c1.getAtomGroups(GroupType.HETATM).size(), cx.getAtomGroups(GroupType.HETATM).size());
             }
         }
+    }
+
+    /**
+     * There were issues when parsing files in parallel using SimpleDateFormat. The culprit are not the actual files,
+     * but rather the parallel execution. No problems spotted by this test, run for whole archive is now flawless after
+     * dropping SimpleDateFormat for date parsing.
+     */
+    @Test
+    @Ignore("ignored for now as Bcif file source may change - currently using local files")
+    public void testFailingEntries() {
+        Pattern.compile(", ").splitAsStream("4he8, 1z4u, 4fp1, 1blc, 4cit, 2y2y, 4exq, 2n0f, 2d9o, 2v16, 1kqv, " +
+                "1bwo, 2k2g, 1qhd, 5mhj, 2dn3, 5pq8, 5cay, 6ms1, 2vhu, 2gi0, 3swe, 3daz, 5yel, 2pxp, 4uis, 3cs1, 3in5," +
+                " 1sl3, 4hjc, 3hj2, 5kpi, 1gyq, 1yq8, 4yqz, 1ox3, 2pls, 1vne, 4q02, 1dtt, 1jau, 5h3b, 5sxk, 4el7, 5q7w," +
+                " 4zuz, 1n6i, 1dhg, 3dhe, 2gpo, 5if7, 5ld8, 1jhz, 4fr3, 1r6u, 3hdl, 5fse, 1iho, 1t10, 2oc6, 3czx, 3b3o," +
+                " 5i6w, 2ecv, 4l2x, 441d, 2i0x, 1xq4, 3tbb, 4mmz, 1qew, 6i16, 1t8d, 5w7r, 6gm1, 1s7u, 2qp3, 1cf3, 4myb," +
+                " 1omh, 1zog, 2b68, 1nqb, 1t7k")
+                .parallel()
+                .forEach(pdbId -> {
+                    System.out.println(pdbId);
+                    Structure cif = loadLocalCif(pdbId);
+                    assertNumberFormat(cif);
+                    Structure bcif = loadLocalBcif(pdbId);
+                    assertNumberFormat(bcif);
+                });
+    }
+
+    private Structure loadLocalCif(String pdbId) {
+        try {
+            String middle = pdbId.substring(1, 3);
+            return CifFileConverter.convert(CifReader.readText(new GZIPInputStream(Files.newInputStream(Paths.get("/var/pdb/" + middle + "/" + pdbId + ".cif.gz")))));
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    private Structure loadLocalBcif(String pdbId) {
+        try {
+            String middle = pdbId.substring(1, 3);
+            return CifFileConverter.convert(CifReader.readBinary(Files.newInputStream(Paths.get("/var/bcif/" + middle + "/" + pdbId + ".bcif"))));
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    private void assertNumberFormat(Structure structure) {
+        PDBHeader header = structure.getPDBHeader();
+        assertNotNull(header);
+        Date relDate = header.getRelDate();
+        assertNotNull(relDate);
+        Date modDate = header.getModDate();
+        assertNotNull(modDate);
+    }
+
+    enum Source {
+        BCIF, // binary cif using ciftools
+        CIF, // mmCIF using ciftools
+        MMCIF, // mmCIF using BioJava impl
+        MMTF // mmtf using BioJava impl
+    }
+
+    /**
+     * Performance diary;
+     *
+     * 05/01/19 - ciftools v0.3.0, parallel, bcif, non-gzipped, 12 worker threads
+     * BCIF: 918 s for 151079 structures, 6073 µs per structure, failed for 0 entries
+     * CIF: 2502 s for 151079 structures, 16562 µs per structure, failed for 0 entries
+     *
+     * 05/02/19 -  ciftools v0.3.0, parallel, bcif, non-gzipped for bcif / gzipped for cif, 12 worker threads
+     * BCIF: 35 s for 5000 structures, 6228 µs per structure, failed for 0 entries
+     * CIF: 132 s for 5000 structures, 23902 µs per structure, failed for 0 entries
+     * MMCIF: 310 s for 5000 structures, 52329 µs per structure, failed for 0 entries
+     * MMTF: 17 s for 5000 fetched structures, 3211 µs per structure, failed for 0 entries
+     *
+     * CIF parsing using David's tokenizer approach takes roughly half the time. Binary parsing using ciftools takes
+     * roughly double the time compared to MMTF and should be even more at a disadvantage when MMTF data is stored
+     * locally. However, MMTF provides almost no metadata.
+     *
+     * @throws IOException propagated
+     */
+    @Test
+    @Ignore("ignore long-running test, do run to track performance")
+    public void parseEntireArchive() throws IOException {
+        // TODO create an objective test case - all local, all/none gzipped, mmtf parses almost no annotation data
+        AtomicInteger counter = new AtomicInteger(0);
+        long start = System.nanoTime();
+        int chunkSize = 250;
+        List<String> failed = Collections.synchronizedList(new ArrayList<>());
+
+        Source source = Source.CIF;
+        Path archivePath = null;
+        switch (source) {
+            // change to your own paths
+            case BCIF: archivePath = Paths.get("/var/bcif/"); break;
+            case CIF: case MMCIF: archivePath = Paths.get("/var/pdb/"); break;
+            // TODO obtain local MMTF archive - for now just pdbIds are obtained and then fetched from the RCSB PDB
+            case MMTF: archivePath = Paths.get("/var/pdb/"); break;
+        }
+
+        Files.walk(archivePath)
+                .parallel()
+                // either process whole archive or limit to some number of structures
+//                .limit(5000)
+                .filter(path -> !Files.isDirectory(path))
+                .forEach(path -> {
+                    int count = counter.incrementAndGet();
+                    if (count % chunkSize == 0) {
+                        long end_chunk = System.nanoTime();
+                        System.out.println("[" + count + "] @ " + (((end_chunk - start) /
+                                1_000 / count) + " µs per structure"));
+                    }
+
+                    try {
+                        // the work is to obtain the CifFile instance and convert into a BioJava structure
+                        switch (source) {
+                            case BCIF:
+                                CifFileConverter.convert(CifReader.readBinary(Files.newInputStream(path))); break;
+                            case CIF:
+                                CifFileConverter.convert(CifReader.readText(new GZIPInputStream(Files.newInputStream(path)))); break;
+                            case MMCIF:
+                                new MMCIFFileReader().getStructure(new GZIPInputStream(Files.newInputStream(path))); break;
+                            case MMTF:
+                                // absolutely not comparable as files are fetched individually
+                                new MMTFFileReader().getStructureById(path.toFile().getName().split("\\.")[0]); break;
+                        }
+                    } catch (Exception e) {
+                        System.err.println("failed for " + path.toFile().getAbsolutePath());
+                        e.printStackTrace();
+                        failed.add(path.toFile().getName().split("\\.")[0]);
+                    }
+                });
+
+        long end = System.nanoTime();
+        System.out.println((end - start) / 1_000_000_000 + " s");
+        System.out.println("failed for " + failed.size() + " structures");
+        System.out.println("failed ids: " + failed);
     }
 }

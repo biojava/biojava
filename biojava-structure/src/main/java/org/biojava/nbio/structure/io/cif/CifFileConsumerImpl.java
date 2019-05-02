@@ -19,7 +19,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.vecmath.Matrix4d;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
@@ -1463,7 +1462,7 @@ class CifFileConsumerImpl implements CifFileConsumer<Structure> {
                 }
             } catch (StructureException e) {
                 logger.warn("Problem finding residue in site entry {} - {}",
-                        structSiteGen.getSiteId().get(rowIndex), e.getMessage(), e.getMessage());
+                        structSiteGen.getSiteId().get(rowIndex), e.getMessage());
             }
 
             if (g != null) {
