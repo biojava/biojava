@@ -442,44 +442,44 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 		// decide whether download is required
 		File existing =  getLocalFile(pdbId);
 		switch(fetchBehavior) {
-		case LOCAL_ONLY:
-			if( existing == null ) {
-				throw new IOException(String.format("Structure %s not found in %s "
-						+ "and configured not to download.",pdbId,getPath()));
-			} else {
-				return existing;
-			}
-		case FETCH_FILES:
-			// Use existing if present
-			if( existing != null) {
-				return existing;
-			}
-			// existing is null, downloadStructure(String,String,boolean,File) will download it
-			break;
-		case FETCH_IF_OUTDATED:
-			// here existing can be null or not:
-			// existing == null : downloadStructure(String,String,boolean,File) will download it
-			// existing != null : downloadStructure(String,String,boolean,File) will check its date and download if older
-			break;
-		case FETCH_REMEDIATED:
-			// Use existing if present and recent enough
-			if( existing != null) {
-				long lastModified = existing.lastModified();
-
-				if (lastModified < LAST_REMEDIATION_DATE) {
-					// the file is too old, replace with newer version
-					logger.warn("Replacing file {} with latest remediated (remediation of {}) file from PDB.",
-							existing, LAST_REMEDIATION_DATE_STRING);
-					existing = null;
-					break;
+			case LOCAL_ONLY:
+				if( existing == null ) {
+					throw new IOException(String.format("Structure %s not found in %s "
+							+ "and configured not to download.",pdbId,getPath()));
 				} else {
 					return existing;
 				}
-			}
-		case FORCE_DOWNLOAD:
-			// discard the existing file to force redownload
-			existing = null; // downloadStructure(String,String,boolean,File) will download it
-			break;
+			case FETCH_FILES:
+				// Use existing if present
+				if( existing != null) {
+					return existing;
+				}
+				// existing is null, downloadStructure(String,String,boolean,File) will download it
+				break;
+			case FETCH_IF_OUTDATED:
+				// here existing can be null or not:
+				// existing == null : downloadStructure(String,String,boolean,File) will download it
+				// existing != null : downloadStructure(String,String,boolean,File) will check its date and download if older
+				break;
+			case FETCH_REMEDIATED:
+				// Use existing if present and recent enough
+				if( existing != null) {
+					long lastModified = existing.lastModified();
+
+					if (lastModified < LAST_REMEDIATION_DATE) {
+						// the file is too old, replace with newer version
+						logger.warn("Replacing file {} with latest remediated (remediation of {}) file from PDB.",
+								existing, LAST_REMEDIATION_DATE_STRING);
+						existing = null;
+						break;
+					} else {
+						return existing;
+					}
+				}
+			case FORCE_DOWNLOAD:
+				// discard the existing file to force redownload
+				existing = null; // downloadStructure(String,String,boolean,File) will download it
+				break;
 		}
 
 		// Force the download now
@@ -519,12 +519,9 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 
 		if (getFilename(pdbId).endsWith(".mmtf.gz")){
 			ftp = CodecUtils.getMmtfEntryUrl(pdbId, true, false);
-		} else if (getFilename(pdbId).endsWith(".bcif")) {
-			// TODO need to change at some point?
-			ftp = "https://webchem.ncbr.muni.cz/ModelServer/static/bcif/" + pdbId;
 		} else {
 			ftp = String.format("%s%s/%s/%s",
-			serverName, pathOnServer, pdbId.substring(1,3).toLowerCase(), getFilename(pdbId));
+					serverName, pathOnServer, pdbId.substring(1,3).toLowerCase(), getFilename(pdbId));
 		}
 
 		URL url = new URL(ftp);
