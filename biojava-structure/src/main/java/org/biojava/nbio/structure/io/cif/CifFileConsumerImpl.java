@@ -1112,7 +1112,6 @@ class CifFileConsumerImpl implements CifFileConsumer<Structure> {
             SeqRes2AtomAligner.storeUnAlignedSeqRes(structure, seqResChains, params.isHeaderOnly());
         }
 
-        // TODO java.lang.NullPointerException - failed for /var/bcif/hm/2hmz.bcif
         // Now make sure all altlocgroups have all the atoms in all the groups
         StructureTools.cleanUpAltLocs(structure);
 
