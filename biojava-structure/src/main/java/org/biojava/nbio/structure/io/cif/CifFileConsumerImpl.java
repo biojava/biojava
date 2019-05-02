@@ -1196,20 +1196,20 @@ class CifFileConsumerImpl implements CifFileConsumer<Structure> {
         Map<String,List<SeqMisMatch>> misMatchMap = new HashMap<>();
         for (int rowIndex = 0; rowIndex < structRefSeqDif.getRowCount(); rowIndex++) {
             SeqMisMatch seqMisMatch = new SeqMisMatchImpl();
-            seqMisMatch.setDetails(structRefSeqDif.getColumn("details").getStringData(rowIndex));
+            seqMisMatch.setDetails(structRefSeqDif.getDetails().get(rowIndex));
 
-            String insCode = structRefSeqDif.getColumn("pdbx_pdb_ins_code").getStringData(rowIndex);
+            String insCode = structRefSeqDif.getPdbxPdbInsCode().get(rowIndex);
                 if (insCode != null && insCode.equals("?")) {
                 insCode = null;
             }
             seqMisMatch.setInsCode(insCode);
-            seqMisMatch.setOrigGroup(structRefSeqDif.getColumn("db_mon_id").getStringData(rowIndex));
-            seqMisMatch.setPdbGroup(structRefSeqDif.getColumn("mon_id").getStringData(rowIndex));
-            seqMisMatch.setPdbResNum(structRefSeqDif.getColumn("pdbx_auth_seq_num").getStringData(rowIndex));
-            seqMisMatch.setUniProtId(structRefSeqDif.getColumn("pdbx_seq_db_accession_code").getStringData(rowIndex));
-            seqMisMatch.setSeqNum(Integer.parseInt(structRefSeqDif.getColumn("seq_num").getStringData(rowIndex)));
+            seqMisMatch.setOrigGroup(structRefSeqDif.getDbMonId().get(rowIndex));
+            seqMisMatch.setPdbGroup(structRefSeqDif.getMonId().get(rowIndex));
+            seqMisMatch.setPdbResNum(structRefSeqDif.getPdbxAuthSeqNum().get(rowIndex));
+            seqMisMatch.setUniProtId(structRefSeqDif.getPdbxSeqDbAccessionCode().get(rowIndex));
+            seqMisMatch.setSeqNum(structRefSeqDif.getSeqNum().get(rowIndex));
 
-            String strandId = structRefSeqDif.getColumn("pdbx_pdb_strand_id").getStringData(rowIndex);
+            String strandId = structRefSeqDif.getPdbxPdbStrandId().get(rowIndex);
             List<SeqMisMatch> seqMisMatches = misMatchMap.computeIfAbsent(strandId, k -> new ArrayList<>());
             seqMisMatches.add(seqMisMatch);
         }
@@ -1283,7 +1283,7 @@ class CifFileConsumerImpl implements CifFileConsumer<Structure> {
         // This is a potentially huge assumption...
 
         for (int rowIndex = 0; rowIndex < entitySrcGen.getRowCount(); rowIndex++) {
-            if (entitySrcGen.getColumn("entity_id").getStringData(rowIndex).equals(structAsym.getEntityId().get(asymRowIndex))) {
+            if (entitySrcGen.getEntityId().get(rowIndex).equals(structAsym.getEntityId().get(asymRowIndex))) {
                 continue;
             }
 
@@ -1291,7 +1291,7 @@ class CifFileConsumerImpl implements CifFileConsumer<Structure> {
         }
 
         for (int rowIndex = 0; rowIndex < entitySrcNat.getRowCount(); rowIndex++) {
-            if (entitySrcNat.getColumn("entity_id").getStringData(rowIndex).equals(structAsym.getEntityId().get(asymRowIndex))) {
+            if (entitySrcNat.getEntityId().get(rowIndex).equals(structAsym.getEntityId().get(asymRowIndex))) {
                 continue;
             }
 
@@ -1299,7 +1299,7 @@ class CifFileConsumerImpl implements CifFileConsumer<Structure> {
         }
 
         for (int rowIndex = 0; rowIndex < entitySrcSyn.getRowCount(); rowIndex++) {
-            if (entitySrcSyn.getColumn("entity_id").getStringData(rowIndex).equals(structAsym.getEntityId().get(asymRowIndex))) {
+            if (entitySrcSyn.getEntityId().get(rowIndex).equals(structAsym.getEntityId().get(asymRowIndex))) {
                 continue;
             }
 
@@ -1308,27 +1308,27 @@ class CifFileConsumerImpl implements CifFileConsumer<Structure> {
     }
 
     private void addInformationFromEntitySrcSyn(int rowIndex, EntityInfo entityInfo) {
-        entityInfo.setOrganismCommon(entitySrcSyn.getColumn("organism_common_name").getStringData(rowIndex));
-        entityInfo.setOrganismScientific(entitySrcSyn.getColumn("organism_scientific").getStringData(rowIndex));
-        entityInfo.setOrganismTaxId(entitySrcSyn.getColumn("ncbi_taxonomy_id").getStringData(rowIndex));
+        entityInfo.setOrganismCommon(entitySrcSyn.getOrganismCommonName().get(rowIndex));
+        entityInfo.setOrganismScientific(entitySrcSyn.getOrganismScientific().get(rowIndex));
+        entityInfo.setOrganismTaxId(entitySrcSyn.getNcbiTaxonomyId().get(rowIndex));
     }
 
     private void addInformationFromEntitySrcNat(int rowIndex, EntityInfo entityInfo) {
-        entityInfo.setAtcc(entitySrcNat.getColumn("pdbx_atcc").getStringData(rowIndex));
-        entityInfo.setCell(entitySrcNat.getColumn("pdbx_cell").getStringData(rowIndex));
-        entityInfo.setOrganismCommon(entitySrcNat.getColumn("common_name").getStringData(rowIndex));
-        entityInfo.setOrganismScientific(entitySrcNat.getColumn("pdbx_organism_scientific").getStringData(rowIndex));
-        entityInfo.setOrganismTaxId(entitySrcNat.getColumn("pdbx_ncbi_taxonomy_id").getStringData(rowIndex));
+        entityInfo.setAtcc(entitySrcNat.getPdbxAtcc().get(rowIndex));
+        entityInfo.setCell(entitySrcNat.getPdbxCell().get(rowIndex));
+        entityInfo.setOrganismCommon(entitySrcNat.getCommonName().get(rowIndex));
+        entityInfo.setOrganismScientific(entitySrcNat.getPdbxOrganismScientific().get(rowIndex));
+        entityInfo.setOrganismTaxId(entitySrcNat.getPdbxNcbiTaxonomyId().get(rowIndex));
     }
 
     private void addInformationFromEntitySrcGen(int rowIndex, EntityInfo entityInfo) {
-        entityInfo.setAtcc(entitySrcGen.getColumn("pdbx_gene_src_atcc").getStringData(rowIndex));
-        entityInfo.setCell(entitySrcGen.getColumn("pdbx_gene_src_cell").getStringData(rowIndex));
-        entityInfo.setOrganismCommon(entitySrcGen.getColumn("gene_src_common_name").getStringData(rowIndex));
-        entityInfo.setOrganismScientific(entitySrcGen.getColumn("pdbx_gene_src_scientific_name").getStringData(rowIndex));
-        entityInfo.setOrganismTaxId(entitySrcGen.getColumn("pdbx_gene_src_ncbi_taxonomy_id").getStringData(rowIndex));
-        entityInfo.setExpressionSystemTaxId(entitySrcGen.getColumn("pdbx_host_org_ncbi_taxonomy_id").getStringData(rowIndex));
-        entityInfo.setExpressionSystem(entitySrcGen.getColumn("pdbx_host_org_scientific_name").getStringData(rowIndex));
+        entityInfo.setAtcc(entitySrcGen.getPdbxGeneSrcAtcc().get(rowIndex));
+        entityInfo.setCell(entitySrcGen.getPdbxGeneSrcCell().get(rowIndex));
+        entityInfo.setOrganismCommon(entitySrcGen.getGeneSrcCommonName().get(rowIndex));
+        entityInfo.setOrganismScientific(entitySrcGen.getPdbxGeneSrcScientificName().get(rowIndex));
+        entityInfo.setOrganismTaxId(entitySrcGen.getPdbxGeneSrcNcbiTaxonomyId().get(rowIndex));
+        entityInfo.setExpressionSystemTaxId(entitySrcGen.getPdbxHostOrgNcbiTaxonomyId().get(rowIndex));
+        entityInfo.setExpressionSystem(entitySrcGen.getPdbxHostOrgScientificName().get(rowIndex));
     }
 
     private void setStructNcsOps() {
