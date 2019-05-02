@@ -22,18 +22,6 @@ import static org.junit.Assert.*;
 
 public class CifFileConsumerImplTest {
     /**
-     * java.lang.NullPointerException - failed for /var/bcif/hm/2hmz.bcif
-     */
-    @Test
-    @Ignore("ignored for now as Bcif file source may change - currently using local files")
-    public void testAltLocCleanup() throws IOException, StructureException {
-        StructureIO.getAtomCache().setUseMmCif(true);
-        StructureIO.getStructure("2hmz");
-        Structure cif = loadLocalCif("2hmz");
-        Structure bcif = loadLocalBcif("2hmz");
-    }
-
-    /**
      * java.lang.NumberFormatException: multiple points have been thrown.
      */
     @Test

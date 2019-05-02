@@ -316,6 +316,7 @@ class CifFileConsumerImpl implements CifFileConsumer<Structure> {
         }
 
         Group altLocGroup = createGroup(recordName, oneLetterCode, threeLetterCode, seqId);
+        altLocGroup.setPDBName(threeLetterCode);
         altLocGroup.setResidueNumber(currentGroup.getResidueNumber());
         currentGroup.addAltLoc(altLocGroup);
         return altLocGroup;
@@ -677,7 +678,6 @@ class CifFileConsumerImpl implements CifFileConsumer<Structure> {
             if (pdbxAuditRevisionHistory.getOrdinal().get(rowIndex) == 1) {
                 String release = pdbxAuditRevisionHistory.getRevisionDate().get(rowIndex);
                 try {
-                    // TODO java.lang.NumberFormatException: multiple points - failed for /var/bcif/z4/1z4s.bcif, failed for /var/bcif/he/4hec.bcif
                     Date releaseDate = DATE_FORMAT.parse(release);
                     pdbHeader.setRelDate(releaseDate);
                 } catch (ParseException e) {
@@ -689,7 +689,6 @@ class CifFileConsumerImpl implements CifFileConsumer<Structure> {
                 // the last revision date will "stick"
                 String revision = pdbxAuditRevisionHistory.getRevisionDate().get(rowIndex);
                 try {
-                    // TODO java.lang.NumberFormatException: multiple points - failed for /var/bcif/dz/1dzw.bcif, failed for /var/bcif/y2/2y28.bcif
                     Date revisionDate = DATE_FORMAT.parse(revision);
                     pdbHeader.setModDate(revisionDate);
                 } catch (ParseException e) {
@@ -713,7 +712,6 @@ class CifFileConsumerImpl implements CifFileConsumer<Structure> {
                 String deposition = recvdInitialDepositionDate.get(rowIndex);
 
                 try {
-                    // TODO failed for /var/bcif/z4/2z4j.bcif java.lang.NumberFormatException: For input string: ".202717E4202717E4"
                     Date depositionDate = DATE_FORMAT.parse(deposition);
                     pdbHeader.setDepDate(depositionDate);
                 } catch (ParseException e) {
@@ -1111,6 +1109,15 @@ class CifFileConsumerImpl implements CifFileConsumer<Structure> {
             logger.debug("Parsing mode unalign_seqres, will parse SEQRES but not align it to ATOM sequence");
             SeqRes2AtomAligner.storeUnAlignedSeqRes(structure, seqResChains, params.isHeaderOnly());
         }
+
+        structure.getChains()
+                .stream()
+                .map(Chain::getAtomGroups)
+                .flatMap(Collection::stream)
+                .filter(Group::hasAltLoc)
+                .map(Group::getAltLocs)
+                .flatMap(Collection::stream)
+                .forEach(System.out::println);
 
         // Now make sure all altlocgroups have all the atoms in all the groups
         StructureTools.cleanUpAltLocs(structure);
