@@ -284,36 +284,35 @@ public class CifFileConsumerImplTest {
      * 05/01/19 - ciftools v0.3.0, parallel, bcif, non-gzipped, 12 worker threads
      * BCIF: 918 s for 151079 structures, 6073 µs per structure, failed for 0 entries
      * CIF: 2502 s for 151079 structures, 16562 µs per structure, failed for 0 entries
+     * MMTF: 207 s for 151579 structures, 1367 µs per structure, failed for 0 entries
      *
      * 05/02/19 -  ciftools v0.3.0, parallel, bcif, non-gzipped for bcif / gzipped for cif, 12 worker threads
      * BCIF: 35 s for 5000 structures, 6228 µs per structure, failed for 0 entries
      * CIF: 132 s for 5000 structures, 23902 µs per structure, failed for 0 entries
      * MMCIF: 310 s for 5000 structures, 52329 µs per structure, failed for 0 entries
-     * MMTF: 17 s for 5000 fetched structures, 3211 µs per structure, failed for 0 entries
+     * MMTF: 8 s for 5000 structures, 1729 µs per structure, failed for 0 entries
      *
      * CIF parsing using David's tokenizer approach takes roughly half the time. Binary parsing using ciftools takes
-     * roughly double the time compared to MMTF and should be even more at a disadvantage when MMTF data is stored
-     * locally. However, MMTF provides almost no metadata.
+     * roughly double the time compared to MMTF. However, MMTF provides almost no metadata.
      *
      * @throws IOException propagated
      */
     @Test
     @Ignore("ignore long-running test, do run to track performance")
     public void parseEntireArchive() throws IOException {
-        // TODO create an objective test case - all local, all/none gzipped, mmtf parses almost no annotation data
+        // TODO create an objective test case - all/none gzipped, mmtf parses almost no annotation data
         AtomicInteger counter = new AtomicInteger(0);
         long start = System.nanoTime();
         int chunkSize = 250;
         List<String> failed = Collections.synchronizedList(new ArrayList<>());
 
-        Source source = Source.CIF;
+        Source source = Source.MMTF;
         Path archivePath = null;
         switch (source) {
             // change to your own paths
             case BCIF: archivePath = Paths.get("/var/bcif/"); break;
             case CIF: case MMCIF: archivePath = Paths.get("/var/pdb/"); break;
-            // TODO obtain local MMTF archive - for now just pdbIds are obtained and then fetched from the RCSB PDB
-            case MMTF: archivePath = Paths.get("/var/pdb/"); break;
+            case MMTF: archivePath = Paths.get("/var/mmtf/"); break;
         }
 
         Files.walk(archivePath)
@@ -339,8 +338,11 @@ public class CifFileConsumerImplTest {
                             case MMCIF:
                                 new MMCIFFileReader().getStructure(new GZIPInputStream(Files.newInputStream(path))); break;
                             case MMTF:
-                                // absolutely not comparable as files are fetched individually
-                                new MMTFFileReader().getStructureById(path.toFile().getName().split("\\.")[0]); break;
+                                GZIPInputStream inputStream = new GZIPInputStream(Files.newInputStream(path));
+                                new MMTFFileReader().getStructure(inputStream);
+                                // impl does not close stream
+                                inputStream.close();
+                                break;
                         }
                     } catch (Exception e) {
                         System.err.println("failed for " + path.toFile().getAbsolutePath());
@@ -351,6 +353,7 @@ public class CifFileConsumerImplTest {
 
         long end = System.nanoTime();
         System.out.println((end - start) / 1_000_000_000 + " s");
+        System.out.println("processed " + counter.get() + " files");
         System.out.println("failed for " + failed.size() + " structures");
         System.out.println("failed ids: " + failed);
     }
