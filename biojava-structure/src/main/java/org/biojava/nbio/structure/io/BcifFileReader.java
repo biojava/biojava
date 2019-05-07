@@ -28,7 +28,7 @@ public class BcifFileReader extends LocalPDBDirectory {
     }
 
     /**
-     * Constructs a new BcifFileReader, initializing the extensions member variable.
+     * Constructs a new B`FileReader, initializing the extensions member variable.
      * The path is initialized to the given path, both autoFetch and splitDir are initialized to false.
      */
     public BcifFileReader(String path) {

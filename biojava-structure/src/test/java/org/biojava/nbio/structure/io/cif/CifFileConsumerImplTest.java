@@ -24,7 +24,10 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.zip.GZIPInputStream;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 public class CifFileConsumerImplTest {
     /**

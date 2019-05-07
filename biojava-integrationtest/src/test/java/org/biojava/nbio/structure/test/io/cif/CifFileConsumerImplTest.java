@@ -1,7 +1,19 @@
 package org.biojava.nbio.structure.test.io.cif;
 
-import org.biojava.nbio.structure.*;
-import org.biojava.nbio.structure.io.*;
+import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.Chain;
+import org.biojava.nbio.structure.DBRef;
+import org.biojava.nbio.structure.Group;
+import org.biojava.nbio.structure.GroupType;
+import org.biojava.nbio.structure.PDBHeader;
+import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.io.BcifFileReader;
+import org.biojava.nbio.structure.io.CifFileReader;
+import org.biojava.nbio.structure.io.FileParsingParameters;
+import org.biojava.nbio.structure.io.LocalPDBDirectory;
+import org.biojava.nbio.structure.io.MMCIFFileReader;
+import org.biojava.nbio.structure.io.MMTFFileReader;
+import org.biojava.nbio.structure.io.PDBFileParser;
 import org.biojava.nbio.structure.io.cif.CifFileConverter;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -21,7 +33,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class CifFileConsumerImplTest {
     private static boolean headerOnly;
