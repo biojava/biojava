@@ -27,7 +27,7 @@ import java.util.Arrays;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-public class CifFileSupplierImplTest {
+public class CifFileSupplierIntegrationTest {
     @Test
     public void test1SMT() throws IOException {
         // an x-ray structure
