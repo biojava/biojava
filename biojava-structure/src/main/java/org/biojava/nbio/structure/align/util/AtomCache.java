@@ -606,7 +606,7 @@ public class AtomCache {
 					}
 				}
 				boolean alreadyContains = newChain.getAtomGroups().contains(group); // we don't want to add duplicate
-				// ligands
+																					// ligands
 				if (shouldContain && !alreadyContains) {
 
 					newChain.addGroup(group);
