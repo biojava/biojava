@@ -28,7 +28,7 @@ import java.util.stream.Collector;
 /**
  * Convert a BioJava {@link Structure} to a CifFile.
  * @author Sebastian Bittrich <sebastian.bittrich@rcsb.org>
- * @since 5.2.1
+ * @since 5.3.0
  */
 class CifFileSupplierImpl implements CifFileSupplier<Structure> {
     @Override

@@ -51,7 +51,7 @@ import org.rcsb.cif.model.generated.Symmetry;
  *
  * @param <S> the type of container an implementing class will return
  * @author Sebastian Bittrich <sebastian.bittrich@rcsb.org>
- * @since 5.2.1
+ * @since 5.3.0
  */
 interface CifFileConsumer<S> {
     /**

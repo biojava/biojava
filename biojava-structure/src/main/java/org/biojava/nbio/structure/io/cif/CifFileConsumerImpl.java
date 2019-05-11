@@ -106,7 +106,7 @@ import java.util.stream.IntStream;
  * all internally used model classes are generated from the MMCIF schema and a standardized interface to CifFile data is
  * provided. This allows to readily parse files in CIF format as well as binary CIF (BCIF) format.
  * @author Sebastian Bittrich <sebastian.bittrich@rcsb.org>
- * @since 5.2.1
+ * @since 5.3.0
  */
 class CifFileConsumerImpl implements CifFileConsumer<Structure> {
     private static final Logger logger = LoggerFactory.getLogger(CifFileConsumerImpl.class);

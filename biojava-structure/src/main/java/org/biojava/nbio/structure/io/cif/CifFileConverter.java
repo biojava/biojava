@@ -14,6 +14,8 @@ import java.nio.file.Path;
 
 /**
  * Convert BioJava structures to CifFiles and vice versa.
+ * @author Sebastian Bittrich <sebastian.bittrich@rcsb.org>
+ * @since 5.3.0
  */
 public class CifFileConverter {
     /**

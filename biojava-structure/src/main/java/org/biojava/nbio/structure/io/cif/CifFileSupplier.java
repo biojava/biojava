@@ -6,7 +6,7 @@ import org.rcsb.cif.model.CifFile;
  * Create a CifFile instance for a given container of structure data.
  * @param <S> the container type used as source
  * @author Sebastian Bittrich <sebastian.bittrich@rcsb.org>
- * @since 5.2.1
+ * @since 5.3.0
  */
 interface CifFileSupplier<S> {
     /**

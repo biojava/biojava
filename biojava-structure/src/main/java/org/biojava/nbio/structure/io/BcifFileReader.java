@@ -10,7 +10,7 @@ import java.io.InputStream;
 /**
  * Parse binary Cif files and provide capabilities to store them locally.
  * @author Sebastian Bittrich <sebastian.bittrich@rcsb.org>
- * @since 5.2.1
+ * @since 5.3.0
  */
 public class BcifFileReader extends LocalPDBDirectory {
     public static final String[] CIF_SPLIT_DIR = new String[] { "data", "structures", "divided", "bcif" };
