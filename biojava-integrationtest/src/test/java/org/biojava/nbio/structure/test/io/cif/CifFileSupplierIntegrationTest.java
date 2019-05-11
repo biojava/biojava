@@ -14,14 +14,11 @@ import org.biojava.nbio.structure.StructureImpl;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.io.cif.CifFileConverter;
 import org.junit.Test;
-import org.rcsb.cif.CifReader;
-import org.rcsb.cif.CifWriter;
 
-import java.io.File;
-import java.io.FileWriter;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
-import java.nio.file.Files;
 import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
@@ -51,18 +48,11 @@ public class CifFileSupplierIntegrationTest {
     }
 
     private static void testRoundTrip(String pdbId) throws IOException {
-        Structure originalStruct = CifFileConverter.convert(CifReader.readText(new URL("https://files.rcsb.org/download/" + pdbId
-                + ".cif").openStream()));
+        URL url = new URL("https://files.rcsb.org/download/" + pdbId + ".cif");
+        Structure originalStruct = CifFileConverter.fromURL(url);
 
-        File outputFile = File.createTempFile("biojava_testing_", ".cif");
-        outputFile.deleteOnExit();
-
-        FileWriter fw = new FileWriter(outputFile);
-        String cif = CifWriter.composeText(CifFileConverter.convert(originalStruct));
-        fw.write(cif);
-        fw.close();
-
-        Structure readStruct = CifFileConverter.convert(CifReader.readText(Files.newInputStream(outputFile.toPath())));
+        InputStream inputStream = new ByteArrayInputStream(CifFileConverter.toText(originalStruct).getBytes());
+        Structure readStruct = CifFileConverter.fromInputStream(inputStream);
 
         assertNotNull(readStruct);
         assertEquals(originalStruct.getChains().size(), readStruct.getChains().size());
@@ -121,9 +111,9 @@ public class CifFileSupplierIntegrationTest {
      * can be written out correctly.
      */
     @Test
-    public void testBiounitWriting()  {
+    public void testBiounitWriting() throws IOException {
         Structure s = createDummyStructure();
-        String mmcif = CifWriter.composeText(CifFileConverter.convert(s));
+        String mmcif = CifFileConverter.toText(s);
         String[] lines = mmcif.split("\n");
         long atomLines = Arrays.stream(lines).filter(l -> l.startsWith("ATOM")).count();
         assertNotNull(mmcif);

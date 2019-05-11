@@ -2,18 +2,90 @@ package org.biojava.nbio.structure.io.cif;
 
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.io.FileParsingParameters;
+import org.rcsb.cif.CifIO;
 import org.rcsb.cif.model.Block;
 import org.rcsb.cif.model.CifFile;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * Convert BioJava structures to CifFiles and vice versa.
  */
 public class CifFileConverter {
     /**
-     * @see CifFileConverter#convert(CifFile, FileParsingParameters)
+     * Read data from a file and convert to Structure without any FileParsingParameters.
+     * @param path the source of information - can be gzipped or binary or text data
+     * @return the target
      */
-    public static Structure convert(CifFile cifFile) {
-        return convert(cifFile, new FileParsingParameters());
+    public static Structure fromPath(Path path) throws IOException {
+        return fromInputStream(Files.newInputStream(path), new FileParsingParameters());
+    }
+
+    /**
+     * Read data from a file and convert to Structure.
+     * @param path the source of information - can be gzipped or binary or text data
+     * @param parameters parameters for parsing
+     * @return the target
+     */
+    public static Structure fromPath(Path path, FileParsingParameters parameters) throws IOException {
+        return fromInputStream(Files.newInputStream(path), parameters);
+    }
+
+    /**
+     * Get data from a URL and convert to Structure without any FileParsingParameters.
+     * @param url the source of information - can be gzipped or binary or text data
+     * @return the target
+     * @throws IOException thrown when reading fails
+     */
+    public static Structure fromURL(URL url) throws IOException {
+        return fromURL(url, new FileParsingParameters());
+    }
+
+    /**
+     * Get data from a URL and convert to Structure.
+     * @param url the source of information - can be gzipped or binary or text data
+     * @param parameters parameters for parsing
+     * @return the target
+     * @throws IOException thrown when reading fails
+     */
+    private static Structure fromURL(URL url, FileParsingParameters parameters) throws IOException {
+        return fromInputStream(url.openStream(), parameters);
+    }
+
+    /**
+     * Convert InputStream to Structure without any FileParsingParameters.
+     * @param inputStream the InputStream of information - can be gzipped or binary or text data
+     * @return the target
+     * @throws IOException thrown when reading fails
+     * @see CifFileConverter#fromInputStream(InputStream, FileParsingParameters)
+     */
+    public static Structure fromInputStream(InputStream inputStream) throws IOException {
+        return fromInputStream(inputStream, new FileParsingParameters());
+    }
+
+    /**
+     * Convert InputStream to Structure.
+     * @param inputStream the InputStream of information - can be gzipped or binary or text data
+     * @param parameters parameters for parsing
+     * @return the target
+     * @throws IOException thrown when reading fails
+     */
+    public static Structure fromInputStream(InputStream inputStream, FileParsingParameters parameters) throws IOException {
+        return fromCifFile(CifIO.readFromInputStream(inputStream), parameters);
+    }
+
+    /**
+     * Convert CifFile to Structure without any FileParsingParameters.
+     * @param cifFile the source
+     * @return the target
+     * @see CifFileConverter#fromCifFile(CifFile, FileParsingParameters)
+     */
+    public static Structure fromCifFile(CifFile cifFile) {
+        return fromCifFile(cifFile, new FileParsingParameters());
     }
 
     /**
@@ -22,7 +94,7 @@ public class CifFileConverter {
      * @param parameters parameters for parsing
      * @return the target
      */
-    public static Structure convert(CifFile cifFile, FileParsingParameters parameters) {
+    public static Structure fromCifFile(CifFile cifFile, FileParsingParameters parameters) {
         // initialize consumer
         CifFileConsumer<Structure> consumer = new CifFileConsumerImpl(parameters);
 
@@ -85,11 +157,51 @@ public class CifFileConverter {
     }
 
     /**
+     * Write a structure to a CIF file.
+     * @param structure the source
+     * @param path where to write to
+     * @throws IOException thrown when writing fails
+     */
+    public static void toTextFile(Structure structure, Path path) throws IOException {
+        CifIO.writeText(toCifFile(structure), path);
+    }
+
+    /**
+     * Write a structure to a BCIF file.
+     * @param structure the source
+     * @param path where to write to
+     * @throws IOException thrown when writing fails
+     */
+    public static void toBinaryFile(Structure structure, Path path) throws IOException {
+        CifIO.writeBinary(toCifFile(structure), path);
+    }
+
+    /**
+     * Convert a structure to BCIF format.
+     * @param structure the source
+     * @return the binary representation of the structure
+     * @throws IOException thrown when writing fails
+     */
+    public static byte[] toBinary(Structure structure) throws IOException {
+        return CifIO.writeText(toCifFile(structure));
+    }
+
+    /**
+     * Convert a structure to mmCIF format.
+     * @param structure the source
+     * @return the mmCIF String representation of the structure
+     * @throws IOException thrown when writing fails
+     */
+    public static String toText(Structure structure) throws IOException {
+        return new String(CifIO.writeText(toCifFile(structure)));
+    }
+
+    /**
      * Convert Structure to CifFile.
      * @param structure the source
      * @return the target
      */
-    public static CifFile convert(Structure structure) {
+    public static CifFile toCifFile(Structure structure) {
         return new CifFileSupplierImpl().get(structure);
     }
 }

@@ -3,7 +3,6 @@ package org.biojava.nbio.structure.io;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
 import org.biojava.nbio.structure.io.cif.CifFileConverter;
-import org.rcsb.cif.CifReader;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,7 +27,7 @@ public class BcifFileReader extends LocalPDBDirectory {
     }
 
     /**
-     * Constructs a new B`FileReader, initializing the extensions member variable.
+     * Constructs a new BcifFileReader, initializing the extensions member variable.
      * The path is initialized to the given path, both autoFetch and splitDir are initialized to false.
      */
     public BcifFileReader(String path) {
@@ -39,7 +38,7 @@ public class BcifFileReader extends LocalPDBDirectory {
 
     @Override
     public Structure getStructure(InputStream inStream) throws IOException {
-        return CifFileConverter.convert(CifReader.readBinary(inStream), getFileParsingParameters());
+        return CifFileConverter.fromInputStream(inStream, getFileParsingParameters());
     }
 
     @Override

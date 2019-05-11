@@ -457,20 +457,20 @@ class CifFileConsumerImpl implements CifFileConsumer<Structure> {
 
         try {
             parsedScaleMatrix = new Matrix4d(
-                    atomSites.getFractTransfMatrix11().get(),
-                    atomSites.getFractTransfMatrix12().get(),
-                    atomSites.getFractTransfMatrix13().get(),
-                    atomSites.getFractTransfVector1().get(),
+                    atomSites.getFractTransfMatrix11().get(0),
+                    atomSites.getFractTransfMatrix12().get(0),
+                    atomSites.getFractTransfMatrix13().get(0),
+                    atomSites.getFractTransfVector1().get(0),
 
-                    atomSites.getFractTransfMatrix21().get(),
-                    atomSites.getFractTransfMatrix22().get(),
-                    atomSites.getFractTransfMatrix23().get(),
-                    atomSites.getFractTransfVector2().get(),
+                    atomSites.getFractTransfMatrix21().get(0),
+                    atomSites.getFractTransfMatrix22().get(0),
+                    atomSites.getFractTransfMatrix23().get(0),
+                    atomSites.getFractTransfVector2().get(0),
 
-                    atomSites.getFractTransfMatrix31().get(),
-                    atomSites.getFractTransfMatrix32().get(),
-                    atomSites.getFractTransfMatrix33().get(),
-                    atomSites.getFractTransfVector3().get(),
+                    atomSites.getFractTransfMatrix31().get(0),
+                    atomSites.getFractTransfMatrix32().get(0),
+                    atomSites.getFractTransfMatrix33().get(0),
+                    atomSites.getFractTransfVector3().get(0),
 
                     0,
                     0,
@@ -530,12 +530,12 @@ class CifFileConsumerImpl implements CifFileConsumer<Structure> {
         }
 
         try {
-            float a = (float) cell.getLengthA().get();
-            float b = (float) cell.getLengthB().get();
-            float c = (float) cell.getLengthC().get();
-            float alpha = (float) cell.getAngleAlpha().get();
-            float beta = (float) cell.getAngleBeta().get();
-            float gamma = (float) cell.getAngleGamma().get();
+            float a = (float) cell.getLengthA().get(0);
+            float b = (float) cell.getLengthB().get(0);
+            float c = (float) cell.getLengthC().get(0);
+            float alpha = (float) cell.getAngleAlpha().get(0);
+            float beta = (float) cell.getAngleBeta().get(0);
+            float gamma = (float) cell.getAngleGamma().get(0);
 
             CrystalCell crystalCell = new CrystalCell();
             crystalCell.setA(a);
@@ -869,12 +869,12 @@ class CifFileConsumerImpl implements CifFileConsumer<Structure> {
     @Override
     public void consumeStruct(Struct struct) {
         if (struct.isDefined() && struct.getTitle().isDefined()) {
-            pdbHeader.setTitle(struct.getTitle().get());
+            pdbHeader.setTitle(struct.getTitle().get(0));
         }
 
         if (struct.isDefined() && struct.getEntryId().isDefined()) {
-            pdbHeader.setIdCode(struct.getEntryId().get());
-            structure.setPDBCode(struct.getEntryId().get());
+            pdbHeader.setIdCode(struct.getEntryId().get(0));
+            structure.setPDBCode(struct.getEntryId().get(0));
         }
     }
 

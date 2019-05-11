@@ -3,7 +3,6 @@ package org.biojava.nbio.structure.io;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
 import org.biojava.nbio.structure.io.cif.CifFileConverter;
-import org.rcsb.cif.CifReader;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,7 +40,7 @@ public class CifFileReader extends LocalPDBDirectory {
 
     @Override
     public Structure getStructure(InputStream inStream) throws IOException{
-        return CifFileConverter.convert(CifReader.readText(inStream), getFileParsingParameters());
+        return CifFileConverter.fromInputStream(inStream, getFileParsingParameters());
     }
 
     @Override

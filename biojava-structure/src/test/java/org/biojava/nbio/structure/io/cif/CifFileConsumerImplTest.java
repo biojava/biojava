@@ -8,7 +8,7 @@ import org.biojava.nbio.structure.io.CifFileReader;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.PDBFileParser;
 import org.junit.Test;
-import org.rcsb.cif.CifReader;
+import org.rcsb.cif.CifIO;
 import org.rcsb.cif.model.CifFile;
 import org.rcsb.cif.model.Column;
 import org.rcsb.cif.model.ValueKind;
@@ -24,10 +24,7 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.zip.GZIPInputStream;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class CifFileConsumerImplTest {
     /**
@@ -213,13 +210,13 @@ public class CifFileConsumerImplTest {
                 "7 1S32 . D . GB  30268542 MET 1 'INTIATING METHIONINE' ? ? 7\n"+
                 "8 1S32 . H . GB  30268542 MET 1 'INTIATING METHIONINE' ? ? 8\n" +
                 "#" ;
-        CifFile cifFile = CifReader.readText(new ByteArrayInputStream(mmcifStr.getBytes()));
+        CifFile cifFile = CifIO.readFromInputStream(new ByteArrayInputStream(mmcifStr.getBytes()));
         Column column = cifFile.getFirstBlock().getCategory("struct_ref_seq_dif").getColumn("seq_num");
 
         assertNotNull(column);
         assertTrue(column.isDefined());
         assertEquals(8, column.getRowCount());
         column.valueKinds().forEach(vk -> assertEquals(ValueKind.NOT_PRESENT, vk));
-        column.getStringData().forEach(sd -> assertTrue(sd.isEmpty()));
+        column.stringData().forEach(sd -> assertTrue(sd.isEmpty()));
     }
 }
