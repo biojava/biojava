@@ -149,7 +149,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 	public void setContents(String sequence) throws CompoundNotFoundException {
 		// Horrendously inefficient - pretty much the way the old BJ did things.
 		// TODO Should be optimised.
-		this.sequence = sequence;
+		this.sequence = sequence.replaceAll(" ", "");
 		this.parsedCompounds.clear();
 		for (int i = 0; i < sequence.length();) {
 			String compoundStr = null;
