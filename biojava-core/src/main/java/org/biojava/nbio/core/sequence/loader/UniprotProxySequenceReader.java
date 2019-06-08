@@ -151,11 +151,11 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 		// TODO Should be optimised.
 		this.sequence = sequence.replaceAll("\\s", "").trim();
 		this.parsedCompounds.clear();
-		for (int i = 0; i < sequence.length();) {
+		for (int i = 0; i < this.sequence.length();) {
 			String compoundStr = null;
 			C compound = null;
 			for (int compoundStrLength = 1; compound == null && compoundStrLength <= compoundSet.getMaxSingleCompoundStringLength(); compoundStrLength++) {
-				compoundStr = sequence.substring(i, i + compoundStrLength);
+				compoundStr = this.sequence.substring(i, i + compoundStrLength);
 				compound = compoundSet.getCompoundForString(compoundStr);
 			}
 			if (compound == null) {
