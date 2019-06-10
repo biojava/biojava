@@ -2002,7 +2002,7 @@ public class PDBFileParser  {
 
 	/** safes repeating a few lines ... */
 	private Integer conect_helper (String line,int start,int end) {
-		if (line.length() < end) return null;
+		if (line.length() < start || line.length() < end) return null;
 
 		String sbond = line.substring(start,end).trim();
 		int bond  = -1 ;
