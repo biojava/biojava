@@ -142,6 +142,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 
 	/**
 	 * Once the sequence is retrieved set the contents and make sure everything this is valid
+	 * Some uniprot records contain white space in the sequence. We must strip it out so setContents doesn't fail.
 	 * @param sequence
 	 * @throws CompoundNotFoundException
 	 */
@@ -149,6 +150,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 	public void setContents(String sequence) throws CompoundNotFoundException {
 		// Horrendously inefficient - pretty much the way the old BJ did things.
 		// TODO Should be optimised.
+		// NOTE This chokes on whitespace in the sequence, so whitespace is stripped
 		this.sequence = sequence.replaceAll("\\s", "").trim();
 		this.parsedCompounds.clear();
 		for (int i = 0; i < this.sequence.length();) {
