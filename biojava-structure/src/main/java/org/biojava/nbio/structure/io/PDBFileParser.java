@@ -1553,8 +1553,8 @@ public class PDBFileParser  {
 	private void pdb_MTRIXn_Handler(String line) {
 
 		// don't process incomplete records
-		if (line.length() < 60) {
-			logger.info("MTRIXn record has fewer than 60 columns: will ignore it");
+		if (line.length() < 55) {
+			logger.info("MTRIXn record has fewer than 55 columns: will ignore it");
 			return;
 		}
 
@@ -1567,7 +1567,7 @@ public class PDBFileParser  {
 			double col3Value = Double.parseDouble(line.substring(30,40));
 			double translValue = Double.parseDouble(line.substring(45,55));
 			int iGiven = 0;
-			if (!line.substring(59,60).trim().equals("")) {
+			if (line.length()>=60 && !line.substring(59,60).trim().isEmpty()) {
 				iGiven = Integer.parseInt(line.substring(59,60));
 			}
 

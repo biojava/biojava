@@ -24,10 +24,6 @@
  */
 package org.biojava.nbio.structure.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -48,6 +44,8 @@ import org.biojava.nbio.structure.io.PDBFileParser;
 import org.biojava.nbio.structure.test.util.StringManipulationTestsHelper;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
  * Test the {@link PDBFileParser}.
@@ -653,5 +651,29 @@ public class PDBFileParserTest {
 		// The release date should be 1992
 		assertEquals(s.getPDBHeader().getRelDate().getYear() + 1900, 1992);
 
+	}
+
+	@Test
+	public void testMatrxn() throws IOException {
+		String pdb =
+				"MTRIX1   1  1.000000  0.000000  0.000000        0.00000    1\n" +
+				"MTRIX2   1  0.000000  1.000000  0.000000        0.00000    1\n" +
+				"MTRIX3   1  0.000000  0.000000  1.000000        0.00000    1\n" +
+				"MTRIX1   2  0.302797 -0.436000 -0.847477      183.33000     \n" +
+				"MTRIX2   2  0.434555  0.854568 -0.284384      -74.97000     \n" +
+				"MTRIX3   2  0.848219 -0.282165  0.448227     -146.16000     \n" +
+				// no padding at end should also work
+				"MTRIX1   3  0.006722  0.856941  0.515371      176.52000\n" +
+				"MTRIX2   3  0.518827  0.437598 -0.734389      -69.86000\n" +
+				"MTRIX3   3 -0.854853  0.272325 -0.441662      242.75999\n";
+
+		BufferedReader br = new BufferedReader(new StringReader(pdb));
+		Structure s = parser.parsePDBFile(br);
+
+		assertNotNull(s.getCrystallographicInfo().getNcsOperators());
+		assertEquals(2, s.getCrystallographicInfo().getNcsOperators().length);
+
+		// making sure we read up to last character
+		assertEquals(242.75999, s.getCrystallographicInfo().getNcsOperators()[1].m23, 0.0000001);
 	}
 }
