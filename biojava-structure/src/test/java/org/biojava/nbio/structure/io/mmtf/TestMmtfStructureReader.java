@@ -64,8 +64,6 @@ public class TestMmtfStructureReader {
 		assertEquals(mmcif.getPDBHeader().getExperimentalTechniques(), 
 				mmtf.getPDBHeader().getExperimentalTechniques());
 		
-		
-		
 		// Compare the SEQRES
 		assertEquals(mmcif.getChainByIndex(0).getSeqResSequence(), 
 				mmtf.getChainByIndex(0).getSeqResSequence());

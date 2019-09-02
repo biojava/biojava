@@ -371,7 +371,7 @@ public class MmtfUtils {
 	/**
 	 * Get the secondary structure as defined by DSSP.
 	 * @param group the input group to be calculated
-	 * @param the integer index of the group type.
+	 * @param dsspIndex integer index of the group type.
 	 */
 	public static void setSecStructType(Group group, int dsspIndex) {
 		SecStrucType secStrucType = getSecStructTypeFromDsspIndex(dsspIndex);
@@ -508,9 +508,7 @@ public class MmtfUtils {
 			
 			char singleLetterCode = sequence.charAt(i);
 			Group group = null;
-			if(seqResGroups.size()<=i){
-			}
-			else{
+			if (seqResGroups.size() > i) {
 				group=seqResGroups.get(i);
 			}
 			if(group!=null){
@@ -525,10 +523,7 @@ public class MmtfUtils {
 
 	private static GroupType getChainType(List<Group> groups) {
 		for(Group group : groups) {
-			if(group==null){
-				continue;
-			}
-			else if(group.getType()!=GroupType.HETATM){
+			if(group!=null && group.getType()!=GroupType.HETATM){
 				return group.getType();
 			}
 		}

@@ -229,7 +229,7 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 			group = new HetatomImpl();
 			break;
 		}
-		atomsInGroup = new ArrayList<Atom>();
+		atomsInGroup = new ArrayList<>();
 		ChemComp chemComp = new ChemComp();
 		chemComp.setOne_letter_code(String.valueOf(singleLetterCode));
 		chemComp.setType(chemCompType.toUpperCase());
@@ -243,7 +243,7 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 			group.setResidueNumber(chain.getName().trim(),
 					groupNumber, insertionCode);
 		}
-		group.setAtoms(new ArrayList<Atom>(atomCount));
+		group.setAtoms(new ArrayList<>(atomCount));
 		if (polymerType==1 || polymerType==2) {
 			MmtfUtils.insertSeqResGroup(chain, group, sequenceIndexId);
 		}
