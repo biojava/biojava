@@ -44,7 +44,7 @@ public class TestMmtfStructureReader {
 	/**
 	 * Compare structures loaded from MMCIF and MMTF files.
 	 */
-	@Test @Ignore
+	@Test
 	public void compareMmcif() throws IOException, StructureException {
 		
 		// Get the MMTF and MMCIF files from the resources folder

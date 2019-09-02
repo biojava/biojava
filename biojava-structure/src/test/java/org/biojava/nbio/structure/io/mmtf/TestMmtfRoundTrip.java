@@ -94,7 +94,6 @@ public class TestMmtfRoundTrip {
 	 * Broad test of atom similarity
 	 * @param structOne the first input structure
 	 * @param structTwo the second input structure
-	 * @param mmtfParams
 	 * @return
 	 */
 	private boolean checkIfAtomsSame(Structure structOne, Structure structTwo) {

@@ -50,6 +50,7 @@ import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
 import org.biojava.nbio.structure.io.mmcif.DownloadChemCompProvider;
+import org.biojava.nbio.structure.io.mmcif.chem.PolymerType;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.biojava.nbio.structure.quaternary.BioAssemblyInfo;
 import org.biojava.nbio.structure.quaternary.BiologicalAssemblyTransformation;
@@ -513,7 +514,7 @@ public class MmtfUtils {
 				continue;
 			}
 			
-			group = getSeqResGroup(modelChain, singleLetterCode, chainType);
+			group = getSeqResGroup(singleLetterCode, chainType);
 			addGroupAtId(seqResGroups, group, i);
 			seqResGroups.set(i, group);
 		}
@@ -537,7 +538,7 @@ public class MmtfUtils {
 		}
 	}
 
-	private static Group getSeqResGroup(Chain modelChain, char singleLetterCode, GroupType type) {
+	private static Group getSeqResGroup(char singleLetterCode, GroupType type) {
 		if(type==GroupType.AMINOACID){
 			AminoAcidImpl a = new AminoAcidImpl();
 			a.setRecordType(AminoAcid.SEQRESRECORD);
@@ -545,6 +546,7 @@ public class MmtfUtils {
 			ChemComp chemComp = new ChemComp();
 			chemComp.setOne_letter_code(""+singleLetterCode);
 			a.setChemComp(chemComp);
+			chemComp.setPolymerType(PolymerType.peptide);
 			return a;
 
 		} else if (type==GroupType.NUCLEOTIDE) {
@@ -552,6 +554,12 @@ public class MmtfUtils {
 			ChemComp chemComp = new ChemComp();
 			chemComp.setOne_letter_code(""+singleLetterCode);
 			n.setChemComp(chemComp);
+			// TODO this could be either dna or rna, how to distinguish properly?
+			if (singleLetterCode == 'U') {
+				chemComp.setPolymerType(PolymerType.rna);
+			} else {
+				chemComp.setPolymerType(PolymerType.dna);
+			}
 			return n;
 		}
 		else{
