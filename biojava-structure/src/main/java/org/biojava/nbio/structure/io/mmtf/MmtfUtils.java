@@ -392,7 +392,7 @@ public class MmtfUtils {
 		String dsspType = DsspType.dsspTypeFromInt(dsspIndex).getDsspType();
 		for(SecStrucType secStrucType : SecStrucType.values())
 		{
-			if(dsspType==secStrucType.name)
+			if(dsspType.equals(secStrucType.name))
 			{
 				return secStrucType;
 			}

@@ -64,11 +64,9 @@ public class TestMmtfStructureReader {
 		assertEquals(mmcif.getPDBHeader().getExperimentalTechniques(), 
 				mmtf.getPDBHeader().getExperimentalTechniques());
 		
-		// Compare the SEQRES
+		// Compare the SEQRES, see issue https://github.com/biojava/biojava/issues/671
 		assertEquals(mmcif.getChainByIndex(0).getSeqResSequence(), 
 				mmtf.getChainByIndex(0).getSeqResSequence());
-		
-		
 		
 	}
 
