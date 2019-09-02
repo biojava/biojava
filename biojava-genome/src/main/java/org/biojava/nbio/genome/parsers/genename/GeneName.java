@@ -25,7 +25,8 @@ package org.biojava.nbio.genome.parsers.genename;
 
 import java.io.Serializable;
 
-/** A simple bean that contains gene name information as available from www.genenames.org
+/**
+ * A simple bean that contains gene name information as available from www.genenames.org
  *
  * @author Andreas Prlic
  *
@@ -34,23 +35,21 @@ public class GeneName implements Serializable, Comparable<GeneName>{
 	//[HGNC ID, Approved Symbol, Approved Name, Status, Previous Symbols, Previous Names, Synonyms,
 	// Chromosome, Accession Numbers, RefSeq IDs,Uniprot]
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = -7163977639324764020L;
-	String hgncId;
-	String approvedSymbol;
-	String approvedName;
-	String status;
-	String previousSymbols;
-	String previousNames;
-	String synonyms;
-	String chromosome;
-	String accessionNr;
-	String refseqIds;
-	String uniprot;
-	String omimId;
-	String ensemblGeneId;
+
+	private String hgncId;
+	private String approvedSymbol;
+	private String approvedName;
+	private String status;
+	private String previousSymbols;
+	private String previousNames;
+	private String synonyms;
+	private String chromosome;
+	private String accessionNr;
+	private String refseqIds;
+	private String uniprot;
+	private String omimId;
+	private String ensemblGeneId;
 
 	public String getHgncId() {
 		return hgncId;

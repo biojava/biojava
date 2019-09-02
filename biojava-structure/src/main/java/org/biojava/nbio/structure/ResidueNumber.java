@@ -27,7 +27,7 @@ package org.biojava.nbio.structure;
 import java.io.Serializable;
 import java.io.StringWriter;
 
-/** 
+/**
  * Everything that is needed to uniquely describe a residue position
  *
  * @author Andreas Prlic
@@ -112,7 +112,7 @@ public class ResidueNumber implements Serializable, Comparable<ResidueNumber>
 
 		return true;
 	}
-	
+
 	/**
 	 * Check if the seqNum and insertion code are equivalent,
 	 * ignoring the chain

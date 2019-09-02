@@ -1,9 +1,30 @@
+/*
+ *                    BioJava development code
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public Licence.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright for this code is held jointly by the individual
+ * authors.  These should be listed in @author doc comments.
+ *
+ * For more information on the BioJava project and its aims,
+ * or to join the biojava-l mailing list, visit the home page
+ * at:
+ *
+ *      http://www.biojava.org/
+ *
+ */
 package org.biojava.nbio.structure.io.mmtf;
 
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -289,7 +310,7 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 
 		// IF the main group doesn't have this atom
 		if (!group.hasAtom(atom.getName())) {
-			
+
 			// If it's not a microheterogenity case
 			if (group.getPDBName().equals(atom.getGroup().getPDBName())) {
 				// And it's not a deuterated case.  'nanoheterogenity'
@@ -405,7 +426,7 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 
 	/**
 	 * Get the type of group (0,1 or 2) depending on whether it is an amino aicd (1), nucleic acid (2) or ligand (0)
-	 * @param currentGroup
+	 * @param polymerType
 	 * @return The type of group. (0,1 or 2) depending on whether it is an amino aicd (1), nucleic acid (2) or ligand (0)
 	 */
 	private int getGroupTypIndicator(PolymerType polymerType) {
@@ -462,6 +483,8 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 			bioAssTrans.setTransformationMatrix(mat4d);
 			// Now add this
 			bioAssInfo.getTransforms().add(bioAssTrans);
+			// sort transformations into a unique order
+			Collections.sort(bioAssInfo.getTransforms());
 		}
 	}
 

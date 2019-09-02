@@ -65,6 +65,8 @@ public class OboFileHandler implements OboFileEventListener {
 	public static final String DISJOINT_FROM = "disjoint_from";
 	public static final String SUBSET       = "subset";
 	public static final String INTERSECTION_OF = "intersection_of";
+	public static final String NAMESPACE = "namespace";
+	public static final String REPLACED_BY = "replaced_by";
 
 
 	public static final String ALT_ID      = "alt_id";
@@ -134,6 +136,10 @@ public class OboFileHandler implements OboFileEventListener {
 				logger.warn("did not find ID for Term! ");
 				return;
 			}
+			if (key.equals(NAMESPACE)){
+				Annotation anno = currentTerm.getAnnotation();
+				anno.setProperty(NAMESPACE, value);
+			}
 			else if (key.equals(NAME)){
 				currentTerm.setDescription(value);
 			} else if (key.equals(DEF)){
@@ -170,6 +176,10 @@ public class OboFileHandler implements OboFileEventListener {
 			} else if (key.equals(ALT_ID)){
 				Annotation anno = currentTerm.getAnnotation();
 				anno.setProperty(ALT_ID, value);
+			}
+			else if (key.equals(REPLACED_BY)) {
+				Annotation anno = currentTerm.getAnnotation();
+				anno.setProperty(REPLACED_BY, value);
 			}
 
 			else {

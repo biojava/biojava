@@ -1,3 +1,23 @@
+/*
+ *                    BioJava development code
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public Licence.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright for this code is held jointly by the individual
+ * authors.  These should be listed in @author doc comments.
+ *
+ * For more information on the BioJava project and its aims,
+ * or to join the biojava-l mailing list, visit the home page
+ * at:
+ *
+ *      http://www.biojava.org/
+ *
+ */
 package org.biojava.nbio.structure.geometry;
 
 import javax.vecmath.AxisAngle4d;
@@ -17,7 +37,7 @@ import org.biojava.nbio.structure.jama.Matrix;
  * three-dimensional attitude representation (axis and angle of rotation). By
  * definition, unit quaternions are always normalized, so their length is always
  * 1.
- * 
+ *
  * @author Aleix Lafita
  * @since 5.0.0
  *
@@ -42,7 +62,7 @@ public class UnitQuaternions {
 	 * principal axes might change or be inverted, resulting in an unreliable
 	 * metric. For shapes with some deviations in their shape, use the metric
 	 * {@link #orientationAngle(Point3d[], Point3d[])}.
-	 * 
+	 *
 	 * @param a
 	 *            array of Point3d
 	 * @param b
@@ -68,7 +88,7 @@ public class UnitQuaternions {
 	 * The formula is taken from: Huynh, D. Q. (2009). Metrics for 3D rotations:
 	 * comparison and analysis. Journal of Mathematical Imaging and Vision,
 	 * 35(2), 155–164. http://doi.org/10.1007/s10851-009-0161-2
-	 * 
+	 *
 	 * @param q1
 	 *            quaternion as Quat4d object
 	 * @param q2
@@ -85,7 +105,7 @@ public class UnitQuaternions {
 	 * [0,1,0] and [0,0,1]).
 	 * <p>
 	 * The orientation can be expressed as a unit quaternion.
-	 * 
+	 *
 	 * @param points
 	 *            array of Point3d
 	 * @return the orientation of the point cloud as a unit quaternion
@@ -106,7 +126,7 @@ public class UnitQuaternions {
 
 	/**
 	 * Calculate the rotation angle component of the input unit quaternion.
-	 * 
+	 *
 	 * @param q
 	 *            unit quaternion Quat4d
 	 * @return the angle in radians of the input quaternion
@@ -124,7 +144,7 @@ public class UnitQuaternions {
 	 * <p>
 	 * The arrays of points need to be centered at the origin. To center the
 	 * points use {@link CalcPoint#center(Point3d[])}.
-	 * 
+	 *
 	 * @param fixed
 	 *            array of Point3d, centered at origin. Original coordinates
 	 *            will not be modified.
@@ -144,7 +164,7 @@ public class UnitQuaternions {
 	 * The angle of the relative orientation of the two sets of points in 3D.
 	 * Equivalent to {@link #angle(Quat4d)} of the unit quaternion obtained by
 	 * {@link #relativeOrientation(Point3d[], Point3d[])}.
-	 * 
+	 *
 	 * @param fixed
 	 *            array of Point3d. Original coordinates will not be modified.
 	 * @param moved
@@ -168,7 +188,7 @@ public class UnitQuaternions {
 
 	/**
 	 * Calculate the relative quaternion orientation of two arrays of points.
-	 * 
+	 *
 	 * @param fixed
 	 *            point array, coordinates will not be modified
 	 * @param moved
@@ -188,7 +208,7 @@ public class UnitQuaternions {
 
 	/**
 	 * Compute the dot (inner) product of two quaternions.
-	 * 
+	 *
 	 * @param q1
 	 *            quaternion as Quat4d object
 	 * @param q2

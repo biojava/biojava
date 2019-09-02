@@ -1,0 +1,114 @@
+LOCUS       3IAN_A                   321 aa            linear   BCT 24-NOV-2018
+DEFINITION  Chain A, Chitinase.
+ACCESSION   3IAN_A
+VERSION     3IAN_A
+DBSOURCE    pdb: molecule 3IAN, chain 65, release Nov 21, 2018;
+            deposition: Jul 14, 2009;
+            class: HYDROLASE;
+            source: Mmdb_id: 999999, Pdb_id 1: 3IAN;
+            Exp. method: X-ray Diffraction.
+KEYWORDS    .
+SOURCE      Lactococcus lactis subsp. lactis
+  ORGANISM  Lactococcus lactis subsp. lactis
+            Bacteria; Firmicutes; Bacilli; Lactobacillales; Streptococcaceae;
+            Lactococcus.
+REFERENCE   1  (residues 1 to 321)
+  AUTHORS   Bonanno,J.B., Rutter,M., Bain,K.T., Miller,S., Ozyurt,S.,
+            Sauder,J.M., Burley,S.K. and Almo,S.C.
+  TITLE     Crystal structure of a chitinase from Lactococcus lactis subsp.
+            lactis
+  JOURNAL   Unpublished
+REFERENCE   2  (residues 1 to 321)
+  AUTHORS   Bonanno,J.B., Rutter,M., Bain,K.T., Miller,S., Ozyurt,S.,
+            Sauder,J.M., Burley,S.K., Almo,S.C. and New York SGX Research
+            Center for Structural Genomics (NYSGXRC).
+  TITLE     Direct Submission
+  JOURNAL   Submitted (14-JUL-2009)
+COMMENT     Crystal structure of a chitinase from Lactococcus lactis subsp.
+            lactis.
+FEATURES             Location/Qualifiers
+     source          1..321
+                     /organism="Lactococcus lactis subsp. lactis"
+                     /sub_species="lactis"
+                     /db_xref="taxon:1360"
+     Het             join(bond(115),bond(117),bond(76))
+                     /heterogen="(NA,2572)"
+     Region          4..313
+                     /region_name="Chi1"
+                     /note="Chitinase [Carbohydrate transport and metabolism];
+                     COG3469"
+                     /db_xref="CDD:226000"
+     Region          5..288
+                     /region_name="Glyco_hydro_18"
+                     /note="Glycosyl hydrolases family 18; pfam00704"
+                     /db_xref="CDD:279094"
+     SecStr          5..12
+                     /sec_str_type="sheet"
+                     /note="strand 1"
+     Site            order(10,46,122,124,189,191,283)
+                     /site_type="active"
+                     /note="putative active site [active]"
+                     /db_xref="CDD:119350"
+     SecStr          24..28
+                     /sec_str_type="sheet"
+                     /note="strand 2"
+     SecStr          40..45
+                     /sec_str_type="sheet"
+                     /note="strand 3"
+     SecStr          65..78
+                     /sec_str_type="helix"
+                     /note="helix 1"
+     SecStr          80..89
+                     /sec_str_type="sheet"
+                     /note="strand 4"
+     SecStr          100..114
+                     /sec_str_type="helix"
+                     /note="helix 2"
+     SecStr          117..124
+                     /sec_str_type="sheet"
+                     /note="strand 5"
+     SecStr          133..151
+                     /sec_str_type="helix"
+                     /note="helix 3"
+     SecStr          155..163
+                     /sec_str_type="sheet"
+                     /note="strand 6"
+     SecStr          172..180
+                     /sec_str_type="helix"
+                     /note="helix 4"
+     SecStr          184..190
+                     /sec_str_type="sheet"
+                     /note="strand 7"
+     SecStr          196..201
+                     /sec_str_type="sheet"
+                     /note="strand 8"
+     SecStr          204..209
+                     /sec_str_type="sheet"
+                     /note="strand 9"
+     SecStr          215..228
+                     /sec_str_type="helix"
+                     /note="helix 5"
+     SecStr          240..246
+                     /sec_str_type="sheet"
+                     /note="strand 10"
+     SecStr          261..273
+                     /sec_str_type="helix"
+                     /note="helix 6"
+     SecStr          278..283
+                     /sec_str_type="sheet"
+                     /note="strand 11"
+     SecStr          289..293
+                     /sec_str_type="sheet"
+                     /note="strand 12"
+     SecStr          300..307
+                     /sec_str_type="helix"
+                     /note="helix 7"
+ORIGIN      
+        1 msldkvlvgy whnwkstgkd gykggssadf nlsstqegyn vinvsfmktp egqtlptfkp
+       61 ynktdtefra eisklnaegk svlialggad ahielkksqe sdfvneiirl vdtygfdgld
+      121 idleqaaiea adnqtvipsa lkkvkdhyrk dgknfmitma pefpyltssg kyapyinnld
+      181 syydfinpqy ynqggdgfwd sdlnmwisqs ndekkedfly gltqrlvtgt dgfikipask
+      241 fviglpsnnd aaatgyvkdp navknalnrl kasgneikgl mtwsvnwdag tnsngekynn
+      301 tfvntyapml fnneghhhhh h
+//
+

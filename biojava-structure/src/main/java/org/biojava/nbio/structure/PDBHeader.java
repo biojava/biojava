@@ -25,7 +25,6 @@ import org.biojava.nbio.structure.quaternary.BioAssemblyInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.DateFormat;
@@ -35,7 +34,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 
-/** 
+/**
  * A class that contains PDB Header information.
  *
  * @author Andreas Prlic
@@ -86,12 +85,12 @@ public class PDBHeader implements PDBRecord {
 		modDate = new Date(0);
 		relDate = new Date(0);
 		dateFormat = new SimpleDateFormat("dd-MMM-yy",Locale.US);
-		
+
 		resolution = DEFAULT_RESOLUTION;
 		rFree = DEFAULT_RFREE;
 		rWork = DEFAULT_RFREE;
-		
-		bioAssemblies = new HashMap<Integer, BioAssemblyInfo>();
+
+		bioAssemblies = new LinkedHashMap<Integer, BioAssemblyInfo>();
 		crystallographicInfo = new PDBCrystallographicInfo();
 
 	}
@@ -476,7 +475,7 @@ public class PDBHeader implements PDBRecord {
 
 	/**
 	 * Return the deposition date of the structure in the PDB.
-	 * 
+	 *
 	 * @return the deposition date
 	 */
 	public Date getDepDate() {
@@ -485,7 +484,7 @@ public class PDBHeader implements PDBRecord {
 
 	/**
 	 * The deposition date of the structure in the PDB
-	 * 
+	 *
 	 * @param depDate the deposition date
 	 */
 	public void setDepDate(Date depDate) {
@@ -550,7 +549,7 @@ public class PDBHeader implements PDBRecord {
 
 	/**
 	 * Return the latest modification date of the structure.
-	 * 
+	 *
 	 * @return the latest modification date
 	 */
 	public Date getModDate() {
@@ -559,16 +558,16 @@ public class PDBHeader implements PDBRecord {
 
 	/**
 	 * The latest modification date of the structure.
-	 * 
+	 *
 	 * @param modDate the latest modification date
 	 */
 	public void setModDate(Date modDate) {
 		this.modDate = modDate;
 	}
-	
+
 	/**
 	 * Return the release date of the structure in the PDB.
-	 * 
+	 *
 	 * @return the release date
 	 */
 	public Date getRelDate() {
@@ -576,9 +575,9 @@ public class PDBHeader implements PDBRecord {
 	}
 
 	/**
-	 * 
+	 *
 	 * The release date of the structure in the PDB.
-	 * 
+	 *
 	 * @param relDate the release date
 	 */
 	public void setRelDate(Date relDate) {

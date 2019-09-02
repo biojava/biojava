@@ -109,7 +109,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 	protected static final String START_SEQUENCE_TAG = "ORIGIN";
 	protected static final String END_SEQUENCE_TAG = "//";
 	// locus line
-	protected static final Pattern lp = Pattern.compile("^(\\S+)\\s+\\d+\\s+(bp|aa)\\s{1,4}(([dms]s-)?(\\S+))?\\s+(circular|linear)?\\s*(\\S+)?\\s*(\\S+)?$");
+	protected static final Pattern lp = Pattern.compile("^(\\S+)\\s+\\d+\\s+(bp|BP|aa|AA)\\s{0,4}(([dmsDMS][sS]-)?(\\S+))?\\s*(circular|CIRCULAR|linear|LINEAR)?\\s*(\\S+)?\\s*(\\S+)?$");
 	// version line
 	protected static final Pattern vp = Pattern.compile("^(\\S*?)(\\.(\\d+))?(\\s+GI:(\\S+))?$");
 	// reference line
@@ -164,9 +164,9 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 					String lengthUnits = m.group(2);
 					String type = m.group(5);
 
-					if (lengthUnits.equals("aa")) {
+					if (lengthUnits.equalsIgnoreCase("aa")) {
 						compoundType = AminoAcidCompoundSet.getAminoAcidCompoundSet();
-					} else if (lengthUnits.equals("bp")) {
+					} else if (lengthUnits.equalsIgnoreCase("bp")) {
 						if (type != null) {
 							if (type.contains("RNA")) {
 								compoundType = RNACompoundSet.getRNACompoundSet();
@@ -215,19 +215,19 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 			} else if (sectionKey.equals(SOURCE_TAG)) {
 				// ignore - can get all this from the first feature
 			} else if (sectionKey.equals(REFERENCE_TAG)) {
-                if (!section.isEmpty()) {
-                    GenbankReference genbankReference = new GenbankReference();
-                    for (String[] ref : section) {
-                        if (ref[0].equals(AUTHORS_TAG)) {
-                            genbankReference.setAuthors(ref[1]);
-                        } else if (ref[0].equals(TITLE_TAG)) {
-                            genbankReference.setTitle(ref[1]);
-                        } else if (ref[0].equals(JOURNAL_TAG)) {
-                            genbankReference.setJournal(ref[1]);
-                        }
-                    }
-                    headerParser.addReference(genbankReference);
-                }
+				if (!section.isEmpty()) {
+					GenbankReference genbankReference = new GenbankReference();
+					for (String[] ref : section) {
+						if (ref[0].equals(AUTHORS_TAG)) {
+							genbankReference.setAuthors(ref[1]);
+						} else if (ref[0].equals(TITLE_TAG)) {
+							genbankReference.setTitle(ref[1]);
+						} else if (ref[0].equals(JOURNAL_TAG)) {
+							genbankReference.setJournal(ref[1]);
+						}
+					}
+					headerParser.addReference(genbankReference);
+				}
 			} else if (sectionKey.equals(COMMENT_TAG)) {
 				// Set up some comments
 				headerParser.setComment(section.get(0)[1]);

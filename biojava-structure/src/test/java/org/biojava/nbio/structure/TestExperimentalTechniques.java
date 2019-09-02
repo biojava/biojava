@@ -31,7 +31,7 @@ import static org.junit.Assert.*;
 public class TestExperimentalTechniques {
 
 	@Test
-	public void test4LNC() throws IOException, StructureException {
+	public void test6F2Q() throws IOException, StructureException {
 
 		// a multiple experimental techniques PDB entry (X-RAY + NEUTRON DIFFRACTION)
 
@@ -40,9 +40,9 @@ public class TestExperimentalTechniques {
 		StructureIO.setAtomCache(cache);
 
 		cache.setUseMmCif(false);
-		Structure sPdb = StructureIO.getStructure("4LNC");
+		Structure sPdb = StructureIO.getStructure("6F2Q");
 		cache.setUseMmCif(true);
-		Structure sCif = StructureIO.getStructure("4LNC");
+		Structure sCif = StructureIO.getStructure("6F2Q");
 
 		comparePdbToCif(sPdb, sCif);
 

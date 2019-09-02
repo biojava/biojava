@@ -22,7 +22,6 @@
  */
 package org.biojava.nbio.structure.align.ce;
 
-import junit.framework.TestCase;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.StructureAlignment;
@@ -32,12 +31,15 @@ import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.align.xml.AFPChainFlipper;
 import org.biojava.nbio.structure.align.xml.AFPChainXMLConverter;
 import org.biojava.nbio.structure.align.xml.AFPChainXMLParser;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.io.IOException;
 
-public class TestSmallAlignment extends TestCase{
+public class TestSmallAlignment {
 
 
+	@Test
 	public void test1a4w() throws IOException, StructureException {
 
 		String name1 = "1a4w.I";
@@ -50,22 +52,22 @@ public class TestSmallAlignment extends TestCase{
 
 		AFPChain afpChain = ce.align(ca1, ca2);
 
-		assertTrue(afpChain != null);
+		Assert.assertTrue(afpChain != null);
 
 		afpChain.setName1(name1);
 		afpChain.setName2(name2);
 
-		assertTrue(afpChain.getNrEQR() ==0 );
+		Assert.assertTrue(afpChain.getNrEQR() == 0);
 
 		String xml = AFPChainXMLConverter.toXML(afpChain,ca1,ca2);
 
 		AFPChain newChain = AFPChainXMLParser.fromXML(xml, ca1, ca2);
 
-		assertTrue(newChain != null);
+		Assert.assertTrue(newChain != null);
 
 		String xml2 = AFPChainXMLConverter.toXML(newChain,ca1,ca2);
 
-		assertEquals(xml,xml2);
+		Assert.assertEquals(xml, xml2);
 
 		// test flipping
 
@@ -78,7 +80,7 @@ public class TestSmallAlignment extends TestCase{
 		AFPChain reverted = AFPChainFlipper.flipChain(flippedRecreated);
 
 		String revertedXML = AFPChainXMLConverter.toXML(reverted, ca1, ca2);
-		assertEquals(xml, revertedXML);
+		Assert.assertEquals(xml, revertedXML);
 
 	}
 }

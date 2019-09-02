@@ -136,21 +136,9 @@ public class DisplayAFP {
 		return lst;
 	}
 
-	/** get the block number for an aligned position
-	 *
-	 * @param afpChain
-	 * @param aligPos
-	 * @return
-	 * @deprecated use AFPAlignmentDisplay.getBlockNrForAlignPos instead...
-	 */
-	@Deprecated
-	public static int getBlockNrForAlignPos(AFPChain afpChain, int aligPos){
-		return AFPAlignmentDisplay.getBlockNrForAlignPos(afpChain, aligPos);
-	}
 
-
-
-	/** return the atom at alignment position aligPos. at the present only works with block 0
+	/**
+	 * Return the atom at alignment position aligPos. at the present only works with block 0
 	 * @param chainNr the number of the aligned pair. 0... first chain, 1... second chain.
 	 * @param afpChain an afpChain object
 	 * @param aligPos position on the alignment

@@ -1,12 +1,36 @@
+/*
+ *                    BioJava development code
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public Licence.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright for this code is held jointly by the individual
+ * authors.  These should be listed in @author doc comments.
+ *
+ * For more information on the BioJava project and its aims,
+ * or to join the biojava-l mailing list, visit the home page
+ * at:
+ *
+ *      http://www.biojava.org/
+ *
+ */
 package org.biojava.nbio.structure.io.mmtf;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Bond;
@@ -16,15 +40,18 @@ import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.align.util.AtomCache;
+import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
 import org.biojava.nbio.structure.io.mmcif.DownloadChemCompProvider;
+import org.biojava.nbio.structure.quaternary.BioAssemblyInfo;
+import org.biojava.nbio.structure.quaternary.BiologicalAssemblyTransformation;
 import org.junit.Test;
 import org.rcsb.mmtf.decoder.StructureDataToAdapter;
 import org.rcsb.mmtf.encoder.AdapterToStructureData;
 
 /**
  * Tests to see if roundtripping of MMTF can be done.
- * 
+ *
  * @author Anthony Bradley
  *
  */
@@ -32,30 +59,35 @@ public class TestMmtfRoundTrip {
 
 	/**
 	 * Test that we can round trip a simple structure.
-	 * 
+	 *
 	 * @throws IOException an error reading the file
 	 * @throws StructureException an error parsing the structure
 	 */
 	@Test
 	public void testRoundTrip() throws IOException, StructureException {
-		
+
 		// Load a structure in MMCIF format
 		AtomCache cache = new AtomCache();
+		FileParsingParameters params = new FileParsingParameters();
+		params.setParseBioAssembly(true);
+		cache.setFileParsingParams(params);
 		cache.setUseMmCif(true);
-		ChemCompGroupFactory.setChemCompProvider(new DownloadChemCompProvider());
 		
 		StructureIO.setAtomCache(cache);
-		Structure structure = StructureIO.getStructure("4CUP");
-		
-		// Write the structure to a MMTF encoding
+
+		ChemCompGroupFactory.setChemCompProvider(new DownloadChemCompProvider());
+
+		// test case for biojava issue #770, order of subunits
+		Structure structure1 = StructureIO.getStructure("3BW1");
 		AdapterToStructureData writerToEncoder = new AdapterToStructureData();
-		new MmtfStructureWriter(structure, writerToEncoder);
-		
-		// Load back the structure from the MMTF encoding
+		new MmtfStructureWriter(structure1, writerToEncoder);
 		MmtfStructureReader mmtfStructureReader = new MmtfStructureReader();
 		new StructureDataToAdapter(writerToEncoder, mmtfStructureReader);
-		
-		assertTrue(checkIfAtomsSame(structure,mmtfStructureReader.getStructure()));
+		Structure structure2 = mmtfStructureReader.getStructure();
+
+		assertTrue(checkIfAtomsSame(structure1, structure2));
+
+		checkBioAssemblies1(structure1, structure2);
 	}
 
 	/**
@@ -66,23 +98,23 @@ public class TestMmtfRoundTrip {
 	 * @return
 	 */
 	private boolean checkIfAtomsSame(Structure structOne, Structure structTwo) {
-		
+
 		// Check the same number of models
 		int numModels = structOne.nrModels();
 		if(numModels!=structTwo.nrModels()){
 			System.out.println("Error - diff number models: "+structOne.getPDBCode());
 			return false;
 		}
-		
+
 		for(int i=0;i<numModels;i++){
-			
+
 			List<Chain> chainsOne = structOne.getChains(i);
 			List<Chain> chainsTwo = structTwo.getChains(i);
 			if(chainsOne.size()!=chainsTwo.size()){
 				System.out.println("Error - diff number chains: "+structOne.getPDBCode());
 				return false;
 			}
-			
+
 			// Now make sure they're sorted in the right order
 			sortChains(chainsOne, chainsTwo);
 			// Check that each one has the same number of poly, non-poly and water chains
@@ -147,9 +179,9 @@ public class TestMmtfRoundTrip {
 						System.out.println(groupOne.getResidueNumber());
 						System.out.println(groupOne.getPDBName()+" vs "+groupTwo.getPDBName());
 						System.out.println(atomsOne.size()+" vs "+atomsTwo.size());
-						return false;           
+						return false;
 					}
-					// Now sort the atoms 
+					// Now sort the atoms
 					sortAtoms(atomsOne, atomsTwo);
 					// Now loop through the atoms
 					for(int l=0;l<atomsOne.size();l++){
@@ -192,10 +224,10 @@ public class TestMmtfRoundTrip {
 					}
 				}
 			}
-		} 
+		}
 		return true;
 	}
-	
+
 	/**
 	 * Check both structures have the same number of poly, non-poly and water chains
 	 * @param structOne the first structure
@@ -207,10 +239,10 @@ public class TestMmtfRoundTrip {
 		assertEquals(structOne.getNonPolyChains(i).size(), structTwo.getNonPolyChains(i).size());
 		assertEquals(structOne.getWaterChains(i).size(), structTwo.getWaterChains(i).size());
 	}
-	
+
 	/**
 	 * Sort the atom based on PDB serial id
-	 * 
+	 *
 	 * @param atomsOne the first list
 	 * @param atomsTwo  the second list
 	 */
@@ -218,7 +250,7 @@ public class TestMmtfRoundTrip {
 		atomsOne.sort(new Comparator<Atom>() {
 			@Override
 			public int compare(Atom o1, Atom o2) {
-				//  
+				//
 				if (o1.getPDBserial()<o2.getPDBserial()){
 					return -1;
 				}
@@ -230,7 +262,7 @@ public class TestMmtfRoundTrip {
 		atomsTwo.sort(new Comparator<Atom>() {
 			@Override
 			public int compare(Atom o1, Atom o2) {
-				//  
+				//
 				if (o1.getPDBserial()<o2.getPDBserial()){
 					return -1;
 				}
@@ -238,12 +270,12 @@ public class TestMmtfRoundTrip {
 					return 1;
 				}
 			}
-		});  		
+		});
 	}
 
 	/**
 	 * Sort the chains based on chain id.
-	 * 
+	 *
 	 * @param chainsOne the first list of chains
 	 * @param chainsTwo the second list of chains
 	 */
@@ -264,27 +296,59 @@ public class TestMmtfRoundTrip {
 	}
 
 	private void checkSeqresGroups(Chain chainOne, Chain chainTwo) {
-		
+
 		assertEquals(chainOne.getSeqResGroups().size(), chainTwo.getSeqResGroups().size());
-		
+
 		for (int i=0; i<chainOne.getSeqResGroups().size(); i++) {
 			Group gOne = chainOne.getSeqResGroup(i);
 			Group gTwo = chainTwo.getSeqResGroup(i);
 			assertNotNull(gOne.getChemComp());
 			assertNotNull(gTwo.getChemComp());
 			assertEquals(gOne.getChemComp().getOne_letter_code(), gTwo.getChemComp().getOne_letter_code());
-			
+
 			assertEquals(gOne.getResidueNumber(), gTwo.getResidueNumber());
 			//assertEquals(gOne.getPDBName(), gTwo.getPDBName());
 		}
-		
+
 		// this is to test issue #517: a null pointer happens if the group hasn't been cloned (including the chem comp associated to it)
 		Chain clonedChain = (Chain)chainTwo.clone();
 		assertEquals(chainTwo.getSeqResGroups().size(), clonedChain.getSeqResGroups().size());
 		for (int i=0; i<clonedChain.getSeqResGroups().size(); i++) {
 			Group g = clonedChain.getSeqResGroup(i);
 			assertNotNull(g.getChemComp());
-			
+
+		}
+	}
+
+	/**
+	 * Checks consistency of bioassemblies
+	 * @param structOne the first input structure
+	 * @param structTwo the second input structure
+	 */
+	private void checkBioAssemblies1(Structure structOne, Structure structTwo) throws IOException {
+
+		Map<Integer, BioAssemblyInfo> expecteds = structOne.getPDBHeader().getBioAssemblies();
+		Map<Integer, BioAssemblyInfo> actuals = structTwo.getPDBHeader().getBioAssemblies();
+		assertEquals(expecteds.size(), actuals.size());
+
+		assertEquals(new ArrayList<>(expecteds.keySet()), new ArrayList<>(actuals.keySet()));
+
+		List<BioAssemblyInfo> assemblies1 = new ArrayList<>(expecteds.values());
+		List<BioAssemblyInfo> assemblies2 = new ArrayList<>(actuals.values());
+
+		for (int i = 0; i < assemblies1.size(); i++) {
+			BioAssemblyInfo info1 = assemblies1.get(i);
+			BioAssemblyInfo info2 = assemblies2.get(i);
+			assertEquals(info1.getId(), info2.getId());
+			assertEquals(info1.getTransforms().size(), info2.getTransforms().size());
+
+			for (int j = 0; j < info1.getTransforms().size(); j++) {
+				BiologicalAssemblyTransformation trans1 = info1.getTransforms().get(j);
+				BiologicalAssemblyTransformation trans2 = info2.getTransforms().get(j);
+
+				assertEquals(trans1.getChainId(), trans2.getChainId());
+				assertTrue(trans1.getTransformationMatrix().epsilonEquals(trans2.getTransformationMatrix(), 0.000001));
+			}
 		}
 	}
 }

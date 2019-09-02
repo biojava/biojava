@@ -1,3 +1,23 @@
+/*
+ *                    BioJava development code
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public Licence.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright for this code is held jointly by the individual
+ * authors.  These should be listed in @author doc comments.
+ *
+ * For more information on the BioJava project and its aims,
+ * or to join the biojava-l mailing list, visit the home page
+ * at:
+ *
+ *      http://www.biojava.org/
+ *
+ */
 package org.biojava.nbio.structure.io.mmtf;
 
 import java.util.List;
@@ -17,7 +37,7 @@ public class MmtfSummaryDataBean {
 	private List<Chain> allChains;
 	private List<Atom> allAtoms;
 	private int numBonds;
-	
+
 	/**
 	 * @return the list of chains (in all models) in the structure
 	 */
@@ -55,14 +75,14 @@ public class MmtfSummaryDataBean {
 		this.numBonds = numBonds;
 	}
 	/**
-	 * @return the map of chain ids (strings asymId) to the index of that chain in the allChains list. 
+	 * @return the map of chain ids (strings asymId) to the index of that chain in the allChains list.
 	 * This only applies for the first model in the structure.
 	 */
 	public Map<String, Integer> getChainIdToIndexMap() {
 		return chainIdToIndexMap;
 	}
 	/**
-	 * @param chainIdToIndexMap the map of chain ids (strings asymId) to the index of that chain in the allChains list. 
+	 * @param chainIdToIndexMap the map of chain ids (strings asymId) to the index of that chain in the allChains list.
 	 * This only applies for the first model in the structure.
 	 */
 	public void setChainIdToIndexMap(Map<String, Integer> chainIdToIndexMap) {

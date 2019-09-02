@@ -26,20 +26,22 @@ package org.biojava.nbio.structure;
 
 import java.io.IOException;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
 
 import org.biojava.nbio.structure.align.ce.CeMain;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.util.AtomCache;
+import org.junit.Test;
 
 /** make sure DNA alignments fail gracefully
  *
  * @author Andreas Prlic
  *
  */
-public class TestDNAAlignment extends TestCase
+public class TestDNAAlignment
 {
 
+	@Test
 	public void test1() throws IOException {
 		String name1="1l3s.A";
 		String name2="1t7p.P";

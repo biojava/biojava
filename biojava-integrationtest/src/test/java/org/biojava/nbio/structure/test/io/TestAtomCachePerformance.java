@@ -25,6 +25,7 @@ import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.LocalPDBDirectory.FetchBehavior;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -35,7 +36,7 @@ import static org.junit.Assert.assertNotNull;
 /**
  * A test to check the performance of AtomCache downloading
  *
- * By default it is excluded from executing by main biojava pom.
+ * By default it is ignored.
  * To execute use:
  * <pre>
  * mvn -Dtest=TestAtomCachePerformance test
@@ -68,6 +69,7 @@ public class TestAtomCachePerformance {
 		cache.setFetchBehavior(FetchBehavior.FORCE_DOWNLOAD);
 	}
 
+	@Ignore
 	@Test
 	public void testDownload() throws IOException, StructureException {
 		System.out.println("Starting performance test for "+PDB_IDS.length+" PDB ids");

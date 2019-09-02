@@ -1,3 +1,23 @@
+/*
+ *                    BioJava development code
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public Licence.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright for this code is held jointly by the individual
+ * authors.  These should be listed in @author doc comments.
+ *
+ * For more information on the BioJava project and its aims,
+ * or to join the biojava-l mailing list, visit the home page
+ * at:
+ *
+ *      http://www.biojava.org/
+ *
+ */
 package org.biojava.nbio.structure.io.mmtf;
 
 import org.junit.Test;
@@ -21,7 +41,7 @@ import org.biojava.nbio.structure.io.mmcif.DownloadChemCompProvider;
 
 /**
  * Test bond finding in BioJava
- * 
+ *
  * @author Anthony Bradley
  *
  */
@@ -29,37 +49,36 @@ public class TestBondFinding {
 
 	/**
 	 * Test that the bonds we are finding are consistent.
-	 * 
+	 *
 	 * @throws IOException
 	 * @throws StructureException
 	 */
 	@Test
 	public void testInterGroupBonds() throws IOException, StructureException {
-		
+
 		// Normal
 		assertEquals(2236, getInterBonds("1QMZ"));
-		
+
 		// 	Disulphide
 		assertEquals(956, getInterBonds("2QWO"));
-		
+
 		// Covalent ligand
 		assertEquals(2294, getInterBonds("4QDV"));
-		
-		// DNA 
+		// DNA
 		assertEquals(22, getInterBonds("4XSN"));
 
 	}
 
 	/**
 	 * Find all of the inter group bonds in a structure.
-	 * 
+	 *
 	 * @param pdbId the pdb id of the structure to determine
 	 * @return the number of inter group bonds (double counted) in a structure
 	 * @throws IOException
 	 * @throws StructureException
 	 */
 	public int getInterBonds(String pdbId) throws IOException, StructureException {
-		
+
 		// Download parameters
 		AtomCache cache = new AtomCache();
 		cache.setUseMmCif(true);
@@ -73,12 +92,12 @@ public class TestBondFinding {
 		dcc.checkDoFirstInstall();
 		cache.setFileParsingParams(params);
 		StructureIO.setAtomCache(cache);
-		
+
 		// Get the structure
 		Structure newStruc = StructureIO.getStructure(pdbId);
-		
+
 		int counter =0;
-		
+
 		// Loop through the atoms and count the bonds
 		for(Chain c: newStruc.getChains()){
 			for(Group g: c.getAtomGroups()){

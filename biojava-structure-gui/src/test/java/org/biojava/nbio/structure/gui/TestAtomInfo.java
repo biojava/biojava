@@ -22,39 +22,42 @@
  */
 package org.biojava.nbio.structure.gui;
 
-import junit.framework.TestCase;
 import org.biojava.nbio.structure.align.gui.jmol.AtomInfo;
+import org.junit.Assert;
+import org.junit.Test;
 
 
-public class TestAtomInfo extends TestCase {
+public class TestAtomInfo {
 
+	@Test
 	public void testAtomInfoConversion(){
 		String s1 = "[MET]508:A.CA/1 #3918";
 
 		AtomInfo aa = AtomInfo.fromString(s1);
-		assertTrue(aa.getAtomName().equals("CA"));
-		assertEquals(aa.getChainId(),"A");
-		assertEquals(aa.getModelNumber(),1);
-		assertEquals(aa.getResidueName(),"MET");
-		assertEquals(aa.getResidueNumber(), "508");
+		Assert.assertTrue(aa.getAtomName().equals("CA"));
+		Assert.assertEquals(aa.getChainId(), "A");
+		Assert.assertEquals(aa.getModelNumber(), 1);
+		Assert.assertEquals(aa.getResidueName(), "MET");
+		Assert.assertEquals(aa.getResidueNumber(), "508");
 
 		String s1New = aa.toString();
 		// atom nr not supported yet
-		assertEquals("[MET]508:A.CA/1",s1New);
+		Assert.assertEquals("[MET]508:A.CA/1", s1New);
 
 	}
 
+	@Test
 	public void testInsertionCode(){
 		String s1 = "[ASP]1^A:A.CA/2 #2";
 
 		AtomInfo aa = AtomInfo.fromString(s1);
 
-		assertEquals(aa.getAtomName(), "CA");
-		assertEquals(aa.getChainId(),"A");
-		assertEquals(aa.getModelNumber(),2);
-		assertEquals(aa.getResidueName(),"ASP");
-		assertEquals(aa.getResidueNumber(), "1A");
-		assertEquals("[ASP]1^A:A.CA/2",aa.toString());
+		Assert.assertEquals(aa.getAtomName(), "CA");
+		Assert.assertEquals(aa.getChainId(), "A");
+		Assert.assertEquals(aa.getModelNumber(), 2);
+		Assert.assertEquals(aa.getResidueName(), "ASP");
+		Assert.assertEquals(aa.getResidueNumber(), "1A");
+		Assert.assertEquals("[ASP]1^A:A.CA/2", aa.toString());
 
 	}
 }

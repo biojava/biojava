@@ -89,7 +89,7 @@ public class CESymmParameters extends CeParameters {
 	public CESymmParameters clone() {
 		return new CESymmParameters(this);
 	}
-	
+
 	public CESymmParameters(CESymmParameters o) {
 		this.maxSymmOrder = o.maxSymmOrder;
 		this.symmType = o.symmType;
@@ -384,7 +384,7 @@ public class CESymmParameters extends CeParameters {
 	public void setUnrefinedScoreThreshold(Double unrefinedScoreThreshold) {
 		this.unrefinedScoreThreshold = unrefinedScoreThreshold;
 	}
-	
+
 	public double getRefinedScoreThreshold() {
 		return refinedScoreThreshold;
 	}

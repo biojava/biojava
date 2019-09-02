@@ -136,6 +136,6 @@ public class GenericGenbankHeaderParser<S extends AbstractSequence<C>, C extends
 	}
 
 	public void addReference(AbstractReference abstractReference){
-	    this.references.add(abstractReference);
-    }
+		this.references.add(abstractReference);
+	}
 }

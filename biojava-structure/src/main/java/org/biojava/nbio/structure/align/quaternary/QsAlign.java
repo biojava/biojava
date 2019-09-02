@@ -1,3 +1,23 @@
+/*
+ *                    BioJava development code
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public Licence.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright for this code is held jointly by the individual
+ * authors.  These should be listed in @author doc comments.
+ *
+ * For more information on the BioJava project and its aims,
+ * or to join the biojava-l mailing list, visit the home page
+ * at:
+ *
+ *      http://www.biojava.org/
+ *
+ */
 package org.biojava.nbio.structure.align.quaternary;
 
 import java.util.ArrayList;
@@ -39,7 +59,7 @@ import org.slf4j.LoggerFactory;
  * protein structures at the quaternary structure level (multiple chains or
  * subunits) and calculates the equivalent subunit matching and a residue-based
  * alignment, together with usual alignment quality scores.
- * 
+ *
  * @author Aleix Lafita
  * @since 5.0.0
  *
@@ -69,8 +89,9 @@ public class QsAlign {
 		QsAlignResult result = new QsAlignResult(s1, s2);
 
 		// SETP 1: cluster each group of subunits O(N^2*L^2) - intra
-		List<SubunitCluster> c1 = SubunitClusterer.cluster(s1, cParams);
-		List<SubunitCluster> c2 = SubunitClusterer.cluster(s2, cParams);
+
+		List<SubunitCluster> c1 = SubunitClusterer.cluster(s1, cParams).getClusters();
+		List<SubunitCluster> c2 = SubunitClusterer.cluster(s2, cParams).getClusters();
 
 		// STEP 2: match each subunit cluster between groups O(N^2*L^2) - inter
 		Map<Integer, Integer> clusterMap = new HashMap<Integer, Integer>();
@@ -83,10 +104,9 @@ public class QsAlign {
 					continue;
 
 				// Use structural alignment to match the subunit clusters
-				if (c1.get(i).mergeStructure(c2.get(j),
-						cParams.getRmsdThreshold(),
-						cParams.getCoverageThreshold(), aParams.getAligner()))
+				if (c1.get(i).mergeStructure(c2.get(j),cParams)) {
 					clusterMap.put(i, j);
+				}
 			}
 		}
 
@@ -200,7 +220,7 @@ public class QsAlign {
 
 				clustSubunitMap.put(key, subunitMap);
 			}
-			
+
 			logger.info("Cluster Subunit Map: " + clustSubunitMap.toString());
 
 			// Unfold the nested map into subunit map and alignment
@@ -293,7 +313,7 @@ public class QsAlign {
 	 * gives the transformation of the complex.
 	 * <p>
 	 * Utility method to cumulative calculate the alignment Atoms.
-	 * 
+	 *
 	 * @param clusters
 	 *            List of SubunitClusters
 	 * @param clusterSubunitMap
@@ -338,7 +358,7 @@ public class QsAlign {
 	 * subunit matchings.
 	 * <p>
 	 * Utility method to cumulative calculate the alignment transformation.
-	 * 
+	 *
 	 * @param clusters
 	 *            List of SubunitClusters
 	 * @param clusterSubunitMap
@@ -354,7 +374,7 @@ public class QsAlign {
 		Pair<Atom[]> pair = getAlignedAtomsForClusterSubunitMap(clusters,
 				clusterSubunitMap);
 
-		return SuperPositions.superpose(Calc.atomsToPoints(pair.getFirst()), 
+		return SuperPositions.superpose(Calc.atomsToPoints(pair.getFirst()),
 				Calc.atomsToPoints(pair.getSecond()));
 
 	}

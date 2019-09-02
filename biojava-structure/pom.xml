@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>biojava</artifactId>
 		<groupId>org.biojava</groupId>
-		<version>5.0.0-SNAPSHOT</version>
+		<version>5.2.2-SNAPSHOT</version>
 	</parent>
 	<artifactId>biojava-structure</artifactId>
 	<name>biojava-structure</name>
@@ -18,7 +18,11 @@
 	</licenses>
 
 	<dependencies>
-
+		<dependency>
+			<groupId>org.rcsb</groupId>
+			<artifactId>ciftools-java</artifactId>
+			<version>0.4.1</version>
+		</dependency>
 		<dependency>
 			<groupId>org.rcsb</groupId>
 			<artifactId>mmtf-api</artifactId>
@@ -40,13 +44,13 @@
 		<dependency>
 			<groupId>org.biojava</groupId>
 			<artifactId>biojava-alignment</artifactId>
-			<version>5.0.0-SNAPSHOT</version>
+			<version>5.2.2-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.biojava</groupId>
 			<artifactId>biojava-core</artifactId>
-			<version>5.0.0-SNAPSHOT</version>
+			<version>5.2.2-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 
@@ -55,14 +59,33 @@
 			<artifactId>vecmath</artifactId>
 			<version>1.3.1</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.jgrapht</groupId>
   			<artifactId>jgrapht-core</artifactId>
-  			<version>0.9.2</version>
+  			<version>1.1.0</version>
 		</dependency>
 
-		<!-- logging dependencies (managed by parent pom, don't set versions or 
+		<!-- JAXb explicit dependency is needed since Java 9. See https://stackoverflow.com/questions/43574426/how-to-resolve-java-lang-noclassdeffounderror-javax-xml-bind-jaxbexception-in-j
+		  Note versions are set in parent pom in dependency management section -->
+		<dependency>
+		    <groupId>javax.xml.bind</groupId>
+		    <artifactId>jaxb-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.xml.bind</groupId>
+			<artifactId>jaxb-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.xml.bind</groupId>
+			<artifactId>jaxb-impl</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>javax.activation</groupId>
+			<artifactId>activation</artifactId>
+		</dependency>
+
+		<!-- logging dependencies (managed by parent pom, don't set versions or
 			scopes here) -->
 		<dependency>
         	<groupId>org.slf4j</groupId>
@@ -98,8 +121,6 @@
 	</dependencies>
 
 	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.build.targetEncoding>UTF-8</project.build.targetEncoding>
 		<maven.build.timestamp.format>yyyyMMdd-HHmm</maven.build.timestamp.format>
 		<timestamp>${maven.build.timestamp}</timestamp>
 	</properties>
@@ -107,7 +128,7 @@
 
 		<plugins>
 
-			<!-- Excluding demo package is required for avoiding namespace clashes 
+			<!-- Excluding demo package is required for avoiding namespace clashes
 				(demo package is in all modules) for signing the jar. See issue #387 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

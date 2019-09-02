@@ -21,9 +21,6 @@
  */
 package org.biojava.nbio.core.util;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -36,6 +33,15 @@ import java.net.URLConnection;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class FileDownloadUtils {
 
@@ -240,6 +246,41 @@ public class FileDownloadUtils {
 		connection.setConnectTimeout(timeout);
 		return connection;
 	}
+
+	/**
+	 * Recursively delete a folder & contents
+	 *
+	 * @param dir directory to delete
+	 */
+	public static void deleteDirectory(Path dir) throws IOException {
+		if(dir == null || !Files.exists(dir))
+			return;
+		Files.walkFileTree(dir, new SimpleFileVisitor<Path>() {
+	        @Override
+	        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+	            Files.delete(file);
+	            return FileVisitResult.CONTINUE;
+	        }
+
+	        @Override
+	        public FileVisitResult postVisitDirectory(Path dir, IOException e) throws IOException {
+	            if (e != null) {
+	                throw e;
+	            }
+	            Files.delete(dir);
+	            return FileVisitResult.CONTINUE;
+	        }
+	    });
+	}
+	/**
+	 * Recursively delete a folder & contents
+	 *
+	 * @param dir directory to delete
+	 */
+	public static void deleteDirectory(String dir) throws IOException {
+		deleteDirectory(Paths.get(dir));
+	}
+
 
 	public static void main(String[] args) {
 		String url;

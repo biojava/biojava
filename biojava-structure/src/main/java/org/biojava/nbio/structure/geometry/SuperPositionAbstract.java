@@ -1,3 +1,23 @@
+/*
+ *                    BioJava development code
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public Licence.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright for this code is held jointly by the individual
+ * authors.  These should be listed in @author doc comments.
+ *
+ * For more information on the BioJava project and its aims,
+ * or to join the biojava-l mailing list, visit the home page
+ * at:
+ *
+ *      http://www.biojava.org/
+ *
+ */
 package org.biojava.nbio.structure.geometry;
 
 import javax.vecmath.Matrix4d;
@@ -6,7 +26,7 @@ import javax.vecmath.Point3d;
 /**
  * The SuperPositionAbstract contains common code shared by all SuperPosition
  * algorithm implementations.
- * 
+ *
  * @author Aleix Lafita
  * @since 5.0.0
  *
@@ -28,7 +48,7 @@ public abstract class SuperPositionAbstract implements SuperPosition {
 
 	/**
 	 * Check that the input to the superposition algorithms is valid.
-	 * 
+	 *
 	 * @param fixed
 	 * @param moved
 	 */

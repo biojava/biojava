@@ -1,8 +1,28 @@
+/*
+ *                    BioJava development code
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public Licence.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright for this code is held jointly by the individual
+ * authors.  These should be listed in @author doc comments.
+ *
+ * For more information on the BioJava project and its aims,
+ * or to join the biojava-l mailing list, visit the home page
+ * at:
+ *
+ *      http://www.biojava.org/
+ *
+ */
 package org.biojava.nbio.structure.io.mmcif.model;
 
 /**
  * Bean to hold data for _pdbx_database_status mmCIF category.
- * 
+ *
  * @author Peter Rose
  * @since 5.0
  */
@@ -17,7 +37,7 @@ public class PdbxDatabaseStatus extends AbstractBean {
 	private String status_code_mr;
 	private String status_code_sf;
 	private String status_code_cs;
-	
+
 	public String getStatus_code() {
 		return status_code;
 	}
@@ -77,5 +97,5 @@ public class PdbxDatabaseStatus extends AbstractBean {
 	}
 	public void setStatus_code_cs(String status_code_cs) {
 		this.status_code_cs = status_code_cs;
-	}  
+	}
 }

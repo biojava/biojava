@@ -16,6 +16,9 @@
  */
 package org.biojava.nbio.structure.scop;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -24,8 +27,6 @@ import java.lang.ref.SoftReference;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 /**
@@ -102,7 +103,7 @@ public class Astral {
 
 	private static Map<String, SoftReference<Astral>> instances = new HashMap<String, SoftReference<Astral>>();
 
-	private static final Logger logger = Logger.getLogger(Astral.class.getName());
+	private static final Logger logger = LoggerFactory.getLogger(Astral.class);
 
 	private Set<String> names;
 	private LinkedHashMap<Integer,String> failedLines;
@@ -221,12 +222,12 @@ public class Astral {
 						String scopId = line.split("\\s")[0].substring(1);
 						names.add(scopId);
 						if (i % 1000 == 0) {
-							logger.log(Level.FINE,"Reading ASTRAL line for " + scopId);
+							logger.debug("Reading ASTRAL line for " + scopId);
 						}
 						i++;
 					} catch (RuntimeException e) {
 						failedLines.put(i, line);
-						logger.log(Level.WARNING,"Couldn't read line " + line, e);
+						logger.warn("Couldn't read line " + line, e);
 					}
 				}
 			}
@@ -240,7 +241,7 @@ public class Astral {
 				try {
 					br.close();
 				} catch (IOException e) {
-					logger.log(Level.WARNING,"Could not close stream", e);
+					logger.warn("Could not close stream", e);
 				}
 			}
 		}

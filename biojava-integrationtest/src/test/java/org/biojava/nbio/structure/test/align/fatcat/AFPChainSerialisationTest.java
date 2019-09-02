@@ -19,9 +19,6 @@
 
 package org.biojava.nbio.structure.test.align.fatcat;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.fatcat.FatCat;
 import org.biojava.nbio.structure.align.fatcat.calc.FatCatParameters;
@@ -32,23 +29,13 @@ import org.biojava.nbio.structure.align.xml.AFPChainXMLParser;
 
 import java.io.IOException;
 
+import static org.junit.Assert.*;
+
 public class AFPChainSerialisationTest
-extends TestCase
 {
 
 
 
-	/**
-	 * @return the suite of tests being tested
-	 */
-	public static Test suite()
-	{
-		return new TestSuite( AFPChainSerialisationTest.class );
-	}
-
-	public AFPChainSerialisationTest(String testName){
-		super(testName);
-	}
 
 //   public void testSerialization1P80_2IUF(){
 //      String name1 = "1P80.D";
@@ -70,6 +57,7 @@ extends TestCase
 //
 //   }
 
+	@org.junit.Test
 	public void testSerialization1a21_1hwg() throws IOException, StructureException{
 
 
@@ -199,7 +187,7 @@ extends TestCase
 	}
 
 
-	public AFPChain doAlign(String name1, String name2, Atom[] ca1, Atom[] ca2 , boolean doRigid) throws StructureException,IOException{
+	private AFPChain doAlign(String name1, String name2, Atom[] ca1, Atom[] ca2 , boolean doRigid) throws StructureException,IOException{
 		FatCatParameters params = new FatCatParameters();
 
 		FatCat fatCat = new FatCat();
@@ -232,7 +220,8 @@ extends TestCase
 	}
 
 
-	public void testMulti() throws IOException, StructureException { 
+	@org.junit.Test
+	public void testMulti() throws IOException, StructureException {
 		Atom[] ca1 = null;
 		Atom[] ca2 = null;
 		Atom[] ca3 = null;
@@ -264,7 +253,7 @@ extends TestCase
 		result2 = align(name3,name4,ca4, ca5,true);
 
 
-		
+
 
 		String xmlNew = "<multi>"+result1[1]+ result2[1] +"</multi>";
 		//System.out.println(xmlNew);
@@ -301,7 +290,7 @@ extends TestCase
 		assertEquals(fatcat2,result2[0]);
 		String xmlnew2 = AFPChainXMLConverter.toXML(new2, ca4, ca6);
 		assertEquals(xmlnew2,result2[1]);
-		
+
 
 
 	}

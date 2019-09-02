@@ -1,3 +1,23 @@
+/*
+ *                    BioJava development code
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public Licence.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright for this code is held jointly by the individual
+ * authors.  These should be listed in @author doc comments.
+ *
+ * For more information on the BioJava project and its aims,
+ * or to join the biojava-l mailing list, visit the home page
+ * at:
+ *
+ *      http://www.biojava.org/
+ *
+ */
 package org.biojava.nbio.structure.geometry;
 
 import javax.vecmath.Matrix3d;
@@ -11,13 +31,13 @@ import org.biojava.nbio.structure.jama.Matrix;
  * geometry (transformation matrices and rotation matrices).
  * <p>
  * This class complements and extends the functionallity of vecmath and JAMA.
- * 
+ *
  * @author Aleix Lafita
  * @since 5.0.0
  *
  */
 public class Matrices {
-	
+
 	/** Prevent instantiation */
 	private Matrices(){}
 
@@ -41,7 +61,7 @@ public class Matrices {
 		}
 		return rot;
 	}
-	
+
 	/**
 	 * Convert a transformation matrix into a rotation matrix.
 	 *
@@ -68,7 +88,7 @@ public class Matrices {
 		transform.get(transl);
 		return transl;
 	}
-	
+
 	/**
 	 * Convert JAMA rotation and translation to a Vecmath transformation matrix.
 	 * Because the JAMA matrix is a pre-multiplication matrix and the Vecmath

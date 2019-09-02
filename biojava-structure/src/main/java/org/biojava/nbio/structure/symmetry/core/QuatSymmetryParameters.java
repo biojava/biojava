@@ -21,11 +21,12 @@
 package org.biojava.nbio.structure.symmetry.core;
 
 import java.io.Serializable;
+import java.util.Set;
 
 /**
  * The QuatSymmetryParameters specify the options used for the detection of
  * quaternary symmetry in structures using the {@link QuatSymmetryDetector}.
- * 
+ *
  * @author Peter Rose
  * @author Aleix Lafita
  *
@@ -49,14 +50,14 @@ public class QuatSymmetryParameters implements Serializable {
 	private double minimumHelixRise = 1.0;
 	private double minimumHelixAngle = 5.0; // min helix angle to differentiate
 											// it from a translational repeat
-	private int maximumLocalCombinations = 50000; // max number of combinations
+	private int maximumLocalCombinations = 10000; // max number of combinations
 													// to try for local symmetry
 													// calculation
-	private int maximumLocalResults = 1000;
-	private int maximumLocalSubunits = 20; // maximum number of subunits for
-											// local symmetry calculations
 	private double localTimeLimit = 120; // time limit for local calculations in
 											// seconds
+	private double localTimeStart = -1; // time when the local calculations started
+										// if set (>0), local time limit will be used
+
 	private boolean onTheFly = true;
 
 	/**
@@ -130,36 +131,6 @@ public class QuatSymmetryParameters implements Serializable {
 	}
 
 	/**
-	 * @return the maximumLocalResults
-	 */
-	public int getMaximumLocalResults() {
-		return maximumLocalResults;
-	}
-
-	/**
-	 * @return the maximumLocalSubunits
-	 */
-	public int getMaximumLocalSubunits() {
-		return maximumLocalSubunits;
-	}
-
-	/**
-	 * @param maximumLocalSubunits
-	 *            the maximumLocalSubunits to set
-	 */
-	public void setMaximumLocalSubunits(int maximumLocalSubunits) {
-		this.maximumLocalSubunits = maximumLocalSubunits;
-	}
-
-	/**
-	 * @param maximumLocalResults
-	 *            the maximumLocalResults to set
-	 */
-	public void setMaximumLocalResults(int maximumLocalResults) {
-		this.maximumLocalResults = maximumLocalResults;
-	}
-
-	/**
 	 * @return the localTimeLimit
 	 */
 	public double getLocalTimeLimit() {
@@ -175,8 +146,45 @@ public class QuatSymmetryParameters implements Serializable {
 	}
 
 	/**
+	 * @return the localTimeStart
+	 */
+	public double getLocalTimeStart() {
+		return localTimeStart;
+	}
+
+	/**
+	 * @param localTimeStart
+	 *            the time when local calculations started
+	 */
+	public void useLocalTimeLimit(double localTimeStart) {
+		this.localTimeStart = localTimeStart;
+	}
+
+	/**
+	 * @param combinations
+	 *            a set of combinations considered fo far by the local
+	 *            symmetry search
+	 * @return true, if the number of combinations
+	 */
+	public boolean isLocalLimitsExceeded(Set<?> combinations) {
+		if(combinations.size()>maximumLocalCombinations) {
+			return true;
+		}
+		return isLocalLimitsExceeded();
+	}
+
+	public boolean isLocalLimitsExceeded() {
+		//use the time limit only if the start time was set
+		if (localTimeStart < 0) {
+			return false;
+		}
+		double elapsedTime = (System.nanoTime() - localTimeStart) / 1000000000;
+		return elapsedTime > localTimeLimit;
+	}
+
+	/**
 	 * On-the-fly Jmol bioassembly generation.
-	 * 
+	 *
 	 * @return true if Jmol on the fly bioassembly generation is used
 	 */
 	public boolean isOnTheFly() {
@@ -185,7 +193,7 @@ public class QuatSymmetryParameters implements Serializable {
 
 	/**
 	 * On-the-fly Jmol bioassembly generation.
-	 * 
+	 *
 	 * @param useJmolBioAssemblies
 	 *            true if Jmol on the fly bioassembly generation is used, false
 	 *            otherwise
@@ -203,9 +211,9 @@ public class QuatSymmetryParameters implements Serializable {
 				+ ", minimumHelixRise=" + minimumHelixRise
 				+ ", minimumHelixAngle=" + minimumHelixAngle
 				+ ", maximumLocalCombinations=" + maximumLocalCombinations
-				+ ", maximumLocalResults=" + maximumLocalResults
-				+ ", maximumLocalSubunits=" + maximumLocalSubunits
+				+ ", localTimeStart=" + localTimeStart
 				+ ", localTimeLimit=" + localTimeLimit + ", onTheFly="
 				+ onTheFly + "]";
 	}
+
 }

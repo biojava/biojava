@@ -1,3 +1,23 @@
+/*
+ *                    BioJava development code
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public Licence.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright for this code is held jointly by the individual
+ * authors.  These should be listed in @author doc comments.
+ *
+ * For more information on the BioJava project and its aims,
+ * or to join the biojava-l mailing list, visit the home page
+ * at:
+ *
+ *      http://www.biojava.org/
+ *
+ */
 package org.biojava.nbio.structure.geometry;
 
 import static org.junit.Assert.*;
@@ -20,7 +40,7 @@ import org.junit.Test;
 
 /**
  * Test the methods in the {@link UnitQuaternions} class.
- * 
+ *
  * @author Aleix Lafita
  * @since 5.0.0
  *
@@ -32,7 +52,7 @@ public class TestUnitQuaternions {
 	 * <p>
 	 * Tests the identity orientation, orientation around one coordinate axis
 	 * and orientation around a non-coordinate axis.
-	 * 
+	 *
 	 * @throws StructureException
 	 * @throws IOException
 	 */
@@ -134,7 +154,7 @@ public class TestUnitQuaternions {
 	/**
 	 * Test {@link UnitQuaternions#orientationMetric(Point3d[], Point3d[])} on a
 	 * real structure, which will be deviating a little bit every time.
-	 * 
+	 *
 	 * @throws StructureException
 	 * @throws IOException
 	 */
@@ -204,7 +224,7 @@ public class TestUnitQuaternions {
 	/**
 	 * Test {@link UnitQuaternions#relativeOrientation(Point3d[], Point3d[])} on
 	 * a real structure. Test recovering of the angle applied.
-	 * 
+	 *
 	 * @throws StructureException
 	 * @throws IOException
 	 */
@@ -217,20 +237,20 @@ public class TestUnitQuaternions {
 		Point3d[] cloud = Calc.atomsToPoints(StructureTools
 				.getRepresentativeAtomArray(pdb));
 		Point3d[] cloud2 = CalcPoint.clonePoint3dArray(cloud);
-		
+
 		// Test orientation angle equal to 0 at this point
 		double angle = UnitQuaternions.orientationAngle(cloud, cloud2, false);
 		assertEquals(angle, 0, 0.001);
-		
+
 		// Apply a 30 degree rotation to cloud
 		AxisAngle4d axis = new AxisAngle4d(new Vector3d(1,1,1), Math.PI / 6);
 		Matrix4d transform = new Matrix4d();
 		transform.set(axis);
-		
+
 		CalcPoint.transform(transform, cloud);
 		angle = UnitQuaternions.orientationAngle(cloud, cloud2, false);
 		angle = Math.min(Math.abs(2 * Math.PI - angle), angle);
-		
+
 		// Test that angle was recovered
 		assertEquals(angle, Math.PI / 6, 0.001);
 	}

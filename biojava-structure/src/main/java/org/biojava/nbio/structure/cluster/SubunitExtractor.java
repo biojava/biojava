@@ -31,11 +31,11 @@ import java.util.List;
 /**
  * The SubunitExtractor extracts the information of each protein {@link Chain}
  * in a {@link Structure} and converts them into a List of {@link Subunit}.
- * 
+ *
  * @author Peter Rose
  * @author Aleix Lafita
  * @since 5.0.0
- * 
+ *
  */
 public class SubunitExtractor {
 
@@ -48,10 +48,10 @@ public class SubunitExtractor {
 
 	/**
 	 * Extract the information of each protein Chain in a Structure and converts
-	 * them into a List of Subunit. The name of the Subunits is set to the
-	 * {@link Chain#getName()}.
-	 * 
-	 * 
+	 * them into a List of Subunit. The name of the Subunits is set to
+	 * {@link Chain#getId()}.
+	 *
+	 *
 	 * @param structure
 	 *            Structure object with protein Chains
 	 * @param absMinLen
@@ -68,19 +68,16 @@ public class SubunitExtractor {
 		// The extracted subunit container
 		List<Subunit> subunits = new ArrayList<Subunit>();
 
-		
-		for (Chain c : structure.getChains()) {
-
+		for (Chain c : structure.getPolyChains()) {
 			// Only take protein chains
 			if (c.isProtein()) {
 				Atom[] ca = StructureTools.getRepresentativeAtomArray(c);
-				logger.debug("Chain " + c.getId() + "; CA Atoms: "
-						+ ca.length + "; SEQRES: " + c.getSeqResSequence());
-				subunits.add(new Subunit(ca, c.getName(), null, structure));
-
+				logger.debug("Chain " + c.getId() + "; CA Atoms: " + ca.length + "; SEQRES: " + c.getSeqResSequence());
+				if (ca.length==0)
+					continue;
+				subunits.add(new Subunit(ca, c.getId(), null, structure));
 			}
 		}
-		
 
 		// Calculate the minimum length of a Subunit
 		int adjustedMinLen = calcAdjustedMinimumSequenceLength(subunits,
@@ -100,7 +97,7 @@ public class SubunitExtractor {
 	 * Returns an adapted minimum sequence length. This method ensure that
 	 * structure that only have short chains are not excluded by the
 	 * minimumSequenceLength cutoff value.
-	 * 
+	 *
 	 * @return adjustedMinimumSequenceLength
 	 */
 	private static int calcAdjustedMinimumSequenceLength(

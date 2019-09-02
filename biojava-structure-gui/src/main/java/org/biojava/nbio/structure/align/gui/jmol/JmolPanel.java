@@ -69,7 +69,7 @@ extends JPrintPanel
 implements ActionListener
 {
 	private static final Logger logger = LoggerFactory.getLogger(JmolPanel.class);
-	
+
 	private static final long serialVersionUID = -3661941083797644242L;
 
 	private JmolViewer viewer;
@@ -127,29 +127,43 @@ implements ActionListener
 		viewer.evalString(rasmolScript);
 	}
 
-	public void setStructure(final Structure s)
-	{
+	public void setStructure(final Structure s, boolean useMmtf) {
+
 		this.structure = s;
-		try (
-				PipedOutputStream out = new PipedOutputStream();
-				// Viewer requires a BufferedInputStream for reflection
-				InputStream in = new BufferedInputStream(new PipedInputStream(out));
-				) {
-			new Thread((Runnable)() -> {
-				try {
-					MmtfActions.writeToOutputStream(s,out);
-				} catch (Exception e) {
-					logger.error("Error generating MMTF output for {}",
-							s.getStructureIdentifier()==null ? s.getStructureIdentifier().getIdentifier() : s.getName(), e);
-				}
-			}).start();
-			viewer.openReader(null, in);
-		} catch (IOException e) {
-			logger.error("Error transfering {} to Jmol",
-					s.getStructureIdentifier()==null ? s.getStructureIdentifier().getIdentifier() : s.getName(), e);
+
+		if (useMmtf) {
+			try (
+					PipedOutputStream out = new PipedOutputStream();
+					// Viewer requires a BufferedInputStream for reflection
+					InputStream in = new BufferedInputStream(new PipedInputStream(out));
+					) {
+				new Thread((Runnable)() -> {
+					try {
+						MmtfActions.writeToOutputStream(s,out);
+					} catch (Exception e) {
+						logger.error("Error generating MMTF output for {}",
+								s.getStructureIdentifier()==null ? s.getStructureIdentifier().getIdentifier() : s.getName(), e);
+					}
+				}).start();
+				viewer.openReader(null, in);
+			} catch (IOException e) {
+				logger.error("Error transfering {} to Jmol",
+						s.getStructureIdentifier()==null ? s.getStructureIdentifier().getIdentifier() : s.getName(), e);
+			}
+		} else {
+			// Use mmCIF format
+			String serialized = s.toMMCIF();
+			viewer.openStringInline(serialized);
+
 		}
 
 		evalString("save STATE state_1");
+
+	}
+
+	public void setStructure(final Structure s) {
+		// Set the default to MMCIF (until issue #629 is fixed)
+		setStructure(s, false);
 	}
 
 	/** assign a custom color to the Jmol chains command.

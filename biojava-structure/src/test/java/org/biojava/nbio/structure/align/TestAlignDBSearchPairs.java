@@ -25,13 +25,12 @@
 package org.biojava.nbio.structure.align;
 
 
+import org.junit.Test;
 
-import junit.framework.TestCase;
-
-public class TestAlignDBSearchPairs extends TestCase
+public class TestAlignDBSearchPairs
 {
 
-
+	@Test
 	public void testNothing(){
 
 	}

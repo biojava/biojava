@@ -4,7 +4,7 @@
   <parent>
     <artifactId>biojava</artifactId>
     <groupId>org.biojava</groupId>
-    <version>5.0.0-SNAPSHOT</version>
+    <version>5.2.2-SNAPSHOT</version>
   </parent>
   <artifactId>biojava-modfinder</artifactId>
   <name>biojava-modfinder</name>
@@ -18,9 +18,9 @@
     </license>
   </licenses>
 
-  <properties>  	   
+  <properties>
   	  	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.build.targetEncoding>UTF-8</project.build.targetEncoding> 
+		<project.build.targetEncoding>UTF-8</project.build.targetEncoding>
   </properties>
   <dependencies>
     <dependency>
@@ -31,7 +31,7 @@
     <dependency>
     	<groupId>org.biojava</groupId>
     	<artifactId>biojava-structure</artifactId>
-    	<version>5.0.0-SNAPSHOT</version>
+    	<version>5.2.2-SNAPSHOT</version>
     	<type>jar</type>
     	<scope>compile</scope>
     </dependency>
@@ -52,7 +52,7 @@
   		<dependency>
     		<groupId>org.apache.logging.log4j</groupId>
     		<artifactId>log4j-core</artifactId>
-  		</dependency>			
+  		</dependency>
   </dependencies>
   <build>
   <plugins>
@@ -67,7 +67,7 @@
                     </excludes>
                 </configuration>
             </plugin>
-  
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>

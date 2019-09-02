@@ -209,8 +209,8 @@ public class StructureAlignmentJmol extends AbstractAlignmentJmol implements Cha
 
 			}
 		});
-			
-		hBox2.add(resetDisplay); 
+
+		hBox2.add(resetDisplay);
 		hBox2.add(Box.createGlue());
 
 
@@ -238,24 +238,24 @@ public class StructureAlignmentJmol extends AbstractAlignmentJmol implements Cha
 
 		hBox2.add(Box.createGlue());
 		vBox.add(hBox2);
-		
-		
+
+
 		// ZOOM SLIDER
 		Box hBox3 = Box.createHorizontalBox();
 		hBox3.setMaximumSize(new Dimension(Short.MAX_VALUE,30));
-		
+
 		JLabel sliderLabel = new JLabel("Zoom");
-		
-		hBox3.add(Box.createGlue()); 
+
+		hBox3.add(Box.createGlue());
 		hBox3.add(sliderLabel);
-        
+
 		JSlider zoomSlider = new JSlider(JSlider.HORIZONTAL,0,500,100);
-		
+
 		zoomSlider.addChangeListener(this);
-		
+
 		zoomSlider.setMajorTickSpacing(100);
 		zoomSlider.setPaintTicks(true);
-		
+
 		Hashtable<Integer, JLabel> labelTable = new Hashtable<Integer, JLabel>();
 		labelTable.put(new Integer(0),new JLabel("0%"));
 		labelTable.put(new Integer(100),new JLabel("100%"));
@@ -263,13 +263,13 @@ public class StructureAlignmentJmol extends AbstractAlignmentJmol implements Cha
 		labelTable.put(new Integer(300),new JLabel("300%"));
 		labelTable.put(new Integer(400),new JLabel("400%"));
 		labelTable.put(new Integer(500),new JLabel("500%"));
-		
+
 		zoomSlider.setLabelTable(labelTable);
 		zoomSlider.setPaintLabels(true);
-		
-		hBox3.add(zoomSlider); 
+
+		hBox3.add(zoomSlider);
 		hBox3.add(Box.createGlue());
-		
+
 		// SPIN CHECKBOX
 		JCheckBox toggleSpin = new JCheckBox("Spin");
 		toggleSpin.addItemListener(
@@ -288,14 +288,14 @@ public class StructureAlignmentJmol extends AbstractAlignmentJmol implements Cha
 					}
 				}
 				);
-		
-		
-		hBox3.add(toggleSpin); 
+
+
+		hBox3.add(toggleSpin);
 		hBox3.add(Box.createGlue());
-		
+
 		vBox.add(hBox3);
 
-		
+
 		// STATUS DISPLAY
 
 		Box hBox = Box.createHorizontalBox();
@@ -624,8 +624,8 @@ public class StructureAlignmentJmol extends AbstractAlignmentJmol implements Cha
 		if (!source.getValueIsAdjusting()) {
 			int zoomValue = (int) source.getValue();
 			jmolPanel.executeCmd("zoom " + zoomValue);
-		}	
+		}
 	}
 
-	
+
 }

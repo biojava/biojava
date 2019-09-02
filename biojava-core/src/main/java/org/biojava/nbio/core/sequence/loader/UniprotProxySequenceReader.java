@@ -76,7 +76,9 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 	private static final String TREMBLID_PATTERN = "[A-NR-Z][0-9]([A-Z][A-Z0-9]{2}[0-9]){1,2}";
 	public static final Pattern UP_AC_PATTERN = Pattern.compile("(" + SPID_PATTERN + "|" + TREMBLID_PATTERN + ")");
 
-	private static String uniprotbaseURL = "http://www.uniprot.org"; //"http://pir.uniprot.org";
+	public static final String DEFAULT_UNIPROT_BASE_URL = "https://www.uniprot.org";
+
+	private static String uniprotbaseURL = DEFAULT_UNIPROT_BASE_URL;
 	private static String uniprotDirectoryCache = null;
 	private String sequence;
 	private CompoundSet<C> compoundSet;
@@ -140,6 +142,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 
 	/**
 	 * Once the sequence is retrieved set the contents and make sure everything this is valid
+	 * Some uniprot records contain white space in the sequence. We must strip it out so setContents doesn't fail.
 	 * @param sequence
 	 * @throws CompoundNotFoundException
 	 */
@@ -147,13 +150,14 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 	public void setContents(String sequence) throws CompoundNotFoundException {
 		// Horrendously inefficient - pretty much the way the old BJ did things.
 		// TODO Should be optimised.
-		this.sequence = sequence;
+		// NOTE This chokes on whitespace in the sequence, so whitespace is stripped
+		this.sequence = sequence.replaceAll("\\s", "").trim();
 		this.parsedCompounds.clear();
-		for (int i = 0; i < sequence.length();) {
+		for (int i = 0; i < this.sequence.length();) {
 			String compoundStr = null;
 			C compound = null;
 			for (int compoundStrLength = 1; compound == null && compoundStrLength <= compoundSet.getMaxSingleCompoundStringLength(); compoundStrLength++) {
-				compoundStr = sequence.substring(i, i + compoundStrLength);
+				compoundStr = this.sequence.substring(i, i + compoundStrLength);
 				compound = compoundSet.getCompoundForString(compoundStr);
 			}
 			if (compound == null) {
@@ -379,39 +383,94 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 		Element uniprotElement = uniprotDoc.getDocumentElement();
 		Element entryElement = XMLHelper.selectSingleElement(uniprotElement, "entry");
 		Element proteinElement = XMLHelper.selectSingleElement(entryElement, "protein");
-		ArrayList<Element> keyWordElementList = XMLHelper.selectElements(proteinElement, "alternativeName");
+		
+		ArrayList<Element> keyWordElementList;
+		getProteinAliasesFromNameGroup(aliasList, proteinElement);
+		
+		keyWordElementList = XMLHelper.selectElements(proteinElement, "component");
 		for (Element element : keyWordElementList) {
-			Element fullNameElement = XMLHelper.selectSingleElement(element, "fullName");
-			aliasList.add(fullNameElement.getTextContent());
-			Element shortNameElement = XMLHelper.selectSingleElement(element, "shortName");
-			if(null != shortNameElement) {
-				String shortName = shortNameElement.getTextContent();
-				if(null != shortName && !shortName.trim().isEmpty()) {
-					aliasList.add(shortName);
-				}
+			getProteinAliasesFromNameGroup(aliasList, element);
+		}
+
+		keyWordElementList = XMLHelper.selectElements(proteinElement, "domain");
+		for (Element element : keyWordElementList) {
+			getProteinAliasesFromNameGroup(aliasList, element);
+		}
+
+		keyWordElementList = XMLHelper.selectElements(proteinElement, "submittedName");
+		for (Element element : keyWordElementList) {
+			getProteinAliasesFromNameGroup(aliasList, element);
+		}
+
+		keyWordElementList = XMLHelper.selectElements(proteinElement, "cdAntigenName");
+		for (Element element : keyWordElementList) {
+			String cdAntigenName = element.getTextContent();
+			if(null != cdAntigenName && !cdAntigenName.trim().isEmpty()) {
+				aliasList.add(cdAntigenName);
 			}
 		}
-		keyWordElementList = XMLHelper.selectElements(proteinElement, "recommendedName");
+			
+		keyWordElementList = XMLHelper.selectElements(proteinElement, "innName");
 		for (Element element : keyWordElementList) {
-			Element fullNameElement = XMLHelper.selectSingleElement(element, "fullName");
-			aliasList.add(fullNameElement.getTextContent());
-			Element shortNameElement = XMLHelper.selectSingleElement(element, "shortName");
-			if(null != shortNameElement) {
-				String shortName = shortNameElement.getTextContent();
-				if(null != shortName && !shortName.trim().isEmpty()) {
-					aliasList.add(shortName);
-				}
+			String cdAntigenName = element.getTextContent();
+			if(null != cdAntigenName && !cdAntigenName.trim().isEmpty()) {
+				aliasList.add(cdAntigenName);
 			}
 		}
-		Element cdAntigen = XMLHelper.selectSingleElement(proteinElement, "cdAntigenName");
-		if(null != cdAntigen) {
-			String cdAntigenName = cdAntigen.getTextContent();
+
+		keyWordElementList = XMLHelper.selectElements(proteinElement, "biotechName");
+		for (Element element : keyWordElementList) {
+			String cdAntigenName = element.getTextContent();
+			if(null != cdAntigenName && !cdAntigenName.trim().isEmpty()) {
+				aliasList.add(cdAntigenName);
+			}
+		}
+
+		keyWordElementList = XMLHelper.selectElements(proteinElement, "allergenName");
+		for (Element element : keyWordElementList) {
+			String cdAntigenName = element.getTextContent();
 			if(null != cdAntigenName && !cdAntigenName.trim().isEmpty()) {
 				aliasList.add(cdAntigenName);
 			}
 		}
 
 		return aliasList;
+	}
+
+	/**
+	 * @param aliasList
+	 * @param proteinElement
+	 * @throws XPathExpressionException
+	 */
+	private void getProteinAliasesFromNameGroup(ArrayList<String> aliasList, Element proteinElement)
+			throws XPathExpressionException {
+		ArrayList<Element> keyWordElementList = XMLHelper.selectElements(proteinElement, "alternativeName");
+		for (Element element : keyWordElementList) {
+			getProteinAliasesFromElement(aliasList, element);
+		}
+		
+		keyWordElementList = XMLHelper.selectElements(proteinElement, "recommendedName");
+		for (Element element : keyWordElementList) {
+			getProteinAliasesFromElement(aliasList, element);
+		}
+	}
+
+	/**
+	 * @param aliasList
+	 * @param element
+	 * @throws XPathExpressionException
+	 */
+	private void getProteinAliasesFromElement(ArrayList<String> aliasList, Element element)
+			throws XPathExpressionException {
+		Element fullNameElement = XMLHelper.selectSingleElement(element, "fullName");
+		aliasList.add(fullNameElement.getTextContent());
+		Element shortNameElement = XMLHelper.selectSingleElement(element, "shortName");
+		if(null != shortNameElement) {
+			String shortName = shortNameElement.getTextContent();
+			if(null != shortName && !shortName.trim().isEmpty()) {
+				aliasList.add(shortName);
+			}
+		}
 	}
 
 	/**
@@ -494,6 +553,61 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 		fw.close();
 	}
 
+	/**
+	 * Open a URL connection.
+	 *
+	 * Follows redirects.
+	 * @param url
+	 * @throws IOException
+	 */
+	private static HttpURLConnection openURLConnection(URL url) throws IOException {
+		// This method should be moved to a utility class in BioJava 5.0
+
+		final int timeout = 5000;
+		final String useragent = "BioJava";
+
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		conn.setRequestProperty("User-Agent", useragent);
+		conn.setInstanceFollowRedirects(true);
+		conn.setConnectTimeout(timeout);
+		conn.setReadTimeout(timeout);
+
+		int status = conn.getResponseCode();
+		while (status == HttpURLConnection.HTTP_MOVED_TEMP
+				|| status == HttpURLConnection.HTTP_MOVED_PERM
+				|| status == HttpURLConnection.HTTP_SEE_OTHER) {
+			// Redirect!
+			String newUrl = conn.getHeaderField("Location");
+
+			if(newUrl.equals(url.toString())) {
+				throw new IOException("Cyclic redirect detected at "+newUrl);
+			}
+
+			// Preserve cookies
+			String cookies = conn.getHeaderField("Set-Cookie");
+
+			// open the new connection again
+			url = new URL(newUrl);
+			conn.disconnect();
+			conn = (HttpURLConnection) url.openConnection();
+			if(cookies != null) {
+				conn.setRequestProperty("Cookie", cookies);
+			}
+			conn.addRequestProperty("User-Agent", useragent);
+			conn.setInstanceFollowRedirects(true);
+			conn.setConnectTimeout(timeout);
+			conn.setReadTimeout(timeout);
+			conn.connect();
+
+			status = conn.getResponseCode();
+
+			logger.info("Redirecting from {} to {}", url, newUrl);
+		}
+		conn.connect();
+
+		return conn;
+	}
+
 	private StringBuilder fetchUniprotXML(String uniprotURL)
 			throws IOException, CompoundNotFoundException {
 
@@ -502,11 +616,9 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 		int attempt = 5;
 		List<String> errorCodes = new ArrayList<String>();
 		while(attempt > 0) {
-			HttpURLConnection uniprotConnection = (HttpURLConnection) uniprot.openConnection();
-			uniprotConnection.setRequestProperty("User-Agent", "BioJava");
-			uniprotConnection.connect();
+			HttpURLConnection uniprotConnection = openURLConnection(uniprot);
 			int statusCode = uniprotConnection.getResponseCode();
-			if (statusCode == 200) {
+			if (statusCode == HttpURLConnection.HTTP_OK) {
 				BufferedReader in = new BufferedReader(
 						new InputStreamReader(
 						uniprotConnection.getInputStream()));

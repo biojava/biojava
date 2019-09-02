@@ -69,9 +69,9 @@ public class AFPAlignmentDisplay
 		Atom[] a1 = getAlignedAtoms1(afpChain,ca1);
 		Atom[] a2 = getAlignedAtoms2(afpChain,ca2);
 
-		Matrix4d trans = SuperPositions.superpose(Calc.atomsToPoints(a1), 
+		Matrix4d trans = SuperPositions.superpose(Calc.atomsToPoints(a1),
 				Calc.atomsToPoints(a2));
-		
+
 		return Matrices.getRotationJAMA(trans);
 
 	}
@@ -82,9 +82,9 @@ public class AFPAlignmentDisplay
 		Atom[] a1 = getAlignedAtoms1(afpChain,ca1);
 		Atom[] a2 = getAlignedAtoms2(afpChain,ca2);
 
-		Matrix4d trans = SuperPositions.superpose(Calc.atomsToPoints(a1), 
+		Matrix4d trans = SuperPositions.superpose(Calc.atomsToPoints(a1),
 				Calc.atomsToPoints(a2));
-		
+
 		return Calc.getTranslationVector(trans);
 
 	}
@@ -338,6 +338,7 @@ public class AFPAlignmentDisplay
 		int     i;
 		int eqr = 0;
 
+		@SuppressWarnings("unused")
 		int count = 0;
 		for(i = 0; i < alnLength; i ++) {
 
@@ -386,17 +387,18 @@ public class AFPAlignmentDisplay
 	 * @throws NoSuchMethodException If an error occurs when invoking jmol
 	 * @throws InvocationTargetException If an error occurs when invoking jmol
 	 * @throws IllegalAccessException If an error occurs when invoking jmol
+	 * @throws StructureException
 	 */
 	public static Structure createArtificalStructure(AFPChain afpChain, Atom[] ca1,
 													 Atom[] ca2) throws ClassNotFoundException, NoSuchMethodException,
-			InvocationTargetException, IllegalAccessException
+			InvocationTargetException, IllegalAccessException, StructureException
 	{
 
 		if ( afpChain.getNrEQR() < 1){
 			return GuiWrapper.getAlignedStructure(ca1, ca2);
 		}
 
-		Group[] twistedGroups = GuiWrapper.prepareGroupsForDisplay(afpChain,ca1, ca2);
+		Group[] twistedGroups = AlignmentTools.prepareGroupsForDisplay(afpChain,ca1, ca2);
 
 		List<Atom> twistedAs = new ArrayList<Atom>();
 

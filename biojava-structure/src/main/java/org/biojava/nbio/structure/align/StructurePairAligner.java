@@ -24,7 +24,7 @@ package org.biojava.nbio.structure.align;
 
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.ce.GuiWrapper;
-import org.biojava.nbio.structure.align.helper.AlignTools;
+import org.biojava.nbio.structure.align.helper.AlignUtils;
 import org.biojava.nbio.structure.align.helper.JointFragments;
 import org.biojava.nbio.structure.align.pairwise.*;
 import org.biojava.nbio.structure.geometry.Matrices;
@@ -57,72 +57,72 @@ import javax.vecmath.Matrix4d;
  *
  *
  * <h2>Example</h2>
- * 
+ *
  * <pre>
  *  public void run(){
- * 
+ *
  * 		// first load two example structures
  * 		{@link InputStream} inStream1 = this.getClass().getResourceAsStream("/files/5pti.pdb");
  * 		{@link InputStream} inStream2 = this.getClass().getResourceAsStream("/files/1tap.pdb");
- * 
+ *
  * 		{@link Structure} structure1 = null;
  * 		{@link Structure} structure2 = null;
- * 
+ *
  * 		{@link PDBFileParser} pdbpars = new {@link PDBFileParser}();
  * 		structure1 = pdbpars.parsePDBFile(inStream1) ;
  * 		structure2 = pdbpars.parsePDBFile(inStream2);
- * 
- * 
+ *
+ *
  * 		// calculate structure superimposition for two complete structures
  * 		{@link StructurePairAligner} aligner = new {@link StructurePairAligner}();
- * 
- * 
+ *
+ *
  * 			// align the full 2 structures with default parameters.
  * 			// see StructurePairAligner for more options and how to align
  * 			// any set of Atoms
  * 			aligner.align(structure1,structure2);
- * 
+ *
  * 			{@link AlternativeAlignment}[] aligs = aligner.getAlignments();
  * 			{@link AlternativeAlignment} a = aligs[0];
  * 			System.out.println(a);
- * 
+ *
  * 			//display the alignment in Jmol
- * 
+ *
  * 			// first get an artificial structure for the alignment
  * 			{@link Structure} artificial = a.getAlignedStructure(structure1, structure2);
- * 
- * 
+ *
+ *
  * 			// and then send it to Jmol (only will work if Jmol is in the Classpath)
- * 
+ *
  * 			BiojavaJmol jmol = new BiojavaJmol();
  * 			jmol.setTitle(artificial.getName());
  * 			jmol.setStructure(artificial);
- * 
+ *
  * 			// color the two structures
- * 
- * 
+ *
+ *
  * 			jmol.evalString("select *; backbone 0.4; wireframe off; spacefill off; " +
  * 					"select not protein and not solvent; spacefill on;");
  * 			jmol.evalString("select *"+"/1 ; color red; model 1; ");
- * 
- * 
+ *
+ *
  * 			// now color the equivalent residues ...
- * 
+ *
  * 			String[] pdb1 = a.getPDBresnum1();
  * 			for (String res : pdb1 ){
  * 				jmol.evalString("select " + res + "/1 ; backbone 0.6; color white;");
  * 			}
- * 
+ *
  * 			jmol.evalString("select *"+"/2; color blue; model 2;");
  * 			String[] pdb2 = a.getPDBresnum2();
  * 			for (String res :pdb2 ){
  * 				jmol.evalString("select " + res + "/2 ; backbone 0.6; color yellow;");
  * 			}
- * 
- * 
+ *
+ *
  * 			// now show both models again.
  * 			jmol.evalString("model 0;");
- * 
+ *
  * 	}
  * </pre>
  *
@@ -245,7 +245,7 @@ public class StructurePairAligner {
 	/**
 	 * get the results of step 1 - the FragmentPairs used for seeding the
 	 * alignment
-	 * 
+	 *
 	 * @return a FragmentPair[] array
 	 */
 
@@ -293,26 +293,6 @@ public class StructurePairAligner {
 	 */
 	public void setParams(StrucAligParameters params) {
 		this.params = params;
-	}
-
-	/**
-	 * check if debug mode is set on
-	 *
-	 * @return debug flag
-	 */
-	@Deprecated
-	public boolean isDebug() {
-		return false;
-	}
-
-	/**
-	 * set the debug flag
-	 *
-	 * @param debug
-	 *            flag
-	 */
-	@Deprecated
-	public void setDebug(boolean debug) {
 	}
 
 	/**
@@ -450,14 +430,14 @@ public class StructurePairAligner {
 		int cols = ca2.length - fragmentLength + 1;
 		distanceMatrix = new Matrix(rows, cols, 0.0);
 
-		double[] dist1 = AlignTools.getDiagonalAtK(ca1, k);
+		double[] dist1 = AlignUtils.getDiagonalAtK(ca1, k);
 
-		double[] dist2 = AlignTools.getDiagonalAtK(ca2, k);
+		double[] dist2 = AlignUtils.getDiagonalAtK(ca2, k);
 		double[] dist3 = new double[0];
 		double[] dist4 = new double[0];
 		if (k2 > 0) {
-			dist3 = AlignTools.getDiagonalAtK(ca1, k2);
-			dist4 = AlignTools.getDiagonalAtK(ca2, k2);
+			dist3 = AlignUtils.getDiagonalAtK(ca1, k2);
+			dist4 = AlignUtils.getDiagonalAtK(ca2, k2);
 		}
 
 		double[][] utmp = new double[][] { { 0, 0, 1 } };
@@ -468,25 +448,25 @@ public class StructurePairAligner {
 
 		for (int i = 0; i < rows; i++) {
 
-			Atom[] catmp1 = AlignTools.getFragment(ca1, i, fragmentLength);
-			Atom center1 = AlignTools.getCenter(ca1, i, fragmentLength);
+			Atom[] catmp1 = AlignUtils.getFragment(ca1, i, fragmentLength);
+			Atom center1 = AlignUtils.getCenter(ca1, i, fragmentLength);
 
 			for (int j = 0; j < cols; j++) {
 
-				double rdd1 = AlignTools.rms_dk_diag(dist1, dist2, i, j,
+				double rdd1 = AlignUtils.rms_dk_diag(dist1, dist2, i, j,
 						fragmentLength, k);
 				double rdd2 = 0;
 				if (k2 > 0)
-					rdd2 = AlignTools.rms_dk_diag(dist3, dist4, i, j,
+					rdd2 = AlignUtils.rms_dk_diag(dist3, dist4, i, j,
 							fragmentLength, k2);
 				double rdd = rdd1 + rdd2;
 				distanceMatrix.set(i, j, rdd);
 
 				if (rdd < params.getFragmentMiniDistance()) {
 					FragmentPair f = new FragmentPair(fragmentLength, i, j);
-					Atom[] catmp2 = AlignTools.getFragment(ca2, j,
+					Atom[] catmp2 = AlignUtils.getFragment(ca2, j,
 							fragmentLength);
-					Atom center2 = AlignTools.getCenter(ca2, j,
+					Atom center2 = AlignUtils.getCenter(ca2, j,
 							fragmentLength);
 
 					f.setCenter1(center1);
@@ -495,7 +475,7 @@ public class StructurePairAligner {
 					Matrix4d t = SuperPositions.superpose(
 							Calc.atomsToPoints(catmp1),
 							Calc.atomsToPoints(catmp2));
-					
+
 					Matrix rotmat = Matrices.getRotationJAMA(t);
 					f.setRot(rotmat);
 

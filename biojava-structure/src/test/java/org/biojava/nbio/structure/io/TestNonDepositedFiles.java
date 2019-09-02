@@ -23,6 +23,7 @@ package org.biojava.nbio.structure.io;
 import static org.junit.Assert.*;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -179,8 +180,11 @@ public class TestNonDepositedFiles {
 		// single-model NMR entry, thus:
 		//assertTrue(s.isNmr());  // we can't detect it properly, because it's single model!
 		assertFalse(s.isCrystallographic()); // at least this we can detect from the unreasonable crystal cell
-		assertTrue(s.nrModels()==1);
+		assertEquals(1, s.nrModels());
 		assertNull(s.getPDBHeader().getExperimentalTechniques());
+
+		// testing that on single chain pdb files we assign an entity type, issue #767
+		assertEquals(EntityType.POLYMER, s.getEntityById(1).getType());
 	}
 
 	private void checkChains(Structure s) {
@@ -354,7 +358,7 @@ public class TestNonDepositedFiles {
 		// pdb and mmcif should have same number of chains
 		assertEquals(s1.getChains().size(), s2.getChains().size());
 	}
-	
+
 	@Test
 	public void testWaterOnlyChainPdb() throws IOException {
 
@@ -377,7 +381,7 @@ public class TestNonDepositedFiles {
 		assertEquals(2,s1.getEntityInfos().size());
 
 	}
-	
+
 	@Test
 	public void testWaterOnlyChainCif() throws IOException {
 
@@ -402,14 +406,30 @@ public class TestNonDepositedFiles {
 
 		// checking that the water molecule was assigned an ad-hoc compound
 		assertEquals(2,s2.getEntityInfos().size());
-		
+
 		Chain cAsymId = s2.getWaterChain("E");
 		assertNotNull("Got null when looking for water-only chain with asym id E", cAsymId);
 		assertSame(c, cAsymId);
-		
+
 	}
 
-	
+	/**
+	 * Some PDB files coming from phenix or other software can have a CRYST1 line without z and not padded with white-spaces
+	 * for the space group column.
+	 * @throws IOException
+	 * @since 5.0.0
+	 */
+	@Test
+	public void testCryst1Parsing() throws IOException {
+		String cryst1Line = "CRYST1   11.111   11.111  111.111  70.00  80.00  60.00 P 1";
+		Structure s;
+		PDBFileParser pdbPars = new PDBFileParser();
+		try(InputStream is = new ByteArrayInputStream(cryst1Line.getBytes()) ) {
+			s = pdbPars.parsePDBFile(is);
+		}
+		assertEquals("P 1", s.getPDBHeader().getCrystallographicInfo().getSpaceGroup().getShortSymbol());
+	}
+
 	private static int[] countEntityTypes(List<EntityInfo> entities) {
 		int countPoly = 0;
 		int countNonPoly = 0;
@@ -419,8 +439,8 @@ public class TestNonDepositedFiles {
 			if (e.getType()==EntityType.NONPOLYMER) countNonPoly++;
 			if (e.getType()==EntityType.WATER) countWater++;
 		}
-		int[] counts = {countPoly, countNonPoly, countWater}; 
+		int[] counts = {countPoly, countNonPoly, countWater};
 		return counts;
-		
+
 	}
 }

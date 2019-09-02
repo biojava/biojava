@@ -28,7 +28,6 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
-import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Matrix4d;
 
 import org.biojava.nbio.structure.Atom;
@@ -42,7 +41,7 @@ import org.biojava.nbio.structure.StructureIdentifier;
 import org.biojava.nbio.structure.StructureImpl;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.ce.CECalculator;
-import org.biojava.nbio.structure.align.helper.AlignTools;
+import org.biojava.nbio.structure.align.helper.AlignUtils;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.multiple.Block;
 import org.biojava.nbio.structure.align.multiple.BlockImpl;
@@ -65,7 +64,7 @@ import org.biojava.nbio.structure.symmetry.core.QuatSymmetryParameters;
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetryResults;
 import org.biojava.nbio.structure.symmetry.internal.CeSymmResult;
 import org.biojava.nbio.structure.symmetry.internal.SymmetryAxes;
-import org.jgrapht.UndirectedGraph;
+import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleGraph;
 import org.slf4j.Logger;
@@ -337,8 +336,8 @@ public class SymmetryTools {
 	public static Matrix getDkMatrix(Atom[] ca1, Atom[] ca2, int k,
 			int fragmentLength) {
 
-		double[] dist1 = AlignTools.getDiagonalAtK(ca1, k);
-		double[] dist2 = AlignTools.getDiagonalAtK(ca2, k);
+		double[] dist1 = AlignUtils.getDiagonalAtK(ca1, k);
+		double[] dist2 = AlignUtils.getDiagonalAtK(ca2, k);
 
 		int rows = ca1.length - fragmentLength - k + 1;
 		int cols = ca2.length - fragmentLength - k + 1;
@@ -474,10 +473,10 @@ public class SymmetryTools {
 	 *
 	 * @return alignment Graph
 	 */
-	public static UndirectedGraph<Integer, DefaultEdge> buildSymmetryGraph(
+	public static Graph<Integer, DefaultEdge> buildSymmetryGraph(
 			AFPChain selfAlignment) {
 
-		UndirectedGraph<Integer, DefaultEdge> graph = new SimpleGraph<Integer, DefaultEdge>(
+		Graph<Integer, DefaultEdge> graph = new SimpleGraph<Integer, DefaultEdge>(
 				DefaultEdge.class);
 
 		for (int i = 0; i < selfAlignment.getOptAln().length; i++) {
@@ -500,7 +499,7 @@ public class SymmetryTools {
 	 *            CeSymmResult
 	 * @throws StructureException
 	 * @result List of structures, by repeat index sequentially
-	 * 
+	 *
 	 */
 	public static List<Structure> divideStructure(CeSymmResult symmetry)
 			throws StructureException {
@@ -519,6 +518,7 @@ public class SymmetryTools {
 		for (int i = 0; i < order; i++) {
 
 			Structure s = new StructureImpl();
+			s.addModel(new ArrayList<Chain>(1));
 			s.setStructureIdentifier(repeatsId.get(i));
 
 			Block align = symmetry.getMultipleAlignment().getBlock(0);
@@ -527,7 +527,7 @@ public class SymmetryTools {
 			// Repeats are always sequential blocks
 			int res1 = align.getStartResidue(i);
 			int res2 = align.getFinalResidue(i);
-			
+
 			// All atoms from the repeat, used for ligand search
 			// AA have an average of 8.45 atoms, so guess capacity with that
 			List<Atom> repeat = new ArrayList<>(Math.max(9*(res2-res1+1),9));
@@ -539,12 +539,12 @@ public class SymmetryTools {
 				repeat.addAll(g.getAtoms());
 			}
 
-			
+
 			List<Group> ligands = StructureTools.getLigandsByProximity(
 					allGroups,
 					repeat.toArray(new Atom[repeat.size()]),
 					StructureTools.DEFAULT_LIGAND_PROXIMITY_CUTOFF);
-			
+
 			logger.warn("Adding {} ligands to {}",ligands.size(), symmetry.getMultipleAlignment().getStructureIdentifier(i));
 			for( Group ligand : ligands) {
 				prevChain = StructureTools.addGroupToStructure(s, ligand, 0, prevChain,true);
@@ -693,45 +693,6 @@ public class SymmetryTools {
 	}
 
 	/**
-	 * Determines if two symmetry axis are equivalent inside the error
-	 * threshold. It only takes into account the direction of the vector where
-	 * the rotation is made: the angle and translation are not taken into
-	 * account.
-	 *
-	 * @param axis1
-	 * @param axis2
-	 * @param epsilon
-	 *            error allowed in the axis comparison
-	 * @return true if equivalent, false otherwise
-	 */
-	@Deprecated
-	public static boolean equivalentAxes(Matrix4d axis1, Matrix4d axis2,
-			double epsilon) {
-
-		AxisAngle4d rot1 = new AxisAngle4d();
-		rot1.set(axis1);
-		AxisAngle4d rot2 = new AxisAngle4d();
-		rot2.set(axis2);
-
-		// rot1.epsilonEquals(rot2, error); //that also compares angle
-		// L-infinite distance without comparing the angle (epsilonEquals)
-		List<Double> sameDir = new ArrayList<Double>();
-		sameDir.add(Math.abs(rot1.x - rot2.x));
-		sameDir.add(Math.abs(rot1.y - rot2.y));
-		sameDir.add(Math.abs(rot1.z - rot2.z));
-
-		List<Double> otherDir = new ArrayList<Double>();
-		otherDir.add(Math.abs(rot1.x + rot2.x));
-		otherDir.add(Math.abs(rot1.y + rot2.y));
-		otherDir.add(Math.abs(rot1.z + rot2.z));
-
-		Double error = Math.min(Collections.max(sameDir),
-				Collections.max(otherDir));
-
-		return error < epsilon;
-	}
-
-	/**
 	 * Given a symmetry result, it calculates the overall global symmetry,
 	 * factoring out the alignment and detection steps of
 	 * {@link QuatSymmetryDetector} algorithm.
@@ -753,9 +714,8 @@ public class SymmetryTools {
 		// The clustering thresholds are set to 0 so that all always merged
 		SubunitClustererParameters cp = new SubunitClustererParameters();
 		cp.setClustererMethod(SubunitClustererMethod.STRUCTURE);
-		cp.setRmsdThreshold(10.0);
-		cp.setCoverageThreshold(0.0);
-		cp.setSequenceIdentityThreshold(1.1); // avoid using sequence cluster
+		cp.setRMSDThreshold(10.0);
+		cp.setStructureCoverageThreshold(0.0);
 
 		QuatSymmetryParameters sp = new QuatSymmetryParameters();
 
@@ -763,79 +723,6 @@ public class SymmetryTools {
 				.calcGlobalSymmetry(subunits, sp, cp);
 
 		return gSymmetry;
-	}
-
-	/**
-	 * Returns true a symmetry multiple alignment has been refined, false
-	 * otherwise.
-	 * <p>
-	 * For a refined alignment only one Block with no repeated residues is
-	 * necessary. Sufficient condition is not tested (only known from the
-	 * algorithm or CeSymmResult).
-	 *
-	 * @param symm
-	 *            the symmetry alignment
-	 * @return true if the alignment is refined
-	 */
-	@Deprecated
-	public static boolean isRefined(MultipleAlignment symm) {
-
-		if (symm.getBlocks().size() > 1) {
-			return false;
-		} else if (symm.size() < 2)
-			return false;
-		else {
-			List<Integer> alreadySeen = new ArrayList<Integer>();
-			List<List<Integer>> align = symm.getBlock(0).getAlignRes();
-			for (int str = 0; str < symm.size(); str++) {
-				for (int res = 0; res < align.get(str).size(); res++) {
-					Integer residue = align.get(str).get(res);
-					if (residue == null)
-						continue;
-					if (alreadySeen.contains(residue)) {
-						return false;
-					} else {
-						alreadySeen.add(residue);
-					}
-				}
-			} // end of all repeats
-			return true;
-		}
-	}
-
-	/**
-	 * Returns true if the symmetry alignment is significant, false otherwise.
-	 * <p>
-	 * For a symmetry alignment to be significant, the alignment has to be
-	 * refined and the TM-score has to be higher than the threshold.
-	 * <p>
-	 * It is recommended to use the {@link CeSymmResult#isSignificant()} method
-	 * instead.
-	 *
-	 * @param msa
-	 * @param symmetryThreshold
-	 * @return
-	 * @throws StructureException
-	 */
-	@Deprecated
-	public static boolean isSignificant(MultipleAlignment msa,
-			double symmetryThreshold) throws StructureException {
-
-		// Order/refinement check
-		if (!SymmetryTools.isRefined(msa))
-			return false;
-
-		// TM-score cutoff
-		double tm = 0.0;
-		if (msa.getScore(MultipleAlignmentScorer.AVGTM_SCORE) == null)
-			tm = MultipleAlignmentScorer.getAvgTMScore(msa);
-		else
-			tm = msa.getScore(MultipleAlignmentScorer.AVGTM_SCORE);
-
-		if (tm < symmetryThreshold)
-			return false;
-
-		return true;
 	}
 
 	/**
@@ -924,7 +811,7 @@ public class SymmetryTools {
 				// Calculate the new transformation information
 				if (arr1.length > 0 && arr2.length > 0) {
 					Matrix4d axis = SuperPositions.superpose(
-							Calc.atomsToPoints(arr1), 
+							Calc.atomsToPoints(arr1),
 							Calc.atomsToPoints(arr2));
 					axes.updateAxis(level, axis);
 				}
@@ -967,7 +854,7 @@ public class SymmetryTools {
 	 * Returns the representative Atom Array of the first model, if the
 	 * structure is NMR, or the Array for each model, if it is a biological
 	 * assembly with multiple models.
-	 * 
+	 *
 	 * @param structure
 	 * @return representative Atom[]
 	 */
@@ -994,7 +881,7 @@ public class SymmetryTools {
 	 * Find valid symmetry orders for a given stoichiometry. For instance, an
 	 * A6B4 protein would give [1,2] because (A6B4)1 and (A3B2)2 are valid
 	 * decompositions.
-	 * 
+	 *
 	 * @param stoichiometry
 	 *            List giving the number of copies in each Subunit cluster
 	 * @return The common factors of the stoichiometry

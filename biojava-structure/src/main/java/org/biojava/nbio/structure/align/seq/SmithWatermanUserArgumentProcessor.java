@@ -28,7 +28,7 @@ public class SmithWatermanUserArgumentProcessor extends AbstractUserArgumentProc
 
 
 	protected static class SmithWatermanStartupParams extends StartupParameters {
-		
+
 		private short gapOpen;
 		private short gapExtend;
 		private double maxRmsd;
@@ -54,7 +54,7 @@ public class SmithWatermanUserArgumentProcessor extends AbstractUserArgumentProc
 			this.gapExtend = gapExtend;
 		}
 
-		
+
 		public double getMaxRmsd() {
 			return maxRmsd;
 		}

@@ -36,16 +36,16 @@ import java.util.zip.GZIPInputStream;
 
 
 
-/** 
+/**
  * A class that takes care about opening URLConnections and sets the proper timeouts
  * @author Andreas Prlic
  * @author Anthony Bradley
- * @since 5.0	
+ * @since 5.0
  */
 public class URLConnectionTools {
 
 	/** The default connection timeout in ms - 15 seconds*/
-	public static final int    DEFAULT_CONNECTION_TIMEOUT = 15000;
+	public static final int    DEFAULT_CONNECTION_TIMEOUT = 30000;
 
 	/**
 	 * Open HttpURLConnection. Recommended way to open URL connections in Java 1.7 and 1.8.
@@ -62,7 +62,7 @@ public class URLConnectionTools {
 	}
 
 
-	/** 
+	/**
 	 * Open HttpURLConnection. Recommended way to open
 	 * HttpURLConnections, since this take care of setting timeouts
 	 * properly for java 1.4 and 1.5
@@ -76,12 +76,12 @@ public class URLConnectionTools {
 		return openURLConnection(url,DEFAULT_CONNECTION_TIMEOUT);
 	}
 
-	/** 
+	/**
 	 * Connect to server and return result as an InputStream.
 	 * always asks for response to be in GZIP encoded
 	 * <p>
 	 * The caller is responsible to close the returned InputStream not to cause
-	 * resource leaks. 
+	 * resource leaks.
 	 * @param url the URL to connect to
 	 * @param timeout the timeout for the connection
 	 * @return an {@link InputStream} of response
@@ -94,12 +94,12 @@ public class URLConnectionTools {
 	}
 
 
-	/** 
+	/**
 	 * Connect to a URL and return result as an InputStream.
 	 * always asks for response to be in GZIP encoded
 	 * <p>
 	 * The caller is responsible to close the returned InputStream not to cause
-	 * resource leaks. 
+	 * resource leaks.
 	 * @param url the input URL to be read
 	 * @return an {@link InputStream} of response
 	 * @throws IOException due to an error opening the URL
@@ -109,7 +109,7 @@ public class URLConnectionTools {
 		return getInputStream(url,true, DEFAULT_CONNECTION_TIMEOUT);
 	}
 
-	/** 
+	/**
 	 * Open a URL and return an InputStream to it
 	 * if acceptGzipEncoding == true, use GZIPEncoding to
 	 * compress communication.
@@ -142,11 +142,11 @@ public class URLConnectionTools {
 
 	}
 
-	/** 
+	/**
 	 * Do a POST to a URL and return the response stream for further processing elsewhere.
 	 * <p>
 	 * The caller is responsible to close the returned InputStream not to cause
-	 * resource leaks.  
+	 * resource leaks.
 	 * @param url  the input URL to be read
 	 * @param data the post data
 	 * @return an {@link InputStream} of response
@@ -157,11 +157,11 @@ public class URLConnectionTools {
 		return doPOST(url,data,DEFAULT_CONNECTION_TIMEOUT);
 	}
 
-	/** 
+	/**
 	 * Do a POST to a URL and return the response stream for further processing elsewhere.
 	 * <p>
 	 * The caller is responsible to close the returned InputStream not to cause
-	 * resource leaks. 
+	 * resource leaks.
 	 * @param url the input URL to be read
 	 * @param data the post data
 	 * @param timeout

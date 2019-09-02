@@ -1,3 +1,23 @@
+/*
+ *                    BioJava development code
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public Licence.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright for this code is held jointly by the individual
+ * authors.  These should be listed in @author doc comments.
+ *
+ * For more information on the BioJava project and its aims,
+ * or to join the biojava-l mailing list, visit the home page
+ * at:
+ *
+ *      http://www.biojava.org/
+ *
+ */
 package org.biojava.nbio.structure.io.mmcif;
 
 import static org.junit.Assert.assertArrayEquals;
@@ -19,9 +39,9 @@ import org.junit.Test;
  */
 public class TestEntityNameAndType {
 
-	@Test	
+	@Test
 	public void testEntityId() throws IOException, StructureException {
-		
+
 		// Set up the atom cache to parse on Internal chain id
 		AtomCache cache = new AtomCache();
 		cache.setUseMmCif(true);
@@ -34,23 +54,23 @@ public class TestEntityNameAndType {
 		StructureIO.setAtomCache(cache);
 		// This is hte information we want to test against
 		String[] typeInformation = new String[] {"POLYMER", "NONPOLYMER", "NONPOLYMER", "NONPOLYMER", "NONPOLYMER", "WATER"};
-		String[] descriptionInformation = new String[] {"BROMODOMAIN ADJACENT TO ZINC FINGER DOMAIN PROTEIN 2B","4-Fluorobenzamidoxime",  "METHANOL", "METHANOL", "METHANOL", "water"};	
-		
+		String[] descriptionInformation = new String[] {"BROMODOMAIN ADJACENT TO ZINC FINGER DOMAIN PROTEIN 2B","4-Fluorobenzamidoxime",  "METHANOL", "METHANOL", "METHANOL", "water"};
+
 		// Now some other information fields to test this data is collated correctly
 		String[] geneSourceSciName = new String[] {"HOMO SAPIENS", null, null, null, null, null};
 		String[] geneSourceTaxId = new String[] {"9606", null, null, null, null, null};
 		String[] hostOrganismSciName = new String[] {"ESCHERICHIA COLI", null, null, null, null, null};
-		String[] hostOrganismTaxId = new String[] {"469008", null, null, null, null, null};		
+		String[] hostOrganismTaxId = new String[] {"469008", null, null, null, null, null};
 
-		
-		
-		/// TODO GET ALL THE ENTITY INFORMATION REQUIRED FOR 4CUP 
+
+
+		/// TODO GET ALL THE ENTITY INFORMATION REQUIRED FOR 4CUP
 		// Get this structure
 		Structure bioJavaStruct = StructureIO.getStructure("4cup");
 		String[] testTypeInfo = new String[6];
 		String[] testDescInfo = new String[6];
-		
-		
+
+
 		String[] testGeneSourceSciName = new String[6];
 		String[] testGeneSourceTaxId = new String[6];
 		String[] testHostOrganismSciName = new String[6];
@@ -79,7 +99,7 @@ public class TestEntityNameAndType {
 		assertArrayEquals(hostOrganismSciName, testHostOrganismSciName);
 		assertArrayEquals(hostOrganismTaxId, testHostOrganismTaxId);
 
-		
-		
+
+
 	}
 }

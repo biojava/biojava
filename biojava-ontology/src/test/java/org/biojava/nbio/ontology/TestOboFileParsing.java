@@ -24,8 +24,9 @@
 
 package org.biojava.nbio.ontology;
 
-import junit.framework.TestCase;
 import org.biojava.nbio.ontology.io.OboParser;
+import org.junit.Assert;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,34 +34,61 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Set;
+import java.util.Iterator;
+import org.biojava.nbio.ontology.utils.Annotation;
 
-public class TestOboFileParsing extends TestCase{
+public class TestOboFileParsing {
 
 	private static final Logger logger = LoggerFactory.getLogger(TestOboFileParsing.class);
 
-	public void testParsingBioSapiensOBO(){
+	@Test
+	public void testParsingBioSapiensOBO() throws Exception {
 		OboParser parser = new OboParser();
 		InputStream inStream = parser.getClass().getResourceAsStream("/ontology/biosapiens.obo");
 
-		assertNotNull(inStream);
+		Assert.assertNotNull(inStream);
 
 		BufferedReader oboFile = new BufferedReader ( new InputStreamReader ( inStream ) );
 
 		Ontology ontology;
-		try {
-			ontology = parser.parseOBO(oboFile, "BioSapiens", "the BioSapiens ontology");
-			Set<Term> keys = ontology.getTerms();
 
-			assertTrue(keys.size() >4000);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			logger.error("Exception: ", e);
-			fail(e.getMessage());
+		ontology = parser.parseOBO(oboFile, "BioSapiens", "the BioSapiens ontology");
+		Set<Term> keys = ontology.getTerms();
+
+		Assert.assertTrue(keys.size() > 4000);
+	}
+
+	@Test
+	public void testParsingHPOOBO() throws Exception {
+		OboParser parser = new OboParser();
+		InputStream inStream = parser.getClass().getResourceAsStream("/ontology/hp.obo");
+
+		Assert.assertNotNull(inStream);
+
+		BufferedReader oboFile = new BufferedReader ( new InputStreamReader ( inStream ) );
+
+		Ontology ontology;
+
+		ontology = parser.parseOBO(oboFile, "Human_phenotype", "the Human Phenotype ontology");
+		Set<Term> keys = ontology.getTerms();
+		Iterator iter = keys.iterator();
+
+		while (iter.hasNext()){
+			Term term = (Term) iter.next();
+			if(term.getName().equals("HP:0000057")) {
+				Annotation anno = term.getAnnotation();
+				Assert.assertTrue(anno.containsProperty("replaced_by"));
+				Assert.assertEquals("HP:0008665", anno.getProperty("replaced_by"));
+			}
+			if(term.getName().equals("HP:0000006")) {
+				Assert.assertEquals("Autosomal dominant inheritance", term.getDescription());
+				Object[] syns = term.getSynonyms();
+				Assert.assertEquals(3,  syns.length);
+				Assert.assertEquals("Autosomal dominant", ((Synonym) syns[0]).getName());
+				Assert.assertEquals("Autosomal dominant form", ((Synonym) syns[1]).getName());
+				Assert.assertEquals("Autosomal dominant type", ((Synonym) syns[2]).getName());
+			}
 		}
-
-
-
-
 	}
 
 }

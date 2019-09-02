@@ -24,18 +24,25 @@ import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.align.util.AtomCache;
+import org.biojava.nbio.structure.asa.GroupAsa;
+import org.biojava.nbio.structure.contact.StructureInterface;
 import org.biojava.nbio.structure.contact.StructureInterfaceCluster;
 import org.biojava.nbio.structure.contact.StructureInterfaceList;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.PDBFileParser;
 import org.junit.Test;
+
+import javax.vecmath.Matrix4d;
 
 public class TestInterfaceClustering {
 
@@ -80,6 +87,91 @@ public class TestInterfaceClustering {
 
 
 
+	}
+
+	/**
+	 * Test for NCS clustering in viral capsid structures that contain NCS operators.
+	 * @throws IOException
+	 * @throws StructureException
+	 */
+	@Test
+	public void test1AUY() throws IOException, StructureException {
+
+		// 1AUY is a viral capsid with NCS ops
+
+		AtomCache cache = new AtomCache();
+		FileParsingParameters params = new FileParsingParameters();
+		params.setAlignSeqRes(true);
+		cache.setFileParsingParams(params);
+		cache.setUseMmCif(true);
+
+		StructureIO.setAtomCache(cache);
+
+		// 3vbr would be an example of capsids with several chains
+		Structure s = StructureIO.getStructure("1auy");
+
+		Map<String,String> chainOrigNames = new HashMap<>();
+		Map<String,Matrix4d> chainNcsOps = new HashMap<>();
+		CrystalBuilder.expandNcsOps(s,chainOrigNames,chainNcsOps);
+		CrystalBuilder cb = new CrystalBuilder(s, chainOrigNames, chainNcsOps);
+
+		StructureInterfaceList interfaces = cb.getUniqueInterfaces(5.5);
+
+		List<StructureInterfaceCluster> clusters = interfaces.getClusters();
+
+		assertNotNull(clusters);
+
+		assertTrue(clusters.size()<=interfaces.size());
+
+		interfaces.calcAsas(100, 1, 0);
+
+		// after calculating ASAs we should have ids for all interfaces
+		for (StructureInterface interf : interfaces) {
+			assertTrue(interf.getId()>0);
+		}
+
+
+		int numInterfacesShouldbeKept = 0;
+
+		List<StructureInterfaceCluster> ncsClusterShouldbeKept = new ArrayList<>();
+		for (StructureInterfaceCluster ncsCluster : interfaces.getClustersNcs()) {
+			if (ncsCluster.getMembers().get(0).getTotalArea()>=StructureInterfaceList.DEFAULT_MINIMUM_INTERFACE_AREA) {
+				//System.out.println("NCS cluster is above cutoff area and has "+ncsCluster.getMembers().size()+ " members");
+				ncsClusterShouldbeKept.add(ncsCluster);
+				numInterfacesShouldbeKept += ncsCluster.getMembers().size();
+			}
+		}
+
+		clusters = interfaces.getClusters();
+
+		assertNotNull(clusters);
+
+		assertTrue(clusters.size()<=interfaces.size());
+
+		interfaces.removeInterfacesBelowArea();
+
+		assertNotNull(interfaces.getClustersNcs());
+
+		// making sure that removeInterfacesBelowArea does not throw away the members for which area wasn't calculated
+		for (StructureInterfaceCluster ncsCluster : ncsClusterShouldbeKept) {
+			assertTrue(interfaces.getClustersNcs().contains(ncsCluster));
+		}
+
+		assertEquals(numInterfacesShouldbeKept, interfaces.size());
+
+		clusters = interfaces.getClusters();
+
+		assertNotNull(clusters);
+
+		assertTrue(clusters.size()<=interfaces.size());
+
+		for (StructureInterface interf : interfaces) {
+			GroupAsa groupAsa = interf.getFirstGroupAsas().values().iterator().next();
+			String expected = interf.getMoleculeIds().getFirst();
+			String actual = groupAsa.getGroup().getChain().getName();
+			// in 1auy this works always since there's only 1 chain. But it is useful in testing cases like 3vbr with serveral chains
+			assertEquals(expected.charAt(0), actual.charAt(0));
+		}
 	}
 
 

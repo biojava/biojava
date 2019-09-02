@@ -48,23 +48,7 @@ public class Synonym implements Comparable<Synonym>{
 	public final static Comparator<Synonym> COMPARATOR = new Comparator<Synonym>() {
 		@Override
 		public int compare(Synonym a, Synonym b) {
-			if (a == null && b == null)
-				return 0;
-			else if (a == null)
-				return -1;
-			else if (b == null)
-				return 1;
-			else {
-				if ((a.getCategory() == null) && (b.getCategory() == null))
-					return 0;
-				else if ( a.getCategory()==null)
-					return -1;
-				else if ( b.getCategory()==null)
-					return 1;
-
-				return a.getCategory().compareToIgnoreCase(
-						b.getCategory());
-			}
+			return String.CASE_INSENSITIVE_ORDER.compare(a.toString(), b.toString());
 		}
 	};
 

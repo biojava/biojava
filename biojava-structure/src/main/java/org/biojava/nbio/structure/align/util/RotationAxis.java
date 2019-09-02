@@ -20,6 +20,13 @@
  */
 package org.biojava.nbio.structure.align.util;
 
+import java.io.StringWriter;
+
+import javax.vecmath.AxisAngle4d;
+import javax.vecmath.Matrix3d;
+import javax.vecmath.Matrix4d;
+import javax.vecmath.Vector3d;
+
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.AtomImpl;
 import org.biojava.nbio.structure.Calc;
@@ -28,12 +35,6 @@ import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.contact.Pair;
 import org.biojava.nbio.structure.geometry.Matrices;
 import org.biojava.nbio.structure.jama.Matrix;
-
-import javax.vecmath.AxisAngle4d;
-import javax.vecmath.Matrix4d;
-import javax.vecmath.Vector3d;
-
-import java.io.StringWriter;
 
 /**
  * Calculates the rotation axis for an alignment
@@ -114,20 +115,9 @@ public final class RotationAxis {
 	public Vector3d getVector3dScrewTranslation() {
 		return new Vector3d(screwTranslation.getX(),screwTranslation.getY(),screwTranslation.getZ());
 	}
-	
+
 	public double getTranslation() {
 		return Calc.amount(screwTranslation);
-	}
-
-	/**
-	 * Get the component of translation perpendicular to the axis of rotation.
-	 * This isn't particularly meaningful, but is calculated internally and
-	 * was useful for debugging.
-	 * @return
-	 */
-	@Deprecated
-	public Atom getOtherTranslation() {
-		return otherTranslation;
 	}
 
 	/**
@@ -413,7 +403,7 @@ public final class RotationAxis {
 		double uLen = Calc.scalarProduct(rotationAxis,rotationAxis);// Should be 1, but double check
 		min/=uLen;
 		max/=uLen;
-		
+
 		// Project the origin onto the axis. If the axis is undefined, use the center of mass
 		Atom axialPt;
 		if(rotationPos == null) {
@@ -462,7 +452,7 @@ public final class RotationAxis {
 		Pair<Atom> endPoints = getAxisEnds(atoms);
 		Atom axisMin = endPoints.getFirst();
 		Atom axisMax = endPoints.getSecond();
-		
+
 		StringWriter result = new StringWriter();
 
 		// set arrow heads to a reasonable length
@@ -586,6 +576,12 @@ public final class RotationAxis {
 	 */
 	public static double getAngle(Matrix rotation) {
 		double c = (rotation.trace()-1)/2.0; //=cos(theta)
+		// c is sometimes slightly out of the [-1,1] range due to numerical instabilities
+		if( -1-1e-8 < c && c < -1 ) c = -1;
+		if( 1+1e-8 > c && c > 1 ) c = 1;
+		if( -1 > c || c > 1 ) {
+			throw new IllegalArgumentException("Input matrix is not a valid rotation matrix.");
+		}
 		return Math.acos(c);
 	}
 
@@ -595,5 +591,39 @@ public final class RotationAxis {
 	 */
 	public boolean isDefined() {
 		return rotationPos != null;
+	}
+
+	/**
+	 * Quickly compute the rotation angle from a rotation matrix.
+	 * @param transform 4D transformation matrix. Translation components are ignored.
+	 * @return Angle, from 0 to PI
+	 */
+	public static double getAngle(Matrix4d transform) {
+		// Calculate angle
+		double c = (transform.m00 + transform.m11 + transform.m22 - 1)/2.0; //=cos(theta)
+		// c is sometimes slightly out of the [-1,1] range due to numerical instabilities
+		if( -1-1e-8 < c && c < -1 ) c = -1;
+		if( 1+1e-8 > c && c > 1 ) c = 1;
+		if( -1 > c || c > 1 ) {
+			throw new IllegalArgumentException("Input matrix is not a valid rotation matrix.");
+		}
+		return Math.acos(c);
+	}
+
+	/**
+	 * Quickly compute the rotation angle from a rotation matrix.
+	 * @param transform 3D rotation matrix
+	 * @return Angle, from 0 to PI
+	 */
+	public static double getAngle(Matrix3d transform) {
+		// Calculate angle
+		double c = (transform.m00 + transform.m11 + transform.m22 - 1)/2.0; //=cos(theta)
+		// c is sometimes slightly out of the [-1,1] range due to numerical instabilities
+		if( -1-1e-8 < c && c < -1 ) c = -1;
+		if( 1+1e-8 > c && c > 1 ) c = 1;
+		if( -1 > c || c > 1 ) {
+			throw new IllegalArgumentException("Input matrix is not a valid rotation matrix.");
+		}
+		return Math.acos(c);
 	}
 }

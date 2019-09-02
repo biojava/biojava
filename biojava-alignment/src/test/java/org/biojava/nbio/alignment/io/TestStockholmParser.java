@@ -23,15 +23,16 @@ package org.biojava.nbio.alignment.io;
 //import java.io.BufferedReader;
 //import java.io.IOException;
 
-import junit.framework.TestCase;
 import org.biojava.nbio.core.sequence.template.AbstractSequence;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.io.InputStream;
 import java.util.zip.GZIPInputStream;
 
 //import java.io.InputStreamReader;
 
-public class TestStockholmParser extends TestCase {
+public class TestStockholmParser {
 
 //	public void testStockholmParser(){
 //
@@ -66,27 +67,28 @@ public class TestStockholmParser extends TestCase {
 //
 //	}
 
+	@Test
 	public void testPiwi(){
 		try {
 			InputStream inStream = new GZIPInputStream(this.getClass().getResourceAsStream("/piwi.sth.gz"));
 
-			assertNotNull(inStream);
+			Assert.assertNotNull(inStream);
 
 			StockholmFileParser fileParser = new StockholmFileParser();
 
 			StockholmStructure data = fileParser.parse(inStream);
 
-			assertTrue("Did not get enough sequences!", data.getBioSequences(false).size()==20);
+			Assert.assertTrue("Did not get enough sequences!", data.getBioSequences(false).size() == 20);
 
 			AbstractSequence<?> seq = data.getBioSequences(false).get(0);
-			assertTrue(seq != null );
+			Assert.assertTrue(seq != null);
 
-			assertTrue(seq.getSequenceAsString().length() > 20);
+			Assert.assertTrue(seq.getSequenceAsString().length() > 20);
 
 		} catch (Exception e) {
 
 			e.printStackTrace();
-			fail(e.getMessage());
+			Assert.fail(e.getMessage());
 		}
 
 

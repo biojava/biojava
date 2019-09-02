@@ -21,28 +21,27 @@
 
 package org.biojava.nbio.structure.gui;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  *
  * @author Jules
  */
-public class RenderStyleTest extends TestCase {
+public class RenderStyleTest {
 
-	public RenderStyleTest(String testName) {
-		super(testName);
+
+
+	@Before
+	public void setUp() throws Exception {
 	}
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@After
+	public void tearDown() throws Exception {
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
-	}
-
+	@Test
 	public void testSomeMethod() {
 		// TODO review the generated test code and remove the default call to fail.
 		//fail("The test case is a prototype.");

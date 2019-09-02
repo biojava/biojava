@@ -33,7 +33,7 @@ import java.io.Serializable;
 public class BetaBridge implements Serializable {
 
 	private static final long serialVersionUID = -5097435425455958487L;
-	
+
 	BridgeType type;
 	int partner1;
 	int partner2;
@@ -45,15 +45,15 @@ public class BetaBridge implements Serializable {
 	}
 
 	@Override
-        public int hashCode()
-        {
-            final int prime = 31;
-            int result = 1;
-            result = prime * result + getType().hashCode();
-            result = prime * result + partner1;
-            result = prime * result + partner2;
-            return result;
-        }
+		public int hashCode()
+		{
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + getType().hashCode();
+			result = prime * result + partner1;
+			result = prime * result + partner2;
+			return result;
+		}
 
 	@Override
 	public boolean equals(Object o) {

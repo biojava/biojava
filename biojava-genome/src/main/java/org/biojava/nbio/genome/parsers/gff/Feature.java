@@ -313,28 +313,6 @@ public class Feature implements FeatureI {
 		return s;
 	}
 
-	/**
-	 * @deprecated
-	 */
-	@Deprecated
-	public static void main(String[] args)
-			throws Exception {
-		//Feature f= new Feature();
-		//intentionally perverse
-		//f.group= "gene_id transcript; transcript \"gene_id fantom2\"; ";
-		//	f.addAttribute( "author", "julian" );
-		//	f.addAttribute( "curator", "nick" );
-		//	f.addAttribute( "author", "hanno" );
-		//Log.log( f.group );
-		//f.addAttribute( "perverse", "foo;goo" );
-		//assert f.getAttribute( "perverse").equals( "foo;goo" );
-		//	assert f.getAttribute( "gene_id" ).equals( "transcript" );
-		//	assert f.getAttribute( "author" ).equals( "julian hanno" );
-		//	assert f.getAttribute( "curator" ).equals( "nick" );
-		//	assert f.getAttribute( "transcript").equals( "gene_id fantom2" );
-		//Log.log( "passed test." );
-	}
-
 	@Override
 	public HashMap<String, String> getAttributes() {
 

@@ -33,8 +33,11 @@ import org.biojava.nbio.structure.SubstructureIdentifier;
 import org.biojava.nbio.structure.align.util.AtomCache;
 
 public class PDPDomain implements StructureIdentifier {
-	String identifier;
-	SubstructureIdentifier canonical;
+	private static final long serialVersionUID = 6894463080739943026L;
+
+	private String identifier;
+	private SubstructureIdentifier canonical;
+
 	public static final Pattern PDP_NAME_PATTERN = Pattern.compile("^(?:PDP:)([0-9][a-z0-9]{3})(\\w)(\\w)$",Pattern.CASE_INSENSITIVE);
 
 	public PDPDomain(String pdpDomainName, List<ResidueRange> ranges) {

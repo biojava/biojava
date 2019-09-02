@@ -23,13 +23,12 @@
 
 package org.biojava.nbio.structure.test.cath;
 
-import junit.framework.TestCase;
 import org.junit.Test;
 
 /**
  * @author Daniel Asarnow
  */
-public class CathTest extends TestCase{
+public class CathTest {
 
 
 

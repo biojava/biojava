@@ -66,7 +66,7 @@ import org.slf4j.LoggerFactory;
 public class AtomCache {
 
 	private static final Logger logger = LoggerFactory.getLogger(AtomCache.class);
-	
+
 	/**
 	 * The default output bioassembly style: if true the bioassemblies are multimodel,
 	 * if false the bioassemblies are flat with renamed chains for symmetry-partners.
@@ -155,24 +155,6 @@ public class AtomCache {
 
 	}
 
-
-	/**
-	 * @param isSplit Ignored
-	 * @deprecated isSplit parameter is ignored (4.0.0)
-	 */
-	@Deprecated
-	public AtomCache(String pdbFilePath,boolean isSplit) {
-		this(pdbFilePath);
-	}
-	/**
-	 * @param isSplit Ignored
-	 * @deprecated isSplit parameter is ignored (4.0.0)
-	 */
-	@Deprecated
-	public AtomCache(String pdbFilePath, String cachePath,boolean isSplit) {
-		this(pdbFilePath,cachePath);
-	}
-
 	/**
 	 * Creates a new AtomCache object based on the provided UserConfiguration.
 	 *
@@ -232,7 +214,7 @@ public class AtomCache {
 	public Atom[] getRepresentativeAtoms(String name) throws IOException, StructureException {
 		return getRepresentativeAtoms(new StructureName(name));
 	}
-	
+
 	public Atom[] getRepresentativeAtoms(StructureIdentifier name) throws IOException, StructureException {
 
 		Atom[] atoms = null;
@@ -247,9 +229,9 @@ public class AtomCache {
 
 		return atoms;
 	}
-	
+
 	/**
-	 * Returns the biological assembly for a given PDB ID and bioAssemblyId, by building the 
+	 * Returns the biological assembly for a given PDB ID and bioAssemblyId, by building the
 	 * assembly from the biounit annotations found in {@link Structure#getPDBHeader()}
 	 * <p>
 	 * Note, the number of available biological unit files
@@ -260,8 +242,8 @@ public class AtomCache {
 	 *            the PDB ID
 	 * @param bioAssemblyId
 	 *            the 1-based index of the biological assembly (0 gets the asymmetric unit)
-	 * @param multiModel if true the output Structure will be a multi-model one with one transformId per model, 
-	 * if false the outputStructure will be as the original with added chains with renamed asymIds (in the form originalAsymId_transformId and originalAuthId_transformId).             
+	 * @param multiModel if true the output Structure will be a multi-model one with one transformId per model,
+	 * if false the outputStructure will be as the original with added chains with renamed asymIds (in the form originalAsymId_transformId and originalAuthId_transformId).
 	 * @return a structure object
 	 * @throws IOException
 	 * @throws StructureException if biassemblyId < 0 or other problems while loading structure
@@ -275,20 +257,20 @@ public class AtomCache {
 			throw new StructureException("bioAssemblyID must be nonnegative: " + pdbId + " bioAssemblyId "
 					+ bioAssemblyId);
 		}
-		
+
 		boolean prevIsParseBioAssembly = getFileParsingParams().isParseBioAssembly();
-		
+
 		if (!getFileParsingParams().isParseBioAssembly()) {
 			getFileParsingParams().setParseBioAssembly(true);
 		}
-		
+
 		Structure asymUnit = getStructureForPdbId(pdbId);
-		
+
 		getFileParsingParams().setParseBioAssembly(prevIsParseBioAssembly);
-		
+
 		if (asymUnit.getPDBHeader() == null || asymUnit.getPDBHeader().getBioAssemblies()==null) {
 			logger.info("No bioassembly information found for {}, returning asymmetric unit as biological assembly", pdbId);
-			return asymUnit; 
+			return asymUnit;
 		}
 
 		// 0 ... asym unit
@@ -308,9 +290,9 @@ public class AtomCache {
 		if ( transformations == null || transformations.size() == 0){
 
 			throw new StructureException("Could not load transformations to recreate biological assembly id " + bioAssemblyId + " of " + pdbId);
-			
+
 		}
-		
+
 		BiologicalAssemblyBuilder builder = new BiologicalAssemblyBuilder();
 
 		// if we use mmcif or mmtf, then we need to pass useAsymIds=true
@@ -318,7 +300,7 @@ public class AtomCache {
 		if (useMmCif) useAsymIds = true;
 		if (useMmtf) useAsymIds = true;
 		return builder.rebuildQuaternaryStructure(asymUnit, transformations, useAsymIds, multiModel);
-		
+
 	}
 
 	/**
@@ -328,33 +310,33 @@ public class AtomCache {
 	 * <p>Biological assemblies can also be accessed using
 	 * <tt>getStructure("BIO:<i>[pdbId]</i>")</tt>
 	 * @param pdbId the PDB id
-	 * @param multiModel if true the output Structure will be a multi-model one with one transformId per model, 
-	 * if false the outputStructure will be as the original with added chains with renamed asymIds (in the form originalAsymId_transformId and originalAuthId_transformId).  
+	 * @param multiModel if true the output Structure will be a multi-model one with one transformId per model,
+	 * if false the outputStructure will be as the original with added chains with renamed asymIds (in the form originalAsymId_transformId and originalAuthId_transformId).
 	 * @return a structure object
 	 * @throws IOException
 	 * @throws StructureException
 	 * @since 4.2
 	 */
 	public Structure getBiologicalAssembly(String pdbId, boolean multiModel) throws StructureException, IOException {
-		
+
 		boolean prevIsParseBioAssembly = getFileParsingParams().isParseBioAssembly();
-		
+
 		if (!getFileParsingParams().isParseBioAssembly()) {
 			getFileParsingParams().setParseBioAssembly(true);
 		}
-		
+
 		Structure asymUnit = getStructureForPdbId(pdbId);
-		
+
 		getFileParsingParams().setParseBioAssembly(prevIsParseBioAssembly);
 
-		
+
 		if (asymUnit.getPDBHeader() == null || asymUnit.getPDBHeader().getBioAssemblies()==null) {
 			logger.info("No bioassembly information found for {}, returning asymmetric unit as biological assembly", pdbId);
-			return asymUnit; 
+			return asymUnit;
 		}
 
 		int bioAssemblyId = 1;
-		
+
 		// does it exist?
 		if (!asymUnit.getPDBHeader().getBioAssemblies().containsKey(bioAssemblyId)) {
 			return asymUnit;
@@ -367,9 +349,9 @@ public class AtomCache {
 		if ( transformations == null || transformations.size() == 0){
 
 			throw new StructureException("Could not load transformations to recreate biological assembly id " + bioAssemblyId + " of " + pdbId);
-			
+
 		}
-		
+
 		BiologicalAssemblyBuilder builder = new BiologicalAssemblyBuilder();
 
 		// if we use mmcif or mmtf, then we need to pass useAsymIds=true
@@ -377,42 +359,42 @@ public class AtomCache {
 		if (useMmCif) useAsymIds = true;
 		if (useMmtf) useAsymIds = true;
 		return builder.rebuildQuaternaryStructure(asymUnit, transformations, useAsymIds, multiModel);
-		
+
 	}
 
 	/**
 	 * Returns all biological assemblies for given PDB id.
 	 * @param pdbId
-	 * @param multiModel if true the output Structure will be a multi-model one with one transformId per model, 
-	 * if false the outputStructure will be as the original with added chains with renamed asymIds (in the form originalAsymId_transformId and originalAuthId_transformId).  
+	 * @param multiModel if true the output Structure will be a multi-model one with one transformId per model,
+	 * if false the outputStructure will be as the original with added chains with renamed asymIds (in the form originalAsymId_transformId and originalAuthId_transformId).
 	 * @return
 	 * @throws StructureException
 	 * @throws IOException
 	 * @since 5.0
 	 */
 	public List<Structure> getBiologicalAssemblies(String pdbId, boolean multiModel) throws StructureException, IOException {
-		
+
 		List<Structure> assemblies = new ArrayList<>();
-		
+
 		boolean prevIsParseBioAssembly = getFileParsingParams().isParseBioAssembly();
-		
+
 		if (!getFileParsingParams().isParseBioAssembly()) {
 			getFileParsingParams().setParseBioAssembly(true);
 		}
-		
+
 		Structure asymUnit = getStructureForPdbId(pdbId);
-		
+
 		getFileParsingParams().setParseBioAssembly(prevIsParseBioAssembly);
-		
+
 
 		if (asymUnit.getPDBHeader() == null || asymUnit.getPDBHeader().getBioAssemblies()==null) {
 			logger.info("No bioassembly information found for {}, returning asymmetric unit as the only biological assembly", pdbId);
 			assemblies.add(asymUnit);
-			return assemblies; 
+			return assemblies;
 		}
 
 
-		for (int bioAssemblyId : asymUnit.getPDBHeader().getBioAssemblies().keySet()) {	
+		for (int bioAssemblyId : asymUnit.getPDBHeader().getBioAssemblies().keySet()) {
 			List<BiologicalAssemblyTransformation> transformations =
 					asymUnit.getPDBHeader().getBioAssemblies().get(bioAssemblyId).getTransforms();
 
@@ -434,7 +416,7 @@ public class AtomCache {
 		}
 		return assemblies;
 	}
-	
+
 	/**
 	 * Returns the path that contains the caching file for utility data, such as domain definitions.
 	 *
@@ -681,59 +663,6 @@ public class AtomCache {
 	}
 
 	/**
-	 * Does the cache automatically download files that are missing from the local installation from the PDB FTP site?
-	 *
-	 * @return flag
-	 * @deprecated Use {@link #getFetchBehavior()}
-	 */
-	@Deprecated
-	public boolean isAutoFetch() {
-		return fetchBehavior != FetchBehavior.LOCAL_ONLY;
-	}
-
-	/**
-	 * <b>N.B.</b> This feature won't work unless the structure wasn't found & autoFetch is set to <code>true</code>.
-	 *
-	 * @return the fetchCurrent
-	 * @deprecated Use {@link FileParsingParameters#getObsoleteBehavior()} instead (4.0.0)
-	 */
-	@Deprecated
-	public boolean isFetchCurrent() {
-		return getObsoleteBehavior() == ObsoleteBehavior.FETCH_CURRENT;
-	}
-
-	/**
-	 * forces the cache to fetch the file if its status is OBSOLETE. This feature has a higher priority than
-	 * {@link #setFetchCurrent(boolean)}.<br>
-	 * <b>N.B.</b> This feature won't work unless the structure wasn't found & autoFetch is set to <code>true</code>.
-	 *
-	 * @return the fetchFileEvenIfObsolete
-	 * @author Amr AL-Hossary
-	 * @see #fetchCurrent
-	 * @since 3.0.2
-	 * @deprecated Use {@link FileParsingParameters#getObsoleteBehavior()} instead (4.0.0)
-	 */
-	@Deprecated
-	public boolean isFetchFileEvenIfObsolete() {
-		return getObsoleteBehavior() == ObsoleteBehavior.FETCH_OBSOLETE;
-	}
-
-
-	/**
-	 * Scop handling was changed in 4.2.0. For behaviour equivalent to
-	 * strictSCOP==true, use {@link ScopDatabase#getDomainByScopID(String)}.
-	 * For strictSCOP==False, create a {@link StructureName} or use
-	 * {@link StructureName#guessScopDomain(String, ScopDatabase)} explicitely.
-	 *
-	 * @return false; ignored
-	 * @deprecated since 4.2
-	 */
-	@Deprecated
-	public boolean isStrictSCOP() {
-		return false;
-	}
-
-	/**
 	 * Send a signal to the cache that the system is shutting down. Notifies underlying SerializableCache instances to
 	 * flush themselves...
 	 */
@@ -758,69 +687,12 @@ public class AtomCache {
 	}
 
 	/**
-	 * Does the cache automatically download files that are missing from the local installation from the PDB FTP site?
-	 *
-	 * @param autoFetch
-	 *            flag
-	 * @deprecated Use {@link #getFetchBehavior()}
-	 */
-	@Deprecated
-	public void setAutoFetch(boolean autoFetch) {
-		if(autoFetch) {
-			setFetchBehavior(FetchBehavior.DEFAULT);
-		} else {
-			setFetchBehavior(FetchBehavior.LOCAL_ONLY);
-		}
-	}
-
-	/**
 	 * set the location at which utility data should be cached.
 	 *
 	 * @param cachePath
 	 */
 	public void setCachePath(String cachePath) {
 		this.cachePath = cachePath;
-	}
-
-	/**
-	 * if enabled, the reader searches for the newest possible PDB ID, if not present in he local installation. The
-	 * {@link #setFetchFileEvenIfObsolete(boolean)} function has a higher priority than this function.<br>
-	 * <b>N.B.</b> This feature won't work unless the structure wasn't found & autoFetch is set to <code>true</code>.
-	 *
-	 * @param fetchCurrent
-	 *            the fetchCurrent to set
-	 * @author Amr AL-Hossary
-	 * @see #setFetchFileEvenIfObsolete(boolean)
-	 * @since 3.0.2
-	 * @deprecated Use {@link FileParsingParameters#setObsoleteBehavior()} instead (4.0.0)
-	 */
-	@Deprecated
-	public void setFetchCurrent(boolean fetchNewestCurrent) {
-		if(fetchNewestCurrent) {
-			setObsoleteBehavior(ObsoleteBehavior.FETCH_CURRENT);
-		} else {
-			if(getObsoleteBehavior() == ObsoleteBehavior.FETCH_CURRENT) {
-				setObsoleteBehavior(ObsoleteBehavior.DEFAULT);
-			}
-		}
-	}
-
-	/**
-	 * <b>N.B.</b> This feature won't work unless the structure wasn't found & autoFetch is set to <code>true</code>.
-	 *
-	 * @param fetchFileEvenIfObsolete
-	 *            the fetchFileEvenIfObsolete to set
-	 * @deprecated Use {@link FileParsingParameters#setObsoleteBehavior()} instead (4.0.0)
-	 */
-	@Deprecated
-	public void setFetchFileEvenIfObsolete(boolean fetchFileEvenIfObsolete) {
-		if(fetchFileEvenIfObsolete) {
-			setObsoleteBehavior(ObsoleteBehavior.FETCH_OBSOLETE);
-		} else {
-			if(getObsoleteBehavior() == ObsoleteBehavior.FETCH_OBSOLETE) {
-				setObsoleteBehavior(ObsoleteBehavior.DEFAULT);
-			}
-		}
 	}
 
 	public void setFileParsingParams(FileParsingParameters params) {
@@ -896,21 +768,6 @@ public class AtomCache {
 		this.pdpprovider = pdpprovider;
 	}
 
-
-	/**
-	 * This method does nothing.
-	 *
-	 * Scop handling was changed in 4.2.0. For behaviour equivalent to
-	 * strictSCOP==true, use {@link ScopDatabase#getDomainByScopID(String)}.
-	 * For strictSCOP==False, create a {@link StructureName} or use
-	 * {@link StructureName#guessScopDomain(String, ScopDatabase)} explicitely.
-	 *
-	 * @param ignored Ignored
-	 * @deprecated Removed in 4.2.0
-	 */
-	@Deprecated
-	public void setStrictSCOP(boolean ignored) {}
-
 	/**
 	 * @return the useMmCif
 	 */
@@ -927,23 +784,23 @@ public class AtomCache {
 		// Either way the user wants to use PDB or MMCIF
 		this.useMmtf = false;
 	}
-	
+
 	/**
 	 * Set whether to use mmtf.
-	 * @param bool the input boolean to set
+	 * @param useMmtf the input boolean to set
 	 */
 	public void setUseMmtf(boolean useMmtf) {
 		this.useMmtf = useMmtf;
 		if(useMmtf){
 			useMmCif=false;
 		}
-		
+
 	}
 
 	/** Returns useMmtf flag
 	 *
 	 * @return true if will load data via mmtf file format
-     */
+	 */
 	public boolean isUseMmtf(){
 		return this.useMmtf;
 	}
@@ -1046,15 +903,17 @@ public class AtomCache {
 	 * @throws IOException error reading from Web or file system
 	 */
 	private Structure loadStructureFromMmtfByPdbId(String pdbId) throws IOException {
-			MMTFFileReader reader = new MMTFFileReader();
-			reader.setFetchBehavior(fetchBehavior);
-			reader.setObsoleteBehavior(obsoleteBehavior);
-			Structure structure = reader.getStructureById(pdbId.toLowerCase());
-			return structure;
+		logger.debug("Loading structure {} from mmtf file.", pdbId);
+		MMTFFileReader reader = new MMTFFileReader();
+		reader.setFetchBehavior(fetchBehavior);
+		reader.setObsoleteBehavior(obsoleteBehavior);
+		Structure structure = reader.getStructureById(pdbId.toLowerCase());
+		return structure;
 	}
 
 	protected Structure loadStructureFromCifByPdbId(String pdbId) throws IOException, StructureException {
 
+		logger.debug("Loading structure {} from mmCIF file {}.", pdbId, path);
 		Structure s;
 		flagLoading(pdbId);
 		try {
@@ -1073,6 +932,7 @@ public class AtomCache {
 
 	protected Structure loadStructureFromPdbByPdbId(String pdbId) throws IOException, StructureException {
 
+		logger.debug("Loading structure {} from PDB file {}.", pdbId, path);
 		Structure s;
 		flagLoading(pdbId);
 		try {

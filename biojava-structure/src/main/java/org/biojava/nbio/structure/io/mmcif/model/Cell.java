@@ -39,7 +39,7 @@ public class Cell extends AbstractBean {
 	String angle_alpha_esd;
 	String angle_beta_esd;
 	String angle_gamma_esd;
-	
+
 	String volume;
 
 	public String getEntry_id() {

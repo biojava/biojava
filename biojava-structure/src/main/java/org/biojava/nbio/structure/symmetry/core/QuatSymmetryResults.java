@@ -22,14 +22,13 @@
  */
 package org.biojava.nbio.structure.symmetry.core;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.cluster.Subunit;
 import org.biojava.nbio.structure.cluster.SubunitCluster;
-import org.biojava.nbio.structure.cluster.SubunitClusterUtils;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Holds the results of quaternary symmetry perception obtained with
@@ -45,62 +44,105 @@ public class QuatSymmetryResults {
 	private Structure structure;
 
 	// Information about the clustering process
-	private List<SubunitCluster> clusters;
+	private Stoichiometry stoichiometry;
 	private boolean local = false;
 
 	// Cached properties
-	private String stoichiometry;
+	private List<SubunitCluster> clusters;
 	private List<Subunit> subunits;
 
 	// Information about the symmetry
 	private SymmetryPerceptionMethod method;
-	private RotationGroup rotationGroup;
 	private HelixLayers helixLayers;
-	private boolean pseudosymmetric = false;
+	private RotationGroup rotationGroup = new RotationGroup();
 
 	// TODO we should unify rotational and roto-translational results
 
 	/**
 	 * Constructor for rotational symmetries.
-	 * 
-	 * @param clusters
-	 *            List of SubunitCluster used to calculate symmetry
+	 *
+	 * @param stoichiometry
+	 *            Stoichiometry used to calculate symmetry
 	 * @param rotationGroup
 	 * @param method
 	 */
-	public QuatSymmetryResults(List<SubunitCluster> clusters,
+	public QuatSymmetryResults(Stoichiometry stoichiometry,
 			RotationGroup rotationGroup, SymmetryPerceptionMethod method) {
 
-		this.clusters = clusters;
-		this.stoichiometry = SubunitClusterUtils
-				.getStoichiometryString(clusters);
-		
+		this.stoichiometry = stoichiometry;
+		this.clusters = stoichiometry.getClusters();
+
 		subunits = new ArrayList<Subunit>();
 		for (SubunitCluster c : clusters) {
 			subunits.addAll(c.getSubunits());
 		}
-			
+
 		this.rotationGroup = rotationGroup;
 		this.method = method;
 	}
 
 	/**
 	 * Constructor for roto-translational symmetries.
-	 * 
-	 * @param clusters
-	 *            List of SubunitCluster used to calculate symmetry
+	 *
+	 * @param stoichiometry
+	 *            Stoichiometry used to calculate symmetry
 	 * @param helixLayers
 	 * @param method
 	 */
-	public QuatSymmetryResults(List<SubunitCluster> clusters,
+	public QuatSymmetryResults(Stoichiometry stoichiometry,
 			HelixLayers helixLayers, SymmetryPerceptionMethod method) {
 
-		this.clusters = clusters;
-		this.stoichiometry = SubunitClusterUtils
-				.getStoichiometryString(clusters);
+		this.stoichiometry = stoichiometry;
+		this.clusters = stoichiometry.getClusters();
+
+		subunits = new ArrayList<Subunit>();
+		for (SubunitCluster c : clusters) {
+			subunits.addAll(c.getSubunits());
+		}
 
 		this.helixLayers = helixLayers;
 		this.method = method;
+	}
+
+	/**
+	 * Determine if this symmetry result is a subset of the other Symmetry result.
+	 * Checks the following conditions:
+	 * - 'Other' includes all subunits of 'this'.
+	 * - 'Other' has the same or higher order than 'this'.
+	 *
+	 * Special treatment for the helical symmetry:
+	 * - 'Other' includes all subunits of 'this'.
+	 * - 'this' may be Cn, as well as H
+	 *
+	 *  Note that isSupersededBy establishes a partial order, i.e. for some
+	 *  symmetries A and B, neither A.isSupersededBy(B) nor B.isSupersededBy(A)
+	 *  may be true.
+	 *
+	 * @param other
+	 *            QuatSymmetryResults
+	 *
+	 * @return true if other supersedes this, false otherwise
+	 */
+
+	public boolean isSupersededBy(QuatSymmetryResults other) {
+		if(other.getSymmetry().startsWith("H")) {
+			if(this.getSymmetry().startsWith("C") || this.getSymmetry().startsWith("H")) {
+				if (other.subunits.containsAll(this.subunits)) {
+					return true;
+				}
+			}
+			return false;
+		}
+
+		if (this.getSymmetry().startsWith("H")) {
+			return false;
+		}
+
+		if (this.rotationGroup.getOrder() <= other.rotationGroup.getOrder() &&
+				other.subunits.containsAll(this.subunits)) {
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -111,7 +153,7 @@ public class QuatSymmetryResults {
 	public List<SubunitCluster> getSubunitClusters() {
 		return Collections.unmodifiableList(clusters);
 	}
-	
+
 	/**
 	 * Returns the List of Subunits used to calculate symmetry.
 	 *
@@ -120,16 +162,16 @@ public class QuatSymmetryResults {
 	public List<Subunit> getSubunits() {
 		return Collections.unmodifiableList(subunits);
 	}
-	
+
 	/**
 	 * Return the number of Subunits involved in the symmetry.
-	 * 
+	 *
 	 * @return the number of Subunits
 	 */
 	public int getSubunitCount() {
 		return subunits.size();
 	}
-	
+
 	/**
 	 * @return rotation group (point group) information representing rotational
 	 *         quaternary symmetry.
@@ -178,18 +220,18 @@ public class QuatSymmetryResults {
 		return new QuatSymmetryScores();
 	}
 
-	public String getStoichiometry() {
+	public Stoichiometry getStoichiometry() {
 		return stoichiometry;
 	}
 
 	public boolean isPseudoStoichiometric() {
-		return SubunitClusterUtils.isPseudoStoichiometric(clusters);
+		return stoichiometry.isPseudoStoichiometric();
 	}
 
 	/**
 	 * A local result means that only a subset of the original Subunits was used
 	 * for symmetry determination.
-	 * 
+	 *
 	 * @return true if local result, false otherwise
 	 */
 	public boolean isLocal() {
@@ -199,7 +241,7 @@ public class QuatSymmetryResults {
 	/**
 	 * A local result means that only a subset of the original Subunits was used
 	 * for symmetry determination.
-	 * 
+	 *
 	 * @param local
 	 *            true if local result, false otherwise
 	 */
@@ -207,26 +249,6 @@ public class QuatSymmetryResults {
 		this.local = local;
 	}
 
-	/**
-	 * A symmetry result is pseudosymmetric when using pseudostoichiometry
-	 * extended the symmetry over the
-	 * 
-	 * @return true is pseudosymmetric, false otherwise
-	 */
-	public boolean isPseudosymmetric() {
-		return pseudosymmetric;
-	}
-
-	/**
-	 * A symmetry result is pseudosymmetric when using pseudostoichiometry
-	 * extended the symmetry over the
-	 * 
-	 * @param pseudosymmetric true if pseudosymmetric, false otherwise
-	 */
-	public void setPseudosymmetric(boolean pseudosymmetric) {
-		this.pseudosymmetric = pseudosymmetric;
-	}
-	
 	public Structure getStructure() {
 		return structure;
 	}

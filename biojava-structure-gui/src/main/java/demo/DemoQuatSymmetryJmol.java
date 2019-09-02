@@ -51,10 +51,10 @@ import java.util.List;
  * Helical: 1B47
  * <p>
  * With internal symmetry: 4E3E, 1VYM
- * 
+ *
  * @author Peter Rose
  * @author Aleix Lafita
- * 
+ *
  */
 public class DemoQuatSymmetryJmol {
 
@@ -72,7 +72,7 @@ public class DemoQuatSymmetryJmol {
 		SubunitClustererParameters cp = new SubunitClustererParameters();
 		cp.setClustererMethod(SubunitClustererMethod.SEQUENCE); // normal
 		// cp.setClustererMethod(SubunitClustererMethod.STRUCTURE); // pseudo
-		cp.setCoverageThreshold(0.9);
+		cp.setSequenceCoverageThreshold(0.9);
 
 		// Calculate and display the global symmetry
 		QuatSymmetryResults globalSymmetry = QuatSymmetryDetector
@@ -94,7 +94,7 @@ public class DemoQuatSymmetryJmol {
 		String title = name + ": " + results.getStoichiometry()
 				+ ", " + results.getSymmetry();
 
-		if (results.isPseudosymmetric())
+		if (results.isPseudoStoichiometric())
 			title += ", pseudosymmetric";
 
 		if (results.isLocal())

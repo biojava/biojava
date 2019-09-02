@@ -28,6 +28,9 @@ import java.util.regex.Pattern;
 import org.biojava.nbio.structure.align.util.AtomCache;
 
 public class BioAssemblyIdentifier implements StructureIdentifier {
+
+	private static final long serialVersionUID = -356206725119993449L;
+
 	private String pdbCode;
 	private int biolNr;
 

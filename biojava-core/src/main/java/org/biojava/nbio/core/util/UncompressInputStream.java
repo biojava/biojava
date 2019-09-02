@@ -75,10 +75,24 @@ import java.io.*;
  * @author  Ronald Tschalar
  * @author  Unidata Program Center
  * @author  Richard Holland - making LZW_MAGIC package-visible.
+ *
+ * @version 0.3-5 2008/01/19
+ * @author  Fred Hansen (zweibieren@yahoo.com)
+ * 	Fixed available() and the EOF condition for mainloop.
+ * 	Also added some comments.
+ *
+ * @version 1.0 2018/01/08
+ * @author      Fred Hansen (zweibieren@yahoo.com)
+ * 	added uncompress(InputStream,OutputStream)
+ * 	    and called it from main(String[])
+ * 	    and uncompress(String, FileOutputStream)
+ * 	normalize indentation
+ * 	rewrite skip method
+ * 	amend logging code in uncompress(String, FileOutputStream)
  */
 public class UncompressInputStream extends FilterInputStream {
-
-	private final static Logger logger = LoggerFactory.getLogger(UncompressInputStream.class);
+	private final static Logger logger
+		= LoggerFactory.getLogger(UncompressInputStream.class);
 
 	/**
 	 * @param is the input stream to decompress
@@ -90,10 +104,9 @@ public class UncompressInputStream extends FilterInputStream {
 	}
 
 
-	byte[] one = new byte[1];
-
 	@Override
-public synchronized int read() throws IOException {
+	public synchronized int read() throws IOException {
+		byte[] one = new byte[1];
 		int b = read(one, 0, 1);
 		if (b == 1)
 			return (one[0] & 0xff);
@@ -108,7 +121,7 @@ public synchronized int read() throws IOException {
 
 	private int[] tab_prefix;
 	private byte[] tab_suffix;
-	private int[] zeros = new int[256];
+	final private int[] zeros = new int[256];
 	private byte[] stack;
 
 	// various state
@@ -123,20 +136,27 @@ public synchronized int read() throws IOException {
 	private int stackp;
 	private int free_ent;
 
-	// input buffer
-	private byte[] data = new byte[10000];
-	private int bit_pos = 0, end = 0, got = 0;
+	/* input buffer
+		The input stream must be considered in chunks
+		Each chunk is of length eight times the current code length.
+		Thus the chunk contains eight codes; NOT on byte boundaries.
+	*/
+	final private byte[] data = new byte[10000];
+	private int
+	    bit_pos = 0,  // current bitwise location in bitstream
+	    end = 0,      // index of next byte to fill in data
+	    got = 0;      // number of bytes gotten by most recent read()
 	private boolean eof = false;
 	private static final int EXTRA = 64;
 
 
 	@Override
-public synchronized int read(byte[] buf, int off, int len)
+	public synchronized int read(byte[] buf, int off, int len)
 			throws IOException {
 		if (eof) return -1;
 		int start = off;
 
-/* Using local copies of various variables speeds things up by as
+		/* Using local copies of various variables speeds things up by as
 		 * much as 30% !
 		 */
 		int[] l_tab_prefix = tab_prefix;
@@ -153,9 +173,7 @@ public synchronized int read(byte[] buf, int off, int len)
 		byte[] l_data = data;
 		int l_bit_pos = bit_pos;
 
-
-// empty stack if stuff still left
-
+		// empty stack if stuff still left
 		int s_size = l_stack.length - l_stackp;
 		if (s_size > 0) {
 			int num = (s_size >= len) ? len : s_size;
@@ -170,17 +188,15 @@ public synchronized int read(byte[] buf, int off, int len)
 			return off - start;
 		}
 
-
-// loop, filling local buffer until enough data has been decompressed
-
+		// loop, filling local buffer until enough data has been decompressed
 		main_loop: do {
 			if (end < EXTRA) fill();
 
-			int bit_in = (got > 0) ? (end - end % l_n_bits) << 3 :
-					(end << 3) - (l_n_bits - 1);
+			int bit_end = (got > 0)
+			    ?  (end - end % l_n_bits) << 3  	// set to a "chunk" boundary
+			    :  (end << 3) - (l_n_bits - 1);  	// no more data, set to last code
 
-			while (l_bit_pos < bit_in) {
-				// handle 1-byte reads correctly
+			while (l_bit_pos < bit_end) {		// handle 1-byte reads correctly
 				if (len == 0) {
 					n_bits = l_n_bits;
 					maxcode = l_maxcode;
@@ -326,7 +342,10 @@ public synchronized int read(byte[] buf, int off, int len)
 			}
 
 			l_bit_pos = resetbuf(l_bit_pos);
-		} while (got > 0);
+		} while
+	   		// old code: (got>0)  fails if code width expands near EOF
+	   		(got > 0	    // usually true
+			|| l_bit_pos < (end << 3) - (l_n_bits - 1));  // last few bytes
 
 		n_bits = l_n_bits;
 		maxcode = l_maxcode;
@@ -346,7 +365,7 @@ public synchronized int read(byte[] buf, int off, int len)
 	 * Moves the unread data in the buffer to the beginning and resets
 	 * the pointers.
 	 */
-	private final int resetbuf(int bit_pos) {
+	private int resetbuf(int bit_pos) {
 		int pos = bit_pos >> 3;
 		System.arraycopy(data, pos, data, 0, end - pos);
 		end -= pos;
@@ -354,29 +373,27 @@ public synchronized int read(byte[] buf, int off, int len)
 	}
 
 
-	private final void fill() throws IOException {
+	private void fill() throws IOException {
 		got = in.read(data, end, data.length - 1 - end);
 		if (got > 0) end += got;
 	}
 
 
 	@Override
-public synchronized long skip(long num) throws IOException {
-		byte[] tmp = new byte[(int) num];
-		int got = read(tmp, 0, (int) num);
-
-		if (got > 0)
-			return got;
-		else
-			return 0L;
+	public synchronized long skip(long num) throws IOException {
+		return Math.max(0, read(new byte[(int) num]));
 	}
 
 
 	@Override
-public synchronized int available() throws IOException {
+	public synchronized int available() throws IOException {
 		if (eof) return 0;
-
-		return in.available();
+		// the old code was:    return in.available();
+		// it fails because this.read() can return bytes
+		// even after in.available()  is zero
+		// -- zweibieren
+		int avail = in.available();
+		return (avail == 0) ? 1 : avail;
 	}
 
 
@@ -389,8 +406,7 @@ public synchronized int available() throws IOException {
 	private static final int HDR_BLOCK_MODE = 0x80;
 
 	private void parse_header() throws IOException {
-// read in and check magic number
-
+		// read in and check magic number
 		int t = in.read();
 		if (t < 0) throw new EOFException("Failed to read magic number");
 		int magic = (t & 0xff) << 8;
@@ -402,9 +418,7 @@ public synchronized int available() throws IOException {
 					"magic number 0x" +
 					Integer.toHexString(magic) + ")");
 
-
-// read in header byte
-
+		// read in header byte
 		int header = in.read();
 		if (header < 0) throw new EOFException("Failed to read header");
 
@@ -425,9 +439,7 @@ public synchronized int available() throws IOException {
 		logger.debug("block mode: {}", block_mode);
 		logger.debug("max bits:   {}", maxbits);
 
-
-// initialize stuff
-
+		// initialize stuff
 		maxmaxcode = 1 << maxbits;
 		n_bits = INIT_BITS;
 		maxcode = (1 << n_bits) - 1;
@@ -451,59 +463,77 @@ public synchronized int available() throws IOException {
 	 * @return false
 	 */
 	@Override
-public boolean markSupported() {
+	public boolean markSupported() {
 		return false;
 	}
 
-	static public void uncompress( String fileInName, FileOutputStream out) throws IOException {
+	/**
+	 * Read a named file and uncompress it.
+	 * @param fileInName Name of compressed file.
+	 * @param out A destination for the result. It is closed after data is sent.
+	 * @return number of bytes sent to the output stream,
+	 * @throws IOException for any error
+	 */
+	public static long uncompress(String fileInName, FileOutputStream out)
+			throws IOException {
 		long start = System.currentTimeMillis();
-
-		InputStream in = new UncompressInputStream(  new FileInputStream(fileInName));
-
-	//  int total = 0;
-		byte[] buffer = new byte[100000];
-		while (true) {
-			int bytesRead = in.read(buffer);
-			if (bytesRead == -1) break;
-			out.write(buffer, 0, bytesRead);
-	 //   total += bytesRead;
+		long total;
+		try (InputStream fin = new FileInputStream(fileInName)) {
+			total = uncompress(fin, out);
 		}
-		in.close();
 		out.close();
 
 		if (debugTiming) {
 			long end = System.currentTimeMillis();
-		//  logger.debug("Decompressed " + total + " bytes");
-			logger.warn("Time: {} seconds", (end - start) / 1000);
+			logger.info("Decompressed {} bytes", total);
+			UncompressInputStream.logger.info("Time: {} seconds", (end - start) / 1000);
 		}
+		return total;
 	}
 
+	/**
+	* Read an input stream and uncompress it to an output stream.
+	* @param in the incoming InputStream. It is NOT closed.
+	* @param out the destination OutputStream. It is NOT closed.
+	* @return number of bytes sent to the output stream
+	* @throws IOException for any error
+	*/
+	public static long uncompress(InputStream in, OutputStream out)
+		throws IOException {
+		UncompressInputStream ucis = new UncompressInputStream(in);
+		long total = 0;
+		byte[] buffer = new byte[100000];
+		while (true) {
+			int bytesRead = ucis.read(buffer);
+			if (bytesRead == -1) break;
+			out.write(buffer, 0, bytesRead);
+			total += bytesRead;
+		}
+		return total;
+	}
 
 	private static final boolean debugTiming = false;
 
+	/**
+	 * Reads a file, uncompresses it, and sends the result to stdout.
+	 * Also writes trivial statistics to stderr.
+	 * @param args An array with one String element, the name of the file to read.
+	 * @throws IOException for any failure
+	 */
 	public static void main(String[] args) throws Exception {
 		if (args.length != 1) {
 			logger.info("Usage: UncompressInputStream <file>");
 			System.exit(1);
 		}
-
-		InputStream in =
-				new UncompressInputStream(new FileInputStream(args[0]));
-
-		byte[] buf = new byte[100000];
-		int tot = 0;
 		long beg = System.currentTimeMillis();
 
-		while (true) {
-			int got = in.read(buf);
-			if (got < 0) break;
-			System.out.write(buf, 0, got);
-			tot += got;
+		long tot;
+		try (InputStream in = new FileInputStream(args[0])) {
+			tot = uncompress(in, System.out);
 		}
 
 		long end = System.currentTimeMillis();
 		logger.info("Decompressed {} bytes", tot);
 		logger.info("Time: {} seconds", (end - beg) / 1000);
-		in.close();
 	}
 }

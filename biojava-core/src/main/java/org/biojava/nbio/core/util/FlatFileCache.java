@@ -29,7 +29,10 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 
-/** Provides a cache for storing multiple small files in memory. Can be used to e.g cache gzip compressed PDB files for avoiding disk IO bottlenecks.
+/**
+ * Provides a cache for storing multiple small files in memory. Can be used to e.g cache gzip compressed PDB files
+ * for avoiding disk IO bottlenecks.
+ * Note this is just a wrapper for the singleton cache.
  *
  * @author Andreas Prlic.
  *
@@ -38,18 +41,11 @@ public class FlatFileCache {
 
 	private final static Logger logger = LoggerFactory.getLogger(FlatFileCache.class);
 
-	private static FlatFileCache me ;
-
+	/**
+	 * The cache singleton.
+	 */
 	private static SoftHashMap<String, byte[]> cache = new SoftHashMap<String, byte[]>(0);
 
-	public static FlatFileCache getInstance() {
-
-	   if ( me == null){
-	      me = new FlatFileCache();
-	   }
-
-		return me;
-	}
 
 	// no public constructor;
 	private FlatFileCache(){
@@ -109,20 +105,17 @@ public class FlatFileCache {
 
 	}
 
-	public int size() {
+	public static int size() {
 		if ( cache != null)
 			return cache.size();
 		else
 			return -1;
 	}
 
-	public void clear(){
+	public static void clear(){
 	   cache.clear();
 	}
 
-	public static void destroy(){
-	   me.clear();
-	   me = null;
-	}
+
 
 }

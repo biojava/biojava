@@ -32,7 +32,11 @@ import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava.nbio.core.sequence.compound.DNACompoundSet;
 import org.biojava.nbio.core.sequence.compound.NucleotideCompound;
-import org.biojava.nbio.core.sequence.features.*;
+import org.biojava.nbio.core.sequence.features.AbstractFeature;
+import org.biojava.nbio.core.sequence.features.DBReferenceInfo;
+import org.biojava.nbio.core.sequence.features.DatabaseReferenceInterface;
+import org.biojava.nbio.core.sequence.features.FeatureRetriever;
+import org.biojava.nbio.core.sequence.features.FeaturesKeyWordInterface;
 import org.biojava.nbio.core.sequence.io.GenbankSequenceParser;
 import org.biojava.nbio.core.sequence.io.GenericGenbankHeaderParser;
 import org.biojava.nbio.core.sequence.template.AbstractSequence;
@@ -41,7 +45,14 @@ import org.biojava.nbio.core.sequence.template.CompoundSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -54,7 +65,7 @@ import java.util.LinkedHashMap;
  */
 public class GenbankProxySequenceReader<C extends Compound> extends StringProxySequenceReader<C> implements FeaturesKeyWordInterface, DatabaseReferenceInterface, FeatureRetriever {
 
-	private final static Logger logger = LoggerFactory.getLogger(GenbankProxySequenceReader.class);
+	private static final Logger logger = LoggerFactory.getLogger(GenbankProxySequenceReader.class);
 
 	private static final String eutilBaseURL = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/"; //
 	private String genbankDirectoryCache = null;

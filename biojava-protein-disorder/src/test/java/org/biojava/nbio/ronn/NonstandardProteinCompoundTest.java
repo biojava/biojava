@@ -84,7 +84,8 @@ public class NonstandardProteinCompoundTest  {
 
 	}
 
-	/** Fetch a protein sequence from the UniProt web site
+	/**
+	 * Fetch a protein sequence from the UniProt web site
 	 *
 	 * @param uniProtID
 	 * @return a Protein Sequence
