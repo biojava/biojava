@@ -379,8 +379,6 @@ public class MmtfUtils {
 		if(secStrucType!=null){
 			group.setProperty("secstruc", secStrucState);
 		}
-		else{
-		}
 	}
 
 
