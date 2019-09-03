@@ -20,8 +20,6 @@
  */
 package org.biojava.nbio.structure.io.mmtf;
 
-import static org.junit.Assert.assertEquals;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -42,14 +40,17 @@ import org.biojava.nbio.structure.StructureImpl;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.junit.Rule;
 import org.junit.Test;
+import static org.junit.Assert.*;
 import org.junit.rules.TemporaryFolder;
 
 /**
- * Test that Biojava can read and write MMTF data.
+ * Test the Biojava MMTF writer.
+ *
  * @author Anthony Bradley
+ * @author Aleix Lafita
  *
  */
-public class TestBasicMmtf {
+public class TestMmtfStructureWriter {
 
 	/**
 	 * A test folder for testing writing files.
@@ -76,11 +77,17 @@ public class TestBasicMmtf {
 	 */
 	@Test
 	public void testWrite() throws IOException {
+
+		// Create a structure
 		Structure structure = new StructureImpl();
+
+		// Add some header information
 		PDBHeader pdbHeader = new PDBHeader();
 		pdbHeader.setExperimentalTechnique("X-RAY DIFFRACTION");
-		structure.setEntityInfos(new ArrayList<EntityInfo>());
 		structure.setPDBHeader(pdbHeader);
+
+		// Create one chain
+		structure.setEntityInfos(new ArrayList<EntityInfo>());
 		Chain chain = new ChainImpl();
 		chain.setId("A");
 		chain.setName("A");
@@ -90,17 +97,24 @@ public class TestBasicMmtf {
 		chemComp.setType("TYPfdl");
 		chemComp.setOne_letter_code("A");
 		group.setChemComp(chemComp);
+
+		// Create one Atom
 		Atom atom = new AtomImpl();
 		atom.setName("A");
 		atom.setElement(Element.Ag);
-		atom.setCoords(new double[] {1.0,2.0,3.0});
+		atom.setCoords(new double[] { 1.0, 2.0, 3.0 });
+
+		// Link together the objects
 		chain.addGroup(group);
 		group.addAtom(atom);
+
 		ResidueNumber residueNumber = new ResidueNumber();
 		residueNumber.setInsCode('A');
 		residueNumber.setSeqNum(100);
 		group.setResidueNumber(residueNumber);
+
 		structure.addChain(chain);
+
 		File tempFile = testFolder.newFile("tmpfile");
 		MmtfActions.writeToFile(structure, tempFile.toPath());
 	}

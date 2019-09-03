@@ -68,6 +68,8 @@ import org.slf4j.LoggerFactory;
  * Should be ported to biojava code.
  *
  * @author Anthony Bradley
+ * @since 5.0
+ * 
  */
 public class MmtfStructureReader implements StructureAdapterInterface, Serializable {
 
@@ -227,7 +229,7 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 			group = new HetatomImpl();
 			break;
 		}
-		atomsInGroup = new ArrayList<Atom>();
+		atomsInGroup = new ArrayList<>();
 		ChemComp chemComp = new ChemComp();
 		chemComp.setOne_letter_code(String.valueOf(singleLetterCode));
 		chemComp.setType(chemCompType.toUpperCase());
@@ -241,7 +243,7 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 			group.setResidueNumber(chain.getName().trim(),
 					groupNumber, insertionCode);
 		}
-		group.setAtoms(new ArrayList<Atom>(atomCount));
+		group.setAtoms(new ArrayList<>(atomCount));
 		if (polymerType==1 || polymerType==2) {
 			MmtfUtils.insertSeqResGroup(chain, group, sequenceIndexId);
 		}
@@ -327,14 +329,15 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 	 * face#setGroupBonds(int, int, int)
 	 */
 	@Override
-	public void setGroupBond(int indOne,
-			int indTwo, int bondOrder) {
-		// Get the atom
+	public void setGroupBond(int indOne, int indTwo, int bondOrder) {
+		
+		// Get the atoms
 		Atom atomOne = atomsInGroup.get(indOne);
 		Atom atomTwo = atomsInGroup.get(indTwo);
+		
 		// set the new bond
-		@SuppressWarnings("unused")
-		BondImpl bond = new BondImpl(atomOne, atomTwo, bondOrder);
+		new BondImpl(atomOne, atomTwo, bondOrder);
+		
 	}
 
 	/* (non-Javadoc)
@@ -342,14 +345,14 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 	 * Interface#setInterGroupBonds(int, int, int)
 	 */
 	@Override
-	public void setInterGroupBond(int indOne,
-			int indTwo, int bondOrder) {
-		// Get the atom
+	public void setInterGroupBond(int indOne, int indTwo, int bondOrder) {
+		
+		// Get the atoms
 		Atom atomOne = allAtoms[indOne];
 		Atom atomTwo = allAtoms[indTwo];
-		// set the new bond
-		@SuppressWarnings("unused")
-		BondImpl bond = new BondImpl(atomOne, atomTwo, bondOrder);
+		
+		// set the new bond (this 
+		new BondImpl(atomOne, atomTwo, bondOrder);
 	}
 
 

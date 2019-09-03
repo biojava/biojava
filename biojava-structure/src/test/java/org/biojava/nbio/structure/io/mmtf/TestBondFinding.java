@@ -41,22 +41,27 @@ import org.biojava.nbio.structure.io.mmcif.DownloadChemCompProvider;
 
 /**
  * Test bond finding in BioJava
+ *
  * @author Anthony Bradley
  *
  */
 public class TestBondFinding {
 
 	/**
-	 * Test that the bonds we are finding is consistenty.
+	 * Test that the bonds we are finding are consistent.
+	 *
 	 * @throws IOException
 	 * @throws StructureException
 	 */
 	@Test
 	public void testInterGroupBonds() throws IOException, StructureException {
+
 		// Normal
 		assertEquals(2236, getInterBonds("1QMZ"));
+
 		// 	Disulphide
 		assertEquals(956, getInterBonds("2QWO"));
+
 		// Covalent ligand
 		assertEquals(2294, getInterBonds("4QDV"));
 		// DNA
@@ -65,13 +70,16 @@ public class TestBondFinding {
 	}
 
 	/**
-	 * Find all of the inter group bonds in a structure
+	 * Find all of the inter group bonds in a structure.
+	 *
 	 * @param pdbId the pdb id of the structure to determine
 	 * @return the number of inter group bonds (double counted) in a structure
 	 * @throws IOException
 	 * @throws StructureException
 	 */
-	public int getInterBonds(String pdbId) throws IOException, StructureException{
+	public int getInterBonds(String pdbId) throws IOException, StructureException {
+
+		// Download parameters
 		AtomCache cache = new AtomCache();
 		cache.setUseMmCif(true);
 		cache.setFetchBehavior(FetchBehavior.FETCH_FILES);
@@ -84,10 +92,13 @@ public class TestBondFinding {
 		dcc.checkDoFirstInstall();
 		cache.setFileParsingParams(params);
 		StructureIO.setAtomCache(cache);
-		int counter =0;
-		// Now get the structure
+
+		// Get the structure
 		Structure newStruc = StructureIO.getStructure(pdbId);
-		// Now loop through the atoms
+
+		int counter =0;
+
+		// Loop through the atoms and count the bonds
 		for(Chain c: newStruc.getChains()){
 			for(Group g: c.getAtomGroups()){
 				List<Atom> theseAtoms = g.getAtoms();

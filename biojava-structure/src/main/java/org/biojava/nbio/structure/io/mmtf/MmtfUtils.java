@@ -50,6 +50,7 @@ import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
 import org.biojava.nbio.structure.io.mmcif.DownloadChemCompProvider;
+import org.biojava.nbio.structure.io.mmcif.chem.ChemCompTools;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.biojava.nbio.structure.quaternary.BioAssemblyInfo;
 import org.biojava.nbio.structure.quaternary.BiologicalAssemblyTransformation;
@@ -371,15 +372,13 @@ public class MmtfUtils {
 	/**
 	 * Get the secondary structure as defined by DSSP.
 	 * @param group the input group to be calculated
-	 * @param the integer index of the group type.
+	 * @param dsspIndex integer index of the group type.
 	 */
 	public static void setSecStructType(Group group, int dsspIndex) {
 		SecStrucType secStrucType = getSecStructTypeFromDsspIndex(dsspIndex);
 		SecStrucState secStrucState = new SecStrucState(group, "MMTF_ASSIGNED", secStrucType);
 		if(secStrucType!=null){
 			group.setProperty("secstruc", secStrucState);
-		}
-		else{
 		}
 	}
 
@@ -394,7 +393,7 @@ public class MmtfUtils {
 		String dsspType = DsspType.dsspTypeFromInt(dsspIndex).getDsspType();
 		for(SecStrucType secStrucType : SecStrucType.values())
 		{
-			if(dsspType==secStrucType.name)
+			if(dsspType.equals(secStrucType.name))
 			{
 				return secStrucType;
 			}
@@ -500,31 +499,29 @@ public class MmtfUtils {
 	 * @param sequence the sequence of the construct
 	 */
 	public static void addSeqRes(Chain modelChain, String sequence) {
+		
 		List<Group> seqResGroups = modelChain.getSeqResGroups();
 		GroupType chainType = getChainType(modelChain.getAtomGroups());
+		
 		for(int i=0; i<sequence.length(); i++){
+			
 			char singleLetterCode = sequence.charAt(i);
 			Group group = null;
-			if(seqResGroups.size()<=i){
-			}
-			else{
+			if (seqResGroups.size() > i) {
 				group=seqResGroups.get(i);
 			}
 			if(group!=null){
 				continue;
 			}
-			group = getSeqResGroup(modelChain, singleLetterCode, chainType);
+			
+			group = getSeqResGroup(singleLetterCode, chainType);
 			addGroupAtId(seqResGroups, group, i);
-			seqResGroups.set(i, group);
 		}
 	}
 
 	private static GroupType getChainType(List<Group> groups) {
 		for(Group group : groups) {
-			if(group==null){
-				continue;
-			}
-			else if(group.getType()!=GroupType.HETATM){
+			if(group!=null && group.getType()!=GroupType.HETATM){
 				return group.getType();
 			}
 		}
@@ -540,20 +537,27 @@ public class MmtfUtils {
 		}
 	}
 
-	private static Group getSeqResGroup(Chain modelChain, char singleLetterCode, GroupType type) {
+	private static Group getSeqResGroup(char singleLetterCode, GroupType type) {
+
 		if(type==GroupType.AMINOACID){
+			String threeLetter = ChemCompTools.getAminoThreeLetter(singleLetterCode);
+			if (threeLetter == null) return null;
+			ChemComp chemComp = ChemCompGroupFactory.getChemComp(threeLetter);
+
 			AminoAcidImpl a = new AminoAcidImpl();
 			a.setRecordType(AminoAcid.SEQRESRECORD);
 			a.setAminoType(singleLetterCode);
-			ChemComp chemComp = new ChemComp();
-			chemComp.setOne_letter_code(""+singleLetterCode);
+			a.setPDBName(threeLetter);
 			a.setChemComp(chemComp);
 			return a;
 
 		} else if (type==GroupType.NUCLEOTIDE) {
+			String twoLetter = ChemCompTools.getDNATwoLetter(singleLetterCode);
+			if (twoLetter == null) return null;
+			ChemComp chemComp = ChemCompGroupFactory.getChemComp(twoLetter);
+
 			NucleotideImpl n = new NucleotideImpl();
-			ChemComp chemComp = new ChemComp();
-			chemComp.setOne_letter_code(""+singleLetterCode);
+			n.setPDBName(twoLetter);
 			n.setChemComp(chemComp);
 			return n;
 		}

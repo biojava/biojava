@@ -51,6 +51,7 @@ import org.rcsb.mmtf.encoder.AdapterToStructureData;
 
 /**
  * Tests to see if roundtripping of MMTF can be done.
+ *
  * @author Anthony Bradley
  *
  */
@@ -58,16 +59,20 @@ public class TestMmtfRoundTrip {
 
 	/**
 	 * Test that we can round trip a simple structure.
+	 *
 	 * @throws IOException an error reading the file
 	 * @throws StructureException an error parsing the structure
 	 */
 	@Test
 	public void testRoundTrip() throws IOException, StructureException {
+
+		// Load a structure in MMCIF format
 		AtomCache cache = new AtomCache();
 		FileParsingParameters params = new FileParsingParameters();
 		params.setParseBioAssembly(true);
 		cache.setFileParsingParams(params);
 		cache.setUseMmCif(true);
+		
 		StructureIO.setAtomCache(cache);
 
 		ChemCompGroupFactory.setChemCompProvider(new DownloadChemCompProvider());
@@ -89,22 +94,26 @@ public class TestMmtfRoundTrip {
 	 * Broad test of atom similarity
 	 * @param structOne the first input structure
 	 * @param structTwo the second input structure
-	 * @param mmtfParams
 	 * @return
 	 */
 	private boolean checkIfAtomsSame(Structure structOne, Structure structTwo) {
+
+		// Check the same number of models
 		int numModels = structOne.nrModels();
 		if(numModels!=structTwo.nrModels()){
 			System.out.println("Error - diff number models: "+structOne.getPDBCode());
 			return false;
 		}
+
 		for(int i=0;i<numModels;i++){
+
 			List<Chain> chainsOne = structOne.getChains(i);
 			List<Chain> chainsTwo = structTwo.getChains(i);
 			if(chainsOne.size()!=chainsTwo.size()){
 				System.out.println("Error - diff number chains: "+structOne.getPDBCode());
 				return false;
 			}
+
 			// Now make sure they're sorted in the right order
 			sortChains(chainsOne, chainsTwo);
 			// Check that each one has the same number of poly, non-poly and water chains
@@ -217,8 +226,9 @@ public class TestMmtfRoundTrip {
 		}
 		return true;
 	}
+
 	/**
-	 * Check both structures have the same number of poly,non-poly and water chains
+	 * Check both structures have the same number of poly, non-poly and water chains
 	 * @param structOne the first structure
 	 * @param structTwo the second structure
 	 * @param i the model index
@@ -228,8 +238,10 @@ public class TestMmtfRoundTrip {
 		assertEquals(structOne.getNonPolyChains(i).size(), structTwo.getNonPolyChains(i).size());
 		assertEquals(structOne.getWaterChains(i).size(), structTwo.getWaterChains(i).size());
 	}
+
 	/**
 	 * Sort the atom based on PDB serial id
+	 *
 	 * @param atomsOne the first list
 	 * @param atomsTwo  the second list
 	 */
@@ -262,6 +274,7 @@ public class TestMmtfRoundTrip {
 
 	/**
 	 * Sort the chains based on chain id.
+	 *
 	 * @param chainsOne the first list of chains
 	 * @param chainsTwo the second list of chains
 	 */
