@@ -516,7 +516,6 @@ public class MmtfUtils {
 			
 			group = getSeqResGroup(singleLetterCode, chainType);
 			addGroupAtId(seqResGroups, group, i);
-			seqResGroups.set(i, group);
 		}
 	}
 

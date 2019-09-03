@@ -44,54 +44,14 @@ public class TestMmtfPerformance {
 
 	private static final int NUMBER_OF_REPEATS = 10;
 
-	// Returns the contents of the file in a byte array.
-	public static byte[] getBytesFromFile(File file) throws IOException {
-		// Get the size of the file
-		long length = file.length();
-
-		// You cannot create an array using a long type.
-		// It needs to be an int type.
-		// Before converting to an int type, check
-		// to ensure that file is not larger than Integer.MAX_VALUE.
-		if (length > Integer.MAX_VALUE) {
-			// File is too large
-			throw new IOException("File is too large!");
-		}
-
-		// Create the byte array to hold the data
-		byte[] bytes = new byte[(int)length];
-
-		// Read in the bytes
-		int offset = 0;
-		int numRead = 0;
-
-		InputStream is = new FileInputStream(file);
-		try {
-			while (offset < bytes.length
-					&& (numRead=is.read(bytes, offset, bytes.length-offset)) >= 0) {
-				offset += numRead;
-			}
-		} finally {
-			is.close();
-		}
-
-		// Ensure all the bytes have been read in
-		if (offset < bytes.length) {
-			throw new IOException("Could not completely read file "+file.getName());
-		}
-		return bytes;
-	}
-
-	static String convertStreamToString(java.io.InputStream is) {
+	private static String convertStreamToString(java.io.InputStream is) {
 		try (
 		java.util.Scanner s = new java.util.Scanner(is)){
 			return s.useDelimiter("\\A").hasNext() ? s.next() : "";
 		}
-
 	}
 
-
-	public byte[] getByteArrayFromInputStream(InputStream is) throws IOException {
+	private byte[] getByteArrayFromInputStream(InputStream is) throws IOException {
 		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 
 		int nRead;
@@ -104,7 +64,6 @@ public class TestMmtfPerformance {
 		buffer.flush();
 
 		return buffer.toByteArray();
-
 	}
 
 	@Test
@@ -128,13 +87,15 @@ public class TestMmtfPerformance {
 
 		byte[] mmtfdata = getByteArrayFromInputStream(new GZIPInputStream((mmtfURL.openStream())));
 
+		// first make sure chemcomp cache is warmed up (chemcomp files are parsed). Like that we count the parsing time without the influence of chemcomp parsing
+		MmtfActions.readFromInputStream(new ByteArrayInputStream(mmtfdata));
+		parser.parsePDBFile(new ByteArrayInputStream(pdbBytes));
+
 		for ( int i =0 ; i< NUMBER_OF_REPEATS ; i++) {
 
 			long mmtfStart = System.nanoTime();
 			MmtfActions.readFromInputStream(new ByteArrayInputStream(mmtfdata));
 			long mmtfEnd = System.nanoTime();
-
-
 
 			long pdbStart = System.nanoTime();
 			parser.parsePDBFile(new ByteArrayInputStream(pdbBytes));
@@ -142,17 +103,14 @@ public class TestMmtfPerformance {
 
 			totalTimePDB += (pdbEnd - pdbStart);
 
-
 			totalTimeMMTF += (mmtfEnd-mmtfStart);
 		}
-
 
 		long timePDB = (totalTimePDB/NUMBER_OF_REPEATS);
 		long timeMMTF = (totalTimeMMTF/NUMBER_OF_REPEATS);
 
-
-		logger.warn("average time to parse mmtf: " + timeMMTF/(1000*1000) + " ms.");
-		logger.warn("average time to parse PDB : " + timePDB/(1000*1000) + " ms. ");
+		logger.info("average time to parse mmtf: " + timeMMTF/(1000*1000) + " ms.");
+		logger.info("average time to parse PDB : " + timePDB/(1000*1000) + " ms. ");
 
 		assertTrue( "It should not be the case, but it is faster to parse a PDB file ("+timePDB+" ns.) than MMTF ("+( timeMMTF)+" ns.)!",( timePDB) > ( timeMMTF));
 
