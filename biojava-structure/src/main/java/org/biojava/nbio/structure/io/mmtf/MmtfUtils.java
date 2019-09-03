@@ -50,7 +50,7 @@ import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
 import org.biojava.nbio.structure.io.mmcif.DownloadChemCompProvider;
-import org.biojava.nbio.structure.io.mmcif.chem.PolymerType;
+import org.biojava.nbio.structure.io.mmcif.chem.ChemCompTools;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.biojava.nbio.structure.quaternary.BioAssemblyInfo;
 import org.biojava.nbio.structure.quaternary.BiologicalAssemblyTransformation;
@@ -539,27 +539,27 @@ public class MmtfUtils {
 	}
 
 	private static Group getSeqResGroup(char singleLetterCode, GroupType type) {
+
 		if(type==GroupType.AMINOACID){
+			String threeLetter = ChemCompTools.getAminoThreeLetter(singleLetterCode);
+			if (threeLetter == null) return null;
+			ChemComp chemComp = ChemCompGroupFactory.getChemComp(threeLetter);
+
 			AminoAcidImpl a = new AminoAcidImpl();
 			a.setRecordType(AminoAcid.SEQRESRECORD);
 			a.setAminoType(singleLetterCode);
-			ChemComp chemComp = new ChemComp();
-			chemComp.setOne_letter_code(""+singleLetterCode);
+			a.setPDBName(threeLetter);
 			a.setChemComp(chemComp);
-			chemComp.setPolymerType(PolymerType.peptide);
 			return a;
 
 		} else if (type==GroupType.NUCLEOTIDE) {
+			String twoLetter = ChemCompTools.getDNATwoLetter(singleLetterCode);
+			if (twoLetter == null) return null;
+			ChemComp chemComp = ChemCompGroupFactory.getChemComp(twoLetter);
+
 			NucleotideImpl n = new NucleotideImpl();
-			ChemComp chemComp = new ChemComp();
-			chemComp.setOne_letter_code(""+singleLetterCode);
+			n.setPDBName(twoLetter);
 			n.setChemComp(chemComp);
-			// TODO this could be either dna or rna, how to distinguish properly?
-			if (singleLetterCode == 'U') {
-				chemComp.setPolymerType(PolymerType.rna);
-			} else {
-				chemComp.setPolymerType(PolymerType.dna);
-			}
 			return n;
 		}
 		else{
