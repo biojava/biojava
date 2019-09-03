@@ -40,7 +40,7 @@
 		<!-- needed for failsafe plugin in integrationtest module - JD 2018-03-08 -->
     	<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<maxmem>512M</maxmem>
-		<mmtf.version>1.0.8</mmtf.version>
+		<mmtf.version>1.0.9</mmtf.version>
 		<slf4j.version>1.7.25</slf4j.version>
 		<log4j.version>2.6.2</log4j.version>
 	</properties>
