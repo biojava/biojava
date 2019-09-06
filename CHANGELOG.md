@@ -1,6 +1,22 @@
 BioJava Changelog
 -----------------
 
+BioJava 5.3.0
+=============
+### New features
+* Support for reading structures from [binary cif format](https://github.com/dsehnal/BinaryCIF) in structure module, thanks to  [CIFTools-java library](https://github.com/rcsb/ciftools-java). Thanks @JonStargaryen 
+* Reading structures from mmCIF via new parser from [CIFTools-java library](https://github.com/rcsb/ciftools-java). Much better read performance than existing parser. Both parsers still live alongside in BioJava 5.3.0, with default still being the BioJava native one. 
+
+### Bug fixes
+* 8x performance increase in reading (non-gzipped) MMTF files thanks to [mmtf-java](https://github.com/rcsb/mmtf-java) dependency upgrade to 1.0.9
+* Bug fixes in MMTF file reading, #671 #850 
+* Bug fix in OBO reading, where only one synonym was saved, #836 
+* Bug fix in Genbank LOCUS line parsing #833 
+* Bug fix in PDB file reading of MTRIX records #845 
+* Bug fix in GenbankReader #800 #829 
+* Dependencies and maven plugin upgrades
+
+
 BioJava 5.2.1
 =============
 ### Bug fixes
