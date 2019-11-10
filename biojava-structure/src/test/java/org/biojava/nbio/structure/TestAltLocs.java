@@ -754,4 +754,97 @@ public class TestAltLocs {
 
 	}
 
+	/**
+	 * Test that bonds between alt locs link atoms with same altloc codes
+	 * https://github.com/rcsb/mmtf/issues/44
+	 */
+	@Test
+	public void testBondsBetweenAltlocs() throws IOException {
+		String mmcifData =
+				"data_test\n" +
+						"loop_\n" +
+						"_atom_site.group_PDB \n" +
+						"_atom_site.id \n" +
+						"_atom_site.type_symbol \n" +
+						"_atom_site.label_atom_id \n" +
+						"_atom_site.label_alt_id \n" +
+						"_atom_site.label_comp_id \n" +
+						"_atom_site.label_asym_id \n" +
+						"_atom_site.label_entity_id \n" +
+						"_atom_site.label_seq_id \n" +
+						"_atom_site.pdbx_PDB_ins_code \n" +
+						"_atom_site.Cartn_x \n" +
+						"_atom_site.Cartn_y \n" +
+						"_atom_site.Cartn_z \n" +
+						"_atom_site.occupancy \n" +
+						"_atom_site.B_iso_or_equiv \n" +
+						"_atom_site.pdbx_formal_charge \n" +
+						"_atom_site.auth_seq_id \n" +
+						"_atom_site.auth_comp_id \n" +
+						"_atom_site.auth_asym_id \n" +
+						"_atom_site.auth_atom_id \n" +
+						"_atom_site.pdbx_PDB_model_num \n" +
+						"ATOM   1405 N  N    A MET A 1 86  ? 10.748  -17.610 -6.975  0.47 16.12 ? 104 MET A N    1 \n" +
+						"ATOM   1406 N  N    B MET A 1 86  ? 10.802  -17.694 -6.986  0.53 17.92 ? 104 MET A N    1 \n" +
+						"ATOM   1407 C  CA   A MET A 1 86  ? 11.189  -17.392 -5.610  0.47 15.78 ? 104 MET A CA   1 \n" +
+						"ATOM   1408 C  CA   B MET A 1 86  ? 11.033  -17.368 -5.587  0.53 18.29 ? 104 MET A CA   1 \n" +
+						"ATOM   1409 C  C    A MET A 1 86  ? 10.952  -18.663 -4.810  0.47 15.91 ? 104 MET A C    1 \n" +
+						"ATOM   1410 C  C    B MET A 1 86  ? 10.882  -18.643 -4.767  0.53 17.40 ? 104 MET A C    1 \n" +
+						"ATOM   1411 O  O    A MET A 1 86  ? 10.120  -19.504 -5.154  0.47 18.21 ? 104 MET A O    1 \n" +
+						"ATOM   1412 O  O    B MET A 1 86  ? 10.018  -19.474 -5.052  0.53 20.02 ? 104 MET A O    1 \n" +
+						"ATOM   1413 C  CB   A MET A 1 86  ? 10.477  -16.204 -4.933  0.47 17.14 ? 104 MET A CB   1 \n" +
+						"ATOM   1414 C  CB   B MET A 1 86  ? 10.001  -16.336 -5.111  0.53 18.92 ? 104 MET A CB   1 \n" +
+						"ATOM   1415 C  CG   A MET A 1 86  ? 9.019   -16.476 -4.619  0.47 20.01 ? 104 MET A CG   1 \n" +
+						"ATOM   1416 C  CG   B MET A 1 86  ? 10.030  -16.038 -3.634  0.53 19.12 ? 104 MET A CG   1 \n" +
+						"ATOM   1417 S  SD   A MET A 1 86  ? 8.207   -15.088 -3.838  0.47 22.06 ? 104 MET A SD   1 \n" +
+						"ATOM   1418 S  SD   B MET A 1 86  ? 8.874   -14.724 -3.205  0.53 20.16 ? 104 MET A SD   1 \n" +
+						"ATOM   1419 C  CE   A MET A 1 86  ? 9.151   -14.973 -2.340  0.47 25.15 ? 104 MET A CE   1 \n" +
+						"ATOM   1420 C  CE   B MET A 1 86  ? 7.269   -15.536 -3.380  0.53 20.38 ? 104 MET A CE   1 \n" +
+						"ATOM   1421 H  H    A MET A 1 86  ? 9.931   -18.207 -7.055  0.47 15.58 ? 104 MET A H    1 \n" +
+						"ATOM   1422 H  H    B MET A 1 86  ? 10.144  -18.461 -7.109  0.53 18.91 ? 104 MET A H    1 \n" +
+						"ATOM   1423 H  HA   A MET A 1 86  ? 12.256  -17.182 -5.644  0.47 15.14 ? 104 MET A HA   1 \n" +
+						"ATOM   1424 H  HA   B MET A 1 86  ? 12.033  -16.953 -5.465  0.53 19.55 ? 104 MET A HA   1 \n" +
+						"ATOM   1425 H  HB2  A MET A 1 86  ? 10.986  -15.920 -4.008  0.47 17.68 ? 104 MET A HB2  1 \n" +
+						"ATOM   1426 H  HB3  A MET A 1 86  ? 10.484  -15.364 -5.622  0.47 17.68 ? 104 MET A HB3  1 \n" +
+						"ATOM   1427 H  HB3  B MET A 1 86  ? 9.001   -16.676 -5.398  0.53 20.49 ? 104 MET A HB3  1 \n" +
+						"ATOM   1428 H  HG2  A MET A 1 86  ? 8.490   -16.704 -5.546  0.47 20.93 ? 104 MET A HG2  1 \n" +
+						"ATOM   1429 H  HG3  A MET A 1 86  ? 8.956   -17.315 -3.927  0.47 20.93 ? 104 MET A HG3  1 \n" +
+						"ATOM   1430 H  HE2  A MET A 1 86  ? 9.861   -14.153 -2.440  0.47 27.31 ? 104 MET A HE2  1 \n" +
+						"ATOM   1431 H  HE2  B MET A 1 86  ? 7.346   -16.554 -2.998  0.53 23.03 ? 104 MET A HE2  1 \n" +
+						"ATOM   1432 H  HE3  B MET A 1 86  ? 6.996   -15.566 -4.437  0.53 23.03 ? 104 MET A HE3  1 ";
+
+		SimpleMMcifParser parser = new SimpleMMcifParser();
+		SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
+		parser.addMMcifConsumer(consumer);
+
+		FileParsingParameters params = new FileParsingParameters();
+		params.setCreateAtomBonds(true);
+		consumer.setFileParsingParameters(params);
+
+		BufferedReader buf = new BufferedReader(new StringReader(mmcifData));
+		parser.parse(buf);
+		buf.close();
+
+		Structure s = consumer.getStructure();
+		Chain c = s.getPolyChains().get(0);
+		assertEquals(1, c.getAtomGroups().size());
+
+		Group g = c.getAtomGroup(0);
+
+		assertEquals(1, g.getAltLocs().size());
+
+		for (Atom a : g.getAtoms()) {
+			for (Bond b : a.getBonds()) {
+//				if (b.getAtomA().getAltLoc() != b.getAtomB().getAltLoc()) {
+//					System.out.println(
+//							b.getAtomA().toString() + ":" + b.getAtomA().getAltLoc() + " --- " +
+//							b.getAtomB().toString() + ":" + b.getAtomB().getAltLoc());
+//				}
+				assertEquals(b.getAtomA().toString() + " --- " + b.getAtomB().toString(),
+						b.getAtomA().getAltLoc(), b.getAtomB().getAltLoc());
+			}
+		}
+
+	}
+
 }

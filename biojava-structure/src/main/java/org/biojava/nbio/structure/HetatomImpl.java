@@ -77,7 +77,7 @@ public class HetatomImpl implements Group {
 	 * Behaviors for how to balance memory vs. performance.
 	 * @author Andreas Prlic
 	 */
-	public static enum PerformanceBehavior {
+	public enum PerformanceBehavior {
 
 		/** use a built-in HashMap for faster access to memory, at the price of more memory consumption */
 		BETTER_PERFORMANCE_MORE_MEMORY,
@@ -87,7 +87,7 @@ public class HetatomImpl implements Group {
 
 	}
 
-	public static PerformanceBehavior performanceBehavior=PerformanceBehavior.LESS_MEMORY_SLOWER_PERFORMANCE;
+	private static PerformanceBehavior performanceBehavior=PerformanceBehavior.LESS_MEMORY_SLOWER_PERFORMANCE;
 
 	private Map<String,Atom> atomNameLookup;
 
@@ -105,42 +105,28 @@ public class HetatomImpl implements Group {
 		pdb_name = null ;
 
 		residueNumber = null;
-		atoms    = new ArrayList<Atom>();
-		properties = new HashMap<String,Object>();
+		atoms    = new ArrayList<>();
+		properties = new HashMap<>();
 		parent = null;
 		chemComp = null;
 		altLocs = null;
 
 		if ( performanceBehavior == PerformanceBehavior.BETTER_PERFORMANCE_MORE_MEMORY)
-			atomNameLookup = new HashMap<String,Atom>();
+			atomNameLookup = new HashMap<>();
 		else
 			atomNameLookup = null;
 	}
 
-
-	/**
-	 *  returns true or false, depending if this group has 3D coordinates or not.
-	 * @return true if Group has 3D coordinates
-	 */
 	@Override
 	public boolean has3D() {
 		return pdb_flag;
 	}
 
-	/** flag if group has 3D data.
-	 *
-	 * @param flag  true to set flag that this Group has 3D coordinates
-	 */
 	@Override
 	public void setPDBFlag(boolean flag){
 		pdb_flag = flag ;
 	}
 
-	/** Set three character name of Group .
-	 *
-	 * @param s  a String specifying the PDBName value
-	 * @see #getPDBName
-	 */
 	@Override
 	public void setPDBName(String s) {
 		// hetatoms can have pdb_name length < 3. e.g. CU (see 1a4a position 1200 )
@@ -152,12 +138,6 @@ public class HetatomImpl implements Group {
 
 	}
 
-	/**
-	 * Returns the PDBName.
-	 *
-	 * @return a String representing the PDBName value
-	 * @see #setPDBName
-	 */
 	@Override
 	public String getPDBName() { return pdb_name;}
 
@@ -187,12 +167,8 @@ public class HetatomImpl implements Group {
 				logger.warn("An atom with name " + atom.getName() + " " + altLocStr + " is already present in group: " + this.toString() + ". The atom with serial " + atom.getPDBserial() + " will be ignored in look-ups.");
 			}
 		}
-	};
+	}
 
-
-	/** remove all atoms
-	 *
-	 */
 	@Override
 	public void clearAtoms() {
 		atoms.clear();
@@ -245,8 +221,7 @@ public class HetatomImpl implements Group {
 		if ( atomNameLookup != null)
 			return atomNameLookup.get(name);
 		else {
-			/** This is the performance penalty we pay for NOT using the atomnameLookup in PerformanceBehaviour.LESS_MEMORY_SLOWER_PERFORMANCE
-			 */
+			// This is the performance penalty we pay for NOT using the atomnameLookup in PerformanceBehaviour.LESS_MEMORY_SLOWER_PERFORMANCE
 			for (Atom a : atoms) {
 				if (a.getName().equals(name)) {
 					return a;
@@ -588,7 +563,7 @@ public class HetatomImpl implements Group {
 	@Override
 	public List<Group> getAltLocs() {
 		if ( altLocs == null)
-			return new ArrayList<Group>();
+			return new ArrayList<>();
 		return altLocs;
 	}
 
@@ -629,7 +604,7 @@ public class HetatomImpl implements Group {
 	@Override
 	public void addAltLoc(Group group) {
 		if ( altLocs == null) {
-			altLocs = new ArrayList<Group>();
+			altLocs = new ArrayList<>();
 		}
 		altLocs.add(group);
 
@@ -663,10 +638,10 @@ public class HetatomImpl implements Group {
 		}
 
 		// now let's fit the hashmaps to size
-		properties = new HashMap<String, Object>(properties);
+		properties = new HashMap<>(properties);
 
 		if ( atomNameLookup != null)
-			atomNameLookup = new HashMap<String,Atom>(atomNameLookup);
+			atomNameLookup = new HashMap<>(atomNameLookup);
 
 	}
 

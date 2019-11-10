@@ -309,7 +309,7 @@ public class AtomImpl implements Atom {
 	@Override
 	public void addBond(Bond bond) {
 		if (bonds==null) {
-			bonds = new ArrayList<Bond>(BONDS_INITIAL_CAPACITY);
+			bonds = new ArrayList<>(BONDS_INITIAL_CAPACITY);
 		}
 		bonds.add(bond);
 	}

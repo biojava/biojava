@@ -200,10 +200,7 @@ public class BondMaker {
 					// Now add support for altLocGroup
 					List<Group> totList = new ArrayList<Group>();
 					totList.add(mainGroup);
-					for(Group altLoc: mainGroup.getAltLocs()){
-						totList.add(altLoc);
-					}
-
+					totList.addAll(mainGroup.getAltLocs());
 
 					// Now iterate through this list
 					for(Group group : totList){
@@ -216,15 +213,19 @@ public class BondMaker {
 							Atom a = getAtom(chemCompBond.getAtom_id_1(), group);
 							Atom b = getAtom(chemCompBond.getAtom_id_2(), group);
 							if ( a != null && b != null){
+
+								// if they are different altlocs there must be no bond
+								if (a.getAltLoc() != b.getAltLoc())
+									continue;
+
 								int bondOrder = chemCompBond.getNumericalBondOrder();
 								logger.debug("Forming bond between atoms {}-{} and {}-{} with bond order {}",
 										a.getPDBserial(), a.getName(), b.getPDBserial(), b.getName(), bondOrder);
 								new BondImpl(a, b, bondOrder);
 							}
-							else{
-								// Some of the atoms were missing. That's fine, there's
-								// nothing to do in this case.
-							}
+							// Else: Some of the atoms were missing. That's fine, there's
+							// nothing to do in this case.
+
 						}
 					}
 				}
@@ -235,6 +236,7 @@ public class BondMaker {
 
 	private Atom getAtom(String atomId, Group group) {
 		Atom a = group.getAtom(atomId);
+
 		// Check for deuteration
 		if(a==null && atomId.startsWith("H")) {
 			a = group.getAtom(atomId.replaceFirst("H", "D"));
