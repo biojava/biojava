@@ -833,6 +833,7 @@ public class TestAltLocs {
 
 		assertEquals(1, g.getAltLocs().size());
 
+		boolean foundCEHE3bond = false;
 		for (Atom a : g.getAtoms()) {
 			for (Bond b : a.getBonds()) {
 //				if (b.getAtomA().getAltLoc() != b.getAtomB().getAltLoc()) {
@@ -840,10 +841,20 @@ public class TestAltLocs {
 //							b.getAtomA().toString() + ":" + b.getAtomA().getAltLoc() + " --- " +
 //							b.getAtomB().toString() + ":" + b.getAtomB().getAltLoc());
 //				}
+				// no bonds between atoms with different alt locs
 				assertEquals(b.getAtomA().toString() + " --- " + b.getAtomB().toString(),
 						b.getAtomA().getAltLoc(), b.getAtomB().getAltLoc());
+
+				// a bond should exist between CE and HE3 but only for altloc=B
+				if ((b.getAtomA().getName().equals("CE") && b.getAtomB().getName().equals("HE3")) ||
+						(b.getAtomA().getName().equals("HE3") && b.getAtomB().getName().equals("CE")) ) {
+					foundCEHE3bond = true;
+				}
 			}
 		}
+
+		// there should be a bond between CE and HE3 but only for altloc=B
+		assertTrue(foundCEHE3bond);
 
 	}
 
