@@ -254,16 +254,13 @@ public class HetatomImpl implements Group {
 			Atom a = atomNameLookup.get(fullName.trim());
 			return a != null;
 		} else {
-			/** This is the performance penalty we pay for NOT using the atomnameLookup in PerformanceBehaviour.LESS_MEMORY_SLOWER_PERFORMANCE
-			 */
+			// This is the performance penalty we pay for NOT using the atomnameLookup in PerformanceBehaviour.LESS_MEMORY_SLOWER_PERFORMANCE
 			for (Atom a : atoms) {
 				if (a.getName().equals(fullName)) {
 					return true;
 				}
 			}
 			return false;
-
-
 		}
 
 	}
@@ -375,42 +372,21 @@ public class HetatomImpl implements Group {
 		properties =  props ;
 	}
 
-	/** return properties.
-	 *
-	 * @return a HashMap object representing the properties value
-	 * @see #setProperties
-	 */
 	@Override
 	public Map<String, Object> getProperties() {
 		return properties ;
 	}
 
-	/** set a single property .
-	 *
-	 * @see #getProperties
-	 * @see #getProperty
-	 */
 	@Override
 	public void setProperty(String key, Object value){
 		properties.put(key,value);
 	}
 
-	/** get a single property .
-	 * @param key  a String
-	 * @return an Object
-	 * @see #setProperty
-	 * @see #setProperties
-	 */
 	@Override
 	public Object getProperty(String key){
 		return properties.get(key);
 	}
 
-
-	/** return an AtomIterator.
-	 *
-	 * @return an Iterator object
-	 */
 	@Override
 	public Iterator<Atom> iterator() {
 		return new AtomIterator(this);
@@ -615,10 +591,6 @@ public class HetatomImpl implements Group {
 		return GroupType.WATERNAMES.contains(pdb_name);
 	}
 
-	/** attempts to reduce the memory imprint of this group by trimming
-	 * all internal Collection objects to the required size.
-	 *
-	 */
 	@Override
 	public void trimToSize(){
 

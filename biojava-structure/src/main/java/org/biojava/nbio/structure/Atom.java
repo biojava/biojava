@@ -163,7 +163,8 @@ public interface Atom extends Cloneable, PDBRecord {
 
 	/**
 	 * Get alternate Location.
-	 * @return a Character object representing the alt loc value
+	 * @return a Character object representing the alt loc value. Default altLoc ('.' in mmCIF files)
+	 * is represented by ' ' (space character, ascii 32).
 	 * @see #setAltLoc
 	 */
 	public Character getAltLoc();

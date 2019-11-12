@@ -157,10 +157,6 @@ public class AtomImpl implements Atom {
 	@Override
 	public double getZ() { return coords.z; }
 
-	/**
-	 * Set alternate Location.
-	 * @see #getAltLoc
-	 */
 	@Override
 	public void setAltLoc(Character c) {
 		// after changing altLoc from Character to char, we do this to keep the interface the same as it used to be - JD 2016-01-27
@@ -170,11 +166,6 @@ public class AtomImpl implements Atom {
 			altLoc = c ;
 	}
 
-	/**
-	 * Get alternate Location.
-	 * @return a Character object representing the alt loc value
-	 * @see #setAltLoc
-	 */
 	@Override
 	public Character getAltLoc() {
 		// after changing altLoc from Character to char, we do this to keep the interface the same as it used to be - JD 2016-01-27
