@@ -838,8 +838,8 @@ public class TestAltLocs {
 			for (Bond b : a.getBonds()) {
 //				if (b.getAtomA().getAltLoc() != b.getAtomB().getAltLoc()) {
 //					System.out.println(
-//							b.getAtomA().toString() + ":" + b.getAtomA().getAltLoc() + " --- " +
-//							b.getAtomB().toString() + ":" + b.getAtomB().getAltLoc());
+//							b.getAtomA().toString() + ": '" + b.getAtomA().getAltLoc() + "' --- " +
+//							b.getAtomB().toString() + ": '" + b.getAtomB().getAltLoc() + "'");
 //				}
 				// no bonds between atoms with different alt locs
 				assertEquals(b.getAtomA().toString() + " --- " + b.getAtomB().toString(),

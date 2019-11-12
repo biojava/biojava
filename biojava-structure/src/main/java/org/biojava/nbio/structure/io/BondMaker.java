@@ -214,9 +214,14 @@ public class BondMaker {
 							Atom b = getAtom(chemCompBond.getAtom_id_2(), group);
 							if ( a != null && b != null){
 
-								// if they are different altlocs there must be no bond
-								if (a.getAltLoc() != b.getAltLoc())
+								// if they are different altlocs (when different from the '.' case) there must be no bond
+								if (a.getAltLoc() != null && b.getAltLoc()!=null &&
+										a.getAltLoc()!=' ' && b.getAltLoc()!=' ' &&
+										a.getAltLoc() != b.getAltLoc()) {
+									logger.debug("Skipping bond between atoms with differently named alt locs {} (altLoc '{}') -- {} (altLoc '{}')",
+											a.toString(), a.getAltLoc(), b.toString(), b.getAltLoc());
 									continue;
+								}
 
 								int bondOrder = chemCompBond.getNumericalBondOrder();
 								logger.debug("Forming bond between atoms {}-{} and {}-{} with bond order {}",
