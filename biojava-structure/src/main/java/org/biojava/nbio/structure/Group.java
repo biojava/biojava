@@ -103,12 +103,13 @@ public interface Group extends Serializable {
 
 	/**
 	 * Set the atoms of this group.
-	 * @see {@link Atom}
+	 * @see Atom
 	 * @param atoms a list of atoms
 	 */
 	public void setAtoms(List<Atom> atoms);
 
-	/** Remove all atoms from this group.
+	/**
+	 * Remove all atoms from this group.
 	 *
 	 */
 	public void clearAtoms();
@@ -118,13 +119,14 @@ public interface Group extends Serializable {
 	 * Beware that some PDB atom names are ambiguous (e.g. CA, which means C-alpha or Calcium),
 	 * ambiguities should not occur within the same group though. To solve these ambiguities
 	 * one would need to check the atom returned for the required element with {@link Atom#getElement()}
+	 * <p>
+	 * Note this method will return only the atom in the default alternative location (be it '.' or a letter).
 	 *
 	 * @param name  a trimmed String representing the atom's PDB name, e.g. "CA"
 	 * @return an Atom object or null if no such atom exists within this group
 	 */
 	public Atom getAtom(String name) ;
-
-
+	
 	/**
 	 * Get at atom by position.
 	 *
