@@ -37,7 +37,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.Assert.*;
 
@@ -755,11 +757,12 @@ public class TestAltLocs {
 	}
 
 	/**
-	 * Test that bonds between alt locs link atoms with same altloc codes
+	 * Test that intra-residue bonds between alt locs link atoms with same altloc codes
 	 * https://github.com/rcsb/mmtf/issues/44
 	 */
 	@Test
-	public void testBondsBetweenAltlocs() throws IOException {
+	public void testIntraResidueBondsBetweenAltlocs() throws IOException {
+		// from 5MOO
 		String mmcifData =
 				"data_test\n" +
 						"loop_\n" +
@@ -857,5 +860,165 @@ public class TestAltLocs {
 		assertTrue(foundCEHE3bond);
 
 	}
+
+	/**
+	 * Test that inter-residue bonds between alt locs link atoms with same altloc codes or default alt loc to all alt locs
+	 * https://github.com/rcsb/mmtf/issues/44
+	 */
+	@Test
+	public void testInterResidueBondsBetweenAltlocs() throws IOException {
+		//  from 5MOO
+		String mmcifData =
+				"data_test\n" +
+						"# \n" +
+						"loop_\n" +
+						"_entity.id \n" +
+						"_entity.type \n" +
+						"_entity.src_method \n" +
+						"_entity.pdbx_description \n" +
+						"_entity.formula_weight \n" +
+						"_entity.pdbx_number_of_molecules \n" +
+						"_entity.pdbx_ec \n" +
+						"_entity.pdbx_mutation \n" +
+						"_entity.pdbx_fragment \n" +
+						"_entity.details \n" +
+						"1 polymer     nat 'Cationic trypsin' 23324.287 1   3.4.21.4 ? ? ? \n" +
+						"# \n" +
+						"loop_\n" +
+						"_entity_poly_seq.entity_id \n" +
+						"_entity_poly_seq.num \n" +
+						"_entity_poly_seq.mon_id \n" +
+						"_entity_poly_seq.hetero \n" +
+						"1 1  ILE n \n" +
+						"1 2  MET n \n" +
+						"# \n" +
+						"loop_\n" +
+						"_struct_asym.id \n" +
+						"_struct_asym.pdbx_blank_PDB_chainid_flag \n" +
+						"_struct_asym.pdbx_modified \n" +
+						"_struct_asym.entity_id \n" +
+						"_struct_asym.details \n" +
+						"A N N 1 ? \n" +
+						"# \n" +
+						"loop_\n" +
+						"_atom_site.group_PDB \n" +
+						"_atom_site.id \n" +
+						"_atom_site.type_symbol \n" +
+						"_atom_site.label_atom_id \n" +
+						"_atom_site.label_alt_id \n" +
+						"_atom_site.label_comp_id \n" +
+						"_atom_site.label_asym_id \n" +
+						"_atom_site.label_entity_id \n" +
+						"_atom_site.label_seq_id \n" +
+						"_atom_site.pdbx_PDB_ins_code \n" +
+						"_atom_site.Cartn_x \n" +
+						"_atom_site.Cartn_y \n" +
+						"_atom_site.Cartn_z \n" +
+						"_atom_site.occupancy \n" +
+						"_atom_site.B_iso_or_equiv \n" +
+						"_atom_site.pdbx_formal_charge \n" +
+						"_atom_site.auth_seq_id \n" +
+						"_atom_site.auth_comp_id \n" +
+						"_atom_site.auth_asym_id \n" +
+						"_atom_site.auth_atom_id \n" +
+						"_atom_site.pdbx_PDB_model_num \n" +
+						"ATOM   1385 N  N    . ILE A 1  1  ? 10.900  -16.328 -10.274 1.00 17.47 ? 103 ILE A N    1 \n" +
+						"ATOM   1386 C  CA   . ILE A 1  1  ? 10.885  -17.487 -9.388  1.00 17.76 ? 103 ILE A CA   1 \n" +
+						"ATOM   1387 C  C    . ILE A 1  1  ? 11.374  -17.058 -8.011  1.00 17.35 ? 103 ILE A C    1 \n" +
+						"ATOM   1388 O  O    . ILE A 1  1  ? 12.265  -16.211 -7.883  1.00 18.51 ? 103 ILE A O    1 \n" +
+						"ATOM   1389 C  CB   . ILE A 1  1  ? 11.721  -18.644 -9.986  1.00 18.19 ? 103 ILE A CB   1 \n" +
+						"ATOM   1390 C  CG1  . ILE A 1  1  ? 11.610  -19.916 -9.144  1.00 19.64 ? 103 ILE A CG1  1 \n" +
+						"ATOM   1391 C  CG2  . ILE A 1  1  ? 13.177  -18.246 -10.209 1.00 19.73 ? 103 ILE A CG2  1 \n" +
+						"ATOM   1392 C  CD1  . ILE A 1  1  ? 12.217  -21.162 -9.820  1.00 22.94 ? 103 ILE A CD1  1 \n" +
+						"ATOM   1393 H  H    A ILE A 1  1  ? 11.598  -15.614 -10.041 1.00 17.71 ? 103 ILE A H    1 \n" +
+						"ATOM   1394 D  D    B ILE A 1  1  ? 11.598  -15.614 -10.041 0.00 17.71 ? 103 ILE A D    1 \n" +
+						"ATOM   1395 H  HA   . ILE A 1  1  ? 9.856   -17.843 -9.277  1.00 17.70 ? 103 ILE A HA   1 \n" +
+						"ATOM   1396 H  HB   . ILE A 1  1  ? 11.300  -18.886 -10.957 1.00 18.93 ? 103 ILE A HB   1 \n" +
+						"ATOM   1397 H  HG12 . ILE A 1  1  ? 12.149  -19.788 -8.209  1.00 20.93 ? 103 ILE A HG12 1 \n" +
+						"ATOM   1398 H  HG13 . ILE A 1  1  ? 10.563  -20.127 -8.939  1.00 20.93 ? 103 ILE A HG13 1 \n" +
+						"ATOM   1399 H  HG21 . ILE A 1  1  ? 13.669  -19.035 -10.776 1.00 20.97 ? 103 ILE A HG21 1 \n" +
+						"ATOM   1400 H  HG22 . ILE A 1  1  ? 13.235  -17.312 -10.767 1.00 20.97 ? 103 ILE A HG22 1 \n" +
+						"ATOM   1401 H  HG23 . ILE A 1  1  ? 13.683  -18.144 -9.251  1.00 20.97 ? 103 ILE A HG23 1 \n" +
+						"ATOM   1402 H  HD11 . ILE A 1  1  ? 13.299  -21.078 -9.905  1.00 24.96 ? 103 ILE A HD11 1 \n" +
+						"ATOM   1403 H  HD12 . ILE A 1  1  ? 11.967  -22.036 -9.223  1.00 24.96 ? 103 ILE A HD12 1 \n" +
+						"ATOM   1404 H  HD13 . ILE A 1  1  ? 11.779  -21.281 -10.808 1.00 24.96 ? 103 ILE A HD13 1 \n" +
+						"ATOM   1405 N  N    A MET A 1  2  ? 10.748  -17.610 -6.975  0.47 16.12 ? 104 MET A N    1 \n" +
+						"ATOM   1406 N  N    B MET A 1  2  ? 10.802  -17.694 -6.986  0.53 17.92 ? 104 MET A N    1 \n" +
+						"ATOM   1407 C  CA   A MET A 1  2  ? 11.189  -17.392 -5.610  0.47 15.78 ? 104 MET A CA   1 \n" +
+						"ATOM   1408 C  CA   B MET A 1  2  ? 11.033  -17.368 -5.587  0.53 18.29 ? 104 MET A CA   1 \n" +
+						"ATOM   1409 C  C    A MET A 1  2  ? 10.952  -18.663 -4.810  0.47 15.91 ? 104 MET A C    1 \n" +
+						"ATOM   1410 C  C    B MET A 1  2  ? 10.882  -18.643 -4.767  0.53 17.40 ? 104 MET A C    1 \n" +
+						"ATOM   1411 O  O    A MET A 1  2  ? 10.120  -19.504 -5.154  0.47 18.21 ? 104 MET A O    1 \n" +
+						"ATOM   1412 O  O    B MET A 1  2  ? 10.018  -19.474 -5.052  0.53 20.02 ? 104 MET A O    1 \n" +
+						"ATOM   1413 C  CB   A MET A 1  2  ? 10.477  -16.204 -4.933  0.47 17.14 ? 104 MET A CB   1 \n" +
+						"ATOM   1414 C  CB   B MET A 1  2  ? 10.001  -16.336 -5.111  0.53 18.92 ? 104 MET A CB   1 \n" +
+						"ATOM   1415 C  CG   A MET A 1  2  ? 9.019   -16.476 -4.619  0.47 20.01 ? 104 MET A CG   1 \n" +
+						"ATOM   1416 C  CG   B MET A 1  2  ? 10.030  -16.038 -3.634  0.53 19.12 ? 104 MET A CG   1 \n" +
+						"ATOM   1417 S  SD   A MET A 1  2  ? 8.207   -15.088 -3.838  0.47 22.06 ? 104 MET A SD   1 \n" +
+						"ATOM   1418 S  SD   B MET A 1  2  ? 8.874   -14.724 -3.205  0.53 20.16 ? 104 MET A SD   1 \n" +
+						"ATOM   1419 C  CE   A MET A 1  2  ? 9.151   -14.973 -2.340  0.47 25.15 ? 104 MET A CE   1 \n" +
+						"ATOM   1420 C  CE   B MET A 1  2  ? 7.269   -15.536 -3.380  0.53 20.38 ? 104 MET A CE   1 \n" +
+						"ATOM   1421 H  H    A MET A 1  2  ? 9.931   -18.207 -7.055  0.47 15.58 ? 104 MET A H    1 \n" +
+						"ATOM   1422 H  H    B MET A 1  2  ? 10.144  -18.461 -7.109  0.53 18.91 ? 104 MET A H    1 \n" +
+						"ATOM   1423 H  HA   A MET A 1  2  ? 12.256  -17.182 -5.644  0.47 15.14 ? 104 MET A HA   1 \n" +
+						"ATOM   1424 H  HA   B MET A 1  2  ? 12.033  -16.953 -5.465  0.53 19.55 ? 104 MET A HA   1 \n" +
+						"ATOM   1425 H  HB2  A MET A 1  2  ? 10.986  -15.920 -4.008  0.47 17.68 ? 104 MET A HB2  1 \n" +
+						"ATOM   1426 H  HB3  A MET A 1  2  ? 10.484  -15.364 -5.622  0.47 17.68 ? 104 MET A HB3  1 \n" +
+						"ATOM   1427 H  HB3  B MET A 1  2  ? 9.001   -16.676 -5.398  0.53 20.49 ? 104 MET A HB3  1 \n" +
+						"ATOM   1428 H  HG2  A MET A 1  2  ? 8.490   -16.704 -5.546  0.47 20.93 ? 104 MET A HG2  1 \n" +
+						"ATOM   1429 H  HG3  A MET A 1  2  ? 8.956   -17.315 -3.927  0.47 20.93 ? 104 MET A HG3  1 \n" +
+						"ATOM   1430 H  HE2  A MET A 1  2  ? 9.861   -14.153 -2.440  0.47 27.31 ? 104 MET A HE2  1 \n" +
+						"ATOM   1431 H  HE2  B MET A 1  2  ? 7.346   -16.554 -2.998  0.53 23.03 ? 104 MET A HE2  1 \n" +
+						"ATOM   1432 H  HE3  B MET A 1  2  ? 6.996   -15.566 -4.437  0.53 23.03 ? 104 MET A HE3  1 ";
+
+		SimpleMMcifParser parser = new SimpleMMcifParser();
+		SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
+		parser.addMMcifConsumer(consumer);
+
+		FileParsingParameters params = new FileParsingParameters();
+		params.setCreateAtomBonds(true);
+		consumer.setFileParsingParameters(params);
+
+		BufferedReader buf = new BufferedReader(new StringReader(mmcifData));
+		parser.parse(buf);
+		buf.close();
+
+		Structure s = consumer.getStructure();
+		Chain c = s.getPolyChains().get(0);
+		assertEquals(2, c.getAtomGroups().size());
+
+		// inter residue bonds and alt locs
+		// ILE-C (.) must be linked to both MET-N (A and B alt locs)
+		Group g1 = c.getAtomGroup(0);
+
+		Atom catom = g1.getAtom("C");
+		List<Bond> bonds = new ArrayList<>();
+		for (Bond b : catom.getBonds()) {
+			if (b.getAtomA().getName().equals("N") || b.getAtomB().getName().equals("N")) {
+				bonds.add(b);
+			}
+		}
+
+		assertEquals(2, bonds.size());
+
+		Set<Character> seenAltLocs = new HashSet<>();
+		for (Bond b : bonds) {
+			Atom aAtom = b.getAtomA();
+			Atom bAtom = b.getAtomB();
+			Atom nAtom;
+			if (aAtom.getName().equals("N")) {
+				nAtom = aAtom;
+			} else {
+				nAtom = bAtom;
+			}
+			seenAltLocs.add(nAtom.getAltLoc());
+		}
+		// 2 distinct N atoms: alt loc A and B
+		assertEquals(2, seenAltLocs.size());
+		assertTrue(seenAltLocs.contains('A'));
+		assertTrue(seenAltLocs.contains('B'));
+
+	}
+
 
 }

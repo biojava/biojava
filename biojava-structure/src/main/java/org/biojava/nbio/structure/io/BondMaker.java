@@ -128,28 +128,49 @@ public class BondMaker {
 						continue;
 					}
 
-					Atom carboxylC;
-					Atom aminoN;
+					List<Atom> carboxylCs = getAtoms(tail, "C");
+					List<Atom> aminoNs = getAtoms(head, "N");
 
-					carboxylC = tail.getC();
-					aminoN = head.getN();
-
-
-					if (carboxylC == null || aminoN == null) {
+					if (carboxylCs.isEmpty() || aminoNs.isEmpty()) {
 						// some structures may be incomplete and not store info
 						// about all of their atoms
-
 						continue;
 					}
 
-
-					if (Calc.getDistance(carboxylC, aminoN) < MAX_PEPTIDE_BOND_LENGTH) {
-						new BondImpl(carboxylC, aminoN, 1);
+					for (Atom carboxylC:carboxylCs) {
+						for (Atom aminoN:aminoNs) {
+							if (carboxylC.getAltLoc() != null && aminoN.getAltLoc()!=null &&
+									carboxylC.getAltLoc()!=' ' && aminoN.getAltLoc()!=' ' &&
+									carboxylC.getAltLoc() != aminoN.getAltLoc()) {
+								logger.debug("Skipping peptide bond between atoms with differently named alt locs {} (altLoc '{}') -- {} (altLoc '{}')",
+										carboxylC.toString(), carboxylC.getAltLoc(), aminoN.toString(), aminoN.getAltLoc());
+								continue;
+							}
+							if (Calc.getDistance(carboxylC, aminoN) < MAX_PEPTIDE_BOND_LENGTH) {
+								new BondImpl(carboxylC, aminoN, 1);
+							}
+						}
 					}
-
 				}
 			}
 		}
+	}
+
+	/**
+	 * Get all atoms (including possible alt locs) in given group that are name with the given atom name
+	 * @param g the group
+	 * @param name the atom name
+	 * @return list of all atoms, or empty list if no atoms with the name
+	 */
+	private List<Atom> getAtoms(Group g, String name) {
+		List<Atom> atoms = new ArrayList<>();
+		List<Group> groupsWithAltLocs = new ArrayList<>();
+		groupsWithAltLocs.add(g);
+		groupsWithAltLocs.addAll(g.getAltLocs());
+		for (Group group : groupsWithAltLocs) {
+			atoms.add(group.getAtom(name));
+		}
+		return atoms;
 	}
 
 	private void formNucleotideBonds() {
