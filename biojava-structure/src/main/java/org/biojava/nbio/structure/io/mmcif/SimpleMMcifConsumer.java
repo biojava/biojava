@@ -213,7 +213,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				}
 			}
 		} catch (NumberFormatException e) {
-			logger.warn("Entity id does not look like a number:", e.getMessage());
+			logger.warn("Entity id does not look like a number: {}", e.getMessage());
 		}
 		return null;
 	}
@@ -729,7 +729,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 			// we'll only add seqres chains that are polymeric or unknown
 			if (type==null || type==EntityType.POLYMER ) {
-			seqResChains.add(seqres);
+				seqResChains.add(seqres);
 			}
 
 			logger.debug(" seqres: " + asym.getId() + " " + seqres + "<") ;

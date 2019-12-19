@@ -128,25 +128,7 @@ public class BondMaker {
 						continue;
 					}
 
-					Atom carboxylC;
-					Atom aminoN;
-
-					carboxylC = tail.getC();
-					aminoN = head.getN();
-
-
-					if (carboxylC == null || aminoN == null) {
-						// some structures may be incomplete and not store info
-						// about all of their atoms
-
-						continue;
-					}
-
-
-					if (Calc.getDistance(carboxylC, aminoN) < MAX_PEPTIDE_BOND_LENGTH) {
-						new BondImpl(carboxylC, aminoN, 1);
-					}
-
+					formBondAltlocAware(tail, "C", head, "N", MAX_PEPTIDE_BOND_LENGTH, 1);
 				}
 			}
 		}
@@ -171,18 +153,7 @@ public class BondMaker {
 						continue;
 					}
 
-					Atom phosphorous = head.getP();
-					Atom oThreePrime = tail.getO3Prime();
-
-					if (phosphorous == null || oThreePrime == null) {
-						continue;
-					}
-
-
-					if (Calc.getDistance(phosphorous, oThreePrime) < MAX_NUCLEOTIDE_BOND_LENGTH) {
-						new BondImpl(phosphorous, oThreePrime, 1);
-					}
-
+					formBondAltlocAware(head, "P", tail, "O3'", MAX_NUCLEOTIDE_BOND_LENGTH, 1);
 				}
 			}
 		}
@@ -200,10 +171,7 @@ public class BondMaker {
 					// Now add support for altLocGroup
 					List<Group> totList = new ArrayList<Group>();
 					totList.add(mainGroup);
-					for(Group altLoc: mainGroup.getAltLocs()){
-						totList.add(altLoc);
-					}
-
+					totList.addAll(mainGroup.getAltLocs());
 
 					// Now iterate through this list
 					for(Group group : totList){
@@ -213,18 +181,9 @@ public class BondMaker {
 								group.getPDBName(), group.getResidueNumber(), aminoChemComp.getAtoms().size(), aminoChemComp.getBonds().size());
 
 						for (ChemCompBond chemCompBond : aminoChemComp.getBonds()) {
-							Atom a = getAtom(chemCompBond.getAtom_id_1(), group);
-							Atom b = getAtom(chemCompBond.getAtom_id_2(), group);
-							if ( a != null && b != null){
-								int bondOrder = chemCompBond.getNumericalBondOrder();
-								logger.debug("Forming bond between atoms {}-{} and {}-{} with bond order {}",
-										a.getPDBserial(), a.getName(), b.getPDBserial(), b.getName(), bondOrder);
-								new BondImpl(a, b, bondOrder);
-							}
-							else{
-								// Some of the atoms were missing. That's fine, there's
-								// nothing to do in this case.
-							}
+							// note we don't check distance to make this call not too expensive
+							formBondAltlocAware(group, chemCompBond.getAtom_id_1(),
+									group, chemCompBond.getAtom_id_2(), -1, chemCompBond.getNumericalBondOrder());
 						}
 					}
 				}
@@ -233,19 +192,80 @@ public class BondMaker {
 		}
 	}
 
-	private Atom getAtom(String atomId, Group group) {
-		Atom a = group.getAtom(atomId);
-		// Check for deuteration
-		if(a==null && atomId.startsWith("H")) {
-			a = group.getAtom(atomId.replaceFirst("H", "D"));
-			// Check it is actually deuterated
-			if(a!=null){
-				if(!a.getElement().equals(Element.D)){
-					a=null;
+	/**
+	 * Form bond between atoms of the given names and groups, respecting alt loc rules to form bonds:
+	 * no bonds between differently named alt locs (that are not the default alt loc '.')
+	 * and multiple bonds for default alt loc to named alt loc.
+	 * @param g1 first group
+	 * @param name1 name of atom in first group
+	 * @param g2 second group
+	 * @param name2 name of atom in second group
+	 * @param maxAllowedLength max length, if atoms distance above this length no bond will be added. If negative no check on distance is performed.
+	 * @param bondOrder the bond order to be set in the created bond(s)
+	 */
+	private void formBondAltlocAware(Group g1, String name1, Group g2, String name2, double maxAllowedLength, int bondOrder) {
+		List<Atom> a1s = getAtoms(g1, name1);
+		List<Atom> a2s = getAtoms(g2, name2);
+
+		if (a1s.isEmpty() || a2s.isEmpty()) {
+			// some structures may be incomplete and not store info
+			// about all of their atoms
+			return;
+		}
+
+		for (Atom a1:a1s) {
+			for (Atom a2:a2s) {
+				if (a1.getAltLoc() != null && a2.getAltLoc()!=null &&
+						a1.getAltLoc()!=' ' && a2.getAltLoc()!=' ' &&
+						a1.getAltLoc() != a2.getAltLoc()) {
+					logger.debug("Skipping bond between atoms with differently named alt locs {} (altLoc '{}') -- {} (altLoc '{}')",
+							a1.toString(), a1.getAltLoc(), a2.toString(), a2.getAltLoc());
+					continue;
+				}
+				if (maxAllowedLength<0) {
+					// negative maxAllowedLength means we don't check distance and always add bond
+					logger.debug("Forming bond between atoms {}-{} and {}-{} with bond order {}",
+							a1.getPDBserial(), a1.getName(), a2.getPDBserial(), a2.getName(), bondOrder);
+					new BondImpl(a1, a2, bondOrder);
+				} else {
+					if (Calc.getDistance(a1, a2) < maxAllowedLength) {
+						logger.debug("Forming bond between atoms {}-{} and {}-{} with bond order {}. Distance is below {}",
+								a1.getPDBserial(), a1.getName(), a2.getPDBserial(), a2.getName(), bondOrder, maxAllowedLength);
+						new BondImpl(a1, a2, bondOrder);
+					} else {
+						logger.debug("Not forming bond between atoms {}-{} and {}-{} with bond order {}, because distance is above {}",
+								a1.getPDBserial(), a1.getName(), a2.getPDBserial(), a2.getName(), bondOrder, maxAllowedLength);
+					}
 				}
 			}
 		}
-		return a;
+	}
+
+	/**
+	 * Get all atoms (including possible alt locs) in given group that are name with the given atom name
+	 * @param g the group
+	 * @param name the atom name
+	 * @return list of all atoms, or empty list if no atoms with the name
+	 */
+	private List<Atom> getAtoms(Group g, String name) {
+		List<Atom> atoms = new ArrayList<>();
+		List<Group> groupsWithAltLocs = new ArrayList<>();
+		groupsWithAltLocs.add(g);
+		groupsWithAltLocs.addAll(g.getAltLocs());
+		for (Group group : groupsWithAltLocs) {
+			Atom a = group.getAtom(name);
+			// Check for deuteration
+			if (a==null && name.startsWith("H")) {
+				a = group.getAtom(name.replaceFirst("H", "D"));
+				// Check it is actually deuterated
+				if (a!=null && !a.getElement().equals(Element.D)){
+					a=null;
+				}
+			}
+			if (a!=null)
+				atoms.add(a);
+		}
+		return atoms;
 	}
 
 	private void trimBondLists() {
