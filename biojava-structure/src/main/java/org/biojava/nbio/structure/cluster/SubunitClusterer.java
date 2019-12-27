@@ -56,12 +56,8 @@ public class SubunitClusterer {
 		return cluster(subunits, params);
 	}
 
-	public static Stoichiometry cluster(List<Subunit> subunits,
-			SubunitClustererParameters params) {
-
-		// The collection of clusters to return
-		List<SubunitCluster> clusters = new ArrayList<SubunitCluster>();
-
+	public static Stoichiometry cluster(List<Subunit> subunits, SubunitClustererParameters params) {
+		List<SubunitCluster> clusters = new ArrayList<>();
 		if (subunits.size() == 0)
 			return new Stoichiometry(clusters);
 

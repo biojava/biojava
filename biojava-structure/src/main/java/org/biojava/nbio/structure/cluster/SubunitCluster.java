@@ -325,51 +325,9 @@ public class SubunitCluster {
 			}
 		}
 
-		// Do a List intersection to find out which EQR columns to remove
-		List<Integer> thisRemove = new ArrayList<>();
-		List<Integer> otherRemove = new ArrayList<>();
-
-		for (int t = 0; t < this.subunitEQR.get(this.representative).size(); t++) {
-			// If the index is aligned do nothing, otherwise mark as removing
-			if (!thisAligned.contains(this.subunitEQR.get(this.representative)
-					.get(t)))
-				thisRemove.add(t);
-		}
-
-		for (int t = 0; t < other.subunitEQR.get(other.representative).size(); t++) {
-			// If the index is aligned do nothing, otherwise mark as removing
-			if (!otherAligned.contains(other.subunitEQR.get(
-					other.representative).get(t)))
-				otherRemove.add(t);
-		}
-		// Now remove unaligned columns, from end to start
-		Collections.sort(thisRemove);
-		Collections.reverse(thisRemove);
-		Collections.sort(otherRemove);
-		Collections.reverse(otherRemove);
-
-		for (Integer column : thisRemove) {
-			for (List<Integer> eqr : this.subunitEQR) {
-				eqr.remove(column);
-			}
-		}
-
-		for (Integer column : otherRemove) {
-			for (List<Integer> eqr : other.subunitEQR) {
-				eqr.remove(column);
-			}
-		}
-
-		// The representative is the longest sequence
-		if (this.subunits.get(this.representative).size() < other.subunits.get(
-				other.representative).size())
-			this.representative = other.representative + subunits.size();
-
-		this.subunits.addAll(other.subunits);
-		this.subunitEQR.addAll(other.subunitEQR);
+		updateEquivResidues(other, thisAligned, otherAligned);
 
 		this.method = SubunitClustererMethod.SEQUENCE;
-
 		pseudoStoichiometric = !params.isHighConfidenceScores(sequenceIdentity,sequenceCoverage);
 
 		return true;
@@ -443,8 +401,8 @@ public class SubunitCluster {
 
 		// Merge clusters
 		List<List<Integer>> alignedRes = msa.getBlock(0).getAlignRes();
-		List<Integer> thisAligned = new ArrayList<Integer>();
-		List<Integer> otherAligned = new ArrayList<Integer>();
+		List<Integer> thisAligned = new ArrayList<>();
+		List<Integer> otherAligned = new ArrayList<>();
 
 		// Extract the aligned residues of both Subunit
 		for (int p = 0; p < msa.length(); p++) {
@@ -467,24 +425,30 @@ public class SubunitCluster {
 			}
 		}
 
+		updateEquivResidues(other, thisAligned, otherAligned);
+
+		this.method = SubunitClustererMethod.STRUCTURE;
+		pseudoStoichiometric = true;
+
+		return true;
+	}
+
+	private void updateEquivResidues(SubunitCluster other, List<Integer> thisAligned, List<Integer> otherAligned) {
 		// Do a List intersection to find out which EQR columns to remove
-		List<Integer> thisRemove = new ArrayList<Integer>();
-		List<Integer> otherRemove = new ArrayList<Integer>();
+		List<Integer> thisRemove = new ArrayList<>();
+		List<Integer> otherRemove = new ArrayList<>();
 
 		for (int t = 0; t < this.subunitEQR.get(this.representative).size(); t++) {
 			// If the index is aligned do nothing, otherwise mark as removing
-			if (!thisAligned.contains(this.subunitEQR.get(this.representative)
-					.get(t)))
+			if (!thisAligned.contains(this.subunitEQR.get(this.representative).get(t)))
 				thisRemove.add(t);
 		}
 
 		for (int t = 0; t < other.subunitEQR.get(other.representative).size(); t++) {
 			// If the index is aligned do nothing, otherwise mark as removing
-			if (!otherAligned.contains(other.subunitEQR.get(
-					other.representative).get(t)))
+			if (!otherAligned.contains(other.subunitEQR.get(other.representative).get(t)))
 				otherRemove.add(t);
 		}
-
 		// Now remove unaligned columns, from end to start
 		Collections.sort(thisRemove);
 		Collections.reverse(thisRemove);
@@ -504,17 +468,12 @@ public class SubunitCluster {
 		}
 
 		// The representative is the longest sequence
-		if (this.subunits.get(this.representative).size() < other.subunits.get(
-				other.representative).size())
+		if (this.subunits.get(this.representative).size() < other.subunits.get(other.representative).size())
 			this.representative = other.representative + subunits.size();
 
 		this.subunits.addAll(other.subunits);
 		this.subunitEQR.addAll(other.subunitEQR);
 
-		this.method = SubunitClustererMethod.STRUCTURE;
-		pseudoStoichiometric = true;
-
-		return true;
 	}
 
 	/**
@@ -564,9 +523,9 @@ public class SubunitCluster {
 		List<List<Integer>> alignedRes = result.getMultipleAlignment()
 				.getBlock(0).getAlignRes();
 
-		List<List<Integer>> columns = new ArrayList<List<Integer>>();
+		List<List<Integer>> columns = new ArrayList<>();
 		for (int s = 0; s < alignedRes.size(); s++)
-			columns.add(new ArrayList<Integer>(alignedRes.get(s).size()));
+			columns.add(new ArrayList<>(alignedRes.get(s).size()));
 
 		// Extract the aligned columns of each repeat in the Subunit
 		for (int col = 0; col < alignedRes.get(0).size(); col++) {
