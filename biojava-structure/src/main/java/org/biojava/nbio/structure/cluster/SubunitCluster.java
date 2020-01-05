@@ -31,6 +31,8 @@ import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.core.sequence.ProteinSequence;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
 import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.Chain;
+import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.StructureAlignment;
 import org.biojava.nbio.structure.align.StructureAlignmentFactory;
@@ -45,6 +47,7 @@ import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsembleImpl;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentImpl;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
 import org.biojava.nbio.structure.align.multiple.util.ReferenceSuperimposer;
+import org.biojava.nbio.structure.quaternary.BiologicalAssemblyBuilder;
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetrySubunits;
 import org.biojava.nbio.structure.symmetry.internal.CESymmParameters;
 import org.biojava.nbio.structure.symmetry.internal.CeSymm;
@@ -179,6 +182,38 @@ public class SubunitCluster {
 	}
 
 	/**
+	 * Tells whether the other SubunitCluster contains exactly the same Subunit.
+	 * This is checked by equality of their entity identifiers if they are present.
+	 *
+	 * @param other
+	 *            SubunitCluster
+	 * @return true if the SubunitClusters are identical, false otherwise
+	 */
+	public boolean isIdenticalByEntityIdTo(SubunitCluster other) {
+		Structure thisStruct = this.subunits.get(this.representative).getStructure();
+		Structure otherStruct = other.subunits.get(other.representative).getStructure();
+		String thisName = this.subunits.get(this.representative).getName();
+		String otherName = other.subunits.get(this.representative).getName();
+		Chain thisChain = thisStruct.getChain(thisName);
+		Chain otherChain = otherStruct.getChain(otherName);
+		if (thisChain == null || otherChain == null) {
+			logger.info("Can't determine entity ids of SubunitClusters {}-{}. Ignoring identity check by entity id",
+					this.subunits.get(this.representative).getName(),
+					other.subunits.get(other.representative).getName());
+			return false;
+		}
+		if (thisChain.getEntityInfo() == null || otherChain.getEntityInfo() == null) {
+			logger.info("Can't determine entity ids of SubunitClusters {}-{}. Ignoring identity check by entity id",
+					this.subunits.get(this.representative).getName(),
+					other.subunits.get(other.representative).getName());
+			return false;
+		}
+		int thisEntityId = thisChain.getEntityInfo().getMolId();
+		int otherEntityId = otherChain.getEntityInfo().getMolId();
+		return thisEntityId == otherEntityId;
+	}
+
+	/**
 	 * Merges the other SubunitCluster into this one if it contains exactly the
 	 * same Subunit. This is checked by {@link #isIdenticalTo(SubunitCluster)}.
 	 *
@@ -191,7 +226,35 @@ public class SubunitCluster {
 		if (!isIdenticalTo(other))
 			return false;
 
-		logger.info("SubunitClusters are identical");
+		logger.info("SubunitClusters {}-{} are identical in sequence",
+				this.subunits.get(this.representative).getName(),
+				other.subunits.get(other.representative).getName());
+
+		this.subunits.addAll(other.subunits);
+		this.subunitEQR.addAll(other.subunitEQR);
+
+		return true;
+	}
+
+	/**
+	 * Merges the other SubunitCluster into this one if it contains exactly the
+	 * same Subunit. This is checked by comparing the entity identifiers of the subunits
+	 * if one can be found.
+	 * Thus this only makes sense when the subunits are complete chains of a
+	 * deposited PDB entry. I
+	 *
+	 * @param other
+	 *            SubunitCluster
+	 * @return true if the SubunitClusters were merged, false otherwise
+	 */
+	public boolean mergeIdenticalByEntityId(SubunitCluster other) {
+
+		if (!isIdenticalByEntityIdTo(other))
+			return false;
+
+		logger.info("SubunitClusters {}-{} belong to same entity. Assuming they are identical",
+				this.subunits.get(this.representative).getName(),
+				other.subunits.get(other.representative).getName());
 
 		this.subunits.addAll(other.subunits);
 		this.subunitEQR.addAll(other.subunitEQR);
