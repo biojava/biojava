@@ -518,14 +518,16 @@ public class SubunitCluster {
 		Collections.sort(otherRemove);
 		Collections.reverse(otherRemove);
 
-		for (Integer column : thisRemove) {
+		for (int t = 0; t < thisRemove.size(); t++) {
 			for (List<Integer> eqr : this.subunitEQR) {
+				int column = thisRemove.get(t);
 				eqr.remove(column);
 			}
 		}
 
-		for (Integer column : otherRemove) {
+		for (int t = 0; t < otherRemove.size(); t++) {
 			for (List<Integer> eqr : other.subunitEQR) {
+				int column = otherRemove.get(t);
 				eqr.remove(column);
 			}
 		}
