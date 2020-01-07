@@ -74,13 +74,9 @@ public class SubunitClusterer {
 						if (params.isUseEntityIdForSeqIdentityDetermination() &&
 								clusters.get(c1).mergeIdenticalByEntityId(clusters.get(c2))) {
 							// This we will only do if the switch is for entity id comparison is on.
-							// In some cases in can save enormous amounts of time, e.g. for clustering full
+							// In some cases it can save enormous amounts of time, e.g. for clustering full
 							// chains of deposited PDB entries. For instance for 6NHJ: with pure alignments it
 							// takes ~ 6 hours, with entity id comparisons it takes 2 minutes.
-							clusters.remove(c2);
-						} else if (clusters.get(c1).mergeIdentical(clusters.get(c2))) {
-							// This always makes sense as an optimization: it's far cheaper to compare the sequence
-							// string than doing a full S-W alignment
 							clusters.remove(c2);
 						} else if (clusters.get(c1).mergeSequence(clusters.get(c2), params)) {
 							clusters.remove(c2);
