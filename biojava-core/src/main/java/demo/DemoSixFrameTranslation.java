@@ -33,7 +33,7 @@ import org.biojava.nbio.core.sequence.template.CompoundSet;
 import org.biojava.nbio.core.sequence.template.Sequence;
 import org.biojava.nbio.core.sequence.transcription.Frame;
 import org.biojava.nbio.core.sequence.transcription.TranscriptionEngine;
-
+//liting needed
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.LinkedHashMap;
