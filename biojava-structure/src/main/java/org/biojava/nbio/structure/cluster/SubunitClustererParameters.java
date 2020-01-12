@@ -45,6 +45,8 @@ public class SubunitClustererParameters implements Serializable {
 	private double sequenceIdentityThreshold;
 	private double sequenceCoverageThreshold = 0.75;
 
+	private boolean useEntityIdForSeqIdentityDetermination = false;
+
 	private double rmsdThreshold = 3.0;
 	private double structureCoverageThreshold = 0.75;
 	private double tmThreshold = 0.5;
@@ -506,5 +508,21 @@ public class SubunitClustererParameters implements Serializable {
 			return sequenceIdentity>=hcSequenceIdentityLocal && sequenceCoverage >= hcSequenceCoverageLocal;
 	}
 
+	/**
+	 * Whether to use the entity id of subunits to infer that sequences are identical.
+	 * Only applies if the {@link SubunitClustererMethod} is a sequence based one.
+	 * @return
+	 */
+	public boolean isUseEntityIdForSeqIdentityDetermination() {
+		return useEntityIdForSeqIdentityDetermination;
+	}
 
+	/**
+	 * Whether to use the entity id of subunits to infer that sequences are identical.
+	 * Only applies if the {@link SubunitClustererMethod} is a sequence based one.
+	 * @param useEntityIdForSeqIdentityDetermination the flag to be set
+	 */
+	public void setUseEntityIdForSeqIdentityDetermination(boolean useEntityIdForSeqIdentityDetermination) {
+		this.useEntityIdForSeqIdentityDetermination = useEntityIdForSeqIdentityDetermination;
+	}
 }

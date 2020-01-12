@@ -31,6 +31,8 @@ import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.core.sequence.ProteinSequence;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
 import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.Chain;
+import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.StructureAlignment;
 import org.biojava.nbio.structure.align.StructureAlignmentFactory;
@@ -45,6 +47,7 @@ import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsembleImpl;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentImpl;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
 import org.biojava.nbio.structure.align.multiple.util.ReferenceSuperimposer;
+import org.biojava.nbio.structure.quaternary.BiologicalAssemblyBuilder;
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetrySubunits;
 import org.biojava.nbio.structure.symmetry.internal.CESymmParameters;
 import org.biojava.nbio.structure.symmetry.internal.CeSymm;
@@ -71,11 +74,10 @@ import java.util.stream.Collectors;
  */
 public class SubunitCluster {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(SubunitCluster.class);
+	private static final Logger logger = LoggerFactory.getLogger(SubunitCluster.class);
 
-	private List<Subunit> subunits = new ArrayList<Subunit>();
-	private List<List<Integer>> subunitEQR = new ArrayList<List<Integer>>();
+	private List<Subunit> subunits = new ArrayList<>();
+	private List<List<Integer>> subunitEQR = new ArrayList<>();
 	private int representative = -1;
 
 	private SubunitClustererMethod method = SubunitClustererMethod.SEQUENCE;
@@ -119,7 +121,7 @@ public class SubunitCluster {
 
 		subunits.add(subunit);
 
-		List<Integer> identity = new ArrayList<Integer>();
+		List<Integer> identity = new ArrayList<>();
 		for (int i = 0; i < subunit.size(); i++)
 			identity.add(i);
 		subunitEQR.add(identity);
@@ -180,6 +182,38 @@ public class SubunitCluster {
 	}
 
 	/**
+	 * Tells whether the other SubunitCluster contains exactly the same Subunit.
+	 * This is checked by equality of their entity identifiers if they are present.
+	 *
+	 * @param other
+	 *            SubunitCluster
+	 * @return true if the SubunitClusters are identical, false otherwise
+	 */
+	public boolean isIdenticalByEntityIdTo(SubunitCluster other) {
+		Structure thisStruct = this.subunits.get(this.representative).getStructure();
+		Structure otherStruct = other.subunits.get(other.representative).getStructure();
+		String thisName = this.subunits.get(this.representative).getName();
+		String otherName = other.subunits.get(this.representative).getName();
+		Chain thisChain = thisStruct.getChain(thisName);
+		Chain otherChain = otherStruct.getChain(otherName);
+		if (thisChain == null || otherChain == null) {
+			logger.info("Can't determine entity ids of SubunitClusters {}-{}. Ignoring identity check by entity id",
+					this.subunits.get(this.representative).getName(),
+					other.subunits.get(other.representative).getName());
+			return false;
+		}
+		if (thisChain.getEntityInfo() == null || otherChain.getEntityInfo() == null) {
+			logger.info("Can't determine entity ids of SubunitClusters {}-{}. Ignoring identity check by entity id",
+					this.subunits.get(this.representative).getName(),
+					other.subunits.get(other.representative).getName());
+			return false;
+		}
+		int thisEntityId = thisChain.getEntityInfo().getMolId();
+		int otherEntityId = otherChain.getEntityInfo().getMolId();
+		return thisEntityId == otherEntityId;
+	}
+
+	/**
 	 * Merges the other SubunitCluster into this one if it contains exactly the
 	 * same Subunit. This is checked by {@link #isIdenticalTo(SubunitCluster)}.
 	 *
@@ -192,7 +226,35 @@ public class SubunitCluster {
 		if (!isIdenticalTo(other))
 			return false;
 
-		logger.info("SubunitClusters are identical");
+		logger.info("SubunitClusters {}-{} are identical in sequence",
+				this.subunits.get(this.representative).getName(),
+				other.subunits.get(other.representative).getName());
+
+		this.subunits.addAll(other.subunits);
+		this.subunitEQR.addAll(other.subunitEQR);
+
+		return true;
+	}
+
+	/**
+	 * Merges the other SubunitCluster into this one if it contains exactly the
+	 * same Subunit. This is checked by comparing the entity identifiers of the subunits
+	 * if one can be found.
+	 * Thus this only makes sense when the subunits are complete chains of a
+	 * deposited PDB entry. I
+	 *
+	 * @param other
+	 *            SubunitCluster
+	 * @return true if the SubunitClusters were merged, false otherwise
+	 */
+	public boolean mergeIdenticalByEntityId(SubunitCluster other) {
+
+		if (!isIdenticalByEntityIdTo(other))
+			return false;
+
+		logger.info("SubunitClusters {}-{} belong to same entity. Assuming they are identical",
+				this.subunits.get(this.representative).getName(),
+				other.subunits.get(other.representative).getName());
 
 		this.subunits.addAll(other.subunits);
 		this.subunitEQR.addAll(other.subunitEQR);
@@ -296,13 +358,15 @@ public class SubunitCluster {
 				return false;
 		}
 
-		logger.info(String.format("SubunitClusters are similar in sequence "
-						+ "with %.2f sequence identity and %.2f coverage", sequenceIdentity,
-				sequenceCoverage));
+		logger.info(String.format("SubunitClusters %s-%s are similar in sequence "
+						+ "with %.2f sequence identity and %.2f coverage",
+				this.subunits.get(this.representative).getName(),
+				other.subunits.get(other.representative).getName(),
+				sequenceIdentity, sequenceCoverage));
 
 		// If coverage and sequence identity sufficient, merge other and this
-		List<Integer> thisAligned = new ArrayList<Integer>();
-		List<Integer> otherAligned = new ArrayList<Integer>();
+		List<Integer> thisAligned = new ArrayList<>();
+		List<Integer> otherAligned = new ArrayList<>();
 
 		// Extract the aligned residues of both Subunit
 		for (int p = 1; p < aligner.getPair().getLength() + 1; p++) {
@@ -318,60 +382,15 @@ public class SubunitCluster {
 
 			// Only consider residues that are part of the SubunitCluster
 			if (this.subunitEQR.get(this.representative).contains(thisIndex)
-					&& other.subunitEQR.get(other.representative).contains(
-							otherIndex)) {
+					&& other.subunitEQR.get(other.representative).contains(otherIndex)) {
 				thisAligned.add(thisIndex);
 				otherAligned.add(otherIndex);
 			}
 		}
 
-		// Do a List intersection to find out which EQR columns to remove
-		List<Integer> thisRemove = new ArrayList<Integer>();
-		List<Integer> otherRemove = new ArrayList<Integer>();
-
-		for (int t = 0; t < this.subunitEQR.get(this.representative).size(); t++) {
-			// If the index is aligned do nothing, otherwise mark as removing
-			if (!thisAligned.contains(this.subunitEQR.get(this.representative)
-					.get(t)))
-				thisRemove.add(t);
-		}
-
-		for (int t = 0; t < other.subunitEQR.get(other.representative).size(); t++) {
-			// If the index is aligned do nothing, otherwise mark as removing
-			if (!otherAligned.contains(other.subunitEQR.get(
-					other.representative).get(t)))
-				otherRemove.add(t);
-		}
-		// Now remove unaligned columns, from end to start
-		Collections.sort(thisRemove);
-		Collections.reverse(thisRemove);
-		Collections.sort(otherRemove);
-		Collections.reverse(otherRemove);
-
-		for (int t = 0; t < thisRemove.size(); t++) {
-			for (List<Integer> eqr : this.subunitEQR) {
-				int column = thisRemove.get(t);
-				eqr.remove(column);
-			}
-		}
-
-		for (int t = 0; t < otherRemove.size(); t++) {
-			for (List<Integer> eqr : other.subunitEQR) {
-				int column = otherRemove.get(t);
-				eqr.remove(column);
-			}
-		}
-
-		// The representative is the longest sequence
-		if (this.subunits.get(this.representative).size() < other.subunits.get(
-				other.representative).size())
-			this.representative = other.representative + subunits.size();
-
-		this.subunits.addAll(other.subunits);
-		this.subunitEQR.addAll(other.subunitEQR);
+		updateEquivResidues(other, thisAligned, otherAligned);
 
 		this.method = SubunitClustererMethod.SEQUENCE;
-
 		pseudoStoichiometric = !params.isHighConfidenceScores(sequenceIdentity,sequenceCoverage);
 
 		return true;
@@ -445,8 +464,8 @@ public class SubunitCluster {
 
 		// Merge clusters
 		List<List<Integer>> alignedRes = msa.getBlock(0).getAlignRes();
-		List<Integer> thisAligned = new ArrayList<Integer>();
-		List<Integer> otherAligned = new ArrayList<Integer>();
+		List<Integer> thisAligned = new ArrayList<>();
+		List<Integer> otherAligned = new ArrayList<>();
 
 		// Extract the aligned residues of both Subunit
 		for (int p = 0; p < msa.length(); p++) {
@@ -469,24 +488,30 @@ public class SubunitCluster {
 			}
 		}
 
+		updateEquivResidues(other, thisAligned, otherAligned);
+
+		this.method = SubunitClustererMethod.STRUCTURE;
+		pseudoStoichiometric = true;
+
+		return true;
+	}
+
+	private void updateEquivResidues(SubunitCluster other, List<Integer> thisAligned, List<Integer> otherAligned) {
 		// Do a List intersection to find out which EQR columns to remove
-		List<Integer> thisRemove = new ArrayList<Integer>();
-		List<Integer> otherRemove = new ArrayList<Integer>();
+		List<Integer> thisRemove = new ArrayList<>();
+		List<Integer> otherRemove = new ArrayList<>();
 
 		for (int t = 0; t < this.subunitEQR.get(this.representative).size(); t++) {
 			// If the index is aligned do nothing, otherwise mark as removing
-			if (!thisAligned.contains(this.subunitEQR.get(this.representative)
-					.get(t)))
+			if (!thisAligned.contains(this.subunitEQR.get(this.representative).get(t)))
 				thisRemove.add(t);
 		}
 
 		for (int t = 0; t < other.subunitEQR.get(other.representative).size(); t++) {
 			// If the index is aligned do nothing, otherwise mark as removing
-			if (!otherAligned.contains(other.subunitEQR.get(
-					other.representative).get(t)))
+			if (!otherAligned.contains(other.subunitEQR.get(other.representative).get(t)))
 				otherRemove.add(t);
 		}
-
 		// Now remove unaligned columns, from end to start
 		Collections.sort(thisRemove);
 		Collections.reverse(thisRemove);
@@ -508,17 +533,12 @@ public class SubunitCluster {
 		}
 
 		// The representative is the longest sequence
-		if (this.subunits.get(this.representative).size() < other.subunits.get(
-				other.representative).size())
+		if (this.subunits.get(this.representative).size() < other.subunits.get(other.representative).size())
 			this.representative = other.representative + subunits.size();
 
 		this.subunits.addAll(other.subunits);
 		this.subunitEQR.addAll(other.subunitEQR);
 
-		this.method = SubunitClustererMethod.STRUCTURE;
-		pseudoStoichiometric = true;
-
-		return true;
 	}
 
 	/**
@@ -568,9 +588,9 @@ public class SubunitCluster {
 		List<List<Integer>> alignedRes = result.getMultipleAlignment()
 				.getBlock(0).getAlignRes();
 
-		List<List<Integer>> columns = new ArrayList<List<Integer>>();
+		List<List<Integer>> columns = new ArrayList<>();
 		for (int s = 0; s < alignedRes.size(); s++)
-			columns.add(new ArrayList<Integer>(alignedRes.get(s).size()));
+			columns.add(new ArrayList<>(alignedRes.get(s).size()));
 
 		// Extract the aligned columns of each repeat in the Subunit
 		for (int col = 0; col < alignedRes.get(0).size(); col++) {

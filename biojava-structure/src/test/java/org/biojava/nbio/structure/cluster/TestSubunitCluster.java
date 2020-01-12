@@ -52,8 +52,8 @@ public class TestSubunitCluster {
 	@Test
 	public void testMergeIdentical() {
 
-		// Create an Atom Array of ploy-alanine
-		List<Atom> atoms = new ArrayList<Atom>(10);
+		// Create an Atom Array of poly-alanine
+		List<Atom> atoms = new ArrayList<>(10);
 		for (int i = 0; i < 10; i++) {
 			Group g = new AminoAcidImpl();
 			g.setPDBName("ALA");
@@ -79,7 +79,7 @@ public class TestSubunitCluster {
 		assertEquals(sc1.length(), 10);
 
 		// Create an Atom Array of poly-glycine
-		List<Atom> atoms2 = new ArrayList<Atom>(10);
+		List<Atom> atoms2 = new ArrayList<>(10);
 		for (int i = 0; i < 10; i++) {
 			Group g = new AminoAcidImpl();
 			g.setPDBName("GLY");
@@ -112,7 +112,7 @@ public class TestSubunitCluster {
 	public void testMergeSequence() throws CompoundNotFoundException {
 
 		// Create an Atom Array of ploy-alanine
-		List<Atom> atoms = new ArrayList<Atom>(100);
+		List<Atom> atoms = new ArrayList<>(100);
 		for (int i = 0; i < 100; i++) {
 			Group g = new AminoAcidImpl();
 			g.setPDBName("ALA");
@@ -163,7 +163,7 @@ public class TestSubunitCluster {
 		assertEquals(sc1.length(), 100);
 
 		// Create an Atom Array of 9 glycine and 91 alanine
-		List<Atom> atoms3 = new ArrayList<Atom>(100);
+		List<Atom> atoms3 = new ArrayList<>(100);
 		for (int i = 0; i < 9; i++) {
 			Group g = new AminoAcidImpl();
 			g.setPDBName("GLY");
