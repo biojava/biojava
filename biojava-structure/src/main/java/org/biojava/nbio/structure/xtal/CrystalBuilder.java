@@ -59,8 +59,10 @@ public class CrystalBuilder {
 	// is enormously long in comparison with the dimensions of the unit cell, some interfaces come at the 7th neighbor.
 	// After a scan of the whole PDB (Oct 2013) using numCells=50, the highest one was 4jgc with
 	// interfaces up to the 11th neighbor. Other high ones (9th neighbors) are 4jbm and 4k3t.
-	// We set the default value to 12 based on that (having not seen any difference in runtime)
-	public static final int DEF_NUM_CELLS = 12;
+	// We set the default value to 20 to be on the safe side. Runtime does not seem to be affected at all - JD 2020-01-12
+	// Some good examples in this posting in CCP4: https://www.jiscmail.ac.uk/cgi-bin/webadmin?A2=CCP4BB;45b2755d.2001
+	// in any case the 5m3h example in the posting seems to have contacts only up to the 11th neighbor.
+	public static final int DEF_NUM_CELLS = 20;
 
 	/**
 	 * Default maximum distance between two chains to be considered an interface.
