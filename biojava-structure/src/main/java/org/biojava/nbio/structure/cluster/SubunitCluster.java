@@ -241,7 +241,7 @@ public class SubunitCluster {
 	 * same Subunit. This is checked by comparing the entity identifiers of the subunits
 	 * if one can be found.
 	 * Thus this only makes sense when the subunits are complete chains of a
-	 * deposited PDB entry. I
+	 * deposited PDB entry.
 	 *
 	 * @param other
 	 *            SubunitCluster

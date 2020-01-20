@@ -53,16 +53,7 @@ public class TestSubunitCluster {
 	public void testMergeIdentical() {
 
 		// Create an Atom Array of poly-alanine
-		List<Atom> atoms = new ArrayList<>(10);
-		for (int i = 0; i < 10; i++) {
-			Group g = new AminoAcidImpl();
-			g.setPDBName("ALA");
-			Atom a = new AtomImpl();
-			a.setName(StructureTools.CA_ATOM_NAME);
-			g.addAtom(a);
-			atoms.add(a);
-		}
-		Atom[] reprAtoms = atoms.toArray(new Atom[atoms.size()]);
+		Atom[] reprAtoms = mockAtomArray(10, "ALA", -1, null);
 
 		// Create two identical SubunitCluster
 		SubunitCluster sc1 = new SubunitCluster(new Subunit(reprAtoms,
@@ -79,16 +70,7 @@ public class TestSubunitCluster {
 		assertEquals(sc1.length(), 10);
 
 		// Create an Atom Array of poly-glycine
-		List<Atom> atoms2 = new ArrayList<>(10);
-		for (int i = 0; i < 10; i++) {
-			Group g = new AminoAcidImpl();
-			g.setPDBName("GLY");
-			Atom a = new AtomImpl();
-			a.setName(StructureTools.CA_ATOM_NAME);
-			g.addAtom(a);
-			atoms2.add(a);
-		}
-		Atom[] reprAtoms2 = atoms2.toArray(new Atom[atoms2.size()]);
+		Atom[] reprAtoms2 = mockAtomArray(10, "GLY", -1, null);
 
 		SubunitCluster sc3 = new SubunitCluster(new Subunit(reprAtoms2,
 				"subunit 1", null, null));
@@ -111,17 +93,8 @@ public class TestSubunitCluster {
 	@Test
 	public void testMergeSequence() throws CompoundNotFoundException {
 
-		// Create an Atom Array of ploy-alanine
-		List<Atom> atoms = new ArrayList<>(100);
-		for (int i = 0; i < 100; i++) {
-			Group g = new AminoAcidImpl();
-			g.setPDBName("ALA");
-			Atom a = new AtomImpl();
-			a.setName(StructureTools.CA_ATOM_NAME);
-			g.addAtom(a);
-			atoms.add(a);
-		}
-		Atom[] reprAtoms = atoms.toArray(new Atom[atoms.size()]);
+		// Create an Atom Array of poly-alanine
+		Atom[] reprAtoms = mockAtomArray(100, "ALA", -1, null);
 
 		// Create two identical SubunitCluster
 		SubunitCluster sc1 = new SubunitCluster(new Subunit(reprAtoms,
@@ -140,16 +113,7 @@ public class TestSubunitCluster {
 		assertEquals(sc1.length(), 100);
 
 		// Create an Atom Array of poly-glycine
-		List<Atom> atoms2 = new ArrayList<Atom>(100);
-		for (int i = 0; i < 100; i++) {
-			Group g = new AminoAcidImpl();
-			g.setPDBName("GLY");
-			Atom a = new AtomImpl();
-			a.setName(StructureTools.CA_ATOM_NAME);
-			g.addAtom(a);
-			atoms2.add(a);
-		}
-		Atom[] reprAtoms2 = atoms2.toArray(new Atom[atoms2.size()]);
+		Atom[] reprAtoms2 = mockAtomArray(100, "GLY", -1, null);
 
 		SubunitCluster sc3 = new SubunitCluster(new Subunit(reprAtoms2,
 				"subunit 3", null, null));
@@ -163,24 +127,7 @@ public class TestSubunitCluster {
 		assertEquals(sc1.length(), 100);
 
 		// Create an Atom Array of 9 glycine and 91 alanine
-		List<Atom> atoms3 = new ArrayList<>(100);
-		for (int i = 0; i < 9; i++) {
-			Group g = new AminoAcidImpl();
-			g.setPDBName("GLY");
-			Atom a = new AtomImpl();
-			a.setName(StructureTools.CA_ATOM_NAME);
-			g.addAtom(a);
-			atoms3.add(a);
-		}
-		for (int i = 0; i < 91; i++) {
-			Group g = new AminoAcidImpl();
-			g.setPDBName("ALA");
-			Atom a = new AtomImpl();
-			a.setName(StructureTools.CA_ATOM_NAME);
-			g.addAtom(a);
-			atoms3.add(a);
-		}
-		Atom[] reprAtoms3 = atoms3.toArray(new Atom[atoms3.size()]);
+		Atom[] reprAtoms3 = mockAtomArray(9, "GLY", 91, "ALA");
 
 		SubunitCluster sc4 = new SubunitCluster(new Subunit(reprAtoms3,
 				"subunit 4", null, null));
@@ -282,5 +229,37 @@ public class TestSubunitCluster {
 		assertTrue(sc1.length() < 178);
 		assertEquals(sc1.getAlignedAtomsSubunit(0).length,
 				sc1.getAlignedAtomsSubunit(1).length);
+	}
+
+	/**
+	 * Create a mock atom array, with size1 residues of type1, followed by size2 residues of type2
+	 * @param size1 the number of residues of type1 to add
+	 * @param type1 the 3 letter code of residue
+	 * @param size2 the number of residues of type2 to add, if -1 none are added
+	 * @param type2 the 3 letter code of residue, if null none are added
+	 * @return the mock atom array
+	 */
+	private Atom[] mockAtomArray(int size1, String type1, int size2, String type2) {
+		List<Atom> atoms = new ArrayList<>(size1 + size2);
+		for (int i = 0; i < size1; i++) {
+			Group g = new AminoAcidImpl();
+			g.setPDBName(type1);
+			Atom a = new AtomImpl();
+			a.setName(StructureTools.CA_ATOM_NAME);
+			g.addAtom(a);
+			atoms.add(a);
+		}
+
+		if (size2 >= 0 && type2 !=null) {
+			for (int i = 0; i < size2; i++) {
+				Group g = new AminoAcidImpl();
+				g.setPDBName(type2);
+				Atom a = new AtomImpl();
+				a.setName(StructureTools.CA_ATOM_NAME);
+				g.addAtom(a);
+				atoms.add(a);
+			}
+		}
+		return atoms.toArray(new Atom[0]);
 	}
 }
