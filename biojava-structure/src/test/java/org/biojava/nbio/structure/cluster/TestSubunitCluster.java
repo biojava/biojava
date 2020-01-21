@@ -30,10 +30,14 @@ import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.structure.AminoAcidImpl;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.AtomImpl;
+import org.biojava.nbio.structure.Chain;
+import org.biojava.nbio.structure.ChainImpl;
+import org.biojava.nbio.structure.EntityInfo;
 import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
+import org.biojava.nbio.structure.StructureImpl;
 import org.biojava.nbio.structure.StructureTools;
 import org.junit.Test;
 
@@ -82,6 +86,47 @@ public class TestSubunitCluster {
 		assertEquals(sc1.size(), 2);
 		assertEquals(sc2.size(), 1);
 		assertEquals(sc1.length(), 10);
+
+	}
+
+	@Test
+	public void testMergeIdenticalByEntityId() {
+
+		// Create 2 Atom Arrays, with same entity id
+		Atom[] reprAtoms1 = mockAtomArray("A", 1, 10, "ALA", -1, null);
+		Structure structure1 = reprAtoms1[0].getGroup().getChain().getStructure();
+
+		Atom[] reprAtoms2 = mockAtomArray("B", 1, 10, "PRO", -1, null);
+		Structure structure2 = reprAtoms2[0].getGroup().getChain().getStructure();
+
+		// Create two SubunitCluster with same entity id
+		SubunitCluster sc1 = new SubunitCluster(new Subunit(reprAtoms1,
+				"A", null, structure1));
+		SubunitCluster sc2 = new SubunitCluster(new Subunit(reprAtoms2,
+				"B", null, structure2));
+
+		boolean merged = sc1.mergeIdenticalByEntityId(sc2);
+
+		// Merged have to be true, and the merged SubunitCluster is sc1
+		assertTrue(merged);
+		assertEquals(2, sc1.size());
+		assertEquals(1, sc2.size());
+		assertEquals(10, sc1.length());
+
+		// Create an Atom Array of poly-glycine with a different entity id
+		Atom[] reprAtoms3 = mockAtomArray("A", 2, 10, "GLY", -1, null);
+		Structure structure3 = reprAtoms2[0].getGroup().getChain().getStructure();
+
+		SubunitCluster sc3 = new SubunitCluster(new Subunit(reprAtoms3,
+				"A", null, structure3));
+
+		merged = sc1.mergeIdenticalByEntityId(sc3);
+
+		// Merged have to be false, and Clusters result unmodified
+		assertFalse(merged);
+		assertEquals(2, sc1.size());
+		assertEquals(1, sc2.size());
+		assertEquals(10, sc1.length());
 
 	}
 
@@ -232,7 +277,8 @@ public class TestSubunitCluster {
 	}
 
 	/**
-	 * Create a mock atom array, with size1 residues of type1, followed by size2 residues of type2
+	 * Create a mock atom array, with size1 residues of type1, followed by size2 residues of type2.
+	 *
 	 * @param size1 the number of residues of type1 to add
 	 * @param type1 the 3 letter code of residue
 	 * @param size2 the number of residues of type2 to add, if -1 none are added
@@ -240,6 +286,7 @@ public class TestSubunitCluster {
 	 * @return the mock atom array
 	 */
 	private Atom[] mockAtomArray(int size1, String type1, int size2, String type2) {
+
 		List<Atom> atoms = new ArrayList<>(size1 + size2);
 		for (int i = 0; i < size1; i++) {
 			Group g = new AminoAcidImpl();
@@ -254,6 +301,51 @@ public class TestSubunitCluster {
 			for (int i = 0; i < size2; i++) {
 				Group g = new AminoAcidImpl();
 				g.setPDBName(type2);
+				Atom a = new AtomImpl();
+				a.setName(StructureTools.CA_ATOM_NAME);
+				g.addAtom(a);
+				atoms.add(a);
+			}
+		}
+		return atoms.toArray(new Atom[0]);
+	}
+
+	/**
+	 * Create a mock atom array, with size1 residues of type1, followed by size2 residues of type2.
+	 *
+	 * @param chainId a chain with this chain id will be set as parent of groups
+	 * @param entityId an entity with this id will be set as parent of chain
+	 * @param size1 the number of residues of type1 to add
+	 * @param type1 the 3 letter code of residue
+	 * @param size2 the number of residues of type2 to add, if -1 none are added
+	 * @param type2 the 3 letter code of residue, if null none are added
+	 * @return the mock atom array
+	 */
+	private Atom[] mockAtomArray(String chainId, int entityId, int size1, String type1, int size2, String type2) {
+		Chain chain = new ChainImpl();
+		Structure structure = new StructureImpl();
+		chain.setId(chainId);
+		structure.addChain(chain);
+		EntityInfo entityInfo = new EntityInfo();
+		entityInfo.setMolId(entityId);
+		chain.setEntityInfo(entityInfo);
+
+		List<Atom> atoms = new ArrayList<>(size1 + size2);
+		for (int i = 0; i < size1; i++) {
+			Group g = new AminoAcidImpl();
+			g.setPDBName(type1);
+			chain.addGroup(g);
+			Atom a = new AtomImpl();
+			a.setName(StructureTools.CA_ATOM_NAME);
+			g.addAtom(a);
+			atoms.add(a);
+		}
+
+		if (size2 >= 0 && type2 !=null) {
+			for (int i = 0; i < size2; i++) {
+				Group g = new AminoAcidImpl();
+				g.setPDBName(type2);
+				chain.addGroup(g);
 				Atom a = new AtomImpl();
 				a.setName(StructureTools.CA_ATOM_NAME);
 				g.addAtom(a);
