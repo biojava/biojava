@@ -69,9 +69,9 @@ public class TestSubunitCluster {
 
 		// Merged have to be true, and the merged SubunitCluster is sc1
 		assertTrue(merged);
-		assertEquals(sc1.size(), 2);
-		assertEquals(sc2.size(), 1);
-		assertEquals(sc1.length(), 10);
+		assertEquals(2, sc1.size());
+		assertEquals(1, sc2.size());
+		assertEquals(10, sc1.length());
 
 		// Create an Atom Array of poly-glycine
 		Atom[] reprAtoms2 = mockAtomArray(10, "GLY", -1, null);
@@ -83,9 +83,9 @@ public class TestSubunitCluster {
 
 		// Merged have to be false, and Clusters result inmodified
 		assertFalse(merged);
-		assertEquals(sc1.size(), 2);
-		assertEquals(sc2.size(), 1);
-		assertEquals(sc1.length(), 10);
+		assertEquals(2, sc1.size());
+		assertEquals(1, sc2.size());
+		assertEquals(10, sc1.length());
 
 	}
 
@@ -153,9 +153,9 @@ public class TestSubunitCluster {
 
 		// Merged have to be true, and the merged SubunitCluster is sc1
 		assertTrue(merged);
-		assertEquals(sc1.size(), 2);
-		assertEquals(sc2.size(), 1);
-		assertEquals(sc1.length(), 100);
+		assertEquals(2, sc1.size());
+		assertEquals(1, sc2.size());
+		assertEquals(100, sc1.length());
 
 		// Create an Atom Array of poly-glycine
 		Atom[] reprAtoms2 = mockAtomArray(100, "GLY", -1, null);
@@ -167,9 +167,9 @@ public class TestSubunitCluster {
 
 		// Merged have to be false, and Clusters result inmodified
 		assertFalse(merged);
-		assertEquals(sc1.size(), 2);
-		assertEquals(sc2.size(), 1);
-		assertEquals(sc1.length(), 100);
+		assertEquals(2, sc1.size());
+		assertEquals(1, sc2.size());
+		assertEquals(100, sc1.length());
 
 		// Create an Atom Array of 9 glycine and 91 alanine
 		Atom[] reprAtoms3 = mockAtomArray(9, "GLY", 91, "ALA");
@@ -181,9 +181,9 @@ public class TestSubunitCluster {
 
 		// Merged have to be true, and the merged SubunitCluster is sc1
 		assertTrue(merged);
-		assertEquals(sc1.size(), 3);
-		assertEquals(sc2.size(), 1);
-		assertEquals(sc1.length(), 91);
+		assertEquals(3, sc1.size());
+		assertEquals(1, sc2.size());
+		assertEquals(91, sc1.length());
 
 	}
 
@@ -224,10 +224,10 @@ public class TestSubunitCluster {
 		// Merged have to be true, and the merged SubunitCluster is sc1
 		assertTrue(merged13);
 		assertTrue(merged24);
-		assertEquals(sc1.size(), 2);
-		assertEquals(sc2.size(), 2);
-		assertEquals(sc1.length(), 141);
-		assertEquals(sc2.length(), 146);
+		assertEquals(2, sc1.size());
+		assertEquals(2, sc2.size());
+		assertEquals(141, sc1.length());
+		assertEquals(146, sc2.length());
 		assertEquals(sc1.getAlignedAtomsSubunit(0).length,
 				sc1.getAlignedAtomsSubunit(1).length);
 		assertEquals(sc2.getAlignedAtomsSubunit(0).length,
@@ -237,8 +237,8 @@ public class TestSubunitCluster {
 		boolean merged = sc1.mergeStructure(sc2, clustererParameters);
 
 		assertTrue(merged);
-		assertEquals(sc1.size(), 4);
-		assertEquals(sc1.length(), 140, 2);
+		assertEquals(4, sc1.size());
+		assertEquals(140, sc1.length(), 2);
 		assertEquals(sc1.getAlignedAtomsSubunit(0).length,
 				sc1.getAlignedAtomsSubunit(2).length);
 
@@ -270,7 +270,7 @@ public class TestSubunitCluster {
 
 		// Divided has to be true, and Subunit length shorter than half
 		assertTrue(divided);
-		assertEquals(sc1.size(), 2);
+		assertEquals(2, sc1.size());
 		assertTrue(sc1.length() < 178);
 		assertEquals(sc1.getAlignedAtomsSubunit(0).length,
 				sc1.getAlignedAtomsSubunit(1).length);
