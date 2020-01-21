@@ -32,6 +32,8 @@ import org.biojava.nbio.core.sequence.ProteinSequence;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Chain;
+import org.biojava.nbio.structure.EntityInfo;
+import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.StructureAlignment;
@@ -252,12 +254,49 @@ public class SubunitCluster {
 		if (!isIdenticalByEntityIdTo(other))
 			return false;
 
+		Subunit thisSub = this.subunits.get(this.representative);
+		Subunit otherSub = other.subunits.get(other.representative);
 		logger.info("SubunitClusters {}-{} belong to same entity. Assuming they are identical",
-				this.subunits.get(this.representative).getName(),
-				other.subunits.get(other.representative).getName());
+				thisSub.getName(),
+				otherSub.getName());
 
-		this.subunits.addAll(other.subunits);
-		this.subunitEQR.addAll(other.subunitEQR);
+		List<Integer> thisAligned = new ArrayList<>();
+		List<Integer> otherAligned = new ArrayList<>();
+
+		// we've merged by entity id, we can assume structure, chain and entity are available
+		Structure thisStruct = thisSub.getStructure();
+		Structure otherStruct = otherSub.getStructure();
+		String thisName = thisSub.getName();
+		String otherName = otherSub.getName();
+		Chain thisChain = thisStruct.getChain(thisName);
+		Chain otherChain = otherStruct.getChain(otherName);
+		EntityInfo entityInfo = thisChain.getEntityInfo();
+
+		// Extract the aligned residues of both Subunits
+		for (int thisIndex=0; thisIndex < thisSub.size(); thisIndex++) {
+
+			Group g = thisSub.getRepresentativeAtoms()[thisIndex].getGroup();
+
+			int seqresIndex = entityInfo.getAlignedResIndex(g, thisChain);
+
+			Group otherG = otherChain.getSeqResGroups().get(seqresIndex - 1);
+
+			if (!otherChain.getAtomGroups().contains(otherG)) {
+				// skip residues that are unobserved in other sequence ("gaps" in the entity alignment)
+				continue;
+			}
+
+			int otherIndex = otherChain.getAtomGroups().indexOf(otherG);
+
+			// Only consider residues that are part of the SubunitCluster
+			if (this.subunitEQR.get(this.representative).contains(thisIndex)
+					&& other.subunitEQR.get(other.representative).contains(otherIndex)) {
+				thisAligned.add(thisIndex);
+				otherAligned.add(otherIndex);
+			}
+		}
+
+		updateEquivResidues(other, thisAligned, otherAligned);
 
 		return true;
 	}
