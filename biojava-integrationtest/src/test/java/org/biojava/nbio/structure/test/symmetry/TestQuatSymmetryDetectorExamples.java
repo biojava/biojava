@@ -372,17 +372,9 @@ public class TestQuatSymmetryDetectorExamples {
 		Structure pdb = StructureIO.getStructure("BIO:1SMT:1");
 
 		SubunitClustererParameters cp = new SubunitClustererParameters();
-//		cp.setOptimizeAlignment(false);
-//		cp.setSequenceIdentityThreshold(0.75);
-//		cp.setMinimumSequenceLength(3);
-//		cp.setAbsoluteMinimumSequenceLength(3);
-//		cp.setUseSequenceCoverage(false);
-//		cp.setUseStructureCoverage(false);
-//		cp.setUseRMSD(false);
 		cp.setUseEntityIdForSeqIdentityDetermination(true);
 		cp.setClustererMethod(SubunitClustererMethod.SEQUENCE);
 		QuatSymmetryParameters symmParams = new QuatSymmetryParameters();
-//		symmParams.setOnTheFly(true);
 		QuatSymmetryResults symmetry = QuatSymmetryDetector.calcGlobalSymmetry(
 				pdb, symmParams, cp);
 
