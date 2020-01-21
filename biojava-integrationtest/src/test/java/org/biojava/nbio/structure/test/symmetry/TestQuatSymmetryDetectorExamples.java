@@ -366,4 +366,28 @@ public class TestQuatSymmetryDetectorExamples {
 		assertEquals(SubunitClustererMethod.SEQUENCE, symmetry.getSubunitClusters().get(0).getClustererMethod());
 
 	}
+
+	@Test
+	public void testSymDetectionWithSubunitClusterByEntityId() throws IOException, StructureException {
+		Structure pdb = StructureIO.getStructure("BIO:1SMT:1");
+
+		SubunitClustererParameters cp = new SubunitClustererParameters();
+//		cp.setOptimizeAlignment(false);
+//		cp.setSequenceIdentityThreshold(0.75);
+//		cp.setMinimumSequenceLength(3);
+//		cp.setAbsoluteMinimumSequenceLength(3);
+//		cp.setUseSequenceCoverage(false);
+//		cp.setUseStructureCoverage(false);
+//		cp.setUseRMSD(false);
+		cp.setUseEntityIdForSeqIdentityDetermination(true);
+		cp.setClustererMethod(SubunitClustererMethod.SEQUENCE);
+		QuatSymmetryParameters symmParams = new QuatSymmetryParameters();
+//		symmParams.setOnTheFly(true);
+		QuatSymmetryResults symmetry = QuatSymmetryDetector.calcGlobalSymmetry(
+				pdb, symmParams, cp);
+
+		// C2 symmetry, A2 stoichiometry
+		assertEquals("C2", symmetry.getSymmetry());
+		assertEquals("A2", symmetry.getStoichiometry().toString());
+	}
 }

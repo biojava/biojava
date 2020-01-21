@@ -34,6 +34,7 @@ import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.ChainImpl;
 import org.biojava.nbio.structure.EntityInfo;
 import org.biojava.nbio.structure.Group;
+import org.biojava.nbio.structure.ResidueNumber;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
@@ -93,17 +94,15 @@ public class TestSubunitCluster {
 	public void testMergeIdenticalByEntityId() {
 
 		// Create 2 Atom Arrays, with same entity id
-		Atom[] reprAtoms1 = mockAtomArray("A", 1, 10, "ALA", -1, null);
-		Structure structure1 = reprAtoms1[0].getGroup().getChain().getStructure();
-
-		Atom[] reprAtoms2 = mockAtomArray("B", 1, 10, "PRO", -1, null);
-		Structure structure2 = reprAtoms2[0].getGroup().getChain().getStructure();
+		Structure structure = mockStructure();
+		Atom[] reprAtoms1 = getAtomArray(structure.getChain("A"));
+		Atom[] reprAtoms2 = getAtomArray(structure.getChain("B"));
 
 		// Create two SubunitCluster with same entity id
 		SubunitCluster sc1 = new SubunitCluster(new Subunit(reprAtoms1,
-				"A", null, structure1));
+				"A", null, structure));
 		SubunitCluster sc2 = new SubunitCluster(new Subunit(reprAtoms2,
-				"B", null, structure2));
+				"B", null, structure));
 
 		boolean merged = sc1.mergeIdenticalByEntityId(sc2);
 
@@ -111,14 +110,13 @@ public class TestSubunitCluster {
 		assertTrue(merged);
 		assertEquals(2, sc1.size());
 		assertEquals(1, sc2.size());
-		assertEquals(10, sc1.length());
+		assertEquals(9, sc1.length());
 
 		// Create an Atom Array of poly-glycine with a different entity id
-		Atom[] reprAtoms3 = mockAtomArray("A", 2, 10, "GLY", -1, null);
-		Structure structure3 = reprAtoms2[0].getGroup().getChain().getStructure();
+		Atom[] reprAtoms3 = getAtomArray(structure.getChain("C"));
 
 		SubunitCluster sc3 = new SubunitCluster(new Subunit(reprAtoms3,
-				"A", null, structure3));
+				"C", null, structure));
 
 		merged = sc1.mergeIdenticalByEntityId(sc3);
 
@@ -126,7 +124,7 @@ public class TestSubunitCluster {
 		assertFalse(merged);
 		assertEquals(2, sc1.size());
 		assertEquals(1, sc2.size());
-		assertEquals(10, sc1.length());
+		assertEquals(9, sc1.length());
 
 	}
 
@@ -311,47 +309,71 @@ public class TestSubunitCluster {
 	}
 
 	/**
-	 * Create a mock atom array, with size1 residues of type1, followed by size2 residues of type2.
-	 *
-	 * @param chainId a chain with this chain id will be set as parent of groups
-	 * @param entityId an entity with this id will be set as parent of chain
-	 * @param size1 the number of residues of type1 to add
-	 * @param type1 the 3 letter code of residue
-	 * @param size2 the number of residues of type2 to add, if -1 none are added
-	 * @param type2 the 3 letter code of residue, if null none are added
-	 * @return the mock atom array
+	 * Create a mock structure with 2 entities 1 (chains A, B) and 2 (chain C).
+	 * @return a structure
 	 */
-	private Atom[] mockAtomArray(String chainId, int entityId, int size1, String type1, int size2, String type2) {
-		Chain chain = new ChainImpl();
+	private Structure mockStructure() {
 		Structure structure = new StructureImpl();
-		chain.setId(chainId);
-		structure.addChain(chain);
-		EntityInfo entityInfo = new EntityInfo();
-		entityInfo.setMolId(entityId);
-		chain.setEntityInfo(entityInfo);
+		EntityInfo entity1 = new EntityInfo();
+		entity1.setMolId(1);
+		EntityInfo entity2 = new EntityInfo();
+		entity2.setMolId(2);
+		structure.addEntityInfo(entity1);
+		structure.addEntityInfo(entity2);
 
-		List<Atom> atoms = new ArrayList<>(size1 + size2);
-		for (int i = 0; i < size1; i++) {
+		Chain chainA = new ChainImpl();
+		chainA.setId("A");
+		Chain chainB = new ChainImpl();
+		chainB.setId("B");
+		entity1.addChain(chainA);
+		entity1.addChain(chainB);
+		Chain chainC = new ChainImpl();
+		chainC.setId("C");
+		entity2.addChain(chainC);
+
+		structure.addChain(chainA);
+		structure.addChain(chainB);
+		structure.addChain(chainC);
+
+		// entity 1: chain A 10 observed residues, chain B 9 observed residues (first unobserved)
+		List<Group> aGroups = getGroupList(10, "ALA", chainA);
+		chainA.setAtomGroups(new ArrayList<>(aGroups));
+		chainA.setSeqResGroups(aGroups);
+		chainA.setEntityInfo(entity1);
+
+		List<Group> bGroups = getGroupList(10, "ALA", chainB);
+		chainB.setAtomGroups(new ArrayList<>(bGroups.subList(1,10)));
+		chainB.setSeqResGroups(bGroups);
+		chainB.setEntityInfo(entity1);
+
+		List<Group> cGroups = getGroupList(20, "GLY", chainC);
+		chainC.setAtomGroups(new ArrayList<>(cGroups));
+		chainC.setSeqResGroups(cGroups);
+		chainC.setEntityInfo(entity2);
+
+		return structure;
+	}
+
+	private List<Group> getGroupList(int size, String type, Chain chain) {
+		List<Group> list = new ArrayList<>();
+		for (int i=0;i<size;i++) {
 			Group g = new AminoAcidImpl();
-			g.setPDBName(type1);
+			g.setPDBName(type);
+			g.setResidueNumber(new ResidueNumber(chain.getId(), i+1, null));
 			chain.addGroup(g);
 			Atom a = new AtomImpl();
 			a.setName(StructureTools.CA_ATOM_NAME);
 			g.addAtom(a);
-			atoms.add(a);
+			list.add(g);
 		}
+		return list;
+	}
 
-		if (size2 >= 0 && type2 !=null) {
-			for (int i = 0; i < size2; i++) {
-				Group g = new AminoAcidImpl();
-				g.setPDBName(type2);
-				chain.addGroup(g);
-				Atom a = new AtomImpl();
-				a.setName(StructureTools.CA_ATOM_NAME);
-				g.addAtom(a);
-				atoms.add(a);
-			}
+	private Atom[] getAtomArray(Chain chain) {
+		Atom[] atoms = new Atom[chain.getAtomGroups().size()];
+		for (int i = 0; i<chain.getAtomGroups().size(); i++) {
+			atoms[i] = chain.getAtomGroups().get(i).getAtom(StructureTools.CA_ATOM_NAME);
 		}
-		return atoms.toArray(new Atom[0]);
+		return atoms;
 	}
 }
