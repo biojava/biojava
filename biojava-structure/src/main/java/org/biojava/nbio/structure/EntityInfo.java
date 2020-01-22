@@ -306,12 +306,12 @@ public class EntityInfo implements Serializable {
 	 * used and when all chains within the entity are numbered in the same way), but
 	 * in general they will be neither unique (because of insertion codes) nor aligned.
 	 * </p>
-	 * @param g
-	 * @param c
+	 * @param g the group
+	 * @param c the chain
 	 * @return the aligned residue index (1 to n), if no SEQRES groups are available at all then {@link ResidueNumber#getSeqNum()}
 	 * is returned as a fall-back, if the group is not found in the SEQRES groups then -1 is returned
 	 * for the given group and chain
-	 * @throws IllegalArgumentException if the given Chain is not a member of this EnityInfo
+	 * @throws IllegalArgumentException if the given Chain is not a member of this EntityInfo
 	 * @see Chain#getSeqResGroup(int)
 	 */
 	public int getAlignedResIndex(Group g, Chain c) {

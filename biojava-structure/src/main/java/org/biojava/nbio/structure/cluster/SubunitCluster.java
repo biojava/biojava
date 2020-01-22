@@ -192,22 +192,35 @@ public class SubunitCluster {
 	 * @return true if the SubunitClusters are identical, false otherwise
 	 */
 	public boolean isIdenticalByEntityIdTo(SubunitCluster other) {
-		Structure thisStruct = this.subunits.get(this.representative).getStructure();
-		Structure otherStruct = other.subunits.get(other.representative).getStructure();
-		String thisName = this.subunits.get(this.representative).getName();
-		String otherName = other.subunits.get(this.representative).getName();
+		Subunit thisSub = this.subunits.get(this.representative);
+		Subunit otherSub = other.subunits.get(other.representative);
+		String thisName = thisSub.getName();
+		String otherName = otherSub.getName();
+
+		Structure thisStruct = thisSub.getStructure();
+		Structure otherStruct = otherSub.getStructure();
+		if (thisStruct == null || otherStruct == null) {
+			logger.info("SubunitClusters {}-{} have no referenced structures. Ignoring identity check by entity id",
+					thisName,
+					otherName);
+			return false;
+		}
+		if (thisStruct != otherStruct) {
+			// different object references: will not cluster even if entity id is same
+			return false;
+		}
 		Chain thisChain = thisStruct.getChain(thisName);
 		Chain otherChain = otherStruct.getChain(otherName);
 		if (thisChain == null || otherChain == null) {
 			logger.info("Can't determine entity ids of SubunitClusters {}-{}. Ignoring identity check by entity id",
-					this.subunits.get(this.representative).getName(),
-					other.subunits.get(other.representative).getName());
+					thisName,
+					otherName);
 			return false;
 		}
 		if (thisChain.getEntityInfo() == null || otherChain.getEntityInfo() == null) {
 			logger.info("Can't determine entity ids of SubunitClusters {}-{}. Ignoring identity check by entity id",
-					this.subunits.get(this.representative).getName(),
-					other.subunits.get(other.representative).getName());
+					thisName,
+					otherName);
 			return false;
 		}
 		int thisEntityId = thisChain.getEntityInfo().getMolId();
@@ -256,18 +269,19 @@ public class SubunitCluster {
 
 		Subunit thisSub = this.subunits.get(this.representative);
 		Subunit otherSub = other.subunits.get(other.representative);
+		String thisName = thisSub.getName();
+		String otherName = otherSub.getName();
+
 		logger.info("SubunitClusters {}-{} belong to same entity. Assuming they are identical",
-				thisSub.getName(),
-				otherSub.getName());
+				thisName,
+				otherName);
 
 		List<Integer> thisAligned = new ArrayList<>();
 		List<Integer> otherAligned = new ArrayList<>();
 
-		// we've merged by entity id, we can assume structure, chain and entity are available
+		// we've merged by entity id, we can assume structure, chain and entity are available (checked in isIdenticalByEntityIdTo())
 		Structure thisStruct = thisSub.getStructure();
 		Structure otherStruct = otherSub.getStructure();
-		String thisName = thisSub.getName();
-		String otherName = otherSub.getName();
 		Chain thisChain = thisStruct.getChain(thisName);
 		Chain otherChain = otherStruct.getChain(otherName);
 		EntityInfo entityInfo = thisChain.getEntityInfo();
