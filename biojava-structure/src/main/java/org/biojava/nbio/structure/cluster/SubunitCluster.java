@@ -298,14 +298,14 @@ public class SubunitCluster {
 				continue;
 			}
 
+			// note the seqresindex is 1-based
 			Group otherG = otherChain.getSeqResGroups().get(seqresIndex - 1);
 
-			if (!otherChain.getAtomGroups().contains(otherG)) {
-				// skip residues that are unobserved in other sequence ("gaps" in the entity alignment)
+			int otherIndex = otherChain.getAtomGroups().indexOf(otherG);
+			if (otherIndex == -1) {
+				// skip residues that are unobserved in other sequence ("gaps" in the entity SEQRES alignment)
 				continue;
 			}
-
-			int otherIndex = otherChain.getAtomGroups().indexOf(otherG);
 
 			// Only consider residues that are part of the SubunitCluster
 			if (this.subunitEQR.get(this.representative).contains(thisIndex)
@@ -316,7 +316,7 @@ public class SubunitCluster {
 		}
 
 		if (thisAligned.size() == 0 && otherAligned.size() == 0) {
-			logger.warn("No equivalent aligned atoms found between SubunitClusters {}-{} via entity seqres alignment. Is FileParsingParameters.setAlignSeqRes() set?", thisName, otherName);
+			logger.warn("No equivalent aligned atoms found between SubunitClusters {}-{} via entity SEQRES alignment. Is FileParsingParameters.setAlignSeqRes() set?", thisName, otherName);
 		}
 
 		updateEquivResidues(other, thisAligned, otherAligned);
