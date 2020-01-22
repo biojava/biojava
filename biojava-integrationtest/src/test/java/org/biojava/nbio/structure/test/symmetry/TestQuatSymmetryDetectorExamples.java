@@ -28,15 +28,19 @@ import java.util.*;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
+import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.cluster.SubunitClusterer;
 import org.biojava.nbio.structure.cluster.SubunitClustererMethod;
 import org.biojava.nbio.structure.cluster.SubunitClustererParameters;
 import org.biojava.nbio.structure.io.FileParsingParameters;
+import org.biojava.nbio.structure.quaternary.BiologicalAssemblyBuilder;
+import org.biojava.nbio.structure.quaternary.BiologicalAssemblyTransformation;
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetryDetector;
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetryParameters;
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetryResults;
 import org.biojava.nbio.structure.symmetry.core.Stoichiometry;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -369,7 +373,7 @@ public class TestQuatSymmetryDetectorExamples {
 	}
 
 	@Test
-	public void testSymDetectionWithSubunitClusterByEntityId() throws IOException, StructureException {
+	public void testSymDetectionWithClusteringByEntityId() throws IOException, StructureException {
 		AtomCache cache = new AtomCache();
 		cache.setUseMmtf(false);
 		cache.setUseMmCif(true);
@@ -389,5 +393,40 @@ public class TestQuatSymmetryDetectorExamples {
 		// C2 symmetry, A2 stoichiometry
 		assertEquals("C2", symmetry.getSymmetry());
 		assertEquals("A2", symmetry.getStoichiometry().toString());
+	}
+
+	/**
+	 * A performance test that demonstrates how the SubunitClustererParameters.setUseEntityIdForSeqIdentityDetermination()
+	 * has a dramatic effect in runtime versus doing alignments.
+	 * This takes minutes with the parameter on, but hours without the parameter.
+	 */
+	@Ignore("This is a performance test to be run manually")
+	@Test
+	public void testSymDetectionPerformanceLargeCapsid() throws IOException, StructureException {
+		AtomCache cache = new AtomCache();
+		cache.setUseMmtf(false);
+		cache.setUseMmCif(true);
+		FileParsingParameters params = new FileParsingParameters();
+		params.setAlignSeqRes(true);
+		params.setParseBioAssembly(true);
+		cache.setFileParsingParams(params);
+		StructureIO.setAtomCache(cache);
+
+		// making sure we remove all atoms but representative before we expand, otherwise memory requirements are huge
+		Structure au = StructureIO.getStructure("6NHJ");
+		StructureTools.reduceToRepresentativeAtoms(au);
+		BiologicalAssemblyBuilder builder = new BiologicalAssemblyBuilder();
+		List<BiologicalAssemblyTransformation> transforms = au.getPDBHeader().getBioAssemblies().get(1).getTransforms();
+		Structure pdb =builder.rebuildQuaternaryStructure(au, transforms, true, false);
+
+		SubunitClustererParameters cp = new SubunitClustererParameters();
+		cp.setUseEntityIdForSeqIdentityDetermination(true); // this is the parameter that makes this fast
+		cp.setClustererMethod(SubunitClustererMethod.SEQUENCE);
+		QuatSymmetryParameters symmParams = new QuatSymmetryParameters();
+		QuatSymmetryResults symmetry = QuatSymmetryDetector.calcGlobalSymmetry(
+				pdb, symmParams, cp);
+
+		assertEquals("I", symmetry.getSymmetry());
+		assertEquals("A960B960C600D480E300", symmetry.getStoichiometry().toString());
 	}
 }
