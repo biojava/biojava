@@ -39,8 +39,8 @@ import java.util.List;
  * @author Peter
  */
 public class C2RotationSolver implements QuatSymmetrySolver {
-	private QuatSymmetrySubunits subunits = null;
-	private QuatSymmetryParameters parameters = null;
+	private QuatSymmetrySubunits subunits;
+	private QuatSymmetryParameters parameters;
 	private Vector3d centroid = new Vector3d();
 	private Matrix4d centroidInverse = new Matrix4d();
 
@@ -132,7 +132,7 @@ public class C2RotationSolver implements QuatSymmetrySolver {
 	}
 
 	private void addEOperation() {
-		List<Integer> permutation = Arrays.asList(new Integer[]{0,1});
+		List<Integer> permutation = Arrays.asList(0,1);
 		Matrix4d transformation = new Matrix4d();
 		transformation.setIdentity();
 		combineWithTranslation(transformation);
@@ -145,7 +145,6 @@ public class C2RotationSolver implements QuatSymmetrySolver {
 
 	/**
 	 * Adds translational component to rotation matrix
-	 * @param rotTrans
 	 * @param rotation
 	 * @return
 	 */

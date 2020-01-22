@@ -293,6 +293,11 @@ public class SubunitCluster {
 
 			int seqresIndex = entityInfo.getAlignedResIndex(g, thisChain);
 
+			if (seqresIndex == -1) {
+				// this might mean that FileParsingParameters.setAlignSeqRes() wasn't set to true during parsing
+				continue;
+			}
+
 			Group otherG = otherChain.getSeqResGroups().get(seqresIndex - 1);
 
 			if (!otherChain.getAtomGroups().contains(otherG)) {
@@ -308,6 +313,10 @@ public class SubunitCluster {
 				thisAligned.add(thisIndex);
 				otherAligned.add(otherIndex);
 			}
+		}
+
+		if (thisAligned.size() == 0 && otherAligned.size() == 0) {
+			logger.warn("No equivalent aligned atoms found between SubunitClusters {}-{} via entity seqres alignment. Is FileParsingParameters.setAlignSeqRes() set?", thisName, otherName);
 		}
 
 		updateEquivResidues(other, thisAligned, otherAligned);
@@ -743,7 +752,7 @@ public class SubunitCluster {
 	 */
 	public List<Atom[]> getAlignedAtomsSubunits() {
 
-		List<Atom[]> alignedAtoms = Collections.emptyList();
+		List<Atom[]> alignedAtoms = new ArrayList<>();
 
 		// Loop through all subunits and add the aligned positions
 		for (int s = 0; s < subunits.size(); s++)

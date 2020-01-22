@@ -32,6 +32,7 @@ import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.cluster.SubunitClusterer;
 import org.biojava.nbio.structure.cluster.SubunitClustererMethod;
 import org.biojava.nbio.structure.cluster.SubunitClustererParameters;
+import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetryDetector;
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetryParameters;
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetryResults;
@@ -369,6 +370,13 @@ public class TestQuatSymmetryDetectorExamples {
 
 	@Test
 	public void testSymDetectionWithSubunitClusterByEntityId() throws IOException, StructureException {
+		AtomCache cache = new AtomCache();
+		cache.setUseMmtf(false);
+		cache.setUseMmCif(true);
+		FileParsingParameters params = new FileParsingParameters();
+		params.setAlignSeqRes(true);
+		cache.setFileParsingParams(params);
+		StructureIO.setAtomCache(cache);
 		Structure pdb = StructureIO.getStructure("BIO:1SMT:1");
 
 		SubunitClustererParameters cp = new SubunitClustererParameters();

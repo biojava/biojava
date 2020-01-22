@@ -21,6 +21,7 @@
 package org.biojava.nbio.structure.symmetry.core;
 
 import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.cluster.SubunitCluster;
 import org.biojava.nbio.structure.geometry.CalcPoint;
@@ -34,7 +35,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * A bean to represent information about the set of {@link Subunit} being
+ * A bean to represent information about the set of {@link org.biojava.nbio.structure.cluster.Subunit}s being
  * considered for symmetry detection. This class is a helper for the
  * {@link QuatSymmetryDetector} algorithm, since it calculates and caches the
  * {@link MomentsOfInertia} and the centroids of each Subunit.
@@ -45,13 +46,13 @@ import java.util.stream.Collectors;
  */
 public class QuatSymmetrySubunits {
 
-	private List<Point3d[]> caCoords = new ArrayList<Point3d[]>();
-	private List<Point3d> originalCenters = new ArrayList<Point3d>();
-	private List<Point3d> centers = new ArrayList<Point3d>();
-	private List<Vector3d> unitVectors = new ArrayList<Vector3d>();
+	private List<Point3d[]> caCoords = new ArrayList<>();
+	private List<Point3d> originalCenters = new ArrayList<>();
+	private List<Point3d> centers = new ArrayList<>();
+	private List<Vector3d> unitVectors = new ArrayList<>();
 
-	private List<Integer> folds = new ArrayList<Integer>();
-	private List<Integer> clusterIds = new ArrayList<Integer>();
+	private List<Integer> folds = new ArrayList<>();
+	private List<Integer> clusterIds = new ArrayList<>();
 	private List<SubunitCluster> clusters;
 
 	private Point3d centroid;
@@ -75,10 +76,7 @@ public class QuatSymmetrySubunits {
 				clusterIds.add(c);
 				Atom[] atoms = clusters.get(c).getAlignedAtomsSubunit(s);
 
-				// Convert atoms to points
-				Point3d[] points = new Point3d[atoms.length];
-				for (int i = 0; i < atoms.length; i++)
-					points[i] = atoms[i].getCoordsAsPoint3d();
+				Point3d[] points = Calc.atomsToPoints(atoms);
 
 				caCoords.add(points);
 			}
