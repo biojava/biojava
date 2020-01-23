@@ -398,7 +398,6 @@ public class TestQuatSymmetryDetectorExamples {
 	/**
 	 * A performance test that demonstrates how the SubunitClustererParameters.setUseEntityIdForSeqIdentityDetermination()
 	 * has a dramatic effect in runtime versus doing alignments.
-	 * This takes minutes with the parameter on, but hours without the parameter.
 	 */
 	@Ignore("This is a performance test to be run manually")
 	@Test
@@ -413,14 +412,20 @@ public class TestQuatSymmetryDetectorExamples {
 		StructureIO.setAtomCache(cache);
 
 		// making sure we remove all atoms but representative before we expand, otherwise memory requirements are huge
+		// 6Q1F is another good example
 		Structure au = StructureIO.getStructure("6NHJ");
 		StructureTools.reduceToRepresentativeAtoms(au);
 		BiologicalAssemblyBuilder builder = new BiologicalAssemblyBuilder();
 		List<BiologicalAssemblyTransformation> transforms = au.getPDBHeader().getBioAssemblies().get(1).getTransforms();
-		Structure pdb =builder.rebuildQuaternaryStructure(au, transforms, true, false);
+		Structure pdb = builder.rebuildQuaternaryStructure(au, transforms, true, false);
 
 		SubunitClustererParameters cp = new SubunitClustererParameters();
-		cp.setUseEntityIdForSeqIdentityDetermination(true); // this is the parameter that makes this fast
+
+		// This is the parameter that makes this fast, set it to false to see the difference.
+		// As of git commit ed322e387cd46344a7864a, the difference in runtime is not that huge:
+		// 2 minutes with true, 10 minutes with false. I observed a much larger difference before, but can't reproduce anymore - JD 2020-01-23
+		cp.setUseEntityIdForSeqIdentityDetermination(true);
+
 		cp.setClustererMethod(SubunitClustererMethod.SEQUENCE);
 		QuatSymmetryParameters symmParams = new QuatSymmetryParameters();
 		QuatSymmetryResults symmetry = QuatSymmetryDetector.calcGlobalSymmetry(
