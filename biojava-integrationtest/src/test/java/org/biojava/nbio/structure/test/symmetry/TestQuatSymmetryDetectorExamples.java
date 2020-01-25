@@ -28,14 +28,19 @@ import java.util.*;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
+import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.cluster.SubunitClusterer;
 import org.biojava.nbio.structure.cluster.SubunitClustererMethod;
 import org.biojava.nbio.structure.cluster.SubunitClustererParameters;
+import org.biojava.nbio.structure.io.FileParsingParameters;
+import org.biojava.nbio.structure.quaternary.BiologicalAssemblyBuilder;
+import org.biojava.nbio.structure.quaternary.BiologicalAssemblyTransformation;
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetryDetector;
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetryParameters;
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetryResults;
 import org.biojava.nbio.structure.symmetry.core.Stoichiometry;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -365,5 +370,68 @@ public class TestQuatSymmetryDetectorExamples {
 		assertFalse(symmetry.isPseudoStoichiometric());
 		assertEquals(SubunitClustererMethod.SEQUENCE, symmetry.getSubunitClusters().get(0).getClustererMethod());
 
+	}
+
+	@Test
+	public void testSymDetectionWithClusteringByEntityId() throws IOException, StructureException {
+		AtomCache cache = new AtomCache();
+		cache.setUseMmtf(false);
+		cache.setUseMmCif(true);
+		FileParsingParameters params = new FileParsingParameters();
+		params.setAlignSeqRes(true);
+		cache.setFileParsingParams(params);
+		StructureIO.setAtomCache(cache);
+		Structure pdb = StructureIO.getStructure("BIO:1SMT:1");
+
+		SubunitClustererParameters cp = new SubunitClustererParameters();
+		cp.setUseEntityIdForSeqIdentityDetermination(true);
+		cp.setClustererMethod(SubunitClustererMethod.SEQUENCE);
+		QuatSymmetryParameters symmParams = new QuatSymmetryParameters();
+		QuatSymmetryResults symmetry = QuatSymmetryDetector.calcGlobalSymmetry(
+				pdb, symmParams, cp);
+
+		// C2 symmetry, A2 stoichiometry
+		assertEquals("C2", symmetry.getSymmetry());
+		assertEquals("A2", symmetry.getStoichiometry().toString());
+	}
+
+	/**
+	 * A performance test that demonstrates how the SubunitClustererParameters.setUseEntityIdForSeqIdentityDetermination()
+	 * has a dramatic effect in runtime versus doing alignments.
+	 */
+	@Ignore("This is a performance test to be run manually")
+	@Test
+	public void testSymDetectionPerformanceLargeCapsid() throws IOException, StructureException {
+		AtomCache cache = new AtomCache();
+		cache.setUseMmtf(false);
+		cache.setUseMmCif(true);
+		FileParsingParameters params = new FileParsingParameters();
+		params.setAlignSeqRes(true);
+		params.setParseBioAssembly(true);
+		cache.setFileParsingParams(params);
+		StructureIO.setAtomCache(cache);
+
+		// making sure we remove all atoms but representative before we expand, otherwise memory requirements are huge
+		// 6Q1F is another good example
+		Structure au = StructureIO.getStructure("6NHJ");
+		StructureTools.reduceToRepresentativeAtoms(au);
+		BiologicalAssemblyBuilder builder = new BiologicalAssemblyBuilder();
+		List<BiologicalAssemblyTransformation> transforms = au.getPDBHeader().getBioAssemblies().get(1).getTransforms();
+		Structure pdb = builder.rebuildQuaternaryStructure(au, transforms, true, false);
+
+		SubunitClustererParameters cp = new SubunitClustererParameters();
+
+		// This is the parameter that makes this fast, set it to false to see the difference.
+		// As of git commit ed322e387cd46344a7864a, the difference in runtime is not that huge:
+		// 2 minutes with true, 10 minutes with false. I observed a much larger difference before, but can't reproduce anymore - JD 2020-01-23
+		cp.setUseEntityIdForSeqIdentityDetermination(true);
+
+		cp.setClustererMethod(SubunitClustererMethod.SEQUENCE);
+		QuatSymmetryParameters symmParams = new QuatSymmetryParameters();
+		QuatSymmetryResults symmetry = QuatSymmetryDetector.calcGlobalSymmetry(
+				pdb, symmParams, cp);
+
+		assertEquals("I", symmetry.getSymmetry());
+		assertEquals("A960B960C600D480E300", symmetry.getStoichiometry().toString());
 	}
 }

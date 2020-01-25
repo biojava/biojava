@@ -511,7 +511,8 @@ public class SubunitClustererParameters implements Serializable {
 	/**
 	 * Whether to use the entity id of subunits to infer that sequences are identical.
 	 * Only applies if the {@link SubunitClustererMethod} is a sequence based one.
-	 * @return
+	 * @return the flag
+	 * @since 5.4.0
 	 */
 	public boolean isUseEntityIdForSeqIdentityDetermination() {
 		return useEntityIdForSeqIdentityDetermination;
@@ -520,7 +521,10 @@ public class SubunitClustererParameters implements Serializable {
 	/**
 	 * Whether to use the entity id of subunits to infer that sequences are identical.
 	 * Only applies if the {@link SubunitClustererMethod} is a sequence based one.
+	 * Note this requires {@link org.biojava.nbio.structure.io.FileParsingParameters#setAlignSeqRes(boolean)} to be
+	 * set to true.
 	 * @param useEntityIdForSeqIdentityDetermination the flag to be set
+	 * @since 5.4.0
 	 */
 	public void setUseEntityIdForSeqIdentityDetermination(boolean useEntityIdForSeqIdentityDetermination) {
 		this.useEntityIdForSeqIdentityDetermination = useEntityIdForSeqIdentityDetermination;
