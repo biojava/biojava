@@ -22,6 +22,7 @@ public class TestInterfaceFinder {
     @Test
     public void testGetAllInterfaces() throws StructureException, IOException {
         Structure s = StructureIO.getStructure("3hbx");
+
         InterfaceFinder finder = new InterfaceFinder(s);
 
         StructureInterfaceList list = finder.getAllInterfaces();
