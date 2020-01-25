@@ -11,6 +11,11 @@ import org.biojava.nbio.structure.xtal.SpaceGroup;
 import javax.vecmath.Point3d;
 import java.util.List;
 
+/**
+ * A class containing methods to find interfaces in a given structure.
+ * @author Jose Duarte
+ * @since 5.4.0
+ */
 public class InterfaceFinder {
 
     public static final double DEFAULT_CONTACT_CUTOFF = 6;
@@ -28,10 +33,20 @@ public class InterfaceFinder {
         this.cutoff = DEFAULT_CONTACT_CUTOFF;
     }
 
+    /**
+     * Set the contact distance cutoff.
+     * @param cutoff the distance value in Angstroms
+     */
     public void setCutoff(double cutoff) {
         this.cutoff = cutoff;
     }
 
+    /**
+     * Find all inter polymer-chain interfaces in the structure.
+     * Two chains will be considered in contact if at least a pair of atoms from each is within the
+     * contact cutoff.
+     * @return the list of all interfaces
+     */
     public StructureInterfaceList getAllInterfaces() {
         initBoundingBoxes();
 
