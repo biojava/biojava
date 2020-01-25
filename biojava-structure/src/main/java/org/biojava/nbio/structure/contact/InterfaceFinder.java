@@ -20,7 +20,7 @@ public class InterfaceFinder {
 
     public static final double DEFAULT_CONTACT_CUTOFF = 6;
 
-    private static final CrystalTransform IDENTITY_TRANSFORM = new CrystalTransform(SpaceGroup.parseSpaceGroup("P1"));
+    private static final CrystalTransform IDENTITY_TRANSFORM = new CrystalTransform((SpaceGroup) null);
     private static final boolean INCLUDE_HETATOMS = true;
 
     private Structure structure;
@@ -43,7 +43,7 @@ public class InterfaceFinder {
 
     /**
      * Find all inter polymer-chain interfaces in the structure.
-     * Two chains will be considered in contact if at least a pair of atoms from each is within the
+     * Two chains will be considered in contact if at least a pair of atoms (one from each chain) is within the
      * contact cutoff.
      * @return the list of all interfaces
      */
