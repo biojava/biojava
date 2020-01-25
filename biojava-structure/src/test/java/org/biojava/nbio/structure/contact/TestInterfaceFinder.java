@@ -12,6 +12,9 @@ import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureImpl;
 import org.biojava.nbio.structure.StructureTools;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import static org.junit.Assert.*;
 
 import javax.vecmath.Point3d;
@@ -21,6 +24,8 @@ import java.util.List;
 import java.util.Set;
 
 public class TestInterfaceFinder {
+
+    private static final Logger logger = LoggerFactory.getLogger(TestInterfaceFinder.class);
 
     @Test
     public void testGetAllInterfaces() {

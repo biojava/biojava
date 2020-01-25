@@ -22,9 +22,13 @@ public class TestInterfaceFinder {
     public void testGetAllInterfaces() throws StructureException, IOException {
         Structure s = StructureIO.getStructure("3hbx");
 
-        InterfaceFinder finder = new InterfaceFinder(s);
+        long start = System.currentTimeMillis();
 
+        InterfaceFinder finder = new InterfaceFinder(s);
         StructureInterfaceList list = finder.getAllInterfaces();
+
+        long end = System.currentTimeMillis();
+        System.out.println("Took " + (end-start) + " ms to calculate interfaces");
 
         assertEquals(12, list.size());
 
