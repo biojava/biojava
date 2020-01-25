@@ -1264,7 +1264,7 @@ public class StructureTools {
 	 *            3-character code for a group.
 	 *
 	 */
-	public static final boolean isNucleotide(String groupCode3) {
+	public static boolean isNucleotide(String groupCode3) {
 		String code = groupCode3.trim();
 		return nucleotides30.containsKey(code)
 				|| nucleotides23.containsKey(code);
@@ -1283,7 +1283,7 @@ public class StructureTools {
 	 * @deprecated Use {@link StructureIdentifier#reduce(Structure)} instead (v. 4.2.0)
 	 */
 	@Deprecated
-	public static final Structure getReducedStructure(Structure s,
+	public static Structure getReducedStructure(Structure s,
 			String chainId) throws StructureException {
 		// since we deal here with structure alignments,
 		// only use Model 1...
@@ -1338,7 +1338,7 @@ public class StructureTools {
 		return newS;
 	}
 
-	public static final String convertAtomsToSeq(Atom[] atoms) {
+	public static String convertAtomsToSeq(Atom[] atoms) {
 
 		StringBuilder buf = new StringBuilder();
 		Group prevGroup = null;
@@ -1374,7 +1374,7 @@ public class StructureTools {
 	 * @throws StructureException
 	 *             if the group cannot be found.
 	 */
-	public static final Group getGroupByPDBResidueNumber(Structure struc,
+	public static Group getGroupByPDBResidueNumber(Structure struc,
 			ResidueNumber pdbResNum) throws StructureException {
 		if (struc == null || pdbResNum == null) {
 			throw new IllegalArgumentException("Null argument(s).");
@@ -1447,7 +1447,7 @@ public class StructureTools {
 	 * @param chain
 	 * @param cutoff
 	 * @return
-	 * @see {@link #getRepresentativeAtomsInContact(Chain, double)}
+	 * @see #getRepresentativeAtomsInContact(Chain, double)
 	 */
 	public static AtomContactSet getAtomsCAInContact(Chain chain, double cutoff) {
 		Grid grid = new Grid(cutoff);
@@ -1921,4 +1921,24 @@ public class StructureTools {
 		return name;
 	}
 
+	/**
+	 * Remove all atoms but the representative atoms (C alphas or phosphates) from the given structure.
+	 * @param structure the structure
+	 * @since 5.4.0
+	 */
+	public static void reduceToRepresentativeAtoms(Structure structure) {
+		for (int modelIdx = 0; modelIdx<structure.nrModels(); modelIdx++) {
+			for (Chain c : structure.getPolyChains(modelIdx)) {
+				for (Group g : c.getAtomGroups()) {
+					List<Atom> atoms = g.getAtoms();
+					if (g.isAminoAcid()) {
+						atoms.removeIf(a->!a.getName().equals(CA_ATOM_NAME));
+					} else if (g.isNucleotide()) {
+						atoms.removeIf(a->!a.getName().equals(NUCLEOTIDE_REPRESENTATIVE));
+					}
+					// else we keep all other atoms. We are concerned only about aminoacids and nucleotides that make up the bulk of the structures
+				}
+			}
+		}
+	}
 }

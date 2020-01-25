@@ -32,6 +32,8 @@ import org.biojava.nbio.core.sequence.ProteinSequence;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Chain;
+import org.biojava.nbio.structure.EntityInfo;
+import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.StructureAlignment;
@@ -190,22 +192,35 @@ public class SubunitCluster {
 	 * @return true if the SubunitClusters are identical, false otherwise
 	 */
 	public boolean isIdenticalByEntityIdTo(SubunitCluster other) {
-		Structure thisStruct = this.subunits.get(this.representative).getStructure();
-		Structure otherStruct = other.subunits.get(other.representative).getStructure();
-		String thisName = this.subunits.get(this.representative).getName();
-		String otherName = other.subunits.get(this.representative).getName();
+		Subunit thisSub = this.subunits.get(this.representative);
+		Subunit otherSub = other.subunits.get(other.representative);
+		String thisName = thisSub.getName();
+		String otherName = otherSub.getName();
+
+		Structure thisStruct = thisSub.getStructure();
+		Structure otherStruct = otherSub.getStructure();
+		if (thisStruct == null || otherStruct == null) {
+			logger.info("SubunitClusters {}-{} have no referenced structures. Ignoring identity check by entity id",
+					thisName,
+					otherName);
+			return false;
+		}
+		if (thisStruct != otherStruct) {
+			// different object references: will not cluster even if entity id is same
+			return false;
+		}
 		Chain thisChain = thisStruct.getChain(thisName);
 		Chain otherChain = otherStruct.getChain(otherName);
 		if (thisChain == null || otherChain == null) {
 			logger.info("Can't determine entity ids of SubunitClusters {}-{}. Ignoring identity check by entity id",
-					this.subunits.get(this.representative).getName(),
-					other.subunits.get(other.representative).getName());
+					thisName,
+					otherName);
 			return false;
 		}
 		if (thisChain.getEntityInfo() == null || otherChain.getEntityInfo() == null) {
 			logger.info("Can't determine entity ids of SubunitClusters {}-{}. Ignoring identity check by entity id",
-					this.subunits.get(this.representative).getName(),
-					other.subunits.get(other.representative).getName());
+					thisName,
+					otherName);
 			return false;
 		}
 		int thisEntityId = thisChain.getEntityInfo().getMolId();
@@ -241,7 +256,7 @@ public class SubunitCluster {
 	 * same Subunit. This is checked by comparing the entity identifiers of the subunits
 	 * if one can be found.
 	 * Thus this only makes sense when the subunits are complete chains of a
-	 * deposited PDB entry. I
+	 * deposited PDB entry.
 	 *
 	 * @param other
 	 *            SubunitCluster
@@ -252,12 +267,59 @@ public class SubunitCluster {
 		if (!isIdenticalByEntityIdTo(other))
 			return false;
 
-		logger.info("SubunitClusters {}-{} belong to same entity. Assuming they are identical",
-				this.subunits.get(this.representative).getName(),
-				other.subunits.get(other.representative).getName());
+		Subunit thisSub = this.subunits.get(this.representative);
+		Subunit otherSub = other.subunits.get(other.representative);
+		String thisName = thisSub.getName();
+		String otherName = otherSub.getName();
 
-		this.subunits.addAll(other.subunits);
-		this.subunitEQR.addAll(other.subunitEQR);
+		logger.info("SubunitClusters {}-{} belong to same entity. Assuming they are identical",
+				thisName,
+				otherName);
+
+		List<Integer> thisAligned = new ArrayList<>();
+		List<Integer> otherAligned = new ArrayList<>();
+
+		// we've merged by entity id, we can assume structure, chain and entity are available (checked in isIdenticalByEntityIdTo())
+		Structure thisStruct = thisSub.getStructure();
+		Structure otherStruct = otherSub.getStructure();
+		Chain thisChain = thisStruct.getChain(thisName);
+		Chain otherChain = otherStruct.getChain(otherName);
+		EntityInfo entityInfo = thisChain.getEntityInfo();
+
+		// Extract the aligned residues of both Subunits
+		for (int thisIndex=0; thisIndex < thisSub.size(); thisIndex++) {
+
+			Group g = thisSub.getRepresentativeAtoms()[thisIndex].getGroup();
+
+			int seqresIndex = entityInfo.getAlignedResIndex(g, thisChain);
+
+			if (seqresIndex == -1) {
+				// this might mean that FileParsingParameters.setAlignSeqRes() wasn't set to true during parsing
+				continue;
+			}
+
+			// note the seqresindex is 1-based
+			Group otherG = otherChain.getSeqResGroups().get(seqresIndex - 1);
+
+			int otherIndex = otherChain.getAtomGroups().indexOf(otherG);
+			if (otherIndex == -1) {
+				// skip residues that are unobserved in other sequence ("gaps" in the entity SEQRES alignment)
+				continue;
+			}
+
+			// Only consider residues that are part of the SubunitCluster
+			if (this.subunitEQR.get(this.representative).contains(thisIndex)
+					&& other.subunitEQR.get(other.representative).contains(otherIndex)) {
+				thisAligned.add(thisIndex);
+				otherAligned.add(otherIndex);
+			}
+		}
+
+		if (thisAligned.size() == 0 && otherAligned.size() == 0) {
+			logger.warn("No equivalent aligned atoms found between SubunitClusters {}-{} via entity SEQRES alignment. Is FileParsingParameters.setAlignSeqRes() set?", thisName, otherName);
+		}
+
+		updateEquivResidues(other, thisAligned, otherAligned);
 
 		return true;
 	}
@@ -690,7 +752,7 @@ public class SubunitCluster {
 	 */
 	public List<Atom[]> getAlignedAtomsSubunits() {
 
-		List<Atom[]> alignedAtoms = Collections.emptyList();
+		List<Atom[]> alignedAtoms = new ArrayList<>();
 
 		// Loop through all subunits and add the aligned positions
 		for (int s = 0; s < subunits.size(); s++)
