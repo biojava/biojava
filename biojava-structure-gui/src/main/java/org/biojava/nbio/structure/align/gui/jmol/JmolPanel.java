@@ -63,6 +63,8 @@ import org.jmol.util.LoggerInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static org.jmol.util.Logger.LEVEL_FATAL;
+
 
 public class JmolPanel
 extends JPrintPanel
@@ -91,6 +93,7 @@ implements ActionListener
 				adapter,
 				null,null,null,null,
 				statusListener);
+		setIgnoreRepaint(true);
 
 	}
 
@@ -410,7 +413,9 @@ implements ActionListener
 				return org.jmol.util.Logger.LEVEL_WARN;
 			if( slf.isErrorEnabled() )
 				return org.jmol.util.Logger.LEVEL_ERROR;
-			throw new IllegalStateException("Unknown SLF4J error level");
+
+			return LEVEL_FATAL;
+			//throw new IllegalStateException("Unknown SLF4J error level");
 		}
 		@Override
 		public void debug(String txt) {

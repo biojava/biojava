@@ -49,10 +49,10 @@ public class ChromosomeMappingTools {
 	public static final String CHROMOSOME = "CHROMOSOME";
 	public static final String CDS = "CDS";
 
-	private static int base = 1;
-	public static void setCoordinateSystem(int baseInt) {
-		base = baseInt;
-	}
+//	private static final int base = 1;
+//	public static void setCoordinateSystem(int baseInt) {
+//		base = baseInt;
+//	}
 
 	/**
 	 * Pretty print the details of a GeneChromosomePosition to a String
@@ -207,7 +207,7 @@ public class ChromosomeMappingTools {
 	 * @param chromPos
 	 * @return length of the CDS in nucleotides.
 	 */
-	public static int getCDSLength(GeneChromosomePosition chromPos) {
+	public static int getCDSLength(GeneChromosomePosition chromPos, int base) {
 
 		List<Integer> exonStarts = chromPos.getExonStarts();
 		List<Integer> exonEnds = chromPos.getExonEnds();
@@ -217,9 +217,9 @@ public class ChromosomeMappingTools {
 
 		int codingLength;
 		if (chromPos.getOrientation().equals('+'))
-			codingLength = ChromosomeMappingTools.getCDSLengthForward(exonStarts, exonEnds, cdsStart, cdsEnd);
+			codingLength = ChromosomeMappingTools.getCDSLengthForward(exonStarts, exonEnds, cdsStart, cdsEnd, base);
 		else
-			codingLength = ChromosomeMappingTools.getCDSLengthReverse(exonStarts, exonEnds, cdsStart, cdsEnd);
+			codingLength = ChromosomeMappingTools.getCDSLengthReverse(exonStarts, exonEnds, cdsStart, cdsEnd, base);
 		return codingLength;
 	}
 
@@ -498,7 +498,7 @@ public class ChromosomeMappingTools {
 	 * @param cdsEnd
 	 * @return
 	 */
-	public static int getCDSLengthReverse(List<Integer> exonStarts, List<Integer> exonEnds, int cdsStart, int cdsEnd) {
+	public static int getCDSLengthReverse(List<Integer> exonStarts, List<Integer> exonEnds, int cdsStart, int cdsEnd, int base) {
 
 		int codingLength = 0;
 
@@ -545,7 +545,7 @@ public class ChromosomeMappingTools {
 	 * @param cdsEnd
 	 * @return
 	 */
-	public static int getCDSLengthForward(List<Integer> exonStarts, List<Integer> exonEnds, int cdsStart, int cdsEnd) {
+	public static int getCDSLengthForward(List<Integer> exonStarts, List<Integer> exonEnds, int cdsStart, int cdsEnd, int base) {
 
 		int codingLength = 0;
 
@@ -773,23 +773,24 @@ public class ChromosomeMappingTools {
 	 * I have a genomic coordinate, where is it on the mRNA
 	 *
 	 * @param coordinate
-	 * @param chromosomePosition
+	 * @param p
 	 * @return
 	 */
-	public static int getCDSPosForChromosomeCoordinate(int coordinate, GeneChromosomePosition chromosomePosition) {
+	public static int getCDSPosForChromosomeCoordinate(int coordinate, GeneChromosomePosition p, int base) {
 
-		if ( chromosomePosition.getOrientation() == '+')
+		if ( p.getOrientation() == '+')
 			return getCDSPosForward(coordinate,
-					chromosomePosition.getExonStarts(),
-					chromosomePosition.getExonEnds(),
-					chromosomePosition.getCdsStart(),
-					chromosomePosition.getCdsEnd());
+					p.getExonStarts(),
+					p.getExonEnds(),
+					p.getCdsStart(),
+					p.getCdsEnd(), base);
 
-		return getCDSPosReverse(coordinate,
-				chromosomePosition.getExonStarts(),
-				chromosomePosition.getExonEnds(),
-				chromosomePosition.getCdsStart(),
-				chromosomePosition.getCdsEnd());
+		else
+			return getCDSPosReverse(coordinate,
+				p.getExonStarts(),
+				p.getExonEnds(),
+				p.getCdsStart(),
+				p.getCdsEnd(), base);
 	}
 
 	/**
@@ -807,7 +808,7 @@ public class ChromosomeMappingTools {
 	 * @author Yana Valasatava
 	 */
 	public static int getCDSPosForward(int chromPos, List<Integer> exonStarts, List<Integer> exonEnds,
-			int cdsStart, int cdsEnd) {
+									   int cdsStart, int cdsEnd, int base) {
 
 		// the genetic coordinate is not in a coding region
 		if ( (chromPos < (cdsStart+base) ) || ( chromPos > (cdsEnd+base) ) ) {
@@ -854,7 +855,7 @@ public class ChromosomeMappingTools {
 	 * @author Yana Valasatava
 	 */
 	public static int getCDSPosReverse(int chromPos, List<Integer> exonStarts, List<Integer> exonEnds,
-			int cdsStart, int cdsEnd) {
+			int cdsStart, int cdsEnd, int base) {
 
 		// the genetic coordinate is not in a coding region
 		if ( (chromPos < (cdsStart+base)) || ( chromPos > (cdsEnd+base) ) ) {

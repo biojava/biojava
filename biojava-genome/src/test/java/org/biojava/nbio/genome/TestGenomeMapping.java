@@ -88,7 +88,7 @@ public class TestGenomeMapping {
 				validateExon(5,516,585, cdsranges  );
 
 
-				int cdslength = ChromosomeMappingTools.getCDSLength(pos);
+				int cdslength = ChromosomeMappingTools.getCDSLength(pos, 1);
 
 				Assert.assertEquals("CDS length should be 582, but is " + cdslength, cdslength, (uniProtLength * 3));
 
@@ -173,15 +173,18 @@ public class TestGenomeMapping {
 	 *
 	 * @author Yana Valasatava
 	 */
-	private int getPositionInmRNA(String geneName, String genebankId, int posChrom) {
+	private int getPositionInmRNA(String geneName, String genebankId, int posChrom, int base) {
 		for (GeneChromosomePosition gcp : gcps) {
 			if ( gcp.getGeneName().equals(geneName) ) {
 				if ( gcp.getGenebankId().equals(genebankId) ) {
-					return ChromosomeMappingTools.getCDSPosForChromosomeCoordinate(posChrom, gcp);
+					return ChromosomeMappingTools.getCDSPosForChromosomeCoordinate(posChrom, gcp, base);
 				}
 			}
 		}
 		return -1;
+	}
+	private int getPositionInmRNA(String geneName, String genebankId, int posChrom) {
+		return getPositionInmRNA(geneName, genebankId, posChrom, 1);
 	}
 
 	/** Make sure the mapping tool correctly retrieves the mRNA position for a gene

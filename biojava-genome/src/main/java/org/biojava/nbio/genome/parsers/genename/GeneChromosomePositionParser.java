@@ -94,8 +94,7 @@ public class GeneChromosomePositionParser {
 	}
 
 	private static GeneChromosomePosition getGeneChromosomePosition(String line) {
-		if ( line == null)
-			return null;
+
 		String[] spl = line.split("\t");
 
 		if ( spl.length != 11) {
@@ -114,10 +113,8 @@ public class GeneChromosomePositionParser {
 		g.setCdsStart(Integer.parseInt(spl[6]));
 		g.setCdsEnd(Integer.parseInt(spl[7]));
 		g.setExonCount(Integer.parseInt(spl[8]));
-		String exonStarts = spl[9];
-		String exonEnds = spl[10];
-		g.setExonStarts(getIntegerList(exonStarts));
-		g.setExonEnds(getIntegerList(exonEnds));
+		g.setExonStarts(getIntegerList(spl[9]));
+		g.setExonEnds(getIntegerList(spl[10]));
 
 		//System.out.println(line);
 		//System.out.println(Arrays.asList(spl) + " " + spl.length);

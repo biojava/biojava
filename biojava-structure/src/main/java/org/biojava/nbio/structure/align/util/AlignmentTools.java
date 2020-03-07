@@ -1194,7 +1194,7 @@ public class AlignmentTools {
 	 * @return a list of Chains that is built up from the Atoms in the ca array
 	 * @throws StructureException
 	 */
-	public static final List<Chain> getAlignedModel(Atom[] ca){
+	public static List<Chain> getAlignedModel(Atom[] ca){
 
 		List<Chain> model = new ArrayList<>();
 		for ( Atom a: ca){
@@ -1204,7 +1204,8 @@ public class AlignmentTools {
 
 			Chain newChain = null;
 			for ( Chain c :  model) {
-				if ( c.getId().equals(parentC.getId())){
+				String cid = c.getId();
+				if ( cid!=null && cid.equals(parentC.getId())){
 					newChain = c;
 					break;
 				}

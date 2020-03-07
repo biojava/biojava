@@ -112,7 +112,7 @@ public class JmolTools {
 
 
 
-		if ( ! chain1.equals("")){
+		if (chain1!=null && ! chain1.equals("")){
 			buf.append(":");
 			buf.append(chain1);
 		}

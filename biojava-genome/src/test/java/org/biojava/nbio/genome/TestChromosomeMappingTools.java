@@ -43,8 +43,8 @@ public class TestChromosomeMappingTools {
 		int cdsEnd = 75;
 
 		int cdsDesired = 23 - 3;
-		ChromosomeMappingTools.setCoordinateSystem(0);
-		int cdsTest = ChromosomeMappingTools.getCDSLengthForward(exonStarts, exonEnds, cdsStart, cdsEnd);
+
+		int cdsTest = ChromosomeMappingTools.getCDSLengthForward(exonStarts, exonEnds, cdsStart, cdsEnd, 0);
 
 		assertEquals(cdsDesired, cdsTest);
 	}
@@ -58,8 +58,8 @@ public class TestChromosomeMappingTools {
 		int cdsEnd = 75;
 
 		int cdsDesired = 12 - 3;
-		ChromosomeMappingTools.setCoordinateSystem(0);
-		int cdsTest = ChromosomeMappingTools.getCDSLengthReverse(exonStarts, exonEnds, cdsStart, cdsEnd);
+
+		int cdsTest = ChromosomeMappingTools.getCDSLengthReverse(exonStarts, exonEnds, cdsStart, cdsEnd, 0);
 
 		assertEquals(cdsDesired, cdsTest);
 	}
@@ -73,8 +73,8 @@ public class TestChromosomeMappingTools {
 		int cdsEnd = 50;
 
 		int cdsDesired = 17 - 3;
-		ChromosomeMappingTools.setCoordinateSystem(0);
-		int cdsTest = ChromosomeMappingTools.getCDSLengthReverse(exonStarts, exonEnds, cdsStart, cdsEnd);
+
+		int cdsTest = ChromosomeMappingTools.getCDSLengthReverse(exonStarts, exonEnds, cdsStart, cdsEnd, 0);
 
 		assertEquals(cdsDesired, cdsTest);
 	}
