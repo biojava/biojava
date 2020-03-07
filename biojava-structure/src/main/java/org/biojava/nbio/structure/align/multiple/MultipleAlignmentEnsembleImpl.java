@@ -173,7 +173,8 @@ public class MultipleAlignmentEnsembleImpl extends AbstractScoresCache
 		calculationTime = afp.getCalculationTime();
 
 		MultipleAlignment msa = new MultipleAlignmentImpl(this);
-		setMultipleAlignments(Collections.singletonList(msa));
+		ArrayList<MultipleAlignment> ms1 = new ArrayList<>(1); ms1.add(msa);
+		setMultipleAlignments(ms1);
 
 		// Convert the rotation and translation to a Matrix4D and set it
 		Matrix4d ident = new Matrix4d();

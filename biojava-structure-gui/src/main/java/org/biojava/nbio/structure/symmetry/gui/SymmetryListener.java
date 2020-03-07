@@ -82,7 +82,7 @@ public class SymmetryListener implements ActionListener {
 
 					break;
 				}
-				case "Optimal Self Alignment":
+				case "Optimal Self Alignment": {
 					Atom[] cloned = StructureTools.cloneAtomArray(symm.getAtoms());
 					AbstractAlignmentJmol jmol = StructureAlignmentDisplay.display(
 							symm.getSelfAlignment(), symm.getAtoms(), cloned);
@@ -91,14 +91,12 @@ public class SymmetryListener implements ActionListener {
 					jmol.setTitle(SymmetryDisplay.getSymmTitle(symm));
 
 					break;
+				}
 				case "Show Symmetry Group":
-					String script = SymmetryDisplay.printSymmetryGroup(symm);
-					jmol.evalString(script);
-
+					jmol.evalString(SymmetryDisplay.printSymmetryGroup(symm));
 					break;
 				case "Show Symmetry Axes": {
-					String s = SymmetryDisplay.printSymmetryAxes(symm);
-					jmol.evalString(s);
+					jmol.evalString(SymmetryDisplay.printSymmetryAxes(symm));
 					break;
 				}
 			}

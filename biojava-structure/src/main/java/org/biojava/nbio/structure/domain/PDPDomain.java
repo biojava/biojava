@@ -56,8 +56,8 @@ public class PDPDomain implements StructureIdentifier {
 	}
 
 	public String getPdbId() {
-		return canonical.getPdbId();
-	}
+        return canonical.pdbId;
+    }
 
 	@Override
 	public SubstructureIdentifier toCanonical() {

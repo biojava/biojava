@@ -70,11 +70,14 @@ public class FuzzyPoint extends SimplePoint {
 	}
 
 	@Override
-	public Integer getPosition() {
-		if(super.getPosition() == -1) {
-			super.setPosition(getResolver().resolve(this));
-		}
-		return super.getPosition();
+	public int getPosition() {
+		int prevPos = super.getPosition();
+		if(prevPos == -1) {
+			int nextPos = getResolver().resolve(this);
+			super.setPosition(nextPos);
+			return nextPos;
+		} else
+			return prevPos;
 	}
 
 	protected Integer getMax() {
@@ -106,6 +109,7 @@ public class FuzzyPoint extends SimplePoint {
 
 	@Override
 	public boolean equals(Object obj) {
+		if (this == obj) return true;
 		boolean equals = false;
 		if (Equals.classEqual(this, obj)) {
 			FuzzyPoint p = (FuzzyPoint) obj;
@@ -130,6 +134,7 @@ public class FuzzyPoint extends SimplePoint {
 
 	@Override
 	public int compareTo(Point point) {
+		if (this == point) return 0;
 		//If we can assign this to a FuzzyPoint then work with a bit more info
 		if(FuzzyPoint.class.isAssignableFrom(point.getClass())) {
 			FuzzyPoint fuzzy = (FuzzyPoint)point;

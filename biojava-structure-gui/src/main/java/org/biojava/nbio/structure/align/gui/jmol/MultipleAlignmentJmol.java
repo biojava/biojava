@@ -76,7 +76,7 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 
 	private MultipleAlignment multAln;
 	private List<Atom[]> transformedAtoms;
-	private final JCheckBox colorByBlocks;
+	private JCheckBox colorByBlocks;
 	private final List<JCheckBox> selectedStructures;
 
 	private static final String LIGAND_DISPLAY_SCRIPT = "select ligand; wireframe 40; spacefill 120; color CPK;";

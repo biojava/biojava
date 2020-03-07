@@ -166,7 +166,7 @@ public Set<C> getEquivalentCompounds(C compound) {
 
 
 	@Override
-public List<C> getAllCompounds() {
+	public List<C> getAllCompounds() {
 		return new ArrayList<>(charSeqToCompound.values());
 	}
 

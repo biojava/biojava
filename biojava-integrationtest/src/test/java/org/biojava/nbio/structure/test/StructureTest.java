@@ -222,12 +222,11 @@ public class StructureTest {
 
 		if ( g1.getPDBName().equals("GLY")){
 			if ( g1 instanceof AminoAcid){
-				try {
-					Atom cb = Calc.createVirtualCBAtom((AminoAcid)g1);
-					g1.addAtom(cb);
-				} catch (StructureException e){
-					fail ("createVirtualCBAtom failed with " + e.getMessage());
-				}
+//				try {
+				g1.addAtom(Calc.createVirtualCBAtom((AminoAcid)g1));
+//				} catch (StructureException e){
+//					fail ("createVirtualCBAtom failed with " + e.getMessage());
+//				}
 			}
 		} else {
 			fail("the group at position 11 is not a GLY!");

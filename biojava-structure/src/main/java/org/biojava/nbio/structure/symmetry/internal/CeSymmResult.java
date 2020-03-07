@@ -21,7 +21,6 @@
 package org.biojava.nbio.structure.symmetry.internal;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -109,7 +108,7 @@ public class CeSymmResult {
 		List<StructureIdentifier> repeats = new ArrayList<>(
 				numRepeats);
 
-		String pdbId = structureId.toCanonical().getPdbId();
+        String pdbId = structureId.toCanonical().pdbId;
 		Block align = multipleAlignment.getBlocks().get(0);
 
 		for (int su = 0; su < numRepeats; su++) {

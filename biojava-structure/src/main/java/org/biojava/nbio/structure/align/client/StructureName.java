@@ -308,7 +308,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 		SubstructureIdentifier si = new SubstructureIdentifier(suffix);
 		base = si; // Safe to realize immediately
 
-		pdbId = si.getPdbId();
+        pdbId = si.pdbId;
 		// Set chainName if unique
 		Set<String> chains = getChainNames(si);
 		if(chains.size() == 1) {
@@ -361,7 +361,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 	 */
 	public String getPdbId() throws StructureException {
 		if( pdbId == null) {
-			pdbId = toCanonical().getPdbId();
+            pdbId = toCanonical().pdbId;
 		}
 		return pdbId;
 	}

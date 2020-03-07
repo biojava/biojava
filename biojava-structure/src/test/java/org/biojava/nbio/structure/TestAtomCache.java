@@ -42,7 +42,7 @@ import static org.junit.Assert.*;
 // TODO dmyersturnbull: we should merge TestAtomCache and AtomCacheTest
 public class TestAtomCache {
 
-	public static final String lineSplit = System.getProperty("file.separator");
+//	public static final String lineSplit = System.getProperty("file.separator");
 	private AtomCache cache;
 
 	@Before

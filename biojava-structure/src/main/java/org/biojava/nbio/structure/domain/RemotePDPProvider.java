@@ -196,9 +196,9 @@ public class RemotePDPProvider extends SerializableCache<String,SortedSet<String
 		List<ResidueRange> ranges = new ArrayList<>();
 		for(String domainRange : domainRanges) {
 			SubstructureIdentifier strucId = new SubstructureIdentifier(domainRange);
-			if(pdbId == null) {
-				pdbId = strucId.getPdbId();
-			} else if(!pdbId.equals(strucId.getPdbId())) {
+            if(pdbId == null) {
+                pdbId = strucId.pdbId;
+			} else if(!pdbId.equals(strucId.pdbId)) {
 				// should never happen with correct server implementation
 				throw new RuntimeException("Don't know how to take the union of domains from multiple PDB IDs.");
 			}

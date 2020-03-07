@@ -35,6 +35,7 @@ import org.biojava.nbio.core.sequence.features.*;
 import org.biojava.nbio.core.sequence.loader.UniprotProxySequenceReader;
 import org.biojava.nbio.core.sequence.location.SequenceLocation;
 import org.biojava.nbio.core.sequence.location.SimpleLocation;
+import org.biojava.nbio.core.sequence.location.template.AbstractLocation;
 import org.biojava.nbio.core.sequence.location.template.Location;
 import org.biojava.nbio.core.sequence.reference.AbstractReference;
 import org.biojava.nbio.core.sequence.storage.ArrayListSequenceReader;
@@ -126,7 +127,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 
 		if (proxyLoader instanceof FeatureRetriever) {
 			this.setFeatureRetriever((FeatureRetriever) sequenceStorage);
-			HashMap<String, ArrayList<AbstractFeature>> ff = getFeatureRetriever().getFeatures();
+			Map<String, ArrayList<AbstractFeature>> ff = getFeatureRetriever().getFeatures();
 			for (ArrayList<AbstractFeature> abstractFeatures : ff.values()){
 				for (AbstractFeature f: abstractFeatures){
 					this.addFeature(f);
@@ -153,11 +154,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 	 * @return the bioBegin
 	 */
 	public Integer getBioBegin() {
-		if (bioBegin == null) {
-			return 1;
-		} else {
-			return bioBegin;
-		}
+		return bioBegin == null ? 1 : bioBegin;
 	}
 
 	/**
@@ -171,11 +168,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 	 * @return the bioEnd
 	 */
 	public Integer getBioEnd() {
-		if (bioEnd == null) {
-			return this.getLength();
-		} else {
-			return bioEnd;
-		}
+		return bioEnd == null ? this.getLength() : bioEnd;
 	}
 
 	/**
@@ -265,13 +258,10 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 	 * @return the source
 	 */
 	public String getSource() {
-		if (source != null) {
+		if (source != null)
 			return source;
-		}
-		if (parentSequence != null) {
-			return parentSequence.getSource();
-		}
-		return null;
+		else
+			return parentSequence != null ? parentSequence.getSource() : null;
 	}
 
 	/**
@@ -353,7 +343,8 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 		List<FeatureInterface<AbstractSequence<C>, C>> features = getFeaturesByType(featureType);
 		if (features != null) {
 			for (FeatureInterface<AbstractSequence<C>, C> feature : features) {
-				if (bioSequencePosition >= feature.getLocations().getStart().getPosition() && bioSequencePosition <= feature.getLocations().getEnd().getPosition()) {
+				AbstractLocation locs = feature.getLocations();
+				if (bioSequencePosition >= locs.getStart().getPosition() && bioSequencePosition <= locs.getEnd().getPosition()) {
 					featureHits.add(feature);
 				}
 			}

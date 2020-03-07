@@ -36,7 +36,7 @@ public interface Point extends Comparable<Point> {
 	/**
 	 * Returns the position held by this object
 	 */
-	Integer getPosition();
+	int getPosition();
 
 	/**
 	 * Returns true if the current position is unknown but is

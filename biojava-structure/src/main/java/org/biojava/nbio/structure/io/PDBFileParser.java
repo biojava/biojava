@@ -1361,6 +1361,10 @@ public class PDBFileParser  {
 
 	}
 
+	static final Pattern resolutionRangePattern = Pattern.compile("^REMARK   3   RESOLUTION RANGE HIGH \\(ANGSTROMS\\) :\\s+(\\d+\\.\\d+).*");
+	static final Pattern remarkFreeRValue = Pattern.compile("^REMARK   3   FREE R VALUE\\s+:\\s+(\\d?\\.\\d+).*");
+	static final Pattern remark3FreeRValueNoCutOff = Pattern.compile("^REMARK   3   FREE R VALUE\\s+(?:\\(NO CUTOFF\\))?\\s+:\\s+(\\d?\\.\\d+).*");
+
 	/**
 	 * Handler for REMARK lines
 	 */
@@ -1394,8 +1398,8 @@ public class PDBFileParser  {
 			// a) take the '(NO CUTOFF)' value if the only one available (shelx software, e.g. 1x7q)
 			// b) don't take it if also a line without '(NO CUTOFF)' is present (CNX software, e.g. 3lak)
 
-			Pattern pR = Pattern.compile("^REMARK   3 {3}FREE R VALUE\\s+(?:\\(NO CUTOFF\\))?\\s+:\\s+(\\d?\\.\\d+).**");
-			Matcher mR = pR.matcher(line);
+
+			Matcher mR = remark3FreeRValueNoCutOff.matcher(line);
 			if (mR.matches()) {
 				try {
 					rfreeNoCutoffLine = Float.parseFloat(mR.group(1));
@@ -1403,8 +1407,8 @@ public class PDBFileParser  {
 					logger.info("Rfree value "+mR.group(1)+" does not look like a number, will ignore it");
 				}
 			}
-			pR = Pattern.compile("^REMARK   3 {3}FREE R VALUE\\s+:\\s+(\\d?\\.\\d+).**");
-			mR = pR.matcher(line);
+
+			mR = remarkFreeRValue.matcher(line);
 			if (mR.matches()) {
 				try {
 					rfreeStandardLine = Float.parseFloat(mR.group(1));
@@ -1417,8 +1421,7 @@ public class PDBFileParser  {
 		// note: if more than 1 value present (occurring in hybrid experimental technique entries, e.g. 3ins, 4n9m)
 		// then last one encountered will be taken
 		} else if (line.startsWith("REMARK   3   RESOLUTION RANGE HIGH")){
-			Pattern pR = Pattern.compile("^REMARK   3 {3}RESOLUTION RANGE HIGH \\(ANGSTROMS\\) :\\s+(\\d+\\.\\d+).**");
-			Matcher mR = pR.matcher(line);
+			Matcher mR = resolutionRangePattern.matcher(line);
 			if (mR.matches()) {
 				try {
 					float res = Float.parseFloat(mR.group(1));
@@ -2671,6 +2674,7 @@ public class PDBFileParser  {
 				recordName = line.substring (0, 6).trim ();
 
 			try {
+				//TODO switch(recordName)
 				if (recordName.equals("ATOM"))
 					pdb_ATOM_Handler(line);
 				else if (recordName.equals("SEQRES"))
@@ -2713,17 +2717,19 @@ public class PDBFileParser  {
 					pdb_SSBOND_Handler(line);
 				else if (recordName.equals("LINK"))
 					pdb_LINK_Handler(line);
-				else if ( params.isParseSecStruc()) {
-					switch (recordName) {
-						case "HELIX":
-							pdb_HELIX_Handler(line);
-							break;
-						case "SHEET":
-							pdb_SHEET_Handler(line);
-							break;
-						case "TURN":
-							pdb_TURN_Handler(line);
-							break;
+				else {
+					if ( params.isParseSecStruc()) {
+						switch (recordName) {
+							case "HELIX":
+								pdb_HELIX_Handler(line);
+								break;
+							case "SHEET":
+								pdb_SHEET_Handler(line);
+								break;
+							case "TURN":
+								pdb_TURN_Handler(line);
+								break;
+						}
 					}
 				}
 			} catch (StringIndexOutOfBoundsException | NullPointerException ex) {

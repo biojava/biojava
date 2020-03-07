@@ -75,7 +75,7 @@ public class SubstructureIdentifier implements StructureIdentifier {
 	private static final Logger logger = LoggerFactory.getLogger(SubstructureIdentifier.class);
 
 
-	private final String pdbId;
+	public final String pdbId;
 	private final List<ResidueRange> ranges;
 
 	/**
@@ -290,10 +290,8 @@ public class SubstructureIdentifier implements StructureIdentifier {
 	 */
 	@Override
 	public Structure loadStructure(AtomCache cache) throws IOException, StructureException {
-		String pdb = getPdbId();
-		if(pdb == null)
-			return null;
-		return cache.getStructureForPdbId(pdb);
+		String pdb = pdbId;
+		return pdb == null ? null : cache.getStructureForPdbId(pdb);
 	}
 
 	/**

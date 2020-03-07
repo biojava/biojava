@@ -45,7 +45,7 @@ public abstract class AbstractNucleotideCompoundSet<C extends NucleotideCompound
 		C upper = newNucleotideCompound(base.toUpperCase(), complement.toUpperCase(), upperEquivalents);
 		C lower = newNucleotideCompound(base.toLowerCase(), complement.toLowerCase(), lowerEquivalents);
 
-		List<C> equivalentCompounds = new ArrayList<>();
+		List<C> equivalentCompounds = new ArrayList<>(equivalents.length*2);
 
 		for(int i=0; i<equivalents.length; i++) {
 			equivalentCompounds.add(getCompoundForString(upperEquivalents[i]));
@@ -68,9 +68,8 @@ public abstract class AbstractNucleotideCompoundSet<C extends NucleotideCompound
 
 		List<NucleotideCompound> ambiguousCompounds = new ArrayList<>();
 		for(NucleotideCompound compound: getAllCompounds()) {
-			if (!compound.isAmbiguous()) {
+			if (!compound.isAmbiguous())
 				continue;
-			}
 			ambiguousCompounds.add(compound);
 		}
 

@@ -324,9 +324,8 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 
 	@Override
 	public Structure getStructureById(String pdbId) throws IOException {
-		InputStream inStream = getInputStream(pdbId);
 
-		return getStructure(inStream);
+		return getStructure(getInputStream(pdbId));
 	}
 
 	/**

@@ -325,7 +325,7 @@ public class StructureAlignmentJmol extends AbstractAlignmentJmol implements Cha
 
 	@Override
 	protected void initCoords() {
-		try {
+//		try {
 			if (ca1 == null || ca2 == null) {
 				if (structure != null)
 					setStructure(structure);
@@ -342,9 +342,9 @@ public class StructureAlignmentJmol extends AbstractAlignmentJmol implements Cha
 			header.setTitle(title);
 			artificial.setPDBHeader(header);
 			setStructure(artificial);
-		} catch (StructureException e) {
-			e.printStackTrace();
-		}
+//		} catch (StructureException e) {
+//			e.printStackTrace();
+//		}
 	}
 
 	@Override

@@ -326,7 +326,7 @@ public class MultipleAlignmentWriter {
 		StructureIdentifier tName = alignment.getEnsemble().getStructureIdentifiers()
 				.get(templateIndex);
 		SubstructureIdentifier canon = tName.toCanonical();
-		String tPdbId = canon.getPdbId();
+        String tPdbId = canon.pdbId;
 		String tChain = null;
 		for(ResidueRange range : canon.getResidueRanges()) {
 			tChain = range.getChainName();

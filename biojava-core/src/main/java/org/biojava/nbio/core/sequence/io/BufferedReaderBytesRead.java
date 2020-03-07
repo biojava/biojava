@@ -417,7 +417,7 @@ public class BufferedReaderBytesRead extends Reader {
 	public String readLine() throws IOException {
 		String line = readLine(false);
 		if (line != null) {
-			bytesRead = bytesRead + line.length();
+			bytesRead += line.length();
 		}
 		return line;
 	}
