@@ -165,7 +165,7 @@ public class FarmJob implements Runnable {
 		System.setProperty(UserConfiguration.PDB_DIR,path);
 
 		String cachePath = params.getCacheFilePath();
-		if ( cachePath != null && ! cachePath.equals(""))
+		if ( cachePath != null && !cachePath.isEmpty())
 			System.setProperty(UserConfiguration.PDB_CACHE_DIR,cachePath);
 		else {
 			// if not provided, we use pdbFilePath as the default CACHE path

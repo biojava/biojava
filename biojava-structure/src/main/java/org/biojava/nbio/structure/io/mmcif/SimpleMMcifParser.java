@@ -272,7 +272,7 @@ public class SimpleMMcifParser implements MMcifParser {
 							continue;
 						}
 						String key = data.get(0);
-						int pos = key.indexOf(".");
+						int pos = key.indexOf('.');
 						if ( pos < 0 ) {
 							// looks like a chem_comp file
 							// line should start with data, otherwise something is wrong!
@@ -358,7 +358,7 @@ public class SimpleMMcifParser implements MMcifParser {
 						continue;
 					}
 					String key = data.get(0);
-					int pos = key.indexOf(".");
+					int pos = key.indexOf('.');
 					if ( pos < 0 ) {
 						// looks like a chem_comp file
 						// line should start with data, otherwise something is wrong!
@@ -443,7 +443,7 @@ public class SimpleMMcifParser implements MMcifParser {
 			if  (c == ' ') {
 
 				if ( ! inString){
-					if ( ! word.equals(""))
+					if (!word.isEmpty())
 						data.add(word.trim());
 					word = "";
 				} else {
@@ -467,7 +467,7 @@ public class SimpleMMcifParser implements MMcifParser {
 					if ( wordEnd ) {
 
 						// at end of string
-						if ( ! word.equals(""))
+						if (!word.isEmpty())
 							data.add(word.trim());
 						word     = "";
 						inString = false;
@@ -497,7 +497,7 @@ public class SimpleMMcifParser implements MMcifParser {
 					if ( wordEnd ) {
 
 						// at end of string
-						if ( ! word.equals(""))
+						if (!word.isEmpty())
 							data.add(word.trim());
 						word     = "";
 						inString = false;
@@ -517,7 +517,7 @@ public class SimpleMMcifParser implements MMcifParser {
 			}
 
 		}
-		if ( ! word.trim().equals(""))
+		if (!word.trim().isEmpty())
 			data.add(word);
 
 

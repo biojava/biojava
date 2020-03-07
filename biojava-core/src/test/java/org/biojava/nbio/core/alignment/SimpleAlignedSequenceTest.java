@@ -53,7 +53,7 @@ public class SimpleAlignedSequenceTest {
 		local = new SimpleAlignedSequence<>(lo, Arrays.asList(Step.COMPOUND, Step.COMPOUND, Step.GAP, Step.GAP, Step.COMPOUND, Step.GAP, Step.COMPOUND,
                 Step.COMPOUND), 1, 3);
 		local2 = new SimpleAlignedSequence<>(go, Arrays.asList(Step.COMPOUND, Step.COMPOUND, Step.COMPOUND), 1, 0);
-		cs = AminoAcidCompoundSet.getAminoAcidCompoundSet();
+        cs = AminoAcidCompoundSet.aminoAcidCompoundSet;
 	}
 
 	@Test(expected=IllegalArgumentException.class)

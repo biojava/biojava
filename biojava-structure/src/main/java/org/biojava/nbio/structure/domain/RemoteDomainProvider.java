@@ -108,9 +108,8 @@ public class RemoteDomainProvider extends SerializableCache<String,SortedSet<Str
 				// work around list in results;
 
 				String[] spl = range.split(",");
-				SortedSet<String> value = new TreeSet<>();
 
-                value.addAll(Arrays.asList(spl));
+                SortedSet<String> value = new TreeSet<>(Arrays.asList(spl));
 				serializedCache.put(entry.getKey(), value);
 			}
 

@@ -134,13 +134,7 @@ public class AlternativeAlignment implements Serializable{
 		d2.setMinimumFractionDigits(2);
 		d2.setMaximumFractionDigits(2);
 		StringBuilder s = new StringBuilder();
-		s.append("#" + getAltAligNumber() +
-				" cluster:" + cluster +
-				" eqr:" + getEqr() +
-				" rmsd:" + d2.format(getRmsd()) +
-				" %id:" + getPercId() +
-				" gaps:" + getGaps() +
-				" score:" + d2.format(score)	);
+		s.append("#").append(getAltAligNumber()).append(" cluster:").append(cluster).append(" eqr:").append(getEqr()).append(" rmsd:").append(d2.format(getRmsd())).append(" %id:").append(getPercId()).append(" gaps:").append(getGaps()).append(" score:").append(d2.format(score));
 
 		return s.toString();
 	}
@@ -305,7 +299,7 @@ public class AlternativeAlignment implements Serializable{
 		//System.out.println("after " + ca[0]);
 	}
 
-	public void finish(StrucAligParameters params,Atom[]ca1,Atom[]ca2) throws StructureException{
+	public void finish(StrucAligParameters params,Atom[]ca1,Atom[]ca2) {
 
 		Atom[] ca3 = new Atom[ca2.length];
 		for ( int i = 0 ; i < ca2.length;i++){
@@ -450,10 +444,9 @@ public class AlternativeAlignment implements Serializable{
 	 * @param params the parameters
 	 * @param ca1 atoms of structure 1
 	 * @param ca2 atoms of structure 2
-	 * @throws StructureException
-	 */
+     */
 
-	public void refine(StrucAligParameters params,Atom[]ca1,Atom[]ca2) throws StructureException{
+	public void refine(StrucAligParameters params,Atom[]ca1,Atom[]ca2) {
 		// System.out.println("refine Alternative Alignment #"+ getAltAligNumber()+" l1:" + ca1.length + " l2:" + ca2.length);
 		//		for ( int i= 0 ; i < idx1.length;i++){
 		//		System.out.println(idx1[i] + " " + idx2[i]);
@@ -738,7 +731,7 @@ public class AlternativeAlignment implements Serializable{
 
 
 
-	public void calculateSuperpositionByIdx(Atom[] ca1, Atom[] ca2)throws StructureException {
+	public void calculateSuperpositionByIdx(Atom[] ca1, Atom[] ca2) {
 
 		super_pos_alig(ca1,ca2,idx1,idx2,false);
 

@@ -512,7 +512,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 	 * @return
 	 * @throws IOException
 	 */
-	private Document getUniprotXML(String accession) throws IOException, CompoundNotFoundException {
+	private Document getUniprotXML(String accession) throws IOException {
 		StringBuilder sb = new StringBuilder();
 		// try in cache
 		if (uniprotDirectoryCache != null && uniprotDirectoryCache.length() > 0) {
@@ -721,7 +721,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 	public static void main(String[] args) {
 
 		try {
-			UniprotProxySequenceReader<AminoAcidCompound> uniprotSequence = new UniprotProxySequenceReader<>("YA745_GIBZE", AminoAcidCompoundSet.getAminoAcidCompoundSet());
+            UniprotProxySequenceReader<AminoAcidCompound> uniprotSequence = new UniprotProxySequenceReader<>("YA745_GIBZE", AminoAcidCompoundSet.aminoAcidCompoundSet);
 			ProteinSequence proteinSequence = new ProteinSequence(uniprotSequence);
 			logger.info("Accession: {}", proteinSequence.getAccession().getID());
 			logger.info("Sequence: {}", proteinSequence.getSequenceAsString());

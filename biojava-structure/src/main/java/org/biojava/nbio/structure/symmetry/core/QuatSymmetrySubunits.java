@@ -51,7 +51,7 @@ public class QuatSymmetrySubunits {
 	private final List<Point3d> centers = new ArrayList<>();
 	private final List<Vector3d> unitVectors = new ArrayList<>();
 
-	private List<Integer> folds;
+	private final List<Integer> folds;
 	private final List<Integer> clusterIds = new ArrayList<>();
 	private final List<SubunitCluster> clusters;
 

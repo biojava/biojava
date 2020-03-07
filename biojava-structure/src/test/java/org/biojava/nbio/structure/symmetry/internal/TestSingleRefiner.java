@@ -243,7 +243,7 @@ public class TestSingleRefiner {
 	}
 
 	@Test
-	public void testExpected() throws StructureException {
+	public void testExpected() {
 
 		for(int i=0;i<alignments.size(); i++) {
 			Map<Integer,Integer> align = alignments.get(i);
@@ -272,7 +272,7 @@ public class TestSingleRefiner {
 	}
 
 	@Test
-	public void testAutomorphism() throws StructureException {
+	public void testAutomorphism() {
 		for(int i=0;i<alignments.size(); i++) {
 			Map<Integer,Integer> align = alignments.get(i);
 
@@ -295,7 +295,7 @@ public class TestSingleRefiner {
 	}
 
 	@Test
-	public void testSymmetric() throws StructureException {
+	public void testSymmetric() {
 		for(int i=0;i<alignments.size(); i++) {
 			Map<Integer,Integer> align = alignments.get(i);
 

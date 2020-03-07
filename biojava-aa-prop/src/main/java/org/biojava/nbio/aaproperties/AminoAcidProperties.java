@@ -43,7 +43,7 @@ public class AminoAcidProperties {
 	 * @param aa The one-letter amino acid code
 	 * @return true if amino acid is charged
 	 */
-	public static final boolean isCharged(char aa) {
+	public static boolean isCharged(char aa) {
 		if (negChargedAAs.contains(String.valueOf(aa))) {
 			return true;
 		}
@@ -60,7 +60,7 @@ public class AminoAcidProperties {
 	 * @param aa The one-letter amino acid code
 	 * @return the charge of amino acid (1 if positively charged, -1 if negatively charged, 0 if not charged)
 	 */
-	public static final int getChargeOfAminoAcid(char aa) {
+	public static int getChargeOfAminoAcid(char aa) {
 		if (negChargedAAs.contains(String.valueOf(aa))) {
 			return -1;
 		}
@@ -76,7 +76,7 @@ public class AminoAcidProperties {
 	 * @param aa The one-letter amino acid code
 	 * @return true if amino acid is polar
 	 */
-	public static final boolean isPolar(char aa) {
+	public static boolean isPolar(char aa) {
 		if (polarAAs.contains(String.valueOf(aa))) {
 			return true;
 		}
@@ -89,7 +89,7 @@ public class AminoAcidProperties {
 	 * @param aa The one-letter amino acid code
 	 * @return the polarity of amino acid (1 if polar, 0 if not polar)
 	 */
-	public static final int getPolarityOfAminoAcid(char aa) {
+	public static int getPolarityOfAminoAcid(char aa) {
 		if (polarAAs.contains(String.valueOf(aa))) {
 			return 1;
 		}

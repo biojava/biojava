@@ -37,7 +37,6 @@ import org.biojava.nbio.core.sequence.io.template.SequenceHeaderParserInterface;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -75,7 +74,7 @@ public class DemoStructureFromFasta {
 		AtomCache cache = new AtomCache();
 
 		// Create SequenceCreator. This converts a String to a ProteinSequence
-		AminoAcidCompoundSet aaSet = AminoAcidCompoundSet.getAminoAcidCompoundSet();
+        AminoAcidCompoundSet aaSet = AminoAcidCompoundSet.aminoAcidCompoundSet;
 		SequenceCreatorInterface<AminoAcidCompound> creator;
 		creator = new ProteinSequenceCreator(aaSet);
 

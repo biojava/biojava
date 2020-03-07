@@ -64,14 +64,14 @@ public class CaseFreeAminoAcidCompoundSet implements CompoundSet<AminoAcidCompou
 		aminoAcidCompoundCache.put("W", new AminoAcidCompound(null, "W", "Trp", "Tryptophan", 186.2132f));
 		aminoAcidCompoundCache.put("Y", new AminoAcidCompound(null, "Y", "Tyr", "Tyrosine", 163.1760f));
 		aminoAcidCompoundCache.put("V", new AminoAcidCompound(null, "V", "Val", "Valine", 99.1326f));
-		aminoAcidCompoundCache.put("B", new AminoAcidCompound(null, "B", "Asx", "Asparagine or Aspartic acid", null));
-		aminoAcidCompoundCache.put("Z", new AminoAcidCompound(null, "Z", "Glx", "Glutamine or Glutamic acid", null));
-		aminoAcidCompoundCache.put("J", new AminoAcidCompound(null, "J", "Xle", "Leucine or Isoleucine", null));
-		aminoAcidCompoundCache.put("X", new AminoAcidCompound(null, "X", "Xaa", "Unspecified", null));
-		aminoAcidCompoundCache.put("-", new AminoAcidCompound(null, "-", "---", "Unspecified", null));
-		aminoAcidCompoundCache.put(".", new AminoAcidCompound(null, ".", "...", "Unspecified", null));
-		aminoAcidCompoundCache.put("_", new AminoAcidCompound(null, "_", "___", "Unspecified", null));
-		aminoAcidCompoundCache.put("*", new AminoAcidCompound(null, "*", "***", "Stop", null));
+		aminoAcidCompoundCache.put("B", new AminoAcidCompound(null, "B", "Asx", "Asparagine or Aspartic acid", Float.NaN));
+		aminoAcidCompoundCache.put("Z", new AminoAcidCompound(null, "Z", "Glx", "Glutamine or Glutamic acid", Float.NaN));
+		aminoAcidCompoundCache.put("J", new AminoAcidCompound(null, "J", "Xle", "Leucine or Isoleucine", Float.NaN));
+		aminoAcidCompoundCache.put("X", new AminoAcidCompound(null, "X", "Xaa", "Unspecified", Float.NaN));
+		aminoAcidCompoundCache.put("-", new AminoAcidCompound(null, "-", "---", "Unspecified", Float.NaN));
+		aminoAcidCompoundCache.put(".", new AminoAcidCompound(null, ".", "...", "Unspecified", Float.NaN));
+		aminoAcidCompoundCache.put("_", new AminoAcidCompound(null, "_", "___", "Unspecified", Float.NaN));
+		aminoAcidCompoundCache.put("*", new AminoAcidCompound(null, "*", "***", "Stop", Float.NaN));
 
 		//Selenocysteine - this is encoded by UGA with the presence
 		//of a SECIS element (SElenoCysteine Insertion Sequence) in the mRNA

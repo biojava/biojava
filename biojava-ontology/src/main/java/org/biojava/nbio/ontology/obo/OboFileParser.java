@@ -82,9 +82,9 @@ public class OboFileParser {
 		escapeChars.put('[', '[');
 		escapeChars.put(']', ']');
 		escapeChars.put('!', '!');
-		for (Character key : escapeChars.keySet()) {
-			Character value = escapeChars.get(key);
-			unescapeChars.put(value, key);
+		for (Map.Entry<Character, Character> entry : escapeChars.entrySet()) {
+			Character value = entry.getValue();
+			unescapeChars.put(value, entry.getKey());
 		}
 	}
 
@@ -276,8 +276,6 @@ public class OboFileParser {
 			if (i == 0) {
 				switch (token) {
 					case "RELATED":
-						scope = Synonym.RELATED_SYNONYM;
-						break;
 					case "UNSPECIFIED":
 						scope = Synonym.RELATED_SYNONYM;
 						break;

@@ -26,9 +26,9 @@ import java.util.*;
 import java.util.Map.Entry;
 
 public class ProteinComplexSignature {
-	private BlastClustReader blastClust;
-	private String pdbId;
-	private List<String> chainIds;
+	private final BlastClustReader blastClust;
+	private final String pdbId;
+	private final List<String> chainIds;
 	private final List<ChainSignature> chainSignatures = new ArrayList<>();
 
 

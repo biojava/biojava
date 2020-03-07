@@ -74,9 +74,8 @@ public class LocalProteinDomainParser {
 	 *
 	 * @param ca an array of Calpha atoms
 	 * @return a list of possible domains
-	 * @throws StructureException
-	 */
-	public static List<Domain> suggestDomains(Atom[] ca) throws StructureException{
+     */
+	public static List<Domain> suggestDomains(Atom[] ca) {
 
 		GetDistanceMatrix distMaxCalculator = new GetDistanceMatrix();
 

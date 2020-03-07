@@ -390,11 +390,11 @@ public class CrystalBuilder {
 
 						if( verbose ) {
 							if (a==0 && b==0 && c==0 && n==0)
-								builder.append(" "+contactsFound+"("+(numPolyChainsAu*(numPolyChainsAu-1))/2+")");
+								builder.append(" ").append(contactsFound).append("(").append((numPolyChainsAu * (numPolyChainsAu - 1)) / 2).append(")");
 							else if (selfEquivalent)
-								builder.append(" "+contactsFound+"("+(numPolyChainsAu*(numPolyChainsAu+1))/2+")");
+								builder.append(" ").append(contactsFound).append("(").append((numPolyChainsAu * (numPolyChainsAu + 1)) / 2).append(")");
 							else
-								builder.append(" "+contactsFound+"("+numPolyChainsAu*numPolyChainsAu+")");
+								builder.append(" ").append(contactsFound).append("(").append(numPolyChainsAu * numPolyChainsAu).append(")");
 
 							logger.debug(builder.toString());
 						}

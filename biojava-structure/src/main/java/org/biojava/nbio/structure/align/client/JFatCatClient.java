@@ -31,10 +31,8 @@ import org.biojava.nbio.structure.align.xml.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Random;
@@ -184,21 +182,18 @@ public class JFatCatClient {
 			// 5 sec
 			InputStream stream = URLConnectionTools.getInputStream(url,timeout);
 
-			String xml = null;
+
 
 			if ( stream != null) {
-
-				xml = convertStreamToString(stream);
+				String xml = convertStreamToString(stream);
+				return AFPChainXMLParser.fromXML(xml, name1, name2, ca1, ca2);
 			}
-			if (xml != null) {
 
-				return AFPChainXMLParser.fromXML (xml, name1, name2, ca1, ca2);
 
-			} else {
-				return null;
-			}
+			return null;
+
 			// TODO dmyersturnbull: method should throw; we shouldn't catch here
-		} catch (IOException | StructureException e){
+		} catch (IOException e){
 			logger.error("error in JFatCatClient: getAFPChainFromServer",e);
 		}
 		return null;
@@ -293,7 +288,7 @@ public class JFatCatClient {
 	}
 
 
-	public static final void sendAFPChainToServer(String serverLocation, AFPChain afpChain,Atom[] ca1, Atom[] ca2) throws JobKillException
+	public static void sendAFPChainToServer(String serverLocation, AFPChain afpChain, Atom[] ca1, Atom[] ca2) throws JobKillException
 	{
 
 		String sendURL = serverLocation + sendAPPEND;
@@ -327,7 +322,7 @@ public class JFatCatClient {
 
 	}
 
-	public static final int getTimeout(){
+	public static int getTimeout(){
 		String timeoutS = resourceManager.getString("connection.timeout");
 		int timeout = 60000;
 
@@ -340,7 +335,7 @@ public class JFatCatClient {
 	}
 
 
-	public static final PdbPairsMessage getPdbPairs(String url,int nrPair, String username) throws IOException, JobKillException {
+	public static PdbPairsMessage getPdbPairs(String url, int nrPair, String username) throws IOException, JobKillException {
 
 
 		String urlS= url + "getPairs?" + "nrPairs=" + nrPair + "&username=" + URLEncoder.encode(username, "UTF-8");
@@ -371,7 +366,7 @@ public class JFatCatClient {
 	}
 
 
-	public static final SortedSet<String> getRepresentatives(String serverLocation, int cutoff){
+	public static SortedSet<String> getRepresentatives(String serverLocation, int cutoff){
 		SortedSet<String> representatives = new TreeSet<>();
 
 		String representURL = serverLocation + representAPPEND;

@@ -106,7 +106,7 @@ public interface XMLWriter {
 	 * @param name The tag name
 	 */
 
-    void closeTag(String name) throws IOException;
+    void closeTag(String name);
 
 	/**
 	 * Hints that a namespace is going to be used in a sub-tree.  Use this method

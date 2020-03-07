@@ -576,7 +576,7 @@ public class StructureAlignmentJmol extends AbstractAlignmentJmol implements Cha
 			count++;
 		}
 
-		buf.append("; backbone 0.6 ; color [" + c1.getRed() + "," + c1.getGreen() + "," + c1.getBlue() + "]; select ");
+		buf.append("; backbone 0.6 ; color [").append(c1.getRed()).append(",").append(c1.getGreen()).append(",").append(c1.getBlue()).append("]; select ");
 
 		count = 0;
 		for (String res : pdb2) {
@@ -589,7 +589,7 @@ public class StructureAlignmentJmol extends AbstractAlignmentJmol implements Cha
 		}
 		// buf.append("; set display selected;");
 
-		buf.append("; backbone 0.6 ; color [" + c2.getRed() + "," + c2.getGreen() + "," + c2.getBlue() + "];");
+		buf.append("; backbone 0.6 ; color [").append(c2.getRed()).append(",").append(c2.getGreen()).append(",").append(c2.getBlue()).append("];");
 
 		// now color this block:
 		jmol.append(buf);

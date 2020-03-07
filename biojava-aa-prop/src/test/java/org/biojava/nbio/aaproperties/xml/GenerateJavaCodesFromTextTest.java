@@ -55,7 +55,7 @@ public class GenerateJavaCodesFromTextTest {
 		List<String> elementNameList = new ArrayList<>();
 		String elementName = null;
 		String elementNameLower = null;
-		Double elementMass;
+		double elementMass;
 		while((line = input.readLine()) != null){
 			String[] sA = line.split("\t");
 			if(sA[0].length() > 0){
@@ -90,7 +90,7 @@ public class GenerateJavaCodesFromTextTest {
 	}
 
 	private double cleanNumber(String s){
-		int index = s.indexOf("(");
+		int index = s.indexOf('(');
 		if(index != -1) s = s.substring(0, index);
 		return Double.parseDouble(s.replace(" ", "").replace("[", "").replace("]", ""));
 	}

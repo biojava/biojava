@@ -24,15 +24,11 @@
 package org.biojava.nbio.ontology.io;
 
 import org.biojava.nbio.ontology.*;
-import org.biojava.nbio.ontology.obo.OboFileEventListener;
 import org.biojava.nbio.ontology.obo.OboFileHandler;
 import org.biojava.nbio.ontology.obo.OboFileParser;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.text.ParseException;
-
-
 
 
 /** Parses an OBO file.

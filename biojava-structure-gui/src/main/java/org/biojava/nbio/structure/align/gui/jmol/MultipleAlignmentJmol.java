@@ -25,9 +25,7 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.StringWriter;
@@ -323,7 +321,7 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 
 	@Override
 	protected void initCoords() {
-		try {
+//		try {
 			if (multAln == null) {
 				if (structure != null)
 					setStructure(structure);
@@ -334,10 +332,11 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 			}
 			Structure artificial = MultipleAlignmentTools.toMultimodelStructure(multAln, transformedAtoms);
 			setStructure(artificial);
-			logger.info(artificial.getPDBHeader().getTitle());
-		} catch (StructureException e) {
-			e.printStackTrace();
-		}
+			if (logger.isInfoEnabled())
+				logger.info(artificial.getPDBHeader().getTitle());
+//		} catch (StructureException e) {
+//			e.printStackTrace();
+//		}
 	}
 
 	@Override
@@ -437,12 +436,11 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 				pos++;
 
 				sel.append(res);
-				sel.append("/" + (i + 1));
+				sel.append("/").append(i + 1);
 			}
 			if (pos == 0)
 				sel.append("none");
-			sel.append("; backbone 0.3 ; color [" + colors[i].getRed() + ","
-					+ colors[i].getGreen() + "," + colors[i].getBlue() + "]; ");
+			sel.append("; backbone 0.3 ; color [").append(colors[i].getRed()).append(",").append(colors[i].getGreen()).append(",").append(colors[i].getBlue()).append("]; ");
 		}
 
 		j.append(sel);
@@ -470,8 +468,7 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 
 		// For every structure color all the blocks with the printBlock method
 		for (int str = 0; str < transformedAtoms.size(); str++) {
-			jmol.append("select */" + (str + 1) + "; color lightgrey; model "
-					+ (str + 1) + "; ");
+			jmol.append("select */").append(String.valueOf(str + 1)).append("; color lightgrey; model ").append(String.valueOf(str + 1)).append("; ");
 
 			int index = 0;
 			for (BlockSet bs : multAln.getBlockSets()) {
@@ -513,12 +510,11 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 			if (count > 0)
 				buf.append(",");
 			buf.append(res);
-			buf.append("/" + (str + 1));
+			buf.append("/").append(str + 1);
 			count++;
 		}
 
-		buf.append("; backbone 0.3 ; color [" + blockColor.getRed() + ","
-				+ blockColor.getGreen() + "," + blockColor.getBlue() + "]; ");
+		buf.append("; backbone 0.3 ; color [").append(blockColor.getRed()).append(",").append(blockColor.getGreen()).append(",").append(blockColor.getBlue()).append("]; ");
 
 		jmol.append(buf);
 	}

@@ -97,11 +97,11 @@ public class GenbankReaderTest {
 		InputStream inStream = this.getClass().getResourceAsStream("/BondFeature.gb");
 		assertNotNull(inStream);
 
-		GenbankReader<ProteinSequence, AminoAcidCompound> genbankProtein
+        GenbankReader<ProteinSequence, AminoAcidCompound> genbankProtein
 				= new GenbankReader<>(
 						inStream,
 						new GenericGenbankHeaderParser<>(),
-						new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet())
+						new ProteinSequenceCreator(AminoAcidCompoundSet.aminoAcidCompoundSet)
 				);
 
 		LinkedHashMap<String, ProteinSequence> proteinSequences = genbankProtein.process();
@@ -207,11 +207,11 @@ public class GenbankReaderTest {
 		CheckableInputStream inStream = new CheckableInputStream(this.getClass().getResourceAsStream("/BondFeature.gb"));
 		assertNotNull(inStream);
 
-		GenbankReader<ProteinSequence, AminoAcidCompound> GenbankProtein
+        GenbankReader<ProteinSequence, AminoAcidCompound> GenbankProtein
 				= new GenbankReader<>(
 						inStream,
 						new GenericGenbankHeaderParser<>(),
-						new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet())
+						new ProteinSequenceCreator(AminoAcidCompoundSet.aminoAcidCompoundSet)
 				);
 		LinkedHashMap<String, ProteinSequence> proteinSequences = GenbankProtein.process();
 		assertTrue(inStream.isclosed());
@@ -260,11 +260,11 @@ public class GenbankReaderTest {
 	
 	private ProteinSequence readGenbankProteinResource(final String resource) throws IOException, CompoundNotFoundException {
 		InputStream inputStream = getClass().getResourceAsStream(resource);
-		GenbankReader<ProteinSequence, AminoAcidCompound> genbankProtein
+        GenbankReader<ProteinSequence, AminoAcidCompound> genbankProtein
 		= new GenbankReader<>(
 				inputStream,
 				new GenericGenbankHeaderParser<>(),
-				new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet())
+				new ProteinSequenceCreator(AminoAcidCompoundSet.aminoAcidCompoundSet)
 				);
 		LinkedHashMap<String, ProteinSequence> proteinSequences = genbankProtein.process();
 		return proteinSequences.values().iterator().next();	

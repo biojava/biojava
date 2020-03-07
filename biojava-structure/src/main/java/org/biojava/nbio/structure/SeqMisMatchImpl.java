@@ -115,20 +115,20 @@ public class SeqMisMatchImpl implements SeqMisMatch, Serializable{
 		s.append("seqNum=" );
 		s.append(seqNum );
 		s.append(", origGroup='" );
-		s.append(origGroup + '\'' );
+		s.append(origGroup).append('\'');
 		s.append(", pdbGroup='" );
-		s.append(pdbGroup + '\'' );
+		s.append(pdbGroup).append('\'');
 		s.append(", details='" );
-		s.append(details + '\'' );
+		s.append(details).append('\'');
 		s.append(", uniProtId='" );
-		s.append(uniProtId + '\'' );
+		s.append(uniProtId).append('\'');
 		s.append(", pdbResNum='" );
-		s.append(pdbResNum + '\'' );
+		s.append(pdbResNum).append('\'');
 
 		if ( insCode == null)
 			s.append(", insCode=null ") ;
 		else
-			s.append(", insCode='" + insCode + '\'') ;
+			s.append(", insCode='").append(insCode).append('\'');
 
 		s.append('}');
 		return s.toString();

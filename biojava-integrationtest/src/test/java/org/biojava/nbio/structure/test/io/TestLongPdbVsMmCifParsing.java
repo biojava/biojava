@@ -229,7 +229,10 @@ public class TestLongPdbVsMmCifParsing {
 		// sugar polymers are not in pdb at all: we avoid them
 		boolean canCompareEntityCounts = true;
 		for (EntityInfo e:sCif.getEntityInfos()) {
-			if (e.getDescription().contains("SUGAR")) canCompareEntityCounts = false;
+			if (e.getDescription().contains("SUGAR")) {
+				canCompareEntityCounts = false;
+				break;
+			}
 		}
 		if (canCompareEntityCounts) {
 			int entCountCif = 0;

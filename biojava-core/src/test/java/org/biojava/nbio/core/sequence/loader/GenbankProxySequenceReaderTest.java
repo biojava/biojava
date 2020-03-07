@@ -127,7 +127,7 @@ public class GenbankProxySequenceReaderTest {
 		GenbankProxySequenceReader<AminoAcidCompound> genbankReader
 				= new GenbankProxySequenceReader<>(System.getProperty("java.io.tmpdir"),
 						this.gi,
-						AminoAcidCompoundSet.getAminoAcidCompoundSet());
+				AminoAcidCompoundSet.aminoAcidCompoundSet);
 
 		// why only tests on protein sequences?
 		ProteinSequence seq = new ProteinSequence(genbankReader);
@@ -182,7 +182,7 @@ public class GenbankProxySequenceReaderTest {
 		GenbankProxySequenceReader<AminoAcidCompound> genbankReader
 				= new GenbankProxySequenceReader<>(System.getProperty("java.io.tmpdir"),
 						this.gi,
-						AminoAcidCompoundSet.getAminoAcidCompoundSet());
+				AminoAcidCompoundSet.aminoAcidCompoundSet);
 
 		ProteinSequence seq = new ProteinSequence(genbankReader);
 

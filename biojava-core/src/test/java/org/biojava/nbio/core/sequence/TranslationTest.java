@@ -52,8 +52,8 @@ public class TranslationTest {
 	private final static Logger logger = LoggerFactory.getLogger(TranslationTest.class);
 
 	private static final DNACompoundSet dnaCs = DNACompoundSet.getDNACompoundSet();
-	private static final AminoAcidCompoundSet aaCs = AminoAcidCompoundSet.getAminoAcidCompoundSet();
-	private static DNASequence brca2Dna;
+	private static final AminoAcidCompoundSet aaCs = AminoAcidCompoundSet.aminoAcidCompoundSet;
+    private static DNASequence brca2Dna;
 	private static Sequence<AminoAcidCompound> brca2Pep;
 	private static Sequence<NucleotideCompound> volvoxDna;
 	private static Sequence<AminoAcidCompound> volvoxPep;

@@ -115,11 +115,10 @@ public class MultipleMcMain implements MultipleStructureAligner {
 	 * @return MultipleAlignment seed alignment
 	 * @throws ExecutionException
 	 * @throws InterruptedException
-	 * @throws StructureException
-	 */
+     */
 	private MultipleAlignment generateSeed(List<Atom[]> atomArrays)
 			throws InterruptedException,
-			ExecutionException, StructureException {
+			ExecutionException {
 
 		int size = atomArrays.size();
 

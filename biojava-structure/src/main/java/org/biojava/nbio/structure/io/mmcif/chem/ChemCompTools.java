@@ -157,7 +157,7 @@ public class ChemCompTools {
 		return DNA_LOOKUP_1TO2.get(c);
 	}
 
-	public static final boolean isStandardChemComp(ChemComp cc){
+	public static boolean isStandardChemComp(ChemComp cc){
 
 		String pid = cc.getMon_nstd_parent_comp_id();
 		String one = cc.getOne_letter_code();

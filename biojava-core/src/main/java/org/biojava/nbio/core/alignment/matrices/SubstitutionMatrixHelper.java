@@ -251,8 +251,8 @@ public class SubstitutionMatrixHelper implements Serializable {
 	// reads in an amino acid substitution matrix, if necessary
 	private static SubstitutionMatrix<AminoAcidCompound> getAminoAcidMatrix(String file) {
 		if (!aminoAcidMatrices.containsKey(file)) {
-			aminoAcidMatrices.put(file, new SimpleSubstitutionMatrix<>(
-					AminoAcidCompoundSet.getAminoAcidCompoundSet(), getReader(file), file));
+            aminoAcidMatrices.put(file, new SimpleSubstitutionMatrix<>(
+                    AminoAcidCompoundSet.aminoAcidCompoundSet, getReader(file), file));
 		}
 		return aminoAcidMatrices.get(file);
 	}

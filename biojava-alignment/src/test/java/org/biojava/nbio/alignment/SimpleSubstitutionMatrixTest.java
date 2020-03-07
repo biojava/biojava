@@ -42,7 +42,7 @@ public class SimpleSubstitutionMatrixTest {
 
 	@Test(expected=FileNotFoundException.class)
 	public void testSimpleSubstitutionMatrixNotFound() throws FileNotFoundException {
-		new SimpleSubstitutionMatrix<>(AminoAcidCompoundSet.getAminoAcidCompoundSet(),
+        new SimpleSubstitutionMatrix<>(AminoAcidCompoundSet.aminoAcidCompoundSet,
 				new File("blosum63.txt"));
 	}
 
@@ -61,7 +61,7 @@ public class SimpleSubstitutionMatrixTest {
 	@Test()
 	public void testSimpleSubstitutionMatrix() {
 		SubstitutionMatrix<AminoAcidCompound> matrix = SimpleSubstitutionMatrix.getBlosum62();
-		assertEquals(matrix.getCompoundSet(), AminoAcidCompoundSet.getAminoAcidCompoundSet());
+        assertEquals(matrix.getCompoundSet(), AminoAcidCompoundSet.aminoAcidCompoundSet);
 		assertEquals(matrix.getName(), "blosum62");
 		assertEquals(matrix.getMaxValue(), 11);
 		assertEquals(matrix.getMinValue(), -4);
@@ -83,8 +83,8 @@ public class SimpleSubstitutionMatrixTest {
 
 	@Test
 	public void testSimpleSubstitutionMatrixCompoundSetOfCShortShort() {
-		SubstitutionMatrix<AminoAcidCompound> matrix = new SimpleSubstitutionMatrix<>(
-				AminoAcidCompoundSet.getAminoAcidCompoundSet(), (short) 5, (short) 1);
+        SubstitutionMatrix<AminoAcidCompound> matrix = new SimpleSubstitutionMatrix<>(
+                AminoAcidCompoundSet.aminoAcidCompoundSet, (short) 5, (short) 1);
 		assertEquals(matrix.getName(), "IDENTITY_5_1");
 	}
 

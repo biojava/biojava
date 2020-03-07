@@ -74,14 +74,12 @@ public class TestDNAAlignment {
 
 	private static List<DNASequence> getDNAFASTAFile() throws Exception {
 
-		InputStream inStream = TestDNAAlignment.class.getResourceAsStream(String.format("/dna-fasta.txt"));
+		InputStream inStream = TestDNAAlignment.class.getResourceAsStream("/dna-fasta.txt");
 		LinkedHashMap<String, DNASequence> fastas = FastaReaderHelper.readFastaDNASequence(inStream);
 
 		List<DNASequence> sequences = new ArrayList<>();
 
-		for (DNASequence seq : fastas.values()) {
-            sequences.add(seq);
-		}
+        sequences.addAll(fastas.values());
 
 		return sequences;
 	}

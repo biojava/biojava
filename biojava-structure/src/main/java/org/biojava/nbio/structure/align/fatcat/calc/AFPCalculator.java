@@ -45,7 +45,7 @@ public class AFPCalculator
 	public static final boolean debug = FatCatAligner.debug;
 
 
-	public static final  void extractAFPChains(FatCatParameters params, AFPChain afpChain,Atom[] ca1,Atom[] ca2) throws StructureException {
+	public static void extractAFPChains(FatCatParameters params, AFPChain afpChain, Atom[] ca1, Atom[] ca2) {
 
 
 
@@ -144,7 +144,7 @@ public class AFPCalculator
 	 * @param p2e
 	 * @return
 	 */
-	private static final double getEnd2EndDistance(Atom[] ca1, Atom[] ca2, int p1b, int p1e, int p2b, int p2e)
+	private static double getEnd2EndDistance(Atom[] ca1, Atom[] ca2, int p1b, int p1e, int p2b, int p2e)
 	{
 
 		double min;
@@ -164,7 +164,7 @@ public class AFPCalculator
 	 * @return
 	 */
 
-	private static final  boolean filterTerminal(Atom[] ca1, Atom[] ca2, int p1b, int p1e, int p2b, int p2e, int fragLen, int minLen)
+	private static boolean filterTerminal(Atom[] ca1, Atom[] ca2, int p1b, int p1e, int p2b, int p2e, int fragLen, int minLen)
 	{
 		int     d1 = Math.min(p1b, p2b);
 		int     d2 = Math.min((ca1.length - p1e), (ca2.length - p2e));
@@ -178,8 +178,8 @@ public class AFPCalculator
 
 	}
 
-	private static final double getRmsd(Atom[] ca1, Atom[] ca2, int fragLen,
-			int p1, int p2, Matrix m, Atom t) {
+	private static double getRmsd(Atom[] ca1, Atom[] ca2, int fragLen,
+                                  int p1, int p2, Matrix m, Atom t) {
 
 
 		double rmsd = 99.9;
@@ -208,8 +208,8 @@ public class AFPCalculator
 	 * @param clone: returns a copy of the atom (in case the coordinate get manipulated...)
 	 * @return an Atom[] array
 	 */
-	private static final Atom[] getFragment(Atom[] caall, int pos, int fragmentLength ,
-			boolean clone){
+	private static Atom[] getFragment(Atom[] caall, int pos, int fragmentLength ,
+                                      boolean clone){
 
 		if ( pos+fragmentLength > caall.length)
 			return null;
@@ -232,7 +232,7 @@ public class AFPCalculator
 	 * Assign score to each AFP
 	 */
 
-	private static final double scoreAfp(AFP afp, double badRmsd, double fragScore)
+	private static double scoreAfp(AFP afp, double badRmsd, double fragScore)
 	{
 		//longer AFP with low rmsd is better
 		double  s, w;
@@ -246,7 +246,7 @@ public class AFPCalculator
 	//------------------------------------------------------------------
 	//Sort the AFPs in increase of their diagonals(i,j)
 	//------------------------------------------------------------------
-	public static final  void sortAfps(AFPChain afpChain, Atom[] ca1, Atom[] ca2)
+	public static void sortAfps(AFPChain afpChain, Atom[] ca1, Atom[] ca2)
 	{
 
 

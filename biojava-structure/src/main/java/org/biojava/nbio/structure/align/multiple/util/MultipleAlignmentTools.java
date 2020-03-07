@@ -23,8 +23,6 @@ package org.biojava.nbio.structure.align.multiple.util;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -818,7 +816,7 @@ public class MultipleAlignmentTools {
 		return msa;
 	}
 
-	public static Structure toMultimodelStructure(MultipleAlignment multAln, List<Atom[]> transformedAtoms) throws StructureException {
+	public static Structure toMultimodelStructure(MultipleAlignment multAln, List<Atom[]> transformedAtoms) {
 		PDBHeader header = new PDBHeader();
 		String title = multAln.getEnsemble().getAlgorithmName() + " V."
 				+ multAln.getEnsemble().getVersion() + " : ";
@@ -843,7 +841,7 @@ public class MultipleAlignmentTools {
 	 * @return a structure object containing a set of models,
 	 * 			one for each input array of Atoms.
 	 */
-	public static final Structure getAlignedStructure(List<Atom[]> atomArrays) {
+	public static Structure getAlignedStructure(List<Atom[]> atomArrays) {
 
 		Structure s = new StructureImpl();
 		for (int i=0; i<atomArrays.size(); i++){

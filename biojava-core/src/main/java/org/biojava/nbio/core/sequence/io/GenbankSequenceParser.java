@@ -166,7 +166,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 						String type = m.group(5);
 
 						if (lengthUnits.equalsIgnoreCase("aa")) {
-							compoundType = AminoAcidCompoundSet.getAminoAcidCompoundSet();
+							compoundType = AminoAcidCompoundSet.aminoAcidCompoundSet;
 						} else if (lengthUnits.equalsIgnoreCase("bp")) {
 							if (type != null) {
 								if (type.contains("RNA")) {
@@ -268,11 +268,11 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 								if (m.matches()) {
 									String dbname = m.group(1);
 									String raccession = m.group(2);
-									Qualifier xref = new DBReferenceInfo(dbname, raccession);
+									DBReferenceInfo xref = new DBReferenceInfo(dbname, raccession);
 									gbFeature.addQualifier(key, xref);
 
 									ArrayList<DBReferenceInfo> listDBEntry = new ArrayList<>();
-									listDBEntry.add((DBReferenceInfo) xref);
+									listDBEntry.add(xref);
 									mapDB.put(key, listDBEntry);
 								} else {
 									throw new ParserException("Bad dbxref");
@@ -321,12 +321,8 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 					seqData = seq.toString().replaceAll("\\s+", "").replaceAll("[\\.|~]", "-").toUpperCase();
 					break;
 				case DBSOURCE:
-					//TODO
-					break;
-				case PRIMARY:
-					//TODO
-					break;
 				case DBLINK:
+				case PRIMARY:
 					//TODO
 					break;
 				default:

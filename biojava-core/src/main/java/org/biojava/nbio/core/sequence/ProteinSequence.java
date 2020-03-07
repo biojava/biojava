@@ -67,7 +67,7 @@ public class ProteinSequence extends AbstractSequence<AminoAcidCompound> {
 	 * @throws CompoundNotFoundException
 	 */
 	public ProteinSequence(String seqString) throws CompoundNotFoundException {
-		this(seqString, AminoAcidCompoundSet.getAminoAcidCompoundSet());
+        this(seqString, AminoAcidCompoundSet.aminoAcidCompoundSet);
 	}
 
 	/**
@@ -89,7 +89,7 @@ public class ProteinSequence extends AbstractSequence<AminoAcidCompound> {
 	 * @param proxyLoader
 	 */
 	public ProteinSequence(ProxySequenceReader<AminoAcidCompound> proxyLoader) {
-		this(proxyLoader, AminoAcidCompoundSet.getAminoAcidCompoundSet());
+        this(proxyLoader, AminoAcidCompoundSet.aminoAcidCompoundSet);
 	}
 
 	/**
@@ -203,7 +203,7 @@ public class ProteinSequence extends AbstractSequence<AminoAcidCompound> {
 		ProteinSequence proteinSequence = new ProteinSequence("ARNDCEQGHILKMFPSTWYVBZJX");
 		logger.info("Protein Sequence: {}", proteinSequence.toString());
 
-		StringProxySequenceReader<AminoAcidCompound> sequenceStringProxyLoader = new StringProxySequenceReader<>("XRNDCEQGHILKMFPSTWYVBZJA", AminoAcidCompoundSet.getAminoAcidCompoundSet());
+        StringProxySequenceReader<AminoAcidCompound> sequenceStringProxyLoader = new StringProxySequenceReader<>("XRNDCEQGHILKMFPSTWYVBZJA", AminoAcidCompoundSet.aminoAcidCompoundSet);
 		ProteinSequence proteinSequenceFromProxy = new ProteinSequence(sequenceStringProxyLoader);
 		logger.info("Protein Sequence from Proxy: {}", proteinSequenceFromProxy.toString());
 

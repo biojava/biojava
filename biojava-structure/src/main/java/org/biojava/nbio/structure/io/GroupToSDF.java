@@ -53,7 +53,7 @@ public class GroupToSDF {
 			String spaceY = getSpace(10, df.format(a.getY()));
 			String spaceZ = getSpace(10, df.format(a.getZ()));
 			String spaceEle = getSpace(4, a.getElement().toString());
-			atomList.append(spaceX+df.format(a.getX())+spaceY+df.format(a.getY())+spaceZ+df.format(a.getZ())+" "+a.getElement().toString()+spaceEle+"0  0  0  0  0  0  0  0  0  0  0  0\n");
+			atomList.append(spaceX).append(df.format(a.getX())).append(spaceY).append(df.format(a.getY())).append(spaceZ).append(df.format(a.getZ())).append(" ").append(a.getElement().toString()).append(spaceEle).append("0  0  0  0  0  0  0  0  0  0  0  0\n");
 			for(Bond b: a.getBonds()){
 				Atom otherAtom = b.getOther(a);
 				if(atoms.indexOf(otherAtom)>=atoms.indexOf(a)){
@@ -106,8 +106,8 @@ public class GroupToSDF {
 				if(chargeCount==0){
 					outS.append("M  CHG   N");
 				}
-				outS.append(getSpace(4, Integer.toString(i))+(i+1));
-				outS.append(getSpace(4, Short.toString(charge))+charge);
+				outS.append(getSpace(4, Integer.toString(i))).append(i + 1);
+				outS.append(getSpace(4, Short.toString(charge))).append(charge);
 				chargeCount++;
 			}
 			//

@@ -61,11 +61,11 @@ public class TargetedLocationParserTest {
 	public static Collection<Data[]> getLocations() {
 
 
-		Data[][] out = new Data[][]{
-			{new Data("7525057", AminoAcidCompoundSet.getAminoAcidCompoundSet(),
+        Data[][] out = new Data[][]{
+			{new Data("7525057", AminoAcidCompoundSet.aminoAcidCompoundSet,
 					"join(complement(NC_000932.1:69611..69724),NC_000932.1:139856..140087,NC_000932.1:140625..140650)", DNACompoundSet.getDNACompoundSet())},
 
-			{new Data("7525059", AminoAcidCompoundSet.getAminoAcidCompoundSet(),
+			{new Data("7525059", AminoAcidCompoundSet.aminoAcidCompoundSet,
 					"NC_000932.1:72371..73897", DNACompoundSet.getDNACompoundSet())},
 
 			{new Data("7525073", DNACompoundSet.getDNACompoundSet() ,

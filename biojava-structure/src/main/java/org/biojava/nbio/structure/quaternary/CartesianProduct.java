@@ -21,7 +21,6 @@
 package org.biojava.nbio.structure.quaternary;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 
@@ -43,8 +42,8 @@ import java.util.List;
  */
 public class CartesianProduct<T> {
 
-	private List<T> list1;
-	private List<T> list2;
+	private final List<T> list1;
+	private final List<T> list2;
 
 	/**
 	 * Class constructor specifying the two lists of a cartesian product.

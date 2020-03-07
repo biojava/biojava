@@ -157,7 +157,7 @@ public interface Table {
 		}
 
 		@Override
-		public Float getMolecularWeight() {
+		public float getMolecularWeight() {
 			throw new UnsupportedOperationException("Not supported");
 		}
 
@@ -176,10 +176,10 @@ public interface Table {
 			throw new UnsupportedOperationException("Not supported");
 		}
 
-		@Override
-		public void setMolecularWeight(Float molecularWeight) {
-			throw new UnsupportedOperationException("Not supported");
-		}
+//		@Override
+//		public void setMolecularWeight(Float molecularWeight) {
+//			throw new UnsupportedOperationException("Not supported");
+//		}
 
 		@Override
 		public void setShortName(String shortName) {

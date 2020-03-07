@@ -57,12 +57,11 @@ public class DemoDistanceTree {
 		InputStream inStream = TreeConstructor.class
 				.getResourceAsStream("/PF00104_small.fasta");
 
-		FastaReader<ProteinSequence, AminoAcidCompound> fastaReader =
+        FastaReader<ProteinSequence, AminoAcidCompound> fastaReader =
 				new FastaReader<>(
 						inStream,
 						new GenericFastaHeaderParser<>(),
-						new ProteinSequenceCreator(AminoAcidCompoundSet
-								.getAminoAcidCompoundSet()));
+						new ProteinSequenceCreator(AminoAcidCompoundSet.aminoAcidCompoundSet));
 
 		LinkedHashMap<String, ProteinSequence> proteinSequences =
 				fastaReader.process();

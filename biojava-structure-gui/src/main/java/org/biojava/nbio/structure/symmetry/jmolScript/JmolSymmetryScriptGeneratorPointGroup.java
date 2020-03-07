@@ -49,7 +49,7 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 	private RotationAxisAligner rotationAxisAligner;
 	private RotationGroup rotationGroup;
 	private Polyhedron polyhedron = null;
-	private String name;
+	private final String name;
 	private String defaultColoring = "";
 	private boolean onTheFly = true;
 

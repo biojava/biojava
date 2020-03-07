@@ -96,10 +96,10 @@ public class ParseFastaFileDemo {
 		InputStream inStream = isp.getInputStream(f);
 
 
-		FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = new FastaReader<>(
+        FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = new FastaReader<>(
 				inStream,
 				new GenericFastaHeaderParser<>(),
-				new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
+				new ProteinSequenceCreator(AminoAcidCompoundSet.aminoAcidCompoundSet));
 
 		LinkedHashMap<String, ProteinSequence> b;
 

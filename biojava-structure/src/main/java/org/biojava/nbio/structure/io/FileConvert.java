@@ -187,13 +187,13 @@ public class FileConvert {
 		// do for all models
 		int nrModels = structure.nrModels() ;
 		if ( structure.isNmr()) {
-			str.append("EXPDTA    NMR, "+ nrModels+" STRUCTURES"+newline) ;
+			str.append("EXPDTA    NMR, ").append(nrModels).append(" STRUCTURES").append(newline);
 		}
 		for (int m = 0 ; m < nrModels ; m++) {
 
 
 			if ( nrModels>1 ) {
-				str.append("MODEL      " + (m+1)+ newline);
+				str.append("MODEL      ").append(m + 1).append(newline);
 			}
 
 			List<Chain> polyChains = structure.getPolyChains(m);
@@ -598,7 +598,7 @@ public class FileConvert {
 
 		StringBuilder str = new StringBuilder();
 
-		str.append(SimpleMMcifParser.MMCIF_TOP_HEADER+"BioJava_mmCIF_file"+newline);
+		str.append(SimpleMMcifParser.MMCIF_TOP_HEADER + "BioJava_mmCIF_file").append(newline);
 
 		if (structure.getPDBHeader()!=null && structure.getPDBHeader().getCrystallographicInfo()!=null &&
 				structure.getPDBHeader().getCrystallographicInfo().getSpaceGroup()!=null &&
@@ -637,7 +637,7 @@ public class FileConvert {
 
 	public static String toMMCIF(Chain chain, boolean writeHeader) {
 		StringBuilder sb = new StringBuilder();
-		sb.append(SimpleMMcifParser.MMCIF_TOP_HEADER+"BioJava_mmCIF_file"+newline);
+		sb.append(SimpleMMcifParser.MMCIF_TOP_HEADER + "BioJava_mmCIF_file").append(newline);
 		sb.append(toMMCIF(chain, chain.getName(), chain.getId(),writeHeader));
 		return sb.toString();
 	}

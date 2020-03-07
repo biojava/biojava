@@ -31,7 +31,6 @@ import org.biojava.nbio.core.sequence.template.CompoundSet;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -272,7 +271,7 @@ public class CommandPrompt {
 		}else{
 			sequence = Utils.checkSequence(sequence);
 			pSequence = new ProteinSequence(sequence);
-			aaSet = AminoAcidCompoundSet.getAminoAcidCompoundSet();
+            aaSet = AminoAcidCompoundSet.aminoAcidCompoundSet;
 		}
 		IPeptideProperties pp = new PeptidePropertiesImpl();
 

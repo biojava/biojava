@@ -57,6 +57,7 @@ public class TestRemoteHmmerScan {
 		for (HmmerResult hmmerResult : results) {
 			if (hmmerResult.getName().equals("HTH_5")) {
 				gotSh2Domain = true;
+				break;
 			}
 		}
 

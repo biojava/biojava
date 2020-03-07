@@ -28,7 +28,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -123,7 +122,7 @@ public class URLIdentifier implements StructureIdentifier {
 		}
 		if(pdbId == null) {
 			String path = url.getPath();
-			pdbId = guessPDBID(path.substring(path.lastIndexOf("/")+1));
+			pdbId = guessPDBID(path.substring(path.lastIndexOf('/')+1));
 		}
 		return new SubstructureIdentifier(pdbId, ranges);
 	}
@@ -225,7 +224,7 @@ public class URLIdentifier implements StructureIdentifier {
 		}
 		String[] pairs = url.getQuery().split("&");
 		for(String pair: pairs) {
-			int i = pair.indexOf("=");
+			int i = pair.indexOf('=');
 			String key = pair;
 			if(i > 0) {
 				key = URLDecoder.decode(pair.substring(0, i), "UTF-8");

@@ -67,7 +67,7 @@ public class SymmOptimizer {
 	private final Random rnd;
 
 	// Optimization parameters
-	private int Rmin; // min aligned repeats per column
+	private final int Rmin; // min aligned repeats per column
 	private final int Lmin; // min repeat length
 	private int maxIter; // max iterations
 	private double C = 20; // probability of accept bad moves constant
@@ -197,11 +197,9 @@ public class SymmOptimizer {
 
 		// Save the optimal alignment
 		List<List<Integer>> optBlock = new ArrayList<>();
-		List<Integer> optFreePool = new ArrayList<>();
-		optFreePool.addAll(freePool);
+        List<Integer> optFreePool = new ArrayList<>(freePool);
 		for (int k = 0; k < order; k++) {
-			List<Integer> b = new ArrayList<>();
-			b.addAll(block.get(k));
+            List<Integer> b = new ArrayList<>(block.get(k));
 			optBlock.add(b);
 		}
 		double optScore = mcScore;
@@ -215,11 +213,9 @@ public class SymmOptimizer {
 
 			// Save the state of the system
 			List<List<Integer>> lastBlock = new ArrayList<>();
-			List<Integer> lastFreePool = new ArrayList<>();
-			lastFreePool.addAll(freePool);
+            List<Integer> lastFreePool = new ArrayList<>(freePool);
 			for (int k = 0; k < order; k++) {
-				List<Integer> b = new ArrayList<>();
-				b.addAll(block.get(k));
+                List<Integer> b = new ArrayList<>(block.get(k));
 				lastBlock.add(b);
 			}
 			double lastScore = mcScore;
@@ -282,11 +278,9 @@ public class SymmOptimizer {
 			// Store as the optimal alignment if better
 			if (mcScore > optScore) {
 				optBlock = new ArrayList<>();
-				optFreePool = new ArrayList<>();
-				optFreePool.addAll(freePool);
+                optFreePool = new ArrayList<>(freePool);
 				for (int k = 0; k < order; k++) {
-					List<Integer> b = new ArrayList<>();
-					b.addAll(block.get(k));
+                    List<Integer> b = new ArrayList<>(block.get(k));
 					optBlock.add(b);
 				}
 				optScore = mcScore;
@@ -842,12 +836,12 @@ public class SymmOptimizer {
 		writer.append("Step,Time,RepeatLength,RMSD,TMscore,MCscore\n");
 
 		for (int i = 0; i < lengthHistory.size(); i++) {
-			writer.append(i * saveStep + ",");
-			writer.append(timeHistory.get(i) + ",");
-			writer.append(lengthHistory.get(i) + ",");
-			writer.append(rmsdHistory.get(i) + ",");
-			writer.append(tmScoreHistory.get(i) + ",");
-			writer.append(mcScoreHistory.get(i) + "\n");
+			writer.append(String.valueOf(i * saveStep)).append(",");
+			writer.append(String.valueOf(timeHistory.get(i))).append(",");
+			writer.append(String.valueOf(lengthHistory.get(i))).append(",");
+			writer.append(String.valueOf(rmsdHistory.get(i))).append(",");
+			writer.append(String.valueOf(tmScoreHistory.get(i))).append(",");
+			writer.append(String.valueOf(mcScoreHistory.get(i))).append("\n");
 		}
 
 		writer.flush();

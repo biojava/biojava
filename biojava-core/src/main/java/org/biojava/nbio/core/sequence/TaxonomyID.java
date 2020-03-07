@@ -30,7 +30,7 @@ package org.biojava.nbio.core.sequence;
 public class TaxonomyID {
 
 
-	private String id;
+	private final String id;
 	DataSource dataSource;
 
 	public TaxonomyID(String id, DataSource dataSource) {

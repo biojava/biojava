@@ -35,7 +35,6 @@ import java.util.BitSet;
 import java.util.List;
 
 import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.gui.JPrintPanel;
 import org.biojava.nbio.structure.align.gui.MenuCreator;
 import org.biojava.nbio.structure.align.gui.MultipleAlignmentJmolDisplay;
@@ -359,7 +358,7 @@ implements AlignmentPositionListener, WindowListener {
 							multAln, mapSeqToStruct,str,i);
 					if (a != null) {
 						cmd.append(JmolTools.getPdbInfo(a));
-						cmd.append("/"+(str+1)+", ");
+						cmd.append("/").append(str + 1).append(", ");
 					}
 				}
 				nrSelected++;

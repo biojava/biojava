@@ -65,7 +65,7 @@ public abstract class AbstractBean {
 
 					Object o  = m.invoke(this);
 					if ( o instanceof String){
-						buf.append(name.substring(3)+": "+ o + " ");
+						buf.append(name.substring(3)).append(": ").append(o).append(" ");
 					}
 					else if ( o instanceof List){
 						buf.append(name.substring(3)).append(": ");

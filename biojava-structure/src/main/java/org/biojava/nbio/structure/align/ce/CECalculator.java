@@ -359,10 +359,8 @@ public class CECalculator {
 	 * @param ca
 	 * @param nse
 	 * @return
-	 * @throws StructureException
-	 */
-	private double[][] initIntraDistmatrix(Atom[] ca, int nse) throws StructureException
-	{
+     */
+	private double[][] initIntraDistmatrix(Atom[] ca, int nse) {
 
 
 		double[][] intraDist = new double[nse][nse];
@@ -1535,7 +1533,7 @@ nBestTrace=nTrace;
 		}
 
 
-		AminoAcidCompoundSet set = AminoAcidCompoundSet.getAminoAcidCompoundSet();
+        AminoAcidCompoundSet set = AminoAcidCompoundSet.aminoAcidCompoundSet;
 
 		for (int i = 0 ; i < origM.getRowDimension() ; i++){
 			for ( int j =0; j < origM.getColumnDimension() ; j ++ ) {
@@ -1887,10 +1885,9 @@ nBestTrace=nTrace;
 	 * @param strLen Number of atoms from pro1 and pro2 to use
 	 * @param storeTransform Store rotation and shift matrices locally
 	 * @return RMSD
-	 * @throws StructureException
-	 */
+     */
 	public double calc_rmsd(Atom[] pro1, Atom[] pro2, int strLen,
-			boolean storeTransform) throws StructureException {
+			boolean storeTransform) {
 
 		Atom[] cod1 = getAtoms(pro1,  strLen,false);
 		Atom[] cod2 = getAtoms(pro2,  strLen,true);

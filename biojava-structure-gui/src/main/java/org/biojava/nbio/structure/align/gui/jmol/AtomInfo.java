@@ -118,13 +118,13 @@ public class AtomInfo {
 
 		StringBuilder buf = new StringBuilder();
 		if ( printResName) {
-			if ( !aa3.equals("")){
+			if (!aa3.isEmpty()){
 				buf.append("[");
 				buf.append(aa3);
 				buf.append("]");
 			}
 		}
-		if ( ! res1.equals("")) {
+		if (!res1.isEmpty()) {
 
 			// let's check if there is an insertion code...
 			Matcher matcher = inscodePatter.matcher(res1);
@@ -137,7 +137,7 @@ public class AtomInfo {
 				String residueNumber = matcher.group(1);
 				String insCode = matcher.group(2);
 				buf.append(residueNumber);
-				if ( insCode != null && ! ( insCode.equals(""))) {
+				if ( insCode != null && ! (insCode.isEmpty())) {
 					buf.append("^");
 					buf.append(insCode);
 				}
@@ -145,7 +145,7 @@ public class AtomInfo {
 
 		}
 
-		if ( ! chain1.equals("")){
+		if (!chain1.isEmpty()){
 			buf.append(":");
 			buf.append(chain1);
 		}

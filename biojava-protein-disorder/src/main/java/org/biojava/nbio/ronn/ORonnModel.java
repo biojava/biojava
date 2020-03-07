@@ -139,7 +139,7 @@ public final class ORonnModel {
 	}
 
 	// sResidue query sequence index and dIndex database sequence index
-	private final float[] align(final int sResidue, final int dIndex) {
+	private float[] align(final int sResidue, final int dIndex) {
 	int dResidue, r;
 	float maxScore = -1000000;
 	float rho1;

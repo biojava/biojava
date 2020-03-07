@@ -630,14 +630,14 @@ public class BasePairParameters implements Serializable {
 	public String toString() {
 		if (getPairingParameters() == null) return "No data";
 		StringBuilder result = new StringBuilder(10000);
-		result.append(pairingParameters.length + " base pairs\n");
+		result.append(pairingParameters.length).append(" base pairs\n");
 		result.append("bp: buckle propeller opening shear stretch stagger tilt roll twist shift slide rise\n");
 		for (int i = 0; i < pairingParameters.length; i++) {
-			result.append(pairingNames.get(i)+": ");
+			result.append(pairingNames.get(i)).append(": ");
 			for (int j = 0; j < 6; j++)
-				result.append(String.format("%5.4f", pairingParameters[i][j]) + " ");
+				result.append(String.format("%5.4f", pairingParameters[i][j])).append(" ");
 			for (int j = 0; j < 6; j++)
-				result.append(String.format("%5.4f", stepParameters[i][j]) + " ");
+				result.append(String.format("%5.4f", stepParameters[i][j])).append(" ");
 			result.append("\n");
 		}
 		return result.toString();

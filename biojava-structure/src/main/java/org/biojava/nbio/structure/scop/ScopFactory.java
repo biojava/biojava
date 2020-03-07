@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
-
+import java.util.concurrent.ConcurrentHashMap;
 
 
 /**
@@ -83,7 +83,7 @@ public class ScopFactory {
 	public static final String LATEST_VERSION = VERSION_2_0_7;
 
 	// Hold one instance for each version
-	private static final Map<String,ScopDatabase> versionedScopDBs = new HashMap<>();
+	private static final Map<String,ScopDatabase> versionedScopDBs = new ConcurrentHashMap<>();
 	private static String defaultVersion = LATEST_VERSION;
 
 	/**
@@ -140,7 +140,7 @@ public class ScopFactory {
 		ScopDatabase scop = versionedScopDBs.get(version);
 		if ( forceLocalData) {
 			// Use a local installation
-			if( scop == null || !(scop instanceof LocalScopDatabase) ) {
+			if(!(scop instanceof LocalScopDatabase)) {
 				logger.info("Creating new {}, version {}", BerkeleyScopInstallation.class.getSimpleName(), version);
 				BerkeleyScopInstallation berkeley = new BerkeleyScopInstallation();
 				berkeley.setScopVersion(version);

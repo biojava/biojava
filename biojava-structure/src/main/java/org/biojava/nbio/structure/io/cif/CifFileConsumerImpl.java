@@ -517,7 +517,7 @@ class CifFileConsumerImpl implements CifFileConsumer<Structure> {
             if (auth == null) {
                 pdbHeader.setAuthors(newaa.toString());
             } else {
-                auth += "," + newaa.toString();
+                auth += "," + newaa;
                 pdbHeader.setAuthors(auth);
             }
         }

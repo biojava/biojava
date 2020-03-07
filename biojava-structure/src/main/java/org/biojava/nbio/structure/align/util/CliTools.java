@@ -39,7 +39,6 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.io.*;
 import java.lang.reflect.Array;
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 /**
@@ -153,7 +152,7 @@ public class CliTools {
 
 					if (propType == Integer.TYPE) {
 						try {
-							propVal = new Integer(args[++i]);
+							propVal = Integer.valueOf(args[++i]);
 						} catch (Exception ex) {
 							throw new ConfigurationException("Option " + arg + " requires an integer parameter");
 						}

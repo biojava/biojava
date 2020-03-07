@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import org.biojava.nbio.core.sequence.MultipleSequenceAlignment;
 import org.biojava.nbio.core.sequence.io.FastaWriter;
-import org.biojava.nbio.core.sequence.io.template.FastaHeaderFormatInterface;
 import org.biojava.nbio.core.sequence.template.Compound;
 import org.biojava.nbio.core.sequence.template.Sequence;
 import org.forester.evoinference.matrix.distance.BasicSymmetricalDistanceMatrix;

@@ -58,7 +58,7 @@ public class SimpleSubstitutionMatrix<C extends Compound> implements Substitutio
 	private final List<C> cols;
 
 	public static SubstitutionMatrix<AminoAcidCompound> getBlosum62() {
-		return new SimpleSubstitutionMatrix<>(AminoAcidCompoundSet.getAminoAcidCompoundSet(), new InputStreamReader(
+        return new SimpleSubstitutionMatrix<>(AminoAcidCompoundSet.aminoAcidCompoundSet, new InputStreamReader(
 				SimpleSubstitutionMatrix.class.getResourceAsStream("/matrices/blosum62.txt")), "blosum62");
 	}
 

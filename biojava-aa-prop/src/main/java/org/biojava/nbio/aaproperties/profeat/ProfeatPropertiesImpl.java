@@ -24,7 +24,6 @@ import org.biojava.nbio.aaproperties.profeat.convertor.*;
 import org.biojava.nbio.core.sequence.ProteinSequence;
 
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.Map;
 
 public class ProfeatPropertiesImpl implements IProfeatProperties{

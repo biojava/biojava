@@ -111,7 +111,7 @@ public class IOUtils {
 	 */
 	public static List<String> getList(BufferedReader br) throws ParserException {
 		final List<String> list = new ArrayList<>();
-		processReader(br, line -> list.add(line));
+		processReader(br, list::add);
 		return list;
 	}
 
@@ -328,8 +328,7 @@ public class IOUtils {
 		try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(file)))) {
 			out.print(string);
 			out.flush();
-			out.close();
-		}
+        }
 	}
 
 }

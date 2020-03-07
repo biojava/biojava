@@ -30,9 +30,9 @@ import java.util.LinkedHashMap;
 public class CoxVariables {
 
 	//   public GeneSetResults gsr;
-	private String cohortName;
-	private String geneSet;
-	private String genes;
+	private final String cohortName;
+	private final String geneSet;
+	private final String genes;
 
 	/**
 	 *

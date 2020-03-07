@@ -149,7 +149,7 @@ public class SearchIO implements Iterable<Result>{
 		}
 
 		String filename = f.getAbsolutePath();
-		int extensionPos = filename.lastIndexOf(".");
+		int extensionPos = filename.lastIndexOf('.');
 		String extension = filename.substring(extensionPos + 1);
 		if (extensionFactoryAssociation.get(extension) == null)
 			throw new UnsupportedOperationException(NOT_SUPPORTED_FILE_EXCEPTION

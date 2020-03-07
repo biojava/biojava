@@ -36,12 +36,12 @@ public class FuzzyPoint extends SimplePoint {
 	/**
 	 * Always uses the min point to resolve a location
 	 */
-	public static final Resolver<FuzzyPoint> MIN_RESOLVER = point -> point.getMin();
+	public static final Resolver<FuzzyPoint> MIN_RESOLVER = FuzzyPoint::getMin;
 
 	/**
 	 * Always uses the max point to resolve a location
 	 */
-	public static final Resolver<FuzzyPoint> MAX_RESOLVER = point -> point.getMax();
+	public static final Resolver<FuzzyPoint> MAX_RESOLVER = FuzzyPoint::getMax;
 
 	/**
 	 * Combines min and max and then gets the mean of it

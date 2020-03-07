@@ -111,7 +111,7 @@ public class FarmJobRunnable implements Runnable {
 		cache = new AtomCache( params.getPdbFilePath(), params.getCacheFilePath());
 
 
-		if ( params.getServer()!= null && (!params.getServer().equals("") ) ) {
+		if ( params.getServer()!= null && (!params.getServer().isEmpty()) ) {
 
 			RemotePDPProvider pdpprovider = new RemotePDPProvider();
 

@@ -42,8 +42,8 @@ public class HelixAxisAligner extends AxisAligner {
 	private static final Vector3d Y_AXIS = new Vector3d(0,1,0);
 	private static final Vector3d Z_AXIS = new Vector3d(0,0,1);
 
-	private QuatSymmetrySubunits subunits;
-	private HelixLayers helixLayers;
+	private final QuatSymmetrySubunits subunits;
+	private final HelixLayers helixLayers;
 
 	private Matrix4d transformationMatrix = new Matrix4d();
 	private final Matrix4d reverseTransformationMatrix = new Matrix4d();

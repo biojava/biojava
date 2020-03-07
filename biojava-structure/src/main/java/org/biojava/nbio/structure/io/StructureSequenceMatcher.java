@@ -171,12 +171,12 @@ public class StructureSequenceMatcher {
 		//2. Run Smith-Waterman to get the alignment
 		// Identity substitution matrix with +1 for match, -1 for mismatch
 		// TODO
-		SubstitutionMatrix<AminoAcidCompound> matrix =
+        SubstitutionMatrix<AminoAcidCompound> matrix =
 				new SimpleSubstitutionMatrix<>(
-						AminoAcidCompoundSet.getAminoAcidCompoundSet(),
+                        AminoAcidCompoundSet.aminoAcidCompoundSet,
 						(short) 1, (short) -1);
-		matrix = new SimpleSubstitutionMatrix<>(
-				AminoAcidCompoundSet.getAminoAcidCompoundSet(),
+        matrix = new SimpleSubstitutionMatrix<>(
+                AminoAcidCompoundSet.aminoAcidCompoundSet,
 				new InputStreamReader(
 						SimpleSubstitutionMatrix.class.getResourceAsStream("/matrices/blosum100.txt")),
 				"blosum100");

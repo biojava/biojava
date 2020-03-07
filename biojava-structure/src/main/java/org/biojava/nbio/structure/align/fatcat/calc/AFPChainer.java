@@ -28,7 +28,6 @@ package org.biojava.nbio.structure.align.fatcat.calc;
 
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Calc;
-import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.AFPTwister;
 import org.biojava.nbio.structure.align.model.AFP;
 import org.biojava.nbio.structure.align.model.AFPChain;
@@ -309,8 +308,8 @@ public class AFPChainer
 
 	{
 
-		Double conn;
-		Double dvar;
+		double conn;
+		double dvar;
 
 		double misScore = params.getMisScore();
 		double maxPenalty = params.getMaxPenalty();

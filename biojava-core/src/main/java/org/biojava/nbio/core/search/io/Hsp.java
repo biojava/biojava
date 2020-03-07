@@ -70,8 +70,8 @@ public abstract class Hsp <S extends Sequence<C>, C extends Compound> {
 	private final String hspQseq;
 	private final String hspHseq;
 	private final String hspIdentityString;
-	private Double percentageIdentity;
-	private Integer mismatchCount;
+	private final Double percentageIdentity;
+	private final Integer mismatchCount;
 	private SimpleSequencePair<S, C> returnAln;
 
 	@Override
@@ -137,7 +137,7 @@ public abstract class Hsp <S extends Sequence<C>, C extends Compound> {
 			else if (sequenceString.matches("^[ACUG]+$"))
 				returnSeq = new RNASequence(sequenceString, DNACompoundSet.getDNACompoundSet());
 			else
-				returnSeq = new ProteinSequence(sequenceString, AminoAcidCompoundSet.getAminoAcidCompoundSet());
+                returnSeq = new ProteinSequence(sequenceString, AminoAcidCompoundSet.aminoAcidCompoundSet);
 		} catch (CompoundNotFoundException ex) {
 			logger.error("Unexpected error, could not find compound when creating Sequence object from Hsp", ex);
 		}

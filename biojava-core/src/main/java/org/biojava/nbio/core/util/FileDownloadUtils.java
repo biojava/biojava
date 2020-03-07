@@ -72,7 +72,7 @@ public class FileDownloadUtils {
 	public static String getFileExtension(File f) {
 		String fileName = f.getName();
 		String ext;
-		int mid = fileName.lastIndexOf(".");
+		int mid = fileName.lastIndexOf('.');
 		ext = fileName.substring(mid + 1);
 		return ext;
 	}
@@ -81,7 +81,7 @@ public class FileDownloadUtils {
 		String fileName = f.getName();
 		String fname;
 
-		int mid = fileName.indexOf(".");
+		int mid = fileName.indexOf('.');
 		fname = fileName.substring(0, mid);
 
 		return fname;

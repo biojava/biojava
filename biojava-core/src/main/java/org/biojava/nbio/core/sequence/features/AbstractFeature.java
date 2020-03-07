@@ -206,12 +206,7 @@ public abstract class AbstractFeature<S extends AbstractSequence<C>, C extends C
 		} else {
 			double end1 = e1.getLocations().getEnd().getPosition();
 			double end2 = e2.getLocations().getEnd().getPosition();
-			if(end1 > end2)
-				return -1;
-			else if(end1 < end2)
-				return 1;
-			else
-			return 0;
+            return Double.compare(end2, end1);
 		}
 
 	};
@@ -224,20 +219,14 @@ public abstract class AbstractFeature<S extends AbstractSequence<C>, C extends C
 	static public final Comparator<FeatureInterface<?, ?>> LENGTH = (e1, e2) -> {
 		double v1 = Math.abs(e1.getLocations().getEnd().getPosition()- e1.getLocations().getStart().getPosition());
 		double v2 = Math.abs(e2.getLocations().getEnd().getPosition() -  e2.getLocations().getStart().getPosition());
-		if (v1 < v2) {
-			return -1;
-		} else if (v1 > v2) {
-			return 1;
-		} else {
-			return 0;
-		}
+         return Double.compare(v1, v2);
 
 	};
 
 	/**
 	 * Sort features by type
 	 */
-	public static final Comparator<FeatureInterface<?, ?>> TYPE = (o1, o2) -> o1.getType().compareTo(o2.getType());
+	public static final Comparator<FeatureInterface<?, ?>> TYPE = Comparator.comparing(FeatureInterface::getType);
 
 	/**
 	 * @return the userObject

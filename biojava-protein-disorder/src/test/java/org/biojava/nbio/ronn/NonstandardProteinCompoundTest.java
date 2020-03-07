@@ -69,7 +69,7 @@ public class NonstandardProteinCompoundTest  {
 
 		ProteinSequence seq = getUniprot(uniprotID);
 
-		AminoAcidCompoundSet compoundSet = AminoAcidCompoundSet.getAminoAcidCompoundSet();
+        AminoAcidCompoundSet compoundSet = AminoAcidCompoundSet.aminoAcidCompoundSet;
 
 /*		for (AminoAcidCompound compound : seq) {
 			System.out.println(compound.getShortName() + " " + compound.getLongName() + " " + compound.getDescription() + " | " + compoundSet.getEquivalentCompounds(compound) + " " + compound.getMolecularWeight() + " " + compound.getBase());
@@ -94,7 +94,7 @@ public class NonstandardProteinCompoundTest  {
 	 */
 	private static ProteinSequence getUniprot(String uniProtID) throws CompoundNotFoundException, IOException {
 
-		AminoAcidCompoundSet set = AminoAcidCompoundSet.getAminoAcidCompoundSet();
+        AminoAcidCompoundSet set = AminoAcidCompoundSet.aminoAcidCompoundSet;
 		UniprotProxySequenceReader<AminoAcidCompound> uniprotSequence =
 				new UniprotProxySequenceReader<>(uniProtID, set);
 

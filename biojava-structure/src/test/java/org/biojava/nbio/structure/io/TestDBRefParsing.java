@@ -27,7 +27,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureException;
 import org.junit.Test;
 
 public class TestDBRefParsing {

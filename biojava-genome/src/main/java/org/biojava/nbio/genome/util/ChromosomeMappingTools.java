@@ -100,7 +100,7 @@ public class ChromosomeMappingTools {
 
 				s.append(" <-  Exon        : ").append(format(start + 1)).append(" - ").append(format(cdsEnd)).append(" | ").append(Integer.toString(cdsEnd - start)).append(" | ").append(Integer.toString(codingLength)).append(" | ").append(Integer.toString(codingLength % 3));
 				s.append(newline);
-				s.append("     UTR         : " + (cdsEnd +1) + " - " + format(end));
+				s.append("     UTR         : ").append(String.valueOf(cdsEnd + 1)).append(" - ").append(format(end));
 				s.append(newline);
 
 			} else if (inCoding) {
@@ -159,7 +159,7 @@ public class ChromosomeMappingTools {
 				}
 				codingLength += (cdsEnd - tmpstart);
 
-				s.append("     UTR         :" + format(cdsEnd + 1) + " | " + format(end));
+				s.append("     UTR         :").append(format(cdsEnd + 1)).append(" | ").append(format(end));
 				s.append(newline);
 				if (tmpstart == start)
 					s.append(" ->  ");
@@ -169,16 +169,16 @@ public class ChromosomeMappingTools {
 				s.append(newline);
 				// single exon with UTR on both ends
 				if (tmpstart != start)
-					s.append("     UTR         :" + format(cdsStart ) + " - " + format(start + 1));
+					s.append("     UTR         :").append(format(cdsStart)).append(" - ").append(format(start + 1));
 				s.append(newline);
 
 			} else if (start <= cdsStart && end >= cdsStart) {
 				inCoding = false;
 				codingLength += (end - cdsStart);
 
-				s.append(" <-  Exon        : " + format(cdsStart+1) + " - " + format(end) + " | " + (end - cdsStart) + " | " + codingLength + " | " + (codingLength % 3));
+				s.append(" <-  Exon        : ").append(format(cdsStart + 1)).append(" - ").append(format(end)).append(" | ").append(String.valueOf(end - cdsStart)).append(" | ").append(String.valueOf(codingLength)).append(" | ").append(String.valueOf(codingLength % 3));
 				s.append(newline);
-				s.append("     UTR         : " + format(start+1) + " - " + format(cdsStart ));
+				s.append("     UTR         : ").append(format(start + 1)).append(" - ").append(format(cdsStart));
 				s.append(newline);
 
 
@@ -186,7 +186,7 @@ public class ChromosomeMappingTools {
 				// full exon is coding
 				codingLength += (end - start);
 
-				s.append("     Exon        : " + format(start+1) + " - " + format(end) + " | " + (end - start) + " | " + codingLength + " | " + (codingLength % 3));
+				s.append("     Exon        : ").append(format(start + 1)).append(" - ").append(format(end)).append(" | ").append(String.valueOf(end - start)).append(" | ").append(String.valueOf(codingLength)).append(" | ").append(String.valueOf(codingLength % 3));
 				s.append(newline);
 			} else {
 				// e.g. see UBQLN3
@@ -335,16 +335,16 @@ public class ChromosomeMappingTools {
 
 					StringBuilder b = new StringBuilder();
 
-					b.append("     UTR         :" + format(cdsEnd + 1) + " - " + format(end) + newline);
+					b.append("     UTR         :").append(format(cdsEnd + 1)).append(" - ").append(format(end)).append(newline);
 					if (tmpstart == start)
 						b.append(" ->  ");
 					else
 						b.append(" <-> ");
-					b.append("Exon        :" + format(tmpstart + 1) + " - " + (cdsEnd) + " | " + format(cdsEnd - tmpstart + 1) + " - " + codingLength + " | " + (codingLength % 3) + newline);
+					b.append("Exon        :").append(format(tmpstart + 1)).append(" - ").append(cdsEnd).append(" | ").append(format(cdsEnd - tmpstart + 1)).append(" - ").append(codingLength).append(" | ").append(codingLength % 3).append(newline);
 
 					// single exon with UTR on both ends
 					if (tmpstart != start)
-						b.append("     UTR         :" + format(cdsStart) + " - " + format(start + 1) + newline);
+						b.append("     UTR         :").append(format(cdsStart)).append(" - ").append(format(start + 1)).append(newline);
 
 					logger.debug(b.toString());
 				}
@@ -678,7 +678,7 @@ public class ChromosomeMappingTools {
 
 				codingLength += (end - cdsStart);
 				if  (debug) {
-					s.append(" <-  Exon        : " + format(cdsStart + 1) + " - " + format(end) + " | " + (end - cdsStart) + " | " + codingLength + " | " + (codingLength % 3));
+					s.append(" <-  Exon        : ").append(format(cdsStart + 1)).append(" - ").append(format(end)).append(" | ").append(end - cdsStart).append(" | ").append(codingLength).append(" | ").append(codingLength % 3);
 					s.append(newline);
 					s.append("     UTR         : ").append(format(start + 1)).append(" - ").append(format(cdsStart));
 					s.append(newline);
@@ -694,13 +694,13 @@ public class ChromosomeMappingTools {
 
 				codingLength += (end - start);
 				if  (debug) {
-					s.append("     Exon        : " + format(start + 1) + " - " + format(end) + " | " + (end - start) + " | " + codingLength + " | " + (codingLength % 3));
+					s.append("     Exon        : ").append(format(start + 1)).append(" - ").append(format(end)).append(" | ").append(end - start).append(" | ").append(codingLength).append(" | ").append(codingLength % 3);
 					s.append(newline);
 				}
 			} else {
 				// e.g. see UBQLN3
 				if ( debug ) {
-					s.append(" no translation! UTR: " + format(start) + " - " + format(end));
+					s.append(" no translation! UTR: ").append(format(start)).append(" - ").append(format(end));
 					s.append(newline);
 				}
 			}

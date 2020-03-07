@@ -20,7 +20,6 @@
  */
 package org.biojava.nbio.core.sequence.storage;
 
-import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.core.sequence.AccessionID;
 import org.biojava.nbio.core.sequence.template.*;
 import org.biojava.nbio.core.util.Equals;

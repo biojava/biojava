@@ -27,7 +27,7 @@ import java.util.*;
 import java.util.Map.Entry;
 
 public class HelicalRepeatUnit {
-	private QuatSymmetrySubunits subunits;
+	private final QuatSymmetrySubunits subunits;
 	private List<Point3d> repeatUnitCenters = new ArrayList<>();
 	private List<Point3d[]> repeatUnits = new ArrayList<>();
 	private final List<List<Integer>> repeatUnitIndices = new ArrayList<>();

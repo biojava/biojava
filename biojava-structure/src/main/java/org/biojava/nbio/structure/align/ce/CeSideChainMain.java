@@ -21,7 +21,6 @@
 package org.biojava.nbio.structure.align.ce;
 
 import org.biojava.nbio.structure.align.StructureAlignment;
-import org.biojava.nbio.structure.align.util.ConfigurationException;
 
 
 public class CeSideChainMain  extends CeMain implements StructureAlignment {

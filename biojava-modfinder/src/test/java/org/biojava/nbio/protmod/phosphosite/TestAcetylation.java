@@ -79,7 +79,7 @@ public class TestAcetylation  {
 				fail("Could not create directory " + localDir.getAbsolutePath());
 		}
 
-		int slashIndex = phosphoSiteFileLocation.lastIndexOf("/");
+		int slashIndex = phosphoSiteFileLocation.lastIndexOf('/');
 
 		String fileName = phosphoSiteFileLocation.substring(slashIndex);
 

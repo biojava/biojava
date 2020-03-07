@@ -566,7 +566,7 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
 	protected static final SubstitutionMatrix<AminoAcidCompound> matrix = SubstitutionMatrixHelper.getBlosum65();
 
 	private boolean isSimilar(char c1, char c2) {
-		AminoAcidCompoundSet set = AminoAcidCompoundSet.getAminoAcidCompoundSet();
+        AminoAcidCompoundSet set = AminoAcidCompoundSet.aminoAcidCompoundSet;
 
 		AminoAcidCompound aa1 = set.getCompoundForString(String.valueOf(c1));
 		AminoAcidCompound aa2 = set.getCompoundForString(String.valueOf(c2));

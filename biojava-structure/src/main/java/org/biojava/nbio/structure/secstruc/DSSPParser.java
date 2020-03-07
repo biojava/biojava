@@ -165,7 +165,7 @@ public class DSSPParser {
 			String resNumStr = line.substring(5,10).trim();
 
 			//Only happens if dssp inserts a line indicating a chain break
-			if(!resNumStr.equals("")) {
+			if(!resNumStr.isEmpty()) {
 
 				int index = Integer.parseInt(indexStr);
 				//Get the group of the structure corresponding to the residue
@@ -183,14 +183,14 @@ public class DSSPParser {
 
 				//Parse the Bridge partners - TODO parallel or antiparallel?
 				String bp = line.substring(25,29).trim();
-				if (bp != "") {
+				if (!bp.isEmpty()) {
 					BetaBridge bb = new BetaBridge(
 							index, Integer.parseInt(bp), BridgeType.parallel);
 					ss.addBridge(bb);
 				} else logger.warn("Unable to parse beta Bridge for resn "+index);
 
 				bp = line.substring(29,33).trim();
-				if (bp != "") {
+				if (!bp.isEmpty()) {
 					BetaBridge bb = new BetaBridge(
 							index, Integer.parseInt(bp), BridgeType.parallel);
 					ss.addBridge(bb);
@@ -203,7 +203,7 @@ public class DSSPParser {
 					int b = a + 8;
 
 					String val = line.substring(a,b).trim();
-					if (val == "") {
+					if (val.isEmpty()) {
 						logger.warn("Unable to parse energy for resn "+index);
 						continue;
 					}
@@ -236,15 +236,15 @@ public class DSSPParser {
 
 				//Angle properties
 				String val = line.substring(91,97).trim();
-				if (val != "") ss.setKappa(Float.parseFloat(val));
+				if (!val.isEmpty()) ss.setKappa(Float.parseFloat(val));
 				else logger.warn("Unable to parse kappa for resn "+index);
 
 				val = line.substring(103,109).trim();
-				if (val != "") ss.setPhi(Float.parseFloat(val));
+				if (!val.isEmpty()) ss.setPhi(Float.parseFloat(val));
 				else logger.warn("Unable to parse phi for resn "+index);
 
 				val = line.substring(109,116).trim();
-				if (val != "") ss.setPsi(Float.parseFloat(val));
+				if (!val.isEmpty()) ss.setPsi(Float.parseFloat(val));
 				else logger.warn("Unable to parse psi for resn "+index);
 
 				if (assign) parent.setProperty(Group.SEC_STRUC, ss);

@@ -71,14 +71,14 @@ public class AminoAcidCompoundSet implements CompoundSet<AminoAcidCompound>, Ser
 		aminoAcidCompoundCache.put("W", new AminoAcidCompound(this, "W", "Trp", "Tryptophan", 186.2132f));
 		aminoAcidCompoundCache.put("Y", new AminoAcidCompound(this, "Y", "Tyr", "Tyrosine", 163.1760f));
 		aminoAcidCompoundCache.put("V", new AminoAcidCompound(this, "V", "Val", "Valine", 99.1326f));
-		aminoAcidCompoundCache.put("B", new AminoAcidCompound(this, "B", "Asx", "Asparagine or Aspartic acid", null));
-		aminoAcidCompoundCache.put("Z", new AminoAcidCompound(this, "Z", "Glx", "Glutamine or Glutamic acid", null));
-		aminoAcidCompoundCache.put("J", new AminoAcidCompound(this, "J", "Xle", "Leucine or Isoleucine", null));
-		aminoAcidCompoundCache.put("X", new AminoAcidCompound(this, "X", "Xaa", "Unspecified", null));
-		aminoAcidCompoundCache.put("-", new AminoAcidCompound(this, "-", "---", "Unspecified", null));
-		aminoAcidCompoundCache.put(".", new AminoAcidCompound(this, ".", "...", "Unspecified", null));
-		aminoAcidCompoundCache.put("_", new AminoAcidCompound(this, "_", "___", "Unspecified", null));
-		aminoAcidCompoundCache.put("*", new AminoAcidCompound(this, "*", "***", "Stop", null));
+		aminoAcidCompoundCache.put("B", new AminoAcidCompound(this, "B", "Asx", "Asparagine or Aspartic acid", Float.NaN));
+		aminoAcidCompoundCache.put("Z", new AminoAcidCompound(this, "Z", "Glx", "Glutamine or Glutamic acid", Float.NaN));
+		aminoAcidCompoundCache.put("J", new AminoAcidCompound(this, "J", "Xle", "Leucine or Isoleucine", Float.NaN));
+		aminoAcidCompoundCache.put("X", new AminoAcidCompound(this, "X", "Xaa", "Unspecified", Float.NaN));
+		aminoAcidCompoundCache.put("-", new AminoAcidCompound(this, "-", "---", "Unspecified", Float.NaN));
+		aminoAcidCompoundCache.put(".", new AminoAcidCompound(this, ".", "...", "Unspecified", Float.NaN));
+		aminoAcidCompoundCache.put("_", new AminoAcidCompound(this, "_", "___", "Unspecified", Float.NaN));
+		aminoAcidCompoundCache.put("*", new AminoAcidCompound(this, "*", "***", "Stop", Float.NaN));
 
 		//Selenocysteine - this is encoded by UGA with the presence
 		//of a SECIS element (SElenoCysteine Insertion Sequence) in the mRNA
@@ -90,10 +90,8 @@ public class AminoAcidCompoundSet implements CompoundSet<AminoAcidCompound>, Ser
 		//which then does the actual conversion to Pyl.
 		aminoAcidCompoundCache.put("O", new AminoAcidCompound(this, "O", "Pyl", "Pyrrolysine", 255.3172f));
 
-		for(AminoAcidCompound aa : aminoAcidCompoundCache.values()) {
-            String threeLtr = aa.getLongName().toUpperCase();
-			aminoAcidCompoundCache3Letter.put(threeLtr, aa);
-		}
+		for(AminoAcidCompound aa : aminoAcidCompoundCache.values())
+			aminoAcidCompoundCache3Letter.put(aa.getLongName().toUpperCase(), aa);
 	}
 
 	@Override
@@ -103,15 +101,13 @@ public class AminoAcidCompoundSet implements CompoundSet<AminoAcidCompound>, Ser
 
 	@Override
 	public AminoAcidCompound getCompoundForString(String string) {
-		if (string.length() == 0) {
+		int sl = string.length();
+		if (sl == 0)
 			return null;
-		}
-		if (string.length() == 3) {
+		if (sl == 3)
 			return this.aminoAcidCompoundCache3Letter.get(string.toUpperCase());
-		}
-		if (string.length() > this.getMaxSingleCompoundStringLength()) {
+		if (sl > this.getMaxSingleCompoundStringLength())
 			throw new IllegalArgumentException("String supplied ("+string+") is too long. Max is "+getMaxSingleCompoundStringLength());
-		}
 		return this.aminoAcidCompoundCache.get(string.toUpperCase());
 	}
 
@@ -126,11 +122,7 @@ public class AminoAcidCompoundSet implements CompoundSet<AminoAcidCompound>, Ser
 		return true;
 	}
 
-	private final static AminoAcidCompoundSet aminoAcidCompoundSet = new AminoAcidCompoundSet();
-
-	public static AminoAcidCompoundSet getAminoAcidCompoundSet() {
-		return aminoAcidCompoundSet;
-	}
+	public final static AminoAcidCompoundSet aminoAcidCompoundSet = new AminoAcidCompoundSet();
 
 	@Override
 	public boolean compoundsEquivalent(AminoAcidCompound compoundOne, AminoAcidCompound compoundTwo) {

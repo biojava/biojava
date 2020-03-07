@@ -42,8 +42,8 @@ import java.util.Set;
  * @author Peter
  */
 public class SystematicSolver implements QuatSymmetrySolver {
-	private QuatSymmetrySubunits subunits;
-	private QuatSymmetryParameters parameters;
+	private final QuatSymmetrySubunits subunits;
+	private final QuatSymmetryParameters parameters;
 
 	private Point3d[] originalCoords = null;
 	private Point3d[] transformedCoords = null;

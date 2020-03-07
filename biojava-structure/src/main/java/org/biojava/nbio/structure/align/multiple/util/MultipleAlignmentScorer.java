@@ -395,11 +395,9 @@ public class MultipleAlignmentScorer {
 	 * @param dCutoff
 	 *            the distance cutoff
 	 * @return the value of the score
-	 * @throws StructureException
-	 */
+     */
 	public static double getMCScore(MultipleAlignment alignment,
-			double gapOpen, double gapExtension, double dCutoff)
-			throws StructureException {
+			double gapOpen, double gapExtension, double dCutoff) {
 
 		List<Atom[]> trans = MultipleAlignmentTools.transformAtoms(alignment);
 

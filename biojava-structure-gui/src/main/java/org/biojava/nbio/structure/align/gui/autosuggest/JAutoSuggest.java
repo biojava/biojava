@@ -135,11 +135,11 @@ public class JAutoSuggest extends JTextField{
 				System.out.println("Lost Focus");
 				dialog.setVisible(false);
 
-				if (getText().trim().equals("") && e.getOppositeComponent() != null && e.getOppositeComponent().getName() != null) {
+				if (getText().trim().isEmpty() && e.getOppositeComponent() != null && e.getOppositeComponent().getName() != null) {
 					if (!e.getOppositeComponent().getName().equals("suggestFieldDropdownButton")) {
 						setText(defaultText);
 					}
-				} else if (getText().trim().equals("")) {
+				} else if (getText().trim().isEmpty()) {
 					setText(defaultText);
 				}
 			}
@@ -352,7 +352,7 @@ public class JAutoSuggest extends JTextField{
 			try {
 				setFont(busy);
 				String userInput = getText().trim();
-				if ( userInput == null || userInput.equals(""))
+				if ( userInput == null || userInput.isEmpty())
 					return "";
 
 				if ( previousWord != null){

@@ -33,7 +33,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 
 
@@ -86,7 +85,7 @@ public class CeCPMainTest {
 	}
 
 	@Test
-	public void testFilterDuplicateAFPsMinLenCTerm() throws PDBParseException, StructureException {
+	public void testFilterDuplicateAFPsMinLenCTerm() throws StructureException {
 		int[][][] startAln, filteredAln;
 		int[] filteredLen;
 		int ca2len;
@@ -186,7 +185,7 @@ public class CeCPMainTest {
 	}
 
 	@Test
-	public void testFilterDuplicateAFPsMinLenNTerm() throws PDBParseException, StructureException {
+	public void testFilterDuplicateAFPsMinLenNTerm() throws StructureException {
 		int[][][] startAln, filteredAln;
 		int ca2len;
 

@@ -284,7 +284,7 @@ public class MultipleAlignmentGUI extends JFrame {
 
 	private void calcAlignment() {
 
-		try {
+//		try {
 			List<Structure> structures = tab.getStructures();
 
 			if ( structures.size() < 2) {
@@ -309,10 +309,10 @@ public class MultipleAlignmentGUI extends JFrame {
 			ProgressThreadDrawer drawer = new ProgressThreadDrawer(progress);
 			drawer.start();
 
-		} catch (StructureException e){
-			JOptionPane.showMessageDialog(null,"Could not align structures. "
-					+ "Exception: " + e.getMessage());
-		}
+//		} catch (StructureException e){
+//			JOptionPane.showMessageDialog(null,"Could not align structures. "
+//					+ "Exception: " + e.getMessage());
+//		}
 
 	}
 

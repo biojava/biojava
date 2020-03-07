@@ -70,11 +70,10 @@ public class GenbankWriterHelper {
 	 *
 	 * @param outputStream
 	 * @param proteinSequences
-	 * @throws Exception
-	 */
+     */
 
 	public static void writeProteinSequence(OutputStream outputStream,
-			Collection<ProteinSequence> proteinSequences) throws Exception {
+			Collection<ProteinSequence> proteinSequences) {
 
 		GenbankWriter<ProteinSequence, AminoAcidCompound> genbankWriter = new GenbankWriter<>(
 				outputStream,
@@ -120,12 +119,10 @@ public class GenbankWriterHelper {
 	 * @param outputStream
 	 * @param dnaSequences
 	 * @param seqType
-	 * @throws Exception
-	 */
+     */
 
 	public static void writeNucleotideSequence(OutputStream outputStream,
-			Collection<DNASequence> dnaSequences, String seqType)
-			throws Exception {
+			Collection<DNASequence> dnaSequences, String seqType) {
 		GenericGenbankHeaderFormat<DNASequence, NucleotideCompound> genericGenbankHeaderFormat = new GenericGenbankHeaderFormat<>(
 				seqType);
 		// genericGenbankHeaderFormat.setLineSeparator(lineSep);
@@ -185,11 +182,9 @@ public class GenbankWriterHelper {
 	 *            Stream to write to; can be System.out
 	 * @param sequences
 	 *            The sequences to write out
-	 * @throws Exception
-	 *             Thrown normally thanks to IO problems
-	 */
+     */
 	public static void writeSequences(OutputStream outputStream,
-			Collection<Sequence<?>> sequences) throws Exception {
+			Collection<Sequence<?>> sequences) {
 
 		GenbankHeaderFormatInterface<Sequence<?>, Compound> fhfi = sequence -> sequence.getAccession().toString();
 

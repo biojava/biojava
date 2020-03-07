@@ -50,8 +50,8 @@ public class BioAssemblyTools {
 	 * @return true if expression is a unary operator expression
 	 */
 	public static boolean isUnaryExpression(String expression) {
-		int first = expression.indexOf("(");
-		int last = expression.lastIndexOf("(");
+		int first = expression.indexOf('(');
+		int last = expression.lastIndexOf('(');
 		if (first < 0 || last < 0) {
 			return true;
 		}

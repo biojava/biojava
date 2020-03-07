@@ -140,7 +140,7 @@ public class TestFlexibleRotationMatrices {
 	}
 
 	private void compareBlock(int blockNr, AFPChain afpChain, AFPChain newChain,
-			Atom[] ca1, Atom[] ca2) throws StructureException {
+			Atom[] ca1, Atom[] ca2) {
 
 
 

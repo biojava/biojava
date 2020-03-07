@@ -117,7 +117,7 @@ public class CasePreservingProteinSequenceCreator extends ProteinSequenceCreator
 	}
 
 	public static void main(String[] args) throws Exception {
-		CasePreservingProteinSequenceCreator creator = new CasePreservingProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet());
+        CasePreservingProteinSequenceCreator creator = new CasePreservingProteinSequenceCreator(AminoAcidCompoundSet.aminoAcidCompoundSet);
 		AbstractSequence<AminoAcidCompound> seq = creator.getSequence("aaAA",0);
 		logger.info("Sequence: {}", seq.getSequenceAsString()); //"AAAA"
 		logger.info("User Collection: {}", seq.getUserCollection()); //"[false, false, true, true]"

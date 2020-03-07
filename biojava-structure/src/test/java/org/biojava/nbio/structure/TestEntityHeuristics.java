@@ -26,8 +26,6 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 
@@ -245,7 +243,7 @@ public class TestEntityHeuristics {
 
 	private void checkEntitiesNumbered(List<EntityInfo> entities) {
 
-		entities.sort((o1, o2) -> new Integer(o1.getMolId()).compareTo(o2.getMolId()));
+		entities.sort((o1, o2) -> Integer.compare(o1.getMolId(), o2.getMolId()));
 
 		int id = 1;
 		for (EntityInfo compound:entities) {

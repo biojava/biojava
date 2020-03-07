@@ -151,7 +151,7 @@ public class PDBBioAssemblyParser {
 	 * Parses list of chain ids (A, B, C, etc.)
 	 */
 	private void addToCurrentChainList(String line) {
-		int index = line.indexOf(":");
+		int index = line.indexOf(':');
 		String chainList = line.substring(index+1).trim();
 		// split by spaces or commas
 		String[] chainIds = chainList.split("[ ,]+");

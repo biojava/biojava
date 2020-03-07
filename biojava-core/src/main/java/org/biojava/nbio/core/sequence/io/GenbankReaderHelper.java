@@ -88,13 +88,13 @@ public class GenbankReaderHelper {
 			return readGenbankProteinSequence(file);
 		}
 
-		GenbankReader<ProteinSequence, AminoAcidCompound> GenbankProxyReader =
+        GenbankReader<ProteinSequence, AminoAcidCompound> GenbankProxyReader =
 				new GenbankReader<>(
 						file,
 						new GenericGenbankHeaderParser<>(),
 						new FileProxyProteinSequenceCreator(
 								file,
-								AminoAcidCompoundSet.getAminoAcidCompoundSet(),
+                                AminoAcidCompoundSet.aminoAcidCompoundSet,
 								new GenbankSequenceParser<AbstractSequence<AminoAcidCompound>, AminoAcidCompound>()
 						)
 				);
@@ -156,10 +156,10 @@ public class GenbankReaderHelper {
 	 */
 	public static LinkedHashMap<String, ProteinSequence> readGenbankProteinSequence(
 			InputStream inStream) throws Exception {
-		GenbankReader<ProteinSequence, AminoAcidCompound> GenbankReader = new GenbankReader<>(
+        GenbankReader<ProteinSequence, AminoAcidCompound> GenbankReader = new GenbankReader<>(
 				inStream,
 				new GenericGenbankHeaderParser<>(),
-				new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
+				new ProteinSequenceCreator(AminoAcidCompoundSet.aminoAcidCompoundSet));
 		return GenbankReader.process();
 	}
 

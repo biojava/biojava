@@ -61,7 +61,7 @@ public class AFPChainXMLParser
 	 * @param ca2
 	 * @return
 	 */
-	 public static AFPChain fromXML(String xml, String name1, String name2, Atom[] ca1, Atom[] ca2) throws IOException, StructureException{
+	 public static AFPChain fromXML(String xml, String name1, String name2, Atom[] ca1, Atom[] ca2) throws IOException {
 			AFPChain[] afps = parseMultiXML( xml);
 			if ( afps.length > 0 ) {
 

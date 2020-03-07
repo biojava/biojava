@@ -79,7 +79,7 @@ public class GFF3FromUniprotBlastHits {
 				}
 				ArrayList<String> uniprotProteinHits = stringArrayListEntry.getValue();
 				String uniprotBestHit = uniprotProteinHits.get(0);
-				UniprotProxySequenceReader<AminoAcidCompound> uniprotSequence = new UniprotProxySequenceReader<>(uniprotBestHit, AminoAcidCompoundSet.getAminoAcidCompoundSet());
+                UniprotProxySequenceReader<AminoAcidCompound> uniprotSequence = new UniprotProxySequenceReader<>(uniprotBestHit, AminoAcidCompoundSet.aminoAcidCompoundSet);
 
 				ProteinSequence proteinSequence = new ProteinSequence(uniprotSequence);
 				String hitSequence = proteinSequence.getSequenceAsString();

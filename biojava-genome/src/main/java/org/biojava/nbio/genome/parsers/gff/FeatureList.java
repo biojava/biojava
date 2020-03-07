@@ -455,7 +455,7 @@ public class FeatureList extends ArrayList<FeatureI> {
 	public String toString() {
 		StringBuilder  s = new StringBuilder("FeatureList: >>\n");
 		for (FeatureI f : this) {
-			s.append( f.seqname() + ":" + f.toString() + "\n");
+			s.append(f.seqname()).append(":").append(f.toString()).append("\n");
 		}
 
 		s.append("\n<<\n");

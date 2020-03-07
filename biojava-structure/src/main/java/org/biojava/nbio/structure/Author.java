@@ -63,7 +63,7 @@ public class Author implements Serializable{
 		if (!Objects.equals(this.surname, other.surname)) {
 			return false;
 		}
-		return !(!Objects.equals(this.initials, other.initials));
+		return Objects.equals(this.initials, other.initials);
 	}
 
 	@Override

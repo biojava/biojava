@@ -26,10 +26,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
+
 import org.biojava.nbio.core.search.io.Hit;
 import org.biojava.nbio.core.search.io.Hsp;
 import org.biojava.nbio.core.search.io.Result;
@@ -71,7 +69,7 @@ public class BlastTabularParser implements ResultFactory {
 
 	// data imported private:
 	int queryIdNumber = 0;
-	HashMap<String,String> queryIdMapping = new HashMap<>();
+	Map<String,String> queryIdMapping = new HashMap<>();
 	String programName=null, queryName = null, databaseFile = null;
 	private String queryId      ;
 	private String subjectId    ;
@@ -136,23 +134,23 @@ public class BlastTabularParser implements ResultFactory {
 
 					String currentSubjectId=subjectId;
 					while (currentSubjectId.equals(subjectId) && lineNumber < fileLinesCount){
-						if (new Double(evalue) > maxEScore) {
+						if (Double.parseDouble(evalue) > maxEScore) {
 							line = fetchData(scanner);
 							lineNumber++;
 							continue;
 						}
 						BlastHspBuilder hspBuilder = new BlastHspBuilder();
 						hspBuilder
-							.setHspAlignLen(new Integer(alnLength))
-							.setHspGaps(new Integer(gapOpenCount))
-							.setHspQueryFrom(new Integer(queryStart))
-							.setHspQueryTo(new Integer(queryEnd))
-							.setHspHitFrom(new Integer(subjectStart))
-							.setHspHitTo(new Integer(subjectEnd))
-							.setHspEvalue(new Double(evalue))
-							.setHspBitScore(new Double(bitScore))
-							.setPercentageIdentity(new Double(percIdentity)/100)
-							.setMismatchCount(new Integer(mismatchCount));
+							.setHspAlignLen(Integer.parseInt(alnLength))
+							.setHspGaps(Integer.parseInt(gapOpenCount))
+							.setHspQueryFrom(Integer.parseInt(queryStart))
+							.setHspQueryTo(Integer.parseInt(queryEnd))
+							.setHspHitFrom(Integer.parseInt(subjectStart))
+							.setHspHitTo(Integer.parseInt(subjectEnd))
+							.setHspEvalue(Double.parseDouble(evalue))
+							.setHspBitScore(Double.parseDouble(bitScore))
+							.setPercentageIdentity(Double.parseDouble(percIdentity)/100)
+							.setMismatchCount(Integer.parseInt(mismatchCount));
 						hsps.add(hspBuilder.createBlastHsp());
 						if (scanner.hasNext()) line = fetchData(scanner);
 						lineNumber++;
@@ -172,7 +170,7 @@ public class BlastTabularParser implements ResultFactory {
 		String[] split;
 
 		line = scanner.nextLine();
-		while (line.startsWith("#")){
+		while (line.charAt(0) == '#'){
 			// blast tabular with header options contains some more informations
 			if (line.matches("#\\s.?BLAST.+")) programName = line.replace("#\\s","");
 			if (line.startsWith("# Query:")) queryName = line.replace("# Query: ","");
@@ -203,13 +201,10 @@ public class BlastTabularParser implements ResultFactory {
 		// blast tabular reports only the first word of the query name.
 		// If it was specified in the header it is better to use that definition
 		if (parsingConsistency == PARSING_CONSISTENCY.IMPROVED && headerFound) {
-			if (queryIdMapping.get(queryId)==null) {
-				queryIdNumber ++;
-				queryIdMapping.put(queryId,"Query_" + queryIdNumber);
-			}
+
 			// If a complete definition of the query name was readed, than we can use
 			// a queryID schema that is consistent with blast xml report
-			queryId = queryIdMapping.get(queryId);
+			queryId = queryIdMapping.computeIfAbsent(queryId, x-> "Query_" + (++queryIdNumber));
 		}
 		if (!headerFound) queryName = queryId;
 

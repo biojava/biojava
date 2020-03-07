@@ -26,7 +26,6 @@ package org.biojava.nbio.structure.io;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -639,7 +638,7 @@ public class SeqRes2AtomAligner {
 		// make sure we actually find an alignment
 		boolean noMatchFound = true;
 
-		Compound gapSymbol =  AminoAcidCompoundSet.getAminoAcidCompoundSet().getCompoundForString("-");
+        Compound gapSymbol =  AminoAcidCompoundSet.aminoAcidCompoundSet.getCompoundForString("-");
 
 		mainLoop:
 			for (int i = 1; i <= aligLength ; i++) {

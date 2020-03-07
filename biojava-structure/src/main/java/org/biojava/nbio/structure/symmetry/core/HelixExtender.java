@@ -29,8 +29,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class HelixExtender {
-	private QuatSymmetrySubunits subunits;
-	private Helix helix;
+	private final QuatSymmetrySubunits subunits;
+	private final Helix helix;
 
 	public HelixExtender(QuatSymmetrySubunits subunits, Helix helix) {
 		this.subunits = subunits;

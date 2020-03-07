@@ -31,9 +31,9 @@ public class RectangularPrism implements Polyhedron {
 	private static final int[] lineLoop2 = {1,5};
 	private static final int[] lineLoop3 = {2,6};
 	private static final int[] lineLoop4 = {3,7};
-	private double length;
-	private double width;
-	private double height;
+	private final double length;
+	private final double width;
+	private final double height;
 	private static final String[] viewNames = {"Front", "Left", "Back", "Right", "Top", "Bottom"};
 
 	public RectangularPrism(double length, double width, double height) {

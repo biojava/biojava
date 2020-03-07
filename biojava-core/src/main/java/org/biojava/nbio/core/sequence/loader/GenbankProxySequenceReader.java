@@ -148,18 +148,17 @@ public class GenbankProxySequenceReader<C extends Compound> extends StringProxyS
 		String genbankURL = eutilBaseURL + "efetch.fcgi?db=" + db + "&id=" + accessionID + "&rettype=gb&retmode=text";
 		logger.trace("Loading: {}", genbankURL);
 		URL genbank = new URL(genbankURL);
-		URLConnection genbankConnection = genbank.openConnection();
-		return genbankConnection.getInputStream();
+		return genbank.openConnection().getInputStream();
 	}
 
-	/**
-	 * Local directory cache of Genbank that can be downloaded
-	 *
-	 * @return the uniprotDirectoryCache
-	 */
-	public String getGenbankDirectoryCache() {
-		return genbankDirectoryCache;
-	}
+//	/**
+//	 * Local directory cache of Genbank that can be downloaded
+//	 *
+//	 * @return the uniprotDirectoryCache
+//	 */
+//	public String getGenbankDirectoryCache() {
+//		return genbankDirectoryCache;
+//	}
 
 	/**
 	 * @param genbankDirectoryCache
@@ -198,8 +197,8 @@ public class GenbankProxySequenceReader<C extends Compound> extends StringProxyS
 
 	public static void main(String[] args) throws Throwable {
 
-		GenbankProxySequenceReader<AminoAcidCompound> genbankProteinReader
-				= new GenbankProxySequenceReader<>("/tmp", "NP_000257", AminoAcidCompoundSet.getAminoAcidCompoundSet());
+        GenbankProxySequenceReader<AminoAcidCompound> genbankProteinReader
+				= new GenbankProxySequenceReader<>("/tmp", "NP_000257", AminoAcidCompoundSet.aminoAcidCompoundSet);
 		ProteinSequence proteinSequence = new ProteinSequence(genbankProteinReader);
 		genbankProteinReader.getHeaderParser().parseHeader(genbankProteinReader.getHeader(), proteinSequence);
 		logger.info("Sequence ({},{})={}...", proteinSequence.getAccession(), proteinSequence.getLength(), proteinSequence.getSequenceAsString().substring(0, 10));

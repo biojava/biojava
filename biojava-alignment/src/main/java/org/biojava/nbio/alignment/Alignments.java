@@ -150,7 +150,7 @@ public class Alignments {
 		PairwiseSequenceScorerType ps = PairwiseSequenceScorerType.GLOBAL_IDENTITIES;
 		GapPenalty gapPenalty = new SimpleGapPenalty();
 		SubstitutionMatrix<C> subMatrix = null;
-		if (cs == AminoAcidCompoundSet.getAminoAcidCompoundSet()) {
+        if (cs == AminoAcidCompoundSet.aminoAcidCompoundSet) {
 			@SuppressWarnings("unchecked") // compound types must be equal since compound sets are equal
 			SubstitutionMatrix<C> temp = (SubstitutionMatrix<C>) SubstitutionMatrixHelper.getBlosum62();
 			subMatrix = temp;

@@ -1051,8 +1051,7 @@ public class WorkSheet {
 	 * @return
 	 */
 	public ArrayList<String> getAllColumns() {
-		ArrayList<String> columns = new ArrayList<>();
-		columns.addAll(columnLookup.keySet());
+        ArrayList<String> columns = new ArrayList<>(columnLookup.keySet());
 		return columns;
 	}
 
@@ -1119,8 +1118,7 @@ public class WorkSheet {
 	 * @return
 	 */
 	public ArrayList<String> getAllRows() {
-		ArrayList<String> rows = new ArrayList<>();
-		rows.addAll(rowLookup.keySet());
+        ArrayList<String> rows = new ArrayList<>(rowLookup.keySet());
 		return rows;
 
 	}

@@ -150,7 +150,7 @@ public class RCSBLigandsFactory {
 		}
 		InputStream is;
 		try {
-			URL url = new URL(HET_URL_STUB + sb.toString());
+			URL url = new URL(HET_URL_STUB + sb);
 			is = url.openConnection().getInputStream();
 		} catch (IOException e) {
 			logger.warn("Couldn't open connection", e);
@@ -329,7 +329,7 @@ public class RCSBLigandsFactory {
 			sb.append(pdbIds[i]);
 		}
 		try {
-			URL url = new URL(PDB_URL_STUB + sb.toString());
+			URL url = new URL(PDB_URL_STUB + sb);
 			is = url.openConnection().getInputStream();
 		} catch (IOException e) {
 			logger.warn("Couldn't open connection", e);

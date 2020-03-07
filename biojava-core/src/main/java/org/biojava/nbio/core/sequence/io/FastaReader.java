@@ -190,11 +190,12 @@ public class FastaReader<S extends Sequence<?>, C extends Compound> {
 
 			if (line == null) {
 				//i.e. EOF
-				if ( sb.length() == 0 && header.length() != 0 ) {
+				int sbl = sb.length();
+				if ( sbl == 0 && header.length() != 0 ) {
 					logger.warn("Can't parse sequence {}. Got sequence of length 0!", sequenceIndex);
 					logger.warn("header: {}", header);
 					header = null;
-				} else if ( sb.length() > 0 ) {
+				} else if ( sbl > 0 ) {
 					//logger.info("Sequence index=" + sequenceIndex + " " + fileIndex );
 					try {
 						@SuppressWarnings("unchecked")
@@ -239,7 +240,7 @@ public class FastaReader<S extends Sequence<?>, C extends Compound> {
 
 			if ( is == null)
 				System.err.println("Could not get input file " + inputFile);
-			FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = new FastaReader<>(is, new GenericFastaHeaderParser<>(), new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
+			FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = new FastaReader<>(is, new GenericFastaHeaderParser<>(), new ProteinSequenceCreator(AminoAcidCompoundSet.aminoAcidCompoundSet));
 			LinkedHashMap<String,ProteinSequence> proteinSequences = fastaReader.process();
 			is.close();
 
@@ -253,7 +254,7 @@ public class FastaReader<S extends Sequence<?>, C extends Compound> {
 							new GenericFastaHeaderParser<>(),
 							new FileProxyProteinSequenceCreator(
 									file,
-									AminoAcidCompoundSet.getAminoAcidCompoundSet(),
+									AminoAcidCompoundSet.aminoAcidCompoundSet,
 									new FastaSequenceParser()
 							)
 					);

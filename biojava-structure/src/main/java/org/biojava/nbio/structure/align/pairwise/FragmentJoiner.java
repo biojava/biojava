@@ -215,7 +215,7 @@ public class FragmentJoiner {
 
 	private boolean densityCheckOk(Atom[] aa1, Atom[] aa2, List<int[]> idxlist,
 											 int p2i, int p2j, int l2,
-											 double densityCutoff) throws StructureException {
+											 double densityCutoff) {
 		JointFragments ftmp = new JointFragments();
 		ftmp.setIdxlist(idxlist);
 		ftmp.add(p2i,p2j,0,l2);

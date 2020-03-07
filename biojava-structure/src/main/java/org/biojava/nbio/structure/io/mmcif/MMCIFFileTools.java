@@ -87,12 +87,12 @@ public class MMCIFFileTools {
 	public static String toLoopMmCifHeaderString(String categoryName, String className) throws ClassNotFoundException {
 		StringBuilder str = new StringBuilder();
 
-		str.append(SimpleMMcifParser.LOOP_START+newline);
+		str.append(SimpleMMcifParser.LOOP_START).append(newline);
 
 		Class<?> c = Class.forName(className);
 
 		for (Field f : getFields(c)) {
-			str.append(categoryName+"."+f.getName()+newline);
+			str.append(categoryName).append(".").append(f.getName()).append(newline);
 		}
 
 		return str.toString();
@@ -148,7 +148,7 @@ public class MMCIFFileTools {
 
 		}
 
-		sb.append(SimpleMMcifParser.COMMENT_CHAR+newline);
+		sb.append(SimpleMMcifParser.COMMENT_CHAR).append(newline);
 
 		return sb.toString();
 	}
@@ -220,7 +220,7 @@ public class MMCIFFileTools {
 			sb.append(toSingleLoopLineMmCifString(o, fields, sizes));
 		}
 
-		sb.append(SimpleMMcifParser.COMMENT_CHAR+newline);
+		sb.append(SimpleMMcifParser.COMMENT_CHAR).append(newline);
 
 		return sb.toString();
 	}

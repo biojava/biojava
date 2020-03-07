@@ -24,7 +24,6 @@ package org.biojava.nbio.structure.symmetry.core;
 import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Matrix4d;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -152,11 +151,11 @@ public class Helix {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("Permutation   : " + getPermutation() + "\n");
-		sb.append("Repeat units  : " + getRepeatUnits() + "\n");
-		sb.append("Rise          : " + getRise() + "\n");
-		sb.append("Angle         : " + Math.toDegrees(getAngle()) +"\n");
-		sb.append("Fold          : " + getFold() + "\n");
+		sb.append("Permutation   : ").append(getPermutation()).append("\n");
+		sb.append("Repeat units  : ").append(getRepeatUnits()).append("\n");
+		sb.append("Rise          : ").append(getRise()).append("\n");
+		sb.append("Angle         : ").append(Math.toDegrees(getAngle())).append("\n");
+		sb.append("Fold          : ").append(getFold()).append("\n");
 		return sb.toString();
 	}
 

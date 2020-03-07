@@ -35,7 +35,7 @@ import static org.biojava.nbio.ontology.obo.OboFileHandler.NAMESPACE;
 public class TestParseOBO {
 
 	@Test
-	public void testNamespace() throws IOException, ParseException {
+	public void testNamespace() throws IOException {
 
 		String testTermEntry = "\n[Term]\n" +
 		"id: SO:0000691\n" +

@@ -103,7 +103,7 @@ public class TestParsingCalcium {
 					atom.getElement()==Element.O ||
 					atom.getElement()==Element.N    );
 
-            assertFalse("backbone atoms should not contain CB atoms", atom.getName().equals("CB"));
+            assertNotEquals("backbone atoms should not contain CB atoms", "CB", atom.getName());
 
 			if (atom.getGroup().getPDBName().equals("GLY")) {
 				hasGlycine = true;

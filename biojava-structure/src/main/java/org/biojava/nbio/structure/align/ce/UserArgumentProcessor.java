@@ -20,8 +20,6 @@
  */
 package org.biojava.nbio.structure.align.ce;
 
-import org.biojava.nbio.structure.align.util.ConfigurationException;
-
 public interface UserArgumentProcessor {
 
 

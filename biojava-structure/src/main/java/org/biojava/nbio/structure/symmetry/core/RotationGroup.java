@@ -25,8 +25,6 @@ import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Vector3d;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -192,7 +190,7 @@ public class RotationGroup implements Iterable<Rotation> {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("Rotations: " + rotations.size() + "\n");
+		sb.append("Rotations: ").append(rotations.size()).append("\n");
 		for (Rotation s: rotations) {
 			sb.append(s.toString()).append("\n");
 		}

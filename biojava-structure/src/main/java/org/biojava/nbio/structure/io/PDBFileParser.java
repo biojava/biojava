@@ -850,7 +850,7 @@ public class PDBFileParser  {
 			title = line.substring(10).trim();
 
 		String t = pdbHeader.getTitle();
-		if ( (t != null) && (! t.equals("")) ){
+		if ( (t != null) && (!t.isEmpty()) ){
 			if (t.endsWith("-"))
 				t += ""; // if last line ends with a hyphen then we don't add space
 			else
@@ -932,7 +932,7 @@ public class PDBFileParser  {
 		if ((fl >0 ) && compndFieldValues.contains(fieldList[0])) {
 
 			continuationField = fieldList[0];
-			if (previousContinuationField.equals("")) {
+			if (previousContinuationField.isEmpty()) {
 				previousContinuationField = continuationField;
 			}
 
@@ -958,7 +958,7 @@ public class PDBFileParser  {
 		while (compndTokens.hasMoreTokens()) {
 			String token = compndTokens.nextToken();
 
-			if (previousContinuationField.equals("")) {
+			if (previousContinuationField.isEmpty()) {
 				previousContinuationField = continuationField;
 			}
 
@@ -976,7 +976,7 @@ public class PDBFileParser  {
 			}
 			if (!continuationField.equals(previousContinuationField)) {
 
-				if (continuationString.equals("")) {
+				if (continuationString.isEmpty()) {
 					continuationString = token;
 
 				} else {
@@ -1157,28 +1157,28 @@ public class PDBFileParser  {
 
 		String[] fieldList = line.split("\\s+");
 
-		if (!fieldList[0].equals("")
+		if (!fieldList[0].isEmpty()
 				&& sourceFieldValues.contains(fieldList[0])) {
 			//			System.out.println("[PDBFileParser.pdb_COMPND_Handler] Setting continuationField to '" + fieldList[0] + "'");
 			continuationField = fieldList[0];
-			if (previousContinuationField.equals("")) {
+			if (previousContinuationField.isEmpty()) {
 				previousContinuationField = continuationField;
 			}
 
 		} else if ((fieldList.length > 1) && ( sourceFieldValues.contains(fieldList[1]))) {
 			//			System.out.println("[PDBFileParser.pdb_COMPND_Handler] Setting continuationField to '" + fieldList[1] + "'");
 			continuationField = fieldList[1];
-			if (previousContinuationField.equals("")) {
+			if (previousContinuationField.isEmpty()) {
 				previousContinuationField = continuationField;
 			}
 
 		} else {
-			if (continuationNr.equals("")) {
+			if (continuationNr.isEmpty()) {
 
 				logger.debug("looks like an old PDB file");
 
 				continuationField = "MOLECULE:";
-				if (previousContinuationField.equals("")) {
+				if (previousContinuationField.isEmpty()) {
 					previousContinuationField = continuationField;
 				}
 			}
@@ -1194,7 +1194,7 @@ public class PDBFileParser  {
 		while (compndTokens.hasMoreTokens()) {
 			String token = compndTokens.nextToken();
 
-			if (previousContinuationField.equals("")) {
+			if (previousContinuationField.isEmpty()) {
 				//				System.out.println("previousContinuationField is empty. Setting to : " + continuationField);
 				previousContinuationField = continuationField;
 			}
@@ -1211,7 +1211,7 @@ public class PDBFileParser  {
 			}
 			if (!continuationField.equals(previousContinuationField)) {
 
-				if (continuationString.equals("")) {
+				if (continuationString.isEmpty()) {
 					continuationString = token;
 
 				} else {
@@ -2042,7 +2042,7 @@ public class PDBFileParser  {
 		int bond;
 		Integer b = null ;
 
-		if ( ! sbond.equals("")) {
+		if (!sbond.isEmpty()) {
 			bond = Integer.parseInt(sbond);
 			b = bond;
 		}
@@ -2266,7 +2266,7 @@ public class PDBFileParser  {
 			String symop2 = line.substring(66, 72).trim();
 
 			// until we implement proper treatment of symmetry in biojava #220, we can't deal with sym-related parteners properly, skipping them
-			if (!symop1.equals("") && !symop2.equals("") && // in case the field is missing
+			if (!symop1.isEmpty() && !symop2.isEmpty() && // in case the field is missing
 					(!symop1.equals("1555") || !symop2.equals("1555")) ) {
 				logger.info("Skipping ss bond between groups {} and {} belonging to different symmetry partners, because it is not supported yet", seqNum1+icode1, seqNum2+icode2);
 				return;
@@ -2651,7 +2651,7 @@ public class PDBFileParser  {
 		while ((line = buf.readLine()) != null) {
 
 			// ignore empty lines
-			if ( line.equals("") ||
+			if (line.isEmpty() ||
 					(line.equals(NEWLINE))){
 				continue;
 			}
@@ -3386,7 +3386,7 @@ public class PDBFileParser  {
 			if (subField.equals("AUTH")) {
 				auth.append(line.substring(19).trim());
 
-				logger.debug("AUTH '" + auth.toString() + "'");
+				logger.debug("AUTH '" + auth + "'");
 
 			}
 			if (subField.equals("TITL")) {
@@ -3394,26 +3394,26 @@ public class PDBFileParser  {
 				//words on the join won't be concatenated
 				titl.append(line.substring(19).trim()).append(" ");
 
-				logger.debug("TITL '" + titl.toString() + "'");
+				logger.debug("TITL '" + titl + "'");
 
 			}
 			if (subField.equals("EDIT")) {
 				edit.append(line.substring(19).trim());
 
-				logger.debug("EDIT '" + edit.toString() + "'");
+				logger.debug("EDIT '" + edit + "'");
 
 			}
 			//        JRNL        REF    NAT.IMMUNOL.                  V.   8   430 2007
 			if (subField.equals("REF ")) {
 				ref.append(line.substring(19).trim()).append(" ");
 
-				logger.debug("REF '" + ref.toString() + "'");
+				logger.debug("REF '" + ref + "'");
 
 			}
 			if (subField.equals("PUBL")) {
 				publ.append(line.substring(19).trim()).append(" ");
 
-				logger.debug("PUBL '" + publ.toString() + "'");
+				logger.debug("PUBL '" + publ + "'");
 
 			}
 			//        JRNL        REFN                   ISSN 1529-2908
@@ -3424,21 +3424,21 @@ public class PDBFileParser  {
 				}
 				refn.append(line.substring(35).trim());
 
-				logger.debug("REFN '" + refn.toString() + "'");
+				logger.debug("REFN '" + refn + "'");
 
 			}
 			//        JRNL        PMID   17351618
 			if (subField.equals("PMID")) {
 				pmid.append(line.substring(19).trim());
 
-				logger.debug("PMID '" + pmid.toString() + "'");
+				logger.debug("PMID '" + pmid + "'");
 
 			}
 			//        JRNL        DOI    10.1038/NI1450
 			if (subField.equals("DOI ")) {
 				doi.append(line.substring(19).trim());
 
-				logger.debug("DOI '" + doi.toString() + "'");
+				logger.debug("DOI '" + doi + "'");
 
 			}
 		}
@@ -3593,7 +3593,7 @@ public class PDBFileParser  {
 	private List<Author> authorBuilder(String authorString) {
 		ArrayList<Author> authorList = new ArrayList<>();
 
-		if (authorString.equals("")) {
+		if (authorString.isEmpty()) {
 			return authorList;
 		}
 

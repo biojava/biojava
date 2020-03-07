@@ -81,8 +81,7 @@ public class CookbookMSAProfiler {
 		Profiler profiler = new Profiler();
 
 		System.out.printf("Loading sequences from %s... ", args[0]);
-		List<ProteinSequence> list = new ArrayList<>();
-		list.addAll(FastaReaderHelper.readFastaProteinSequence(new File(args[0])).values());
+        List<ProteinSequence> list = new ArrayList<>(FastaReaderHelper.readFastaProteinSequence(new File(args[0])).values());
 		if (args.length > 1 && Integer.parseInt(args[1]) < list.size()) {
 			System.out.printf("%s/%d", args[1], list.size());
 			list = list.subList(0, Integer.parseInt(args[1]));

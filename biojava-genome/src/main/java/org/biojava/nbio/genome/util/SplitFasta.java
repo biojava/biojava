@@ -61,7 +61,7 @@ public class SplitFasta {
 
 		public static void main( String[] args ){
 		try{
-			SplitFasta splitFasta = new SplitFasta();
+//			SplitFasta splitFasta = new SplitFasta();
 			SplitFasta.processNucleotides(new File("/Users/Scooter/scripps/dyadic/analysis/454Scaffolds/454Scaffolds.fna"), "", new File("/Users/Scooter/scripps/dyadic/analysis/454Scaffolds/individual"));
 		}catch(Exception e){
 			logger.error("Exception: ", e);

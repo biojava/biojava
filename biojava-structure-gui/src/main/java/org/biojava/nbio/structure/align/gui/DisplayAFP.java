@@ -54,7 +54,7 @@ public class DisplayAFP {
 	private static final Logger logger = LoggerFactory.getLogger(DisplayAFP.class);
 
 	//TODO: same as getEqrPos??? !!!
-	public static final List<Integer> getEQRAlignmentPos(AFPChain afpChain){
+	public static List<Integer> getEQRAlignmentPos(AFPChain afpChain){
 		List<Integer> lst = new ArrayList<>();
 
 		char[] s1 = afpChain.getAlnseq1();
@@ -105,7 +105,7 @@ public class DisplayAFP {
 	 * @param afpChain
 	 * @param ca
 	 */
-	public static final List<String> getPDBresnum(int aligPos, AFPChain afpChain, Atom[] ca){
+	public static List<String> getPDBresnum(int aligPos, AFPChain afpChain, Atom[] ca){
 		List<String> lst = new ArrayList<>();
 		if ( aligPos > 1) {
 			System.err.println("multiple alignments not supported yet!");
@@ -144,7 +144,7 @@ public class DisplayAFP {
 	 * @param getPrevious gives the previous position if false, gives the next posible atom
 	 * @return a CA atom that is at a particular position of the alignment
 	 */
-	public static final Atom getAtomForAligPos(AFPChain afpChain,int chainNr, int aligPos, Atom[] ca , boolean getPrevious ) throws StructureException{
+	public static Atom getAtomForAligPos(AFPChain afpChain, int chainNr, int aligPos, Atom[] ca , boolean getPrevious ) throws StructureException{
 		int[] optLen = afpChain.getOptLen();
 		// int[][][] optAln = afpChain.getOptAln();
 
@@ -311,7 +311,7 @@ public class DisplayAFP {
 
 	}
 
-	private static final int getUngappedFatCatPos(AFPChain afpChain, int chainNr, int aligPos){
+	private static int getUngappedFatCatPos(AFPChain afpChain, int chainNr, int aligPos){
 		char[] aseq;
 		if ( chainNr == 0 )
 			aseq = afpChain.getAlnseq1();
@@ -404,7 +404,7 @@ public class DisplayAFP {
 	 * @param hetatms
 	 * @return
 	 */
-	public static final Atom[] getAtomArray(Atom[] ca,List<Group> hetatms ) {
+	public static Atom[] getAtomArray(Atom[] ca, List<Group> hetatms ) {
 		List<Atom> atoms = new ArrayList<>();
 		Collections.addAll(atoms, ca);
 
@@ -432,7 +432,7 @@ public class DisplayAFP {
 	/** Note: ca2, hetatoms2 and nucleotides2 should not be rotated. This will be done here...
 	 * */
 
-	public static final StructureAlignmentJmol display(AFPChain afpChain,Group[] twistedGroups, Atom[] ca1, Atom[] ca2,List<Group> hetatms1, List<Group> hetatms2 ) throws StructureException {
+	public static StructureAlignmentJmol display(AFPChain afpChain, Group[] twistedGroups, Atom[] ca1, Atom[] ca2, List<Group> hetatms1, List<Group> hetatms2 ) {
 
 		List<Atom> twistedAs = new ArrayList<>();
 

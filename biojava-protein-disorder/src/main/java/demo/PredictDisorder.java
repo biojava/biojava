@@ -36,7 +36,7 @@ public class PredictDisorder {
 
 		ProteinSequence seq = getUniprot(uniprotID);
 		System.out.println("Protein Sequence: "+ seq.toString());
-		AminoAcidCompoundSet compoundSet = AminoAcidCompoundSet.getAminoAcidCompoundSet();
+        AminoAcidCompoundSet compoundSet = AminoAcidCompoundSet.aminoAcidCompoundSet;
 
 		if (!compoundSet.isValidSequence(seq) ) {
 			System.err.println("Invalid sequence, exiting");
@@ -58,7 +58,7 @@ public class PredictDisorder {
 	 */
 	private static ProteinSequence getUniprot(String uniProtID) throws Exception {
 
-		AminoAcidCompoundSet set = AminoAcidCompoundSet.getAminoAcidCompoundSet();
+        AminoAcidCompoundSet set = AminoAcidCompoundSet.aminoAcidCompoundSet;
 		UniprotProxySequenceReader<AminoAcidCompound> uniprotSequence = new UniprotProxySequenceReader<>(uniProtID, set);
 
 		ProteinSequence seq = new ProteinSequence(uniprotSequence);

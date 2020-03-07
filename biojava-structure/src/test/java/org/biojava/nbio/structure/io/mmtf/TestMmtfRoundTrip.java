@@ -27,7 +27,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -269,8 +268,8 @@ public class TestMmtfRoundTrip {
 	 * @param chainsTwo the second list of chains
 	 */
 	private void sortChains(List<Chain> chainsOne, List<Chain> chainsTwo) {
-		chainsOne.sort((o1, o2) -> o1.getId().compareTo(o2.getId()));
-		chainsTwo.sort((o1, o2) -> o1.getId().compareTo(o2.getId()));
+		chainsOne.sort(Comparator.comparing(Chain::getId));
+		chainsTwo.sort(Comparator.comparing(Chain::getId));
 
 	}
 

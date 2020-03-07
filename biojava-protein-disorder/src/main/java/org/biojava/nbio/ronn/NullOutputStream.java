@@ -27,7 +27,6 @@
 
 package org.biojava.nbio.ronn;
 
-import java.io.IOException;
 import java.io.OutputStream;
 
 /**

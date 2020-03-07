@@ -42,10 +42,10 @@ public class TestFASTAReader {
 		ClasspathResource r = new ClasspathResource(path);
 		FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = null ;
 		try( InputStream inStream = r.getInputStream() ) {
-			fastaReader = new FastaReader<>(
+            fastaReader = new FastaReader<>(
 					inStream,
 					new GenericFastaHeaderParser<>(),
-					new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
+					new ProteinSequenceCreator(AminoAcidCompoundSet.aminoAcidCompoundSet));
 			LinkedHashMap<String, ProteinSequence> sequences = fastaReader.process();
 			assertThat(sequences,is(notNullValue()));
 			assertThat(sequences.size(),is(1));
@@ -82,10 +82,10 @@ public class TestFASTAReader {
 		ClasspathResource r = new ClasspathResource(path);
 		FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = null ;
 		try( InputStream inStream = r.getInputStream() ) {
-			fastaReader = new FastaReader<>(
+            fastaReader = new FastaReader<>(
 					inStream,
 					new GenericFastaHeaderParser<>(),
-					new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
+					new ProteinSequenceCreator(AminoAcidCompoundSet.aminoAcidCompoundSet));
 			LinkedHashMap<String,ProteinSequence> out1 = fastaReader.process(1);
 			assertThat(out1,is(notNullValue()));
 			assertThat(out1.size(),is(1));
@@ -124,10 +124,10 @@ public class TestFASTAReader {
 		ClasspathResource r = new ClasspathResource(path);
 		FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = null ;
 		try( InputStream inStream = r.getInputStream() ) {
-			fastaReader = new FastaReader<>(
+            fastaReader = new FastaReader<>(
 					inStream,
 					new GenericFastaHeaderParser<>(),
-					new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
+					new ProteinSequenceCreator(AminoAcidCompoundSet.aminoAcidCompoundSet));
 			LinkedHashMap<String,ProteinSequence> out1 = fastaReader.process(1);
 			assertThat(out1,is(notNullValue()));
 			assertThat(out1.size(),is(1));

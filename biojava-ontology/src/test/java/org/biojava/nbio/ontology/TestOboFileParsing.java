@@ -34,7 +34,7 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Set;
-import java.util.Iterator;
+
 import org.biojava.nbio.ontology.utils.Annotation;
 
 public class TestOboFileParsing {

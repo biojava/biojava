@@ -40,7 +40,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -131,7 +130,7 @@ public class EntityFinder {
 		// let's find first the max entity id to assign entity ids to the newly found entities
 		int maxMolId = 0;
 		if (!entities.isEmpty()) {
-			maxMolId = Collections.max(entities, (o1, o2) -> new Integer(o1.getMolId()).compareTo(o2.getMolId())).getMolId();
+			maxMolId = Collections.max(entities, (o1, o2) -> Integer.compare(o1.getMolId(), o2.getMolId())).getMolId();
 		}
 		// we go one over the max
 		int molId = maxMolId + 1;

@@ -26,7 +26,6 @@ package demo;
 
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.StructureAlignment;
 import org.biojava.nbio.structure.align.gui.StructureAlignmentDisplay;
@@ -36,8 +35,6 @@ import org.biojava.nbio.structure.align.util.AFPChainScorer;
 import org.biojava.nbio.structure.align.xml.AFPChainXMLConverter;
 import org.biojava.nbio.structure.io.FastaAFPChainConverter;
 import org.biojava.nbio.structure.io.FastaStructureParser;
-
-import java.io.IOException;
 
 /**
  * Demo displaying a structural alignment from a FASTA file using {@link FastaAFPChainConverter}.

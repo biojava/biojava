@@ -141,7 +141,7 @@ public final class Fastq
 	 *
 	 * @return a new FastqBuilder
 	 */
-	public static final FastqBuilder builder()
+	public static FastqBuilder builder()
 	{
 		return new FastqBuilder();
 	}

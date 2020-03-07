@@ -1101,13 +1101,13 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	private int getInternalNr(Group atomG) {
 		if ( atomG.getType().equals(GroupType.AMINOACID)) {
 			AminoAcidImpl aa = (AminoAcidImpl) atomG;
-			return new Long(aa.getId()).intValue();
+			return Long.valueOf(aa.getId()).intValue();
 		} else if ( atomG.getType().equals(GroupType.NUCLEOTIDE)) {
 			NucleotideImpl nu = (NucleotideImpl) atomG;
-			return new Long(nu.getId()).intValue();
+			return Long.valueOf(nu.getId()).intValue();
 		} else {
 			HetatomImpl he = (HetatomImpl) atomG;
-			return new Long(he.getId()).intValue();
+			return Long.valueOf(he.getId()).intValue();
 		}
 	}
 
@@ -1596,7 +1596,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		if (auth == null) {
 			header.setAuthors(newaa.toString());
 		}else {
-			auth += "," + newaa.toString();
+			auth += "," + newaa;
 			header.setAuthors(auth);
 
 		}

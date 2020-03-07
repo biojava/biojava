@@ -22,7 +22,6 @@ package org.biojava.nbio.structure.align.multiple.util;
 
 import java.util.List;
 
-import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.multiple.BlockSet;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 

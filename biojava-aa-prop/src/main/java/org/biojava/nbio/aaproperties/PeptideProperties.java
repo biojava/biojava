@@ -78,7 +78,7 @@ public class PeptideProperties {
 	 * 	a protein sequence consisting of non-ambiguous characters only
 	 * @return the total molecular weight of sequence + weight of water molecule
 	 */
-	public static final double getMolecularWeight(String sequence){
+	public static double getMolecularWeight(String sequence){
 		sequence = Utils.checkSequence(sequence);
 		ProteinSequence pSequence = null;
 		try {
@@ -109,7 +109,7 @@ public class PeptideProperties {
 	 * @throws JAXBException
 	 * 	thrown if unable to properly parse either elementMassFile or aminoAcidCompositionFile
 	 */
-	public static final double getMolecularWeight(String sequence, File elementMassFile, File aminoAcidCompositionFile)
+	public static double getMolecularWeight(String sequence, File elementMassFile, File aminoAcidCompositionFile)
 	throws FileNotFoundException, JAXBException{
 		sequence = Utils.checkSequence(sequence);
 		ProteinSequence pSequence = null;
@@ -140,7 +140,7 @@ public class PeptideProperties {
 	 * @throws FileNotFoundException
 	 * 	thrown if either elementMassFile or aminoAcidCompositionFile are not found
 	 */
-	public static final double getMolecularWeight(String sequence, File aminoAcidCompositionFile) throws FileNotFoundException, JAXBException{
+	public static double getMolecularWeight(String sequence, File aminoAcidCompositionFile) throws FileNotFoundException, JAXBException{
 		sequence = Utils.checkSequence(sequence);
 		ProteinSequence pSequence = null;
 		try {
@@ -166,7 +166,7 @@ public class PeptideProperties {
 	 * @throws FileNotFoundException
 	 * 	thrown if either elementMassFile or aminoAcidCompositionFile are not found
 	 */
-	public static final AminoAcidCompositionTable obtainAminoAcidCompositionTable(File aminoAcidCompositionFile)
+	public static AminoAcidCompositionTable obtainAminoAcidCompositionTable(File aminoAcidCompositionFile)
 	throws JAXBException, FileNotFoundException{
 		IPeptideProperties pp = new PeptidePropertiesImpl();
 		return pp.obtainAminoAcidCompositionTable(aminoAcidCompositionFile);
@@ -186,7 +186,7 @@ public class PeptideProperties {
 	 * @throws FileNotFoundException
 	 * 	thrown if either elementMassFile or aminoAcidCompositionFile are not found
 	 */
-	public static final AminoAcidCompositionTable obtainAminoAcidCompositionTable(File elementMassFile, File aminoAcidCompositionFile)
+	public static AminoAcidCompositionTable obtainAminoAcidCompositionTable(File elementMassFile, File aminoAcidCompositionFile)
 	throws JAXBException, FileNotFoundException{
 		IPeptideProperties pp = new PeptidePropertiesImpl();
 		return pp.obtainAminoAcidCompositionTable(elementMassFile, aminoAcidCompositionFile);
@@ -230,7 +230,7 @@ public class PeptideProperties {
 	 * 	true if Cys are assumed to be reduced and false if Cys are assumed to form cystines
 	 * @return the absorbance (optical density) of sequence
 	 */
-	public static final double getAbsorbance(String sequence, boolean assumeCysReduced){
+	public static double getAbsorbance(String sequence, boolean assumeCysReduced){
 		sequence = Utils.checkSequence(sequence);
 		ProteinSequence pSequence = null;
 		try {
@@ -259,7 +259,7 @@ public class PeptideProperties {
 	 *            assumed to form cystines
 	 * @return the extinction coefficient of sequence
 	 */
-	public static final double getExtinctionCoefficient(String sequence, boolean assumeCysReduced) {
+	public static double getExtinctionCoefficient(String sequence, boolean assumeCysReduced) {
 		sequence = Utils.checkSequence(sequence);
 		ProteinSequence pSequence = null;
 		try {
@@ -283,7 +283,7 @@ public class PeptideProperties {
 	 * 		a protein sequence consisting of non-ambiguous characters only
 	 * @return the instability index of sequence
 	 */
-	public static final double getInstabilityIndex(String sequence) {
+	public static double getInstabilityIndex(String sequence) {
 		sequence = Utils.checkSequence(sequence);
 		ProteinSequence pSequence = null;
 		try {
@@ -310,7 +310,7 @@ public class PeptideProperties {
 	 * 		a protein sequence consisting of non-ambiguous characters only
 	 * @return the aliphatic index of sequence
 	 */
-	public static final double getApliphaticIndex(String sequence) {
+	public static double getApliphaticIndex(String sequence) {
 		sequence = Utils.checkSequence(sequence);
 		ProteinSequence pSequence = null;
 		try {
@@ -337,7 +337,7 @@ public class PeptideProperties {
 	 * 		a protein sequence consisting of non-ambiguous characters only
 	 * @return the average hydropathy value of sequence
 	 */
-	public static final double getAvgHydropathy(String sequence) {
+	public static double getAvgHydropathy(String sequence) {
 		sequence = Utils.checkSequence(sequence);
 		ProteinSequence pSequence = null;
 		try {
@@ -369,7 +369,7 @@ public class PeptideProperties {
 	 * 		whether to use Expasy values (Default) or Innovagen values
 	 * @return the isoelectric point of sequence
 	 */
-	public static final double getIsoelectricPoint(String sequence, boolean useExpasyValues) {
+	public static double getIsoelectricPoint(String sequence, boolean useExpasyValues) {
 		sequence = Utils.checkSequence(sequence);
 		ProteinSequence pSequence = null;
 		try {
@@ -382,7 +382,7 @@ public class PeptideProperties {
 		return pp.getIsoelectricPoint(pSequence, useExpasyValues);
 	}
 
-	public static final double getIsoelectricPoint(String sequence){
+	public static double getIsoelectricPoint(String sequence){
 		return getIsoelectricPoint(sequence, true);
 	}
 
@@ -405,7 +405,7 @@ public class PeptideProperties {
 	 * 		the pH value to use for computation of the net charge. Default at 7.
 	 * @return the net charge of sequence at given pHPoint
 	 */
-	public static final double getNetCharge(String sequence, boolean useExpasyValues, double pHPoint){
+	public static double getNetCharge(String sequence, boolean useExpasyValues, double pHPoint){
 		sequence = Utils.checkSequence(sequence);
 		ProteinSequence pSequence = null;
 		try {
@@ -418,11 +418,11 @@ public class PeptideProperties {
 		return pp.getNetCharge(pSequence, useExpasyValues, pHPoint);
 	}
 
-	public static final double getNetCharge(String sequence, boolean useExpasyValues) {
+	public static double getNetCharge(String sequence, boolean useExpasyValues) {
 		return getNetCharge(sequence, useExpasyValues, 7.0);
 	}
 
-	public static final double getNetCharge(String sequence){
+	public static double getNetCharge(String sequence){
 		return getNetCharge(sequence, true);
 	}
 
@@ -441,7 +441,7 @@ public class PeptideProperties {
 	 * @return the composition of specified amino acid in the sequence
 	 * @see SingleLetterAACode
 	 */
-	public static final double getEnrichment(String sequence, SingleLetterAACode aminoAcidCode) {
+	public static double getEnrichment(String sequence, SingleLetterAACode aminoAcidCode) {
 		return getEnrichment(sequence, aminoAcidCode.toString());
 	}
 
@@ -459,7 +459,7 @@ public class PeptideProperties {
 	 * 		the code of the amino acid to compute
 	 * @return the composition of specified amino acid in the sequence
 	 */
-	public static final double getEnrichment(String sequence, char aminoAcidCode){
+	public static double getEnrichment(String sequence, char aminoAcidCode){
 		return getEnrichment(sequence, aminoAcidCode);
 	}
 
@@ -477,7 +477,7 @@ public class PeptideProperties {
 	 *            the code of the amino acid to compute
 	 * @return the composition of specified amino acid in the sequence
 	 */
-	public static final double getEnrichment(String sequence, String aminoAcidCode){
+	public static double getEnrichment(String sequence, String aminoAcidCode){
 		sequence = Utils.checkSequence(sequence);
 		ProteinSequence pSequence = null;
 		try {
@@ -503,7 +503,7 @@ public class PeptideProperties {
 	 * @return the composition of the 20 standard amino acid in the sequence
 	 * @see AminoAcidCompound
 	 */
-	public static final Map<AminoAcidCompound, Double> getAAComposition(String sequence) {
+	public static Map<AminoAcidCompound, Double> getAAComposition(String sequence) {
 		sequence = Utils.checkSequence(sequence);
 		ProteinSequence pSequence = null;
 		try {
@@ -527,7 +527,7 @@ public class PeptideProperties {
 	 * 		a protein sequence consisting of non-ambiguous characters only
 	 * @return the composition of the 20 standard amino acid in the sequence
 	 */
-	public static final Map<String, Double> getAACompositionString(String sequence){
+	public static Map<String, Double> getAACompositionString(String sequence){
 		Map<AminoAcidCompound, Double> aa2Composition = getAAComposition(sequence);
 		Map<String, Double> aaString2Composition = new HashMap<>();
 		for(Map.Entry<AminoAcidCompound, Double> entry : aa2Composition.entrySet()){
@@ -547,7 +547,7 @@ public class PeptideProperties {
 	 * 		a protein sequence consisting of non-ambiguous characters only
 	 * @return the composition of the 20 standard amino acid in the sequence
 	 */
-	public static final Map<Character, Double> getAACompositionChar(String sequence){
+	public static Map<Character, Double> getAACompositionChar(String sequence){
 		Map<AminoAcidCompound, Double> aa2Composition = getAAComposition(sequence);
 		Map<Character, Double> aaChar2Composition = new HashMap<>();
 		for(Map.Entry<AminoAcidCompound, Double> entry : aa2Composition.entrySet()){
@@ -564,7 +564,7 @@ public class PeptideProperties {
 	 * 		a protein sequence consisting of non-ambiguous characters only
 	 * @return the array of charges of amino acids in the protein (1 if amino acid is positively charged, -1 if negatively charged, 0 if not charged)
 	 */
-	public static final int[] getChargesOfAminoAcids(String sequence) {
+	public static int[] getChargesOfAminoAcids(String sequence) {
 		int[] charges = new int[sequence.length()];
 		for ( int i=0; i < sequence.length(); i++ ) {
 			char aa = sequence.toCharArray()[i];
@@ -580,7 +580,7 @@ public class PeptideProperties {
 	 * 		a protein sequence consisting of non-ambiguous characters only
 	 * @return the array of polarity of amino acids in the protein (1 if amino acid is polar, 0 if not)
 	 */
-	public static final int[] getPolarityOfAminoAcids(String sequence) {
+	public static int[] getPolarityOfAminoAcids(String sequence) {
 		int[] polarity = new int[sequence.length()];
 		for ( int i=0; i < sequence.length(); i++ ) {
 			char aa = sequence.toCharArray()[i];

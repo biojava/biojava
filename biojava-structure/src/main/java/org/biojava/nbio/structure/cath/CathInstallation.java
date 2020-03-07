@@ -450,9 +450,9 @@ public class CathInstallation implements CathDatabase{
 				sseqh = new StringBuilder();
 				sseqs = new StringBuilder();
 			} else if ( line.startsWith("SRANGE") ) {
-				int startStart = line.indexOf("=",10) + 1;
-				int startStop = line.indexOf(" ",10);
-				int stopStart = line.indexOf("=",startStop) + 1;
+				int startStart = line.indexOf('=',10) + 1;
+				int startStop = line.indexOf(' ',10);
+				int stopStart = line.indexOf('=',startStop) + 1;
 //                Integer start = Integer.parseInt( line.substring(startStart,startStop) );
 //                Integer stop = Integer.parseInt( line.substring(stopStart, line.length()) );
 				segment.setStart( line.substring(startStart,startStop) );
@@ -524,7 +524,7 @@ public class CathInstallation implements CathDatabase{
 		CathNode cathNode = new CathNode();
 		String[] token = line.split("\\s+",3);
 		cathNode.setNodeId( token[0] );
-		int idx = token[0].lastIndexOf(".");
+		int idx = token[0].lastIndexOf('.');
 		if ( idx == -1 ) idx = token[0].length();
 		cathNode.setParentId( token[0].substring( 0, idx ) );
 		cathNode.setRepresentative( token[1] );

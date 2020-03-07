@@ -42,7 +42,7 @@ public interface Compound {
 
 	void setLongName(String longName);
 
-	Float getMolecularWeight();
+	float getMolecularWeight();
 
-	void setMolecularWeight(Float molecularWeight);
+//	void setMolecularWeight(Float molecularWeight);
 }

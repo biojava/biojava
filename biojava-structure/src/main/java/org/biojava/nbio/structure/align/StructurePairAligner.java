@@ -135,8 +135,7 @@ import javax.vecmath.Matrix4d;
  */
 public class StructurePairAligner {
 
-	private final static Logger logger = LoggerFactory
-			.getLogger(StructurePairAligner.class);
+	private final static Logger logger = LoggerFactory.getLogger(StructurePairAligner.class);
 
 	AlternativeAlignment[] alts;
 	Matrix distanceMatrix;
@@ -544,18 +543,14 @@ public class StructurePairAligner {
 			a.setAltAligNumber(i + 1);
 			a.setDistanceMatrix(distanceMatrix);
 
-			try {
-				if (params.getMaxIter() > 0) {
-
+//			try {
+				if (params.getMaxIter() > 0)
 					a.refine(params, ca1, ca2);
-				} else {
-
+				else
 					a.finish(params, ca1, ca2);
-
-				}
-			} catch (StructureException e) {
-				logger.error("Refinement of fragment {} failed", i, e);
-			}
+//			} catch (StructureException e) {
+//				logger.error("Refinement of fragment {} failed", i, e);
+//			}
 			a.calcScores(ca1, ca2);
 			aas.add(a);
 		}
@@ -568,10 +563,8 @@ public class StructurePairAligner {
 		alts = aas.toArray(new AlternativeAlignment[0]);
 		// do final numbering of alternative solutions
 		int aanbr = 0;
-		for (AlternativeAlignment a : alts) {
-			aanbr++;
-			a.setAltAligNumber(aanbr);
-		}
+		for (AlternativeAlignment a : alts)
+			a.setAltAligNumber(++aanbr);
 
 		logger.debug("total calculation time: {} ms.",
 				(System.currentTimeMillis() - timeStart));

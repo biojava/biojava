@@ -119,7 +119,7 @@ public class StructureAlignmentOptimizer
 			equSet[0][i] = iniSet[0][i];
 			equSet[1][i] = iniSet[1][i];
 			if(iniSet[0][i] > len1 || iniSet[1][i] > len2)  {
-				throw new RuntimeException(String.format("StructureAlignmentOptimizer: focus exceeds the protein 1 or 2 length!"));
+				throw new RuntimeException("StructureAlignmentOptimizer: focus exceeds the protein 1 or 2 length!");
 			}
 		}
 
@@ -353,9 +353,7 @@ public class StructureAlignmentOptimizer
 	 * the equivalent residues: residues where Dij &lt;= Dc and i,j is an aligned pair
 	 * use the previous superimposing
 	 */
-	private boolean defineEquPos(int alnLen, int[][] alnList)
-	throws StructureException
-	{
+	private boolean defineEquPos(int alnLen, int[][] alnList) {
 		int     i, r1, r2;
 		int     equLenOld = equLen;
 		int[][]    equSetOld = new int[2][equLenOld];

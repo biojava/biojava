@@ -30,8 +30,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -470,13 +468,7 @@ public class SecStrucCalc {
 			} else if (o1.getFirst() > o2.getFirst()) {
 				return +1;
 			} else {
-				if (o1.getSecond() < o2.getSecond()) {
-					return -1;
-				} else if (o1.getSecond() > o2.getSecond()) {
-					return 1;
-				} else {
-					return 0;
-				}
+				return o1.getSecond().compareTo(o2.getSecond());
 			}
 		});
 
@@ -598,8 +590,7 @@ public class SecStrucCalc {
 		String nl = System.getProperty("line.separator");
 
 		//Header Line
-		buf.append("==== Secondary Structure Definition by BioJava"
-				+ " DSSP implementation, Version October 2015 ===="+nl);
+		buf.append("==== Secondary Structure Definition by BioJava" + " DSSP implementation, Version October 2015 ====").append(nl);
 
 		//First line with column definition
 		buf.append("  #  RESIDUE AA STRUCTURE BP1 BP2  ACC     "
@@ -650,8 +641,8 @@ public class SecStrucCalc {
 			aa.append(StructureTools.get1LetterCode(groups[k].getPDBName()));
 		}
 
-		return g.toString()+nl+h.toString()+nl+
-				i.toString()+nl+ss.toString()+nl+aa.toString();
+		return g +nl+ h +nl+
+				i +nl+ ss +nl+ aa;
 	}
 
 	/**
@@ -663,7 +654,7 @@ public class SecStrucCalc {
 
 		StringBuilder buf = new StringBuilder();
 		String nl = System.getProperty("line.separator");
-		buf.append(">"+groups[0].getChain().getStructure().getIdentifier()+nl);
+		buf.append(">").append(groups[0].getChain().getStructure().getIdentifier()).append(nl);
 
 		for (int g = 0; g < groups.length; g++){
 			buf.append(getSecStrucState(g).getType());

@@ -193,7 +193,7 @@ public class Feature implements FeatureI {
 	   String[] values = mAttributes.split(";");
 	   for(String attribute : values){
 		   attribute = attribute.trim();
-		   int equalindex = attribute.indexOf("=");
+		   int equalindex = attribute.indexOf('=');
 		   String splitData = "=";
 		   if(equalindex == -1) //gtf uses space and gff3 uses =
 			   splitData = " ";

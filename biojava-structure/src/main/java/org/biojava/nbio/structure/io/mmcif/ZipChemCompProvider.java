@@ -23,7 +23,6 @@ package org.biojava.nbio.structure.io.mmcif;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.FileSystem;
@@ -82,7 +81,7 @@ public class ZipChemCompProvider implements ChemCompProvider{
 		this.m_zipFile = Paths.get(chemicalComponentDictionaryFile);
 
 		// Use a default temporary directory if not passed a value.
-		if (tempDir == null || tempDir.equals("")) {
+		if (tempDir == null || tempDir.isEmpty()) {
 			this.m_tempDir = Paths.get(System.getProperty("java.io.tmpdir"));
 		} else {
 			this.m_tempDir = Paths.get(tempDir);

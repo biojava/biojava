@@ -48,7 +48,7 @@ public class Utils {
 	 * @return
 	 * 		a value with the given number of decimal places.
 	 */
-	public final static double roundToDecimals(double d, int c) {
+	public static double roundToDecimals(double d, int c) {
 		if(c < 0) return d;
 		double p = Math.pow(10,c);
 		d = d * p;
@@ -67,7 +67,7 @@ public class Utils {
 	 * @return
 	 * 		true if invalid characters are found, else return false.
 	 */
-	public final static boolean doesSequenceContainInvalidChar(String sequence, Set<Character> cSet){
+	public static boolean doesSequenceContainInvalidChar(String sequence, Set<Character> cSet){
 		for(char c:sequence.toCharArray()){
 			if(!cSet.contains(c)) return true;
 		}
@@ -86,7 +86,7 @@ public class Utils {
 	 * @return
 	 * 		the number of invalid characters in sequence.
 	 */
-	public final static int getNumberOfInvalidChar(String sequence, Set<Character> cSet, boolean ignoreCase){
+	public static int getNumberOfInvalidChar(String sequence, Set<Character> cSet, boolean ignoreCase){
 		int total = 0;
 		char[] cArray;
 		if(ignoreCase) cArray = sequence.toUpperCase().toCharArray();
@@ -109,7 +109,7 @@ public class Utils {
 	 * @return
 	 * 		a new sequence with all invalid characters being replaced by '-'.
 	 */
-	public final static String cleanSequence(String sequence, Set<Character> cSet){
+	public static String cleanSequence(String sequence, Set<Character> cSet){
 		Set<Character> invalidCharSet = new HashSet<>();
 		StringBuilder cleanSeq = new StringBuilder();
 		if(cSet == null) cSet = PeptideProperties.standardAASet;
@@ -125,7 +125,7 @@ public class Utils {
 		// TODO: Should be StringJoiner once JDK8 used
 		StringBuilder stringBuilder = new StringBuilder();
 		for(char c: invalidCharSet){
-			stringBuilder.append("\'" + c + "\'");
+			stringBuilder.append("\'").append(c).append("\'");
 		}
 		stringBuilder.deleteCharAt(stringBuilder.length()-1);
 		stringBuilder.append(" are being replaced with '-'");
@@ -145,7 +145,7 @@ public class Utils {
 	 * @return
 	 * 		a sequence with no invalid characters.
 	 */
-	public static final String checkSequence(String sequence){
+	public static String checkSequence(String sequence){
 		return checkSequence(sequence, null);
 	}
 
@@ -162,7 +162,7 @@ public class Utils {
 	 * @return
 	 * 		a sequence with no invalid characters.
 	 */
-	public static final String checkSequence(String sequence, Set<Character> cSet){
+	public static String checkSequence(String sequence, Set<Character> cSet){
 		boolean containInvalid;
 		if(cSet != null){
 			containInvalid = sequence != null && doesSequenceContainInvalidChar(sequence, cSet);

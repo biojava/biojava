@@ -157,7 +157,7 @@ implements StructurePairSelector {
 
 			URL u ;
 
-			if ( chainId.getText() == null || chainId.getText().equals("")){
+			if ( chainId.getText() == null || chainId.getText().isEmpty()){
 
 				u = f.toURI().toURL();
 			} else {

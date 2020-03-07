@@ -84,9 +84,7 @@ public class PrettyXMLWriter implements XMLWriter {
 		}
 	}
 
-	private void _openTag()
-		throws IOException
-	{
+	private void _openTag() {
 		if (isOpeningTag) {
 			writer.println('>');
 			afterNewline = true;
@@ -223,9 +221,7 @@ public class PrettyXMLWriter implements XMLWriter {
 	}
 
 	@Override
-	public void closeTag(String qName)
-		throws IOException
-	{
+	public void closeTag(String qName) {
 		indent--;
 
 		if (isOpeningTag) {
@@ -271,9 +267,7 @@ public class PrettyXMLWriter implements XMLWriter {
 	writer.println(data);
 	}
 
-	protected void printChars(String data)
-		throws IOException
-	{
+	protected void printChars(String data) {
 	if (data == null) {
 		printChars("null");
 		return;
@@ -289,9 +283,7 @@ public class PrettyXMLWriter implements XMLWriter {
 	}
 	}
 
-	protected void printAttributeValue(String data)
-		throws IOException
-	{
+	protected void printAttributeValue(String data) {
 	if (data == null) {
 		printAttributeValue("null");
 		return;

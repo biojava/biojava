@@ -42,7 +42,7 @@ public class GOParser {
 							String ontoName,
 							String ontoDescription,
 							OntologyFactory factory)
-		throws ParseException, IOException
+		throws IOException
 	{
 		try {
 			Ontology onto = factory.createOntology(ontoName, ontoDescription);

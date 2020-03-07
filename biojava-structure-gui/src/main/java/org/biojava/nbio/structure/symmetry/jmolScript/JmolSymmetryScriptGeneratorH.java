@@ -41,8 +41,8 @@ import java.util.List;
 public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 	private static final double AXIS_SCALE_FACTOR = 1.2;
 	private static final double SIDE_CHAIN_EXTENSION = 6.0;
-	private HelixAxisAligner helixAxisAligner;
-	private String name;
+	private final HelixAxisAligner helixAxisAligner;
+	private final String name;
 	private String defaultColoring = "";
 	private boolean onTheFly = false;
 

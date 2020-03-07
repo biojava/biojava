@@ -1092,19 +1092,15 @@ public class AlignmentTools {
 			//Loop for every position in the block
 			for (int j=0; j<optAln[i][0].length; j++){
 				//If the first position is evaluated initialize the last positions
-				if (j==0){
-					last1 = optAln[i][0][j];
-					last2 = optAln[i][1][j];
-				}
-				else{
+				if (j != 0) {
 					//If one of the positions or both are not contiguous increment the number of gaps
-					if (optAln[i][0][j] > last1+1 || optAln[i][1][j] > last2+1){
+					if (optAln[i][0][j] > last1 + 1 || optAln[i][1][j] > last2 + 1) {
 						gaps++;
 					}
 					//Otherwise just set the last position to the current one
-					last1 = optAln[i][0][j];
-					last2 = optAln[i][1][j];
 				}
+				last1 = optAln[i][0][j];
+				last2 = optAln[i][1][j];
 			}
 			blockGap[i] = gaps;
 		}
@@ -1233,7 +1229,7 @@ public class AlignmentTools {
 	 * @param ca2
 	 * @return a structure object containing two models, one for each set of Atoms.
 	 */
-	public static final Structure getAlignedStructure(Atom[] ca1, Atom[] ca2) {
+	public static Structure getAlignedStructure(Atom[] ca1, Atom[] ca2) {
 
 		/* Previous implementation commented
 

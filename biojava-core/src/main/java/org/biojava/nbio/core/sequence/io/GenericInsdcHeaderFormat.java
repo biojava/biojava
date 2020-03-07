@@ -70,7 +70,7 @@ public class GenericInsdcHeaderFormat<S extends AbstractSequence<C>, C extends C
 			return line + lineSep;
 		}
 		String goodlines = "";
-		while(!"".equals(line.replaceAll("^\\s+", ""))) {
+		while(!line.replaceAll("^\\s+", "").isEmpty()) {
 			if(line.length() <= MAX_WIDTH) {
 				goodlines += line + lineSep;
 				break;
@@ -101,7 +101,7 @@ public class GenericInsdcHeaderFormat<S extends AbstractSequence<C>, C extends C
 		if(location.length() <= length) {
 			return location;
 		}
-		int index = location.substring(length).lastIndexOf(",");
+		int index = location.substring(length).lastIndexOf(',');
 		if(-1 == index) {
 			//No good place to split (!)
 			return location;

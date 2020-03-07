@@ -46,8 +46,8 @@ import org.biojava.nbio.structure.symmetry.geometry.SphereSampler;
  * @author Peter
  */
 public class RotationSolver implements QuatSymmetrySolver {
-	private QuatSymmetrySubunits subunits;
-	private QuatSymmetryParameters parameters;
+	private final QuatSymmetrySubunits subunits;
+	private final QuatSymmetryParameters parameters;
 
 	private double distanceThreshold = 0.0f;
 	private DistanceBox<Integer> box = null;

@@ -199,7 +199,7 @@ public class SingleLinkageClusterer {
 
 		if (m==0) return;
 
-		indicesToCheck.remove(new Integer(dendrogram[m-1].getFirst()));
+		indicesToCheck.remove(Integer.valueOf(dendrogram[m - 1].getFirst()));
 	}
 
 	private LinkedPair getClosestPair() {

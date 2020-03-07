@@ -447,14 +447,14 @@ public class AlignmentGui extends JFrame{
 		}
 
 		String name1 = s.getName();
-		if ( name1 == null || name1.equals(""))
+		if ( name1 == null || name1.isEmpty())
 			name1 = s.getPDBCode();
 
 
 
 		System.out.println("name1 in alig gui:" + name1);
 		String file = dbsearch.getOutFileLocation();
-		if ( file == null || file.equals("") ){
+		if ( file == null || file.isEmpty()){
 			JOptionPane.showMessageDialog(null,"Please select a directory to contain the DB search results.");
 			return;
 		}

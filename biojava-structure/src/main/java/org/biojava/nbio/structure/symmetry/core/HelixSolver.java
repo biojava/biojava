@@ -44,10 +44,10 @@ public class HelixSolver {
 	private static final Logger logger = LoggerFactory
 			.getLogger(HelixSolver.class);
 
-	private QuatSymmetrySubunits subunits;
-	private int fold;
+	private final QuatSymmetrySubunits subunits;
+	private final int fold;
 	private final HelixLayers helixLayers = new HelixLayers();
-	private QuatSymmetryParameters parameters;
+	private final QuatSymmetryParameters parameters;
 	boolean modified = true;
 
 	public HelixSolver(QuatSymmetrySubunits subunits, int fold,

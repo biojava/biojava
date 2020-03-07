@@ -55,7 +55,7 @@ public class MultipleSequenceAlignmentTest {
 
 	@Test
 	public void testGetCompoundsAt() {
-		AminoAcidCompound aminoAcid = AminoAcidCompoundSet.getAminoAcidCompoundSet().getCompoundForString("N");
+        AminoAcidCompound aminoAcid = AminoAcidCompoundSet.aminoAcidCompoundSet.getCompoundForString("N");
 		List<AminoAcidCompound> colProteins = new ArrayList<>();
 		for (int i = 0; i < 8; i++) {
 			colProteins.add(aminoAcid);

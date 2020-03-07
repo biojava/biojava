@@ -23,7 +23,6 @@ package demo;
 import java.io.IOException;
 
 import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.io.mmtf.MmtfActions;
 
 /**

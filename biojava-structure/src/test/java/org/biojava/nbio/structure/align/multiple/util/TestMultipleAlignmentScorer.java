@@ -161,9 +161,8 @@ public class TestMultipleAlignmentScorer {
 	 * the same Atoms and perfectly aligned, so that TM-score = 1
 	 * and RMSD = 0.
 	 * @return MultipleAlignment identity
-	 * @throws StructureException
-	 */
-	private MultipleAlignment identityMSTA() throws StructureException {
+     */
+	private MultipleAlignment identityMSTA() {
 
 		//Generate the identical Atom arrays
 		List<Atom[]> atomArrays = new ArrayList<>(20);

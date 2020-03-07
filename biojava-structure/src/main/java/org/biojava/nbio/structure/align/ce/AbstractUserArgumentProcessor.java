@@ -242,7 +242,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 
 		String pdbFilePath = params.getPdbFilePath();
 
-		if ( pdbFilePath == null || pdbFilePath.equals("")){
+		if ( pdbFilePath == null || pdbFilePath.isEmpty()){
 
 			UserConfiguration c = new UserConfiguration();
 			pdbFilePath = c.getPdbFilePath();
@@ -251,7 +251,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 
 		String cacheFilePath = params.getCacheFilePath();
 
-		if ( cacheFilePath == null || cacheFilePath.equals("")){
+		if ( cacheFilePath == null || cacheFilePath.isEmpty()){
 			cacheFilePath = pdbFilePath;
 
 		}
@@ -263,21 +263,21 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 
 		String searchFile = params.getSearchFile();
 
-		if ( alignPairs == null || alignPairs.equals("")) {
-			if ( searchFile == null || searchFile.equals("")){
+		if ( alignPairs == null || alignPairs.isEmpty()) {
+			if ( searchFile == null || searchFile.isEmpty()){
 				throw new ConfigurationException("Please specify -alignPairs or -searchFile !");
 			}
 		}
 
 		String outputFile = params.getOutFile();
 
-		if ( outputFile == null || outputFile.equals("")){
+		if ( outputFile == null || outputFile.isEmpty()){
 			throw new ConfigurationException("Please specify the mandatory argument -outFile!");
 		}
 
 		System.out.println("running DB search with parameters: " + params);
 
-		if ( alignPairs != null && ! alignPairs.equals("")) {
+		if ( alignPairs != null && !alignPairs.isEmpty()) {
 			runAlignPairs(cache, alignPairs, outputFile);
 		}  else {
 			// must be a searchFile request...
@@ -701,12 +701,12 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 	 */
 	private Structure fixStructureName(Structure s, String file) {
 
-		if ( s.getName() != null && (! s.getName().equals("")))
+		if ( s.getName() != null && (!s.getName().isEmpty()))
 			return s;
 
 		s.setName(s.getPDBCode());
 
-		if ( s.getName() == null || s.getName().equals("")){
+		if ( s.getName() == null || s.getName().isEmpty()){
 			File f = new File(file);
 			s.setName(f.getName());
 		}
@@ -723,7 +723,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 		StructureAlignment alg = getAlgorithm();
 
 		buf.append("-------------------").append(newline);
-		buf.append(alg.getAlgorithmName() + " v." + alg.getVersion() + " help: " + newline);
+		buf.append(alg.getAlgorithmName()).append(" v.").append(alg.getVersion()).append(" help: ").append(newline);
 		buf.append("-------------------").append(newline);
 		buf.append(newline);
 

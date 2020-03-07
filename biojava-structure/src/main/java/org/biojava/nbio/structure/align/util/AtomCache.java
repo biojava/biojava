@@ -510,8 +510,7 @@ public class AtomCache {
 	 * @throws StructureException
 	 */
 	public Structure getStructure(StructureIdentifier strucId) throws IOException, StructureException {
-		Structure s = strucId.loadStructure(this);
-		Structure r = strucId.reduce(s);
+		Structure r = strucId.reduce(strucId.loadStructure(this));
 		r.setStructureIdentifier(strucId);
 		return r;
 	}

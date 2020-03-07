@@ -835,7 +835,7 @@ public class Location implements Iterable<Location>
 	@Override
 	public String toString()
 	{
-		return new String( "[L=" + (mEnd - mStart) + "; S=" + mStart + "; E=" + mEnd +"]" );
+		return "[L=" + (mEnd - mStart) + "; S=" + mStart + "; E=" + mEnd + "]";
 	}
 
 	/* (non-Javadoc)

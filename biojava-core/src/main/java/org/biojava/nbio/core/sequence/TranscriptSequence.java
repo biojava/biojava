@@ -29,7 +29,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 
 /**
@@ -45,7 +44,7 @@ public class TranscriptSequence extends DNASequence {
 	private final LinkedHashMap<String, CDSSequence> cdsSequenceHashMap = new LinkedHashMap<>();
 	private StartCodonSequence startCodonSequence = null;
 	private StopCodonSequence stopCodonSequence = null;
-	private GeneSequence parentGeneSequence;
+	private final GeneSequence parentGeneSequence;
 
 	/**
 	 *

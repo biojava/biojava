@@ -662,7 +662,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 			ScopDomain bestMatch = match.next();
 			if(logger.isWarnEnabled()) {
 				StringBuilder warnMsg = new StringBuilder();
-				warnMsg.append("Trying domain " + bestMatch.getScopId() + ".");
+				warnMsg.append("Trying domain ").append(bestMatch.getScopId()).append(".");
 				if (match.hasNext()) {
 					warnMsg.append(" Other possibilities: ");
 					while (match.hasNext()) {

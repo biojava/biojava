@@ -86,7 +86,7 @@ public interface Edit<C extends Compound> {
 
 			return new JoiningSequenceReader<>(sequences);
 		}
-		private int start;
+		private final int start;
 		private int end = -1;
 		private String stringSequence;
 		private Sequence<C> sequence;

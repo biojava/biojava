@@ -38,7 +38,7 @@ public class BlastClustReader implements Serializable {
 
 	private static final Logger logger = LoggerFactory.getLogger(BlastClustReader.class);
 
-	private int sequenceIdentity;
+	private final int sequenceIdentity;
 	private final List<List<String>> clusters = new ArrayList<>();
 	// https://cdn.rcsb.org/resources/sequence/clusters/bc-95.out
 	private static final String coreUrl = "https://cdn.rcsb.org/resources/sequence/clusters/";

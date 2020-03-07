@@ -251,8 +251,7 @@ public class MultipleMcOptimizer implements Callable<MultipleAlignment> {
 			MultipleAlignment lastMSA = msa.clone();
 			List<SortedSet<Integer>> lastFreePool = new ArrayList<>();
 			for (int k = 0; k < size; k++) {
-				SortedSet<Integer> p = new TreeSet<>();
-				p.addAll(freePool.get(k));
+                SortedSet<Integer> p = new TreeSet<>(freePool.get(k));
 				lastFreePool.add(p);
 			}
 			double lastScore = mcScore;
@@ -843,9 +842,9 @@ public class MultipleMcOptimizer implements Callable<MultipleAlignment> {
 
 		for (int i = 0; i < lengthHistory.size(); i++) {
 			writer.append(String.valueOf(i * 100));
-			writer.append("," + lengthHistory.get(i));
-			writer.append("," + rmsdHistory.get(i));
-			writer.append("," + scoreHistory.get(i) + "\n");
+			writer.append(",").append(String.valueOf(lengthHistory.get(i)));
+			writer.append(",").append(String.valueOf(rmsdHistory.get(i)));
+			writer.append(",").append(String.valueOf(scoreHistory.get(i))).append("\n");
 		}
 		writer.flush();
 		writer.close();

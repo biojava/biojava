@@ -85,7 +85,7 @@ public class PermutationGroup implements Iterable<List<Integer>> {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("Permutation Group: " + permutations.size() + " permutation");
+		sb.append("Permutation Group: ").append(permutations.size()).append(" permutation");
 		for (List<Integer> permutation : permutations) {
 			sb.append(permutation.toString());
 		}

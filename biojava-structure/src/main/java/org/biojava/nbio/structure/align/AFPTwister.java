@@ -165,10 +165,9 @@ public class AFPTwister {
 	 * @param ca1
 	 * @param ca2
 	 * @return Group array twisted.
-	 * @throws StructureException
-	 */
+     */
 	public static Group[] twistOptimized(AFPChain afpChain, Atom[] ca1,
-			Atom[] ca2) throws StructureException {
+			Atom[] ca2) {
 
 		Atom[] optTwistPdb = new Atom[ca2.length];
 

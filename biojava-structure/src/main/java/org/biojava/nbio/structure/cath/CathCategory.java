@@ -98,7 +98,7 @@ public enum CathCategory {
 	public static CathCategory fromCathCode(String code) {
 		int count = 0;
 		int idx = 0;
-		while ((idx = code.indexOf(".",idx)) != -1) {
+		while ((idx = code.indexOf('.',idx)) != -1) {
 			count++;
 			idx++;
 		}

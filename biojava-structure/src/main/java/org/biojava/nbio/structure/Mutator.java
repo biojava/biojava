@@ -78,10 +78,8 @@ public class Mutator{
 	 * @param pdbResnum the PDB residue number of the residue
 	 * @param newType the new residue type (3 characters)
 	 * @return a structure object where one residue has been modified
-	 * @throws PDBParseException
-	 */
-	public Structure  mutate(Structure struc, String chainId, String pdbResnum, String newType)
-	throws PDBParseException{
+     */
+	public Structure  mutate(Structure struc, String chainId, String pdbResnum, String newType) {
 
 
 		// create a  container for the new structure

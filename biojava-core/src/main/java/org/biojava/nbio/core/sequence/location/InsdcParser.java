@@ -32,7 +32,6 @@ import org.biojava.nbio.core.sequence.location.template.Point;
 import org.biojava.nbio.core.sequence.template.AbstractSequence;
 import org.biojava.nbio.core.sequence.template.Compound;
 
-import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
@@ -228,7 +227,7 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
 				String accession = m.group(1);
 				Strand s = versus == 1 ? Strand.POSITIVE : Strand.NEGATIVE;
 				int start = Integer.parseInt(m.group(3));
-				int end = m.group(6) == null ? start : new Integer(m.group(6));
+				int end = m.group(6) == null ? start : Integer.valueOf(m.group(6));
 
 				if (featureGlobalStart > start) {
 					featureGlobalStart = start;
@@ -252,7 +251,7 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
 					l.setPartialOn3prime(true);
 				}
 
-				if (!(accession == null || "".equals(accession))) l.setAccession(new AccessionID(accession));
+				if (!(accession == null || accession.isEmpty())) l.setAccession(new AccessionID(accession));
 
 				boundedLocationsCollection.add(l);
 

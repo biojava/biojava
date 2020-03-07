@@ -182,7 +182,7 @@ public class AAIndexFileParser {
 
 
 		//System.out.println(">" + currentRows+"<");
-		AminoAcidCompoundSet compoundSet = AminoAcidCompoundSet.getAminoAcidCompoundSet();
+        AminoAcidCompoundSet compoundSet = AminoAcidCompoundSet.aminoAcidCompoundSet;
 		for ( int i = 0 ; i < currentRows.length() ; i ++){
 			char c = currentRows.charAt(i);
 			AminoAcidCompound aa = compoundSet.getCompoundForString(String.valueOf(c));

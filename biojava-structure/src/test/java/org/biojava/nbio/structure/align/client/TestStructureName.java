@@ -24,7 +24,6 @@ import static org.biojava.nbio.structure.align.client.StructureName.Source.*;
 import static org.junit.Assert.*;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 

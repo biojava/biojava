@@ -261,9 +261,9 @@ public class SimpleProfileTest {
 
 	@Test
 	public void testGetCompoundSet() {
-		assertEquals(global.getCompoundSet(), AminoAcidCompoundSet.getAminoAcidCompoundSet());
-		assertEquals(local.getCompoundSet(), AminoAcidCompoundSet.getAminoAcidCompoundSet());
-		assertEquals(single.getCompoundSet(), AminoAcidCompoundSet.getAminoAcidCompoundSet());
+        assertEquals(global.getCompoundSet(), AminoAcidCompoundSet.aminoAcidCompoundSet);
+        assertEquals(local.getCompoundSet(), AminoAcidCompoundSet.aminoAcidCompoundSet);
+        assertEquals(single.getCompoundSet(), AminoAcidCompoundSet.aminoAcidCompoundSet);
 	}
 
 	@Test
@@ -313,7 +313,7 @@ public class SimpleProfileTest {
 
 	@Test
 	public void testGetIndexOf() {
-		AminoAcidCompoundSet cs = AminoAcidCompoundSet.getAminoAcidCompoundSet();
+        AminoAcidCompoundSet cs = AminoAcidCompoundSet.aminoAcidCompoundSet;
 		assertEquals(global.getIndexOf(cs.getCompoundForString("A")), 1);
 		assertEquals(global.getIndexOf(cs.getCompoundForString("R")), 2);
 		assertEquals(global.getIndexOf(cs.getCompoundForString("N")), 3);
@@ -381,7 +381,7 @@ public class SimpleProfileTest {
 
 	@Test
 	public void testGetLastIndexOf() {
-		AminoAcidCompoundSet cs = AminoAcidCompoundSet.getAminoAcidCompoundSet();
+        AminoAcidCompoundSet cs = AminoAcidCompoundSet.aminoAcidCompoundSet;
 		assertEquals(global.getLastIndexOf(cs.getCompoundForString("A")), 1);
 		assertEquals(global.getLastIndexOf(cs.getCompoundForString("R")), 2);
 		assertEquals(global.getLastIndexOf(cs.getCompoundForString("N")), 3);

@@ -86,7 +86,7 @@ public class Dataset {
 		for ( String f : rfiles) {
 
 
-			int slashIndex = f.lastIndexOf("/");
+			int slashIndex = f.lastIndexOf('/');
 
 			String fileName = f.substring(slashIndex);
 
@@ -135,7 +135,7 @@ public class Dataset {
 			try {
 
 
-				int slashIndex = f.lastIndexOf("/");
+				int slashIndex = f.lastIndexOf('/');
 
 				String fileName = f.substring(slashIndex);
 

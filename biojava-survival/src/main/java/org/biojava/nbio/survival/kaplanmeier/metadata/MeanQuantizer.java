@@ -39,7 +39,7 @@ public class MeanQuantizer implements DiscreteQuantizerInterface {
 		DescriptiveStatistics ds = new DescriptiveStatistics();
 		for (String row : worksheet.getRows()) {
 			try {
-				Double d = Double.parseDouble(worksheet.getCell(row, column));
+				double d = Double.parseDouble(worksheet.getCell(row, column));
 				ds.addValue(d);
 			} catch (Exception e) {
 			}

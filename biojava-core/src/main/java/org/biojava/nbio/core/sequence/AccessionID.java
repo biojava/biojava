@@ -36,7 +36,7 @@ import org.biojava.nbio.core.util.Hashcoder;
  */
 public class AccessionID {
 
-	private String id;
+	private final String id;
 	private DataSource source = DataSource.LOCAL;
 	private Integer version;
 	private String identifier = null;

@@ -147,9 +147,9 @@ public class GeneMarkGTFReader {
 		end = s.indexOf('#', start);
 		String attributes;
 		if (end < 0) {
-			attributes = new String(s.substring(start));
+			attributes = s.substring(start);
 		} else {
-			attributes = new String(s.substring(start, end));
+			attributes = s.substring(start, end);
 		}
 
 		return new Feature(seqname, source, type, location, score, frame, attributes);

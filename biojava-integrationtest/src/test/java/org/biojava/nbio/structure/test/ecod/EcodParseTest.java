@@ -107,6 +107,7 @@ public class EcodParseTest {
 			for(ResidueRange r : ranges) {
 				if( r == null ) {
 					clean = false;
+					break;
 				}
 			}
 			if( ! clean ) {
@@ -166,6 +167,7 @@ public class EcodParseTest {
 			for(ResidueRange r : ranges) {
 				if( r == null ) {
 					clean = false;
+					break;
 				}
 			}
 			if( ! clean ) {

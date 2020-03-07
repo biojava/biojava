@@ -203,9 +203,8 @@ public class StructureImpl implements Structure {
 		// first we need to gather all groups with the author id chainName: polymers, non-polymers and waters
 		Chain polyChain = getPolyChainByPDB(chainName, modelnr);
 		if(polyChain != null) {
-			List<Group> groups = new ArrayList<>();
 
-			groups.addAll(polyChain.getAtomGroups());
+            List<Group> groups = new ArrayList<>(polyChain.getAtomGroups());
 
 
 			// there can be more than one non-poly chain for a given author id

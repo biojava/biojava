@@ -34,7 +34,7 @@ import java.util.List;
  *
  */
 public class Prism implements Polyhedron {
-	private int n;
+	private final int n;
 	private double circumscribedRadius = 1.0;
 	private double height = 1.0;
 

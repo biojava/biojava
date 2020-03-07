@@ -28,7 +28,7 @@ import java.io.File;
  */
 public class TwoBitFacade {
 
-	private TwoBitParser twoBitParser;
+	private final TwoBitParser twoBitParser;
 
 
 	/**
@@ -43,7 +43,7 @@ public class TwoBitFacade {
 	/**
 	 *  Closes .2bit file twoBitParser.
 	 */
-	public void close() throws Exception {
+	public void close() {
 		if (twoBitParser != null)
 			twoBitParser.close();
 

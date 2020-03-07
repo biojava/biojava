@@ -133,7 +133,7 @@ public class FastaWriter<S extends Sequence<?>, C extends Compound> {
 			FileInputStream is = new FileInputStream("/Users/Scooter/scripps/dyadic/c1-454Scaffolds.faa");
 
 
-			FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = new FastaReader<>(is, new GenericFastaHeaderParser<>(), new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
+            FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = new FastaReader<>(is, new GenericFastaHeaderParser<>(), new ProteinSequenceCreator(AminoAcidCompoundSet.aminoAcidCompoundSet));
 			LinkedHashMap<String, ProteinSequence> proteinSequences = fastaReader.process();
 			is.close();
 

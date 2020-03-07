@@ -214,7 +214,7 @@ public class PDBHeader implements PDBRecord {
 		String authors = getAuthors();
 		if ( authors == null)
 			return;
-		if ( authors.equals("")){
+		if (authors.isEmpty()){
 			return;
 		}
 

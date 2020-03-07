@@ -113,22 +113,20 @@ implements StructurePairSelector
 	}
 
 	@Override
-	public Structure getStructure1() throws StructureException
-	{
+	public Structure getStructure1() {
 		String scop1 = dom1.getText();
 		return getStructure(scop1);
 	}
 
 	@Override
-	public Structure getStructure2() throws StructureException
-	{
+	public Structure getStructure2() {
 		return getStructure(dom2.getText());
 	}
 
 	private Structure getStructure(String domainID) {
 		//PDBFileReader reader = new PDBFileReader();
 
-		if ( domainID == null || domainID.equals(""))
+		if ( domainID == null || domainID.isEmpty())
 			return null;
 
 

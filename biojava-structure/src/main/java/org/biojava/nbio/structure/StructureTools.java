@@ -256,7 +256,7 @@ public class StructureTools {
 	 *            the structure object
 	 * @return the number of Atoms in this Structure
 	 */
-	public static final int getNrAtoms(Structure s) {
+	public static int getNrAtoms(Structure s) {
 
 		int nrAtoms = 0;
 
@@ -277,7 +277,7 @@ public class StructureTools {
 	 *            the structure object
 	 * @return the number of groups in the structure
 	 */
-	public static final int getNrGroups(Structure s) {
+	public static int getNrGroups(Structure s) {
 		int nrGroups = 0;
 
 		List<Chain> chains = s.getChains(0);
@@ -302,7 +302,7 @@ public class StructureTools {
 	 *            contains the atom names to be used.
 	 * @return an Atom[] array
 	 */
-	public static final Atom[] getAtomArray(Structure s, String[] atomNames) {
+	public static Atom[] getAtomArray(Structure s, String[] atomNames) {
 		List<Chain> chains = s.getModel(0);
 
 		List<Atom> atoms = new ArrayList<>();
@@ -328,8 +328,8 @@ public class StructureTools {
 	 *            contains the atom names to be used.
 	 * @return an Atom[] array
 	 */
-	public static final Atom[] getAtomArrayAllModels(Structure s,
-			String[] atomNames) {
+	public static Atom[] getAtomArrayAllModels(Structure s,
+											   String[] atomNames) {
 
 		List<Atom> atoms = new ArrayList<>();
 
@@ -348,7 +348,7 @@ public class StructureTools {
 	 *            input structure
 	 * @return all atom array
 	 */
-	public static final Atom[] getAllAtomArray(Structure s) {
+	public static Atom[] getAllAtomArray(Structure s) {
 		List<Atom> atoms = new ArrayList<>();
 
 		AtomIterator iter = new AtomIterator(s);
@@ -365,7 +365,7 @@ public class StructureTools {
 	 *            input structure
 	 * @return all atom array
 	 */
-	public static final Atom[] getAllAtomArray(Structure s, int model) {
+	public static Atom[] getAllAtomArray(Structure s, int model) {
 		List<Atom> atoms = new ArrayList<>();
 
 		AtomIterator iter = new AtomIterator(s,model);
@@ -385,7 +385,7 @@ public class StructureTools {
 	 *            input chain
 	 * @return all atom array
 	 */
-	public static final Atom[] getAllAtomArray(Chain c) {
+	public static Atom[] getAllAtomArray(Chain c) {
 		List<Atom> atoms = new ArrayList<>();
 
 		for (Group g : c.getAtomGroups()) {
@@ -658,7 +658,7 @@ public class StructureTools {
 	 *            if true HET atoms are included in array, if false they are not
 	 * @return
 	 */
-	public static final Atom[] getAllNonHAtomArray(Structure s, boolean hetAtoms) {
+	public static Atom[] getAllNonHAtomArray(Structure s, boolean hetAtoms) {
 		AtomIterator iter = new AtomIterator(s);
 		return getAllNonHAtomArray(s, hetAtoms, iter);
 	}
@@ -672,11 +672,11 @@ public class StructureTools {
 	 * @param modelNr Model number to draw atoms from
 	 * @return
 	 */
-	public static final Atom[] getAllNonHAtomArray(Structure s, boolean hetAtoms, int modelNr) {
+	public static Atom[] getAllNonHAtomArray(Structure s, boolean hetAtoms, int modelNr) {
 		AtomIterator iter = new AtomIterator(s,modelNr);
 		return getAllNonHAtomArray(s, hetAtoms, iter);
 	}
-	private static final Atom[] getAllNonHAtomArray(Structure s, boolean hetAtoms, AtomIterator iter) {
+	private static Atom[] getAllNonHAtomArray(Structure s, boolean hetAtoms, AtomIterator iter) {
 		List<Atom> atoms = new ArrayList<>();
 
 		while (iter.hasNext()) {
@@ -706,7 +706,7 @@ public class StructureTools {
 	 *            if true HET atoms are included in array, if false they are not
 	 * @return
 	 */
-	public static final Atom[] getAllNonHAtomArray(Chain c, boolean hetAtoms) {
+	public static Atom[] getAllNonHAtomArray(Chain c, boolean hetAtoms) {
 		List<Atom> atoms = new ArrayList<>();
 
 		for (Group g : c.getAtomGroups()) {
@@ -735,7 +735,7 @@ public class StructureTools {
 	 *            if true HET atoms are included in array, if false they are not
 	 * @return
 	 */
-	public static final Point3d[] getAllNonHCoordsArray(Chain c, boolean hetAtoms) {
+	public static Point3d[] getAllNonHCoordsArray(Chain c, boolean hetAtoms) {
 		List<Point3d> atoms = new ArrayList<>();
 
 		for (Group g : c.getAtomGroups()) {
@@ -807,7 +807,7 @@ public class StructureTools {
 	 *            contains the atom names to be used.
 	 * @return an Atom[] array
 	 */
-	public static final Atom[] getAtomArray(Chain c, String[] atomNames) {
+	public static Atom[] getAtomArray(Chain c, String[] atomNames) {
 
 		List<Atom> atoms = new ArrayList<>();
 
@@ -850,7 +850,7 @@ public class StructureTools {
 	 * @return an Atom[] array
 	 * @see #getRepresentativeAtomArray(Chain)
 	 */
-	public static final Atom[] getAtomCAArray(Chain c) {
+	public static Atom[] getAtomCAArray(Chain c) {
 		List<Atom> atoms = new ArrayList<>();
 
 		for (Group g : c.getAtomGroups()) {
@@ -877,7 +877,7 @@ public class StructureTools {
 	 * @return representative Atoms of the chain backbone
 	 * @since Biojava 4.1.0
 	 */
-	public static final Atom[] getRepresentativeAtomArray(Chain c) {
+	public static Atom[] getRepresentativeAtomArray(Chain c) {
 		List<Atom> atoms = new ArrayList<>();
 
 		for (Group g : c.getAtomGroups()) {
@@ -913,7 +913,7 @@ public class StructureTools {
 	 * @return Atom array
 	 * @since Biojava 4.1.0
 	 */
-	public static final Atom[] cloneAtomArray(Atom[] ca) {
+	public static Atom[] cloneAtomArray(Atom[] ca) {
 		Atom[] newCA = new Atom[ca.length];
 
 		List<Chain> model = new ArrayList<>();
@@ -1191,7 +1191,7 @@ public class StructureTools {
 	 *            a three character amino acid representation String
 	 * @see {@link #get1LetterCode(String)}
 	 */
-	public static final Character get1LetterCodeAmino(String groupCode3) {
+	public static Character get1LetterCodeAmino(String groupCode3) {
 		return aminoAcids.get(groupCode3);
 	}
 
@@ -1206,7 +1206,7 @@ public class StructureTools {
 	 *            three letter representation
 	 * @return The 1-letter abbreviation
 	 */
-	public static final Character get1LetterCode(String groupCode3) {
+	public static Character get1LetterCode(String groupCode3) {
 
 		Character code1;
 
@@ -1284,7 +1284,7 @@ public class StructureTools {
 		if (chainId != null)
 			chainId = chainId.trim();
 
-		if (chainId == null || chainId.equals("")) {
+		if (chainId == null || chainId.isEmpty()) {
 			// only get model 0
 			List<Chain> model0 = s.getModel(0);
 			for (Chain c : model0) {

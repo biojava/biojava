@@ -139,8 +139,8 @@ public class MmtfStructureWriter {
 			Atom other = bond.getOther(atom);
 			// If both atoms are in the group
 			if (atomsInGroup.contains(other)){
-				Integer firstBondIndex = atomsInGroup.indexOf(atom);
-				Integer secondBondIndex = atomsInGroup.indexOf(other);
+				int firstBondIndex = atomsInGroup.indexOf(atom);
+				int secondBondIndex = atomsInGroup.indexOf(other);
 				// Don't add the same bond twice
 				if(firstBondIndex>secondBondIndex){
 					int bondOrder = bond.getBondOrder();

@@ -124,10 +124,10 @@ public class FastaReaderHelper {
 	 */
 	public static LinkedHashMap<String, ProteinSequence> readFastaProteinSequence(
 			InputStream inStream) throws IOException {
-		FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = new FastaReader<>(
+        FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = new FastaReader<>(
 				inStream,
 				new GenericFastaHeaderParser<>(),
-				new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
+				new ProteinSequenceCreator(AminoAcidCompoundSet.aminoAcidCompoundSet));
 		return fastaReader.process();
 	}
 

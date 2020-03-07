@@ -300,7 +300,7 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 	 * non-Hydrogen atoms are not included
 	 * @return
 	 */
-	private static final Atom[] getAllNonHAtomArray(Atom[] m, int minSizeHetAtomToInclude) {
+	private static Atom[] getAllNonHAtomArray(Atom[] m, int minSizeHetAtomToInclude) {
 		List<Atom> atoms = new ArrayList<>();
 
 		for (Atom a:m){

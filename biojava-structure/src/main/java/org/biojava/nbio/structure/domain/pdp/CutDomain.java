@@ -67,7 +67,7 @@ public class CutDomain {
 		val.first_cut = true;
 
 
-		Cut cut = new Cut();
+//		Cut cut = new Cut();
 
 		site = Cut.cut(ca,dom,val, dist, pdpMatrix);
 		if ( verbose )

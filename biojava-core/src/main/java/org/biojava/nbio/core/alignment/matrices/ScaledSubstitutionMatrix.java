@@ -59,7 +59,7 @@ public class ScaledSubstitutionMatrix implements
 	private int scale;
 
 	public ScaledSubstitutionMatrix(){
-		compoundSet = AminoAcidCompoundSet.getAminoAcidCompoundSet();
+        compoundSet = AminoAcidCompoundSet.aminoAcidCompoundSet;
 	}
 
 

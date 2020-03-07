@@ -63,7 +63,7 @@ final class FastqParser
 	/**
 	 * FASTQ formatted sequence parser line processor.
 	 */
-	private static final class FastqParserLineProcessor implements LineProcessor<Object>
+	private static final class FastqParserLineProcessor implements LineProcessor<Void>
 	{
 		/** Parser state. */
 		private State state = State.DESCRIPTION;
@@ -114,22 +114,22 @@ final class FastqParser
 		}
 
 		@Override
-		public Object getResult()
+		public Void getResult()
 		{
 			return null;
 		}
 
 		@Override
-		public boolean processLine(final String line) throws IOException
+		public boolean processLine(String line) throws IOException
 		{
-			String sequence;
-			String quality;
+			line = line.trim();
+
 			switch (state)
 			{
 			case DESCRIPTION:
 				if (line.startsWith("@"))
 				{
-					listener.description(line.substring(1).trim());
+					listener.description(line.substring(1));
 					state = State.SEQUENCE;
 				}
 				else
@@ -138,28 +138,25 @@ final class FastqParser
 				}
 				break;
 			case SEQUENCE:
-				sequence = line.trim();
-				listener.sequence(sequence);
-				sequenceLength = sequence.length();
+				listener.sequence(line);
+				sequenceLength = line.length();
 				state = State.REPEAT_DESCRIPTION;
 				break;
 			case REPEAT_DESCRIPTION:
 				if (line.startsWith("+"))
 				{
-					listener.repeatDescription(line.substring(1).trim());
+					listener.repeatDescription(line.substring(1));
 					state = State.QUALITY;
 				}
 				else
 				{
-					sequence = line.trim();
-					listener.appendSequence(sequence);
-					sequenceLength += sequence.length();
+					listener.appendSequence(line);
+					sequenceLength += line.length();
 				}
 				break;
 			case QUALITY:
-				quality = line.trim();
-				listener.quality(quality);
-				qualityLength = quality.length();
+				listener.quality(line);
+				qualityLength = line.length();
 				state = State.COMPLETE;
 				break;
 			case COMPLETE:
@@ -169,7 +166,7 @@ final class FastqParser
 
 					if (line.startsWith("@"))
 					{
-						listener.description(line.substring(1).trim());
+						listener.description(line.substring(1));
 						state = State.SEQUENCE;
 					}
 					else
@@ -179,9 +176,8 @@ final class FastqParser
 				}
 				else
 				{
-					quality = line.trim();
-					listener.appendQuality(quality);
-					qualityLength += quality.length();
+					listener.appendQuality(line);
+					qualityLength += line.length();
 				}
 				break;
 			default:

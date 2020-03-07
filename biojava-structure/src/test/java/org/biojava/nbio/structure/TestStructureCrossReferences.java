@@ -143,7 +143,7 @@ public class TestStructureCrossReferences {
 		// TODO implement
 	}
 
-	private void doFullTest(Structure structure, boolean emptySeqRes) throws StructureException {
+	private void doFullTest(Structure structure, boolean emptySeqRes) {
 
 		//System.out.println("Testing references in original structure");
 

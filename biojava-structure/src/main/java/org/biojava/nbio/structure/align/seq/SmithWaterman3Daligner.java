@@ -41,7 +41,6 @@ import org.biojava.nbio.structure.align.ce.UserArgumentProcessor;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.util.AFPAlignmentDisplay;
 import org.biojava.nbio.structure.align.util.AlignmentTools;
-import org.biojava.nbio.structure.align.util.ConfigurationException;
 import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.core.sequence.ProteinSequence;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
@@ -77,7 +76,7 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
 	private static final String version = "1.1";
 	private SmithWaterman3DParameters params;
 
-	public static void main(String[] args) throws ConfigurationException {
+	public static void main(String[] args) {
 		//args = new String[]{"-pdb1","1cdg.A","-pdb2","1tim.A","-pdbFilePath","/tmp/","-show3d","-printFatCat"};
 		UserArgumentProcessor processor = new SmithWatermanUserArgumentProcessor();
 		processor.process(args);
@@ -184,7 +183,7 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
 		char[] alnseq2 = new char[ca1Length+ca2Length+1] ;
 		char[] alnsymb = new char[ca1Length+ca2Length+1];
 
-		Compound gapSymbol =  AminoAcidCompoundSet.getAminoAcidCompoundSet().getCompoundForString("-");
+        Compound gapSymbol =  AminoAcidCompoundSet.aminoAcidCompoundSet.getCompoundForString("-");
 
 		int pos = 0 ; // aligned positions
 

@@ -88,7 +88,7 @@ public class SelectMultiplePanel extends JPanel {
 		return hBox;
 	}
 
-	public List<Structure> getStructures() throws StructureException {
+	public List<Structure> getStructures() {
 
 		List<Structure> structures = new ArrayList<>();
 

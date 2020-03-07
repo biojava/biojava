@@ -20,7 +20,6 @@
  */
 package org.biojava.nbio.structure;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import org.biojava.nbio.structure.align.util.AtomCache;

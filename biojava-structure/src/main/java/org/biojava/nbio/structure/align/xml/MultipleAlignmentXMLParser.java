@@ -206,7 +206,7 @@ public class MultipleAlignmentXMLParser {
 					if (residue.equals("null")){
 						alignRes.get(str-1).add(null);
 					} else {
-						alignRes.get(str-1).add(new Integer(residue));
+						alignRes.get(str-1).add(Integer.valueOf(residue));
 					}
 
 					str++;
@@ -268,12 +268,12 @@ public class MultipleAlignmentXMLParser {
 
 		String ioTime = atts.getNamedItem("IOTime").getTextContent();
 		if (!ioTime.equals("null")){
-			ensemble.setIoTime(new Long(ioTime));
+			ensemble.setIoTime(Long.valueOf(ioTime));
 		}
 
 		String time = atts.getNamedItem("CalculationTime").getTextContent();
 		if (!time.equals("null")){
-			ensemble.setCalculationTime(new Long(time));
+			ensemble.setCalculationTime(Long.valueOf(time));
 		}
 	}
 
