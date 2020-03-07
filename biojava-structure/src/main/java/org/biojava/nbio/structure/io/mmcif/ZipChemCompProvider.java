@@ -33,6 +33,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipEntry;
@@ -236,7 +237,7 @@ public class ZipChemCompProvider implements ChemCompProvider{
 		final String filename = "chemcomp/" + recordName+".cif.gz";
 
 		// try with resources block to read from the filesystem.
-		try (FileSystem fs = FileSystems.newFileSystem(m_zipFile, null)) {
+		try (FileSystem fs = FileSystems.newFileSystem(m_zipFile, (ClassLoader)null)) {
 			Path cif = fs.getPath(filename);
 
 			if (Files.exists(cif)) {
@@ -293,7 +294,7 @@ public class ZipChemCompProvider implements ChemCompProvider{
 		*/
 
 		// Copy in each file.
-		try (FileSystem zipfs = FileSystems.newFileSystem(zipFile, null)) {
+		try (FileSystem zipfs = FileSystems.newFileSystem(zipFile, (ClassLoader)null)) {
 			Files.createDirectories(pathWithinArchive);
 			for (File f : files) {
 				if (!f.isDirectory() && f.exists()) {
