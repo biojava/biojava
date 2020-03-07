@@ -26,5 +26,5 @@ import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
 
 public interface AAIndexProvider {
 
-	public SubstitutionMatrix<AminoAcidCompound> getMatrix(String matrixName);
+	SubstitutionMatrix<AminoAcidCompound> getMatrix(String matrixName);
 }

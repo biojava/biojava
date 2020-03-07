@@ -39,7 +39,7 @@ public interface Bond extends Serializable {
 	 * @see #getAtomB()
 	 * @return one of the two atoms in this bond
 	 */
-	public Atom getAtomA();
+    Atom getAtomA();
 
 	/**
 	 * Gets atom 'B' of this bond. There is no meaning to which atom is 'A' and
@@ -49,7 +49,7 @@ public interface Bond extends Serializable {
 	 * @see #getAtomA()
 	 * @return one of the two atoms in this bond
 	 */
-	public Atom getAtomB();
+    Atom getAtomB();
 
 	/**
 	 * A utility method to get the other atom in a bond, given one of its atoms.
@@ -66,7 +66,7 @@ public interface Bond extends Serializable {
 	 *             if the passed atom is not in this bond
 	 * @return the atom in this bond that was not passed as an argument
 	 */
-	public Atom getOther(Atom exclude);
+    Atom getOther(Atom exclude);
 
 	/**
 	 * Gets the bond order of this bond. A return value of '1' corresponds to a
@@ -74,7 +74,7 @@ public interface Bond extends Serializable {
 	 *
 	 * @return this bond's bond order
 	 */
-	public int getBondOrder();
+    int getBondOrder();
 
 	/**
 	 * Gets the distance between the two atoms of this bond.
@@ -85,5 +85,5 @@ public interface Bond extends Serializable {
 	 *
 	 * @return the distance between the two atoms of this bond.
 	 */
-	public double getLength();
+    double getLength();
 }

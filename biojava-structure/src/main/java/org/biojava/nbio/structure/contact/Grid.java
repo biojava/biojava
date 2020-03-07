@@ -65,8 +65,8 @@ public class Grid {
 
 	private GridCell[][][] cells;
 
-	private double cutoff;
-	private int cellSize;
+	private final double cutoff;
+	private final int cellSize;
 
 	private Point3d[] iAtoms;
 	private Point3d[] jAtoms;
@@ -386,12 +386,12 @@ public class Grid {
 
 		if (jAtomObjects == null) {
 			for (Contact cont : list) {
-				contacts.add(new AtomContact(new Pair<Atom>(iAtomObjects[cont.getI()],iAtomObjects[cont.getJ()]),cont.getDistance()));
+				contacts.add(new AtomContact(new Pair<>(iAtomObjects[cont.getI()], iAtomObjects[cont.getJ()]),cont.getDistance()));
 			}
 
 		} else {
 			for (Contact cont : list) {
-				contacts.add(new AtomContact(new Pair<Atom>(iAtomObjects[cont.getI()],jAtomObjects[cont.getJ()]),cont.getDistance()));
+				contacts.add(new AtomContact(new Pair<>(iAtomObjects[cont.getI()], jAtomObjects[cont.getJ()]),cont.getDistance()));
 			}
 		}
 

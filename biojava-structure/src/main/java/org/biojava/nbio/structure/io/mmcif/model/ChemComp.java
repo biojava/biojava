@@ -67,11 +67,11 @@ public class ChemComp implements Serializable, Comparable<ChemComp>{
 	private String mon_nstd_flag;
 
 	@IgnoreField
-	private List<ChemCompDescriptor> descriptors = new ArrayList<ChemCompDescriptor>();
+	private List<ChemCompDescriptor> descriptors = new ArrayList<>();
 	@IgnoreField
-	private List<ChemCompBond> bonds = new ArrayList<ChemCompBond>();
+	private List<ChemCompBond> bonds = new ArrayList<>();
 	@IgnoreField
-	private List<ChemCompAtom> atoms = new ArrayList<ChemCompAtom>();
+	private List<ChemCompAtom> atoms = new ArrayList<>();
 
 	// and some derived data for easier processing...
 	@IgnoreField
@@ -83,7 +83,7 @@ public class ChemComp implements Serializable, Comparable<ChemComp>{
 
 	@Override
 	public String toString(){
-		StringBuffer buf = new StringBuffer("ChemComp ");
+		StringBuilder buf = new StringBuilder("ChemComp ");
 		buf.append(id);
 		buf.append(" ");
 		buf.append(one_letter_code);

@@ -93,7 +93,7 @@ public class MultipleAlignmentWriter {
 		fatcat.append(alignment.toString() + "\n\n");
 
 		// Get the alignment sequences and the mapping
-		List<Integer> mapSeqToStruct = new ArrayList<Integer>();
+		List<Integer> mapSeqToStruct = new ArrayList<>();
 		List<String> alnSequences = MultipleAlignmentTools
 				.getSequenceAlignment(alignment, mapSeqToStruct);
 
@@ -197,7 +197,7 @@ public class MultipleAlignmentWriter {
 	 */
 	public static String toTransformMatrices(MultipleAlignment alignment) {
 
-		StringBuffer txt = new StringBuffer();
+		StringBuilder txt = new StringBuilder();
 
 		for (int bs = 0; bs < alignment.getBlockSets().size(); bs++) {
 
@@ -360,11 +360,11 @@ public class MultipleAlignmentWriter {
 				String tPDB = templateAtoms[tRes].toPDB();
 
 				// merge the two records into 3D format
-				str.append(qPDB.substring(0, 30)); // up through coordinates
-				str.append(tPDB.substring(30, 54)); // coordinates
-				str.append(tPDB.substring(22, 27)); // residue number
+				str.append(qPDB, 0, 30); // up through coordinates
+				str.append(tPDB, 30, 54); // coordinates
+				str.append(tPDB, 22, 27); // residue number
 				str.append(' ');
-				str.append(tPDB.substring(17, 20));
+				str.append(tPDB, 17, 20);
 				str.append('\n');
 			}
 		}

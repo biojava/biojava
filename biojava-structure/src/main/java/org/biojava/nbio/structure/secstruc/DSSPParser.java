@@ -152,7 +152,7 @@ public class DSSPParser {
 		String startLine = "  #  RESIDUE AA STRUCTURE BP1 BP2  ACC";
 		String line;
 
-		List<SecStrucState> secstruc = new ArrayList<SecStrucState>();
+		List<SecStrucState> secstruc = new ArrayList<>();
 
 		//Find the first line of the DSSP output
 		while((line = reader.readLine()) != null) {
@@ -185,14 +185,14 @@ public class DSSPParser {
 				String bp = line.substring(25,29).trim();
 				if (bp != "") {
 					BetaBridge bb = new BetaBridge(
-							index, Integer.valueOf(bp), BridgeType.parallel);
+							index, Integer.parseInt(bp), BridgeType.parallel);
 					ss.addBridge(bb);
 				} else logger.warn("Unable to parse beta Bridge for resn "+index);
 
 				bp = line.substring(29,33).trim();
 				if (bp != "") {
 					BetaBridge bb = new BetaBridge(
-							index, Integer.valueOf(bp), BridgeType.parallel);
+							index, Integer.parseInt(bp), BridgeType.parallel);
 					ss.addBridge(bb);
 				} else logger.warn("Unable to parse beta Bridge for resn "+index);
 
@@ -212,7 +212,7 @@ public class DSSPParser {
 
 					int partner = Integer.parseInt(p[0]);
 					if (partner != 0) partner += index;
-					double energy = Double.valueOf(p[1]) * 1000.0;
+					double energy = Double.parseDouble(p[1]) * 1000.0;
 
 					switch(i){
 					case 0:
@@ -236,15 +236,15 @@ public class DSSPParser {
 
 				//Angle properties
 				String val = line.substring(91,97).trim();
-				if (val != "") ss.setKappa(Float.valueOf(val));
+				if (val != "") ss.setKappa(Float.parseFloat(val));
 				else logger.warn("Unable to parse kappa for resn "+index);
 
 				val = line.substring(103,109).trim();
-				if (val != "") ss.setPhi(Float.valueOf(val));
+				if (val != "") ss.setPhi(Float.parseFloat(val));
 				else logger.warn("Unable to parse phi for resn "+index);
 
 				val = line.substring(109,116).trim();
-				if (val != "") ss.setPsi(Float.valueOf(val));
+				if (val != "") ss.setPsi(Float.parseFloat(val));
 				else logger.warn("Unable to parse psi for resn "+index);
 
 				if (assign) parent.setProperty(Group.SEC_STRUC, ss);

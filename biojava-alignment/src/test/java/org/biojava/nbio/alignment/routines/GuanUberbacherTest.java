@@ -54,14 +54,14 @@ public class GuanUberbacherTest {
 		target = new ProteinSequence("RDG");
 		gaps = new SimpleGapPenalty(10, 1);
 		blosum62 = SubstitutionMatrixHelper.getBlosum62();
-		alignment = new GuanUberbacher<ProteinSequence, AminoAcidCompound>(query, target, gaps, blosum62);
-		self = new GuanUberbacher<ProteinSequence, AminoAcidCompound>(query, query, gaps, blosum62);
+		alignment = new GuanUberbacher<>(query, target, gaps, blosum62);
+		self = new GuanUberbacher<>(query, query, gaps, blosum62);
 	}
 
 	@Test
 	public void testGuanUberbacher() {
 		GuanUberbacher<ProteinSequence, AminoAcidCompound> gu =
-				new GuanUberbacher<ProteinSequence, AminoAcidCompound>();
+				new GuanUberbacher<>();
 		gu.setQuery(query);
 		gu.setTarget(target);
 		gu.setGapPenalty(gaps);
@@ -111,7 +111,7 @@ public class GuanUberbacherTest {
 	public void should_align_shorter_query() throws CompoundNotFoundException {
 		DNASequence query = new DNASequence("A", AmbiguityDNACompoundSet.getDNACompoundSet());
 		DNASequence target = new DNASequence("AT", AmbiguityDNACompoundSet.getDNACompoundSet());
-		GuanUberbacher<DNASequence, NucleotideCompound> aligner = new GuanUberbacher<DNASequence, NucleotideCompound>(query, target, new SimpleGapPenalty((short)5, (short)2), SubstitutionMatrixHelper.getNuc4_4());
+		GuanUberbacher<DNASequence, NucleotideCompound> aligner = new GuanUberbacher<>(query, target, new SimpleGapPenalty((short) 5, (short) 2), SubstitutionMatrixHelper.getNuc4_4());
 		assertEquals(String.format("A-%nAT%n"), aligner.getPair().toString());
 	}
 	/**
@@ -121,7 +121,7 @@ public class GuanUberbacherTest {
 	public void should_align_shorter_target() throws CompoundNotFoundException {
 		DNASequence query = new DNASequence("AT", AmbiguityDNACompoundSet.getDNACompoundSet());
 		DNASequence target = new DNASequence("A", AmbiguityDNACompoundSet.getDNACompoundSet());
-		GuanUberbacher<DNASequence, NucleotideCompound> aligner = new GuanUberbacher<DNASequence, NucleotideCompound>(query, target, new SimpleGapPenalty((short)5, (short)2), SubstitutionMatrixHelper.getNuc4_4());
+		GuanUberbacher<DNASequence, NucleotideCompound> aligner = new GuanUberbacher<>(query, target, new SimpleGapPenalty((short) 5, (short) 2), SubstitutionMatrixHelper.getNuc4_4());
 		assertEquals(String.format("AT%nA-%n"), aligner.getPair().toString());
 	}
 	/**
@@ -131,7 +131,7 @@ public class GuanUberbacherTest {
 	public void should_align_multiple_cuts() throws CompoundNotFoundException {
 		DNASequence query = new DNASequence("AAT", AmbiguityDNACompoundSet.getDNACompoundSet());
 		DNASequence target = new DNASequence("AATG", AmbiguityDNACompoundSet.getDNACompoundSet());
-		GuanUberbacher<DNASequence, NucleotideCompound> aligner = new GuanUberbacher<DNASequence, NucleotideCompound>(query, target, new SimpleGapPenalty((short)0, (short)2), SubstitutionMatrixHelper.getNuc4_4());
+		GuanUberbacher<DNASequence, NucleotideCompound> aligner = new GuanUberbacher<>(query, target, new SimpleGapPenalty((short) 0, (short) 2), SubstitutionMatrixHelper.getNuc4_4());
 		aligner.setCutsPerSection(2); // 3 bases with 2 cuts
 		assertEquals(String.format("AAT-%nAATG%n"), aligner.getPair().toString());
 	}

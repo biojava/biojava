@@ -62,8 +62,11 @@ public class AlignerHelper {
 	 */
 	public static class Cut {
 
-		private int queryIndex;
-		private int[][] targetIndices, tiLast, ti1, ti2;
+		private final int queryIndex;
+		private int[][] targetIndices;
+		private int[][] tiLast;
+		private final int[][] ti1;
+		private final int[][] ti2;
 
 		public Cut(int queryIndex, int[] dim) {
 			this.queryIndex = queryIndex;
@@ -171,7 +174,7 @@ public class AlignerHelper {
 		for (Cut c : cuts) {
 			anchors[c.getQueryIndex()] = c.getTargetIndex(zMax);
 		}
-		return addScore ? (int) subscore : 0;
+		return addScore ? subscore : 0;
 	}
 
 	public static Cut[] getCuts(int k, Subproblem subproblem, int[] dim, boolean anchor0) {
@@ -244,11 +247,11 @@ public class AlignerHelper {
 		public boolean isStartAnchored() {
 			return isAnchored;
 		}
-		private int queryStartIndex; // [0]
-		private int targetStartIndex; // [1]
-		private int queryEndIndex; // [2]
-		private int targetEndIndex; // [3]
-		private boolean isAnchored;
+		private final int queryStartIndex; // [0]
+		private final int targetStartIndex; // [1]
+		private final int queryEndIndex; // [2]
+		private final int targetEndIndex; // [3]
+		private final boolean isAnchored;
 		public Subproblem(int queryStartIndex, int targetStartIndex, int queryEndIndex, int targetEndIndex) {
 			this(queryStartIndex, targetStartIndex, queryEndIndex, targetEndIndex, false);
 		}
@@ -267,8 +270,8 @@ public class AlignerHelper {
 		 * @return list alignment subproblems
 		 */
 		public static List<Subproblem> getSubproblems(List<Anchor> anchors, int querySequenceLength, int targetSequenceLength) {
-			Collections.sort(anchors, new Anchor.QueryIndexComparator());
-			List<Subproblem> list = new ArrayList<Subproblem>();
+			anchors.sort(new Anchor.QueryIndexComparator());
+			List<Subproblem> list = new ArrayList<>();
 			Anchor last = new Anchor(-1, -1); // sentinal anchor
 			boolean isAnchored = false;
 			for (int i = 0; i < anchors.size(); i++) {

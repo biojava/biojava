@@ -161,9 +161,9 @@ public class ProteinSequence extends AbstractSequence<AminoAcidCompound> {
 		InputStream is = url.openConnection().getInputStream();
 
 		FastaReader<DNASequence, NucleotideCompound> parentReader
-				= new FastaReader<DNASequence, NucleotideCompound>(is,
-						new PlainFastaHeaderParser<DNASequence, NucleotideCompound>(),
-						new DNASequenceCreator(AmbiguityDNACompoundSet.getDNACompoundSet()));
+				= new FastaReader<>(is,
+				new PlainFastaHeaderParser<>(),
+				new DNASequenceCreator(AmbiguityDNACompoundSet.getDNACompoundSet()));
 		LinkedHashMap<String, DNASequence> seq = parentReader.process();
 
 		DNASequence parentSeq = null;
@@ -203,7 +203,7 @@ public class ProteinSequence extends AbstractSequence<AminoAcidCompound> {
 		ProteinSequence proteinSequence = new ProteinSequence("ARNDCEQGHILKMFPSTWYVBZJX");
 		logger.info("Protein Sequence: {}", proteinSequence.toString());
 
-		StringProxySequenceReader<AminoAcidCompound> sequenceStringProxyLoader = new StringProxySequenceReader<AminoAcidCompound>("XRNDCEQGHILKMFPSTWYVBZJA", AminoAcidCompoundSet.getAminoAcidCompoundSet());
+		StringProxySequenceReader<AminoAcidCompound> sequenceStringProxyLoader = new StringProxySequenceReader<>("XRNDCEQGHILKMFPSTWYVBZJA", AminoAcidCompoundSet.getAminoAcidCompoundSet());
 		ProteinSequence proteinSequenceFromProxy = new ProteinSequence(sequenceStringProxyLoader);
 		logger.info("Protein Sequence from Proxy: {}", proteinSequenceFromProxy.toString());
 

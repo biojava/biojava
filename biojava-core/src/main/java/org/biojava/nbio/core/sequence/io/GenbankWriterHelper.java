@@ -76,10 +76,10 @@ public class GenbankWriterHelper {
 	public static void writeProteinSequence(OutputStream outputStream,
 			Collection<ProteinSequence> proteinSequences) throws Exception {
 
-		GenbankWriter<ProteinSequence, AminoAcidCompound> genbankWriter = new GenbankWriter<ProteinSequence, AminoAcidCompound>(
+		GenbankWriter<ProteinSequence, AminoAcidCompound> genbankWriter = new GenbankWriter<>(
 				outputStream,
 				proteinSequences,
-				new GenericGenbankHeaderFormat<ProteinSequence, AminoAcidCompound>());
+				new GenericGenbankHeaderFormat<>());
 		genbankWriter.process();
 
 	}
@@ -126,10 +126,10 @@ public class GenbankWriterHelper {
 	public static void writeNucleotideSequence(OutputStream outputStream,
 			Collection<DNASequence> dnaSequences, String seqType)
 			throws Exception {
-		GenericGenbankHeaderFormat<DNASequence, NucleotideCompound> genericGenbankHeaderFormat = new GenericGenbankHeaderFormat<DNASequence, NucleotideCompound>(
+		GenericGenbankHeaderFormat<DNASequence, NucleotideCompound> genericGenbankHeaderFormat = new GenericGenbankHeaderFormat<>(
 				seqType);
 		// genericGenbankHeaderFormat.setLineSeparator(lineSep);
-		GenbankWriter<DNASequence, NucleotideCompound> genbankWriter = new GenbankWriter<DNASequence, NucleotideCompound>(
+		GenbankWriter<DNASequence, NucleotideCompound> genbankWriter = new GenbankWriter<>(
 				outputStream, dnaSequences, genericGenbankHeaderFormat);
 		// genbankWriter.setLineSeparator(lineSep);
 		genbankWriter.process();
@@ -171,7 +171,7 @@ public class GenbankWriterHelper {
 
 	private static Collection<Sequence<?>> singleSeqToCollection(
 			Sequence<?> sequence) {
-		Collection<Sequence<?>> sequences = new ArrayList<Sequence<?>>();
+		Collection<Sequence<?>> sequences = new ArrayList<>();
 		sequences.add(sequence);
 		return sequences;
 	}
@@ -191,17 +191,9 @@ public class GenbankWriterHelper {
 	public static void writeSequences(OutputStream outputStream,
 			Collection<Sequence<?>> sequences) throws Exception {
 
-		GenbankHeaderFormatInterface<Sequence<?>, Compound> fhfi = new GenbankHeaderFormatInterface<Sequence<?>, Compound>() {
+		GenbankHeaderFormatInterface<Sequence<?>, Compound> fhfi = sequence -> sequence.getAccession().toString();
 
-			@Override
-			public String getHeader(Sequence<?> sequence) {
-				return sequence.getAccession().toString();
-			}
-
-			;
-		};
-
-		GenbankWriter<Sequence<?>, Compound> genbankWriter = new GenbankWriter<Sequence<?>, Compound>(
+		GenbankWriter<Sequence<?>, Compound> genbankWriter = new GenbankWriter<>(
 				outputStream, sequences, fhfi);
 
 		genbankWriter.process();

@@ -61,41 +61,39 @@ public class OboFileParser {
 
 
 	protected static final Map<Character, Character> escapeChars =
-		new HashMap<Character, Character>();
+			new HashMap<>();
 
 	protected static final Map<Character, Character> unescapeChars =
-		new HashMap<Character, Character>();
+			new HashMap<>();
 
 	static {
-		escapeChars.put(new Character('n'), new Character('\n'));
-		escapeChars.put(new Character('W'), new Character(' '));
-		escapeChars.put(new Character('t'), new Character('\t'));
-		escapeChars.put(new Character(':'), new Character(':'));
-		escapeChars.put(new Character(','), new Character(','));
-		escapeChars.put(new Character('"'), new Character('"'));
-		escapeChars.put(new Character('\''), new Character('\''));
-		escapeChars.put(new Character('\\'), new Character('\\'));
-		escapeChars.put(new Character('{'), new Character('{'));
-		escapeChars.put(new Character('}'), new Character('}'));
-		escapeChars.put(new Character('('), new Character('('));
-		escapeChars.put(new Character(')'), new Character(')'));
-		escapeChars.put(new Character('['), new Character('['));
-		escapeChars.put(new Character(']'), new Character(']'));
-		escapeChars.put(new Character('!'), new Character('!'));
-		Iterator <Character> it = escapeChars.keySet().iterator();
-		while (it.hasNext()) {
-			Character key = it.next();
+		escapeChars.put('n', '\n');
+		escapeChars.put('W', ' ');
+		escapeChars.put('t', '\t');
+		escapeChars.put(':', ':');
+		escapeChars.put(',', ',');
+		escapeChars.put('"', '"');
+		escapeChars.put('\'', '\'');
+		escapeChars.put('\\', '\\');
+		escapeChars.put('{', '{');
+		escapeChars.put('}', '}');
+		escapeChars.put('(', '(');
+		escapeChars.put(')', ')');
+		escapeChars.put('[', '[');
+		escapeChars.put(']', ']');
+		escapeChars.put('!', '!');
+		for (Character key : escapeChars.keySet()) {
 			Character value = escapeChars.get(key);
 			unescapeChars.put(value, key);
 		}
 	}
 
 	public static class SOPair {
-		public String str = null;
+		public String str;
 
-		public int index = -1;
+		public int index;
 
-		public int endIndex = -1;
+		public int endIndex;
 
 		public SOPair(String str, int index) {
 			this(str, index, -1);
@@ -114,7 +112,7 @@ public class OboFileParser {
 
 
 	public OboFileParser(){
-		listeners = new ArrayList<OboFileEventListener>();
+		listeners = new ArrayList<>();
 	}
 
 
@@ -166,7 +164,7 @@ public class OboFileParser {
 					lineEnd = line.length();
 
 				// find nested values
-				NestedValue nv = null;
+				NestedValue nv;
 
 				int trailingStartIndex = -1;
 				int trailingEndIndex = -1;
@@ -258,12 +256,17 @@ public class OboFileParser {
 		StringTokenizer tokenizer = new StringTokenizer(leftovers, " \t");
 		int scope = Synonym.RELATED_SYNONYM;
 
-		if ( key.equals(OboFileHandler.EXACT_SYNONYM))
-			scope = Synonym.EXACT_SYNONYM;
-		else if ( key.equals(OboFileHandler.BROAD_SYNONYM))
-			scope = Synonym.BROAD_SYNONYM;
-		else if ( key.equals(OboFileHandler.NARROW_SYNONYM))
-			scope = Synonym.NARROW_SYNONYM;
+		switch (key) {
+			case OboFileHandler.EXACT_SYNONYM:
+				scope = Synonym.EXACT_SYNONYM;
+				break;
+			case OboFileHandler.BROAD_SYNONYM:
+				scope = Synonym.BROAD_SYNONYM;
+				break;
+			case OboFileHandler.NARROW_SYNONYM:
+				scope = Synonym.NARROW_SYNONYM;
+				break;
+		}
 
 
 		String catID = null;
@@ -271,19 +274,26 @@ public class OboFileParser {
 			String token = tokenizer.nextToken();
 			//logger.info("TOKEN:" +token);
 			if (i == 0) {
-				if (token.equals("RELATED"))
-					scope = Synonym.RELATED_SYNONYM;
-				else if (token.equals("UNSPECIFIED"))
-					scope = Synonym.RELATED_SYNONYM;
-				else if (token.equals("EXACT"))
-					scope = Synonym.EXACT_SYNONYM;
-				else if (token.equals("BROAD"))
-					scope = Synonym.BROAD_SYNONYM;
-				else if (token.equals("NARROW"))
-					scope = Synonym.NARROW_SYNONYM;
-				else
-					throw new IOException("Found unexpected scope "
-							+ "identifier " + token + line);
+				switch (token) {
+					case "RELATED":
+						scope = Synonym.RELATED_SYNONYM;
+						break;
+					case "UNSPECIFIED":
+						scope = Synonym.RELATED_SYNONYM;
+						break;
+					case "EXACT":
+						scope = Synonym.EXACT_SYNONYM;
+						break;
+					case "BROAD":
+						scope = Synonym.BROAD_SYNONYM;
+						break;
+					case "NARROW":
+						scope = Synonym.NARROW_SYNONYM;
+						break;
+					default:
+						throw new IOException("Found unexpected scope "
+								+ "identifier " + token + line);
+				}
 			} else if (i == 1) {
 				catID = token;
 			} else
@@ -316,7 +326,7 @@ public class OboFileParser {
 	}
 
 	protected Map<String,Object>[] getDbxrefList(String line, int startoffset, int endoffset) throws IOException {
-		Vector<Map<String,Object>> temp = new Vector<Map<String,Object>>();
+		Vector<Map<String,Object>> temp = new Vector<>();
 		boolean stop = false;
 		while (!stop) {
 			int braceIndex = findUnescaped(line, '{', startoffset, endoffset);
@@ -343,7 +353,7 @@ public class OboFileParser {
 				startoffset++;
 				continue;
 			}
-			NestedValue nv = null;
+			NestedValue nv;
 			if (trailing) {
 				nv = new NestedValue();
 				endIndex = getNestedValue(nv, line, endIndex + 1);
@@ -367,7 +377,7 @@ public class OboFileParser {
 
 	protected Map<String,Object> parseXref(String line,
 			int startoffset, int endoffset) throws IOException {
-		String xref_str = null;
+		String xref_str;
 		String desc_str = null;
 
 		SOPair xref = unescape(line, '"', startoffset, endoffset, false);
@@ -381,7 +391,7 @@ public class OboFileParser {
 		}
 
 
-		Map<String, Object> m = new HashMap<String, Object>();
+		Map<String, Object> m = new HashMap<>();
 		m.put("xref",xref_str);
 		m.put("desc",desc_str);
 		return m;
@@ -390,34 +400,28 @@ public class OboFileParser {
 
 
 	private void triggerNewStanza(String stanza){
-		Iterator<OboFileEventListener> iter = listeners.iterator();
-		while (iter.hasNext()){
-			OboFileEventListener li = iter.next();
+		for (OboFileEventListener li : listeners) {
 			li.newStanza(stanza);
 		}
 	}
 
 	private void triggerNewKey(String key, String value){
-		Iterator<OboFileEventListener> iter = listeners.iterator();
-		while (iter.hasNext()){
-			OboFileEventListener li = iter.next();
+		for (OboFileEventListener li : listeners) {
 			li.newKey(key, value);
 		}
 	}
 
 	private void triggerNewSynonym(Synonym synonym){
-		Iterator<OboFileEventListener> iter = listeners.iterator();
-		while (iter.hasNext()){
-			OboFileEventListener li = iter.next();
+		for (OboFileEventListener li : listeners) {
 			li.newSynonym(synonym);
 		}
 	}
 
 	public static String escape(String str, boolean escapespaces) {
-		StringBuffer out = new StringBuffer();
+		StringBuilder out = new StringBuilder();
 		for (int i = 0; i < str.length(); i++) {
 			char c = str.charAt(i);
-			Object o = unescapeChars.get(new Character(c));
+			Object o = unescapeChars.get(c);
 			if (o == null)
 				out.append(c);
 			else {
@@ -441,7 +445,7 @@ public class OboFileParser {
 
 	public SOPair unescape(String str, char toChar, int startindex,
 			int endindex, boolean mustFindChar) throws IOException {
-		StringBuffer out = new StringBuffer();
+		StringBuilder out = new StringBuilder();
 		int endValue = -1;
 		for (int i = startindex; i < endindex; i++) {
 			char c = str.charAt(i);
@@ -449,7 +453,7 @@ public class OboFileParser {
 				i++;
 				c = str.charAt(i);
 				Character mapchar = escapeChars
-				.get(new Character(c));
+				.get(c);
 				if (mapchar == null)
 					throw new IOException("Unrecognized escape"
 							+ " character " + c + " found.");
@@ -615,9 +619,8 @@ class NestedValue {
 	public String toString(){
 		String txt = "NestedValue: " ;
 		Set<Object> keys = propertyValues.keySet();
-		Iterator<Object> iter = keys.iterator();
-		while (iter.hasNext()){
-			String key = iter.next().toString();
+		for (Object o : keys) {
+			String key = o.toString();
 			String value = propertyValues.get(key).toString();
 			txt += " [" + key + ":" + value + "]";
 		}
@@ -636,9 +639,8 @@ class NestedValue {
 
 	public void addPropertyValue(Properties pv) {
 		Set<Object> keys = pv.keySet();
-		Iterator<Object> iter = keys.iterator();
-		while (iter.hasNext()){
-			String key = iter.next().toString();
+		for (Object o : keys) {
+			String key = o.toString();
 			String value = pv.get(key).toString();
 			propertyValues.setProperty(key, value);
 		}

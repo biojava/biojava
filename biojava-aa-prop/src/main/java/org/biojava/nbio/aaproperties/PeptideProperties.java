@@ -64,7 +64,7 @@ public class PeptideProperties {
 	 * To initialize the standardAASet
 	 */
 	static{
-		standardAASet = new HashSet<Character>();
+		standardAASet = new HashSet<>();
 		for(SingleLetterAACode c:SingleLetterAACode.values()) standardAASet.add(c.toString().charAt(0));
 	}
 
@@ -529,9 +529,9 @@ public class PeptideProperties {
 	 */
 	public static final Map<String, Double> getAACompositionString(String sequence){
 		Map<AminoAcidCompound, Double> aa2Composition = getAAComposition(sequence);
-		Map<String, Double> aaString2Composition = new HashMap<String, Double>();
-		for(AminoAcidCompound aaCompound:aa2Composition.keySet()){
-			aaString2Composition.put(aaCompound.getShortName(), aa2Composition.get(aaCompound));
+		Map<String, Double> aaString2Composition = new HashMap<>();
+		for(Map.Entry<AminoAcidCompound, Double> entry : aa2Composition.entrySet()){
+			aaString2Composition.put(entry.getKey().getShortName(), entry.getValue());
 		}
 		return aaString2Composition;
 	}
@@ -549,9 +549,9 @@ public class PeptideProperties {
 	 */
 	public static final Map<Character, Double> getAACompositionChar(String sequence){
 		Map<AminoAcidCompound, Double> aa2Composition = getAAComposition(sequence);
-		Map<Character, Double> aaChar2Composition = new HashMap<Character, Double>();
-		for(AminoAcidCompound aaCompound:aa2Composition.keySet()){
-			aaChar2Composition.put(aaCompound.getShortName().charAt(0), aa2Composition.get(aaCompound));
+		Map<Character, Double> aaChar2Composition = new HashMap<>();
+		for(Map.Entry<AminoAcidCompound, Double> entry : aa2Composition.entrySet()){
+			aaChar2Composition.put(entry.getKey().getShortName().charAt(0), entry.getValue());
 		}
 		return aaChar2Composition;
 	}

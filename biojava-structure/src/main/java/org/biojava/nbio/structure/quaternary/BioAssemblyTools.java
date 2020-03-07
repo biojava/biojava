@@ -68,7 +68,7 @@ public class BioAssemblyTools {
 		tmp = tmp.replace(")", "");
 
 		// separate the operators
-		List<String> components = null;
+		List<String> components;
 		try {
 			components = Arrays.asList(tmp.split(","));
 		} catch (Exception e) {
@@ -76,7 +76,7 @@ public class BioAssemblyTools {
 		}
 
 		// expand ranges if present, i.e. 1-60 -> 1, 2, 3, ..., 60
-		List<String> operators = new ArrayList<String>();
+		List<String> operators = new ArrayList<>();
 		for (String component : components) {
 			if (component.contains("-")) {
 				operators.addAll(expandRange(component));
@@ -94,8 +94,8 @@ public class BioAssemblyTools {
 	 * @throws IllegalArgumentException
 	 */
 	private static List<String> expandRange(String expression) throws IllegalArgumentException {
-		int first = 0;
-		int last = 0;
+		int first;
+		int last;
 		try {
 			String[] range = expression.split("-");
 			first = Integer.parseInt(range[0]);
@@ -104,7 +104,7 @@ public class BioAssemblyTools {
 			throw new IllegalArgumentException("Invalid range specification in oper_expression: " + expression);
 		}
 
-		List<String> expandedExpression = new ArrayList<String>(last-first+1);
+		List<String> expandedExpression = new ArrayList<>(last - first + 1);
 		for (int i = first; i <= last; i++) {
 			expandedExpression.add(String.valueOf(i));
 		}
@@ -114,7 +114,7 @@ public class BioAssemblyTools {
 	public static List<OrderedPair<String>> parseBinaryOperatorExpression(String expression)
 			throws IllegalArgumentException {
 		// split operator expression, i.e. (1,2,3)(4,5) into two subexpressions
-		String[] subExpressions = null;
+		String[] subExpressions;
 		try {
 			subExpressions = expression.split("\\)\\(");
 		} catch (Exception e) {
@@ -127,7 +127,7 @@ public class BioAssemblyTools {
 		List<String> rightSide = parseSubExpression(subExpressions[1]);
 
 		// form the cartesian product of the two lists
-		CartesianProduct<String> product = new CartesianProduct<String>(leftSide, rightSide);
+		CartesianProduct<String> product = new CartesianProduct<>(leftSide, rightSide);
 		return product.getOrderedPairs();
 	}
 

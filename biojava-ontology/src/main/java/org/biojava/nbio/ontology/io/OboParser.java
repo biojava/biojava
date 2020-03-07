@@ -70,7 +70,6 @@ public class OboParser {
 	 * @param ontoDescription
 
 	 * @return the ontology represented as a BioJava ontology file
-	 * @throws ParseException
 	 * @throws IOException
 	 */
 	public Ontology parseOBO(
@@ -78,27 +77,26 @@ public class OboParser {
 			String ontoName,
 			String ontoDescription
 			)
-					throws ParseException, IOException {
+					throws IOException {
 
-		try {
+//		try {
 			OntologyFactory factory = OntoTools.getDefaultFactory();
-			Ontology ontology = factory.createOntology(ontoName, ontoDescription);
 
 			OboFileParser parser = new OboFileParser();
 
-			OboFileEventListener handler = new OboFileHandler(ontology);
+			Ontology ontology = factory.createOntology(ontoName, ontoDescription);
 
-			parser.addOboFileEventListener(handler);
+            parser.addOboFileEventListener(new OboFileHandler(ontology));
 			parser.parseOBO(oboFile);
 
 			return ontology;
 
-
-		} catch (AlreadyExistsException ex) {
-			throw new RuntimeException( "Duplication in ontology");
-		} catch (OntologyException ex) {
-			throw new RuntimeException(ex);
-		}
+//
+//		} catch (AlreadyExistsException ex) {
+//			throw new RuntimeException( "Duplication in ontology");
+//		} catch (OntologyException ex) {
+//			throw new RuntimeException(ex);
+//		}
 
 	}
 }

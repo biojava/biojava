@@ -26,9 +26,9 @@ package org.biojava.nbio.survival.cox;
  */
 public class SurvivalInfoIndex implements Comparable<SurvivalInfoIndex> {
 
-	private double time;
-	private int event;
-	private int index;
+	private final double time;
+	private final int event;
+	private final int index;
 	private double[] data;
 
 	/**

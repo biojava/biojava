@@ -43,8 +43,8 @@ public class GenericGenbankHeaderParser<S extends AbstractSequence<C>, C extends
 	@SuppressWarnings("unused")
 	private int version;
 	private boolean versionSeen;
-	private ArrayList<String> comments = new ArrayList<>();
-	private List<AbstractReference> references = new ArrayList<>();
+	private final ArrayList<String> comments = new ArrayList<>();
+	private final List<AbstractReference> references = new ArrayList<>();
 
 	/**
 	 * Parse the header and set the values in the sequence

@@ -45,19 +45,22 @@ public interface IProfeatProperties {
 	/**
 	 * Enumeration of the seven different attributes
 	 */
-	public enum ATTRIBUTE {HYDROPHOBICITY, VOLUME, POLARITY, POLARIZABILITY, CHARGE, SECONDARYSTRUCTURE, SOLVENTACCESSIBILITY};
+    enum ATTRIBUTE {HYDROPHOBICITY, VOLUME, POLARITY, POLARIZABILITY, CHARGE, SECONDARYSTRUCTURE, SOLVENTACCESSIBILITY}
+
 	/**
 	 * Enumeration of the three different groupings for each attributes
 	 */
-	public enum GROUPING {GROUP1, GROUP2, GROUP3};
+    enum GROUPING {GROUP1, GROUP2, GROUP3}
+
 	/**
 	 * Enumeration of the transition between groupA and groupB
 	 */
-	public enum TRANSITION {BETWEEN_11, BETWEEN_22, BETWEEN_33, BETWEEN_12, BETWEEN_13, BETWEEN_23};
+    enum TRANSITION {BETWEEN_11, BETWEEN_22, BETWEEN_33, BETWEEN_12, BETWEEN_13, BETWEEN_23}
+
 	/**
 	 * Enumeration of the distribution for the first, first 25%, first 50%, first 75% and 100% of the grouping
 	 */
-	public enum DISTRIBUTION {FIRST, FIRST25, FIRST50, FIRST75, ALL};
+    enum DISTRIBUTION {FIRST, FIRST25, FIRST50, FIRST75, ALL}
 
 	/**
 	 * Returns the composition of the specific grouping for the given attribute.
@@ -73,11 +76,11 @@ public interface IProfeatProperties {
 	 * @throws Exception
 	 * 	throws Exception if attribute or group are unknown
 	 */
-	public double getComposition(ProteinSequence sequence, ATTRIBUTE attribute, GROUPING group) throws Exception;
+    double getComposition(ProteinSequence sequence, ATTRIBUTE attribute, GROUPING group) throws Exception;
 
-	public Map<GROUPING, Double> getComposition(ProteinSequence sequence, ATTRIBUTE attribute) throws Exception;
+	Map<GROUPING, Double> getComposition(ProteinSequence sequence, ATTRIBUTE attribute) throws Exception;
 
-	public Map<ATTRIBUTE, Map<GROUPING, Double>> getComposition(ProteinSequence sequence) throws Exception;
+	Map<ATTRIBUTE, Map<GROUPING, Double>> getComposition(ProteinSequence sequence) throws Exception;
 
 	/**
 	 * Returns the number of transition between the specified groups for the given attribute with respect to the length of sequence.
@@ -93,11 +96,11 @@ public interface IProfeatProperties {
 	 * @throws Exception
 	 * 	throws Exception if attribute or group are unknown
 	 */
-	public double getTransition(ProteinSequence sequence, ATTRIBUTE attribute, TRANSITION transition) throws Exception;
+    double getTransition(ProteinSequence sequence, ATTRIBUTE attribute, TRANSITION transition) throws Exception;
 
-	public Map<TRANSITION, Double> getTransition(ProteinSequence sequence, ATTRIBUTE attribute) throws Exception;
+	Map<TRANSITION, Double> getTransition(ProteinSequence sequence, ATTRIBUTE attribute) throws Exception;
 
-	public Map<ATTRIBUTE, Map<TRANSITION, Double>> getTransition(ProteinSequence sequence) throws Exception;
+	Map<ATTRIBUTE, Map<TRANSITION, Double>> getTransition(ProteinSequence sequence) throws Exception;
 
 	/**
 	 * Computes and return the position with respect to the sequence where the given distribution of the grouping can be found.<br/>
@@ -120,11 +123,11 @@ public interface IProfeatProperties {
 	 * @throws Exception
 	 * 	throws Exception if attribute or group are unknown
 	 */
-	public double getDistributionPosition(ProteinSequence sequence, ATTRIBUTE attribute, GROUPING group, DISTRIBUTION distribution) throws Exception;
+    double getDistributionPosition(ProteinSequence sequence, ATTRIBUTE attribute, GROUPING group, DISTRIBUTION distribution) throws Exception;
 
-	public Map<DISTRIBUTION, Double> getDistributionPosition(ProteinSequence sequence, ATTRIBUTE attribute, GROUPING group) throws Exception;
+	Map<DISTRIBUTION, Double> getDistributionPosition(ProteinSequence sequence, ATTRIBUTE attribute, GROUPING group) throws Exception;
 
-	public Map<GROUPING, Map<DISTRIBUTION, Double>> getDistributionPosition(ProteinSequence sequence, ATTRIBUTE attribute) throws Exception;
+	Map<GROUPING, Map<DISTRIBUTION, Double>> getDistributionPosition(ProteinSequence sequence, ATTRIBUTE attribute) throws Exception;
 
-	public Map<ATTRIBUTE , Map<GROUPING, Map<DISTRIBUTION, Double>>> getDistributionPosition(ProteinSequence sequence) throws Exception;
+	Map<ATTRIBUTE , Map<GROUPING, Map<DISTRIBUTION, Double>>> getDistributionPosition(ProteinSequence sequence) throws Exception;
 }

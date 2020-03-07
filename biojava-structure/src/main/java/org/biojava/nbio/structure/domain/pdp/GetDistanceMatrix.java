@@ -30,7 +30,7 @@ public class GetDistanceMatrix {
 	 *
 	 * @param protein
 	 */
-	public  PDPDistanceMatrix getDistanceMatrix(Atom[] protein) throws StructureException{
+	public  PDPDistanceMatrix getDistanceMatrix(Atom[] protein) {
 		int[][] dist = new int[protein.length+3][protein.length+3];
 		int i,j;
 		double d,dt1,dt2,dt3,dt4;
@@ -69,7 +69,7 @@ public class GetDistanceMatrix {
 					d+= distance*distance;
 				}
 				else if(hasCbeta1 && ! hasCbeta2) {
-					double distance = 999;
+					double distance;
 
 					distance = Calc.getDistance(cb1, ca2);
 					d += distance * distance;
@@ -157,7 +157,7 @@ public class GetDistanceMatrix {
 
 
 	private Atom getCBeta(Group g1) {
-		Atom cb = null;
+		Atom cb;
 
 
 		cb = g1.getAtom("CB");

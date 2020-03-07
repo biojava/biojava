@@ -191,8 +191,8 @@ public class TestBioassemblies {
 			List<Chain> model = multiModelBioAssemblies.get(0).getModel(modelIdx);
 			for (Chain c:model) {
 				System.out.println(c.getId()+" "+c.getName());
-				assertTrue(!c.getId().contains("_"));
-				assertTrue(!c.getName().contains("_"));
+                assertFalse(c.getId().contains("_"));
+                assertFalse(c.getName().contains("_"));
 			}
 
 		}

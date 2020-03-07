@@ -20,11 +20,7 @@
  */
 package org.biojava.nbio.core.search.io;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 import org.biojava.nbio.core.sequence.template.Sequence;
 
@@ -41,20 +37,20 @@ import org.biojava.nbio.core.sequence.template.Sequence;
  */
 
 public abstract class Result implements Iterable<Hit>{
-	private String program;
-	private String version;
-	private String reference;
-	private String dbFile;
+	private final String program;
+	private final String version;
+	private final String reference;
+	private final String dbFile;
 
-	private HashMap<String,String> programSpecificParameters;
+	private final HashMap<String,String> programSpecificParameters;
 
-	private int iterationNumber;
-	private String queryID;
-	private String queryDef;
-	private int queryLength;
-	private Sequence querySequence;
-	private List<Hit> hits;
-	private int hitCounter = -1;
+	private final int iterationNumber;
+	private final String queryID;
+	private final String queryDef;
+	private final int queryLength;
+	private final Sequence querySequence;
+	private final List<Hit> hits;
+	private final int hitCounter = -1;
 
 	public Result(String program, String version, String reference, String dbFile, HashMap<String, String> programSpecificParameters, int iterationNumber, String queryID, String queryDef, int queryLength, List<Hit> hits, Sequence querySequence) {
 		this.program = program;
@@ -94,13 +90,13 @@ public abstract class Result implements Iterable<Hit>{
 			return false;
 		}
 		final Result other = (Result) obj;
-		if ((this.queryID == null) ? (other.queryID != null) : !this.queryID.equals(other.queryID)) {
+		if (!Objects.equals(this.queryID, other.queryID)) {
 			return false;
 		}
-		if ((this.queryDef == null) ? (other.queryDef != null) : !this.queryDef.equals(other.queryDef)) {
+		if (!Objects.equals(this.queryDef, other.queryDef)) {
 			return false;
 		}
-		if (this.hits != other.hits && (this.hits == null || !this.hits.equals(other.hits))) {
+		if (!Objects.equals(this.hits, other.hits)) {
 			return false;
 		}
 		return true;

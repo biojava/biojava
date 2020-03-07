@@ -37,11 +37,11 @@ public class ResidueNumberTest {
 	}
 
 	@BeforeClass
-	public static void setUpClass() throws Exception {
+	public static void setUpClass() {
 	}
 
 	@AfterClass
-	public static void tearDownClass() throws Exception {
+	public static void tearDownClass() {
 	}
 
 	@Before
@@ -102,7 +102,7 @@ public class ResidueNumberTest {
 		boolean result = number2.equals(number1);
 		Assert.assertEquals(expResult, result);
 
-		Set<ResidueNumber> numberSet= new HashSet<ResidueNumber>();
+		Set<ResidueNumber> numberSet= new HashSet<>();
 		numberSet.add(number1);
 		numberSet.add(number2);
 		Assert.assertEquals(1, numberSet.size());

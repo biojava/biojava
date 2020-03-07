@@ -66,7 +66,7 @@ public class SubunitExtractor {
 			int absMinLen, double fraction, int minLen) {
 
 		// The extracted subunit container
-		List<Subunit> subunits = new ArrayList<Subunit>();
+		List<Subunit> subunits = new ArrayList<>();
 
 		for (Chain c : structure.getPolyChains()) {
 			// Only take protein chains
@@ -107,7 +107,7 @@ public class SubunitExtractor {
 		int minLength = Integer.MAX_VALUE;
 
 		// Extract the length List, the min and the max
-		List<Integer> lengths = new ArrayList<Integer>();
+		List<Integer> lengths = new ArrayList<>();
 		for (int i = 0; i < subunits.size(); i++) {
 			if (subunits.get(i).size() >= absMinLen) {
 				maxLength = Math.max(subunits.get(i).size(), maxLength);
@@ -123,7 +123,7 @@ public class SubunitExtractor {
 			return adjustedMinimumSequenceLength;
 
 		// Calculate the median of the lengths
-		double median = 0;
+		double median;
 		Collections.sort(lengths);
 		if (lengths.size() % 2 == 1) {
 			int middle = (lengths.size() - 1) / 2;

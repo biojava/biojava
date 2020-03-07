@@ -50,7 +50,7 @@ import java.util.Map;
 public class TwoBitSequenceReader<C extends NucleotideCompound> extends BitSequenceReader<C> {
 
 	public TwoBitSequenceReader(Sequence<C> sequence) {
-		super(new TwoBitArrayWorker<C>(sequence), sequence.getAccession());
+		super(new TwoBitArrayWorker<>(sequence), sequence.getAccession());
 	}
 
 	public TwoBitSequenceReader(String sequence, CompoundSet<C> compoundSet) {
@@ -58,7 +58,7 @@ public class TwoBitSequenceReader<C extends NucleotideCompound> extends BitSeque
 	}
 
 	public TwoBitSequenceReader(String sequence, CompoundSet<C> compoundSet, AccessionID accession) {
-		super(new TwoBitArrayWorker<C>(sequence, compoundSet), accession);
+		super(new TwoBitArrayWorker<>(sequence, compoundSet), accession);
 	}
 
 	public TwoBitSequenceReader(TwoBitArrayWorker<C> worker) {
@@ -138,7 +138,7 @@ public class TwoBitSequenceReader<C extends NucleotideCompound> extends BitSeque
 		@Override
 		protected List<C> generateIndexToCompounds() {
 			CompoundSet<C> cs = getCompoundSet();
-			List<C> result = new ArrayList<C>();
+			List<C> result = new ArrayList<>();
 			result.add( cs.getCompoundForString("T"));
 
 

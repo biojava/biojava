@@ -41,7 +41,7 @@ public class MyTestHelper
 
 	public static String compareAlignment(String pdb1, String chain1, String pdb2, String chain2, String originalOutput, boolean doRigid){
 
-		AFPChain afpChain = null;
+		AFPChain afpChain;
 
 		PDBFileReader pdbpars = new PDBFileReader();
 		pdbpars.setPath(pdbPath);

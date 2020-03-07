@@ -39,7 +39,7 @@ import java.util.concurrent.Callable;
 public class CallablePairwiseSequenceAligner<S extends Sequence<C>, C extends Compound>
 		implements Callable<SequencePair<S, C>> {
 
-	private PairwiseSequenceAligner<S, C> psa;
+	private final PairwiseSequenceAligner<S, C> psa;
 
 	/**
 	 * Creates a pairwise sequence alignment task for simplified parallel execution.

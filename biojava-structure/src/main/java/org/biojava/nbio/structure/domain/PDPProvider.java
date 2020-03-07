@@ -48,7 +48,7 @@ public interface PDPProvider {
 	 * @return Set of domain names, e.g. "PDP:4HHBAa"
 	 * @throws IOException
 	 */
-	public SortedSet<String> getPDPDomainNamesForPDB(String pdbId) throws IOException;
+    SortedSet<String> getPDPDomainNamesForPDB(String pdbId) throws IOException;
 	/**
 	 * Get the structure for a particular PDP domain
 	 * @param pdpDomainName PDP identifier, e.g. "PDP:4HHBAa"
@@ -57,7 +57,7 @@ public interface PDPProvider {
 	 * @throws IOException For IO errors, e.g. when parsing PDP information
 	 * @throws StructureException For errors creating the structure
 	 */
-	public Structure getDomain(String pdpDomainName, AtomCache cache) throws IOException, StructureException;
+    Structure getDomain(String pdpDomainName, AtomCache cache) throws IOException, StructureException;
 	/**
 	 * Get a StructureIdentifier representing the specified PDP domain.
 	 *
@@ -65,5 +65,5 @@ public interface PDPProvider {
 	 * @return a PDPDomain representing this domain name
 	 * @throws IOException
 	 */
-	public PDPDomain getPDPDomain(String pdpDomainName) throws IOException;
+    PDPDomain getPDPDomain(String pdpDomainName) throws IOException;
 }

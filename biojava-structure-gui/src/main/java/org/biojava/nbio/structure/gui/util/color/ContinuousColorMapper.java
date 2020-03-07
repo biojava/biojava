@@ -37,5 +37,5 @@ public interface ContinuousColorMapper {
 	 * @param value The real to be mapped
 	 * @return The color corresponding to value
 	 */
-	public Color getColor(double value);
+    Color getColor(double value);
 }

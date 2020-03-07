@@ -153,7 +153,7 @@ public class LocationHelper {
 			end = (length * (numberOfPasses + 1)) + modEnd;
 		}
 
-		List<Location> locations = new ArrayList<Location>();
+		List<Location> locations = new ArrayList<>();
 		locations.add(new SimpleLocation(modStart, length, strand));
 		for (int i = 0; i < numberOfPasses; i++) {
 			locations.add(new SimpleLocation(1, length, strand));
@@ -163,7 +163,7 @@ public class LocationHelper {
 				new SimplePoint(end), strand, true, false, locations);
 	}
 
-	private static interface LocationPredicate {
+	private interface LocationPredicate {
 		boolean accept(Location previous, Location current);
 	}
 
@@ -172,12 +172,9 @@ public class LocationHelper {
 	 * lowest start
 	 */
 	public static Location getMin(List<Location> locations) {
-		return scanLocations(locations, new LocationPredicate() {
-			@Override
-			public boolean accept(Location previous, Location current) {
-				int res = current.getStart().compareTo(previous.getStart());
-				return res < 0;
-			}
+		return scanLocations(locations, (previous, current) -> {
+			int res = current.getStart().compareTo(previous.getStart());
+			return res < 0;
 		});
 	}
 
@@ -186,12 +183,9 @@ public class LocationHelper {
 	 * highest end
 	 */
 	public static Location getMax(List<Location> locations) {
-		return scanLocations(locations, new LocationPredicate() {
-			@Override
-			public boolean accept(Location previous, Location current) {
-				int res = current.getEnd().compareTo(previous.getEnd());
-				return res > 0;
-			}
+		return scanLocations(locations, (previous, current) -> {
+			int res = current.getEnd().compareTo(previous.getEnd());
+			return res > 0;
 		});
 	}
 
@@ -283,7 +277,7 @@ public class LocationHelper {
 	 * @return Returns a boolean indicating if this is consistently accessioned
 	 */
 	public static boolean consistentAccessions(List<Location> subLocations) {
-		Set<AccessionID> set = new HashSet<AccessionID>();
+		Set<AccessionID> set = new HashSet<>();
 		for(Location sub: subLocations) {
 			set.add(sub.getAccession());
 		}

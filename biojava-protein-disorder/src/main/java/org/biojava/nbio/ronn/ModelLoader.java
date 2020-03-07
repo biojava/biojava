@@ -33,6 +33,7 @@ import org.slf4j.LoggerFactory;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -95,7 +96,7 @@ public final class ModelLoader {
 	final float[] W;// = new float[RonnConstraint.maxD];
 
 	int numOfDBAAseq;
-	int modelNum = -1;
+	int modelNum;
 
 	public Model(final int modelNum, final int numberofSequence) {
 		this.modelNum = modelNum;
@@ -155,7 +156,7 @@ public final class ModelLoader {
 
 	}
 
-	private static final Map<Integer, Model> models = new HashMap<Integer, Model>();
+	private static final Map<Integer, Model> models = new HashMap<>();
 
 	public Model getModel(final int modelNum) {
 	return ModelLoader.models.get(modelNum);
@@ -167,8 +168,8 @@ public final class ModelLoader {
 			final BufferedReader bfr = new BufferedReader(
 					new InputStreamReader(ModelLoader.class.getResourceAsStream(
 							"model" + i + ".rec"),
-							"ISO-8859-1"));
-			String line = null;
+							StandardCharsets.ISO_8859_1));
+			String line;
 			line = bfr.readLine().trim();
 			final int numberOfSeqs = Integer.parseInt(line);
 			final Model model = new Model(i, numberOfSeqs);

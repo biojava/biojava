@@ -169,9 +169,9 @@ public class SigEva
 			else    getPara(5, len);        //flexible-FATCAT
 		}
 		else if(sparse == 3)    { //sparse sampling = 3
-			if(twist == 0)  getPara(8, len); //rigid-FATCAT
-			else    getPara(8, len); //flexible-FATCAT
-		}
+            //flexible-FATCAT
+            getPara(8, len); //rigid-FATCAT
+        }
 		else if(sparse == 1)    { //sparse sampling = 1
 			if(twist == 0)  getPara(6, len); //rigid-FATCAT
 			else    getPara(7, len); //flexible-FATCAT

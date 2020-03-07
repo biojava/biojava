@@ -52,13 +52,13 @@ public enum TransformType {
 
 
 
-	private int id;
-	private int foldType;
-	private boolean isScrew;
-	private boolean isInfinite;
-	private String shortName;
+	private final int id;
+	private final int foldType;
+	private final boolean isScrew;
+	private final boolean isInfinite;
+	private final String shortName;
 
-	private TransformType(int id, int foldType, boolean isScrew, boolean isInfinite, String shortName) {
+	TransformType(int id, int foldType, boolean isScrew, boolean isInfinite, String shortName) {
 		this.id = id;
 		this.foldType = foldType;
 		this.isScrew = isScrew;

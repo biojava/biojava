@@ -66,9 +66,9 @@ public final class FastqVariantTest {
 	@Test
 	public void testParseFastqVariant()
 	{
-		Assert.assertEquals(null, parseFastqVariant(null));
-		Assert.assertEquals(null, parseFastqVariant(""));
-		Assert.assertEquals(null, parseFastqVariant("not a valid FASTQ variant"));
+        Assert.assertNull(parseFastqVariant(null));
+        Assert.assertNull(parseFastqVariant(""));
+        Assert.assertNull(parseFastqVariant("not a valid FASTQ variant"));
 		Assert.assertEquals(FASTQ_SANGER, parseFastqVariant("FASTQ_SANGER"));
 		Assert.assertEquals(FASTQ_SANGER, parseFastqVariant("fastq-sanger"));
 	}

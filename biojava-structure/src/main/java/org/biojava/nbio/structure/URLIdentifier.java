@@ -116,7 +116,7 @@ public class URLIdentifier implements StructureIdentifier {
 			if(params.containsKey(RESIDUES_PARAM)) {
 				ranges = ResidueRange.parseMultiple(params.get(RESIDUES_PARAM));
 			} else if(params.containsKey(CHAINID_PARAM)) {
-				ranges = Arrays.asList(new ResidueRange(params.get(CHAINID_PARAM),(ResidueNumber)null,(ResidueNumber)null));
+				ranges = Collections.singletonList(new ResidueRange(params.get(CHAINID_PARAM)));
 			}
 		} catch (UnsupportedEncodingException e) {
 			logger.error("Unable to decode URL "+url,e);
@@ -137,7 +137,7 @@ public class URLIdentifier implements StructureIdentifier {
 	 * @return null
 	 */
 	@Override
-	public Structure loadStructure(AtomCache cache) throws StructureException,
+	public Structure loadStructure(AtomCache cache) throws
 			IOException {
 		StructureFiletype format = StructureFiletype.UNKNOWN;
 
@@ -217,7 +217,7 @@ public class URLIdentifier implements StructureIdentifier {
 	 * @throws UnsupportedEncodingException
 	 */
 	private static Map<String,String> parseQuery(URL url) throws UnsupportedEncodingException {
-		Map<String,String> params = new LinkedHashMap<String, String>();
+		Map<String,String> params = new LinkedHashMap<>();
 		String query = url.getQuery();
 		if( query == null || query.isEmpty()) {
 			// empty query

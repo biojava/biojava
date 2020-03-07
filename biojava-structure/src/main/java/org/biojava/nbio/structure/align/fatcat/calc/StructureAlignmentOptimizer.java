@@ -76,7 +76,7 @@ public class StructureAlignmentOptimizer
 	 */
 
 	public StructureAlignmentOptimizer(int b1, int end1, Atom[] c1, int b2, int end2, Atom[] c2,
-			int iniLen, int[][] iniSet) throws StructureException{
+			int iniLen, int[][] iniSet) {
 
 		//System.err.println("optimizing range:" + b1 + "-" + end1 + "("+ (end1-b1) + ") b2:  " + b2 + "-" + end2+ "("+ (end2-b2) + ") iniLen " + iniLen);
 		//System.out.println("ca1: " + c1.length + " ca2: " + c2.length);
@@ -111,7 +111,7 @@ public class StructureAlignmentOptimizer
 
 
 		//initial equivalent sets
-		maxLen = (len1 < len2)?len1:len2;
+		maxLen = Math.min(len1, len2);
 
 		equSet = new int[2][maxLen];
 		for(int i = 0; i < iniLen; i ++)    {
@@ -232,9 +232,7 @@ public class StructureAlignmentOptimizer
 	/**
 	 * superimpose two structures according to the equivalent residues
 	 */
-	private void superimposeBySet ()
-	throws StructureException
-	{
+	private void superimposeBySet () {
 
 		//extract the coordinations of equivalent residues
 		Atom[] tmp1 = new Atom[equLen];
@@ -289,8 +287,8 @@ public class StructureAlignmentOptimizer
 		long optStart = System.currentTimeMillis();
 		if ( debug)
 			System.out.println("Optimizing up to " + maxi + " iterations.. ");
-		boolean ifstop = true;;
-		int     i, alnLen;
+		boolean ifstop;
+        int     i, alnLen;
 		alnLen = 0;
 
 		int[][]     alnList =  new int[2][maxLen];
@@ -334,8 +332,7 @@ public class StructureAlignmentOptimizer
 	//              Sij = Dc^2 - Dij^2 if Dij <= Dc
 	//                    0            else
 	//--------------------------------------------------------------------------------------------------------
-	private void calMatrix() throws StructureException
-	{
+	private void calMatrix() {
 		int     i, j;
 		double  dis;
 		for(i = 0; i < pro1Len; i ++)   {
@@ -388,7 +385,7 @@ public class StructureAlignmentOptimizer
 		//if (debug)
 		//   System.out.println(String.format(" OPT: new equLen %d rmsd %f", equLen, rmsd));
 
-		boolean     ifstop = false;
+		boolean     ifstop;
 
 //      if (debug) {
 //         System.out.print(" OPT: rmsd diff: " + Math.abs(rmsd - rmsdOld) + " equLens: " + equLenOld + ":"+ equLen);

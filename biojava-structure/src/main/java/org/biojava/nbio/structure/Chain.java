@@ -423,13 +423,13 @@ public interface Chain extends Serializable {
 	 *
 	 * @return true if there are only solvent molecules in this chain.
 	 */
-	public boolean isWaterOnly();
+    boolean isWaterOnly();
 
 	/**  Returns true if the given chain is composed of non-polymeric (including water) groups only.
 	 *
 	 * @return true if only non-polymeric groups in this chain.
 	 */
-	public boolean isPureNonPolymer();
+    boolean isPureNonPolymer();
 
 	/**
 	 * Get the predominant {@link GroupType} for a given Chain, following these
@@ -448,7 +448,7 @@ public interface Chain extends Serializable {
 	 *
 	 * @return
 	 */
-	public GroupType getPredominantGroupType();
+    GroupType getPredominantGroupType();
 
 	/**
 	 * Tell whether given chain is a protein chain
@@ -456,7 +456,7 @@ public interface Chain extends Serializable {
 	 * @return true if protein, false if nucleotide or ligand
 	 * @see #getPredominantGroupType()
 	 */
-	public  boolean isProtein();
+    boolean isProtein();
 
 	/**
 	 * Tell whether given chain is DNA or RNA
@@ -464,5 +464,5 @@ public interface Chain extends Serializable {
 	 * @return true if nucleic acid, false if protein or ligand
 	 * @see #getPredominantGroupType()
 	 */
-	public  boolean isNucleicAcid();
+    boolean isNucleicAcid();
 }

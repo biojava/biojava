@@ -31,8 +31,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 
 /**
@@ -102,7 +101,7 @@ public class TestAcetylation  {
 
 		for (Site s : sites) {
 
-			assertTrue(s.getResidue() != null);
+            assertNotNull(s.getResidue());
 
 		}
 

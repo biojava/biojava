@@ -45,7 +45,7 @@ public interface Block extends ScoresCache {
 	 *
 	 * @return Block identical copy of this object.
 	 */
-	public Block clone();
+    Block clone();
 
 	/**
 	 * Set the back-reference to its parent BlockSet.
@@ -54,7 +54,7 @@ public interface Block extends ScoresCache {
 	 *            the parent BlockSet.
 	 * @see #getBlockSet()
 	 */
-	public void setBlockSet(BlockSet parent);
+    void setBlockSet(BlockSet parent);
 
 	/**
 	 * Returns the parent BlockSet of the Block. Returns null if there is no
@@ -63,7 +63,7 @@ public interface Block extends ScoresCache {
 	 * @return BlockSet the parent BlockSet of the Block, or null.
 	 * @see #setBlockSet(BlockSet)
 	 */
-	public BlockSet getBlockSet();
+    BlockSet getBlockSet();
 
 	/**
 	 * Returns the double List containing the aligned residues for each
@@ -74,7 +74,7 @@ public interface Block extends ScoresCache {
 	 * @return List a double List of aligned residues for each structure.
 	 * @see #setAlignRes()
 	 */
-	public List<List<Integer>> getAlignRes();
+    List<List<Integer>> getAlignRes();
 
 	/**
 	 * Set the double List containing the aligned residues for each structure.
@@ -83,7 +83,7 @@ public interface Block extends ScoresCache {
 	 *            a double List of Integers with the aligned residues.
 	 * @see #getAlignRes()
 	 */
-	public void setAlignRes(List<List<Integer>> alignRes);
+    void setAlignRes(List<List<Integer>> alignRes);
 
 	/**
 	 * Returns the total number of aligned positions (columns) in the Block.
@@ -92,7 +92,7 @@ public interface Block extends ScoresCache {
 	 * @see #getCoreLength();
 	 * @see #size()
 	 */
-	public int length();
+    int length();
 
 	/**
 	 * Returns the number of aligned structures (rows) in the Block.
@@ -101,7 +101,7 @@ public interface Block extends ScoresCache {
 	 * @see #length()
 	 * @see #getCoreLength()
 	 */
-	public int size();
+    int size();
 
 	/**
 	 * Returns the number of aligned positions (columns) without gaps in the
@@ -112,7 +112,7 @@ public interface Block extends ScoresCache {
 	 * @see #length()
 	 * @see #size()
 	 */
-	public int getCoreLength();
+    int getCoreLength();
 
 	/**
 	 * Returns the number of non null positions (residues) of each structure in
@@ -120,7 +120,7 @@ public interface Block extends ScoresCache {
 	 *
 	 * @return List of residue counts for each structure
 	 */
-	public List<Integer> getAlignResCounts();
+    List<Integer> getAlignResCounts();
 
 	/**
 	 * Calculates and returns the first position of the specified structure in
@@ -132,7 +132,7 @@ public interface Block extends ScoresCache {
 	 *
 	 * @return the first non null aligned position of the structure
 	 */
-	public int getStartIndex(int str);
+    int getStartIndex(int str);
 
 	/**
 	 * Calculates and returns the first residue of the specified structure in
@@ -144,7 +144,7 @@ public interface Block extends ScoresCache {
 	 *
 	 * @return the first non null aligned residue of the structure
 	 */
-	public int getStartResidue(int str);
+    int getStartResidue(int str);
 
 	/**
 	 * Calculates and returns the last position of the specified structure in
@@ -156,7 +156,7 @@ public interface Block extends ScoresCache {
 	 *
 	 * @return the last non null aligned position of the structure
 	 */
-	public int getFinalIndex(int str);
+    int getFinalIndex(int str);
 
 	/**
 	 * Calculates and returns the last residue of the specified structure in the
@@ -168,12 +168,12 @@ public interface Block extends ScoresCache {
 	 *
 	 * @return the last non null aligned residue of the structure
 	 */
-	public int getFinalResidue(int str);
+    int getFinalResidue(int str);
 
 	/**
 	 * Clear scores and other properties which depend on the specific alignment.
 	 * This frees memory and ensures consistency of the cached variables.
 	 */
-	public void clear();
+    void clear();
 
 }

@@ -71,5 +71,5 @@ public enum QsRelation {
 	 * {@link #EQUIVALENT}, {@link #PARTIAL_COMPLETE} or
 	 * {@link #PARTIAL_INCOMPLETE}.
 	 */
-	DIFFERENT;
+	DIFFERENT
 }

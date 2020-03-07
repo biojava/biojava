@@ -41,7 +41,7 @@ import java.util.Map;
  * @see IPeptideProperties
  */
 public class Constraints {
-	private static AminoAcidCompoundSet aaSet = new AminoAcidCompoundSet();
+	private static final AminoAcidCompoundSet aaSet = new AminoAcidCompoundSet();
 	//A, R, N, D, C, E, Q, G, H, I, L, K, M, F, P, S, T, W, Y, V
 	public static AminoAcidCompound A = aaSet.getCompoundForString("A");
 	public static AminoAcidCompound R = aaSet.getCompoundForString("R");
@@ -64,14 +64,14 @@ public class Constraints {
 	public static AminoAcidCompound Y = aaSet.getCompoundForString("Y");
 	public static AminoAcidCompound V = aaSet.getCompoundForString("V");
 
-	public static Map<AminoAcidCompound, Double> aa2ExtinctionCoefficient = new HashMap<AminoAcidCompound, Double>();
-	public static Map<AminoAcidCompound, Double> aa2MolecularWeight = new HashMap<AminoAcidCompound, Double>();
-	public static Map<AminoAcidCompound, Double> aa2Hydrophathicity = new HashMap<AminoAcidCompound, Double>();
-	public static Map<AminoAcidCompound, Double> aa2PKa = new HashMap<AminoAcidCompound, Double>();
-	public static Map<String, Double> diAA2Instability = new HashMap<String, Double>();
+	public static Map<AminoAcidCompound, Double> aa2ExtinctionCoefficient = new HashMap<>();
+	public static Map<AminoAcidCompound, Double> aa2MolecularWeight = new HashMap<>();
+	public static Map<AminoAcidCompound, Double> aa2Hydrophathicity = new HashMap<>();
+	public static Map<AminoAcidCompound, Double> aa2PKa = new HashMap<>();
+	public static Map<String, Double> diAA2Instability = new HashMap<>();
 
-	public static Map<AminoAcidCompound, Double> aa2NTerminalPka = new HashMap<AminoAcidCompound, Double>();
-	public static Map<AminoAcidCompound, Double> aa2CTerminalPka = new HashMap<AminoAcidCompound, Double>();
+	public static Map<AminoAcidCompound, Double> aa2NTerminalPka = new HashMap<>();
+	public static Map<AminoAcidCompound, Double> aa2CTerminalPka = new HashMap<>();
 
 	static{
 		initMolecularWeight();
@@ -287,7 +287,7 @@ public class Constraints {
 		SingleLetterAACode[] aa = SingleLetterAACode.values();
 		for(int i = 0; i < aa.length; i++){
 			for(int j = 0; j < aa.length; j++){
-				diAA2Instability.put("" + aa[i] + aa[j], instability[i][j]);
+				diAA2Instability.put(String.valueOf(aa[i]) + aa[j], instability[i][j]);
 			}
 		}
 	}

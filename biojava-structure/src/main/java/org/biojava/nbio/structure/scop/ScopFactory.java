@@ -83,7 +83,7 @@ public class ScopFactory {
 	public static final String LATEST_VERSION = VERSION_2_0_7;
 
 	// Hold one instance for each version
-	private static Map<String,ScopDatabase> versionedScopDBs = new HashMap<String, ScopDatabase>();
+	private static final Map<String,ScopDatabase> versionedScopDBs = new HashMap<>();
 	private static String defaultVersion = LATEST_VERSION;
 
 	/**
@@ -147,7 +147,6 @@ public class ScopFactory {
 				versionedScopDBs.put(version,berkeley);
 				return berkeley;
 			}
-			return scop;
 		} else {
 			// Use a remote installation
 			if( scop == null ) {
@@ -156,8 +155,8 @@ public class ScopFactory {
 				scop.setScopVersion(version);
 				versionedScopDBs.put(version,scop);
 			}
-			return scop;
 		}
+		return scop;
 	}
 
 

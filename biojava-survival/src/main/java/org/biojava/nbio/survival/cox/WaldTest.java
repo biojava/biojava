@@ -41,9 +41,7 @@ public class WaldTest {
 	public static WaldTestInfo process(double[][] var, double[] b, double toler_chol) {
 		double[][] b_ = new double[1][b.length];
 
-		for(int i = 0; i < b.length; i++){
-			b_[0][i] = b[i];
-		}
+        System.arraycopy(b, 0, b_[0], 0, b.length);
 
 		return process(var,b_,toler_chol);
 
@@ -59,7 +57,7 @@ public class WaldTest {
 	public static WaldTestInfo process(double[][] var, double[][] b, double toler_chol) {
 
 
-		int i = 0;
+		int i;
 
 	//      if(ci.coefficientsList.size() == 1){
 	//          double b_ = b[0][i];
@@ -71,7 +69,7 @@ public class WaldTest {
 		//  double toler_chol = ci.toler;
 		int ntest = 1;
 		int nvar = b[0].length;
-		double sum = 0;
+		double sum;
 		double[][] solve = new double[ntest][nvar];
 		double[] bsum = new double[ntest];
 
@@ -85,9 +83,7 @@ public class WaldTest {
 		}
 
 		for (i = 0; i < ntest; i++) {
-			for (int j = 0; j < nvar; j++) {
-				solve[i][j] = b[i][j];
-			}
+            System.arraycopy(b[i], 0, solve[i], 0, nvar);
 			Chsolve2.process(var, nvar, solve, i);   /*solve now has b* var-inverse */
 
 			sum = 0;

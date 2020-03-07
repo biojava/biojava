@@ -45,7 +45,7 @@ public class CookbookAlignAllGlobal {
 	}
 
 	private static void alignAllGlobal(String[] ids) throws Exception {
-		List<ProteinSequence> lst = new ArrayList<ProteinSequence>();
+		List<ProteinSequence> lst = new ArrayList<>();
 		for (String id : ids) {
 			lst.add(getSequenceForId(id));
 		}

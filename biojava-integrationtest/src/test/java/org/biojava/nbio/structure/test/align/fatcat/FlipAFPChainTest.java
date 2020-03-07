@@ -118,7 +118,7 @@ public class FlipAFPChainTest {
 		Assert.assertNotNull("could not get nr. of eqr: ", afpChain.getNrEQR());
 		Assert.assertNotNull("could not get nr. of eqr: ", origFlip.getNrEQR());
 
-		Assert.assertTrue("The nr. of equivalent positions is not equal!", afpChain.getNrEQR() == origFlip.getNrEQR());
+		Assert.assertEquals("The nr. of equivalent positions is not equal!", afpChain.getNrEQR(), origFlip.getNrEQR());
 
 		Atom shift1 = afpChain.getBlockShiftVector()[0];
 		Atom shift2 = origFlip.getBlockShiftVector()[0];
@@ -158,8 +158,7 @@ public class FlipAFPChainTest {
 	 * @param ca2
 	 * @return
 	 */
-	private double getRMSD(AFPChain afpChain, Atom[] ca1, Atom[] ca2)
-			throws StructureException {
+	private double getRMSD(AFPChain afpChain, Atom[] ca1, Atom[] ca2) {
 
 		Atom[] ca2clone = StructureTools.cloneAtomArray(ca2);
 		rotateAtoms2(afpChain,ca2clone);
@@ -169,9 +168,9 @@ public class FlipAFPChainTest {
 		Atom[] catmp1 = AFPAlignmentDisplay.getAlignedAtoms1(afpChain, ca1);
 		Atom[] catmp2 = AFPAlignmentDisplay.getAlignedAtoms2(afpChain, ca2clone);
 
-		Assert.assertTrue(catmp1.length == catmp2.length);
+		Assert.assertEquals(catmp1.length, catmp2.length);
 
-		Assert.assertTrue(catmp1.length == afpChain.getNrEQR());
+		Assert.assertEquals(catmp1.length, afpChain.getNrEQR());
 
 		return Calc.rmsd(catmp1,catmp2);
 	}

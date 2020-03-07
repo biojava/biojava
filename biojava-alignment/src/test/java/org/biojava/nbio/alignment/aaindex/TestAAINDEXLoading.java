@@ -63,7 +63,7 @@ V    0.02   -1.52   -2.17   -2.02    0.34   -1.38   -1.84   -1.96   -0.35    1.9
 
 		SubstitutionMatrix<AminoAcidCompound> sdm = SubstitutionMatrixHelper.getMatrixFromAAINDEX(matrixName);
 
-		int scale = 1;
+		int scale;
 		if ( sdm instanceof ScaledSubstitutionMatrix) {
 			ScaledSubstitutionMatrix scaledSDM = (ScaledSubstitutionMatrix)sdm;
 			scale = scaledSDM.getScale();

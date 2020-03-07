@@ -40,7 +40,7 @@ public class AtomInfo {
 	String residueNumber;
 	int modelNumber;
 
-	private static Pattern inscodePatter ;
+	private static final Pattern inscodePatter ;
 	static {
 		inscodePatter = Pattern.compile("([0-9]+)([a-zA-Z]*)?");
 	}
@@ -106,17 +106,17 @@ public class AtomInfo {
 
 	@Override
 	public String toString() {
-		String aa3 = "";
+		String aa3;
 		boolean printResName = true;
 
-		String chain1 ="";
-		String res1 = "";
+		String chain1;
+		String res1;
 
 		aa3 = residueName;
 		res1 = residueNumber;
 		chain1 = chainId;
 
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		if ( printResName) {
 			if ( !aa3.equals("")){
 				buf.append("[");

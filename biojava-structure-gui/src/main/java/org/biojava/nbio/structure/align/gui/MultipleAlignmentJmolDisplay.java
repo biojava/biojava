@@ -76,7 +76,7 @@ public class MultipleAlignmentJmolDisplay  {
 	public static List<String> getPDBresnum(int structNum,
 			MultipleAlignment multAln, Atom[] ca){
 
-		List<String> lst = new ArrayList<String>();
+		List<String> lst = new ArrayList<>();
 
 		for(Block block : multAln.getBlocks() ) {
 
@@ -99,11 +99,9 @@ public class MultipleAlignmentJmolDisplay  {
 	 *
 	 * @param multAln
 	 * @param jmol
-
-	 * @throws StructureException
 	 */
 	public static void showMultipleAligmentPanel(MultipleAlignment multAln,
-			AbstractAlignmentJmol jmol) throws StructureException {
+			AbstractAlignmentJmol jmol) {
 
 		MultipleAligPanel me = new MultipleAligPanel(multAln, jmol);
 		JFrame frame = new JFrame();

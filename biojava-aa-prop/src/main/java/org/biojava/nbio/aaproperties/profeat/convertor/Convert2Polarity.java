@@ -38,7 +38,7 @@ public class Convert2Polarity extends Convertor{
 			return unknownGroup;//Non-standard AA
 		}
 	}
-	private static String[] subCategory = {"Value_4.9-6.2", "Value_8.0-9.2", "Value_10.4-13.0"};
+	private static final String[] subCategory = {"Value_4.9-6.2", "Value_8.0-9.2", "Value_10.4-13.0"};
 	@Override
 	public String[] getGrouping(){return subCategory;}
 	@Override

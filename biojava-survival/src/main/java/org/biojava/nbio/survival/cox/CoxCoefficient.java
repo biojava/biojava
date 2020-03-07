@@ -222,7 +222,7 @@ public class CoxCoefficient {
 	 * @return
 	 */
 	public static String fmt(Double d, int precision, int pad) {
-		String value = "";
+		String value;
 		DecimalFormat dfe = new DecimalFormat("0.00E0");
 		String dpad = "0.";
 		double p = 1.0;

@@ -86,8 +86,8 @@ public class AsaCalculator {
 
 	private class AsaCalcWorker implements Runnable {
 
-		private int i;
-		private double[] asas;
+		private final int i;
+		private final double[] asas;
 
 		public AsaCalcWorker(int i, double[] asas) {
 			this.i = i;
@@ -101,11 +101,11 @@ public class AsaCalculator {
 	}
 
 
-	private Point3d[] atomCoords;
-	private Atom[] atoms;
-	private double[] radii;
-	private double probe;
-	private int nThreads;
+	private final Point3d[] atomCoords;
+	private final Atom[] atoms;
+	private final double[] radii;
+	private final double probe;
+	private final int nThreads;
 	private Point3d[] spherePoints;
 	private double cons;
 	private int[][] neighborIndices;
@@ -243,7 +243,7 @@ public class AsaCalculator {
 			}
 		}
 
-		return asas.values().toArray(new GroupAsa[asas.size()]);
+		return asas.values().toArray(new GroupAsa[0]);
 	}
 
 	/**
@@ -347,7 +347,7 @@ public class AsaCalculator {
 	 * @param nSpherePoints the number of points to be used in generating the spherical dot-density
 	 * @return
 	 */
-	private Point3d[] generateSpherePoints(int nSpherePoints) {
+	private static Point3d[] generateSpherePoints(int nSpherePoints) {
 		Point3d[] points = new Point3d[nSpherePoints];
 		double inc = Math.PI * (3.0 - Math.sqrt(5.0));
 		double offset = 2.0 / nSpherePoints;

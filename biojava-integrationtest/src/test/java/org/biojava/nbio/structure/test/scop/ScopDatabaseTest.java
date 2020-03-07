@@ -94,7 +94,7 @@ public abstract class ScopDatabaseTest {
 		desc = scop.getScopDescriptionBySunid(node.getSunid());
 		assertEquals(tag,46487,node.getSunid());
 		assertEquals(tag,"-",desc.getName());
-		assertTrue(tag,Pattern.matches("Human \\(Homo sapiens\\)( \\[TaxId: 9606\\])?",desc.getDescription()));
+		assertTrue(tag,Pattern.matches("Human \\(Homo sapiens\\)( \\[TaxId: 9606])?",desc.getDescription()));
 		assertEquals(tag,"a.1.1.2",desc.getClassificationId());
 
 		node = scop.getScopNode(node.getParentSunid());

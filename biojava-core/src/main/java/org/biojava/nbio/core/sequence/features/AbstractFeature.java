@@ -40,15 +40,15 @@ import java.util.Map;
  */
 public abstract class AbstractFeature<S extends AbstractSequence<C>, C extends Compound>
 		implements FeatureInterface<S, C> {
-	List<FeatureInterface<S, C>> childrenFeatures = new ArrayList<FeatureInterface<S, C>>();
+	List<FeatureInterface<S, C>> childrenFeatures = new ArrayList<>();
 	FeatureInterface<S, C> parentFeature;
 	AbstractLocation sequenceLocation;
-	String type = "";
-	String source = "";
+	String type;
+	String source;
 	private String description = "";
 	private String shortDescription = "";
 	private Object userObject = null;
-	private Map<String, List<Qualifier>> Qualifiers = new HashMap<String, List<Qualifier>>();
+	private Map<String, List<Qualifier>> Qualifiers = new HashMap<>();
 
 	/**
 	 * A feature has a type and a source
@@ -196,28 +196,24 @@ public abstract class AbstractFeature<S extends AbstractSequence<C>, C extends C
 	 * of overlapping features so they are delivered in a proper order.
 	 */
 
-	public static final Comparator<FeatureInterface<?, ?>> LOCATION_LENGTH = new Comparator<FeatureInterface<?, ?>>() {
-
-		@Override
-		public int compare(FeatureInterface<?, ?> e1, FeatureInterface<?, ?> e2) {
-			double v1 = e1.getLocations().getStart().getPosition();
-			double v2 = e2.getLocations().getStart().getPosition();
-			if (v1 < v2) {
+	public static final Comparator<FeatureInterface<?, ?>> LOCATION_LENGTH = (e1, e2) -> {
+		double v1 = e1.getLocations().getStart().getPosition();
+		double v2 = e2.getLocations().getStart().getPosition();
+		if (v1 < v2) {
+			return -1;
+		} else if (v1 > v2) {
+			return 1;
+		} else {
+			double end1 = e1.getLocations().getEnd().getPosition();
+			double end2 = e2.getLocations().getEnd().getPosition();
+			if(end1 > end2)
 				return -1;
-			} else if (v1 > v2) {
+			else if(end1 < end2)
 				return 1;
-			} else {
-				double end1 = e1.getLocations().getEnd().getPosition();
-				double end2 = e2.getLocations().getEnd().getPosition();
-				if(end1 > end2)
-					return -1;
-				else if(end1 < end2)
-					return 1;
-				else
-				return 0;
-			}
-
+			else
+			return 0;
 		}
+
 	};
 
 	 /**
@@ -225,33 +221,23 @@ public abstract class AbstractFeature<S extends AbstractSequence<C>, C extends C
 	 *
 	 */
 
-	static public final Comparator<FeatureInterface<?, ?>> LENGTH = new Comparator<FeatureInterface<?, ?>>() {
-
-		@Override
-		public int compare(FeatureInterface<?, ?> e1, FeatureInterface<?, ?> e2) {
-			double v1 = Math.abs(e1.getLocations().getEnd().getPosition()- e1.getLocations().getStart().getPosition());
-			double v2 = Math.abs(e2.getLocations().getEnd().getPosition() -  e2.getLocations().getStart().getPosition());
-			if (v1 < v2) {
-				return -1;
-			} else if (v1 > v2) {
-				return 1;
-			} else {
-				return 0;
-			}
-
+	static public final Comparator<FeatureInterface<?, ?>> LENGTH = (e1, e2) -> {
+		double v1 = Math.abs(e1.getLocations().getEnd().getPosition()- e1.getLocations().getStart().getPosition());
+		double v2 = Math.abs(e2.getLocations().getEnd().getPosition() -  e2.getLocations().getStart().getPosition());
+		if (v1 < v2) {
+			return -1;
+		} else if (v1 > v2) {
+			return 1;
+		} else {
+			return 0;
 		}
+
 	};
 
 	/**
 	 * Sort features by type
 	 */
-	public static final Comparator<FeatureInterface<?, ?>> TYPE = new Comparator<FeatureInterface<?, ?>>() {
-
-		@Override
-		public int compare(FeatureInterface<?, ?> o1, FeatureInterface<?, ?> o2) {
-			return o1.getType().compareTo(o2.getType());
-		}
-	};
+	public static final Comparator<FeatureInterface<?, ?>> TYPE = (o1, o2) -> o1.getType().compareTo(o2.getType());
 
 	/**
 	 * @return the userObject
@@ -292,7 +278,7 @@ public abstract class AbstractFeature<S extends AbstractSequence<C>, C extends C
 			vals.add(qualifier);
 			Qualifiers.put(key, vals);
 		} else {
-			List<Qualifier> vals = new ArrayList<Qualifier>();
+			List<Qualifier> vals = new ArrayList<>();
 			vals.add(qualifier);
 			Qualifiers.put(key, vals);
 		}

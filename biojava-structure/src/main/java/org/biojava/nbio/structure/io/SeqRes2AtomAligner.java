@@ -82,7 +82,7 @@ public class SeqRes2AtomAligner {
 
 
 
-	private String alignmentString;
+	private final String alignmentString;
 
 	public SeqRes2AtomAligner(){
 		logger.debug("initialising SeqRes2AtomAligner");
@@ -103,12 +103,9 @@ public class SeqRes2AtomAligner {
 	 */
 	public static Chain getMatchingAtomRes(Chain seqRes, List<Chain> atomList, boolean useChainId)
 	{
-		Iterator<Chain> iter = atomList.iterator();
-		while(iter.hasNext()){
-			Chain atomChain = iter.next();
-
-			String atomChainId = null;
-			String seqResChainId = null;
+		for (Chain atomChain : atomList) {
+			String atomChainId;
+			String seqResChainId;
 			if (useChainId) {
 				atomChainId = atomChain.getId();
 				seqResChainId = seqRes.getId();
@@ -118,7 +115,7 @@ public class SeqRes2AtomAligner {
 
 			}
 
-			if ( atomChainId.equals(seqResChainId)){
+			if (atomChainId.equals(seqResChainId)) {
 				return atomChain;
 			}
 
@@ -189,13 +186,12 @@ public class SeqRes2AtomAligner {
 				logger.debug("SEQRES chain {} is a nucleotide chain ({} nucleotides), aligning nucleotides...", seqRes.getId(), numNucleotidesSeqres);
 
 				alignNucleotideChains(seqRes,atomRes);
-				return;
 			} else {
 
 				logger.debug("SEQRES chain {} contains {} amino acids and {} nucleotides, ignoring...", seqRes.getId(),numAminosSeqres,numNucleotidesSeqres);
 
-				return;
 			}
+			return;
 		}
 
 		if ( atomRes.getAtomGroups(GroupType.AMINOACID).size() < 1) {
@@ -367,7 +363,7 @@ public class SeqRes2AtomAligner {
 	 */
 	public static String getFullAtomSequence(List<Group> groups, Map<Integer, Integer> positionIndex, boolean isNucleotideChain){
 
-		StringBuffer sequence = new StringBuffer() ;
+		StringBuilder sequence = new StringBuilder() ;
 		int seqIndex = 0; // track sequence.length()
 		for ( int i=0 ; i< groups.size(); i++){
 			Group g = groups.get(i);
@@ -453,8 +449,8 @@ public class SeqRes2AtomAligner {
 
 	private boolean alignNucleotideGroups(List<Group> seqRes, List<Group> atomRes) {
 
-		Map<Integer,Integer> seqresIndexPosition = new HashMap<Integer, Integer>();
-		Map<Integer,Integer> atomIndexPosition   = new HashMap<Integer, Integer>();
+		Map<Integer,Integer> seqresIndexPosition = new HashMap<>();
+		Map<Integer,Integer> atomIndexPosition   = new HashMap<>();
 
 		String seq1 = getFullAtomSequence(seqRes, seqresIndexPosition, true);
 		//
@@ -531,7 +527,7 @@ public class SeqRes2AtomAligner {
 	}
 
 	private Sequence<NucleotideCompound> getNucleotideSequence(String seq) {
-		Sequence<NucleotideCompound> s = null;
+		Sequence<NucleotideCompound> s;
 
 		// first we try DNA, then RNA, them hybrid
 
@@ -573,8 +569,8 @@ public class SeqRes2AtomAligner {
 	 */
 	private boolean alignProteinChains(List<Group> seqRes, List<Group> atomRes) {
 
-		Map<Integer,Integer> seqresIndexPosition = new HashMap<Integer, Integer>();
-		Map<Integer,Integer> atomIndexPosition   = new HashMap<Integer, Integer>();
+		Map<Integer,Integer> seqresIndexPosition = new HashMap<>();
+		Map<Integer,Integer> atomIndexPosition   = new HashMap<>();
 
 		String seq1 = getFullAtomSequence(seqRes, seqresIndexPosition, false);
 		//

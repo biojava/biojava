@@ -109,7 +109,7 @@ public class SeqMisMatchImpl implements SeqMisMatch, Serializable{
 
 	@Override
 	public String toString() {
-		StringBuffer  s = new StringBuffer();
+		StringBuilder s = new StringBuilder();
 
 		s.append("SeqMisMatchImpl{");
 		s.append("seqNum=" );

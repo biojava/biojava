@@ -59,7 +59,7 @@ public interface ResultFactory {
 	 * @param results
 	 * @throws Exception
 	 */
-	void storeObjects(List<Result> results) throws IOException, ParseException;
+	void storeObjects(List<Result> results);
 
 	/**
 	 * Specify the collection of sequences objects used as queries in the Search run.

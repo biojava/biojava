@@ -45,7 +45,7 @@ public class AgScore {
 		//double temp;
 		int n = survivalInfoList.size();
 
-		ArrayList<String> variables = new ArrayList<String>(coxInfo.getCoefficientsList().keySet());
+		ArrayList<String> variables = new ArrayList<>(coxInfo.getCoefficientsList().keySet());
 		int nvar = variables.size();
 
 
@@ -66,11 +66,11 @@ public class AgScore {
 		double[] mh2 = new double[nvar];
 		double[] mh3 = new double[nvar];
 
-		double denom = 0;
-		double time = 0;
-		double e_denom = 0;
-		double meanwt = 0;
-		double deaths = 0;
+		double denom;
+		double time;
+		double e_denom;
+		double meanwt;
+		double deaths;
 		double risk;
 		double[][] covar = new double[nvar][n];
 		double[][] resid = new double[nvar][n];
@@ -78,7 +78,7 @@ public class AgScore {
 		double downwt, temp1, temp2, d2;
 
 
-		int person = 0;
+		int person;
 
 		//  n = *nx;
 		//  nvar  = *nvarx;

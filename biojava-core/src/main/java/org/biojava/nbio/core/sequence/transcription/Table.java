@@ -64,7 +64,7 @@ public interface Table {
 	 * @author ayates
 	 *
 	 */
-	public static class Codon implements Compound {
+	class Codon implements Compound {
 
 		private final CaseInsensitiveTriplet triplet;
 		private final boolean start;
@@ -191,7 +191,7 @@ public interface Table {
 	 * Class used to hold three nucleotides together and allow for equality
 	 * to be assessed in a case insensitive manner.
 	 */
-	public static class CaseInsensitiveTriplet {
+	class CaseInsensitiveTriplet {
 
 		private final NucleotideCompound one;
 		private final NucleotideCompound two;
@@ -199,7 +199,7 @@ public interface Table {
 
 		private transient boolean hashSet = false;
 		private transient int hash;
-		private transient boolean stringSet = false;
+		private final transient boolean stringSet = false;
 		private transient String stringify;
 
 		public CaseInsensitiveTriplet(NucleotideCompound one,

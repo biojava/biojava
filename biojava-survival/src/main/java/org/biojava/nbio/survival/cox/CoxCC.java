@@ -27,6 +27,7 @@ import org.biojava.nbio.survival.cox.matrix.Matrix;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  *
@@ -42,9 +43,9 @@ public class CoxCC {
 	static public void process(CoxInfo ci) throws Exception {
 		ArrayList<SurvivalInfo> survivalInfoList = ci.survivalInfoList;
 		//r
-		ArrayList<String> variables = new ArrayList<String>(ci.getCoefficientsList().keySet());
+		ArrayList<String> variables = new ArrayList<>(ci.getCoefficientsList().keySet());
 
-		ArrayList<Integer> strataClass = new ArrayList<Integer>(survivalInfoList.size());
+		ArrayList<Integer> strataClass = new ArrayList<>(survivalInfoList.size());
 		double[] wt = new double[survivalInfoList.size()];
 		for (int i = 0; i < survivalInfoList.size(); i++) {
 			SurvivalInfo si = survivalInfoList.get(i);
@@ -67,7 +68,7 @@ public class CoxCC {
 //            }
 //        }
 
-		double[][] rvar = null;
+		double[][] rvar;
 
 		if (ci.getNaiveVariance() != null) {
 			rvar = ci.getNaiveVariance();
@@ -75,7 +76,7 @@ public class CoxCC {
 			rvar = ci.getVariance();
 		}
 		//nj
-		LinkedHashMap<Integer, Double> nj = new LinkedHashMap<Integer, Double>();
+		LinkedHashMap<Integer, Double> nj = new LinkedHashMap<>();
 		Collections.sort(strataClass);
 		for (Integer value : strataClass) {
 			Double count = nj.get(value);
@@ -86,7 +87,7 @@ public class CoxCC {
 			nj.put(value, count);
 		}
 		//Nj
-		LinkedHashMap<Integer, Double> Nj = new LinkedHashMap<Integer, Double>();
+		LinkedHashMap<Integer, Double> Nj = new LinkedHashMap<>();
 		//N = N + Nj[key];
 		double N = 0;
 		for (int i = 0; i < survivalInfoList.size(); i++) {
@@ -106,9 +107,10 @@ public class CoxCC {
 			N = N + value;
 		}
 
-		LinkedHashMap<Integer, Double> k1j = new LinkedHashMap<Integer, Double>();
-		for (Integer key : nj.keySet()) {
-			double _nj = (nj.get(key)); //trying to copy what R is doing on precision
+		LinkedHashMap<Integer, Double> k1j = new LinkedHashMap<>();
+		for (Map.Entry<Integer, Double> entry : nj.entrySet()) {
+            Integer key = entry.getKey();
+            double _nj = (entry.getValue()); //trying to copy what R is doing on precision
 			double _Nj = (Nj.get(key));
 			//         System.out.println("nj=" + _nj + " Nj=" + _Nj);
 			k1j.put(key, _Nj * ((_Nj / _nj) - 1));
@@ -116,10 +118,11 @@ public class CoxCC {
 
 		double[][] V = new double[variables.size()][variables.size()];
 
-		for (Integer i : k1j.keySet()) {
-			//          System.out.println("Strata=" + i + " " + k1j.get(i) + " " + Nj.get(i) + " " + nj.get(i));
+		for (Map.Entry<Integer, Double> entry : k1j.entrySet()) {
+            Integer i = entry.getKey();
+            //          System.out.println("Strata=" + i + " " + k1j.get(i) + " " + Nj.get(i) + " " + nj.get(i));
 			if (nj.get(i) > 1) {
-				LinkedHashMap<String, DescriptiveStatistics> variableStatsMap = new LinkedHashMap<String, DescriptiveStatistics>();
+				LinkedHashMap<String, DescriptiveStatistics> variableStatsMap = new LinkedHashMap<>();
 
 				for (int p = 0; p < survivalInfoList.size(); p++) {
 					SurvivalInfo si = survivalInfoList.get(p);
@@ -161,7 +164,7 @@ public class CoxCC {
 		 //              System.out.println("sstrat=" + i);
 		 //              StdArrayIO.print(var_covar);
 
-					   V = Matrix.add(V, Matrix.scale(var_covar, k1j.get(i))  );
+					   V = Matrix.add(V, Matrix.scale(var_covar, entry.getValue())  );
 
 		 //       for (int m = 0; m < V.length; m++) {
 		 //           for (int n = 0; n < V.length; n++) {

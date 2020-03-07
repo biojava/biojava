@@ -38,10 +38,10 @@ public class GroupContact implements Serializable {
 
 	private Pair<Group> pair;
 
-	private List<AtomContact> atomContacts;
+	private final List<AtomContact> atomContacts;
 
 	public GroupContact() {
-		atomContacts = new ArrayList<AtomContact>();
+		atomContacts = new ArrayList<>();
 	}
 
 	public void addAtomContact(AtomContact atomContact) {
@@ -82,7 +82,7 @@ public class GroupContact implements Serializable {
 	 */
 	public List<AtomContact> getContactsWithinDistance(double distance) {
 
-		List<AtomContact> list = new ArrayList<AtomContact>();
+		List<AtomContact> list = new ArrayList<>();
 		for (AtomContact contact:this.atomContacts) {
 			if (contact.getDistance()<distance) {
 				list.add(contact);

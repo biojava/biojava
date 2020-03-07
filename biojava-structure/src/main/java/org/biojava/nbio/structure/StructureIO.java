@@ -281,16 +281,16 @@ public class StructureIO {
 	}
 
 
-	public static enum StructureFiletype {
+	public enum StructureFiletype {
 		PDB( (new PDBFileReader()).getExtensions()),
 		CIF( new MMCIFFileReader().getExtensions()),
-		UNKNOWN(Collections.<String>emptyList());
+		UNKNOWN(Collections.emptyList());
 
-		private List<String> extensions;
+		private final List<String> extensions;
 		/**
 		 * @param extensions List of supported extensions, including leading period
 		 */
-		private StructureFiletype(List<String> extensions) {
+		StructureFiletype(List<String> extensions) {
 			this.extensions = extensions;
 		}
 		/**

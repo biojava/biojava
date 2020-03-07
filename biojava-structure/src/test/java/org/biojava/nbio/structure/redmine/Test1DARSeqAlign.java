@@ -72,13 +72,13 @@ public class Test1DARSeqAlign {
 		//System.out.println(g3);
 		//System.out.println(FileConvert.toPDB(g3.getAtom(0)));
 
-		assertTrue(! a.getSeqResGroups().contains(g));
+        assertFalse(a.getSeqResGroups().contains(g));
 
 		assertTrue( g instanceof NucleotideImpl);
 
-		assertTrue(g.getType().equals(GroupType.NUCLEOTIDE));
+        assertEquals(g.getType(), GroupType.NUCLEOTIDE);
 
-		assertTrue( g3.getPDBName().equals("LYS"));
+        assertEquals("LYS", g3.getPDBName());
 		assertTrue( a.getSeqResGroups().contains(g3));
 
 		assertTrue( g3 instanceof AminoAcid);

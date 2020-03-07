@@ -31,7 +31,6 @@ import org.biojava.nbio.structure.AtomImpl;
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.ChainImpl;
 import org.biojava.nbio.structure.Element;
-import org.biojava.nbio.structure.EntityInfo;
 import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.PDBHeader;
 import org.biojava.nbio.structure.ResidueNumber;
@@ -87,7 +86,7 @@ public class TestMmtfStructureWriter {
 		structure.setPDBHeader(pdbHeader);
 
 		// Create one chain
-		structure.setEntityInfos(new ArrayList<EntityInfo>());
+		structure.setEntityInfos(new ArrayList<>());
 		Chain chain = new ChainImpl();
 		chain.setId("A");
 		chain.setName("A");

@@ -47,8 +47,8 @@ import static org.junit.Assert.*;
  */
 public class TestMultipleAlignmentWriter {
 
-	private MultipleAlignment alignment1;
-	private MultipleAlignment alignment2;
+	private final MultipleAlignment alignment1;
+	private final MultipleAlignment alignment2;
 
 	/**
 	 * Build the alignments in common for every writer output, so that they do
@@ -70,7 +70,7 @@ public class TestMultipleAlignmentWriter {
 
 		FileReader file = new FileReader("src/test/resources/testMSTA1.fasta");
 		BufferedReader reader = new BufferedReader(file);
-		String line = null;
+		String line;
 		StringBuilder stringBuilder = new StringBuilder();
 
 		while ((line = reader.readLine()) != null) {
@@ -90,7 +90,7 @@ public class TestMultipleAlignmentWriter {
 
 		FileReader file = new FileReader("src/test/resources/testMSTA2.fasta");
 		BufferedReader reader = new BufferedReader(file);
-		String line = null;
+		String line;
 		StringBuilder stringBuilder = new StringBuilder();
 
 		while ((line = reader.readLine()) != null) {
@@ -110,7 +110,7 @@ public class TestMultipleAlignmentWriter {
 
 		FileReader file = new FileReader("src/test/resources/testMSTA1.fatcat");
 		BufferedReader reader = new BufferedReader(file);
-		String line = null;
+		String line;
 		StringBuilder stringBuilder = new StringBuilder();
 
 		while ((line = reader.readLine()) != null) {
@@ -130,7 +130,7 @@ public class TestMultipleAlignmentWriter {
 
 		FileReader file = new FileReader("src/test/resources/testMSTA2.fatcat");
 		BufferedReader reader = new BufferedReader(file);
-		String line = null;
+		String line;
 		StringBuilder stringBuilder = new StringBuilder();
 
 		while ((line = reader.readLine()) != null) {
@@ -151,7 +151,7 @@ public class TestMultipleAlignmentWriter {
 		FileReader file = new FileReader(
 				"src/test/resources/testMSTA1_alnres.tsv");
 		BufferedReader reader = new BufferedReader(file);
-		String line = null;
+		String line;
 		StringBuilder stringBuilder = new StringBuilder();
 
 		while ((line = reader.readLine()) != null) {
@@ -172,7 +172,7 @@ public class TestMultipleAlignmentWriter {
 		FileReader file = new FileReader(
 				"src/test/resources/testMSTA2_alnres.tsv");
 		BufferedReader reader = new BufferedReader(file);
-		String line = null;
+		String line;
 		StringBuilder stringBuilder = new StringBuilder();
 
 		while ((line = reader.readLine()) != null) {

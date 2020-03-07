@@ -77,7 +77,7 @@ public class EntityInfo implements Serializable {
 	 * Initialised lazily upon call to {@link #getAlignedResIndex(Group, Chain)}
 	 * Keys are asym_ids of chains, values maps of residue numbers to indices.
 	 */
-	private Map<String, Map<ResidueNumber,Integer>> chains2pdbResNums2ResSerials;
+	private final Map<String, Map<ResidueNumber,Integer>> chains2pdbResNums2ResSerials;
 
 	private String refChainId;
 	private String description = null;
@@ -159,11 +159,11 @@ public class EntityInfo implements Serializable {
 		this.title = c.title;
 
 		if (c.synonyms!=null) {
-			this.synonyms = new ArrayList<String>();
+			this.synonyms = new ArrayList<>();
 			synonyms.addAll(c.synonyms);
 		}
 		if (c.ecNums!=null) {
-			this.ecNums = new ArrayList<String>();
+			this.ecNums = new ArrayList<>();
 			ecNums.addAll(c.ecNums);
 		}
 
@@ -244,7 +244,7 @@ public class EntityInfo implements Serializable {
 			chainIds.add(chain.getId());
 		}
 
-		Collections.sort(chainIds, String.CASE_INSENSITIVE_ORDER);
+		chainIds.sort(String.CASE_INSENSITIVE_ORDER);
 
 		for (Chain chain:chains) {
 			if (chain.getId().equals(chainIds.get(0))) {
@@ -380,7 +380,7 @@ public class EntityInfo implements Serializable {
 			return;
 		}
 
-		Map<ResidueNumber,Integer> resNums2ResSerials = new HashMap<ResidueNumber, Integer>();
+		Map<ResidueNumber,Integer> resNums2ResSerials = new HashMap<>();
 		chains2pdbResNums2ResSerials.put(c.getId(), resNums2ResSerials);
 
 		for (int i=0;i<c.getSeqResGroups().size();i++) {

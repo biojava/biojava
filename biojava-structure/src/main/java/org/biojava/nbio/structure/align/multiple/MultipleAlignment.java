@@ -53,7 +53,7 @@ public interface MultipleAlignment extends ScoresCache {
 	 *
 	 * @return MultipleAlignment identical copy of this object.
 	 */
-	public MultipleAlignment clone();
+    MultipleAlignment clone();
 
 	/**
 	 * Returns the parent Ensemble of the MultipleAlignment. Returns null if
@@ -63,7 +63,7 @@ public interface MultipleAlignment extends ScoresCache {
 	 *         BlockSet, or null.
 	 * @see #setEnsemble(MultipleAlignmentEnsemble)
 	 */
-	public MultipleAlignmentEnsemble getEnsemble();
+    MultipleAlignmentEnsemble getEnsemble();
 
 	/**
 	 * Set the back-reference to its parent Ensemble.
@@ -76,7 +76,7 @@ public interface MultipleAlignment extends ScoresCache {
 	 *            the parent MultipleAlignmentEnsemble.
 	 * @see #getEnsemble()
 	 */
-	public void setEnsemble(MultipleAlignmentEnsemble parent);
+    void setEnsemble(MultipleAlignmentEnsemble parent);
 
 	/**
 	 * Returns the BlockSet List of the multiple structure alignment.
@@ -87,7 +87,7 @@ public interface MultipleAlignment extends ScoresCache {
 	 * @see #getBlocks()
 	 * @see #setBlockSets(List)
 	 */
-	public List<BlockSet> getBlockSets();
+    List<BlockSet> getBlockSets();
 
 	/**
 	 * Returns the BlockSet with the specified index of the MultipleAlignment.
@@ -100,7 +100,7 @@ public interface MultipleAlignment extends ScoresCache {
 	 * @see #getBlocks()
 	 * @see #getBlockSets()
 	 */
-	public BlockSet getBlockSet(int index);
+    BlockSet getBlockSet(int index);
 
 	/**
 	 * Sets the List of BlockSet List of the specified alignment.
@@ -109,7 +109,7 @@ public interface MultipleAlignment extends ScoresCache {
 	 *            the List of BlockSets that describe the aligned residues.
 	 * @see #getBlockSets()
 	 */
-	public void setBlockSets(List<BlockSet> blockSets);
+    void setBlockSets(List<BlockSet> blockSets);
 
 	/**
 	 * Convenience method to get a List of all Blocks from all BlockSets.
@@ -119,7 +119,7 @@ public interface MultipleAlignment extends ScoresCache {
 	 * @return List of Blocks
 	 * @see #getBlockSets()
 	 */
-	public List<Block> getBlocks();
+    List<Block> getBlocks();
 
 	/**
 	 * Returns the Block with the specified index of the MultipleAlignment.
@@ -132,7 +132,7 @@ public interface MultipleAlignment extends ScoresCache {
 	 * @see #getBlocks()
 	 * @see #getBlockSets()
 	 */
-	public Block getBlock(int index);
+    Block getBlock(int index);
 
 	/**
 	 * Returns the array of Atoms for each structure from its parent Ensemble.
@@ -142,7 +142,7 @@ public interface MultipleAlignment extends ScoresCache {
 	 * @return List of Atom arrays
 	 * @see #getEnsemble()
 	 */
-	public List<Atom[]> getAtomArrays();
+    List<Atom[]> getAtomArrays();
 
 	/**
 	 * Returns the StructureIdentifier associated with the structure index from
@@ -152,7 +152,7 @@ public interface MultipleAlignment extends ScoresCache {
 	 * @return StructureIdentifier
 	 * @see #getEnsemble()
 	 */
-	public StructureIdentifier getStructureIdentifier(int index);
+    StructureIdentifier getStructureIdentifier(int index);
 
 	/**
 	 * Returns the number of aligned structures in the MultipleAlignment.
@@ -161,7 +161,7 @@ public interface MultipleAlignment extends ScoresCache {
 	 * @see #length()
 	 * @see #getCoreLength()
 	 */
-	public int size();
+    int size();
 
 	/**
 	 * Returns the total number of aligned residues (columns) in the multiple
@@ -171,7 +171,7 @@ public interface MultipleAlignment extends ScoresCache {
 	 * @see #getCoreLength()
 	 * @see #size()
 	 */
-	public int length();
+    int length();
 
 	/**
 	 * Returns the number of aligned residues (columns) without gaps in the
@@ -181,7 +181,7 @@ public interface MultipleAlignment extends ScoresCache {
 	 * @see #length()
 	 * @see #size()
 	 */
-	public int getCoreLength();
+    int getCoreLength();
 
 	/**
 	 * Returns the number of non null positions (residues) of each structure in
@@ -189,7 +189,7 @@ public interface MultipleAlignment extends ScoresCache {
 	 *
 	 * @return List of residue counts for each structure
 	 */
-	public List<Integer> getAlignResCounts();
+    List<Integer> getAlignResCounts();
 
 	/**
 	 * Returns the coverage of the alignment for each structure in the
@@ -197,7 +197,7 @@ public interface MultipleAlignment extends ScoresCache {
 	 *
 	 * @return List coverage for each structure
 	 */
-	public List<Double> getCoverages();
+    List<Double> getCoverages();
 
 	/**
 	 * Clear scores and other properties which depend on the specific alignment.
@@ -205,7 +205,7 @@ public interface MultipleAlignment extends ScoresCache {
 	 * <p>
 	 * Recursively clears member BlockSets.
 	 */
-	public void clear();
+    void clear();
 
 	/**
 	 * Return a summary of the MultipleAlignment, containing the structures, the
@@ -215,6 +215,6 @@ public interface MultipleAlignment extends ScoresCache {
 	 * @return String header summary of the MultipleAlignment
 	 */
 	@Override
-	public String toString();
+    String toString();
 
 }

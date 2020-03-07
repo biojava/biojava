@@ -40,7 +40,7 @@ import static org.junit.Assert.*;
 public class TestStructureSerialization {
 
 	@Test
-	public void testSerializeStructure() throws IOException, StructureException, ClassNotFoundException {
+	public void testSerializeStructure() throws IOException, ClassNotFoundException {
 
 		PDBFileReader reader = new PDBFileReader();
 		reader.getFileParsingParameters().setParseSecStruc(true);

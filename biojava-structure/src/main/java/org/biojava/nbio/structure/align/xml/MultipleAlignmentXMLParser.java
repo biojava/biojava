@@ -77,7 +77,7 @@ public class MultipleAlignmentXMLParser {
 			throws ParserConfigurationException, SAXException, IOException {
 
 		List<MultipleAlignmentEnsemble> ensembles =
-				new ArrayList<MultipleAlignmentEnsemble>();
+				new ArrayList<>();
 
 		//Convert string to XML document
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -113,14 +113,16 @@ public class MultipleAlignmentXMLParser {
 		for (int i=0; i<children.getLength(); i++) {
 
 			Node child = children.item(i);
-			if (child.getNodeName().equals("MultipleAlignment")){
-				parseMultipleAlignment(child, ensemble);
-			}
-			else if (child.getNodeName().equals("Structures")){
-				parseStructures(child, ensemble);
-			}
-			else if (child.getNodeName().equals("ScoresCache")){
-				parseScoresCache(child, ensemble);
+			switch (child.getNodeName()) {
+				case "MultipleAlignment":
+					parseMultipleAlignment(child, ensemble);
+					break;
+				case "Structures":
+					parseStructures(child, ensemble);
+					break;
+				case "ScoresCache":
+					parseScoresCache(child, ensemble);
+					break;
 			}
 		}
 
@@ -150,22 +152,24 @@ public class MultipleAlignmentXMLParser {
 	public static BlockSet parseBlockSet(Node root, MultipleAlignment msa) {
 
 		BlockSet bs = new BlockSetImpl(msa);
-		List<Matrix4d> transforms = new ArrayList<Matrix4d>();
+		List<Matrix4d> transforms = new ArrayList<>();
 		NodeList children = root.getChildNodes();
 
 		for (int i=0; i<children.getLength(); i++) {
 
 			Node child = children.item(i);
 
-			if (child.getNodeName().equals("Block")){
-				parseBlock(child, bs);
-			}
-			else if (child.getNodeName().equals("Matrix4d")){
-				Matrix4d t = parseMatrix4d(child);
-				transforms.add(t);
-			}
-			else if (child.getNodeName().equals("ScoresCache")){
-				parseScoresCache(child, bs);
+			switch (child.getNodeName()) {
+				case "Block":
+					parseBlock(child, bs);
+					break;
+				case "Matrix4d":
+					Matrix4d t = parseMatrix4d(child);
+					transforms.add(t);
+					break;
+				case "ScoresCache":
+					parseScoresCache(child, bs);
+					break;
 			}
 		}
 		//Because if it is 0 means that there were no transformations
@@ -178,7 +182,7 @@ public class MultipleAlignmentXMLParser {
 	public static Block parseBlock(Node root, BlockSet blockSet) {
 
 		Block b = new BlockImpl(blockSet);
-		List<List<Integer>> alignRes = new ArrayList<List<Integer>>();
+		List<List<Integer>> alignRes = new ArrayList<>();
 		b.setAlignRes(alignRes);
 		NodeList children = root.getChildNodes();
 
@@ -195,7 +199,7 @@ public class MultipleAlignmentXMLParser {
 				while (node!=null){
 
 					if (alignRes.size() < str) {
-						alignRes.add(new ArrayList<Integer>());
+						alignRes.add(new ArrayList<>());
 					}
 
 					String residue = node.getTextContent();
@@ -276,7 +280,7 @@ public class MultipleAlignmentXMLParser {
 	public static void parseStructures(Node root,
 			MultipleAlignmentEnsemble ensemble) {
 
-		List<StructureIdentifier> names = new ArrayList<StructureIdentifier>();
+		List<StructureIdentifier> names = new ArrayList<>();
 		ensemble.setStructureIdentifiers(names);
 
 		NamedNodeMap atts = root.getAttributes();

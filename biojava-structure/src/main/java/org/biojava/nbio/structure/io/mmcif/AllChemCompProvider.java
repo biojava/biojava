@@ -132,7 +132,7 @@ public class AllChemCompProvider implements ChemCompProvider, Runnable{
 	}
 
 
-	private static  void downloadFileFromRemote(URL remoteURL, File localFile) throws FileNotFoundException, IOException{
+	private static  void downloadFileFromRemote(URL remoteURL, File localFile) throws IOException{
 		logger.info("Downloading " + remoteURL + " to: " + localFile);
 		FileOutputStream out = new FileOutputStream(localFile);
 

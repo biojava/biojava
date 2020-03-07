@@ -46,11 +46,11 @@ public class GenbankCookbookTest {
 	}
 
 	@BeforeClass
-	public static void setUpClass() throws Exception {
+	public static void setUpClass() {
 	}
 
 	@AfterClass
-	public static void tearDownClass() throws Exception {
+	public static void tearDownClass() {
 	}
 
 	@Before
@@ -71,13 +71,13 @@ public class GenbankCookbookTest {
 		 */
 		//Try with the GenbankProxySequenceReader
 		GenbankProxySequenceReader<AminoAcidCompound> genbankProteinReader
-				= new GenbankProxySequenceReader<AminoAcidCompound>(System.getProperty("java.io.tmpdir"), "NP_000257", AminoAcidCompoundSet.getAminoAcidCompoundSet());
+				= new GenbankProxySequenceReader<>(System.getProperty("java.io.tmpdir"), "NP_000257", AminoAcidCompoundSet.getAminoAcidCompoundSet());
 		ProteinSequence proteinSequence = new ProteinSequence(genbankProteinReader);
 		genbankProteinReader.getHeaderParser().parseHeader(genbankProteinReader.getHeader(), proteinSequence);
 		//logger.info("Sequence({},{}) = {}...", proteinSequence.getAccession(), proteinSequence.getLength(), proteinSequence.getSequenceAsString().substring(0, 10));
 
 	GenbankProxySequenceReader<NucleotideCompound> genbankDNAReader
-	= new GenbankProxySequenceReader<NucleotideCompound>(System.getProperty("java.io.tmpdir"), "NM_001126", DNACompoundSet.getDNACompoundSet());
+	= new GenbankProxySequenceReader<>(System.getProperty("java.io.tmpdir"), "NM_001126", DNACompoundSet.getDNACompoundSet());
 	DNASequence dnaSequence = new DNASequence(genbankDNAReader);
 	genbankDNAReader.getHeaderParser().parseHeader(genbankDNAReader.getHeader(), dnaSequence);
 	//logger.info("Sequence({},{}) = {}...", dnaSequence.getAccession(), dnaSequence.getLength(), dnaSequence.getSequenceAsString().substring(0, 10));
@@ -104,9 +104,9 @@ public class GenbankCookbookTest {
 		 */
 		//Try reading with the GanbankReader
 
-		GenbankReader<DNASequence, NucleotideCompound> dnaReader = new GenbankReader<DNASequence, NucleotideCompound>(
+		GenbankReader<DNASequence, NucleotideCompound> dnaReader = new GenbankReader<>(
 				dnaResource.getInputStream(),
-				new GenericGenbankHeaderParser<DNASequence, NucleotideCompound>(),
+				new GenericGenbankHeaderParser<>(),
 				new DNASequenceCreator(DNACompoundSet.getDNACompoundSet())
 		);
 		dnaSequences = dnaReader.process();
@@ -114,9 +114,9 @@ public class GenbankCookbookTest {
 		logger.debug("DNA Sequence: {}", dnaSequences);
 
 
-		GenbankReader<ProteinSequence, AminoAcidCompound> protReader = new GenbankReader<ProteinSequence, AminoAcidCompound>(
+		GenbankReader<ProteinSequence, AminoAcidCompound> protReader = new GenbankReader<>(
 				protResource.getInputStream(),
-				new GenericGenbankHeaderParser<ProteinSequence, AminoAcidCompound>(),
+				new GenericGenbankHeaderParser<>(),
 				new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet())
 		);
 		protSequences = protReader.process();

@@ -66,7 +66,7 @@ public class MultipleAlignmentScorer {
 		alignment.putScore(RMSD, getRMSD(trans));
 
 		// Put AvgTM-Score
-		List<Integer> lengths = new ArrayList<Integer>(alignment.size());
+		List<Integer> lengths = new ArrayList<>(alignment.size());
 		for (Atom[] atoms : alignment.getAtomArrays()) {
 			lengths.add(atoms.length);
 		}
@@ -237,7 +237,7 @@ public class MultipleAlignmentScorer {
 
 		List<Atom[]> trans = MultipleAlignmentTools.transformAtoms(alignment);
 
-		List<Integer> lengths = new ArrayList<Integer>(alignment.size());
+		List<Integer> lengths = new ArrayList<>(alignment.size());
 		for (Atom[] atoms : alignment.getAtomArrays()) {
 			lengths.add(atoms.length);
 		}
@@ -314,7 +314,7 @@ public class MultipleAlignmentScorer {
 
 		List<Atom[]> trans = MultipleAlignmentTools.transformAtoms(alignment);
 
-		List<Integer> lengths = new ArrayList<Integer>(alignment.size());
+		List<Integer> lengths = new ArrayList<>(alignment.size());
 		for (Atom[] atoms : alignment.getAtomArrays()) {
 			lengths.add(atoms.length);
 		}
@@ -440,11 +440,9 @@ public class MultipleAlignmentScorer {
 	 * @param A
 	 *            the distance cutoff penalization
 	 * @return the value of the score
-	 * @throws StructureException
 	 */
 	private static double getMCScore(List<Atom[]> trans, double d0,
-			double gapOpen, double gapExtension, double A)
-			throws StructureException {
+			double gapOpen, double gapExtension, double A) {
 
 		int size = trans.size();
 		int length = trans.get(0).length;

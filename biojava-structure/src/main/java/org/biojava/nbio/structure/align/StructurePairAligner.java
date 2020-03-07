@@ -143,7 +143,7 @@ public class StructurePairAligner {
 	StrucAligParameters params;
 	FragmentPair[] fragPairs;
 
-	List<AlignmentProgressListener> listeners = new ArrayList<AlignmentProgressListener>();
+	List<AlignmentProgressListener> listeners = new ArrayList<>();
 
 	public StructurePairAligner() {
 		super();
@@ -444,7 +444,7 @@ public class StructurePairAligner {
 		Atom unitvector = new AtomImpl();
 		unitvector.setCoords(utmp[0]);
 
-		List<FragmentPair> fragments = new ArrayList<FragmentPair>();
+		List<FragmentPair> fragments = new ArrayList<>();
 
 		for (int i = 0; i < rows; i++) {
 
@@ -500,7 +500,7 @@ public class StructurePairAligner {
 		notifyFragmentListeners(fragments);
 
 		FragmentPair[] fp = fragments
-				.toArray(new FragmentPair[fragments.size()]);
+				.toArray(new FragmentPair[0]);
 		setFragmentPairs(fp);
 
 		logger.debug(" got # fragment pairs: {}", fp.length);
@@ -536,7 +536,7 @@ public class StructurePairAligner {
 
 		logger.debug("step 3 - refine alignments");
 
-		List<AlternativeAlignment> aas = new ArrayList<AlternativeAlignment>();
+		List<AlternativeAlignment> aas = new ArrayList<>();
 		for (int i = 0; i < frags.length; i++) {
 			JointFragments f = frags[i];
 			AlternativeAlignment a = new AlternativeAlignment();
@@ -562,10 +562,10 @@ public class StructurePairAligner {
 
 		// sort the alternative alignments
 		Comparator<AlternativeAlignment> comp = new AltAligComparator();
-		Collections.sort(aas, comp);
+		aas.sort(comp);
 		Collections.reverse(aas);
 
-		alts = aas.toArray(new AlternativeAlignment[aas.size()]);
+		alts = aas.toArray(new AlternativeAlignment[0]);
 		// do final numbering of alternative solutions
 		int aanbr = 0;
 		for (AlternativeAlignment a : alts) {

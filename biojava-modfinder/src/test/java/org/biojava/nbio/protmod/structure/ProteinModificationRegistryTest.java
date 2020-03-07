@@ -49,7 +49,7 @@ public class ProteinModificationRegistryTest {
 	@Test
 	public void testRegisterModification() {
 		// define the involved components, in this case two cystines (CYS)
-		List<Component> components = new ArrayList<Component>(2);
+		List<Component> components = new ArrayList<>(2);
 		components.add(Component.of("CYS"));
 		components.add(Component.of("CYS"));
 

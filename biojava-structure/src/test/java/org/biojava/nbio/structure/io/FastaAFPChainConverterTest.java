@@ -86,12 +86,10 @@ public class FastaAFPChainConverterTest {
 			expectedFr.close();
 			actualFr.close();
 			return isSimilar;
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		} catch (SAXException e) {
+		} catch (IOException | SAXException e) {
 			throw new RuntimeException(e);
 		}
-	}
+    }
 
 	private AtomCache cache;
 

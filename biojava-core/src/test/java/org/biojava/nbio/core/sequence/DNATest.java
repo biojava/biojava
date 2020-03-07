@@ -43,8 +43,8 @@ import static org.junit.Assert.*;
 
 public class DNATest {
 
-	private DNACompoundSet set = new DNACompoundSet();
-	private AmbiguityDNACompoundSet ambiguity = new AmbiguityDNACompoundSet();
+	private final DNACompoundSet set = new DNACompoundSet();
+	private final AmbiguityDNACompoundSet ambiguity = new AmbiguityDNACompoundSet();
 
 	@Test
 	public void reverseComplement() throws CompoundNotFoundException {
@@ -54,17 +54,17 @@ public class DNATest {
 
 	@Test
 	public void complement() throws CompoundNotFoundException {
-		String s = new ComplementSequenceView<NucleotideCompound>(getSeq()).getSequenceAsString();
+		String s = new ComplementSequenceView<>(getSeq()).getSequenceAsString();
 		assertThat("Complemented sequence not as expected", s, is("TACG"));
 	}
 
 	@Test
 	public void reverse() throws CompoundNotFoundException {
-		SequenceView<NucleotideCompound> r = new ReversedSequenceView<NucleotideCompound>(getSeq());
+		SequenceView<NucleotideCompound> r = new ReversedSequenceView<>(getSeq());
 		assertThat("Reversed sequence not as expected", r.getSequenceAsString(), is("CGTA"));
 		assertThat("Base at 2 not right", r.getCompoundAt(2).toString(), is("G"));
 
-		List<String> actual = new ArrayList<String>();
+		List<String> actual = new ArrayList<>();
 		List<String> expected = Arrays.asList("C", "G", "T", "A");
 		for (NucleotideCompound c : r) {
 			actual.add(c.toString());
@@ -165,11 +165,11 @@ public class DNATest {
 		String expected = "ATGCAACTGA";
 		DNASequence seq = getSeq(expected);
 		SequenceReader<NucleotideCompound> twoBitFromSeq =
-				new TwoBitSequenceReader<NucleotideCompound>(seq);
+				new TwoBitSequenceReader<>(seq);
 
 		//being cheeky here & getting compound set from seq
 		SequenceReader<NucleotideCompound> twoBitFromString =
-				new TwoBitSequenceReader<NucleotideCompound>(expected, seq.getCompoundSet());
+				new TwoBitSequenceReader<>(expected, seq.getCompoundSet());
 
 		assertThat("TwoBit from Sequence not as expected", twoBitFromSeq.getSequenceAsString(), is(expected));
 		assertThat("TwoBit from String not as expected", twoBitFromString.getSequenceAsString(), is(expected));
@@ -180,11 +180,11 @@ public class DNATest {
 		String expected = "ATGCAACTGA";
 		DNASequence seq = getSeq(expected);
 		SequenceReader<NucleotideCompound> bitFromSeq =
-				new FourBitSequenceReader<NucleotideCompound>(seq);
+				new FourBitSequenceReader<>(seq);
 
 		//being cheeky here & getting compound set from seq
 		SequenceReader<NucleotideCompound> bitFromString =
-				new FourBitSequenceReader<NucleotideCompound>(expected, seq.getCompoundSet());
+				new FourBitSequenceReader<>(expected, seq.getCompoundSet());
 
 		assertThat("FourBit from Sequence not as expected", bitFromSeq.getSequenceAsString(), is(expected));
 		assertThat("FourBit from String not as expected", bitFromString.getSequenceAsString(), is(expected));
@@ -193,7 +193,7 @@ public class DNATest {
 	@Test(expected = IllegalStateException.class)
 	public void badTwoBit() throws CompoundNotFoundException {
 		DNASequence seq = getSeq();
-		new TwoBitSequenceReader<NucleotideCompound>("ATNGC", seq.getCompoundSet());
+		new TwoBitSequenceReader<>("ATNGC", seq.getCompoundSet());
 	}
 
 	@Test
@@ -203,7 +203,7 @@ public class DNATest {
 		NucleotideCompound n = cs.getCompoundForString("N");
 		int length = 1000;
 
-		ProxySequenceReader<NucleotideCompound> sr = new SingleCompoundSequenceReader<NucleotideCompound>(n, cs, length);
+		ProxySequenceReader<NucleotideCompound> sr = new SingleCompoundSequenceReader<>(n, cs, length);
 		DNASequence seq = new DNASequence(sr);
 
 		int intCount = 0;
@@ -268,8 +268,8 @@ public class DNATest {
 		assertTrue("Asserting sequences are identical ignoring case & case different", SequenceMixin.sequenceEqualityIgnoreCase(d, getSeq("aTgC")));
 		assertFalse("Sequence lengths differ", SequenceMixin.sequenceEquality(d, getSeq("ATG")));
 
-		DNASequence bsr = new DNASequence(new TwoBitSequenceReader<NucleotideCompound>("ATGC", DNACompoundSet.getDNACompoundSet()));
-		DNASequence bsrCI = new DNASequence(new TwoBitSequenceReader<NucleotideCompound>("ATGc", DNACompoundSet.getDNACompoundSet()));
+		DNASequence bsr = new DNASequence(new TwoBitSequenceReader<>("ATGC", DNACompoundSet.getDNACompoundSet()));
+		DNASequence bsrCI = new DNASequence(new TwoBitSequenceReader<>("ATGc", DNACompoundSet.getDNACompoundSet()));
 
 		assertTrue("Asserting sequences are identical; backing stores differ", SequenceMixin.sequenceEquality(d, bsr));
 		assertTrue("Asserting sequences are identical ignoring case; backing stores differ", SequenceMixin.sequenceEqualityIgnoreCase(d, bsrCI));

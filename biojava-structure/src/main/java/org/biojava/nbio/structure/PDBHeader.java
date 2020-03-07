@@ -73,7 +73,7 @@ public class PDBHeader implements PDBRecord {
 	private Long id;
 	public static final String newline = System.getProperty("line.separator");
 
-	private DateFormat dateFormat;
+	private final DateFormat dateFormat;
 
 	private Map<Integer,BioAssemblyInfo> bioAssemblies ;
 
@@ -90,7 +90,7 @@ public class PDBHeader implements PDBRecord {
 		rFree = DEFAULT_RFREE;
 		rWork = DEFAULT_RFREE;
 
-		bioAssemblies = new LinkedHashMap<Integer, BioAssemblyInfo>();
+		bioAssemblies = new LinkedHashMap<>();
 		crystallographicInfo = new PDBCrystallographicInfo();
 
 	}
@@ -111,22 +111,20 @@ public class PDBHeader implements PDBRecord {
 			for (Method m : methods) {
 				String name = m.getName();
 
-				if (name.substring(0, 3).equals("get")) {
+				if (name.startsWith("get")) {
 					if (name.equals("getClass")) {
 						continue;
 					}
 					Object o = m.invoke(this);
 					if (o != null) {
-						buf.append(name.substring(3, name.length()));
+						buf.append(name.substring(3));
 						buf.append(": ").append(o).append(" ");
 					}
 				}
 			}
 		} catch (ClassNotFoundException e) {
 			logger.error("Exception caught while creating toString  ",e);
-		} catch (InvocationTargetException e) {
-			logger.error("Exception caught while creating toString ",e);
-		} catch (IllegalAccessException e) {
+		} catch (InvocationTargetException | IllegalAccessException e) {
 			logger.error("Exception caught while creating toString ",e);
 		}
 
@@ -408,7 +406,7 @@ public class PDBHeader implements PDBRecord {
 			for (Method m : methods) {
 				String name = m.getName();
 
-				if (name.substring(0, 3).equals("get")) {
+				if (name.startsWith("get")) {
 					if (name.equals("getClass")) {
 						continue;
 					}
@@ -432,13 +430,7 @@ public class PDBHeader implements PDBRecord {
 					}
 				}
 			}
-		} catch (ClassNotFoundException e) {
-			logger.error("Exception caught while comparing PDBHeader objects ",e);
-			return false;
-		} catch (InvocationTargetException e) {
-			logger.error("Exception caught while comparing PDBHeader objects ",e);
-			return false;
-		} catch (IllegalAccessException e) {
+		} catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException e) {
 			logger.error("Exception caught while comparing PDBHeader objects ",e);
 			return false;
 		}

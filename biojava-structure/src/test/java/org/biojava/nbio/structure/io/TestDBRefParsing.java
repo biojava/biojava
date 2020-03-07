@@ -33,7 +33,7 @@ import org.junit.Test;
 public class TestDBRefParsing {
 
 	@Test
-	public void testShortLine() throws IOException, StructureException {
+	public void testShortLine() throws IOException {
 		Structure s,ref;
 		PDBFileParser pdbPars = new PDBFileParser();
 

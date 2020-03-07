@@ -44,7 +44,7 @@ public class GroupAsa implements Serializable {
 
 	private static HashMap<Character,Double>  initTriPeptAsas() {
 		// ASA in extended tripeptide conformation (GLY-X-GLY) from Miller et al JMB 1987 (for calculation of relative ASAs)
-		HashMap<Character,Double> map = new HashMap<Character,Double>();
+		HashMap<Character,Double> map = new HashMap<>();
 		map.put('A', 113.0);
 		map.put('R', 241.0);
 		map.put('N', 158.0);
@@ -71,7 +71,7 @@ public class GroupAsa implements Serializable {
 
 
 
-	private Group g;
+	private final Group g;
 
 	/**
 	 * ASA of uncomplexed residue
@@ -223,14 +223,10 @@ public class GroupAsa implements Serializable {
 		GroupAsa n = new GroupAsa(this.g);
 		n.setAsaC(this.getAsaC());
 		n.setAsaU(this.getAsaU());
-		n.atomAsaUs = new ArrayList<Double>(this.atomAsaUs.size());
-		n.atomAsaCs = new ArrayList<Double>(this.atomAsaCs.size());
-		for (int i=0;i<this.atomAsaUs.size();i++) {
-			n.atomAsaUs.add(this.atomAsaUs.get(i));
-		}
-		for (int i=0;i<this.atomAsaCs.size();i++) {
-			n.atomAsaCs.add(this.atomAsaCs.get(i));
-		}
+		n.atomAsaUs = new ArrayList<>(this.atomAsaUs.size());
+		n.atomAsaCs = new ArrayList<>(this.atomAsaCs.size());
+        n.atomAsaUs.addAll(this.atomAsaUs);
+        n.atomAsaCs.addAll(this.atomAsaCs);
 
 		return n;
 	}

@@ -31,8 +31,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class TestQuaternaryStructureProviders {
 
@@ -66,7 +65,7 @@ public class TestQuaternaryStructureProviders {
 			gotException = true;
 		}
 
-		assertTrue("Bioassembly 3 for PDB id 5LDH should fail with a StructureException!", !gotException);
+        assertFalse("Bioassembly 3 for PDB id 5LDH should fail with a StructureException!", gotException);
 
 		// bioassembly 2 does exist in mmcif file, let's check that
 		gotException = false;
@@ -78,7 +77,7 @@ public class TestQuaternaryStructureProviders {
 		} catch (StructureException e) {
 			gotException = true;
 		}
-		assertTrue("Bioassembly 2 for PDB id 5LDH should not fail with a StructureException!", !gotException);
+        assertFalse("Bioassembly 2 for PDB id 5LDH should not fail with a StructureException!", gotException);
 
 	}
 
@@ -139,10 +138,11 @@ public class TestQuaternaryStructureProviders {
 		assertEquals(mmSize, mMap.get(bioMolecule).getMacromolecularSize());
 
 
-		for ( int k : pMap.keySet()) {
-			assertTrue(mMap.containsKey(k));
+		for (Map.Entry<Integer, BioAssemblyInfo> entry : pMap.entrySet()) {
+            int k = entry.getKey();
+            assertTrue(mMap.containsKey(k));
 
-			BioAssemblyInfo pBioAssemb = pMap.get(k);
+			BioAssemblyInfo pBioAssemb = entry.getValue();
 			BioAssemblyInfo mBioAssemb = mMap.get(k);
 
 			assertEquals("Macromolecular sizes don't coincide!",pBioAssemb.getMacromolecularSize(), mBioAssemb.getMacromolecularSize());

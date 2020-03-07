@@ -45,7 +45,7 @@ public class TestMMcifOrganismParsing {
 
 
 	@BeforeClass
-	public static void setUp() throws Exception {
+	public static void setUp() {
 
 		AtomCache cache = new AtomCache();
 		cache.setUseMmCif(true);

@@ -203,7 +203,7 @@ public class AFPPostProcessor
 				e2 = ca2.length;
 			}
 			if(blockSize[i] > 1)    continue;
-			len = (e1 - b1) < (e2 - b2)?(e1 - b1):(e2 - b2);
+			len = Math.min((e1 - b1), (e2 - b2));
 			//if(i == blockNum - 1) blockNum --;
 			if(len < 2 * fragLen)   {
 				for(j = i; j < blockNum - 1; j ++)      {

@@ -65,7 +65,7 @@ import org.biojava.nbio.structure.gui.util.StructurePairSelector;
  */
 public class AlignmentGui extends JFrame{
 
-	private final static long serialVersionUID =0l;
+	private final static long serialVersionUID = 0L;
 
 	StructureAlignment algorithm;
 
@@ -82,7 +82,7 @@ public class AlignmentGui extends JFrame{
 	JProgressBar progress;
 
 
-	private DBSearchGUI dbsearch;
+	private final DBSearchGUI dbsearch;
 
 
 	public static void main(String[] args){
@@ -93,7 +93,7 @@ public class AlignmentGui extends JFrame{
 
 	static final ResourceManager resourceManager = ResourceManager.getResourceManager("ce");
 
-	private static final String MAIN_TITLE = "Pairwise Structure Alignment - Main - V." + resourceManager.getString("ce.version");;
+	private static final String MAIN_TITLE = "Pairwise Structure Alignment - Main - V." + resourceManager.getString("ce.version");
 
 	private static final AlignmentGui me = new AlignmentGui();
 
@@ -208,7 +208,7 @@ public class AlignmentGui extends JFrame{
 		algorithmList.setSelectedIndex(0);
 
 		Action actionAlgorithm = new AbstractAction("Algorithm") {
-			public static final long serialVersionUID = 0l;
+			public static final long serialVersionUID = 0L;
 			// This method is called when the button is pressed
 			@Override
 			public void actionPerformed(ActionEvent evt) {
@@ -226,7 +226,7 @@ public class AlignmentGui extends JFrame{
 
 
 		Action paramAction = new AbstractAction("Parameters") {
-			public static final long serialVersionUID = 0l;
+			public static final long serialVersionUID = 0L;
 			// This method is called when the button is pressed
 			@Override
 			public void actionPerformed(ActionEvent evt) {
@@ -269,7 +269,7 @@ public class AlignmentGui extends JFrame{
 		//        hBox42.add(Box.createGlue());
 		//        vBox.add(hBox42);
 		Action action1 = new AbstractAction("Align") {
-			public static final long serialVersionUID = 0l;
+			public static final long serialVersionUID = 0L;
 			// This method is called when the button is pressed
 			@Override
 			public void actionPerformed(ActionEvent evt) {
@@ -290,7 +290,7 @@ public class AlignmentGui extends JFrame{
 		JButton submitB = new JButton(action1);
 
 		Action action3 = new AbstractAction("Abort") {
-			public static final long serialVersionUID = 0l;
+			public static final long serialVersionUID = 0L;
 			// This method is called when the button is pressed
 			@Override
 			public void actionPerformed(ActionEvent evt) {
@@ -304,7 +304,7 @@ public class AlignmentGui extends JFrame{
 		abortB.setEnabled(false);
 
 		Action action2 = new AbstractAction("Exit") {
-			public static final long serialVersionUID = 0l;
+			public static final long serialVersionUID = 0L;
 			// This method is called when the button is pressed
 			@Override
 			public void actionPerformed(ActionEvent evt) {
@@ -377,8 +377,8 @@ public class AlignmentGui extends JFrame{
 				return;
 			}
 
-			String name1 = "custom1";
-			String name2 = "custom2";
+			String name1;
+			String name2;
 
 			if  ( pos == 0){
 				name1 = tab1.getName1().getIdentifier();
@@ -400,9 +400,7 @@ public class AlignmentGui extends JFrame{
 			progress.setIndeterminate(true);
 			ProgressThreadDrawer drawer = new ProgressThreadDrawer(progress);
 			drawer.start();
-		} catch (StructureException e){
-			JOptionPane.showMessageDialog(null,"Could not align structures. Exception: " + e.getMessage());
-		} catch (IOException e) {
+		} catch (StructureException | IOException e){
 			JOptionPane.showMessageDialog(null,"Could not align structures. Exception: " + e.getMessage());
 		}
 

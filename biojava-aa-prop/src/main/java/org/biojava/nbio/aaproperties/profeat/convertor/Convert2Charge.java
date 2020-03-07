@@ -39,7 +39,7 @@ public class Convert2Charge extends Convertor{
 		}
 	}
 
-	private static String[] subCategory = {"Positive", "Neutral", "Negative"};
+	private static final String[] subCategory = {"Positive", "Neutral", "Negative"};
 	@Override
 	public String[] getGrouping(){return Convert2Charge.subCategory;}
 	@Override

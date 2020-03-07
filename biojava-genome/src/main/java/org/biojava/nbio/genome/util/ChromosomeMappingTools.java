@@ -112,7 +112,7 @@ public class ChromosomeMappingTools {
 			}
 		}
 		s.append("Coding Length: ");
-		s.append((codingLength-3)+"");
+		s.append(String.valueOf(codingLength - 3));
 		s.append(newline);
 		return s.toString();
 	}
@@ -242,7 +242,7 @@ public class ChromosomeMappingTools {
 		int cdsEnd = chromPos.getCdsEnd();
 
 
-		ChromPos chromosomePos = null;
+		ChromPos chromosomePos;
 
 		if (chromPos.getOrientation().equals('+'))
 
@@ -333,7 +333,7 @@ public class ChromosomeMappingTools {
 
 				if ( debug ) {
 
-					StringBuffer b = new StringBuffer();
+					StringBuilder b = new StringBuilder();
 
 					b.append("     UTR         :" + format(cdsEnd + 1) + " - " + format(end) + newline);
 					if (tmpstart == start)
@@ -706,7 +706,7 @@ public class ChromosomeMappingTools {
 			}
 		}
 		if ( debug ) {
-			s.append("CDS length: ").append(Integer.toString(codingLength - 3));
+			s.append("CDS length: ").append((codingLength - 3));
 			s.append(newline);
 			logger.debug(s.toString());
 		}
@@ -821,7 +821,7 @@ public class ChromosomeMappingTools {
 		List<Range<Integer>> cdsRegions = getCDSRegions(exonStarts, exonEnds, cdsStart, cdsEnd);
 
 		int codingLength = 0;
-		int lengthExon = 0;
+		int lengthExon;
 		for (Range<Integer> range : cdsRegions) {
 
 			int start = range.lowerEndpoint();
@@ -868,7 +868,7 @@ public class ChromosomeMappingTools {
 		List<Range<Integer>> cdsRegions = getCDSRegions(exonStarts, exonEnds, cdsStart, cdsEnd);
 
 		int codingLength = 0;
-		int lengthExon = 0;
+		int lengthExon;
 		for ( int i=cdsRegions.size()-1; i>=0; i-- ) {
 
 			int start = cdsRegions.get(i).lowerEndpoint();
@@ -899,8 +899,8 @@ public class ChromosomeMappingTools {
 	public static List<Range<Integer>> getCDSRegions(List<Integer> origExonStarts, List<Integer> origExonEnds, int cdsStart, int cdsEnd) {
 
 		// remove exons that are fully landed in UTRs
-		List<Integer> exonStarts = new ArrayList<Integer>(origExonStarts);
-		List<Integer> exonEnds = new ArrayList<Integer>(origExonEnds);
+		List<Integer> exonStarts = new ArrayList<>(origExonStarts);
+		List<Integer> exonEnds = new ArrayList<>(origExonEnds);
 
 		int j=0;
 		for (int i = 0; i < origExonStarts.size(); i++) {
@@ -920,7 +920,7 @@ public class ChromosomeMappingTools {
 		exonEnds.remove(nExons-1);
 		exonEnds.add(cdsEnd);
 
-		List<Range<Integer>> cdsRegion = new ArrayList<Range<Integer>>();
+		List<Range<Integer>> cdsRegion = new ArrayList<>();
 		for ( int i=0; i<nExons; i++ ) {
 			Range<Integer> r = Range.closed(exonStarts.get(i), exonEnds.get(i));
 			cdsRegion.add(r);

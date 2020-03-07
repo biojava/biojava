@@ -49,7 +49,7 @@ public class AFPCalculator
 
 
 
-		List<AFP> afpSet = new ArrayList<AFP>();
+		List<AFP> afpSet = new ArrayList<>();
 		afpChain.setAfpSet(afpSet);
 
 		if ( debug )
@@ -61,7 +61,7 @@ public class AFPCalculator
 		@SuppressWarnings("unused")
 		int n0, n, n1, n2;
 		double  filter1;
-		double rmsd = 0;
+		double rmsd;
 
 		Matrix r = new Matrix(3,3);
 		Atom   t = new AtomImpl();
@@ -78,15 +78,12 @@ public class AFPCalculator
 		int     add = sparse + 1; //if add > 1, use sparse sampling
 		n0 = n = n1 = n2 = 0;
 
-		int minLen = 0;
+		int minLen;
 
 		int prot1Length = ca1.length;
 		int prot2Length = ca2.length;
 
-		if(prot1Length < prot2Length)
-			minLen = prot1Length;
-		else
-			minLen = prot2Length;
+        minLen = Math.min(prot1Length, prot2Length);
 		afpChain.setMinLen(minLen);
 
 		afpChain.setBlockResList(new int[maxTra+1][2][minLen]);
@@ -150,7 +147,7 @@ public class AFPCalculator
 	private static final double getEnd2EndDistance(Atom[] ca1, Atom[] ca2, int p1b, int p1e, int p2b, int p2e)
 	{
 
-		double min = 99;
+		double min;
 			double dist1 = Calc.getDistance(ca1[p1b], ca1[p1e]);
 			double dist2 = Calc.getDistance(ca2[p2b], ca2[p2e]);
 			min = dist1 - dist2;
@@ -169,8 +166,8 @@ public class AFPCalculator
 
 	private static final  boolean filterTerminal(Atom[] ca1, Atom[] ca2, int p1b, int p1e, int p2b, int p2e, int fragLen, int minLen)
 	{
-		int     d1 = (p1b < p2b)?p1b:p2b;
-		int     d2 = (ca1.length - p1e) < (ca2.length - p2e)?(ca1.length - p1e):(ca2.length - p2e);
+		int     d1 = Math.min(p1b, p2b);
+		int     d2 = Math.min((ca1.length - p1e), (ca2.length - p2e));
 		int     d3 = d1 + d2 + fragLen; //maximum alignment length from current AFP
 
 
@@ -182,7 +179,7 @@ public class AFPCalculator
 	}
 
 	private static final double getRmsd(Atom[] ca1, Atom[] ca2, int fragLen,
-			int p1, int p2, Matrix m, Atom t) throws StructureException {
+			int p1, int p2, Matrix m, Atom t) {
 
 
 		double rmsd = 99.9;

@@ -90,23 +90,23 @@ public class ScopDomain implements Serializable, Cloneable, StructureIdentifier 
 		buf.append("\t") ;
 		buf.append(classificationId);
 		buf.append("\t") ;
-		buf.append(String.valueOf(sunid));
+		buf.append(sunid);
 		buf.append("\t") ;
 
 		buf.append("cl=");
-		buf.append(String.valueOf(classId));
+		buf.append(classId);
 		buf.append(",cf=");
-		buf.append(String.valueOf(foldId));
+		buf.append(foldId);
 		buf.append(",sf=");
-		buf.append(String.valueOf(superfamilyId));
+		buf.append(superfamilyId);
 		buf.append(",fa=");
-		buf.append(String.valueOf(familyId));
+		buf.append(familyId);
 		buf.append(",dm=");
-		buf.append(String.valueOf(domainId));
+		buf.append(domainId);
 		buf.append(",sp=");
-		buf.append(String.valueOf(speciesId));
+		buf.append(speciesId);
 		buf.append(",px=");
-		buf.append(String.valueOf(px));
+		buf.append(px);
 
 
 		return buf.toString();
@@ -214,7 +214,7 @@ public class ScopDomain implements Serializable, Cloneable, StructureIdentifier 
 	 * Returns the chains this domain is defined over; contains more than 1 element only if this domains is a multi-chain domain.
 	 */
 	public Set<String> getChains() {
-		Set<String> chains = new HashSet<String>();
+		Set<String> chains = new HashSet<>();
 		List<ResidueRange> rrs = ResidueRange.parseMultiple(getRanges());
 		for (ResidueRange rr : rrs) chains.add(rr.getChainName());
 		return chains;

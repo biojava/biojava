@@ -239,7 +239,7 @@ public class SymmetryDisplay {
 		for (Axis a : symmAxes) {
 			RotationAxis rot = a.getRotationAxis();
 			List<List<Integer>> cyclicForm = axes.getRepeatsCyclicForm(a);
-			List<Atom> repAtoms = new ArrayList<Atom>();
+			List<Atom> repAtoms = new ArrayList<>();
 			for(List<Integer> cycle : cyclicForm) {
 				for(Integer repeat : cycle) {
 					repAtoms.addAll(Arrays.asList(repeats.get(repeat)));
@@ -247,7 +247,7 @@ public class SymmetryDisplay {
 			}
 
 			script += rot.getJmolScript(
-					repAtoms.toArray(new Atom[repAtoms.size()]), id);
+					repAtoms.toArray(new Atom[0]), id);
 			id++;
 		}
 
@@ -299,7 +299,7 @@ public class SymmetryDisplay {
 	 */
 	public static String getSymmTitle(CeSymmResult result) {
 
-		StringBuffer buff = new StringBuffer();
+		StringBuilder buff = new StringBuilder();
 
 		// Add algorithm name and version
 		buff.append(result.getMultipleAlignment().getEnsemble()

@@ -58,28 +58,11 @@ public class TestAltLocs {
 		List<Group> groups = a.getAtomGroups();
 		for (Group g : groups){
 			ChemComp cc = g.getChemComp();
-			if ( ResidueType.lPeptideLinking.equals(cc.getResidueType()) ||
-					PolymerType.PROTEIN_ONLY.contains(cc.getPolymerType()) ||
-					PolymerType.POLYNUCLEOTIDE_ONLY.contains(cc.getPolymerType())
-					){
-				if (! g.isWater()) {
-					//System.out.println(g);
-					groupCount ++;
-				}
-			} else {
-				// when using the Reduced Chem Comp provider
-				// there are 3 groups in 2CI1 which are non-standard: SNC, KOR, CIT
-				// they are not in the reduced set of standard definitions that will
-				// be shipped in the .jar file.
-
-				// if the download chem comp provider is used
-				// there will be CIT, which is not a peptide, but
-				// should still be counted as a valid HETATOM group...
-				if (! g.isWater()) {
-					//System.out.println(cc);
-					//System.out.println(g);
-					groupCount++;
-				}
+			//System.out.println(cc);
+			//System.out.println(g);
+			if (! g.isWater()) {
+				//System.out.println(g);
+				groupCount ++;
 			}
 		}
 
@@ -274,7 +257,7 @@ public class TestAltLocs {
 
 		//System.out.println(structure.getPdbId() + " has # CA atoms: " + ca.length);
 
-		List<Atom> caList = new ArrayList<Atom>();
+		List<Atom> caList = new ArrayList<>();
 		for ( Chain c: structure.getChains()){
 			for (Group g: c.getAtomGroups()){
 
@@ -384,9 +367,7 @@ public class TestAltLocs {
 				// Now add support for altLocGroup
 				List<Atom> atomsList = new ArrayList<>(mainGroup.getAtoms());
 				for(Group altLocOne: mainGroup.getAltLocs()){
-					for(Atom atomAltLocOne: altLocOne.getAtoms()){
-						atomsList.add(atomAltLocOne);
-					}
+                    atomsList.addAll(altLocOne.getAtoms());
 				}
 				// Get the chem copm
 				ChemComp aminoChemComp = ChemCompGroupFactory.getChemComp(mainGroup
@@ -439,7 +420,7 @@ public class TestAltLocs {
 		Atom[] ca = StructureTools.getAtomCAArray(structure);
 
 
-		List<Atom> caList = new ArrayList<Atom>();
+		List<Atom> caList = new ArrayList<>();
 		for ( Chain c: structure.getChains()){
 			for (Group g: c.getAtomGroups()){
 
@@ -501,7 +482,7 @@ public class TestAltLocs {
 
 		//System.out.println(structure.getPdbId() + " has # CA atoms: " + ca.length);
 
-		List<Atom> caList = new ArrayList<Atom>();
+		List<Atom> caList = new ArrayList<>();
 		for ( Chain c: structure.getChains()){
 			for (Group g: c.getAtomGroups()){
 
@@ -564,7 +545,7 @@ public class TestAltLocs {
 
 		//System.out.println(structure.getPdbId() + " has # CA atoms: " + ca.length);
 
-		List<Atom> caList = new ArrayList<Atom>();
+		List<Atom> caList = new ArrayList<>();
 		for ( Chain c: structure.getChains()){
 			// notice here we test the seqresgroups, because we want to check if microheterogeinity is treated correctly
 			for (Group g: c.getSeqResGroups()){

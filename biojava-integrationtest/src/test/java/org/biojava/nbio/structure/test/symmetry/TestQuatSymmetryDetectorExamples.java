@@ -267,7 +267,7 @@ public class TestQuatSymmetryDetectorExamples {
 			for (QuatSymmetryResults local:foundLocal) {
 				logger.info("Found stoichiometry "+local.getStoichiometry().toString()+" with symmetry "+local.getSymmetry());
 				assertTrue("Stoichiometry "+local.getStoichiometry().toString()+" not expected for "+testIds.get(iTest),
-						refLocal.keySet().contains(local.getStoichiometry().toString()));
+						refLocal.containsKey(local.getStoichiometry().toString()));
 
 				assertEquals("Symmetry "+local.getSymmetry()+" with stoichiometry "+local.getStoichiometry().toString()+
 								" not expected for "+testIds.get(iTest),

@@ -38,7 +38,7 @@ public class JmolTools {
 		return getPdbInfo(a,true);
 	}
 
-	private static Pattern inscodePatter ;
+	private static final Pattern inscodePatter ;
 	static {
 		inscodePatter = Pattern.compile("([0-9]+)([a-zA-Z]*)?");
 	}
@@ -80,7 +80,7 @@ public class JmolTools {
 			}
 		}
 
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		if ( printResName) {
 			if ( !aa3.equals("")){
 				buf.append("[");

@@ -23,6 +23,7 @@ package org.biojava.nbio.structure.gui.util.color;
 
 import java.awt.*;
 import java.awt.color.ColorSpace;
+import java.util.Arrays;
 
 /**
  * @author Spencer Bliven
@@ -156,8 +157,7 @@ public class LinearColorInterpolator implements ColorInterpolator {
 
 	public void setColorSpace(ColorSpace colorSpace) {
 		InterpolationDirection[] dir = new InterpolationDirection[colorSpace.getNumComponents()];
-		for(int i=0;i<dir.length;i++)
-			dir[i] = InterpolationDirection.INNER;
+        Arrays.fill(dir, InterpolationDirection.INNER);
 		this.setColorSpace(colorSpace, dir);
 	}
 

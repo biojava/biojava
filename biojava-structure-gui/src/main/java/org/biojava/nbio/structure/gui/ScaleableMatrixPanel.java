@@ -198,7 +198,7 @@ implements ChangeListener, ActionListener {
 
 
 	protected static Map<String,ContinuousColorMapper> createGradients() {
-		SortedMap<String,ContinuousColorMapper> gradients = new TreeMap<String,ContinuousColorMapper>();
+		SortedMap<String,ContinuousColorMapper> gradients = new TreeMap<>();
 
 		int i = 0; //prepend number, since sorted alphabetically
 		ColorSpace hsv = HSVColorSpace.getHSVColorSpace();
@@ -379,7 +379,8 @@ implements ChangeListener, ActionListener {
 	implements ListCellRenderer {
 
 		private static final long serialVersionUID = -2000575579184232365L;
-		private int min,max;
+		private final int min;
+		private final int max;
 		JLabel title;
 		JPanel gradientContainer;
 

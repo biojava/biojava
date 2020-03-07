@@ -123,7 +123,7 @@ public class XMLHelper {
 	}
 
 	static public Element selectSingleElement(Element element, String xpathExpression) throws XPathExpressionException {
-		if (xpathExpression.indexOf("/") == -1) {
+		if (!xpathExpression.contains("/")) {
 			NodeList nodeList = element.getChildNodes();
 			for (int i = 0; i < nodeList.getLength(); i++) {
 				Node node = nodeList.item(i);
@@ -145,11 +145,11 @@ public class XMLHelper {
 	}
 
 	static public ArrayList<Element> selectElements(Element element, String xpathExpression) throws XPathExpressionException {
-		ArrayList<Element> resultVector = new ArrayList<Element>();
+		ArrayList<Element> resultVector = new ArrayList<>();
 		if (element == null) {
 			return resultVector;
 		}
-		if (xpathExpression.indexOf("/") == -1) {
+		if (!xpathExpression.contains("/")) {
 			NodeList nodeList = element.getChildNodes();
 			for (int i = 0; i < nodeList.getLength(); i++) {
 				Node node = nodeList.item(i);

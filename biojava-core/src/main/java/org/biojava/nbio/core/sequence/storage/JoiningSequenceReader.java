@@ -61,6 +61,7 @@ public class JoiningSequenceReader<C extends Compound> implements ProxySequenceR
 	 * available during construction otherwise we will throw an illegal
 	 * state exception).
 	 */
+	@SafeVarargs
 	public JoiningSequenceReader(Sequence<C>... sequences) {
 		this(Arrays.asList(sequences));
 	}
@@ -76,6 +77,7 @@ public class JoiningSequenceReader<C extends Compound> implements ProxySequenceR
 		this.compoundSet = grepCompoundSet();
 	}
 
+	@SafeVarargs
 	public JoiningSequenceReader(CompoundSet<C> compoundSet, Sequence<C>... sequences) {
 		this(compoundSet, Arrays.asList(sequences));
 	}
@@ -86,7 +88,7 @@ public class JoiningSequenceReader<C extends Compound> implements ProxySequenceR
 	}
 
 	private List<Sequence<C>> grepSequences(List<Sequence<C>> sequences) {
-		List<Sequence<C>> seqs = new ArrayList<Sequence<C>>();
+		List<Sequence<C>> seqs = new ArrayList<>();
 		for (Sequence<C> s : sequences) {
 			if (s.getLength() != 0) {
 				seqs.add(s);
@@ -277,13 +279,14 @@ public class JoiningSequenceReader<C extends Compound> implements ProxySequenceR
 
 
 	@Override
-	public void setContents(String sequence) throws CompoundNotFoundException {
+	public void setContents(String sequence) {
 		throw new UnsupportedOperationException();
 	}
 
 
+	@SafeVarargs
 	@Override
-	public int countCompounds(C... compounds) {
+	public final int countCompounds(C... compounds) {
 		return SequenceMixin.countCompounds(this, compounds);
 	}
 

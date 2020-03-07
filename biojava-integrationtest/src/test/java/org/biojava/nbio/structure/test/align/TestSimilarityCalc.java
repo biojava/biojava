@@ -26,14 +26,12 @@ import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.StructureAlignment;
 import org.biojava.nbio.structure.align.StructureAlignmentFactory;
 import org.biojava.nbio.structure.align.model.AFPChain;
-import org.biojava.nbio.structure.align.model.AfpChainWriter;
 import org.biojava.nbio.structure.align.seq.SmithWaterman3DParameters;
 import org.biojava.nbio.structure.align.seq.SmithWaterman3Daligner;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.junit.Test;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 
 /**
@@ -49,8 +47,8 @@ public class TestSimilarityCalc  {
 
 		AtomCache cache = new AtomCache();
 
-		Structure structure1 = null;
-		Structure structure2 = null;
+		Structure structure1;
+		Structure structure2;
 
 		try {
 
@@ -71,9 +69,9 @@ public class TestSimilarityCalc  {
 			afpChain.setName2(name2);
 
 
-			assertTrue(afpChain.getAlnLength() == 71);
+			assertEquals(71, afpChain.getAlnLength());
 
-			assertTrue(afpChain.getAlnLength() == 71);
+			assertEquals(71, afpChain.getAlnLength());
 			assertTrue(afpChain.getSimilarity() > .57);
 			assertTrue(afpChain.getSimilarity() <= .6);
 

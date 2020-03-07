@@ -55,40 +55,33 @@ public class HelpDialog {
 	      vBox= Box.createVerticalBox();
 	      vBox.add(scroll);
 
-	      txt.addHyperlinkListener(new HyperlinkListener(){
+	      txt.addHyperlinkListener(e -> {
 
-	         @Override
-			public void hyperlinkUpdate(HyperlinkEvent e) {
-
-	             if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-	                 String href = e.getDescription();
-	                 BrowserOpener.showDocument(href);
-	             }
-	             if ( e.getEventType() == HyperlinkEvent.EventType.ENTERED) {
-	                 // change the mouse curor
-	                 vBox.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-	             }
-	             if (e.getEventType() == HyperlinkEvent.EventType.EXITED) {
-	                 vBox.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-	             }
-	         }
-	     });
+			  if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+				  String href = e.getDescription();
+				  BrowserOpener.showDocument(href);
+			  }
+			  if ( e.getEventType() == HyperlinkEvent.EventType.ENTERED) {
+				  // change the mouse curor
+				  vBox.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+			  }
+			  if (e.getEventType() == HyperlinkEvent.EventType.EXITED) {
+				  vBox.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+			  }
+		  });
 
 
 	      JButton close = new JButton("Close");
 
-	      close.addActionListener(new ActionListener(){
-	         @Override
-			public void actionPerformed(ActionEvent event) {
-	            Object source = event.getSource();
+	      close.addActionListener(event -> {
+			 Object source = event.getSource();
 
-	            JButton but = (JButton)source;
-	            Container parent = but.getParent().getParent().getParent().getParent().getParent().getParent() ;
+			 JButton but = (JButton)source;
+			 Container parent = but.getParent().getParent().getParent().getParent().getParent().getParent() ;
 
-	            JDialog dia = (JDialog) parent;
-	            dia.dispose();
-	         }
-	      });
+			 JDialog dia = (JDialog) parent;
+			 dia.dispose();
+		  });
 
 	      Box hBoxb = Box.createHorizontalBox();
 	      hBoxb.add(Box.createGlue());

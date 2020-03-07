@@ -46,7 +46,7 @@ public class DemoShowValidationResults {
 
 	private static void showPdbValidation(String pdbId) {
 		try {
-			JAXBContext ctx = JAXBContext.newInstance(new Class[] {WwPDBValidationInformation.class});
+			JAXBContext ctx = JAXBContext.newInstance(WwPDBValidationInformation.class);
 
 			Unmarshaller um = ctx.createUnmarshaller();
 
@@ -87,7 +87,7 @@ public class DemoShowValidationResults {
 					pos +="^" + iCode;
 				pos +=":" + chainId;
 
-				BigDecimal base = new BigDecimal(0.5);
+				BigDecimal base = new BigDecimal("0.5");
 
 				for (Clash clash : clashes){
 					String clashatom = clash.getAtom();

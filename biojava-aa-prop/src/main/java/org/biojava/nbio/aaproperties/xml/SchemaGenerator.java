@@ -27,7 +27,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class SchemaGenerator extends SchemaOutputResolver{
-	private String fileName;
+	private final String fileName;
 
 	public SchemaGenerator(String filename){
 		this.fileName = filename;

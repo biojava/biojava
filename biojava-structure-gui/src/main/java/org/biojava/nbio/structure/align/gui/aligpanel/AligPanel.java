@@ -63,11 +63,11 @@ public class AligPanel  extends JPrintPanel implements AlignmentPositionListener
 	private static final long serialVersionUID = -6892229111166263764L;
 
 	private AFPChain afpChain;
-	private AFPChainCoordManager coordManager ;
-	private Font seqFont;
-	private Font eqFont;
+	private final AFPChainCoordManager coordManager ;
+	private final Font seqFont;
+	private final Font eqFont;
 	private AbstractAlignmentJmol jmol;
-	private AligPanelMouseMotionListener mouseMoLi;
+	private final AligPanelMouseMotionListener mouseMoLi;
 
 	private BitSet selection;
 
@@ -89,7 +89,7 @@ public class AligPanel  extends JPrintPanel implements AlignmentPositionListener
 
 		try {
 			BufferedReader in = new BufferedReader(new FileReader(file));
-			StringBuffer xml = new StringBuffer();
+			StringBuilder xml = new StringBuilder();
 			String str;
 			while ((str = in.readLine()) != null) {
 				xml.append(str);
@@ -279,7 +279,7 @@ public void paintComponent(Graphics g){
 
 						int colorPos = 0;
 						if (isFATCAT) {
-							int block = 0;
+							int block;
 							char s = symb[i];
 							try {
 								block = Integer.parseInt(String.valueOf(s)) - 1;
@@ -430,7 +430,7 @@ public void mouseOverPosition(AlignedPosition p) {
 
 		int size = afpChain.getAlnLength();
 
-		StringBuffer cmd = new StringBuffer("select ");
+		StringBuilder cmd = new StringBuilder("select ");
 
 		int nrSelected = 0;
 		try {
@@ -581,30 +581,42 @@ public void windowOpened(WindowEvent e) {
 public void actionPerformed(ActionEvent e) {
 		String cmd = e.getActionCommand();
 		// print is handled by superclass
-		if ( cmd.equals(MenuCreator.PRINT)) {
-			super.actionPerformed(e);
-		} else if (cmd.equals(MenuCreator.TEXT_ONLY)){
-			String result = AfpChainWriter.toWebSiteDisplay(afpChain, ca1, ca2);
-			DisplayAFP.showAlignmentImage(afpChain, result);
-		} else if ( cmd.equals(MenuCreator.PAIRS_ONLY)) {
-			String result = AfpChainWriter.toAlignedPairs(afpChain, ca1, ca2) ;
-			DisplayAFP.showAlignmentImage(afpChain, result);
-		} else if (cmd.equals(MenuCreator.FATCAT_TEXT)){
-			String result = afpChain.toFatcat(ca1, ca2);
-			result += AFPChain.newline;
-			result += afpChain.toRotMat();
-			DisplayAFP.showAlignmentImage(afpChain, result);
-		} else if ( cmd.equals(MenuCreator.SELECT_EQR)){
-			selectEQR();
-		} else if ( cmd.equals(MenuCreator.SIMILARITY_COLOR)){
-			colorBySimilarity(true);
-		} else if ( cmd.equals(MenuCreator.EQR_COLOR)){
-			colorBySimilarity(false);
-		} else if ( cmd.equals(MenuCreator.FATCAT_BLOCK)){
-			colorByAlignmentBlock();
-		}
-		else {
-			System.err.println("Unknown command:" + cmd);
+		switch (cmd) {
+			case MenuCreator.PRINT:
+				super.actionPerformed(e);
+				break;
+			case MenuCreator.TEXT_ONLY: {
+				String result = AfpChainWriter.toWebSiteDisplay(afpChain, ca1, ca2);
+				DisplayAFP.showAlignmentImage(afpChain, result);
+				break;
+			}
+			case MenuCreator.PAIRS_ONLY: {
+				String result = AfpChainWriter.toAlignedPairs(afpChain, ca1, ca2);
+				DisplayAFP.showAlignmentImage(afpChain, result);
+				break;
+			}
+			case MenuCreator.FATCAT_TEXT: {
+				String result = afpChain.toFatcat(ca1, ca2);
+				result += AFPChain.newline;
+				result += afpChain.toRotMat();
+				DisplayAFP.showAlignmentImage(afpChain, result);
+				break;
+			}
+			case MenuCreator.SELECT_EQR:
+				selectEQR();
+				break;
+			case MenuCreator.SIMILARITY_COLOR:
+				colorBySimilarity(true);
+				break;
+			case MenuCreator.EQR_COLOR:
+				colorBySimilarity(false);
+				break;
+			case MenuCreator.FATCAT_BLOCK:
+				colorByAlignmentBlock();
+				break;
+			default:
+				System.err.println("Unknown command:" + cmd);
+				break;
 		}
 
 	}

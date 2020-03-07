@@ -40,7 +40,7 @@ public class AFPChainFlipper {
 	 * @param o ... the original AFPCHain that should be flipped
 	 * @return a cloned AFPCHain which the positions of name1 and name2 flipped.
 	 */
-	public static AFPChain flipChain(AFPChain o) throws StructureException{
+	public static AFPChain flipChain(AFPChain o) {
 
 		AFPChain n = new AFPChain(o.getAlgorithmName());
 		n.setVersion(o.getVersion());

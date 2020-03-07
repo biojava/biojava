@@ -38,7 +38,7 @@ public class Convert2SolventAccessibility extends Convertor{
 		}
 	}
 
-	private static String[] subCategory = {"Buried", "Exposed", "Intermediate"};
+	private static final String[] subCategory = {"Buried", "Exposed", "Intermediate"};
 	@Override
 	public String[] getGrouping(){return subCategory;}
 	@Override

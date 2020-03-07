@@ -40,7 +40,8 @@ public class FractionalSimilarityScorer<S extends Sequence<C>, C extends Compoun
 		implements PairwiseSequenceScorer<S, C> {
 
 	// always stored
-	private S query, target;
+	private final S query;
+    private final S target;
 	private int max, score;
 
 	// optional cached input field

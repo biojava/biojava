@@ -176,7 +176,7 @@ public class TestInterfaceClustering {
 
 
 	@Test
-	public void test3C5FWithSeqresPdb() throws IOException, StructureException {
+	public void test3C5FWithSeqresPdb() throws IOException {
 
 		InputStream inStream = new GZIPInputStream(this.getClass().getResourceAsStream("/org/biojava/nbio/structure/io/3c5f_raw.pdb.gz"));
 		assertNotNull(inStream);
@@ -224,7 +224,7 @@ public class TestInterfaceClustering {
 	// see https://github.com/eppic-team/eppic/issues/39
 	// See also TestCompoundResIndexMapping
 	//@Test
-	public void test3DDONoSeqresPdb() throws IOException, StructureException {
+	public void test3DDONoSeqresPdb() throws IOException {
 
 		// 3ddo contains 6 chains in 1 entity, with residue numbering completely different in each of the chains
 

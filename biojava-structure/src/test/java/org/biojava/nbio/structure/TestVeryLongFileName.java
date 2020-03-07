@@ -20,7 +20,6 @@
  */
 package org.biojava.nbio.structure;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 

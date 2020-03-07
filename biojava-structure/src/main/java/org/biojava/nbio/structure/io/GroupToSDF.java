@@ -59,10 +59,10 @@ public class GroupToSDF {
 				if(atoms.indexOf(otherAtom)>=atoms.indexOf(a)){
 					continue;
 				}
-				if(atoms.indexOf(otherAtom)<0){
+				if(!atoms.contains(otherAtom)){
 					continue;
 				}
-				if(atoms.indexOf(a)<0){
+				if(!atoms.contains(a)){
 					continue;
 				}
 				numBonds++;
@@ -130,7 +130,7 @@ public class GroupToSDF {
 
 	private static List<Number> getAtomCharges(Group group) {
 		// The list to store the answer
-		List<Number> outArr = new ArrayList<Number>();
+		List<Number> outArr = new ArrayList<>();
 		// Get the atom charge Information
 		for(Atom a: group.getAtoms()){
 			outArr.add(a.getCharge());

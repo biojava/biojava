@@ -36,5 +36,5 @@ public interface FeaturesKeyWordInterface {
 	 *
 	 * @return
 	 */
-	public ArrayList<String> getKeyWords() ;
+    ArrayList<String> getKeyWords() ;
 }

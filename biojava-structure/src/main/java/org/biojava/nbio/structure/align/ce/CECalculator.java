@@ -118,7 +118,7 @@ public class CECalculator {
 		dist1= new double[0][0];
 		dist2= new double[0][0];
 		this.params = params;
-		matrixListeners = new ArrayList<MatrixListener>();
+		matrixListeners = new ArrayList<>();
 
 	}
 
@@ -139,7 +139,7 @@ public class CECalculator {
 		afpChain.setCa1Length(nse1);
 		afpChain.setCa2Length(nse2);
 
-		int traceMaxSize=nse1<nse2?nse1:nse2;
+		int traceMaxSize= Math.min(nse1, nse2);
 
 		f1 = new int[nse1];
 		f2 = new int[nse2];
@@ -259,9 +259,8 @@ public class CECalculator {
 	 * @param ca2 The CA of the second residue
 	 * @return The distance between the two fragments, according to the selected
 	 * scoring strategy. Lower distances are better alignments.
-	 * @throws StructureException
 	 */
-	private double getDistanceWithSidechain(Atom ca1, Atom ca2) throws StructureException {
+	private double getDistanceWithSidechain(Atom ca1, Atom ca2) {
 
 		if ( params.getScoringStrategy() == CeParameters.ScoringStrategy.CA_SCORING) {
 
@@ -447,7 +446,7 @@ public class CECalculator {
 
 		//System.out.println("nse1 :" +nse1 + " nse2: " + nse2);
 
-		int traceMaxSize=nse1<nse2?nse1:nse2;
+		int traceMaxSize= Math.min(nse1, nse2);
 
 		bestTrace1 = new int [traceMaxSize];
 		bestTrace2 = new int [traceMaxSize];
@@ -477,10 +476,10 @@ public class CECalculator {
 
 		nTraces =0;
 		long tracesLimit=(long)5e7;
-		double score =-1;
-		double score0 = -1;
-		double score1 = -1 ;
-		double score2 = -1;
+		double score;
+		double score0;
+		double score1;
+		double score2;
 
 		int mse1;
 		int mse2;
@@ -580,7 +579,7 @@ public class CECalculator {
 
 								nTrace++;
 								boolean isTraceUp=true;
-								int traceIndex_=0;
+								int traceIndex_;
 
 								traceLoop:
 									while(nTrace>0) {
@@ -806,7 +805,7 @@ public class CECalculator {
 			((nTrace>1?traceScore[nTrace-2][traceIndex[nTrace-1]]:score0)
 		 *a[nTrace-1]+score1*(a[nTrace]-a[nTrace-1]))/a[nTrace];
 		 */
-		double val = 0;
+		double val;
 		if ( nTrace>1)
 			val =traceScore[nTrace-2][traceIndex[nTrace-1]];
 		else
@@ -940,7 +939,7 @@ nBestTrace=nTrace;
 		int winSize = params.getWinSize();
 		int nse1 = ca1.length;
 		int nse2 = ca2.length;
-		int traceMaxSize=nse1<nse2?nse1:nse2;
+		int traceMaxSize= Math.min(nse1, nse2);
 		int idir;
 
 
@@ -998,7 +997,7 @@ nBestTrace=nTrace;
 		bestTraceLen=new int [traceMaxSize];
 
 
-		int strLen=0;
+		int strLen;
 
 		int jt;
 		strLen=0;
@@ -1143,7 +1142,7 @@ nBestTrace=nTrace;
 		}
 
 		// start to convert CE internal datastructure to generic AFPChain one...
-		List<AFP> afpSet = new ArrayList<AFP>();
+		List<AFP> afpSet = new ArrayList<>();
 		for (int afp=0;afp<nBestTrace;afp++){
 			// fill in data from nBestTrace into AFP
 
@@ -1253,7 +1252,7 @@ nBestTrace=nTrace;
 		int pos = 0;
 		String atomName = ca[j].getName();
 
-		Atom a = null;
+		Atom a;
 
 			a= parent.getAtom(atomName);
 			if ( a != null){
@@ -1555,7 +1554,7 @@ nBestTrace=nTrace;
 
 				short aaScore = substMatrix.getValue(ac1,ac2);
 
-				double weightedScore = (aaScore / internalScale) * params.getSeqWeight();
+				double weightedScore = (((double)aaScore) / internalScale) * params.getSeqWeight();
 
 
 				val += weightedScore;
@@ -1609,7 +1608,7 @@ nBestTrace=nTrace;
 		// isGlobal1,isGlobal2 are always false...
 
 		int i, j, is, js, iMax, jMax, k;
-		boolean ge=(gapE!=0.0?true:false);
+		boolean ge=(gapE != 0.0);
 		double sum, sum_ret, sum_brk;
 
 		boolean[][] brk_flg=new boolean [nSeq1][nSeq2];
@@ -1850,7 +1849,7 @@ nBestTrace=nTrace;
 	}
 
 
-	private void rot_mol(Atom[] caA, Atom[] caB, int nse2, Matrix m , Atom shift) throws StructureException{
+	private void rot_mol(Atom[] caA, Atom[] caB, int nse2, Matrix m , Atom shift) {
 
 		for(int l=0; l<nse2; l++) {
 			Atom a = caA[l];
@@ -1919,11 +1918,10 @@ nBestTrace=nTrace;
 	 * @param length the number of atoms to copy
 	 * @param clone If true, preform a deep copy, cloning the underlying Groups
 	 * @return An array with the first length items of ca, possibly cloning the Atoms.
-	 * @throws StructureException
 	 */
-	private Atom[] getAtoms(Atom[] ca,  int length, boolean clone) throws StructureException{
+	private Atom[] getAtoms(Atom[] ca,  int length, boolean clone) {
 
-		List<Atom> atoms = new ArrayList<Atom>();
+		List<Atom> atoms = new ArrayList<>();
 		for ( int i = 0 ; i < length ; i++){
 
 			Atom a;
@@ -1936,7 +1934,7 @@ nBestTrace=nTrace;
 			}
 			atoms.add(a);
 		}
-		return atoms.toArray(new Atom[atoms.size()]);
+		return atoms.toArray(new Atom[0]);
 	}
 
 

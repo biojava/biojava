@@ -34,13 +34,13 @@ public interface PDBRecord extends Serializable {
 	 *
 	 * @return a String providing a PDB file like representation of the record.
 	 */
-	public String toPDB();
+    String toPDB();
 
 
 	/** Appends a PDB file like representation of this record to the provided StringBuffer.
 	 *
 	 */
-	public void toPDB(StringBuffer buf);
+    void toPDB(StringBuffer buf);
 
 
 }

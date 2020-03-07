@@ -65,7 +65,7 @@ public class BiologicalAssemblyBuilder {
 	 */
 	private Map<String, Matrix4d> allTransformations;
 
-	private List<String> modelIndex = new ArrayList<>();
+	private final List<String> modelIndex = new ArrayList<>();
 
 	public BiologicalAssemblyBuilder(){
 		init();
@@ -164,16 +164,13 @@ public class BiologicalAssemblyBuilder {
 	 */
 	private void orderTransformationsByChainId(Structure asymUnit, List<BiologicalAssemblyTransformation> transformations) {
 		final List<String> chainIds = getChainIds(asymUnit);
-		Collections.sort(transformations, new Comparator<BiologicalAssemblyTransformation>() {
-			@Override
-			public int compare(BiologicalAssemblyTransformation t1, BiologicalAssemblyTransformation t2) {
-				// set sort order only if the two ids are identical
-				if (t1.getId().equals(t2.getId())) {
-					 return chainIds.indexOf(t1.getChainId()) - chainIds.indexOf(t2.getChainId());
-				} else {
-					return t1.getId().compareTo(t2.getId());
-				}
-		    }
+		transformations.sort((t1, t2) -> {
+			// set sort order only if the two ids are identical
+			if (t1.getId().equals(t2.getId())) {
+				return chainIds.indexOf(t1.getChainId()) - chainIds.indexOf(t2.getChainId());
+			} else {
+				return t1.getId().compareTo(t2.getId());
+			}
 		});
 	}
 
@@ -184,7 +181,7 @@ public class BiologicalAssemblyBuilder {
 	 * @return
 	 */
 	private List<String> getChainIds(Structure asymUnit) {
-		List<String> chainIds = new ArrayList<String>();
+		List<String> chainIds = new ArrayList<>();
 		for ( Chain c : asymUnit.getChains()){
 			String intChainID = c.getId();
 			chainIds.add(intChainID);
@@ -300,7 +297,7 @@ public class BiologicalAssemblyBuilder {
 		for ( PdbxStructAssemblyGen psag : psags){
 			if ( psag.getAssembly_id().equals(assemblyId)) {
 
-				List<String>asymIds= Arrays.asList(psag.getAsym_id_list().split(","));
+				String[] asymIds= psag.getAsym_id_list().split(",");
 
 				operatorResolver.parseOperatorExpressionString(psag.getOper_expression());
 
@@ -332,7 +329,7 @@ public class BiologicalAssemblyBuilder {
 	}
 
 	private ArrayList<BiologicalAssemblyTransformation> getBioUnitTransformationsListUnaryOperators(String assemblyId, List<PdbxStructAssemblyGen> psags) {
-		ArrayList<BiologicalAssemblyTransformation> transformations = new ArrayList<BiologicalAssemblyTransformation>();
+		ArrayList<BiologicalAssemblyTransformation> transformations = new ArrayList<>();
 
 
 		for ( PdbxStructAssemblyGen psag : psags){
@@ -341,7 +338,7 @@ public class BiologicalAssemblyBuilder {
 				operatorResolver.parseOperatorExpressionString(psag.getOper_expression());
 				List<String> operators = operatorResolver.getUnaryOperators();
 
-				List<String>asymIds= Arrays.asList(psag.getAsym_id_list().split(","));
+				String[] asymIds= psag.getAsym_id_list().split(",");
 
 				// apply unary operators to the specified chains
 				for (String chainId : asymIds) {

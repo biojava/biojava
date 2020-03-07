@@ -59,11 +59,11 @@ public enum ExperimentalTechnique {
 	 private static final HashMap<String, ExperimentalTechnique> expTechStr2Value = initExpTechStr2Value();
 
 
-	 private String name;
-	 private boolean isCrystallographic;
-	 private boolean isNmr;
+	 private final String name;
+	 private final boolean isCrystallographic;
+	 private final boolean isNmr;
 
-	 private ExperimentalTechnique(String name, boolean isXtallographic, boolean isNmr) {
+	 ExperimentalTechnique(String name, boolean isXtallographic, boolean isNmr) {
 		 this.name = name;
 		 this.isCrystallographic = isXtallographic;
 		 this.isNmr = isNmr;
@@ -71,7 +71,7 @@ public enum ExperimentalTechnique {
 
 
 	 private static HashMap<String, ExperimentalTechnique> initExpTechStr2Value() {
-		HashMap<String, ExperimentalTechnique> expTechStr2Value = new HashMap<String, ExperimentalTechnique>();
+		HashMap<String, ExperimentalTechnique> expTechStr2Value = new HashMap<>();
 		for(ExperimentalTechnique exp:ExperimentalTechnique.values()) {
 			expTechStr2Value.put(exp.getName(), exp);
 		}

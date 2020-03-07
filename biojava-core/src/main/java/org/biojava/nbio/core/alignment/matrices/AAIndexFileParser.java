@@ -53,7 +53,7 @@ public class AAIndexFileParser {
 
 
 	public AAIndexFileParser(){
-		matrices  = new HashMap<String, SubstitutionMatrix<AminoAcidCompound>>();
+		matrices  = new HashMap<>();
 	}
 
 	/** parse an inputStream that points to an AAINDEX database file
@@ -71,7 +71,7 @@ public class AAIndexFileParser {
 		inMatrix = false;
 
 		BufferedReader buf = new BufferedReader (new InputStreamReader (inputStream));
-		String line = null;
+		String line;
 		line = buf.readLine();
 
 		while (  line != null ) {
@@ -125,10 +125,10 @@ public class AAIndexFileParser {
 			}
 
 
-			Float score = Float.parseFloat(values[i]);
+			float score = Float.parseFloat(values[i]);
 			score = scale * score;
 
-			Short s = (short) Math.round(score);
+			short s = (short) Math.round(score);
 
 			matrix[currentRowPos][i] = s;
 
@@ -150,7 +150,7 @@ public class AAIndexFileParser {
 		}
 	}
 
-	private int determineScale(String value) {
+	private static int determineScale(String value) {
 
 		String[] spl = value.split("\\.");
 
@@ -177,8 +177,8 @@ public class AAIndexFileParser {
 
 		matrix = new short[nrRows][nrCols];
 
-		rows = new ArrayList<AminoAcidCompound>();
-		cols = new ArrayList<AminoAcidCompound>();
+		rows = new ArrayList<>();
+		cols = new ArrayList<>();
 
 
 		//System.out.println(">" + currentRows+"<");

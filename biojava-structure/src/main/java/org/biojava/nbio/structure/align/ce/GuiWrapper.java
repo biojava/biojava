@@ -69,8 +69,8 @@ public class GuiWrapper {
 
 		Class c = Class.forName(strucAlignmentDisplay);
 
-		Method display = c.getMethod("display", new Class[]{AFPChain.class, Atom[].class,
-				Atom[].class});
+		Method display = c.getMethod("display", AFPChain.class, Atom[].class,
+				Atom[].class);
 
 		Object structureAlignmentJmol = display.invoke(null, afpChain,ca1,ca2);
 
@@ -87,7 +87,7 @@ public class GuiWrapper {
 		Class abstractAligJmolC = Class.forName(abstractAligJmol);
 
 		Class c = Class.forName(displayAFP);
-		Method show = c.getMethod("showAlignmentPanel", new Class[] {AFPChain.class, Atom[].class, Atom[].class, abstractAligJmolC});
+		Method show = c.getMethod("showAlignmentPanel", AFPChain.class, Atom[].class, Atom[].class, abstractAligJmolC);
 
 		show.invoke(null,afpChain, ca1, ca2, jmol);
 	}
@@ -104,7 +104,7 @@ public class GuiWrapper {
 
 		Object strucAligJ = structureAlignmentJmol.newInstance();
 
-		Method setS = structureAlignmentJmol.getMethod("setStructure", new Class[] {Structure.class});
+		Method setS = structureAlignmentJmol.getMethod("setStructure", Structure.class);
 
 		setS.invoke(strucAligJ,structure);
 	}
@@ -129,7 +129,7 @@ public class GuiWrapper {
 		Class<?> structureAlignmentJmol = Class.forName(strucAligJmol);
 
 		Class<?> c = Class.forName(displayAFP);
-		Method show = c.getMethod("getAlignedStructure", new Class[] { Atom[].class, Atom[].class});
+		Method show = c.getMethod("getAlignedStructure", Atom[].class, Atom[].class);
 
 		Structure s = (Structure) show.invoke(null, ca1, ca2);
 
@@ -143,7 +143,7 @@ public class GuiWrapper {
 
 		Class<?> scaleMatrixPanelC = Class.forName(scaleMatrixPanel);
 
-		Method setMatrix = scaleMatrixPanelC.getMethod("setMatrix", new Class[] { Matrix.class});
+		Method setMatrix = scaleMatrixPanelC.getMethod("setMatrix", Matrix.class);
 
 		JPanel panel = (JPanel) scaleMatrixPanelC.newInstance();
 
@@ -161,7 +161,7 @@ public class GuiWrapper {
 		Class structureAlignmentJmol = Class.forName(strucAligJmol);
 
 		Class c = Class.forName(displayAFP);
-		Method show = c.getMethod("getAtomArray", new Class[] { Atom[].class, List.class, List.class});
+		Method show = c.getMethod("getAtomArray", Atom[].class, List.class, List.class);
 
 		Atom[] atoms = (Atom[]) show.invoke(null, ca, hetatoms, nucs);
 
@@ -185,7 +185,7 @@ public class GuiWrapper {
 			Class<?> c = Class.forName(tableClass);
 			Object table = c.newInstance();
 
-			Method show = c.getMethod("show", new Class[]{File.class, UserConfiguration.class });
+			Method show = c.getMethod("show", File.class, UserConfiguration.class);
 
 			show.invoke(table, new File(params.getShowDBresult()),config);
 

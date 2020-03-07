@@ -38,7 +38,7 @@ public class Convert2Hydrophobicity extends Convertor {
 			return unknownGroup;//Non-standard AA
 		}
 	}
-	private static String[] subCategory = {"Polar", "Neutral", "Hydrophobicity"};
+	private static final String[] subCategory = {"Polar", "Neutral", "Hydrophobicity"};
 	@Override
 	public String[] getGrouping(){return subCategory;}
 	@Override

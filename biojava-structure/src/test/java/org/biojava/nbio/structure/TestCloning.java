@@ -149,7 +149,7 @@ public class TestCloning {
 		compareCloned(s, c);
 	}
 
-	private void compareCloned(final Structure s, final Structure c) throws StructureException {
+	private void compareCloned(final Structure s, final Structure c) {
 
 		assertEquals(s.getChains().size(), c.getChains().size());
 

@@ -58,7 +58,7 @@ public interface Edit<C extends Compound> {
 	 * with a target Sequence. These ends can be of 0 length but conceptionally
 	 * they can still exist.
 	 */
-	public static abstract class AbstractEdit<C extends Compound> implements Edit<C> {
+	abstract class AbstractEdit<C extends Compound> implements Edit<C> {
 
 		private final static Logger logger = LoggerFactory.getLogger(AbstractEdit.class);
 
@@ -78,15 +78,15 @@ public interface Edit<C extends Compound> {
 		@Override
 		public Sequence<C> edit(Sequence<C> editingSequence) {
 			Sequence<C> targetSequence = getTargetSequence(editingSequence);
-			List<Sequence<C>> sequences = new ArrayList<Sequence<C>>();
+			List<Sequence<C>> sequences = new ArrayList<>();
 
 			sequences.add(getFivePrime(editingSequence));
 			sequences.add(targetSequence);
 			sequences.add(getThreePrime(editingSequence));
 
-			return new JoiningSequenceReader<C>(sequences);
+			return new JoiningSequenceReader<>(sequences);
 		}
-		private int start = -1;
+		private int start;
 		private int end = -1;
 		private String stringSequence;
 		private Sequence<C> sequence;
@@ -119,8 +119,8 @@ public interface Edit<C extends Compound> {
 		public Sequence<C> getTargetSequence(Sequence<C> editingSequence) {
 			if (sequence == null && stringSequence != null) {
 				try {
-					sequence = new BasicSequence<C>(
-								stringSequence, editingSequence.getCompoundSet());
+					sequence = new BasicSequence<>(
+							stringSequence, editingSequence.getCompoundSet());
 				} catch (CompoundNotFoundException e) {
 					// TODO is there a better way to handle this exception?
 					logger.error("Problem setting sequence, some unrecognised compounds: {}", e.getMessage());
@@ -136,7 +136,7 @@ public interface Edit<C extends Compound> {
 		protected Sequence<C> getEmptySequence(Sequence<C> editingSequence) {
 			Sequence<C> s = null;
 			try {
-				s = new BasicSequence<C>("", editingSequence.getCompoundSet());
+				s = new BasicSequence<>("", editingSequence.getCompoundSet());
 			} catch (CompoundNotFoundException e) {
 				// should not happen
 				logger.error("Could not construct empty sequence. {}. This is most likely a bug.", e.getMessage());
@@ -156,7 +156,7 @@ public interface Edit<C extends Compound> {
 	/**
 	 * Implementation which allows for the deletion of bases from a Sequence
 	 */
-	public static class Delete<C extends Compound> extends AbstractEdit<C> {
+	class Delete<C extends Compound> extends AbstractEdit<C> {
 
 		public Delete(int position) {
 			this(position, position);
@@ -209,7 +209,7 @@ public interface Edit<C extends Compound> {
 	 * The code will raise exceptions if you attempt a single base edit
 	 * with an insertion.
 	 */
-	public static class Insert<C extends Compound> extends AbstractEdit<C> {
+	class Insert<C extends Compound> extends AbstractEdit<C> {
 
 		private final boolean singlePosition;
 
@@ -285,7 +285,7 @@ public interface Edit<C extends Compound> {
 	 * presence of a CompoundSet to parse a String (if given) which means
 	 * the eventual length of a Sequence is a lazy operation.
 	 */
-	public static class Substitute<C extends Compound> extends AbstractEdit<C> {
+	class Substitute<C extends Compound> extends AbstractEdit<C> {
 
 		public Substitute(String sequence, int position) {
 			super(position);

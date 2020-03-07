@@ -61,7 +61,7 @@ public interface IPeptideProperties{
 	 * @return the total molecular weight of sequence + weight of water molecule
 	 * @see ProteinSequence
 	 */
-	public double getMolecularWeight(ProteinSequence sequence);
+    double getMolecularWeight(ProteinSequence sequence);
 
 	/**
 	 * Returns the molecular weight of sequence. The sequence argument must be a protein sequence consisting of only non-ambiguous characters.
@@ -80,7 +80,7 @@ public interface IPeptideProperties{
 	 * @throws FileNotFoundException
 	 * 		thrown if either elementMassFile or aminoAcidCompositionFile are not found
 	 */
-	public double getMolecularWeight(ProteinSequence sequence, File aminoAcidCompositionFile) throws JAXBException, FileNotFoundException;
+    double getMolecularWeight(ProteinSequence sequence, File aminoAcidCompositionFile) throws JAXBException, FileNotFoundException;
 
 	/**
 	 * Returns the molecular weight of sequence. The sequence argument must be a protein sequence consisting of only non-ambiguous characters.
@@ -99,7 +99,7 @@ public interface IPeptideProperties{
 	 * @throws FileNotFoundException
 	 * 		thrown if either elementMassFile or aminoAcidCompositionFile are not found
 	 */
-	public double getMolecularWeight(ProteinSequence sequence, File elementMassFile, File aminoAcidCompositionFile)
+    double getMolecularWeight(ProteinSequence sequence, File elementMassFile, File aminoAcidCompositionFile)
 		throws JAXBException, FileNotFoundException;
 
 	/**
@@ -114,7 +114,7 @@ public interface IPeptideProperties{
 	 * 		a amino acid composition table obtained by calling IPeptideProperties.obtainAminoAcidCompositionTable
 	 * @return the total molecular weight of sequence + weight of water molecule
 	 */
-	public double getMolecularWeightBasedOnXML(ProteinSequence sequence, AminoAcidCompositionTable aminoAcidCompositionTable);
+    double getMolecularWeightBasedOnXML(ProteinSequence sequence, AminoAcidCompositionTable aminoAcidCompositionTable);
 
 	/**
 	 * This method would initialize amino acid composition table based on the input xml files and stores the table for usage in future calls to
@@ -129,7 +129,7 @@ public interface IPeptideProperties{
 	 * @throws FileNotFoundException
 	 * 		thrown if either elementMassFile or aminoAcidCompositionFile are not found
 	 */
-	public AminoAcidCompositionTable obtainAminoAcidCompositionTable(File aminoAcidCompositionFile)
+    AminoAcidCompositionTable obtainAminoAcidCompositionTable(File aminoAcidCompositionFile)
 		throws JAXBException, FileNotFoundException;
 
 	/**
@@ -146,7 +146,7 @@ public interface IPeptideProperties{
 	 * @throws FileNotFoundException
 	 * 		thrown if either elementMassFile or aminoAcidCompositionFile are not found
 	 */
-	public AminoAcidCompositionTable obtainAminoAcidCompositionTable(File elementMassFile, File aminoAcidCompositionFile)
+    AminoAcidCompositionTable obtainAminoAcidCompositionTable(File elementMassFile, File aminoAcidCompositionFile)
 		throws JAXBException, FileNotFoundException;
 
 	/**
@@ -166,7 +166,7 @@ public interface IPeptideProperties{
 	 * @return the extinction coefficient of sequence
 	 * @see ProteinSequence
 	 */
-	public double getExtinctionCoefficient(ProteinSequence sequence, boolean assumeCysReduced);
+    double getExtinctionCoefficient(ProteinSequence sequence, boolean assumeCysReduced);
 
 	/**
 	 * Returns the absorbance (optical density) of sequence. The sequence argument
@@ -182,7 +182,7 @@ public interface IPeptideProperties{
 	 * @return the absorbance (optical density) of sequence
 	 * @see ProteinSequence
 	 */
-	public double getAbsorbance(ProteinSequence sequence, boolean assumeCysReduced);
+    double getAbsorbance(ProteinSequence sequence, boolean assumeCysReduced);
 
 	/**
 	 * Returns the instability index of sequence. The sequence argument must be
@@ -196,7 +196,7 @@ public interface IPeptideProperties{
 	 * @return the instability index of sequence
 	 * @see ProteinSequence
 	 */
-	public double getInstabilityIndex(ProteinSequence sequence);
+    double getInstabilityIndex(ProteinSequence sequence);
 
 	/**
 	 * Returns the apliphatic index of sequence. The sequence argument must be a
@@ -213,7 +213,7 @@ public interface IPeptideProperties{
 	 * @return the aliphatic index of sequence
 	 * @see ProteinSequence
 	 */
-	public double getApliphaticIndex(ProteinSequence sequence);
+    double getApliphaticIndex(ProteinSequence sequence);
 
 	/**
 	 * Returns the average hydropathy value of sequence. The sequence argument
@@ -229,7 +229,7 @@ public interface IPeptideProperties{
 	 * @return the average hydropathy value of sequence
 	 * @see ProteinSequence
 	 */
-	public double getAvgHydropathy(ProteinSequence sequence);
+    double getAvgHydropathy(ProteinSequence sequence);
 
 	/**
 	 * Returns the isoelectric point of sequence. The sequence argument must be
@@ -250,9 +250,9 @@ public interface IPeptideProperties{
 	 * @return the isoelectric point of sequence
 	 * @see ProteinSequence
 	 */
-	public double getIsoelectricPoint(ProteinSequence sequence, boolean useExpasyValues);
+    double getIsoelectricPoint(ProteinSequence sequence, boolean useExpasyValues);
 
-	public double getIsoelectricPoint(ProteinSequence seuqence);
+	double getIsoelectricPoint(ProteinSequence seuqence);
 
 	/**
 	 * Returns the net charge of sequence at pH 7. The sequence argument must be
@@ -274,11 +274,11 @@ public interface IPeptideProperties{
 	 * @return the net charge of sequence at given pHPoint
 	 * @see ProteinSequence
 	 */
-	public double getNetCharge(ProteinSequence sequence, boolean useExpasyValues, double pHPoint);
+    double getNetCharge(ProteinSequence sequence, boolean useExpasyValues, double pHPoint);
 
-	public double getNetCharge(ProteinSequence sequence, boolean useExpasyValues);
+	double getNetCharge(ProteinSequence sequence, boolean useExpasyValues);
 
-	public double getNetCharge(ProteinSequence sequence);
+	double getNetCharge(ProteinSequence sequence);
 
 	/**
 	 * Returns the composition of specified amino acid in the sequence. The
@@ -296,7 +296,7 @@ public interface IPeptideProperties{
 	 * @see ProteinSequence
 	 * @see AminoAcidCompound
 	 */
-	public double getEnrichment(ProteinSequence sequence, AminoAcidCompound aminoAcidCode);
+    double getEnrichment(ProteinSequence sequence, AminoAcidCompound aminoAcidCode);
 
 	/**
 	 * Returns the composition of the 20 standard amino acid in the sequence.
@@ -311,5 +311,5 @@ public interface IPeptideProperties{
 	 * @see ProteinSequence
 	 * @see AminoAcidCompound
 	 */
-	public Map<AminoAcidCompound, Double> getAAComposition(ProteinSequence sequence);
+    Map<AminoAcidCompound, Double> getAAComposition(ProteinSequence sequence);
 }

@@ -35,21 +35,21 @@ public interface CathDatabase {
 	 *
 	 * @return CATH version
 	 */
-	public String getCathVersion();
+    String getCathVersion();
 
 	/** Return the CathNode for a node ID.
 	 *
 	 * @param nodeId
 	 * @return CATH node
 	 */
-	public CathNode getCathNode(String nodeId);
+    CathNode getCathNode(String nodeId);
 
 	/** Return list of CATH descriptions for node representatives at a CATH category (e.g. "T").
 	 *
 	 * @param category
 	 * @return CATH descriptions
 	 */
-	public List<CathDomain> getByCategory(CathCategory category);
+    List<CathDomain> getByCategory(CathCategory category);
 
 	/** Return list of CATH descriptions whose CATH codes (e.g. 1.4.6.10) start with the query.
 	 * This is currently redundant with getDescriptionsByNodeId.
@@ -57,63 +57,63 @@ public interface CathDatabase {
 	 * @param query
 	 * @return CATH descriptions
 	 */
-	public List<CathDomain> filterByCathCode(String query);
+    List<CathDomain> filterByCathCode(String query);
 
 	/** Return the CATH sub-tree for a particular domain.
 	 *
 	 * @param domain
 	 * @return CATH sub-tree
 	 */
-	public List<CathNode> getTree(CathDomain domain);
+    List<CathNode> getTree(CathDomain domain);
 
 	/** Return list of CATH domains whose node name (e.g. Orthogonal Bundle) starts with the query.
 	 *
 	 * @param query
 	 * @return CATH domains
 	 */
-	public List<CathDomain> filterByNodeName(String query);
+    List<CathDomain> filterByNodeName(String query);
 
 	/** Return list of CATH descriptions whose descriptions (name field) starts with the query.
 	 *
 	 * @param query
 	 * @return CATH descriptions
 	 */
-	public List<CathDomain> filterByDescription(String query);
+    List<CathDomain> filterByDescription(String query);
 
 	/** Return CATH description for node representative by node ID.
 	 *
 	 * @param nodeId
 	 * @return CATH description
 	 */
-	public CathDomain getDescriptionByNodeId(String nodeId);
+    CathDomain getDescriptionByNodeId(String nodeId);
 
 	/** Return all CATH domains for a PDB ID.
 	 *
 	 * @param pdbId
 	 * @return CATH domains
 	 */
-	public List<CathDomain> getDomainsForPdb(String pdbId);
+    List<CathDomain> getDomainsForPdb(String pdbId);
 
 	/** Return CATH domain for CATH domain ID.
 	 *
 	 * @param cathId
 	 * @return CATH domain
 	 */
-	public CathDomain getDomainByCathId(String cathId);
+    CathDomain getDomainByCathId(String cathId);
 
 	/** Return CATH description for CATH domain ID.
 	 *
 	 * @param cathId
 	 * @return
 	 */
-	public CathDomain getDescriptionByCathId(String cathId);
+    CathDomain getDescriptionByCathId(String cathId);
 
 	/** Return all CATH domains for a particular CATH node.
 	 *
 	 * @param nodeId
 	 * @return
 	 */
-	public List<CathDomain> getDomainsByNodeId(String nodeId);
+    List<CathDomain> getDomainsByNodeId(String nodeId);
 
-	public List<CathFragment> getFragmentsByPdbId(String pdbId);
+	List<CathFragment> getFragmentsByPdbId(String pdbId);
 }

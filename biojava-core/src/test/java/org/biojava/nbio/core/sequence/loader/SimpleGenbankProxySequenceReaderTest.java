@@ -48,9 +48,9 @@ public class SimpleGenbankProxySequenceReaderTest {
 		String wrongGi = "34567";
 
 		GenbankProxySequenceReader<AminoAcidCompound> genbankReader
-				= new GenbankProxySequenceReader<AminoAcidCompound>(System.getProperty("java.io.tmpdir"),
-						wrongGi,
-						AminoAcidCompoundSet.getAminoAcidCompoundSet());
+				= new GenbankProxySequenceReader<>(System.getProperty("java.io.tmpdir"),
+				wrongGi,
+				AminoAcidCompoundSet.getAminoAcidCompoundSet());
 
 		ProteinSequence seq = new ProteinSequence(genbankReader);
 	}

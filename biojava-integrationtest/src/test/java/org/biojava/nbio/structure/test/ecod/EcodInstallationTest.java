@@ -148,7 +148,7 @@ public class EcodInstallationTest {
 
 	private void matchNames(String pdbId,String[] expected,List<EcodDomain> actual) {
 		assertEquals("Wrong number of domains for "+pdbId, expected.length, actual.size());
-		Set<String> exp = new HashSet<String>(Arrays.asList(expected));
+		Set<String> exp = new HashSet<>(Arrays.asList(expected));
 		for(EcodDomain d : actual) {
 			assertTrue("Unexpected domain "+d.getDomainId()+" in "+pdbId,exp.contains(d.getDomainId()));
 		}
@@ -175,7 +175,7 @@ public class EcodInstallationTest {
 		}
 		expected = new EcodDomain(
 				//				Long uid, String domainId, Boolean manual,
-				20669l, "e1lyw.1", false,
+                20669L, "e1lyw.1", false,
 				//				Integer xGroup, Integer hGroup, Integer tGroup, Integer fGroup, String pdbId,
 				1,1,1,fGroup,"1lyw",
 				//				String chainName, String range, String seqId, String architectureName,
@@ -184,7 +184,7 @@ public class EcodInstallationTest {
 				"cradle loop barrel", "RIFT-related","acid protease",
 				//				String fGroupName, Boolean isAssembly, List<String> ligands
 				fGroupName,
-				20669l, Collections.singleton("EPE")
+                20669L, Collections.singleton("EPE")
 				);
 		assertEquals(ecodId,expected,domain);
 
@@ -195,13 +195,13 @@ public class EcodInstallationTest {
 	}
 
 	@Test
-	public void testMultithreaded() throws IOException {
+	public void testMultithreaded() {
 		final EcodInstallation ecod = (EcodInstallation) EcodFactory.getEcodDatabase(VERSION);
 		ecod.clear();
 		String[] ecodIds = new String[] {
 				"e4s1gA1", "e4umoB1", "e4v0cA1", "e4v1af1", "e3j7yj1", "e4wfcA1","e4b0jP1",
 		};
-		List<Future<EcodDomain>> futureDomains = new ArrayList<Future<EcodDomain>>();
+		List<Future<EcodDomain>> futureDomains = new ArrayList<>();
 		for(final String ecodId : ecodIds) {
 			Callable<EcodDomain> job = new Callable<EcodDomain>() {
 				@Override
@@ -246,8 +246,8 @@ public class EcodInstallationTest {
 		Set<String> expected,actual;
 
 		// expected members through at least develop133
-		expected = new HashSet<String>(Arrays.asList(
-				"e4il6R1 e4pj0R1 e4pj0r1 e4ub6R1 e4ub8R1".split(" ") ));
+		expected = new HashSet<>(Arrays.asList(
+				"e4il6R1 e4pj0R1 e4pj0r1 e4ub6R1 e4ub8R1".split(" ")));
 		// expanded by develop204
 		if( ecod.getVersion().compareToIgnoreCase("develop204") >= 0) {
 			expected.addAll(Arrays.asList(
@@ -256,21 +256,21 @@ public class EcodInstallationTest {
 		}
 
 		filtered = ecod.filterByHierarchy("6106.1.1");
-		actual = new HashSet<String>();
+		actual = new HashSet<>();
 		for(EcodDomain d : filtered) {
 			actual.add(d.getDomainId());
 		}
 		assertEquals(expected,actual);
 
 		filtered = ecod.filterByHierarchy("6106.1");
-		actual = new HashSet<String>();
+		actual = new HashSet<>();
 		for(EcodDomain d : filtered) {
 			actual.add(d.getDomainId());
 		}
 		assertEquals(expected,actual);
 
 		filtered = ecod.filterByHierarchy("6106");
-		actual = new HashSet<String>();
+		actual = new HashSet<>();
 		for(EcodDomain d : filtered) {
 			actual.add(d.getDomainId());
 		}

@@ -223,7 +223,7 @@ public class AFPChainXMLParser
 	}
 
 	public static AFPChain[] parseMultiXML(String xml) throws IOException {
-		List<AFPChain> afpChains = new ArrayList<AFPChain>();
+		List<AFPChain> afpChains = new ArrayList<>();
 
 		try
 		{
@@ -273,7 +273,7 @@ public class AFPChainXMLParser
 
 				a.setAlignScore(Double.parseDouble(getAttribute(rootElement,"alignScore")));
 				a.setChainRmsd(Double.parseDouble(getAttribute(rootElement,"chainRmsd")));
-				Double identity = Double.parseDouble(getAttribute(rootElement,"identity"));
+				double identity = Double.parseDouble(getAttribute(rootElement,"identity"));
 				a.setIdentity(identity);
 
 				a.setNormAlignScore(Double.parseDouble(getAttribute(rootElement,"normAlignScore")));
@@ -298,7 +298,7 @@ public class AFPChainXMLParser
 				}
 
 				String calcTimeS = getAttribute(rootElement,"time");
-				Long calcTime = -1L;
+				long calcTime = -1L;
 				if ( calcTimeS != null){
 
 					try {
@@ -316,7 +316,7 @@ public class AFPChainXMLParser
 				a.setBlockShiftVector(blockShiftVector);
 
 				int afpNum = Integer.parseInt(getAttribute(rootElement,"afpNum"));
-				List<AFP> afpSet = new ArrayList<AFP>();
+				List<AFP> afpSet = new ArrayList<>();
 				for (int afp=0;afp<afpNum;afp++){
 					afpSet.add( new AFP());
 				}
@@ -361,7 +361,7 @@ public class AFPChainXMLParser
 			e.printStackTrace();
 		}
 
-		return afpChains.toArray(new AFPChain[afpChains.size()]);
+		return afpChains.toArray(new AFPChain[0]);
 	}
 
 
@@ -421,23 +421,24 @@ public class AFPChainXMLParser
 			if(!eqr.hasAttributes()) continue;
 
 
-			if ( eqr.getNodeName().equals("eqr")) {
-				nrEqr++;
-				NamedNodeMap atts = eqr.getAttributes();
+			switch (eqr.getNodeName()) {
+				case "eqr":
+					nrEqr++;
+					NamedNodeMap atts = eqr.getAttributes();
 
-				int eqrNr = Integer.parseInt(atts.getNamedItem("eqrNr").getTextContent());
+					int eqrNr = Integer.parseInt(atts.getNamedItem("eqrNr").getTextContent());
 
-				String pdbres1 = atts.getNamedItem("pdbres1").getTextContent();
-				String chain1 = atts.getNamedItem("chain1").getTextContent();
-				String pdbres2 = atts.getNamedItem("pdbres2").getTextContent();
-				String chain2 = atts.getNamedItem("chain2").getTextContent();
+					String pdbres1 = atts.getNamedItem("pdbres1").getTextContent();
+					String chain1 = atts.getNamedItem("chain1").getTextContent();
+					String pdbres2 = atts.getNamedItem("pdbres2").getTextContent();
+					String chain2 = atts.getNamedItem("chain2").getTextContent();
 
-				//System.out.println(blockNr + " " + eqrNr + " " + chain1+" " + pdbres1 + ":" + chain2 + " " + pdbres2);
+					//System.out.println(blockNr + " " + eqrNr + " " + chain1+" " + pdbres1 + ":" + chain2 + " " + pdbres2);
 
-				pdbAln[blockNr][0][eqrNr] = chain1+":"+pdbres1;
-				pdbAln[blockNr][1][eqrNr] = chain2+":"+pdbres2;
+					pdbAln[blockNr][0][eqrNr] = chain1 + ":" + pdbres1;
+					pdbAln[blockNr][1][eqrNr] = chain2 + ":" + pdbres2;
 
-				//  A WORK AROUND FOR THE PROBLEM THAT WE DON:T HAVE PDBs LOADED AT THIS TIME...
+					//  A WORK AROUND FOR THE PROBLEM THAT WE DON:T HAVE PDBs LOADED AT THIS TIME...
 
 				/* int pos1 = getPositionForPDBresunm(pdbres1,chain1,ca1);
 				int pos2 = getPositionForPDBresunm(pdbres2,chain2,ca2);
@@ -445,30 +446,33 @@ public class AFPChainXMLParser
 				optAln[blockNr][0][eqrNr] = pos1;
 				optAln[blockNr][1][eqrNr] = pos2;
 				 */
-			} else if ( eqr.getNodeName().equals("matrix")){
-				// process Matrix
-				Matrix m = new Matrix(3,3);
+					break;
+				case "matrix":
+					// process Matrix
+					Matrix m = new Matrix(3, 3);
 
-				for (int i =1 ; i <= 3 ; i++){
-					for (int j =1 ; j <= 3 ; j++){
-						String att = getAttribute(eqr, "mat" +i + j);
-						double val = Double.parseDouble(att);
-						m.set(i-1,j-1,val);
+					for (int i = 1; i <= 3; i++) {
+						for (int j = 1; j <= 3; j++) {
+							String att = getAttribute(eqr, "mat" + i + j);
+							double val = Double.parseDouble(att);
+							m.set(i - 1, j - 1, val);
 
+						}
 					}
-				}
-				ms[blockNr] = m;
+					ms[blockNr] = m;
 
-			} else if ( eqr.getNodeName().equals("shift")){
-				Atom shift = new AtomImpl();
-				double x = Double.parseDouble(getAttribute(eqr, "x"));
-				double y = Double.parseDouble(getAttribute(eqr, "y"));
-				double z = Double.parseDouble(getAttribute(eqr, "z"));
-				shift.setX(x);
-				shift.setY(y);
-				shift.setZ(z);
-				shifts[blockNr] = shift;
+					break;
+				case "shift":
+					Atom shift = new AtomImpl();
+					double x = Double.parseDouble(getAttribute(eqr, "x"));
+					double y = Double.parseDouble(getAttribute(eqr, "y"));
+					double z = Double.parseDouble(getAttribute(eqr, "z"));
+					shift.setX(x);
+					shift.setY(y);
+					shift.setZ(z);
+					shifts[blockNr] = shift;
 
+					break;
 			}
 
 		}

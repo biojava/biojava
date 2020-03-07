@@ -36,8 +36,8 @@ public class StructureGroupXMLConverter {
 		xml.attribute("chainID", group.getChainId());
 		xml.attribute("pdbName", group.getPDBName());
 		if ( group.getInsCode() != null)
-			xml.attribute("insCode",group.getInsCode()+"");
-		xml.attribute("residueNr", group.getResidueNumber()+"");
+			xml.attribute("insCode", String.valueOf(group.getInsCode()));
+		xml.attribute("residueNr", String.valueOf(group.getResidueNumber()));
 		xml.attribute("isAminoAcid", Boolean.toString(group.isAminoAcid()));
 		xml.closeTag("structureGroup");
 	}
@@ -57,7 +57,7 @@ public class StructureGroupXMLConverter {
 		resNum.setInsCode(insCode.charAt(0));
 		resNum.setSeqNum(Integer.parseInt(resN));
 
-		StructureGroup g = new StructureGroup(resNum, pdbName, Boolean.valueOf(isAminoAcid));
+		StructureGroup g = new StructureGroup(resNum, pdbName, Boolean.parseBoolean(isAminoAcid));
 		return g;
 	}
 

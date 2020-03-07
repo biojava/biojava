@@ -118,7 +118,7 @@ public class FragmentJoiner {
 													 StrucAligParameters params) throws StructureException {
 
 		//the final list of joined fragments stores as apairs
-		List<JointFragments> fll = new ArrayList<JointFragments>();
+		List<JointFragments> fll = new ArrayList<>();
 
 		FragmentPair[] tmpfidx = new FragmentPair[fraglst.length];
 		for ( int i=0 ; i < fraglst.length; i++){
@@ -200,16 +200,16 @@ public class FragmentJoiner {
 
 
 		Comparator<JointFragments> comp = new JointFragmentsComparator();
-		Collections.sort(fll,comp);
+		fll.sort(comp);
 		Collections.reverse(fll);
 		int m = Math.min(params.getMaxrefine(),fll.size());
-		List<JointFragments> retlst = new ArrayList<JointFragments>();
+		List<JointFragments> retlst = new ArrayList<>();
 		for ( int i = 0 ; i < m ; i++){
 			JointFragments jf = fll.get(i);
 			retlst.add(jf);
 		}
 
-		return retlst.toArray(new JointFragments[retlst.size()]);
+		return retlst.toArray(new JointFragments[0]);
 
 	}
 
@@ -244,9 +244,8 @@ public class FragmentJoiner {
 	 * @param ca1subset
 	 * @param ca2subset
 	 * @return a double
-	 * @throws StructureException
 	 */
-	private double getDensity(Atom[] ca1subset, Atom[] ca2subset ) throws StructureException{
+	private double getDensity(Atom[] ca1subset, Atom[] ca2subset ) {
 
 		Atom centroid1 =  Calc.getCentroid(ca1subset);
 		Atom centroid2 = Calc.getCentroid(ca2subset);
@@ -297,7 +296,7 @@ public class FragmentJoiner {
 		//      now svd ftmp and check if the rms is < X ...
 		AlternativeAlignment ali = new AlternativeAlignment();
 		ali.apairs_from_idxlst(frag);
-		double rms = 999;
+		double rms;
 
 		int[] idx1 = ali.getIdx1();
 		int[] idx2 = ali.getIdx2();
@@ -323,7 +322,7 @@ public class FragmentJoiner {
 
 	public boolean angleCheckOk(FragmentPair a, FragmentPair b, float distcutoff){
 
-		double dist = -999;
+		double dist;
 
 		Atom v1 = a.getUnitv();
 		Atom v2 = b.getUnitv();
@@ -372,7 +371,7 @@ public class FragmentJoiner {
 		int[] used = new int[n];
 
 		//the final list of joined fragments stores as apairs
-		List<JointFragments> fll = new ArrayList<JointFragments>();
+		List<JointFragments> fll = new ArrayList<>();
 
 		double adiff = angleDiff * Math.PI / 180d;
 		logger.debug("addiff" + adiff);
@@ -440,16 +439,16 @@ public class FragmentJoiner {
 
 
 		Comparator<JointFragments> comp = new JointFragmentsComparator();
-		Collections.sort(fll,comp);
+		fll.sort(comp);
 		Collections.reverse(fll);
 		int m = Math.min(maxRefine,fll.size());
-		List<JointFragments> retlst = new ArrayList<JointFragments>();
+		List<JointFragments> retlst = new ArrayList<>();
 		for ( int i = 0 ; i < m ; i++){
 			JointFragments jf = fll.get(i);
 			retlst.add(jf);
 		}
 
-		return retlst.toArray(new JointFragments[retlst.size()]);
+		return retlst.toArray(new JointFragments[0]);
 
 	}
 
@@ -555,11 +554,7 @@ class JointFragmentsComparator
 			return -1;
 		}
 		else{
-			if ( rms1 < rms2)
-				return 1;
-			if ( rms1 > rms2)
-				return -1;
-			return 0;
+			return Double.compare(rms2, rms1);
 		}
 	}
 

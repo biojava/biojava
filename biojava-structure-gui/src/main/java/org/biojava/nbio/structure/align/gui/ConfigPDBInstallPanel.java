@@ -48,7 +48,7 @@ public class ConfigPDBInstallPanel extends JPanel
 
 	JTextField pdbDir;
 
-	private static ConfigPDBInstallPanel instance = new ConfigPDBInstallPanel();
+	private static final ConfigPDBInstallPanel instance = new ConfigPDBInstallPanel();
 
 	static JDialog dialog;
 
@@ -137,22 +137,14 @@ public class ConfigPDBInstallPanel extends JPanel
 		vBox.add(Box.createGlue());
 
 		JButton apply = new JButton("Apply");
-		apply.addActionListener(new ActionListener(){
-			@Override
-		public void actionPerformed(ActionEvent event) {
-				instance.applyValues();
-				dialog.dispose();
-			}
+		apply.addActionListener(event -> {
+			instance.applyValues();
+			dialog.dispose();
 		});
 
 		JButton close = new JButton("Cancel");
 
-		close.addActionListener(new ActionListener(){
-			@Override
-		public void actionPerformed(ActionEvent event) {
-			  dialog.dispose();
-			}
-		});
+		close.addActionListener(event -> dialog.dispose());
 
 		Box hBoxb = Box.createHorizontalBox();
 		hBoxb.add(Box.createGlue());

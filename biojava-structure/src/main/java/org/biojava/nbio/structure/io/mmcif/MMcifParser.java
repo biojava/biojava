@@ -36,31 +36,31 @@ public interface MMcifParser {
 	 *
 	 * @param consumer a consumer object.
 	 */
-	public void addMMcifConsumer(MMcifConsumer consumer);
+    void addMMcifConsumer(MMcifConsumer consumer);
 
 	/** Remove all consumers from the parser.
 	 *
 	 */
-	public void clearConsumers();
+    void clearConsumers();
 
 	/** remove a single consumer from the parser
 	 *
 	 * @param consumer
 	 */
-	public void removeMMcifConsumer(MMcifConsumer consumer);
+    void removeMMcifConsumer(MMcifConsumer consumer);
 
 
 	/** Start the actual parsing. The parser will trigger events that are defined by the MMcifConsumer class.
 	 *
 	 * @param buf a BufferedReader.
 	 */
-	public void parse(BufferedReader buf) throws IOException;
+    void parse(BufferedReader buf) throws IOException;
 
 	/** Start the actual parsing. The parser will trigger events that are defined by the MMcifConsumer class.
 	 *
 	 * @param inStream InputStream to parse from.
 	 */
-	public void parse(InputStream inStream) throws IOException;
+    void parse(InputStream inStream) throws IOException;
 
 
 }

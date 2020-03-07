@@ -35,7 +35,7 @@ import static org.junit.Assert.*;
 public class TestDistanceTreeEvaluator {
 
 	@Test
-	public void testErrorFree() throws Exception {
+	public void testErrorFree() {
 
 		// Create a perfect additive distance matrix
 		BasicSymmetricalDistanceMatrix DM = new BasicSymmetricalDistanceMatrix(
@@ -44,7 +44,7 @@ public class TestDistanceTreeEvaluator {
 		// dAB = 0.8, dBC = 0.4, dAC = 0.8
 		for (int i = 0; i < 3; i++) {
 			char id = (char) ('A' + i);
-			DM.setIdentifier(i, id + "");
+			DM.setIdentifier(i, String.valueOf(id));
 			for (int j = i; j < 3; j++) {
 				if (i == j) {
 					DM.setValue(i, j, 0.0);
@@ -66,7 +66,7 @@ public class TestDistanceTreeEvaluator {
 	}
 
 	@Test
-	public void testErrorEstimation() throws Exception {
+	public void testErrorEstimation() {
 
 		// Matrix taken from forester test
 		BasicSymmetricalDistanceMatrix m = new BasicSymmetricalDistanceMatrix(4);

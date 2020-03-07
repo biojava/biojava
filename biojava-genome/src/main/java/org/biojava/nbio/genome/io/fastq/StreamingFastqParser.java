@@ -58,20 +58,17 @@ final class StreamingFastqParser
 		FastqParser.parse(readable, new ParseListener()
 			{
 				@Override
-				public void description(final String description) throws IOException
-				{
+				public void description(final String description) {
 					builder.withDescription(description);
 				}
 
 				@Override
-				public void sequence(final String sequence) throws IOException
-				{
+				public void sequence(final String sequence) {
 					builder.withSequence(sequence);
 				}
 
 				@Override
-				public void appendSequence(final String sequence) throws IOException
-				{
+				public void appendSequence(final String sequence) {
 					builder.appendSequence(sequence);
 				}
 

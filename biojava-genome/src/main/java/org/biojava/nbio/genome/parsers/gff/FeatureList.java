@@ -40,7 +40,7 @@ import java.util.Map.Entry;
 @SuppressWarnings("serial")
 public class FeatureList extends ArrayList<FeatureI> {
 
-	 Map<String, Map<String,List<FeatureI>>> featindex = new HashMap<String,Map<String,List<FeatureI>>>();
+	 Map<String, Map<String,List<FeatureI>>> featindex = new HashMap<>();
 	Location mLocation;			//genomic location (union of feature locations)
 
 	/**
@@ -81,11 +81,11 @@ public class FeatureList extends ArrayList<FeatureI> {
 			if (featindex.containsKey(entry.getKey())){
 				Map<String,List<FeatureI>> feat = featindex.get(entry.getKey());
 				if (feat==null){
-					feat= new HashMap<String,List<FeatureI>>();
+					feat= new HashMap<>();
 				}
 				List<FeatureI> features = feat.get(entry.getValue());
 				if (features==null){
-					features = new ArrayList<FeatureI>();
+					features = new ArrayList<>();
 				}
 				features.add(feature);
 				feat.put(entry.getValue(), features);
@@ -103,9 +103,7 @@ public class FeatureList extends ArrayList<FeatureI> {
 	 * @param list The collection of FeatureI objects.
 	 */
 	public void add(Collection<FeatureI> list) {
-		for (FeatureI f : list) {
-			add(f);
-		}
+		this.addAll(list);
 	}
 
 	/**
@@ -185,7 +183,7 @@ public class FeatureList extends ArrayList<FeatureI> {
 	 * the order of features in the list.
 	 */
 	public Collection<String> groupValues() {
-		Set<String> set = new HashSet<String>();
+		Set<String> set = new HashSet<>();
 		for (FeatureI f : this) {
 			//enter in a set -- removes duplicates
 			set.add(f.group());
@@ -207,10 +205,10 @@ public class FeatureList extends ArrayList<FeatureI> {
 		if (featindex.containsKey(key)){
 			Map<String, List<FeatureI>> map = featindex.get(key);
 			Collection<String> result = map.keySet();
-			if (result == null) result = new HashSet<String>();
+			if (result == null) result = new HashSet<>();
 			return Collections.unmodifiableCollection(result);
 		}
-		LinkedHashMap<String, String> hash = new LinkedHashMap<String, String>();
+		LinkedHashMap<String, String> hash = new LinkedHashMap<>();
 		for (FeatureI f : this) {
 			//enter as a key -- removes duplicates
 			hash.put(f.getAttribute(key), null);
@@ -353,8 +351,7 @@ public class FeatureList extends ArrayList<FeatureI> {
 	 * on the same strand as the specified location will be considered for inclusion.
 	 * @return The new list of features that overlap the location.
 	 */
-	public FeatureList selectOverlapping(String seqname, Location location, boolean useBothStrands)
-			throws Exception {
+	public FeatureList selectOverlapping(String seqname, Location location, boolean useBothStrands) {
 		FeatureList list = new FeatureList();
 
 		for (FeatureI feature : this) {
@@ -468,7 +465,7 @@ public class FeatureList extends ArrayList<FeatureI> {
 	/**
 	 * used by sort routine
 	 */
-	private class FeatureComparator implements Comparator<FeatureI>, Serializable {
+	private static class FeatureComparator implements Comparator<FeatureI>, Serializable {
 	private static final long serialVersionUID = 1;
 
 		@Override

@@ -29,8 +29,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 
 public class TestParsingCalcium {
@@ -81,15 +80,15 @@ public class TestParsingCalcium {
 
 		Atom[] atoms = StructureTools.getRepresentativeAtomArray(s);
 		for (Atom atom:atoms) {
-			assertTrue("atom "+atom.getPDBserial()+" of residue "+atom.getGroup().getResidueNumber()+"-"+atom.getGroup().getPDBName()+
-					" is not a Carbon alpha", atom.getElement()==Element.C);
+            assertSame("atom " + atom.getPDBserial() + " of residue " + atom.getGroup().getResidueNumber() + "-" + atom.getGroup().getPDBName() +
+                    " is not a Carbon alpha", atom.getElement(), Element.C);
 		}
 
 		for (Chain c:s.getChains()) {
 			atoms = StructureTools.getRepresentativeAtomArray(c);
 			for (Atom atom:atoms) {
-				assertTrue("atom "+atom.getPDBserial()+" of residue "+atom.getGroup().getResidueNumber()+"-"+atom.getGroup().getPDBName()+
-						" is not a Carbon alpha", atom.getElement()==Element.C);
+                assertSame("atom " + atom.getPDBserial() + " of residue " + atom.getGroup().getResidueNumber() + "-" + atom.getGroup().getPDBName() +
+                        " is not a Carbon alpha", atom.getElement(), Element.C);
 			}
 		}
 
@@ -104,7 +103,7 @@ public class TestParsingCalcium {
 					atom.getElement()==Element.O ||
 					atom.getElement()==Element.N    );
 
-			assertTrue("backbone atoms should not contain CB atoms",!atom.getName().equals("CB"));
+            assertFalse("backbone atoms should not contain CB atoms", atom.getName().equals("CB"));
 
 			if (atom.getGroup().getPDBName().equals("GLY")) {
 				hasGlycine = true;

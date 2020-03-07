@@ -184,7 +184,7 @@ public class TestDifficultMmCIFFiles {
 	}
 
 	@Test
-	public void test4letterChains() throws IOException, StructureException, URISyntaxException {
+	public void test4letterChains() throws IOException, URISyntaxException {
 		String filename = "/1hh0_4char.cif.gz";
 		URL url = getClass().getResource(filename);
 		assumeNotNull("Can't find resource "+filename,url);

@@ -44,7 +44,7 @@ public class CeSideChainMain  extends CeMain implements StructureAlignment {
 		}
 	}
 
-	public static void main(String[] args) throws ConfigurationException {
+	public static void main(String[] args) {
 		CeSideChainUserArgumentProcessor processor = new CeSideChainUserArgumentProcessor();
 		processor.process(args);
 	}

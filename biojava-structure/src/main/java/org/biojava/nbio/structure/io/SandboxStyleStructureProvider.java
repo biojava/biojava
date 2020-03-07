@@ -187,7 +187,7 @@ public class SandboxStyleStructureProvider implements StructureProvider {
 
 		String[] dirName = f.list();
 
-		List<String>pdbIds = new ArrayList<String>();
+		List<String>pdbIds = new ArrayList<>();
 		for (String dir : dirName) {
 			File d2= new File(f,dir);
 			if ( ! d2.isDirectory())

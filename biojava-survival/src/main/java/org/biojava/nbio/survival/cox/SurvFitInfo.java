@@ -21,6 +21,7 @@
 package org.biojava.nbio.survival.cox;
 
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Contains info for graphing km figures
@@ -29,8 +30,8 @@ import java.util.LinkedHashMap;
  */
 public class SurvFitInfo {
 
-	private LinkedHashMap<String, StrataInfo> strataInfoHashMap = new LinkedHashMap<String, StrataInfo>();
-	private LinkedHashMap<String, StrataInfo> unweightedStrataInfoHashMap = new LinkedHashMap<String, StrataInfo>();
+	private LinkedHashMap<String, StrataInfo> strataInfoHashMap = new LinkedHashMap<>();
+	private LinkedHashMap<String, StrataInfo> unweightedStrataInfoHashMap = new LinkedHashMap<>();
 	private boolean weighted = false;
 
 
@@ -70,9 +71,9 @@ public class SurvFitInfo {
 	 * @param label
 	 */
 	public void addStrataInfoHashMap(LinkedHashMap<String, StrataInfo> siHashMap, String label) {
-		for (String key : siHashMap.keySet()) {
-			StrataInfo si = siHashMap.get(key);
-			strataInfoHashMap.put(label + " " + key, si);
+		for (Map.Entry<String, StrataInfo> entry : siHashMap.entrySet()) {
+			StrataInfo si = entry.getValue();
+			strataInfoHashMap.put(label + " " + entry.getKey(), si);
 		}
 	}
 

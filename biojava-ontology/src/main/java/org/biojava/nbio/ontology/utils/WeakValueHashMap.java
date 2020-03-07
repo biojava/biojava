@@ -110,7 +110,7 @@ public class WeakValueHashMap extends AbstractMap {
 	}
 
 	private class WVEntrySet extends AbstractSet {
-	private Set keyRefEntrySet;
+	private final Set keyRefEntrySet;
 
 	public WVEntrySet() {
 		super();
@@ -130,9 +130,9 @@ public class WeakValueHashMap extends AbstractMap {
 	}
 	}
 
-	private class WVEntryIterator implements Iterator {
+	private static class WVEntryIterator implements Iterator {
 	private Object cache;
-	private Iterator keyRefIterator;
+	private final Iterator keyRefIterator;
 
 	public WVEntryIterator(Iterator keyRefIterator) {
 		this.keyRefIterator = keyRefIterator;
@@ -182,8 +182,8 @@ public class WeakValueHashMap extends AbstractMap {
 	}
 
 	private static class WVMapEntry implements Map.Entry {
-	private Object key;
-	private Object value;
+	private final Object key;
+	private final Object value;
 
 	private WVMapEntry(Object key, Object value) {
 		this.key = key;

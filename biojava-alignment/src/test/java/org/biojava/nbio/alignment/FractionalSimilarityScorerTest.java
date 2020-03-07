@@ -53,20 +53,20 @@ public class FractionalSimilarityScorerTest {
 		target = new ProteinSequence("RADG");
 		gaps = new SimpleGapPenalty((short) 2, (short) 1);
 		blosum62 = SubstitutionMatrixHelper.getBlosum62();
-		alignment = new NeedlemanWunsch<ProteinSequence, AminoAcidCompound>(query, target, gaps, blosum62);
-		self = new NeedlemanWunsch<ProteinSequence, AminoAcidCompound>(query, query, gaps, blosum62);
-		scorer1 = new FractionalSimilarityScorer<ProteinSequence, AminoAcidCompound>(alignment);
-		scorer2 = new FractionalSimilarityScorer<ProteinSequence, AminoAcidCompound>(self);
+		alignment = new NeedlemanWunsch<>(query, target, gaps, blosum62);
+		self = new NeedlemanWunsch<>(query, query, gaps, blosum62);
+		scorer1 = new FractionalSimilarityScorer<>(alignment);
+		scorer2 = new FractionalSimilarityScorer<>(self);
 	}
 
 	@Test
 	public void testFractionalSimilarityScorerPairwiseSequenceAlignerOfSC() {
-		assertNotNull(new FractionalSimilarityScorer<ProteinSequence, AminoAcidCompound>(alignment));
+		assertNotNull(new FractionalSimilarityScorer<>(alignment));
 	}
 
 	@Test
 	public void testFractionalSimilarityScorerSequencePairOfSC() {
-		assertNotNull(new FractionalSimilarityScorer<ProteinSequence, AminoAcidCompound>(alignment.getPair()));
+		assertNotNull(new FractionalSimilarityScorer<>(alignment.getPair()));
 	}
 
 	@Test

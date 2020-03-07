@@ -44,16 +44,16 @@ public class UnitCellBoundingBox {
 	 * bounding boxes of all chains of all AUs in unit cell
 	 * e.g. chainBbs[0] would be the bounding boxes for all chains in the original AU
 	 */
-	private BoundingBox[][] chainBbs;
+	private final BoundingBox[][] chainBbs;
 
 	/**
 	 * An array with dimensions numOperatorsSg to contain all bounding boxes of
 	 * all AUs in unit cell
 	 */
-	private BoundingBox[] auBbs;
+	private final BoundingBox[] auBbs;
 
-	private int numOperatorsSg; // i.e. multiplicity of space group
-	private int numPolyChainsAu;
+	private final int numOperatorsSg; // i.e. multiplicity of space group
+	private final int numPolyChainsAu;
 
 	public UnitCellBoundingBox(int numOperatorsSg, int numPolyChainsAu) {
 		this.numOperatorsSg = numOperatorsSg;

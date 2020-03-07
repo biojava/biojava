@@ -22,7 +22,6 @@ package org.biojava.nbio.structure.test.util;
 
 import java.util.Deque;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.biojava.nbio.structure.StructureIO;
@@ -65,7 +64,7 @@ public final class GlobalsHelper {
 	}
 
 	// Saves defaults as stack
-	private static Deque<PathInfo> stack = new LinkedList<>();
+	private static final Deque<PathInfo> stack = new LinkedList<>();
 	static {
 		// Save default state
 		pushState();

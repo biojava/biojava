@@ -42,11 +42,11 @@ public class GenericFastaHeaderParserTest {
 	}
 
 	@BeforeClass
-	public static void setUpClass() throws Exception {
+	public static void setUpClass() {
 	}
 
 	@AfterClass
-	public static void tearDownClass() throws Exception {
+	public static void tearDownClass() {
 	}
 
 	@Before
@@ -78,9 +78,9 @@ public class GenericFastaHeaderParserTest {
 	@Test
 	public void testParseHeader() throws CompoundNotFoundException {
 		logger.info("parseHeader");
-		String header = "";
+		String header;
 		ProteinSequence sequence = new ProteinSequence("");
-		GenericFastaHeaderParser<ProteinSequence,AminoAcidCompound> instance = new GenericFastaHeaderParser<ProteinSequence,AminoAcidCompound>();
+		GenericFastaHeaderParser<ProteinSequence,AminoAcidCompound> instance = new GenericFastaHeaderParser<>();
 
 		header = "gi|gi-number|gb|accession|locus";
 		instance.parseHeader(header, sequence);

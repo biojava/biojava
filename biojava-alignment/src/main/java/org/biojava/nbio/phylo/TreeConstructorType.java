@@ -38,5 +38,5 @@ public enum TreeConstructorType {
 	UPGMA,
 
 	/** What does this stand for? (Aleix: Nov 2015) */
-	AV;
+	AV
 }

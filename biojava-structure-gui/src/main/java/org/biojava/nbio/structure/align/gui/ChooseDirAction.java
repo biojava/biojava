@@ -46,7 +46,7 @@ public class ChooseDirAction extends AbstractAction{
 		this.config = config;
 		this.textField = textField;
 	}
-	public static final long serialVersionUID = 0l;
+	public static final long serialVersionUID = 0L;
 	// This method is called when the button is pressed
 	@Override
 	public void actionPerformed(ActionEvent evt) {

@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
 public class FatCatUserArgumentProcessor extends AbstractUserArgumentProcessor {
 	Logger logger = LoggerFactory.getLogger(FatCatUserArgumentProcessor.class);
 
-	protected class FatCatStartupParams extends StartupParameters {
+	protected static class FatCatStartupParams extends StartupParameters {
 		int fragLen;
 		Double rmsdCut;
 		double disCut;
@@ -91,7 +91,7 @@ public class FatCatUserArgumentProcessor extends AbstractUserArgumentProcessor {
 
 	@Override
 	public StructureAlignment getAlgorithm() {
-		StructureAlignment algorithm = null;
+		StructureAlignment algorithm;
 		if ( params != null && ((FatCatStartupParams)params).isFlexible()) {
 			logger.info("running flexible alignment");
 			algorithm = new FatCatFlexible();

@@ -34,7 +34,7 @@ public class TestAtomInfo {
 		String s1 = "[MET]508:A.CA/1 #3918";
 
 		AtomInfo aa = AtomInfo.fromString(s1);
-		Assert.assertTrue(aa.getAtomName().equals("CA"));
+        Assert.assertEquals("CA", aa.getAtomName());
 		Assert.assertEquals(aa.getChainId(), "A");
 		Assert.assertEquals(aa.getModelNumber(), 1);
 		Assert.assertEquals(aa.getResidueName(), "MET");

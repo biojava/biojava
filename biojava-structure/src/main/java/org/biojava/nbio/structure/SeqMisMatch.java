@@ -25,33 +25,33 @@ package org.biojava.nbio.structure;
  */
 public interface SeqMisMatch {
 
-	public Integer getSeqNum() ;
+	Integer getSeqNum() ;
 
-	public void setSeqNum(Integer seqNum) ;
+	void setSeqNum(Integer seqNum) ;
 
-	public String getOrigGroup() ;
+	String getOrigGroup() ;
 
-	public void setOrigGroup(String origGroup);
+	void setOrigGroup(String origGroup);
 
-	public String getPdbGroup() ;
+	String getPdbGroup() ;
 
-	public void setPdbGroup(String pdbGroup) ;
+	void setPdbGroup(String pdbGroup) ;
 
-	public String getDetails() ;
+	String getDetails() ;
 
-	public void setDetails(String details);
-	public String getUniProtId() ;
+	void setDetails(String details);
+	String getUniProtId() ;
 
-	public void setUniProtId(String uniProtId) ;
+	void setUniProtId(String uniProtId) ;
 
-	public String getInsCode() ;
+	String getInsCode() ;
 
-	public void setInsCode(String insCode) ;
+	void setInsCode(String insCode) ;
 
-	public String getPdbResNum() ;
+	String getPdbResNum() ;
 
-	public void setPdbResNum(String pdbResNum) ;
+	void setPdbResNum(String pdbResNum) ;
 
 	@Override
-	public String toString();
+    String toString();
 }

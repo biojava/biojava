@@ -57,8 +57,8 @@ import java.util.LinkedHashMap;
 public class FastaStructureParser {
 
 	// inputs
-	private FastaReader<ProteinSequence, AminoAcidCompound> reader;
-	private AtomCache cache;
+	private final FastaReader<ProteinSequence, AminoAcidCompound> reader;
+	private final AtomCache cache;
 
 	// cache processed data
 	private String[] accessions;
@@ -71,7 +71,7 @@ public class FastaStructureParser {
 			SequenceCreatorInterface<AminoAcidCompound> sequenceCreator,
 			AtomCache cache)
 	{
-		this(new FastaReader<ProteinSequence, AminoAcidCompound>(
+		this(new FastaReader<>(
 				is, headerParser, sequenceCreator),cache);
 	}
 
@@ -80,7 +80,7 @@ public class FastaStructureParser {
 			SequenceCreatorInterface<AminoAcidCompound> sequenceCreator,
 			AtomCache cache) throws FileNotFoundException
 	{
-		this(new FastaReader<ProteinSequence, AminoAcidCompound>(
+		this(new FastaReader<>(
 				file, headerParser, sequenceCreator), cache);
 	}
 

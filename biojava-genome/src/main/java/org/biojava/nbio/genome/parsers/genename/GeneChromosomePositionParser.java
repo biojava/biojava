@@ -79,9 +79,9 @@ public class GeneChromosomePositionParser {
 	public static List<GeneChromosomePosition> getChromosomeMappings(InputStream inStream) throws IOException {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(inStream));
 
-		ArrayList<GeneChromosomePosition> gcps = new ArrayList<GeneChromosomePosition>();
+		ArrayList<GeneChromosomePosition> gcps = new ArrayList<>();
 
-		String line = null;
+		String line;
 		while ((line = reader.readLine()) != null) {
 			GeneChromosomePosition gcp = getGeneChromosomePosition(line);
 			if ( gcp != null)
@@ -126,7 +126,7 @@ public class GeneChromosomePositionParser {
 
 	private static List<Integer> getIntegerList(String lst){
 		String[] spl = lst.split(",");
-		ArrayList<Integer> l = new ArrayList<Integer>();
+		ArrayList<Integer> l = new ArrayList<>();
 		for (String s : spl){
 			l.add(Integer.parseInt(s));
 		}

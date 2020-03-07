@@ -58,7 +58,7 @@ public class FileConvert {
 
 
 
-	private Structure structure ;
+	private final Structure structure ;
 
 	private boolean printConnections;
 
@@ -231,7 +231,7 @@ public class FileConvert {
 				}
 
 			}
-			if (nonPolyGroupsExist) str.append(String.format("%-80s","TER")).append(newline);;
+			if (nonPolyGroupsExist) str.append(String.format("%-80s","TER")).append(newline);
 
 			boolean waterGroupsExist = false;
 			for (Chain chain : waterChains) {
@@ -248,7 +248,7 @@ public class FileConvert {
 				}
 
 			}
-			if (waterGroupsExist) str.append(String.format("%-80s","TER")).append(newline);;
+			if (waterGroupsExist) str.append(String.format("%-80s","TER")).append(newline);
 
 
 			if ( nrModels>1) {
@@ -271,7 +271,7 @@ public class FileConvert {
 		int groupsize  = g.size();
 
 		for ( int atompos = 0 ; atompos < groupsize; atompos++) {
-			Atom a = null ;
+			Atom a;
 
 			a = g.getAtom(atompos);
 			if ( a == null)
@@ -390,7 +390,7 @@ public class FileConvert {
 
 		GroupType type = g.getType() ;
 
-		String record = "" ;
+		String record;
 		if ( type.equals(GroupType.HETATM) ) {
 			record = "HETATM";
 		} else {
@@ -411,7 +411,7 @@ public class FileConvert {
 		if ( altLoc == null)
 			altLoc = ' ';
 
-		String resseq = "" ;
+		String resseq;
 		if ( hasInsertionCode(pdbcode) )
 			resseq     = String.format("%5s",pdbcode);
 		else
@@ -426,7 +426,7 @@ public class FileConvert {
 
 		String leftResName = String.format("%3s",resName);
 
-		StringBuffer s = new StringBuffer();
+		StringBuilder s = new StringBuilder();
 		s.append(record);
 		s.append(serial);
 		s.append(" ");

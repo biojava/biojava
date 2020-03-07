@@ -33,9 +33,8 @@ public interface ParseListener
 	 * Notify this parse listener of a description line.
 	 *
 	 * @param description description line
-	 * @throws IOException if an I/O error occurs
-	 */
-	void description(String description) throws IOException;
+     */
+	void description(String description);
 
 	/**
 	 * Notify this parse listener of a sequence line.
@@ -47,9 +46,8 @@ public interface ParseListener
 	 * </p>
 	 *
 	 * @param sequence sequence line
-	 * @throws IOException if an I/O error occurs
-	 */
-	void sequence(String sequence) throws IOException;
+     */
+	void sequence(String sequence);
 
 	/**
 	 * Notify this parse listener of an additional sequence line.
@@ -60,9 +58,8 @@ public interface ParseListener
 	 * </p>
 	 *
 	 * @param sequence additional sequence line
-	 * @throws IOException if an I/O error occurs
-	 */
-	void appendSequence(String sequence) throws IOException;
+     */
+	void appendSequence(String sequence);
 
 	/**
 	 * Notify this parse listener of a repeat description line.

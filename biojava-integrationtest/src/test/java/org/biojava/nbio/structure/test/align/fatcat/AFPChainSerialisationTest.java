@@ -148,13 +148,13 @@ public class AFPChainSerialisationTest
 		int blockNum = afpChain.getBlockNum();
 		int[] optLen = afpChain.getOptLen();
 
-		assertTrue("The nr of aligned blocks is not the same! " + blockNum + " " + newChain.getBlockNum() , blockNum == newChain.getBlockNum());
+		assertEquals("The nr of aligned blocks is not the same! " + blockNum + " " + newChain.getBlockNum(), blockNum, newChain.getBlockNum());
 
 
 
 		for ( int i =0 ; i < blockNum ; i++){
 			int newLenI = newChain.getOptLen()[i];
-			assertTrue("The values in the optLen field don't match! pos:" + i + " orig:" + optLen[i] + " new:" +  newLenI,optLen[i] == newLenI);
+			assertEquals("The values in the optLen field don't match! pos:" + i + " orig:" + optLen[i] + " new:" + newLenI, optLen[i], newLenI);
 		}
 
 		// test the internal optAlign data structure:
@@ -170,8 +170,8 @@ public class AFPChainSerialisationTest
 				int n1 = optAln2[i][0][j];
 				int n2 = optAln2[i][1][j];
 
-				assertTrue(p1 == n1);
-				assertTrue(p2 == n2);
+				assertEquals(p1, n1);
+				assertEquals(p2, n2);
 
 			}
 		}
@@ -187,7 +187,7 @@ public class AFPChainSerialisationTest
 	}
 
 
-	private AFPChain doAlign(String name1, String name2, Atom[] ca1, Atom[] ca2 , boolean doRigid) throws StructureException,IOException{
+	private AFPChain doAlign(String name1, String name2, Atom[] ca1, Atom[] ca2 , boolean doRigid) throws StructureException {
 		FatCatParameters params = new FatCatParameters();
 
 		FatCat fatCat = new FatCat();
@@ -222,14 +222,14 @@ public class AFPChainSerialisationTest
 
 	@org.junit.Test
 	public void testMulti() throws IOException, StructureException {
-		Atom[] ca1 = null;
-		Atom[] ca2 = null;
-		Atom[] ca3 = null;
-		Atom[] ca4 = null;
-		Atom[] ca5 = null;
-		Atom[] ca6 = null;
-		String[] result1 = null;
-		String[] result2 = null;
+		Atom[] ca1;
+		Atom[] ca2;
+		Atom[] ca3;
+		Atom[] ca4;
+		Atom[] ca5;
+		Atom[] ca6;
+		String[] result1;
+		String[] result2;
 
 		String name1 = "5pti.A";
 		String name2 = "1znf.A";
@@ -264,7 +264,7 @@ public class AFPChainSerialisationTest
 		//WARNING: THE ORDER CAN CHANGE: order of elements in XML is not necessarily the same!
 		AFPChain[] chains = AFPChainXMLParser.parseMultiXML(xmlNew);
 
-		assertTrue(chains.length == 2);
+		assertEquals(2, chains.length);
 
 		// recreate the correct chains...
 		AFPChain new1 = getAfpFor(name1,chains);
@@ -273,16 +273,16 @@ public class AFPChainSerialisationTest
 		assertNotNull(new1);
 		assertNotNull(new2);
 
-		assertTrue(new1.getName1().equals(name1));
+		assertEquals(new1.getName1(), name1);
 		//System.out.println(new2.getName1() + " " + new2.getName2() + " "+ name3);
-		assertTrue(new2.getName1().equals(name3));
+		assertEquals(new2.getName1(), name3);
 
 
 		AFPChainXMLParser.rebuildAFPChain(new1, ca1, ca3);
 		String fatcat1 = new1.toFatcat(ca1, ca3);
 		assertEquals(fatcat1, result1[0]);
 		String xmlnew1 = AFPChainXMLConverter.toXML(new1, ca1, ca3);
-		assertTrue(xmlnew1.equals(result1[1]));
+		assertEquals(xmlnew1, result1[1]);
 
 		AFPChainXMLParser.rebuildAFPChain(new2, ca4, ca6);
 		String fatcat2 = new2.toFatcat(ca4, ca6);

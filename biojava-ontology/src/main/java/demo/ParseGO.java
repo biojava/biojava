@@ -56,11 +56,9 @@ public class ParseGO {
 			Ontology ontology = parser.parseOBO(oboFile, "BioSapiens", "the BioSapiens ontology");
 
 			Set<Term> keys = ontology.getTerms();
-			Iterator<Term> iter = keys.iterator();
-			while (iter.hasNext()){
-				Term t = iter.next();
-				logger.info("{} [{}]", t.getName(), t.getDescription());
-			}
+            for (Term t : keys) {
+                logger.info("{} [{}]", t.getName(), t.getDescription());
+            }
 		} catch (Exception e){
 			logger.error("Exception: ", e);
 		}

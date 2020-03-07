@@ -54,7 +54,7 @@ import javax.vecmath.Matrix4d;
  *
  */
 public class CeCPMain extends CeMain {
-	private static boolean debug = false;
+	private static final boolean debug = false;
 
 	public static final String algorithmName = "jCE Circular Permutation";
 
@@ -84,7 +84,7 @@ public class CeCPMain extends CeMain {
 		return CeCPMain.version;
 	}
 
-	public static void main(String[] args) throws ConfigurationException {
+	public static void main(String[] args) {
 		CeCPUserArgumentProcessor processor = new CeCPUserArgumentProcessor(); //Responsible for creating a CeCPMain instance
 		processor.process(args);
 	}
@@ -354,7 +354,7 @@ public class CeCPMain extends CeMain {
 
 
 		int firstRes = nStart; // start res number after trimming
-		int lastRes = nStart+ca2len;  // last res number after trimming
+		int lastRes;  // last res number after trimming
 		if(nStart >= ca2len || cEnd < ca2len) { // no circular permutation
 			firstRes=nStart;
 			lastRes=cEnd;
@@ -415,8 +415,8 @@ public class CeCPMain extends CeMain {
 
 		// Fix numbering:
 		// First, split up the atoms into left and right blocks
-		List< ResiduePair > left = new ArrayList<ResiduePair>(); // residues from left of duplication
-		List< ResiduePair > right = new ArrayList<ResiduePair>(); // residues from right of duplication
+		List< ResiduePair > left = new ArrayList<>(); // residues from left of duplication
+		List< ResiduePair > right = new ArrayList<>(); // residues from right of duplication
 
 		for(int i=0;i<optLen[0];i++) {
 			if( optAln[0][1][i] >= firstRes && optAln[0][1][i] <= lastRes ) { // not trimmed
@@ -432,7 +432,7 @@ public class CeCPMain extends CeMain {
 		alignLen = 0;
 
 		// Now we don't care about left/right, so just call them "blocks"
-		List<List<ResiduePair>> blocks = new ArrayList<List<ResiduePair>>(2);
+		List<List<ResiduePair>> blocks = new ArrayList<>(2);
 		if( !left.isEmpty() ) {
 			blocks.add(left);
 			alignLen += left.size();
@@ -756,7 +756,7 @@ public class CeCPMain extends CeMain {
 	// requires additional dependencies biojava-structure-gui and JmolApplet
 	// TODO dmyersturnbull: This should probably be in structure-gui
 	@SuppressWarnings("unused")
-	private static void displayAlignment(AFPChain afpChain, Atom[] ca1, Atom[] ca2) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, StructureException {
+	private static void displayAlignment(AFPChain afpChain, Atom[] ca1, Atom[] ca2) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
 		Atom[] ca1clone = StructureTools.cloneAtomArray(ca1);
 		Atom[] ca2clone = StructureTools.cloneAtomArray(ca2);
 		if (! GuiWrapper.isGuiModuleInstalled()) {

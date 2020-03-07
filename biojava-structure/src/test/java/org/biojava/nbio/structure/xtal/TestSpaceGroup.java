@@ -40,10 +40,10 @@ public class TestSpaceGroup {
 
 	private static final double DELTA = 0.000001;
 	// use true for printing operators of all space groups (including non-enantiomorphics), or false to print only enantiomorphics
-	private static boolean PRINT_OPERATORS_FROM_ALL_SGS = false;
+	private static final boolean PRINT_OPERATORS_FROM_ALL_SGS = false;
 
 	// print information per operator
-	private static boolean VERBOSE = false;
+	private static final boolean VERBOSE = false;
 
 	@Test
 	public void testTransfConversion() {
@@ -101,9 +101,9 @@ public class TestSpaceGroup {
 							Assert.assertFalse(diffz>1 && diffz<0);
 
 							// they are integer, i.e. 0 or 1
-							Assert.assertTrue(diffx == (int)diffx);
-							Assert.assertTrue(diffy == (int)diffy);
-							Assert.assertTrue(diffz == (int)diffz);
+							Assert.assertEquals(diffx, (int) diffx, 0.0);
+							Assert.assertEquals(diffy, (int) diffy, 0.0);
+							Assert.assertEquals(diffz, (int) diffz, 0.0);
 						}
 
 					}
@@ -172,11 +172,11 @@ public class TestSpaceGroup {
 				if (i==0) {
 					Assert.assertTrue(ct.isIdentity());
 					Assert.assertFalse(ct.isPureCrystalTranslation());
-					Assert.assertTrue(ct.getTransformType()==TransformType.AU);
+					Assert.assertSame(ct.getTransformType(), TransformType.AU);
 				}
 
 				Assert.assertFalse(ct.isPureCrystalTranslation());
-				Assert.assertFalse(ct.getTransformType()==TransformType.XTALTRANSL);
+				Assert.assertNotSame(ct.getTransformType(), TransformType.XTALTRANSL);
 
 
 				// rotation axes and type
@@ -206,7 +206,10 @@ public class TestSpaceGroup {
 				} else { // i.e. determinant -1
 					switch (foldType) {
 					case -1:
-						Assert.assertEquals(0,axisAngle.angle,DELTA);
+                        case -6:
+                        case -4:
+                        case -3:
+                            Assert.assertEquals(0,axisAngle.angle,DELTA);
 						// no glide planes
 						Assert.assertTrue(ct.getTranslScrewComponent().epsilonEquals(new Vector3d(0,0,0), DELTA));
 						break;
@@ -214,23 +217,11 @@ public class TestSpaceGroup {
 						Assert.assertEquals(0,axisAngle.angle,DELTA);
 						// glide planes can happen
 						break;
-					case -3:
-						Assert.assertEquals(0,axisAngle.angle,DELTA);
-						// no glide planes
-						Assert.assertTrue(ct.getTranslScrewComponent().epsilonEquals(new Vector3d(0,0,0), DELTA));
-						break;
-					case -4:
-						Assert.assertEquals(0,axisAngle.angle,DELTA);
-						// no glide planes
-						Assert.assertTrue(ct.getTranslScrewComponent().epsilonEquals(new Vector3d(0,0,0), DELTA));
-						break;
-					case -6:
-						Assert.assertEquals(0,axisAngle.angle,DELTA);
-						// no glide planes
-						Assert.assertTrue(ct.getTranslScrewComponent().epsilonEquals(new Vector3d(0,0,0), DELTA));
-						break;
+                        // no glide planes
+                        // no glide planes
+                        // no glide planes
 
-					}
+                    }
 
 				}
 
@@ -288,14 +279,14 @@ public class TestSpaceGroup {
 					}
 
 					Assert.assertTrue(ct.isFractionalTranslation());
-					Assert.assertTrue(ct.getTransformType()==TransformType.CELLTRANSL);
+					Assert.assertSame(ct.getTransformType(), TransformType.CELLTRANSL);
 				}
 				if (ct.isRotation() && !ct.isFractionalTranslation()) {
 					Assert.assertTrue(ct.getTransformType()==TransformType.TWOFOLD ||
 							ct.getTransformType()==TransformType.THREEFOLD ||
 							ct.getTransformType()==TransformType.FOURFOLD ||
 							ct.getTransformType()==TransformType.SIXFOLD);
-					Assert.assertTrue(!ct.getTransformType().isScrew());
+					Assert.assertFalse(ct.getTransformType().isScrew());
 				}
 
 				if (spaceGroup.isEnantiomorphic() || PRINT_OPERATORS_FROM_ALL_SGS) {
@@ -332,7 +323,7 @@ public class TestSpaceGroup {
 	}
 
 	// to debug the testing code (run as java program so that we can use normal debugger)
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) {
 		TestSpaceGroup test = new TestSpaceGroup();
 		test.testTransfConversion();
 	}

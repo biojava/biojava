@@ -56,22 +56,22 @@ public class SimpleProfileProfileAlignerTest {
 		protein4 = new ProteinSequence("ANDR");
 		gaps = new SimpleGapPenalty(2, 1);
 		blosum62 = SubstitutionMatrixHelper.getBlosum62();
-		prof1 = new SimpleProfile<ProteinSequence, AminoAcidCompound>(protein1);
-		prof2 = new SimpleProfile<ProteinSequence, AminoAcidCompound>(protein2);
-		prof3 = new SimpleProfile<ProteinSequence, AminoAcidCompound>(protein3);
-		prof4 = new SimpleProfile<ProteinSequence, AminoAcidCompound>(protein4);
-		sppa1 = new SimpleProfileProfileAligner<ProteinSequence, AminoAcidCompound>(prof1, prof2, gaps, blosum62);
+		prof1 = new SimpleProfile<>(protein1);
+		prof2 = new SimpleProfile<>(protein2);
+		prof3 = new SimpleProfile<>(protein3);
+		prof4 = new SimpleProfile<>(protein4);
+		sppa1 = new SimpleProfileProfileAligner<>(prof1, prof2, gaps, blosum62);
 		pp1 = sppa1.getPair();
-		sppa2 = new SimpleProfileProfileAligner<ProteinSequence, AminoAcidCompound>(prof3, prof4, gaps, blosum62);
+		sppa2 = new SimpleProfileProfileAligner<>(prof3, prof4, gaps, blosum62);
 		pp2 = sppa2.getPair();
-		sppa3 = new SimpleProfileProfileAligner<ProteinSequence, AminoAcidCompound>(pp1, pp2, gaps, blosum62);
+		sppa3 = new SimpleProfileProfileAligner<>(pp1, pp2, gaps, blosum62);
 		all = sppa3.getPair();
 	}
 
 	@Test
 	public void testSimpleProfileProfileAligner() {
 		SimpleProfileProfileAligner<ProteinSequence, AminoAcidCompound> alig =
-				new SimpleProfileProfileAligner<ProteinSequence, AminoAcidCompound>();
+				new SimpleProfileProfileAligner<>();
 		alig.setQuery(prof1);
 		alig.setTarget(prof2);
 		alig.setGapPenalty(gaps);

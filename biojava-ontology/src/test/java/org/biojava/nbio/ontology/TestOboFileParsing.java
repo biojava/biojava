@@ -71,24 +71,22 @@ public class TestOboFileParsing {
 
 		ontology = parser.parseOBO(oboFile, "Human_phenotype", "the Human Phenotype ontology");
 		Set<Term> keys = ontology.getTerms();
-		Iterator iter = keys.iterator();
 
-		while (iter.hasNext()){
-			Term term = (Term) iter.next();
-			if(term.getName().equals("HP:0000057")) {
-				Annotation anno = term.getAnnotation();
-				Assert.assertTrue(anno.containsProperty("replaced_by"));
-				Assert.assertEquals("HP:0008665", anno.getProperty("replaced_by"));
-			}
-			if(term.getName().equals("HP:0000006")) {
-				Assert.assertEquals("Autosomal dominant inheritance", term.getDescription());
-				Object[] syns = term.getSynonyms();
-				Assert.assertEquals(3,  syns.length);
-				Assert.assertEquals("Autosomal dominant", ((Synonym) syns[0]).getName());
-				Assert.assertEquals("Autosomal dominant form", ((Synonym) syns[1]).getName());
-				Assert.assertEquals("Autosomal dominant type", ((Synonym) syns[2]).getName());
-			}
-		}
+        for (Term term : keys) {
+            if (term.getName().equals("HP:0000057")) {
+                Annotation anno = term.getAnnotation();
+                Assert.assertTrue(anno.containsProperty("replaced_by"));
+                Assert.assertEquals("HP:0008665", anno.getProperty("replaced_by"));
+            }
+            if (term.getName().equals("HP:0000006")) {
+                Assert.assertEquals("Autosomal dominant inheritance", term.getDescription());
+                Object[] syns = term.getSynonyms();
+                Assert.assertEquals(3, syns.length);
+                Assert.assertEquals("Autosomal dominant", ((Synonym) syns[0]).getName());
+                Assert.assertEquals("Autosomal dominant form", ((Synonym) syns[1]).getName());
+                Assert.assertEquals("Autosomal dominant type", ((Synonym) syns[2]).getName());
+            }
+        }
 	}
 
 }

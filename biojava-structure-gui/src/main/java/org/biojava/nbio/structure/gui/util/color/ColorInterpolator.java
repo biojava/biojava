@@ -36,5 +36,5 @@ public interface ColorInterpolator {
 	 * @return The color between a and b
 	 * @throws IllegalArgumentException if mixing is not between 0 and 1
 	 */
-	public Color interpolate(Color a, Color b, float mixing);
+    Color interpolate(Color a, Color b, float mixing);
 }

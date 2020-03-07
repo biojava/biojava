@@ -100,7 +100,7 @@ public class SubstructureIdentifier implements StructureIdentifier {
 
 			this.ranges = ResidueRange.parseMultiple(rangeStr);
 		} else {
-			this.ranges = new LinkedList<ResidueRange>();
+			this.ranges = new LinkedList<>();
 		}
 	}
 
@@ -199,7 +199,7 @@ public class SubstructureIdentifier implements StructureIdentifier {
 		for( int modelNr=0;modelNr<s.nrModels();modelNr++) {
 
 			// Construct new model
-			newS.addModel(new ArrayList<Chain>());
+			newS.addModel(new ArrayList<>());
 
 			if(getResidueRanges().isEmpty()) {
 				// Include all residues

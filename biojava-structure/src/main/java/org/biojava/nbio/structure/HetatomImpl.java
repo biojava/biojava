@@ -87,7 +87,7 @@ public class HetatomImpl implements Group {
 
 	}
 
-	private static PerformanceBehavior performanceBehavior=PerformanceBehavior.LESS_MEMORY_SLOWER_PERFORMANCE;
+	private static final PerformanceBehavior performanceBehavior=PerformanceBehavior.LESS_MEMORY_SLOWER_PERFORMANCE;
 
 	private Map<String,Atom> atomNameLookup;
 

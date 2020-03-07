@@ -49,7 +49,7 @@ public class TestEntityHeuristics {
 	//}
 
 	@Test
-	public void test1b8gRaw() throws IOException, StructureException {
+	public void test1b8gRaw() throws IOException {
 
 		Structure s = getStructure("1b8g_raw.pdb.gz", true);
 
@@ -81,7 +81,7 @@ public class TestEntityHeuristics {
 
 
 	@Test
-	public void test2m7yRaw() throws IOException, StructureException {
+	public void test2m7yRaw() throws IOException {
 
 		Structure s = getStructure("2m7y_raw.pdb.gz", true);
 
@@ -112,7 +112,7 @@ public class TestEntityHeuristics {
 	}
 
 	@Test
-	public void test3c5fRaw() throws IOException, StructureException {
+	public void test3c5fRaw() throws IOException {
 
 		Structure s = getStructure("3c5f_raw.pdb.gz", true);
 
@@ -153,7 +153,7 @@ public class TestEntityHeuristics {
 	}
 
 	@Test
-	public void test4b19Raw() throws IOException, StructureException {
+	public void test4b19Raw() throws IOException {
 
 		Structure s = getStructure("4b19_raw.pdb.gz", true);
 
@@ -184,7 +184,7 @@ public class TestEntityHeuristics {
 	}
 
 	@Test
-	public void test3ddoNoseqres() throws IOException, StructureException {
+	public void test3ddoNoseqres() throws IOException {
 
 		// 3ddo contains 6 chains in 1 entity, with residue numbering completely different in each of the chains
 
@@ -207,7 +207,7 @@ public class TestEntityHeuristics {
 	}
 
 	@Test
-	public void test3ddoSeqres() throws IOException, StructureException {
+	public void test3ddoSeqres() throws IOException {
 
 		// 3ddo contains 6 chains in 1 entity, with residue numbering completely different in each of the chains
 
@@ -245,13 +245,7 @@ public class TestEntityHeuristics {
 
 	private void checkEntitiesNumbered(List<EntityInfo> entities) {
 
-		Collections.sort(entities, new Comparator<EntityInfo>() {
-
-			@Override
-			public int compare(EntityInfo o1, EntityInfo o2) {
-				return new Integer(o1.getMolId()).compareTo(o2.getMolId());
-			}
-		});
+		entities.sort((o1, o2) -> new Integer(o1.getMolId()).compareTo(o2.getMolId()));
 
 		int id = 1;
 		for (EntityInfo compound:entities) {

@@ -150,13 +150,13 @@ Column 15: Comma-separated value list of non-polymer entities within 4 A of at l
 		this.tGroupName = o.tGroupName;
 		this.fGroupName = o.fGroupName;
 		this.assemblyId = o.assemblyId;
-		this.ligands = new HashSet<String>(o.ligands);
+		this.ligands = new HashSet<>(o.ligands);
 	}
 
 
 
 	@Override
-	protected Object clone() throws CloneNotSupportedException {
+	protected Object clone() {
 		return new EcodDomain(this);
 	}
 

@@ -1,7 +1,5 @@
 package org.biojava.nbio.structure.io.mmtf;
 
-import static org.junit.Assert.assertEquals;
-
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;

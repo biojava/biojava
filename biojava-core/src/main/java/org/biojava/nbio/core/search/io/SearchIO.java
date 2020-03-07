@@ -55,7 +55,7 @@ public class SearchIO implements Iterable<Result>{
 	 */
 	private List<Result> results;
 
-	private final String NOT_SUPPORTED_FILE_EXCEPTION =
+	private static final String NOT_SUPPORTED_FILE_EXCEPTION =
 			"This extension is not associated with any parser. You can try to specify a ResultFactory object.";
 
 	/**
@@ -140,7 +140,7 @@ public class SearchIO implements Iterable<Result>{
 	 */
 	private ResultFactory guessFactory(File f){
 		if (extensionFactoryAssociation == null){
-			extensionFactoryAssociation = new HashMap<String, ResultFactory>();
+			extensionFactoryAssociation = new HashMap<>();
 			ServiceLoader<ResultFactory> impl = ServiceLoader.load(ResultFactory.class);
 			for (ResultFactory loadedImpl : impl) {
 				List<String> fileExtensions = loadedImpl.getFileExtensions();

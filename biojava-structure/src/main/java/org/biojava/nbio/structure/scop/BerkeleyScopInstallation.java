@@ -45,7 +45,7 @@ public class BerkeleyScopInstallation extends ScopInstallation {
 	 * A map from SCOP version names which the Berkeley server offers as a
 	 * download to an array of equivalent deprecated SCOP version names.
 	 */
-	public static final Map<String,String[]> EQUIVALENT_VERSIONS = new HashMap<String,String[]>();
+	public static final Map<String,String[]> EQUIVALENT_VERSIONS = new HashMap<>();
 
 	static {
 		EQUIVALENT_VERSIONS.put("2.01", new String[] {"1.75A"});
@@ -62,7 +62,7 @@ public class BerkeleyScopInstallation extends ScopInstallation {
 	}
 
 	private static class BerkeleyScopMirror extends ScopMirror {
-		private String rootURL;
+		private final String rootURL;
 		public BerkeleyScopMirror(String url) {
 			super(url);
 			rootURL = url;

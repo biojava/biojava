@@ -122,8 +122,8 @@ final class FastqParser
 		@Override
 		public boolean processLine(final String line) throws IOException
 		{
-			String sequence = null;
-			String quality = null;
+			String sequence;
+			String quality;
 			switch (state)
 			{
 			case DESCRIPTION:
@@ -192,7 +192,7 @@ final class FastqParser
 	}
 
 	/** Parser state. */
-	private static enum State
+	private enum State
 	{
 		/** Description parser state. */
 		DESCRIPTION,
@@ -207,6 +207,6 @@ final class FastqParser
 		QUALITY,
 
 		/** Complete parser state. */
-		COMPLETE;
-	};
+		COMPLETE
+	}
 }

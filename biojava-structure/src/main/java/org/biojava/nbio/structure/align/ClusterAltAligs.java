@@ -65,7 +65,7 @@ public class ClusterAltAligs {
 			List remainList = new ArrayList();
 			List currentCluster = new ArrayList();
 
-			currentCluster.add( new Integer(i));
+			currentCluster.add(i);
 			excludeList.add(a);
 
 			int j=-1;
@@ -94,7 +94,7 @@ public class ClusterAltAligs {
 				//		" l1:"+ idxA.length + " l2:" + idxB.length + " perpos:" + perpos);
 
 				if ( perpos > cutoff){
-					currentCluster.add(new Integer(j));
+					currentCluster.add(j);
 					excludeList.add(b);
 				} else {
 					remainList.add(b);
@@ -115,11 +115,10 @@ public class ClusterAltAligs {
 			cpos++;
 			//System.out.println("cluster "+cpos+":");
 			List cluster = (List) iter.next();
-			Iterator iter2 = cluster.iterator();
-			while (iter2.hasNext()){
-				Integer i = (Integer) iter2.next();
+			for (Object o : cluster) {
+				Integer i = (Integer) o;
 
-				AlternativeAlignment alig = aligs[i.intValue()];
+				AlternativeAlignment alig = aligs[i];
 				alig.setCluster(cpos);
 				//System.out.println( " ("+ aligs[i.intValue()]+")");
 

@@ -29,7 +29,7 @@ import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 
 public interface SequenceReader<C extends Compound> extends Sequence<C> {
 
-	public void setCompoundSet(CompoundSet<C> compoundSet);
+	void setCompoundSet(CompoundSet<C> compoundSet);
 
-	public void setContents(String sequence) throws CompoundNotFoundException;
+	void setContents(String sequence) throws CompoundNotFoundException;
 }

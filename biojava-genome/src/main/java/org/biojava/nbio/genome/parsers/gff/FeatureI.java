@@ -36,7 +36,7 @@ public interface FeatureI
 	 *
 	 * @return The location.
 	 */
-	public Location location();
+    Location location();
 
 	/**
 	 * Get the group id of the feature. The group id is defined in the GFF1
@@ -50,21 +50,21 @@ public interface FeatureI
 	 *
 	 * @return The group id. This may be an empty string.
 	 */
-	public String group();
+    String group();
 
 	/**
 	 * Get the feature type, for example, "exon", "CDS", etc.
 	 *
 	 * @return The type.
 	 */
-	public String type();
+    String type();
 
 	/**
 	 * Get the sequence name.
 	 *
 	 * @return Sequence name.
 	 */
-	public String seqname();
+    String seqname();
 
 	/**
 	 * Get the attribute value for this key.
@@ -72,7 +72,7 @@ public interface FeatureI
 	 * @param key The key.
 	 * @return The corresponding value. Null if the key has no value defined .
 	 */
-	public String getAttribute( String key );
+    String getAttribute(String key);
 
 
 	/**
@@ -81,7 +81,7 @@ public interface FeatureI
 	 * @param key The key.
 	 * @return True if a value is defined for this key.
 	 */
-	public boolean hasAttribute( String key );
+    boolean hasAttribute(String key);
 
 	/**
 	 * Check if the feature attributes include the specified key/value pair.
@@ -90,7 +90,7 @@ public interface FeatureI
 	 * @param value The value.
 	 * @return True if the feature's value for this key matches the specified value.
 	 */
-	public boolean hasAttribute( String key, String value );
+    boolean hasAttribute(String key, String value);
 
 	/**
 	 * A string representation of the feature.
@@ -98,15 +98,15 @@ public interface FeatureI
 	 * @return The string.
 	 */
 	@Override
-	public String toString();
+    String toString();
 
 	/**
 	 * Get HashMap of user data.
 	 *
 	 * @return The user HashMap.
 	 */
-	public  HashMap<String, String> userData();
+    HashMap<String, String> userData();
 
-	public HashMap<String, String> getAttributes();
+	HashMap<String, String> getAttributes();
 
 }

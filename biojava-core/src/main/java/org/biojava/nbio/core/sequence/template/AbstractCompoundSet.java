@@ -39,11 +39,11 @@ public abstract class AbstractCompoundSet<C extends Compound> implements Compoun
 
 	private final static Logger logger = LoggerFactory.getLogger(AbstractCompoundSet.class);
 
-	private Map<CharSequence, C> charSeqToCompound = new HashMap<CharSequence, C>();
+	private final Map<CharSequence, C> charSeqToCompound = new HashMap<>();
 	private int maxCompoundCharSequenceLength = -1;
 	private Boolean compoundStringLengthEqual = null;
 
-	Map<C,Set<C>> equivalentsMap = new HashMap<C, Set<C>>();
+	Map<C,Set<C>> equivalentsMap = new HashMap<>();
 
 	protected void addCompound(C compound, C lowerCasedCompound, Iterable<C> equivalents) {
 		addCompound(compound);
@@ -60,18 +60,15 @@ public abstract class AbstractCompoundSet<C extends Compound> implements Compoun
 		}
 	}
 
-	protected void addCompound(C compound, C lowerCasedCompound, C... equivalents) {
-		List<C> equiv = new ArrayList<C>(equivalents.length);
+	@SafeVarargs
+	protected final void addCompound(C compound, C lowerCasedCompound, C... equivalents) {
+		List<C> equiv = new ArrayList<>(equivalents.length);
 		equiv.addAll(Arrays.asList(equivalents));
 		addCompound(compound, lowerCasedCompound, equiv);
 	}
 
 	protected void addEquivalent(C compound, C equivalent) {
-	 Set<C> s = equivalentsMap.get(compound);
-	 if ( s == null){
-		 s = new HashSet<C>();
-		 equivalentsMap.put(compound, s);
-	 }
+		Set<C> s = equivalentsMap.computeIfAbsent(compound, k -> new HashSet<>());
 
 		s.add( equivalent);
 	}
@@ -170,7 +167,7 @@ public Set<C> getEquivalentCompounds(C compound) {
 
 	@Override
 public List<C> getAllCompounds() {
-		return new ArrayList<C>(charSeqToCompound.values());
+		return new ArrayList<>(charSeqToCompound.values());
 	}
 
 	private void assertCompound(C compound) {

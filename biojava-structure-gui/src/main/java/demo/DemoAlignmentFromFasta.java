@@ -24,6 +24,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 
 import org.biojava.nbio.core.sequence.ProteinSequence;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
@@ -68,20 +69,15 @@ public class DemoAlignmentFromFasta {
 
 
 		InputStream fasta;
-		try {
-			fasta = new ByteArrayInputStream(fastaStr.getBytes("UTF-8"));
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-			return;
-		}
+        fasta = new ByteArrayInputStream(fastaStr.getBytes(StandardCharsets.UTF_8));
 
-		// Create a header parser to parse the header lines into valid structure accessions.
+        // Create a header parser to parse the header lines into valid structure accessions.
 		// The resulting accession can be anything interpretable by AtomCache.getStructure.
 		// Possible Examples: "4HHB" (whole structure), "d4hhba_" (SCOP domain),
 		//   "4HHB.A:1-15" (residue range)
 		// For this example, the built-in fasta parser will extract the correct accession.
 		SequenceHeaderParserInterface<ProteinSequence, AminoAcidCompound> headerParser;
-		headerParser = new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>();
+		headerParser = new GenericFastaHeaderParser<>();
 
 		// Create AtomCache to fetch structures from the PDB
 		AtomCache cache = new AtomCache();
@@ -96,10 +92,7 @@ public class DemoAlignmentFromFasta {
 				fasta, headerParser, creator, cache);
 		try {
 			parser.process();
-		} catch (IOException e) {
-			e.printStackTrace();
-			return;
-		} catch (StructureException e) {
+		} catch (IOException | StructureException e) {
 			e.printStackTrace();
 			return;
 		}

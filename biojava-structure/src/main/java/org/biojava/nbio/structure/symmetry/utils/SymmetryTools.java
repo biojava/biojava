@@ -443,17 +443,17 @@ public class SymmetryTools {
 	public static List<List<Integer>> buildSymmetryGraph(List<AFPChain> afps,
 			Atom[] atoms, boolean undirected) {
 
-		List<List<Integer>> graph = new ArrayList<List<Integer>>();
+		List<List<Integer>> graph = new ArrayList<>();
 
 		for (int n = 0; n < atoms.length; n++) {
-			graph.add(new ArrayList<Integer>());
+			graph.add(new ArrayList<>());
 		}
 
 		for (int k = 0; k < afps.size(); k++) {
 			for (int i = 0; i < afps.get(k).getOptAln().length; i++) {
 				for (int j = 0; j < afps.get(k).getOptAln()[i][0].length; j++) {
-					Integer res1 = afps.get(k).getOptAln()[i][0][j];
-					Integer res2 = afps.get(k).getOptAln()[i][1][j];
+					int res1 = afps.get(k).getOptAln()[i][0][j];
+					int res2 = afps.get(k).getOptAln()[i][1][j];
 					graph.get(res1).add(res2);
 					if (undirected)
 						graph.get(res2).add(res1);
@@ -476,7 +476,7 @@ public class SymmetryTools {
 	public static Graph<Integer, DefaultEdge> buildSymmetryGraph(
 			AFPChain selfAlignment) {
 
-		Graph<Integer, DefaultEdge> graph = new SimpleGraph<Integer, DefaultEdge>(
+		Graph<Integer, DefaultEdge> graph = new SimpleGraph<>(
 				DefaultEdge.class);
 
 		for (int i = 0; i < selfAlignment.getOptAln().length; i++) {
@@ -512,13 +512,13 @@ public class SymmetryTools {
 		Atom[] atoms = symmetry.getAtoms();
 		Set<Group> allGroups = StructureTools.getAllGroupsFromSubset(atoms, GroupType.HETATM);
 		List<StructureIdentifier> repeatsId = symmetry.getRepeatsID();
-		List<Structure> repeats = new ArrayList<Structure>(order);
+		List<Structure> repeats = new ArrayList<>(order);
 
 		// Create new structure containing the repeat atoms
 		for (int i = 0; i < order; i++) {
 
 			Structure s = new StructureImpl();
-			s.addModel(new ArrayList<Chain>(1));
+			s.addModel(new ArrayList<>(1));
 			s.setStructureIdentifier(repeatsId.get(i));
 
 			Block align = symmetry.getMultipleAlignment().getBlock(0);
@@ -542,7 +542,7 @@ public class SymmetryTools {
 
 			List<Group> ligands = StructureTools.getLigandsByProximity(
 					allGroups,
-					repeat.toArray(new Atom[repeat.size()]),
+					repeat.toArray(new Atom[0]),
 					StructureTools.DEFAULT_LIGAND_PROXIMITY_CUTOFF);
 
 			logger.warn("Adding {} ligands to {}",ligands.size(), symmetry.getMultipleAlignment().getStructureIdentifier(i));
@@ -613,7 +613,7 @@ public class SymmetryTools {
 
 		MultipleAlignment repeats = newEnsemble.getMultipleAlignment(0);
 		Block block = repeats.getBlock(0);
-		List<Atom[]> atomArrays = new ArrayList<Atom[]>();
+		List<Atom[]> atomArrays = new ArrayList<>();
 
 		for (Structure s : repSt)
 			atomArrays.add(StructureTools.getRepresentativeAtomArray(s));
@@ -621,7 +621,7 @@ public class SymmetryTools {
 		newEnsemble.setAtomArrays(atomArrays);
 
 		for (int su = 0; su < block.size(); su++) {
-			Integer start = block.getStartResidue(su);
+			int start = block.getStartResidue(su);
 
 			// Normalize aligned residues
 			for (int res = 0; res < block.length(); res++) {
@@ -658,7 +658,7 @@ public class SymmetryTools {
 
 		MultipleAlignmentEnsemble e = new MultipleAlignmentEnsembleImpl(symm,
 				atoms, atoms, false);
-		e.setAtomArrays(new ArrayList<Atom[]>());
+		e.setAtomArrays(new ArrayList<>());
 		StructureIdentifier name = null;
 		if (e.getStructureIdentifiers() != null) {
 			if (!e.getStructureIdentifiers().isEmpty())
@@ -667,12 +667,12 @@ public class SymmetryTools {
 			name = atoms[0].getGroup().getChain().getStructure()
 					.getStructureIdentifier();
 
-		e.setStructureIdentifiers(new ArrayList<StructureIdentifier>());
+		e.setStructureIdentifiers(new ArrayList<>());
 
 		MultipleAlignment result = new MultipleAlignmentImpl();
 		BlockSet bs = new BlockSetImpl(result);
 		Block b = new BlockImpl(bs);
-		b.setAlignRes(new ArrayList<List<Integer>>());
+		b.setAlignRes(new ArrayList<>());
 
 		int order = symm.getBlockNum();
 		for (int su = 0; su < order; su++) {
@@ -737,7 +737,7 @@ public class SymmetryTools {
 	 */
 	public static List<Group> getGroups(Atom[] rAtoms) {
 
-		List<Group> groups = new ArrayList<Group>(rAtoms.length);
+		List<Group> groups = new ArrayList<>(rAtoms.length);
 
 		for (Atom a : rAtoms) {
 			Group g = a.getGroup();
@@ -774,8 +774,8 @@ public class SymmetryTools {
 			for (int level = 0; level < axes.getNumLevels(); level++) {
 
 				// Calculate the aligned atom arrays to superimpose
-				List<Atom> list1 = new ArrayList<Atom>();
-				List<Atom> list2 = new ArrayList<Atom>();
+				List<Atom> list1 = new ArrayList<>();
+				List<Atom> list2 = new ArrayList<>();
 
 				for (int firstRepeat : axes.getFirstRepeats(level)) {
 
@@ -805,8 +805,8 @@ public class SymmetryTools {
 					}
 				}
 
-				Atom[] arr1 = list1.toArray(new Atom[list1.size()]);
-				Atom[] arr2 = list2.toArray(new Atom[list2.size()]);
+				Atom[] arr1 = list1.toArray(new Atom[0]);
+				Atom[] arr2 = list2.toArray(new Atom[0]);
 
 				// Calculate the new transformation information
 				if (arr1.length > 0 && arr2.length > 0) {
@@ -817,7 +817,7 @@ public class SymmetryTools {
 				}
 
 				// Get the transformations from the SymmetryAxes
-				List<Matrix4d> transformations = new ArrayList<Matrix4d>();
+				List<Matrix4d> transformations = new ArrayList<>();
 				for (int su = 0; su < msa.size(); su++) {
 					transformations.add(axes.getRepeatTransform(su));
 				}
@@ -866,7 +866,7 @@ public class SymmetryTools {
 		else {
 
 			// Get Atoms of all models
-			List<Atom> atomList = new ArrayList<Atom>();
+			List<Atom> atomList = new ArrayList<>();
 			for (int m = 0; m < structure.nrModels(); m++) {
 				for (Chain c : structure.getModel(m))
 					atomList.addAll(Arrays.asList(StructureTools
@@ -888,7 +888,7 @@ public class SymmetryTools {
 	 */
 	public static List<Integer> getValidFolds(List<Integer> stoichiometry) {
 
-		List<Integer> denominators = new ArrayList<Integer>();
+		List<Integer> denominators = new ArrayList<>();
 
 		if (stoichiometry.isEmpty())
 			return denominators;
@@ -896,7 +896,7 @@ public class SymmetryTools {
 		int nChains = Collections.max(stoichiometry);
 
 		// Remove duplicate stoichiometries
-		Set<Integer> nominators = new TreeSet<Integer>(stoichiometry);
+		Set<Integer> nominators = new TreeSet<>(stoichiometry);
 
 		// find common denominators
 		for (int d = 1; d <= nChains; d++) {

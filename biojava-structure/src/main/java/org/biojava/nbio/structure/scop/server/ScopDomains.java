@@ -93,7 +93,7 @@ public class ScopDomains implements Serializable{
 
 	public static ScopDomains fromXML(String xml){
 
-		ScopDomains job = null;
+		ScopDomains job;
 
 		try {
 

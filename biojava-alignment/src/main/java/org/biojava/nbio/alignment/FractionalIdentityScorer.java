@@ -40,7 +40,8 @@ public class FractionalIdentityScorer<S extends Sequence<C>, C extends Compound>
 		implements PairwiseSequenceScorer<S, C> {
 
 	// always stored
-	private S query, target;
+	private final S query;
+    private final S target;
 	private int max, score;
 
 	// optional cached input field

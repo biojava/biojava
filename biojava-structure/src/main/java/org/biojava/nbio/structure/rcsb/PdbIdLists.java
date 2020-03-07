@@ -226,7 +226,7 @@ public class PdbIdLists {
 
 		InputStream in =  doPOST(u,encodedXML);
 
-		Set<String> pdbIds = new TreeSet<String>();
+		Set<String> pdbIds = new TreeSet<>();
 
 
 		try (BufferedReader rd = new BufferedReader(new InputStreamReader(in))) {
@@ -237,7 +237,6 @@ public class PdbIdLists {
 				pdbIds.add(line);
 
 			}
-			rd.close();
 		}
 
 
@@ -275,7 +274,7 @@ public class PdbIdLists {
 		// Get the response
 		return conn.getInputStream();
 
-	};
+	}
 
 	public static void main(String[] args){
 		try {

@@ -176,7 +176,7 @@ public class CathDomain implements Serializable, StructureIdentifier {
 	 */
 	public String getPdbIdAndChain() {
 		return domainName.substring(0, 4) +
-				(!domainName.substring(4, 5).equals("0") ? "." + domainName.substring(4, 5) : "");
+				(!domainName.startsWith("0", 4) ? "." + domainName.substring(4, 5) : "");
 	}
 
 	public Integer getDomainId() {
@@ -280,10 +280,10 @@ public class CathDomain implements Serializable, StructureIdentifier {
 	}
 
 	public String getCATH() {
-		return Integer.toString(getClassId()) + "." +
-				Integer.toString(getArchitectureId()) + "." +
-				Integer.toString(getTopologyId()) + "." +
-				Integer.toString(getHomologyId());
+		return getClassId() + "." +
+				getArchitectureId() + "." +
+				getTopologyId() + "." +
+				getHomologyId();
 	}
 
 	public void setSOLID(String cathCode) {
@@ -296,11 +296,11 @@ public class CathDomain implements Serializable, StructureIdentifier {
 	}
 
 	public String getSOILD() {
-		return Integer.toString(getSequenceFamilyId()) + "." +
-				Integer.toString(getOrthologousSequenceFamilyId()) + "." +
-				Integer.toString(getLikeSequenceFamilyId()) + "." +
-				Integer.toString(getIdenticalSequenceFamilyId()) + "." +
-				Integer.toString(getDomainCounter());
+		return getSequenceFamilyId() + "." +
+				getOrthologousSequenceFamilyId() + "." +
+				getLikeSequenceFamilyId() + "." +
+				getIdenticalSequenceFamilyId() + "." +
+				getDomainCounter();
 	}
 
 	public Integer getClassificationId(CathCategory cathCategory) {
@@ -422,7 +422,7 @@ public class CathDomain implements Serializable, StructureIdentifier {
 	 * Returns the chains this domain is defined over; contains more than 1 element only if this domains is a multi-chain domain.
 	 */
 	public Set<String> getChains() {
-		Set<String> chains = new HashSet<String>();
+		Set<String> chains = new HashSet<>();
 		List<ResidueRange> rrs = toCanonical().getResidueRanges();
 		for (ResidueRange rr : rrs) chains.add(rr.getChainName());
 		return chains;
@@ -435,7 +435,7 @@ public class CathDomain implements Serializable, StructureIdentifier {
 
 	@Override
 	public SubstructureIdentifier toCanonical() {
-		List<ResidueRange> ranges = new ArrayList<ResidueRange>();
+		List<ResidueRange> ranges = new ArrayList<>();
 		String chain = String.valueOf(getDomainName().charAt(getDomainName().length() - 3));
 		for (CathSegment segment : this.getSegments()) {
 			ranges.add(new ResidueRange(chain, segment.getStart(), segment.getStop()));

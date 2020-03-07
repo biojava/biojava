@@ -54,8 +54,10 @@ public class SimpleAlignedSequence<S extends Sequence<C>, C extends Compound> im
 
 	// always stored
 	private AlignedSequence<S, C> prev;
-	private S original;
-	private int length, numBefore, numAfter;
+	private final S original;
+	private final int length;
+	private int numBefore;
+	private int numAfter;
 	private Location location;
 
 	// cached (lazily initialized)
@@ -266,8 +268,9 @@ public class SimpleAlignedSequence<S extends Sequence<C>, C extends Compound> im
 
 	// methods for Sequence
 
+	@SafeVarargs
 	@Override
-	public int countCompounds(C... compounds) {
+	public final int countCompounds(C... compounds) {
 		int count = 0;
 		List<C> search = Arrays.asList(compounds);
 		for (C compound : getAsList()) {
@@ -285,7 +288,7 @@ public class SimpleAlignedSequence<S extends Sequence<C>, C extends Compound> im
 
 	@Override
 	public List<C> getAsList() {
-		List<C> compounds = new ArrayList<C>();
+		List<C> compounds = new ArrayList<>();
 		for (int i = 1; i <= length; i++) {
 			compounds.add(getCompoundAt(i));
 		}
@@ -382,7 +385,7 @@ public class SimpleAlignedSequence<S extends Sequence<C>, C extends Compound> im
 
 	// helper method to initialize the location
 	private void setLocation(List<Step> steps) {
-		List<Location> sublocations = new ArrayList<Location>();
+		List<Location> sublocations = new ArrayList<>();
 		int start = 0, step = 0, oStep = numBefore+numAfter, oMax = this.original.getLength(), pStep = 0, pMax =
 				(prev == null) ? 0 : prev.getLength();
 		boolean inGap = true;

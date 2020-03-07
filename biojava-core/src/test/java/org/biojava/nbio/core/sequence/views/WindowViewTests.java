@@ -38,7 +38,7 @@ public class WindowViewTests {
 	@Test
 	public void basicWindow() throws CompoundNotFoundException {
 		RNASequence rna = new RNASequence("AUGCCU");
-		WindowedSequence<NucleotideCompound> window = new WindowedSequence<NucleotideCompound>(rna, 3);
+		WindowedSequence<NucleotideCompound> window = new WindowedSequence<>(rna, 3);
 
 		Iterator<SequenceView<NucleotideCompound>> iter = window.iterator();
 		assertTrue("hasNext() returns true", iter.hasNext());
@@ -57,8 +57,8 @@ public class WindowViewTests {
 	@Test
 	public void reaminderWindow() throws CompoundNotFoundException {
 		RNASequence rna = new RNASequence("AUGCC");
-		WindowedSequence<NucleotideCompound> window = new WindowedSequence<NucleotideCompound>(rna, 3);
-		List<SequenceView<NucleotideCompound>> list = new ArrayList<SequenceView<NucleotideCompound>>();
+		WindowedSequence<NucleotideCompound> window = new WindowedSequence<>(rna, 3);
+		List<SequenceView<NucleotideCompound>> list = new ArrayList<>();
 		for(SequenceView<NucleotideCompound> c: window) {
 			list.add(c);
 		}

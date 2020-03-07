@@ -59,7 +59,7 @@ implements StructurePairSelector {
 
 
 
-	private JComboBox fileType ;
+	private final JComboBox fileType ;
 
 	JTextField filePath1;
 	JTextField filePath2;
@@ -129,7 +129,7 @@ implements StructurePairSelector {
 	private Structure getStructure(JTextField filePath,JTextField chainId) throws StructureException{
 		//PDBFileReader reader = new PDBFileReader();
 
-		StructureIOFile reader = null;
+		StructureIOFile reader;
 		String fileFormat = (String)fileType.getSelectedItem();
 		if ( fileFormat.equals(UserConfiguration.PDB_FORMAT)){
 			reader = new PDBFileReader();
@@ -141,7 +141,7 @@ implements StructurePairSelector {
 
 		String path = filePath.getText();
 		File f = new File(path);
-		Structure s = null;
+		Structure s;
 		try {
 			s = reader.getStructure(f);
 		} catch (IOException  e){
@@ -206,7 +206,7 @@ class ChooseAction extends AbstractAction{
 		super("Choose");
 		this.textField = textField;
 	}
-	public static final long serialVersionUID = 0l;
+	public static final long serialVersionUID = 0L;
 	// This method is called when the button is pressed
 	@Override
 	public void actionPerformed(ActionEvent evt) {

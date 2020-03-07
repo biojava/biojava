@@ -32,5 +32,5 @@ public interface ChangeValue {
 	 * @param originalValue
 	 * @return
 	 */
-	public String change(String originalValue);
+    String change(String originalValue);
 }

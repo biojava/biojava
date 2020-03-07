@@ -92,7 +92,7 @@ public class StructureSequenceMatcherTest {
 				//>2PTC:I|PDBID|CHAIN|SEQUENCE
 				"RPDFCLEPPYTGPCKARIIRYFYNAKAGLCQTFVYGGCRAKRNNFKSAEDCMRTCGGA";
 
-		Assert.assertTrue(seq1.length() == pdbNum1.length);
+		Assert.assertEquals(seq1.length(), pdbNum1.length);
 
 		/*// report some stats
 		System.out.println("The SEQRES and ATOM information is available via the chains:");
@@ -133,7 +133,7 @@ public class StructureSequenceMatcherTest {
 
 	@Test
 	public void testGetProteinSequenceForStructure() {
-		Map<Integer,Group> groupIndexPos = new HashMap<Integer,Group>();
+		Map<Integer,Group> groupIndexPos = new HashMap<>();
 		ProteinSequence prot = StructureSequenceMatcher.getProteinSequenceForStructure(struct1, groupIndexPos);
 
 

@@ -121,19 +121,19 @@ public class StrucAligParameters {
 	}
 	@Override
 	public String toString() {
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		String t = " ";
 
-		Object[] params = new Object[]{new Integer(initialK) ,new Integer(seedFragmentLength),
-				new Float(seedRmsdCutoff),
-				new Integer(fragmentLength),
-				new Integer(diagonalDistance), new Integer(diagonalDistance2), new Float(fragmentMiniDistance),
-				new Integer(angleDiff),
-				new Float(fragCompat), new Integer(maxrefine),
-				new Boolean(reduceInitialFragments), new Double(joinRMSCutoff), new Boolean(joinPlo),
-				new Boolean(doAngleCheck), new Boolean(doDistanceCheck), new Boolean(doRMSCheck),
-				new Boolean(doDensityCheck), new Float(densityCutoff), new Float(create_co), new Integer(maxIter),
-				new Float(gapOpen), new Float(gapExtension), new Integer(permutationSize), new Float(evalCutoff)};
+		Object[] params = new Object[]{initialK, seedFragmentLength,
+				seedRmsdCutoff,
+				fragmentLength,
+				diagonalDistance, diagonalDistance2, fragmentMiniDistance,
+				angleDiff,
+				fragCompat, maxrefine,
+				reduceInitialFragments, joinRMSCutoff, joinPlo,
+				doAngleCheck, doDistanceCheck, doRMSCheck,
+				doDensityCheck, densityCutoff, create_co, maxIter,
+				gapOpen, gapExtension, permutationSize, evalCutoff};
 
 		for (int i=0 ; i< params.length ; i++){
 			buf.append(params[i]);

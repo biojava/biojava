@@ -81,7 +81,7 @@ public class CookbookMSAProfiler {
 		Profiler profiler = new Profiler();
 
 		System.out.printf("Loading sequences from %s... ", args[0]);
-		List<ProteinSequence> list = new ArrayList<ProteinSequence>();
+		List<ProteinSequence> list = new ArrayList<>();
 		list.addAll(FastaReaderHelper.readFastaProteinSequence(new File(args[0])).values());
 		if (args.length > 1 && Integer.parseInt(args[1]) < list.size()) {
 			System.out.printf("%s/%d", args[1], list.size());
@@ -106,7 +106,7 @@ public class CookbookMSAProfiler {
 		profiler.setCheckpoint();
 
 		System.out.print("Stage 2: hierarchical clustering into a guide tree... ");
-		GuideTree<ProteinSequence, AminoAcidCompound> tree = new GuideTree<ProteinSequence, AminoAcidCompound>(list,
+		GuideTree<ProteinSequence, AminoAcidCompound> tree = new GuideTree<>(list,
 				scorers);
 		scorers = null;
 		System.out.printf("%d ms using %d kB%n%n%s%n%n", profiler.getTimeSinceCheckpoint()/1000000,

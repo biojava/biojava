@@ -44,15 +44,15 @@ public class QuatSymmetryResults {
 	private Structure structure;
 
 	// Information about the clustering process
-	private Stoichiometry stoichiometry;
+	private final Stoichiometry stoichiometry;
 	private boolean local = false;
 
 	// Cached properties
-	private List<SubunitCluster> clusters;
-	private List<Subunit> subunits;
+	private final List<SubunitCluster> clusters;
+	private final List<Subunit> subunits;
 
 	// Information about the symmetry
-	private SymmetryPerceptionMethod method;
+	private final SymmetryPerceptionMethod method;
 	private HelixLayers helixLayers;
 	private RotationGroup rotationGroup = new RotationGroup();
 
@@ -72,7 +72,7 @@ public class QuatSymmetryResults {
 		this.stoichiometry = stoichiometry;
 		this.clusters = stoichiometry.getClusters();
 
-		subunits = new ArrayList<Subunit>();
+		subunits = new ArrayList<>();
 		for (SubunitCluster c : clusters) {
 			subunits.addAll(c.getSubunits());
 		}
@@ -95,7 +95,7 @@ public class QuatSymmetryResults {
 		this.stoichiometry = stoichiometry;
 		this.clusters = stoichiometry.getClusters();
 
-		subunits = new ArrayList<Subunit>();
+		subunits = new ArrayList<>();
 		for (SubunitCluster c : clusters) {
 			subunits.addAll(c.getSubunits());
 		}

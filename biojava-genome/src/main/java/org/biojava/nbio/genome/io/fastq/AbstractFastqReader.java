@@ -27,6 +27,7 @@ import com.google.common.io.Resources;
 import java.io.*;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 /**
@@ -100,7 +101,7 @@ abstract class AbstractFastqReader
 		Collect collect = new Collect();
 		try
 		{
-			reader = Resources.asCharSource(url, Charset.forName("UTF-8")).openBufferedStream();
+			reader = Resources.asCharSource(url, StandardCharsets.UTF_8).openBufferedStream();
 			stream(reader, collect);
 		}
 		finally

@@ -110,7 +110,7 @@ public class ModifiedCompoundXMLConverter {
 		ProteinModification modification = null;
 		//Collection<StructureAtomLinkage> linkages = new ArrayList<StructureAtomLinkage>();
 		StructureAtomLinkage[] linkages = null;
-		List<StructureGroup> structureGroups = new ArrayList<StructureGroup>();
+		List<StructureGroup> structureGroups = new ArrayList<>();
 		try
 		{
 			//Convert string to XML document
@@ -142,40 +142,40 @@ public class ModifiedCompoundXMLConverter {
 					if(!listOfConditions.hasAttributes()) continue;
 
 
-					if ( listOfConditions.getNodeName().equals("proteinModification")) {
-						//modification = ProteinModificationXMLConverter.fromXML(listOfConditions);
-						String modId = getAttribute(listOfConditions, "id");
-						modification = ProteinModificationRegistry.getById(modId);
-						if (modification==null) {
-							logger.warn("Error: no modification information.");
-						}
-					} else if ( listOfConditions.getNodeName().equals("linkage")) {
-						double dist = Double.parseDouble(getAttribute(listOfConditions, "distance"));
-						int pos = Integer.parseInt(getAttribute(listOfConditions,"pos"));
-						int total = Integer.parseInt(getAttribute(listOfConditions,"total"));
-						if ( linkages == null)
-							linkages = new StructureAtomLinkage[total];
+					switch (listOfConditions.getNodeName()) {
+						case "proteinModification":
+							//modification = ProteinModificationXMLConverter.fromXML(listOfConditions);
+							String modId = getAttribute(listOfConditions, "id");
+							modification = ProteinModificationRegistry.getById(modId);
+							if (modification == null) {
+								logger.warn("Error: no modification information.");
+							}
+							break;
+						case "linkage":
+							double dist = Double.parseDouble(getAttribute(listOfConditions, "distance"));
+							int pos = Integer.parseInt(getAttribute(listOfConditions, "pos"));
+							int total = Integer.parseInt(getAttribute(listOfConditions, "total"));
+							if (linkages == null)
+								linkages = new StructureAtomLinkage[total];
 
-						StructureAtom atom1 = getAtom("atom1", listOfConditions);
-						StructureAtom atom2 = getAtom("atom2",listOfConditions);
-						StructureAtomLinkage linkage = new StructureAtomLinkage(atom1, atom2, dist);
-						//linkages.add(linkage);
-						linkages[pos] = linkage;
-					} else if (listOfConditions.getNodeName().equals("structureGroup")) {
-						StructureGroup group = StructureGroupXMLConverter.fromXML(listOfConditions);
-						structureGroups.add(group);
+							StructureAtom atom1 = getAtom("atom1", listOfConditions);
+							StructureAtom atom2 = getAtom("atom2", listOfConditions);
+							StructureAtomLinkage linkage = new StructureAtomLinkage(atom1, atom2, dist);
+							//linkages.add(linkage);
+							linkages[pos] = linkage;
+							break;
+						case "structureGroup":
+							StructureGroup group = StructureGroupXMLConverter.fromXML(listOfConditions);
+							structureGroups.add(group);
 //						logger.info("structureGroups size:" + structureGroups.size());
+							break;
 					}
 				}
 			}
 		} catch (SAXParseException err)	{
 			logger.error("** Parsing error, line: {}, uri: {}", err.getLineNumber (), err.getSystemId (), err);
-		}
-		catch (SAXException e) {
+		} catch (Throwable e) {
 			logger.error("Exception: ", e);
-		}
-		catch (Throwable t) {
-			logger.error("Exception: ", t);
 		}
 
 

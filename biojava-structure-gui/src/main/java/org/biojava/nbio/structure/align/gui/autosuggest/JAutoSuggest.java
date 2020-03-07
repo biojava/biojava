@@ -247,7 +247,7 @@ public class JAutoSuggest extends JTextField{
 		lastWord = "";
 		regular = getFont();
 		busy = new Font(getFont().getName(), Font.ITALIC, getFont().getSize());
-		suggestions = new Vector<String>();
+		suggestions = new Vector<>();
 		defaultText = DEFAULT_TEXT;
 
 
@@ -340,7 +340,7 @@ public class JAutoSuggest extends JTextField{
 	 */
 	private class SuggestionFetcher extends SwingWorker<String, Object> {
 		/** flag used to stop the thread */
-		private AtomicBoolean stop = new AtomicBoolean(false);
+		private final AtomicBoolean stop = new AtomicBoolean(false);
 
 		String previousWord;
 		/**

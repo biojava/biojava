@@ -29,9 +29,9 @@ import java.util.List;
 
 
 public class Tetrahedron implements Polyhedron {
-	private static double TETRAHEDRAL_ANGLE = Math.acos(-1.0/3.0);
-	private static int[] lineLoop1 = {0,1,2,3,0,2};
-	private static int[] lineLoop2 = {1,3};
+	private static final double TETRAHEDRAL_ANGLE = Math.acos(-1.0/3.0);
+	private static final int[] lineLoop1 = {0,1,2,3,0,2};
+	private static final int[] lineLoop2 = {1,3};
 
 	private double circumscribedRadius = 1.0;
 
@@ -120,7 +120,7 @@ public class Tetrahedron implements Polyhedron {
 			m.transform(p);
 		}
 		return tetrahedron;
-	};
+	}
 
 	@Override
 	public List<int[]> getLineLoops() {

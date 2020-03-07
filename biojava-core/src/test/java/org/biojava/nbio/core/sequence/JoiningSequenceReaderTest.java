@@ -34,13 +34,13 @@ public class JoiningSequenceReaderTest {
 	@Test
 	public void canScan() throws CompoundNotFoundException {
 		JoiningSequenceReader<NucleotideCompound> seq =
-			new JoiningSequenceReader<NucleotideCompound>(
-					new DNASequence("AAAA"),
-					new DNASequence("GGG"),
-					new JoiningSequenceReader<NucleotideCompound>(new DNASequence("A"), new DNASequence("C")),
-					new DNASequence("TT"),
-					new DNASequence("C")
-		);
+				new JoiningSequenceReader<>(
+						new DNASequence("AAAA"),
+						new DNASequence("GGG"),
+						new JoiningSequenceReader<>(new DNASequence("A"), new DNASequence("C")),
+						new DNASequence("TT"),
+						new DNASequence("C")
+				);
 
 		String expected = "AAAAGGGACTTC";
 
@@ -59,12 +59,12 @@ public class JoiningSequenceReaderTest {
 	@Test
 	public void empty() throws CompoundNotFoundException {
 		JoiningSequenceReader<NucleotideCompound> seq =
-			new JoiningSequenceReader<NucleotideCompound>(
-					new DNASequence(""),
-					new DNASequence(""),
-					new DNASequence("A"),
-					new DNASequence("")
-			);
+				new JoiningSequenceReader<>(
+						new DNASequence(""),
+						new DNASequence(""),
+						new DNASequence("A"),
+						new DNASequence("")
+				);
 		assertEquals("Testing empty sequences", "A", seq.getSequenceAsString());
 	}
 }

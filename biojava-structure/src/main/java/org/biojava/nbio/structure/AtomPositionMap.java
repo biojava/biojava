@@ -61,54 +61,46 @@ public class AtomPositionMap {
 
 	private static final Logger logger = LoggerFactory.getLogger(AtomPositionMap.class);
 
-	private HashMap<ResidueNumber, Integer> hashMap;
-	private TreeMap<ResidueNumber, Integer> treeMap;
+	private final HashMap<ResidueNumber, Integer> hashMap;
+	private final TreeMap<ResidueNumber, Integer> treeMap;
 
 
 	/**
 	 * Used as a Predicate to indicate whether a particular Atom should be mapped
 	 */
-	public static interface GroupMatcher {
+	public interface GroupMatcher {
 		boolean matches(Group group);
 	}
 
 	/**
 	 * Matches CA atoms of protein groups
 	 */
-	public static final GroupMatcher AMINO_ACID_MATCHER = new GroupMatcher() {
-		@Override
-		public boolean matches(Group group) {
-			if( group == null )
-				return false;
-			ChemComp chem = group.getChemComp();
-			if(chem == null)
-				return false;
-			// Get polymer type
-			PolymerType polyType = chem.getPolymerType();
-			if( polyType == null) {
-				ResidueType type = chem.getResidueType();
-				if(type != null ) {
-					polyType = type.getPolymerType();
-				}
+	public static final GroupMatcher AMINO_ACID_MATCHER = group -> {
+		if( group == null )
+			return false;
+		ChemComp chem = group.getChemComp();
+		if(chem == null)
+			return false;
+		// Get polymer type
+		PolymerType polyType = chem.getPolymerType();
+		if( polyType == null) {
+			ResidueType type = chem.getResidueType();
+			if(type != null ) {
+				polyType = type.getPolymerType();
 			}
-			if( polyType == null ) {
-				return false;
-			}
-
-			return PolymerType.PROTEIN_ONLY.contains(polyType)
-					&& group.hasAtom(StructureTools.CA_ATOM_NAME);
 		}
+		if( polyType == null ) {
+			return false;
+		}
+
+		return PolymerType.PROTEIN_ONLY.contains(polyType)
+				&& group.hasAtom(StructureTools.CA_ATOM_NAME);
 	};
 
 	/**
 	 * Matches all atoms
 	 */
-	public static final GroupMatcher ANYTHING_MATCHER = new GroupMatcher() {
-		@Override
-		public boolean matches(Group group) {
-			return true;
-		}
-	};
+	public static final GroupMatcher ANYTHING_MATCHER = group -> true;
 
 	/**
 	 * A map that is sorted by its values. Used for the treemap
@@ -123,7 +115,7 @@ public class AtomPositionMap {
 	private static class ValueComparator<T, V extends Comparable<V>> implements Comparator<T>, Serializable {
 	private static final long serialVersionUID = 1;
 
-		private Map<T, V> map;
+		private final Map<T, V> map;
 
 		public ValueComparator(Map<T, V> map) {
 			this.map = map;
@@ -153,7 +145,7 @@ public class AtomPositionMap {
 	 * @param atoms
 	 */
 	public AtomPositionMap(Atom[] atoms, GroupMatcher matcher) {
-		hashMap = new HashMap<ResidueNumber, Integer>();
+		hashMap = new HashMap<>();
 		for (int i = 0; i < atoms.length; i++) {
 			Group group = atoms[i].getGroup();
 			ResidueNumber rn = group.getResidueNumber();
@@ -163,8 +155,8 @@ public class AtomPositionMap {
 				}
 			}
 		}
-		Comparator<ResidueNumber> vc = new ValueComparator<ResidueNumber, Integer>(hashMap);
-		treeMap = new TreeMap<ResidueNumber, Integer>(vc);
+		Comparator<ResidueNumber> vc = new ValueComparator<>(hashMap);
+		treeMap = new TreeMap<>(vc);
 		treeMap.putAll(hashMap);
 	}
 
@@ -341,7 +333,7 @@ public class AtomPositionMap {
 		String currentChain = "";
 		ResidueNumber first = null;
 		ResidueNumber prev = null;
-		List<ResidueRangeAndLength> ranges = new ArrayList<ResidueRangeAndLength>();
+		List<ResidueRangeAndLength> ranges = new ArrayList<>();
 		for (ResidueNumber rn : treeMap.keySet()) {
 			if (!rn.getChainName().equals(currentChain)) {
 				if (first != null) {

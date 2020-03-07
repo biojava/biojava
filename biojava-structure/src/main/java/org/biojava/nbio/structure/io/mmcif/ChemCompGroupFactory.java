@@ -40,7 +40,7 @@ public class ChemCompGroupFactory {
 
 	private static ChemCompProvider chemCompProvider = new DownloadChemCompProvider();
 
-	private static SoftHashMap<String, ChemComp> cache = new SoftHashMap<String, ChemComp>(0);
+	private static final SoftHashMap<String, ChemComp> cache = new SoftHashMap<>(0);
 
 	public static ChemComp getChemComp(String recordName){
 
@@ -98,7 +98,7 @@ public class ChemCompGroupFactory {
 		// make sure we work with upper case records
 		recordName = recordName.toUpperCase().trim();
 
-		Group g = null;
+		Group g;
 
 
 		ChemComp cc =  getChemComp(recordName);

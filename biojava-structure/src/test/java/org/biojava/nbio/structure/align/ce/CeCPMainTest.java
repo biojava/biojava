@@ -81,7 +81,7 @@ public class CeCPMainTest {
 		int[] expectedLen = new int[] { expected[0][0].length, expected[1][0].length };
 
 		Assert.assertTrue(Arrays.deepEquals(expected, align));
-		Assert.assertTrue(Arrays.equals(expectedLen, blkLen));
+		Assert.assertArrayEquals(expectedLen, blkLen);
 
 	}
 
@@ -129,7 +129,7 @@ public class CeCPMainTest {
 			result = CeCPMain.filterDuplicateAFPs(afpChain, new CECalculator(null), ca1, ca2,params);
 
 			Assert.assertTrue("Wrong optAln for minCPlength=" + minCPlength, Arrays.deepEquals(filteredAln, result.getOptAln()));
-			Assert.assertTrue("Wrong optLen for minCPlength=" + minCPlength, Arrays.equals(filteredLen, result.getOptLen()));
+			Assert.assertArrayEquals("Wrong optLen for minCPlength=" + minCPlength, filteredLen, result.getOptLen());
 	}
 
 		// For minCPlength=4, filtering changes
@@ -149,7 +149,7 @@ public class CeCPMainTest {
 		result = CeCPMain.filterDuplicateAFPs(afpChain, new CECalculator(null), ca1, ca2,params);
 
 		Assert.assertTrue("Wrong optAln for minCPlength=" + params.getMinCPLength(), Arrays.deepEquals(filteredAln, result.getOptAln()));
-		Assert.assertTrue("Wrong optLen for minCPlength=" + params.getMinCPLength(), Arrays.equals(filteredLen, result.getOptLen()));
+		Assert.assertArrayEquals("Wrong optLen for minCPlength=" + params.getMinCPLength(), filteredLen, result.getOptLen());
 
 		// For minCPlength=5, filtering changes
 		params.setMinCPLength(5);
@@ -164,13 +164,13 @@ public class CeCPMainTest {
 		result = CeCPMain.filterDuplicateAFPs(afpChain, new CECalculator(null), ca1, ca2,params);
 
 		Assert.assertTrue("Wrong optAln for minCPlength=" + params.getMinCPLength(), Arrays.deepEquals(filteredAln, result.getOptAln()));
-		Assert.assertTrue("Wrong optLen for minCPlength=" + params.getMinCPLength(), Arrays.equals(filteredLen, result.getOptLen()));
+		Assert.assertArrayEquals("Wrong optLen for minCPlength=" + params.getMinCPLength(), filteredLen, result.getOptLen());
 
 		params.setMinCPLength(7);
 		result = CeCPMain.filterDuplicateAFPs(afpChain, new CECalculator(null), ca1, ca2,params);
 
 		Assert.assertTrue("Wrong optAln for minCPlength=" + params.getMinCPLength(), Arrays.deepEquals(filteredAln, result.getOptAln()));
-		Assert.assertTrue("Wrong optLen for minCPlength=" + params.getMinCPLength(), Arrays.equals(filteredLen, result.getOptLen()));
+		Assert.assertArrayEquals("Wrong optLen for minCPlength=" + params.getMinCPLength(), filteredLen, result.getOptLen());
 
 		// Eventually, no alignment!
 		params.setMinCPLength(8);
@@ -181,7 +181,7 @@ public class CeCPMainTest {
 		result = CeCPMain.filterDuplicateAFPs(afpChain, new CECalculator(null), ca1, ca2,params);
 
 		Assert.assertTrue("Wrong optAln for minCPlength=" + params.getMinCPLength(), Arrays.deepEquals(filteredAln, result.getOptAln()));
-		Assert.assertTrue("Wrong optLen for minCPlength=" + params.getMinCPLength(), Arrays.equals(filteredLen, result.getOptLen()));
+		Assert.assertArrayEquals("Wrong optLen for minCPlength=" + params.getMinCPLength(), filteredLen, result.getOptLen());
 
 	}
 
@@ -228,7 +228,7 @@ public class CeCPMainTest {
 			result = CeCPMain.filterDuplicateAFPs(afpChain, new CECalculator(null), ca1, ca2,params);
 
 			Assert.assertTrue("Wrong optAln for minCPlength=" + params.getMinCPLength(), Arrays.deepEquals(filteredAln, result.getOptAln()));
-			Assert.assertTrue("Wrong optLen for minCPlength=" + params.getMinCPLength(), Arrays.equals(filteredLen, result.getOptLen()));
+			Assert.assertArrayEquals("Wrong optLen for minCPlength=" + params.getMinCPLength(), filteredLen, result.getOptLen());
 		}
 
 		// For minCPlength=3, filtering changes
@@ -248,7 +248,7 @@ public class CeCPMainTest {
 		result = CeCPMain.filterDuplicateAFPs(afpChain, new CECalculator(null), ca1, ca2,params);
 
 		Assert.assertTrue("Wrong optAln for minCPlength=" + params.getMinCPLength(), Arrays.deepEquals(filteredAln, result.getOptAln()));
-		Assert.assertTrue("Wrong optLen for minCPlength=" + params.getMinCPLength(), Arrays.equals(filteredLen, result.getOptLen()));
+		Assert.assertArrayEquals("Wrong optLen for minCPlength=" + params.getMinCPLength(), filteredLen, result.getOptLen());
 
 		// For minCPlength=4, filtering changes
 		params.setMinCPLength(5);
@@ -263,13 +263,13 @@ public class CeCPMainTest {
 		result = CeCPMain.filterDuplicateAFPs(afpChain, new CECalculator(null), ca1, ca2,params);
 
 		Assert.assertTrue("Wrong optAln for minCPlength=" + params.getMinCPLength(), Arrays.deepEquals(filteredAln, result.getOptAln()));
-		Assert.assertTrue("Wrong optLen for minCPlength=" + params.getMinCPLength(), Arrays.equals(filteredLen, result.getOptLen()));
+		Assert.assertArrayEquals("Wrong optLen for minCPlength=" + params.getMinCPLength(), filteredLen, result.getOptLen());
 
 		params.setMinCPLength(8);
 		result = CeCPMain.filterDuplicateAFPs(afpChain, new CECalculator(null), ca1, ca2,params);
 
 		Assert.assertTrue("Wrong optAln for minCPlength=" + params.getMinCPLength(), Arrays.deepEquals(filteredAln, result.getOptAln()));
-		Assert.assertTrue("Wrong optLen for minCPlength=" + params.getMinCPLength(), Arrays.equals(filteredLen, result.getOptLen()));
+		Assert.assertArrayEquals("Wrong optLen for minCPlength=" + params.getMinCPLength(), filteredLen, result.getOptLen());
 
 		// Eventually, no alignment!
 		params.setMinCPLength(9);
@@ -280,7 +280,7 @@ public class CeCPMainTest {
 		result = CeCPMain.filterDuplicateAFPs(afpChain, new CECalculator(null), ca1, ca2,params);
 
 		Assert.assertTrue("Wrong optAln for minCPlength=" + params.getMinCPLength(), Arrays.deepEquals(filteredAln, result.getOptAln()));
-		Assert.assertTrue("Wrong optLen for minCPlength=" + params.getMinCPLength(), Arrays.equals(filteredLen, result.getOptLen()));
+		Assert.assertArrayEquals("Wrong optLen for minCPlength=" + params.getMinCPLength(), filteredLen, result.getOptLen());
 
 	}
 
@@ -305,7 +305,7 @@ public class CeCPMainTest {
 
 
 	@Test
-	public void testCalculateMinCP() throws SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+	public void testCalculateMinCP() throws SecurityException, IllegalArgumentException {
 		int[] block;
 		int ca2len;
 
@@ -380,9 +380,8 @@ public class CeCPMainTest {
 	 *
 	 * @param len
 	 * @return
-	 * @throws PDBParseException
-	 */
-	private Atom[] makeDummyCA(int len) throws PDBParseException {
+     */
+	private Atom[] makeDummyCA(int len) {
 		Atom[] ca1;
 		Chain chain1 = new ChainImpl();
 		chain1.setId("A");
@@ -395,7 +394,7 @@ public class CeCPMainTest {
 			ca1[i].setCoords(new double[] { i, 0, 0 });
 			Group aa = new AminoAcidImpl();
 			aa.setPDBName("GLY");
-			aa.setResidueNumber( ResidueNumber.fromString(i+""));
+			aa.setResidueNumber( ResidueNumber.fromString(String.valueOf(i)));
 			aa.addAtom(ca1[i]);
 			chain1.addGroup(aa);
 		}

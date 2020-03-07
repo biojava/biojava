@@ -46,7 +46,8 @@ public class SimpleProfilePair<S extends Sequence<C>, C extends Compound> extend
 
 	private static final long serialVersionUID = 1L;
 
-	private Profile<S, C> query, target;
+	private final Profile<S, C> query;
+    private final Profile<S, C> target;
 
 	/**
 	 * Creates a pair profile for the given profiles.

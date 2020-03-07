@@ -80,7 +80,7 @@ import java.util.Locale;
 
 public class Matrix implements Cloneable, java.io.Serializable {
 
-	 static final long serialVersionUID = 8492558293015348719l;
+	 static final long serialVersionUID = 8492558293015348719L;
 
 
 /* ------------------------
@@ -90,13 +90,14 @@ public class Matrix implements Cloneable, java.io.Serializable {
 	/** Array for internal storage of elements.
 	@serial internal array storage.
 	*/
-	private double[][] A;
+	private final double[][] A;
 
 	/** Row and column dimensions.
 	@serial row dimension.
 	@serial column dimension.
 	*/
-	private int m, n;
+	private final int m;
+    private final int n;
 
 /* ------------------------
 	Constructors
@@ -199,9 +200,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
 				throw new IllegalArgumentException
 					("All rows must have the same length.");
 			}
-			for (int j = 0; j < n; j++) {
-				C[i][j] = A[i][j];
-			}
+			System.arraycopy(A[i], 0, C[i], 0, n);
 		}
 		return X;
 	}
@@ -214,9 +213,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
 		Matrix X = new Matrix(m,n);
 		double[][] C = X.getArray();
 		for (int i = 0; i < m; i++) {
-			for (int j = 0; j < n; j++) {
-				C[i][j] = A[i][j];
-			}
+			if (n >= 0) System.arraycopy(A[i], 0, C[i], 0, n);
 		}
 		return X;
 	}
@@ -244,9 +241,7 @@ public Object clone () {
 	public double[][] getArrayCopy () {
 		double[][] C = new double[m][n];
 		for (int i = 0; i < m; i++) {
-			for (int j = 0; j < n; j++) {
-				C[i][j] = A[i][j];
-			}
+			if (n >= 0) System.arraycopy(A[i], 0, C[i], 0, n);
 		}
 		return C;
 	}
@@ -272,9 +267,7 @@ public Object clone () {
 	public double[] getRowPackedCopy () {
 		double[] vals = new double[m*n];
 		for (int i = 0; i < m; i++) {
-			for (int j = 0; j < n; j++) {
-				vals[i*n+j] = A[i][j];
-			}
+			if (n >= 0) System.arraycopy(A[i], 0, vals, i * n + 0, n);
 		}
 		return vals;
 	}
@@ -320,9 +313,7 @@ public Object clone () {
 		double[][] B = X.getArray();
 		try {
 			for (int i = i0; i <= i1; i++) {
-				for (int j = j0; j <= j1; j++) {
-					B[i-i0][j-j0] = A[i][j];
-				}
+				if (j1 + 1 - j0 >= 0) System.arraycopy(A[i], j0, B[i - i0], j0 - j0, j1 + 1 - j0);
 			}
 		} catch(ArrayIndexOutOfBoundsException e) {
 			throw new ArrayIndexOutOfBoundsException("Submatrix indices");
@@ -388,9 +379,7 @@ public Object clone () {
 		double[][] B = X.getArray();
 		try {
 			for (int i = 0; i < r.length; i++) {
-				for (int j = j0; j <= j1; j++) {
-					B[i][j-j0] = A[r[i]][j];
-				}
+				if (j1 + 1 - j0 >= 0) System.arraycopy(A[r[i]], j0, B[i], j0 - j0, j1 + 1 - j0);
 			}
 		} catch(ArrayIndexOutOfBoundsException e) {
 			throw new ArrayIndexOutOfBoundsException("Submatrix indices");
@@ -1050,7 +1039,7 @@ public static Matrix read (BufferedReader input) throws java.io.IOException {
 		int n = v.size();  // Now we've got the number of columns!
 		double[] row = new double[n];
 		for (int j=0; j<n; j++)  // extract the elements of the 1st row.
-			row[j]=((Double)v.elementAt(j)).doubleValue();
+			row[j]= (Double) v.elementAt(j);
 		v.removeAllElements();
 		v.addElement(row);  // Start storing rows instead of columns.
 		while (tokenizer.nextToken() == StreamTokenizer.TT_WORD) {

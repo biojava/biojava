@@ -33,7 +33,7 @@ import org.biojava.nbio.structure.align.model.AFPChain;
  */
 public interface OrderDetector {
 
-	public int calculateOrder(AFPChain afpChain, Atom[] ca)
+	int calculateOrder(AFPChain afpChain, Atom[] ca)
 			throws RefinerFailedException;
 
 }

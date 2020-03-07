@@ -45,7 +45,7 @@ public class CookbookAlignAllLocal {
 	}
 
 	private static void alignAllLocal(String[] ids) throws Exception {
-		List<ProteinSequence> lst = new ArrayList<ProteinSequence>();
+		List<ProteinSequence> lst = new ArrayList<>();
 		for (String id : ids) {
 			lst.add(getSequenceForId(id));
 		}

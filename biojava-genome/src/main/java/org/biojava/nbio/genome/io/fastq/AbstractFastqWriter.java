@@ -100,27 +100,11 @@ abstract class AbstractFastqWriter
 		{
 			throw new IllegalArgumentException("fastq must not be null");
 		}
-		Writer writer = null;
-		try
-		{
-			writer = new BufferedWriter(new FileWriter(file));
-			append(writer, fastq);
-		}
-		finally
-		{
-			if (writer != null)
-			{
-				try
-				{
-					writer.close();
-				}
-				catch (IOException e)
-				{
-					// ignore
-				}
-			}
-		}
-	}
+        try (Writer writer = new BufferedWriter(new FileWriter(file))) {
+            append(writer, fastq);
+        }
+        // ignore
+    }
 
 	@Override
 	public final void write(final OutputStream outputStream, final Fastq... fastq) throws IOException

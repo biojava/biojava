@@ -38,7 +38,7 @@ public class Convert2NormalizedVanDerWaalsVolume extends Convertor{
 			return unknownGroup;//Non-standard AA
 		}
 	}
-	private static String[] subCategory = {"Range_0-2.78", "Range_2.95-4.0", "Range_4.03-8.08"};
+	private static final String[] subCategory = {"Range_0-2.78", "Range_2.95-4.0", "Range_4.03-8.08"};
 	@Override
 	public String[] getGrouping(){return subCategory;}
 	@Override

@@ -56,32 +56,29 @@ public class MenuCreator {
 
 		JMenuItem openI = new JMenuItem("Open");
 		openI.setMnemonic(KeyEvent.VK_O);
-		openI.addActionListener(new ActionListener(){
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String cmd = e.getActionCommand();
-				if ( cmd.equals("Open")){
-					final JFileChooser fc = new JFileChooser();
+		openI.addActionListener(e -> {
+			String cmd = e.getActionCommand();
+			if ( cmd.equals("Open")){
+				final JFileChooser fc = new JFileChooser();
 
 //					In response to a button click:
-					int returnVal = fc.showOpenDialog(null);
-					if ( returnVal == JFileChooser.APPROVE_OPTION) {
-						File file = fc.getSelectedFile();
+				int returnVal = fc.showOpenDialog(null);
+				if ( returnVal == JFileChooser.APPROVE_OPTION) {
+					File file1 = fc.getSelectedFile();
 
-						PDBFileReader reader = new PDBFileReader();
-						try {
-							Structure s = reader.getStructure(file);
-							BiojavaJmol jmol = new BiojavaJmol();
-							jmol.setStructure(s);
-							jmol.evalString("select * ; color chain;");
-							jmol.evalString("select *; spacefill off; wireframe off; backbone 0.4;  ");
+					PDBFileReader reader = new PDBFileReader();
+					try {
+						Structure s = reader.getStructure(file1);
+						BiojavaJmol jmol = new BiojavaJmol();
+						jmol.setStructure(s);
+						jmol.evalString("select * ; color chain;");
+						jmol.evalString("select *; spacefill off; wireframe off; backbone 0.4;  ");
 
-						} catch (Exception ex){
-							ex.printStackTrace();
-						}
-
-
+					} catch (Exception ex){
+						ex.printStackTrace();
 					}
+
+
 				}
 			}
 		});
@@ -89,15 +86,11 @@ public class MenuCreator {
 
 		JMenuItem exitI = new JMenuItem("Exit");
 		exitI.setMnemonic(KeyEvent.VK_X);
-		exitI.addActionListener(new ActionListener(){
+		exitI.addActionListener(e -> {
+			String cmd = e.getActionCommand();
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String cmd = e.getActionCommand();
-
-				if ( cmd.equals("Exit")){
-					System.exit(0);
-				}
+			if ( cmd.equals("Exit")){
+				System.exit(0);
 			}
 		});
 
@@ -106,14 +99,11 @@ public class MenuCreator {
 
 		JMenu align = new JMenu("Align");
 		JMenuItem pairI = new JMenuItem("2 protein structures");
-		pairI.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String cmd = e.getActionCommand();
+		pairI.addActionListener(e -> {
+			String cmd = e.getActionCommand();
 
-				if ( cmd.equals("2 protein structures")){
-					MenuCreator.showPairDialog();
-				}
+			if ( cmd.equals("2 protein structures")){
+				MenuCreator.showPairDialog();
 			}
 		});
 
@@ -123,15 +113,11 @@ public class MenuCreator {
 
 		JMenu about = new JMenu("About");
 		JMenuItem aboutI = new JMenuItem("PDBview");
-		aboutI.addActionListener(new ActionListener(){
+		aboutI.addActionListener(e -> {
+			String cmd = e.getActionCommand();
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String cmd = e.getActionCommand();
-
-				if ( cmd.equals("PDBview")){
-					MenuCreator.showAboutDialog();
-				}
+			if ( cmd.equals("PDBview")){
+				MenuCreator.showAboutDialog();
 			}
 		});
 
@@ -177,17 +163,14 @@ public class MenuCreator {
 
 		JButton close = new JButton("Close");
 
-		close.addActionListener(new ActionListener(){
-			@Override
-			public void actionPerformed(ActionEvent event) {
-				Object source = event.getSource();
+		close.addActionListener(event -> {
+			Object source = event.getSource();
 
-				JButton but = (JButton)source;
-				Container parent = but.getParent().getParent().getParent().getParent().getParent().getParent() ;
+			JButton but = (JButton)source;
+			Container parent = but.getParent().getParent().getParent().getParent().getParent().getParent() ;
 
-				JDialog dia = (JDialog) parent;
-				dia.dispose();
-			}
+			JDialog dia = (JDialog) parent;
+			dia.dispose();
 		});
 
 		Box hBoxb = Box.createHorizontalBox();

@@ -33,18 +33,18 @@ import java.util.List;
  */
 public class HetatomImplTest {
 
-	private int bigTestNumber = 60000;
+	private final int bigTestNumber = 60000;
 
 	public HetatomImplTest() {
 
 	}
 
 	@BeforeClass
-	public static void setUpClass() throws Exception {
+	public static void setUpClass() {
 	}
 
 	@AfterClass
-	public static void tearDownClass() throws Exception {
+	public static void tearDownClass() {
 	}
 
 	@Before
@@ -520,7 +520,7 @@ public class HetatomImplTest {
 	@Test
 	public void testGetResidueNumberUsage() {
 //        System.out.println("testGetResidueNumberUsage");
-		List<Group> resNumgroups = new ArrayList<Group>();
+		List<Group> resNumgroups = new ArrayList<>();
 
 		for (int i = 0; i < bigTestNumber; i++) {
 			ResidueNumber resNum = new ResidueNumber("A", i, ' ');
@@ -529,7 +529,7 @@ public class HetatomImplTest {
 			resNumgroups.add(hetAtom);
 		}
 
-		List<Integer> integers = new ArrayList<Integer>();
+		List<Integer> integers = new ArrayList<>();
 
 		for (Group group : resNumgroups) {
 			ResidueNumber resnum = group.getResidueNumber();
@@ -541,7 +541,7 @@ public class HetatomImplTest {
 	@Test
 	public void testSetResidueNumberUsage() {
 
-		List<Group> resNumgroups = new ArrayList<Group>();
+		List<Group> resNumgroups = new ArrayList<>();
 
 		for (int i = 0; i < bigTestNumber; i++) {
 			ResidueNumber resNum = new ResidueNumber("A", i, ' ');

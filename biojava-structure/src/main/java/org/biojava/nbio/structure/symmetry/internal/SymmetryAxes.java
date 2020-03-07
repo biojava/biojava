@@ -75,8 +75,8 @@ public class SymmetryAxes {
 	 */
 	public static class Axis {
 		private Matrix4d operator;
-		private int order;
-		private SymmetryType symmType;
+		private final int order;
+		private final SymmetryType symmType;
 		private int level;
 		//private int indexInLevel;
 		private int firstRepeat;
@@ -261,7 +261,7 @@ public class SymmetryAxes {
 	 * @return axes elementary axes of symmetry.
 	 */
 	public List<Matrix4d> getElementaryAxes(){
-		List<Matrix4d> ops = new ArrayList<Matrix4d>(getNumLevels());
+		List<Matrix4d> ops = new ArrayList<>(getNumLevels());
 		for(Axis axis : axes) {
 			ops.add(axis.getOperator());
 		}
@@ -541,7 +541,7 @@ public class SymmetryAxes {
 	 * @return List of first Repeats of each index, sorted in ascending order
 	 */
 	public List<Integer> getFirstRepeats(int level) {
-		List<Integer> firstRepeats = new ArrayList<Integer>();
+		List<Integer> firstRepeats = new ArrayList<>();
 		int m = getNumRepeats(level+1); //size of the level
 		int d = axes.get(level).getOrder(); //degree of this level
 		int n = m*d; // number of repeats included in each axis

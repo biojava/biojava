@@ -85,7 +85,7 @@ public class GenbankWriter<S extends Sequence<?>, C extends Compound> {
 	 * @param lineSeparator
 	 */
 
-	public void process() throws Exception {
+	public void process() {
 		// Loosely based on code from Howard Salis
 		// TODO - Force lower case?
 		// boolean closeit = false;

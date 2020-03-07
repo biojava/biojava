@@ -63,7 +63,7 @@ public class UserConfiguration
 
 	private String fileFormat;
 
-	private static AtomicBoolean warningShown = new AtomicBoolean(false);
+	private static final AtomicBoolean warningShown = new AtomicBoolean(false);
 
 
 	/**
@@ -103,7 +103,7 @@ public class UserConfiguration
 
 	private String initPdbFilePath() {
 
-		String path = null;
+		String path;
 
 		String propertyName = PDB_DIR;
 
@@ -174,7 +174,7 @@ public class UserConfiguration
 
 	private String initCacheFilePath() {
 
-		String path = null;
+		String path;
 
 		String propertyName = PDB_CACHE_DIR;
 
@@ -320,8 +320,8 @@ public class UserConfiguration
 		if (! pdbFilePath.equals(tempdir))
 			xw.attribute("path", pdbFilePath);
 
-		xw.attribute("fetchBehavior", fetchBehavior+"");
-		xw.attribute("obsoleteBehavior", obsoleteBehavior+"");
+		xw.attribute("fetchBehavior", String.valueOf(fetchBehavior));
+		xw.attribute("obsoleteBehavior", String.valueOf(obsoleteBehavior));
 		xw.attribute("fileFormat", fileFormat);
 		xw.closeTag("PDBFILEPATH");
 

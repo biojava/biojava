@@ -48,11 +48,11 @@ public class GeneFeatureHelperTest {
 	private static final Logger logger = LoggerFactory.getLogger(GeneFeatureHelperTest.class);
 
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 	}
 
 	@After
-	public void tearDown() throws Exception {
+	public void tearDown() {
 	}
 
 	@Test

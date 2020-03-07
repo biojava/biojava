@@ -57,7 +57,7 @@ public class TestDNAAlignment {
 
 			Profile<DNASequence, NucleotideCompound> profile = Alignments.getMultipleSequenceAlignment(lst);
 
-			Assert.assertTrue(profile.getSize() == 10);
+			Assert.assertEquals(10, profile.getSize());
 
 			Assert.assertTrue(profile.getAlignedSequence(1).getSequenceAsString().length() > 50);
 
@@ -77,11 +77,10 @@ public class TestDNAAlignment {
 		InputStream inStream = TestDNAAlignment.class.getResourceAsStream(String.format("/dna-fasta.txt"));
 		LinkedHashMap<String, DNASequence> fastas = FastaReaderHelper.readFastaDNASequence(inStream);
 
-		List<DNASequence> sequences = new ArrayList<DNASequence>();
+		List<DNASequence> sequences = new ArrayList<>();
 
-		for (String key : fastas.keySet()) {
-			DNASequence seq = fastas.get(key);
-			sequences.add(seq);
+		for (DNASequence seq : fastas.values()) {
+            sequences.add(seq);
 		}
 
 		return sequences;
@@ -96,7 +95,7 @@ public class TestDNAAlignment {
 		DNASequence target = new DNASequence("ACTGACGTGTAGCTGACTGA", DNACompoundSet.getDNACompoundSet());
 		DNASequence query = new DNASequence("ACTGACGTGTAGCTGACTGTA", AmbiguityDNACompoundSet.getDNACompoundSet());
 
-		List<DNASequence> lst = new ArrayList<DNASequence>();
+		List<DNASequence> lst = new ArrayList<>();
 		lst.add(target);
 		lst.add(query);
 
@@ -163,6 +162,6 @@ public class TestDNAAlignment {
 		SubstitutionMatrix<NucleotideCompound> matrix = SubstitutionMatrixHelper.getNuc4_4();
 		SimpleGapPenalty gapP = new SimpleGapPenalty((short)0, (short)3);
 		PairwiseSequenceAligner<DNASequence, NucleotideCompound> aligner = Alignments.getPairwiseAligner(query, target, PairwiseSequenceAlignerType.GLOBAL, gapP, matrix);
-		Assert.assertEquals(String.format("GTAAAA-G----------%nG-AAAACGTTTTTTTTTT%n"), aligner.getPair().toString());;
+		Assert.assertEquals(String.format("GTAAAA-G----------%nG-AAAACGTTTTTTTTTT%n"), aligner.getPair().toString());
 	}
 }

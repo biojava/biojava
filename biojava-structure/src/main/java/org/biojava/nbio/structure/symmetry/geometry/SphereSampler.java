@@ -32,7 +32,7 @@ import java.util.List;
  */
 class Permute {
 
-	private List<Point3i> triples = new ArrayList<Point3i>();
+	private final List<Point3i> triples = new ArrayList<>();
 
 	Permute(Point3i t) {
 		Point3i tmp = new Point3i();
@@ -98,7 +98,7 @@ class Permute {
 	public Point3i get(int i) {
 		return triples.get(i);
 	}
-};
+}
 
 /**
  * Sample possible orientations. An orientation can be represented as a
@@ -154,7 +154,7 @@ public final class SphereSampler {
 	static
 	{
 
-		List<Quat4d> myorientations = new ArrayList<Quat4d>();
+		List<Quat4d> myorientations = new ArrayList<>();
 
 		// 60 equally spaced grid points covering all quaternions
 		// This could be removed, since the 48-cell bcc lattice has lower angle error -SB
@@ -173,7 +173,7 @@ public final class SphereSampler {
 		// This is the c48u309 lattice from Karney 2006, with a max error of 10.07
 		// degrees.
 
-		List<Quat4d> grid = new ArrayList<Quat4d>();
+		List<Quat4d> grid = new ArrayList<>();
 		int ncell1 = 0;
 		for (int n = 0; n < nent; ++n) { // for each tuple (k,l,m) above
 			Permute p = new Permute(new Point3i(k[n], l[n], m[n]));
@@ -209,7 +209,7 @@ public final class SphereSampler {
 
 	// this class cannot be instantiated
 	private SphereSampler() {
-	};
+	}
 
 	public static int getSphereCount() {
 

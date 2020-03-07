@@ -61,36 +61,25 @@ public class FileDownloadUtils {
 		// Took following recipe from
 		// http://stackoverflow.com/questions/106770/standard-concise-way-to-copy-a-file-in-java
 		// The nio package seems to be the most efficient way to copy a file
-		FileChannel source = null;
-		FileChannel destination = null;
 
-		try {
-			// we need the supress warnings here (the warning that the stream is not closed is harmless)
-			// see http://stackoverflow.com/questions/12970407/does-filechannel-close-close-the-underlying-stream
-			source = new FileInputStream(src).getChannel();
-			destination = new FileOutputStream(dst).getChannel();
-			destination.transferFrom(source, 0, source.size());
-		} finally {
-			if (source != null) {
-				source.close();
-			}
-			if (destination != null) {
-				destination.close();
-			}
-		}
+        try (FileChannel source = new FileInputStream(src).getChannel(); FileChannel destination = new FileOutputStream(dst).getChannel()) {
+            // we need the supress warnings here (the warning that the stream is not closed is harmless)
+            // see http://stackoverflow.com/questions/12970407/does-filechannel-close-close-the-underlying-stream
+            destination.transferFrom(source, 0, source.size());
+        }
 	}
 
 	public static String getFileExtension(File f) {
 		String fileName = f.getName();
-		String ext = "";
+		String ext;
 		int mid = fileName.lastIndexOf(".");
-		ext = fileName.substring(mid + 1, fileName.length());
+		ext = fileName.substring(mid + 1);
 		return ext;
 	}
 
 	public static String getFilePrefix(File f) {
 		String fileName = f.getName();
-		String fname = "";
+		String fname;
 
 		int mid = fileName.indexOf(".");
 		fname = fileName.substring(0, mid);

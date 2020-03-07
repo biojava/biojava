@@ -44,7 +44,7 @@ public class FlatFileCache {
 	/**
 	 * The cache singleton.
 	 */
-	private static SoftHashMap<String, byte[]> cache = new SoftHashMap<String, byte[]>(0);
+	private static final SoftHashMap<String, byte[]> cache = new SoftHashMap<>(0);
 
 
 	// no public constructor;
@@ -73,7 +73,7 @@ public class FlatFileCache {
 
 			// Read in the bytes
 			int offset = 0;
-			int numRead = 0;
+			int numRead;
 			while (offset < bytes.length
 					&& (numRead=is.read(bytes, offset, bytes.length-offset)) >= 0) {
 				offset += numRead;

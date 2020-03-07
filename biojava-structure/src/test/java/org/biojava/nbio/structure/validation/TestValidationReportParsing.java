@@ -83,7 +83,7 @@ public class TestValidationReportParsing {
 
 	private void testPDB(String pdbId) {
 		try {
-			JAXBContext ctx = JAXBContext.newInstance(new Class[] {WwPDBValidationInformation.class});
+			JAXBContext ctx = JAXBContext.newInstance(WwPDBValidationInformation.class);
 
 			Unmarshaller um = ctx.createUnmarshaller();
 

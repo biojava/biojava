@@ -33,7 +33,7 @@ package org.biojava.nbio.structure;
 
 public class StructureException extends Exception {
 
-	public static final long serialVersionUID = 62946250941673093l;
+	public static final long serialVersionUID = 62946250941673093L;
 	/**
 	 * Constructs a StructureException object.
 	 *

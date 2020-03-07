@@ -35,8 +35,8 @@ public final class Pair<T> implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private T first;
-	private T second;
+	private final T first;
+	private final T second;
 
 	/**
 	 * Creates a <code>Pair</code> from the specified elements.

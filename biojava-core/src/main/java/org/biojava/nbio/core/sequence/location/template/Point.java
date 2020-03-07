@@ -29,7 +29,7 @@ public interface Point extends Comparable<Point> {
 	/**
 	 * Used to resolve a position about a point
 	 */
-	public interface Resolver<T extends Point> {
+    interface Resolver<T extends Point> {
 		int resolve(T point);
 	}
 

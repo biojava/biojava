@@ -76,13 +76,13 @@ public class FileProxyProteinSequenceCreator implements SequenceCreatorInterface
 	@Override
 	public AbstractSequence<AminoAcidCompound> getSequence(String sequence, long index) throws CompoundNotFoundException, IOException {
 		SequenceFileProxyLoader<AminoAcidCompound> sequenceFileProxyLoader =
-				new SequenceFileProxyLoader<AminoAcidCompound>(
+				new SequenceFileProxyLoader<>(
 						file,
 						sequenceParser,
 						index,
 						sequence.length(),
 						compoundSet
-						);
+				);
 		return new ProteinSequence(sequenceFileProxyLoader, compoundSet);
 	}
 

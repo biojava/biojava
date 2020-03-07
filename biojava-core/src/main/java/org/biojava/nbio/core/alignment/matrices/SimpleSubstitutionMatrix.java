@@ -50,14 +50,15 @@ public class SimpleSubstitutionMatrix<C extends Compound> implements Substitutio
 
 	private static final String comment = "#";
 
-	private CompoundSet<C> compoundSet;
+	private final CompoundSet<C> compoundSet;
 	private String description, name;
-	private short[][] matrix;
+	private final short[][] matrix;
 	private short max, min;
-	private List<C> rows, cols;
+	private final List<C> rows;
+	private final List<C> cols;
 
 	public static SubstitutionMatrix<AminoAcidCompound> getBlosum62() {
-		return new SimpleSubstitutionMatrix<AminoAcidCompound>(AminoAcidCompoundSet.getAminoAcidCompoundSet(), new InputStreamReader(
+		return new SimpleSubstitutionMatrix<>(AminoAcidCompoundSet.getAminoAcidCompoundSet(), new InputStreamReader(
 				SimpleSubstitutionMatrix.class.getResourceAsStream("/matrices/blosum62.txt")), "blosum62");
 	}
 
@@ -126,10 +127,10 @@ public class SimpleSubstitutionMatrix<C extends Compound> implements Substitutio
 		this.name = name;
 		max = Short.MIN_VALUE;
 		min = Short.MAX_VALUE;
-		rows = new ArrayList<C>();
-		cols = new ArrayList<C>();
+		rows = new ArrayList<>();
+		cols = new ArrayList<>();
 		StringBuilder descriptionIn = new StringBuilder();
-		List<short[]> matrixIn = new ArrayList<short[]>();
+		List<short[]> matrixIn = new ArrayList<>();
 		while(input.hasNextLine()) {
 			String line = input.nextLine();
 			if (line.startsWith(comment)) {
@@ -184,8 +185,8 @@ public class SimpleSubstitutionMatrix<C extends Compound> implements Substitutio
 		StringBuilder s = new StringBuilder();
 		int lengthCompound = compoundSet.getMaxSingleCompoundStringLength(), lengthRest =
 				Math.max(Math.max(Short.toString(min).length(), Short.toString(max).length()), lengthCompound) + 1;
-		String padCompound = "%" + Integer.toString(lengthCompound) + "s",
-				padRest = "%" + Integer.toString(lengthRest);
+		String padCompound = "%" + lengthCompound + "s",
+				padRest = "%" + lengthRest;
 		for (int i = 0; i < lengthCompound; i++) {
 			s.append(" ");
 		}
@@ -288,7 +289,7 @@ public class SimpleSubstitutionMatrix<C extends Compound> implements Substitutio
 	@Override
 	public Map<C, Short> getRow(C row) {
 		int rowIndex = rows.indexOf(row);
-		Map<C, Short> map = new HashMap<C, Short>();
+		Map<C, Short> map = new HashMap<>();
 		for (int colIndex = 0; colIndex < matrix[rowIndex].length; colIndex++) {
 			map.put(cols.get(colIndex), matrix[rowIndex][colIndex]);
 		}
@@ -298,7 +299,7 @@ public class SimpleSubstitutionMatrix<C extends Compound> implements Substitutio
 	@Override
 	public Map<C, Short> getColumn(C column) {
 		int colIndex = cols.indexOf(column);
-		Map<C, Short> map = new HashMap<C, Short>();
+		Map<C, Short> map = new HashMap<>();
 		for (int i = 0; i < matrix.length; i++) {
 			map.put(rows.get(i), matrix[i][colIndex]);
 		}

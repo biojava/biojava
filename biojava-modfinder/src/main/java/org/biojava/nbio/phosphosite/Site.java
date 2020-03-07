@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 
@@ -48,11 +49,11 @@ public class Site {
 		Reader decoder = new InputStreamReader(gzipStream);
 		BufferedReader buf = new BufferedReader(decoder);
 
-		String line = null;
+		String line;
 
-		List<Site > data = new ArrayList<Site>();
+		List<Site > data = new ArrayList<>();
 
-		List<String> headerFields = null;
+		List<String> headerFields;
 
 		int proteinIndex = -1;
 		int uniprotIndex = -1;
@@ -131,11 +132,8 @@ public class Site {
 	private static List<String> parseHeaderFields(String line) {
 		String[] spl = line.split("\t");
 
-		List<String> h = new ArrayList<String>();
-		for (String s: spl){
-			h.add(s);
-
-		}
+		List<String> h = new ArrayList<>();
+        h.addAll(Arrays.asList(spl));
 
 		return h;
 	}
@@ -215,7 +213,7 @@ public class Site {
 
 	@Override
 	public String toString() {
-		StringBuffer s = new StringBuffer();
+		StringBuilder s = new StringBuilder();
 
 		s.append("Site{" +
 				"protein='" + protein + '\'');

@@ -75,15 +75,16 @@ public class BitSequenceReader<C extends Compound> implements ProxySequenceReade
 	 * Class is immutable & so this is unsupported
 	 */
 	@Override
-	public void setContents(String sequence) throws CompoundNotFoundException {
+	public void setContents(String sequence) {
 		throw new UnsupportedOperationException(getClass().getSimpleName() + " is an immutable data structure; cannot reset contents");
 	}
 
 	/**
 	 * Counts the number of times a compound appears in this sequence store
 	 */
+	@SafeVarargs
 	@Override
-	public int countCompounds(C... compounds) {
+	public final int countCompounds(C... compounds) {
 		return SequenceMixin.countCompounds(this, compounds);
 	}
 

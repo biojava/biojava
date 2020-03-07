@@ -156,13 +156,13 @@ public class DBRef implements PDBRecord {
 			for (Method m : methods) {
 				String name = m.getName();
 
-				if (name.substring(0, 3).equals("get")) {
+				if (name.startsWith("get")) {
 					if (name.equals("getClass")) {
 						continue;
 					}
 					Object o = m.invoke(this);
 					if (o != null) {
-						buf.append(name.substring(3, name.length()));
+						buf.append(name.substring(3));
 						buf.append(": ").append(o).append(" ");
 					}
 				}

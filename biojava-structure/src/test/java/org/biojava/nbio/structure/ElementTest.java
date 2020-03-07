@@ -21,7 +21,6 @@
 
 package org.biojava.nbio.structure;
 
-import junit.framework.TestCase;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -57,9 +56,9 @@ public class ElementTest {
 		Assert.assertTrue(la.isMetal());
 		Element ac = Element.Ac;
 		Assert.assertTrue(ac.isMetal());
-	};
+	}
 
-	@Test
+    @Test
 	public void testIsMetalloid() {
 		Element h = Element.H;
 		Assert.assertFalse(h.isMetalloid());

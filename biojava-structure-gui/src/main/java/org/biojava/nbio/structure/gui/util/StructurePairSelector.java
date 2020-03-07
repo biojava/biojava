@@ -35,7 +35,7 @@ import org.biojava.nbio.structure.StructureException;
  */
 public interface StructurePairSelector {
 
-	public Structure getStructure1() throws StructureException, IOException;
-	public Structure getStructure2() throws StructureException, IOException;
+	Structure getStructure1() throws StructureException, IOException;
+	Structure getStructure2() throws StructureException, IOException;
 
 }

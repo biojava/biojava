@@ -176,7 +176,7 @@ public class UncompressInputStream extends FilterInputStream {
 		// empty stack if stuff still left
 		int s_size = l_stack.length - l_stackp;
 		if (s_size > 0) {
-			int num = (s_size >= len) ? len : s_size;
+			int num = Math.min(s_size, len);
 			System.arraycopy(l_stack, l_stackp, buf, off, num);
 			off += num;
 			len -= num;
@@ -304,7 +304,7 @@ public class UncompressInputStream extends FilterInputStream {
 				// And put them out in forward order
 
 				s_size = l_stack.length - l_stackp;
-				int num = (s_size >= len) ? len : s_size;
+				int num = Math.min(s_size, len);
 				System.arraycopy(l_stack, l_stackp, buf, off, num);
 				off += num;
 				len -= num;

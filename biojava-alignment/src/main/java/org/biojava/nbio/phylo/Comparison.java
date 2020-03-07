@@ -101,7 +101,7 @@ public class Comparison {
 	 * @return true if it is a gap, false otherwise
 	 */
 	public static final boolean isGap(char c) {
-		return (c == '-' || c == '.' || c == ' ') ? true : false;
+		return c == '-' || c == '.' || c == ' ';
 	}
 
 }

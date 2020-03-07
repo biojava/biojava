@@ -51,14 +51,14 @@ public interface Ontology  {
 	 * @return the name of the ontology
 	 */
 
-	public String getName();
+	String getName();
 
 	/** Set the name for this ontology
 	 *
 	 * @param name - the name
 	 *
 	 */
-	public void setName(String name);
+	void setName(String name);
 
 	/**
 	 * Return a human-readable description of this ontology, or the empty
@@ -66,13 +66,13 @@ public interface Ontology  {
 	 * @return the description of the term
 	 */
 
-	public String getDescription();
+	String getDescription();
 
 	/** set the description of this ontology
 	 *
 	 * @param description
 	 */
-	public void setDescription(String description);
+	void setDescription(String description);
 
 
 
@@ -81,7 +81,7 @@ public interface Ontology  {
 	 * @return a Set of all Terms of the ontology.
 	 */
 
-	public Set<Term> getTerms();
+	Set<Term> getTerms();
 
 	/**
 	 * Fetch the term with the specified name.
@@ -91,7 +91,7 @@ public interface Ontology  {
 	 * @throws NoSuchElementException if no term exists with that name
 	 */
 
-	public Term getTerm(String name) throws NoSuchElementException;
+	Term getTerm(String name) throws NoSuchElementException;
 
 	/**
 	 * Return all triples from this ontology which match the supplied
@@ -104,7 +104,7 @@ public interface Ontology  {
 	 * @return a Set of triples
 	 */
 
-	public Set<Triple> getTriples(Term subject, Term object, Term predicate);
+	Set<Triple> getTriples(Term subject, Term object, Term predicate);
 
 	/**
 	 * Return the associated OntologyOps.
@@ -118,7 +118,7 @@ public interface Ontology  {
 	 * @return the OntologyOps instance associated with this instance.
 	 */
 
-	public OntologyOps getOps();
+	OntologyOps getOps();
 
 	/**
 	 * Create a new term in this ontology.
@@ -132,7 +132,7 @@ public interface Ontology  {
 	 * @throws ChangeVetoException
 	 */
 
-	public Term createTerm(String name)
+	Term createTerm(String name)
 			throws
 			AlreadyExistsException,
 
@@ -151,7 +151,7 @@ public interface Ontology  {
 	 * @throws ChangeVetoException
 	 */
 
-	public Term createTerm(String name, String description)
+	Term createTerm(String name, String description)
 			throws
 			AlreadyExistsException,
 
@@ -171,7 +171,7 @@ public interface Ontology  {
 	 * @throws ChangeVetoException
 	 */
 
-	public Term createTerm(String name, String description, Object[] synonyms)
+	Term createTerm(String name, String description, Object[] synonyms)
 			throws
 			AlreadyExistsException,
 
@@ -190,7 +190,7 @@ public interface Ontology  {
 	 * @throws ChangeVetoException
 	 */
 
-	public Variable createVariable(String name, String description)
+	Variable createVariable(String name, String description)
 			throws
 			AlreadyExistsException,
 
@@ -212,7 +212,7 @@ public interface Ontology  {
 	 * @throws IllegalArgumentException
 	 */
 
-	public Term importTerm(Term t, String localName)
+	Term importTerm(Term t, String localName)
 			throws
 
 			IllegalArgumentException;
@@ -233,7 +233,7 @@ public interface Ontology  {
 	 * @throws IllegalArgumentException if subject, object or predicate are not all
 	 *      from the same ontology
 	 */
-	public Triple createTriple(Term subject, Term object, Term predicate, String name, String description)
+	Triple createTriple(Term subject, Term object, Term predicate, String name, String description)
 			throws
 			AlreadyExistsException
 			;
@@ -246,7 +246,7 @@ public interface Ontology  {
 	 * @return true if contained
 	 */
 
-	public boolean containsTriple(Term subject, Term object, Term predicate);
+	boolean containsTriple(Term subject, Term object, Term predicate);
 
 	/**
 	 * Remove a term from an ontology, together with all triples which refer to it.
@@ -254,7 +254,7 @@ public interface Ontology  {
 	 * @throws ChangeVetoException
 	 */
 
-	public void deleteTerm(Term t) ;
+	void deleteTerm(Term t) ;
 
 	/**
 	 * Determines if this ontology currently contains a term named <code>name</code>
@@ -262,7 +262,7 @@ public interface Ontology  {
 	 * @return true is contained
 	 */
 
-	public boolean containsTerm(String name);
+	boolean containsTerm(String name);
 
 	/**
 	 * A basic in-memory implementation of an ontology
@@ -274,7 +274,7 @@ public interface Ontology  {
 
 	// AP: I am setting name and description to public changeable fields
 	// e.g during parsing of an .obo file we don't know them when the ontology is instanciated
-	public final class Impl
+	final class Impl
 
 	implements Ontology, java.io.Serializable {
 		/**
@@ -294,13 +294,13 @@ public interface Ontology  {
 		private final OntologyOps ops;
 
 		{
-			terms            = new HashMap<String, Term>();
-			triples          = new HashSet<Triple>();
-			subjectTriples   = new HashMap<Term, Set<Triple>>();
-			objectTriples    = new HashMap<Term, Set<Triple>>();
-			relationTriples  = new HashMap<Term, Set<Triple>>();
-			remoteTerms      = new HashMap<Term, RemoteTerm>();
-			localRemoteTerms = new HashSet<Term>();
+			terms            = new HashMap<>();
+			triples          = new HashSet<>();
+			subjectTriples   = new HashMap<>();
+			objectTriples    = new HashMap<>();
+			relationTriples  = new HashMap<>();
+			remoteTerms      = new HashMap<>();
+			localRemoteTerms = new HashSet<>();
 		}
 
 		public Impl(String name, String description) {
@@ -337,7 +337,7 @@ public interface Ontology  {
 
 		@Override
 		public Set<Term> getTerms() {
-			return new HashSet<Term>(terms.values());
+			return new HashSet<>(terms.values());
 		}
 
 		@Override
@@ -377,16 +377,15 @@ public interface Ontology  {
 			}
 		}
 
-		private Set<Triple> filterTriples(Set<Triple> base, Term subject, Term object, Term predicate) {
+		private static Set<Triple> filterTriples(Set<Triple> base, Term subject, Term object, Term predicate) {
 			if (base == null) {
 				return Collections.EMPTY_SET;
 			} else if (subject == null && object == null && predicate == null) {
-				return Collections.unmodifiableSet(new HashSet<Triple>(base));
+				return Collections.unmodifiableSet(new HashSet<>(base));
 			}
 
-			Set<Triple> retval = new HashSet<Triple>();
-			for (Iterator<Triple> i = base.iterator(); i.hasNext(); ) {
-				Triple t = i.next();
+			Set<Triple> retval = new HashSet<>();
+			for (Triple t : base) {
 				if (subject != null && t.getSubject() != subject) {
 					continue;
 				}
@@ -531,8 +530,7 @@ public interface Ontology  {
 				String description)
 						throws
 						AlreadyExistsException,
-						IllegalArgumentException,
-						NullPointerException,
+				NullPointerException,
 						IllegalArgumentException
 						{
 			Triple t = new Triple.Impl(subject, object, predicate, name, description);
@@ -564,11 +562,7 @@ public interface Ontology  {
 		}
 
 		private void pushTriple(Map<Term,Set<Triple>> m, Term key, Triple t) {
-			Set<Triple> s = m.get(key);
-			if (s == null) {
-				s = new HashSet<Triple>();
-				m.put(key, s);
-			}
+			Set<Triple> s = m.computeIfAbsent(key, k -> new HashSet<>());
 			s.add(t);
 		}
 

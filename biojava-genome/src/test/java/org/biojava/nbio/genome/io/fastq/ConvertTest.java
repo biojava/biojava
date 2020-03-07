@@ -99,7 +99,7 @@ public final class ConvertTest {
 		}
 	}
 
-	private final class FastqVariantPair
+	private static final class FastqVariantPair
 	{
 		final FastqVariant variant1;
 		final FastqVariant variant2;

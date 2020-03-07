@@ -24,10 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.List;
-import java.util.Map;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.*;
 
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.client.JFatCatClient;
@@ -58,7 +55,7 @@ public class RemoteDomainProvider extends SerializableCache<String,SortedSet<Str
 	ScopDatabase scop;
 	PDPProvider pdp;
 
-	private static String CACHE_FILE_NAME = "remotedomaincache.ser";
+	private static final String CACHE_FILE_NAME = "remotedomaincache.ser";
 
 
 	public RemoteDomainProvider(){
@@ -95,7 +92,7 @@ public class RemoteDomainProvider extends SerializableCache<String,SortedSet<Str
 	 *
 	 */
 	private void loadRepresentativeDomainAssignments() throws IOException {
-		AssignmentXMLSerializer results = null;
+		AssignmentXMLSerializer results;
 		try {
 			URL u = new URL(url + "getRepresentativeDomains");
 			logger.info("Fetching {}",u);
@@ -105,19 +102,16 @@ public class RemoteDomainProvider extends SerializableCache<String,SortedSet<Str
 
 			Map<String,String> data = results.getAssignments();
 			logger.info("got {} ranges from server.",data.size());
-			for (String key: data.keySet()){
-				String range = data.get(key);
+			for (Map.Entry<String, String> entry : data.entrySet()){
+				String range = entry.getValue();
 
 				// work around list in results;
 
 				String[] spl = range.split(",");
-				SortedSet<String> value = new TreeSet<String>();
+				SortedSet<String> value = new TreeSet<>();
 
-				for (String s : spl){
-					value.add(s);
-
-				}
-				serializedCache.put(key, value);
+                value.addAll(Arrays.asList(spl));
+				serializedCache.put(entry.getKey(), value);
 			}
 
 		} catch (MalformedURLException e){
@@ -150,7 +144,7 @@ public class RemoteDomainProvider extends SerializableCache<String,SortedSet<Str
 			cache(name,data);
 			return data;
 		} else {
-			SortedSet<String> r = new TreeSet<String>();
+			SortedSet<String> r = new TreeSet<>();
 			for ( ScopDomain d: scopDomains){
 				StructureName s = new StructureName(d.getScopId());
 
@@ -176,7 +170,7 @@ public class RemoteDomainProvider extends SerializableCache<String,SortedSet<Str
 	private SortedSet<String> getPDPDomains(StructureName n) throws IOException, StructureException {
 		SortedSet<String> pdpDomains = pdp.getPDPDomainNamesForPDB(n.getPdbId());
 
-		SortedSet<String> r = new TreeSet<String>();
+		SortedSet<String> r = new TreeSet<>();
 		String chainID = n.getChainId();
 		for ( String s : pdpDomains){
 			StructureName d = new StructureName(s);
@@ -213,7 +207,7 @@ public class RemoteDomainProvider extends SerializableCache<String,SortedSet<Str
 	public SortedSet<String> getRepresentativeDomains() throws IOException {
 
 		String url = "http://source.rcsb.org/jfatcatserver/domains/getRepresentativeDomainNames";
-		SortedSet<String> domainRanges = null;
+		SortedSet<String> domainRanges;
 		try {
 			URL u = new URL(url);
 			logger.info("Fetching {}",url);

@@ -57,7 +57,7 @@ public class TestSuperPosition {
 
 	// the transformation to apply to cloud points 1 that needs to be recovered by the superposition code
 	private static final AxisAngle4d rotAxis = new AxisAngle4d(0.440, 0.302, 0.845, 1.570);
-	private static final Vector3d translation = new Vector3d(0.345, 2.453, 5.324);;
+	private static final Vector3d translation = new Vector3d(0.345, 2.453, 5.324);
 	private static Matrix4d transform;
 
 	// a translation to apply to cloud point 2 for the rmsd test only
@@ -67,13 +67,12 @@ public class TestSuperPosition {
 	 * Generate two clouds of random points of different sizes to test
 	 * correctness and performance of superposition algorithms.
 	 *
-	 * @throws StructureException
 	 */
 	@Before
-	public void setUp() throws StructureException {
+	public void setUp() {
 
-		cloud1 = new ArrayList<Point3d[]>(5);
-		cloud2 = new ArrayList<Point3d[]>(5);
+		cloud1 = new ArrayList<>(5);
+		cloud2 = new ArrayList<>(5);
 
 		Random rnd = new Random(0);
 

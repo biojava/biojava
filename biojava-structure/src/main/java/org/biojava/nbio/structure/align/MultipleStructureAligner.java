@@ -45,7 +45,7 @@ public interface MultipleStructureAligner{
 	 * @throws StructureException
 	 * @see #align(List,Object)
 	 */
-	public MultipleAlignment align(List<Atom[]> atomArrays) throws StructureException;
+    MultipleAlignment align(List<Atom[]> atomArrays) throws StructureException;
 
 	/**
 	 * Run an alignment and also send a bean containing the parameters.
@@ -55,33 +55,33 @@ public interface MultipleStructureAligner{
 	 * @throws StructureException
 	 * @see #align(List)
 	 */
-	public MultipleAlignment align(List<Atom[]> atomArrays, Object params) throws StructureException;
+    MultipleAlignment align(List<Atom[]> atomArrays, Object params) throws StructureException;
 
 	/**
 	 * Return the parameters of this algorithm instance.
 	 *
 	 * @return The returned Object will be a Java bean.
 	 */
-	public ConfigStrucAligParams getParameters();
+    ConfigStrucAligParams getParameters();
 
 	/**
 	 * Set the parameters for this algorithm to use.
 	 *
 	 * @param parameters
 	 */
-	public void setParameters(ConfigStrucAligParams parameters);
+    void setParameters(ConfigStrucAligParams parameters);
 
 	/**
 	 * Get the name of this Algorithm.
 	 *
 	 * @return String name of the algorithm
 	 */
-	public String getAlgorithmName();
+    String getAlgorithmName();
 
 	/**
 	 * Get the Version information for this Algorithm.
 	 *
 	 * @return String version of the algorithm
 	 */
-	public String getVersion();
+    String getVersion();
 }

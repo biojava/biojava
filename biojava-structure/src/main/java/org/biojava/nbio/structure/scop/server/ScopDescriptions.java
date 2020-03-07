@@ -92,7 +92,7 @@ public class ScopDescriptions implements Serializable{
 
 	public static ScopDescriptions fromXML(String xml){
 
-		ScopDescriptions job = null;
+		ScopDescriptions job;
 
 		try {
 

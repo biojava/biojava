@@ -31,7 +31,7 @@ import java.util.TreeMap;
 
 class SpaceGroupMapAdapter extends XmlAdapter<SpaceGroupMapElements[], Map<Integer, SpaceGroup>> {
 	@Override
-	public SpaceGroupMapElements[] marshal(Map<Integer, SpaceGroup> arg0) throws Exception {
+	public SpaceGroupMapElements[] marshal(Map<Integer, SpaceGroup> arg0) {
 		SpaceGroupMapElements[] mapElements = new SpaceGroupMapElements[arg0.size()];
 		int i = 0;
 		for (Map.Entry<Integer, SpaceGroup> entry : arg0.entrySet())
@@ -41,8 +41,8 @@ class SpaceGroupMapAdapter extends XmlAdapter<SpaceGroupMapElements[], Map<Integ
 	}
 
 	@Override
-	public Map<Integer, SpaceGroup> unmarshal(SpaceGroupMapElements[] arg0) throws Exception {
-		Map<Integer, SpaceGroup> r = new TreeMap<Integer, SpaceGroup>();
+	public Map<Integer, SpaceGroup> unmarshal(SpaceGroupMapElements[] arg0) {
+		Map<Integer, SpaceGroup> r = new TreeMap<>();
 		for (SpaceGroupMapElements mapelement : arg0)
 			r.put(mapelement.key, mapelement.value);
 		return r;

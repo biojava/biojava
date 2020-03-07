@@ -37,12 +37,12 @@ public class AtomContactSet implements Serializable, Iterable<AtomContact> {
 
 	private static final long serialVersionUID = 1L;
 
-	private HashMap<Pair<AtomIdentifier>, AtomContact> contacts;
-	private double cutoff;
+	private final HashMap<Pair<AtomIdentifier>, AtomContact> contacts;
+	private final double cutoff;
 
 	public AtomContactSet(double cutoff) {
 		this.cutoff = cutoff;
-		this.contacts = new HashMap<Pair<AtomIdentifier>,AtomContact>();
+		this.contacts = new HashMap<>();
 	}
 
 	public void add(AtomContact contact) {
@@ -62,7 +62,7 @@ public class AtomContactSet implements Serializable, Iterable<AtomContact> {
 	}
 
 	public boolean hasContact(AtomIdentifier atomId1, AtomIdentifier atomId2) {
-		return contacts.containsKey(new Pair<AtomIdentifier>(atomId1,atomId2));
+		return contacts.containsKey(new Pair<>(atomId1, atomId2));
 	}
 
 	/**
@@ -72,9 +72,9 @@ public class AtomContactSet implements Serializable, Iterable<AtomContact> {
 	 * @return
 	 */
 	public AtomContact getContact(Atom atom1, Atom atom2) {
-		return contacts.get(new Pair<AtomIdentifier>(
-				new AtomIdentifier(atom1.getPDBserial(),atom1.getGroup().getChainId()),
-				new AtomIdentifier(atom2.getPDBserial(),atom2.getGroup().getChainId()) ));
+		return contacts.get(new Pair<>(
+				new AtomIdentifier(atom1.getPDBserial(), atom1.getGroup().getChainId()),
+				new AtomIdentifier(atom2.getPDBserial(), atom2.getGroup().getChainId())));
 	}
 
 	public int size() {
@@ -86,12 +86,13 @@ public class AtomContactSet implements Serializable, Iterable<AtomContact> {
 		return contacts.values().iterator();
 	}
 
-	private Pair<AtomIdentifier> getAtomIdPairFromContact(AtomContact contact) {
-		Pair<AtomIdentifier> pair = new Pair<AtomIdentifier>(
-				new AtomIdentifier(contact.getPair().getFirst().getPDBserial(),contact.getPair().getFirst().getGroup().getChainId()),
-				new AtomIdentifier(contact.getPair().getSecond().getPDBserial(),contact.getPair().getSecond().getGroup().getChainId()));
-
-		return pair;
+	private static Pair<AtomIdentifier> getAtomIdPairFromContact(AtomContact contact) {
+		Pair<Atom> pair = contact.getPair();
+		Atom a = pair.getFirst();
+		Atom b = pair.getSecond();
+		return new Pair<>(
+				new AtomIdentifier(a.getPDBserial(), a.getGroup().getChainId()),
+				new AtomIdentifier(b.getPDBserial(), b.getGroup().getChainId()));
 	}
 
 	/**
@@ -132,7 +133,7 @@ public class AtomContactSet implements Serializable, Iterable<AtomContact> {
 					String.format("%.2f", distance)+" is larger than contacts' distance cutoff "+
 					String.format("%.2f", cutoff));
 
-		List<AtomContact> list = new ArrayList<AtomContact>();
+		List<AtomContact> list = new ArrayList<>();
 		for (AtomContact contact:this.contacts.values()) {
 			if (contact.getDistance()<distance) {
 				list.add(contact);

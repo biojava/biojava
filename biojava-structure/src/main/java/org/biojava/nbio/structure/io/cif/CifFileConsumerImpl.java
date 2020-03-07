@@ -144,7 +144,7 @@ class CifFileConsumerImpl implements CifFileConsumer<Structure> {
     private Map<String, String> asymId2authorId;
     private Matrix4d parsedScaleMatrix;
 
-    private FileParsingParameters params;
+    private final FileParsingParameters params;
 
     public CifFileConsumerImpl(FileParsingParameters params) {
         this.params = params;
@@ -1260,14 +1260,15 @@ class CifFileConsumerImpl implements CifFileConsumer<Structure> {
             seqMisMatches.add(seqMisMatch);
         }
 
-        for (String chainId : misMatchMap.keySet()){
+        for (Map.Entry<String, List<SeqMisMatch>> entry : misMatchMap.entrySet()){
+            String chainId = entry.getKey();
             Chain chain = structure.getPolyChainByPDB(chainId);
             if (chain == null) {
                 logger.warn("Could not set mismatches for chain with author id {}", chainId);
                 continue;
             }
 
-            chain.setSeqMisMatches(misMatchMap.get(chainId));
+            chain.setSeqMisMatches(entry.getValue());
         }
     }
 

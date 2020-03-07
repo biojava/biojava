@@ -95,8 +95,8 @@ public class CommandPrompt {
 		/*
 		 * Parse input arguments
 		 */
-		List<Character> propertyList = new ArrayList<Character>();
-		List<Character> specificList = new ArrayList<Character>();
+		List<Character> propertyList = new ArrayList<>();
+		List<Character> specificList = new ArrayList<>();
 		String inputLocation = null;
 		String outputLocation = null;
 		String aminoAcidCompositionLocation = null;
@@ -179,15 +179,15 @@ public class CommandPrompt {
 		}
 		LinkedHashMap<String, ProteinSequence> ret;
 		if ( inputLocation.toLowerCase().contains(".gb")) {
-			GenbankReader<ProteinSequence, AminoAcidCompound> genbankReader = new GenbankReader<ProteinSequence, AminoAcidCompound>(
-					inStream, new GenericGenbankHeaderParser<ProteinSequence, AminoAcidCompound>(),
+			GenbankReader<ProteinSequence, AminoAcidCompound> genbankReader = new GenbankReader<>(
+					inStream, new GenericGenbankHeaderParser<>(),
 					new ProteinSequenceCreator(set));
 			ret = genbankReader.process();
 
 
 		} else {
-			FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = new FastaReader<ProteinSequence, AminoAcidCompound>(
-					inStream, new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>(),
+			FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = new FastaReader<>(
+					inStream, new GenericFastaHeaderParser<>(),
 					new ProteinSequenceCreator(set));
 			ret = fastaReader.process();
 
@@ -198,9 +198,9 @@ public class CommandPrompt {
 	public enum PropertyName{MolecularWeight, Absorbance_True, Absorbance_False, ExtinctionCoefficient_True, ExtinctionCoefficient_False,
 		InstabilityIndex, ApliphaticIndex, AverageHydropathyValue, IsoelectricPoint, NetCharge_pH_7, A, R,
 		N, D, C, E, Q, G, H, I, L,
-		K, M, F, P, S, T, W, Y, V};
+		K, M, F, P, S, T, W, Y, V}
 
-	private static void printHeader(PrintStream output, List<Character> propertyList, List<Character> specificList, String delimiter) throws IOException{
+	private static void printHeader(PrintStream output, List<Character> propertyList, List<Character> specificList, String delimiter) {
 		int specificCount = 0;
 		/*
 		 * 1 Molecular weight
@@ -214,7 +214,7 @@ public class CommandPrompt {
 		 * 9 Composition of the 20 standard amino acid
 		 * 0 Composition of the specific amino acid
 		 */
-		List<String> sList = new ArrayList<String>();
+		List<String> sList = new ArrayList<>();
 		sList.add("SequenceName");
 		for(Character c:propertyList){
 			switch(c){
@@ -238,7 +238,7 @@ public class CommandPrompt {
 				sList.add(PropertyName.T.toString()); sList.add(PropertyName.W.toString());
 				sList.add(PropertyName.Y.toString()); sList.add(PropertyName.V.toString());
 				break;
-			case '0': sList.add("" + specificList.get(specificCount++)); break;
+			case '0': sList.add(String.valueOf(specificList.get(specificCount++))); break;
 			}
 		}
 		for(int i = 0; i < sList.size(); i++){
@@ -277,14 +277,11 @@ public class CommandPrompt {
 		IPeptideProperties pp = new PeptidePropertiesImpl();
 
 		int specificCount = 0;
-		List<Double> dList = new ArrayList<Double>();
+		List<Double> dList = new ArrayList<>();
 		for(Character c:propertyList){
 			switch(c){
 			case '1':
-				if(aaTable == null)
-					dList.add(pp.getMolecularWeight(pSequence));
-				else
-					dList.add(pp.getMolecularWeight(pSequence));
+				dList.add(pp.getMolecularWeight(pSequence));
 				break;
 			case '2':
 				dList.add(pp.getAbsorbance(pSequence, true));
@@ -323,7 +320,7 @@ public class CommandPrompt {
 				dList.add(aaCompound2Double.get(Constraints.Y));
 				dList.add(aaCompound2Double.get(Constraints.V));
 				break;
-			case '0': dList.add(pp.getEnrichment(pSequence, aaSet.getCompoundForString("" + specificList.get(specificCount++)))); break;
+			case '0': dList.add(pp.getEnrichment(pSequence, aaSet.getCompoundForString(String.valueOf(specificList.get(specificCount++))))); break;
 			}
 		}
 		output.print(header.replace(delimiter, "_"));

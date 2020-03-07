@@ -38,7 +38,7 @@ public interface XMLWriter {
 	 * @param s a string of data to include verbatim in the XML stream
 	 */
 
-	public void printRaw(String s) throws IOException;
+    void printRaw(String s);
 
 	/**
 	 * Open a new namespace-qualified XML tag.
@@ -47,7 +47,7 @@ public interface XMLWriter {
 	 * @param localName The name of the tag
 	 */
 
-	public void openTag(String nsURI, String localName) throws IOException;
+    void openTag(String nsURI, String localName) throws IOException;
 
 	/**
 	 * Open a new unqualified XML tag.  This may also be used if you want
@@ -56,7 +56,7 @@ public interface XMLWriter {
 	 * @param name The name of the tag.
 	 */
 
-	public void openTag(String name) throws IOException;
+    void openTag(String name) throws IOException;
 
 	/**
 	 * Add an attribute to an element.  This will throw an exception if it's not
@@ -67,7 +67,7 @@ public interface XMLWriter {
 	 * @param value The textual value of the attribute
 	 */
 
-	public void attribute(String nsURI, String localName, String value) throws IOException;
+    void attribute(String nsURI, String localName, String value) throws IOException;
 
 	/**
 	 * Add an un-qualified attribute to an element.  This will throw an exception if it's not
@@ -77,19 +77,19 @@ public interface XMLWriter {
 	 * @param value The textual value of the attribute
 	 */
 
-	public void attribute(String qName, String value) throws IOException;
+    void attribute(String qName, String value) throws IOException;
 
 	/**
 	 * Prints some textual content in an element.
 	 */
 
-	public void print(String data) throws IOException;
+    void print(String data) throws IOException;
 
 	/**
 	 * Prints some textual content, terminated with a newline character.
 	 */
 
-	public void println(String data) throws IOException;
+    void println(String data) throws IOException;
 
 	/**
 	 * Closes an element
@@ -98,7 +98,7 @@ public interface XMLWriter {
 	 * @param qName The name of the tag
 	 */
 
-	public void closeTag(String nsURI, String qName) throws IOException;
+    void closeTag(String nsURI, String qName) throws IOException;
 
 	/**
 	 * Closes an un-qualified element.
@@ -106,7 +106,7 @@ public interface XMLWriter {
 	 * @param name The tag name
 	 */
 
-	public void closeTag(String name) throws IOException;
+    void closeTag(String name) throws IOException;
 
 	/**
 	 * Hints that a namespace is going to be used in a sub-tree.  Use this method
@@ -121,7 +121,7 @@ public interface XMLWriter {
 	 * @param prefixHint A suggested prefix-string for this namespace.
 	 */
 
-	public void declareNamespace(String nsURI, String prefixHint) throws IOException;
+    void declareNamespace(String nsURI, String prefixHint) throws IOException;
 
 	/**
 	 * Close this XMLWriter, and it's underlying stream.
@@ -129,5 +129,5 @@ public interface XMLWriter {
 	 * @since 1.4
 	 */
 
-	public void close() throws IOException;
+    void close();
 }

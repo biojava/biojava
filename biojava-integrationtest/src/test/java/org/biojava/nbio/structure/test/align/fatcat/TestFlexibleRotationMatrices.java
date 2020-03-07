@@ -86,7 +86,7 @@ public class TestFlexibleRotationMatrices {
 			//Atom[] shifts1 = afpChain.getBlockShiftVector();
 			double[] blockRmsd = afpChain.getBlockRmsd();
 
-			assertTrue( afpChain.getBlockNum() == newChain.getBlockNum());
+			assertEquals(afpChain.getBlockNum(), newChain.getBlockNum());
 
 			// make sure the XML conversion worked OK.
 			for ( int i = 0 ; i < newChain.getBlockNum();i++) {
@@ -96,7 +96,7 @@ public class TestFlexibleRotationMatrices {
 				assertTrue(compareRmsd(blockRmsd[i], newChain.getBlockRmsd()[i]) );
 			}
 
-			assertTrue(afpChain.getOptLength() == newChain.getOptLength());
+			assertEquals(afpChain.getOptLength(), newChain.getOptLength());
 
 			// get the aligned blocks and check RMSD
 			int[] blockSize =afpChain.getBlockSize();
@@ -122,9 +122,7 @@ public class TestFlexibleRotationMatrices {
 
 			}
 
-		} catch (IOException e){
-			fail(e.getMessage());
-		} catch (StructureException e){
+		} catch (IOException | StructureException e){
 			fail(e.getMessage());
 		}
 
@@ -161,9 +159,9 @@ public class TestFlexibleRotationMatrices {
 
 		// get the eqr atoms of block X:
 		int[] optLen =afpChain.getOptLen();
-		List<Atom> eqrPos1 = new ArrayList<Atom>();
-		List<Atom> eqrPos2 = new ArrayList<Atom>();
-		List<Atom> eqrPos2copy = new ArrayList<Atom>();
+		List<Atom> eqrPos1 = new ArrayList<>();
+		List<Atom> eqrPos2 = new ArrayList<>();
+		List<Atom> eqrPos2copy = new ArrayList<>();
 		for ( int z = 0 ; z < blocks2[blockNr][0].length && z < optLen[blockNr] ; z++){
 			int pos1 = blocks2[blockNr][0][z];
 			int pos2 = blocks2[blockNr][1][z];
@@ -177,15 +175,15 @@ public class TestFlexibleRotationMatrices {
 			eqrPos2copy.add(c3);
 		}
 
-		assertTrue("The nr of Atoms in block " + blockNr + " does not match the expected nr. Expected:" + afpChain.getOptLen()[blockNr] + " but found: " + eqrPos2.size() , eqrPos2.size() == afpChain.getOptLen()[blockNr]);
+		assertEquals("The nr of Atoms in block " + blockNr + " does not match the expected nr. Expected:" + afpChain.getOptLen()[blockNr] + " but found: " + eqrPos2.size(), eqrPos2.size(), afpChain.getOptLen()[blockNr]);
 
 
 
 		// THIS IS ROTATING the coordinates according to what is in the file.
 
-		Atom[] blockSet1 = eqrPos1.toArray(new Atom[eqrPos1.size()]);
-		Atom[] blockSet2 = eqrPos2.toArray(new Atom[eqrPos2.size()]);
-		Atom[] blockSet2copy = eqrPos2copy.toArray(new Atom[eqrPos2copy.size()]);
+		Atom[] blockSet1 = eqrPos1.toArray(new Atom[0]);
+		Atom[] blockSet2 = eqrPos2.toArray(new Atom[0]);
+		Atom[] blockSet2copy = eqrPos2copy.toArray(new Atom[0]);
 
 
 		//System.out.println(shift );
@@ -248,7 +246,7 @@ public class TestFlexibleRotationMatrices {
 
 	}
 
-	private boolean compareVectors(Atom atom1, Atom atom2) throws StructureException {
+	private boolean compareVectors(Atom atom1, Atom atom2) {
 
 		//System.out.println(Math.abs(atom1.getX()-  atom2.getX()));
 		assertTrue("The X coordinates are too far apart!", Math.abs(atom1.getX()-  atom2.getX()) < 0.01);
@@ -270,7 +268,7 @@ public class TestFlexibleRotationMatrices {
 
 	}
 
-	private AFPChain getAlignment (String name1, String name2, Atom[] ca1, Atom[] ca2 , boolean doRigid) throws StructureException,IOException{
+	private AFPChain getAlignment (String name1, String name2, Atom[] ca1, Atom[] ca2 , boolean doRigid) throws StructureException {
 		FatCatParameters params = new FatCatParameters();
 
 		StructureAlignment fatCat ;

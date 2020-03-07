@@ -106,7 +106,7 @@ public class MMcifTest {
 
 
 		// load the PDB file via the PDB parser
-		Structure pdbStructure = null;
+		Structure pdbStructure;
 		InputStream pinStream = this.getClass().getResourceAsStream("/"+id+".pdb");
 		assertNotNull(inStream);
 

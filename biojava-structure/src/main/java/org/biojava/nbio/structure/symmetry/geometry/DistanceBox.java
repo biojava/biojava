@@ -28,10 +28,10 @@ import java.util.*;
  * @author Peter
  */
 public class DistanceBox<T> {
-	private Map<Long, List<T>> map;
-	private Map<Long, List<T>> layerMap;
+	private final Map<Long, List<T>> map;
+	private final Map<Long, List<T>> layerMap;
 	private boolean modified;
-	private double inverseBinWidth;
+	private final double inverseBinWidth;
 	// relative locations of 26 boxes surrounding a box at (0, 0, 0)
 	private static final long[] offset = new long[] {
 		0 + ( 0 * 10000) + ( 0 * 1000000000L),
@@ -63,12 +63,12 @@ public class DistanceBox<T> {
 		1 + ( 1 * 10000) + ( 1 * 1000000000L)
 	};
 
-	private List<T> tempBox = new ArrayList<T>(offset.length);
+	private final List<T> tempBox = new ArrayList<>(offset.length);
 
 	/** Creates a new instance of DistanceBox */
 	public DistanceBox(double binWidth) {
-		map = new HashMap<Long, List<T>>();
-		layerMap = new HashMap<Long, List<T>>();
+		map = new HashMap<>();
+		layerMap = new HashMap<>();
 		this.inverseBinWidth = 1.0f/binWidth;
 		this.modified = true;
 	}
@@ -79,12 +79,7 @@ public class DistanceBox<T> {
 		long k = (long) StrictMath.rint(point.z * inverseBinWidth);
 		long location = i + (j * 10000L) + (k * 1000000000L);
 
-		List<T> box = map.get(location);
-
-		if (box == null) {
-			box = new ArrayList<T>();
-			map.put(location, box);
-		}
+		List<T> box = map.computeIfAbsent(location, k1 -> new ArrayList<>());
 
 		box.add(object);
 		modified = true;
@@ -127,8 +122,8 @@ public class DistanceBox<T> {
 	}
 
 	public List<T> getIntersection(DistanceBox<T> distanceBox) {
-		List<T> intersection = new ArrayList<T>();
-		HashSet<Long> checkedLocations = new HashSet<Long>();
+		List<T> intersection = new ArrayList<>();
+		HashSet<Long> checkedLocations = new HashSet<>();
 
 		for (Iterator<Long> iter = map.keySet().iterator(); iter.hasNext();) {
 			long location = iter.next();
@@ -165,13 +160,13 @@ public class DistanceBox<T> {
 			}
 		}
 		// ensure that boxTwo has no empty element by copying from tempBox of defined size
-		List<T> boxTwo = null;
+		List<T> boxTwo;
 		if (tempBox.size() == 0) {
 			boxTwo = Collections.emptyList();
 		} else if (tempBox.size() == 1) {
 			boxTwo = Collections.singletonList(tempBox.get(0));
 		} else {
-			boxTwo = new ArrayList<T>(tempBox);
+			boxTwo = new ArrayList<>(tempBox);
 		}
 		return boxTwo;
 	}

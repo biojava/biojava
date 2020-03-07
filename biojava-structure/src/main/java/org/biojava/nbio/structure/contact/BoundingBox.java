@@ -139,7 +139,7 @@ public class BoundingBox implements Serializable {
 
 	}
 
-	private class Bound implements Comparable<Bound> {
+	private static class Bound implements Comparable<Bound> {
 		int cardinal;
 		double value;
 		public Bound(int cardinal,double value) {
@@ -181,8 +181,8 @@ public class BoundingBox implements Serializable {
 
 	private boolean areOverlapping(double imin, double imax, double jmin, double jmax, double cutoff) {
 
-		Bound[] bounds = {new Bound(0,imin), new Bound(1,imax),
-				new Bound(2,jmin), new Bound(3,jmax)};
+		Bound[] bounds = {new Bound(0, imin), new Bound(1, imax),
+                new Bound(2, jmin), new Bound(3, jmax)};
 
 		Arrays.sort(bounds);
 

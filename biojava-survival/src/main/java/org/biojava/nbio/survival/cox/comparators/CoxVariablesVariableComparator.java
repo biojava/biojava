@@ -29,8 +29,8 @@ import org.biojava.nbio.survival.cox.CoxVariables;
  */
 public class CoxVariablesVariableComparator implements CoxComparatorInterface {
 
-	String variables = "";
-	String variable = "";
+	String variables;
+	String variable;
 
 	/**
 	 *
@@ -55,13 +55,7 @@ public class CoxVariablesVariableComparator implements CoxComparatorInterface {
 			return 1;
 		if(ci2 == null && ci1 != null)
 			return -1;
-		if (ci1.getCoefficientsList().get(variable).getPvalue() < ci2.getCoefficientsList().get(variable).getPvalue()) {
-			return -1;
-		} else if (ci1.getCoefficientsList().get(variable).getPvalue() > ci2.getCoefficientsList().get(variable).getPvalue()) {
-			return 1;
-		} else {
-			return 0;
-		}
+        return Double.compare(ci1.getCoefficientsList().get(variable).getPvalue(), ci2.getCoefficientsList().get(variable).getPvalue());
 		//ascending order
 		// return coxVariables1.compareTo(coxVariables2);
 	}
@@ -70,7 +64,7 @@ public class CoxVariablesVariableComparator implements CoxComparatorInterface {
 	public String getDescription() {
 	   return description;
 	}
-	String description = "Signatures ranked by p-value ";
+	String description;
 
 	@Override
 	public void setDescription(String description) {

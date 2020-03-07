@@ -28,7 +28,7 @@ import java.util.List;
 public class ClusterDomains {
 
 
-	static private boolean verbose = CutDomain.verbose;
+	static private final boolean verbose = CutDomain.verbose;
 
 	private static int ndom;
 	public static List<Domain> cluster(List<Domain> domains, PDPDistanceMatrix pdpDistMatrix){
@@ -43,7 +43,7 @@ public class ClusterDomains {
 		int Sim = -1;
 		int Sjm = -1;
 
-		long total_max_contacts = 0;
+		long total_max_contacts;
 
 		double maximum_values = PDPParameters.CUT_OFF_VALUE1S;
 		double maximum_valuem = PDPParameters.CUT_OFF_VALUE1M;
@@ -226,7 +226,7 @@ public class ClusterDomains {
 		if ( verbose)
 			System.out.println("  +++  combining domains " + Si + " " + Sj);
 
-		List<Domain> newdoms = new ArrayList<Domain>();
+		List<Domain> newdoms = new ArrayList<>();
 
 		//int ndom = domains.size();
 		for(int i=0;i<domains.get(Sj).nseg;i++) {

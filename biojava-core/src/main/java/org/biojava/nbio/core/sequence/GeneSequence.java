@@ -41,14 +41,14 @@ public class GeneSequence extends DNASequence {
 
 	private final static Logger logger = LoggerFactory.getLogger(GeneSequence.class);
 
-	private final LinkedHashMap<String, TranscriptSequence> transcriptSequenceHashMap = new LinkedHashMap<String, TranscriptSequence>();
-	private final LinkedHashMap<String, IntronSequence> intronSequenceHashMap = new LinkedHashMap<String, IntronSequence>();
-	private final LinkedHashMap<String, ExonSequence> exonSequenceHashMap = new LinkedHashMap<String, ExonSequence>();
-	private final ArrayList<IntronSequence> intronSequenceList = new ArrayList<IntronSequence>();
-	private final ArrayList<ExonSequence> exonSequenceList = new ArrayList<ExonSequence>();
+	private final LinkedHashMap<String, TranscriptSequence> transcriptSequenceHashMap = new LinkedHashMap<>();
+	private final LinkedHashMap<String, IntronSequence> intronSequenceHashMap = new LinkedHashMap<>();
+	private final LinkedHashMap<String, ExonSequence> exonSequenceHashMap = new LinkedHashMap<>();
+	private final ArrayList<IntronSequence> intronSequenceList = new ArrayList<>();
+	private final ArrayList<ExonSequence> exonSequenceList = new ArrayList<>();
 	boolean intronAdded = false; // need to deal with the problem that typically introns are not added when validating the list and adding in introns as the regions not included in exons
 	private Strand strand = Strand.UNDEFINED;
-	private ChromosomeSequence chromosomeSequence;
+	private final ChromosomeSequence chromosomeSequence;
 
 	/**
 	 * A class that keeps track of the details of a GeneSequence which is difficult to properly model. Two important concepts that is difficult
@@ -102,7 +102,7 @@ public class GeneSequence extends DNASequence {
 		}
 		ExonComparator exonComparator = new ExonComparator();
 		//sort based on start position and sense;
-		Collections.sort(exonSequenceList, exonComparator);
+		exonSequenceList.sort(exonComparator);
 		int shift = -1;
 		if (getStrand() == Strand.NEGATIVE) {
 			shift = 1;

@@ -192,7 +192,7 @@ public class MultiThreadedDBSearch {
 
 	public void run(){
 
-		File outFileF = null;
+		File outFileF;
 		SynchronizedOutFile out ;
 
 		try {
@@ -257,12 +257,7 @@ public class MultiThreadedDBSearch {
 			}
 
 			out.flush();
-		} catch (IOException e){
-			logger.error("Error while loading representative structure {}", name1, e);
-			interrupt();
-			cleanup();
-			return;
-		} catch (StructureException e) {
+		} catch (IOException | StructureException e){
 			logger.error("Error while loading representative structure {}", name1, e);
 			interrupt();
 			cleanup();
@@ -270,7 +265,7 @@ public class MultiThreadedDBSearch {
 		}
 
 
-		int nrJobs = 0;
+        int nrJobs = 0;
 		DomainProvider domainProvider;
 		try {
 			domainProvider = DomainProviderFactory.getDomainProvider();
@@ -301,12 +296,7 @@ public class MultiThreadedDBSearch {
 				}
 
 			}
-		} catch(IOException e) {
-			logger.error("Error while fetching representative domains", e);
-			interrupt();
-			cleanup();
-			return;
-		} catch (StructureException e) {
+		} catch(IOException | StructureException e) {
 			logger.error("Error while fetching representative domains", e);
 			interrupt();
 			cleanup();
@@ -314,7 +304,7 @@ public class MultiThreadedDBSearch {
 		}
 
 
-		ThreadPoolExecutor  pool = ConcurrencyTools.getThreadPool();
+        ThreadPoolExecutor  pool = ConcurrencyTools.getThreadPool();
 		logger.info("{}", pool.getPoolSize());
 
 		long startTime = System.currentTimeMillis();

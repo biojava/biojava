@@ -48,7 +48,7 @@ import org.biojava.nbio.structure.align.util.AtomCache;
  */
 public class DemoMultipleMC {
 
-	public static void main(String[] args) throws IOException, StructureException, InterruptedException, ExecutionException {
+	public static void main(String[] args) throws IOException, StructureException {
 
 		//ASP-proteinases (CEMC paper)
 		//List<String> names = Arrays.asList("3app", "4ape", "2apr", "5pep", "1psn", "4cms", "1bbs.A", "1smr.A", "2jxr.A", "1mpp", "2asi", "1am5");
@@ -97,9 +97,9 @@ public class DemoMultipleMC {
 		//Load the CA atoms of the structures
 		AtomCache cache = new AtomCache();
 
-		List<StructureIdentifier> identifiers = new ArrayList<StructureIdentifier>();
+		List<StructureIdentifier> identifiers = new ArrayList<>();
 
-		List<Atom[]> atomArrays = new ArrayList<Atom[]>();
+		List<Atom[]> atomArrays = new ArrayList<>();
 		for (String name:names)	{
 			atomArrays.add(cache.getAtoms(name));
 			identifiers.add(new SubstructureIdentifier(name));

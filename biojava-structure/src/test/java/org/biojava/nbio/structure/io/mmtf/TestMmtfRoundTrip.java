@@ -139,7 +139,7 @@ public class TestMmtfRoundTrip {
 					if(!groupOne.getType().equals(groupTwo.getType())){
 						System.out.println("Error - diff group type: "+structOne.getPDBCode());
 						System.out.println(groupOne.getPDBName() + " and type: "+groupOne.getType());
-						System.out.println(groupTwo.getPDBName() + " and type: "+groupTwo.getType());;
+						System.out.println(groupTwo.getPDBName() + " and type: "+groupTwo.getType());
 					}
 					// Check the single letter amino acid is correct
 					if(groupOne.getChemComp().getOne_letter_code().length()==1 && groupTwo.getChemComp().getOne_letter_code().length()==1){
@@ -164,14 +164,10 @@ public class TestMmtfRoundTrip {
 					List<Atom> atomsTwo = new ArrayList<>(groupTwo.getAtoms());
 
 					for(Group altLocOne: groupOne.getAltLocs()){
-						for(Atom atomAltLocOne: altLocOne.getAtoms()){
-							atomsOne.add(atomAltLocOne);
-						}
+						atomsOne.addAll(altLocOne.getAtoms());
 					}
 					for(Group altLocTwo: groupTwo.getAltLocs()){
-						for(Atom atomAltLocTwo: altLocTwo.getAtoms()){
-							atomsTwo.add(atomAltLocTwo);
-						}
+						atomsTwo.addAll(altLocTwo.getAtoms());
 					}
 					if(atomsOne.size()!=atomsTwo.size()){
 						System.out.println("Error - diff number atoms: "+structOne.getPDBCode());
@@ -246,28 +242,22 @@ public class TestMmtfRoundTrip {
 	 * @param atomsTwo  the second list
 	 */
 	private void sortAtoms(List<Atom> atomsOne, List<Atom> atomsTwo) {
-		atomsOne.sort(new Comparator<Atom>() {
-			@Override
-			public int compare(Atom o1, Atom o2) {
-				//
-				if (o1.getPDBserial()<o2.getPDBserial()){
-					return -1;
-				}
-				else{
-					return 1;
-				}
+		atomsOne.sort((o1, o2) -> {
+			//
+			if (o1.getPDBserial()<o2.getPDBserial()){
+				return -1;
+			}
+			else{
+				return 1;
 			}
 		});
-		atomsTwo.sort(new Comparator<Atom>() {
-			@Override
-			public int compare(Atom o1, Atom o2) {
-				//
-				if (o1.getPDBserial()<o2.getPDBserial()){
-					return -1;
-				}
-				else{
-					return 1;
-				}
+		atomsTwo.sort((o1, o2) -> {
+			//
+			if (o1.getPDBserial()<o2.getPDBserial()){
+				return -1;
+			}
+			else{
+				return 1;
 			}
 		});
 	}
@@ -279,18 +269,8 @@ public class TestMmtfRoundTrip {
 	 * @param chainsTwo the second list of chains
 	 */
 	private void sortChains(List<Chain> chainsOne, List<Chain> chainsTwo) {
-		Collections.sort(chainsOne, new Comparator<Chain>() {
-			@Override
-			public int compare(Chain o1, Chain o2) {
-				return o1.getId().compareTo(o2.getId());
-			}
-		});
-		Collections.sort(chainsTwo, new Comparator<Chain>() {
-			@Override
-			public int compare(Chain o1, Chain o2) {
-				return o1.getId().compareTo(o2.getId());
-			}
-		});
+		chainsOne.sort((o1, o2) -> o1.getId().compareTo(o2.getId()));
+		chainsTwo.sort((o1, o2) -> o1.getId().compareTo(o2.getId()));
 
 	}
 
@@ -324,7 +304,7 @@ public class TestMmtfRoundTrip {
 	 * @param structOne the first input structure
 	 * @param structTwo the second input structure
 	 */
-	private void checkBioAssemblies1(Structure structOne, Structure structTwo) throws IOException {
+	private void checkBioAssemblies1(Structure structOne, Structure structTwo) {
 
 		Map<Integer, BioAssemblyInfo> expecteds = structOne.getPDBHeader().getBioAssemblies();
 		Map<Integer, BioAssemblyInfo> actuals = structTwo.getPDBHeader().getBioAssemblies();

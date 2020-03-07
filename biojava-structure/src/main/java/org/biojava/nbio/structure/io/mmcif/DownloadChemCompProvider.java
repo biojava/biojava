@@ -87,7 +87,7 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 	// flags to make sure there is only one thread running that is loading the dictionary
 	static AtomicBoolean loading = new AtomicBoolean(false);
 
-	static final List<String> protectedIDs = new ArrayList<String> ();
+	static final List<String> protectedIDs = new ArrayList<>();
 	static {
 		protectedIDs.add("CON");
 		protectedIDs.add("PRN");
@@ -151,13 +151,7 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 		} else {
 			// file exists.. did it get extracted?
 
-			FilenameFilter filter =new FilenameFilter() {
-
-				@Override
-				public boolean accept(File dir, String file) {
-					return file.endsWith(".cif.gz");
-				}
-			};
+			FilenameFilter filter = (dir1, file) -> file.endsWith(".cif.gz");
 			String[] files = dir.list(filter);
 			if ( files.length < 500) {
 				// not all did get unpacked
@@ -182,9 +176,9 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 		int counter = 0;
 		InputStreamProvider prov = new InputStreamProvider();
 
-		try( BufferedReader buf = new BufferedReader (new InputStreamReader (prov.getInputStream(f)));
-				) {
-			String line = null;
+		try( BufferedReader buf = new BufferedReader (new InputStreamReader (prov.getInputStream(f)))
+		) {
+			String line;
 			line = buf.readLine ();
 			StringWriter writer = new StringWriter();
 
@@ -404,8 +398,8 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 			URLConnection uconn = URLConnectionTools.openURLConnection(url);
 
 			try( PrintWriter pw = new PrintWriter(new GZIPOutputStream(new FileOutputStream(newFile)));
-					BufferedReader fileBuffer = new BufferedReader(new InputStreamReader(uconn.getInputStream()));
-					) {
+					BufferedReader fileBuffer = new BufferedReader(new InputStreamReader(uconn.getInputStream()))
+			) {
 
 				String line;
 

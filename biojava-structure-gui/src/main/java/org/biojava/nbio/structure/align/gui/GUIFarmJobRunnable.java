@@ -74,12 +74,7 @@ public class GUIFarmJobRunnable implements Runnable{
 		t.start();
 
 
-		javax.swing.SwingUtilities.invokeLater(new Runnable() {
-	        @Override
-			public void run() {
-	            createAndShowGUI(progressListener);
-	        }
-		});
+		javax.swing.SwingUtilities.invokeLater(() -> createAndShowGUI(progressListener));
 
 	}
 

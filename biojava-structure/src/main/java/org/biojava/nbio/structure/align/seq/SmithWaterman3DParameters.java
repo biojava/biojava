@@ -42,7 +42,7 @@ public class SmithWaterman3DParameters implements ConfigStrucAligParams {
 
 	@Override
 	public List<String> getUserConfigHelp() {
-		List<String> params = new ArrayList<String>();
+		List<String> params = new ArrayList<>();
 		params.add("The Gap open penalty");
 		params.add("The Gap extension penalty");
 		params.add("The maximum RMSD of superposition allowed");
@@ -54,7 +54,7 @@ public class SmithWaterman3DParameters implements ConfigStrucAligParams {
 
 	@Override
 	public List<String> getUserConfigParameterNames() {
-		List<String> params = new ArrayList<String>();
+		List<String> params = new ArrayList<>();
 		params.add("Gap Open");
 		params.add("Gap Extension");
 		params.add("Maximum RMSD");
@@ -65,7 +65,7 @@ public class SmithWaterman3DParameters implements ConfigStrucAligParams {
 
 	@Override
 	public List<String> getUserConfigParameters() {
-		List<String> params = new ArrayList<String>();
+		List<String> params = new ArrayList<>();
 		params.add("GapOpen");
 		params.add("GapExtend");
 		params.add("MaxRmsd");
@@ -77,7 +77,7 @@ public class SmithWaterman3DParameters implements ConfigStrucAligParams {
 	@Override
 	@SuppressWarnings("rawtypes")
 	public List<Class> getUserConfigTypes() {
-		List<Class> params = new ArrayList<Class>();
+		List<Class> params = new ArrayList<>();
 		params.add(Short.class);
 		params.add(Short.class);
 		params.add(Double.class);

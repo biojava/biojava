@@ -117,14 +117,13 @@ implements Ontology {
 	}
 
 	@Override
-	public Term createTerm(String name) throws AlreadyExistsException,  IllegalArgumentException {
+	public Term createTerm(String name) throws IllegalArgumentException {
 		throw new IllegalArgumentException(getName() + " is immutable");
 	}
 
 	@Override
 	public Term createTerm(String name, String description)
 			throws
-			AlreadyExistsException,
 
 			IllegalArgumentException
 			{
@@ -134,7 +133,6 @@ implements Ontology {
 	@Override
 	public Term createTerm(String name, String description, Object[] synonyms)
 			throws
-			AlreadyExistsException,
 
 			IllegalArgumentException
 			{
@@ -144,7 +142,6 @@ implements Ontology {
 	@Override
 	public Variable createVariable(String name, String description)
 			throws
-			AlreadyExistsException,
 
 			IllegalArgumentException
 			{
@@ -160,10 +157,7 @@ implements Ontology {
 	}
 
 	@Override
-	public Triple createTriple(Term subject, Term object, Term predicate, String name, String description)
-			throws
-			AlreadyExistsException
-			{
+	public Triple createTriple(Term subject, Term object, Term predicate, String name, String description) {
 		throw new IllegalArgumentException(getName() + " is immutable");
 			}
 
@@ -190,7 +184,7 @@ implements Ontology {
 	}
 
 	public IntTerm resolveInt(int val) {
-		Integer i = new Integer(val);
+		Integer i = val;
 		IntTerm term = (IntTerm) termCache.get(i);
 
 		if(term == null) {
@@ -205,7 +199,7 @@ implements Ontology {
 
 	implements Term {
 		private final int val;
-		private Set synonyms;
+		private final Set synonyms;
 
 		public IntTerm(int val) {
 			this(val, null);

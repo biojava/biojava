@@ -42,7 +42,7 @@ import java.util.List;
 public class ProteinSequenceCreator implements
 		SequenceCreatorInterface<AminoAcidCompound> {
 
-	private CompoundSet<AminoAcidCompound> compoundSet;
+	private final CompoundSet<AminoAcidCompound> compoundSet;
 /**
  *
  * @param compoundSet
@@ -70,7 +70,7 @@ public AbstractSequence<AminoAcidCompound> getSequence(String sequence,
 	@Override
 public AbstractSequence<AminoAcidCompound> getSequence(
 			List<AminoAcidCompound> list) {
-		ArrayListProxySequenceReader<AminoAcidCompound> store = new ArrayListProxySequenceReader<AminoAcidCompound>();
+		ArrayListProxySequenceReader<AminoAcidCompound> store = new ArrayListProxySequenceReader<>();
 		store.setCompoundSet(compoundSet);
 		store.setContents(list);
 		return new ProteinSequence(store);

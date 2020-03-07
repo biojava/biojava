@@ -123,7 +123,7 @@ public class URLConnectionTools {
 	 * @throws IOException due to an error opening the URL
 	 */
 	public static InputStream getInputStream(URL url, boolean acceptGzipEncoding, int timeout) throws IOException {
-		InputStream inStream = null ;
+		InputStream inStream;
 		URLConnection huc = URLConnectionTools.openURLConnection(url,timeout);
 
 		if ( acceptGzipEncoding) huc.setRequestProperty("Accept-Encoding", "gzip");

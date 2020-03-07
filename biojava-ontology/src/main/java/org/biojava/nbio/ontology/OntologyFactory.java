@@ -34,8 +34,7 @@ public interface OntologyFactory {
 	 * @param description the description for the ontology
 	 * @return an Ontology
 	 * @throws NullPointerException if either name or description are null
-	 * @throws OntologyException if the ontology could not be created
 	 */
-	public Ontology createOntology(String name, String description)
-	throws OntologyException;
+    Ontology createOntology(String name, String description)
+	;
 }

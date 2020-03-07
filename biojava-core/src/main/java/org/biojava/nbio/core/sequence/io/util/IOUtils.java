@@ -70,7 +70,7 @@ public class IOUtils {
 	public static void copy(InputStream input, OutputStream output)
 			throws IOException {
 		byte[] buffer = new byte[BUFFER];
-		int n = 0;
+		int n;
 		while (-1 != (n = input.read(buffer))) {
 			output.write(buffer, 0, n);
 		}
@@ -110,13 +110,8 @@ public class IOUtils {
 	 * @throws ParserException Can throw this if we cannot parse the given reader
 	 */
 	public static List<String> getList(BufferedReader br) throws ParserException {
-		final List<String> list = new ArrayList<String>();
-		processReader(br, new ReaderProcessor() {
-			@Override
-			public void process(String line) {
-				list.add(line);
-			}
-		});
+		final List<String> list = new ArrayList<>();
+		processReader(br, line -> list.add(line));
 		return list;
 	}
 
@@ -183,8 +178,8 @@ public class IOUtils {
 	 *
 	 * @author ayates
 	 */
-	public static interface ReaderProcessor {
-		void process(String line) throws IOException;
+	public interface ReaderProcessor {
+		void process(String line);
 	}
 
 	/**
@@ -330,14 +325,10 @@ public class IOUtils {
 	 * @throws IOException If any I/O exception occurs while printing; this method does not catch any exceptions
 	 */
 	public static void print(String string, File file) throws IOException {
-		PrintWriter out = null;
-		try {
-			out = new PrintWriter(new BufferedWriter(new FileWriter(file)));
+		try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(file)))) {
 			out.print(string);
 			out.flush();
 			out.close();
-		} finally {
-			if (out != null) out.close();
 		}
 	}
 

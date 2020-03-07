@@ -34,7 +34,7 @@ public class PassthroughIdentifier implements StructureIdentifier {
 
 	private static final long serialVersionUID = -2773111624414448950L;
 
-	private String identifier;
+	private final String identifier;
 	public PassthroughIdentifier(String identifier) {
 		this.identifier = identifier;
 	}
@@ -48,11 +48,11 @@ public class PassthroughIdentifier implements StructureIdentifier {
 	 */
 	@Override
 	public SubstructureIdentifier toCanonical() {
-		return new SubstructureIdentifier(null, new ArrayList<ResidueRange>());
+		return new SubstructureIdentifier(null, new ArrayList<>());
 	}
 
 	@Override
-	public Structure reduce(Structure input) throws StructureException {
+	public Structure reduce(Structure input) {
 		return input;
 	}
 	/**
@@ -60,8 +60,7 @@ public class PassthroughIdentifier implements StructureIdentifier {
 	 * @return null
 	 */
 	@Override
-	public Structure loadStructure(AtomCache cache) throws StructureException,
-			IOException {
+	public Structure loadStructure(AtomCache cache) {
 		return null;
 	}
 

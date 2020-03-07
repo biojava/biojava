@@ -44,10 +44,10 @@ public class MeanQuantizer implements DiscreteQuantizerInterface {
 			} catch (Exception e) {
 			}
 		}
-		Double mean = ds.getMean();
+		double mean = ds.getMean();
 		for (String row : worksheet.getRows()) {
 			try {
-				Double d = Double.parseDouble(worksheet.getCell(row, column));
+				double d = Double.parseDouble(worksheet.getCell(row, column));
 				if (d < mean) {
 					worksheet.addCell(row, column, "L");
 				} else {

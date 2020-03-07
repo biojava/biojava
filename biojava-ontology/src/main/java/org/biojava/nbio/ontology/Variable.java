@@ -27,7 +27,7 @@ package org.biojava.nbio.ontology;
  */
 public interface Variable
 extends Term {
-	public static class Impl
+	class Impl
 	extends Term.Impl
 	implements Variable
 	{

@@ -26,16 +26,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import javax.vecmath.Point3d;
 
@@ -168,7 +159,7 @@ public class StructureTools {
 	private static final Set<Element> hBondDonorAcceptors;
 
 	static {
-		nucleotides30 = new HashMap<String, Character>();
+		nucleotides30 = new HashMap<>();
 		nucleotides30.put("DA", 'A');
 		nucleotides30.put("DC", 'C');
 		nucleotides30.put("DG", 'G');
@@ -212,14 +203,14 @@ public class StructureTools {
 		// store nucleic acids (C, G, A, T, U, and I), and
 		// the modified versions of nucleic acids (+C, +G, +A, +T, +U, and +I),
 		// and
-		nucleotides23 = new HashMap<String, Character>();
+		nucleotides23 = new HashMap<>();
 		String[] names = { "C", "G", "A", "T", "U", "I", "+C", "+G", "+A",
 				"+T", "+U", "+I" };
 		for (String n : names) {
 			nucleotides23.put(n, n.charAt(n.length() - 1));
 		}
 
-		aminoAcids = new HashMap<String, Character>();
+		aminoAcids = new HashMap<>();
 		aminoAcids.put("GLY", 'G');
 		aminoAcids.put("ALA", 'A');
 		aminoAcids.put("VAL", 'V');
@@ -251,7 +242,7 @@ public class StructureTools {
 		aminoAcids.put("PYH", 'O');
 		aminoAcids.put("PYL", 'O');
 
-		hBondDonorAcceptors = new HashSet<Element>();
+		hBondDonorAcceptors = new HashSet<>();
 		hBondDonorAcceptors.add(Element.N);
 		hBondDonorAcceptors.add(Element.O);
 		hBondDonorAcceptors.add(Element.S);
@@ -314,10 +305,10 @@ public class StructureTools {
 	public static final Atom[] getAtomArray(Structure s, String[] atomNames) {
 		List<Chain> chains = s.getModel(0);
 
-		List<Atom> atoms = new ArrayList<Atom>();
+		List<Atom> atoms = new ArrayList<>();
 
 		extractAtoms(atomNames, chains, atoms);
-		return atoms.toArray(new Atom[atoms.size()]);
+		return atoms.toArray(new Atom[0]);
 
 	}
 
@@ -340,13 +331,13 @@ public class StructureTools {
 	public static final Atom[] getAtomArrayAllModels(Structure s,
 			String[] atomNames) {
 
-		List<Atom> atoms = new ArrayList<Atom>();
+		List<Atom> atoms = new ArrayList<>();
 
 		for (int i = 0; i < s.nrModels(); i++) {
 			List<Chain> chains = s.getModel(i);
 			extractAtoms(atomNames, chains, atoms);
 		}
-		return atoms.toArray(new Atom[atoms.size()]);
+		return atoms.toArray(new Atom[0]);
 
 	}
 
@@ -358,14 +349,14 @@ public class StructureTools {
 	 * @return all atom array
 	 */
 	public static final Atom[] getAllAtomArray(Structure s) {
-		List<Atom> atoms = new ArrayList<Atom>();
+		List<Atom> atoms = new ArrayList<>();
 
 		AtomIterator iter = new AtomIterator(s);
 		while (iter.hasNext()) {
 			Atom a = iter.next();
 			atoms.add(a);
 		}
-		return atoms.toArray(new Atom[atoms.size()]);
+		return atoms.toArray(new Atom[0]);
 	}
 	/**
 	 * Convert all atoms of the structure (specified model) into an Atom array
@@ -375,14 +366,14 @@ public class StructureTools {
 	 * @return all atom array
 	 */
 	public static final Atom[] getAllAtomArray(Structure s, int model) {
-		List<Atom> atoms = new ArrayList<Atom>();
+		List<Atom> atoms = new ArrayList<>();
 
 		AtomIterator iter = new AtomIterator(s,model);
 		while (iter.hasNext()) {
 			Atom a = iter.next();
 			atoms.add(a);
 		}
-		return atoms.toArray(new Atom[atoms.size()]);
+		return atoms.toArray(new Atom[0]);
 
 	}
 
@@ -395,16 +386,14 @@ public class StructureTools {
 	 * @return all atom array
 	 */
 	public static final Atom[] getAllAtomArray(Chain c) {
-		List<Atom> atoms = new ArrayList<Atom>();
+		List<Atom> atoms = new ArrayList<>();
 
 		for (Group g : c.getAtomGroups()) {
 			if (g.isWater())
 				continue;
-			for (Atom a : g.getAtoms()) {
-				atoms.add(a);
-			}
+			atoms.addAll(g.getAtoms());
 		}
-		return atoms.toArray(new Atom[atoms.size()]);
+		return atoms.toArray(new Atom[0]);
 	}
 
 	/**
@@ -417,8 +406,8 @@ public class StructureTools {
 	 * @return
 	 */
 	public static List<Group> getUnalignedGroups(Atom[] ca) {
-		Set<Chain> chains = new HashSet<Chain>();
-		Set<Group> caGroups = new HashSet<Group>();
+		Set<Chain> chains = new HashSet<>();
+		Set<Group> caGroups = new HashSet<>();
 
 		// Create list of all chains in this structure
 		Structure s = null;
@@ -433,9 +422,7 @@ public class StructureTools {
 		}
 		if (s != null) {
 			// Add all chains from the structure
-			for (Chain c : s.getChains(0)) {
-				chains.add(c);
-			}
+			chains.addAll(s.getChains(0));
 		}
 
 		// Add groups and chains from ca
@@ -452,7 +439,7 @@ public class StructureTools {
 		}
 
 		// Iterate through all chains, finding groups not in ca
-		List<Group> unadded = new ArrayList<Group>();
+		List<Group> unadded = new ArrayList<>();
 		for (Chain c : chains) {
 			for (Group g : c.getAtomGroups()) {
 				if (!caGroups.contains(g)) {
@@ -690,7 +677,7 @@ public class StructureTools {
 		return getAllNonHAtomArray(s, hetAtoms, iter);
 	}
 	private static final Atom[] getAllNonHAtomArray(Structure s, boolean hetAtoms, AtomIterator iter) {
-		List<Atom> atoms = new ArrayList<Atom>();
+		List<Atom> atoms = new ArrayList<>();
 
 		while (iter.hasNext()) {
 			Atom a = iter.next();
@@ -707,7 +694,7 @@ public class StructureTools {
 
 			atoms.add(a);
 		}
-		return atoms.toArray(new Atom[atoms.size()]);
+		return atoms.toArray(new Atom[0]);
 	}
 
 	/**
@@ -720,7 +707,7 @@ public class StructureTools {
 	 * @return
 	 */
 	public static final Atom[] getAllNonHAtomArray(Chain c, boolean hetAtoms) {
-		List<Atom> atoms = new ArrayList<Atom>();
+		List<Atom> atoms = new ArrayList<>();
 
 		for (Group g : c.getAtomGroups()) {
 			if (g.isWater())
@@ -736,7 +723,7 @@ public class StructureTools {
 				atoms.add(a);
 			}
 		}
-		return atoms.toArray(new Atom[atoms.size()]);
+		return atoms.toArray(new Atom[0]);
 	}
 
 	/**
@@ -749,7 +736,7 @@ public class StructureTools {
 	 * @return
 	 */
 	public static final Point3d[] getAllNonHCoordsArray(Chain c, boolean hetAtoms) {
-		List<Point3d> atoms = new ArrayList<Point3d>();
+		List<Point3d> atoms = new ArrayList<>();
 
 		for (Group g : c.getAtomGroups()) {
 			if (g.isWater())
@@ -765,7 +752,7 @@ public class StructureTools {
 				atoms.add(a.getCoordsAsPoint3d());
 			}
 		}
-		return atoms.toArray(new Point3d[atoms.size()]);
+		return atoms.toArray(new Point3d[0]);
 	}
 
 	/**
@@ -785,7 +772,7 @@ public class StructureTools {
 			for (Group g : c.getAtomGroups()) {
 
 				// a temp container for the atoms of this group
-				List<Atom> thisGroupAtoms = new ArrayList<Atom>();
+				List<Atom> thisGroupAtoms = new ArrayList<>();
 				// flag to check if this group contains all the requested atoms.
 				boolean thisGroupAllAtoms = true;
 				for (String atomName : atomNames) {
@@ -800,9 +787,7 @@ public class StructureTools {
 				}
 				if (thisGroupAllAtoms) {
 					// add the atoms of this group to the array.
-					for (Atom a : thisGroupAtoms) {
-						atoms.add(a);
-					}
+					atoms.addAll(thisGroupAtoms);
 				}
 
 			}
@@ -824,12 +809,12 @@ public class StructureTools {
 	 */
 	public static final Atom[] getAtomArray(Chain c, String[] atomNames) {
 
-		List<Atom> atoms = new ArrayList<Atom>();
+		List<Atom> atoms = new ArrayList<>();
 
 		for (Group g : c.getAtomGroups()) {
 
 			// a temp container for the atoms of this group
-			List<Atom> thisGroupAtoms = new ArrayList<Atom>();
+			List<Atom> thisGroupAtoms = new ArrayList<>();
 			// flag to check if this group contains all the requested atoms.
 			boolean thisGroupAllAtoms = true;
 			for (String atomName : atomNames) {
@@ -848,13 +833,11 @@ public class StructureTools {
 
 			if (thisGroupAllAtoms) {
 				// add the atoms of this group to the array.
-				for (Atom a : thisGroupAtoms) {
-					atoms.add(a);
-				}
+				atoms.addAll(thisGroupAtoms);
 			}
 
 		}
-		return atoms.toArray(new Atom[atoms.size()]);
+		return atoms.toArray(new Atom[0]);
 
 	}
 
@@ -868,7 +851,7 @@ public class StructureTools {
 	 * @see #getRepresentativeAtomArray(Chain)
 	 */
 	public static final Atom[] getAtomCAArray(Chain c) {
-		List<Atom> atoms = new ArrayList<Atom>();
+		List<Atom> atoms = new ArrayList<>();
 
 		for (Group g : c.getAtomGroups()) {
 			if (g.hasAtom(CA_ATOM_NAME)
@@ -877,7 +860,7 @@ public class StructureTools {
 			}
 		}
 
-		return atoms.toArray(new Atom[atoms.size()]);
+		return atoms.toArray(new Atom[0]);
 	}
 
 	/**
@@ -895,7 +878,7 @@ public class StructureTools {
 	 * @since Biojava 4.1.0
 	 */
 	public static final Atom[] getRepresentativeAtomArray(Chain c) {
-		List<Atom> atoms = new ArrayList<Atom>();
+		List<Atom> atoms = new ArrayList<>();
 
 		for (Group g : c.getAtomGroups()) {
 
@@ -916,7 +899,7 @@ public class StructureTools {
 			}
 		}
 
-		return atoms.toArray(new Atom[atoms.size()]);
+		return atoms.toArray(new Atom[0]);
 
 	}
 
@@ -933,7 +916,7 @@ public class StructureTools {
 	public static final Atom[] cloneAtomArray(Atom[] ca) {
 		Atom[] newCA = new Atom[ca.length];
 
-		List<Chain> model = new ArrayList<Chain>();
+		List<Chain> model = new ArrayList<>();
 		int apos = -1;
 		for (Atom a : ca) {
 			apos++;
@@ -979,7 +962,7 @@ public class StructureTools {
 	public static Group[] cloneGroups(Atom[] ca) {
 		Group[] newGroup = new Group[ca.length];
 
-		List<Chain> model = new ArrayList<Chain>();
+		List<Chain> model = new ArrayList<>();
 		int apos = -1;
 		for (Atom a : ca) {
 			apos++;
@@ -1087,7 +1070,7 @@ public class StructureTools {
 	 */
 	public static Atom[] getAtomCAArray(Structure s) {
 
-		List<Atom> atoms = new ArrayList<Atom>();
+		List<Atom> atoms = new ArrayList<>();
 
 		for (Chain c : s.getChains()) {
 			for (Group g : c.getAtomGroups()) {
@@ -1098,7 +1081,7 @@ public class StructureTools {
 			}
 		}
 
-		return atoms.toArray(new Atom[atoms.size()]);
+		return atoms.toArray(new Atom[0]);
 	}
 
 	/**
@@ -1118,16 +1101,14 @@ public class StructureTools {
 	 */
 	public static Atom[] getRepresentativeAtomArray(Structure s) {
 
-		List<Atom> atoms = new ArrayList<Atom>();
+		List<Atom> atoms = new ArrayList<>();
 
 		for (Chain c : s.getChains()) {
 			Atom[] chainAtoms = getRepresentativeAtomArray(c);
-			for (Atom a : chainAtoms) {
-				atoms.add(a);
-			}
+			atoms.addAll(Arrays.asList(chainAtoms));
 		}
 
-		return atoms.toArray(new Atom[atoms.size()]);
+		return atoms.toArray(new Atom[0]);
 	}
 
 	/**
@@ -1140,7 +1121,7 @@ public class StructureTools {
 	 */
 	public static Atom[] getBackboneAtomArray(Structure s) {
 
-		List<Atom> atoms = new ArrayList<Atom>();
+		List<Atom> atoms = new ArrayList<>();
 
 		for (Chain c : s.getChains()) {
 			for (Group g : c.getAtomGroups()) {
@@ -1195,7 +1176,7 @@ public class StructureTools {
 
 		}
 
-		return atoms.toArray(new Atom[atoms.size()]);
+		return atoms.toArray(new Atom[0]);
 	}
 
 	/**
@@ -1313,7 +1294,7 @@ public class StructureTools {
 
 		}
 
-		Chain c = null;
+		Chain c;
 		try {
 			c = s.getChainByPDB(chainId);
 		} catch (StructureException e) {
@@ -1404,7 +1385,7 @@ public class StructureTools {
 			String[] atomNames, double cutoff) {
 		Grid grid = new Grid(cutoff);
 
-		Atom[] atoms = null;
+		Atom[] atoms;
 		if (atomNames == null) {
 			atoms = getAllNonHAtomArray(chain, false);
 		} else {
@@ -1433,7 +1414,7 @@ public class StructureTools {
 	 * @return
 	 */
 	public static AtomContactSet getAtomsInContact(Chain chain, double cutoff) {
-		return getAtomsInContact(chain, (String[]) null, cutoff);
+		return getAtomsInContact(chain, null, cutoff);
 	}
 
 	/**
@@ -1502,8 +1483,8 @@ public class StructureTools {
 	public static AtomContactSet getAtomsInContact(Chain chain1, Chain chain2,
 			String[] atomNames, double cutoff, boolean hetAtoms) {
 		Grid grid = new Grid(cutoff);
-		Atom[] atoms1 = null;
-		Atom[] atoms2 = null;
+		Atom[] atoms1;
+		Atom[] atoms2;
 		if (atomNames == null) {
 			atoms1 = getAllNonHAtomArray(chain1, hetAtoms);
 			atoms2 = getAllNonHAtomArray(chain2, hetAtoms);
@@ -1565,12 +1546,12 @@ public class StructureTools {
 		// for speed, we avoid calculating square roots
 		radius = radius * radius;
 
-		Map<Group, Double> distances = new HashMap<Group, Double>();
+		Map<Group, Double> distances = new HashMap<>();
 
 		// we only need this if we're averaging distances
 		// note that we can't use group.getAtoms().size() because some the
 		// group's atoms be outside the shell
-		Map<Group, Integer> atomCounts = new HashMap<Group, Integer>();
+		Map<Group, Integer> atomCounts = new HashMap<>();
 
 		for (Chain chain : structure.getChains()) {
 			groupLoop: for (Group chainGroup : chain.getAtomGroups()) {
@@ -1627,9 +1608,7 @@ public class StructureTools {
 			}
 		} else {
 			// in this case we used getDistanceFast
-			for (Map.Entry<Group, Double> entry : distances.entrySet()) {
-				distances.put(entry.getKey(), Math.sqrt(entry.getValue()));
-			}
+			distances.replaceAll((k, v) -> Math.sqrt(v));
 		}
 
 		return distances;
@@ -1644,7 +1623,7 @@ public class StructureTools {
 		// which returns the square of a distance.
 		distance = distance * distance;
 
-		Set<Group> returnSet = new LinkedHashSet<Group>();
+		Set<Group> returnSet = new LinkedHashSet<>();
 		for (Chain chain : structure.getChains()) {
 			groupLoop: for (Group chainGroup : chain.getAtomGroups()) {
 				if (!includeWater && chainGroup.isWater())
@@ -1691,9 +1670,9 @@ public class StructureTools {
 	public static Set<Group> getGroupsWithinShell(Structure structure,
 			Group group, double distance, boolean includeWater) {
 
-		Set<Group> returnList = new LinkedHashSet<Group>();
+		Set<Group> returnList = new LinkedHashSet<>();
 
-		Set<ResidueNumber> excludeGroups = new HashSet<ResidueNumber>();
+		Set<ResidueNumber> excludeGroups = new HashSet<>();
 		excludeGroups.add(group.getResidueNumber());
 		for (Atom atom : group.getAtoms()) {
 			Set<Group> set = getGroupsWithinShell(structure, atom,
@@ -1742,7 +1721,7 @@ public class StructureTools {
 	 */
 	public static List<Group> filterLigands(List<Group> allGroups) {
 
-		List<Group> groups = new ArrayList<Group>();
+		List<Group> groups = new ArrayList<>();
 		for (Group g : allGroups) {
 
 			if ( g.isPolymeric())

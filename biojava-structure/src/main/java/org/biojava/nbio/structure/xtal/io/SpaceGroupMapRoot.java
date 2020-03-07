@@ -43,7 +43,7 @@ public class SpaceGroupMapRoot {
 	private TreeMap<Integer, SpaceGroup> mapProperty;
 
 	public SpaceGroupMapRoot() {
-		mapProperty = new TreeMap<Integer, SpaceGroup>();
+		mapProperty = new TreeMap<>();
 	}
 
 	@XmlJavaTypeAdapter(SpaceGroupMapAdapter.class)
@@ -72,7 +72,7 @@ public class SpaceGroupMapRoot {
 	}
 
 	public static SpaceGroupMapRoot fromXML(String xml) throws JAXBException{
-		SpaceGroupMapRoot job = null;
+		SpaceGroupMapRoot job;
 
 		JAXBContext jaxbContext = JAXBContext.newInstance(SpaceGroupMapRoot.class);
 

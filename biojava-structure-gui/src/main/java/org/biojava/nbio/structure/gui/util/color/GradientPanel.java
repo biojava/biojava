@@ -26,8 +26,9 @@ import java.awt.*;
 
 public class GradientPanel extends JPanel {
 	private static final long serialVersionUID = -6387922432121206731L;
-	private ContinuousColorMapper mapper;
-	private double min, max;
+	private final ContinuousColorMapper mapper;
+	private final double min;
+    private final double max;
 
 
 	public GradientPanel(ContinuousColorMapper mapper, double min, double max) {

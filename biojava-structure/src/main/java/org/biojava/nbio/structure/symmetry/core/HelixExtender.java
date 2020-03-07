@@ -25,11 +25,12 @@ import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class HelixExtender {
-	private QuatSymmetrySubunits subunits = null;
-	private Helix helix = null;
+	private QuatSymmetrySubunits subunits;
+	private Helix helix;
 
 	public HelixExtender(QuatSymmetrySubunits subunits, Helix helix) {
 		this.subunits = subunits;
@@ -40,7 +41,7 @@ public class HelixExtender {
 		List<List<Integer>> layerLines = helix.getLayerLines();
 
 		// get list of subunit indices to be used for helix extension
-		List<Integer> indices = new ArrayList<Integer>();
+		List<Integer> indices = new ArrayList<>();
 		for (List<Integer> line: layerLines) {
 			if (steps < 0) {
 				indices.add(line.get(0));
@@ -50,7 +51,7 @@ public class HelixExtender {
 		}
 		System.out.println("Extending subunits: " + indices);
 
-		List<Point3d> points = new ArrayList<Point3d>();
+		List<Point3d> points = new ArrayList<>();
 		Matrix4d transformation = helix.getTransformation();
 		for (int index: indices) {
 	    	Point3d[] trace = subunits.getTraces().get(index);
@@ -58,9 +59,7 @@ public class HelixExtender {
 		    for (int i = 0; i < Math.abs(steps); i++) {
 		    	CalcPoint.transform(transformation, copy);
 		    }
-		    for (Point3d p: copy) {
-		    	points.add(p);
-		    }
+            points.addAll(Arrays.asList(copy));
 		}
 		return points.toArray(new Point3d[0]);
 	}

@@ -43,7 +43,7 @@ public class AtomIterator implements Iterator<Atom> {
 
 	private Group     group         ;
 	private int current_atom_pos    ;
-	private GroupIterator groupiter ;
+	private final GroupIterator groupiter ;
 
 	/**
 	 * Constructs an AtomIterator object over all models

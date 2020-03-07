@@ -35,7 +35,7 @@ public interface StructureAlignment {
 	 * @return the afpChain object that contains the alignment.
 	 * @throws StructureException
 	 */
-	public AFPChain align(Atom[] ca1, Atom[] ca2) throws StructureException;
+    AFPChain align(Atom[] ca1, Atom[] ca2) throws StructureException;
 
 	/** run an alignment and also send a bean containing the parameters.
 	 *
@@ -45,29 +45,29 @@ public interface StructureAlignment {
 	 * @return the afpChain object that contains the alignment.
 	 * @throws StructureException
 	 */
-	public AFPChain align(Atom[] ca1, Atom[] ca2, Object params) throws StructureException;
+    AFPChain align(Atom[] ca1, Atom[] ca2, Object params) throws StructureException;
 
 	/** Return the paramers for this algorithm.
 	 *
 	 * @return The returned object will be a Java bean.
 	 */
-	public ConfigStrucAligParams getParameters();
+    ConfigStrucAligParams getParameters();
 
 	/** Set the default parameters for this algorithm to use
 	 *
 	 * @param parameters
 	 */
-	public void setParameters(ConfigStrucAligParams parameters);
+    void setParameters(ConfigStrucAligParams parameters);
 
 	/** Get the name of the Algorithm
 	 *
 	 * @return the name of the algorithm
 	 */
-	public String getAlgorithmName();
+    String getAlgorithmName();
 
 	/** Get the Version information for this Algorithm.
 	 *
 	 * @return the version of the algorithm
 	 */
-	public String getVersion();
+    String getVersion();
 }

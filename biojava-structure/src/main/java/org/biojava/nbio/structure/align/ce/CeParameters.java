@@ -46,7 +46,7 @@ public class CeParameters implements ConfigStrucAligParams  {
 	protected double rmsdThrJoin;
 	protected double maxOptRMSD;
 
-	public static enum ScoringStrategy {
+	public enum ScoringStrategy {
 		CA_SCORING("CA only"),
 		SIDE_CHAIN_SCORING("Sidechain orientation"),
 		SIDE_CHAIN_ANGLE_SCORING("Angle between sidechains"),
@@ -54,8 +54,8 @@ public class CeParameters implements ConfigStrucAligParams  {
 		SEQUENCE_CONSERVATION("Sequence Conservation");
 		public static ScoringStrategy DEFAULT_SCORING_STRATEGY = CA_SCORING;
 
-		private String name;
-		private ScoringStrategy(String name) {
+		private final String name;
+		ScoringStrategy(String name) {
 			this.name = name;
 		}
 		@Override
@@ -205,7 +205,7 @@ public class CeParameters implements ConfigStrucAligParams  {
 
 	@Override
 	public List<String> getUserConfigHelp() {
-		List<String> params =new ArrayList<String>();
+		List<String> params = new ArrayList<>();
 		String helpMaxGap = "This parameter configures the maximum gap size G, that is applied during the AFP extension. The larger the value, the longer the calculation time can become, Default value is 30. Set to 0 for no limit. " ;
 		//String helpRmsdThr = "This configures the RMSD threshold applied during the trace of the fragment matrix.";
 		String helpWinSize = "This configures the fragment size m of Aligned Fragment Pairs (AFPs).";
@@ -222,7 +222,7 @@ public class CeParameters implements ConfigStrucAligParams  {
 
 	@Override
 	public List<String> getUserConfigParameters() {
-		List<String> params = new ArrayList<String>();
+		List<String> params = new ArrayList<>();
 		params.add("MaxGapSize");
 		//params.add("RmsdThr");
 		params.add("WinSize");
@@ -236,7 +236,7 @@ public class CeParameters implements ConfigStrucAligParams  {
 
 	@Override
 	public List<String> getUserConfigParameterNames(){
-		List<String> params = new ArrayList<String>();
+		List<String> params = new ArrayList<>();
 		params.add("max. gap size G (during AFP extension).");
 		//params.add("RMSD threshold during trace of the fragment matrix.");
 		params.add("fragment size m");
@@ -250,7 +250,7 @@ public class CeParameters implements ConfigStrucAligParams  {
 	@Override
 	@SuppressWarnings("rawtypes")
 	public List<Class> getUserConfigTypes() {
-		List<Class> params = new ArrayList<Class>();
+		List<Class> params = new ArrayList<>();
 		params.add(Integer.class);
 		//params.add(Double.class);
 		params.add(Integer.class);

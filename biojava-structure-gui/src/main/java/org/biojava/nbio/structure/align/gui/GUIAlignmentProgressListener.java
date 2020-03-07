@@ -46,8 +46,8 @@ public class GUIAlignmentProgressListener extends JPanel implements AlignmentPro
 	int alignmentsProcessed;
 
 	JProgressBar progressBar;
-	private JTextArea taskOutput;
-	private JButton stopButton;
+	private final JTextArea taskOutput;
+	private final JButton stopButton;
 
 	FarmJob farmJob;
 

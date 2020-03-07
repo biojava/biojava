@@ -31,8 +31,8 @@ public class BioAssemblyIdentifier implements StructureIdentifier {
 
 	private static final long serialVersionUID = -356206725119993449L;
 
-	private String pdbCode;
-	private int biolNr;
+	private final String pdbCode;
+	private final int biolNr;
 
 	public static final Pattern BIO_NAME_PATTERN = Pattern.compile("^(?:BIO:)([0-9][a-z0-9]{3})(?::([0-9]+))?$", Pattern.CASE_INSENSITIVE);
 
@@ -74,12 +74,12 @@ public class BioAssemblyIdentifier implements StructureIdentifier {
 	}
 
 	@Override
-	public SubstructureIdentifier toCanonical() throws StructureException {
-		return new SubstructureIdentifier(pdbCode, new ArrayList<ResidueRange>());
+	public SubstructureIdentifier toCanonical() {
+		return new SubstructureIdentifier(pdbCode, new ArrayList<>());
 	}
 
 	@Override
-	public Structure reduce(Structure input) throws StructureException {
+	public Structure reduce(Structure input) {
 		// Should be the full structure
 		return input;
 	}

@@ -48,7 +48,7 @@ import org.slf4j.LoggerFactory;
  */
 
 public class BlastTabularParser implements ResultFactory {
-	private final String blastReference =
+	private static final String blastReference =
 			"Zheng Zhang, Scott Schwartz, Lukas Wagner, and Webb Miller (2000), A greedy algorithm for aligning DNA sequences&quot;, J Comput Biol 2000; 7(1-2):203-14.";
 	/**
 	 * Tries to define a different level of consistency during parsing.
@@ -71,7 +71,7 @@ public class BlastTabularParser implements ResultFactory {
 
 	// data imported private:
 	int queryIdNumber = 0;
-	HashMap<String,String> queryIdMapping = new HashMap<String,String>();
+	HashMap<String,String> queryIdMapping = new HashMap<>();
 	String programName=null, queryName = null, databaseFile = null;
 	private String queryId      ;
 	private String subjectId    ;
@@ -89,7 +89,7 @@ public class BlastTabularParser implements ResultFactory {
 
 	@Override
 	public List<String> getFileExtensions() {
-		List<String> l = new ArrayList<String>();
+		List<String> l = new ArrayList<>();
 		l.add("blasttabular");
 		l.add("blasttxt");
 		return l;
@@ -102,7 +102,7 @@ public class BlastTabularParser implements ResultFactory {
 
 	@Override
 	public List<Result> createObjects(double maxEScore) throws IOException, ParseException {
-		List<Result> results = new ArrayList<Result>();
+		List<Result> results = new ArrayList<>();
 
 		log.info("Query for hits");
 		LineNumberReader  lnr = new LineNumberReader(new FileReader(targetFile));
@@ -126,13 +126,13 @@ public class BlastTabularParser implements ResultFactory {
 						.setQueryDef(queryName)
 						.setReference(blastReference);
 
-				List<Hit> hits = new ArrayList<Hit>();
+				List<Hit> hits = new ArrayList<>();
 
 				String currentQueryId = queryId;
 				while (currentQueryId.equals(queryId) && lineNumber < fileLinesCount){
 					BlastHitBuilder hitBuilder = new BlastHitBuilder();
 
-					List<Hsp> hsps = new ArrayList<Hsp>();
+					List<Hsp> hsps = new ArrayList<>();
 
 					String currentSubjectId=subjectId;
 					while (currentSubjectId.equals(subjectId) && lineNumber < fileLinesCount){
@@ -217,7 +217,7 @@ public class BlastTabularParser implements ResultFactory {
 	}
 
 	@Override
-	public void storeObjects(List<Result> results) throws IOException, ParseException {
+	public void storeObjects(List<Result> results) {
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
 

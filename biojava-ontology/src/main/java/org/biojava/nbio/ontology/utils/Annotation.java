@@ -113,7 +113,7 @@ public interface Annotation  {
 	 *
 	 */
 
-	public void removeProperty(Object key)
+    void removeProperty(Object key)
 			throws NoSuchElementException;
 
 	/**
@@ -157,6 +157,6 @@ public interface Annotation  {
 	 * an implementation to have annotation even though it should implement
 	 * Annotatable.
 	 */
-	static final Annotation EMPTY_ANNOTATION = new EmptyAnnotation();
+    Annotation EMPTY_ANNOTATION = new EmptyAnnotation();
 }
 

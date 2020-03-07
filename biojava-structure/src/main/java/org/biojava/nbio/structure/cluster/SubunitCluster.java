@@ -49,7 +49,6 @@ import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsembleImpl;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentImpl;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
 import org.biojava.nbio.structure.align.multiple.util.ReferenceSuperimposer;
-import org.biojava.nbio.structure.quaternary.BiologicalAssemblyBuilder;
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetrySubunits;
 import org.biojava.nbio.structure.symmetry.internal.CESymmParameters;
 import org.biojava.nbio.structure.symmetry.internal.CeSymm;
@@ -80,7 +79,7 @@ public class SubunitCluster {
 
 	private List<Subunit> subunits = new ArrayList<>();
 	private List<List<Integer>> subunitEQR = new ArrayList<>();
-	private int representative = -1;
+	private int representative;
 
 	private SubunitClustererMethod method = SubunitClustererMethod.SEQUENCE;
 	private boolean pseudoStoichiometric = false;
@@ -679,9 +678,9 @@ public class SubunitCluster {
 		}
 
 		// Divide the Subunits in their repeats
-		List<Subunit> newSubunits = new ArrayList<Subunit>(subunits.size()
+		List<Subunit> newSubunits = new ArrayList<>(subunits.size()
 				* columns.size());
-		List<List<Integer>> newSubunitEQR = new ArrayList<List<Integer>>(
+		List<List<Integer>> newSubunitEQR = new ArrayList<>(
 				subunits.size() * columns.size());
 
 		for (int s = 0; s < subunits.size(); s++) {
@@ -700,7 +699,7 @@ public class SubunitCluster {
 						.get(s).getStructure()));
 
 				// Recalculate equivalent residues
-				List<Integer> eqr = new ArrayList<Integer>();
+				List<Integer> eqr = new ArrayList<>();
 				for (int p = 0; p < columns.get(r).size(); p++) {
 					eqr.add(subunitEQR.get(s).get(columns.get(r).get(p))
 							- start);
@@ -795,7 +794,7 @@ public class SubunitCluster {
 		MultipleAlignment msa = new MultipleAlignmentImpl();
 		msa.setEnsemble(new MultipleAlignmentEnsembleImpl());
 		msa.getEnsemble().setAtomArrays(
-				subunits.stream().map(s -> s.getRepresentativeAtoms())
+				subunits.stream().map(Subunit::getRepresentativeAtoms)
 						.collect(Collectors.toList()));
 
 		// Fill in the alignment information

@@ -69,7 +69,7 @@ public class MultipleAlignmentDisplay {
 								+ atomArrays.get(i).length);
 		}
 
-		List<Atom[]> rotatedAtoms = new ArrayList<Atom[]>();
+		List<Atom[]> rotatedAtoms = new ArrayList<>();
 
 		// TODO implement independent BlockSet superposition of the structure
 		List<Matrix4d> transf = multAln.getBlockSet(0).getTransformations();

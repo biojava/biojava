@@ -136,14 +136,14 @@ public class DNASequence extends AbstractSequence<NucleotideCompound> {
 	 * Returns a Sequence which runs in the current reverse order
 	 */
 	public SequenceView<NucleotideCompound> getReverse() {
-		return new ReversedSequenceView<NucleotideCompound>(this);
+		return new ReversedSequenceView<>(this);
 	}
 
 	/**
 	 * Returns a Sequence which will complement every base
 	 */
 	public SequenceView<NucleotideCompound> getComplement() {
-		return new ComplementSequenceView<NucleotideCompound>(this);
+		return new ComplementSequenceView<>(this);
 	}
 
 	/**
@@ -172,7 +172,7 @@ public class DNASequence extends AbstractSequence<NucleotideCompound> {
 		logger.info("DNA Sequence: {}", dnaSequence.toString());
 
 		StringProxySequenceReader<NucleotideCompound> sequenceStringProxyLoader =
-				new StringProxySequenceReader<NucleotideCompound>("GCTA", DNACompoundSet.getDNACompoundSet());
+				new StringProxySequenceReader<>("GCTA", DNACompoundSet.getDNACompoundSet());
 		DNASequence dnaSequenceFromProxy = new DNASequence(sequenceStringProxyLoader);
 		logger.info("DNA Sequence from Proxy: {}", dnaSequenceFromProxy.toString());
 	}

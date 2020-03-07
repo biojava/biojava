@@ -339,8 +339,8 @@ public class Calc {
 	 * @return true if ...
 	 */
 	public static final boolean isConnected(AminoAcid a, AminoAcid b) {
-		Atom C = null ;
-		Atom N = null;
+		Atom C;
+		Atom N;
 
 		C = a.getC();
 		N = b.getN();
@@ -422,7 +422,7 @@ public class Calc {
 		}
 		AtomIterator iter = new AtomIterator(group) ;
 		while (iter.hasNext()) {
-			Atom atom = null ;
+			Atom atom;
 
 			atom = iter.next() ;
 			rotate(atom,rotationmatrix);
@@ -651,7 +651,7 @@ public class Calc {
 		Atom oldAtom = null;
 		Atom rotOldAtom = null;
 		while (iter.hasNext()) {
-			Atom atom = null ;
+			Atom atom;
 
 			atom = iter.next() ;
 			try {
@@ -700,7 +700,7 @@ public class Calc {
 
 		AtomIterator iter = new AtomIterator(structure) ;
 		while (iter.hasNext() ) {
-			Atom atom = null ;
+			Atom atom;
 
 			atom = iter.next()  ;
 
@@ -746,7 +746,7 @@ public class Calc {
 
 		AtomIterator iter = new AtomIterator(group) ;
 		while (iter.hasNext() ) {
-			Atom atom = null ;
+			Atom atom;
 
 			atom = iter.next()  ;
 
@@ -947,11 +947,8 @@ public class Calc {
 	 *
 	 * @param atomSet
 	 *            a set of Atoms
-	 * @return an Atom representing the Centroid of the set of atoms
-	 * @throws StructureException
-	 * */
-	public static final Atom[] centerAtoms(Atom[] atomSet, Atom centroid)
-			throws StructureException {
+	 * @return an Atom representing the Centroid of the set of atoms */
+	public static final Atom[] centerAtoms(Atom[] atomSet, Atom centroid) {
 
 		Atom shiftVector = getCenterVector(atomSet, centroid);
 
@@ -974,10 +971,8 @@ public class Calc {
 	 *            the amino acid for which a "virtual" CB atom should be
 	 *            calculated
 	 * @return a "virtual" CB atom
-	 * @throws StructureException
-	 */
-	public static final Atom createVirtualCBAtom(AminoAcid amino)
-			throws StructureException{
+     */
+	public static final Atom createVirtualCBAtom(AminoAcid amino) {
 
 		AminoAcid  ala = StandardAminoAcid.getAminoAcid("ALA");
 		Atom aN  = ala.getN();

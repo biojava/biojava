@@ -250,8 +250,7 @@ public class AFPTwister {
 	 */
 	// orig name: transPdb
 	private static void transformOrigPDB(int n, int[] res1, int[] res2,
-			Atom[] ca1, Atom[] ca2, AFPChain afpChain, int blockNr)
-			throws StructureException {
+			Atom[] ca1, Atom[] ca2, AFPChain afpChain, int blockNr) {
 		logger.debug(
 				"transforming original coordinates {} len1: {} res1: {} len2: {} res2: {}",
 				n, ca1.length, res1.length, ca2.length, res2.length);
@@ -297,7 +296,7 @@ public class AFPTwister {
 	private static Atom[] getAtoms(Atom[] ca, int[] positions, int length,
 			boolean clone) {
 
-		List<Atom> atoms = new ArrayList<Atom>();
+		List<Atom> atoms = new ArrayList<>();
 		for (int i = 0; i < length; i++) {
 			int p = positions[i];
 			Atom a;
@@ -309,7 +308,7 @@ public class AFPTwister {
 			}
 			atoms.add(a);
 		}
-		return atoms.toArray(new Atom[atoms.size()]);
+		return atoms.toArray(new Atom[0]);
 	}
 
 	/**
@@ -321,15 +320,14 @@ public class AFPTwister {
 	 * @param r2
 	 */
 	// orig name: modifyCod
-	private static void cloneAtomRange(Atom[] p1, Atom[] p2, int r1, int r2)
-			throws StructureException {
+	private static void cloneAtomRange(Atom[] p1, Atom[] p2, int r1, int r2) {
 
 		logger.debug("modifyCod from: {} to: {}", r1, r2);
 
 		// special clone method, can;t use StructureTools.cloneCAArray, since we
 		// access the data
 		// slightly differently here.
-		List<Chain> model = new ArrayList<Chain>();
+		List<Chain> model = new ArrayList<>();
 		for (int i = r1; i < r2; i++) {
 
 			Group g = p2[i].getGroup();
@@ -369,7 +367,7 @@ public class AFPTwister {
 	 * @return rmsd of CAs
 	 */
 	private static double calCaRmsd(Atom[] ca1, Atom[] pro, int resn,
-			int[] res1, int[] res2) throws StructureException {
+			int[] res1, int[] res2) {
 
 		Atom[] cod1 = getAtoms(ca1, res1, resn, false);
 		Atom[] cod2 = getAtoms(pro, res2, resn, false);

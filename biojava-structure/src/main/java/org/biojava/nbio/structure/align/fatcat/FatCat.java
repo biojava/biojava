@@ -60,7 +60,7 @@ public class FatCat
 	 *
 	 * @param argv
 	 */
-	public static void main(String[] argv) throws ConfigurationException {
+	public static void main(String[] argv) {
 		FatCatUserArgumentProcessor processor = new FatCatUserArgumentProcessor();
 		processor.process(argv);
 	}

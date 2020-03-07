@@ -255,14 +255,9 @@ public class MetalBondConsumer implements MMcifConsumer{
 		d.setLowerLimit(Float.parseFloat(lineData.get(2)));
 		d.setUpperLimit(Float.parseFloat(lineData.get(3)));
 
-		List<MetalBondDistance> defs = definitions.get(d.getAtomType1());
+        List<MetalBondDistance> defs = definitions.computeIfAbsent(d.getAtomType1(), k -> new ArrayList<>());
 
-		if ( defs == null){
-			defs = new ArrayList<>();
-			definitions.put(d.getAtomType1(),defs);
-		}
-
-		defs.add(d);
+        defs.add(d);
 
 	}
 

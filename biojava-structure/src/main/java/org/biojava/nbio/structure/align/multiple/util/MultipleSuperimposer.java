@@ -58,8 +58,7 @@ public interface MultipleSuperimposer {
 	 *  		atoms to align (via the {@link MultipleAlignment#getEnsemble()
 	 *  		ensemble}).
 	 *
-	 * @throws StructureException
 	 */
-	public void superimpose(MultipleAlignment alignment)
-			throws StructureException;
+    void superimpose(MultipleAlignment alignment)
+	;
 }

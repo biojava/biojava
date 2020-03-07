@@ -33,7 +33,7 @@ import java.util.Comparator;
 public class MeanModelComparator implements Comparator<CoxVariables>, Serializable {
 	private static final long serialVersionUID = 1;
 
-	String variable = "";
+	String variable;
 
 	/**
 	 *
@@ -64,13 +64,7 @@ public class MeanModelComparator implements Comparator<CoxVariables>, Serializab
 
 	   double c2ratio = Math.min(c2LTpvalue, c2GTpvalue) / Math.max(c2LTpvalue, c2GTpvalue);
 
-		if (c1ratio > c2ratio) {
-			return 1;
-		} else if (c1ratio < c2ratio) {
-			return -1;
-		} else {
-			return 0;
-		}
+        return Double.compare(c1ratio, c2ratio);
 		//ascending order
 		// return coxVariables1.compareTo(coxVariables2);
 	}

@@ -64,14 +64,14 @@ import org.biojava.nbio.structure.gui.util.SelectMultiplePanel;
  */
 public class MultipleAlignmentGUI extends JFrame {
 
-	private final static long serialVersionUID =0l;
+	private final static long serialVersionUID = 0L;
 	private final static String version = "1.0";
 
 	private MultipleStructureAligner multiple;
 	private StructureAlignment pairwise;
 
-	private SelectMultiplePanel tab;
-	private JTabbedPane tabPane;
+	private final SelectMultiplePanel tab;
+	private final JTabbedPane tabPane;
 
 	private Thread thread;
 	private AlignmentCalculationRunnable alicalc;
@@ -154,7 +154,7 @@ public class MultipleAlignmentGUI extends JFrame {
 		algorithmList.setSelectedIndex(0);
 
 		Action actionAlgorithm = new AbstractAction("Algorithm") {
-			public static final long serialVersionUID = 0l;
+			public static final long serialVersionUID = 0L;
 			@Override
 			public void actionPerformed(ActionEvent evt) {
 				JComboBox cb = (JComboBox)evt.getSource();
@@ -165,7 +165,7 @@ public class MultipleAlignmentGUI extends JFrame {
 		algorithmList.addActionListener(actionAlgorithm);
 
 		Action paramAction = new AbstractAction("Parameters") {
-			public static final long serialVersionUID = 0l;
+			public static final long serialVersionUID = 0L;
 			@Override
 			public void actionPerformed(ActionEvent evt) {
 				StructureAlignment p = getPairwiseStructureAligner();
@@ -197,7 +197,7 @@ public class MultipleAlignmentGUI extends JFrame {
 		multList.setSelectedIndex(0);
 
 		Action actionMultiple = new AbstractAction("Algorithm") {
-			public static final long serialVersionUID = 0l;
+			public static final long serialVersionUID = 0L;
 			@Override
 			public void actionPerformed(ActionEvent evt) {
 				updateMultipleAlgorithm();
@@ -206,7 +206,7 @@ public class MultipleAlignmentGUI extends JFrame {
 		multList.addActionListener(actionMultiple);
 
 		Action paramAction = new AbstractAction("Parameters") {
-			public static final long serialVersionUID = 0l;
+			public static final long serialVersionUID = 0L;
 			@Override
 			public void actionPerformed(ActionEvent evt) {
 				MultipleStructureAligner m = getMultipleStructureAligner();
@@ -236,7 +236,7 @@ public class MultipleAlignmentGUI extends JFrame {
 		progress.setVisible(false);
 
 		Action action1 = new AbstractAction("Align") {
-			public static final long serialVersionUID = 0l;
+			public static final long serialVersionUID = 0L;
 			// This method is called when the button is pressed
 			@Override
 			public void actionPerformed(ActionEvent evt) {
@@ -246,7 +246,7 @@ public class MultipleAlignmentGUI extends JFrame {
 		JButton submitB = new JButton(action1);
 
 		Action action3 = new AbstractAction("Abort") {
-			public static final long serialVersionUID = 0l;
+			public static final long serialVersionUID = 0L;
 			// This method is called when the button is pressed
 			@Override
 			public void actionPerformed(ActionEvent evt) {
@@ -257,7 +257,7 @@ public class MultipleAlignmentGUI extends JFrame {
 		abortB.setEnabled(false);
 
 		Action action2 = new AbstractAction("Exit") {
-			public static final long serialVersionUID = 0l;
+			public static final long serialVersionUID = 0L;
 			// This method is called when the button is pressed
 			@Override
 			public void actionPerformed(ActionEvent evt) {

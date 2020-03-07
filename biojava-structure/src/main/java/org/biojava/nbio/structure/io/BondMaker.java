@@ -81,8 +81,8 @@ public class BondMaker {
 	 */
 	private static final double MAX_NUCLEOTIDE_BOND_LENGTH = 2.1;
 
-	private Structure structure;
-	private FileParsingParameters params;
+	private final Structure structure;
+	private final FileParsingParameters params;
 
 	public BondMaker(Structure structure, FileParsingParameters params) {
 		this.structure = structure;
@@ -169,7 +169,7 @@ public class BondMaker {
 						continue;
 					}
 					// Now add support for altLocGroup
-					List<Group> totList = new ArrayList<Group>();
+					List<Group> totList = new ArrayList<>();
 					totList.add(mainGroup);
 					totList.addAll(mainGroup.getAltLocs());
 
@@ -203,7 +203,7 @@ public class BondMaker {
 	 * @param maxAllowedLength max length, if atoms distance above this length no bond will be added. If negative no check on distance is performed.
 	 * @param bondOrder the bond order to be set in the created bond(s)
 	 */
-	private void formBondAltlocAware(Group g1, String name1, Group g2, String name2, double maxAllowedLength, int bondOrder) {
+	private static void formBondAltlocAware(Group g1, String name1, Group g2, String name2, double maxAllowedLength, int bondOrder) {
 		List<Atom> a1s = getAtoms(g1, name1);
 		List<Atom> a2s = getAtoms(g2, name2);
 
@@ -247,7 +247,7 @@ public class BondMaker {
 	 * @param name the atom name
 	 * @return list of all atoms, or empty list if no atoms with the name
 	 */
-	private List<Atom> getAtoms(Group g, String name) {
+	private static List<Atom> getAtoms(Group g, String name) {
 		List<Atom> atoms = new ArrayList<>();
 		List<Group> groupsWithAltLocs = new ArrayList<>();
 		groupsWithAltLocs.add(g);
@@ -410,8 +410,8 @@ public class BondMaker {
 			String altLocStr1 = altLoc1.isEmpty()? "" : "(alt loc "+altLoc1+")";
 			String altLocStr2 = altLoc2.isEmpty()? "" : "(alt loc "+altLoc2+")";
 
-			Map<Integer,Atom> a1 = null;
-			Map<Integer,Atom> a2 = null;
+			Map<Integer,Atom> a1;
+			Map<Integer,Atom> a2;
 
 			try {
 				a1 = getAtomFromRecord(atomName1, altLoc1, resName1, chainId1, seqId1, insCode1);

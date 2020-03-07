@@ -477,7 +477,7 @@ public class ProteinModificationParserTest {
 	 * http://www.biojava.org/wiki/BioJava:CookBook3:ProtMod
 	 */
 	private List<ResidueNumber> identifyPhosphosites(Structure struc) {
-		List<ResidueNumber> phosphosites = new ArrayList<ResidueNumber>();
+		List<ResidueNumber> phosphosites = new ArrayList<>();
 		ProteinModificationIdentifier parser = new ProteinModificationIdentifier();
 		parser.identify(struc, ProteinModificationRegistry.getByKeyword("phosphoprotein"));
 		Set<ModifiedCompound> mcs = parser.getIdentifiedModifiedCompound();

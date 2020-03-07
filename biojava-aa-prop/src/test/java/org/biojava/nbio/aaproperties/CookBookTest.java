@@ -74,8 +74,8 @@ public class CookBookTest {
 
 		//Enrichment of a list of amino acid types
 		Map<String, Double> composition = PeptideProperties.getAACompositionString(sequence);
-		for(String aa:composition.keySet()){
-			logger.debug("Composition of {}: {}", aa, composition.get(aa));
+		for(Map.Entry<String, Double> entry : composition.entrySet()){
+			logger.debug("Composition of {}: {}", entry.getKey(), entry.getValue());
 		}
 	}
 

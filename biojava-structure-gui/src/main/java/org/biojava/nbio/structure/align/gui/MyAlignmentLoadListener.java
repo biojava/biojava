@@ -76,7 +76,7 @@ public class MyAlignmentLoadListener implements ActionListener {
 				BufferedReader in = new BufferedReader(
 						new InputStreamReader(stream));
 
-				StringBuffer input = new StringBuffer();
+				StringBuilder input = new StringBuilder();
 				String str;
 				while ((str = in.readLine()) != null) {
 					input.append(str);

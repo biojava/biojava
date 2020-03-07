@@ -42,7 +42,7 @@ import org.biojava.nbio.core.sequence.template.Sequence;
  */
 public class GuanUberbacher<S extends Sequence<C>, C extends Compound> extends AnchoredPairwiseSequenceAligner<S, C> {
 
-	private static int defaultCutsPerSection = 10;
+	private static final int defaultCutsPerSection = 10;
 
 	/**
 	 * Sets the default number of cuts added to each section during each pass.

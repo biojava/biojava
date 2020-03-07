@@ -142,7 +142,7 @@ public final class ORonnModel {
 	private final float[] align(final int sResidue, final int dIndex) {
 	int dResidue, r;
 	float maxScore = -1000000;
-	float rho1 = 0;
+	float rho1;
 	int maxIdx = 0;
 	float rho0 = 0;
 	short[] dbAARow = model.dbAA[dIndex];

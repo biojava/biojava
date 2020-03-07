@@ -39,16 +39,15 @@ import java.util.Set;
  */
 public interface RemotePairwiseAlignmentProperties extends Serializable{
 
-	public static final long serialVersionUID = 1L;
+	long serialVersionUID = 1L;
 
 	/**
 	 * Method that returns the value associated with the key given in parameter.
 	 *
 	 * @param key :a String with the required key for this map.
 	 * @return a String with the value associated with this key
-	 * @throws Exception if key is not in the map of output options.
 	 */
-	public String getAlignmentOption(String key) throws Exception;
+    String getAlignmentOption(String key);
 
 	/**
 	 * Method to set the value for a specific alignment parameter using a key to store in a map.
@@ -56,12 +55,12 @@ public interface RemotePairwiseAlignmentProperties extends Serializable{
 	 * @param key :the key use to designate the value to be stored
 	 * @param val :the actual value matched to key
 	 */
-	public void setAlignementOption(String key,String val);
+    void setAlignementOption(String key, String val);
 
 	/**
 	 * Method to get all keys to the information stored in this object.
 	 *
 	 * @return a <code>Set</code> with all keys held in this instance of the object
 	 */
-	public Set<String> getAlignmentOptions();
+    Set<String> getAlignmentOptions();
 }

@@ -25,6 +25,7 @@ import org.biojava.nbio.genome.query.BlastXMLQuery;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  *
@@ -33,13 +34,13 @@ import java.util.LinkedHashMap;
 public class BlastHomologyHits {
 
 	static public LinkedHashMap<String, ArrayList<String>> getMatches(File xmlBlastHits, double ecutoff) throws Exception {
-		LinkedHashMap<String, ArrayList<String>> homologyHits = new LinkedHashMap<String, ArrayList<String>>();
+		LinkedHashMap<String, ArrayList<String>> homologyHits = new LinkedHashMap<>();
 		BlastXMLQuery blastXMLQuery = new BlastXMLQuery(xmlBlastHits.getAbsolutePath());
 		LinkedHashMap<String, ArrayList<String>> hits = blastXMLQuery.getHitsQueryDef(ecutoff);
-		for (String accessionid : hits.keySet()) {
-			String[] data = accessionid.split(" "); // deal with notes/comments in blast results
+		for (Map.Entry<String, ArrayList<String>> entry : hits.entrySet()) {
+			String[] data = entry.getKey().split(" "); // deal with notes/comments in blast results
 			String id = data[0];
-			ArrayList<String> uniprotProteinHits = hits.get(accessionid);
+			ArrayList<String> uniprotProteinHits = entry.getValue();
 			homologyHits.put(id, uniprotProteinHits);
 
 		}

@@ -463,7 +463,6 @@ public class QuatSymmetryDetector {
 		Set<Integer> usedClusterIds =
 				usedSubunitIds.stream().
 					map(allSubunitClusterIds::get).
-					distinct().
 					collect(Collectors.toSet());
 
 		// for each used cluster, remove unused subunits
@@ -501,8 +500,8 @@ public class QuatSymmetryDetector {
 		if (subunits.getSubunitCount() == 0)
 			return null;
 
-		RotationGroup rotationGroup = null;
-		SymmetryPerceptionMethod method = null;
+		RotationGroup rotationGroup;
+		SymmetryPerceptionMethod method;
 		if (subunits.getFolds().size() == 1) {
 			// no symmetry possible, create empty ("C1") rotation group
 			method = SymmetryPerceptionMethod.NO_ROTATION;

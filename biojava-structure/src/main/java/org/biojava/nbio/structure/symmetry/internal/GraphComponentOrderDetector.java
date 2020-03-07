@@ -46,8 +46,7 @@ import org.jgrapht.graph.DefaultEdge;
 public class GraphComponentOrderDetector implements OrderDetector {
 
 	@Override
-	public int calculateOrder(AFPChain selfAlignment, Atom[] ca)
-			throws RefinerFailedException {
+	public int calculateOrder(AFPChain selfAlignment, Atom[] ca) {
 
 		// Construct the alignment graph with jgrapht
 		Graph<Integer, DefaultEdge> graph = SymmetryTools
@@ -55,11 +54,11 @@ public class GraphComponentOrderDetector implements OrderDetector {
 
 		// Find the maximally connected components of the graph
 		ConnectivityInspector<Integer, DefaultEdge> inspector =
-				new ConnectivityInspector<Integer, DefaultEdge>(graph);
+				new ConnectivityInspector<>(graph);
 		List<Set<Integer>> components = inspector.connectedSets();
 
 		// The order maximizes the residues aligned
-		Map<Integer, Integer> counts = new HashMap<Integer, Integer>();
+		Map<Integer, Integer> counts = new HashMap<>();
 		for (Set<Integer> c : components) {
 			if (counts.containsKey(c.size()))
 				counts.put(c.size(), counts.get(c.size()) + c.size());

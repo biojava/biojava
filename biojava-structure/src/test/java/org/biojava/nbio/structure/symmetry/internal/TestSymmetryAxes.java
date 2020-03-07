@@ -23,6 +23,7 @@ package org.biojava.nbio.structure.symmetry.internal;
 import static org.junit.Assert.*;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import javax.vecmath.AxisAngle4d;
@@ -103,13 +104,13 @@ public class TestSymmetryAxes {
 				Arrays.asList(1,3,5,7)
 				);
 		assertEquals(relation,axes.getRepeatsCyclicForm(0));
-		relation = Arrays.asList(
-				Arrays.asList(0,1)
-				);
+		relation = Collections.singletonList(
+                Arrays.asList(0, 1)
+        );
 		assertEquals(relation,axes.getRepeatsCyclicForm(1));
-		relation = Arrays.asList(
-				Arrays.asList(2,3)
-				);
+		relation = Collections.singletonList(
+                Arrays.asList(2, 3)
+        );
 		assertEquals(relation,axes.getRepeatsCyclicForm(1,2));
 		try {
 			axes.getRepeatsCyclicForm(2);
@@ -245,13 +246,13 @@ public class TestSymmetryAxes {
 				Arrays.asList(1,3,5,7)
 				);
 		assertEquals(relation,axes.getRepeatsCyclicForm(0));
-		relation = Arrays.asList(
-				Arrays.asList(0,1)
-				);
+		relation = Collections.singletonList(
+                Arrays.asList(0, 1)
+        );
 		assertEquals(relation,axes.getRepeatsCyclicForm(1));
-		relation = Arrays.asList(
-				Arrays.asList(2,3)
-				);
+		relation = Collections.singletonList(
+                Arrays.asList(2, 3)
+        );
 		assertEquals(relation,axes.getRepeatsCyclicForm(1,2));
 		try {
 			axes.getRepeatsCyclicForm(2);

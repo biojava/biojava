@@ -70,7 +70,7 @@ public class FarmJobRunnable implements Runnable {
 	private static final String JFATCAT_NAME            = "jfatcat.name";
 	private static final String JFATCAT_VERSION         = "jfatcat.version";
 
-	private static ResourceManager resourceManager = ResourceManager.getResourceManager("jfatcat");
+	private static final ResourceManager resourceManager = ResourceManager.getResourceManager("jfatcat");
 
 
 	//private static DateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy h:mm a",Locale.US);
@@ -95,10 +95,10 @@ public class FarmJobRunnable implements Runnable {
 	List<AlignmentProgressListener> progressListeners;
 	CountProgressListener counter ;
 
-	String userName = null;
+	String userName;
 	protected AtomCache cache;
 
-	boolean verbose = false; // TODO dmyersturnbull: we should probably remove this in favor of SLF4J
+	boolean verbose; // TODO dmyersturnbull: we should probably remove this in favor of SLF4J
 	String version = null;
 
 	private static final String alignURL = "/align/";
@@ -155,7 +155,7 @@ public class FarmJobRunnable implements Runnable {
 	public void addAlignmentProgressListener(AlignmentProgressListener listener){
 
 		if (progressListeners == null)
-			progressListeners = new ArrayList<AlignmentProgressListener>();
+			progressListeners = new ArrayList<>();
 
 		progressListeners.add(listener);
 	}
@@ -228,7 +228,7 @@ public class FarmJobRunnable implements Runnable {
 			}
 			SortedSet<PdbPair> alignmentPairs = msg.getPairs();
 			logger.debug("{}: Server responded with {} pairs.", userName, alignmentPairs.size());
-			List<String> results = new ArrayList<String>();
+			List<String> results = new ArrayList<>();
 
 			String algorithmName = msg.getMethod();
 			if ( version == null) {
@@ -470,7 +470,7 @@ public class FarmJobRunnable implements Runnable {
 	private StructureAlignment getAlgorithm(String algorithmName) throws StructureException {
 
 
-		StructureAlignment algorithm    = null;
+		StructureAlignment algorithm;
 
 		if ( algorithmName == null){
 
@@ -531,7 +531,7 @@ public class FarmJobRunnable implements Runnable {
 		if ( maxNrAlignments < nrPairs )
 			nrPairs = maxNrAlignments;
 
-		SortedSet<PdbPair> allPairs = new TreeSet<PdbPair>();
+		SortedSet<PdbPair> allPairs = new TreeSet<>();
 
 		PdbPairsMessage msg = null;
 

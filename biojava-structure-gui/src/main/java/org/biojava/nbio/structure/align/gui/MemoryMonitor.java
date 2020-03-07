@@ -61,7 +61,7 @@ public class MemoryMonitor extends JPanel {
 	boolean doControls;
 	JTextField tf;
 
-	public static final long serialVersionUID = 56289234782130l;
+	public static final long serialVersionUID = 56289234782130L;
 
 	public MemoryMonitor() {
 		setLayout(new BorderLayout());
@@ -103,28 +103,28 @@ public class MemoryMonitor extends JPanel {
 	}
 
 
-	public class Surface extends JPanel implements Runnable {
+	public static class Surface extends JPanel implements Runnable {
 
-		public static final long serialVersionUID = 2387409854370432908l;
+		public static final long serialVersionUID = 2387409854370432908L;
 
 		public Thread thread;
 		public long sleepAmount = 1000;
 		private int w, h;
 		private BufferedImage bimg;
 		private Graphics2D big;
-		private Font font = new Font("Times New Roman", Font.PLAIN, 11);
-		private Runtime r = Runtime.getRuntime();
+		private final Font font = new Font("Times New Roman", Font.PLAIN, 11);
+		private final Runtime r = Runtime.getRuntime();
 		private int columnInc;
 		private int[] pts;
 		private int ptNum;
 		private int ascent, descent;
 		//private float freeMemory, totalMemory;
-		private Rectangle graphOutlineRect = new Rectangle();
-		private Rectangle2D mfRect = new Rectangle2D.Float();
-		private Rectangle2D muRect = new Rectangle2D.Float();
-		private Line2D graphLine = new Line2D.Float();
-		private Color graphColor = new Color(46, 139, 87);
-		private Color mfColor = new Color(0, 100, 0);
+		private final Rectangle graphOutlineRect = new Rectangle();
+		private final Rectangle2D mfRect = new Rectangle2D.Float();
+		private final Rectangle2D muRect = new Rectangle2D.Float();
+		private final Line2D graphLine = new Line2D.Float();
+		private final Color graphColor = new Color(46, 139, 87);
+		private final Color mfColor = new Color(0, 100, 0);
 		private String usedStr;
 
 
@@ -169,8 +169,8 @@ public class MemoryMonitor extends JPanel {
 
 			// .. Draw allocated and used strings ..
 			big.setColor(Color.green);
-			big.drawString(String.valueOf((int) totalMemory/1024) + "K allocated",  4.0f, ascent+0.5f);
-			usedStr = String.valueOf(((int) (totalMemory - freeMemory))/1024)
+			big.drawString((int) totalMemory / 1024 + "K allocated",  4.0f, ascent+0.5f);
+			usedStr = ((int) (totalMemory - freeMemory)) / 1024
 					+ "K used";
 			big.drawString(usedStr, 4, h-descent);
 
@@ -234,7 +234,7 @@ public class MemoryMonitor extends JPanel {
 				pts = new int[graphW];
 				ptNum = 0;
 			} else if (pts.length != graphW) {
-				int[] tmp = null;
+				int[] tmp;
 				if (ptNum < graphW) {
 					tmp = new int[ptNum];
 					System.arraycopy(pts, 0, tmp, 0, tmp.length);
@@ -259,9 +259,7 @@ public class MemoryMonitor extends JPanel {
 				}
 				if (ptNum+2 == pts.length) {
 					// throw out oldest point
-					for (int j = 1;j < ptNum; j++) {
-						pts[j-1] = pts[j];
-					}
+					if (ptNum - 1 >= 0) System.arraycopy(pts, 1, pts, 0, ptNum - 1);
 					--ptNum;
 				} else {
 					ptNum++;

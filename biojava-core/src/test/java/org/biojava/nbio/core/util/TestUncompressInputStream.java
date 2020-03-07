@@ -60,7 +60,7 @@ public class TestUncompressInputStream {
 		ByteArrayOutputStream obaos = new ByteArrayOutputStream();
 		try (BufferedInputStream oin = new BufferedInputStream(
 				this.getClass().getClassLoader()
-				.getResourceAsStream(ORIG_OF_BIGGER_TEST_FILE));) {
+				.getResourceAsStream(ORIG_OF_BIGGER_TEST_FILE))) {
 			byte[] buf = new byte[100000];
 			int len;
 			while ((len = oin.read(buf)) >= 0)

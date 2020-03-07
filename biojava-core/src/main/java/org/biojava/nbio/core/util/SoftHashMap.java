@@ -41,7 +41,7 @@ public class SoftHashMap<K, V> extends AbstractMap<K, V> {
 
 	/** The internal HashMap that stores SoftReference to actual data. */
 
-	private final Map<K, SoftReference<V>> map = new HashMap<K, SoftReference<V>>();
+	private final Map<K, SoftReference<V>> map = new HashMap<>();
 
 	/** Maximum Number of references you dont want GC to collect. */
 
@@ -49,11 +49,11 @@ public class SoftHashMap<K, V> extends AbstractMap<K, V> {
 
 	/** The FIFO list of hard references, order of last access. */
 
-	private final LinkedList<V> hardCache = new LinkedList<V>();
+	private final LinkedList<V> hardCache = new LinkedList<>();
 
 	/** Reference queue for cleared SoftReference objects. */
 
-	private final ReferenceQueue<V> queue = new ReferenceQueue<V>();
+	private final ReferenceQueue<V> queue = new ReferenceQueue<>();
 
 	public SoftHashMap() {
 
@@ -215,7 +215,7 @@ public synchronized V put(K key, V value) {
 
 		logger.debug("Putting {} on cache. size: {}", key, size());
 
-		map.put(key, new SoftValue<K, V>(value, key, queue));
+		map.put(key, new SoftValue<>(value, key, queue));
 
 		return value;
 

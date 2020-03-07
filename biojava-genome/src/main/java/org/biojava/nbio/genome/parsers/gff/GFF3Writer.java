@@ -29,6 +29,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  *
@@ -45,9 +46,10 @@ public class GFF3Writer {
 	public void write(OutputStream outputStream, LinkedHashMap<String, ChromosomeSequence> chromosomeSequenceList) throws Exception {
 
 		outputStream.write("##gff-version 3\n".getBytes());
-		for (String key : chromosomeSequenceList.keySet()) {
-			ChromosomeSequence chromosomeSequence = chromosomeSequenceList.get(key);
-			String gff3line = "";
+		for (Map.Entry<String, ChromosomeSequence> entry : chromosomeSequenceList.entrySet()) {
+            String key = entry.getKey();
+            ChromosomeSequence chromosomeSequence = entry.getValue();
+			String gff3line;
 	//         if(source.length() == 0){
 	//             Collection<GeneSequence> genes = chromosomeSequence.getGeneSequences().values();
 	//             for(GeneSequence gene : genes){
@@ -94,8 +96,8 @@ public class GFF3Writer {
 					outputStream.write(gff3line.getBytes());
 
 					String transcriptParentName = geneSequence.getAccession().getID() + "." + transcriptIndex;
-					ArrayList<CDSSequence> cdsSequenceList = new ArrayList<CDSSequence>(transcriptSequence.getCDSSequences().values());
-					Collections.sort(cdsSequenceList, new SequenceComparator());
+					ArrayList<CDSSequence> cdsSequenceList = new ArrayList<>(transcriptSequence.getCDSSequences().values());
+					cdsSequenceList.sort(new SequenceComparator());
 					for (CDSSequence cdsSequence : cdsSequenceList) {
 						gff3line = key + "\t" + cdsSequence.getSource() + "\t" + "CDS" + "\t" + cdsSequence.getBioBegin() + "\t" + cdsSequence.getBioEnd() + "\t";
 						score = cdsSequence.getSequenceScore();

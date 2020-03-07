@@ -139,14 +139,12 @@ public class TestMmtfUtils {
 	 */
 	private List<Atom> getAllAtoms(Structure bioJavaStruct) {
 		// Get all the atoms
-		List<Atom> theseAtoms = new ArrayList<Atom>();
+		List<Atom> theseAtoms = new ArrayList<>();
 		for (int i=0; i<bioJavaStruct.nrModels(); i++){
 			List<Chain> chains = bioJavaStruct.getModel(i);
 			for (Chain c : chains) {
 				for (Group g : c.getAtomGroups()) {
-					for(Atom a: MmtfUtils.getAtomsForGroup(g)){
-						theseAtoms.add(a);
-					}
+					theseAtoms.addAll(MmtfUtils.getAtomsForGroup(g));
 				}
 			}
 		}
@@ -381,8 +379,8 @@ public class TestMmtfUtils {
 		assertEquals(MmtfUtils.getSecStructTypeFromDsspIndex(5).name,"Bridge");
 		assertEquals(MmtfUtils.getSecStructTypeFromDsspIndex(6).name,"Turn");
 		assertEquals(MmtfUtils.getSecStructTypeFromDsspIndex(7).name,"Coil");
-		assertEquals(MmtfUtils.getSecStructTypeFromDsspIndex(-1), null);
-		assertEquals(MmtfUtils.getSecStructTypeFromDsspIndex(10), null);
+		assertNull(MmtfUtils.getSecStructTypeFromDsspIndex(-1));
+		assertNull(MmtfUtils.getSecStructTypeFromDsspIndex(10));
 
 	}
 

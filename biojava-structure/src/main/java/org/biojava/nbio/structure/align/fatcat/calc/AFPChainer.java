@@ -94,7 +94,7 @@ public class AFPChainer
 		//transformation, calculated at DoChainAfp, be used in List extraction
 
 		//forward: calculate the score matrix
-		boolean isConnected = false;
+		boolean isConnected;
 		int     i, j, j0,  n;
 		double  stmp;
 
@@ -247,14 +247,14 @@ public class AFPChainer
 		a3 = i1 - f;
 		a2 = a3 - c;
 		a1 = i1 - G;
-		a2 = a2>0?a2:0;
-		a1 = a1>0?a1:0;
+		a2 = Math.max(a2, 0);
+		a1 = Math.max(a1, 0);
 
 		b3 = j1 - f;
 		b2 = b3 - c;
 		b1 = j1 - G;
-		b2 = (b2 > 0)?b2:0;
-		b1 = (b1 > 0)?b1:0;
+		b2 = Math.max(b2, 0);
+		b1 = Math.max(b1, 0);
 
 		int[][] afpAftIndex = afpChain.getAfpAftIndex();
 		int[][] afpBefIndex = afpChain.getAfpBefIndex();
@@ -309,8 +309,8 @@ public class AFPChainer
 
 	{
 
-		Double conn = afpChain.getConn();
-		Double dvar = afpChain.getDVar();
+		Double conn;
+		Double dvar;
 
 		double misScore = params.getMisScore();
 		double maxPenalty = params.getMaxPenalty();
@@ -383,7 +383,7 @@ public class AFPChainer
 	{
 		int     l1 = afp1.getP1() - afp2.getP1() - afp2.getFragLen();
 		int     l2 = afp1.getP2() - afp2.getP2() - afp2.getFragLen();
-		return (l1 > l2?l2:l1);
+		return (Math.min(l1, l2));
 	}
 
 	/**
@@ -446,7 +446,7 @@ public class AFPChainer
 		int minLen = afpChain.getMinLen();
 		List<AFP> afpSet = afpChain.getAfpSet();
 
-		int afpChainLen = 0;
+		int afpChainLen;
 
 		//trace-back from currafp (maxsco)
 		int[]     afpchain    = new int[minLen];
@@ -611,7 +611,7 @@ public class AFPChainer
 
 		afpChain.setBlockSize(blockSize);
 		afpChain.setBlockRmsd(blockRmsd);
-		int blockNum = afpChain.getBlockNum();
+		int blockNum;
 		blockNum = ++bk;
 		if ( debug)
 			System.err.println("AFPChainser setBlockNUm:" + blockNum);
@@ -698,7 +698,7 @@ public class AFPChainer
 	 * @param catmp1
 	 * @return
 	 */
-	private static double getRmsd(Atom[] catmp1, Atom[] catmp2) throws StructureException{
+	private static double getRmsd(Atom[] catmp1, Atom[] catmp2) {
 
 		Matrix4d trans = SuperPositions.superpose(Calc.atomsToPoints(catmp1),
 				Calc.atomsToPoints(catmp2));

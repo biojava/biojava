@@ -37,7 +37,7 @@ public class AtomInfoParser {
 
 	static {
 
-		String numberPattern = "\\[(.*)\\]([0-9^a-zA-Z]+)(:[a-zA-Z]*)?\\.([a-zA-Z]+)(/[0-9]*)?";
+		String numberPattern = "\\[(.*)]([0-9^a-zA-Z]+)(:[a-zA-Z]*)?\\.([a-zA-Z]+)(/[0-9]*)?";
 		pattern = Pattern.compile(numberPattern);
 
 	}
@@ -94,12 +94,12 @@ public class AtomInfoParser {
 
 		String ci = " ";
 		if (chainId != null)
-			ci = chainId.substring(1,chainId.length());
+			ci = chainId.substring(1);
 		info.setChainId(ci);
 
 		int mn = 1;
 		if ( modelNumber != null)
-			mn = Integer.parseInt(modelNumber.substring(1,modelNumber.length()));
+			mn = Integer.parseInt(modelNumber.substring(1));
 		info.setModelNumber(mn);
 
 

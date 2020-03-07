@@ -96,7 +96,7 @@ public class NonstandardProteinCompoundTest  {
 
 		AminoAcidCompoundSet set = AminoAcidCompoundSet.getAminoAcidCompoundSet();
 		UniprotProxySequenceReader<AminoAcidCompound> uniprotSequence =
-				new UniprotProxySequenceReader<AminoAcidCompound>(uniProtID,set);
+				new UniprotProxySequenceReader<>(uniProtID, set);
 
 		ProteinSequence seq = new ProteinSequence(uniprotSequence);
 

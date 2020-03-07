@@ -34,8 +34,8 @@ import org.biojava.nbio.core.sequence.template.Sequence;
 public class StandardRescoreRefiner<S extends Sequence<C>, C extends Compound> extends AbstractScorer
 		implements RescoreRefiner<S, C> {
 
-	private PairInProfileScorerType pips;
-	private ProfileProfileAlignerType ppa;
+	private final PairInProfileScorerType pips;
+	private final ProfileProfileAlignerType ppa;
 
 	public StandardRescoreRefiner(PairInProfileScorerType pips, ProfileProfileAlignerType ppa) {
 		this.pips = pips;

@@ -39,84 +39,84 @@ public interface ProteinModification {
 	 *
 	 * @return modification id.
 	 */
-	public String getId();
+    String getId();
 
 	/**
 	 *
 	 * @return Protein Data Bank Chemical Component ID.
 	 */
-	public String getPdbccId();
+    String getPdbccId();
 
 	/**
 	 *
 	 * @return Protein Data Bank Chemical Component name.
 	 */
-	public String getPdbccName();
+    String getPdbccName();
 
 	/**
 	 *
 	 * @return RESID ID.
 	 */
-	public String getResidId();
+    String getResidId();
 
 	/**
 	 *
 	 * @return RESID name.
 	 */
-	public String getResidName();
+    String getResidName();
 
 	/**
 	 *
 	 * @return PSI-MOD ID.
 	 */
-	public String getPsimodId();
+    String getPsimodId();
 
 	/**
 	 *
 	 * @return PSI-MOD name.
 	 */
-	public String getPsimodName();
+    String getPsimodName();
 
 	/**
 	 *
 	 * @return Systematic name.
 	 */
-	public String getSystematicName();
+    String getSystematicName();
 
 	/**
 	 *
 	 * @return Description.
 	 */
-	public String getDescription();
+    String getDescription();
 
 	/**
 	 *
 	 * @return a set of keywords.
 	 */
-	public Set<String> getKeywords();
+    Set<String> getKeywords();
 
 	/**
 	 *
 	 * @return {@link ModificationCondition}
 	 */
-	public ModificationCondition getCondition();
+    ModificationCondition getCondition();
 
 	/**
 	 *
 	 * @return formula of the modified residue.
 	 */
-	public String getFormula();
+    String getFormula();
 
 	/**
 	 *
 	 * @return the modification category.
 	 */
-	public ModificationCategory getCategory();
+    ModificationCategory getCategory();
 
 	/**
 	 *
 	 * @return the modification occurrence type.
 	 */
-	public ModificationOccurrenceType getOccurrenceType();
+    ModificationOccurrenceType getOccurrenceType();
 
 }

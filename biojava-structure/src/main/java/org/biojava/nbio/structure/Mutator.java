@@ -59,7 +59,7 @@ public class Mutator{
 	List<String> supportedAtoms;
 
 	public Mutator(){
-		supportedAtoms = new ArrayList<String>();
+		supportedAtoms = new ArrayList<>();
 		supportedAtoms.add("N");
 		supportedAtoms.add("CA");
 		supportedAtoms.add("C");
@@ -138,10 +138,8 @@ public class Mutator{
 	 * @param oldAmino
 	 * @param newType
 	 * @return a new, mutated, residue
-	 * @throws PDBParseException
 	 */
-	public AminoAcid mutateResidue(AminoAcid oldAmino, String newType)
-	throws PDBParseException {
+	public AminoAcid mutateResidue(AminoAcid oldAmino, String newType) {
 
 		AminoAcid newgroup = new AminoAcidImpl();
 

@@ -112,8 +112,8 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
 		String seq1 = StructureTools.convertAtomsToSeq(ca1);
 		String seq2 = StructureTools.convertAtomsToSeq(ca2);
 
-		ProteinSequence s1 = null;
-		ProteinSequence s2 = null;
+		ProteinSequence s1;
+		ProteinSequence s2;
 
 		try {
 			s1 = new ProteinSequence(seq1);

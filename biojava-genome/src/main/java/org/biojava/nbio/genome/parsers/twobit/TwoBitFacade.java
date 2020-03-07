@@ -28,7 +28,7 @@ import java.io.File;
  */
 public class TwoBitFacade {
 
-	private TwoBitParser twoBitParser = null;
+	private TwoBitParser twoBitParser;
 
 
 	/**

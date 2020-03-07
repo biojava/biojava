@@ -92,7 +92,7 @@ public class AtomCache {
 	private String cachePath;
 
 	// make sure IDs are loaded uniquely
-	private Collection<String> currentlyLoading = Collections.synchronizedCollection(new TreeSet<String>());
+	private final Collection<String> currentlyLoading = Collections.synchronizedCollection(new TreeSet<>());
 
 	private String path;
 
@@ -188,7 +188,7 @@ public class AtomCache {
 	}
 	public Atom[] getAtoms(StructureIdentifier name) throws IOException, StructureException {
 
-		Atom[] atoms = null;
+		Atom[] atoms;
 
 		// System.out.println("loading " + name);
 		Structure s = getStructure(name);
@@ -217,7 +217,7 @@ public class AtomCache {
 
 	public Atom[] getRepresentativeAtoms(StructureIdentifier name) throws IOException, StructureException {
 
-		Atom[] atoms = null;
+		Atom[] atoms;
 
 		Structure s = getStructure(name);
 
@@ -911,7 +911,7 @@ public class AtomCache {
 		return structure;
 	}
 
-	protected Structure loadStructureFromCifByPdbId(String pdbId) throws IOException, StructureException {
+	protected Structure loadStructureFromCifByPdbId(String pdbId) throws IOException {
 
 		logger.debug("Loading structure {} from mmCIF file {}.", pdbId, path);
 		Structure s;
@@ -930,7 +930,7 @@ public class AtomCache {
 		return s;
 	}
 
-	protected Structure loadStructureFromPdbByPdbId(String pdbId) throws IOException, StructureException {
+	protected Structure loadStructureFromPdbByPdbId(String pdbId) throws IOException {
 
 		logger.debug("Loading structure {} from PDB file {}.", pdbId, path);
 		Structure s;

@@ -59,7 +59,7 @@ public class Astral {
 	 * @author dmyersturnbull
 	 *
 	 */
-	public static enum AstralSet {
+	public enum AstralSet {
 		FORTY_175("1.75_40", "http://scop.berkeley.edu/downloads/scopseq-1.75/astral-scopdom-seqres-gd-sel-gs-bib-40-1.75.fa"),
 		NINETY_FIVE_175("1.75_95", "http://scop.berkeley.edu/downloads/scopseq-1.75/astral-scopdom-seqres-gd-sel-gs-bib-95-1.75.fa"),
 		FORTY_175A("1.75A_40", "http://scop.berkeley.edu/downloads/scopeseq-2.01/astral-scopedom-seqres-gd-sel-gs-bib-40-2.01.fa"),
@@ -72,8 +72,8 @@ public class Astral {
 		NINETY_FIVE_202("2.02_95", "http://scop.berkeley.edu/downloads/scopeseq-2.02/astral-scopedom-seqres-gd-sel-gs-bib-95-2.02.fa"),
 		FORTY_203("2.03_40", "http://scop.berkeley.edu/downloads/scopeseq-2.03/astral-scopedom-seqres-gd-sel-gs-bib-40-2.03.fa"),
 		NINETY_FIVE_203("2.03_95", "http://scop.berkeley.edu/downloads/scopeseq-2.03/astral-scopedom-seqres-gd-sel-gs-bib-95-2.03.fa");
-		private String id;
-		private String url;
+		private final String id;
+		private final String url;
 
 		public static AstralSet parse(String str) {
 			for (AstralSet c : AstralSet.class.getEnumConstants()) {
@@ -101,7 +101,7 @@ public class Astral {
 		}
 	}
 
-	private static Map<String, SoftReference<Astral>> instances = new HashMap<String, SoftReference<Astral>>();
+	private static final Map<String, SoftReference<Astral>> instances = new HashMap<>();
 
 	private static final Logger logger = LoggerFactory.getLogger(Astral.class);
 
@@ -116,7 +116,7 @@ public class Astral {
 			return instances.get(cutoff.getId()).get().getNames();
 		}
 		Astral astral = new Astral(cutoff);
-		instances.put(cutoff.getId(), new SoftReference<Astral>(astral));
+		instances.put(cutoff.getId(), new SoftReference<>(astral));
 		return astral.getNames();
 	}
 
@@ -203,8 +203,8 @@ public class Astral {
 	 * Parses the FASTA file opened by reader.
 	 */
 	private void init(Reader reader) {
-		names = new TreeSet<String>();
-		failedLines = new LinkedHashMap<Integer,String>();
+		names = new TreeSet<>();
+		failedLines = new LinkedHashMap<>();
 
 		BufferedReader br = null;
 
@@ -214,7 +214,7 @@ public class Astral {
 
 			logger.info("Reading ASTRAL file...");
 
-			String line = "";
+			String line;
 			int i = 0;
 			while ((line = br.readLine()) != null) {
 				if (line.startsWith(">")) {

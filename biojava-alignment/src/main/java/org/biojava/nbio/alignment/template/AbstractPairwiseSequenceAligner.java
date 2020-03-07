@@ -137,12 +137,12 @@ public abstract class AbstractPairwiseSequenceAligner<S extends Sequence<C>, C e
 
 	@Override
 	protected List<C> getCompoundsOfQuery() {
-		return (query == null) ? new ArrayList<C>() : query.getAsList();
+		return (query == null) ? new ArrayList<>() : query.getAsList();
 	}
 
 	@Override
 	protected List<C> getCompoundsOfTarget() {
-		return (target == null) ? new ArrayList<C>() : target.getAsList();
+		return (target == null) ? new ArrayList<>() : target.getAsList();
 	}
 
 	@Override
@@ -176,7 +176,7 @@ public abstract class AbstractPairwiseSequenceAligner<S extends Sequence<C>, C e
 				maxt += getSubstitutionMatrix().getValue(c, c);
 			}
 			max = Math.max(maxq, maxt);
-			score = min = isLocal() ? 0 : (int) (2 * getGapPenalty().getOpenPenalty() + (query.getLength() +
+			score = min = isLocal() ? 0 : (2 * getGapPenalty().getOpenPenalty() + (query.getLength() +
 					target.getLength()) * getGapPenalty().getExtensionPenalty());
 		}
 	}

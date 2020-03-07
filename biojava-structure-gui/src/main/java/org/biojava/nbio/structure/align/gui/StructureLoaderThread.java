@@ -52,7 +52,7 @@ public class StructureLoaderThread extends SwingWorker<String, Object> {
 		System.out.println("loading " + name );
 
 		AtomCache cache = new AtomCache(config.getPdbFilePath(),config.getCacheFilePath());
-		Structure s = null;
+		Structure s;
 		try {
 			if ( showBiolAssembly) {
 				s= StructureIO.getBiologicalAssembly(name);
@@ -97,29 +97,25 @@ public class StructureLoaderThread extends SwingWorker<String, Object> {
 
 		if ( progressFrame == null){
 
-			SwingUtilities.invokeLater(new Runnable() {
-
-				@Override
-				public void run() {
-					// TODO Auto-generated method stub
+			SwingUtilities.invokeLater(() -> {
+				// TODO Auto-generated method stub
 
 
-					final JFrame frame = new JFrame("Loading ...");
-					final JProgressBar progressBar = new JProgressBar();
+				final JFrame frame = new JFrame("Loading ...");
+				final JProgressBar progressBar = new JProgressBar();
 
-					progressBar.setIndeterminate(true);
+				progressBar.setIndeterminate(true);
 
-					final JPanel contentPane = new JPanel();
-					contentPane.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
-					contentPane.setLayout(new BorderLayout());
-					contentPane.add(new JLabel("Loading ..."), BorderLayout.NORTH);
-					contentPane.add(progressBar, BorderLayout.CENTER);
-					frame.setContentPane(contentPane);
-					frame.pack();
-					frame.setLocationRelativeTo(null);
-					progressFrame = frame;
-					frame.setVisible(true);
-				}
+				final JPanel contentPane = new JPanel();
+				contentPane.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+				contentPane.setLayout(new BorderLayout());
+				contentPane.add(new JLabel("Loading ..."), BorderLayout.NORTH);
+				contentPane.add(progressBar, BorderLayout.CENTER);
+				frame.setContentPane(contentPane);
+				frame.pack();
+				frame.setLocationRelativeTo(null);
+				progressFrame = frame;
+				frame.setVisible(true);
 			});
 
 		}
@@ -130,14 +126,10 @@ public class StructureLoaderThread extends SwingWorker<String, Object> {
 	static JFrame progressFrame = null;
 	private void hideProgressBar() {
 
-		SwingUtilities.invokeLater(new Runnable() {
-
-			@Override
-			public void run() {
-				if ( progressFrame != null){
-					progressFrame.dispose();
-					progressFrame = null;
-				}
+		SwingUtilities.invokeLater(() -> {
+			if ( progressFrame != null){
+				progressFrame.dispose();
+				progressFrame = null;
 			}
 		});
 

@@ -36,11 +36,8 @@ public class StreamingFastqParserTest {
 	{
 		try
 		{
-			StreamingFastqParser.stream((Readable) null, FastqVariant.FASTQ_SANGER, new StreamListener() {
-				@Override
-				public void fastq(final Fastq fastq) {
-					// empty
-				}
+			StreamingFastqParser.stream(null, FastqVariant.FASTQ_SANGER, fastq -> {
+				// empty
 			});
 			Assert.fail("stream(null,,) expected IllegalArgumentException");
 		}
@@ -56,11 +53,8 @@ public class StreamingFastqParserTest {
 		try
 		{
 			final String input = "";
-			StreamingFastqParser.stream(new StringReader(input), null, new StreamListener() {
-				@Override
-				public void fastq(final Fastq fastq) {
-					// empty
-				}
+			StreamingFastqParser.stream(new StringReader(input), null, fastq -> {
+				// empty
 			});
 			Assert.fail("stream(null,,) expected IllegalArgumentException");
 		}

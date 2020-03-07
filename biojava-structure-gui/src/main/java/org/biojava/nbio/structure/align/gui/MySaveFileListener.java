@@ -52,8 +52,8 @@ import java.io.FileWriter;
  */
 public class MySaveFileListener implements ActionListener {
 
-	private AFPChain afpChain;
-	private MultipleAlignment msa;
+	private final AFPChain afpChain;
+	private final MultipleAlignment msa;
 	private boolean printText;
 
 	public MySaveFileListener (AFPChain afpChain){

@@ -52,7 +52,7 @@ import org.biojava.nbio.structure.geometry.SuperPositions;
  */
 public class ReferenceSuperimposer implements MultipleSuperimposer {
 
-	private int reference;
+	private final int reference;
 
 	/**
 	 * Default Constructor.
@@ -77,8 +77,7 @@ public class ReferenceSuperimposer implements MultipleSuperimposer {
 	}
 
 	@Override
-	public void superimpose(MultipleAlignment alignment)
-			throws StructureException {
+	public void superimpose(MultipleAlignment alignment) {
 
 		//Check for inconsistencies in the alignment
 		if(alignment.getEnsemble() == null) {
@@ -109,7 +108,7 @@ public class ReferenceSuperimposer implements MultipleSuperimposer {
 
 			//Block transformations
 			List<Matrix4d> transforms =
-					new ArrayList<Matrix4d>(atomArrays.size());
+					new ArrayList<>(atomArrays.size());
 
 			//Loop through structures
 			for (int i=0; i<atomArrays.size(); i++){
@@ -125,8 +124,8 @@ public class ReferenceSuperimposer implements MultipleSuperimposer {
 				Atom[] ref = atomArrays.get(reference);
 				Atom[] curr = atomArrays.get(i);
 
-				List<Atom> atomSet1 = new ArrayList<Atom>();
-				List<Atom> atomSet2 = new ArrayList<Atom>();
+				List<Atom> atomSet1 = new ArrayList<>();
+				List<Atom> atomSet2 = new ArrayList<>();
 
 				for( Block blk : bs.getBlocks() ) {
 					if( blk.size() != atomArrays.size()) {
@@ -145,8 +144,8 @@ public class ReferenceSuperimposer implements MultipleSuperimposer {
 						atomSet2.add(curr[pos2]);
 					}
 				}
-				Atom[] array1 = atomSet1.toArray(new Atom[atomSet1.size()]);
-				Atom[] array2 = atomSet2.toArray(new Atom[atomSet2.size()]);
+				Atom[] array1 = atomSet1.toArray(new Atom[0]);
+				Atom[] array2 = atomSet2.toArray(new Atom[0]);
 
 				array2 = StructureTools.cloneAtomArray(array2);
 

@@ -60,7 +60,7 @@ public enum ModificationOccurrenceType {
 	/**
 	 * The variable is the same as the &ltOccurrence&gt; in the ptm_list XML file.
 	 */
-	private String label;
+	private final String label;
 
 	/**
 	 *
@@ -71,9 +71,9 @@ public enum ModificationOccurrenceType {
 		return mapLabelOcc.get(label);
 	}
 
-	private static Map<String, ModificationOccurrenceType> mapLabelOcc;
+	private static final Map<String, ModificationOccurrenceType> mapLabelOcc;
 	static {
-		mapLabelOcc = new HashMap<String, ModificationOccurrenceType>();
+		mapLabelOcc = new HashMap<>();
 		for (ModificationOccurrenceType occ:ModificationOccurrenceType.values()) {
 			mapLabelOcc.put(occ.label, occ);
 		}

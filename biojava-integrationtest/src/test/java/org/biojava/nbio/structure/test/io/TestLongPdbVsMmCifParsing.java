@@ -100,9 +100,9 @@ public class TestLongPdbVsMmCifParsing {
 			(cache.getPath().equals(System.getProperty("java.io.tmpdir")+File.separator))    ) {
 
 			throw new IllegalArgumentException("PDB_DIR has not been set or it is set to the default temp directory. Please set PDB_DIR to run this test");
-		};
+		}
 
-		params = new FileParsingParameters();
+        params = new FileParsingParameters();
 		cache.setFileParsingParams(params);
 		cache.setObsoleteBehavior(ObsoleteBehavior.THROW_EXCEPTION);
 	}
@@ -130,7 +130,7 @@ public class TestLongPdbVsMmCifParsing {
 	@Ignore
 	@Test
 	public void testSingle() throws IOException, StructureException {
-		testAll(Arrays.asList("4kro"));
+		testAll(Collections.singletonList("4kro"));
 	}
 
 	@After
@@ -141,7 +141,7 @@ public class TestLongPdbVsMmCifParsing {
 
 	private void testAll(List<String> pdbIds) throws IOException, StructureException {
 
-		pdbIdsWithMismatchingMolIds = new HashSet<String>();
+		pdbIdsWithMismatchingMolIds = new HashSet<>();
 
 		long start = System.currentTimeMillis();
 
@@ -358,7 +358,7 @@ public class TestLongPdbVsMmCifParsing {
 
 
 			if (ciPdb.getNcsOperators()==null) {
-				assertTrue(ciCif.getNcsOperators()==null);
+				assertNull(ciCif.getNcsOperators());
 			} else {
 
 				Matrix4d[] ncsOpersPdb = ciPdb.getNcsOperators();
@@ -393,18 +393,19 @@ public class TestLongPdbVsMmCifParsing {
 					hPdb.getNrBioAssemblies(),batPdb.size());
 			assertEquals("Size of bioassemblies maps don't coincide",batPdb.size(), batCif.size());
 
-			for (int id:batPdb.keySet()) {
+			for (Map.Entry<Integer, BioAssemblyInfo> entry : batPdb.entrySet()) {
+				int id = entry.getKey();
 				assertTrue("Bioassembly id is not contained in mmCIF",batCif.containsKey(id));
 				// there's an inconsistency in 4amh pdb vs mmCIF in mmSize
 				if (sPdb.getPDBCode().equalsIgnoreCase("4amh")) continue;
 
 				assertEquals("Macromolecular size of assembly "+id+" doesn't coincide",
-						batPdb.get(id).getMacromolecularSize(), batCif.get(id).getMacromolecularSize());
+						entry.getValue().getMacromolecularSize(), batCif.get(id).getMacromolecularSize());
 			}
 		}
 	}
 
-	private void testChains(Structure sPdb, Structure sCif) throws StructureException {
+	private void testChains(Structure sPdb, Structure sCif) {
 		assertNotNull(sPdb.getChains());
 		assertNotNull(sCif.getChains());
 
@@ -432,7 +433,7 @@ public class TestLongPdbVsMmCifParsing {
 
 
 
-		Set<String> chainIds = new TreeSet<String>();
+		Set<String> chainIds = new TreeSet<>();
 		for (Chain chain:sPdb.getPolyChains()){
 			chainIds.add(chain.getName());
 		}
@@ -601,7 +602,7 @@ public class TestLongPdbVsMmCifParsing {
 		InputStream inStream = this.getClass().getResourceAsStream(testSetFile);
 		BufferedReader br = new BufferedReader(new InputStreamReader(inStream));
 
-		List<String> list = new ArrayList<String>();
+		List<String> list = new ArrayList<>();
 
 		String line;
 		while ((line=br.readLine())!=null) {

@@ -56,7 +56,7 @@ import org.junit.Test;
 public class TestNonDepositedFiles {
 
 	@Test
-	public void test1B8GnoSeqresPdb() throws IOException, StructureException {
+	public void test1B8GnoSeqresPdb() throws IOException {
 
 		InputStream inStream = new GZIPInputStream(this.getClass().getResourceAsStream("/org/biojava/nbio/structure/io/1b8g_raw.pdb.gz"));
 		assertNotNull(inStream);
@@ -72,7 +72,7 @@ public class TestNonDepositedFiles {
 
 		assertTrue(s.isCrystallographic());
 		assertFalse(s.isNmr());
-		assertTrue(s.nrModels()==1);
+		assertEquals(1, s.nrModels());
 		assertNull(s.getPDBHeader().getExperimentalTechniques());
 
 		assertNotNull(s.getCrystallographicInfo().getCrystalCell());
@@ -126,7 +126,7 @@ public class TestNonDepositedFiles {
 	}
 
 	@Test
-	public void test3C5F() throws IOException, StructureException {
+	public void test3C5F() throws IOException {
 		InputStream inStream = new GZIPInputStream(this.getClass().getResourceAsStream("/org/biojava/nbio/structure/io/3c5f_raw.pdb.gz"));
 		assertNotNull(inStream);
 
@@ -146,7 +146,7 @@ public class TestNonDepositedFiles {
 	}
 
 	@Test
-	public void test4B19() throws IOException, StructureException {
+	public void test4B19() throws IOException {
 		InputStream inStream = new GZIPInputStream(this.getClass().getResourceAsStream("/org/biojava/nbio/structure/io/4b19_raw.pdb.gz"));
 		assertNotNull(inStream);
 

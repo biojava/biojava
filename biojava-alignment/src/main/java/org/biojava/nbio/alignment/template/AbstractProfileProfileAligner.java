@@ -189,13 +189,13 @@ public abstract class AbstractProfileProfileAligner<S extends Sequence<C>, C ext
 	@Override
 	protected List<C> getCompoundsOfQuery() {
 		// TODO replace with consensus sequence
-		return (query == null) ? new ArrayList<C>() : query.getAlignedSequence(1).getAsList();
+		return (query == null) ? new ArrayList<>() : query.getAlignedSequence(1).getAsList();
 	}
 
 	@Override
 	protected List<C> getCompoundsOfTarget() {
 		// TODO replace with consensus sequence
-		return (target == null) ? new ArrayList<C>() : target.getAlignedSequence(1).getAsList();
+		return (target == null) ? new ArrayList<>() : target.getAlignedSequence(1).getAsList();
 	}
 
 	@Override
@@ -248,7 +248,7 @@ public abstract class AbstractProfileProfileAligner<S extends Sequence<C>, C ext
 				maxt += getSubstitutionScore(tfrac[i], tfrac[i]);
 			}
 			max = Math.max(maxq, maxt);
-			score = min = isLocal() ? 0 : (int) (2 * getGapPenalty().getOpenPenalty() + (query.getLength() +
+			score = min = isLocal() ? 0 : (2 * getGapPenalty().getOpenPenalty() + (query.getLength() +
 					target.getLength()) * getGapPenalty().getExtensionPenalty());
 		}
 	}

@@ -44,9 +44,9 @@ public class LocIterator implements Iterator<Location> {
 	int mIncrement;
 
 	@SuppressWarnings("unused")
-	private LocIterator() {};
+	private LocIterator() {}
 
-	/**
+    /**
 	 * Construct an iterator that slides a window over a Location.
 	 *
 	 * @param bounds The location over which to iterate.
@@ -138,7 +138,7 @@ public class LocIterator implements Iterator<Location> {
 	 */
 	public Location remainder()
 	{
-		Location remainder= null;
+		Location remainder;
 
 		if( mPosition == 0 )
 		{

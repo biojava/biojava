@@ -97,7 +97,7 @@ public class AlignmentCalcDB implements AlignmentCalculationRunnable {
 	@Override
 	public void run() {
 
-		StructureAlignment algorithm = null;
+		StructureAlignment algorithm;
 
 		if ( parent != null )
 			algorithm = parent.getStructureAlignment();

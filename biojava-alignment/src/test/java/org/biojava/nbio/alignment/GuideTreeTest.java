@@ -49,11 +49,11 @@ public class GuideTreeTest {
 
 	@Before
 	public void setup() throws CompoundNotFoundException {
-		proteins = Arrays.asList(new ProteinSequence[] {new ProteinSequence("ARND"), new ProteinSequence("ARND"),
-				new ProteinSequence("HILK"), new ProteinSequence("ANDR")});
+		proteins = Arrays.asList(new ProteinSequence("ARND"), new ProteinSequence("ARND"),
+				new ProteinSequence("HILK"), new ProteinSequence("ANDR"));
 		gaps = new SimpleGapPenalty((short) 2, (short) 1);
 		blosum62 = SubstitutionMatrixHelper.getBlosum62();
-		tree = new GuideTree<ProteinSequence, AminoAcidCompound>(proteins, Alignments.getAllPairsScorers(proteins,
+		tree = new GuideTree<>(proteins, Alignments.getAllPairsScorers(proteins,
 				PairwiseSequenceScorerType.GLOBAL_IDENTITIES, gaps, blosum62));
 	}
 
@@ -112,12 +112,13 @@ public class GuideTreeTest {
 			switch (i++) {
 			case 0: assertEquals(n.getName(), "1"); break;
 			case 1: assertEquals(n.getName(), "2"); break;
-			case 2: assertEquals(n.getName(), ""); break;
+			case 2:
+                case 6:
+                case 4:
+                    assertEquals(n.getName(), ""); break;
 			case 3: assertEquals(n.getName(), "3"); break;
-			case 4: assertEquals(n.getName(), ""); break;
-			case 5: assertEquals(n.getName(), "4"); break;
-			case 6: assertEquals(n.getName(), ""); break;
-			}
+                case 5: assertEquals(n.getName(), "4"); break;
+            }
 		}
 	}
 

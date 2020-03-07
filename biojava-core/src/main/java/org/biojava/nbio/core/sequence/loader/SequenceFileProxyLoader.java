@@ -57,10 +57,10 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
 
 	SequenceParserInterface sequenceParser;
 	private CompoundSet<C> compoundSet;
-	private List<C> parsedCompounds = new ArrayList<C>();
+	private final List<C> parsedCompounds = new ArrayList<>();
 	File file;
-	long sequenceStartIndex = -1;
-	int sequenceLength = -1;
+	long sequenceStartIndex;
+	int sequenceLength;
 	//private boolean initialized = false;
 
 	/**
@@ -204,7 +204,7 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
 	 */
 	public String getSequenceAsString(Integer bioBegin, Integer bioEnd, Strand strand) {
 
-		SequenceAsStringHelper<C> sequenceAsStringHelper = new SequenceAsStringHelper<C>();
+		SequenceAsStringHelper<C> sequenceAsStringHelper = new SequenceAsStringHelper<>();
 		return sequenceAsStringHelper.getSequenceAsString(this.parsedCompounds, compoundSet, bioBegin, bioEnd, strand);
 	}
 
@@ -260,7 +260,7 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
 	@Override
 	public SequenceView<C> getSubSequence(final Integer bioBegin, final Integer bioEnd) {
 
-		return new SequenceProxyView<C>(SequenceFileProxyLoader.this, bioBegin, bioEnd);
+		return new SequenceProxyView<>(SequenceFileProxyLoader.this, bioBegin, bioEnd);
 	}
 
 	/**
@@ -296,8 +296,9 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
 	 * @param compounds
 	 * @return
 	 */
+	@SafeVarargs
 	@Override
-	public int countCompounds(C... compounds) {
+	public final int countCompounds(C... compounds) {
 		return SequenceMixin.countCompounds(this, compounds);
 	}
 

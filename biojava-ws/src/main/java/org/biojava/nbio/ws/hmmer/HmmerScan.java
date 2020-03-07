@@ -32,6 +32,6 @@ import java.util.SortedSet;
  */
 public interface HmmerScan {
 
-	public  SortedSet<HmmerResult> scan(ProteinSequence sequence) throws IOException;
+	SortedSet<HmmerResult> scan(ProteinSequence sequence) throws IOException;
 
 }

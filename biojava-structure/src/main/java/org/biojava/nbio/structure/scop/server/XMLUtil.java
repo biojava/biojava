@@ -112,7 +112,7 @@ public class XMLUtil {
 
 	public static ScopDescription getScopDescriptionFromXML(String xml){
 
-		ScopDescription job = null;
+		ScopDescription job;
 
 		try {
 
@@ -186,7 +186,7 @@ public class XMLUtil {
 	}
 	public static List<String> getCommentsFromXML(String xml){
 
-		List<String> comments = null;
+		List<String> comments;
 
 		try {
 
@@ -227,7 +227,7 @@ public class XMLUtil {
 	}
 
 	public static ScopNode getScopNodeFromXML(String xml){
-		ScopNode job = null;
+		ScopNode job;
 
 		try {
 
@@ -273,7 +273,7 @@ public class XMLUtil {
 	}
 
 	public static ScopDomain getScopDomainFromXML(String xml){
-		ScopDomain job = null;
+		ScopDomain job;
 
 		try {
 
@@ -321,7 +321,7 @@ public class XMLUtil {
 	@SuppressWarnings("unchecked")
 	public static SortedSet<Domain> getDomainsFromXML(String xml) {
 
-		SortedSet<Domain> domains = null;
+		SortedSet<Domain> domains;
 		try {
 
 			Unmarshaller un = jaxbContextDomains.createUnmarshaller();
@@ -364,7 +364,7 @@ public class XMLUtil {
 	}
 
 	public static SortedSet<String> getDomainRangesFromXML(String xml){
-		SortedSet<String> domains = null;
+		SortedSet<String> domains;
 		try {
 
 			Unmarshaller un = jaxbContextStringSortedSet.createUnmarshaller();

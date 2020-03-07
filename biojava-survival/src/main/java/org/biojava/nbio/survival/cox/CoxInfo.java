@@ -27,6 +27,7 @@ import org.biojava.nbio.survival.kaplanmeier.figure.KaplanMeierFigure;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 //import org.biojava.nbio.survival.cox.comparators.SurvivalInfoComparator;
 
@@ -59,9 +60,9 @@ public class CoxInfo {
 	int numSamples = 0;
 	int numEvents = 0;
 	private LinkedHashMap<String, String> metaDataFilter = null;
-	private LinkedHashMap<String, CoxCoefficient> coefficientsList = new LinkedHashMap<String, CoxCoefficient>();
-	LinkedHashMap<Double, Double> baselineSurvivorFunction = new LinkedHashMap<Double, Double>();
-	ArrayList<SurvivalInfo> survivalInfoList = new ArrayList<SurvivalInfo>();
+	private final LinkedHashMap<String, CoxCoefficient> coefficientsList = new LinkedHashMap<>();
+	LinkedHashMap<Double, Double> baselineSurvivorFunction = new LinkedHashMap<>();
+	ArrayList<SurvivalInfo> survivalInfoList = new ArrayList<>();
 	/**
 	 *
 	 */
@@ -82,18 +83,15 @@ public class CoxInfo {
 	/**
 	 *
 	 * @param var
-	 * @throws Exception
 	 */
-	public void setVariance(double[][] var) throws Exception {
+	public void setVariance(double[][] var) {
 
 		//   if (Math.abs(var[0][1] - var[1][0]) > .0000000000001) { //in the CoxCC correction looks like a precision error keeps these from being equal 10-19
 		//       throw new Exception("Expecting diagonal to be equal");
 		//   }
 		imat = new double[var.length][var[0].length];
 		for (int i = 0; i < var.length; i++) {
-			for (int j = 0; j < var[0].length; j++) {
-				imat[i][j] = var[i][j];
-			}
+            System.arraycopy(var[i], 0, imat[i], 0, var[0].length);
 		}
 		calcSummaryValues();
 	}
@@ -105,9 +103,7 @@ public class CoxInfo {
 	public double[][] getVariance() {
 		double[][] var = new double[imat.length][imat[0].length];
 		for (int i = 0; i < var.length; i++) {
-			for (int j = 0; j < var[0].length; j++) {
-				var[i][j] = imat[i][j];
-			}
+            System.arraycopy(imat[i], 0, var[i], 0, var[0].length);
 		}
 
 		return var;
@@ -116,9 +112,8 @@ public class CoxInfo {
 	/**
 	 *
 	 * @param var
-	 * @throws Exception
 	 */
-	public void setNaiveVariance(double[][] var) throws Exception {
+	public void setNaiveVariance(double[][] var) {
 //        if (var[0][1] != var[1][0]) {
 //            throw new Exception("Expecting diagonal to be equal");
 //        }
@@ -126,9 +121,7 @@ public class CoxInfo {
 
 		naive_imat = new double[var.length][var[0].length];
 		for (int i = 0; i < var.length; i++) {
-			for (int j = 0; j < var[0].length; j++) {
-				naive_imat[i][j] = var[i][j];
-			}
+            System.arraycopy(var[i], 0, naive_imat[i], 0, var[0].length);
 		}
 
 		calcSummaryValues();
@@ -141,9 +134,7 @@ public class CoxInfo {
 	public double[][] getNaiveVariance() {
 		double[][] var = new double[imat.length][imat[0].length];
 		for (int i = 0; i < var.length; i++) {
-			for (int j = 0; j < var[0].length; j++) {
-				var[i][j] = naive_imat[i][j];
-			}
+            System.arraycopy(naive_imat[i], 0, var[i], 0, var[0].length);
 		}
 
 		return var;
@@ -184,7 +175,7 @@ public class CoxInfo {
 	 * @return
 	 */
 	public double[][] getVariableResiduals() {
-		ArrayList<String> variables = new ArrayList<String>(coefficientsList.keySet());
+		ArrayList<String> variables = new ArrayList<>(coefficientsList.keySet());
 		double[][] rr = new double[survivalInfoList.size()][variables.size()];
 		int p = 0;
 		for (SurvivalInfo si : this.survivalInfoList) {
@@ -204,7 +195,7 @@ public class CoxInfo {
 	 * @param rr
 	 */
 	public void setVariableResiduals(double[][] rr) {
-		ArrayList<String> variables = new ArrayList<String>(coefficientsList.keySet());
+		ArrayList<String> variables = new ArrayList<>(coefficientsList.keySet());
 
 		int p = 0;
 		for (SurvivalInfo si : this.survivalInfoList) {
@@ -265,7 +256,7 @@ public class CoxInfo {
 
 		for (CoxCoefficient coe : coefficientsList.values()) {
 			String robust = "";
-			String stderror = "";
+			String stderror;
 			if (naive_imat != null) {
 				stderror = beginCell + fmt(coe.getRobustStdError(), 5, 9) + endCell;
 				robust = beginCell + fmt(coe.getStdError(), 5, 9) + endCell;
@@ -289,7 +280,7 @@ public class CoxInfo {
 			return "";
 		if(Double.isNaN(d))
 			return "";
-		String value = "";
+		String value;
 		DecimalFormat dfe = new DecimalFormat("0.00E0");
 		String dpad = "0.";
 		double p = 1.0;
@@ -320,7 +311,7 @@ public class CoxInfo {
 
 		//beta
 
-		ArrayList<String> variables = new ArrayList<String>(coefficientsList.keySet());
+		ArrayList<String> variables = new ArrayList<>(coefficientsList.keySet());
 		for (int i = 0; i < variables.size(); i++) {
 			String variable = variables.get(i);
 			CoxCoefficient coe = coefficientsList.get(variable);
@@ -507,9 +498,9 @@ public class CoxInfo {
 
 		if (baselineSurvivorFunction.size() > 0) {
 			o = o + beginLine + "Baseline Survivor Function (at predictor means)" + endLine;
-			for (Double time : baselineSurvivorFunction.keySet()) {
-				Double mean = baselineSurvivorFunction.get(time);
-				o = o + beginLine + fmt(time, 4, 10) + fmt(mean, 4, 10) + endLine;
+			for (Map.Entry<Double, Double> entry : baselineSurvivorFunction.entrySet()) {
+				Double mean = entry.getValue();
+				o = o + beginLine + fmt(entry.getKey(), 4, 10) + fmt(mean, 4, 10) + endLine;
 			}
 		}
 

@@ -39,7 +39,7 @@ import java.util.List;
 public class SequenceScalePanel
 extends JPanel{
 
-	static final long serialVersionUID = 7893248902423l;
+	static final long serialVersionUID = 7893248902423L;
 
 	//private static final Logger logger = LoggerFactory.getLogger(SequenceScalePanel.class);
 
@@ -105,7 +105,7 @@ extends JPanel{
 		setPrefSize();
 		coordManager = new CoordManager();
 
-		apos = new ArrayList<AlignedPosition>();
+		apos = new ArrayList<>();
 
 	}
 
@@ -219,7 +219,7 @@ extends JPanel{
 
 		setPaintDefaults(g2D);
 
-		int y = 1;
+		int y;
 
 
 		// draw the scale
@@ -378,7 +378,7 @@ extends JPanel{
 		if ( scale <= 3)
 			lineH = 8;
 
-		int i = startpos;
+		int i;
 
 
 		// display the actual sequence!;
@@ -446,7 +446,7 @@ extends JPanel{
 
 			//g2D.setColor(SCALE_COLOR);
 
-			int i = startpos;
+			int i;
 
 			// display the actual sequence!;
 			for ( int gap = startpos ;   gap < apos.size() ;gap++){

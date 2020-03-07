@@ -29,6 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -250,10 +251,10 @@ public final class SequenceUtil {
 	 */
 	public static List<FastaSequence> readFasta(final InputStream inStream)
 		throws IOException {
-	final List<FastaSequence> seqs = new ArrayList<FastaSequence>();
+	final List<FastaSequence> seqs = new ArrayList<>();
 
 	final BufferedReader infasta = new BufferedReader(
-		new InputStreamReader(inStream, "UTF8"), 16000);
+		new InputStreamReader(inStream, StandardCharsets.UTF_8), 16000);
 	final Pattern pattern = Pattern.compile("//s+");
 
 	String line;

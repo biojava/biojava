@@ -86,7 +86,7 @@ public class RCSBDescriptionFactory {
 
 		// now get polymers
 		data = structureIdE.getChildNodes();
-		Element polymerE = null;
+		Element polymerE;
 		for (int i = 0; i < data.getLength(); i++) {
 			if (data.item(i).getNodeType() != 1) continue;
 			polymerE = (Element) data.item(i);
@@ -121,7 +121,7 @@ public class RCSBDescriptionFactory {
 	private static RCSBMacromolecule makeMolecule(Element moleculeE) {
 		RCSBMacromolecule molecule = new RCSBMacromolecule();
 		molecule.setName(moleculeE.getAttribute("name"));
-		Element element = null;
+		Element element;
 		NodeList data = moleculeE.getChildNodes();
 		for (int i = 0; i < data.getLength(); i++) {
 			if (data.item(i).getNodeType() != 1) continue;
@@ -141,28 +141,35 @@ public class RCSBDescriptionFactory {
 		polymer.setWeight(ReadUtils.toDouble(polymerE.getAttribute("weight")));
 		polymer.setType(ReadUtils.toStr(polymerE.getAttribute("type")));
 
-		Element element = null;
+		Element element;
 		NodeList data = polymerE.getChildNodes();
 		for (int i = 0; i < data.getLength(); i++) {
 			if (data.item(i).getNodeType() != 1) continue;
 			element = (Element) data.item(i);
-			if (element.getNodeName().equals("chain")) {
-				parseChains(polymer, element.getAttribute("id"));
-			} else if (element.getNodeName().equals("Taxonomy")) {
-				String name = element.getAttribute("name");
-				int id = ReadUtils.toInt(element.getAttribute("id"));
-				RCSBTaxonomy taxonomy = new RCSBTaxonomy(name, id);
-				polymer.setTaxonomy(taxonomy);
-			} else if (element.getNodeName().equals("macroMolecule")) {
-				RCSBMacromolecule molecule = makeMolecule(element);
-				polymer.setMolecule(molecule);
-			} else if (element.getNodeName().equals("polymerDescription")) {
-				polymer.setDescription(element.getAttribute("description"));
-			} else if (element.getNodeName().equals("enzClass")) {
-				polymer.setEnzClass(element.getAttribute("ec"));
-			} else if (element.getNodeName().equals("synonym")) {
-				parseSynonyms(polymer, element.getAttribute("name"));
-			}
+            switch (element.getNodeName()) {
+                case "chain":
+                    parseChains(polymer, element.getAttribute("id"));
+                    break;
+                case "Taxonomy":
+                    String name = element.getAttribute("name");
+                    int id = ReadUtils.toInt(element.getAttribute("id"));
+                    RCSBTaxonomy taxonomy = new RCSBTaxonomy(name, id);
+                    polymer.setTaxonomy(taxonomy);
+                    break;
+                case "macroMolecule":
+                    RCSBMacromolecule molecule = makeMolecule(element);
+                    polymer.setMolecule(molecule);
+                    break;
+                case "polymerDescription":
+                    polymer.setDescription(element.getAttribute("description"));
+                    break;
+                case "enzClass":
+                    polymer.setEnzClass(element.getAttribute("ec"));
+                    break;
+                case "synonym":
+                    parseSynonyms(polymer, element.getAttribute("name"));
+                    break;
+            }
 		}
 		return polymer;
 	}

@@ -44,7 +44,7 @@ import java.util.TreeSet;
 public class JFatCatClient {
 	private final static Logger logger = LoggerFactory.getLogger(JFatCatClient.class);
 
-	private static ResourceManager resourceManager = ResourceManager.getResourceManager("jfatcat");
+	private static final ResourceManager resourceManager = ResourceManager.getResourceManager("jfatcat");
 
 	private static final String serverAPPEND    = "show?name1=%s&name2=%s";
 
@@ -60,13 +60,13 @@ public class JFatCatClient {
 
 	private static final String serverPositionInQueue =  "queuePosition?method=%s&name1=%s&name2=%s";
 
-	private static Random generator;
+	private static final Random generator;
 
-	private static String newline = System.getProperty("line.separator");
+	private static final String newline = System.getProperty("line.separator");
 
-	private static String KILL_JOB = "KILL_JOB";
+	private static final String KILL_JOB = "KILL_JOB";
 
-	private static String COME_BACK_LATER = "COME_BACK_LATER";
+	private static final String COME_BACK_LATER = "COME_BACK_LATER";
 
 	static {
 
@@ -113,7 +113,7 @@ public class JFatCatClient {
 
 			InputStream stream = URLConnectionTools.getInputStream(url,timeout);
 
-			String xml = null;
+			String xml;
 
 			if ( stream != null) {
 
@@ -146,7 +146,7 @@ public class JFatCatClient {
 
 			InputStream stream = URLConnectionTools.getInputStream(url,timeout);
 
-			String xml = null;
+			String xml;
 
 			if ( stream != null) {
 
@@ -198,9 +198,7 @@ public class JFatCatClient {
 				return null;
 			}
 			// TODO dmyersturnbull: method should throw; we shouldn't catch here
-		} catch (IOException e){
-			logger.error("error in JFatCatClient: getAFPChainFromServer",e);
-		} catch (StructureException e) {
+		} catch (IOException | StructureException e){
 			logger.error("error in JFatCatClient: getAFPChainFromServer",e);
 		}
 		return null;
@@ -211,7 +209,7 @@ public class JFatCatClient {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
 		StringBuilder sb = new StringBuilder();
 
-		String line = null;
+		String line;
 		try {
 			while ((line = reader.readLine()) != null) {
 				sb.append(line).append(newline);
@@ -354,7 +352,7 @@ public class JFatCatClient {
 		// we are very tolerant with requesting a set of pairs, since we probably depend on getting it to get work started...
 		// 1 min...
 		InputStream stream = URLConnectionTools.getInputStream(serverUrl,timeout);
-		String xml = null;
+		String xml;
 
 		if ( stream != null) {
 
@@ -374,7 +372,7 @@ public class JFatCatClient {
 
 
 	public static final SortedSet<String> getRepresentatives(String serverLocation, int cutoff){
-		SortedSet<String> representatives = new TreeSet<String>();
+		SortedSet<String> representatives = new TreeSet<>();
 
 		String representURL = serverLocation + representAPPEND;
 

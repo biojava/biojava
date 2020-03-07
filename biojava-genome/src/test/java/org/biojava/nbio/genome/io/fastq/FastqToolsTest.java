@@ -505,14 +505,14 @@ public final class FastqToolsTest {
 	@Test
 	public void testToList()
 	{
-		List<String> list = new ArrayList<String>();
+		List<String> list = new ArrayList<>();
 		Assert.assertSame(list, FastqTools.toList(list));
 	}
 
 	@Test
 	public void testToListNotAList()
 	{
-		Collection<String> collection = new HashSet<String>();
+		Collection<String> collection = new HashSet<>();
 		Assert.assertTrue(FastqTools.toList(collection) instanceof List);
 		Assert.assertNotSame(collection, FastqTools.toList(collection));
 	}

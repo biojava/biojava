@@ -49,8 +49,8 @@ public class DemoFATCAT
 
 		AtomCache cache = new AtomCache();
 
-		Structure structure1 = null;
-		Structure structure2 = null;
+		Structure structure1;
+		Structure structure2;
 
 		try {
 

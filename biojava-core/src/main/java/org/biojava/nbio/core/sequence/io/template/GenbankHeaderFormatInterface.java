@@ -36,8 +36,8 @@ public interface GenbankHeaderFormatInterface<S extends Sequence<?>, C extends C
 	 * @param sequence
 	 * @return
 	 */
-	public static final String UNKNOWN_DNA = "UNK";
+    String UNKNOWN_DNA = "UNK";
 
-	public String getHeader(S sequence);
+	String getHeader(S sequence);
 
 }

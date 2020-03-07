@@ -203,10 +203,10 @@ public class JmolViewerImpl implements StructureViewer {
 				adapterC = Class.forName(adapter);
 				smartAdapterC = Class.forName(smartAdapter);
 
-				Method m = viewerC.getMethod("allocateSimpleViewer", new Class[]{Component.class, adapterC});
+				Method m = viewerC.getMethod("allocateSimpleViewer", Component.class, adapterC);
 
-				Constructor constructor = smartAdapterC.getConstructor(new Class[]{});
-				adapterO = constructor.newInstance(new Object[]{});
+				Constructor constructor = smartAdapterC.getConstructor();
+				adapterO = constructor.newInstance();
 
 				//viewerC = JmolSimpleViewer.allocateSimpleViewer(this, adapter);
 				viewerO = m.invoke(viewerC, this, adapterO);
@@ -214,20 +214,12 @@ public class JmolViewerImpl implements StructureViewer {
 				evalString = viewerC.getMethod("evalString", String.class);
 
 				renderScreenImage = viewerC.getMethod("renderScreenImage",
-						new Class[]{Graphics.class, Dimension.class, Rectangle.class});
+                        Graphics.class, Dimension.class, Rectangle.class);
 
-				openStringInline = viewerC.getMethod("openStringInline", new Class[]{String.class});
+				openStringInline = viewerC.getMethod("openStringInline", String.class);
 
-			} catch (InstantiationException ex) {
+			} catch (InstantiationException | NoSuchMethodException | InvocationTargetException | IllegalArgumentException | IllegalAccessException ex) {
 				logger.error("Exception caught", ex);
-			} catch (IllegalAccessException ex) {
-				logger.error("Exception caught", ex);
-			} catch (IllegalArgumentException ex) {
-				logger.error("Exception caught", ex);
-			} catch (InvocationTargetException ex) {
-				logger.error("Exception caught", ex);
-			} catch (NoSuchMethodException e) {
-				logger.error("Exception caught", e);
 			}
 
 			evalString("set scriptQueue on;");

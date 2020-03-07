@@ -55,7 +55,7 @@ public abstract class AbstractMatrixAligner<S extends Sequence<C>, C extends Com
 	protected GapPenalty gapPenalty;
 	private SubstitutionMatrix<C> subMatrix;
 	private boolean local, storingScoreMatrix;
-	protected List<Anchor> anchors = new ArrayList<Anchor>();
+	protected List<Anchor> anchors = new ArrayList<>();
 	protected int cutsPerSection;
 
 	// output fields
@@ -218,8 +218,8 @@ public abstract class AbstractMatrixAligner<S extends Sequence<C>, C extends Com
 		CompoundSet<C> compoundSet = getCompoundSet();
 		int lengthCompound = compoundSet.getMaxSingleCompoundStringLength(), lengthRest =
 				Math.max(Math.max(Integer.toString(min).length(), Integer.toString(max).length()), lengthCompound) + 1;
-		String padCompound = "%" + Integer.toString(lengthCompound) + "s",
-				padRest = "%" + Integer.toString(lengthRest);
+		String padCompound = "%" + lengthCompound + "s",
+				padRest = "%" + lengthRest;
 		List<C> query = getCompoundsOfQuery(), target = getCompoundsOfTarget();
 		for (int type = 0; type < scores[0][0].length; type++) {
 			if (type > 0) {
@@ -312,7 +312,7 @@ public abstract class AbstractMatrixAligner<S extends Sequence<C>, C extends Com
 		}
 		boolean linear = (gapPenalty.getType() == GapPenalty.Type.LINEAR);
 		Last[][][] traceback = new Last[dim[0]][][];
-		List<Step> sx = new ArrayList<Step>(), sy = new ArrayList<Step>();
+		List<Step> sx = new ArrayList<>(), sy = new ArrayList<>();
 
 		if (!local) {
 			xyMax = new int[] { dim[0] - 1, dim[1] - 1 };

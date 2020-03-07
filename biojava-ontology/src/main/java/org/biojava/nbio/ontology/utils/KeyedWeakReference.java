@@ -35,7 +35,7 @@ import java.lang.ref.WeakReference;
  */
 
 public class KeyedWeakReference extends WeakReference {
-	private Object key;
+	private final Object key;
 
 	public KeyedWeakReference(Object key, Object ref) {
 		super(ref);

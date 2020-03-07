@@ -497,7 +497,7 @@ public class MMCIFFileTools {
 	 * @return
 	 */
 	public static List<AtomSite> convertStructureToAtomSites(Structure s) {
-		List<AtomSite> list = new ArrayList<AtomSite>();
+		List<AtomSite> list = new ArrayList<>();
 
 		for (int m=0;m<s.nrModels();m++) {
 			for (Chain c:s.getChains(m)) {

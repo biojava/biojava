@@ -68,14 +68,14 @@ public class TestSampleGenerator {
 		//Obtain the structure atoms from resources
 		StructureIOFile reader = new PDBFileReader();
 		File f = new File("src/test/resources/2gox.pdb");
-		Structure structure = null;
+		Structure structure;
 		try {
 			structure = reader.getStructure(f);
 		} catch (IOException e){
 			AtomCache cache = new AtomCache();
 			structure = cache.getStructure("2gox");
 		}
-		List<Atom[]> atomArrays = new ArrayList<Atom[]>(3);
+		List<Atom[]> atomArrays = new ArrayList<>(3);
 		for (int str=0; str<3; str++){
 			Atom[] atoms = StructureTools.
 					getRepresentativeAtomArray(structure);
@@ -89,16 +89,16 @@ public class TestSampleGenerator {
 		ensemble.setAlgorithmName("testAlignment");
 		ensemble.setVersion("1.0");
 		ensemble.setCalculationTime((long) 1000000000);
-		ensemble.setStructureIdentifiers(Arrays.<StructureIdentifier>asList(new StructureName("2gox"),new StructureName("2gox"),new StructureName("2gox")));
+		ensemble.setStructureIdentifiers(Arrays.asList(new StructureName("2gox"),new StructureName("2gox"),new StructureName("2gox")));
 
 		//Generate the MultipleAlignment - 2 blocks with 2 blocksets each
 		int[] nextResidue = new int[3];
 		for (int bs=0; bs<2; bs++){
 			BlockSet blockSet = new BlockSetImpl(msa);
 			for (int b=0; b<2; b++){
-				List<List<Integer>> alnRes = new ArrayList<List<Integer>>(3);
+				List<List<Integer>> alnRes = new ArrayList<>(3);
 				for (int str=0; str<3; str++){
-					List<Integer> chain = new ArrayList<Integer>(50);
+					List<Integer> chain = new ArrayList<>(50);
 					for (int res=0; res<10; res++){
 						//Introduce gaps and discontinuities
 						if (nextResidue[str] % (2+str) == str)chain.add(null);
@@ -138,11 +138,11 @@ public class TestSampleGenerator {
 			throws StructureException, IOException {
 
 		//Download the globin structures
-		List<StructureIdentifier> names = Arrays.<StructureIdentifier>asList(
+		List<StructureIdentifier> names = Arrays.asList(
 				new StructureName("1mbc"), new StructureName("1hlb"),
 				new StructureName("1thb.A"), new StructureName("1ith.A"));
 		AtomCache cache = new AtomCache();
-		List<Atom[]> atomArrays = new ArrayList<Atom[]>();
+		List<Atom[]> atomArrays = new ArrayList<>();
 		for (StructureIdentifier name:names) atomArrays.add(cache.getAtoms(name));
 
 		MultipleAlignmentEnsemble ensemble =
@@ -165,9 +165,9 @@ public class TestSampleGenerator {
 		Block block1 = new BlockImpl(blockSet1);
 		Block block2 = new BlockImpl(blockSet1);
 		Block block3 = new BlockImpl(blockSet2);
-		block1.setAlignRes(new ArrayList<List<Integer>>());
-		block2.setAlignRes(new ArrayList<List<Integer>>());
-		block3.setAlignRes(new ArrayList<List<Integer>>());
+		block1.setAlignRes(new ArrayList<>());
+		block2.setAlignRes(new ArrayList<>());
+		block3.setAlignRes(new ArrayList<>());
 
 		List<Integer> aligned11 = Arrays.asList(
 				0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21);

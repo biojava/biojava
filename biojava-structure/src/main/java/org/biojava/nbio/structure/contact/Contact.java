@@ -31,9 +31,9 @@ public class Contact implements Serializable {
 
 	private static final long serialVersionUID = 5059569852079048728L;
 
-	private int i;
-	private int j;
-	private double distance;
+	private final int i;
+	private final int j;
+	private final double distance;
 
 	public Contact(int i, int j, double distance) {
 		this.i = i;
@@ -42,7 +42,7 @@ public class Contact implements Serializable {
 	}
 
 	public Pair<Integer> getIndexPair() {
-		return new Pair<Integer>(i,j);
+		return new Pair<>(i, j);
 	}
 
 	public int getI() {

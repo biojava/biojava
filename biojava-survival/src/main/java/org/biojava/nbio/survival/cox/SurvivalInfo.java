@@ -22,6 +22,7 @@ package org.biojava.nbio.survival.cox;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Data class to represent a single sample where time and event/censor status is required
@@ -45,12 +46,12 @@ public class SurvivalInfo implements Comparable<SurvivalInfo> {
 	private double residual = 0.0;
 	private String clusterValue = "";
 
-	LinkedHashMap<String,Double> residualVariableMap = new LinkedHashMap<String,Double>();
+	LinkedHashMap<String,Double> residualVariableMap = new LinkedHashMap<>();
 
-	LinkedHashMap<String, Double> data = new LinkedHashMap<String, Double>();
+	LinkedHashMap<String, Double> data = new LinkedHashMap<>();
 	//    LinkedHashMap<String, Double> discreteData = new LinkedHashMap<String, Double>();
-	LinkedHashMap<String, String> unknownDataType = new LinkedHashMap<String, String>();
-	LinkedHashMap<String, String> originalMetaData = new LinkedHashMap<String,String>();
+	LinkedHashMap<String, String> unknownDataType = new LinkedHashMap<>();
+	LinkedHashMap<String, String> originalMetaData = new LinkedHashMap<>();
 
 	/**
 	 *
@@ -74,9 +75,9 @@ public class SurvivalInfo implements Comparable<SurvivalInfo> {
 		status = e;
 
 		data = d;
-		for(String key : d.keySet()){
-			Double value = d.get(key);
-			originalMetaData.put(key, value + "");
+		for(Map.Entry<String, Double> entry : d.entrySet()){
+			Double value = entry.getValue();
+			originalMetaData.put(entry.getKey(), String.valueOf(value));
 		}
 	}
 
@@ -158,7 +159,7 @@ public class SurvivalInfo implements Comparable<SurvivalInfo> {
 	 * @param value
 	 */
 	public void addContinuousVariable(String variable, Double value) {
-		originalMetaData.put(variable, value + "");
+		originalMetaData.put(variable, String.valueOf(value));
 		data.put(variable, value);
 	}
 
@@ -177,7 +178,7 @@ public class SurvivalInfo implements Comparable<SurvivalInfo> {
 	 * @return
 	 */
 	public ArrayList<String> getGroupCategories(String groupName) {
-		ArrayList<String> groupNameList = new ArrayList<String>();
+		ArrayList<String> groupNameList = new ArrayList<>();
 		for (String key : data.keySet()) {
 			if (key.startsWith(groupName + "_")) {
 				groupNameList.add(key);
@@ -199,7 +200,7 @@ public class SurvivalInfo implements Comparable<SurvivalInfo> {
 	 * @return
 	 */
 	public ArrayList<String> getDataVariables(){
-		ArrayList<String> v = new ArrayList<String>();
+		ArrayList<String> v = new ArrayList<>();
 		v.addAll(data.keySet());
 		v.addAll(unknownDataType.keySet());
 

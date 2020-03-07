@@ -45,7 +45,7 @@ public abstract class AbstractNucleotideCompoundSet<C extends NucleotideCompound
 		C upper = newNucleotideCompound(base.toUpperCase(), complement.toUpperCase(), upperEquivalents);
 		C lower = newNucleotideCompound(base.toLowerCase(), complement.toLowerCase(), lowerEquivalents);
 
-		List<C> equivalentCompounds = new ArrayList<C>();
+		List<C> equivalentCompounds = new ArrayList<>();
 
 		for(int i=0; i<equivalents.length; i++) {
 			equivalentCompounds.add(getCompoundForString(upperEquivalents[i]));
@@ -64,9 +64,9 @@ public abstract class AbstractNucleotideCompoundSet<C extends NucleotideCompound
 	 */
 	@SuppressWarnings("unchecked")
 	protected void calculateIndirectAmbiguities() {
-		Map<NucleotideCompound, List<NucleotideCompound>> equivalentsMap = new HashMap<NucleotideCompound, List<NucleotideCompound>>();
+		Map<NucleotideCompound, List<NucleotideCompound>> equivalentsMap = new HashMap<>();
 
-		List<NucleotideCompound> ambiguousCompounds = new ArrayList<NucleotideCompound>();
+		List<NucleotideCompound> ambiguousCompounds = new ArrayList<>();
 		for(NucleotideCompound compound: getAllCompounds()) {
 			if (!compound.isAmbiguous()) {
 				continue;
@@ -101,8 +101,9 @@ public abstract class AbstractNucleotideCompoundSet<C extends NucleotideCompound
 
 		//And once it's all done start adding them to the equivalents map
 
-		for ( NucleotideCompound key: equivalentsMap.keySet()){
-			List<NucleotideCompound> vals = equivalentsMap.get(key);
+		for (Map.Entry<NucleotideCompound, List<NucleotideCompound>> entry : equivalentsMap.entrySet()){
+            NucleotideCompound key = entry.getKey();
+            List<NucleotideCompound> vals = entry.getValue();
 			for (NucleotideCompound value: vals){
 				addEquivalent((C)key,(C)value);
 				addEquivalent((C)value,(C)key);
@@ -116,12 +117,8 @@ public abstract class AbstractNucleotideCompoundSet<C extends NucleotideCompound
 		NucleotideCompound value) {
 
 
-			List<NucleotideCompound> listS = equivalentsMap.get(key);
-			if ( listS == null){
-				listS = new ArrayList<NucleotideCompound>();
-				equivalentsMap.put(key, listS);
-			}
-			listS.add(value);
+		List<NucleotideCompound> listS = equivalentsMap.computeIfAbsent(key, k -> new ArrayList<>());
+		listS.add(value);
 
 
 }
@@ -139,7 +136,7 @@ private NucleotideCompound toLowerCase(NucleotideCompound compound) {
 	 * @return The ambiguity symbol which represents this set of nucleotides best
 	 */
 	public NucleotideCompound getAmbiguity(NucleotideCompound... compounds) {
-		Set<NucleotideCompound> settedCompounds = new HashSet<NucleotideCompound>();
+		Set<NucleotideCompound> settedCompounds = new HashSet<>();
 		for(NucleotideCompound compound: compounds) {
 			for(NucleotideCompound subCompound: compound.getConstituents()) {
 				settedCompounds.add(getCompoundForString(subCompound.getBase().toUpperCase()));

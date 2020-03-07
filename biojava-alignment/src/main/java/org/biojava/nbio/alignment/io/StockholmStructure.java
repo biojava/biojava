@@ -94,9 +94,9 @@ public class StockholmStructure {
 	public StockholmStructure() {
 		fileAnnotation = new StockholmFileAnnotation();
 		consAnnotation = new StockholmConsensusAnnotation();
-		sequences = new HashMap<String, StringBuffer>();
-		seqsAnnotation = new HashMap<String, StockholmSequenceAnnotation>();
-		resAnnotation = new HashMap<String, StockholmResidueAnnotation>();
+		sequences = new HashMap<>();
+		seqsAnnotation = new HashMap<>();
+		resAnnotation = new HashMap<>();
 	}
 
 	public StockholmFileAnnotation getFileAnnotation() {
@@ -235,10 +235,11 @@ public class StockholmStructure {
 		if (forcedSequenceType != null && !(forcedSequenceType.equals(PFAM) || forcedSequenceType.equals(RFAM))) {
 			throw new IllegalArgumentException("Illegal Argument " + forcedSequenceType);
 		}
-		List<AbstractSequence<? extends AbstractCompound>> seqs = new ArrayList<AbstractSequence<? extends AbstractCompound>>();
-		for (String sequencename : sequences.keySet()) {
-			AbstractSequence<? extends AbstractCompound> seq = null;
-			String sequence = sequences.get(sequencename).toString();
+		List<AbstractSequence<? extends AbstractCompound>> seqs = new ArrayList<>();
+		for (Map.Entry<String, StringBuffer> entry : sequences.entrySet()) {
+            String sequencename = entry.getKey();
+            AbstractSequence<? extends AbstractCompound> seq;
+			String sequence = entry.getValue().toString();
 			if (ignoreCase) {
 				sequence = sequence.toUpperCase();
 			}
@@ -308,16 +309,16 @@ public class StockholmStructure {
 
 	@Override
 	public String toString() {
-		StringBuffer result = new StringBuffer();
+		StringBuilder result = new StringBuilder();
 		List<AbstractSequence<? extends AbstractCompound>> bioSeqs = getBioSequences(false);
 		int sequenceLength = -1;
 		for (AbstractSequence<? extends AbstractCompound> sequence : bioSeqs) {
 			String sequenceAsString = sequence.getSequenceAsString();
 			sequenceLength = sequenceAsString.length();
 			if (sequenceLength > 50) {
-				result.append(sequenceAsString.substring(0, 40));
+				result.append(sequenceAsString, 0, 40);
 				result.append("...");
-				result.append(sequenceAsString.substring(sequenceLength - 3, sequenceLength));
+				result.append(sequenceAsString, sequenceLength - 3, sequenceLength);
 			} else {
 				result.append(sequenceAsString);
 			}

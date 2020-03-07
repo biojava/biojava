@@ -60,7 +60,7 @@ public class ListStringWrapper implements Serializable{
 	}
 
 	public ListStringWrapper(){
-		data = new ArrayList<String>();
+		data = new ArrayList<>();
 	}
 
 	public List<String> getData() {
@@ -95,7 +95,7 @@ public class ListStringWrapper implements Serializable{
 
 	public static ListStringWrapper fromXML(String xml){
 
-		ListStringWrapper job = null;
+		ListStringWrapper job;
 
 		try {
 

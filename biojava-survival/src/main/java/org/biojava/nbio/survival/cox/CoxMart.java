@@ -59,7 +59,7 @@ public class CoxMart {
 		int i, j;
 		int lastone;
 		int n = survivalInfoList.size();
-		double deaths, denom = 0, e_denom = 0;
+		double deaths, denom = 0, e_denom;
 		double hazard;
 		double temp, wtsum;
 		double downwt;

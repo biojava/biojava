@@ -139,7 +139,7 @@ public class TestStructureCrossReferences {
 	}
 
 	//@Test
-	public void testCrossReferencesRawFile() throws IOException, StructureException {
+	public void testCrossReferencesRawFile() {
 		// TODO implement
 	}
 
@@ -194,7 +194,7 @@ public class TestStructureCrossReferences {
 		testStructureRefs(structure, emptySeqRes);
 	}
 
-	private void testStructureRefs(Structure s, boolean emptySeqRes) throws StructureException {
+	private void testStructureRefs(Structure s, boolean emptySeqRes) {
 
 		// structure, chain, group, atom linking
 		for (Chain c:s.getChains()) {
@@ -265,7 +265,7 @@ public class TestStructureCrossReferences {
 
 	}
 
-	private void testInterfaceRefs(Structure s, StructureInterface i) throws StructureException {
+	private void testInterfaceRefs(Structure s, StructureInterface i) {
 
 		for (Atom a:i.getMolecules().getFirst()) {
 			assertNotNull(a.getGroup().getChain().getEntityInfo());

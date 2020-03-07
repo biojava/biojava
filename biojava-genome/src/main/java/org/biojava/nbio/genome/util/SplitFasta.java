@@ -40,7 +40,7 @@ public class SplitFasta {
 
 	private static final Logger logger = LoggerFactory.getLogger(SplitFasta.class);
 
-	public void processNucleotides(File fastaFileName,String uniqueid, File outputDirectory ) throws Exception{
+	public static void processNucleotides(File fastaFileName, String uniqueid, File outputDirectory) throws Exception{
 		if(!outputDirectory.exists())
 			outputDirectory.mkdirs();
 
@@ -52,7 +52,7 @@ public class SplitFasta {
 			}else{
 				fileName = fileName + uniqueid + dnaSequence.getAccession().getID() + ".fna";
 			}
-			ArrayList<DNASequence> dnaList = new ArrayList<DNASequence>();
+			ArrayList<DNASequence> dnaList = new ArrayList<>();
 			dnaList.add(dnaSequence);
 			FastaWriterHelper.writeNucleotideSequence(new File(fileName), dnaList);
 		}
@@ -62,7 +62,7 @@ public class SplitFasta {
 		public static void main( String[] args ){
 		try{
 			SplitFasta splitFasta = new SplitFasta();
-			splitFasta.processNucleotides(new File("/Users/Scooter/scripps/dyadic/analysis/454Scaffolds/454Scaffolds.fna"), "", new File("/Users/Scooter/scripps/dyadic/analysis/454Scaffolds/individual"));
+			SplitFasta.processNucleotides(new File("/Users/Scooter/scripps/dyadic/analysis/454Scaffolds/454Scaffolds.fna"), "", new File("/Users/Scooter/scripps/dyadic/analysis/454Scaffolds/individual"));
 		}catch(Exception e){
 			logger.error("Exception: ", e);
 		}

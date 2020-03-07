@@ -55,9 +55,9 @@ import java.util.List;
  */
 public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
 
-	private SequenceCreatorInterface<C> sequenceCreator;
-	private GenbankSequenceParser<S,C> genbankParser;
-	private BufferedReader bufferedReader;
+	private final SequenceCreatorInterface<C> sequenceCreator;
+	private final GenbankSequenceParser<S,C> genbankParser;
+	private final BufferedReader bufferedReader;
 	private boolean closed;
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 

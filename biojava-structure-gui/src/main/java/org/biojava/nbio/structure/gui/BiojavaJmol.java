@@ -149,35 +149,27 @@ public class BiojavaJmol  {
 
 		JButton resetDisplay = new JButton("Reset Display");
 
-		resetDisplay.addActionListener(new ActionListener() {
+		resetDisplay.addActionListener(e -> {
+			System.out.println("reset!!");
+			jmolPanel.executeCmd("restore STATE state_1");
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				System.out.println("reset!!");
-				jmolPanel.executeCmd("restore STATE state_1");
-
-			}
 		});
 
 		hBox2.add(resetDisplay); hBox2.add(Box.createGlue());
 
 		JCheckBox toggleSelection = new JCheckBox("Show Selection");
 		toggleSelection.addItemListener(
-			    new ItemListener() {
+				e -> {
+					  boolean showSelection = (e.getStateChange() == ItemEvent.SELECTED);
 
-					@Override
-					public void itemStateChanged(ItemEvent e) {
-						  boolean showSelection = (e.getStateChange() == ItemEvent.SELECTED);
+					  if (showSelection){
+						  jmolPanel.executeCmd("set display selected");
+					  } else {
+						  jmolPanel.executeCmd("set display off");
+					  }
 
-						  if (showSelection){
-							  jmolPanel.executeCmd("set display selected");
-						  } else {
-							  jmolPanel.executeCmd("set display off");
-						  }
-
-					}
 				}
-			);
+		);
 
 
 

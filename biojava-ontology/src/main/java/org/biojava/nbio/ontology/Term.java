@@ -66,7 +66,7 @@ public interface Term extends Annotatable {
 	 * @return the name of the term
 	 */
 
-	public String getName();
+	String getName();
 
 	/**
 	 * Return a human-readable description of this term, or the empty string if
@@ -74,42 +74,42 @@ public interface Term extends Annotatable {
 	 * @return the description of the term
 	 */
 
-	public String getDescription();
+	String getDescription();
 
 	/** set the description of the term;
 	 *
 	 * @param description
 	 *
 	 */
-	public void setDescription(String description);
+	void setDescription(String description);
 
 	/**
 	 * Return the ontology in which this term exists.
 	 * @return the ontology
 	 */
 
-	public Ontology getOntology();
+	Ontology getOntology();
 
 	/**
 	 * Return the synonyms for this term.
 	 * @return the synonyms
 	 */
 
-	public Object[] getSynonyms();
+	Object[] getSynonyms();
 
 	/**
 	 * Add a synonym for this term.
 	 * @param synonym the synonym
 	 */
 
-	public void addSynonym(Object synonym);
+	void addSynonym(Object synonym);
 
 	/**
 	 * Remove a synonym for this term.
 	 * @param synonym
 	 */
 
-	public void removeSynonym(Object synonym);
+	void removeSynonym(Object synonym);
 
 	/**
 	 * Simple in-memory implementation of an ontology term.
@@ -117,7 +117,7 @@ public interface Term extends Annotatable {
 	 * This can be used to implement Ontology.createTerm
 	 */
 
-	public static class Impl
+	class Impl
 	extends AbstractTerm
 	implements Term, java.io.Serializable {
 		/**
@@ -155,7 +155,7 @@ public interface Term extends Annotatable {
 			this.description = description;
 			this.ontology = ontology;
 
-			this.synonyms = new TreeSet<Object>();
+			this.synonyms = new TreeSet<>();
 			if (synonyms!=null) this.synonyms.addAll(Arrays.asList(synonyms));
 		}
 

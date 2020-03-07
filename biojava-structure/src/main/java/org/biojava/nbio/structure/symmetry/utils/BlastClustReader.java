@@ -38,8 +38,8 @@ public class BlastClustReader implements Serializable {
 
 	private static final Logger logger = LoggerFactory.getLogger(BlastClustReader.class);
 
-	private int sequenceIdentity = 0;
-	private List<List<String>> clusters = new ArrayList<>();
+	private int sequenceIdentity;
+	private final List<List<String>> clusters = new ArrayList<>();
 	// https://cdn.rcsb.org/resources/sequence/clusters/bc-95.out
 	private static final String coreUrl = "https://cdn.rcsb.org/resources/sequence/clusters/";
 
@@ -102,7 +102,7 @@ public class BlastClustReader implements Serializable {
 		loadClusters(sequenceIdentity);
 		String pdbIdUpper = pdbId.toUpperCase();
 
-		List<List<String>> matches = new ArrayList<List<String>>();
+		List<List<String>> matches = new ArrayList<>();
 		for (List<String> cluster: clusters) {
 			for (String chainId: cluster) {
 				if (chainId.startsWith(pdbIdUpper)) {
@@ -117,14 +117,14 @@ public class BlastClustReader implements Serializable {
 	public List<List<String>> getChainIdsInEntry(String pdbId) {
 		loadClusters(sequenceIdentity);
 
-		List<List<String>> matches = new ArrayList<List<String>>();
+		List<List<String>> matches = new ArrayList<>();
 		List<String> match = null;
 
 		for (List<String> cluster: clusters) {
 			for (String chainId: cluster) {
 				if (chainId.startsWith(pdbId)) {
 					if (match == null) {
-						match = new ArrayList<String>();
+						match = new ArrayList<>();
 					}
 					match.add(chainId.substring(5));
 				}
@@ -159,7 +159,7 @@ public class BlastClustReader implements Serializable {
 			if (stream != null) {
 				BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
 
-				String line = null;
+				String line;
 				while ((line = reader.readLine()) != null) {
 					line = line.replaceAll("_", ".");
 					List<String> cluster = Arrays.asList(line.split(" "));

@@ -37,7 +37,7 @@ public interface DomainProvider {
 	 * @throws IOException For IO errors getting the domains
 	 * @throws StructureException For errors converting name to a valid identifier
 	 */
-	public SortedSet<String> getDomainNames(String name) throws IOException, StructureException;
+    SortedSet<String> getDomainNames(String name) throws IOException, StructureException;
 	/**
 	 * Get the full list of representative domains for the PDB.
 	 *
@@ -46,5 +46,5 @@ public interface DomainProvider {
 	 * @return A full list of all representative domains recognized by this provider
 	 * @throws IOException For IO errors getting the representatives
 	 */
-	public SortedSet<String> getRepresentativeDomains() throws IOException;
+    SortedSet<String> getRepresentativeDomains() throws IOException;
 }

@@ -40,22 +40,22 @@ public class PDBTemporaryStorageUtils {
 	 * @author Ulysse Carion
 	 */
 	public static class LinkRecord {
-		private String name1;
-		private String altLoc1;
-		private String resName1;
-		private String chainID1;
-		private String resSeq1;
-		private String iCode1;
+		private final String name1;
+		private final String altLoc1;
+		private final String resName1;
+		private final String chainID1;
+		private final String resSeq1;
+		private final String iCode1;
 
-		private String name2;
-		private String altLoc2;
-		private String resName2;
-		private String chainID2;
-		private String resSeq2;
-		private String iCode2;
+		private final String name2;
+		private final String altLoc2;
+		private final String resName2;
+		private final String chainID2;
+		private final String resSeq2;
+		private final String iCode2;
 
-		private String sym1;
-		private String sym2;
+		private final String sym1;
+		private final String sym2;
 
 		public LinkRecord(String name1, String altLoc1, String resName1,
 				String chainID1, String resSeq1, String iCode1, String name2,

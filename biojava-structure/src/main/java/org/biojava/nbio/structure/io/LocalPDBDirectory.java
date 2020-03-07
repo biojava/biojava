@@ -68,7 +68,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	 * @author Spencer Bliven
 	 * @see LocalPDBDirectory#setObsoleteBehavior(ObsoleteBehavior)
 	 */
-	public static enum ObsoleteBehavior {
+	public enum ObsoleteBehavior {
 		/** Fetch the most recent version of the PDB entry. */
 		FETCH_CURRENT,
 		/** Fetch the obsolete entry from the PDB archives. */
@@ -84,7 +84,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	 * @author Spencer Bliven
 	 *
 	 */
-	public static enum FetchBehavior {
+	public enum FetchBehavior {
 		/** Never fetch from the server; Throw errors for missing files */
 		LOCAL_ONLY,
 		/** Fetch missing files from the server. Don't check for outdated files */
@@ -133,14 +133,14 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	public static final long MIN_PDB_FILE_SIZE = 40;  // Empty gzip files are 20bytes. Add a few more for buffer.
 
 	private File path;
-	private List<String> extensions;
+	private final List<String> extensions;
 
 	/**
 	 * The server name, prefixed by the protocol string (http:// or ftp://).
 	 * Note that we don't support file stamp retrieving for ftp protocol, thus some of the
 	 * fetch modes will not work properly with ftp protocol
 	 */
-	private String serverName;
+	private final String serverName;
 
 	private FileParsingParameters params;
 
@@ -163,7 +163,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	 * @param path Path to the PDB file directory
 	 */
 	public LocalPDBDirectory(String path) {
-		extensions    = new ArrayList<String>();
+		extensions    = new ArrayList<>();
 
 		params = new FileParsingParameters();
 
@@ -526,7 +526,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 
 		URL url = new URL(ftp);
 
-		Date serverFileDate = null;
+		Date serverFileDate;
 		if (existingFile!=null) {
 
 			serverFileDate = getLastModifiedTime(url);
@@ -611,7 +611,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	 */
 	protected File getDir(String pdbId, boolean obsolete) {
 
-		File dir = null;
+		File dir;
 
 		if (obsolete) {
 			// obsolete is always split
@@ -644,7 +644,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 		// Search directories:
 		// 1) LOCAL_MMCIF_SPLIT_DIR/<middle>/(pdb)?<pdbId>.<ext>
 		// 2) LOCAL_MMCIF_ALL_DIR/<middle>/(pdb)?<pdbId>.<ext>
-		LinkedList<File> searchdirs = new LinkedList<File>();
+		LinkedList<File> searchdirs = new LinkedList<>();
 		String middle = pdbId.substring(1,3).toLowerCase();
 
 		File splitdir = new File(splitDirPath, middle);

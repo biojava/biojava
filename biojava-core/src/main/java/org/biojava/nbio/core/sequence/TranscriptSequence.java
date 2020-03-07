@@ -41,11 +41,11 @@ public class TranscriptSequence extends DNASequence {
 
 	private final static Logger logger = LoggerFactory.getLogger(TranscriptSequence.class);
 
-	private final ArrayList<CDSSequence> cdsSequenceList = new ArrayList<CDSSequence>();
-	private final LinkedHashMap<String, CDSSequence> cdsSequenceHashMap = new LinkedHashMap<String, CDSSequence>();
+	private final ArrayList<CDSSequence> cdsSequenceList = new ArrayList<>();
+	private final LinkedHashMap<String, CDSSequence> cdsSequenceHashMap = new LinkedHashMap<>();
 	private StartCodonSequence startCodonSequence = null;
 	private StopCodonSequence stopCodonSequence = null;
-	private GeneSequence parentGeneSequence = null;
+	private GeneSequence parentGeneSequence;
 
 	/**
 	 *
@@ -113,7 +113,7 @@ public class TranscriptSequence extends DNASequence {
 		CDSSequence cdsSequence = new CDSSequence(this, begin, end, phase); //sense should be the same as parent
 		cdsSequence.setAccession(accession);
 		cdsSequenceList.add(cdsSequence);
-		Collections.sort(cdsSequenceList, new CDSComparator());
+		cdsSequenceList.sort(new CDSComparator());
 		cdsSequenceHashMap.put(accession.getID(), cdsSequence);
 		return cdsSequence;
 	}
@@ -137,16 +137,16 @@ public class TranscriptSequence extends DNASequence {
 	 * @return
 	 */
 	public ArrayList<ProteinSequence> getProteinCDSSequences() {
-		ArrayList<ProteinSequence> proteinSequenceList = new ArrayList<ProteinSequence>();
+		ArrayList<ProteinSequence> proteinSequenceList = new ArrayList<>();
 		for (int i = 0; i < cdsSequenceList.size(); i++) {
 			CDSSequence cdsSequence = cdsSequenceList.get(i);
 			String codingSequence = cdsSequence.getCodingSequence();
 			//          logger.debug("CDS {} {} = {}", getStrand(), cdsSequence.getPhase(), codingSequence);
 			if (this.getStrand() == Strand.NEGATIVE) {
 				if (cdsSequence.phase == 1) {
-					codingSequence = codingSequence.substring(1, codingSequence.length());
+					codingSequence = codingSequence.substring(1);
 				} else if (cdsSequence.phase == 2) {
-					codingSequence = codingSequence.substring(2, codingSequence.length());
+					codingSequence = codingSequence.substring(2);
 				}
 				if (i < cdsSequenceList.size() - 1) {
 					CDSSequence nextCDSSequence = cdsSequenceList.get(i + 1);
@@ -160,9 +160,9 @@ public class TranscriptSequence extends DNASequence {
 				}
 			} else {
 				if (cdsSequence.phase == 1) {
-					codingSequence = codingSequence.substring(1, codingSequence.length());
+					codingSequence = codingSequence.substring(1);
 				} else if (cdsSequence.phase == 2) {
-					codingSequence = codingSequence.substring(2, codingSequence.length());
+					codingSequence = codingSequence.substring(2);
 				}
 				if (i < cdsSequenceList.size() - 1) {
 					CDSSequence nextCDSSequence = cdsSequenceList.get(i + 1);

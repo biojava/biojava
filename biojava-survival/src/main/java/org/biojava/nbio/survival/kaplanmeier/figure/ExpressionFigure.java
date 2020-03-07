@@ -41,7 +41,7 @@ public class ExpressionFigure extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 
-	ArrayList<String> title = new ArrayList<String>();
+	ArrayList<String> title = new ArrayList<>();
 	/**
 	 *
 	 */
@@ -70,8 +70,8 @@ public class ExpressionFigure extends JPanel {
 	FontMetrics fm;
 	KMFigureInfo kmfi = new KMFigureInfo();
 //    LinkedHashMap<String, ArrayList<CensorStatus>> survivalData = new LinkedHashMap<String, ArrayList<CensorStatus>>();
-	ArrayList<String> lineInfoList = new ArrayList<String>();
-	ArrayList<SurvivalInfo> siList = new ArrayList<SurvivalInfo>();
+	ArrayList<String> lineInfoList = new ArrayList<>();
+	ArrayList<SurvivalInfo> siList = new ArrayList<>();
 	String variable = "";
 	private String fileName = "";
 
@@ -120,7 +120,7 @@ public class ExpressionFigure extends JPanel {
 	 * @param variable
 	 */
 	public void setSurvivalInfo(ArrayList<String> title, ArrayList<SurvivalInfo> _siList, String variable) {
-		this.siList = new ArrayList<SurvivalInfo>();
+		this.siList = new ArrayList<>();
 		this.title = title;
 		this.variable = variable;
 
@@ -132,7 +132,7 @@ public class ExpressionFigure extends JPanel {
 		for (SurvivalInfo si : _siList) {
 			this.siList.add(si);
 			String v = si.getOriginalMetaData(variable);
-			Double value = Double.parseDouble(v);
+			double value = Double.parseDouble(v);
 			ds.addValue(value);
 			if (maxTime == null || maxTime < si.getTime()) {
 				maxTime = si.getTime();
@@ -140,12 +140,12 @@ public class ExpressionFigure extends JPanel {
 
 		}
 		SurvivalInfoValueComparator sivc = new SurvivalInfoValueComparator(variable);
-		Collections.sort(this.siList, sivc);
+		this.siList.sort(sivc);
 		mean = ds.getMean();
 		minY = ds.getMin();
 		maxY = ds.getMax();
-		minY = (double) Math.floor(minY);
-		maxY = (double) Math.ceil(maxY);
+		minY = Math.floor(minY);
+		maxY = Math.ceil(maxY);
 
 
 		this.repaint();
@@ -278,7 +278,7 @@ public class ExpressionFigure extends JPanel {
 		//  increment = increment * 10.0;
 		double d = minY + increment;
 		//double graphHeight = top - bottom;
-		String label = "";
+		String label;
 		while (d < maxY) {
 			int yvalue = getY(maxY - d);
 			label = df.format(d);
@@ -372,13 +372,13 @@ public class ExpressionFigure extends JPanel {
 			application.setSize(500, 400);         // window is 500 pixels wide, 400 high
 			application.setVisible(true);
 
-			ArrayList<String> titles = new ArrayList<String>();
+			ArrayList<String> titles = new ArrayList<>();
 			titles.add("Line 1");
 			titles.add("line 2");
 
-			ArrayList<String> figureInfo = new ArrayList<String>();
+			ArrayList<String> figureInfo = new ArrayList<>();
 
-			ArrayList<SurvivalInfo> survivalInfoList = new ArrayList<SurvivalInfo>();
+			ArrayList<SurvivalInfo> survivalInfoList = new ArrayList<>();
 
 			for (int i = 0; i < 600; i++) {
 				double r = Math.random();

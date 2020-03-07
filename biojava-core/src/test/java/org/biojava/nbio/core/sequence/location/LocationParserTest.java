@@ -54,7 +54,7 @@ public class LocationParserTest {
 
 	public static final InsdcParser PARSER = new InsdcParser();
 
-	private Logger log = LoggerFactory.getLogger(getClass());
+	private final Logger log = LoggerFactory.getLogger(getClass());
 
 	@Test
 	@Ignore

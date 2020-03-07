@@ -345,7 +345,7 @@ public class PeptidePropertiesImplTest {
 			logger.debug(p);
 			logger.debug("pH\tInnovagen\tExpasy\tdiff");
 			for ( int i = 1; i < 15; i++) {
-				double phPoint = (new Double(i)).doubleValue();
+				double phPoint = new Double(i);
 				double chrgInnovagen = PeptideProperties.getNetCharge(p,false,phPoint);
 				double chrgExpasy = PeptideProperties.getNetCharge(p,true,phPoint);
 				logger.debug(String.format("%2.1f\t%2.2f\t%2.2f\t%2.2f", phPoint, chrgInnovagen,

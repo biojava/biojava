@@ -51,7 +51,7 @@ public interface SuperPosition {
 	 * @return transformation matrix as a Matrix4d to superpose moved onto fixed
 	 *         point arrays
 	 */
-	public Matrix4d superpose(Point3d[] fixed, Point3d[] moved);
+    Matrix4d superpose(Point3d[] fixed, Point3d[] moved);
 
 	/**
 	 * Transform an array of points so that the coordinates of its points
@@ -71,7 +71,7 @@ public interface SuperPosition {
 	 * @return transformation matrix as a Matrix4d to superpose moved onto fixed
 	 *         point arrays
 	 */
-	public Matrix4d superposeAndTransform(Point3d[] fixed, Point3d[] moved);
+    Matrix4d superposeAndTransform(Point3d[] fixed, Point3d[] moved);
 
 	/**
 	 * Calculate the RMSD between two arrays of equivalent points that are not
@@ -94,6 +94,6 @@ public interface SuperPosition {
 	 * @return the minimum RMSD between the equivalent point arrays (after
 	 *         superposition)
 	 */
-	public double getRmsd(Point3d[] x, Point3d[] y);
+    double getRmsd(Point3d[] x, Point3d[] y);
 
 }

@@ -40,7 +40,6 @@ import org.biojava.nbio.structure.align.gui.jmol.AbstractAlignmentJmol;
 import org.biojava.nbio.structure.align.gui.jmol.JmolTools;
 import org.biojava.nbio.structure.align.gui.jmol.StructureAlignmentJmol;
 import org.biojava.nbio.structure.align.model.AFPChain;
-import org.biojava.nbio.structure.align.util.AFPAlignmentDisplay;
 import org.biojava.nbio.structure.align.util.AlignmentTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,7 +55,7 @@ public class DisplayAFP {
 
 	//TODO: same as getEqrPos??? !!!
 	public static final List<Integer> getEQRAlignmentPos(AFPChain afpChain){
-		List<Integer> lst = new ArrayList<Integer>();
+		List<Integer> lst = new ArrayList<>();
 
 		char[] s1 = afpChain.getAlnseq1();
 		char[] s2 = afpChain.getAlnseq2();
@@ -107,7 +106,7 @@ public class DisplayAFP {
 	 * @param ca
 	 */
 	public static final List<String> getPDBresnum(int aligPos, AFPChain afpChain, Atom[] ca){
-		List<String> lst = new ArrayList<String>();
+		List<String> lst = new ArrayList<>();
 		if ( aligPos > 1) {
 			System.err.println("multiple alignments not supported yet!");
 			return lst;
@@ -230,7 +229,7 @@ public class DisplayAFP {
 
 				if(len > 0)     {
 
-					int lmax = (p1 - p1b - 1)>(p2 - p2b - 1)?(p1 - p1b - 1):(p2 - p2b - 1);
+					int lmax = Math.max((p1 - p1b - 1), (p2 - p2b - 1));
 
 					// lmax gives the length of an alignment gap
 
@@ -343,7 +342,7 @@ public class DisplayAFP {
 
 				if(len > 0)     {
 
-					int lmax = (p1 - p1b - 1)>(p2 - p2b - 1)?(p1 - p1b - 1):(p2 - p2b - 1);
+					int lmax = Math.max((p1 - p1b - 1), (p2 - p2b - 1));
 
 					// lmax gives the length of an alignment gap
 
@@ -404,10 +403,9 @@ public class DisplayAFP {
 	 * @param ca
 	 * @param hetatms
 	 * @return
-	 * @throws StructureException
 	 */
-	public static final Atom[] getAtomArray(Atom[] ca,List<Group> hetatms ) throws StructureException{
-		List<Atom> atoms = new ArrayList<Atom>();
+	public static final Atom[] getAtomArray(Atom[] ca,List<Group> hetatms ) {
+		List<Atom> atoms = new ArrayList<>();
 		Collections.addAll(atoms, ca);
 
 		logger.debug("got {} hetatoms", hetatms.size());
@@ -425,7 +423,7 @@ public class DisplayAFP {
 			atoms.add(a);
 		}
 
-		Atom[] arr = atoms.toArray(new Atom[atoms.size()]);
+		Atom[] arr = atoms.toArray(new Atom[0]);
 
 		return arr;
 	}
@@ -436,7 +434,7 @@ public class DisplayAFP {
 
 	public static final StructureAlignmentJmol display(AFPChain afpChain,Group[] twistedGroups, Atom[] ca1, Atom[] ca2,List<Group> hetatms1, List<Group> hetatms2 ) throws StructureException {
 
-		List<Atom> twistedAs = new ArrayList<Atom>();
+		List<Atom> twistedAs = new ArrayList<>();
 
 		for ( Group g: twistedGroups){
 			if ( g == null )
@@ -446,7 +444,7 @@ public class DisplayAFP {
 			Atom a = g.getAtom(0);
 			twistedAs.add(a);
 		}
-		Atom[] twistedAtoms = twistedAs.toArray(new Atom[twistedAs.size()]);
+		Atom[] twistedAtoms = twistedAs.toArray(new Atom[0]);
 		twistedAtoms = StructureTools.cloneAtomArray(twistedAtoms);
 
 		Atom[] arr1 = getAtomArray(ca1, hetatms1);
@@ -476,7 +474,7 @@ public class DisplayAFP {
 		return jmol;
 	}
 
-	public static void showAlignmentPanel(AFPChain afpChain, Atom[] ca1, Atom[] ca2, AbstractAlignmentJmol jmol) throws StructureException {
+	public static void showAlignmentPanel(AFPChain afpChain, Atom[] ca1, Atom[] ca2, AbstractAlignmentJmol jmol) {
 
 		AligPanel me = new AligPanel();
 		me.setAlignmentJmol(jmol);
@@ -560,7 +558,7 @@ public class DisplayAFP {
 
 		Group[] twistedGroups = AlignmentTools.prepareGroupsForDisplay(afpChain,ca1, ca2);
 
-		List<Atom> twistedAs = new ArrayList<Atom>();
+		List<Atom> twistedAs = new ArrayList<>();
 
 		for ( Group g: twistedGroups){
 			if ( g == null )
@@ -570,7 +568,7 @@ public class DisplayAFP {
 			Atom a = g.getAtom(0);
 			twistedAs.add(a);
 		}
-		Atom[] twistedAtoms = twistedAs.toArray(new Atom[twistedAs.size()]);
+		Atom[] twistedAtoms = twistedAs.toArray(new Atom[0]);
 
 		List<Group> hetatms  = StructureTools.getUnalignedGroups(ca1);
 		List<Group> hetatms2 = StructureTools.getUnalignedGroups(ca2);

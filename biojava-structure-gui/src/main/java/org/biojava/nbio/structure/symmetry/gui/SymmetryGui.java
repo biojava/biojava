@@ -65,19 +65,19 @@ import org.biojava.nbio.structure.symmetry.internal.CeSymm;
  */
 public class SymmetryGui extends JFrame {
 
-	private final static long serialVersionUID = 0l;
+	private final static long serialVersionUID = 0L;
 
-	private CESymmParameters params = new CESymmParameters();
+	private final CESymmParameters params = new CESymmParameters();
 	private JButton abortB;
 
-	private SelectPDBPanel  tab1 ;
-	private PDBUploadPanel  tab2;
-	private ScopSelectPanel tab3;
+	private final SelectPDBPanel  tab1 ;
+	private final PDBUploadPanel  tab2;
+	private final ScopSelectPanel tab3;
 
 	private Thread thread;
 	private AlignmentCalculationRunnable alicalc;
-	private JTabbedPane masterPane;
-	private JTabbedPane tabPane;
+	private final JTabbedPane masterPane;
+	private final JTabbedPane tabPane;
 	private JProgressBar progress;
 
 	public static void main(String[] args){
@@ -159,7 +159,7 @@ public class SymmetryGui extends JFrame {
 		algorithmList.setSelectedIndex(0);
 
 		Action paramAction = new AbstractAction("Parameters") {
-			public static final long serialVersionUID = 0l;
+			public static final long serialVersionUID = 0L;
 			// This method is called when the button is pressed
 			@Override
 			public void actionPerformed(ActionEvent evt) {
@@ -188,7 +188,7 @@ public class SymmetryGui extends JFrame {
 		progress.setVisible(false);
 
 		Action action1 = new AbstractAction("Analyze") {
-			public static final long serialVersionUID = 0l;
+			public static final long serialVersionUID = 0L;
 			// This method is called when the button is pressed
 			@Override
 			public void actionPerformed(ActionEvent evt) {
@@ -206,7 +206,7 @@ public class SymmetryGui extends JFrame {
 		JButton submitB = new JButton(action1);
 
 		Action action3 = new AbstractAction("Abort") {
-			public static final long serialVersionUID = 0l;
+			public static final long serialVersionUID = 0L;
 			// This method is called when the button is pressed
 			@Override
 			public void actionPerformed(ActionEvent evt) {
@@ -220,7 +220,7 @@ public class SymmetryGui extends JFrame {
 		abortB.setEnabled(false);
 
 		Action action2 = new AbstractAction("Exit") {
-			public static final long serialVersionUID = 0l;
+			public static final long serialVersionUID = 0L;
 			// This method is called when the button is pressed
 			@Override
 			public void actionPerformed(ActionEvent evt) {
@@ -302,10 +302,7 @@ public class SymmetryGui extends JFrame {
 			progress.setIndeterminate(true);
 			ProgressThreadDrawer drawer = new ProgressThreadDrawer(progress);
 			drawer.start();
-		} catch (StructureException e){
-			JOptionPane.showMessageDialog(null,
-					"Could not align structures. Exception: " + e.getMessage());
-		} catch (IOException e) {
+		} catch (StructureException | IOException e){
 			JOptionPane.showMessageDialog(null,
 					"Could not align structures. Exception: " + e.getMessage());
 		}

@@ -88,7 +88,7 @@ public class TestContactCalc {
 				for (int i = 0; i < cts.length; i++) {
 					logger.info((cts[i] == null ? "ALL" : cts[i][0]) + "\t" + cutoffs[i] + "\t");
 
-					AtomContactSet atomContacts = null;
+					AtomContactSet atomContacts;
 					if (cts[i] != null && cts[i][0].equals("CA")) {
 						atomContacts = StructureTools.getRepresentativeAtomsInContact(chain, cutoffs[i]);
 					} else {

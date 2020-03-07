@@ -30,6 +30,7 @@ import org.biojava.nbio.core.sequence.template.ComplementCompound;
 import org.biojava.nbio.core.sequence.template.Compound;
 import org.biojava.nbio.core.sequence.template.CompoundSet;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -51,14 +52,14 @@ public class NucleotideCompound extends AbstractCompound implements ComplementCo
 	  super(base);
 	  this.compoundSet = compoundSet;
 	  this.complementStr = complementStr;
-	  this.constituents = unmodifiableSet(new HashSet<NucleotideCompound>(asList(this)));
+	  this.constituents = unmodifiableSet(new HashSet<>(Collections.singletonList(this)));
 	}
 
 	public NucleotideCompound(String base, CompoundSet<NucleotideCompound> compoundSet, String complementStr, NucleotideCompound[] constituents) {
 		super(base);
 		this.compoundSet = compoundSet;
 		this.complementStr = complementStr;
-		this.constituents = unmodifiableSet(new HashSet<NucleotideCompound>(asList(constituents)));
+		this.constituents = unmodifiableSet(new HashSet<>(asList(constituents)));
 	}
 
 	@Override

@@ -38,7 +38,7 @@ public class BlastXMLQuery {
 
 	private static final Logger logger = LoggerFactory.getLogger(BlastXMLQuery.class);
 
-	Document blastDoc = null;
+	Document blastDoc;
 
 	public BlastXMLQuery(String blastFile) throws Exception {
 		logger.info("Start read of {}", blastFile);
@@ -47,7 +47,7 @@ public class BlastXMLQuery {
 	}
 
 	public LinkedHashMap<String, ArrayList<String>> getHitsQueryDef(double maxEScore) throws Exception {
-		LinkedHashMap<String, ArrayList<String>> hitsHashMap = new LinkedHashMap<String, ArrayList<String>>();
+		LinkedHashMap<String, ArrayList<String>> hitsHashMap = new LinkedHashMap<>();
 		logger.info("Query for hits");
 		ArrayList<Element> elementList = XMLHelper.selectElements(blastDoc.getDocumentElement(), "BlastOutput_iterations/Iteration[Iteration_hits]");
 		logger.info("{} hits", elementList.size());
@@ -67,11 +67,7 @@ public class BlastXMLQuery {
 					String value = evalueElement.getTextContent();
 					double evalue = Double.parseDouble(value);
 					if (evalue <= maxEScore) {
-						ArrayList<String> hits = hitsHashMap.get(querydef);
-						if (hits == null) {
-							hits = new ArrayList<String>();
-							hitsHashMap.put(querydef, hits);
-						}
+						ArrayList<String> hits = hitsHashMap.computeIfAbsent(querydef, k -> new ArrayList<>());
 						hits.add(hitaccession);
 					}
 				}

@@ -60,8 +60,7 @@ public final class SolexaFastqReaderTest
 	}
 
 	@Test
-	public void testValidateDescription() throws Exception
-	{
+	public void testValidateDescription() {
 		SolexaFastqReader reader = new SolexaFastqReader();
 		URL invalidDescription = getClass().getResource("solexa-invalid-description.fastq");
 		try
@@ -76,8 +75,7 @@ public final class SolexaFastqReaderTest
 	}
 
 	@Test
-	public void testValidateRepeatDescription() throws Exception
-	{
+	public void testValidateRepeatDescription() {
 		SolexaFastqReader reader = new SolexaFastqReader();
 		URL invalidRepeatDescription = getClass().getResource("solexa-invalid-repeat-description.fastq");
 		try

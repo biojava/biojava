@@ -104,7 +104,7 @@ public class MultipleAlignmentXMLConverter {
 
 			xml.openTag("eqr"+pos);
 			for (int str=0; str<alignment.size(); str++){
-				xml.attribute("str"+(str+1),alignment.get(str).get(pos)+"");
+				xml.attribute("str"+(str+1), String.valueOf(alignment.get(str).get(pos)));
 			}
 			xml.closeTag("eqr"+pos);
 		}
@@ -122,7 +122,7 @@ public class MultipleAlignmentXMLConverter {
 		for (int x=0;x<4;x++){
 			for (int y=0;y<4;y++){
 				String key = "mat"+(x+1)+(y+1);
-				String value = transform.getElement(x,y)+"";
+				String value = String.valueOf(transform.getElement(x, y));
 				xml.attribute(key,value);
 			}
 		}
@@ -138,7 +138,7 @@ public class MultipleAlignmentXMLConverter {
 		//We need a new tag for every score, we don't know their names
 		for (String score:cache.getScores()){
 			xml.openTag(score);
-			String value = cache.getScore(score)+"";
+			String value = String.valueOf(cache.getScore(score));
 			xml.attribute("value", value);
 			xml.closeTag(score);
 		}
@@ -151,8 +151,8 @@ public class MultipleAlignmentXMLConverter {
 		//Creation properties
 		xml.attribute("Algorithm", ensemble.getAlgorithmName());
 		xml.attribute("Version", ensemble.getVersion());
-		xml.attribute("IOTime", ensemble.getIoTime()+"");
-		xml.attribute("CalculationTime", ensemble.getCalculationTime()+"");
+		xml.attribute("IOTime", String.valueOf(ensemble.getIoTime()));
+		xml.attribute("CalculationTime", String.valueOf(ensemble.getCalculationTime()));
 
 		//Structure Identifiers
 		xml.openTag("Structures");

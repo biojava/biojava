@@ -28,7 +28,7 @@ public class Cut {
 
 	static boolean verbose = CutDomain.verbose;
 
-	public int cut( Atom[] ca, Domain dom, CutValues val, int[][] dist, PDPDistanceMatrix pdpMatrix) {
+	public static int cut(Atom[] ca, Domain dom, CutValues val, int[][] dist, PDPDistanceMatrix pdpMatrix) {
 
 		int nclose = pdpMatrix.getNclose();
 
@@ -59,7 +59,7 @@ public class Cut {
 
 		List<Segment> segments = dom.getSegments();
 
-		java.util.Collections.sort(segments, new SegmentComparator());
+		segments.sort(new SegmentComparator());
 
 		if ( verbose)
 			System.out.println("  ---  Cut.cut " + dom + " ");

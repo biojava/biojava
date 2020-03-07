@@ -70,7 +70,7 @@ import static java.lang.Math.PI;
 public class BasePairParameters implements Serializable {
 
 	private static final long serialVersionUID = 6214502385L;
-	private static Logger log = LoggerFactory.getLogger(BasePairParameters.class);
+	private static final Logger log = LoggerFactory.getLogger(BasePairParameters.class);
 
 	// See URL http://ndbserver.rutgers.edu/ndbmodule/archives/reports/tsukuba/Table1.html
 	// and the paper cited at the top of this class (also as Table 1).
@@ -145,9 +145,9 @@ public class BasePairParameters implements Serializable {
 	}
 
 	protected Structure structure;
-	protected boolean canonical = true;
-	protected boolean useRNA = false;
-	protected boolean nonredundant = false;
+	protected boolean canonical;
+	protected boolean useRNA;
+	protected boolean nonredundant;
 	protected double[] pairParameters;
 
 	// this is the main data that the user wants to get back out from the procedure.
@@ -227,12 +227,12 @@ public class BasePairParameters implements Serializable {
 			lastStep = currentStep;
 			currentStep = this.basePairReferenceFrame(pairs.get(i));
 			referenceFrames.add((Matrix4d)currentStep.clone());
-			for (int j = 0; j < 6; j++) pairingParameters[i][j] = pairParameters[j];
+			System.arraycopy(pairParameters, 0, pairingParameters[i], 0, 6);
 			if (i != 0) {
 				lastStep.invert();
 				lastStep.mul(currentStep);
 				double[] sparms = calculateTp(lastStep);
-				for (int j = 0; j < 6; j++) stepParameters[i][j] = sparms[j];
+				System.arraycopy(sparms, 0, stepParameters[i], 0, 6);
 			}
 		}
 		return this;
@@ -509,7 +509,7 @@ public class BasePairParameters implements Serializable {
 							if (a == null) valid = false;
 						}
 						if (valid) {
-							result.add(new Pair<Group>(g1, g2));
+							result.add(new Pair<>(g1, g2));
 							pairingNames.add((useRNA ? BASE_LIST_RNA[type1]+ BASE_LIST_RNA[type2] : BASE_LIST_DNA[type1]+ BASE_LIST_DNA[type2]));
 							pairSequence += c.getAtomSequence().charAt(index1 + k);
 						} else if (pairSequence.length() != 0 && pairSequence.charAt(pairSequence.length()-1) != ' ') pairSequence += ' ';

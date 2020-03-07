@@ -46,8 +46,8 @@ public class PDBDomainProvider implements DomainProvider{
 	public static final String DEFAULT_PDB_HOST = "http://www.rcsb.org";
 	public static final String DEFAULT_PDB_API_URL = DEFAULT_PDB_HOST + "/pdb/rest/";
 
-	private String base;
-	private int cutoff;
+	private final String base;
+	private final int cutoff;
 
 	/**
 	 */
@@ -95,11 +95,11 @@ public class PDBDomainProvider implements DomainProvider{
 
 			//System.out.println(url);
 
-			final SortedSet<String> results = new TreeSet<String>();
+			final SortedSet<String> results = new TreeSet<>();
 			DefaultHandler handler = new DefaultHandler() {
 				@Override
 				public void startElement(String uri, String localName,String qName,
-						Attributes attributes) throws SAXException {
+						Attributes attributes) {
 
 					//System.out.println("Start Element :" + qName);
 
@@ -111,13 +111,7 @@ public class PDBDomainProvider implements DomainProvider{
 			};
 			handleRestRequest(url,handler);
 			return results;
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (SAXException e) {
-			e.printStackTrace();
-		} catch (ParserConfigurationException e) {
+		} catch (ParserConfigurationException | SAXException | IOException e) {
 			e.printStackTrace();
 		}
 		return null;

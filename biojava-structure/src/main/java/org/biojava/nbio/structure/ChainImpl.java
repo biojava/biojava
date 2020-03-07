@@ -66,7 +66,7 @@ public class ChainImpl implements Chain {
 	private EntityInfo entity;
 	private Structure parent;
 
-	private Map<String, Integer> pdbResnumMap;
+	private final Map<String, Integer> pdbResnumMap;
 	private String asymId; // the 'internal' chain identifier as used in mmCIF files
 
 
@@ -348,7 +348,7 @@ public class ChainImpl implements Chain {
 			throws StructureException {
 		// Short-circut for include all groups
 		if(start == null && end == null) {
-			return groups.toArray(new Group[groups.size()]);
+			return groups.toArray(new Group[0]);
 		}
 
 
@@ -415,7 +415,7 @@ public class ChainImpl implements Chain {
 
 		//not checking if the end has been found in this case...
 
-		return retlst.toArray(new Group[retlst.size()] );
+		return retlst.toArray(new Group[0]);
 	}
 
 

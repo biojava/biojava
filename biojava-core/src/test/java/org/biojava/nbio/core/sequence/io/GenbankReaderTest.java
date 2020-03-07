@@ -72,11 +72,11 @@ public class GenbankReaderTest {
 	}
 
 	@BeforeClass
-	public static void setUpClass() throws Exception {
+	public static void setUpClass() {
 	}
 
 	@AfterClass
-	public static void tearDownClass() throws Exception {
+	public static void tearDownClass() {
 	}
 
 	@Before
@@ -169,7 +169,7 @@ public class GenbankReaderTest {
 	 * The underlying {@link InputStream} should remain open until the last call.
 	 */
 	@Test
-	public void testPartialProcess() throws IOException, CompoundNotFoundException, NoSuchFieldException {
+	public void testPartialProcess() throws IOException, CompoundNotFoundException {
 		CheckableInputStream inStream = new CheckableInputStream(this.getClass().getResourceAsStream("/two-dnaseqs.gb"));
 
 		GenbankReader<DNASequence, NucleotideCompound> genbankDNA
@@ -217,7 +217,7 @@ public class GenbankReaderTest {
 		assertTrue(inStream.isclosed());
 
 
-		Assert.assertTrue(proteinSequences.size() == 1);
+		assertEquals(1, proteinSequences.size());
 		logger.debug("protein sequences: {}", proteinSequences);
 
 		ProteinSequence protein = new ArrayList<>(proteinSequences.values()).get(0);
@@ -228,7 +228,7 @@ public class GenbankReaderTest {
 		List<Qualifier> dbrefs = quals.get("db_xref");
 
 		Assert.assertNotNull(codedBy);
-		Assert.assertTrue(!codedBy.isEmpty());
+		assertFalse(codedBy.isEmpty());
 		assertEquals(codedBy, "NM_000266.2:503..904");
 		assertEquals(5, dbrefs.size());
 
@@ -353,7 +353,7 @@ public class GenbankReaderTest {
 	/**
 	 * Helper class to be able to verify the closed state of the input stream.
 	 */
-	private class CheckableInputStream extends BufferedInputStream {
+	private static class CheckableInputStream extends BufferedInputStream {
 
 		private boolean closed;
 

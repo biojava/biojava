@@ -52,18 +52,18 @@ public class TestSmallAlignment {
 
 		AFPChain afpChain = ce.align(ca1, ca2);
 
-		Assert.assertTrue(afpChain != null);
+        Assert.assertNotNull(afpChain);
 
 		afpChain.setName1(name1);
 		afpChain.setName2(name2);
 
-		Assert.assertTrue(afpChain.getNrEQR() == 0);
+        Assert.assertEquals(0, afpChain.getNrEQR());
 
 		String xml = AFPChainXMLConverter.toXML(afpChain,ca1,ca2);
 
 		AFPChain newChain = AFPChainXMLParser.fromXML(xml, ca1, ca2);
 
-		Assert.assertTrue(newChain != null);
+        Assert.assertNotNull(newChain);
 
 		String xml2 = AFPChainXMLConverter.toXML(newChain,ca1,ca2);
 

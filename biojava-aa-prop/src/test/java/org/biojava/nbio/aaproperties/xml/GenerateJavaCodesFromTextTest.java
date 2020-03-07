@@ -43,7 +43,7 @@ public class GenerateJavaCodesFromTextTest {
 	//@Test
 	public void generateCodes() throws IOException{
 		BufferedReader input = new BufferedReader(new FileReader("./src/test/resources/Symbol2Name.txt"));
-		Map<String, String> symbol2Name = new HashMap<String, String>();
+		Map<String, String> symbol2Name = new HashMap<>();
 		String line = input.readLine();//Header line is not required
 		while((line = input.readLine()) != null){
 			String[] sA = line.split("\t");
@@ -52,10 +52,10 @@ public class GenerateJavaCodesFromTextTest {
 		input.close();
 
 		input = new BufferedReader(new FileReader("./src/test/resources/Symbol2Weight.txt"));
-		List<String> elementNameList = new ArrayList<String>();
+		List<String> elementNameList = new ArrayList<>();
 		String elementName = null;
 		String elementNameLower = null;
-		Double elementMass = null;
+		Double elementMass;
 		while((line = input.readLine()) != null){
 			String[] sA = line.split("\t");
 			if(sA[0].length() > 0){

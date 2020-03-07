@@ -34,10 +34,7 @@ import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.jama.Matrix;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * A wrapper for {@link CeMain} which sets default parameters to be appropriate for finding
@@ -126,15 +123,11 @@ public class OptimalCECPMain extends CeMain {
 					"Permutation point ("+cp+") must be between -ca2.length and ca2.length-1" );
 		}
 
-		List<T> temp = new ArrayList<T>(cp);
+		List<T> temp = new ArrayList<>(cp);
 
 		// shift residues left
-		for(int i=0;i<cp;i++) {
-			temp.add(arr[i]);
-		}
-		for(int j=cp;j<arr.length;j++) {
-			arr[j-cp]=arr[j];
-		}
+		temp.addAll(Arrays.asList(arr).subList(0, cp));
+        System.arraycopy(arr, cp, arr, cp - cp, arr.length - cp);
 		for(int i=0;i<cp;i++) {
 			arr[arr.length-cp+i] = temp.get(i);
 		}
@@ -333,7 +326,7 @@ public class OptimalCECPMain extends CeMain {
 		int[] optLen = afpChain.getOptLen();
 
 		// the processed alignment
-		List<List<List<Integer>>> blocks = new ArrayList<List<List<Integer>>>(afpChain.getBlockNum()*2);
+		List<List<List<Integer>>> blocks = new ArrayList<>(afpChain.getBlockNum() * 2);
 
 		//Update residue indices
 		// newi = (oldi-cp) % N
@@ -342,9 +335,9 @@ public class OptimalCECPMain extends CeMain {
 				continue;
 
 			// set up storage for the current block
-			List<List<Integer>> currBlock = new ArrayList<List<Integer>>(2);
-			currBlock.add( new ArrayList<Integer>());
-			currBlock.add( new ArrayList<Integer>());
+			List<List<Integer>> currBlock = new ArrayList<>(2);
+			currBlock.add(new ArrayList<>());
+			currBlock.add(new ArrayList<>());
 			blocks.add(currBlock);
 
 			// pos = 0 case
@@ -356,9 +349,9 @@ public class OptimalCECPMain extends CeMain {
 				//this happens when the new alignment crosses the protein terminus
 				if( optAln[block][1][pos-1]+cp<ca2len &&
 						optAln[block][1][pos]+cp >= ca2len) {
-					currBlock = new ArrayList<List<Integer>>(2);
-					currBlock.add( new ArrayList<Integer>());
-					currBlock.add( new ArrayList<Integer>());
+					currBlock = new ArrayList<>(2);
+					currBlock.add(new ArrayList<>());
+					currBlock.add(new ArrayList<>());
 					blocks.add(currBlock);
 				}
 				currBlock.get(0).add( optAln[block][0][pos] );
@@ -651,9 +644,8 @@ public class OptimalCECPMain extends CeMain {
 	 * @throws NoSuchMethodException
 	 * @throws InvocationTargetException
 	 * @throws IllegalAccessException
-	 * @throws StructureException
 	 */
-	private static void displayAlignment(AFPChain afpChain, Atom[] ca1, Atom[] ca2) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, StructureException {
+	private static void displayAlignment(AFPChain afpChain, Atom[] ca1, Atom[] ca2) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
 		Atom[] ca1clone = StructureTools.cloneAtomArray(ca1);
 		Atom[] ca2clone = StructureTools.cloneAtomArray(ca2);
 		if (! GuiWrapper.isGuiModuleInstalled()) {

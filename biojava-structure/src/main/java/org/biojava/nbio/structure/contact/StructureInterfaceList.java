@@ -74,7 +74,7 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 
 	private static final long serialVersionUID = 1L;
 
-	private List<StructureInterface> list;
+	private final List<StructureInterface> list;
 
 	private List<StructureInterfaceCluster> clusters = null;
 	private List<StructureInterfaceCluster> clustersNcs = null;
@@ -164,11 +164,12 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 		long start = System.currentTimeMillis();
 
 		// we only need to calculate ASA for that subset (any translation of those will have same values)
-		for (String molecId:uniqAsaChains.keySet()) {
+		for (Map.Entry<String, Atom[]> entry : uniqAsaChains.entrySet()) {
+            String molecId = entry.getKey();
 
-			logger.debug("Calculating uncomplexed ASA for molecId {}, with {} atoms", molecId, uniqAsaChains.get(molecId).length);
+            logger.debug("Calculating uncomplexed ASA for molecId {}, with {} atoms", molecId, entry.getValue().length);
 
-			AsaCalculator asaCalc = new AsaCalculator(uniqAsaChains.get(molecId),
+			AsaCalculator asaCalc = new AsaCalculator(entry.getValue(),
 					AsaCalculator.DEFAULT_PROBE_SIZE, nSpherePoints, nThreads);
 
 			double[] atomAsas = asaCalc.calculateAsas();
@@ -398,9 +399,9 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 		SingleLinkageClusterer slc = new SingleLinkageClusterer(matrix, true);
 
 		Map<Integer, Set<Integer>> clusteredIndices = slc.getClusters(contactOverlapScoreClusterCutoff);
-		for (int clusterIdx:clusteredIndices.keySet()) {
+		for (Set<Integer> integers : clusteredIndices.values()) {
 			List<StructureInterface> members = new ArrayList<>();
-			for (int idx:clusteredIndices.get(clusterIdx)) {
+			for (int idx: integers) {
 				members.add(list.get(idx));
 			}
 			StructureInterfaceCluster cluster = new StructureInterfaceCluster();

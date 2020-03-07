@@ -36,7 +36,7 @@ package org.biojava.nbio.structure.jama;
 
 public class SingularValueDecomposition implements java.io.Serializable {
 
-	 static final long serialVersionUID = 640239472093534756l;
+	 static final long serialVersionUID = 640239472093534756L;
 
 /* ------------------------
 	Class variables
@@ -46,18 +46,20 @@ public class SingularValueDecomposition implements java.io.Serializable {
 	@serial internal storage of U.
 	@serial internal storage of V.
 	*/
-	private double[][] U, V;
+	private final double[][] U;
+        private final double[][] V;
 
 	/** Array for internal storage of singular values.
 	@serial internal storage of singular values.
 	*/
-	private double[] s;
+	private final double[] s;
 
 	/** Row and column dimensions.
 	@serial row dimension.
 	@serial column dimension.
 	*/
-	private int m, n;
+	private final int m;
+        private final int n;
 
 /* ------------------------
 	Constructor

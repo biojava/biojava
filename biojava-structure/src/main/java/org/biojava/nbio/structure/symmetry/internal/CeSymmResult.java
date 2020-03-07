@@ -22,6 +22,7 @@ package org.biojava.nbio.structure.symmetry.internal;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.biojava.nbio.structure.Atom;
@@ -105,7 +106,7 @@ public class CeSymmResult {
 		if (!isRefined())
 			return null;
 
-		List<StructureIdentifier> repeats = new ArrayList<StructureIdentifier>(
+		List<StructureIdentifier> repeats = new ArrayList<>(
 				numRepeats);
 
 		String pdbId = structureId.toCanonical().getPdbId();
@@ -120,7 +121,7 @@ public class CeSymmResult {
 			ResidueRange range = new ResidueRange(res1.getChainName(), res1, res2);
 
 			StructureIdentifier id = new SubstructureIdentifier(pdbId,
-					Arrays.asList(range));
+                    Collections.singletonList(range));
 
 			repeats.add(id);
 		}

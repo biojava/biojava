@@ -27,14 +27,14 @@ import java.util.List;
 
 
 public class RectangularPrism implements Polyhedron {
-	private static int[] lineLoop1 = {0,1,2,3,0,4,5,6,7,4};
-	private static int[] lineLoop2 = {1,5};
-	private static int[] lineLoop3 = {2,6};
-	private static int[] lineLoop4 = {3,7};
-	private double length = 1.0;
-	private double width = 1.0;
-	private double height = 1.0;
-	private static String[] viewNames = {"Front", "Left", "Back", "Right", "Top", "Bottom"};
+	private static final int[] lineLoop1 = {0,1,2,3,0,4,5,6,7,4};
+	private static final int[] lineLoop2 = {1,5};
+	private static final int[] lineLoop3 = {2,6};
+	private static final int[] lineLoop4 = {3,7};
+	private double length;
+	private double width;
+	private double height;
+	private static final String[] viewNames = {"Front", "Left", "Back", "Right", "Top", "Bottom"};
 
 	public RectangularPrism(double length, double width, double height) {
 		this.length = length;
@@ -103,7 +103,7 @@ public class RectangularPrism implements Polyhedron {
 		vertices[7] = new Point3d( x, -y, -z);
 
 		return vertices;
-	};
+	}
 
 	@Override
 	public List<int[]> getLineLoops() {

@@ -42,7 +42,7 @@ public enum Frame {
 	private final boolean reverse;
 	private final int start;
 
-	private Frame(int start, boolean reverse) {
+	Frame(int start, boolean reverse) {
 		this.start = start;
 		this.reverse = reverse;
 	}
@@ -83,7 +83,7 @@ public enum Frame {
 	public <C extends NucleotideCompound> Sequence<C> wrap(Sequence<C> incoming) {
 		Sequence<C> reversed;
 		if(reverse) {
-			reversed = new ComplementSequenceView<C>(new ReversedSequenceView<C>(incoming));
+			reversed = new ComplementSequenceView<>(new ReversedSequenceView<>(incoming));
 		}
 		else {
 			reversed = incoming;

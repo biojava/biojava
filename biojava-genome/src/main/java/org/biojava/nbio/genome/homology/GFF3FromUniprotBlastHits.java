@@ -41,6 +41,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  *
@@ -56,12 +57,13 @@ public class GFF3FromUniprotBlastHits {
 		process(hits, geneSequenceHashMap, gff3Output);
 	}
 
-	public void process(LinkedHashMap<String, ArrayList<String>> hits, LinkedHashMap<String, GeneSequence> geneSequenceHashMap, OutputStream gff3Output) throws Exception {
+	public void process(LinkedHashMap<String, ArrayList<String>> hits, LinkedHashMap<String, GeneSequence> geneSequenceHashMap, OutputStream gff3Output) {
 		int size = hits.size();
 		int index = 0;
 //		HashMap<String, String> scaffoldsReferencedHashMap = new HashMap<String, String>();
-		for (String accessionid : hits.keySet()) {
-			index++;
+		for (Map.Entry<String, ArrayList<String>> stringArrayListEntry : hits.entrySet()) {
+            String accessionid = stringArrayListEntry.getKey();
+            index++;
 			if (index == 12) {
 				index = 12;
 			}
@@ -75,9 +77,9 @@ public class GFF3FromUniprotBlastHits {
 					logger.error("Not found " + id);
 					continue;
 				}
-				ArrayList<String> uniprotProteinHits = hits.get(accessionid);
+				ArrayList<String> uniprotProteinHits = stringArrayListEntry.getValue();
 				String uniprotBestHit = uniprotProteinHits.get(0);
-				UniprotProxySequenceReader<AminoAcidCompound> uniprotSequence = new UniprotProxySequenceReader<AminoAcidCompound>(uniprotBestHit, AminoAcidCompoundSet.getAminoAcidCompoundSet());
+				UniprotProxySequenceReader<AminoAcidCompound> uniprotSequence = new UniprotProxySequenceReader<>(uniprotBestHit, AminoAcidCompoundSet.getAminoAcidCompoundSet());
 
 				ProteinSequence proteinSequence = new ProteinSequence(uniprotSequence);
 				String hitSequence = proteinSequence.getSequenceAsString();
@@ -87,7 +89,7 @@ public class GFF3FromUniprotBlastHits {
 					String predictedProteinSequence = transcriptSequence.getProteinSequence().getSequenceAsString();
 					ArrayList<ProteinSequence> cdsProteinList = transcriptSequence.getProteinCDSSequences();
 
-					ArrayList<CDSSequence> cdsSequenceList = new ArrayList<CDSSequence>(transcriptSequence.getCDSSequences().values());
+					ArrayList<CDSSequence> cdsSequenceList = new ArrayList<>(transcriptSequence.getCDSSequences().values());
 					String testSequence = "";
 					for (ProteinSequence cdsProteinSequence : cdsProteinList) {
 						testSequence = testSequence + cdsProteinSequence.getSequenceAsString();
@@ -140,7 +142,7 @@ public class GFF3FromUniprotBlastHits {
 						proteinIndex = proteinIndex + seq.length();
 						if (startIndex != null && endIndex != null && startIndex != endIndex) {
 							CDSSequence cdsSequence = cdsSequenceList.get(i);
-							String hitLabel = "";
+							String hitLabel;
 							if (transcriptSequence.getStrand() == Strand.POSITIVE) {
 								hitLabel = uniprotBestHit + "_" + startIndex + "_" + endIndex;
 							} else {
@@ -227,11 +229,11 @@ public class GFF3FromUniprotBlastHits {
 											notes = notes + " " + note.getId();
 											geneSequence.addNote(note.getId()); // add note/keyword which can be output in fasta header if needed
 											LinkedHashMap<String, String> properties = note.getProperties();
-											for (String propertytype : properties.keySet()) {
-												if (propertytype.equals("evidence")) {
+											for (Map.Entry<String, String> entry : properties.entrySet()) {
+												if (entry.getKey().equals("evidence")) {
 													continue;
 												}
-												String property = properties.get(propertytype);
+												String property = entry.getValue();
 
 												if (property.startsWith("C:")) {
 													continue; // skip over the location

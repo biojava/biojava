@@ -73,13 +73,7 @@ public class WebStartMain
 
 			// we did not get enough arguments, show the general user interface...
 
-			javax.swing.SwingUtilities.invokeLater(new Runnable() {
-				@Override
-				public void run() {
-
-					AlignmentGui.getInstance();
-				}
-			});
+			javax.swing.SwingUtilities.invokeLater(() -> AlignmentGui.getInstance());
 
 			return;
 
@@ -88,12 +82,7 @@ public class WebStartMain
 		else if ( args.length < 3){
 			//String arg0 = args[0];
 
-			javax.swing.SwingUtilities.invokeLater(new Runnable() {
-				@Override
-				public void run() {
-					AlignmentGui.getInstance();
-				}
-			});
+			javax.swing.SwingUtilities.invokeLater(() -> AlignmentGui.getInstance());
 
 			return;
 

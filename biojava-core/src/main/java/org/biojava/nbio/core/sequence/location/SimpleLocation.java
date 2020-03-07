@@ -61,7 +61,7 @@ public class SimpleLocation extends AbstractLocation {
 
 	public SimpleLocation(Point start, Point end, Strand strand) {
 
-		super(start, end, strand, false, false, new ArrayList<Location>());
+		super(start, end, strand, false, false, new ArrayList<>());
 	}
 
 	public SimpleLocation(Point start, Point end, Strand strand, AccessionID accession) {

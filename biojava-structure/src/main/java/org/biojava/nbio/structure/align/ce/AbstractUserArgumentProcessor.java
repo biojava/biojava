@@ -82,7 +82,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 
 	protected StartupParameters params ;
 
-	public static final List<String> mandatoryArgs= new ArrayList<String>();
+	public static final List<String> mandatoryArgs= new ArrayList<>();
 
 	protected AbstractUserArgumentProcessor(){
 		params = getStartupParametersInstance();
@@ -303,7 +303,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 		System.out.println("will use " + useNrCPUs + " CPUs.");
 
 		PDBFileReader reader = new PDBFileReader();
-		Structure structure1 = null ;
+		Structure structure1;
 		try {
 			structure1 = reader.getStructure(searchFile);
 		} catch (IOException e) {
@@ -351,7 +351,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 			String legend = getDbSearchLegend();
 			out.write(legend + newline );
 			System.out.println(legend);
-			String line = null;
+			String line;
 			while ( (line = is.readLine()) != null){
 				if ( line.startsWith("#"))
 					continue;
@@ -431,8 +431,8 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 
 		// first load two example structures
 
-		Structure structure1 = null;
-		Structure structure2 = null;
+		Structure structure1;
+		Structure structure2;
 
 		String path = params.getPdbFilePath();
 
@@ -546,22 +546,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 				System.out.println(afpChain.toCE(ca1, ca2));
 			}
 
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.exit(1); return;
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-			System.exit(1); return;
-		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
-			System.exit(1); return;
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-			System.exit(1); return;
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-			System.exit(1); return;
-		} catch (StructureException e) {
+		} catch (IOException | StructureException | IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
 			e.printStackTrace();
 			System.exit(1); return;
 		}
@@ -734,7 +719,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 
 	@Override
 	public String printHelp() {
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		StructureAlignment alg = getAlgorithm();
 
 		buf.append("-------------------").append(newline);

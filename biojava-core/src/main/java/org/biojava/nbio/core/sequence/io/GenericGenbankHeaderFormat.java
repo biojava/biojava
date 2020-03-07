@@ -36,7 +36,7 @@ public class GenericGenbankHeaderFormat<S extends AbstractSequence<C>, C extends
 		GenbankHeaderFormatInterface<S, C> {
 	private static final int HEADER_WIDTH = 12;
 	private static final String lineSep = "%n";
-	private String seqType = null;
+	private String seqType;
 
 	public GenericGenbankHeaderFormat() {
 		seqType = null;
@@ -169,8 +169,8 @@ public class GenericGenbankHeaderFormat<S extends AbstractSequence<C>, C extends
 					+ " is too long");
 		}
 
-		String units = "";
-		String mol_type = "";
+		String units;
+		String mol_type;
 		if (sequence.getCompoundSet() instanceof DNACompoundSet) {
 			units = "bp";
 			mol_type = "DNA";

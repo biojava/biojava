@@ -40,10 +40,10 @@ import java.util.Collection;
 @RunWith(Parameterized.class)
 public class TargetedLocationParserTest {
 
-	private Data request;
+	private final Data request;
 
 	public static class Data {
-		private String Insdc;
+		private final String Insdc;
 
 		/**
 		 * Parser data input. Based on that input it should be able to identity the origin and wanted target
@@ -55,10 +55,10 @@ public class TargetedLocationParserTest {
 		public Data(String gi, CompoundSet<?> originType, String Insdc, CompoundSet<?> compound) {
 			this.Insdc = Insdc;
 		}
-	};
+	}
 
 	@Parameterized.Parameters
-	public static Collection<Data[]> getLocations() throws Exception {
+	public static Collection<Data[]> getLocations() {
 
 
 		Data[][] out = new Data[][]{
@@ -85,7 +85,7 @@ public class TargetedLocationParserTest {
 
 
 	@Test
-	public void locationTest() throws Exception {
+	public void locationTest() {
 
 		InsdcParser parser = new InsdcParser(DataSource.GENBANK);
 		Location loc = parser.parse(request.Insdc);

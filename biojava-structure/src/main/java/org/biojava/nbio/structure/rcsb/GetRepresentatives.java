@@ -39,11 +39,11 @@ import java.util.TreeSet;
  */
 public class GetRepresentatives {
 
-	private static String clusterUrl = "http://www.rcsb.org/pdb/rest/representatives?cluster=";
-	private static String allUrl = "http://www.rcsb.org/pdb/rest/getCurrent/";
+	private static final String clusterUrl = "http://www.rcsb.org/pdb/rest/representatives?cluster=";
+	private static final String allUrl = "http://www.rcsb.org/pdb/rest/getCurrent/";
 
 	// available sequence clusters
-	private static List<Integer> seqIdentities = Arrays.asList(30, 40, 50, 70, 90, 95, 100);
+	private static final List<Integer> seqIdentities = Arrays.asList(30, 40, 50, 70, 90, 95, 100);
 
 
 	/**
@@ -54,7 +54,7 @@ public class GetRepresentatives {
 	 * @return PdbChainKey set of representatives
 	 */
 	public static SortedSet<StructureName> getRepresentatives(int sequenceIdentity) {
-		SortedSet<StructureName> representatives = new TreeSet<StructureName>();
+		SortedSet<StructureName> representatives = new TreeSet<>();
 
 		if (!seqIdentities.contains(sequenceIdentity)) {
 			System.err.println("Error: representative chains are not available for %sequence identity: "
@@ -69,7 +69,7 @@ public class GetRepresentatives {
 
 			InputStream stream = URLConnectionTools.getInputStream(u, 60000);
 
-			String xml = null;
+			String xml;
 
 			if (stream != null) {
 				xml = JFatCatClient.convertStreamToString(stream);
@@ -95,7 +95,7 @@ public class GetRepresentatives {
 	 * @return PdbChainKey set of all PDB IDs.
 	 */
 	public static SortedSet<String> getAll() {
-		SortedSet<String> representatives = new TreeSet<String>();
+		SortedSet<String> representatives = new TreeSet<>();
 
 		try {
 
@@ -107,7 +107,7 @@ public class GetRepresentatives {
 				BufferedReader reader = new BufferedReader(
 						new InputStreamReader(stream));
 
-				String line = null;
+				String line;
 
 				while ((line = reader.readLine()) != null) {
 					int index = line.lastIndexOf("structureId=");

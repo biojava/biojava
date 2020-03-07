@@ -41,9 +41,9 @@ public class Model implements Serializable {
 
 	private static final Logger logger = LoggerFactory.getLogger(Model.class);
 
-	private List<Chain> polyChains;
-	private List<Chain> nonPolyChains;
-	private List<Chain> waterChains;
+	private final List<Chain> polyChains;
+	private final List<Chain> nonPolyChains;
+	private final List<Chain> waterChains;
 
 	public Model(){
 		polyChains = new ArrayList<>();

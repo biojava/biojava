@@ -78,10 +78,10 @@ public class CrystalBuilder {
 	 */
 	private static final boolean INCLUDE_HETATOMS = true;
 
-	private Structure structure;
-	private PDBCrystallographicInfo crystallographicInfo;
-	private int numPolyChainsAu;
-	private int numOperatorsSg;
+	private final Structure structure;
+	private final PDBCrystallographicInfo crystallographicInfo;
+	private final int numPolyChainsAu;
+	private final int numOperatorsSg;
 	private Map<String,Matrix4d> chainNcsOps = null;
 	private Map<String,String> chainOrigNames = null;
 
@@ -93,7 +93,7 @@ public class CrystalBuilder {
 	private Map<String,Map<Matrix4d,StructureInterface>> visitedNcsChainPairs = null;
 
 	private boolean searchBeyondAU;
-	private Matrix4d[] ops;
+	private final Matrix4d[] ops;
 
 	/**
 	 * Special constructor for NCS-aware CrystalBuilder.
@@ -256,7 +256,7 @@ public class CrystalBuilder {
 
 		// initialising debugging vars
 		long start = -1;
-		long end = -1;
+		long end;
 		int trialCount = 0;
 		int skippedRedundant = 0;
 		int skippedAUsNoOverlap = 0;
@@ -264,7 +264,7 @@ public class CrystalBuilder {
 		int skippedSelfEquivalent = 0;
 
 		// The bounding boxes of all AUs of the unit cell
-		UnitCellBoundingBox bbGrid = new UnitCellBoundingBox(numOperatorsSg, numPolyChainsAu);;
+		UnitCellBoundingBox bbGrid = new UnitCellBoundingBox(numOperatorsSg, numPolyChainsAu);
 		// we calculate all the bounds of each of the asym units, those will then be reused and translated
 		bbGrid.setBbs(structure, ops, INCLUDE_HETATOMS);
 
@@ -466,8 +466,7 @@ public class CrystalBuilder {
 
 		// same original chain names
 		Optional<Matrix4d> matchDirect =
-				visitedNcsChainPairs.computeIfAbsent(matchChainIdsIJ, k-> new HashMap<>()).entrySet().stream().
-					map(r->r.getKey()).
+				visitedNcsChainPairs.computeIfAbsent(matchChainIdsIJ, k-> new HashMap<>()).keySet().stream().
 					filter(r->r.epsilonEquals(j2iNcsOrigin,0.01)).
 					findFirst();
 
@@ -477,8 +476,7 @@ public class CrystalBuilder {
 		if(matchMatrix == null) {
 			// reversed original chain names with inverted transform
 			Optional<Matrix4d> matchInverse =
-					visitedNcsChainPairs.computeIfAbsent(matchChainIdsJI, k-> new HashMap<>()).entrySet().stream().
-					map(r->r.getKey()).
+					visitedNcsChainPairs.computeIfAbsent(matchChainIdsJI, k-> new HashMap<>()).keySet().stream().
 					filter(r->r.epsilonEquals(i2jNcsOrigin,0.01)).
 					findFirst();
 			matchMatrix = matchInverse.orElse(null);

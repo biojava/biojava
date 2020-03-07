@@ -116,18 +116,19 @@ public class ChemCompBond implements Serializable {
 	 *         the value is non-numeric or unknown.
 	 */
 	public int getNumericalBondOrder() {
-		if (value_order.equals("SING")) {
-			return 1;
-		} else if (value_order.equals("DOUB")) {
-			return 2;
-		} else if (value_order.equals("TRIP")) {
-			return 3;
-		} else if (value_order.equals("QUAD")) {
-			return 4;
-		} else {
-			logger.error("Unknown or non-numeric value for value_order: "
-					+ value_order);
-			return -1;
-		}
+        switch (value_order) {
+            case "SING":
+                return 1;
+            case "DOUB":
+                return 2;
+            case "TRIP":
+                return 3;
+            case "QUAD":
+                return 4;
+            default:
+                logger.error("Unknown or non-numeric value for value_order: "
+                        + value_order);
+                return -1;
+        }
 	}
 }

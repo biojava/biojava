@@ -42,9 +42,9 @@ public class TestFASTAReader {
 		ClasspathResource r = new ClasspathResource(path);
 		FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = null ;
 		try( InputStream inStream = r.getInputStream() ) {
-			fastaReader = new FastaReader<ProteinSequence, AminoAcidCompound>(
+			fastaReader = new FastaReader<>(
 					inStream,
-					new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>(),
+					new GenericFastaHeaderParser<>(),
 					new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
 			LinkedHashMap<String, ProteinSequence> sequences = fastaReader.process();
 			assertThat(sequences,is(notNullValue()));
@@ -82,9 +82,9 @@ public class TestFASTAReader {
 		ClasspathResource r = new ClasspathResource(path);
 		FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = null ;
 		try( InputStream inStream = r.getInputStream() ) {
-			fastaReader = new FastaReader<ProteinSequence, AminoAcidCompound>(
+			fastaReader = new FastaReader<>(
 					inStream,
-					new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>(),
+					new GenericFastaHeaderParser<>(),
 					new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
 			LinkedHashMap<String,ProteinSequence> out1 = fastaReader.process(1);
 			assertThat(out1,is(notNullValue()));
@@ -124,9 +124,9 @@ public class TestFASTAReader {
 		ClasspathResource r = new ClasspathResource(path);
 		FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = null ;
 		try( InputStream inStream = r.getInputStream() ) {
-			fastaReader = new FastaReader<ProteinSequence, AminoAcidCompound>(
+			fastaReader = new FastaReader<>(
 					inStream,
-					new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>(),
+					new GenericFastaHeaderParser<>(),
 					new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
 			LinkedHashMap<String,ProteinSequence> out1 = fastaReader.process(1);
 			assertThat(out1,is(notNullValue()));

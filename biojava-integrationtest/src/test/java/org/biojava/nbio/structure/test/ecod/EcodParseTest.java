@@ -85,11 +85,7 @@ public class EcodParseTest {
 			try {
 				struct = cache.getStructure(d.getPdbId());
 				ca1 = StructureTools.getRepresentativeAtomArray(struct);
-			} catch (IOException e) {
-				logger.error("Error getting structure for "+d.getDomainId(),e);
-				errors++;
-				continue;
-			} catch (StructureException e) {
+			} catch (IOException | StructureException e) {
 				logger.error("Error getting structure for "+d.getDomainId(),e);
 				errors++;
 				continue;
@@ -128,12 +124,11 @@ public class EcodParseTest {
 						Group g = struct.getPolyChainByPDB(range.getStart().getChainName()).getGroupByPDB(range.getStart());
 						if(g!=null) {
 							logger.warn("No CA atom for starting residue "+d.getDomainId()+"_"+range);
-							clean = false;
-						} else {
+                        } else {
 							logger.error("Start doesn't exist for "+d.getDomainId()+"_"+range.toString());
-							clean = false;
-						}
-					}
+                        }
+                        clean = false;
+                    }
 				} catch(Exception e) {
 					logger.error("Start doesn't exist for "+d.getDomainId()+"_"+range.toString(),e);
 					clean = false;
@@ -147,12 +142,11 @@ public class EcodParseTest {
 						} catch(StructureException e ) {}
 						if(g!=null) {
 							logger.warn("No CA atom for ending residue "+d.getDomainId()+"_"+range);
-							clean = false;
-						} else {
+                        } else {
 							logger.error("End doesn't exist for "+d.getDomainId()+"_"+range.toString());
-							clean = false;
-						}
-					}
+                        }
+                        clean = false;
+                    }
 				} catch(Exception e) {
 					logger.error("End doesn't exist for "+d.getDomainId()+"_"+range.toString(),e);
 					clean = false;

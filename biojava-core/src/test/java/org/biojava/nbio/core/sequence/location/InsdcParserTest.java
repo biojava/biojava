@@ -38,9 +38,9 @@ import org.slf4j.LoggerFactory;
 @RunWith(Parameterized.class)
 public class InsdcParserTest {
 
-	private Logger log = LoggerFactory.getLogger(getClass());
-	private String data;
-	private String expected;
+	private final Logger log = LoggerFactory.getLogger(getClass());
+	private final String data;
+	private final String expected;
 
 	public InsdcParserTest(String data, String expected) {
 		this.data = data;
@@ -58,10 +58,9 @@ public class InsdcParserTest {
 	/**
 	 * Test for issue #254
 	 *
-	 * @throws Exception
 	 */
 	@Test
-	public void extractAccessionTest() throws Exception {
+	public void extractAccessionTest() {
 		log.info("test accession");
 		log.debug("data: '{}'   expected: '{}'", data, expected);
 

@@ -40,9 +40,9 @@ import org.biojava.nbio.structure.symmetry.internal.RefinerFailedException;
  */
 public class AngleOrderDetectorPlus implements OrderDetector {
 
-	private int maxOrder;
+	private final int maxOrder;
 	private final double error;
-	private boolean normalizeError;
+	private final boolean normalizeError;
 
 	/**
 	 * @param error

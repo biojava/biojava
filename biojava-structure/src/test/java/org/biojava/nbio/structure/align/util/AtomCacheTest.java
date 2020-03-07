@@ -75,7 +75,7 @@ import org.slf4j.LoggerFactory;
  */
 public class AtomCacheTest {
 
-	private static Logger logger = LoggerFactory.getLogger(AtomCacheTest.class);
+	private static final Logger logger = LoggerFactory.getLogger(AtomCacheTest.class);
 	private AtomCache cache;
 
 	@Before
@@ -187,14 +187,14 @@ public class AtomCacheTest {
 	}
 
 	@Test
-	public void testSetPath_withTilde() throws Exception {
+	public void testSetPath_withTilde() {
 		cache.setPath("~" + File.separator);
 
 		assertEquals(System.getProperty("user.home") + File.separator, cache.getPath());
 	}
 
 	@Test
-	public void testNewInstanceWithTilder() throws Exception {
+	public void testNewInstanceWithTilder() {
 		AtomCache cache1 = new AtomCache("~" + File.separator);
 
 		assertEquals(System.getProperty("user.home") + File.separator, cache1.getPath());
@@ -399,7 +399,7 @@ public class AtomCacheTest {
 			assertNotNull(s);
 
 			Group g = s.getChain("A").getAtomGroup(0);
-			assertTrue(g.getPDBName().equals("ATP"));
+			assertEquals("ATP", g.getPDBName());
 
 			// should be unknown
 			ChemComp chem = g.getChemComp();
@@ -462,7 +462,7 @@ public class AtomCacheTest {
 			assertNotNull(s);
 
 			Group g = s.getChain("A").getAtomGroup(0);
-			assertTrue(g.getPDBName().equals("ATP"));
+			assertEquals("ATP", g.getPDBName());
 
 			// should be unknown
 			ChemComp chem = g.getChemComp();

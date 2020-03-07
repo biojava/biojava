@@ -94,7 +94,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 		FILE,
 		ECOD,
 		BIO,
-	};
+	}
 
 	private Source mySource = null;
 
@@ -340,7 +340,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 	}
 
 	private static Set<String> getChainNames(SubstructureIdentifier si) {
-		Set<String> chains = new TreeSet<String>();
+		Set<String> chains = new TreeSet<>();
 		List<ResidueRange> ranges = si.getResidueRanges();
 		for(ResidueRange range : ranges) {
 			String chainName = range.getChainName();
@@ -626,7 +626,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 	 * @return The best match for name among the domains of scopDB, or null if none match.
 	 */
 	public static ScopDomain guessScopDomain(String name, ScopDatabase scopDB) {
-		List<ScopDomain> matches = new LinkedList<ScopDomain>();
+		List<ScopDomain> matches = new LinkedList<>();
 
 		// Try exact match first
 		ScopDomain domain = scopDB.getDomainByScopID(name);

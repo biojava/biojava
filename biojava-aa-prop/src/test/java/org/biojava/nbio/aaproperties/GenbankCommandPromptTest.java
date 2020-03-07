@@ -33,8 +33,8 @@ public class GenbankCommandPromptTest {
 		//-i BondFeature.gb -a
 		String[] args = new String[11];
 		args[0] = "-i";
-		args[1] = "./src/test/resources/BondFeature.gb";;
-		args[2] = "-x";
+		args[1] = "./src/test/resources/BondFeature.gb";
+        args[2] = "-x";
 		args[3] = "./src/main/resources/AdvancedAminoAcidComposition.xml";
 		args[4] = "-0";
 		args[5] = "0";
@@ -53,8 +53,8 @@ public class GenbankCommandPromptTest {
 		//-i BondFeature.gb -a
 		String[] args = new String[7];
 		args[0] = "-i";
-		args[1] = "./src/test/resources/BondFeature.gb";;
-		args[2] = "-a";
+		args[1] = "./src/test/resources/BondFeature.gb";
+        args[2] = "-a";
 		args[3] = "-o";
 		args[4] = output.toString();
 		args[5] = "-f";
@@ -69,8 +69,8 @@ public class GenbankCommandPromptTest {
 		//-i BondFeature.gb -a
 		String[] args = new String[7];
 		args[0] = "-i";
-		args[1] = "./src/test/resources/BondFeature.gb";;
-		args[2] = "-a";
+		args[1] = "./src/test/resources/BondFeature.gb";
+        args[2] = "-a";
 		args[3] = "-o";
 		args[4] = output.toString();
 		args[5] = "-f";

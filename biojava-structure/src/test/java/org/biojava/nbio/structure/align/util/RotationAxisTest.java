@@ -64,7 +64,7 @@ import javax.vecmath.Matrix4d;
 public class RotationAxisTest {
 
 	@Test
-	public void testProjection() throws Exception{
+	public void testProjection() {
 		RotationAxis axis;
 		Atom dir,pos,projected;
 

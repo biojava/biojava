@@ -232,7 +232,7 @@ public class SequenceDisplay extends JPanel implements ChangeListener {
 
 		this.setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
 
-		apos = new ArrayList<AlignedPosition>();
+		apos = new ArrayList<>();
 	}
 
 	public void clearListeners(){
@@ -451,9 +451,7 @@ public class SequenceDisplay extends JPanel implements ChangeListener {
 	private int getMaxSequenceLength(){
 		int l1 = panel1.getChain().getAtomGroups(GroupType.AMINOACID).size();
 		int l2 = panel2.getChain().getAtomGroups(GroupType.AMINOACID).size();
-		if ( l1 > l2)
-			return l1;
-		else return l2;
+        return Math.max(l1, l2);
 	}
 
 

@@ -49,7 +49,7 @@ public class Test4hhb {
 	public void test4hhbPDBFile() throws IOException
 	{
 
-		Structure structure = null;
+		Structure structure;
 
 		InputStream inStream = new GZIPInputStream(this.getClass().getResourceAsStream("/4hhb.pdb.gz"));
 		assertNotNull(inStream);
@@ -70,7 +70,7 @@ public class Test4hhb {
 		testStructure(structure);
 
 
-		Structure structure2 = null;
+		Structure structure2;
 
 		inStream = new GZIPInputStream(this.getClass().getResourceAsStream("/4hhb.cif.gz"));
 		assertNotNull(inStream);

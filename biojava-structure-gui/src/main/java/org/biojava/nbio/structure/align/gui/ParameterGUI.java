@@ -82,7 +82,7 @@ public class ParameterGUI extends JFrame{
 		assert(names.size() == types.size());
 		assert(names.size() == helps.size());
 
-		textFields = new ArrayList<Component>();
+		textFields = new ArrayList<>();
 		Box vBox = Box.createVerticalBox();
 
 		for (int i = 0 ; i < keys.size(); i++){
@@ -146,32 +146,21 @@ public class ParameterGUI extends JFrame{
 
 
 		JButton abort = new JButton("Cancel");
-		abort.addActionListener(new ActionListener(){
-			@Override
-			public void actionPerformed(ActionEvent event) {
-				destroy();
-				dispose();	         }
-		});
+		abort.addActionListener(event -> {
+			destroy();
+			dispose();	         });
 
 		JButton defaultB = new JButton("Default");
-		defaultB.addActionListener(new ActionListener(){
-			@Override
-			public void actionPerformed(ActionEvent event) {
-				setDefault();
-			}
-		});
+		defaultB.addActionListener(event -> setDefault());
 
 		JButton close = new JButton("Apply");
 
-		close.addActionListener(new ActionListener(){
-			@Override
-			public void actionPerformed(ActionEvent event) {
+		close.addActionListener(event -> {
 
-				storeParameters();
+			storeParameters();
 
-				destroy();
-				dispose();	         }
-		});
+			destroy();
+			dispose();	         });
 
 		Box hBox = Box.createHorizontalBox();
 		hBox.add(abort);
@@ -247,7 +236,7 @@ public class ParameterGUI extends JFrame{
 			Class type = types.get(i);
 			String key  = keys.get(i);
 			// String name = keys.get(i);
-			String value = null;
+			String value;
 			System.out.println(key);
 			if( type.isEnum() ) {
 				JComboBox field = (JComboBox)  textFields.get(i);
@@ -256,10 +245,10 @@ public class ParameterGUI extends JFrame{
 			} else if ( type == Boolean.class){
 				JComboBox field = (JComboBox)  textFields.get(i);
 				int sel = field.getSelectedIndex();
-				Boolean flag = true;
+				boolean flag = true;
 				if ( sel == 1 )
 					flag = false;
-				value = flag.toString();
+				value = Boolean.toString(flag);
 			} else {
 				JTextField field = (JTextField)textFields.get(i);
 				value = field.getText();

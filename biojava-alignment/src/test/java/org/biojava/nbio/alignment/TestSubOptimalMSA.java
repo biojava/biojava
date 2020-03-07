@@ -36,7 +36,7 @@ import java.util.List;
 
 public class TestSubOptimalMSA {
 
-	private List<DNASequence> sequences = new ArrayList<DNASequence>();
+	private final List<DNASequence> sequences = new ArrayList<>();
 
 	@Before
 	public void setUp() {

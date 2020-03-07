@@ -136,7 +136,7 @@ public class TestHardBioUnits {
 		assertEquals(2, bioAssembly.getPolyChains().size());
 
 		// here we'll store all author chain ids without the operator id part
-		Set<String> chainIdsNoOps = new HashSet<String>();
+		Set<String> chainIdsNoOps = new HashSet<>();
 
 		for (Chain poly:bioAssembly.getPolyChains()) {
 			chainIdsNoOps.add(poly.getName().split("_")[0]);

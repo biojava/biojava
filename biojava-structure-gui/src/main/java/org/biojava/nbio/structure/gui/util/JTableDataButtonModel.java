@@ -26,7 +26,7 @@ import javax.swing.table.AbstractTableModel;
 
 class JTableDataButtonModel extends AbstractTableModel {
 
-		public static final long serialVersionUID = 0l;
+		public static final long serialVersionUID = 0L;
 
 		Object[][] __rows;
 		String[]   __columns;

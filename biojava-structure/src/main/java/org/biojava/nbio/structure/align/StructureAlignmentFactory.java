@@ -38,7 +38,7 @@ public class StructureAlignmentFactory {
 
 	private final static Logger logger = LoggerFactory.getLogger(StructureAlignmentFactory.class);
 
-	private static List<StructureAlignment> algorithms = new ArrayList<StructureAlignment>();
+	private static final List<StructureAlignment> algorithms = new ArrayList<>();
 
 	static {
 		algorithms.add( new CeMain() );
@@ -111,13 +111,7 @@ public class StructureAlignmentFactory {
 					@SuppressWarnings("unchecked")
 					Class<StructureAlignment> c = (Class<StructureAlignment>) Class.forName(algo.getClass().getName());
 					return c.newInstance();
-				} catch (ClassNotFoundException e){
-					logger.error("Exception: ", e);
-					return null;
-				} catch (IllegalAccessException e){
-					logger.error("Exception: ", e);
-					return null;
-				} catch (InstantiationException e){
+				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException e){
 					logger.error("Exception: ", e);
 					return null;
 				}
@@ -130,18 +124,18 @@ public class StructureAlignmentFactory {
 	}
 
 	public static StructureAlignment[] getAllAlgorithms(){
-		return algorithms.toArray(new StructureAlignment[algorithms.size()]);
+		return algorithms.toArray(new StructureAlignment[0]);
 	}
 
 	public static String[] getAllAlgorithmNames(){
 		StructureAlignment[] algos = getAllAlgorithms();
-		List<String> names = new ArrayList<String>();
+		List<String> names = new ArrayList<>();
 
 		for (StructureAlignment alg : algos){
 			names.add(alg.getAlgorithmName());
 		}
 
-		return names.toArray(new String[names.size()]);
+		return names.toArray(new String[0]);
 	}
 
 }

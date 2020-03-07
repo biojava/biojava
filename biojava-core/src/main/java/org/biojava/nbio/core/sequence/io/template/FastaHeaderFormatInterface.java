@@ -35,5 +35,5 @@ public interface FastaHeaderFormatInterface<S extends Sequence<?>, C extends Com
 	 * @param sequence
 	 * @return
 	 */
-	public String getHeader(S sequence);
+    String getHeader(S sequence);
 }

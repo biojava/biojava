@@ -47,7 +47,7 @@ public class TestStructureImpl {
 
 		// Create new Structure and assign one Chain to it
 		Structure s1 = new StructureImpl();
-		s1.addModel(new ArrayList<Chain>(1));
+		s1.addModel(new ArrayList<>(1));
 
 		Chain c1 = new ChainImpl();
 		s1.addChain(c1);
@@ -73,7 +73,7 @@ public class TestStructureImpl {
 		Atom a2 = (Atom) a1.clone();
 
 		Structure s2 = new StructureImpl();
-		s2.addModel(new ArrayList<Chain>(1));
+		s2.addModel(new ArrayList<>(1));
 		Chain c2 = new ChainImpl();
 		s2.addChain(c2);
 		Group g2 = new HetatomImpl();
@@ -88,7 +88,7 @@ public class TestStructureImpl {
 		Group g3 = (Group) g1.clone();
 		Atom a3 = g3.getAtom(0);
 		Structure s3 = new StructureImpl();
-		s3.addModel(new ArrayList<Chain>(1));
+		s3.addModel(new ArrayList<>(1));
 		Chain c3 = new ChainImpl();
 		s3.addChain(c3);
 		c3.addGroup(g3);

@@ -42,11 +42,11 @@ public class FastaGeneWriter {
 
 	private final static Logger logger = LoggerFactory.getLogger(FastaGeneWriter.class);
 
-	boolean showExonUppercase = false;
+	boolean showExonUppercase;
 	OutputStream os;
 	Collection<GeneSequence> sequences;
 	FastaHeaderFormatInterface<GeneSequence, NucleotideCompound> headerFormat;
-	private int lineLength = 60;
+	private int lineLength;
 /**
  *
  * @param os
@@ -86,7 +86,7 @@ public class FastaGeneWriter {
 			os.write(lineSep);
 
 			int compoundCount = 0;
-			String seq = "";
+			String seq;
 			//GeneSequence currently has a strand attribute to indicate direction
 
 			seq = sequence.getSequence5PrimeTo3Prime().getSequenceAsString();
@@ -95,8 +95,8 @@ public class FastaGeneWriter {
 				int geneBioBegin = sequence.getBioBegin();
 				int geneBioEnd = sequence.getBioEnd();
 				for (ExonSequence exonSequence : sequence.getExonSequences()) {
-					int featureBioBegin = 0;
-					int featureBioEnd = 0;
+					int featureBioBegin;
+					int featureBioEnd;
 					if (sequence.getStrand() != Strand.NEGATIVE) {
 						featureBioBegin = exonSequence.getBioBegin() - geneBioBegin;
 						featureBioEnd = exonSequence.getBioEnd() - geneBioBegin;
@@ -156,7 +156,7 @@ public class FastaGeneWriter {
 	public static void main(String[] args) {
 
 		try {
-			ArrayList<GeneSequence> sequences = new ArrayList<GeneSequence>();
+			ArrayList<GeneSequence> sequences = new ArrayList<>();
 			ChromosomeSequence seq1 = new ChromosomeSequence("ATATATATATATATATATATATATATATATATACGCGCGCGCGCGCGCGCGCGCGCGCGCGCGCATATATATATATATATATATATACGCGCGCGCGCGCGCGCATATATATATATATATATATATATATATATATACGCGCGCGCGCGCGCGCGCGCGCGCGCGCGCATATATATATATATATATATATACGCGCGCGCGCGCGCGC");
 			GeneSequence gene1 = seq1.addGene(new AccessionID("gene1"), 1, 20, Strand.POSITIVE);
 
@@ -170,7 +170,7 @@ public class FastaGeneWriter {
 			sequences.add(gene2);
 
 
-			FastaGeneWriter fastaWriter = new FastaGeneWriter(System.out, sequences, new GenericFastaHeaderFormat<GeneSequence, NucleotideCompound>(), true);
+			FastaGeneWriter fastaWriter = new FastaGeneWriter(System.out, sequences, new GenericFastaHeaderFormat<>(), true);
 			fastaWriter.process();
 
 

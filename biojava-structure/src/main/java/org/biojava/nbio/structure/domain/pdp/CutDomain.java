@@ -43,7 +43,7 @@ public class CutDomain {
 
 		ndom = 0;
 
-		domains = new ArrayList<Domain>();
+		domains = new ArrayList<>();
 
 	}
 
@@ -69,7 +69,7 @@ public class CutDomain {
 
 		Cut cut = new Cut();
 
-		site = cut.cut(ca,dom,val, dist, pdpMatrix);
+		site = Cut.cut(ca,dom,val, dist, pdpMatrix);
 		if ( verbose )
 		System.out.println("  S ... site " + dom + " : site: " + site + " val : " + val);
 

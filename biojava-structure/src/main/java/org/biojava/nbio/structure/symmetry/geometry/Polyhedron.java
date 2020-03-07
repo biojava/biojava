@@ -33,10 +33,10 @@ import java.util.List;
  */
 public interface Polyhedron {
 
-	public Point3d[] getVertices();
-	public List<int[]> getLineLoops();
-	public double getCirumscribedRadius();
-	public int getViewCount();
-	public String getViewName(int index);
-	public Matrix3d getViewMatrix(int index);
+	Point3d[] getVertices();
+	List<int[]> getLineLoops();
+	double getCirumscribedRadius();
+	int getViewCount();
+	String getViewName(int index);
+	Matrix3d getViewMatrix(int index);
 }

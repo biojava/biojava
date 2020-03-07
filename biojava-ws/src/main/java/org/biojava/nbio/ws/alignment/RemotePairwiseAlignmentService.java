@@ -41,7 +41,7 @@ public interface RemotePairwiseAlignmentService {
 	 *
 	 * @throws Exception
 	 */
-	public String sendAlignmentRequest(Sequence<Compound> seq, RemotePairwiseAlignmentProperties rpa) throws Exception;
+    String sendAlignmentRequest(Sequence<Compound> seq, RemotePairwiseAlignmentProperties rpa) throws Exception;
 
 	/**
 	 * Doing the actual analysis on the instantiated service using specified parameters on the string representation
@@ -49,7 +49,7 @@ public interface RemotePairwiseAlignmentService {
 	 *
 	 * @throws Exception
 	 */
-	public String sendAlignmentRequest(String str, RemotePairwiseAlignmentProperties rpa) throws Exception;
+    String sendAlignmentRequest(String str, RemotePairwiseAlignmentProperties rpa) throws Exception;
 
 	/**
 	 * Simple method to check if the specified request has been completed by the service used.
@@ -59,7 +59,7 @@ public interface RemotePairwiseAlignmentService {
 	 * @return a boolean value telling if this requestID has been completed or not.
 	 * @throws Exception if the ID does not exist.
 	 */
-	public boolean isReady(String id,long present) throws Exception;
+    boolean isReady(String id, long present) throws Exception;
 
 	/**
 	 * Getting the actual alignment results from this instantiated service for a given ID with specific
@@ -70,5 +70,5 @@ public interface RemotePairwiseAlignmentService {
 	 * @return : an <code>InputStream</code> with the actual alignment results
 	 * @throws Exception
 	 */
-	public InputStream getAlignmentResults(String rid,RemotePairwiseAlignmentOutputProperties out) throws Exception;
+    InputStream getAlignmentResults(String rid, RemotePairwiseAlignmentOutputProperties out) throws Exception;
 }

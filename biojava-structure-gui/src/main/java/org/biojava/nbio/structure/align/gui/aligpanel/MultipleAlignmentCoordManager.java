@@ -31,8 +31,8 @@ import java.awt.*;
  */
 public class MultipleAlignmentCoordManager {
 
-	private int alignmentLength;     	//number of aligned residues
-	private int alignmentSize;			//number of strucures aligned
+	private final int alignmentLength;     	//number of aligned residues
+	private final int alignmentSize;			//number of strucures aligned
 
 	/**
 	 * Constructor.

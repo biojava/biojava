@@ -81,20 +81,16 @@ public class RNAToAminoAcidTranslator extends
 		this.initMetOnly = initMetOnly;
 		this.translateNCodons = translateNCodons;
 
-		quickLookup = new HashMap<Table.CaseInsensitiveTriplet, Codon>(codons
+		quickLookup = new HashMap<>(codons
 				.getAllCompounds().size());
-		aminoAcidToCodon = new HashMap<AminoAcidCompound, List<Codon>>();
+		aminoAcidToCodon = new HashMap<>();
 
 		List<Codon> codonList = table.getCodons(nucleotides, aminoAcids);
 		for (Codon codon : codonList) {
 			quickLookup.put(codon.getTriplet(), codon);
 			codonArray[codon.getTriplet().intValue()] = codon;
 
-			List<Codon> codonL = aminoAcidToCodon.get(codon.getAminoAcid());
-			if (codonL == null) {
-				codonL = new ArrayList<Codon>();
-				aminoAcidToCodon.put(codon.getAminoAcid(), codonL);
-			}
+			List<Codon> codonL = aminoAcidToCodon.computeIfAbsent(codon.getAminoAcid(), k -> new ArrayList<>());
 			codonL.add(codon);
 
 		}
@@ -114,9 +110,9 @@ public class RNAToAminoAcidTranslator extends
 	public List<Sequence<AminoAcidCompound>> createSequences(
 			Sequence<NucleotideCompound> originalSequence) {
 
-		List<List<AminoAcidCompound>> workingList = new ArrayList<List<AminoAcidCompound>>();
+		List<List<AminoAcidCompound>> workingList = new ArrayList<>();
 
-		Iterable<SequenceView<NucleotideCompound>> iter = new WindowedSequence<NucleotideCompound>(
+		Iterable<SequenceView<NucleotideCompound>> iter = new WindowedSequence<>(
 				originalSequence, 3);
 
 		boolean first = true;
@@ -132,7 +128,7 @@ public class RNAToAminoAcidTranslator extends
 					element.getCompoundAt(i++), element.getCompoundAt(i++),
 					element.getCompoundAt(i++));
 
-			Codon target = null;
+			Codon target;
 
 			target = quickLookup.get(triplet);
 
@@ -152,7 +148,7 @@ public class RNAToAminoAcidTranslator extends
 					}
 				}
 
-				addCompoundsToList(Arrays.asList(aminoAcid), workingList);
+				addCompoundsToList(Collections.singletonList(aminoAcid), workingList);
 			}
 
 			if (doTranslate && stopAtStopCodons && target.isStop()) {

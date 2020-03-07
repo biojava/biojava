@@ -237,11 +237,11 @@ public class AFPChainXMLConverter {
 		xml.attribute("name2", afpChain.getName2());
 		xml.attribute("method", afpChain.getAlgorithmName());
 		xml.attribute("version" , afpChain.getVersion());
-		xml.attribute("alnLength", afpChain.getAlnLength() + "");
-		xml.attribute("blockNum", afpChain.getBlockNum() + "");
-		xml.attribute("gapLen", afpChain.getGapLen() + "");
-		xml.attribute("optLength", afpChain.getOptLength() + "");
-		xml.attribute("totalLenIni", afpChain.getTotalLenIni() + "");
+		xml.attribute("alnLength", String.valueOf(afpChain.getAlnLength()));
+		xml.attribute("blockNum", String.valueOf(afpChain.getBlockNum()));
+		xml.attribute("gapLen", String.valueOf(afpChain.getGapLen()));
+		xml.attribute("optLength", String.valueOf(afpChain.getOptLength()));
+		xml.attribute("totalLenIni", String.valueOf(afpChain.getTotalLenIni()));
 
 		xml.attribute("alignScore", String.format("%5.2f", afpChain.getAlignScore() ).trim());
 		xml.attribute("chainRmsd",  String.format("%5.2f", afpChain.getChainRmsd() ).trim());
@@ -250,13 +250,13 @@ public class AFPChainXMLConverter {
 		xml.attribute("probability", String.format("%.2e", afpChain.getProbability() ).trim());
 		xml.attribute("similarity", String.format("%5.4f", afpChain.getSimilarity() ).trim());
 
-		xml.attribute("similarity1", afpChain.getCoverage1() + "");
-		xml.attribute("similarity2", afpChain.getCoverage2() + "");
+		xml.attribute("similarity1", String.valueOf(afpChain.getCoverage1()));
+		xml.attribute("similarity2", String.valueOf(afpChain.getCoverage2()));
 		xml.attribute("totalRmsdIni", String.format("%5.2f",afpChain.getTotalRmsdIni() ).trim());
 		xml.attribute("totalRmsdOpt", String.format("%5.2f",afpChain.getTotalRmsdOpt() ).trim());
-		xml.attribute("ca1Length", afpChain.getCa1Length()+"");
-		xml.attribute("ca2Length", afpChain.getCa2Length()+"");
-		xml.attribute("afpNum",afpChain.getAfpSet().size()+"");
+		xml.attribute("ca1Length", String.valueOf(afpChain.getCa1Length()));
+		xml.attribute("ca2Length", String.valueOf(afpChain.getCa2Length()));
+		xml.attribute("afpNum", String.valueOf(afpChain.getAfpSet().size()));
 		xml.attribute("alignScoreUpdate",String.format("%5.2f",afpChain.getAlignScoreUpdate()).trim());
 		xml.attribute("time", String.format("%d",afpChain.getCalculationTime()));
 		if ( afpChain.getTMScore() != -1){

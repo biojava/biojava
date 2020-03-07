@@ -48,7 +48,7 @@ public class TestMultipleAlignmentTools {
 	 */
 	public static class NamedBlock extends BlockImpl {
 		private static final long serialVersionUID = 5060618718423340848L;
-		private String name;
+		private final String name;
 		public NamedBlock(String name, BlockSet bs) {
 			super(bs);
 			this.name = name;
@@ -88,7 +88,7 @@ public class TestMultipleAlignmentTools {
 				Arrays.asList( 20, 21, 22),
 				Arrays.asList( 10, 11, 12),
 				Arrays.asList( 10, null, 12),
-				Arrays.asList( (Integer)null,null,null),
+				Arrays.asList(null,null,null),
 				Arrays.asList( 10, 11, 12),
 				Arrays.asList( 10, 11, 12)
 				));
@@ -106,7 +106,7 @@ public class TestMultipleAlignmentTools {
 				Arrays.asList( 40, 41, 42),
 				Arrays.asList( 30, 31, 32),
 				Arrays.asList( null, 31, 32),
-				Arrays.asList( (Integer)null,null,null),
+				Arrays.asList(null,null,null),
 				Arrays.asList( 30, 51, 52),
 				Arrays.asList( 30, 31, 32)
 				));

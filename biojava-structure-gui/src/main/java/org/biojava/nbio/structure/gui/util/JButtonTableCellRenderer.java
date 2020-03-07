@@ -27,7 +27,7 @@ import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 
 class JButtonTableCellRenderer implements TableCellRenderer {
-	private TableCellRenderer __defaultRenderer;
+	private final TableCellRenderer __defaultRenderer;
 
 	public JButtonTableCellRenderer(TableCellRenderer renderer) {
 		__defaultRenderer = renderer;

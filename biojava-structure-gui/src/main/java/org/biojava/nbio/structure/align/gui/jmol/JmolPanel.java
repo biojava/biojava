@@ -135,9 +135,9 @@ implements ActionListener
 			try (
 					PipedOutputStream out = new PipedOutputStream();
 					// Viewer requires a BufferedInputStream for reflection
-					InputStream in = new BufferedInputStream(new PipedInputStream(out));
-					) {
-				new Thread((Runnable)() -> {
+					InputStream in = new BufferedInputStream(new PipedInputStream(out))
+			) {
+				new Thread(() -> {
 					try {
 						MmtfActions.writeToOutputStream(s,out);
 					} catch (Exception e) {
@@ -171,39 +171,7 @@ implements ActionListener
 	 */
 	public void jmolColorByChain(){
 		String script =
-				"function color_by_chain(objtype, color_list) {"+ String.format("%n") +
-				""+ String.format("%n") +
-				"		 if (color_list) {"+ String.format("%n") +
-				"		   if (color_list.type == \"string\") {"+ String.format("%n") +
-				"		     color_list = color_list.split(\",\").trim();"+ String.format("%n") +
-				"		   }"+ String.format("%n") +
-				"		 } else {"+ String.format("%n") +
-				"		   color_list = [\"104BA9\",\"AA00A2\",\"C9F600\",\"FFA200\",\"284A7E\",\"7F207B\",\"9FB82E\",\"BF8B30\",\"052D6E\",\"6E0069\",\"83A000\",\"A66A00\",\"447BD4\",\"D435CD\",\"D8FA3F\",\"FFBA40\",\"6A93D4\",\"D460CF\",\"E1FA71\",\"FFCC73\"];"+ String.format("%n") +
-				"		 }"+ String.format("%n") +
-
-				"		 var cmd2 = \"\";"+ String.format("%n") +
-
-				"		 if (!objtype) {"+ String.format("%n") +
-				"		   var type_list  = [ \"backbone\",\"cartoon\",\"dots\",\"halo\",\"label\",\"meshribbon\",\"polyhedra\",\"rocket\",\"star\",\"strand\",\"strut\",\"trace\"];"+ String.format("%n") +
-				"		   cmd2 = \"color \" + type_list.join(\" none; color \") + \" none;\";"+ String.format("%n") +
-				"		   objtype = \"atoms\";"+ String.format("%n") +
-
-				"		 }"+ String.format("%n") +
-
-				"		 var chain_list  = script(\"show chain\").trim().lines;"+ String.format("%n") +
-				"		 var chain_count = chain_list.length;"+ String.format("%n") +
-
-				"		 var color_count = color_list.length;"+ String.format("%n") +
-				"		 var sel = {selected};"+ String.format("%n") +
-				"		 var cmds = \"\";"+ String.format("%n") +
-
-
-				"		 for (var chain_number=1; chain_number<=chain_count; chain_number++) {"+ String.format("%n") +
-				"		   // remember, Jmol arrays start with 1, but % can return 0"+ String.format("%n") +
-				"		   cmds += \"select sel and :\" + chain_list[chain_number] + \";color \" + objtype + \" [x\" + color_list[(chain_number-1) % color_count + 1] + \"];\" + cmd2;"+ String.format("%n") +
-				"		 }"+ String.format("%n") +
-				"		 script INLINE @{cmds + \"select sel\"}"+ String.format("%n") +
-				"}";
+				"function color_by_chain(objtype, color_list) {" + String.format("%n") + String.format("%n") + "		 if (color_list) {" + String.format("%n") + "		   if (color_list.type == \"string\") {" + String.format("%n") + "		     color_list = color_list.split(\",\").trim();" + String.format("%n") + "		   }" + String.format("%n") + "		 } else {" + String.format("%n") + "		   color_list = [\"104BA9\",\"AA00A2\",\"C9F600\",\"FFA200\",\"284A7E\",\"7F207B\",\"9FB82E\",\"BF8B30\",\"052D6E\",\"6E0069\",\"83A000\",\"A66A00\",\"447BD4\",\"D435CD\",\"D8FA3F\",\"FFBA40\",\"6A93D4\",\"D460CF\",\"E1FA71\",\"FFCC73\"];" + String.format("%n") + "		 }" + String.format("%n") + "		 var cmd2 = \"\";" + String.format("%n") + "		 if (!objtype) {" + String.format("%n") + "		   var type_list  = [ \"backbone\",\"cartoon\",\"dots\",\"halo\",\"label\",\"meshribbon\",\"polyhedra\",\"rocket\",\"star\",\"strand\",\"strut\",\"trace\"];" + String.format("%n") + "		   cmd2 = \"color \" + type_list.join(\" none; color \") + \" none;\";" + String.format("%n") + "		   objtype = \"atoms\";" + String.format("%n") + "		 }" + String.format("%n") + "		 var chain_list  = script(\"show chain\").trim().lines;" + String.format("%n") + "		 var chain_count = chain_list.length;" + String.format("%n") + "		 var color_count = color_list.length;" + String.format("%n") + "		 var sel = {selected};" + String.format("%n") + "		 var cmds = \"\";" + String.format("%n") + "		 for (var chain_number=1; chain_number<=chain_count; chain_number++) {" + String.format("%n") + "		   // remember, Jmol arrays start with 1, but % can return 0" + String.format("%n") + "		   cmds += \"select sel and :\" + chain_list[chain_number] + \";color \" + objtype + \" [x\" + color_list[(chain_number-1) % color_count + 1] + \"];\" + cmd2;" + String.format("%n") + "		 }" + String.format("%n") + "		 script INLINE @{cmds + \"select sel\"}" + String.format("%n") + "}";
 
 		executeCmd(script);
 	}
@@ -229,66 +197,86 @@ implements ActionListener
 
 		String selectLigand = "select ligand;wireframe 0.16;spacefill 0.5; color cpk ;";
 
-		if ( value.equals("Cartoon")){
-			String script = "hide null; select all;  spacefill off; wireframe off; backbone off;" +
-					" cartoon on; " +
-					" select ligand; wireframe 0.16;spacefill 0.5; color cpk; " +
-					" select *.FE; spacefill 0.7; color cpk ; " +
-					" select *.CU; spacefill 0.7; color cpk ; " +
-					" select *.ZN; spacefill 0.7; color cpk ; " +
-					" select all; ";
-			this.executeCmd(script);
-		} else if (value.equals("Backbone")){
-			String script = "hide null; select all; spacefill off; wireframe off; backbone 0.4;" +
-					" cartoon off; " +
-					" select ligand; wireframe 0.16;spacefill 0.5; color cpk; " +
-					" select *.FE; spacefill 0.7; color cpk ; " +
-					" select *.CU; spacefill 0.7; color cpk ; " +
-					" select *.ZN; spacefill 0.7; color cpk ; " +
-					" select all; ";
-			this.executeCmd(script);
-		} else if (value.equals("CPK")){
-			String script = "hide null; select all; spacefill off; wireframe off; backbone off;" +
-					" cartoon off; cpk on;" +
-					" select ligand; wireframe 0.16;spacefill 0.5; color cpk; " +
-					" select *.FE; spacefill 0.7; color cpk ; " +
-					" select *.CU; spacefill 0.7; color cpk ; " +
-					" select *.ZN; spacefill 0.7; color cpk ; " +
-					" select all; ";
-			this.executeCmd(script);
+		switch (value) {
+			case "Cartoon": {
+				String script = "hide null; select all;  spacefill off; wireframe off; backbone off;" +
+						" cartoon on; " +
+						" select ligand; wireframe 0.16;spacefill 0.5; color cpk; " +
+						" select *.FE; spacefill 0.7; color cpk ; " +
+						" select *.CU; spacefill 0.7; color cpk ; " +
+						" select *.ZN; spacefill 0.7; color cpk ; " +
+						" select all; ";
+				this.executeCmd(script);
+				break;
+			}
+			case "Backbone": {
+				String script = "hide null; select all; spacefill off; wireframe off; backbone 0.4;" +
+						" cartoon off; " +
+						" select ligand; wireframe 0.16;spacefill 0.5; color cpk; " +
+						" select *.FE; spacefill 0.7; color cpk ; " +
+						" select *.CU; spacefill 0.7; color cpk ; " +
+						" select *.ZN; spacefill 0.7; color cpk ; " +
+						" select all; ";
+				this.executeCmd(script);
+				break;
+			}
+			case "CPK": {
+				String script = "hide null; select all; spacefill off; wireframe off; backbone off;" +
+						" cartoon off; cpk on;" +
+						" select ligand; wireframe 0.16;spacefill 0.5; color cpk; " +
+						" select *.FE; spacefill 0.7; color cpk ; " +
+						" select *.CU; spacefill 0.7; color cpk ; " +
+						" select *.ZN; spacefill 0.7; color cpk ; " +
+						" select all; ";
+				this.executeCmd(script);
 
-		} else if (value.equals("Ligands")){
-			this.executeCmd("restrict ligand; cartoon off; wireframe on;  display selected;");
-		} else if (value.equals("Ligands and Pocket")){
-			this.executeCmd(" select within (6.0,ligand); cartoon off; wireframe on; backbone off; display selected; ");
-		} else if ( value.equals("Ball and Stick")){
-			String script = "hide null; restrict not water;  wireframe 0.2; spacefill 25%;" +
-					" cartoon off; backbone off; " +
-					" select ligand; wireframe 0.16; spacefill 0.5; color cpk; " +
-					" select *.FE; spacefill 0.7; color cpk ; " +
-					" select *.CU; spacefill 0.7; color cpk ; " +
-					" select *.ZN; spacefill 0.7; color cpk ; " +
-					" select all; ";
-			this.executeCmd(script);
-		} else if ( value.equals("By Chain")){
-			jmolColorByChain();
-			String script = "hide null; select all;set defaultColors Jmol; color_by_chain(\"cartoon\"); color_by_chain(\"\"); " + selectLigand + "; select all; ";
-			this.executeCmd(script);
-		} else if ( value.equals("Rainbow")) {
-			this.executeCmd("hide null; select all; set defaultColors Jmol; color group; color cartoon group; " + selectLigand + "; select all; " );
-		} else if ( value.equals("Secondary Structure")){
-			this.executeCmd("hide null; select all; set defaultColors Jmol; color structure; color cartoon structure;" + selectLigand + "; select all; " );
+				break;
+			}
+			case "Ligands":
+				this.executeCmd("restrict ligand; cartoon off; wireframe on;  display selected;");
+				break;
+			case "Ligands and Pocket":
+				this.executeCmd(" select within (6.0,ligand); cartoon off; wireframe on; backbone off; display selected; ");
+				break;
+			case "Ball and Stick": {
+				String script = "hide null; restrict not water;  wireframe 0.2; spacefill 25%;" +
+						" cartoon off; backbone off; " +
+						" select ligand; wireframe 0.16; spacefill 0.5; color cpk; " +
+						" select *.FE; spacefill 0.7; color cpk ; " +
+						" select *.CU; spacefill 0.7; color cpk ; " +
+						" select *.ZN; spacefill 0.7; color cpk ; " +
+						" select all; ";
+				this.executeCmd(script);
+				break;
+			}
+			case "By Chain": {
+				jmolColorByChain();
+				String script = "hide null; select all;set defaultColors Jmol; color_by_chain(\"cartoon\"); color_by_chain(\"\"); " + selectLigand + "; select all; ";
+				this.executeCmd(script);
+				break;
+			}
+			case "Rainbow":
+				this.executeCmd("hide null; select all; set defaultColors Jmol; color group; color cartoon group; " + selectLigand + "; select all; ");
+				break;
+			case "Secondary Structure":
+				this.executeCmd("hide null; select all; set defaultColors Jmol; color structure; color cartoon structure;" + selectLigand + "; select all; ");
 
-		} else if ( value.equals("By Element")){
-			this.executeCmd("hide null; select all; set defaultColors Jmol; color cpk; color cartoon cpk; " + selectLigand + "; select all; ");
-		} else if ( value.equals("By Amino Acid")){
-			this.executeCmd("hide null; select all; set defaultColors Jmol; color amino; color cartoon amino; " + selectLigand + "; select all; " );
-		} else if ( value.equals("Hydrophobicity") ){
-			this.executeCmd("hide null; set defaultColors Jmol; select hydrophobic; color red; color cartoon red; select not hydrophobic ; color blue ; color cartoon blue; "+ selectLigand+"; select all; ");
-		} else if ( value.equals("Suggest Domains")){
-			colorByPDP();
-		} else if ( value.equals("Show SCOP Domains")){
-			colorBySCOP();
+				break;
+			case "By Element":
+				this.executeCmd("hide null; select all; set defaultColors Jmol; color cpk; color cartoon cpk; " + selectLigand + "; select all; ");
+				break;
+			case "By Amino Acid":
+				this.executeCmd("hide null; select all; set defaultColors Jmol; color amino; color cartoon amino; " + selectLigand + "; select all; ");
+				break;
+			case "Hydrophobicity":
+				this.executeCmd("hide null; set defaultColors Jmol; select hydrophobic; color red; color cartoon red; select not hydrophobic ; color blue ; color cartoon blue; " + selectLigand + "; select all; ");
+				break;
+			case "Suggest Domains":
+				colorByPDP();
+				break;
+			case "Show SCOP Domains":
+				colorBySCOP();
+				break;
 		}
 		evalString("restore selection; ");
 	}
@@ -361,7 +349,7 @@ implements ActionListener
 					Group startG = ca[start].getGroup();
 					Group endG = ca[end].getGroup();
 					logger.debug("   Segment: " +startG.getResidueNumber() +":" + startG.getChainId() + " - " + endG.getResidueNumber()+":"+endG.getChainId() + " " + s);
-					String j1 = startG.getResidueNumber()+"";
+					String j1 = String.valueOf(startG.getResidueNumber());
 					String j2 = endG.getResidueNumber()+":"+endG.getChainId();
 					String script = " select  " +j1 +"-" +j2 +"/1;";
 					script += " color [" + c1.getRed() + ","+c1.getGreen() + "," +c1.getBlue()+"];";
@@ -407,7 +395,7 @@ implements ActionListener
 	}
 
 	public static class JmolLoggerAdapter implements LoggerInterface {
-		private Logger slf;
+		private final Logger slf;
 		public JmolLoggerAdapter(Logger slf) {
 			this.slf=slf;
 		}

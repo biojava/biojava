@@ -133,35 +133,35 @@ public class AminoAcidTest {
 
 	@Test
 	public void generateXml() throws JAXBException, IOException{
-		List<Name2Count> elementList = new ArrayList<Name2Count>();
+		List<Name2Count> elementList = new ArrayList<>();
 		elementList.add(new Name2Count("Carbon", 3));
 		elementList.add(new Name2Count("Hydrogen", 5));
 		elementList.add(new Name2Count("Nitrogen", 1));
 		elementList.add(new Name2Count("Oxygen", 1));
 		AminoAcidComposition alanine = new AminoAcidComposition("A", "Ala", "Alanine", elementList, null);
 
-		elementList = new ArrayList<Name2Count>();
+		elementList = new ArrayList<>();
 		elementList.add(new Name2Count("Carbon", 6));
 		elementList.add(new Name2Count("Hydrogen", 12));
 		elementList.add(new Name2Count("Nitrogen", 4));
 		elementList.add(new Name2Count("Oxygen", 1));
 		AminoAcidComposition arginine = new AminoAcidComposition("R", "Arg", "Arginine", elementList, null);
 
-		elementList = new ArrayList<Name2Count>();
+		elementList = new ArrayList<>();
 		elementList.add(new Name2Count("Carbon", 4));
 		elementList.add(new Name2Count("Hydrogen", 6));
 		elementList.add(new Name2Count("Nitrogen", 2));
 		elementList.add(new Name2Count("Oxygen", 2));
 		AminoAcidComposition asparagine = new AminoAcidComposition("N", "Asn", "Asparagine", elementList, null);
 
-		elementList = new ArrayList<Name2Count>();
+		elementList = new ArrayList<>();
 		elementList.add(new Name2Count("Carbon", 4));
 		elementList.add(new Name2Count("Hydrogen", 5));
 		elementList.add(new Name2Count("Nitrogen", 1));
 		elementList.add(new Name2Count("Oxygen", 3));
 		AminoAcidComposition asparticAcid = new AminoAcidComposition("D", "Asp", "Aspartic Acid", elementList, null);
 
-		elementList = new ArrayList<Name2Count>();
+		elementList = new ArrayList<>();
 
 		elementList.add(new Name2Count("Carbon", 3));
 		elementList.add(new Name2Count("Hydrogen", 5));
@@ -170,7 +170,7 @@ public class AminoAcidTest {
 		elementList.add(new Name2Count("Sulfur", 1));
 		AminoAcidComposition cysteine = new AminoAcidComposition("C", "Cys", "Cysteine", elementList, null);
 
-		elementList = new ArrayList<Name2Count>();
+		elementList = new ArrayList<>();
 
 		elementList.add(new Name2Count("Carbon", 5));
 		elementList.add(new Name2Count("Hydrogen", 7));
@@ -178,7 +178,7 @@ public class AminoAcidTest {
 		elementList.add(new Name2Count("Oxygen", 3));
 		AminoAcidComposition glutamicAcid = new AminoAcidComposition("E", "Glu", "Glutamic Acid", elementList, null);
 
-		elementList = new ArrayList<Name2Count>();
+		elementList = new ArrayList<>();
 
 		elementList.add(new Name2Count("Carbon", 5));
 		elementList.add(new Name2Count("Hydrogen", 8));
@@ -186,7 +186,7 @@ public class AminoAcidTest {
 		elementList.add(new Name2Count("Oxygen", 2));
 		AminoAcidComposition glutamine = new AminoAcidComposition("Q", "Gln", "Glutamine", elementList, null);
 
-		elementList = new ArrayList<Name2Count>();
+		elementList = new ArrayList<>();
 
 		elementList.add(new Name2Count("Carbon", 2));
 		elementList.add(new Name2Count("Hydrogen", 3));
@@ -194,7 +194,7 @@ public class AminoAcidTest {
 		elementList.add(new Name2Count("Oxygen", 1));
 		AminoAcidComposition glycine = new AminoAcidComposition("G", "Gly", "Glycine", elementList, null);
 
-		elementList = new ArrayList<Name2Count>();
+		elementList = new ArrayList<>();
 
 		elementList.add(new Name2Count("Carbon", 6));
 		elementList.add(new Name2Count("Hydrogen", 7));
@@ -202,7 +202,7 @@ public class AminoAcidTest {
 		elementList.add(new Name2Count("Oxygen", 1));
 		AminoAcidComposition histidine = new AminoAcidComposition("H", "His", "Histidine", elementList, null);
 
-		elementList = new ArrayList<Name2Count>();
+		elementList = new ArrayList<>();
 
 		elementList.add(new Name2Count("Carbon", 6));
 		elementList.add(new Name2Count("Hydrogen", 11));
@@ -210,7 +210,7 @@ public class AminoAcidTest {
 		elementList.add(new Name2Count("Oxygen", 1));
 		AminoAcidComposition isoleucine = new AminoAcidComposition("I", "Ile", "Isoleucine", elementList, null);
 
-		elementList = new ArrayList<Name2Count>();
+		elementList = new ArrayList<>();
 
 		elementList.add(new Name2Count("Carbon", 6));
 		elementList.add(new Name2Count("Hydrogen", 11));
@@ -218,7 +218,7 @@ public class AminoAcidTest {
 		elementList.add(new Name2Count("Oxygen", 1));
 		AminoAcidComposition leucine = new AminoAcidComposition("L", "Leu", "Leucine", elementList, null);
 
-		elementList = new ArrayList<Name2Count>();
+		elementList = new ArrayList<>();
 
 		elementList.add(new Name2Count("Carbon", 6));
 		elementList.add(new Name2Count("Hydrogen", 12));
@@ -226,7 +226,7 @@ public class AminoAcidTest {
 		elementList.add(new Name2Count("Oxygen", 1));
 		AminoAcidComposition lysine = new AminoAcidComposition("K", "Lys", "Lysine", elementList, null);
 
-		elementList = new ArrayList<Name2Count>();
+		elementList = new ArrayList<>();
 
 		elementList.add(new Name2Count("Carbon", 5));
 		elementList.add(new Name2Count("Hydrogen", 9));
@@ -235,7 +235,7 @@ public class AminoAcidTest {
 		elementList.add(new Name2Count("Sulfur", 1));
 		AminoAcidComposition methionine = new AminoAcidComposition("M", "Met", "Methionine", elementList, null);
 
-		elementList = new ArrayList<Name2Count>();
+		elementList = new ArrayList<>();
 
 		elementList.add(new Name2Count("Carbon", 9));
 		elementList.add(new Name2Count("Hydrogen", 9));
@@ -243,7 +243,7 @@ public class AminoAcidTest {
 		elementList.add(new Name2Count("Oxygen", 1));
 		AminoAcidComposition phenylalanine = new AminoAcidComposition("F", "Phe", "Phenylalanine", elementList, null);
 
-		elementList = new ArrayList<Name2Count>();
+		elementList = new ArrayList<>();
 
 		elementList.add(new Name2Count("Carbon", 5));
 		elementList.add(new Name2Count("Hydrogen", 7));
@@ -251,7 +251,7 @@ public class AminoAcidTest {
 		elementList.add(new Name2Count("Oxygen", 1));
 		AminoAcidComposition proline = new AminoAcidComposition("P", "Pro", "Proline", elementList, null);
 
-		elementList = new ArrayList<Name2Count>();
+		elementList = new ArrayList<>();
 
 		elementList.add(new Name2Count("Carbon", 3));
 		elementList.add(new Name2Count("Hydrogen", 5));
@@ -259,7 +259,7 @@ public class AminoAcidTest {
 		elementList.add(new Name2Count("Oxygen", 2));
 		AminoAcidComposition serine = new AminoAcidComposition("S", "Ser", "Serine", elementList, null);
 
-		elementList = new ArrayList<Name2Count>();
+		elementList = new ArrayList<>();
 
 		elementList.add(new Name2Count("Carbon", 4));
 		elementList.add(new Name2Count("Hydrogen", 7));
@@ -267,7 +267,7 @@ public class AminoAcidTest {
 		elementList.add(new Name2Count("Oxygen", 2));
 		AminoAcidComposition threonine = new AminoAcidComposition("T", "Thr", "Threonine", elementList, null);
 
-		elementList = new ArrayList<Name2Count>();
+		elementList = new ArrayList<>();
 
 		elementList.add(new Name2Count("Carbon", 11));
 		elementList.add(new Name2Count("Hydrogen", 10));
@@ -275,7 +275,7 @@ public class AminoAcidTest {
 		elementList.add(new Name2Count("Oxygen", 1));
 		AminoAcidComposition tryptophan = new AminoAcidComposition("W", "Trp", "Tryptophan", elementList, null);
 
-		elementList = new ArrayList<Name2Count>();
+		elementList = new ArrayList<>();
 
 		elementList.add(new Name2Count("Carbon", 9));
 		elementList.add(new Name2Count("Hydrogen", 9));
@@ -283,7 +283,7 @@ public class AminoAcidTest {
 		elementList.add(new Name2Count("Oxygen", 2));
 		AminoAcidComposition tyrosine = new AminoAcidComposition("Y", "Tyr", "Tyrosine", elementList, null);
 
-		elementList = new ArrayList<Name2Count>();
+		elementList = new ArrayList<>();
 
 		elementList.add(new Name2Count("Carbon", 5));
 		elementList.add(new Name2Count("Hydrogen", 9));
@@ -291,7 +291,7 @@ public class AminoAcidTest {
 		elementList.add(new Name2Count("Oxygen", 1));
 		AminoAcidComposition valine = new AminoAcidComposition("V", "Val", "Valine", elementList, null);
 
-		List<AminoAcidComposition> aList = new ArrayList<AminoAcidComposition>();
+		List<AminoAcidComposition> aList = new ArrayList<>();
 		aList.add(alanine);
 		aList.add(arginine);
 		aList.add(asparagine);

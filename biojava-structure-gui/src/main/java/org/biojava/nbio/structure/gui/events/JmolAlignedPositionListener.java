@@ -71,8 +71,8 @@ public class JmolAlignedPositionListener implements AlignmentPositionListener{
 			return;
 		}
 
-		String pdbpos1 ="";
-		String pdbpos2 = "";
+		String pdbpos1;
+		String pdbpos2;
 
 		if ( p1 >-1) {
 			Atom a = ca1[p1];

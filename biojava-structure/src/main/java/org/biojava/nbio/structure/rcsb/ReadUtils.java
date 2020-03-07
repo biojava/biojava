@@ -70,8 +70,8 @@ public class ReadUtils {
 			documentBuilderFactorySet = true;
 		}
 		DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder builder = null;
-		Document document = null;
+		DocumentBuilder builder;
+		Document document;
 		try {
 			builder = builderFactory.newDocumentBuilder();
 		} catch (ParserConfigurationException e) {
