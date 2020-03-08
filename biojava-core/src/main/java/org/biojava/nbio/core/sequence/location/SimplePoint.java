@@ -104,9 +104,9 @@ public class SimplePoint implements Serializable, Point {
 		boolean equals = false;
 		if (Equals.classEqual(this, obj)) {
 			SimplePoint p = (SimplePoint) obj;
-			equals = (Equals.equal(getPosition(), p.getPosition())
-					&& Equals.equal(isUncertain(), p.isUncertain())
-					&& Equals.equal(isUnknown(), p.isUnknown()));
+			equals = (getPosition() == p.getPosition()
+					&& isUncertain() == p.isUncertain()
+					&& isUnknown() == p.isUnknown());
 		}
 		return equals;
 	}

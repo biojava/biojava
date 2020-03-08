@@ -29,6 +29,7 @@ import org.biojava.nbio.core.util.Hashcoder;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * An implementation of the popular bit encodings. This class provides the
@@ -193,8 +194,8 @@ public class BitSequenceReader<C extends Compound> implements ProxySequenceReade
 		if(Equals.classEqual(this, o)) {
 			@SuppressWarnings("unchecked")
 			BitSequenceReader<C> that = (BitSequenceReader<C>)o;
-			return  Equals.equal(this.accession, that.accession) &&
-					Equals.equal(this.worker, that.worker);
+			return  Objects.equals(this.accession, that.accession) &&
+					Objects.equals(this.worker, that.worker);
 		}
 		return false;
 	}
@@ -287,9 +288,8 @@ public class BitSequenceReader<C extends Compound> implements ProxySequenceReade
 		 */
 		public void populate(Sequence<C> sequence) {
 			int position = 1;
-			for (C c : sequence) {
+			for (C c : sequence)
 				setCompoundAt(c, position++);
-			}
 		}
 
 		/**
@@ -460,9 +460,9 @@ public class BitSequenceReader<C extends Compound> implements ProxySequenceReade
 		public boolean equals(Object o) {
 			if(Equals.classEqual(this, o)) {
 				BitArrayWorker<C> that = (BitArrayWorker<C>)o;
-				return  Equals.equal(compoundSet, that.compoundSet) &&
-						Equals.equal(indexToCompoundsLookup, that.indexToCompoundsLookup) &&
-						Equals.equal(sequence, that.sequence);
+				return  Objects.equals(compoundSet, that.compoundSet) &&
+						Objects.equals(indexToCompoundsLookup, that.indexToCompoundsLookup) &&
+						Objects.equals(sequence, that.sequence);
 			}
 			return false;
 		}

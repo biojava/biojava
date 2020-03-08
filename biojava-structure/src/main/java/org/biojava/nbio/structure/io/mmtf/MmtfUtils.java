@@ -520,30 +520,30 @@ public class MmtfUtils {
 
 	private static Group getSeqResGroup(char singleLetterCode, GroupType type) {
 
-		if(type==GroupType.AMINOACID){
-			String threeLetter = ChemCompTools.getAminoThreeLetter(singleLetterCode);
-			if (threeLetter == null) return null;
-			ChemComp chemComp = ChemCompGroupFactory.getChemComp(threeLetter);
+		switch (type) {
+			case AMINOACID:
+				String threeLetter = ChemCompTools.getAminoThreeLetter(singleLetterCode);
+				if (threeLetter != null) {
+					AminoAcidImpl a = new AminoAcidImpl();
+					a.setRecordType(AminoAcid.SEQRESRECORD);
+					a.setAminoType(singleLetterCode);
+					a.setPDBName(threeLetter);
+					a.setChemComp(ChemCompGroupFactory.getChemComp(threeLetter));
+					return a;
+				}
 
-			AminoAcidImpl a = new AminoAcidImpl();
-			a.setRecordType(AminoAcid.SEQRESRECORD);
-			a.setAminoType(singleLetterCode);
-			a.setPDBName(threeLetter);
-			a.setChemComp(chemComp);
-			return a;
-
-		} else if (type==GroupType.NUCLEOTIDE) {
-			String twoLetter = ChemCompTools.getDNATwoLetter(singleLetterCode);
-			if (twoLetter == null) return null;
-			ChemComp chemComp = ChemCompGroupFactory.getChemComp(twoLetter);
-
-			NucleotideImpl n = new NucleotideImpl();
-			n.setPDBName(twoLetter);
-			n.setChemComp(chemComp);
-			return n;
+				break;
+			case NUCLEOTIDE:
+				String twoLetter = ChemCompTools.getDNATwoLetter(singleLetterCode);
+				if (twoLetter != null) {
+					NucleotideImpl n = new NucleotideImpl();
+					n.setPDBName(twoLetter);
+					n.setChemComp(ChemCompGroupFactory.getChemComp(twoLetter));
+					return n;
+				}
+				break;
 		}
-		else{
-			return null;
-		}
+		return null;
+
 	}
 }

@@ -21,6 +21,7 @@
  */
 package org.biojava.nbio.core.sequence.template;
 
+import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
 import org.biojava.nbio.core.util.Equals;
 import org.biojava.nbio.core.util.Hashcoder;
 import org.slf4j.Logger;
@@ -155,19 +156,22 @@ public Set<C> getEquivalentCompounds(C compound) {
 
 		@Override
 		public boolean isValidSequence(Sequence<C> sequence) {
-				for (C compound: sequence) {
-						if (!hasCompound(compound)) {
-								return false;
-						}
-				}
-				return true;
+			for (C compound: sequence) {
+				if (!hasCompound(compound))
+					return false;
+			}
+			return true;
 		}
 
 
 
 	@Override
-	public List<C> getAllCompounds() {
-		return new ArrayList<>(charSeqToCompound.values());
+	public Collection<C> getAllCompounds() {
+		return
+			Collections.unmodifiableCollection(
+			//new ArrayList<>(
+				charSeqToCompound.values()
+			);
 	}
 
 	private void assertCompound(C compound) {
@@ -197,11 +201,12 @@ public Set<C> getEquivalentCompounds(C compound) {
 		@Override
 		@SuppressWarnings("unchecked")
 		public boolean equals(Object o) {
+				if (this == o) return true;
 				if (! (o instanceof AbstractCompoundSet)) return false;
 				if(Equals.classEqual(this, o)) {
 						AbstractCompoundSet<C> that = (AbstractCompoundSet<C>)o;
-						return  Equals.equal(charSeqToCompound, that.charSeqToCompound) &&
-										Equals.equal(equivalentsMap, that.equivalentsMap);
+                    return  Objects.equals(charSeqToCompound, that.charSeqToCompound) &&
+                            Objects.equals(equivalentsMap, that.equivalentsMap);
 				}
 				return false;
 		}

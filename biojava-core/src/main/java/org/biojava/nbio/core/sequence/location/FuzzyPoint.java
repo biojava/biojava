@@ -25,6 +25,8 @@ import org.biojava.nbio.core.sequence.location.template.Point;
 import org.biojava.nbio.core.util.Equals;
 import org.biojava.nbio.core.util.Hashcoder;
 
+import java.util.Objects;
+
 /**
  * Implementation for resolving fuzzy locations. Caches the calculated
  * value.
@@ -113,10 +115,10 @@ public class FuzzyPoint extends SimplePoint {
 		boolean equals = false;
 		if (Equals.classEqual(this, obj)) {
 			FuzzyPoint p = (FuzzyPoint) obj;
-			equals = (Equals.equal(getMin(), p.getMin())
-					&& Equals.equal(getMax(), p.getMax())
-					&& Equals.equal(isUnknown(), p.isUnknown())
-					&& Equals.equal(isUncertain(), p.isUncertain())
+			equals = (Objects.equals(getMin(), p.getMin())
+					&& Objects.equals(getMax(), p.getMax())
+					&& isUnknown() == p.isUnknown()
+					&& isUncertain() == p.isUncertain()
 					);
 		}
 		return equals;

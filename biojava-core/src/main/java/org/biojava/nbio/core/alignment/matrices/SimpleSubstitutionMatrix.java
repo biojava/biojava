@@ -108,10 +108,11 @@ public class SimpleSubstitutionMatrix<C extends Compound> implements Substitutio
 		name = "IDENTITY_" + match + "_" + replace;
 		max = (match > replace) ? match : replace;
 		min = (match < replace) ? match : replace;
-		rows = cols = compoundSet.getAllCompounds();
-		matrix = new short[rows.size()][cols.size()];
-		for (int r = 0; r < rows.size(); r++) {
-			for (int c = 0; c < cols.size(); c++) {
+		rows = cols = new ArrayList<>(compoundSet.getAllCompounds());
+		int N = rows.size();
+		matrix = new short[N][N];
+		for (int r = 0; r < N; r++) {
+			for (int c = 0; c < N; c++) {
 				try {
 					matrix[r][c] = (compoundSet.compoundsEquivalent(rows.get(r), cols.get(c))) ? match : replace;
 				} catch (UnsupportedOperationException e) {
@@ -230,7 +231,8 @@ public class SimpleSubstitutionMatrix<C extends Compound> implements Substitutio
 	private static <C extends Compound> int getIndexOfCompound(List<C> list, C compound) {
 		int index = list.indexOf(compound);
 		if (index == -1) {
-			for (int i = 0; i < list.size(); i++) {
+			int N = list.size();
+			for (int i = 0; i < N; i++) {
 				if (compound.equalsIgnoreCase(list.get(i))) {
 					index = i;
 					break;
@@ -290,7 +292,8 @@ public class SimpleSubstitutionMatrix<C extends Compound> implements Substitutio
 	public Map<C, Short> getRow(C row) {
 		int rowIndex = rows.indexOf(row);
 		Map<C, Short> map = new HashMap<>();
-		for (int colIndex = 0; colIndex < matrix[rowIndex].length; colIndex++) {
+		int N = matrix[rowIndex].length;
+		for (int colIndex = 0; colIndex < N; colIndex++) {
 			map.put(cols.get(colIndex), matrix[rowIndex][colIndex]);
 		}
 		return map;

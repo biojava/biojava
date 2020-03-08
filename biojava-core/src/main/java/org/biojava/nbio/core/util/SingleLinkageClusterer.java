@@ -135,7 +135,7 @@ public class SingleLinkageClusterer {
 		dendrogram = new LinkedPair[numItems-1];
 
 
-		logger.debug("Initial matrix: \n"+matrixToString());
+		//logger.debug("Initial matrix: \n"+matrixToString());
 
 
 		for (int m=0;m<numItems-1;m++) {
@@ -176,11 +176,7 @@ public class SingleLinkageClusterer {
 	 * @return
 	 */
 	private double link(double d1, double d2) {
-		if (isScoreMatrix) {
-			return Math.max(d1,d2);
-		} else {
-			return Math.min(d1,d2);
-		}
+		return isScoreMatrix ? Math.max(d1, d2) : Math.min(d1, d2);
 	}
 
 	private double getDistance(int first, int second) {
@@ -293,23 +289,23 @@ public class SingleLinkageClusterer {
 					Set<Integer> firstCluster = clusters.get(firstClusterId);
 					Set<Integer> secondCluster = clusters.get(secondClusterId);
 					if (firstCluster.size()<secondCluster.size()) {
-						logger.debug("Joining cluster "+firstClusterId+" to cluster "+secondClusterId);
+						//logger.debug("Joining cluster "+firstClusterId+" to cluster "+secondClusterId);
 						// we join first onto second
 						secondCluster.addAll(firstCluster);
 						clusters.remove(firstClusterId);
 					} else {
-						logger.debug("Joining cluster "+secondClusterId+" to cluster "+firstClusterId);
+						//logger.debug("Joining cluster "+secondClusterId+" to cluster "+firstClusterId);
 						// we join second onto first
 						firstCluster.addAll(secondCluster);
 						clusters.remove(secondClusterId);
 					}
 				}
 
-				logger.debug("Within cutoff:     "+dendrogram[i]);
+				//logger.debug("Within cutoff:     "+dendrogram[i]);
 
 			} else {
 
-				logger.debug("Not within cutoff: "+dendrogram[i]);
+				//logger.debug("Not within cutoff: "+dendrogram[i]);
 
 			}
 		}
@@ -340,7 +336,7 @@ public class SingleLinkageClusterer {
 
 		}
 
-		logger.debug("Clusters: \n"+clustersToString(finalClusters));
+		//logger.debug("Clusters: \n"+clustersToString(finalClusters));
 
 		return finalClusters;
 	}

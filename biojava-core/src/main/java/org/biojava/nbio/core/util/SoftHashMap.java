@@ -37,7 +37,7 @@ public class SoftHashMap<K, V> extends AbstractMap<K, V> {
 
 	private final static Logger logger = LoggerFactory.getLogger(SoftHashMap.class);
 
-	public static final int DEFAULT_LIMIT = 1;
+	//public static final int DEFAULT_LIMIT = 1;
 
 	/** The internal HashMap that stores SoftReference to actual data. */
 

@@ -243,17 +243,18 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
 
 	@Override
 	public int[] getCompoundCountsAt(int alignmentIndex) {
-		return getCompoundCountsAt(alignmentIndex, getCompoundSet().getAllCompounds());
+		return getCompoundCountsAt(alignmentIndex, new ArrayList(getCompoundSet().getAllCompounds()));
 	}
 
 	@Override
 	public int[] getCompoundCountsAt(int alignmentIndex, List<C> compounds) {
 		int[] counts = new int[compounds.size()];
-		C gap = getCompoundSet().getCompoundForString("-");
+		CompoundSet<C> s = getCompoundSet();
+		C gap = s.getCompoundForString("-");
 		int igap = compounds.indexOf(gap);
 		for (C compound : getCompoundsAt(alignmentIndex)) {
 			int i = compounds.indexOf(compound);
-			if (i >= 0 && i != igap && !getCompoundSet().compoundsEquivalent(compound, gap)) {
+			if (i >= 0 && i != igap && !s.compoundsEquivalent(compound, gap)) {
 				counts[i]++;
 			}
 		}
@@ -277,19 +278,20 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
 
 	@Override
 	public float[] getCompoundWeightsAt(int alignmentIndex) {
-		return getCompoundWeightsAt(alignmentIndex, getCompoundSet().getAllCompounds());
+		return getCompoundWeightsAt(alignmentIndex, new ArrayList(getCompoundSet().getAllCompounds()));
 	}
 
 	@Override
 	public float[] getCompoundWeightsAt(int alignmentIndex, List<C> compounds) {
-		float[] weights = new float[compounds.size()];
+		int N = compounds.size();
+		float[] weights = new float[N];
 		int[] counts = getCompoundCountsAt(alignmentIndex, compounds);
 		float total = 0.0f;
-		for (int i : counts) {
+		for (int i : counts)
 			total += i;
-		}
+
 		if (total > 0.0f) {
-			for (int i = 0; i < weights.length; i++) {
+			for (int i = 0; i < N; i++) {
 				weights[i] = counts[i]/total;
 			}
 		}
@@ -352,9 +354,10 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
 
 	@Override
 	public boolean hasGap(int alignmentIndex) {
-		C gap = getCompoundSet().getCompoundForString("-");
+		CompoundSet<C> s = getCompoundSet();
+		C gap = s.getCompoundForString("-");
 		for (C compound : getCompoundsAt(alignmentIndex)) {
-			if (getCompoundSet().compoundsEquivalent(compound, gap)) {
+			if (s.compoundsEquivalent(compound, gap)) {
 				return true;
 			}
 		}

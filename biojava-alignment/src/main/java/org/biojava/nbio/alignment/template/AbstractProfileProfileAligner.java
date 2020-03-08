@@ -236,7 +236,7 @@ public abstract class AbstractProfileProfileAligner<S extends Sequence<C>, C ext
 		if (query != null && target != null && getGapPenalty() != null && getSubstitutionMatrix() != null &&
 				query.getCompoundSet().equals(target.getCompoundSet())) {
 			int maxq = 0, maxt = 0;
-			cslist = query.getCompoundSet().getAllCompounds();
+			cslist = new ArrayList(query.getCompoundSet().getAllCompounds());
 			qfrac = new float[query.getLength()][];
 			for (int i = 0; i < qfrac.length; i++) {
 				qfrac[i] = query.getCompoundWeightsAt(i + 1, cslist);
@@ -255,17 +255,20 @@ public abstract class AbstractProfileProfileAligner<S extends Sequence<C>, C ext
 
 	// helper method that scores alignment of two column vectors
 	private int getSubstitutionScore(float[] qv, float[] tv) {
-		float score = 0.0f;
+		double score = 0.0;
+		SubstitutionMatrix<C> s = getSubstitutionMatrix();
 		for (int q = 0; q < qv.length; q++) {
-			if (qv[q] > 0.0f) {
+			float qvq = qv[q];
+			if (qvq > 0.0) {
+				C cq = cslist.get(q);
 				for (int t = 0; t < tv.length; t++) {
-					if (tv[t] > 0.0f) {
-						score += qv[q]*tv[t]*getSubstitutionMatrix().getValue(cslist.get(q), cslist.get(t));
-					}
+					float tvt = tv[t];
+					if (tvt > 0.0)
+						score += qvq * tvt * s.getValue(cq, cslist.get(t));
 				}
 			}
 		}
-		return Math.round(score);
+		return (int) Math.round(score); //TODO return double?
 	}
 
 }

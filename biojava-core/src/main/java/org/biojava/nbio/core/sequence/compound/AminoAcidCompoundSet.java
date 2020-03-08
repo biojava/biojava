@@ -145,7 +145,7 @@ public class AminoAcidCompoundSet implements CompoundSet<AminoAcidCompound>, Ser
 			addAmbiguousEquivalents("I", "L", "J");
 			// ambiguous gaps
 			AminoAcidCompound gap1, gap2, gap3;
-			Set<AminoAcidCompound> gaps = new HashSet<>();
+			Set<AminoAcidCompound> gaps = new HashSet<>(3);
 			gaps.add(gap1 = aminoAcidCompoundCache.get("-"));
 			gaps.add(gap2 = aminoAcidCompoundCache.get("."));
 			gaps.add(gap3 = aminoAcidCompoundCache.get("_"));
@@ -153,7 +153,7 @@ public class AminoAcidCompoundSet implements CompoundSet<AminoAcidCompound>, Ser
 			equivalentsCache.put(gap2, gaps);
 			equivalentsCache.put(gap3, gaps);
 			// X is never equivalent, even to itself
-			equivalentsCache.put(aminoAcidCompoundCache.get("X"), new HashSet<>());
+			equivalentsCache.put(aminoAcidCompoundCache.get("X"), Collections.EMPTY_SET);
 		}
 		return equivalentsCache.get(compound);
 	}
@@ -163,18 +163,18 @@ public class AminoAcidCompoundSet implements CompoundSet<AminoAcidCompound>, Ser
 		Set<AminoAcidCompound> equivalents;
 		AminoAcidCompound cOne, cTwo, cEither;
 
-		equivalents = new HashSet<>();
+		equivalents = new HashSet<>(3);
 		equivalents.add(cOne = aminoAcidCompoundCache.get(one));
 		equivalents.add(cTwo = aminoAcidCompoundCache.get(two));
 		equivalents.add(cEither = aminoAcidCompoundCache.get(either));
 		equivalentsCache.put(cEither, equivalents);
 
-		equivalents = new HashSet<>();
+		equivalents = new HashSet<>(2);
 		equivalents.add(cOne);
 		equivalents.add(cEither);
 		equivalentsCache.put(cOne, equivalents);
 
-		equivalents = new HashSet<>();
+		equivalents = new HashSet<>(2);
 		equivalents.add(cTwo);
 		equivalents.add(cEither);
 		equivalentsCache.put(cTwo, equivalents);
@@ -188,16 +188,19 @@ public class AminoAcidCompoundSet implements CompoundSet<AminoAcidCompound>, Ser
 	@Override
 	public boolean isValidSequence(Sequence<AminoAcidCompound> sequence) {
 		for (AminoAcidCompound compound: sequence) {
-			if (!hasCompound(compound)) {
+			if (!hasCompound(compound))
 				return false;
-			}
 		}
 		return true;
 	}
 
 	@Override
-	public List<AminoAcidCompound> getAllCompounds() {
-		return new ArrayList<>(aminoAcidCompoundCache.values());
+	public Collection<AminoAcidCompound> getAllCompounds() {
+		return
+			//new ArrayList<>(
+			Collections.unmodifiableCollection(
+				aminoAcidCompoundCache.values()
+			);
 	}
 
 

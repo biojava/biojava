@@ -33,14 +33,10 @@ import org.biojava.nbio.core.sequence.views.ReversedSequenceView;
 import org.biojava.nbio.core.util.Hashcoder;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 import static java.lang.String.format;
 import static org.biojava.nbio.core.util.Equals.classEqual;
-import static org.biojava.nbio.core.util.Equals.equal;
 
 /**
  * Base abstraction of a location which encodes for the majority of important
@@ -265,13 +261,13 @@ public abstract class AbstractLocation implements Serializable, Location {
 		boolean equals = false;
 		if (classEqual(this, obj)) {
 			AbstractLocation l = (AbstractLocation) obj;
-			equals = (equal(getStart(), l.getStart())
-					&& equal(getEnd(), l.getEnd())
-					&& equal(getStrand(), l.getStrand())
-					&& equal(isCircular(), l.isCircular())
-					&& equal(isBetweenCompounds(), l.isBetweenCompounds())
-					&& equal(getSubLocations(), l.getSubLocations())
-					&& equal(getAccession(), l.getAccession()));
+			equals = (Objects.equals(getStart(), l.getStart())
+					&& Objects.equals(getEnd(), l.getEnd())
+					&& Objects.equals(getStrand(), l.getStrand())
+					&& isCircular() == l.isCircular()
+					&& isBetweenCompounds() == l.isBetweenCompounds()
+					&& Objects.equals(getSubLocations(), l.getSubLocations())
+					&& Objects.equals(getAccession(), l.getAccession()));
 		}
 		return equals;
 	}

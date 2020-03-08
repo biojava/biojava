@@ -185,7 +185,7 @@ public class CaseFreeAminoAcidCompoundSet implements CompoundSet<AminoAcidCompou
 	}
 
 	@Override
-	public List<AminoAcidCompound> getAllCompounds() {
+	public Collection<AminoAcidCompound> getAllCompounds() {
 		return new ArrayList<>(aminoAcidCompoundCache.values());
 	}
 

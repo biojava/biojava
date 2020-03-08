@@ -30,6 +30,7 @@ import org.biojava.nbio.core.util.Equals;
 import org.biojava.nbio.core.util.Hashcoder;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Provides a way of separating us from the specific {@link IUPACTable} even
@@ -119,10 +120,10 @@ public interface Table {
 			boolean equals = false;
 			if(Equals.classEqual(this, o)) {
 				Codon casted = (Codon) o;
-				equals =   Equals.equal(getTriplet(), casted.getTriplet()) &&
-							Equals.equal(isStart(), casted.isStart()) &&
-							Equals.equal(isStop(), casted.isStop()) &&
-							Equals.equal(getAminoAcid(), casted.getAminoAcid());
+				equals =   Objects.equals(getTriplet(), casted.getTriplet()) &&
+						isStart() == casted.isStart() &&
+						isStop() == casted.isStop() &&
+                        Objects.equals(getAminoAcid(), casted.getAminoAcid());
 			}
 			return equals;
 		}

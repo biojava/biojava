@@ -35,6 +35,7 @@ import org.biojava.nbio.core.util.Hashcoder;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Stores a Sequence as a collection of compounds in an ArrayList
@@ -277,8 +278,8 @@ public class ArrayListSequenceReader<C extends Compound> implements SequenceRead
 	public boolean equals(Object o) {
 		if(Equals.classEqual(this, o)) {
 			ArrayListSequenceReader<C> that = (ArrayListSequenceReader<C>)o;
-			return  Equals.equal(parsedCompounds, that.parsedCompounds) &&
-					Equals.equal(compoundSet, that.compoundSet);
+            return  Objects.equals(parsedCompounds, that.parsedCompounds) &&
+                    Objects.equals(compoundSet, that.compoundSet);
 		}
 		return false;
 	}

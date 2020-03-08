@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Controls global {@link EcodDatabase EcodDatabases} being used.
@@ -50,7 +51,8 @@ public class EcodFactory {
 	public static final String DEFAULT_VERSION = EcodInstallation.DEFAULT_VERSION;
 
 	private static final Map<String, SoftReference<EcodDatabase>> versionedEcodDBs =
-			Collections.synchronizedMap(new HashMap<>());
+			//Collections.synchronizedMap(new HashMap<>());
+			new ConcurrentHashMap();
 	private static String defaultVersion = EcodInstallation.DEFAULT_VERSION;
 
 	/**

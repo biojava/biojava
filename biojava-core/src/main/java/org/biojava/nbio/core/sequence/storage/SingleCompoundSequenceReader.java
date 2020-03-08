@@ -27,6 +27,7 @@ import org.biojava.nbio.core.util.Hashcoder;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * An implementation of the SequenceReader interface which for every
@@ -204,9 +205,9 @@ public class SingleCompoundSequenceReader<C extends Compound> implements ProxySe
 	public boolean equals(Object o) {
 		if(Equals.classEqual(this, o)) {
 			SingleCompoundSequenceReader<C> that = (SingleCompoundSequenceReader<C>)o;
-			return  Equals.equal(compound, that.compound) &&
-					Equals.equal(compoundSet, that.compoundSet) &&
-					Equals.equal(length, that.length);
+			return  Objects.equals(compound, that.compound) &&
+                    Objects.equals(compoundSet, that.compoundSet) &&
+					length == that.length;
 		}
 		return false;
 	}
@@ -214,9 +215,9 @@ public class SingleCompoundSequenceReader<C extends Compound> implements ProxySe
 	public boolean equals(Sequence<C> o) {
 		if(Equals.classEqual(this, o)) {
 			SingleCompoundSequenceReader<C> that = (SingleCompoundSequenceReader<C>)o;
-			return  Equals.equal(compound, that.compound) &&
-					Equals.equal(compoundSet, that.compoundSet) &&
-					Equals.equal(length, that.length);
+			return  Objects.equals(compound, that.compound) &&
+                    Objects.equals(compoundSet, that.compoundSet) &&
+					length == that.length;
 		}
 		return false;
 	}

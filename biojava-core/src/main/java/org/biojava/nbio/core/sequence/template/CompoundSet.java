@@ -25,7 +25,9 @@
  */
 package org.biojava.nbio.core.sequence.template;
 
-import java.util.List;
+import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
+
+import java.util.Collection;
 import java.util.Set;
 
 
@@ -58,7 +60,7 @@ public interface CompoundSet<C extends Compound> {
 
 	boolean hasCompound(C compound);
 
-	List<C> getAllCompounds();
+	Collection<C> getAllCompounds();
 
 	boolean isComplementable();
 }
