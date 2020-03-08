@@ -23,9 +23,9 @@
  */
 package org.biojava.nbio.alignment;
 
-import org.biojava.nbio.core.alignment.matrices.SubstitutionMatrixHelper;
 import org.biojava.nbio.alignment.Alignments.PairwiseSequenceAlignerType;
 import org.biojava.nbio.alignment.template.PairwiseSequenceAligner;
+import org.biojava.nbio.core.alignment.matrices.SubstitutionMatrixHelper;
 import org.biojava.nbio.core.alignment.template.Profile;
 import org.biojava.nbio.core.alignment.template.SequencePair;
 import org.biojava.nbio.core.alignment.template.SubstitutionMatrix;
@@ -77,9 +77,7 @@ public class TestDNAAlignment {
 		InputStream inStream = TestDNAAlignment.class.getResourceAsStream("/dna-fasta.txt");
 		LinkedHashMap<String, DNASequence> fastas = FastaReaderHelper.readFastaDNASequence(inStream);
 
-		List<DNASequence> sequences = new ArrayList<>();
-
-        sequences.addAll(fastas.values());
+		List<DNASequence> sequences = new ArrayList<>(fastas.values());
 
 		return sequences;
 	}

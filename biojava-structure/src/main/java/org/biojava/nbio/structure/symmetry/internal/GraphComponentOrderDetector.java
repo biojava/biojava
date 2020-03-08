@@ -20,17 +20,17 @@
  */
 package org.biojava.nbio.structure.symmetry.internal;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.symmetry.utils.SymmetryTools;
 import org.jgrapht.Graph;
 import org.jgrapht.alg.connectivity.ConnectivityInspector;
 import org.jgrapht.graph.DefaultEdge;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * The GraphOrderDetector transforms the self-alignment into a Graph and

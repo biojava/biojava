@@ -61,10 +61,10 @@ extends JFrame{
 	private static final String[] columnNames = new String[]{"#","eqr","score", "rms", "gaps","cluster", "show distance matrix","show alignment"};
 
 	AlternativeAlignment[] aligs;
-	JPanel panel;
+	final JPanel panel;
 
-	Structure structure1;
-	Structure structure2;
+	final Structure structure1;
+	final Structure structure2;
 	StructurePairAligner structurePairAligner;
 
 	public AlternativeAlignmentFrame(Structure s1, Structure s2) {
@@ -322,8 +322,8 @@ extends JFrame{
 }
 
 class MyButtonMouseListener implements MouseListener{
-	AlternativeAlignmentFrame parent;
-	int pos;
+	final AlternativeAlignmentFrame parent;
+	final int pos;
 	public MyButtonMouseListener(AlternativeAlignmentFrame parent, int position){
 
 		this.parent = parent;
@@ -362,8 +362,8 @@ class MyButtonMouseListener implements MouseListener{
 }
 
 class MatrixMouseListener implements MouseListener{
-	AlternativeAlignmentFrame parent;
-	int pos;
+	final AlternativeAlignmentFrame parent;
+	final int pos;
 	public MatrixMouseListener( AlternativeAlignmentFrame parent, int position){
 
 		this.parent = parent;

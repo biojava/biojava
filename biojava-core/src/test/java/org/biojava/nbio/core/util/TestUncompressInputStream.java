@@ -20,13 +20,14 @@
  */
 package org.biojava.nbio.core.util;
 
-import java.io.BufferedInputStream;
+import org.junit.Assert;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import org.junit.Assert;
+
+import static org.junit.Assert.assertEquals;
 
 public class TestUncompressInputStream {
 

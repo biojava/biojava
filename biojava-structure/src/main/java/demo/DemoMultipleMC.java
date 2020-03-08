@@ -20,11 +20,6 @@
  */
 package demo;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.ArrayList;
-
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIdentifier;
@@ -35,6 +30,11 @@ import org.biojava.nbio.structure.align.multiple.mc.MultipleMcMain;
 import org.biojava.nbio.structure.align.multiple.mc.MultipleMcParameters;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentWriter;
 import org.biojava.nbio.structure.align.util.AtomCache;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Demo for running the MultipleMC Algorithm on a protein family.

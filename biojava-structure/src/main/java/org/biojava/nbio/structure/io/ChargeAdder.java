@@ -22,8 +22,6 @@
  */
 package org.biojava.nbio.structure.io;
 
-import java.util.List;
-
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.Group;
@@ -33,6 +31,8 @@ import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.biojava.nbio.structure.io.mmcif.model.ChemCompAtom;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 /**
  * A class to add appropriate charge information to a structure.

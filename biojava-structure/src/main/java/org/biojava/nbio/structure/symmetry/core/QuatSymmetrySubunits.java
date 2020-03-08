@@ -30,8 +30,8 @@ import org.biojava.nbio.structure.symmetry.utils.SymmetryTools;
 
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**

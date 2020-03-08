@@ -20,13 +20,13 @@
  */
 package org.biojava.nbio.structure.align.multiple;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIdentifier;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A general implementation of a {@link MultipleAlignment}.

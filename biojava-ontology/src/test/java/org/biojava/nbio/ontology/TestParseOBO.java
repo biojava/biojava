@@ -27,7 +27,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.*;
-import java.text.ParseException;
 import java.util.Set;
 
 import static org.biojava.nbio.ontology.obo.OboFileHandler.NAMESPACE;

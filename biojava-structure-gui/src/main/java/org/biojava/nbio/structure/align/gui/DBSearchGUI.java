@@ -42,13 +42,13 @@ public class DBSearchGUI extends JPanel {
 
 
 	StructureAlignment algorithm;
-	SelectPDBPanel tab1;
+	final SelectPDBPanel tab1;
 	JTabbedPane tabPane;
 
-	PDBUploadPanel tab2;
-	ScopSelectPanel tab3;
+	final PDBUploadPanel tab2;
+	final ScopSelectPanel tab3;
 
-	JPanel listPane;
+	final JPanel listPane;
 	JButton abortB;
 	AlignmentCalcDB alicalc;
 	JProgressBar progress;

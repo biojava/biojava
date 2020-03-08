@@ -25,7 +25,6 @@ import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.LocalPDBDirectory.FetchBehavior;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

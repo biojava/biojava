@@ -42,10 +42,10 @@ public class FastaGeneWriter {
 
 	private final static Logger logger = LoggerFactory.getLogger(FastaGeneWriter.class);
 
-	boolean showExonUppercase;
-	OutputStream os;
-	Collection<GeneSequence> sequences;
-	FastaHeaderFormatInterface<GeneSequence, NucleotideCompound> headerFormat;
+	final boolean showExonUppercase;
+	final OutputStream os;
+	final Collection<GeneSequence> sequences;
+	final FastaHeaderFormatInterface<GeneSequence, NucleotideCompound> headerFormat;
 	private int lineLength;
 /**
  *

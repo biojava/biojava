@@ -43,7 +43,7 @@ public abstract class AbstractCompoundSet<C extends Compound> implements Compoun
 	private int maxCompoundCharSequenceLength = -1;
 	private Boolean compoundStringLengthEqual = null;
 
-	Map<C,Set<C>> equivalentsMap = new HashMap<>();
+	final Map<C,Set<C>> equivalentsMap = new HashMap<>();
 
 	protected void addCompound(C compound, C lowerCasedCompound, Iterable<C> equivalents) {
 		addCompound(compound);

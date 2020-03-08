@@ -50,9 +50,9 @@ import java.util.List;
 public class FileProxyDNASequenceCreator implements
 		SequenceCreatorInterface<NucleotideCompound> {
 
-	CompoundSet<NucleotideCompound> compoundSet;
-	File file;
-	SequenceParserInterface sequenceParser;
+	final CompoundSet<NucleotideCompound> compoundSet;
+	final File file;
+	final SequenceParserInterface sequenceParser;
 
 	/**
 	 * Need File so that we can store full path name in SequenceFileProxyLoader for Random File access as a quick read

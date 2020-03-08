@@ -25,10 +25,9 @@ package org.biojava.nbio.structure;
 
 import org.biojava.nbio.structure.io.FileConvert;
 
+import javax.vecmath.Point3d;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.vecmath.Point3d;
 
 
 /**

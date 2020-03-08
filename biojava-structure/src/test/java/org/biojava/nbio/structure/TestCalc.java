@@ -20,15 +20,16 @@
  */
 package org.biojava.nbio.structure;
 
-import static org.junit.Assert.*;
+import org.biojava.nbio.structure.geometry.Matrices;
+import org.biojava.nbio.structure.jama.Matrix;
+import org.junit.Test;
 
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
-import org.biojava.nbio.structure.geometry.Matrices;
-import org.biojava.nbio.structure.jama.Matrix;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class TestCalc {
 

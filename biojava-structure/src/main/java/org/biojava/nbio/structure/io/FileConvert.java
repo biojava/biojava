@@ -21,6 +21,14 @@
  */
 package org.biojava.nbio.structure.io;
 
+import org.biojava.nbio.core.util.XMLWriter;
+import org.biojava.nbio.structure.*;
+import org.biojava.nbio.structure.io.mmcif.MMCIFFileTools;
+import org.biojava.nbio.structure.io.mmcif.SimpleMMcifParser;
+import org.biojava.nbio.structure.io.mmcif.model.AtomSite;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -28,23 +36,6 @@ import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
-
-import org.biojava.nbio.core.util.XMLWriter;
-import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.Bond;
-import org.biojava.nbio.structure.Chain;
-import org.biojava.nbio.structure.DBRef;
-import org.biojava.nbio.structure.Element;
-import org.biojava.nbio.structure.Group;
-import org.biojava.nbio.structure.GroupType;
-import org.biojava.nbio.structure.PDBHeader;
-import org.biojava.nbio.structure.Site;
-import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.io.mmcif.MMCIFFileTools;
-import org.biojava.nbio.structure.io.mmcif.SimpleMMcifParser;
-import org.biojava.nbio.structure.io.mmcif.model.AtomSite;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -63,14 +54,14 @@ public class FileConvert {
 	private boolean printConnections;
 
 	// Locale should be english, e.g. in DE separator is "," -> PDB files have "." !
-	public static DecimalFormat d3 = (DecimalFormat)NumberFormat.getInstance(Locale.US);
+	public static final DecimalFormat d3 = (DecimalFormat)NumberFormat.getInstance(Locale.US);
 	static {
 		d3.setMaximumIntegerDigits(4);
 		d3.setMinimumFractionDigits(3);
 		d3.setMaximumFractionDigits(3);
 		d3.setGroupingUsed(false);
 	}
-	public static DecimalFormat d2 = (DecimalFormat)NumberFormat.getInstance(Locale.US);
+	public static final DecimalFormat d2 = (DecimalFormat)NumberFormat.getInstance(Locale.US);
 	static {
 		d2.setMaximumIntegerDigits(3);
 		d2.setMinimumFractionDigits(2);

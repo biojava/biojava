@@ -27,7 +27,6 @@ import org.biojava.nbio.structure.jama.Matrix;
 import javax.vecmath.Matrix3d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
-
 import java.util.ArrayList;
 import java.util.List;
 

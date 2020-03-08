@@ -24,6 +24,7 @@ package org.biojava.nbio.structure.align;
  *
  */
 
+import org.biojava.nbio.core.util.ConcurrencyTools;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
@@ -41,7 +42,6 @@ import org.biojava.nbio.structure.domain.DomainProviderFactory;
 import org.biojava.nbio.structure.domain.RemoteDomainProvider;
 import org.biojava.nbio.structure.io.LocalPDBDirectory.FetchBehavior;
 import org.biojava.nbio.structure.io.PDBFileReader;
-import org.biojava.nbio.core.util.ConcurrencyTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,7 +63,7 @@ public class MultiThreadedDBSearch {
 
 	private final static Logger logger = LoggerFactory.getLogger(MultiThreadedDBSearch.class);
 
-	AtomicBoolean interrupted  ;
+	final AtomicBoolean interrupted  ;
 
 	StructureAlignment algorithm;
 
@@ -71,13 +71,13 @@ public class MultiThreadedDBSearch {
 
 	String name1;
 
-	int nrCPUs;
+	final int nrCPUs;
 
 	AtomCache cache;
 	File resultList;
 	SortedSet<String> representatives;
 
-	boolean domainSplit;
+	final boolean domainSplit;
 
 	Structure structure1;
 

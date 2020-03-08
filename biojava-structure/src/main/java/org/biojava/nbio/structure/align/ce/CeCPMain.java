@@ -32,12 +32,11 @@ import org.biojava.nbio.structure.geometry.Matrices;
 import org.biojava.nbio.structure.geometry.SuperPositions;
 import org.biojava.nbio.structure.jama.Matrix;
 
+import javax.vecmath.Matrix4d;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import javax.vecmath.Matrix4d;
 
 /**
  * A wrapper for {@link CeMain} which sets default parameters to be appropriate for finding
@@ -113,13 +112,11 @@ public class CeCPMain extends CeMain {
 		case LEFT:
 			duplicateRight = false;
 			break;
-		case RIGHT:
-			duplicateRight = true;
-			break;
-		case SHORTER:
+            case SHORTER:
 			duplicateRight = ca1.length >= ca2.length;
 			break;
-		default:
+            case RIGHT:
+            default:
 			duplicateRight = true;
 		}
 
@@ -580,8 +577,8 @@ public class CeCPMain extends CeMain {
 	 * @see #filterDuplicateAFPs()
 	 */
 	private static class ResiduePair {
-		public int a;
-		public int b;
+		public final int a;
+		public final int b;
 		public ResiduePair(int a, int b) {
 			this.a=a;
 			this.b=b;

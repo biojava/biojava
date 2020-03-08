@@ -27,7 +27,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class GUIFarmJobRunnable implements Runnable{
-	FarmJobParameters params;
+	final FarmJobParameters params;
 	GUIAlignmentProgressListener progressListener ;
 	public GUIFarmJobRunnable(FarmJobParameters params){
 		this.params = params;

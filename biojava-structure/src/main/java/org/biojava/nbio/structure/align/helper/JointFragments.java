@@ -36,7 +36,7 @@ public class JointFragments {
 
 		double rms;
 
-		List<int[]> idxlist;
+		final List<int[]> idxlist;
 		public JointFragments(){
 			idxlist = new ArrayList<>();
 			rms = 999;

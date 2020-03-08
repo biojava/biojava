@@ -20,19 +20,17 @@
  */
 package org.biojava.nbio.core.search.io.blast;
 
+import org.biojava.nbio.core.search.io.Hit;
+import org.biojava.nbio.core.search.io.Hsp;
+import org.biojava.nbio.core.search.io.Result;
+import org.junit.*;
+
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import org.biojava.nbio.core.search.io.Hit;
-import org.biojava.nbio.core.search.io.Hsp;
-import org.biojava.nbio.core.search.io.Result;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  *

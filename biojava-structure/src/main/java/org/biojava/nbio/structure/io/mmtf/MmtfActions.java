@@ -20,17 +20,17 @@
  */
 package org.biojava.nbio.structure.io.mmtf;
 
+import org.biojava.nbio.structure.Structure;
+import org.rcsb.mmtf.decoder.GenericDecoder;
+import org.rcsb.mmtf.decoder.ReaderUtils;
+import org.rcsb.mmtf.decoder.StructureDataToAdapter;
+import org.rcsb.mmtf.encoder.AdapterToStructureData;
+import org.rcsb.mmtf.encoder.WriterUtils;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Path;
-
-import org.biojava.nbio.structure.Structure;
-import org.rcsb.mmtf.decoder.GenericDecoder;
-import org.rcsb.mmtf.decoder.StructureDataToAdapter;
-import org.rcsb.mmtf.decoder.ReaderUtils;
-import org.rcsb.mmtf.encoder.AdapterToStructureData;
-import org.rcsb.mmtf.encoder.WriterUtils;
 
 /**
  * A class of functions for reading and writing Biojava structures using MMTF

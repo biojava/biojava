@@ -30,7 +30,7 @@ package org.biojava.nbio.core.sequence;
  */
 public class StopCodonSequence extends DNASequence {
 
-public DNASequence parentGeneSequence;
+public final DNASequence parentGeneSequence;
 
 
 	public StopCodonSequence(TranscriptSequence parentGeneSequence, int begin, int end){

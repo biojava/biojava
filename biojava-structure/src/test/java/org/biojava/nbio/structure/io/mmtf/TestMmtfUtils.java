@@ -20,43 +20,19 @@
  */
 package org.biojava.nbio.structure.io.mmtf;
 
-import org.junit.Test;
-
-import static org.junit.Assert.*;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.vecmath.Matrix4d;
-
-import org.biojava.nbio.structure.AminoAcidImpl;
-import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.AtomImpl;
-import org.biojava.nbio.structure.BondImpl;
-import org.biojava.nbio.structure.Chain;
-import org.biojava.nbio.structure.ChainImpl;
-import org.biojava.nbio.structure.ExperimentalTechnique;
-import org.biojava.nbio.structure.Group;
-import org.biojava.nbio.structure.HetatomImpl;
-import org.biojava.nbio.structure.NucleotideImpl;
-import org.biojava.nbio.structure.PDBCrystallographicInfo;
-import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.StructureIO;
-import org.biojava.nbio.structure.StructureImpl;
-import org.biojava.nbio.structure.io.mmtf.MmtfUtils;
+import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.quaternary.BioAssemblyInfo;
 import org.biojava.nbio.structure.quaternary.BiologicalAssemblyTransformation;
 import org.biojava.nbio.structure.xtal.BravaisLattice;
 import org.biojava.nbio.structure.xtal.CrystalCell;
 import org.biojava.nbio.structure.xtal.SpaceGroup;
+import org.junit.Test;
+
+import javax.vecmath.Matrix4d;
+import java.io.IOException;
+import java.util.*;
+
+import static org.junit.Assert.*;
 
 /**
  * Test the MMTF utils class.
@@ -185,7 +161,7 @@ public class TestMmtfUtils {
 	 */
 	@Test
 	public void testGetExperimentalMethods() {
-		Set<ExperimentalTechnique> experimentalTechniques = new HashSet<>();
+		Set<ExperimentalTechnique> experimentalTechniques = EnumSet.noneOf(ExperimentalTechnique.class);
 		experimentalTechniques.add(ExperimentalTechnique.XRAY_DIFFRACTION);
 		experimentalTechniques.add(ExperimentalTechnique.ELECTRON_MICROSCOPY);
 		String[] techniques = MmtfUtils.techniquesToStringArray(experimentalTechniques);

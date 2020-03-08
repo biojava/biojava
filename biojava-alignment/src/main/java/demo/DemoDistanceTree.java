@@ -20,9 +20,6 @@
  */
 package demo;
 
-import java.io.InputStream;
-import java.util.LinkedHashMap;
-
 import org.biojava.nbio.core.alignment.matrices.SubstitutionMatrixHelper;
 import org.biojava.nbio.core.alignment.template.SubstitutionMatrix;
 import org.biojava.nbio.core.sequence.MultipleSequenceAlignment;
@@ -32,14 +29,13 @@ import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava.nbio.core.sequence.io.FastaReader;
 import org.biojava.nbio.core.sequence.io.GenericFastaHeaderParser;
 import org.biojava.nbio.core.sequence.io.ProteinSequenceCreator;
-import org.biojava.nbio.phylo.DistanceMatrixCalculator;
-import org.biojava.nbio.phylo.DistanceTreeEvaluator;
-import org.biojava.nbio.phylo.ForesterWrapper;
-import org.biojava.nbio.phylo.TreeConstructor;
-import org.biojava.nbio.phylo.TreeConstructorType;
+import org.biojava.nbio.phylo.*;
 import org.forester.evoinference.matrix.distance.BasicSymmetricalDistanceMatrix;
 import org.forester.evoinference.matrix.distance.DistanceMatrix;
 import org.forester.phylogeny.Phylogeny;
+
+import java.io.InputStream;
+import java.util.LinkedHashMap;
 
 /**
  * This demo contains the CookBook example to create a phylogenetic tree from a

@@ -52,12 +52,12 @@ implements StructurePairSelector{
 	 */
 	private static final long serialVersionUID = -5682120627824627408L;
 
-	boolean debug = true;
-	JTextField pdbDir;
-	JTextField f1;
-	JTextField f2;
-	JTextField c1;
-	JTextField c2;
+	final boolean debug = true;
+	final JTextField pdbDir;
+	final JTextField f1;
+	final JTextField f2;
+	final JTextField c1;
+	final JTextField c2;
 
 	private static final Logger logger = LoggerFactory.getLogger(StructurePairSelector.class);
 
@@ -220,7 +220,7 @@ implements StructurePairSelector{
 
 class ChooseDirAction extends AbstractAction{
 
-	JTextField textField;
+	final JTextField textField;
 	public ChooseDirAction (JTextField textField){
 		super("Choose");
 		this.textField = textField;

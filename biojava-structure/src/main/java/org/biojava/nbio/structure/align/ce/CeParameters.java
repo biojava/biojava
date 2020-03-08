@@ -26,8 +26,8 @@ package org.biojava.nbio.structure.align.ce;
 
 import org.biojava.nbio.core.alignment.matrices.SubstitutionMatrixHelper;
 import org.biojava.nbio.core.alignment.template.SubstitutionMatrix;
-import org.biojava.nbio.structure.align.util.CliTools;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
+import org.biojava.nbio.structure.align.util.CliTools;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +52,7 @@ public class CeParameters implements ConfigStrucAligParams  {
 		SIDE_CHAIN_ANGLE_SCORING("Angle between sidechains"),
 		CA_AND_SIDE_CHAIN_ANGLE_SCORING("CA distance+Angle between sidechains"),
 		SEQUENCE_CONSERVATION("Sequence Conservation");
-		public static ScoringStrategy DEFAULT_SCORING_STRATEGY = CA_SCORING;
+		public static final ScoringStrategy DEFAULT_SCORING_STRATEGY = CA_SCORING;
 
 		private final String name;
 		ScoringStrategy(String name) {

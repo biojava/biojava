@@ -22,9 +22,9 @@ package demo;
 
 
 import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.FileParsingParameters;
-import org.biojava.nbio.structure.StructureIO;
 
 
 /** Example of how to load PDB files using the AtomCache class.

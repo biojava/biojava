@@ -34,7 +34,7 @@ public class WorkSheet {
 	private final LinkedHashMap<String, HeaderInfo> columnLookup = new LinkedHashMap<>();
 	private final LinkedHashMap<String, HeaderInfo> rowLookup = new LinkedHashMap<>();
 	private CompactCharSequence[][] data = new CompactCharSequence[1][1];
-	HashMap<String, String> dataGrid = new HashMap<>();
+	final HashMap<String, String> dataGrid = new HashMap<>();
 	private String indexColumnName = "";
 
 	/**
@@ -808,7 +808,7 @@ public class WorkSheet {
 		}
 	}
 	//When we do gene signatures we ask for the same data value often. This method took up 50% of the time.
-	HashMap<String, Double> doubleValues = new HashMap<>();
+    final HashMap<String, Double> doubleValues = new HashMap<>();
 	boolean cacheDoubleValues = false;
 
 	/**

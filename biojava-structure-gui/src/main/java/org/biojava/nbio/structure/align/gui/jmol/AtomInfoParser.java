@@ -33,7 +33,7 @@ public class AtomInfoParser {
 
 	private static final Logger logger = LoggerFactory.getLogger(AtomInfoParser.class);
 
-	static Pattern pattern;
+	static final Pattern pattern;
 
 	static {
 

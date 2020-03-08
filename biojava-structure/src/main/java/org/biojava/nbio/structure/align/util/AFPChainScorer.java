@@ -25,8 +25,6 @@
 package org.biojava.nbio.structure.align.util;
 
 
-import javax.vecmath.Matrix4d;
-
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.StructureException;
@@ -34,6 +32,8 @@ import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.geometry.SuperPositions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.vecmath.Matrix4d;
 
 public class AFPChainScorer {
 

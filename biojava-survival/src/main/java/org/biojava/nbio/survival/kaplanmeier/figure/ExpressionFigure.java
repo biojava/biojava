@@ -149,7 +149,7 @@ public class ExpressionFigure extends JPanel {
 
 		this.repaint();
 	}
-	DecimalFormat df = new DecimalFormat("#.#");
+	final DecimalFormat df = new DecimalFormat("#.#");
 
 	private void setRenderingHints(Graphics2D g) {
 		RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);

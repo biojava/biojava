@@ -21,18 +21,14 @@
 
 package org.biojava.nbio.structure.symmetry.core;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  *
  * @author Peter
  */
 public class PermutationGroup implements Iterable<List<Integer>> {
-	List<List<Integer>> permutations = new ArrayList<>();
+	final List<List<Integer>> permutations = new ArrayList<>();
 
 	public void addPermutation(List<Integer> permutation) {
 		if (!permutations.contains(permutation)) {

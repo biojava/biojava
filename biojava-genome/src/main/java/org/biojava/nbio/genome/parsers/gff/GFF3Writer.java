@@ -20,8 +20,8 @@
  */
 package org.biojava.nbio.genome.parsers.gff;
 
-import org.biojava.nbio.genome.GeneFeatureHelper;
 import org.biojava.nbio.core.sequence.*;
+import org.biojava.nbio.genome.GeneFeatureHelper;
 
 import java.io.File;
 import java.io.FileOutputStream;

@@ -20,19 +20,14 @@
  */
 package org.biojava.nbio.structure.align.xml;
 
-import java.io.IOException;
-import java.util.List;
-
-import javax.vecmath.Matrix4d;
-
 import org.biojava.nbio.core.util.PrettyXMLWriter;
 import org.biojava.nbio.structure.StructureIdentifier;
-import org.biojava.nbio.structure.align.multiple.Block;
-import org.biojava.nbio.structure.align.multiple.BlockSet;
-import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
-import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsemble;
-import org.biojava.nbio.structure.align.multiple.ScoresCache;
+import org.biojava.nbio.structure.align.multiple.*;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentWriter;
+
+import javax.vecmath.Matrix4d;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * Helper methods to convert all the hierarchy levels of a MultipleAlignment

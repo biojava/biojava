@@ -22,12 +22,12 @@ package org.biojava.nbio.structure.io;
 
 //import static org.junit.Assert.*;
 
+import org.biojava.nbio.structure.io.mmcif.SimpleMMcifParser;
+import org.junit.Test;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
-
-import org.biojava.nbio.structure.io.mmcif.SimpleMMcifParser;
-import org.junit.Test;
 
 public class TestMmCIFSpecialCases {
 

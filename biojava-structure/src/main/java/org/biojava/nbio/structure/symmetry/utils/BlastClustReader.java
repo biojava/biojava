@@ -23,11 +23,7 @@ package org.biojava.nbio.structure.symmetry.utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Serializable;
+import java.io.*;
 import java.net.URL;
 import java.util.*;
 
@@ -162,8 +158,7 @@ public class BlastClustReader implements Serializable {
 				String line;
 				while ((line = reader.readLine()) != null) {
 					line = line.replaceAll("_", ".");
-					List<String> cluster = Arrays.asList(line.split(" "));
-					clusters.add(cluster);
+					clusters.add(Arrays.asList(line.split(" ")));
 				}
 				reader.close();
 				stream.close();

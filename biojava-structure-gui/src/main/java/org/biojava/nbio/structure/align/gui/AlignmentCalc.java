@@ -52,8 +52,8 @@ public class AlignmentCalc implements AlignmentCalculationRunnable {
 	String pdb1;
 	String pdb2;
 
-	String name1;
-	String name2;
+	final String name1;
+	final String name2;
 
 	Structure structure1;
 	Structure structure2;

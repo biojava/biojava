@@ -23,8 +23,8 @@
  */
 package org.biojava.nbio.structure.io.sifts;
 
-import org.biojava.nbio.structure.align.util.UserConfiguration;
 import org.biojava.nbio.core.sequence.io.util.IOUtils;
+import org.biojava.nbio.structure.align.util.UserConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

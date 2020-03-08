@@ -20,7 +20,6 @@
  */
 package org.biojava.nbio.aaproperties;
 
-import org.biojava.nbio.aaproperties.PeptideProperties;
 import org.biojava.nbio.aaproperties.xml.AminoAcidCompositionTable;
 import org.junit.Test;
 import org.slf4j.Logger;

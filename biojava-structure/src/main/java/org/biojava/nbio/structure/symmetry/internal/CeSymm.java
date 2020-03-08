@@ -20,16 +20,7 @@
  */
 package org.biojava.nbio.structure.symmetry.internal;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.vecmath.Matrix4d;
-
-import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.StructureIdentifier;
-import org.biojava.nbio.structure.StructureTools;
+import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.ce.CECalculator;
 import org.biojava.nbio.structure.align.ce.CeCPMain;
 import org.biojava.nbio.structure.align.ce.MatrixListener;
@@ -43,6 +34,10 @@ import org.biojava.nbio.structure.symmetry.internal.CESymmParameters.SymmetryTyp
 import org.biojava.nbio.structure.symmetry.utils.SymmetryTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.vecmath.Matrix4d;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Identify the symmetries in a structure by running an alignment of the

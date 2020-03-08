@@ -20,9 +20,9 @@
  */
 package org.biojava.nbio.core.search.io;
 
-import java.util.*;
-
 import org.biojava.nbio.core.sequence.template.Sequence;
+
+import java.util.*;
 
 /**
  * This class models a search result.

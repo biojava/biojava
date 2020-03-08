@@ -20,11 +20,12 @@
  */
 package org.biojava.nbio.core.search.io;
 
+import org.biojava.nbio.core.sequence.template.Sequence;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
-import org.biojava.nbio.core.sequence.template.Sequence;
 
 /**
  * Designed by Paolo Pavan.

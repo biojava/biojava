@@ -23,13 +23,9 @@ package org.biojava.nbio.structure;
 import org.biojava.nbio.structure.io.PDBFileReader;
 import org.junit.Test;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test the serialization and deserialization of BioJava structure objects.

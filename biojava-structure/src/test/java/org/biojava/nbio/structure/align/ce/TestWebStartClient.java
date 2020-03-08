@@ -24,6 +24,7 @@
 
 package org.biojava.nbio.structure.align.ce;
 
+import org.biojava.nbio.core.util.PrettyXMLWriter;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.StructureAlignment;
@@ -34,7 +35,6 @@ import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.align.xml.AFPChainFlipper;
 import org.biojava.nbio.structure.align.xml.AFPChainXMLConverter;
 import org.biojava.nbio.structure.align.xml.AFPChainXMLParser;
-import org.biojava.nbio.core.util.PrettyXMLWriter;
 import org.junit.Assert;
 import org.junit.Test;
 

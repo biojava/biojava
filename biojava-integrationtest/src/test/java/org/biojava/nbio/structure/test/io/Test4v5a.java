@@ -22,15 +22,14 @@ package org.biojava.nbio.structure.test.io;
 
 //import static org.junit.Assert.*;
 
-import java.io.IOException;
-
-
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.junit.Ignore;
 import org.junit.Test;
+
+import java.io.IOException;
 
 /**
  * Test for a difficult large mmCIF file (a ribosome) with many 2-letter chain ids.

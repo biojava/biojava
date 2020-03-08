@@ -23,9 +23,9 @@
 
 package org.biojava.nbio.alignment;
 
-import org.biojava.nbio.core.alignment.SimpleProfile;
 import org.biojava.nbio.alignment.template.GuideTreeNode;
 import org.biojava.nbio.alignment.template.PairwiseSequenceScorer;
+import org.biojava.nbio.core.alignment.SimpleProfile;
 import org.biojava.nbio.core.alignment.template.Profile;
 import org.biojava.nbio.core.alignment.template.ProfilePair;
 import org.biojava.nbio.core.sequence.AccessionID;
@@ -39,7 +39,6 @@ import org.forester.phylogeny.Phylogeny;
 import org.forester.phylogeny.PhylogenyNode;
 
 import javax.swing.tree.TreeNode;
-
 import java.util.*;
 import java.util.concurrent.Future;
 

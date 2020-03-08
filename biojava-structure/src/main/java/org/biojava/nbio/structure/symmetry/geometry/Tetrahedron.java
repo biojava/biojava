@@ -20,10 +20,10 @@
  */
 package org.biojava.nbio.structure.symmetry.geometry;
 
+import org.biojava.nbio.structure.geometry.CalcPoint;
+
 import javax.vecmath.Matrix3d;
 import javax.vecmath.Point3d;
-
-import org.biojava.nbio.structure.geometry.CalcPoint;
 import java.util.Arrays;
 import java.util.List;
 

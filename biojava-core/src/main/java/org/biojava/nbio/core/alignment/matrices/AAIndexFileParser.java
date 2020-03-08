@@ -38,7 +38,7 @@ import java.util.Map;
 public class AAIndexFileParser {
 	int scale = -1;
 
-	Map<String,SubstitutionMatrix<AminoAcidCompound>> matrices;
+	final Map<String,SubstitutionMatrix<AminoAcidCompound>> matrices;
 
 	ScaledSubstitutionMatrix currentMatrix;
 	String currentRows;

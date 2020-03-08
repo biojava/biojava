@@ -20,7 +20,6 @@
  */
 package org.biojava.nbio.genome.homology;
 
-import org.biojava.nbio.genome.GeneFeatureHelper;
 import org.biojava.nbio.alignment.Alignments;
 import org.biojava.nbio.alignment.Alignments.PairwiseSequenceAlignerType;
 import org.biojava.nbio.alignment.SimpleGapPenalty;
@@ -33,6 +32,7 @@ import org.biojava.nbio.core.sequence.features.DBReferenceInfo;
 import org.biojava.nbio.core.sequence.features.DatabaseReferenceInterface;
 import org.biojava.nbio.core.sequence.features.FeaturesKeyWordInterface;
 import org.biojava.nbio.core.sequence.loader.UniprotProxySequenceReader;
+import org.biojava.nbio.genome.GeneFeatureHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,6 +41,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -96,11 +97,13 @@ public class GFF3FromUniprotBlastHits {
 					}
 					if (!testSequence.equals(predictedProteinSequence) && (!predictedProteinSequence.equals(testSequence.substring(0, testSequence.length() - 1)))) {
 						DNASequence codingSequence = transcriptSequence.getDNACodingSequence();
-						logger.info("Coding Sequence: {}", codingSequence.getSequenceAsString());
-						logger.info("Sequence agreement error");
-						logger.info("CDS seq={}", testSequence);
-						logger.info("PRE seq={}", predictedProteinSequence);
-						logger.info("UNI seq={}", hitSequence);
+						if (logger.isInfoEnabled()) {
+							logger.info("Coding Sequence: {}", codingSequence.getSequenceAsString());
+							logger.info("Sequence agreement error");
+							logger.info("CDS seq={}", testSequence);
+							logger.info("PRE seq={}", predictedProteinSequence);
+							logger.info("UNI seq={}", hitSequence);
+						}
 						//  throw new Exception("Protein Sequence compare error " + id);
 					}
 
@@ -117,22 +120,20 @@ public class GFF3FromUniprotBlastHits {
 					for (int i = 0; i < cdsProteinList.size(); i++) {
 						ProteinSequence peptideSequence = cdsProteinList.get(i);
 						String seq = peptideSequence.getSequenceAsString();
-						Integer startIndex = null;
+						int startIndex = -1;
 						int offsetStartIndex = 0;
 						for (int s = 0; s < seq.length(); s++) {
 							startIndex = alignment.getIndexInTargetForQueryAt(proteinIndex + s);
-							if (startIndex != null) {
-								startIndex = startIndex + 1;
-								offsetStartIndex = s;
-								break;
-							}
+							startIndex = startIndex + 1;
+							offsetStartIndex = s;
+							break;
 						}
-						Integer endIndex = null;
+						int endIndex = -1;
 
 						int offsetEndIndex = 0;
 						for (int e = 0; e < seq.length(); e++) {
 							endIndex = alignment.getIndexInTargetForQueryAt(proteinIndex + seq.length() - 1 - e);
-							if (endIndex != null) {
+							{
 								endIndex = endIndex + 1;
 								offsetEndIndex = e;
 								break;
@@ -140,7 +141,7 @@ public class GFF3FromUniprotBlastHits {
 						}
 
 						proteinIndex = proteinIndex + seq.length();
-						if (startIndex != null && endIndex != null && startIndex != endIndex) {
+						if (startIndex != endIndex) {
 							CDSSequence cdsSequence = cdsSequenceList.get(i);
 							String hitLabel;
 							if (transcriptSequence.getStrand() == Strand.POSITIVE) {
@@ -162,7 +163,7 @@ public class GFF3FromUniprotBlastHits {
 								FeaturesKeyWordInterface featureKeyWords = proteinSequence.getFeaturesKeyWord();
 								String notes = "";
 								if (featureKeyWords != null) {
-									ArrayList<String> keyWords = featureKeyWords.getKeyWords();
+									List<String> keyWords = featureKeyWords.getKeyWords();
 									if (keyWords.size() > 0) {
 										notes = ";Note=";
 										for (String note : keyWords) {
@@ -182,7 +183,7 @@ public class GFF3FromUniprotBlastHits {
 
 								DatabaseReferenceInterface databaseReferences = proteinSequence.getDatabaseReferences();
 								if (databaseReferences != null) {
-									LinkedHashMap<String, ArrayList<DBReferenceInfo>> databaseReferenceHashMap = databaseReferences.getDatabaseReferences();
+									Map<String, ArrayList<DBReferenceInfo>> databaseReferenceHashMap = databaseReferences.getDatabaseReferences();
 									ArrayList<DBReferenceInfo> pfamList = databaseReferenceHashMap.get("Pfam");
 									ArrayList<DBReferenceInfo> cazyList = databaseReferenceHashMap.get("CAZy");
 									ArrayList<DBReferenceInfo> goList = databaseReferenceHashMap.get("GO");

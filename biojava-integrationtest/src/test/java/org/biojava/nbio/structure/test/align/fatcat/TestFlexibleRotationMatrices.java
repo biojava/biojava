@@ -24,7 +24,10 @@
 
 package org.biojava.nbio.structure.test.align.fatcat;
 
-import org.biojava.nbio.structure.*;
+import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.Calc;
+import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.StructureAlignment;
 import org.biojava.nbio.structure.align.fatcat.FatCatFlexible;
 import org.biojava.nbio.structure.align.fatcat.FatCatRigid;
@@ -38,11 +41,10 @@ import org.biojava.nbio.structure.geometry.SuperPositions;
 import org.biojava.nbio.structure.jama.Matrix;
 import org.junit.Test;
 
+import javax.vecmath.Matrix4d;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.vecmath.Matrix4d;
 
 import static org.junit.Assert.*;
 

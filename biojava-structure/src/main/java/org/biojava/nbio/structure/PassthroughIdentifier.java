@@ -20,9 +20,9 @@
  */
 package org.biojava.nbio.structure;
 
-import java.util.ArrayList;
-
 import org.biojava.nbio.structure.align.util.AtomCache;
+
+import java.util.ArrayList;
 
 /**
  * A stub StructureIdentifier, representing the full structure in all cases.

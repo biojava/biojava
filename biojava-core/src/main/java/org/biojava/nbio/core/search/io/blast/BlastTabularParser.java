@@ -20,14 +20,6 @@
  */
 package org.biojava.nbio.core.search.io.blast;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.LineNumberReader;
-import java.text.ParseException;
-import java.util.*;
-
 import org.biojava.nbio.core.search.io.Hit;
 import org.biojava.nbio.core.search.io.Hsp;
 import org.biojava.nbio.core.search.io.Result;
@@ -35,6 +27,10 @@ import org.biojava.nbio.core.search.io.ResultFactory;
 import org.biojava.nbio.core.sequence.template.Sequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.*;
+import java.text.ParseException;
+import java.util.*;
 
 /**
  * Designed by Paolo Pavan.
@@ -69,7 +65,7 @@ public class BlastTabularParser implements ResultFactory {
 
 	// data imported private:
 	int queryIdNumber = 0;
-	Map<String,String> queryIdMapping = new HashMap<>();
+	final Map<String,String> queryIdMapping = new HashMap<>();
 	String programName=null, queryName = null, databaseFile = null;
 	private String queryId      ;
 	private String subjectId    ;
@@ -204,7 +200,7 @@ public class BlastTabularParser implements ResultFactory {
 
 			// If a complete definition of the query name was readed, than we can use
 			// a queryID schema that is consistent with blast xml report
-			queryId = queryIdMapping.computeIfAbsent(queryId, x-> "Query_" + (++queryIdNumber));
+			queryId = queryIdMapping.computeIfAbsent(queryId, x -> "Query_" + (++queryIdNumber));
 		}
 		if (!headerFound) queryName = queryId;
 

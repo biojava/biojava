@@ -20,9 +20,6 @@
  */
 package org.biojava.nbio.phylo;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import org.biojava.nbio.core.sequence.MultipleSequenceAlignment;
 import org.biojava.nbio.core.sequence.io.FastaWriter;
 import org.biojava.nbio.core.sequence.template.Compound;
@@ -32,6 +29,10 @@ import org.forester.io.parsers.FastaParser;
 import org.forester.io.writers.PhylogenyWriter;
 import org.forester.msa.Msa;
 import org.forester.phylogeny.Phylogeny;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 
 /**
  * This class contains wrapper methods for communication between BioJava and

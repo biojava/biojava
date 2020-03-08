@@ -20,15 +20,15 @@
  */
 package org.biojava.nbio.structure.cluster;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.symmetry.core.Stoichiometry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The SubunitClusterer takes as input a collection of {@link Subunit} and

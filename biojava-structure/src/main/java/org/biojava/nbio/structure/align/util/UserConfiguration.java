@@ -19,11 +19,11 @@
 
 package org.biojava.nbio.structure.align.util;
 
+import org.biojava.nbio.core.util.PrettyXMLWriter;
+import org.biojava.nbio.core.util.XMLWriter;
 import org.biojava.nbio.structure.align.ce.StartupParameters;
 import org.biojava.nbio.structure.io.LocalPDBDirectory.FetchBehavior;
 import org.biojava.nbio.structure.io.LocalPDBDirectory.ObsoleteBehavior;
-import org.biojava.nbio.core.util.PrettyXMLWriter;
-import org.biojava.nbio.core.util.XMLWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -27,10 +27,13 @@
 package org.biojava.nbio.structure.align.fatcat.calc;
 
 
-import javax.vecmath.Matrix4d;
-
-import org.biojava.nbio.structure.*;
+import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.Calc;
+import org.biojava.nbio.structure.Group;
+import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.geometry.SuperPositions;
+
+import javax.vecmath.Matrix4d;
 
 
 
@@ -39,13 +42,13 @@ public class StructureAlignmentOptimizer
 
 	//private static final boolean showAlig = false;
 
-	int pro1Len;
-	int pro2Len;
-	int maxLen;
-	Atom[] cod1;
-	Atom[] cod2;
+	final int pro1Len;
+	final int pro2Len;
+	final int maxLen;
+	final Atom[] cod1;
+	final Atom[] cod2;
 
-	int[][] equSet;
+	final int[][] equSet;
 	int equLen;
 	int equLen0;
 	double[][]sij;

@@ -24,9 +24,9 @@
  */
 package org.biojava.nbio.structure.io.sifts;
 
-import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.core.util.FileDownloadUtils;
 import org.biojava.nbio.core.util.InputStreamProvider;
+import org.biojava.nbio.structure.align.util.AtomCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

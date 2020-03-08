@@ -20,27 +20,21 @@
  */
 package org.biojava.nbio.structure.io;
 
-import org.biojava.nbio.structure.Calc;
-import org.biojava.nbio.structure.Chain;
-import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.StructureIO;
-import org.biojava.nbio.structure.StructureTools;
+import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.geometry.CalcPoint;
 import org.biojava.nbio.structure.geometry.SuperPosition;
 import org.biojava.nbio.structure.geometry.SuperPositionQCP;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
+import javax.vecmath.Matrix4d;
+import javax.vecmath.Point3d;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.vecmath.Matrix4d;
-import javax.vecmath.Point3d;
+import static org.junit.Assert.*;
 
 public class TestHardBioUnits {
 

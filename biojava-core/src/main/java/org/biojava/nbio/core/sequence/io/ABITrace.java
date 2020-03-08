@@ -22,23 +22,15 @@
 
 package org.biojava.nbio.core.sequence.io;
 
-import java.io.IOException;
-import java.io.File;
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.DataInputStream;
-import java.io.ByteArrayInputStream;
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
-import java.net.URL;
-import java.io.InputStream;
-
+import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.core.sequence.compound.ABITracerCompoundSet;
 import org.biojava.nbio.core.sequence.compound.NucleotideCompound;
 import org.biojava.nbio.core.sequence.template.AbstractSequence;
-import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.net.URL;
 
 /**
  * Title: ABITrace<p><p>

@@ -23,10 +23,10 @@
 
 package org.biojava.nbio.structure;
 
+import org.biojava.nbio.structure.align.util.AtomCache;
+
 import java.io.IOException;
 import java.io.Serializable;
-
-import org.biojava.nbio.structure.align.util.AtomCache;
 
 
 /**

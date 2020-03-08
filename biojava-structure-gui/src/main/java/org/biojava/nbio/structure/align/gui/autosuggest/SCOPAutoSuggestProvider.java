@@ -36,11 +36,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class SCOPAutoSuggestProvider implements AutoSuggestProvider{
 
-	boolean DEBUG = false;
+	final boolean DEBUG = false;
 
 	int maxResults = 20;
 
-	AtomicBoolean stop = new AtomicBoolean(false);
+	final AtomicBoolean stop = new AtomicBoolean(false);
 
 	@Override
 	public Vector<String> getSuggestion(String userInput) {

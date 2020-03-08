@@ -33,14 +33,13 @@ import org.biojava.nbio.structure.jama.Matrix;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.vecmath.Matrix4d;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.vecmath.Matrix4d;
 
 /**
  * Methods for analyzing and manipulating AFPChains and for
@@ -57,7 +56,7 @@ public class AlignmentTools {
 	private static final Logger logger = LoggerFactory.getLogger(AlignmentTools.class);
 
 
-	public static boolean debug = false;
+	public static final boolean debug = false;
 
 	/**
 	 * Checks that the alignment given by afpChain is sequential. This means

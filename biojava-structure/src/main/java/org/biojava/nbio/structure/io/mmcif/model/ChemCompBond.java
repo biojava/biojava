@@ -24,10 +24,10 @@
  */
 package org.biojava.nbio.structure.io.mmcif.model;
 
-import java.io.Serializable;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.Serializable;
 
 
 /*

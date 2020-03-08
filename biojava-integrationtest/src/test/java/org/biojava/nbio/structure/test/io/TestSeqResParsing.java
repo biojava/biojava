@@ -24,16 +24,11 @@
 package org.biojava.nbio.structure.test.io;
 
 
-import java.io.IOException;
-
-import org.biojava.nbio.structure.AminoAcid;
-import org.biojava.nbio.structure.Chain;
-import org.biojava.nbio.structure.Group;
-import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.junit.Test;
-import org.biojava.nbio.structure.StructureIO;
+
+import java.io.IOException;
 
 import static org.junit.Assert.*;
 

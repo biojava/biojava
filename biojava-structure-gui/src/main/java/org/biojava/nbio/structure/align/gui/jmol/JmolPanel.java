@@ -24,27 +24,7 @@
 
 package org.biojava.nbio.structure.align.gui.jmol;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
-import java.text.DecimalFormat;
-import java.util.List;
-
-import javax.swing.JComboBox;
-
-import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.Calc;
-import org.biojava.nbio.structure.Group;
-import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureTools;
+import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.gui.JPrintPanel;
 import org.biojava.nbio.structure.domain.LocalProteinDomainParser;
 import org.biojava.nbio.structure.domain.pdp.Domain;
@@ -63,6 +43,14 @@ import org.jmol.util.LoggerInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.*;
+import java.text.DecimalFormat;
+import java.util.List;
+
 import static org.jmol.util.Logger.LEVEL_FATAL;
 
 
@@ -76,7 +64,7 @@ implements ActionListener
 
 	private JmolViewer viewer;
 	private JmolAdapter adapter;
-	JmolStatusListener statusListener;
+	final JmolStatusListener statusListener;
 	final Dimension currentSize = new Dimension();
 	final Rectangle rectClip = new Rectangle();
 

@@ -20,24 +20,18 @@
  */
 package org.biojava.nbio.structure.align.multiple.util;
 
-import static org.junit.Assert.*;
-
-import java.io.IOException;
-import java.util.List;
-
-import javax.vecmath.Matrix4d;
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.align.multiple.Block;
-import org.biojava.nbio.structure.align.multiple.BlockSet;
-import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
-import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsemble;
-import org.biojava.nbio.structure.align.multiple.TestSampleGenerator;
-import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentWriter;
+import org.biojava.nbio.structure.align.multiple.*;
 import org.biojava.nbio.structure.align.xml.MultipleAlignmentXMLParser;
 import org.junit.Test;
 import org.xml.sax.SAXException;
+
+import javax.vecmath.Matrix4d;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
+import java.util.List;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test the correctness of converting and parsing a MultipleAlignment

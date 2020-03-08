@@ -58,7 +58,7 @@ public class PeptideProperties {
 	/**
 	 * Contains the 20 standard AA code in a set
 	 */
-	public static Set<Character> standardAASet;
+	public static final Set<Character> standardAASet;
 
 	/**
 	 * To initialize the standardAASet

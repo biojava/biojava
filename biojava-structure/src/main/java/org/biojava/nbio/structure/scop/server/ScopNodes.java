@@ -50,7 +50,7 @@ public class ScopNodes implements Serializable {
 
 	List<ScopNode> scopNodes ;
 
-	static JAXBContext jaxbContext;
+	static final JAXBContext jaxbContext;
 	static {
 		try {
 			jaxbContext= JAXBContext.newInstance(ScopNodes.class);

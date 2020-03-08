@@ -69,7 +69,7 @@ public class SystemInfo
 		+ "user.dir "
 		+ "user.home "
 		+ "user.name ";
-	EtchedBorder        border;
+	final EtchedBorder        border;
 
 	public SystemInfo()
 	{

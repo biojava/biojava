@@ -20,10 +20,10 @@
  */
 package org.biojava.nbio.structure.domain;
 
+import org.biojava.nbio.structure.StructureException;
+
 import java.io.IOException;
 import java.util.SortedSet;
-
-import org.biojava.nbio.structure.StructureException;
 
 /**
  * Decomposes a structure from the PDB into representative domains

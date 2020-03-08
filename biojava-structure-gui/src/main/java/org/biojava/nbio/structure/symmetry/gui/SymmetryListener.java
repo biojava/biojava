@@ -20,9 +20,6 @@
  */
 package org.biojava.nbio.structure.symmetry.gui;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.gui.StructureAlignmentDisplay;
@@ -32,6 +29,9 @@ import org.biojava.nbio.structure.align.util.RotationAxis;
 import org.biojava.nbio.structure.symmetry.internal.CeSymmResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * Action Listener for the symmetry menu. Trigger various internal symmetry

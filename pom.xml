@@ -164,7 +164,7 @@
 				</plugin>
 				<plugin>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.8.0</version>
+					<version>3.8.1</version>
 					<configuration>
 						<source>${jdk.version}</source>
 						<target>${jdk.version}</target>
@@ -180,11 +180,11 @@
 				</plugin>
 				<plugin>
 					<artifactId>maven-scm-plugin</artifactId>
-					<version>1.10.0</version>
+					<version>1.11.2</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-source-plugin</artifactId>
-					<version>3.0.1</version>
+					<version>3.2.1</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-failsafe-plugin</artifactId>
@@ -239,7 +239,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-shade-plugin</artifactId>
-					<version>3.2.0</version>
+					<version>3.2.2</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-assembly-plugin</artifactId>
@@ -313,7 +313,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
-					<version>3.0.0-M3</version>
+					<version>3.0.0-M4</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -368,8 +368,8 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
 					<argLine>-Xmx1500M</argLine>
-					<reuseForks>false</reuseForks>
-					<forkCount>1</forkCount>
+<!--					<reuseForks>false</reuseForks>-->
+<!--					<forkCount>1</forkCount>-->
 				</configuration>
 			</plugin>
 

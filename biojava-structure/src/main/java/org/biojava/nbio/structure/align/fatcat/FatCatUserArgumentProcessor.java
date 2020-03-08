@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
 
 
 public class FatCatUserArgumentProcessor extends AbstractUserArgumentProcessor {
-	Logger logger = LoggerFactory.getLogger(FatCatUserArgumentProcessor.class);
+	final Logger logger = LoggerFactory.getLogger(FatCatUserArgumentProcessor.class);
 
 	protected static class FatCatStartupParams extends StartupParameters {
 		int fragLen;

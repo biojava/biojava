@@ -28,8 +28,8 @@ class JTableDataButtonModel extends AbstractTableModel {
 
 		public static final long serialVersionUID = 0L;
 
-		Object[][] __rows;
-		String[]   __columns;
+		final Object[][] __rows;
+		final String[]   __columns;
 
 		public JTableDataButtonModel(Object[][] rows, String[] columns){
 				__rows = rows;

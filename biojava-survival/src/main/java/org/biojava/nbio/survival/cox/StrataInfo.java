@@ -44,7 +44,7 @@ public class StrataInfo {
 	private final ArrayList<Double> upper = new ArrayList<>();
 	private final ArrayList<Double> lower = new ArrayList<>();
 	private final LinkedHashMap<Double, Integer> ndead = new LinkedHashMap<>();
-	DecimalFormat df = new DecimalFormat("#.######");
+	final DecimalFormat df = new DecimalFormat("#.######");
 	DecimalFormat dfe = new DecimalFormat("0.000000E0");
 
 	/**

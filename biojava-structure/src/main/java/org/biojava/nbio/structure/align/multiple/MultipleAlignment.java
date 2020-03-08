@@ -20,10 +20,10 @@
  */
 package org.biojava.nbio.structure.align.multiple;
 
-import java.util.List;
-
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureIdentifier;
+
+import java.util.List;
 
 /**
  * A MultipleAlignment is a Data Structure to store the core information of a

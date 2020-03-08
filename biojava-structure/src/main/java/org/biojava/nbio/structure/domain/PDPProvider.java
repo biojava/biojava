@@ -24,12 +24,12 @@
  */
 package org.biojava.nbio.structure.domain;
 
-import java.io.IOException;
-import java.util.SortedSet;
-
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.util.AtomCache;
+
+import java.io.IOException;
+import java.util.SortedSet;
 
 /**
  * Decomposes a structure into representative PDP domains.

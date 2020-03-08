@@ -34,12 +34,10 @@ import org.biojava.nbio.structure.jama.Matrix;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.vecmath.Matrix4d;
 import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.List;
-
-
-import javax.vecmath.Matrix4d;
 
 /**
  * Implements a class which handles one possible (alternative) solution.

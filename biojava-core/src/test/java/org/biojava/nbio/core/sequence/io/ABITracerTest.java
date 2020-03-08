@@ -21,10 +21,11 @@
 
 package org.biojava.nbio.core.sequence.io;
 
+import org.junit.*;
+
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URL;
-import org.junit.*;
 
 /**
  * Test file 3730.ab1 is from https://github.com/biopython/biopython/blob/master/Tests/Abi/3730.ab1

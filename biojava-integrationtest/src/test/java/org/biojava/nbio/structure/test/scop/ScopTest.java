@@ -20,11 +20,7 @@
  */
 package org.biojava.nbio.structure.test.scop;
 
-import org.biojava.nbio.structure.Chain;
-import org.biojava.nbio.structure.Group;
-import org.biojava.nbio.structure.GroupIterator;
-import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.scop.ScopDatabase;
 import org.biojava.nbio.structure.scop.ScopDomain;
@@ -35,7 +31,8 @@ import org.junit.Test;
 import java.io.IOException;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 //import org.biojava.nbio.structure.scop.RemoteScopInstallation;
 
@@ -43,7 +40,7 @@ import static org.junit.Assert.*;
 
 public class ScopTest {
 
-	boolean debug = false;
+	final boolean debug = false;
 
 	@Test
 	public void testLocalScop() throws IOException, StructureException{

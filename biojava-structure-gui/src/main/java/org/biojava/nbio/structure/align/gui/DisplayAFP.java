@@ -19,21 +19,7 @@
 
 package org.biojava.nbio.structure.align.gui;
 
-import java.awt.Dimension;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import javax.swing.Box;
-import javax.swing.JFrame;
-import javax.swing.JMenuBar;
-import javax.swing.JScrollPane;
-
-import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.Group;
-import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.StructureTools;
+import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.gui.aligpanel.AligPanel;
 import org.biojava.nbio.structure.align.gui.aligpanel.StatusDisplay;
 import org.biojava.nbio.structure.align.gui.jmol.AbstractAlignmentJmol;
@@ -43,6 +29,12 @@ import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.util.AlignmentTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /** A utility class for visualistion of structure alignments
  *

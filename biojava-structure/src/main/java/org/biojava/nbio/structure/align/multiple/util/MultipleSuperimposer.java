@@ -20,10 +20,10 @@
  */
 package org.biojava.nbio.structure.align.multiple.util;
 
-import java.util.List;
-
 import org.biojava.nbio.structure.align.multiple.BlockSet;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
+
+import java.util.List;
 
 /**
  * Interface for Multiple Alignment superposition algorithms.

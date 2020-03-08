@@ -32,11 +32,7 @@ import org.biojava.nbio.core.sequence.template.AbstractSequence;
 import org.biojava.nbio.core.sequence.template.Compound;
 import org.biojava.nbio.core.util.StringManipulationHelper;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Formatter;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 /**
  * @author mckeee1

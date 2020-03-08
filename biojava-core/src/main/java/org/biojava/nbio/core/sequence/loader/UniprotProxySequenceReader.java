@@ -50,10 +50,7 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -350,8 +347,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 		}
 		Element uniprotElement = uniprotDoc.getDocumentElement();
 		Element entryElement = XMLHelper.selectSingleElement(uniprotElement, "entry");
-		ArrayList<Element> keyWordElementList = XMLHelper.selectElements(entryElement, "accession");
-		for (Element element : keyWordElementList) {
+		for (Element element : XMLHelper.selectElements(entryElement, "accession")) {
 			AccessionID accessionID = new AccessionID(element.getTextContent(), DataSource.UNIPROT);
 			accessionList.add(accessionID);
 		}
@@ -366,75 +362,71 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 	 * @return
 	 * @throws XPathExpressionException
 	 */
-	public ArrayList<String> getAliases() throws XPathExpressionException {
+	public List<String> getAliases() throws XPathExpressionException {
 
 		return getProteinAliases();
 	}
+
 	/**
 	 * Pull uniprot protein aliases associated with this sequence
 	 * @return
 	 * @throws XPathExpressionException
 	 */
-	public ArrayList<String> getProteinAliases() throws XPathExpressionException {
-		ArrayList<String> aliasList = new ArrayList<>();
-		if (uniprotDoc == null) {
-			return aliasList;
-		}
+	public List<String> getProteinAliases() throws XPathExpressionException {
+		if (uniprotDoc == null)
+			return Collections.EMPTY_LIST;
+
+		ArrayList<String> a = new ArrayList<>();
+
 		Element uniprotElement = uniprotDoc.getDocumentElement();
 		Element entryElement = XMLHelper.selectSingleElement(uniprotElement, "entry");
 		Element proteinElement = XMLHelper.selectSingleElement(entryElement, "protein");
 		
-		ArrayList<Element> keyWordElementList;
-		getProteinAliasesFromNameGroup(aliasList, proteinElement);
+
+		getProteinAliasesFromNameGroup(a, proteinElement);
 		
-		keyWordElementList = XMLHelper.selectElements(proteinElement, "component");
-		for (Element element : keyWordElementList) {
-			getProteinAliasesFromNameGroup(aliasList, element);
+
+		for (Element element : XMLHelper.selectElements(proteinElement, "component")) {
+			getProteinAliasesFromNameGroup(a, element);
 		}
 
-		keyWordElementList = XMLHelper.selectElements(proteinElement, "domain");
-		for (Element element : keyWordElementList) {
-			getProteinAliasesFromNameGroup(aliasList, element);
+		for (Element element : XMLHelper.selectElements(proteinElement, "domain")) {
+			getProteinAliasesFromNameGroup(a, element);
 		}
 
-		keyWordElementList = XMLHelper.selectElements(proteinElement, "submittedName");
-		for (Element element : keyWordElementList) {
-			getProteinAliasesFromNameGroup(aliasList, element);
+		for (Element element : XMLHelper.selectElements(proteinElement, "submittedName")) {
+			getProteinAliasesFromNameGroup(a, element);
 		}
 
-		keyWordElementList = XMLHelper.selectElements(proteinElement, "cdAntigenName");
-		for (Element element : keyWordElementList) {
+		for (Element element : XMLHelper.selectElements(proteinElement, "cdAntigenName")) {
 			String cdAntigenName = element.getTextContent();
 			if(null != cdAntigenName && !cdAntigenName.trim().isEmpty()) {
-				aliasList.add(cdAntigenName);
-			}
-		}
-			
-		keyWordElementList = XMLHelper.selectElements(proteinElement, "innName");
-		for (Element element : keyWordElementList) {
-			String cdAntigenName = element.getTextContent();
-			if(null != cdAntigenName && !cdAntigenName.trim().isEmpty()) {
-				aliasList.add(cdAntigenName);
+				a.add(cdAntigenName);
 			}
 		}
 
-		keyWordElementList = XMLHelper.selectElements(proteinElement, "biotechName");
-		for (Element element : keyWordElementList) {
+		for (Element element : XMLHelper.selectElements(proteinElement, "innName")) {
 			String cdAntigenName = element.getTextContent();
 			if(null != cdAntigenName && !cdAntigenName.trim().isEmpty()) {
-				aliasList.add(cdAntigenName);
+				a.add(cdAntigenName);
 			}
 		}
 
-		keyWordElementList = XMLHelper.selectElements(proteinElement, "allergenName");
-		for (Element element : keyWordElementList) {
+		for (Element element : XMLHelper.selectElements(proteinElement, "biotechName")) {
 			String cdAntigenName = element.getTextContent();
 			if(null != cdAntigenName && !cdAntigenName.trim().isEmpty()) {
-				aliasList.add(cdAntigenName);
+				a.add(cdAntigenName);
 			}
 		}
 
-		return aliasList;
+		for (Element element : XMLHelper.selectElements(proteinElement, "allergenName")) {
+			String cdAntigenName = element.getTextContent();
+			if(null != cdAntigenName && !cdAntigenName.trim().isEmpty()) {
+				a.add(cdAntigenName);
+			}
+		}
+
+		return a;
 	}
 
 	/**
@@ -444,15 +436,11 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 	 */
 	private void getProteinAliasesFromNameGroup(ArrayList<String> aliasList, Element proteinElement)
 			throws XPathExpressionException {
-		ArrayList<Element> keyWordElementList = XMLHelper.selectElements(proteinElement, "alternativeName");
-		for (Element element : keyWordElementList) {
-			getProteinAliasesFromElement(aliasList, element);
-		}
-		
-		keyWordElementList = XMLHelper.selectElements(proteinElement, "recommendedName");
-		for (Element element : keyWordElementList) {
-			getProteinAliasesFromElement(aliasList, element);
-		}
+		for (Element e : XMLHelper.selectElements(proteinElement, "alternativeName"))
+			getProteinAliasesFromElement(aliasList, e);
+
+		for (Element e : XMLHelper.selectElements(proteinElement, "recommendedName"))
+			getProteinAliasesFromElement(aliasList, e);
 	}
 
 	/**
@@ -485,9 +473,9 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 		}
 		Element uniprotElement = uniprotDoc.getDocumentElement();
 		Element entryElement = XMLHelper.selectSingleElement(uniprotElement, "entry");
-		ArrayList<Element> proteinElements = XMLHelper.selectElements(entryElement, "gene");
+		List<Element> proteinElements = XMLHelper.selectElements(entryElement, "gene");
 		for(Element proteinElement : proteinElements) {
-			ArrayList<Element> keyWordElementList = XMLHelper.selectElements(proteinElement, "name");
+			List<Element> keyWordElementList = XMLHelper.selectElements(proteinElement, "name");
 			for (Element element : keyWordElementList) {
 				aliasList.add(element.getTextContent());
 			}
@@ -789,19 +777,18 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 	 * @return
 	 */
 	@Override
-	public ArrayList<String> getKeyWords() {
+	public List<String> getKeyWords() {
+		if (uniprotDoc == null)
+			return Collections.EMPTY_LIST;
+
 		ArrayList<String> keyWordsList = new ArrayList<>();
-		if (uniprotDoc == null) {
-			return keyWordsList;
-		}
 		try {
 			Element uniprotElement = uniprotDoc.getDocumentElement();
 
 			Element entryElement = XMLHelper.selectSingleElement(uniprotElement, "entry");
-			ArrayList<Element> keyWordElementList = XMLHelper.selectElements(entryElement, "keyword");
-			for (Element element : keyWordElementList) {
+			for (Element element : XMLHelper.selectElements(entryElement, "keyword"))
 				keyWordsList.add(element.getTextContent());
-			}
+
 		} catch (XPathExpressionException e) {
 			logger.error("Problems while parsing keywords in UniProt XML: {}. No keywords will be available.",e.getMessage());
 			return new ArrayList<>();
@@ -824,18 +811,15 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 		try {
 			Element uniprotElement = uniprotDoc.getDocumentElement();
 			Element entryElement = XMLHelper.selectSingleElement(uniprotElement, "entry");
-			ArrayList<Element> dbreferenceElementList = XMLHelper.selectElements(entryElement, "dbReference");
-			for (Element element : dbreferenceElementList) {
+			for (Element element : XMLHelper.selectElements(entryElement, "dbReference")) {
 				String type = element.getAttribute("type");
 				String id = element.getAttribute("id");
 				ArrayList<DBReferenceInfo> idlist = databaseReferencesHashMap.computeIfAbsent(type, k -> new ArrayList<>());
 				DBReferenceInfo dbreferenceInfo = new DBReferenceInfo(type, id);
-				ArrayList<Element> propertyElementList = XMLHelper.selectElements(element, "property");
-				for (Element propertyElement : propertyElementList) {
-					String propertyType = propertyElement.getAttribute("type");
-					String propertyValue = propertyElement.getAttribute("value");
-					dbreferenceInfo.addProperty(propertyType, propertyValue);
-				}
+				List<Element> propertyElementList = XMLHelper.selectElements(element, "property");
+
+				for (Element pe : propertyElementList)
+					dbreferenceInfo.addProperty(pe.getAttribute("type"), pe.getAttribute("value"));
 
 				idlist.add(dbreferenceInfo);
 			}

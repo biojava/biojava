@@ -30,7 +30,7 @@ public class SynchronizedOutFile {
 
 	String[] tmp;
 
-	int ARR_SIZE=100;
+	final int ARR_SIZE=100;
 	Integer counter;
 
 	boolean useGzipCompression;

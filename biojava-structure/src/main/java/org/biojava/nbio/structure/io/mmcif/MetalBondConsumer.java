@@ -35,7 +35,7 @@ import java.util.Map;
 public class MetalBondConsumer implements MMcifConsumer{
 
 
-	Map<String,List<MetalBondDistance>> definitions = new HashMap<>();
+	final Map<String,List<MetalBondDistance>> definitions = new HashMap<>();
 
 	@Override
 	public void documentStart() {

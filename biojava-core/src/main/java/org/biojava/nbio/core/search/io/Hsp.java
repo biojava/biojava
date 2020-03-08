@@ -20,10 +20,6 @@
  */
 package org.biojava.nbio.core.search.io;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
 import org.biojava.nbio.core.alignment.SimpleAlignedSequence;
 import org.biojava.nbio.core.alignment.SimpleSequencePair;
 import org.biojava.nbio.core.alignment.template.AlignedSequence.Step;
@@ -38,6 +34,10 @@ import org.biojava.nbio.core.sequence.template.Compound;
 import org.biojava.nbio.core.sequence.template.Sequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * This class models a search Hsp.

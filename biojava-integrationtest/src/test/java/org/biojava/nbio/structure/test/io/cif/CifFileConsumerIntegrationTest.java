@@ -1,17 +1,7 @@
 package org.biojava.nbio.structure.test.io.cif;
 
-import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.Chain;
-import org.biojava.nbio.structure.DBRef;
-import org.biojava.nbio.structure.Group;
-import org.biojava.nbio.structure.GroupType;
-import org.biojava.nbio.structure.PDBHeader;
-import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.io.BcifFileReader;
-import org.biojava.nbio.structure.io.CifFileReader;
-import org.biojava.nbio.structure.io.FileParsingParameters;
-import org.biojava.nbio.structure.io.LocalPDBDirectory;
-import org.biojava.nbio.structure.io.PDBFileParser;
+import org.biojava.nbio.structure.*;
+import org.biojava.nbio.structure.io.*;
 import org.junit.Test;
 
 import java.io.IOException;

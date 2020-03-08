@@ -20,17 +20,17 @@
  */
 package org.biojava.nbio.structure.test.io;
 
-import static org.junit.Assert.*;
-
-import java.io.IOException;
-import java.util.List;
-
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.junit.Test;
+
+import java.io.IOException;
+import java.util.List;
+
+import static org.junit.Assert.*;
 
 public class TestBioassemblies {
 

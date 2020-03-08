@@ -43,7 +43,7 @@ public class OboFileHandler implements OboFileEventListener {
 
 	private static final Logger logger = LoggerFactory.getLogger(OboFileEventListener.class);
 
-	Ontology ontology;
+	final Ontology ontology;
 	List<Term> termStack ;
 
 	public static final String TERM        = "Term";

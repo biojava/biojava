@@ -31,8 +31,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  *
@@ -52,7 +52,7 @@ public class GeneIDXMLReader {
 
 	public LinkedHashMap<String, ProteinSequence> getProteinSequences() throws Exception {
 		LinkedHashMap<String, ProteinSequence> proteinSequenceList = new LinkedHashMap<>();
-		ArrayList<Element> elementList = XMLHelper.selectElements(geneidDoc.getDocumentElement(), "prediction/gene/protein");
+		List<Element> elementList = XMLHelper.selectElements(geneidDoc.getDocumentElement(), "prediction/gene/protein");
 		logger.info("{} hits", elementList.size());
 
 		for (Element proteinElement : elementList) {
@@ -69,10 +69,8 @@ public class GeneIDXMLReader {
 
 	public LinkedHashMap<String, DNASequence> getDNACodingSequences() throws Exception {
 		LinkedHashMap<String, DNASequence> dnaSequenceList = new LinkedHashMap<>();
-		ArrayList<Element> elementList = XMLHelper.selectElements(geneidDoc.getDocumentElement(), "prediction/gene/cDNA");
-		logger.info("{} hits", elementList.size());
 
-		for (Element dnaElement : elementList) {
+		for (Element dnaElement : XMLHelper.selectElements(geneidDoc.getDocumentElement(), "prediction/gene/cDNA")) {
 			Element geneElement = (Element) dnaElement.getParentNode();
 			String sequence = dnaElement.getTextContent().replaceAll("\\W","");
 			DNASequence dnaSequence = new DNASequence(sequence);

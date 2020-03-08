@@ -53,10 +53,10 @@ public class OboFileParser {
 	List<OboFileEventListener> listeners;
 
 	protected String line;
-	protected int linenum = 0;
+	protected final int linenum = 0;
 	protected int totalSize = 0;
 	protected int bytesRead = 0;
-	protected StringBuffer tempBuffer = new StringBuffer();
+	protected final StringBuffer tempBuffer = new StringBuffer();
 	protected SimpleDateFormat dateFormat = new SimpleDateFormat("dd:MM:yyyy HH:mm", Locale.US);
 
 
@@ -89,11 +89,11 @@ public class OboFileParser {
 	}
 
 	public static class SOPair {
-		public String str;
+		public final String str;
 
-		public int index;
+		public final int index;
 
-		public int endIndex;
+		public final int endIndex;
 
 		public SOPair(String str, int index) {
 			this(str, index, -1);
@@ -606,7 +606,7 @@ public class OboFileParser {
 
 class NestedValue {
 
-	protected Properties propertyValues = new Properties();
+	protected final Properties propertyValues = new Properties();
 	protected String name;
 	protected String suggestedComment;
 

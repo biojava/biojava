@@ -30,7 +30,6 @@ import org.biojava.nbio.core.sequence.template.AbstractSequence;
 import org.junit.Assert;
 import org.junit.Test;
 
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;

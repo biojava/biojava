@@ -33,7 +33,7 @@ import java.util.Comparator;
 public class CoxVariablesOverallModelFitComparator implements Comparator<CoxVariables>, Serializable {
 	private static final long serialVersionUID = 1;
 
-	String variables;
+	final String variables;
 
 	/**
 	 * Variables are stored as a string representation of an ArrayList

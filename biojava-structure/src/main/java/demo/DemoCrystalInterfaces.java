@@ -23,13 +23,13 @@ package demo;
 
 import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.contact.*;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.xtal.CrystalBuilder;
 import org.biojava.nbio.structure.xtal.CrystalTransform;
 import org.biojava.nbio.structure.xtal.SpaceGroup;
-import org.biojava.nbio.structure.StructureIO;
 
 import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Vector3d;

@@ -20,13 +20,13 @@
  */
 package org.biojava.nbio.structure.test.io;
 
-import static org.junit.Assert.*;
-
-import java.io.IOException;
-
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
 import org.junit.Test;
+
+import java.io.IOException;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test StructureIO methods.

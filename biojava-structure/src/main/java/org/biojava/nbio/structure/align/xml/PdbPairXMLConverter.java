@@ -20,9 +20,9 @@
  */
 package org.biojava.nbio.structure.align.xml;
 
+import org.biojava.nbio.core.util.PrettyXMLWriter;
 import org.biojava.nbio.structure.align.client.PdbPair;
 import org.biojava.nbio.structure.align.fatcat.FatCatRigid;
-import org.biojava.nbio.core.util.PrettyXMLWriter;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;

@@ -46,12 +46,12 @@ public class SurvivalInfo implements Comparable<SurvivalInfo> {
 	private double residual = 0.0;
 	private String clusterValue = "";
 
-	LinkedHashMap<String,Double> residualVariableMap = new LinkedHashMap<>();
+	final LinkedHashMap<String,Double> residualVariableMap = new LinkedHashMap<>();
 
 	LinkedHashMap<String, Double> data = new LinkedHashMap<>();
 	//    LinkedHashMap<String, Double> discreteData = new LinkedHashMap<String, Double>();
-	LinkedHashMap<String, String> unknownDataType = new LinkedHashMap<>();
-	LinkedHashMap<String, String> originalMetaData = new LinkedHashMap<>();
+    final LinkedHashMap<String, String> unknownDataType = new LinkedHashMap<>();
+	final LinkedHashMap<String, String> originalMetaData = new LinkedHashMap<>();
 
 	/**
 	 *

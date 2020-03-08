@@ -46,8 +46,8 @@ import static org.junit.Assert.*;
  */
 @RunWith(Parameterized.class)
 public abstract class ScopDatabaseTest {
-	protected ScopDatabase scop;
-	String tag;
+	protected final ScopDatabase scop;
+	final String tag;
 
 	/**
 	 *

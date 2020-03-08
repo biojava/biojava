@@ -23,7 +23,6 @@
 
 package org.biojava.nbio.core.alignment.template;
 
-import org.biojava.nbio.core.alignment.template.AlignedSequence;
 import org.biojava.nbio.core.sequence.location.template.Location;
 import org.biojava.nbio.core.sequence.template.Compound;
 import org.biojava.nbio.core.sequence.template.Sequence;

@@ -47,7 +47,7 @@ public class FastaReader<S extends Sequence<?>, C extends Compound> {
 	private final static Logger logger = LoggerFactory.getLogger(FastaReader.class);
 
 	SequenceCreatorInterface<C> sequenceCreator;
-	SequenceHeaderParserInterface<S,C> headerParser;
+	final SequenceHeaderParserInterface<S,C> headerParser;
 	BufferedReaderBytesRead br;
 	InputStreamReader isr;
 	FileInputStream fi = null;

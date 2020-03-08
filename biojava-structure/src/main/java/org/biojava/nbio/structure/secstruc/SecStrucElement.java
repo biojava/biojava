@@ -20,10 +20,10 @@
  */
 package org.biojava.nbio.structure.secstruc;
 
-import java.io.Serializable;
-
 import org.biojava.nbio.structure.ResidueNumber;
 import org.biojava.nbio.structure.ResidueRangeAndLength;
+
+import java.io.Serializable;
 
 /**
  * A secondary structure element (SSE) is an object representing a block of

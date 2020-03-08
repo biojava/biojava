@@ -23,9 +23,8 @@
  */
 package org.biojava.nbio.structure;
 
-import java.util.List;
-
 import javax.vecmath.Point3d;
+import java.util.List;
 
 /**
  * A simple interface for an Atom.

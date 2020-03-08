@@ -20,22 +20,6 @@
  */
 package org.biojava.nbio.structure.symmetry.gui;
 
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.io.IOException;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.Box;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenuBar;
-import javax.swing.JOptionPane;
-import javax.swing.JProgressBar;
-import javax.swing.JTabbedPane;
-
 import org.biojava.nbio.structure.PassthroughIdentifier;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
@@ -52,6 +36,11 @@ import org.biojava.nbio.structure.gui.util.ScopSelectPanel;
 import org.biojava.nbio.structure.gui.util.StructurePairSelector;
 import org.biojava.nbio.structure.symmetry.internal.CESymmParameters;
 import org.biojava.nbio.structure.symmetry.internal.CeSymm;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.io.IOException;
 
 /**
  * A JFrame that allows to trigger a symmetry analysis, either from files
@@ -332,7 +321,7 @@ public class SymmetryGui extends JFrame {
 class ProgressThreadDrawer extends Thread {
 
 	JProgressBar progress;
-	static int interval = 300;
+	static final int interval = 300;
 
 	public ProgressThreadDrawer(JProgressBar progress) {
 		this.progress = progress;

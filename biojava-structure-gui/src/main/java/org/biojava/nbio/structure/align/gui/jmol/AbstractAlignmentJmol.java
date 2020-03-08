@@ -20,23 +20,7 @@
  */
 package org.biojava.nbio.structure.align.gui.jmol;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-import java.util.List;
-
-import javax.swing.JFrame;
-import javax.swing.JTextField;
-
-import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.Chain;
-import org.biojava.nbio.structure.ChainImpl;
-import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureImpl;
+import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.util.ResourceManager;
 import org.biojava.nbio.structure.jama.Matrix;
 import org.jcolorbrewer.ColorBrewer;
@@ -44,6 +28,10 @@ import org.jmol.api.JmolViewer;
 import org.jmol.viewer.Viewer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.swing.*;
+import java.awt.event.*;
+import java.util.List;
 
 /**
  * An Abstract Class to generalize the visualization of AFP and

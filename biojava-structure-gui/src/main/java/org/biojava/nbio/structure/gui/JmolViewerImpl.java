@@ -42,7 +42,7 @@ public class JmolViewerImpl implements StructureViewer {
 	public static final String smartAdapter = "org.jmol.adapter.smarter.SmarterJmolAdapter";
 	Structure structure;
 	JmolPanel jmolPanel;
-	JFrame frame;
+	final JFrame frame;
 
 	public JmolViewerImpl() {
 

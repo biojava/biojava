@@ -34,10 +34,10 @@ import java.awt.*;
 
 public class StructureLoaderThread extends SwingWorker<String, Object> {
 
-	String name;
-	boolean showBiolAssembly;
+	final String name;
+	final boolean showBiolAssembly;
 
-	UserConfiguration config;
+	final UserConfiguration config;
 
 	StructureLoaderThread(UserConfiguration config, String name, boolean showBiolAssembly){
 		this.name = name;

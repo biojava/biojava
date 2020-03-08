@@ -20,13 +20,13 @@
  */
 package org.biojava.nbio.structure.contact;
 
-import java.io.Serializable;
-
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.EntityInfo;
 import org.biojava.nbio.structure.Group;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.Serializable;
 
 /**
  * A bean for identifying groups in GroupContactSets.

@@ -20,10 +20,10 @@
  */
 package org.biojava.nbio.genome;
 
-import static org.junit.Assert.*;
-
 import org.biojava.nbio.genome.parsers.gff.Location;
 import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 public class TestLocation {
 

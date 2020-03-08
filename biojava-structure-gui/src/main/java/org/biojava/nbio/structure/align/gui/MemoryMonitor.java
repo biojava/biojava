@@ -55,11 +55,11 @@ import java.util.Date;
  */
 public class MemoryMonitor extends JPanel {
 
-	static JCheckBox dateStampCB = new JCheckBox("Output Date Stamp");
-	public Surface surf;
-	JPanel controls;
+	static final JCheckBox dateStampCB = new JCheckBox("Output Date Stamp");
+	public final Surface surf;
+	final JPanel controls;
 	boolean doControls;
-	JTextField tf;
+	final JTextField tf;
 
 	public static final long serialVersionUID = 56289234782130L;
 

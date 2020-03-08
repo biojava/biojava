@@ -20,13 +20,10 @@
  */
 package org.biojava.nbio.structure;
 
-import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-
 import org.biojava.nbio.structure.align.util.AtomCache;
-import org.biojava.nbio.structure.io.MMCIFFileReader;
-import org.biojava.nbio.structure.io.PDBFileReader;
+
+import java.io.IOException;
+import java.util.List;
 
 /**
  * A class that provides static access methods for easy lookup of protein structure related components
@@ -39,7 +36,7 @@ public class StructureIO {
 
 	//private static final Logger logger = LoggerFactory.getLogger(StructureIO.class);
 
-	private static AtomCache cache ;
+	@Deprecated private static ThreadLocal<AtomCache> caches = ThreadLocal.withInitial(()->null) ;
 
 
 	/**
@@ -95,30 +92,27 @@ public class StructureIO {
 	 */
 	public static Structure getStructure(String name) throws IOException, StructureException{
 
-		checkInitAtomCache();
 
 		// delegate this functionality to AtomCache...
 
-		return cache.getStructure(name);
+		return getAtomCache().getStructure(name);
 
 	}
 
 
-	private static void checkInitAtomCache() {
-		if ( cache == null){
-			cache = new AtomCache();
-		}
-
+	@Deprecated public static void setAtomCache(AtomCache c){
+		caches.set(c);
 	}
 
-	public static void setAtomCache(AtomCache c){
-		cache = c;
+	@Deprecated public static AtomCache getAtomCache() {
+		//synchronized (StructureIO.class) {
+			AtomCache cache = caches.get();
+			if ( cache == null)
+				setAtomCache(cache = new AtomCache());
+			return cache;
+		//}
 	}
 
-	public static AtomCache getAtomCache() {
-		checkInitAtomCache();
-		return cache;
-	}
 
 
 	/**
@@ -147,13 +141,7 @@ public class StructureIO {
 	 */
 	public static Structure getBiologicalAssembly(String pdbId, boolean multiModel) throws IOException, StructureException{
 
-		checkInitAtomCache();
-
-		pdbId = pdbId.toLowerCase();
-
-		Structure s = cache.getBiologicalAssembly(pdbId, multiModel);
-
-		return s;
+		return getAtomCache().getBiologicalAssembly(pdbId.toLowerCase(), multiModel);
 	}
 
 	/**
@@ -194,14 +182,7 @@ public class StructureIO {
 	 * @throws IOException
 	 */
 	public static Structure getBiologicalAssembly(String pdbId, int biolAssemblyNr, boolean multiModel) throws IOException, StructureException {
-
-		checkInitAtomCache();
-
-		pdbId = pdbId.toLowerCase();
-
-		Structure s = cache.getBiologicalAssembly(pdbId, biolAssemblyNr, multiModel);
-
-		return s;
+		return getAtomCache().getBiologicalAssembly(pdbId.toLowerCase(), biolAssemblyNr, multiModel);
 	}
 
 	/**
@@ -241,13 +222,8 @@ public class StructureIO {
 	 */
 	public static List<Structure> getBiologicalAssemblies(String pdbId, boolean multiModel) throws IOException, StructureException {
 
-		checkInitAtomCache();
 
-		pdbId = pdbId.toLowerCase();
-
-		List<Structure> s = cache.getBiologicalAssemblies(pdbId, multiModel);
-
-		return s;
+		return getAtomCache().getBiologicalAssemblies(pdbId.toLowerCase(), multiModel);
 
 	}
 
@@ -267,39 +243,19 @@ public class StructureIO {
 	}
 
 
-	private static final String FILE_SEPARATOR = System.getProperty("file.separator");
+//	private static final String FILE_SEPARATOR = System.getProperty("file.separator");
 
-	/**
-	 * Utility method to set the location where PDB files can be found
-	 *
-	 * @param pathToPDBFiles
-	 */
-	public static void setPdbPath(String pathToPDBFiles){
+//	/**
+//	 * Utility method to set the location where PDB files can be found
+//	 *
+//	 * @param pathToPDBFiles
+//	 */
+//	public static void setPdbPath(String pathToPDBFiles){
+//
+//		if ( ! pathToPDBFiles.endsWith(FILE_SEPARATOR))
+//			pathToPDBFiles += FILE_SEPARATOR;
+//	}
 
-		if ( ! pathToPDBFiles.endsWith(FILE_SEPARATOR))
-			pathToPDBFiles += FILE_SEPARATOR;
-	}
-
-
-	public enum StructureFiletype {
-		PDB( (new PDBFileReader()).getExtensions()),
-		CIF( new MMCIFFileReader().getExtensions()),
-		UNKNOWN(Collections.emptyList());
-
-		private final List<String> extensions;
-		/**
-		 * @param extensions List of supported extensions, including leading period
-		 */
-		StructureFiletype(List<String> extensions) {
-			this.extensions = extensions;
-		}
-		/**
-		 * @return a list of file extensions associated with this type
-		 */
-		public List<String> getExtensions() {
-			return extensions;
-		}
-	}
 
 	/**
 	 * Attempts to guess the type of a structure file based on the extension
@@ -310,9 +266,8 @@ public class StructureIO {
 		String lower = filename.toLowerCase();
 		for(StructureFiletype type : StructureFiletype.values()) {
 			for(String ext : type.getExtensions()) {
-				if(lower.endsWith(ext.toLowerCase())) {
+				if(lower.endsWith(ext.toLowerCase()))
 					return type;
-				}
 			}
 		}
 		return StructureFiletype.UNKNOWN;

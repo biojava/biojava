@@ -21,13 +21,14 @@
 package org.biojava.nbio.structure.io;
 
 
-import java.io.IOException;
-
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
 import org.junit.Test;
-import static org.junit.Assert.*;
+
+import java.io.IOException;
+
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Created by ap3 on 31/07/2015.

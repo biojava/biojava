@@ -23,11 +23,11 @@
 
 package org.biojava.nbio.structure.io;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.biojava.nbio.structure.Bond;
 import org.biojava.nbio.structure.PDBRecord;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple bean to store disulfide bridge information, the SSBOND records in the PDB files.

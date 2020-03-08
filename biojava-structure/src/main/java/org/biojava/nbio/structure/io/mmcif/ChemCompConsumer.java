@@ -32,7 +32,7 @@ public class ChemCompConsumer implements MMcifConsumer {
 
 	private static final Logger logger = LoggerFactory.getLogger(ChemCompConsumer.class);
 
-	ChemicalComponentDictionary dictionary;
+	final ChemicalComponentDictionary dictionary;
 
 	String latestChemCompId;
 	public ChemCompConsumer(){

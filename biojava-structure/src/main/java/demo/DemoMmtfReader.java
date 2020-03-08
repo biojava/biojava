@@ -20,10 +20,10 @@
  */
 package demo;
 
-import java.io.IOException;
-
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.io.mmtf.MmtfActions;
+
+import java.io.IOException;
 
 /**
  * Class to show how to read a Biojava structure using MMTF

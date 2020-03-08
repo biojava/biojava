@@ -27,7 +27,6 @@ package org.biojava.nbio.core.sequence.compound;
 
 import org.biojava.nbio.core.sequence.template.AbstractCompound;
 import org.biojava.nbio.core.sequence.template.ComplementCompound;
-import org.biojava.nbio.core.sequence.template.Compound;
 import org.biojava.nbio.core.sequence.template.CompoundSet;
 
 import java.util.Collections;

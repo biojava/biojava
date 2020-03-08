@@ -23,6 +23,7 @@
 package org.biojava.nbio.structure.test;
 
 import junit.framework.TestCase;
+import org.biojava.nbio.core.util.StringManipulationHelper;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.align.StructureAlignment;
 import org.biojava.nbio.structure.align.StructureAlignmentFactory;
@@ -33,7 +34,6 @@ import org.biojava.nbio.structure.align.xml.AFPChainXMLConverter;
 import org.biojava.nbio.structure.align.xml.AFPChainXMLParser;
 import org.biojava.nbio.structure.test.align.fatcat.FlipAFPChainTest;
 import org.biojava.nbio.structure.test.util.StringManipulationTestsHelper;
-import org.biojava.nbio.core.util.StringManipulationHelper;
 
 import java.io.InputStream;
 

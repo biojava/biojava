@@ -20,16 +20,16 @@
  */
 package org.biojava.nbio.structure.symmetry.internal;
 
-import static org.junit.Assert.*;
-
-import java.io.IOException;
-
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureTools;
-import org.biojava.nbio.structure.symmetry.internal.CeSymm;
 import org.junit.Test;
+
+import java.io.IOException;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Run two easy cases of internal symmetry and test that results are significant

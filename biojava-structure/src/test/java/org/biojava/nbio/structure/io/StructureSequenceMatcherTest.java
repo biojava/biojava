@@ -23,10 +23,10 @@
 package org.biojava.nbio.structure.io;
 
 
-import org.biojava.nbio.structure.*;
-import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.core.sequence.ProteinSequence;
+import org.biojava.nbio.structure.*;
+import org.biojava.nbio.structure.align.util.AtomCache;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

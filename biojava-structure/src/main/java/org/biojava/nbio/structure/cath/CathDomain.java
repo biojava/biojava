@@ -27,20 +27,12 @@ package org.biojava.nbio.structure.cath;
  * @author Daniel Asarnow
  */
 
+import org.biojava.nbio.structure.*;
+import org.biojava.nbio.structure.align.util.AtomCache;
+
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.biojava.nbio.structure.ResidueRange;
-import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.StructureIdentifier;
-import org.biojava.nbio.structure.SubstructureIdentifier;
-import org.biojava.nbio.structure.align.util.AtomCache;
+import java.util.*;
 
 /**
  * A class which represents a single CATH domain.

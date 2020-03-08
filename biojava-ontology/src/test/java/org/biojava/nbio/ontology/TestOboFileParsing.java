@@ -25,6 +25,7 @@
 package org.biojava.nbio.ontology;
 
 import org.biojava.nbio.ontology.io.OboParser;
+import org.biojava.nbio.ontology.utils.Annotation;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -34,8 +35,6 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Set;
-
-import org.biojava.nbio.ontology.utils.Annotation;
 
 public class TestOboFileParsing {
 

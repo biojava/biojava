@@ -20,17 +20,7 @@
  */
 package org.biojava.nbio.structure.test.ecod;
 
-import java.io.IOException;
-import java.util.List;
-
-import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.AtomPositionMap;
-import org.biojava.nbio.structure.Group;
-import org.biojava.nbio.structure.ResidueRange;
-import org.biojava.nbio.structure.ResidueRangeAndLength;
-import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.StructureTools;
+import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.ecod.EcodDatabase;
 import org.biojava.nbio.structure.ecod.EcodDomain;
@@ -38,6 +28,9 @@ import org.biojava.nbio.structure.ecod.EcodFactory;
 import org.biojava.nbio.structure.io.LocalPDBDirectory.ObsoleteBehavior;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.List;
 
 /**
  * This is not a unit test.

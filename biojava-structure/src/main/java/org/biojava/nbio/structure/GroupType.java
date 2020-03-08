@@ -95,7 +95,7 @@ public enum GroupType {
 	 * @return
 	 */
 	private static Set<ResidueType> matchPolymerTypes(Set<PolymerType> allowedTypes) {
-		Set<ResidueType> matched = new HashSet<>();
+		Set<ResidueType> matched = EnumSet.noneOf(ResidueType.class);
 		for(ResidueType restype : ResidueType.values()) {
 			if(allowedTypes.contains(restype.polymerType)) {
 				matched.add(restype);
@@ -109,7 +109,7 @@ public enum GroupType {
 	 * @return
 	 */
 	private static Set<ResidueType> getHetatmTypes() {
-		Set<ResidueType> unmatched = new HashSet<>();
+		Set<ResidueType> unmatched = EnumSet.noneOf(ResidueType.class);
 		for(ResidueType restype : ResidueType.values()) {
 			if(!AMINOACID.getResidueTypes().contains(restype) &&
 					!NUCLEOTIDE.getResidueTypes().contains(restype) ) {

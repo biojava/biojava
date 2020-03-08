@@ -23,8 +23,8 @@
 
 package org.biojava.nbio.genome.parsers.genename;
 
-import org.biojava.nbio.genome.App;
 import org.biojava.nbio.core.util.InputStreamProvider;
+import org.biojava.nbio.genome.App;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

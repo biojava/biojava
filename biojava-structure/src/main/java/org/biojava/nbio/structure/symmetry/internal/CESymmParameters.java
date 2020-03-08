@@ -20,10 +20,10 @@
  */
 package org.biojava.nbio.structure.symmetry.internal;
 
+import org.biojava.nbio.structure.align.ce.CeParameters;
+
 import java.util.List;
 import java.util.Random;
-
-import org.biojava.nbio.structure.align.ce.CeParameters;
 
 /**
  * Provides parameters to {@link CeSymm}.

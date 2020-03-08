@@ -26,10 +26,12 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Comparator;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class TestEntityHeuristics {
 
@@ -243,7 +245,7 @@ public class TestEntityHeuristics {
 
 	private void checkEntitiesNumbered(List<EntityInfo> entities) {
 
-		entities.sort((o1, o2) -> Integer.compare(o1.getMolId(), o2.getMolId()));
+		entities.sort(Comparator.comparingInt(EntityInfo::getMolId));
 
 		int id = 1;
 		for (EntityInfo compound:entities) {

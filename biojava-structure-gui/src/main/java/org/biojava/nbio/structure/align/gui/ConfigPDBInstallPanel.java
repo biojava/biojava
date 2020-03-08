@@ -44,7 +44,7 @@ public class ConfigPDBInstallPanel extends JPanel
 	private static final long serialVersionUID = -1055193854675583808L;
 
 	JCheckBox fromFtp;
-	JComboBox fileType;
+	final JComboBox fileType;
 
 	JTextField pdbDir;
 
@@ -198,7 +198,7 @@ public class ConfigPDBInstallPanel extends JPanel
 }
 
 class MyAction implements ActionListener{
-	JDialog dialog;
+	final JDialog dialog;
 
 	public MyAction(JDialog dialog) {
 		this.dialog= dialog;

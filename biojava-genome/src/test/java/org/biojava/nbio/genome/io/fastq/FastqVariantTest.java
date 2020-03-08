@@ -20,10 +20,10 @@
  */
 package org.biojava.nbio.genome.io.fastq;
 
-import static org.biojava.nbio.genome.io.fastq.FastqVariant.*;
-
 import org.junit.Assert;
 import org.junit.Test;
+
+import static org.biojava.nbio.genome.io.fastq.FastqVariant.*;
 
 /**
  * Unit test for FastqVariant.

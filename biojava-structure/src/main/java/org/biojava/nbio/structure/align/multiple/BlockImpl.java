@@ -20,11 +20,11 @@
  */
 package org.biojava.nbio.structure.align.multiple;
 
+import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentTools;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentTools;
 
 /**
  * General implementation of a {@link Block} that supports any type of

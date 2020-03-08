@@ -23,16 +23,16 @@
 
 package org.biojava.nbio.structure;
 
+import org.biojava.nbio.structure.align.util.AtomCache;
+import org.biojava.nbio.structure.contact.Grid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-
-import org.biojava.nbio.structure.align.util.AtomCache;
-import org.biojava.nbio.structure.contact.Grid;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This is the canonical way to identify a part of a structure.

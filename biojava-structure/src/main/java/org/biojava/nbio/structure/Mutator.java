@@ -20,8 +20,6 @@
 
 package org.biojava.nbio.structure;
 
-import org.biojava.nbio.structure.io.PDBParseException;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,7 +54,7 @@ p.close();
  * @version %I% %G%
  */
 public class Mutator{
-	List<String> supportedAtoms;
+	final List<String> supportedAtoms;
 
 	public Mutator(){
 		supportedAtoms = new ArrayList<>();

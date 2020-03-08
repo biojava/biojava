@@ -61,10 +61,10 @@ implements StructurePairSelector {
 
 	private final JComboBox fileType ;
 
-	JTextField filePath1;
-	JTextField filePath2;
-	JTextField chain1;
-	JTextField chain2;
+	final JTextField filePath1;
+	final JTextField filePath2;
+	final JTextField chain1;
+	final JTextField chain2;
 
 	public static JComboBox getFileFormatSelect(){
 		JComboBox fileType = new JComboBox();
@@ -201,7 +201,7 @@ implements StructurePairSelector {
 
 class ChooseAction extends AbstractAction{
 
-	JTextField textField;
+	final JTextField textField;
 	public ChooseAction (JTextField textField){
 		super("Choose");
 		this.textField = textField;

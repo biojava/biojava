@@ -22,7 +22,9 @@ package org.biojava.nbio.protmod.structure;
 
 import org.biojava.nbio.protmod.ProteinModification;
 import org.biojava.nbio.protmod.ProteinModificationRegistry;
-import org.biojava.nbio.structure.*;
+import org.biojava.nbio.structure.ResidueNumber;
+import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.StructureException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

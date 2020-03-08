@@ -20,12 +20,12 @@
  */
 package org.biojava.nbio.structure.geometry;
 
+import org.biojava.nbio.structure.jama.EigenvalueDecomposition;
+import org.biojava.nbio.structure.jama.Matrix;
+
 import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Quat4d;
-
-import org.biojava.nbio.structure.jama.EigenvalueDecomposition;
-import org.biojava.nbio.structure.jama.Matrix;
 
 /**
  * UnitQuaternions is a static Class that contains methods for calculating and

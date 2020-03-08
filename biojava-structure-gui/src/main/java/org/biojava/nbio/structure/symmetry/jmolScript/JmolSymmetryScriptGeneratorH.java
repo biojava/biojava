@@ -28,10 +28,9 @@ import org.biojava.nbio.structure.symmetry.core.QuatSymmetrySubunits;
 import org.jcolorbrewer.ColorBrewer;
 
 import javax.vecmath.*;
-
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 
 /**

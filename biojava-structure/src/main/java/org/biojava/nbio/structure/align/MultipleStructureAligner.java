@@ -20,12 +20,12 @@
  */
 package org.biojava.nbio.structure.align;
 
-import java.util.List;
-
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.ce.ConfigStrucAligParams;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
+
+import java.util.List;
 
 /**
  * Interface for the Multiple Structure Alignment Algorithms. The Pairwise Alignment Algorithms can also

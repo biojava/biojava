@@ -20,8 +20,6 @@
  */
 package org.biojava.nbio.core.sequence.location;
 
-import java.util.Arrays;
-import java.util.Collection;
 import org.biojava.nbio.core.sequence.DataSource;
 import org.biojava.nbio.core.sequence.location.template.Location;
 import org.junit.Assert;
@@ -30,6 +28,9 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Arrays;
+import java.util.Collection;
 
 /**
  *

@@ -24,12 +24,6 @@
  */
 package org.biojava.nbio.structure.domain;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.*;
-
 import org.biojava.nbio.structure.ResidueRange;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
@@ -40,6 +34,12 @@ import org.biojava.nbio.structure.align.util.URLConnectionTools;
 import org.biojava.nbio.structure.scop.server.XMLUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.*;
 
 
 /** A class that provided PDP assignments that are loaded from a remote web server

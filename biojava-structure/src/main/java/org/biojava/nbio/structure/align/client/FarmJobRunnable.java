@@ -20,6 +20,8 @@
  */
 package org.biojava.nbio.structure.align.client;
 
+import org.biojava.nbio.core.util.FlatFileCache;
+import org.biojava.nbio.core.util.PrettyXMLWriter;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.StructureAlignment;
@@ -40,8 +42,6 @@ import org.biojava.nbio.structure.domain.RemotePDPProvider;
 import org.biojava.nbio.structure.io.LocalPDBDirectory.FetchBehavior;
 import org.biojava.nbio.structure.scop.RemoteScopInstallation;
 import org.biojava.nbio.structure.scop.ScopFactory;
-import org.biojava.nbio.core.util.FlatFileCache;
-import org.biojava.nbio.core.util.PrettyXMLWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,7 +75,7 @@ public class FarmJobRunnable implements Runnable {
 
 	//private static DateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy h:mm a",Locale.US);
 
-	FarmJobParameters params;
+	final FarmJobParameters params;
 
 	String prevName1;
 	Atom[] ca1 ;
@@ -93,10 +93,10 @@ public class FarmJobRunnable implements Runnable {
 	boolean terminated ;
 
 	List<AlignmentProgressListener> progressListeners;
-	CountProgressListener counter ;
+	final CountProgressListener counter ;
 
-	String userName;
-	protected AtomCache cache;
+	final String userName;
+	protected final AtomCache cache;
 
 	boolean verbose; // TODO dmyersturnbull: we should probably remove this in favor of SLF4J
 	String version = null;

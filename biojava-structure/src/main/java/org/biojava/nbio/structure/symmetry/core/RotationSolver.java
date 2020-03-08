@@ -21,24 +21,14 @@
 
 package org.biojava.nbio.structure.symmetry.core;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.vecmath.AxisAngle4d;
-import javax.vecmath.Matrix4d;
-import javax.vecmath.Point3d;
-import javax.vecmath.Quat4d;
-import javax.vecmath.Vector3d;
-
 import org.biojava.nbio.structure.geometry.CalcPoint;
 import org.biojava.nbio.structure.geometry.MomentsOfInertia;
 import org.biojava.nbio.structure.geometry.UnitQuaternions;
 import org.biojava.nbio.structure.symmetry.geometry.DistanceBox;
 import org.biojava.nbio.structure.symmetry.geometry.SphereSampler;
+
+import javax.vecmath.*;
+import java.util.*;
 
 
 /**

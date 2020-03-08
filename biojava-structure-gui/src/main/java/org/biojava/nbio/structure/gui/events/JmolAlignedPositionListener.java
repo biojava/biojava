@@ -33,10 +33,10 @@ import org.biojava.nbio.structure.gui.util.AlignedPosition;
 
 public class JmolAlignedPositionListener implements AlignmentPositionListener{
 
-	BiojavaJmol parent;
+	final BiojavaJmol parent;
 	Atom[] ca1;
 	Atom[] ca2;
-	StructurePairAligner structurePairAligner;
+	final StructurePairAligner structurePairAligner;
 
 	public JmolAlignedPositionListener(BiojavaJmol parent, StructurePairAligner alig){
 		this.parent = parent;

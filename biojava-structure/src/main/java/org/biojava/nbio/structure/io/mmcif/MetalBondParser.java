@@ -25,8 +25,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
-import java.util.*;
-
+import java.util.List;
+import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
 /**
@@ -39,7 +39,7 @@ public class MetalBondParser  {
 	private static final String BONDS_FILE = "org/biojava/nbio/structure/bond_distance_limits.cif.gz";
 
 
-	static Map<String,List<MetalBondDistance>> definitions;
+	static final Map<String,List<MetalBondDistance>> definitions;
 
 	static {
 		 definitions = init();

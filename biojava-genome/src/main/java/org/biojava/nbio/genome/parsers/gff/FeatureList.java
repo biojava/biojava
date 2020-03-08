@@ -40,7 +40,7 @@ import java.util.Map.Entry;
 @SuppressWarnings("serial")
 public class FeatureList extends ArrayList<FeatureI> {
 
-	 Map<String, Map<String,List<FeatureI>>> featindex = new HashMap<>();
+	 final Map<String, Map<String,List<FeatureI>>> featindex = new HashMap<>();
 	Location mLocation;			//genomic location (union of feature locations)
 
 	/**

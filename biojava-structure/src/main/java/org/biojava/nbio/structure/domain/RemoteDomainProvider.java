@@ -20,12 +20,6 @@
  */
 package org.biojava.nbio.structure.domain;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.*;
-
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.client.JFatCatClient;
 import org.biojava.nbio.structure.align.client.StructureName;
@@ -36,6 +30,12 @@ import org.biojava.nbio.structure.scop.ScopFactory;
 import org.biojava.nbio.structure.scop.server.XMLUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.*;
 
 
 /**
@@ -50,7 +50,7 @@ import org.slf4j.LoggerFactory;
 public class RemoteDomainProvider extends SerializableCache<String,SortedSet<String>> implements DomainProvider{
 	private static final Logger logger = LoggerFactory.getLogger(RemoteDomainProvider.class);
 
-	public String url = RemotePDPProvider.DEFAULT_SERVER;
+	public final String url = RemotePDPProvider.DEFAULT_SERVER;
 
 	ScopDatabase scop;
 	PDPProvider pdp;

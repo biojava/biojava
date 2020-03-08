@@ -20,8 +20,8 @@
  */
 package org.biojava.nbio.protmod.io;
 
-import org.biojava.nbio.protmod.Component;
 import org.biojava.nbio.core.util.PrettyXMLWriter;
+import org.biojava.nbio.protmod.Component;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;

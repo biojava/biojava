@@ -20,16 +20,6 @@
  */
 package org.biojava.nbio.structure.xtal;
 
-import static org.junit.Assert.*;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.zip.GZIPInputStream;
-
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
@@ -43,6 +33,15 @@ import org.biojava.nbio.structure.io.PDBFileParser;
 import org.junit.Test;
 
 import javax.vecmath.Matrix4d;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.zip.GZIPInputStream;
+
+import static org.junit.Assert.*;
 
 public class TestInterfaceClustering {
 

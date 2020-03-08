@@ -20,27 +20,18 @@
  */
 package org.biojava.nbio.structure.io.mmtf;
 
+import org.biojava.nbio.structure.*;
+import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
-import org.biojava.nbio.structure.AminoAcidImpl;
-import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.AtomImpl;
-import org.biojava.nbio.structure.Chain;
-import org.biojava.nbio.structure.ChainImpl;
-import org.biojava.nbio.structure.Element;
-import org.biojava.nbio.structure.Group;
-import org.biojava.nbio.structure.PDBHeader;
-import org.biojava.nbio.structure.ResidueNumber;
-import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureImpl;
-import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
-import org.junit.Rule;
-import org.junit.Test;
-import static org.junit.Assert.*;
-import org.junit.rules.TemporaryFolder;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test the Biojava MMTF writer.

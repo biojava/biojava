@@ -26,6 +26,8 @@ package org.biojava.nbio.structure.align.ce;
 
 import org.biojava.nbio.core.alignment.matrices.ScaledSubstitutionMatrix;
 import org.biojava.nbio.core.alignment.template.SubstitutionMatrix;
+import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
+import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.model.AFP;
 import org.biojava.nbio.structure.align.model.AFPChain;
@@ -33,13 +35,10 @@ import org.biojava.nbio.structure.align.util.AFPAlignmentDisplay;
 import org.biojava.nbio.structure.geometry.Matrices;
 import org.biojava.nbio.structure.geometry.SuperPositions;
 import org.biojava.nbio.structure.jama.Matrix;
-import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
-import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.vecmath.Matrix4d;
+import java.util.ArrayList;
+import java.util.List;
 
 
 
@@ -83,7 +82,7 @@ public class CeCalculatorEnhanced {
 
 	protected static final 	double  zThr=-0.1;
 
-	long timeStart ;
+	final long timeStart ;
 	long timeEnd;
 	private int nAtom;
 
@@ -101,13 +100,13 @@ public class CeCalculatorEnhanced {
 	private double z;
 	private int[] traceIndexContainer;
 
-	protected CeParameters params;
+	protected final CeParameters params;
 	// SHOULD these fields be PARAMETERS?
 
 	protected static final int nIter = 1;
 	private static final boolean distAll = false;
 
-	List<MatrixListener> matrixListeners;
+	final List<MatrixListener> matrixListeners;
 
 	public static final boolean GLOBAL_ALIGN1 = false;
 	public static final boolean GLOBAL_ALIGN2 = false;

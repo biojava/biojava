@@ -24,13 +24,14 @@ import org.biojava.nbio.core.util.FlatFileCache;
 import org.biojava.nbio.structure.io.mmcif.DownloadChemCompProvider;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.zip.GZIPOutputStream;
+
+import static org.junit.Assert.*;
 
 public class TestDownloadChemCompProvider {
 

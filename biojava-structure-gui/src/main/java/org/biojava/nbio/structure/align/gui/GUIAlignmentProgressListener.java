@@ -45,7 +45,7 @@ public class GUIAlignmentProgressListener extends JPanel implements AlignmentPro
 
 	int alignmentsProcessed;
 
-	JProgressBar progressBar;
+	final JProgressBar progressBar;
 	private final JTextArea taskOutput;
 	private final JButton stopButton;
 

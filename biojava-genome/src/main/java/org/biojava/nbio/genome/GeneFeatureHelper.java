@@ -20,9 +20,9 @@
  */
 package org.biojava.nbio.genome;
 
-import org.biojava.nbio.genome.parsers.gff.*;
 import org.biojava.nbio.core.sequence.*;
 import org.biojava.nbio.core.sequence.io.FastaReaderHelper;
+import org.biojava.nbio.genome.parsers.gff.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

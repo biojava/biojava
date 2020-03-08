@@ -20,6 +20,12 @@
  */
 package org.biojava.nbio.structure.ecod;
 
+import org.biojava.nbio.structure.align.util.UserConfiguration;
+import org.biojava.nbio.structure.cath.CathFactory;
+import org.biojava.nbio.structure.scop.ScopFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.lang.ref.SoftReference;
 import java.util.Collections;
@@ -27,12 +33,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import org.biojava.nbio.structure.align.util.UserConfiguration;
-import org.biojava.nbio.structure.cath.CathFactory;
-import org.biojava.nbio.structure.scop.ScopFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Controls global {@link EcodDatabase EcodDatabases} being used.

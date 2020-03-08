@@ -20,7 +20,6 @@
  */
 package demo;
 
-import java.io.IOException;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
@@ -32,6 +31,8 @@ import org.biojava.nbio.structure.symmetry.internal.CESymmParameters.RefineMetho
 import org.biojava.nbio.structure.symmetry.internal.CESymmParameters.SymmetryType;
 import org.biojava.nbio.structure.symmetry.internal.CeSymm;
 import org.biojava.nbio.structure.symmetry.internal.CeSymmResult;
+
+import java.io.IOException;
 
 /**
  * Quick demo of how to call CE-Symm programmatically.

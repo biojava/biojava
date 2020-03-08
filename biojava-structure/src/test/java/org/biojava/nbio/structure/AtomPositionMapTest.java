@@ -33,7 +33,7 @@ import java.util.Map;
 import java.util.NavigableMap;
 
 import static org.junit.Assert.*;
-import static org.junit.Assume.*;
+import static org.junit.Assume.assumeTrue;
 
 /**
  * A unit test for {@link org.biojava.nbio.structure.AtomPositionMap}.

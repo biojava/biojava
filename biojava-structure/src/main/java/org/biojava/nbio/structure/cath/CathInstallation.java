@@ -23,11 +23,11 @@
 
 package org.biojava.nbio.structure.cath;
 
-import org.biojava.nbio.structure.align.util.UserConfiguration;
 import org.biojava.nbio.core.util.FileDownloadUtils;
+import org.biojava.nbio.core.util.InputStreamProvider;
+import org.biojava.nbio.structure.align.util.UserConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.biojava.nbio.core.util.InputStreamProvider;
 
 import java.io.*;
 import java.net.URL;

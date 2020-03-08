@@ -25,7 +25,6 @@ import org.biojava.nbio.structure.geometry.SuperPositions;
 
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
-
 import java.util.List;
 
 /**

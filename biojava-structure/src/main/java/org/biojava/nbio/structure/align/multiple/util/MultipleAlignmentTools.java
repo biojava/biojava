@@ -20,17 +20,6 @@
  */
 package org.biojava.nbio.structure.align.multiple.util;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.SortedSet;
-import java.util.TreeSet;
-
-import javax.vecmath.Matrix4d;
-
 import org.biojava.nbio.core.alignment.matrices.SubstitutionMatrixHelper;
 import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.core.sequence.AccessionID;
@@ -40,17 +29,7 @@ import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
 import org.biojava.nbio.phylo.DistanceMatrixCalculator;
 import org.biojava.nbio.phylo.TreeConstructor;
 import org.biojava.nbio.phylo.TreeConstructorType;
-import org.biojava.nbio.structure.AminoAcid;
-import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.Calc;
-import org.biojava.nbio.structure.Chain;
-import org.biojava.nbio.structure.Group;
-import org.biojava.nbio.structure.PDBHeader;
-import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.StructureIdentifier;
-import org.biojava.nbio.structure.StructureImpl;
-import org.biojava.nbio.structure.StructureTools;
+import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.multiple.Block;
 import org.biojava.nbio.structure.align.multiple.BlockSet;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
@@ -58,6 +37,10 @@ import org.biojava.nbio.structure.align.util.AlignmentTools;
 import org.biojava.nbio.structure.jama.Matrix;
 import org.forester.evoinference.matrix.distance.BasicSymmetricalDistanceMatrix;
 import org.forester.phylogeny.Phylogeny;
+
+import javax.vecmath.Matrix4d;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * Utility functions for working with {@link MultipleAlignment}.

@@ -23,9 +23,9 @@ package org.biojava.nbio.structure.io;
 import org.biojava.nbio.alignment.Alignments;
 import org.biojava.nbio.alignment.Alignments.PairwiseSequenceAlignerType;
 import org.biojava.nbio.alignment.SimpleGapPenalty;
-import org.biojava.nbio.core.alignment.matrices.SubstitutionMatrixHelper;
 import org.biojava.nbio.alignment.template.GapPenalty;
 import org.biojava.nbio.alignment.template.PairwiseSequenceAligner;
+import org.biojava.nbio.core.alignment.matrices.SubstitutionMatrixHelper;
 import org.biojava.nbio.core.alignment.template.SequencePair;
 import org.biojava.nbio.core.alignment.template.SubstitutionMatrix;
 import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
@@ -38,14 +38,7 @@ import org.biojava.nbio.structure.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * Heuristical finding of Entities (called Compounds in legacy PDB format)
@@ -130,7 +123,7 @@ public class EntityFinder {
 		// let's find first the max entity id to assign entity ids to the newly found entities
 		int maxMolId = 0;
 		if (!entities.isEmpty()) {
-			maxMolId = Collections.max(entities, (o1, o2) -> Integer.compare(o1.getMolId(), o2.getMolId())).getMolId();
+			maxMolId = Collections.max(entities, Comparator.comparingInt(EntityInfo::getMolId)).getMolId();
 		}
 		// we go one over the max
 		int molId = maxMolId + 1;

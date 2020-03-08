@@ -24,12 +24,12 @@ import org.biojava.nbio.aaproperties.profeat.IProfeatProperties.ATTRIBUTE;
 import org.biojava.nbio.aaproperties.profeat.IProfeatProperties.DISTRIBUTION;
 import org.biojava.nbio.aaproperties.profeat.IProfeatProperties.GROUPING;
 import org.biojava.nbio.aaproperties.profeat.IProfeatProperties.TRANSITION;
-import org.biojava.nbio.aaproperties.profeat.ProfeatProperties;
-//import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Map;
+
+//import org.junit.Test;
 
 public class CookBookTest {
 

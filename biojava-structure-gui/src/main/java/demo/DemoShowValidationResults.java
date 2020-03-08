@@ -24,8 +24,8 @@
 package demo;
 
 import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.align.gui.jmol.StructureAlignmentJmol;
 import org.biojava.nbio.structure.StructureIO;
+import org.biojava.nbio.structure.align.gui.jmol.StructureAlignmentJmol;
 import org.biojava.nbio.structure.validation.*;
 
 import javax.xml.bind.JAXBContext;

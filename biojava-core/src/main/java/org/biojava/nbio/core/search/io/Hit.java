@@ -20,12 +20,12 @@
  */
 package org.biojava.nbio.core.search.io;
 
+import org.biojava.nbio.core.sequence.template.Sequence;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
-
-import org.biojava.nbio.core.sequence.template.Sequence;
 
 /**
  * This class models a search Hit.

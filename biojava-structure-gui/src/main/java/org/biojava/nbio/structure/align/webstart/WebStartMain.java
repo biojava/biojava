@@ -41,7 +41,6 @@ import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
 
 import javax.swing.*;
-
 import java.io.File;
 
 public class WebStartMain

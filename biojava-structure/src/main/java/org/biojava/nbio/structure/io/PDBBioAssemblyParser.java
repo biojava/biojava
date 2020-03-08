@@ -23,10 +23,11 @@ package org.biojava.nbio.structure.io;
 import org.biojava.nbio.structure.jama.Matrix;
 import org.biojava.nbio.structure.quaternary.BioAssemblyInfo;
 import org.biojava.nbio.structure.quaternary.BiologicalAssemblyTransformation;
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
 
 import java.util.*;
+
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
 
 /**
  * Parses REMARK 350 records in a PDB file and creates transformations to

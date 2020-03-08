@@ -33,7 +33,7 @@ public class MetaDataInfo {
 	/**
 	 *
 	 */
-	public String column;
+	public final String column;
 	/**
 	 *
 	 */

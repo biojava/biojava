@@ -20,12 +20,15 @@
  */
 package org.biojava.nbio.structure.secstruc;
 
-import java.util.*;
-
 import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.GroupIterator;
 import org.biojava.nbio.structure.ResidueNumber;
 import org.biojava.nbio.structure.Structure;
+
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This class contains methods for obtaining and converting secondary structure

@@ -1,22 +1,11 @@
 package org.biojava.nbio.structure.io.cif;
 
-import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.Chain;
-import org.biojava.nbio.structure.Element;
-import org.biojava.nbio.structure.EntityType;
-import org.biojava.nbio.structure.Group;
-import org.biojava.nbio.structure.GroupType;
-import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.xtal.CrystalCell;
 import org.biojava.nbio.structure.xtal.SpaceGroup;
 import org.rcsb.cif.model.Category;
 import org.rcsb.cif.model.CifFile;
-import org.rcsb.cif.model.builder.BlockBuilder;
-import org.rcsb.cif.model.builder.CategoryBuilder;
-import org.rcsb.cif.model.builder.CifBuilder;
-import org.rcsb.cif.model.builder.FloatColumnBuilder;
-import org.rcsb.cif.model.builder.IntColumnBuilder;
-import org.rcsb.cif.model.builder.StrColumnBuilder;
+import org.rcsb.cif.model.builder.*;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

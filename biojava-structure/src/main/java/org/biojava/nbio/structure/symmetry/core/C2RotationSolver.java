@@ -24,12 +24,7 @@ package org.biojava.nbio.structure.symmetry.core;
 import org.biojava.nbio.structure.geometry.CalcPoint;
 import org.biojava.nbio.structure.geometry.UnitQuaternions;
 
-import javax.vecmath.AxisAngle4d;
-import javax.vecmath.Matrix4d;
-import javax.vecmath.Point3d;
-import javax.vecmath.Quat4d;
-import javax.vecmath.Vector3d;
-
+import javax.vecmath.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

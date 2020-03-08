@@ -20,24 +20,19 @@
  */
 package org.biojava.nbio.structure.align.multiple.util;
 
+import org.biojava.nbio.core.util.PrettyXMLWriter;
+import org.biojava.nbio.structure.*;
+import org.biojava.nbio.structure.align.multiple.Block;
+import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
+import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsemble;
+import org.biojava.nbio.structure.align.xml.MultipleAlignmentXMLConverter;
+
+import javax.vecmath.Matrix4d;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.vecmath.Matrix4d;
-
-import org.biojava.nbio.core.util.PrettyXMLWriter;
-import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.ResidueRange;
-import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.StructureIdentifier;
-import org.biojava.nbio.structure.SubstructureIdentifier;
-import org.biojava.nbio.structure.align.multiple.Block;
-import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
-import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsemble;
-import org.biojava.nbio.structure.align.xml.MultipleAlignmentXMLConverter;
 
 /**
  * This class contains functions for the conversion of {@link MultipleAlignment}

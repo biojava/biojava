@@ -30,7 +30,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.vecmath.*;
-
 import java.util.*;
 
 public class HelixAxisAligner extends AxisAligner {

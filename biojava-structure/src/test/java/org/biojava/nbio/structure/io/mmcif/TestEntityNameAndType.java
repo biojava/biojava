@@ -20,18 +20,14 @@
  */
 package org.biojava.nbio.structure.io.mmcif;
 
-import static org.junit.Assert.assertArrayEquals;
-
-import java.io.IOException;
-
-import org.biojava.nbio.structure.Chain;
-import org.biojava.nbio.structure.EntityInfo;
-import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.StructureIO;
+import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.junit.Test;
+
+import java.io.IOException;
+
+import static org.junit.Assert.assertArrayEquals;
 /**
  * Test to ensure the entity name and type
  * @author Anthony Bradley

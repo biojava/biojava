@@ -24,14 +24,15 @@
 
 package org.biojava.nbio.structure;
 
-import java.io.IOException;
-
-import static org.junit.Assert.*;
-
 import org.biojava.nbio.structure.align.ce.CeMain;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.junit.Test;
+
+import java.io.IOException;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 /** make sure DNA alignments fail gracefully
  *

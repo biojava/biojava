@@ -20,10 +20,10 @@
  */
 package org.biojava.nbio.protmod.io;
 
+import org.biojava.nbio.core.util.PrettyXMLWriter;
 import org.biojava.nbio.protmod.ProteinModification;
 import org.biojava.nbio.protmod.ProteinModificationRegistry;
 import org.biojava.nbio.protmod.structure.*;
-import org.biojava.nbio.core.util.PrettyXMLWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;

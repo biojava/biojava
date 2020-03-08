@@ -50,9 +50,9 @@ public class CachedRemoteScopInstallation extends SerializableCache<String,ScopD
 
 	private static final String CACHE_FILE_NAME = "remotescopinstallation.ser";
 
-	RemoteScopInstallation proxy ;
+	final RemoteScopInstallation proxy ;
 
-	SerializableCache<Integer,ScopDescription> scopDescriptionCache ;
+	final SerializableCache<Integer,ScopDescription> scopDescriptionCache ;
 
 	public CachedRemoteScopInstallation() throws IOException {
 		this(true);

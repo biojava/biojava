@@ -20,17 +20,17 @@
  */
 package org.biojava.nbio.structure.secstruc;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.zip.GZIPInputStream;
-
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.zip.GZIPInputStream;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test the correctness of the DSSP implementation in BioJava

@@ -23,7 +23,9 @@
  */
 package org.biojava.nbio.structure.align.gui.jmol;
 
-import org.biojava.nbio.structure.*;
+import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.PDBHeader;
+import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.align.gui.AlignmentGui;
 import org.biojava.nbio.structure.align.gui.DisplayAFP;
 import org.biojava.nbio.structure.align.gui.MenuCreator;
@@ -40,9 +42,11 @@ import org.biojava.nbio.structure.jama.Matrix;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ItemEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;

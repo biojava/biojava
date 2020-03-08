@@ -33,8 +33,8 @@ public class ScopInstallationInstance
 {
 
 
-	static ScopInstallationInstance me = new ScopInstallationInstance();
-	ScopDatabase install;
+	static final ScopInstallationInstance me = new ScopInstallationInstance();
+	final ScopDatabase install;
 	private ScopInstallationInstance(){
 		UserConfiguration config = WebStartMain.getWebStartConfig();
 		String cacheLocation = config.getPdbFilePath();

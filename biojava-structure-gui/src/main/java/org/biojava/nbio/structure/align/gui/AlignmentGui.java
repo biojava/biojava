@@ -22,23 +22,6 @@
  */
 package org.biojava.nbio.structure.align.gui;
 
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.io.File;
-import java.io.IOException;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.Box;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenuBar;
-import javax.swing.JOptionPane;
-import javax.swing.JProgressBar;
-import javax.swing.JTabbedPane;
-
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.StructureAlignment;
@@ -51,6 +34,12 @@ import org.biojava.nbio.structure.align.webstart.WebStartMain;
 import org.biojava.nbio.structure.gui.util.PDBUploadPanel;
 import org.biojava.nbio.structure.gui.util.ScopSelectPanel;
 import org.biojava.nbio.structure.gui.util.StructurePairSelector;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.io.File;
+import java.io.IOException;
 
 /** A JFrame that allows to trigger a pairwise structure alignment,
  * either from files in a directory,
@@ -71,14 +60,14 @@ public class AlignmentGui extends JFrame{
 
 	JButton abortB;
 
-	SelectPDBPanel  tab1 ;
-	PDBUploadPanel  tab2;
-	ScopSelectPanel tab3;
+	final SelectPDBPanel  tab1 ;
+	final PDBUploadPanel  tab2;
+	final ScopSelectPanel tab3;
 
 	Thread thread;
 	AlignmentCalculationRunnable alicalc;
-	JTabbedPane masterPane;
-	JTabbedPane tabPane;
+	final JTabbedPane masterPane;
+	final JTabbedPane tabPane;
 	JProgressBar progress;
 
 
@@ -548,7 +537,7 @@ public class AlignmentGui extends JFrame{
 class ProgressThreadDrawer extends Thread {
 
 	JProgressBar progress;
-	static int interval = 300;
+	static final int interval = 300;
 
 	public ProgressThreadDrawer(JProgressBar progress) {
 		this.progress = progress;

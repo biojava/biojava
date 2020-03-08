@@ -90,7 +90,7 @@ public enum PolymerType implements Serializable
 	 */
 	unknown(null);
 
-	static Map<String,PolymerType> lookupTable = new HashMap<>();
+	static final Map<String,PolymerType> lookupTable = new HashMap<>();
 
 	static {
 

@@ -20,16 +20,16 @@
  */
 package org.biojava.nbio.structure.align.client;
 
-import static org.biojava.nbio.structure.align.client.StructureName.Source.*;
-import static org.junit.Assert.*;
+import org.biojava.nbio.structure.StructureException;
+import org.junit.Ignore;
+import org.junit.Test;
 
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.biojava.nbio.structure.StructureException;
-import org.junit.Ignore;
-import org.junit.Test;
+import static org.biojava.nbio.structure.align.client.StructureName.Source.*;
+import static org.junit.Assert.*;
 
 public class TestStructureName {
 

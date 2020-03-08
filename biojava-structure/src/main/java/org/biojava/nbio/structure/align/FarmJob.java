@@ -20,6 +20,7 @@
  */
 package org.biojava.nbio.structure.align;
 
+import org.biojava.nbio.core.util.InputStreamProvider;
 import org.biojava.nbio.structure.align.client.FarmJobParameters;
 import org.biojava.nbio.structure.align.client.FarmJobRunnable;
 import org.biojava.nbio.structure.align.events.AlignmentProgressListener;
@@ -29,7 +30,6 @@ import org.biojava.nbio.structure.align.util.UserConfiguration;
 import org.biojava.nbio.structure.scop.CachedRemoteScopInstallation;
 import org.biojava.nbio.structure.scop.ScopDatabase;
 import org.biojava.nbio.structure.scop.ScopFactory;
-import org.biojava.nbio.core.util.InputStreamProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

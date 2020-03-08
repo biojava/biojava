@@ -20,7 +20,6 @@
  */
 package org.biojava.nbio.aaproperties;
 
-import org.biojava.nbio.aaproperties.CommandPrompt;
 import org.junit.Test;
 
 import java.io.File;

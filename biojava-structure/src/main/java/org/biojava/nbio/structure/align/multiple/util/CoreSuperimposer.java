@@ -20,11 +20,6 @@
  */
 package org.biojava.nbio.structure.align.multiple.util;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.vecmath.Matrix4d;
-
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.StructureTools;
@@ -33,6 +28,10 @@ import org.biojava.nbio.structure.align.multiple.BlockSet;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.geometry.SuperPositionSVD;
 import org.biojava.nbio.structure.geometry.SuperPositions;
+
+import javax.vecmath.Matrix4d;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Superimposes the core aligned residues of every structure in a

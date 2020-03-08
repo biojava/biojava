@@ -46,7 +46,7 @@ public class TwoBitParser extends InputStream {
 
 	private static final Logger logger = LoggerFactory.getLogger(TwoBitParser.class);
 
-	public int DEFAULT_BUFFER_SIZE = 10000;
+	public final int DEFAULT_BUFFER_SIZE = 10000;
 	//
 	private final RandomAccessFile raf;
 	private final File f;

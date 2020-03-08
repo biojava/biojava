@@ -23,14 +23,13 @@ package org.biojava.nbio.structure.symmetry.axis;
 import org.biojava.nbio.structure.geometry.CalcPoint;
 import org.biojava.nbio.structure.geometry.MomentsOfInertia;
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetryResults;
+import org.biojava.nbio.structure.symmetry.core.QuatSymmetrySubunits;
 import org.biojava.nbio.structure.symmetry.core.Rotation;
 import org.biojava.nbio.structure.symmetry.core.RotationGroup;
-import org.biojava.nbio.structure.symmetry.core.QuatSymmetrySubunits;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.vecmath.*;
-
 import java.util.*;
 
 public class RotationAxisAligner extends AxisAligner{

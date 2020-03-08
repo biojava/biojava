@@ -21,11 +21,11 @@
  */
 package org.biojava.nbio.core.sequence.location;
 
-import java.io.Serializable;
-
 import org.biojava.nbio.core.sequence.location.template.Point;
 import org.biojava.nbio.core.util.Equals;
 import org.biojava.nbio.core.util.Hashcoder;
+
+import java.io.Serializable;
 
 /**
  * Basic implementation of the Point interface.

@@ -20,11 +20,6 @@
  */
 package org.biojava.nbio.phylo;
 
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.LinkedHashMap;
-
 import org.biojava.nbio.core.sequence.MultipleSequenceAlignment;
 import org.biojava.nbio.core.sequence.ProteinSequence;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
@@ -36,7 +31,12 @@ import org.biojava.nbio.core.sequence.io.ProteinSequenceCreator;
 import org.forester.msa.Msa;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.LinkedHashMap;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test the BioJava-forester wrapper methods.

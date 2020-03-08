@@ -21,34 +21,25 @@
  */
 package org.biojava.nbio.structure.basepairs;
 
-import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.Group;
-import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.contact.Pair;
 import org.biojava.nbio.structure.geometry.SuperPosition;
 import org.biojava.nbio.structure.geometry.SuperPositionQCP;
 import org.biojava.nbio.structure.io.PDBFileReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.List;
-import java.util.Arrays;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
+import java.util.*;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import static java.lang.Math.sin;
-import static java.lang.Math.cos;
-import static java.lang.Math.atan2;
-import static java.lang.Math.acos;
-import static java.lang.Math.PI;
+import static java.lang.Math.*;
 
 /**
  * This module calculates the el Hassan-Calladine Base Pairing and Base-pair Step Parameters for any nucleic
@@ -154,8 +145,8 @@ public class BasePairParameters implements Serializable {
 	protected String pairSequence = "";
 	protected double[][] pairingParameters;
 	protected double[][] stepParameters;
-	protected List<String> pairingNames = new ArrayList<>();
-	protected List<Matrix4d> referenceFrames = new ArrayList<>();
+	protected final List<String> pairingNames = new ArrayList<>();
+	protected final List<Matrix4d> referenceFrames = new ArrayList<>();
 
 
 	/**

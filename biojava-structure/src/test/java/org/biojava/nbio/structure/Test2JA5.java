@@ -20,13 +20,13 @@
  */
 package org.biojava.nbio.structure;
 
-import static org.junit.Assert.*;
-
-import java.io.IOException;
-
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.junit.Test;
+
+import java.io.IOException;
+
+import static org.junit.Assert.*;
 
 /**
  * Created by andreas on 9/16/15.

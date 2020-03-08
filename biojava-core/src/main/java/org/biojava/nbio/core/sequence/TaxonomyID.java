@@ -31,7 +31,7 @@ public class TaxonomyID {
 
 
 	private final String id;
-	DataSource dataSource;
+	final DataSource dataSource;
 
 	public TaxonomyID(String id, DataSource dataSource) {
 		this.id = id;

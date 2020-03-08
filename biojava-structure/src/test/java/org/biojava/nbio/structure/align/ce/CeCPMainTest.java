@@ -28,7 +28,6 @@ package org.biojava.nbio.structure.align.ce;
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.util.AtomCache;
-import org.biojava.nbio.structure.io.PDBParseException;
 import org.junit.Assert;
 import org.junit.Test;
 

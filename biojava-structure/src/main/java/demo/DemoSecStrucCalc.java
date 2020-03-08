@@ -20,15 +20,15 @@
  */
 package demo;
 
-import java.io.IOException;
-import java.util.List;
-
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.util.AtomCache;
-import org.biojava.nbio.structure.secstruc.SecStrucElement;
 import org.biojava.nbio.structure.secstruc.SecStrucCalc;
+import org.biojava.nbio.structure.secstruc.SecStrucElement;
 import org.biojava.nbio.structure.secstruc.SecStrucTools;
+
+import java.io.IOException;
+import java.util.List;
 
 /**
  * Demonstration on how to use the Secondary Structure Prediction (DSSP)

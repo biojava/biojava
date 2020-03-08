@@ -20,11 +20,11 @@
  */
 package org.biojava.nbio.structure.io.mmtf;
 
-import java.util.List;
-import java.util.Map;
-
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Chain;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Class to store the summary data for a given structure.

@@ -20,9 +20,9 @@
  */
 package org.biojava.nbio.structure.quaternary;
 
+import org.biojava.nbio.core.util.PrettyXMLWriter;
 import org.biojava.nbio.structure.xtal.CrystalCell;
 import org.biojava.nbio.structure.xtal.CrystalTransform;
-import org.biojava.nbio.core.util.PrettyXMLWriter;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;

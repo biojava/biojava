@@ -21,12 +21,12 @@
 
 package org.biojava.nbio.core.sequence.features;
 
-import java.util.List;
-import java.util.Map;
-
 import org.biojava.nbio.core.sequence.location.template.AbstractLocation;
 import org.biojava.nbio.core.sequence.template.AbstractSequence;
 import org.biojava.nbio.core.sequence.template.Compound;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Interface class to handle describing arbitrary features. A feature can be found at multiple locations in a sequence such as

@@ -24,13 +24,13 @@
  */
 package org.biojava.nbio.structure;
 
-import java.io.IOException;
-import java.util.Iterator;
-import java.util.List;
-
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.junit.Test;
+
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
 
 import static org.junit.Assert.*;
 

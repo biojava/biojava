@@ -24,17 +24,16 @@
 package org.biojava.nbio.structure.symmetry.jmolScript;
 
 import org.biojava.nbio.structure.symmetry.axis.RotationAxisAligner;
+import org.biojava.nbio.structure.symmetry.core.QuatSymmetrySubunits;
 import org.biojava.nbio.structure.symmetry.core.Rotation;
 import org.biojava.nbio.structure.symmetry.core.RotationGroup;
-import org.biojava.nbio.structure.symmetry.core.QuatSymmetrySubunits;
 import org.biojava.nbio.structure.symmetry.geometry.Polyhedron;
 import org.jcolorbrewer.ColorBrewer;
 
 import javax.vecmath.*;
-
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * @author Peter

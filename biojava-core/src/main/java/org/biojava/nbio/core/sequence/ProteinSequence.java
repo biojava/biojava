@@ -25,6 +25,7 @@ package org.biojava.nbio.core.sequence;
 import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.core.sequence.compound.*;
 import org.biojava.nbio.core.sequence.features.FeatureInterface;
+import org.biojava.nbio.core.sequence.features.Qualifier;
 import org.biojava.nbio.core.sequence.io.DNASequenceCreator;
 import org.biojava.nbio.core.sequence.io.FastaReader;
 import org.biojava.nbio.core.sequence.io.PlainFastaHeaderParser;
@@ -42,7 +43,6 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.List;
-import org.biojava.nbio.core.sequence.features.Qualifier;
 
 /**
  * The representation of a ProteinSequence

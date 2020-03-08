@@ -28,9 +28,10 @@ import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
 import org.biojava.nbio.structure.io.mmcif.ChemCompProvider;
 import org.biojava.nbio.structure.io.mmcif.DownloadChemCompProvider;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 import java.io.IOException;
+
+import static org.junit.Assert.*;
 
 /** test for https://redmine.open-bio.org/issues/3282
  *

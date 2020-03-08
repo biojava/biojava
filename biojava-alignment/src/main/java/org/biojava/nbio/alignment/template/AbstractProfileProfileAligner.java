@@ -23,10 +23,10 @@
 
 package org.biojava.nbio.alignment.template;
 
-import org.biojava.nbio.core.alignment.template.ProfilePair;
-import org.biojava.nbio.core.alignment.template.Profile;
-import org.biojava.nbio.core.alignment.template.SubstitutionMatrix;
 import org.biojava.nbio.alignment.template.GapPenalty.Type;
+import org.biojava.nbio.core.alignment.template.Profile;
+import org.biojava.nbio.core.alignment.template.ProfilePair;
+import org.biojava.nbio.core.alignment.template.SubstitutionMatrix;
 import org.biojava.nbio.core.sequence.template.Compound;
 import org.biojava.nbio.core.sequence.template.CompoundSet;
 import org.biojava.nbio.core.sequence.template.Sequence;

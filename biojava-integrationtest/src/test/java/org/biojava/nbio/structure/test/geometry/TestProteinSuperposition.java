@@ -20,24 +20,18 @@
  */
 package org.biojava.nbio.structure.test.geometry;
 
-import static org.junit.Assert.*;
-
-import java.io.IOException;
-
-import javax.vecmath.Point3d;
-
-import org.biojava.nbio.structure.Calc;
-import org.biojava.nbio.structure.Chain;
-import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.StructureIO;
-import org.biojava.nbio.structure.StructureTools;
+import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.geometry.SuperPosition;
 import org.biojava.nbio.structure.geometry.SuperPositionQCP;
 import org.biojava.nbio.structure.geometry.SuperPositionQuat;
 import org.biojava.nbio.structure.geometry.SuperPositionSVD;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import javax.vecmath.Point3d;
+import java.io.IOException;
+
+import static org.junit.Assert.assertEquals;
 
 public class TestProteinSuperposition {
 

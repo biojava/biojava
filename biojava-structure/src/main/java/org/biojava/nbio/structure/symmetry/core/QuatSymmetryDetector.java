@@ -24,17 +24,19 @@ package org.biojava.nbio.structure.symmetry.core;
 
 import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.cluster.*;
+import org.biojava.nbio.structure.cluster.Subunit;
+import org.biojava.nbio.structure.cluster.SubunitCluster;
+import org.biojava.nbio.structure.cluster.SubunitClusterer;
+import org.biojava.nbio.structure.cluster.SubunitClustererParameters;
 import org.biojava.nbio.structure.contact.BoundingBox;
 import org.biojava.nbio.structure.contact.Grid;
+import org.jgrapht.Graph;
+import org.jgrapht.alg.clique.CliqueMinimalSeparatorDecomposition;
+import org.jgrapht.graph.AsSubgraph;
+import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import org.jgrapht.alg.clique.CliqueMinimalSeparatorDecomposition;
-import org.jgrapht.graph.DefaultEdge;
-import org.jgrapht.graph.AsSubgraph;
-import org.jgrapht.Graph;
 
 import javax.vecmath.Point3d;
 import java.util.*;

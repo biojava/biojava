@@ -20,12 +20,12 @@
  */
 package org.biojava.nbio.structure;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * An internal utility class for StructureImpl to make it easier to manage poly and nonpoly chains.

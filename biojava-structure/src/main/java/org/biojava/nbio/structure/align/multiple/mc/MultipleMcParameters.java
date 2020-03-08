@@ -20,11 +20,11 @@
  */
 package org.biojava.nbio.structure.align.multiple.mc;
 
+import org.biojava.nbio.structure.align.ce.ConfigStrucAligParams;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
-import org.biojava.nbio.structure.align.ce.ConfigStrucAligParams;
 
 /**
  * Contains the parameters to be sent to the MC optimization.

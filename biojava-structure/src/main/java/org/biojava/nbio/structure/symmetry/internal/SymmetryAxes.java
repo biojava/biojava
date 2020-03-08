@@ -20,16 +20,15 @@
  */
 package org.biojava.nbio.structure.symmetry.internal;
 
+import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
+import org.biojava.nbio.structure.align.util.RotationAxis;
+import org.biojava.nbio.structure.symmetry.internal.CESymmParameters.SymmetryType;
+
+import javax.vecmath.Matrix4d;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-
-import javax.vecmath.Matrix4d;
-
-import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
-import org.biojava.nbio.structure.align.util.RotationAxis;
-import org.biojava.nbio.structure.symmetry.internal.CESymmParameters.SymmetryType;
 
 /**
  * Data Structure that stores all the symmetry axis that describe

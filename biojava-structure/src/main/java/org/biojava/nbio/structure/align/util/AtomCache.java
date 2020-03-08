@@ -20,13 +20,7 @@
  */
 package org.biojava.nbio.structure.align.util;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.TreeSet;
-
+import org.biojava.nbio.core.util.FileDownloadUtils;
 import org.biojava.nbio.core.util.InputStreamProvider;
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.client.StructureName;
@@ -41,16 +35,17 @@ import org.biojava.nbio.structure.io.LocalPDBDirectory.ObsoleteBehavior;
 import org.biojava.nbio.structure.io.MMCIFFileReader;
 import org.biojava.nbio.structure.io.MMTFFileReader;
 import org.biojava.nbio.structure.io.PDBFileReader;
-import org.biojava.nbio.core.util.FileDownloadUtils;
 import org.biojava.nbio.structure.quaternary.BiologicalAssemblyBuilder;
 import org.biojava.nbio.structure.quaternary.BiologicalAssemblyTransformation;
-import org.biojava.nbio.structure.scop.CachedRemoteScopInstallation;
-import org.biojava.nbio.structure.scop.ScopDatabase;
-import org.biojava.nbio.structure.scop.ScopDescription;
-import org.biojava.nbio.structure.scop.ScopDomain;
-import org.biojava.nbio.structure.scop.ScopFactory;
+import org.biojava.nbio.structure.scop.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * A utility class that provides easy access to Structure objects. If you are running a script that is frequently
@@ -92,7 +87,8 @@ public class AtomCache {
 	private String cachePath;
 
 	// make sure IDs are loaded uniquely
-	private final Collection<String> currentlyLoading = Collections.synchronizedCollection(new TreeSet<>());
+	//private final Collection<String> currentlyLoading = Collections.newSetFromMap(new ConcurrentHashMap());
+	private final Map<String,Structure> map = new ConcurrentHashMap();
 
 	private String path;
 
@@ -147,7 +143,7 @@ public class AtomCache {
 		fetchBehavior = FetchBehavior.DEFAULT;
 		obsoleteBehavior = ObsoleteBehavior.DEFAULT;
 
-		currentlyLoading.clear();
+//		currentlyLoading.clear();
 		params = new FileParsingParameters();
 
 		setUseMmCif(false);
@@ -778,22 +774,23 @@ public class AtomCache {
 	 * @param useMmCif
 	 *            the useMmCif to set
 	 */
-	public void setUseMmCif(boolean useMmCif) {
+	@Deprecated public void setUseMmCif(boolean useMmCif) {
 		this.useMmCif = useMmCif;
 		// Either way the user wants to use PDB or MMCIF
 		this.useMmtf = false;
+		map.clear();
 	}
 
 	/**
 	 * Set whether to use mmtf.
 	 * @param useMmtf the input boolean to set
 	 */
-	public void setUseMmtf(boolean useMmtf) {
+	@Deprecated public void setUseMmtf(boolean useMmtf) {
 		this.useMmtf = useMmtf;
 		if(useMmtf){
 			useMmCif=false;
 		}
-
+		map.clear();
 	}
 
 	/** Returns useMmtf flag
@@ -804,10 +801,9 @@ public class AtomCache {
 		return this.useMmtf;
 	}
 
-	private boolean checkLoading(String name) {
-		return currentlyLoading.contains(name);
-
-	}
+//	private boolean checkLoading(String name) {
+//		return currentlyLoading.contains(name);
+//	}
 
 	/**
 	 * Returns a {@link Structure} corresponding to the CATH identifier supplied in {@code structureName}, using the the {@link CathDatabase}
@@ -844,17 +840,13 @@ public class AtomCache {
 		return n;
 	}
 
-	protected void flagLoading(String name) {
-		if (!currentlyLoading.contains(name)) {
-
-			currentlyLoading.add(name);
-		}
-	}
-
-	protected void flagLoadingFinished(String name) {
-
-		currentlyLoading.remove(name);
-	}
+//	protected void flagLoading(String name) {
+//		currentlyLoading.add(name);
+//	}
+//
+//	protected void flagLoadingFinished(String name) {
+//		currentlyLoading.remove(name);
+//	}
 
 	/**
 	 * Loads a structure directly by PDB ID
@@ -864,35 +856,40 @@ public class AtomCache {
 	 * @throws StructureException
 	 */
 	public Structure getStructureForPdbId(String pdbId) throws IOException, StructureException {
+
 		if(pdbId == null)
 			return null;
-		if(pdbId.length() != 4) {
+
+		if(pdbId.length() != 4)
 			throw new StructureException("Unrecognized PDB ID: "+pdbId);
-		}
-		while (checkLoading(pdbId)) {
-			// waiting for loading to be finished...
 
+//		while (checkLoading(pdbId)) {
+//			// waiting for loading to be finished...
+//
+//			try {
+//				Thread.sleep(100);
+//			} catch (InterruptedException e) {
+//				logger.error(e.getMessage());
+//			}
+//
+//		}
+
+
+		return map.computeIfAbsent(pdbId, p->{
 			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-				logger.error(e.getMessage());
+				if (useMmtf)
+					return loadStructureFromMmtfByPdbId(pdbId);
+				else if (useMmCif)
+					return loadStructureFromCifByPdbId(pdbId);
+				else
+					return loadStructureFromPdbByPdbId(pdbId);
+			} catch (Exception e) {
+				//TODO wrap exception e as a structure for storage in the cache
+
+				e.printStackTrace();
+				return null;
 			}
-
-		}
-
-		Structure s;
-		if (useMmtf) {
-			logger.debug("loading from mmtf");
-			s = loadStructureFromMmtfByPdbId(pdbId);
-		}
-		else if (useMmCif) {
-			logger.debug("loading from mmcif");
-			s = loadStructureFromCifByPdbId(pdbId);
-		} else {
-			logger.debug("loading from pdb");
-			s = loadStructureFromPdbByPdbId(pdbId);
-		}
-		return s;
+		});
 	}
 
 	/**
@@ -906,25 +903,24 @@ public class AtomCache {
 		MMTFFileReader reader = new MMTFFileReader();
 		reader.setFetchBehavior(fetchBehavior);
 		reader.setObsoleteBehavior(obsoleteBehavior);
-		Structure structure = reader.getStructureById(pdbId.toLowerCase());
-		return structure;
+		return reader.getStructureById(pdbId.toLowerCase());
 	}
 
 	protected Structure loadStructureFromCifByPdbId(String pdbId) throws IOException {
 
 		logger.debug("Loading structure {} from mmCIF file {}.", pdbId, path);
 		Structure s;
-		flagLoading(pdbId);
-		try {
+//		flagLoading(pdbId);
+//		try {
 			MMCIFFileReader reader = new MMCIFFileReader(path);
 			reader.setFetchBehavior(fetchBehavior);
 			reader.setObsoleteBehavior(obsoleteBehavior);
 			reader.setFileParsingParameters(params);
 			s = reader.getStructureById(pdbId.toLowerCase());
 
-		} finally {
-			flagLoadingFinished(pdbId);
-		}
+//		} finally {
+//			flagLoadingFinished(pdbId);
+//		}
 
 		return s;
 	}
@@ -933,8 +929,8 @@ public class AtomCache {
 
 		logger.debug("Loading structure {} from PDB file {}.", pdbId, path);
 		Structure s;
-		flagLoading(pdbId);
-		try {
+//		flagLoading(pdbId);
+//		try {
 			PDBFileReader reader = new PDBFileReader(path);
 			reader.setFetchBehavior(fetchBehavior);
 			reader.setObsoleteBehavior(obsoleteBehavior);
@@ -943,9 +939,9 @@ public class AtomCache {
 
 			s = reader.getStructureById(pdbId.toLowerCase());
 
-		} finally {
-			flagLoadingFinished(pdbId);
-		}
+//		} finally {
+//			flagLoadingFinished(pdbId);
+//		}
 
 		return s;
 	}

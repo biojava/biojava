@@ -22,7 +22,8 @@ package org.biojava.nbio.core.sequence;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 /**
  * Created by yana on 3/27/17.

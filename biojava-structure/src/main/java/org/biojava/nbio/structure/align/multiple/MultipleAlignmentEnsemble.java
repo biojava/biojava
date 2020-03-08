@@ -20,11 +20,11 @@
  */
 package org.biojava.nbio.structure.align.multiple;
 
-import java.util.List;
-
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureIdentifier;
 import org.biojava.nbio.structure.jama.Matrix;
+
+import java.util.List;
 
 /**
  * A MultipleAlignmentEnsemble is a collection of {@link MultipleAlignment}s

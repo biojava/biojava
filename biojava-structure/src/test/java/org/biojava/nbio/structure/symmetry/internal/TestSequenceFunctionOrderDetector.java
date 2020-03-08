@@ -20,21 +20,18 @@
  */
 package org.biojava.nbio.structure.symmetry.internal;
 
-import static org.junit.Assert.*;
+import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.align.model.AFPChain;
+import org.biojava.nbio.structure.align.util.AtomCache;
+import org.biojava.nbio.structure.symmetry.internal.CESymmParameters.RefineMethod;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.align.model.AFPChain;
-import org.biojava.nbio.structure.align.util.AtomCache;
-import org.biojava.nbio.structure.symmetry.internal.CeSymm;
-import org.biojava.nbio.structure.symmetry.internal.RefinerFailedException;
-import org.biojava.nbio.structure.symmetry.internal.SequenceFunctionOrderDetector;
-import org.biojava.nbio.structure.symmetry.internal.CESymmParameters.RefineMethod;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Originally part of {@link CeSymmTest}.

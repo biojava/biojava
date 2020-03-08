@@ -22,11 +22,10 @@ package org.biojava.nbio.structure.quaternary;
 
 import org.biojava.nbio.structure.*;
 
+import javax.vecmath.Point3d;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import javax.vecmath.Point3d;
 
 
 

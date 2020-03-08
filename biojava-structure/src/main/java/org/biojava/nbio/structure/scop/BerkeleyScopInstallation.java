@@ -38,8 +38,8 @@ import java.util.Map;
 public class BerkeleyScopInstallation extends ScopInstallation {
 
 
-	String defaultBerkeleyDownloadURL = "http://scop.berkeley.edu/downloads/parse/";
-	String defaultBerkeleyScopVersion=ScopFactory.LATEST_VERSION;
+	final String defaultBerkeleyDownloadURL = "http://scop.berkeley.edu/downloads/parse/";
+	final String defaultBerkeleyScopVersion=ScopFactory.LATEST_VERSION;
 
 	/**
 	 * A map from SCOP version names which the Berkeley server offers as a

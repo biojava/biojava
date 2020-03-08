@@ -55,12 +55,12 @@ import java.util.List;
  */
 public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenceReader<C> {
 
-	SequenceParserInterface sequenceParser;
+	final SequenceParserInterface sequenceParser;
 	private CompoundSet<C> compoundSet;
 	private final List<C> parsedCompounds = new ArrayList<>();
-	File file;
-	long sequenceStartIndex;
-	int sequenceLength;
+	final File file;
+	final long sequenceStartIndex;
+	final int sequenceLength;
 	//private boolean initialized = false;
 
 	/**

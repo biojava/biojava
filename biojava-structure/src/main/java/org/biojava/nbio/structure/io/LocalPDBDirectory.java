@@ -21,14 +21,14 @@
  */
 package org.biojava.nbio.structure.io;
 
+import org.biojava.nbio.core.util.FileDownloadUtils;
+import org.biojava.nbio.core.util.InputStreamProvider;
 import org.biojava.nbio.structure.PDBStatus;
 import org.biojava.nbio.structure.PDBStatus.Status;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
-import org.biojava.nbio.core.util.FileDownloadUtils;
 import org.rcsb.mmtf.utils.CodecUtils;
-import org.biojava.nbio.core.util.InputStreamProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -34,7 +34,7 @@ public class AligPanelMouseMotionListener implements MouseMotionListener, MouseL
 
 	AligPanel parent;
 
-	List<AlignmentPositionListener> aligPosListeners;
+	final List<AlignmentPositionListener> aligPosListeners;
 	int prevPos;
 
 	boolean isDragging ;

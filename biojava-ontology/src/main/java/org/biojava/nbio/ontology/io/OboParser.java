@@ -23,7 +23,9 @@
 
 package org.biojava.nbio.ontology.io;
 
-import org.biojava.nbio.ontology.*;
+import org.biojava.nbio.ontology.OntoTools;
+import org.biojava.nbio.ontology.Ontology;
+import org.biojava.nbio.ontology.OntologyFactory;
 import org.biojava.nbio.ontology.obo.OboFileHandler;
 import org.biojava.nbio.ontology.obo.OboFileParser;
 

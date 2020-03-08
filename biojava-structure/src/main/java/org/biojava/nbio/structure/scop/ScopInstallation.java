@@ -24,15 +24,18 @@
 
 package org.biojava.nbio.structure.scop;
 
+import org.biojava.nbio.core.util.FileDownloadUtils;
+import org.biojava.nbio.core.util.InputStreamProvider;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
-import org.biojava.nbio.core.util.FileDownloadUtils;
-import org.biojava.nbio.core.util.InputStreamProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;

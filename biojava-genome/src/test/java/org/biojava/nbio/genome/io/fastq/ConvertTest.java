@@ -20,16 +20,16 @@
  */
 package org.biojava.nbio.genome.io.fastq;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import org.junit.Test;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Round trip conversion functional tests.

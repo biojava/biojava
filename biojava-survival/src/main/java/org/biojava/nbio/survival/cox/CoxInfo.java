@@ -61,7 +61,7 @@ public class CoxInfo {
 	int numEvents = 0;
 	private LinkedHashMap<String, String> metaDataFilter = null;
 	private final LinkedHashMap<String, CoxCoefficient> coefficientsList = new LinkedHashMap<>();
-	LinkedHashMap<Double, Double> baselineSurvivorFunction = new LinkedHashMap<>();
+	final LinkedHashMap<Double, Double> baselineSurvivorFunction = new LinkedHashMap<>();
 	ArrayList<SurvivalInfo> survivalInfoList = new ArrayList<>();
 	/**
 	 *

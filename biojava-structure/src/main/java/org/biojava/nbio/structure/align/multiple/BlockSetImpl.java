@@ -20,11 +20,10 @@
  */
 package org.biojava.nbio.structure.align.multiple;
 
+import javax.vecmath.Matrix4d;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.vecmath.Matrix4d;
 
 /**
  * A general implementation of a BlockSet to store a flexible part of a multiple

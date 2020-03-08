@@ -20,9 +20,8 @@
  */
 package org.biojava.nbio.structure.align.multiple;
 
-import java.util.List;
-
 import javax.vecmath.Matrix4d;
+import java.util.List;
 
 /**
  * A BlockSet is a Data Structure to store a flexible alignment part of a

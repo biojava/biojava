@@ -34,7 +34,6 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -49,7 +48,7 @@ public class SiftsXMLParser {
 	Document dom;
 	List<SiftsEntity> entities;
 
-	static boolean debug = false;
+	static final boolean debug = false;
 	public SiftsXMLParser(){
 		entities = new ArrayList<>();
 	}

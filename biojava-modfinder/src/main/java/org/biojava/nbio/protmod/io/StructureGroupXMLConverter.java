@@ -20,9 +20,9 @@
  */
 package org.biojava.nbio.protmod.io;
 
+import org.biojava.nbio.core.util.PrettyXMLWriter;
 import org.biojava.nbio.protmod.structure.StructureGroup;
 import org.biojava.nbio.structure.ResidueNumber;
-import org.biojava.nbio.core.util.PrettyXMLWriter;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 

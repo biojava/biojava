@@ -49,9 +49,9 @@ import java.util.List;
  */
 public class FileProxyProteinSequenceCreator implements SequenceCreatorInterface<AminoAcidCompound> {
 
-	CompoundSet<AminoAcidCompound> compoundSet;
-	File file;
-	SequenceParserInterface sequenceParser;
+	final CompoundSet<AminoAcidCompound> compoundSet;
+	final File file;
+	final SequenceParserInterface sequenceParser;
 
 	/**
 	 * Need File so that we can store full path name in SequenceFileProxyLoader for Random File access as a quick read

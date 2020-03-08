@@ -75,7 +75,7 @@ public enum ResidueType implements Serializable {
 	otherChemComp(null, "other");
 
 
-	static Map<String,ResidueType> lookupTable = new HashMap<>();
+	static final Map<String,ResidueType> lookupTable = new HashMap<>();
 
 	static {
 

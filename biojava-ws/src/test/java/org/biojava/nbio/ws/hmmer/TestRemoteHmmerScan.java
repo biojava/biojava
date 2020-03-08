@@ -20,11 +20,12 @@
  */
 package org.biojava.nbio.ws.hmmer;
 
-import java.util.SortedSet;
-
 import org.biojava.nbio.core.sequence.ProteinSequence;
 import org.junit.Ignore;
 import org.junit.Test;
+
+import java.util.SortedSet;
+
 import static org.junit.Assert.*;
 
 public class TestRemoteHmmerScan {

@@ -140,8 +140,8 @@ public class BoundingBox implements Serializable {
 	}
 
 	private static class Bound implements Comparable<Bound> {
-		int cardinal;
-		double value;
+		final int cardinal;
+		final double value;
 		public Bound(int cardinal,double value) {
 			this.cardinal = cardinal;
 			this.value = value;

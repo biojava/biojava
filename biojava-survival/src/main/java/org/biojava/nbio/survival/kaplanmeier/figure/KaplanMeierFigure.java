@@ -65,8 +65,8 @@ public class KaplanMeierFigure extends JPanel {
 	int labelWidth;
 	double minTime = 0.0;
 	double maxTime = 10.0;
-	double minPercentage = 0.0;
-	double maxPercentage = 1.0;
+	final double minPercentage = 0.0;
+	final double maxPercentage = 1.0;
 	FontMetrics fm;
 	KMFigureInfo kmfi = new KMFigureInfo();
 	LinkedHashMap<String, ArrayList<CensorStatus>> survivalData = new LinkedHashMap<>();
@@ -346,7 +346,7 @@ public class KaplanMeierFigure extends JPanel {
 		}
 		fw.close();
 	}
-	DecimalFormat df = new DecimalFormat("#.#");
+	final DecimalFormat df = new DecimalFormat("#.#");
 
 	@Override
 	public void paintComponent(Graphics g) // draw graphics in the panel

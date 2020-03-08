@@ -187,7 +187,7 @@ public class Feature implements FeatureI {
 		return mUserMap;
 	}
 
-	 HashMap<String,String> attributeHashMap = new HashMap<>();
+	 final HashMap<String,String> attributeHashMap = new HashMap<>();
 
 	private void initAttributeHashMap(){
 	   String[] values = mAttributes.split(";");

@@ -20,13 +20,12 @@
  */
 package org.biojava.nbio.structure.symmetry.internal;
 
-import static java.lang.Math.*;
-
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.util.RotationAxis;
-import org.biojava.nbio.structure.symmetry.internal.OrderDetector;
-import org.biojava.nbio.structure.symmetry.internal.RefinerFailedException;
+
+import static java.lang.Math.PI;
+import static java.lang.Math.abs;
 
 /**
  * Guesses an order of rotational symmetry from the angle.

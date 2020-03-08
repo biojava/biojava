@@ -20,10 +20,6 @@
  */
 package org.biojava.nbio.aaproperties.xml;
 
-import org.biojava.nbio.aaproperties.xml.Element;
-import org.biojava.nbio.aaproperties.xml.ElementTable;
-import org.biojava.nbio.aaproperties.xml.Isotope;
-import org.biojava.nbio.aaproperties.xml.SchemaGenerator;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

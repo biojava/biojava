@@ -21,27 +21,16 @@
 package org.biojava.nbio.structure.io.mmcif;
 
 
-import java.lang.reflect.Field;
-import java.util.*;
-
-import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.Chain;
-import org.biojava.nbio.structure.Element;
-import org.biojava.nbio.structure.EntityType;
-import org.biojava.nbio.structure.Group;
-import org.biojava.nbio.structure.GroupType;
-import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.io.FileConvert;
-import org.biojava.nbio.structure.io.mmcif.model.AbstractBean;
-import org.biojava.nbio.structure.io.mmcif.model.AtomSite;
-import org.biojava.nbio.structure.io.mmcif.model.CIFLabel;
-import org.biojava.nbio.structure.io.mmcif.model.Cell;
-import org.biojava.nbio.structure.io.mmcif.model.IgnoreField;
-import org.biojava.nbio.structure.io.mmcif.model.Symmetry;
+import org.biojava.nbio.structure.io.mmcif.model.*;
 import org.biojava.nbio.structure.xtal.CrystalCell;
 import org.biojava.nbio.structure.xtal.SpaceGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.lang.reflect.Field;
+import java.util.*;
 
 /**
  * Some tools for mmCIF file writing.

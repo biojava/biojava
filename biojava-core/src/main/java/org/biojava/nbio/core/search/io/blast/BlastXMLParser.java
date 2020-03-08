@@ -25,6 +25,15 @@ import org.biojava.nbio.core.search.io.Hit;
 import org.biojava.nbio.core.search.io.Hsp;
 import org.biojava.nbio.core.search.io.Result;
 import org.biojava.nbio.core.search.io.ResultFactory;
+import org.biojava.nbio.core.sequence.template.Sequence;
+import org.biojava.nbio.core.util.XMLHelper;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPathException;
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
@@ -32,14 +41,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPathException;
-import org.biojava.nbio.core.sequence.template.Sequence;
-import org.biojava.nbio.core.util.XMLHelper;
-import org.slf4j.LoggerFactory;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.xml.sax.SAXException;
 
 /**
  * Re-designed by Paolo Pavan on the footprint of:
@@ -102,7 +103,7 @@ public class BlastXMLParser implements ResultFactory {
 			String dbFile = XMLHelper.selectSingleElement(blastDoc.getDocumentElement(),"BlastOutput_db").getTextContent();
 
 			logger.info("Query for hits in "+ targetFile);
-			ArrayList<Element> IterationsList = XMLHelper.selectElements(blastDoc.getDocumentElement(), "BlastOutput_iterations/Iteration[Iteration_hits]");
+			List<Element> IterationsList = XMLHelper.selectElements(blastDoc.getDocumentElement(), "BlastOutput_iterations/Iteration[Iteration_hits]");
 			logger.info(IterationsList.size() + " results");
 
 			resultsCollection = new ArrayList<>();
@@ -117,10 +118,10 @@ public class BlastXMLParser implements ResultFactory {
 
 				// Iteration* section keys:
 				resultBuilder
-					.setIterationNumber(Integer.valueOf(XMLHelper.selectSingleElement(element, "Iteration_iter-num").getTextContent()))
+					.setIterationNumber(Integer.parseInt(XMLHelper.selectSingleElement(element, "Iteration_iter-num").getTextContent()))
 					.setQueryID(XMLHelper.selectSingleElement(element,"Iteration_query-ID").getTextContent())
 					.setQueryDef(XMLHelper.selectSingleElement(element, "Iteration_query-def").getTextContent())
-					.setQueryLength(Integer.valueOf(XMLHelper.selectSingleElement(element, "Iteration_query-len").getTextContent()));
+					.setQueryLength(Integer.parseInt(XMLHelper.selectSingleElement(element, "Iteration_query-len").getTextContent()));
 
 				if (queryReferences != null) resultBuilder.setQuerySequence(queryReferencesMap.get(
 						XMLHelper.selectSingleElement(element,"Iteration_query-ID").getTextContent()
@@ -128,25 +129,26 @@ public class BlastXMLParser implements ResultFactory {
 
 
 
-				Element iterationHitsElement = XMLHelper.selectSingleElement(element, "Iteration_hits");
-				ArrayList<Element> hitList = XMLHelper.selectElements(iterationHitsElement, "Hit");
-
 				hitsCollection = new ArrayList<>();
+
+				Element iterationHitsElement = XMLHelper.selectSingleElement(element, "Iteration_hits");
+				List<Element> hitList = XMLHelper.selectElements(iterationHitsElement, "Hit");
+
 				for (Element hitElement : hitList) {
 					BlastHitBuilder blastHitBuilder = new BlastHitBuilder();
 					blastHitBuilder
-						.setHitNum(Integer.valueOf(XMLHelper.selectSingleElement(hitElement, "Hit_num").getTextContent()))
+						.setHitNum(Integer.parseInt(XMLHelper.selectSingleElement(hitElement, "Hit_num").getTextContent()))
 						.setHitId(XMLHelper.selectSingleElement(hitElement, "Hit_id").getTextContent())
 						.setHitDef(XMLHelper.selectSingleElement(hitElement, "Hit_def").getTextContent())
 						.setHitAccession(XMLHelper.selectSingleElement(hitElement, "Hit_accession").getTextContent())
-						.setHitLen(Integer.valueOf(XMLHelper.selectSingleElement(hitElement, "Hit_len").getTextContent()));
+						.setHitLen(Integer.parseInt(XMLHelper.selectSingleElement(hitElement, "Hit_len").getTextContent()));
 
 					if (databaseReferences != null) blastHitBuilder.setHitSequence(databaseReferencesMap.get(
 						XMLHelper.selectSingleElement(hitElement, "Hit_id").getTextContent()
 					));
 
 					Element hithspsElement = XMLHelper.selectSingleElement(hitElement, "Hit_hsps");
-					ArrayList<Element> hspList = XMLHelper.selectElements(hithspsElement, "Hsp");
+					List<Element> hspList = XMLHelper.selectElements(hithspsElement, "Hsp");
 
 					hspsCollection = new ArrayList<>();
 					for (Element hspElement : hspList) {
@@ -156,20 +158,20 @@ public class BlastXMLParser implements ResultFactory {
 						if (evalue <= maxEScore) {
 							BlastHspBuilder blastHspBuilder = new BlastHspBuilder();
 							blastHspBuilder
-								.setHspNum(Integer.valueOf(XMLHelper.selectSingleElement(hspElement, "Hsp_num").getTextContent()))
+								.setHspNum(Integer.parseInt(XMLHelper.selectSingleElement(hspElement, "Hsp_num").getTextContent()))
 								.setHspBitScore(new Double(XMLHelper.selectSingleElement(hspElement, "Hsp_bit-score").getTextContent()))
-								.setHspScore(Integer.valueOf(XMLHelper.selectSingleElement(hspElement, "Hsp_score").getTextContent()))
+								.setHspScore(Integer.parseInt(XMLHelper.selectSingleElement(hspElement, "Hsp_score").getTextContent()))
 								.setHspEvalue(evalue)
-								.setHspQueryFrom(Integer.valueOf(XMLHelper.selectSingleElement(hspElement, "Hsp_query-from").getTextContent()))
-								.setHspQueryTo(Integer.valueOf(XMLHelper.selectSingleElement(hspElement, "Hsp_query-to").getTextContent()))
-								.setHspHitFrom(Integer.valueOf(XMLHelper.selectSingleElement(hspElement, "Hsp_hit-from").getTextContent()))
-								.setHspHitTo(Integer.valueOf(XMLHelper.selectSingleElement(hspElement, "Hsp_hit-to").getTextContent()))
-								.setHspQueryFrame(Integer.valueOf(XMLHelper.selectSingleElement(hspElement, "Hsp_query-frame").getTextContent()))
-								.setHspHitFrame(Integer.valueOf(XMLHelper.selectSingleElement(hspElement, "Hsp_hit-frame").getTextContent()))
-								.setHspIdentity(Integer.valueOf(XMLHelper.selectSingleElement(hspElement, "Hsp_identity").getTextContent()))
-								.setHspPositive(Integer.valueOf(XMLHelper.selectSingleElement(hspElement, "Hsp_positive").getTextContent()))
-								.setHspGaps(Integer.valueOf(XMLHelper.selectSingleElement(hspElement, "Hsp_gaps").getTextContent()))
-								.setHspAlignLen(Integer.valueOf(XMLHelper.selectSingleElement(hspElement, "Hsp_align-len").getTextContent()))
+								.setHspQueryFrom(Integer.parseInt(XMLHelper.selectSingleElement(hspElement, "Hsp_query-from").getTextContent()))
+								.setHspQueryTo(Integer.parseInt(XMLHelper.selectSingleElement(hspElement, "Hsp_query-to").getTextContent()))
+								.setHspHitFrom(Integer.parseInt(XMLHelper.selectSingleElement(hspElement, "Hsp_hit-from").getTextContent()))
+								.setHspHitTo(Integer.parseInt(XMLHelper.selectSingleElement(hspElement, "Hsp_hit-to").getTextContent()))
+								.setHspQueryFrame(Integer.parseInt(XMLHelper.selectSingleElement(hspElement, "Hsp_query-frame").getTextContent()))
+								.setHspHitFrame(Integer.parseInt(XMLHelper.selectSingleElement(hspElement, "Hsp_hit-frame").getTextContent()))
+								.setHspIdentity(Integer.parseInt(XMLHelper.selectSingleElement(hspElement, "Hsp_identity").getTextContent()))
+								.setHspPositive(Integer.parseInt(XMLHelper.selectSingleElement(hspElement, "Hsp_positive").getTextContent()))
+								.setHspGaps(Integer.parseInt(XMLHelper.selectSingleElement(hspElement, "Hsp_gaps").getTextContent()))
+								.setHspAlignLen(Integer.parseInt(XMLHelper.selectSingleElement(hspElement, "Hsp_align-len").getTextContent()))
 								.setHspQseq(XMLHelper.selectSingleElement(hspElement, "Hsp_qseq").getTextContent())
 								.setHspHseq(XMLHelper.selectSingleElement(hspElement, "Hsp_hseq").getTextContent())
 								.setHspIdentityString(XMLHelper.selectSingleElement(hspElement, "Hsp_midline").getTextContent());
@@ -217,8 +219,7 @@ public class BlastXMLParser implements ResultFactory {
 		if (queryReferences != null) {
 			queryReferencesMap = new HashMap<>(queryReferences.size());
 			for (int counter=0; counter < queryReferences.size() ; counter ++){
-				String id = "Query_"+(counter+1);
-				queryReferencesMap.put(id, queryReferences.get(counter));
+				queryReferencesMap.put("Query_"+(counter+1), queryReferences.get(counter));
 			}
 		}
 
@@ -226,8 +227,7 @@ public class BlastXMLParser implements ResultFactory {
 			databaseReferencesMap = new HashMap<>(databaseReferences.size());
 			for (int counter=0; counter < databaseReferences.size() ; counter ++){
 				// this is strange: while Query_id are 1 based, Hit (database) id are 0 based
-				String id = "gnl|BL_ORD_ID|"+(counter);
-				databaseReferencesMap.put(id, databaseReferences.get(counter));
+				databaseReferencesMap.put("gnl|BL_ORD_ID|"+(counter), databaseReferences.get(counter));
 			}
 		}
 	}

@@ -20,39 +20,20 @@
  */
 package org.biojava.nbio.structure.align.quaternary;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import javax.vecmath.Matrix4d;
-
-import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.Calc;
-import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.StructureTools;
-import org.biojava.nbio.structure.align.multiple.Block;
-import org.biojava.nbio.structure.align.multiple.BlockImpl;
-import org.biojava.nbio.structure.align.multiple.BlockSet;
-import org.biojava.nbio.structure.align.multiple.BlockSetImpl;
-import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
-import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsembleImpl;
-import org.biojava.nbio.structure.align.multiple.MultipleAlignmentImpl;
+import org.biojava.nbio.structure.*;
+import org.biojava.nbio.structure.align.multiple.*;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
 import org.biojava.nbio.structure.align.multiple.util.ReferenceSuperimposer;
-import org.biojava.nbio.structure.cluster.Subunit;
-import org.biojava.nbio.structure.cluster.SubunitCluster;
-import org.biojava.nbio.structure.cluster.SubunitClusterer;
-import org.biojava.nbio.structure.cluster.SubunitClustererParameters;
-import org.biojava.nbio.structure.cluster.SubunitExtractor;
+import org.biojava.nbio.structure.cluster.*;
 import org.biojava.nbio.structure.contact.Pair;
 import org.biojava.nbio.structure.geometry.SuperPositions;
 import org.biojava.nbio.structure.geometry.UnitQuaternions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.vecmath.Matrix4d;
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * Quaternary Structure Alignment (QS-Align). The algorithm takes as input two

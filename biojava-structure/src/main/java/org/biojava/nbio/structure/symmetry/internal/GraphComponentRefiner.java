@@ -20,14 +20,6 @@
  */
 package org.biojava.nbio.structure.symmetry.internal;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-
-import javax.vecmath.GMatrix;
-import javax.vecmath.GVector;
-
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.model.AFPChain;
@@ -37,6 +29,13 @@ import org.biojava.nbio.structure.symmetry.utils.SymmetryTools;
 import org.jgrapht.Graph;
 import org.jgrapht.alg.connectivity.ConnectivityInspector;
 import org.jgrapht.graph.DefaultEdge;
+
+import javax.vecmath.GMatrix;
+import javax.vecmath.GVector;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 /**
  * The GraphRefiner transforms the self-alignment into a Graph and extracts its

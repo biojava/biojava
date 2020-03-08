@@ -20,7 +20,10 @@
  */
 package org.biojava.nbio.structure.cluster;
 
-import org.biojava.nbio.structure.*;
+import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.Chain;
+import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.StructureTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

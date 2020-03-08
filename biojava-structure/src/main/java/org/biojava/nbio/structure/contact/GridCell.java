@@ -20,10 +20,9 @@
  */
 package org.biojava.nbio.structure.contact;
 
+import javax.vecmath.Point3d;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.vecmath.Point3d;
 
 
 /**

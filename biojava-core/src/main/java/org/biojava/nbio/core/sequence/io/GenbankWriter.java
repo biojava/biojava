@@ -38,11 +38,11 @@ import java.util.Collection;
  *
  */
 public class GenbankWriter<S extends Sequence<?>, C extends Compound> {
-	int SEQUENCE_INDENT = 9;
+	final int SEQUENCE_INDENT = 9;
 
-	OutputStream os;
-	Collection<S> sequences;
-	GenbankHeaderFormatInterface<S, C> headerFormat;
+	final OutputStream os;
+	final Collection<S> sequences;
+	final GenbankHeaderFormatInterface<S, C> headerFormat;
 	private int lineLength = 60;
 
 	// byte[] lineSep = System.getProperty("line.separator").getBytes();

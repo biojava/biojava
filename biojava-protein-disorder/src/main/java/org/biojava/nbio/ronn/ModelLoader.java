@@ -95,8 +95,8 @@ public final class ModelLoader {
 	 */
 	final float[] W;// = new float[RonnConstraint.maxD];
 
-	int numOfDBAAseq;
-	int modelNum;
+	final int numOfDBAAseq;
+	final int modelNum;
 
 	public Model(final int modelNum, final int numberofSequence) {
 		this.modelNum = modelNum;

@@ -20,20 +20,19 @@
  */
 package org.biojava.nbio.structure.symmetry.internal;
 
-import static org.junit.Assert.*;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import org.biojava.nbio.structure.symmetry.internal.CESymmParameters.SymmetryType;
+import org.biojava.nbio.structure.symmetry.internal.SymmetryAxes.Axis;
+import org.junit.Test;
 
 import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
-import org.biojava.nbio.structure.symmetry.internal.CESymmParameters.SymmetryType;
-import org.biojava.nbio.structure.symmetry.internal.SymmetryAxes.Axis;
-import org.junit.Test;
+import static org.junit.Assert.*;
 
 
 public class TestSymmetryAxes {

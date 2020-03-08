@@ -21,11 +21,13 @@
  */
 package org.biojava.nbio.core.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URL;
@@ -33,15 +35,8 @@ import java.net.URLConnection;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.SimpleFileVisitor;
+import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class FileDownloadUtils {
 
@@ -113,9 +108,8 @@ public class FileDownloadUtils {
 			try {
 				URLConnection connection = prepareURLConnection(url.toString(), timeout);
 				connection.connect();
-				InputStream inputStream = connection.getInputStream();
 
-				rbc = Channels.newChannel(inputStream);
+				rbc = Channels.newChannel(connection.getInputStream());
 				fos = new FileOutputStream(tempFile);
 				fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
 				break;

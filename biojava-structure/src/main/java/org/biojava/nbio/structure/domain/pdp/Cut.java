@@ -26,7 +26,7 @@ import java.util.List;
 
 public class Cut {
 
-	static boolean verbose = CutDomain.verbose;
+	static final boolean verbose = CutDomain.verbose;
 
 	public static int cut(Atom[] ca, Domain dom, CutValues val, int[][] dist, PDPDistanceMatrix pdpMatrix) {
 

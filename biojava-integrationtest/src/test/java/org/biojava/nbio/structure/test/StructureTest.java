@@ -25,15 +25,14 @@ import org.biojava.nbio.structure.geometry.SuperPositions;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.PDBFileParser;
 import org.biojava.nbio.structure.io.SSBondImpl;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import javax.vecmath.Matrix4d;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Set;
-
-import javax.vecmath.Matrix4d;
-
-import org.junit.BeforeClass;
-import org.junit.Test;
 
 import static org.junit.Assert.*;
 

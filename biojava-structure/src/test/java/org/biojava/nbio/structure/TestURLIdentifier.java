@@ -20,17 +20,17 @@
  */
 package org.biojava.nbio.structure;
 
-import static org.junit.Assert.*;
+import org.biojava.nbio.structure.align.util.AtomCache;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.Arrays;
 
-import org.biojava.nbio.structure.align.util.AtomCache;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static org.junit.Assert.*;
 
 public class TestURLIdentifier {
 	private static final Logger logger = LoggerFactory.getLogger(TestURLIdentifier.class);

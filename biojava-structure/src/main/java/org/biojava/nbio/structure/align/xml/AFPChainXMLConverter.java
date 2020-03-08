@@ -20,12 +20,12 @@
  */
 package org.biojava.nbio.structure.align.xml;
 
+import org.biojava.nbio.core.util.PrettyXMLWriter;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.util.AlignmentTools;
 import org.biojava.nbio.structure.jama.Matrix;
-import org.biojava.nbio.core.util.PrettyXMLWriter;
 
 import java.io.IOException;
 import java.io.PrintWriter;

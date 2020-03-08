@@ -20,17 +20,16 @@
  */
 package org.biojava.nbio.structure.align.multiple.util;
 
+import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
+import org.biojava.nbio.structure.align.multiple.TestSampleGenerator;
+import org.junit.Test;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
-import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
-import org.biojava.nbio.structure.align.multiple.TestSampleGenerator;
-import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentWriter;
-import org.junit.Test;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test the correctness of various Text outputs for {@link MultipleAlignment}s.

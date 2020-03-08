@@ -23,6 +23,7 @@
 
 package demo;
 
+import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.align.client.StructureName;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
 import org.biojava.nbio.structure.cath.CathDatabase;
@@ -30,7 +31,6 @@ import org.biojava.nbio.structure.cath.CathDomain;
 import org.biojava.nbio.structure.cath.CathInstallation;
 import org.biojava.nbio.structure.cath.CathSegment;
 import org.biojava.nbio.structure.gui.BiojavaJmol;
-import org.biojava.nbio.structure.StructureIO;
 
 import java.util.List;
 

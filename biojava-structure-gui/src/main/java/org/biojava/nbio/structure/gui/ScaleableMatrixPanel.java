@@ -63,12 +63,12 @@ implements ChangeListener, ActionListener {
 	 */
 	private static final long serialVersionUID = -8082261434322968652L;
 
-	protected JMatrixPanel mPanel;
-	protected JSlider slider;
-	protected JScrollPane scroll;
-	protected JComboBox coloring;
+	protected final JMatrixPanel mPanel;
+	protected final JSlider slider;
+	protected final JScrollPane scroll;
+	protected final JComboBox coloring;
 
-	protected Map<String,ContinuousColorMapper> gradients;
+	protected final Map<String,ContinuousColorMapper> gradients;
 
 	protected static final int SLIDER_STEPS = 8; // Number of minor ticks per unit scaled
 
@@ -381,8 +381,8 @@ implements ChangeListener, ActionListener {
 		private static final long serialVersionUID = -2000575579184232365L;
 		private final int min;
 		private final int max;
-		JLabel title;
-		JPanel gradientContainer;
+		final JLabel title;
+		final JPanel gradientContainer;
 
 		public GradientRenderer() {
 			this.setPreferredSize(new Dimension(100,25));

@@ -42,7 +42,7 @@ public class SerializableCache <K,V>{
 
 	private static final Logger logger = LoggerFactory.getLogger(SerializableCache.class);
 
-	protected String cacheFileName;
+	protected final String cacheFileName;
 	protected Map<K,V> serializedCache ;
 
 

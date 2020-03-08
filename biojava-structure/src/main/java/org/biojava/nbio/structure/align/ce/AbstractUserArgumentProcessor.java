@@ -78,9 +78,9 @@ import java.util.List;
  */
 public abstract class AbstractUserArgumentProcessor implements UserArgumentProcessor {
 
-	public static String newline = System.getProperty("line.separator");
+	public static final String newline = System.getProperty("line.separator");
 
-	protected StartupParameters params ;
+	protected final StartupParameters params ;
 
 	public static final List<String> mandatoryArgs= new ArrayList<>();
 

@@ -34,31 +34,31 @@ public class KMFigureInfo {
 	/**
 	 *
 	 */
-	public int titleHeight = 40;
+	public final int titleHeight = 40;
 	/**
 	 *
 	 */
-	public int padding = 20;
+	public final int padding = 20;
 	/**
 	 *
 	 */
-	public Integer width = 600;
+	public final Integer width = 600;
 	/**
 	 *
 	 */
-	public Integer height = 400;
+	public final Integer height = 400;
 	/**
 	 *
 	 */
-	public double timeScale = 1.0; //multiplier to change time from days to months etc
+	public final double timeScale = 1.0; //multiplier to change time from days to months etc
 	/**
 	 *
 	 */
-	public double yaxisPercentIncrement = .2;
+	public final double yaxisPercentIncrement = .2;
 	/**
 	 *
 	 */
-	public double xaxisPercentIncrement = .25;
+	public final double xaxisPercentIncrement = .25;
 	/**
 	 *
 	 */
@@ -70,24 +70,24 @@ public class KMFigureInfo {
 	/**
 	 *
 	 */
-	public double figureLineInfoLowerPercentX = .01;
+	public final double figureLineInfoLowerPercentX = .01;
 	/**
 	 *
 	 */
-	public double figureLineInfoLowerPercentY = .01;
+	public final double figureLineInfoLowerPercentY = .01;
 	/**
 	 *
 	 */
-	public BasicStroke axisStroke = new BasicStroke(2);
+	public final BasicStroke axisStroke = new BasicStroke(2);
 	/**
 	 *
 	 */
-	public BasicStroke kmStroke = new BasicStroke(3);
+	public final BasicStroke kmStroke = new BasicStroke(3);
 	/**
 	 *
 	 */
-	public Color[] legendColor = {Color.RED, Color.BLUE, Color.GREEN, Color.CYAN, Color.ORANGE, Color.YELLOW, Color.MAGENTA, Color.PINK};
-	public ArrayList<Double> xAxisLabels = new ArrayList<>();//new ArrayList<Double>(Arrays.asList(0.0, 5.0, 10.0, 15.0, 20.0));
+	public final Color[] legendColor = {Color.RED, Color.BLUE, Color.GREEN, Color.CYAN, Color.ORANGE, Color.YELLOW, Color.MAGENTA, Color.PINK};
+	public final ArrayList<Double> xAxisLabels = new ArrayList<>();//new ArrayList<Double>(Arrays.asList(0.0, 5.0, 10.0, 15.0, 20.0));
 	public String xAxisLegend = "";
 	public String yAxisLegend = "";
 	public Color getColor(int index) {

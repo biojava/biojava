@@ -20,8 +20,6 @@
  */
 package org.biojava.nbio.aaproperties;
 
-import org.biojava.nbio.aaproperties.PeptideProperties;
-import org.biojava.nbio.aaproperties.Utils;
 import org.biojava.nbio.aaproperties.xml.AminoAcidCompositionTable;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -345,7 +343,7 @@ public class PeptidePropertiesImplTest {
 			logger.debug(p);
 			logger.debug("pH\tInnovagen\tExpasy\tdiff");
 			for ( int i = 1; i < 15; i++) {
-				double phPoint = (double) i;
+				double phPoint = i;
 				double chrgInnovagen = PeptideProperties.getNetCharge(p,false,phPoint);
 				double chrgExpasy = PeptideProperties.getNetCharge(p,true,phPoint);
 				logger.debug(String.format("%2.1f\t%2.2f\t%2.2f\t%2.2f", phPoint, chrgInnovagen,

@@ -27,7 +27,6 @@ import org.biojava.nbio.structure.symmetry.axis.RotationAxisAligner;
 import javax.vecmath.Color4f;
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Tuple3d;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;

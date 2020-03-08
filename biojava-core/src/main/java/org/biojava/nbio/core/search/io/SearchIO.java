@@ -23,11 +23,7 @@ package org.biojava.nbio.core.search.io;
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ServiceLoader;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 /**
  * Designed by Paolo Pavan.

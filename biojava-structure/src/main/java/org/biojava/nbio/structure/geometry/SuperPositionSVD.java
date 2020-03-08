@@ -22,12 +22,12 @@
  */
 package org.biojava.nbio.structure.geometry;
 
+import org.biojava.nbio.structure.jama.Matrix;
+import org.biojava.nbio.structure.jama.SingularValueDecomposition;
+
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
-
-import org.biojava.nbio.structure.jama.Matrix;
-import org.biojava.nbio.structure.jama.SingularValueDecomposition;
 
 /**
  * A class that calculates the superposition between two sets of points using an

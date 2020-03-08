@@ -20,20 +20,14 @@
  */
 package org.biojava.nbio.structure.io;
 
-import static org.junit.Assert.*;
+import org.biojava.nbio.structure.*;
+import org.biojava.nbio.structure.align.util.AtomCache;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.util.List;
 
-import org.biojava.nbio.structure.Bond;
-import org.biojava.nbio.structure.Group;
-import org.biojava.nbio.structure.ResidueNumber;
-import org.biojava.nbio.structure.Site;
-import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.StructureIO;
-import org.biojava.nbio.structure.align.util.AtomCache;
-import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
  * Created by larsonmattr on 10/31/2015.

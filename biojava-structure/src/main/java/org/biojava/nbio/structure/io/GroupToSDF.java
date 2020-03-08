@@ -20,12 +20,13 @@
  */
 package org.biojava.nbio.structure.io;
 
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Bond;
 import org.biojava.nbio.structure.Group;
+
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class GroupToSDF {

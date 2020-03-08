@@ -21,11 +21,6 @@
 package demo;
 
 
-import java.io.File;
-import java.io.InputStream;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import org.biojava.nbio.core.sequence.ProteinSequence;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
@@ -33,6 +28,11 @@ import org.biojava.nbio.core.sequence.io.FastaReader;
 import org.biojava.nbio.core.sequence.io.GenericFastaHeaderParser;
 import org.biojava.nbio.core.sequence.io.ProteinSequenceCreator;
 import org.biojava.nbio.core.util.InputStreamProvider;
+
+import java.io.File;
+import java.io.InputStream;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 /**

@@ -20,12 +20,12 @@
  */
 package org.biojava.nbio.structure;
 
+import org.biojava.nbio.structure.align.util.AtomCache;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.biojava.nbio.structure.align.util.AtomCache;
 
 public class BioAssemblyIdentifier implements StructureIdentifier {
 

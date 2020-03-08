@@ -20,9 +20,9 @@
  */
 package org.biojava.nbio.structure.align.multiple;
 
-import java.util.Set;
-
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
+
+import java.util.Set;
 
 /**
  * Interface for classes which implement a temporary cache for various numeric

@@ -26,10 +26,6 @@ package org.biojava.nbio.structure.io;
 
 import org.biojava.nbio.core.alignment.template.AlignedSequence;
 import org.biojava.nbio.core.alignment.template.SequencePair;
-import org.biojava.nbio.structure.*;
-import org.biojava.nbio.structure.align.model.AFPChain;
-import org.biojava.nbio.structure.align.util.AlignmentTools;
-import org.biojava.nbio.structure.align.xml.AFPChainXMLConverter;
 import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.core.sequence.ProteinSequence;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
@@ -41,6 +37,10 @@ import org.biojava.nbio.core.sequence.io.template.SequenceCreatorInterface;
 import org.biojava.nbio.core.sequence.io.template.SequenceHeaderParserInterface;
 import org.biojava.nbio.core.sequence.template.Sequence;
 import org.biojava.nbio.core.util.SequenceTools;
+import org.biojava.nbio.structure.*;
+import org.biojava.nbio.structure.align.model.AFPChain;
+import org.biojava.nbio.structure.align.util.AlignmentTools;
+import org.biojava.nbio.structure.align.xml.AFPChainXMLConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

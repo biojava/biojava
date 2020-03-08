@@ -20,12 +20,12 @@
  */
 package org.biojava.nbio.structure.symmetry.utils;
 
+import org.biojava.nbio.structure.symmetry.core.QuatSymmetryDetector;
+
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-
-import org.biojava.nbio.structure.symmetry.core.QuatSymmetryDetector;
 
 /**
  * In mathematics, the power set (or powerset) of any set S, written P(S), is

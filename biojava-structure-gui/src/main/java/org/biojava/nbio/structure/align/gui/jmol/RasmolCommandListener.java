@@ -41,10 +41,10 @@ extends KeyAdapter
 implements ActionListener,
 MouseListener {
 
-	JTextField textfield;
-	JmolPanel jmolPanel;
+	final JTextField textfield;
+	final JmolPanel jmolPanel;
 
-	List<String> history;
+	final List<String> history;
 	int historyPosition;
 
 	public RasmolCommandListener(JmolPanel panel, JTextField field){

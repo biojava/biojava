@@ -39,7 +39,7 @@ import java.io.File;
  */
 public class ChooseDirAction extends AbstractAction{
 
-	JTextField textField;
+	final JTextField textField;
 	UserConfiguration config;
 	public ChooseDirAction (JTextField textField, UserConfiguration config){
 		super("Choose");

@@ -35,6 +35,7 @@ import org.biojava.nbio.structure.jama.Matrix;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.vecmath.Matrix4d;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.PrintStream;
@@ -42,8 +43,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
-import javax.vecmath.Matrix4d;
 
 /**
  * Perform a pairwise protein structure superimposition.
@@ -142,7 +141,7 @@ public class StructurePairAligner {
 	StrucAligParameters params;
 	FragmentPair[] fragPairs;
 
-	List<AlignmentProgressListener> listeners = new ArrayList<>();
+	final List<AlignmentProgressListener> listeners = new ArrayList<>();
 
 	public StructurePairAligner() {
 		super();

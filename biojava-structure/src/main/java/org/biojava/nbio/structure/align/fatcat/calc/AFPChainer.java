@@ -34,9 +34,8 @@ import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.geometry.SuperPositions;
 import org.biojava.nbio.structure.jama.Matrix;
 
-import java.util.List;
-
 import javax.vecmath.Matrix4d;
+import java.util.List;
 
 /** a class to chain AFPs to an alignment
  *

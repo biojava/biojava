@@ -22,7 +22,7 @@
 
 package org.biojava.nbio.core.sequence.features;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Models the keywords that are annotated for a protein sequence at Uniprot. If a ProxySequenceReader
@@ -36,5 +36,5 @@ public interface FeaturesKeyWordInterface {
 	 *
 	 * @return
 	 */
-    ArrayList<String> getKeyWords() ;
+    List<String> getKeyWords() ;
 }

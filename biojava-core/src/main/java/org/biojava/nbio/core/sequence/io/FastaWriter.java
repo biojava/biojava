@@ -30,11 +30,7 @@ import org.biojava.nbio.core.sequence.template.Sequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedOutputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 
@@ -50,9 +46,9 @@ public class FastaWriter<S extends Sequence<?>, C extends Compound> {
 
 	private final static Logger logger = LoggerFactory.getLogger(FastaWriter.class);
 
-	OutputStream os;
-	Collection<S> sequences;
-	FastaHeaderFormatInterface<S, C> headerFormat;
+	final OutputStream os;
+	final Collection<S> sequences;
+	final FastaHeaderFormatInterface<S, C> headerFormat;
 	private int lineLength = 60;
 	byte[] lineSep = System.getProperty("line.separator").getBytes();
 /**
