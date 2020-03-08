@@ -51,7 +51,7 @@ import java.util.*;
  * @author Spencer Bliven
  *
  */
-public abstract class LocalPDBDirectory implements StructureIOFile {
+@Deprecated public abstract class LocalPDBDirectory implements StructureIOFile {
 
 	private static final Logger logger = LoggerFactory.getLogger(LocalPDBDirectory.class);
 
@@ -349,37 +349,27 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 			throw new IOException("The provided ID does not look like a PDB ID : " + pdbId);
 
 		// Check existing
-		File file = downloadStructure(pdbId);
-
-		if(!file.exists()) {
-			throw new IOException("Structure "+pdbId+" not found and unable to download.");
-		}
-
-		InputStreamProvider isp = new InputStreamProvider();
-
-		InputStream inputStream = isp.getInputStream(file);
-
-		return inputStream;
+		return downloadStructure(pdbId);
 	}
 
-	/**
-	 * Download a structure, but don't parse it yet or store it in memory.
-	 *
-	 * Used to pre-fetch large numbers of structures.
-	 * @param pdbId
-	 * @throws IOException
-	 */
-	public void prefetchStructure(String pdbId) throws IOException {
-		if ( pdbId.length() != 4)
-			throw new IOException("The provided ID does not look like a PDB ID : " + pdbId);
-
-		// Check existing
-		File file = downloadStructure(pdbId);
-
-		if(!file.exists()) {
-			throw new IOException("Structure "+pdbId+" not found and unable to download.");
-		}
-	}
+//	/**
+//	 * Download a structure, but don't parse it yet or store it in memory.
+//	 *
+//	 * Used to pre-fetch large numbers of structures.
+//	 * @param pdbId
+//	 * @throws IOException
+//	 */
+//	public void prefetchStructure(String pdbId) throws IOException {
+//		if ( pdbId.length() != 4)
+//			throw new IOException("The provided ID does not look like a PDB ID : " + pdbId);
+//
+//		// Check existing
+//		File file = downloadStructure(pdbId);
+//
+//		if(!file.exists()) {
+//			throw new IOException("Structure "+pdbId+" not found and unable to download.");
+//		}
+//	}
 
 	/**
 	 * Attempts to delete all versions of a structure from the local directory.
@@ -434,52 +424,52 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	 * @throws IOException for errors downloading or writing, or if the
 	 *  fetchBehavior is {@link FetchBehavior#LOCAL_ONLY}
 	 */
-	protected File downloadStructure(String pdbId) throws IOException{
+	protected InputStream downloadStructure(String pdbId) throws IOException{
 		if ( pdbId.length() != 4)
 			throw new IOException("The provided ID does not look like a PDB ID : " + pdbId);
 
 		// decide whether download is required
-		File existing =  getLocalFile(pdbId);
-		switch(fetchBehavior) {
-		case LOCAL_ONLY:
-			if( existing == null ) {
-				throw new IOException(String.format("Structure %s not found in %s "
-						+ "and configured not to download.",pdbId,getPath()));
-			} else {
-				return existing;
-			}
-		case FETCH_FILES:
-			// Use existing if present
-			if( existing != null) {
-				return existing;
-			}
-			// existing is null, downloadStructure(String,String,boolean,File) will download it
-			break;
-		case FETCH_IF_OUTDATED:
-			// here existing can be null or not:
-			// existing == null : downloadStructure(String,String,boolean,File) will download it
-			// existing != null : downloadStructure(String,String,boolean,File) will check its date and download if older
-			break;
-		case FETCH_REMEDIATED:
-			// Use existing if present and recent enough
-			if( existing != null) {
-				long lastModified = existing.lastModified();
-
-				if (lastModified < LAST_REMEDIATION_DATE) {
-					// the file is too old, replace with newer version
-					logger.warn("Replacing file {} with latest remediated (remediation of {}) file from PDB.",
-							existing, LAST_REMEDIATION_DATE_STRING);
-					existing = null;
-					break;
-				} else {
-					return existing;
-				}
-			}
-		case FORCE_DOWNLOAD:
-			// discard the existing file to force redownload
-			existing = null; // downloadStructure(String,String,boolean,File) will download it
-			break;
-		}
+//		File existing =  getLocalFile(pdbId);
+//		switch(fetchBehavior) {
+//		case LOCAL_ONLY:
+//			if( existing == null ) {
+//				throw new IOException(String.format("Structure %s not found in %s "
+//						+ "and configured not to download.",pdbId,getPath()));
+//			} else {
+//				return existing;
+//			}
+//		case FETCH_FILES:
+//			// Use existing if present
+//			if( existing != null) {
+//				return existing;
+//			}
+//			// existing is null, downloadStructure(String,String,boolean,File) will download it
+//			break;
+//		case FETCH_IF_OUTDATED:
+//			// here existing can be null or not:
+//			// existing == null : downloadStructure(String,String,boolean,File) will download it
+//			// existing != null : downloadStructure(String,String,boolean,File) will check its date and download if older
+//			break;
+//		case FETCH_REMEDIATED:
+//			// Use existing if present and recent enough
+//			if( existing != null) {
+//				long lastModified = existing.lastModified();
+//
+//				if (lastModified < LAST_REMEDIATION_DATE) {
+//					// the file is too old, replace with newer version
+//					logger.warn("Replacing file {} with latest remediated (remediation of {}) file from PDB.",
+//							existing, LAST_REMEDIATION_DATE_STRING);
+//					existing = null;
+//					break;
+//				} else {
+//					return existing;
+//				}
+//			}
+//		case FORCE_DOWNLOAD:
+//			// discard the existing file to force redownload
+//			existing = null; // downloadStructure(String,String,boolean,File) will download it
+//			break;
+//		}
 
 		// Force the download now
 		if(obsoleteBehavior == ObsoleteBehavior.FETCH_CURRENT) {
@@ -489,12 +479,12 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 				// either an error or there is not current entry
 				current = pdbId;
 			}
-			return downloadStructure(current, splitDirURL,false, existing);
+			return downloadStructure(current, splitDirURL,false);
 		} else if(obsoleteBehavior == ObsoleteBehavior.FETCH_OBSOLETE
 				&& PDBStatus.getStatus(pdbId) == Status.OBSOLETE) {
-			return downloadStructure(pdbId, obsoleteDirURL, true, existing);
+			return downloadStructure(pdbId, obsoleteDirURL, true);
 		} else {
-			return downloadStructure(pdbId, splitDirURL, false, existing);
+			return downloadStructure(pdbId, splitDirURL, false);
 		}
 	}
 
@@ -508,45 +498,43 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	 * @return
 	 * @throws IOException
 	 */
-	private File downloadStructure(String pdbId, String pathOnServer, boolean obsolete, File existingFile)
-			throws IOException{
+	private InputStream downloadStructure(String pdbId, String pathOnServer, boolean obsolete) throws IOException{
 
-		File dir = getDir(pdbId,obsolete);
-		File realFile = new File(dir,getFilename(pdbId));
+//		File dir = getDir(pdbId,obsolete);
+//		File realFile = new File(dir,getFilename(pdbId));
 
 		String ftp;
 
 		if (getFilename(pdbId).endsWith(".mmtf.gz")){
 			ftp = CodecUtils.getMmtfEntryUrl(pdbId, true, false);
 		} else {
-			ftp = String.format("%s%s/%s/%s",
-			serverName, pathOnServer, pdbId.substring(1,3).toLowerCase(), getFilename(pdbId));
+			ftp = String.format("%s%s/%s/%s", serverName, pathOnServer, pdbId.substring(1,3).toLowerCase(), getFilename(pdbId));
 		}
 
 		URL url = new URL(ftp);
 
-		Date serverFileDate;
-		if (existingFile!=null) {
+//		Date serverFileDate;
+//		if (existingFile!=null) {
+//
+//			serverFileDate = getLastModifiedTime(url);
+//
+//			if (serverFileDate!=null) {
+//				if (existingFile.lastModified()>=serverFileDate.getTime()) {
+//					return existingFile;
+//				} else {
+//					// otherwise we go ahead and download, warning about it first
+//					logger.warn("File {} is outdated, will download new one from PDB (updated on {})",
+//							existingFile, serverFileDate.toString());
+//				}
+//			} else {
+//				logger.warn("Could not determine if file {} is outdated (could not get timestamp from server). Will force redownload", existingFile);
+//			}
+//		}
 
-			serverFileDate = getLastModifiedTime(url);
+//		logger.info("Fetching " + ftp);
+//		logger.info("Writing to "+ realFile);
 
-			if (serverFileDate!=null) {
-				if (existingFile.lastModified()>=serverFileDate.getTime()) {
-					return existingFile;
-				} else {
-					// otherwise we go ahead and download, warning about it first
-					logger.warn("File {} is outdated, will download new one from PDB (updated on {})",
-							existingFile, serverFileDate.toString());
-				}
-			} else {
-				logger.warn("Could not determine if file {} is outdated (could not get timestamp from server). Will force redownload", existingFile);
-			}
-		}
-
-		logger.info("Fetching " + ftp);
-		logger.info("Writing to "+ realFile);
-
-		FileDownloadUtils.downloadFile(url, realFile);
+		return FileDownloadUtils.downloadStream(url, 60000);
 
 		// Commented out following code used for setting the modified date to the downloaded file - JD 2015-01-15
 		// The only reason to have it was in order to get an rsync-like behavior, respecting the timestamps
@@ -563,7 +551,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 		//}
 
 
-		return realFile;
+//		return realFile;
 	}
 
 	/**

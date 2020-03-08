@@ -35,6 +35,7 @@ import org.biojava.nbio.core.sequence.location.template.Location;
 import org.biojava.nbio.core.sequence.template.AbstractSequence;
 import org.biojava.nbio.core.sequence.template.CompoundSet;
 import org.biojava.nbio.core.sequence.template.ProxySequenceReader;
+import org.biojava.nbio.core.util.FileDownloadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -158,7 +159,7 @@ public class ProteinSequence extends AbstractSequence<AminoAcidCompound> {
 
 		logger.trace("Getting parent DNA sequence from URL: {}", url.toString());
 
-		InputStream is = url.openConnection().getInputStream();
+		InputStream is = FileDownloadUtils.downloadStream(url, 60000); //url.openConnection().getInputStream();
 
 		FastaReader<DNASequence, NucleotideCompound> parentReader
 				= new FastaReader<>(is,

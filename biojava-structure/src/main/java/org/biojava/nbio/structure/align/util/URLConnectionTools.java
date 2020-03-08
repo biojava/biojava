@@ -27,13 +27,13 @@
 
 package org.biojava.nbio.structure.align.util;
 
+import org.biojava.nbio.core.util.FileDownloadUtils;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.zip.GZIPInputStream;
-
 
 
 /**
@@ -90,7 +90,7 @@ public class URLConnectionTools {
 	 */
 	public static InputStream getInputStream(URL url, int timeout) throws IOException
 	{
-		return getInputStream(url,true, timeout);
+		return FileDownloadUtils.downloadStream(url, timeout);
 	}
 
 
@@ -106,40 +106,7 @@ public class URLConnectionTools {
 	 */
 	public static InputStream getInputStream(URL url) throws IOException
 	{
-		return getInputStream(url,true, DEFAULT_CONNECTION_TIMEOUT);
-	}
-
-	/**
-	 * Open a URL and return an InputStream to it
-	 * if acceptGzipEncoding == true, use GZIPEncoding to
-	 * compress communication.
-	 * <p>
-	 * The caller is responsible to close the returned InputStream not to cause
-	 * resource leaks.
-	 * @param url the input URL to be read
-	 * @param acceptGzipEncoding whether to accept Gzip encoding
-	 * @param timeout
-	 * @return an {@link InputStream} of response
-	 * @throws IOException due to an error opening the URL
-	 */
-	public static InputStream getInputStream(URL url, boolean acceptGzipEncoding, int timeout) throws IOException {
-		InputStream inStream;
-		URLConnection huc = URLConnectionTools.openURLConnection(url,timeout);
-
-		if ( acceptGzipEncoding) huc.setRequestProperty("Accept-Encoding", "gzip");
-
-		String contentEncoding = huc.getContentEncoding();
-
-		inStream = huc.getInputStream();
-
-		if (contentEncoding != null) {
-			if (contentEncoding.contains("gzip")) {
-				inStream = new GZIPInputStream(inStream);
-			}
-		}
-
-		return inStream;
-
+		return FileDownloadUtils.downloadStream(url, DEFAULT_CONNECTION_TIMEOUT);
 	}
 
 	/**

@@ -154,9 +154,8 @@ public class StructureIO {
 	 * @param pdbId
 	 * @return a Structure object or null if that assembly is not available
 	 * @throws StructureException
-	 * @throws IOException
 	 */
-	public static Structure getBiologicalAssembly(String pdbId) throws IOException, StructureException{
+	public static Structure getBiologicalAssembly(String pdbId) throws StructureException{
 		return getBiologicalAssembly(pdbId, AtomCache.DEFAULT_BIOASSEMBLY_STYLE);
 	}
 

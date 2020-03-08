@@ -388,8 +388,7 @@ public class MultiThreadedDBSearch {
 		}
 
 		if ( domainProvider instanceof RemoteDomainProvider ) {
-			RemoteDomainProvider remoteP = (RemoteDomainProvider) domainProvider;
-			remoteP.flushCache();
+			((RemoteDomainProvider) domainProvider).flushCache();
 		}
 
 		logger.info("done checking local files...");
@@ -397,15 +396,15 @@ public class MultiThreadedDBSearch {
 	}
 
 
-	private void checkFile(String repre) throws IOException, StructureException {
+	@Deprecated private void checkFile(String repre) throws IOException, StructureException {
 
-		StructureName name = new StructureName(repre);
-
-		PDBFileReader reader = new PDBFileReader();
-		reader.setFetchBehavior(FetchBehavior.FETCH_REMEDIATED);
-		reader.setPath(cache.getPath());
-		reader.setFileParsingParameters(cache.getFileParsingParams());
-		reader.prefetchStructure(name.getPdbId());
+//		StructureName name = new StructureName(repre);
+//
+//		PDBFileReader reader = new PDBFileReader();
+//		reader.setFetchBehavior(FetchBehavior.FETCH_REMEDIATED);
+//		reader.setPath(cache.getPath());
+//		reader.setFileParsingParameters(cache.getFileParsingParams());
+//		reader.prefetchStructure(name.getPdbId());
 	}
 
 

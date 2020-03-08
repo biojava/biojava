@@ -624,8 +624,7 @@ public class AtomCache {
 	 */
 	public Structure getStructureForDomain(String scopId, ScopDatabase scopDatabase) throws IOException,
 			StructureException {
-		ScopDomain domain = scopDatabase.getDomainByScopID(scopId);
-		return getStructureForDomain(domain, scopDatabase);
+		return getStructureForDomain(scopDatabase.getDomainByScopID(scopId), scopDatabase);
 	}
 
 	/**
@@ -643,11 +642,9 @@ public class AtomCache {
 
 		// todo: use a SCOP implementation that is backed by SerializableCache
 		ScopDatabase scopInstallation = ScopFactory.getSCOP();
-		if (scopInstallation != null) {
-			if (scopInstallation instanceof CachedRemoteScopInstallation) {
-				CachedRemoteScopInstallation cacheScop = (CachedRemoteScopInstallation) scopInstallation;
-				cacheScop.flushCache();
-			}
+		if (scopInstallation instanceof CachedRemoteScopInstallation) {
+			CachedRemoteScopInstallation cacheScop = (CachedRemoteScopInstallation) scopInstallation;
+			cacheScop.flushCache();
 		}
 
 	}
