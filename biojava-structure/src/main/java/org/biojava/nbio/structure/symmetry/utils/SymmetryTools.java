@@ -520,7 +520,7 @@ public class SymmetryTools {
 
 			List<Group> ligands = StructureTools.getLigandsByProximity(
 					allGroups,
-					repeat.toArray(new Atom[0]),
+					repeat.toArray(Atom.EmptyAtomArray),
 					StructureTools.DEFAULT_LIGAND_PROXIMITY_CUTOFF);
 
 			logger.warn("Adding {} ligands to {}",ligands.size(), symmetry.getMultipleAlignment().getStructureIdentifier(i));
@@ -783,8 +783,8 @@ public class SymmetryTools {
 					}
 				}
 
-				Atom[] arr1 = list1.toArray(new Atom[0]);
-				Atom[] arr2 = list2.toArray(new Atom[0]);
+				Atom[] arr1 = list1.toArray(Atom.EmptyAtomArray);
+				Atom[] arr2 = list2.toArray(Atom.EmptyAtomArray);
 
 				// Calculate the new transformation information
 				if (arr1.length > 0 && arr2.length > 0) {
@@ -850,7 +850,7 @@ public class SymmetryTools {
 					atomList.addAll(Arrays.asList(StructureTools
 							.getRepresentativeAtomArray(c)));
 			}
-			return atomList.toArray(new Atom[0]);
+			return atomList.toArray(Atom.EmptyAtomArray);
 		}
 
 	}

@@ -415,7 +415,7 @@ public class DisplayAFP {
 			atoms.add(a);
 		}
 
-		Atom[] arr = atoms.toArray(new Atom[0]);
+		Atom[] arr = atoms.toArray(Atom.EmptyAtomArray);
 
 		return arr;
 	}
@@ -436,7 +436,7 @@ public class DisplayAFP {
 			Atom a = g.getAtom(0);
 			twistedAs.add(a);
 		}
-		Atom[] twistedAtoms = twistedAs.toArray(new Atom[0]);
+		Atom[] twistedAtoms = twistedAs.toArray(Atom.EmptyAtomArray);
 		twistedAtoms = StructureTools.cloneAtomArray(twistedAtoms);
 
 		Atom[] arr1 = getAtomArray(ca1, hetatms1);
@@ -560,7 +560,7 @@ public class DisplayAFP {
 			Atom a = g.getAtom(0);
 			twistedAs.add(a);
 		}
-		Atom[] twistedAtoms = twistedAs.toArray(new Atom[0]);
+		Atom[] twistedAtoms = twistedAs.toArray(Atom.EmptyAtomArray);
 
 		List<Group> hetatms  = StructureTools.getUnalignedGroups(ca1);
 		List<Group> hetatms2 = StructureTools.getUnalignedGroups(ca2);

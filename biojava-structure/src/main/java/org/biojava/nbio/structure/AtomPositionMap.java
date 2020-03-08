@@ -144,9 +144,9 @@ public class AtomPositionMap {
 			Group group = atoms[i].getGroup();
 			ResidueNumber rn = group.getResidueNumber();
 			if (matcher.matches(group)) {
-				if (!hashMap.containsKey(rn)) {
-					hashMap.put(rn, i);
-				}
+				//if (!hashMap.containsKey(rn)) {
+				hashMap.putIfAbsent(rn, i);
+				//}
 			}
 		}
 		Comparator<ResidueNumber> vc = new ValueComparator<>(hashMap);
@@ -205,11 +205,7 @@ public class AtomPositionMap {
 	 */
 	public int getLengthDirectional(int positionStart, int positionEnd, String startingChain) {
 		int count = getLength(positionStart,positionEnd,startingChain);
-		if(positionStart <= positionEnd) {
-			return count;
-		} else {
-			return -count;
-		}
+		return positionStart <= positionEnd ? count : -count;
 	}
 
 	/**
@@ -287,8 +283,9 @@ public class AtomPositionMap {
 	public ResidueNumber getFirst(String chainId) {
 		Map.Entry<ResidueNumber,Integer> entry = treeMap.firstEntry();
 		while (true) {
-			if (entry.getKey().getChainName().equals(chainId)) return entry.getKey();
-			entry = treeMap.higherEntry(entry.getKey());
+			ResidueNumber k = entry.getKey();
+			if (k.getChainName().equals(chainId)) return k;
+			entry = treeMap.higherEntry(k);
 			if (entry == null) return null;
 		}
 	}
@@ -300,8 +297,9 @@ public class AtomPositionMap {
 	public ResidueNumber getLast(String chainId) {
 		Map.Entry<ResidueNumber,Integer> entry = treeMap.lastEntry();
 		while (true) {
-			if (entry.getKey().getChainName().equals(chainId)) return entry.getKey();
-			entry = treeMap.lowerEntry(entry.getKey());
+			ResidueNumber k = entry.getKey();
+			if (k.getChainName().equals(chainId)) return k;
+			entry = treeMap.lowerEntry(k);
 			if (entry == null) return null;
 		}
 	}
@@ -331,16 +329,20 @@ public class AtomPositionMap {
 		for (ResidueNumber rn : treeMap.keySet()) {
 			if (!rn.getChainName().equals(currentChain)) {
 				if (first != null) {
-					ResidueRangeAndLength newRange = new ResidueRangeAndLength(currentChain, first, prev, this.getLength(first, prev));
-					ranges.add(newRange);
+					ranges.add(new ResidueRangeAndLength(
+							currentChain, first, prev,
+							getLength(first, prev)));
 				}
 				first = rn;
 			}
 			prev = rn;
 			currentChain = rn.getChainName();
 		}
-		ResidueRangeAndLength newRange = new ResidueRangeAndLength(currentChain, first, prev, this.getLength(first, prev));
-		ranges.add(newRange);
+
+		ranges.add(new ResidueRangeAndLength(
+				currentChain, first, prev,
+				getLength(first, prev)));
+
 		return ranges;
 	}
 

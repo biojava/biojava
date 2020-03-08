@@ -54,8 +54,7 @@ public class AFPTwister {
 	 *
 	 * @return twisted Groups
 	 */
-	public static Group[] twistPDB(AFPChain afpChain, Atom[] ca1, Atom[] ca2)
-			throws StructureException {
+	public static Group[] twistPDB(AFPChain afpChain, Atom[] ca1, Atom[] ca2) {
 		// --------------------------------------------------------
 
 		if (afpChain.isShortAlign())
@@ -306,7 +305,7 @@ public class AFPTwister {
 			}
 			atoms.add(a);
 		}
-		return atoms.toArray(new Atom[0]);
+		return atoms.toArray(Atom.EmptyAtomArray);
 	}
 
 	/**

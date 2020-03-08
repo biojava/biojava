@@ -285,8 +285,7 @@ public class StructureAlignmentOptimizer
 	}
 
 
-	private void optimize(int maxi) throws StructureException
-	{
+	private void optimize(int maxi) {
 		long optStart = System.currentTimeMillis();
 		if ( debug)
 			System.out.println("Optimizing up to " + maxi + " iterations.. ");

@@ -36,7 +36,7 @@ public class StructureIO {
 
 	//private static final Logger logger = LoggerFactory.getLogger(StructureIO.class);
 
-	@Deprecated private static ThreadLocal<AtomCache> caches = ThreadLocal.withInitial(()->null) ;
+	@Deprecated private static final ThreadLocal<AtomCache> caches = ThreadLocal.withInitial(()->null) ;
 
 
 	/**

@@ -82,6 +82,8 @@ public class Matrix implements Cloneable, java.io.Serializable {
 
 	 static final long serialVersionUID = 8492558293015348719L;
 
+	public static final Matrix[] EmptyMatrixArray = new Matrix[0];
+
 
 /* ------------------------
 	Class variables

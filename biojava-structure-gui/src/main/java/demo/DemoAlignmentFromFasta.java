@@ -121,7 +121,7 @@ public class DemoAlignmentFromFasta {
 	}
 
 
-	public static void main(String[] args) throws StructureException {
+	public static void main(String[] args) {
 		getAlignmentFromFasta();
 	}
 }

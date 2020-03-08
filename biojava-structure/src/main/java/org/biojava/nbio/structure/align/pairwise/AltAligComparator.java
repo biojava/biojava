@@ -37,31 +37,32 @@ public class AltAligComparator implements Comparator<AlternativeAlignment>, Seri
 
 	public AltAligComparator() {
 		super();
-
 	}
 
 	@Override
 	public int compare(AlternativeAlignment a, AlternativeAlignment b) {
+		if (a==b) return 0;
 
 		int s1 = a.getIdx1().length;
 		int s2 = b.getIdx1().length;
 
 		if ( s1 > s2)
 			return 1;
-		if ( s1 < s2)
+		else if ( s1 < s2)
 			return -1;
+		else {
 
-		// seem to have the same length
+			double rms1 = a.getRmsd();
+			double rms2 = b.getRmsd();
+			return Double.compare(rms1, rms2);
 
-		double rms1 = a.getRmsd();
-		double rms2 = b.getRmsd();
-
-		if ( rms1 < rms2)
-			return 1;
-		if ( rms1 < rms2)
-			return -1;
-
-		return 0;
+//			if (rms1 < rms2)
+//				return 1;
+//			if (rms1 < rms2)
+//				return -1;
+//
+//			return 0;
+		}
 	}
 
 

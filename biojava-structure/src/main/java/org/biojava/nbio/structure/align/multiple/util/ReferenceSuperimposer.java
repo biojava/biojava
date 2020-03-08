@@ -142,8 +142,8 @@ public class ReferenceSuperimposer implements MultipleSuperimposer {
 						atomSet2.add(curr[pos2]);
 					}
 				}
-				Atom[] array1 = atomSet1.toArray(new Atom[0]);
-				Atom[] array2 = atomSet2.toArray(new Atom[0]);
+				Atom[] array1 = atomSet1.toArray(Atom.EmptyAtomArray);
+				Atom[] array2 = atomSet2.toArray(Atom.EmptyAtomArray);
 
 				array2 = StructureTools.cloneAtomArray(array2);
 

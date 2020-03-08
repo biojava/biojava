@@ -26,10 +26,9 @@ import org.biojava.nbio.genome.parsers.genename.GeneChromosomePosition;
 import org.biojava.nbio.genome.parsers.genename.GeneChromosomePositionParser;
 import org.biojava.nbio.genome.util.ChromosomeMappingTools;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
-import java.io.InputStream;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -43,13 +42,24 @@ public class TestGenomeMapping {
 
 	private static final String geneChromosomeFile = "http://cdn.rcsb.org/gene/hg38/geneChromosome38.tsf.gz";
 
-	private List<GeneChromosomePosition> gcps = null;
+	private static final List<GeneChromosomePosition> gcps;
 
-	@Before
-	public void setUp() throws Exception {
-		InputStream input = new GZIPInputStream(new URL(geneChromosomeFile).openStream());
-		gcps = GeneChromosomePositionParser.getChromosomeMappings(input);
+	static {
+		List<GeneChromosomePosition> g;
+		try {
+			g = GeneChromosomePositionParser.getChromosomeMappings(
+					new GZIPInputStream(new URL(geneChromosomeFile).openStream()));
+		} catch (IOException e) {
+			e.printStackTrace();
+			g = null;
+		}
+		gcps = g;
 	}
+
+//	@Before
+//	public void setUp() throws Exception {
+//
+//	}
 
 	@Test
 	public void testAK1() {

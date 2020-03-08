@@ -293,7 +293,7 @@ public class TestSubunitCluster {
 				atoms.add(a);
 			}
 		}
-		return atoms.toArray(new Atom[0]);
+		return atoms.toArray(Atom.EmptyAtomArray);
 	}
 
 	/**

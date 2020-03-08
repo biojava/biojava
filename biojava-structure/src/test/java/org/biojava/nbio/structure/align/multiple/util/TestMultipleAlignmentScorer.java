@@ -47,7 +47,7 @@ import static org.junit.Assert.assertEquals;
 public class TestMultipleAlignmentScorer {
 
 	@Test
-	public void testRefRMSD() throws Exception{
+	public void testRefRMSD() {
 
 		//Identity Test: RefRMSD has to be equal to 0.0
 		MultipleAlignment identMSA = identityMSTA();
@@ -66,7 +66,7 @@ public class TestMultipleAlignmentScorer {
 	}
 
 	@Test
-	public void testRMSD() throws Exception{
+	public void testRMSD() {
 
 		//Identity Test: RMSD has to be equal to 0.0
 		MultipleAlignment identMSA = identityMSTA();
@@ -123,7 +123,7 @@ public class TestMultipleAlignmentScorer {
 	}
 
 	@Test
-	public void testMCScore() throws Exception {
+	public void testMCScore() {
 
 		//Identity Test: MultipleMC-Score has to be equal to 576.21
 		MultipleAlignment identMSA = identityMSTA();

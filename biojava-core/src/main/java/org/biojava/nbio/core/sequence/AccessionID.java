@@ -93,6 +93,7 @@ public class AccessionID {
 
 	@Override
 	public boolean equals(Object o) {
+		if (this == o) return true;
 		boolean equals = false;
 		if (Equals.classEqual(this, o)) {
 			AccessionID l = (AccessionID) o;

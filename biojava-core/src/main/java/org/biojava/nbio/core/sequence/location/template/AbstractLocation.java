@@ -260,8 +260,7 @@ public abstract class AbstractLocation implements Serializable, Location {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
+		if (this == obj) return true;
 
 		boolean equals = false;
 		if (classEqual(this, obj)) {

@@ -161,10 +161,9 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
 	 * @param smithWaterman pairwise Sequence aligner
 	 * @param pair The sequence alignment calculated by aligner
 	 * @return an AFPChain encapsulating the alignment in aligPair
-	 * @throws StructureException
 	 */
 	private AFPChain convert(Atom[] ca1, Atom[] ca2,  SequencePair<ProteinSequence,
-			AminoAcidCompound> pair, PairwiseSequenceAligner<ProteinSequence, AminoAcidCompound> smithWaterman) throws StructureException {
+			AminoAcidCompound> pair, PairwiseSequenceAligner<ProteinSequence, AminoAcidCompound> smithWaterman) {
 		AFPChain afpChain = new AFPChain(algorithmName);
 		int ca1Length = ca1.length;
 		int ca2Length = ca2.length;

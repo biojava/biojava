@@ -35,6 +35,7 @@ import org.biojava.nbio.structure.io.LocalPDBDirectory.ObsoleteBehavior;
 import org.biojava.nbio.structure.io.MMCIFFileReader;
 import org.biojava.nbio.structure.io.MMTFFileReader;
 import org.biojava.nbio.structure.io.PDBFileReader;
+import org.biojava.nbio.structure.quaternary.BioAssemblyInfo;
 import org.biojava.nbio.structure.quaternary.BiologicalAssemblyBuilder;
 import org.biojava.nbio.structure.quaternary.BiologicalAssemblyTransformation;
 import org.biojava.nbio.structure.scop.*;
@@ -183,19 +184,8 @@ public class AtomCache {
 		return getAtoms(new StructureName(name));
 	}
 	public Atom[] getAtoms(StructureIdentifier name) throws IOException, StructureException {
-
-		Atom[] atoms;
-
 		// System.out.println("loading " + name);
-		Structure s = getStructure(name);
-
-		atoms = StructureTools.getAtomCAArray(s);
-
-		/*
-		 * synchronized (cache){ cache.put(name, atoms); }
-		 */
-
-		return atoms;
+		return StructureTools.getAtomCAArray(getStructure(name));
 	}
 	/**
 	 * Returns the representative atoms for the provided name.
@@ -212,18 +202,7 @@ public class AtomCache {
 	}
 
 	public Atom[] getRepresentativeAtoms(StructureIdentifier name) throws IOException, StructureException {
-
-		Atom[] atoms;
-
-		Structure s = getStructure(name);
-
-		atoms = StructureTools.getRepresentativeAtomArray(s);
-
-		/*
-		 * synchronized (cache){ cache.put(name, atoms); }
-		 */
-
-		return atoms;
+		return StructureTools.getRepresentativeAtomArray(getStructure(name));
 	}
 
 	/**
@@ -271,7 +250,7 @@ public class AtomCache {
 
 		// 0 ... asym unit
 		if ( bioAssemblyId == 0) {
-			logger.info("Requested biological assembly 0 for PDB id "+pdbId+", returning asymmetric unit");
+			logger.info("Requested biological assembly 0 for PDB id {} returning asymmetric unit", pdbId);
 			return asymUnit;
 		}
 		// does it exist?
@@ -315,15 +294,16 @@ public class AtomCache {
 	 */
 	public Structure getBiologicalAssembly(String pdbId, boolean multiModel) throws StructureException, IOException {
 
-		boolean prevIsParseBioAssembly = getFileParsingParams().isParseBioAssembly();
+		FileParsingParameters params = getFileParsingParams();
+		boolean prevIsParseBioAssembly = params.isParseBioAssembly();
 
-		if (!getFileParsingParams().isParseBioAssembly()) {
-			getFileParsingParams().setParseBioAssembly(true);
+		if (!params.isParseBioAssembly()) {
+			params.setParseBioAssembly(true);
 		}
 
 		Structure asymUnit = getStructureForPdbId(pdbId);
 
-		getFileParsingParams().setParseBioAssembly(prevIsParseBioAssembly);
+		params.setParseBioAssembly(prevIsParseBioAssembly);
 
 
 		if (asymUnit.getPDBHeader() == null || asymUnit.getPDBHeader().getBioAssemblies()==null) {
@@ -383,32 +363,30 @@ public class AtomCache {
 		getFileParsingParams().setParseBioAssembly(prevIsParseBioAssembly);
 
 
-		if (asymUnit.getPDBHeader() == null || asymUnit.getPDBHeader().getBioAssemblies()==null) {
+		Map<Integer, BioAssemblyInfo> basms = asymUnit.getPDBHeader().getBioAssemblies();
+		if (asymUnit.getPDBHeader() == null || basms ==null) {
 			logger.info("No bioassembly information found for {}, returning asymmetric unit as the only biological assembly", pdbId);
 			assemblies.add(asymUnit);
 			return assemblies;
 		}
 
 
-		for (int bioAssemblyId : asymUnit.getPDBHeader().getBioAssemblies().keySet()) {
+		for (Map.Entry<Integer,BioAssemblyInfo> e : basms.entrySet()) {
 			List<BiologicalAssemblyTransformation> transformations =
-					asymUnit.getPDBHeader().getBioAssemblies().get(bioAssemblyId).getTransforms();
+					e.getValue().getTransforms(); //assemblies.get(bioAssemblyId).getTransforms();
 
 
 			if ( transformations == null || transformations.size() == 0){
-
-				logger.info("Could not load transformations to recreate biological assembly id " + bioAssemblyId + " of " + pdbId+". Assembly id will be missing in biological assemblies.");
+				if (logger.isInfoEnabled())
+					logger.info("Could not load transformations to recreate biological assembly id " + assemblies + " of " + pdbId+". Assembly id will be missing in biological assemblies.");
 				continue;
 			}
 
-			BiologicalAssemblyBuilder builder = new BiologicalAssemblyBuilder();
-
 			// if we use mmcif or mmtf, then we need to pass useAsymIds=true
-			boolean useAsymIds = false;
-			if (useMmCif) useAsymIds = true;
-			if (useMmtf) useAsymIds = true;
-			Structure s = builder.rebuildQuaternaryStructure(asymUnit, transformations, useAsymIds, multiModel);
-			assemblies.add(s);
+			assemblies.add(new BiologicalAssemblyBuilder()
+					.rebuildQuaternaryStructure(
+						asymUnit, transformations,
+						useMmCif || useMmtf, multiModel));
 		}
 		return assemblies;
 	}
@@ -488,9 +466,7 @@ public class AtomCache {
 	 *             errors, eg for poorly formatted subranges.
 	 */
 	public Structure getStructure(String name) throws IOException, StructureException {
-		StructureName structureName = new StructureName(name);
-
-		return getStructure(structureName);
+		return getStructure(new StructureName(name));
 	}
 
 	/**
@@ -852,10 +828,9 @@ public class AtomCache {
 	 * Loads a structure directly by PDB ID
 	 * @param pdbId
 	 * @return
-	 * @throws IOException
 	 * @throws StructureException
 	 */
-	public Structure getStructureForPdbId(String pdbId) throws IOException, StructureException {
+	public Structure getStructureForPdbId(String pdbId) throws StructureException {
 
 		if(pdbId == null)
 			return null;

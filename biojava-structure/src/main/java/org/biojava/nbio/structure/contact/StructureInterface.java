@@ -310,7 +310,7 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 			atoms.add(a);
 
 		}
-		return atoms.toArray(new Atom[0]);
+		return atoms.toArray(Atom.EmptyAtomArray);
 	}
 
 	/**

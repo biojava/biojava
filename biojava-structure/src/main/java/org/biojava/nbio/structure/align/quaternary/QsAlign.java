@@ -250,8 +250,8 @@ public class QsAlign {
 			MultipleAlignment msa = new MultipleAlignmentImpl();
 			msa.setEnsemble(new MultipleAlignmentEnsembleImpl());
 			msa.getEnsemble().setAtomArrays(
-					Arrays.asList(atomArray1.toArray(new Atom[0]),
-							atomArray2.toArray(new Atom[0])));
+					Arrays.asList(atomArray1.toArray(Atom.EmptyAtomArray),
+							atomArray2.toArray(Atom.EmptyAtomArray)));
 
 			// Fill in the alignment information
 			BlockSet bs = new BlockSetImpl(msa);
@@ -331,8 +331,8 @@ public class QsAlign {
 
 		}
 		return new Pair<>(
-				atomArray1.toArray(new Atom[0]),
-				atomArray2.toArray(new Atom[0]));
+				atomArray1.toArray(Atom.EmptyAtomArray),
+				atomArray2.toArray(Atom.EmptyAtomArray));
 	}
 
 	/**

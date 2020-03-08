@@ -126,10 +126,9 @@ public class CeCalculatorEnhanced {
 	 * @param ca1
 	 * @param ca2
 	 * @return afpChain
-	 * @throws StructureException
 	 */
 	public AFPChain extractFragments(AFPChain afpChain,
-			Atom[] ca1, Atom[] ca2) throws StructureException{
+			Atom[] ca1, Atom[] ca2) {
 
 		int nse1 = ca1.length;
 		int nse2 = ca2.length;
@@ -1260,7 +1259,7 @@ nBestTrace=nTrace;
 	// TODO:  consider all requested Atoms?
 	private double getRMSDForBestTrace(int ir, Atom[] strBuf1, Atom[] strBuf2,
 			int[] bestTracesN2, int[][] bestTraces12, int[] bestTrace22,
-			int winSize,Atom[] ca1, Atom[] ca2 ) throws StructureException {
+			int winSize,Atom[] ca1, Atom[] ca2 ) {
 		int is=0;
 		for(int jt=0; jt<bestTracesN[ir]; jt++) {
 			for(int i=0; i<winSize; i++) {
@@ -1284,7 +1283,7 @@ nBestTrace=nTrace;
 	/** calc initial RMSD for bestTrace1 in debug only
 	 *
 	 */
-	private void checkPrintRmsdNew(int traceMaxSize, int winSize, Atom[] ca1, Atom[] ca2) throws StructureException{
+	private void checkPrintRmsdNew(int traceMaxSize, int winSize, Atom[] ca1, Atom[] ca2) {
 
 		int is = 0;
 		// calc initial RMSD for bestTrace1
@@ -1332,7 +1331,7 @@ nBestTrace=nTrace;
 
 
 	private int optimizeSuperposition(AFPChain afpChain, int nse1, int nse2, int strLen, double rmsd, Atom[] ca1, Atom[] ca2,int nGaps,
-			Atom[] strBuf1, Atom[] strBuf2 ) throws StructureException {
+			Atom[] strBuf1, Atom[] strBuf2 ) {
 
 		//System.out.println("optimizing Superimposition...");
 
@@ -2020,7 +2019,7 @@ nBestTrace=nTrace;
 			}
 			atoms.add(a);
 		}
-		return atoms.toArray(new Atom[0]);
+		return atoms.toArray(Atom.EmptyAtomArray);
 	}
 
 
@@ -2203,21 +2202,14 @@ nBestTrace=nTrace;
 
 		afpChain.setBlockNum(1);
 		//afpChain.setAlignScore(z);
-		Matrix[] m ;
-
-		if ( r != null ) {
-			m = new Matrix[1];
-			m[0] = r;
-		} else  {
-			m = new Matrix[0];
-		}
+		Matrix[] m = r != null ? new Matrix[]{r} : Matrix.EmptyMatrixArray;
 
 		Atom[] as ;
 		if ( t != null) {
 			as = new Atom[1];
 			as[0] = t;
 		} else {
-			as = new Atom[0];
+			as = Atom.EmptyAtomArray;
 		}
 
 		afpChain.setBlockRotationMatrix(m);

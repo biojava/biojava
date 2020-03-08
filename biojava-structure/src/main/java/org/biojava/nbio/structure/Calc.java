@@ -445,8 +445,7 @@ public class Calc {
 		double z = atom.getZ();
 		double[][] ad = new double[][]{{x,y,z}};
 
-		Matrix am = new Matrix(ad);
-		Matrix na = am.times(m);
+		Matrix na = new Matrix(ad).times(m);
 
 		atom.setX(na.get(0,0));
 		atom.setY(na.get(0,1));
@@ -468,9 +467,7 @@ public class Calc {
 		AtomIterator iter = new AtomIterator(group) ;
 
 		while (iter.hasNext()) {
-			Atom atom = iter.next() ;
-			rotate(atom,m);
-
+			rotate(iter.next(), m);
 		}
 
 	}

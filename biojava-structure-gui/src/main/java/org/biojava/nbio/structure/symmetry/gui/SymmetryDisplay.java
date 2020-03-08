@@ -244,7 +244,7 @@ public class SymmetryDisplay {
 			}
 
 			script += rot.getJmolScript(
-					repAtoms.toArray(new Atom[0]), id);
+					repAtoms.toArray(Atom.EmptyAtomArray), id);
 			id++;
 		}
 

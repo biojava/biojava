@@ -114,10 +114,11 @@ public interface Table {
 		}
 
 		@Override
-		public boolean equals(Object obj) {
+		public boolean equals(Object o) {
+			if (this == o) return true;
 			boolean equals = false;
-			if(Equals.classEqual(this, obj)) {
-				Codon casted = (Codon) obj;
+			if(Equals.classEqual(this, o)) {
+				Codon casted = (Codon) o;
 				equals =   Equals.equal(getTriplet(), casted.getTriplet()) &&
 							Equals.equal(isStart(), casted.isStart()) &&
 							Equals.equal(isStop(), casted.isStop()) &&
@@ -223,10 +224,11 @@ public interface Table {
 		}
 
 		@Override
-		public boolean equals(Object obj) {
+		public boolean equals(Object o) {
+			if (this == o) return true;
 			boolean equals = false;
-			if(Equals.classEqual(this, obj)) {
-				CaseInsensitiveTriplet casted = (CaseInsensitiveTriplet) obj;
+			if(Equals.classEqual(this, o)) {
+				CaseInsensitiveTriplet casted = (CaseInsensitiveTriplet) o;
 				return toString().equals(casted.toString());
 			}
 			return equals;

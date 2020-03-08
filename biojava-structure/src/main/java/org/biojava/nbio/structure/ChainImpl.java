@@ -429,12 +429,16 @@ public class ChainImpl implements Chain {
 	@Override
 	public Group getGroupByPDB(ResidueNumber resNum) throws StructureException {
 		String pdbresnum = resNum.toString();
-		if ( pdbResnumMap.containsKey(pdbresnum)) {
-			Integer pos = pdbResnumMap.get(pdbresnum);
+		Integer pos = pdbResnumMap.get(pdbresnum);
+		if ( pos!=null ) {
 			return groups.get(pos);
 		} else {
 			throw new StructureException("unknown PDB residue number " + pdbresnum + " in chain " + authId);
 		}
+	}
+
+	public boolean hasGroupByPDB(ResidueNumber resNum)  {
+		return pdbResnumMap.containsKey(resNum);
 	}
 
 	/**

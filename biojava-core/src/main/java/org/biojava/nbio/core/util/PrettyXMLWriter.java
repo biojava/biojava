@@ -238,9 +238,7 @@ public class PrettyXMLWriter implements XMLWriter {
 	}
 
 	@Override
-	public void println(String data)
-		throws IOException
-	{
+	public void println(String data) {
 	if (isOpeningTag) {
 		writer.println('>');
 		isOpeningTag = false;
@@ -251,9 +249,7 @@ public class PrettyXMLWriter implements XMLWriter {
 	}
 
 	@Override
-	public void print(String data)
-		throws IOException
-	{
+	public void print(String data) {
 	if (isOpeningTag) {
 		writer.print('>');
 		isOpeningTag = false;

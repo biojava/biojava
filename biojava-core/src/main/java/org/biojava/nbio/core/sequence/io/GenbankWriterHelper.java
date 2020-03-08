@@ -105,11 +105,10 @@ public class GenbankWriterHelper {
 	 *
 	 * @param outputStream
 	 * @param dnaSequences
-	 * @throws Exception
-	 */
+     */
 
 	public static void writeNucleotideSequence(OutputStream outputStream,
-			Collection<DNASequence> dnaSequences) throws Exception {
+			Collection<DNASequence> dnaSequences) {
 		writeNucleotideSequence(outputStream, dnaSequences, LINEAR_DNA);
 	}
 
@@ -153,10 +152,9 @@ public class GenbankWriterHelper {
 	 *
 	 * @param outputStream
 	 * @param sequence
-	 * @throws Exception
-	 */
+     */
 	public static void writeSequence(OutputStream outputStream,
-			Sequence<?> sequence) throws Exception {
+			Sequence<?> sequence) {
 		writeSequences(outputStream, singleSeqToCollection(sequence));
 	}
 

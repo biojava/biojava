@@ -545,7 +545,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 
 	@Override
 	public boolean equals(Object o){
-
+		if (this == o) return true;
 		if(! Equals.classEqual(this, o)) {
 			return false;
 		}

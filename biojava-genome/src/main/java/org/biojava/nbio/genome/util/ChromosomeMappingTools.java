@@ -586,9 +586,9 @@ public class ChromosomeMappingTools {
 	 * @return
 	 */
 	public static List<Range<Integer>> getChromosomalRangesForCDS(GeneChromosomePosition chromPos){
-		if ( chromPos.getOrientation() == '+')
-			return getCDSExonRangesForward(chromPos,CHROMOSOME);
-		return getCDSExonRangesReverse(chromPos,CHROMOSOME);
+		return chromPos.getOrientation() == '+' ?
+				getCDSExonRangesForward(chromPos, CHROMOSOME) :
+				getCDSExonRangesReverse(chromPos, CHROMOSOME);
 	}
 
 	private static List<Range<Integer>> getCDSExonRangesReverse(GeneChromosomePosition chromPos, String responseType) {
@@ -657,24 +657,17 @@ public class ChromosomeMappingTools {
 				}
 
 
-				Range<Integer> r ;
-				if ( responseType.equals(CDS))
-					r = Range.closed(0,codingLength);
-				else
-					r = Range.closed(tmpstart,cdsEnd);
 
-				data.add(r);
+				data.add(responseType.equals(CDS) ?
+						Range.closed(0, codingLength) :
+						Range.closed(tmpstart, cdsEnd));
 
 			} else if (start <= cdsStart && end >= cdsStart) {
 				inCoding = false;
 
-				Range<Integer> r;
-				if ( responseType.equals(CDS))
-					r = Range.closed(codingLength,codingLength+(end-cdsStart));
-				else
-					r = Range.closed(cdsStart+1,end);
-
-				data.add(r);
+				data.add(responseType.equals(CDS) ?
+						Range.closed(codingLength, codingLength + (end - cdsStart)) :
+						Range.closed(cdsStart + 1, end));
 
 				codingLength += (end - cdsStart);
 				if  (debug) {
@@ -685,12 +678,9 @@ public class ChromosomeMappingTools {
 				}
 			} else if (inCoding) {
 				// full exon is coding
-				Range<Integer> r;
-				if ( responseType.equals(CDS))
-					r = Range.closed(codingLength,codingLength+(end-start));
-				else
-					r = Range.closed(start,end);
-				data.add(r);
+				data.add(responseType.equals(CDS) ?
+						Range.closed(codingLength, codingLength + (end - start)) :
+						Range.closed(start, end));
 
 				codingLength += (end - start);
 				if  (debug) {
@@ -736,33 +726,24 @@ public class ChromosomeMappingTools {
 				inCoding = true;
 				codingLength += (end - cdsStart);
 
-				Range<Integer> r;
-				if ( responseType.equals(CDS))
-					r = Range.closed(0,codingLength);
-				else
-					r = Range.closed(cdsStart,end);
-				data.add(r);
+				data.add(responseType.equals(CDS) ?
+						Range.closed(0, codingLength) :
+						Range.closed(cdsStart, end));
 
 			} else if (start <= cdsEnd && end >= cdsEnd) {
 				//logger.debug(" <-- CDS end at: " + cdsEnd );
 				inCoding = false;
 
-				Range<Integer> r;
-				if ( responseType.equals(CDS))
-					r = Range.closed(codingLength,codingLength+(cdsEnd-start));
-				else
-					r = Range.closed(start,cdsEnd);
-				data.add(r);
+				data.add(responseType.equals(CDS) ?
+						Range.closed(codingLength, codingLength + (cdsEnd - start)) :
+						Range.closed(start, cdsEnd));
 				codingLength += (cdsEnd - start);
 
 			} else if (inCoding) {
 				// full exon is coding
-				Range<Integer> r;
-				if ( responseType.equals(CDS))
-					r = Range.closed(codingLength,codingLength+(end-start));
-				else
-					r = Range.closed(start,end);
-				data.add(r);
+				data.add(responseType.equals(CDS) ?
+						Range.closed(codingLength, codingLength + (end - start)) :
+						Range.closed(start, end));
 				codingLength += (end - start);
 			}
 		}

@@ -241,7 +241,7 @@ public class TestAsaCalc {
 	public void testNoAtomsAsaCalc() {
 
 		// in case of no atoms at all, the calculation should not fail and return an empty array
-		Atom[] atoms = new Atom[0];
+		Atom[] atoms = Atom.EmptyAtomArray;
 
 		AsaCalculator asaCalc = new AsaCalculator(atoms,
 				AsaCalculator.DEFAULT_PROBE_SIZE,

@@ -430,11 +430,25 @@ public class BasePairParameters implements Serializable {
 				result.add(c);
 			}
 		}
-		if (removeDups) for (int i = 0; i < result.size(); i++) {
-			for (int j = i+2; j < result.size(); j++) {
-				// remove duplicate sequences (structures with two or more identical units)
-				if (result.get(i).getAtomSequence().equals(result.get(j).getAtomSequence())) {
-					result.remove(j);
+		if (removeDups) {
+			int s = result.size();
+			BitSet toRemove = new BitSet();
+			for (int i = 0; i < s; i++) {
+				for (int j = i + 2; j < s; j++) {
+					// remove duplicate sequences (structures with two or more identical units)
+					if (result.get(i).getAtomSequence().equals(result.get(j).getAtomSequence())) {
+						toRemove.set(j);
+					}
+				}
+			}
+			if (!toRemove.isEmpty()) {
+				Iterator<Chain> r = result.iterator();
+				int i = 0;
+				while (r.hasNext()) {
+					Chain rr = r.next();
+					if (toRemove.get(i++)) {
+						r.remove();
+					}
 				}
 			}
 		}

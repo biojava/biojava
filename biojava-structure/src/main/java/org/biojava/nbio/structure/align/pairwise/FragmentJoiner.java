@@ -292,7 +292,7 @@ public class FragmentJoiner {
 	 * @param frag the JointFragments object that contains the list of identical positions
 	 * @return the rms
 	 */
-	public static double getRMS(Atom[] ca1, Atom[]ca2,JointFragments frag) throws StructureException {
+	public static double getRMS(Atom[] ca1, Atom[]ca2,JointFragments frag) {
 		//      now svd ftmp and check if the rms is < X ...
 		AlternativeAlignment ali = new AlternativeAlignment();
 		ali.apairs_from_idxlst(frag);

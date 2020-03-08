@@ -173,9 +173,8 @@ public class MultipleMcOptimizer implements Callable<MultipleAlignment> {
 	 * Initialize the freePool and all the variables needed for the
 	 * optimization.
 	 *
-	 * @throws StructureException
 	 */
-	private void initialize() throws StructureException {
+	private void initialize() {
 
 		// Initialize alignment variables
 		freePool = new ArrayList<>();

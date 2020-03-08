@@ -163,6 +163,8 @@ public interface Chain extends Serializable {
 	 */
 	Group getGroupByPDB(ResidueNumber resNum) throws StructureException;
 
+	boolean hasGroupByPDB(ResidueNumber resNum);
+
 	/**
 	 * Get all groups that are located between two PDB residue numbers.
 	 *

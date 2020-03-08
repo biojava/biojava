@@ -74,7 +74,7 @@ public class SequenceProxyView<C extends Compound> implements SequenceView<C> {
 
 	@Override
 	public boolean equals(Object o) {
-
+		if (this == o) return true;
 		if(! Equals.classEqual(this, o)) {
 			return false;
 		}

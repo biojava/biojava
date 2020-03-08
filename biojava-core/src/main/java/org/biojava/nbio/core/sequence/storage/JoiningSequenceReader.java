@@ -303,7 +303,7 @@ public class JoiningSequenceReader<C extends Compound> implements ProxySequenceR
 
 	@Override
 	public boolean equals(Object o) {
-
+		if (this == o) return true;
 		if(! Equals.classEqual(this, o)) {
 			return false;
 		}

@@ -1258,9 +1258,8 @@ public class AlignmentTools {
 	 * @param ca1
 	 * @param ca2
 	 * @return an array of Groups that are transformed for 3D display
-	 * @throws StructureException
 	 */
-	public static Group[] prepareGroupsForDisplay(AFPChain afpChain, Atom[] ca1, Atom[] ca2) throws StructureException{
+	public static Group[] prepareGroupsForDisplay(AFPChain afpChain, Atom[] ca1, Atom[] ca2) {
 
 
 		if ( afpChain.getBlockRotationMatrix().length == 0 ) {

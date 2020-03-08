@@ -42,7 +42,10 @@ import java.util.List;
  */
 public interface Atom extends Cloneable, PDBRecord {
 
-	/**
+	Atom[] EmptyAtomArray = new Atom[0];
+
+
+    /**
 	 * Set atom name, e.g. "CA".
 	 * @param s  a trimmed String specifying the name value
 	 * @see #getName

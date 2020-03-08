@@ -83,13 +83,13 @@ public interface XMLWriter {
 	 * Prints some textual content in an element.
 	 */
 
-    void print(String data) throws IOException;
+    void print(String data);
 
 	/**
 	 * Prints some textual content, terminated with a newline character.
 	 */
 
-    void println(String data) throws IOException;
+    void println(String data);
 
 	/**
 	 * Closes an element

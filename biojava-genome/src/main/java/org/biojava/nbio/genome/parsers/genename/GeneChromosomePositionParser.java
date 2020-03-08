@@ -66,20 +66,13 @@ public class GeneChromosomePositionParser {
 	}
 
 	public static List<GeneChromosomePosition> getChromosomeMappings() throws IOException {
-
-		URL url = new URL(DEFAULT_MAPPING_URL);
-
-		InputStreamProvider prov = new InputStreamProvider();
-
-		InputStream inStream = prov.getInputStream(url);
-
-		return getChromosomeMappings(inStream);
+		return getChromosomeMappings(new InputStreamProvider().getInputStream(new URL(DEFAULT_MAPPING_URL)));
 	}
 
 	public static List<GeneChromosomePosition> getChromosomeMappings(InputStream inStream) throws IOException {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(inStream));
 
-		ArrayList<GeneChromosomePosition> gcps = new ArrayList<>();
+		ArrayList<GeneChromosomePosition> gcps = new ArrayList<>(1024);
 
 		String line;
 		while ((line = reader.readLine()) != null) {

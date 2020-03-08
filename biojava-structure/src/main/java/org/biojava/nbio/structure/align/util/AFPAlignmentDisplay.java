@@ -106,7 +106,7 @@ public class AFPAlignmentDisplay
 			}
 
 		}
-		return atoms.toArray(new Atom[0]);
+		return atoms.toArray(Atom.EmptyAtomArray);
 	}
 	public static Atom[] getAlignedAtoms2(AFPChain afpChain,Atom[] ca2){
 
@@ -127,7 +127,7 @@ public class AFPAlignmentDisplay
 			}
 
 		}
-		return atoms.toArray(new Atom[0]);
+		return atoms.toArray(Atom.EmptyAtomArray);
 	}
 
 
@@ -409,7 +409,7 @@ public class AFPAlignmentDisplay
 			Atom a = g.getAtom(0);
 			twistedAs.add(a);
 		}
-		Atom[] twistedAtoms = twistedAs.toArray(new Atom[0]);
+		Atom[] twistedAtoms = twistedAs.toArray(Atom.EmptyAtomArray);
 
 		List<Group> hetatms  = new ArrayList<>();
 		List<Group> nucs1    = new ArrayList<>();

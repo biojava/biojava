@@ -307,7 +307,7 @@ public class StructureTools {
 		List<Atom> atoms = new ArrayList<>();
 
 		extractAtoms(atomNames, chains, atoms);
-		return atoms.toArray(new Atom[0]);
+		return atoms.toArray(Atom.EmptyAtomArray);
 
 	}
 
@@ -336,7 +336,7 @@ public class StructureTools {
 			List<Chain> chains = s.getModel(i);
 			extractAtoms(atomNames, chains, atoms);
 		}
-		return atoms.toArray(new Atom[0]);
+		return atoms.toArray(Atom.EmptyAtomArray);
 
 	}
 
@@ -355,7 +355,7 @@ public class StructureTools {
 			Atom a = iter.next();
 			atoms.add(a);
 		}
-		return atoms.toArray(new Atom[0]);
+		return atoms.toArray(Atom.EmptyAtomArray);
 	}
 	/**
 	 * Convert all atoms of the structure (specified model) into an Atom array
@@ -372,7 +372,7 @@ public class StructureTools {
 			Atom a = iter.next();
 			atoms.add(a);
 		}
-		return atoms.toArray(new Atom[0]);
+		return atoms.toArray(Atom.EmptyAtomArray);
 
 	}
 
@@ -392,7 +392,7 @@ public class StructureTools {
 				continue;
 			atoms.addAll(g.getAtoms());
 		}
-		return atoms.toArray(new Atom[0]);
+		return atoms.toArray(Atom.EmptyAtomArray);
 	}
 
 	/**
@@ -693,7 +693,7 @@ public class StructureTools {
 
 			atoms.add(a);
 		}
-		return atoms.toArray(new Atom[0]);
+		return atoms.toArray(Atom.EmptyAtomArray);
 	}
 
 	/**
@@ -722,7 +722,7 @@ public class StructureTools {
 				atoms.add(a);
 			}
 		}
-		return atoms.toArray(new Atom[0]);
+		return atoms.toArray(Atom.EmptyAtomArray);
 	}
 
 	/**
@@ -836,7 +836,7 @@ public class StructureTools {
 			}
 
 		}
-		return atoms.toArray(new Atom[0]);
+		return atoms.toArray(Atom.EmptyAtomArray);
 
 	}
 
@@ -859,7 +859,7 @@ public class StructureTools {
 			}
 		}
 
-		return atoms.toArray(new Atom[0]);
+		return atoms.toArray(Atom.EmptyAtomArray);
 	}
 
 	/**
@@ -898,7 +898,7 @@ public class StructureTools {
 			}
 		}
 
-		return atoms.toArray(new Atom[0]);
+		return atoms.toArray(Atom.EmptyAtomArray);
 
 	}
 
@@ -939,13 +939,10 @@ public class StructureTools {
 			Group parentN = (Group) parentG.clone();
 
 			newCA[apos] = parentN.getAtom(a.getName());
-			try {
-				// if the group doesn't exist yet, this produces a StructureException
-				newChain.getGroupByPDB(parentN.getResidueNumber());
-			} catch (StructureException e) {
-				// the group doesn't exist yet in the newChain, let's add it
-				newChain.addGroup(parentN);
-			}
+
+			// if the group doesn't exist yet, this produces a StructureException
+			if (!newChain.hasGroupByPDB(parentN.getResidueNumber()))
+				newChain.addGroup(parentN); // the group doesn't exist yet in the newChain, let's add it
 
 		}
 		return newCA;
@@ -1080,7 +1077,7 @@ public class StructureTools {
 			}
 		}
 
-		return atoms.toArray(new Atom[0]);
+		return atoms.toArray(Atom.EmptyAtomArray);
 	}
 
 	/**
@@ -1107,7 +1104,7 @@ public class StructureTools {
 			atoms.addAll(Arrays.asList(chainAtoms));
 		}
 
-		return atoms.toArray(new Atom[0]);
+		return atoms.toArray(Atom.EmptyAtomArray);
 	}
 
 	/**
@@ -1175,7 +1172,7 @@ public class StructureTools {
 
 		}
 
-		return atoms.toArray(new Atom[0]);
+		return atoms.toArray(Atom.EmptyAtomArray);
 	}
 
 	/**

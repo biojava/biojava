@@ -297,7 +297,7 @@ public class SimpleAlignedSequence<S extends Sequence<C>, C extends Compound> im
 
 	@Override
 	public boolean equals(Object o){
-
+		if (this == o) return true;
 		if(! Equals.classEqual(this, o)) {
 			return false;
 		}

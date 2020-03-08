@@ -23,7 +23,10 @@
  */
 package org.biojava.nbio.structure.domain;
 
-import org.biojava.nbio.structure.*;
+import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.Chain;
+import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.domain.pdp.*;
 
 import java.util.List;
@@ -60,9 +63,8 @@ public class LocalProteinDomainParser {
 	 *
 	 * @param s the protein structure
 	 * @return a list of possible domains
-	 * @throws StructureException
-	 */
-	public static List<Domain> suggestDomains(Structure s) throws StructureException{
+     */
+	public static List<Domain> suggestDomains(Structure s) {
 
 		Atom[] ca = StructureTools.getRepresentativeAtomArray(s);
 

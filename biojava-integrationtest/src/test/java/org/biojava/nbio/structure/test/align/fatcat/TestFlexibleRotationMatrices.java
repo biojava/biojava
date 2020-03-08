@@ -183,9 +183,9 @@ public class TestFlexibleRotationMatrices {
 
 		// THIS IS ROTATING the coordinates according to what is in the file.
 
-		Atom[] blockSet1 = eqrPos1.toArray(new Atom[0]);
-		Atom[] blockSet2 = eqrPos2.toArray(new Atom[0]);
-		Atom[] blockSet2copy = eqrPos2copy.toArray(new Atom[0]);
+		Atom[] blockSet1 = eqrPos1.toArray(Atom.EmptyAtomArray);
+		Atom[] blockSet2 = eqrPos2.toArray(Atom.EmptyAtomArray);
+		Atom[] blockSet2copy = eqrPos2copy.toArray(Atom.EmptyAtomArray);
 
 
 		//System.out.println(shift );

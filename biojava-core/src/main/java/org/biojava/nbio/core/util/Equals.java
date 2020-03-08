@@ -20,6 +20,8 @@
  */
 package org.biojava.nbio.core.util;
 
+import java.util.Objects;
+
 /**
  * A set of helper methods which return true if the two parameters are
  * equal to each other.
@@ -46,8 +48,9 @@ public class Equals {
 	 * Does not compare class types.
 	 * @see #classEqual(Object, Object)
 	 */
-	public static boolean equal(Object one, Object two) {
-		return one == null && two == null || !(one == null || two == null) && (one == two || one.equals(two));
+	@Deprecated public static boolean equal(Object one, Object two) {
+		return Objects.equals(one, two);
+		//return one == null && two == null || !(one == null || two == null) && (one == two || one.equals(two));
 	}
 
 	/**
@@ -82,6 +85,7 @@ public class Equals {
 	 *         equal at the class level
 	 */
 	public static boolean classEqual(Object one, Object two) {
-		return one == two || !(one == null || two == null) && one.getClass() == two.getClass();
+		return one == two ||
+				(!(one == null || two == null) && one.getClass() == two.getClass());
 	}
 }
