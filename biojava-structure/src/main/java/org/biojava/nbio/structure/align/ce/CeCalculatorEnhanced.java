@@ -28,7 +28,10 @@ import org.biojava.nbio.core.alignment.matrices.ScaledSubstitutionMatrix;
 import org.biojava.nbio.core.alignment.template.SubstitutionMatrix;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
-import org.biojava.nbio.structure.*;
+import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.Calc;
+import org.biojava.nbio.structure.Group;
+import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.model.AFP;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.util.AFPAlignmentDisplay;
@@ -905,7 +908,7 @@ nBestTrace=nTrace;
 	}
 
 	public void nextStep( AFPChain afpChain,
-			Atom[] ca1, Atom[] ca2) throws StructureException{
+			Atom[] ca1, Atom[] ca2) {
 
 
 		if(nBestTrace>0) {
@@ -923,7 +926,7 @@ nBestTrace=nTrace;
 	// this part is modified from the original CeCalculator
 	@SuppressWarnings("unused")
 	private void checkBestTraces( AFPChain afpChain,
-			Atom[] ca1, Atom[] ca2) throws StructureException{
+			Atom[] ca1, Atom[] ca2) {
 
 		z=0.0;
 

@@ -48,15 +48,18 @@ import java.util.Map;
  *
  * @author Scooter Willis <willishf at gmail dot com>
  * @author Mark Chapman
+ *
+ * TODO test
+ *
  */
 public class GFF3FromUniprotBlastHits {
 
 	private static final Logger logger = LoggerFactory.getLogger(GFF3FromUniprotBlastHits.class);
 
-	public void process(File xmlBlastHits, double ecutoff, LinkedHashMap<String, GeneSequence> geneSequenceHashMap, OutputStream gff3Output) throws Exception {
-		LinkedHashMap<String, ArrayList<String>> hits = BlastHomologyHits.getMatches(xmlBlastHits, ecutoff);
-		process(hits, geneSequenceHashMap, gff3Output);
-	}
+//	public void process(File xmlBlastHits, double ecutoff, LinkedHashMap<String, GeneSequence> geneSequenceHashMap, OutputStream gff3Output) throws Exception {
+//		LinkedHashMap<String, ArrayList<String>> hits = BlastHomologyHits.getMatches(xmlBlastHits, ecutoff);
+//		process(hits, geneSequenceHashMap, gff3Output);
+//	}
 
 	public void process(LinkedHashMap<String, ArrayList<String>> hits, LinkedHashMap<String, GeneSequence> geneSequenceHashMap, OutputStream gff3Output) {
 		int size = hits.size();
@@ -117,30 +120,28 @@ public class GFF3FromUniprotBlastHits {
 					//   System.out.println(new Pair().format(alignment));
 					int proteinIndex = 0;
 					int gff3Index = 0;
-					for (int i = 0; i < cdsProteinList.size(); i++) {
+					int cdsProteins = cdsProteinList.size();
+					for (int i = 0; i < cdsProteins; i++) {
 						ProteinSequence peptideSequence = cdsProteinList.get(i);
-						String seq = peptideSequence.getSequenceAsString();
-						int startIndex = -1;
+						final String seq = peptideSequence.getSequenceAsString();
+						int startIndex;
 						int offsetStartIndex = 0;
-						for (int s = 0; s < seq.length(); s++) {
-							startIndex = alignment.getIndexInTargetForQueryAt(proteinIndex + s);
+						int seqLen = seq.length();
+						//for (int s = 0; s < seqLen; s++) {
+							startIndex = alignment.getIndexInTargetForQueryAt(proteinIndex);
 							startIndex = startIndex + 1;
-							offsetStartIndex = s;
-							break;
-						}
-						int endIndex = -1;
+//							offsetStartIndex = 0;
+						//}
+						int endIndex;
 
 						int offsetEndIndex = 0;
-						for (int e = 0; e < seq.length(); e++) {
-							endIndex = alignment.getIndexInTargetForQueryAt(proteinIndex + seq.length() - 1 - e);
-							{
-								endIndex = endIndex + 1;
-								offsetEndIndex = e;
-								break;
-							}
-						}
+//						for (int e = 0; e < seqLen; e++) {
+							endIndex = alignment.getIndexInTargetForQueryAt(proteinIndex + seqLen - 1);
+							endIndex = endIndex + 1;
+//							offsetEndIndex = 0;
+//						}
 
-						proteinIndex = proteinIndex + seq.length();
+						proteinIndex = proteinIndex + seqLen;
 						if (startIndex != endIndex) {
 							CDSSequence cdsSequence = cdsSequenceList.get(i);
 							String hitLabel;
@@ -167,15 +168,16 @@ public class GFF3FromUniprotBlastHits {
 									if (keyWords.size() > 0) {
 										notes = ";Note=";
 										for (String note : keyWords) {
-											if (note.equals("Complete proteome")) {
-												continue;
-											}
-											if (note.equals("Direct protein sequencing")) {
-												continue;
-											}
+											switch (note) {
+												case "Complete proteome":
+												case "Direct protein sequencing":
+													continue;
+												default:
+													notes = notes + " " + note;
+													geneSequence.addNote(note); // add note/keyword which can be output in fasta header if needed
+													break;
 
-											notes = notes + " " + note;
-											geneSequence.addNote(note); // add note/keyword which can be output in fasta header if needed
+											}
 										}
 									}
 
@@ -231,14 +233,13 @@ public class GFF3FromUniprotBlastHits {
 											geneSequence.addNote(note.getId()); // add note/keyword which can be output in fasta header if needed
 											LinkedHashMap<String, String> properties = note.getProperties();
 											for (Map.Entry<String, String> entry : properties.entrySet()) {
-												if (entry.getKey().equals("evidence")) {
+												if (entry.getKey().equals("evidence"))
 													continue;
-												}
-												String property = entry.getValue();
 
-												if (property.startsWith("C:")) {
+												String property = entry.getValue();
+												if (property.startsWith("C:"))
 													continue; // skip over the location
-												}
+
 												if (property.endsWith("...")) {
 													property = property.substring(0, property.length() - 3);
 												}

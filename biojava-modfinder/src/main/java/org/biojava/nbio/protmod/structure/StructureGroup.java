@@ -117,10 +117,7 @@ implements Comparable<StructureGroup> {
 			return false;
 
 		StructureGroup aGroup = (StructureGroup) obj;
-		if (!resNum.equals(aGroup.resNum))
-			return false;
-
-		return true;
+		return resNum.equals(aGroup.resNum);
 	}
 
 	@Override

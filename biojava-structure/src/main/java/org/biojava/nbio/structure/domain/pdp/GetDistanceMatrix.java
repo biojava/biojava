@@ -38,7 +38,7 @@ public class GetDistanceMatrix {
      *
      * @param protein
      */
-    public PDPDistanceMatrix getDistanceMatrix(final Atom[] protein) {
+    public static PDPDistanceMatrix getDistanceMatrix(final Atom[] protein) {
         int n = protein.length;
         int[][] dist = new int[n + 3][n + 3];
         int i, j;
@@ -147,7 +147,7 @@ public class GetDistanceMatrix {
     }
 
 
-    private Atom getCBeta(Group g1) {
+    private static Atom getCBeta(Group g1) {
         Atom cb;
 
 

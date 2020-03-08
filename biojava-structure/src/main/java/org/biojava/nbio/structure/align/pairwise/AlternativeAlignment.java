@@ -710,14 +710,13 @@ public class AlternativeAlignment implements Serializable{
 	 * @param i2
 	 * @return the number of gaps in this alignment
 	 */
-	private int count_gaps(int[] i1, int[] i2){
+	private static int count_gaps(int[] i1, int[] i2){
 
 		int i0 = i1[0];
 		int j0 = i2[0];
 		int gaps = 0;
 		for (int i =1 ; i<i1.length;i++ ){
-			if ( Math.abs(i1[i]-i0) != 1 ||
-					( Math.abs(i2[i]-j0) != 1)){
+			if (Math.abs(i1[i]-i0) != 1 || Math.abs(i2[i]-j0) != 1){
 				gaps +=1;
 			}
 			i0 = i1[i];

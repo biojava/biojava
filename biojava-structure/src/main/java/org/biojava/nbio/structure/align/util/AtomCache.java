@@ -220,13 +220,12 @@ public class AtomCache {
 	 * @param multiModel if true the output Structure will be a multi-model one with one transformId per model,
 	 * if false the outputStructure will be as the original with added chains with renamed asymIds (in the form originalAsymId_transformId and originalAuthId_transformId).
 	 * @return a structure object
-	 * @throws IOException
 	 * @throws StructureException if biassemblyId < 0 or other problems while loading structure
 	 * @author Peter Rose
 	 * @since 3.2
 	 */
 	public Structure getBiologicalAssembly(String pdbId, int bioAssemblyId, boolean multiModel)
-			throws StructureException, IOException {
+			throws StructureException {
 
 		if (bioAssemblyId < 0) {
 			throw new StructureException("bioAssemblyID must be nonnegative: " + pdbId + " bioAssemblyId "
@@ -288,11 +287,10 @@ public class AtomCache {
 	 * @param multiModel if true the output Structure will be a multi-model one with one transformId per model,
 	 * if false the outputStructure will be as the original with added chains with renamed asymIds (in the form originalAsymId_transformId and originalAuthId_transformId).
 	 * @return a structure object
-	 * @throws IOException
 	 * @throws StructureException
 	 * @since 4.2
 	 */
-	public Structure getBiologicalAssembly(String pdbId, boolean multiModel) throws StructureException, IOException {
+	public Structure getBiologicalAssembly(String pdbId, boolean multiModel) throws StructureException {
 
 		FileParsingParameters params = getFileParsingParams();
 		boolean prevIsParseBioAssembly = params.isParseBioAssembly();
@@ -345,10 +343,9 @@ public class AtomCache {
 	 * if false the outputStructure will be as the original with added chains with renamed asymIds (in the form originalAsymId_transformId and originalAuthId_transformId).
 	 * @return
 	 * @throws StructureException
-	 * @throws IOException
 	 * @since 5.0
 	 */
-	public List<Structure> getBiologicalAssemblies(String pdbId, boolean multiModel) throws StructureException, IOException {
+	public List<Structure> getBiologicalAssemblies(String pdbId, boolean multiModel) throws StructureException {
 
 		List<Structure> assemblies = new ArrayList<>();
 
@@ -508,11 +505,10 @@ public class AtomCache {
 	 * @param scopDatabase
 	 *            A {@link ScopDatabase} to use
 	 * @return a Structure object
-	 * @throws IOException
 	 * @throws StructureException
 	 */
-	public Structure getStructureForDomain(ScopDomain domain, ScopDatabase scopDatabase) throws IOException,
-			StructureException {
+	public Structure getStructureForDomain(ScopDomain domain, ScopDatabase scopDatabase) throws
+            StructureException {
 		return getStructureForDomain(domain, scopDatabase, false);
 	}
 
@@ -528,11 +524,10 @@ public class AtomCache {
 	 *            domain belongs; if set to true, hetero-atoms are included if and only if they are strictly within the
 	 *            definition (residue numbers) of the SCOP domain
 	 * @return a Structure object
-	 * @throws IOException
 	 * @throws StructureException
 	 */
 	public Structure getStructureForDomain(ScopDomain domain, ScopDatabase scopDatabase, boolean strictLigandHandling)
-			throws IOException, StructureException {
+			throws StructureException {
 
 		String pdbId = domain.getPdbId();
 		Structure fullStructure = getStructureForPdbId(pdbId);
@@ -785,14 +780,14 @@ public class AtomCache {
 	 * Returns a {@link Structure} corresponding to the CATH identifier supplied in {@code structureName}, using the the {@link CathDatabase}
 	 * at {@link CathFactory#getCathDatabase()}.
 	 */
-	public Structure getStructureForCathDomain(StructureName structureName) throws IOException, StructureException {
+	public Structure getStructureForCathDomain(StructureName structureName) throws StructureException {
 		return getStructureForCathDomain(structureName, CathFactory.getCathDatabase());
 	}
 
 	/**
 	 * Returns a {@link Structure} corresponding to the CATH identifier supplied in {@code structureName}, using the specified {@link CathDatabase}.
 	 */
-	public Structure getStructureForCathDomain(StructureName structureName, CathDatabase cathInstall) throws IOException, StructureException {
+	public Structure getStructureForCathDomain(StructureName structureName, CathDatabase cathInstall) throws StructureException {
 
 		CathDomain cathDomain = cathInstall.getDomainByCathId(structureName.getIdentifier());
 

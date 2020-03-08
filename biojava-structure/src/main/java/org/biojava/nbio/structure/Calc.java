@@ -767,15 +767,11 @@ public class Calc {
 	public static Atom getCentroid(Atom[] atomSet){
 
 		// if we don't catch this case, the centroid returned is (NaN,NaN,NaN), which can cause lots of problems down the line
-		if (atomSet.length==0)
+		int n = atomSet.length;
+		if (n==0)
 			throw new IllegalArgumentException("Atom array has length 0, can't calculate centroid!");
 
-
 		double[] coords = new double[3];
-
-		coords[0] = 0;
-		coords[1] = 0;
-		coords[2] = 0 ;
 
 		for (Atom a : atomSet) {
 			coords[0] += a.getX();
@@ -783,7 +779,6 @@ public class Calc {
 			coords[2] += a.getZ();
 		}
 
-		int n = atomSet.length;
 		coords[0] = coords[0] / n;
 		coords[1] = coords[1] / n;
 		coords[2] = coords[2] / n;

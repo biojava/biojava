@@ -137,9 +137,8 @@ public class StructureIO {
 	 * if false the outputStructure will be as the original with added chains with renamed asymIds (in the form originalAsymId_transformId and originalAuthId_transformId).
 	 * @return a Structure object or null if that assembly is not available
 	 * @throws StructureException
-	 * @throws IOException
-	 */
-	public static Structure getBiologicalAssembly(String pdbId, boolean multiModel) throws IOException, StructureException{
+     */
+	public static Structure getBiologicalAssembly(String pdbId, boolean multiModel) throws StructureException{
 
 		return getAtomCache().getBiologicalAssembly(pdbId.toLowerCase(), multiModel);
 	}
@@ -179,9 +178,8 @@ public class StructureIO {
 	 * if false the outputStructure will be as the original with added chains with renamed asymIds (in the form originalAsymId_transformId and originalAuthId_transformId).
 	 * @return a Structure object or null if that assembly is not available
 	 * @throws StructureException if there is no bioassembly available for given biolAssemblyNr or some other problems encountered while loading it
-	 * @throws IOException
-	 */
-	public static Structure getBiologicalAssembly(String pdbId, int biolAssemblyNr, boolean multiModel) throws IOException, StructureException {
+     */
+	public static Structure getBiologicalAssembly(String pdbId, int biolAssemblyNr, boolean multiModel) throws StructureException {
 		return getAtomCache().getBiologicalAssembly(pdbId.toLowerCase(), biolAssemblyNr, multiModel);
 	}
 
@@ -216,11 +214,10 @@ public class StructureIO {
 	 * @param multiModel if true the output Structure will be a multi-model one with one transformId per model,
 	 * if false the outputStructure will be as the original with added chains with renamed asymIds (in the form originalAsymId_transformId and originalAuthId_transformId).
 	 * @return
-	 * @throws IOException
 	 * @throws StructureException
 	 * @since 5.0
 	 */
-	public static List<Structure> getBiologicalAssemblies(String pdbId, boolean multiModel) throws IOException, StructureException {
+	public static List<Structure> getBiologicalAssemblies(String pdbId, boolean multiModel) throws StructureException {
 
 
 		return getAtomCache().getBiologicalAssemblies(pdbId.toLowerCase(), multiModel);

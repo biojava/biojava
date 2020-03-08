@@ -217,13 +217,13 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 			evalString("save selection; select *; color grey; "
 					+ "select ligand; color CPK;");
 
-			if (value == "Set1") {
+			if (value.equals("Set1")) {
 				colorPalette = ColorBrewer.Set1;
-			} else if (value == "Set2") {
+			} else if (value.equals("Set2")) {
 				colorPalette = ColorBrewer.Set2;
-			} else if (value == "Spectral") {
+			} else if (value.equals("Spectral")) {
 				colorPalette = ColorBrewer.Spectral;
-			} else if (value == "Pastel") {
+			} else if (value.equals("Pastel")) {
 				colorPalette = ColorBrewer.Pastel1;
 			}
 			String script = getJmolString(multAln, transformedAtoms,

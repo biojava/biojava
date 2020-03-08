@@ -83,6 +83,7 @@ public abstract class Result implements Iterable<Hit>{
 	 */
 	@Override
 	public boolean equals(Object obj) {
+		if (this == obj) return true;
 		if (obj == null) {
 			return false;
 		}
@@ -90,16 +91,9 @@ public abstract class Result implements Iterable<Hit>{
 			return false;
 		}
 		final Result other = (Result) obj;
-		if (!Objects.equals(this.queryID, other.queryID)) {
-			return false;
-		}
-		if (!Objects.equals(this.queryDef, other.queryDef)) {
-			return false;
-		}
-		if (!Objects.equals(this.hits, other.hits)) {
-			return false;
-		}
-		return true;
+		return Objects.equals(this.queryID, other.queryID) &&
+				Objects.equals(this.queryDef, other.queryDef) &&
+				Objects.equals(this.hits, other.hits);
 	}
 
 	public int getIterationNumber() {

@@ -59,9 +59,9 @@ public class AsaCalculator {
 	 * The default value for number of sphere points to sample.
 	 * See this paper for a nice study on the effect of this parameter: https://f1000research.com/articles/5-189/v1
 	 */
-	public static final int DEFAULT_N_SPHERE_POINTS = 1000;
+//	public static final int DEFAULT_N_SPHERE_POINTS = 1000;
 	public static final double DEFAULT_PROBE_SIZE = 1.4;
-	public static final int DEFAULT_NTHREADS = 1;
+//	public static final int DEFAULT_NTHREADS = 1;
 
 	private static final boolean DEFAULT_USE_SPATIAL_HASHING = true;
 
@@ -458,7 +458,7 @@ public class AsaCalculator {
 
 	private List<Contact> calcContacts() {
 		if (atomCoords.length == 0)
-			return new ArrayList<>();
+			return Collections.EMPTY_LIST;//new ArrayList<>();
 		double maxRadius = 0;
 		OptionalDouble optionalDouble = Arrays.stream(radii).max();
 		if (optionalDouble.isPresent())
@@ -480,11 +480,14 @@ public class AsaCalculator {
 
 		int n_accessible_point = 0;
 
+		Point3d test_point = new Point3d();
+
 		for (Point3d point: spherePoints){
 			boolean is_accessible = true;
-			Point3d test_point = new Point3d(point.x*radius + atom_i.x,
-					point.y*radius + atom_i.y,
-					point.z*radius + atom_i.z);
+			test_point.set(
+			 point.x*radius + atom_i.x,
+			point.y*radius + atom_i.y,
+			point.z*radius + atom_i.z);
 
 			int[] cycled_indices = new int[n_neighbor];
 			int arind = 0;
@@ -498,9 +501,9 @@ public class AsaCalculator {
 			}
 
 			for (int j: cycled_indices) {
-				Point3d atom_j = atomCoords[neighbor_indices[j]];
-				double r = radii[neighbor_indices[j]] + probe;
-				double diff_sq = test_point.distanceSquared(atom_j);
+				int jj = neighbor_indices[j];
+				double r = radii[jj] + probe;
+				double diff_sq = test_point.distanceSquared(atomCoords[jj]);
 				if (diff_sq < r*r) {
 					j_closest_neighbor = j;
 					is_accessible = false;

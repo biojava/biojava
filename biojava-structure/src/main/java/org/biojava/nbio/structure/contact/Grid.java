@@ -30,6 +30,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import static java.util.Collections.EMPTY_LIST;
+
 
 /**
  * A grid to be used for calculating atom contacts through a spatial hashing algorithm.
@@ -417,11 +419,11 @@ public class Grid {
 	 */
 	public List<Contact> getIndicesContacts() {
 
-		List<Contact> list = new ArrayList<>();
-
 		// if the 2 sets of atoms are not overlapping they are too far away and no need to calculate anything
 		// this won't apply if there's only one set of atoms (iAtoms), where we would want all-to-all contacts
-		if (noOverlap) return list;
+		if (noOverlap) return EMPTY_LIST;
+
+		List<Contact> list = new ArrayList<>();
 
 
 		for (int xind=0;xind<cells.length;xind++) {
@@ -451,7 +453,7 @@ public class Grid {
 			}
 		}
 
-		return list;
+		return list.isEmpty() ? EMPTY_LIST : list;
 	}
 
 	/**
@@ -476,14 +478,16 @@ public class Grid {
 				if( x<0 || cells.length<=x) continue;
 				for (int y=yind-1;y<=yind+1;y++) {
 					if( y<0 || cells[x].length<=y ) continue;
-					for (int z=zind-1;z<=zind+1;z++) {
-						if( z<0 || cells[x][y].length<=z ) continue;
 
-						GridCell cell = cells[x][y][z];
+					GridCell[] cxy = cells[x][y];
+
+					for (int z=zind-1;z<=zind+1;z++) {
+						if( z<0 || cxy.length<=z ) continue;
+
 						// Check for contacts in this cell
-						if(cell != null && cell.hasContactToAtom(iAtoms, jAtoms, atom, cutoff)) {
+						GridCell cell = cxy[z];
+						if(cell != null && cell.hasContactToAtom(iAtoms, jAtoms, atom, cutoff))
 							return true;
-						}
 					}
 				}
 			}

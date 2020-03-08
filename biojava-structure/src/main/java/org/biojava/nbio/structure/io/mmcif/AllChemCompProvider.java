@@ -168,7 +168,7 @@ public class AllChemCompProvider implements ChemCompProvider, Runnable{
 	 */
 	private void loadAllChemComps() throws IOException {
 		String fileName = getLocalFileName();
-		logger.debug("Loading " + fileName);
+		logger.debug("Loading {}", fileName);
 		InputStreamProvider isp = new InputStreamProvider();
 
 

@@ -60,13 +60,8 @@ public class StructureAtom {
 
 		StructureAtom anAtom = (StructureAtom)obj;
 
-		if (!anAtom.getGroup().equals(group))
-			return false;
+		return anAtom.getGroup().equals(group) && anAtom.getAtomName().equals(atomName);
 
-		if (!anAtom.getAtomName().equals(atomName))
-			return false;
-
-		return true;
 	}
 
 	@Override

@@ -25,8 +25,6 @@
  */
 package org.biojava.nbio.core.sequence.template;
 
-import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
-
 import java.util.Collection;
 import java.util.Set;
 

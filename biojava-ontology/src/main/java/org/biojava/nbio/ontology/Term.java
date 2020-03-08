@@ -227,7 +227,7 @@ public interface Term extends Annotatable {
 		Term that = (Term) obj;
 
 		return this.getOntology() == that.getOntology() &&
-				this.getName() == that.getName();
+                this.getName().equals(that.getName());
 	  }
 	}
 }

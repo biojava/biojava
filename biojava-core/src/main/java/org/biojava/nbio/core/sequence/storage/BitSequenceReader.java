@@ -26,10 +26,7 @@ import org.biojava.nbio.core.sequence.template.*;
 import org.biojava.nbio.core.util.Equals;
 import org.biojava.nbio.core.util.Hashcoder;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * An implementation of the popular bit encodings. This class provides the
@@ -462,7 +459,7 @@ public class BitSequenceReader<C extends Compound> implements ProxySequenceReade
 				BitArrayWorker<C> that = (BitArrayWorker<C>)o;
 				return  Objects.equals(compoundSet, that.compoundSet) &&
 						Objects.equals(indexToCompoundsLookup, that.indexToCompoundsLookup) &&
-						Objects.equals(sequence, that.sequence);
+						Arrays.equals(sequence, that.sequence);
 			}
 			return false;
 		}

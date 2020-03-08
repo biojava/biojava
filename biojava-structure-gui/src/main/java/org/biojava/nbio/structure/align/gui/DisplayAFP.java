@@ -538,10 +538,9 @@ public class DisplayAFP {
 	 * @param ca1 atoms for protein 1
 	 * @param ca2 atoms for protein 2
 	 * @return a protein structure with 2 models.
-	 * @throws StructureException
-	 */
+     */
 	public static Structure createArtificalStructure(AFPChain afpChain, Atom[] ca1,
-			Atom[] ca2) throws StructureException{
+			Atom[] ca2) {
 
 
 		if ( afpChain.getNrEQR() < 1){

@@ -114,7 +114,7 @@ public class SecStrucTools {
 
 				if (count > 0) {
 					// If chain and type are equal increment counter
-					if (ss.type == type && chainId == g.getChainId()) {
+					if (ss.type == type && chainId.equals(g.getChainId())) {
 						previous = g.getResidueNumber();
 						count++;
 						continue;
@@ -185,7 +185,7 @@ public class SecStrucTools {
 
 				if (count > 0) {
 					// If chain and type are equal increment counter
-					if (ss.type == type && chainId == g.getChainId()) {
+					if (ss.type == type && chainId.equals(g.getChainId())) {
 						previous = g.getResidueNumber();
 						count++;
 						continue;

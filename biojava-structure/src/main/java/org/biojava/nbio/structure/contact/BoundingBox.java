@@ -179,7 +179,7 @@ public class BoundingBox implements Serializable {
 		return true;
 	}
 
-	private boolean areOverlapping(double imin, double imax, double jmin, double jmax, double cutoff) {
+	private static boolean areOverlapping(double imin, double imax, double jmin, double jmax, double cutoff) {
 
 		Bound[] bounds = {new Bound(0, imin), new Bound(1, imax),
                 new Bound(2, jmin), new Bound(3, jmax)};
@@ -228,7 +228,7 @@ public class BoundingBox implements Serializable {
 	 * @param array
 	 * @return
 	 */
-	public double[] getMinMax(double[] array) {
+	public static double[] getMinMax(double[] array) {
 		double[] minmax = new double[2];
 
 		double max = Double.MIN_VALUE;

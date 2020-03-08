@@ -22,7 +22,6 @@ package org.biojava.nbio.structure;
 
 import org.biojava.nbio.structure.align.util.AtomCache;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -68,8 +67,7 @@ public class BioAssemblyIdentifier implements StructureIdentifier {
 	}
 
 	@Override
-	public Structure loadStructure(AtomCache cache) throws StructureException,
-			IOException {
+	public Structure loadStructure(AtomCache cache) throws StructureException {
 		return cache.getBiologicalAssembly(pdbCode, biolNr, AtomCache.DEFAULT_BIOASSEMBLY_STYLE);
 	}
 

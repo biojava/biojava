@@ -23,7 +23,6 @@ package org.biojava.nbio.structure.domain;
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.util.AtomCache;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -71,8 +70,7 @@ public class PDPDomain implements StructureIdentifier {
 	}
 
 	@Override
-	public Structure loadStructure(AtomCache cache) throws StructureException,
-			IOException {
+	public Structure loadStructure(AtomCache cache) throws StructureException {
 		return canonical.loadStructure(cache);
 	}
 }

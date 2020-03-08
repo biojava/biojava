@@ -79,9 +79,9 @@ public class LocalProteinDomainParser {
      */
 	public static List<Domain> suggestDomains(Atom[] ca) {
 
-		GetDistanceMatrix distMaxCalculator = new GetDistanceMatrix();
+		//GetDistanceMatrix distMaxCalculator = new GetDistanceMatrix();
 
-		PDPDistanceMatrix pdpMatrix = distMaxCalculator.getDistanceMatrix(ca);
+		PDPDistanceMatrix pdpMatrix = GetDistanceMatrix.getDistanceMatrix(ca);
 
 
 

@@ -28,7 +28,6 @@ import org.biojava.nbio.structure.contact.Grid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -286,10 +285,9 @@ public class SubstructureIdentifier implements StructureIdentifier {
 	 * @return A Structure containing at least the atoms identified by this,
 	 *  or null if no PDB ID is set
 	 * @throws StructureException For errors loading and parsing the structure
-	 * @throws IOException Errors reading the structure from disk
-	 */
+     */
 	@Override
-	public Structure loadStructure(AtomCache cache) throws IOException, StructureException {
+	public Structure loadStructure(AtomCache cache) throws StructureException {
 		String pdb = pdbId;
 		return pdb == null ? null : cache.getStructureForPdbId(pdb);
 	}

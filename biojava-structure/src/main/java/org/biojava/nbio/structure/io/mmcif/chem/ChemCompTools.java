@@ -131,13 +131,13 @@ public class ChemCompTools {
 
 	}
 
-	public static Character getAminoOneLetter(String chemCompId){
-		return  AMINO_ACID_LOOKUP_3TO1.get(chemCompId);
+	public static char getAminoOneLetter(String chemCompId){
+		return  AMINO_ACID_LOOKUP_3TO1.getOrDefault(chemCompId, (char)0);
 	}
 
 
-	public static Character getDNAOneLetter(String chemCompId){
-		return  DNA_LOOKUP_2TO1.get(chemCompId) ;
+	public static char getDNAOneLetter(String chemCompId){
+		return DNA_LOOKUP_2TO1.getOrDefault(chemCompId, (char)0) ;
 	}
 
 	public static String getAminoThreeLetter(Character c){
@@ -195,10 +195,7 @@ public class ChemCompTools {
 
 
 	private static boolean performRNACheck(ChemComp cc) {
-		if (cc.getId().length() == 1)
-			return true;
-		else
-			return false;
+		return cc.getId().length() == 1;
 	}
 
 
@@ -206,25 +203,19 @@ public class ChemCompTools {
 		if ( cc.getId().equals(UNKNOWN_NUCLEOTIDE.toString()))
 			return false;
 
-		Character c = getDNAOneLetter(cc.getId());
-		if ( c==null){
-			// we did not find it in the list of standard nucleotides
-			return false;
-		}
-		return true;
+		char c = getDNAOneLetter(cc.getId());
+		// we did not find it in the list of standard nucleotides?
+		return c != 0;
 	}
 
 
 	private static boolean performPeptideCheck(ChemComp cc, String one) {
-		if (one.equals(UNKNOWN_ONE_LETTER_CODE.toString())) {
+		if (one.equals(UNKNOWN_ONE_LETTER_CODE.toString()))
 			return false;
-		}
-		Character c =  getAminoOneLetter(cc.getId());
-		if ( c==null){
-			// we did not find it in the list of standard aminos
-			return false;
-		}
-		return true;
+
+		char c =  getAminoOneLetter(cc.getId());
+		// we did not find it in the list of standard aminos?
+		return c != 0;
 	}
 
 
@@ -245,16 +236,12 @@ public class ChemCompTools {
 		}
 		PolymerType poly = cc.getPolymerType();
 		if (( poly == PolymerType.peptide) || ( poly == PolymerType.dpeptide)){
-			Character c = getAminoOneLetter(parent.getId());
-			if ( c == null)
-				c = UNKNOWN_ONE_LETTER_CODE;
-			return c;
+			char c = getAminoOneLetter(parent.getId());
+			return c == 0 ? UNKNOWN_ONE_LETTER_CODE : Character.valueOf(c);
 		}
 		if ( poly == PolymerType.dna){
-			Character c = getDNAOneLetter(parent.getId());
-			if (c == null)
-				c = UNKNOWN_NUCLEOTIDE;
-			return c;
+			char c = getDNAOneLetter(parent.getId());
+			return c == 0 ? UNKNOWN_NUCLEOTIDE : Character.valueOf(c);
 
 		}
 		return cc.getMon_nstd_parent_comp_id().charAt(0);

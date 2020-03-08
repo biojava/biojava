@@ -20,8 +20,6 @@
  */
 package org.biojava.nbio.core.util;
 
-import java.util.Objects;
-
 /**
  * A set of helper methods which return true if the two parameters are
  * equal to each other.

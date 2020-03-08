@@ -27,6 +27,7 @@ import org.biojava.nbio.structure.io.mmcif.chem.ResidueType;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /** A definition for a Chemical Component, as maintained by the wwPDB. For access to all definitions,
  * please download the components.cif.gz file from the wwPDB website.
@@ -111,10 +112,7 @@ public class ChemComp implements Serializable, Comparable<ChemComp>{
 
 	public boolean hasParent(){
 		String pid = mon_nstd_parent_comp_id;
-		if ((pid != null ) && (! pid.equals("?"))){
-			return true;
-		}
-		return false;
+		return (pid != null) && (!pid.equals("?"));
 	}
 
 	public boolean isStandard(){
@@ -584,12 +582,7 @@ public class ChemComp implements Serializable, Comparable<ChemComp>{
 				return false;
 		} else if (!three_letter_code.equals(other.three_letter_code))
 			return false;
-		if (type == null) {
-			if (other.type != null)
-				return false;
-		} else if (!type.equals(other.type))
-			return false;
-		return true;
+		return Objects.equals(type, other.type);
 	}
 
 	/**

@@ -26,7 +26,6 @@ package org.biojava.nbio.ronn;
 
 import org.biojava.nbio.data.sequence.FastaSequence;
 import org.biojava.nbio.data.sequence.SequenceUtil;
-import org.biojava.nbio.ronn.ModelLoader.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -138,20 +137,13 @@ public final class ORonn implements Callable<ORonn> {
 	public ORonn call() throws NumberFormatException {
 		final String seq = sequence.getSequence();
 		// Calculate for each model
-		for (int m = 0; m < ORonn.NUMBER_OF_MODELS; m++) {
-			final Model model = mloader.getModel(m);
-			final ORonnModel rmodel = new ORonnModel(seq, model, disorder);
-			final float[] scores = rmodel.detect();
-			addScore(scores);
-		}
+		for (int m = 0; m < ORonn.NUMBER_OF_MODELS; m++)
+			addScore(new ORonnModel(seq, mloader.getModel(m), disorder).detect());
 
-		final char[] ch = seq.toCharArray();
 		final float[] meanScores = getMeanScores();
-		assert meanScores.length == seq.length() : "Scores are not calculated for "
-				+ "all residues!";
-		writeResults(meanScores, ch);
-		stat.println(timer.getTotalTime() + "ms prediction completed for "
-				+ sequence.getId());
+		assert meanScores.length == seq.length() : "Scores are not calculated for all residues!";
+		writeResults(meanScores, seq.toCharArray());
+		stat.println(timer.getTotalTime() + "ms prediction completed for " + sequence.getId());
 		return this;
 	}
 
@@ -171,8 +163,9 @@ public final class ORonn implements Callable<ORonn> {
 	}
 
 	float[] getMeanScores() {
-		final float[] meanScores = new float[cummulativeScore.length];
-		for (int i = 0; i < cummulativeScore.length; i++) {
+		int n = cummulativeScore.length;
+		final float[] meanScores = new float[n];
+		for (int i = 0; i < n; i++) {
 			meanScores[i] = cummulativeScore[i] / ORonn.NUMBER_OF_MODELS;
 		}
 		return meanScores;

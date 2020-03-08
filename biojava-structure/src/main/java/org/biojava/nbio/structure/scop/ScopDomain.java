@@ -26,7 +26,6 @@ import org.biojava.nbio.structure.align.util.AtomCache;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.List;
@@ -235,8 +234,7 @@ public class ScopDomain implements Serializable, Cloneable, StructureIdentifier 
 	}
 
 	@Override
-	public Structure loadStructure(AtomCache cache) throws StructureException,
-	IOException {
+	public Structure loadStructure(AtomCache cache) throws StructureException {
 		return cache.getStructureForPdbId(pdbId);
 	}
 

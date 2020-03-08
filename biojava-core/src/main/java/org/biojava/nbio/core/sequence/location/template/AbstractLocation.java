@@ -240,13 +240,12 @@ public abstract class AbstractLocation implements Serializable, Location {
 	/**
 	 * Here to allow for recursion
 	 */
-	private List<Location> getAllSubLocations(Location location) {
+	private static List<Location> getAllSubLocations(Location location) {
 		List<Location> flatSubLocations = new ArrayList<>();
 		for (Location l : location.getSubLocations()) {
 			if (l.isComplex()) {
 				flatSubLocations.addAll(getAllSubLocations(l));
-			}
-			else {
+			} else {
 				flatSubLocations.add(l);
 			}
 		}
@@ -358,7 +357,7 @@ public abstract class AbstractLocation implements Serializable, Location {
 	 * Uses the Sequence's CompoundSet to decide if a compound can
 	 * be assgined to ComplementCompound meaning it can complement
 	 */
-	protected <C extends Compound> boolean canComplement(Sequence<C> sequence) {
+	protected static <C extends Compound> boolean canComplement(Sequence<C> sequence) {
 		CompoundSet<C> compoundSet = sequence.getCompoundSet();
 		Compound c = compoundSet.getAllCompounds().iterator().next();
 		return ComplementCompound.class.isAssignableFrom(c.getClass());

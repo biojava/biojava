@@ -1956,13 +1956,13 @@ nBestTrace=nTrace;
 	private static double zByZ(double z1, double z2) {
 		double p1=zToP(z1);
 		double p2=zToP(z2);
-		return(pToZ(p1*p2));
+		return pToZ(p1*p2);
 	}
 
-	protected double zStrAlign(int winSize, int nTrace, double score, int nGaps) {
+	protected static double zStrAlign(int winSize, int nTrace, double score, int nGaps) {
 		double z1=zScore(winSize, nTrace, score);
 		double z2=zGaps(winSize, nTrace, nGaps);
-		return(zByZ(z1, z2));
+		return zByZ(z1, z2);
 	}
 
 	static double zScore(int winSize, int nTrace, double score) {

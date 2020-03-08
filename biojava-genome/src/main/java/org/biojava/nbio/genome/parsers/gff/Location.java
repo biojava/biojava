@@ -857,24 +857,17 @@ public class Location implements Iterable<Location>
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
+		if (obj == null || getClass() != obj.getClass())
 			return false;
 		Location other = (Location) obj;
-		if (mEnd != other.mEnd)
-			return false;
-		if (mStart != other.mStart)
-			return false;
-		return true;
+		return mStart == other.mStart && mEnd == other.mEnd;
 	}
 
 	/**
 	 *
 	 */
-	private boolean isHealthy()
-	{
-		return ( mStart <= mEnd ) && (( mStart <= 0 && mEnd <= 0 ) || (mStart >= 0 && mEnd >= 0));
+	private boolean isHealthy() {
+		return ( mStart <= mEnd ) && (( mStart <= 0 && mEnd <= 0 ) || (mStart >= 0 /*&& mEnd >= 0*/));
 	}
 
 }

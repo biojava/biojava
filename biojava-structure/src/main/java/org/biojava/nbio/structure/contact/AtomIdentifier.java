@@ -21,6 +21,7 @@
 package org.biojava.nbio.structure.contact;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class AtomIdentifier implements Serializable {
 
@@ -63,25 +64,17 @@ public class AtomIdentifier implements Serializable {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
+		if (obj==null || getClass() != obj.getClass())
 			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		AtomIdentifier other = (AtomIdentifier) obj;
-		if (chainId == null) {
-			if (other.chainId != null)
-				return false;
-		} else if (!chainId.equals(other.chainId))
-			return false;
-		if (pdbSerial != other.pdbSerial)
-			return false;
-		return true;
+		else {
+			AtomIdentifier other = (AtomIdentifier) obj;
+			return pdbSerial == other.pdbSerial && Objects.equals(chainId, other.chainId);
+		}
 	}
 
 	@Override
 	public String toString() {
-		return " [" + pdbSerial + " - "
-				+ chainId + "]";
+		return " [" + pdbSerial + " - " + chainId + "]";
 	}
 
 

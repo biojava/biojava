@@ -26,8 +26,7 @@ package org.biojava.nbio.data.sequence;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Objects;
 
 /**
  * A FASTA formatted sequence. Please note that this class does not make any
@@ -41,173 +40,150 @@ import java.util.regex.Pattern;
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)
-public final class FastaSequence implements Comparable<FastaSequence>{
+public final class FastaSequence implements Comparable<FastaSequence> {
 
-	/**
-	 * Sequence id
-	 */
-	private String id;
+    /**
+     * Sequence id
+     */
+    private String id;
 
-	// TODO what about gapped sequence here! should be indicated
-	/**
-	 * Returns the string representation of sequence
-	 */
-	private String sequence;
+    // TODO what about gapped sequence here! should be indicated
+    /**
+     * Returns the string representation of sequence
+     */
+    private String sequence;
 
-	@SuppressWarnings("unused")
-	private FastaSequence() {
-	// Default constructor for JaxB
-	}
+    @SuppressWarnings("unused")
+    private FastaSequence() {
+        // Default constructor for JaxB
+    }
 
-	/**
-	 * Upon construction the any whitespace characters are removed from the
-	 * sequence
-	 *
-	 * @param id
-	 * @param sequence
-	 */
-	public FastaSequence(final String id, final String sequence) {
-	this.id = id.trim();
-	this.sequence = SequenceUtil.cleanSequence(sequence);
-	}
+    /**
+     * Upon construction the any whitespace characters are removed from the
+     * sequence
+     *
+     * @param id
+     * @param sequence
+     */
+    public FastaSequence(final String id, final String sequence) {
+        this.id = id.trim();
+        this.sequence = SequenceUtil.cleanSequence(sequence);
+    }
 
-	/**
-	 * Gets the value of id
-	 *
-	 * @return the value of id
-	 */
-	public String getId() {
-	return id;
-	}
+    /**
+     * Gets the value of id
+     *
+     * @return the value of id
+     */
+    public String getId() {
+        return id;
+    }
 
-	/**
-	 * Gets the value of sequence
-	 *
-	 * @return the value of sequence
-	 */
-	public String getSequence() {
-	return sequence;
-	}
+    /**
+     * Gets the value of sequence
+     *
+     * @return the value of sequence
+     */
+    public String getSequence() {
+        return sequence;
+    }
 
-	public static int countMatchesInSequence(final String theString,
-		final String theRegExp) {
-	final Pattern p = Pattern.compile(theRegExp);
-	final Matcher m = p.matcher(theString);
-	int cnt = 0;
-	while (m.find()) {
-		cnt++;
-	}
-	return cnt;
-	}
+//    public static int countMatchesInSequence(final String theString,
+//                                             final String theRegExp) {
+//        final Pattern p = Pattern.compile(theRegExp);
+//        final Matcher m = p.matcher(theString);
+//        int cnt = 0;
+//        while (m.find()) {
+//            cnt++;
+//        }
+//        return cnt;
+//    }
 
-	public String getFormattedFasta() {
-	return getFormatedSequence(80);
-	}
+    public String getFormattedFasta() {
+        return getFormatedSequence(80);
+    }
 
-	/**
-	 *
-	 * @return one line name, next line sequence, no matter what the sequence
-	 *         length is
-	 */
-	public String getOnelineFasta() {
-	String fasta = ">" + getId() + "\n";
-	fasta += getSequence() + "\n";
-	return fasta;
-	}
+    /**
+     * @return one line name, next line sequence, no matter what the sequence
+     * length is
+     */
+    public String getOnelineFasta() {
+		return ">" + getId() + "\n" + (getSequence() + "\n");
+    }
 
-	/**
-	 * Format sequence per width letter in one string. Without spaces.
-	 *
-	 * @return multiple line formated sequence, one line width letters length
-	 *
-	 */
-	public String getFormatedSequence(final int width) {
-	if (sequence == null) {
-		return "";
-	}
+    /**
+     * Format sequence per width letter in one string. Without spaces.
+     *
+     * @return multiple line formated sequence, one line width letters length
+     */
+    public String getFormatedSequence(final int width) {
+        if (sequence == null) {
+            return "";
+        }
 
-	assert width >= 0 : "Wrong width parameter ";
+        assert width >= 0 : "Wrong width parameter ";
 
-	final StringBuilder sb = new StringBuilder(sequence);
-	int nchunks = sequence.length() / width;
-	// add up inserted new line chars
-	nchunks = (nchunks + sequence.length()) / width;
-	int nlineCharcounter = 0;
-	for (int i = 1; i <= nchunks; i++) {
-		final int insPos = width * i + nlineCharcounter;
-		// to prevent inserting new line in the very end of a sequence then
-		// it would have failed.
-		// Also covers the case when the sequences shorter than width
-		if (sb.length() <= insPos) {
-		break;
-		}
-		sb.insert(insPos, "\n");
-		nlineCharcounter++;
-	}
-	return sb.toString();
-	}
+        final StringBuilder sb = new StringBuilder(sequence);
+        int nchunks = sequence.length() / width;
+        // add up inserted new line chars
+        nchunks = (nchunks + sequence.length()) / width;
+        int nlineCharcounter = 0;
+        for (int i = 1; i <= nchunks; i++) {
+            final int insPos = width * i + nlineCharcounter;
+            // to prevent inserting new line in the very end of a sequence then
+            // it would have failed.
+            // Also covers the case when the sequences shorter than width
+            if (sb.length() <= insPos) {
+                break;
+            }
+            sb.insert(insPos, "\n");
+            nlineCharcounter++;
+        }
+        return sb.toString();
+    }
 
-	/**
-	 *
-	 * @return sequence length
-	 */
-	public int getLength() {
-	return sequence.length();
-	}
+    /**
+     * @return sequence length
+     */
+    public int getLength() {
+        return sequence.length();
+    }
 
-	/**
-	 * Same as oneLineFasta
-	 */
-	@Override
-	public String toString() {
-	return this.getOnelineFasta();
-	}
+    /**
+     * Same as oneLineFasta
+     */
+    @Override
+    public String toString() {
+        return this.getOnelineFasta();
+    }
 
-	@Override
-	public int hashCode() {
-	final int prime = 31;
-	int result = 1;
-	result = prime * result + ((id == null) ? 0 : id.hashCode());
-	result = prime * result
-		+ ((sequence == null) ? 0 : sequence.hashCode());
-	return result;
-	}
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        result = prime * result + ((sequence == null) ? 0 : sequence.hashCode());
+        return result;
+    }
 
-	@Override
-	public boolean equals(final Object obj) {
-	if (this == obj) {
-		return true;
-	}
-	if (obj == null) {
-		return false;
-	}
-	if (getClass() != obj.getClass()) {
-		return false;
-	}
-	final FastaSequence other = (FastaSequence) obj;
-	if (id == null) {
-		if (other.id != null) {
-		return false;
-		}
-	} else if (!id.equals(other.id)) {
-		return false;
-	}
-	if (sequence == null) {
-		if (other.sequence != null) {
-		return false;
-		}
-	} else if (!sequence.equals(other.sequence)) {
-		return false;
-	}
-	return true;
-	}
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj)
+            return true;
 
-	@Override
-	public int compareTo(FastaSequence o) {
-		if(o==null || o.id==null)
-			return 1;
+        if (obj == null || getClass() != obj.getClass())
+            return false;
 
-		return this.getId().compareTo(o.id);
-	}
+        final FastaSequence other = (FastaSequence) obj;
+        return Objects.equals(id, other.id) && Objects.equals(sequence, other.sequence);
+    }
+
+    @Override
+    public int compareTo(FastaSequence o) {
+        if (o == null || o.id == null)
+            return 1;
+
+        return this.getId().compareTo(o.id);
+    }
 
 }

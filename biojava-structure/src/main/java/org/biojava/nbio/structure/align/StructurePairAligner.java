@@ -519,7 +519,7 @@ public class StructurePairAligner {
 
 		} else if (params.isJoinPlo()) {
 			// this approach by StrComPy (peter lackner):
-			frags = joiner.frag_pairwise_compat(fp, params.getAngleDiff(),
+			frags = FragmentJoiner.frag_pairwise_compat(fp, params.getAngleDiff(),
 					params.getFragCompat(), params.getMaxrefine());
 
 		} else {

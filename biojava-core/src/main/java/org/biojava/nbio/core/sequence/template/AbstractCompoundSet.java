@@ -21,7 +21,6 @@
  */
 package org.biojava.nbio.core.sequence.template;
 
-import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
 import org.biojava.nbio.core.util.Equals;
 import org.biojava.nbio.core.util.Hashcoder;
 import org.slf4j.Logger;

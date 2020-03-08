@@ -227,6 +227,7 @@ public class Site implements PDBRecord, Comparable<Site> {
 
 	@Override
 	public boolean equals(Object obj) {
+		if (this == obj) return true;
 		if (obj == null) {
 			return false;
 		}
@@ -234,19 +235,7 @@ public class Site implements PDBRecord, Comparable<Site> {
 			return false;
 		}
 		final Site other = (Site) obj;
-		if (!Objects.equals(this.siteID, other.siteID)) {
-			return false;
-		}
-		if (!Objects.equals(this.groups, other.groups)) {
-			return false;
-		}
-		if (!Objects.equals(this.evCode, other.evCode)) {
-			return false;
-		}
-		if (!Objects.equals(this.description, other.description)) {
-			return false;
-		}
-		return true;
+		return Objects.equals(this.siteID, other.siteID) && Objects.equals(this.groups, other.groups) && Objects.equals(this.evCode, other.evCode) && Objects.equals(this.description, other.description);
 	}
 
 	@Override

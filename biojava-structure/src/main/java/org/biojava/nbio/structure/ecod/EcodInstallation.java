@@ -355,7 +355,7 @@ public class EcodInstallation implements EcodDatabase {
 				return false;
 
 			// Re-download old copies of "latest"
-			if(updateFrequency != null && requestedVersion == DEFAULT_VERSION ) {
+			if(updateFrequency != null && requestedVersion.equals(DEFAULT_VERSION)) {
 				long mod = f.lastModified();
 				// Time of last update
 				Date lastUpdate = new Date();

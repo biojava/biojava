@@ -30,7 +30,6 @@ package org.biojava.nbio.structure.align.fatcat.calc;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.Group;
-import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.geometry.SuperPositions;
 
 import javax.vecmath.Matrix4d;
@@ -197,9 +196,8 @@ public class StructureAlignmentOptimizer
 	/** run the optimization
 	 *
 	 * @param maxi maximum nr. of iterations
-	 * @throws StructureException
-	 */
-	public void runOptimization(int maxi) throws StructureException{
+     */
+	public void runOptimization(int maxi) {
 		superimposeBySet();
 		if ( debug)
 			System.err.println("   initial rmsd " + rmsd);

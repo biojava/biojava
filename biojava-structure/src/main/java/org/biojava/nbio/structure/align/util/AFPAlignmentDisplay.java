@@ -386,12 +386,10 @@ public class AFPAlignmentDisplay
 	 * @throws NoSuchMethodException If an error occurs when invoking jmol
 	 * @throws InvocationTargetException If an error occurs when invoking jmol
 	 * @throws IllegalAccessException If an error occurs when invoking jmol
-	 * @throws StructureException
-	 */
+     */
 	public static Structure createArtificalStructure(AFPChain afpChain, Atom[] ca1,
 													 Atom[] ca2) throws ClassNotFoundException, NoSuchMethodException,
-			InvocationTargetException, IllegalAccessException, StructureException
-	{
+			InvocationTargetException, IllegalAccessException {
 
 		if ( afpChain.getNrEQR() < 1){
 			return GuiWrapper.getAlignedStructure(ca1, ca2);

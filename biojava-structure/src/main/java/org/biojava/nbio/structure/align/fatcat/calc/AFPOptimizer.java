@@ -27,7 +27,6 @@
 package org.biojava.nbio.structure.align.fatcat.calc;
 
 import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.model.AFP;
 import org.biojava.nbio.structure.align.model.AFPChain;
 
@@ -41,8 +40,7 @@ public class AFPOptimizer
 	/**
 	 * optimize the alignment by dynamic programming
 	 */
-	public static void optimizeAln(FatCatParameters params, AFPChain afpChain,Atom[] ca1, Atom[] ca2) throws StructureException
-	{
+	public static void optimizeAln(FatCatParameters params, AFPChain afpChain,Atom[] ca1, Atom[] ca2) {
 
 		int minLen = afpChain.getMinLen();
 		int fragLen = params.getFragLen();

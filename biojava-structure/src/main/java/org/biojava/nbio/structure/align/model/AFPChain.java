@@ -400,13 +400,10 @@ public class AFPChain implements Serializable, Cloneable {
 
 	public boolean isSignificantResult(){
 		if ( algorithmName.equalsIgnoreCase(CeMain.algorithmName) || algorithmName.equalsIgnoreCase(CeSideChainMain.algorithmName)){
-			if (probability >= 3.5)
-				return true;
+			return probability >= 3.5;
 		} else {
-			if (probability < 0.01)
-				return true;
+			return probability < 0.01;
 		}
-		return false;
 	}
 
 
@@ -1392,8 +1389,7 @@ public class AFPChain implements Serializable, Cloneable {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
+		if (this == obj) return true;
 		if (obj == null)
 			return false;
 		if (getClass() != obj.getClass())
@@ -1409,9 +1405,7 @@ public class AFPChain implements Serializable, Cloneable {
 			return false;
 		if (!Arrays.equals(optLen, other.optLen))
 			return false;
-		if (optLength != other.optLength)
-			return false;
-		return true;
+		return optLength == other.optLength;
 	}
 
 
