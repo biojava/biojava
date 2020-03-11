@@ -71,13 +71,13 @@ public class GenbankCookbookTest {
 		 */
 		//Try with the GenbankProxySequenceReader
         GenbankProxySequenceReader<AminoAcidCompound> genbankProteinReader
-				= new GenbankProxySequenceReader<>(System.getProperty("java.io.tmpdir"), "NP_000257", AminoAcidCompoundSet.aminoAcidCompoundSet);
+				= new GenbankProxySequenceReader<>("NP_000257", AminoAcidCompoundSet.aminoAcidCompoundSet);
 		ProteinSequence proteinSequence = new ProteinSequence(genbankProteinReader);
 		genbankProteinReader.getHeaderParser().parseHeader(genbankProteinReader.getHeader(), proteinSequence);
 		//logger.info("Sequence({},{}) = {}...", proteinSequence.getAccession(), proteinSequence.getLength(), proteinSequence.getSequenceAsString().substring(0, 10));
 
 	GenbankProxySequenceReader<NucleotideCompound> genbankDNAReader
-	= new GenbankProxySequenceReader<>(System.getProperty("java.io.tmpdir"), "NM_001126", DNACompoundSet.getDNACompoundSet());
+	= new GenbankProxySequenceReader<>("NM_001126", DNACompoundSet.getDNACompoundSet());
 	DNASequence dnaSequence = new DNASequence(genbankDNAReader);
 	genbankDNAReader.getHeaderParser().parseHeader(genbankDNAReader.getHeader(), dnaSequence);
 	//logger.info("Sequence({},{}) = {}...", dnaSequence.getAccession(), dnaSequence.getLength(), dnaSequence.getSequenceAsString().substring(0, 10));

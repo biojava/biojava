@@ -125,7 +125,7 @@ public class GenbankProxySequenceReaderTest {
 	public void testFeatures() throws IOException, InterruptedException, CompoundNotFoundException {
 		logger.info("run test for protein: {}", gi);
 		GenbankProxySequenceReader<AminoAcidCompound> genbankReader
-				= new GenbankProxySequenceReader<>(System.getProperty("java.io.tmpdir"),
+				= new GenbankProxySequenceReader<>(
 						this.gi,
 				AminoAcidCompoundSet.aminoAcidCompoundSet);
 
@@ -180,7 +180,7 @@ public class GenbankProxySequenceReaderTest {
 		logger.info("create protein sequence test for target {}", gi);
 
 		GenbankProxySequenceReader<AminoAcidCompound> genbankReader
-				= new GenbankProxySequenceReader<>(System.getProperty("java.io.tmpdir"),
+				= new GenbankProxySequenceReader<>(
 						this.gi,
 				AminoAcidCompoundSet.aminoAcidCompoundSet);
 

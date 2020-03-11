@@ -20,7 +20,7 @@
  */
 package org.biojava.nbio.structure.align.util;
 
-import org.biojava.nbio.core.util.FileDownloadUtils;
+import org.biojava.nbio.core.util.Download;
 import org.biojava.nbio.core.util.InputStreamProvider;
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.client.StructureName;
@@ -724,7 +724,7 @@ public class AtomCache {
 	 *            to a directory
 	 */
 	public void setPath(String path) {
-		this.path = FileDownloadUtils.expandUserHome(path);
+		this.path = Download.expandUserHome(path);
 	}
 
 	public void setPdpprovider(PDPProvider pdpprovider) {

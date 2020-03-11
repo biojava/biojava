@@ -20,7 +20,7 @@
  */
 package org.biojava.nbio.structure.align.util;
 
-import org.biojava.nbio.core.util.FileDownloadUtils;
+import org.biojava.nbio.core.util.Download;
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.io.LocalPDBDirectory;
 import org.biojava.nbio.structure.io.LocalPDBDirectory.FetchBehavior;
@@ -354,7 +354,7 @@ public class AtomCacheTest {
 		System.setProperty(UserConfiguration.PDB_DIR, tmpCache.toString());
 		System.setProperty(UserConfiguration.PDB_CACHE_DIR, tmpCache.toString());
 
-		FileDownloadUtils.deleteDirectory(tmpCache);
+		Download.deleteDirectory(tmpCache);
 		Files.createDirectory(tmpCache);
 		try {
 			cache.setPath(tmpCache.toString());
@@ -374,7 +374,7 @@ public class AtomCacheTest {
 			Files.createDirectories(testCif.getParent());
 			URL resource = AtomCacheTest.class.getResource("/atp.cif.gz");
 			File src = new File(resource.getPath());
-			FileDownloadUtils.copy(src, testCif.toFile());
+			Download.copy(src, testCif.toFile());
 
 			// Load structure
 			Structure s = cache.getStructure("1ABC");
@@ -394,7 +394,7 @@ public class AtomCacheTest {
 			assertTrue(chem.getAtoms().size() > 0);
 			assertEquals("NON-POLYMER", chem.getType());
 		} finally {
-			FileDownloadUtils.deleteDirectory(tmpCache);
+			Download.deleteDirectory(tmpCache);
 		}
 	}
 
@@ -413,7 +413,7 @@ public class AtomCacheTest {
 		System.setProperty(UserConfiguration.PDB_DIR, tmpCache.toString());
 		System.setProperty(UserConfiguration.PDB_CACHE_DIR, tmpCache.toString());
 
-		FileDownloadUtils.deleteDirectory(tmpCache);
+		Download.deleteDirectory(tmpCache);
 		Files.createDirectory(tmpCache);
 		try {
 			cache.setPath(tmpCache.toString());
@@ -437,7 +437,7 @@ public class AtomCacheTest {
 			Files.createDirectories(testCif.getParent());
 			URL resource = AtomCacheTest.class.getResource("/atp.cif.gz");
 			File src = new File(resource.getPath());
-			FileDownloadUtils.copy(src, testCif.toFile());
+			Download.copy(src, testCif.toFile());
 
 			// Load structure
 			Structure s = cache.getStructure("1ABC");
@@ -457,7 +457,7 @@ public class AtomCacheTest {
 			assertTrue(chem.getAtoms().size() > 0);
 			assertEquals("NON-POLYMER", chem.getType());
 		} finally {
-			FileDownloadUtils.deleteDirectory(tmpCache);
+			Download.deleteDirectory(tmpCache);
 		}
 	}
 

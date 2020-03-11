@@ -33,9 +33,10 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.concurrent.TimeUnit;
 import java.util.zip.GZIPInputStream;
 
-public class FileDownloadUtils {
+public class Download {
 
-	private static final Logger logger = LoggerFactory.getLogger(FileDownloadUtils.class);
+	private static final Logger logger = LoggerFactory.getLogger(Download.class);
+	private static final int DOWNLOAD_TIMEOUT_MS_DEFAULT = 60000;
 
 	/**
 	 * Copy the content of file src to dst TODO since java 1.7 this is provided
@@ -77,6 +78,7 @@ public class FileDownloadUtils {
 		bb.followRedirects(true);
 		bb.followSslRedirects(true);
 
+
 //		try {
 			File cacheDir = Paths.get(System.getProperty("java.io.tmpdir"), "biojava").toFile();
 			cacheDir.mkdirs();
@@ -90,29 +92,29 @@ public class FileDownloadUtils {
 	}
 
 
-	/**
-	 * Converts path to Unix convention and adds a terminating slash if it was
-	 * omitted
-	 *
-	 * @param path original platform dependent path
-	 * @return path in Unix convention
-	 * @author Peter Rose
-	 * @since 3.2
-	 */
-	public static String toUnixPath(String path) {
-		String uPath = path;
-		if (uPath.contains("\\")) {
-			uPath = uPath.replaceAll("\\\\", "/");
-		}
-		// this should be removed, it's need since "\" is added AtomCache code
-		if (uPath.endsWith("//")) {
-			uPath = uPath.substring(0, uPath.length() - 1);
-		}
-		if (!uPath.endsWith("/")) {
-			uPath = uPath + "/";
-		}
-		return uPath;
-	}
+//	/**
+//	 * Converts path to Unix convention and adds a terminating slash if it was
+//	 * omitted
+//	 *
+//	 * @param path original platform dependent path
+//	 * @return path in Unix convention
+//	 * @author Peter Rose
+//	 * @since 3.2
+//	 */
+//	public static String toUnixPath(String path) {
+//		String uPath = path;
+//		if (uPath.contains("\\")) {
+//			uPath = uPath.replaceAll("\\\\", "/");
+//		}
+//		// this should be removed, it's need since "\" is added AtomCache code
+//		if (uPath.endsWith("//")) {
+//			uPath = uPath.substring(0, uPath.length() - 1);
+//		}
+//		if (!uPath.endsWith("/")) {
+//			uPath = uPath + "/";
+//		}
+//		return uPath;
+//	}
 
 	/**
 	 * Expands ~ in paths to the user's home directory.
@@ -180,7 +182,7 @@ public class FileDownloadUtils {
 	 * @throws IOException
 	 * @author Jacek Grzebyta
 	 */
-	public static URLConnection prepareURLConnection(String url, int timeout) throws IOException {
+	private static URLConnection prepareURLConnection(String url, int timeout) throws IOException {
 		URLConnection connection = new URL(url).openConnection();
 		connection.setReadTimeout(timeout);
 		connection.setConnectTimeout(timeout);
@@ -212,6 +214,10 @@ public class FileDownloadUtils {
 	    });
 	}
 
+	public static InputStream stream(URL url) throws IOException {
+		return stream(url, DOWNLOAD_TIMEOUT_MS_DEFAULT);
+	}
+
 	/**
 	 * Open a URL and return an InputStream to it
 	 * if acceptGzipEncoding == true, use GZIPEncoding to
@@ -224,7 +230,7 @@ public class FileDownloadUtils {
 	 * @return an {@link InputStream} of response
 	 * @throws IOException due to an error opening the URL
 	 */
-	public static InputStream downloadStream(URL url, int timeoutMS) throws IOException {
+	public static InputStream stream(URL url, int timeoutMS) throws IOException {
 //		InputStream inStream;
 //		URLConnection huc = URLConnectionTools.openURLConnection(url,timeout);
 //
@@ -248,20 +254,17 @@ public class FileDownloadUtils {
 			}
 
 			ResponseBody b = r.body();
+//			if (b.contentLength()==0) {
+//				return new ByteArrayInputStream(new byte[] { } ); //HACK
+//			}
 
-			InputStream inStream = new ByteArrayInputStream(b.bytes()); //b.byteStream();
+			InputStream inStream =
+					//b.byteStream();
+					new ByteArrayInputStream(b.bytes()); //b.byteStream();
 
-			if (b.contentType().toString().contains("gzip")) {
+			if (b.contentType().toString().contains("-gzip")) {
 				return new GZIPInputStream(inStream);
 			}
-
-//			if (acceptGzipEncoding) {
-////				if (contentEncoding != null) {
-////					if (contentEncoding.contains("gzip")) {
-
-////					}
-////				}
-//			}
 
 			return inStream;
 		}

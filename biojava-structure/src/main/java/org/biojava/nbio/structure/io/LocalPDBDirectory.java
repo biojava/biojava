@@ -21,7 +21,7 @@
  */
 package org.biojava.nbio.structure.io;
 
-import org.biojava.nbio.core.util.FileDownloadUtils;
+import org.biojava.nbio.core.util.Download;
 import org.biojava.nbio.core.util.InputStreamProvider;
 import org.biojava.nbio.structure.PDBStatus;
 import org.biojava.nbio.structure.PDBStatus.Status;
@@ -172,7 +172,7 @@ import java.util.*;
 			path = config.getPdbFilePath();
 			logger.debug("Initialising from system property/environment variable to path: {}", path);
 		} else {
-			path = FileDownloadUtils.expandUserHome(path);
+			path = Download.expandUserHome(path);
 			logger.debug("Initialising with path {}", path);
 		}
 		this.path = new File(path);
@@ -194,7 +194,7 @@ import java.util.*;
 	 * Sets the path for the directory where PDB files are read/written
 	 */
 	public void setPath(String p){
-		path = new File(FileDownloadUtils.expandUserHome(p)) ;
+		path = new File(Download.expandUserHome(p)) ;
 		initPaths();
 	}
 
@@ -300,7 +300,7 @@ import java.util.*;
 	@Override
 	public Structure getStructure(String filename) throws IOException
 	{
-		filename = FileDownloadUtils.expandUserHome(filename);
+		filename = Download.expandUserHome(filename);
 		File f = new File(filename);
 		return getStructure(f);
 
@@ -516,7 +516,7 @@ import java.util.*;
 //		logger.info("Fetching " + ftp);
 //		logger.info("Writing to "+ realFile);
 
-		return FileDownloadUtils.downloadStream(url, 60000);
+		return Download.stream(url);
 
 		// Commented out following code used for setting the modified date to the downloaded file - JD 2015-01-15
 		// The only reason to have it was in order to get an rsync-like behavior, respecting the timestamps

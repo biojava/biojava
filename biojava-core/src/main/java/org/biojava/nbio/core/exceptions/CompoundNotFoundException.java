@@ -25,7 +25,9 @@
  */
 package org.biojava.nbio.core.exceptions;
 
-public class CompoundNotFoundException extends Exception {
+import java.io.IOException;
+
+public class CompoundNotFoundException extends IOException {
 	/**
 	 *
 	 */

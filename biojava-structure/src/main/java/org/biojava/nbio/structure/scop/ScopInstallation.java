@@ -24,7 +24,7 @@
 
 package org.biojava.nbio.structure.scop;
 
-import org.biojava.nbio.core.util.FileDownloadUtils;
+import org.biojava.nbio.core.util.Download;
 import org.biojava.nbio.core.util.InputStreamProvider;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureTools;
@@ -724,7 +724,7 @@ public class ScopInstallation implements LocalScopDatabase {
 
 	protected void downloadFileFromRemote(URL remoteURL, File localFile) throws IOException{
 		logger.info("Downloading " + remoteURL + " to: " + localFile);
-		FileDownloadUtils.downloadFile(remoteURL, localFile);
+		Download.downloadFile(remoteURL, localFile);
 	}
 
 	private boolean claFileAvailable(){

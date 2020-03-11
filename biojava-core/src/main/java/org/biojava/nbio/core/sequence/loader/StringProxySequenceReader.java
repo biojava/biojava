@@ -32,6 +32,7 @@ import org.biojava.nbio.core.sequence.storage.SequenceAsStringHelper;
 import org.biojava.nbio.core.sequence.template.*;
 import org.biojava.nbio.core.util.Equals;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -63,11 +64,15 @@ public class StringProxySequenceReader<C extends Compound> implements ProxySeque
 
 	@Override
 	public void setContents(String sequence) throws CompoundNotFoundException {
+		if (sequence == null)
+			throw new CompoundNotFoundException("null sequence: " +  sequence);
+
 		// Horrendously inefficient - pretty much the way the old BJ did things.
 		// TODO Should be optimised.
 		this.sequence = sequence;
 		this.parsedCompounds.clear();
-		for (int i = 0; i < sequence.length();) {
+		int l = sequence.length();
+		for (int i = 0; i < l;) {
 			String compoundStr = null;
 			C compound = null;
 			for (int compoundStrLength = 1; compound == null && compoundStrLength <= compoundSet.getMaxSingleCompoundStringLength(); compoundStrLength++) {

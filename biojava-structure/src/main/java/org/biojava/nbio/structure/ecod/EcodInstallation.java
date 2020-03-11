@@ -20,7 +20,7 @@
 
 package org.biojava.nbio.structure.ecod;
 
-import org.biojava.nbio.core.util.FileDownloadUtils;
+import org.biojava.nbio.core.util.Download;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -388,7 +388,7 @@ public class EcodInstallation implements EcodDatabase {
 			File localFile = getDomainFile();
 
 			logger.info("Downloading {} to: {}",domainsURL, localFile);
-			FileDownloadUtils.downloadFile(domainsURL, localFile);
+			Download.downloadFile(domainsURL, localFile);
 		} catch (MalformedURLException e) {
 			logger.error("Malformed url: "+ url + DOMAINS_PATH + getDomainFilename(),e);
 		} finally {

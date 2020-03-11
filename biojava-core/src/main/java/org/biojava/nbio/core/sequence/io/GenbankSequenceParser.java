@@ -54,6 +54,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -143,11 +144,12 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 		// Get an ordered list of key->value pairs in array-tuples
 		do {
 			section = this.readSection(bufferedReader);
-			sectionKey = section.get(0)[0];
+			String[] s0 = section.get(0);
+			sectionKey = s0[0];
 			if (sectionKey == null) {
 				//if we reach the end of the file, section contains empty strings
-				if(section.get(0)[1]==null || section.get(0)[1].equals("") ||
-						section.get(0)[1].length()==0) {
+				if(s0[1]==null || s0[1].equals("") ||
+						s0[1].length()==0) {
 					throw new ParserException(Messages.ENDOFFILE);
 				}
 				throw new ParserException(Messages.SECTIONKEYNULL);
@@ -155,7 +157,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 			// process section-by-section
 			switch (sectionKey) {
 				case LOCUS_TAG: {
-					String loc = section.get(0)[1];
+					String loc = s0[1];
 					header = loc;
 					Matcher m = lp.matcher(loc);
 					if (m.matches()) {
@@ -169,7 +171,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 							compoundType = AminoAcidCompoundSet.aminoAcidCompoundSet;
 						} else if (lengthUnits.equalsIgnoreCase("bp")) {
 							if (type != null) {
-								if (type.contains("RNA")) {
+								if (type.contains("RNA")) { //HACK
 									compoundType = RNACompoundSet.getRNACompoundSet();
 								} else {
 									compoundType = DNACompoundSet.getDNACompoundSet();
@@ -179,7 +181,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 							}
 						}
 
-						log.debug("compound type: {}", compoundType.getClass().getSimpleName());
+						//log.debug("compound type: {}", compoundType.getClass().getSimpleName());
 
 					} else {
 						throw new ParserException("Bad locus line");
@@ -187,17 +189,17 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 					break;
 				}
 				case DEFINITION_TAG:
-					headerParser.setDescription(section.get(0)[1]);
+					headerParser.setDescription(s0[1]);
 					break;
 				case ACCESSION_TAG:
 					// if multiple accessions, store only first as accession,
 					// and store rest in annotation
-					String[] accs = section.get(0)[1].split("\\s+");
+					String[] accs = s0[1].split("\\s+");
 					accession = accs[0].trim();
 					headerParser.setAccession(accession);
 					break;
 				case VERSION_TAG: {
-					String ver = section.get(0)[1];
+					String ver = s0[1];
 					Matcher m = vp.matcher(ver);
 					if (m.matches()) {
 						String verAcc = m.group(1);
@@ -244,15 +246,16 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 					break;
 				case COMMENT_TAG:
 					// Set up some comments
-					headerParser.setComment(section.get(0)[1]);
+					headerParser.setComment(s0[1]);
 					break;
 				case FEATURE_TAG:
 					// starting from second line of input, start a new feature whenever we come across
 					// a key that does not start with /
 					AbstractFeature gbFeature = null;
 					for (int i = 1; i < section.size(); i++) {
-						String key = section.get(i)[0];
-						String val = section.get(i)[1];
+						String[] si = section.get(i);
+						String key = si[0];
+						String val = si[1];
 						if (key.startsWith("/")) {
 							if (gbFeature == null) {
 								throw new ParserException("Malformed GenBank file: found a qualifier without feature.");
@@ -271,7 +274,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 									DBReferenceInfo xref = new DBReferenceInfo(dbname, raccession);
 									gbFeature.addQualifier(key, xref);
 
-									ArrayList<DBReferenceInfo> listDBEntry = new ArrayList<>();
+									ArrayList<DBReferenceInfo> listDBEntry = new ArrayList<>(1);
 									listDBEntry.add(xref);
 									mapDB.put(key, listDBEntry);
 								} else {
@@ -284,24 +287,17 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 								if (key.equalsIgnoreCase("translation")) {
 									// strip spaces from sequence
 									val = val.replaceAll("\\s+", "");
-									Qualifier q = new Qualifier(key, val);
-									gbFeature.addQualifier(key, q);
+									gbFeature.addQualifier(key, new Qualifier(key, val));
 								} else {
-									Qualifier q = new Qualifier(key, val);
-									gbFeature.addQualifier(key, q);
+									gbFeature.addQualifier(key, new Qualifier(key, val));
 								}
 							}
 						} else {
 							// new feature!
 							gbFeature = new TextFeature(key, val, key, key);
-							Location l =
-									locationParser.parse(val);
-							gbFeature.setLocation((AbstractLocation) l);
+							gbFeature.setLocation((AbstractLocation) locationParser.parse(val));
 
-							if (!featureCollection.containsKey(key)) {
-								featureCollection.put(key, new ArrayList());
-							}
-							featureCollection.get(key).add(gbFeature);
+							featureCollection.computeIfAbsent(key, (x)->new ArrayList<>(1)).add(gbFeature);
 						}
 					}
 					break;
@@ -363,8 +359,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 					// having only white space characters
 					continue;
 				}
-				if (line == null
-						|| (!line.startsWith(" ") && linecount++ > 0 && (!firstSecKey
+				if (line == null || (!line.startsWith(" ") && linecount++ > 0 && (!firstSecKey
 						.equals(START_SEQUENCE_TAG) || line
 						.startsWith(END_SEQUENCE_TAG)))) {
 					// dump out last part of section
@@ -417,7 +412,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 		try {
 			parse(bufferedReader);
 		} catch (ParserException e) {
-			if(e.getMessage().equalsIgnoreCase(Messages.ENDOFFILE))	return null;
+			if (e.getMessage().equalsIgnoreCase(Messages.ENDOFFILE)) return null;
 			else throw new ParserException(e.getMessage());
 		}
 

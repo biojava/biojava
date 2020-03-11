@@ -92,6 +92,7 @@ public class TestMmtfPerformance {
 
 		// first make sure chemcomp cache is warmed up (chemcomp files are parsed). Like that we count the parsing time without the influence of chemcomp parsing
 		MmtfActions.readFromInputStream(new ByteArrayInputStream(mmtfdata));
+		
 		parser.parsePDBFile(new ByteArrayInputStream(pdbBytes));
 
 		for ( int i =0 ; i< NUMBER_OF_REPEATS ; i++) {

@@ -27,7 +27,7 @@
 
 package org.biojava.nbio.structure.align.util;
 
-import org.biojava.nbio.core.util.FileDownloadUtils;
+import org.biojava.nbio.core.util.Download;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -90,7 +90,7 @@ public class URLConnectionTools {
 	 */
 	public static InputStream getInputStream(URL url, int timeout) throws IOException
 	{
-		return FileDownloadUtils.downloadStream(url, timeout);
+		return Download.stream(url, timeout);
 	}
 
 
@@ -106,7 +106,7 @@ public class URLConnectionTools {
 	 */
 	public static InputStream getInputStream(URL url) throws IOException
 	{
-		return FileDownloadUtils.downloadStream(url, DEFAULT_CONNECTION_TIMEOUT);
+		return Download.stream(url, DEFAULT_CONNECTION_TIMEOUT);
 	}
 
 	/**

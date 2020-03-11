@@ -24,7 +24,7 @@
  */
 package org.biojava.nbio.structure.io.sifts;
 
-import org.biojava.nbio.core.util.FileDownloadUtils;
+import org.biojava.nbio.core.util.Download;
 import org.biojava.nbio.core.util.InputStreamProvider;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.slf4j.Logger;
@@ -88,7 +88,7 @@ public class SiftsMappingProvider {
 			String u = String.format(fileLoc,pdbId);
 			URL url = new URL(u);
 			logger.debug("Downloading SIFTS file {} to {}",url,dest);
-			FileDownloadUtils.downloadFile(url, dest);
+			Download.downloadFile(url, dest);
 		}
 
 		InputStreamProvider prov = new InputStreamProvider();

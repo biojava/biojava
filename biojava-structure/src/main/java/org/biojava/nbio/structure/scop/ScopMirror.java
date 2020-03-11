@@ -20,7 +20,7 @@
  */
 package org.biojava.nbio.structure.scop;
 
-import org.biojava.nbio.core.util.FileDownloadUtils;
+import org.biojava.nbio.core.util.Download;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -86,12 +86,12 @@ public class ScopMirror {
 	public boolean isReachable() {
 		final int timeout = 800;
 		if(rootURL != null) {
-			return FileDownloadUtils.ping(getRootURL(),timeout);
+			return Download.ping(getRootURL(),timeout);
 		} else {
 			try {
 				URI cla = new URI(getClaURL("VERSION"));
 				String host = cla.getHost();
-				return FileDownloadUtils.ping(host,timeout);
+				return Download.ping(host,timeout);
 			} catch (URISyntaxException e) {
 				return false;
 			}

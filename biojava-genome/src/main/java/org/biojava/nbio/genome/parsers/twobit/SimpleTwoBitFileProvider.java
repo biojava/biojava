@@ -20,7 +20,7 @@
  */
 package org.biojava.nbio.genome.parsers.twobit;
 
-import org.biojava.nbio.core.util.FileDownloadUtils;
+import org.biojava.nbio.core.util.Download;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,7 +49,7 @@ public class SimpleTwoBitFileProvider {
 			logger.info("downloading " + twoBitFileURL + " to " + tmp.getAbsolutePath());
 
 			// 2bit files are large and take a while to download
-			FileDownloadUtils.downloadFile(twoBitFileURL, tmp);
+			Download.downloadFile(twoBitFileURL, tmp);
 
 			// check the parent directory exists
 

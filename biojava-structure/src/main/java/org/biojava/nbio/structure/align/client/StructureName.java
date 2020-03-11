@@ -21,7 +21,7 @@
 package org.biojava.nbio.structure.align.client;
 
 
-import org.biojava.nbio.core.util.FileDownloadUtils;
+import org.biojava.nbio.core.util.Download;
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.cath.CathDomain;
@@ -218,7 +218,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 			return;
 
 		// Guess FILE based on file existence
-		File file = new File(FileDownloadUtils.expandUserHome(name));
+		File file = new File(Download.expandUserHome(name));
 		if( file.canRead() && !file.isDirectory() ) {
 			// an attempt to mitigate issue #398. It doesn't fix it but it catches the most common case of passing a pdb id and finding a file in working dir matching it
 			if (name.matches("\\d\\w\\w\\w")) {
@@ -478,7 +478,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 					} else {
 						filename = name;
 					}
-					filename = FileDownloadUtils.expandUserHome(filename);
+					filename = Download.expandUserHome(filename);
 					base = new URLIdentifier(new File(filename).toURI().toURL());
 				} catch (MalformedURLException e) {
 					// Should never happen
