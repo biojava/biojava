@@ -222,7 +222,7 @@ public class PDBHeader implements PDBRecord {
 
 	}
 
-	private void printMultiLine(StringBuffer buf, String lineStart, String data, char breakChar){
+	private static void printMultiLine(StringBuffer buf, String lineStart, String data, char breakChar){
 		if ( lineStart.length() !=  9)
 			logger.info("lineStart != 9, there will be problems :" + lineStart);
 
@@ -306,7 +306,7 @@ public class PDBHeader implements PDBRecord {
 
 	}
 
-	private void fillLine(StringBuffer buf, int currentPos){
+	private static void fillLine(StringBuffer buf, int currentPos){
 		int l = currentPos;
 		while (l < 67){
 			l++;

@@ -1,10 +1,6 @@
 package org.biojava.nbio.structure.contact;
 
-import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.Calc;
-import org.biojava.nbio.structure.Chain;
-import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureTools;
+import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.xtal.CrystalTransform;
 import org.biojava.nbio.structure.xtal.SpaceGroup;
 
@@ -23,7 +19,7 @@ public class InterfaceFinder {
     private static final CrystalTransform IDENTITY_TRANSFORM = new CrystalTransform((SpaceGroup) null);
     private static final boolean INCLUDE_HETATOMS = true;
 
-    private Structure structure;
+    private final Structure structure;
     private double cutoff;
 
     private BoundingBox[] boundingBoxes;

@@ -32,7 +32,6 @@ import org.biojava.nbio.core.sequence.storage.SequenceAsStringHelper;
 import org.biojava.nbio.core.sequence.template.*;
 import org.biojava.nbio.core.util.Equals;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;

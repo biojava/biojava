@@ -406,8 +406,10 @@ public class EntityInfo implements Serializable {
 			Group seqResGroup = c.getSeqResGroup(i);
 
 			if (seqResGroup==null) {
-				logger.warn("The SEQRES group is null for index {} in chain with asym_id {}, whilst it wasn't null in chain with asym_id {}",
-						 i, c.getId(), chain.getId());
+				if (logger.isWarnEnabled()) {
+					logger.warn("The SEQRES group is null for index {} in chain with asym_id {}, whilst it wasn't null in chain with asym_id {}",
+							i, c.getId(), chain.getId());
+				}
 				continue;
 			}
 

@@ -23,174 +23,187 @@ package org.biojava.nbio.ws.hmmer;
 import java.io.Serializable;
 import java.util.SortedSet;
 
-/** The results of a Hmmer search for a single sequence
+/**
+ * The results of a Hmmer search for a single sequence
  *
  * @author Andreas Prlic
  * @since 3.0.3
  */
-public class HmmerResult implements Comparable<HmmerResult>, Serializable{
+public class HmmerResult implements Comparable<HmmerResult>, Serializable {
 
-	/**
-	 *
-	 */
-	private static final long serialVersionUID = -6016026193090737943L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -6016026193090737943L;
 
-	String desc ;
-	Float score;
-	Float evalue;
-	Double pvalue;
-	String acc;
-	Integer dcl;
-	String name;
-	Integer ndom;
-	Integer nreported;
+    String desc;
+    Float score;
+    Float evalue;
+    Double pvalue;
+    String acc;
+    Integer dcl;
+    String name;
+    Integer ndom;
+    Integer nreported;
 
-	SortedSet<HmmerDomain>domains;
+    SortedSet<HmmerDomain> domains;
 
-	public SortedSet<HmmerDomain> getDomains() {
-		return domains;
-	}
-	public void setDomains(SortedSet<HmmerDomain> domains) {
-		this.domains = domains;
-	}
-	public String getDesc() {
-		return desc;
-	}
-	public void setDesc(String desc) {
-		this.desc = desc;
-	}
-	public Float getScore() {
-		return score;
-	}
-	public void setScore(Float score) {
-		this.score = score;
-	}
-	public Float getEvalue() {
-		return evalue;
-	}
-	public void setEvalue(Float evalue) {
-		this.evalue = evalue;
-	}
-	public Double getPvalue() {
-		return pvalue;
-	}
-	public void setPvalue(Double pvalue) {
-		this.pvalue = pvalue;
-	}
-	public String getAcc() {
-		return acc;
-	}
-	public void setAcc(String acc) {
-		this.acc = acc;
-	}
-	public Integer getDcl() {
-		return dcl;
-	}
-	public void setDcl(Integer dcl) {
-		this.dcl = dcl;
-	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public Integer getNdom() {
-		return ndom;
-	}
-	public void setNdom(Integer ndom) {
-		this.ndom = ndom;
-	}
-	public Integer getNreported() {
-		return nreported;
-	}
-	public void setNreported(Integer nreported) {
-		this.nreported = nreported;
-	}
-	@Override
-	public String toString() {
-		return "HmmerResult [acc=" + acc + ", desc=" + desc + ", score=" + score + ", evalue="
-				+ evalue + ", pvalue=" + pvalue + ", dcl="
-				+ dcl + ", name=" + name + ", ndom=" + ndom + ", nreported="
-				+ nreported + ", domains=" + domains + "]";
-	}
+    public SortedSet<HmmerDomain> getDomains() {
+        return domains;
+    }
 
+    public void setDomains(SortedSet<HmmerDomain> domains) {
+        this.domains = domains;
+    }
 
-	@Override
-	public int compareTo(HmmerResult o) {
-		// 	sort  by the start position of the first domain
+    public String getDesc() {
+        return desc;
+    }
 
-		if ( emptyDomains(this) && emptyDomains(o)){
-			return 0;
-		}
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
 
-		if ( ! emptyDomains(this) && emptyDomains(o))
-			return -1;
+    public Float getScore() {
+        return score;
+    }
 
-		if ( emptyDomains(this) && (! emptyDomains(o)))
-			return 1;
+    public void setScore(Float score) {
+        this.score = score;
+    }
 
-		// ok when we are here, both domains are not empty
+    public Float getEvalue() {
+        return evalue;
+    }
 
-		HmmerDomain me = this.getDomains().first();
-		HmmerDomain other = o.getDomains().first();
+    public void setEvalue(Float evalue) {
+        this.evalue = evalue;
+    }
 
-		//System.out.println(" domains: " + me.getHmmAcc() + " " + other.getHmmAcc()+ " " + me.getSqFrom().compareTo(other.getSqFrom()));
+    public Double getPvalue() {
+        return pvalue;
+    }
 
-		return(me.getSqFrom().compareTo(other.getSqFrom()));
-	}
-	private boolean emptyDomains(HmmerResult o) {
-		SortedSet<HmmerDomain> d = o.getDomains();
-		return d == null || d.size() == 0;
-	}
+    public void setPvalue(Double pvalue) {
+        this.pvalue = pvalue;
+    }
+
+    public String getAcc() {
+        return acc;
+    }
+
+    public void setAcc(String acc) {
+        this.acc = acc;
+    }
+
+    public Integer getDcl() {
+        return dcl;
+    }
+
+    public void setDcl(Integer dcl) {
+        this.dcl = dcl;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Integer getNdom() {
+        return ndom;
+    }
+
+    public void setNdom(Integer ndom) {
+        this.ndom = ndom;
+    }
+
+    public Integer getNreported() {
+        return nreported;
+    }
+
+    public void setNreported(Integer nreported) {
+        this.nreported = nreported;
+    }
+
+    @Override
+    public String toString() {
+        return "HmmerResult [acc=" + acc + ", desc=" + desc + ", score=" + score + ", evalue="
+                + evalue + ", pvalue=" + pvalue + ", dcl="
+                + dcl + ", name=" + name + ", ndom=" + ndom + ", nreported="
+                + nreported + ", domains=" + domains + "]";
+    }
 
 
-	/** Get the overlap between two HmmerResult objects
-	 *
-	 * @param other
-	 * @return 0 if no overlap, otherwise the length of the overlap
-	 */
-	public int getOverlapLength(HmmerResult other){
+    @Override
+    public int compareTo(HmmerResult o) {
 
-		int overlap = 0;
-		for ( HmmerDomain d1 : getDomains()){
-			for (HmmerDomain d2 : other.getDomains()){
-				overlap += getOverlap(d1, d2);
-			}
-		}
-		return overlap;
+        if (this == o) return 0;
+        // 	sort  by the start position of the first domain
 
-	}
+        boolean eThis = emptyDomains(this);
+        boolean eThat = emptyDomains(o);
+        if (eThis && eThat)
+            return 0;
 
-	private int getOverlap(HmmerDomain one, HmmerDomain other){
-		int xs = one.getSqFrom();
-		int ys = one.getSqTo();
-		int as = other.getSqFrom();
-		int bs = other.getSqTo();
+        if (!eThis && eThat)
+            return -1;
 
-		int overlap = 0;
-		//1:
+        if (eThis && !eThat)
+            return 1;
 
-		if ((( xs< as)  && ( as<ys)) || ((xs < bs) && ( bs <= ys)) || (as<xs && ys<bs)) {
+        // ok when we are here, both domains are not empty
 
-			//2:
+        //System.out.println(" domains: " + me.getHmmAcc() + " " + other.getHmmAcc()+ " " + me.getSqFrom().compareTo(other.getSqFrom()));
 
-			if ( xs < as) {
-				if ( ys < bs)
-					overlap = ys-as;
-				else
-					overlap = bs-as;
-			} else {
-				if  ( ys < bs)
-					overlap = ys -xs;
-				else
-					overlap = bs - xs;
+        return this.getDomains().first().getSqFrom().compareTo(o.getDomains().first().getSqFrom());
+    }
 
-			}
+    private boolean emptyDomains(HmmerResult o) {
+        SortedSet<HmmerDomain> d = o.getDomains();
+        return d == null || d.size() == 0;
+    }
 
-		}
 
-		return overlap;
-	}
+    /**
+     * Get the overlap between two HmmerResult objects
+     *
+     * @param other
+     * @return 0 if no overlap, otherwise the length of the overlap
+     */
+    public int getOverlapLength(HmmerResult other) {
+
+        int overlap = 0;
+        for (HmmerDomain d1 : getDomains()) {
+            for (HmmerDomain d2 : other.getDomains()) {
+                overlap += getOverlap(d1, d2);
+            }
+        }
+        return overlap;
+
+    }
+
+    private int getOverlap(HmmerDomain one, HmmerDomain other) {
+        int xs = one.getSqFrom();
+        int ys = one.getSqTo();
+        int as = other.getSqFrom();
+        int bs = other.getSqTo();
+
+        if (((xs < as) && (as < ys)) || ((xs < bs) && (bs <= ys)) || (as < xs && ys < bs)) {
+
+            //2:
+
+            if (xs < as) {
+                return ys < bs ? ys - as : bs - as;
+            } else {
+                return ys < bs ? ys - xs : bs - xs;
+            }
+
+        }
+
+        return 0;
+    }
 
 }

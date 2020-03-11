@@ -447,7 +447,7 @@ public class PDBStatus {
      * 		newPdbId, or <tt>null</tt> if an error occurred.
      */
     public static List<String> getReplaces(String newPdbId, boolean recurse) {
-        List<Map<String, String>> attrList = getStatusIdRecords(new String[]{newPdbId});
+        List<Map<String, String>> attrList = getStatusIdRecords(newPdbId);
         //Expect a single record
         if (attrList == null || attrList.size() != 1) {
             //TODO Is it possible to have multiple record per ID?

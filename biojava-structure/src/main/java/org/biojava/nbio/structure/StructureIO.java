@@ -189,9 +189,8 @@ public class StructureIO {
 	 * @param biolAssemblyNr - the ith biological assembly that is available for a PDB ID (we start counting at 1, 0 represents the asym unit).
 	 * @return a Structure object or null if that assembly is not available
 	 * @throws StructureException if there is no bioassembly available for given biolAssemblyNr or some other problems encountered while loading it
-	 * @throws IOException
-	 */
-	public static Structure getBiologicalAssembly(String pdbId, int biolAssemblyNr) throws IOException, StructureException {
+     */
+	public static Structure getBiologicalAssembly(String pdbId, int biolAssemblyNr) throws StructureException {
 		return getBiologicalAssembly(pdbId, biolAssemblyNr, AtomCache.DEFAULT_BIOASSEMBLY_STYLE);
 	}
 
@@ -230,11 +229,10 @@ public class StructureIO {
 	 * If only one biological assembly is required use {@link #getBiologicalAssembly(String)} or {@link #getBiologicalAssembly(String, int)} instead.
 	 * @param pdbId
 	 * @return
-	 * @throws IOException
 	 * @throws StructureException
 	 * @since 5.0
 	 */
-	public static List<Structure> getBiologicalAssemblies(String pdbId) throws IOException, StructureException {
+	public static List<Structure> getBiologicalAssemblies(String pdbId) throws StructureException {
 		return getBiologicalAssemblies(pdbId, AtomCache.DEFAULT_BIOASSEMBLY_STYLE);
 	}
 

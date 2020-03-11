@@ -275,24 +275,28 @@ public class TestContactCalc {
 
 	private double[][] calcDistanceMatrix(Atom[] atoms) {
 
-		double[][] distMatrix = new double[atoms.length][atoms.length];
+		int n = atoms.length;
+		double[][] distMatrix = new double[n][n];
 
-		for (int i=0;i<atoms.length;i++) {
-			for (int j=i+1;j<atoms.length;j++) {
-				distMatrix[i][j] = Calc.getDistance(atoms[i], atoms[j]);
-			}
+		for (int i = 0; i< n; i++) {
+			double[] di = distMatrix[i];
+			Atom ai = atoms[i];
+			for (int j = i+1; j< n; j++)
+				di[j] = Calc.getDistance(ai, atoms[j]);
 		}
 		return distMatrix;
 	}
 
 	private double[][] calcDistanceMatrix(Atom[] atoms1, Atom[] atoms2) {
 
-		double[][] distMatrix = new double[atoms1.length][atoms2.length];
+		int h = atoms1.length;
+		int w = atoms2.length;
+		double[][] distMatrix = new double[h][w];
 
-		for (int i=0;i<atoms1.length;i++) {
-			for (int j=0;j<atoms2.length;j++) {
-				distMatrix[i][j] = Calc.getDistance(atoms1[i], atoms2[j]);
-			}
+		for (int i = 0; i< h; i++) {
+			double[] di = distMatrix[i];
+			for (int j = 0; j< w; j++)
+				di[j] = Calc.getDistance(atoms1[i], atoms2[j]);
 		}
 		return distMatrix;
 	}

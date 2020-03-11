@@ -55,7 +55,7 @@ public class NonstandardProteinCompoundTest  {
 			try {
 				testUniprot(id);
 				// throttle load on uniprot server
-				Thread.sleep(1000);
+				Thread.sleep(200);
 
 			} catch (CompoundNotFoundException e){
 
@@ -65,7 +65,7 @@ public class NonstandardProteinCompoundTest  {
 		}
 	}
 
-	private void testUniprot(String uniprotID) throws CompoundNotFoundException, IOException {
+	private void testUniprot(String uniprotID) throws IOException {
 
 		ProteinSequence seq = getUniprot(uniprotID);
 

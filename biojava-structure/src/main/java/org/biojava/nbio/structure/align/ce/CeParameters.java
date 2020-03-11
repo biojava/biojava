@@ -161,9 +161,9 @@ public class CeParameters implements ConfigStrucAligParams  {
 	public Double getRmsdThrJoin() {
 		return rmsdThrJoin;
 	}
-	public void setRmsdThrJoin(Double rmsdThrJoin) {
-		this.rmsdThrJoin = rmsdThrJoin;
-	}
+//	public void setRmsdThrJoin(Double rmsdThrJoin) {
+//		this.rmsdThrJoin = rmsdThrJoin;
+//	}
 
 	public ScoringStrategy getScoringStrategy()
 	{

@@ -107,7 +107,7 @@ public class TestCloning {
 	}
 
 	@Test
-	public void testBiounitEntitiesMultimodel() throws StructureException, IOException {
+	public void testBiounitEntitiesMultimodel() throws StructureException {
 		Structure s;
 		s = StructureIO.getBiologicalAssembly("1stp", 1, true);
 

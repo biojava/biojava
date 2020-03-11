@@ -24,8 +24,8 @@
  */
 package org.biojava.nbio.structure.scop;
 
+import org.biojava.nbio.core.util.Download;
 import org.biojava.nbio.structure.align.client.JFatCatClient;
-import org.biojava.nbio.structure.align.util.URLConnectionTools;
 import org.biojava.nbio.structure.domain.SerializableCache;
 import org.biojava.nbio.structure.scop.server.ScopDomains;
 import org.slf4j.Logger;
@@ -91,17 +91,17 @@ public class CachedRemoteScopInstallation extends SerializableCache<String,ScopD
 		} catch (MalformedURLException e) {
 			throw new IOException("URL " + RemoteScopInstallation.DEFAULT_SERVER + "getRepresentativeScopDomains" + " is wrong", e);
 		}
-		logger.info("Using " + u + " to download representative domains");
-		InputStream response = URLConnectionTools.getInputStream(u);
-		String xml = JFatCatClient.convertStreamToString(response);
-		ScopDomains results  = ScopDomains.fromXML(xml);
 
-		logger.info("got " + results.getScopDomain().size() + " domain ranges for Scop domains from server.");
-		for (ScopDomain dom : results.getScopDomain()){
-			String scopId = dom.getScopId();
-			serializedCache.put(scopId, dom);
-		}
+		logger.info("Using {} to download representative domains", u);
 
+		InputStream response = Download.stream(u);
+
+		ScopDomains results  = ScopDomains.fromXML(JFatCatClient.convertStreamToString(response));
+
+		logger.info("got {} domain ranges for Scop domains from server.", results.getScopDomain().size());
+
+		for (ScopDomain dom : results.getScopDomain())
+			serializedCache.put(dom.getScopId(), dom);
 	}
 
 

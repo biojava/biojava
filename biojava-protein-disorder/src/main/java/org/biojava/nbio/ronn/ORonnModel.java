@@ -76,7 +76,7 @@ public final class ORonnModel {
         int sResidue;
         int dIndex;
         int r;
-        float est, fOrder, pDisor, fDisor;
+        double est, fOrder, pDisor, fDisor;
         final float[][] Z = new float[seqAA.length][ORonnModel.maxR];
         final int[] Q = new int[seqAA.length];
         final Threshold thold = new ModelLoader.Threshold(model.modelNum);
@@ -87,7 +87,7 @@ public final class ORonnModel {
          * such condition
          */
         for (sResidue = 0; sResidue <= query.length - ORonnModel.AA_ALPHABET; sResidue++) {
-            est = 0.0f;
+            est = 0.0;
 
             for (dIndex = 0; dIndex < model.numOfDBAAseq; dIndex++) {
                 final float[] rho = align(sResidue, dIndex);// search for the
@@ -105,7 +105,7 @@ public final class ORonnModel {
             pDisor = (float) (disorder_weight * fDisor / ((1.0 - disorder_weight)
                     * fOrder + disorder_weight * fDisor));
             for (r = sResidue; r < sResidue + ORonnModel.AA_ALPHABET; r++) {
-                Z[r][Q[r]] = pDisor;
+                Z[r][Q[r]] = (float) pDisor;
                 Q[r]++;
             }
         }
@@ -114,10 +114,10 @@ public final class ORonnModel {
             est = 0.0f;
             float[] zRow = Z[sResidue];
             int numOfIterations = Q[sResidue];
-            for (r = 0; r < numOfIterations; r++) {
+            for (r = 0; r < numOfIterations; r++)
                 est += zRow[r];
-            }
-            scores[sResidue] = est / numOfIterations;
+
+            scores[sResidue] = (float) (est / numOfIterations);
         }
         return scores;
     }
@@ -140,19 +140,17 @@ public final class ORonnModel {
     // sResidue query sequence index and dIndex database sequence index
     private float[] align(final int sResidue, final int dIndex) {
         int dResidue, r;
-        float maxScore = Float.NEGATIVE_INFINITY;
-        float rho1;
+        double maxScore = Double.NEGATIVE_INFINITY;
         int maxIdx = 0;
         float rho0 = 0;
         short[] dbAARow = model.dbAA[dIndex];
         int numOfIterations = model.Length[dIndex] - ORonnModel.AA_ALPHABET;
         for (dResidue = 0; dResidue <= numOfIterations; dResidue++) {
             // go though the database sequence for maximised alignment
-            rho1 = 0.0f;
+            double rho1 = 0.0f;
             for (r = 0; r < ORonnModel.AA_ALPHABET; r++) {
                 // go through the query sequence for one alignment
-                rho1 += RonnConstraint.Blosum62[seqAA[sResidue + r]][dbAARow[dResidue
-                        + r]];
+                rho1 += RonnConstraint.Blosum62[seqAA[sResidue + r]][dbAARow[dResidue + r]];
             }
             if (rho1 > maxScore) {
                 maxScore = rho1;
@@ -162,25 +160,26 @@ public final class ORonnModel {
         for (r = 0; r < ORonnModel.AA_ALPHABET; r++) {
             rho0 += RonnConstraint.Blosum62[dbAARow[maxIdx + r]][dbAARow[maxIdx + r]];
         }
-        return new float[]{rho0, maxScore};
+        return new float[]{rho0, (float)maxScore};
     }
 
     public ORonnModel(final String sequence, final Model model,
                       final float disorder) throws NumberFormatException {
-        this.disorder_weight = disorder;
-        this.model = model;
-        query = sequence.toCharArray();
-        seqAA = new short[query.length];
+
         assert model != null;
         assert model.numOfDBAAseq > 0;
+
+        this.disorder_weight = disorder;
+        this.model = model;
+        this.query = sequence.toCharArray();
+        this.seqAA = new short[query.length];
+
         int sLen = sequence.length();
         for (int sResidue = 0; sResidue < sLen; sResidue++) {
             short r = RonnConstraint.INDEX[query[sResidue] - 'A'];
-            if ((r < 0) || (r > 19)) {
-                logger.error("seqAA[sResidue]={}({})", r, query[sResidue]);
-                System.exit(1);
-            }
-            seqAA[sResidue] = r;
+            if ((r < 0) || (r > 19))
+                throw new RuntimeException("seqAA[sResidue]=" + r + "(" + query[sResidue] + ")");//System.exit(1);
+            this.seqAA[sResidue] = r;
         }
     }
 }

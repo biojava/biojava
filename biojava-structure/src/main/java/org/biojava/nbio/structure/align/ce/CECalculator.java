@@ -97,7 +97,7 @@ public class CECalculator {
 	private Atom t;
 	protected int nTraces;
 
-	private double z;
+//	private double z;
 	private int[] traceIndexContainer;
 
 	protected final CeParameters params;
@@ -926,7 +926,7 @@ nBestTrace=nTrace;
 	private void checkBestTraces( AFPChain afpChain,
 			Atom[] ca1, Atom[] ca2) {
 
-		z=0.0;
+		double z = 0.0;
 
 
 		int nGaps;
@@ -946,7 +946,6 @@ nBestTrace=nTrace;
 		Atom[] strBuf1 = new Atom[traceMaxSize];
 		Atom[] strBuf2 = new Atom[traceMaxSize];
 
-		double rmsdNew;
 
 
 
@@ -963,7 +962,7 @@ nBestTrace=nTrace;
 		for(int ir=0; ir<nBestTraces; ir++) {
 			if(bestTracesN[ir]!=nBestTrace) continue;
 
-			rmsdNew = getRMSDForBestTrace(ir, strBuf1, strBuf2, bestTracesN,bestTraces1, bestTrace2,winSize,ca1,ca2);
+			double rmsdNew = getRMSDForBestTrace(ir, strBuf1, strBuf2, bestTracesN,bestTraces1, bestTrace2,winSize,ca1,ca2);
 			if ( isPrint)
 				System.out.println(String.format("%d %d %d %.2f", ir, bestTracesN[ir], nBestTrace, rmsdNew));
 
@@ -1087,7 +1086,7 @@ nBestTrace=nTrace;
 								}
 								// Check new RMSD
 								//sup_str(strBuf1, strBuf2, strLen, d_);
-								rmsdNew=calc_rmsd(strBuf1, strBuf2, strLen, true);
+								double rmsdNew=calc_rmsd(strBuf1, strBuf2, strLen, true);
 								//System.out.println(String.format("step %d %d %d %.2f old: %.2f", it, idir, idep, rmsdNew, rmsd));
 
 								// Update best trace if RMSD improved
@@ -1109,7 +1108,8 @@ nBestTrace=nTrace;
 							}
 					}
 			}
-		rmsdNew=calc_rmsd(strBuf1, strBuf2, strLen,true);
+			
+		double rmsdNew=calc_rmsd(strBuf1, strBuf2, strLen,true);
 		if ( isPrint)
 			System.out.println("rmsdNew: " + rmsdNew + " rmsd " + rmsd);
 		afpChain.setTotalRmsdIni(rmsdNew);

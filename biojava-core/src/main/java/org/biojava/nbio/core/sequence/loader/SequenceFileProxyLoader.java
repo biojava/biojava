@@ -97,7 +97,7 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
 	 *  Load the sequence
 	 * @return
 	 */
-	private boolean init() throws IOException, CompoundNotFoundException {
+	private boolean init() throws IOException {
 
 		BufferedReader br = new BufferedReader(new FileReader(file));
 		br.skip(sequenceStartIndex);

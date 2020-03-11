@@ -56,9 +56,7 @@ public class RemoteHmmerScan implements HmmerScan {
 	@Override
 	public  SortedSet<HmmerResult> scan(ProteinSequence sequence) throws IOException {
 
-		URL url = new URL(HMMER_SERVICE);
-
-		return scan(sequence, url);
+		return scan(sequence, new URL(HMMER_SERVICE));
 
 	}
 

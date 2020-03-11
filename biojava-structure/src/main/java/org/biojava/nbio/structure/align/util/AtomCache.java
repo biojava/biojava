@@ -490,10 +490,9 @@ public class AtomCache {
 	 * @param domain
 	 *            a SCOP domain
 	 * @return a Structure object
-	 * @throws IOException
 	 * @throws StructureException
 	 */
-	public Structure getStructureForDomain(ScopDomain domain) throws IOException, StructureException {
+	public Structure getStructureForDomain(ScopDomain domain) throws StructureException {
 		return getStructureForDomain(domain, ScopFactory.getSCOP());
 	}
 
@@ -619,10 +618,9 @@ public class AtomCache {
 	 * @param scopDatabase
 	 *            A {@link ScopDatabase} to use
 	 * @return a Structure object
-	 * @throws IOException
 	 * @throws StructureException
 	 */
-	public Structure getStructureForDomain(String scopId, ScopDatabase scopDatabase) throws IOException,
+	public Structure getStructureForDomain(String scopId, ScopDatabase scopDatabase) throws
 			StructureException {
 		return getStructureForDomain(scopDatabase.getDomainByScopID(scopId), scopDatabase);
 	}

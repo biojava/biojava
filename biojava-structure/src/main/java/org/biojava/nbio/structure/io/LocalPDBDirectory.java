@@ -493,7 +493,7 @@ import java.util.*;
 			ftp = String.format("%s%s/%s/%s", serverName, pathOnServer, pdbId.substring(1,3).toLowerCase(), getFilename(pdbId));
 		}
 
-		URL url = new URL(ftp);
+		return Download.stream(new URL(ftp));
 
 //		Date serverFileDate;
 //		if (existingFile!=null) {
@@ -516,7 +516,6 @@ import java.util.*;
 //		logger.info("Fetching " + ftp);
 //		logger.info("Writing to "+ realFile);
 
-		return Download.stream(url);
 
 		// Commented out following code used for setting the modified date to the downloaded file - JD 2015-01-15
 		// The only reason to have it was in order to get an rsync-like behavior, respecting the timestamps

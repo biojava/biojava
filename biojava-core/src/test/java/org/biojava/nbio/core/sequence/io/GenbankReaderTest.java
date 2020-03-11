@@ -152,7 +152,7 @@ public class GenbankReaderTest {
 	 * The underlying {@link InputStream} should remain open until the last call.
 	 */
 	@Test
-	public void testPartialProcess() throws IOException, CompoundNotFoundException {
+	public void testPartialProcess() throws IOException {
 		CheckableInputStream inStream = new CheckableInputStream(this.getClass().getResourceAsStream("/two-dnaseqs.gb"));
 
 		GenbankReader<DNASequence, NucleotideCompound> genbankDNA
@@ -217,7 +217,7 @@ public class GenbankReaderTest {
 
 	}
 
-	private DNASequence readGenbankResource(final String resource) throws IOException, CompoundNotFoundException {
+	private DNASequence readGenbankResource(final String resource) throws IOException {
 		InputStream inputStream = getClass().getResourceAsStream(resource);
 		GenbankReader<DNASequence, NucleotideCompound> genbankDNA
 		= new GenbankReader<>(
@@ -229,7 +229,7 @@ public class GenbankReaderTest {
 		return dnaSequences.values().iterator().next();
 	}
 	
-	private RNASequence readGenbankRNAResource(final String resource) throws IOException, CompoundNotFoundException {
+	private RNASequence readGenbankRNAResource(final String resource) throws IOException {
 		InputStream inputStream = getClass().getResourceAsStream(resource);
 		GenbankReader<RNASequence, NucleotideCompound> genbankRNA
 		= new GenbankReader<>(
@@ -241,7 +241,7 @@ public class GenbankReaderTest {
 		return rnaSequences.values().iterator().next();	
 	}
 	
-	private ProteinSequence readGenbankProteinResource(final String resource) throws IOException, CompoundNotFoundException {
+	private ProteinSequence readGenbankProteinResource(final String resource) throws IOException {
 		InputStream inputStream = getClass().getResourceAsStream(resource);
         GenbankReader<ProteinSequence, AminoAcidCompound> genbankProtein
 		= new GenbankReader<>(
@@ -253,7 +253,7 @@ public class GenbankReaderTest {
 		return proteinSequences.values().iterator().next();	
 	}
 	
-	private AbstractSequence<?> readUnknownGenbankResource(final String resource) throws IOException, CompoundNotFoundException {
+	private AbstractSequence<?> readUnknownGenbankResource(final String resource) throws IOException {
 		InputStream inputStream = getClass().getResourceAsStream(resource);
 		GenbankSequenceParser genbankParser = new GenbankSequenceParser();
 		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
@@ -270,7 +270,7 @@ public class GenbankReaderTest {
 	}
 
 	@Test
-	public void testNcbiExpandedAccessionFormats() throws IOException, CompoundNotFoundException {
+	public void testNcbiExpandedAccessionFormats() throws IOException {
 		DNASequence header0 = readGenbankResource("/empty_header0.gb");
 		assertEquals("CP032762             5868661 bp    DNA     circular BCT 15-OCT-2018", header0.getOriginalHeader());
 
@@ -282,7 +282,7 @@ public class GenbankReaderTest {
 	}
 	
 	@Test
-	public void testLegacyLocusCompatable() throws IOException, CompoundNotFoundException {
+	public void testLegacyLocusCompatable() throws IOException {
 		
 		// Testing opening a genbank file with uppercase units, strand and topology
 		AbstractSequence header0 = readUnknownGenbankResource("/org/biojava/nbio/core/sequence/io/uppercase_locus0.gb");

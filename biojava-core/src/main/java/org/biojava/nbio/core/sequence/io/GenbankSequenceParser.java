@@ -44,7 +44,6 @@ import org.biojava.nbio.core.sequence.features.TextFeature;
 import org.biojava.nbio.core.sequence.io.template.SequenceParserInterface;
 import org.biojava.nbio.core.sequence.location.InsdcParser;
 import org.biojava.nbio.core.sequence.location.template.AbstractLocation;
-import org.biojava.nbio.core.sequence.location.template.Location;
 import org.biojava.nbio.core.sequence.reference.GenbankReference;
 import org.biojava.nbio.core.sequence.template.AbstractSequence;
 import org.biojava.nbio.core.sequence.template.Compound;
@@ -54,7 +53,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -148,7 +146,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 			sectionKey = s0[0];
 			if (sectionKey == null) {
 				//if we reach the end of the file, section contains empty strings
-				if(s0[1]==null || s0[1].equals("") ||
+				if(s0[1]==null || s0[1].isEmpty() ||
 						s0[1].length()==0) {
 					throw new ParserException(Messages.ENDOFFILE);
 				}
@@ -287,10 +285,8 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 								if (key.equalsIgnoreCase("translation")) {
 									// strip spaces from sequence
 									val = val.replaceAll("\\s+", "");
-									gbFeature.addQualifier(key, new Qualifier(key, val));
-								} else {
-									gbFeature.addQualifier(key, new Qualifier(key, val));
 								}
+								gbFeature.addQualifier(key, new Qualifier(key, val));
 							}
 						} else {
 							// new feature!

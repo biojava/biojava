@@ -24,7 +24,6 @@ package org.biojava.nbio.core.sequence.io.template;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.Reader;
 
 /**
  *

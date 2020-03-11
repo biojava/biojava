@@ -35,7 +35,6 @@ import javax.vecmath.Point3d;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.*;
 
 /**
@@ -1511,7 +1510,7 @@ public class StructureTools {
         // we only need this if we're averaging distances
         // note that we can't use group.getAtoms().size() because some the
         // group's atoms be outside the shell
-        Map<Group, Integer> atomCounts = new HashMap<>();
+        Map<Group, Integer> atomCounts = useAverageDistance ? new HashMap<>() : null;
 
         for (Chain chain : structure.getChains()) {
             groupLoop:
@@ -1521,40 +1520,36 @@ public class StructureTools {
                 if (!includeWater && chainGroup.isWater())
                     continue;
 
+                ResidueNumber residue = chainGroup.getResidueNumber();
+
                 // check blacklist of residue numbers
                 for (ResidueNumber rn : excludeResidues) {
-                    if (rn.equals(chainGroup.getResidueNumber()))
+                    if (rn.equals(residue))
                         continue groupLoop;
                 }
 
                 for (Atom testAtom : chainGroup.getAtoms()) {
 
                     // use getDistanceFast as we are doing a lot of comparisons
-                    double dist = Calc.getDistanceFast(centroid, testAtom);
+                    double dist = Calc.getDistanceSqr(centroid, testAtom);
 
                     // if we're the shell
                     if (dist <= radius) {
-                        if (!distances.containsKey(chainGroup))
-                            distances.put(chainGroup, Double.POSITIVE_INFINITY);
+
+
                         if (useAverageDistance) {
                             // sum the distance; we'll divide by the total
                             // number later
                             // here, we CANNOT use fastDistance (distance
                             // squared) because we want the arithmetic mean
-                            distances.put(chainGroup, distances.get(chainGroup)
-                                    + Math.sqrt(dist));
-                            if (!atomCounts.containsKey(chainGroup))
-                                atomCounts.put(chainGroup, 0);
-                            atomCounts.put(chainGroup,
-                                    atomCounts.get(chainGroup) + 1);
+                            distances.put(chainGroup, distances.get(chainGroup) + Math.sqrt(dist));
+                            atomCounts.compute(chainGroup, (Group g, Integer y) -> y + 1);
                         } else {
                             // take the minimum distance among all atoms of
                             // chainGroup
                             // note that we can't break here because we might
                             // find a smaller distance
-                            if (dist < distances.get(chainGroup)) {
-                                distances.put(chainGroup, dist);
-                            }
+                            distances.merge(chainGroup, dist, Math::min);
                         }
                     }
 
@@ -1563,10 +1558,7 @@ public class StructureTools {
         }
 
         if (useAverageDistance) {
-            for (Map.Entry<Group, Double> entry : distances.entrySet()) {
-                int count = atomCounts.get(entry.getKey());
-                distances.put(entry.getKey(), entry.getValue() / count);
-            }
+            distances.replaceAll((k, v) -> v / (int) atomCounts.get(k));
         } else {
             // in this case we used getDistanceFast
             distances.replaceAll((k, v) -> Math.sqrt(v));
@@ -1584,21 +1576,25 @@ public class StructureTools {
         // which returns the square of a distance.
         distance = distance * distance;
 
-        Set<Group> returnSet = new LinkedHashSet<>();
+        Set<Group> returnSet = null;
         for (Chain chain : structure.getChains()) {
             groupLoop:
             for (Group chainGroup : chain.getAtomGroups()) {
                 if (!includeWater && chainGroup.isWater())
                     continue;
+
+                ResidueNumber residue = chainGroup.getResidueNumber();
                 for (ResidueNumber rn : excludeResidues) {
-                    if (rn.equals(chainGroup.getResidueNumber()))
+                    if (rn.equals(residue))
                         continue groupLoop;
                 }
+
                 for (Atom atomB : chainGroup.getAtoms()) {
 
                     // use getDistanceFast as we are doing a lot of comparisons
-                    double dist = Calc.getDistanceFast(atom, atomB);
+                    double dist = Calc.getDistanceSqr(atom, atomB);
                     if (dist <= distance) {
+                        if (returnSet==null) returnSet = new LinkedHashSet<>();
                         returnSet.add(chainGroup);
                         break;
                     }
@@ -1606,7 +1602,7 @@ public class StructureTools {
                 }
             }
         }
-        return returnSet;
+        return returnSet == null ? Collections.EMPTY_SET : returnSet;
     }
 
     /**
@@ -1633,9 +1629,7 @@ public class StructureTools {
         Set<ResidueNumber> excludeGroups = new HashSet<>();
         excludeGroups.add(group.getResidueNumber());
         for (Atom atom : group.getAtoms()) {
-            Set<Group> set = getGroupsWithinShell(structure, atom,
-                    excludeGroups, distance, includeWater);
-            returnList.addAll(set);
+            returnList.addAll(getGroupsWithinShell(structure, atom, excludeGroups, distance, includeWater));
         }
 
         return returnList;
@@ -1677,18 +1671,15 @@ public class StructureTools {
      */
     public static List<Group> filterLigands(List<Group> allGroups) {
 
-        List<Group> groups = new ArrayList<>();
+        List<Group> groups = null;
         for (Group g : allGroups) {
-
-            if (g.isPolymeric())
-                continue;
-
-            if (!g.isWater()) {
+            if (!g.isPolymeric() && !g.isWater()) {
+                if (groups == null) groups = new ArrayList(1);
                 groups.add(g);
             }
         }
 
-        return groups;
+        return groups!=null ? groups : Collections.EMPTY_LIST;
     }
 
     /**
@@ -1735,8 +1726,7 @@ public class StructureTools {
             if (parser == null) {
                 parser = new PDBFileParser();
             }
-            InputStream inStream = new FileInputStream(f);
-            return parser.parsePDBFile(inStream);
+            return parser.parsePDBFile(new FileInputStream(f));
         } else {
             if (cache == null) {
                 cache = new AtomCache();

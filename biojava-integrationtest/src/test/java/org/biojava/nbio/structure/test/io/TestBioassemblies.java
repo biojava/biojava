@@ -39,10 +39,9 @@ public class TestBioassemblies {
 	/**
 	 * A test for an NMR structure
 	 * @throws StructureException
-	 * @throws IOException
-	 */
+     */
 	@Test
-	public void test1E17() throws IOException, StructureException {
+	public void test1E17() throws StructureException {
 
 		AtomCache prevAtomCache = StructureIO.getAtomCache();
 
@@ -72,10 +71,9 @@ public class TestBioassemblies {
 	/**
 	 * A test for an entry with a biounit that is a subset of the AU
 	 * @throws StructureException
-	 * @throws IOException
-	 */
+     */
 	@Test
-	public void test4TTX() throws IOException, StructureException {
+	public void test4TTX() throws StructureException {
 
 		AtomCache prevAtomCache = StructureIO.getAtomCache();
 		AtomCache cache = new AtomCache();
@@ -145,11 +143,10 @@ public class TestBioassemblies {
 
 	/**
 	 * A difficult case: see http://www.mail-archive.com/jmol-users@lists.sourceforge.net/msg25927.html
-	 * @throws IOException
 	 * @throws StructureException
 	 */
 	@Test
-	public void test4OPJ() throws IOException, StructureException {
+	public void test4OPJ() throws StructureException {
 
 		AtomCache prevAtomCache = StructureIO.getAtomCache();
 		AtomCache cache = new AtomCache();

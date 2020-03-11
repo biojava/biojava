@@ -562,8 +562,7 @@ public interface Ontology  {
 		}
 
 		private void pushTriple(Map<Term,Set<Triple>> m, Term key, Triple t) {
-			Set<Triple> s = m.computeIfAbsent(key, k -> new HashSet<>());
-			s.add(t);
+			m.computeIfAbsent(key, k -> new HashSet<>(1)).add(t);
 		}
 
 		private void removeTriple(Triple t) {

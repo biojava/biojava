@@ -453,7 +453,7 @@ public class FragmentJoiner {
 	}
 
 
-	public void extendFragments(Atom[] ca1, Atom[] ca2 ,JointFragments[] fragments, StrucAligParameters params) throws StructureException {
+	public void extendFragments(Atom[] ca1, Atom[] ca2 ,JointFragments[] fragments, StrucAligParameters params) {
 
 		for(JointFragments p : fragments){
 			extendFragments(ca1, ca2, p, params);

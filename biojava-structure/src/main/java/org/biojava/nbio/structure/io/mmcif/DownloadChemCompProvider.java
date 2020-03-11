@@ -35,6 +35,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.zip.GZIPOutputStream;
@@ -79,12 +80,14 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 	// flags to make sure there is only one thread running that is loading the dictionary
 	static final AtomicBoolean loading = new AtomicBoolean(false);
 
-	static final List<String> protectedIDs = new ArrayList<>();
+	static final List<String> protectedIDs;
 	static {
-		protectedIDs.add("CON");
-		protectedIDs.add("PRN");
-		protectedIDs.add("AUX");
-		protectedIDs.add("NUL");
+		ArrayList<String> p = new ArrayList<>(4);
+		p.add("CON");
+		p.add("PRN");
+		p.add("AUX");
+		p.add("NUL");
+		protectedIDs = Collections.unmodifiableList(p);
 	}
 
 	private static ChemCompProvider fallback = null; // Fallback provider if the download fails

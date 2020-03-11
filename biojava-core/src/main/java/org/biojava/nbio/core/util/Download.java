@@ -22,11 +22,11 @@
 package org.biojava.nbio.core.util;
 
 import okhttp3.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.net.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
 import java.nio.channels.FileChannel;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -35,7 +35,7 @@ import java.util.zip.GZIPInputStream;
 
 public class Download {
 
-	private static final Logger logger = LoggerFactory.getLogger(Download.class);
+	//private static final Logger logger = LoggerFactory.getLogger(Download.class);
 	private static final int DOWNLOAD_TIMEOUT_MS_DEFAULT = 60000;
 
 	/**
@@ -77,7 +77,7 @@ public class Download {
 		OkHttpClient.Builder bb = new OkHttpClient.Builder();
 		bb.followRedirects(true);
 		bb.followSslRedirects(true);
-
+		bb.retryOnConnectionFailure(true);
 
 //		try {
 			File cacheDir = Paths.get(System.getProperty("java.io.tmpdir"), "biojava").toFile();
@@ -247,24 +247,21 @@ public class Download {
 				.build());
 
 		c.timeout().deadline(timeoutMS, TimeUnit.MILLISECONDS);
+
 		try (Response r = c.execute()) {
+			InputStream inStream;
+			ResponseBody b = r.body();
 			if (!r.isSuccessful()) {
 				//throw new IOException("Unexpected code " + r);
-				return new ByteArrayInputStream(new byte[] { } ); //HACK
+				inStream = new ByteArrayInputStream(new byte[] { } ); //HACK
+			} else {
+				inStream =
+						//b.byteStream();
+						new ByteArrayInputStream(b.bytes()); //b.byteStream();
 			}
 
-			ResponseBody b = r.body();
-//			if (b.contentLength()==0) {
-//				return new ByteArrayInputStream(new byte[] { } ); //HACK
-//			}
-
-			InputStream inStream =
-					//b.byteStream();
-					new ByteArrayInputStream(b.bytes()); //b.byteStream();
-
-			if (b.contentType().toString().contains("-gzip")) {
+			if (b.contentType().toString().contains("-gzip"))
 				return new GZIPInputStream(inStream);
-			}
 
 			return inStream;
 		}

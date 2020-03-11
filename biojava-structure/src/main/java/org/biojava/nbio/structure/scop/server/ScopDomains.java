@@ -28,14 +28,13 @@ import org.biojava.nbio.structure.scop.ScopDomain;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.io.Serializable;
+import java.io.StringReader;
 import java.util.List;
 
 @XmlRootElement(name = "ScopDomains", namespace ="http://source.rcsb.org")
@@ -93,21 +92,15 @@ public class ScopDomains implements Serializable{
 
 	public static ScopDomains fromXML(String xml){
 
-		ScopDomains job;
 
 		try {
 
-			Unmarshaller un = jaxbContext.createUnmarshaller();
-
-			ByteArrayInputStream bais = new ByteArrayInputStream(xml.getBytes());
-
-			job = (ScopDomains) un.unmarshal(bais);
+			return (ScopDomains) jaxbContext.createUnmarshaller().unmarshal(new StringReader(xml));
 
 		} catch (Exception e){
 			throw new RuntimeException("Could not parse " + ScopDomains.class + " from XML", e);
 		}
 
-		return job;
 	}
 
 

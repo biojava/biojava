@@ -20,6 +20,7 @@
  */
 package org.biojava.nbio.structure.align.client;
 
+import org.biojava.nbio.core.util.Download;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.align.fatcat.FatCatRigid;
 import org.biojava.nbio.structure.align.model.AFPChain;
@@ -41,363 +42,353 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 public class JFatCatClient {
-	private final static Logger logger = LoggerFactory.getLogger(JFatCatClient.class);
+    private final static Logger logger = LoggerFactory.getLogger(JFatCatClient.class);
 
-	private static final ResourceManager resourceManager = ResourceManager.getResourceManager("jfatcat");
+    private static final ResourceManager resourceManager = ResourceManager.getResourceManager("jfatcat");
 
-	private static final String serverAPPEND    = "show?name1=%s&name2=%s";
+    private static final String serverAPPEND = "show?name1=%s&name2=%s";
 
-	private static final String sendAPPEND      = "submit?name1=%s&name2=%s&version=%s";
+    private static final String sendAPPEND = "submit?name1=%s&name2=%s&version=%s";
 
-	private static final String multiSendAPPEND = "jobSubmit?username=%s&version=%s";
+    private static final String multiSendAPPEND = "jobSubmit?username=%s&version=%s";
 
-	private static final String representAPPEND = "representatives?cluster=%s";
+    private static final String representAPPEND = "representatives?cluster=%s";
 
-	private static final String serverHasResult = "hasResult?method=%s&name1=%s&name2=%s";
+    private static final String serverHasResult = "hasResult?method=%s&name1=%s&name2=%s";
 
-	private static final int DEFAULT_TIMEOUT = 5000;
+    private static final int DEFAULT_TIMEOUT = 5000;
 
-	private static final String serverPositionInQueue =  "queuePosition?method=%s&name1=%s&name2=%s";
+    private static final String serverPositionInQueue = "queuePosition?method=%s&name1=%s&name2=%s";
 
-	private static final Random generator;
+    private static final Random generator;
 
-	private static final String newline = System.getProperty("line.separator");
+    private static final String newline = System.getProperty("line.separator");
 
-	private static final String KILL_JOB = "KILL_JOB";
+    private static final String KILL_JOB = "KILL_JOB";
 
-	private static final String COME_BACK_LATER = "COME_BACK_LATER";
+    private static final String COME_BACK_LATER = "COME_BACK_LATER";
 
-	static {
+    static {
 
-		generator = new Random();
+        generator = new Random();
 
-	}
+    }
 
-	public static void main(String[] args) throws Exception {
-		//System.out.println(hasPrecalculatedResult("http://source.rcsb.org/jfatcatserver/align/", "jCE Circular Permutation", "1CDG.A", "1TIM.A"));
-		AtomCache cache = new AtomCache();
-		String name1= "2W72.A";
-		String name2= "1D2Z.D";
+    public static void main(String[] args) throws Exception {
+        //System.out.println(hasPrecalculatedResult("http://source.rcsb.org/jfatcatserver/align/", "jCE Circular Permutation", "1CDG.A", "1TIM.A"));
+        AtomCache cache = new AtomCache();
+        String name1 = "2W72.A";
+        String name2 = "1D2Z.D";
 
-		Atom[] ca1 = cache.getAtoms(name1);
-		Atom[] ca2 = cache.getAtoms(name2);
+        Atom[] ca1 = cache.getAtoms(name1);
+        Atom[] ca2 = cache.getAtoms(name2);
 
-		int timeout = 10000;
+        int timeout = 10000;
 
-		String testServer = "http://source.rcsb.org/jfatcatserver/align/";
+        String testServer = "http://source.rcsb.org/jfatcatserver/align/";
 
-		System.out.println(getAFPChainFromServer(testServer, FatCatRigid.algorithmName, name1, name2, ca1, ca2, timeout));
+        System.out.println(getAFPChainFromServer(testServer, FatCatRigid.algorithmName, name1, name2, ca1, ca2, timeout));
 
-		PdbPairsMessage msg = getPdbPairs(testServer, 1, "test");
+        PdbPairsMessage msg = getPdbPairs(testServer, 1, "test");
 
-		System.out.println(msg);
+        System.out.println(msg);
 
-		System.out.println(getRepresentatives(FarmJobParameters.DEFAULT_SERVER_URL, 40));
-	}
+        System.out.println(getRepresentatives(FarmJobParameters.DEFAULT_SERVER_URL, 40));
+    }
 
-	public static boolean hasPrecalculatedResult(String serverLocation, String method, String name1, String name2 ){
-		return hasPrecalculatedResult(serverLocation, method, name1, name2, DEFAULT_TIMEOUT );
-	}
+    public static boolean hasPrecalculatedResult(String serverLocation, String method, String name1, String name2) {
+        return hasPrecalculatedResult(serverLocation, method, name1, name2, DEFAULT_TIMEOUT);
+    }
 
-	public static boolean hasPrecalculatedResult(String serverLocation, String method, String name1, String name2, int timeout){
+    public static boolean hasPrecalculatedResult(String serverLocation, String method, String name1, String name2, int timeout) {
 
-		String serverURL = serverLocation + serverHasResult;
-
-
-		boolean hasResults = false;
-		try {
-			String u = String.format(serverURL,URLEncoder.encode(method,"UTF-8"),name1,name2) ;
-			URL url = new URL(u);
-			//System.out.println("has result ? ..."  + url);
-
-			InputStream stream = URLConnectionTools.getInputStream(url,timeout);
-
-			String xml;
-
-			if ( stream != null) {
-
-				xml = convertStreamToString(stream);
-				logger.info(" has PrecalcResults got XML from server: " + xml);
-				HasResultXMLConverter conv = new HasResultXMLConverter();
-				hasResults = conv.fromXML(xml);
-			}
-
-		} catch (IOException e){
-			// log error and return false
-			logger.error("error in JFatCatClient: getAFPChainFromServer",e);
-		}
-		return hasResults;
-	}
+        String serverURL = serverLocation + serverHasResult;
 
 
-	public int getPositionInQueue(String serverLocation, String method, String name1, String name2){
-		return getPositionInQueue(serverLocation, method, name1, name2, DEFAULT_TIMEOUT);
-	}
+        boolean hasResults = false;
+        try {
+            String u = String.format(serverURL, URLEncoder.encode(method, "UTF-8"), name1, name2);
+            URL url = new URL(u);
+            //System.out.println("has result ? ..."  + url);
 
-	public int getPositionInQueue(String serverLocation, String method, String name1, String name2, int timeout){
-		String serverURL = serverLocation + serverPositionInQueue;
+            InputStream stream = URLConnectionTools.getInputStream(url, timeout);
 
+            String xml;
 
-		int position = Integer.MIN_VALUE;
-		try {
-			String u = String.format(serverURL,URLEncoder.encode(method,"UTF-8"),name1,name2) ;
-			URL url = new URL(u);
+            if (stream != null) {
 
-			InputStream stream = URLConnectionTools.getInputStream(url,timeout);
+                xml = convertStreamToString(stream);
+                logger.info(" has PrecalcResults got XML from server: " + xml);
+                HasResultXMLConverter conv = new HasResultXMLConverter();
+                hasResults = conv.fromXML(xml);
+            }
 
-			String xml;
-
-			if ( stream != null) {
-
-				xml = convertStreamToString(stream);
-				//System.out.println("got XML from server: " + xml);
-				PositionInQueueXMLConverter conv = new PositionInQueueXMLConverter();
-				position = conv.fromXML(xml);
-			}
-
-		} catch (IOException e){
-			logger.error("error in JFatCatClient: getAFPChainFromServer",e); // TODO dmyersturnbull: method should throw; we shouldn't catch here
-		}
-		return position;
-
-	}
-	public static AFPChain getAFPChainFromServer(String serverLocation ,  String name1, String name2, Atom[] ca1, Atom[] ca2) {
-		String method = FatCatRigid.algorithmName;
-		return getAFPChainFromServer(serverLocation, method, name1, name2, ca1, ca2,DEFAULT_TIMEOUT);
-	}
-
-	public static AFPChain getAFPChainFromServer(String serverLocation , String method, String name1, String name2, Atom[] ca1, Atom[] ca2, int timeout)
-	{
-
-		String serverURL = serverLocation + serverAPPEND;
-
-		try {
-			String u = String.format(serverURL,name1,name2) ;
-
-			if ( method != null)
-				u+= "&method=" + URLEncoder.encode(method,"UTF-8");
-
-			URL url = new URL(u);
-			logger.info("requesting alignment from server..."  + url);
-			// have a short timeout for this...
-			// 5 sec
-			InputStream stream = URLConnectionTools.getInputStream(url,timeout);
+        } catch (IOException e) {
+            // log error and return false
+            logger.error("error in JFatCatClient: getAFPChainFromServer", e);
+        }
+        return hasResults;
+    }
 
 
+    public int getPositionInQueue(String serverLocation, String method, String name1, String name2) {
+        return getPositionInQueue(serverLocation, method, name1, name2, DEFAULT_TIMEOUT);
+    }
 
-			if ( stream != null) {
-				String xml = convertStreamToString(stream);
-				return AFPChainXMLParser.fromXML(xml, name1, name2, ca1, ca2);
-			}
+    public int getPositionInQueue(String serverLocation, String method, String name1, String name2, int timeout) {
+        String serverURL = serverLocation + serverPositionInQueue;
 
 
+        int position = Integer.MIN_VALUE;
+        try {
+            String u = String.format(serverURL, URLEncoder.encode(method, "UTF-8"), name1, name2);
+            URL url = new URL(u);
+
+            InputStream stream = URLConnectionTools.getInputStream(url, timeout);
+
+            String xml;
+
+            if (stream != null) {
+
+                xml = convertStreamToString(stream);
+                //System.out.println("got XML from server: " + xml);
+                PositionInQueueXMLConverter conv = new PositionInQueueXMLConverter();
+                position = conv.fromXML(xml);
+            }
+
+        } catch (IOException e) {
+            logger.error("error in JFatCatClient: getAFPChainFromServer", e); // TODO dmyersturnbull: method should throw; we shouldn't catch here
+        }
+        return position;
+
+    }
+
+    public static AFPChain getAFPChainFromServer(String serverLocation, String name1, String name2, Atom[] ca1, Atom[] ca2) {
+        String method = FatCatRigid.algorithmName;
+        return getAFPChainFromServer(serverLocation, method, name1, name2, ca1, ca2, DEFAULT_TIMEOUT);
+    }
+
+    public static AFPChain getAFPChainFromServer(String serverLocation, String method, String name1, String name2, Atom[] ca1, Atom[] ca2, int timeout) {
+
+        String serverURL = serverLocation + serverAPPEND;
+
+        try {
+            String u = String.format(serverURL, name1, name2);
+
+            if (method != null)
+                u += "&method=" + URLEncoder.encode(method, "UTF-8");
+
+            URL url = new URL(u);
+            logger.info("requesting alignment from server..." + url);
+            // have a short timeout for this...
+            // 5 sec
+            InputStream stream = URLConnectionTools.getInputStream(url, timeout);
+
+
+            if (stream != null) {
+                String xml = convertStreamToString(stream);
+                return AFPChainXMLParser.fromXML(xml, name1, name2, ca1, ca2);
+            }
+
+
+            return null;
+
+            // TODO dmyersturnbull: method should throw; we shouldn't catch here
+        } catch (IOException e) {
+            logger.error("error in JFatCatClient: getAFPChainFromServer", e);
+        }
+        return null;
+    }
+
+
+    public static String convertStreamToString(InputStream stream) {
+
+        BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+
+        try {
+            String line;
+            StringBuilder sb = new StringBuilder(stream.available());
+            while ((line = reader.readLine()) != null) {
+                sb.append(line).append(newline);
+            }
+            return sb.toString();
+        } catch (IOException e) {
+            logger.error("Couldn't convert stream to string", e); // TODO dmyersturnbull: method should throw; we shouldn't catch here
 			return null;
+        } finally {
+            try {
+                stream.close();
+            } catch (IOException e) {
+                logger.warn("Can't close stream", e);
+            }
+        }
 
-			// TODO dmyersturnbull: method should throw; we shouldn't catch here
-		} catch (IOException e){
-			logger.error("error in JFatCatClient: getAFPChainFromServer",e);
-		}
-		return null;
-	}
+    }
 
+    public static String sendMultiAFPChainToServer(String serverLocation, String multiXML, String username) throws JobKillException {
+        String version = resourceManager.getString("jfatcat.version");
+        return sendMultiAFPChainToServer(serverLocation, multiXML, username, version);
+    }
 
-	public static String convertStreamToString(InputStream stream){
-		BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-		StringBuilder sb = new StringBuilder();
+    public static String sendMultiAFPChainToServer(String serverLocation, String multiXML, String username, String version) throws JobKillException {
+        String multiSendURL = serverLocation + multiSendAPPEND;
 
-		String line;
-		try {
-			while ((line = reader.readLine()) != null) {
-				sb.append(line).append(newline);
-			}
-		} catch (IOException e) {
-			logger.error("Couldn't convert stream to string", e); // TODO dmyersturnbull: method should throw; we shouldn't catch here
-		} finally {
-			try {
-				stream.close();
-			} catch (IOException e) {
-				logger.warn("Can't close stream", e);
-			}
-		}
+        String responseS = "";
 
-		return sb.toString();
-	}
+        String u = String.format(multiSendURL, username, version);
 
-	public static String sendMultiAFPChainToServer(String serverLocation, String multiXML, String username) throws JobKillException{
-		String version = resourceManager.getString("jfatcat.version");
-		return sendMultiAFPChainToServer(serverLocation, multiXML, username, version);
-	}
+        int timeout = getTimeout();
 
-	public static String sendMultiAFPChainToServer(String serverLocation, String multiXML, String username, String version) throws JobKillException{
-		String multiSendURL = serverLocation + multiSendAPPEND;
+        boolean submitted = false;
 
-		String responseS = "";
+        while (!submitted) {
+            try {
+                URL url = new URL(u);
+                InputStream response = URLConnectionTools.doPOST(url, multiXML, timeout);
+                responseS = convertStreamToString(response);
+                submitted = true;
+                if (!responseS.contains("OK"))
+                    logger.error("server returned " + responseS);
 
-		String u = String.format(multiSendURL,username,version);
+                // server is busy... wait a bit and try again
+                if (responseS.startsWith(COME_BACK_LATER)) {
+                    submitted = false;
+                }
 
-		int timeout = getTimeout();
+            } catch (Exception e) {
+                logger.error("Error in JFatCatClient: while sending results back to server", e);
 
-		boolean submitted = false;
+                try {
+                    int randomSleep = getRandomSleepTime();
+                    logger.warn("sleeping " + (randomSleep / 1000) + " sec.");
+                    Thread.sleep(randomSleep);
+                } catch (InterruptedException ex) {
+                    logger.warn("Interrupted while sleeping", ex);
+                }
+            }
+        }
 
-		while (! submitted ){
-			try {
-				URL url = new URL(u);
-				InputStream response = URLConnectionTools.doPOST(url, multiXML,timeout);
-				responseS = convertStreamToString(response);
-				submitted = true;
-				if (! responseS.contains("OK"))
-					logger.error("server returned " + responseS);
+        if (responseS.startsWith(KILL_JOB)) {
+            throw new JobKillException("Server responded with KILL message.");
 
-				// server is busy... wait a bit and try again
-				if ( responseS.startsWith(COME_BACK_LATER)){
-					submitted = false;
-				}
-
-			} catch (Exception e){
-				logger.error("Error in JFatCatClient: while sending results back to server",e);
-
-				try {
-					int randomSleep = getRandomSleepTime();
-					logger.warn("sleeping " + (randomSleep/1000) + " sec.");
-					Thread.sleep(randomSleep);
-				} catch (InterruptedException ex){
-					logger.warn("Interrupted while sleeping", ex);
-				}
-			}
-		}
-
-		if ( responseS.startsWith(KILL_JOB)){
-			throw new JobKillException("Server responded with KILL message.");
-
-		}
+        }
 
 
-		return responseS;
-	}
+        return responseS;
+    }
 
-	public static int getRandomSleepTime() {
+    public static int getRandomSleepTime() {
 
-		// now wait between 7 and 13 min.
+        // now wait between 7 and 13 min.
 
-		int minTime = 560000;
+        int minTime = 560000;
 
-		int maxTime = 7800000 - minTime;
+        int maxTime = 7800000 - minTime;
 
-		int nextId = generator.nextInt(maxTime);
-		return minTime + nextId;
+        int nextId = generator.nextInt(maxTime);
+        return minTime + nextId;
 
-	}
-
-
-	public static void sendAFPChainToServer(String serverLocation, AFPChain afpChain, Atom[] ca1, Atom[] ca2) throws JobKillException
-	{
-
-		String sendURL = serverLocation + sendAPPEND;
-
-		String version = resourceManager.getString("jfatcat.version");
-
-		int timeout = getTimeout();
-
-		try {
-
-			// just to make sure that similarity has been calculated!
-			afpChain.getSimilarity();
-
-			String xml = AFPChainXMLConverter.toXML(afpChain, ca1, ca2);
-
-			String u = String.format(sendURL,afpChain.getName1() , afpChain.getName2(),version);
-
-			URL url = new URL(u);
-
-			InputStream response = URLConnectionTools.doPOST(url, xml,timeout);
-
-			logger.debug("got response: {}", convertStreamToString(response));
-
-			if ( xml.startsWith("KILL_JOB")){
-				throw new JobKillException("Server responded with KILL message.");
-			}
-
-		} catch (IOException e){
-			logger.error("error in JFatCatClient: sendAFPChainToServer",e);
-		}
-
-	}
-
-	public static int getTimeout(){
-		String timeoutS = resourceManager.getString("connection.timeout");
-		int timeout = 60000;
-
-		try {
-			timeout = Integer.parseInt(timeoutS);
-		} catch (NumberFormatException ex ){
-			logger.error("Bad connection.timeout parameter",ex);
-		}
-		return timeout;
-	}
+    }
 
 
-	public static PdbPairsMessage getPdbPairs(String url, int nrPair, String username) throws IOException, JobKillException {
+    public static void sendAFPChainToServer(String serverLocation, AFPChain afpChain, Atom[] ca1, Atom[] ca2) throws JobKillException {
+
+        String sendURL = serverLocation + sendAPPEND;
+
+        String version = resourceManager.getString("jfatcat.version");
+
+        int timeout = getTimeout();
+
+        try {
+
+            // just to make sure that similarity has been calculated!
+            afpChain.getSimilarity();
+
+            String xml = AFPChainXMLConverter.toXML(afpChain, ca1, ca2);
+
+            String u = String.format(sendURL, afpChain.getName1(), afpChain.getName2(), version);
+
+            URL url = new URL(u);
+
+            InputStream response = URLConnectionTools.doPOST(url, xml, timeout);
+
+            logger.debug("got response: {}", convertStreamToString(response));
+
+            if (xml.startsWith("KILL_JOB")) {
+                throw new JobKillException("Server responded with KILL message.");
+            }
+
+        } catch (IOException e) {
+            logger.error("error in JFatCatClient: sendAFPChainToServer", e);
+        }
+
+    }
+
+    public static int getTimeout() {
+        String timeoutS = resourceManager.getString("connection.timeout");
+        int timeout = 60000;
+
+        try {
+            timeout = Integer.parseInt(timeoutS);
+        } catch (NumberFormatException ex) {
+            logger.error("Bad connection.timeout parameter", ex);
+        }
+        return timeout;
+    }
 
 
-		String urlS= url + "getPairs?" + "nrPairs=" + nrPair + "&username=" + URLEncoder.encode(username, "UTF-8");
-		int timeout = getTimeout();
-
-		PdbPairsMessage msg = null;
-		logger.info("requesting {}", urlS);
-		URL serverUrl = new URL(urlS);
-		// we are very tolerant with requesting a set of pairs, since we probably depend on getting it to get work started...
-		// 1 min...
-		InputStream stream = URLConnectionTools.getInputStream(serverUrl,timeout);
-		String xml;
-
-		if ( stream != null) {
-
-			xml = convertStreamToString(stream);
-			if (xml != null) {
-				if ( xml.startsWith("KILL_JOB")){
-					// we got the KILL signal from the server...
-					throw new JobKillException("Server responded with KILL message.");
-				}
-				msg = PdbPairXMLConverter.convertXMLtoPairs(xml);
-
-			}
-		}
-
-		return msg;
-	}
+    public static PdbPairsMessage getPdbPairs(String url, int nrPair, String username) throws IOException, JobKillException {
 
 
-	public static SortedSet<String> getRepresentatives(String serverLocation, int cutoff){
-		SortedSet<String> representatives = new TreeSet<>();
+        String urlS = url + "getPairs?" + "nrPairs=" + nrPair + "&username=" + URLEncoder.encode(username, "UTF-8");
+        int timeout = getTimeout();
 
-		String representURL = serverLocation + representAPPEND;
+        logger.info("requesting {}", urlS);
+        URL serverUrl = new URL(urlS);
+        // we are very tolerant with requesting a set of pairs, since we probably depend on getting it to get work started...
+        // 1 min...
+        InputStream stream = Download.stream(serverUrl, timeout); //URLConnectionTools.getInputStream(serverUrl,timeout);
+        String xml;
 
-		if ( cutoff < 20)
-			cutoff = 40;
-		int timeout = getTimeout();
-		String u = String.format(representURL,cutoff);
+        xml = convertStreamToString(stream);
 
-		logger.info("Fetching representatives from "+u);
-		try {
-			URL url = new URL(u);
+        if (xml.startsWith("KILL_JOB"))
+            throw new JobKillException("Server responded with KILL message."); // we got the KILL signal from the server...
 
-			InputStream stream = URLConnectionTools.getInputStream(url,timeout);
+        return PdbPairXMLConverter.convertXMLtoPairs(xml);
+    }
 
-			String xml = null;
 
-			if ( stream != null) {
+    public static SortedSet<String> getRepresentatives(String serverLocation, int cutoff) {
+        SortedSet<String> representatives = new TreeSet<>();
 
-				xml = convertStreamToString(stream);
-			}
-			if (xml != null) {
-				representatives = RepresentativeXMLConverter.fromXML(xml);
-			}
-		} catch (IOException e){ // TODO dmyersturnbull: method should throw; we shouldn't catch here
-			logger.error("Error fetching representatives",e);
-		}
-		return representatives;
-	}
+        String representURL = serverLocation + representAPPEND;
 
+        if (cutoff < 20)
+            cutoff = 40;
+        int timeout = getTimeout();
+        String u = String.format(representURL, cutoff);
+
+        logger.info("Fetching representatives from " + u);
+        try {
+            URL url = new URL(u);
+
+            InputStream stream = URLConnectionTools.getInputStream(url, timeout);
+
+            String xml = null;
+
+            if (stream != null) {
+
+                xml = convertStreamToString(stream);
+            }
+            if (xml != null) {
+                representatives = RepresentativeXMLConverter.fromXML(xml);
+            }
+        } catch (IOException e) { // TODO dmyersturnbull: method should throw; we shouldn't catch here
+            logger.error("Error fetching representatives", e);
+        }
+        return representatives;
+    }
 
 
 }

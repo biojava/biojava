@@ -195,7 +195,7 @@ public class TestQuaternaryStructureProviders {
 
 	}
 
-	private Structure getPdbBioAssembly(String pdbId, int bioMolecule, boolean multiModel) throws IOException, StructureException {
+	private Structure getPdbBioAssembly(String pdbId, int bioMolecule, boolean multiModel) throws StructureException {
 		// get bio assembly from PDB file
 		AtomCache cache = new AtomCache();
 		cache.setUseMmCif(false);
@@ -204,7 +204,7 @@ public class TestQuaternaryStructureProviders {
 		return pdbS;
 	}
 
-	private Structure getMmcifBioAssembly(String pdbId, int bioMolecule, boolean multiModel) throws IOException, StructureException {
+	private Structure getMmcifBioAssembly(String pdbId, int bioMolecule, boolean multiModel) throws StructureException {
 		// get bio assembly from mmcif file
 		AtomCache cache = new AtomCache();
 		cache.setUseMmCif(true);

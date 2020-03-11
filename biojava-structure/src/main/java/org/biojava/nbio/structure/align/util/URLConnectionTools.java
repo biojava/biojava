@@ -93,36 +93,21 @@ public class URLConnectionTools {
 		return Download.stream(url, timeout);
 	}
 
-
-	/**
-	 * Connect to a URL and return result as an InputStream.
-	 * always asks for response to be in GZIP encoded
-	 * <p>
-	 * The caller is responsible to close the returned InputStream not to cause
-	 * resource leaks.
-	 * @param url the input URL to be read
-	 * @return an {@link InputStream} of response
-	 * @throws IOException due to an error opening the URL
-	 */
-	public static InputStream getInputStream(URL url) throws IOException
-	{
-		return Download.stream(url, DEFAULT_CONNECTION_TIMEOUT);
-	}
-
-	/**
-	 * Do a POST to a URL and return the response stream for further processing elsewhere.
-	 * <p>
-	 * The caller is responsible to close the returned InputStream not to cause
-	 * resource leaks.
-	 * @param url  the input URL to be read
-	 * @param data the post data
-	 * @return an {@link InputStream} of response
-	 * @throws IOException due to an error opening the URL
-	 */
-	public static InputStream doPOST(URL url, String data) throws IOException
-	{
-		return doPOST(url,data,DEFAULT_CONNECTION_TIMEOUT);
-	}
+//
+//	/**
+//	 * Do a POST to a URL and return the response stream for further processing elsewhere.
+//	 * <p>
+//	 * The caller is responsible to close the returned InputStream not to cause
+//	 * resource leaks.
+//	 * @param url  the input URL to be read
+//	 * @param data the post data
+//	 * @return an {@link InputStream} of response
+//	 * @throws IOException due to an error opening the URL
+//	 */
+//	public static InputStream doPOST(URL url, String data) throws IOException
+//	{
+//		return doPOST(url,data,DEFAULT_CONNECTION_TIMEOUT);
+//	}
 
 	/**
 	 * Do a POST to a URL and return the response stream for further processing elsewhere.

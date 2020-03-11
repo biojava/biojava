@@ -82,14 +82,13 @@ public class GenbankProxySequenceReaderTest {
 	 * In {@link GenbankProxySequenceReader} there is a check to see if the requested files are already in the temp
 	 * directory before attempting to retrieve them from the remote server. so simply copying the test files to the temp
 	 * directory avoids calling out to the server and hitting a 429 status code from the server which fails the build.
-	 * @throws IOException
 	 */
 	@Before
-	public void copyTestFiles() throws IOException {
-		Collection<String[]> accessorIds = getExamples();
-		for (String[] arr: accessorIds) {
-			copyTestFileToWorkingDirectory(arr[0]+".gb");
-		}
+	public void copyTestFiles() {
+//		Collection<String[]> accessorIds = getExamples();
+//		for (String[] arr: accessorIds) {
+//			copyTestFileToWorkingDirectory(arr[0]+".gb");
+//		}
 	}
 
 	/**
@@ -122,7 +121,7 @@ public class GenbankProxySequenceReaderTest {
 
 
 	@Test
-	public void testFeatures() throws IOException, InterruptedException, CompoundNotFoundException {
+	public void testFeatures() throws IOException, InterruptedException {
 		logger.info("run test for protein: {}", gi);
 		GenbankProxySequenceReader<AminoAcidCompound> genbankReader
 				= new GenbankProxySequenceReader<>(

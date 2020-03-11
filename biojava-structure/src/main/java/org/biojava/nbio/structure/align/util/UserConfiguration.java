@@ -55,8 +55,8 @@ public class UserConfiguration
 
 	public static final String lineSplit = System.getProperty("file.separator");
 
-	private String pdbFilePath;
-	private String cacheFilePath;
+	@Deprecated private String pdbFilePath;
+	@Deprecated private String cacheFilePath;
 
 	private FetchBehavior fetchBehavior;
 	private ObsoleteBehavior obsoleteBehavior;

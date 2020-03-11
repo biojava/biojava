@@ -121,7 +121,7 @@ public class MultipleAlignmentScorer {
 				for (int r2 = r1 + 1; r2 < transformed.size(); r2++) {
 					Atom atom = transformed.get(r2)[c];
 					if (atom != null) {
-						nonNullSqDist += Calc.getDistanceFast(refAtom, atom);
+						nonNullSqDist += Calc.getDistanceSqr(refAtom, atom);
 						nonNullLength++;
 					}
 				}
@@ -208,7 +208,7 @@ public class MultipleAlignmentScorer {
 					continue;
 				Atom atom = transformed.get(r)[c];
 				if (atom != null) {
-					nonNullSqDist += Calc.getDistanceFast(refAtom, atom);
+					nonNullSqDist += Calc.getDistanceSqr(refAtom, atom);
 					nonNullLength++;
 				}
 			}

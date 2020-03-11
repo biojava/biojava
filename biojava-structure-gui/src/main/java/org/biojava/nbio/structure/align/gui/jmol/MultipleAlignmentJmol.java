@@ -217,14 +217,19 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 			evalString("save selection; select *; color grey; "
 					+ "select ligand; color CPK;");
 
-			if (value.equals("Set1")) {
-				colorPalette = ColorBrewer.Set1;
-			} else if (value.equals("Set2")) {
-				colorPalette = ColorBrewer.Set2;
-			} else if (value.equals("Spectral")) {
-				colorPalette = ColorBrewer.Spectral;
-			} else if (value.equals("Pastel")) {
-				colorPalette = ColorBrewer.Pastel1;
+			switch (value) {
+				case "Set1":
+					colorPalette = ColorBrewer.Set1;
+					break;
+				case "Set2":
+					colorPalette = ColorBrewer.Set2;
+					break;
+				case "Spectral":
+					colorPalette = ColorBrewer.Spectral;
+					break;
+				case "Pastel":
+					colorPalette = ColorBrewer.Pastel1;
+					break;
 			}
 			String script = getJmolString(multAln, transformedAtoms,
 					colorPalette, colorByBlocks.isSelected());

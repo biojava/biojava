@@ -20,7 +20,7 @@
  */
 package org.biojava.nbio.structure.domain;
 
-import org.biojava.nbio.structure.align.util.URLConnectionTools;
+import org.biojava.nbio.core.util.Download;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -127,7 +127,7 @@ public class PDBDomainProvider implements DomainProvider{
 	private static void handleRestRequest(String url, DefaultHandler handler) throws SAXException, IOException, ParserConfigurationException {
 		// Fetch XML stream
 		URL u = new URL(url);
-		InputStream response = URLConnectionTools.getInputStream(u);
+        InputStream response = Download.stream(u);
 		InputSource xml = new InputSource(response);
 
 		// Parse XML

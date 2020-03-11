@@ -86,7 +86,7 @@ public class Calc {
 	 *            an Atom object
 	 * @return a double
 	 */
-	public static double getDistanceFast(Atom a, Atom b) {
+	public static double getDistanceSqr(Atom a, Atom b) {
 		double x = a.getX() - b.getX();
 		double y = a.getY() - b.getY();
 		double z = a.getZ() - b.getZ();

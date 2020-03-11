@@ -97,12 +97,13 @@ public class MMCIFFileReader extends LocalPDBDirectory {
 	@Override
 	public Structure getStructure(InputStream inStream) throws IOException{
 
-		MMcifParser parser = new SimpleMMcifParser();
 
 		consumer = new SimpleMMcifConsumer();
 
 		consumer.setFileParsingParameters(getFileParsingParameters());
 
+
+		MMcifParser parser = new SimpleMMcifParser();
 
 		// The Consumer builds up the BioJava - structure object.
 		// you could also hook in your own and build up you own data model.
@@ -112,14 +113,13 @@ public class MMCIFFileReader extends LocalPDBDirectory {
 
 
 		// now get the protein structure.
-		Structure cifStructure = consumer.getStructure();
 
-		return cifStructure;
+		return consumer.getStructure();
 	}
 
-	public SimpleMMcifConsumer getMMcifConsumer(){
-		return consumer;
-	}
+//	public SimpleMMcifConsumer getMMcifConsumer(){
+//		return consumer;
+//	}
 
 //	public void setMMCifConsumer(SimpleMMcifConsumer consumer){
 //		this.consumer = consumer;

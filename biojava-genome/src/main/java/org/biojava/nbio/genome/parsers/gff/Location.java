@@ -293,22 +293,22 @@ public class Location implements Iterable<Location>
 		}
 	}
 
-	private Location intersect(int a1, int a2, int b1, int b2) {
+	private static Location intersect(int a1, int a2, int b1, int b2) {
 		if (a1 > b1) {
 			return intersect(b1, b2, a1, a2);
 		}
 		// Safe to assume a1 <= b1
-		if (b1 >= a2) {
+		else if (b1 >= a2) {
 			// b starts after a ends
 			return null;
-		} else if (b1 < a2 && b2 <= a2) {
+		} else if (b2 <= a2) {
 			// b starts after a starts and ends before or at where a ends
 			return new Location(b1, b2);
-		} else if (b1 >= a1 && a2 <= b2) {
+		} else if (a2 <= b2) {
 			// b starts after a but extends after the end of a
 			return new Location(b1, a2);
-		}
-		return null;
+		} else
+			return null;
 	}
 
 

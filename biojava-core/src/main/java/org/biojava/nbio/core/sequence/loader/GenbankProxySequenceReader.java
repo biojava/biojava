@@ -42,7 +42,10 @@ import org.biojava.nbio.core.util.Download;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -76,7 +79,7 @@ public class GenbankProxySequenceReader<C extends Compound> extends StringProxyS
 
 		String db = compoundSet instanceof AminoAcidCompoundSet ? "protein" : "nuccore";
 
-		BufferedInputStream inStream1;
+//		BufferedInputStream inStream1;
 //		if (genbankDirectoryCache != null && genbankDirectoryCache.length() > 0) {
 //			File f = new File(genbankDirectoryCache + File.separatorChar + accessionID + ".gb");
 //			if (f.exists()) {
@@ -93,41 +96,40 @@ public class GenbankProxySequenceReader<C extends Compound> extends StringProxyS
 //		URL genbank = new URL(genbankURL);
 //		inStream1 = new BufferedInputStream(genbank.openConnection().getInputStream());
 //		}
-		InputStream inStream = Download.stream(new URL(genbankURL));
 		genbankParser = new GenbankSequenceParser<>();
 
-		String s = genbankParser.getSequence(new BufferedReader(new InputStreamReader(inStream)), 0);
-		setContents(s);
-		headerParser = genbankParser.getSequenceHeaderParser();
-		header = genbankParser.getHeader();
-		features = genbankParser.getFeatures();
+		try (InputStream inStream = Download.stream(new URL(genbankURL))) {
+			String s = genbankParser.getSequence(new BufferedReader(new InputStreamReader(inStream)), 0);
+			setContents(s);
+			headerParser = genbankParser.getSequenceHeaderParser();
+			header = genbankParser.getHeader();
+			features = genbankParser.getFeatures();
 
-		if (compoundSet.getClass().equals(AminoAcidCompoundSet.class)) {
-			if (!genbankParser.getCompoundType().equals(compoundSet)) {
-				logger.error("Declared compount type {} does not mach the real: {}", genbankParser.getCompoundType().toString(), compoundSet.toString());
-				throw new IOException("Wrong declared compound type for: " + accessionID);
+			if (compoundSet.getClass().equals(AminoAcidCompoundSet.class)) {
+				if (!genbankParser.getCompoundType().equals(compoundSet)) {
+					logger.error("Declared compount type {} does not mach the real: {}", genbankParser.getCompoundType().toString(), compoundSet.toString());
+					throw new IOException("Wrong declared compound type for: " + accessionID);
+				}
 			}
 		}
-
-		inStream.close();
 	}
 
-	private void copyInputStreamToFile(InputStream in, File f) throws IOException, InterruptedException {
-		FileOutputStream out = new FileOutputStream(f);
-		byte[] buffer = new byte[1024];
-		int len = in.read(buffer);
-		while (len != -1) {
-			out.write(buffer, 0, len);
-			len = in.read(buffer);
-			if (Thread.interrupted()) {
-				in.close();
-				out.close();
-				throw new InterruptedException();
-			}
-		}
-		in.close();
-		out.close();
-	}
+//	private void copyInputStreamToFile(InputStream in, File f) throws IOException, InterruptedException {
+//		FileOutputStream out = new FileOutputStream(f);
+//		byte[] buffer = new byte[1024];
+//		int len = in.read(buffer);
+//		while (len != -1) {
+//			out.write(buffer, 0, len);
+//			len = in.read(buffer);
+//			if (Thread.interrupted()) {
+//				in.close();
+//				out.close();
+//				throw new InterruptedException();
+//			}
+//		}
+//		in.close();
+//		out.close();
+//	}
 
 	//	/**
 //	 * Local directory cache of Genbank that can be downloaded

@@ -33,15 +33,12 @@ import org.biojava.nbio.structure.align.ce.*;
 import org.biojava.nbio.structure.align.client.FarmJobParameters;
 import org.biojava.nbio.structure.align.client.JFatCatClient;
 import org.biojava.nbio.structure.align.client.PdbPair;
-import org.biojava.nbio.structure.align.client.StructureName;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.align.util.SynchronizedOutFile;
 import org.biojava.nbio.structure.domain.DomainProvider;
 import org.biojava.nbio.structure.domain.DomainProviderFactory;
 import org.biojava.nbio.structure.domain.RemoteDomainProvider;
-import org.biojava.nbio.structure.io.LocalPDBDirectory.FetchBehavior;
-import org.biojava.nbio.structure.io.PDBFileReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -396,7 +393,7 @@ public class MultiThreadedDBSearch {
 	}
 
 
-	@Deprecated private void checkFile(String repre) throws IOException, StructureException {
+	@Deprecated private void checkFile(String repre) {
 
 //		StructureName name = new StructureName(repre);
 //
