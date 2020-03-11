@@ -30,6 +30,7 @@ import org.biojava.nbio.core.util.Equals;
 import org.biojava.nbio.core.util.Hashcoder;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Provides a way of separating us from the specific {@link IUPACTable} even
@@ -64,7 +65,7 @@ public interface Table {
 	 * @author ayates
 	 *
 	 */
-	public static class Codon implements Compound {
+	class Codon implements Compound {
 
 		private final CaseInsensitiveTriplet triplet;
 		private final boolean start;
@@ -114,14 +115,15 @@ public interface Table {
 		}
 
 		@Override
-		public boolean equals(Object obj) {
+		public boolean equals(Object o) {
+			if (this == o) return true;
 			boolean equals = false;
-			if(Equals.classEqual(this, obj)) {
-				Codon casted = (Codon) obj;
-				equals =   Equals.equal(getTriplet(), casted.getTriplet()) &&
-							Equals.equal(isStart(), casted.isStart()) &&
-							Equals.equal(isStop(), casted.isStop()) &&
-							Equals.equal(getAminoAcid(), casted.getAminoAcid());
+			if(Equals.classEqual(this, o)) {
+				Codon casted = (Codon) o;
+				equals =   Objects.equals(getTriplet(), casted.getTriplet()) &&
+						isStart() == casted.isStart() &&
+						isStop() == casted.isStop() &&
+                        Objects.equals(getAminoAcid(), casted.getAminoAcid());
 			}
 			return equals;
 		}
@@ -157,7 +159,7 @@ public interface Table {
 		}
 
 		@Override
-		public Float getMolecularWeight() {
+		public float getMolecularWeight() {
 			throw new UnsupportedOperationException("Not supported");
 		}
 
@@ -176,10 +178,10 @@ public interface Table {
 			throw new UnsupportedOperationException("Not supported");
 		}
 
-		@Override
-		public void setMolecularWeight(Float molecularWeight) {
-			throw new UnsupportedOperationException("Not supported");
-		}
+//		@Override
+//		public void setMolecularWeight(Float molecularWeight) {
+//			throw new UnsupportedOperationException("Not supported");
+//		}
 
 		@Override
 		public void setShortName(String shortName) {
@@ -191,7 +193,7 @@ public interface Table {
 	 * Class used to hold three nucleotides together and allow for equality
 	 * to be assessed in a case insensitive manner.
 	 */
-	public static class CaseInsensitiveTriplet {
+	class CaseInsensitiveTriplet {
 
 		private final NucleotideCompound one;
 		private final NucleotideCompound two;
@@ -199,7 +201,7 @@ public interface Table {
 
 		private transient boolean hashSet = false;
 		private transient int hash;
-		private transient boolean stringSet = false;
+		private final transient boolean stringSet = false;
 		private transient String stringify;
 
 		public CaseInsensitiveTriplet(NucleotideCompound one,
@@ -223,10 +225,11 @@ public interface Table {
 		}
 
 		@Override
-		public boolean equals(Object obj) {
+		public boolean equals(Object o) {
+			if (this == o) return true;
 			boolean equals = false;
-			if(Equals.classEqual(this, obj)) {
-				CaseInsensitiveTriplet casted = (CaseInsensitiveTriplet) obj;
+			if(Equals.classEqual(this, o)) {
+				CaseInsensitiveTriplet casted = (CaseInsensitiveTriplet) o;
 				return toString().equals(casted.toString());
 			}
 			return equals;

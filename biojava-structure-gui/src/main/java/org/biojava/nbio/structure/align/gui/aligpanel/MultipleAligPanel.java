@@ -20,22 +20,7 @@
  */
 package org.biojava.nbio.structure.align.gui.aligpanel;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.RenderingHints;
-import java.awt.event.ActionEvent;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-import java.util.ArrayList;
-import java.util.BitSet;
-import java.util.List;
-
 import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.gui.JPrintPanel;
 import org.biojava.nbio.structure.align.gui.MenuCreator;
 import org.biojava.nbio.structure.align.gui.MultipleAlignmentJmolDisplay;
@@ -49,6 +34,14 @@ import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentWriter;
 import org.biojava.nbio.structure.align.util.AFPAlignmentDisplay;
 import org.biojava.nbio.structure.gui.events.AlignmentPositionListener;
 import org.biojava.nbio.structure.gui.util.AlignedPosition;
+
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.List;
 
 /**
  * A JPanel that can display the sequence alignment of a
@@ -77,11 +70,11 @@ implements AlignmentPositionListener, WindowListener {
 	int size; 			//number of structures
 	int length; 		//number of aligned positions in sequence alignment
 
-	private Font seqFont;
-	private Font eqFont;
+	private final Font seqFont;
+	private final Font eqFont;
 
 	private AbstractAlignmentJmol jmol;
-	private MultipleAligPanelMouseMotionListener mouseMoLi;
+	private final MultipleAligPanelMouseMotionListener mouseMoLi;
 	private MultipleAlignmentCoordManager coordManager;
 
 	private BitSet selection;
@@ -120,10 +113,9 @@ implements AlignmentPositionListener, WindowListener {
 	 * @param afpChain
 	 * @param ca1
 	 * @param ca2
-	 * @throws StructureException
 	 */
 	public MultipleAligPanel(AFPChain afpChain, Atom[] ca1, Atom[] ca2,
-			AbstractAlignmentJmol jmol) throws StructureException {
+			AbstractAlignmentJmol jmol) {
 
 		this();
 
@@ -139,7 +131,7 @@ implements AlignmentPositionListener, WindowListener {
 		this.multAln = ensemble.getMultipleAlignment(0);
 
 		//Create the sequence alignment and the structure-sequence mapping.
-		this.mapSeqToStruct = new ArrayList<Integer>();
+		this.mapSeqToStruct = new ArrayList<>();
 		this.alnSeq = MultipleAlignmentTools.getSequenceAlignment(
 				this.multAln, this.mapSeqToStruct);
 
@@ -162,7 +154,7 @@ implements AlignmentPositionListener, WindowListener {
 		this.multAln = msa;
 
 		//Create the sequence alignment and the structure-sequence mapping.
-		this.mapSeqToStruct = new ArrayList<Integer>();
+		this.mapSeqToStruct = new ArrayList<>();
 		this.alnSeq = MultipleAlignmentTools.getSequenceAlignment(
 				this.multAln, this.mapSeqToStruct);
 
@@ -225,7 +217,7 @@ implements AlignmentPositionListener, WindowListener {
 			else isGapped = true;
 
 			//Loop through every structure to get all the points
-			List<Point> points = new ArrayList<Point>();
+			List<Point> points = new ArrayList<>();
 			for (int str=0; str<size; str++) points.add(
 					coordManager.getPanelPos(str,i));
 			Point p1 = points.get(0);
@@ -351,7 +343,7 @@ implements AlignmentPositionListener, WindowListener {
 
 		if (jmol == null) return;
 
-		StringBuffer cmd = new StringBuffer("select ");
+		StringBuilder cmd = new StringBuilder("select ");
 		int nrSelected = 0;
 		for (int i=0; i<length; i++){
 			if (selection.get(i)){
@@ -360,7 +352,7 @@ implements AlignmentPositionListener, WindowListener {
 							multAln, mapSeqToStruct,str,i);
 					if (a != null) {
 						cmd.append(JmolTools.getPdbInfo(a));
-						cmd.append("/"+(str+1)+", ");
+						cmd.append("/").append(str + 1).append(", ");
 					}
 				}
 				nrSelected++;
@@ -437,27 +429,40 @@ implements AlignmentPositionListener, WindowListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String cmd = e.getActionCommand();
-		if ( cmd.equals(MenuCreator.PRINT)) {
-			super.actionPerformed(e);
-		} else if (cmd.equals(MenuCreator.FASTA_FORMAT)){
-			String result = MultipleAlignmentWriter.toFASTA(multAln);
-			MultipleAlignmentJmolDisplay.showAlignmentImage(multAln, result);
-		} else if ( cmd.equals(MenuCreator.PAIRS_ONLY)) {
-			String result = MultipleAlignmentWriter.toAlignedResidues(multAln);
-			MultipleAlignmentJmolDisplay.showAlignmentImage(multAln, result);
-		} else if (cmd.equals(MenuCreator.FATCAT_TEXT)){
-			String result = MultipleAlignmentWriter.toFatCat(multAln);
-			MultipleAlignmentJmolDisplay.showAlignmentImage(multAln, result);
-		} else if (cmd.equals(MenuCreator.SELECT_EQR)){
-			selectEQR();
-		} else if ( cmd.equals(MenuCreator.SIMILARITY_COLOR)){
-			colorBySimilarity(true);
-		} else if (cmd.equals(MenuCreator.EQR_COLOR)){
-			colorBySimilarity(false);
-		} else if ( cmd.equals(MenuCreator.FATCAT_BLOCK)){
-			colorByAlignmentBlock();
-		} else {
-			System.err.println("Unknown command:" + cmd);
+		switch (cmd) {
+			case MenuCreator.PRINT:
+				super.actionPerformed(e);
+				break;
+			case MenuCreator.FASTA_FORMAT: {
+				String result = MultipleAlignmentWriter.toFASTA(multAln);
+				MultipleAlignmentJmolDisplay.showAlignmentImage(multAln, result);
+				break;
+			}
+			case MenuCreator.PAIRS_ONLY: {
+				String result = MultipleAlignmentWriter.toAlignedResidues(multAln);
+				MultipleAlignmentJmolDisplay.showAlignmentImage(multAln, result);
+				break;
+			}
+			case MenuCreator.FATCAT_TEXT: {
+				String result = MultipleAlignmentWriter.toFatCat(multAln);
+				MultipleAlignmentJmolDisplay.showAlignmentImage(multAln, result);
+				break;
+			}
+			case MenuCreator.SELECT_EQR:
+				selectEQR();
+				break;
+			case MenuCreator.SIMILARITY_COLOR:
+				colorBySimilarity(true);
+				break;
+			case MenuCreator.EQR_COLOR:
+				colorBySimilarity(false);
+				break;
+			case MenuCreator.FATCAT_BLOCK:
+				colorByAlignmentBlock();
+				break;
+			default:
+				System.err.println("Unknown command:" + cmd);
+				break;
 		}
 	}
 

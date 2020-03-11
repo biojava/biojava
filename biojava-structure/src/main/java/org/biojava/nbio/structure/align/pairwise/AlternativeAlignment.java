@@ -34,12 +34,10 @@ import org.biojava.nbio.structure.jama.Matrix;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.vecmath.Matrix4d;
 import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.List;
-
-
-import javax.vecmath.Matrix4d;
 
 /**
  * Implements a class which handles one possible (alternative) solution.
@@ -67,17 +65,17 @@ public class AlternativeAlignment implements Serializable{
 	//short[] alig1;
 	//short[] alig2;
 
-	private int nfrags;
-	private Atom center;
-	private Matrix rot;
-	private Atom tr;
+	private final int nfrags;
+	private final Atom center;
+	private final Matrix rot;
+	private final Atom tr;
 
 
 	// the scores...
 	private int gaps0;
 	private int eqr0;
-	private int rms0;
-	private int joined;
+	private final int rms0;
+	private final int joined;
 	private int percId;
 	private int cluster;
 	private float score;
@@ -133,14 +131,8 @@ public class AlternativeAlignment implements Serializable{
 		d2.setMaximumIntegerDigits(3);
 		d2.setMinimumFractionDigits(2);
 		d2.setMaximumFractionDigits(2);
-		StringBuffer s = new StringBuffer();
-		s.append("#" + getAltAligNumber() +
-				" cluster:" + cluster +
-				" eqr:" + getEqr() +
-				" rmsd:" + d2.format(getRmsd()) +
-				" %id:" + getPercId() +
-				" gaps:" + getGaps() +
-				" score:" + d2.format(score)	);
+		StringBuilder s = new StringBuilder();
+		s.append("#").append(getAltAligNumber()).append(" cluster:").append(cluster).append(" eqr:").append(getEqr()).append(" rmsd:").append(d2.format(getRmsd())).append(" %id:").append(getPercId()).append(" gaps:").append(getGaps()).append(" score:").append(d2.format(score));
 
 		return s.toString();
 	}
@@ -305,7 +297,7 @@ public class AlternativeAlignment implements Serializable{
 		//System.out.println("after " + ca[0]);
 	}
 
-	public void finish(StrucAligParameters params,Atom[]ca1,Atom[]ca2) throws StructureException{
+	public void finish(StrucAligParameters params,Atom[]ca1,Atom[]ca2) {
 
 		Atom[] ca3 = new Atom[ca2.length];
 		for ( int i = 0 ; i < ca2.length;i++){
@@ -345,11 +337,11 @@ public class AlternativeAlignment implements Serializable{
 		return out;
 	}
 
-	private Alignable getInitalStrCompAlignment(
+	private static Alignable getInitalStrCompAlignment(
 			Atom[] ca1,
-			Atom[]ca2,
+			Atom[] ca2,
 			StrucAligParameters params
-			){
+	){
 
 		int rows = ca1.length;
 		int cols = ca2.length;
@@ -383,11 +375,8 @@ public class AlternativeAlignment implements Serializable{
 				aligmat[0][j] = new AligMatEl();
 
 				Atom b1 = ca2[j];
-				double d = 999;
 
-				d = Calc.getDistance(a1,b1);
-
-
+				double d = Calc.getDistance(a1,b1);
 				AligMatEl e = new AligMatEl();
 				if (d > co) {
 					e.setValue(0);
@@ -453,10 +442,9 @@ public class AlternativeAlignment implements Serializable{
 	 * @param params the parameters
 	 * @param ca1 atoms of structure 1
 	 * @param ca2 atoms of structure 2
-	 * @throws StructureException
-	 */
+     */
 
-	public void refine(StrucAligParameters params,Atom[]ca1,Atom[]ca2) throws StructureException{
+	public void refine(StrucAligParameters params,Atom[]ca1,Atom[]ca2) {
 		// System.out.println("refine Alternative Alignment #"+ getAltAligNumber()+" l1:" + ca1.length + " l2:" + ca2.length);
 		//		for ( int i= 0 ; i < idx1.length;i++){
 		//		System.out.println(idx1[i] + " " + idx2[i]);
@@ -497,7 +485,7 @@ public class AlternativeAlignment implements Serializable{
 		int maxiter = params.getMaxIter();
 		for (int iter = 0 ; iter< maxiter; iter++){
 
-			float  subscore = 0.0f;
+			float  subscore;
 
 			rotateShiftAtoms(ca3);
 
@@ -581,12 +569,8 @@ public class AlternativeAlignment implements Serializable{
 				// now we join the two solutions
 				if ( subpathsize > permsize){
 					IndexPair[] wholepath = new IndexPair[pathsize+subpathsize];
-					for ( int t=0; t < pathsize; t++){
-						wholepath[t] = path[t];
-					}
-					for ( int t=0 ; t < subpathsize; t++){
-						wholepath[t+pathsize] = subpath[t];
-					}
+                    System.arraycopy(path, 0, wholepath, 0, pathsize);
+                    System.arraycopy(subpath, 0, wholepath, 0 + pathsize, subpathsize);
 					pathsize += subpathsize;
 					path = wholepath;
 					ali.setPath(path);
@@ -726,14 +710,13 @@ public class AlternativeAlignment implements Serializable{
 	 * @param i2
 	 * @return the number of gaps in this alignment
 	 */
-	private int count_gaps(int[] i1, int[] i2){
+	private static int count_gaps(int[] i1, int[] i2){
 
 		int i0 = i1[0];
 		int j0 = i2[0];
 		int gaps = 0;
 		for (int i =1 ; i<i1.length;i++ ){
-			if ( Math.abs(i1[i]-i0) != 1 ||
-					( Math.abs(i2[i]-j0) != 1)){
+			if (Math.abs(i1[i]-i0) != 1 || Math.abs(i2[i]-j0) != 1){
 				gaps +=1;
 			}
 			i0 = i1[i];
@@ -745,7 +728,7 @@ public class AlternativeAlignment implements Serializable{
 
 
 
-	public void calculateSuperpositionByIdx(Atom[] ca1, Atom[] ca2)throws StructureException {
+	public void calculateSuperpositionByIdx(Atom[] ca1, Atom[] ca2) {
 
 		super_pos_alig(ca1,ca2,idx1,idx2,false);
 
@@ -760,12 +743,11 @@ public class AlternativeAlignment implements Serializable{
 	 * @param idx1 idx positions in set1
 	 * @param idx2 idx positions in set2
 	 * @param getRMS a flag if the RMS should be calculated
-	 * @throws StructureException
 	 */
 
 
 
-	private void super_pos_alig(Atom[]ca1,Atom[]ca2,int[] idx1, int[] idx2, boolean getRMS) throws StructureException{
+	private void super_pos_alig(Atom[]ca1,Atom[]ca2,int[] idx1, int[] idx2, boolean getRMS) {
 
 		//System.out.println("superpos alig ");
 		Atom[] ca1subset = new Atom[idx1.length];

@@ -27,9 +27,9 @@ package org.biojava.nbio.core.sequence.compound;
 
 import org.biojava.nbio.core.sequence.template.AbstractCompound;
 import org.biojava.nbio.core.sequence.template.ComplementCompound;
-import org.biojava.nbio.core.sequence.template.Compound;
 import org.biojava.nbio.core.sequence.template.CompoundSet;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -51,14 +51,14 @@ public class NucleotideCompound extends AbstractCompound implements ComplementCo
 	  super(base);
 	  this.compoundSet = compoundSet;
 	  this.complementStr = complementStr;
-	  this.constituents = unmodifiableSet(new HashSet<NucleotideCompound>(asList(this)));
+	  this.constituents = unmodifiableSet(new HashSet<>(Collections.singletonList(this)));
 	}
 
 	public NucleotideCompound(String base, CompoundSet<NucleotideCompound> compoundSet, String complementStr, NucleotideCompound[] constituents) {
 		super(base);
 		this.compoundSet = compoundSet;
 		this.complementStr = complementStr;
-		this.constituents = unmodifiableSet(new HashSet<NucleotideCompound>(asList(constituents)));
+		this.constituents = unmodifiableSet(new HashSet<>(asList(constituents)));
 	}
 
 	@Override
@@ -70,35 +70,35 @@ public class NucleotideCompound extends AbstractCompound implements ComplementCo
 	public ComplementCompound getComplement() {
 		return compoundSet.getCompoundForString(complementStr);
 	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (!(obj instanceof NucleotideCompound)) {
-			return false;
-		}
-		NucleotideCompound them = (NucleotideCompound) obj;
-		return toString().equals(them.toString());
-	}
-
-	@Override
-	public int hashCode() {
-		return toString().hashCode();
-	}
-
-	@Override
-	public boolean equalsIgnoreCase(Compound compound) {
-		if (compound == null) {
-			return false;
-		}
-		if (!(compound instanceof NucleotideCompound)) {
-			return false;
-		}
-		NucleotideCompound them = (NucleotideCompound) compound;
-		return toString().equalsIgnoreCase(them.toString());
-	}
+//
+//	@Override
+//	public boolean equals(Object obj) {
+//		if (obj == null) {
+//			return false;
+//		}
+//		if (!(obj instanceof NucleotideCompound)) {
+//			return false;
+//		}
+//		NucleotideCompound them = (NucleotideCompound) obj;
+//		return toString().equals(them.toString());
+//	}
+//
+//	@Override
+//	public int hashCode() {
+//		return toString().hashCode();
+//	}
+//
+//	@Override
+//	public boolean equalsIgnoreCase(Compound compound) {
+//		if (compound == null) {
+//			return false;
+//		}
+//		if (!(compound instanceof NucleotideCompound)) {
+//			return false;
+//		}
+//		NucleotideCompound them = (NucleotideCompound) compound;
+//		return toString().equalsIgnoreCase(them.toString());
+//	}
 
 	public Set<NucleotideCompound> getConstituents() {
 	  return constituents;

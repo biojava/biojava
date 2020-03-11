@@ -39,9 +39,9 @@ public interface GapPenalty {
 	 *  <li>DYNAMIC, if penalty values change during alignment
 	 * </ul>
 	 */
-	enum Type {CONSTANT, LINEAR, AFFINE, DYNAMIC};
+	enum Type {CONSTANT, LINEAR, AFFINE, DYNAMIC}
 
-	/**
+    /**
 	 * Returns penalty given when an already open gap elongates by a single element
 	 *
 	 * @return gap extension penalty

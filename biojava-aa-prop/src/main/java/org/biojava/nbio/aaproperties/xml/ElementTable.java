@@ -58,8 +58,8 @@ public class ElementTable {
 	 * Populate the Maps for quick retrieval
 	 */
 	public void populateMaps(){
-		this.elementName2Element = new HashMap<String, Element>();
-		this.isotopeName2Isotope = new HashMap<String, Isotope>();
+		this.elementName2Element = new HashMap<>();
+		this.isotopeName2Isotope = new HashMap<>();
 		if(this.element != null){
 			for(Element e:this.element){
 				this.elementName2Element.put(e.getName(), e);

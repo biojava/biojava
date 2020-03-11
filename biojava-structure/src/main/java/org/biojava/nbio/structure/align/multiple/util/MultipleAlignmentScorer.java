@@ -20,15 +20,15 @@
  */
 package org.biojava.nbio.structure.align.multiple.util;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.jama.Matrix;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Utility class for calculating common scores of {@link MultipleAlignment}s.
@@ -66,7 +66,7 @@ public class MultipleAlignmentScorer {
 		alignment.putScore(RMSD, getRMSD(trans));
 
 		// Put AvgTM-Score
-		List<Integer> lengths = new ArrayList<Integer>(alignment.size());
+		List<Integer> lengths = new ArrayList<>(alignment.size());
 		for (Atom[] atoms : alignment.getAtomArrays()) {
 			lengths.add(atoms.length);
 		}
@@ -237,7 +237,7 @@ public class MultipleAlignmentScorer {
 
 		List<Atom[]> trans = MultipleAlignmentTools.transformAtoms(alignment);
 
-		List<Integer> lengths = new ArrayList<Integer>(alignment.size());
+		List<Integer> lengths = new ArrayList<>(alignment.size());
 		for (Atom[] atoms : alignment.getAtomArrays()) {
 			lengths.add(atoms.length);
 		}
@@ -314,7 +314,7 @@ public class MultipleAlignmentScorer {
 
 		List<Atom[]> trans = MultipleAlignmentTools.transformAtoms(alignment);
 
-		List<Integer> lengths = new ArrayList<Integer>(alignment.size());
+		List<Integer> lengths = new ArrayList<>(alignment.size());
 		for (Atom[] atoms : alignment.getAtomArrays()) {
 			lengths.add(atoms.length);
 		}
@@ -395,11 +395,9 @@ public class MultipleAlignmentScorer {
 	 * @param dCutoff
 	 *            the distance cutoff
 	 * @return the value of the score
-	 * @throws StructureException
-	 */
+     */
 	public static double getMCScore(MultipleAlignment alignment,
-			double gapOpen, double gapExtension, double dCutoff)
-			throws StructureException {
+			double gapOpen, double gapExtension, double dCutoff) {
 
 		List<Atom[]> trans = MultipleAlignmentTools.transformAtoms(alignment);
 
@@ -440,11 +438,9 @@ public class MultipleAlignmentScorer {
 	 * @param A
 	 *            the distance cutoff penalization
 	 * @return the value of the score
-	 * @throws StructureException
 	 */
 	private static double getMCScore(List<Atom[]> trans, double d0,
-			double gapOpen, double gapExtension, double A)
-			throws StructureException {
+			double gapOpen, double gapExtension, double A) {
 
 		int size = trans.size();
 		int length = trans.get(0).length;

@@ -25,11 +25,11 @@ import org.biojava.nbio.structure.gui.util.AlignedPosition;
 
 public interface AlignmentPositionListener {
 
-	public void mouseOverPosition(AlignedPosition p);
-	public void positionSelected(AlignedPosition p);
-	public void toggleSelection(AlignedPosition p);
-	public void rangeSelected(AlignedPosition start , AlignedPosition end);
-	public void selectionLocked();
-	public void selectionUnlocked();
+	void mouseOverPosition(AlignedPosition p);
+	void positionSelected(AlignedPosition p);
+	void toggleSelection(AlignedPosition p);
+	void rangeSelected(AlignedPosition start, AlignedPosition end);
+	void selectionLocked();
+	void selectionUnlocked();
 
 }

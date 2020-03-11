@@ -39,7 +39,7 @@ import java.util.TreeSet;
 public class RepresentativeXMLConverter {
 
 
-	public static final String toXML(SortedSet<String> representatives){
+	public static String toXML(SortedSet<String> representatives){
 		StringWriter sw = new StringWriter();
 		PrintWriter writer = new PrintWriter(sw);
 
@@ -59,8 +59,8 @@ public class RepresentativeXMLConverter {
 		return sw.toString();
 	}
 
-	public static final SortedSet<String> fromXML(String xml){
-		SortedSet<String> representatives = new TreeSet<String>();
+	public static SortedSet<String> fromXML(String xml){
+		SortedSet<String> representatives = new TreeSet<>();
 		try {
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder db = factory.newDocumentBuilder();

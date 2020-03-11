@@ -45,12 +45,7 @@ public class Synonym implements Comparable<Synonym>{
 		return txt;
 	}
 
-	public final static Comparator<Synonym> COMPARATOR = new Comparator<Synonym>() {
-		@Override
-		public int compare(Synonym a, Synonym b) {
-			return String.CASE_INSENSITIVE_ORDER.compare(a.toString(), b.toString());
-		}
-	};
+	public final static Comparator<Synonym> COMPARATOR = (a, b) -> String.CASE_INSENSITIVE_ORDER.compare(a.toString(), b.toString());
 
 	public Synonym() {
 	}

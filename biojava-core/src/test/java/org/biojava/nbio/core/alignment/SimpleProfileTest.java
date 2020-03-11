@@ -52,20 +52,17 @@ public class SimpleProfileTest {
 		target = new ProteinSequence("RDG");
 		query.setAccession(new AccessionID("Query"));
 		target.setAccession(new AccessionID("Target"));
-		global = new SimpleProfile<ProteinSequence, AminoAcidCompound>(query, target, Arrays.asList(new Step[] {
-				Step.COMPOUND, Step.COMPOUND, Step.COMPOUND, Step.COMPOUND, Step.GAP}), 0, 0, Arrays.asList(
-				new Step[] {Step.GAP, Step.COMPOUND, Step.GAP, Step.COMPOUND, Step.COMPOUND}), 0, 0);
-		local = new SimpleProfile<ProteinSequence, AminoAcidCompound>(query, target, Arrays.asList(new Step[] {
-				Step.COMPOUND, Step.COMPOUND, Step.COMPOUND}), 1, 0, Arrays.asList(new Step[] { Step.COMPOUND,
-				Step.GAP, Step.COMPOUND}), 0, 1);
-		single = new SimpleProfile<ProteinSequence, AminoAcidCompound>(query);
+		global = new SimpleProfile<>(query, target, Arrays.asList(Step.COMPOUND, Step.COMPOUND, Step.COMPOUND, Step.COMPOUND, Step.GAP), 0, 0, Arrays.asList(
+                Step.GAP, Step.COMPOUND, Step.GAP, Step.COMPOUND, Step.COMPOUND), 0, 0);
+		local = new SimpleProfile<>(query, target, Arrays.asList(Step.COMPOUND, Step.COMPOUND, Step.COMPOUND), 1, 0, Arrays.asList(Step.COMPOUND,
+                Step.GAP, Step.COMPOUND), 0, 1);
+		single = new SimpleProfile<>(query);
 	}
 
 	@Test(expected=IllegalArgumentException.class)
 	public void testSimpleProfile() {
-		new SimpleProfile<ProteinSequence, AminoAcidCompound>(query, target, Arrays.asList(new Step[] {
-				Step.COMPOUND, Step.COMPOUND, Step.COMPOUND, Step.COMPOUND, Step.GAP}), 0, 0, Arrays.asList(
-				new Step[] {Step.GAP, Step.COMPOUND, Step.GAP, Step.COMPOUND}), 0, 0);
+		new SimpleProfile<>(query, target, Arrays.asList(Step.COMPOUND, Step.COMPOUND, Step.COMPOUND, Step.COMPOUND, Step.GAP), 0, 0, Arrays.asList(
+                Step.GAP, Step.COMPOUND, Step.GAP, Step.COMPOUND), 0, 0);
 	}
 
 	@Test
@@ -264,9 +261,9 @@ public class SimpleProfileTest {
 
 	@Test
 	public void testGetCompoundSet() {
-		assertEquals(global.getCompoundSet(), AminoAcidCompoundSet.getAminoAcidCompoundSet());
-		assertEquals(local.getCompoundSet(), AminoAcidCompoundSet.getAminoAcidCompoundSet());
-		assertEquals(single.getCompoundSet(), AminoAcidCompoundSet.getAminoAcidCompoundSet());
+        assertEquals(global.getCompoundSet(), AminoAcidCompoundSet.aminoAcidCompoundSet);
+        assertEquals(local.getCompoundSet(), AminoAcidCompoundSet.aminoAcidCompoundSet);
+        assertEquals(single.getCompoundSet(), AminoAcidCompoundSet.aminoAcidCompoundSet);
 	}
 
 	@Test
@@ -316,7 +313,7 @@ public class SimpleProfileTest {
 
 	@Test
 	public void testGetIndexOf() {
-		AminoAcidCompoundSet cs = AminoAcidCompoundSet.getAminoAcidCompoundSet();
+        AminoAcidCompoundSet cs = AminoAcidCompoundSet.aminoAcidCompoundSet;
 		assertEquals(global.getIndexOf(cs.getCompoundForString("A")), 1);
 		assertEquals(global.getIndexOf(cs.getCompoundForString("R")), 2);
 		assertEquals(global.getIndexOf(cs.getCompoundForString("N")), 3);
@@ -384,7 +381,7 @@ public class SimpleProfileTest {
 
 	@Test
 	public void testGetLastIndexOf() {
-		AminoAcidCompoundSet cs = AminoAcidCompoundSet.getAminoAcidCompoundSet();
+        AminoAcidCompoundSet cs = AminoAcidCompoundSet.aminoAcidCompoundSet;
 		assertEquals(global.getLastIndexOf(cs.getCompoundForString("A")), 1);
 		assertEquals(global.getLastIndexOf(cs.getCompoundForString("R")), 2);
 		assertEquals(global.getLastIndexOf(cs.getCompoundForString("N")), 3);

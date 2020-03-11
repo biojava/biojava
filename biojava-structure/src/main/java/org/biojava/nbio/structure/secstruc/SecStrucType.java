@@ -45,7 +45,7 @@ public enum SecStrucType {
 	public final Character type;
 	public final String name;
 
-	private SecStrucType(String name, Character stype) {
+	SecStrucType(String name, Character stype) {
 		this.name = name;
 		this.type = stype;
 	}

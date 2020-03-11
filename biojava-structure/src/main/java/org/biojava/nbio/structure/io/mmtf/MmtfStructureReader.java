@@ -20,36 +20,7 @@
  */
 package org.biojava.nbio.structure.io.mmtf;
 
-import java.io.Serializable;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.vecmath.Matrix4d;
-
-import org.biojava.nbio.structure.AminoAcid;
-import org.biojava.nbio.structure.AminoAcidImpl;
-import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.AtomImpl;
-import org.biojava.nbio.structure.BondImpl;
-import org.biojava.nbio.structure.Chain;
-import org.biojava.nbio.structure.ChainImpl;
-import org.biojava.nbio.structure.Element;
-import org.biojava.nbio.structure.EntityInfo;
-import org.biojava.nbio.structure.EntityType;
-import org.biojava.nbio.structure.Group;
-import org.biojava.nbio.structure.HetatomImpl;
-import org.biojava.nbio.structure.NucleotideImpl;
-import org.biojava.nbio.structure.PDBCrystallographicInfo;
-import org.biojava.nbio.structure.PDBHeader;
-import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureImpl;
-import org.biojava.nbio.structure.StructureTools;
+import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.io.mmcif.chem.PolymerType;
 import org.biojava.nbio.structure.io.mmcif.chem.ResidueType;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
@@ -61,6 +32,12 @@ import org.rcsb.mmtf.api.StructureAdapterInterface;
 import org.rcsb.mmtf.dataholders.MmtfStructure;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.vecmath.Matrix4d;
+import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 
 /**
@@ -80,7 +57,7 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 	private static final Logger logger = LoggerFactory.getLogger(MmtfStructureReader.class);
 
 	/** The structure. */
-	private Structure structure;
+	private final Structure structure;
 
 	/** The model number. */
 	private int modelNumber;
@@ -99,19 +76,19 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 	private int atomCounter;
 
 	/** The list of EntityInformation */
-	private List<EntityInfo> entityInfoList;
+	private final List<EntityInfo> entityInfoList;
 
 	/** All the chains */
-	private List<Chain> chainList;
+	private final List<Chain> chainList;
 
 	/** All the chains as a list of maps */
-	private List<Map<String,Chain>> chainMap;
+	private final List<Map<String,Chain>> chainMap;
 
 	private List<double[]> transformList;
 
 	private int bioassIndex;
 
-	private Map<String,String> chainSequenceMap;
+	private final Map<String,String> chainSequenceMap;
 
 	/**
 	 * Instantiates a new bio java structure decoder.
@@ -177,7 +154,7 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 	public void setModelInfo(int inputModelNumber,
 			int chainCount) {
 		modelNumber = inputModelNumber;
-		structure.addModel(new ArrayList<Chain>(chainCount));
+		structure.addModel(new ArrayList<>(chainCount));
 		chainMap.add(new HashMap<>());
 	}
 
@@ -293,7 +270,7 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 			altGroup = getCorrectAltLocGroup(alternativeLocationId);
 			atom.setAltLoc(alternativeLocationId);
 		} else {
-			atom.setAltLoc(Character.valueOf(' '));
+			atom.setAltLoc(' ');
 		}
 		atom.setX(x);
 		atom.setY(y);
@@ -395,7 +372,7 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 		Group altLocG = (Group) group.clone();
 		// drop atoms from cloned group...
 		// https://redmine.open-bio.org/issues/3307
-		altLocG.setAtoms(new ArrayList<Atom>());
+		altLocG.setAtoms(new ArrayList<>());
 		altLocG.getAltLocs().clear();
 		group.addAltLoc(altLocG);
 		return altLocG;
@@ -458,19 +435,19 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 		}
 		else{
 			bioAssInfo = new  BioAssemblyInfo();
-			bioAssInfo.setTransforms(new ArrayList<BiologicalAssemblyTransformation>());
+			bioAssInfo.setTransforms(new ArrayList<>());
 			bioAssemblies.put(bioAssemblyId, bioAssInfo);
 			bioAssInfo.setId(bioAssemblyId);
 		}
 
 		for(int currChainIndex : inputChainIndices){
 			BiologicalAssemblyTransformation bioAssTrans = new BiologicalAssemblyTransformation();
-			Integer transId = transformList.indexOf(inputTransform)+1;
+			int transId = transformList.indexOf(inputTransform)+1;
 			if(transId==0){
 				transformList.add(inputTransform);
 				transId = transformList.indexOf(inputTransform)+1;
 			}
-			bioAssTrans.setId(transId.toString());
+			bioAssTrans.setId(Integer.toString(transId));
 			// If it actually has an index - if it doesn't it is because the chain has no density.
 			if (currChainIndex!=-1){
 				bioAssTrans.setChainId(chainList.get(currChainIndex).getId());

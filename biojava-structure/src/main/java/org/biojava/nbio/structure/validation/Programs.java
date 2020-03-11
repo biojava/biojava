@@ -86,7 +86,7 @@ public class Programs {
 	 */
 	public List<Program> getProgram() {
 		if (program == null) {
-			program = new ArrayList<Program>();
+			program = new ArrayList<>();
 		}
 		return this.program;
 	}

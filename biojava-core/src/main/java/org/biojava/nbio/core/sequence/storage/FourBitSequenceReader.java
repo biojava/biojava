@@ -43,7 +43,7 @@ import java.util.*;
 public class FourBitSequenceReader<C extends Compound> extends BitSequenceReader<C> {
 
 	public FourBitSequenceReader(Sequence<C> sequence) {
-		super(new FourBitArrayWorker<C>(sequence), sequence.getAccession());
+		super(new FourBitArrayWorker<>(sequence), sequence.getAccession());
 	}
 
 	public FourBitSequenceReader(String sequence, CompoundSet<C> compoundSet) {
@@ -51,7 +51,7 @@ public class FourBitSequenceReader<C extends Compound> extends BitSequenceReader
 	}
 
 	public FourBitSequenceReader(String sequence, CompoundSet<C> compoundSet, AccessionID accession) {
-		super(new FourBitArrayWorker<C>(sequence, compoundSet), accession);
+		super(new FourBitArrayWorker<>(sequence, compoundSet), accession);
 	}
 
 	public FourBitSequenceReader(FourBitArrayWorker<C> worker) {
@@ -114,7 +114,7 @@ public class FourBitSequenceReader<C extends Compound> extends BitSequenceReader
 		@Override
 		protected Map<C, Integer> generateCompoundsToIndex() {
 			final CompoundSet<C> cs = getCompoundSet();
-			Map<C, Integer> map = new HashMap<C, Integer>();
+			Map<C, Integer> map = new HashMap<>();
 			int index = 0;
 			for (C currentCompound : sortedCompounds(cs)) {
 				C upperCasedCompound = getOptionalUpperCasedCompound(currentCompound, cs);
@@ -132,7 +132,7 @@ public class FourBitSequenceReader<C extends Compound> extends BitSequenceReader
 		}
 
 		private C getOptionalUpperCasedCompound(C currentCompound, CompoundSet<C> cs) {
-			C upperCasedCompound = null;
+			C upperCasedCompound;
 			String upperCasedString = cs.getStringForCompound(currentCompound).toUpperCase();
 			if (cs.getCompoundForString(upperCasedString) == null) {
 				upperCasedCompound = currentCompound;
@@ -143,16 +143,11 @@ public class FourBitSequenceReader<C extends Compound> extends BitSequenceReader
 		}
 
 		private List<C> sortedCompounds(final CompoundSet<C> cs) {
-			List<C> compounds = new ArrayList<C>(cs.getAllCompounds());
-			Collections.sort(compounds, new Comparator<C>() {
-
-
-				@Override
-				public int compare(C o1, C o2) {
-					String s1 = cs.getStringForCompound(o1);
-					String s2 = cs.getStringForCompound(o2);
-					return s1.compareTo(s2);
-				}
+			List<C> compounds = new ArrayList<>(cs.getAllCompounds());
+			compounds.sort((o1, o2) -> {
+				String s1 = cs.getStringForCompound(o1);
+				String s2 = cs.getStringForCompound(o2);
+				return s1.compareTo(s2);
 			});
 			return compounds;
 		}
@@ -165,7 +160,7 @@ public class FourBitSequenceReader<C extends Compound> extends BitSequenceReader
 		protected List<C> generateIndexToCompounds() {
 			CompoundSet<C> cs = getCompoundSet();
 			Map<C, Integer> lookup = getCompoundsToIndexLookup();
-			Map<Integer, C> tempMap = new HashMap<Integer, C>();
+			Map<Integer, C> tempMap = new HashMap<>();
 			//First get the reverse lookup working
 			for (C compound : lookup.keySet()) {
 				C upperCasedCompound = getOptionalUpperCasedCompound(compound, cs);
@@ -174,8 +169,8 @@ public class FourBitSequenceReader<C extends Compound> extends BitSequenceReader
 			}
 
 			//Then populate the results by going back through the sorted integer keys
-			List<C> compounds = new ArrayList<C>();
-			List<Integer> keys = new ArrayList<Integer>(tempMap.keySet());
+			List<C> compounds = new ArrayList<>();
+			List<Integer> keys = new ArrayList<>(tempMap.keySet());
 			Collections.sort(keys);
 			for (Integer key : keys) {
 				compounds.add(tempMap.get(key));

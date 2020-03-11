@@ -24,6 +24,7 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Used to work with SurvivalInfo
@@ -86,23 +87,18 @@ public class SurvivalInfoHelper {
 	public static void categorizeData(ArrayList<SurvivalInfo> DataT) {
 
 		//Go through and get all variable value pairs
-		LinkedHashMap<String, LinkedHashMap<String, Double>> valueMap = new LinkedHashMap<String, LinkedHashMap<String, Double>>();
+		LinkedHashMap<String, LinkedHashMap<String, Double>> valueMap = new LinkedHashMap<>();
 		for (SurvivalInfo si : DataT) {
 
-			for (String key : si.unknownDataType.keySet()) {
-				LinkedHashMap<String, Double> map = valueMap.get(key);
-				if (map == null) {
-					map = new LinkedHashMap<String, Double>();
-					valueMap.put(key, map);
-				}
-				map.put(si.unknownDataType.get(key), null);
+			for (Map.Entry<String, String> entry : si.unknownDataType.entrySet()) {
+				LinkedHashMap<String, Double> map = valueMap.computeIfAbsent(entry.getKey(), k -> new LinkedHashMap<>());
+				map.put(entry.getValue(), null);
 			}
 		}
 
-		for (String variable : valueMap.keySet()) {
-			LinkedHashMap<String, Double> values = valueMap.get(variable);
-			if (isCategorical(values)) {
-				ArrayList<String> categories = new ArrayList<String>(values.keySet());
+		for (LinkedHashMap<String, Double> values : valueMap.values()) {
+            if (isCategorical(values)) {
+				ArrayList<String> categories = new ArrayList<>(values.keySet());
 				Collections.sort(categories); //go ahead and put in alphabetical order
 				if (categories.size() == 2) {
 					for (String value : values.keySet()) {
@@ -125,9 +121,10 @@ public class SurvivalInfoHelper {
 		}
 
 		for (SurvivalInfo si : DataT) {
-			for (String key : si.unknownDataType.keySet()) {
-				LinkedHashMap<String, Double> map = valueMap.get(key);
-				String value = si.unknownDataType.get(key);
+			for (Map.Entry<String, String> entry : si.unknownDataType.entrySet()) {
+                String key = entry.getKey();
+                LinkedHashMap<String, Double> map = valueMap.get(key);
+				String value = entry.getValue();
 				Double d = map.get(value);
 				si.data.put(key, d);
 			}
@@ -147,7 +144,7 @@ public class SurvivalInfoHelper {
 	 * @return
 	 */
 	public static ArrayList<String> addInteraction(String variable1, String variable2, ArrayList<SurvivalInfo> survivalInfoList) {
-		ArrayList<String> variables = new ArrayList<String>();
+		ArrayList<String> variables = new ArrayList<>();
 		variables.add(variable1);
 		variables.add(variable2);
 		variables.add(variable1 + ":" + variable2);
@@ -170,9 +167,9 @@ public class SurvivalInfoHelper {
 	 * @throws Exception
 	 */
 	public static void groupByRange(double[] range, String variable, String groupName, ArrayList<SurvivalInfo> survivalInfoList) throws Exception {
-		ArrayList<String> labels = new ArrayList<String>();
+		ArrayList<String> labels = new ArrayList<>();
 		for (int i = 0; i < range.length; i++) {
-			String label = "";
+			String label;
 			if (i == 0) {
 				label = "[<=" + range[i] + "]";
 			} else if (i == range.length - 1) {
@@ -184,7 +181,7 @@ public class SurvivalInfoHelper {
 			}
 			labels.add(label);
 		}
-		ArrayList<String> validLabels = new ArrayList<String>();
+		ArrayList<String> validLabels = new ArrayList<>();
 
 		//need to find the categories so we can set 1 and 0 and not include ranges with no values
 		for (SurvivalInfo si : survivalInfoList) {

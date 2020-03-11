@@ -20,13 +20,6 @@
  */
 package org.biojava.nbio.structure.symmetry.internal;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
-
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.multiple.Block;
@@ -38,6 +31,13 @@ import org.biojava.nbio.structure.jama.Matrix;
 import org.biojava.nbio.structure.symmetry.utils.SymmetryTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
 /**
  * Optimizes a symmetry alignment by a Monte Carlo score optimization of the
@@ -64,24 +64,24 @@ public class SymmOptimizer {
 	private static final Logger logger = LoggerFactory
 			.getLogger(SymmOptimizer.class);
 
-	private Random rnd;
+	private final Random rnd;
 
 	// Optimization parameters
-	private int Rmin = 2; // min aligned repeats per column
-	private int Lmin; // min repeat length
+	private final int Rmin; // min aligned repeats per column
+	private final int Lmin; // min repeat length
 	private int maxIter; // max iterations
 	private double C = 20; // probability of accept bad moves constant
 
 	// Score function parameters
 	private static final double Gopen = 20.0; // Penalty for opening gap
 	private static final double Gextend = 10.0; // Penalty for extending gaps
-	private double dCutoff;
+	private final double dCutoff;
 
 	// Alignment Information
-	private MultipleAlignment msa;
-	private SymmetryAxes axes;
-	private Atom[] atoms;
-	private int order;
+	private final MultipleAlignment msa;
+	private final SymmetryAxes axes;
+	private final Atom[] atoms;
+	private final int order;
 	private int length; // total alignment columns (block size)
 	private int repeatCore; // core length (without gaps)
 
@@ -146,21 +146,21 @@ public class SymmOptimizer {
 					"Seed alignment too short: repeat core length < 1");
 
 		// Initialize the history variables
-		timeHistory = new ArrayList<Long>();
-		lengthHistory = new ArrayList<Integer>();
-		rmsdHistory = new ArrayList<Double>();
-		mcScoreHistory = new ArrayList<Double>();
-		tmScoreHistory = new ArrayList<Double>();
+		timeHistory = new ArrayList<>();
+		lengthHistory = new ArrayList<>();
+		rmsdHistory = new ArrayList<>();
+		mcScoreHistory = new ArrayList<>();
+		tmScoreHistory = new ArrayList<>();
 
 		C = 20 * order;
 
 		// Initialize alignment variables
 		block = msa.getBlock(0).getAlignRes();
-		freePool = new ArrayList<Integer>();
+		freePool = new ArrayList<>();
 		length = block.get(0).size();
 
 		// Store the residues aligned in the block
-		List<Integer> aligned = new ArrayList<Integer>();
+		List<Integer> aligned = new ArrayList<>();
 		for (int su = 0; su < order; su++)
 			aligned.addAll(block.get(su));
 
@@ -196,12 +196,10 @@ public class SymmOptimizer {
 		initialize();
 
 		// Save the optimal alignment
-		List<List<Integer>> optBlock = new ArrayList<List<Integer>>();
-		List<Integer> optFreePool = new ArrayList<Integer>();
-		optFreePool.addAll(freePool);
+		List<List<Integer>> optBlock = new ArrayList<>();
+        List<Integer> optFreePool = new ArrayList<>(freePool);
 		for (int k = 0; k < order; k++) {
-			List<Integer> b = new ArrayList<Integer>();
-			b.addAll(block.get(k));
+            List<Integer> b = new ArrayList<>(block.get(k));
 			optBlock.add(b);
 		}
 		double optScore = mcScore;
@@ -214,12 +212,10 @@ public class SymmOptimizer {
 		while (i < maxIter && conv < stepsToConverge) {
 
 			// Save the state of the system
-			List<List<Integer>> lastBlock = new ArrayList<List<Integer>>();
-			List<Integer> lastFreePool = new ArrayList<Integer>();
-			lastFreePool.addAll(freePool);
+			List<List<Integer>> lastBlock = new ArrayList<>();
+            List<Integer> lastFreePool = new ArrayList<>(freePool);
 			for (int k = 0; k < order; k++) {
-				List<Integer> b = new ArrayList<Integer>();
-				b.addAll(block.get(k));
+                List<Integer> b = new ArrayList<>(block.get(k));
 				lastBlock.add(b);
 			}
 			double lastScore = mcScore;
@@ -281,12 +277,10 @@ public class SymmOptimizer {
 
 			// Store as the optimal alignment if better
 			if (mcScore > optScore) {
-				optBlock = new ArrayList<List<Integer>>();
-				optFreePool = new ArrayList<Integer>();
-				optFreePool.addAll(freePool);
+				optBlock = new ArrayList<>();
+                optFreePool = new ArrayList<>(freePool);
 				for (int k = 0; k < order; k++) {
-					List<Integer> b = new ArrayList<Integer>();
-					b.addAll(block.get(k));
+                    List<Integer> b = new ArrayList<>(block.get(k));
 					optBlock.add(b);
 				}
 				optScore = mcScore;
@@ -366,7 +360,7 @@ public class SymmOptimizer {
 	 */
 	private boolean checkGaps() {
 
-		List<Integer> shrinkColumns = new ArrayList<Integer>();
+		List<Integer> shrinkColumns = new ArrayList<>();
 		// Loop for each column
 		for (int res = 0; res < length; res++) {
 			int gapCount = 0;
@@ -842,12 +836,12 @@ public class SymmOptimizer {
 		writer.append("Step,Time,RepeatLength,RMSD,TMscore,MCscore\n");
 
 		for (int i = 0; i < lengthHistory.size(); i++) {
-			writer.append(i * saveStep + ",");
-			writer.append(timeHistory.get(i) + ",");
-			writer.append(lengthHistory.get(i) + ",");
-			writer.append(rmsdHistory.get(i) + ",");
-			writer.append(tmScoreHistory.get(i) + ",");
-			writer.append(mcScoreHistory.get(i) + "\n");
+			writer.append(String.valueOf(i * saveStep)).append(",");
+			writer.append(String.valueOf(timeHistory.get(i))).append(",");
+			writer.append(String.valueOf(lengthHistory.get(i))).append(",");
+			writer.append(String.valueOf(rmsdHistory.get(i))).append(",");
+			writer.append(String.valueOf(tmScoreHistory.get(i))).append(",");
+			writer.append(String.valueOf(mcScoreHistory.get(i))).append("\n");
 		}
 
 		writer.flush();

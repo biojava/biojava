@@ -26,7 +26,10 @@ import org.biojava.nbio.core.sequence.ProteinSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.SortedSet;
@@ -69,7 +72,7 @@ public class RemoteHmmerScan implements HmmerScan {
 	 */
 	public SortedSet<HmmerResult> scan(ProteinSequence sequence, URL serviceLocation) throws IOException{
 
-		StringBuffer postContent = new StringBuffer();
+		StringBuilder postContent = new StringBuilder();
 
 		postContent.append("hmmdb=pfam");
 
@@ -94,8 +97,7 @@ public class RemoteHmmerScan implements HmmerScan {
 
 		connection.setRequestProperty("Accept","application/json");
 
-		connection.setRequestProperty("Content-Length", "" +
-				Integer.toString(postContent.toString().getBytes().length));
+		connection.setRequestProperty("Content-Length", String.valueOf(postContent.toString().getBytes().length));
 
 		//Send request
 		DataOutputStream wr = new DataOutputStream (
@@ -125,7 +127,7 @@ public class RemoteHmmerScan implements HmmerScan {
 
 		String inputLine;
 
-		StringBuffer result = new StringBuffer();
+		StringBuilder result = new StringBuilder();
 		while ((inputLine = in.readLine()) != null) {
 			result.append(inputLine);
 		}
@@ -134,7 +136,7 @@ public class RemoteHmmerScan implements HmmerScan {
 
 		// process the response and build up a container for the data.
 
-		SortedSet<HmmerResult> results = new TreeSet<HmmerResult>();
+		SortedSet<HmmerResult> results = new TreeSet<>();
 		try {
 			JSONObject json =  JSONObject.fromObject(result.toString());
 
@@ -149,7 +151,7 @@ public class RemoteHmmerScan implements HmmerScan {
 				HmmerResult hmmResult = new HmmerResult();
 
 				Object dclO = hit.get("dcl");
-				Integer dcl = -1;
+				int dcl = -1;
 				if ( dclO instanceof Long){
 					Long dclL = (Long) dclO;
 					dcl = dclL.intValue();
@@ -170,7 +172,7 @@ public class RemoteHmmerScan implements HmmerScan {
 
 				JSONArray hmmdomains = hit.getJSONArray("domains");
 
-				SortedSet<HmmerDomain> domains = new TreeSet<HmmerDomain>();
+				SortedSet<HmmerDomain> domains = new TreeSet<>();
 				for ( int j= 0 ; j < hmmdomains.size() ; j++){
 					JSONObject d = hmmdomains.getJSONObject(j);
 					Integer is_included = getInteger(d.get("is_included"));

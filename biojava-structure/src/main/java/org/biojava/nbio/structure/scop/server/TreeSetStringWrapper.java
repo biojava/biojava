@@ -49,7 +49,7 @@ public class TreeSetStringWrapper implements Serializable{
 	private static final long serialVersionUID = 4193799052494327416L;
 	TreeSet<String> data;
 
-	static JAXBContext jaxbContext;
+	static final JAXBContext jaxbContext;
 	static {
 		try {
 			jaxbContext= JAXBContext.newInstance(TreeSetStringWrapper.class);
@@ -59,7 +59,7 @@ public class TreeSetStringWrapper implements Serializable{
 	}
 
 	public TreeSetStringWrapper(){
-		data = new TreeSet<String>();
+		data = new TreeSet<>();
 	}
 
 	public TreeSet<String> getData() {
@@ -94,7 +94,7 @@ public class TreeSetStringWrapper implements Serializable{
 
 	public static TreeSetStringWrapper fromXML(String xml){
 
-		TreeSetStringWrapper job = null;
+		TreeSetStringWrapper job;
 
 		try {
 

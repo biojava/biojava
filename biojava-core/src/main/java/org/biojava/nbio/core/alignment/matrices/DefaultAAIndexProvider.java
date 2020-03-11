@@ -38,7 +38,7 @@ public class DefaultAAIndexProvider implements AAIndexProvider {
 
 	private final static Logger logger = LoggerFactory.getLogger(DefaultAAIndexProvider.class);
 
-	Map<String,SubstitutionMatrix<AminoAcidCompound>> matrices;
+	final Map<String,SubstitutionMatrix<AminoAcidCompound>> matrices;
 
 	public DefaultAAIndexProvider(){
 
@@ -65,7 +65,7 @@ public class DefaultAAIndexProvider implements AAIndexProvider {
 	}
 
 	public InputStream getInputStreamToAAindexFile(){
-		 return SubstitutionMatrixHelper.class.getResourceAsStream(String.format("/matrices/AAINDEX.txt"));
+		 return SubstitutionMatrixHelper.class.getResourceAsStream("/matrices/AAINDEX.txt");
 	}
 
 }

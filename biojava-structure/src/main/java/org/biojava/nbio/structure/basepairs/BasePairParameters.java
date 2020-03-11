@@ -21,34 +21,25 @@
  */
 package org.biojava.nbio.structure.basepairs;
 
-import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.Group;
-import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.contact.Pair;
 import org.biojava.nbio.structure.geometry.SuperPosition;
 import org.biojava.nbio.structure.geometry.SuperPositionQCP;
 import org.biojava.nbio.structure.io.PDBFileReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.List;
-import java.util.Arrays;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
+import java.util.*;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import static java.lang.Math.sin;
-import static java.lang.Math.cos;
-import static java.lang.Math.atan2;
-import static java.lang.Math.acos;
-import static java.lang.Math.PI;
+import static java.lang.Math.*;
 
 /**
  * This module calculates the el Hassan-Calladine Base Pairing and Base-pair Step Parameters for any nucleic
@@ -70,7 +61,7 @@ import static java.lang.Math.PI;
 public class BasePairParameters implements Serializable {
 
 	private static final long serialVersionUID = 6214502385L;
-	private static Logger log = LoggerFactory.getLogger(BasePairParameters.class);
+	private static final Logger log = LoggerFactory.getLogger(BasePairParameters.class);
 
 	// See URL http://ndbserver.rutgers.edu/ndbmodule/archives/reports/tsukuba/Table1.html
 	// and the paper cited at the top of this class (also as Table 1).
@@ -145,17 +136,17 @@ public class BasePairParameters implements Serializable {
 	}
 
 	protected Structure structure;
-	protected boolean canonical = true;
-	protected boolean useRNA = false;
-	protected boolean nonredundant = false;
+	protected boolean canonical;
+	protected boolean useRNA;
+	protected boolean nonredundant;
 	protected double[] pairParameters;
 
 	// this is the main data that the user wants to get back out from the procedure.
 	protected String pairSequence = "";
 	protected double[][] pairingParameters;
 	protected double[][] stepParameters;
-	protected List<String> pairingNames = new ArrayList<>();
-	protected List<Matrix4d> referenceFrames = new ArrayList<>();
+	protected final List<String> pairingNames = new ArrayList<>();
+	protected final List<Matrix4d> referenceFrames = new ArrayList<>();
 
 
 	/**
@@ -227,12 +218,12 @@ public class BasePairParameters implements Serializable {
 			lastStep = currentStep;
 			currentStep = this.basePairReferenceFrame(pairs.get(i));
 			referenceFrames.add((Matrix4d)currentStep.clone());
-			for (int j = 0; j < 6; j++) pairingParameters[i][j] = pairParameters[j];
+			System.arraycopy(pairParameters, 0, pairingParameters[i], 0, 6);
 			if (i != 0) {
 				lastStep.invert();
 				lastStep.mul(currentStep);
 				double[] sparms = calculateTp(lastStep);
-				for (int j = 0; j < 6; j++) stepParameters[i][j] = sparms[j];
+				System.arraycopy(sparms, 0, stepParameters[i], 0, 6);
 			}
 		}
 		return this;
@@ -439,11 +430,25 @@ public class BasePairParameters implements Serializable {
 				result.add(c);
 			}
 		}
-		if (removeDups) for (int i = 0; i < result.size(); i++) {
-			for (int j = i+2; j < result.size(); j++) {
-				// remove duplicate sequences (structures with two or more identical units)
-				if (result.get(i).getAtomSequence().equals(result.get(j).getAtomSequence())) {
-					result.remove(j);
+		if (removeDups) {
+			int s = result.size();
+			BitSet toRemove = new BitSet();
+			for (int i = 0; i < s; i++) {
+				for (int j = i + 2; j < s; j++) {
+					// remove duplicate sequences (structures with two or more identical units)
+					if (result.get(i).getAtomSequence().equals(result.get(j).getAtomSequence())) {
+						toRemove.set(j);
+					}
+				}
+			}
+			if (!toRemove.isEmpty()) {
+				Iterator<Chain> r = result.iterator();
+				int i = 0;
+				while (r.hasNext()) {
+					Chain rr = r.next();
+					if (toRemove.get(i++)) {
+						r.remove();
+					}
 				}
 			}
 		}
@@ -509,7 +514,7 @@ public class BasePairParameters implements Serializable {
 							if (a == null) valid = false;
 						}
 						if (valid) {
-							result.add(new Pair<Group>(g1, g2));
+							result.add(new Pair<>(g1, g2));
 							pairingNames.add((useRNA ? BASE_LIST_RNA[type1]+ BASE_LIST_RNA[type2] : BASE_LIST_DNA[type1]+ BASE_LIST_DNA[type2]));
 							pairSequence += c.getAtomSequence().charAt(index1 + k);
 						} else if (pairSequence.length() != 0 && pairSequence.charAt(pairSequence.length()-1) != ' ') pairSequence += ' ';
@@ -630,14 +635,14 @@ public class BasePairParameters implements Serializable {
 	public String toString() {
 		if (getPairingParameters() == null) return "No data";
 		StringBuilder result = new StringBuilder(10000);
-		result.append(pairingParameters.length + " base pairs\n");
+		result.append(pairingParameters.length).append(" base pairs\n");
 		result.append("bp: buckle propeller opening shear stretch stagger tilt roll twist shift slide rise\n");
 		for (int i = 0; i < pairingParameters.length; i++) {
-			result.append(pairingNames.get(i)+": ");
+			result.append(pairingNames.get(i)).append(": ");
 			for (int j = 0; j < 6; j++)
-				result.append(String.format("%5.4f", pairingParameters[i][j]) + " ");
+				result.append(String.format("%5.4f", pairingParameters[i][j])).append(" ");
 			for (int j = 0; j < 6; j++)
-				result.append(String.format("%5.4f", stepParameters[i][j]) + " ");
+				result.append(String.format("%5.4f", stepParameters[i][j])).append(" ");
 			result.append("\n");
 		}
 		return result.toString();

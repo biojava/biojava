@@ -139,8 +139,7 @@ public class FlipAFPChainTest {
 	 * @param ca2
 	 * @return
 	 */
-	private double getRMSD(AFPChain afpChain, Atom[] ca1, Atom[] ca2)
-	throws StructureException {
+	private double getRMSD(AFPChain afpChain, Atom[] ca1, Atom[] ca2) {
 
 		Atom[] ca2clone = StructureTools.cloneAtomArray(ca2);
 		rotateAtoms2(afpChain,ca2clone);
@@ -150,9 +149,9 @@ public class FlipAFPChainTest {
 		Atom[] catmp1 = AFPAlignmentDisplay.getAlignedAtoms1(afpChain, ca1);
 		Atom[] catmp2 = AFPAlignmentDisplay.getAlignedAtoms2(afpChain, ca2clone);
 
-		assertTrue(catmp1.length == catmp2.length);
+		assertEquals(catmp1.length, catmp2.length);
 
-		assertTrue(catmp1.length == afpChain.getNrEQR());
+		assertEquals(catmp1.length, afpChain.getNrEQR());
 
 		return Calc.rmsd(catmp1,catmp2);
 	}

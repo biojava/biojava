@@ -29,7 +29,7 @@ import org.biojava.nbio.structure.align.ce.CECPParameters.DuplicationHint;
 
 public class CeCPUserArgumentProcessor extends CeUserArgumentProcessor {
 
-	protected class CeCPStartupParams extends CeStartupParams {
+	protected static class CeCPStartupParams extends CeStartupParams {
 		protected DuplicationHint duplicationHint;
 		protected Integer minCPLength;
 
@@ -67,7 +67,7 @@ public class CeCPUserArgumentProcessor extends CeUserArgumentProcessor {
 
 	@Override
 	protected StartupParameters getStartupParametersInstance() {
-		return  new CeCPStartupParams();
+		return new CeCPStartupParams();
 	}
 	@Override
 	public StructureAlignment getAlgorithm() {

@@ -74,7 +74,7 @@ public class SequenceProxyView<C extends Compound> implements SequenceView<C> {
 
 	@Override
 	public boolean equals(Object o) {
-
+		if (this == o) return true;
 		if(! Equals.classEqual(this, o)) {
 			return false;
 		}
@@ -117,12 +117,12 @@ public class SequenceProxyView<C extends Compound> implements SequenceView<C> {
 
 	@Override
 	public SequenceView<C> getSubSequence(final Integer bioStart, final Integer bioEnd) {
-		return new SequenceProxyView<C>(this, bioStart, bioEnd);
+		return new SequenceProxyView<>(this, bioStart, bioEnd);
 	}
 
 	@Override
 	public Iterator<C> iterator() {
-		return new SequenceMixin.SequenceIterator<C>(this);
+		return new SequenceMixin.SequenceIterator<>(this);
 	}
 
 	@Override
@@ -175,8 +175,9 @@ public class SequenceProxyView<C extends Compound> implements SequenceView<C> {
 		this.bioEnd = bioEnd;
 	}
 
+	@SafeVarargs
 	@Override
-	public int countCompounds(C... compounds) {
+	public final int countCompounds(C... compounds) {
 		return SequenceMixin.countCompounds(this, compounds);
 	}
 

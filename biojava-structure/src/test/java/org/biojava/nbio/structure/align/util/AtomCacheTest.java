@@ -20,37 +20,8 @@
  */
 package org.biojava.nbio.structure.align.util;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.zip.GZIPOutputStream;
-
 import org.biojava.nbio.core.util.FileDownloadUtils;
-import org.biojava.nbio.structure.AtomPositionMap;
-import org.biojava.nbio.structure.Chain;
-import org.biojava.nbio.structure.Group;
-import org.biojava.nbio.structure.ResidueRangeAndLength;
-import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.StructureIO;
-import org.biojava.nbio.structure.StructureIdentifier;
-import org.biojava.nbio.structure.StructureTools;
-import org.biojava.nbio.structure.SubstructureIdentifier;
+import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.io.LocalPDBDirectory;
 import org.biojava.nbio.structure.io.LocalPDBDirectory.FetchBehavior;
 import org.biojava.nbio.structure.io.LocalPDBDirectory.ObsoleteBehavior;
@@ -67,6 +38,22 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.zip.GZIPOutputStream;
+
+import static org.junit.Assert.*;
+
 
 /**
  * A test for {@link AtomCache}.
@@ -75,7 +62,7 @@ import org.slf4j.LoggerFactory;
  */
 public class AtomCacheTest {
 
-	private static Logger logger = LoggerFactory.getLogger(AtomCacheTest.class);
+	private static final Logger logger = LoggerFactory.getLogger(AtomCacheTest.class);
 	private AtomCache cache;
 
 	@Before
@@ -187,14 +174,14 @@ public class AtomCacheTest {
 	}
 
 	@Test
-	public void testSetPath_withTilde() throws Exception {
+	public void testSetPath_withTilde() {
 		cache.setPath("~" + File.separator);
 
 		assertEquals(System.getProperty("user.home") + File.separator, cache.getPath());
 	}
 
 	@Test
-	public void testNewInstanceWithTilder() throws Exception {
+	public void testNewInstanceWithTilder() {
 		AtomCache cache1 = new AtomCache("~" + File.separator);
 
 		assertEquals(System.getProperty("user.home") + File.separator, cache1.getPath());
@@ -399,7 +386,7 @@ public class AtomCacheTest {
 			assertNotNull(s);
 
 			Group g = s.getChain("A").getAtomGroup(0);
-			assertTrue(g.getPDBName().equals("ATP"));
+			assertEquals("ATP", g.getPDBName());
 
 			// should be unknown
 			ChemComp chem = g.getChemComp();
@@ -462,7 +449,7 @@ public class AtomCacheTest {
 			assertNotNull(s);
 
 			Group g = s.getChain("A").getAtomGroup(0);
-			assertTrue(g.getPDBName().equals("ATP"));
+			assertEquals("ATP", g.getPDBName());
 
 			// should be unknown
 			ChemComp chem = g.getChemComp();

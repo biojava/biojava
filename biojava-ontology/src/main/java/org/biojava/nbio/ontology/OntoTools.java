@@ -73,13 +73,7 @@ public final class OntoTools {
 	public static final Term PARTIAL_ORDER;
 
 	static {
-		DEFAULT_FACTORY = new OntologyFactory() {
-			@Override
-			public Ontology createOntology(String name, String desc)
-			throws OntologyException {
-				return new Ontology.Impl(name, desc);
-			}
-		};
+		DEFAULT_FACTORY = Ontology.Impl::new;
 
 		try {
 			BufferedReader reader = new BufferedReader(

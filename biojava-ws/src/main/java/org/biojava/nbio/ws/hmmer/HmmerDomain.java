@@ -129,10 +129,7 @@ public class HmmerDomain implements Comparable<HmmerDomain>, Serializable{
 		return (this.getSqFrom().compareTo(o.getSqFrom()));
 	}
 	private boolean emptyDomain(HmmerDomain o) {
-
-		if  ( o.getSqFrom() == null)
-			return true;
-		return false;
+		return o.getSqFrom() == null;
 	}
 
 	/*

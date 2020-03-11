@@ -20,6 +20,7 @@
  */
 package org.biojava.nbio.structure.align;
 
+import org.biojava.nbio.core.util.InputStreamProvider;
 import org.biojava.nbio.structure.align.client.FarmJobParameters;
 import org.biojava.nbio.structure.align.client.FarmJobRunnable;
 import org.biojava.nbio.structure.align.events.AlignmentProgressListener;
@@ -29,7 +30,6 @@ import org.biojava.nbio.structure.align.util.UserConfiguration;
 import org.biojava.nbio.structure.scop.CachedRemoteScopInstallation;
 import org.biojava.nbio.structure.scop.ScopDatabase;
 import org.biojava.nbio.structure.scop.ScopFactory;
-import org.biojava.nbio.core.util.InputStreamProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -80,7 +80,7 @@ public class FarmJob implements Runnable {
 
 	public void addAlignmentProgressListener(AlignmentProgressListener listener){
 		if (progressListeners == null)
-			progressListeners = new ArrayList<AlignmentProgressListener>();
+			progressListeners = new ArrayList<>();
 
 		progressListeners.add(listener);
 	}
@@ -165,14 +165,14 @@ public class FarmJob implements Runnable {
 		System.setProperty(UserConfiguration.PDB_DIR,path);
 
 		String cachePath = params.getCacheFilePath();
-		if ( cachePath != null && ! cachePath.equals(""))
+		if ( cachePath != null && !cachePath.isEmpty())
 			System.setProperty(UserConfiguration.PDB_CACHE_DIR,cachePath);
 		else {
 			// if not provided, we use pdbFilePath as the default CACHE path
 			System.setProperty(UserConfiguration.PDB_CACHE_DIR,path);
 		}
 		// declare SCOP to be locally cached, but fetching new stuff from remote
-		ScopDatabase scop = null;
+		ScopDatabase scop;
 		try {
 			scop = new CachedRemoteScopInstallation(true);
 		} catch (IOException e) {
@@ -181,7 +181,7 @@ public class FarmJob implements Runnable {
 		ScopFactory.setScopDatabase(scop);
 
 		String username = params.getUsername();
-		jobs = new ArrayList<FarmJobRunnable>();
+		jobs = new ArrayList<>();
 		for ( int i = 0 ; i < params.getThreads();i++){
 			logger.info("starting thread #{}", (i+1));
 			FarmJobRunnable runner = new FarmJobRunnable(params);
@@ -232,14 +232,14 @@ public class FarmJob implements Runnable {
 		System.out.println("-------------------");
 
 		System.out.println("FarmJob accepts the following parameters:");
-		System.out.println("");
+		System.out.println();
 		System.out.println(" Mandatory:");
 		System.out.println("   -pdbFilePath (mandatory) Path to the directory in your file system that contains the PDB files.");
 
 		System.out.println("   provide either -time or -nrAlignments. If both are provided the job stops as soon as any of the criteria has been reached.");
 		System.out.println("   -time maximum number of time to run (in seconds). -1 means no time limit, but run -nrAlignment arguments. Default: " + FarmJobParameters.DEFAULT_JOB_TIME );
 		System.out.println("   -nrAlignments number of alignments to calculate. Default: " + FarmJobParameters.DEFAULT_NR_ALIGNMENTS) ;
-		System.out.println("");
+		System.out.println();
 		System.out.println(" Optional: ");
 		System.out.println("   -threads number of parallel threads to calculate alignments. Should be nr. of available CPUs. Default: " + FarmJobParameters.DEFAULT_NR_THREADS);
 		System.out.println("   -server the location of the server URL to talk to. Default : " + FarmJobParameters.DEFAULT_SERVER_URL);

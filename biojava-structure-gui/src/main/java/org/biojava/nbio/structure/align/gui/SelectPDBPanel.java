@@ -20,25 +20,15 @@
  */
 package org.biojava.nbio.structure.align.gui;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.io.IOException;
-
-import javax.swing.Box;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
-import javax.swing.JTextField;
-
-import org.biojava.nbio.structure.ResidueRange;
-import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.StructureIdentifier;
-import org.biojava.nbio.structure.SubstructureIdentifier;
+import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
 import org.biojava.nbio.structure.align.webstart.WebStartMain;
 import org.biojava.nbio.structure.gui.util.StructurePairSelector;
+
+import javax.swing.*;
+import java.awt.*;
+import java.io.IOException;
 
 
 /** A Panel that allows user to specify PDB & chain ID, as well as sub-ranges
@@ -52,12 +42,12 @@ implements StructurePairSelector{
 
 	boolean debug = true;
 
-	JTextField f1;
-	JTextField f2;
-	JTextField c1;
-	JTextField c2;
-	JTextField r1;
-	JTextField r2;
+	final JTextField f1;
+	final JTextField f2;
+	final JTextField c1;
+	final JTextField c2;
+	final JTextField r1;
+	final JTextField r2;
 
 	UserConfiguration config;
 	JTabbedPane configPane;

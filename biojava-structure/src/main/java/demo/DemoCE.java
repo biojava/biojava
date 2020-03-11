@@ -55,8 +55,8 @@ public class DemoCE {
 
 		AtomCache cache = new AtomCache();
 
-		Structure structure1 = null;
-		Structure structure2 = null;
+		Structure structure1;
+		Structure structure2;
 
 		try {
 
@@ -110,7 +110,7 @@ public class DemoCE {
 		System.out.println("RMSD      :\t" + String.format("%.2f",afpChain.getTotalRmsdOpt() )+ "\t The RMSD of the alignment");
 		System.out.println("Z-score   :\t" + afpChain.getProbability() + "\t The Z-score of the alignment (CE)");
 		System.out.println("TM-score  :\t" + String.format("%.2f",afpChain.getTMScore()) + "\t The TM-score of the alignment.");
-		System.out.println("");
+		System.out.println();
 		System.out.println("Other scores:");
 		System.out.println("Identity  :\t" + String.format("%.2f",afpChain.getIdentity())   + "\t The percent of residues that are sequence-identical in the alignment.");
 		System.out.println("Similarity:\t" + String.format("%.2f",afpChain.getSimilarity()) + "\t The percent of residues in the alignment that are sequence-similar.");

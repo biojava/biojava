@@ -30,9 +30,9 @@ import java.util.LinkedHashMap;
 public class CoxVariables {
 
 	//   public GeneSetResults gsr;
-	private String cohortName = "";
-	private String geneSet = "";
-	private String genes = "";
+	private final String cohortName;
+	private final String geneSet;
+	private final String genes;
 
 	/**
 	 *
@@ -55,7 +55,7 @@ public class CoxVariables {
 		String link = geneSet + "_" + cohortName;
 		return link.hashCode();
 	}
-	private LinkedHashMap<String, CoxInfo> coxInfoHashMap = new LinkedHashMap<String, CoxInfo>();
+	private final LinkedHashMap<String, CoxInfo> coxInfoHashMap = new LinkedHashMap<>();
 
 	/**
 	 *
@@ -98,7 +98,7 @@ public class CoxVariables {
 	 * @return
 	 */
 	public static String fmt(Double d, int precision, int pad) {
-		String value = "";
+		String value;
 		DecimalFormat dfe = new DecimalFormat("0.00E0");
 		String dpad = "0.";
 		double p = 1.0;
@@ -128,10 +128,9 @@ public class CoxVariables {
 		//    co = co + genes + "\r\n";
 		coxOutput = coxOutput + cohortName + "," + genes.replace(',', ' ') + "\r\n";
 		coxOutput = coxOutput + ",Coe,StdErr,p-value,HR,HR Lo 95%,HR Hi 95%\r\n";
-		for (String variables : coxInfoHashMap.keySet()) {
-			CoxInfo ci = coxInfoHashMap.get(variables);
+		for (CoxInfo ci : coxInfoHashMap.values()) {
 
-			coxOutput = coxOutput + "Overall Model Fit p-value=" + fmt(ci.getOverallModelFitPvalue(), 5, 0) + "\r\n";
+            coxOutput = coxOutput + "Overall Model Fit p-value=" + fmt(ci.getOverallModelFitPvalue(), 5, 0) + "\r\n";
 			coxOutput = coxOutput + ci.getCoefficientText(false, "", ",", "", "");
 			coxOutput = coxOutput + "\r\n";
 

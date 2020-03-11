@@ -20,17 +20,17 @@
  */
 package org.biojava.nbio.structure;
 
-import static org.junit.Assert.*;
+import org.biojava.nbio.structure.align.util.AtomCache;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.Arrays;
 
-import org.biojava.nbio.structure.align.util.AtomCache;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static org.junit.Assert.*;
 
 public class TestURLIdentifier {
 	private static final Logger logger = LoggerFactory.getLogger(TestURLIdentifier.class);
@@ -79,7 +79,7 @@ public class TestURLIdentifier {
 
 		full = id.loadStructure(cache);
 		assertNotNull(full);
-		assertEquals("2POS",id.toCanonical().getPdbId());
+        assertEquals("2POS", id.toCanonical().pdbId);
 //		assertEquals("2POS",full.getName()); // What should this get set to with identifiers?
 
 		url = new URL("file://" + base + "?residues=A:1-5");
@@ -106,7 +106,7 @@ public class TestURLIdentifier {
 
 			full = id.loadStructure(cache);
 			assertNotNull(full);
-			assertEquals("1B8G",id.toCanonical().getPdbId());
+            assertEquals("1B8G", id.toCanonical().pdbId);
 		} catch(UnknownHostException e) {
 			logger.error("Unable to connect to rcsb.org");
 			// still pass

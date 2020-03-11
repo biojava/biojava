@@ -20,23 +20,16 @@
  */
 package org.biojava.nbio.structure.asa;
 
-import org.biojava.nbio.structure.AminoAcidImpl;
-import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.AtomImpl;
-import org.biojava.nbio.structure.Element;
-import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.StructureIO;
-import org.biojava.nbio.structure.StructureTools;
+import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
 import org.biojava.nbio.structure.io.mmcif.DownloadChemCompProvider;
-import static org.junit.Assert.*;
-
 import org.junit.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.junit.Assert.*;
 
 /**
  * Testing of Accessible Surface Area calculations
@@ -248,7 +241,7 @@ public class TestAsaCalc {
 	public void testNoAtomsAsaCalc() {
 
 		// in case of no atoms at all, the calculation should not fail and return an empty array
-		Atom[] atoms = new Atom[0];
+		Atom[] atoms = Atom.EmptyAtomArray;
 
 		AsaCalculator asaCalc = new AsaCalculator(atoms,
 				AsaCalculator.DEFAULT_PROBE_SIZE,

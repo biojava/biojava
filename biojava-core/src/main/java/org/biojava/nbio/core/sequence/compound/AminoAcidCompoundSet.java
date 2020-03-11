@@ -44,11 +44,11 @@ public class AminoAcidCompoundSet implements CompoundSet<AminoAcidCompound>, Ser
 	 *
 	 */
 	private static final long serialVersionUID = 4000344194364133456L;
-	private final Map<String, AminoAcidCompound> aminoAcidCompoundCache = new HashMap<String, AminoAcidCompound>();
-	private final Map<String, AminoAcidCompound> aminoAcidCompoundCache3Letter = new HashMap<String, AminoAcidCompound>();
+	private final Map<String, AminoAcidCompound> aminoAcidCompoundCache = new HashMap<>();
+	private final Map<String, AminoAcidCompound> aminoAcidCompoundCache3Letter = new HashMap<>();
 
 	private final Map<AminoAcidCompound, Set<AminoAcidCompound>> equivalentsCache =
-			new HashMap<AminoAcidCompound, Set<AminoAcidCompound>>();
+			new HashMap<>();
 
 	public AminoAcidCompoundSet() {
 		aminoAcidCompoundCache.put("A", new AminoAcidCompound(this, "A", "Ala", "Alanine", 71.0788f));
@@ -71,14 +71,14 @@ public class AminoAcidCompoundSet implements CompoundSet<AminoAcidCompound>, Ser
 		aminoAcidCompoundCache.put("W", new AminoAcidCompound(this, "W", "Trp", "Tryptophan", 186.2132f));
 		aminoAcidCompoundCache.put("Y", new AminoAcidCompound(this, "Y", "Tyr", "Tyrosine", 163.1760f));
 		aminoAcidCompoundCache.put("V", new AminoAcidCompound(this, "V", "Val", "Valine", 99.1326f));
-		aminoAcidCompoundCache.put("B", new AminoAcidCompound(this, "B", "Asx", "Asparagine or Aspartic acid", null));
-		aminoAcidCompoundCache.put("Z", new AminoAcidCompound(this, "Z", "Glx", "Glutamine or Glutamic acid", null));
-		aminoAcidCompoundCache.put("J", new AminoAcidCompound(this, "J", "Xle", "Leucine or Isoleucine", null));
-		aminoAcidCompoundCache.put("X", new AminoAcidCompound(this, "X", "Xaa", "Unspecified", null));
-		aminoAcidCompoundCache.put("-", new AminoAcidCompound(this, "-", "---", "Unspecified", null));
-		aminoAcidCompoundCache.put(".", new AminoAcidCompound(this, ".", "...", "Unspecified", null));
-		aminoAcidCompoundCache.put("_", new AminoAcidCompound(this, "_", "___", "Unspecified", null));
-		aminoAcidCompoundCache.put("*", new AminoAcidCompound(this, "*", "***", "Stop", null));
+		aminoAcidCompoundCache.put("B", new AminoAcidCompound(this, "B", "Asx", "Asparagine or Aspartic acid", Float.NaN));
+		aminoAcidCompoundCache.put("Z", new AminoAcidCompound(this, "Z", "Glx", "Glutamine or Glutamic acid", Float.NaN));
+		aminoAcidCompoundCache.put("J", new AminoAcidCompound(this, "J", "Xle", "Leucine or Isoleucine", Float.NaN));
+		aminoAcidCompoundCache.put("X", new AminoAcidCompound(this, "X", "Xaa", "Unspecified", Float.NaN));
+		aminoAcidCompoundCache.put("-", new AminoAcidCompound(this, "-", "---", "Unspecified", Float.NaN));
+		aminoAcidCompoundCache.put(".", new AminoAcidCompound(this, ".", "...", "Unspecified", Float.NaN));
+		aminoAcidCompoundCache.put("_", new AminoAcidCompound(this, "_", "___", "Unspecified", Float.NaN));
+		aminoAcidCompoundCache.put("*", new AminoAcidCompound(this, "*", "***", "Stop", Float.NaN));
 
 		//Selenocysteine - this is encoded by UGA with the presence
 		//of a SECIS element (SElenoCysteine Insertion Sequence) in the mRNA
@@ -90,11 +90,8 @@ public class AminoAcidCompoundSet implements CompoundSet<AminoAcidCompound>, Ser
 		//which then does the actual conversion to Pyl.
 		aminoAcidCompoundCache.put("O", new AminoAcidCompound(this, "O", "Pyl", "Pyrrolysine", 255.3172f));
 
-		for(String oneLtr : aminoAcidCompoundCache.keySet()) {
-			AminoAcidCompound aa = aminoAcidCompoundCache.get(oneLtr);
-			String threeLtr = aa.getLongName().toUpperCase();
-			aminoAcidCompoundCache3Letter.put(threeLtr, aa);
-		}
+		for(AminoAcidCompound aa : aminoAcidCompoundCache.values())
+			aminoAcidCompoundCache3Letter.put(aa.getLongName().toUpperCase(), aa);
 	}
 
 	@Override
@@ -104,15 +101,13 @@ public class AminoAcidCompoundSet implements CompoundSet<AminoAcidCompound>, Ser
 
 	@Override
 	public AminoAcidCompound getCompoundForString(String string) {
-		if (string.length() == 0) {
+		int sl = string.length();
+		if (sl == 0)
 			return null;
-		}
-		if (string.length() == 3) {
+		if (sl == 3)
 			return this.aminoAcidCompoundCache3Letter.get(string.toUpperCase());
-		}
-		if (string.length() > this.getMaxSingleCompoundStringLength()) {
+		if (sl > this.getMaxSingleCompoundStringLength())
 			throw new IllegalArgumentException("String supplied ("+string+") is too long. Max is "+getMaxSingleCompoundStringLength());
-		}
 		return this.aminoAcidCompoundCache.get(string.toUpperCase());
 	}
 
@@ -127,11 +122,7 @@ public class AminoAcidCompoundSet implements CompoundSet<AminoAcidCompound>, Ser
 		return true;
 	}
 
-	private final static AminoAcidCompoundSet aminoAcidCompoundSet = new AminoAcidCompoundSet();
-
-	public static AminoAcidCompoundSet getAminoAcidCompoundSet() {
-		return aminoAcidCompoundSet;
-	}
+	public final static AminoAcidCompoundSet aminoAcidCompoundSet = new AminoAcidCompoundSet();
 
 	@Override
 	public boolean compoundsEquivalent(AminoAcidCompound compoundOne, AminoAcidCompound compoundTwo) {
@@ -154,7 +145,7 @@ public class AminoAcidCompoundSet implements CompoundSet<AminoAcidCompound>, Ser
 			addAmbiguousEquivalents("I", "L", "J");
 			// ambiguous gaps
 			AminoAcidCompound gap1, gap2, gap3;
-			Set<AminoAcidCompound> gaps = new HashSet<AminoAcidCompound>();
+			Set<AminoAcidCompound> gaps = new HashSet<>(3);
 			gaps.add(gap1 = aminoAcidCompoundCache.get("-"));
 			gaps.add(gap2 = aminoAcidCompoundCache.get("."));
 			gaps.add(gap3 = aminoAcidCompoundCache.get("_"));
@@ -162,7 +153,7 @@ public class AminoAcidCompoundSet implements CompoundSet<AminoAcidCompound>, Ser
 			equivalentsCache.put(gap2, gaps);
 			equivalentsCache.put(gap3, gaps);
 			// X is never equivalent, even to itself
-			equivalentsCache.put(aminoAcidCompoundCache.get("X"), new HashSet<AminoAcidCompound>());
+			equivalentsCache.put(aminoAcidCompoundCache.get("X"), Collections.EMPTY_SET);
 		}
 		return equivalentsCache.get(compound);
 	}
@@ -172,18 +163,18 @@ public class AminoAcidCompoundSet implements CompoundSet<AminoAcidCompound>, Ser
 		Set<AminoAcidCompound> equivalents;
 		AminoAcidCompound cOne, cTwo, cEither;
 
-		equivalents = new HashSet<AminoAcidCompound>();
+		equivalents = new HashSet<>(3);
 		equivalents.add(cOne = aminoAcidCompoundCache.get(one));
 		equivalents.add(cTwo = aminoAcidCompoundCache.get(two));
 		equivalents.add(cEither = aminoAcidCompoundCache.get(either));
 		equivalentsCache.put(cEither, equivalents);
 
-		equivalents = new HashSet<AminoAcidCompound>();
+		equivalents = new HashSet<>(2);
 		equivalents.add(cOne);
 		equivalents.add(cEither);
 		equivalentsCache.put(cOne, equivalents);
 
-		equivalents = new HashSet<AminoAcidCompound>();
+		equivalents = new HashSet<>(2);
 		equivalents.add(cTwo);
 		equivalents.add(cEither);
 		equivalentsCache.put(cTwo, equivalents);
@@ -197,16 +188,19 @@ public class AminoAcidCompoundSet implements CompoundSet<AminoAcidCompound>, Ser
 	@Override
 	public boolean isValidSequence(Sequence<AminoAcidCompound> sequence) {
 		for (AminoAcidCompound compound: sequence) {
-			if (!hasCompound(compound)) {
+			if (!hasCompound(compound))
 				return false;
-			}
 		}
 		return true;
 	}
 
 	@Override
-	public List<AminoAcidCompound> getAllCompounds() {
-		return new ArrayList<AminoAcidCompound>(aminoAcidCompoundCache.values());
+	public Collection<AminoAcidCompound> getAllCompounds() {
+		return
+			//new ArrayList<>(
+			Collections.unmodifiableCollection(
+				aminoAcidCompoundCache.values()
+			);
 	}
 
 

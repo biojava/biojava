@@ -20,11 +20,11 @@
  */
 package org.biojava.nbio.structure.align.multiple;
 
-import java.util.List;
-
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureIdentifier;
 import org.biojava.nbio.structure.jama.Matrix;
+
+import java.util.List;
 
 /**
  * A MultipleAlignmentEnsemble is a collection of {@link MultipleAlignment}s
@@ -49,7 +49,7 @@ public interface MultipleAlignmentEnsemble extends ScoresCache {
 	 *
 	 * @return MultipleAlignmentEnsemble identical copy of this object.
 	 */
-	public MultipleAlignmentEnsemble clone();
+    MultipleAlignmentEnsemble clone();
 
 	/**
 	 * Returns the name of the multiple structure alignment algorithm that
@@ -58,7 +58,7 @@ public interface MultipleAlignmentEnsemble extends ScoresCache {
 	 * @return String name of the algorithm.
 	 * @see #setAlgorithmName(String)
 	 */
-	public String getAlgorithmName();
+    String getAlgorithmName();
 
 	/**
 	 * Set the name of the multiple structure alignment algorithm that created
@@ -67,7 +67,7 @@ public interface MultipleAlignmentEnsemble extends ScoresCache {
 	 * @param algorithmName name of the algorithm.
 	 * @see #getAlgorithmName()
 	 */
-	public void setAlgorithmName(String algorithmName);
+    void setAlgorithmName(String algorithmName);
 
 	/**
 	 * Returns the version of the algorithm used to generate the
@@ -76,7 +76,7 @@ public interface MultipleAlignmentEnsemble extends ScoresCache {
 	 * @return String version of the algorithm.
 	 * @see #setVersion(String)
 	 */
-	public String getVersion();
+    String getVersion();
 
 	/**
 	 * Sets the version of the algorithm used to generate the MultipleAlignment
@@ -85,7 +85,7 @@ public interface MultipleAlignmentEnsemble extends ScoresCache {
 	 * @param version the version of the algorithm.
 	 * @see #getVersion()
 	 */
-	public void setVersion(String version);
+    void setVersion(String version);
 
 	/**
 	 * Returns a List containing the names of the structures aligned
@@ -98,7 +98,7 @@ public interface MultipleAlignmentEnsemble extends ScoresCache {
 	 * @see #setStructureIdentifiers(List)
 	 * @see #getAtomArrays()
 	 */
-	public List<StructureIdentifier> getStructureIdentifiers();
+    List<StructureIdentifier> getStructureIdentifiers();
 
 	/**
 	 * Set the List containing the names of the structures aligned
@@ -109,7 +109,7 @@ public interface MultipleAlignmentEnsemble extends ScoresCache {
 	 * @see #getStructureIdentifiers()
 	 * @see #setAtomArrays(List)
 	 */
-	public void setStructureIdentifiers(List<StructureIdentifier> structureIdentifiers);
+    void setStructureIdentifiers(List<StructureIdentifier> structureIdentifiers);
 
 	/**
 	 * Get an array of representative atoms for each structure (CA atoms for
@@ -126,7 +126,7 @@ public interface MultipleAlignmentEnsemble extends ScoresCache {
 	 * @return List of Atom[].
 	 * @see #setAtomArrays(List)
 	 */
-	public List<Atom[]> getAtomArrays();
+    List<Atom[]> getAtomArrays();
 
 	/**
 	 * Sets the List of Atom arrays. Every structure has an Atom array
@@ -140,7 +140,7 @@ public interface MultipleAlignmentEnsemble extends ScoresCache {
 	 * @see #getAtomArrays()
 	 * @see #setStructureIdentifiers(List)
 	 */
-	public void setAtomArrays(List<Atom[]> atomArrays);
+    void setAtomArrays(List<Atom[]> atomArrays);
 
 	/**
 	 * Returns the List containing the interatomic distance Matrix of each
@@ -149,7 +149,7 @@ public interface MultipleAlignmentEnsemble extends ScoresCache {
 	 * @return List of Matrix interatomic distance matrices.
 	 * @see #updateDistanceMatrix()
 	 */
-	public List<Matrix> getDistanceMatrix();
+    List<Matrix> getDistanceMatrix();
 
 	/**
 	 * Returns the List of MultipleAlignments in the ensemble.
@@ -157,7 +157,7 @@ public interface MultipleAlignmentEnsemble extends ScoresCache {
 	 * @return List of MultipleAlignment in the ensemble.
 	 * @see #setMultipleAlignments()
 	 */
-	public List<MultipleAlignment> getMultipleAlignments();
+    List<MultipleAlignment> getMultipleAlignments();
 
 	/**
 	 * Returns the MultipleAlignments at the specified index
@@ -167,7 +167,7 @@ public interface MultipleAlignmentEnsemble extends ScoresCache {
 	 * @return MultipleAlignment at the index in the ensemble.
 	 * @see #setMultipleAlignments()
 	 */
-	public MultipleAlignment getMultipleAlignment(int index);
+    MultipleAlignment getMultipleAlignment(int index);
 
 	/**
 	 * Set the List of MultipleAlignments in the ensemble.
@@ -176,7 +176,7 @@ public interface MultipleAlignmentEnsemble extends ScoresCache {
 	 * ensemble.
 	 * @see #addMultipleAlignment(MultipleAlignment)
 	 */
-	public void setMultipleAlignments(List<MultipleAlignment> alignments);
+    void setMultipleAlignments(List<MultipleAlignment> alignments);
 
 	/**
 	 * Add a new MultipleAlignment to the end of the ensemble and set its
@@ -184,7 +184,7 @@ public interface MultipleAlignmentEnsemble extends ScoresCache {
 	 *
 	 * @param alignment
 	 */
-	public void addMultipleAlignment(MultipleAlignment alignment);
+    void addMultipleAlignment(MultipleAlignment alignment);
 
 	/**
 	 * Returns the number of aligned structures in the MultipleAlignments.
@@ -193,19 +193,19 @@ public interface MultipleAlignmentEnsemble extends ScoresCache {
 	 * @see #getStructureIdentifiers()
 	 * @see #getAtomArrays()
 	 */
-	public int size();
+    int size();
 
 	/**
 	 * Returns the io time for this object, in milliseconds.
 	 * @return long creation time, or null if unset
 	 */
-	public Long getIoTime();
+    Long getIoTime();
 
 	/**
 	 * Set the IO time to load this object
 	 * @param millis
 	 */
-	public void setIoTime(Long millis);
+    void setIoTime(Long millis);
 
 	/**
 	 * Returns the running time of the structure alignment calculation, in
@@ -214,14 +214,14 @@ public interface MultipleAlignmentEnsemble extends ScoresCache {
 	 * @return long running time of the calculation, or null if unset
 	 * @see #getIoTime()
 	 */
-	public Long getCalculationTime();
+    Long getCalculationTime();
 
 	/**
 	 * Set the running time spent to calculate this alignment.
 	 *
 	 * @param millis
 	 */
-	public void setCalculationTime(Long millis);
+    void setCalculationTime(Long millis);
 
 	/**
 	 * Clear scores and other properties which depend on the specific
@@ -229,5 +229,5 @@ public interface MultipleAlignmentEnsemble extends ScoresCache {
 	 * variables.<p>
 	 * Recursively clears the member MultipleAlignments.
 	 */
-	public void clear();
+    void clear();
 }

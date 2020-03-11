@@ -55,27 +55,27 @@ import java.util.Map;
 public interface Group extends Serializable {
 
 	/** Group property key for secondary structure annotation */
-	public static final String SEC_STRUC = "secstruc";
+    String SEC_STRUC = "secstruc";
 
 	/**
 	 * Get number of atoms.
 	 * @return number of atoms of this Group
 	 */
-	public int size();
+    int size();
 
 	/**
 	 * Return true or false, depending if this group has 3D coordinates or not.
 	 *
 	 * @return true if Group has 3D coordinates
 	 */
-	public boolean has3D ();
+    boolean has3D();
 
 	/**
 	 * Flag if group has 3D data .
 	 *
 	 * @param flag  true to set flag that this Group has 3D coordinates
 	 */
-	public void setPDBFlag(boolean flag);
+    void setPDBFlag(boolean flag);
 
 	/**
 	 * Get Type of group, one of {@link GroupType#AMINOACID}, {@link GroupType#HETATM}
@@ -83,14 +83,14 @@ public interface Group extends Serializable {
 	 *
 	 * @return a String representing the type value
 	 */
-	public GroupType getType();
+    GroupType getType();
 
 	/**
 	 * Add an atom to this group.
 	 *
 	 * @param atom  an Atom object
 	 */
-	public void addAtom(Atom atom);
+    void addAtom(Atom atom);
 
 	/**
 	 * Get list of atoms.
@@ -98,7 +98,7 @@ public interface Group extends Serializable {
 	 * @return a List object representing the atoms
 	 * @see #setAtoms(List)
 	 */
-	public List<Atom> getAtoms() ;
+    List<Atom> getAtoms() ;
 
 
 	/**
@@ -106,13 +106,13 @@ public interface Group extends Serializable {
 	 * @see Atom
 	 * @param atoms a list of atoms
 	 */
-	public void setAtoms(List<Atom> atoms);
+    void setAtoms(List<Atom> atoms);
 
 	/**
 	 * Remove all atoms from this group.
 	 *
 	 */
-	public void clearAtoms();
+    void clearAtoms();
 
 	/**
 	 * Get an atom given its PDB name.
@@ -125,7 +125,7 @@ public interface Group extends Serializable {
 	 * @param name  a trimmed String representing the atom's PDB name, e.g. "CA"
 	 * @return an Atom object or null if no such atom exists within this group
 	 */
-	public Atom getAtom(String name) ;
+    Atom getAtom(String name) ;
 	
 	/**
 	 * Get at atom by position.
@@ -133,7 +133,7 @@ public interface Group extends Serializable {
 	 * @param position  an int
 	 * @return an Atom object or null if no Atom exists for given position
 	 */
-	public Atom getAtom(int position) ;
+    Atom getAtom(int position) ;
 
 	/**
 	 * Tell whether a particular atom exists within this group.
@@ -143,7 +143,7 @@ public interface Group extends Serializable {
 	 * @param name  a trimmed String representing the atom's PDB name, e.g. "CA"
 	 * @return true if Atom with name exists within this group
 	 */
-	public boolean hasAtom(String name);
+    boolean hasAtom(String name);
 
 	/**
 	 * Get the PDB 3-letter name for this group. (e.g. ALA)
@@ -151,7 +151,7 @@ public interface Group extends Serializable {
 	 * @return a String representing the PDBName value
 	 * @see #setPDBName
 	 */
-	public String getPDBName();
+    String getPDBName();
 
 	/**
 	 * Set the PDB 3-letter name for this group. (e.g. ALA)
@@ -159,7 +159,7 @@ public interface Group extends Serializable {
 	 * @param s  a String specifying the PDBName value
 	 * @see #getPDBName
 	 */
-	public void setPDBName(String s) ;
+    void setPDBName(String s) ;
 
 
 	/**
@@ -183,7 +183,7 @@ public interface Group extends Serializable {
 	 * @return true if all Atoms required for an AminoAcid are available (N, CA, C, O)
 	 * @see #getType
 	 */
-	public boolean hasAminoAtoms() ;
+    boolean hasAminoAtoms() ;
 
 
 	/**
@@ -191,7 +191,7 @@ public interface Group extends Serializable {
 	 *
 	 * @return true if a polymeric group
 	 */
-	public boolean isPolymeric();
+    boolean isPolymeric();
 
 
 	/**
@@ -199,7 +199,7 @@ public interface Group extends Serializable {
 	 *
 	 * @return true if an amino acid
 	 */
-	public boolean isAminoAcid();
+    boolean isAminoAcid();
 
 
 	/**
@@ -207,7 +207,7 @@ public interface Group extends Serializable {
 	 *
 	 * @return true if a nucleotide
 	 */
-	public boolean isNucleotide();
+    boolean isNucleotide();
 
 
 
@@ -220,7 +220,7 @@ public interface Group extends Serializable {
 	 * @param properties  a Map object specifying the properties value
 	 * @see #getProperties
 	 */
-	public void setProperties(Map<String,Object> properties) ;
+    void setProperties(Map<String, Object> properties) ;
 
 	/**
 	 * Return properties.
@@ -228,7 +228,7 @@ public interface Group extends Serializable {
 	 *
 	 * @return a HashMap object representing the properties value
 	 */
-	public Map<String,Object> getProperties() ;
+    Map<String,Object> getProperties() ;
 
 	/**
 	 * Set a single property .
@@ -237,7 +237,7 @@ public interface Group extends Serializable {
 	 * @param value  an Object
 	 * @see #getProperty
 	 */
-	public void setProperty(String key, Object value) ;
+    void setProperty(String key, Object value) ;
 
 	/**
 	 * Get a single property .
@@ -246,21 +246,21 @@ public interface Group extends Serializable {
 	 * @return an Object
 	 * @see #setProperty
 	 */
-	public Object getProperty(String key) ;
+    Object getProperty(String key) ;
 
 	/**
 	 * Get an Atom Iterator.
 	 *
 	 * @return an Iterator object
 	 */
-	public Iterator<Atom> iterator() ;
+    Iterator<Atom> iterator() ;
 
 
 	/**
 	 * Returns and identical copy of this Group object .
 	 * @return  and identical copy of this Group object
 	 */
-	public Object clone();
+    Object clone();
 
 	/**
 	 * Sets the back-reference to its parent Chain.
@@ -268,7 +268,7 @@ public interface Group extends Serializable {
 	 * @see #getChain()
 	 * @since 3.0
 	 */
-	public void setChain(Chain chain);
+    void setChain(Chain chain);
 
 	/**
 	 * Returns the parent Chain of the Group.
@@ -277,7 +277,7 @@ public interface Group extends Serializable {
 	 * @see #setChain(Chain)
 	 * @since 3.0
 	 */
-	public Chain getChain() ;
+    Chain getChain() ;
 
 	/**
 	 * Returns a dynamically created ResidueNumber for the group - this
@@ -286,7 +286,7 @@ public interface Group extends Serializable {
 	 * @return ResidueNumber for the group.
 	 * @since 3.0
 	 */
-	public ResidueNumber getResidueNumber();
+    ResidueNumber getResidueNumber();
 
 
 	/**
@@ -294,7 +294,7 @@ public interface Group extends Serializable {
 	 *
 	 * @param residueNumber the PDB residueNumber
 	 */
-	public void setResidueNumber(ResidueNumber residueNumber);
+    void setResidueNumber(ResidueNumber residueNumber);
 
 	/**
 	 * Utility method to temporarily set a chainID for a group, if a parent chain object does not exist yet.
@@ -304,7 +304,7 @@ public interface Group extends Serializable {
 	 * @param residueNumber
 	 * @param iCode
 	 */
-	public void setResidueNumber(String chainId, Integer residueNumber, Character iCode);
+    void setResidueNumber(String chainId, Integer residueNumber, Character iCode);
 
 	/**
 	 * Utility method for returning the chainId of the Group or null if no
@@ -314,21 +314,21 @@ public interface Group extends Serializable {
 	 * @since 3.0
 	 * @return  the ID of the chain
 	 */
-	public String getChainId();
+    String getChainId();
 
 	/**
 	 * Set the Chemical Component that closer describes this group.
 	 *
 	 * @param cc the chemical component
 	 */
-	public void setChemComp(ChemComp cc);
+    void setChemComp(ChemComp cc);
 
 	/**
 	 * Get the chemical component that closer describes this group. If the information does not exist yet, fetches the information from PDB web site.
 	 *
 	 * @return the Chemical Component definition for this Group.
 	 */
-	public ChemComp getChemComp();
+    ChemComp getChemComp();
 
 
 	/**
@@ -337,7 +337,7 @@ public interface Group extends Serializable {
 	 * @return boolean flag if there are alternate locations.
 	 * @see #getAltLocs()
 	 */
-	public boolean hasAltLoc();
+    boolean hasAltLoc();
 
 
 	/**
@@ -363,14 +363,14 @@ public interface Group extends Serializable {
 	 *
 	 * @return List of other groups that are on alternate locations
 	 */
-	public List<Group> getAltLocs();
+    List<Group> getAltLocs();
 
 	/**
 	 * Add a group that is an alternate location for this group.
 	 *
 	 * @param g the altloc group to add
 	 */
-	public void addAltLoc(Group g);
+    void addAltLoc(Group g);
 
 	/**
 	 * Determines if this group is water.
@@ -378,7 +378,7 @@ public interface Group extends Serializable {
 	 * @see GroupType#WATERNAMES
 	 * @return true if it's water, false otherwise.
 	 */
-	public boolean isWater();
+    boolean isWater();
 
 	/**
 	 * Gets the alternate location group to this group that has the alt-loc character code passed.
@@ -386,7 +386,7 @@ public interface Group extends Serializable {
 	 * @param altLoc the alternate location code of the group desired
 	 * @return the alternate location group if found, or null otherwise
 	 */
-	public Group getAltLocGroup(Character altLoc);
+    Group getAltLocGroup(Character altLoc);
 
 
 	/**
@@ -394,13 +394,13 @@ public interface Group extends Serializable {
 	 * all internal Collection objects to the required size.
 	 *
 	 */
-	public void trimToSize();
+    void trimToSize();
 
 	/**
 	 * Function to get the Group as an MDL molblock
 	 * @return the string of the MDL molblock
 	 */
-	public String toSDF();
+    String toSDF();
 
 	/**
 	 * Tells whether the group is annotated as HETATM in the file.
@@ -408,7 +408,7 @@ public interface Group extends Serializable {
 	 * polymeric group is in a ligand chain or not.
 	 * @return
 	 */
-	public boolean isHetAtomInFile();
+    boolean isHetAtomInFile();
 
 	/**
 	 * Sets the field isHetAtomInFile which is intented only for
@@ -416,5 +416,5 @@ public interface Group extends Serializable {
 	 * or in a polymeric chain.
 	 * @param isHetAtomInFile
 	 */
-	public void setHetAtomInFile(boolean isHetAtomInFile);
+    void setHetAtomInFile(boolean isHetAtomInFile);
 }

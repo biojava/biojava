@@ -20,24 +20,19 @@
  */
 package org.biojava.nbio.structure.align.multiple.util;
 
+import org.biojava.nbio.core.util.PrettyXMLWriter;
+import org.biojava.nbio.structure.*;
+import org.biojava.nbio.structure.align.multiple.Block;
+import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
+import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsemble;
+import org.biojava.nbio.structure.align.xml.MultipleAlignmentXMLConverter;
+
+import javax.vecmath.Matrix4d;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.vecmath.Matrix4d;
-
-import org.biojava.nbio.core.util.PrettyXMLWriter;
-import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.ResidueRange;
-import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.StructureIdentifier;
-import org.biojava.nbio.structure.SubstructureIdentifier;
-import org.biojava.nbio.structure.align.multiple.Block;
-import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
-import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsemble;
-import org.biojava.nbio.structure.align.xml.MultipleAlignmentXMLConverter;
 
 /**
  * This class contains functions for the conversion of {@link MultipleAlignment}
@@ -90,10 +85,10 @@ public class MultipleAlignmentWriter {
 
 		// Initialize the String and put the summary information
 		StringWriter fatcat = new StringWriter();
-		fatcat.append(alignment.toString() + "\n\n");
+		fatcat.append(alignment.toString()).append("\n\n");
 
 		// Get the alignment sequences and the mapping
-		List<Integer> mapSeqToStruct = new ArrayList<Integer>();
+		List<Integer> mapSeqToStruct = new ArrayList<>();
 		List<String> alnSequences = MultipleAlignmentTools
 				.getSequenceAlignment(alignment, mapSeqToStruct);
 
@@ -111,14 +106,12 @@ public class MultipleAlignmentWriter {
 		// Write the Sequence Alignment
 		for (int str = 0; str < alignment.size(); str++) {
 			if (str < 9) {
-				fatcat.append("Chain 0" + (str + 1) + ": "
-						+ alnSequences.get(str) + "\n");
+				fatcat.append("Chain 0").append(String.valueOf(str + 1)).append(": ").append(alnSequences.get(str)).append("\n");
 			} else {
-				fatcat.append("Chain " + (str + 1) + ": "
-						+ alnSequences.get(str) + "\n");
+				fatcat.append("Chain ").append(String.valueOf(str + 1)).append(": ").append(alnSequences.get(str)).append("\n");
 			}
 			if (str != alignment.size() - 1) {
-				fatcat.append("          " + blockNumbers + "\n");
+				fatcat.append("          ").append(blockNumbers).append("\n");
 			}
 		}
 		return fatcat.toString();
@@ -145,15 +138,14 @@ public class MultipleAlignmentWriter {
 
 		// Write structure names & PDB codes
 		for (int str = 0; str < multAln.size(); str++) {
-			residueGroup.append("#Struct" + (str + 1) + ":\t");
+			residueGroup.append("#Struct").append(String.valueOf(str + 1)).append(":\t");
 			residueGroup.append(multAln.getEnsemble().getStructureIdentifiers()
 					.get(str).getIdentifier());
 			residueGroup.append("\n");
 		}
 		// Whrite header for columns
 		for (int str = 0; str < multAln.size(); str++)
-			residueGroup.append("#Num" + (str + 1) + "\tChain" + (str + 1)
-					+ "\tAA" + (str + 1) + "\t");
+			residueGroup.append("#Num").append(String.valueOf(str + 1)).append("\tChain").append(String.valueOf(str + 1)).append("\tAA").append(String.valueOf(str + 1)).append("\t");
 		residueGroup.append("\n");
 
 		// Write optimally aligned pairs
@@ -197,7 +189,7 @@ public class MultipleAlignmentWriter {
 	 */
 	public static String toTransformMatrices(MultipleAlignment alignment) {
 
-		StringBuffer txt = new StringBuffer();
+		StringBuilder txt = new StringBuilder();
 
 		for (int bs = 0; bs < alignment.getBlockSets().size(); bs++) {
 
@@ -326,7 +318,7 @@ public class MultipleAlignmentWriter {
 		StructureIdentifier tName = alignment.getEnsemble().getStructureIdentifiers()
 				.get(templateIndex);
 		SubstructureIdentifier canon = tName.toCanonical();
-		String tPdbId = canon.getPdbId();
+        String tPdbId = canon.pdbId;
 		String tChain = null;
 		for(ResidueRange range : canon.getResidueRanges()) {
 			tChain = range.getChainName();
@@ -360,11 +352,11 @@ public class MultipleAlignmentWriter {
 				String tPDB = templateAtoms[tRes].toPDB();
 
 				// merge the two records into 3D format
-				str.append(qPDB.substring(0, 30)); // up through coordinates
-				str.append(tPDB.substring(30, 54)); // coordinates
-				str.append(tPDB.substring(22, 27)); // residue number
+				str.append(qPDB, 0, 30); // up through coordinates
+				str.append(tPDB, 30, 54); // coordinates
+				str.append(tPDB, 22, 27); // residue number
 				str.append(' ');
-				str.append(tPDB.substring(17, 20));
+				str.append(tPDB, 17, 20);
 				str.append('\n');
 			}
 		}

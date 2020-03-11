@@ -28,10 +28,9 @@ import org.biojava.nbio.structure.jama.Matrix;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.vecmath.Matrix4d;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
-
-import javax.vecmath.Matrix4d;
 
 
 public class AFPAlignmentDisplay
@@ -60,11 +59,11 @@ public class AFPAlignmentDisplay
 			{-2,-3,-4,-2,-2,-3,-4,-4,-3,-2,-3,-2,-3,-3,-3,-2,-1,1,2,11,-4},
 			{-4,-4,-4,-4,-4,-4,-4,-4,-4,-4,-4,-4,-4,-4,-4,-4,-4,-4,-4,-4,1}};
 
-	private static Character[] aa1 = new Character[]{  'G',   'A',   'P',   'C',   'T',   'S','D',   'N',   'E',   'Q',   'K',   'H',   'R', 'V',   'I',   'L',   'M',   'F',   'Y',   'W', '-'};
+	private static final Character[] aa1 = new Character[]{  'G',   'A',   'P',   'C',   'T',   'S','D',   'N',   'E',   'Q',   'K',   'H',   'R', 'V',   'I',   'L',   'M',   'F',   'Y',   'W', '-'};
 
 	private static final List<Character> aa1List = Arrays.asList(aa1);
 
-	public static Matrix getRotMax(AFPChain afpChain,Atom[] ca1,Atom[] ca2) throws StructureException{
+	public static Matrix getRotMax(AFPChain afpChain,Atom[] ca1,Atom[] ca2) {
 
 		Atom[] a1 = getAlignedAtoms1(afpChain,ca1);
 		Atom[] a2 = getAlignedAtoms2(afpChain,ca2);
@@ -76,7 +75,7 @@ public class AFPAlignmentDisplay
 
 	}
 
-	public static Atom getTranslation(AFPChain afpChain,Atom[] ca1,Atom[] ca2) throws StructureException{
+	public static Atom getTranslation(AFPChain afpChain,Atom[] ca1,Atom[] ca2) {
 
 
 		Atom[] a1 = getAlignedAtoms1(afpChain,ca1);
@@ -90,7 +89,7 @@ public class AFPAlignmentDisplay
 	}
 
 	public static Atom[] getAlignedAtoms1(AFPChain afpChain,Atom[] ca1){
-		List<Atom> atoms = new ArrayList<Atom>();
+		List<Atom> atoms = new ArrayList<>();
 
 		int blockNum = afpChain.getBlockNum();
 
@@ -107,11 +106,11 @@ public class AFPAlignmentDisplay
 			}
 
 		}
-		return atoms.toArray(new Atom[atoms.size()]);
+		return atoms.toArray(Atom.EmptyAtomArray);
 	}
 	public static Atom[] getAlignedAtoms2(AFPChain afpChain,Atom[] ca2){
 
-		List<Atom> atoms = new ArrayList<Atom>();
+		List<Atom> atoms = new ArrayList<>();
 
 		int blockNum = afpChain.getBlockNum();
 
@@ -128,7 +127,7 @@ public class AFPAlignmentDisplay
 			}
 
 		}
-		return atoms.toArray(new Atom[atoms.size()]);
+		return atoms.toArray(Atom.EmptyAtomArray);
 	}
 
 
@@ -233,7 +232,7 @@ public class AFPAlignmentDisplay
 					continue;
 				}
 				if(len > 0)     {
-					lmax = (p1 - p1b - 1)>(p2 - p2b - 1)?(p1 - p1b - 1):(p2 - p2b - 1);
+					lmax = Math.max((p1 - p1b - 1), (p2 - p2b - 1));
 					for(k = 0; k < lmax; k ++)      {
 						if(k >= (p1 - p1b - 1)) alnseq1[len] = '-';
 						else {
@@ -329,7 +328,7 @@ public class AFPAlignmentDisplay
 
 		if ( seq1 == null || seq2 == null){
 			logger.warn("Can't calc %ID for an empty alignment! ");
-			Map<String, Double> m = new HashMap<String, Double>();
+			Map<String, Double> m = new HashMap<>();
 			m.put("similarity", similarity);
 			m.put("identity", identity);
 			return m;
@@ -369,7 +368,7 @@ public class AFPAlignmentDisplay
 			similarity = (similarity) / eqr;
 			identity = identity/eqr;
 		}
-		Map<String, Double> m = new HashMap<String, Double>();
+		Map<String, Double> m = new HashMap<>();
 		m.put("similarity", similarity);
 		m.put("identity", identity);
 
@@ -387,12 +386,10 @@ public class AFPAlignmentDisplay
 	 * @throws NoSuchMethodException If an error occurs when invoking jmol
 	 * @throws InvocationTargetException If an error occurs when invoking jmol
 	 * @throws IllegalAccessException If an error occurs when invoking jmol
-	 * @throws StructureException
-	 */
+     */
 	public static Structure createArtificalStructure(AFPChain afpChain, Atom[] ca1,
 													 Atom[] ca2) throws ClassNotFoundException, NoSuchMethodException,
-			InvocationTargetException, IllegalAccessException, StructureException
-	{
+			InvocationTargetException, IllegalAccessException {
 
 		if ( afpChain.getNrEQR() < 1){
 			return GuiWrapper.getAlignedStructure(ca1, ca2);
@@ -400,7 +397,7 @@ public class AFPAlignmentDisplay
 
 		Group[] twistedGroups = AlignmentTools.prepareGroupsForDisplay(afpChain,ca1, ca2);
 
-		List<Atom> twistedAs = new ArrayList<Atom>();
+		List<Atom> twistedAs = new ArrayList<>();
 
 		for ( Group g: twistedGroups){
 			if ( g == null )
@@ -410,23 +407,23 @@ public class AFPAlignmentDisplay
 			Atom a = g.getAtom(0);
 			twistedAs.add(a);
 		}
-		Atom[] twistedAtoms = twistedAs.toArray(new Atom[twistedAs.size()]);
+		Atom[] twistedAtoms = twistedAs.toArray(Atom.EmptyAtomArray);
 
-		List<Group> hetatms  = new ArrayList<Group>();
-		List<Group> nucs1    = new ArrayList<Group>();
+		List<Group> hetatms  = new ArrayList<>();
+		List<Group> nucs1    = new ArrayList<>();
 		Group g1 = ca1[0].getGroup();
-		Chain c1 = null;
+		Chain c1;
 		if ( g1 != null) {
 			c1 = g1.getChain();
 			if ( c1 != null){
-				hetatms = c1.getAtomGroups(GroupType.HETATM);;
+				hetatms = c1.getAtomGroups(GroupType.HETATM);
 				nucs1  = c1.getAtomGroups(GroupType.NUCLEOTIDE);
 			}
 		}
-		List<Group> hetatms2 = new ArrayList<Group>();
-		List<Group> nucs2    = new ArrayList<Group>();
+		List<Group> hetatms2 = new ArrayList<>();
+		List<Group> nucs2    = new ArrayList<>();
 		Group g2 = ca2[0].getGroup();
-		Chain c2 = null;
+		Chain c2;
 		if ( g2 != null){
 			c2 = g2.getChain();
 			if ( c2 != null){
@@ -467,7 +464,7 @@ public class AFPAlignmentDisplay
 
 				if (len != 0) {
 					// check for gapped region
-					int lmax = (p1 - p1b - 1)>(p2 - p2b - 1)?(p1 - p1b - 1):(p2 - p2b - 1);
+					int lmax = Math.max((p1 - p1b - 1), (p2 - p2b - 1));
 					for(int k = 0; k < lmax; k ++)      {
 						len++;
 					}

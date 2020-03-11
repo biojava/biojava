@@ -25,8 +25,6 @@ import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Vector3d;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -35,7 +33,7 @@ import java.util.List;
  * @author Peter
  */
 public class RotationGroup implements Iterable<Rotation> {
-	private List<Rotation> rotations = new ArrayList<Rotation>();
+	private final List<Rotation> rotations = new ArrayList<>();
 	private int principalAxisIndex = 0;
 	private int higherOrderRotationAxis = 0;
 	private int twoFoldsPerpendicular = 0;
@@ -61,7 +59,7 @@ public class RotationGroup implements Iterable<Rotation> {
 
 	public void setC1(int n) {
 		Rotation r = new Rotation();
-		List<Integer> permutation = new ArrayList<Integer>(n);
+		List<Integer> permutation = new ArrayList<>(n);
 		for (int i = 0; i < n; i++) {
 			permutation.add(i);
 		}
@@ -192,7 +190,7 @@ public class RotationGroup implements Iterable<Rotation> {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("Rotations: " + rotations.size() + "\n");
+		sb.append("Rotations: ").append(rotations.size()).append("\n");
 		for (Rotation s: rotations) {
 			sb.append(s.toString()).append("\n");
 		}
@@ -353,21 +351,18 @@ public class RotationGroup implements Iterable<Rotation> {
 	}
 
 	public void sortByFoldDecending() {
-		Collections.sort(rotations, new Comparator<Rotation>() {
-			@Override
-			public int compare(Rotation o1, Rotation o2) {
-				int delta = o1.getDirection() - o2.getDirection();
-				if (delta != 0) {
-					return delta;
-				}
-				delta = Math.round(Math.signum(o2.getFold() - o1.getFold()));
-				if (delta != 0) {
-					return delta;
-				}
-
-				delta = (int)(Math.signum(o1.getAxisAngle().angle - o2.getAxisAngle().angle));
+		rotations.sort((o1, o2) -> {
+			int delta = o1.getDirection() - o2.getDirection();
+			if (delta != 0) {
 				return delta;
 			}
+			delta = Math.round(Math.signum(o2.getFold() - o1.getFold()));
+			if (delta != 0) {
+				return delta;
+			}
+
+			delta = (int) (Math.signum(o1.getAxisAngle().angle - o2.getAxisAngle().angle));
+			return delta;
 		});
 	}
 

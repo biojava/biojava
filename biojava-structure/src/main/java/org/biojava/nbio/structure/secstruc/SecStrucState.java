@@ -53,7 +53,7 @@ public class SecStrucState extends SecStrucInfo {
 
 	// Symbols: starting '>', ending '<', or both 'X'.
 	// Number means bracketed n-turn residue without h-bond
-	private char[] turn;
+	private final char[] turn;
 	private boolean bend;
 
 	private BetaBridge bridge1;
@@ -226,7 +226,7 @@ public class SecStrucState extends SecStrucInfo {
 
 	public String printDSSPline(int index) {
 
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 
 		// #
 		if (index < 9)

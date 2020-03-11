@@ -30,7 +30,6 @@ import org.biojava.nbio.structure.align.webstart.WebStartMain;
 import org.biojava.nbio.structure.align.xml.AFPChainXMLConverter;
 
 import javax.swing.*;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedWriter;
@@ -52,8 +51,8 @@ import java.io.FileWriter;
  */
 public class MySaveFileListener implements ActionListener {
 
-	private AFPChain afpChain;
-	private MultipleAlignment msa;
+	private final AFPChain afpChain;
+	private final MultipleAlignment msa;
 	private boolean printText;
 
 	public MySaveFileListener (AFPChain afpChain){

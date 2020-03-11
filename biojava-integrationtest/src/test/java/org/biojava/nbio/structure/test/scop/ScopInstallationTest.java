@@ -47,7 +47,7 @@ public class ScopInstallationTest extends ScopDatabaseTest {
 	//@Parameters
 	@Parameters(name="{0}")
 	public static Collection<Object[]> availableDatabases() {
-		ArrayList<Object[]> databases = new ArrayList<Object[]>();
+		ArrayList<Object[]> databases = new ArrayList<>();
 		ScopInstallation scop;
 
 		for(String version : new String[] {

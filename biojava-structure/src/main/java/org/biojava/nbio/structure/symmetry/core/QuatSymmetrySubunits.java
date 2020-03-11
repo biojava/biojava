@@ -30,8 +30,8 @@ import org.biojava.nbio.structure.symmetry.utils.SymmetryTools;
 
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -46,17 +46,17 @@ import java.util.stream.Collectors;
  */
 public class QuatSymmetrySubunits {
 
-	private List<Point3d[]> caCoords = new ArrayList<>();
-	private List<Point3d> originalCenters = new ArrayList<>();
-	private List<Point3d> centers = new ArrayList<>();
-	private List<Vector3d> unitVectors = new ArrayList<>();
+	private final List<Point3d[]> caCoords = new ArrayList<>();
+	private final List<Point3d> originalCenters = new ArrayList<>();
+	private final List<Point3d> centers = new ArrayList<>();
+	private final List<Vector3d> unitVectors = new ArrayList<>();
 
-	private List<Integer> folds = new ArrayList<>();
-	private List<Integer> clusterIds = new ArrayList<>();
-	private List<SubunitCluster> clusters;
+	private final List<Integer> folds;
+	private final List<Integer> clusterIds = new ArrayList<>();
+	private final List<SubunitCluster> clusters;
 
 	private Point3d centroid;
-	private MomentsOfInertia momentsOfInertia = new MomentsOfInertia();
+	private final MomentsOfInertia momentsOfInertia = new MomentsOfInertia();
 
 	/**
 	 * Converts the List of {@link SubunitCluster} to a Subunit object.
@@ -83,7 +83,7 @@ public class QuatSymmetrySubunits {
 		}
 
 		// List number of members in each cluster
-		List<Integer> stoichiometries = clusters.stream().map(c -> c.size())
+		List<Integer> stoichiometries = clusters.stream().map(SubunitCluster::size)
 				.collect(Collectors.toList());
 		folds = SymmetryTools.getValidFolds(stoichiometries);
 	}
@@ -105,7 +105,7 @@ public class QuatSymmetrySubunits {
 	 */
 	public List<String> getChainIds() {
 
-		List<String> chains = new ArrayList<String>(getSubunitCount());
+		List<String> chains = new ArrayList<>(getSubunitCount());
 
 		// Loop through all subunits in the clusters and fill Lists
 		for (int c = 0; c < clusters.size(); c++) {
@@ -125,7 +125,7 @@ public class QuatSymmetrySubunits {
 	 */
 	public List<Integer> getModelNumbers() {
 
-		List<Integer> models = new ArrayList<Integer>(getSubunitCount());
+		List<Integer> models = new ArrayList<>(getSubunitCount());
 
 		// Loop through all subunits in the clusters and fill Lists
 		for (int c = 0; c < clusters.size(); c++) {
@@ -224,8 +224,7 @@ public class QuatSymmetrySubunits {
 	}
 
 	private void calcCentroid() {
-		Point3d[] orig = originalCenters.toArray(new Point3d[originalCenters
-				.size()]);
+		Point3d[] orig = originalCenters.toArray(new Point3d[0]);
 		centroid = CalcPoint.centroid(orig);
 	}
 

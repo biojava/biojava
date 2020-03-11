@@ -41,7 +41,7 @@ public class NCBIQBlastServiceDemo {
 	private static final String SEQUENCE = "MKWVTFISLLFLFSSAYSRGVFRRDAHKSEVAHRFKDLGEENFKALVLIAFAQYLQQCPFEDHVKLVNEVTEFAKTCVADESAENCDKS";
 
 	public static void main(String[] args) {
-		NCBIQBlastService service = null;
+		NCBIQBlastService service;
 		if (args.length == 1) {
 			service = new NCBIQBlastService(args[0]);
 		} else {

@@ -44,12 +44,12 @@ public class Comparison {
 	 *            SequenceI
 	 * @return float
 	 */
-	public final static float PID(String seq1, String seq2) {
+	public static float PID(String seq1, String seq2) {
 		return PID(seq1, seq2, 0, seq1.length());
 	}
 
 	// Another pid with region specification
-	public final static float PID(String seq1, String seq2, int start, int end) {
+	public static float PID(String seq1, String seq2, int start, int end) {
 
 		int s1len = seq1.length();
 		int s2len = seq2.length();
@@ -100,8 +100,8 @@ public class Comparison {
 	 *
 	 * @return true if it is a gap, false otherwise
 	 */
-	public static final boolean isGap(char c) {
-		return (c == '-' || c == '.' || c == ' ') ? true : false;
+	public static boolean isGap(char c) {
+		return c == '-' || c == '.' || c == ' ';
 	}
 
 }

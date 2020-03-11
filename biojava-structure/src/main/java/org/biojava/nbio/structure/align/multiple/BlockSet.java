@@ -20,9 +20,8 @@
  */
 package org.biojava.nbio.structure.align.multiple;
 
-import java.util.List;
-
 import javax.vecmath.Matrix4d;
+import java.util.List;
 
 /**
  * A BlockSet is a Data Structure to store a flexible alignment part of a
@@ -55,7 +54,7 @@ public interface BlockSet extends ScoresCache {
 	 *
 	 * @return BlockSet identical copy of this object.
 	 */
-	public BlockSet clone();
+    BlockSet clone();
 
 	/**
 	 * Returns the parent MultipleAlignment of the BlockSet.
@@ -65,7 +64,7 @@ public interface BlockSet extends ScoresCache {
 	 * or null.
 	 * @see #setMultipleAlignment(MultipleAlignment)
 	 */
-	public MultipleAlignment getMultipleAlignment();
+    MultipleAlignment getMultipleAlignment();
 
 	/**
 	 * Set the back-reference to its parent MultipleAlignment.
@@ -77,7 +76,7 @@ public interface BlockSet extends ScoresCache {
 	 * @param parent the parent MultipleAlignment.
 	 * @see #getMultipleAlignment()
 	 */
-	public void setMultipleAlignment(MultipleAlignment parent);
+    void setMultipleAlignment(MultipleAlignment parent);
 
 	/**
 	 * Returns the List of alignment Blocks of the BlockSet.
@@ -86,7 +85,7 @@ public interface BlockSet extends ScoresCache {
 	 *
 	 * @see #setBlocks(List)
 	 */
-	public List<Block> getBlocks();
+    List<Block> getBlocks();
 
 	/**
 	 * Set the List of alignment Blocks of the BlockSet.
@@ -96,7 +95,7 @@ public interface BlockSet extends ScoresCache {
 	 * @param blocks List of alignment Blocks.
 	 * @see #getBlocks()
 	 */
-	public void setBlocks(List<Block> blocks);
+    void setBlocks(List<Block> blocks);
 
 	/**
 	 * Returns a transformation matrix for each structure giving the
@@ -104,7 +103,7 @@ public interface BlockSet extends ScoresCache {
 	 *
 	 * @return the 3D superimposition information of the alignment
 	 */
-	public List<Matrix4d> getTransformations();
+    List<Matrix4d> getTransformations();
 
 	/**
 	 * Set a new superposition for the structures.
@@ -113,7 +112,7 @@ public interface BlockSet extends ScoresCache {
 	 *
 	 * @param matrices
 	 */
-	public void setTransformations(List<Matrix4d> transformations);
+    void setTransformations(List<Matrix4d> transformations);
 
 	/**
 	 * Returns the total number of aligned residues (columns) in the alignment:
@@ -123,7 +122,7 @@ public interface BlockSet extends ScoresCache {
 	 * @see #getCoreLength()
 	 * @see #size()
 	 */
-	public int length();
+    int length();
 
 	/**
 	 * Returns the number of aligned residues (columns) without gaps in the
@@ -133,7 +132,7 @@ public interface BlockSet extends ScoresCache {
 	 * @see #length()
 	 * @see #size()
 	 */
-	public int getCoreLength();
+    int getCoreLength();
 
 	/**
 	 * Returns the number of non null positions (residues) of each structure in
@@ -141,7 +140,7 @@ public interface BlockSet extends ScoresCache {
 	 *
 	 * @return List of residue counts for each structure
 	 */
-	public List<Integer> getAlignResCounts();
+    List<Integer> getAlignResCounts();
 
 	/**
 	 * Returns the number of aligned structures in the BlockSet.
@@ -150,7 +149,7 @@ public interface BlockSet extends ScoresCache {
 	 * @see #length()
 	 * @see #getCoreLength()
 	 */
-	public int size();
+    int size();
 
 	/**
 	 * Clear scores and other properties which depend on the specific
@@ -158,5 +157,5 @@ public interface BlockSet extends ScoresCache {
 	 * variables.<p>
 	 * Recursively clears the memeber Blocks.
 	 */
-	public void clear();
+    void clear();
 }

@@ -32,6 +32,7 @@ import java.io.FileNotFoundException;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 /**
  * Tests {@link RCSBDescriptionFactory}.
@@ -134,17 +135,17 @@ public class RCSBDescriptionFactoryTest {
 		assertEquals("notype", polymer.getType());
 		assertEquals(1, polymer.getIndex().intValue());
 		assertEquals("really close to empty", polymer.getDescription());
-		assertEquals(null, polymer.getEnzClass());
+		assertNull(polymer.getEnzClass());
 		assertEquals(10, polymer.getLength().intValue());
 		assertEquals(0, polymer.getWeight(), 0);
 
 		polymer = polymers.get(1);
-		assertEquals(null, polymer.getType()); // make sure these are null and not ""
-		assertEquals(null, polymer.getIndex());
-		assertEquals(null, polymer.getDescription());
-		assertEquals(null, polymer.getEnzClass());
-		assertEquals(null, polymer.getLength());
-		assertEquals(null, polymer.getWeight());
+		assertNull(polymer.getType()); // make sure these are null and not ""
+		assertNull(polymer.getIndex());
+		assertNull(polymer.getDescription());
+		assertNull(polymer.getEnzClass());
+		assertNull(polymer.getLength());
+		assertNull(polymer.getWeight());
 
 	}
 
@@ -163,7 +164,7 @@ public class RCSBDescriptionFactoryTest {
 		assertEquals("protein", polymer.getType());
 		assertEquals(1, polymer.getIndex().intValue());
 		assertEquals("HEMOGLOBIN (DEOXY) (ALPHA CHAIN)", polymer.getDescription());
-		assertEquals(null, polymer.getEnzClass());
+		assertNull(polymer.getEnzClass());
 		assertEquals(141, polymer.getLength().intValue());
 		assertEquals(15150.5, polymer.getWeight(), 0);
 
@@ -197,7 +198,7 @@ public class RCSBDescriptionFactoryTest {
 		assertEquals("protein", polymer.getType());
 		assertEquals(2, polymer.getIndex().intValue());
 		assertEquals("HEMOGLOBIN (DEOXY) (BETA CHAIN)", polymer.getDescription());
-		assertEquals(null, polymer.getEnzClass());
+		assertNull(polymer.getEnzClass());
 		assertEquals(146, polymer.getLength().intValue());
 		assertEquals(15890.4, polymer.getWeight(), 0);
 

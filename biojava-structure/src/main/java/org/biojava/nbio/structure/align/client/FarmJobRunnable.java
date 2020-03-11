@@ -20,6 +20,8 @@
  */
 package org.biojava.nbio.structure.align.client;
 
+import org.biojava.nbio.core.util.FlatFileCache;
+import org.biojava.nbio.core.util.PrettyXMLWriter;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.StructureAlignment;
@@ -40,8 +42,6 @@ import org.biojava.nbio.structure.domain.RemotePDPProvider;
 import org.biojava.nbio.structure.io.LocalPDBDirectory.FetchBehavior;
 import org.biojava.nbio.structure.scop.RemoteScopInstallation;
 import org.biojava.nbio.structure.scop.ScopFactory;
-import org.biojava.nbio.core.util.FlatFileCache;
-import org.biojava.nbio.core.util.PrettyXMLWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,12 +70,12 @@ public class FarmJobRunnable implements Runnable {
 	private static final String JFATCAT_NAME            = "jfatcat.name";
 	private static final String JFATCAT_VERSION         = "jfatcat.version";
 
-	private static ResourceManager resourceManager = ResourceManager.getResourceManager("jfatcat");
+	private static final ResourceManager resourceManager = ResourceManager.getResourceManager("jfatcat");
 
 
 	//private static DateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy h:mm a",Locale.US);
 
-	FarmJobParameters params;
+	final FarmJobParameters params;
 
 	String prevName1;
 	Atom[] ca1 ;
@@ -93,12 +93,12 @@ public class FarmJobRunnable implements Runnable {
 	boolean terminated ;
 
 	List<AlignmentProgressListener> progressListeners;
-	CountProgressListener counter ;
+	final CountProgressListener counter ;
 
-	String userName = null;
-	protected AtomCache cache;
+	final String userName;
+	protected final AtomCache cache;
 
-	boolean verbose = false; // TODO dmyersturnbull: we should probably remove this in favor of SLF4J
+	boolean verbose; // TODO dmyersturnbull: we should probably remove this in favor of SLF4J
 	String version = null;
 
 	private static final String alignURL = "/align/";
@@ -111,7 +111,7 @@ public class FarmJobRunnable implements Runnable {
 		cache = new AtomCache( params.getPdbFilePath(), params.getCacheFilePath());
 
 
-		if ( params.getServer()!= null && (!params.getServer().equals("") ) ) {
+		if ( params.getServer()!= null && (!params.getServer().isEmpty()) ) {
 
 			RemotePDPProvider pdpprovider = new RemotePDPProvider();
 
@@ -155,7 +155,7 @@ public class FarmJobRunnable implements Runnable {
 	public void addAlignmentProgressListener(AlignmentProgressListener listener){
 
 		if (progressListeners == null)
-			progressListeners = new ArrayList<AlignmentProgressListener>();
+			progressListeners = new ArrayList<>();
 
 		progressListeners.add(listener);
 	}
@@ -228,7 +228,7 @@ public class FarmJobRunnable implements Runnable {
 			}
 			SortedSet<PdbPair> alignmentPairs = msg.getPairs();
 			logger.debug("{}: Server responded with {} pairs.", userName, alignmentPairs.size());
-			List<String> results = new ArrayList<String>();
+			List<String> results = new ArrayList<>();
 
 			String algorithmName = msg.getMethod();
 			if ( version == null) {
@@ -470,7 +470,7 @@ public class FarmJobRunnable implements Runnable {
 	private StructureAlignment getAlgorithm(String algorithmName) throws StructureException {
 
 
-		StructureAlignment algorithm    = null;
+		StructureAlignment algorithm;
 
 		if ( algorithmName == null){
 
@@ -531,7 +531,7 @@ public class FarmJobRunnable implements Runnable {
 		if ( maxNrAlignments < nrPairs )
 			nrPairs = maxNrAlignments;
 
-		SortedSet<PdbPair> allPairs = new TreeSet<PdbPair>();
+		SortedSet<PdbPair> allPairs = new TreeSet<>();
 
 		PdbPairsMessage msg = null;
 

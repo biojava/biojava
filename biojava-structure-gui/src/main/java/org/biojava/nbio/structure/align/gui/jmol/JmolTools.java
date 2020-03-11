@@ -34,11 +34,11 @@ public class JmolTools {
 	 *
 	 * @return a String representation in Jmol style of the PDB information of this atom
 	 */
-	public static final String getPdbInfo(Atom a){
+	public static String getPdbInfo(Atom a){
 		return getPdbInfo(a,true);
 	}
 
-	private static Pattern inscodePatter ;
+	private static final Pattern inscodePatter ;
 	static {
 		inscodePatter = Pattern.compile("([0-9]+)([a-zA-Z]*)?");
 	}
@@ -63,7 +63,7 @@ public class JmolTools {
 
 	// TODO: move this to AtomInfo class
 
-	public static final String getPdbInfo(Atom a, boolean printResName){
+	public static String getPdbInfo(Atom a, boolean printResName){
 		String aa3 = "";
 
 		String chain1 ="";
@@ -80,15 +80,15 @@ public class JmolTools {
 			}
 		}
 
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		if ( printResName) {
-			if ( !aa3.equals("")){
+			if (!aa3.isEmpty()){
 				buf.append("[");
 				buf.append(aa3);
 				buf.append("]");
 			}
 		}
-		if ( ! res1.equals("")) {
+		if (!res1.isEmpty()) {
 
 			// let's check if there is an insertion code...
 			Matcher matcher = inscodePatter.matcher(res1);
@@ -101,7 +101,7 @@ public class JmolTools {
 				String residueNumber = matcher.group(1);
 				String insCode = matcher.group(2);
 				buf.append(residueNumber);
-				if ( insCode != null && ! ( insCode.equals(""))) {
+				if ( insCode != null && ! (insCode.isEmpty())) {
 					buf.append("^");
 					buf.append(insCode);
 				}
@@ -112,7 +112,7 @@ public class JmolTools {
 
 
 
-		if ( ! chain1.equals("")){
+		if (chain1!=null && !chain1.isEmpty()){
 			buf.append(":");
 			buf.append(chain1);
 		}

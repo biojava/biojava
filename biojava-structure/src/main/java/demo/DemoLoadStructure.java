@@ -24,11 +24,11 @@
 
 package demo;
 
+import org.biojava.nbio.core.util.InputStreamProvider;
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.PDBFileReader;
-import org.biojava.nbio.core.util.InputStreamProvider;
 
 
 

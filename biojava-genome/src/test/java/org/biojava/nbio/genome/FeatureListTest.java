@@ -35,8 +35,7 @@ import org.junit.Test;
  */
 public class FeatureListTest {
 	@Test
-	public void testAddIndex() throws Exception
-	{
+	public void testAddIndex() {
 		FeatureList fl = new FeatureList();
 		fl.add(new Feature("seqname", "source", "type", new Location(1, 2), (double)0, 0, "gene_id \"gene_id_1\"; transcript_id \"transcript_id_1\";"));
 		fl.addIndex("transcript_id");

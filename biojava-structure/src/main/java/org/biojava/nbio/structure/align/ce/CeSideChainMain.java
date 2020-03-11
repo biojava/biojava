@@ -21,7 +21,6 @@
 package org.biojava.nbio.structure.align.ce;
 
 import org.biojava.nbio.structure.align.StructureAlignment;
-import org.biojava.nbio.structure.align.util.ConfigurationException;
 
 
 public class CeSideChainMain  extends CeMain implements StructureAlignment {
@@ -44,7 +43,7 @@ public class CeSideChainMain  extends CeMain implements StructureAlignment {
 		}
 	}
 
-	public static void main(String[] args) throws ConfigurationException {
+	public static void main(String[] args) {
 		CeSideChainUserArgumentProcessor processor = new CeSideChainUserArgumentProcessor();
 		processor.process(args);
 	}

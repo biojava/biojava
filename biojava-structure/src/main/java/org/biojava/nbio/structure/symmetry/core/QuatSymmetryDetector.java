@@ -24,17 +24,19 @@ package org.biojava.nbio.structure.symmetry.core;
 
 import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.cluster.*;
+import org.biojava.nbio.structure.cluster.Subunit;
+import org.biojava.nbio.structure.cluster.SubunitCluster;
+import org.biojava.nbio.structure.cluster.SubunitClusterer;
+import org.biojava.nbio.structure.cluster.SubunitClustererParameters;
 import org.biojava.nbio.structure.contact.BoundingBox;
 import org.biojava.nbio.structure.contact.Grid;
+import org.jgrapht.Graph;
+import org.jgrapht.alg.clique.CliqueMinimalSeparatorDecomposition;
+import org.jgrapht.graph.AsSubgraph;
+import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import org.jgrapht.alg.clique.CliqueMinimalSeparatorDecomposition;
-import org.jgrapht.graph.DefaultEdge;
-import org.jgrapht.graph.AsSubgraph;
-import org.jgrapht.Graph;
 
 import javax.vecmath.Point3d;
 import java.util.*;
@@ -340,9 +342,9 @@ public class QuatSymmetryDetector {
 							map(QuatSymmetryResults::getStoichiometry).
 								reduce(Stoichiometry::combineWith).get();
 
-				if (groupComposition.numberOfComponents() < 2) {
+				if (groupComposition.numberOfComponents() < 2)
 					continue;
-				}
+
 				//check if grouped clusters also have symmetry
 				QuatSymmetryResults localResult = calcQuatSymmetry(groupComposition,symmParams);
 
@@ -351,10 +353,11 @@ public class QuatSymmetryDetector {
 					clusterSymmetries.add(localResult);
 					// find subunit ids in this cluster list
 					Set<Integer> knownResult = new HashSet<>();
-					for (SubunitCluster cluster: groupComposition.getClusters()) {
-						int i = nontrivialComposition.getClusters().indexOf(cluster);
-						knownResult.addAll(clusterIdToSubunitIds.get(i));
-					}
+					List<SubunitCluster> nc = nontrivialComposition.getClusters();
+					for (SubunitCluster cluster: groupComposition.getClusters())
+						knownResult.addAll(clusterIdToSubunitIds.get(nc.indexOf(cluster)));
+					if (knownResult.isEmpty())
+						knownResult = Collections.EMPTY_SET;
 					// since symmetry is found,
 					// do not try graph decomposition of this set of subunits later
 					knownCombinations.add(knownResult);
@@ -372,12 +375,13 @@ public class QuatSymmetryDetector {
 	                                                                  Set<Set<Integer>> knownCombinations,
 	                                                                  Graph<Integer, DefaultEdge> graph) {
 
-		List<QuatSymmetryResults> localSymmetries = new ArrayList<>();
-
 		// do not go any deeper into recursion if over the time/combinations limit
 		if(symmParams.isLocalLimitsExceeded(knownCombinations)) {
-			return localSymmetries;
+			return Collections.EMPTY_LIST;
 		}
+
+		List<QuatSymmetryResults> localSymmetries = new ArrayList<>();
+
 		// extract components of a (sub-)graph
 		CliqueMinimalSeparatorDecomposition<Integer, DefaultEdge> cmsd =
 				new CliqueMinimalSeparatorDecomposition<>(graph);
@@ -400,20 +404,16 @@ public class QuatSymmetryDetector {
 			Stoichiometry localStoichiometry =
 					trimSubunitClusters(globalComposition, allSubunitClusterIds, clusterIdToSubunitIds, usedSubunitIds);
 
-			if (localStoichiometry.numberOfComponents()==0) {
+			if (localStoichiometry.numberOfComponents()==0)
 				continue;
-			}
+
 
 			//NB: usedSubunitIds might have changed when trimming clusters
 			// if a subunit belongs to a cluster with no other subunits,
 			// it is removed inside trimSubunitClusters
 			Set<Integer> usedSubunitIdsSet = new HashSet<>(usedSubunitIds);
-			if(!graphComponent.equals(usedSubunitIdsSet)) {
-				if(knownCombinations.contains(usedSubunitIdsSet)) {
-					continue;
-				} else {
-					knownCombinations.add(usedSubunitIdsSet);
-				}
+			if (!graphComponent.equals(usedSubunitIdsSet) && !knownCombinations.add(usedSubunitIdsSet)) {
+				continue;
 			}
 
 			QuatSymmetryResults localResult = calcQuatSymmetry(localStoichiometry,symmParams);
@@ -432,10 +432,9 @@ public class QuatSymmetryDetector {
 				// try removing subunits one by one and decompose the sub-graph recursively
 				Set<Integer> prunedGraphVertices = new HashSet<>(usedSubunitIds);
 				prunedGraphVertices.remove(removeSubunitId);
-				if (knownCombinations.contains(prunedGraphVertices)) {
+				if (!knownCombinations.add(prunedGraphVertices))
 					continue;
-				}
-				knownCombinations.add(prunedGraphVertices);
+
 
 				Graph<Integer, DefaultEdge> subGraph = new AsSubgraph<>(graph,prunedGraphVertices);
 
@@ -463,7 +462,6 @@ public class QuatSymmetryDetector {
 		Set<Integer> usedClusterIds =
 				usedSubunitIds.stream().
 					map(allSubunitClusterIds::get).
-					distinct().
 					collect(Collectors.toSet());
 
 		// for each used cluster, remove unused subunits
@@ -501,8 +499,8 @@ public class QuatSymmetryDetector {
 		if (subunits.getSubunitCount() == 0)
 			return null;
 
-		RotationGroup rotationGroup = null;
-		SymmetryPerceptionMethod method = null;
+		RotationGroup rotationGroup;
+		SymmetryPerceptionMethod method;
 		if (subunits.getFolds().size() == 1) {
 			// no symmetry possible, create empty ("C1") rotation group
 			method = SymmetryPerceptionMethod.NO_ROTATION;

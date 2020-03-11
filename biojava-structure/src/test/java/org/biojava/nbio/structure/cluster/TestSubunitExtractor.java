@@ -20,15 +20,16 @@
  */
 package org.biojava.nbio.structure.cluster;
 
-import static org.junit.Assert.*;
+import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureIO;
+import org.biojava.nbio.structure.align.util.AtomCache;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.util.List;
 
-import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.StructureIO;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test the {@link SubunitExtractor} correctness on different real structures
@@ -85,6 +86,7 @@ public class TestSubunitExtractor {
 	@Test
 	public void testBioAssembly() throws StructureException, IOException {
 
+		StructureIO.setAtomCache(new AtomCache());
 		Structure s = StructureIO.getStructure("BIO:4E3E:1");
 
 		List<Subunit> subunits = SubunitExtractor.extractSubunits(s, 5, 0.75, 20);

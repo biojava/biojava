@@ -47,26 +47,27 @@ public enum CathCategory {
 	static final String lut = "CATHSOLID";
 
 	public static CathCategory fromString(String type) {
-		if ( type.equals("C") ) {
-			return Class;
-		} else if ( type.equals("A") ) {
-			return Architecture;
-		} else if ( type.equals("T") ) {
-			return Topolgy;
-		} else if ( type.equals("H") ) {
-			return Homology;
-		} else if ( type.equals("S") ) {
-			return SequenceFamily;
-		} else if ( type.equals("O") ) {
-			return OrthologousSequenceFamily;
-		} else if ( type.equals("L") ) {
-			return LikeSequenceFamily;
-		} else if ( type.equals("I") ) {
-			return IdenticalSequenceFamily;
+        switch (type) {
+            case "C":
+                return Class;
+            case "A":
+                return Architecture;
+            case "T":
+                return Topolgy;
+            case "H":
+                return Homology;
+            case "S":
+                return SequenceFamily;
+            case "O":
+                return OrthologousSequenceFamily;
+            case "L":
+                return LikeSequenceFamily;
+            case "I":
+                return IdenticalSequenceFamily;
 //        } else if ( type.equals("D") ) {
-		} else {
-			return DomainCounter;
-		}
+            default:
+                return DomainCounter;
+        }
 	}
 
 	@Override
@@ -97,7 +98,7 @@ public enum CathCategory {
 	public static CathCategory fromCathCode(String code) {
 		int count = 0;
 		int idx = 0;
-		while ((idx = code.indexOf(".",idx)) != -1) {
+		while ((idx = code.indexOf('.',idx)) != -1) {
 			count++;
 			idx++;
 		}

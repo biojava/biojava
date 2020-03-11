@@ -20,23 +20,15 @@
  */
 package org.biojava.nbio.structure.geometry;
 
-import static org.junit.Assert.*;
+import org.biojava.nbio.structure.*;
+import org.biojava.nbio.structure.align.util.AtomCache;
+import org.junit.Test;
 
+import javax.vecmath.*;
 import java.io.IOException;
 
-import javax.vecmath.AxisAngle4d;
-import javax.vecmath.Matrix4d;
-import javax.vecmath.Point3d;
-import javax.vecmath.Quat4d;
-import javax.vecmath.Vector3d;
-
-import org.biojava.nbio.structure.Calc;
-import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.StructureIO;
-import org.biojava.nbio.structure.StructureTools;
-import org.biojava.nbio.structure.geometry.UnitQuaternions;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test the methods in the {@link UnitQuaternions} class.
@@ -170,6 +162,7 @@ public class TestUnitQuaternions {
 		transform.rotZ(Math.PI / 15);
 
 		// Get points from a structure.
+		StructureIO.setAtomCache(new AtomCache());
 		Structure pdb = StructureIO.getStructure("4hhb.A");
 		Point3d[] cloud = Calc.atomsToPoints(StructureTools
 				.getRepresentativeAtomArray(pdb));

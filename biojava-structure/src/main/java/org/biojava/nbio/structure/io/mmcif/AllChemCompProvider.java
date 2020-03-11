@@ -21,10 +21,10 @@
  */
 package org.biojava.nbio.structure.io.mmcif;
 
+import org.biojava.nbio.core.util.InputStreamProvider;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
 import org.biojava.nbio.structure.io.LocalPDBDirectory;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
-import org.biojava.nbio.core.util.InputStreamProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,8 +57,8 @@ public class AllChemCompProvider implements ChemCompProvider, Runnable{
 	static ChemicalComponentDictionary dict;
 
 	// flags to make sure there is only one thread running that is loading the dictionary
-	static AtomicBoolean loading       = new AtomicBoolean(false);
-	static AtomicBoolean isInitialized = new AtomicBoolean(false);
+	static final AtomicBoolean loading       = new AtomicBoolean(false);
+	static final AtomicBoolean isInitialized = new AtomicBoolean(false);
 
 	public AllChemCompProvider(){
 
@@ -132,7 +132,7 @@ public class AllChemCompProvider implements ChemCompProvider, Runnable{
 	}
 
 
-	private static  void downloadFileFromRemote(URL remoteURL, File localFile) throws FileNotFoundException, IOException{
+	private static  void downloadFileFromRemote(URL remoteURL, File localFile) throws IOException{
 		logger.info("Downloading " + remoteURL + " to: " + localFile);
 		FileOutputStream out = new FileOutputStream(localFile);
 
@@ -168,7 +168,7 @@ public class AllChemCompProvider implements ChemCompProvider, Runnable{
 	 */
 	private void loadAllChemComps() throws IOException {
 		String fileName = getLocalFileName();
-		logger.debug("Loading " + fileName);
+		logger.debug("Loading {}", fileName);
 		InputStreamProvider isp = new InputStreamProvider();
 
 

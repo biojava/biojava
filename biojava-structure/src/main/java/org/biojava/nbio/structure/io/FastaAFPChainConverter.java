@@ -26,10 +26,6 @@ package org.biojava.nbio.structure.io;
 
 import org.biojava.nbio.core.alignment.template.AlignedSequence;
 import org.biojava.nbio.core.alignment.template.SequencePair;
-import org.biojava.nbio.structure.*;
-import org.biojava.nbio.structure.align.model.AFPChain;
-import org.biojava.nbio.structure.align.util.AlignmentTools;
-import org.biojava.nbio.structure.align.xml.AFPChainXMLConverter;
 import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.core.sequence.ProteinSequence;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
@@ -41,6 +37,10 @@ import org.biojava.nbio.core.sequence.io.template.SequenceCreatorInterface;
 import org.biojava.nbio.core.sequence.io.template.SequenceHeaderParserInterface;
 import org.biojava.nbio.core.sequence.template.Sequence;
 import org.biojava.nbio.core.util.SequenceTools;
+import org.biojava.nbio.structure.*;
+import org.biojava.nbio.structure.align.model.AFPChain;
+import org.biojava.nbio.structure.align.util.AlignmentTools;
+import org.biojava.nbio.structure.align.xml.AFPChainXMLConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -84,9 +84,9 @@ public class FastaAFPChainConverter {
 	 */
 	public static AFPChain cpFastaToAfpChain(File fastaFile, Structure structure, int cpSite) throws IOException, StructureException {
 		InputStream inStream = new FileInputStream(fastaFile);
-		SequenceCreatorInterface<AminoAcidCompound> creator = new CasePreservingProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet());
-		SequenceHeaderParserInterface<ProteinSequence, AminoAcidCompound> headerParser = new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>();
-		FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = new FastaReader<ProteinSequence, AminoAcidCompound>(inStream, headerParser, creator);
+        SequenceCreatorInterface<AminoAcidCompound> creator = new CasePreservingProteinSequenceCreator(AminoAcidCompoundSet.aminoAcidCompoundSet);
+		SequenceHeaderParserInterface<ProteinSequence, AminoAcidCompound> headerParser = new GenericFastaHeaderParser<>();
+		FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = new FastaReader<>(inStream, headerParser, creator);
 		LinkedHashMap<String, ProteinSequence> sequences = fastaReader.process();
 		inStream.close();
 		Iterator<ProteinSequence> iter = sequences.values().iterator();
@@ -194,10 +194,10 @@ public class FastaAFPChainConverter {
 	public static AFPChain fastaFileToAfpChain(File fastaFile, Structure structure1, Structure structure2)
 			throws IOException, StructureException {
 		InputStream inStream = new FileInputStream(fastaFile);
-		SequenceCreatorInterface<AminoAcidCompound> creator = new CasePreservingProteinSequenceCreator(
-				AminoAcidCompoundSet.getAminoAcidCompoundSet());
-		SequenceHeaderParserInterface<ProteinSequence, AminoAcidCompound> headerParser = new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>();
-		FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = new FastaReader<ProteinSequence, AminoAcidCompound>(
+        SequenceCreatorInterface<AminoAcidCompound> creator = new CasePreservingProteinSequenceCreator(
+                AminoAcidCompoundSet.aminoAcidCompoundSet);
+		SequenceHeaderParserInterface<ProteinSequence, AminoAcidCompound> headerParser = new GenericFastaHeaderParser<>();
+		FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = new FastaReader<>(
 				inStream, headerParser, creator);
 		LinkedHashMap<String, ProteinSequence> sequences = fastaReader.process();
 		inStream.close();
@@ -236,8 +236,8 @@ public class FastaAFPChainConverter {
 			throw new IllegalArgumentException("A structure is null");
 		}
 
-		List<ProteinSequence> seqs = new ArrayList<ProteinSequence>();
-		List<String> names = new ArrayList<String>(2);
+		List<ProteinSequence> seqs = new ArrayList<>();
+		List<String> names = new ArrayList<>(2);
 		for (Map.Entry<String, ProteinSequence> entry : sequences.entrySet()) {
 			seqs.add(entry.getValue());
 			names.add(entry.getKey());
@@ -321,7 +321,7 @@ public class FastaAFPChainConverter {
 				sb1.append(a.getBase());
 			}
 			ProteinSequence seq2 = new ProteinSequence(sb2.toString());
-			LinkedHashMap<String, ProteinSequence> map = new LinkedHashMap<String, ProteinSequence>();
+			LinkedHashMap<String, ProteinSequence> map = new LinkedHashMap<>();
 			map.put(structure1.getName(), seq1);
 			map.put(structure2.getName(), seq2);
 			return fastaToAfpChain(map, structure1, structure2);
@@ -349,8 +349,8 @@ public class FastaAFPChainConverter {
 
 		// remove any gap
 		// this includes the ones introduced by the nullifying above
-		List<ResidueNumber> alignedResiduesList1 = new ArrayList<ResidueNumber>();
-		List<ResidueNumber> alignedResiduesList2 = new ArrayList<ResidueNumber>();
+		List<ResidueNumber> alignedResiduesList1 = new ArrayList<>();
+		List<ResidueNumber> alignedResiduesList2 = new ArrayList<>();
 		for (int i = 0; i < residues1.length; i++) {
 			if (residues1[i] != null && residues2[i] != null) {
 				alignedResiduesList1.add(residues1[i]);
@@ -358,8 +358,8 @@ public class FastaAFPChainConverter {
 			}
 		}
 
-		ResidueNumber[] alignedResidues1 = alignedResiduesList1.toArray(new ResidueNumber[alignedResiduesList1.size()]);
-		ResidueNumber[] alignedResidues2 = alignedResiduesList2.toArray(new ResidueNumber[alignedResiduesList2.size()]);
+		ResidueNumber[] alignedResidues1 = alignedResiduesList1.toArray(new ResidueNumber[0]);
+		ResidueNumber[] alignedResidues2 = alignedResiduesList2.toArray(new ResidueNumber[0]);
 
 		AFPChain afpChain = AlignmentTools.createAFPChain(ca1, ca2, alignedResidues1, alignedResidues2);
 		afpChain.setAlgorithmName("unknown");
@@ -379,7 +379,7 @@ public class FastaAFPChainConverter {
 	 * @param sequence Make sure <em>not</em> to use {@link ProteinSequence#getSequenceAsString()} for this, as it won't preserve upper- and lower-case
 	 */
 	public static List<Object> getAlignedUserCollection(String sequence) {
-		List<Object> aligned = new ArrayList<Object>(sequence.length());
+		List<Object> aligned = new ArrayList<>(sequence.length());
 		for (char c : sequence.toCharArray()) {
 			aligned.add(Character.isUpperCase(c));
 		}

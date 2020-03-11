@@ -27,7 +27,6 @@
 
 package org.biojava.nbio.ronn;
 
-import java.io.IOException;
 import java.io.OutputStream;
 
 /**
@@ -40,7 +39,7 @@ import java.io.OutputStream;
 public final class NullOutputStream extends OutputStream {
 
 	@Override
-	public void write(final int b) throws IOException {
+	public void write(final int b) {
 		// this methods does nothing.
 		// This is an intention
 	}

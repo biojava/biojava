@@ -41,7 +41,7 @@ public enum TreeType {
 	/** Description name of the Tree Type */
 	protected final String name;
 
-	private TreeType(String name){
+	TreeType(String name){
 		this.name = name;
 	}
 }

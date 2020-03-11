@@ -24,12 +24,9 @@ import org.biojava.nbio.core.alignment.template.SequencePair;
 import org.biojava.nbio.core.search.io.blast.BlastHspBuilder;
 import org.biojava.nbio.core.sequence.DNASequence;
 import org.biojava.nbio.core.sequence.compound.NucleotideCompound;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.*;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Paolo Pavan
@@ -37,7 +34,7 @@ import static org.junit.Assert.*;
 
 public class HspTest {
 
-	Hsp hspImpl = new BlastHspBuilder()
+	final Hsp hspImpl = new BlastHspBuilder()
 				.setHspNum(1)
 				.setHspBitScore(377.211)
 				.setHspEvalue(8.04143e-093)
@@ -55,7 +52,7 @@ public class HspTest {
 				.setHspIdentityString("||||||||| |||||||||||||||||| ||||||||| |||||||||||||||||||||||| |||||||| |||||||||||||||||||||||  |||||||  |||||||||||||||||||||||||||||||||||| |||||||||||||||||||||||||||||||||| ||||||||| ||||||| |||||||||||||||||||||||| |||||")
 				.createBlastHsp();
 
-	Hsp uncompleteHsp = new BlastHspBuilder()
+	final Hsp uncompleteHsp = new BlastHspBuilder()
 				.setPercentageIdentity(100.00/100)
 				.setHspAlignLen(48)
 				.setMismatchCount(0)

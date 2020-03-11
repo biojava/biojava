@@ -48,7 +48,7 @@ public class DefaultMatrixMapper implements ContinuousColorMapper {
 	 */
 	@Override
 	public Color getColor(double value) {
-		float hue = 1.0f;
+		float hue;
 		hue = (float)(1-(value/scalevalue));
 		if (hue < 0)
 			hue = 0;

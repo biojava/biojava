@@ -153,8 +153,8 @@ public class TestCrystalInfo {
 		CrystalCell cell1 = xtalInfo.getCrystalCell();
 		CrystalCell cell2 = xtalInfo2.getCrystalCell();
 
-		if (s1.isNmr()) assertTrue(cell1==null);
-		if (s2.isNmr()) assertTrue(cell2==null);
+		if (s1.isNmr()) assertNull(cell1);
+		if (s2.isNmr()) assertNull(cell2);
 
 		if (cell1==null && cell2==null) return;
 

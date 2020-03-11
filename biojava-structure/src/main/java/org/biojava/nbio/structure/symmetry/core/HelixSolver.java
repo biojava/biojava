@@ -29,7 +29,6 @@ import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
-
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -44,10 +43,10 @@ public class HelixSolver {
 	private static final Logger logger = LoggerFactory
 			.getLogger(HelixSolver.class);
 
-	private QuatSymmetrySubunits subunits = null;
-	private int fold = 1;
-	private HelixLayers helixLayers = new HelixLayers();
-	private QuatSymmetryParameters parameters = null;
+	private final QuatSymmetrySubunits subunits;
+	private final int fold;
+	private final HelixLayers helixLayers = new HelixLayers();
+	private final QuatSymmetryParameters parameters;
 	boolean modified = true;
 
 	public HelixSolver(QuatSymmetrySubunits subunits, int fold,
@@ -73,7 +72,7 @@ public class HelixSolver {
 		HelicalRepeatUnit unit = new HelicalRepeatUnit(subunits);
 		List<Point3d> repeatUnitCenters = unit.getRepeatUnitCenters();
 		List<Point3d[]> repeatUnits = unit.getRepeatUnits();
-		Set<List<Integer>> permutations = new HashSet<List<Integer>>();
+		Set<List<Integer>> permutations = new HashSet<>();
 
 		double minRise = parameters.getMinimumHelixRise() * fold; // for n-start
 																	// helix,
@@ -129,7 +128,7 @@ public class HelixSolver {
 
 
 			// keep track of which subunits are permuted
-			Set<Integer> permSet = new HashSet<Integer>();
+			Set<Integer> permSet = new HashSet<>();
 			int count = 0;
 			boolean valid = true;
 			for (int i = 0; i < permutation.size(); i++) {
@@ -164,8 +163,8 @@ public class HelixSolver {
 			}
 
 			// superpose all permuted subunits
-			List<Point3d> point1 = new ArrayList<Point3d>();
-			List<Point3d> point2 = new ArrayList<Point3d>();
+			List<Point3d> point1 = new ArrayList<>();
+			List<Point3d> point2 = new ArrayList<>();
 			List<Point3d> centers = subunits.getOriginalCenters();
 			for (int j = 0; j < permutation.size(); j++) {
 				if (permutation.get(j) != -1) {
@@ -355,7 +354,7 @@ public class HelixSolver {
 		List<Point3d> centers = subunits.getOriginalCenters();
 		List<Integer> seqClusterId = subunits.getClusterIds();
 
-		List<Integer> permutations = new ArrayList<Integer>(centers.size());
+		List<Integer> permutations = new ArrayList<>(centers.size());
 		double[] dSqs = new double[centers.size()];
 		boolean[] used = new boolean[centers.size()];
 		Arrays.fill(used, false);
@@ -366,7 +365,7 @@ public class HelixSolver {
 			int permutation = -1;
 			double minDistSq = Double.MAX_VALUE;
 			for (int j = 0; j < centers.size(); j++) {
-				if (seqClusterId.get(i) == seqClusterId.get(j)) {
+				if (seqClusterId.get(i).equals(seqClusterId.get(j))) {
 					if (!used[j]) {
 						double dSq = tCenter.distanceSquared(centers.get(j));
 						if (dSq < minDistSq && dSq <= rmsdThresholdSq) {

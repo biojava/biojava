@@ -20,18 +20,7 @@
  */
 package org.biojava.nbio.structure.io;
 
-import static org.junit.Assert.assertNotNull;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-import java.util.zip.GZIPInputStream;
-
-import org.biojava.nbio.structure.Chain;
-import org.biojava.nbio.structure.Group;
-import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.StructureIO;
+import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.LocalPDBDirectory.FetchBehavior;
 import org.biojava.nbio.structure.io.mmcif.MMcifParser;
@@ -42,6 +31,13 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+import java.util.zip.GZIPInputStream;
+
+import static org.junit.Assert.assertNotNull;
 
 public class TestHeaderOnly {
 
@@ -73,13 +69,13 @@ public class TestHeaderOnly {
 
 		Structure sPDB = StructureIO.getStructure(pdbID);
 
-		Assert.assertEquals(false, doSeqResHaveAtoms(sPDB));
+		Assert.assertFalse(doSeqResHaveAtoms(sPDB));
 
 		// Test 2: with mmCIF
 		cache.setUseMmCif(true);
 
 		Structure sCIF = StructureIO.getStructure(pdbID);
-		Assert.assertEquals(false, doSeqResHaveAtoms(sCIF));
+		Assert.assertFalse(doSeqResHaveAtoms(sCIF));
 
 
 	}
@@ -107,14 +103,14 @@ public class TestHeaderOnly {
 		StructureIO.setAtomCache(cache);
 
 		Structure sPDB = StructureIO.getStructure(pdbID);
-		Assert.assertEquals(true, doSeqResHaveAtoms(sPDB));
+		Assert.assertTrue(doSeqResHaveAtoms(sPDB));
 		check1REPChainC(sPDB); // Check particular residues to be aligned.
 
 		// Test 2: with mmCIF
 		cache.setUseMmCif(true);
 
 		Structure sCIF = StructureIO.getStructure(pdbID);
-		Assert.assertEquals(true, doSeqResHaveAtoms(sCIF));
+		Assert.assertTrue(doSeqResHaveAtoms(sCIF));
 		check1REPChainC(sCIF); // Check particular residues to be aligned.
 	}
 
@@ -148,7 +144,7 @@ public class TestHeaderOnly {
 
 	// Test using local files.
 	@Test
-	public void testSpeed2() throws StructureException, IOException {
+	public void testSpeed2() throws IOException {
 		// Test the file parsing speed when the files are already downloaded.
 
 		InputStream cifStream = new GZIPInputStream(this.getClass().getResourceAsStream("/4hhb.cif.gz"));
@@ -222,7 +218,7 @@ public class TestHeaderOnly {
 	 *
 	 * @param s: Structure to test.
 	 */
-	public void check1REPChainC(Structure s) throws StructureException {
+	public void check1REPChainC(Structure s) {
 		String sequence = "MAETAVINHKKRKNSPRIVQSNDLTEAAYSLSRDQKRMLYLFVDQIRK" +
 				"SDGTLQEHDGICEIHVAKYAEIFGLTSAEASKDIRQALKSFAGKEVVFYRPEEDAGDE" +
 				"KGYESFPWFIKPAHSPSRGLYSVHINPYLIPFFIGLQNRFTQFRLSETKEITNPYAMR" +

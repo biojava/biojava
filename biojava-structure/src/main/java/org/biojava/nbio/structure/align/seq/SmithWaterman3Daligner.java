@@ -23,11 +23,16 @@ package org.biojava.nbio.structure.align.seq;
 import org.biojava.nbio.alignment.Alignments;
 import org.biojava.nbio.alignment.Alignments.PairwiseSequenceAlignerType;
 import org.biojava.nbio.alignment.SimpleGapPenalty;
-import org.biojava.nbio.core.alignment.matrices.SubstitutionMatrixHelper;
 import org.biojava.nbio.alignment.template.GapPenalty;
 import org.biojava.nbio.alignment.template.PairwiseSequenceAligner;
+import org.biojava.nbio.core.alignment.matrices.SubstitutionMatrixHelper;
 import org.biojava.nbio.core.alignment.template.SequencePair;
 import org.biojava.nbio.core.alignment.template.SubstitutionMatrix;
+import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
+import org.biojava.nbio.core.sequence.ProteinSequence;
+import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
+import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
+import org.biojava.nbio.core.sequence.template.Compound;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.StructureException;
@@ -41,12 +46,6 @@ import org.biojava.nbio.structure.align.ce.UserArgumentProcessor;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.util.AFPAlignmentDisplay;
 import org.biojava.nbio.structure.align.util.AlignmentTools;
-import org.biojava.nbio.structure.align.util.ConfigurationException;
-import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
-import org.biojava.nbio.core.sequence.ProteinSequence;
-import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
-import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
-import org.biojava.nbio.core.sequence.template.Compound;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -77,7 +76,7 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
 	private static final String version = "1.1";
 	private SmithWaterman3DParameters params;
 
-	public static void main(String[] args) throws ConfigurationException {
+	public static void main(String[] args) {
 		//args = new String[]{"-pdb1","1cdg.A","-pdb2","1tim.A","-pdbFilePath","/tmp/","-show3d","-printFatCat"};
 		UserArgumentProcessor processor = new SmithWatermanUserArgumentProcessor();
 		processor.process(args);
@@ -112,8 +111,8 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
 		String seq1 = StructureTools.convertAtomsToSeq(ca1);
 		String seq2 = StructureTools.convertAtomsToSeq(ca2);
 
-		ProteinSequence s1 = null;
-		ProteinSequence s2 = null;
+		ProteinSequence s1;
+		ProteinSequence s2;
 
 		try {
 			s1 = new ProteinSequence(seq1);
@@ -162,10 +161,9 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
 	 * @param smithWaterman pairwise Sequence aligner
 	 * @param pair The sequence alignment calculated by aligner
 	 * @return an AFPChain encapsulating the alignment in aligPair
-	 * @throws StructureException
 	 */
 	private AFPChain convert(Atom[] ca1, Atom[] ca2,  SequencePair<ProteinSequence,
-			AminoAcidCompound> pair, PairwiseSequenceAligner<ProteinSequence, AminoAcidCompound> smithWaterman) throws StructureException {
+			AminoAcidCompound> pair, PairwiseSequenceAligner<ProteinSequence, AminoAcidCompound> smithWaterman) {
 		AFPChain afpChain = new AFPChain(algorithmName);
 		int ca1Length = ca1.length;
 		int ca2Length = ca2.length;
@@ -184,7 +182,7 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
 		char[] alnseq2 = new char[ca1Length+ca2Length+1] ;
 		char[] alnsymb = new char[ca1Length+ca2Length+1];
 
-		Compound gapSymbol =  AminoAcidCompoundSet.getAminoAcidCompoundSet().getCompoundForString("-");
+        Compound gapSymbol =  AminoAcidCompoundSet.aminoAcidCompoundSet.getCompoundForString("-");
 
 		int pos = 0 ; // aligned positions
 

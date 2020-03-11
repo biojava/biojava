@@ -43,7 +43,7 @@ public class OboFileHandler implements OboFileEventListener {
 
 	private static final Logger logger = LoggerFactory.getLogger(OboFileEventListener.class);
 
-	Ontology ontology;
+	final Ontology ontology;
 	List<Term> termStack ;
 
 	public static final String TERM        = "Term";
@@ -91,7 +91,7 @@ public class OboFileHandler implements OboFileEventListener {
 
 	@Override
 	public void documentStart() {
-		termStack = new ArrayList<Term>();
+		termStack = new ArrayList<>();
 	}
 
 	@Override
@@ -136,54 +136,68 @@ public class OboFileHandler implements OboFileEventListener {
 				logger.warn("did not find ID for Term! ");
 				return;
 			}
-			if (key.equals(NAMESPACE)){
-				Annotation anno = currentTerm.getAnnotation();
-				anno.setProperty(NAMESPACE, value);
-			}
-			else if (key.equals(NAME)){
-				currentTerm.setDescription(value);
-			} else if (key.equals(DEF)){
-				//TODO
-				// set definition
-				Annotation anno = currentTerm.getAnnotation();
-				anno.setProperty(DEF, value);
-			} else if (key.equals(XREF_ANALOG)){
-				// set xref analog
-				Annotation anno = currentTerm.getAnnotation();
-				anno.setProperty(XREF_ANALOG, value);
-			} else if (key.equals(IS_OBSOLETE)) {
-				// ignore obsolete Terms...
-				//logger.info("obsolete: {}", currentTerm);
-				Annotation anno = currentTerm.getAnnotation();
-				anno.setProperty(IS_OBSOLETE, new Boolean(true));
-
-			} else if (key.equals(IS_A) ||
-					key.equals(RELATIONSHIP) ||
-					key.equals(DISJOINT_FROM) ||
-					key.equals(INTERSECTION_OF) ||
-					key.equals(SUBSET)) {
-				try {
-					Term object = (ontology.containsTerm(value) ?
-							ontology.getTerm(value): ontology.createTerm(value));
-					Term predicate = (ontology.containsTerm(key) ? ontology.getTerm(key) : ontology.createTerm(key));
-					ontology.createTriple(currentTerm, object, predicate, currentTerm + " " + predicate + " " + object, key+"-relationship");
-				} catch (AlreadyExistsException ex) {
+			switch (key) {
+				case NAMESPACE: {
+					Annotation anno = currentTerm.getAnnotation();
+					anno.setProperty(NAMESPACE, value);
+					break;
 				}
+				case NAME:
+					currentTerm.setDescription(value);
+					break;
+				case DEF: {
+					//TODO
+					// set definition
+					Annotation anno = currentTerm.getAnnotation();
+					anno.setProperty(DEF, value);
+					break;
+				}
+				case XREF_ANALOG: {
+					// set xref analog
+					Annotation anno = currentTerm.getAnnotation();
+					anno.setProperty(XREF_ANALOG, value);
+					break;
+				}
+				case IS_OBSOLETE: {
+					// ignore obsolete Terms...
+					//logger.info("obsolete: {}", currentTerm);
+					Annotation anno = currentTerm.getAnnotation();
+					anno.setProperty(IS_OBSOLETE, Boolean.TRUE);
 
-			} else if (key.equals(COMMENT)){
-				Annotation anno = currentTerm.getAnnotation();
-				anno.setProperty(COMMENT, value);
-			} else if (key.equals(ALT_ID)){
-				Annotation anno = currentTerm.getAnnotation();
-				anno.setProperty(ALT_ID, value);
-			}
-			else if (key.equals(REPLACED_BY)) {
-				Annotation anno = currentTerm.getAnnotation();
-				anno.setProperty(REPLACED_BY, value);
-			}
+					break;
+				}
+				case IS_A:
+				case RELATIONSHIP:
+				case DISJOINT_FROM:
+				case INTERSECTION_OF:
+				case SUBSET:
+					try {
+						Term object = (ontology.containsTerm(value) ?
+								ontology.getTerm(value) : ontology.createTerm(value));
+						Term predicate = (ontology.containsTerm(key) ? ontology.getTerm(key) : ontology.createTerm(key));
+						ontology.createTriple(currentTerm, object, predicate, currentTerm + " " + predicate + " " + object, key + "-relationship");
+					} catch (AlreadyExistsException ex) {
+					}
 
-			else {
-				//logger.info("unknown key {}", key);
+					break;
+				case COMMENT: {
+					Annotation anno = currentTerm.getAnnotation();
+					anno.setProperty(COMMENT, value);
+					break;
+				}
+				case ALT_ID: {
+					Annotation anno = currentTerm.getAnnotation();
+					anno.setProperty(ALT_ID, value);
+					break;
+				}
+				case REPLACED_BY: {
+					Annotation anno = currentTerm.getAnnotation();
+					anno.setProperty(REPLACED_BY, value);
+					break;
+				}
+				default:
+					//logger.info("unknown key {}", key);
+					break;
 			}
 
 

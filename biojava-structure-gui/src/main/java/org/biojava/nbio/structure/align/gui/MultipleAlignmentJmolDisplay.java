@@ -20,15 +20,6 @@
  */
 package org.biojava.nbio.structure.align.gui;
 
-import java.awt.Dimension;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.Box;
-import javax.swing.JFrame;
-import javax.swing.JMenuBar;
-import javax.swing.JScrollPane;
-
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.gui.aligpanel.MultipleAligPanel;
@@ -39,6 +30,11 @@ import org.biojava.nbio.structure.align.gui.jmol.MultipleAlignmentJmol;
 import org.biojava.nbio.structure.align.multiple.Block;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentDisplay;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
 
@@ -76,7 +72,7 @@ public class MultipleAlignmentJmolDisplay  {
 	public static List<String> getPDBresnum(int structNum,
 			MultipleAlignment multAln, Atom[] ca){
 
-		List<String> lst = new ArrayList<String>();
+		List<String> lst = new ArrayList<>();
 
 		for(Block block : multAln.getBlocks() ) {
 
@@ -99,11 +95,9 @@ public class MultipleAlignmentJmolDisplay  {
 	 *
 	 * @param multAln
 	 * @param jmol
-
-	 * @throws StructureException
 	 */
 	public static void showMultipleAligmentPanel(MultipleAlignment multAln,
-			AbstractAlignmentJmol jmol) throws StructureException {
+			AbstractAlignmentJmol jmol) {
 
 		MultipleAligPanel me = new MultipleAligPanel(multAln, jmol);
 		JFrame frame = new JFrame();

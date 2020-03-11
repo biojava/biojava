@@ -63,12 +63,12 @@ implements ChangeListener, ActionListener {
 	 */
 	private static final long serialVersionUID = -8082261434322968652L;
 
-	protected JMatrixPanel mPanel;
-	protected JSlider slider;
-	protected JScrollPane scroll;
-	protected JComboBox coloring;
+	protected final JMatrixPanel mPanel;
+	protected final JSlider slider;
+	protected final JScrollPane scroll;
+	protected final JComboBox coloring;
 
-	protected Map<String,ContinuousColorMapper> gradients;
+	protected final Map<String,ContinuousColorMapper> gradients;
 
 	protected static final int SLIDER_STEPS = 8; // Number of minor ticks per unit scaled
 
@@ -198,7 +198,7 @@ implements ChangeListener, ActionListener {
 
 
 	protected static Map<String,ContinuousColorMapper> createGradients() {
-		SortedMap<String,ContinuousColorMapper> gradients = new TreeMap<String,ContinuousColorMapper>();
+		SortedMap<String,ContinuousColorMapper> gradients = new TreeMap<>();
 
 		int i = 0; //prepend number, since sorted alphabetically
 		ColorSpace hsv = HSVColorSpace.getHSVColorSpace();
@@ -379,9 +379,10 @@ implements ChangeListener, ActionListener {
 	implements ListCellRenderer {
 
 		private static final long serialVersionUID = -2000575579184232365L;
-		private int min,max;
-		JLabel title;
-		JPanel gradientContainer;
+		private final int min;
+		private final int max;
+		final JLabel title;
+		final JPanel gradientContainer;
 
 		public GradientRenderer() {
 			this.setPreferredSize(new Dimension(100,25));

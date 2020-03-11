@@ -30,8 +30,8 @@ import org.biojava.nbio.structure.io.LocalPDBDirectory.FetchBehavior;
 
 public class TmpAtomCache
 {
-	static String tmpDir = System.getProperty("java.io.tmpdir");
-	public static AtomCache cache = new AtomCache(tmpDir, tmpDir);
+	static final String tmpDir = System.getProperty("java.io.tmpdir");
+	public static final AtomCache cache = new AtomCache(tmpDir, tmpDir);
 	static {
 		FileParsingParameters params = new FileParsingParameters();
 		params.setAlignSeqRes(true);

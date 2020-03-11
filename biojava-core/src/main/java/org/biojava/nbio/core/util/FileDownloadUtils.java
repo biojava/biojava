@@ -21,27 +21,17 @@
  */
 package org.biojava.nbio.core.util;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.SocketTimeoutException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.nio.channels.Channels;
-import java.nio.channels.FileChannel;
-import java.nio.channels.ReadableByteChannel;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.attribute.BasicFileAttributes;
-
+import okhttp3.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.*;
+import java.net.*;
+import java.nio.channels.FileChannel;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.concurrent.TimeUnit;
+import java.util.zip.GZIPInputStream;
 
 public class FileDownloadUtils {
 
@@ -61,94 +51,44 @@ public class FileDownloadUtils {
 		// Took following recipe from
 		// http://stackoverflow.com/questions/106770/standard-concise-way-to-copy-a-file-in-java
 		// The nio package seems to be the most efficient way to copy a file
-		FileChannel source = null;
-		FileChannel destination = null;
 
-		try {
-			// we need the supress warnings here (the warning that the stream is not closed is harmless)
-			// see http://stackoverflow.com/questions/12970407/does-filechannel-close-close-the-underlying-stream
-			source = new FileInputStream(src).getChannel();
-			destination = new FileOutputStream(dst).getChannel();
-			destination.transferFrom(source, 0, source.size());
-		} finally {
-			if (source != null) {
-				source.close();
-			}
-			if (destination != null) {
-				destination.close();
-			}
-		}
+        try (FileChannel source = new FileInputStream(src).getChannel(); FileChannel destination = new FileOutputStream(dst).getChannel()) {
+            // we need the supress warnings here (the warning that the stream is not closed is harmless)
+            // see http://stackoverflow.com/questions/12970407/does-filechannel-close-close-the-underlying-stream
+            destination.transferFrom(source, 0, source.size());
+        }
 	}
 
 	public static String getFileExtension(File f) {
 		String fileName = f.getName();
-		String ext = "";
-		int mid = fileName.lastIndexOf(".");
-		ext = fileName.substring(mid + 1, fileName.length());
-		return ext;
+		return fileName.substring(fileName.lastIndexOf('.') + 1);
 	}
 
 	public static String getFilePrefix(File f) {
 		String fileName = f.getName();
-		String fname = "";
-
-		int mid = fileName.indexOf(".");
-		fname = fileName.substring(0, mid);
-
-		return fname;
+		return fileName.substring(0, fileName.indexOf('.'));
 	}
 
-	/**
-	 * Download the content provided at URL url and store the result to a local
-	 * file, using a temp file to cache the content in case something goes wrong
-	 * in download
-	 *
-	 * @param url
-	 * @param destination
-	 * @throws IOException
-	 */
-	public static void downloadFile(URL url, File destination) throws IOException {
-		int count = 0;
-		int maxTries = 10;
-		int timeout = 60000; //60 sec
+	static final OkHttpClient.Builder clients;
+	static {
+		/** https://square.github.io/okhttp/recipes/#response-caching-kt-java */
+		int cacheSize = 512 * 1024 * 1024; //512m
+		OkHttpClient.Builder bb = new OkHttpClient.Builder();
+		bb.followRedirects(true);
+		bb.followSslRedirects(true);
 
-		File tempFile = File.createTempFile(getFilePrefix(destination), "." + getFileExtension(destination));
+//		try {
+			File cacheDir = Paths.get(System.getProperty("java.io.tmpdir"), "biojava").toFile();
+			cacheDir.mkdirs();
+			Cache cache = new Cache(cacheDir, cacheSize);
+			bb.cache(cache);
 
-		// Took following recipe from stackoverflow:
-		// http://stackoverflow.com/questions/921262/how-to-download-and-save-a-file-from-internet-using-java
-		// It seems to be the most efficient way to transfer a file
-		// See: http://docs.oracle.com/javase/7/docs/api/java/nio/channels/FileChannel.html
-		ReadableByteChannel rbc = null;
-		FileOutputStream fos = null;
-		while (true) {
-			try {
-				URLConnection connection = prepareURLConnection(url.toString(), timeout);
-				connection.connect();
-				InputStream inputStream = connection.getInputStream();
-
-				rbc = Channels.newChannel(inputStream);
-				fos = new FileOutputStream(tempFile);
-				fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-				break;
-			} catch (SocketTimeoutException e) {
-				if (++count == maxTries) throw e;
-			} finally {
-				if (rbc != null) {
-					rbc.close();
-				}
-				if (fos != null) {
-					fos.close();
-				}
-			}
-		}
-
-		logger.debug("Copying temp file {} to final location {}", tempFile, destination);
-		copy(tempFile, destination);
-
-		// delete the tmp file
-		tempFile.delete();
-
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+		clients = bb;
 	}
+
 
 	/**
 	 * Converts path to Unix convention and adds a terminating slash if it was
@@ -264,36 +204,163 @@ public class FileDownloadUtils {
 
 	        @Override
 	        public FileVisitResult postVisitDirectory(Path dir, IOException e) throws IOException {
-	            if (e != null) {
+	            if (e != null)
 	                throw e;
-	            }
 	            Files.delete(dir);
 	            return FileVisitResult.CONTINUE;
 	        }
 	    });
 	}
+
 	/**
-	 * Recursively delete a folder & contents
-	 *
-	 * @param dir directory to delete
+	 * Open a URL and return an InputStream to it
+	 * if acceptGzipEncoding == true, use GZIPEncoding to
+	 * compress communication.
+	 * <p>
+	 * The caller is responsible to close the returned InputStream not to cause
+	 * resource leaks.
+	 * @param url the input URL to be read
+	 * @param timeoutMS
+	 * @return an {@link InputStream} of response
+	 * @throws IOException due to an error opening the URL
 	 */
-	public static void deleteDirectory(String dir) throws IOException {
-		deleteDirectory(Paths.get(dir));
-	}
+	public static InputStream downloadStream(URL url, int timeoutMS) throws IOException {
+//		InputStream inStream;
+//		URLConnection huc = URLConnectionTools.openURLConnection(url,timeout);
+//
+//		if ( acceptGzipEncoding) huc.setRequestProperty("Accept-Encoding", "gzip");
+//
+//		String contentEncoding = huc.getContentEncoding();
+//
+//		inStream = huc.getInputStream();
+
+		OkHttpClient client = clients.build(); //TODO ThreadLocal
+
+		Call c = client.newCall(new Request.Builder().url(url).cacheControl(CacheControl.FORCE_CACHE).build());
+
+		c.timeout().deadline(timeoutMS, TimeUnit.MILLISECONDS);
+		try (Response r = c.execute()) {
+			if (!r.isSuccessful()) {
+				//throw new IOException("Unexpected code " + r);
+				return new ByteArrayInputStream(new byte[] { } ); //HACK
+			}
+
+			ResponseBody b = r.body();
+
+			InputStream inStream = new ByteArrayInputStream(b.bytes()); //b.byteStream();
+
+			if (b.contentType().toString().contains("gzip")) {
+				return new GZIPInputStream(inStream);
+			}
+
+//			if (acceptGzipEncoding) {
+////				if (contentEncoding != null) {
+////					if (contentEncoding.contains("gzip")) {
+
+////					}
+////				}
+//			}
+
+			return inStream;
+		}
 
 
-	public static void main(String[] args) {
-		String url;
-		url = "http://scop.mrc-lmb.cam.ac.uk/scop/parse/";
-		System.out.format("%s\t%s%n", ping(url, 200), url);
-		url = "http://scop.mrc-lmb.cam.ac.uk/scop/parse/foo";
-		System.out.format("%s\t%s%n", ping(url, 200), url);
-		url = "http://scopzzz.mrc-lmb.cam.ac.uk/scop/parse/";
-		System.out.format("%s\t%s%n", ping(url, 200), url);
-		url = "scop.mrc-lmb.cam.ac.uk";
-		System.out.format("%s\t%s%n", ping(url, 200), url);
-		url = "http://scop.mrc-lmb.cam.ac.uk";
-		System.out.format("%s\t%s%n", ping(url, 200), url);
 	}
+
+	/**
+	 * Download the content provided at URL url and store the result to a local
+	 * file, using a temp file to cache the content in case something goes wrong
+	 * in download
+	 *
+	 * @param url
+	 * @param destination
+	 * @throws IOException
+	 */
+	public static void downloadFile(URL url, File destination) throws IOException {
+
+
+		OkHttpClient client = clients.build(); //TODO ThreadLocal
+
+		try (Response r = client.newCall(new Request.Builder().url(url).build()).execute()) {
+			if (!r.isSuccessful()) {
+				//throw new IOException("Unexpected code " + r);
+				return;
+			}
+
+			ResponseBody b = r.body();
+
+			FileChannel dst = new FileOutputStream(destination).getChannel();
+			dst.transferFrom(b.source(), 0, b.contentLength());
+
+			System.out.println("Response 1 response:          " + r);
+			System.out.println("Response 1 cache response:    " + r.cacheResponse());
+			System.out.println("Response 1 network response:  " + r.networkResponse());
+		}
+
+
+//		int count = 0;
+//		int maxTries = 10;
+//		int timeout = 60000; //60 sec
+//
+//		File tempFile = File.createTempFile(getFilePrefix(destination), "." + getFileExtension(destination));
+//
+//		// Took following recipe from stackoverflow:
+//		// http://stackoverflow.com/questions/921262/how-to-download-and-save-a-file-from-internet-using-java
+//		// It seems to be the most efficient way to transfer a file
+//		// See: http://docs.oracle.com/javase/7/docs/api/java/nio/channels/FileChannel.html
+//		ReadableByteChannel rbc = null;
+//		FileOutputStream fos = null;
+//		while (true) {
+//			try {
+//				URLConnection connection = prepareURLConnection(url.toString(), timeout);
+//				connection.connect();
+//
+//				rbc = Channels.newChannel(connection.getInputStream());
+//				fos = new FileOutputStream(tempFile);
+//				fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+//				break;
+//			} catch (SocketTimeoutException e) {
+//				if (++count == maxTries) throw e;
+//			} finally {
+//				if (rbc != null) {
+//					rbc.close();
+//				}
+//				if (fos != null) {
+//					fos.close();
+//				}
+//			}
+//		}
+//
+//		logger.debug("Copying temp file {} to final location {}", tempFile, destination);
+//		copy(tempFile, destination);
+//
+//		// delete the tmp file
+//		tempFile.delete();
+
+	}
+
+//	/**
+//	 * Recursively delete a folder & contents
+//	 *
+//	 * @param dir directory to delete
+//	 */
+//	public static void deleteDirectory(String dir) throws IOException {
+//		deleteDirectory(Paths.get(dir));
+//	}
+//
+//
+//	public static void main(String[] args) {
+//		String url;
+//		url = "http://scop.mrc-lmb.cam.ac.uk/scop/parse/";
+//		System.out.format("%s\t%s%n", ping(url, 200), url);
+//		url = "http://scop.mrc-lmb.cam.ac.uk/scop/parse/foo";
+//		System.out.format("%s\t%s%n", ping(url, 200), url);
+//		url = "http://scopzzz.mrc-lmb.cam.ac.uk/scop/parse/";
+//		System.out.format("%s\t%s%n", ping(url, 200), url);
+//		url = "scop.mrc-lmb.cam.ac.uk";
+//		System.out.format("%s\t%s%n", ping(url, 200), url);
+//		url = "http://scop.mrc-lmb.cam.ac.uk";
+//		System.out.format("%s\t%s%n", ping(url, 200), url);
+//	}
 
 }

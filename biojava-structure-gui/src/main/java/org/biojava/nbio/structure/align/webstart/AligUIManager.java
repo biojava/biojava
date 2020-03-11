@@ -25,7 +25,6 @@
 package org.biojava.nbio.structure.align.webstart;
 
 import javax.swing.*;
-import javax.swing.UIManager.LookAndFeelInfo;
 
 
 public class AligUIManager
@@ -43,13 +42,13 @@ public class AligUIManager
 			}
 
 			//System.out.println("Installed Look And Feels:");
-			LookAndFeelInfo[] feels = UIManager.getInstalledLookAndFeels();
+			//LookAndFeelInfo[] feels = UIManager.getInstalledLookAndFeels();
 
-			if ( feels != null){
+			//if ( feels != null){
 				//for ( LookAndFeelInfo info: feels){
 					//System.out.println(info.getName() + " " + info.getClassName());
 			  // }
-			}
+			//}
 
 
 			//System.out.println("Auxiliary Look And Feels:");

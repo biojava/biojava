@@ -90,7 +90,7 @@ public class ResidueRange {
 		Matcher matcher = RANGE_REGEX.matcher(s);
 		if (matcher.matches()) {
 			ResidueNumber start = null, end = null;
-			String chain = null;
+			String chain;
 			try {
 				chain = matcher.group(1);
 				if (matcher.group(2) != null) {
@@ -137,7 +137,7 @@ public class ResidueRange {
 		}
 
 		String[] parts = s.split(",");
-		List<ResidueRange> list = new ArrayList<ResidueRange>(parts.length);
+		List<ResidueRange> list = new ArrayList<>(parts.length);
 		for (String part : parts) {
 			list.add(parse(part));
 		}
@@ -150,6 +150,10 @@ public class ResidueRange {
 		this.start.setChainName(chainName);
 		this.end = ResidueNumber.fromString(end);
 		this.end.setChainName(chainName);
+	}
+
+	public ResidueRange(String chainName) {
+		this(chainName, (ResidueNumber)null, null);
 	}
 
 	public ResidueRange(String chainName, ResidueNumber start, ResidueNumber end) {
@@ -257,7 +261,7 @@ public class ResidueRange {
 		final Iterator<Entry<ResidueNumber, Integer>> entryIt = map.getNavMap().entrySet().iterator();
 		if(! entryIt.hasNext()) {
 			// empty iterator
-			return Arrays.asList(new ResidueNumber[0]).iterator();
+			return Collections.emptyIterator(); //Arrays.asList(new ResidueNumber[0]).iterator();
 		}
 		// Peek at upcoming entry
 
@@ -352,7 +356,7 @@ public class ResidueRange {
 	}
 
 	public static List<ResidueRange> parseMultiple(List<String> ranges) {
-		List<ResidueRange> rrs = new ArrayList<ResidueRange>(ranges.size());
+		List<ResidueRange> rrs = new ArrayList<>(ranges.size());
 		for (String range : ranges) {
 			ResidueRange rr = ResidueRange.parse(range);
 			if (rr != null) rrs.add(rr);
@@ -361,7 +365,7 @@ public class ResidueRange {
 	}
 
 	public static List<String> toStrings(List<? extends ResidueRange> ranges) {
-		List<String> list = new ArrayList<String>(ranges.size());
+		List<String> list = new ArrayList<>(ranges.size());
 		for (ResidueRange range : ranges) {
 			list.add(range.toString());
 		}

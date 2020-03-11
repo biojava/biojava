@@ -42,7 +42,7 @@ public class SerializableCache <K,V>{
 
 	private static final Logger logger = LoggerFactory.getLogger(SerializableCache.class);
 
-	protected String cacheFileName;
+	protected final String cacheFileName;
 	protected Map<K,V> serializedCache ;
 
 
@@ -117,7 +117,7 @@ public class SerializableCache <K,V>{
 
 		File f = getCacheFile();
 
-		serializedCache = new HashMap<K,V>();
+		serializedCache = new HashMap<>();
 
 		// has never been cached here before
 		if( ! f.exists()) {
@@ -133,11 +133,8 @@ public class SerializableCache <K,V>{
 			ObjectInputStream ois = new ObjectInputStream(fis);
 			serializedCache = (HashMap<K,V>) ois.readObject();
 			ois.close();
-		} catch (IOException e){
+		} catch (IOException | ClassNotFoundException e){
 			// TODO shouldn't this be thrown forward?
-			logger.error("Exception caught while reading serialized file",e);
-			return null;
-		} catch (ClassNotFoundException e) {
 			logger.error("Exception caught while reading serialized file",e);
 			return null;
 		}

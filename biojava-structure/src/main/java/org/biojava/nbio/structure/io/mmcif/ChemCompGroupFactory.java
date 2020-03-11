@@ -23,11 +23,7 @@
 package org.biojava.nbio.structure.io.mmcif;
 
 import org.biojava.nbio.core.util.SoftHashMap;
-import org.biojava.nbio.structure.AminoAcid;
-import org.biojava.nbio.structure.AminoAcidImpl;
-import org.biojava.nbio.structure.Group;
-import org.biojava.nbio.structure.HetatomImpl;
-import org.biojava.nbio.structure.NucleotideImpl;
+import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.io.mmcif.chem.PolymerType;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.slf4j.Logger;
@@ -40,26 +36,18 @@ public class ChemCompGroupFactory {
 
 	private static ChemCompProvider chemCompProvider = new DownloadChemCompProvider();
 
-	private static SoftHashMap<String, ChemComp> cache = new SoftHashMap<String, ChemComp>(0);
+	private static final SoftHashMap<String, ChemComp> cache = new SoftHashMap<>(0);
 
 	public static ChemComp getChemComp(String recordName){
-
-		recordName = recordName.toUpperCase().trim();
-
 		// we are using the cache, to avoid hitting the file system too often.
-		ChemComp cc = cache.get(recordName);
-		if ( cc != null) {
-			logger.debug("Chem comp "+cc.getThree_letter_code()+" read from cache");
-			return cc;
-		}
-
-		// not cached, get the chem comp from the provider
-		logger.debug("Chem comp "+recordName+" read from provider "+chemCompProvider.getClass().getCanonicalName());
-		cc = chemCompProvider.getChemComp(recordName);
-
 		// Note that this also caches null or empty responses
-		cache.put(recordName, cc);
-		return cc;
+		return cache.computeIfAbsent(recordName.toUpperCase().trim(), r -> {
+			// not cached, get the chem comp from the provider
+			if (logger.isDebugEnabled())
+				logger.debug("Chem comp " + r + " read from provider " + chemCompProvider.getClass().getCanonicalName());
+
+			return chemCompProvider.getChemComp(r);
+		});
 	}
 
 	/**
@@ -98,7 +86,7 @@ public class ChemCompGroupFactory {
 		// make sure we work with upper case records
 		recordName = recordName.toUpperCase().trim();
 
-		Group g = null;
+		Group g;
 
 
 		ChemComp cc =  getChemComp(recordName);
@@ -121,7 +109,8 @@ public class ChemCompGroupFactory {
 
 			if ( one_letter == null || one_letter.length()==0 || one_letter.equals("?")) {
 				// e.g. problem with PRR, which probably should have a parent of ALA, but as of 20110127 does not.
-				logger.warn("Problem with chemical component: " + recordName + "  Did not find one letter code! Setting it to 'X'");
+				if (logger.isWarnEnabled())
+					logger.warn("Problem with chemical component: " + recordName + "  Did not find one letter code! Setting it to 'X'");
 				aa.setAminoType('X');
 
 			} else  {
@@ -131,9 +120,9 @@ public class ChemCompGroupFactory {
 
 			g = aa;
 		} else if ( PolymerType.POLYNUCLEOTIDE_ONLY.contains(cc.getPolymerType())) {
-			NucleotideImpl nuc = new NucleotideImpl();
 
-			g = nuc;
+
+			g = new NucleotideImpl();
 
 
 		} else {

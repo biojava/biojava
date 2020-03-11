@@ -29,10 +29,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.NavigableMap;
 
 import static org.junit.Assert.*;
-import static org.junit.Assume.*;
+import static org.junit.Assume.assumeTrue;
 
 /**
  * A unit test for {@link org.biojava.nbio.structure.AtomPositionMap}.
@@ -41,7 +42,7 @@ import static org.junit.Assume.*;
 public class AtomPositionMapTest {
 
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		cache = new AtomCache(); // TODO Should mock instead of depending on real data from AtomCache
 		cache.setObsoleteBehavior(LocalPDBDirectory.ObsoleteBehavior.FETCH_OBSOLETE);
 	}
@@ -62,8 +63,8 @@ public class AtomPositionMapTest {
 		ResidueNumber end = new ResidueNumber("A", 117, null);
 		AtomPositionMap map = new AtomPositionMap(cache.getAtoms(pdbId));
 		NavigableMap<ResidueNumber,Integer> navMap = map.getNavMap();
-		for (ResidueNumber n : navMap.keySet()) {
-			assertEquals("An element is missing", map.getPosition(n).intValue(), navMap.get(n).intValue());
+		for (Map.Entry<ResidueNumber, Integer> entry : navMap.entrySet()) {
+			assertEquals("An element is missing", map.getPosition(entry.getKey()).intValue(), entry.getValue().intValue());
 		}
 		int realLength = map.getLength(start, end);
 		assertEquals("Real atom length is wrong", length, realLength);
@@ -186,8 +187,8 @@ public class AtomPositionMapTest {
 		AtomPositionMap map = new AtomPositionMap(cache.getAtoms(pdbId));
 		NavigableMap<ResidueNumber,Integer> navMap = map.getNavMap();
 
-		for (ResidueNumber n : navMap.keySet()) {
-			assertEquals("An element is missing", map.getPosition(n).intValue(), navMap.get(n).intValue());
+		for (Map.Entry<ResidueNumber, Integer> entry : navMap.entrySet()) {
+			assertEquals("An element is missing", map.getPosition(entry.getKey()).intValue(), entry.getValue().intValue());
 		}
 
 		int length1 = 60; // 2+37+21

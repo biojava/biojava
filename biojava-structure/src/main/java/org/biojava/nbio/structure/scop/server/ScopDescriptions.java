@@ -47,7 +47,7 @@ public class ScopDescriptions implements Serializable{
 
 	private static final long serialVersionUID = 4924350548761431852L;
 
-	static JAXBContext jaxbContext;
+	static final JAXBContext jaxbContext;
 	static {
 		try {
 			jaxbContext= JAXBContext.newInstance(ScopDescriptions.class);
@@ -92,7 +92,7 @@ public class ScopDescriptions implements Serializable{
 
 	public static ScopDescriptions fromXML(String xml){
 
-		ScopDescriptions job = null;
+		ScopDescriptions job;
 
 		try {
 

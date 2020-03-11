@@ -20,19 +20,18 @@
  */
 package org.biojava.nbio.structure.ecod;
 
-import java.io.IOException;
-import java.lang.ref.SoftReference;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import org.biojava.nbio.structure.align.util.UserConfiguration;
 import org.biojava.nbio.structure.cath.CathFactory;
 import org.biojava.nbio.structure.scop.ScopFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.lang.ref.SoftReference;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Controls global {@link EcodDatabase EcodDatabases} being used.
@@ -49,8 +48,9 @@ public class EcodFactory {
 
 	public static final String DEFAULT_VERSION = EcodInstallation.DEFAULT_VERSION;
 
-	private static Map<String, SoftReference<EcodDatabase>> versionedEcodDBs =
-			Collections.synchronizedMap(new HashMap<String, SoftReference<EcodDatabase>>());
+	private static final Map<String, SoftReference<EcodDatabase>> versionedEcodDBs =
+			//Collections.synchronizedMap(new HashMap<>());
+			new ConcurrentHashMap();
 	private static String defaultVersion = EcodInstallation.DEFAULT_VERSION;
 
 	/**
@@ -79,13 +79,13 @@ public class EcodFactory {
 				logger.debug("Creating new {}, version {}",EcodInstallation.class.getSimpleName(),version);
 				String cacheDir = new UserConfiguration().getCacheFilePath();
 				ecod = new EcodInstallation(cacheDir, version);
-				versionedEcodDBs.put(version.toLowerCase(), new SoftReference<EcodDatabase>(ecod));
+				versionedEcodDBs.put(version.toLowerCase(), new SoftReference<>(ecod));
 
 				// If the parsed version differed from that requested, add that too
 				// Note that getVersion() may trigger file parsing
 				try {
 					if( ! versionedEcodDBs.containsKey(ecod.getVersion().toLowerCase()) ) {
-						versionedEcodDBs.put(ecod.getVersion().toLowerCase(),new SoftReference<EcodDatabase>(ecod));
+						versionedEcodDBs.put(ecod.getVersion().toLowerCase(), new SoftReference<>(ecod));
 					}
 				} catch (IOException e) {
 					// For parsing errors, just use the requested version

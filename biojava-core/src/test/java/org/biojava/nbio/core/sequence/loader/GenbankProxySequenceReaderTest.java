@@ -55,7 +55,7 @@ import java.util.Collection;
 @RunWith(Parameterized.class)
 public class GenbankProxySequenceReaderTest {
 
-	private String gi;
+	private final String gi;
 	private final static Logger logger = LoggerFactory.getLogger(GenbankProxySequenceReaderTest.class);
 
 	public GenbankProxySequenceReaderTest(String gi) {
@@ -127,7 +127,7 @@ public class GenbankProxySequenceReaderTest {
 		GenbankProxySequenceReader<AminoAcidCompound> genbankReader
 				= new GenbankProxySequenceReader<>(System.getProperty("java.io.tmpdir"),
 						this.gi,
-						AminoAcidCompoundSet.getAminoAcidCompoundSet());
+				AminoAcidCompoundSet.aminoAcidCompoundSet);
 
 		// why only tests on protein sequences?
 		ProteinSequence seq = new ProteinSequence(genbankReader);
@@ -166,7 +166,7 @@ public class GenbankProxySequenceReaderTest {
 			logger.info("CDS: {}", CDS);
 			String codedBy = CDS.getQualifiers().get("coded_by").get(0).getValue();
 			Assert.assertNotNull(codedBy);
-			Assert.assertTrue(!codedBy.isEmpty());
+			Assert.assertFalse(codedBy.isEmpty());
 			logger.info("\t\tcoded_by: {}", codedBy);
 		}
 
@@ -182,7 +182,7 @@ public class GenbankProxySequenceReaderTest {
 		GenbankProxySequenceReader<AminoAcidCompound> genbankReader
 				= new GenbankProxySequenceReader<>(System.getProperty("java.io.tmpdir"),
 						this.gi,
-						AminoAcidCompoundSet.getAminoAcidCompoundSet());
+				AminoAcidCompoundSet.aminoAcidCompoundSet);
 
 		ProteinSequence seq = new ProteinSequence(genbankReader);
 
@@ -205,7 +205,7 @@ public class GenbankProxySequenceReaderTest {
 					 That test is always failed
 					 */
 					//Assert.assertTrue(parentSeq.getAccession());
-					Assert.assertTrue(!parentSeq.getSequenceAsString().isEmpty());
+					Assert.assertFalse(parentSeq.getSequenceAsString().isEmpty());
 				}
 			}
 		} else {

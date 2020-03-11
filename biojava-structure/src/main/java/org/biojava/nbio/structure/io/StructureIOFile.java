@@ -42,13 +42,13 @@ public interface StructureIOFile extends StructureProvider {
 	 * called only in the constructor of the implementing class.
 	 * @param ext  a String ...
 	 */
-	public void addExtension(String ext);
+    void addExtension(String ext);
 
 	/**
 	 * Returns a list of extensions supported by this class
 	 * @return a (potentially empty) list of strings
 	 */
-	public List<String> getExtensions();
+    List<String> getExtensions();
 
 	/**
 	 * Open filename and return a Structure object.
@@ -59,7 +59,7 @@ public interface StructureIOFile extends StructureProvider {
 	 * @return a Structure object
 	 * @throws IOException ...
 	 */
-	public Structure getStructure(String filename) throws IOException ;
+    Structure getStructure(String filename) throws IOException ;
 
 	/**
 	 * Read file from File and returns
@@ -69,5 +69,5 @@ public interface StructureIOFile extends StructureProvider {
 	 * @return a Structure object
 	 * @throws IOException ...
 	 */
-	public Structure getStructure(File file) throws IOException ;
+    Structure getStructure(File file) throws IOException ;
 }

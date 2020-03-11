@@ -24,12 +24,7 @@ package org.biojava.nbio.structure.symmetry.core;
 import org.biojava.nbio.structure.geometry.CalcPoint;
 import org.biojava.nbio.structure.geometry.UnitQuaternions;
 
-import javax.vecmath.AxisAngle4d;
-import javax.vecmath.Matrix4d;
-import javax.vecmath.Point3d;
-import javax.vecmath.Quat4d;
-import javax.vecmath.Vector3d;
-
+import javax.vecmath.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -39,12 +34,12 @@ import java.util.List;
  * @author Peter
  */
 public class C2RotationSolver implements QuatSymmetrySolver {
-	private QuatSymmetrySubunits subunits;
-	private QuatSymmetryParameters parameters;
+	private final QuatSymmetrySubunits subunits;
+	private final QuatSymmetryParameters parameters;
 	private Vector3d centroid = new Vector3d();
-	private Matrix4d centroidInverse = new Matrix4d();
+	private final Matrix4d centroidInverse = new Matrix4d();
 
-	private RotationGroup rotations = new RotationGroup();
+	private final RotationGroup rotations = new RotationGroup();
 
 
 	public C2RotationSolver(QuatSymmetrySubunits subunits, QuatSymmetryParameters parameters) {
@@ -153,9 +148,9 @@ public class C2RotationSolver implements QuatSymmetrySolver {
 		rotation.mul(rotation, centroidInverse);
 	}
 
-	private Rotation createSymmetryOperation(List<Integer> permutation, Matrix4d transformation, AxisAngle4d axisAngle, int fold, QuatSymmetryScores scores) {
+	private static Rotation createSymmetryOperation(List<Integer> permutation, Matrix4d transformation, AxisAngle4d axisAngle, int fold, QuatSymmetryScores scores) {
 		Rotation s = new Rotation();
-		s.setPermutation(new ArrayList<Integer>(permutation));
+		s.setPermutation(new ArrayList<>(permutation));
 		s.setTransformation(new Matrix4d(transformation));
 		s.setAxisAngle(new AxisAngle4d(axisAngle));
 		s.setFold(fold);

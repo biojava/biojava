@@ -20,11 +20,6 @@
  */
 package demo;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-
 import org.biojava.nbio.core.sequence.ProteinSequence;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
@@ -32,17 +27,18 @@ import org.biojava.nbio.core.sequence.io.CasePreservingProteinSequenceCreator;
 import org.biojava.nbio.core.sequence.io.GenericFastaHeaderParser;
 import org.biojava.nbio.core.sequence.io.template.SequenceCreatorInterface;
 import org.biojava.nbio.core.sequence.io.template.SequenceHeaderParserInterface;
-import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.ResidueNumber;
-import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.StructureTools;
+import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.gui.StructureAlignmentDisplay;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.util.AlignmentTools;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.FastaStructureParser;
 import org.biojava.nbio.structure.io.StructureSequenceMatcher;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Demo of how to use the {@link FastaStructureParser} class to read protein
@@ -53,7 +49,7 @@ import org.biojava.nbio.structure.io.StructureSequenceMatcher;
  */
 public class DemoAlignmentFromFasta {
 
-	public static void getAlignmentFromFasta() throws StructureException {
+	public static void getAlignmentFromFasta() {
 
 		// Load a test sequence
 		// Normally this would come from a file, eg
@@ -68,26 +64,21 @@ public class DemoAlignmentFromFasta {
 
 
 		InputStream fasta;
-		try {
-			fasta = new ByteArrayInputStream(fastaStr.getBytes("UTF-8"));
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-			return;
-		}
+        fasta = new ByteArrayInputStream(fastaStr.getBytes(StandardCharsets.UTF_8));
 
-		// Create a header parser to parse the header lines into valid structure accessions.
+        // Create a header parser to parse the header lines into valid structure accessions.
 		// The resulting accession can be anything interpretable by AtomCache.getStructure.
 		// Possible Examples: "4HHB" (whole structure), "d4hhba_" (SCOP domain),
 		//   "4HHB.A:1-15" (residue range)
 		// For this example, the built-in fasta parser will extract the correct accession.
 		SequenceHeaderParserInterface<ProteinSequence, AminoAcidCompound> headerParser;
-		headerParser = new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>();
+		headerParser = new GenericFastaHeaderParser<>();
 
 		// Create AtomCache to fetch structures from the PDB
 		AtomCache cache = new AtomCache();
 
 		// Create SequenceCreator. This converts a String to a ProteinSequence
-		AminoAcidCompoundSet aaSet = AminoAcidCompoundSet.getAminoAcidCompoundSet();
+        AminoAcidCompoundSet aaSet = AminoAcidCompoundSet.aminoAcidCompoundSet;
 		SequenceCreatorInterface<AminoAcidCompound> creator;
 		creator = new CasePreservingProteinSequenceCreator(aaSet);
 
@@ -96,10 +87,7 @@ public class DemoAlignmentFromFasta {
 				fasta, headerParser, creator, cache);
 		try {
 			parser.process();
-		} catch (IOException e) {
-			e.printStackTrace();
-			return;
-		} catch (StructureException e) {
+		} catch (IOException | StructureException e) {
 			e.printStackTrace();
 			return;
 		}
@@ -133,7 +121,7 @@ public class DemoAlignmentFromFasta {
 	}
 
 
-	public static void main(String[] args) throws StructureException {
+	public static void main(String[] args) {
 		getAlignmentFromFasta();
 	}
 }

@@ -120,7 +120,7 @@ public class Element {
 
 	public void setIsotopes(List<Isotope> isotopes) {
 		this.isotope = isotopes;
-		this.name2Isotope = new HashMap<String, Isotope>();
+		this.name2Isotope = new HashMap<>();
 		if(isotopes != null){
 			for(Isotope i:isotopes){
 				name2Isotope.put(i.getName(), i);

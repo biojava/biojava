@@ -53,18 +53,18 @@ import java.util.List;
 public class AlternativeAlignmentFrame
 extends JFrame{
 
-	private static final long serialVersionUID=0l;
+	private static final long serialVersionUID= 0L;
 
 
 	private static final Logger logger = LoggerFactory.getLogger(AlternativeAlignmentFrame.class);
 
-	private static String[] columnNames = new String[]{"#","eqr","score", "rms", "gaps","cluster", "show distance matrix","show alignment"};
+	private static final String[] columnNames = new String[]{"#","eqr","score", "rms", "gaps","cluster", "show distance matrix","show alignment"};
 
 	AlternativeAlignment[] aligs;
-	JPanel panel;
+	final JPanel panel;
 
-	Structure structure1;
-	Structure structure2;
+	final Structure structure1;
+	final Structure structure2;
 	StructurePairAligner structurePairAligner;
 
 	public AlternativeAlignmentFrame(Structure s1, Structure s2) {
@@ -126,12 +126,12 @@ extends JFrame{
 		for ( int i=0;i< aligs.length;i++){
 			AlternativeAlignment alig = aligs[i];
 
-			data[i][0] = new Integer(i+1);
-			data[i][1] = new Integer(alig.getEqr());
-			data[i][2] = new Double(alig.getScore());
-			data[i][3] = new Double(alig.getRmsd());
-			data[i][4] = new Integer(alig.getGaps());
-			data[i][5] = new Integer(alig.getCluster());
+			data[i][0] = i + 1;
+			data[i][1] = alig.getEqr();
+			data[i][2] = (double) alig.getScore();
+			data[i][3] = alig.getRmsd();
+			data[i][4] = alig.getGaps();
+			data[i][5] = alig.getCluster();
 			JButton maxb = new JButton("Distance Matrix");
 			maxb.addMouseListener(new MatrixMouseListener(this,i));
 
@@ -322,8 +322,8 @@ extends JFrame{
 }
 
 class MyButtonMouseListener implements MouseListener{
-	AlternativeAlignmentFrame parent;
-	int pos;
+	final AlternativeAlignmentFrame parent;
+	final int pos;
 	public MyButtonMouseListener(AlternativeAlignmentFrame parent, int position){
 
 		this.parent = parent;
@@ -362,8 +362,8 @@ class MyButtonMouseListener implements MouseListener{
 }
 
 class MatrixMouseListener implements MouseListener{
-	AlternativeAlignmentFrame parent;
-	int pos;
+	final AlternativeAlignmentFrame parent;
+	final int pos;
 	public MatrixMouseListener( AlternativeAlignmentFrame parent, int position){
 
 		this.parent = parent;

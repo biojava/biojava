@@ -20,17 +20,6 @@
  */
 package org.biojava.nbio.structure.align.multiple.mc;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.SortedSet;
-import java.util.TreeSet;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.CallableStructureAlignment;
@@ -39,16 +28,12 @@ import org.biojava.nbio.structure.align.StructureAlignment;
 import org.biojava.nbio.structure.align.ce.CeCPMain;
 import org.biojava.nbio.structure.align.ce.ConfigStrucAligParams;
 import org.biojava.nbio.structure.align.model.AFPChain;
-import org.biojava.nbio.structure.align.multiple.Block;
-import org.biojava.nbio.structure.align.multiple.BlockImpl;
-import org.biojava.nbio.structure.align.multiple.BlockSet;
-import org.biojava.nbio.structure.align.multiple.BlockSetImpl;
-import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
-import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsemble;
-import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsembleImpl;
-import org.biojava.nbio.structure.align.multiple.MultipleAlignmentImpl;
+import org.biojava.nbio.structure.align.multiple.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.*;
+import java.util.concurrent.*;
 
 /**
  * Main class of the Java implementation of the Combinatorial Extension -
@@ -115,25 +100,24 @@ public class MultipleMcMain implements MultipleStructureAligner {
 	 * @return MultipleAlignment seed alignment
 	 * @throws ExecutionException
 	 * @throws InterruptedException
-	 * @throws StructureException
-	 */
+     */
 	private MultipleAlignment generateSeed(List<Atom[]> atomArrays)
 			throws InterruptedException,
-			ExecutionException, StructureException {
+			ExecutionException {
 
 		int size = atomArrays.size();
 
 		//List to store the all-to-all alignments
-		List<List<AFPChain>> afpAlignments = new ArrayList<List<AFPChain>>();
+		List<List<AFPChain>> afpAlignments = new ArrayList<>();
 		for (int i=0; i<size; i++){
-			afpAlignments.add(new ArrayList<AFPChain>());
+			afpAlignments.add(new ArrayList<>());
 			for (int j=0; j<size; j++)
 				afpAlignments.get(i).add(null);
 		}
 
 		int threads = params.getNrThreads();
 		ExecutorService executor = Executors.newFixedThreadPool(threads);
-		List<Future<AFPChain>> afpFuture = new ArrayList<Future<AFPChain>>();
+		List<Future<AFPChain>> afpFuture = new ArrayList<>();
 
 		//Create all the possible protein pairwise combinations
 		//(N*(N-1)/2) and call the pairwise alignment algorithm
@@ -184,7 +168,7 @@ public class MultipleMcMain implements MultipleStructureAligner {
 
 		int size = afpAlignments.size();
 
-		List<Double> RMSDs = new ArrayList<Double>();
+		List<Double> RMSDs = new ArrayList<>();
 		for (int i=0; i<afpAlignments.size(); i++){
 			double rmsd=0.0;
 			for (int j=0; j<size; j++){
@@ -216,22 +200,21 @@ public class MultipleMcMain implements MultipleStructureAligner {
 	 * @param ref index of the reference structure
 	 * @param flexible uses BlockSets if true, uses Blocks otherwise
 	 * @return MultipleAlignment seed alignment
-	 * @throws StructureException
 	 */
 	private static MultipleAlignment combineReferenceAlignments(
 			List<AFPChain> afpList, List<Atom[]> atomArrays,
-			int ref, boolean flexible) throws StructureException {
+			int ref, boolean flexible) {
 
 		int size = atomArrays.size();
-		int length = 0;  //the number of residues of the reference structure
+		int length;  //the number of residues of the reference structure
 		if (ref==0) length = afpList.get(1).getCa1Length();
 		else length = afpList.get(0).getCa2Length();
-		SortedSet<Integer> flexibleBoundaries = new TreeSet<Integer>();
+		SortedSet<Integer> flexibleBoundaries = new TreeSet<>();
 
 		//Stores the equivalencies of all the structures as a double List
-		List<List<Integer>> equivalencies = new ArrayList<List<Integer>>();
+		List<List<Integer>> equivalencies = new ArrayList<>();
 		for (int str=0; str<size; str++){
-			equivalencies.add(new ArrayList<Integer>());
+			equivalencies.add(new ArrayList<>());
 			for (int res=0; res<length; res++){
 				if (str==ref) equivalencies.get(str).add(res);  //identity
 				else equivalencies.get(str).add(null);
@@ -305,10 +288,10 @@ public class MultipleMcMain implements MultipleStructureAligner {
 				if (lastB.getAlignRes() == null){
 					//Initialize the aligned residues list
 					List<List<Integer>> alnRes =
-							new ArrayList<List<Integer>>(size);
+							new ArrayList<>(size);
 
 					for (int k=0; k<size; k++) {
-						alnRes.add(new ArrayList<Integer>());
+						alnRes.add(new ArrayList<>());
 					}
 					lastB.setAlignRes(alnRes);
 				}
@@ -335,9 +318,7 @@ public class MultipleMcMain implements MultipleStructureAligner {
 		//Generate the seed alignment and optimize it
 		try {
 			result = generateSeed(atomArrays);
-		} catch (InterruptedException e) {
-			logger.warn("Seed generation failed.",e);
-		} catch (ExecutionException e) {
+		} catch (InterruptedException | ExecutionException e) {
 			logger.warn("Seed generation failed.",e);
 		}
 

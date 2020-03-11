@@ -50,7 +50,7 @@ MouseMotionListener
 {
 
 
-	boolean selectionLocked;
+	final boolean selectionLocked;
 	boolean dragging;
 
 	int selectionStart;
@@ -61,13 +61,13 @@ MouseMotionListener
 	int chainLength;
 
 
-	CoordManager coordManager;
+	final CoordManager coordManager;
 
 	//private static final Logger logger = LoggerFactory.getLogger(SequenceMouseListener.class);
 
-	SequenceDisplay parent;
+	final SequenceDisplay parent;
 
-	List<AlignmentPositionListener> alignmentPositionListeners;
+	final List<AlignmentPositionListener> alignmentPositionListeners;
 
 	public SequenceMouseListener(SequenceDisplay parent) {
 		super();
@@ -86,7 +86,7 @@ MouseMotionListener
 
 		coordManager = new CoordManager();
 
-		alignmentPositionListeners = new ArrayList<AlignmentPositionListener>();
+		alignmentPositionListeners = new ArrayList<>();
 		//renderer.getLayeredPane().addMouseListener(popupFrame);
 
 	}

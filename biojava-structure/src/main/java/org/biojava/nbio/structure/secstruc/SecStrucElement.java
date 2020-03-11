@@ -20,10 +20,10 @@
  */
 package org.biojava.nbio.structure.secstruc;
 
-import java.io.Serializable;
-
 import org.biojava.nbio.structure.ResidueNumber;
 import org.biojava.nbio.structure.ResidueRangeAndLength;
+
+import java.io.Serializable;
 
 /**
  * A secondary structure element (SSE) is an object representing a block of
@@ -37,9 +37,9 @@ public class SecStrucElement implements Serializable  {
 
 	private static final long serialVersionUID = -8485685793171396131L;
 
-	private SecStrucType type;
-	private ResidueRangeAndLength range;
-	private int index;
+	private final SecStrucType type;
+	private final ResidueRangeAndLength range;
+	private final int index;
 
 	/**
 	 * Create a new SSE object. The start and end residue numbers cannot be the
@@ -100,7 +100,7 @@ public class SecStrucElement implements Serializable  {
 	 * @return
 	 */
 	public String getId() {
-		return type.toString() + index + "";
+		return type.toString() + index;
 	}
 
 	/**

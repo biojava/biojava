@@ -20,14 +20,6 @@
  */
 package org.biojava.nbio.structure.io.mmcif;
 
-import static org.junit.Assert.assertEquals;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
@@ -39,11 +31,19 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import static org.junit.Assert.assertEquals;
+
 public class TestChemCompProvider {
 	private static final Logger s_logger = LoggerFactory.getLogger(TestChemCompProvider.class);
 
 	// Short test with bad ligand name (QNA is bogus)
-	final	String DNAexample =
+	static final	String DNAexample =
 
 	"ATOM      1  H   MET A   1      11.756 -15.759  11.647  1.00  7.95\n" +
 	"ATOM      2  N   MET A   1      12.461 -16.373  11.329  1.00  7.95\n" +
@@ -186,7 +186,7 @@ public class TestChemCompProvider {
 	}
 
 	@Test
-	public void testGetOneLetterCode() throws Exception {
+	public void testGetOneLetterCode() {
 
 		String oneLetter;
 

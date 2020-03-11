@@ -82,11 +82,11 @@ public class Dataset {
 
 		File dir = getLocalDir();
 
-		List<File> files = new ArrayList<File>();
+		List<File> files = new ArrayList<>();
 		for ( String f : rfiles) {
 
 
-			int slashIndex = f.lastIndexOf("/");
+			int slashIndex = f.lastIndexOf('/');
 
 			String fileName = f.substring(slashIndex);
 
@@ -98,7 +98,7 @@ public class Dataset {
 
 		}
 
-		return files.toArray(new File[files.size()]);
+		return files.toArray(new File[0]);
 	}
 
 
@@ -135,7 +135,7 @@ public class Dataset {
 			try {
 
 
-				int slashIndex = f.lastIndexOf("/");
+				int slashIndex = f.lastIndexOf('/');
 
 				String fileName = f.substring(slashIndex);
 
@@ -170,7 +170,7 @@ public class Dataset {
 
 		FileOutputStream w = new FileOutputStream(tmp);
 
-		int i= 0;
+		int i;
 		byte[] bytesIn = new byte[300000];
 		while ((i = in.read(bytesIn)) >= 0) {
 			w.write(bytesIn,0,i);

@@ -32,8 +32,8 @@ import java.util.List;
 public class JournalArticle implements Serializable {
 
 	private static final long serialVersionUID = 5062668226159515468L;
-	private List<Author> authorList = new ArrayList<Author>();
-	private List<Author> editorList = new ArrayList<Author>();
+	private List<Author> authorList = new ArrayList<>();
+	private List<Author> editorList = new ArrayList<>();
 	private String title = "";
 	private String ref = "";
 	private String journalName = "";
@@ -258,19 +258,19 @@ public class JournalArticle implements Serializable {
 		}
 		refString.append(ref);
 		jrnlString.append(refString).append(eol);
-		if (!publisher.equals("")) {
+		if (!publisher.isEmpty()) {
 			publString.append(publisher);
 			jrnlString.append(publString).append(eol);
 		}
-		if (!refn.equals("")) {
+		if (!refn.isEmpty()) {
 			refnString.append(refn);
 			jrnlString.append(refnString).append(eol);
 		}
-		if (!pmid.equals("")) {
+		if (!pmid.isEmpty()) {
 			pmidString.append(pmid);
 			jrnlString.append(pmidString).append(eol);
 		}
-		if (!doi.equals("")) {
+		if (!doi.isEmpty()) {
 			doiString.append(doi);
 			jrnlString.append(doiString).append(eol);
 		}

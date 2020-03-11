@@ -20,19 +20,14 @@
  */
 package org.biojava.nbio.structure.align.xml;
 
-import java.io.IOException;
-import java.util.List;
-
-import javax.vecmath.Matrix4d;
-
 import org.biojava.nbio.core.util.PrettyXMLWriter;
 import org.biojava.nbio.structure.StructureIdentifier;
-import org.biojava.nbio.structure.align.multiple.Block;
-import org.biojava.nbio.structure.align.multiple.BlockSet;
-import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
-import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsemble;
-import org.biojava.nbio.structure.align.multiple.ScoresCache;
+import org.biojava.nbio.structure.align.multiple.*;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentWriter;
+
+import javax.vecmath.Matrix4d;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * Helper methods to convert all the hierarchy levels of a MultipleAlignment
@@ -104,7 +99,7 @@ public class MultipleAlignmentXMLConverter {
 
 			xml.openTag("eqr"+pos);
 			for (int str=0; str<alignment.size(); str++){
-				xml.attribute("str"+(str+1),alignment.get(str).get(pos)+"");
+				xml.attribute("str"+(str+1), String.valueOf(alignment.get(str).get(pos)));
 			}
 			xml.closeTag("eqr"+pos);
 		}
@@ -122,7 +117,7 @@ public class MultipleAlignmentXMLConverter {
 		for (int x=0;x<4;x++){
 			for (int y=0;y<4;y++){
 				String key = "mat"+(x+1)+(y+1);
-				String value = transform.getElement(x,y)+"";
+				String value = String.valueOf(transform.getElement(x, y));
 				xml.attribute(key,value);
 			}
 		}
@@ -138,7 +133,7 @@ public class MultipleAlignmentXMLConverter {
 		//We need a new tag for every score, we don't know their names
 		for (String score:cache.getScores()){
 			xml.openTag(score);
-			String value = cache.getScore(score)+"";
+			String value = String.valueOf(cache.getScore(score));
 			xml.attribute("value", value);
 			xml.closeTag(score);
 		}
@@ -151,8 +146,8 @@ public class MultipleAlignmentXMLConverter {
 		//Creation properties
 		xml.attribute("Algorithm", ensemble.getAlgorithmName());
 		xml.attribute("Version", ensemble.getVersion());
-		xml.attribute("IOTime", ensemble.getIoTime()+"");
-		xml.attribute("CalculationTime", ensemble.getCalculationTime()+"");
+		xml.attribute("IOTime", String.valueOf(ensemble.getIoTime()));
+		xml.attribute("CalculationTime", String.valueOf(ensemble.getCalculationTime()));
 
 		//Structure Identifiers
 		xml.openTag("Structures");

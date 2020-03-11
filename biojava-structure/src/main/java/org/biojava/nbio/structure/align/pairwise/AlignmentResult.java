@@ -48,7 +48,7 @@ public class AlignmentResult implements Serializable
 
 	@Override
 public String toString(){
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		buf.append(pdb1);
 		buf.append("_");
 		buf.append(chain1);
@@ -166,7 +166,7 @@ public String toString(){
 		this.ioTime = ioTime;
 	}
 	public void serialize (File output)
-	throws FileNotFoundException, IOException{
+	throws IOException{
 		// save alignment result:
 
 		FileOutputStream outStream = new FileOutputStream(output);
@@ -177,7 +177,7 @@ public String toString(){
 	}
 
 	public static AlignmentResult deserialize(File output)
-	throws FileNotFoundException, IOException, ClassNotFoundException{
+	throws IOException, ClassNotFoundException{
 		FileInputStream fin = new FileInputStream(output);
 		ObjectInputStream objIn = new ObjectInputStream(fin);
 		AlignmentResult result = (AlignmentResult) objIn.readObject();

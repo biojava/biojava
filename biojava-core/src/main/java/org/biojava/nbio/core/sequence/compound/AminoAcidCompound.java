@@ -23,75 +23,76 @@
 
 package org.biojava.nbio.core.sequence.compound;
 
-import java.io.Serializable;
-
 import org.biojava.nbio.core.sequence.template.AbstractCompound;
-import org.biojava.nbio.core.sequence.template.Compound;
 import org.biojava.nbio.core.sequence.template.CompoundSet;
+
+import java.io.Serializable;
 
 /**
  * Used to describe an Amino Acid.
+ *
  * @author Richard Holland
  * @author Scooter Willis
  * @author Andy Yates
  */
 public class AminoAcidCompound extends AbstractCompound implements Serializable {
 
-	/**
-	 *
-	 */
-private static final long serialVersionUID = -1955116496725902319L;
-private final AminoAcidCompoundSet compoundSet;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -1955116496725902319L;
+    private final AminoAcidCompoundSet compoundSet;
 
 
-	public AminoAcidCompound(AminoAcidCompoundSet compoundSet, String shortName,
-			String longName, String description, Float molecularWeight) {
-		super(shortName);
-		setShortName(shortName);
-		setLongName(longName);
-		setDescription(description);
-		setMolecularWeight(molecularWeight);
-		this.compoundSet = compoundSet;
-	}
+    public AminoAcidCompound(AminoAcidCompoundSet compoundSet, String shortName,
+                             String longName, String description, float molecularWeight) {
+        super(shortName);
+        setShortName(shortName);
+        setLongName(longName);
+        setDescription(description);
+        this.molecularWeight = molecularWeight;
+        this.compoundSet = compoundSet;
+    }
 
-	// TODO need to allow for modified name; that's not equality though is it?
-	@Override
-public boolean equals(Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (!(obj instanceof AminoAcidCompound)) {
-			return false;
-		}
-		AminoAcidCompound them = (AminoAcidCompound) obj;
-		if (toString().equals(them.toString())) {
-			return true;
-		}
-		return getLongName().equals(them.getLongName());
+//    // TODO need to allow for modified name; that's not equality though is it?
+//    @Override
+//    public boolean equals(Object obj) {
+//        if (obj == null) {
+//            return false;
+//        }
+//        if (!(obj instanceof AminoAcidCompound)) {
+//            return false;
+//        }
+//        AminoAcidCompound them = (AminoAcidCompound) obj;
+//        if (toString().equals(them.toString())) {
+//            return true;
+//        }
+//        return getLongName().equals(them.getLongName());
+//
+//    }
 
-	}
 
-	@Override
-public int hashCode() {
-		return toString().hashCode();
-	}
+//    @Override
+//    public int hashCode() {
+//        return toString().hashCode();
+//    }
 
-	@Override
-public boolean equalsIgnoreCase(Compound compound) {
-		if (compound == null) {
-			return false;
-		}
-		if (!(compound instanceof AminoAcidCompound)) {
-			return false;
-		}
-		AminoAcidCompound them = (AminoAcidCompound) compound;
-		if (toString().equalsIgnoreCase(them.toString())) {
-			return true;
-		}
-		return getLongName().equalsIgnoreCase(them.getLongName());
-	}
+//    @Override
+//    public boolean equalsIgnoreCase(Compound compound) {
+//        if (compound == null) {
+//            return false;
+//        }
+//        if (!(compound instanceof AminoAcidCompound)) {
+//            return false;
+//        }
+//        AminoAcidCompound them = (AminoAcidCompound) compound;
+//        if (toString().equalsIgnoreCase(them.toString())) {
+//            return true;
+//        }
+//        return getLongName().equalsIgnoreCase(them.getLongName());
+//    }
 
-	public CompoundSet<AminoAcidCompound> getCompoundSet() {
-		return compoundSet;
-	}
+    public CompoundSet<AminoAcidCompound> getCompoundSet() {
+        return compoundSet;
+    }
 }

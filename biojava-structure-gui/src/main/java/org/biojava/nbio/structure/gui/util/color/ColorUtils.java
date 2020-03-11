@@ -29,9 +29,9 @@ import java.awt.*;
 public class ColorUtils
 {
 
-	public static Color orange =   Color.decode("#FFA500");
-	public static Color cyan   =   Color.decode("#00FFFF");
-	public static Color gold   =   Color.decode("#FFD700");
+	public static final Color orange =   Color.decode("#FFA500");
+	public static final Color cyan   =   Color.decode("#00FFFF");
+	public static final Color gold   =   Color.decode("#FFD700");
 
 
 	static final Color c1 = Color.decode("#228B22"); // green

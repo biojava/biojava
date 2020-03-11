@@ -56,7 +56,7 @@ public String toString(){
 		// Bioinformatics, 24, pp. 872-873  (2008)
 
 
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		buf.append("AFP: p1:");
 		buf.append(p1);
 		buf.append(" p2: ");

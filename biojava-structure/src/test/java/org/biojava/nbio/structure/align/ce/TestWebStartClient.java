@@ -24,6 +24,7 @@
 
 package org.biojava.nbio.structure.align.ce;
 
+import org.biojava.nbio.core.util.PrettyXMLWriter;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.StructureAlignment;
@@ -34,7 +35,6 @@ import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.align.xml.AFPChainFlipper;
 import org.biojava.nbio.structure.align.xml.AFPChainXMLConverter;
 import org.biojava.nbio.structure.align.xml.AFPChainXMLParser;
-import org.biojava.nbio.core.util.PrettyXMLWriter;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -88,7 +88,7 @@ public class TestWebStartClient {
 
 		Assert.assertNotNull(afpChain);
 		Assert.assertNotNull(afpChain.getAlgorithmName());
-		Assert.assertTrue(afpChain.getAlgorithmName().equals(algorithm.getAlgorithmName()));
+        Assert.assertEquals(afpChain.getAlgorithmName(), algorithm.getAlgorithmName());
 
 		String xml = AFPChainXMLConverter.toXML(afpChain,ca1,ca2);
 
@@ -97,7 +97,7 @@ public class TestWebStartClient {
 		AFPChain afpServer = JFatCatClient.getAFPChainFromServer(serverLocation,algorithm.getAlgorithmName(), name1, name2, ca1, ca2, 5000);
 		Assert.assertNotNull(afpServer);
 
-		Assert.assertTrue("Algorithm names don't match!", afpServer.getAlgorithmName().equals(algorithm.getAlgorithmName()));
+        Assert.assertEquals("Algorithm names don't match!", afpServer.getAlgorithmName(), algorithm.getAlgorithmName());
 		Assert.assertTrue("Alignment blockNum < 1", afpServer.getBlockNum() >= 1);
 
 		String xml2 = AFPChainXMLConverter.toXML(afpServer, ca1, ca2);

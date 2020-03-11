@@ -32,11 +32,7 @@ import org.biojava.nbio.core.sequence.template.AbstractSequence;
 import org.biojava.nbio.core.sequence.template.Compound;
 import org.biojava.nbio.core.util.StringManipulationHelper;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Formatter;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 /**
  * @author mckeee1
@@ -56,7 +52,7 @@ public class GenericInsdcHeaderFormat<S extends AbstractSequence<C>, C extends C
 	 * @param quote
 	 */
 	private String _write_feature_qualifier(String key, String value, boolean quote) {
-		String line = "";
+		String line;
 		if(null == value) {
 			line = QUALIFIER_INDENT_STR + "/" + key + lineSep;
 			return line;
@@ -70,7 +66,7 @@ public class GenericInsdcHeaderFormat<S extends AbstractSequence<C>, C extends C
 			return line + lineSep;
 		}
 		String goodlines = "";
-		while(!"".equals(line.replaceAll("^\\s+", ""))) {
+		while(!line.replaceAll("^\\s+", "").isEmpty()) {
 			if(line.length() <= MAX_WIDTH) {
 				goodlines += line + lineSep;
 				break;
@@ -101,7 +97,7 @@ public class GenericInsdcHeaderFormat<S extends AbstractSequence<C>, C extends C
 		if(location.length() <= length) {
 			return location;
 		}
-		int index = location.substring(length).lastIndexOf(",");
+		int index = location.substring(length).lastIndexOf(',');
 		if(-1 == index) {
 			//No good place to split (!)
 			return location;
@@ -195,7 +191,7 @@ public class GenericInsdcHeaderFormat<S extends AbstractSequence<C>, C extends C
 			}
 			StringBuilder sb = new StringBuilder();
 			Formatter formatter = new Formatter(sb,Locale.US);
-			ArrayList<String> locations = new ArrayList<String>();
+			ArrayList<String> locations = new ArrayList<>();
 			for(FeatureInterface<AbstractSequence<C>, C> f  : feature.getChildrenFeatures()) {
 				locations.add(_insdc_location_string_ignoring_strand_and_subfeatures(f.getLocations(), record_length));
 			}
@@ -208,7 +204,7 @@ public class GenericInsdcHeaderFormat<S extends AbstractSequence<C>, C extends C
 		//This covers typical forward strand features, and also an evil mixed strand:
 		StringBuilder sb = new StringBuilder();
 		Formatter formatter = new Formatter(sb,Locale.US);
-		ArrayList<String> locations = new ArrayList<String>();
+		ArrayList<String> locations = new ArrayList<>();
 		for(FeatureInterface<AbstractSequence<C>, C> f  : feature.getChildrenFeatures()) {
 			locations.add(_insdc_location_string_ignoring_strand_and_subfeatures(f.getLocations(), record_length));
 		}
@@ -340,14 +336,14 @@ public class GenericInsdcHeaderFormat<S extends AbstractSequence<C>, C extends C
 	 */
 	protected ArrayList<String> _split_multi_line(String text, int max_len) {
 		// TODO Auto-generated method stub
-		ArrayList<String> output = new ArrayList<String>();
+		ArrayList<String> output = new ArrayList<>();
 		text = text.trim();
 		if(text.length() <= max_len) {
 			output.add(text);
 			return output;
 		}
 
-		ArrayList<String> words = new ArrayList<String>();
+		ArrayList<String> words = new ArrayList<>();
 		Collections.addAll(words, text.split("\\s+"));
 		while(!words.isEmpty()) {
 			text = words.remove(0);

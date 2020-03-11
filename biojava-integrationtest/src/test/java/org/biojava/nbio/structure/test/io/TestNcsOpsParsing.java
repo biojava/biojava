@@ -20,17 +20,16 @@
  */
 package org.biojava.nbio.structure.test.io;
 
-import static org.junit.Assert.*;
-
-import java.io.IOException;
-
-import javax.vecmath.Matrix4d;
-
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.junit.Test;
+
+import javax.vecmath.Matrix4d;
+import java.io.IOException;
+
+import static org.junit.Assert.*;
 
 public class TestNcsOpsParsing {
 

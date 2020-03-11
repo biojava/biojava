@@ -45,7 +45,7 @@ public class SparseVector implements Serializable{
 
 	private final int N;             // length
 
-	private SymbolTable<Integer, Double> symbolTable;  // the vector, represented by index-value pairs
+	private final SymbolTable<Integer, Double> symbolTable;  // the vector, represented by index-value pairs
 
 
 	/** Constructor. initialize the all 0s vector of length N
@@ -54,7 +54,7 @@ public class SparseVector implements Serializable{
 	 */
 	public SparseVector(int N) {
 		this.N  = N;
-		this.symbolTable = new SymbolTable<Integer, Double>();
+		this.symbolTable = new SymbolTable<>();
 	}
 
 	/** Setter method (should it be renamed to set?)

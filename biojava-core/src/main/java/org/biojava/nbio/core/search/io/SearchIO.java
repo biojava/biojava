@@ -23,11 +23,7 @@ package org.biojava.nbio.core.search.io;
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ServiceLoader;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 /**
  * Designed by Paolo Pavan.
@@ -55,7 +51,7 @@ public class SearchIO implements Iterable<Result>{
 	 */
 	private List<Result> results;
 
-	private final String NOT_SUPPORTED_FILE_EXCEPTION =
+	private static final String NOT_SUPPORTED_FILE_EXCEPTION =
 			"This extension is not associated with any parser. You can try to specify a ResultFactory object.";
 
 	/**
@@ -140,7 +136,7 @@ public class SearchIO implements Iterable<Result>{
 	 */
 	private ResultFactory guessFactory(File f){
 		if (extensionFactoryAssociation == null){
-			extensionFactoryAssociation = new HashMap<String, ResultFactory>();
+			extensionFactoryAssociation = new HashMap<>();
 			ServiceLoader<ResultFactory> impl = ServiceLoader.load(ResultFactory.class);
 			for (ResultFactory loadedImpl : impl) {
 				List<String> fileExtensions = loadedImpl.getFileExtensions();
@@ -149,7 +145,7 @@ public class SearchIO implements Iterable<Result>{
 		}
 
 		String filename = f.getAbsolutePath();
-		int extensionPos = filename.lastIndexOf(".");
+		int extensionPos = filename.lastIndexOf('.');
 		String extension = filename.substring(extensionPos + 1);
 		if (extensionFactoryAssociation.get(extension) == null)
 			throw new UnsupportedOperationException(NOT_SUPPORTED_FILE_EXCEPTION

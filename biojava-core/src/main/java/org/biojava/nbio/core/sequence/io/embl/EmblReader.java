@@ -21,7 +21,10 @@
 package org.biojava.nbio.core.sequence.io.embl;
 
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedList;
 
@@ -46,7 +49,7 @@ public class EmblReader {
 	public static EmblRecord process(File file) throws IOException {
 
 		EmblRecord emblRecord = new EmblRecord();
-		StringBuilder sequence = new StringBuilder("");
+		StringBuilder sequence = new StringBuilder();
 		LinkedList<EmblReference> emblReferences = new LinkedList<>();
 		EmblReference emblReference = new EmblReference();
 		LinkedList<String> accessionNumber = new LinkedList<>();
@@ -59,13 +62,13 @@ public class EmblReader {
 			throw new IllegalArgumentException("the file can't be a directory");
 
 		try (FileReader fileReader = new FileReader(file)) {
-			String line = "";
+			String line;
 			String lineIdentifier;
 			String lineInfo;
 			try (BufferedReader bufferedReader = new BufferedReader(fileReader)) {
 				while ((line = bufferedReader.readLine()) != null) {
 					if (line.length() > 1) {
-						lineInfo = line.substring(2, line.length()).trim();
+						lineInfo = line.substring(2).trim();
 						lineIdentifier = line.substring(0, 2);
 						if (lineIdentifier.equals("ID"))
 							emblRecord.setEmblId(populateID(lineInfo));
@@ -129,22 +132,30 @@ public class EmblReader {
 
 	private static void populateEmblReferences(String lineIdentifier, String lineInfo, EmblReference emblReference
 			, LinkedList<EmblReference> emblReferences) {
-		if (lineIdentifier.equals("RN"))
-			emblReference.setReferenceNumber(lineInfo);
-		else if (lineIdentifier.equals("RP"))
-			emblReference.setReferencePosition(lineInfo);
-		else if (lineIdentifier.equals("RX"))
-			emblReference.setReferenceCrossReference(lineInfo);
-		else if (lineIdentifier.equals("RG"))
-			emblReference.setReferenceGroup(lineInfo);
-		else if (lineIdentifier.equals("RA"))
-			emblReference.setReferenceAuthor(lineInfo);
-		else if (lineIdentifier.equals("RT"))
-			emblReference.setReferenceTitle(lineInfo);
-		else if (lineIdentifier.equals("RL")) {
-			emblReference.setReferenceLocation(lineInfo);
-			emblReferences.add(emblReference.copyEmblReference(emblReference));
-		}
+        switch (lineIdentifier) {
+            case "RN":
+                emblReference.setReferenceNumber(lineInfo);
+                break;
+            case "RP":
+                emblReference.setReferencePosition(lineInfo);
+                break;
+            case "RX":
+                emblReference.setReferenceCrossReference(lineInfo);
+                break;
+            case "RG":
+                emblReference.setReferenceGroup(lineInfo);
+                break;
+            case "RA":
+                emblReference.setReferenceAuthor(lineInfo);
+                break;
+            case "RT":
+                emblReference.setReferenceTitle(lineInfo);
+                break;
+            case "RL":
+                emblReference.setReferenceLocation(lineInfo);
+                emblReferences.add(emblReference.copyEmblReference(emblReference));
+                break;
+        }
 	}
 
 	private static void populateAccessionNumber(String line, LinkedList<String> accessionNumber) {

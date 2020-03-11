@@ -20,8 +20,8 @@
  */
 package org.biojava.nbio.protmod.io;
 
-import org.biojava.nbio.protmod.Component;
 import org.biojava.nbio.core.util.PrettyXMLWriter;
+import org.biojava.nbio.protmod.Component;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -46,8 +46,8 @@ public class ComponentXMLConverter {
 	public static void toXML(Component component, PrettyXMLWriter xml) throws IOException{
 		xml.openTag("component");
 
-		xml.attribute("nTerminal" , component.isNTerminal()+"");
-		xml.attribute("cTerminal", component.isCTerminal()+"");
+		xml.attribute("nTerminal" , String.valueOf(component.isNTerminal()));
+		xml.attribute("cTerminal", String.valueOf(component.isCTerminal()));
 		for (String pdbccId : component.getPdbccIds()){
 			xml.openTag("pdbccID");
 			xml.attribute("id", pdbccId);
@@ -74,7 +74,7 @@ public class ComponentXMLConverter {
 		boolean isNTerminal = Boolean.parseBoolean(nTerminalS);
 		boolean isCTerminal = Boolean.parseBoolean(cTerminalS);
 
-		Set<String>pdbccIds = new HashSet<String>();
+		Set<String>pdbccIds = new HashSet<>();
 
 		NodeList valList = componentN.getChildNodes();
 		int numChildren  = valList.getLength();

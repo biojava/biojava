@@ -55,7 +55,7 @@ public class ProteinModificationRegistry {
 	private static Map<ModificationCategory, Set<ProteinModification>> byCategory = null;
 	private static Map<ModificationOccurrenceType, Set<ProteinModification>> byOccurrenceType = null;
 
-	private static String DIR_XML_PTM_LIST = "ptm_list.xml";
+	private static final String DIR_XML_PTM_LIST = "ptm_list.xml";
 
 
 
@@ -109,22 +109,22 @@ public class ProteinModificationRegistry {
 	private static synchronized void lazyInit(InputStream inStream) {
 		if (registry==null) {
 
-			registry = 	new HashSet<ProteinModification>();
-			byId = new HashMap<String, ProteinModification>();
-			byResidId = new HashMap<String, Set<ProteinModification>>();
-			byPsimodId = new HashMap<String, Set<ProteinModification>>();
-			byPdbccId = new HashMap<String, Set<ProteinModification>>();
-			byKeyword = new HashMap<String, Set<ProteinModification>>();
-			byComponent = new HashMap<Component, Set<ProteinModification>>();
-			byCategory = new EnumMap<ModificationCategory, Set<ProteinModification>>(
+			registry = new HashSet<>();
+			byId = new HashMap<>();
+			byResidId = new HashMap<>();
+			byPsimodId = new HashMap<>();
+			byPdbccId = new HashMap<>();
+			byKeyword = new HashMap<>();
+			byComponent = new HashMap<>();
+			byCategory = new EnumMap<>(
 					ModificationCategory.class);
 			for (ModificationCategory cat:ModificationCategory.values()) {
-				byCategory.put(cat, new HashSet<ProteinModification>());
+				byCategory.put(cat, new HashSet<>());
 			}
-			byOccurrenceType = new EnumMap<ModificationOccurrenceType, Set<ProteinModification>>(
+			byOccurrenceType = new EnumMap<>(
 					ModificationOccurrenceType.class);
 			for (ModificationOccurrenceType occ:ModificationOccurrenceType.values()) {
-				byOccurrenceType.put(occ, new HashSet<ProteinModification>());
+				byOccurrenceType.put(occ, new HashSet<>());
 			}
 			registerCommonProteinModifications(inStream);
 		}
@@ -156,50 +156,30 @@ public class ProteinModificationRegistry {
 		ModificationCondition condition = modification.getCondition();
 		List<Component> comps = condition.getComponents();
 		for (Component comp:comps) {
-			Set<ProteinModification> mods = byComponent.get(comp);
-			if (mods==null) {
-				mods = new HashSet<ProteinModification>();
-				byComponent.put(comp, mods);
-			}
+			Set<ProteinModification> mods = byComponent.computeIfAbsent(comp, k -> new HashSet<>());
 			mods.add(modification);
 		}
 
 		String pdbccId = modification.getPdbccId();
 		if (pdbccId!=null) {
-			Set<ProteinModification> mods = byPdbccId.get(pdbccId);
-			if (mods==null) {
-				mods = new HashSet<ProteinModification>();
-				byPdbccId.put(pdbccId, mods);
-			}
+			Set<ProteinModification> mods = byPdbccId.computeIfAbsent(pdbccId, k -> new HashSet<>());
 			mods.add(modification);
 		}
 
 		String residId = modification.getResidId();
 		if (residId!=null) {
-			Set<ProteinModification> mods = byResidId.get(residId);
-			if (mods==null) {
-				mods = new HashSet<ProteinModification>();
-				byResidId.put(residId, mods);
-			}
+			Set<ProteinModification> mods = byResidId.computeIfAbsent(residId, k -> new HashSet<>());
 			mods.add(modification);
 		}
 
 		String psimodId = modification.getPsimodId();
 		if (psimodId!=null) {
-			Set<ProteinModification> mods = byPsimodId.get(psimodId);
-			if (mods==null) {
-				mods = new HashSet<ProteinModification>();
-				byPsimodId.put(psimodId, mods);
-			}
+			Set<ProteinModification> mods = byPsimodId.computeIfAbsent(psimodId, k -> new HashSet<>());
 			mods.add(modification);
 		}
 
 		for (String keyword : modification.getKeywords()) {
-			Set<ProteinModification> mods = byKeyword.get(keyword);
-			if (mods==null) {
-				mods = new HashSet<ProteinModification>();
-				byKeyword.put(keyword, mods);
-			}
+			Set<ProteinModification> mods = byKeyword.computeIfAbsent(keyword, k -> new HashSet<>());
 			mods.add(modification);
 		}
 	}
@@ -308,7 +288,7 @@ public class ProteinModificationRegistry {
 		if (comps.length==0) {
 			return Collections.unmodifiableSet(mods);
 		} else {
-			Set<ProteinModification> ret = new HashSet<ProteinModification>(mods);
+			Set<ProteinModification> ret = new HashSet<>(mods);
 			for (Component comp:comps) {
 				mods = byComponent.get(comp);
 				if (mods==null) {

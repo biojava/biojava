@@ -37,7 +37,7 @@ import java.util.List;
  */
 public class RCSBPolymer {
 
-	private List<Character> chains;
+	private final List<Character> chains;
 
 	private String description;
 
@@ -49,7 +49,7 @@ public class RCSBPolymer {
 
 	private RCSBMacromolecule molecule;
 
-	private List<String> synonyms;
+	private final List<String> synonyms;
 
 	private RCSBTaxonomy taxonomy;
 
@@ -58,8 +58,8 @@ public class RCSBPolymer {
 	private Double weight;
 
 	public RCSBPolymer() {
-		chains = new ArrayList<Character>();
-		synonyms = new ArrayList<String>();
+		chains = new ArrayList<>();
+		synonyms = new ArrayList<>();
 	}
 
 	public List<Character> getChains() {

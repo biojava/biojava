@@ -83,12 +83,13 @@ public class MapToStringTransformer {
 	 */
 	public String transform(Map<?, ?> map) {
 		StringBuilder sb = new StringBuilder();
-		for (Object key : map.keySet()) {
-			sb.append(getSeparatorSequence());
+		for (Map.Entry<?, ?> entry : map.entrySet()) {
+            Object key = entry.getKey();
+            sb.append(getSeparatorSequence());
 			String keyString = key != null ? key.toString() : getNullValue();
 			sb.append(keyString);
 			sb.append(getMappingSequence());
-			String valueString = map.get(key) != null ? map.get(key).toString() : getNullValue();
+			String valueString = entry.getValue() != null ? entry.getValue().toString() : getNullValue();
 			sb.append(valueString);
 		}
 		return sb.substring(1);

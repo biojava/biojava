@@ -37,7 +37,7 @@ public class Convert2SecondaryStructure extends Convertor{
 			return unknownGroup;//Non-standard AA
 		}
 	}
-	private static String[] subCategory = {"Helix", "Strand", "Coil"};
+	private static final String[] subCategory = {"Helix", "Strand", "Coil"};
 	@Override
 	public String[] getGrouping(){return subCategory;}
 	@Override

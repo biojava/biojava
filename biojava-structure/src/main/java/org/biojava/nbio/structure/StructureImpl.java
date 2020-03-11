@@ -23,13 +23,13 @@
  */
 package org.biojava.nbio.structure;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ListIterator;
-
 import org.biojava.nbio.structure.io.FileConvert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ListIterator;
 
 /**
  * Implementation of a PDB Structure. This class
@@ -145,7 +145,7 @@ public class StructureImpl implements Structure {
 
 		// go through each chain and clone chain
 		for (int i=0;i<nrModels();i++){
-			List<Chain> cloned_model = new ArrayList<Chain>();
+			List<Chain> cloned_model = new ArrayList<>();
 
 			for (int j=0;j<size(i);j++){
 
@@ -203,9 +203,8 @@ public class StructureImpl implements Structure {
 		// first we need to gather all groups with the author id chainName: polymers, non-polymers and waters
 		Chain polyChain = getPolyChainByPDB(chainName, modelnr);
 		if(polyChain != null) {
-			List<Group> groups = new ArrayList<>();
 
-			groups.addAll(polyChain.getAtomGroups());
+            List<Group> groups = new ArrayList<>(polyChain.getAtomGroups());
 
 
 			// there can be more than one non-poly chain for a given author id

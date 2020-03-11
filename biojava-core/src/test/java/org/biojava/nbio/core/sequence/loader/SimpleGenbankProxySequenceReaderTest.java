@@ -20,13 +20,14 @@
  */
 package org.biojava.nbio.core.sequence.loader;
 
-import java.io.IOException;
 import org.biojava.nbio.core.sequence.ProteinSequence;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
 
 
 /**
@@ -47,10 +48,10 @@ public class SimpleGenbankProxySequenceReaderTest {
 
 		String wrongGi = "34567";
 
-		GenbankProxySequenceReader<AminoAcidCompound> genbankReader
-				= new GenbankProxySequenceReader<AminoAcidCompound>(System.getProperty("java.io.tmpdir"),
-						wrongGi,
-						AminoAcidCompoundSet.getAminoAcidCompoundSet());
+        GenbankProxySequenceReader<AminoAcidCompound> genbankReader
+				= new GenbankProxySequenceReader<>(System.getProperty("java.io.tmpdir"),
+				wrongGi,
+                AminoAcidCompoundSet.aminoAcidCompoundSet);
 
 		ProteinSequence seq = new ProteinSequence(genbankReader);
 	}

@@ -20,10 +20,10 @@
  */
 package org.biojava.nbio.structure.io;
 
+import org.biojava.nbio.core.util.InputStreamProvider;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
-import org.biojava.nbio.core.util.InputStreamProvider;
 
 import java.io.File;
 import java.io.IOException;
@@ -187,7 +187,7 @@ public class SandboxStyleStructureProvider implements StructureProvider {
 
 		String[] dirName = f.list();
 
-		List<String>pdbIds = new ArrayList<String>();
+		List<String>pdbIds = new ArrayList<>();
 		for (String dir : dirName) {
 			File d2= new File(f,dir);
 			if ( ! d2.isDirectory())

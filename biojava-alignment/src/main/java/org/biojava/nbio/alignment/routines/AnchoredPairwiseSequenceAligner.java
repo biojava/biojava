@@ -23,17 +23,18 @@
 
 package org.biojava.nbio.alignment.routines;
 
-import org.biojava.nbio.core.alignment.SimpleSequencePair;
 import org.biojava.nbio.alignment.routines.AlignerHelper.Anchor;
 import org.biojava.nbio.alignment.template.AbstractPairwiseSequenceAligner;
+import org.biojava.nbio.alignment.template.GapPenalty;
+import org.biojava.nbio.core.alignment.SimpleSequencePair;
 import org.biojava.nbio.core.alignment.template.AlignedSequence;
 import org.biojava.nbio.core.alignment.template.AlignedSequence.Step;
-import org.biojava.nbio.alignment.template.GapPenalty;
 import org.biojava.nbio.core.alignment.template.SubstitutionMatrix;
 import org.biojava.nbio.core.sequence.template.Compound;
 import org.biojava.nbio.core.sequence.template.Sequence;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -96,9 +97,7 @@ public class AnchoredPairwiseSequenceAligner<S extends Sequence<C>, C extends Co
 	 */
 	public int[] getAnchors() {
 		int[] anchor = new int[getScoreMatrixDimensions()[0] - 1];
-		for (int i = 0; i < anchor.length; i++) {
-			anchor[i] = -1;
-		}
+        Arrays.fill(anchor, -1);
 		for (int i = 0; i < anchors.size(); i++) {
 			anchor[anchors.get(i).getQueryIndex()] = anchors.get(i).getTargetIndex();
 		}
@@ -111,7 +110,7 @@ public class AnchoredPairwiseSequenceAligner<S extends Sequence<C>, C extends Co
 	 * @param anchors list of points that are tied to the given indices in the target
 	 */
 	public void setAnchors(int[] anchors) {
-		super.anchors = new ArrayList<Anchor>();
+		super.anchors = new ArrayList<>();
 		if (anchors != null) {
 			for (int i = 0; i < anchors.length; i++) {
 				if (anchors[i] >= 0) {
@@ -133,7 +132,7 @@ public class AnchoredPairwiseSequenceAligner<S extends Sequence<C>, C extends Co
 
 	@Override
 	protected void setProfile(List<Step> sx, List<Step> sy) {
-		profile = pair = new SimpleSequencePair<S, C>(getQuery(), getTarget(), sx, sy);
+		profile = pair = new SimpleSequencePair<>(getQuery(), getTarget(), sx, sy);
 	}
 
 }

@@ -20,11 +20,11 @@
  */
 package org.biojava.nbio.structure.geometry;
 
+import org.biojava.nbio.structure.jama.Matrix;
+
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
-
-import org.biojava.nbio.structure.jama.Matrix;
 
 /**
  * Utility operations on Point3d.

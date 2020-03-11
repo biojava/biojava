@@ -24,26 +24,18 @@
  */
 package org.biojava.nbio.structure.test;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringReader;
-import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.Chain;
-import org.biojava.nbio.structure.ChainImpl;
-import org.biojava.nbio.structure.Group;
-import org.biojava.nbio.structure.JournalArticle;
-import org.biojava.nbio.structure.PDBHeader;
-import org.biojava.nbio.structure.Site;
-import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.StructureTools;
+import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.PDBFileParser;
 import org.biojava.nbio.structure.test.util.StringManipulationTestsHelper;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
 
 import static org.junit.Assert.*;
 
@@ -108,7 +100,7 @@ public class PDBFileParserTest {
 		Structure s = parser.parsePDBFile(br);
 		String pdb = s.toPDB();
 
-		assertTrue("the created PDB file does not match the input file", pdb.equals(t));
+        assertEquals("the created PDB file does not match the input file", pdb, t);
 
 
 	}
@@ -304,7 +296,7 @@ public class PDBFileParserTest {
 			//				System.out.println("Got:");
 			//				System.out.println(remark800.toString());
 		}
-		assertTrue("the created PDB REMARK800 section does not match the input file", remark800.toString().equals(remark800Test));
+        assertEquals("the created PDB REMARK800 section does not match the input file", remark800.toString(), remark800Test);
 
 		if (!sites.toString().equals(sitesTest)) {
 			System.out.println("Expected:");
@@ -331,7 +323,7 @@ public class PDBFileParserTest {
 
 
 		BufferedReader br = new BufferedReader(new StringReader(jrnlString));
-		Structure s = null;
+		Structure s;
 
 		s = parser.parsePDBFile(br);
 
@@ -357,7 +349,7 @@ public class PDBFileParserTest {
 
 
 		BufferedReader br = new BufferedReader(new StringReader(jrnlString));
-		Structure s = null;
+		Structure s;
 		s = parser.parsePDBFile(br);
 		//    String jrnl = s.getJournalArticle().toString();
 		//            System.out.println(jrnl);
@@ -380,7 +372,7 @@ public class PDBFileParserTest {
 
 
 		BufferedReader br = new BufferedReader(new StringReader(jrnlString));
-		Structure s = null;
+		Structure s;
 		s = parser.parsePDBFile(br);
 		// String jrnl = s.getJournalArticle().toString();
 		//            System.out.println(jrnl);
@@ -406,7 +398,7 @@ public class PDBFileParserTest {
 
 
 		BufferedReader br = new BufferedReader(new StringReader(jrnlString));
-		Structure s = null;
+		Structure s;
 		s = parser.parsePDBFile(br);
 		// String jrnl = s.getJournalArticle().toString();
 		//            System.out.println(jrnl);
@@ -433,7 +425,7 @@ public class PDBFileParserTest {
 
 
 		BufferedReader br = new BufferedReader(new StringReader(jrnlString));
-		Structure s = null;
+		Structure s;
 		s = parser.parsePDBFile(br);
 		//   String jrnl = s.getJournalArticle().toString();
 		//            System.out.println(jrnl);
@@ -459,7 +451,7 @@ public class PDBFileParserTest {
 
 
 		BufferedReader br = new BufferedReader(new StringReader(jrnlString));
-		Structure s = null;
+		Structure s;
 		s = parser.parsePDBFile(br);
 
 		JournalArticle journalArticle = s.getJournalArticle();
@@ -552,7 +544,7 @@ public class PDBFileParserTest {
 		String pdb = s.toPDB();
 
 
-		assertTrue("the created PDB file does not match the input file", pdb.equals(atomLines));
+        assertEquals("the created PDB file does not match the input file", pdb, atomLines);
 
 	}
 
@@ -619,13 +611,13 @@ public class PDBFileParserTest {
 		BufferedReader br = new BufferedReader(new StringReader(missingElement));
 		Structure s = parser.parsePDBFile(br);
 		String pdb = s.toPDB();
-		assertTrue("the Element column has not been filled correctly", pdb.equals(original));
+        assertEquals("the Element column has not been filled correctly", pdb, original);
 
 
 		br = new BufferedReader(new StringReader(emptyElement));
 		s = parser.parsePDBFile(br);
 		pdb = s.toPDB();
-		assertTrue("the Element column has not been filled correctly", pdb.equals(original));
+        assertEquals("the Element column has not been filled correctly", pdb, original);
 
 	}
 

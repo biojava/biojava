@@ -29,12 +29,12 @@ import org.biojava.nbio.core.alignment.matrices.SimpleSubstitutionMatrix;
 import org.biojava.nbio.core.alignment.template.AlignedSequence;
 import org.biojava.nbio.core.alignment.template.SequencePair;
 import org.biojava.nbio.core.alignment.template.SubstitutionMatrix;
-import org.biojava.nbio.structure.*;
 import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.core.sequence.ProteinSequence;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava.nbio.core.sequence.template.CompoundSet;
+import org.biojava.nbio.structure.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -119,7 +119,7 @@ public class StructureSequenceMatcher {
 
 		for(Chain chain : struct.getChains()) {
 			List<Group> groups = chain.getAtomGroups();
-			Map<Integer,Integer> chainIndexPosition = new HashMap<Integer, Integer>();
+			Map<Integer,Integer> chainIndexPosition = new HashMap<>();
 			int prevLen = seqStr.length();
 
 			// get the sequence for this chain
@@ -128,9 +128,9 @@ public class StructureSequenceMatcher {
 
 
 			// fix up the position to include previous chains, and map the value back to a Group
-			for(Integer seqIndex : chainIndexPosition.keySet()) {
-				Integer groupIndex = chainIndexPosition.get(seqIndex);
-				groupIndexPosition.put(prevLen + seqIndex, groups.get(groupIndex));
+			for(Map.Entry<Integer, Integer> entry : chainIndexPosition.entrySet()) {
+				Integer groupIndex = entry.getValue();
+				groupIndexPosition.put(prevLen + entry.getKey(), groups.get(groupIndex));
 			}
 		}
 
@@ -163,7 +163,7 @@ public class StructureSequenceMatcher {
 	public static ResidueNumber[] matchSequenceToStructure(ProteinSequence seq, Structure struct) {
 
 		//1. Create ProteinSequence for struct while remembering to which group each residue corresponds
-		Map<Integer,Group> atomIndexPosition   = new HashMap<Integer, Group>();
+		Map<Integer,Group> atomIndexPosition   = new HashMap<>();
 
 		ProteinSequence structSeq = getProteinSequenceForStructure(struct,atomIndexPosition);
 
@@ -171,15 +171,15 @@ public class StructureSequenceMatcher {
 		//2. Run Smith-Waterman to get the alignment
 		// Identity substitution matrix with +1 for match, -1 for mismatch
 		// TODO
-		SubstitutionMatrix<AminoAcidCompound> matrix =
-			new SimpleSubstitutionMatrix<AminoAcidCompound>(
-					AminoAcidCompoundSet.getAminoAcidCompoundSet(),
-					(short)1, (short)-1 );
-		matrix = new SimpleSubstitutionMatrix<AminoAcidCompound>(
-				AminoAcidCompoundSet.getAminoAcidCompoundSet(),
+        SubstitutionMatrix<AminoAcidCompound> matrix =
+				new SimpleSubstitutionMatrix<>(
+                        AminoAcidCompoundSet.aminoAcidCompoundSet,
+						(short) 1, (short) -1);
+        matrix = new SimpleSubstitutionMatrix<>(
+                AminoAcidCompoundSet.aminoAcidCompoundSet,
 				new InputStreamReader(
 						SimpleSubstitutionMatrix.class.getResourceAsStream("/matrices/blosum100.txt")),
-		"blosum100");
+				"blosum100");
 		SequencePair<ProteinSequence, AminoAcidCompound> pair =
 			Alignments.getPairwiseAlignment(seq, structSeq,
 					PairwiseSequenceAlignerType.GLOBAL, new SimpleGapPenalty(), matrix);

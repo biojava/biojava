@@ -38,12 +38,12 @@ public enum BravaisLattice {
 	HEXAGONAL    (6, "HEXAGONAL",    new CrystalCell(1.00,1.00,1.25, 90,90,120)),// a=b!=c, alpha=beta=90, gamma=120
 	CUBIC        (7, "CUBIC",        new CrystalCell(1.00,1.00,1.00, 90,90,90)); // a=b=c, alpha=beta=gamma=90
 
-	private static HashMap<String, BravaisLattice> name2bl = initname2bl();
-	private String name;
-	private int id;
-	private CrystalCell exampleUnitCell;
+	private static final HashMap<String, BravaisLattice> name2bl = initname2bl();
+	private final String name;
+	private final int id;
+	private final CrystalCell exampleUnitCell;
 
-	private BravaisLattice(int id, String name, CrystalCell exampleUnitCell) {
+	BravaisLattice(int id, String name, CrystalCell exampleUnitCell) {
 		this.name = name;
 		this.id = id;
 		this.exampleUnitCell = exampleUnitCell;
@@ -62,7 +62,7 @@ public enum BravaisLattice {
 	}
 
 	private static HashMap<String,BravaisLattice> initname2bl(){
-		HashMap<String,BravaisLattice> name2bl = new HashMap<String, BravaisLattice>();
+		HashMap<String,BravaisLattice> name2bl = new HashMap<>();
 		for (BravaisLattice bl:BravaisLattice.values()) {
 			name2bl.put(bl.getName(), bl);
 		}

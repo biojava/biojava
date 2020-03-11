@@ -103,13 +103,15 @@ public class CallableStructureAlignment implements  Callable<AFPChain> {
 			if (ca1 == null) {
 				Structure structure1 = cache.getStructure(pair.getName1());
 				ca1 =  StructureTools.getRepresentativeAtomArray(structure1);
-			} else ca1 = StructureTools.cloneAtomArray(ca1);
+			} else
+				ca1 = StructureTools.cloneAtomArray(ca1);
 
 			Structure structure2 = null;
 			if (ca2 == null) {
 				structure2 = cache.getStructure(pair.getName2());
 				ca2 = StructureTools.getRepresentativeAtomArray(structure2);
-			} else ca2 = StructureTools.cloneAtomArray(ca2);
+			} else
+				ca2 = StructureTools.cloneAtomArray(ca2);
 
 			afpChain = algorithm.align(ca1, ca2);
 

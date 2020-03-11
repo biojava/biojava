@@ -20,12 +20,12 @@
  */
 package org.biojava.nbio.structure.io;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
 import org.biojava.nbio.structure.io.mmtf.MmtfActions;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * A class to read MMTF files and cache them locally.

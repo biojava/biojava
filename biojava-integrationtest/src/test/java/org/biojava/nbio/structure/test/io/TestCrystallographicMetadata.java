@@ -20,12 +20,12 @@
  */
 package org.biojava.nbio.structure.test.io;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
-
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.align.util.AtomCache;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
  * A test for the parsing of some crystallographic metadata: non standard space group and non standard coordinate frame convention.

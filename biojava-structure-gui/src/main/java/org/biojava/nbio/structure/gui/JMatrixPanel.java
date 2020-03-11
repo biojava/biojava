@@ -63,7 +63,7 @@ public class JMatrixPanel extends JPanel{
 	int selectedAlignmentPos;
 
 	final static BasicStroke stroke = new BasicStroke(2.0f);
-	StrucAligParameters params;
+	final StrucAligParameters params;
 
 	public JMatrixPanel(){
 		scale = 1;

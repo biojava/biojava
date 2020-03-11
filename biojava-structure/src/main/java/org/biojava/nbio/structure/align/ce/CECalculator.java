@@ -26,11 +26,9 @@ package org.biojava.nbio.structure.align.ce;
 
 import org.biojava.nbio.core.alignment.matrices.ScaledSubstitutionMatrix;
 import org.biojava.nbio.core.alignment.template.SubstitutionMatrix;
-import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.Calc;
-import org.biojava.nbio.structure.Group;
-import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.StructureTools;
+import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
+import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
+import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.model.AFP;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.util.AFPAlignmentDisplay;
@@ -38,13 +36,10 @@ import org.biojava.nbio.structure.align.util.AFPChainScorer;
 import org.biojava.nbio.structure.geometry.Matrices;
 import org.biojava.nbio.structure.geometry.SuperPositions;
 import org.biojava.nbio.structure.jama.Matrix;
-import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
-import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.vecmath.Matrix4d;
+import java.util.ArrayList;
+import java.util.List;
 
 
 
@@ -63,6 +58,8 @@ public class CECalculator {
 
 	protected static final boolean isPrint = false;
 	private static final boolean debug = false;
+
+	public static final double strLenThreshold = 0.95;
 
 	int[] f1;
 	int[] f2;
@@ -85,7 +82,7 @@ public class CECalculator {
 
 	protected static final 	double  zThr=-0.1;
 
-	long timeStart ;
+	final long timeStart ;
 	long timeEnd;
 	private int nAtom;
 
@@ -103,22 +100,23 @@ public class CECalculator {
 	private double z;
 	private int[] traceIndexContainer;
 
-	protected CeParameters params;
+	protected final CeParameters params;
 	// SHOULD these fields be PARAMETERS?
 
 	protected static final int nIter = 1;
 	private static final boolean distAll = false;
 
-	List<MatrixListener> matrixListeners;
+	final List<MatrixListener> matrixListeners;
 
 
+	static final double[][] EMPTY_DOUBLE_SQUARE = new double[0][0];
 
 	public CECalculator(CeParameters params){
 		timeStart = System.currentTimeMillis();
-		dist1= new double[0][0];
-		dist2= new double[0][0];
+
+		dist1 = dist2 = EMPTY_DOUBLE_SQUARE;
 		this.params = params;
-		matrixListeners = new ArrayList<MatrixListener>();
+		matrixListeners = new ArrayList<>();
 
 	}
 
@@ -128,10 +126,9 @@ public class CECalculator {
 	 * @param ca1
 	 * @param ca2
 	 * @return afpChain
-	 * @throws StructureException
 	 */
 	public AFPChain extractFragments(AFPChain afpChain,
-			Atom[] ca1, Atom[] ca2) throws StructureException{
+			Atom[] ca1, Atom[] ca2) {
 
 		int nse1 = ca1.length;
 		int nse2 = ca2.length;
@@ -139,7 +136,7 @@ public class CECalculator {
 		afpChain.setCa1Length(nse1);
 		afpChain.setCa2Length(nse2);
 
-		int traceMaxSize=nse1<nse2?nse1:nse2;
+		int traceMaxSize= Math.min(nse1, nse2);
 
 		f1 = new int[nse1];
 		f2 = new int[nse2];
@@ -259,9 +256,8 @@ public class CECalculator {
 	 * @param ca2 The CA of the second residue
 	 * @return The distance between the two fragments, according to the selected
 	 * scoring strategy. Lower distances are better alignments.
-	 * @throws StructureException
 	 */
-	private double getDistanceWithSidechain(Atom ca1, Atom ca2) throws StructureException {
+	private double getDistanceWithSidechain(Atom ca1, Atom ca2) {
 
 		if ( params.getScoringStrategy() == CeParameters.ScoringStrategy.CA_SCORING) {
 
@@ -360,10 +356,8 @@ public class CECalculator {
 	 * @param ca
 	 * @param nse
 	 * @return
-	 * @throws StructureException
-	 */
-	private double[][] initIntraDistmatrix(Atom[] ca, int nse) throws StructureException
-	{
+     */
+	private double[][] initIntraDistmatrix(Atom[] ca, int nse) {
 
 
 		double[][] intraDist = new double[nse][nse];
@@ -447,7 +441,7 @@ public class CECalculator {
 
 		//System.out.println("nse1 :" +nse1 + " nse2: " + nse2);
 
-		int traceMaxSize=nse1<nse2?nse1:nse2;
+		int traceMaxSize= Math.min(nse1, nse2);
 
 		bestTrace1 = new int [traceMaxSize];
 		bestTrace2 = new int [traceMaxSize];
@@ -477,10 +471,10 @@ public class CECalculator {
 
 		nTraces =0;
 		long tracesLimit=(long)5e7;
-		double score =-1;
-		double score0 = -1;
-		double score1 = -1 ;
-		double score2 = -1;
+		double score;
+		double score0;
+		double score1;
+		double score2;
 
 		int mse1;
 		int mse2;
@@ -580,7 +574,7 @@ public class CECalculator {
 
 								nTrace++;
 								boolean isTraceUp=true;
-								int traceIndex_=0;
+								int traceIndex_;
 
 								traceLoop:
 									while(nTrace>0) {
@@ -806,17 +800,17 @@ public class CECalculator {
 			((nTrace>1?traceScore[nTrace-2][traceIndex[nTrace-1]]:score0)
 		 *a[nTrace-1]+score1*(a[nTrace]-a[nTrace-1]))/a[nTrace];
 		 */
-		double val = 0;
+		double val;
 		if ( nTrace>1)
 			val =traceScore[nTrace-2][traceIndex[nTrace-1]];
 		else
 			val = score0;
 
-		double score2 =  (val * traceIndexContainer[nTrace-1]+score1*(traceIndexContainer[nTrace]-traceIndexContainer[nTrace-1]))/traceIndexContainer[nTrace];
+		return  (val * traceIndexContainer[nTrace-1]+score1*(traceIndexContainer[nTrace]-traceIndexContainer[nTrace-1]))/traceIndexContainer[nTrace];
 
 		//System.out.println("check: score0 " + score0 + " score 1 " + score1 + " sc2: " + score2 + " val: " + val + " nTrace:" + nTrace+ " " +  traceIndexContainer[nTrace-1] + " " +  traceIndexContainer[nTrace-1] + " " + traceIndexContainer[nTrace] );
 
-		return score2;
+
 
 
 	}
@@ -922,8 +916,7 @@ nBestTrace=nTrace;
 
 		convertAfpChain(afpChain, ca1, ca2);
 		AFPAlignmentDisplay.getAlign(afpChain, ca1, ca2);
-		double tmScore = AFPChainScorer.getTMScore(afpChain, ca1, ca2,false);
-		afpChain.setTMScore(tmScore);
+		afpChain.setTMScore(AFPChainScorer.getTMScore(afpChain, ca1, ca2,false));
 	}
 
 
@@ -931,7 +924,7 @@ nBestTrace=nTrace;
 	// this part is modified from the original CeCalculator
 	@SuppressWarnings("unused")
 	private void checkBestTraces( AFPChain afpChain,
-			Atom[] ca1, Atom[] ca2) throws StructureException{
+			Atom[] ca1, Atom[] ca2) {
 
 		z=0.0;
 
@@ -940,7 +933,7 @@ nBestTrace=nTrace;
 		int winSize = params.getWinSize();
 		int nse1 = ca1.length;
 		int nse2 = ca2.length;
-		int traceMaxSize=nse1<nse2?nse1:nse2;
+		int traceMaxSize= Math.min(nse1, nse2);
 		int idir;
 
 
@@ -998,7 +991,7 @@ nBestTrace=nTrace;
 		bestTraceLen=new int [traceMaxSize];
 
 
-		int strLen=0;
+		int strLen;
 
 		int jt;
 		strLen=0;
@@ -1143,7 +1136,7 @@ nBestTrace=nTrace;
 		}
 
 		// start to convert CE internal datastructure to generic AFPChain one...
-		List<AFP> afpSet = new ArrayList<AFP>();
+		List<AFP> afpSet = new ArrayList<>(nBestTrace);
 		for (int afp=0;afp<nBestTrace;afp++){
 			// fill in data from nBestTrace into AFP
 
@@ -1246,14 +1239,14 @@ nBestTrace=nTrace;
 	 * @param ca
 	 * @param j
 	 */
-	private void setStrBuf(Atom[] strBuf, int i, Atom[] ca, int j) {
+	private static void setStrBuf(Atom[] strBuf, int i, Atom[] ca, int j) {
 		// TODO Auto-generated method stub
 		//TODO
 		Group parent = ca[j].getGroup();
 		int pos = 0;
 		String atomName = ca[j].getName();
 
-		Atom a = null;
+		Atom a;
 
 			a= parent.getAtom(atomName);
 			if ( a != null){
@@ -1272,7 +1265,7 @@ nBestTrace=nTrace;
 	// TODO:  consider all requested Atoms?
 	private double getRMSDForBestTrace(int ir, Atom[] strBuf1, Atom[] strBuf2,
 			int[] bestTracesN2, int[][] bestTraces12, int[] bestTrace22,
-			int winSize,Atom[] ca1, Atom[] ca2 ) throws StructureException {
+			int winSize,Atom[] ca1, Atom[] ca2 ) {
 		int is=0;
 		for(int jt=0; jt<bestTracesN[ir]; jt++) {
 			for(int i=0; i<winSize; i++) {
@@ -1283,8 +1276,8 @@ nBestTrace=nTrace;
 			is+=winSize;
 		}
 		//sup_str(strBuf1, strBuf2, bestTracesN[ir]*winSize, d_);
-		double rmsdNew=calc_rmsd(strBuf1, strBuf2, bestTracesN[ir]*winSize, true);
-		return rmsdNew;
+		return calc_rmsd(strBuf1, strBuf2, bestTracesN[ir]*winSize, true);
+
 
 	}
 
@@ -1296,7 +1289,7 @@ nBestTrace=nTrace;
 	/** calc initial RMSD for bestTrace1 in debug only
 	 *
 	 */
-	private void checkPrintRmsdNew(int traceMaxSize, int winSize, Atom[] ca1, Atom[] ca2) throws StructureException{
+	private void checkPrintRmsdNew(int traceMaxSize, int winSize, Atom[] ca1, Atom[] ca2) {
 
 		int is = 0;
 		// calc initial RMSD for bestTrace1
@@ -1344,7 +1337,7 @@ nBestTrace=nTrace;
 
 
 	private int optimizeSuperposition(AFPChain afpChain, int nse1, int nse2, int strLen, double rmsd, Atom[] ca1, Atom[] ca2,int nGaps,
-			Atom[] strBuf1, Atom[] strBuf2 ) throws StructureException {
+			Atom[] strBuf1, Atom[] strBuf2 ) {
 
 		//System.out.println("optimizing Superimposition...");
 
@@ -1425,17 +1418,16 @@ nBestTrace=nTrace;
 
 			nAtom=0; nGaps=0;
 			for(int ia=0; ia<lcmp; ia++) {
-				if(align_se1[ia]!=-1 && align_se2[ia]!=-1) {
+				int seia1, seia2;
+				if((seia1 = align_se1[ia]) !=-1 && (seia2 = align_se2[ia]) !=-1) {
 
-					strBuf1[nAtom]=ca1[align_se1[ia]];
-					strBuf2[nAtom]=ca2[align_se2[ia]];
+					strBuf1[nAtom]=ca1[seia1];
+					strBuf2[nAtom]=ca2[seia2];
 
 					nAtom++;
 
-				}
-				else {
+				} else
 					nGaps++;
-				}
 			}
 
 
@@ -1450,7 +1442,7 @@ nBestTrace=nTrace;
 			//afpChain.setTotalRmsdOpt(rmsd);
 			//System.out.println("rmsd: " + rmsd);
 
-			if(!(nAtom<strLen*0.95) && (!isRmsdLenAssigned)) {
+			if(!isRmsdLenAssigned && nAtom >= strLen * strLenThreshold) {
 				rmsdLen=rmsd;
 				isRmsdLenAssigned=true;
 			}
@@ -1536,7 +1528,7 @@ nBestTrace=nTrace;
 		}
 
 
-		AminoAcidCompoundSet set = AminoAcidCompoundSet.getAminoAcidCompoundSet();
+        AminoAcidCompoundSet set = AminoAcidCompoundSet.aminoAcidCompoundSet;
 
 		for (int i = 0 ; i < origM.getRowDimension() ; i++){
 			for ( int j =0; j < origM.getColumnDimension() ; j ++ ) {
@@ -1555,7 +1547,7 @@ nBestTrace=nTrace;
 
 				short aaScore = substMatrix.getValue(ac1,ac2);
 
-				double weightedScore = (aaScore / internalScale) * params.getSeqWeight();
+				double weightedScore = (((double)aaScore) / internalScale) * params.getSeqWeight();
 
 
 				val += weightedScore;
@@ -1609,7 +1601,7 @@ nBestTrace=nTrace;
 		// isGlobal1,isGlobal2 are always false...
 
 		int i, j, is, js, iMax, jMax, k;
-		boolean ge=(gapE!=0.0?true:false);
+		boolean ge=(gapE != 0.0);
 		double sum, sum_ret, sum_brk;
 
 		boolean[][] brk_flg=new boolean [nSeq1][nSeq2];
@@ -1850,7 +1842,7 @@ nBestTrace=nTrace;
 	}
 
 
-	private void rot_mol(Atom[] caA, Atom[] caB, int nse2, Matrix m , Atom shift) throws StructureException{
+	private static void rot_mol(Atom[] caA, Atom[] caB, int nse2, Matrix m, Atom shift) {
 
 		for(int l=0; l<nse2; l++) {
 			Atom a = caA[l];
@@ -1888,10 +1880,9 @@ nBestTrace=nTrace;
 	 * @param strLen Number of atoms from pro1 and pro2 to use
 	 * @param storeTransform Store rotation and shift matrices locally
 	 * @return RMSD
-	 * @throws StructureException
-	 */
+     */
 	public double calc_rmsd(Atom[] pro1, Atom[] pro2, int strLen,
-			boolean storeTransform) throws StructureException {
+			boolean storeTransform) {
 
 		Atom[] cod1 = getAtoms(pro1,  strLen,false);
 		Atom[] cod2 = getAtoms(pro2,  strLen,true);
@@ -1919,24 +1910,18 @@ nBestTrace=nTrace;
 	 * @param length the number of atoms to copy
 	 * @param clone If true, preform a deep copy, cloning the underlying Groups
 	 * @return An array with the first length items of ca, possibly cloning the Atoms.
-	 * @throws StructureException
 	 */
-	private Atom[] getAtoms(Atom[] ca,  int length, boolean clone) throws StructureException{
+	private static Atom[] getAtoms(Atom[] ca, int length, boolean clone) {
 
-		List<Atom> atoms = new ArrayList<Atom>();
+		List<Atom> atoms = new ArrayList<>(length); //TODO avoid ArrayList, just craete Atom[]
 		for ( int i = 0 ; i < length ; i++){
-
-			Atom a;
-			if ( clone ){
-				Group g = (Group)ca[i].getGroup().clone();
-				a = g.getAtom(ca[i].getName());
-			}
-			else {
-				a = ca[i];
-			}
-			atoms.add(a);
+			atoms.add(clone ?
+				((Group) ca[i].getGroup().clone()).getAtom(ca[i].getName()) :
+				ca[i]
+			);
 		}
-		return atoms.toArray(new Atom[atoms.size()]);
+
+		return atoms.toArray(Atom.EmptyAtomArray);
 	}
 
 
@@ -1954,33 +1939,33 @@ nBestTrace=nTrace;
 
 
 
-	private double zToP(double z) {
+	private static double zToP(double z) {
 		int ind=(int)(z/0.1);
 		if(ind<0) ind=0;
 		if(ind>149) ind=149;
 		return(tableZtoP[ind]);
 	}
 	///////////////////////////////////////////////////////////////////////////
-	private		double pToZ(double p) {
+	private static double pToZ(double p) {
 		int ind=(int)(-Math.log10(p)*3.0);
 		if(ind<0) ind=0;
 		if(ind>149) ind=149;
 		return(tablePtoZ[ind]);
 	}
 	///////////////////////////////////////////////////////////////////////////
-	private	double zByZ(double z1, double z2) {
+	private static double zByZ(double z1, double z2) {
 		double p1=zToP(z1);
 		double p2=zToP(z2);
-		return(pToZ(p1*p2));
+		return pToZ(p1*p2);
 	}
 
-	protected double zStrAlign(int winSize, int nTrace, double score, int nGaps) {
+	protected static double zStrAlign(int winSize, int nTrace, double score, int nGaps) {
 		double z1=zScore(winSize, nTrace, score);
 		double z2=zGaps(winSize, nTrace, nGaps);
-		return(zByZ(z1, z2));
+		return zByZ(z1, z2);
 	}
 
-	double zScore(int winSize, int nTrace, double score) {
+	static double zScore(int winSize, int nTrace, double score) {
 
 		if(winSize==8) {
 
@@ -2020,7 +2005,7 @@ nBestTrace=nTrace;
 
 	}
 	///////////////////////////////////////////////////////////////////////////
-	double zGaps(int winSize, int nTrace, int nGaps) {
+	static double zGaps(int winSize, int nTrace, int nGaps) {
 
 		if(nTrace<2) return(0.0);
 		double scoreAv_, scoreSd_;
@@ -2119,21 +2104,14 @@ nBestTrace=nTrace;
 
 		 afpChain.setBlockNum(1);
 		 //afpChain.setAlignScore(z);
-		 Matrix[] m ;
-
-		 if ( r != null ) {
-			 m = new Matrix[1];
-			 m[0] = r;
-		 } else  {
-			 m = new Matrix[0];
-		 }
+		 Matrix[] m = r != null ? new Matrix[]{r} : Matrix.EmptyMatrixArray;
 
 		 Atom[] as ;
 		 if ( t != null) {
 			 as = new Atom[1];
 			 as[0] = t;
 		 } else {
-			 as = new Atom[0];
+			 as = Atom.EmptyAtomArray;
 		 }
 
 		 afpChain.setBlockRotationMatrix(m);

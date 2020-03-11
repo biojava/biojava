@@ -46,13 +46,13 @@ public class TwoBitParser extends InputStream {
 
 	private static final Logger logger = LoggerFactory.getLogger(TwoBitParser.class);
 
-	public int DEFAULT_BUFFER_SIZE = 10000;
+	public final int DEFAULT_BUFFER_SIZE = 10000;
 	//
-	private RandomAccessFile raf;
-	private File f;
+	private final RandomAccessFile raf;
+	private final File f;
 	private boolean reverse = false;
-	private String[] seq_names;
-	private HashMap<String,Long> seq2pos = new HashMap<String,Long>();
+	private final String[] seq_names;
+	private final HashMap<String,Long> seq2pos = new HashMap<>();
 	private String cur_seq_name;
 	private long[][] cur_nn_blocks;
 	private long[][] cur_mask_blocks;
@@ -98,7 +98,7 @@ public class TwoBitParser extends InputStream {
 		}
 	}
 	private long readFourBytes() throws Exception {
-		long ret = 0;
+		long ret;
 		if(!reverse) {
 			ret = raf.read();
 			ret += raf.read()*0x100;
@@ -170,7 +170,7 @@ public class TwoBitParser extends InputStream {
 	 * Method resets current position to the begining of sequence stream.
 	 */
 	@Override
-	public synchronized void reset() throws IOException {
+	public synchronized void reset() {
 		cur_seq_pos = 0;
 		cur_nn_block_num = (cur_nn_blocks.length>0)?0:-1;
 		cur_mask_block_num = (cur_mask_blocks.length>0)?0:-1;
@@ -228,7 +228,7 @@ public class TwoBitParser extends InputStream {
 		else if(bit_num==3) {
 			file_pos++;
 		}
-		char ret = 'N';
+		char ret;
 		if((cur_nn_block_num>=0)&&
 				(cur_nn_blocks[cur_nn_block_num][0]<=cur_seq_pos)) {
 			if(cur_bits[bit_num]!=0) {
@@ -297,7 +297,7 @@ public class TwoBitParser extends InputStream {
 	 * new current sequence.
 	 */
 	@Override
-	public void close() throws IOException {
+	public void close() {
 		cur_seq_name = null;
 		cur_nn_blocks = null;
 		cur_mask_blocks = null;

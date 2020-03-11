@@ -42,7 +42,7 @@ import static org.junit.Assert.*;
 // TODO dmyersturnbull: we should merge TestAtomCache and AtomCacheTest
 public class TestAtomCache {
 
-	public static final String lineSplit = System.getProperty("file.separator");
+//	public static final String lineSplit = System.getProperty("file.separator");
 	private AtomCache cache;
 
 	@Before
@@ -54,7 +54,7 @@ public class TestAtomCache {
 				"1cmw", "1hhb","4hhb"
 		};
 
-		List<LocalPDBDirectory> readers = new ArrayList<LocalPDBDirectory>();
+		List<LocalPDBDirectory> readers = new ArrayList<>();
 		readers.add(new MMCIFFileReader(cache.getPath()) );
 		readers.add(new PDBFileReader(cache.getPath()) );
 		for(LocalPDBDirectory reader : readers) {
@@ -162,7 +162,7 @@ public class TestAtomCache {
 
 	// note: we expect an IOException because 1CMW is obsolete and hasn't got a replacement
 	@Test
-	public void testFetchCurrent1CMW() throws IOException, StructureException {
+	public void testFetchCurrent1CMW() throws StructureException {
 
 		cache.setFetchBehavior(FetchBehavior.FETCH_FILES);
 		cache.setObsoleteBehavior(ObsoleteBehavior.FETCH_CURRENT);

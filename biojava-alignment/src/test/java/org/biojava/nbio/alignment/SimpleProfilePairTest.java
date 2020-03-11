@@ -23,9 +23,10 @@
 
 package org.biojava.nbio.alignment;
 
-import org.biojava.nbio.core.alignment.SimpleProfilePair;
-import org.biojava.nbio.core.alignment.template.AlignedSequence.Step;
 import org.biojava.nbio.alignment.template.GapPenalty;
+import org.biojava.nbio.core.alignment.SimpleProfilePair;
+import org.biojava.nbio.core.alignment.matrices.SubstitutionMatrixHelper;
+import org.biojava.nbio.core.alignment.template.AlignedSequence.Step;
 import org.biojava.nbio.core.alignment.template.Profile;
 import org.biojava.nbio.core.alignment.template.ProfilePair;
 import org.biojava.nbio.core.alignment.template.SubstitutionMatrix;
@@ -36,9 +37,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
-import org.biojava.nbio.alignment.NeedlemanWunsch;
-import org.biojava.nbio.alignment.SimpleGapPenalty;
-import org.biojava.nbio.core.alignment.matrices.SubstitutionMatrixHelper;
 
 import static org.junit.Assert.assertEquals;
 
@@ -57,34 +55,31 @@ public class SimpleProfilePairTest {
 		protein4 = new ProteinSequence("ANDR");
 		gaps = new SimpleGapPenalty((short) 2, (short) 1);
 		blosum62 = SubstitutionMatrixHelper.getBlosum62();
-		pair1 = new NeedlemanWunsch<ProteinSequence, AminoAcidCompound>(protein1, protein2, gaps, blosum62).getPair();
-		pair2 = new NeedlemanWunsch<ProteinSequence, AminoAcidCompound>(protein3, protein4, gaps, blosum62).getPair();
+		pair1 = new NeedlemanWunsch<>(protein1, protein2, gaps, blosum62).getPair();
+		pair2 = new NeedlemanWunsch<>(protein3, protein4, gaps, blosum62).getPair();
 	}
 
 	@Test
 	public void testSimpleProfilePair() {
 		ProfilePair<ProteinSequence, AminoAcidCompound> all =
-				new SimpleProfilePair<ProteinSequence, AminoAcidCompound>(pair1, pair2, Arrays.asList(new Step[] {
-				Step.COMPOUND, Step.COMPOUND, Step.COMPOUND, Step.COMPOUND, Step.GAP, Step.GAP}), Arrays.asList(
-				new Step[] {Step.COMPOUND, Step.GAP, Step.COMPOUND, Step.COMPOUND, Step.COMPOUND, Step.COMPOUND}));
+				new SimpleProfilePair<>(pair1, pair2, Arrays.asList(Step.COMPOUND, Step.COMPOUND, Step.COMPOUND, Step.COMPOUND, Step.GAP, Step.GAP), Arrays.asList(
+                        Step.COMPOUND, Step.GAP, Step.COMPOUND, Step.COMPOUND, Step.COMPOUND, Step.COMPOUND));
 		assertEquals(all.toString(), String.format("ARND--%nARND--%n--HILK%nA-ND-R%n"));
 	}
 
 	@Test
 	public void testGetQuery() {
 		ProfilePair<ProteinSequence, AminoAcidCompound> all =
-				new SimpleProfilePair<ProteinSequence, AminoAcidCompound>(pair1, pair2, Arrays.asList(new Step[] {
-				Step.COMPOUND, Step.COMPOUND, Step.COMPOUND, Step.COMPOUND, Step.GAP, Step.GAP}), Arrays.asList(
-				new Step[] {Step.COMPOUND, Step.GAP, Step.COMPOUND, Step.COMPOUND, Step.COMPOUND, Step.COMPOUND}));
+				new SimpleProfilePair<>(pair1, pair2, Arrays.asList(Step.COMPOUND, Step.COMPOUND, Step.COMPOUND, Step.COMPOUND, Step.GAP, Step.GAP), Arrays.asList(
+                        Step.COMPOUND, Step.GAP, Step.COMPOUND, Step.COMPOUND, Step.COMPOUND, Step.COMPOUND));
 		assertEquals(all.getQuery(), pair1);
 	}
 
 	@Test
 	public void testGetTarget() {
 		ProfilePair<ProteinSequence, AminoAcidCompound> all =
-				new SimpleProfilePair<ProteinSequence, AminoAcidCompound>(pair1, pair2, Arrays.asList(new Step[] {
-				Step.COMPOUND, Step.COMPOUND, Step.COMPOUND, Step.COMPOUND, Step.GAP, Step.GAP}), Arrays.asList(
-				new Step[] {Step.COMPOUND, Step.GAP, Step.COMPOUND, Step.COMPOUND, Step.COMPOUND, Step.COMPOUND}));
+				new SimpleProfilePair<>(pair1, pair2, Arrays.asList(Step.COMPOUND, Step.COMPOUND, Step.COMPOUND, Step.COMPOUND, Step.GAP, Step.GAP), Arrays.asList(
+                        Step.COMPOUND, Step.GAP, Step.COMPOUND, Step.COMPOUND, Step.COMPOUND, Step.COMPOUND));
 		assertEquals(all.getTarget(), pair2);
 	}
 

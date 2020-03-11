@@ -20,9 +20,9 @@
  */
 package org.biojava.nbio.structure.secstruc;
 
-import java.io.Serializable;
-
 import org.biojava.nbio.structure.Group;
+
+import java.io.Serializable;
 
 /**
  * Container for the secondary structure information of a single residue. This
@@ -47,8 +47,8 @@ public class SecStrucInfo implements Serializable {
 	public static final String BIOJAVA_ASSIGNMENT = "BIOJAVA_ASSIGNMENT";
 
 	protected SecStrucType type;
-	protected String assignment;
-	protected Group parent;
+	protected final String assignment;
+	protected final Group parent;
 
 	public SecStrucInfo(Group g, String ass, SecStrucType t) {
 		type = t;

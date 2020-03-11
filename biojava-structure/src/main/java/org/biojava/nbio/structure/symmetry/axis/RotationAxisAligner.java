@@ -23,14 +23,13 @@ package org.biojava.nbio.structure.symmetry.axis;
 import org.biojava.nbio.structure.geometry.CalcPoint;
 import org.biojava.nbio.structure.geometry.MomentsOfInertia;
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetryResults;
+import org.biojava.nbio.structure.symmetry.core.QuatSymmetrySubunits;
 import org.biojava.nbio.structure.symmetry.core.Rotation;
 import org.biojava.nbio.structure.symmetry.core.RotationGroup;
-import org.biojava.nbio.structure.symmetry.core.QuatSymmetrySubunits;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.vecmath.*;
-
 import java.util.*;
 
 public class RotationAxisAligner extends AxisAligner{
@@ -42,18 +41,18 @@ public class RotationAxisAligner extends AxisAligner{
 	private static final Vector3d Y_AXIS = new Vector3d(0,1,0);
 	private static final Vector3d Z_AXIS = new Vector3d(0,0,1);
 
-	private QuatSymmetrySubunits subunits = null;
-	private RotationGroup rotationGroup = null;
+	private final QuatSymmetrySubunits subunits;
+	private final RotationGroup rotationGroup;
 
 	private Matrix4d transformationMatrix = new Matrix4d();
-	private Matrix4d reverseTransformationMatrix = new Matrix4d();
+	private final Matrix4d reverseTransformationMatrix = new Matrix4d();
 	private Vector3d referenceVector = new Vector3d();
 	private Vector3d principalRotationVector = new Vector3d();
 	private Vector3d[] principalAxesOfInertia = null;
 	 List<List<Integer>> alignedOrbits = null;
 
-	private Vector3d minBoundary = new Vector3d();
-	private Vector3d maxBoundary = new Vector3d();
+	private final Vector3d minBoundary = new Vector3d();
+	private final Vector3d maxBoundary = new Vector3d();
 	private double xyRadiusMax = Double.MIN_VALUE;
 
 	boolean modified = true;
@@ -236,7 +235,7 @@ public class RotationAxisAligner extends AxisAligner{
 	 * @return list of orbits ordered by z-depth
 	 */
 	private void calcAlignedOrbits() {
-		Map<Double, List<Integer>> depthMap = new TreeMap<Double, List<Integer>>();
+		Map<Double, List<Integer>> depthMap = new TreeMap<>();
 		double[] depth = getSubunitZDepth();
 		alignedOrbits = calcOrbits();
 
@@ -539,7 +538,7 @@ public class RotationAxisAligner extends AxisAligner{
 	 *
 	 */
 	private List<List<Integer>> getOrbitsByXYWidth() {
-		Map<Double, List<Integer>> widthMap = new TreeMap<Double, List<Integer>>();
+		Map<Double, List<Integer>> widthMap = new TreeMap<>();
 		double[] width = getSubunitXYWidth();
 		List<List<Integer>> orbits = calcOrbits();
 
@@ -559,9 +558,7 @@ public class RotationAxisAligner extends AxisAligner{
 
 		// now fill orbits back into list ordered by width
 		orbits.clear();
-		for (List<Integer> orbit: widthMap.values()) {
-			orbits.add(orbit);
-		}
+        orbits.addAll(widthMap.values());
 		return orbits;
 	}
 
@@ -608,14 +605,14 @@ public class RotationAxisAligner extends AxisAligner{
 		int n = subunits.getSubunitCount();
 		int fold = rotationGroup.getRotation(0).getFold();
 
-		List<List<Integer>> orbits = new ArrayList<List<Integer>>();
+		List<List<Integer>> orbits = new ArrayList<>();
 		boolean[] used = new boolean[n];
 		Arrays.fill(used, false);
 
 		for (int i = 0; i < n; i++) {
 			if (! used[i]) {
 				// determine the equivalent subunits
-				List<Integer> orbit = new ArrayList<Integer>(fold);
+				List<Integer> orbit = new ArrayList<>(fold);
 				for (int j = 0; j < fold; j++) {
 					List<Integer> permutation = rotationGroup.getRotation(j).getPermutation();
 					orbit.add(permutation.get(i));
@@ -637,7 +634,7 @@ public class RotationAxisAligner extends AxisAligner{
 //		System.out.println("Permutation0: " + p0);
 //		System.out.println("Permutation1: " + p1);
 
-		List<Integer> inRotationOrder = new ArrayList<Integer>(orbit.size());
+		List<Integer> inRotationOrder = new ArrayList<>(orbit.size());
 		inRotationOrder.add(orbit.get(0));
 		for (int i = 1; i < orbit.size(); i++) {
 			int current = inRotationOrder.get(i-1);

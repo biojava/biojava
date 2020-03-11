@@ -95,9 +95,7 @@ public class AlignUtils {
 
 		Atom[] tmp = new Atom[fragmentLength];
 
-		for (int i=0;i< fragmentLength;i++){
-			tmp[i] = caall[i+pos];
-		}
+        if (fragmentLength >= 0) System.arraycopy(caall, 0 + pos, tmp, 0, fragmentLength);
 		return tmp;
 
 	}

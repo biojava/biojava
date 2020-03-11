@@ -57,11 +57,11 @@ public class SequenceDisplay extends JPanel implements ChangeListener {
 	Structure structure2;
 	AlternativeAlignment alig;
 	StructurePairAligner structurePairAligner;
-	SequenceScalePanel panel1;
-	SequenceScalePanel panel2;
+	final SequenceScalePanel panel1;
+	final SequenceScalePanel panel2;
 
-	JSlider  residueSizeSlider;
-	JLabel  percentageDisplay;
+	final JSlider  residueSizeSlider;
+	final JLabel  percentageDisplay;
 
 	int[] idx1;
 	int[] idx2;
@@ -73,15 +73,15 @@ public class SequenceDisplay extends JPanel implements ChangeListener {
 
 	//private static final Logger logger = LoggerFactory.getLogger(SequenceDisplay.class);
 
-	List<AlignedPosition> apos;
+	final List<AlignedPosition> apos;
 
 	float scale;
-	SequenceMouseListener mouseListener1;
-	SequenceMouseListener mouseListener2;
+	final SequenceMouseListener mouseListener1;
+	final SequenceMouseListener mouseListener2;
 
 
-	JLabel label1;
-	JLabel label2;
+	final JLabel label1;
+	final JLabel label2;
 
 	public static void main(String[] args){
 
@@ -232,7 +232,7 @@ public class SequenceDisplay extends JPanel implements ChangeListener {
 
 		this.setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
 
-		apos = new ArrayList<AlignedPosition>();
+		apos = new ArrayList<>();
 	}
 
 	public void clearListeners(){
@@ -451,9 +451,7 @@ public class SequenceDisplay extends JPanel implements ChangeListener {
 	private int getMaxSequenceLength(){
 		int l1 = panel1.getChain().getAtomGroups(GroupType.AMINOACID).size();
 		int l2 = panel2.getChain().getAtomGroups(GroupType.AMINOACID).size();
-		if ( l1 > l2)
-			return l1;
-		else return l2;
+        return Math.max(l1, l2);
 	}
 
 

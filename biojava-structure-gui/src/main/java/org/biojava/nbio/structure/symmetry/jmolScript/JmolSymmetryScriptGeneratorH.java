@@ -28,10 +28,9 @@ import org.biojava.nbio.structure.symmetry.core.QuatSymmetrySubunits;
 import org.jcolorbrewer.ColorBrewer;
 
 import javax.vecmath.*;
-
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 
 /**
@@ -39,10 +38,10 @@ import java.util.List;
  *
  */
 public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
-	private static double AXIS_SCALE_FACTOR = 1.2;
-	private static double SIDE_CHAIN_EXTENSION = 6.0;
-	private HelixAxisAligner helixAxisAligner = null;
-	private String name = "";
+	private static final double AXIS_SCALE_FACTOR = 1.2;
+	private static final double SIDE_CHAIN_EXTENSION = 6.0;
+	private final HelixAxisAligner helixAxisAligner;
+	private final String name;
 	private String defaultColoring = "";
 	private boolean onTheFly = false;
 
@@ -416,16 +415,12 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 			   colors[half+i] = temp;
 			}
 		}
-		Map<Color4f, List<String>> colorMap = new HashMap<Color4f, List<String>>();
+		Map<Color4f, List<String>> colorMap = new HashMap<>();
 
 		for (int i = 0; i < orbits.size(); i++) {
 				for (Integer j: orbits.get(i)) {
 					Color4f c = colors[i];
-					List<String> ids = colorMap.get(c);
-					if (ids == null) {
-						ids = new ArrayList<String>();
-						colorMap.put(c,  ids);
-					}
+					List<String> ids = colorMap.computeIfAbsent(c, k -> new ArrayList<>());
 					String id = getChainSpecification(modelNumbers, chainIds, j);
 					ids.add(id);
 				}
@@ -448,15 +443,11 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 		int clusters = Collections.max(seqClusterIds) + 1;
 		Color[] col = ColorBrewer.BrBG.getColorPalette(clusters);
 		Color4f[] colors = ColorConverter.convertColor4f(col);
-		Map<Color4f, List<String>> colorMap = new HashMap<Color4f, List<String>>();
+		Map<Color4f, List<String>> colorMap = new HashMap<>();
 
 		for (int i = 0; i < n; i++) {
 			Color4f c = colors[seqClusterIds.get(i)];
-			List<String> ids = colorMap.get(c);
-			if (ids == null) {
-				ids = new ArrayList<String>();
-				colorMap.put(c,  ids);
-			}
+			List<String> ids = colorMap.computeIfAbsent(c, k -> new ArrayList<>());
 			String id = getChainSpecification(modelNumbers, chainIds, i);
 			ids.add(id);
 
@@ -481,7 +472,7 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 		List<Integer> clusterIds = subunits.getClusterIds();
 		int clusterCount = Collections.max(clusterIds) + 1;
 
-		Map<Color4f, List<String>> colorMap = new HashMap<Color4f, List<String>>();
+		Map<Color4f, List<String>> colorMap = new HashMap<>();
 
 		int maxLen = 0;
 		for (List<Integer> unit: units) {
@@ -502,11 +493,7 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 					Color4f c = new Color4f(colors[count]);
 					count++;
 					c.scale(scale);
-					List<String> ids = colorMap.get(c);
-					if (ids == null) {
-						ids = new ArrayList<String>();
-						colorMap.put(c,  ids);
-					}
+					List<String> ids = colorMap.computeIfAbsent(c, k -> new ArrayList<>());
 					String id = getChainSpecification(modelNumbers, chainIds, subunit);
 					ids.add(id);
 				}
@@ -579,7 +566,7 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 //		System.out.println("XZRadius: " + radius);
 
 
-		List<Point3d> ePoints = new ArrayList<Point3d>(points.size());
+		List<Point3d> ePoints = new ArrayList<>(points.size());
 		for (Point3d p: points) {
 			Point3d q = new Point3d(p);
 			transformation.transform(q);
@@ -597,7 +584,7 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 		Matrix4d transformation = helixAxisAligner.getTransformation();
 		Matrix4d reversetransformation = helixAxisAligner.getReverseTransformation();
 
-		List<Point3d> ePoints = new ArrayList<Point3d>(points.size());
+		List<Point3d> ePoints = new ArrayList<>(points.size());
 		for (Point3d p: points) {
 			Point3d q = new Point3d(p);
 			transformation.transform(q);

@@ -22,13 +22,13 @@ package org.biojava.nbio.structure.symmetry.geometry;
 
 import javax.vecmath.Matrix3d;
 import javax.vecmath.Point3d;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 
 public class Octahedron implements Polyhedron {
-	private static double TETRAHEDRAL_ANGLE = Math.acos(-1.0/3.0);
-	private static int[] lineLoop1 = {2,4,3,5,2,1,3,0,5,1,4,0,2};
+	private static final double TETRAHEDRAL_ANGLE = Math.acos(-1.0/3.0);
+	private static final int[] lineLoop1 = {2,4,3,5,2,1,3,0,5,1,4,0,2};
 	private double cirumscribedRadius = 1.0;
 
 	/**
@@ -108,11 +108,11 @@ public class Octahedron implements Polyhedron {
 	    octahedron[5] = new Point3d(0, 0,  cirumscribedRadius);
 
 		return octahedron;
-	};
+	}
 
 	@Override
 	public List<int[]> getLineLoops() {
-		return Arrays.asList(lineLoop1);
+		return Collections.singletonList(lineLoop1);
 	}
 
 	public Point3d getC4Axis(double scale) {

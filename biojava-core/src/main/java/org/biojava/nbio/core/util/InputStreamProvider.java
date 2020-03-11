@@ -100,7 +100,7 @@ public class InputStreamProvider {
 	 * @return the magic number
 	 * @throws IOException
 	 */
-	private int getMagicNumber(InputStream in)
+	private static int getMagicNumber(InputStream in)
 	throws IOException {
 
 
@@ -118,7 +118,7 @@ public class InputStreamProvider {
 	public InputStream getInputStream(URL u)
 	throws IOException{
 
-		int magic = 0;
+		int magic;
 
 
 		InputStream inStream = u.openStream();
@@ -160,7 +160,7 @@ public class InputStreamProvider {
 		// use the magic numbers to determine the compression type,
 		// use file extension only as 2nd choice
 
-		int magic = 0;
+		int magic;
 
 
 		InputStream test = getInputStreamFromFile(f);
@@ -168,7 +168,7 @@ public class InputStreamProvider {
 		test.close();
 
 
-		InputStream inputStream = null;
+		InputStream inputStream;
 
 		String fileName = f.getName();
 

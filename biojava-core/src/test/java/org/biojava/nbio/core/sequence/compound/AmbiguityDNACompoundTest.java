@@ -29,7 +29,7 @@ import static org.junit.Assert.assertEquals;
 
 public class AmbiguityDNACompoundTest {
 
-	private AmbiguityDNACompoundSet set = AmbiguityDNACompoundSet.getDNACompoundSet();
+	private final AmbiguityDNACompoundSet set = AmbiguityDNACompoundSet.getDNACompoundSet();
 
 	@Test
 	public void testAmbiguity() {
@@ -44,7 +44,7 @@ public class AmbiguityDNACompoundTest {
 	}
 
 	private NucleotideCompound[] getCompounds(String... compoundStrings) {
-		List<NucleotideCompound> c = new ArrayList<NucleotideCompound>();
+		List<NucleotideCompound> c = new ArrayList<>();
 		for(String s: compoundStrings) {
 			c.add(set.getCompoundForString(s));
 		}

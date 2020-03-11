@@ -30,7 +30,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.vecmath.*;
-
 import java.util.*;
 
 public class HelixAxisAligner extends AxisAligner {
@@ -42,18 +41,18 @@ public class HelixAxisAligner extends AxisAligner {
 	private static final Vector3d Y_AXIS = new Vector3d(0,1,0);
 	private static final Vector3d Z_AXIS = new Vector3d(0,0,1);
 
-	private QuatSymmetrySubunits subunits = null;
-	private HelixLayers helixLayers = null;
+	private final QuatSymmetrySubunits subunits;
+	private final HelixLayers helixLayers;
 
 	private Matrix4d transformationMatrix = new Matrix4d();
-	private Matrix4d reverseTransformationMatrix = new Matrix4d();
+	private final Matrix4d reverseTransformationMatrix = new Matrix4d();
 	private Vector3d referenceVector = new Vector3d();
 	private Vector3d principalRotationVector = new Vector3d();
 	private Vector3d[] principalAxesOfInertia = null;
 	private List<List<Integer>> alignedOrbits = null;
 
-	private Vector3d minBoundary = new Vector3d();
-	private Vector3d maxBoundary = new Vector3d();
+	private final Vector3d minBoundary = new Vector3d();
+	private final Vector3d maxBoundary = new Vector3d();
 	private double xzRadiusMax = Double.MIN_VALUE;
 
 	boolean modified = true;
@@ -276,7 +275,7 @@ public class HelixAxisAligner extends AxisAligner {
 		}
 
 		// average over all midpoints to find best center of rotation
-		centerOfRotation.scale(1/(line.size()-2));
+		centerOfRotation.scale(1.0/(line.size()-2));
 		// since helix is aligned along the y-axis, with an origin at y = 0, place the center of rotation there
 		centerOfRotation.y = 0;
 		// transform center of rotation to the original coordinate frame
@@ -356,7 +355,7 @@ public class HelixAxisAligner extends AxisAligner {
 	 * @return list of orbits ordered by z-depth
 	 */
 	private void calcAlignedOrbits() {
-		Map<Double, List<Integer>> depthMap = new TreeMap<Double, List<Integer>>();
+		Map<Double, List<Integer>> depthMap = new TreeMap<>();
 		double[] depth = getSubunitZDepth();
 		alignedOrbits = calcOrbits();
 
@@ -378,13 +377,11 @@ public class HelixAxisAligner extends AxisAligner {
 
 		// now fill orbits back into list ordered by depth
 		alignedOrbits.clear();
-		for (List<Integer> orbit: depthMap.values()) {
-			// order subunit in a clockwise rotation around the z-axis
-			/// starting at the 12 O-clock position (+y position)
-			// TODO how should this be aligned??
-	//		alignWithReferenceAxis(orbit);
-			alignedOrbits.add(orbit);
-		}
+		// order subunit in a clockwise rotation around the z-axis
+		/// starting at the 12 O-clock position (+y position)
+		// TODO how should this be aligned??
+		//		alignWithReferenceAxis(orbit);
+		alignedOrbits.addAll(depthMap.values());
 	}
 
 
@@ -429,7 +426,7 @@ public class HelixAxisAligner extends AxisAligner {
 	 * @param referenceVectors
 	 * @return
 	 */
-	private Matrix4d alignAxes(Vector3d[] axisVectors, Vector3d[] referenceVectors) {
+	private static Matrix4d alignAxes(Vector3d[] axisVectors, Vector3d[] referenceVectors) {
 		Matrix4d m1 = new Matrix4d();
 		AxisAngle4d a = new AxisAngle4d();
 		Vector3d axis = new Vector3d();
@@ -585,7 +582,7 @@ public class HelixAxisAligner extends AxisAligner {
 	private List<List<Integer>> calcOrbits() {
 		int n = subunits.getSubunitCount();
 
-		List<List<Integer>> orbits = new ArrayList<List<Integer>>();
+		List<List<Integer>> orbits = new ArrayList<>();
 		for (int i = 0; i < n; i++) {
 			orbits.add(Collections.singletonList(i));
 		}

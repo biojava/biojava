@@ -21,8 +21,8 @@ package org.biojava.nbio.structure.align.gui;
 
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.align.gui.jmol.AbstractAlignmentJmol;
-import javax.swing.*;
 
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -32,7 +32,7 @@ import java.io.PrintWriter;
 
 public class MyExportListener implements ActionListener{
 
-	AbstractAlignmentJmol parent;
+	final AbstractAlignmentJmol parent;
 	MyExportListener(AbstractAlignmentJmol parent){
 		this.parent = parent;
 	}

@@ -93,7 +93,7 @@ public class GeneMarkGTFReader {
 	private static Feature parseLine(String s) {
 		//FIXME update to use regex split on tabs
 		//FIXME better errors on parse failures
-		int start = 0;
+		int start;
 		int end = 0;
 
 		start = end;
@@ -116,7 +116,7 @@ public class GeneMarkGTFReader {
 		end = s.indexOf('\t', start);
 		String locEnd = s.substring(start, end);
 
-		Double score;
+		double score;
 		start = end + 1;
 		end = s.indexOf('\t', start);
 		try {
@@ -145,11 +145,11 @@ public class GeneMarkGTFReader {
 		//grab everything until end of line (or # comment)
 		start = end + 1;
 		end = s.indexOf('#', start);
-		String attributes = null;
+		String attributes;
 		if (end < 0) {
-			attributes = new String(s.substring(start));
+			attributes = s.substring(start);
 		} else {
-			attributes = new String(s.substring(start, end));
+			attributes = s.substring(start, end);
 		}
 
 		return new Feature(seqname, source, type, location, score, frame, attributes);

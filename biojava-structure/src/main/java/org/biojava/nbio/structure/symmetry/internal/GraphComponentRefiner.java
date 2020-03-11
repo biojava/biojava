@@ -20,14 +20,6 @@
  */
 package org.biojava.nbio.structure.symmetry.internal;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-
-import javax.vecmath.GMatrix;
-import javax.vecmath.GVector;
-
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.model.AFPChain;
@@ -35,8 +27,15 @@ import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.util.AlignmentTools;
 import org.biojava.nbio.structure.symmetry.utils.SymmetryTools;
 import org.jgrapht.Graph;
-import org.jgrapht.alg.ConnectivityInspector;
+import org.jgrapht.alg.connectivity.ConnectivityInspector;
 import org.jgrapht.graph.DefaultEdge;
+
+import javax.vecmath.GMatrix;
+import javax.vecmath.GVector;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 /**
  * The GraphRefiner transforms the self-alignment into a Graph and extracts its
@@ -63,12 +62,12 @@ public class GraphComponentRefiner implements SymmetryRefiner {
 				.buildSymmetryGraph(selfAlignment);
 
 		// Find the maximally connected components of the graph
-		ConnectivityInspector<Integer, DefaultEdge> inspector = new ConnectivityInspector<Integer, DefaultEdge>(
+		ConnectivityInspector<Integer, DefaultEdge> inspector = new ConnectivityInspector<>(
 				graph);
 		List<Set<Integer>> components = inspector.connectedSets();
 
 		// Filter components with size != order, and transform to ResidueGroups
-		List<ResidueGroup> groups = new ArrayList<ResidueGroup>();
+		List<ResidueGroup> groups = new ArrayList<>();
 		for (Set<Integer> comp : components) {
 			if (comp.size() == order) {
 				ResidueGroup group = new ResidueGroup(comp);
@@ -103,7 +102,7 @@ public class GraphComponentRefiner implements SymmetryRefiner {
 		}
 
 		// The compatibility score is the sum of rows of the matrix
-		List<Integer> rowScores = new ArrayList<Integer>(size);
+		List<Integer> rowScores = new ArrayList<>(size);
 		for (int i = 0; i < size; i++) {
 			GVector row = new GVector(size);
 			matrix.getRow(i, row);
@@ -113,9 +112,9 @@ public class GraphComponentRefiner implements SymmetryRefiner {
 		}
 
 		// Refined multiple alignment Block as a result
-		List<List<Integer>> alignRes = new ArrayList<List<Integer>>(order);
+		List<List<Integer>> alignRes = new ArrayList<>(order);
 		for (int i = 0; i < order; i++)
-			alignRes.add(new ArrayList<Integer>());
+			alignRes.add(new ArrayList<>());
 
 		// Iterate until no more groups left to add (all groups score 0)
 		while (true) {

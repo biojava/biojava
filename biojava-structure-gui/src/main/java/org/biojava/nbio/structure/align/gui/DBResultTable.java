@@ -96,7 +96,7 @@ public class DBResultTable implements ActionListener{
 
 	public void show(BufferedReader in, UserConfiguration config) throws IOException{
 		String str;
-		List<String[]> tmpdat = new ArrayList<String[]>();
+		List<String[]> tmpdat = new ArrayList<>();
 		while ((str = in.readLine()) != null) {
 			if ( str.startsWith("#")) {
 				if ( str.startsWith("# algorithm:")) {
@@ -142,9 +142,7 @@ public class DBResultTable implements ActionListener{
 								ceParams.setScoringStrategy(scoreS);
 							}
 						}
-					} catch (IndexOutOfBoundsException e){
-						System.err.println("Unknown scoring strategy from line: " + str);
-					} catch (IllegalArgumentException e) {
+					} catch (IndexOutOfBoundsException | IllegalArgumentException e){
 						System.err.println("Unknown scoring strategy from line: " + str);
 					} catch (Exception e) {
 						System.err.println("Unknown parameter can't read parameters from line: " + str);
@@ -260,7 +258,7 @@ public class DBResultTable implements ActionListener{
 	}
 
 	private void outputSelection() {
-		StringBuffer output = new StringBuffer();
+		StringBuilder output = new StringBuilder();
 		output.append(String.format("Lead: %d, %d. ",
 				table.getSelectionModel().getLeadSelectionIndex(),
 				table.getColumnModel().getSelectionModel().
@@ -309,7 +307,7 @@ public class DBResultTable implements ActionListener{
 		}
 
 		try {
-			Structure structure1 = null;
+			Structure structure1;
 			if ( name1.equals("CUSTOM")) {
 				// user uploaded a custom PDB file...
 				structure1 = loadCustomStructure(userPath,userChain);
@@ -348,7 +346,7 @@ public class DBResultTable implements ActionListener{
 
 	private Structure loadCustomStructure(String userPath2, String userChain2) throws StructureException{
 		StructureIOFile reader = new PDBFileReader();
-		Structure s = null;
+		Structure s;
 		try {
 			s = reader.getStructure(userPath2);
 		} catch (IOException  e){

@@ -356,7 +356,7 @@ public class StockholmFileParser {
 		if (internalScanner == null) {
 			internalScanner = new Scanner(inStream);
 		}
-		ArrayList<StockholmStructure> structures = new ArrayList<StockholmStructure>();
+		ArrayList<StockholmStructure> structures = new ArrayList<>();
 		while (max != INFINITY && max-- > 0) {
 			StockholmStructure structure = parse(internalScanner);
 			if (structure != null) {
@@ -399,7 +399,7 @@ public class StockholmFileParser {
 				throw new IllegalArgumentException("No Scanner defined");
 			}
 		}
-		String line = null;
+		String line;
 		int linesCount = 0;
 		try {
 			while (scanner.hasNextLine()) {
@@ -507,9 +507,8 @@ public class StockholmFileParser {
 		if (structure != null) {
 			int length = -1;
 			Map<String, StringBuffer> sequences = structure.getSequences();
-			for (String sequencename : sequences.keySet()) {
-				StringBuffer sequence = sequences.get(sequencename);
-				if (length == -1) {
+			for (StringBuffer sequence : sequences.values()) {
+                if (length == -1) {
 					length = sequence.length();
 				} else if (length != sequence.length()) {
 					throw new RuntimeException("Sequences have different lengths");
@@ -544,79 +543,114 @@ public class StockholmFileParser {
 	 *            the line to be parsed
 	 */
 	private void handleFileAnnotation(String featureName, String value) {
-		if (featureName.equals(GF_ACCESSION_NUMBER)) {
-			stockholmStructure.getFileAnnotation().setGFAccessionNumber(value);
-		} else if (featureName.equals(GF_IDENTIFICATION)) {
-			stockholmStructure.getFileAnnotation().setGFIdentification(value);
-		} else if (featureName.equals(GF_DB_REFERENCE)) {
-			stockholmStructure.getFileAnnotation().addDBReference(value);
-		} else if (featureName.equals(GF_DEFINITION)) {
-			stockholmStructure.getFileAnnotation().setGFDefinition(value);
-		} else if (featureName.equals(GF_AUTHOR)) {
-			stockholmStructure.getFileAnnotation().setGFAuthors(value);
-		} else if (featureName.equals(GF_ALIGNMENT_METHOD)) {
-			stockholmStructure.getFileAnnotation().setAlignmentMethod(value);
-		} else if (featureName.equals(GF_BUILD_METHOD)) {
-			stockholmStructure.getFileAnnotation().addGFBuildMethod(value);
-		} else if (featureName.equals(GF_SEARCH_METHOD)) {
-			stockholmStructure.getFileAnnotation().setGFSearchMethod(value);
-		} else if (featureName.equals(GF_SOURCE_SEED)) {
-			stockholmStructure.getFileAnnotation().setGFSourceSeed(value);
-		} else if (featureName.equals(GF_SOURCE_STRUCTURE)) {
-			stockholmStructure.getFileAnnotation().setGFSourceStructure(value);
-		} else if (featureName.equals(GF_GATHERING_THRESHOLD)) {
-			stockholmStructure.getFileAnnotation().setGFGatheringThreshs(value);
-		} else if (featureName.equals(GF_TRUSTED_CUTOFF)) {
-			stockholmStructure.getFileAnnotation().setGFTrustedCutoffs(value);
-		} else if (featureName.equals(GF_NOISE_CUTOFF)) {
-			stockholmStructure.getFileAnnotation().setGFNoiseCutoffs(value);
-		} else if (featureName.equals(GF_TYPE_FIELD)) {
-			stockholmStructure.getFileAnnotation().setGFTypeField(value);
-		} else if (featureName.equals(GF_PREVIOUS_IDS)) {
-			stockholmStructure.getFileAnnotation().setGFPreviousIDs(value);
-		} else if (featureName.equals(GF_SEQUENCE)) {
-			// status = STATUS_IN_SEQUENCE;
-			stockholmStructure.getFileAnnotation().setGFNumSequences(value);
-		} else if (featureName.equals(GF_DB_COMMENT)) {
-			stockholmStructure.getFileAnnotation().setGFDBComment(value);
-			// } else if (featureName.equals(GF_DB_REFERENCE)) {
-			// stockholmStructure.getFileAnnotation().addDBReference(value);
-		} else if (featureName.equals(GF_REFERENCE_COMMENT)) {
-			stockholmStructure.getFileAnnotation().setGFRefComment(value);
-		} else if (featureName.equals(GF_REFERENCE_NUMBER)) {
-			StockholmFileAnnotationReference reference = new StockholmFileAnnotationReference();
-			stockholmStructure.getFileAnnotation().getReferences().add(reference);
-		} else if (featureName.equals(GF_REFERENCE_MEDLINE)) {
-			stockholmStructure.getFileAnnotation().getReferences().lastElement().setRefMedline(value);
-		} else if (featureName.equals(GF_REFERENCE_TITLE)) {
-			stockholmStructure.getFileAnnotation().getReferences().lastElement().addToRefTitle(value);
-		} else if (featureName.equals(GF_REFERENCE_AUTHOR)) {
-			stockholmStructure.getFileAnnotation().getReferences().lastElement().addToRefAuthor(value);
-		} else if (featureName.equals(GF_REFERENCE_LOCALTION)) {
-			stockholmStructure.getFileAnnotation().getReferences().lastElement().setRefLocation(value);
-		} else if (featureName.equals(GF_KEYWORDS)) {
-			stockholmStructure.getFileAnnotation().setGFKeywords(value);
-		} else if (featureName.equals(GF_COMMENT)) {
-			stockholmStructure.getFileAnnotation().addToGFComment(value);
-		} else if (featureName.equals(GF_PFAM_ACCESSION)) {
-			stockholmStructure.getFileAnnotation().setGFPfamAccession(value);
-		} else if (featureName.equals(GF_LOCATION)) {
-			stockholmStructure.getFileAnnotation().setGFLocation(value);
-		} else if (featureName.equals(GF_WIKIPEDIA_LINK)) {
-			stockholmStructure.getFileAnnotation().setGFWikipediaLink(value);
-		} else if (featureName.equals(GF_CLAN)) {
-			stockholmStructure.getFileAnnotation().setGFClan(value);
-		} else if (featureName.equals(GF_MEMBERSHIP)) {
-			stockholmStructure.getFileAnnotation().setGFMembership(value);
-		} else if (featureName.equals(GF_NEW_HAMPSHIRE)) {
-			stockholmStructure.getFileAnnotation().addGFNewHampshire(value);
-		} else if (featureName.equals(GF_TREE_ID)) {
-			stockholmStructure.getFileAnnotation().addGFTreeID(value);
-		} else if (featureName.equals(GF_FALSE_DISCOVERY_RATE)) {
-			stockholmStructure.getFileAnnotation().addGFFalseDiscoveryRate(value);
-		} else {
-			// unknown feature
-			logger.warn("Unknown File Feature [{}].\nPlease contact the Biojava team.", featureName);
+		switch (featureName) {
+			case GF_ACCESSION_NUMBER:
+				stockholmStructure.getFileAnnotation().setGFAccessionNumber(value);
+				break;
+			case GF_IDENTIFICATION:
+				stockholmStructure.getFileAnnotation().setGFIdentification(value);
+				break;
+			case GF_DB_REFERENCE:
+				stockholmStructure.getFileAnnotation().addDBReference(value);
+				break;
+			case GF_DEFINITION:
+				stockholmStructure.getFileAnnotation().setGFDefinition(value);
+				break;
+			case GF_AUTHOR:
+				stockholmStructure.getFileAnnotation().setGFAuthors(value);
+				break;
+			case GF_ALIGNMENT_METHOD:
+				stockholmStructure.getFileAnnotation().setAlignmentMethod(value);
+				break;
+			case GF_BUILD_METHOD:
+				stockholmStructure.getFileAnnotation().addGFBuildMethod(value);
+				break;
+			case GF_SEARCH_METHOD:
+				stockholmStructure.getFileAnnotation().setGFSearchMethod(value);
+				break;
+			case GF_SOURCE_SEED:
+				stockholmStructure.getFileAnnotation().setGFSourceSeed(value);
+				break;
+			case GF_SOURCE_STRUCTURE:
+				stockholmStructure.getFileAnnotation().setGFSourceStructure(value);
+				break;
+			case GF_GATHERING_THRESHOLD:
+				stockholmStructure.getFileAnnotation().setGFGatheringThreshs(value);
+				break;
+			case GF_TRUSTED_CUTOFF:
+				stockholmStructure.getFileAnnotation().setGFTrustedCutoffs(value);
+				break;
+			case GF_NOISE_CUTOFF:
+				stockholmStructure.getFileAnnotation().setGFNoiseCutoffs(value);
+				break;
+			case GF_TYPE_FIELD:
+				stockholmStructure.getFileAnnotation().setGFTypeField(value);
+				break;
+			case GF_PREVIOUS_IDS:
+				stockholmStructure.getFileAnnotation().setGFPreviousIDs(value);
+				break;
+			case GF_SEQUENCE:
+				// status = STATUS_IN_SEQUENCE;
+				stockholmStructure.getFileAnnotation().setGFNumSequences(value);
+				break;
+			case GF_DB_COMMENT:
+				stockholmStructure.getFileAnnotation().setGFDBComment(value);
+				// } else if (featureName.equals(GF_DB_REFERENCE)) {
+				// stockholmStructure.getFileAnnotation().addDBReference(value);
+				break;
+			case GF_REFERENCE_COMMENT:
+				stockholmStructure.getFileAnnotation().setGFRefComment(value);
+				break;
+			case GF_REFERENCE_NUMBER:
+				StockholmFileAnnotationReference reference = new StockholmFileAnnotationReference();
+				stockholmStructure.getFileAnnotation().getReferences().add(reference);
+				break;
+			case GF_REFERENCE_MEDLINE:
+				stockholmStructure.getFileAnnotation().getReferences().lastElement().setRefMedline(value);
+				break;
+			case GF_REFERENCE_TITLE:
+				stockholmStructure.getFileAnnotation().getReferences().lastElement().addToRefTitle(value);
+				break;
+			case GF_REFERENCE_AUTHOR:
+				stockholmStructure.getFileAnnotation().getReferences().lastElement().addToRefAuthor(value);
+				break;
+			case GF_REFERENCE_LOCALTION:
+				stockholmStructure.getFileAnnotation().getReferences().lastElement().setRefLocation(value);
+				break;
+			case GF_KEYWORDS:
+				stockholmStructure.getFileAnnotation().setGFKeywords(value);
+				break;
+			case GF_COMMENT:
+				stockholmStructure.getFileAnnotation().addToGFComment(value);
+				break;
+			case GF_PFAM_ACCESSION:
+				stockholmStructure.getFileAnnotation().setGFPfamAccession(value);
+				break;
+			case GF_LOCATION:
+				stockholmStructure.getFileAnnotation().setGFLocation(value);
+				break;
+			case GF_WIKIPEDIA_LINK:
+				stockholmStructure.getFileAnnotation().setGFWikipediaLink(value);
+				break;
+			case GF_CLAN:
+				stockholmStructure.getFileAnnotation().setGFClan(value);
+				break;
+			case GF_MEMBERSHIP:
+				stockholmStructure.getFileAnnotation().setGFMembership(value);
+				break;
+			case GF_NEW_HAMPSHIRE:
+				stockholmStructure.getFileAnnotation().addGFNewHampshire(value);
+				break;
+			case GF_TREE_ID:
+				stockholmStructure.getFileAnnotation().addGFTreeID(value);
+				break;
+			case GF_FALSE_DISCOVERY_RATE:
+				stockholmStructure.getFileAnnotation().addGFFalseDiscoveryRate(value);
+				break;
+			default:
+				// unknown feature
+				logger.warn("Unknown File Feature [{}].\nPlease contact the Biojava team.", featureName);
+				break;
 		}
 	}
 
@@ -630,33 +664,47 @@ public class StockholmFileParser {
 	 *            the line to be parsed.
 	 */
 	private void handleConsensusAnnotation(String featureName, String value) {
-		if (featureName.equals(GC_SECONDARY_STRUCTURE)) {
-			stockholmStructure.getConsAnnotation().setSecondaryStructure(value);
-		} else if (featureName.equals(GC_SEQUENSE_CONSENSUS)) {
-			stockholmStructure.getConsAnnotation().setSequenceConsensus(value);
-		} else if (featureName.equals(GC_SURFACE_ACCESSIBILITY)) {
-			stockholmStructure.getConsAnnotation().setSurfaceAccessibility(value);
-		} else if (featureName.equals(GC_TRANS_MEMBRANE)) {
-			stockholmStructure.getConsAnnotation().setTransMembrane(value);
-		} else if (featureName.equals(GC_POSTERIOR_PROBABILITY)) {
-			stockholmStructure.getConsAnnotation().setPosteriorProbability(value);
-		} else if (featureName.equals(GC_LIGAND_BINDING)) {
-			stockholmStructure.getConsAnnotation().setLigandBinding(value);
-		} else if (featureName.equals(GC_ACTIVE_SITE)) {
-			stockholmStructure.getConsAnnotation().setActiveSite(value);
-		} else if (featureName.equals(GC_AS_PFAM_PREDICTED)) {
-			stockholmStructure.getConsAnnotation().setAsPFamPredicted(value);
-		} else if (featureName.equals(GC_AS_SWISSPROT)) {
-			stockholmStructure.getConsAnnotation().setAsSwissProt(value);
-		} else if (featureName.equals(GC_INTRON)) {
-			stockholmStructure.getConsAnnotation().setIntron(value);
-		} else if (featureName.equals(GC_REFERENCE_ANNOTATION)) {
-			stockholmStructure.getConsAnnotation().setReferenceAnnotation(value);
-		} else if (featureName.equals(GC_MODEL_MASK)) {
-			stockholmStructure.getConsAnnotation().setModelMask(value);
-		} else {
-			// unknown feature
-			logger.warn("Unknown Consensus Feature [{}].\nPlease contact the Biojava team.", featureName);
+		switch (featureName) {
+			case GC_SECONDARY_STRUCTURE:
+				stockholmStructure.getConsAnnotation().setSecondaryStructure(value);
+				break;
+			case GC_SEQUENSE_CONSENSUS:
+				stockholmStructure.getConsAnnotation().setSequenceConsensus(value);
+				break;
+			case GC_SURFACE_ACCESSIBILITY:
+				stockholmStructure.getConsAnnotation().setSurfaceAccessibility(value);
+				break;
+			case GC_TRANS_MEMBRANE:
+				stockholmStructure.getConsAnnotation().setTransMembrane(value);
+				break;
+			case GC_POSTERIOR_PROBABILITY:
+				stockholmStructure.getConsAnnotation().setPosteriorProbability(value);
+				break;
+			case GC_LIGAND_BINDING:
+				stockholmStructure.getConsAnnotation().setLigandBinding(value);
+				break;
+			case GC_ACTIVE_SITE:
+				stockholmStructure.getConsAnnotation().setActiveSite(value);
+				break;
+			case GC_AS_PFAM_PREDICTED:
+				stockholmStructure.getConsAnnotation().setAsPFamPredicted(value);
+				break;
+			case GC_AS_SWISSPROT:
+				stockholmStructure.getConsAnnotation().setAsSwissProt(value);
+				break;
+			case GC_INTRON:
+				stockholmStructure.getConsAnnotation().setIntron(value);
+				break;
+			case GC_REFERENCE_ANNOTATION:
+				stockholmStructure.getConsAnnotation().setReferenceAnnotation(value);
+				break;
+			case GC_MODEL_MASK:
+				stockholmStructure.getConsAnnotation().setModelMask(value);
+				break;
+			default:
+				// unknown feature
+				logger.warn("Unknown Consensus Feature [{}].\nPlease contact the Biojava team.", featureName);
+				break;
 		}
 	}
 
@@ -667,21 +715,29 @@ public class StockholmFileParser {
 	 *            the line to be parsed
 	 */
 	private void handleSequenceAnnotation(String seqName, String featureName, String value) {
-		if (featureName.equals(GS_ACCESSION_NUMBER)) {
-			stockholmStructure.addGSAccessionNumber(seqName, value);
-		} else if (featureName.equals(GS_DESCRIPTION)) {
-			stockholmStructure.addGSDescription(seqName, value);
-		} else if (featureName.equals(GS_DATABASE_REFERENCE)) {
-			stockholmStructure.addGSdbReference(seqName, value);
-		} else if (featureName.equals(GS_ORGANISM_SPECIES)) {
-			stockholmStructure.addGSOrganismSpecies(seqName, value);
-		} else if (featureName.equals(GS_ORGANISM_CLASSIFICATION)) {
-			stockholmStructure.addGSOrganismClassification(seqName, value);
-		} else if (featureName.equals(GS_LOOK)) {
-			stockholmStructure.addGSLook(seqName, value);
-		} else {
-			// unknown feature
-			logger.warn("Unknown Sequence Feature [{}].\nPlease contact the Biojava team.", featureName);
+		switch (featureName) {
+			case GS_ACCESSION_NUMBER:
+				stockholmStructure.addGSAccessionNumber(seqName, value);
+				break;
+			case GS_DESCRIPTION:
+				stockholmStructure.addGSDescription(seqName, value);
+				break;
+			case GS_DATABASE_REFERENCE:
+				stockholmStructure.addGSdbReference(seqName, value);
+				break;
+			case GS_ORGANISM_SPECIES:
+				stockholmStructure.addGSOrganismSpecies(seqName, value);
+				break;
+			case GS_ORGANISM_CLASSIFICATION:
+				stockholmStructure.addGSOrganismClassification(seqName, value);
+				break;
+			case GS_LOOK:
+				stockholmStructure.addGSLook(seqName, value);
+				break;
+			default:
+				// unknown feature
+				logger.warn("Unknown Sequence Feature [{}].\nPlease contact the Biojava team.", featureName);
+				break;
 		}
 	}
 
@@ -693,27 +749,38 @@ public class StockholmFileParser {
 	 */
 	private void handleResidueAnnotation(String seqName, String featureName, String value) {
 
-		if (featureName.equals(GR_SURFACE_ACCESSIBILITY)) {
-			stockholmStructure.addSurfaceAccessibility(seqName, value);
-		} else if (featureName.equals(GR_TRANS_MEMBRANE)) {
-			stockholmStructure.addTransMembrane(seqName, value);
-		} else if (featureName.equals(GR_POSTERIOR_PROBABILITY)) {
-			stockholmStructure.addPosteriorProbability(seqName, value);
-		} else if (featureName.equals(GR_LIGAND_BINDING)) {
-			stockholmStructure.addLigandBinding(seqName, value);
-		} else if (featureName.equals(GR_ACTIVE_SITE)) {
-			stockholmStructure.addActiveSite(seqName, value);
-		} else if (featureName.equals(GR_AS_PFAM_PREDICTED)) {
-			stockholmStructure.addASPFamPredicted(seqName, value);
-		} else if (featureName.equals(GR_AS_SWISSPROT)) {
-			stockholmStructure.addASSwissProt(seqName, value);
-		} else if (featureName.equals(GR_INTRON)) {
-			stockholmStructure.addIntron(seqName, value);
-		} else if (featureName.equals(GR_SECONDARY_STRUCTURE)) {
-			stockholmStructure.addSecondaryStructure(seqName, value);
-		} else {
-			// unknown feature
-			logger.warn("Unknown Residue Feature [{}].\nPlease contact the Biojava team.", featureName);
+		switch (featureName) {
+			case GR_SURFACE_ACCESSIBILITY:
+				stockholmStructure.addSurfaceAccessibility(seqName, value);
+				break;
+			case GR_TRANS_MEMBRANE:
+				stockholmStructure.addTransMembrane(seqName, value);
+				break;
+			case GR_POSTERIOR_PROBABILITY:
+				stockholmStructure.addPosteriorProbability(seqName, value);
+				break;
+			case GR_LIGAND_BINDING:
+				stockholmStructure.addLigandBinding(seqName, value);
+				break;
+			case GR_ACTIVE_SITE:
+				stockholmStructure.addActiveSite(seqName, value);
+				break;
+			case GR_AS_PFAM_PREDICTED:
+				stockholmStructure.addASPFamPredicted(seqName, value);
+				break;
+			case GR_AS_SWISSPROT:
+				stockholmStructure.addASSwissProt(seqName, value);
+				break;
+			case GR_INTRON:
+				stockholmStructure.addIntron(seqName, value);
+				break;
+			case GR_SECONDARY_STRUCTURE:
+				stockholmStructure.addSecondaryStructure(seqName, value);
+				break;
+			default:
+				// unknown feature
+				logger.warn("Unknown Residue Feature [{}].\nPlease contact the Biojava team.", featureName);
+				break;
 		}
 	}
 }

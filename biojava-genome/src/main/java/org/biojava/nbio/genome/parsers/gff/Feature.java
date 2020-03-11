@@ -51,8 +51,6 @@ public class Feature implements FeatureI {
 		return mSeqname;
 	}
 
-	;
-
 	/**
 	 * Get source (aka method). (GFF field 2). This is often the name of
 	 * the program or procedure that created the features.
@@ -63,8 +61,6 @@ public class Feature implements FeatureI {
 		return mSource;
 	}
 
-	;
-
 	/**
 	 * Get feature type, such as "exon" or "CDS". (GFF field 3).
 	 *
@@ -74,8 +70,6 @@ public class Feature implements FeatureI {
 	public String type() {
 		return mType;
 	}
-
-	;
 
 	/**
 	 * Get location of feature. Note that feature objects have
@@ -98,8 +92,6 @@ public class Feature implements FeatureI {
 		return mScore;
 	}
 
-	;
-
 	/**
 	 * Get frame (aka phase). (GFF field 8). Specifies the offset of the
 	 * first nucleotide of the first in-frame codon, assuming this feature
@@ -113,8 +105,6 @@ public class Feature implements FeatureI {
 		return mFrame;
 	}
 
-	;
-
 	/**
 	 * Get the string of key/value attributes. (GFF field 9). The format and
 	 * meaning of this field varies from flavor to flavor of GFF/GTF. This method
@@ -127,13 +117,11 @@ public class Feature implements FeatureI {
 		return mAttributes;
 	}
 
-	;
-
 	@SuppressWarnings("unused")
 	private Feature() {
 	}
 
-	;        //unavailable
+	//unavailable
 
 	/**
 	 * Make a copy of the specified feature. The mappings in the userMap() HashMap
@@ -153,7 +141,7 @@ public class Feature implements FeatureI {
 		mFrame = feature.mFrame;
 		mAttributes = feature.mAttributes;
 		initAttributeHashMap();
-		mUserMap = new HashMap<String, String>(feature.mUserMap);
+		mUserMap = new HashMap<>(feature.mUserMap);
 	}
 
 	/**
@@ -177,7 +165,7 @@ public class Feature implements FeatureI {
 		mFrame = frame;
 		mAttributes = attributes;
 		initAttributeHashMap();
-		mUserMap = new HashMap<String, String>();
+		mUserMap = new HashMap<>();
 
 	}
 
@@ -199,13 +187,13 @@ public class Feature implements FeatureI {
 		return mUserMap;
 	}
 
-	 HashMap<String,String> attributeHashMap = new HashMap<String,String>();
+	 final HashMap<String,String> attributeHashMap = new HashMap<>();
 
 	private void initAttributeHashMap(){
 	   String[] values = mAttributes.split(";");
 	   for(String attribute : values){
 		   attribute = attribute.trim();
-		   int equalindex = attribute.indexOf("=");
+		   int equalindex = attribute.indexOf('=');
 		   String splitData = "=";
 		   if(equalindex == -1) //gtf uses space and gff3 uses =
 			   splitData = " ";
@@ -300,7 +288,7 @@ public class Feature implements FeatureI {
 		s += mType + '\t';
 		s += mLocation.start() + "\t";
 		s += mLocation.end() + "\t";
-		s += Double.toString(mScore) + "\t";
+		s += mScore + "\t";
 
 		if (mFrame == -1) {
 			s += ".\t";

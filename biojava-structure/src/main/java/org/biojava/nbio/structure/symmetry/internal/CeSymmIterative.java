@@ -20,23 +20,9 @@
  */
 package org.biojava.nbio.structure.symmetry.internal;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-
-import javax.vecmath.Matrix4d;
-
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.StructureIdentifier;
-import org.biojava.nbio.structure.align.multiple.Block;
-import org.biojava.nbio.structure.align.multiple.BlockImpl;
-import org.biojava.nbio.structure.align.multiple.BlockSet;
-import org.biojava.nbio.structure.align.multiple.BlockSetImpl;
-import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
-import org.biojava.nbio.structure.align.multiple.MultipleAlignmentImpl;
+import org.biojava.nbio.structure.align.multiple.*;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
 import org.biojava.nbio.structure.secstruc.SecStrucElement;
 import org.biojava.nbio.structure.secstruc.SecStrucTools;
@@ -45,11 +31,14 @@ import org.biojava.nbio.structure.symmetry.internal.CESymmParameters.RefineMetho
 import org.biojava.nbio.structure.symmetry.internal.CESymmParameters.SymmetryType;
 import org.biojava.nbio.structure.symmetry.utils.SymmetryTools;
 import org.jgrapht.Graph;
-import org.jgrapht.alg.ConnectivityInspector;
+import org.jgrapht.alg.connectivity.ConnectivityInspector;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.vecmath.Matrix4d;
+import java.util.*;
 
 /**
  * Iterative version of CeSymm that aims at identifying all symmetry axis of a
@@ -74,9 +63,9 @@ public class CeSymmIterative {
 	private static final Logger logger = LoggerFactory
 			.getLogger(CeSymmIterative.class);
 
-	private CESymmParameters params;
-	private Graph<Integer, DefaultEdge> alignGraph; // cumulative
-	private List<CeSymmResult> levels; // symmetry at each level
+	private final CESymmParameters params;
+	private final Graph<Integer, DefaultEdge> alignGraph; // cumulative
+	private final List<CeSymmResult> levels; // symmetry at each level
 
 	/**
 	 * For the iterative algorithm to work properly the refinement and
@@ -88,8 +77,8 @@ public class CeSymmIterative {
 	 */
 	public CeSymmIterative(CESymmParameters param) {
 		params = param;
-		alignGraph = new SimpleGraph<Integer, DefaultEdge>(DefaultEdge.class);
-		levels = new ArrayList<CeSymmResult>();
+		alignGraph = new SimpleGraph<>(DefaultEdge.class);
+		levels = new ArrayList<>();
 	}
 
 	/**
@@ -218,21 +207,21 @@ public class CeSymmIterative {
 
 		// Initialize a new multiple alignment
 		MultipleAlignment msa = new MultipleAlignmentImpl();
-		msa.getEnsemble().setAtomArrays(new ArrayList<Atom[]>());
+		msa.getEnsemble().setAtomArrays(new ArrayList<>());
 		msa.getEnsemble().setStructureIdentifiers(
-				new ArrayList<StructureIdentifier>());
+				new ArrayList<>());
 		msa.getEnsemble().setAlgorithmName(CeSymm.algorithmName);
 		msa.getEnsemble().setVersion(CeSymm.version);
 
 		BlockSet bs = new BlockSetImpl(msa);
 		Block b = new BlockImpl(bs);
-		b.setAlignRes(new ArrayList<List<Integer>>());
+		b.setAlignRes(new ArrayList<>());
 
 		// Calculate the connected groups of the alignment graph
-		ConnectivityInspector<Integer, DefaultEdge> inspector = new ConnectivityInspector<Integer, DefaultEdge>(
+		ConnectivityInspector<Integer, DefaultEdge> inspector = new ConnectivityInspector<>(
 				alignGraph);
 		List<Set<Integer>> comps = inspector.connectedSets();
-		List<ResidueGroup> groups = new ArrayList<ResidueGroup>(comps.size());
+		List<ResidueGroup> groups = new ArrayList<>(comps.size());
 		for (Set<Integer> comp : comps)
 			groups.add(new ResidueGroup(comp));
 
@@ -241,7 +230,7 @@ public class CeSymmIterative {
 		for (CeSymmResult sr : levels)
 			order *= sr.getMultipleAlignment().size();
 		for (int su = 0; su < order; su++)
-			b.getAlignRes().add(new ArrayList<Integer>());
+			b.getAlignRes().add(new ArrayList<>());
 
 		// Construct the resulting MultipleAlignment from ResidueGroups
 		for (ResidueGroup group : groups) {

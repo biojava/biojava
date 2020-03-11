@@ -29,6 +29,7 @@ import org.w3c.dom.Element;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  *
@@ -38,7 +39,7 @@ public class BlastXMLQuery {
 
 	private static final Logger logger = LoggerFactory.getLogger(BlastXMLQuery.class);
 
-	Document blastDoc = null;
+	Document blastDoc;
 
 	public BlastXMLQuery(String blastFile) throws Exception {
 		logger.info("Start read of {}", blastFile);
@@ -47,31 +48,27 @@ public class BlastXMLQuery {
 	}
 
 	public LinkedHashMap<String, ArrayList<String>> getHitsQueryDef(double maxEScore) throws Exception {
-		LinkedHashMap<String, ArrayList<String>> hitsHashMap = new LinkedHashMap<String, ArrayList<String>>();
+		LinkedHashMap<String, ArrayList<String>> hitsHashMap = new LinkedHashMap<>();
 		logger.info("Query for hits");
-		ArrayList<Element> elementList = XMLHelper.selectElements(blastDoc.getDocumentElement(), "BlastOutput_iterations/Iteration[Iteration_hits]");
+		List<Element> elementList = XMLHelper.selectElements(blastDoc.getDocumentElement(), "BlastOutput_iterations/Iteration[Iteration_hits]");
 		logger.info("{} hits", elementList.size());
 
 		for (Element element : elementList) {
 			Element iterationquerydefElement = XMLHelper.selectSingleElement(element, "Iteration_query-def");
 			String querydef = iterationquerydefElement.getTextContent();
 			Element iterationHitsElement = XMLHelper.selectSingleElement(element, "Iteration_hits");
-			ArrayList<Element> hitList = XMLHelper.selectElements(iterationHitsElement, "Hit");
+			List<Element> hitList = XMLHelper.selectElements(iterationHitsElement, "Hit");
 			for (Element hitElement : hitList) {
 				Element hitaccessionElement = XMLHelper.selectSingleElement(hitElement, "Hit_accession");
 				String hitaccession = hitaccessionElement.getTextContent();
 				Element hithspsElement = XMLHelper.selectSingleElement(hitElement, "Hit_hsps");
-				ArrayList<Element> hspList = XMLHelper.selectElements(hithspsElement, "Hsp");
+				List<Element> hspList = XMLHelper.selectElements(hithspsElement, "Hsp");
 				for (Element hspElement : hspList) {
 					Element evalueElement = XMLHelper.selectSingleElement(hspElement, "Hsp_evalue");
 					String value = evalueElement.getTextContent();
 					double evalue = Double.parseDouble(value);
 					if (evalue <= maxEScore) {
-						ArrayList<String> hits = hitsHashMap.get(querydef);
-						if (hits == null) {
-							hits = new ArrayList<String>();
-							hitsHashMap.put(querydef, hits);
-						}
+						ArrayList<String> hits = hitsHashMap.computeIfAbsent(querydef, k -> new ArrayList<>());
 						hits.add(hitaccession);
 					}
 				}

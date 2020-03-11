@@ -23,8 +23,8 @@
  */
 package org.biojava.nbio.structure.io.sifts;
 
-import org.biojava.nbio.structure.align.util.UserConfiguration;
 import org.biojava.nbio.core.sequence.io.util.IOUtils;
+import org.biojava.nbio.structure.align.util.UserConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -121,7 +121,7 @@ public class SiftsChainToUniprotMapping {
 	protected static SiftsChainToUniprotMapping build() throws IOException {
 		SiftsChainToUniprotMapping sifts = new SiftsChainToUniprotMapping();
 		BufferedReader br = new BufferedReader(new FileReader(DEFAULT_FILE));
-		String line = "";
+		String line;
 		while ((line = br.readLine()) != null) {
 			if (line.isEmpty() || line.startsWith("#") || line.startsWith("PDB")) continue;
 			String[] parts = line.split("\t");
@@ -147,8 +147,8 @@ public class SiftsChainToUniprotMapping {
 
 		logger.info("Downloading {} to {}",DEFAULT_URL.toString(),DEFAULT_FILE);
 
-		InputStream in = null;
-		OutputStream out = null;
+		InputStream in;
+		OutputStream out;
 
 		in = new GZIPInputStream(DEFAULT_URL.openStream());
 		out = new FileOutputStream(DEFAULT_FILE);
@@ -156,9 +156,9 @@ public class SiftsChainToUniprotMapping {
 
 	}
 
-	private Map<String, SiftsChainEntry> byChainId = new HashMap<String, SiftsChainEntry>();
+	private final Map<String, SiftsChainEntry> byChainId = new HashMap<>();
 
-	private Map<String, SiftsChainEntry> byUniProtId = new HashMap<String, SiftsChainEntry>();
+	private final Map<String, SiftsChainEntry> byUniProtId = new HashMap<>();
 
 	private SiftsChainToUniprotMapping() {
 

@@ -22,6 +22,7 @@
 package org.biojava.nbio.structure;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Describes author attributes for author information in a PDB file.
@@ -59,10 +60,10 @@ public class Author implements Serializable{
 			return false;
 		}
 		final Author other = (Author) obj;
-		if ((this.surname == null) ? (other.surname != null) : !this.surname.equals(other.surname)) {
+		if (!Objects.equals(this.surname, other.surname)) {
 			return false;
 		}
-		return !((this.initials == null) ? (other.initials != null) : !this.initials.equals(other.initials));
+		return Objects.equals(this.initials, other.initials);
 	}
 
 	@Override

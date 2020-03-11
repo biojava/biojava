@@ -48,7 +48,7 @@ public class CollectionTools {
 	}
 
 	public static Object randomPick(Collection<Number> col) {
-		Object[] objs = col.toArray(new Object[col.size()]);
+		Object[] objs = col.toArray(new Object[0]);
 		return objs[(int) Math.floor(Math.random() * objs.length)];
 	}
 }

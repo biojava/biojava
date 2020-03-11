@@ -23,7 +23,6 @@
  */
 package org.biojava.nbio.core.sequence.views;
 
-import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.core.sequence.compound.NucleotideCompound;
 import org.biojava.nbio.core.sequence.compound.RNACompoundSet;
 import org.biojava.nbio.core.sequence.template.*;
@@ -39,7 +38,7 @@ import java.util.Map;
  */
 public class RnaSequenceView extends SequenceProxyView<NucleotideCompound> implements ProxySequenceReader<NucleotideCompound> {
 
-	private CompoundSet<NucleotideCompound> rnaCompounds;
+	private final CompoundSet<NucleotideCompound> rnaCompounds;
 	private Map<NucleotideCompound, NucleotideCompound> dnaToRna = null;
 	private Map<NucleotideCompound, NucleotideCompound> rnaToDna = null;
 
@@ -90,9 +89,9 @@ public class RnaSequenceView extends SequenceProxyView<NucleotideCompound> imple
 
 	protected void buildTranslators() {
 		Map<NucleotideCompound, NucleotideCompound> localDnaToRna =
-				new HashMap<NucleotideCompound, NucleotideCompound>();
+				new HashMap<>();
 		Map<NucleotideCompound, NucleotideCompound> localRnaToDna =
-				new HashMap<NucleotideCompound, NucleotideCompound>();
+				new HashMap<>();
 
 		NucleotideCompound thymine =
 				getViewedSequence().getCompoundSet().getCompoundForString("T");
@@ -124,7 +123,7 @@ public class RnaSequenceView extends SequenceProxyView<NucleotideCompound> imple
 	}
 
 	@Override
-	public void setContents(String sequence) throws CompoundNotFoundException {
+	public void setContents(String sequence) {
 		throw new UnsupportedOperationException("Unsupported operation; create a new viewed sequence");
 	}
 }

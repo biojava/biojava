@@ -72,7 +72,7 @@ public class CrystalTransform implements Serializable {
 	/**
 	 * The crystal translation (always integer)
 	 */
-	private Point3i crystalTranslation;
+	private final Point3i crystalTranslation;
 
 
 	/**
@@ -467,7 +467,7 @@ public class CrystalTransform implements Serializable {
 		// For reference see:
 		// http://www.crystallography.fr/mathcryst/pdf/Gargnano/Aroyo_Gargnano_1.pdf
 
-		Vector3d transl = null;
+		Vector3d transl;
 
 		Matrix3d W =
 				new Matrix3d(m.m00,m.m01,m.m02,

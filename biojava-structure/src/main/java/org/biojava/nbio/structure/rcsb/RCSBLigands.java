@@ -39,10 +39,10 @@ public class RCSBLigands {
 
 	private String pdbId;
 
-	private List<RCSBLigand> ligands;
+	private final List<RCSBLigand> ligands;
 
 	public RCSBLigands() {
-		ligands = new ArrayList<RCSBLigand>();
+		ligands = new ArrayList<>();
 	}
 
 	public void addLigand(RCSBLigand ligand) {

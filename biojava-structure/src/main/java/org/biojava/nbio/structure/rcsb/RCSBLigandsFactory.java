@@ -96,7 +96,7 @@ public class RCSBLigandsFactory {
 			return null;
 		}
 
-		List<RCSBLigand> ligands = new ArrayList<RCSBLigand>();
+		List<RCSBLigand> ligands = new ArrayList<>();
 
 		// first get the ligandInfo
 		Element structureIdE = null;
@@ -110,7 +110,7 @@ public class RCSBLigandsFactory {
 
 		// now get individual ligands
 		data = structureIdE.getChildNodes();
-		Element ligandE = null;
+		Element ligandE;
 		for (int i = 0; i < data.getLength(); i++) {
 			if (data.item(i).getNodeType() != 1) continue;
 			ligandE = (Element) data.item(i);
@@ -150,7 +150,7 @@ public class RCSBLigandsFactory {
 		}
 		InputStream is;
 		try {
-			URL url = new URL(HET_URL_STUB + sb.toString());
+			URL url = new URL(HET_URL_STUB + sb);
 			is = url.openConnection().getInputStream();
 		} catch (IOException e) {
 			logger.warn("Couldn't open connection", e);
@@ -187,7 +187,7 @@ public class RCSBLigandsFactory {
 
 		// now get individual ligands
 		data = structureIdE.getChildNodes();
-		Element ligandE = null;
+		Element ligandE;
 		for (int i = 0; i < data.getLength(); i++) {
 			if (data.item(i).getNodeType() != 1) continue;
 			ligandE = (Element) data.item(i);
@@ -239,9 +239,9 @@ public class RCSBLigandsFactory {
 
 		// first we have to handle the element "ligandsInEntry", which is not present if we have only 1 structure
 
-		List<RCSBLigands> ligandsList = new ArrayList<RCSBLigands>();
+		List<RCSBLigands> ligandsList = new ArrayList<>();
 
-		Element structureIdE = null;
+		Element structureIdE;
 
 		for (int k = 0; k < dataaa.getLength(); k++) {
 
@@ -263,7 +263,7 @@ public class RCSBLigandsFactory {
 
 				// now get individual ligands
 				data = ligandIdE.getChildNodes();
-				Element ligandE = null;
+				Element ligandE;
 				for (int i = 0; i < data.getLength(); i++) {
 					if (data.item(i).getNodeType() != 1) continue;
 					ligandE = (Element) data.item(i);
@@ -329,7 +329,7 @@ public class RCSBLigandsFactory {
 			sb.append(pdbIds[i]);
 		}
 		try {
-			URL url = new URL(PDB_URL_STUB + sb.toString());
+			URL url = new URL(PDB_URL_STUB + sb);
 			is = url.openConnection().getInputStream();
 		} catch (IOException e) {
 			logger.warn("Couldn't open connection", e);
@@ -343,21 +343,27 @@ public class RCSBLigandsFactory {
 		ligand.setId(ligandE.getAttribute("chemicalID"));
 		ligand.setType(ligandE.getAttribute("type"));
 		ligand.setWeight(ReadUtils.toDouble(ligandE.getAttribute("molecularWeight")));
-		Element element = null;
+		Element element;
 		NodeList data = ligandE.getChildNodes();
 		for (int i = 0; i < data.getLength(); i++) {
 			if (data.item(i).getNodeType() != 1) continue;
 			element = (Element) data.item(i);
-			if (element.getNodeName().equals("chemicalName")) {
-				ligand.setName(element.getTextContent());
-			} else if (element.getNodeName().equals("formula")) {
-				ligand.setFormula(element.getTextContent());
-			} else if (element.getNodeName().equals("InChIKey")) {
-				ligand.setInChIKey(element.getTextContent());
-			} else if (element.getNodeName().equals("InChI")) {
-				ligand.setInChI(element.getTextContent());
-			} else if (element.getNodeName().equals("smiles")) {
-				ligand.setSmiles(element.getTextContent());
+			switch (element.getNodeName()) {
+				case "chemicalName":
+					ligand.setName(element.getTextContent());
+					break;
+				case "formula":
+					ligand.setFormula(element.getTextContent());
+					break;
+				case "InChIKey":
+					ligand.setInChIKey(element.getTextContent());
+					break;
+				case "InChI":
+					ligand.setInChI(element.getTextContent());
+					break;
+				case "smiles":
+					ligand.setSmiles(element.getTextContent());
+					break;
 			}
 		}
 		return ligand;

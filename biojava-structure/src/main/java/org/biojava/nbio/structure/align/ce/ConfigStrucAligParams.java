@@ -31,31 +31,31 @@ public interface ConfigStrucAligParams {
 	 *
 	 * @return list of parameters
 	 */
-	public List<String> getUserConfigParameters();
+    List<String> getUserConfigParameters();
 
 	/** The labels to be displayed to the user for each parameter
 	 *
 	 * @return list of parameter names
 	 */
-	public List<String> getUserConfigParameterNames();
+    List<String> getUserConfigParameterNames();
 
 	/** Get the data types of the parameters
 	 *
 	 * @return list of parameter classes
 	 */
 	@SuppressWarnings("rawtypes")
-	public List<Class> getUserConfigTypes();
+    List<Class> getUserConfigTypes();
 
 
 	/** The help text for each of these parameters.
 	 *
 	 * @return help strings
 	 */
-	public List<String> getUserConfigHelp();
+    List<String> getUserConfigHelp();
 
 
 	/** Set the parameters to the default.
 	 *
 	 */
-	public void reset();
+    void reset();
 }

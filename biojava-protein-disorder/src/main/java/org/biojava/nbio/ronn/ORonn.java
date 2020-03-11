@@ -26,7 +26,6 @@ package org.biojava.nbio.ronn;
 
 import org.biojava.nbio.data.sequence.FastaSequence;
 import org.biojava.nbio.data.sequence.SequenceUtil;
-import org.biojava.nbio.ronn.ModelLoader.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -91,8 +90,7 @@ public final class ORonn implements Callable<ORonn> {
 		timer = new Timer(TimeUnit.MILLISECONDS);
 	}
 	//This constructor is for API calls where the caller collects the results directly
-	ORonn(final FastaSequence sequence, final ModelLoader mloader) throws NumberFormatException,
-	IOException {
+	ORonn(final FastaSequence sequence, final ModelLoader mloader) throws NumberFormatException {
 		this.sequence = sequence;
 		this.mloader = mloader;
 		out = new PrintWriter(new NullOutputStream());
@@ -136,23 +134,16 @@ public final class ORonn implements Callable<ORonn> {
 	}
 
 	@Override
-	public ORonn call() throws NumberFormatException, IOException {
+	public ORonn call() throws NumberFormatException {
 		final String seq = sequence.getSequence();
 		// Calculate for each model
-		for (int m = 0; m < ORonn.NUMBER_OF_MODELS; m++) {
-			final Model model = mloader.getModel(m);
-			final ORonnModel rmodel = new ORonnModel(seq, model, disorder);
-			final float[] scores = rmodel.detect();
-			addScore(scores);
-		}
+		for (int m = 0; m < ORonn.NUMBER_OF_MODELS; m++)
+			addScore(new ORonnModel(seq, mloader.getModel(m), disorder).detect());
 
-		final char[] ch = seq.toCharArray();
 		final float[] meanScores = getMeanScores();
-		assert meanScores.length == seq.length() : "Scores are not calculated for "
-				+ "all residues!";
-		writeResults(meanScores, ch);
-		stat.println(timer.getTotalTime() + "ms prediction completed for "
-				+ sequence.getId());
+		assert meanScores.length == seq.length() : "Scores are not calculated for all residues!";
+		writeResults(meanScores, seq.toCharArray());
+		stat.println(timer.getTotalTime() + "ms prediction completed for " + sequence.getId());
 		return this;
 	}
 
@@ -172,8 +163,9 @@ public final class ORonn implements Callable<ORonn> {
 	}
 
 	float[] getMeanScores() {
-		final float[] meanScores = new float[cummulativeScore.length];
-		for (int i = 0; i < cummulativeScore.length; i++) {
+		int n = cummulativeScore.length;
+		final float[] meanScores = new float[n];
+		for (int i = 0; i < n; i++) {
 			meanScores[i] = cummulativeScore[i] / ORonn.NUMBER_OF_MODELS;
 		}
 		return meanScores;
@@ -190,7 +182,7 @@ public final class ORonn implements Callable<ORonn> {
 	 * sequence. Letters and values separated by tabulation in	this case.
 	 *
 	 */
-	static enum ResultLayout {
+	enum ResultLayout {
 		VERTICAL, HORIZONTAL
 	}
 
@@ -201,7 +193,7 @@ public final class ORonn implements Callable<ORonn> {
 	static boolean isValidSequenceForRonn(final FastaSequence fsequence,
 			final PrintWriter stat) {
 		boolean valid = true;
-		String message = "";
+		String message;
 		if (!ORonn.isValidSequence(fsequence)) {
 			message = "IGNORING sequence "
 					+ fsequence.getId()
@@ -225,7 +217,7 @@ public final class ORonn implements Callable<ORonn> {
 
 	static void validateSequenceForRonn(final FastaSequence fsequence) {
 
-		String message = "";
+		String message;
 		if (!ORonn.isValidSequence(fsequence)) {
 			message = "IGNORING sequence "
 					+ fsequence.getId()
@@ -353,7 +345,7 @@ public final class ORonn implements Callable<ORonn> {
 		// Do parallel execution
 		final ExecutorService executor = new ThreadPoolExecutor(prms
 				.getThreadNum(), prms.getThreadNum(), 0L, TimeUnit.SECONDS,
-				new SynchronousQueue<Runnable>(),
+				new SynchronousQueue<>(),
 				new ThreadPoolExecutor.CallerRunsPolicy());
 		try {
 			for (final FastaSequence sequence : fsequences) {
@@ -369,8 +361,7 @@ public final class ORonn implements Callable<ORonn> {
 				executor.submit(ronn);
 			}
 			executor.shutdown();
-			final int timeOut = (fsequences.size() < 60) ? 60 : fsequences
-					.size();
+			final int timeOut = Math.max(fsequences.size(), 60);
 			stat.println("All task submitted. Waiting for complition for "
 					+ "maximum of " + timeOut + " minutes");
 			executor.awaitTermination(timeOut, TimeUnit.MINUTES);

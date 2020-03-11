@@ -79,7 +79,7 @@ public class JronnTest {
 	 * Credit Thomas Klambauer, but here have removed the implement of
 	 * AutoCloseable (Java 7) for BioJava support of Java 6.
 	 */
-	public class ScopedProperty {
+	public static class ScopedProperty {
 
 		private final String key;
 		private final String oldValue;

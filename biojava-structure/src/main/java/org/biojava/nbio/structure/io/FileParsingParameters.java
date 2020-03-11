@@ -24,9 +24,9 @@
 
 package org.biojava.nbio.structure.io;
 
-import java.io.Serializable;
-
 import org.biojava.nbio.structure.AminoAcid;
+
+import java.io.Serializable;
 
 /**
  * A class that configures parameters that can be sent to the PDB file parsers

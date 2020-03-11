@@ -20,16 +20,15 @@
  */
 package org.biojava.nbio.structure.symmetry.internal;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.util.AlignmentTools;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author blivens
@@ -41,7 +40,7 @@ public class TestSingleRefiner {
 	List<Map<Integer, Integer>> expecteds;
 
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 
 		Map<Integer,Integer> align;
 		Map<Integer,Integer> expect;
@@ -49,9 +48,9 @@ public class TestSingleRefiner {
 		// Note that all the expecteds rely on scoreAbsError being used internally
 		// by refineSymmetry
 
-		alignments = new ArrayList<Map<Integer,Integer>>();
-		orders = new ArrayList<Integer>();
-		expecteds = new ArrayList<Map<Integer,Integer>>();
+		alignments = new ArrayList<>();
+		orders = new ArrayList<>();
+		expecteds = new ArrayList<>();
 
 		/* 0. Chained alignment
 		 * 1\
@@ -60,7 +59,7 @@ public class TestSingleRefiner {
 		 * 4>8>12</
 		 * 5>9>13<--
 		 */
-		align = new HashMap<Integer,Integer>();
+		align = new HashMap<>();
 		align.put(	1,	6);
 		align.put(	2,	6);
 		align.put(	3,	7);
@@ -82,7 +81,7 @@ public class TestSingleRefiner {
 		 * 4>8>12<--
 		 * 5>9>13<--
 		 */
-		expect = new HashMap<Integer,Integer>();
+		expect = new HashMap<>();
 		expect.put(	2,	6);
 		expect.put(	3,	7);
 		expect.put(	4,	8);
@@ -102,7 +101,7 @@ public class TestSingleRefiner {
 		 * 1->5->9<--
 		 *    4->8<\
 		 */
-		align = new HashMap<Integer,Integer>();
+		align = new HashMap<>();
 		align.put(	1,	5);
 		align.put(	5,	9);
 		align.put(	9,	1);
@@ -113,7 +112,7 @@ public class TestSingleRefiner {
 		/* 1. Expect
 		 * 1->5->9<--
 		 */
-		expect = new HashMap<Integer,Integer>();
+		expect = new HashMap<>();
 		expect.put(	1,	5);
 		expect.put(	5,	9);
 		expect.put(	9,	1);
@@ -123,7 +122,7 @@ public class TestSingleRefiner {
 		 * 1->5->9<--
 		 * 2->6->10<\
 		 */
-		align = new HashMap<Integer,Integer>();
+		align = new HashMap<>();
 		align.put(	1,	5);
 		align.put(	5,	9);
 		align.put(	9,	1);
@@ -136,7 +135,7 @@ public class TestSingleRefiner {
 		 * 1->5->9<--
 		 * 2->6->10<--
 		 */
-		expect = new HashMap<Integer,Integer>();
+		expect = new HashMap<>();
 		expect.put(	1,	5);
 		expect.put(	5,	9);
 		expect.put(	9,	1);
@@ -149,7 +148,7 @@ public class TestSingleRefiner {
 		 * 1->5->9<--
 		 * 2/^6->10<--
 		 */
-		align = new HashMap<Integer,Integer>();
+		align = new HashMap<>();
 		align.put(	1,	5);
 		align.put(	5,	9);
 		align.put(	9,	1);
@@ -162,7 +161,7 @@ public class TestSingleRefiner {
 		 * 1->5->9<--
 		 * 2->6->10<--
 		 */
-		expect = new HashMap<Integer,Integer>();
+		expect = new HashMap<>();
 		expect.put(	1,	5);
 		expect.put(	5,	9);
 		expect.put(	9,	1);
@@ -174,7 +173,7 @@ public class TestSingleRefiner {
 		/* 4. Wrong order
 		 * 3->7<--
 		 */
-		align = new HashMap<Integer,Integer>();
+		align = new HashMap<>();
 		align.put(	3,	7);
 		align.put(	7,	3);
 		alignments.add(align);
@@ -182,14 +181,14 @@ public class TestSingleRefiner {
 		/*
 		 * 4. Expect empty
 		 */
-		expect = new HashMap<Integer,Integer>();
+		expect = new HashMap<>();
 		expecteds.add(expect);
 
 		/* 5. Prioritize score over chain length
 		 * 1->5->9</
 		 * 3->6->10
 		 */
-		align = new HashMap<Integer,Integer>();
+		align = new HashMap<>();
 		align.put(	1,	5);
 		align.put(	5,	9);
 		align.put(	9,	3);
@@ -200,7 +199,7 @@ public class TestSingleRefiner {
 		/* 5. Expect
 		 * 3->5->9<--
 		 */
-		expect = new HashMap<Integer,Integer>();
+		expect = new HashMap<>();
 		expect.put(	3,	5);
 		expect.put(	5,	9);
 		expect.put(	9,	3);
@@ -211,7 +210,7 @@ public class TestSingleRefiner {
 		/*
 		 * 6. Small cycles can be repaired. 3>5>7>5
 		 */
-		align = new HashMap<Integer, Integer>();
+		align = new HashMap<>();
 		align.put(3, 5);
 		align.put(5, 7);
 		align.put(7, 5);
@@ -220,7 +219,7 @@ public class TestSingleRefiner {
 		/*
 		 * 6. Expect 3>5>7<--
 		 */
-		expect = new HashMap<Integer, Integer>();
+		expect = new HashMap<>();
 		expect.put(3, 5);
 		expect.put(5, 7);
 		expect.put(7, 3);
@@ -230,7 +229,7 @@ public class TestSingleRefiner {
 		 * 7. It might be a good idea to allow cycles if their length divides the order. However, this isn't allowed
 		 * yet. 3>5<
 		 */
-		align = new HashMap<Integer, Integer>();
+		align = new HashMap<>();
 		align.put(3, 5);
 		align.put(5, 3);
 		alignments.add(align);
@@ -238,12 +237,12 @@ public class TestSingleRefiner {
 		/*
 		 * 7. Expect empty, but could argue for 3>5<--
 		 */
-		expect = new HashMap<Integer, Integer>();
+		expect = new HashMap<>();
 		expecteds.add(expect);
 	}
 
 	@Test
-	public void testExpected() throws StructureException {
+	public void testExpected() {
 
 		for(int i=0;i<alignments.size(); i++) {
 			Map<Integer,Integer> align = alignments.get(i);
@@ -263,15 +262,16 @@ public class TestSingleRefiner {
 	 * @param align
 	 */
 	private void testAutomorphism(Map<Integer,Integer> align) {
-		for(Integer pre:align.keySet()) {
-			Integer post = align.get(pre);
+		for(Map.Entry<Integer, Integer> entry : align.entrySet()) {
+            Integer pre = entry.getKey();
+            Integer post = entry.getValue();
 			Assert.assertNotNull("Not automorphic: f(" + pre + ") not defined", post);
 			Assert.assertTrue("not automorphic: f(" + pre + ") = " + post + " but f(" + post + ") undefined", align.containsKey(post));
 		}
 	}
 
 	@Test
-	public void testAutomorphism() throws StructureException {
+	public void testAutomorphism() {
 		for(int i=0;i<alignments.size(); i++) {
 			Map<Integer,Integer> align = alignments.get(i);
 
@@ -285,15 +285,16 @@ public class TestSingleRefiner {
 		Assert.assertEquals(align.size(), alignK.size()); // Assumption; Should be tested by AlignmentToolsTest
 
 		int refinementNum = 0;
-		for(Integer res : alignK.keySet()) {
-			Integer resK = alignK.get(res);
+		for(Map.Entry<Integer, Integer> entry : alignK.entrySet()) {
+            Integer res = entry.getKey();
+            Integer resK = entry.getValue();
 			Assert.assertEquals(String.format("Asymmetric alignment in #%d. f^%d(%d)=%d", refinementNum++, k, res, resK), res,
 					resK);
 		}
 	}
 
 	@Test
-	public void testSymmetric() throws StructureException {
+	public void testSymmetric() {
 		for(int i=0;i<alignments.size(); i++) {
 			Map<Integer,Integer> align = alignments.get(i);
 

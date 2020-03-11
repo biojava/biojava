@@ -24,12 +24,6 @@
 package org.biojava.nbio.structure.io;
 
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import org.biojava.nbio.alignment.Alignments;
 import org.biojava.nbio.alignment.Alignments.PairwiseSequenceAlignerType;
 import org.biojava.nbio.alignment.SimpleGapPenalty;
@@ -42,29 +36,20 @@ import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.core.sequence.DNASequence;
 import org.biojava.nbio.core.sequence.ProteinSequence;
 import org.biojava.nbio.core.sequence.RNASequence;
-import org.biojava.nbio.core.sequence.compound.AmbiguityDNACompoundSet;
-import org.biojava.nbio.core.sequence.compound.AmbiguityDNARNAHybridCompoundSet;
-import org.biojava.nbio.core.sequence.compound.AmbiguityRNACompoundSet;
-import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
-import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
-import org.biojava.nbio.core.sequence.compound.DNACompoundSet;
-import org.biojava.nbio.core.sequence.compound.NucleotideCompound;
+import org.biojava.nbio.core.sequence.compound.*;
 import org.biojava.nbio.core.sequence.template.Compound;
 import org.biojava.nbio.core.sequence.template.Sequence;
-import org.biojava.nbio.structure.AminoAcid;
-import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.Chain;
-import org.biojava.nbio.structure.Group;
-import org.biojava.nbio.structure.GroupType;
-import org.biojava.nbio.structure.HetatomImpl;
-import org.biojava.nbio.structure.NucleotideImpl;
-import org.biojava.nbio.structure.ResidueNumber;
-import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.io.mmcif.chem.PolymerType;
 import org.biojava.nbio.structure.io.mmcif.chem.ResidueType;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -82,7 +67,7 @@ public class SeqRes2AtomAligner {
 
 
 
-	private String alignmentString;
+	private final String alignmentString;
 
 	public SeqRes2AtomAligner(){
 		logger.debug("initialising SeqRes2AtomAligner");
@@ -103,12 +88,9 @@ public class SeqRes2AtomAligner {
 	 */
 	public static Chain getMatchingAtomRes(Chain seqRes, List<Chain> atomList, boolean useChainId)
 	{
-		Iterator<Chain> iter = atomList.iterator();
-		while(iter.hasNext()){
-			Chain atomChain = iter.next();
-
-			String atomChainId = null;
-			String seqResChainId = null;
+		for (Chain atomChain : atomList) {
+			String atomChainId;
+			String seqResChainId;
 			if (useChainId) {
 				atomChainId = atomChain.getId();
 				seqResChainId = seqRes.getId();
@@ -118,7 +100,7 @@ public class SeqRes2AtomAligner {
 
 			}
 
-			if ( atomChainId.equals(seqResChainId)){
+			if (atomChainId.equals(seqResChainId)) {
 				return atomChain;
 			}
 
@@ -189,13 +171,12 @@ public class SeqRes2AtomAligner {
 				logger.debug("SEQRES chain {} is a nucleotide chain ({} nucleotides), aligning nucleotides...", seqRes.getId(), numNucleotidesSeqres);
 
 				alignNucleotideChains(seqRes,atomRes);
-				return;
 			} else {
 
 				logger.debug("SEQRES chain {} contains {} amino acids and {} nucleotides, ignoring...", seqRes.getId(),numAminosSeqres,numNucleotidesSeqres);
 
-				return;
 			}
+			return;
 		}
 
 		if ( atomRes.getAtomGroups(GroupType.AMINOACID).size() < 1) {
@@ -367,7 +348,7 @@ public class SeqRes2AtomAligner {
 	 */
 	public static String getFullAtomSequence(List<Group> groups, Map<Integer, Integer> positionIndex, boolean isNucleotideChain){
 
-		StringBuffer sequence = new StringBuffer() ;
+		StringBuilder sequence = new StringBuilder() ;
 		int seqIndex = 0; // track sequence.length()
 		for ( int i=0 ; i< groups.size(); i++){
 			Group g = groups.get(i);
@@ -453,8 +434,8 @@ public class SeqRes2AtomAligner {
 
 	private boolean alignNucleotideGroups(List<Group> seqRes, List<Group> atomRes) {
 
-		Map<Integer,Integer> seqresIndexPosition = new HashMap<Integer, Integer>();
-		Map<Integer,Integer> atomIndexPosition   = new HashMap<Integer, Integer>();
+		Map<Integer,Integer> seqresIndexPosition = new HashMap<>();
+		Map<Integer,Integer> atomIndexPosition   = new HashMap<>();
 
 		String seq1 = getFullAtomSequence(seqRes, seqresIndexPosition, true);
 		//
@@ -531,7 +512,7 @@ public class SeqRes2AtomAligner {
 	}
 
 	private Sequence<NucleotideCompound> getNucleotideSequence(String seq) {
-		Sequence<NucleotideCompound> s = null;
+		Sequence<NucleotideCompound> s;
 
 		// first we try DNA, then RNA, them hybrid
 
@@ -573,8 +554,8 @@ public class SeqRes2AtomAligner {
 	 */
 	private boolean alignProteinChains(List<Group> seqRes, List<Group> atomRes) {
 
-		Map<Integer,Integer> seqresIndexPosition = new HashMap<Integer, Integer>();
-		Map<Integer,Integer> atomIndexPosition   = new HashMap<Integer, Integer>();
+		Map<Integer,Integer> seqresIndexPosition = new HashMap<>();
+		Map<Integer,Integer> atomIndexPosition   = new HashMap<>();
 
 		String seq1 = getFullAtomSequence(seqRes, seqresIndexPosition, false);
 		//
@@ -643,7 +624,7 @@ public class SeqRes2AtomAligner {
 		// make sure we actually find an alignment
 		boolean noMatchFound = true;
 
-		Compound gapSymbol =  AminoAcidCompoundSet.getAminoAcidCompoundSet().getCompoundForString("-");
+        Compound gapSymbol =  AminoAcidCompoundSet.aminoAcidCompoundSet.getCompoundForString("-");
 
 		mainLoop:
 			for (int i = 1; i <= aligLength ; i++) {

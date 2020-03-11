@@ -21,27 +21,16 @@
 package org.biojava.nbio.structure.io.mmcif;
 
 
-import java.lang.reflect.Field;
-import java.util.*;
-
-import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.Chain;
-import org.biojava.nbio.structure.Element;
-import org.biojava.nbio.structure.EntityType;
-import org.biojava.nbio.structure.Group;
-import org.biojava.nbio.structure.GroupType;
-import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.io.FileConvert;
-import org.biojava.nbio.structure.io.mmcif.model.AbstractBean;
-import org.biojava.nbio.structure.io.mmcif.model.AtomSite;
-import org.biojava.nbio.structure.io.mmcif.model.CIFLabel;
-import org.biojava.nbio.structure.io.mmcif.model.Cell;
-import org.biojava.nbio.structure.io.mmcif.model.IgnoreField;
-import org.biojava.nbio.structure.io.mmcif.model.Symmetry;
+import org.biojava.nbio.structure.io.mmcif.model.*;
 import org.biojava.nbio.structure.xtal.CrystalCell;
 import org.biojava.nbio.structure.xtal.SpaceGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.lang.reflect.Field;
+import java.util.*;
 
 /**
  * Some tools for mmCIF file writing.
@@ -87,12 +76,12 @@ public class MMCIFFileTools {
 	public static String toLoopMmCifHeaderString(String categoryName, String className) throws ClassNotFoundException {
 		StringBuilder str = new StringBuilder();
 
-		str.append(SimpleMMcifParser.LOOP_START+newline);
+		str.append(SimpleMMcifParser.LOOP_START).append(newline);
 
 		Class<?> c = Class.forName(className);
 
 		for (Field f : getFields(c)) {
-			str.append(categoryName+"."+f.getName()+newline);
+			str.append(categoryName).append(".").append(f.getName()).append(newline);
 		}
 
 		return str.toString();
@@ -148,7 +137,7 @@ public class MMCIFFileTools {
 
 		}
 
-		sb.append(SimpleMMcifParser.COMMENT_CHAR+newline);
+		sb.append(SimpleMMcifParser.COMMENT_CHAR).append(newline);
 
 		return sb.toString();
 	}
@@ -220,7 +209,7 @@ public class MMCIFFileTools {
 			sb.append(toSingleLoopLineMmCifString(o, fields, sizes));
 		}
 
-		sb.append(SimpleMMcifParser.COMMENT_CHAR+newline);
+		sb.append(SimpleMMcifParser.COMMENT_CHAR).append(newline);
 
 		return sb.toString();
 	}
@@ -497,7 +486,7 @@ public class MMCIFFileTools {
 	 * @return
 	 */
 	public static List<AtomSite> convertStructureToAtomSites(Structure s) {
-		List<AtomSite> list = new ArrayList<AtomSite>();
+		List<AtomSite> list = new ArrayList<>();
 
 		for (int m=0;m<s.nrModels();m++) {
 			for (Chain c:s.getChains(m)) {

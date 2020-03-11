@@ -24,20 +24,14 @@
 package org.biojava.nbio.structure.io;
 
 
-import org.biojava.nbio.structure.EntityInfo;
-import org.biojava.nbio.structure.EntityType;
-import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.StructureIO;
+import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 
 public class TestMMcifOrganismParsing {
@@ -45,7 +39,7 @@ public class TestMMcifOrganismParsing {
 
 
 	@BeforeClass
-	public static void setUp() throws Exception {
+	public static void setUp() {
 
 		AtomCache cache = new AtomCache();
 		cache.setUseMmCif(true);

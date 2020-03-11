@@ -53,7 +53,7 @@ class SecStrucGroup extends HetatomImpl {
 	@Override
 	public String toString() {
 
-		StringBuffer str = new StringBuffer("SecStrucGroup ");
+		StringBuilder str = new StringBuilder("SecStrucGroup ");
 		str.append(residueNumber);
 		str.append(" ");
 		str.append(pdb_name);

@@ -40,6 +40,8 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import static org.biojava.nbio.core.sequence.io.util.IOUtils.close;
 import static org.biojava.nbio.core.sequence.io.util.IOUtils.openFile;
@@ -76,8 +78,11 @@ public class XMLHelper {
 
 	static public Document inputStreamToDocument(InputStream inputStream) throws SAXException, IOException, ParserConfigurationException  {
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		dbf.setIgnoringComments(true);
+		dbf.setIgnoringElementContentWhitespace(true);
 
 		DocumentBuilder db = dbf.newDocumentBuilder();
+
 
 		Document doc = db.parse(inputStream);
 		doc.getDocumentElement().normalize();
@@ -123,13 +128,13 @@ public class XMLHelper {
 	}
 
 	static public Element selectSingleElement(Element element, String xpathExpression) throws XPathExpressionException {
-		if (xpathExpression.indexOf("/") == -1) {
+		if (!xpathExpression.contains("/")) {
 			NodeList nodeList = element.getChildNodes();
-			for (int i = 0; i < nodeList.getLength(); i++) {
+			int nn = nodeList.getLength();
+			for (int i = 0; i < nn; i++) {
 				Node node = nodeList.item(i);
-				if (node.getNodeType() == Node.ELEMENT_NODE && node.getNodeName().equals(xpathExpression)) {
+				if (node.getNodeType() == Node.ELEMENT_NODE && node.getNodeName().equals(xpathExpression))
 					return (Element) node;
-				}
 			}
 			//  NodeList nodes = element.getElementsByTagName(xpathExpression);
 			//  if (nodes.getLength() > 0) {
@@ -139,34 +144,34 @@ public class XMLHelper {
 			//  }
 		} else {
 			XPath xpath = XPathFactory.newInstance().newXPath();
-			Element node = (Element) xpath.evaluate(xpathExpression, element, XPathConstants.NODE);
-			return node;
+			return (Element) xpath.evaluate(xpathExpression, element, XPathConstants.NODE);
 		}
 	}
 
-	static public ArrayList<Element> selectElements(Element element, String xpathExpression) throws XPathExpressionException {
-		ArrayList<Element> resultVector = new ArrayList<Element>();
+	static public List<Element> selectElements(Element element, String xpathExpression) throws XPathExpressionException {
 		if (element == null) {
-			return resultVector;
+			return Collections.EMPTY_LIST;
 		}
-		if (xpathExpression.indexOf("/") == -1) {
+		ArrayList<Element> r = new ArrayList<>();
+		if (!xpathExpression.contains("/")) {
 			NodeList nodeList = element.getChildNodes();
-			for (int i = 0; i < nodeList.getLength(); i++) {
+			int nn = nodeList.getLength();
+			for (int i = 0; i < nn; i++) {
 				Node node = nodeList.item(i);
 				if (node.getNodeType() == Node.ELEMENT_NODE && node.getNodeName().equals(xpathExpression)) {
-					resultVector.add((Element) node);
+					r.add((Element) node);
 				}
 			}
 		} else {
 			XPath xpath = XPathFactory.newInstance().newXPath();
 			NodeList nodes = (NodeList) xpath.evaluate(xpathExpression, element, XPathConstants.NODESET);
 
-
-			for (int i = 0; i < nodes.getLength(); i++) {
-				Node node = nodes.item(i);
-				resultVector.add((Element) node);
-			}
+			int nn = nodes.getLength();
+			for (int i = 0; i < nn; i++)
+				r.add((Element) nodes.item(i));
 		}
-		return resultVector;
+		return r.isEmpty() ?
+				Collections.EMPTY_LIST :
+				r;
 	}
 }

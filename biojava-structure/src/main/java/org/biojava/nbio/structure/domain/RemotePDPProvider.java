@@ -24,16 +24,6 @@
  */
 package org.biojava.nbio.structure.domain;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.SortedSet;
-import java.util.TreeSet;
-
 import org.biojava.nbio.structure.ResidueRange;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
@@ -44,6 +34,12 @@ import org.biojava.nbio.structure.align.util.URLConnectionTools;
 import org.biojava.nbio.structure.scop.server.XMLUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.*;
 
 
 /** A class that provided PDP assignments that are loaded from a remote web server
@@ -59,7 +55,7 @@ public class RemotePDPProvider extends SerializableCache<String,SortedSet<String
 
 	String server = DEFAULT_SERVER;
 
-	private static String CACHE_FILE_NAME = "remotepdpdomaindefs.ser";
+	private static final String CACHE_FILE_NAME = "remotepdpdomaindefs.ser";
 
 
 	public static void main(String[] args) throws IOException, StructureException{
@@ -111,7 +107,7 @@ public class RemotePDPProvider extends SerializableCache<String,SortedSet<String
 	 */
 	private void loadRepresentativeDomains() throws IOException {
 
-		AssignmentXMLSerializer results = null;
+		AssignmentXMLSerializer results;
 		try {
 			URL u = new URL(server + "getRepresentativePDPDomains");
 			logger.info("Fetching {}",u);
@@ -121,19 +117,15 @@ public class RemotePDPProvider extends SerializableCache<String,SortedSet<String
 
 			Map<String,String> data = results.getAssignments();
 			logger.info("got {} domain ranges for PDP domains from server.",data.size());
-			for (String key: data.keySet()){
-				String range = data.get(key);
+			for (Map.Entry<String, String> entry : data.entrySet()){
+				String range = entry.getValue();
 
 				// work around list in results;
 
 				String[] spl = range.split(",");
-				SortedSet<String> value = new TreeSet<String>();
 
-				for (String s : spl){
-					value.add(s);
-
-				}
-				serializedCache.put(key, value);
+                SortedSet<String> value = new TreeSet<>(Arrays.asList(spl));
+				serializedCache.put(entry.getKey(), value);
 			}
 
 		} catch (MalformedURLException e){
@@ -200,12 +192,12 @@ public class RemotePDPProvider extends SerializableCache<String,SortedSet<String
 		}
 
 		String pdbId = null;
-		List<ResidueRange> ranges = new ArrayList<ResidueRange>();
+		List<ResidueRange> ranges = new ArrayList<>();
 		for(String domainRange : domainRanges) {
 			SubstructureIdentifier strucId = new SubstructureIdentifier(domainRange);
-			if(pdbId == null) {
-				pdbId = strucId.getPdbId();
-			} else if(!pdbId.equals(strucId.getPdbId())) {
+            if(pdbId == null) {
+                pdbId = strucId.pdbId;
+			} else if(!pdbId.equals(strucId.pdbId)) {
 				// should never happen with correct server implementation
 				throw new RuntimeException("Don't know how to take the union of domains from multiple PDB IDs.");
 			}
@@ -244,7 +236,7 @@ public class RemotePDPProvider extends SerializableCache<String,SortedSet<String
 	 */
 	@Override
 	public SortedSet<String> getPDPDomainNamesForPDB(String pdbId) throws IOException{
-		SortedSet<String> results = null;
+		SortedSet<String> results;
 		try {
 			URL u = new URL(server + "getPDPDomainNamesForPDB?pdbId="+pdbId);
 			logger.info("Fetching {}",u);

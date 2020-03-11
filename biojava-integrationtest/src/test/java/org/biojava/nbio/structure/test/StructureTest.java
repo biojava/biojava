@@ -25,15 +25,14 @@ import org.biojava.nbio.structure.geometry.SuperPositions;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.PDBFileParser;
 import org.biojava.nbio.structure.io.SSBondImpl;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import javax.vecmath.Matrix4d;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Set;
-
-import javax.vecmath.Matrix4d;
-
-import org.junit.BeforeClass;
-import org.junit.Test;
 
 import static org.junit.Assert.*;
 
@@ -98,10 +97,9 @@ public class StructureTest {
 
 	/**
 	 * Tests if a PDB file can be parsed
-	 * @throws Exception
 	 */
 	@Test
-	public void testReadPDBFile() throws Exception {
+	public void testReadPDBFile() {
 
 		assertEquals("pdb code not set!","5PTI",structure.getPDBCode());
 
@@ -126,7 +124,7 @@ public class StructureTest {
 	}
 
 	@Test
-	public void testSSBondParsing() throws Exception {
+	public void testSSBondParsing() {
 		assertNotNull(structure);
 
 		List<Bond> ssbonds = structure.getSSBonds();
@@ -164,16 +162,15 @@ public class StructureTest {
 
 	/**
 	 * Tests that standard amino acids are working properly
-	 * @throws Exception
 	 */
 	@Test
-	public void testStandardAmino() throws Exception {
+	public void testStandardAmino() {
 
 		AminoAcid arg = StandardAminoAcid.getAminoAcid("ARG");
-		assertTrue(arg.size() == 11 );
+		assertEquals(11, arg.size());
 
 		AminoAcid gly = StandardAminoAcid.getAminoAcid("G");
-		assertTrue(gly.size() == 4);
+		assertEquals(4, gly.size());
 
 	}
 
@@ -182,7 +179,7 @@ public class StructureTest {
 
 		PDBHeader header = structure.getPDBHeader();
 		String classification = header.getClassification();
-		assertTrue(classification.equals("PROTEINASE INHIBITOR (TRYPSIN)"));
+		assertEquals("PROTEINASE INHIBITOR (TRYPSIN)", classification);
 
 		String idCode = header.getIdCode();
 		assertEquals("the idCode in the Header is " + idCode + " and not 5PTI, as expected","5PTI",idCode);
@@ -208,7 +205,7 @@ public class StructureTest {
 		//assertEquals("did not find the right number of compounds! ", 2, compounds.size());
 
 		EntityInfo comp = compounds.get(0);
-		assertEquals("did not get the right compounds info",true,comp.getDescription().startsWith("TRYPSIN INHIBITOR"));
+		assertTrue("did not get the right compounds info", comp.getDescription().startsWith("TRYPSIN INHIBITOR"));
 
 		List<String> chainIds = comp.getChainIds();
 		List<Chain> chains    = comp.getChains();
@@ -224,12 +221,11 @@ public class StructureTest {
 
 		if ( g1.getPDBName().equals("GLY")){
 			if ( g1 instanceof AminoAcid){
-				try {
-					Atom cb = Calc.createVirtualCBAtom((AminoAcid)g1);
-					g1.addAtom(cb);
-				} catch (StructureException e){
-					fail ("createVirtualCBAtom failed with " + e.getMessage());
-				}
+//				try {
+				g1.addAtom(Calc.createVirtualCBAtom((AminoAcid)g1));
+//				} catch (StructureException e){
+//					fail ("createVirtualCBAtom failed with " + e.getMessage());
+//				}
 			}
 		} else {
 			fail("the group at position 11 is not a GLY!");
@@ -237,14 +233,14 @@ public class StructureTest {
 	}
 
 	@Test
-	public void testMutation() throws Exception {
+	public void testMutation() {
 
 		Group g1 = (Group)structure.getChainByIndex(0).getAtomGroup(21).clone();
-		assertTrue(g1 != null);
+		assertNotNull(g1);
 
 
 		Group g2 = (Group)structure.getChainByIndex(0).getAtomGroup(53).clone();
-		assertTrue(g2 != null);
+		assertNotNull(g2);
 
 
 		assertEquals("The group at position 22 is not a PHE","PHE", g1.getPDBName());
@@ -292,13 +288,13 @@ public class StructureTest {
 	}
 
 	@Test
-	public void testElement() throws Exception {
+	public void testElement() {
 		// there should be no wild card elements
 		// in a structure (!= Element.R)
 		for (Chain c: structure.getChains()) {
 			for (Group g: c.getAtomGroups()) {
 				for (Atom a: g.getAtoms()) {
-					assertFalse(a.getElement().equals(Element.R));
+					assertNotEquals(a.getElement(), Element.R);
 				}
 			}
 		}

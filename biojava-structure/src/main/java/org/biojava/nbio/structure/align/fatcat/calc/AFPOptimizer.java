@@ -27,7 +27,6 @@
 package org.biojava.nbio.structure.align.fatcat.calc;
 
 import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.model.AFP;
 import org.biojava.nbio.structure.align.model.AFPChain;
 
@@ -41,8 +40,7 @@ public class AFPOptimizer
 	/**
 	 * optimize the alignment by dynamic programming
 	 */
-	public static void optimizeAln(FatCatParameters params, AFPChain afpChain,Atom[] ca1, Atom[] ca2) throws StructureException
-	{
+	public static void optimizeAln(FatCatParameters params, AFPChain afpChain,Atom[] ca1, Atom[] ca2) {
 
 		int minLen = afpChain.getMinLen();
 		int fragLen = params.getFragLen();
@@ -72,7 +70,7 @@ public class AFPOptimizer
 
 		List<AFP> afpSet = afpChain.getAfpSet();
 
-		int optLength         = afpChain.getOptLength();
+		int optLength;
 		int[] afpChainList    = afpChain.getAfpChainList();
 		int[] block2Afp       = afpChain.getBlock2Afp();
 		int[] blockSize       = afpChain.getBlockSize();
@@ -241,7 +239,7 @@ public class AFPOptimizer
 					blockScore[i] += afpSet.get(bknow).getScore() + conn;
 					g1 = afpSet.get(bknow).getP1() - afpSet.get(bkold).getP1() - afpSet.get(bkold).getFragLen();
 					g2 = afpSet.get(bknow).getP2() - afpSet.get(bkold).getP2() - afpSet.get(bkold).getFragLen();
-					blockGap[i] += (g1 > g2)?g1:g2;
+					blockGap[i] += Math.max(g1, g2);
 				}
 				bkold = bknow;
 			}

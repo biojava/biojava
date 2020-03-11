@@ -20,8 +20,6 @@
  */
 package org.biojava.nbio.alignment;
 
-import static org.junit.Assert.*;
-
 import org.biojava.nbio.core.alignment.template.Profile;
 import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.core.sequence.DNASequence;
@@ -34,9 +32,11 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
+
 public class TestSubOptimalMSA {
 
-	private List<DNASequence> sequences = new ArrayList<DNASequence>();
+	private final List<DNASequence> sequences = new ArrayList<>();
 
 	@Before
 	public void setUp() {

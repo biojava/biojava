@@ -20,10 +20,6 @@
  */
 package org.biojava.nbio.structure.test.align.seq;
 
-import static org.junit.Assert.*;
-
-import java.io.IOException;
-
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
@@ -32,6 +28,11 @@ import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.seq.SmithWaterman3DParameters;
 import org.biojava.nbio.structure.align.seq.SmithWaterman3Daligner;
 import org.junit.Test;
+
+import java.io.IOException;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test the superposition based on a sequence alignment on different cases.

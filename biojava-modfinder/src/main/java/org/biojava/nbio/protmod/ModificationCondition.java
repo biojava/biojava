@@ -37,11 +37,11 @@ public interface ModificationCondition {
 	 *
 	 * @return the involved components.
 	 */
-	public List<Component> getComponents();
+    List<Component> getComponents();
 
 	/**
 	 *
 	 * @return a list of all {Link ModificationLinkage}s.
 	 */
-	public List<ModificationLinkage> getLinkages();
+    List<ModificationLinkage> getLinkages();
 }

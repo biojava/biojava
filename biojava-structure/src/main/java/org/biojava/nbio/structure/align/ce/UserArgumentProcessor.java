@@ -20,8 +20,6 @@
  */
 package org.biojava.nbio.structure.align.ce;
 
-import org.biojava.nbio.structure.align.util.ConfigurationException;
-
 public interface UserArgumentProcessor {
 
 
@@ -29,11 +27,11 @@ public interface UserArgumentProcessor {
 	 *
 	 * @param argv
 	 */
-	public void process(String[] argv) throws ConfigurationException;
+    void process(String[] argv);
 
 	/**
 	 * Print help about the arguments
 	 * @return
 	 */
-	public String printHelp();
+    String printHelp();
 }

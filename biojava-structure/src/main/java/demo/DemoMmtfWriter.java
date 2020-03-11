@@ -20,14 +20,14 @@
  */
 package demo;
 
-import java.io.IOException;
-import java.nio.file.Paths;
-
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.io.mmtf.MmtfActions;
 import org.biojava.nbio.structure.io.mmtf.MmtfUtils;
+
+import java.io.IOException;
+import java.nio.file.Paths;
 
 public class DemoMmtfWriter {
 

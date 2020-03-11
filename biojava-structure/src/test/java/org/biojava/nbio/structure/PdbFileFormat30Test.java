@@ -27,12 +27,11 @@ import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.PDBFileParser;
 import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
 import org.biojava.nbio.structure.io.mmcif.ReducedChemCompProvider;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-
-import org.junit.Test;
 
 import static org.junit.Assert.*;
 
@@ -114,7 +113,7 @@ public class PdbFileFormat30Test {
 		FileParsingParameters params = new FileParsingParameters();
 		params.setAlignSeqRes(false);
 		pdbpars.setFileParsingParameters(params);
-		Structure structure = null;
+		Structure structure;
 
 		structure = pdbpars.parsePDBFile(inStream) ;
 
@@ -153,7 +152,7 @@ public class PdbFileFormat30Test {
 		// thus here we have the one specified in header plus a SO4 nonpolymer entity
 		assertEquals(2, compounds.size());
 		EntityInfo mol = compounds.get(0);
-		assertTrue(mol.getDescription().equals("6,7-DIMETHYL-8-RIBITYLLUMAZINE SYNTHASE"));
+        assertEquals("6,7-DIMETHYL-8-RIBITYLLUMAZINE SYNTHASE", mol.getDescription());
 		assertEquals(60, mol.getChainIds().size());
 		assertEquals(60, mol.getChains().size());
 		assertTrue(isChainNameInEntity(mol,"S"));

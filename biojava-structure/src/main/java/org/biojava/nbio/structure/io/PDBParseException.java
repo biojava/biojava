@@ -28,7 +28,7 @@ package org.biojava.nbio.structure.io;
  */
 
 public class PDBParseException extends Exception{
-	public static final long serialVersionUID = 219047230178423923l;
+	public static final long serialVersionUID = 219047230178423923L;
 	/**
 	 * Constructs a PDBParseException object.
 	 *

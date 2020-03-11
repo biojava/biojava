@@ -20,7 +20,11 @@
  */
 package org.biojava.nbio.structure.io.mmcif;
 
-import static org.junit.Assert.*;
+import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureIO;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -28,11 +32,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.StructureIO;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test date related changes in mmCIF 5.0 format.

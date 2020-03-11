@@ -32,7 +32,6 @@ import org.biojava.nbio.structure.align.StructureAlignment;
 import org.biojava.nbio.structure.align.fatcat.calc.FatCatAligner;
 import org.biojava.nbio.structure.align.fatcat.calc.FatCatParameters;
 import org.biojava.nbio.structure.align.model.AFPChain;
-import org.biojava.nbio.structure.align.util.ConfigurationException;
 
 
 public class FatCat
@@ -60,7 +59,7 @@ public class FatCat
 	 *
 	 * @param argv
 	 */
-	public static void main(String[] argv) throws ConfigurationException {
+	public static void main(String[] argv) {
 		FatCatUserArgumentProcessor processor = new FatCatUserArgumentProcessor();
 		processor.process(argv);
 	}

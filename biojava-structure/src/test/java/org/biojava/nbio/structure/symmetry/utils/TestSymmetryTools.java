@@ -20,12 +20,13 @@
  */
 package org.biojava.nbio.structure.symmetry.utils;
 
-import static org.junit.Assert.*;
+import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test the methods in {@link SymmetryTools} class.
@@ -62,7 +63,7 @@ public class TestSymmetryTools {
 		assertEquals("Wrong folds for " + stoich, expected, folds);
 
 		stoich = Arrays.asList(6, 5);
-		expected = Arrays.asList(1);
+		expected = Collections.singletonList(1);
 		folds = SymmetryTools.getValidFolds(stoich);
 		assertEquals("Wrong folds for " + stoich, expected, folds);
 

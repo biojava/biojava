@@ -20,18 +20,13 @@
  */
 package org.biojava.nbio.structure;
 
-import static org.junit.Assert.*;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.util.NoSuchElementException;
 
-import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.AtomIterator;
-import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.StructureIO;
-import org.biojava.nbio.structure.StructureTools;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class TestAtomIterator {
 	@Test

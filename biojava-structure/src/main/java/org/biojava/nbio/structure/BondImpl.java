@@ -33,9 +33,9 @@ import java.util.List;
 public class BondImpl implements Bond {
 
 	private static final long serialVersionUID = 8836120946858134380L;
-	private Atom atomA;
-	private Atom atomB;
-	private int bondOrder;
+	private final Atom atomA;
+	private final Atom atomB;
+	private final int bondOrder;
 
 	/**
 	 * Constructs a new bond from a pair of atoms and the bond order of the bond
@@ -90,7 +90,7 @@ public class BondImpl implements Bond {
 	private void addSelfToAtoms() {
 		List<Bond> bonds = atomA.getBonds();
 		if (bonds==null) {
-			bonds = new ArrayList<Bond>(AtomImpl.BONDS_INITIAL_CAPACITY);
+			bonds = new ArrayList<>(AtomImpl.BONDS_INITIAL_CAPACITY);
 			atomA.setBonds(bonds);
 		}
 

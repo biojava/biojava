@@ -78,12 +78,12 @@ public static boolean  showDocument ( URL  url )
 	try
 	{
 		Method  method = basicServiceClass.getMethod (
-			"showDocument", new Class [ ] { URL.class } );
+			"showDocument", URL.class);
 
 		Boolean  resultBoolean = ( Boolean )
 			method.invoke ( basicServiceObject, new Object [ ] { url } );
 
-		boolean success = resultBoolean.booleanValue ( );
+		boolean success = resultBoolean;
 		if ( ! success )
 		System.out.println("invocation of method failed!");
 		return success;
@@ -109,10 +109,10 @@ private static Object  getBasicServiceObject ( )
 			= Class.forName ( "javax.jnlp.ServiceManager" );
 
 		Method  lookupMethod = serviceManagerClass.getMethod ( "lookup",
-			new Class [ ] { String.class } );
+                String.class);
 
 		return lookupMethod.invoke (
-			null, new Object [ ] { "javax.jnlp.BasicService" } );
+			null, "javax.jnlp.BasicService");
 	}
 	catch ( Exception  ex )
 	{

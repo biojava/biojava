@@ -49,9 +49,9 @@ import java.util.List;
  */
 public class FileProxyProteinSequenceCreator implements SequenceCreatorInterface<AminoAcidCompound> {
 
-	CompoundSet<AminoAcidCompound> compoundSet;
-	File file;
-	SequenceParserInterface sequenceParser;
+	final CompoundSet<AminoAcidCompound> compoundSet;
+	final File file;
+	final SequenceParserInterface sequenceParser;
 
 	/**
 	 * Need File so that we can store full path name in SequenceFileProxyLoader for Random File access as a quick read
@@ -76,13 +76,13 @@ public class FileProxyProteinSequenceCreator implements SequenceCreatorInterface
 	@Override
 	public AbstractSequence<AminoAcidCompound> getSequence(String sequence, long index) throws CompoundNotFoundException, IOException {
 		SequenceFileProxyLoader<AminoAcidCompound> sequenceFileProxyLoader =
-				new SequenceFileProxyLoader<AminoAcidCompound>(
+				new SequenceFileProxyLoader<>(
 						file,
 						sequenceParser,
 						index,
 						sequence.length(),
 						compoundSet
-						);
+				);
 		return new ProteinSequence(sequenceFileProxyLoader, compoundSet);
 	}
 

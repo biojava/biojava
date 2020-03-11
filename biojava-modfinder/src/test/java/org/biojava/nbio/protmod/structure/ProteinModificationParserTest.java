@@ -22,7 +22,9 @@ package org.biojava.nbio.protmod.structure;
 
 import org.biojava.nbio.protmod.ProteinModification;
 import org.biojava.nbio.protmod.ProteinModificationRegistry;
-import org.biojava.nbio.structure.*;
+import org.biojava.nbio.structure.ResidueNumber;
+import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.StructureException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -477,7 +479,7 @@ public class ProteinModificationParserTest {
 	 * http://www.biojava.org/wiki/BioJava:CookBook3:ProtMod
 	 */
 	private List<ResidueNumber> identifyPhosphosites(Structure struc) {
-		List<ResidueNumber> phosphosites = new ArrayList<ResidueNumber>();
+		List<ResidueNumber> phosphosites = new ArrayList<>();
 		ProteinModificationIdentifier parser = new ProteinModificationIdentifier();
 		parser.identify(struc, ProteinModificationRegistry.getByKeyword("phosphoprotein"));
 		Set<ModifiedCompound> mcs = parser.getIdentifiedModifiedCompound();

@@ -20,27 +20,15 @@
  */
 package org.biojava.nbio.structure.cluster;
 
-import static org.junit.Assert.*;
+import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
+import org.biojava.nbio.structure.*;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
-import org.biojava.nbio.structure.AminoAcidImpl;
-import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.AtomImpl;
-import org.biojava.nbio.structure.Chain;
-import org.biojava.nbio.structure.ChainImpl;
-import org.biojava.nbio.structure.EntityInfo;
-import org.biojava.nbio.structure.Group;
-import org.biojava.nbio.structure.ResidueNumber;
-import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.StructureIO;
-import org.biojava.nbio.structure.StructureImpl;
-import org.biojava.nbio.structure.StructureTools;
-import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
  * Test the {@link SubunitCluster} merge and divide methods, one test specific
@@ -305,7 +293,7 @@ public class TestSubunitCluster {
 				atoms.add(a);
 			}
 		}
-		return atoms.toArray(new Atom[0]);
+		return atoms.toArray(Atom.EmptyAtomArray);
 	}
 
 	/**

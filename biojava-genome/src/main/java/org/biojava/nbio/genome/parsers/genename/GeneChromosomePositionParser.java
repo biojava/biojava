@@ -23,8 +23,8 @@
 
 package org.biojava.nbio.genome.parsers.genename;
 
-import org.biojava.nbio.genome.App;
 import org.biojava.nbio.core.util.InputStreamProvider;
+import org.biojava.nbio.genome.App;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,22 +66,15 @@ public class GeneChromosomePositionParser {
 	}
 
 	public static List<GeneChromosomePosition> getChromosomeMappings() throws IOException {
-
-		URL url = new URL(DEFAULT_MAPPING_URL);
-
-		InputStreamProvider prov = new InputStreamProvider();
-
-		InputStream inStream = prov.getInputStream(url);
-
-		return getChromosomeMappings(inStream);
+		return getChromosomeMappings(new InputStreamProvider().getInputStream(new URL(DEFAULT_MAPPING_URL)));
 	}
 
 	public static List<GeneChromosomePosition> getChromosomeMappings(InputStream inStream) throws IOException {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(inStream));
 
-		ArrayList<GeneChromosomePosition> gcps = new ArrayList<GeneChromosomePosition>();
+		ArrayList<GeneChromosomePosition> gcps = new ArrayList<>(1024);
 
-		String line = null;
+		String line;
 		while ((line = reader.readLine()) != null) {
 			GeneChromosomePosition gcp = getGeneChromosomePosition(line);
 			if ( gcp != null)
@@ -94,8 +87,7 @@ public class GeneChromosomePositionParser {
 	}
 
 	private static GeneChromosomePosition getGeneChromosomePosition(String line) {
-		if ( line == null)
-			return null;
+
 		String[] spl = line.split("\t");
 
 		if ( spl.length != 11) {
@@ -114,10 +106,8 @@ public class GeneChromosomePositionParser {
 		g.setCdsStart(Integer.parseInt(spl[6]));
 		g.setCdsEnd(Integer.parseInt(spl[7]));
 		g.setExonCount(Integer.parseInt(spl[8]));
-		String exonStarts = spl[9];
-		String exonEnds = spl[10];
-		g.setExonStarts(getIntegerList(exonStarts));
-		g.setExonEnds(getIntegerList(exonEnds));
+		g.setExonStarts(getIntegerList(spl[9]));
+		g.setExonEnds(getIntegerList(spl[10]));
 
 		//System.out.println(line);
 		//System.out.println(Arrays.asList(spl) + " " + spl.length);
@@ -126,7 +116,7 @@ public class GeneChromosomePositionParser {
 
 	private static List<Integer> getIntegerList(String lst){
 		String[] spl = lst.split(",");
-		ArrayList<Integer> l = new ArrayList<Integer>();
+		ArrayList<Integer> l = new ArrayList<>();
 		for (String s : spl){
 			l.add(Integer.parseInt(s));
 		}

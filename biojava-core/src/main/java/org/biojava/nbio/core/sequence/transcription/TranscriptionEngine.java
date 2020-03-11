@@ -125,7 +125,7 @@ public class TranscriptionEngine {
 	 */
 	public Map<Frame, Sequence<AminoAcidCompound>> multipleFrameTranslation(
 			Sequence<NucleotideCompound> dna, Frame... frames) {
-		Map<Frame, Sequence<AminoAcidCompound>> results = new EnumMap<Frame, Sequence<AminoAcidCompound>>(
+		Map<Frame, Sequence<AminoAcidCompound>> results = new EnumMap<>(
 				Frame.class);
 		for (Frame frame : frames) {
 			Sequence<NucleotideCompound> rna = getDnaRnaTranslator()
@@ -327,8 +327,8 @@ public class TranscriptionEngine {
 			if (aminoAcidCompounds != null) {
 				return aminoAcidCompounds;
 			}
-			return AminoAcidCompoundSet.getAminoAcidCompoundSet();
-		}
+            return AminoAcidCompoundSet.aminoAcidCompoundSet;
+        }
 
 		private DNAToRNATranslator getDnaRnaTranslator() {
 			if (dnaRnaTranslator != null) {

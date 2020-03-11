@@ -69,8 +69,8 @@ package org.biojava.nbio.genome.parsers.gff;
 public class Location implements Iterable<Location>
 {
 
-	private int mStart;
-	private int mEnd;
+	private final int mStart;
+	private final int mEnd;
 
 
 	/**
@@ -267,8 +267,8 @@ public class Location implements Iterable<Location>
 		}
 		else
 		{
-			int start= (other.mStart < mStart)? other.mStart: mStart;
-			int end= (other.mEnd > mEnd)? other.mEnd: mEnd;
+			int start= Math.min(other.mStart, mStart);
+			int end= Math.max(other.mEnd, mEnd);
 
 			return new Location( start, end );
 		}
@@ -368,15 +368,7 @@ public class Location implements Iterable<Location>
 		final Location loc= this;
 
 		//return iterable anonymous inner class
-		return new Iterable<Location> ()
-			{
-				@Override
-				public LocIterator iterator()
-				{
-					return new LocIterator( loc, windowSize, increment );
-				}
-
-			};
+		return () -> new LocIterator( loc, windowSize, increment );
 	}
 
 	/**
@@ -503,7 +495,7 @@ public class Location implements Iterable<Location>
 		{
 			if( other.mStart >= mStart )
 			{
-				return new Location( mStart, (other.mStart < mEnd)? other.mStart: mEnd );
+				return new Location( mStart, Math.min(other.mStart, mEnd));
 			}
 			else
 			{
@@ -531,7 +523,7 @@ public class Location implements Iterable<Location>
 		{
 			if( other.mEnd <= mEnd )
 			{
-				return new Location( (other.mEnd > mStart)? other.mEnd: mStart, mEnd );
+				return new Location(Math.max(other.mEnd, mStart), mEnd );
 			}
 			else
 			{
@@ -843,7 +835,7 @@ public class Location implements Iterable<Location>
 	@Override
 	public String toString()
 	{
-		return new String( "[L=" + (mEnd - mStart) + "; S=" + mStart + "; E=" + mEnd +"]" );
+		return "[L=" + (mEnd - mStart) + "; S=" + mStart + "; E=" + mEnd + "]";
 	}
 
 	/* (non-Javadoc)
@@ -865,24 +857,17 @@ public class Location implements Iterable<Location>
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
+		if (obj == null || getClass() != obj.getClass())
 			return false;
 		Location other = (Location) obj;
-		if (mEnd != other.mEnd)
-			return false;
-		if (mStart != other.mStart)
-			return false;
-		return true;
+		return mStart == other.mStart && mEnd == other.mEnd;
 	}
 
 	/**
 	 *
 	 */
-	private boolean isHealthy()
-	{
-		return ( mStart <= mEnd ) && (( mStart <= 0 && mEnd <= 0 ) || (mStart >= 0 && mEnd >= 0));
+	private boolean isHealthy() {
+		return ( mStart <= mEnd ) && (( mStart <= 0 && mEnd <= 0 ) || (mStart >= 0 /*&& mEnd >= 0*/));
 	}
 
 }

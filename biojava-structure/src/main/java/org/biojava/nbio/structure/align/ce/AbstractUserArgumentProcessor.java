@@ -78,11 +78,11 @@ import java.util.List;
  */
 public abstract class AbstractUserArgumentProcessor implements UserArgumentProcessor {
 
-	public static String newline = System.getProperty("line.separator");
+	public static final String newline = System.getProperty("line.separator");
 
-	protected StartupParameters params ;
+	protected final StartupParameters params ;
 
-	public static final List<String> mandatoryArgs= new ArrayList<String>();
+	public static final List<String> mandatoryArgs= new ArrayList<>();
 
 	protected AbstractUserArgumentProcessor(){
 		params = getStartupParametersInstance();
@@ -242,7 +242,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 
 		String pdbFilePath = params.getPdbFilePath();
 
-		if ( pdbFilePath == null || pdbFilePath.equals("")){
+		if ( pdbFilePath == null || pdbFilePath.isEmpty()){
 
 			UserConfiguration c = new UserConfiguration();
 			pdbFilePath = c.getPdbFilePath();
@@ -251,7 +251,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 
 		String cacheFilePath = params.getCacheFilePath();
 
-		if ( cacheFilePath == null || cacheFilePath.equals("")){
+		if ( cacheFilePath == null || cacheFilePath.isEmpty()){
 			cacheFilePath = pdbFilePath;
 
 		}
@@ -263,21 +263,21 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 
 		String searchFile = params.getSearchFile();
 
-		if ( alignPairs == null || alignPairs.equals("")) {
-			if ( searchFile == null || searchFile.equals("")){
+		if ( alignPairs == null || alignPairs.isEmpty()) {
+			if ( searchFile == null || searchFile.isEmpty()){
 				throw new ConfigurationException("Please specify -alignPairs or -searchFile !");
 			}
 		}
 
 		String outputFile = params.getOutFile();
 
-		if ( outputFile == null || outputFile.equals("")){
+		if ( outputFile == null || outputFile.isEmpty()){
 			throw new ConfigurationException("Please specify the mandatory argument -outFile!");
 		}
 
 		System.out.println("running DB search with parameters: " + params);
 
-		if ( alignPairs != null && ! alignPairs.equals("")) {
+		if ( alignPairs != null && !alignPairs.isEmpty()) {
 			runAlignPairs(cache, alignPairs, outputFile);
 		}  else {
 			// must be a searchFile request...
@@ -303,7 +303,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 		System.out.println("will use " + useNrCPUs + " CPUs.");
 
 		PDBFileReader reader = new PDBFileReader();
-		Structure structure1 = null ;
+		Structure structure1;
 		try {
 			structure1 = reader.getStructure(searchFile);
 		} catch (IOException e) {
@@ -351,7 +351,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 			String legend = getDbSearchLegend();
 			out.write(legend + newline );
 			System.out.println(legend);
-			String line = null;
+			String line;
 			while ( (line = is.readLine()) != null){
 				if ( line.startsWith("#"))
 					continue;
@@ -431,8 +431,8 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 
 		// first load two example structures
 
-		Structure structure1 = null;
-		Structure structure2 = null;
+		Structure structure1;
+		Structure structure2;
 
 		String path = params.getPdbFilePath();
 
@@ -546,22 +546,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 				System.out.println(afpChain.toCE(ca1, ca2));
 			}
 
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.exit(1); return;
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-			System.exit(1); return;
-		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
-			System.exit(1); return;
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-			System.exit(1); return;
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-			System.exit(1); return;
-		} catch (StructureException e) {
+		} catch (IOException | StructureException | IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
 			e.printStackTrace();
 			System.exit(1); return;
 		}
@@ -578,10 +563,8 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 	 * @throws NoSuchMethodException If an error occurs when invoking jmol
 	 * @throws InvocationTargetException If an error occurs when invoking jmol
 	 * @throws IllegalAccessException If an error occurs when invoking jmol
-	 * @throws StructureException
-	 */
-	private void checkWriteFile( AFPChain afpChain, Atom[] ca1, Atom[] ca2, boolean dbsearch) throws IOException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, StructureException
-			{
+     */
+	private void checkWriteFile( AFPChain afpChain, Atom[] ca1, Atom[] ca2, boolean dbsearch) throws IOException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
 		String output = null;
 		if ( params.isOutputPDB()){
 			if (! GuiWrapper.isGuiModuleInstalled()) {
@@ -716,12 +699,12 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 	 */
 	private Structure fixStructureName(Structure s, String file) {
 
-		if ( s.getName() != null && (! s.getName().equals("")))
+		if ( s.getName() != null && (!s.getName().isEmpty()))
 			return s;
 
 		s.setName(s.getPDBCode());
 
-		if ( s.getName() == null || s.getName().equals("")){
+		if ( s.getName() == null || s.getName().isEmpty()){
 			File f = new File(file);
 			s.setName(f.getName());
 		}
@@ -734,11 +717,11 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 
 	@Override
 	public String printHelp() {
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		StructureAlignment alg = getAlgorithm();
 
 		buf.append("-------------------").append(newline);
-		buf.append(alg.getAlgorithmName() + " v." + alg.getVersion() + " help: " + newline);
+		buf.append(alg.getAlgorithmName()).append(" v.").append(alg.getVersion()).append(" help: ").append(newline);
 		buf.append("-------------------").append(newline);
 		buf.append(newline);
 

@@ -25,7 +25,7 @@
  */
 package org.biojava.nbio.core.sequence.template;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.Set;
 
 
@@ -34,31 +34,31 @@ public interface CompoundSet<C extends Compound> {
 	/**
 	 * Returns the maximum size of a compound String this set holds
 	 */
-	public int getMaxSingleCompoundStringLength();
+    int getMaxSingleCompoundStringLength();
 
 	/**
 	 * Returns true if all String representations of Compounds are of the
 	 * same length.
 	 */
-	public boolean isCompoundStringLengthEqual();
+    boolean isCompoundStringLengthEqual();
 
 	/**
 	 * Return null if not recognised. Throw IllegalArgumentException if string
 	 * is longer than maximum allowed by {@link #getStringForCompound(Compound)}.
 	 */
-	public C getCompoundForString(String string);
+    C getCompoundForString(String string);
 
-	public String getStringForCompound(C compound);
+	String getStringForCompound(C compound);
 
-	public boolean compoundsEquivalent(C compoundOne, C compoundTwo);
+	boolean compoundsEquivalent(C compoundOne, C compoundTwo);
 
-	public boolean isValidSequence(Sequence<C> sequence);
+	boolean isValidSequence(Sequence<C> sequence);
 
-	public Set<C> getEquivalentCompounds(C compound);
+	Set<C> getEquivalentCompounds(C compound);
 
-	public boolean hasCompound(C compound);
+	boolean hasCompound(C compound);
 
-	public List<C> getAllCompounds();
+	Collection<C> getAllCompounds();
 
 	boolean isComplementable();
 }

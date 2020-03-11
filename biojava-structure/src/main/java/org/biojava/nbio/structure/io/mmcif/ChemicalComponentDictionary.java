@@ -36,14 +36,14 @@ import java.util.Map;
  */
 public class ChemicalComponentDictionary {
 
-	private Map<String, ChemComp> dictionary;
-	private Map<String,String> replaces;
-	private Map<String,String> isreplacedby;
+	private final Map<String, ChemComp> dictionary;
+	private final Map<String,String> replaces;
+	private final Map<String,String> isreplacedby;
 
 	public ChemicalComponentDictionary(){
-		dictionary = new HashMap<String, ChemComp>();
-		replaces   = new HashMap<String, String>();
-		isreplacedby = new HashMap<String, String>();
+		dictionary = new HashMap<>();
+		replaces   = new HashMap<>();
+		isreplacedby = new HashMap<>();
 	}
 
 	public boolean isReplaced(ChemComp c){

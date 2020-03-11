@@ -20,17 +20,7 @@
  */
 package org.biojava.nbio.structure.test.ecod;
 
-import java.io.IOException;
-import java.util.List;
-
-import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.AtomPositionMap;
-import org.biojava.nbio.structure.Group;
-import org.biojava.nbio.structure.ResidueRange;
-import org.biojava.nbio.structure.ResidueRangeAndLength;
-import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.StructureTools;
+import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.ecod.EcodDatabase;
 import org.biojava.nbio.structure.ecod.EcodDomain;
@@ -38,6 +28,9 @@ import org.biojava.nbio.structure.ecod.EcodFactory;
 import org.biojava.nbio.structure.io.LocalPDBDirectory.ObsoleteBehavior;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.List;
 
 /**
  * This is not a unit test.
@@ -85,11 +78,7 @@ public class EcodParseTest {
 			try {
 				struct = cache.getStructure(d.getPdbId());
 				ca1 = StructureTools.getRepresentativeAtomArray(struct);
-			} catch (IOException e) {
-				logger.error("Error getting structure for "+d.getDomainId(),e);
-				errors++;
-				continue;
-			} catch (StructureException e) {
+			} catch (IOException | StructureException e) {
 				logger.error("Error getting structure for "+d.getDomainId(),e);
 				errors++;
 				continue;
@@ -111,6 +100,7 @@ public class EcodParseTest {
 			for(ResidueRange r : ranges) {
 				if( r == null ) {
 					clean = false;
+					break;
 				}
 			}
 			if( ! clean ) {
@@ -128,12 +118,11 @@ public class EcodParseTest {
 						Group g = struct.getPolyChainByPDB(range.getStart().getChainName()).getGroupByPDB(range.getStart());
 						if(g!=null) {
 							logger.warn("No CA atom for starting residue "+d.getDomainId()+"_"+range);
-							clean = false;
-						} else {
+                        } else {
 							logger.error("Start doesn't exist for "+d.getDomainId()+"_"+range.toString());
-							clean = false;
-						}
-					}
+                        }
+                        clean = false;
+                    }
 				} catch(Exception e) {
 					logger.error("Start doesn't exist for "+d.getDomainId()+"_"+range.toString(),e);
 					clean = false;
@@ -147,12 +136,11 @@ public class EcodParseTest {
 						} catch(StructureException e ) {}
 						if(g!=null) {
 							logger.warn("No CA atom for ending residue "+d.getDomainId()+"_"+range);
-							clean = false;
-						} else {
+                        } else {
 							logger.error("End doesn't exist for "+d.getDomainId()+"_"+range.toString());
-							clean = false;
-						}
-					}
+                        }
+                        clean = false;
+                    }
 				} catch(Exception e) {
 					logger.error("End doesn't exist for "+d.getDomainId()+"_"+range.toString(),e);
 					clean = false;
@@ -172,6 +160,7 @@ public class EcodParseTest {
 			for(ResidueRange r : ranges) {
 				if( r == null ) {
 					clean = false;
+					break;
 				}
 			}
 			if( ! clean ) {

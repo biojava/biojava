@@ -118,10 +118,8 @@ public final class DemoRotationAxis {
 			jmolPanel.evalString("draw ID z VECTOR {0,0,0} {0,0,5} WIDTH 0.5 COLOR blue \">z\";");
 			*/
 
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (StructureException e) {
+		} catch (IOException | StructureException e) {
 			e.printStackTrace();
 		}
-	}
+    }
 }

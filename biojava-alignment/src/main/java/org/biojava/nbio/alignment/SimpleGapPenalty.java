@@ -23,9 +23,9 @@
 
 package org.biojava.nbio.alignment;
 
-import java.io.Serializable;
-
 import org.biojava.nbio.alignment.template.GapPenalty;
+
+import java.io.Serializable;
 
 /**
  * Implements a data structure for the gap penalties used during a sequence alignment routine.

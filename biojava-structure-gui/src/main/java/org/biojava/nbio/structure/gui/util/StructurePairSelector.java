@@ -21,10 +21,10 @@
  */
 package org.biojava.nbio.structure.gui.util;
 
-import java.io.IOException;
-
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
+
+import java.io.IOException;
 
 /** To be implemented by JPanels that are part of the GUI to trigger structure aligmnents.
  *
@@ -35,7 +35,7 @@ import org.biojava.nbio.structure.StructureException;
  */
 public interface StructurePairSelector {
 
-	public Structure getStructure1() throws StructureException, IOException;
-	public Structure getStructure2() throws StructureException, IOException;
+	Structure getStructure1() throws StructureException, IOException;
+	Structure getStructure2() throws StructureException, IOException;
 
 }

@@ -28,7 +28,7 @@ import java.util.List;
 public class ClusterDomains {
 
 
-	static private boolean verbose = CutDomain.verbose;
+	static private final boolean verbose = CutDomain.verbose;
 
 	private static int ndom;
 	public static List<Domain> cluster(List<Domain> domains, PDPDistanceMatrix pdpDistMatrix){
@@ -43,7 +43,7 @@ public class ClusterDomains {
 		int Sim = -1;
 		int Sjm = -1;
 
-		long total_max_contacts = 0;
+		long total_max_contacts;
 
 		double maximum_values = PDPParameters.CUT_OFF_VALUE1S;
 		double maximum_valuem = PDPParameters.CUT_OFF_VALUE1M;
@@ -144,7 +144,7 @@ public class ClusterDomains {
 			domains.get(Si).avd=domcont(domains.get(Si));
 			domains.get(Sj).avd=domcont(domains.get(Sj));
 				 */
-				if(verbose) System.out.println(String.format(" Listing the domains after combining..."));
+				if(verbose) System.out.println(" Listing the domains after combining...");
 				if(verbose) listdomains (domains);
 			}
 			else if (maximum_valuem > PDPParameters.CUT_OFF_VALUE1M) {
@@ -162,7 +162,7 @@ public class ClusterDomains {
 			domains[Sim].avd=domcont(domains[Sim]);
 			domains[Sjm].avd=domcont(domains[Sjm]);
 				 */
-				if(verbose) System.out.println(String.format(" Listing the domains after combining..."));
+				if(verbose) System.out.println(" Listing the domains after combining...");
 				if(verbose) listdomains (domains);
 			}
 			else if (maximum_values > PDPParameters.CUT_OFF_VALUE1S) {
@@ -180,11 +180,11 @@ public class ClusterDomains {
 			domains[Sis].avd=domcont(domains[Sis]);
 			domains[Sjs].avd=domcont(domains[Sjs]);
 				 */
-				if(verbose) System.out.println(String.format(" Listing the domains after combining..."));
+				if(verbose) System.out.println(" Listing the domains after combining...");
 				if(verbose) listdomains(domains);
 			}
 			else {
-				if(verbose) System.out.println(String.format(" Maximum value is less than cut off value. (max:" + maximum_value+")" ));
+				if(verbose) System.out.println(" Maximum value is less than cut off value. (max:" + maximum_value+")");
 				maximum_value = -1.0;
 				maximum_values = -1.0;
 				maximum_valuem = -1.0;
@@ -192,7 +192,7 @@ public class ClusterDomains {
 			}
 		} while ( maximum_value > 0.0||maximum_values>0.0||maximum_valuem>0.0);
 
-		if(verbose) System.out.println(String.format(" The domains are:"));
+		if(verbose) System.out.println(" The domains are:");
 		if(verbose) listdomains(domains);
 		return domains;
 	}
@@ -226,7 +226,7 @@ public class ClusterDomains {
 		if ( verbose)
 			System.out.println("  +++  combining domains " + Si + " " + Sj);
 
-		List<Domain> newdoms = new ArrayList<Domain>();
+		List<Domain> newdoms = new ArrayList<>();
 
 		//int ndom = domains.size();
 		for(int i=0;i<domains.get(Sj).nseg;i++) {
@@ -268,7 +268,7 @@ public class ClusterDomains {
 		return contacts;
 	}
 
-	private static final void listdomains(List<Domain> domains){
+	private static void listdomains(List<Domain> domains){
 
 		int i = -1;
 		for ( Domain dom : domains){

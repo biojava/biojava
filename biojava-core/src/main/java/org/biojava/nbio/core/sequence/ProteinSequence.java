@@ -25,6 +25,7 @@ package org.biojava.nbio.core.sequence;
 import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.core.sequence.compound.*;
 import org.biojava.nbio.core.sequence.features.FeatureInterface;
+import org.biojava.nbio.core.sequence.features.Qualifier;
 import org.biojava.nbio.core.sequence.io.DNASequenceCreator;
 import org.biojava.nbio.core.sequence.io.FastaReader;
 import org.biojava.nbio.core.sequence.io.PlainFastaHeaderParser;
@@ -34,6 +35,7 @@ import org.biojava.nbio.core.sequence.location.template.Location;
 import org.biojava.nbio.core.sequence.template.AbstractSequence;
 import org.biojava.nbio.core.sequence.template.CompoundSet;
 import org.biojava.nbio.core.sequence.template.ProxySequenceReader;
+import org.biojava.nbio.core.util.FileDownloadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,7 +44,6 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.List;
-import org.biojava.nbio.core.sequence.features.Qualifier;
 
 /**
  * The representation of a ProteinSequence
@@ -67,7 +68,7 @@ public class ProteinSequence extends AbstractSequence<AminoAcidCompound> {
 	 * @throws CompoundNotFoundException
 	 */
 	public ProteinSequence(String seqString) throws CompoundNotFoundException {
-		this(seqString, AminoAcidCompoundSet.getAminoAcidCompoundSet());
+        this(seqString, AminoAcidCompoundSet.aminoAcidCompoundSet);
 	}
 
 	/**
@@ -89,7 +90,7 @@ public class ProteinSequence extends AbstractSequence<AminoAcidCompound> {
 	 * @param proxyLoader
 	 */
 	public ProteinSequence(ProxySequenceReader<AminoAcidCompound> proxyLoader) {
-		this(proxyLoader, AminoAcidCompoundSet.getAminoAcidCompoundSet());
+        this(proxyLoader, AminoAcidCompoundSet.aminoAcidCompoundSet);
 	}
 
 	/**
@@ -158,12 +159,12 @@ public class ProteinSequence extends AbstractSequence<AminoAcidCompound> {
 
 		logger.trace("Getting parent DNA sequence from URL: {}", url.toString());
 
-		InputStream is = url.openConnection().getInputStream();
+		InputStream is = FileDownloadUtils.downloadStream(url, 60000); //url.openConnection().getInputStream();
 
 		FastaReader<DNASequence, NucleotideCompound> parentReader
-				= new FastaReader<DNASequence, NucleotideCompound>(is,
-						new PlainFastaHeaderParser<DNASequence, NucleotideCompound>(),
-						new DNASequenceCreator(AmbiguityDNACompoundSet.getDNACompoundSet()));
+				= new FastaReader<>(is,
+				new PlainFastaHeaderParser<>(),
+				new DNASequenceCreator(AmbiguityDNACompoundSet.getDNACompoundSet()));
 		LinkedHashMap<String, DNASequence> seq = parentReader.process();
 
 		DNASequence parentSeq = null;
@@ -203,7 +204,7 @@ public class ProteinSequence extends AbstractSequence<AminoAcidCompound> {
 		ProteinSequence proteinSequence = new ProteinSequence("ARNDCEQGHILKMFPSTWYVBZJX");
 		logger.info("Protein Sequence: {}", proteinSequence.toString());
 
-		StringProxySequenceReader<AminoAcidCompound> sequenceStringProxyLoader = new StringProxySequenceReader<AminoAcidCompound>("XRNDCEQGHILKMFPSTWYVBZJA", AminoAcidCompoundSet.getAminoAcidCompoundSet());
+        StringProxySequenceReader<AminoAcidCompound> sequenceStringProxyLoader = new StringProxySequenceReader<>("XRNDCEQGHILKMFPSTWYVBZJA", AminoAcidCompoundSet.aminoAcidCompoundSet);
 		ProteinSequence proteinSequenceFromProxy = new ProteinSequence(sequenceStringProxyLoader);
 		logger.info("Protein Sequence from Proxy: {}", proteinSequenceFromProxy.toString());
 

@@ -30,26 +30,6 @@ package org.biojava.nbio.core.util;
  */
 public class Equals {
 
-	public static boolean equal(int one, int two) {
-		return one == two;
-	}
-
-	public static boolean equal(long one, long two) {
-		return (one == two);
-	}
-
-	public static boolean equal(boolean one, boolean two) {
-		return one == two;
-	}
-
-	/**
-	 * Does not compare class types.
-	 * @see #classEqual(Object, Object)
-	 */
-	public static boolean equal(Object one, Object two) {
-		return one == null && two == null || !(one == null || two == null) && (one == two || one.equals(two));
-	}
-
 	/**
 	 * This method should be called before beginning any equals methods. In order
 	 * to return true the method:
@@ -82,6 +62,7 @@ public class Equals {
 	 *         equal at the class level
 	 */
 	public static boolean classEqual(Object one, Object two) {
-		return one == two || !(one == null || two == null) && one.getClass() == two.getClass();
+		return one == two ||
+				(!(one == null || two == null) && one.getClass() == two.getClass());
 	}
 }

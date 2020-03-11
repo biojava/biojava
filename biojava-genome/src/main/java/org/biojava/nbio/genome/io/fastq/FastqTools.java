@@ -133,7 +133,7 @@ public final class FastqTools
 		{
 			throw new IllegalArgumentException("fastq must not be null");
 		}
-		QualityFeature<AbstractSequence<NucleotideCompound>, NucleotideCompound> qualityScores = new QualityFeature<AbstractSequence<NucleotideCompound>, NucleotideCompound>("qualityScores", "sequencing");
+		QualityFeature<AbstractSequence<NucleotideCompound>, NucleotideCompound> qualityScores = new QualityFeature<>("qualityScores", "sequencing");
 		qualityScores.setQualities(toList(qualityScores(fastq)));
 		return qualityScores;
 	}
@@ -153,7 +153,7 @@ public final class FastqTools
 		{
 			throw new IllegalArgumentException("fastq must not be null");
 		}
-		QuantityFeature<AbstractSequence<NucleotideCompound>, NucleotideCompound> errorProbabilities = new QuantityFeature<AbstractSequence<NucleotideCompound>, NucleotideCompound>("errorProbabilities", "sequencing");
+		QuantityFeature<AbstractSequence<NucleotideCompound>, NucleotideCompound> errorProbabilities = new QuantityFeature<>("errorProbabilities", "sequencing");
 		errorProbabilities.setQuantities(toList(errorProbabilities(fastq)));
 		return errorProbabilities;
 	}

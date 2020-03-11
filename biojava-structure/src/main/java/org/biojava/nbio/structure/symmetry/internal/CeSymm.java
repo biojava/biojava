@@ -20,16 +20,7 @@
  */
 package org.biojava.nbio.structure.symmetry.internal;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.vecmath.Matrix4d;
-
-import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.StructureIdentifier;
-import org.biojava.nbio.structure.StructureTools;
+import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.ce.CECalculator;
 import org.biojava.nbio.structure.align.ce.CeCPMain;
 import org.biojava.nbio.structure.align.ce.MatrixListener;
@@ -43,6 +34,10 @@ import org.biojava.nbio.structure.symmetry.internal.CESymmParameters.SymmetryTyp
 import org.biojava.nbio.structure.symmetry.utils.SymmetryTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.vecmath.Matrix4d;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Identify the symmetries in a structure by running an alignment of the
@@ -189,8 +184,8 @@ public class CeSymm {
 		CECalculator calculator = new CECalculator(params);
 		Matrix lastMatrix = null;
 
-		List<AFPChain> selfAlignments = new ArrayList<AFPChain>();
-		AFPChain optimalAFP = null;
+		List<AFPChain> selfAlignments = new ArrayList<>();
+		AFPChain optimalAFP;
 
 		// STEP 2: perform the self-alignments of the structure
 		int i = 0;
@@ -270,7 +265,7 @@ public class CeSymm {
 		// STEP 3: order detection & symmetry refinement, apply consistency
 		try {
 			// ORDER DETECTION
-			OrderDetector orderDetector = null;
+			OrderDetector orderDetector;
 			int order = 1;
 			switch (params.getOrderDetectorMethod()) {
 			case USER_INPUT:
@@ -424,12 +419,12 @@ public class CeSymm {
 			// STEP 5: symmetry alignment optimization
 			if (result.getParams().getOptimization()) {
 				try {
-					MultipleAlignment msa = result.getMultipleAlignment();
+					MultipleAlignment msa;
 					SymmOptimizer optimizer = new SymmOptimizer(result);
 					msa = optimizer.optimize();
 					result.setMultipleAlignment(msa);
 				} catch (RefinerFailedException e) {
-					logger.debug("Optimization failed:" + e.getMessage());
+					logger.debug("Optimization failed {}", e.getMessage());
 				}
 			}
 		}

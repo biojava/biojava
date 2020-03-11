@@ -20,10 +20,10 @@
  */
 package org.biojava.nbio.genome;
 
-import static org.junit.Assert.*;
-
 import org.biojava.nbio.genome.parsers.gff.Location;
 import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 public class TestLocation {
 
@@ -64,11 +64,11 @@ public class TestLocation {
 
 		//isBefore
 		assertTrue( r2_5.isBefore( r5_8 ));
-		assertTrue( !r2_5.isBefore( r4_7 ));
+        assertFalse(r2_5.isBefore(r4_7));
 
 		//isAfter
 		assertTrue(r5_8.isAfter( r2_5 ));
-		assertTrue(!r5_8.isAfter( r4_7 ));
+        assertFalse(r5_8.isAfter(r4_7));
 
 		//contains
 		assertTrue(p15_19.contains( p16_19 ));
@@ -76,8 +76,8 @@ public class TestLocation {
 		//overlaps
 		assertTrue(r2_5.overlaps( r4_7 ));
 		assertTrue(r2_5.overlaps( r0_3 ));
-		assertTrue(!r5_8.overlaps( r2_5 ));
-		assertTrue(!r2_5.overlaps( r5_8 ));
+        assertFalse(r5_8.overlaps(r2_5));
+        assertFalse(r2_5.overlaps(r5_8));
 
 
 		//prefix

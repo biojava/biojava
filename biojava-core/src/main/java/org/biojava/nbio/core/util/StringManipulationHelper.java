@@ -75,7 +75,7 @@ public class StringManipulationHelper  {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
 		StringBuilder sb = new StringBuilder();
 
-		String line = null;
+		String line;
 		try {
 			while ((line = reader.readLine()) != null) {
 
@@ -136,24 +136,18 @@ public class StringManipulationHelper  {
 
 
 	public static boolean equalsToXml(String expected, String actual) {
-		Document expectedDocument=null;
-		Document actualDocument=null;
+		Document expectedDocument;
+		Document actualDocument;
 		try {
 			DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 			expectedDocument = documentBuilder.parse(new ByteArrayInputStream(expected.getBytes()));
 			actualDocument = documentBuilder.parse(new ByteArrayInputStream(actual.getBytes()));
-		} catch (ParserConfigurationException e) {
-			logger.error("Exception: ", e);
-			throw new RuntimeException("Couldn't Parse XML", e);
-		} catch (SAXException e) {
-			logger.error("Exception: ", e);
-			throw new RuntimeException("Couldn't Parse XML", e);
-		} catch (IOException e) {
+		} catch (ParserConfigurationException | IOException | SAXException e) {
 			logger.error("Exception: ", e);
 			throw new RuntimeException("Couldn't Parse XML", e);
 		}
-		final DocumentType doctype1 = expectedDocument.getDoctype();
+        final DocumentType doctype1 = expectedDocument.getDoctype();
 		final DocumentType doctype2 = actualDocument.getDoctype();
 		if (doctype1==null ^ doctype2 == null) {
 			return false;

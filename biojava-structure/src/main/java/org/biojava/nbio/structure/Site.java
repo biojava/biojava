@@ -23,6 +23,7 @@ package org.biojava.nbio.structure;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 /**
  * Holds the data of sites presented in PDB files. <br/>
@@ -42,7 +43,7 @@ public class Site implements PDBRecord, Comparable<Site> {
 	private static final String lineEnd = System.getProperty("line.separator");
 
 	private String siteID = "";
-	private List<Group> groups = new ArrayList<Group>();
+	private List<Group> groups = new ArrayList<>();
 	//variables for REMARK 800
 	private String evCode = "";
 	private String description = "";
@@ -226,6 +227,7 @@ public class Site implements PDBRecord, Comparable<Site> {
 
 	@Override
 	public boolean equals(Object obj) {
+		if (this == obj) return true;
 		if (obj == null) {
 			return false;
 		}
@@ -233,19 +235,7 @@ public class Site implements PDBRecord, Comparable<Site> {
 			return false;
 		}
 		final Site other = (Site) obj;
-		if ((this.siteID == null) ? (other.siteID != null) : !this.siteID.equals(other.siteID)) {
-			return false;
-		}
-		if (this.groups != other.groups && (this.groups == null || !this.groups.equals(other.groups))) {
-			return false;
-		}
-		if ((this.evCode == null) ? (other.evCode != null) : !this.evCode.equals(other.evCode)) {
-			return false;
-		}
-		if ((this.description == null) ? (other.description != null) : !this.description.equals(other.description)) {
-			return false;
-		}
-		return true;
+		return Objects.equals(this.siteID, other.siteID) && Objects.equals(this.groups, other.groups) && Objects.equals(this.evCode, other.evCode) && Objects.equals(this.description, other.description);
 	}
 
 	@Override

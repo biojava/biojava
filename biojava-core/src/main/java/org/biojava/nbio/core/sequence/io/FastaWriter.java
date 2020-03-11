@@ -30,11 +30,7 @@ import org.biojava.nbio.core.sequence.template.Sequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedOutputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 
@@ -50,9 +46,9 @@ public class FastaWriter<S extends Sequence<?>, C extends Compound> {
 
 	private final static Logger logger = LoggerFactory.getLogger(FastaWriter.class);
 
-	OutputStream os;
-	Collection<S> sequences;
-	FastaHeaderFormatInterface<S, C> headerFormat;
+	final OutputStream os;
+	final Collection<S> sequences;
+	final FastaHeaderFormatInterface<S, C> headerFormat;
 	private int lineLength = 60;
 	byte[] lineSep = System.getProperty("line.separator").getBytes();
 /**
@@ -103,7 +99,7 @@ public class FastaWriter<S extends Sequence<?>, C extends Compound> {
 			os.write(lineSep);
 
 			int compoundCount = 0;
-			String seq = "";
+			String seq;
 
 			seq = sequence.getSequenceAsString();
 
@@ -133,7 +129,7 @@ public class FastaWriter<S extends Sequence<?>, C extends Compound> {
 			FileInputStream is = new FileInputStream("/Users/Scooter/scripps/dyadic/c1-454Scaffolds.faa");
 
 
-			FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = new FastaReader<ProteinSequence, AminoAcidCompound>(is, new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>(), new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
+            FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = new FastaReader<>(is, new GenericFastaHeaderParser<>(), new ProteinSequenceCreator(AminoAcidCompoundSet.aminoAcidCompoundSet));
 			LinkedHashMap<String, ProteinSequence> proteinSequences = fastaReader.process();
 			is.close();
 
@@ -144,7 +140,7 @@ public class FastaWriter<S extends Sequence<?>, C extends Compound> {
 
 			BufferedOutputStream bo = new BufferedOutputStream(fileOutputStream);
 			long start = System.currentTimeMillis();
-			FastaWriter<ProteinSequence, AminoAcidCompound> fastaWriter = new FastaWriter<ProteinSequence, AminoAcidCompound>(bo, proteinSequences.values(), new GenericFastaHeaderFormat<ProteinSequence, AminoAcidCompound>());
+			FastaWriter<ProteinSequence, AminoAcidCompound> fastaWriter = new FastaWriter<>(bo, proteinSequences.values(), new GenericFastaHeaderFormat<>());
 			fastaWriter.process();
 			bo.close();
 			long end = System.currentTimeMillis();

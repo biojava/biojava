@@ -26,35 +26,35 @@ import java.awt.*;
 
 public interface StructureViewer {
 
-	public void setStructure(Structure structure);
-	public void repaint();
-	public void setSelection(Selection selection);
-	public Selection getSelection();
+	void setStructure(Structure structure);
+	void repaint();
+	void setSelection(Selection selection);
+	Selection getSelection();
 
 	/** Apply this color to the current Selection
 	 *
 	 * @param red
 	 */
-	public void setColor(Color red);
-	public Color getColor();
+    void setColor(Color red);
+	Color getColor();
 
 
 	/** Apply this style to the current selection
 	 *
 	 * @param wireframe renderstyle
 	 */
-	public void setStyle(RenderStyle wireframe);
+    void setStyle(RenderStyle wireframe);
 
 	/** Clear the current display
 	 *
 	 *
 	 */
-	public void clear();
+    void clear();
 
 	/** Set the Zoom level
 	 *
 	 * @param i
 	 */
-	public void setZoom(int i);
+    void setZoom(int i);
 
 }

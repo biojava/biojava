@@ -20,29 +20,7 @@
  */
 package org.biojava.nbio.structure.io;
 
-import static org.junit.Assert.*;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Arrays;
-
-import org.biojava.nbio.structure.AminoAcidImpl;
-import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.AtomImpl;
-import org.biojava.nbio.structure.Chain;
-import org.biojava.nbio.structure.ChainImpl;
-import org.biojava.nbio.structure.Element;
-import org.biojava.nbio.structure.EntityInfo;
-import org.biojava.nbio.structure.Group;
-import org.biojava.nbio.structure.ResidueNumber;
-import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.StructureIO;
-import org.biojava.nbio.structure.StructureImpl;
-import org.biojava.nbio.structure.StructureTools;
+import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.mmcif.MMCIFFileTools;
 import org.biojava.nbio.structure.io.mmcif.MMcifParser;
@@ -51,6 +29,12 @@ import org.biojava.nbio.structure.io.mmcif.SimpleMMcifParser;
 import org.biojava.nbio.structure.io.mmcif.model.CIFLabel;
 import org.biojava.nbio.structure.io.mmcif.model.IgnoreField;
 import org.junit.Test;
+
+import java.io.*;
+import java.util.Arrays;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class TestMMCIFWriting {
 

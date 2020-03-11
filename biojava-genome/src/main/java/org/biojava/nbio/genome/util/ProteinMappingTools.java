@@ -44,7 +44,7 @@ public class ProteinMappingTools {
 	 *
 	 * @return the protein sequence
 	 */
-	public static ProteinSequence convertDNAtoProteinSequence(DNASequence dnaSequence) throws CompoundNotFoundException {
+	public static ProteinSequence convertDNAtoProteinSequence(DNASequence dnaSequence) {
 		RNASequence mRNA = dnaSequence.getRNASequence();
 		return mRNA.getProteinSequence();
 	}

@@ -36,7 +36,7 @@ import java.awt.*;
  */
 public abstract class ContinuousColorMapperTransform implements ContinuousColorMapper {
 
-	protected ContinuousColorMapper mapper;
+	protected final ContinuousColorMapper mapper;
 
 	/**
 	 * Creates a transform.

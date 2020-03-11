@@ -20,38 +20,12 @@
  */
 package org.biojava.nbio.structure.io.mmtf;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
-import javax.vecmath.Matrix4d;
-
-import org.biojava.nbio.structure.AminoAcid;
-import org.biojava.nbio.structure.AminoAcidImpl;
-import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.Bond;
-import org.biojava.nbio.structure.Chain;
-import org.biojava.nbio.structure.ExperimentalTechnique;
-import org.biojava.nbio.structure.Group;
-import org.biojava.nbio.structure.GroupType;
-import org.biojava.nbio.structure.NucleotideImpl;
-import org.biojava.nbio.structure.PDBCrystallographicInfo;
-import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.StructureIO;
+import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
 import org.biojava.nbio.structure.io.mmcif.DownloadChemCompProvider;
 import org.biojava.nbio.structure.io.mmcif.chem.ChemCompTools;
-import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.biojava.nbio.structure.quaternary.BioAssemblyInfo;
 import org.biojava.nbio.structure.quaternary.BiologicalAssemblyTransformation;
 import org.biojava.nbio.structure.secstruc.DSSPParser;
@@ -64,6 +38,12 @@ import org.rcsb.mmtf.dataholders.DsspType;
 import org.rcsb.mmtf.utils.CodecUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.vecmath.Matrix4d;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * A utils class of functions needed for Biojava to read and write to mmtf.
@@ -310,8 +290,8 @@ public class MmtfUtils {
 	 * @return the atoms for the input Biojava Group
 	 */
 	public static List<Atom> getAtomsForGroup(Group inputGroup) {
-		Set<Atom> uniqueAtoms = new HashSet<Atom>();
-		List<Atom> theseAtoms = new ArrayList<Atom>();
+		Set<Atom> uniqueAtoms = new HashSet<>();
+		List<Atom> theseAtoms = new ArrayList<>();
 		for(Atom a: inputGroup.getAtoms()){
 			theseAtoms.add(a);
 			uniqueAtoms.add(a);
@@ -343,9 +323,9 @@ public class MmtfUtils {
 				// Now set the bonding information.
 				Atom other = bond.getOther(atom);
 				// If both atoms are in the group
-				if (atomsInGroup.indexOf(other)!=-1){
-					Integer firstBondIndex = atomsInGroup.indexOf(atom);
-					Integer secondBondIndex = atomsInGroup.indexOf(other);
+				if (atomsInGroup.contains(other)){
+					int firstBondIndex = atomsInGroup.indexOf(atom);
+					int secondBondIndex = atomsInGroup.indexOf(other);
 					// Don't add the same bond twice
 					if (firstBondIndex<secondBondIndex){
 						bondCounter++;
@@ -539,30 +519,30 @@ public class MmtfUtils {
 
 	private static Group getSeqResGroup(char singleLetterCode, GroupType type) {
 
-		if(type==GroupType.AMINOACID){
-			String threeLetter = ChemCompTools.getAminoThreeLetter(singleLetterCode);
-			if (threeLetter == null) return null;
-			ChemComp chemComp = ChemCompGroupFactory.getChemComp(threeLetter);
+		switch (type) {
+			case AMINOACID:
+				String threeLetter = ChemCompTools.getAminoThreeLetter(singleLetterCode);
+				if (threeLetter != null) {
+					AminoAcidImpl a = new AminoAcidImpl();
+					a.setRecordType(AminoAcid.SEQRESRECORD);
+					a.setAminoType(singleLetterCode);
+					a.setPDBName(threeLetter);
+					a.setChemComp(ChemCompGroupFactory.getChemComp(threeLetter));
+					return a;
+				}
 
-			AminoAcidImpl a = new AminoAcidImpl();
-			a.setRecordType(AminoAcid.SEQRESRECORD);
-			a.setAminoType(singleLetterCode);
-			a.setPDBName(threeLetter);
-			a.setChemComp(chemComp);
-			return a;
-
-		} else if (type==GroupType.NUCLEOTIDE) {
-			String twoLetter = ChemCompTools.getDNATwoLetter(singleLetterCode);
-			if (twoLetter == null) return null;
-			ChemComp chemComp = ChemCompGroupFactory.getChemComp(twoLetter);
-
-			NucleotideImpl n = new NucleotideImpl();
-			n.setPDBName(twoLetter);
-			n.setChemComp(chemComp);
-			return n;
+				break;
+			case NUCLEOTIDE:
+				String twoLetter = ChemCompTools.getDNATwoLetter(singleLetterCode);
+				if (twoLetter != null) {
+					NucleotideImpl n = new NucleotideImpl();
+					n.setPDBName(twoLetter);
+					n.setChemComp(ChemCompGroupFactory.getChemComp(twoLetter));
+					return n;
+				}
+				break;
 		}
-		else{
-			return null;
-		}
+		return null;
+
 	}
 }

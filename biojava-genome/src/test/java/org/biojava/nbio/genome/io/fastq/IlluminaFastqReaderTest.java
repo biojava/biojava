@@ -21,11 +21,12 @@
 package org.biojava.nbio.genome.io.fastq;
 
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+
+import static org.junit.Assert.*;
 
 
 /**
@@ -59,8 +60,7 @@ public final class IlluminaFastqReaderTest
 	}
 
 	@Test
-	public void testValidateDescription() throws Exception
-	{
+	public void testValidateDescription() {
 		IlluminaFastqReader reader = new IlluminaFastqReader();
 		URL invalidDescription = getClass().getResource("illumina-invalid-description.fastq");
 		try
@@ -75,8 +75,7 @@ public final class IlluminaFastqReaderTest
 	}
 
 	@Test
-	public void testValidateRepeatDescription() throws Exception
-	{
+	public void testValidateRepeatDescription() {
 		IlluminaFastqReader reader = new IlluminaFastqReader();
 		URL invalidRepeatDescription = getClass().getResource("illumina-invalid-repeat-description.fastq");
 		try

@@ -52,11 +52,10 @@ public class CytobandParser {
 		try {
 			SortedSet<Cytoband> cytobands = me.getAllCytobands(new URL(
 					DEFAULT_LOCATION));
-			SortedSet<StainType> types = new TreeSet<StainType>();
+			SortedSet<StainType> types = new TreeSet<>();
 			for (Cytoband c : cytobands) {
 				logger.info("Cytoband: {}", c);
-				if (!types.contains(c.getType()))
-					types.add(c.getType());
+                types.add(c.getType());
 			}
 			logger.info("Strain Type: {}", types);
 		} catch (Exception e) {
@@ -76,8 +75,8 @@ public class CytobandParser {
 			throws IOException {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(
 				instream));
-		String line = null;
-		SortedSet<Cytoband> cytobands = new TreeSet<Cytoband>();
+		String line;
+		SortedSet<Cytoband> cytobands = new TreeSet<>();
 		while ((line = reader.readLine()) != null) {
 			String[] spl = line.split("\t");
 			if (spl.length != 5) {

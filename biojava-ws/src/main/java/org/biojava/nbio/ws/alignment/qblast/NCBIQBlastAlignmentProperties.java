@@ -45,7 +45,7 @@ import static org.biojava.nbio.ws.alignment.qblast.BlastAlignmentParameterEnum.*
 public class NCBIQBlastAlignmentProperties implements RemotePairwiseAlignmentProperties {
 	private static final long serialVersionUID = 7158270364392309841L;
 
-	private Map<BlastAlignmentParameterEnum, String> param = new HashMap<BlastAlignmentParameterEnum, String>();
+	private final Map<BlastAlignmentParameterEnum, String> param = new HashMap<>();
 
 	/**
 	 * This method forwards to {@link #getAlignmentOption(BlastAlignmentParameterEnum)}. Consider using it instead.
@@ -69,7 +69,7 @@ public class NCBIQBlastAlignmentProperties implements RemotePairwiseAlignmentPro
 	 */
 	@Override
 	public Set<String> getAlignmentOptions() {
-		Set<String> result = new HashSet<String>();
+		Set<String> result = new HashSet<>();
 		for (BlastAlignmentParameterEnum parameter : param.keySet()) {
 			result.add(parameter.name());
 		}
@@ -302,7 +302,9 @@ public class NCBIQBlastAlignmentProperties implements RemotePairwiseAlignmentPro
 				setBlastGapCosts(9, 1);
 				break;
 			case PAM70:
-				setBlastGapCosts(10, 1);
+                case BLOSUM80:
+                case BLOSUM90:
+                    setBlastGapCosts(10, 1);
 				break;
 			case PAM250:
 				setBlastGapCosts(14, 2);
@@ -313,13 +315,8 @@ public class NCBIQBlastAlignmentProperties implements RemotePairwiseAlignmentPro
 			case BLOSUM50:
 				setBlastGapCosts(13, 2);
 				break;
-			case BLOSUM80:
-			case BLOSUM90:
-				setBlastGapCosts(10, 1);
-				break;
-			case BLOSUM62:
-				break;
-			default:
+                case BLOSUM62:
+                default:
 				break;
 			}
 		}

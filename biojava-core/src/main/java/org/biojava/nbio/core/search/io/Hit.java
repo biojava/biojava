@@ -20,11 +20,12 @@
  */
 package org.biojava.nbio.core.search.io;
 
+import org.biojava.nbio.core.sequence.template.Sequence;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
-
-import org.biojava.nbio.core.sequence.template.Sequence;
+import java.util.Objects;
 
 /**
  * This class models a search Hit.
@@ -47,7 +48,7 @@ public abstract class Hit implements Iterable<Hsp>{
 	 */
 	private final int hitLen;
 	private final List<Hsp> hsps;
-	private Sequence hitSequence;
+	private final Sequence hitSequence;
 
 
 
@@ -85,7 +86,7 @@ public abstract class Hit implements Iterable<Hsp>{
 		if (this.hitLen != other.hitLen) {
 			return false;
 		}
-		if (this.hsps != other.hsps && (this.hsps == null || !this.hsps.equals(other.hsps))) {
+		if (!Objects.equals(this.hsps, other.hsps)) {
 			return false;
 		}
 		return true;

@@ -21,87 +21,9 @@
  */
 package org.biojava.nbio.structure.io.mmcif;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
-import javax.vecmath.Matrix4d;
-
-import org.biojava.nbio.structure.AminoAcid;
-import org.biojava.nbio.structure.AminoAcidImpl;
-import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.AtomImpl;
-import org.biojava.nbio.structure.Chain;
-import org.biojava.nbio.structure.ChainImpl;
-import org.biojava.nbio.structure.EntityInfo;
-import org.biojava.nbio.structure.EntityType;
-import org.biojava.nbio.structure.DBRef;
-import org.biojava.nbio.structure.Element;
-import org.biojava.nbio.structure.Group;
-import org.biojava.nbio.structure.GroupType;
-import org.biojava.nbio.structure.HetatomImpl;
-import org.biojava.nbio.structure.NucleotideImpl;
-import org.biojava.nbio.structure.PDBCrystallographicInfo;
-import org.biojava.nbio.structure.PDBHeader;
-import org.biojava.nbio.structure.ResidueNumber;
-import org.biojava.nbio.structure.SeqMisMatch;
-import org.biojava.nbio.structure.SeqMisMatchImpl;
-import org.biojava.nbio.structure.Site;
-import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.StructureImpl;
-import org.biojava.nbio.structure.StructureTools;
-import org.biojava.nbio.structure.io.BondMaker;
-import org.biojava.nbio.structure.io.ChargeAdder;
-import org.biojava.nbio.structure.io.EntityFinder;
-import org.biojava.nbio.structure.io.FileParsingParameters;
-import org.biojava.nbio.structure.io.SeqRes2AtomAligner;
-import org.biojava.nbio.structure.io.mmcif.model.AtomSite;
-import org.biojava.nbio.structure.io.mmcif.model.AtomSites;
-import org.biojava.nbio.structure.io.mmcif.model.AuditAuthor;
-import org.biojava.nbio.structure.io.mmcif.model.Cell;
-import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
-import org.biojava.nbio.structure.io.mmcif.model.ChemCompAtom;
-import org.biojava.nbio.structure.io.mmcif.model.ChemCompBond;
-import org.biojava.nbio.structure.io.mmcif.model.ChemCompDescriptor;
-import org.biojava.nbio.structure.io.mmcif.model.DatabasePDBremark;
-import org.biojava.nbio.structure.io.mmcif.model.DatabasePDBrev;
-import org.biojava.nbio.structure.io.mmcif.model.DatabasePdbrevRecord;
-import org.biojava.nbio.structure.io.mmcif.model.Entity;
-import org.biojava.nbio.structure.io.mmcif.model.EntityPoly;
-import org.biojava.nbio.structure.io.mmcif.model.EntityPolySeq;
-import org.biojava.nbio.structure.io.mmcif.model.EntitySrcGen;
-import org.biojava.nbio.structure.io.mmcif.model.EntitySrcNat;
-import org.biojava.nbio.structure.io.mmcif.model.EntitySrcSyn;
-import org.biojava.nbio.structure.io.mmcif.model.Exptl;
-import org.biojava.nbio.structure.io.mmcif.model.PdbxAuditRevisionHistory;
-import org.biojava.nbio.structure.io.mmcif.model.PdbxChemCompDescriptor;
-import org.biojava.nbio.structure.io.mmcif.model.PdbxChemCompIdentifier;
-import org.biojava.nbio.structure.io.mmcif.model.PdbxDatabaseStatus;
-import org.biojava.nbio.structure.io.mmcif.model.PdbxEntityNonPoly;
-import org.biojava.nbio.structure.io.mmcif.model.PdbxNonPolyScheme;
-import org.biojava.nbio.structure.io.mmcif.model.PdbxPolySeqScheme;
-import org.biojava.nbio.structure.io.mmcif.model.PdbxStructAssembly;
-import org.biojava.nbio.structure.io.mmcif.model.PdbxStructAssemblyGen;
-import org.biojava.nbio.structure.io.mmcif.model.PdbxStructOperList;
-import org.biojava.nbio.structure.io.mmcif.model.Refine;
-import org.biojava.nbio.structure.io.mmcif.model.Struct;
-import org.biojava.nbio.structure.io.mmcif.model.StructAsym;
-import org.biojava.nbio.structure.io.mmcif.model.StructConn;
-import org.biojava.nbio.structure.io.mmcif.model.StructKeywords;
-import org.biojava.nbio.structure.io.mmcif.model.StructNcsOper;
-import org.biojava.nbio.structure.io.mmcif.model.StructRef;
-import org.biojava.nbio.structure.io.mmcif.model.StructRefSeq;
-import org.biojava.nbio.structure.io.mmcif.model.StructRefSeqDif;
-import org.biojava.nbio.structure.io.mmcif.model.StructSite;
-import org.biojava.nbio.structure.io.mmcif.model.StructSiteGen;
-import org.biojava.nbio.structure.io.mmcif.model.Symmetry;
+import org.biojava.nbio.structure.*;
+import org.biojava.nbio.structure.io.*;
+import org.biojava.nbio.structure.io.mmcif.model.*;
 import org.biojava.nbio.structure.quaternary.BioAssemblyInfo;
 import org.biojava.nbio.structure.quaternary.BiologicalAssemblyBuilder;
 import org.biojava.nbio.structure.quaternary.BiologicalAssemblyTransformation;
@@ -110,6 +32,11 @@ import org.biojava.nbio.structure.xtal.SpaceGroup;
 import org.biojava.nbio.structure.xtal.SymoplibParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.vecmath.Matrix4d;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * A MMcifConsumer implementation that builds an in-memory representation of the
@@ -352,7 +279,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 		boolean isHetAtomInFile = false;
 
-		Character aminoCode1 = null;
+		Character aminoCode1;
 		if ( recordName.equals("ATOM") )
 			aminoCode1 = StructureTools.get1LetterCodeAmino(groupCode3);
 		else {
@@ -399,7 +326,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 			// we came to the beginning of a new NMR model
 			allModels.add(currentModel);
-			currentModel = new ArrayList<Chain>();
+			currentModel = new ArrayList<>();
 			currentChain = null;
 			currentGroup = null;
 		}
@@ -569,9 +496,9 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 		String alt = atom.getLabel_alt_id();
 		if (( alt != null ) && ( alt.length() > 0) && (! alt.equals("."))){
-			a.setAltLoc(new Character(alt.charAt(0)));
+			a.setAltLoc(alt.charAt(0));
 		} else {
-			a.setAltLoc(new Character(' '));
+			a.setAltLoc(' ');
 		}
 
 		Element element = Element.R;
@@ -630,7 +557,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			Group altLocG = (Group) currentGroup.clone();
 			// drop atoms from cloned group...
 			// https://redmine.open-bio.org/issues/3307
-			altLocG.setAtoms(new ArrayList<Atom>());
+			altLocG.setAtoms(new ArrayList<>());
 			altLocG.getAltLocs().clear();
 			currentGroup.addAltLoc(altLocG);
 			return altLocG;
@@ -658,27 +585,27 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		currentNmrModelNumber 	= null;
 		//atomCount     		= 0;
 
-		allModels     = new ArrayList<List<Chain>>();
-		currentModel  = new ArrayList<Chain>();
-		entities      = new ArrayList<Entity>();
+		allModels     = new ArrayList<>();
+		currentModel  = new ArrayList<>();
+		entities      = new ArrayList<>();
 		entityPolys   = new ArrayList<>();
-		strucRefs     = new ArrayList<StructRef>();
-		seqResChains  = new ArrayList<Chain>();
-		entityChains  = new ArrayList<Chain>();
-		structAsyms   = new ArrayList<StructAsym>();
+		strucRefs     = new ArrayList<>();
+		seqResChains  = new ArrayList<>();
+		entityChains  = new ArrayList<>();
+		structAsyms   = new ArrayList<>();
 
-		asymId2entityId = new HashMap<String,String>();
+		asymId2entityId = new HashMap<>();
 		asymId2authorId = new HashMap<>();
-		structOpers   = new ArrayList<PdbxStructOperList>();
-		strucAssemblies = new ArrayList<PdbxStructAssembly>();
-		strucAssemblyGens = new ArrayList<PdbxStructAssemblyGen>();
-		entitySrcGens = new ArrayList<EntitySrcGen>();
-		entitySrcNats = new ArrayList<EntitySrcNat>();
-		entitySrcSyns = new ArrayList<EntitySrcSyn>();
-		structConn = new ArrayList<StructConn>();
-		structNcsOper = new ArrayList<StructNcsOper>();
-		sequenceDifs = new ArrayList<StructRefSeqDif>();
-		structSiteGens = new ArrayList<StructSiteGen>();
+		structOpers   = new ArrayList<>();
+		strucAssemblies = new ArrayList<>();
+		strucAssemblyGens = new ArrayList<>();
+		entitySrcGens = new ArrayList<>();
+		entitySrcNats = new ArrayList<>();
+		entitySrcSyns = new ArrayList<>();
+		structConn = new ArrayList<>();
+		structNcsOper = new ArrayList<>();
+		sequenceDifs = new ArrayList<>();
+		structSiteGens = new ArrayList<>();
 	}
 
 
@@ -791,11 +718,11 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 			// the more detailed mapping of chains to rotation operations happens in StructureIO...
 
-			Map<Integer,BioAssemblyInfo> bioAssemblies = new LinkedHashMap<Integer, BioAssemblyInfo>();
+			Map<Integer,BioAssemblyInfo> bioAssemblies = new LinkedHashMap<>();
 
 			for ( PdbxStructAssembly psa : strucAssemblies){
 
-				List<PdbxStructAssemblyGen> psags = new ArrayList<PdbxStructAssemblyGen>(1);
+				List<PdbxStructAssemblyGen> psags = new ArrayList<>(1);
 
 				for ( PdbxStructAssemblyGen psag: strucAssemblyGens ) {
 					if ( psag.getAssembly_id().equals(psa.getId())) {
@@ -853,7 +780,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		setCrystallographicInfoMetadata();
 
 
-		Map<String,List<SeqMisMatch>> misMatchMap = new HashMap<String, List<SeqMisMatch>>();
+		Map<String,List<SeqMisMatch>> misMatchMap = new HashMap<>();
 		for (StructRefSeqDif sdif : sequenceDifs) {
 			SeqMisMatch misMatch = new SeqMisMatchImpl();
 			misMatch.setDetails(sdif.getDetails());
@@ -869,16 +796,13 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			misMatch.setSeqNum(sdif.getSeq_num());
 
 
-			List<SeqMisMatch> mms = misMatchMap.get(sdif.getPdbx_pdb_strand_id());
-			if ( mms == null) {
-				mms = new ArrayList<SeqMisMatch>();
-				misMatchMap.put(sdif.getPdbx_pdb_strand_id(),mms);
-			}
+			List<SeqMisMatch> mms = misMatchMap.computeIfAbsent(sdif.getPdbx_pdb_strand_id(), k -> new ArrayList<>());
 			mms.add(misMatch);
 
 		}
 
-		for (String chainId : misMatchMap.keySet()){
+		for (Map.Entry<String, List<SeqMisMatch>> entry : misMatchMap.entrySet()){
+			String chainId = entry.getKey();
 
 			Chain chain = structure.getPolyChainByPDB(chainId);
 
@@ -887,7 +811,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				continue;
 			}
 
-			chain.setSeqMisMatches(misMatchMap.get(chainId));
+			chain.setSeqMisMatches(entry.getValue());
 
 
 		}
@@ -1070,7 +994,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				//map the atoms to the seqres...
 
 				// we need to first clone the seqres so that they stay independent for different models
-				List<Group> seqResGroups = new ArrayList<Group>();
+				List<Group> seqResGroups = new ArrayList<>();
 				for (int i=0;i<seqResChain.getAtomGroups().size();i++) {
 					seqResGroups.add((Group)seqResChain.getAtomGroups().get(i).clone());
 				}
@@ -1104,13 +1028,13 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	private int getInternalNr(Group atomG) {
 		if ( atomG.getType().equals(GroupType.AMINOACID)) {
 			AminoAcidImpl aa = (AminoAcidImpl) atomG;
-			return new Long(aa.getId()).intValue();
+			return Long.valueOf(aa.getId()).intValue();
 		} else if ( atomG.getType().equals(GroupType.NUCLEOTIDE)) {
 			NucleotideImpl nu = (NucleotideImpl) atomG;
-			return new Long(nu.getId()).intValue();
+			return Long.valueOf(nu.getId()).intValue();
 		} else {
 			HetatomImpl he = (HetatomImpl) atomG;
-			return new Long(he.getId()).intValue();
+			return Long.valueOf(he.getId()).intValue();
 		}
 	}
 
@@ -1281,7 +1205,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 	private void setStructNcsOps() {
 
-		ArrayList<Matrix4d> ncsOperators = new ArrayList<Matrix4d>();
+		ArrayList<Matrix4d> ncsOperators = new ArrayList<>();
 
 		for (StructNcsOper sNcsOper:structNcsOper) {
 
@@ -1322,7 +1246,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		// we only set it if not empty, otherwise remains null
 		if (ncsOperators.size()>0) {
 			structure.getCrystallographicInfo().setNcsOperators(
-					ncsOperators.toArray(new Matrix4d[ncsOperators.size()]));
+					ncsOperators.toArray(new Matrix4d[0]));
 		}
 	}
 
@@ -1362,7 +1286,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 		List<DatabasePdbrevRecord> revRecords = header.getRevisionRecords();
 		if ( revRecords == null) {
-			revRecords = new ArrayList<DatabasePdbrevRecord>();
+			revRecords = new ArrayList<>();
 			header.setRevisionRecords(revRecords);
 		}
 		revRecords.add(record);
@@ -1491,7 +1415,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				// line contains ANGSTROM info...
 				String resolution = line.substring(i-5,i).trim();
 				// convert string to float
-				float res = 99 ;
+				float res;
 				try {
 					res = Float.parseFloat(resolution);
 
@@ -1573,8 +1497,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 		String name =  aa.getName();
 
-		StringBuffer famName = new StringBuffer();
-		StringBuffer initials = new StringBuffer();
+		StringBuilder famName = new StringBuilder();
+		StringBuilder initials = new StringBuilder();
 		boolean afterComma = false;
 		for ( char c: name.toCharArray()) {
 			if ( c == ' ')
@@ -1590,7 +1514,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				famName.append(c);
 		}
 
-		StringBuffer newaa = new StringBuffer();
+		StringBuilder newaa = new StringBuilder();
 		newaa.append(initials);
 		newaa.append(famName);
 
@@ -1599,7 +1523,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		if (auth == null) {
 			header.setAuthors(newaa.toString());
 		}else {
-			auth += "," + newaa.toString();
+			auth += "," + newaa;
 			header.setAuthors(auth);
 
 		}
@@ -1757,14 +1681,14 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			return;
 		}
 
-		Character begin_ins_code = ' ';
+		char begin_ins_code = ' ';
 		if (sref.getPdbx_seq_align_beg_ins_code() != null ) {
-		    begin_ins_code = new Character(sref.getPdbx_seq_align_beg_ins_code().charAt(0));
+		    begin_ins_code = sref.getPdbx_seq_align_beg_ins_code().charAt(0);
 		}
 
-		Character end_ins_code = ' ';
+		char end_ins_code = ' ';
 		if (sref.getPdbx_seq_align_end_ins_code() != null) {
-		    end_ins_code = new Character(sref.getPdbx_seq_align_end_ins_code().charAt(0));
+		    end_ins_code = sref.getPdbx_seq_align_end_ins_code().charAt(0);
 		}
 
 		if (begin_ins_code == '?')
@@ -1782,14 +1706,14 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		int dbseqbegin = Integer.parseInt(sref.getDb_align_beg());
 		int dbseqend   = Integer.parseInt(sref.getDb_align_end());
 
-		Character db_begin_in_code = ' ';
+		char db_begin_in_code = ' ';
 		if (sref.getPdbx_db_align_beg_ins_code() != null) {
-		    db_begin_in_code = new Character(sref.getPdbx_db_align_beg_ins_code().charAt(0));
+		    db_begin_in_code = sref.getPdbx_db_align_beg_ins_code().charAt(0);
 		}
 
-		Character db_end_in_code = ' ';
+		char db_end_in_code = ' ';
 		if (sref.getPdbx_db_align_end_ins_code() != null) {
-		    db_end_in_code = new Character(sref.getPdbx_db_align_end_ins_code().charAt(0));
+		    db_end_in_code = sref.getPdbx_db_align_end_ins_code().charAt(0);
 		}
 
 		if (db_begin_in_code == '?')
@@ -1807,7 +1731,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 		List<DBRef> dbrefs = structure.getDBRefs();
 		if ( dbrefs == null)
-			dbrefs = new ArrayList<DBRef>();
+			dbrefs = new ArrayList<>();
 		dbrefs.add(r);
 
 		logger.debug(r.toPDB());
@@ -2072,7 +1996,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 		// Simply implement the method.
 		List<Site> sites = structure.getSites();
-		if (sites == null) sites = new ArrayList<Site>();
+		if (sites == null) sites = new ArrayList<>();
 
 		Site site = null;
 		for (Site asite : sites) {
@@ -2096,7 +2020,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	 */
 	private void addSites() {
 		List<Site> sites = structure.getSites();
-		if (sites == null) sites = new ArrayList<Site>();
+		if (sites == null) sites = new ArrayList<>();
 
 		for (StructSiteGen siteGen : structSiteGens) {
 				// For each StructSiteGen, find the residues involved, if they exist then
@@ -2150,7 +2074,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 					}
 
 					List<Group> groups = site.getGroups();
-					if (groups == null) groups = new ArrayList<Group>();
+					if (groups == null) groups = new ArrayList<>();
 
 					// Check the self-consistency of the residue reference from auth_seq_id and chain_id
 					if (!comp_id.equals(g.getPDBName())) {

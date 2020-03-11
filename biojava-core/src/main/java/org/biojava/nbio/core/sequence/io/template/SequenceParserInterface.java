@@ -37,5 +37,5 @@ public interface SequenceParserInterface {
 	 * @return
 	 * @throws Exception
 	 */
-	public String getSequence(BufferedReader bufferedReader,int sequenceLength) throws IOException;
+    String getSequence(BufferedReader bufferedReader, int sequenceLength) throws IOException;
 }

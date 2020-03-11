@@ -23,16 +23,14 @@
 
 package org.biojava.nbio.ontology.io;
 
-import org.biojava.nbio.ontology.*;
-import org.biojava.nbio.ontology.obo.OboFileEventListener;
+import org.biojava.nbio.ontology.OntoTools;
+import org.biojava.nbio.ontology.Ontology;
+import org.biojava.nbio.ontology.OntologyFactory;
 import org.biojava.nbio.ontology.obo.OboFileHandler;
 import org.biojava.nbio.ontology.obo.OboFileParser;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.text.ParseException;
-
-
 
 
 /** Parses an OBO file.
@@ -70,7 +68,6 @@ public class OboParser {
 	 * @param ontoDescription
 
 	 * @return the ontology represented as a BioJava ontology file
-	 * @throws ParseException
 	 * @throws IOException
 	 */
 	public Ontology parseOBO(
@@ -78,27 +75,26 @@ public class OboParser {
 			String ontoName,
 			String ontoDescription
 			)
-					throws ParseException, IOException {
+					throws IOException {
 
-		try {
+//		try {
 			OntologyFactory factory = OntoTools.getDefaultFactory();
-			Ontology ontology = factory.createOntology(ontoName, ontoDescription);
 
 			OboFileParser parser = new OboFileParser();
 
-			OboFileEventListener handler = new OboFileHandler(ontology);
+			Ontology ontology = factory.createOntology(ontoName, ontoDescription);
 
-			parser.addOboFileEventListener(handler);
+            parser.addOboFileEventListener(new OboFileHandler(ontology));
 			parser.parseOBO(oboFile);
 
 			return ontology;
 
-
-		} catch (AlreadyExistsException ex) {
-			throw new RuntimeException( "Duplication in ontology");
-		} catch (OntologyException ex) {
-			throw new RuntimeException(ex);
-		}
+//
+//		} catch (AlreadyExistsException ex) {
+//			throw new RuntimeException( "Duplication in ontology");
+//		} catch (OntologyException ex) {
+//			throw new RuntimeException(ex);
+//		}
 
 	}
 }

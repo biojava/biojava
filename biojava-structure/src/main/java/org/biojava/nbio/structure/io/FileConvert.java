@@ -21,6 +21,14 @@
  */
 package org.biojava.nbio.structure.io;
 
+import org.biojava.nbio.core.util.XMLWriter;
+import org.biojava.nbio.structure.*;
+import org.biojava.nbio.structure.io.mmcif.MMCIFFileTools;
+import org.biojava.nbio.structure.io.mmcif.SimpleMMcifParser;
+import org.biojava.nbio.structure.io.mmcif.model.AtomSite;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -28,23 +36,6 @@ import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
-
-import org.biojava.nbio.core.util.XMLWriter;
-import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.Bond;
-import org.biojava.nbio.structure.Chain;
-import org.biojava.nbio.structure.DBRef;
-import org.biojava.nbio.structure.Element;
-import org.biojava.nbio.structure.Group;
-import org.biojava.nbio.structure.GroupType;
-import org.biojava.nbio.structure.PDBHeader;
-import org.biojava.nbio.structure.Site;
-import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.io.mmcif.MMCIFFileTools;
-import org.biojava.nbio.structure.io.mmcif.SimpleMMcifParser;
-import org.biojava.nbio.structure.io.mmcif.model.AtomSite;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -58,19 +49,19 @@ public class FileConvert {
 
 
 
-	private Structure structure ;
+	private final Structure structure ;
 
 	private boolean printConnections;
 
 	// Locale should be english, e.g. in DE separator is "," -> PDB files have "." !
-	public static DecimalFormat d3 = (DecimalFormat)NumberFormat.getInstance(Locale.US);
+	public static final DecimalFormat d3 = (DecimalFormat)NumberFormat.getInstance(Locale.US);
 	static {
 		d3.setMaximumIntegerDigits(4);
 		d3.setMinimumFractionDigits(3);
 		d3.setMaximumFractionDigits(3);
 		d3.setGroupingUsed(false);
 	}
-	public static DecimalFormat d2 = (DecimalFormat)NumberFormat.getInstance(Locale.US);
+	public static final DecimalFormat d2 = (DecimalFormat)NumberFormat.getInstance(Locale.US);
 	static {
 		d2.setMaximumIntegerDigits(3);
 		d2.setMinimumFractionDigits(2);
@@ -187,13 +178,13 @@ public class FileConvert {
 		// do for all models
 		int nrModels = structure.nrModels() ;
 		if ( structure.isNmr()) {
-			str.append("EXPDTA    NMR, "+ nrModels+" STRUCTURES"+newline) ;
+			str.append("EXPDTA    NMR, ").append(nrModels).append(" STRUCTURES").append(newline);
 		}
 		for (int m = 0 ; m < nrModels ; m++) {
 
 
 			if ( nrModels>1 ) {
-				str.append("MODEL      " + (m+1)+ newline);
+				str.append("MODEL      ").append(m + 1).append(newline);
 			}
 
 			List<Chain> polyChains = structure.getPolyChains(m);
@@ -231,7 +222,7 @@ public class FileConvert {
 				}
 
 			}
-			if (nonPolyGroupsExist) str.append(String.format("%-80s","TER")).append(newline);;
+			if (nonPolyGroupsExist) str.append(String.format("%-80s","TER")).append(newline);
 
 			boolean waterGroupsExist = false;
 			for (Chain chain : waterChains) {
@@ -248,7 +239,7 @@ public class FileConvert {
 				}
 
 			}
-			if (waterGroupsExist) str.append(String.format("%-80s","TER")).append(newline);;
+			if (waterGroupsExist) str.append(String.format("%-80s","TER")).append(newline);
 
 
 			if ( nrModels>1) {
@@ -271,7 +262,7 @@ public class FileConvert {
 		int groupsize  = g.size();
 
 		for ( int atompos = 0 ; atompos < groupsize; atompos++) {
-			Atom a = null ;
+			Atom a;
 
 			a = g.getAtom(atompos);
 			if ( a == null)
@@ -390,7 +381,7 @@ public class FileConvert {
 
 		GroupType type = g.getType() ;
 
-		String record = "" ;
+		String record;
 		if ( type.equals(GroupType.HETATM) ) {
 			record = "HETATM";
 		} else {
@@ -411,7 +402,7 @@ public class FileConvert {
 		if ( altLoc == null)
 			altLoc = ' ';
 
-		String resseq = "" ;
+		String resseq;
 		if ( hasInsertionCode(pdbcode) )
 			resseq     = String.format("%5s",pdbcode);
 		else
@@ -426,7 +417,7 @@ public class FileConvert {
 
 		String leftResName = String.format("%3s",resName);
 
-		StringBuffer s = new StringBuffer();
+		StringBuilder s = new StringBuilder();
 		s.append(record);
 		s.append(serial);
 		s.append(" ");
@@ -598,7 +589,7 @@ public class FileConvert {
 
 		StringBuilder str = new StringBuilder();
 
-		str.append(SimpleMMcifParser.MMCIF_TOP_HEADER+"BioJava_mmCIF_file"+newline);
+		str.append(SimpleMMcifParser.MMCIF_TOP_HEADER + "BioJava_mmCIF_file").append(newline);
 
 		if (structure.getPDBHeader()!=null && structure.getPDBHeader().getCrystallographicInfo()!=null &&
 				structure.getPDBHeader().getCrystallographicInfo().getSpaceGroup()!=null &&
@@ -637,7 +628,7 @@ public class FileConvert {
 
 	public static String toMMCIF(Chain chain, boolean writeHeader) {
 		StringBuilder sb = new StringBuilder();
-		sb.append(SimpleMMcifParser.MMCIF_TOP_HEADER+"BioJava_mmCIF_file"+newline);
+		sb.append(SimpleMMcifParser.MMCIF_TOP_HEADER + "BioJava_mmCIF_file").append(newline);
 		sb.append(toMMCIF(chain, chain.getName(), chain.getId(),writeHeader));
 		return sb.toString();
 	}

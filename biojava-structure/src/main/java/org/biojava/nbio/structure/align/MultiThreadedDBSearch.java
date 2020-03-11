@@ -24,6 +24,7 @@ package org.biojava.nbio.structure.align;
  *
  */
 
+import org.biojava.nbio.core.util.ConcurrencyTools;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
@@ -41,7 +42,6 @@ import org.biojava.nbio.structure.domain.DomainProviderFactory;
 import org.biojava.nbio.structure.domain.RemoteDomainProvider;
 import org.biojava.nbio.structure.io.LocalPDBDirectory.FetchBehavior;
 import org.biojava.nbio.structure.io.PDBFileReader;
-import org.biojava.nbio.core.util.ConcurrencyTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,7 +63,7 @@ public class MultiThreadedDBSearch {
 
 	private final static Logger logger = LoggerFactory.getLogger(MultiThreadedDBSearch.class);
 
-	AtomicBoolean interrupted  ;
+	final AtomicBoolean interrupted  ;
 
 	StructureAlignment algorithm;
 
@@ -71,13 +71,13 @@ public class MultiThreadedDBSearch {
 
 	String name1;
 
-	int nrCPUs;
+	final int nrCPUs;
 
 	AtomCache cache;
 	File resultList;
 	SortedSet<String> representatives;
 
-	boolean domainSplit;
+	final boolean domainSplit;
 
 	Structure structure1;
 
@@ -192,7 +192,7 @@ public class MultiThreadedDBSearch {
 
 	public void run(){
 
-		File outFileF = null;
+		File outFileF;
 		SynchronizedOutFile out ;
 
 		try {
@@ -257,12 +257,7 @@ public class MultiThreadedDBSearch {
 			}
 
 			out.flush();
-		} catch (IOException e){
-			logger.error("Error while loading representative structure {}", name1, e);
-			interrupt();
-			cleanup();
-			return;
-		} catch (StructureException e) {
+		} catch (IOException | StructureException e){
 			logger.error("Error while loading representative structure {}", name1, e);
 			interrupt();
 			cleanup();
@@ -270,7 +265,7 @@ public class MultiThreadedDBSearch {
 		}
 
 
-		int nrJobs = 0;
+        int nrJobs = 0;
 		DomainProvider domainProvider;
 		try {
 			domainProvider = DomainProviderFactory.getDomainProvider();
@@ -301,12 +296,7 @@ public class MultiThreadedDBSearch {
 				}
 
 			}
-		} catch(IOException e) {
-			logger.error("Error while fetching representative domains", e);
-			interrupt();
-			cleanup();
-			return;
-		} catch (StructureException e) {
+		} catch(IOException | StructureException e) {
 			logger.error("Error while fetching representative domains", e);
 			interrupt();
 			cleanup();
@@ -314,7 +304,7 @@ public class MultiThreadedDBSearch {
 		}
 
 
-		ThreadPoolExecutor  pool = ConcurrencyTools.getThreadPool();
+        ThreadPoolExecutor  pool = ConcurrencyTools.getThreadPool();
 		logger.info("{}", pool.getPoolSize());
 
 		long startTime = System.currentTimeMillis();
@@ -398,8 +388,7 @@ public class MultiThreadedDBSearch {
 		}
 
 		if ( domainProvider instanceof RemoteDomainProvider ) {
-			RemoteDomainProvider remoteP = (RemoteDomainProvider) domainProvider;
-			remoteP.flushCache();
+			((RemoteDomainProvider) domainProvider).flushCache();
 		}
 
 		logger.info("done checking local files...");
@@ -407,15 +396,15 @@ public class MultiThreadedDBSearch {
 	}
 
 
-	private void checkFile(String repre) throws IOException, StructureException {
+	@Deprecated private void checkFile(String repre) throws IOException, StructureException {
 
-		StructureName name = new StructureName(repre);
-
-		PDBFileReader reader = new PDBFileReader();
-		reader.setFetchBehavior(FetchBehavior.FETCH_REMEDIATED);
-		reader.setPath(cache.getPath());
-		reader.setFileParsingParameters(cache.getFileParsingParams());
-		reader.prefetchStructure(name.getPdbId());
+//		StructureName name = new StructureName(repre);
+//
+//		PDBFileReader reader = new PDBFileReader();
+//		reader.setFetchBehavior(FetchBehavior.FETCH_REMEDIATED);
+//		reader.setPath(cache.getPath());
+//		reader.setFileParsingParameters(cache.getFileParsingParams());
+//		reader.prefetchStructure(name.getPdbId());
 	}
 
 

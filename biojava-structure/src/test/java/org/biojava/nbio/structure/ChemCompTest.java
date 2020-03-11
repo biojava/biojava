@@ -45,7 +45,7 @@ public class ChemCompTest {
 
 		assertNotNull("residue type has not been set!", cc.getResidueType());
 
-		assertTrue (" is not amino ", cc.getResidueType().equals(ResidueType.lPeptideLinking));
+        assertEquals(" is not amino ", cc.getResidueType(), ResidueType.lPeptideLinking);
 	}
 
 	@Test
@@ -67,7 +67,7 @@ public class ChemCompTest {
 
 		assertNotNull(cc);
 
-		assertTrue(" is not mea" , cc.getId().equals(chemID));
+        assertEquals(" is not mea", cc.getId(), chemID);
 
 		assertEquals(" one letter code is not correct", "F", cc.getOne_letter_code());
 
@@ -79,11 +79,11 @@ public class ChemCompTest {
 
 		assertNotNull("residue type has not been set!", cc.getResidueType());
 
-		assertTrue (" is not amino ", cc.getResidueType().equals(ResidueType.lPeptideLinking));
+        assertEquals(" is not amino ", cc.getResidueType(), ResidueType.lPeptideLinking);
 
 		Group g = ChemCompGroupFactory.getGroupFromChemCompDictionary(chemID);
 
-		assertTrue( g.getType().equals(GroupType.AMINOACID));
+        assertEquals(g.getType(), GroupType.AMINOACID);
 
 		ChemCompGroupFactory.setChemCompProvider(oldProvider);
 	}
@@ -107,7 +107,7 @@ public class ChemCompTest {
 
 		assertNotNull(aa.getAminoType());
 
-		assertTrue(aa.getAminoType().equals('X'));
+        assertEquals('X', (char) aa.getAminoType());
 
 		ChemCompGroupFactory.setChemCompProvider(oldProvider);
 
@@ -127,7 +127,7 @@ public class ChemCompTest {
 
 	assertNotNull(cc);
 
-	assertTrue(" is not mea" , cc.getId().equals(chemID));
+        assertEquals(" is not mea", cc.getId(), chemID);
 
 	assertTrue(cc.isEmpty());
 
@@ -139,7 +139,7 @@ public class ChemCompTest {
 
 	assertNotNull(cc);
 
-	assertTrue(" is not mea" , cc.getId().equals(chemID));
+        assertEquals(" is not mea", cc.getId(), chemID);
 
 	assertEquals("MEA",cc.getThree_letter_code());
 
@@ -155,7 +155,7 @@ public class ChemCompTest {
 
 	assertNotNull(cc);
 
-	assertTrue(" is not mea" , cc.getId().equals(chemID));
+        assertEquals(" is not mea", cc.getId(), chemID);
 
 	assertEquals("MEA",cc.getThree_letter_code());
 
@@ -166,7 +166,7 @@ public class ChemCompTest {
 
 	assertNotNull(cc);
 
-	assertTrue(" is not mea" , cc.getId().equals(chemID));
+        assertEquals(" is not mea", cc.getId(), chemID);
 
 	//the cached description contains all information even with the ReducedProvider
 	assertNotNull(cc.getThree_letter_code());

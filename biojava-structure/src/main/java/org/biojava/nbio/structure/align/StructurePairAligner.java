@@ -35,6 +35,7 @@ import org.biojava.nbio.structure.jama.Matrix;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.vecmath.Matrix4d;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.PrintStream;
@@ -42,8 +43,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
-import javax.vecmath.Matrix4d;
 
 /**
  * Perform a pairwise protein structure superimposition.
@@ -135,15 +134,14 @@ import javax.vecmath.Matrix4d;
  */
 public class StructurePairAligner {
 
-	private final static Logger logger = LoggerFactory
-			.getLogger(StructurePairAligner.class);
+	private final static Logger logger = LoggerFactory.getLogger(StructurePairAligner.class);
 
 	AlternativeAlignment[] alts;
 	Matrix distanceMatrix;
 	StrucAligParameters params;
 	FragmentPair[] fragPairs;
 
-	List<AlignmentProgressListener> listeners = new ArrayList<AlignmentProgressListener>();
+	final List<AlignmentProgressListener> listeners = new ArrayList<>();
 
 	public StructurePairAligner() {
 		super();
@@ -444,7 +442,7 @@ public class StructurePairAligner {
 		Atom unitvector = new AtomImpl();
 		unitvector.setCoords(utmp[0]);
 
-		List<FragmentPair> fragments = new ArrayList<FragmentPair>();
+		List<FragmentPair> fragments = new ArrayList<>();
 
 		for (int i = 0; i < rows; i++) {
 
@@ -500,7 +498,7 @@ public class StructurePairAligner {
 		notifyFragmentListeners(fragments);
 
 		FragmentPair[] fp = fragments
-				.toArray(new FragmentPair[fragments.size()]);
+				.toArray(new FragmentPair[0]);
 		setFragmentPairs(fp);
 
 		logger.debug(" got # fragment pairs: {}", fp.length);
@@ -521,7 +519,7 @@ public class StructurePairAligner {
 
 		} else if (params.isJoinPlo()) {
 			// this approach by StrComPy (peter lackner):
-			frags = joiner.frag_pairwise_compat(fp, params.getAngleDiff(),
+			frags = FragmentJoiner.frag_pairwise_compat(fp, params.getAngleDiff(),
 					params.getFragCompat(), params.getMaxrefine());
 
 		} else {
@@ -536,7 +534,7 @@ public class StructurePairAligner {
 
 		logger.debug("step 3 - refine alignments");
 
-		List<AlternativeAlignment> aas = new ArrayList<AlternativeAlignment>();
+		List<AlternativeAlignment> aas = new ArrayList<>();
 		for (int i = 0; i < frags.length; i++) {
 			JointFragments f = frags[i];
 			AlternativeAlignment a = new AlternativeAlignment();
@@ -544,34 +542,28 @@ public class StructurePairAligner {
 			a.setAltAligNumber(i + 1);
 			a.setDistanceMatrix(distanceMatrix);
 
-			try {
-				if (params.getMaxIter() > 0) {
-
+//			try {
+				if (params.getMaxIter() > 0)
 					a.refine(params, ca1, ca2);
-				} else {
-
+				else
 					a.finish(params, ca1, ca2);
-
-				}
-			} catch (StructureException e) {
-				logger.error("Refinement of fragment {} failed", i, e);
-			}
+//			} catch (StructureException e) {
+//				logger.error("Refinement of fragment {} failed", i, e);
+//			}
 			a.calcScores(ca1, ca2);
 			aas.add(a);
 		}
 
 		// sort the alternative alignments
 		Comparator<AlternativeAlignment> comp = new AltAligComparator();
-		Collections.sort(aas, comp);
+		aas.sort(comp);
 		Collections.reverse(aas);
 
-		alts = aas.toArray(new AlternativeAlignment[aas.size()]);
+		alts = aas.toArray(new AlternativeAlignment[0]);
 		// do final numbering of alternative solutions
 		int aanbr = 0;
-		for (AlternativeAlignment a : alts) {
-			aanbr++;
-			a.setAltAligNumber(aanbr);
-		}
+		for (AlternativeAlignment a : alts)
+			a.setAltAligNumber(++aanbr);
 
 		logger.debug("total calculation time: {} ms.",
 				(System.currentTimeMillis() - timeStart));

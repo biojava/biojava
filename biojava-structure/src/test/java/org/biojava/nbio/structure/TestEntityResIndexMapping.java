@@ -20,7 +20,11 @@
  */
 package org.biojava.nbio.structure;
 
-import static org.junit.Assert.*;
+import org.biojava.nbio.structure.align.util.AtomCache;
+import org.biojava.nbio.structure.io.FileParsingParameters;
+import org.biojava.nbio.structure.io.PDBFileParser;
+import org.junit.Ignore;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,11 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 
-import org.biojava.nbio.structure.align.util.AtomCache;
-import org.biojava.nbio.structure.io.FileParsingParameters;
-import org.biojava.nbio.structure.io.PDBFileParser;
-import org.junit.Ignore;
-import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
  * Various tests for functionality in {@link EntityInfo} and {@link org.biojava.nbio.structure.io.EntityFinder}

@@ -28,14 +28,7 @@ import org.biojava.nbio.structure.contact.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Calculate and assign the secondary structure (SS) to the
@@ -103,8 +96,8 @@ public class SecStrucCalc {
 	private AtomContactSet contactSet;
 	private Map<ResidueNumber, Integer> indResMap;
 	public SecStrucCalc(){
-		ladders = new ArrayList<Ladder>();
-		bridges = new ArrayList<BetaBridge>();
+		ladders = new ArrayList<>();
+		bridges = new ArrayList<>();
 	}
 
 
@@ -119,11 +112,11 @@ public class SecStrucCalc {
 	public List<SecStrucState> calculate(Structure s, boolean assign)
 			throws StructureException {
 
-		List<SecStrucState> secstruc = new ArrayList<SecStrucState>();
+		List<SecStrucState> secstruc = new ArrayList<>();
 		for(int i=0; i<s.nrModels(); i++) {
 			// Reinitialise the global vars
-			ladders = new ArrayList<Ladder>();
-			bridges = new ArrayList<BetaBridge>();
+			ladders = new ArrayList<>();
+			bridges = new ArrayList<>();
 			groups = initGroupArray(s, i);
 			// Initialise the contact set for this structure
 			initContactSet();
@@ -423,7 +416,7 @@ public class SecStrucCalc {
 	private void findBridges() {
 		// Get the interator of contacts
 		Iterator<AtomContact> myIter = contactSet.iterator();
-		List<Pair<Integer>> outList = new ArrayList<Pair<Integer>>();
+		List<Pair<Integer>> outList = new ArrayList<>();
 
 		// Now iterate through this
 		while(myIter.hasNext()){
@@ -460,30 +453,17 @@ public class SecStrucCalc {
 				continue;
 			}
 
-			Pair<Integer> thisPair = new Pair<Integer>(i,j);
+			Pair<Integer> thisPair = new Pair<>(i, j);
 			outList.add(thisPair);
 		}
 		//
-		Collections.sort(outList, new Comparator<Pair<Integer>>() {
-			@Override
-			public int compare(Pair<Integer> o1, Pair<Integer> o2) {
-				if(o1.getFirst()<o2.getFirst()){
-					return -1;
-				}
-				else if(o1.getFirst()>o2.getFirst()){
-					return +1;
-				}
-				else{
-					if(o1.getSecond()<o2.getSecond()){
-						return -1;
-					}
-					else if(o1.getSecond()>o2.getSecond()){
-						return 1;
-					}
-					else{
-						return 0;
-					}
-				}
+		outList.sort((o1, o2) -> {
+			if (o1.getFirst() < o2.getFirst()) {
+				return -1;
+			} else if (o1.getFirst() > o2.getFirst()) {
+				return +1;
+			} else {
+				return o1.getSecond().compareTo(o2.getSecond());
 			}
 		});
 
@@ -601,12 +581,11 @@ public class SecStrucCalc {
 	 */
 	public String printDSSP() {
 
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		String nl = System.getProperty("line.separator");
 
 		//Header Line
-		buf.append("==== Secondary Structure Definition by BioJava"
-				+ " DSSP implementation, Version October 2015 ===="+nl);
+		buf.append("==== Secondary Structure Definition by BioJava" + " DSSP implementation, Version October 2015 ====").append(nl);
 
 		//First line with column definition
 		buf.append("  #  RESIDUE AA STRUCTURE BP1 BP2  ACC     "
@@ -634,11 +613,11 @@ public class SecStrucCalc {
 	 */
 	public String printHelixSummary() {
 
-		StringBuffer g = new StringBuffer(); //3-10 helix
-		StringBuffer h = new StringBuffer(); //alpha helix
-		StringBuffer i = new StringBuffer(); //pi-helix
-		StringBuffer ss = new StringBuffer(); //SS summary
-		StringBuffer aa = new StringBuffer(); //AA one-letter
+		StringBuilder g = new StringBuilder(); //3-10 helix
+		StringBuilder h = new StringBuilder(); //alpha helix
+		StringBuilder i = new StringBuilder(); //pi-helix
+		StringBuilder ss = new StringBuilder(); //SS summary
+		StringBuilder aa = new StringBuilder(); //AA one-letter
 		String nl = System.getProperty("line.separator");
 
 		g.append(	"3 turn: ");
@@ -657,8 +636,8 @@ public class SecStrucCalc {
 			aa.append(StructureTools.get1LetterCode(groups[k].getPDBName()));
 		}
 
-		return g.toString()+nl+h.toString()+nl+
-				i.toString()+nl+ss.toString()+nl+aa.toString();
+		return g +nl+ h +nl+
+				i +nl+ ss +nl+ aa;
 	}
 
 	/**
@@ -668,9 +647,9 @@ public class SecStrucCalc {
 	 */
 	public String printFASTA() {
 
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		String nl = System.getProperty("line.separator");
-		buf.append(">"+groups[0].getChain().getStructure().getIdentifier()+nl);
+		buf.append(">").append(groups[0].getChain().getStructure().getIdentifier()).append(nl);
 
 		for (int g = 0; g < groups.length; g++){
 			buf.append(getSecStrucState(g).getType());
@@ -704,7 +683,7 @@ public class SecStrucCalc {
 	}
 
 	private static SecStrucGroup[] initGroupArray(Structure s, int modelId) {
-		List<SecStrucGroup> groupList = new ArrayList<SecStrucGroup>();
+		List<SecStrucGroup> groupList = new ArrayList<>();
 		//
 		for ( Chain c : s.getChains(modelId)){
 
@@ -742,7 +721,7 @@ public class SecStrucCalc {
 			}
 
 		}
-		return groupList.toArray(new SecStrucGroup[groupList.size()]);
+		return groupList.toArray(new SecStrucGroup[0]);
 	}
 
 	/**
@@ -750,7 +729,7 @@ public class SecStrucCalc {
 	 * missing in the PDB files as only few experimental methods allow
 	 * to resolve their location.
 	 */
-	private void calculateHAtoms() throws StructureException {
+	private void calculateHAtoms() {
 
 		for ( int i = 0 ; i < groups.length-1  ; i++) {
 
@@ -777,9 +756,7 @@ public class SecStrucCalc {
 		 * More efficient method for calculating C-Alpha pairs
 		 */
 		if (groups.length < 5) return;
-		Iterator<AtomContact> otu = contactSet.iterator();
-		while(otu.hasNext()){
-			AtomContact ac = otu.next();
+		for (AtomContact ac : contactSet) {
 			Pair<Atom> pair = ac.getPair();
 			Group g1 = pair.getFirst().getGroup();
 			Group g2 = pair.getSecond().getGroup();
@@ -787,9 +764,9 @@ public class SecStrucCalc {
 			int i = indResMap.get(g1.getResidueNumber());
 			int j = indResMap.get(g2.getResidueNumber());
 			// Now check this
-			checkAddHBond(i,j);
+			checkAddHBond(i, j);
 			//"backwards" hbonds are not allowed
-			if (j!=(i+1)) checkAddHBond(j,i);
+			if (j != (i + 1)) checkAddHBond(j, i);
 		}
 	}
 
@@ -808,7 +785,7 @@ public class SecStrucCalc {
 
 		SecStrucGroup two = groups[j];
 
-		double energy = 0;
+		double energy;
 
 		try {
 			energy = calculateHBondEnergy(one,two);
@@ -816,7 +793,7 @@ public class SecStrucCalc {
 			logger.warn("Energy calculation failed", e);
 			return;
 		}
-		logger.debug("Energy between positions ({},{}): ",i,j,energy);
+		logger.debug("Energy between positions ({},{}={}): ",i,j,energy);
 
 		trackHBondEnergy(i,j,energy);
 	}
@@ -842,32 +819,31 @@ public class SecStrucCalc {
 		Atom O = two.getO();
 		Atom C = two.getC();
 
-		double dno = Calc.getDistance(O,N);
-		double dhc = Calc.getDistance(C,H);
-		double dho = Calc.getDistance(O,H);
-		double dnc = Calc.getDistance(C,N);
+		double dno = Calc.getDistance(O,N); if (dno < MINDIST) return HBONDLOWENERGY;
+		double dhc = Calc.getDistance(C,H); if (dhc < MINDIST) return HBONDLOWENERGY;
+		double dho = Calc.getDistance(O,H); if (dho < MINDIST) return HBONDLOWENERGY;
+		double dnc = Calc.getDistance(C,N); if (dnc < MINDIST) return HBONDLOWENERGY;
 
-		logger.debug(" cccc: {} {} {} {} O ({})..N ({}):{}  |  ho:{} - hc:{} + nc:{} - no:{}",
-				one.getResidueNumber(),one.getPDBName(),two.getResidueNumber(),two.getPDBName(),
-				O.getPDBserial(),N.getPDBserial(),dno,dho,dhc,dnc,dno);
+		if (logger.isDebugEnabled()) {
+			logger.debug(" cccc: {} {} {} {} O ({})..N ({}):{}  |  ho:{} - hc:{} + nc:{} - no:{}",
+					one.getResidueNumber(), one.getPDBName(), two.getResidueNumber(), two.getPDBName(),
+					O.getPDBserial(), N.getPDBserial(), dno, dho, dhc, dnc, dno);
+		}
 
 		//there seems to be a contact!
-		if ( (dno < MINDIST) || (dhc < MINDIST) ||
-				(dnc < MINDIST) || (dno < MINDIST)) {
-			return HBONDLOWENERGY;
-		}
 
 		double e1 = Q / dho - Q / dhc;
 		double e2 = Q / dnc - Q / dno;
 
 		double energy = e1 + e2;
 
-		logger.debug(" N ({}) O({}): {} : {} ",N.getPDBserial(),O.getPDBserial(),(float) dno,energy);
+		if (logger.isDebugEnabled()) {
+			logger.debug(" N ({}) O({}): {} : {} ", N.getPDBserial(), O.getPDBserial(), (float) dno, energy);
+		}
 
-		//Avoid too strong energy
-		if (energy > HBONDLOWENERGY) return energy;
+		//Avoid too strong energy?
+		return energy > HBONDLOWENERGY ? energy : HBONDLOWENERGY;
 
-		return HBONDLOWENERGY ;
 	}
 
 	/**
@@ -951,8 +927,8 @@ public class SecStrucCalc {
 					getSecStrucState(i+turn).setTurn('<', turn);
 					//Bracketed residues get the helix number
 					for (int j=i+1; j<i+turn; j++){
-						Integer t = turn;
-						char helix = t.toString().charAt(0);
+						int t = turn;
+						char helix = Integer.toString(t).charAt(0);
 						getSecStrucState(j).setTurn(helix, turn);
 					}
 				}
@@ -1009,8 +985,7 @@ public class SecStrucCalc {
 	 * 		2009/08/how-to-calculate-h-atoms-for-nitrogens.html
 	 */
 	@SuppressWarnings("unused")
-	private static Atom calc_H(Atom C, Atom N, Atom CA)
-			throws StructureException {
+	private static Atom calc_H(Atom C, Atom N, Atom CA) {
 
 		Atom nc  = Calc.subtract(N,C);
 		Atom nca = Calc.subtract(N,CA);

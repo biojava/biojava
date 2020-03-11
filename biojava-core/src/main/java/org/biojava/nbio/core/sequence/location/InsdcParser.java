@@ -32,7 +32,6 @@ import org.biojava.nbio.core.sequence.location.template.Point;
 import org.biojava.nbio.core.sequence.template.AbstractSequence;
 import org.biojava.nbio.core.sequence.template.Compound;
 
-import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +58,7 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
 	//protected static final Pattern singleLocationPattern = Pattern.compile("(?:[A-Z]([A-Za-z\\.0-9_]*?):)?(<?)(\\d+)(\\.{2}|\\^)?(>?)(\\d+)?(>?)?");
 
 	// fixed issue #254
-	protected static final Pattern singleLocationPattern = Pattern.compile("(?:([A-Za-z\\.0-9_]*?):)?(<?)(\\d+)(\\.{2}|\\^)?(>?)(\\d+)?(>?)?");
+	protected static final Pattern singleLocationPattern = Pattern.compile("(?:([A-Za-z.0-9_]*?):)?(<?)(\\d+)(\\.{2}|\\^)?(>?)(\\d+)?(>?)?");
 	/**
 	 * Decodes a split pattern. Split patterns are a composition of multiple
 	 * locationsString qualified by actions: join(location,location, ...
@@ -96,11 +95,11 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
 	protected Integer featureGlobalStart, featureGlobalEnd;
 
 	//private S referenceSequence = new org.biojava.nbio.core.sequence.DNASequence();
-	private AbstractSequence referenceSequence = new DNASequence();
+	private final AbstractSequence referenceSequence = new DNASequence();
 
 	enum complexFeaturesAppendEnum {
 
-		FLATTEN, HIERARCHICAL;
+		FLATTEN, HIERARCHICAL
 	}
 	/**
 	 * define the mode in which complex features should be appended in FLATTEN
@@ -160,17 +159,16 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
 	 * @param reader The source of the data; assumes that end of the reader
 	 * stream is the end of the location string to parse
 	 * @return The parsed location
-	 * @throws IOException Thrown with any reader error
 	 * @throws ParserException Thrown with any error with parsing locations
 	 */
-	public List<AbstractLocation> parse(Reader reader) throws IOException, ParserException {
+	public List<AbstractLocation> parse(Reader reader) throws ParserException {
 		// use parse(String s) instead!
 		return null;
 	}
 
 	private List<Location> parseLocationString(String string, int versus) throws ParserException {
 		Matcher m;
-		List<Location> boundedLocationsCollection = new ArrayList<Location>();
+		List<Location> boundedLocationsCollection = new ArrayList<>();
 
 		//String[] tokens = string.split(locationSplitPattern);
 		List<String> tokens = splitString(string);
@@ -229,7 +227,7 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
 				String accession = m.group(1);
 				Strand s = versus == 1 ? Strand.POSITIVE : Strand.NEGATIVE;
 				int start = Integer.parseInt(m.group(3));
-				int end = m.group(6) == null ? start : new Integer(m.group(6));
+				int end = m.group(6) == null ? start : Integer.parseInt(m.group(6));
 
 				if (featureGlobalStart > start) {
 					featureGlobalStart = start;
@@ -253,7 +251,7 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
 					l.setPartialOn3prime(true);
 				}
 
-				if (!(accession == null || "".equals(accession))) l.setAccession(new AccessionID(accession));
+				if (!(accession == null || accession.isEmpty())) l.setAccession(new AccessionID(accession));
 
 				boundedLocationsCollection.add(l);
 
@@ -265,7 +263,7 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
 
 
 	private List<String> splitString(String input) {
-		List<String> result = new ArrayList<String>();
+		List<String> result = new ArrayList<>();
 		int start = 0;
 		int openedParenthesis = 0;
 		for (int current = 0; current < input.length(); current++) {

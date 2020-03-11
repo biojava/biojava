@@ -26,6 +26,7 @@ package org.biojava.nbio.structure.io;
 
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
+
 import java.io.IOException;
 import java.io.InputStream;
 

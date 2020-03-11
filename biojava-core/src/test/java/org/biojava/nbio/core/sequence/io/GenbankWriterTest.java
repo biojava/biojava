@@ -49,10 +49,7 @@ public class GenbankWriterTest {
 		//File dnaFile = new File("src/test/resources/NM_000266.gb");
 		LinkedHashMap<String, DNASequence> dnaSequences = GenbankReaderHelper.readGenbankDNASequence( inStream );
 		ByteArrayOutputStream fragwriter = new ByteArrayOutputStream();
-		ArrayList<DNASequence> seqs = new ArrayList<DNASequence>();
-		for(DNASequence seq : dnaSequences.values()) {
-			seqs.add(seq);
-		}
+        ArrayList<DNASequence> seqs = new ArrayList<>(dnaSequences.values());
 		GenbankWriterHelper.writeNucleotideSequence(fragwriter, seqs,
 				GenbankWriterHelper.LINEAR_DNA);
 		//System.out.println(fragwriter.toString());

@@ -63,7 +63,7 @@
 		<dependency>
 			<groupId>org.jgrapht</groupId>
   			<artifactId>jgrapht-core</artifactId>
-  			<version>1.1.0</version>
+  			<version>1.4.0</version>
 		</dependency>
 
 		<!-- JAXb explicit dependency is needed since Java 9. See https://stackoverflow.com/questions/43574426/how-to-resolve-java-lang-noclassdeffounderror-javax-xml-bind-jaxbexception-in-j

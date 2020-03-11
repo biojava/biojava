@@ -41,7 +41,7 @@ public class Entity {
 
 	@Override
 	public String toString(){
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 
 	buf.append("Entity - id:").append(id);
 

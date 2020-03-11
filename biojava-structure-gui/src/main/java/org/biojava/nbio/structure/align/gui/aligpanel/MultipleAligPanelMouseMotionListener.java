@@ -42,7 +42,7 @@ public class MultipleAligPanelMouseMotionListener
 implements MouseMotionListener, MouseListener {
 
 	private MultipleAligPanel parent;
-	private List<AlignmentPositionListener> aligPosListeners;
+	private final List<AlignmentPositionListener> aligPosListeners;
 	private int prevPos;
 
 	private boolean isDragging ;
@@ -52,7 +52,7 @@ implements MouseMotionListener, MouseListener {
 
 	public MultipleAligPanelMouseMotionListener(MultipleAligPanel parent){
 		this.parent = parent;
-		aligPosListeners = new ArrayList<AlignmentPositionListener>();
+		aligPosListeners = new ArrayList<>();
 		prevPos = -1;
 		isDragging = false;
 		selectionStart = null;

@@ -28,7 +28,7 @@ import java.util.*;
 
 public class ModifiedAminoAcidCompoundSet implements CompoundSet<AminoAcidCompound> {
 
-	private final Map<String, AminoAcidCompound> aminoAcidCompoundCache = new HashMap<String, AminoAcidCompound>();
+	private final Map<String, AminoAcidCompound> aminoAcidCompoundCache = new HashMap<>();
 
 	public ModifiedAminoAcidCompoundSet(List<AminoAcidComposition> aaList, Map<Character, Double> aaSymbol2MolecularWeight) {
 		this.aminoAcidCompoundCache.put("-", new AminoAcidCompound(null, "-", "", "", 0.0f));
@@ -83,8 +83,8 @@ public class ModifiedAminoAcidCompoundSet implements CompoundSet<AminoAcidCompou
 	}
 
 	@Override
-	public List<AminoAcidCompound> getAllCompounds() {
-		return new ArrayList<AminoAcidCompound>(aminoAcidCompoundCache.values());
+	public Collection<AminoAcidCompound> getAllCompounds() {
+		return new ArrayList<>(aminoAcidCompoundCache.values());
 	}
 
 	@Override

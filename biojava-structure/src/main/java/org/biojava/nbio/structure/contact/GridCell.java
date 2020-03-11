@@ -20,10 +20,9 @@
  */
 package org.biojava.nbio.structure.contact;
 
+import javax.vecmath.Point3d;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.vecmath.Point3d;
 
 
 /**
@@ -35,13 +34,13 @@ import javax.vecmath.Point3d;
 public class GridCell {
 
 
-	private Grid grid;
-	private ArrayList<Integer> iIndices;
-	private ArrayList<Integer> jIndices;
+	private final Grid grid;
+	private final ArrayList<Integer> iIndices;
+	private final ArrayList<Integer> jIndices;
 
 	public GridCell(Grid parent){
-		iIndices = new ArrayList<Integer>();
-		jIndices = new ArrayList<Integer>();
+		iIndices = new ArrayList<>();
+		jIndices = new ArrayList<>();
 		this.grid = parent;
 	}
 
@@ -70,7 +69,7 @@ public class GridCell {
 	 */
 	public List<Contact> getContactsWithinCell(){
 
-		List<Contact> contacts = new ArrayList<Contact>();
+		List<Contact> contacts = new ArrayList<>();
 
 		Point3d[] iAtoms = grid.getIAtoms();
 		Point3d[] jAtoms = grid.getJAtoms();
@@ -110,7 +109,7 @@ public class GridCell {
 	 */
 	public List<Contact> getContactsToOtherCell(GridCell otherCell){
 
-		List<Contact> contacts = new ArrayList<Contact>();
+		List<Contact> contacts = new ArrayList<>();
 
 		Point3d[] iAtoms = grid.getIAtoms();
 		Point3d[] jAtoms = grid.getJAtoms();

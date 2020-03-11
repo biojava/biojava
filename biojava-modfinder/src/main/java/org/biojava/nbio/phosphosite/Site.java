@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 
@@ -48,11 +49,11 @@ public class Site {
 		Reader decoder = new InputStreamReader(gzipStream);
 		BufferedReader buf = new BufferedReader(decoder);
 
-		String line = null;
+		String line;
 
-		List<Site > data = new ArrayList<Site>();
+		List<Site > data = new ArrayList<>();
 
-		List<String> headerFields = null;
+		List<String> headerFields;
 
 		int proteinIndex = -1;
 		int uniprotIndex = -1;
@@ -131,11 +132,7 @@ public class Site {
 	private static List<String> parseHeaderFields(String line) {
 		String[] spl = line.split("\t");
 
-		List<String> h = new ArrayList<String>();
-		for (String s: spl){
-			h.add(s);
-
-		}
+        List<String> h = new ArrayList<>(Arrays.asList(spl));
 
 		return h;
 	}
@@ -215,26 +212,24 @@ public class Site {
 
 	@Override
 	public String toString() {
-		StringBuffer s = new StringBuffer();
+		StringBuilder s = new StringBuilder();
 
-		s.append("Site{" +
-				"protein='" + protein + '\'');
+		s.append("Site{" + "protein='").append(protein).append('\'');
 		if ( uniprot != null)
-				s.append(", uniprot='" + uniprot + '\'' );
+				s.append(", uniprot='").append(uniprot).append('\'');
 		if ( geneSymb != null)
-			s.append(
-				", geneSymb='" + geneSymb + '\'' );
+			s.append(", geneSymb='").append(geneSymb).append('\'');
 		if (chrLoc != null)
-				s.append(", chrLoc='" + chrLoc + '\'' );
+				s.append(", chrLoc='").append(chrLoc).append('\'');
 		if (modType != null)
-			s.append(", modType='" + modType + '\'' );
+			s.append(", modType='").append(modType).append('\'');
 
 		if (residue != null)
-			s.append(        ", residue='" + residue + '\'' );
+			s.append(", residue='").append(residue).append('\'');
 		if ( group != null)
-				s.append(", group='" + group + '\'' );
+				s.append(", group='").append(group).append('\'');
 		if (organism != null)
-			s.append(", organism='" + organism + '\'' );
+			s.append(", organism='").append(organism).append('\'');
 
 		  s.append(      '}');
 

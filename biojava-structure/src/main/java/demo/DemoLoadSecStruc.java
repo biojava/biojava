@@ -20,9 +20,6 @@
  */
 package demo;
 
-import java.io.IOException;
-import java.util.List;
-
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.util.AtomCache;
@@ -31,6 +28,9 @@ import org.biojava.nbio.structure.secstruc.DSSPParser;
 import org.biojava.nbio.structure.secstruc.SecStrucCalc;
 import org.biojava.nbio.structure.secstruc.SecStrucInfo;
 import org.biojava.nbio.structure.secstruc.SecStrucTools;
+
+import java.io.IOException;
+import java.util.List;
 
 /**
  * Demonstration of how to load a Structure with the SS information, either from

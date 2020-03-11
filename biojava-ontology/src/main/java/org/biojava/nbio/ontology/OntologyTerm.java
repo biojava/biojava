@@ -52,7 +52,7 @@ public interface OntologyTerm extends Term {
 	 */
 
 	@Override
-	public Ontology getOntology();
+	Ontology getOntology();
 
 	/**
 	 * Simple in-memory implementation of a remote ontology term.
@@ -60,7 +60,7 @@ public interface OntologyTerm extends Term {
 	 * This can be used to implement Ontology.importTerm
 	 */
 
-	public final static class Impl
+	final class Impl
 
 	implements OntologyTerm, java.io.Serializable {
 
@@ -68,7 +68,7 @@ public interface OntologyTerm extends Term {
 		private final Ontology ontology;
 		private final Ontology target;
 
-		private Set synonyms;
+		private final Set synonyms;
 
 		public Impl(Ontology ontology, Ontology target) {
 			this(ontology, target, null);

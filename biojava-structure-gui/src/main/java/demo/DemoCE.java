@@ -60,8 +60,8 @@ public class DemoCE
 
 		ChemCompGroupFactory.setChemCompProvider(prov);
 
-		Structure structure1 = null;
-		Structure structure2 = null;
+		Structure structure1;
+		Structure structure2;
 
 		try {
 

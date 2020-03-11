@@ -39,7 +39,7 @@ public class Convert2Polarizability extends Convertor{
 		}
 	}
 
-	private static String[] subCategory = {"Value_0-0.08", "Value_0.128-0.186", "Value_0.219-0.409"};
+	private static final String[] subCategory = {"Value_0-0.08", "Value_0.128-0.186", "Value_0.219-0.409"};
 	@Override
 	public String[] getGrouping(){return subCategory;}
 	@Override

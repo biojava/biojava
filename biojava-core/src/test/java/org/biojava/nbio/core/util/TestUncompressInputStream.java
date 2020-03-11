@@ -20,13 +20,14 @@
  */
 package org.biojava.nbio.core.util;
 
-import java.io.BufferedInputStream;
+import org.junit.Assert;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import org.junit.Assert;
+
+import static org.junit.Assert.assertEquals;
 
 public class TestUncompressInputStream {
 
@@ -60,7 +61,7 @@ public class TestUncompressInputStream {
 		ByteArrayOutputStream obaos = new ByteArrayOutputStream();
 		try (BufferedInputStream oin = new BufferedInputStream(
 				this.getClass().getClassLoader()
-				.getResourceAsStream(ORIG_OF_BIGGER_TEST_FILE));) {
+				.getResourceAsStream(ORIG_OF_BIGGER_TEST_FILE))) {
 			byte[] buf = new byte[100000];
 			int len;
 			while ((len = oin.read(buf)) >= 0)

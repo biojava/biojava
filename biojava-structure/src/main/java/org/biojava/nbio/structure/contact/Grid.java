@@ -21,15 +21,16 @@
 package org.biojava.nbio.structure.contact;
 
 
+import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.Calc;
+
+import javax.vecmath.Point3d;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import javax.vecmath.Point3d;
-
-import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.Calc;
+import static java.util.Collections.EMPTY_LIST;
 
 
 /**
@@ -65,8 +66,8 @@ public class Grid {
 
 	private GridCell[][][] cells;
 
-	private double cutoff;
-	private int cellSize;
+	private final double cutoff;
+	private final int cellSize;
 
 	private Point3d[] iAtoms;
 	private Point3d[] jAtoms;
@@ -386,12 +387,12 @@ public class Grid {
 
 		if (jAtomObjects == null) {
 			for (Contact cont : list) {
-				contacts.add(new AtomContact(new Pair<Atom>(iAtomObjects[cont.getI()],iAtomObjects[cont.getJ()]),cont.getDistance()));
+				contacts.add(new AtomContact(new Pair<>(iAtomObjects[cont.getI()], iAtomObjects[cont.getJ()]),cont.getDistance()));
 			}
 
 		} else {
 			for (Contact cont : list) {
-				contacts.add(new AtomContact(new Pair<Atom>(iAtomObjects[cont.getI()],jAtomObjects[cont.getJ()]),cont.getDistance()));
+				contacts.add(new AtomContact(new Pair<>(iAtomObjects[cont.getI()], jAtomObjects[cont.getJ()]),cont.getDistance()));
 			}
 		}
 
@@ -418,11 +419,11 @@ public class Grid {
 	 */
 	public List<Contact> getIndicesContacts() {
 
-		List<Contact> list = new ArrayList<>();
-
 		// if the 2 sets of atoms are not overlapping they are too far away and no need to calculate anything
 		// this won't apply if there's only one set of atoms (iAtoms), where we would want all-to-all contacts
-		if (noOverlap) return list;
+		if (noOverlap) return EMPTY_LIST;
+
+		List<Contact> list = new ArrayList<>();
 
 
 		for (int xind=0;xind<cells.length;xind++) {
@@ -452,7 +453,7 @@ public class Grid {
 			}
 		}
 
-		return list;
+		return list.isEmpty() ? EMPTY_LIST : list;
 	}
 
 	/**
@@ -477,14 +478,16 @@ public class Grid {
 				if( x<0 || cells.length<=x) continue;
 				for (int y=yind-1;y<=yind+1;y++) {
 					if( y<0 || cells[x].length<=y ) continue;
-					for (int z=zind-1;z<=zind+1;z++) {
-						if( z<0 || cells[x][y].length<=z ) continue;
 
-						GridCell cell = cells[x][y][z];
+					GridCell[] cxy = cells[x][y];
+
+					for (int z=zind-1;z<=zind+1;z++) {
+						if( z<0 || cxy.length<=z ) continue;
+
 						// Check for contacts in this cell
-						if(cell != null && cell.hasContactToAtom(iAtoms, jAtoms, atom, cutoff)) {
+						GridCell cell = cxy[z];
+						if(cell != null && cell.hasContactToAtom(iAtoms, jAtoms, atom, cutoff))
 							return true;
-						}
 					}
 				}
 			}

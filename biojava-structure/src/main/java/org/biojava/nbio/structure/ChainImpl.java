@@ -24,18 +24,21 @@
 package org.biojava.nbio.structure;
 
 
-import org.biojava.nbio.structure.io.FileConvert;
-import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
-import org.biojava.nbio.structure.io.mmcif.chem.PolymerType;
-import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.core.sequence.ProteinSequence;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
 import org.biojava.nbio.core.sequence.template.Sequence;
+import org.biojava.nbio.structure.io.FileConvert;
+import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
+import org.biojava.nbio.structure.io.mmcif.chem.PolymerType;
+import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -66,7 +69,7 @@ public class ChainImpl implements Chain {
 	private EntityInfo entity;
 	private Structure parent;
 
-	private Map<String, Integer> pdbResnumMap;
+	private final Map<String, Integer> pdbResnumMap;
 	private String asymId; // the 'internal' chain identifier as used in mmCIF files
 
 
@@ -348,7 +351,7 @@ public class ChainImpl implements Chain {
 			throws StructureException {
 		// Short-circut for include all groups
 		if(start == null && end == null) {
-			return groups.toArray(new Group[groups.size()]);
+			return groups.toArray(new Group[0]);
 		}
 
 
@@ -415,7 +418,7 @@ public class ChainImpl implements Chain {
 
 		//not checking if the end has been found in this case...
 
-		return retlst.toArray(new Group[retlst.size()] );
+		return retlst.toArray(new Group[0]);
 	}
 
 
@@ -426,12 +429,16 @@ public class ChainImpl implements Chain {
 	@Override
 	public Group getGroupByPDB(ResidueNumber resNum) throws StructureException {
 		String pdbresnum = resNum.toString();
-		if ( pdbResnumMap.containsKey(pdbresnum)) {
-			Integer pos = pdbResnumMap.get(pdbresnum);
+		Integer pos = pdbResnumMap.get(pdbresnum);
+		if ( pos!=null ) {
 			return groups.get(pos);
 		} else {
 			throw new StructureException("unknown PDB residue number " + pdbresnum + " in chain " + authId);
 		}
+	}
+
+	public boolean hasGroupByPDB(ResidueNumber resNum)  {
+		return pdbResnumMap.containsKey(resNum);
 	}
 
 	/**

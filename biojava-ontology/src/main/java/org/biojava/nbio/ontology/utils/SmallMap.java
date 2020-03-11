@@ -222,7 +222,7 @@ public class SmallMap extends AbstractMap implements Serializable {
 	}
 
 	private class MapEntry implements Map.Entry {
-		private int offset;
+		private final int offset;
 
 		private MapEntry(int offset) {
 			this.offset = offset;

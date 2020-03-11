@@ -24,15 +24,18 @@
 
 package org.biojava.nbio.structure.scop;
 
+import org.biojava.nbio.core.util.FileDownloadUtils;
+import org.biojava.nbio.core.util.InputStreamProvider;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
-import org.biojava.nbio.core.util.FileDownloadUtils;
-import org.biojava.nbio.core.util.InputStreamProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -82,15 +85,15 @@ public class ScopInstallation implements LocalScopDatabase {
 
 	private String cacheLocation ;
 
-	private AtomicBoolean installedCla;
-	private AtomicBoolean installedDes;
-	private AtomicBoolean installedHie;
-	private AtomicBoolean installedCom;
+	private final AtomicBoolean installedCla;
+	private final AtomicBoolean installedDes;
+	private final AtomicBoolean installedHie;
+	private final AtomicBoolean installedCom;
 
 	private Map<Integer, List<String>> commentsMap;
-	private Map<String, List<ScopDomain>> domainMap;
-	private Map<Integer, ScopDescription> sunidMap;
-	private Map<Integer, ScopNode> scopTree;
+	private final Map<String, List<ScopDomain>> domainMap;
+	private final Map<Integer, ScopDescription> sunidMap;
+	private final Map<Integer, ScopNode> scopTree;
 
 
 	/**
@@ -112,12 +115,12 @@ public class ScopInstallation implements LocalScopDatabase {
 		installedCom.set(false);
 
 		scopVersion = DEFAULT_VERSION;
-		mirrors = new ArrayList<ScopMirror>(1);
+		mirrors = new ArrayList<>(1);
 
-		domainMap = new HashMap<String, List<ScopDomain>>();
+		domainMap = new HashMap<>();
 
-		sunidMap  = new HashMap<Integer, ScopDescription>();
-		scopTree  = new TreeMap<Integer, ScopNode>();
+		sunidMap  = new HashMap<>();
+		scopTree  = new TreeMap<>();
 
 	}
 
@@ -178,10 +181,9 @@ public class ScopInstallation implements LocalScopDatabase {
 			throw new ScopIOException(e);
 		}
 
-		List<ScopDescription> matches = new ArrayList<ScopDescription>();
-		for (Integer i : sunidMap.keySet()){
-			ScopDescription sc = sunidMap.get(i);
-			if ( sc.getCategory().equals(category))
+		List<ScopDescription> matches = new ArrayList<>();
+		for (ScopDescription sc : sunidMap.values()){
+            if ( sc.getCategory().equals(category))
 
 				try {
 					matches.add((ScopDescription)sc.clone());
@@ -205,12 +207,11 @@ public class ScopInstallation implements LocalScopDatabase {
 			throw new ScopIOException(e);
 		}
 
-		List<ScopDescription> matches = new ArrayList<ScopDescription>();
-		for (Integer i : sunidMap.keySet()){
-			ScopDescription sc = sunidMap.get(i);
+		List<ScopDescription> matches = new ArrayList<>();
+		for (ScopDescription sc : sunidMap.values()){
 
 
-			if( sc.getClassificationId().startsWith(query)){
+            if( sc.getClassificationId().startsWith(query)){
 				matches.add(sc);
 			}
 		}
@@ -227,7 +228,7 @@ public class ScopInstallation implements LocalScopDatabase {
 		ScopNode node = getScopNode(domain.getSunid());
 
 
-		List<ScopNode> tree = new ArrayList<ScopNode>();
+		List<ScopNode> tree = new ArrayList<>();
 		while (node != null){
 
 			//System.out.println("This node: sunid:" + node.getSunid() );
@@ -246,7 +247,7 @@ public class ScopInstallation implements LocalScopDatabase {
 	@Override
 	public List<ScopDomain> filterByDomainName(String query) {
 
-		List<ScopDomain > domains = new ArrayList<ScopDomain>();
+		List<ScopDomain > domains = new ArrayList<>();
 		if (query.length() <5){
 			return domains;
 		}
@@ -281,11 +282,10 @@ public class ScopInstallation implements LocalScopDatabase {
 		}
 
 		query = query.toLowerCase();
-		List<ScopDescription> matches = new ArrayList<ScopDescription>();
-		for (Integer i : sunidMap.keySet()){
-			ScopDescription sc = sunidMap.get(i);
+		List<ScopDescription> matches = new ArrayList<>();
+		for (ScopDescription sc : sunidMap.values()){
 
-			if( sc.getDescription().toLowerCase().startsWith(query)){
+            if( sc.getDescription().toLowerCase().startsWith(query)){
 				matches.add(sc);
 			}
 		}
@@ -321,7 +321,7 @@ public class ScopInstallation implements LocalScopDatabase {
 
 		List<ScopDomain> doms = domainMap.get(pdbId.toLowerCase());
 
-		List<ScopDomain> retdoms = new ArrayList<ScopDomain>();
+		List<ScopDomain> retdoms = new ArrayList<>();
 
 		if ( doms == null)
 			return retdoms;
@@ -428,7 +428,7 @@ public class ScopInstallation implements LocalScopDatabase {
 			String children = spl[2];
 			String[] childIds = children.split(",");
 
-			List<Integer> chis = new ArrayList<Integer>();
+			List<Integer> chis = new ArrayList<>();
 
 			for ( String id : childIds){
 				if ( id.equals("-"))
@@ -472,7 +472,7 @@ public class ScopInstallation implements LocalScopDatabase {
 
 	private void parseComments(BufferedReader buffer) throws IOException {
 
-		commentsMap = new HashMap<Integer,List<String>>();
+		commentsMap = new HashMap<>();
 
 		int counter = 0;
 		String line;
@@ -481,10 +481,10 @@ public class ScopInstallation implements LocalScopDatabase {
 			String[] parts = line.split("!");
 			int sunId = Integer.parseInt(parts[0].trim());
 			if (parts.length == 1) {
-				commentsMap.put(sunId, new ArrayList<String>(1));
+				commentsMap.put(sunId, new ArrayList<>(1));
 				continue;
 			}
-			List<String> comments = new ArrayList<String>(parts.length - 1);
+			List<String> comments = new ArrayList<>(parts.length - 1);
 			for (int i = 1; i < parts.length; i++) {
 				String trimmed = parts[i].trim();
 				if( !trimmed.isEmpty() ) {
@@ -499,7 +499,7 @@ public class ScopInstallation implements LocalScopDatabase {
 	}
 
 	private void parseDescriptions(BufferedReader buffer) throws IOException {
-		String line = null;
+		String line;
 
 		int counter = 0;
 		while ((line = buffer.readLine ()) != null) {
@@ -536,7 +536,7 @@ public class ScopInstallation implements LocalScopDatabase {
 
 
 	private void parseClassification(BufferedReader buffer) throws IOException {
-		String line = null;
+		String line;
 
 		int counter = 0;
 		while ((line = buffer.readLine ()) != null) {
@@ -594,7 +594,7 @@ public class ScopInstallation implements LocalScopDatabase {
 			if ( domainMap.containsKey(pdbId)){
 				domainList = domainMap.get(pdbId);
 			} else {
-				domainList = new ArrayList<ScopDomain>();
+				domainList = new ArrayList<>();
 				domainMap.put(pdbId,domainList);
 			}
 
@@ -637,7 +637,7 @@ public class ScopInstallation implements LocalScopDatabase {
 		return ranges;
 	}
 
-	protected void downloadClaFile() throws FileNotFoundException, IOException{
+	protected void downloadClaFile() throws IOException{
 		if(mirrors.size()<1) {
 			initScopURLs();
 		}
@@ -658,7 +658,7 @@ public class ScopInstallation implements LocalScopDatabase {
 		throw new IOException("Unable to download SCOP .cla file",exception);
 	}
 
-	protected void downloadDesFile() throws FileNotFoundException, IOException{
+	protected void downloadDesFile() throws IOException{
 		if(mirrors.size()<1) {
 			initScopURLs();
 		}
@@ -701,7 +701,7 @@ public class ScopInstallation implements LocalScopDatabase {
 
 	}
 
-	protected void downloadComFile() throws FileNotFoundException, IOException{
+	protected void downloadComFile() throws IOException{
 		if(mirrors.size()<1) {
 			initScopURLs();
 		}
@@ -836,10 +836,10 @@ public class ScopInstallation implements LocalScopDatabase {
 			throw new ScopIOException(e);
 		}
 
-		List<ScopDomain> domains = new ArrayList<ScopDomain>();
+		List<ScopDomain> domains = new ArrayList<>();
 
-		for (String pdbId: domainMap.keySet()){
-			for (ScopDomain d : domainMap.get(pdbId)){
+		for (List<ScopDomain> scopDomains : domainMap.values()){
+			for (ScopDomain d : scopDomains){
 				try {
 					if ( d.getPx() == sunid) {
 						domains.add((ScopDomain)d.clone());
@@ -874,7 +874,7 @@ public class ScopInstallation implements LocalScopDatabase {
 		} catch (IOException e) {
 			throw new ScopIOException(e);
 		}
-		if (!commentsMap.containsKey(sunid)) return new ArrayList<String>(1);
+		if (!commentsMap.containsKey(sunid)) return new ArrayList<>(1);
 		return commentsMap.get(sunid);
 	}
 

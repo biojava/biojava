@@ -20,11 +20,6 @@
  */
 package org.biojava.nbio.phylo;
 
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.LinkedHashMap;
-
 import org.biojava.nbio.core.sequence.MultipleSequenceAlignment;
 import org.biojava.nbio.core.sequence.ProteinSequence;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
@@ -33,11 +28,15 @@ import org.biojava.nbio.core.sequence.io.FastaReader;
 import org.biojava.nbio.core.sequence.io.FastaWriter;
 import org.biojava.nbio.core.sequence.io.GenericFastaHeaderParser;
 import org.biojava.nbio.core.sequence.io.ProteinSequenceCreator;
-import org.biojava.nbio.core.sequence.io.template.FastaHeaderFormatInterface;
 import org.forester.msa.Msa;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.LinkedHashMap;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test the BioJava-forester wrapper methods.
@@ -54,12 +53,11 @@ public class TestForesterWrapper {
 		InputStream inStream = TestForesterWrapper.class
 				.getResourceAsStream("/1u6d_symm.fasta");
 
-		FastaReader<ProteinSequence, AminoAcidCompound> fastaReader =
-				new FastaReader<ProteinSequence, AminoAcidCompound>(
-				inStream,
-				new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>(),
-				new ProteinSequenceCreator(AminoAcidCompoundSet
-						.getAminoAcidCompoundSet()));
+        FastaReader<ProteinSequence, AminoAcidCompound> fastaReader =
+				new FastaReader<>(
+						inStream,
+						new GenericFastaHeaderParser<>(),
+						new ProteinSequenceCreator(AminoAcidCompoundSet.aminoAcidCompoundSet));
 
 		LinkedHashMap<String, ProteinSequence> proteinSequences = fastaReader
 				.process();
@@ -67,7 +65,7 @@ public class TestForesterWrapper {
 		inStream.close();
 
 		MultipleSequenceAlignment<ProteinSequence, AminoAcidCompound> msa =
-				new MultipleSequenceAlignment<ProteinSequence, AminoAcidCompound>();
+				new MultipleSequenceAlignment<>();
 
 		String expected = "";
 		for (ProteinSequence proteinSequence : proteinSequences.values()) {
@@ -79,14 +77,9 @@ public class TestForesterWrapper {
 		// Convert the biojava MSA to a FASTA String
 		OutputStream os = new ByteArrayOutputStream();
 		FastaWriter<ProteinSequence, AminoAcidCompound> fastaW =
-				new FastaWriter<ProteinSequence, AminoAcidCompound>(os,
-				msa.getAlignedSequences(),
-				new FastaHeaderFormatInterface<ProteinSequence, AminoAcidCompound>() {
-					@Override
-					public String getHeader(ProteinSequence sequence) {
-						return sequence.getAccession().toString();
-					};
-				});
+				new FastaWriter<>(os,
+						msa.getAlignedSequences(),
+						sequence -> sequence.getAccession().toString());
 		fastaW.process();
 		String biojava = os.toString();
 
@@ -95,8 +88,8 @@ public class TestForesterWrapper {
 
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < fMsa.getNumberOfSequences(); i++) {
-			sb.append(">" + fMsa.getIdentifier(i) + System.lineSeparator());
-			sb.append(fMsa.getSequenceAsString(i) + System.lineSeparator());
+			sb.append(">").append(fMsa.getIdentifier(i)).append(System.lineSeparator());
+			sb.append(fMsa.getSequenceAsString(i)).append(System.lineSeparator());
 		}
 		String forester = sb.toString();
 

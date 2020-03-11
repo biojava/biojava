@@ -23,9 +23,9 @@ package org.biojava.nbio.structure.io;
 import org.biojava.nbio.alignment.Alignments;
 import org.biojava.nbio.alignment.Alignments.PairwiseSequenceAlignerType;
 import org.biojava.nbio.alignment.SimpleGapPenalty;
-import org.biojava.nbio.core.alignment.matrices.SubstitutionMatrixHelper;
 import org.biojava.nbio.alignment.template.GapPenalty;
 import org.biojava.nbio.alignment.template.PairwiseSequenceAligner;
+import org.biojava.nbio.core.alignment.matrices.SubstitutionMatrixHelper;
 import org.biojava.nbio.core.alignment.template.SequencePair;
 import org.biojava.nbio.core.alignment.template.SubstitutionMatrix;
 import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
@@ -38,15 +38,7 @@ import org.biojava.nbio.structure.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * Heuristical finding of Entities (called Compounds in legacy PDB format)
@@ -102,7 +94,7 @@ public class EntityFinder {
 	 */
 	private static List<EntityInfo> findUniqueEntities(TreeMap<String,EntityInfo> chainIds2entities) {
 
-		List<EntityInfo> list = new ArrayList<EntityInfo>();
+		List<EntityInfo> list = new ArrayList<>();
 
 		for (EntityInfo cluster:chainIds2entities.values()) {
 			boolean present = false;
@@ -131,12 +123,7 @@ public class EntityFinder {
 		// let's find first the max entity id to assign entity ids to the newly found entities
 		int maxMolId = 0;
 		if (!entities.isEmpty()) {
-			maxMolId = Collections.max(entities, new Comparator<EntityInfo>() {
-				@Override
-				public int compare(EntityInfo o1, EntityInfo o2) {
-					return new Integer(o1.getMolId()).compareTo(o2.getMolId());
-				}
-			}).getMolId();
+			maxMolId = Collections.max(entities, Comparator.comparingInt(EntityInfo::getMolId)).getMolId();
 		}
 		// we go one over the max
 		int molId = maxMolId + 1;
@@ -200,7 +187,7 @@ public class EntityFinder {
 		// different kind of chain: we won't try to align them
 		if (isC1prot != isC2prot ) return false;
 
-		List<Group> c1AtomGroups = null;
+		List<Group> c1AtomGroups;
 		if (isC1prot) {
 			c1AtomGroups = c1.getAtomGroups(GroupType.AMINOACID);
 		}
@@ -240,11 +227,11 @@ public class EntityFinder {
 
 
 
-		TreeMap<String, EntityInfo> chainIds2entities = new TreeMap<String,EntityInfo>();
+		TreeMap<String, EntityInfo> chainIds2entities = new TreeMap<>();
 
 		if (polyModels.isEmpty()) return chainIds2entities;
 
-		Set<Integer> polyChainIndices = new TreeSet<Integer>();
+		Set<Integer> polyChainIndices = new TreeSet<>();
 		for (int i=0;i<polyModels.get(0).size();i++) {
 			polyChainIndices.add(i);
 		}
@@ -261,16 +248,16 @@ public class EntityFinder {
 					Chain c1 = polyModels.get(0).get(i);
 					Chain c2 = polyModels.get(0).get(j);
 
-					Map<Integer,Integer> positionIndex1 = new HashMap<Integer, Integer>();
-					Map<Integer,Integer> positionIndex2 = new HashMap<Integer, Integer>();
+					Map<Integer,Integer> positionIndex1 = new HashMap<>();
+					Map<Integer,Integer> positionIndex2 = new HashMap<>();
 					// here we use false, which means that X will be used for unknown compounds
 					String str1 = SeqRes2AtomAligner.getFullAtomSequence(c1.getAtomGroups(), positionIndex1, false);
 					String str2 = SeqRes2AtomAligner.getFullAtomSequence(c2.getAtomGroups(), positionIndex2, false);
 
-					int seq1Length = 0;
-					int seq2Length = 0;
+					int seq1Length;
+					int seq2Length;
 
-					SequencePair<?,?> pair = null;
+					SequencePair<?,?> pair;
 					if (isProteinSequence(str1) && isProteinSequence(str2)) {
 						ProteinSequence s1 = getProteinSequence(str1);
 						ProteinSequence s2 = getProteinSequence(str2);

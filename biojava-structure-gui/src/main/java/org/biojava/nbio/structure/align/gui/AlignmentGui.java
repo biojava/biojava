@@ -22,23 +22,6 @@
  */
 package org.biojava.nbio.structure.align.gui;
 
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.io.File;
-import java.io.IOException;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.Box;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenuBar;
-import javax.swing.JOptionPane;
-import javax.swing.JProgressBar;
-import javax.swing.JTabbedPane;
-
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.StructureAlignment;
@@ -51,6 +34,12 @@ import org.biojava.nbio.structure.align.webstart.WebStartMain;
 import org.biojava.nbio.structure.gui.util.PDBUploadPanel;
 import org.biojava.nbio.structure.gui.util.ScopSelectPanel;
 import org.biojava.nbio.structure.gui.util.StructurePairSelector;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.io.File;
+import java.io.IOException;
 
 /** A JFrame that allows to trigger a pairwise structure alignment,
  * either from files in a directory,
@@ -65,24 +54,24 @@ import org.biojava.nbio.structure.gui.util.StructurePairSelector;
  */
 public class AlignmentGui extends JFrame{
 
-	private final static long serialVersionUID =0l;
+	private final static long serialVersionUID = 0L;
 
 	StructureAlignment algorithm;
 
 	JButton abortB;
 
-	SelectPDBPanel  tab1 ;
-	PDBUploadPanel  tab2;
-	ScopSelectPanel tab3;
+	final SelectPDBPanel  tab1 ;
+	final PDBUploadPanel  tab2;
+	final ScopSelectPanel tab3;
 
 	Thread thread;
 	AlignmentCalculationRunnable alicalc;
-	JTabbedPane masterPane;
-	JTabbedPane tabPane;
+	final JTabbedPane masterPane;
+	final JTabbedPane tabPane;
 	JProgressBar progress;
 
 
-	private DBSearchGUI dbsearch;
+	private final DBSearchGUI dbsearch;
 
 
 	public static void main(String[] args){
@@ -93,7 +82,7 @@ public class AlignmentGui extends JFrame{
 
 	static final ResourceManager resourceManager = ResourceManager.getResourceManager("ce");
 
-	private static final String MAIN_TITLE = "Pairwise Structure Alignment - Main - V." + resourceManager.getString("ce.version");;
+	private static final String MAIN_TITLE = "Pairwise Structure Alignment - Main - V." + resourceManager.getString("ce.version");
 
 	private static final AlignmentGui me = new AlignmentGui();
 
@@ -208,7 +197,7 @@ public class AlignmentGui extends JFrame{
 		algorithmList.setSelectedIndex(0);
 
 		Action actionAlgorithm = new AbstractAction("Algorithm") {
-			public static final long serialVersionUID = 0l;
+			public static final long serialVersionUID = 0L;
 			// This method is called when the button is pressed
 			@Override
 			public void actionPerformed(ActionEvent evt) {
@@ -226,7 +215,7 @@ public class AlignmentGui extends JFrame{
 
 
 		Action paramAction = new AbstractAction("Parameters") {
-			public static final long serialVersionUID = 0l;
+			public static final long serialVersionUID = 0L;
 			// This method is called when the button is pressed
 			@Override
 			public void actionPerformed(ActionEvent evt) {
@@ -269,7 +258,7 @@ public class AlignmentGui extends JFrame{
 		//        hBox42.add(Box.createGlue());
 		//        vBox.add(hBox42);
 		Action action1 = new AbstractAction("Align") {
-			public static final long serialVersionUID = 0l;
+			public static final long serialVersionUID = 0L;
 			// This method is called when the button is pressed
 			@Override
 			public void actionPerformed(ActionEvent evt) {
@@ -290,7 +279,7 @@ public class AlignmentGui extends JFrame{
 		JButton submitB = new JButton(action1);
 
 		Action action3 = new AbstractAction("Abort") {
-			public static final long serialVersionUID = 0l;
+			public static final long serialVersionUID = 0L;
 			// This method is called when the button is pressed
 			@Override
 			public void actionPerformed(ActionEvent evt) {
@@ -304,7 +293,7 @@ public class AlignmentGui extends JFrame{
 		abortB.setEnabled(false);
 
 		Action action2 = new AbstractAction("Exit") {
-			public static final long serialVersionUID = 0l;
+			public static final long serialVersionUID = 0L;
 			// This method is called when the button is pressed
 			@Override
 			public void actionPerformed(ActionEvent evt) {
@@ -377,8 +366,8 @@ public class AlignmentGui extends JFrame{
 				return;
 			}
 
-			String name1 = "custom1";
-			String name2 = "custom2";
+			String name1;
+			String name2;
 
 			if  ( pos == 0){
 				name1 = tab1.getName1().getIdentifier();
@@ -400,9 +389,7 @@ public class AlignmentGui extends JFrame{
 			progress.setIndeterminate(true);
 			ProgressThreadDrawer drawer = new ProgressThreadDrawer(progress);
 			drawer.start();
-		} catch (StructureException e){
-			JOptionPane.showMessageDialog(null,"Could not align structures. Exception: " + e.getMessage());
-		} catch (IOException e) {
+		} catch (StructureException | IOException e){
 			JOptionPane.showMessageDialog(null,"Could not align structures. Exception: " + e.getMessage());
 		}
 
@@ -449,14 +436,14 @@ public class AlignmentGui extends JFrame{
 		}
 
 		String name1 = s.getName();
-		if ( name1 == null || name1.equals(""))
+		if ( name1 == null || name1.isEmpty())
 			name1 = s.getPDBCode();
 
 
 
 		System.out.println("name1 in alig gui:" + name1);
 		String file = dbsearch.getOutFileLocation();
-		if ( file == null || file.equals("") ){
+		if ( file == null || file.isEmpty()){
 			JOptionPane.showMessageDialog(null,"Please select a directory to contain the DB search results.");
 			return;
 		}
@@ -550,7 +537,7 @@ public class AlignmentGui extends JFrame{
 class ProgressThreadDrawer extends Thread {
 
 	JProgressBar progress;
-	static int interval = 300;
+	static final int interval = 300;
 
 	public ProgressThreadDrawer(JProgressBar progress) {
 		this.progress = progress;

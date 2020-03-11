@@ -20,14 +20,7 @@
  */
 package org.biojava.nbio.genome.io.fastq;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-
+import java.io.*;
 import java.util.Arrays;
 
 /**
@@ -100,27 +93,11 @@ abstract class AbstractFastqWriter
 		{
 			throw new IllegalArgumentException("fastq must not be null");
 		}
-		Writer writer = null;
-		try
-		{
-			writer = new BufferedWriter(new FileWriter(file));
-			append(writer, fastq);
-		}
-		finally
-		{
-			if (writer != null)
-			{
-				try
-				{
-					writer.close();
-				}
-				catch (IOException e)
-				{
-					// ignore
-				}
-			}
-		}
-	}
+        try (Writer writer = new BufferedWriter(new FileWriter(file))) {
+            append(writer, fastq);
+        }
+        // ignore
+    }
 
 	@Override
 	public final void write(final OutputStream outputStream, final Fastq... fastq) throws IOException

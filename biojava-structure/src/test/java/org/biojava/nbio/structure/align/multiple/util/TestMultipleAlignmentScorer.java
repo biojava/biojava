@@ -20,31 +20,16 @@
  */
 package org.biojava.nbio.structure.align.multiple.util;
 
+import org.biojava.nbio.structure.*;
+import org.biojava.nbio.structure.align.multiple.*;
+import org.junit.Test;
+
+import javax.vecmath.Matrix4d;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.vecmath.Matrix4d;
-
-import org.biojava.nbio.structure.AminoAcidImpl;
-import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.AtomImpl;
-import org.biojava.nbio.structure.Chain;
-import org.biojava.nbio.structure.ChainImpl;
-import org.biojava.nbio.structure.Group;
-import org.biojava.nbio.structure.ResidueNumber;
-import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.align.multiple.Block;
-import org.biojava.nbio.structure.align.multiple.BlockImpl;
-import org.biojava.nbio.structure.align.multiple.BlockSet;
-import org.biojava.nbio.structure.align.multiple.BlockSetImpl;
-import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
-import org.biojava.nbio.structure.align.multiple.MultipleAlignmentImpl;
-import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
-import org.biojava.nbio.structure.align.multiple.util.ReferenceSuperimposer;
-import org.junit.Test;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test the correctness of various Score calculations for
@@ -62,7 +47,7 @@ import static org.junit.Assert.*;
 public class TestMultipleAlignmentScorer {
 
 	@Test
-	public void testRefRMSD() throws Exception{
+	public void testRefRMSD() {
 
 		//Identity Test: RefRMSD has to be equal to 0.0
 		MultipleAlignment identMSA = identityMSTA();
@@ -81,7 +66,7 @@ public class TestMultipleAlignmentScorer {
 	}
 
 	@Test
-	public void testRMSD() throws Exception{
+	public void testRMSD() {
 
 		//Identity Test: RMSD has to be equal to 0.0
 		MultipleAlignment identMSA = identityMSTA();
@@ -138,7 +123,7 @@ public class TestMultipleAlignmentScorer {
 	}
 
 	@Test
-	public void testMCScore() throws Exception {
+	public void testMCScore() {
 
 		//Identity Test: MultipleMC-Score has to be equal to 576.21
 		MultipleAlignment identMSA = identityMSTA();
@@ -161,18 +146,17 @@ public class TestMultipleAlignmentScorer {
 	 * the same Atoms and perfectly aligned, so that TM-score = 1
 	 * and RMSD = 0.
 	 * @return MultipleAlignment identity
-	 * @throws StructureException
-	 */
-	private MultipleAlignment identityMSTA() throws StructureException {
+     */
+	private MultipleAlignment identityMSTA() {
 
 		//Generate the identical Atom arrays
-		List<Atom[]> atomArrays = new ArrayList<Atom[]>(20);
+		List<Atom[]> atomArrays = new ArrayList<>(20);
 		for (int i=0; i<3; i++) atomArrays.add(makeDummyCA(20));
 
 		//Generate the identity alignment (1-1-1,2-2-2,etc)
-		List<List<Integer>> alnRes = new ArrayList<List<Integer>>(3);
+		List<List<Integer>> alnRes = new ArrayList<>(3);
 		for (int str=0; str<3; str++){
-			List<Integer> chain = new ArrayList<Integer>(20);
+			List<Integer> chain = new ArrayList<>(20);
 			for (int res=0; res<20; res++) chain.add(res);
 			alnRes.add(chain);
 		}
@@ -196,18 +180,17 @@ public class TestMultipleAlignmentScorer {
 	 * Atoms but incorreclty aligned (offset of 1 position) without gaps.
 	 *
 	 * @return MultipleAlignment simple MSTA
-	 * @throws StructureException
 	 */
-	private MultipleAlignment simpleMSTA() throws StructureException{
+	private MultipleAlignment simpleMSTA() {
 
 		//Generate three identical Atom arrays
-		List<Atom[]> atomArrays = new ArrayList<Atom[]>(52);
+		List<Atom[]> atomArrays = new ArrayList<>(52);
 		for (int i=0; i<3; i++) atomArrays.add(makeDummyCA(52));
 
 		//Generate the incorrect alignment (0-1-2,1-2-3,etc)
-		List<List<Integer>> alnRes = new ArrayList<List<Integer>>(3);
+		List<List<Integer>> alnRes = new ArrayList<>(3);
 		for (int str=0; str<3; str++){
-			List<Integer> chain = new ArrayList<Integer>(50);
+			List<Integer> chain = new ArrayList<>(50);
 			for (int res=0; res<50; res++) chain.add(res+str);
 			alnRes.add(chain);
 		}
@@ -232,16 +215,15 @@ public class TestMultipleAlignmentScorer {
 	 * same Atoms but incorreclty aligned with gaps.
 	 *
 	 * @return MultipleAlignment gapped MSTA
-	 * @throws StructureException
 	 */
-	private MultipleAlignment gappedMSTA() throws StructureException{
+	private MultipleAlignment gappedMSTA() {
 
 		//Generate three identical Atom arrays
-		List<Atom[]> atomArrays = new ArrayList<Atom[]>(30);
+		List<Atom[]> atomArrays = new ArrayList<>(30);
 		for (int i=0; i<3; i++) atomArrays.add(makeDummyCA(30));
 
 		//Generate alignment with nulls and some missalignments
-		List<List<Integer>> alnRes = new ArrayList<List<Integer>>(3);
+		List<List<Integer>> alnRes = new ArrayList<>(3);
 		List<Integer> chain1 = Arrays.asList(
 				1, 2, 	 3, 5, 8, 10, 12, 	 15, 17,  19, 22, null, 24, 27);
 		List<Integer> chain2 = Arrays.asList(
@@ -282,7 +264,7 @@ public class TestMultipleAlignmentScorer {
 			ca1[i].setCoords(new double[] { i, 0, 0 });
 			Group aa = new AminoAcidImpl();
 			aa.setPDBName("GLY");
-			aa.setResidueNumber( ResidueNumber.fromString(i+""));
+			aa.setResidueNumber( ResidueNumber.fromString(String.valueOf(i)));
 			aa.addAtom(ca1[i]);
 			chain1.addGroup(aa);
 		}

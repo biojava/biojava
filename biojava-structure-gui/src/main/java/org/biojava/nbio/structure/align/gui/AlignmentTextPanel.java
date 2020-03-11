@@ -33,7 +33,7 @@ public class AlignmentTextPanel extends JPrintPanel {
 	 *
 	 */
 	private static final long serialVersionUID = 5092386365924879073L;
-	JEditorPane tp;
+	final JEditorPane tp;
 
 	public AlignmentTextPanel(){
 		super();

@@ -30,12 +30,12 @@ public class CutDomain {
 
 	int ndom;
 
-	List<Domain> domains;
+	final List<Domain> domains;
 
-	public static boolean verbose = true;
+	public static final boolean verbose = true;
 
-	int[][] dist;
-	Atom[] ca;
+	final int[][] dist;
+	final Atom[] ca;
 
 	public CutDomain(Atom[]ca, PDPDistanceMatrix pdpMatrix){
 		dist = pdpMatrix.getDist();
@@ -43,7 +43,7 @@ public class CutDomain {
 
 		ndom = 0;
 
-		domains = new ArrayList<Domain>();
+		domains = new ArrayList<>();
 
 	}
 
@@ -67,9 +67,9 @@ public class CutDomain {
 		val.first_cut = true;
 
 
-		Cut cut = new Cut();
+//		Cut cut = new Cut();
 
-		site = cut.cut(ca,dom,val, dist, pdpMatrix);
+		site = Cut.cut(ca,dom,val, dist, pdpMatrix);
 		if ( verbose )
 		System.out.println("  S ... site " + dom + " : site: " + site + " val : " + val);
 

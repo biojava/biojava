@@ -20,23 +20,15 @@
  */
 package org.biojava.nbio.structure.io.mmtf;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.Bond;
-import org.biojava.nbio.structure.Chain;
-import org.biojava.nbio.structure.ChainImpl;
-import org.biojava.nbio.structure.EntityInfo;
-import org.biojava.nbio.structure.Group;
-import org.biojava.nbio.structure.PDBCrystallographicInfo;
-import org.biojava.nbio.structure.PDBHeader;
-import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.biojava.nbio.structure.quaternary.BioAssemblyInfo;
 import org.rcsb.mmtf.api.StructureAdapterInterface;
 import org.rcsb.mmtf.dataholders.MmtfStructure;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * Class to take Biojava structure data and covert to the DataApi for encoding.
@@ -48,7 +40,7 @@ import org.rcsb.mmtf.dataholders.MmtfStructure;
  */
 public class MmtfStructureWriter {
 
-	private StructureAdapterInterface mmtfDecoderInterface;
+	private final StructureAdapterInterface mmtfDecoderInterface;
 
 	/**
 	 * Pass data from Biojava structure  to another generic output type. Loops through the data
@@ -102,14 +94,14 @@ public class MmtfStructureWriter {
 					if (chemComp.getOne_letter_code().length()==1){
 						singleLetterCode = chemComp.getOne_letter_code().charAt(0);
 					}
-					mmtfDecoderInterface.setGroupInfo(group.getPDBName(), group.getResidueNumber().getSeqNum(), insCode.charValue(),
+					mmtfDecoderInterface.setGroupInfo(group.getPDBName(), group.getResidueNumber().getSeqNum(), insCode,
 							chemComp.getType().toUpperCase(), atomsInGroup.size(), MmtfUtils.getNumBondsInGroup(atomsInGroup), singleLetterCode,
 							sequenceGroups.indexOf(group), MmtfUtils.getSecStructType(group));
 					for (Atom atom : atomsInGroup){
 						char altLoc = MmtfStructure.UNAVAILABLE_CHAR_VALUE;
 						if(atom.getAltLoc()!=null){
-							if(atom.getAltLoc().charValue()!=' '){
-								altLoc=atom.getAltLoc().charValue();
+							if(atom.getAltLoc() !=' '){
+								altLoc= atom.getAltLoc();
 							}
 						}
 						mmtfDecoderInterface.setAtomInfo(atom.getName(), atom.getPDBserial(), altLoc, (float) atom.getX(),
@@ -138,9 +130,9 @@ public class MmtfStructureWriter {
 			// Now set the bonding information.
 			Atom other = bond.getOther(atom);
 			// If both atoms are in the group
-			if (atomsInGroup.indexOf(other)!=-1){
-				Integer firstBondIndex = atomsInGroup.indexOf(atom);
-				Integer secondBondIndex = atomsInGroup.indexOf(other);
+			if (atomsInGroup.contains(other)){
+				int firstBondIndex = atomsInGroup.indexOf(atom);
+				int secondBondIndex = atomsInGroup.indexOf(other);
 				// Don't add the same bond twice
 				if(firstBondIndex>secondBondIndex){
 					int bondOrder = bond.getBondOrder();
@@ -149,8 +141,8 @@ public class MmtfStructureWriter {
 			}
 			// Otherwise it's an inter group bond - so add it here
 			else {
-				Integer firstBondIndex = allAtoms.indexOf(atom);
-				Integer secondBondIndex = allAtoms.indexOf(other);
+				int firstBondIndex = allAtoms.indexOf(atom);
+				int secondBondIndex = allAtoms.indexOf(other);
 				if(firstBondIndex>secondBondIndex){
 					// Don't add the same bond twice
 					int bondOrder = bond.getBondOrder();

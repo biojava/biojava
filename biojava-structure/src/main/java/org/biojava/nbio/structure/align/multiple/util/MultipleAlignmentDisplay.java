@@ -26,7 +26,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.vecmath.Matrix4d;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -69,7 +68,7 @@ public class MultipleAlignmentDisplay {
 								+ atomArrays.get(i).length);
 		}
 
-		List<Atom[]> rotatedAtoms = new ArrayList<Atom[]>();
+		List<Atom[]> rotatedAtoms = new ArrayList<>();
 
 		// TODO implement independent BlockSet superposition of the structure
 		List<Matrix4d> transf = multAln.getBlockSet(0).getTransformations();

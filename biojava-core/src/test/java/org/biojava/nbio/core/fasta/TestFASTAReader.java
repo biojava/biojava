@@ -20,12 +20,6 @@
  */
 package org.biojava.nbio.core.fasta;
 
-import java.io.InputStream;
-import java.util.LinkedHashMap;
-
-import static org.junit.Assert.* ;
-import static org.hamcrest.CoreMatchers.* ;
-
 import org.biojava.nbio.core.sequence.ProteinSequence;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
@@ -35,6 +29,12 @@ import org.biojava.nbio.core.sequence.io.ProteinSequenceCreator;
 import org.biojava.nbio.core.sequence.io.util.ClasspathResource;
 import org.junit.Test;
 
+import java.io.InputStream;
+import java.util.LinkedHashMap;
+
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertThat;
+
 
 public class TestFASTAReader {
 
@@ -42,10 +42,10 @@ public class TestFASTAReader {
 		ClasspathResource r = new ClasspathResource(path);
 		FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = null ;
 		try( InputStream inStream = r.getInputStream() ) {
-			fastaReader = new FastaReader<ProteinSequence, AminoAcidCompound>(
+            fastaReader = new FastaReader<>(
 					inStream,
-					new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>(),
-					new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
+					new GenericFastaHeaderParser<>(),
+					new ProteinSequenceCreator(AminoAcidCompoundSet.aminoAcidCompoundSet));
 			LinkedHashMap<String, ProteinSequence> sequences = fastaReader.process();
 			assertThat(sequences,is(notNullValue()));
 			assertThat(sequences.size(),is(1));
@@ -82,10 +82,10 @@ public class TestFASTAReader {
 		ClasspathResource r = new ClasspathResource(path);
 		FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = null ;
 		try( InputStream inStream = r.getInputStream() ) {
-			fastaReader = new FastaReader<ProteinSequence, AminoAcidCompound>(
+            fastaReader = new FastaReader<>(
 					inStream,
-					new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>(),
-					new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
+					new GenericFastaHeaderParser<>(),
+					new ProteinSequenceCreator(AminoAcidCompoundSet.aminoAcidCompoundSet));
 			LinkedHashMap<String,ProteinSequence> out1 = fastaReader.process(1);
 			assertThat(out1,is(notNullValue()));
 			assertThat(out1.size(),is(1));
@@ -124,10 +124,10 @@ public class TestFASTAReader {
 		ClasspathResource r = new ClasspathResource(path);
 		FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = null ;
 		try( InputStream inStream = r.getInputStream() ) {
-			fastaReader = new FastaReader<ProteinSequence, AminoAcidCompound>(
+            fastaReader = new FastaReader<>(
 					inStream,
-					new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>(),
-					new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
+					new GenericFastaHeaderParser<>(),
+					new ProteinSequenceCreator(AminoAcidCompoundSet.aminoAcidCompoundSet));
 			LinkedHashMap<String,ProteinSequence> out1 = fastaReader.process(1);
 			assertThat(out1,is(notNullValue()));
 			assertThat(out1.size(),is(1));

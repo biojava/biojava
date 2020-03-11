@@ -23,20 +23,14 @@
 
 package org.biojava.nbio.structure;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.NavigableMap;
-import java.util.TreeMap;
-
 import org.biojava.nbio.structure.io.mmcif.chem.PolymerType;
 import org.biojava.nbio.structure.io.mmcif.chem.ResidueType;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.Serializable;
+import java.util.*;
 
 /**
  * A map from {@link ResidueNumber ResidueNumbers} to ATOM record positions in a PDB file.
@@ -61,54 +55,46 @@ public class AtomPositionMap {
 
 	private static final Logger logger = LoggerFactory.getLogger(AtomPositionMap.class);
 
-	private HashMap<ResidueNumber, Integer> hashMap;
-	private TreeMap<ResidueNumber, Integer> treeMap;
+	private final HashMap<ResidueNumber, Integer> hashMap;
+	private final TreeMap<ResidueNumber, Integer> treeMap;
 
 
 	/**
 	 * Used as a Predicate to indicate whether a particular Atom should be mapped
 	 */
-	public static interface GroupMatcher {
+	public interface GroupMatcher {
 		boolean matches(Group group);
 	}
 
 	/**
 	 * Matches CA atoms of protein groups
 	 */
-	public static final GroupMatcher AMINO_ACID_MATCHER = new GroupMatcher() {
-		@Override
-		public boolean matches(Group group) {
-			if( group == null )
-				return false;
-			ChemComp chem = group.getChemComp();
-			if(chem == null)
-				return false;
-			// Get polymer type
-			PolymerType polyType = chem.getPolymerType();
-			if( polyType == null) {
-				ResidueType type = chem.getResidueType();
-				if(type != null ) {
-					polyType = type.getPolymerType();
-				}
+	public static final GroupMatcher AMINO_ACID_MATCHER = group -> {
+		if( group == null )
+			return false;
+		ChemComp chem = group.getChemComp();
+		if(chem == null)
+			return false;
+		// Get polymer type
+		PolymerType polyType = chem.getPolymerType();
+		if( polyType == null) {
+			ResidueType type = chem.getResidueType();
+			if(type != null ) {
+				polyType = type.getPolymerType();
 			}
-			if( polyType == null ) {
-				return false;
-			}
-
-			return PolymerType.PROTEIN_ONLY.contains(polyType)
-					&& group.hasAtom(StructureTools.CA_ATOM_NAME);
 		}
+		if( polyType == null ) {
+			return false;
+		}
+
+		return PolymerType.PROTEIN_ONLY.contains(polyType)
+				&& group.hasAtom(StructureTools.CA_ATOM_NAME);
 	};
 
 	/**
 	 * Matches all atoms
 	 */
-	public static final GroupMatcher ANYTHING_MATCHER = new GroupMatcher() {
-		@Override
-		public boolean matches(Group group) {
-			return true;
-		}
-	};
+	public static final GroupMatcher ANYTHING_MATCHER = group -> true;
 
 	/**
 	 * A map that is sorted by its values. Used for the treemap
@@ -123,7 +109,7 @@ public class AtomPositionMap {
 	private static class ValueComparator<T, V extends Comparable<V>> implements Comparator<T>, Serializable {
 	private static final long serialVersionUID = 1;
 
-		private Map<T, V> map;
+		private final Map<T, V> map;
 
 		public ValueComparator(Map<T, V> map) {
 			this.map = map;
@@ -153,18 +139,18 @@ public class AtomPositionMap {
 	 * @param atoms
 	 */
 	public AtomPositionMap(Atom[] atoms, GroupMatcher matcher) {
-		hashMap = new HashMap<ResidueNumber, Integer>();
+		hashMap = new HashMap<>();
 		for (int i = 0; i < atoms.length; i++) {
 			Group group = atoms[i].getGroup();
 			ResidueNumber rn = group.getResidueNumber();
 			if (matcher.matches(group)) {
-				if (!hashMap.containsKey(rn)) {
-					hashMap.put(rn, i);
-				}
+				//if (!hashMap.containsKey(rn)) {
+				hashMap.putIfAbsent(rn, i);
+				//}
 			}
 		}
-		Comparator<ResidueNumber> vc = new ValueComparator<ResidueNumber, Integer>(hashMap);
-		treeMap = new TreeMap<ResidueNumber, Integer>(vc);
+		Comparator<ResidueNumber> vc = new ValueComparator<>(hashMap);
+		treeMap = new TreeMap<>(vc);
 		treeMap.putAll(hashMap);
 	}
 
@@ -219,11 +205,7 @@ public class AtomPositionMap {
 	 */
 	public int getLengthDirectional(int positionStart, int positionEnd, String startingChain) {
 		int count = getLength(positionStart,positionEnd,startingChain);
-		if(positionStart <= positionEnd) {
-			return count;
-		} else {
-			return -count;
-		}
+		return positionStart <= positionEnd ? count : -count;
 	}
 
 	/**
@@ -301,8 +283,9 @@ public class AtomPositionMap {
 	public ResidueNumber getFirst(String chainId) {
 		Map.Entry<ResidueNumber,Integer> entry = treeMap.firstEntry();
 		while (true) {
-			if (entry.getKey().getChainName().equals(chainId)) return entry.getKey();
-			entry = treeMap.higherEntry(entry.getKey());
+			ResidueNumber k = entry.getKey();
+			if (k.getChainName().equals(chainId)) return k;
+			entry = treeMap.higherEntry(k);
 			if (entry == null) return null;
 		}
 	}
@@ -314,8 +297,9 @@ public class AtomPositionMap {
 	public ResidueNumber getLast(String chainId) {
 		Map.Entry<ResidueNumber,Integer> entry = treeMap.lastEntry();
 		while (true) {
-			if (entry.getKey().getChainName().equals(chainId)) return entry.getKey();
-			entry = treeMap.lowerEntry(entry.getKey());
+			ResidueNumber k = entry.getKey();
+			if (k.getChainName().equals(chainId)) return k;
+			entry = treeMap.lowerEntry(k);
 			if (entry == null) return null;
 		}
 	}
@@ -341,20 +325,24 @@ public class AtomPositionMap {
 		String currentChain = "";
 		ResidueNumber first = null;
 		ResidueNumber prev = null;
-		List<ResidueRangeAndLength> ranges = new ArrayList<ResidueRangeAndLength>();
+		List<ResidueRangeAndLength> ranges = new ArrayList<>();
 		for (ResidueNumber rn : treeMap.keySet()) {
 			if (!rn.getChainName().equals(currentChain)) {
 				if (first != null) {
-					ResidueRangeAndLength newRange = new ResidueRangeAndLength(currentChain, first, prev, this.getLength(first, prev));
-					ranges.add(newRange);
+					ranges.add(new ResidueRangeAndLength(
+							currentChain, first, prev,
+							getLength(first, prev)));
 				}
 				first = rn;
 			}
 			prev = rn;
 			currentChain = rn.getChainName();
 		}
-		ResidueRangeAndLength newRange = new ResidueRangeAndLength(currentChain, first, prev, this.getLength(first, prev));
-		ranges.add(newRange);
+
+		ranges.add(new ResidueRangeAndLength(
+				currentChain, first, prev,
+				getLength(first, prev)));
+
 		return ranges;
 	}
 

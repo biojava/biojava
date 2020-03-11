@@ -42,7 +42,7 @@ public class KaplanMeierFigure extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 
-	ArrayList<String> title = new ArrayList<String>();
+	ArrayList<String> title = new ArrayList<>();
 	/**
 	 *
 	 */
@@ -55,7 +55,7 @@ public class KaplanMeierFigure extends JPanel {
 	 *
 	 */
 	private int left;
-	private int yaxisLabel = 20;
+	private final int yaxisLabel = 20;
 	/**
 	 *
 	 */
@@ -65,16 +65,16 @@ public class KaplanMeierFigure extends JPanel {
 	int labelWidth;
 	double minTime = 0.0;
 	double maxTime = 10.0;
-	double minPercentage = 0.0;
-	double maxPercentage = 1.0;
+	final double minPercentage = 0.0;
+	final double maxPercentage = 1.0;
 	FontMetrics fm;
 	KMFigureInfo kmfi = new KMFigureInfo();
-	LinkedHashMap<String, ArrayList<CensorStatus>> survivalData = new LinkedHashMap<String, ArrayList<CensorStatus>>();
-	ArrayList<String> lineInfoList = new ArrayList<String>();
+	LinkedHashMap<String, ArrayList<CensorStatus>> survivalData = new LinkedHashMap<>();
+	ArrayList<String> lineInfoList = new ArrayList<>();
 	SurvFitInfo sfi = new SurvFitInfo();
 	private String fileName = "";
-	private ArrayList<Double> xAxisTimeValues = new ArrayList<Double>();
-	private ArrayList<Integer> xAxisTimeCoordinates = new ArrayList<Integer>();
+	private final ArrayList<Double> xAxisTimeValues = new ArrayList<>();
+	private final ArrayList<Integer> xAxisTimeCoordinates = new ArrayList<>();
 
 	/**
 	 *
@@ -91,7 +91,7 @@ public class KaplanMeierFigure extends JPanel {
 	 * @return
 	 */
 	public ArrayList<String> getGroups() {
-		return new ArrayList<String>(survivalData.keySet());
+		return new ArrayList<>(survivalData.keySet());
 	}
 
 	/**
@@ -160,7 +160,7 @@ public class KaplanMeierFigure extends JPanel {
 	 * @throws Exception
 	 */
 	public void setCoxInfo(ArrayList<String> title, CoxInfo ci, String strataVariable, LinkedHashMap<String, String> legendMap, Boolean useWeighted) throws Exception {
-		LinkedHashMap<String, ArrayList<CensorStatus>> survivalData = new LinkedHashMap<String, ArrayList<CensorStatus>>();
+		LinkedHashMap<String, ArrayList<CensorStatus>> survivalData = new LinkedHashMap<>();
 		ArrayList<SurvivalInfo> siList = ci.getSurvivalInfoList();
 		int n = 0;
 		int event = 0;
@@ -171,12 +171,8 @@ public class KaplanMeierFigure extends JPanel {
 
 				legend = strata;
 			}
-			ArrayList<CensorStatus> censorStatusList = survivalData.get(legend);
-			if (censorStatusList == null) {
-				censorStatusList = new ArrayList<CensorStatus>();
-				survivalData.put(legend, censorStatusList);
-			}
-			CensorStatus cs = new CensorStatus(strata, si.getTime(), si.getStatus() + "");
+			ArrayList<CensorStatus> censorStatusList = survivalData.computeIfAbsent(legend, k -> new ArrayList<>());
+			CensorStatus cs = new CensorStatus(strata, si.getTime(), String.valueOf(si.getStatus()));
 			cs.weight = si.getWeight();
 			censorStatusList.add(cs);
 			n++;
@@ -195,7 +191,7 @@ public class KaplanMeierFigure extends JPanel {
 //        System.out.println("setCoxInfo=" + cc.pvalue + " " + title);
 
 
-		ArrayList<String> lines = new ArrayList<String>();
+		ArrayList<String> lines = new ArrayList<>();
 		lines.add(line1);
 		lines.add(line2);
 		lines.add(line3);
@@ -210,7 +206,7 @@ public class KaplanMeierFigure extends JPanel {
 	 * @return
 	 */
 	public static String fmt(Double d, int precision, int pad) {
-		String value = "";
+		String value;
 		DecimalFormat dfe = new DecimalFormat("0.00E0");
 		String dpad = "0.";
 		double p = 1.0;
@@ -303,7 +299,7 @@ public class KaplanMeierFigure extends JPanel {
 		this.title = title;
 		this.survivalData = survivalData;
 		Double mTime = null;
-		ArrayList<String> labels = new ArrayList<String>(survivalData.keySet());
+		ArrayList<String> labels = new ArrayList<>(survivalData.keySet());
 		Collections.sort(labels);
 		for (String legend : labels) {
 			ArrayList<CensorStatus> censorStatusList = survivalData.get(legend);
@@ -341,8 +337,7 @@ public class KaplanMeierFigure extends JPanel {
 		FileWriter fw = new FileWriter(fileName);
 		fw.write("index\tTIME\tSTATUS\tGROUP\r\n");
 		int index = 0;
-		for (String group : survivalData.keySet()) {
-			ArrayList<CensorStatus> sd = survivalData.get(group);
+		for (ArrayList<CensorStatus> sd : survivalData.values()) {
 			for (CensorStatus cs : sd) {
 				String line = index + "\t" + cs.time + "\t" + cs.censored + "\t" + cs.group + "\r\n";
 				index++;
@@ -351,7 +346,7 @@ public class KaplanMeierFigure extends JPanel {
 		}
 		fw.close();
 	}
-	DecimalFormat df = new DecimalFormat("#.#");
+	final DecimalFormat df = new DecimalFormat("#.#");
 
 	@Override
 	public void paintComponent(Graphics g) // draw graphics in the panel
@@ -394,7 +389,7 @@ public class KaplanMeierFigure extends JPanel {
 
 
 		int colorIndex = 0;
-		ArrayList<String> labels = new ArrayList<String>(sfi.getStrataInfoHashMap().keySet());
+		ArrayList<String> labels = new ArrayList<>(sfi.getStrataInfoHashMap().keySet());
 		Collections.sort(labels);
 
 		LinkedHashMap<String, StrataInfo> strataInfoHashMap = sfi.getStrataInfoHashMap();
@@ -521,7 +516,7 @@ public class KaplanMeierFigure extends JPanel {
 		return xAxisTimeCoordinates;
 	}
 
-	class PlotInfo {
+	static class PlotInfo {
 
 		double time;
 		double atRisk;
@@ -763,7 +758,7 @@ public class KaplanMeierFigure extends JPanel {
 		try {
 
 			KaplanMeierFigure kaplanMeierFigure = new KaplanMeierFigure();
-			LinkedHashMap<String, ArrayList<CensorStatus>> survivalDataHashMap = new LinkedHashMap<String, ArrayList<CensorStatus>>();
+			LinkedHashMap<String, ArrayList<CensorStatus>> survivalDataHashMap = new LinkedHashMap<>();
 
 //            if (false) { //http://sph.bu.edu/otlt/MPH-Modules/BS/BS704_Survival/
 //                ArrayList<CensorStatus> graph1 = new ArrayList<CensorStatus>();
@@ -801,7 +796,7 @@ public class KaplanMeierFigure extends JPanel {
 
 
 
-				ArrayList<CensorStatus> graph1 = new ArrayList<CensorStatus>();
+				ArrayList<CensorStatus> graph1 = new ArrayList<>();
 				graph1.add(new CensorStatus("A", 1.0, "1"));
 				graph1.add(new CensorStatus("A", 1.0, "1"));
 				graph1.add(new CensorStatus("A", 1.0, "1"));
@@ -841,7 +836,7 @@ public class KaplanMeierFigure extends JPanel {
 
 				survivalDataHashMap.put("Label 1", graph1);
 
-				ArrayList<CensorStatus> graph2 = new ArrayList<CensorStatus>();
+				ArrayList<CensorStatus> graph2 = new ArrayList<>();
 				graph2.add(new CensorStatus("A", 1.0, "1"));
 				graph2.add(new CensorStatus("A", 1.0, "1"));
 				graph2.add(new CensorStatus("A", 1.0, "0"));
@@ -882,7 +877,7 @@ public class KaplanMeierFigure extends JPanel {
 				survivalDataHashMap.put("Label 2", graph2);
 			}
 
-			ArrayList<String> figureInfo = new ArrayList<String>();
+			ArrayList<String> figureInfo = new ArrayList<>();
 			//DecimalFormat dfe = new DecimalFormat("0.00E0");
 			//DecimalFormat df = new DecimalFormat("0.00");
 
@@ -896,7 +891,7 @@ public class KaplanMeierFigure extends JPanel {
 			application.setSize(500, 400);         // window is 500 pixels wide, 400 high
 			application.setVisible(true);
 
-			ArrayList<String> titles = new ArrayList<String>();
+			ArrayList<String> titles = new ArrayList<>();
 			titles.add("Line 1");
 			titles.add("Line 2");
 			kaplanMeierFigure.setSurvivalData(titles, survivalDataHashMap, true);

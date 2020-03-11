@@ -49,7 +49,7 @@ public class ScopDomains implements Serializable{
 
 	List<ScopDomain> domains ;
 
-	static JAXBContext jaxbContext;
+	static final JAXBContext jaxbContext;
 	static {
 		try {
 			jaxbContext= JAXBContext.newInstance(ScopDomains.class);
@@ -93,7 +93,7 @@ public class ScopDomains implements Serializable{
 
 	public static ScopDomains fromXML(String xml){
 
-		ScopDomains job = null;
+		ScopDomains job;
 
 		try {
 

@@ -21,26 +21,8 @@
 package org.biojava.nbio.structure.align.client;
 
 
-import java.io.File;
-import java.io.IOException;
-import java.io.Serializable;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.biojava.nbio.structure.BioAssemblyIdentifier;
-import org.biojava.nbio.structure.ResidueRange;
-import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.StructureIdentifier;
-import org.biojava.nbio.structure.SubstructureIdentifier;
-import org.biojava.nbio.structure.URLIdentifier;
+import org.biojava.nbio.core.util.FileDownloadUtils;
+import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.cath.CathDomain;
 import org.biojava.nbio.structure.cath.CathFactory;
@@ -48,12 +30,20 @@ import org.biojava.nbio.structure.domain.PDPDomain;
 import org.biojava.nbio.structure.domain.PDPProvider;
 import org.biojava.nbio.structure.domain.RemotePDPProvider;
 import org.biojava.nbio.structure.ecod.EcodFactory;
-import org.biojava.nbio.core.util.FileDownloadUtils;
 import org.biojava.nbio.structure.scop.ScopDatabase;
 import org.biojava.nbio.structure.scop.ScopDomain;
 import org.biojava.nbio.structure.scop.ScopFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.Serializable;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
@@ -74,7 +64,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 	private static final long serialVersionUID = 4021229518711762957L;
 	private static final Logger logger = LoggerFactory.getLogger(StructureName.class);
 
-	protected String name;
+	protected final String name;
 	protected String pdbId;
 	protected String chainName;
 
@@ -94,7 +84,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 		FILE,
 		ECOD,
 		BIO,
-	};
+	}
 
 	private Source mySource = null;
 
@@ -308,7 +298,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 		SubstructureIdentifier si = new SubstructureIdentifier(suffix);
 		base = si; // Safe to realize immediately
 
-		pdbId = si.getPdbId();
+        pdbId = si.pdbId;
 		// Set chainName if unique
 		Set<String> chains = getChainNames(si);
 		if(chains.size() == 1) {
@@ -340,7 +330,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 	}
 
 	private static Set<String> getChainNames(SubstructureIdentifier si) {
-		Set<String> chains = new TreeSet<String>();
+		Set<String> chains = new TreeSet<>();
 		List<ResidueRange> ranges = si.getResidueRanges();
 		for(ResidueRange range : ranges) {
 			String chainName = range.getChainName();
@@ -361,7 +351,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 	 */
 	public String getPdbId() throws StructureException {
 		if( pdbId == null) {
-			pdbId = toCanonical().getPdbId();
+            pdbId = toCanonical().pdbId;
 		}
 		return pdbId;
 	}
@@ -626,7 +616,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 	 * @return The best match for name among the domains of scopDB, or null if none match.
 	 */
 	public static ScopDomain guessScopDomain(String name, ScopDatabase scopDB) {
-		List<ScopDomain> matches = new LinkedList<ScopDomain>();
+		List<ScopDomain> matches = new LinkedList<>();
 
 		// Try exact match first
 		ScopDomain domain = scopDB.getDomainByScopID(name);
@@ -662,7 +652,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 			ScopDomain bestMatch = match.next();
 			if(logger.isWarnEnabled()) {
 				StringBuilder warnMsg = new StringBuilder();
-				warnMsg.append("Trying domain " + bestMatch.getScopId() + ".");
+				warnMsg.append("Trying domain ").append(bestMatch.getScopId()).append(".");
 				if (match.hasNext()) {
 					warnMsg.append(" Other possibilities: ");
 					while (match.hasNext()) {

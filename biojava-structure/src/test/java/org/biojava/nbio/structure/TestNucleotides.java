@@ -137,7 +137,7 @@ public class TestNucleotides {
 	}
 
 	@Test
-	public void test1REP() throws StructureException, IOException{
+	public void test1REP() throws IOException{
 
 		PDBFileReader reader = new PDBFileReader();
 		FileParsingParameters params = new FileParsingParameters();
@@ -164,16 +164,16 @@ public class TestNucleotides {
 
 
 		assertNotNull("Could not acces Chem Comp file!" , n1.getChemComp());
-		assertTrue("ChemComp is not DC",n1.getChemComp().getId().equals("DC"));
+		assertEquals("ChemComp is not DC", "DC", n1.getChemComp().getId());
 		assertNotNull("Could not determine polymer type " , n1.getChemComp().getPolymerType());
 		//System.out.println(n1.getChemComp().getPolymerType());
-		assertTrue(n1.getChemComp().getPolymerType().equals(PolymerType.dna));
+		assertEquals(n1.getChemComp().getPolymerType(), PolymerType.dna);
 
 		assertNotNull(n1.getPDBName());
 		assertNotNull(n1.getResidueNumber());
 		assertNotNull(n2.getResidueNumber());
 		assertEquals("23", n2.getResidueNumber().toString());
-		assertTrue(n1.getResidueNumber().equals(n2.getResidueNumber()));
+		assertEquals(n1.getResidueNumber(), n2.getResidueNumber());
 
 
 	}

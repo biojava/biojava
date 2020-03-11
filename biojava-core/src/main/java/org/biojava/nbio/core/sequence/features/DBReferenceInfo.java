@@ -37,9 +37,9 @@ import java.util.LinkedHashMap;
  * @author Paolo Pavan
  */
 public class DBReferenceInfo extends Qualifier {
-	private LinkedHashMap<String, String> properties = new LinkedHashMap<String, String>();
-	private String database = "";
-	private String id = "";
+	private LinkedHashMap<String, String> properties = new LinkedHashMap<>();
+	private String database;
+	private String id;
 
 	/**
 	 * The source database and id

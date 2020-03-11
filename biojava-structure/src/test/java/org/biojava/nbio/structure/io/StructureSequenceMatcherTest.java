@@ -23,10 +23,10 @@
 package org.biojava.nbio.structure.io;
 
 
-import org.biojava.nbio.structure.*;
-import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.core.sequence.ProteinSequence;
+import org.biojava.nbio.structure.*;
+import org.biojava.nbio.structure.align.util.AtomCache;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -92,7 +92,7 @@ public class StructureSequenceMatcherTest {
 				//>2PTC:I|PDBID|CHAIN|SEQUENCE
 				"RPDFCLEPPYTGPCKARIIRYFYNAKAGLCQTFVYGGCRAKRNNFKSAEDCMRTCGGA";
 
-		Assert.assertTrue(seq1.length() == pdbNum1.length);
+		Assert.assertEquals(seq1.length(), pdbNum1.length);
 
 		/*// report some stats
 		System.out.println("The SEQRES and ATOM information is available via the chains:");
@@ -133,7 +133,7 @@ public class StructureSequenceMatcherTest {
 
 	@Test
 	public void testGetProteinSequenceForStructure() {
-		Map<Integer,Group> groupIndexPos = new HashMap<Integer,Group>();
+		Map<Integer,Group> groupIndexPos = new HashMap<>();
 		ProteinSequence prot = StructureSequenceMatcher.getProteinSequenceForStructure(struct1, groupIndexPos);
 
 

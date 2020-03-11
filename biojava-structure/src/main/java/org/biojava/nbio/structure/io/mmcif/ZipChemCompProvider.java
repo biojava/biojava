@@ -20,29 +20,20 @@
  */
 package org.biojava.nbio.structure.io.mmcif;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
-
 import org.biojava.nbio.structure.io.mmcif.chem.PolymerType;
 import org.biojava.nbio.structure.io.mmcif.chem.ResidueType;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.*;
+import java.nio.file.FileSystem;
+import java.nio.file.*;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 /** This chemical component provider retrieves and caches chemical component definition files from a
  * zip archive specified in its construction.  If the archive does not contain the record, an attempt is
@@ -67,7 +58,7 @@ public class ZipChemCompProvider implements ChemCompProvider{
 	private boolean m_removeCif;
 
 	// Missing IDs from library that cannot be download added here to prevent delays.
-	private Set<String> unavailable = new HashSet<String>();
+	private final Set<String> unavailable = new HashSet<>();
 
 	/**
 	 * ZipChemCompProvider is a Chemical Component provider that stores chemical components
@@ -82,7 +73,7 @@ public class ZipChemCompProvider implements ChemCompProvider{
 		this.m_zipFile = Paths.get(chemicalComponentDictionaryFile);
 
 		// Use a default temporary directory if not passed a value.
-		if (tempDir == null || tempDir.equals("")) {
+		if (tempDir == null || tempDir.isEmpty()) {
 			this.m_tempDir = Paths.get(System.getProperty("java.io.tmpdir"));
 		} else {
 			this.m_tempDir = Paths.get(tempDir);
@@ -104,12 +95,9 @@ public class ZipChemCompProvider implements ChemCompProvider{
 		if (!f.exists()) {
 			s_logger.info("Creating missing zip archive: " + m_zipFile.toString());
 			FileOutputStream fo = new FileOutputStream(f);
-			ZipOutputStream zip = new ZipOutputStream(new BufferedOutputStream(fo));
-			try {
+			try (ZipOutputStream zip = new ZipOutputStream(new BufferedOutputStream(fo))) {
 				zip.putNextEntry(new ZipEntry("chemcomp/"));
 				zip.closeEntry();
-			} finally {
-				zip.close();
 			}
 		}
 	}
@@ -218,11 +206,7 @@ public class ZipChemCompProvider implements ChemCompProvider{
 		}
 
 		final File dir = new File(dirName);
-		return dir.listFiles(new FilenameFilter() {
-			@Override
-			public boolean accept(File dir, String filename)
-			{ return filename.endsWith(suffix); }
-		} );
+		return dir.listFiles((dir1, filename) -> filename.endsWith(suffix));
 	}
 
 	/**
@@ -236,7 +220,7 @@ public class ZipChemCompProvider implements ChemCompProvider{
 		final String filename = "chemcomp/" + recordName+".cif.gz";
 
 		// try with resources block to read from the filesystem.
-		try (FileSystem fs = FileSystems.newFileSystem(m_zipFile, null)) {
+		try (FileSystem fs = FileSystems.newFileSystem(m_zipFile, (ClassLoader)null)) {
 			Path cif = fs.getPath(filename);
 
 			if (Files.exists(cif)) {
@@ -269,7 +253,7 @@ public class ZipChemCompProvider implements ChemCompProvider{
 	 * @return true if successfully appended these files.
 	 */
 	private synchronized boolean addToZipFileSystem(Path zipFile, File[] files, Path pathWithinArchive) {
-		boolean ret = false;
+		boolean ret;
 
 		/* URIs in Java 7 cannot have spaces, must use Path instead
 		 * and so, cannot use the properties map to describe need to create
@@ -293,7 +277,7 @@ public class ZipChemCompProvider implements ChemCompProvider{
 		*/
 
 		// Copy in each file.
-		try (FileSystem zipfs = FileSystems.newFileSystem(zipFile, null)) {
+		try (FileSystem zipfs = FileSystems.newFileSystem(zipFile, (ClassLoader)null)) {
 			Files.createDirectories(pathWithinArchive);
 			for (File f : files) {
 				if (!f.isDirectory() && f.exists()) {

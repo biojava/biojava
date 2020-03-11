@@ -29,7 +29,6 @@ import org.biojava.nbio.structure.align.util.UserConfiguration;
 import org.biojava.nbio.structure.align.webstart.WebStartMain;
 
 import javax.swing.*;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
@@ -209,38 +208,34 @@ public class MenuCreator {
 	public static JMenuItem getDBResultMenuItem() {
 
 		ImageIcon saveicon = createImageIcon("/icons/kpdf.png");
-		JMenuItem saveI = null;
+		JMenuItem saveI;
 
 		if ( saveicon == null)
 			saveI = new JMenuItem(LOAD_DB_RESULTS);
 		else
 			saveI = new JMenuItem(LOAD_DB_RESULTS, saveicon);
 
-		saveI.addActionListener(new ActionListener() {
+		saveI.addActionListener(e -> {
+			final JFileChooser fc = new JFileChooser();
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				final JFileChooser fc = new JFileChooser();
+			//					In response to a button click:
+			int returnVal = fc.showOpenDialog(null);
+			if ( returnVal == JFileChooser.APPROVE_OPTION) {
+				File file = fc.getSelectedFile();
 
-				//					In response to a button click:
-				int returnVal = fc.showOpenDialog(null);
-				if ( returnVal == JFileChooser.APPROVE_OPTION) {
-					File file = fc.getSelectedFile();
-
-					UserConfiguration config = WebStartMain.getWebStartConfig();
-					DBResultTable table = new DBResultTable();
-					table.show(file,config);
-				}
-
+				UserConfiguration config = WebStartMain.getWebStartConfig();
+				DBResultTable table = new DBResultTable();
+				table.show(file,config);
 			}
-		} );
+
+		});
 
 		return saveI;
 	}
 
 	public static JMenuItem getShowPDBMenuItem() {
 		ImageIcon loadI = createImageIcon("/icons/background.png");
-		JMenuItem openI = null;
+		JMenuItem openI;
 
 		if ( loadI == null)
 			openI =new JMenuItem("Show By ID");
@@ -255,7 +250,7 @@ public class MenuCreator {
 
 	public static JMenuItem getOpenPDBMenuItem() {
 		ImageIcon loadI = createImageIcon("/icons/background.png");
-		JMenuItem openI = null;
+		JMenuItem openI;
 
 		if ( loadI == null)
 			openI =new JMenuItem("Open PDB file");
@@ -269,7 +264,7 @@ public class MenuCreator {
 
 	public static JMenuItem getLoadMenuItem() {
 
-		JMenuItem loadF = null;
+		JMenuItem loadF;
 		ImageIcon loadI = createImageIcon("/icons/revert.png");
 		if ( loadI == null)
 			loadF = new JMenuItem(LOAD_ALIGNMENT_XML);
@@ -305,7 +300,7 @@ public class MenuCreator {
 
 		ImageIcon saveicon = createImageIcon("/icons/filesave.png");
 
-		JMenuItem saveF = null;
+		JMenuItem saveF;
 
 		if (saveicon != null)
 			saveF = new JMenuItem("Save text display", saveicon);
@@ -400,7 +395,7 @@ public class MenuCreator {
 
 		ImageIcon saveicon = createImageIcon("/icons/filesave.png");
 
-		JMenuItem saveF = null;
+		JMenuItem saveF;
 
 		if (saveicon != null )
 			saveF = new JMenuItem("Save text display", saveicon);
@@ -487,7 +482,7 @@ public class MenuCreator {
 
 	public static JMenuItem getExportPDBMenuItem(AbstractAlignmentJmol parent) {
 		ImageIcon saveicon = createImageIcon("/icons/compfile.png");
-		JMenuItem exportI = null;
+		JMenuItem exportI;
 
 		if ( saveicon == null)
 			exportI = new JMenuItem("Export PDB file");
@@ -504,7 +499,7 @@ public class MenuCreator {
 			MultipleAlignment msa){
 
 		ImageIcon saveicon = createImageIcon("/icons/filesave.png");
-		JMenuItem saveF = null;
+		JMenuItem saveF;
 
 		if (saveicon == null)
 			saveF = new JMenuItem(SAVE_ALIGNMENT_XML);
@@ -522,7 +517,7 @@ public class MenuCreator {
 
 		ImageIcon helpIcon = createImageIcon("/icons/help.png");
 
-		JMenuItem aboutM = null;
+		JMenuItem aboutM;
 
 		if ( helpIcon == null)
 			aboutM = new  JMenuItem("About this Software");
@@ -530,14 +525,7 @@ public class MenuCreator {
 			aboutM = new  JMenuItem("About this Software", helpIcon);
 
 		aboutM.setMnemonic(KeyEvent.VK_A);
-		aboutM.addActionListener(new ActionListener(){
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				MenuCreator.showAboutDialog();
-
-			}
-		});
+		aboutM.addActionListener(e -> MenuCreator.showAboutDialog());
 		return aboutM;
 	}
 
@@ -547,7 +535,7 @@ public class MenuCreator {
 
 		ImageIcon helpIcon = createImageIcon("/icons/help.png");
 
-		JMenuItem aboutM = null;
+		JMenuItem aboutM;
 
 		if ( helpIcon == null)
 			aboutM = new  JMenuItem("System Info");
@@ -555,14 +543,7 @@ public class MenuCreator {
 			aboutM = new  JMenuItem("System Info", helpIcon);
 
 		aboutM.setMnemonic(KeyEvent.VK_S);
-		aboutM.addActionListener(new ActionListener(){
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				MenuCreator.showSystemInfo();
-
-			}
-		});
+		aboutM.addActionListener(e -> MenuCreator.showSystemInfo());
 		return aboutM;
 	}
 
@@ -579,15 +560,11 @@ public class MenuCreator {
 			exitI = new JMenuItem("Quit",exitIcon);
 		exitI.setMnemonic(KeyEvent.VK_Q);
 		exitI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, keyMask));
-		exitI.addActionListener(new ActionListener(){
+		exitI.addActionListener(e -> {
+			String cmd = e.getActionCommand();
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String cmd = e.getActionCommand();
-
-				if ( cmd.equals("Quit")){
-					System.exit(0);
-				}
+			if ( cmd.equals("Quit")){
+				System.exit(0);
 			}
 		});
 		return exitI;
@@ -607,14 +584,10 @@ public class MenuCreator {
 			helpM = new JMenuItem("Help", helpIcon);
 
 		helpM.setMnemonic(KeyEvent.VK_H);
-		helpM.addActionListener(new ActionListener(){
+		helpM.addActionListener(e -> {
+			HelpDialog d = new HelpDialog();
+			d.showDialog();
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				HelpDialog d = new HelpDialog();
-				d.showDialog();
-
-			}
 		});
 
 		return helpM;
@@ -635,7 +608,7 @@ public class MenuCreator {
 		closeI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, keyMask));
 
 		class MyCloseListener implements ActionListener{
-			JFrame f;
+			final JFrame f;
 			MyCloseListener(JFrame frame){
 				f=frame;
 			}
@@ -713,14 +686,11 @@ public class MenuCreator {
 			pairI = new JMenuItem(PAIRWISE_ALIGN, alignIcon);
 		pairI.setMnemonic(KeyEvent.VK_N);
 		pairI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, keyMask));
-		pairI.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String cmd = e.getActionCommand();
+		pairI.addActionListener(e -> {
+			String cmd = e.getActionCommand();
 
-				if ( cmd.equals(PAIRWISE_ALIGN)){
-					MenuCreator.showPairDialog();
-				}
+			if ( cmd.equals(PAIRWISE_ALIGN)){
+				MenuCreator.showPairDialog();
 			}
 		});
 		return pairI;
@@ -736,14 +706,11 @@ public class MenuCreator {
 			multipleI = new JMenuItem(MULTIPLE_ALIGN, alignIcon);
 		multipleI.setMnemonic(KeyEvent.VK_N);
 		multipleI.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, keyMask));
-		multipleI.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String cmd = e.getActionCommand();
+		multipleI.addActionListener(e -> {
+			String cmd = e.getActionCommand();
 
-				if ( cmd.equals(MULTIPLE_ALIGN)){
-					MenuCreator.showMultipleDialog();
-				}
+			if ( cmd.equals(MULTIPLE_ALIGN)){
+				MenuCreator.showMultipleDialog();
 			}
 		});
 		return multipleI;
@@ -844,7 +811,7 @@ public class MenuCreator {
 	private static JMenuItem getMemoryMonitorItem() {
 		ImageIcon helpIcon = createImageIcon("/icons/help.png");
 
-		JMenuItem aboutM = null;
+		JMenuItem aboutM;
 
 		if ( helpIcon == null)
 			aboutM = new  JMenuItem("Memory Monitor");
@@ -852,14 +819,7 @@ public class MenuCreator {
 			aboutM = new  JMenuItem("Memory Monitor", helpIcon);
 
 		aboutM.setMnemonic(KeyEvent.VK_M);
-		aboutM.addActionListener(new ActionListener(){
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				MenuCreator.showMemoryMonitor();
-
-			}
-		});
+		aboutM.addActionListener(e -> MenuCreator.showMemoryMonitor());
 		return aboutM;
 	}
 
@@ -888,14 +848,7 @@ public class MenuCreator {
 		Box b = Box.createHorizontalBox();
 		JButton b1 = new JButton("Run Garbage Collector");
 
-		b1.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				System.gc();
-
-			}
-		});
+		b1.addActionListener(e -> System.gc());
 
 		b.add(b1);
 		b.add(Box.createGlue());
@@ -920,15 +873,11 @@ public class MenuCreator {
 		else
 			configI = new JMenuItem("Settings",configIcon);
 		configI.setMnemonic(KeyEvent.VK_S);
-		configI.addActionListener(new ActionListener(){
+		configI.addActionListener(e -> {
+			String cmd = e.getActionCommand();
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String cmd = e.getActionCommand();
-
-				if ( cmd.equals("Settings")){
-					ConfigPDBInstallPanel.showDialog();
-				}
+			if ( cmd.equals("Settings")){
+				ConfigPDBInstallPanel.showDialog();
 			}
 		});
 		return configI;

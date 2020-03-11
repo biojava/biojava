@@ -26,7 +26,6 @@ package demo;
 
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.StructureAlignment;
 import org.biojava.nbio.structure.align.gui.StructureAlignmentDisplay;
@@ -37,8 +36,6 @@ import org.biojava.nbio.structure.align.xml.AFPChainXMLConverter;
 import org.biojava.nbio.structure.io.FastaAFPChainConverter;
 import org.biojava.nbio.structure.io.FastaStructureParser;
 
-import java.io.IOException;
-
 /**
  * Demo displaying a structural alignment from a FASTA file using {@link FastaAFPChainConverter}.
  *
@@ -48,7 +45,7 @@ import java.io.IOException;
  */
 public class AFPFromFasta {
 
-	public static void main(String[] args) throws IOException, StructureException, Exception {
+	public static void main(String[] args) throws Exception {
 		Structure structure1 = StructureTools.getStructure("1w0p");
 		Structure structure2 = StructureTools.getStructure("1w0p");
 		String first = "alfdynatgdtefdspakqgwmqdntnngsgvltnadgmpawlvqgiggraqwtyslstnqhaqassfgwrmttemkvlsggmitnyyangtqrvlpiisldssgnlvvefegqtgrtvlatgtaateyhkfelvflpgsnpsasfyfdgklirdniqptaskQNMIVWGNGSSntdgvaayrdikfei------------------------------------------------------------------------------------------------------------------QGDVIf------------RGPDRIPSIVASsvTPGVVTAFAEKRVGGgdpgalsntNDIITRTSRDGGITWDTELNLTEQinvsdeFDFSDPRPIYDPs---SNTVLVSYARWPtdaaqngdrikpwmpNGIFYSVYDVASgnWQAPIDVTdqvkersfqiagwggselyrrntslnsqqdwqsnakirivdgaanqiqvadgsrkyvvtlsidesgglvanlngvsapiilqsehakvhsfhdyelqysalnhtttlfvdgqqittwagevsqenniqfgnadaqidgrlhvqkivltqqghnlvefdafylaqqtpevekdleklgwtkiktgntmslygNASVNPGpgHGITLtrqqnisgsqNGRLIYPAIVLdrfFLNVMSIYSDDGgsnwq-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------TGSTLpipfrwksssileTLEPSEADMVELQN--GDLLLTARLDFNQivngvny--SPRQQFLSKDGGITWSLLEANNANvfsnistgTVDASITRFEqsdgSHFLLFTNPQGnpagTNgr------------QNLGLWFSFDEG--VTWKGPIQ--LVNGasaysdiyqldsenaivivetdnsnmrilrmpitllkqklt";

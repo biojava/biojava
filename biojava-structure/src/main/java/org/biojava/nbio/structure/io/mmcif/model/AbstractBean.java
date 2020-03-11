@@ -41,7 +41,7 @@ public abstract class AbstractBean {
 	@Override
 	@SuppressWarnings({  "unchecked" })
 	public String toString(){
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		buf.append(this.getClass().getName()).append(": ");
 		/* disabled for the moment
 
@@ -61,14 +61,14 @@ public abstract class AbstractBean {
 				Method m = methods[i];
 
 				String name = m.getName();
-				if ( name.substring(0,3).equals("get")) {
+				if ( name.startsWith("get")) {
 
-					Object o  = m.invoke(this, new Object[]{});
+					Object o  = m.invoke(this);
 					if ( o instanceof String){
-						buf.append(name.substring(3, name.length())+": "+ o + " ");
+						buf.append(name.substring(3)).append(": ").append(o).append(" ");
 					}
 					else if ( o instanceof List){
-						buf.append(name.substring(3, name.length())).append(": ");
+						buf.append(name.substring(3)).append(": ");
 
 						List<Object>lst = (List<Object>)o;
 						for (Object obj : lst){
@@ -86,9 +86,7 @@ public abstract class AbstractBean {
 
 			}
 
-		} catch (InvocationTargetException e){
-			logger.error("Exception caught while producing toString",e);
-		} catch (IllegalAccessException e) {
+		} catch (InvocationTargetException | IllegalAccessException e){
 			logger.error("Exception caught while producing toString",e);
 		}
 

@@ -27,10 +27,12 @@
 package org.biojava.nbio.structure.align.fatcat.calc;
 
 
-import javax.vecmath.Matrix4d;
-
-import org.biojava.nbio.structure.*;
+import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.Calc;
+import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.geometry.SuperPositions;
+
+import javax.vecmath.Matrix4d;
 
 
 
@@ -39,13 +41,13 @@ public class StructureAlignmentOptimizer
 
 	//private static final boolean showAlig = false;
 
-	int pro1Len;
-	int pro2Len;
-	int maxLen;
-	Atom[] cod1;
-	Atom[] cod2;
+	final int pro1Len;
+	final int pro2Len;
+	final int maxLen;
+	final Atom[] cod1;
+	final Atom[] cod2;
 
-	int[][] equSet;
+	final int[][] equSet;
 	int equLen;
 	int equLen0;
 	double[][]sij;
@@ -76,7 +78,7 @@ public class StructureAlignmentOptimizer
 	 */
 
 	public StructureAlignmentOptimizer(int b1, int end1, Atom[] c1, int b2, int end2, Atom[] c2,
-			int iniLen, int[][] iniSet) throws StructureException{
+			int iniLen, int[][] iniSet) {
 
 		//System.err.println("optimizing range:" + b1 + "-" + end1 + "("+ (end1-b1) + ") b2:  " + b2 + "-" + end2+ "("+ (end2-b2) + ") iniLen " + iniLen);
 		//System.out.println("ca1: " + c1.length + " ca2: " + c2.length);
@@ -111,7 +113,7 @@ public class StructureAlignmentOptimizer
 
 
 		//initial equivalent sets
-		maxLen = (len1 < len2)?len1:len2;
+		maxLen = Math.min(len1, len2);
 
 		equSet = new int[2][maxLen];
 		for(int i = 0; i < iniLen; i ++)    {
@@ -119,7 +121,7 @@ public class StructureAlignmentOptimizer
 			equSet[0][i] = iniSet[0][i];
 			equSet[1][i] = iniSet[1][i];
 			if(iniSet[0][i] > len1 || iniSet[1][i] > len2)  {
-				throw new RuntimeException(String.format("StructureAlignmentOptimizer: focus exceeds the protein 1 or 2 length!"));
+				throw new RuntimeException("StructureAlignmentOptimizer: focus exceeds the protein 1 or 2 length!");
 			}
 		}
 
@@ -194,9 +196,8 @@ public class StructureAlignmentOptimizer
 	/** run the optimization
 	 *
 	 * @param maxi maximum nr. of iterations
-	 * @throws StructureException
-	 */
-	public void runOptimization(int maxi) throws StructureException{
+     */
+	public void runOptimization(int maxi) {
 		superimposeBySet();
 		if ( debug)
 			System.err.println("   initial rmsd " + rmsd);
@@ -232,9 +233,7 @@ public class StructureAlignmentOptimizer
 	/**
 	 * superimpose two structures according to the equivalent residues
 	 */
-	private void superimposeBySet ()
-	throws StructureException
-	{
+	private void superimposeBySet () {
 
 		//extract the coordinations of equivalent residues
 		Atom[] tmp1 = new Atom[equLen];
@@ -284,13 +283,12 @@ public class StructureAlignmentOptimizer
 	}
 
 
-	private void optimize(int maxi) throws StructureException
-	{
+	private void optimize(int maxi) {
 		long optStart = System.currentTimeMillis();
 		if ( debug)
 			System.out.println("Optimizing up to " + maxi + " iterations.. ");
-		boolean ifstop = true;;
-		int     i, alnLen;
+		boolean ifstop;
+        int     i, alnLen;
 		alnLen = 0;
 
 		int[][]     alnList =  new int[2][maxLen];
@@ -334,8 +332,7 @@ public class StructureAlignmentOptimizer
 	//              Sij = Dc^2 - Dij^2 if Dij <= Dc
 	//                    0            else
 	//--------------------------------------------------------------------------------------------------------
-	private void calMatrix() throws StructureException
-	{
+	private void calMatrix() {
 		int     i, j;
 		double  dis;
 		for(i = 0; i < pro1Len; i ++)   {
@@ -356,9 +353,7 @@ public class StructureAlignmentOptimizer
 	 * the equivalent residues: residues where Dij &lt;= Dc and i,j is an aligned pair
 	 * use the previous superimposing
 	 */
-	private boolean defineEquPos(int alnLen, int[][] alnList)
-	throws StructureException
-	{
+	private boolean defineEquPos(int alnLen, int[][] alnList) {
 		int     i, r1, r2;
 		int     equLenOld = equLen;
 		int[][]    equSetOld = new int[2][equLenOld];
@@ -388,7 +383,7 @@ public class StructureAlignmentOptimizer
 		//if (debug)
 		//   System.out.println(String.format(" OPT: new equLen %d rmsd %f", equLen, rmsd));
 
-		boolean     ifstop = false;
+		boolean     ifstop;
 
 //      if (debug) {
 //         System.out.print(" OPT: rmsd diff: " + Math.abs(rmsd - rmsdOld) + " equLens: " + equLenOld + ":"+ equLen);

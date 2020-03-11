@@ -20,16 +20,6 @@
  */
 package org.biojava.nbio.core.search.io.blast;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.LineNumberReader;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Scanner;
 import org.biojava.nbio.core.search.io.Hit;
 import org.biojava.nbio.core.search.io.Hsp;
 import org.biojava.nbio.core.search.io.Result;
@@ -37,6 +27,10 @@ import org.biojava.nbio.core.search.io.ResultFactory;
 import org.biojava.nbio.core.sequence.template.Sequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.*;
+import java.text.ParseException;
+import java.util.*;
 
 /**
  * Designed by Paolo Pavan.
@@ -48,7 +42,7 @@ import org.slf4j.LoggerFactory;
  */
 
 public class BlastTabularParser implements ResultFactory {
-	private final String blastReference =
+	private static final String blastReference =
 			"Zheng Zhang, Scott Schwartz, Lukas Wagner, and Webb Miller (2000), A greedy algorithm for aligning DNA sequences&quot;, J Comput Biol 2000; 7(1-2):203-14.";
 	/**
 	 * Tries to define a different level of consistency during parsing.
@@ -71,7 +65,7 @@ public class BlastTabularParser implements ResultFactory {
 
 	// data imported private:
 	int queryIdNumber = 0;
-	HashMap<String,String> queryIdMapping = new HashMap<String,String>();
+	final Map<String,String> queryIdMapping = new HashMap<>();
 	String programName=null, queryName = null, databaseFile = null;
 	private String queryId      ;
 	private String subjectId    ;
@@ -89,7 +83,7 @@ public class BlastTabularParser implements ResultFactory {
 
 	@Override
 	public List<String> getFileExtensions() {
-		List<String> l = new ArrayList<String>();
+		List<String> l = new ArrayList<>();
 		l.add("blasttabular");
 		l.add("blasttxt");
 		return l;
@@ -102,7 +96,7 @@ public class BlastTabularParser implements ResultFactory {
 
 	@Override
 	public List<Result> createObjects(double maxEScore) throws IOException, ParseException {
-		List<Result> results = new ArrayList<Result>();
+		List<Result> results = new ArrayList<>();
 
 		log.info("Query for hits");
 		LineNumberReader  lnr = new LineNumberReader(new FileReader(targetFile));
@@ -126,33 +120,33 @@ public class BlastTabularParser implements ResultFactory {
 						.setQueryDef(queryName)
 						.setReference(blastReference);
 
-				List<Hit> hits = new ArrayList<Hit>();
+				List<Hit> hits = new ArrayList<>();
 
 				String currentQueryId = queryId;
 				while (currentQueryId.equals(queryId) && lineNumber < fileLinesCount){
 					BlastHitBuilder hitBuilder = new BlastHitBuilder();
 
-					List<Hsp> hsps = new ArrayList<Hsp>();
+					List<Hsp> hsps = new ArrayList<>();
 
 					String currentSubjectId=subjectId;
 					while (currentSubjectId.equals(subjectId) && lineNumber < fileLinesCount){
-						if (new Double(evalue) > maxEScore) {
+						if (Double.parseDouble(evalue) > maxEScore) {
 							line = fetchData(scanner);
 							lineNumber++;
 							continue;
 						}
 						BlastHspBuilder hspBuilder = new BlastHspBuilder();
 						hspBuilder
-							.setHspAlignLen(new Integer(alnLength))
-							.setHspGaps(new Integer(gapOpenCount))
-							.setHspQueryFrom(new Integer(queryStart))
-							.setHspQueryTo(new Integer(queryEnd))
-							.setHspHitFrom(new Integer(subjectStart))
-							.setHspHitTo(new Integer(subjectEnd))
-							.setHspEvalue(new Double(evalue))
-							.setHspBitScore(new Double(bitScore))
-							.setPercentageIdentity(new Double(percIdentity)/100)
-							.setMismatchCount(new Integer(mismatchCount));
+							.setHspAlignLen(Integer.parseInt(alnLength))
+							.setHspGaps(Integer.parseInt(gapOpenCount))
+							.setHspQueryFrom(Integer.parseInt(queryStart))
+							.setHspQueryTo(Integer.parseInt(queryEnd))
+							.setHspHitFrom(Integer.parseInt(subjectStart))
+							.setHspHitTo(Integer.parseInt(subjectEnd))
+							.setHspEvalue(Double.parseDouble(evalue))
+							.setHspBitScore(Double.parseDouble(bitScore))
+							.setPercentageIdentity(Double.parseDouble(percIdentity)/100)
+							.setMismatchCount(Integer.parseInt(mismatchCount));
 						hsps.add(hspBuilder.createBlastHsp());
 						if (scanner.hasNext()) line = fetchData(scanner);
 						lineNumber++;
@@ -172,7 +166,7 @@ public class BlastTabularParser implements ResultFactory {
 		String[] split;
 
 		line = scanner.nextLine();
-		while (line.startsWith("#")){
+		while (line.charAt(0) == '#'){
 			// blast tabular with header options contains some more informations
 			if (line.matches("#\\s.?BLAST.+")) programName = line.replace("#\\s","");
 			if (line.startsWith("# Query:")) queryName = line.replace("# Query: ","");
@@ -203,13 +197,10 @@ public class BlastTabularParser implements ResultFactory {
 		// blast tabular reports only the first word of the query name.
 		// If it was specified in the header it is better to use that definition
 		if (parsingConsistency == PARSING_CONSISTENCY.IMPROVED && headerFound) {
-			if (queryIdMapping.get(queryId)==null) {
-				queryIdNumber ++;
-				queryIdMapping.put(queryId,"Query_" + queryIdNumber);
-			}
+
 			// If a complete definition of the query name was readed, than we can use
 			// a queryID schema that is consistent with blast xml report
-			queryId = queryIdMapping.get(queryId);
+			queryId = queryIdMapping.computeIfAbsent(queryId, x -> "Query_" + (++queryIdNumber));
 		}
 		if (!headerFound) queryName = queryId;
 
@@ -217,7 +208,7 @@ public class BlastTabularParser implements ResultFactory {
 	}
 
 	@Override
-	public void storeObjects(List<Result> results) throws IOException, ParseException {
+	public void storeObjects(List<Result> results) {
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
 

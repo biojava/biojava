@@ -63,13 +63,13 @@ public class SymbolTable<Key extends Comparable<Key>, Value> implements Iterable
 	 */
 	private static final long serialVersionUID = -4417561575046471931L;
 
-	private TreeMap<Key, Value> st;
+	private final TreeMap<Key, Value> st;
 
 	/**
 	 * Create an empty symbol table.
 	 */
 	public SymbolTable() {
-		st = new TreeMap<Key, Value>();
+		st = new TreeMap<>();
 	}
 
 	/**

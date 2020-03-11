@@ -31,5 +31,5 @@ public enum SymmetryPerceptionMethod {
 	NO_ROTATION,
 	C2_ROTATION,
 	ROTATION,
-	ROTO_TRANSLATION;
+	ROTO_TRANSLATION
 }

@@ -22,17 +22,17 @@ package org.biojava.nbio.structure.align.events;
 
 public interface AlignmentProgressListener {
 
-	public void alignmentStarted(String name1, String name2);
+	void alignmentStarted(String name1, String name2);
 
-	public void alignmentEnded();
+	void alignmentEnded();
 
-	public void logStatus(String message);
+	void logStatus(String message);
 
-	public void downloadingStructures(String name);
+	void downloadingStructures(String name);
 
-	public void requestingAlignmentsFromServer(int nrAlignments);
+	void requestingAlignmentsFromServer(int nrAlignments);
 
-	public void sentResultsToServer(int nrAlignments,String serverMessage);
+	void sentResultsToServer(int nrAlignments, String serverMessage);
 
 
 }

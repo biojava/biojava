@@ -36,6 +36,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -144,7 +145,7 @@ public class ModifiedCompoundSerializationTest {
 	public List<ModifiedCompound> testXMLSerialization(String pdbId){
 		String xml = null;
 		ModifiedCompound currentMC = null;
-		List<ModifiedCompound> all = new ArrayList<ModifiedCompound>();
+		List<ModifiedCompound> all = new ArrayList<>();
 		try {
 
 			Structure struc = TmpAtomCache.cache.getStructure(pdbId);
@@ -220,7 +221,7 @@ public class ModifiedCompoundSerializationTest {
 			char[] buffer = new char[1024];
 			try {
 				Reader reader = new BufferedReader(
-						new InputStreamReader(is, "UTF-8"));
+						new InputStreamReader(is, StandardCharsets.UTF_8));
 				int n;
 				while ((n = reader.read(buffer)) != -1) {
 					writer.write(buffer, 0, n);

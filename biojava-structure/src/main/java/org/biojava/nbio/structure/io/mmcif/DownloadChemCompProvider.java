@@ -20,15 +20,15 @@
  */
 package org.biojava.nbio.structure.io.mmcif;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import org.biojava.nbio.core.util.InputStreamProvider;
+import org.biojava.nbio.structure.align.util.URLConnectionTools;
+import org.biojava.nbio.structure.align.util.UserConfiguration;
+import org.biojava.nbio.structure.io.LocalPDBDirectory;
+import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Files;
@@ -38,14 +38,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.zip.GZIPOutputStream;
-
-import org.biojava.nbio.core.util.InputStreamProvider;
-import org.biojava.nbio.structure.align.util.URLConnectionTools;
-import org.biojava.nbio.structure.align.util.UserConfiguration;
-import org.biojava.nbio.structure.io.LocalPDBDirectory;
-import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 
@@ -85,9 +77,9 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 
 
 	// flags to make sure there is only one thread running that is loading the dictionary
-	static AtomicBoolean loading = new AtomicBoolean(false);
+	static final AtomicBoolean loading = new AtomicBoolean(false);
 
-	static final List<String> protectedIDs = new ArrayList<String> ();
+	static final List<String> protectedIDs = new ArrayList<>();
 	static {
 		protectedIDs.add("CON");
 		protectedIDs.add("PRN");
@@ -151,13 +143,7 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 		} else {
 			// file exists.. did it get extracted?
 
-			FilenameFilter filter =new FilenameFilter() {
-
-				@Override
-				public boolean accept(File dir, String file) {
-					return file.endsWith(".cif.gz");
-				}
-			};
+			FilenameFilter filter = (dir1, file) -> file.endsWith(".cif.gz");
 			String[] files = dir.list(filter);
 			if ( files.length < 500) {
 				// not all did get unpacked
@@ -182,9 +168,9 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 		int counter = 0;
 		InputStreamProvider prov = new InputStreamProvider();
 
-		try( BufferedReader buf = new BufferedReader (new InputStreamReader (prov.getInputStream(f)));
-				) {
-			String line = null;
+		try( BufferedReader buf = new BufferedReader (new InputStreamReader (prov.getInputStream(f)))
+		) {
+			String line;
 			line = buf.readLine ();
 			StringWriter writer = new StringWriter();
 
@@ -404,8 +390,8 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 			URLConnection uconn = URLConnectionTools.openURLConnection(url);
 
 			try( PrintWriter pw = new PrintWriter(new GZIPOutputStream(new FileOutputStream(newFile)));
-					BufferedReader fileBuffer = new BufferedReader(new InputStreamReader(uconn.getInputStream()));
-					) {
+					BufferedReader fileBuffer = new BufferedReader(new InputStreamReader(uconn.getInputStream()))
+			) {
 
 				String line;
 

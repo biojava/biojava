@@ -20,8 +20,6 @@
  */
 package org.biojava.nbio.core.sequence.location;
 
-import java.util.Arrays;
-import java.util.Collection;
 import org.biojava.nbio.core.sequence.DataSource;
 import org.biojava.nbio.core.sequence.location.template.Location;
 import org.junit.Assert;
@@ -31,6 +29,9 @@ import org.junit.runners.Parameterized;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
+import java.util.Collection;
+
 /**
  *
  * @author Jacek Grzebyta
@@ -38,9 +39,9 @@ import org.slf4j.LoggerFactory;
 @RunWith(Parameterized.class)
 public class InsdcParserTest {
 
-	private Logger log = LoggerFactory.getLogger(getClass());
-	private String data;
-	private String expected;
+	private final Logger log = LoggerFactory.getLogger(getClass());
+	private final String data;
+	private final String expected;
 
 	public InsdcParserTest(String data, String expected) {
 		this.data = data;
@@ -58,10 +59,9 @@ public class InsdcParserTest {
 	/**
 	 * Test for issue #254
 	 *
-	 * @throws Exception
 	 */
 	@Test
-	public void extractAccessionTest() throws Exception {
+	public void extractAccessionTest() {
 		log.info("test accession");
 		log.debug("data: '{}'   expected: '{}'", data, expected);
 

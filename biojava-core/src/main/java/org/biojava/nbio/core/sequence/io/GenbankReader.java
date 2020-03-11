@@ -36,13 +36,7 @@ import org.biojava.nbio.core.sequence.template.Compound;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -55,9 +49,9 @@ import java.util.List;
  */
 public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
 
-	private SequenceCreatorInterface<C> sequenceCreator;
-	private GenbankSequenceParser<S,C> genbankParser;
-	private BufferedReader bufferedReader;
+	private final SequenceCreatorInterface<C> sequenceCreator;
+	private final GenbankSequenceParser<S,C> genbankParser;
+	private final BufferedReader bufferedReader;
 	private boolean closed;
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 

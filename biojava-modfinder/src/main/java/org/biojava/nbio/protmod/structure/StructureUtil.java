@@ -180,7 +180,7 @@ public final class StructureUtil {
 			throw new IllegalArgumentException("bondLengthTolerance cannot be negative.");
 		}
 
-		List<Atom[]> ret = new ArrayList<Atom[]>();
+		List<Atom[]> ret = new ArrayList<>();
 
 		if (potentialNamesOfAtomOnGroup1 == null) {
 			// if empty name, search for all atoms
@@ -282,8 +282,8 @@ public final class StructureUtil {
 
 		double distance = Calc.getDistance(a1,a2);
 
-		Float min = definition.getLowerLimit();
-		Float max = definition.getUpperLimit();
+		float min = definition.getLowerLimit();
+		float max = definition.getUpperLimit();
 
 		return ( min < distance && max > distance);
 
@@ -327,7 +327,7 @@ public final class StructureUtil {
 		}
 
 		int n = atoms.size();
-		List<String> ret = new ArrayList<String>(n);
+		List<String> ret = new ArrayList<>(n);
 		for (int i=0; i<n; i++) {
 			ret.add(atoms.get(i).getName());
 		}

@@ -30,7 +30,7 @@ import java.awt.event.MouseListener;
 
 class JTableMouseButtonListener implements MouseListener {
 
-	private JTable __table;
+	private final JTable __table;
 
 	private void __forwardEventToButton(MouseEvent e) {
 		TableColumnModel columnModel = __table.getColumnModel();

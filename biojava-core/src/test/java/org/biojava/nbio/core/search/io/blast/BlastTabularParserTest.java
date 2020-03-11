@@ -20,19 +20,17 @@
  */
 package org.biojava.nbio.core.search.io.blast;
 
+import org.biojava.nbio.core.search.io.Hit;
+import org.biojava.nbio.core.search.io.Hsp;
+import org.biojava.nbio.core.search.io.Result;
+import org.junit.*;
+
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import org.biojava.nbio.core.search.io.Hit;
-import org.biojava.nbio.core.search.io.Hsp;
-import org.biojava.nbio.core.search.io.Result;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  *
@@ -67,7 +65,7 @@ public class BlastTabularParserTest {
 		System.out.println("getFileExtensions");
 		BlastTabularParser instance = new BlastTabularParser();
 
-		List<String> expResult = new ArrayList<String>();
+		List<String> expResult = new ArrayList<>();
 		expResult.add("blasttabular");
 		expResult.add("blasttxt");
 
@@ -143,7 +141,7 @@ public class BlastTabularParserTest {
 				.setHspBitScore(2894)
 				.createBlastHsp();
 
-		List<Hsp> hsplist = new ArrayList<Hsp>();
+		List<Hsp> hsplist = new ArrayList<>();
 		hsplist.add(hsp1Hit1Res1);
 		hsplist.add(hsp1Hit1Res2);
 
@@ -151,7 +149,7 @@ public class BlastTabularParserTest {
 				.setHitDef("CP000411")
 				.setHsps(hsplist)
 				.createBlastHit();
-		List<Hit> hitlist = new ArrayList<Hit>();
+		List<Hit> hitlist = new ArrayList<>();
 		hitlist.add(hit1Res1);
 
 		BlastResult res1 = new BlastResultBuilder()

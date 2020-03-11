@@ -29,7 +29,7 @@ package org.biojava.nbio.core.sequence;
  * @author Scooter Willis
  */
 public class StartCodonSequence extends DNASequence {
-public DNASequence parentGeneSequence = null;
+public final DNASequence parentGeneSequence;
 
 
 	public StartCodonSequence(TranscriptSequence parentGeneSequence, int begin, int end){

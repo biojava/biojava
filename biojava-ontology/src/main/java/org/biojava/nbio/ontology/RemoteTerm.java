@@ -60,7 +60,7 @@ public interface RemoteTerm extends Term {
 	 * @return the term
 	 */
 
-	public Term getRemoteTerm();
+	Term getRemoteTerm();
 
 	/**
 	 * Simple in-memory implementation of a remote ontology term.
@@ -68,7 +68,7 @@ public interface RemoteTerm extends Term {
 	 * This can be used to implement Ontology.importTerm
 	 */
 
-	public final static class Impl
+	final class Impl
 	extends AbstractTerm
 	implements RemoteTerm, java.io.Serializable {
 		/**
@@ -78,7 +78,7 @@ public interface RemoteTerm extends Term {
 		private final Ontology ontology;
 		private final Term remoteTerm;
 		private final String name;
-		private Set synonyms;
+		private final Set synonyms;
 
 		public Impl(Ontology ontology, Term remoteTerm, String name) {
 			this(ontology, remoteTerm, name, null);

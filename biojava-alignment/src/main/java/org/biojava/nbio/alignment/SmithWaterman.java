@@ -23,11 +23,11 @@
 
 package org.biojava.nbio.alignment;
 
-import org.biojava.nbio.core.alignment.SimpleSequencePair;
 import org.biojava.nbio.alignment.template.AbstractPairwiseSequenceAligner;
+import org.biojava.nbio.alignment.template.GapPenalty;
+import org.biojava.nbio.core.alignment.SimpleSequencePair;
 import org.biojava.nbio.core.alignment.template.AlignedSequence;
 import org.biojava.nbio.core.alignment.template.AlignedSequence.Step;
-import org.biojava.nbio.alignment.template.GapPenalty;
 import org.biojava.nbio.core.alignment.template.SubstitutionMatrix;
 import org.biojava.nbio.core.sequence.template.Compound;
 import org.biojava.nbio.core.sequence.template.Sequence;
@@ -69,7 +69,7 @@ public class SmithWaterman<S extends Sequence<C>, C extends Compound> extends Ab
 
 	@Override
 	protected void setProfile(List<Step> sx, List<Step> sy) {
-		profile = pair = new SimpleSequencePair<S, C>(getQuery(), getTarget(), sx, xyStart[0],
+		profile = pair = new SimpleSequencePair<>(getQuery(), getTarget(), sx, xyStart[0],
 				getQuery().getLength() - xyMax[0], sy, xyStart[1], getTarget().getLength() - xyMax[1]);
 	}
 

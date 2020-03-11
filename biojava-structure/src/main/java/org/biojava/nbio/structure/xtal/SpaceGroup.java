@@ -37,7 +37,6 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.io.Serializable;
@@ -103,8 +102,8 @@ public class SpaceGroup implements Serializable {
 		this.primitiveMultiplicity = primitiveMultiplicity;
 		this.shortSymbol = shortSymbol;
 		this.altShortSymbol = altShortSymbol;
-		transformations = new ArrayList<Matrix4d>(multiplicity);
-		transfAlgebraic = new ArrayList<String>(multiplicity);
+		transformations = new ArrayList<>(multiplicity);
+		transfAlgebraic = new ArrayList<>(multiplicity);
 		cellTranslations = new Vector3d[multiplicity/primitiveMultiplicity];
 		this.bravLattice = bravLattice;
 	}
@@ -188,7 +187,7 @@ public class SpaceGroup implements Serializable {
 	}
 
 	private static double[] convertAlgebraicStrToCoefficients(String algString) {
-		String letters = null;
+		String letters;
 		String noLetters = null;
 		Matcher m = splitPat1.matcher(algString);
 		if (m.matches()) {
@@ -215,12 +214,16 @@ public class SpaceGroup implements Serializable {
 				s = -1.0;
 			}
 			String coord = m.group(2);
-			if (coord.equals("X")) {
-				coefficients[0] = s;
-			} else if (coord.equals("Y")) {
-				coefficients[1] = s;
-			} else if (coord.equals("Z")) {
-				coefficients[2] = s;
+			switch (coord) {
+				case "X":
+					coefficients[0] = s;
+					break;
+				case "Y":
+					coefficients[1] = s;
+					break;
+				case "Z":
+					coefficients[2] = s;
+					break;
 			}
 		}
 		if (noLetters!=null) {
@@ -272,7 +275,7 @@ public class SpaceGroup implements Serializable {
 	 * @return
 	 */
 	public List<Matrix4d> getTransformations() {
-		List<Matrix4d> transfs = new ArrayList<Matrix4d>();
+		List<Matrix4d> transfs = new ArrayList<>();
 		for (int i=1;i<this.transformations.size();i++){
 			transfs.add(transformations.get(i));
 		}
@@ -541,7 +544,7 @@ public class SpaceGroup implements Serializable {
 	 * @return
 	 */
 	public static int getRotAxisType(Matrix4d m) {
-		int axisType = 0;
+		int axisType;
 
 		Matrix3d rot = new Matrix3d(m.m00,m.m01,m.m02,
 				m.m10,m.m11,m.m12,
@@ -606,7 +609,7 @@ public class SpaceGroup implements Serializable {
 	public String toXML(){
 
 
-		JAXBContext jaxbContextStringSortedSet = null;
+		JAXBContext jaxbContextStringSortedSet;
 
 		try {
 			jaxbContextStringSortedSet= JAXBContext.newInstance(SpaceGroup.class);
@@ -645,10 +648,10 @@ public class SpaceGroup implements Serializable {
 	public void setTransfAlgebraic(List<String> transfAlgebraic) {
 		//System.out.println("setting transfAlgebraic " + transfAlgebraic);
 		if ( transformations == null || transformations.size() == 0)
-			transformations = new ArrayList<Matrix4d>(transfAlgebraic.size());
+			transformations = new ArrayList<>(transfAlgebraic.size());
 
 		if ( this.transfAlgebraic == null || this.transfAlgebraic.size() == 0)
-			this.transfAlgebraic = new ArrayList<String>(transfAlgebraic.size());
+			this.transfAlgebraic = new ArrayList<>(transfAlgebraic.size());
 
 		for ( String transf : transfAlgebraic){
 			addTransformation(transf);

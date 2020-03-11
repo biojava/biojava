@@ -31,7 +31,7 @@ import javax.vecmath.Quat4d;
  */
 // This would be better named HexacosichoronSampler, since it's sampling 4D space. -SB
 public final class IcosahedralSampler {
-	private static Quat4d quat = new Quat4d();
+	private static final Quat4d quat = new Quat4d();
 
 	// this class cannot be instantiated
 	private IcosahedralSampler() {
@@ -57,7 +57,7 @@ public final class IcosahedralSampler {
 	//	format quaternion
 	// The fifth column gives a weighting factor. Since the 600-cell is regular, all
 	// orientations cover an equal fraction of orientation space and have equal weight.
-	private static double[][] orientations = {
+	private static final double[][] orientations = {
 	{1.000000000f, 0.000000000f, 0.000000000f, 0.000000000f, 1.000000f},
 	{0.000000000f, 1.000000000f, 0.000000000f, 0.000000000f, 1.000000f},
 	{0.000000000f, 0.000000000f, 1.000000000f, 0.000000000f, 1.000000f},

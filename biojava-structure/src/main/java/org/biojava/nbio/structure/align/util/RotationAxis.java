@@ -20,13 +20,6 @@
  */
 package org.biojava.nbio.structure.align.util;
 
-import java.io.StringWriter;
-
-import javax.vecmath.AxisAngle4d;
-import javax.vecmath.Matrix3d;
-import javax.vecmath.Matrix4d;
-import javax.vecmath.Vector3d;
-
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.AtomImpl;
 import org.biojava.nbio.structure.Calc;
@@ -35,6 +28,12 @@ import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.contact.Pair;
 import org.biojava.nbio.structure.geometry.Matrices;
 import org.biojava.nbio.structure.jama.Matrix;
+
+import javax.vecmath.AxisAngle4d;
+import javax.vecmath.Matrix3d;
+import javax.vecmath.Matrix4d;
+import javax.vecmath.Vector3d;
+import java.io.StringWriter;
 
 /**
  * Calculates the rotation axis for an alignment

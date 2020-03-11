@@ -40,7 +40,7 @@ public class AtomInfo {
 	String residueNumber;
 	int modelNumber;
 
-	private static Pattern inscodePatter ;
+	private static final Pattern inscodePatter ;
 	static {
 		inscodePatter = Pattern.compile("([0-9]+)([a-zA-Z]*)?");
 	}
@@ -106,25 +106,25 @@ public class AtomInfo {
 
 	@Override
 	public String toString() {
-		String aa3 = "";
+		String aa3;
 		boolean printResName = true;
 
-		String chain1 ="";
-		String res1 = "";
+		String chain1;
+		String res1;
 
 		aa3 = residueName;
 		res1 = residueNumber;
 		chain1 = chainId;
 
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		if ( printResName) {
-			if ( !aa3.equals("")){
+			if (!aa3.isEmpty()){
 				buf.append("[");
 				buf.append(aa3);
 				buf.append("]");
 			}
 		}
-		if ( ! res1.equals("")) {
+		if (!res1.isEmpty()) {
 
 			// let's check if there is an insertion code...
 			Matcher matcher = inscodePatter.matcher(res1);
@@ -137,7 +137,7 @@ public class AtomInfo {
 				String residueNumber = matcher.group(1);
 				String insCode = matcher.group(2);
 				buf.append(residueNumber);
-				if ( insCode != null && ! ( insCode.equals(""))) {
+				if ( insCode != null && ! (insCode.isEmpty())) {
 					buf.append("^");
 					buf.append(insCode);
 				}
@@ -145,7 +145,7 @@ public class AtomInfo {
 
 		}
 
-		if ( ! chain1.equals("")){
+		if (!chain1.isEmpty()){
 			buf.append(":");
 			buf.append(chain1);
 		}

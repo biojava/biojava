@@ -204,17 +204,12 @@ public class Stoichiometry {
 				}
 				break;
 
-			case QUESTIONMARK:
-				key = "?";
-				if(clusterInd<alphabet.length()) {
-					key = alphabet.substring(clusterInd, clusterInd + 1);
-				}
-				break;
-
-			case CUSTOM:
+            case CUSTOM:
 				throw new IllegalStateException("Alphas should be handled by the custom generator function.");
 
-			default:
+            case QUESTIONMARK:
+
+            default:
 				key = "?";
 				if(clusterInd<alphabet.length()) {
 					key = alphabet.substring(clusterInd, clusterInd + 1);

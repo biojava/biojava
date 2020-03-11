@@ -24,12 +24,11 @@ package org.biojava.nbio.structure.basepairs;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
-import org.biojava.nbio.structure.basepairs.BasePairParameters;
 import org.junit.Test;
 
 import java.io.IOException;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * This class tests the implementations of the search for base pairs for different RCSB structures

@@ -93,7 +93,7 @@ public enum ModificationCategory {
 	/**
 	 * The variable is the same as the &ltType&gt; in the ptm_list XML file.
 	 */
-	private String label;
+	private final String label;
 
 	private String desc;
 
@@ -106,9 +106,9 @@ public enum ModificationCategory {
 		return mapLabelCat.get(label);
 	}
 
-	private static Map<String, ModificationCategory> mapLabelCat;
+	private static final Map<String, ModificationCategory> mapLabelCat;
 	static {
-		mapLabelCat = new HashMap<String, ModificationCategory>();
+		mapLabelCat = new HashMap<>();
 		for (ModificationCategory cat:ModificationCategory.values()) {
 			mapLabelCat.put(cat.label, cat);
 		}

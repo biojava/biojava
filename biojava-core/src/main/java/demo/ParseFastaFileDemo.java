@@ -21,9 +21,6 @@
 package demo;
 
 
-import java.io.File;
-import java.io.InputStream;
-import java.util.LinkedHashMap;
 import org.biojava.nbio.core.sequence.ProteinSequence;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
@@ -31,6 +28,11 @@ import org.biojava.nbio.core.sequence.io.FastaReader;
 import org.biojava.nbio.core.sequence.io.GenericFastaHeaderParser;
 import org.biojava.nbio.core.sequence.io.ProteinSequenceCreator;
 import org.biojava.nbio.core.util.InputStreamProvider;
+
+import java.io.File;
+import java.io.InputStream;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 /**
@@ -94,19 +96,19 @@ public class ParseFastaFileDemo {
 		InputStream inStream = isp.getInputStream(f);
 
 
-		FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = new FastaReader<ProteinSequence, AminoAcidCompound>(
+        FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = new FastaReader<>(
 				inStream,
-				new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>(),
-				new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
+				new GenericFastaHeaderParser<>(),
+				new ProteinSequenceCreator(AminoAcidCompoundSet.aminoAcidCompoundSet));
 
 		LinkedHashMap<String, ProteinSequence> b;
 
 		int nrSeq = 0;
 
 		while ((b = fastaReader.process(100)) != null) {
-			for (String key : b.keySet()) {
+			for (Map.Entry<String, ProteinSequence> entry : b.entrySet()) {
 				nrSeq++;
-				System.out.println(nrSeq + " : " + key + " " + b.get(key));
+				System.out.println(nrSeq + " : " + entry.getKey() + " " + entry.getValue());
 				if ( nrSeq % 100000 == 0)
 					System.out.println(nrSeq );
 			}

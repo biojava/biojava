@@ -50,14 +50,15 @@ public class SimpleSubstitutionMatrix<C extends Compound> implements Substitutio
 
 	private static final String comment = "#";
 
-	private CompoundSet<C> compoundSet;
+	private final CompoundSet<C> compoundSet;
 	private String description, name;
-	private short[][] matrix;
+	private final short[][] matrix;
 	private short max, min;
-	private List<C> rows, cols;
+	private final List<C> rows;
+	private final List<C> cols;
 
 	public static SubstitutionMatrix<AminoAcidCompound> getBlosum62() {
-		return new SimpleSubstitutionMatrix<AminoAcidCompound>(AminoAcidCompoundSet.getAminoAcidCompoundSet(), new InputStreamReader(
+        return new SimpleSubstitutionMatrix<>(AminoAcidCompoundSet.aminoAcidCompoundSet, new InputStreamReader(
 				SimpleSubstitutionMatrix.class.getResourceAsStream("/matrices/blosum62.txt")), "blosum62");
 	}
 
@@ -107,10 +108,11 @@ public class SimpleSubstitutionMatrix<C extends Compound> implements Substitutio
 		name = "IDENTITY_" + match + "_" + replace;
 		max = (match > replace) ? match : replace;
 		min = (match < replace) ? match : replace;
-		rows = cols = compoundSet.getAllCompounds();
-		matrix = new short[rows.size()][cols.size()];
-		for (int r = 0; r < rows.size(); r++) {
-			for (int c = 0; c < cols.size(); c++) {
+		rows = cols = new ArrayList<>(compoundSet.getAllCompounds());
+		int N = rows.size();
+		matrix = new short[N][N];
+		for (int r = 0; r < N; r++) {
+			for (int c = 0; c < N; c++) {
 				try {
 					matrix[r][c] = (compoundSet.compoundsEquivalent(rows.get(r), cols.get(c))) ? match : replace;
 				} catch (UnsupportedOperationException e) {
@@ -126,10 +128,10 @@ public class SimpleSubstitutionMatrix<C extends Compound> implements Substitutio
 		this.name = name;
 		max = Short.MIN_VALUE;
 		min = Short.MAX_VALUE;
-		rows = new ArrayList<C>();
-		cols = new ArrayList<C>();
+		rows = new ArrayList<>();
+		cols = new ArrayList<>();
 		StringBuilder descriptionIn = new StringBuilder();
-		List<short[]> matrixIn = new ArrayList<short[]>();
+		List<short[]> matrixIn = new ArrayList<>();
 		while(input.hasNextLine()) {
 			String line = input.nextLine();
 			if (line.startsWith(comment)) {
@@ -184,8 +186,8 @@ public class SimpleSubstitutionMatrix<C extends Compound> implements Substitutio
 		StringBuilder s = new StringBuilder();
 		int lengthCompound = compoundSet.getMaxSingleCompoundStringLength(), lengthRest =
 				Math.max(Math.max(Short.toString(min).length(), Short.toString(max).length()), lengthCompound) + 1;
-		String padCompound = "%" + Integer.toString(lengthCompound) + "s",
-				padRest = "%" + Integer.toString(lengthRest);
+		String padCompound = "%" + lengthCompound + "s",
+				padRest = "%" + lengthRest;
 		for (int i = 0; i < lengthCompound; i++) {
 			s.append(" ");
 		}
@@ -229,7 +231,8 @@ public class SimpleSubstitutionMatrix<C extends Compound> implements Substitutio
 	private static <C extends Compound> int getIndexOfCompound(List<C> list, C compound) {
 		int index = list.indexOf(compound);
 		if (index == -1) {
-			for (int i = 0; i < list.size(); i++) {
+			int N = list.size();
+			for (int i = 0; i < N; i++) {
 				if (compound.equalsIgnoreCase(list.get(i))) {
 					index = i;
 					break;
@@ -288,8 +291,9 @@ public class SimpleSubstitutionMatrix<C extends Compound> implements Substitutio
 	@Override
 	public Map<C, Short> getRow(C row) {
 		int rowIndex = rows.indexOf(row);
-		Map<C, Short> map = new HashMap<C, Short>();
-		for (int colIndex = 0; colIndex < matrix[rowIndex].length; colIndex++) {
+		Map<C, Short> map = new HashMap<>();
+		int N = matrix[rowIndex].length;
+		for (int colIndex = 0; colIndex < N; colIndex++) {
 			map.put(cols.get(colIndex), matrix[rowIndex][colIndex]);
 		}
 		return map;
@@ -298,7 +302,7 @@ public class SimpleSubstitutionMatrix<C extends Compound> implements Substitutio
 	@Override
 	public Map<C, Short> getColumn(C column) {
 		int colIndex = cols.indexOf(column);
-		Map<C, Short> map = new HashMap<C, Short>();
+		Map<C, Short> map = new HashMap<>();
 		for (int i = 0; i < matrix.length; i++) {
 			map.put(rows.get(i), matrix[i][colIndex]);
 		}

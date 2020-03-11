@@ -20,12 +20,6 @@
  */
 package demo;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
-
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIdentifier;
@@ -38,6 +32,11 @@ import org.biojava.nbio.structure.align.multiple.mc.MultipleMcMain;
 import org.biojava.nbio.structure.align.multiple.mc.MultipleMcParameters;
 import org.biojava.nbio.structure.align.util.AtomCache;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Demo for running the CEMC Algorithm on a protein family and
  * visualizing the results.
@@ -48,7 +47,7 @@ import org.biojava.nbio.structure.align.util.AtomCache;
  */
 public class DemoMultipleMC {
 
-	public static void main(String[] args) throws IOException, StructureException, InterruptedException, ExecutionException {
+	public static void main(String[] args) throws IOException, StructureException {
 
 		//ASP-proteinases (CEMC paper)
 		//List<String> names = Arrays.asList("3app", "4ape", "2apr", "5pep", "1psn", "4cms", "1bbs.A", "1smr.A", "2jxr.A", "1mpp", "2asi", "1am5");
@@ -97,9 +96,9 @@ public class DemoMultipleMC {
 		//Load the CA atoms of the structures
 		AtomCache cache = new AtomCache();
 
-		List<StructureIdentifier> identifiers = new ArrayList<StructureIdentifier>();
+		List<StructureIdentifier> identifiers = new ArrayList<>();
 
-		List<Atom[]> atomArrays = new ArrayList<Atom[]>();
+		List<Atom[]> atomArrays = new ArrayList<>();
 		for (String name:names)	{
 			atomArrays.add(cache.getAtoms(name));
 			identifiers.add(new SubstructureIdentifier(name));

@@ -36,18 +36,18 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class SCOPAutoSuggestProvider implements AutoSuggestProvider{
 
-	boolean DEBUG = false;
+	final boolean DEBUG = false;
 
 	int maxResults = 20;
 
-	AtomicBoolean stop = new AtomicBoolean(false);
+	final AtomicBoolean stop = new AtomicBoolean(false);
 
 	@Override
 	public Vector<String> getSuggestion(String userInput) {
 
 		long timeS = System.currentTimeMillis();
 
-		List<ScopDomain> domains = new ArrayList<ScopDomain>();
+		List<ScopDomain> domains;
 
 		domains = getPossibleScopDomains(userInput);
 
@@ -55,7 +55,7 @@ public class SCOPAutoSuggestProvider implements AutoSuggestProvider{
 
 		// convert domains to Strings
 
-		Vector<String> v=new Vector<String>();
+		Vector<String> v= new Vector<>();
 
 		int counter = 0;
 		for ( ScopDomain d : domains){
@@ -82,7 +82,7 @@ public class SCOPAutoSuggestProvider implements AutoSuggestProvider{
 
 	private List<ScopDomain> getPossibleScopDomains(String userInput) {
 
-		List<ScopDomain> domains = new ArrayList<ScopDomain>();
+		List<ScopDomain> domains = new ArrayList<>();
 
 		ScopDatabase scop = ScopFactory.getSCOP();
 

@@ -23,16 +23,15 @@
 
 package org.biojava.nbio.structure;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.contact.Grid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * This is the canonical way to identify a part of a structure.
@@ -75,7 +74,7 @@ public class SubstructureIdentifier implements StructureIdentifier {
 	private static final Logger logger = LoggerFactory.getLogger(SubstructureIdentifier.class);
 
 
-	private final String pdbId;
+	public final String pdbId;
 	private final List<ResidueRange> ranges;
 
 	/**
@@ -100,7 +99,7 @@ public class SubstructureIdentifier implements StructureIdentifier {
 
 			this.ranges = ResidueRange.parseMultiple(rangeStr);
 		} else {
-			this.ranges = new LinkedList<ResidueRange>();
+			this.ranges = new LinkedList<>();
 		}
 	}
 
@@ -199,7 +198,7 @@ public class SubstructureIdentifier implements StructureIdentifier {
 		for( int modelNr=0;modelNr<s.nrModels();modelNr++) {
 
 			// Construct new model
-			newS.addModel(new ArrayList<Chain>());
+			newS.addModel(new ArrayList<>());
 
 			if(getResidueRanges().isEmpty()) {
 				// Include all residues
@@ -286,14 +285,11 @@ public class SubstructureIdentifier implements StructureIdentifier {
 	 * @return A Structure containing at least the atoms identified by this,
 	 *  or null if no PDB ID is set
 	 * @throws StructureException For errors loading and parsing the structure
-	 * @throws IOException Errors reading the structure from disk
-	 */
+     */
 	@Override
-	public Structure loadStructure(AtomCache cache) throws IOException, StructureException {
-		String pdb = getPdbId();
-		if(pdb == null)
-			return null;
-		return cache.getStructureForPdbId(pdb);
+	public Structure loadStructure(AtomCache cache) throws StructureException {
+		String pdb = pdbId;
+		return pdb == null ? null : cache.getStructureForPdbId(pdb);
 	}
 
 	/**

@@ -85,8 +85,8 @@ public class HmmerDemo {
 	 */
 	private static ProteinSequence getUniprot(String uniProtID) throws Exception {
 
-		AminoAcidCompoundSet set = AminoAcidCompoundSet.getAminoAcidCompoundSet();
-		UniprotProxySequenceReader<AminoAcidCompound> uniprotSequence = new UniprotProxySequenceReader<AminoAcidCompound>(uniProtID,set);
+        AminoAcidCompoundSet set = AminoAcidCompoundSet.aminoAcidCompoundSet;
+		UniprotProxySequenceReader<AminoAcidCompound> uniprotSequence = new UniprotProxySequenceReader<>(uniProtID, set);
 
 		ProteinSequence seq = new ProteinSequence(uniprotSequence);
 

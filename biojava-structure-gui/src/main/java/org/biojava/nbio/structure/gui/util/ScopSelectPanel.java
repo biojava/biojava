@@ -25,7 +25,6 @@
 package org.biojava.nbio.structure.gui.util;
 
 import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.gui.autosuggest.AutoSuggestProvider;
 import org.biojava.nbio.structure.align.gui.autosuggest.JAutoSuggest;
 import org.biojava.nbio.structure.align.gui.autosuggest.SCOPAutoSuggestProvider;
@@ -47,8 +46,8 @@ implements StructurePairSelector
 	 *
 	 */
 	private static final long serialVersionUID = 757947454156959178L;
-	JAutoSuggest dom1;
-	JAutoSuggest dom2;
+	final JAutoSuggest dom1;
+	final JAutoSuggest dom2;
 
 	//private static final Logger logger = LoggerFactory.getLogger(ScopSelectPanel.class);
 
@@ -113,22 +112,20 @@ implements StructurePairSelector
 	}
 
 	@Override
-	public Structure getStructure1() throws StructureException
-	{
+	public Structure getStructure1() {
 		String scop1 = dom1.getText();
 		return getStructure(scop1);
 	}
 
 	@Override
-	public Structure getStructure2() throws StructureException
-	{
+	public Structure getStructure2() {
 		return getStructure(dom2.getText());
 	}
 
-	private Structure getStructure(String domainID) throws StructureException{
+	private Structure getStructure(String domainID) {
 		//PDBFileReader reader = new PDBFileReader();
 
-		if ( domainID == null || domainID.equals(""))
+		if ( domainID == null || domainID.isEmpty())
 			return null;
 
 

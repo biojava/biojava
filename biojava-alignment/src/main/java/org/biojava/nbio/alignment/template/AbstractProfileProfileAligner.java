@@ -23,10 +23,10 @@
 
 package org.biojava.nbio.alignment.template;
 
-import org.biojava.nbio.core.alignment.template.ProfilePair;
-import org.biojava.nbio.core.alignment.template.Profile;
-import org.biojava.nbio.core.alignment.template.SubstitutionMatrix;
 import org.biojava.nbio.alignment.template.GapPenalty.Type;
+import org.biojava.nbio.core.alignment.template.Profile;
+import org.biojava.nbio.core.alignment.template.ProfilePair;
+import org.biojava.nbio.core.alignment.template.SubstitutionMatrix;
 import org.biojava.nbio.core.sequence.template.Compound;
 import org.biojava.nbio.core.sequence.template.CompoundSet;
 import org.biojava.nbio.core.sequence.template.Sequence;
@@ -189,13 +189,13 @@ public abstract class AbstractProfileProfileAligner<S extends Sequence<C>, C ext
 	@Override
 	protected List<C> getCompoundsOfQuery() {
 		// TODO replace with consensus sequence
-		return (query == null) ? new ArrayList<C>() : query.getAlignedSequence(1).getAsList();
+		return (query == null) ? new ArrayList<>() : query.getAlignedSequence(1).getAsList();
 	}
 
 	@Override
 	protected List<C> getCompoundsOfTarget() {
 		// TODO replace with consensus sequence
-		return (target == null) ? new ArrayList<C>() : target.getAlignedSequence(1).getAsList();
+		return (target == null) ? new ArrayList<>() : target.getAlignedSequence(1).getAsList();
 	}
 
 	@Override
@@ -236,7 +236,7 @@ public abstract class AbstractProfileProfileAligner<S extends Sequence<C>, C ext
 		if (query != null && target != null && getGapPenalty() != null && getSubstitutionMatrix() != null &&
 				query.getCompoundSet().equals(target.getCompoundSet())) {
 			int maxq = 0, maxt = 0;
-			cslist = query.getCompoundSet().getAllCompounds();
+			cslist = new ArrayList(query.getCompoundSet().getAllCompounds());
 			qfrac = new float[query.getLength()][];
 			for (int i = 0; i < qfrac.length; i++) {
 				qfrac[i] = query.getCompoundWeightsAt(i + 1, cslist);
@@ -248,24 +248,27 @@ public abstract class AbstractProfileProfileAligner<S extends Sequence<C>, C ext
 				maxt += getSubstitutionScore(tfrac[i], tfrac[i]);
 			}
 			max = Math.max(maxq, maxt);
-			score = min = isLocal() ? 0 : (int) (2 * getGapPenalty().getOpenPenalty() + (query.getLength() +
+			score = min = isLocal() ? 0 : (2 * getGapPenalty().getOpenPenalty() + (query.getLength() +
 					target.getLength()) * getGapPenalty().getExtensionPenalty());
 		}
 	}
 
 	// helper method that scores alignment of two column vectors
 	private int getSubstitutionScore(float[] qv, float[] tv) {
-		float score = 0.0f;
+		double score = 0.0;
+		SubstitutionMatrix<C> s = getSubstitutionMatrix();
 		for (int q = 0; q < qv.length; q++) {
-			if (qv[q] > 0.0f) {
+			float qvq = qv[q];
+			if (qvq > 0.0) {
+				C cq = cslist.get(q);
 				for (int t = 0; t < tv.length; t++) {
-					if (tv[t] > 0.0f) {
-						score += qv[q]*tv[t]*getSubstitutionMatrix().getValue(cslist.get(q), cslist.get(t));
-					}
+					float tvt = tv[t];
+					if (tvt > 0.0)
+						score += qvq * tvt * s.getValue(cq, cslist.get(t));
 				}
 			}
 		}
-		return Math.round(score);
+		return (int) Math.round(score); //TODO return double?
 	}
 
 }

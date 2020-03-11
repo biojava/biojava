@@ -44,12 +44,9 @@ public class SimpleSequencePairTest {
 	public void setup() throws CompoundNotFoundException {
 		query = new ProteinSequence("ARND");
 		target = new ProteinSequence("RDG");
-		global = new SimpleSequencePair<ProteinSequence, AminoAcidCompound>(query, target, Arrays.asList(new Step[] {
-				Step.COMPOUND, Step.COMPOUND, Step.COMPOUND, Step.COMPOUND, Step.GAP}), Arrays.asList(new Step[] {
-				Step.GAP, Step.COMPOUND, Step.GAP, Step.COMPOUND, Step.COMPOUND}));
-		local = new SimpleSequencePair<ProteinSequence, AminoAcidCompound>(query, target, Arrays.asList(new Step[] {
-				Step.COMPOUND, Step.COMPOUND, Step.COMPOUND}), 1, 0, Arrays.asList(new Step[] { Step.COMPOUND,
-				Step.GAP, Step.COMPOUND}), 0, 1);
+		global = new SimpleSequencePair<>(query, target, Arrays.asList(Step.COMPOUND, Step.COMPOUND, Step.COMPOUND, Step.COMPOUND, Step.GAP), Arrays.asList(Step.GAP, Step.COMPOUND, Step.GAP, Step.COMPOUND, Step.COMPOUND));
+		local = new SimpleSequencePair<>(query, target, Arrays.asList(Step.COMPOUND, Step.COMPOUND, Step.COMPOUND), 1, 0, Arrays.asList(Step.COMPOUND,
+                Step.GAP, Step.COMPOUND), 0, 1);
 	}
 
 	@Test

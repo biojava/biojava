@@ -20,20 +20,19 @@
  */
 package org.biojava.nbio.structure.io;
 
-import static org.junit.Assert.assertEquals;
+import org.biojava.nbio.structure.Structure;
+import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureException;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 public class TestDBRefParsing {
 
 	@Test
-	public void testShortLine() throws IOException, StructureException {
+	public void testShortLine() throws IOException {
 		Structure s,ref;
 		PDBFileParser pdbPars = new PDBFileParser();
 

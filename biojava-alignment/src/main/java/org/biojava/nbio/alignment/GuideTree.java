@@ -23,9 +23,9 @@
 
 package org.biojava.nbio.alignment;
 
-import org.biojava.nbio.core.alignment.SimpleProfile;
 import org.biojava.nbio.alignment.template.GuideTreeNode;
 import org.biojava.nbio.alignment.template.PairwiseSequenceScorer;
+import org.biojava.nbio.core.alignment.SimpleProfile;
 import org.biojava.nbio.core.alignment.template.Profile;
 import org.biojava.nbio.core.alignment.template.ProfilePair;
 import org.biojava.nbio.core.sequence.AccessionID;
@@ -39,7 +39,6 @@ import org.forester.phylogeny.Phylogeny;
 import org.forester.phylogeny.PhylogenyNode;
 
 import javax.swing.tree.TreeNode;
-
 import java.util.*;
 import java.util.concurrent.Future;
 
@@ -54,11 +53,11 @@ import java.util.concurrent.Future;
  */
 public class GuideTree<S extends Sequence<C>, C extends Compound> implements Iterable<GuideTreeNode<S, C>> {
 
-	private List<S> sequences;
-	private List<PairwiseSequenceScorer<S, C>> scorers;
-	private BasicSymmetricalDistanceMatrix distances;
-	private String newick;
-	private Node root;
+	private final List<S> sequences;
+	private final List<PairwiseSequenceScorer<S, C>> scorers;
+	private final BasicSymmetricalDistanceMatrix distances;
+	private final String newick;
+	private final Node root;
 
 	/**
 	 * Creates a guide tree for use during progressive multiple sequence alignment.
@@ -170,10 +169,13 @@ public class GuideTree<S extends Sequence<C>, C extends Compound> implements Ite
 	 */
 	public class Node implements GuideTreeNode<S, C> {
 
-		private GuideTreeNode<S, C> parent, child1, child2;
-		private double distance;
-		private String name;
-		private boolean isLeaf, isVisited;
+		private final GuideTreeNode<S, C> parent;
+		private GuideTreeNode<S, C> child1;
+		private GuideTreeNode<S, C> child2;
+		private final double distance;
+		private final String name;
+		private final boolean isLeaf;
+		private boolean isVisited;
 		private Profile<S, C> profile;
 		private Future<ProfilePair<S, C>> profileFuture;
 
@@ -182,7 +184,7 @@ public class GuideTree<S extends Sequence<C>, C extends Compound> implements Ite
 			distance = node.getDistanceToParent();
 			name = node.getName();
 			if(isLeaf = node.isExternal()) {
-				profile = new SimpleProfile<S, C>(sequences.get(distances.getIndex(name)));
+				profile = new SimpleProfile<>(sequences.get(distances.getIndex(name)));
 			} else {
 				child1 = new Node(node.getChildNode1(), this);
 				child2 = new Node(node.getChildNode2(), this);
@@ -237,7 +239,7 @@ public class GuideTree<S extends Sequence<C>, C extends Compound> implements Ite
 
 		@Override
 		public Enumeration<GuideTreeNode<S, C>> children() {
-			Vector<GuideTreeNode<S, C>> children = new Vector<GuideTreeNode<S, C>>();
+			Vector<GuideTreeNode<S, C>> children = new Vector<>();
 			children.add(getChild1());
 			children.add(getChild2());
 			return children.elements();
@@ -301,11 +303,11 @@ public class GuideTree<S extends Sequence<C>, C extends Compound> implements Ite
 	// helper class that defines the default post-order (leaves to root) traversal
 	private class PostOrderIterator implements Iterator<GuideTreeNode<S, C>> {
 
-		private Stack<Node> nodes;
+		private final Stack<Node> nodes;
 
 		private PostOrderIterator() {
 			getRoot().clearVisited();
-			nodes = new Stack<Node>();
+			nodes = new Stack<>();
 			nodes.push(getRoot());
 		}
 

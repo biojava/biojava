@@ -20,20 +20,18 @@
  */
 package org.biojava.nbio.structure.align.multiple.util;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.vecmath.Matrix4d;
-
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Calc;
-import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.multiple.Block;
 import org.biojava.nbio.structure.align.multiple.BlockSet;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.geometry.SuperPositionSVD;
 import org.biojava.nbio.structure.geometry.SuperPositions;
+
+import javax.vecmath.Matrix4d;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Superimposes the core aligned residues of every structure in a
@@ -54,7 +52,7 @@ import org.biojava.nbio.structure.geometry.SuperPositions;
  */
 public class CoreSuperimposer implements MultipleSuperimposer {
 
-	private int reference;
+	private final int reference;
 
 	/**
 	 * Default Constructor.
@@ -79,8 +77,7 @@ public class CoreSuperimposer implements MultipleSuperimposer {
 	}
 
 	@Override
-	public void superimpose(MultipleAlignment alignment)
-			throws StructureException {
+	public void superimpose(MultipleAlignment alignment) {
 
 		//Check for inconsistencies in the alignment
 		if(alignment.getEnsemble() == null) {
@@ -111,7 +108,7 @@ public class CoreSuperimposer implements MultipleSuperimposer {
 
 			//Block transformations
 			List<Matrix4d> transforms =
-					new ArrayList<Matrix4d>(atomArrays.size());
+					new ArrayList<>(atomArrays.size());
 
 			//Loop through structures
 			for (int i=0; i<atomArrays.size(); i++){
@@ -127,8 +124,8 @@ public class CoreSuperimposer implements MultipleSuperimposer {
 				Atom[] ref = atomArrays.get(reference);
 				Atom[] curr = atomArrays.get(i);
 
-				List<Atom> atomSet1 = new ArrayList<Atom>();
-				List<Atom> atomSet2 = new ArrayList<Atom>();
+				List<Atom> atomSet1 = new ArrayList<>();
+				List<Atom> atomSet2 = new ArrayList<>();
 
 				for( Block blk : bs.getBlocks() ) {
 
@@ -156,8 +153,8 @@ public class CoreSuperimposer implements MultipleSuperimposer {
 						atomSet2.add(curr[pos2]);
 					}
 				}
-				Atom[] array1 = atomSet1.toArray(new Atom[atomSet1.size()]);
-				Atom[] array2 = atomSet2.toArray(new Atom[atomSet2.size()]);
+				Atom[] array1 = atomSet1.toArray(Atom.EmptyAtomArray);
+				Atom[] array2 = atomSet2.toArray(Atom.EmptyAtomArray);
 
 				array2 = StructureTools.cloneAtomArray(array2);
 

@@ -20,9 +20,6 @@
  */
 package org.biojava.nbio.structure.symmetry.gui;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.gui.StructureAlignmentDisplay;
@@ -32,6 +29,9 @@ import org.biojava.nbio.structure.align.util.RotationAxis;
 import org.biojava.nbio.structure.symmetry.internal.CeSymmResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * Action Listener for the symmetry menu. Trigger various internal symmetry
@@ -43,8 +43,8 @@ import org.slf4j.LoggerFactory;
  */
 public class SymmetryListener implements ActionListener {
 
-	private MultipleAlignmentJmol jmol;
-	private CeSymmResult symm;
+	private final MultipleAlignmentJmol jmol;
+	private final CeSymmResult symm;
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(SymmetryListener.class);
@@ -64,34 +64,41 @@ public class SymmetryListener implements ActionListener {
 			logger.error("Currently not displaying a symmetry!");
 
 		try {
-			if (cmd.equals("Repeats Superposition")) {
-				MultipleAlignmentJmol j = SymmetryDisplay.displayRepeats(symm);
-				String s = SymmetryDisplay.printSymmetryAxes(symm, false);
-				j.evalString(s);
-				j.evalString("save STATE state_1");
+			switch (cmd) {
+				case "Repeats Superposition": {
+					MultipleAlignmentJmol j = SymmetryDisplay.displayRepeats(symm);
+					String s = SymmetryDisplay.printSymmetryAxes(symm, false);
+					j.evalString(s);
+					j.evalString("save STATE state_1");
 
 
-			} else if (cmd.equals("Multiple Structure Alignment")) {
-				MultipleAlignmentJmol j = SymmetryDisplay.displayFull(symm);
-				String s = SymmetryDisplay.printSymmetryAxes(symm);
-				j.evalString(s);
-				j.evalString("save STATE state_1");
+					break;
+				}
+				case "Multiple Structure Alignment": {
+					MultipleAlignmentJmol j = SymmetryDisplay.displayFull(symm);
+					String s = SymmetryDisplay.printSymmetryAxes(symm);
+					j.evalString(s);
+					j.evalString("save STATE state_1");
 
-			} else if (cmd.equals("Optimal Self Alignment")) {
-				Atom[] cloned = StructureTools.cloneAtomArray(symm.getAtoms());
-				AbstractAlignmentJmol jmol = StructureAlignmentDisplay.display(
-						symm.getSelfAlignment(), symm.getAtoms(), cloned);
-				RotationAxis axis = new RotationAxis(symm.getSelfAlignment());
-				jmol.evalString(axis.getJmolScript(symm.getAtoms()));
-				jmol.setTitle(SymmetryDisplay.getSymmTitle(symm));
+					break;
+				}
+				case "Optimal Self Alignment": {
+					Atom[] cloned = StructureTools.cloneAtomArray(symm.getAtoms());
+					AbstractAlignmentJmol jmol = StructureAlignmentDisplay.display(
+							symm.getSelfAlignment(), symm.getAtoms(), cloned);
+					RotationAxis axis = new RotationAxis(symm.getSelfAlignment());
+					jmol.evalString(axis.getJmolScript(symm.getAtoms()));
+					jmol.setTitle(SymmetryDisplay.getSymmTitle(symm));
 
-			} else if (cmd.equals("Show Symmetry Group")) {
-				String script = SymmetryDisplay.printSymmetryGroup(symm);
-				jmol.evalString(script);
-
-			} else if (cmd.equals("Show Symmetry Axes")) {
-				String s = SymmetryDisplay.printSymmetryAxes(symm);
-				jmol.evalString(s);
+					break;
+				}
+				case "Show Symmetry Group":
+					jmol.evalString(SymmetryDisplay.printSymmetryGroup(symm));
+					break;
+				case "Show Symmetry Axes": {
+					jmol.evalString(SymmetryDisplay.printSymmetryAxes(symm));
+					break;
+				}
 			}
 
 		} catch (Exception e) {

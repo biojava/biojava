@@ -35,7 +35,7 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class ConfigXMLHandler extends DefaultHandler {
 
-	UserConfiguration config ;
+	final UserConfiguration config ;
 
 	/**
 	 *

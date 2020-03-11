@@ -21,7 +21,6 @@
 package org.biojava.nbio.structure.quaternary;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 
@@ -43,8 +42,8 @@ import java.util.List;
  */
 public class CartesianProduct<T> {
 
-	private List<T> list1 = Collections.emptyList();
-	private List<T> list2 = Collections.emptyList();
+	private final List<T> list1;
+	private final List<T> list2;
 
 	/**
 	 * Class constructor specifying the two lists of a cartesian product.
@@ -60,11 +59,11 @@ public class CartesianProduct<T> {
 	 * @return the list of ordered pairs
 	 */
 	public List<OrderedPair<T>> getOrderedPairs() {
-		List<OrderedPair<T>> pairs = new ArrayList<OrderedPair<T>>(list1.size()*list2.size());
+		List<OrderedPair<T>> pairs = new ArrayList<>(list1.size() * list2.size());
 
 		for (T element1: list1) {
 			for (T element2: list2) {
-				pairs.add(new OrderedPair<T>(element1, element2));
+				pairs.add(new OrderedPair<>(element1, element2));
 			}
 		}
 

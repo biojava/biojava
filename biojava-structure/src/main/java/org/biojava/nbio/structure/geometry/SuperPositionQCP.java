@@ -21,13 +21,13 @@
 
 package org.biojava.nbio.structure.geometry;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.vecmath.Matrix3d;
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Implementation of the Quaternion-Based Characteristic Polynomial algorithm
@@ -126,8 +126,8 @@ public final class SuperPositionQCP extends SuperPositionAbstract {
 	private Point3d ytrans;
 
 	private double e0;
-	private Matrix3d rotmat = new Matrix3d();
-	private Matrix4d transformation = new Matrix4d();
+	private final Matrix3d rotmat = new Matrix3d();
+	private final Matrix4d transformation = new Matrix4d();
 	private double rmsd = 0;
 	private double Sxy, Sxz, Syx, Syz, Szx, Szy;
 	private double SxxpSyy, Szz, mxEigenV, SyzmSzy, SxzmSzx, SxymSyx;
@@ -135,7 +135,7 @@ public final class SuperPositionQCP extends SuperPositionAbstract {
 	private double Syy, Sxx, SyzpSzy;
 	private boolean rmsdCalculated = false;
 	private boolean transformationCalculated = false;
-	private boolean centered = false;
+	private final boolean centered = false;
 
 	/**
 	 * Default constructor for the quaternion based superposition algorithm.

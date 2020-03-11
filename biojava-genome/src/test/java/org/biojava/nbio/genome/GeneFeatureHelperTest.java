@@ -21,13 +21,13 @@
 package org.biojava.nbio.genome;
 
 import junitx.framework.FileAssert;
-import org.biojava.nbio.genome.parsers.gff.FeatureList;
-import org.biojava.nbio.genome.parsers.gff.GFF3Reader;
-import org.biojava.nbio.genome.parsers.gff.GFF3Writer;
 import org.biojava.nbio.core.sequence.ChromosomeSequence;
 import org.biojava.nbio.core.sequence.GeneSequence;
 import org.biojava.nbio.core.sequence.ProteinSequence;
 import org.biojava.nbio.core.sequence.io.FastaWriterHelper;
+import org.biojava.nbio.genome.parsers.gff.FeatureList;
+import org.biojava.nbio.genome.parsers.gff.GFF3Reader;
+import org.biojava.nbio.genome.parsers.gff.GFF3Writer;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -48,11 +48,11 @@ public class GeneFeatureHelperTest {
 	private static final Logger logger = LoggerFactory.getLogger(GeneFeatureHelperTest.class);
 
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 	}
 
 	@After
-	public void tearDown() throws Exception {
+	public void tearDown() {
 	}
 
 	@Test

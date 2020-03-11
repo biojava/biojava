@@ -40,7 +40,7 @@ public enum BridgeType {
 	public final Character type;
 	public final String name;
 
-	private BridgeType(String name, Character stype) {
+	BridgeType(String name, Character stype) {
 		this.name = name;
 		this.type = stype;
 	}

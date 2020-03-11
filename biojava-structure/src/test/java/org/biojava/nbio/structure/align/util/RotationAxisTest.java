@@ -51,11 +51,11 @@ import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.AtomImpl;
 import org.junit.Test;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-
 import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Matrix4d;
+
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author blivens
@@ -64,7 +64,7 @@ import javax.vecmath.Matrix4d;
 public class RotationAxisTest {
 
 	@Test
-	public void testProjection() throws Exception{
+	public void testProjection() {
 		RotationAxis axis;
 		Atom dir,pos,projected;
 

@@ -30,7 +30,6 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedHashMap;
-import java.util.logging.Level;
 
 /**
  *
@@ -44,11 +43,11 @@ public class FastaReaderTest {
 	}
 
 	@BeforeClass
-	public static void setUpClass() throws Exception {
+	public static void setUpClass() {
 	}
 
 	@AfterClass
-	public static void tearDownClass() throws Exception {
+	public static void tearDownClass() {
 	}
 
 	@Before
@@ -69,7 +68,7 @@ public class FastaReaderTest {
 		Assert.assertNotNull(inStream);
 
 
-		FastaReader<ProteinSequence,AminoAcidCompound> fastaReader = new FastaReader<ProteinSequence,AminoAcidCompound>(inStream, new GenericFastaHeaderParser<ProteinSequence,AminoAcidCompound>(), new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
+        FastaReader<ProteinSequence,AminoAcidCompound> fastaReader = new FastaReader<>(inStream, new GenericFastaHeaderParser<>(), new ProteinSequenceCreator(AminoAcidCompoundSet.aminoAcidCompoundSet));
 		LinkedHashMap<String,ProteinSequence> proteinSequences = fastaReader.process();
 		inStream.close();
 
@@ -78,9 +77,8 @@ public class FastaReaderTest {
 		Assert.assertEquals(proteinSequences.size(), 283);
 
 		int seqNum = 0;
-		for(String id:proteinSequences.keySet()) {
-			ProteinSequence proteinSequence = proteinSequences.get(id);
-			switch(seqNum) {
+		for(ProteinSequence proteinSequence : proteinSequences.values()) {
+            switch(seqNum) {
 				case 0:
 					Assert.assertEquals(proteinSequence.getAccession().getID(), "A2D504_ATEGE/1-46");
 					Assert.assertEquals(proteinSequence.getSequenceAsString(), "-----------------FK-N----LP-LED----------------Q----ITL--IQY-----------SWM----------------------CL-SSFA------LSWRSYK---HTNSQFLYFAPDLVF-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
@@ -106,7 +104,7 @@ public class FastaReaderTest {
 		logger.info("process(int)");
 		InputStream inStream = this.getClass().getResourceAsStream("/PF00104_small.fasta");
 		Assert.assertNotNull(inStream);
-		FastaReader<ProteinSequence,AminoAcidCompound> fastaReader = new FastaReader<ProteinSequence,AminoAcidCompound>(inStream, new GenericFastaHeaderParser<ProteinSequence,AminoAcidCompound>(), new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
+        FastaReader<ProteinSequence,AminoAcidCompound> fastaReader = new FastaReader<>(inStream, new GenericFastaHeaderParser<>(), new ProteinSequenceCreator(AminoAcidCompoundSet.aminoAcidCompoundSet));
 		LinkedHashMap<String,ProteinSequence> proteinSequences = fastaReader.process(200);
 
 		//Should have 200 sequences
@@ -114,9 +112,8 @@ public class FastaReaderTest {
 		Assert.assertEquals(proteinSequences.size(), 200);
 
 		int seqNum = 0;
-		for(String id:proteinSequences.keySet()) {
-			ProteinSequence proteinSequence = proteinSequences.get(id);
-			switch(seqNum) {
+		for(ProteinSequence proteinSequence : proteinSequences.values()) {
+            switch(seqNum) {
 				case 0:
 					Assert.assertEquals(proteinSequence.getAccession().getID(), "A2D504_ATEGE/1-46");
 					Assert.assertEquals(proteinSequence.getSequenceAsString(), "-----------------FK-N----LP-LED----------------Q----ITL--IQY-----------SWM----------------------CL-SSFA------LSWRSYK---HTNSQFLYFAPDLVF-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
@@ -134,9 +131,8 @@ public class FastaReaderTest {
 		proteinSequences = fastaReader.process(200);
 		Assert.assertEquals(proteinSequences.size(), 83);
 		seqNum = 0;
-		for(String id:proteinSequences.keySet()) {
-			ProteinSequence proteinSequence = proteinSequences.get(id);
-			switch(seqNum) {
+		for(ProteinSequence proteinSequence : proteinSequences.values()) {
+            switch(seqNum) {
 				case 0:
 					Assert.assertEquals(proteinSequence.getAccession().getID(), "RARA_CANFA/233-413");
 					Assert.assertEquals(proteinSequence.getSequenceAsString(), "TKCIIKTVEFAKQL-PGFT-T----LT-IAD----------------Q----ITL--LKA-----------ACL----------------------DI-LILR------ICTRYTP---EQDTMTFSEGLTLN-------------------------------------------------------------------------------------------------------------------------------------------------------------RTQMHKAGFGPLTDLVFAFA-NQL-LPL-E-MDDAET--------------------GLLSA-ICLI-CGDRQD-------------------------------------------LEQP--DRVDMLQEPLLEALKV-Y-----VRK---------RR---PS----------------------------RP------H--------MFP-KMLMKITD-LRSIS-----------------AKG-AERV--ITLKMEIPG--SMP--PLI-------QEM---");
@@ -164,10 +160,10 @@ public class FastaReaderTest {
 
 		InputStream inStream = this.getClass().getResourceAsStream("/test.fasta");
 
-		FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = new FastaReader<ProteinSequence, AminoAcidCompound>(
+        FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = new FastaReader<>(
 				inStream,
-				new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>(),
-				new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
+				new GenericFastaHeaderParser<>(),
+				new ProteinSequenceCreator(AminoAcidCompoundSet.aminoAcidCompoundSet));
 
 		LinkedHashMap<String, ProteinSequence> b;
 
@@ -192,10 +188,10 @@ public class FastaReaderTest {
 
 		InputStream inStream = this.getClass().getResourceAsStream("/test.fasta");
 
-		FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = new FastaReader<ProteinSequence, AminoAcidCompound>(
+        FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = new FastaReader<>(
 				inStream,
-				new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>(),
-				new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
+				new GenericFastaHeaderParser<>(),
+				new ProteinSequenceCreator(AminoAcidCompoundSet.aminoAcidCompoundSet));
 
 
 		int nrSeq = 0;

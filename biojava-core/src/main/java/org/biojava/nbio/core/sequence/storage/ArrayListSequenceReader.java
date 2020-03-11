@@ -35,6 +35,7 @@ import org.biojava.nbio.core.util.Hashcoder;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Stores a Sequence as a collection of compounds in an ArrayList
@@ -44,7 +45,7 @@ import java.util.List;
 public class ArrayListSequenceReader<C extends Compound> implements SequenceReader<C> {
 
 	private CompoundSet<C> compoundSet;
-	private ArrayList<C> parsedCompounds = new ArrayList<C>();
+	private final ArrayList<C> parsedCompounds = new ArrayList<>();
 
 	private volatile Integer hashcode = null;
 
@@ -95,7 +96,7 @@ public class ArrayListSequenceReader<C extends Compound> implements SequenceRead
 	 */
 	public String getSequenceAsString(Integer begin, Integer end, Strand strand) {
 		// TODO Optimise/cache.
-		SequenceAsStringHelper<C> sequenceAsStringHelper = new SequenceAsStringHelper<C>();
+		SequenceAsStringHelper<C> sequenceAsStringHelper = new SequenceAsStringHelper<>();
 		return sequenceAsStringHelper.getSequenceAsString(this.parsedCompounds, compoundSet, begin, end, strand);
 	}
 
@@ -182,15 +183,14 @@ public class ArrayListSequenceReader<C extends Compound> implements SequenceRead
 	public void setContents(String sequence) throws CompoundNotFoundException {
 		// Horrendously inefficient - pretty much the way the old BJ did things.
 		// TODO Should be optimised.
-		this.parsedCompounds.clear();
+		int length = sequence.length();
+		parsedCompounds.clear();
+		parsedCompounds.ensureCapacity(length); //get the array size correct
+
 		hashcode = null;
 		int maxCompoundLength = compoundSet.getMaxSingleCompoundStringLength();
-		boolean maxCompundLengthEqual1 = true;
-		if (maxCompoundLength > 1) {
-			maxCompundLengthEqual1 = false;
-		}
-		int length = sequence.length();
-		parsedCompounds.ensureCapacity(length); //get the array size correct
+		boolean maxCompundLengthEqual1 = maxCompoundLength <= 1;
+
 		for (int i = 0; i < length;) {
 			String compoundStr = null;
 			C compound = null;
@@ -219,9 +219,7 @@ public class ArrayListSequenceReader<C extends Compound> implements SequenceRead
 	 */
 	public void setContents(List<C> list) {
 		parsedCompounds.clear();
-		for (C c : list) {
-			parsedCompounds.add(c);
-		}
+		parsedCompounds.addAll(list);
 	}
 
 	/**
@@ -232,7 +230,7 @@ public class ArrayListSequenceReader<C extends Compound> implements SequenceRead
 	 */
 	@Override
 	public SequenceView<C> getSubSequence(final Integer bioBegin, final Integer bioEnd) {
-		return new SequenceProxyView<C>(ArrayListSequenceReader.this, bioBegin, bioEnd);
+		return new SequenceProxyView<>(ArrayListSequenceReader.this, bioBegin, bioEnd);
 	}
 
 	/**
@@ -249,8 +247,9 @@ public class ArrayListSequenceReader<C extends Compound> implements SequenceRead
 	 * @param compounds
 	 * @return
 	 */
+	@SafeVarargs
 	@Override
-	public int countCompounds(C... compounds) {
+	public final int countCompounds(C... compounds) {
 		return SequenceMixin.countCompounds(this, compounds);
 	}
 
@@ -279,8 +278,8 @@ public class ArrayListSequenceReader<C extends Compound> implements SequenceRead
 	public boolean equals(Object o) {
 		if(Equals.classEqual(this, o)) {
 			ArrayListSequenceReader<C> that = (ArrayListSequenceReader<C>)o;
-			return  Equals.equal(parsedCompounds, that.parsedCompounds) &&
-					Equals.equal(compoundSet, that.compoundSet);
+            return  Objects.equals(parsedCompounds, that.parsedCompounds) &&
+                    Objects.equals(compoundSet, that.compoundSet);
 		}
 		return false;
 	}

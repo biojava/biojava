@@ -58,8 +58,7 @@ public final class SangerFastqReaderTest
 		return new SangerFastqWriter();
 	}
 
-	public void testValidateDescription() throws Exception
-	{
+	public void testValidateDescription() {
 		SangerFastqReader reader = new SangerFastqReader();
 		URL invalidDescription = getClass().getResource("sanger-invalid-description.fastq");
 		try
@@ -74,8 +73,7 @@ public final class SangerFastqReaderTest
 	}
 
 	@Test
-	public void testValidateRepeatDescription() throws Exception
-	{
+	public void testValidateRepeatDescription() {
 		SangerFastqReader reader = new SangerFastqReader();
 		URL invalidRepeatDescription = getClass().getResource("sanger-invalid-repeat-description.fastq");
 		try

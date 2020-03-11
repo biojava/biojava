@@ -20,11 +20,7 @@
  */
 package org.biojava.nbio.structure.test.scop;
 
-import org.biojava.nbio.structure.Chain;
-import org.biojava.nbio.structure.Group;
-import org.biojava.nbio.structure.GroupIterator;
-import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.scop.ScopDatabase;
 import org.biojava.nbio.structure.scop.ScopDomain;
@@ -35,7 +31,8 @@ import org.junit.Test;
 import java.io.IOException;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 //import org.biojava.nbio.structure.scop.RemoteScopInstallation;
 
@@ -43,7 +40,7 @@ import static org.junit.Assert.*;
 
 public class ScopTest {
 
-	boolean debug = false;
+	final boolean debug = false;
 
 	@Test
 	public void testLocalScop() throws IOException, StructureException{
@@ -98,11 +95,11 @@ public class ScopTest {
 
 		List<ScopDomain> domains = scop.getDomainsForPDB("4HHB");
 
-		assertTrue(domains.size() == 4);
+        assertEquals(4, domains.size());
 
 		// test case sensitivity;
 		List<ScopDomain> domains2 = scop.getDomainsForPDB("4hhb");
-		assertTrue(domains2.size() == domains.size());
+        assertEquals(domains2.size(), domains.size());
 
 		//System.out.println(domains);
 
@@ -110,7 +107,7 @@ public class ScopTest {
 		String scop1m02 = "d1m02a_	1m02	A:	k.36.1.1	74353	cl=58788,cf=75796,sf=75797,fa=75798,dm=75799,sp=75800,px=74353";
 
 		List<ScopDomain> domains1m02 = scop.getDomainsForPDB("1m02");
-		assertTrue(domains1m02.size() == 1);
+        assertEquals(1, domains1m02.size());
 		ScopDomain d1 = domains1m02.get(0);
 
 		assertNotNull(d1);
@@ -119,7 +116,7 @@ public class ScopTest {
 
 
 		List<ScopDomain> domains1cdg = scop.getDomainsForPDB("1CDG");
-		assertTrue(domains1cdg.size() == 4);
+        assertEquals(4, domains1cdg.size());
 		ScopDomain d2 = domains1cdg.get(0);
 		assertEquals("Wrong SCOP Id", "d1cdga1", d2.getScopId());
 		AtomCache cache = new AtomCache();
@@ -146,7 +143,7 @@ public class ScopTest {
 
 		// check a domain with multiple ranges
 		List<ScopDomain> domains1xzp = scop.getDomainsForPDB("1xzp");
-		assertTrue(domains1xzp.size() ==4 );
+        assertEquals(4, domains1xzp.size());
 
 
 
@@ -163,7 +160,7 @@ public class ScopTest {
 		// check insertion codes
 
 		List<ScopDomain> domains2bq6 = scop.getDomainsForPDB("2bq6");
-		assertTrue(domains2bq6.size() == 2);
+        assertEquals(2, domains2bq6.size());
 		ScopDomain target = scop.getDomainByScopID("d2bq6a1");
 
 		assertNotNull(target);

@@ -31,8 +31,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  *
@@ -42,7 +42,7 @@ public class GeneIDXMLReader {
 
 	private static final Logger logger = LoggerFactory.getLogger(GeneIDXMLReader.class);
 
-	Document geneidDoc = null;
+	Document geneidDoc;
 
 	public GeneIDXMLReader(String geneidXMLFile) throws Exception {
 		logger.info("Start read of {}", geneidXMLFile);
@@ -51,8 +51,8 @@ public class GeneIDXMLReader {
 	}
 
 	public LinkedHashMap<String, ProteinSequence> getProteinSequences() throws Exception {
-		LinkedHashMap<String, ProteinSequence> proteinSequenceList = new LinkedHashMap<String, ProteinSequence>();
-		ArrayList<Element> elementList = XMLHelper.selectElements(geneidDoc.getDocumentElement(), "prediction/gene/protein");
+		LinkedHashMap<String, ProteinSequence> proteinSequenceList = new LinkedHashMap<>();
+		List<Element> elementList = XMLHelper.selectElements(geneidDoc.getDocumentElement(), "prediction/gene/protein");
 		logger.info("{} hits", elementList.size());
 
 		for (Element proteinElement : elementList) {
@@ -68,11 +68,9 @@ public class GeneIDXMLReader {
 	}
 
 	public LinkedHashMap<String, DNASequence> getDNACodingSequences() throws Exception {
-		LinkedHashMap<String, DNASequence> dnaSequenceList = new LinkedHashMap<String, DNASequence>();
-		ArrayList<Element> elementList = XMLHelper.selectElements(geneidDoc.getDocumentElement(), "prediction/gene/cDNA");
-		logger.info("{} hits", elementList.size());
+		LinkedHashMap<String, DNASequence> dnaSequenceList = new LinkedHashMap<>();
 
-		for (Element dnaElement : elementList) {
+		for (Element dnaElement : XMLHelper.selectElements(geneidDoc.getDocumentElement(), "prediction/gene/cDNA")) {
 			Element geneElement = (Element) dnaElement.getParentNode();
 			String sequence = dnaElement.getTextContent().replaceAll("\\W","");
 			DNASequence dnaSequence = new DNASequence(sequence);

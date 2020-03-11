@@ -79,7 +79,7 @@ public abstract class AbstractFastqWriterTest {
 
 		try
 		{
-			writer.append((Appendable) null, fastq0);
+			writer.append(null, fastq0);
 			Assert.fail("append(null,) expected IllegalArgumentException");
 		}
 		catch (IllegalArgumentException e)
@@ -96,7 +96,7 @@ public abstract class AbstractFastqWriterTest {
 		Fastq fastq0 = createFastq();
 		Fastq fastq1 = createFastq();
 		Fastq fastq2 = createFastq();
-		List<Fastq> list = new ArrayList<Fastq>();
+		List<Fastq> list = new ArrayList<>();
 		Assert.assertSame(appendable, writer.append(appendable, list));
 		list.add(fastq0);
 		Assert.assertSame(appendable, writer.append(appendable, list));
@@ -109,7 +109,7 @@ public abstract class AbstractFastqWriterTest {
 
 		try
 		{
-			writer.append((Appendable) null, list);
+			writer.append(null, list);
 			Assert.fail("append(null,) expected IllegalArgumentException");
 		}
 		catch (IllegalArgumentException e)
@@ -163,7 +163,7 @@ public abstract class AbstractFastqWriterTest {
 		Fastq fastq0 = createFastq();
 		Fastq fastq1 = createFastq();
 		Fastq fastq2 = createFastq();
-		List<Fastq> list = new ArrayList<Fastq>();
+		List<Fastq> list = new ArrayList<>();
 		File file0 = File.createTempFile("abstractFastqWriterTest", null);
 		writer.write(file0, list);
 
@@ -238,7 +238,7 @@ public abstract class AbstractFastqWriterTest {
 		Fastq fastq1 = createFastq();
 		Fastq fastq2 = createFastq();
 		OutputStream outputStream = new ByteArrayOutputStream();
-		List<Fastq> list = new ArrayList<Fastq>();
+		List<Fastq> list = new ArrayList<>();
 		writer.write(outputStream, list);
 		list.add(fastq0);
 		writer.write(outputStream, list);

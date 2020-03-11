@@ -28,7 +28,7 @@ import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
 import org.biojava.nbio.structure.jama.Matrix;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test that all relevant information (except scores and cache) is correctly
@@ -40,7 +40,7 @@ import static org.junit.Assert.*;
 public class TestAFPChainConversion {
 
 	@Test
-	public void testAFPconversion() throws Exception{
+	public void testAFPconversion() {
 
 		//Fill an AFPChain with the general information
 		AFPChain afp = new AFPChain("algorithm");
@@ -82,8 +82,7 @@ public class TestAFPChainConversion {
 		assertEquals(afp.getName2(), ensemble.getStructureIdentifiers().get(1).getIdentifier());
 		assertEquals(afp.getAlgorithmName(), ensemble.getAlgorithmName());
 		assertEquals(afp.getVersion(),ensemble.getVersion());
-		assertTrue(ensemble.getCalculationTime().equals(
-				afp.getCalculationTime()));
+		assertEquals((long) ensemble.getCalculationTime(), afp.getCalculationTime());
 		assertEquals(afp.getBlockNum(), msa.getBlockSets().size());
 		for (int b = 0; b<afp.getBlockNum(); b++){
 			assertEquals(Calc.getTransformation(

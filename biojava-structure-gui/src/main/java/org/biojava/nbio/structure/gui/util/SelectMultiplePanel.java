@@ -23,23 +23,17 @@
  */
 package org.biojava.nbio.structure.gui.util;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.Box;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-
 import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIdentifier;
 import org.biojava.nbio.structure.align.client.StructureName;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
 import org.biojava.nbio.structure.align.webstart.WebStartMain;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A Text Panel that allows the user to specify multiple structure
@@ -53,7 +47,7 @@ public class SelectMultiplePanel extends JPanel {
 
 	private static final long serialVersionUID = 757947454156959178L;
 
-	JTextField input;
+	final JTextField input;
 
 	public SelectMultiplePanel(){
 		this(true);
@@ -88,9 +82,9 @@ public class SelectMultiplePanel extends JPanel {
 		return hBox;
 	}
 
-	public List<Structure> getStructures() throws StructureException {
+	public List<Structure> getStructures() {
 
-		List<Structure> structures = new ArrayList<Structure>();
+		List<Structure> structures = new ArrayList<>();
 
 		for (StructureIdentifier name:getNames()){
 			structures.add(getStructure(name));
@@ -100,7 +94,7 @@ public class SelectMultiplePanel extends JPanel {
 
 	public List<StructureIdentifier> getNames() {
 
-		List<StructureIdentifier> names = new ArrayList<StructureIdentifier>();
+		List<StructureIdentifier> names = new ArrayList<>();
 
 		String raw = input.getText().trim();
 		String[] split = raw.split(" ");
@@ -111,7 +105,7 @@ public class SelectMultiplePanel extends JPanel {
 		return names;
 	}
 
-	private Structure getStructure(StructureIdentifier name) throws StructureException{
+	private Structure getStructure(StructureIdentifier name) {
 
 		UserConfiguration config = WebStartMain.getWebStartConfig();
 

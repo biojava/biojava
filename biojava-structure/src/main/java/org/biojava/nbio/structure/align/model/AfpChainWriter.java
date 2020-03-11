@@ -45,7 +45,7 @@ public class AfpChainWriter
 
 	public static final String newline = System.getProperty("line.separator");
 
-	private static int LINELENGTH = 70;
+	private static final int LINELENGTH = 70;
 
 	public static String toFatCat(AFPChain afpChain, Atom[] ca1, Atom[] ca2)
 	{
@@ -248,8 +248,7 @@ public class AfpChainWriter
 		//System.out.println(alnseq1.length + " " + alnseq1.toString());
 
 		while((alnLength - t) > 0)      {
-			if(alnLength - t > linelen)     len = linelen;
-			else    len = alnLength - t;
+            len = Math.min(alnLength - t, linelen);
 
 			if ( ap >= ca1.length)
 				break;
@@ -295,12 +294,11 @@ public class AfpChainWriter
 						if ( showAlignmentBlock && block > -1 ) {
 							a += "<span class=\"alignmentBlock1"+block+"\">" + c1 + "</span>";
 							b += "<span class=\"alignmentBlock2"+block+"\">" + c2 + "</span>";
-							c += "<span class=\"m\">" + cl + "</span>";
 						} else {
 							a += getPrefix(c1, c2, 0, block, false).toString() + c1 + "</span>";
 							b += getPrefix(c1, c2, 1, block, false).toString() + c2 + "</span>";
-							c += "<span class=\"m\">" + cl + "</span>";
 						}
+						c += "<span class=\"m\">" + cl + "</span>";
 
 					} else if ( c1 != '-' && c2 != '-') {
 
@@ -330,10 +328,7 @@ public class AfpChainWriter
 			}
 
 			txt.append(newline);
-			if ( longHeader )
-				txt.append(String.format("%14s", " "));
-			else
-				txt.append(String.format("%14s", " "));
+			txt.append(String.format("%14s", " "));
 
 			if (  longHeader ) {
 				for(k = 10; k <= len; k += 10)
@@ -589,7 +584,7 @@ public class AfpChainWriter
 					formatStartingText(p1,p2,header1,header2,footer1,footer2,ca1,ca2);
 				} else {
 					// check for gapped region
-					int lmax = (p1 - p1b - 1)>(p2 - p2b - 1)?(p1 - p1b - 1):(p2 - p2b - 1);
+					int lmax = Math.max((p1 - p1b - 1), (p2 - p2b - 1));
 					for(k = 0; k < lmax; k ++)      {
 
 
@@ -715,15 +710,13 @@ public class AfpChainWriter
 			//alnseq1[len] = '-';
 			if (  formatHTML){
 				alnseq1.append("<span class=\"qg\">-</span>");
-				header1.append(" ");
-				header2.append(" ");
 
 
 			} else {
 				alnseq1.append('-');
-				header1.append(" ");
-				header2.append(" ");
 			}
+			header1.append(" ");
+			header2.append(" ");
 
 		}
 		else {
@@ -742,13 +735,11 @@ public class AfpChainWriter
 			//alnseq2[len] = '-';
 			if ( formatHTML){
 				alnseq2.append("<span class=\"qg\">-</span>");
-				footer1.append(" ");
-				footer2.append(" ");
 			} else {
 				alnseq2.append('-');
-				footer1.append(" ");
-				footer2.append(" ");
 			}
+			footer1.append(" ");
+			footer2.append(" ");
 
 		}
 		else  {
@@ -833,10 +824,8 @@ public class AfpChainWriter
 			//System.out.println(len + " p1:" + tmp + " = " + pos1 + " " + " " + display + " " + ignoreH1);
 			if ( ! ignoreH1) {
 				header1.append(String.format("%-13s",display ));
-				header2.append("|");
-			} else {
-				header2.append("|");
 			}
+			header2.append("|");
 
 		} else if ( hasInsertionCode){
 			Character insCode = g.getResidueNumber().getInsCode();
@@ -991,22 +980,16 @@ public class AfpChainWriter
 				alnsymb.getBuffer().replace(0, lens, "");
 
 
-
-				header1.getBuffer().replace(0, LINELENGTH, "");
-				header2.getBuffer().replace(0, LINELENGTH , "");
-				footer1.getBuffer().replace(0, LINELENGTH, "");
-				footer2.getBuffer().replace(0, LINELENGTH, "");
-				block.getBuffer().replace(0, LINELENGTH, "");
 			} else {
 				alnseq1.getBuffer().replace(0, LINELENGTH, "");
 				alnseq2.getBuffer().replace(0, LINELENGTH, "");
 				alnsymb.getBuffer().replace(0, LINELENGTH, "");
-				header1.getBuffer().replace(0, LINELENGTH, "");
-				header2.getBuffer().replace(0, LINELENGTH , "");
-				footer1.getBuffer().replace(0, LINELENGTH, "");
-				footer2.getBuffer().replace(0, LINELENGTH, "");
-				block.getBuffer().replace(0, LINELENGTH, "");
 			}
+			header1.getBuffer().replace(0, LINELENGTH, "");
+			header2.getBuffer().replace(0, LINELENGTH , "");
+			footer1.getBuffer().replace(0, LINELENGTH, "");
+			footer2.getBuffer().replace(0, LINELENGTH, "");
+			block.getBuffer().replace(0, LINELENGTH, "");
 			StringBuffer buf = header1.getBuffer();
 			for ( int i=0;i<buf.length();i++){
 				char c = buf.charAt(i);
@@ -1058,7 +1041,7 @@ public class AfpChainWriter
 
 	public static String toDBSearchResult(AFPChain afpChain)
 	{
-		StringBuffer str = new StringBuffer();
+		StringBuilder str = new StringBuilder();
 
 		str.append(afpChain.getName1());
 		str.append("\t");
@@ -1098,7 +1081,7 @@ public class AfpChainWriter
 		int blockNum = afpChain.getBlockNum();
 		Atom[] blockShiftVector = afpChain.getBlockShiftVector();
 
-		StringBuffer txt = new StringBuffer();
+		StringBuilder txt = new StringBuilder();
 
 		if ( blockRotationMatrix == null || blockRotationMatrix.length < 1)
 			return "";
@@ -1169,7 +1152,7 @@ public class AfpChainWriter
 
 
 
-		StringBuffer txt = new StringBuffer();
+		StringBuilder txt = new StringBuilder();
 
 		txt.append("Chain 1: ");
 		txt.append(name1);
@@ -1199,8 +1182,7 @@ public class AfpChainWriter
 		int     k, len;
 
 		while((alnLength - t) > 0)      {
-			if(alnLength - t > linelen)     len = linelen;
-			else    len = alnLength - t;
+            len = Math.min(alnLength - t, linelen);
 
 
 			//System.err.println("t,len:"+t+":"+len);

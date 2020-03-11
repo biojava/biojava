@@ -34,7 +34,7 @@ public interface EcodDatabase {
 	 * @return version
 	 * @throws IOException
 	 */
-	public String getVersion() throws IOException;
+    String getVersion() throws IOException;
 
 	/**
 	 * Get a particular ECOD domain by the domain ID (e.g. "e4hhbA1")
@@ -42,7 +42,7 @@ public interface EcodDatabase {
 	 * @return
 	 * @throws IOException
 	 */
-	public EcodDomain getDomainsById(String ecodId) throws IOException;
+    EcodDomain getDomainsById(String ecodId) throws IOException;
 
 	/**
 	 * Get a list of all ECOD domains for a particular PDB ID
@@ -50,7 +50,7 @@ public interface EcodDatabase {
 	 * @return the list of domains, or null if no matching domains were found
 	 * @throws IOException
 	 */
-	public List<EcodDomain> getDomainsForPdb(String pdbId) throws IOException;
+    List<EcodDomain> getDomainsForPdb(String pdbId) throws IOException;
 
 	/**
 	 * Get a list of domains within a particular level of the hierarchy
@@ -59,12 +59,12 @@ public interface EcodDatabase {
 	 * @return
 	 * @throws IOException
 	 */
-	public List<EcodDomain> filterByHierarchy(String hierarchy) throws IOException;
+    List<EcodDomain> filterByHierarchy(String hierarchy) throws IOException;
 
 	/**
 	 * Get all ECOD domains
 	 * @return
 	 * @throws IOException
 	 */
-	public List<EcodDomain> getAllDomains() throws IOException;
+    List<EcodDomain> getAllDomains() throws IOException;
 }

@@ -38,11 +38,11 @@ public class SingleLinkageClusterer {
 
 	private static final Logger logger = LoggerFactory.getLogger(SingleLinkageClusterer.class);
 
-	private class LinkedPair {
+	private static class LinkedPair {
 
-		private int first;
-		private int second;
-		private double closestDistance;
+		private final int first;
+		private final int second;
+		private final double closestDistance;
 
 		public LinkedPair(int first, int second, double minDistance) {
 			this.first = first;
@@ -65,7 +65,7 @@ public class SingleLinkageClusterer {
 		@Override
 		public String toString() {
 
-			String closestDistStr = null;
+			String closestDistStr;
 			if (closestDistance==Double.MAX_VALUE) {
 				closestDistStr = String.format("%6s", "inf");
 			} else {
@@ -77,11 +77,11 @@ public class SingleLinkageClusterer {
 
 	}
 
-	private double[][] matrix;
+	private final double[][] matrix;
 
-	private boolean isScoreMatrix;
+	private final boolean isScoreMatrix;
 
-	private int numItems;
+	private final int numItems;
 
 	private LinkedPair[] dendrogram;
 
@@ -135,7 +135,7 @@ public class SingleLinkageClusterer {
 		dendrogram = new LinkedPair[numItems-1];
 
 
-		logger.debug("Initial matrix: \n"+matrixToString());
+		//logger.debug("Initial matrix: \n"+matrixToString());
 
 
 		for (int m=0;m<numItems-1;m++) {
@@ -176,11 +176,7 @@ public class SingleLinkageClusterer {
 	 * @return
 	 */
 	private double link(double d1, double d2) {
-		if (isScoreMatrix) {
-			return Math.max(d1,d2);
-		} else {
-			return Math.min(d1,d2);
-		}
+		return isScoreMatrix ? Math.max(d1, d2) : Math.min(d1, d2);
 	}
 
 	private double getDistance(int first, int second) {
@@ -190,7 +186,7 @@ public class SingleLinkageClusterer {
 	private void updateIndicesToCheck(int m) {
 
 		if (indicesToCheck==null) {
-			indicesToCheck = new ArrayList<Integer>(numItems);
+			indicesToCheck = new ArrayList<>(numItems);
 
 			for (int i=0;i<numItems;i++) {
 				indicesToCheck.add(i);
@@ -199,7 +195,7 @@ public class SingleLinkageClusterer {
 
 		if (m==0) return;
 
-		indicesToCheck.remove(new Integer(dendrogram[m-1].getFirst()));
+		indicesToCheck.remove(Integer.valueOf(dendrogram[m - 1].getFirst()));
 	}
 
 	private LinkedPair getClosestPair() {
@@ -215,7 +211,7 @@ public class SingleLinkageClusterer {
 
 					if (matrix[i][j]>=max) {
 						max = matrix[i][j];
-						closestPair = new LinkedPair(i,j,max);
+						closestPair = new LinkedPair(i, j, max);
 					}
 
 				}
@@ -229,7 +225,7 @@ public class SingleLinkageClusterer {
 
 					if (matrix[i][j]<=min) {
 						min = matrix[i][j];
-						closestPair = new LinkedPair(i,j,min);
+						closestPair = new LinkedPair(i, j, min);
 					}
 
 				}
@@ -250,7 +246,7 @@ public class SingleLinkageClusterer {
 			clusterIt();
 		}
 
-		Map<Integer, Set<Integer>> clusters = new TreeMap<Integer, Set<Integer>>();
+		Map<Integer, Set<Integer>> clusters = new TreeMap<>();
 
 		int clusterId = 1;
 
@@ -276,7 +272,7 @@ public class SingleLinkageClusterer {
 
 				if (firstClusterId==-1 && secondClusterId==-1) {
 					// neither member is in a cluster yet, let's assign a new cluster and put them both in
-					Set<Integer> members = new TreeSet<Integer>();
+					Set<Integer> members = new TreeSet<>();
 					members.add(dendrogram[i].getFirst());
 					members.add(dendrogram[i].getSecond());
 					clusters.put(clusterId, members);
@@ -293,36 +289,32 @@ public class SingleLinkageClusterer {
 					Set<Integer> firstCluster = clusters.get(firstClusterId);
 					Set<Integer> secondCluster = clusters.get(secondClusterId);
 					if (firstCluster.size()<secondCluster.size()) {
-						logger.debug("Joining cluster "+firstClusterId+" to cluster "+secondClusterId);
+						//logger.debug("Joining cluster "+firstClusterId+" to cluster "+secondClusterId);
 						// we join first onto second
-						for (int member : firstCluster) {
-							secondCluster.add(member);
-						}
+						secondCluster.addAll(firstCluster);
 						clusters.remove(firstClusterId);
 					} else {
-						logger.debug("Joining cluster "+secondClusterId+" to cluster "+firstClusterId);
+						//logger.debug("Joining cluster "+secondClusterId+" to cluster "+firstClusterId);
 						// we join second onto first
-						for (int member : secondCluster) {
-							firstCluster.add(member);
-						}
+						firstCluster.addAll(secondCluster);
 						clusters.remove(secondClusterId);
 					}
 				}
 
-				logger.debug("Within cutoff:     "+dendrogram[i]);
+				//logger.debug("Within cutoff:     "+dendrogram[i]);
 
 			} else {
 
-				logger.debug("Not within cutoff: "+dendrogram[i]);
+				//logger.debug("Not within cutoff: "+dendrogram[i]);
 
 			}
 		}
 
 		// reassigning cluster numbers by creating a new map (there can be gaps in the numbering if cluster-joining happened)
-		Map<Integer,Set<Integer>> finalClusters = new TreeMap<Integer, Set<Integer>>();
+		Map<Integer,Set<Integer>> finalClusters = new TreeMap<>();
 		int newClusterId = 1;
-		for (int oldClusterId:clusters.keySet()) {
-			finalClusters.put(newClusterId, clusters.get(oldClusterId));
+		for (Set<Integer> integers : clusters.values()) {
+			finalClusters.put(newClusterId, integers);
 			newClusterId++;
 		}
 
@@ -336,7 +328,7 @@ public class SingleLinkageClusterer {
 				}
 			}
 			if (!isAlreadyClustered) {
-				Set<Integer> members = new TreeSet<Integer>();
+				Set<Integer> members = new TreeSet<>();
 				members.add(i);
 				finalClusters.put(newClusterId, members);
 				newClusterId++;
@@ -344,7 +336,7 @@ public class SingleLinkageClusterer {
 
 		}
 
-		logger.debug("Clusters: \n"+clustersToString(finalClusters));
+		//logger.debug("Clusters: \n"+clustersToString(finalClusters));
 
 		return finalClusters;
 	}
@@ -367,9 +359,9 @@ public class SingleLinkageClusterer {
 
 	private String clustersToString(Map<Integer,Set<Integer>> finalClusters) {
 		StringBuilder sb = new StringBuilder();
-		for (int cId:finalClusters.keySet()) {
-			sb.append(cId).append(": ");
-			for (int member:finalClusters.get(cId)) {
+		for (Map.Entry<Integer, Set<Integer>> entry : finalClusters.entrySet()) {
+			sb.append((int) entry.getKey()).append(": ");
+			for (int member: entry.getValue()) {
 				sb.append(member).append(" ");
 			}
 			sb.append("\n");

@@ -31,20 +31,20 @@ import java.util.LinkedHashMap;
  */
 public class StrataInfo {
 
-	private ArrayList<Double> time = new ArrayList<Double>();
-	private ArrayList<Integer> status = new ArrayList<Integer>();
-	private ArrayList<Double> nevent = new ArrayList<Double>();
-	private ArrayList<Double> ncens = new ArrayList<Double>();
-	private ArrayList<Double> nrisk = new ArrayList<Double>();
-	private ArrayList<Double> weight = new ArrayList<Double>();
-	private ArrayList<Double> surv = new ArrayList<Double>();
-	private ArrayList<Double> varhaz = new ArrayList<Double>();
-	private ArrayList<Double> stderr = new ArrayList<Double>();
-	private ArrayList<Double> stdlow = new ArrayList<Double>();
-	private ArrayList<Double> upper = new ArrayList<Double>();
-	private ArrayList<Double> lower = new ArrayList<Double>();
-	private LinkedHashMap<Double, Integer> ndead = new LinkedHashMap<Double, Integer>();
-	DecimalFormat df = new DecimalFormat("#.######");
+	private final ArrayList<Double> time = new ArrayList<>();
+	private final ArrayList<Integer> status = new ArrayList<>();
+	private final ArrayList<Double> nevent = new ArrayList<>();
+	private final ArrayList<Double> ncens = new ArrayList<>();
+	private final ArrayList<Double> nrisk = new ArrayList<>();
+	private final ArrayList<Double> weight = new ArrayList<>();
+	private final ArrayList<Double> surv = new ArrayList<>();
+	private final ArrayList<Double> varhaz = new ArrayList<>();
+	private final ArrayList<Double> stderr = new ArrayList<>();
+	private ArrayList<Double> stdlow = new ArrayList<>();
+	private final ArrayList<Double> upper = new ArrayList<>();
+	private final ArrayList<Double> lower = new ArrayList<>();
+	private final LinkedHashMap<Double, Integer> ndead = new LinkedHashMap<>();
+	final DecimalFormat df = new DecimalFormat("#.######");
 	DecimalFormat dfe = new DecimalFormat("0.000000E0");
 
 	/**
@@ -67,7 +67,7 @@ public class StrataInfo {
 				maxTime = t;
 			}
 		}
-		Double timeRange = maxTime - minTime;
+		double timeRange = maxTime - minTime;
 		Double targetTime = minTime + timePercentage * timeRange;
 		Double previousTime = null;
 		for (Double t : time) {
@@ -89,7 +89,7 @@ public class StrataInfo {
 	 * @return
 	 */
 	public Double getNearestAtRisk(double t) {
-		Integer index = 0;
+		int index = 0;
 /*       String timeValue = t + "";
 		String format = "#";
 		int numDecimals = 0;

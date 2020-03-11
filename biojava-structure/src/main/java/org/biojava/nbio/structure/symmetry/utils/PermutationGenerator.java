@@ -34,9 +34,9 @@ public class PermutationGenerator {
 // http://www.merriampark.com/perm.htm // The PermutationGenerator Java class systematically generates permutations. It relies on the fact that any set with n elements can be placed in one-to-one correspondence with the set {1, 2, 3, ..., n}. The algorithm is described by Kenneth H. Rosen, Discrete Mathematics and Its Applications, 2nd edition (NY: McGraw-Hill, 1991), pp. 282-284.
 
 
-	private int[] a;
+	private final int[] a;
 	private BigInteger numLeft;
-	private BigInteger total;
+	private final BigInteger total;
 
 	//-----------------------------------------------------------
 	// Constructor. WARNING: Don't make n too large.

@@ -20,11 +20,6 @@
  */
 package org.biojava.nbio.structure.test.symmetry;
 
-import static org.junit.Assert.*;
-
-import java.io.IOException;
-import java.util.*;
-
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
@@ -44,6 +39,14 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.junit.Assert.*;
 
 /**
  * Test the {@link QuatSymmetryDetector} algorithm for symmetry detection on a
@@ -267,7 +270,7 @@ public class TestQuatSymmetryDetectorExamples {
 			for (QuatSymmetryResults local:foundLocal) {
 				logger.info("Found stoichiometry "+local.getStoichiometry().toString()+" with symmetry "+local.getSymmetry());
 				assertTrue("Stoichiometry "+local.getStoichiometry().toString()+" not expected for "+testIds.get(iTest),
-						refLocal.keySet().contains(local.getStoichiometry().toString()));
+						refLocal.containsKey(local.getStoichiometry().toString()));
 
 				assertEquals("Symmetry "+local.getSymmetry()+" with stoichiometry "+local.getStoichiometry().toString()+
 								" not expected for "+testIds.get(iTest),

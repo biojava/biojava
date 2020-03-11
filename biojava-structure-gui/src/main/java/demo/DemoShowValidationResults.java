@@ -24,8 +24,8 @@
 package demo;
 
 import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.align.gui.jmol.StructureAlignmentJmol;
 import org.biojava.nbio.structure.StructureIO;
+import org.biojava.nbio.structure.align.gui.jmol.StructureAlignmentJmol;
 import org.biojava.nbio.structure.validation.*;
 
 import javax.xml.bind.JAXBContext;
@@ -46,7 +46,7 @@ public class DemoShowValidationResults {
 
 	private static void showPdbValidation(String pdbId) {
 		try {
-			JAXBContext ctx = JAXBContext.newInstance(new Class[] {WwPDBValidationInformation.class});
+			JAXBContext ctx = JAXBContext.newInstance(WwPDBValidationInformation.class);
 
 			Unmarshaller um = ctx.createUnmarshaller();
 
@@ -87,7 +87,7 @@ public class DemoShowValidationResults {
 					pos +="^" + iCode;
 				pos +=":" + chainId;
 
-				BigDecimal base = new BigDecimal(0.5);
+				BigDecimal base = new BigDecimal("0.5");
 
 				for (Clash clash : clashes){
 					String clashatom = clash.getAtom();

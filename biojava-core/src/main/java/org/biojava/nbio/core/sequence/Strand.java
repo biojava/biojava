@@ -33,7 +33,7 @@ public enum Strand {
 	private final String stringRepresentation;
 	private final int numericRepresentation;
 
-	private Strand(String stringRepresentation, int numericRepresentation) {
+	Strand(String stringRepresentation, int numericRepresentation) {
 		this.stringRepresentation = stringRepresentation;
 		this.numericRepresentation = numericRepresentation;
 	}

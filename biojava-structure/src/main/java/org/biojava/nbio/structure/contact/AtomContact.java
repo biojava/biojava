@@ -20,9 +20,9 @@
  */
 package org.biojava.nbio.structure.contact;
 
-import java.io.Serializable;
-
 import org.biojava.nbio.structure.Atom;
+
+import java.io.Serializable;
 
 /**
  * A pair of atoms that are in contact

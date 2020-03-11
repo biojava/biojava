@@ -25,7 +25,6 @@ import org.biojava.nbio.ontology.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -42,13 +41,13 @@ public class GOParser {
 							String ontoName,
 							String ontoDescription,
 							OntologyFactory factory)
-		throws ParseException, IOException
+		throws IOException
 	{
 		try {
 			Ontology onto = factory.createOntology(ontoName, ontoDescription);
 			Term isa = onto.importTerm(OntoTools.IS_A, null);
 			Term partof = null; // fixme: onto.importTerm(OntoTools.PART_OF, null);
-			List<Term> termStack = new ArrayList<Term>();
+			List<Term> termStack = new ArrayList<>();
 			String line;
 			while ((line = goFile.readLine()) != null) {
 				int leadSpaces = 0;
@@ -101,7 +100,7 @@ public class GOParser {
 	}
 
 	private Term parseTerm(Ontology onto, String s)
-		throws ParseException, AlreadyExistsException
+		throws AlreadyExistsException
 	{
 		int semi = s.indexOf(';');
 		int semi2 = s.indexOf(';', semi + 1);
@@ -122,7 +121,7 @@ public class GOParser {
 		} else {
 			Term t = onto.createTerm(termName, termDesc);
 			if (toke.hasMoreTokens()) {
-				List<String> secondaries = new ArrayList<String>();
+				List<String> secondaries = new ArrayList<>();
 				while (toke.hasMoreTokens()) {
 					secondaries.add(toke.nextToken());
 				}

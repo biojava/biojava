@@ -20,11 +20,11 @@
  */
 package org.biojava.nbio.alignment;
 
-import org.biojava.nbio.core.alignment.matrices.SimpleSubstitutionMatrix;
 import org.biojava.nbio.alignment.Alignments.PairwiseSequenceScorerType;
 import org.biojava.nbio.alignment.Alignments.ProfileProfileAlignerType;
 import org.biojava.nbio.alignment.template.GapPenalty;
 import org.biojava.nbio.alignment.template.PairwiseSequenceScorer;
+import org.biojava.nbio.core.alignment.matrices.SimpleSubstitutionMatrix;
 import org.biojava.nbio.core.alignment.template.Profile;
 import org.biojava.nbio.core.alignment.template.SubstitutionMatrix;
 import org.biojava.nbio.core.sequence.ProteinSequence;
@@ -81,8 +81,7 @@ public class CookbookMSAProfiler {
 		Profiler profiler = new Profiler();
 
 		System.out.printf("Loading sequences from %s... ", args[0]);
-		List<ProteinSequence> list = new ArrayList<ProteinSequence>();
-		list.addAll(FastaReaderHelper.readFastaProteinSequence(new File(args[0])).values());
+        List<ProteinSequence> list = new ArrayList<>(FastaReaderHelper.readFastaProteinSequence(new File(args[0])).values());
 		if (args.length > 1 && Integer.parseInt(args[1]) < list.size()) {
 			System.out.printf("%s/%d", args[1], list.size());
 			list = list.subList(0, Integer.parseInt(args[1]));
@@ -106,7 +105,7 @@ public class CookbookMSAProfiler {
 		profiler.setCheckpoint();
 
 		System.out.print("Stage 2: hierarchical clustering into a guide tree... ");
-		GuideTree<ProteinSequence, AminoAcidCompound> tree = new GuideTree<ProteinSequence, AminoAcidCompound>(list,
+		GuideTree<ProteinSequence, AminoAcidCompound> tree = new GuideTree<>(list,
 				scorers);
 		scorers = null;
 		System.out.printf("%d ms using %d kB%n%n%s%n%n", profiler.getTimeSinceCheckpoint()/1000000,

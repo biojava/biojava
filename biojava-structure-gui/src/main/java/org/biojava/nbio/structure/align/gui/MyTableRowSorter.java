@@ -50,7 +50,7 @@ public class MyTableRowSorter extends TableRowSorter<TableModel>
 class MyComparator implements Comparator<String>, Serializable {
 	private static final long serialVersionUID = 1;
 
-	int column;
+	final int column;
 	public MyComparator(int column){
 		this.column = column;
 	}

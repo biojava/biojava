@@ -35,5 +35,5 @@ public interface SequenceHeaderParserInterface<S extends Sequence<?>, C extends 
 	 * @param header
 	 * @param sequence
 	 */
-	public void parseHeader(String header, S sequence);
+    void parseHeader(String header, S sequence);
 }

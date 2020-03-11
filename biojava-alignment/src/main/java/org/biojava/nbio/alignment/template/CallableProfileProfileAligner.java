@@ -39,7 +39,7 @@ import java.util.concurrent.Callable;
 public class CallableProfileProfileAligner<S extends Sequence<C>, C extends Compound>
 		implements Callable<ProfilePair<S, C>> {
 
-	private ProfileProfileAligner<S, C> ppa;
+	private final ProfileProfileAligner<S, C> ppa;
 
 	/**
 	 * Creates a profile-profile alignment task for simplified parallel execution.

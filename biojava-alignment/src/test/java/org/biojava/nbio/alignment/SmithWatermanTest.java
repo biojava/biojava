@@ -23,8 +23,8 @@
 
 package org.biojava.nbio.alignment;
 
-import org.biojava.nbio.core.alignment.matrices.SubstitutionMatrixHelper;
 import org.biojava.nbio.alignment.template.GapPenalty;
+import org.biojava.nbio.core.alignment.matrices.SubstitutionMatrixHelper;
 import org.biojava.nbio.core.alignment.template.SubstitutionMatrix;
 import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.core.sequence.ProteinSequence;
@@ -49,14 +49,14 @@ public class SmithWatermanTest {
 		target = new ProteinSequence("ERDNKGFPS");
 		gaps = new SimpleGapPenalty((short) 2, (short) 1);
 		blosum62 = SubstitutionMatrixHelper.getBlosum62();
-		alignment = new SmithWaterman<ProteinSequence, AminoAcidCompound>(query, target, gaps, blosum62);
-		self = new SmithWaterman<ProteinSequence, AminoAcidCompound>(query, query, gaps, blosum62);
+		alignment = new SmithWaterman<>(query, target, gaps, blosum62);
+		self = new SmithWaterman<>(query, query, gaps, blosum62);
 	}
 
 	@Test
 	public void testSmithWaterman() {
 		SmithWaterman<ProteinSequence, AminoAcidCompound> alig =
-				new SmithWaterman<ProteinSequence, AminoAcidCompound>();
+				new SmithWaterman<>();
 		alig.setQuery(query);
 		alig.setTarget(target);
 		alig.setGapPenalty(gaps);

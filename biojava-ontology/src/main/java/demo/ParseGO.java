@@ -34,7 +34,6 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.Iterator;
 import java.util.Set;
 
 public class ParseGO {
@@ -56,11 +55,9 @@ public class ParseGO {
 			Ontology ontology = parser.parseOBO(oboFile, "BioSapiens", "the BioSapiens ontology");
 
 			Set<Term> keys = ontology.getTerms();
-			Iterator<Term> iter = keys.iterator();
-			while (iter.hasNext()){
-				Term t = iter.next();
-				logger.info("{} [{}]", t.getName(), t.getDescription());
-			}
+            for (Term t : keys) {
+                logger.info("{} [{}]", t.getName(), t.getDescription());
+            }
 		} catch (Exception e){
 			logger.error("Exception: ", e);
 		}

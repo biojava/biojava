@@ -29,7 +29,6 @@
 package org.biojava.nbio.structure.validation;
 
 import javax.xml.bind.annotation.*;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -122,7 +121,7 @@ public class WwPDBValidationInformation implements Serializable {
 	 */
 	public List<ModelledSubgroup> getModelledSubgroup() {
 		if (modelledSubgroup == null) {
-			modelledSubgroup = new ArrayList<ModelledSubgroup>();
+			modelledSubgroup = new ArrayList<>();
 		}
 		return this.modelledSubgroup;
 	}

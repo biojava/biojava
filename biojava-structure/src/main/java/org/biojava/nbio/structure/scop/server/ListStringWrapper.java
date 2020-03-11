@@ -50,7 +50,7 @@ public class ListStringWrapper implements Serializable{
 	private static final long serialVersionUID = 4193799052494327416L;
 	List<String> data;
 
-	static JAXBContext jaxbContext;
+	static final JAXBContext jaxbContext;
 	static {
 		try {
 			jaxbContext= JAXBContext.newInstance(ListStringWrapper.class);
@@ -60,7 +60,7 @@ public class ListStringWrapper implements Serializable{
 	}
 
 	public ListStringWrapper(){
-		data = new ArrayList<String>();
+		data = new ArrayList<>();
 	}
 
 	public List<String> getData() {
@@ -95,7 +95,7 @@ public class ListStringWrapper implements Serializable{
 
 	public static ListStringWrapper fromXML(String xml){
 
-		ListStringWrapper job = null;
+		ListStringWrapper job;
 
 		try {
 

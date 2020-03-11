@@ -34,7 +34,6 @@ public interface CensorStatusSelect {
 	 * @param worksheet
 	 * @param row
 	 * @return
-	 * @throws Exception
 	 */
-	public CensorStatus select(WorkSheet worksheet,String row) throws Exception;
+    CensorStatus select(WorkSheet worksheet, String row);
 }

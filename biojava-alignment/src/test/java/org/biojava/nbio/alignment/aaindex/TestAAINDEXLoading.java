@@ -63,7 +63,7 @@ V    0.02   -1.52   -2.17   -2.02    0.34   -1.38   -1.84   -1.96   -0.35    1.9
 
 		SubstitutionMatrix<AminoAcidCompound> sdm = SubstitutionMatrixHelper.getMatrixFromAAINDEX(matrixName);
 
-		int scale = 1;
+		int scale;
 		if ( sdm instanceof ScaledSubstitutionMatrix) {
 			ScaledSubstitutionMatrix scaledSDM = (ScaledSubstitutionMatrix)sdm;
 			scale = scaledSDM.getScale();
@@ -71,7 +71,7 @@ V    0.02   -1.52   -2.17   -2.02    0.34   -1.38   -1.84   -1.96   -0.35    1.9
 		}
 
 
-		AminoAcidCompoundSet aas = AminoAcidCompoundSet.getAminoAcidCompoundSet();
+        AminoAcidCompoundSet aas = AminoAcidCompoundSet.aminoAcidCompoundSet;
 
 		AminoAcidCompound v = aas.getCompoundForString("V");
 		AminoAcidCompound w = aas.getCompoundForString("W");
@@ -149,7 +149,7 @@ J   0.002   0.000   0.001   0.000   0.001   0.002   0.002   0.001   0.002   0.00
 			Assert.assertEquals(1000, scale);
 		}
 
-		AminoAcidCompoundSet aas = AminoAcidCompoundSet.getAminoAcidCompoundSet();
+        AminoAcidCompoundSet aas = AminoAcidCompoundSet.aminoAcidCompoundSet;
 
 		AminoAcidCompound minus = aas.getCompoundForString("-");
 

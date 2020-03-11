@@ -39,7 +39,6 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.io.*;
 import java.lang.reflect.Array;
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 /**
@@ -100,14 +99,14 @@ public class CliTools {
 			throw new ConfigurationException("Couldn't get information for target bean " + ex.getMessage());
 		}
 
-		Map<String,PropertyDescriptor> propertiesByName = new HashMap<String, PropertyDescriptor>();
+		Map<String,PropertyDescriptor> propertiesByName = new HashMap<>();
 		for (PropertyDescriptor pd : bi.getPropertyDescriptors() ) {
 			propertiesByName.put(pd.getName(), pd);
 		}
 
-		List<String> anonArgs = new ArrayList<String>();
-		Map<PropertyDescriptor,List<String>> arrayProps = new HashMap<PropertyDescriptor, List<String>>();
-		Set<PropertyDescriptor> usedProps = new HashSet<PropertyDescriptor>();
+		List<String> anonArgs = new ArrayList<>();
+		Map<PropertyDescriptor,List<String>> arrayProps = new HashMap<>();
+		Set<PropertyDescriptor> usedProps = new HashSet<>();
 
 		boolean stdInUsed = false;
 		boolean stdOutUsed = false;
@@ -125,7 +124,7 @@ public class CliTools {
 
 				boolean arrayMode = false;
 				Object propVal = null;
-				Class propType = null;
+				Class propType;
 
 				if (pd == null) {
 					if (arg.startsWith("-no")) {
@@ -153,7 +152,7 @@ public class CliTools {
 
 					if (propType == Integer.TYPE) {
 						try {
-							propVal = new Integer(args[++i]);
+							propVal = Integer.valueOf(args[++i]);
 						} catch (Exception ex) {
 							throw new ConfigurationException("Option " + arg + " requires an integer parameter");
 						}
@@ -274,20 +273,14 @@ public class CliTools {
 				//System.out.println("setting to: " + propVal + " " + propVal.getClass().getName());
 
 				if (arrayMode) {
-					List valList = arrayProps.get(pd);
-					if (valList == null) {
-						valList = new ArrayList();
-						arrayProps.put(pd, valList);
-					}
+					List valList = arrayProps.computeIfAbsent(pd, k -> new ArrayList());
 					valList.add(propVal);
 				} else {
 					if (usedProps.contains(pd)) {
 						throw new ConfigurationException("Multiple values supplied for " + pd.getName());
 					}
 					try {
-						pd.getWriteMethod().invoke(bean, new Object[] {propVal});
-					} catch (InvocationTargetException ex) {
-						throw new ConfigurationException("Error configuring '" + pd.getName() + "'");
+						pd.getWriteMethod().invoke(bean, propVal);
 					} catch (Exception ex) {
 						throw new ConfigurationException("Error configuring '" + pd.getName() + "'");
 					}
@@ -317,15 +310,13 @@ public class CliTools {
 				valArray = vals.toArray((Object[]) Array.newInstance(compType, vals.size()));
 			}
 			try {
-				pd.getWriteMethod().invoke(bean, new Object[] {valArray});
-			} catch (InvocationTargetException ex) {
-				throw new ConfigurationException("Error configuring '" + pd.getName() + "'");
+				pd.getWriteMethod().invoke(bean, valArray);
 			} catch (Exception ex) {
 				throw new ConfigurationException("Error configuring '" + pd.getName() + "'");
 			}
 		}
 
-		return anonArgs.toArray(new String[anonArgs.size()]);
+		return anonArgs.toArray(new String[0]);
 	}
 
 	/**

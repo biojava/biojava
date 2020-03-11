@@ -33,7 +33,7 @@ public class CasePreservingProteinSequenceCreatorTest {
 
 	@Test
 	public void testConstructor() throws CompoundNotFoundException {
-		CasePreservingProteinSequenceCreator creator = new CasePreservingProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet());
+        CasePreservingProteinSequenceCreator creator = new CasePreservingProteinSequenceCreator(AminoAcidCompoundSet.aminoAcidCompoundSet);
 
 		String seq = "aCDEfgHI-Jkl";
 		ProteinSequence prot = (ProteinSequence) creator.getSequence(seq, 0);

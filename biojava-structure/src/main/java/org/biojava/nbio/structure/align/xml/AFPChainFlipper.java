@@ -26,7 +26,6 @@ package org.biojava.nbio.structure.align.xml;
 
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Calc;
-import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.jama.Matrix;
 
@@ -40,7 +39,7 @@ public class AFPChainFlipper {
 	 * @param o ... the original AFPCHain that should be flipped
 	 * @return a cloned AFPCHain which the positions of name1 and name2 flipped.
 	 */
-	public static AFPChain flipChain(AFPChain o) throws StructureException{
+	public static AFPChain flipChain(AFPChain o) {
 
 		AFPChain n = new AFPChain(o.getAlgorithmName());
 		n.setVersion(o.getVersion());

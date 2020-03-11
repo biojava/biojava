@@ -22,8 +22,9 @@ package org.biojava.nbio.core.search.io.blast;
 
 
 import org.biojava.nbio.core.search.io.Hsp;
-import java.util.List;
 import org.biojava.nbio.core.sequence.template.Sequence;
+
+import java.util.List;
 
 /**
  * Designed by Paolo Pavan.

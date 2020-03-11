@@ -20,11 +20,12 @@
  */
 package org.biojava.nbio.core.search.io;
 
+import org.biojava.nbio.core.sequence.template.Sequence;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
-import org.biojava.nbio.core.sequence.template.Sequence;
 
 /**
  * Designed by Paolo Pavan.
@@ -59,7 +60,7 @@ public interface ResultFactory {
 	 * @param results
 	 * @throws Exception
 	 */
-	void storeObjects(List<Result> results) throws IOException, ParseException;
+	void storeObjects(List<Result> results);
 
 	/**
 	 * Specify the collection of sequences objects used as queries in the Search run.

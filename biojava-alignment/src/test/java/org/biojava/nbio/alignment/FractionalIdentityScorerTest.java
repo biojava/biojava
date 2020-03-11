@@ -23,9 +23,9 @@
 
 package org.biojava.nbio.alignment;
 
-import org.biojava.nbio.core.alignment.matrices.SubstitutionMatrixHelper;
 import org.biojava.nbio.alignment.template.GapPenalty;
 import org.biojava.nbio.alignment.template.PairwiseSequenceScorer;
+import org.biojava.nbio.core.alignment.matrices.SubstitutionMatrixHelper;
 import org.biojava.nbio.core.alignment.template.SubstitutionMatrix;
 import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.core.sequence.ProteinSequence;
@@ -52,20 +52,20 @@ public class FractionalIdentityScorerTest {
 		target = new ProteinSequence("RDG");
 		gaps = new SimpleGapPenalty((short) 10, (short) 1);
 		blosum62 = SubstitutionMatrixHelper.getBlosum62();
-		alignment = new NeedlemanWunsch<ProteinSequence, AminoAcidCompound>(query, target, gaps, blosum62);
-		self = new NeedlemanWunsch<ProteinSequence, AminoAcidCompound>(query, query, gaps, blosum62);
-		scorer1 = new FractionalIdentityScorer<ProteinSequence, AminoAcidCompound>(alignment);
-		scorer2 = new FractionalIdentityScorer<ProteinSequence, AminoAcidCompound>(self);
+		alignment = new NeedlemanWunsch<>(query, target, gaps, blosum62);
+		self = new NeedlemanWunsch<>(query, query, gaps, blosum62);
+		scorer1 = new FractionalIdentityScorer<>(alignment);
+		scorer2 = new FractionalIdentityScorer<>(self);
 	}
 
 	@Test
 	public void testFractionalIdentityScorerPairwiseSequenceAlignerOfSC() {
-		assertNotNull(new FractionalIdentityScorer<ProteinSequence, AminoAcidCompound>(alignment));
+		assertNotNull(new FractionalIdentityScorer<>(alignment));
 	}
 
 	@Test
 	public void testFractionalIdentityScorerSequencePairOfSC() {
-		assertNotNull(new FractionalIdentityScorer<ProteinSequence, AminoAcidCompound>(alignment.getPair()));
+		assertNotNull(new FractionalIdentityScorer<>(alignment.getPair()));
 	}
 
 	@Test

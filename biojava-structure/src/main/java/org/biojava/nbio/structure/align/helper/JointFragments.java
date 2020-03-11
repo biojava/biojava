@@ -23,8 +23,6 @@
 package org.biojava.nbio.structure.align.helper;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 
@@ -38,9 +36,9 @@ public class JointFragments {
 
 		double rms;
 
-		List<int[]> idxlist;
+		final List<int[]> idxlist;
 		public JointFragments(){
-			idxlist = new ArrayList<int[]>();
+			idxlist = new ArrayList<>();
 			rms = 999;
 		}
 
@@ -49,11 +47,7 @@ public class JointFragments {
 		 * Each int[] stores the residue numbers of several equivalent residues.
 		 */
 		public void setIdxlist(List<int[]> idxs) {
-			Iterator<int[]> iter = idxs.iterator();
-			while (iter.hasNext()){
-				int[] e = iter.next();
-				idxlist.add(e);
-			}
+			idxlist.addAll(idxs);
 		}
 
 
@@ -77,16 +71,14 @@ public class JointFragments {
 				int[] e = new int[] {p1+k,p2+k};
 
 				// check if already known ...
-				Iterator<int[]> iter = idxlist.iterator();
-				while (iter.hasNext()){
-					int[] kno = iter.next();
-					if ((kno[0] == e[0]) && ( kno[1] == e[1])){
+				for (int[] kno : idxlist) {
+					if ((kno[0] == e[0]) && (kno[1] == e[1])) {
 						System.err.println("already known index pair, not adding a 2nd time." + e[0] + " " + e[1]);
 						return;
 					}
 				}
 				idxlist.add(e);
-				Collections.sort(idxlist, new IdxComparator());
+				idxlist.sort(new IdxComparator());
 			}
 		}
 

@@ -20,9 +20,9 @@
  */
 package org.biojava.nbio.structure.quaternary;
 
+import org.biojava.nbio.core.util.PrettyXMLWriter;
 import org.biojava.nbio.structure.xtal.CrystalCell;
 import org.biojava.nbio.structure.xtal.CrystalTransform;
-import org.biojava.nbio.core.util.PrettyXMLWriter;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -236,7 +236,7 @@ public class BiologicalAssemblyTransformation implements Cloneable, Comparable<B
 	public static List<BiologicalAssemblyTransformation> fromMultiXML(String xml) throws ParserConfigurationException, SAXException, IOException{
 
 
-		List<BiologicalAssemblyTransformation> transformations = new ArrayList<BiologicalAssemblyTransformation>();
+		List<BiologicalAssemblyTransformation> transformations = new ArrayList<>();
 
 		// read the XML of a string and returns a ModelTransformationmatrix
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -247,7 +247,7 @@ public class BiologicalAssemblyTransformation implements Cloneable, Comparable<B
 		Document doc = db.parse(inStream);
 
 		// normalize text representation
-		doc.getDocumentElement().normalize();;
+		doc.getDocumentElement().normalize();
 
 		NodeList listOfTransforms = doc.getElementsByTagName("transformation");
 

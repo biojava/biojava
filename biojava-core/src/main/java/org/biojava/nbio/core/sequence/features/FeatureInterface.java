@@ -21,12 +21,12 @@
 
 package org.biojava.nbio.core.sequence.features;
 
-import java.util.List;
-import java.util.Map;
-
 import org.biojava.nbio.core.sequence.location.template.AbstractLocation;
 import org.biojava.nbio.core.sequence.template.AbstractSequence;
 import org.biojava.nbio.core.sequence.template.Compound;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Interface class to handle describing arbitrary features. A feature can be found at multiple locations in a sequence such as
@@ -47,21 +47,21 @@ public interface FeatureInterface<S extends AbstractSequence<C>, C extends Compo
 	 * @return
 	 */
 
-	public String getShortDescription();
+    String getShortDescription();
 
 	/**
 	 * Set the short description that can be used to describe the feature
 	 * @param shortDescription
 	 */
 
-	public void setShortDescription(String shortDescription);
+    void setShortDescription(String shortDescription);
 
 	  /**
 	 * Get the description that can be used to describe the feature
 	 * @return
 	 */
 
-	public String getDescription();
+      String getDescription();
 
 
 	  /**
@@ -69,7 +69,7 @@ public interface FeatureInterface<S extends AbstractSequence<C>, C extends Compo
 	 * @return
 	 */
 
-	public void setDescription(String description);
+      void setDescription(String description);
 
 		/**
 	 * The location(s) of this feature where the location should contain a reference to parent and sequence etc.
@@ -80,7 +80,7 @@ public interface FeatureInterface<S extends AbstractSequence<C>, C extends Compo
 	 *
 	 * @return a Location anchoring this feature
 	 */
-	public AbstractLocation getLocations();
+        AbstractLocation getLocations();
 
 		/**
 	 * The new location for this feature.
@@ -93,14 +93,14 @@ public interface FeatureInterface<S extends AbstractSequence<C>, C extends Compo
 	 * @param loc the new Location for this feature
 	 *
 	 */
-	public void setLocation(AbstractLocation loc);
+        void setLocation(AbstractLocation loc);
 
 		/**
 	 * The type of the feature.
 	 *
 	 * @return the type of this sequence
 	 */
-	public String getType();
+        String getType();
 
 	/**
 	 * Change the type of this feature.
@@ -108,7 +108,7 @@ public interface FeatureInterface<S extends AbstractSequence<C>, C extends Compo
 	 * @param type  new type String
 	 *
 	 */
-	public void setType(String type);
+    void setType(String type);
 
 
 		/**
@@ -116,7 +116,7 @@ public interface FeatureInterface<S extends AbstractSequence<C>, C extends Compo
 	 *
 	 * @return the source, or generator
 	 */
-	public String getSource();
+        String getSource();
 
 	/**
 	 * Change the source of the FeatureInterface.
@@ -124,46 +124,46 @@ public interface FeatureInterface<S extends AbstractSequence<C>, C extends Compo
 	 * @param source the new source String
 	 *
 	 */
-	public void setSource(String source);
+    void setSource(String source);
 
 	/**
 	 * Set the parent feature
 	 * @param feature
 	 */
 
-	public void setParentFeature(FeatureInterface<S, C> feature);
+    void setParentFeature(FeatureInterface<S, C> feature);
 
 	/**
 	 * Get the parent feature
 	 * @return
 	 */
 
-	public FeatureInterface<S, C> getParentFeature();
+    FeatureInterface<S, C> getParentFeature();
 
 	/**
 	 * Get the features contained by this feature
 	 * @return
 	 */
 
-	public List<FeatureInterface<S, C>> getChildrenFeatures();
+    List<FeatureInterface<S, C>> getChildrenFeatures();
 
 	/**
 	 * Set the children features
 	 * @param features
 	 */
 
-	public void setChildrenFeatures(List<FeatureInterface<S, C>> features);
+    void setChildrenFeatures(List<FeatureInterface<S, C>> features);
 
 
 		/**
 	 * @return the userObject
 	 */
-	public Object getUserObject();
+        Object getUserObject();
 
 	/**
 	 * @param userObject the userObject to set
 	 */
-	public void setUserObject(Object userObject);
+    void setUserObject(Object userObject);
 
 
 	/**
@@ -171,19 +171,19 @@ public interface FeatureInterface<S extends AbstractSequence<C>, C extends Compo
 	 * @return
 	 */
 
-	public Map<String, List<Qualifier>> getQualifiers();
+    Map<String, List<Qualifier>> getQualifiers();
 
 	/**
 	 * Set the qualifiers
 	 * @param qualifiers
 	 */
 
-	public void setQualifiers(Map<String, List<Qualifier>> qualifiers);
+    void setQualifiers(Map<String, List<Qualifier>> qualifiers);
 	/**
 	 * Add a qualifier
 	 * @param qualifier
 	 */
 
-	public void addQualifier(String key, Qualifier qualifier);
+    void addQualifier(String key, Qualifier qualifier);
 
 }

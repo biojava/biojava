@@ -23,9 +23,9 @@
  */
 package org.biojava.nbio.alignment;
 
-import org.biojava.nbio.core.alignment.matrices.SubstitutionMatrixHelper;
 import org.biojava.nbio.alignment.Alignments.PairwiseSequenceAlignerType;
 import org.biojava.nbio.alignment.template.PairwiseSequenceAligner;
+import org.biojava.nbio.core.alignment.matrices.SubstitutionMatrixHelper;
 import org.biojava.nbio.core.alignment.template.Profile;
 import org.biojava.nbio.core.alignment.template.SequencePair;
 import org.biojava.nbio.core.alignment.template.SubstitutionMatrix;
@@ -57,7 +57,7 @@ public class TestDNAAlignment {
 
 			Profile<DNASequence, NucleotideCompound> profile = Alignments.getMultipleSequenceAlignment(lst);
 
-			Assert.assertTrue(profile.getSize() == 10);
+			Assert.assertEquals(10, profile.getSize());
 
 			Assert.assertTrue(profile.getAlignedSequence(1).getSequenceAsString().length() > 50);
 
@@ -74,15 +74,10 @@ public class TestDNAAlignment {
 
 	private static List<DNASequence> getDNAFASTAFile() throws Exception {
 
-		InputStream inStream = TestDNAAlignment.class.getResourceAsStream(String.format("/dna-fasta.txt"));
+		InputStream inStream = TestDNAAlignment.class.getResourceAsStream("/dna-fasta.txt");
 		LinkedHashMap<String, DNASequence> fastas = FastaReaderHelper.readFastaDNASequence(inStream);
 
-		List<DNASequence> sequences = new ArrayList<DNASequence>();
-
-		for (String key : fastas.keySet()) {
-			DNASequence seq = fastas.get(key);
-			sequences.add(seq);
-		}
+		List<DNASequence> sequences = new ArrayList<>(fastas.values());
 
 		return sequences;
 	}
@@ -96,7 +91,7 @@ public class TestDNAAlignment {
 		DNASequence target = new DNASequence("ACTGACGTGTAGCTGACTGA", DNACompoundSet.getDNACompoundSet());
 		DNASequence query = new DNASequence("ACTGACGTGTAGCTGACTGTA", AmbiguityDNACompoundSet.getDNACompoundSet());
 
-		List<DNASequence> lst = new ArrayList<DNASequence>();
+		List<DNASequence> lst = new ArrayList<>();
 		lst.add(target);
 		lst.add(query);
 
@@ -163,6 +158,6 @@ public class TestDNAAlignment {
 		SubstitutionMatrix<NucleotideCompound> matrix = SubstitutionMatrixHelper.getNuc4_4();
 		SimpleGapPenalty gapP = new SimpleGapPenalty((short)0, (short)3);
 		PairwiseSequenceAligner<DNASequence, NucleotideCompound> aligner = Alignments.getPairwiseAligner(query, target, PairwiseSequenceAlignerType.GLOBAL, gapP, matrix);
-		Assert.assertEquals(String.format("GTAAAA-G----------%nG-AAAACGTTTTTTTTTT%n"), aligner.getPair().toString());;
+		Assert.assertEquals(String.format("GTAAAA-G----------%nG-AAAACGTTTTTTTTTT%n"), aligner.getPair().toString());
 	}
 }

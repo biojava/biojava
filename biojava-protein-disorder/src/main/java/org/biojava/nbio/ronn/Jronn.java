@@ -58,9 +58,7 @@ public class Jronn implements Serializable {
 	static {
 		try {
 			loader.loadModels();
-		} catch (NumberFormatException e) {
-			throw new RuntimeException("Fails to load models!" + e.getMessage(), e);
-		} catch (IOException e) {
+		} catch (NumberFormatException | IOException e) {
 			throw new RuntimeException("Fails to load models!" + e.getMessage(), e);
 		}
 	}
@@ -157,7 +155,7 @@ public class Jronn implements Serializable {
 	 * @return
 	 */
 	public static FastaSequence convertProteinSequencetoFasta(ProteinSequence sequence){
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		for (AminoAcidCompound compound : sequence) {
 
 			String c = compound.getShortName();
@@ -175,13 +173,11 @@ public class Jronn implements Serializable {
 	private static float[] predictSerial(FastaSequence fsequence) {
 		ORonn.validateSequenceForRonn(fsequence);
 		ORonn ronn;
-		float[] disorder = null;
+		float[] disorder;
 		try {
 			ronn = new ORonn(fsequence, loader);
 			disorder = ronn.call().getMeanScores();
 		} catch (NumberFormatException e) {
-			throw new RuntimeException("Jronn fails to load models " + e.getLocalizedMessage(), e);
-		} catch (IOException e) {
 			throw new RuntimeException("Jronn fails to load models " + e.getLocalizedMessage(), e);
 		}
 		return disorder;
@@ -215,7 +211,7 @@ public class Jronn implements Serializable {
 
 		int count=0;
 		int regionLen=0;
-		List<Range> ranges = new ArrayList<Range>();
+		List<Range> ranges = new ArrayList<>();
 		for(float score: scores) {
 			count++;
 			// Round to 2 decimal points before comparison
@@ -233,7 +229,7 @@ public class Jronn implements Serializable {
 		if(regionLen>1) {
 			ranges.add(new Range(count-regionLen+1, count,scores[scores.length-1]));
 		}
-		return ranges.toArray(new Range[ranges.size()]);
+		return ranges.toArray(new Range[0]);
 
 	}
 
@@ -246,7 +242,7 @@ public class Jronn implements Serializable {
 	 * @see #getDisorder(FastaSequence)
 	 */
 	public static Map<FastaSequence,float[]> getDisorderScores(List<FastaSequence> sequences) {
-		Map<FastaSequence,float[]> results = new TreeMap<FastaSequence, float[]>();
+		Map<FastaSequence,float[]> results = new TreeMap<>();
 		for(FastaSequence fsequence : sequences) {
 			results.put(fsequence, predictSerial(fsequence));
 		}
@@ -261,7 +257,7 @@ public class Jronn implements Serializable {
 	 * @see #getDisorder(FastaSequence)
 	 */
 	public static Map<FastaSequence,Range[]> getDisorder(List<FastaSequence> sequences) {
-		Map<FastaSequence,Range[]> disorderRanges = new TreeMap<FastaSequence,Range[]>();
+		Map<FastaSequence,Range[]> disorderRanges = new TreeMap<>();
 		for(FastaSequence fs: sequences) {
 			disorderRanges.put(fs, getDisorder(fs));
 		}

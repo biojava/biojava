@@ -20,22 +20,16 @@
  */
 package org.biojava.nbio.structure.scop;
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import org.biojava.nbio.structure.*;
+import org.biojava.nbio.structure.align.util.AtomCache;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
-
-import org.biojava.nbio.structure.ResidueRange;
-import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.StructureIdentifier;
-import org.biojava.nbio.structure.SubstructureIdentifier;
-import org.biojava.nbio.structure.align.util.AtomCache;
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 
 /** Container for the information for a domain. Contains a line in the file
@@ -90,23 +84,23 @@ public class ScopDomain implements Serializable, Cloneable, StructureIdentifier 
 		buf.append("\t") ;
 		buf.append(classificationId);
 		buf.append("\t") ;
-		buf.append(String.valueOf(sunid));
+		buf.append(sunid);
 		buf.append("\t") ;
 
 		buf.append("cl=");
-		buf.append(String.valueOf(classId));
+		buf.append(classId);
 		buf.append(",cf=");
-		buf.append(String.valueOf(foldId));
+		buf.append(foldId);
 		buf.append(",sf=");
-		buf.append(String.valueOf(superfamilyId));
+		buf.append(superfamilyId);
 		buf.append(",fa=");
-		buf.append(String.valueOf(familyId));
+		buf.append(familyId);
 		buf.append(",dm=");
-		buf.append(String.valueOf(domainId));
+		buf.append(domainId);
 		buf.append(",sp=");
-		buf.append(String.valueOf(speciesId));
+		buf.append(speciesId);
 		buf.append(",px=");
-		buf.append(String.valueOf(px));
+		buf.append(px);
 
 
 		return buf.toString();
@@ -214,7 +208,7 @@ public class ScopDomain implements Serializable, Cloneable, StructureIdentifier 
 	 * Returns the chains this domain is defined over; contains more than 1 element only if this domains is a multi-chain domain.
 	 */
 	public Set<String> getChains() {
-		Set<String> chains = new HashSet<String>();
+		Set<String> chains = new HashSet<>();
 		List<ResidueRange> rrs = ResidueRange.parseMultiple(getRanges());
 		for (ResidueRange rr : rrs) chains.add(rr.getChainName());
 		return chains;
@@ -240,8 +234,7 @@ public class ScopDomain implements Serializable, Cloneable, StructureIdentifier 
 	}
 
 	@Override
-	public Structure loadStructure(AtomCache cache) throws StructureException,
-	IOException {
+	public Structure loadStructure(AtomCache cache) throws StructureException {
 		return cache.getStructureForPdbId(pdbId);
 	}
 

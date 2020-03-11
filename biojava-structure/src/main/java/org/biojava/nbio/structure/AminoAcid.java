@@ -52,44 +52,44 @@ public interface AminoAcid extends Group {
 	 * Field to distinguish AminoAcids that have been created from SEQRES records and ATOM records.
 	 *
 	 */
-	public static final String ATOMRECORD = "ATOM";
+    String ATOMRECORD = "ATOM";
 
 	/**
 	 * Field to distinguish AminoAcids that have been created from SEQRES records and ATOM records.
 	 *
 	 */
-	public static final String SEQRESRECORD = "SEQRES";
+    String SEQRESRECORD = "SEQRES";
 
 	/**
 	 * Get N atom.
 	 *
 	 * @return an Atom object or null if N atom does not exist
 	 */
-	public Atom getN()    ;
+    Atom getN()    ;
 
 	/**
 	 * Get CA atom.
 	 * @return an Atom object or null if CA atom does not exist
 	 */
-	public Atom getCA()   ;
+    Atom getCA()   ;
 
 	/**
 	 * Get C atom.
 	 * @return an Atom object or null if C atom does not exist
 	 */
-	public Atom getC()    ;
+    Atom getC()    ;
 
 	/**
 	 * Get O atom.
 	 * @return an Atom object or null if O atom does not exist
 	 */
-	public Atom getO()    ;
+    Atom getO()    ;
 
 	/**
 	 * Get CB atom.
 	 * @return an Atom object or null if CB atom does not exist
 	 */
-	public Atom getCB()   ;
+    Atom getCB()   ;
 
 	/**
 	 * Returns the name of the AA, in single letter code.
@@ -97,7 +97,7 @@ public interface AminoAcid extends Group {
 	 * @return a Character object representing the amino type value
 	 * @see #setAminoType
 	 */
-	public  Character getAminoType() ;
+    Character getAminoType() ;
 
 	/**
 	 * Set the name of the AA, in single letter code .
@@ -105,7 +105,7 @@ public interface AminoAcid extends Group {
 	 * @param aa  a Character object specifying the amino type value
 	 * @see #getAminoType
 	 */
-	public void setAminoType(Character aa) ;
+    void setAminoType(Character aa) ;
 
 	/**
 	 * Allows to distinguish between amino acids that are provided
@@ -113,7 +113,7 @@ public interface AminoAcid extends Group {
 	 * @param recordName either ATOMRECORD or SEQRESRECORD
 	 * @see #getRecordType()
 	 */
-	public void setRecordType(String recordName);
+    void setRecordType(String recordName);
 
 	/**
 	 * Allows to distinguish between amino acids that are provided
@@ -121,6 +121,6 @@ public interface AminoAcid extends Group {
 	 * @return the origin of this amino acid (ATOM or SEQRES records)
 	 * @see #setRecordType(String)
 	 */
-	public String getRecordType();
+    String getRecordType();
 
 }

@@ -20,24 +20,7 @@
  */
 package org.biojava.nbio.structure;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLDecoder;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.biojava.nbio.core.util.InputStreamProvider;
-import org.biojava.nbio.structure.StructureIO.StructureFiletype;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.PDBFileReader;
 import org.biojava.nbio.structure.io.mmcif.MMcifParser;
@@ -45,6 +28,17 @@ import org.biojava.nbio.structure.io.mmcif.SimpleMMcifConsumer;
 import org.biojava.nbio.structure.io.mmcif.SimpleMMcifParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Represents a structure loaded from a URL (including a file URL)
@@ -116,14 +110,14 @@ public class URLIdentifier implements StructureIdentifier {
 			if(params.containsKey(RESIDUES_PARAM)) {
 				ranges = ResidueRange.parseMultiple(params.get(RESIDUES_PARAM));
 			} else if(params.containsKey(CHAINID_PARAM)) {
-				ranges = Arrays.asList(new ResidueRange(params.get(CHAINID_PARAM),(ResidueNumber)null,(ResidueNumber)null));
+				ranges = Collections.singletonList(new ResidueRange(params.get(CHAINID_PARAM)));
 			}
 		} catch (UnsupportedEncodingException e) {
 			logger.error("Unable to decode URL "+url,e);
 		}
 		if(pdbId == null) {
 			String path = url.getPath();
-			pdbId = guessPDBID(path.substring(path.lastIndexOf("/")+1));
+			pdbId = guessPDBID(path.substring(path.lastIndexOf('/')+1));
 		}
 		return new SubstructureIdentifier(pdbId, ranges);
 	}
@@ -137,7 +131,7 @@ public class URLIdentifier implements StructureIdentifier {
 	 * @return null
 	 */
 	@Override
-	public Structure loadStructure(AtomCache cache) throws StructureException,
+	public Structure loadStructure(AtomCache cache) throws
 			IOException {
 		StructureFiletype format = StructureFiletype.UNKNOWN;
 
@@ -217,7 +211,7 @@ public class URLIdentifier implements StructureIdentifier {
 	 * @throws UnsupportedEncodingException
 	 */
 	private static Map<String,String> parseQuery(URL url) throws UnsupportedEncodingException {
-		Map<String,String> params = new LinkedHashMap<String, String>();
+		Map<String,String> params = new LinkedHashMap<>();
 		String query = url.getQuery();
 		if( query == null || query.isEmpty()) {
 			// empty query
@@ -225,7 +219,7 @@ public class URLIdentifier implements StructureIdentifier {
 		}
 		String[] pairs = url.getQuery().split("&");
 		for(String pair: pairs) {
-			int i = pair.indexOf("=");
+			int i = pair.indexOf('=');
 			String key = pair;
 			if(i > 0) {
 				key = URLDecoder.decode(pair.substring(0, i), "UTF-8");

@@ -25,8 +25,11 @@ import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.StructureAlignmentFactory;
-import org.biojava.nbio.structure.align.ce.*;
+import org.biojava.nbio.structure.align.ce.CECPParameters;
 import org.biojava.nbio.structure.align.ce.CECPParameters.DuplicationHint;
+import org.biojava.nbio.structure.align.ce.CeCPMain;
+import org.biojava.nbio.structure.align.ce.CeMain;
+import org.biojava.nbio.structure.align.ce.OptimalCECPMain;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.junit.Assert;
@@ -44,13 +47,13 @@ import java.util.Arrays;
  */
 public class OptimalCECPMainTest {
 
-	private AtomCache cache = new AtomCache();
+	private final AtomCache cache = new AtomCache();
 
 	/* (non-Javadoc)
 	 * @see junit.framework.TestCase#setUp()
 	 */
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 	}
 
 	/**
@@ -183,22 +186,22 @@ public class OptimalCECPMainTest {
 		arrP = Arrays.copyOf(arr0, arr0.length);
 		Assert.assertTrue("Shallow equals!", Arrays.deepEquals(arr0, arrP));
 		permuteArray.invoke(null, arrP, 0);
-		Assert.assertTrue(String.format("Permuting by 0 gave %s%s%s%s%s%s", (Object[]) arrP),
+		Assert.assertTrue(String.format("Permuting by 0 gave %s%s%s%s%s%s", arrP),
 				Arrays.deepEquals(arr0, arrP));
 
 		arrP = Arrays.copyOf(arr0, arr0.length);
 		permuteArray.invoke(null, arrP, 1);
-		Assert.assertTrue(String.format("Permuting by 1 gave %s%s%s%s%s%s", (Object[]) arrP),
+		Assert.assertTrue(String.format("Permuting by 1 gave %s%s%s%s%s%s", arrP),
 				Arrays.deepEquals(arr1, arrP));
 
 		arrP = Arrays.copyOf(arr0, arr0.length);
 		permuteArray.invoke(null, arrP, 5);
-		Assert.assertTrue(String.format("Permuting by 7 gave %s%s%s%s%s%s", (Object[]) arrP),
+		Assert.assertTrue(String.format("Permuting by 7 gave %s%s%s%s%s%s", arrP),
 				Arrays.deepEquals(arr5, arrP));
 
 		arrP = Arrays.copyOf(arr0, arr0.length);
 		permuteArray.invoke(null, arrP, -1);
-		Assert.assertTrue(String.format("Permuting by -1 gave %s%s%s%s%s%s", (Object[]) arrP),
+		Assert.assertTrue(String.format("Permuting by -1 gave %s%s%s%s%s%s", arrP),
 				Arrays.deepEquals(arr5, arrP));
 
 		try {

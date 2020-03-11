@@ -38,31 +38,31 @@ public interface AutoSuggestProvider {
 	 * @param userInput
 	 * @return list of suggestions
 	 */
-	public Vector<String> getSuggestion(String userInput);
+    Vector<String> getSuggestion(String userInput);
 
 
 	/** set the maximum number of suggestions to return
 	 *
 	 * @param maxNrSuggestions
 	 */
-	public void setMaxNrSuggestions(int maxNrSuggestions);
+    void setMaxNrSuggestions(int maxNrSuggestions);
 
 
 	/** Get the maximun nr of suggestions
 	 *
 	 * @return maxNrSuggestions
 	 */
-	public int getMaxNrSuggestions();
+    int getMaxNrSuggestions();
 
 
 	/** reset all suggestions
 	 *
 	 */
-	public void clear();
+    void clear();
 
 
 	/** Interrupt searching for suggestions
 	 *
 	 */
-	public void stop();
+    void stop();
 }

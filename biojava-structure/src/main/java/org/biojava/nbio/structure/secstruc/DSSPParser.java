@@ -20,25 +20,18 @@
  */
 package org.biojava.nbio.structure.secstruc;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringReader;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.zip.GZIPInputStream;
-
 import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.ResidueNumber;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.*;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.zip.GZIPInputStream;
 
 /**
  * Class to parse a DSSP file (output of the DSSP program),
@@ -152,7 +145,7 @@ public class DSSPParser {
 		String startLine = "  #  RESIDUE AA STRUCTURE BP1 BP2  ACC";
 		String line;
 
-		List<SecStrucState> secstruc = new ArrayList<SecStrucState>();
+		List<SecStrucState> secstruc = new ArrayList<>();
 
 		//Find the first line of the DSSP output
 		while((line = reader.readLine()) != null) {
@@ -165,7 +158,7 @@ public class DSSPParser {
 			String resNumStr = line.substring(5,10).trim();
 
 			//Only happens if dssp inserts a line indicating a chain break
-			if(!resNumStr.equals("")) {
+			if(!resNumStr.isEmpty()) {
 
 				int index = Integer.parseInt(indexStr);
 				//Get the group of the structure corresponding to the residue
@@ -183,16 +176,16 @@ public class DSSPParser {
 
 				//Parse the Bridge partners - TODO parallel or antiparallel?
 				String bp = line.substring(25,29).trim();
-				if (bp != "") {
+				if (!bp.isEmpty()) {
 					BetaBridge bb = new BetaBridge(
-							index, Integer.valueOf(bp), BridgeType.parallel);
+							index, Integer.parseInt(bp), BridgeType.parallel);
 					ss.addBridge(bb);
 				} else logger.warn("Unable to parse beta Bridge for resn "+index);
 
 				bp = line.substring(29,33).trim();
-				if (bp != "") {
+				if (!bp.isEmpty()) {
 					BetaBridge bb = new BetaBridge(
-							index, Integer.valueOf(bp), BridgeType.parallel);
+							index, Integer.parseInt(bp), BridgeType.parallel);
 					ss.addBridge(bb);
 				} else logger.warn("Unable to parse beta Bridge for resn "+index);
 
@@ -203,7 +196,7 @@ public class DSSPParser {
 					int b = a + 8;
 
 					String val = line.substring(a,b).trim();
-					if (val == "") {
+					if (val.isEmpty()) {
 						logger.warn("Unable to parse energy for resn "+index);
 						continue;
 					}
@@ -212,7 +205,7 @@ public class DSSPParser {
 
 					int partner = Integer.parseInt(p[0]);
 					if (partner != 0) partner += index;
-					double energy = Double.valueOf(p[1]) * 1000.0;
+					double energy = Double.parseDouble(p[1]) * 1000.0;
 
 					switch(i){
 					case 0:
@@ -236,15 +229,15 @@ public class DSSPParser {
 
 				//Angle properties
 				String val = line.substring(91,97).trim();
-				if (val != "") ss.setKappa(Float.valueOf(val));
+				if (!val.isEmpty()) ss.setKappa(Float.parseFloat(val));
 				else logger.warn("Unable to parse kappa for resn "+index);
 
 				val = line.substring(103,109).trim();
-				if (val != "") ss.setPhi(Float.valueOf(val));
+				if (!val.isEmpty()) ss.setPhi(Float.parseFloat(val));
 				else logger.warn("Unable to parse phi for resn "+index);
 
 				val = line.substring(109,116).trim();
-				if (val != "") ss.setPsi(Float.valueOf(val));
+				if (!val.isEmpty()) ss.setPsi(Float.parseFloat(val));
 				else logger.warn("Unable to parse psi for resn "+index);
 
 				if (assign) parent.setProperty(Group.SEC_STRUC, ss);

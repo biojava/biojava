@@ -41,37 +41,37 @@ import java.util.Map;
  * @see IPeptideProperties
  */
 public class Constraints {
-	private static AminoAcidCompoundSet aaSet = new AminoAcidCompoundSet();
+	private static final AminoAcidCompoundSet aaSet = new AminoAcidCompoundSet();
 	//A, R, N, D, C, E, Q, G, H, I, L, K, M, F, P, S, T, W, Y, V
-	public static AminoAcidCompound A = aaSet.getCompoundForString("A");
-	public static AminoAcidCompound R = aaSet.getCompoundForString("R");
-	public static AminoAcidCompound N = aaSet.getCompoundForString("N");
-	public static AminoAcidCompound D = aaSet.getCompoundForString("D");
-	public static AminoAcidCompound C = aaSet.getCompoundForString("C");
-	public static AminoAcidCompound E = aaSet.getCompoundForString("E");
-	public static AminoAcidCompound Q = aaSet.getCompoundForString("Q");
-	public static AminoAcidCompound G = aaSet.getCompoundForString("G");
-	public static AminoAcidCompound H = aaSet.getCompoundForString("H");
-	public static AminoAcidCompound I = aaSet.getCompoundForString("I");
-	public static AminoAcidCompound L = aaSet.getCompoundForString("L");
-	public static AminoAcidCompound K = aaSet.getCompoundForString("K");
-	public static AminoAcidCompound M = aaSet.getCompoundForString("M");
-	public static AminoAcidCompound F = aaSet.getCompoundForString("F");
-	public static AminoAcidCompound P = aaSet.getCompoundForString("P");
-	public static AminoAcidCompound S = aaSet.getCompoundForString("S");
-	public static AminoAcidCompound T = aaSet.getCompoundForString("T");
-	public static AminoAcidCompound W = aaSet.getCompoundForString("W");
-	public static AminoAcidCompound Y = aaSet.getCompoundForString("Y");
-	public static AminoAcidCompound V = aaSet.getCompoundForString("V");
+	public static final AminoAcidCompound A = aaSet.getCompoundForString("A");
+	public static final AminoAcidCompound R = aaSet.getCompoundForString("R");
+	public static final AminoAcidCompound N = aaSet.getCompoundForString("N");
+	public static final AminoAcidCompound D = aaSet.getCompoundForString("D");
+	public static final AminoAcidCompound C = aaSet.getCompoundForString("C");
+	public static final AminoAcidCompound E = aaSet.getCompoundForString("E");
+	public static final AminoAcidCompound Q = aaSet.getCompoundForString("Q");
+	public static final AminoAcidCompound G = aaSet.getCompoundForString("G");
+	public static final AminoAcidCompound H = aaSet.getCompoundForString("H");
+	public static final AminoAcidCompound I = aaSet.getCompoundForString("I");
+	public static final AminoAcidCompound L = aaSet.getCompoundForString("L");
+	public static final AminoAcidCompound K = aaSet.getCompoundForString("K");
+	public static final AminoAcidCompound M = aaSet.getCompoundForString("M");
+	public static final AminoAcidCompound F = aaSet.getCompoundForString("F");
+	public static final AminoAcidCompound P = aaSet.getCompoundForString("P");
+	public static final AminoAcidCompound S = aaSet.getCompoundForString("S");
+	public static final AminoAcidCompound T = aaSet.getCompoundForString("T");
+	public static final AminoAcidCompound W = aaSet.getCompoundForString("W");
+	public static final AminoAcidCompound Y = aaSet.getCompoundForString("Y");
+	public static final AminoAcidCompound V = aaSet.getCompoundForString("V");
 
-	public static Map<AminoAcidCompound, Double> aa2ExtinctionCoefficient = new HashMap<AminoAcidCompound, Double>();
-	public static Map<AminoAcidCompound, Double> aa2MolecularWeight = new HashMap<AminoAcidCompound, Double>();
-	public static Map<AminoAcidCompound, Double> aa2Hydrophathicity = new HashMap<AminoAcidCompound, Double>();
-	public static Map<AminoAcidCompound, Double> aa2PKa = new HashMap<AminoAcidCompound, Double>();
-	public static Map<String, Double> diAA2Instability = new HashMap<String, Double>();
+	public static final Map<AminoAcidCompound, Double> aa2ExtinctionCoefficient = new HashMap<>();
+	public static final Map<AminoAcidCompound, Double> aa2MolecularWeight = new HashMap<>();
+	public static final Map<AminoAcidCompound, Double> aa2Hydrophathicity = new HashMap<>();
+	public static final Map<AminoAcidCompound, Double> aa2PKa = new HashMap<>();
+	public static final Map<String, Double> diAA2Instability = new HashMap<>();
 
-	public static Map<AminoAcidCompound, Double> aa2NTerminalPka = new HashMap<AminoAcidCompound, Double>();
-	public static Map<AminoAcidCompound, Double> aa2CTerminalPka = new HashMap<AminoAcidCompound, Double>();
+	public static final Map<AminoAcidCompound, Double> aa2NTerminalPka = new HashMap<>();
+	public static final Map<AminoAcidCompound, Double> aa2CTerminalPka = new HashMap<>();
 
 	static{
 		initMolecularWeight();
@@ -287,7 +287,7 @@ public class Constraints {
 		SingleLetterAACode[] aa = SingleLetterAACode.values();
 		for(int i = 0; i < aa.length; i++){
 			for(int j = 0; j < aa.length; j++){
-				diAA2Instability.put("" + aa[i] + aa[j], instability[i][j]);
+				diAA2Instability.put(String.valueOf(aa[i]) + aa[j], instability[i][j]);
 			}
 		}
 	}

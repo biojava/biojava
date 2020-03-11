@@ -29,7 +29,7 @@ public class FarmJobParameters {
 	public static final int DEFAULT_NR_ALIGNMENTS = -1;
 	public static final int DEFAULT_NR_THREADS = 1;
 	public static final String DEFAULT_SERVER_URL;
-	private static ResourceManager resourceManager;
+	private static final ResourceManager resourceManager;
 	static {
 		resourceManager = ResourceManager.getResourceManager("jfatcat");
 		DEFAULT_SERVER_URL = resourceManager.getString("server.url");

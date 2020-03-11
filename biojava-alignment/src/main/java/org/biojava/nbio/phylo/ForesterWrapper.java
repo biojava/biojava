@@ -20,12 +20,8 @@
  */
 package org.biojava.nbio.phylo;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import org.biojava.nbio.core.sequence.MultipleSequenceAlignment;
 import org.biojava.nbio.core.sequence.io.FastaWriter;
-import org.biojava.nbio.core.sequence.io.template.FastaHeaderFormatInterface;
 import org.biojava.nbio.core.sequence.template.Compound;
 import org.biojava.nbio.core.sequence.template.Sequence;
 import org.forester.evoinference.matrix.distance.BasicSymmetricalDistanceMatrix;
@@ -33,6 +29,10 @@ import org.forester.io.parsers.FastaParser;
 import org.forester.io.writers.PhylogenyWriter;
 import org.forester.msa.Msa;
 import org.forester.phylogeny.Phylogeny;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 
 /**
  * This class contains wrapper methods for communication between BioJava and
@@ -64,14 +64,9 @@ public class ForesterWrapper {
 
 		// Convert the biojava MSA to a FASTA String
 		OutputStream os = new ByteArrayOutputStream();
-		FastaWriter<C, D> fastaW = new FastaWriter<C, D>(os,
+		FastaWriter<C, D> fastaW = new FastaWriter<>(os,
 				msa.getAlignedSequences(),
-				new FastaHeaderFormatInterface<C, D>() {
-					@Override
-					public String getHeader(C sequence) {
-						return sequence.getAccession().toString();
-					};
-				});
+				sequence -> sequence.getAccession().toString());
 
 		fastaW.process();
 		String fastaMSA = os.toString();

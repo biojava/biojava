@@ -20,24 +20,18 @@
  */
 package org.biojava.nbio.structure.io.mmtf;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
-
-import java.io.IOException;
-import java.util.List;
-
-import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.Bond;
-import org.biojava.nbio.structure.Chain;
-import org.biojava.nbio.structure.Group;
-import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.StructureIO;
+import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.LocalPDBDirectory.FetchBehavior;
 import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
 import org.biojava.nbio.structure.io.mmcif.DownloadChemCompProvider;
+import org.junit.Test;
+
+import java.io.IOException;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test bond finding in BioJava

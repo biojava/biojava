@@ -33,14 +33,13 @@ import org.biojava.nbio.structure.jama.Matrix;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.vecmath.Matrix4d;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.vecmath.Matrix4d;
 
 /**
  * Methods for analyzing and manipulating AFPChains and for
@@ -57,7 +56,7 @@ public class AlignmentTools {
 	private static final Logger logger = LoggerFactory.getLogger(AlignmentTools.class);
 
 
-	public static boolean debug = false;
+	public static final boolean debug = false;
 
 	/**
 	 * Checks that the alignment given by afpChain is sequential. This means
@@ -157,7 +156,7 @@ public class AlignmentTools {
 	 * @throws StructureException If afpChain is not one-to-one
 	 */
 	public static Map<Integer, Integer> alignmentAsMap(AFPChain afpChain) throws StructureException {
-		Map<Integer,Integer> map = new HashMap<Integer,Integer>();
+		Map<Integer,Integer> map = new HashMap<>();
 
 		if( afpChain.getAlnLength() < 1 ) {
 			return map;
@@ -189,7 +188,7 @@ public class AlignmentTools {
 	 *  function is undefined for that input.
 	 */
 	public static <T> Map<T,T> applyAlignment(Map<T, T> alignmentMap, int k) {
-		return applyAlignment(alignmentMap, new IdentityMap<T>(), k);
+		return applyAlignment(alignmentMap, new IdentityMap<>(), k);
 	}
 
 	/**
@@ -223,11 +222,11 @@ public class AlignmentTools {
 
 		if(k<0) throw new IllegalArgumentException("k must be positive");
 		if(k==1) {
-			return new HashMap<S,T>(alignmentMap);
+			return new HashMap<>(alignmentMap);
 		}
 		// Convert to lists to establish a fixed order
-		List<S> preimage = new ArrayList<S>(alignmentMap.keySet()); // currently unmodified
-		List<S> image = new ArrayList<S>(preimage);
+		List<S> preimage = new ArrayList<>(alignmentMap.keySet()); // currently unmodified
+		List<S> image = new ArrayList<>(preimage);
 
 		for(int n=1;n<k;n++) {
 			// apply alignment
@@ -241,7 +240,7 @@ public class AlignmentTools {
 
 
 
-		Map<S, T> imageMap = new HashMap<S,T>(alignmentMap.size());
+		Map<S, T> imageMap = new HashMap<>(alignmentMap.size());
 
 		//TODO handle nulls consistently.
 		// assure that all the residues in the domain are valid keys
@@ -282,7 +281,7 @@ public class AlignmentTools {
 	 */
 	public static int getSymmetryOrder(Map<Integer, Integer> alignment,
 									   final int maxSymmetry, final float minimumMetricChange) {
-		return getSymmetryOrder(alignment, new IdentityMap<Integer>(), maxSymmetry, minimumMetricChange);
+		return getSymmetryOrder(alignment, new IdentityMap<>(), maxSymmetry, minimumMetricChange);
 	}
 	/**
 	 * Tries to detect symmetry in an alignment.
@@ -321,8 +320,8 @@ public class AlignmentTools {
 	 */
 	public static int getSymmetryOrder(Map<Integer, Integer> alignment, Map<Integer,Integer> identity,
 									   final int maxSymmetry, final float minimumMetricChange) {
-		List<Integer> preimage = new ArrayList<Integer>(alignment.keySet()); // currently unmodified
-		List<Integer> image = new ArrayList<Integer>(preimage);
+		List<Integer> preimage = new ArrayList<>(alignment.keySet()); // currently unmodified
+		List<Integer> image = new ArrayList<>(preimage);
 
 		int bestSymmetry = 1;
 		double bestMetric = Double.POSITIVE_INFINITY; //lower is better
@@ -443,10 +442,10 @@ public class AlignmentTools {
 	 */
 	public static Map<Integer, Integer> guessSequentialAlignment(
 			Map<Integer,Integer> alignment, boolean inverseAlignment) {
-		Map<Integer,Integer> identity = new HashMap<Integer,Integer>();
+		Map<Integer,Integer> identity = new HashMap<>();
 
-		SortedSet<Integer> aligned1 = new TreeSet<Integer>();
-		SortedSet<Integer> aligned2 = new TreeSet<Integer>();
+		SortedSet<Integer> aligned1 = new TreeSet<>();
+		SortedSet<Integer> aligned2 = new TreeSet<>();
 
 		for(Entry<Integer,Integer> pair : alignment.entrySet()) {
 			aligned1.add(pair.getKey());
@@ -480,18 +479,18 @@ public class AlignmentTools {
 	public static List<List<List<Integer>>> getOptAlnAsList(AFPChain afpChain) {
 		int[][][] optAln = afpChain.getOptAln();
 		int[] optLen = afpChain.getOptLen();
-		List<List<List<Integer>>> blocks = new ArrayList<List<List<Integer>>>(afpChain.getBlockNum());
+		List<List<List<Integer>>> blocks = new ArrayList<>(afpChain.getBlockNum());
 		for(int blockNum=0;blockNum<afpChain.getBlockNum();blockNum++) {
 			//TODO could improve speed an memory by wrapping the arrays with
 			// an unmodifiable list, similar to Arrays.asList(...) but with the
 			// correct size parameter.
-			List<Integer> align1 = new ArrayList<Integer>(optLen[blockNum]);
-			List<Integer> align2 = new ArrayList<Integer>(optLen[blockNum]);
+			List<Integer> align1 = new ArrayList<>(optLen[blockNum]);
+			List<Integer> align2 = new ArrayList<>(optLen[blockNum]);
 			for(int pos=0;pos<optLen[blockNum];pos++) {
 				align1.add(optAln[blockNum][0][pos]);
 				align2.add(optAln[blockNum][1][pos]);
 			}
-			List<List<Integer>> block = new ArrayList<List<Integer>>(2);
+			List<List<Integer>> block = new ArrayList<>(2);
 			block.add(align1);
 			block.add(align2);
 			blocks.add(block);
@@ -559,13 +558,12 @@ public class AlignmentTools {
 	 *  Must be the same length as aligned1.
 	 * @return An AFPChain representing the alignment. Many properties may be
 	 *  null or another default.
-	 * @throws StructureException if an error occured during superposition
 	 * @throws IllegalArgumentException if aligned1 and aligned2 have different
 	 *  lengths
 	 * @see AlignmentTools#replaceOptAln(AFPChain, Atom[], Atom[], Map)
 	 */
 	public static AFPChain createAFPChain(Atom[] ca1, Atom[] ca2,
-										  ResidueNumber[] aligned1, ResidueNumber[] aligned2 ) throws StructureException {
+										  ResidueNumber[] aligned1, ResidueNumber[] aligned2 ) {
 		//input validation
 		int alnLen = aligned1.length;
 		if(alnLen != aligned2.length) {
@@ -627,7 +625,7 @@ public class AlignmentTools {
 
 		// Determine block lengths
 		// Split blocks if residue indices don't increase monotonically
-		List<Integer> newBlkLen = new ArrayList<Integer>();
+		List<Integer> newBlkLen = new ArrayList<>();
 		boolean blockChanged = false;
 		for(int blk=0;blk<blockNum;blk++) {
 			int currLen=1;
@@ -655,7 +653,7 @@ public class AlignmentTools {
 		}
 
 		// Split blocks
-		List<int[][]> blocks = new ArrayList<int[][]>( newBlkLen.size() );
+		List<int[][]> blocks = new ArrayList<>(newBlkLen.size());
 
 		int oldBlk = 0;
 		int pos = 0;
@@ -758,7 +756,7 @@ public class AlignmentTools {
 		// increasing monotonically.
 		Integer[] res1 = alignment.keySet().toArray(new Integer[0]);
 		Arrays.sort(res1);
-		List<Integer> blockLens = new ArrayList<Integer>(2);
+		List<Integer> blockLens = new ArrayList<>(2);
 		int optLength = 0;
 		Integer lastRes = alignment.get(res1[0]);
 		int blkLen = lastRes==null?0:1;
@@ -989,17 +987,17 @@ public class AlignmentTools {
 	 */
 	public static <S,T> String toConciseAlignmentString(Map<S,T> alignment, Map<T,S> identity) {
 		// Clone input to prevent changes
-		Map<S,T> alig = new HashMap<S,T>(alignment);
+		Map<S,T> alig = new HashMap<>(alignment);
 
 		// Generate inverse alignment
-		Map<S,List<S>> inverse = new HashMap<S,List<S>>();
+		Map<S,List<S>> inverse = new HashMap<>();
 		for(Entry<S,T> e: alig.entrySet()) {
 			S val = identity.get(e.getValue());
 			if( inverse.containsKey(val) ) {
 				List<S> l = inverse.get(val);
 				l.add(e.getKey());
 			} else {
-				List<S> l = new ArrayList<S>();
+				List<S> l = new ArrayList<>();
 				l.add(e.getKey());
 				inverse.put(val,l);
 			}
@@ -1051,14 +1049,14 @@ public class AlignmentTools {
 	 * @see #toConciseAlignmentString(Map, Map)
 	 */
 	public static <T> String toConciseAlignmentString(Map<T, T> alignment) {
-		return toConciseAlignmentString(alignment, new IdentityMap<T>());
+		return toConciseAlignmentString(alignment, new IdentityMap<>());
 	}
 
 	/**
 	 * @see #toConciseAlignmentString(Map, Map)
 	 */
 	public static Map<Integer, Integer> fromConciseAlignmentString(String string) {
-		Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+		Map<Integer, Integer> map = new HashMap<>();
 		boolean matches = true;
 		while (matches) {
 			Pattern pattern = Pattern.compile("(\\d+)>(\\d+)");
@@ -1093,23 +1091,15 @@ public class AlignmentTools {
 			//Loop for every position in the block
 			for (int j=0; j<optAln[i][0].length; j++){
 				//If the first position is evaluated initialize the last positions
-				if (j==0){
-					last1 = optAln[i][0][j];
-					last2 = optAln[i][1][j];
-				}
-				else{
+				if (j != 0) {
 					//If one of the positions or both are not contiguous increment the number of gaps
-					if (optAln[i][0][j] > last1+1 || optAln[i][1][j] > last2+1){
+					if (optAln[i][0][j] > last1 + 1 || optAln[i][1][j] > last2 + 1) {
 						gaps++;
-						last1 = optAln[i][0][j];
-						last2 = optAln[i][1][j];
 					}
 					//Otherwise just set the last position to the current one
-					else{
-						last1 = optAln[i][0][j];
-						last2 = optAln[i][1][j];
-					}
 				}
+				last1 = optAln[i][0][j];
+				last2 = optAln[i][1][j];
 			}
 			blockGap[i] = gaps;
 		}
@@ -1199,9 +1189,9 @@ public class AlignmentTools {
 	 * @return a list of Chains that is built up from the Atoms in the ca array
 	 * @throws StructureException
 	 */
-	public static final List<Chain> getAlignedModel(Atom[] ca){
+	public static List<Chain> getAlignedModel(Atom[] ca){
 
-		List<Chain> model = new ArrayList<Chain>();
+		List<Chain> model = new ArrayList<>();
 		for ( Atom a: ca){
 
 			Group g = a.getGroup();
@@ -1209,7 +1199,8 @@ public class AlignmentTools {
 
 			Chain newChain = null;
 			for ( Chain c :  model) {
-				if ( c.getId().equals(parentC.getId())){
+				String cid = c.getId();
+				if ( cid!=null && cid.equals(parentC.getId())){
 					newChain = c;
 					break;
 				}
@@ -1236,9 +1227,8 @@ public class AlignmentTools {
 	 * @param ca1
 	 * @param ca2
 	 * @return a structure object containing two models, one for each set of Atoms.
-	 * @throws StructureException
 	 */
-	public static final Structure getAlignedStructure(Atom[] ca1, Atom[] ca2) throws StructureException{
+	public static Structure getAlignedStructure(Atom[] ca1, Atom[] ca2) {
 
 		/* Previous implementation commented
 
@@ -1268,9 +1258,8 @@ public class AlignmentTools {
 	 * @param ca1
 	 * @param ca2
 	 * @return an array of Groups that are transformed for 3D display
-	 * @throws StructureException
 	 */
-	public static Group[] prepareGroupsForDisplay(AFPChain afpChain, Atom[] ca1, Atom[] ca2) throws StructureException{
+	public static Group[] prepareGroupsForDisplay(AFPChain afpChain, Atom[] ca1, Atom[] ca2) {
 
 
 		if ( afpChain.getBlockRotationMatrix().length == 0 ) {

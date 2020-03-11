@@ -20,11 +20,10 @@
  */
 package org.biojava.nbio.structure.align.multiple;
 
+import javax.vecmath.Matrix4d;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.vecmath.Matrix4d;
 
 /**
  * A general implementation of a BlockSet to store a flexible part of a multiple
@@ -88,7 +87,7 @@ public class BlockSetImpl extends AbstractScoresCache implements Serializable,
 		this.pose = null;
 		if (bs.pose != null) {
 			// Make a deep copy of everything
-			this.pose = new ArrayList<Matrix4d>();
+			this.pose = new ArrayList<>();
 			for (Matrix4d trans : bs.pose) {
 				Matrix4d newTrans = (Matrix4d) trans.clone();
 				pose.add(newTrans);
@@ -98,7 +97,7 @@ public class BlockSetImpl extends AbstractScoresCache implements Serializable,
 		blocks = null;
 		if (bs.blocks != null) {
 			// Make a deep copy of everything
-			this.blocks = new ArrayList<Block>();
+			this.blocks = new ArrayList<>();
 			for (Block b : bs.blocks) {
 				Block newB = b.clone();
 				newB.setBlockSet(this);
@@ -143,7 +142,7 @@ public class BlockSetImpl extends AbstractScoresCache implements Serializable,
 	@Override
 	public List<Block> getBlocks() {
 		if (blocks == null)
-			blocks = new ArrayList<Block>();
+			blocks = new ArrayList<>();
 		return blocks;
 	}
 
@@ -232,7 +231,7 @@ public class BlockSetImpl extends AbstractScoresCache implements Serializable,
 		if (alignResCounts != null)
 			return alignResCounts;
 
-		alignResCounts = new ArrayList<Integer>(size());
+		alignResCounts = new ArrayList<>(size());
 		for (int s = 0; s < size(); s++)
 			alignResCounts.add(0);
 

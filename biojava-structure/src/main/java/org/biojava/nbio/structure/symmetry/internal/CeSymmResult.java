@@ -20,16 +20,7 @@
  */
 package org.biojava.nbio.structure.symmetry.internal;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.ResidueNumber;
-import org.biojava.nbio.structure.ResidueRange;
-import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.StructureIdentifier;
-import org.biojava.nbio.structure.SubstructureIdentifier;
+import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.multiple.Block;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
@@ -37,6 +28,10 @@ import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
 import org.biojava.nbio.structure.symmetry.internal.CESymmParameters.RefineMethod;
 import org.biojava.nbio.structure.symmetry.internal.CESymmParameters.SymmetryType;
 import org.biojava.nbio.structure.symmetry.utils.SymmetryTools;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * This Class stores all the relevant information of an internal symmetry result
@@ -105,10 +100,10 @@ public class CeSymmResult {
 		if (!isRefined())
 			return null;
 
-		List<StructureIdentifier> repeats = new ArrayList<StructureIdentifier>(
+		List<StructureIdentifier> repeats = new ArrayList<>(
 				numRepeats);
 
-		String pdbId = structureId.toCanonical().getPdbId();
+        String pdbId = structureId.toCanonical().pdbId;
 		Block align = multipleAlignment.getBlocks().get(0);
 
 		for (int su = 0; su < numRepeats; su++) {
@@ -120,7 +115,7 @@ public class CeSymmResult {
 			ResidueRange range = new ResidueRange(res1.getChainName(), res1, res2);
 
 			StructureIdentifier id = new SubstructureIdentifier(pdbId,
-					Arrays.asList(range));
+                    Collections.singletonList(range));
 
 			repeats.add(id);
 		}

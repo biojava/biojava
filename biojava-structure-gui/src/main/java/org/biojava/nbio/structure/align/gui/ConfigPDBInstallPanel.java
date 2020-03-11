@@ -44,11 +44,11 @@ public class ConfigPDBInstallPanel extends JPanel
 	private static final long serialVersionUID = -1055193854675583808L;
 
 	JCheckBox fromFtp;
-	JComboBox fileType;
+	final JComboBox fileType;
 
 	JTextField pdbDir;
 
-	private static ConfigPDBInstallPanel instance = new ConfigPDBInstallPanel();
+	private static final ConfigPDBInstallPanel instance = new ConfigPDBInstallPanel();
 
 	static JDialog dialog;
 
@@ -137,22 +137,14 @@ public class ConfigPDBInstallPanel extends JPanel
 		vBox.add(Box.createGlue());
 
 		JButton apply = new JButton("Apply");
-		apply.addActionListener(new ActionListener(){
-			@Override
-		public void actionPerformed(ActionEvent event) {
-				instance.applyValues();
-				dialog.dispose();
-			}
+		apply.addActionListener(event -> {
+			instance.applyValues();
+			dialog.dispose();
 		});
 
 		JButton close = new JButton("Cancel");
 
-		close.addActionListener(new ActionListener(){
-			@Override
-		public void actionPerformed(ActionEvent event) {
-			  dialog.dispose();
-			}
-		});
+		close.addActionListener(event -> dialog.dispose());
 
 		Box hBoxb = Box.createHorizontalBox();
 		hBoxb.add(Box.createGlue());
@@ -206,7 +198,7 @@ public class ConfigPDBInstallPanel extends JPanel
 }
 
 class MyAction implements ActionListener{
-	JDialog dialog;
+	final JDialog dialog;
 
 	public MyAction(JDialog dialog) {
 		this.dialog= dialog;

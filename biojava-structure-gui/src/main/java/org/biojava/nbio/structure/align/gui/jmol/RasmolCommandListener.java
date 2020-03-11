@@ -41,16 +41,16 @@ extends KeyAdapter
 implements ActionListener,
 MouseListener {
 
-	JTextField textfield;
-	JmolPanel jmolPanel;
+	final JTextField textfield;
+	final JmolPanel jmolPanel;
 
-	List<String> history;
+	final List<String> history;
 	int historyPosition;
 
 	public RasmolCommandListener(JmolPanel panel, JTextField field){
 		textfield = field;
 		jmolPanel = panel;
-		history = new ArrayList<String>();
+		history = new ArrayList<>();
 		historyPosition = -2; // -2 = history = empty;
 	}
 
@@ -69,7 +69,7 @@ MouseListener {
 		// now comes history part:
 
 		// no need for history:
-		if ( cmd.equals("")) return;
+		if (cmd.isEmpty()) return;
 
 		// check last command in history
 		// if equivalent, don't add,
@@ -95,18 +95,20 @@ MouseListener {
 			textfield.setText("");
 			textfield.repaint();
 		}
-	};
+	}
 
 
 	@Override
-	public void  mouseExited(MouseEvent e){};
-	@Override
-	public void  mouseReleased(MouseEvent e){};
-	@Override
-	public void  mousePressed(MouseEvent e){};
+	public void  mouseExited(MouseEvent e){}
 
 	@Override
-	public void  mouseEntered(MouseEvent e){};
+	public void  mouseReleased(MouseEvent e){}
+
+	@Override
+	public void  mousePressed(MouseEvent e){}
+
+	@Override
+	public void  mouseEntered(MouseEvent e){}
 
 	/** takes care of the cursor up/down keys. triggers copying of stored
 	 * commands into the current textfield

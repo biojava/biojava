@@ -30,7 +30,6 @@ import org.biojava.nbio.core.sequence.template.AbstractSequence;
 import org.junit.Assert;
 import org.junit.Test;
 
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -505,14 +504,14 @@ public final class FastqToolsTest {
 	@Test
 	public void testToList()
 	{
-		List<String> list = new ArrayList<String>();
+		List<String> list = new ArrayList<>();
 		Assert.assertSame(list, FastqTools.toList(list));
 	}
 
 	@Test
 	public void testToListNotAList()
 	{
-		Collection<String> collection = new HashSet<String>();
+		Collection<String> collection = new HashSet<>();
 		Assert.assertTrue(FastqTools.toList(collection) instanceof List);
 		Assert.assertNotSame(collection, FastqTools.toList(collection));
 	}

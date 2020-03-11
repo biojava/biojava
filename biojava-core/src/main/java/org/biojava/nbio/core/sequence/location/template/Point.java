@@ -29,14 +29,14 @@ public interface Point extends Comparable<Point> {
 	/**
 	 * Used to resolve a position about a point
 	 */
-	public interface Resolver<T extends Point> {
+    interface Resolver<T extends Point> {
 		int resolve(T point);
 	}
 
 	/**
 	 * Returns the position held by this object
 	 */
-	Integer getPosition();
+	int getPosition();
 
 	/**
 	 * Returns true if the current position is unknown but is

@@ -20,28 +20,19 @@
  */
 package org.biojava.nbio.structure.io;
 
-import static org.junit.Assert.*;
-
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.List;
-import java.util.zip.GZIPInputStream;
-
-import org.biojava.nbio.structure.Chain;
-import org.biojava.nbio.structure.EntityInfo;
-import org.biojava.nbio.structure.EntityType;
-import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.StructureIO;
+import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.mmcif.MMcifParser;
 import org.biojava.nbio.structure.io.mmcif.SimpleMMcifConsumer;
 import org.biojava.nbio.structure.io.mmcif.SimpleMMcifParser;
 import org.biojava.nbio.structure.xtal.CrystalCell;
 import org.junit.Test;
+
+import java.io.*;
+import java.util.List;
+import java.util.zip.GZIPInputStream;
+
+import static org.junit.Assert.*;
 
 /**
  * Tests for non-deposited PDB/mmCIF files, i.e. any kind of "raw" file
@@ -56,7 +47,7 @@ import org.junit.Test;
 public class TestNonDepositedFiles {
 
 	@Test
-	public void test1B8GnoSeqresPdb() throws IOException, StructureException {
+	public void test1B8GnoSeqresPdb() throws IOException {
 
 		InputStream inStream = new GZIPInputStream(this.getClass().getResourceAsStream("/org/biojava/nbio/structure/io/1b8g_raw.pdb.gz"));
 		assertNotNull(inStream);
@@ -72,7 +63,7 @@ public class TestNonDepositedFiles {
 
 		assertTrue(s.isCrystallographic());
 		assertFalse(s.isNmr());
-		assertTrue(s.nrModels()==1);
+		assertEquals(1, s.nrModels());
 		assertNull(s.getPDBHeader().getExperimentalTechniques());
 
 		assertNotNull(s.getCrystallographicInfo().getCrystalCell());
@@ -126,7 +117,7 @@ public class TestNonDepositedFiles {
 	}
 
 	@Test
-	public void test3C5F() throws IOException, StructureException {
+	public void test3C5F() throws IOException {
 		InputStream inStream = new GZIPInputStream(this.getClass().getResourceAsStream("/org/biojava/nbio/structure/io/3c5f_raw.pdb.gz"));
 		assertNotNull(inStream);
 
@@ -146,7 +137,7 @@ public class TestNonDepositedFiles {
 	}
 
 	@Test
-	public void test4B19() throws IOException, StructureException {
+	public void test4B19() throws IOException {
 		InputStream inStream = new GZIPInputStream(this.getClass().getResourceAsStream("/org/biojava/nbio/structure/io/4b19_raw.pdb.gz"));
 		assertNotNull(inStream);
 

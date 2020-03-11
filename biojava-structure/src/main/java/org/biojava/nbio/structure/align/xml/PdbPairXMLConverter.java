@@ -20,9 +20,9 @@
  */
 package org.biojava.nbio.structure.align.xml;
 
+import org.biojava.nbio.core.util.PrettyXMLWriter;
 import org.biojava.nbio.structure.align.client.PdbPair;
 import org.biojava.nbio.structure.align.fatcat.FatCatRigid;
-import org.biojava.nbio.core.util.PrettyXMLWriter;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -44,7 +44,7 @@ public class PdbPairXMLConverter {
 	public static final String DEFAULT_METHOD_NAME = FatCatRigid.algorithmName;
 
 	public static PdbPairsMessage convertXMLtoPairs(String xml) {
-		SortedSet<PdbPair>  pairs = new TreeSet<PdbPair>();
+		SortedSet<PdbPair>  pairs = new TreeSet<>();
 		PdbPairsMessage message = new PdbPairsMessage();
 		try
 		{

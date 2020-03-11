@@ -20,11 +20,6 @@
  */
 package org.biojava.nbio.structure.test.util;
 
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.NoSuchElementException;
-
 import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
@@ -33,6 +28,10 @@ import org.biojava.nbio.structure.io.mmcif.ChemCompProvider;
 import org.biojava.nbio.structure.io.mmcif.DownloadChemCompProvider;
 import org.biojava.nbio.structure.scop.ScopDatabase;
 import org.biojava.nbio.structure.scop.ScopFactory;
+
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.NoSuchElementException;
 
 /**
  * Helper class to manage all the global state changes in BioJava.
@@ -65,7 +64,7 @@ public final class GlobalsHelper {
 	}
 
 	// Saves defaults as stack
-	private static Deque<PathInfo> stack = new LinkedList<>();
+	private static final Deque<PathInfo> stack = new LinkedList<>();
 	static {
 		// Save default state
 		pushState();
@@ -79,7 +78,7 @@ public final class GlobalsHelper {
 	/**
 	 * Save current global state to the stack
 	 */
-	public static void pushState() {
+	public synchronized static void pushState() {
 		PathInfo paths = new PathInfo();
 		stack.addFirst(paths);
 	}

@@ -41,32 +41,32 @@ public interface ModifiedCompound {
 	 *
 	 * @return a description
 	 */
-	public String getDescription();
+    String getDescription();
 
-	public void setDescription(String desc);
+	void setDescription(String desc);
 
 	/**
 	 *
 	 * @return {@link ProteinModificationBean} occurred on the residue.
 	 */
-	public ProteinModification getModification();
+    ProteinModification getModification();
 
-	public void setModification(ProteinModification modi);
+	void setModification(ProteinModification modi);
 
 	/**
 	 *
 	 * @return a set of involved group.
 	 */
-	public Set<StructureGroup> getGroups();
+    Set<StructureGroup> getGroups();
 
-	public void setGroups(Set<StructureGroup> groups);
+	void setGroups(Set<StructureGroup> groups);
 
 	/**
 	 *
 	 * @param isAminoAcid true if amino acids.
 	 * @return a set of involved group of the type.
 	 */
-	public Set<StructureGroup> getGroups(boolean isAminoAcid);
+    Set<StructureGroup> getGroups(boolean isAminoAcid);
 
 
 
@@ -76,13 +76,13 @@ public interface ModifiedCompound {
 	 * @see #getLinkedGroupPairs
 	 * @see StructureAtomLinkage
 	 */
-	public Set<StructureAtomLinkage> getAtomLinkages();
+    Set<StructureAtomLinkage> getAtomLinkages();
 
 	/** Set atom linkages
 	 *
 	 * @return
 	 */
-	public void setAtomLinkages(Set<StructureAtomLinkage> linkages);
+    void setAtomLinkages(Set<StructureAtomLinkage> linkages);
 
 	/**
 	 * Add a linkage. Add new the involved groups first using {@link addGroup}.
@@ -90,20 +90,20 @@ public interface ModifiedCompound {
 	 * @return true if this linkage was not already contained.
 	 * @see StructureAtomLinkage
 	 */
-	public boolean addAtomLinkage(StructureAtomLinkage linkage);
+    boolean addAtomLinkage(StructureAtomLinkage linkage);
 
 	/**
 	 * Add a collections of linkages.
 	 * @param linkages an atom linkage.
 	 */
-	public void addAtomLinkages(Collection<StructureAtomLinkage> linkages);
+    void addAtomLinkages(Collection<StructureAtomLinkage> linkages);
 
 
 	/**
 	 *
 	 * @return true if groups from multiple chains were involved
 	 */
-	public boolean crossChains();
+    boolean crossChains();
 
 
 }

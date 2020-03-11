@@ -54,15 +54,15 @@ public class PDBStatusTest {
 
 	@Test
 	public void testGetReplacement() {
-		Assert.assertFalse(Arrays.asList("YES").equals(Arrays.asList("NO"))); //check for deep equals
+		Assert.assertNotEquals(Arrays.asList("YES"), Arrays.asList("NO")); //check for deep equals
 
 		// 1CMW is replacedBy NONE
-		Assert.assertEquals(Arrays.asList(), PDBStatus.getReplacement("1CMW", true, false));
-		Assert.assertEquals(Arrays.asList("1CMW"), PDBStatus.getReplacement("1CMW", true, true));
+		Assert.assertEquals(Collections.emptyList(), PDBStatus.getReplacement("1CMW", true, false));
+		Assert.assertEquals(Collections.singletonList("1CMW"), PDBStatus.getReplacement("1CMW", true, true));
 
 		// 1HHB is replacedBy 2-4HHB
-		Assert.assertEquals(Arrays.asList("3HHB"), PDBStatus.getReplacement("3HHB", false, false));
-		Assert.assertEquals(Arrays.asList("3HHB"), PDBStatus.getReplacement("3HHB", false, true));
+		Assert.assertEquals(Collections.singletonList("3HHB"), PDBStatus.getReplacement("3HHB", false, false));
+		Assert.assertEquals(Collections.singletonList("3HHB"), PDBStatus.getReplacement("3HHB", false, true));
 		Assert.assertEquals(Arrays.asList("4HHB", "3HHB", "2HHB"), PDBStatus.getReplacement("1HHB", false, false));
 		Assert.assertEquals(Arrays.asList("4HHB", "3HHB", "2HHB", "1HHB"), PDBStatus.getReplacement("1HHB", false, true));
 
@@ -78,7 +78,7 @@ public class PDBStatusTest {
 	public void testGetCurrent() {
 		Assert.assertEquals("4HHB", PDBStatus.getCurrent("1HHB"));
 		Assert.assertEquals("3HHB", PDBStatus.getCurrent("3HHB"));
-		Assert.assertEquals(null, PDBStatus.getCurrent("1CMW"));
+		Assert.assertNull(PDBStatus.getCurrent("1CMW"));
 		Assert.assertEquals("3ENI", PDBStatus.getCurrent("1KSA"));
 		Assert.assertEquals("8CAT", PDBStatus.getCurrent("1CAT"));
 		Assert.assertEquals("8CAT", PDBStatus.getCurrent("3CAT"));
@@ -87,14 +87,14 @@ public class PDBStatusTest {
 
 	@Test
 	public void testGetReplaces() {
-		Assert.assertEquals(new ArrayList<String>(), Arrays.asList(new String[]{}));
+		Assert.assertEquals(new ArrayList<String>(), Collections.emptyList());
 
-		Assert.assertEquals(Arrays.asList("1HHB"), PDBStatus.getReplaces("4HHB", false));
-		Assert.assertEquals(Arrays.asList("1HHB"), PDBStatus.getReplaces("3HHB", false));
-		Assert.assertEquals(Arrays.asList(), PDBStatus.getReplaces("1HHB", false));
+		Assert.assertEquals(Collections.singletonList("1HHB"), PDBStatus.getReplaces("4HHB", false));
+		Assert.assertEquals(Collections.singletonList("1HHB"), PDBStatus.getReplaces("3HHB", false));
+		Assert.assertEquals(Collections.emptyList(), PDBStatus.getReplaces("1HHB", false));
 		Assert.assertEquals(Arrays.asList("1M50", "1KSA"), PDBStatus.getReplaces("3ENI", false));
 		Assert.assertEquals(Arrays.asList("1M50", "1KSA"), PDBStatus.getReplaces("3ENI", true));
-		Assert.assertEquals(Arrays.asList("3CAT"), PDBStatus.getReplaces("8CAT", false));
+		Assert.assertEquals(Collections.singletonList("3CAT"), PDBStatus.getReplaces("8CAT", false));
 		Assert.assertEquals(Arrays.asList("3CAT", "1CAT"), PDBStatus.getReplaces("8CAT", true));
 
 	}
@@ -113,37 +113,37 @@ public class PDBStatusTest {
 			List<String> a,b;
 
 			b = Arrays.asList("F","A");
-			a = new LinkedList<String>();
+			a = new LinkedList<>();
 			mergeReversed.invoke(null, a,b);
 			Assert.assertEquals(Arrays.asList("F", "A"), a);
 
-			a = new LinkedList<String>();
+			a = new LinkedList<>();
 			a.add("B");
 			mergeReversed.invoke(null, a,b);
 			Assert.assertEquals(Arrays.asList("F", "B", "A"), a);
 
-			a = new LinkedList<String>();
+			a = new LinkedList<>();
 			a.add("G");
 			mergeReversed.invoke(null, a,b);
 			Assert.assertEquals(Arrays.asList("G", "F", "A"), a);
 
-			a = new LinkedList<String>();
+			a = new LinkedList<>();
 			a.add("1");
 			mergeReversed.invoke(null, a,b);
 			Assert.assertEquals(Arrays.asList("F", "A", "1"), a);
 
-			a = new LinkedList<String>();
+			a = new LinkedList<>();
 			a.add("G");
 			a.add("1");
 			mergeReversed.invoke(null, a,b);
 			Assert.assertEquals(Arrays.asList("G", "F", "A", "1"), a);
 
-			b = Arrays.asList();
+			b = Collections.emptyList();
 			mergeReversed.invoke(null, a,b);
 			Assert.assertEquals(Arrays.asList("G", "F", "A", "1"), a);
 
 			b = Arrays.asList("G","D","C","A");
-			a = new LinkedList<String>();
+			a = new LinkedList<>();
 			a.add("F");
 			a.add("B");
 			a.add("1");

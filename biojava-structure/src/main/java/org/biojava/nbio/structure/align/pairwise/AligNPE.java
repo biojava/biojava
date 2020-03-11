@@ -61,7 +61,7 @@ public class AligNPE {
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < cols; j++) {
 
-				int e=0;
+				int e;
 				//if ( ( i < rows) &&
 				//        ( j < cols)) {
 					//TODO: the ALIGFACTOR calc should be hidden in Gotoh!!

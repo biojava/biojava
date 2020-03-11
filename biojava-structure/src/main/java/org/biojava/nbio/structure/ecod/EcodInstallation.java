@@ -20,32 +20,19 @@
 
 package org.biojava.nbio.structure.ecod;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.Reader;
+import org.biojava.nbio.core.util.FileDownloadUtils;
+import org.biojava.nbio.structure.align.util.UserConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.biojava.nbio.structure.align.util.UserConfiguration;
-import org.biojava.nbio.core.util.FileDownloadUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Provides access to the Evolutionary Classification of Protein Domains (ECOD).
@@ -77,12 +64,12 @@ public class EcodInstallation implements EcodDatabase {
 
 
 	private String cacheLocation;
-	private String requestedVersion; // version requested, e.g. "latest". Used for the paths
+	private final String requestedVersion; // version requested, e.g. "latest". Used for the paths
 	private String parsedVersion; // actual version parsed
 
 	// lock to prevent multiple threads from downloading simultaneously
 	// Should hold the lock when reading/writing allDomains or domainMap
-	private ReadWriteLock domainsFileLock;
+	private final ReadWriteLock domainsFileLock;
 	private List<EcodDomain> allDomains;
 	private Map<String,List<EcodDomain>> domainMap;//PDB ID -> domains, lazily constructed from allDomains
 
@@ -148,7 +135,7 @@ public class EcodInstallation implements EcodDatabase {
 				return null;
 			}
 			// Deep clone
-			List<EcodDomain> clonedDoms = new ArrayList<EcodDomain>(doms.size());
+			List<EcodDomain> clonedDoms = new ArrayList<>(doms.size());
 			for(EcodDomain d : doms) {
 				clonedDoms.add( new EcodDomain(d) );
 			}
@@ -173,7 +160,7 @@ public class EcodInstallation implements EcodDatabase {
 		Integer hGroup = xhtGroup.length>1 ? Integer.parseInt(xhtGroup[1]) : null;
 		Integer tGroup = xhtGroup.length>2 ? Integer.parseInt(xhtGroup[2]) : null;
 
-		List<EcodDomain> filtered = new ArrayList<EcodDomain>();
+		List<EcodDomain> filtered = new ArrayList<>();
 		for(EcodDomain d: getAllDomains()) {
 			boolean match = true;
 			if(xhtGroup.length>0) {
@@ -368,7 +355,7 @@ public class EcodInstallation implements EcodDatabase {
 				return false;
 
 			// Re-download old copies of "latest"
-			if(updateFrequency != null && requestedVersion == DEFAULT_VERSION ) {
+			if(updateFrequency != null && requestedVersion.equals(DEFAULT_VERSION)) {
 				long mod = f.lastModified();
 				// Time of last update
 				Date lastUpdate = new Date();
@@ -477,7 +464,7 @@ public class EcodInstallation implements EcodDatabase {
 			}
 
 			// Leave enough space for all PDBs as of 2015
-			domainMap = new HashMap<String, List<EcodDomain>>((int) (150000/.85),.85f);
+			domainMap = new HashMap<>((int) (150000 / .85), .85f);
 
 			// Index with domainMap
 			for(EcodDomain d : allDomains) {
@@ -496,7 +483,7 @@ public class EcodInstallation implements EcodDatabase {
 				if( domainMap.containsKey(pdbId) ) {
 					currDomains = domainMap.get(pdbId);
 				} else {
-					currDomains = new LinkedList<EcodDomain>();
+					currDomains = new LinkedList<>();
 					domainMap.put(pdbId,currDomains);
 				}
 				currDomains.add(d);
@@ -574,7 +561,7 @@ v1.4 - added seqid_range and headers (develop101)
 		private void parse(BufferedReader in) throws IOException {
 			try {
 				// Allocate plenty of space for ECOD as of 2015
-				ArrayList<EcodDomain> domainsList = new ArrayList<EcodDomain>(500000);
+				ArrayList<EcodDomain> domainsList = new ArrayList<>(500000);
 
 				Pattern versionRE = Pattern.compile("^\\s*#.*ECOD\\s*version\\s+(\\S+).*");
 				Pattern commentRE = Pattern.compile("^\\s*#.*");
@@ -692,12 +679,12 @@ v1.4 - added seqid_range and headers (develop101)
 									}
 
 									String ligandStr = fields[i++];
-									Set<String> ligands = null;
+									Set<String> ligands;
 									if( ligandStr.equals("NO_LIGANDS_4A") || ligandStr.isEmpty() ) {
 										ligands = Collections.emptySet();
 									} else {
 										String[] ligSplit = ligandStr.split(",");
-										ligands = new LinkedHashSet<String>(ligSplit.length);
+										ligands = new LinkedHashSet<>(ligSplit.length);
 										for(String s : ligSplit) {
 											ligands.add(s.intern());
 										}
@@ -767,7 +754,7 @@ v1.4 - added seqid_range and headers (develop101)
 
 	@Override
 	public String toString() {
-		String version = null;
+		String version;
 		try {
 			version = getVersion();
 		} catch (IOException e) {

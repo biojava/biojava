@@ -64,7 +64,7 @@ public enum EntityType {
 	/**
 	 * @param entType the type of the Entity
 	 */
-	private EntityType(String entType) {
+    EntityType(String entType) {
 
 		this.setEntityType(entType);
 

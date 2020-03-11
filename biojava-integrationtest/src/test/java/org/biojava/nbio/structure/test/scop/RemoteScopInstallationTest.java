@@ -46,7 +46,7 @@ public class RemoteScopInstallationTest extends ScopDatabaseTest {
 	//@Parameters
 	@Parameters(name="{0}")
 	public static Collection<Object[]> availableDatabases() {
-		ArrayList<Object[]> databases = new ArrayList<Object[]>();
+		ArrayList<Object[]> databases = new ArrayList<>();
 		RemoteScopInstallation scop;
 		for(String version : new String[] {
 				ScopFactory.LATEST_VERSION,

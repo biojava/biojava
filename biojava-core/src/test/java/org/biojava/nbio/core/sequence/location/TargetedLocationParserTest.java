@@ -40,10 +40,10 @@ import java.util.Collection;
 @RunWith(Parameterized.class)
 public class TargetedLocationParserTest {
 
-	private Data request;
+	private final Data request;
 
 	public static class Data {
-		private String Insdc;
+		private final String Insdc;
 
 		/**
 		 * Parser data input. Based on that input it should be able to identity the origin and wanted target
@@ -55,17 +55,17 @@ public class TargetedLocationParserTest {
 		public Data(String gi, CompoundSet<?> originType, String Insdc, CompoundSet<?> compound) {
 			this.Insdc = Insdc;
 		}
-	};
+	}
 
 	@Parameterized.Parameters
-	public static Collection<Data[]> getLocations() throws Exception {
+	public static Collection<Data[]> getLocations() {
 
 
-		Data[][] out = new Data[][]{
-			{new Data("7525057", AminoAcidCompoundSet.getAminoAcidCompoundSet(),
+        Data[][] out = new Data[][]{
+			{new Data("7525057", AminoAcidCompoundSet.aminoAcidCompoundSet,
 					"join(complement(NC_000932.1:69611..69724),NC_000932.1:139856..140087,NC_000932.1:140625..140650)", DNACompoundSet.getDNACompoundSet())},
 
-			{new Data("7525059", AminoAcidCompoundSet.getAminoAcidCompoundSet(),
+			{new Data("7525059", AminoAcidCompoundSet.aminoAcidCompoundSet,
 					"NC_000932.1:72371..73897", DNACompoundSet.getDNACompoundSet())},
 
 			{new Data("7525073", DNACompoundSet.getDNACompoundSet() ,
@@ -85,7 +85,7 @@ public class TargetedLocationParserTest {
 
 
 	@Test
-	public void locationTest() throws Exception {
+	public void locationTest() {
 
 		InsdcParser parser = new InsdcParser(DataSource.GENBANK);
 		Location loc = parser.parse(request.Insdc);

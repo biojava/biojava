@@ -20,8 +20,6 @@
  */
 package demo;
 
-import java.io.IOException;
-
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
@@ -29,6 +27,8 @@ import org.biojava.nbio.structure.align.quaternary.QsAlign;
 import org.biojava.nbio.structure.align.quaternary.QsAlignParameters;
 import org.biojava.nbio.structure.align.quaternary.QsAlignResult;
 import org.biojava.nbio.structure.cluster.SubunitClustererParameters;
+
+import java.io.IOException;
 
 /**
  * Demo on how to use programatically {@link QsAlign} for the alignment of

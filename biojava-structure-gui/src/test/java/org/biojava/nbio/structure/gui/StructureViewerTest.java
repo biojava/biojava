@@ -37,11 +37,11 @@ public class StructureViewerTest {
 
 
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 	}
 
 	@After
-	public void tearDown() throws Exception {
+	public void tearDown() {
 	}
 
 	/**
@@ -178,7 +178,7 @@ public class StructureViewerTest {
 	   // fail("The test case is a prototype.");
 	}
 
-	public class StructureViewerImpl implements StructureViewer {
+	public static class StructureViewerImpl implements StructureViewer {
 
 		@Override
 		public void setStructure(Structure structure) {

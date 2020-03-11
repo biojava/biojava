@@ -77,7 +77,7 @@ public final class FastqTest {
 	public void testDescription()
 	{
 		Fastq fastq = new Fastq("description", "sequence", "quality_", FastqVariant.FASTQ_SANGER);
-		Assert.assertTrue(fastq.getDescription() != null);
+        Assert.assertNotNull(fastq.getDescription());
 		Assert.assertEquals("description", fastq.getDescription());
 	}
 
@@ -85,7 +85,7 @@ public final class FastqTest {
 	public void testSequence()
 	{
 		Fastq fastq = new Fastq("description", "sequence", "quality_", FastqVariant.FASTQ_SANGER);
-		Assert.assertTrue(fastq.getSequence() != null);
+        Assert.assertNotNull(fastq.getSequence());
 		Assert.assertEquals("sequence", fastq.getSequence());
 	}
 
@@ -93,7 +93,7 @@ public final class FastqTest {
 	public void testQuality()
 	{
 		Fastq fastq = new Fastq("description", "sequence", "quality_", FastqVariant.FASTQ_SANGER);
-		Assert.assertTrue(fastq.getQuality() != null);
+        Assert.assertNotNull(fastq.getQuality());
 		Assert.assertEquals("quality_", fastq.getQuality());
 	}
 
@@ -101,7 +101,7 @@ public final class FastqTest {
 	public void testVariant()
 	{
 		Fastq fastq = new Fastq("description", "sequence", "quality_", FastqVariant.FASTQ_SANGER);
-		Assert.assertTrue(fastq.getVariant() != null);
+        Assert.assertNotNull(fastq.getVariant());
 		Assert.assertEquals(FastqVariant.FASTQ_SANGER, fastq.getVariant());
 	}
 
@@ -117,15 +117,15 @@ public final class FastqTest {
 		Fastq fastq0 = new Fastq("description", "sequence", "quality_", FastqVariant.FASTQ_SANGER);
 		Fastq fastq1 = new Fastq("description", "sequence", "quality_", FastqVariant.FASTQ_SANGER);
 
-		Assert.assertFalse(fastq0.equals(null));
-		Assert.assertFalse(fastq1.equals(null));
-		Assert.assertFalse(fastq0.equals(new Object()));
-		Assert.assertFalse(fastq1.equals(new Object()));
-		Assert.assertTrue(fastq0.equals(fastq0));
-		Assert.assertTrue(fastq1.equals(fastq1));
-		Assert.assertFalse(fastq0 == fastq1);
-		Assert.assertFalse(fastq0.equals(fastq1));
-		Assert.assertFalse(fastq1.equals(fastq0));
+        Assert.assertNotEquals(null, fastq0);
+        Assert.assertNotEquals(null, fastq1);
+        Assert.assertNotEquals(fastq0, new Object());
+        Assert.assertNotEquals(fastq1, new Object());
+        Assert.assertEquals(fastq0, fastq0);
+        Assert.assertEquals(fastq1, fastq1);
+        Assert.assertNotSame(fastq0, fastq1);
+        Assert.assertNotEquals(fastq0, fastq1);
+        Assert.assertNotEquals(fastq1, fastq0);
 	}
 
 	@Test

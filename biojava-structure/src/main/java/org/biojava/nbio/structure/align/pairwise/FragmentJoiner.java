@@ -115,10 +115,10 @@ public class FragmentJoiner {
 
 
 	public JointFragments[] approach_ap3(Atom[] ca1, Atom[] ca2, FragmentPair[] fraglst,
-													 StrucAligParameters params) throws StructureException {
+													 StrucAligParameters params) {
 
 		//the final list of joined fragments stores as apairs
-		List<JointFragments> fll = new ArrayList<JointFragments>();
+		List<JointFragments> fll = new ArrayList<>();
 
 		FragmentPair[] tmpfidx = new FragmentPair[fraglst.length];
 		for ( int i=0 ; i < fraglst.length; i++){
@@ -200,22 +200,22 @@ public class FragmentJoiner {
 
 
 		Comparator<JointFragments> comp = new JointFragmentsComparator();
-		Collections.sort(fll,comp);
+		fll.sort(comp);
 		Collections.reverse(fll);
 		int m = Math.min(params.getMaxrefine(),fll.size());
-		List<JointFragments> retlst = new ArrayList<JointFragments>();
+		List<JointFragments> retlst = new ArrayList<>();
 		for ( int i = 0 ; i < m ; i++){
 			JointFragments jf = fll.get(i);
 			retlst.add(jf);
 		}
 
-		return retlst.toArray(new JointFragments[retlst.size()]);
+		return retlst.toArray(new JointFragments[0]);
 
 	}
 
-	private boolean densityCheckOk(Atom[] aa1, Atom[] aa2, List<int[]> idxlist,
-											 int p2i, int p2j, int l2,
-											 double densityCutoff) throws StructureException {
+	private static boolean densityCheckOk(Atom[] aa1, Atom[] aa2, List<int[]> idxlist,
+										  int p2i, int p2j, int l2,
+										  double densityCutoff) {
 		JointFragments ftmp = new JointFragments();
 		ftmp.setIdxlist(idxlist);
 		ftmp.add(p2i,p2j,0,l2);
@@ -244,9 +244,8 @@ public class FragmentJoiner {
 	 * @param ca1subset
 	 * @param ca2subset
 	 * @return a double
-	 * @throws StructureException
 	 */
-	private double getDensity(Atom[] ca1subset, Atom[] ca2subset ) throws StructureException{
+	private static double getDensity(Atom[] ca1subset, Atom[] ca2subset) {
 
 		Atom centroid1 =  Calc.getCentroid(ca1subset);
 		Atom centroid2 = Calc.getCentroid(ca2subset);
@@ -271,7 +270,7 @@ public class FragmentJoiner {
 		return Math.min(avd1,avd2);
 	}
 
-	private double rmsCheck(Atom[] a1, Atom[] a2,List<int[]> idxlist, int p2i, int p2j, int l2) throws StructureException {
+	private static double rmsCheck(Atom[] a1, Atom[] a2, List<int[]> idxlist, int p2i, int p2j, int l2) {
 
 		//System.out.println(dd);
 		// check if a joint fragment has low rms ...
@@ -293,11 +292,11 @@ public class FragmentJoiner {
 	 * @param frag the JointFragments object that contains the list of identical positions
 	 * @return the rms
 	 */
-	public static double getRMS(Atom[] ca1, Atom[]ca2,JointFragments frag) throws StructureException {
+	public static double getRMS(Atom[] ca1, Atom[]ca2,JointFragments frag) {
 		//      now svd ftmp and check if the rms is < X ...
 		AlternativeAlignment ali = new AlternativeAlignment();
 		ali.apairs_from_idxlst(frag);
-		double rms = 999;
+		double rms;
 
 		int[] idx1 = ali.getIdx1();
 		int[] idx2 = ali.getIdx2();
@@ -321,9 +320,9 @@ public class FragmentJoiner {
 		return rms;
 	}
 
-	public boolean angleCheckOk(FragmentPair a, FragmentPair b, float distcutoff){
+	public static boolean angleCheckOk(FragmentPair a, FragmentPair b, float distcutoff){
 
-		double dist = -999;
+		double dist;
 
 		Atom v1 = a.getUnitv();
 		Atom v2 = b.getUnitv();
@@ -332,7 +331,7 @@ public class FragmentJoiner {
 		return dist <= distcutoff;
 	}
 
-	private boolean distanceCheckOk(FragmentPair a, FragmentPair b, float fragCompatDist){
+	private static boolean distanceCheckOk(FragmentPair a, FragmentPair b, float fragCompatDist){
 
 		double dd ;
 
@@ -358,7 +357,7 @@ public class FragmentJoiner {
 	 * @param maxRefine max number of solutions to keep
 	 * @return JointFragments[]
 	 */
-	public JointFragments[] frag_pairwise_compat(FragmentPair[] fraglst, int angleDiff, float fragCompatDist, int maxRefine  ){
+	public static JointFragments[] frag_pairwise_compat(FragmentPair[] fraglst, int angleDiff, float fragCompatDist, int maxRefine){
 
 
 		FragmentPair[] tmpfidx = new FragmentPair[fraglst.length];
@@ -372,7 +371,7 @@ public class FragmentJoiner {
 		int[] used = new int[n];
 
 		//the final list of joined fragments stores as apairs
-		List<JointFragments> fll = new ArrayList<JointFragments>();
+		List<JointFragments> fll = new ArrayList<>();
 
 		double adiff = angleDiff * Math.PI / 180d;
 		logger.debug("addiff" + adiff);
@@ -440,16 +439,16 @@ public class FragmentJoiner {
 
 
 		Comparator<JointFragments> comp = new JointFragmentsComparator();
-		Collections.sort(fll,comp);
+		fll.sort(comp);
 		Collections.reverse(fll);
 		int m = Math.min(maxRefine,fll.size());
-		List<JointFragments> retlst = new ArrayList<JointFragments>();
+		List<JointFragments> retlst = new ArrayList<>();
 		for ( int i = 0 ; i < m ; i++){
 			JointFragments jf = fll.get(i);
 			retlst.add(jf);
 		}
 
-		return retlst.toArray(new JointFragments[retlst.size()]);
+		return retlst.toArray(new JointFragments[0]);
 
 	}
 
@@ -462,7 +461,7 @@ public class FragmentJoiner {
 
 	}
 
-	public void extendFragments(Atom[] ca1, Atom[] ca2 , JointFragments fragments, StrucAligParameters params) throws StructureException {
+	public static void extendFragments(Atom[] ca1, Atom[] ca2, JointFragments fragments, StrucAligParameters params) {
 
 		List<int[]> pos = fragments.getIdxlist();
 
@@ -519,7 +518,7 @@ public class FragmentJoiner {
 	}
 
 
-	private double testAdd(Atom[] ca1, Atom[] ca2, JointFragments fragments, int pstart1, int pstart2) throws StructureException {
+	private static double testAdd(Atom[] ca1, Atom[] ca2, JointFragments fragments, int pstart1, int pstart2) {
 
 		JointFragments frag = new JointFragments();
 		frag.setIdxlist(fragments.getIdxlist());
@@ -555,11 +554,7 @@ class JointFragmentsComparator
 			return -1;
 		}
 		else{
-			if ( rms1 < rms2)
-				return 1;
-			if ( rms1 > rms2)
-				return -1;
-			return 0;
+			return Double.compare(rms2, rms1);
 		}
 	}
 

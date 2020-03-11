@@ -20,11 +20,10 @@
  */
 package org.biojava.nbio.structure.align.multiple.util;
 
-import java.util.List;
-
-import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.multiple.BlockSet;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
+
+import java.util.List;
 
 /**
  * Interface for Multiple Alignment superposition algorithms.
@@ -58,8 +57,7 @@ public interface MultipleSuperimposer {
 	 *  		atoms to align (via the {@link MultipleAlignment#getEnsemble()
 	 *  		ensemble}).
 	 *
-	 * @throws StructureException
 	 */
-	public void superimpose(MultipleAlignment alignment)
-			throws StructureException;
+    void superimpose(MultipleAlignment alignment)
+	;
 }

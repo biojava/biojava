@@ -83,7 +83,7 @@ public class AminoAcidCompositionTable {
 	 * 		Stores the mass of elements and isotopes
 	 */
 	public void computeMolecularWeight(ElementTable eTable){
-		this.aaSymbol2MolecularWeight = new HashMap<Character, Double>();
+		this.aaSymbol2MolecularWeight = new HashMap<>();
 		for(AminoAcidComposition a:aminoacid){
 			//Check to ensure that the symbol is of single character
 			if(a.getSymbol().length() != 1){
@@ -91,7 +91,7 @@ public class AminoAcidCompositionTable {
 			}
 			//Check to ensure that the symbols are not repeated
 			char c = a.getSymbol().charAt(0);
-			if(this.aaSymbol2MolecularWeight.keySet().contains(c)){
+			if(this.aaSymbol2MolecularWeight.containsKey(c)){
 				throw new Error("Symbol " + c + " is repeated.\r\n" +
 						"Please check AminoAcidComposition XML file to ensure there are no repeated symbols. Note that this is case-insensitive.\r\n" +
 						"This means that having 'A' and 'a' would be repeating.");

@@ -97,7 +97,7 @@ public class AlignmentToolsTest {
 		final float minimumMetricChange = .5f;// be liberal, since we have small alignments
 
 		// noisy C3 alignment
-		Map<Integer,Integer> alignment1 = new HashMap<Integer,Integer>();
+		Map<Integer,Integer> alignment1 = new HashMap<>();
 		alignment1.put(1, 5);
 		alignment1.put(2, 6);
 		alignment1.put(4, 7);
@@ -107,14 +107,14 @@ public class AlignmentToolsTest {
 		alignment1.put(10, 3);
 		alignment1.put(11, 4);
 
-		Map<Integer,Integer> identity = new AlignmentTools.IdentityMap<Integer>();
+		Map<Integer,Integer> identity = new AlignmentTools.IdentityMap<>();
 
 		order = AlignmentTools.getSymmetryOrder(alignment1, identity, maxSymmetry, minimumMetricChange);
 		Assert.assertEquals("Wrong order for alignment 1", 3, order);
 
 		// sequential alignment. Should be order 1, but we report this as "no symmetry"
 		//TODO Change default return value in getSymmetry
-		Map<Integer,Integer> alignment2 = new HashMap<Integer,Integer>();
+		Map<Integer,Integer> alignment2 = new HashMap<>();
 		for(int i=1;i<10;i++) {
 			alignment2.put(i, i+1);
 		}
@@ -123,7 +123,7 @@ public class AlignmentToolsTest {
 		Assert.assertEquals("Wrong order for alignment 2", 1, order);
 
 		// now try to get symmetry order with an imperfect identity
-		Map<Integer,Integer> alignment3 = new HashMap<Integer,Integer>();
+		Map<Integer,Integer> alignment3 = new HashMap<>();
 		alignment3.put(1, 15);
 		alignment3.put(2, 16);
 		alignment3.put(4, 17);
@@ -133,7 +133,7 @@ public class AlignmentToolsTest {
 		alignment3.put(10, 13);
 		alignment3.put(11, 14);
 
-		Map<Integer,Integer> identityMinus10 = new HashMap<Integer,Integer>();
+		Map<Integer,Integer> identityMinus10 = new HashMap<>();
 		for(int i=1;i<=11;i++) {
 			identityMinus10.put(i+10, i);
 		}
@@ -155,7 +155,7 @@ public class AlignmentToolsTest {
 	@Test
 	public void testGuessSequentialAlignment() {
 		// noisy C3 alignment
-		Map<Integer,Integer> alignment1 = new HashMap<Integer,Integer>();
+		Map<Integer,Integer> alignment1 = new HashMap<>();
 		alignment1.put(1, 5);
 		alignment1.put(2, 6);
 		alignment1.put(4, 7);
@@ -166,7 +166,7 @@ public class AlignmentToolsTest {
 		alignment1.put(11, 4);
 
 		// Sequential version of the alignment
-		Map<Integer,Integer> sequentialForward = new HashMap<Integer,Integer>();
+		Map<Integer,Integer> sequentialForward = new HashMap<>();
 		sequentialForward.put(1, 2);
 		sequentialForward.put(2, 3);
 		sequentialForward.put(4, 4);
@@ -177,7 +177,7 @@ public class AlignmentToolsTest {
 		sequentialForward.put(11, 11);
 
 		// inverse of sequentialForward
-		Map<Integer,Integer> sequentialBackward = new HashMap<Integer,Integer>();
+		Map<Integer,Integer> sequentialBackward = new HashMap<>();
 		sequentialBackward.put(2, 1);
 		sequentialBackward.put(3, 2);
 		sequentialBackward.put(4, 4);
@@ -254,7 +254,7 @@ public class AlignmentToolsTest {
 	@Test
 	public void testApplyAlignment() {
 		// noisy C3 alignment
-		Map<Integer,Integer> alignment1 = new HashMap<Integer,Integer>();
+		Map<Integer,Integer> alignment1 = new HashMap<>();
 		alignment1.put(1, 5);
 		alignment1.put(2, 6);
 		alignment1.put(4, 7);
@@ -264,7 +264,7 @@ public class AlignmentToolsTest {
 		alignment1.put(10, 3);
 		alignment1.put(11, 4);
 
-		Map<Integer,Integer> image1 = new HashMap<Integer,Integer>();
+		Map<Integer,Integer> image1 = new HashMap<>();
 		image1.put(1, null);
 		image1.put(2, 9);
 		image1.put(4, 11);
@@ -284,7 +284,7 @@ public class AlignmentToolsTest {
 	@Test
 	public void testApplyAlignmentNonIdentical() {
 		// noisy C3 alignment
-		Map<Integer,Integer> alignment1 = new HashMap<Integer,Integer>();
+		Map<Integer,Integer> alignment1 = new HashMap<>();
 		alignment1.put(1, 15);
 		alignment1.put(2, 16);
 		alignment1.put(4, 17);
@@ -294,7 +294,7 @@ public class AlignmentToolsTest {
 		alignment1.put(10, 13);
 		alignment1.put(11, 14);
 
-		Map<Integer,Integer> image1 = new HashMap<Integer,Integer>();
+		Map<Integer,Integer> image1 = new HashMap<>();
 		image1.put(1, null);
 		image1.put(2, 19);
 		image1.put(4, 21);
@@ -306,7 +306,7 @@ public class AlignmentToolsTest {
 		//image1.put(5, null);
 		//image1.put(3, null);
 
-		Map<Integer,Integer> identity1 = new HashMap<Integer, Integer>();
+		Map<Integer,Integer> identity1 = new HashMap<>();
 		for(int i=1;i<12;i++) {
 			identity1.put(i+10,i);
 		}
@@ -320,7 +320,7 @@ public class AlignmentToolsTest {
 		String result,expected;
 		int i=0;
 
-		test = new HashMap<Integer, Integer>();
+		test = new HashMap<>();
 		test.put(1, 2);
 		test.put(2, 3);
 		test.put(3, 4);
@@ -331,7 +331,7 @@ public class AlignmentToolsTest {
 		Assert.assertEquals((i++) + ". Linear strings.", expected, result);
 
 
-		test = new HashMap<Integer, Integer>();
+		test = new HashMap<>();
 		test.put(1, 2);
 		test.put(2, 3);
 		test.put(3, 1);
@@ -341,7 +341,7 @@ public class AlignmentToolsTest {
 		result = AlignmentTools.toConciseAlignmentString(test);
 		Assert.assertEquals((i++) + ". Cycles.", expected, result);
 
-		test = new HashMap<Integer, Integer>();
+		test = new HashMap<>();
 		test.put(1, 2);
 		test.put(2, 3);
 		test.put(3, 1);
@@ -351,7 +351,7 @@ public class AlignmentToolsTest {
 		result = AlignmentTools.toConciseAlignmentString(test);
 		Assert.assertEquals((i++) + ". Complex.", expected, result);
 
-		test = new HashMap<Integer, Integer>();
+		test = new HashMap<>();
 		test.put(1, 2);
 		test.put(2, 3);
 		test.put(3, 4);
@@ -376,7 +376,7 @@ public class AlignmentToolsTest {
 		result = AlignmentTools.toConciseAlignmentString(test);
 		Assert.assertEquals((i++) + ". Sub-optimal arrangement", expected, result);
 
-		Map <Integer,Double> test2 = new HashMap<Integer, Double>();
+		Map <Integer,Double> test2 = new HashMap<>();
 		test2.put(1, 12.);
 		test2.put(2, 13.);
 		test2.put(3, 14.);
@@ -409,7 +409,7 @@ public class AlignmentToolsTest {
 		Atom[] ca2 = StructureTools.getRepresentativeAtomArray(s);
 		StringBuilder sb = new StringBuilder();
 		BufferedReader br = new BufferedReader(new FileReader("src/test/resources/align/31BI_symm_align.xml"));
-		String line = "";
+		String line;
 		while ((line = br.readLine()) != null) {
 			sb.append(line);
 		}
@@ -429,7 +429,7 @@ public class AlignmentToolsTest {
 	 */
 	public static class OffsetMap extends AbstractMap<Double,Integer>
 	{
-		private int offset;
+		private final int offset;
 		public OffsetMap(int offset) {
 			this.offset = offset;
 		}

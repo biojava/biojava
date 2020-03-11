@@ -20,21 +20,22 @@
  */
 package org.biojava.nbio.structure.xtal;
 
-import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
 
 import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Point3i;
-import static java.lang.Math.sqrt;
 
-import org.junit.Before;
-import org.junit.Test;
+import static java.lang.Math.sqrt;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class TestCrystalCell {
 
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 	}
 
 	@Test

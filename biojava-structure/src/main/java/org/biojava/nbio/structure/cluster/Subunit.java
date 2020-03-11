@@ -43,11 +43,11 @@ public class Subunit {
 
 	// Optional fields for Subunit annotation
 	private String name;
-	private Structure structure;
-	private StructureIdentifier identifier;
+	private final Structure structure;
+	private final StructureIdentifier identifier;
 
 	// Required fields for Subunit definition
-	private Atom[] reprAtoms;
+	private final Atom[] reprAtoms;
 	private ProteinSequence sequence = null;
 
 	/**

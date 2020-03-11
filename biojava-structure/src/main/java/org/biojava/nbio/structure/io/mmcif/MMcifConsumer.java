@@ -37,63 +37,63 @@ public interface MMcifConsumer {
 	/** called at start of document
 	 *
 	 */
-	public void documentStart();
+    void documentStart();
 
 	/** called at end of document
 	 *
 	 */
-	public void documentEnd();
+    void documentEnd();
 
 
 	/** A new AtomSite record has been read. Contains the Atom data
 	 *
 	 * @param atom
 	 */
-	public void newAtomSite(AtomSite atom);
-	public void newEntity(Entity entity);
-	public void newEntityPoly(EntityPoly entityPoly);
-	public void newEntityPolySeq(EntityPolySeq epolseq);
-	public void newStructAsym(StructAsym sasym);
-	public void setStruct(Struct struct);
-	public void newDatabasePDBrev(DatabasePDBrev dbrev);
-	public void newDatabasePDBrevRecord(DatabasePdbrevRecord dbrev);
-	public void newDatabasePDBremark(DatabasePDBremark remark);
-	public void newExptl(Exptl exptl);
-	public void newCell(Cell cell);
-	public void newSymmetry(Symmetry symmetry);
-	public void newStructNcsOper(StructNcsOper sNcsOper);
-	public void newAtomSites(AtomSites atomSites);
-	public void newStructRef(StructRef sref);
-	public void newStructRefSeq(StructRefSeq sref);
-	public void newStructRefSeqDif(StructRefSeqDif sref);
-	public void newStructSite(StructSite sref);
-	public void newStructSiteGen(StructSiteGen sref);
-	public void newPdbxAuditRevisionHistory(PdbxAuditRevisionHistory history);
-	public void newPdbxDatabaseStatus(PdbxDatabaseStatus status);
-	public void newPdbxPolySeqScheme(PdbxPolySeqScheme ppss);
-	public void newPdbxNonPolyScheme(PdbxNonPolyScheme ppss);
-	public void newPdbxEntityNonPoly(PdbxEntityNonPoly pen);
-	public void newStructKeywords(StructKeywords kw);
-	public void newRefine(Refine r);
-	public void newChemComp(ChemComp c);
-	public void newChemCompDescriptor(ChemCompDescriptor ccd);
-	public void newPdbxStructOperList(PdbxStructOperList structOper);
-	public void newPdbxStrucAssembly(PdbxStructAssembly strucAssembly);
-	public void newPdbxStrucAssemblyGen(PdbxStructAssemblyGen strucAssembly);
-	public void newChemCompAtom(ChemCompAtom atom);
-	public void newPdbxChemCompIndentifier(PdbxChemCompIdentifier id);
-	public void newChemCompBond(ChemCompBond bond);
-	public void newPdbxChemCompDescriptor(PdbxChemCompDescriptor desc);
-	public void newEntitySrcGen(EntitySrcGen entitySrcGen);
-	public void newEntitySrcNat(EntitySrcNat entitySrcNat);
-	public void newEntitySrcSyn(EntitySrcSyn entitySrcSyn);
-	public void newStructConn(StructConn structConn);
+    void newAtomSite(AtomSite atom);
+	void newEntity(Entity entity);
+	void newEntityPoly(EntityPoly entityPoly);
+	void newEntityPolySeq(EntityPolySeq epolseq);
+	void newStructAsym(StructAsym sasym);
+	void setStruct(Struct struct);
+	void newDatabasePDBrev(DatabasePDBrev dbrev);
+	void newDatabasePDBrevRecord(DatabasePdbrevRecord dbrev);
+	void newDatabasePDBremark(DatabasePDBremark remark);
+	void newExptl(Exptl exptl);
+	void newCell(Cell cell);
+	void newSymmetry(Symmetry symmetry);
+	void newStructNcsOper(StructNcsOper sNcsOper);
+	void newAtomSites(AtomSites atomSites);
+	void newStructRef(StructRef sref);
+	void newStructRefSeq(StructRefSeq sref);
+	void newStructRefSeqDif(StructRefSeqDif sref);
+	void newStructSite(StructSite sref);
+	void newStructSiteGen(StructSiteGen sref);
+	void newPdbxAuditRevisionHistory(PdbxAuditRevisionHistory history);
+	void newPdbxDatabaseStatus(PdbxDatabaseStatus status);
+	void newPdbxPolySeqScheme(PdbxPolySeqScheme ppss);
+	void newPdbxNonPolyScheme(PdbxNonPolyScheme ppss);
+	void newPdbxEntityNonPoly(PdbxEntityNonPoly pen);
+	void newStructKeywords(StructKeywords kw);
+	void newRefine(Refine r);
+	void newChemComp(ChemComp c);
+	void newChemCompDescriptor(ChemCompDescriptor ccd);
+	void newPdbxStructOperList(PdbxStructOperList structOper);
+	void newPdbxStrucAssembly(PdbxStructAssembly strucAssembly);
+	void newPdbxStrucAssemblyGen(PdbxStructAssemblyGen strucAssembly);
+	void newChemCompAtom(ChemCompAtom atom);
+	void newPdbxChemCompIndentifier(PdbxChemCompIdentifier id);
+	void newChemCompBond(ChemCompBond bond);
+	void newPdbxChemCompDescriptor(PdbxChemCompDescriptor desc);
+	void newEntitySrcGen(EntitySrcGen entitySrcGen);
+	void newEntitySrcNat(EntitySrcNat entitySrcNat);
+	void newEntitySrcSyn(EntitySrcSyn entitySrcSyn);
+	void newStructConn(StructConn structConn);
 
 	/** AuditAuthor contains the info from the PDB-AUTHOR records.
 	 *
 	 * @param aa
 	 */
-	public void newAuditAuthor(AuditAuthor aa);
+    void newAuditAuthor(AuditAuthor aa);
 
 	/** This method is called if no particular handler for the provided cif category
 	 * has been implemented so far.
@@ -101,10 +101,10 @@ public interface MMcifConsumer {
 	 * @param loopFields the fields of this category.
 	 * @param lineData the data that is being provided.
 	 */
-	public void newGenericData(String category, List<String> loopFields, List<String> lineData);
+    void newGenericData(String category, List<String> loopFields, List<String> lineData);
 
-	public void setFileParsingParameters(FileParsingParameters params);
-	public FileParsingParameters getFileParsingParameters();
+	void setFileParsingParameters(FileParsingParameters params);
+	FileParsingParameters getFileParsingParameters();
 
 
 

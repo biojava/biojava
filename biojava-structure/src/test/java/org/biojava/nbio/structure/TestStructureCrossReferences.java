@@ -20,15 +20,6 @@
  */
 package org.biojava.nbio.structure;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-
-import java.io.IOException;
-import java.util.List;
-
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.contact.StructureInterface;
 import org.biojava.nbio.structure.contact.StructureInterfaceList;
@@ -37,6 +28,11 @@ import org.biojava.nbio.structure.xtal.CrystalBuilder;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.List;
+
+import static org.junit.Assert.*;
 
 public class TestStructureCrossReferences {
 
@@ -139,11 +135,11 @@ public class TestStructureCrossReferences {
 	}
 
 	//@Test
-	public void testCrossReferencesRawFile() throws IOException, StructureException {
+	public void testCrossReferencesRawFile() {
 		// TODO implement
 	}
 
-	private void doFullTest(Structure structure, boolean emptySeqRes) throws StructureException {
+	private void doFullTest(Structure structure, boolean emptySeqRes) {
 
 		//System.out.println("Testing references in original structure");
 
@@ -194,7 +190,7 @@ public class TestStructureCrossReferences {
 		testStructureRefs(structure, emptySeqRes);
 	}
 
-	private void testStructureRefs(Structure s, boolean emptySeqRes) throws StructureException {
+	private void testStructureRefs(Structure s, boolean emptySeqRes) {
 
 		// structure, chain, group, atom linking
 		for (Chain c:s.getChains()) {
@@ -265,7 +261,7 @@ public class TestStructureCrossReferences {
 
 	}
 
-	private void testInterfaceRefs(Structure s, StructureInterface i) throws StructureException {
+	private void testInterfaceRefs(Structure s, StructureInterface i) {
 
 		for (Atom a:i.getMolecules().getFirst()) {
 			assertNotNull(a.getGroup().getChain().getEntityInfo());

@@ -40,11 +40,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class AlignmentCalcDB implements AlignmentCalculationRunnable {
 
 
-	public static String SCOP_VERSION =  "1.75";
+	public static final String SCOP_VERSION =  "1.75";
 
 	//private static final Logger logger = LoggerFactory.getLogger(AlignmentCalcDB.class);
 
-	AtomicBoolean interrupted ;
+	final AtomicBoolean interrupted ;
 
 
 	String name1;
@@ -56,10 +56,10 @@ public class AlignmentCalcDB implements AlignmentCalculationRunnable {
 	UserConfiguration config;
 
 
-	String outFile;
+	final String outFile;
 
 	int nrCPUs;
-	Boolean domainSplit ;
+	final Boolean domainSplit ;
 
 	StructureAlignment customAlgorithm;
 
@@ -97,7 +97,7 @@ public class AlignmentCalcDB implements AlignmentCalculationRunnable {
 	@Override
 	public void run() {
 
-		StructureAlignment algorithm = null;
+		StructureAlignment algorithm;
 
 		if ( parent != null )
 			algorithm = parent.getStructureAlignment();

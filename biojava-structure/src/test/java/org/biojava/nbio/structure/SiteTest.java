@@ -63,7 +63,7 @@ public class SiteTest {
 		ser195.setResidueNumber("H", 195, ' ');
 		ser195.setPDBName("SER");
 		ser195.setChain(chain);
-		List<Group> catSiteGroups = new ArrayList<Group>();
+		List<Group> catSiteGroups = new ArrayList<>();
 		catSiteGroups.add(his57);
 		catSiteGroups.add(asp102);
 		catSiteGroups.add(ser195);
@@ -99,7 +99,7 @@ public class SiteTest {
 		hoh497.setPDBName("HOH");
 		hoh497.setChain(chain);
 
-		bindingSiteGroups = new ArrayList<Group>();
+		bindingSiteGroups = new ArrayList<>();
 
 		bindingSiteGroups.add(arg221a);
 		bindingSiteGroups.add(lys224);
@@ -118,11 +118,11 @@ public class SiteTest {
 	}
 
 	@BeforeClass
-	public static void setUpClass() throws Exception {
+	public static void setUpClass() {
 	}
 
 	@AfterClass
-	public static void tearDownClass() throws Exception {
+	public static void tearDownClass() {
 	}
 
 	@Before
@@ -155,7 +155,7 @@ public class SiteTest {
 	@Test
 	public void testToPDB_StringBuffer() {
 //        System.out.println("toPDB");
-		StringBuffer buf = new StringBuffer("");
+		StringBuffer buf = new StringBuffer();
 		String expResult =  "SITE     1 AC1  6 ARG H 221A LYS H 224  HOH H 403  HOH H 460                    " + newline +
 							"SITE     2 AC1  6 HOH H 464  HOH H 497                                          "+ newline;
 		bindingSite.toPDB(buf);
@@ -188,7 +188,7 @@ public class SiteTest {
 	@Test
 	public void testRemark800ToPDB_StringBuffer() {
 //        System.out.println("remark800toPDB");
-		StringBuffer buf = new StringBuffer("");
+		StringBuffer buf = new StringBuffer();
 		String expResult =  "REMARK 800 SITE_IDENTIFIER: CAT                                                 " + newline +
 							"REMARK 800 EVIDENCE_CODE: UNKNOWN                                               " + newline +
 							"REMARK 800 SITE_DESCRIPTION: ACTIVE SITE                                        " + newline;

@@ -23,10 +23,10 @@ package org.biojava.nbio.structure.symmetry.misc;
 import java.util.List;
 
 public class ChainSignature implements Comparable<ChainSignature> {
-	private int chainCount = 0;
-	private String representative = "";
+	private final int chainCount;
+	private final String representative;
 	private String compositionId = "";
-	private List<String> chainIds = null;
+	private final List<String> chainIds;
 
 	public ChainSignature(String representative, int chainCount, List<String> chainIds) {
 		this.representative = representative;

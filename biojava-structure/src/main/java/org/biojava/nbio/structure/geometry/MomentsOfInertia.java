@@ -27,7 +27,6 @@ import org.biojava.nbio.structure.jama.Matrix;
 import javax.vecmath.Matrix3d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,19 +45,19 @@ import java.util.List;
  */
 public class MomentsOfInertia {
 
-	private List<Point3d> points = new ArrayList<Point3d>();
-	private List<Double> masses = new ArrayList<Double>();
+	private final List<Point3d> points = new ArrayList<>();
+	private final List<Double> masses = new ArrayList<>();
 
 	private boolean modified = true;
 
 	private double[] principalMomentsOfInertia = new double[3];
-	private Vector3d[] principalAxes = new Vector3d[3];
+	private final Vector3d[] principalAxes = new Vector3d[3];
 
-	private Matrix3d orientation = new Matrix3d();
+	private final Matrix3d orientation = new Matrix3d();
 
 	public enum SymmetryClass {
 		LINEAR, PROLATE, OBLATE, SYMMETRIC, ASYMMETRIC
-	};
+	}
 
 	/** Creates a new empty instance of MomentsOfInertia */
 	public MomentsOfInertia() {

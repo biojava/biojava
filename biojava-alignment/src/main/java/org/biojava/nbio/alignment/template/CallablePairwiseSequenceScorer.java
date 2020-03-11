@@ -37,7 +37,7 @@ import java.util.concurrent.Callable;
  */
 public class CallablePairwiseSequenceScorer<S extends Sequence<C>, C extends Compound> implements Callable<Double> {
 
-	private PairwiseSequenceScorer<S, C> pss;
+	private final PairwiseSequenceScorer<S, C> pss;
 
 	/**
 	 * Creates a pairwise sequence scoring task for simplified parallel execution.

@@ -33,7 +33,7 @@ import java.util.Comparator;
 public class CoxVariablesOverallModelFitComparator implements Comparator<CoxVariables>, Serializable {
 	private static final long serialVersionUID = 1;
 
-	String variables = "";
+	final String variables;
 
 	/**
 	 * Variables are stored as a string representation of an ArrayList
@@ -49,13 +49,7 @@ public class CoxVariablesOverallModelFitComparator implements Comparator<CoxVari
 		CoxInfo ci1 = coxVariables1.getCoxInfo(variables);
 		CoxInfo ci2 = coxVariables2.getCoxInfo(variables);
 
-		if (ci1.getWaldTestInfo().getPvalue() < ci2.getWaldTestInfo().getPvalue()) {
-			return -1;
-		} else if (ci1.getWaldTestInfo().getPvalue() > ci2.getWaldTestInfo().getPvalue()) {
-			return 1;
-		} else {
-			return 0;
-		}
+        return Double.compare(ci1.getWaldTestInfo().getPvalue(), ci2.getWaldTestInfo().getPvalue());
 		//ascending order
 		// return coxVariables1.compareTo(coxVariables2);
 	}

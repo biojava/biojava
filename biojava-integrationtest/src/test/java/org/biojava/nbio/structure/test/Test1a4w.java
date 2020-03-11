@@ -82,7 +82,7 @@ public class Test1a4w {
 
 
 
-		Structure structure2 = null;
+		Structure structure2;
 
 		InputStream inStream = this.getClass().getResourceAsStream("/1a4w.cif");
 		Assert.assertNotNull(inStream);
@@ -132,15 +132,15 @@ public class Test1a4w {
 		//System.out.println(structure);
 		Assert.assertTrue("chain " + a.getName() + " length should be 26. was: " + a.getAtomGroups(GroupType.AMINOACID).size(), (a.getAtomGroups(GroupType.AMINOACID).size() == 26));
 
-		Assert.assertTrue("chain " + a.getName() + " seqres length should be 36. was: " + a.getSeqResLength(), a.getSeqResLength() == 36);
+        Assert.assertEquals("chain " + a.getName() + " seqres length should be 36. was: " + a.getSeqResLength(), 36, a.getSeqResLength());
 
 		Assert.assertTrue("chain " + b.getName() + " length should be 248. was: " + b.getAtomGroups(GroupType.AMINOACID).size(), (b.getAtomGroups(GroupType.AMINOACID).size() == 248));
 
-		Assert.assertTrue("chain " + b.getName() + " seqres length should be 259. was: " + b.getSeqResLength(), b.getSeqResLength() == 259);
+        Assert.assertEquals("chain " + b.getName() + " seqres length should be 259. was: " + b.getSeqResLength(), 259, b.getSeqResLength());
 
 		Assert.assertTrue("chain " + c.getName() + " length should be 9. was: " + c.getAtomGroups(GroupType.AMINOACID).size(), (c.getAtomGroups(GroupType.AMINOACID).size() == 9));
 
-		Assert.assertTrue("chain " + c.getName() + " seqres length should be 12. was: " + c.getSeqResLength(), c.getSeqResLength() == 12);
+        Assert.assertEquals("chain " + c.getName() + " seqres length should be 12. was: " + c.getSeqResLength(), 12, c.getSeqResLength());
 
 		Assert.assertEquals("chain " + c.getName() + " seqres sequences is not correct!", "NGDFEEIPEEYL", c.getSeqResSequence());
 	}
@@ -253,14 +253,18 @@ public class Test1a4w {
 					// before biojava 5.0 we were asserting for same chain, but now the DAR residue is in its own nonpoly chain, can't do it anymore
 					//assertEquals(c2, g.getChain());
 					String pdbName = g.getPDBName();
-					if ( pdbName.equals("DAR")) {
-						darPresent = true;
-						//System.out.println("darPresent");
+					switch (pdbName) {
+						case "DAR":
+							darPresent = true;
+							//System.out.println("darPresent");
+							break;
+						case "GLY":
+							glyPresent = true;
+							break;
+						case "H2O":
+							noWater = false;
+							break;
 					}
-					else if ( pdbName.equals("GLY"))
-						glyPresent = true;
-					else if ( pdbName.equals("H2O"))
-						noWater = false;
 				}
 			}
 		}

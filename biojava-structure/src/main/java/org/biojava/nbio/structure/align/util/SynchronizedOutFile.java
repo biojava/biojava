@@ -30,10 +30,10 @@ public class SynchronizedOutFile {
 
 	String[] tmp;
 
-	int ARR_SIZE=100;
+	final int ARR_SIZE=100;
 	Integer counter;
 
-	boolean useGzipCompression = false;
+	boolean useGzipCompression;
 
 
 	/** Create a thread safe wrapper for writing to this file, the file will be gzip compressed.
@@ -62,7 +62,7 @@ public class SynchronizedOutFile {
 	 *
 	 * @param f
 	 */
-	public SynchronizedOutFile(File f) throws FileNotFoundException, IOException{
+	public SynchronizedOutFile(File f) throws IOException{
 
 		this(f,false);
 
@@ -98,7 +98,7 @@ public class SynchronizedOutFile {
 
 
 		OutputStream out = null;
-		FileOutputStream fileOutputStream=null;
+		FileOutputStream fileOutputStream;
 		try {
 			//This is less code-redundant
 			fileOutputStream = new FileOutputStream(file, true);

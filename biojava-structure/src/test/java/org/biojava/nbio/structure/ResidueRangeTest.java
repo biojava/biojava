@@ -46,7 +46,7 @@ public class ResidueRangeTest {
 	private AtomCache cache;
 
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		cache = new AtomCache(); // TODO Should mock instead of depending on
 		// real data from AtomCache
 		cache.setObsoleteBehavior(ObsoleteBehavior.FETCH_OBSOLETE);
@@ -90,7 +90,7 @@ public class ResidueRangeTest {
 	 * Tests creating ResidueRanges and calculating their lengths.
 	 */
 	@Test
-	public void testWithLengths() throws IOException, StructureException {
+	public void testWithLengths() {
 		String[] ids = new String[] { "1w0p", "3qq3", "3chc", "2ei7" }; // more:
 		// ,
 		// "2qbr"
@@ -107,7 +107,7 @@ public class ResidueRangeTest {
 				new ResidueNumber("L", 254, 't') };
 		int[] lengths = new int[] { 117 - 5, 200 - 10, 111, 55 };
 		int totalLength = 0;
-		List<ResidueRangeAndLength> ranges = new ArrayList<ResidueRangeAndLength>(
+		List<ResidueRangeAndLength> ranges = new ArrayList<>(
 				ids.length);
 		for (int i = 0; i < ids.length; i++) {
 			ResidueRangeAndLength rr = new ResidueRangeAndLength(chains[i],
@@ -261,12 +261,12 @@ public class ResidueRangeTest {
 	}
 
 	@Test(expected=IllegalArgumentException.class)
-	public void testBadSyntax() throws IOException, StructureException {
+	public void testBadSyntax() {
 		ResidueRange.parse("-");
 	}
 
 	@Test
-	public void testPartialRange() throws IOException, StructureException {
+	public void testPartialRange() {
 		String rangeStr = "C_1023-";
 		ResidueRange range = ResidueRange.parse(rangeStr);
 		assertEquals(rangeStr,1023,(int)range.getStart().getSeqNum());

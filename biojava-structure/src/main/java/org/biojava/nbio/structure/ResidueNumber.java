@@ -177,7 +177,7 @@ public class ResidueNumber implements Serializable, Comparable<ResidueNumber>
 	public String toPDB() {
 		String insCodeS ;
 		if ( insCode != null)
-			insCodeS = insCode+"";
+			insCodeS = String.valueOf(insCode);
 		else insCodeS = " ";
 		return String.format("%s%4d%-2s", chainName, seqNum, insCodeS);
 	}

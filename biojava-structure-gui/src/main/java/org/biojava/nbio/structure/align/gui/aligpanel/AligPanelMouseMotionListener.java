@@ -34,7 +34,7 @@ public class AligPanelMouseMotionListener implements MouseMotionListener, MouseL
 
 	AligPanel parent;
 
-	List<AlignmentPositionListener> aligPosListeners;
+	final List<AlignmentPositionListener> aligPosListeners;
 	int prevPos;
 
 	boolean isDragging ;
@@ -44,7 +44,7 @@ public class AligPanelMouseMotionListener implements MouseMotionListener, MouseL
 
 	public AligPanelMouseMotionListener(AligPanel parent){
 		this.parent = parent;
-		aligPosListeners = new ArrayList<AlignmentPositionListener>();
+		aligPosListeners = new ArrayList<>();
 		prevPos = -1;
 		isDragging = false;
 		selectionStart = null;

@@ -24,14 +24,13 @@
 
 package org.biojava.nbio.structure.align.gui.jmol;
 
-import java.util.Map;
-
-import javax.swing.JTextField;
-
 import org.jmol.api.JmolStatusListener;
 import org.jmol.c.CBK;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.swing.*;
+import java.util.Map;
 
 public class MyJmolStatusListener implements JmolStatusListener {
 	private static final Logger logger = LoggerFactory.getLogger(MyJmolStatusListener.class);

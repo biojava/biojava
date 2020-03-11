@@ -31,8 +31,6 @@ import org.biojava.nbio.structure.gui.util.PDBUploadPanel;
 import org.biojava.nbio.structure.gui.util.ScopSelectPanel;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 
 public class DBSearchGUI extends JPanel {
@@ -44,13 +42,13 @@ public class DBSearchGUI extends JPanel {
 
 
 	StructureAlignment algorithm;
-	SelectPDBPanel tab1;
+	final SelectPDBPanel tab1;
 	JTabbedPane tabPane;
 
-	PDBUploadPanel tab2;
-	ScopSelectPanel tab3;
+	final PDBUploadPanel tab2;
+	final ScopSelectPanel tab3;
 
-	JPanel listPane;
+	final JPanel listPane;
 	JButton abortB;
 	AlignmentCalcDB alicalc;
 	JProgressBar progress;
@@ -155,30 +153,26 @@ public class DBSearchGUI extends JPanel {
 
 		dir.add(hBox);
 
-		chB.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				JFileChooser chooser = new JFileChooser();
-				chooser.setMultiSelectionEnabled(false);
-				chooser.setDialogTitle("Select Output Directory");
-				chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-				//
-				// disable the "All files" option.
-				//
-				chooser.setAcceptAllFileFilterUsed(false);
-				//
+		chB.addActionListener(e -> {
+			JFileChooser chooser = new JFileChooser();
+			chooser.setMultiSelectionEnabled(false);
+			chooser.setDialogTitle("Select Output Directory");
+			chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+			//
+			// disable the "All files" option.
+			//
+			chooser.setAcceptAllFileFilterUsed(false);
+			//
 
 
-				//				In response to a button click:
-				int returnVal = chooser.showSaveDialog(null);
-				if ( returnVal == JFileChooser.APPROVE_OPTION) {
-					File file = chooser.getSelectedFile();
-					outFileLocation.setText(file.getPath());
-					outFileLocation.repaint();
-				}
-
+			//				In response to a button click:
+			int returnVal = chooser.showSaveDialog(null);
+			if ( returnVal == JFileChooser.APPROVE_OPTION) {
+				File file = chooser.getSelectedFile();
+				outFileLocation.setText(file.getPath());
+				outFileLocation.repaint();
 			}
+
 		});
 
 		//tabP.addTab("Select Output Directory", null, dir,
@@ -203,18 +197,14 @@ public class DBSearchGUI extends JPanel {
 		JComboBox domainList = new JComboBox(petStrings);
 		domainList.setSelectedIndex(0);
 		domainList.setToolTipText("Either align whole chains or SCOP domains and domains assigned with PDP, where no SCOP available.");
-		domainList.addActionListener(new ActionListener() {
+		domainList.addActionListener(arg0 -> {
+			JComboBox box = (JComboBox)arg0.getSource();
+			int index = box.getSelectedIndex();
+			if ( index == 0)
+				useDomainSplit = true;
+			else
+				useDomainSplit = false;
 
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				JComboBox box = (JComboBox)arg0.getSource();
-				int index = box.getSelectedIndex();
-				if ( index == 0)
-					useDomainSplit = true;
-				else
-					useDomainSplit = false;
-
-			}
 		});
 
 		JLabel label= new JLabel("Domains:");

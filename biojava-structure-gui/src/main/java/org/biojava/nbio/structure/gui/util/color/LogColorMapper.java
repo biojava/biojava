@@ -34,7 +34,7 @@ package org.biojava.nbio.structure.gui.util.color;
  */
 public class LogColorMapper extends ContinuousColorMapperTransform {
 
-	private int base;
+	private final int base;
 
 	/**
 	 * Creates a new LogColorMapper with base 10.

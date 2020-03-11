@@ -21,24 +21,14 @@
 
 package org.biojava.nbio.structure.symmetry.core;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.vecmath.AxisAngle4d;
-import javax.vecmath.Matrix4d;
-import javax.vecmath.Point3d;
-import javax.vecmath.Quat4d;
-import javax.vecmath.Vector3d;
-
 import org.biojava.nbio.structure.geometry.CalcPoint;
 import org.biojava.nbio.structure.geometry.MomentsOfInertia;
 import org.biojava.nbio.structure.geometry.UnitQuaternions;
 import org.biojava.nbio.structure.symmetry.geometry.DistanceBox;
 import org.biojava.nbio.structure.symmetry.geometry.SphereSampler;
+
+import javax.vecmath.*;
+import java.util.*;
 
 
 /**
@@ -46,19 +36,19 @@ import org.biojava.nbio.structure.symmetry.geometry.SphereSampler;
  * @author Peter
  */
 public class RotationSolver implements QuatSymmetrySolver {
-	private QuatSymmetrySubunits subunits = null;
-	private QuatSymmetryParameters parameters = null;
+	private final QuatSymmetrySubunits subunits;
+	private final QuatSymmetryParameters parameters;
 
 	private double distanceThreshold = 0.0f;
 	private DistanceBox<Integer> box = null;
 	private Vector3d centroid = new Vector3d();
-	private Matrix4d centroidInverse = new Matrix4d();
+	private final Matrix4d centroidInverse = new Matrix4d();
 	private Point3d[] originalCoords = null;
 	private Point3d[] transformedCoords = null;
 	// Cache whether a permutation is invalid (null) vs has been added to rotations
-	private Map<List<Integer>,Rotation> evaluatedPermutations = new HashMap<>();
+	private final Map<List<Integer>,Rotation> evaluatedPermutations = new HashMap<>();
 
-	private RotationGroup rotations = new RotationGroup();
+	private final RotationGroup rotations = new RotationGroup();
 
 	public RotationSolver(QuatSymmetrySubunits subunits, QuatSymmetryParameters parameters) {
 		if (subunits.getSubunitCount()== 2) {
@@ -280,7 +270,7 @@ public class RotationSolver implements QuatSymmetrySolver {
 			 n = 60;
 		}
 		List<Integer> folds = subunits.getFolds();
-		List<Double> angles = new ArrayList<Double>(folds.size()-1);
+		List<Double> angles = new ArrayList<>(folds.size() - 1);
 
 		// note this loop starts at 1, we do ignore 1-fold symmetry, which is the first entry
 		for (int fold: folds) {
@@ -334,7 +324,7 @@ public class RotationSolver implements QuatSymmetrySolver {
 		int selfaligned = 0;
 		for (int i = 0; i < permutation.size(); i++) {
 			int j = permutation.get(i);
-			if ( seqClusterId.get(i) != seqClusterId.get(j)) {
+			if (!seqClusterId.get(i).equals(seqClusterId.get(j))) {
 				return false;
 			}
 			if(i == j ) {
@@ -356,7 +346,7 @@ public class RotationSolver implements QuatSymmetrySolver {
 
 	private static Rotation createSymmetryOperation(List<Integer> permutation, Matrix4d transformation, AxisAngle4d axisAngle, int fold, QuatSymmetryScores scores) {
 		Rotation s = new Rotation();
-		s.setPermutation(new ArrayList<Integer>(permutation));
+		s.setPermutation(new ArrayList<>(permutation));
 		s.setTransformation(new Matrix4d(transformation));
 		s.setAxisAngle(new AxisAngle4d(axisAngle));
 		s.setFold(fold);
@@ -367,7 +357,7 @@ public class RotationSolver implements QuatSymmetrySolver {
 
 	private void setupDistanceBox() {
 		distanceThreshold = calcDistanceThreshold();
-		box = new DistanceBox<Integer>(distanceThreshold);
+		box = new DistanceBox<>(distanceThreshold);
 
 		for (int i = 0; i < originalCoords.length; i++) {
 			box.addPoint(originalCoords[i], i);
@@ -399,7 +389,7 @@ public class RotationSolver implements QuatSymmetrySolver {
 	 * @return A list mapping each subunit to the closest transformed subunit
 	 */
 	private List<Integer> getPermutation() {
-		List<Integer> permutation = new ArrayList<Integer>(transformedCoords.length);
+		List<Integer> permutation = new ArrayList<>(transformedCoords.length);
 		double sum = 0.0f;
 
 		for (Point3d t: transformedCoords) {
@@ -429,7 +419,7 @@ public class RotationSolver implements QuatSymmetrySolver {
 		}
 
 		// check uniqueness of indices
-		Set<Integer> set = new HashSet<Integer>(permutation);
+		Set<Integer> set = new HashSet<>(permutation);
 
 		// if size mismatch, clear permutation (its invalid)
 		if (set.size() != originalCoords.length) {

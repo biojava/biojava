@@ -91,7 +91,7 @@ public final class RonnConstraint {
 		{ -2, -2, -3, -2, 3, -3, 2, -1, -2, -1, -1, -2, -3, -1, -2, -2, -2,
 			-1, 2, 7 } };
 
-	public static enum Threshold {
+	public enum Threshold {
 	T0(0, RonnConstraint.THRESHOLD0), T1(1, RonnConstraint.THRESHOLD1), T2(
 		2, RonnConstraint.THRESHOLD2), T3(3, RonnConstraint.THRESHOLD3), T4(
 		4, RonnConstraint.THRESHOLD4), T5(5, RonnConstraint.THRESHOLD5), T6(
@@ -101,7 +101,7 @@ public final class RonnConstraint {
 	private final int tnum;
 	private final float[] values;
 
-	private Threshold(final int tnum, final float[] values) {
+	Threshold(final int tnum, final float[] values) {
 		this.tnum = tnum;
 		this.values = values;
 	}

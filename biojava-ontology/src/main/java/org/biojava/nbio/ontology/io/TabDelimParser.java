@@ -86,11 +86,9 @@ public class TabDelimParser {
 	 * @param of  an OntologyFactory used to create the Ontology instance
 	 * @return  a new Ontology
 	 * @throws IOException if there is some problem with the buffered reader
-	 * @throws OntologyException if it was not possible to instantiate a new
-	 *         ontology
-	 */
+     */
 	public Ontology parse(BufferedReader in, OntologyFactory of)
-	throws IOException, OntologyException {
+	throws IOException {
 		String name = "";
 		String description = "";
 		Ontology onto = null;
@@ -139,8 +137,8 @@ public class TabDelimParser {
 						Term objT = resolveTerm(object, onto);
 						Term relT = resolveTerm(predicate, onto);
 
-						Triple trip = resolveTriple(subT, objT, relT, onto);
-						trip = trip==null?null:trip; // prevent unused field error
+						/*Triple trip =*/ resolveTriple(subT, objT, relT, onto);
+						//trip = trip; // prevent unused field error
 					} catch (StringIndexOutOfBoundsException e) {
 						throw new IOException("Could not parse line: " + line);
 					}
@@ -159,8 +157,8 @@ public class TabDelimParser {
 		} else {
 			try {
 				if(isTrippleTerm) {
-					int c1 = termName.indexOf(",");
-					int c2 = termName.indexOf(",", c1 + 1);
+					int c1 = termName.indexOf(',');
+					int c2 = termName.indexOf(',', c1 + 1);
 
 					String source = termName.substring(1, c1);
 					String target = termName.substring(c2 + 1, termName.length() - 1);

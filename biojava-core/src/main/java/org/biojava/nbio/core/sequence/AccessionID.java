@@ -25,6 +25,8 @@ package org.biojava.nbio.core.sequence;
 import org.biojava.nbio.core.util.Equals;
 import org.biojava.nbio.core.util.Hashcoder;
 
+import java.util.Objects;
+
 /**
  * Used in Sequences as the unique indentifier. If possible, set the {@link DataSource} to know the
  * source of the id. This allows a SequenceProxy to gather features or related sequences
@@ -36,7 +38,7 @@ import org.biojava.nbio.core.util.Hashcoder;
  */
 public class AccessionID {
 
-	private String id = null;
+	private final String id;
 	private DataSource source = DataSource.LOCAL;
 	private Integer version;
 	private String identifier = null;
@@ -93,13 +95,14 @@ public class AccessionID {
 
 	@Override
 	public boolean equals(Object o) {
+		if (this == o) return true;
 		boolean equals = false;
 		if (Equals.classEqual(this, o)) {
 			AccessionID l = (AccessionID) o;
-			equals = (Equals.equal(getID(), l.getID())
-					&& Equals.equal(getDataSource(), l.getDataSource())
-					&& Equals.equal(getIdentifier(), l.getIdentifier())
-					&& Equals.equal(getVersion(), l.getVersion()));
+            equals = (Objects.equals(getID(), l.getID())
+					&& Objects.equals(getDataSource(), l.getDataSource())
+					&& Objects.equals(getIdentifier(), l.getIdentifier())
+					&& Objects.equals(getVersion(), l.getVersion()));
 	}
 		return equals;
 	}

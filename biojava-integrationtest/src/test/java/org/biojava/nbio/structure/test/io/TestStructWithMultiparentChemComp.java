@@ -20,14 +20,13 @@
  */
 package org.biojava.nbio.structure.test.io;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
-
-
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.align.util.AtomCache;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 public class TestStructWithMultiparentChemComp {
 

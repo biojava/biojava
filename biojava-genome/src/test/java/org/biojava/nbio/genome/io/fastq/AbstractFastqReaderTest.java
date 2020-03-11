@@ -312,35 +312,17 @@ public abstract class AbstractFastqReaderTest {
 	}
 
 	@Test
-	public void testErrorExamples() throws Exception
-	{
+	public void testErrorExamples() {
 		FastqReader reader = createFastqReader();
 		for (String errorExample : ERROR_EXAMPLES)
 		{
-			InputStream inputStream = getClass().getResourceAsStream(errorExample);
-			try
-			{
+			try (InputStream inputStream = getClass().getResourceAsStream(errorExample)) {
 				reader.read(inputStream);
 				Assert.fail("error example " + errorExample + " expected IOException");
-			}
-			catch (IOException e)
-			{
+			} catch (IOException e) {
 				// expected
 			}
-			finally
-			{
-				if (inputStream != null)
-				{
-					try
-					{
-						inputStream.close();
-					}
-					catch (IOException e)
-					{
-						// ignore
-					}
-				}
-			}
+			// ignore
 		}
 	}
 
@@ -351,37 +333,37 @@ public abstract class AbstractFastqReaderTest {
 		final String input = "";
 		reader.parse(new StringReader(input), new ParseListener() {
 						 @Override
-						 public void description(final String description) throws IOException {
+						 public void description(final String description) {
 							 // empty
 						 }
 
 						 @Override
-						 public void sequence(final String sequence) throws IOException {
+						 public void sequence(final String sequence) {
 							 // empty
 						 }
 
 						 @Override
-						 public void appendSequence(final String sequence) throws IOException {
+						 public void appendSequence(final String sequence) {
 							 // empty
 						 }
 
 						 @Override
-						 public void repeatDescription(final String repeatDescription) throws IOException {
+						 public void repeatDescription(final String repeatDescription) {
 							 // empty
 						 }
 
 						 @Override
-						 public void quality(final String quality) throws IOException {
+						 public void quality(final String quality) {
 							 // empty
 						 }
 
 						 @Override
-						 public void appendQuality(final String quality) throws IOException {
+						 public void appendQuality(final String quality) {
 							 // empty
 						 }
 
 						 @Override
-						 public void complete() throws IOException {
+						 public void complete() {
 							 // empty
 						 }
 					 });
@@ -393,39 +375,39 @@ public abstract class AbstractFastqReaderTest {
 		FastqReader reader = createFastqReader();
 		try
 		{
-			reader.parse((Readable) null, new ParseListener() {
+			reader.parse(null, new ParseListener() {
 							 @Override
-							 public void description(final String description) throws IOException {
+							 public void description(final String description) {
 								 // empty
 							 }
 
 							 @Override
-							 public void sequence(final String sequence) throws IOException {
+							 public void sequence(final String sequence) {
 								 // empty
 							 }
 
 							 @Override
-							 public void appendSequence(final String sequence) throws IOException {
+							 public void appendSequence(final String sequence) {
 								 // empty
 							 }
 
 							 @Override
-							 public void repeatDescription(final String repeatDescription) throws IOException {
+							 public void repeatDescription(final String repeatDescription) {
 								 // empty
 							 }
 
 							 @Override
-							 public void quality(final String quality) throws IOException {
+							 public void quality(final String quality) {
 								 // empty
 							 }
 
 							 @Override
-							 public void appendQuality(final String quality) throws IOException {
+							 public void appendQuality(final String quality) {
 								 // empty
 							 }
 
 							 @Override
-							 public void complete() throws IOException {
+							 public void complete() {
 								 // empty
 							 }
 						 });

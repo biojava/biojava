@@ -20,10 +20,6 @@
  */
 package org.biojava.nbio.structure.test.align.qsalign;
 
-import static org.junit.Assert.*;
-
-import java.io.IOException;
-
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
@@ -33,6 +29,11 @@ import org.biojava.nbio.structure.align.quaternary.QsAlignResult;
 import org.biojava.nbio.structure.align.quaternary.QsRelation;
 import org.biojava.nbio.structure.cluster.SubunitClustererParameters;
 import org.junit.Test;
+
+import java.io.IOException;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test the correctness of the {@link QsAlign} algorithm with some examples of

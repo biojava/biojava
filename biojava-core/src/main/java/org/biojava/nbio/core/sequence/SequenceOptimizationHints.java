@@ -68,13 +68,13 @@ public class SequenceOptimizationHints {
 
 	public enum SequenceUsage {
 
-		FULL_SEQUENCE_DATA, SUB_SEQUENCE_DATA, MINIMAL_SEQUENCE_DATA;
-	}
+		FULL_SEQUENCE_DATA, SUB_SEQUENCE_DATA, MINIMAL_SEQUENCE_DATA
+    }
 
 	public enum SequenceCollection {
 
-		ALL_SEQUENCES, VARIABLE_SEQUENCES, MINIMINAL_SEQUENCES;
-	}
+		ALL_SEQUENCES, VARIABLE_SEQUENCES, MINIMINAL_SEQUENCES
+    }
 
 	static private SequenceUsage sequenceUsage = SequenceUsage.FULL_SEQUENCE_DATA;
 	static private SequenceCollection sequenceCollection = SequenceCollection.ALL_SEQUENCES;

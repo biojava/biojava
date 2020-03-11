@@ -21,11 +21,11 @@
  */
 package org.biojava.nbio.core.sequence.location;
 
-import java.io.Serializable;
-
 import org.biojava.nbio.core.sequence.location.template.Point;
 import org.biojava.nbio.core.util.Equals;
 import org.biojava.nbio.core.util.Hashcoder;
+
+import java.io.Serializable;
 
 /**
  * Basic implementation of the Point interface.
@@ -56,7 +56,7 @@ public class SimplePoint implements Serializable, Point {
 	}
 
 	@Override
-	public Integer getPosition() {
+	public int getPosition() {
 		return position;
 	}
 
@@ -100,12 +100,13 @@ public class SimplePoint implements Serializable, Point {
 
 	@Override
 	public boolean equals(Object obj) {
+		if (this == obj) return true;
 		boolean equals = false;
 		if (Equals.classEqual(this, obj)) {
 			SimplePoint p = (SimplePoint) obj;
-			equals = (Equals.equal(getPosition(), p.getPosition())
-					&& Equals.equal(isUncertain(), p.isUncertain())
-					&& Equals.equal(isUnknown(), p.isUnknown()));
+			equals = (getPosition() == p.getPosition()
+					&& isUncertain() == p.isUncertain()
+					&& isUnknown() == p.isUnknown());
 		}
 		return equals;
 	}
@@ -125,8 +126,9 @@ public class SimplePoint implements Serializable, Point {
 	}
 
 	@Override
-	public int compareTo(Point o) {
-		return getPosition().compareTo(o.getPosition());
+	public int compareTo(Point point) {
+		if (this == point) return 0;
+		return Integer.compare(getPosition(), point.getPosition());
 	}
 
 	@Override

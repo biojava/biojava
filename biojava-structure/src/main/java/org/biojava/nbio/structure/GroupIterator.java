@@ -38,7 +38,7 @@ import java.util.NoSuchElementException;
 
 public class GroupIterator implements Iterator<Group> {
 
-	private Structure structure   ;
+	private final Structure structure   ;
 	private int current_model_pos ;
 	private int current_chain_pos ;
 	private int current_group_pos ;

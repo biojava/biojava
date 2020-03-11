@@ -34,7 +34,7 @@ import java.util.List;
  *
  */
 public class Prism implements Polyhedron {
-	private int n = 3;
+	private final int n;
 	private double circumscribedRadius = 1.0;
 	private double height = 1.0;
 
@@ -115,11 +115,11 @@ public class Prism implements Polyhedron {
 		}
 
 		return polygon;
-	};
+	}
 
 	@Override
 	public List<int[]> getLineLoops() {
-		List<int[]> list = new ArrayList<int[]>();
+		List<int[]> list = new ArrayList<>();
 		int[] l1 = new int[2*n+2];
 		for (int i = 0; i < n; i++) {
 			l1[i] = i;

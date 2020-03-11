@@ -22,23 +22,15 @@
 
 package org.biojava.nbio.core.sequence.io;
 
-import java.io.IOException;
-import java.io.File;
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.DataInputStream;
-import java.io.ByteArrayInputStream;
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
-import java.net.URL;
-import java.io.InputStream;
-
+import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.core.sequence.compound.ABITracerCompoundSet;
 import org.biojava.nbio.core.sequence.compound.NucleotideCompound;
 import org.biojava.nbio.core.sequence.template.AbstractSequence;
-import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.net.URL;
 
 /**
  * Title: ABITrace<p><p>
@@ -55,7 +47,12 @@ public class ABITrace {
 
 	//the next three lines are the important persistent data
 	private String sequence;
-	private int A[], G[], C[], T[], baseCalls[], qCalls[];
+	private int[] A;
+    private int[] G;
+    private int[] C;
+    private int[] T;
+    private int[] baseCalls;
+    private int[] qCalls;
 	private int traceLength, seqLength;
 
 	//This is the actual file data.
@@ -110,7 +107,7 @@ public class ABITrace {
 	 * @throws IOException if there is a problem reading from the BufferedInputStream
 	 */
 	private void ABITraceInit(BufferedInputStream bis) throws IOException{
-		byte[] bytes = null;
+		byte[] bytes;
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		int b;
 		while ((b = bis.read()) >= 0)
@@ -191,16 +188,17 @@ public class ABITrace {
 	 * @throws CompoundNotFoundException if the base is not valid
 	 */
 	public int[] getTrace (String base) throws CompoundNotFoundException {
-		if (base.equals("A")) {
-			return A;
-		} else if (base.equals("C")) {
-			return C;
-		} else if (base.equals("G")) {
-			return G;
-		} else if (base.equals("T")) {
-			return T;
-		} else {
-			throw new CompoundNotFoundException("Don't know base: " + base);
+		switch (base) {
+			case "A":
+				return A;
+			case "C":
+				return C;
+			case "G":
+				return G;
+			case "T":
+				return T;
+			default:
+				throw new CompoundNotFoundException("Don't know base: " + base);
 		}
 	}
 
@@ -320,9 +318,9 @@ public class ABITrace {
 	 * @return - scaling factor
 	 */
 	private double calculateScale(int height) {
-		double newScale = 0.0;
-		double max = (double) getMaximum();
-		double ht = (double) height;
+		double newScale;
+		double max = getMaximum();
+		double ht = height;
 		newScale = ((ht - 50.0)) / max;
 		return newScale;
 	}
@@ -366,9 +364,9 @@ public class ABITrace {
 	 * traces into their arrays.
 	 */
 	private void setTraces() {
-		int pointers[] = new int[4]; //alphabetical, 0=A, 1=C, 2=G, 3=T
-		int datas[] = new int[4];
-		char order[] = new char[4];
+		int[] pointers = new int[4]; //alphabetical, 0=A, 1=C, 2=G, 3=T
+		int[] datas = new int[4];
+		char[] order = new char[4];
 
 		datas[0] = DATA9;
 		datas[1] = DATA10;
@@ -413,10 +411,10 @@ public class ABITrace {
 			DataInputStream dis = new DataInputStream(new ByteArrayInputStream(qq));
 			for (int x = 0; x <= traceLength - 1; x++) {
 				try {
-					if (i == 0) A[x] = (int) dis.readShort();
-					if (i == 1) C[x] = (int) dis.readShort();
-					if (i == 2) G[x] = (int) dis.readShort();
-					if (i == 3) T[x] = (int) dis.readShort();
+					if (i == 0) A[x] = dis.readShort();
+					if (i == 1) C[x] = dis.readShort();
+					if (i == 2) G[x] = dis.readShort();
+					if (i == 3) T[x] = dis.readShort();
 				} catch (IOException e)//This shouldn't happen. If it does something must be seriously wrong.
 				{
 					throw new IllegalStateException("Unexpected IOException encountered while manipulating internal streams.");
@@ -430,7 +428,7 @@ public class ABITrace {
 	 * Fetch the sequence from the trace data.
 	 */
 	private void setSeq() {
-		char tempseq[] = new char[seqLength];
+		char[] tempseq = new char[seqLength];
 		for (int x = 0; x <= seqLength - 1; ++x) {
 			tempseq[x] = (char) traceData[PBAS2 + x];
 		}
@@ -447,7 +445,7 @@ public class ABITrace {
 		DataInputStream dis = new DataInputStream(new ByteArrayInputStream(qq));
 		for (int i = 0; i <= seqLength - 1; ++i) {
 			try {
-				qCalls[i] = (int) dis.readByte();
+				qCalls[i] = dis.readByte();
 			} catch (IOException e)//This shouldn't happen. If it does something must be seriously wrong.
 			{
 				throw new IllegalStateException("Unexpected IOException encountered while manipulating internal streams.");
@@ -465,7 +463,7 @@ public class ABITrace {
 		DataInputStream dis = new DataInputStream(new ByteArrayInputStream(qq));
 		for (int i = 0; i <= seqLength - 1; ++i) {
 			try {
-				baseCalls[i] = (int) dis.readShort();
+				baseCalls[i] = dis.readShort();
 			} catch (IOException e)//This shouldn't happen. If it does something must be seriously wrong.
 			{
 				throw new IllegalStateException("Unexpected IOException encountered while manipulating internal streams.");
@@ -540,7 +538,7 @@ public class ABITrace {
 	 * @return - int beginning at pointer in trace array
 	 */
 	private int getIntAt(int pointer) {
-		int out = 0;
+		int out;
 		byte[] temp = new byte[4];
 		getSubArray(temp, pointer);
 		try {
@@ -560,9 +558,7 @@ public class ABITrace {
 	 * @param traceDataOffset - starting point
 	 */
 	private void getSubArray(byte[] b, int traceDataOffset) {
-		for (int x = 0; x <= b.length - 1; x++) {
-			b[x] = traceData[traceDataOffset + x];
-		}
+		System.arraycopy(traceData, traceDataOffset + 0, b, 0, b.length - 1 + 1);
 	}
 
 	/**
@@ -573,7 +569,7 @@ public class ABITrace {
 	 * @return - if format of ABI file is correct
 	 */
 	private boolean isABI() {
-		char ABI[] = new char[4];
+		char[] ABI = new char[4];
 
 		for (int i = 0; i <= 2; i++) {
 			ABI[i] = (char) traceData[i];

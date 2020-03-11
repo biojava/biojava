@@ -20,8 +20,6 @@
 
 package org.biojava.nbio.structure;
 
-import org.biojava.nbio.structure.io.PDBParseException;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,10 +54,10 @@ p.close();
  * @version %I% %G%
  */
 public class Mutator{
-	List<String> supportedAtoms;
+	final List<String> supportedAtoms;
 
 	public Mutator(){
-		supportedAtoms = new ArrayList<String>();
+		supportedAtoms = new ArrayList<>();
 		supportedAtoms.add("N");
 		supportedAtoms.add("CA");
 		supportedAtoms.add("C");
@@ -78,10 +76,8 @@ public class Mutator{
 	 * @param pdbResnum the PDB residue number of the residue
 	 * @param newType the new residue type (3 characters)
 	 * @return a structure object where one residue has been modified
-	 * @throws PDBParseException
-	 */
-	public Structure  mutate(Structure struc, String chainId, String pdbResnum, String newType)
-	throws PDBParseException{
+     */
+	public Structure  mutate(Structure struc, String chainId, String pdbResnum, String newType) {
 
 
 		// create a  container for the new structure
@@ -138,10 +134,8 @@ public class Mutator{
 	 * @param oldAmino
 	 * @param newType
 	 * @return a new, mutated, residue
-	 * @throws PDBParseException
 	 */
-	public AminoAcid mutateResidue(AminoAcid oldAmino, String newType)
-	throws PDBParseException {
+	public AminoAcid mutateResidue(AminoAcid oldAmino, String newType) {
 
 		AminoAcid newgroup = new AminoAcidImpl();
 

@@ -24,13 +24,13 @@
  */
 package org.biojava.nbio.structure;
 
-import java.io.IOException;
-import java.util.Iterator;
-import java.util.List;
-
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.junit.Test;
+
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -149,7 +149,7 @@ public class TestCloning {
 		compareCloned(s, c);
 	}
 
-	private void compareCloned(final Structure s, final Structure c) throws StructureException {
+	private void compareCloned(final Structure s, final Structure c) {
 
 		assertEquals(s.getChains().size(), c.getChains().size());
 

@@ -48,7 +48,7 @@ public interface SymmetryRefiner {
 	 * @throws RefinerFailedException
 	 * @throws StructureException
 	 */
-	public MultipleAlignment refine(AFPChain selfAlignment, Atom[] atoms, int order)
+    MultipleAlignment refine(AFPChain selfAlignment, Atom[] atoms, int order)
 			throws RefinerFailedException, StructureException;
 
 }

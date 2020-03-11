@@ -43,7 +43,7 @@ public interface SequenceCreatorInterface<C extends Compound> {
 	 * @throws CompoundNotFoundException
 	 * @throws IOException
 	 */
-	public AbstractSequence<C> getSequence(String sequence, long index) throws CompoundNotFoundException, IOException;
+    AbstractSequence<C> getSequence(String sequence, long index) throws CompoundNotFoundException, IOException;
 
 	/**
 	 *
@@ -51,13 +51,13 @@ public interface SequenceCreatorInterface<C extends Compound> {
 	 * @param index
 	 * @return
 	 */
-	public AbstractSequence<C> getSequence(ProxySequenceReader<C> proxyLoader, long index);
+    AbstractSequence<C> getSequence(ProxySequenceReader<C> proxyLoader, long index);
 
 	/**
 	 *
 	 * @param list
 	 * @return
 	 */
-	public AbstractSequence<C> getSequence(List<C> list);
+    AbstractSequence<C> getSequence(List<C> list);
 
 }

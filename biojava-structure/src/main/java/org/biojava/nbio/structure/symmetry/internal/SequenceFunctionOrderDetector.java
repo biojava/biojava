@@ -20,12 +20,12 @@
  */
 package org.biojava.nbio.structure.symmetry.internal;
 
-import java.util.Map;
-
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.util.AlignmentTools;
+
+import java.util.Map;
 
 /**
  * Calls Spencer's method for determining order.
@@ -56,7 +56,7 @@ public class SequenceFunctionOrderDetector implements OrderDetector {
 					AlignmentTools.alignmentAsMap(afpChain);
 
 			return AlignmentTools.getSymmetryOrder(alignment,
-					new AlignmentTools.IdentityMap<Integer>(),
+					new AlignmentTools.IdentityMap<>(),
 					maxSymmetry, minimumMetricChange);
 
 		} catch (StructureException e) {

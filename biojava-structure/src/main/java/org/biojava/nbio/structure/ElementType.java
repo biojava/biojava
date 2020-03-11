@@ -48,9 +48,9 @@ public enum ElementType {
 	POST_TRANSITION_METAL(true),
 	UNKNOWN(false);
 
-	private boolean metal;
+	private final boolean metal;
 
-	private ElementType(boolean metal) {
+	ElementType(boolean metal) {
 		this.metal = metal;
 	}
 

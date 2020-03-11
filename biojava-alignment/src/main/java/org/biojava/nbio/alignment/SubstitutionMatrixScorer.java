@@ -40,8 +40,8 @@ implements PairwiseSequenceScorer<S, C> {
 
 	private final SubstitutionMatrix<C> matrix;
 
-	private S query;
-	private S target;
+	private final S query;
+	private final S target;
 	private double score;
 
 	public SubstitutionMatrixScorer(SequencePair<S, C> pair, SubstitutionMatrix<C> matrix) {

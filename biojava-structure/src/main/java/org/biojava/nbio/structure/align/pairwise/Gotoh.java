@@ -37,9 +37,9 @@ import java.util.List;
  * @version %I% %G%
  */
 public class Gotoh {
-	public static int ALIGFACTOR = 1000; // constant to shift floats to ints
+	public static final int ALIGFACTOR = 1000; // constant to shift floats to ints
 
-	Alignable a;
+	final Alignable a;
 
 	int k,openPen,elgPen,rowDim,colDim,openVal,elgVal;
 
@@ -209,7 +209,7 @@ public class Gotoh {
 
 		int  n;
 		IndexPair[] backId = new IndexPair[a.getRows()+1+a.getCols()+1];
-		List<IndexPair> path = new ArrayList<IndexPair>();
+		List<IndexPair> path = new ArrayList<>();
 
 		backId[0] = new IndexPair((short)(a.getRows()),(short)(a.getCols()));
 

@@ -37,11 +37,11 @@ import java.util.List;
  */
 public class RCSBMacromolecule {
 
-	private List<String> accessions;
+	private final List<String> accessions;
 	private String name;
 
 	public RCSBMacromolecule() {
-		accessions = new ArrayList<String>();
+		accessions = new ArrayList<>();
 	}
 
 	public List<String> getAccessions() {

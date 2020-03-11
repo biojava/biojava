@@ -20,9 +20,9 @@
  */
 package org.biojava.nbio.structure.align.multiple;
 
-import java.util.Set;
-
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
+
+import java.util.Set;
 
 /**
  * Interface for classes which implement a temporary cache for various numeric
@@ -51,7 +51,7 @@ public interface ScoresCache {
 	 * in headers. Example names found in: {@link MultipleAlignmentScorer}.
 	 * @param score Value of the score
 	 */
-	public void putScore(String property, Double score);
+    void putScore(String property, Double score);
 
 	/**
 	 * Get the value for a particular score. Scores which return null
@@ -61,12 +61,12 @@ public interface ScoresCache {
 	 * @param property Name of the score to fetch
 	 * @return Value of the score, or null if it is not set.
 	 */
-	public Double getScore(String property);
+    Double getScore(String property);
 
 	/**
 	 * Get a collection of all scores that have been set.
 	 *
 	 * @return Set of all score names
 	 */
-	public Set<String> getScores();
+    Set<String> getScores();
 }

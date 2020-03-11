@@ -20,8 +20,6 @@
  */
 package org.biojava.nbio.phylo;
 
-import java.io.IOException;
-import java.util.List;
 import org.biojava.nbio.core.alignment.template.SubstitutionMatrix;
 import org.biojava.nbio.core.sequence.MultipleSequenceAlignment;
 import org.biojava.nbio.core.sequence.template.Compound;
@@ -32,6 +30,9 @@ import org.forester.evoinference.matrix.distance.DistanceMatrix;
 import org.forester.msa.Msa;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.List;
 
 /**
  * The DistanceMatrixCalculator methods generate a {@link DistanceMatrix} from a

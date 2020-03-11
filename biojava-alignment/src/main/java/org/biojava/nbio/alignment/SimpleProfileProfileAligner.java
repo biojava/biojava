@@ -23,12 +23,14 @@
 
 package org.biojava.nbio.alignment;
 
-import org.biojava.nbio.core.alignment.template.ProfilePair;
-import org.biojava.nbio.core.alignment.template.Profile;
-import org.biojava.nbio.core.alignment.template.SubstitutionMatrix;
+import org.biojava.nbio.alignment.template.AbstractProfileProfileAligner;
+import org.biojava.nbio.alignment.template.Aligner;
+import org.biojava.nbio.alignment.template.GapPenalty;
 import org.biojava.nbio.core.alignment.SimpleProfilePair;
-import org.biojava.nbio.alignment.template.*;
 import org.biojava.nbio.core.alignment.template.AlignedSequence.Step;
+import org.biojava.nbio.core.alignment.template.Profile;
+import org.biojava.nbio.core.alignment.template.ProfilePair;
+import org.biojava.nbio.core.alignment.template.SubstitutionMatrix;
 import org.biojava.nbio.core.sequence.template.Compound;
 import org.biojava.nbio.core.sequence.template.Sequence;
 
@@ -110,7 +112,7 @@ public class SimpleProfileProfileAligner<S extends Sequence<C>, C extends Compou
 
 	@Override
 	protected void setProfile(List<Step> sx, List<Step> sy) {
-		profile = pair = new SimpleProfilePair<S, C>(getQuery(), getTarget(), sx, sy);
+		profile = pair = new SimpleProfilePair<>(getQuery(), getTarget(), sx, sy);
 	}
 
 }

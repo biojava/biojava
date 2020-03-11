@@ -20,9 +20,6 @@
  */
 package demo;
 
-import java.io.InputStream;
-import java.util.LinkedHashMap;
-
 import org.biojava.nbio.core.alignment.matrices.SubstitutionMatrixHelper;
 import org.biojava.nbio.core.alignment.template.SubstitutionMatrix;
 import org.biojava.nbio.core.sequence.MultipleSequenceAlignment;
@@ -32,14 +29,13 @@ import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava.nbio.core.sequence.io.FastaReader;
 import org.biojava.nbio.core.sequence.io.GenericFastaHeaderParser;
 import org.biojava.nbio.core.sequence.io.ProteinSequenceCreator;
-import org.biojava.nbio.phylo.DistanceMatrixCalculator;
-import org.biojava.nbio.phylo.DistanceTreeEvaluator;
-import org.biojava.nbio.phylo.ForesterWrapper;
-import org.biojava.nbio.phylo.TreeConstructor;
-import org.biojava.nbio.phylo.TreeConstructorType;
+import org.biojava.nbio.phylo.*;
 import org.forester.evoinference.matrix.distance.BasicSymmetricalDistanceMatrix;
 import org.forester.evoinference.matrix.distance.DistanceMatrix;
 import org.forester.phylogeny.Phylogeny;
+
+import java.io.InputStream;
+import java.util.LinkedHashMap;
 
 /**
  * This demo contains the CookBook example to create a phylogenetic tree from a
@@ -57,12 +53,11 @@ public class DemoDistanceTree {
 		InputStream inStream = TreeConstructor.class
 				.getResourceAsStream("/PF00104_small.fasta");
 
-		FastaReader<ProteinSequence, AminoAcidCompound> fastaReader =
-				new FastaReader<ProteinSequence, AminoAcidCompound>(
-				inStream,
-				new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>(),
-				new ProteinSequenceCreator(AminoAcidCompoundSet
-						.getAminoAcidCompoundSet()));
+        FastaReader<ProteinSequence, AminoAcidCompound> fastaReader =
+				new FastaReader<>(
+						inStream,
+						new GenericFastaHeaderParser<>(),
+						new ProteinSequenceCreator(AminoAcidCompoundSet.aminoAcidCompoundSet));
 
 		LinkedHashMap<String, ProteinSequence> proteinSequences =
 				fastaReader.process();
@@ -70,7 +65,7 @@ public class DemoDistanceTree {
 		inStream.close();
 
 		MultipleSequenceAlignment<ProteinSequence, AminoAcidCompound> msa =
-				new MultipleSequenceAlignment<ProteinSequence, AminoAcidCompound>();
+				new MultipleSequenceAlignment<>();
 
 		for (ProteinSequence proteinSequence : proteinSequences.values()) {
 			msa.addAlignedSequence(proteinSequence);

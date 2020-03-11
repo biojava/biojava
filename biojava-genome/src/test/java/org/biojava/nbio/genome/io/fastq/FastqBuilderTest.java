@@ -316,7 +316,7 @@ public final class FastqBuilderTest {
 			.withQuality("0123")
 			.withVariant(FastqVariant.FASTQ_SOLEXA);
 
-		Assert.assertEquals(false, fastqBuilder.sequenceAndQualityLengthsMatch());
+        Assert.assertFalse(fastqBuilder.sequenceAndQualityLengthsMatch());
 	}
 
 	@Test
@@ -327,7 +327,7 @@ public final class FastqBuilderTest {
 			.withSequence("ACTG")
 			.withVariant(FastqVariant.FASTQ_SOLEXA);
 
-		Assert.assertEquals(false, fastqBuilder.sequenceAndQualityLengthsMatch());
+        Assert.assertFalse(fastqBuilder.sequenceAndQualityLengthsMatch());
 	}
 
 	@Test

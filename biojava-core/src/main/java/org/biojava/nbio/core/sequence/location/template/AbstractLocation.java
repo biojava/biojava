@@ -33,14 +33,10 @@ import org.biojava.nbio.core.sequence.views.ReversedSequenceView;
 import org.biojava.nbio.core.util.Hashcoder;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 import static java.lang.String.format;
 import static org.biojava.nbio.core.util.Equals.classEqual;
-import static org.biojava.nbio.core.util.Equals.equal;
 
 /**
  * Base abstraction of a location which encodes for the majority of important
@@ -224,7 +220,7 @@ public abstract class AbstractLocation implements Serializable, Location {
 			list = getSubLocations();
 		}
 		else {
-			list = new ArrayList<Location>();
+			list = new ArrayList<>();
 			list.add(this);
 		}
 		return list.iterator();
@@ -244,13 +240,12 @@ public abstract class AbstractLocation implements Serializable, Location {
 	/**
 	 * Here to allow for recursion
 	 */
-	private List<Location> getAllSubLocations(Location location) {
-		List<Location> flatSubLocations = new ArrayList<Location>();
+	private static List<Location> getAllSubLocations(Location location) {
+		List<Location> flatSubLocations = new ArrayList<>();
 		for (Location l : location.getSubLocations()) {
 			if (l.isComplex()) {
 				flatSubLocations.addAll(getAllSubLocations(l));
-			}
-			else {
+			} else {
 				flatSubLocations.add(l);
 			}
 		}
@@ -260,16 +255,18 @@ public abstract class AbstractLocation implements Serializable, Location {
 
 	@Override
 	public boolean equals(Object obj) {
+		if (this == obj) return true;
+
 		boolean equals = false;
 		if (classEqual(this, obj)) {
 			AbstractLocation l = (AbstractLocation) obj;
-			equals = (equal(getStart(), l.getStart())
-					&& equal(getEnd(), l.getEnd())
-					&& equal(getStrand(), l.getStrand())
-					&& equal(isCircular(), l.isCircular())
-					&& equal(isBetweenCompounds(), l.isBetweenCompounds())
-					&& equal(getSubLocations(), l.getSubLocations())
-					&& equal(getAccession(), l.getAccession()));
+			equals = (Objects.equals(getStart(), l.getStart())
+					&& Objects.equals(getEnd(), l.getEnd())
+					&& Objects.equals(getStrand(), l.getStrand())
+					&& isCircular() == l.isCircular()
+					&& isBetweenCompounds() == l.isBetweenCompounds()
+					&& Objects.equals(getSubLocations(), l.getSubLocations())
+					&& Objects.equals(getAccession(), l.getAccession()));
 		}
 		return equals;
 	}
@@ -311,11 +308,11 @@ public abstract class AbstractLocation implements Serializable, Location {
 	@Override
 	public <C extends Compound> Sequence<C> getSubSequence(Sequence<C> sequence) {
 		if(isCircular()) {
-			List<Sequence<C>> sequences = new ArrayList<Sequence<C>>();
+			List<Sequence<C>> sequences = new ArrayList<>();
 			for(Location l: this) {
 				sequences.add(l.getSubSequence(sequence));
 			}
-			return new JoiningSequenceReader<C>(sequence.getCompoundSet(), sequences);
+			return new JoiningSequenceReader<>(sequence.getCompoundSet(), sequences);
 		}
 		return reverseSequence(sequence.getSubSequence(
 				getStart().getPosition(), getEnd().getPosition()));
@@ -327,11 +324,11 @@ public abstract class AbstractLocation implements Serializable, Location {
 
 	@Override
 	public <C extends Compound> Sequence<C> getRelevantSubSequence(Sequence<C> sequence) {
-		List<Sequence<C>> sequences = new ArrayList<Sequence<C>>();
+		List<Sequence<C>> sequences = new ArrayList<>();
 		for(Location l: getRelevantSubLocations()) {
 			sequences.add(l.getSubSequence(sequence));
 		}
-		return new JoiningSequenceReader<C>(sequence.getCompoundSet(), sequences);
+		return new JoiningSequenceReader<>(sequence.getCompoundSet(), sequences);
 	}
 
 	/**
@@ -345,12 +342,12 @@ public abstract class AbstractLocation implements Serializable, Location {
 			return sequence;
 		}
 
-		Sequence<C> reversed = new ReversedSequenceView<C>(sequence);
+		Sequence<C> reversed = new ReversedSequenceView<>(sequence);
 		// "safe" operation as we have tried to check this
 		if(canComplement(sequence)) {
 			Sequence<ComplementCompound> casted = (Sequence<ComplementCompound>) reversed;
 			ComplementSequenceView<ComplementCompound> complement =
-					new ComplementSequenceView<ComplementCompound>(casted);
+					new ComplementSequenceView<>(casted);
 			return (Sequence<C>)complement;
 		}
 		return reversed;
@@ -360,7 +357,7 @@ public abstract class AbstractLocation implements Serializable, Location {
 	 * Uses the Sequence's CompoundSet to decide if a compound can
 	 * be assgined to ComplementCompound meaning it can complement
 	 */
-	protected <C extends Compound> boolean canComplement(Sequence<C> sequence) {
+	protected static <C extends Compound> boolean canComplement(Sequence<C> sequence) {
 		CompoundSet<C> compoundSet = sequence.getCompoundSet();
 		Compound c = compoundSet.getAllCompounds().iterator().next();
 		return ComplementCompound.class.isAssignableFrom(c.getClass());

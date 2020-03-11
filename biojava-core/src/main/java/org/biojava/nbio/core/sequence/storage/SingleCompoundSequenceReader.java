@@ -20,7 +20,6 @@
  */
 package org.biojava.nbio.core.sequence.storage;
 
-import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.core.sequence.AccessionID;
 import org.biojava.nbio.core.sequence.template.*;
 import org.biojava.nbio.core.util.Equals;
@@ -28,6 +27,7 @@ import org.biojava.nbio.core.util.Hashcoder;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * An implementation of the SequenceReader interface which for every
@@ -74,7 +74,7 @@ public class SingleCompoundSequenceReader<C extends Compound> implements ProxySe
 	 */
 
 	@Override
-	public void setContents(String sequence) throws CompoundNotFoundException {
+	public void setContents(String sequence) {
 		throw new UnsupportedOperationException("Not supported.");
 	}
 
@@ -146,7 +146,7 @@ public class SingleCompoundSequenceReader<C extends Compound> implements ProxySe
 
 	@Override
 	public SequenceView<C> getSubSequence(Integer start, Integer end) {
-		return new SequenceProxyView<C>(this, start, end);
+		return new SequenceProxyView<>(this, start, end);
 	}
 
 	/**
@@ -171,8 +171,9 @@ public class SingleCompoundSequenceReader<C extends Compound> implements ProxySe
 	 * Delegates to {@link SequenceMixin#countCompounds(org.biojava.nbio.core.sequence.template.Sequence, C[]) }
 	 */
 
+	@SafeVarargs
 	@Override
-	public int countCompounds(C... compounds) {
+	public final int countCompounds(C... compounds) {
 		return SequenceMixin.countCompounds(this, compounds);
 	}
 
@@ -182,7 +183,7 @@ public class SingleCompoundSequenceReader<C extends Compound> implements ProxySe
 
 	@Override
 	public Iterator<C> iterator() {
-		return new SequenceMixin.SequenceIterator<C>(this);
+		return new SequenceMixin.SequenceIterator<>(this);
 	}
 
 	@Override
@@ -204,9 +205,9 @@ public class SingleCompoundSequenceReader<C extends Compound> implements ProxySe
 	public boolean equals(Object o) {
 		if(Equals.classEqual(this, o)) {
 			SingleCompoundSequenceReader<C> that = (SingleCompoundSequenceReader<C>)o;
-			return  Equals.equal(compound, that.compound) &&
-					Equals.equal(compoundSet, that.compoundSet) &&
-					Equals.equal(length, that.length);
+			return  Objects.equals(compound, that.compound) &&
+                    Objects.equals(compoundSet, that.compoundSet) &&
+					length == that.length;
 		}
 		return false;
 	}
@@ -214,9 +215,9 @@ public class SingleCompoundSequenceReader<C extends Compound> implements ProxySe
 	public boolean equals(Sequence<C> o) {
 		if(Equals.classEqual(this, o)) {
 			SingleCompoundSequenceReader<C> that = (SingleCompoundSequenceReader<C>)o;
-			return  Equals.equal(compound, that.compound) &&
-					Equals.equal(compoundSet, that.compoundSet) &&
-					Equals.equal(length, that.length);
+			return  Objects.equals(compound, that.compound) &&
+                    Objects.equals(compoundSet, that.compoundSet) &&
+					length == that.length;
 		}
 		return false;
 	}

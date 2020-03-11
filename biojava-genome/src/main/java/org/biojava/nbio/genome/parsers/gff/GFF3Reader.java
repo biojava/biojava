@@ -100,7 +100,7 @@ public class GFF3Reader {
 
 
 	public static FeatureList read(String filename) throws IOException {
-	   return read(filename,new ArrayList<String>(0));
+	   return read(filename, new ArrayList<>(0));
 	}
 
 
@@ -122,7 +122,7 @@ public class GFF3Reader {
 
 		String locEnd =line[4].trim();
 
-		Double score;
+		double score;
 
 		try {
 			score = Double.parseDouble(line[5].trim());

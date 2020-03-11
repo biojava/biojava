@@ -20,15 +20,15 @@
  */
 package org.biojava.nbio.structure.io;
 
-import org.biojava.nbio.structure.ResidueNumber;
-import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.core.sequence.ProteinSequence;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
 import org.biojava.nbio.core.sequence.io.FastaReader;
 import org.biojava.nbio.core.sequence.io.template.SequenceCreatorInterface;
 import org.biojava.nbio.core.sequence.io.template.SequenceHeaderParserInterface;
+import org.biojava.nbio.structure.ResidueNumber;
+import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.align.util.AtomCache;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -57,8 +57,8 @@ import java.util.LinkedHashMap;
 public class FastaStructureParser {
 
 	// inputs
-	private FastaReader<ProteinSequence, AminoAcidCompound> reader;
-	private AtomCache cache;
+	private final FastaReader<ProteinSequence, AminoAcidCompound> reader;
+	private final AtomCache cache;
 
 	// cache processed data
 	private String[] accessions;
@@ -71,7 +71,7 @@ public class FastaStructureParser {
 			SequenceCreatorInterface<AminoAcidCompound> sequenceCreator,
 			AtomCache cache)
 	{
-		this(new FastaReader<ProteinSequence, AminoAcidCompound>(
+		this(new FastaReader<>(
 				is, headerParser, sequenceCreator),cache);
 	}
 
@@ -80,7 +80,7 @@ public class FastaStructureParser {
 			SequenceCreatorInterface<AminoAcidCompound> sequenceCreator,
 			AtomCache cache) throws FileNotFoundException
 	{
-		this(new FastaReader<ProteinSequence, AminoAcidCompound>(
+		this(new FastaReader<>(
 				file, headerParser, sequenceCreator), cache);
 	}
 

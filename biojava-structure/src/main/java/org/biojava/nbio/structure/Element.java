@@ -159,24 +159,24 @@ public enum Element {
 	 */
 	R(104, 0, 105, 0.0f, 0.0f, 0, 0, 4, 1, 0, 0.000f, -1, 3, null, 0.00f, ElementType.UNKNOWN); // this is an R-group
 	// should these be declared final?
-	private int atomicNumber;
-	private int period;
+	private final int atomicNumber;
+	private final int period;
 	//private int hillOrder;
-	private float VDWRadius; // in Angstroms
-	private float covalentRadius; // in Angstroms
-	private int valenceElectronCount;
-	private int minimumValence;
-	private int maximumValence;
-	private int commonValence;
-	private int maximumCovalentValence;
-	private float atomicMass;
-	private int coreElectronCount;
-	private int oxidationState;
-	private int[] allOxidationStates;
+	private final float VDWRadius; // in Angstroms
+	private final float covalentRadius; // in Angstroms
+	private final int valenceElectronCount;
+	private final int minimumValence;
+	private final int maximumValence;
+	private final int commonValence;
+	private final int maximumCovalentValence;
+	private final float atomicMass;
+	private final int coreElectronCount;
+	private final int oxidationState;
+	private final int[] allOxidationStates;
 	// Pauling electronegativity: http://en.wikipedia.org/wiki/Electronegativity
-	private float paulingElectronegativity;
+	private final float paulingElectronegativity;
 	// Element type: http://www.ptable.com/
-	private ElementType elementType;
+	private final ElementType elementType;
 	//private static final Element[] hillOrderIndex;
 
 //
@@ -191,12 +191,12 @@ public enum Element {
 	private static final Map<String,Element> allElements ;
 
 	static {
-		allElements = new HashMap<String,Element>();
+		allElements = new HashMap<>();
 		for (Element e : Element.values()){
 			allElements.put(e.toString().toLowerCase(), e);
 		}
 	}
-	private Element(int atomicNumber,
+	Element(int atomicNumber,
 			int period,
 			int hillOrder,
 			float VDWRadius,

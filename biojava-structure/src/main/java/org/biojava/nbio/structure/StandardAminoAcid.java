@@ -43,7 +43,7 @@ public final class StandardAminoAcid {
 
 	private static final String STANDARD_AMINOS_FILE = "org/biojava/nbio/structure/standardaminos.pdb.gz";
 
-	static private Map<String,AminoAcid> aminoAcids;
+	static private final Map<String,AminoAcid> aminoAcids;
 
 	/**
 	 * Cannot be instantiated.
@@ -64,7 +64,7 @@ public final class StandardAminoAcid {
 	 * @author Tamas Horvath provided the standard amino acids
 	 */
 	static {
-		aminoAcids = new HashMap<String,AminoAcid>();
+		aminoAcids = new HashMap<>();
 
 
 		InputStream fileStream = StandardAminoAcid.class.getClassLoader().getResourceAsStream(STANDARD_AMINOS_FILE);

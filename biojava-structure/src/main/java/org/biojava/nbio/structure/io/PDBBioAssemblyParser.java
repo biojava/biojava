@@ -23,10 +23,11 @@ package org.biojava.nbio.structure.io;
 import org.biojava.nbio.structure.jama.Matrix;
 import org.biojava.nbio.structure.quaternary.BioAssemblyInfo;
 import org.biojava.nbio.structure.quaternary.BiologicalAssemblyTransformation;
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
 
 import java.util.*;
+
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
 
 /**
  * Parses REMARK 350 records in a PDB file and creates transformations to
@@ -41,10 +42,10 @@ public class PDBBioAssemblyParser {
 	//private static final Logger logger = LoggerFactory.getLogger(PDBBioAssemblyParser.class);
 
 	private Integer currentBioMolecule = null;
-	private List<String> currentChainIDs = new ArrayList<String>();
+	private final List<String> currentChainIDs = new ArrayList<>();
 	private Matrix currentMatrix = null;
 	private double[] shift = null;
-	private Map<Integer,BioAssemblyInfo> transformationMap = new HashMap<Integer, BioAssemblyInfo>();
+	private final Map<Integer,BioAssemblyInfo> transformationMap = new HashMap<>();
 	private int modelNumber = 1;
 
 	private List<BiologicalAssemblyTransformation> transformations;
@@ -151,7 +152,7 @@ public class PDBBioAssemblyParser {
 	 * Parses list of chain ids (A, B, C, etc.)
 	 */
 	private void addToCurrentChainList(String line) {
-		int index = line.indexOf(":");
+		int index = line.indexOf(':');
 		String chainList = line.substring(index+1).trim();
 		// split by spaces or commas
 		String[] chainIds = chainList.split("[ ,]+");
@@ -159,7 +160,7 @@ public class PDBBioAssemblyParser {
 	}
 
 	private void initialize() {
-		transformations = new ArrayList<BiologicalAssemblyTransformation>();
+		transformations = new ArrayList<>();
 		currentMatrix = Matrix.identity(3,3);
 		currentBioMolecule = null;
 		shift = new double[3];

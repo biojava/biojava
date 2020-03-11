@@ -34,17 +34,17 @@ import java.util.*;
  */
 
 public class PrettyXMLWriter implements XMLWriter {
-	private int indentUnit = 2;
+	private final int indentUnit = 2;
 
-	private PrintWriter writer;
+	private final PrintWriter writer;
 	private boolean isOpeningTag = false;
 	private boolean afterNewline = true;
 	private int indent = 0;
 
-	private Map<String, String> namespacePrefixes = new HashMap<String, String>();
+	private final Map<String, String> namespacePrefixes = new HashMap<>();
 	private int namespaceSeed = 0;
-	private LinkedList<List<String>> namespaceBindings = new LinkedList<List<String>>();
-	private List<String> namespacesDeclared = new ArrayList<String>();
+	private final LinkedList<List<String>> namespaceBindings = new LinkedList<>();
+	private final List<String> namespacesDeclared = new ArrayList<>();
 
 	public PrettyXMLWriter(PrintWriter writer) {
 		this.writer = writer;
@@ -64,10 +64,9 @@ public class PrettyXMLWriter implements XMLWriter {
 		}
 	}
 
-	private void handleDeclaredNamespaces()
-		throws IOException
+	private void handleDeclaredNamespaces() throws IOException
 	{
-		if (namespacesDeclared.size() == 0) {
+		if (namespacesDeclared.size() > 0) {
 			for (Iterator<String> nsi = namespacesDeclared.iterator(); nsi.hasNext(); ) {
 				String nsURI = nsi.next();
 				if (!namespacePrefixes.containsKey(nsURI)) {
@@ -79,17 +78,13 @@ public class PrettyXMLWriter implements XMLWriter {
 		}
 	}
 
-	protected void writeIndent()
-		throws IOException
-	{
+	protected void writeIndent() {
 		for (int i = 0; i < indent * indentUnit; ++i) {
 			writer.write(' ');
 		}
 	}
 
-	private void _openTag()
-		throws IOException
-	{
+	private void _openTag() {
 		if (isOpeningTag) {
 			writer.println('>');
 			afterNewline = true;
@@ -108,7 +103,7 @@ public class PrettyXMLWriter implements XMLWriter {
 		namespacePrefixes.put(nsURI, prefix);
 		List<String> bindings = namespaceBindings.getLast();
 		if (bindings == null) {
-			bindings = new ArrayList<String>();
+			bindings = new ArrayList<>();
 			namespaceBindings.removeLast();
 			namespaceBindings.add(bindings);
 		}
@@ -226,9 +221,7 @@ public class PrettyXMLWriter implements XMLWriter {
 	}
 
 	@Override
-	public void closeTag(String qName)
-		throws IOException
-	{
+	public void closeTag(String qName) {
 		indent--;
 
 		if (isOpeningTag) {
@@ -245,9 +238,7 @@ public class PrettyXMLWriter implements XMLWriter {
 	}
 
 	@Override
-	public void println(String data)
-		throws IOException
-	{
+	public void println(String data) {
 	if (isOpeningTag) {
 		writer.println('>');
 		isOpeningTag = false;
@@ -258,9 +249,7 @@ public class PrettyXMLWriter implements XMLWriter {
 	}
 
 	@Override
-	public void print(String data)
-		throws IOException
-	{
+	public void print(String data) {
 	if (isOpeningTag) {
 		writer.print('>');
 		isOpeningTag = false;
@@ -270,15 +259,11 @@ public class PrettyXMLWriter implements XMLWriter {
 	}
 
 	@Override
-	public void printRaw(String data)
-		throws IOException
-	{
+	public void printRaw(String data) {
 	writer.println(data);
 	}
 
-	protected void printChars(String data)
-		throws IOException
-	{
+	protected void printChars(String data) {
 	if (data == null) {
 		printChars("null");
 		return;
@@ -294,9 +279,7 @@ public class PrettyXMLWriter implements XMLWriter {
 	}
 	}
 
-	protected void printAttributeValue(String data)
-		throws IOException
-	{
+	protected void printAttributeValue(String data) {
 	if (data == null) {
 		printAttributeValue("null");
 		return;
@@ -312,18 +295,14 @@ public class PrettyXMLWriter implements XMLWriter {
 	}
 	}
 
-	protected void numericalEntity(char c)
-		throws IOException
-	{
+	protected void numericalEntity(char c) {
 	writer.print("&#");
 	writer.print((int) c);
 	writer.print(';');
 	}
 
 	@Override
-	public void close()
-		throws IOException
-	{
+	public void close() {
 		writer.close();
 	}
 }

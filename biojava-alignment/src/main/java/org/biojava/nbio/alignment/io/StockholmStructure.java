@@ -94,9 +94,9 @@ public class StockholmStructure {
 	public StockholmStructure() {
 		fileAnnotation = new StockholmFileAnnotation();
 		consAnnotation = new StockholmConsensusAnnotation();
-		sequences = new HashMap<String, StringBuffer>();
-		seqsAnnotation = new HashMap<String, StockholmSequenceAnnotation>();
-		resAnnotation = new HashMap<String, StockholmResidueAnnotation>();
+		sequences = new HashMap<>();
+		seqsAnnotation = new HashMap<>();
+		resAnnotation = new HashMap<>();
 	}
 
 	public StockholmFileAnnotation getFileAnnotation() {
@@ -235,10 +235,11 @@ public class StockholmStructure {
 		if (forcedSequenceType != null && !(forcedSequenceType.equals(PFAM) || forcedSequenceType.equals(RFAM))) {
 			throw new IllegalArgumentException("Illegal Argument " + forcedSequenceType);
 		}
-		List<AbstractSequence<? extends AbstractCompound>> seqs = new ArrayList<AbstractSequence<? extends AbstractCompound>>();
-		for (String sequencename : sequences.keySet()) {
-			AbstractSequence<? extends AbstractCompound> seq = null;
-			String sequence = sequences.get(sequencename).toString();
+		List<AbstractSequence<? extends AbstractCompound>> seqs = new ArrayList<>();
+		for (Map.Entry<String, StringBuffer> entry : sequences.entrySet()) {
+            String sequencename = entry.getKey();
+            AbstractSequence<? extends AbstractCompound> seq;
+			String sequence = entry.getValue().toString();
 			if (ignoreCase) {
 				sequence = sequence.toUpperCase();
 			}
@@ -256,9 +257,8 @@ public class StockholmStructure {
 			}
 			String[] seqDetails = splitSeqName(sequencename);
 			seq.setDescription(seqDetails[0]);
-			seq.setBioBegin((seqDetails[1] == null || seqDetails[1].trim().equals("") ? null : new Integer(
-					seqDetails[1])));
-			seq.setBioEnd((seqDetails[2] == null || seqDetails[2].trim().equals("") ? null : new Integer(seqDetails[2])));
+			seq.setBioBegin((seqDetails[1] == null || seqDetails[1].trim().isEmpty() ? null : Integer.valueOf(seqDetails[1])));
+			seq.setBioEnd((seqDetails[2] == null || seqDetails[2].trim().isEmpty() ? null : Integer.valueOf(seqDetails[2])));
 
 			seqs.add(seq);
 		}
@@ -308,22 +308,22 @@ public class StockholmStructure {
 
 	@Override
 	public String toString() {
-		StringBuffer result = new StringBuffer();
+		StringBuilder result = new StringBuilder();
 		List<AbstractSequence<? extends AbstractCompound>> bioSeqs = getBioSequences(false);
 		int sequenceLength = -1;
 		for (AbstractSequence<? extends AbstractCompound> sequence : bioSeqs) {
 			String sequenceAsString = sequence.getSequenceAsString();
 			sequenceLength = sequenceAsString.length();
 			if (sequenceLength > 50) {
-				result.append(sequenceAsString.substring(0, 40));
+				result.append(sequenceAsString, 0, 40);
 				result.append("...");
-				result.append(sequenceAsString.substring(sequenceLength - 3, sequenceLength));
+				result.append(sequenceAsString, sequenceLength - 3, sequenceLength);
 			} else {
 				result.append(sequenceAsString);
 			}
-			result.append(" " + sequence.getDescription() + "\n");
+			result.append(" ").append(sequence.getDescription()).append("\n");
 		}
-		result.append("Alignment with " + bioSeqs.size() + " rows and " + sequenceLength + " columns");
+		result.append("Alignment with ").append(bioSeqs.size()).append(" rows and ").append(sequenceLength).append(" columns");
 
 		return result.toString();
 	}

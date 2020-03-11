@@ -34,9 +34,9 @@ public class BetaBridge implements Serializable {
 
 	private static final long serialVersionUID = -5097435425455958487L;
 
-	BridgeType type;
-	int partner1;
-	int partner2;
+	final BridgeType type;
+	final int partner1;
+	final int partner2;
 
 	public BetaBridge(int i, int j, BridgeType t) {
 		partner1 = Math.min(i, j);

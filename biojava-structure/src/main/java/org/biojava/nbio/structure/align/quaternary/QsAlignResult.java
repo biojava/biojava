@@ -20,19 +20,18 @@
  */
 package org.biojava.nbio.structure.align.quaternary;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import javax.vecmath.Matrix4d;
-
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
 import org.biojava.nbio.structure.cluster.Subunit;
 import org.biojava.nbio.structure.cluster.SubunitCluster;
+
+import javax.vecmath.Matrix4d;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Result of a Quaternary Structure Alignment {@link QsAlign}. The QsAlignResult
@@ -47,8 +46,8 @@ public class QsAlignResult {
 
 	private List<SubunitCluster> clusters;
 
-	private List<Subunit> subunits1;
-	private List<Subunit> subunits2;
+	private final List<Subunit> subunits1;
+	private final List<Subunit> subunits2;
 
 	private Map<Integer, Integer> subunitMap;
 	private MultipleAlignment alignment;
@@ -234,7 +233,7 @@ public class QsAlignResult {
 	 */
 	public List<Subunit> getAlignedSubunits1() {
 
-		List<Subunit> aligned = new ArrayList<Subunit>(subunitMap.size());
+		List<Subunit> aligned = new ArrayList<>(subunitMap.size());
 
 		for (Integer key : subunitMap.keySet())
 			aligned.add(subunits1.get(key));
@@ -250,10 +249,10 @@ public class QsAlignResult {
 	 */
 	public List<Subunit> getAlignedSubunits2() {
 
-		List<Subunit> aligned = new ArrayList<Subunit>(subunitMap.size());
+		List<Subunit> aligned = new ArrayList<>(subunitMap.size());
 
-		for (Integer key : subunitMap.keySet())
-			aligned.add(subunits2.get(subunitMap.get(key)));
+		for (Integer integer : subunitMap.values())
+			aligned.add(subunits2.get(integer));
 
 		return aligned;
 	}
@@ -295,10 +294,10 @@ public class QsAlignResult {
 				+ ", length="
 				+ length()
 				+ ", Aligned 1: "
-				+ getAlignedSubunits1().stream().map(s -> s.getName())
+				+ getAlignedSubunits1().stream().map(Subunit::getName)
 						.collect(Collectors.toList())
 				+ ", Aligned 2: "
-				+ getAlignedSubunits2().stream().map(s -> s.getName())
+				+ getAlignedSubunits2().stream().map(Subunit::getName)
 						.collect(Collectors.toList()) + "]";
 	}
 

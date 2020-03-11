@@ -20,13 +20,10 @@
  */
 package org.biojava.nbio.structure;
 
-import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-
 import org.biojava.nbio.structure.align.util.AtomCache;
-import org.biojava.nbio.structure.io.MMCIFFileReader;
-import org.biojava.nbio.structure.io.PDBFileReader;
+
+import java.io.IOException;
+import java.util.List;
 
 /**
  * A class that provides static access methods for easy lookup of protein structure related components
@@ -39,7 +36,7 @@ public class StructureIO {
 
 	//private static final Logger logger = LoggerFactory.getLogger(StructureIO.class);
 
-	private static AtomCache cache ;
+	@Deprecated private static final ThreadLocal<AtomCache> caches = ThreadLocal.withInitial(()->null) ;
 
 
 	/**
@@ -95,30 +92,27 @@ public class StructureIO {
 	 */
 	public static Structure getStructure(String name) throws IOException, StructureException{
 
-		checkInitAtomCache();
 
 		// delegate this functionality to AtomCache...
 
-		return cache.getStructure(name);
+		return getAtomCache().getStructure(name);
 
 	}
 
 
-	private static void checkInitAtomCache() {
-		if ( cache == null){
-			cache = new AtomCache();
-		}
-
+	@Deprecated public static void setAtomCache(AtomCache c){
+		caches.set(c);
 	}
 
-	public static void setAtomCache(AtomCache c){
-		cache = c;
+	@Deprecated public static AtomCache getAtomCache() {
+		//synchronized (StructureIO.class) {
+			AtomCache cache = caches.get();
+			if ( cache == null)
+				setAtomCache(cache = new AtomCache());
+			return cache;
+		//}
 	}
 
-	public static AtomCache getAtomCache() {
-		checkInitAtomCache();
-		return cache;
-	}
 
 
 	/**
@@ -143,17 +137,10 @@ public class StructureIO {
 	 * if false the outputStructure will be as the original with added chains with renamed asymIds (in the form originalAsymId_transformId and originalAuthId_transformId).
 	 * @return a Structure object or null if that assembly is not available
 	 * @throws StructureException
-	 * @throws IOException
-	 */
-	public static Structure getBiologicalAssembly(String pdbId, boolean multiModel) throws IOException, StructureException{
+     */
+	public static Structure getBiologicalAssembly(String pdbId, boolean multiModel) throws StructureException{
 
-		checkInitAtomCache();
-
-		pdbId = pdbId.toLowerCase();
-
-		Structure s = cache.getBiologicalAssembly(pdbId, multiModel);
-
-		return s;
+		return getAtomCache().getBiologicalAssembly(pdbId.toLowerCase(), multiModel);
 	}
 
 	/**
@@ -167,9 +154,8 @@ public class StructureIO {
 	 * @param pdbId
 	 * @return a Structure object or null if that assembly is not available
 	 * @throws StructureException
-	 * @throws IOException
 	 */
-	public static Structure getBiologicalAssembly(String pdbId) throws IOException, StructureException{
+	public static Structure getBiologicalAssembly(String pdbId) throws StructureException{
 		return getBiologicalAssembly(pdbId, AtomCache.DEFAULT_BIOASSEMBLY_STYLE);
 	}
 
@@ -191,17 +177,9 @@ public class StructureIO {
 	 * if false the outputStructure will be as the original with added chains with renamed asymIds (in the form originalAsymId_transformId and originalAuthId_transformId).
 	 * @return a Structure object or null if that assembly is not available
 	 * @throws StructureException if there is no bioassembly available for given biolAssemblyNr or some other problems encountered while loading it
-	 * @throws IOException
-	 */
-	public static Structure getBiologicalAssembly(String pdbId, int biolAssemblyNr, boolean multiModel) throws IOException, StructureException {
-
-		checkInitAtomCache();
-
-		pdbId = pdbId.toLowerCase();
-
-		Structure s = cache.getBiologicalAssembly(pdbId, biolAssemblyNr, multiModel);
-
-		return s;
+     */
+	public static Structure getBiologicalAssembly(String pdbId, int biolAssemblyNr, boolean multiModel) throws StructureException {
+		return getAtomCache().getBiologicalAssembly(pdbId.toLowerCase(), biolAssemblyNr, multiModel);
 	}
 
 	/**
@@ -235,19 +213,13 @@ public class StructureIO {
 	 * @param multiModel if true the output Structure will be a multi-model one with one transformId per model,
 	 * if false the outputStructure will be as the original with added chains with renamed asymIds (in the form originalAsymId_transformId and originalAuthId_transformId).
 	 * @return
-	 * @throws IOException
 	 * @throws StructureException
 	 * @since 5.0
 	 */
-	public static List<Structure> getBiologicalAssemblies(String pdbId, boolean multiModel) throws IOException, StructureException {
+	public static List<Structure> getBiologicalAssemblies(String pdbId, boolean multiModel) throws StructureException {
 
-		checkInitAtomCache();
 
-		pdbId = pdbId.toLowerCase();
-
-		List<Structure> s = cache.getBiologicalAssemblies(pdbId, multiModel);
-
-		return s;
+		return getAtomCache().getBiologicalAssemblies(pdbId.toLowerCase(), multiModel);
 
 	}
 
@@ -267,39 +239,19 @@ public class StructureIO {
 	}
 
 
-	private static final String FILE_SEPARATOR = System.getProperty("file.separator");
+//	private static final String FILE_SEPARATOR = System.getProperty("file.separator");
 
-	/**
-	 * Utility method to set the location where PDB files can be found
-	 *
-	 * @param pathToPDBFiles
-	 */
-	public static void setPdbPath(String pathToPDBFiles){
+//	/**
+//	 * Utility method to set the location where PDB files can be found
+//	 *
+//	 * @param pathToPDBFiles
+//	 */
+//	public static void setPdbPath(String pathToPDBFiles){
+//
+//		if ( ! pathToPDBFiles.endsWith(FILE_SEPARATOR))
+//			pathToPDBFiles += FILE_SEPARATOR;
+//	}
 
-		if ( ! pathToPDBFiles.endsWith(FILE_SEPARATOR))
-			pathToPDBFiles += FILE_SEPARATOR;
-	}
-
-
-	public static enum StructureFiletype {
-		PDB( (new PDBFileReader()).getExtensions()),
-		CIF( new MMCIFFileReader().getExtensions()),
-		UNKNOWN(Collections.<String>emptyList());
-
-		private List<String> extensions;
-		/**
-		 * @param extensions List of supported extensions, including leading period
-		 */
-		private StructureFiletype(List<String> extensions) {
-			this.extensions = extensions;
-		}
-		/**
-		 * @return a list of file extensions associated with this type
-		 */
-		public List<String> getExtensions() {
-			return extensions;
-		}
-	}
 
 	/**
 	 * Attempts to guess the type of a structure file based on the extension
@@ -310,9 +262,8 @@ public class StructureIO {
 		String lower = filename.toLowerCase();
 		for(StructureFiletype type : StructureFiletype.values()) {
 			for(String ext : type.getExtensions()) {
-				if(lower.endsWith(ext.toLowerCase())) {
+				if(lower.endsWith(ext.toLowerCase()))
 					return type;
-				}
 			}
 		}
 		return StructureFiletype.UNKNOWN;

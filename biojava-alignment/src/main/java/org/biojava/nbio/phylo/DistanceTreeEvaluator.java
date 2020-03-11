@@ -66,8 +66,8 @@ public class DistanceTreeEvaluator {
 	public static double evaluate(Phylogeny tree, DistanceMatrix matrix) {
 		int numSequences = matrix.getSize();
 		List<PhylogenyNode> externalNodes = tree.getExternalNodes();
-		HashMap<String, PhylogenyNode> externalNodesHashMap = new HashMap<String, PhylogenyNode>();
-		Set<PhylogenyNode> path = new HashSet<PhylogenyNode>();
+		HashMap<String, PhylogenyNode> externalNodesHashMap = new HashMap<>();
+		Set<PhylogenyNode> path = new HashSet<>();
 
 		for (PhylogenyNode node : externalNodes) {
 			externalNodesHashMap.put(node.getName(), node);

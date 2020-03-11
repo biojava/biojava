@@ -87,7 +87,7 @@ public class PDBStatus {
 	 *
 	 */
 	//TODO Use SoftReferences to allow garbage collection
-	private static Map<String, Map<String, String>> recordsCache= new Hashtable<String, Map<String, String>>();
+	private static final Map<String, Map<String, String>> recordsCache= new Hashtable<>();
 
 	/**
 	 * Represents the status of PDB IDs. 'OBSOLETE' and 'CURRENT' are the most
@@ -291,7 +291,7 @@ public class PDBStatus {
 		}
 
 		// If we're current, just return
-		LinkedList<String> results = new LinkedList<String>();
+		LinkedList<String> results = new LinkedList<>();
 		switch(status) {
 			case CURRENT:
 				results.add(oldPdbId);
@@ -313,12 +313,7 @@ public class PDBStatus {
 				}
 
 				String[] replacements = replacementStr.split(" ");
-				Arrays.sort(replacements, new Comparator<String>() {
-					@Override
-					public int compare(String o1, String o2) {
-						return o2.compareToIgnoreCase(o1);
-					}
-				});
+				Arrays.sort(replacements, (o1, o2) -> o2.compareToIgnoreCase(o1));
 				for(String replacement : replacements) {
 
 					// Return the replacement.
@@ -328,7 +323,7 @@ public class PDBStatus {
 					}
 					else {
 						if(includeObsolete) {
-							mergeReversed(results,Arrays.asList(replacement));
+							mergeReversed(results, Collections.singletonList(replacement));
 						} else {
 							// check status of replacement
 							Status replacementStatus = getStatus(replacement);
@@ -339,7 +334,7 @@ public class PDBStatus {
 								case CURRENT:
 								default:
 									// include it
-									mergeReversed(results,Arrays.asList(replacement));
+									mergeReversed(results, Collections.singletonList(replacement));
 							}
 						}
 					}
@@ -371,12 +366,7 @@ public class PDBStatus {
 				results.add(oldPdbId);
 
 				String[] replacements = replacementStr.split(" ");
-				Arrays.sort(replacements, new Comparator<String>() {
-					@Override
-					public int compare(String o1, String o2) {
-						return o2.compareToIgnoreCase(o1);
-					}
-				});
+				Arrays.sort(replacements, (o1, o2) -> o2.compareToIgnoreCase(o1));
 				for(String replacement : replacements) {
 
 					// Return the replacement.
@@ -385,7 +375,7 @@ public class PDBStatus {
 						mergeReversed(results,others);
 					}
 					else {
-						mergeReversed(results,Arrays.asList(replacement));
+						mergeReversed(results, Collections.singletonList(replacement));
 					}
 				}
 
@@ -482,7 +472,7 @@ public class PDBStatus {
 		String replacedList = attrs.get("replaces"); //space-delimited list
 		if(replacedList == null) {
 			// no replaces value; assume root
-			return new ArrayList<String>();
+			return new ArrayList<>();
 		}
 		String[] directDescendents = replacedList.split("\\s");
 
@@ -490,7 +480,7 @@ public class PDBStatus {
 		if(recurse) {
 			// Note: Assumes a proper directed acyclic graph of revisions
 			// Cycles will cause infinite loops.
-			List<String> allDescendents = new LinkedList<String>();
+			List<String> allDescendents = new LinkedList<>();
 			for(String replaced : directDescendents) {
 				List<String> roots = PDBStatus.getReplaces(replaced, recurse);
 				mergeReversed(allDescendents,roots);
@@ -536,7 +526,7 @@ public class PDBStatus {
 	 */
 	private static List<Map<String, String>> getStatusIdRecords(String[] pdbIDs) {
 
-		List<Map<String,String>> result = new ArrayList<Map<String,String>>(pdbIDs.length);
+		List<Map<String,String>> result = new ArrayList<>(pdbIDs.length);
 
 		String serverName = System.getProperty(PDB_SERVER_PROPERTY);
 
@@ -598,13 +588,7 @@ public class PDBStatus {
 			result.addAll(handler.getRecords());
 
 			// TODO should throw these forward and let the caller log
-		} catch (IOException e){
-			logger.error("Problem getting status for {} from PDB server. Error: {}", Arrays.toString(pdbIDs), e.getMessage());
-			return null;
-		} catch (SAXException e) {
-			logger.error("Problem getting status for {} from PDB server. Error: {}", Arrays.toString(pdbIDs), e.getMessage());
-			return null;
-		} catch (ParserConfigurationException e) {
+		} catch (IOException | ParserConfigurationException | SAXException e){
 			logger.error("Problem getting status for {} from PDB server. Error: {}", Arrays.toString(pdbIDs), e.getMessage());
 			return null;
 		}
@@ -619,10 +603,10 @@ public class PDBStatus {
 	 *
 	 */
 	private static class PDBStatusXMLHandler extends DefaultHandler {
-		private List<Map<String,String>> records;
+		private final List<Map<String,String>> records;
 
 		public PDBStatusXMLHandler() {
-			records = new ArrayList<Map<String,String>>();
+			records = new ArrayList<>();
 		}
 
 		/**
@@ -630,17 +614,16 @@ public class PDBStatus {
 		 * @param localName
 		 * @param qName
 		 * @param attributes
-		 * @throws SAXException
 		 * @see org.xml.sax.helpers.DefaultHandler#startElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
 		 */
 		@Override
 		public void startElement(String uri, String localName, String qName,
-		                         Attributes attributes) throws SAXException {
+		                         Attributes attributes) {
 			//System.out.format("Starting element: uri='%s' localName='%s' qName='%s'\n", uri, localName, qName);
 			if(qName.equals("record")) {
 				//Convert attributes into a Map, as it should have been.
 				//Important since SAX reuses Attributes objects for different calls
-				Map<String,String> attrMap = new HashMap<String,String>(attributes.getLength()*2);
+				Map<String,String> attrMap = new HashMap<>(attributes.getLength() * 2);
 				for(int i=0;i<attributes.getLength();i++) {
 					attrMap.put(attributes.getQName(i), attributes.getValue(i));
 				}
@@ -673,7 +656,7 @@ public class PDBStatus {
 
 	public static SortedSet<String> getCurrentPDBIds() throws IOException {
 
-		SortedSet<String> allPDBs = new TreeSet<String>();
+		SortedSet<String> allPDBs = new TreeSet<>();
 		String serverName = System.getProperty(PDB_SERVER_PROPERTY);
 
 		if ( serverName == null)
@@ -692,7 +675,7 @@ public class PDBStatus {
 			BufferedReader reader = new BufferedReader(
 					new InputStreamReader(stream));
 
-			String line = null;
+			String line;
 
 			while ((line = reader.readLine()) != null) {
 				int index = line.lastIndexOf("structureId=");

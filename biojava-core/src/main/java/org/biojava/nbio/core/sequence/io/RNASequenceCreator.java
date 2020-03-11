@@ -78,7 +78,7 @@ public AbstractSequence<NucleotideCompound> getSequence(
 	@Override
 public AbstractSequence<NucleotideCompound> getSequence(List<NucleotideCompound> list) {
 		ArrayListProxySequenceReader<NucleotideCompound> store =
-			new ArrayListProxySequenceReader<NucleotideCompound>();
+				new ArrayListProxySequenceReader<>();
 		store.setCompoundSet(compoundSet);
 		store.setContents(list);
 		return new RNASequence(store);

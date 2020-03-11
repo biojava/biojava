@@ -34,7 +34,6 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -49,9 +48,9 @@ public class SiftsXMLParser {
 	Document dom;
 	List<SiftsEntity> entities;
 
-	static boolean debug = false;
+	static final boolean debug = false;
 	public SiftsXMLParser(){
-		entities = new ArrayList<SiftsEntity>();
+		entities = new ArrayList<>();
 	}
 
 	public List<SiftsEntity> getEntities(){
@@ -60,7 +59,7 @@ public class SiftsXMLParser {
 
 
 	public void parseXmlFile(InputStream is){
-		entities = new ArrayList<SiftsEntity>();
+		entities = new ArrayList<>();
 
 		//get the factory
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -75,12 +74,8 @@ public class SiftsXMLParser {
 
 			parseDocument();
 
-		}catch(ParserConfigurationException pce) {
+		}catch(ParserConfigurationException | IOException | SAXException pce) {
 			pce.printStackTrace();
-		}catch(SAXException se) {
-			se.printStackTrace();
-		}catch(IOException ioe) {
-			ioe.printStackTrace();
 		}
 	}
 
@@ -269,7 +264,7 @@ public class SiftsXMLParser {
 		}
 
 	private List<String> getTextValues(Element ele, String tagName) {
-		List<String>values = new ArrayList<String>();
+		List<String>values = new ArrayList<>();
 		NodeList nl = ele.getElementsByTagName(tagName);
 		if(nl != null && nl.getLength() > 0) {
 			for ( int i = 0 ;i < nl.getLength() ; i ++) {

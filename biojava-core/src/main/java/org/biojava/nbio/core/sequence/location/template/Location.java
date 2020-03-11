@@ -45,7 +45,7 @@ public interface Location extends Iterable<Location>, Accessioned {
 	 * Basic location which is set to the minimum and maximum bounds of
 	 * {@link Integer}. {@link Strand} is set to {@link Strand#UNDEFINED}.
 	 */
-	public static final Location EMPTY =
+	Location EMPTY =
 			new SimpleLocation(Integer.MIN_VALUE, Integer.MAX_VALUE, Strand.UNDEFINED);
 
 	/**
@@ -128,7 +128,7 @@ public interface Location extends Iterable<Location>, Accessioned {
 	 * Helper methods for use with the Location classes. Taking its
 	 * inspiration from the RichSequence.Tools class from the old BioJava
 	 */
-	public static class Tools {
+	class Tools {
 
 		/**
 		 * Used for building a location from a series of sub-locations
@@ -206,7 +206,7 @@ public interface Location extends Iterable<Location>, Accessioned {
 				end = (length * (numberOfPasses + 1)) + modEnd;
 			}
 
-			List<Location> locations = new ArrayList<Location>();
+			List<Location> locations = new ArrayList<>();
 			locations.add(new SimpleLocation(modStart, length, strand));
 			for (int i = 0; i < numberOfPasses; i++) {
 				locations.add(new SimpleLocation(1, length, strand));
@@ -216,7 +216,7 @@ public interface Location extends Iterable<Location>, Accessioned {
 					new SimplePoint(end), strand, true, false, locations);
 		}
 
-		private static interface LocationPredicate {
+		private interface LocationPredicate {
 
 			boolean accept(Location previous, Location current);
 		}
@@ -226,13 +226,9 @@ public interface Location extends Iterable<Location>, Accessioned {
 		 * lowest start
 		 */
 		public static Location getMin(List<Location> locations) {
-			return scanLocations(locations, new LocationPredicate() {
-
-				@Override
-				public boolean accept(Location previous, Location current) {
-					int res = current.getStart().compareTo(previous.getStart());
-					return res < 0;
-				}
+			return scanLocations(locations, (previous, current) -> {
+				int res = current.getStart().compareTo(previous.getStart());
+				return res < 0;
 			});
 		}
 
@@ -241,13 +237,9 @@ public interface Location extends Iterable<Location>, Accessioned {
 		 * highest end
 		 */
 		public static Location getMax(List<Location> locations) {
-			return scanLocations(locations, new LocationPredicate() {
-
-				@Override
-				public boolean accept(Location previous, Location current) {
-					int res = current.getEnd().compareTo(previous.getEnd());
-					return res > 0;
-				}
+			return scanLocations(locations, (previous, current) -> {
+				int res = current.getEnd().compareTo(previous.getEnd());
+				return res > 0;
 			});
 		}
 

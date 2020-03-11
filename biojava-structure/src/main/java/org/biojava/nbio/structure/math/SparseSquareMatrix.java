@@ -50,7 +50,7 @@ public class SparseSquareMatrix implements Serializable {
 	private static final long serialVersionUID = -5217767192992868955L;
 
 	private final int N;           // N-by-N matrix
-	private SparseVector[] rows;   // the rows, each row is a sparse vector
+	private final SparseVector[] rows;   // the rows, each row is a sparse vector
 
 	/** initialize an N-by-N matrix of all 0s
 	 *

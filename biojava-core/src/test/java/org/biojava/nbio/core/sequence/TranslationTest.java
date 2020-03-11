@@ -51,9 +51,9 @@ public class TranslationTest {
 
 	private final static Logger logger = LoggerFactory.getLogger(TranslationTest.class);
 
-	private static DNACompoundSet dnaCs = DNACompoundSet.getDNACompoundSet();
-	private static AminoAcidCompoundSet aaCs = AminoAcidCompoundSet.getAminoAcidCompoundSet();
-	private static DNASequence brca2Dna;
+	private static final DNACompoundSet dnaCs = DNACompoundSet.getDNACompoundSet();
+	private static final AminoAcidCompoundSet aaCs = AminoAcidCompoundSet.aminoAcidCompoundSet;
+    private static DNASequence brca2Dna;
 	private static Sequence<AminoAcidCompound> brca2Pep;
 	private static Sequence<NucleotideCompound> volvoxDna;
 	private static Sequence<AminoAcidCompound> volvoxPep;
@@ -70,20 +70,20 @@ public class TranslationTest {
 				"org/biojava/nbio/core/sequence/volvox-peptide.fasta").getInputStream();
 
 		try {
-			FastaReader<DNASequence, NucleotideCompound> dnaReader = new FastaReader<DNASequence, NucleotideCompound>(cdsIs,
-					new GenericFastaHeaderParser<DNASequence, NucleotideCompound>(), new DNASequenceCreator(dnaCs));
+			FastaReader<DNASequence, NucleotideCompound> dnaReader = new FastaReader<>(cdsIs,
+					new GenericFastaHeaderParser<>(), new DNASequenceCreator(dnaCs));
 			brca2Dna = dnaReader.process().values().iterator().next();
-			FastaReader<ProteinSequence, AminoAcidCompound> pReader = new FastaReader<ProteinSequence, AminoAcidCompound>(
-					pepIs, new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>(), new ProteinSequenceCreator(
-							aaCs));
+			FastaReader<ProteinSequence, AminoAcidCompound> pReader = new FastaReader<>(
+					pepIs, new GenericFastaHeaderParser<>(), new ProteinSequenceCreator(
+					aaCs));
 			brca2Pep = pReader.process().values().iterator().next();
 
-			FastaReader<DNASequence, NucleotideCompound> volvoxDnaReader = new FastaReader<DNASequence, NucleotideCompound>(volDnaIs,
-					new GenericFastaHeaderParser<DNASequence, NucleotideCompound>(), new DNASequenceCreator(dnaCs));
+			FastaReader<DNASequence, NucleotideCompound> volvoxDnaReader = new FastaReader<>(volDnaIs,
+					new GenericFastaHeaderParser<>(), new DNASequenceCreator(dnaCs));
 			volvoxDna = volvoxDnaReader.process().values().iterator().next();
-			FastaReader<ProteinSequence, AminoAcidCompound> volvoxPepReader = new FastaReader<ProteinSequence, AminoAcidCompound>(
-					volPepIs, new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>(), new ProteinSequenceCreator(
-							aaCs));
+			FastaReader<ProteinSequence, AminoAcidCompound> volvoxPepReader = new FastaReader<>(
+					volPepIs, new GenericFastaHeaderParser<>(), new ProteinSequenceCreator(
+					aaCs));
 			volvoxPep = volvoxPepReader.process().values().iterator().next();
 		}
 		catch (IOException e) {

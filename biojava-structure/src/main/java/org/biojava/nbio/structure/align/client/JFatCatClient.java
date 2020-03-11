@@ -21,12 +21,11 @@
 package org.biojava.nbio.structure.align.client;
 
 import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.fatcat.FatCatRigid;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.util.AtomCache;
-import org.biojava.nbio.structure.align.util.URLConnectionTools;
 import org.biojava.nbio.structure.align.util.ResourceManager;
+import org.biojava.nbio.structure.align.util.URLConnectionTools;
 import org.biojava.nbio.structure.align.xml.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,7 +43,7 @@ import java.util.TreeSet;
 public class JFatCatClient {
 	private final static Logger logger = LoggerFactory.getLogger(JFatCatClient.class);
 
-	private static ResourceManager resourceManager = ResourceManager.getResourceManager("jfatcat");
+	private static final ResourceManager resourceManager = ResourceManager.getResourceManager("jfatcat");
 
 	private static final String serverAPPEND    = "show?name1=%s&name2=%s";
 
@@ -60,13 +59,13 @@ public class JFatCatClient {
 
 	private static final String serverPositionInQueue =  "queuePosition?method=%s&name1=%s&name2=%s";
 
-	private static Random generator;
+	private static final Random generator;
 
-	private static String newline = System.getProperty("line.separator");
+	private static final String newline = System.getProperty("line.separator");
 
-	private static String KILL_JOB = "KILL_JOB";
+	private static final String KILL_JOB = "KILL_JOB";
 
-	private static String COME_BACK_LATER = "COME_BACK_LATER";
+	private static final String COME_BACK_LATER = "COME_BACK_LATER";
 
 	static {
 
@@ -113,7 +112,7 @@ public class JFatCatClient {
 
 			InputStream stream = URLConnectionTools.getInputStream(url,timeout);
 
-			String xml = null;
+			String xml;
 
 			if ( stream != null) {
 
@@ -146,7 +145,7 @@ public class JFatCatClient {
 
 			InputStream stream = URLConnectionTools.getInputStream(url,timeout);
 
-			String xml = null;
+			String xml;
 
 			if ( stream != null) {
 
@@ -184,23 +183,18 @@ public class JFatCatClient {
 			// 5 sec
 			InputStream stream = URLConnectionTools.getInputStream(url,timeout);
 
-			String xml = null;
+
 
 			if ( stream != null) {
-
-				xml = convertStreamToString(stream);
+				String xml = convertStreamToString(stream);
+				return AFPChainXMLParser.fromXML(xml, name1, name2, ca1, ca2);
 			}
-			if (xml != null) {
 
-				return AFPChainXMLParser.fromXML (xml, name1, name2, ca1, ca2);
 
-			} else {
-				return null;
-			}
+			return null;
+
 			// TODO dmyersturnbull: method should throw; we shouldn't catch here
 		} catch (IOException e){
-			logger.error("error in JFatCatClient: getAFPChainFromServer",e);
-		} catch (StructureException e) {
 			logger.error("error in JFatCatClient: getAFPChainFromServer",e);
 		}
 		return null;
@@ -211,7 +205,7 @@ public class JFatCatClient {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
 		StringBuilder sb = new StringBuilder();
 
-		String line = null;
+		String line;
 		try {
 			while ((line = reader.readLine()) != null) {
 				sb.append(line).append(newline);
@@ -295,7 +289,7 @@ public class JFatCatClient {
 	}
 
 
-	public static final void sendAFPChainToServer(String serverLocation, AFPChain afpChain,Atom[] ca1, Atom[] ca2) throws JobKillException
+	public static void sendAFPChainToServer(String serverLocation, AFPChain afpChain, Atom[] ca1, Atom[] ca2) throws JobKillException
 	{
 
 		String sendURL = serverLocation + sendAPPEND;
@@ -329,7 +323,7 @@ public class JFatCatClient {
 
 	}
 
-	public static final int getTimeout(){
+	public static int getTimeout(){
 		String timeoutS = resourceManager.getString("connection.timeout");
 		int timeout = 60000;
 
@@ -342,7 +336,7 @@ public class JFatCatClient {
 	}
 
 
-	public static final PdbPairsMessage getPdbPairs(String url,int nrPair, String username) throws IOException, JobKillException {
+	public static PdbPairsMessage getPdbPairs(String url, int nrPair, String username) throws IOException, JobKillException {
 
 
 		String urlS= url + "getPairs?" + "nrPairs=" + nrPair + "&username=" + URLEncoder.encode(username, "UTF-8");
@@ -354,7 +348,7 @@ public class JFatCatClient {
 		// we are very tolerant with requesting a set of pairs, since we probably depend on getting it to get work started...
 		// 1 min...
 		InputStream stream = URLConnectionTools.getInputStream(serverUrl,timeout);
-		String xml = null;
+		String xml;
 
 		if ( stream != null) {
 
@@ -373,8 +367,8 @@ public class JFatCatClient {
 	}
 
 
-	public static final SortedSet<String> getRepresentatives(String serverLocation, int cutoff){
-		SortedSet<String> representatives = new TreeSet<String>();
+	public static SortedSet<String> getRepresentatives(String serverLocation, int cutoff){
+		SortedSet<String> representatives = new TreeSet<>();
 
 		String representURL = serverLocation + representAPPEND;
 

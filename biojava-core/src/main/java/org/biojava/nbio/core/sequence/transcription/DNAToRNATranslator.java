@@ -65,7 +65,7 @@ public class DNAToRNATranslator extends AbstractCompoundTranslator<NucleotideCom
 		@Override
 		public List<Sequence<NucleotideCompound>> createSequences(Sequence<NucleotideCompound> originalSequence) {
 				if(shortCutTranslation) {
-						List<Sequence<NucleotideCompound>> result = new ArrayList<Sequence<NucleotideCompound>>(1);
+						List<Sequence<NucleotideCompound>> result = new ArrayList<>(1);
 						result.add(wrapToRna(originalSequence));
 						return result;
 				}

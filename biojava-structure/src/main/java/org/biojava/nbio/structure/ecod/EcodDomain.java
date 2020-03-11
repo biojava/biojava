@@ -22,7 +22,6 @@ package org.biojava.nbio.structure.ecod;
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.util.AtomCache;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.List;
@@ -150,13 +149,13 @@ Column 15: Comma-separated value list of non-polymer entities within 4 A of at l
 		this.tGroupName = o.tGroupName;
 		this.fGroupName = o.fGroupName;
 		this.assemblyId = o.assemblyId;
-		this.ligands = new HashSet<String>(o.ligands);
+		this.ligands = new HashSet<>(o.ligands);
 	}
 
 
 
 	@Override
-	protected Object clone() throws CloneNotSupportedException {
+	protected Object clone() {
 		return new EcodDomain(this);
 	}
 
@@ -454,8 +453,7 @@ Column 15: Comma-separated value list of non-polymer entities within 4 A of at l
 	}
 
 	@Override
-	public Structure loadStructure(AtomCache cache) throws StructureException,
-			IOException {
+	public Structure loadStructure(AtomCache cache) throws StructureException {
 		return cache.getStructureForPdbId(pdbId);
 	}
 

@@ -71,8 +71,8 @@ public class GenericFastaHeaderParser<S extends AbstractSequence<C>, C extends C
 	 */
 	private String[] getHeaderValues(String header) {
 		String[] data = new String[0];
-		ArrayList<String> values = new ArrayList<String>();
-		StringBuffer sb = new StringBuffer();
+		ArrayList<String> values = new ArrayList<>();
+		StringBuilder sb = new StringBuilder();
 		//commented out 1/11/2012 to resolve an issue where headers do contain a length= at the end that are not recognized
 		//if(header.indexOf("length=") != -1){
 		//    data = new String[1];
@@ -152,7 +152,7 @@ public class GenericFastaHeaderParser<S extends AbstractSequence<C>, C extends C
 			String[] pdbe = data[0].split(" ");
 			String[] pdbaccession = pdbe[0].split(":");
 			sequence.setAccession(new AccessionID(pdbaccession[1], DataSource.PDBe));
-		} else if (data[0].indexOf(":") != -1 && data.length > 1 && data[1].equals("PDBID")) {
+		} else if (data[0].contains(":") && data.length > 1 && data[1].equals("PDBID")) {
 			sequence.setAccession(new AccessionID(data[0], DataSource.PDB2));
 		} else if (data[0].equalsIgnoreCase("pat")) {
 			sequence.setAccession(new AccessionID(data[2], DataSource.PATENTS));
@@ -178,7 +178,7 @@ public class GenericFastaHeaderParser<S extends AbstractSequence<C>, C extends C
 	public static void main(String[] args) {
 
 		logger.info("parseHeader");
-		String header = "";
+		String header;
 		ProteinSequence sequence = null;
 		try {
 			sequence = new ProteinSequence("");
@@ -187,7 +187,7 @@ public class GenericFastaHeaderParser<S extends AbstractSequence<C>, C extends C
 			logger.error("Could not create empty protein sequence. Error: {}. This is most likely a bug.",e.getMessage());
 		}
 		GenericFastaHeaderParser<ProteinSequence,AminoAcidCompound> instance =
-		  new GenericFastaHeaderParser<ProteinSequence,AminoAcidCompound>();
+				new GenericFastaHeaderParser<>();
 
 		header = "gi|gi-number|gb|accession|locus";
 		instance.parseHeader(header, sequence);

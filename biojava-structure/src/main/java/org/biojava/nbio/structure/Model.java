@@ -20,12 +20,12 @@
  */
 package org.biojava.nbio.structure;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * An internal utility class for StructureImpl to make it easier to manage poly and nonpoly chains.
@@ -41,9 +41,9 @@ public class Model implements Serializable {
 
 	private static final Logger logger = LoggerFactory.getLogger(Model.class);
 
-	private List<Chain> polyChains;
-	private List<Chain> nonPolyChains;
-	private List<Chain> waterChains;
+	private final List<Chain> polyChains;
+	private final List<Chain> nonPolyChains;
+	private final List<Chain> waterChains;
 
 	public Model(){
 		polyChains = new ArrayList<>();

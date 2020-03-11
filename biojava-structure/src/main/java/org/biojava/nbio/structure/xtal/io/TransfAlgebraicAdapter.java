@@ -26,12 +26,13 @@ package org.biojava.nbio.structure.xtal.io;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class TransfAlgebraicAdapter extends XmlAdapter<String[], List<String>>{
 
 	@Override
-	public String[] marshal(List<String> arg0) throws Exception {
+	public String[] marshal(List<String> arg0) {
 		String[] elements = new String[arg0.size()];
 		int i = 0;
 		for (String s : arg0)
@@ -40,10 +41,8 @@ public class TransfAlgebraicAdapter extends XmlAdapter<String[], List<String>>{
 	}
 
 	@Override
-	public List<String> unmarshal(String[] arg0) throws Exception {
-		List<String> l = new ArrayList<String>();
-		for (String s : arg0)
-			l.add(s);
+	public List<String> unmarshal(String[] arg0) {
+        List<String> l = new ArrayList<>(Arrays.asList(arg0));
 		return l;
 	}
 
