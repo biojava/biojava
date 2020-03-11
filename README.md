@@ -34,6 +34,17 @@ If you are using Maven you can add the BioJava repository by adding the followin
     </dependencies>
 ```
 
+### Quick Demo
+
+on Linux, Mac, or in (git-bash)[https://gitforwindows.org/] run 
+
+```bash
+
+mvn install
+bin/biojava.sh
+```
+
+
 ### Snapshot builds
 
 To use the latest builds from BioJava, you can add the following config your project's pom.xml:

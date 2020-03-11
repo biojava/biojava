@@ -455,6 +455,20 @@
 				<!--</executions>-->
 			<!--</plugin>-->
 
+			<plugin><!--the simplest possible deployment/bundling with the fewest jarfile collision risks-->
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>install</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/lib</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 
 		<extensions>
@@ -647,6 +661,15 @@
 				<plugins>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-jar-plugin</artifactId>
+						<configuration>
+							<excludes>
+								<exclude>demo/**</exclude>
+							</excludes>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-gpg-plugin</artifactId>
 						<version>1.6</version>
 						<executions>
@@ -658,28 +681,28 @@
 								</goals>
 							</execution>
 						</executions>
-					</plugin>
-				</plugins>
+					</plugin>			<!-- Excluding demo package is required for avoiding namespace clashes (demo package is in all modules) for signing the jar. See issue #387 -->
+ 				</plugins>
 			</build>
+
 		</profile>
 
 	</profiles>
 
 	<modules>
 
-		<module>biojava-core</module>
-		<module>biojava-alignment</module>
-		<module>biojava-structure</module>
-		<module>biojava-structure-gui</module>
-		<module>biojava-genome</module>
-		<module>biojava-modfinder</module>
-		<module>biojava-ws</module>
-		<module>biojava-protein-disorder</module>
 		<module>biojava-aa-prop</module>
-		<module>biojava-survival</module>
-		<module>biojava-ontology</module>
-		<!-- Keep integration tests last  -->
+		<module>biojava-alignment</module>
+		<module>biojava-core</module>
+		<module>biojava-genome</module>
 		<module>biojava-integrationtest</module>
+		<module>biojava-modfinder</module>
+		<module>biojava-ontology</module>
+		<module>biojava-protein-disorder</module>
+		<module>biojava-structure-gui</module>
+		<module>biojava-structure</module>
+		<module>biojava-survival</module>
+		<module>biojava-ws</module>
 	</modules>
 	<inceptionYear>2000</inceptionYear>
 	<issueManagement>
