@@ -21,7 +21,7 @@
 		<repository>
 			<id>biojava-maven-repo</id>
 			<name>BioJava repository</name>
-			<url>http://www.biojava.org/download/maven/</url>
+			<url>https://www.biojava.org/download/maven/</url>
 			<snapshots>
 				<enabled>true</enabled>
 			</snapshots>
