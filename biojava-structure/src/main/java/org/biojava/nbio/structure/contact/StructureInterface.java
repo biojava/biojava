@@ -337,7 +337,7 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 		ChemComp chemComp = g.getChemComp();
 
 		if (chemComp==null) {
-			logger.warn("Warning: can't determine PolymerType for group "+g.getResidueNumber()+" ("+g.getPDBName()+"). Will consider it as non-nucleotide/non-protein type.");
+			logger.warn("Can't determine PolymerType for group "+g.getResidueNumber()+" ("+g.getPDBName()+"). Will consider it as non-nucleotide/non-protein type.");
 			return false;
 		}
 
@@ -574,12 +574,12 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 	 * Calculates the contact overlap score between this StructureInterface and
 	 * the given one.
 	 * The two sides of the given StructureInterface need to match this StructureInterface
-	 * in the sense that they must come from the same Compound (Entity), i.e.
+	 * in the sense that they must come from the same Entity, i.e.
 	 * their residue numbers need to align with 100% identity, except for unobserved
 	 * density residues. The SEQRES indices obtained through {@link EntityInfo#getAlignedResIndex(Group, Chain)} are
 	 * used to match residues, thus if no SEQRES is present or if {@link FileParsingParameters#setAlignSeqRes(boolean)}
 	 * is not used, this calculation is not guaranteed to work properly.
-	 * @param other
+	 * @param other the interface to be compared to this one
 	 * @param invert if false the comparison will be done first-to-first and second-to-second,
 	 * if true the match will be first-to-second and second-to-first
 	 * @return the contact overlap score, range [0.0,1.0]
@@ -657,7 +657,7 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 
 	/**
 	 * Tell whether the interface is isologous, i.e. it is formed
-	 * by the same patches of same Compound on both sides.
+	 * by the same patches of same entity on both sides.
 	 *
 	 * @return true if isologous, false if heterologous
 	 */
@@ -684,7 +684,7 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 	}
 
 	/**
-	 * Finds the parent compounds by looking up the references of first atom of each side of this interface
+	 * Finds the parent entities by looking up the references of first atom of each side of this interface
 	 * @return
 	 */
 	public Pair<EntityInfo> getParentCompounds() {
@@ -709,7 +709,7 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 	 * Return a String representing the 2 molecules of this interface in PDB format.
 	 * If the molecule ids (i.e. chain ids) are the same for both molecules, then the second
 	 * one will be replaced by the next letter in alphabet (or A for Z)
-	 * @return
+	 * @return the PDB-formatted string
 	 */
 	public String toPDB() {
 
@@ -747,7 +747,7 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 	 * Return a String representing the 2 molecules of this interface in mmCIF format.
 	 * If the molecule ids (i.e. chain ids) are the same for both molecules, then the second
 	 * one will be written as chainId_operatorId (with operatorId taken from {@link #getTransforms()}
-	 * @return
+	 * @return the mmCIF-formatted string
 	 */
 	public String toMMCIF() {
 		StringBuilder sb = new StringBuilder();
