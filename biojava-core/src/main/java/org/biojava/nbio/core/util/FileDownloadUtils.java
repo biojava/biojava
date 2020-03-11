@@ -236,7 +236,9 @@ public class FileDownloadUtils {
 
 		OkHttpClient client = clients.build(); //TODO ThreadLocal
 
-		Call c = client.newCall(new Request.Builder().url(url).cacheControl(CacheControl.FORCE_CACHE).build());
+		Call c = client.newCall(new Request.Builder().url(url)
+				//.cacheControl(CacheControl.FORCE_CACHE)
+				.build());
 
 		c.timeout().deadline(timeoutMS, TimeUnit.MILLISECONDS);
 		try (Response r = c.execute()) {

@@ -325,7 +325,7 @@ import java.util.*;
 	@Override
 	public Structure getStructureById(String pdbId) throws IOException {
 
-		return getStructure(getInputStream(pdbId));
+		return getStructure(structureInputStream(pdbId));
 	}
 
 	/**
@@ -343,13 +343,67 @@ import java.util.*;
 	 * @return
 	 * @throws IOException
 	 */
-	protected InputStream getInputStream(String pdbId) throws IOException{
+	protected InputStream structureInputStream(String pdbId) throws IOException{
 
 		if ( pdbId.length() != 4)
-			throw new IOException("The provided ID does not look like a PDB ID : " + pdbId);
+			throw new IOException("Invalid PDB ID : " + pdbId);
 
-		// Check existing
-		return downloadStructure(pdbId);
+//		// Check existing
+//		if ( pdbId.length() != 4)
+//			throw new IOException("The provided ID does not look like a PDB ID : " + pdbId);
+
+		// decide whether download is required
+//		File existing =  getLocalFile(pdbId);
+//		switch(fetchBehavior) {
+//		case LOCAL_ONLY:
+//			if( existing == null ) {
+//				throw new IOException(String.format("Structure %s not found in %s "
+//						+ "and configured not to download.",pdbId,getPath()));
+//			} else {
+//				return existing;
+//			}
+//		case FETCH_FILES:
+//			// Use existing if present
+//			if( existing != null) {
+//				return existing;
+//			}
+//			// existing is null, downloadStructure(String,String,boolean,File) will download it
+//			break;
+//		case FETCH_IF_OUTDATED:
+//			// here existing can be null or not:
+//			// existing == null : downloadStructure(String,String,boolean,File) will download it
+//			// existing != null : downloadStructure(String,String,boolean,File) will check its date and download if older
+//			break;
+//		case FETCH_REMEDIATED:
+//			// Use existing if present and recent enough
+//			if( existing != null) {
+//				long lastModified = existing.lastModified();
+//
+//				if (lastModified < LAST_REMEDIATION_DATE) {
+//					// the file is too old, replace with newer version
+//					logger.warn("Replacing file {} with latest remediated (remediation of {}) file from PDB.",
+//							existing, LAST_REMEDIATION_DATE_STRING);
+//					existing = null;
+//					break;
+//				} else {
+//					return existing;
+//				}
+//			}
+//		case FORCE_DOWNLOAD:
+//			// discard the existing file to force redownload
+//			existing = null; // downloadStructure(String,String,boolean,File) will download it
+//			break;
+//		}
+
+		// Force the download now
+		if(obsoleteBehavior == ObsoleteBehavior.FETCH_CURRENT) {
+			String current = PDBStatus.getCurrent(pdbId); // either an error or there is not current entry
+			return structureInputStream(current == null ? pdbId : current, splitDirURL);
+		} else if(obsoleteBehavior == ObsoleteBehavior.FETCH_OBSOLETE && PDBStatus.getStatus(pdbId) == Status.OBSOLETE) {
+			return structureInputStream(pdbId, obsoleteDirURL);
+		} else {
+			return structureInputStream(pdbId, splitDirURL);
+		}
 	}
 
 //	/**
@@ -418,93 +472,21 @@ import java.util.*;
 	}
 
 	/**
-	 * Downloads an MMCIF file from the PDB to the local path
-	 * @param pdbId
-	 * @return The file, or null if it was unavailable for download
-	 * @throws IOException for errors downloading or writing, or if the
-	 *  fetchBehavior is {@link FetchBehavior#LOCAL_ONLY}
-	 */
-	protected InputStream downloadStructure(String pdbId) throws IOException{
-		if ( pdbId.length() != 4)
-			throw new IOException("The provided ID does not look like a PDB ID : " + pdbId);
-
-		// decide whether download is required
-//		File existing =  getLocalFile(pdbId);
-//		switch(fetchBehavior) {
-//		case LOCAL_ONLY:
-//			if( existing == null ) {
-//				throw new IOException(String.format("Structure %s not found in %s "
-//						+ "and configured not to download.",pdbId,getPath()));
-//			} else {
-//				return existing;
-//			}
-//		case FETCH_FILES:
-//			// Use existing if present
-//			if( existing != null) {
-//				return existing;
-//			}
-//			// existing is null, downloadStructure(String,String,boolean,File) will download it
-//			break;
-//		case FETCH_IF_OUTDATED:
-//			// here existing can be null or not:
-//			// existing == null : downloadStructure(String,String,boolean,File) will download it
-//			// existing != null : downloadStructure(String,String,boolean,File) will check its date and download if older
-//			break;
-//		case FETCH_REMEDIATED:
-//			// Use existing if present and recent enough
-//			if( existing != null) {
-//				long lastModified = existing.lastModified();
-//
-//				if (lastModified < LAST_REMEDIATION_DATE) {
-//					// the file is too old, replace with newer version
-//					logger.warn("Replacing file {} with latest remediated (remediation of {}) file from PDB.",
-//							existing, LAST_REMEDIATION_DATE_STRING);
-//					existing = null;
-//					break;
-//				} else {
-//					return existing;
-//				}
-//			}
-//		case FORCE_DOWNLOAD:
-//			// discard the existing file to force redownload
-//			existing = null; // downloadStructure(String,String,boolean,File) will download it
-//			break;
-//		}
-
-		// Force the download now
-		if(obsoleteBehavior == ObsoleteBehavior.FETCH_CURRENT) {
-			String current = PDBStatus.getCurrent(pdbId);
-
-			if(current == null) {
-				// either an error or there is not current entry
-				current = pdbId;
-			}
-			return downloadStructure(current, splitDirURL,false);
-		} else if(obsoleteBehavior == ObsoleteBehavior.FETCH_OBSOLETE
-				&& PDBStatus.getStatus(pdbId) == Status.OBSOLETE) {
-			return downloadStructure(pdbId, obsoleteDirURL, true);
-		} else {
-			return downloadStructure(pdbId, splitDirURL, false);
-		}
-	}
-
-	/**
 	 * Download a file from the ftp server, replacing any existing files if needed
 	 * @param pdbId PDB ID
 	 * @param pathOnServer Path on the FTP server, e.g. data/structures/divided/pdb
-	 * @param obsolete Whether or not file should be saved to the obsolete location locally
 	 * @param existingFile if not null and checkServerFileDate is true, the last modified date of the
 	 * server file and this file will be compared to decide whether to download or not
 	 * @return
 	 * @throws IOException
 	 */
-	private InputStream downloadStructure(String pdbId, String pathOnServer, boolean obsolete) throws IOException{
-
-//		File dir = getDir(pdbId,obsolete);
-//		File realFile = new File(dir,getFilename(pdbId));
-
+	private InputStream structureInputStream(String pdbId, String pathOnServer) throws IOException{
+//
+////		File dir = getDir(pdbId,obsolete);
+////		File realFile = new File(dir,getFilename(pdbId));
+//
 		String ftp;
-
+//
 		if (getFilename(pdbId).endsWith(".mmtf.gz")){
 			ftp = CodecUtils.getMmtfEntryUrl(pdbId, true, false);
 		} else {
