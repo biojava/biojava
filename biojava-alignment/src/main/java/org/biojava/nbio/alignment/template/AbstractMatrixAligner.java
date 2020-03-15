@@ -314,6 +314,8 @@ public abstract class AbstractMatrixAligner<S extends Sequence<C>, C extends Com
 		Last[][][] traceback = new Last[dim[0]][][];
 		List<Step> sx = new ArrayList<>(), sy = new ArrayList<>();
 
+		int extensionPenalty = gapPenalty.getExtensionPenalty();
+		int openPenalty = gapPenalty.getOpenPenalty();
 		if (!local) {
 			xyMax = new int[] { dim[0] - 1, dim[1] - 1 };
 			xyStart = new int[] { 0, 0 };
@@ -324,12 +326,11 @@ public abstract class AbstractMatrixAligner<S extends Sequence<C>, C extends Com
 				Subproblem subproblem = problems.get(i);
 				for (int x = subproblem.getQueryStartIndex(); x <= subproblem.getQueryEndIndex(); x++) {
 
-					traceback[x] =
+					int[] scoreVector = getSubstitutionScoreVector(x, subproblem);
 
-					  linear ?
-						setScoreVector(x, subproblem, gapPenalty.getExtensionPenalty(), getSubstitutionScoreVector(x, subproblem), storingScoreMatrix, scores) :
-
-						setScoreVector(x, subproblem, gapPenalty.getOpenPenalty(), gapPenalty.getExtensionPenalty(), getSubstitutionScoreVector(x, subproblem), storingScoreMatrix, scores);
+					traceback[x] = linear ?
+						setScoreVector(x, subproblem, extensionPenalty, scoreVector, storingScoreMatrix, scores) :
+						setScoreVector(x, subproblem, openPenalty, extensionPenalty, scoreVector, storingScoreMatrix, scores);
 				}
 			}
 			setSteps(traceback, scores, sx, sy);
@@ -341,25 +342,20 @@ public abstract class AbstractMatrixAligner<S extends Sequence<C>, C extends Com
 		} else {
 			for (int x = 0; x < dim[0]; x++) {
 
-				traceback[x] =
-
-				  linear ?
-					setScoreVector(x, gapPenalty.getExtensionPenalty(), getSubstitutionScoreVector(x), storingScoreMatrix, scores, xyMax, score) :
-
-					setScoreVector(x, gapPenalty.getOpenPenalty(), gapPenalty.getExtensionPenalty(), getSubstitutionScoreVector(x), storingScoreMatrix, scores, xyMax, score);
-
-				if (xyMax[0] == x) {
-					score = scores[x][xyMax[1]][0];
-				}
+				int[] score = getSubstitutionScoreVector(x);
+				traceback[x] = linear ?
+					setScoreVector(x, extensionPenalty, score, storingScoreMatrix, scores, xyMax, this.score) :
+					setScoreVector(x, openPenalty, extensionPenalty, score, storingScoreMatrix, scores, xyMax, this.score);
+				if (xyMax[0] == x)
+					this.score = scores[x][xyMax[1]][0];
 			}
 			xyStart = local ? setSteps(traceback, xyMax, sx, sy) : setSteps(traceback, scores, sx, sy);
 		}
 
 		setProfile(sx, sy);
 
-		if (!storingScoreMatrix) {
+		if (!storingScoreMatrix)
 			scores = null;
-		}
 
 		time = System.nanoTime() - timeStart;
 	}

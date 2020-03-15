@@ -94,12 +94,8 @@ public class CeMain extends AbstractStructureAlignment implements StructureAlign
 		ca2clone = new Atom[ca2.length];
 
 		int pos = 0;
-		for (Atom a : ca2){
-			Group g = a.getGroup();//.clone(); // works because each group has only a CA atom
-
-			ca2clone[pos] = g.getAtom(a.getName());
-
-			pos++;
+		for (Atom a : ca2) {
+			ca2clone[pos++] = ((Group) a.getGroup().clone()).getAtom(a.getName());  // works because each group has only a CA atom
 		}
 
 		calculator = new CECalculator(params);
@@ -121,15 +117,17 @@ public class CeMain extends AbstractStructureAlignment implements StructureAlign
 		if (ca2.length!=0 && ca2[0].getGroup().getChain()!=null && ca2[0].getGroup().getChain().getStructure()!=null)
 			afpChain.setName2(ca2[0].getGroup().getChain().getStructure().getName());
 
-		if ( afpChain.getNrEQR() == 0)
+		if (afpChain.getNrEQR() == 0)
 		   return afpChain;
 
 		// Set the distance matrix
 
 		int winSize = params.getWinSize();
 		int winSizeComb1 = (winSize-1)*(winSize-2)/2;
-		double[][] m = calculator.initSumOfDistances(ca1.length, ca2.length, winSize, winSizeComb1, ca1, ca2clone);
-		afpChain.setDistanceMatrix(new Matrix(m));
+
+		afpChain.setDistanceMatrix(new Matrix(
+				calculator.initSumOfDistances(ca1.length, ca2.length, winSize, winSizeComb1, ca1, ca2clone)
+		));
 		afpChain.setSequentialAlignment(true);
 
 		return afpChain;

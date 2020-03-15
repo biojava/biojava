@@ -341,6 +341,12 @@ public class Download {
 
 	}
 
+	public static BufferedReader bufferedReader(URL u) throws IOException {
+		return new BufferedReader(new InputStreamReader(stream(u)));
+	}
+
+
+
 //	/**
 //	 * Recursively delete a folder & contents
 //	 *

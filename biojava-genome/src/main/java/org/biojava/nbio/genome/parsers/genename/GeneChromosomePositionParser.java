@@ -116,11 +116,9 @@ public class GeneChromosomePositionParser {
 
 	private static List<Integer> getIntegerList(String lst){
 		String[] spl = lst.split(",");
-		ArrayList<Integer> l = new ArrayList<>();
-		for (String s : spl){
+		ArrayList<Integer> l = new ArrayList<>(spl.length);
+		for (String s : spl)
 			l.add(Integer.parseInt(s));
-		}
-		l.trimToSize();
 		return l;
 	}
 }

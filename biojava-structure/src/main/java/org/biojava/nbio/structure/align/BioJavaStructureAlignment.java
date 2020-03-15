@@ -161,13 +161,13 @@ implements StructureAlignment  {
 
 			IndexPair align_se = path[ia];
 			// no gap
-			if(align_se.getRow() !=-1 && align_se.getCol()!=-1) {
+			if(align_se.row() !=-1 && align_se.col()!=-1) {
 
-				optAln[0][0][pos] = align_se.getRow();
-				optAln[0][1][pos] = align_se.getCol();
+				optAln[0][0][pos] = align_se.row();
+				optAln[0][1][pos] = align_se.col();
 
-				char l1 = getOneLetter(ca1[align_se.getRow()].getGroup());
-				char l2 = getOneLetter(ca2[align_se.getCol()].getGroup());
+				char l1 = getOneLetter(ca1[align_se.row()].getGroup());
+				char l2 = getOneLetter(ca2[align_se.col()].getGroup());
 
 				alnseq1[ia] = Character.toUpperCase(l1);
 				alnseq2[ia] = Character.toUpperCase(l2);
@@ -177,16 +177,16 @@ implements StructureAlignment  {
 			} else {
 				// there is a gap on this position
 				alnsymb[ia] = ' ';
-				if (align_se.getRow() == -1 ) {
+				if (align_se.row() == -1 ) {
 					alnseq1[ia] = '-';
 				} else {
-					char l1 = getOneLetter(ca1[align_se.getRow()].getGroup());
+					char l1 = getOneLetter(ca1[align_se.row()].getGroup());
 					alnseq1[ia] = Character.toLowerCase(l1);
 				}
-				if ( align_se.getCol() == -1 ) {
+				if ( align_se.col() == -1 ) {
 					alnseq2[ia] = '-';
 				} else {
-					char l2 = getOneLetter(ca2[align_se.getCol()].getGroup());
+					char l2 = getOneLetter(ca2[align_se.col()].getGroup());
 					alnseq2[ia] = Character.toLowerCase(l2);
 				}
 

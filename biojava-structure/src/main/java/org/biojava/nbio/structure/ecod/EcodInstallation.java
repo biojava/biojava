@@ -26,10 +26,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
-import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -69,7 +67,7 @@ public class EcodInstallation implements EcodDatabase {
 
 	// lock to prevent multiple threads from downloading simultaneously
 	// Should hold the lock when reading/writing allDomains or domainMap
-	private final ReadWriteLock domainsFileLock;
+	private final ReentrantReadWriteLock domainsFileLock;
 	private List<EcodDomain> allDomains;
 	private Map<String,List<EcodDomain>> domainMap;//PDB ID -> domains, lazily constructed from allDomains
 
@@ -86,7 +84,7 @@ public class EcodInstallation implements EcodDatabase {
 	 * @param requestedVersion ECOD requestedVersion to fetch
 	 */
 	public EcodInstallation(String cacheLocation, String version) {
-		domainsFileLock = new ReentrantReadWriteLock();
+		domainsFileLock = new ReentrantReadWriteLock(true);
 
 		this.cacheLocation = cacheLocation;
 
@@ -121,11 +119,11 @@ public class EcodInstallation implements EcodDatabase {
 			logger.trace("LOCK readlock");
 			while( domainMap == null ) {
 				// unlock to allow ensureDomainsFileInstalled to get the write lock
-				logger.trace("UNLOCK readlock");
-				domainsFileLock.readLock().unlock();
+				//logger.trace("UNLOCK readlock");
+				//domainsFileLock.readLock().unlock();
 				indexDomains();
-				domainsFileLock.readLock().lock();
-				logger.trace("LOCK readlock");
+				//domainsFileLock.readLock().lock();
+				//logger.trace("LOCK readlock");
 			}
 
 			if(pdbId != null)
@@ -219,8 +217,8 @@ public class EcodInstallation implements EcodDatabase {
 	 */
 	@Override
 	public List<EcodDomain> getAllDomains() throws IOException {
-		domainsFileLock.readLock().lock();
 		logger.trace("LOCK readlock");
+		domainsFileLock.readLock().lock();
 		try {
 			while( allDomains == null) {
 				// unlock to allow ensureDomainsFileInstalled to get the write lock
@@ -322,80 +320,79 @@ public class EcodInstallation implements EcodDatabase {
 			if( allDomains != null ) {
 				return;
 			}
+
+			domainsFileLock.writeLock().lock();
+			logger.trace("LOCK writelock");
+			try {
+				parseDomains(new URL( url + DOMAINS_PATH + getDomainFilename()));
+			} finally {
+				logger.trace("UNLOCK writelock");
+				domainsFileLock.writeLock().unlock();
+			}
+
 		} finally {
 			logger.trace("UNLOCK readlock");
 			domainsFileLock.readLock().unlock();
 		}
 
-		// Download domains
-		domainsFileLock.writeLock().lock();
-		logger.trace("LOCK writelock");
-		try {
-			if( !domainsAvailable() ) {
-				downloadDomains();
-			}
-			parseDomains();
-		} finally {
-			logger.trace("UNLOCK writelock");
-			domainsFileLock.writeLock().unlock();
-		}
+
 	}
 
-	/**
-	 * Checks that the domains file has been downloaded
-	 * @return
-	 */
-	private boolean domainsAvailable() {
-		domainsFileLock.readLock().lock();
-		logger.trace("LOCK readlock");
-		try {
-			File f = getDomainFile();
+//	/**
+//	 * Checks that the domains file has been downloaded
+//	 * @return
+//	 */
+//	private boolean domainsAvailable() {
+//		domainsFileLock.readLock().lock();
+//		logger.trace("LOCK readlock");
+//		try {
+//			File f = getDomainFile();
+//
+//			if (!f.exists() || f.length() <= 0 )
+//				return false;
+//
+//			// Re-download old copies of "latest"
+//			if(updateFrequency != null && requestedVersion.equals(DEFAULT_VERSION)) {
+//				long mod = f.lastModified();
+//				// Time of last update
+//				Date lastUpdate = new Date();
+//				Calendar cal = Calendar.getInstance();
+//				cal.setTime(lastUpdate);
+//				cal.add(Calendar.DAY_OF_WEEK, -updateFrequency);
+//				long updateTime = cal.getTimeInMillis();
+//				// Check if file predates last update
+//				if( mod < updateTime ) {
+//					logger.info("{} is out of date.",f);
+//					return false;
+//				}
+//			}
+//			return true;
+//		} finally {
+//			logger.trace("UNLOCK readlock");
+//			domainsFileLock.readLock().unlock();
+//		}
+//	}
 
-			if (!f.exists() || f.length() <= 0 )
-				return false;
-
-			// Re-download old copies of "latest"
-			if(updateFrequency != null && requestedVersion.equals(DEFAULT_VERSION)) {
-				long mod = f.lastModified();
-				// Time of last update
-				Date lastUpdate = new Date();
-				Calendar cal = Calendar.getInstance();
-				cal.setTime(lastUpdate);
-				cal.add(Calendar.DAY_OF_WEEK, -updateFrequency);
-				long updateTime = cal.getTimeInMillis();
-				// Check if file predates last update
-				if( mod < updateTime ) {
-					logger.info("{} is out of date.",f);
-					return false;
-				}
-			}
-			return true;
-		} finally {
-			logger.trace("UNLOCK readlock");
-			domainsFileLock.readLock().unlock();
-		}
-	}
-
-	/**
-	 * Downloads the domains file, overwriting any existing file
-	 * @throws IOException
-	 */
-	private void downloadDomains() throws IOException {
-		domainsFileLock.writeLock().lock();
-		logger.trace("LOCK writelock");
-		try {
-			URL domainsURL = new URL( url + DOMAINS_PATH + getDomainFilename());
-			File localFile = getDomainFile();
-
-			logger.info("Downloading {} to: {}",domainsURL, localFile);
-			Download.downloadFile(domainsURL, localFile);
-		} catch (MalformedURLException e) {
-			logger.error("Malformed url: "+ url + DOMAINS_PATH + getDomainFilename(),e);
-		} finally {
-			logger.trace("UNLOCK writelock");
-			domainsFileLock.writeLock().unlock();
-		}
-	}
+//	/**
+//	 * Downloads the domains file, overwriting any existing file
+//	 * @throws IOException
+//	 */
+//	private void downloadDomains() throws IOException {
+//		domainsFileLock.writeLock().lock();
+//		logger.trace("LOCK writelock");
+//		try {
+//			URL domainsURL = new URL( url + DOMAINS_PATH + getDomainFilename());
+//			File localFile = getDomainFile();
+//
+//			logger.info("Downloading {} to: {}",domainsURL, localFile);
+//			Download.downloadFile(domainsURL, localFile);
+//		} catch (MalformedURLException e) {
+//			logger.error("Malformed url: "+ url + DOMAINS_PATH + getDomainFilename(),e);
+//		} finally {
+//			logger.trace("UNLOCK writelock");
+//			domainsFileLock.writeLock().unlock();
+//		}
+//	}
 
 	/**
 	 * Basename for the domains file with the current requestedVersion.
@@ -413,42 +410,35 @@ public class EcodInstallation implements EcodDatabase {
 		return new File(getCacheLocation(),getDomainFilename());
 	}
 
-	/**
-	 * The expected ECOD update frequency determines whether the version
-	 * "latest" should be re-downloaded
-	 * @return the expected ECOD update frequency, in days
-	 */
-	public Integer getUpdateFrequency() {
-		return updateFrequency;
-	}
-
-	/**
-	 * The "latest" version will be re-downloaded if it is older than
-	 * {@link #getUpdateFrequency()} days. Setting this to null disables
-	 * re-downloading (delete $PDB_CACHE_DIR/ecod.latest.domains.txt manually
-	 * to force updating). Setting to 0 will force downloading for every
-	 * program execution.
-	 * @param updateFrequency the updateFrequency to set
-	 */
-	public void setUpdateFrequency(Integer updateFrequency) {
-		this.updateFrequency = updateFrequency;
-	}
+//	/**
+//	 * The expected ECOD update frequency determines whether the version
+//	 * "latest" should be re-downloaded
+//	 * @return the expected ECOD update frequency, in days
+//	 */
+//	public Integer getUpdateFrequency() {
+//		return updateFrequency;
+//	}
+//
+//	/**
+//	 * The "latest" version will be re-downloaded if it is older than
+//	 * {@link #getUpdateFrequency()} days. Setting this to null disables
+//	 * re-downloading (delete $PDB_CACHE_DIR/ecod.latest.domains.txt manually
+//	 * to force updating). Setting to 0 will force downloading for every
+//	 * program execution.
+//	 * @param updateFrequency the updateFrequency to set
+//	 */
+//	public void setUpdateFrequency(Integer updateFrequency) {
+//		this.updateFrequency = updateFrequency;
+//	}
 
 	/**
 	 * Parses the domains from the local file
 	 * @throws IOException
 	 */
-	private void parseDomains() throws IOException {
-		domainsFileLock.writeLock().lock();
-		logger.trace("LOCK writelock");
-		try {
-			EcodParser parser = new EcodParser(getDomainFile());
-			allDomains = parser.getDomains();
-			parsedVersion = parser.getVersion();
-		} finally {
-			logger.trace("UNLOCK writelock");
-			domainsFileLock.writeLock().unlock();
-		}
+	private void parseDomains(URL u) throws IOException {
+		EcodParser parser = new EcodParser(Download.bufferedReader(u));
+		allDomains = parser.getDomains();
+		parsedVersion = parser.getVersion();
 	}
 
 	/**
@@ -473,20 +463,12 @@ public class EcodInstallation implements EcodDatabase {
 				if( pdbId == null ) {
 					String ecodId = d.getDomainId();
 					if( ecodId != null && !ecodId.isEmpty() ) {
-						Matcher match = ECOD_RE.matcher(ecodId);
-						pdbId = match.group(1);
+						pdbId = ECOD_RE.matcher(ecodId).group(1);
 					}
 				}
 
 				// Add current domain to the map
-				List<EcodDomain> currDomains;
-				if( domainMap.containsKey(pdbId) ) {
-					currDomains = domainMap.get(pdbId);
-				} else {
-					currDomains = new LinkedList<>();
-					domainMap.put(pdbId,currDomains);
-				}
-				currDomains.add(d);
+				domainMap.computeIfAbsent(pdbId, k -> new LinkedList<>()).add(d);
 			}
 		} finally {
 			logger.trace("UNLOCK writelock");

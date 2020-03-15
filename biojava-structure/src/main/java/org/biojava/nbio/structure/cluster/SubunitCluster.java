@@ -384,12 +384,7 @@ public class SubunitCluster {
 				.getPairwiseAligner(thisSequence, otherSequence, alignerType,
 						gapPenalty, subsMatrix);
 
-		double sequenceIdentity;
-		if(params.isUseGlobalMetrics()) {
-			sequenceIdentity = aligner.getPair().getPercentageOfIdentity(true);
-		} else {
-			sequenceIdentity = aligner.getPair().getPercentageOfIdentity(false);
-		}
+		double sequenceIdentity = aligner.getPair().getPercentageOfIdentity(params.isUseGlobalMetrics());
 
 		if (sequenceIdentity < params.getSequenceIdentityThreshold())
 			return false;

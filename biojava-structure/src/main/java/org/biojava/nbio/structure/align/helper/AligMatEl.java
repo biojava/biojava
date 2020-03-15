@@ -22,6 +22,8 @@
  */
 package org.biojava.nbio.structure.align.helper;
 
+import java.util.Objects;
+
 public class AligMatEl
 extends IndexPair{
 
@@ -36,7 +38,7 @@ extends IndexPair{
 
 
 		public AligMatEl(){
-			super();
+			super((short)-1, (short)-1);
 			value  = -1;
 			contig = -1;
 		}
@@ -55,10 +57,25 @@ extends IndexPair{
 			this.value = value;
 		}
 
-		@Override
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof AligMatEl)) return false;
+		if (!super.equals(o)) return false;
+		AligMatEl aligMatEl = (AligMatEl) o;
+		return value == aligMatEl.value &&
+				contig == aligMatEl.contig;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(super.hashCode(), value, contig);
+	}
+
+	@Override
 		public String toString(){
 			String ret = "AligMatEl val:" + value + " contig:" + contig +
-			" trackrow:" + getRow() + " trackcol:" + getCol();
+			" trackrow:" + row() + " trackcol:" + col();
 			return ret;
 		}
 

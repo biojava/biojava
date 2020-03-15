@@ -84,14 +84,14 @@ public class EcodFactory {
 				// If the parsed version differed from that requested, add that too
 				// Note that getVersion() may trigger file parsing
 				try {
-					if( ! versionedEcodDBs.containsKey(ecod.getVersion().toLowerCase()) ) {
-						versionedEcodDBs.put(ecod.getVersion().toLowerCase(), new SoftReference<>(ecod));
-					}
+
+					versionedEcodDBs.putIfAbsent(ecod.getVersion().toLowerCase(), new SoftReference<>(ecod));
+
 				} catch (IOException e) {
 					// For parsing errors, just use the requested version
 				}
 			}
-			logger.trace("Releasing EcodFactory lock after getting version "+version);
+			//logger.trace("Releasing EcodFactory lock after getting version "+version);
 
 			return ecod;
 		}
@@ -107,7 +107,7 @@ public class EcodFactory {
 				Entry<String, SoftReference<EcodDatabase>> entry = it.next();
 				SoftReference<EcodDatabase> ref = entry.getValue();
 				if(ref.get() == null) {
-					logger.debug("Removed version {} from EcodFactory to save memory.",entry.getKey());
+					//logger.debug("Removed version {} from EcodFactory to save memory.",entry.getKey());
 					it.remove();
 				}
 			}

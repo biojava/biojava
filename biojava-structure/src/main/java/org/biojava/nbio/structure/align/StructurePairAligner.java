@@ -41,7 +41,6 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -555,8 +554,7 @@ public class StructurePairAligner {
 		}
 
 		// sort the alternative alignments
-		Comparator<AlternativeAlignment> comp = new AltAligComparator();
-		aas.sort(comp);
+		aas.sort(AltAligComparator.the);
 		Collections.reverse(aas);
 
 		alts = aas.toArray(new AlternativeAlignment[0]);

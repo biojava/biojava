@@ -24,7 +24,6 @@
  */
 package org.biojava.nbio.structure.io;
 
-import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.core.sequence.ProteinSequence;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;

@@ -200,12 +200,12 @@ public class QuatSymmetryResults {
 	 *         group symbol and for helical symmetry returns "H".
 	 */
 	public String getSymmetry() {
-		if (helixLayers != null && helixLayers.size() > 0) {
+		if (helixLayers != null && helixLayers.size() > 0)
 			return "H";
-		} else if (rotationGroup != null && rotationGroup.getOrder() > 0) {
+		else if (rotationGroup != null && rotationGroup.getOrder() > 0)
 			return rotationGroup.getPointGroup();
-		}
-		return "";
+		else
+			return "";
 	}
 
 	/**

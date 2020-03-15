@@ -22,6 +22,7 @@ package org.biojava.nbio.genome;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Range;
+import org.biojava.nbio.core.util.Download;
 import org.biojava.nbio.genome.parsers.genename.GeneChromosomePosition;
 import org.biojava.nbio.genome.parsers.genename.GeneChromosomePositionParser;
 import org.biojava.nbio.genome.util.ChromosomeMappingTools;
@@ -33,7 +34,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.zip.GZIPInputStream;
 
 /**
  * Created by andreas on 7/19/16.
@@ -47,8 +47,7 @@ public class TestGenomeMapping {
 	static {
 		List<GeneChromosomePosition> g;
 		try {
-			g = GeneChromosomePositionParser.getChromosomeMappings(
-					new GZIPInputStream(new URL(geneChromosomeFile).openStream()));
+			g = GeneChromosomePositionParser.getChromosomeMappings( Download.stream(new URL(geneChromosomeFile)) );
 		} catch (IOException e) {
 			e.printStackTrace();
 			g = null;

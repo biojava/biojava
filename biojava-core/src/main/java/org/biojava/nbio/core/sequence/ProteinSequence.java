@@ -161,11 +161,9 @@ public class ProteinSequence extends AbstractSequence<AminoAcidCompound> {
 
 		InputStream is = Download.stream(url); //url.openConnection().getInputStream();
 
-		FastaReader<DNASequence, NucleotideCompound> parentReader
-				= new FastaReader<>(is,
+		LinkedHashMap<String, DNASequence> seq = new FastaReader<DNASequence, NucleotideCompound>(is,
 				new PlainFastaHeaderParser<>(),
-				new DNASequenceCreator(AmbiguityDNACompoundSet.getDNACompoundSet()));
-		LinkedHashMap<String, DNASequence> seq = parentReader.process();
+				new DNASequenceCreator(AmbiguityDNACompoundSet.getDNACompoundSet())).process();
 
 		DNASequence parentSeq = null;
 		if (seq.size() == 1) {

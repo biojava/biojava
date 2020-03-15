@@ -23,42 +23,61 @@
 package org.biojava.nbio.structure.align.helper;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class IndexPair implements Serializable {
 
-	/**
-	 *
-	 */
-	private static final long serialVersionUID = 1832393751152650420L;
-	short row;
-	short col;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1832393751152650420L;
+    private short row;
+    private short col;
 
-	public IndexPair(){
-		row = -1;
-		col = -1;
-	}
-
-	public IndexPair(short row, short col){
-		this.row = row;
-		this.col=col;
-
-	}
-	public short getCol() {
-		return col;
-	}
-	public void setCol(short col) {
-		this.col = col;
-	}
-	public short getRow() {
-		return row;
-	}
-	public void setRow(short row) {
-		this.row = row;
+	public IndexPair(int row, int col) {
+    	this.row = (short)row;
+    	this.col = (short)col;
+    	if (this.row!=row || this.col!=col)
+    		throw new ArithmeticException();
 	}
 
-	@Override
-public String toString(){
-		return "["+row + " " + col+"]";
-	}
+    public IndexPair(short row, short col) {
+        this.row = row;
+        this.col = col;
+    }
+
+    public short col() {
+        return col;
+    }
+
+    public void setCol(short col) {
+        this.col = col;
+    }
+
+    public short row() {
+        return row;
+    }
+
+    public void setRow(short row) {
+        this.row = row;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof IndexPair)) return false;
+        IndexPair indexPair = (IndexPair) o;
+        return row == indexPair.row && col == indexPair.col;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(row, col);
+    }
+
+    @Override
+    public String toString() {
+        return "[" + row + " " + col + "]";
+    }
 }
 

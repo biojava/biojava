@@ -620,9 +620,9 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 
 		// Try exact match first
 		ScopDomain domain = scopDB.getDomainByScopID(name);
-		if (domain != null) {
+		if (domain != null)
 			return domain;
-		}
+
 
 		// Didn't work. Guess it!
 		logger.warn("Warning, could not find SCOP domain: " + name);

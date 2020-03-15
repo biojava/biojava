@@ -44,8 +44,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -60,8 +58,12 @@ public class GenbankProxySequenceReader<C extends Compound> extends StringProxyS
 	private static final Logger logger = LoggerFactory.getLogger(GenbankProxySequenceReader.class);
 
 	private static final String eutilBaseURL = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/"; //
-//	private String genbankDirectoryCache = null;
-	private final GenbankSequenceParser<AbstractSequence<C>, C> genbankParser;
+//		logger.trace("Loading: {}", genbankURL);
+//		URL genbank = new URL(genbankURL);
+//		inStream1 = new BufferedInputStream(genbank.openConnection().getInputStream());
+//		}
+	//	private String genbankDirectoryCache = null;
+	private final GenbankSequenceParser<AbstractSequence<C>, C> genbankParser = new GenbankSequenceParser<>();
 	private final GenericGenbankHeaderParser<AbstractSequence<C>, C> headerParser;
 	private final String header;
 	private final Map<String, ArrayList<AbstractFeature>> features;
@@ -92,24 +94,18 @@ public class GenbankProxySequenceReader<C extends Compound> extends StringProxyS
 //			}
 //		} else {
 		String genbankURL = eutilBaseURL + "efetch.fcgi?db=" + db + "&id=" + accessionID + "&rettype=gb&retmode=text";
-//		logger.trace("Loading: {}", genbankURL);
-//		URL genbank = new URL(genbankURL);
-//		inStream1 = new BufferedInputStream(genbank.openConnection().getInputStream());
-//		}
-		genbankParser = new GenbankSequenceParser<>();
 
-		try (InputStream inStream = Download.stream(new URL(genbankURL))) {
-			String s = genbankParser.getSequence(new BufferedReader(new InputStreamReader(inStream)), 0);
-			setContents(s);
+		try (BufferedReader r = Download.bufferedReader(new URL(genbankURL))) {
+			setContents(genbankParser.getSequence(r, 0));
 			headerParser = genbankParser.getSequenceHeaderParser();
 			header = genbankParser.getHeader();
 			features = genbankParser.getFeatures();
+		}
 
-			if (compoundSet.getClass().equals(AminoAcidCompoundSet.class)) {
-				if (!genbankParser.getCompoundType().equals(compoundSet)) {
-					logger.error("Declared compount type {} does not mach the real: {}", genbankParser.getCompoundType().toString(), compoundSet.toString());
-					throw new IOException("Wrong declared compound type for: " + accessionID);
-				}
+		if (compoundSet.getClass().equals(AminoAcidCompoundSet.class)) {
+			if (!genbankParser.getCompoundType().equals(compoundSet)) {
+				logger.error("Declared compount type {} does not mach the real: {}", genbankParser.getCompoundType().toString(), compoundSet.toString());
+				throw new IOException("Wrong declared compound type for: " + accessionID);
 			}
 		}
 	}

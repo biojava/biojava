@@ -243,14 +243,16 @@ public class SimpleSubstitutionMatrix<C extends Compound> implements Substitutio
 	}
 	@Override
 	public short getValue(C from, C to) {
-		int row = getIndexOfCompound(rows, from), col = getIndexOfCompound(cols, to);
-		if (row == -1 || col == -1) {
-			row = getIndexOfCompound(cols, from);
-			col = getIndexOfCompound(rows, to);
-			if (row == -1 || col == -1) {
+		int row, col;
+		if ((row=getIndexOfCompound(rows, from)) == -1 || (col = getIndexOfCompound(cols, to)) == -1) {
+
+			if ((row = getIndexOfCompound(cols, from)) == -1)
 				return min;
-			}
+
+			if ((col = getIndexOfCompound(rows, to)) == -1)
+				return min;
 		}
+
 		return matrix[row][col];
 	}
 

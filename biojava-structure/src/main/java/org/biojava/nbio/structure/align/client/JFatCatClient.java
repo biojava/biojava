@@ -40,6 +40,7 @@ import java.net.URLEncoder;
 import java.util.Random;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 public class JFatCatClient {
     private final static Logger logger = LoggerFactory.getLogger(JFatCatClient.class);
@@ -203,18 +204,22 @@ public class JFatCatClient {
 
     public static String convertStreamToString(InputStream stream) {
 
-        BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-
         try {
-            String line;
-            StringBuilder sb = new StringBuilder(stream.available());
-            while ((line = reader.readLine()) != null) {
-                sb.append(line).append(newline);
-            }
-            return sb.toString();
-        } catch (IOException e) {
-            logger.error("Couldn't convert stream to string", e); // TODO dmyersturnbull: method should throw; we shouldn't catch here
-			return null;
+
+//            int aa = stream.available();
+
+            return new BufferedReader(new InputStreamReader(stream))
+                    .lines()
+                    .collect(Collectors.joining("\n"));
+//            String line;
+//            StringBuilder sb = new StringBuilder(aa);
+//            while ((line = reader.readLine()) != null) {
+//                sb.append(line).append(newline);
+//            }
+//            return sb.toString();
+//        } catch (IOException e) {
+//            logger.error("Couldn't convert stream to string", e); // TODO dmyersturnbull: method should throw; we shouldn't catch here
+//			return null;
         } finally {
             try {
                 stream.close();

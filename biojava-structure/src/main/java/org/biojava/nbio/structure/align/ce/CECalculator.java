@@ -127,8 +127,7 @@ public class CECalculator {
 	 * @param ca2
 	 * @return afpChain
 	 */
-	public AFPChain extractFragments(AFPChain afpChain,
-			Atom[] ca1, Atom[] ca2) {
+	public AFPChain extractFragments(AFPChain afpChain, Atom[] ca1, Atom[] ca2) {
 
 		int nse1 = ca1.length;
 		int nse2 = ca2.length;
@@ -161,15 +160,12 @@ public class CECalculator {
 
 		// CE: unused code. distAll is always false and both loops do the same???
 		// CE v2.3 calls this Weight factors for trace extension
-		if(distAll ) {
+		if(distAll) {
 			for(int i=0; i<traceMaxSize; i++)
 				traceIndexContainer[i]=(i+1)*i*winSize*winSize/2+(i+1)*winSizeComb1;
 		} else {
-			for(int i=0; i<traceMaxSize; i++) {
+			for(int i=0; i<traceMaxSize; i++)
 				traceIndexContainer[i]=(i+1)*i*winSize/2+(i+1)*winSizeComb1;
-
-
-			}
 		}
 
 		// verified: a[] is set correctly.
@@ -1602,7 +1598,7 @@ nBestTrace=nTrace;
 
 		int i, j, is, js, iMax, jMax, k;
 		boolean ge=(gapE != 0.0);
-		double sum, sum_ret, sum_brk;
+		double sum_ret, sum_brk;
 
 		boolean[][] brk_flg=new boolean [nSeq1][nSeq2];
 		for(i=0; i<nSeq1; i++) brk_flg[i]=new boolean [nSeq2];
@@ -1627,6 +1623,7 @@ nBestTrace=nTrace;
 				for(j=nSeq2-1; j>=0; j--)
 				{
 					brk_flg[i][j]=false;
+					double sum;
 					if(j<nSeq2-1 && i<nSeq1-1)
 					{
 						sum=mat[i+1][j+1];
@@ -1665,6 +1662,7 @@ nBestTrace=nTrace;
 			for(i=nSeq1-1; i>=0; i--)
 				for(j=nSeq2-1; j>=0; j--)
 				{
+					double sum;
 					brk_flg[i][j]=false;
 					if(j<nSeq2-1 && i<nSeq1-1)
 					{
@@ -1747,7 +1745,7 @@ nBestTrace=nTrace;
 			for(j=0; j<nSeq2; j++)
 			{
 				if(i==0 && j==0) continue;
-				sum=mat[i][j];
+				double sum=mat[i][j];
 				if(isGlobal1) sum+=-gapI-gapE*i;
 				if(isGlobal2) sum+=-gapI-gapE*j;
 				if(sum>sum_ret)
@@ -1765,7 +1763,7 @@ nBestTrace=nTrace;
 		for(i=is, j=js; i<nSeq1 && j<nSeq2; i++, j++)
 		{
 			iMax=i; jMax=j;
-			sum=mat[i][j];
+			double sum=mat[i][j];
 			if(!ge)
 			{
 				for(k=i+1; k<nSeq1; k++)

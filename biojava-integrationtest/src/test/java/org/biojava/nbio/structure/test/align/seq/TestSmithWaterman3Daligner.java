@@ -21,7 +21,6 @@
 package org.biojava.nbio.structure.test.align.seq;
 
 import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.model.AFPChain;
@@ -51,17 +50,15 @@ public class TestSmithWaterman3Daligner {
 	@Test
 	public void testMaxRMSD() throws StructureException, IOException {
 
-		Structure s1 = StructureTools.getStructure("1A3N.A");
-		Structure s2 = StructureTools.getStructure("1A3N.B");
-
-		Atom[] ca1 = StructureTools.getRepresentativeAtomArray(s1);
-		Atom[] ca2 = StructureTools.getRepresentativeAtomArray(s2);
 
 		SmithWaterman3Daligner aligner = new SmithWaterman3Daligner();
 		SmithWaterman3DParameters params = new SmithWaterman3DParameters();
 
 		// Use no restriction on the RMSD
 		params.setMaxRmsd(99.0);
+
+		Atom[] ca1 = StructureTools.getRepresentativeAtomArray(StructureTools.getStructure("1A3N.A"));
+		Atom[] ca2 = StructureTools.getRepresentativeAtomArray(StructureTools.getStructure("1A3N.B"));
 
 		AFPChain afpChain = aligner.align(ca1, ca2, params);
 

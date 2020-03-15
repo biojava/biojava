@@ -595,34 +595,28 @@ public class HetatomImpl implements Group {
 	public void trimToSize(){
 
 		if ( atoms instanceof ArrayList<?>) {
-			ArrayList<Atom> myatoms = (ArrayList<Atom>) atoms;
-			myatoms.trimToSize();
+			((ArrayList<Atom>) atoms).trimToSize();
 		}
 		if ( altLocs instanceof ArrayList<?>){
-			ArrayList<Group> myAltLocs = (ArrayList<Group>) altLocs;
-			myAltLocs.trimToSize();
+			((ArrayList<Group>) altLocs).trimToSize();
 		}
 
 		if ( hasAltLoc()) {
-			for (Group alt : getAltLocs()){
+			for (Group alt : getAltLocs())
 				alt.trimToSize();
-			}
 		}
 
-		// now let's fit the hashmaps to size
-		properties = new HashMap<>(properties);
-
-		if ( atomNameLookup != null)
-			atomNameLookup = new HashMap<>(atomNameLookup);
-
+//		// now let's fit the hashmaps to size
+//		properties = new HashMap<>(properties);
+//		if ( atomNameLookup != null)
+//			atomNameLookup = new HashMap<>(atomNameLookup);
 	}
 
 
 	@Override
 	public String toSDF() {
 		// Function to return the SDF of a given strucutre
-		GroupToSDF gts = new GroupToSDF();
-		return gts.getText(this);
+		return new GroupToSDF().getText(this);
 	}
 
 	@Override

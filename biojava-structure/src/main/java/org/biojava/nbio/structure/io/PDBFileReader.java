@@ -138,8 +138,7 @@ public class PDBFileReader extends LocalPDBDirectory {
 		PDBFileParser pdbpars = new PDBFileParser();
 		pdbpars.setFileParsingParameters(getFileParsingParameters());
 
-		Structure struc = pdbpars.parsePDBFile(inStream) ;
-		return struc ;
+		return pdbpars.parsePDBFile(inStream);
 	}
 
 	@Override

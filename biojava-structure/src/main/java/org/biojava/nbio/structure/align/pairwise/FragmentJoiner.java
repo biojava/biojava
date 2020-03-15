@@ -24,7 +24,6 @@ package org.biojava.nbio.structure.align.pairwise;
 
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Calc;
-import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.align.StrucAligParameters;
 import org.biojava.nbio.structure.align.helper.AlignUtils;
 import org.biojava.nbio.structure.align.helper.JointFragments;

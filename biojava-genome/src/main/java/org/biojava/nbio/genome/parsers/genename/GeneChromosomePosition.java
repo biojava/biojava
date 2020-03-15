@@ -38,7 +38,9 @@ public class GeneChromosomePosition implements Comparable<GeneChromosomePosition
 	private Integer cdsStart;
 	private Integer cdsEnd;
 	int exonCount;
+	/** TODO int[] */
 	private List<Integer> exonStarts;
+	/** TODO int[] */
 	private List<Integer> exonEnds;
 
 	public String getGeneName() {

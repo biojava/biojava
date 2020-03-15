@@ -211,7 +211,7 @@ public class Gotoh {
 		IndexPair[] backId = new IndexPair[a.getRows()+1+a.getCols()+1];
 		List<IndexPair> path = new ArrayList<>();
 
-		backId[0] = new IndexPair((short)(a.getRows()),(short)(a.getCols()));
+		backId[0] = new IndexPair((a.getRows()),(a.getCols()));
 
 		// backtrace, get backId indices, the indices in diagonal store in path
 
@@ -222,13 +222,13 @@ public class Gotoh {
 
 
 		n=1;
-		while ( (backId[n-1].getRow()>=1) &&
-				(backId[n-1].getCol()>=1)
+		while ( (backId[n-1].row()>=1) &&
+				(backId[n-1].col()>=1)
 				)
 		{
 			// get backtrace index
-			int x = backId[n-1].getRow();
-			int y = backId[n-1].getCol();
+			int x = backId[n-1].row();
+			int y = backId[n-1].col();
 
 			try {
 
@@ -256,8 +256,8 @@ public class Gotoh {
 				System.exit(0);
 			}
 			// get diagonal indeces into path
-			if (((backId[n-1].getRow() - backId[n].getRow()) == 1)
-					&& (( backId[n-1].getCol() - backId[n].getCol()) == 1)) {
+			if (((backId[n-1].row() - backId[n].row()) == 1)
+					&& (( backId[n-1].col() - backId[n].col()) == 1)) {
 				path.add(backId[n-1]);
 				pathsize++;
 
@@ -270,8 +270,7 @@ public class Gotoh {
 		IndexPair[] newpath = new IndexPair[pathsize];
 		for (int i = 0 ; i < pathsize; i++){
 			IndexPair o = path.get(pathsize-1-i);
-			IndexPair np = new IndexPair((short)(o.getRow()-1),(short)(o.getCol()-1));
-			newpath[i] = np;
+			newpath[i] = new IndexPair((o.row()-1), (o.col()-1));
 		}
 
 		a.setPath(newpath);

@@ -358,13 +358,13 @@ public class SimpleMMcifParser implements MMcifParser {
 
 	}
 
-	private void resetBuffers(List<String> loopFields, List<String> lineData, Set<String> loopWarnings) {
+	private static void resetBuffers(List<String> loopFields, List<String> lineData, Set<String> loopWarnings) {
 		loopFields.clear();
 		lineData.clear();
 		loopWarnings.clear();
 	}
 
-	private List<String> processSingleLine(String line){
+	private static List<String> processSingleLine(String line){
 
 		List<String> data = new ArrayList<>();
 
@@ -379,7 +379,7 @@ public class SimpleMMcifParser implements MMcifParser {
 		boolean inString = false; // semicolon (;) quoting
 		boolean inS1     = false; // single quote (') quoting
 		boolean inS2     = false; // double quote (") quoting
-		String word 	 = "";
+		StringBuilder word 	 = new StringBuilder();
 
 		for (int i=0; i< line.length(); i++ ){
 
@@ -396,12 +396,12 @@ public class SimpleMMcifParser implements MMcifParser {
 			if  (c == ' ') {
 
 				if ( ! inString){
-					if (!word.isEmpty())
-						data.add(word.trim());
-					word = "";
+					if (word.length() > 0)
+						data.add(word.toString().trim());
+					word = new StringBuilder();
 				} else {
 					// we are in a string, add the space
-					word += c;
+					word.append(c);
 				}
 
 			} else if (c == S1 )  {
@@ -420,13 +420,13 @@ public class SimpleMMcifParser implements MMcifParser {
 					if ( wordEnd ) {
 
 						// at end of string
-						if (!word.isEmpty())
-							data.add(word.trim());
-						word     = "";
+						if (word.length() > 0)
+							data.add(word.toString().trim());
+						word = new StringBuilder();
 						inString = false;
 						inS1     = false;
 					} else {
-						word += c;
+						word.append(c);
 					}
 
 				} else if (prevC==null || prevC==' ') {
@@ -434,7 +434,7 @@ public class SimpleMMcifParser implements MMcifParser {
 					inString = true;
 					inS1     = true;
 				} else {
-					word += c;
+					word.append(c);
 				}
 			} else if ( c == S2 ){
 				if ( inString){
@@ -450,28 +450,28 @@ public class SimpleMMcifParser implements MMcifParser {
 					if ( wordEnd ) {
 
 						// at end of string
-						if (!word.isEmpty())
-							data.add(word.trim());
-						word     = "";
+						if (word.length() > 0)
+							data.add(word.toString().trim());
+						word = new StringBuilder();
 						inString = false;
 						inS2     = false;
 					} else {
-						word += c;
+						word.append(c);
 					}
 				}  else if (prevC==null || prevC==' ') {
 					// the beginning of a new string
 					inString = true;
 					inS2     = true;
 				} else {
-					word += c;
+					word.append(c);
 				}
 			} else {
-				word += c;
+				word.append(c);
 			}
 
 		}
-		if (!word.trim().isEmpty())
-			data.add(word);
+		if (!word.toString().trim().isEmpty())
+			data.add(word.toString());
 
 
 		return data;
@@ -485,9 +485,9 @@ public class SimpleMMcifParser implements MMcifParser {
 	 * @param buf
 	 * @return
 	 */
-	private List<String> processLine(String line,
-			BufferedReader buf,
-			int fieldLength)
+	private static List<String> processLine(String line,
+											BufferedReader buf,
+											int fieldLength)
 					throws IOException{
 
 		//System.out.println("XX processLine " + fieldLength + " " + line);
@@ -570,296 +570,257 @@ public class SimpleMMcifParser implements MMcifParser {
 		switch (category) {
 			case "_entity":
 
-				Entity e = (Entity) buildObject(
-						Entity.class.getName(),
-						loopFields, lineData, loopWarnings);
-				triggerNewEntity(e);
+				triggerNewEntity(buildObject(
+						Entity.class,
+						loopFields, lineData, loopWarnings));
 
 				break;
 			case "_entity_poly":
-				EntityPoly ep = (EntityPoly) buildObject(EntityPoly.class.getName(), loopFields, lineData, loopWarnings);
-				triggerNewEntityPoly(ep);
+				triggerNewEntityPoly(buildObject(EntityPoly.class, loopFields, lineData, loopWarnings));
 
 				break;
 			case "_struct":
 
-				struct = (Struct) buildObject(
-						Struct.class.getName(),
-						loopFields, lineData, loopWarnings);
+				struct = buildObject(Struct.class, loopFields, lineData, loopWarnings);
 
 				break;
 			case "_atom_site":
 
-				AtomSite a = (AtomSite) buildObject(
-						AtomSite.class.getName(),
-						loopFields, lineData, loopWarnings);
-				triggerNewAtomSite(a);
+				triggerNewAtomSite(buildObject(
+						AtomSite.class,
+						loopFields, lineData, loopWarnings));
 
 				break;
 			case "_database_PDB_rev": {
-				DatabasePDBrev dbrev = (DatabasePDBrev) buildObject(
-						DatabasePDBrev.class.getName(),
-						loopFields, lineData, loopWarnings);
 
-				triggerNewDatabasePDBrev(dbrev);
+				triggerNewDatabasePDBrev(buildObject(
+						DatabasePDBrev.class,
+						loopFields, lineData, loopWarnings));
 
 				break;
 			}
 			case "_database_PDB_rev_record": {
-				DatabasePdbrevRecord dbrev = (DatabasePdbrevRecord) buildObject(
-						DatabasePdbrevRecord.class.getName(),
-						loopFields, lineData, loopWarnings);
 
-				triggerNewDatabasePDBrevRecord(dbrev);
+				triggerNewDatabasePDBrevRecord(buildObject(
+						DatabasePdbrevRecord.class,
+						loopFields, lineData, loopWarnings));
 
 				// MMCIF version 5 dates
 				break;
 			}
 			case "_pdbx_audit_revision_history":
-				PdbxAuditRevisionHistory history = (PdbxAuditRevisionHistory) buildObject(
-						PdbxAuditRevisionHistory.class.getName(),
-						loopFields, lineData, loopWarnings);
 
-				triggerNewPdbxAuditRevisionHistory(history);
+				triggerNewPdbxAuditRevisionHistory(buildObject(
+						PdbxAuditRevisionHistory.class,
+						loopFields, lineData, loopWarnings));
 
 				// MMCIF version 5 dates
 				break;
 			case "_pdbx_database_status":
-				PdbxDatabaseStatus status = (PdbxDatabaseStatus) buildObject(
-						PdbxDatabaseStatus.class.getName(),
-						loopFields, lineData, loopWarnings);
 
-				triggerNewPdbxDatabaseStatus(status);
+				triggerNewPdbxDatabaseStatus(buildObject(
+						PdbxDatabaseStatus.class,
+						loopFields, lineData, loopWarnings));
 
 				break;
 			case "_database_PDB_remark":
-				DatabasePDBremark remark = (DatabasePDBremark) buildObject(
-						DatabasePDBremark.class.getName(),
-						loopFields, lineData, loopWarnings);
 
-				triggerNewDatabasePDBremark(remark);
+				triggerNewDatabasePDBremark(buildObject(
+						DatabasePDBremark.class,
+						loopFields, lineData, loopWarnings));
 
 				break;
 			case "_exptl": {
-				Exptl exptl = (Exptl) buildObject(
-						Exptl.class.getName(),
-						loopFields, lineData, loopWarnings);
 
-				triggerExptl(exptl);
+				triggerExptl(buildObject(
+						Exptl.class,
+						loopFields, lineData, loopWarnings));
 
 				break;
 			}
 			case "_cell":
-				Cell cell = (Cell) buildObject(
-						Cell.class.getName(),
-						loopFields, lineData, loopWarnings);
 
-				triggerNewCell(cell);
+				triggerNewCell(buildObject(
+						Cell.class,
+						loopFields, lineData, loopWarnings));
 
 				break;
 			case "_symmetry":
-				Symmetry symmetry = (Symmetry) buildObject(
-						Symmetry.class.getName(),
-						loopFields, lineData, loopWarnings);
 
-				triggerNewSymmetry(symmetry);
+				triggerNewSymmetry(buildObject(
+						Symmetry.class,
+						loopFields, lineData, loopWarnings));
 				break;
 			case "_struct_ncs_oper":
 
-				StructNcsOper sNcsOper = (StructNcsOper) buildObject(
-						StructNcsOper.class.getName(),
-						loopFields, lineData, loopWarnings);
-				triggerNewStructNcsOper(sNcsOper);
+				triggerNewStructNcsOper(buildObject(
+						StructNcsOper.class,
+						loopFields, lineData, loopWarnings));
 				break;
 			case "_atom_sites":
 
-				AtomSites atomSites = (AtomSites) buildObject(
-						AtomSites.class.getName(),
-						loopFields, lineData, loopWarnings);
-				triggerNewAtomSites(atomSites);
+				triggerNewAtomSites(buildObject(
+						AtomSites.class,
+						loopFields, lineData, loopWarnings));
 
 				break;
 			case "_struct_ref": {
-				StructRef sref = (StructRef) buildObject(
-						StructRef.class.getName(),
-						loopFields, lineData, loopWarnings);
 
-				triggerNewStrucRef(sref);
+				triggerNewStrucRef(buildObject(
+						StructRef.class,
+						loopFields, lineData, loopWarnings));
 
 				break;
 			}
 			case "_struct_ref_seq": {
-				StructRefSeq sref = (StructRefSeq) buildObject(
-						StructRefSeq.class.getName(),
-						loopFields, lineData, loopWarnings);
 
-				triggerNewStrucRefSeq(sref);
+				triggerNewStrucRefSeq(buildObject(
+						StructRefSeq.class,
+						loopFields, lineData, loopWarnings));
 				break;
 			}
 			case "_struct_ref_seq_dif": {
-				StructRefSeqDif sref = (StructRefSeqDif) buildObject(
-						StructRefSeqDif.class.getName(),
-						loopFields, lineData, loopWarnings);
 
-				triggerNewStrucRefSeqDif(sref);
+				triggerNewStrucRefSeqDif(buildObject(
+						StructRefSeqDif.class,
+						loopFields, lineData, loopWarnings));
 				break;
 			}
 			case "_struct_site_gen": {
-				StructSiteGen sref = (StructSiteGen) buildObject(
-						StructSiteGen.class.getName(),
-						loopFields, lineData, loopWarnings);
 
-				triggerNewStructSiteGen(sref);
+				triggerNewStructSiteGen(buildObject(
+						StructSiteGen.class,
+						loopFields, lineData, loopWarnings));
 				break;
 			}
 			case "_struct_site": {
-				StructSite sref = (StructSite) buildObject(
-						StructSite.class.getName(),
-						loopFields, lineData, loopWarnings);
-				triggerNewStructSite(sref);
+				triggerNewStructSite(buildObject(
+						StructSite.class,
+						loopFields, lineData, loopWarnings));
 				break;
 			}
 			case "_entity_poly_seq": {
-				EntityPolySeq exptl = (EntityPolySeq) buildObject(
-						EntityPolySeq.class.getName(),
-						loopFields, lineData, loopWarnings);
 
-				triggerNewEntityPolySeq(exptl);
+				triggerNewEntityPolySeq(buildObject(
+						EntityPolySeq.class,
+						loopFields, lineData, loopWarnings));
 				break;
 			}
 			case "_entity_src_gen":
-				EntitySrcGen entitySrcGen = (EntitySrcGen) buildObject(
-						EntitySrcGen.class.getName(),
-						loopFields, lineData, loopWarnings);
-				triggerNewEntitySrcGen(entitySrcGen);
+				triggerNewEntitySrcGen(buildObject(
+						EntitySrcGen.class,
+						loopFields, lineData, loopWarnings));
 				break;
 			case "_entity_src_nat":
-				EntitySrcNat entitySrcNat = (EntitySrcNat) buildObject(
-						EntitySrcNat.class.getName(),
-						loopFields, lineData, loopWarnings);
-				triggerNewEntitySrcNat(entitySrcNat);
+				triggerNewEntitySrcNat(buildObject(
+						EntitySrcNat.class,
+						loopFields, lineData, loopWarnings));
 				break;
 			case "_pdbx_entity_src_syn":
-				EntitySrcSyn entitySrcSyn = (EntitySrcSyn) buildObject(
-						EntitySrcSyn.class.getName(),
-						loopFields, lineData, loopWarnings);
-				triggerNewEntitySrcSyn(entitySrcSyn);
+				triggerNewEntitySrcSyn(buildObject(
+						EntitySrcSyn.class,
+						loopFields, lineData, loopWarnings));
 				break;
 			case "_struct_asym":
-				StructAsym sasym = (StructAsym) buildObject(
-						StructAsym.class.getName(),
-						loopFields, lineData, loopWarnings);
 
-				triggerNewStructAsym(sasym);
+				triggerNewStructAsym(buildObject(
+						StructAsym.class,
+						loopFields, lineData, loopWarnings));
 
 				break;
 			case "_pdbx_poly_seq_scheme": {
-				PdbxPolySeqScheme ppss = (PdbxPolySeqScheme) buildObject(
-						PdbxPolySeqScheme.class.getName(),
-						loopFields, lineData, loopWarnings);
 
-				triggerNewPdbxPolySeqScheme(ppss);
+				triggerNewPdbxPolySeqScheme(buildObject(
+						PdbxPolySeqScheme.class,
+						loopFields, lineData, loopWarnings));
 
 				break;
 			}
 			case "_pdbx_nonpoly_scheme": {
-				PdbxNonPolyScheme ppss = (PdbxNonPolyScheme) buildObject(
-						PdbxNonPolyScheme.class.getName(),
-						loopFields, lineData, loopWarnings);
 
-				triggerNewPdbxNonPolyScheme(ppss);
+				triggerNewPdbxNonPolyScheme(buildObject(
+						PdbxNonPolyScheme.class,
+						loopFields, lineData, loopWarnings));
 
 				break;
 			}
 			case "_pdbx_entity_nonpoly":
-				PdbxEntityNonPoly pen = (PdbxEntityNonPoly) buildObject(
-						PdbxEntityNonPoly.class.getName(),
+				triggerNewPdbxEntityNonPoly(buildObject(
+						PdbxEntityNonPoly.class,
 						loopFields, lineData, loopWarnings
-				);
-				triggerNewPdbxEntityNonPoly(pen);
+				));
 				break;
 			case "_struct_keywords":
-				StructKeywords kw = (StructKeywords) buildObject(
-						StructKeywords.class.getName(),
+				triggerNewStructKeywords(buildObject(
+						StructKeywords.class,
 						loopFields, lineData, loopWarnings
-				);
-				triggerNewStructKeywords(kw);
+				));
 				break;
 			case "_refine":
-				Refine r = (Refine) buildObject(
-						Refine.class.getName(),
+				triggerNewRefine(buildObject(
+						Refine.class,
 						loopFields, lineData, loopWarnings
-				);
-				triggerNewRefine(r);
+				));
 				break;
 			case "_chem_comp":
-				ChemComp c = (ChemComp) buildObject(
-						ChemComp.class.getName(),
+				triggerNewChemComp(buildObject(
+						ChemComp.class,
 						loopFields, lineData, loopWarnings
-				);
-				triggerNewChemComp(c);
+				));
 				break;
 			case "_audit_author":
-				AuditAuthor aa = (AuditAuthor) buildObject(
-						AuditAuthor.class.getName(),
-						loopFields, lineData, loopWarnings);
-				triggerNewAuditAuthor(aa);
+				triggerNewAuditAuthor(buildObject(
+						AuditAuthor.class,
+						loopFields, lineData, loopWarnings));
 				break;
 			case "_pdbx_chem_comp_descriptor":
-				ChemCompDescriptor ccd = (ChemCompDescriptor) buildObject(
-						ChemCompDescriptor.class.getName(),
-						loopFields, lineData, loopWarnings);
-				triggerNewChemCompDescriptor(ccd);
+				triggerNewChemCompDescriptor(buildObject(
+						ChemCompDescriptor.class,
+						loopFields, lineData, loopWarnings));
 				break;
 			case "_pdbx_struct_oper_list":
 
-				PdbxStructOperList structOper = (PdbxStructOperList) buildObject(
-						PdbxStructOperList.class.getName(),
+				triggerNewPdbxStructOper(buildObject(
+						PdbxStructOperList.class,
 						loopFields, lineData, loopWarnings
-				);
-				triggerNewPdbxStructOper(structOper);
+				));
 
 				break;
 			case "_pdbx_struct_assembly": {
-				PdbxStructAssembly sa = (PdbxStructAssembly) buildObject(
-						PdbxStructAssembly.class.getName(),
-						loopFields, lineData, loopWarnings);
-				triggerNewPdbxStructAssembly(sa);
+				triggerNewPdbxStructAssembly(buildObject(
+						PdbxStructAssembly.class,
+						loopFields, lineData, loopWarnings));
 
 				break;
 			}
 			case "_pdbx_struct_assembly_gen": {
-				PdbxStructAssemblyGen sa = (PdbxStructAssemblyGen) buildObject(
-						PdbxStructAssemblyGen.class.getName(),
-						loopFields, lineData, loopWarnings);
-				triggerNewPdbxStructAssemblyGen(sa);
+				triggerNewPdbxStructAssemblyGen(buildObject(
+						PdbxStructAssemblyGen.class,
+						loopFields, lineData, loopWarnings));
 				break;
 			}
 			case "_chem_comp_atom":
-				ChemCompAtom atom = (ChemCompAtom) buildObject(
-						ChemCompAtom.class.getName(),
+				ChemCompAtom atom = buildObject(
+						ChemCompAtom.class,
 						loopFields, lineData, loopWarnings);
 				triggerNewChemCompAtom(atom);
 
 				break;
 			case "_chem_comp_bond":
-				ChemCompBond bond = (ChemCompBond) buildObject(
-						ChemCompBond.class.getName(),
-						loopFields, lineData, loopWarnings);
-				triggerNewChemCompBond(bond);
+				triggerNewChemCompBond(buildObject(
+						ChemCompBond.class,
+						loopFields, lineData, loopWarnings));
 				break;
 			case "_pdbx_chem_comp_identifier": {
-				PdbxChemCompIdentifier id = (PdbxChemCompIdentifier) buildObject(
-						PdbxChemCompIdentifier.class.getName(),
-						loopFields, lineData, loopWarnings);
-				triggerNewPdbxChemCompIdentifier(id);
+				triggerNewPdbxChemCompIdentifier(buildObject(
+						PdbxChemCompIdentifier.class,
+						loopFields, lineData, loopWarnings));
 				break;
 			}
 			case "_struct_conn": {
-				StructConn id = (StructConn) buildObject(
-						StructConn.class.getName(),
-						loopFields, lineData, loopWarnings);
-				triggerNewStructConn(id);
+				triggerNewStructConn(buildObject(
+						StructConn.class,
+						loopFields, lineData, loopWarnings));
 
 				break;
 			}
@@ -952,39 +913,49 @@ public class SimpleMMcifParser implements MMcifParser {
 	 * @param warnings
 	 * @return
 	 */
-	private Object buildObject(String className, List<String> loopFields, List<String> lineData, Set<String> warnings) {
+	@Deprecated private Object buildObject(String className, List<String> loopFields, List<String> lineData, Set<String> warnings) {
 
-		Object o;
 		Class<?> c;
 
 		try {
 			// build up the Entity object from the line data...
 			c = Class.forName(className);
 
-			o = c.newInstance();
+		} catch (ClassNotFoundException e){
+			logger.error( "{} {}", className, e);
+			return null;
+		}
 
-		} catch (InstantiationException|ClassNotFoundException|IllegalAccessException e){
-			logger.error( "Error while constructing {}: {}", className, e.getMessage());
+		return buildObject(c, loopFields, lineData, warnings);
+	}
+
+	private static <X> X buildObject(Class<X> c, List<String> loopFields, List<String> lineData, Set<String> warnings) {
+
+		Object o;
+
+		try {
+			o = c.newInstance();
+		} catch (InstantiationException | IllegalAccessException e) {
+			logger.error( "{} {}", c, e);
 			return null;
 		}
 
 		// these methods get the fields but also looking at the IgnoreField and CIFLabel annotations
-		Field[] fields = MMCIFFileTools.getFields(c);
-		String[] names = MMCIFFileTools.getFieldNames(fields);
 
 		// let's build a map of all methods so that we can look up the setter methods later
 		Method[] methods = c.getMethods();
 
-		Map<String,Method> methodMap = new HashMap<>();
-		for (Method m : methods) {
+		Map<String,Method> methodMap = new HashMap<>(methods.length);
+		for (Method m : methods)
 			methodMap.put(m.getName(),m);
-		}
+
+		Field[] fields = MMCIFFileTools.getFields(c);
+		String[] names = MMCIFFileTools.getFieldNames(fields);
 
 		// and a map of all the fields so that we can lookup them up later
-		Map<String, Field> names2fields = new HashMap<>();
-		for (int i=0;i<fields.length;i++) {
+		Map<String, Field> names2fields = new HashMap<>(fields.length);
+		for (int i=0;i<fields.length;i++)
 			names2fields.put(names[i], fields[i]);
-		}
 
 		int pos = -1 ;
 		for (String key: loopFields){
@@ -1014,35 +985,28 @@ public class SimpleMMcifParser implements MMcifParser {
 				continue;
 			}
 
-
-
 			// now we populate the object with the values by invoking the corresponding setter method,
 			// note that all of the mmCif container classes have only one argument (they are beans)
 			Class<?>[] pType  = setter.getParameterTypes();
-
-
 			try {
 				if ( pType[0].getName().equals(Integer.class.getName())) {
 					if ( val != null && ! val.equals("?") && !val.equals(".")) {
-
-						Integer intVal = Integer.parseInt(val);
-						setter.invoke(o, intVal);
-
+						setter.invoke(o, Integer.parseInt(val));
 					}
 				} else {
 					// default val is a String
 					setter.invoke(o, val);
 				}
-			} catch (IllegalAccessException|InvocationTargetException e) {
-				logger.error("Could not invoke setter {} with value {} for class {}", setterMethodName, val, className);
+			} catch (IllegalAccessException| InvocationTargetException e) {
+				logger.error("Could not invoke setter {} with value {} for class {}", setterMethodName, val, c);
 			}
 
 		}
 
-		return o;
+		return (X) o;
 	}
 
-	private void produceWarning(String key, String val, Class<?> c, Set<String> warnings) {
+	private static void produceWarning(String key, String val, Class<?> c, Set<String> warnings) {
 
 		String warning = "Trying to set field " + key + " in "+ c.getName() +" found in file, but no corresponding field could be found in model class (value:" + val + ")";
 		String warnkey = key+"-"+c.getName();

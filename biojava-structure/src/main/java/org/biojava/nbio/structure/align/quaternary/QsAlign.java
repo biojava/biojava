@@ -64,7 +64,7 @@ public class QsAlign {
 	}
 
 	public static QsAlignResult align(List<Subunit> s1, List<Subunit> s2,
-			SubunitClustererParameters cParams, QsAlignParameters aParams)
+			SubunitClustererParameters cParams, final QsAlignParameters aParams)
 			throws StructureException {
 
 		QsAlignResult result = new QsAlignResult(s1, s2);
@@ -74,25 +74,33 @@ public class QsAlign {
 		List<SubunitCluster> c1 = SubunitClusterer.cluster(s1, cParams).getClusters();
 		List<SubunitCluster> c2 = SubunitClusterer.cluster(s2, cParams).getClusters();
 
+		int c1s = c1.size();
+		int c2s = c2.size();
+
 		// STEP 2: match each subunit cluster between groups O(N^2*L^2) - inter
 		Map<Integer, Integer> clusterMap = new HashMap<>();
-		for (int i = 0; i < c1.size(); i++) {
-			for (int j = 0; j < c2.size(); j++) {
 
-				if (clusterMap.containsKey(i))
-					break;
+		for (int i = 0; i < c1s; i++) {
+			if (clusterMap.containsKey(i))
+				continue;
+
+			SubunitCluster ci = c1.get(i);
+
+			for (int j = 0; j < c2s; j++) {
 				if (clusterMap.containsValue(j))
 					continue;
 
 				// Use structural alignment to match the subunit clusters
-				if (c1.get(i).mergeStructure(c2.get(j),cParams)) {
+				if (ci.mergeStructure(c2.get(j),cParams))
 					clusterMap.put(i, j);
-				}
 			}
 		}
 
-		logger.info("Cluster Map: " + clusterMap.toString());
+		logger.info("Cluster Map: {}", clusterMap);
 		result.setClusters(c1);
+
+		final double aParamsCutOff = aParams.getdCutoff();
+		final double maxOrientationAngle = aParams.getMaxOrientationAngle();
 
 		// STEP 3: Align the assemblies for each cluster match O(N^2*L)
 		for (Entry<Integer, Integer> e : clusterMap.entrySet()) {
@@ -105,11 +113,11 @@ public class QsAlign {
 			// Take a cluster match as reference
 			int index1 = 0;
 			int index2 = clust1.size() - clust2.size();
-			Map<Integer, Integer> subunitMap = new HashMap<>();
+			Map<Integer, Integer> subunitMap = new HashMap<>(1);
 			subunitMap.put(index1, index2);
 
 			// Map cluster id to their subunit matching
-			Map<Integer, Map<Integer, Integer>> clustSubunitMap = new HashMap<>();
+			Map<Integer, Map<Integer, Integer>> clustSubunitMap = new HashMap<>(1);
 			clustSubunitMap.put(globalKey, subunitMap);
 
 			// Change order of key set so that globalKey is first
@@ -121,10 +129,7 @@ public class QsAlign {
 				int key = entry.getKey();
 
 				// Recover subunitMap if it is the reference, new one otherwise
-				if (key == globalKey)
-					subunitMap = clustSubunitMap.get(key);
-				else
-					subunitMap = new HashMap<>();
+				subunitMap = key == globalKey ? clustSubunitMap.get(key) : new HashMap<Integer, Integer>();
 
 				// Obtain the clusters of each subunit group
 				clust1 = c1.get(key);
@@ -135,16 +140,15 @@ public class QsAlign {
 				index2 = clust1.size() - clust2.size();
 
 				for (int i = 0; i < index2; i++) {
-					for (int j = index2; j < clust1.size(); j++) {
+					if (subunitMap.containsKey(i))
+						continue;
 
-						if (subunitMap.containsKey(i))
-							break;
+					for (int j = index2; j < clust1.size(); j++) {
 						if (subunitMap.containsValue(j))
 							continue;
 
 						// Obtain cumulative transformation matrix
-						Matrix4d transform = getTransformForClusterSubunitMap(
-								c1, clustSubunitMap);
+						Matrix4d transform = getTransformForClusterSubunitMap(c1, clustSubunitMap);
 
 						// Obtain Atom arrays of the subunit pair to match
 						Atom[] atoms1 = clust1.getAlignedAtomsSubunit(i);
@@ -157,11 +161,13 @@ public class QsAlign {
 
 						// 1- Check that the distance fulfills maximum
 						double dCentroid = Calc.getDistance(centr1, centr2);
-						if (dCentroid > aParams.getdCutoff()) {
-							logger.debug(String.format("Subunit matching %d "
-									+ "vs %d of cluster %d could not be "
-									+ "matched, because centroid distance is "
-									+ "%.2f", index1, index2, key, dCentroid));
+						if (dCentroid > aParamsCutOff) {
+							if (logger.isDebugEnabled()) {
+								logger.debug(String.format("Subunit matching %d "
+										+ "vs %d of cluster %d could not be "
+										+ "matched, because centroid distance is "
+										+ "%.2f", index1, index2, key, dCentroid));
+							}
 							continue;
 						}
 
@@ -174,28 +180,34 @@ public class QsAlign {
 								Calc.atomsToPoints(atoms1),
 								Calc.atomsToPoints(atoms2c), false);
 						qOrient = Math.min(Math.abs(2*Math.PI - qOrient), qOrient);
-						if (qOrient > aParams.getMaxOrientationAngle()) {
-							logger.debug(String.format("Subunit matching %d "
-									+ "vs %d of cluster %d could not be "
-									+ "matched, because orientation metric is "
-									+ "%.2f", i, j, key, qOrient));
+						if (qOrient > maxOrientationAngle) {
+							if (logger.isDebugEnabled()) {
+								logger.debug(String.format("Subunit matching %d "
+										+ "vs %d of cluster %d could not be "
+										+ "matched, because orientation metric is "
+										+ "%.2f", i, j, key, qOrient));
+							}
 							continue;
 						}
 
 						// 3- Check the RMSD condition
 						double rmsd = Calc.rmsd(atoms1, atoms2c);
 						if (rmsd > aParams.getMaxRmsd()) {
-							logger.debug(String.format("Subunit matching %d "
-									+ "vs %d of cluster %d could not be "
-									+ "matched, because RMSD is %.2f", i,
-									j, key, rmsd));
+							if (logger.isDebugEnabled()) {
+								logger.debug(String.format("Subunit matching %d "
+												+ "vs %d of cluster %d could not be "
+												+ "matched, because RMSD is %.2f", i,
+										j, key, rmsd));
+							}
 							continue;
 						}
 
-						logger.info(String.format("Subunit matching %d vs %d"
-								+ " of cluster %d with centroid distance %.2f"
-								+ ", orientation metric %.2f and RMSD %.2f",
-								i, j, key, dCentroid, qOrient, rmsd));
+						if (logger.isDebugEnabled()) {
+							logger.debug(String.format("Subunit matching %d vs %d"
+											+ " of cluster %d with centroid distance %.2f"
+											+ ", orientation metric %.2f and RMSD %.2f",
+									i, j, key, dCentroid, qOrient, rmsd));
+						}
 
 						subunitMap.put(i, j);
 					}
@@ -204,7 +216,7 @@ public class QsAlign {
 				clustSubunitMap.put(key, subunitMap);
 			}
 
-			logger.info("Cluster Subunit Map: " + clustSubunitMap.toString());
+			logger.info("Cluster Subunit Map: {}", clustSubunitMap);
 
 			// Unfold the nested map into subunit map and alignment
 			subunitMap = new HashMap<>();
@@ -247,11 +259,15 @@ public class QsAlign {
 			}
 
 			// Evaluate the goodness of the match with an alignment object
+
+			MultipleAlignmentEnsembleImpl msai = new MultipleAlignmentEnsembleImpl();
+			msai.setAtomArrays(Arrays.asList(
+					atomArray1.toArray(Atom.EmptyAtomArray),
+					atomArray2.toArray(Atom.EmptyAtomArray))
+			);
+
 			MultipleAlignment msa = new MultipleAlignmentImpl();
-			msa.setEnsemble(new MultipleAlignmentEnsembleImpl());
-			msa.getEnsemble().setAtomArrays(
-					Arrays.asList(atomArray1.toArray(Atom.EmptyAtomArray),
-							atomArray2.toArray(Atom.EmptyAtomArray)));
+			msa.setEnsemble(msai);
 
 			// Fill in the alignment information
 			BlockSet bs = new BlockSetImpl(msa);
@@ -268,11 +284,13 @@ public class QsAlign {
 			MultipleAlignmentScorer.calculateScores(msa);
 
 			// If it is the best match found so far store it
-			if (subunitMap.size() > result.getSubunitMap().size()) {
+			int resultSubUnitMapSize = result.getSubunitMap().size();
+			int subUnitMapSize = subunitMap.size();
+			if (subUnitMapSize > resultSubUnitMapSize) {
 				result.setSubunitMap(subunitMap);
 				result.setAlignment(msa);
-				logger.info("Better result found: " + result.toString());
-			} else if (subunitMap.size() == result.getSubunitMap().size()) {
+				logger.info("Better result found: {}", result);
+			} else if (subUnitMapSize == resultSubUnitMapSize) {
 				if (result.getAlignment() == null) {
 					result.setSubunitMap(subunitMap);
 					result.setAlignment(msa);
@@ -280,7 +298,7 @@ public class QsAlign {
 						.getRmsd()) {
 					result.setSubunitMap(subunitMap);
 					result.setAlignment(msa);
-					logger.info("Better result found: " + result.toString());
+					logger.info("Better result found: {}", result);
 				}
 			}
 

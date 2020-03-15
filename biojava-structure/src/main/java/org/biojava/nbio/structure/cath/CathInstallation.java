@@ -342,12 +342,12 @@ public class CathInstallation implements CathDatabase{
 		return fragmentMap.get(pdbId);
 	}
 
-	private void parseCathDomainList() throws IOException {
-		File file = new File(getDomainListFileName());
-		InputStreamProvider ips = new InputStreamProvider();
-		BufferedReader buffer = new BufferedReader (new InputStreamReader(ips.getInputStream(file)));
-		parseCathDomainList(buffer);
-	}
+//	private void parseCathDomainList() throws IOException {
+//		File file = new File(getDomainListFileName());
+//		InputStreamProvider ips = new InputStreamProvider();
+//		BufferedReader buffer = new BufferedReader (new InputStreamReader(ips.getInputStream(file)));
+//		parseCathDomainList(buffer);
+//	}
 
 	private void parseCathDomainList(BufferedReader bufferedReader) throws IOException{
 		String line;
@@ -668,7 +668,7 @@ public class CathInstallation implements CathDatabase{
 		LOGGER.info("Downloaded {} in {} sec. to {}", String.format("%.1f",disp) + unit, (timeE - timeS)/1000, localFile);
 	}
 
-	private boolean domainDescriptionFileAvailable(){
+	@Deprecated private boolean domainDescriptionFileAvailable(){
 		String fileName = getDomainDescriptionFileName();
 		File f = new File(fileName);
 		return f.exists();
@@ -692,15 +692,13 @@ public class CathInstallation implements CathDatabase{
 		return f.exists();
 	}
 
-	protected void downloadDomainListFile() throws IOException{
+	protected void downloadAndParseDomainListFile() throws IOException{
 		String remoteFilename = domainListFileName;
 		URL url = new URL(buildUrl(remoteFilename));
-		String localFileName = getDomainListFileName();
-		File localFile = new File(localFileName);
-		downloadFileFromRemote(url, localFile);
+		parseCathNames(Download.bufferedReader(url));
 	}
 
-	protected void downloadDomainDescriptionFile() throws IOException{
+	@Deprecated protected void downloadDomainDescriptionFile() throws IOException{
 		String remoteFilename = domainDescriptionFileName;
 		URL url = new URL(buildUrl(remoteFilename));
 		String localFileName = getDomainDescriptionFileName();
@@ -708,7 +706,7 @@ public class CathInstallation implements CathDatabase{
 		downloadFileFromRemote(url, localFile);
 	}
 
-	protected void downloadNodeListFile() throws IOException{
+	@Deprecated protected void downloadNodeListFile() throws IOException{
 		String remoteFilename = nodeListFileName;
 		URL url = new URL(buildUrl(remoteFilename));
 		String localFileName = getNodeListFileName();
@@ -727,18 +725,19 @@ public class CathInstallation implements CathDatabase{
 	public void ensureDomainListInstalled(){
 		if ( installedDomainList.get() ) return;
 
-		if ( ! domainListFileAvailable() ){
-			try {
-				downloadDomainListFile();
-			} catch (Exception e){
-				LOGGER.error("Could not download CATH domain list file. Error: {}", e.getMessage());
-				installedDomainList.set(false);
-				return;
-			}
-		}
+//		if ( ! domainListFileAvailable() ){
+//			try {
+//				downloadDomainListFile();
+//			} catch (Exception e){
+//				LOGGER.error("Could not download CATH domain list file. Error: {}", e.getMessage());
+//				installedDomainList.set(false);
+//				return;
+//			}
+//		}
 
 		try {
-			parseCathDomainList();
+			downloadAndParseDomainListFile();
+			//parseCathDomainList();
 		} catch (Exception e){
 			LOGGER.error(e.getMessage(), e);
 			installedDomainList.set(false);

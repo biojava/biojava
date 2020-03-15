@@ -35,6 +35,7 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.List;
 import java.util.SortedSet;
@@ -272,16 +273,16 @@ public class XMLUtil {
 		return baos.toString();
 	}
 
-	public static ScopDomain getScopDomainFromXML(String xml){
+	public static ScopDomain getScopDomainFromXML(InputStream xml){
 		ScopDomain job;
 
 		try {
 
 			Unmarshaller un = jaxbContextScopDomain.createUnmarshaller();
 
-			ByteArrayInputStream bais = new ByteArrayInputStream(xml.getBytes());
+			//ByteArrayInputStream bais = new ByteArrayInputStream(xml.getBytes());
 
-			job = (ScopDomain) un.unmarshal(bais);
+			job = (ScopDomain) un.unmarshal(xml);
 
 		} catch (JAXBException e){
 			throw new RuntimeException("Could not serialize to XML", e);

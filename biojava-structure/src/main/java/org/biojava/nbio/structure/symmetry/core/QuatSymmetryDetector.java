@@ -524,7 +524,7 @@ public class QuatSymmetryDetector {
 		String symmetry = results.getSymmetry();
 
 		// Check structures with Cn symmetry (n = 1, ...) for helical symmetry
-		if (symmetry.startsWith("C")) {
+ 		if (symmetry.startsWith("C")) {
 			HelixSolver hc = new HelixSolver(subunits,
 					rotationGroup.getOrder(), parameters);
 			HelixLayers helixLayers = hc.getSymmetryOperations();
@@ -542,9 +542,7 @@ public class QuatSymmetryDetector {
 				double hRmsd = helixLayers.getScores().getRmsd();
 				// System.out.println("cRMSD: " + cRmsd + " hRMSD: " + hRmsd);
 				double deltaRmsd = hRmsd - cRmsd;
-				if (symmetry.equals("C1")
-						|| (!symmetry.equals("C1") && deltaRmsd <= parameters
-								.getHelixRmsdThreshold())) {
+				if (symmetry.equals("C1") || deltaRmsd <= parameters.getHelixRmsdThreshold()) {
 					method = SymmetryPerceptionMethod.ROTO_TRANSLATION;
 					results = new QuatSymmetryResults(composition, helixLayers,
 							method);

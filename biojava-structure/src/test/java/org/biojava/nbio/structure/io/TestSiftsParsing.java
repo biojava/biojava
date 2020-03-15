@@ -84,8 +84,10 @@ public class TestSiftsParsing {
 			//System.out.println(e.getEntityId() + " " +e.getType());
 
 
-			Assert.assertTrue(e.getSegments().size() > 0);
-			for (SiftsSegment seg : e.getSegments()) {
+			List<SiftsSegment> segments = e.getSegments();
+
+			Assert.assertTrue(segments.size() > 0);
+			for (SiftsSegment seg : segments) {
 				Assert.assertTrue(seg.getResidues().size() > 0);
 				//System.out.println(seg.getResidues().size());
 				//System.out.println(" Segment: " + seg.getSegId() + " " + seg.getStart() + " " + seg.getEnd()) ;

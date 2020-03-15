@@ -33,7 +33,7 @@ public class AmbiguityDNACompoundSet extends DNACompoundSet {
 	}
 
 	public static AmbiguityDNACompoundSet getDNACompoundSet() {
-	return InitaliseOnDemand.INSTANCE;
+		return InitaliseOnDemand.INSTANCE;
 	}
 
 	public AmbiguityDNACompoundSet() {

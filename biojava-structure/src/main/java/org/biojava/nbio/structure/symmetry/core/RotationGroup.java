@@ -28,6 +28,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import static java.lang.System.identityHashCode;
+
 /**
  * @see http://en.wikipedia.org/wiki/Rotation_group_SO(3)
  * @author Peter
@@ -88,7 +90,7 @@ public class RotationGroup implements Iterable<Rotation> {
 				findHigherOrderAxes();
 				findTwoFoldsPerpendicular();
 				calcPointGroup();
-				sortByFoldDecending();
+				sortByFoldDescending();
 			}
 			modified = false;
 		}
@@ -350,20 +352,24 @@ public class RotationGroup implements Iterable<Rotation> {
 		}
 	}
 
-	public void sortByFoldDecending() {
-		rotations.sort((o1, o2) -> {
-			int delta = o1.getDirection() - o2.getDirection();
-			if (delta != 0) {
-				return delta;
-			}
-			delta = Math.round(Math.signum(o2.getFold() - o1.getFold()));
-			if (delta != 0) {
-				return delta;
-			}
+	public void sortByFoldDescending() {
+		if (rotations.size() > 1) {
+			rotations.sort((o1, o2) -> {
 
-			delta = (int) (Math.signum(o1.getAxisAngle().angle - o2.getAxisAngle().angle));
-			return delta;
-		});
+				if (o1 == o2) return 0;
+
+				int delta = Integer.compare(o1.getDirection(), o2.getDirection());
+				if (delta != 0) return delta;
+
+				delta = Integer.compare(o1.getFold(), o2.getFold());
+				if (delta != 0) return delta;
+
+				delta = Double.compare(o1.getAxisAngle().angle, o2.getAxisAngle().angle);
+				if (delta != 0) return delta;
+
+				return Integer.compare(identityHashCode(o1), identityHashCode(o2));
+			});
+		}
 	}
 
 	@Override

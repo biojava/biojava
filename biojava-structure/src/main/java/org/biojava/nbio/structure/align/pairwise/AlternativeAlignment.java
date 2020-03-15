@@ -238,7 +238,7 @@ public class AlternativeAlignment implements Serializable{
 		for (int x = 0 ; x < l ; x++) {
 			idx1[x]=i+x;
 			idx2[x]=j+x;
-			aligpath[x] = new IndexPair((short)(i+x),(short)(j+x));
+			aligpath[x] = new IndexPair((i+x),(j+x));
 		}
 	}
 
@@ -250,16 +250,14 @@ public class AlternativeAlignment implements Serializable{
 		List<int[]> il = jf.getIdxlist();
 		//System.out.println("Alt Alig apairs_from_idxlst");
 
-		aligpath = new IndexPair[il.size()];
-		idx1 = new int[il.size()];
-		idx2 = new int[il.size()];
-		for (int i =0 ; i < il.size();i++) {
+		int ils = il.size();
+		aligpath = new IndexPair[ils];
+		idx1 = new int[ils];
+		idx2 = new int[ils];
+		for (int i = 0; i < ils; i++) {
 			int[] p = il.get(i);
 			//System.out.print(" idx1 " + p[0] + " idx2 " + p[1]);
-			idx1[i] = p[0];
-			idx2[i] = p[1];
-			aligpath[i] = new IndexPair((short)p[0],(short)p[1]);
-
+			aligpath[i] = new IndexPair(idx1[i] = p[0], idx2[i] = p[1]);
 		}
 		eqr0  = idx1.length;
 		//System.out.println("eqr " + eqr0);
@@ -285,16 +283,10 @@ public class AlternativeAlignment implements Serializable{
 	 * @param ca
 	 */
 	private void rotateShiftAtoms(Atom[] ca){
-
-		for (int i  = 0 ; i < ca.length; i++){
-			Atom c = ca[i];
-
-			Calc.rotate(c,currentRotMatrix);
-			Calc.shift(c,currentTranMatrix);
-			//System.out.println("after " + c);
-			ca[i] = c;
+		for (Atom c : ca) {
+			Calc.rotate(c, currentRotMatrix);
+			Calc.shift(c, currentTranMatrix);
 		}
-		//System.out.println("after " + ca[0]);
 	}
 
 	public void finish(StrucAligParameters params,Atom[]ca1,Atom[]ca2) {
@@ -302,7 +294,6 @@ public class AlternativeAlignment implements Serializable{
 		Atom[] ca3 = new Atom[ca2.length];
 		for ( int i = 0 ; i < ca2.length;i++){
 			ca3[i] = (Atom) ca2[i].clone();
-
 		}
 		// do the inital superpos...
 
@@ -310,7 +301,7 @@ public class AlternativeAlignment implements Serializable{
 		rotateShiftAtoms(ca3);
 
 		calcScores(ca1,ca2);
-		logger.debug("eqr " + eqr0 + " " + gaps0 + " "  +idx1[0] + " " +idx1[1]);
+		//logger.debug("eqr " + eqr0 + " " + gaps0 + " "  +idx1[0] + " " +idx1[1]);
 
 		getPdbRegions(ca1,ca2);
 
@@ -503,10 +494,10 @@ public class AlternativeAlignment implements Serializable{
 
 			// now for a superimposable permutation. First we need to check the size and
 			// position of the quadrant left out by the optimal path
-			int firsta = path[0].getRow();
-			int firstb = path[0].getCol();
-			int lasta  = path[pathsize-1].getRow();
-			int lastb  = path[pathsize-1].getCol();
+			int firsta = path[0].row();
+			int firstb = path[0].col();
+			int lasta  = path[pathsize-1].row();
+			int lastb  = path[pathsize-1].col();
 
 			int quada_beg, quada_end, quadb_beg,quadb_end;
 
@@ -546,8 +537,7 @@ public class AlternativeAlignment implements Serializable{
 
 						//System.out.println(s+" " +t);
 						//double val = sim.get(s,t);
-						double val = aligmat[s][t].getValue();
-						submat.set(s-quada_beg,t-quadb_beg,val);
+						submat.set(s-quada_beg,t-quadb_beg, aligmat[s][t].getValue());
 					}
 				}
 				// and perform a dp alignment again. (Note, that we fix the superposition).
@@ -562,8 +552,8 @@ public class AlternativeAlignment implements Serializable{
 				int subpathsize = subali.getPathSize();
 				for ( int p=0;p<subpath.length;p++){
 					IndexPair sp = subpath[p];
-					sp.setRow((short)(sp.getRow()+quada_beg));
-					sp.setCol((short)(sp.getCol()+quadb_beg));
+					sp.setRow((short)(sp.row()+quada_beg));
+					sp.setCol((short)(sp.col()+quadb_beg));
 				}
 
 				// now we join the two solutions
@@ -583,16 +573,12 @@ public class AlternativeAlignment implements Serializable{
 			int j =0 ;
 			//System.out.println("pathsize,path " + pathsize + " " + path.length);
 
-			for (int i=0; i < pathsize; i++){
-				int x = path[i].getRow();
-				int y = path[i].getCol();
-				//System.out.println(x+ " " + y);
-				double d = Calc.getDistance(ca1[x], ca3[y]);
-				//double d = dismat.get(x,y);
-				// now we apply the evaluation distance cutoff
-				if ( d < params.getEvalCutoff()){
-					//System.out.println("j:"+j+ " " + x+" " + y + " " + d );
+			double cutoffSqr = params.getEvalCutoff(); cutoffSqr*=cutoffSqr;
 
+			for (int i=0; i < pathsize; i++){
+				int x = path[i].row(), y = path[i].col();
+				// now we apply the evaluation distance cutoff
+				if (Calc.getDistanceSqr(ca1[x], ca3[y]) < cutoffSqr){
 					idx1[j] = x;
 					idx2[j] = y;
 					j+=1;
@@ -628,8 +614,6 @@ public class AlternativeAlignment implements Serializable{
 
 		}
 
-
-
 		idx1 = (int[]) FragmentJoiner.resizeArray(idx1,lenneu);
 		idx2 = (int[]) FragmentJoiner.resizeArray(idx2,lenneu);
 		//		new ... get rms...
@@ -647,30 +631,17 @@ public class AlternativeAlignment implements Serializable{
 		pdbresnum2 = new String[idx2.length];
 
 		for (int i =0 ; i < idx1.length;i++){
-			Atom a1 = ca1[idx1[i]];
-			Atom a2 = ca2[idx2[i]];
-			Group p1 = a1.getGroup();
-			Group p2 = a2.getGroup();
-			Chain c1 = p1.getChain();
-			Chain c2 = p2.getChain();
+			Group p1 = ca1[idx1[i]].getGroup();
+			Group p2 = ca2[idx2[i]].getGroup();
 
-			String cid1 = c1.getId();
-			String cid2 = c2.getId();
+			String cid1 = p1.getChain().getId();
+			String cid2 = p2.getChain().getId();
 
 			String pdb1 = p1.getResidueNumber().toString();
 			String pdb2 = p2.getResidueNumber().toString();
 
-
-			if ( ! cid1.equals(" "))
-				pdb1 += ":" + cid1;
-
-
-			if ( ! cid2.equals(" "))
-				pdb2 += ":" + cid2;
-
-
-			pdbresnum1[i] = pdb1;
-			pdbresnum2[i] = pdb2;
+			pdbresnum1[i] = !cid1.equals(" ") ? (pdb1 + ":" + cid1) : pdb1;
+			pdbresnum2[i] = !cid2.equals(" ") ? (pdb2 + ":" + cid2) : pdb2;
 		}
 	}
 
@@ -716,9 +687,9 @@ public class AlternativeAlignment implements Serializable{
 		int j0 = i2[0];
 		int gaps = 0;
 		for (int i =1 ; i<i1.length;i++ ){
-			if (Math.abs(i1[i]-i0) != 1 || Math.abs(i2[i]-j0) != 1){
-				gaps +=1;
-			}
+			if (Math.abs(i1[i]-i0) != 1 || Math.abs(i2[i]-j0) != 1)
+				gaps++;
+
 			i0 = i1[i];
 			j0 = i2[i];
 		}
@@ -806,11 +777,8 @@ public class AlternativeAlignment implements Serializable{
 		percId = 0;
 		// calc the % id
 		for (int i=0 ; i< idx1.length; i++){
-			Atom a1 = ca1[idx1[i]];
-			Atom a2 = ca2[idx2[i]];
-
-			Group g1 = a1.getGroup();
-			Group g2 = a2.getGroup();
+			Group g1 = ca1[idx1[i]].getGroup();
+			Group g2 = ca2[idx2[i]].getGroup();
 			if ( g1.getPDBName().equals(g2.getPDBName())){
 				percId++;
 			}
@@ -858,11 +826,7 @@ public class AlternativeAlignment implements Serializable{
 	 * @return a PDB file as a String
 	 */
 	public String toPDB(Structure s1, Structure s2){
-
-
-		Structure newpdb = getAlignedStructure(s1, s2);
-
-		return newpdb.toPDB();
+		return getAlignedStructure(s1, s2).toPDB();
 	}
 
 

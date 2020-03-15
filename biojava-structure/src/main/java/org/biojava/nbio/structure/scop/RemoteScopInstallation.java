@@ -207,10 +207,9 @@ public class RemoteScopInstallation implements ScopDatabase {
 			String scopId1 = scopId;
 			scopId1 = scopId1.trim();
 			URL u = new URL(server + "getDomainByScopID?scopId="+ scopId1 +"&version="+getScopVersion());
-			InputStream response = Download.stream(u);
-			String xml = JFatCatClient.convertStreamToString(response);
+//			String xml = JFatCatClient.convertStreamToString(Download.stream(u));
 
-			return !xml.trim().isEmpty() ? XMLUtil.getScopDomainFromXML(xml) : null;
+			return XMLUtil.getScopDomainFromXML(Download.stream(u));
 		} catch (Exception e){
 			throw new RuntimeException("Unable to reach "+ server + "getDomainByScopID?scopId="+scopId+"&version="+getScopVersion(), e);
 		}

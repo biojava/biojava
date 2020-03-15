@@ -60,6 +60,9 @@ public class CalcPoint {
 	 * @return centroid as Point3d
 	 */
 	public static Point3d centroid(Point3d[] x) {
+		if (x.length == 1)
+			return x[0];
+
 		Point3d center = new Point3d();
 		for (Point3d p : x) {
 			center.add(p);

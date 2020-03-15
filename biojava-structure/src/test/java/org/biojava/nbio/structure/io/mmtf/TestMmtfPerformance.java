@@ -20,17 +20,16 @@
  */
 package org.biojava.nbio.structure.io.mmtf;
 
+import org.biojava.nbio.core.util.Download;
 import org.biojava.nbio.structure.io.PDBFileParser;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.zip.GZIPInputStream;
 
 import static org.junit.Assert.assertTrue;
 
@@ -75,34 +74,34 @@ public class TestMmtfPerformance {
 
 		pdbId = pdbId.toUpperCase();
 
-		URL url = new URL("https://files.rcsb.org/download/"+pdbId+".pdb.gz");
+		URL pdbURL = new URL("https://files.rcsb.org/download/"+pdbId+".pdb.gz");
 
-		String pdbFile = convertStreamToString(new GZIPInputStream(url.openStream()));
+//		String pdbFile = convertStreamToString(new GZIPInputStream(pdbURL.openStream()));
 
 		long totalTimePDB = 0;
 		long totalTimeMMTF = 0;
 
-		byte[] pdbBytes = pdbFile.getBytes();
+//		byte[] pdbBytes = pdbFile.getBytes();
 
 		PDBFileParser parser = new PDBFileParser();
 
 		URL mmtfURL = new URL("https://mmtf.rcsb.org/v1.0/full/" + pdbId + ".mmtf.gz");
 
-		byte[] mmtfdata = getByteArrayFromInputStream(new GZIPInputStream((mmtfURL.openStream())));
+
 
 		// first make sure chemcomp cache is warmed up (chemcomp files are parsed). Like that we count the parsing time without the influence of chemcomp parsing
-		MmtfActions.readFromInputStream(new ByteArrayInputStream(mmtfdata));
+		MmtfActions.readFromInputStream(Download.stream(mmtfURL));
 		
-		parser.parsePDBFile(new ByteArrayInputStream(pdbBytes));
+		parser.parsePDBFile(Download.stream(pdbURL));
 
 		for ( int i =0 ; i< NUMBER_OF_REPEATS ; i++) {
 
 			long mmtfStart = System.nanoTime();
-			MmtfActions.readFromInputStream(new ByteArrayInputStream(mmtfdata));
+			MmtfActions.readFromInputStream(Download.stream(mmtfURL));
 			long mmtfEnd = System.nanoTime();
 
 			long pdbStart = System.nanoTime();
-			parser.parsePDBFile(new ByteArrayInputStream(pdbBytes));
+			parser.parsePDBFile(Download.stream(pdbURL));
 			long pdbEnd = System.nanoTime();
 
 			totalTimePDB += (pdbEnd - pdbStart);
