@@ -27,6 +27,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 
@@ -441,6 +442,30 @@ public class TestNonDepositedFiles {
 		}
 		int[] counts = {countPoly, countNonPoly, countWater};
 		return counts;
+
+	}
+
+	@Test
+	public void testCarbohydrates() throws IOException {
+		// Example carbohydrate remediation file to be released in July 2020
+		URL url = new URL("https://raw.githubusercontent.com/pdbxmmcifwg/carbohydrate-extension/master/examples/models/1B5F-carb.cif");
+		InputStream inStream = url.openStream();
+
+		MMcifParser parser = new SimpleMMcifParser();
+
+		SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
+		parser.addMMcifConsumer(consumer);
+		parser.parse(new BufferedReader(new InputStreamReader(inStream)));
+
+		Structure structure = consumer.getStructure();
+
+		assertEquals(7, structure.getEntityInfos().size());
+
+		assertEquals(2, structure.getEntityById(1).getChains().size());
+		assertEquals(2, structure.getEntityById(2).getChains().size());
+
+		assertEquals(0, structure.getNonPolyChains().size());
+		assertEquals(4, structure.getPolyChains().size());
 
 	}
 }
