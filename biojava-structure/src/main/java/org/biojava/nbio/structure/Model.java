@@ -110,6 +110,10 @@ public class Model implements Serializable {
 			logger.warn("Chain with asym id {} (author id {}) has entity type 'macrolide', considering it non-polymeric", c.getId(), c.getName());
 			nonPolyChains.add(c);
 
+		} else if (info.getType() == EntityType.BRANCHED) {
+			logger.warn("Chain with asym id {} (author id {}) has entity type 'branched', considering it non-polymeric", c.getId(), c.getName());
+			nonPolyChains.add(c);
+
 		} else {
 			logger.warn("Chain with asym id {} (author id {}) has unsupported entity type '{}'. Will not add it to the Structure.", c.getId(), c.getName(), info.getType().toString());
 			// ignore it

@@ -20,12 +20,11 @@
  */
 package org.biojava.nbio.structure.io.mmtf;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -43,11 +42,16 @@ import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
 import org.biojava.nbio.structure.io.mmcif.DownloadChemCompProvider;
+import org.biojava.nbio.structure.io.mmcif.MMcifParser;
+import org.biojava.nbio.structure.io.mmcif.SimpleMMcifConsumer;
+import org.biojava.nbio.structure.io.mmcif.SimpleMMcifParser;
 import org.biojava.nbio.structure.quaternary.BioAssemblyInfo;
 import org.biojava.nbio.structure.quaternary.BiologicalAssemblyTransformation;
 import org.junit.Test;
 import org.rcsb.mmtf.decoder.StructureDataToAdapter;
 import org.rcsb.mmtf.encoder.AdapterToStructureData;
+
+import static org.junit.Assert.*;
 
 /**
  * Tests to see if roundtripping of MMTF can be done.
@@ -349,5 +353,41 @@ public class TestMmtfRoundTrip {
 				assertTrue(trans1.getTransformationMatrix().epsilonEquals(trans2.getTransformationMatrix(), 0.000001));
 			}
 		}
+	}
+
+	@Test
+	public void testStructWithBranchedEntitiesRoundTrip() throws IOException {
+		// Example carbohydrate remediation file to be released in July 2020
+		URL url = new URL("https://raw.githubusercontent.com/pdbxmmcifwg/carbohydrate-extension/master/examples/models/1B5F-carb.cif");
+		InputStream inStream = url.openStream();
+
+		MMcifParser parser = new SimpleMMcifParser();
+
+		SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
+		parser.addMMcifConsumer(consumer);
+		parser.parse(new BufferedReader(new InputStreamReader(inStream)));
+
+		Structure structure = consumer.getStructure();
+
+		AdapterToStructureData writerToEncoder = new AdapterToStructureData();
+		new MmtfStructureWriter(structure, writerToEncoder);
+		MmtfStructureReader mmtfStructureReader = new MmtfStructureReader();
+		new StructureDataToAdapter(writerToEncoder, mmtfStructureReader);
+		Structure structure2 = mmtfStructureReader.getStructure();
+
+		assertEquals(7, structure2.getEntityInfos().size());
+
+		assertEquals(2, structure2.getEntityById(1).getChains().size());
+		assertEquals(2, structure2.getEntityById(2).getChains().size());
+
+		assertEquals(4, structure2.getNonPolyChains().size());
+		assertEquals(4, structure2.getPolyChains().size());
+
+		assertEquals(1, structure2.getEntityById(3).getChains().size());
+
+		// chain asym_id="E" is from entity 3
+		assertSame(structure2.getNonPolyChain("E"), structure2.getEntityById(3).getChains().get(0));
+
+		assertEquals(5, structure2.getNonPolyChain("E").getAtomGroups().size());
 	}
 }
