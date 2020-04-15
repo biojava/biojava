@@ -47,6 +47,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * Use {@link GenbankReaderHelper} as an example of how to use this class where {@link GenbankReaderHelper} should be the
@@ -153,34 +154,55 @@ public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
 		}
 
 		LinkedHashMap<String,S> sequences = new LinkedHashMap<>();
-		@SuppressWarnings("unchecked")
 		int i=0;
 		while(true) {
 			if(max>0 && i>=max) break;
 			i++;
-			String seqString = genbankParser.getSequence(bufferedReader, 0);
-			//reached end of file?
-			if(seqString==null) break;
-			@SuppressWarnings("unchecked")
-			S sequence = (S) sequenceCreator.getSequence(seqString, 0);
-			genbankParser.getSequenceHeaderParser().parseHeader(genbankParser.getHeader(), sequence);
-
-			// add features to new sequence
-			genbankParser.getFeatures().values().stream()
-			.flatMap(List::stream)
-			.forEach(sequence::addFeature);
-
-			// add taxonomy ID to new sequence
-			ArrayList<DBReferenceInfo> dbQualifier = genbankParser.getDatabaseReferences().get("db_xref");
-			if (dbQualifier != null){
-				DBReferenceInfo q = dbQualifier.get(0);
-				sequence.setTaxonomy(new TaxonomyID(q.getDatabase()+":"+q.getId(), DataSource.GENBANK));
+			S sequence = getSequence();
+			if(null == sequence) {
+				break;
 			}
-
 			sequences.put(sequence.getAccession().getID(), sequence);
 		}
 
 		return sequences;
+	}
+	
+	public Stream<S> getSequencesAsStream() {
+		return Stream.generate(() -> {
+			try {
+				return getSequence();
+			} catch (IOException | CompoundNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return null;
+			}
+		});
+	}
+	
+	private S getSequence() throws IOException, CompoundNotFoundException {
+		String seqString = genbankParser.getSequence(bufferedReader, 0);
+		//reached end of file?
+		if(seqString==null) {
+			return null;
+		}
+		@SuppressWarnings("unchecked")
+		S sequence = (S) sequenceCreator.getSequence(seqString, 0);
+		genbankParser.getSequenceHeaderParser().parseHeader(genbankParser.getHeader(), sequence);
+
+		// add features to new sequence
+		genbankParser.getFeatures().values().stream()
+		.flatMap(List::stream)
+		.forEach(sequence::addFeature);
+
+		// add taxonomy ID to new sequence
+		ArrayList<DBReferenceInfo> dbQualifier = genbankParser.getDatabaseReferences().get("db_xref");
+		if (dbQualifier != null){
+			DBReferenceInfo q = dbQualifier.get(0);
+			sequence.setTaxonomy(new TaxonomyID(q.getDatabase()+":"+q.getId(), DataSource.GENBANK));
+		}
+		
+		return sequence;
 	}
 
 	public void close() {
