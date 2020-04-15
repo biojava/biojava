@@ -183,11 +183,12 @@ public class TestQuatSymmetryDetectorExamples {
 				localSymmetries.put("A8","D2");
 			testLocalSymmetries.add(localSymmetries);
 
+		/* Bioassembly for 3R8R changed in January 2020 (PR #867)
 		testIds.add("BIO:3R8R:1");
 			testStoichiometries.add("A12");
 			localSymmetries = new HashMap<>();
 				localSymmetries.put("A10","D5");
-			testLocalSymmetries.add(localSymmetries);
+			testLocalSymmetries.add(localSymmetries);*/
 
 		testIds.add("BIO:1O18:1");
 			testStoichiometries.add("A14B6C5D5");
