@@ -45,6 +45,18 @@ public enum EntityType {
 	POLYMER("polymer"),
 
 	/**
+	 * The 'branched' type use mainly to represent carbohydrates.
+	 * The type was introduced in these versions of the mmcif dictionary:
+	 * 5.101	2012-08-22
+	 * 5.291	2017-09-10
+	 * 5.304	2018-08-01
+	 * The type will only be used for PDB-deposited files from July 2020, as part of
+	 * the carbohydrate remediation project.
+	 * @since 5.4.0
+	 */
+	BRANCHED("branched"),
+
+	/**
 	 * Non-polymeric entities: ligands, metal ions, buffer molecules, etc
 	 */
 	NONPOLYMER("non-polymer"),

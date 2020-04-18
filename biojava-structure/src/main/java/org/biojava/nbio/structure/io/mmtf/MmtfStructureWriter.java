@@ -37,6 +37,8 @@ import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.biojava.nbio.structure.quaternary.BioAssemblyInfo;
 import org.rcsb.mmtf.api.StructureAdapterInterface;
 import org.rcsb.mmtf.dataholders.MmtfStructure;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Class to take Biojava structure data and covert to the DataApi for encoding.
@@ -48,7 +50,9 @@ import org.rcsb.mmtf.dataholders.MmtfStructure;
  */
 public class MmtfStructureWriter {
 
-	private StructureAdapterInterface mmtfDecoderInterface;
+	private static final Logger logger = LoggerFactory.getLogger(MmtfStructureWriter.class);
+
+	private final StructureAdapterInterface mmtfDecoderInterface;
 
 	/**
 	 * Pass data from Biojava structure  to another generic output type. Loops through the data
@@ -179,9 +183,8 @@ public class MmtfStructureWriter {
 			List<Chain> entityChains = entityInfo.getChains();
 			if (entityChains.isEmpty()){
 				// Error mapping chain to entity
-				System.err.println("ERROR MAPPING CHAIN TO ENTITY: "+description);
+				logger.error("ERROR MAPPING CHAIN TO ENTITY: "+description);
 				mmtfDecoderInterface.setEntityInfo(new int[0], "", description, type);
-				continue;
 			}
 			else{
 				int[] chainIndices = new int[entityChains.size()];
@@ -194,7 +197,7 @@ public class MmtfStructureWriter {
 					chainImpl = (ChainImpl) entityChains.get(0);
 				}
 				else{
-					throw new RuntimeException();
+					throw new RuntimeException("Encountered Chain of unexpected type");
 				}
 				String sequence = chainImpl.getSeqResOneLetterSeq();
 				mmtfDecoderInterface.setEntityInfo(chainIndices, sequence, description, type);
@@ -205,8 +208,7 @@ public class MmtfStructureWriter {
 
 	/**
 	 * Generate the bioassembly information on in the desired form.
-	 * @param bioJavaStruct the Biojava structure
-	 * @param header the header
+	 *
 	 */
 	private void storeBioassemblyInformation(Map<String, Integer> chainIdToIndexMap, Map<Integer, BioAssemblyInfo> inputBioAss) {
 		int bioAssemblyIndex = 0;
