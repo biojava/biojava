@@ -283,7 +283,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 						// new feature!
 						gbFeature = new TextFeature(key, val, key, key);
 						Location l =
-								locationParser.parse(val);
+								locationParser.parse(val, isCircularSequence);
 						gbFeature.setLocation((AbstractLocation)l);
 
 						if (!featureCollection.containsKey(key)) {
