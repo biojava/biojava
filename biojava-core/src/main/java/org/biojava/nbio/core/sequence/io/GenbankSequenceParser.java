@@ -67,6 +67,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 	private GenericGenbankHeaderParser<S, C> headerParser;
 	private String header;
 	private String accession;
+	private boolean isCircularSequence;
 	public LinkedHashMap<String, ArrayList<DBReferenceInfo>> mapDB;
 	/**
 	 * this data structure collects list of features extracted from the
@@ -177,6 +178,8 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 							compoundType = DNACompoundSet.getDNACompoundSet();
 						}
 					}
+
+					isCircularSequence = m.group(6).equalsIgnoreCase("circular");
 
 					log.debug("compound type: {}", compoundType.getClass().getSimpleName());
 
