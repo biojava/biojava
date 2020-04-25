@@ -182,6 +182,10 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 
 					isCircularSequence = m.group(7).equalsIgnoreCase("circular");
 
+					// configure location parser with needed information
+					locationParser.setSequenceLength(sequenceLength);
+					locationParser.setSequenceCircular(isCircularSequence);
+
 					log.debug("compound type: {}", compoundType.getClass().getSimpleName());
 
 				} else {
@@ -284,7 +288,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 						// new feature!
 						gbFeature = new TextFeature(key, val, key, key);
 						Location l =
-								locationParser.parse(val, isCircularSequence);
+								locationParser.parse(val);
 						gbFeature.setLocation((AbstractLocation)l);
 
 						if (!featureCollection.containsKey(key)) {

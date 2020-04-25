@@ -35,6 +35,7 @@ import org.biojava.nbio.core.sequence.template.Compound;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -48,6 +49,9 @@ import java.util.regex.Pattern;
  * @author Paolo Pavan
  */
 public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
+
+	private boolean isSequenceCircular;
+	private long sequenceLength;
 
 	private final DataSource dataSource;
 
@@ -80,7 +84,6 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
 	 * Not really sure that they are not declared obsolete but they are still in
 	 * several files.
 	 */
-	//protected static final Pattern genbankSplitPattern = Pattern.compile("^\\s?(join|order|bond|complement|)\\(?([^\\)]+)\\)?");
 	protected static final Pattern genbankSplitPattern = Pattern.compile("^\\s?(join|order|bond|complement|)\\(?(.+)\\)?");
 	/**
 	 * designed to recursively split a location string in tokens. Valid tokens
@@ -126,7 +129,13 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
 		return dataSource;
 	}
 
+	public void setSequenceCircular(boolean sequenceCircular) {
+		isSequenceCircular = sequenceCircular;
+	}
 
+	public void setSequenceLength(long sequenceLength) {
+		this.sequenceLength = sequenceLength;
+	}
 
 	/**
 	 * Main method for parsing a location from a String instance
@@ -135,12 +144,12 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
 	 * @return The parsed location
 	 * @throws ParserException thrown in the event of any error during parsing
 	 */
-	public Location parse(String locationString, boolean isSequenceCircular) throws ParserException {
+	public Location parse(String locationString) throws ParserException {
 		featureGlobalStart = Integer.MAX_VALUE;
 		featureGlobalEnd = 1;
 
 		Location l;
-		List<Location> ll = parseLocationString(locationString, 1, isSequenceCircular);
+		List<Location> ll = parseLocationString(locationString, 1);
 
 		if (ll.size() == 1) {
 			l = ll.get(0);
@@ -153,10 +162,6 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
 					ll);
 		}
 		return l;
-	}
-
-	public Location parse(String locationString) throws ParserException {
-		return parse(locationString, false);
 	}
 
 		/**
@@ -173,7 +178,7 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
 		return null;
 	}
 
-	private List<Location> parseLocationString(String string, int versus, boolean isSequenceCircular) throws ParserException {
+	private List<Location> parseLocationString(String string, int versus) throws ParserException {
 		Matcher m;
 		List<Location> boundedLocationsCollection = new ArrayList<Location>();
 
@@ -192,7 +197,7 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
 				//recursive case
 				int localVersus = splitQualifier.equalsIgnoreCase("complement") ? -1 : 1;
 				List<Location> subLocations = parseLocationString(
-						splitString, versus * localVersus, isSequenceCircular);
+						splitString, versus * localVersus);
 
 				switch (complexFeaturesAppendMode) {
 					case FLATTEN:
