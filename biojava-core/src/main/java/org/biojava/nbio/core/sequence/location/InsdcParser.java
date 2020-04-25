@@ -51,7 +51,7 @@ import java.util.regex.Pattern;
 public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
 
 	private boolean isSequenceCircular;
-	private long sequenceLength;
+	private int sequenceLength;
 
 	private final DataSource dataSource;
 
@@ -133,7 +133,7 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
 		isSequenceCircular = sequenceCircular;
 	}
 
-	public void setSequenceLength(long sequenceLength) {
+	public void setSequenceLength(int sequenceLength) {
 		this.sequenceLength = sequenceLength;
 	}
 
@@ -249,11 +249,34 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
 					featureGlobalEnd = end;
 				}
 
-				AbstractLocation l = new SimpleLocation(
-						new SimplePoint(start),
-						new SimplePoint(end),
-						s
-				);
+				AbstractLocation l;
+				if (start < end) {
+					l = new SimpleLocation(
+							new SimplePoint(start),
+							new SimplePoint(end),
+							s
+					);
+				} else {
+					// in case of location spanning the end point, Location contract wants sublocations
+					AbstractLocation l5prime = new SimpleLocation(
+							new SimplePoint(1),
+							new SimplePoint(end),
+							Strand.POSITIVE
+					);
+					AbstractLocation l3prime = new SimpleLocation(
+							new SimplePoint(start),
+							new SimplePoint(sequenceLength),
+							Strand.POSITIVE
+					);
+
+					l = new SimpleLocation(
+							new SimplePoint(start),
+							new SimplePoint(end), // seq length
+							s,
+							isSequenceCircular,
+							Arrays.asList(l5prime, l3prime)
+					);
+				}
 
 				if(m.group(4) != null && m.group(4).equals("^")) l.setBetweenCompounds(true);
 

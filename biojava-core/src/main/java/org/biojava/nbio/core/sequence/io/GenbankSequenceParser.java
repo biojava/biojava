@@ -68,7 +68,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 	private String header;
 	private String accession;
 	private boolean isCircularSequence;
-	private long sequenceLength;
+	private int sequenceLength;
 	public LinkedHashMap<String, ArrayList<DBReferenceInfo>> mapDB;
 	/**
 	 * this data structure collects list of features extracted from the
@@ -162,7 +162,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 				if (m.matches()) {
 					headerParser.setName(m.group(1));
 					headerParser.setAccession(m.group(1)); // default if no accession found
-					sequenceLength = Long.valueOf(m.group(2));
+					sequenceLength = Integer.valueOf(m.group(2));
 					String lengthUnits = m.group(3);
 					String type = m.group(6);
 
