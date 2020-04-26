@@ -180,7 +180,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 						}
 					}
 
-					isCircularSequence = m.group(7).equalsIgnoreCase("circular");
+					if (m.group(7) != null) isCircularSequence = m.group(7).equalsIgnoreCase("circular");
 
 					// configure location parser with needed information
 					locationParser.setSequenceLength(sequenceLength);
