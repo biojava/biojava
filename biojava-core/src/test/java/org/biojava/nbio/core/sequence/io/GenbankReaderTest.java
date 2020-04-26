@@ -24,9 +24,11 @@ import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.core.sequence.DNASequence;
 import org.biojava.nbio.core.sequence.ProteinSequence;
 import org.biojava.nbio.core.sequence.RNASequence;
+import org.biojava.nbio.core.sequence.Strand;
 import org.biojava.nbio.core.sequence.compound.*;
 import org.biojava.nbio.core.sequence.features.FeatureInterface;
 import org.biojava.nbio.core.sequence.features.Qualifier;
+import org.biojava.nbio.core.sequence.location.template.AbstractLocation;
 import org.biojava.nbio.core.sequence.template.AbstractSequence;
 import org.junit.*;
 import org.slf4j.Logger;
@@ -339,6 +341,14 @@ public class GenbankReaderTest {
 		final DNASequence seq = readGenbankResource("/feature-spans-zero-point-circular-sequence.gb");
 
 		assertNotNull(seq);
+
+		final FeatureInterface<AbstractSequence<NucleotideCompound>, NucleotideCompound> f = seq.getFeatures().get(33);
+		final AbstractLocation fLocation = f.getLocations();
+
+		assertEquals(true, fLocation.isCircular());
+		assertEquals(7028, (int)fLocation.getStart().getPosition());
+		assertEquals(286, (int)fLocation.getEnd().getPosition());
+		assertEquals(Strand.NEGATIVE, fLocation.getStrand());
 	}
 
 	/**
