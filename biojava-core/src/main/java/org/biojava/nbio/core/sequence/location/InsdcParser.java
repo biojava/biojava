@@ -50,7 +50,7 @@ import java.util.regex.Pattern;
 public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
 
 	private boolean isSequenceCircular;
-	private int sequenceLength;
+	private long sequenceLength;
 
 	private final DataSource dataSource;
 
@@ -132,7 +132,7 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
 		isSequenceCircular = sequenceCircular;
 	}
 
-	public void setSequenceLength(int sequenceLength) {
+	public void setSequenceLength(long sequenceLength) {
 		this.sequenceLength = sequenceLength;
 	}
 
@@ -264,7 +264,7 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
 							);
 					AbstractLocation l3prime = new SimpleLocation(
 							start,
-							sequenceLength,
+							(int) sequenceLength,
 							Strand.UNDEFINED
 							);
 
