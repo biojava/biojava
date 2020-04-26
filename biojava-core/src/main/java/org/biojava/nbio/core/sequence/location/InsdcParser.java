@@ -35,7 +35,6 @@ import org.biojava.nbio.core.sequence.template.Compound;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -250,32 +249,33 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
 				}
 
 				AbstractLocation l;
-				if (start < end) {
+				if (start <= end) {
 					l = new SimpleLocation(
-							new SimplePoint(start),
-							new SimplePoint(end),
+							start,
+							end,
 							s
 					);
 				} else {
 					// in case of location spanning the end point, Location contract wants sublocations
 					AbstractLocation l5prime = new SimpleLocation(
-							new SimplePoint(1),
-							new SimplePoint(end),
-							Strand.POSITIVE
-					);
+							1,
+							end,
+							Strand.UNDEFINED
+							);
 					AbstractLocation l3prime = new SimpleLocation(
-							new SimplePoint(start),
-							new SimplePoint(sequenceLength),
-							Strand.POSITIVE
-					);
+							start,
+							sequenceLength,
+							Strand.UNDEFINED
+							);
 
-					l = new SimpleLocation(
+					l = new InsdcLocations.GroupLocation(
 							new SimplePoint(start),
-							new SimplePoint(end), // seq length
+							new SimplePoint(end),
 							s,
 							isSequenceCircular,
-							Arrays.asList(l5prime, l3prime)
+							l5prime, l3prime
 					);
+
 				}
 
 				if(m.group(4) != null && m.group(4).equals("^")) l.setBetweenCompounds(true);
