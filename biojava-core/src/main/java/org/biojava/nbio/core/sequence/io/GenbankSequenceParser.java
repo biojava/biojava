@@ -137,7 +137,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 
 
 	private String parse(BufferedReader bufferedReader) {
-		String sectionKey = null;
+		String sectionKey;
 		List<String[]> section;
 		// Get an ordered list of key->value pairs in array-tuples
 		do {
@@ -330,8 +330,8 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 	// reads an indented section, combining split lines and creating a list of
 	// key->value tuples
 	private List<String[]> readSection(BufferedReader bufferedReader) {
-		List<String[]> section = new ArrayList<String[]>();
-		String line = "";
+		List<String[]> section = new ArrayList<>();
+		String line;
 
 		String currKey = null;
 		StringBuffer currVal = new StringBuffer();
