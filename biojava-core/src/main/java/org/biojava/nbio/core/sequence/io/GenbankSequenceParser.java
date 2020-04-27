@@ -168,7 +168,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 				case DBLINK: break;			// not implemented yet
 				default:
 					if(!sectionKey.equals(END_SEQUENCE_TAG)) {
-						log.info("found unknown section key: "+sectionKey);
+						log.info("found unknown section key: %", sectionKey);
 					}
 			}
 		} while (!sectionKey.equals(END_SEQUENCE_TAG));
