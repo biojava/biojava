@@ -153,7 +153,6 @@ public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
 		}
 
 		LinkedHashMap<String,S> sequences = new LinkedHashMap<>();
-		@SuppressWarnings("unchecked")
 		int i=0;
 		while(true) {
 			if(max>0 && i>=max) break;
