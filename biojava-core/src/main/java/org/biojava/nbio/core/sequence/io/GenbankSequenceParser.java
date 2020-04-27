@@ -181,7 +181,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 		// the [0] tuple, and sequence string as [1] so all we have
 		// to do is concat the [1] parts and then strip out spaces,
 		// and replace '.' and '~' with '-' for our parser.
-		StringBuffer seq = new StringBuffer();
+		StringBuilder seq = new StringBuilder();
 		for (int i = 1; i < section.size(); i++) {
 			seq.append(section.get(i)[1]);
 		}
@@ -350,7 +350,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 		String line;
 
 		String currKey = null;
-		StringBuffer currVal = new StringBuffer();
+		StringBuilder currVal = new StringBuilder();
 		boolean done = false;
 		int linecount = 0;
 
@@ -385,7 +385,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 						// not null
 						currKey = m.group(2) == null ? (m.group(4) == null ? m
 								.group(6) : m.group(4)) : m.group(2);
-						currVal = new StringBuffer();
+						currVal = new StringBuilder();
 			// val = group(3) if group(2) not null, group(5) if
 						// group(4) not null, "" otherwise, trimmed
 						currVal.append((m.group(2) == null ? (m.group(4) == null ? ""
