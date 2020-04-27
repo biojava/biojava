@@ -202,7 +202,7 @@ public class GenbankReaderTest {
 		assertTrue(inStream.isclosed());
 
 
-		Assert.assertTrue(proteinSequences.size() == 1);
+		Assert.assertEquals(1, proteinSequences.size());
 		logger.debug("protein sequences: {}", proteinSequences);
 
 		ProteinSequence protein = new ArrayList<>(proteinSequences.values()).get(0);
@@ -213,7 +213,7 @@ public class GenbankReaderTest {
 		List<Qualifier> dbrefs = quals.get("db_xref");
 
 		Assert.assertNotNull(codedBy);
-		Assert.assertTrue(!codedBy.isEmpty());
+		Assert.assertFalse(codedBy.isEmpty());
 		assertEquals("NM_000266.2:503..904", codedBy);
 		assertEquals(5, dbrefs.size());
 
@@ -345,7 +345,7 @@ public class GenbankReaderTest {
 		final FeatureInterface<AbstractSequence<NucleotideCompound>, NucleotideCompound> f = seq.getFeatures().get(33);
 		final AbstractLocation fLocation = f.getLocations();
 
-		assertEquals(true, fLocation.isCircular());
+		assertTrue(fLocation.isCircular());
 		assertEquals(7028, (int)fLocation.getStart().getPosition());
 		assertEquals(286, (int)fLocation.getEnd().getPosition());
 		assertEquals(Strand.NEGATIVE, fLocation.getStrand());
