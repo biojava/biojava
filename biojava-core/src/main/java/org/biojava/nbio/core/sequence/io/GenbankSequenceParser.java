@@ -405,9 +405,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 					}
 				}
 			}
-		} catch (IOException e) {
-			throw new ParserException(e.getMessage());
-		} catch (RuntimeException e) {
+		} catch (IOException | RuntimeException e) {
 			throw new ParserException(e.getMessage());
 		}
 		return section;
