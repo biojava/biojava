@@ -163,20 +163,6 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
 		return l;
 	}
 
-		/**
-         * Reader based version of the parse methods.
-         *
-         * @param reader The source of the data; assumes that end of the reader
-         * stream is the end of the location string to parse
-         * @return The parsed location
-         * @throws IOException Thrown with any reader error
-         * @throws ParserException Thrown with any error with parsing locations
-         */
-	public List<AbstractLocation> parse(Reader reader) throws IOException, ParserException {
-		// use parse(String s) instead!
-		throw new UnsupportedOperationException("Not implemented yet.");
-	}
-
 	private List<Location> parseLocationString(String string, int versus) throws ParserException {
 		Matcher m;
 		List<Location> boundedLocationsCollection = new ArrayList<Location>();
