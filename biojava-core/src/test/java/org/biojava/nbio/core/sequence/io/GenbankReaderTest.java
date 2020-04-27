@@ -53,25 +53,6 @@ public class GenbankReaderTest {
 
 	private final static Logger logger = LoggerFactory.getLogger(GenbankReaderTest.class);
 
-	public GenbankReaderTest() {
-	}
-
-	@BeforeClass
-	public static void setUpClass() throws Exception {
-	}
-
-	@AfterClass
-	public static void tearDownClass() throws Exception {
-	}
-
-	@Before
-	public void setUp() {
-	}
-
-	@After
-	public void tearDown() {
-	}
-
 	/**
 	 * Test of process method, of class GenbankReader.
 	 */
