@@ -37,10 +37,7 @@ import org.biojava.nbio.core.sequence.DataSource;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava.nbio.core.sequence.compound.DNACompoundSet;
 import org.biojava.nbio.core.sequence.compound.RNACompoundSet;
-import org.biojava.nbio.core.sequence.features.AbstractFeature;
-import org.biojava.nbio.core.sequence.features.DBReferenceInfo;
-import org.biojava.nbio.core.sequence.features.Qualifier;
-import org.biojava.nbio.core.sequence.features.TextFeature;
+import org.biojava.nbio.core.sequence.features.*;
 import org.biojava.nbio.core.sequence.io.template.SequenceParserInterface;
 import org.biojava.nbio.core.sequence.location.InsdcParser;
 import org.biojava.nbio.core.sequence.location.template.AbstractLocation;
@@ -49,6 +46,7 @@ import org.biojava.nbio.core.sequence.reference.GenbankReference;
 import org.biojava.nbio.core.sequence.template.AbstractSequence;
 import org.biojava.nbio.core.sequence.template.Compound;
 import org.biojava.nbio.core.sequence.template.CompoundSet;
+import org.biojava.nbio.core.sequence.template.Sequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -292,7 +290,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 						gbFeature.setLocation((AbstractLocation)l);
 
 						if (!featureCollection.containsKey(key)) {
-							featureCollection.put(key, new ArrayList());
+							featureCollection.put(key, new ArrayList<>());
 						}
 						featureCollection.get(key).add(gbFeature);
 					}
