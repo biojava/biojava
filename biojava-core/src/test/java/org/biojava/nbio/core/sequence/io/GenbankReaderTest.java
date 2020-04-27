@@ -336,7 +336,7 @@ public class GenbankReaderTest {
 	/**
 	 * Helper class to be able to verify the closed state of the input stream.
 	 */
-	private class CheckableInputStream extends BufferedInputStream {
+	private static class CheckableInputStream extends BufferedInputStream {
 
 		private boolean closed;
 
