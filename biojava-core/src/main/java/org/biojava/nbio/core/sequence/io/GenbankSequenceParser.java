@@ -415,9 +415,9 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 
 	@Override
 	public String getSequence(BufferedReader bufferedReader, int sequenceLength) {
-		featureCollection = new HashMap<String, ArrayList<AbstractFeature>>();
-		mapDB = new LinkedHashMap<String, ArrayList<DBReferenceInfo>>();
-		headerParser = new GenericGenbankHeaderParser<S, C>();
+		featureCollection = new HashMap<>();
+		mapDB = new LinkedHashMap<>();
+		headerParser = new GenericGenbankHeaderParser<>();
 		try {
 			parse(bufferedReader);
 		} catch (ParserException e) {
@@ -441,7 +441,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 	}
 
 	public ArrayList<String> getKeyWords() {
-		return new ArrayList<String>(featureCollection.keySet());
+		return new ArrayList<>(featureCollection.keySet());
 	}
 
 	public ArrayList<AbstractFeature> getFeatures(String keyword) {
