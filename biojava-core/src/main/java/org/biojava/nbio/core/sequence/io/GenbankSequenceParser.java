@@ -386,7 +386,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 						currKey = m.group(2) == null ? (m.group(4) == null ? m
 								.group(6) : m.group(4)) : m.group(2);
 						currVal = new StringBuilder();
-			// val = group(3) if group(2) not null, group(5) if
+						// val = group(3) if group(2) not null, group(5) if
 						// group(4) not null, "" otherwise, trimmed
 						currVal.append((m.group(2) == null ? (m.group(4) == null ? ""
 								: m.group(5))
