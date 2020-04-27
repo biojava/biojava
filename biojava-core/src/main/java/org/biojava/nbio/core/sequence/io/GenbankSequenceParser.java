@@ -75,7 +75,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 	 */
 	private HashMap<String, ArrayList<AbstractFeature>> featureCollection;
 
-	private Logger log = LoggerFactory.getLogger(getClass());
+	private final Logger log = LoggerFactory.getLogger(getClass());
 
 	// this is a compoundset parsed from header.
 	private CompoundSet<?> compoundType;
