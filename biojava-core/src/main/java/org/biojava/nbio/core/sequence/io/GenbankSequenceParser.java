@@ -257,11 +257,11 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 							if (m.matches()) {
 								String dbname = m.group(1);
 								String raccession = m.group(2);
-								Qualifier xref = new DBReferenceInfo(dbname, raccession);
+								DBReferenceInfo xref = new DBReferenceInfo(dbname, raccession);
 								gbFeature.addQualifier(key, xref);
 
-								ArrayList<DBReferenceInfo> listDBEntry = new ArrayList<DBReferenceInfo>();
-								listDBEntry.add((DBReferenceInfo) xref);
+								ArrayList<DBReferenceInfo> listDBEntry = new ArrayList<>();
+								listDBEntry.add(xref);
 								mapDB.put(key, listDBEntry);
 							} else {
 								throw new ParserException("Bad dbxref");
