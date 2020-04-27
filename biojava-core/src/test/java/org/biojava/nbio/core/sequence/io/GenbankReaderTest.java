@@ -214,7 +214,7 @@ public class GenbankReaderTest {
 
 		Assert.assertNotNull(codedBy);
 		Assert.assertTrue(!codedBy.isEmpty());
-		assertEquals(codedBy, "NM_000266.2:503..904");
+		assertEquals("NM_000266.2:503..904", codedBy);
 		assertEquals(5, dbrefs.size());
 
 	}
