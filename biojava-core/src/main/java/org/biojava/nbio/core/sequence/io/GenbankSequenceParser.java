@@ -118,12 +118,14 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 	protected static final Pattern dbxp = Pattern.compile("^([^:]+):(\\S+)$");
 
 	protected static final InsdcParser locationParser = new InsdcParser(DataSource.GENBANK);
-	//sections start at a line and continue till the first line afterwards with a
-	//non-whitespace first character
-	//we want to match any of the following as a new section within a section
-	//  \s{0,8} word \s{0,7} value
-	//  \s{21} /word = value
-	//  \s{21} /word
+	/**
+	 * sections start at a line and continue till the first line afterwards with a
+	 * 	non-whitespace first character
+	 * 	we want to match any of the following as a new section within a section
+	 * 	  \s{0,8} word \s{0,7} value
+	 * 	  \s{21} /word = value
+	 * 	  \s{21} /word
+	 */
 	protected static final Pattern sectp = Pattern.compile("^(\\s{0,8}(\\S+)\\s{0,7}(.*)|\\s{21}(/\\S+?)=(.*)|\\s{21}(/\\S+))$");
 
 	protected static final Pattern readableFiles = Pattern.compile(".*(g[bp]k*$|\\u002eg[bp].*)");
@@ -131,9 +133,6 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 	private static final String DBSOURCE = "DBSOURCE";
 	private static final String PRIMARY = "PRIMARY";
 	private static final String DBLINK = "DBLINK";
-
-//  private NCBITaxon tax = null;
-
 
 
 	private String parse(BufferedReader bufferedReader) {
