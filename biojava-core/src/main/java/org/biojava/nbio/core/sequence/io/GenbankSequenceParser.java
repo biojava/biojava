@@ -51,10 +51,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -434,18 +431,18 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 		return headerParser;
 	}
 
-	public LinkedHashMap<String, ArrayList<DBReferenceInfo>> getDatabaseReferences() {
+	public Map<String, ArrayList<DBReferenceInfo>> getDatabaseReferences() {
 		return mapDB;
 	}
 
-	public ArrayList<String> getKeyWords() {
+	public List<String> getKeyWords() {
 		return new ArrayList<>(featureCollection.keySet());
 	}
 
-	public ArrayList<AbstractFeature> getFeatures(String keyword) {
+	public List<AbstractFeature> getFeatures(String keyword) {
 		return featureCollection.get(keyword);
 	}
-	public HashMap<String, ArrayList<AbstractFeature>> getFeatures() {
+	public Map<String, ArrayList<AbstractFeature>> getFeatures() {
 		return featureCollection;
 	}
 
