@@ -106,6 +106,9 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 	protected static final String BASE_COUNT_TAG = "BASE";
 	//                                                  "CONTIG"
 	protected static final String START_SEQUENCE_TAG = "ORIGIN";
+	protected static final String DBSOURCE = "DBSOURCE";
+	protected static final String PRIMARY = "PRIMARY";
+	protected static final String DBLINK = "DBLINK";
 	protected static final String END_SEQUENCE_TAG = "//";
 	// locus line
 	protected static final Pattern lp = Pattern.compile("^(\\S+)\\s+(\\d+)\\s+(bp|BP|aa|AA)\\s{0,4}(([dmsDMS][sS]-)?(\\S+))?\\s*(circular|CIRCULAR|linear|LINEAR)?\\s*(\\S+)?\\s*(\\S+)?$");
@@ -130,9 +133,6 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 
 	protected static final Pattern readableFiles = Pattern.compile(".*(g[bp]k*$|\\u002eg[bp].*)");
 	protected static final Pattern headerLine = Pattern.compile("^LOCUS.*");
-	private static final String DBSOURCE = "DBSOURCE";
-	private static final String PRIMARY = "PRIMARY";
-	private static final String DBLINK = "DBLINK";
 
 
 	private String parse(BufferedReader bufferedReader) {
@@ -151,175 +151,192 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 				throw new ParserException(Messages.SECTIONKEYNULL);
 			}
 			// process section-by-section
-			if (sectionKey.equals(LOCUS_TAG)) {
-				String loc = section.get(0)[1];
-				header = loc;
-				Matcher m = lp.matcher(loc);
-				if (m.matches()) {
-					headerParser.setName(m.group(1));
-					headerParser.setAccession(m.group(1)); // default if no accession found
-					sequenceLength = Long.valueOf(m.group(2));
-					String lengthUnits = m.group(3);
-					String type = m.group(6);
-
-					if (lengthUnits.equalsIgnoreCase("aa")) {
-						compoundType = AminoAcidCompoundSet.getAminoAcidCompoundSet();
-					} else if (lengthUnits.equalsIgnoreCase("bp")) {
-						if (type != null) {
-							if (type.contains("RNA")) {
-								compoundType = RNACompoundSet.getRNACompoundSet();
-							} else {
-								compoundType = DNACompoundSet.getDNACompoundSet();
-							}
-						} else {
-							compoundType = DNACompoundSet.getDNACompoundSet();
-						}
+			switch (sectionKey) {
+				case LOCUS_TAG: parseLocusTag(section); break;
+				case DEFINITION_TAG: parseDefinitionTag(section); break;
+				case ACCESSION_TAG: parseAccessionTag(section); break;
+				case VERSION_TAG: parseVersionTag(section); break;
+				case KEYWORDS_TAG: break; 	// not implemented yet
+				case SOURCE_TAG: break; 	// ignore - can get all this from the first feature
+				case REFERENCE_TAG: parseReferenceTag(section); break;
+				case COMMENT_TAG: parseCommentTag(section); break;
+				case FEATURE_TAG: parseFeatureTag(section); break;
+				case BASE_COUNT_TAG: break;	// ignore - can calculate from sequence content later if needed
+				case START_SEQUENCE_TAG: parseStartSequenceTag(section); break;
+				case DBSOURCE: break;		// not implemented yet
+				case PRIMARY: break;		// not implemented yet
+				case DBLINK: break;			// not implemented yet
+				default:
+					if(!sectionKey.equals(END_SEQUENCE_TAG)) {
+						log.info("found unknown section key: "+sectionKey);
 					}
-
-					if (m.group(7) != null) isCircularSequence = m.group(7).equalsIgnoreCase("circular");
-
-					// configure location parser with needed information
-					locationParser.setSequenceLength(sequenceLength);
-					locationParser.setSequenceCircular(isCircularSequence);
-
-					log.debug("compound type: {}", compoundType.getClass().getSimpleName());
-
-				} else {
-					throw new ParserException("Bad locus line");
-				}
-			} else if (sectionKey.equals(DEFINITION_TAG)) {
-				headerParser.setDescription(section.get(0)[1]);
-			} else if (sectionKey.equals(ACCESSION_TAG)) {
-				// if multiple accessions, store only first as accession,
-				// and store rest in annotation
-				String[] accs = section.get(0)[1].split("\\s+");
-				accession = accs[0].trim();
-				headerParser.setAccession(accession);
-			} else if (sectionKey.equals(VERSION_TAG)) {
-				String ver = section.get(0)[1];
-				Matcher m = vp.matcher(ver);
-				if (m.matches()) {
-					String verAcc = m.group(1);
-					if (!accession.equals(verAcc)) {
-						// the version refers to a different accession!
-						// believe the version line, and store the original
-						// accession away in the additional accession set
-						accession = verAcc;
-					}
-					if (m.group(3) != null) {
-						headerParser.setVersion(Integer.parseInt(m.group(3)));
-					}
-					if (m.group(5) != null) {
-						headerParser.setIdentifier(m.group(5));
-					}
-				} else {
-					throw new ParserException("Bad version line");
-				}
-			} else if (sectionKey.equals(KEYWORDS_TAG)) {
-			} else if (sectionKey.equals(SOURCE_TAG)) {
-				// ignore - can get all this from the first feature
-			} else if (sectionKey.equals(REFERENCE_TAG)) {
-				GenbankReference genbankReference = new GenbankReference();
-				for (String[] ref : section) {
-					if (ref[0].equals(AUTHORS_TAG)) {
-						genbankReference.setAuthors(ref[1]);
-					} else if (ref[0].equals(TITLE_TAG)) {
-						genbankReference.setTitle(ref[1]);
-					} else if (ref[0].equals(JOURNAL_TAG)) {
-						genbankReference.setJournal(ref[1]);
-					}
-				}
-				headerParser.addReference(genbankReference);
-
-			} else if (sectionKey.equals(COMMENT_TAG)) {
-				// Set up some comments
-				headerParser.setComment(section.get(0)[1]);
-			} else if (sectionKey.equals(FEATURE_TAG)) {
-				// starting from second line of input, start a new feature whenever we come across
-				// a key that does not start with /
-				AbstractFeature gbFeature = null;
-				for (int i = 1; i < section.size(); i++) {
-					String key = section.get(i)[0];
-					String val = section.get(i)[1];
-					if (key.startsWith("/")) {
-						if (gbFeature == null) {
-							throw new ParserException("Malformed GenBank file: found a qualifier without feature.");
-						}
-						key = key.substring(1); // strip leading slash
-						val = val.replaceAll("\\s*[\\n\\r]+\\s*", " ").trim();
-						if (val.endsWith("\"")) {
-							val = val.substring(1, val.length() - 1); // strip quotes
-						}
-						// parameter on old feature
-						if (key.equals("db_xref")) {
-							Matcher m = dbxp.matcher(val);
-							if (m.matches()) {
-								String dbname = m.group(1);
-								String raccession = m.group(2);
-								DBReferenceInfo xref = new DBReferenceInfo(dbname, raccession);
-								gbFeature.addQualifier(key, xref);
-
-								ArrayList<DBReferenceInfo> listDBEntry = new ArrayList<>();
-								listDBEntry.add(xref);
-								mapDB.put(key, listDBEntry);
-							} else {
-								throw new ParserException("Bad dbxref");
-							}
-						} else if (key.equalsIgnoreCase("organism")) {
-							Qualifier q = new Qualifier(key, val.replace('\n', ' '));
-							gbFeature.addQualifier(key, q);
-						} else {
-							if (key.equalsIgnoreCase("translation")) {
-								// strip spaces from sequence
-								val = val.replaceAll("\\s+", "");
-								Qualifier q = new Qualifier(key, val);
-								gbFeature.addQualifier(key, q);
-							} else {
-								Qualifier q = new Qualifier(key, val);
-								gbFeature.addQualifier(key, q);
-							}
-						}
-					} else {
-						// new feature!
-						gbFeature = new TextFeature(key, val, key, key);
-						Location l =
-								locationParser.parse(val);
-						gbFeature.setLocation((AbstractLocation)l);
-
-						if (!featureCollection.containsKey(key)) {
-							featureCollection.put(key, new ArrayList<>());
-						}
-						featureCollection.get(key).add(gbFeature);
-					}
-				}
-			} else if (sectionKey.equals(BASE_COUNT_TAG)) {
-				// ignore - can calculate from sequence content later if needed
-			} else if (sectionKey.equals(START_SEQUENCE_TAG)) {
-				// our first line is ignorable as it is the ORIGIN tag
-				// the second line onwards conveniently have the number as
-				// the [0] tuple, and sequence string as [1] so all we have
-				// to do is concat the [1] parts and then strip out spaces,
-				// and replace '.' and '~' with '-' for our parser.
-				StringBuffer seq = new StringBuffer();
-				for (int i = 1; i < section.size(); i++) {
-					seq.append(section.get(i)[1]);
-				}
-				seqData = seq.toString().replaceAll("\\s+", "").replaceAll("[\\.|~]", "-").toUpperCase();
-			} else if(sectionKey.equals(DBSOURCE)) {
-				//TODO
-			} else if(sectionKey.equals(PRIMARY)) {
-				//TODO
-			} else if(sectionKey.equals(DBLINK)) {
-				//TODO
-			} else {
-				if(!sectionKey.equals(END_SEQUENCE_TAG)) {
-					log.info("found unknown section key: "+sectionKey);
-				}
 			}
 		} while (!sectionKey.equals(END_SEQUENCE_TAG));
 		return seqData;
 	}
 
+	private void parseStartSequenceTag(List<String[]> section) {
+		// our first line is ignorable as it is the ORIGIN tag
+		// the second line onwards conveniently have the number as
+		// the [0] tuple, and sequence string as [1] so all we have
+		// to do is concat the [1] parts and then strip out spaces,
+		// and replace '.' and '~' with '-' for our parser.
+		StringBuffer seq = new StringBuffer();
+		for (int i = 1; i < section.size(); i++) {
+			seq.append(section.get(i)[1]);
+		}
+		seqData = seq.toString().replaceAll("\\s+", "").replaceAll("[\\.|~]", "-").toUpperCase();
+	}
+
+	private void parseFeatureTag(List<String[]> section) {
+		// starting from second line of input, start a new feature whenever we come across
+		// a key that does not start with /
+		AbstractFeature gbFeature = null;
+		for (int i = 1; i < section.size(); i++) {
+			String key = section.get(i)[0];
+			String val = section.get(i)[1];
+			if (key.startsWith("/")) {
+				if (gbFeature == null) {
+					throw new ParserException("Malformed GenBank file: found a qualifier without feature.");
+				}
+				key = key.substring(1); // strip leading slash
+				val = val.replaceAll("\\s*[\\n\\r]+\\s*", " ").trim();
+				if (val.endsWith("\"")) {
+					val = val.substring(1, val.length() - 1); // strip quotes
+				}
+				// parameter on old feature
+				if (key.equals("db_xref")) {
+					Matcher m = dbxp.matcher(val);
+					if (m.matches()) {
+						String dbname = m.group(1);
+						String raccession = m.group(2);
+						DBReferenceInfo xref = new DBReferenceInfo(dbname, raccession);
+						gbFeature.addQualifier(key, xref);
+
+						ArrayList<DBReferenceInfo> listDBEntry = new ArrayList<>();
+						listDBEntry.add(xref);
+						mapDB.put(key, listDBEntry);
+					} else {
+						throw new ParserException("Bad dbxref");
+					}
+				} else if (key.equalsIgnoreCase("organism")) {
+					Qualifier q = new Qualifier(key, val.replace('\n', ' '));
+					gbFeature.addQualifier(key, q);
+				} else {
+					if (key.equalsIgnoreCase("translation")) {
+						// strip spaces from sequence
+						val = val.replaceAll("\\s+", "");
+						Qualifier q = new Qualifier(key, val);
+						gbFeature.addQualifier(key, q);
+					} else {
+						Qualifier q = new Qualifier(key, val);
+						gbFeature.addQualifier(key, q);
+					}
+				}
+			} else {
+				// new feature!
+				gbFeature = new TextFeature(key, val, key, key);
+				Location l =
+						locationParser.parse(val);
+				gbFeature.setLocation((AbstractLocation)l);
+
+				if (!featureCollection.containsKey(key)) {
+					featureCollection.put(key, new ArrayList<>());
+				}
+				featureCollection.get(key).add(gbFeature);
+			}
+		}
+	}
+
+	private void parseCommentTag(List<String[]> section) {
+		headerParser.setComment(section.get(0)[1]);
+	}
+
+	private void parseReferenceTag(List<String[]> section) {
+		GenbankReference genbankReference = new GenbankReference();
+		for (String[] ref : section) {
+			if (ref[0].equals(AUTHORS_TAG)) {
+				genbankReference.setAuthors(ref[1]);
+			} else if (ref[0].equals(TITLE_TAG)) {
+				genbankReference.setTitle(ref[1]);
+			} else if (ref[0].equals(JOURNAL_TAG)) {
+				genbankReference.setJournal(ref[1]);
+			}
+		}
+		headerParser.addReference(genbankReference);
+	}
+
+	private void parseVersionTag(List<String[]> section) {
+		String ver = section.get(0)[1];
+		Matcher m = vp.matcher(ver);
+		if (m.matches()) {
+			String verAcc = m.group(1);
+			if (!accession.equals(verAcc)) {
+				// the version refers to a different accession!
+				// believe the version line, and store the original
+				// accession away in the additional accession set
+				accession = verAcc;
+			}
+			if (m.group(3) != null) {
+				headerParser.setVersion(Integer.parseInt(m.group(3)));
+			}
+			if (m.group(5) != null) {
+				headerParser.setIdentifier(m.group(5));
+			}
+		} else {
+			throw new ParserException("Bad version line");
+		}
+	}
+
+	private void parseAccessionTag(List<String[]> section) {
+		// if multiple accessions, store only first as accession,
+		// and store rest in annotation
+		String[] accs = section.get(0)[1].split("\\s+");
+		accession = accs[0].trim();
+		headerParser.setAccession(accession);
+	}
+
+	private void parseDefinitionTag(List<String[]> section) {
+		headerParser.setDescription(section.get(0)[1]);
+	}
+
+	private void parseLocusTag(List<String[]> section) {
+		String loc = section.get(0)[1];
+		header = loc;
+		Matcher m = lp.matcher(loc);
+		if (m.matches()) {
+			headerParser.setName(m.group(1));
+			headerParser.setAccession(m.group(1)); // default if no accession found
+			sequenceLength = Long.valueOf(m.group(2));
+			String lengthUnits = m.group(3);
+			String type = m.group(6);
+
+			if (lengthUnits.equalsIgnoreCase("aa")) {
+				compoundType = AminoAcidCompoundSet.getAminoAcidCompoundSet();
+			} else if (lengthUnits.equalsIgnoreCase("bp")) {
+				if (type != null) {
+					if (type.contains("RNA")) {
+						compoundType = RNACompoundSet.getRNACompoundSet();
+					} else {
+						compoundType = DNACompoundSet.getDNACompoundSet();
+					}
+				} else {
+					compoundType = DNACompoundSet.getDNACompoundSet();
+				}
+			}
+
+			if (m.group(7) != null) isCircularSequence = m.group(7).equalsIgnoreCase("circular");
+
+			// configure location parser with needed information
+			locationParser.setSequenceLength(sequenceLength);
+			locationParser.setSequenceCircular(isCircularSequence);
+
+			log.debug("compound type: {}", compoundType.getClass().getSimpleName());
+
+		} else {
+			throw new ParserException("Bad locus line");
+		}
+	}
 
 
 	// reads an indented section, combining split lines and creating a list of
