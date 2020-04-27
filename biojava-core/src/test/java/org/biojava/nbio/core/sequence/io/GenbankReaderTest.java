@@ -154,7 +154,7 @@ public class GenbankReaderTest {
 	 * The underlying {@link InputStream} should remain open until the last call.
 	 */
 	@Test
-	public void testPartialProcess() throws IOException, CompoundNotFoundException, NoSuchFieldException {
+	public void testPartialProcess() throws IOException, CompoundNotFoundException {
 		CheckableInputStream inStream = new CheckableInputStream(this.getClass().getResourceAsStream("/two-dnaseqs.gb"));
 
 		GenbankReader<DNASequence, NucleotideCompound> genbankDNA
