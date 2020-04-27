@@ -31,7 +31,6 @@ import org.biojava.nbio.core.sequence.features.Qualifier;
 import org.biojava.nbio.core.sequence.location.template.AbstractLocation;
 import org.biojava.nbio.core.sequence.template.AbstractSequence;
 import org.biojava.nbio.core.sequence.template.Compound;
-import org.biojava.nbio.core.sequence.template.Sequence;
 import org.junit.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
