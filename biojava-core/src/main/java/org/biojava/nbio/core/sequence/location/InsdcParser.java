@@ -174,7 +174,7 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
          */
 	public List<AbstractLocation> parse(Reader reader) throws IOException, ParserException {
 		// use parse(String s) instead!
-		return null;
+		throw new UnsupportedOperationException("Not implemented yet.");
 	}
 
 	private List<Location> parseLocationString(String string, int versus) throws ParserException {
