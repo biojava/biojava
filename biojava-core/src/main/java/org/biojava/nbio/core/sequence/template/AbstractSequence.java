@@ -126,7 +126,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 
 		if (proxyLoader instanceof FeatureRetriever) {
 			this.setFeatureRetriever((FeatureRetriever) sequenceStorage);
-			HashMap<String, ArrayList<AbstractFeature>> ff = getFeatureRetriever().getFeatures();
+			Map<String, List<AbstractFeature>> ff = getFeatureRetriever().getFeatures();
 			for (String k: ff.keySet()){
 				for (AbstractFeature f: ff.get(k)){
 					this.addFeature(f);

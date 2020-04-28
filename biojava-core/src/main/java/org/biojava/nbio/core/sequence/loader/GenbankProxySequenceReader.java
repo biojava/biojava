@@ -55,9 +55,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
+import java.util.*;
 
 /**
  * @author Karl Nicholas <github:karlnicholas>
@@ -72,7 +70,7 @@ public class GenbankProxySequenceReader<C extends Compound> extends StringProxyS
 	private GenbankSequenceParser<AbstractSequence<C>, C> genbankParser;
 	private GenericGenbankHeaderParser<AbstractSequence<C>, C> headerParser;
 	private String header;
-	private HashMap<String, ArrayList<AbstractFeature>> features;
+	private Map<String, List<AbstractFeature>> features;
 
 
 	/**
@@ -182,17 +180,17 @@ public class GenbankProxySequenceReader<C extends Compound> extends StringProxyS
 		return headerParser;
 	}
 	@Override
-	public HashMap<String, ArrayList<AbstractFeature>> getFeatures() {
+	public Map<String, List<AbstractFeature>> getFeatures() {
 		return features;
 	}
 
 	@Override
-	public LinkedHashMap<String, ArrayList<DBReferenceInfo>> getDatabaseReferences() {
+	public Map<String, List<DBReferenceInfo>> getDatabaseReferences() {
 		return genbankParser.getDatabaseReferences();
 	}
 
 	@Override
-	public ArrayList<String> getKeyWords() {
+	public List<String> getKeyWords() {
 		return genbankParser.getKeyWords();
 	}
 

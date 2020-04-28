@@ -62,13 +62,13 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 	private String header;
 	private String accession;
 	private boolean isCircularSequence;
-	public Map<String, ArrayList<DBReferenceInfo>> mapDB;
+	private Map<String, List<DBReferenceInfo>> mapDB;
 	/**
 	 * this data structure collects list of features extracted from the
 	 * FEATURE_TAG section They are organized by list of the same type (i.e.
 	 * same genbank Feature) and are provided with location
 	 */
-	private HashMap<String, ArrayList<AbstractFeature>> featureCollection;
+	private HashMap<String, List<AbstractFeature>> featureCollection;
 
 	private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -430,7 +430,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 		return headerParser;
 	}
 
-	public Map<String, ArrayList<DBReferenceInfo>> getDatabaseReferences() {
+	public Map<String, List<DBReferenceInfo>> getDatabaseReferences() {
 		return mapDB;
 	}
 
@@ -441,7 +441,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 	public List<AbstractFeature> getFeatures(String keyword) {
 		return featureCollection.get(keyword);
 	}
-	public Map<String, ArrayList<AbstractFeature>> getFeatures() {
+	public Map<String, List<AbstractFeature>> getFeatures() {
 		return featureCollection;
 	}
 

@@ -45,6 +45,7 @@ import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Testing example for issue #834
@@ -187,7 +188,7 @@ public class GenbankProxySequenceReaderTest {
 		ProteinSequence seq = new ProteinSequence(genbankReader);
 
 		// if target protein contain CDS/coded_by than it should contain parent nucleotide seq
-		ArrayList<AbstractFeature> CDSs = genbankReader.getFeatures().get("CDS");
+		List<AbstractFeature> CDSs = genbankReader.getFeatures().get("CDS");
 
 		if (CDSs != null) {
 			if (CDSs.size() == 1) {

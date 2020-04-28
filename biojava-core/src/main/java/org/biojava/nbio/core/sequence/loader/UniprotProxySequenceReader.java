@@ -50,10 +50,7 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -816,8 +813,8 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 	 * @return
 	 */
 	@Override
-	public LinkedHashMap<String, ArrayList<DBReferenceInfo>> getDatabaseReferences()  {
-		LinkedHashMap<String, ArrayList<DBReferenceInfo>> databaseReferencesHashMap = new LinkedHashMap<String, ArrayList<DBReferenceInfo>>();
+	public Map<String, List<DBReferenceInfo>> getDatabaseReferences()  {
+		Map<String, List<DBReferenceInfo>> databaseReferencesHashMap = new LinkedHashMap<>();
 		if (uniprotDoc == null) {
 			return databaseReferencesHashMap;
 		}
@@ -829,7 +826,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 			for (Element element : dbreferenceElementList) {
 				String type = element.getAttribute("type");
 				String id = element.getAttribute("id");
-				ArrayList<DBReferenceInfo> idlist = databaseReferencesHashMap.get(type);
+				List<DBReferenceInfo> idlist = databaseReferencesHashMap.get(type);
 				if (idlist == null) {
 					idlist = new ArrayList<DBReferenceInfo>();
 					databaseReferencesHashMap.put(type, idlist);
@@ -846,7 +843,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 			}
 		} catch (XPathExpressionException e) {
 			logger.error("Problems while parsing db references in UniProt XML: {}. No db references will be available.",e.getMessage());
-			return new LinkedHashMap<String, ArrayList<DBReferenceInfo>>();
+			return new LinkedHashMap<>();
 		}
 
 		return databaseReferencesHashMap;
