@@ -41,6 +41,8 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -160,7 +162,7 @@ public class GFF3FromUniprotBlastHits {
 								FeaturesKeyWordInterface featureKeyWords = proteinSequence.getFeaturesKeyWord();
 								String notes = "";
 								if (featureKeyWords != null) {
-									ArrayList<String> keyWords = featureKeyWords.getKeyWords();
+									List<String> keyWords = featureKeyWords.getKeyWords();
 									if (keyWords.size() > 0) {
 										notes = ";Note=";
 										for (String note : keyWords) {
@@ -180,11 +182,11 @@ public class GFF3FromUniprotBlastHits {
 
 								DatabaseReferenceInterface databaseReferences = proteinSequence.getDatabaseReferences();
 								if (databaseReferences != null) {
-									LinkedHashMap<String, ArrayList<DBReferenceInfo>> databaseReferenceHashMap = databaseReferences.getDatabaseReferences();
-									ArrayList<DBReferenceInfo> pfamList = databaseReferenceHashMap.get("Pfam");
-									ArrayList<DBReferenceInfo> cazyList = databaseReferenceHashMap.get("CAZy");
-									ArrayList<DBReferenceInfo> goList = databaseReferenceHashMap.get("GO");
-									ArrayList<DBReferenceInfo> eccList = databaseReferenceHashMap.get("BRENDA");
+									Map<String, List<DBReferenceInfo>> databaseReferenceHashMap = databaseReferences.getDatabaseReferences();
+									List<DBReferenceInfo> pfamList = databaseReferenceHashMap.get("Pfam");
+									List<DBReferenceInfo> cazyList = databaseReferenceHashMap.get("CAZy");
+									List<DBReferenceInfo> goList = databaseReferenceHashMap.get("GO");
+									List<DBReferenceInfo> eccList = databaseReferenceHashMap.get("BRENDA");
 									if (pfamList != null && pfamList.size() > 0) {
 										if (notes.length() == 0) {
 											notes = ";Note=";
