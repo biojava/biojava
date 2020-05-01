@@ -42,10 +42,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Testing example for issue #834
@@ -192,8 +192,9 @@ public class GenbankProxySequenceReaderTest {
 
 		if (CDSs != null) {
 			if (CDSs.size() == 1) {
-				ArrayList<Qualifier> qualifiers = (ArrayList)CDSs.get(0).getQualifiers().get("coded_by");
-				Qualifier codedBy = qualifiers.get(0);
+				final Map<String, List<Qualifier>> qualifiers = CDSs.get(0).getQualifiers();
+				List<Qualifier> codedByQualifiers = qualifiers.get("coded_by");
+				Qualifier codedBy = codedByQualifiers.get(0);
 				if (codedBy != null) {
 
 					AbstractSequence<?> parentSeq = seq.getParentSequence();
