@@ -238,7 +238,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 		if(! Equals.classEqual(this, o)) {
 			return false;
 		}
-
+		@SuppressWarnings("unchecked")
 		Sequence<C> other = (Sequence<C>)o;
 		if ( other.getCompoundSet() != getCompoundSet())
 			return false;
