@@ -37,7 +37,10 @@ import org.biojava.nbio.core.sequence.DataSource;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava.nbio.core.sequence.compound.DNACompoundSet;
 import org.biojava.nbio.core.sequence.compound.RNACompoundSet;
-import org.biojava.nbio.core.sequence.features.*;
+import org.biojava.nbio.core.sequence.features.AbstractFeature;
+import org.biojava.nbio.core.sequence.features.DBReferenceInfo;
+import org.biojava.nbio.core.sequence.features.Qualifier;
+import org.biojava.nbio.core.sequence.features.TextFeature;
 import org.biojava.nbio.core.sequence.io.template.SequenceParserInterface;
 import org.biojava.nbio.core.sequence.location.InsdcParser;
 import org.biojava.nbio.core.sequence.location.template.AbstractLocation;
@@ -447,7 +450,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 
 	public void parseFeatures(AbstractSequence<C> sequence) {
 		for (String k: featureCollection.keySet())
-			for (AbstractFeature f: featureCollection.get(k))
+			for (AbstractFeature<AbstractSequence<C>, C> f: featureCollection.get(k))
 				sequence.addFeature(f);
 	}
 
