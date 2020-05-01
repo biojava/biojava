@@ -71,7 +71,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 	 * FEATURE_TAG section They are organized by list of the same type (i.e.
 	 * same genbank Feature) and are provided with location
 	 */
-	private HashMap<String, List<AbstractFeature>> featureCollection;
+	private Map<String, List<AbstractFeature<AbstractSequence<C>, C>>> featureCollection;
 
 	private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -441,10 +441,10 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 		return new ArrayList<>(featureCollection.keySet());
 	}
 
-	public List<AbstractFeature> getFeatures(String keyword) {
+	public List<AbstractFeature<AbstractSequence<C>, C>> getFeatures(String keyword) {
 		return featureCollection.get(keyword);
 	}
-	public Map<String, List<AbstractFeature>> getFeatures() {
+	public Map<String, List<AbstractFeature<AbstractSequence<C>, C>>> getFeatures() {
 		return featureCollection;
 	}
 

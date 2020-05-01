@@ -22,6 +22,9 @@
 
 package org.biojava.nbio.core.sequence.features;
 
+import org.biojava.nbio.core.sequence.template.AbstractSequence;
+import org.biojava.nbio.core.sequence.template.Compound;
+
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +33,6 @@ import java.util.Map;
  * has a list features
  * @author @author Paolo Pavan
  */
-public interface FeatureRetriever {
-	Map<String, List<AbstractFeature>> getFeatures();
+public interface FeatureRetriever<C extends Compound> {
+	Map<String, List<AbstractFeature<AbstractSequence<C>, C>>> getFeatures();
 }

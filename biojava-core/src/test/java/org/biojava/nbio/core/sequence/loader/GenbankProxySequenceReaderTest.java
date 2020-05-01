@@ -188,7 +188,7 @@ public class GenbankProxySequenceReaderTest {
 		ProteinSequence seq = new ProteinSequence(genbankReader);
 
 		// if target protein contain CDS/coded_by than it should contain parent nucleotide seq
-		List<AbstractFeature> CDSs = genbankReader.getFeatures().get("CDS");
+		List<AbstractFeature<AbstractSequence<AminoAcidCompound>, AminoAcidCompound>> CDSs = genbankReader.getFeatures().get("CDS");
 
 		if (CDSs != null) {
 			if (CDSs.size() == 1) {
