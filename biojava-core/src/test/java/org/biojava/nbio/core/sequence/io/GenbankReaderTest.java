@@ -50,7 +50,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
@@ -163,27 +162,6 @@ public class GenbankReaderTest {
 		assertEquals("GENBANK", dnaSequence.getAccession().getDataSource().name());
 		assertEquals(3, dnaSequence.getAccession().getVersion().intValue());
 		assertTrue(genbankDNA.isClosed());
-	}
-	
-	@Test
-	public void testSequenceStream() {
-		CheckableInputStream inStream = new CheckableInputStream(this.getClass().getResourceAsStream("/two-dnaseqs.gb"));
-
-		GenbankReader<DNASequence, NucleotideCompound> genbankDNA
-				= new GenbankReader<>(
-				inStream,
-				new GenericGenbankHeaderParser<>(),
-				new DNASequenceCreator(DNACompoundSet.getDNACompoundSet())
-		);
-		
-		Stream<DNASequence> seqStream = genbankDNA.getSequencesAsStream();
-		assertEquals(seqStream.count(),2);
-		
-		assertFalse(genbankDNA.isClosed());
-		genbankDNA.close();
-		assertTrue(genbankDNA.isClosed());
-		assertTrue(inStream.isclosed());
-
 	}
 
 	/**
