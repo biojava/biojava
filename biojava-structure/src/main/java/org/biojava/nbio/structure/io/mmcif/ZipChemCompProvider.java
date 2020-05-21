@@ -236,7 +236,7 @@ public class ZipChemCompProvider implements ChemCompProvider{
 		final String filename = "chemcomp/" + recordName+".cif.gz";
 
 		// try with resources block to read from the filesystem.
-		try (FileSystem fs = FileSystems.newFileSystem(m_zipFile, null)) {
+		try (FileSystem fs = FileSystems.newFileSystem(m_zipFile, (ClassLoader) null)) {
 			Path cif = fs.getPath(filename);
 
 			if (Files.exists(cif)) {
