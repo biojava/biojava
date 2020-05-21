@@ -67,6 +67,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 	private GenericGenbankHeaderParser<S, C> headerParser;
 	private String header;
 	private String accession;
+	private String srcRecord = "";
 	public LinkedHashMap<String, ArrayList<DBReferenceInfo>> mapDB;
 	/**
 	 * this data structure collects list of features extracted from the
@@ -354,6 +355,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 					bufferedReader.reset();
 					done = true;
 				} else {
+					srcRecord += line + "\n";
 					Matcher m = sectp.matcher(line);
 					if (m.matches()) {
 						// new key
@@ -439,5 +441,23 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 
 	public CompoundSet<?> getCompoundType() {
 		return compoundType;
+	}
+
+
+
+	/**
+	 * @return the srcRecord
+	 */
+	public String getSrcRecord() {
+		return srcRecord;
+	}
+
+
+
+	/**
+	 * @param srcRecord the srcRecord to set
+	 */
+	public void setSrcRecord(String srcRecord) {
+		this.srcRecord = srcRecord;
 	}
 }

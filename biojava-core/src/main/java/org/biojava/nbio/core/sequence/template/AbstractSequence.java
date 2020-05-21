@@ -77,6 +77,8 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 	private List<String> comments = new ArrayList<>();
 	private List<AbstractReference> references;
 
+	private String srcRecord;
+
 	public AbstractSequence() {
 	}
 
@@ -732,5 +734,18 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 		return SequenceMixin.inverse(this);
 	}
 
+	/**
+	 * @return the srcRecord
+	 */
+	public String getSrcRecord() {
+		return srcRecord;
+	}
+
+	/**
+	 * @param srcRecord the srcRecord to set
+	 */
+	public void setSrcRecord(String srcRecord) {
+		this.srcRecord = srcRecord;
+	}
 
 }

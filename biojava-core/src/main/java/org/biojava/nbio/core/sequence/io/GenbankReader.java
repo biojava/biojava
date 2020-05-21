@@ -153,10 +153,10 @@ public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
 		}
 
 		LinkedHashMap<String,S> sequences = new LinkedHashMap<>();
-		@SuppressWarnings("unchecked")
 		int i=0;
 		while(true) {
 			if(max>0 && i>=max) break;
+			genbankParser.setSrcRecord("");
 			i++;
 			String seqString = genbankParser.getSequence(bufferedReader, 0);
 			//reached end of file?
@@ -165,6 +165,8 @@ public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
 			S sequence = (S) sequenceCreator.getSequence(seqString, 0);
 			genbankParser.getSequenceHeaderParser().parseHeader(genbankParser.getHeader(), sequence);
 
+			sequence.setSrcRecord(genbankParser.getSrcRecord());
+			
 			// add features to new sequence
 			genbankParser.getFeatures().values().stream()
 			.flatMap(List::stream)
