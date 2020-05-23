@@ -736,6 +736,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 
 	/**
 	 * @return the srcRecord
+	 * This is thee entire unparsed file/record record for the sequence
 	 */
 	public String getSrcRecord() {
 		return srcRecord;
