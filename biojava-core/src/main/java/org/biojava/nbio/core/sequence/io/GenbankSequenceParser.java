@@ -67,6 +67,8 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 	private GenericGenbankHeaderParser<S, C> headerParser;
 	private String header;
 	private String accession;
+	private boolean isCircularSequence;
+	private long sequenceLength;
 	public LinkedHashMap<String, ArrayList<DBReferenceInfo>> mapDB;
 	/**
 	 * this data structure collects list of features extracted from the
@@ -109,7 +111,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 	protected static final String START_SEQUENCE_TAG = "ORIGIN";
 	protected static final String END_SEQUENCE_TAG = "//";
 	// locus line
-	protected static final Pattern lp = Pattern.compile("^(\\S+)\\s+\\d+\\s+(bp|BP|aa|AA)\\s{0,4}(([dmsDMS][sS]-)?(\\S+))?\\s*(circular|CIRCULAR|linear|LINEAR)?\\s*(\\S+)?\\s*(\\S+)?$");
+	protected static final Pattern lp = Pattern.compile("^(\\S+)\\s+(\\d+)\\s+(bp|BP|aa|AA)\\s{0,4}(([dmsDMS][sS]-)?(\\S+))?\\s*(circular|CIRCULAR|linear|LINEAR)?\\s*(\\S+)?\\s*(\\S+)?$");
 	// version line
 	protected static final Pattern vp = Pattern.compile("^(\\S*?)(\\.(\\d+))?(\\s+GI:(\\S+))?$");
 	// reference line
@@ -160,9 +162,9 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 				if (m.matches()) {
 					headerParser.setName(m.group(1));
 					headerParser.setAccession(m.group(1)); // default if no accession found
-
-					String lengthUnits = m.group(2);
-					String type = m.group(5);
+					sequenceLength = Long.valueOf(m.group(2));
+					String lengthUnits = m.group(3);
+					String type = m.group(6);
 
 					if (lengthUnits.equalsIgnoreCase("aa")) {
 						compoundType = AminoAcidCompoundSet.getAminoAcidCompoundSet();
@@ -177,6 +179,12 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 							compoundType = DNACompoundSet.getDNACompoundSet();
 						}
 					}
+
+					if (m.group(7) != null) isCircularSequence = m.group(7).equalsIgnoreCase("circular");
+
+					// configure location parser with needed information
+					locationParser.setSequenceLength(sequenceLength);
+					locationParser.setSequenceCircular(isCircularSequence);
 
 					log.debug("compound type: {}", compoundType.getClass().getSimpleName());
 

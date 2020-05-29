@@ -128,9 +128,9 @@ public abstract class AbstractLocation implements Serializable, Location {
 		int st = getStart().getPosition();
 		int e = getEnd().getPosition();
 
-		if (st > e) {
+		if (st > e && ! isCircular()) {
 			throw new IllegalStateException(
-					String.format("Start (%d) is greater than end (%d); "
+					String.format("Start (%d) is greater than end (%d) in non circular sequence; "
 					+ "this is an incorrect format",
 					st, e));
 		}

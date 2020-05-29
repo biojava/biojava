@@ -49,6 +49,9 @@ import java.util.regex.Pattern;
  */
 public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
 
+	private boolean isSequenceCircular;
+	private long sequenceLength;
+
 	private final DataSource dataSource;
 
 		/**
@@ -80,7 +83,6 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
 	 * Not really sure that they are not declared obsolete but they are still in
 	 * several files.
 	 */
-	//protected static final Pattern genbankSplitPattern = Pattern.compile("^\\s?(join|order|bond|complement|)\\(?([^\\)]+)\\)?");
 	protected static final Pattern genbankSplitPattern = Pattern.compile("^\\s?(join|order|bond|complement|)\\(?(.+)\\)?");
 	/**
 	 * designed to recursively split a location string in tokens. Valid tokens
@@ -126,7 +128,13 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
 		return dataSource;
 	}
 
+	public void setSequenceCircular(boolean sequenceCircular) {
+		isSequenceCircular = sequenceCircular;
+	}
 
+	public void setSequenceLength(long sequenceLength) {
+		this.sequenceLength = sequenceLength;
+	}
 
 	/**
 	 * Main method for parsing a location from a String instance
@@ -146,23 +154,24 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
 			l = ll.get(0);
 		} else {
 			l = new SimpleLocation(
-					featureGlobalStart,
-					featureGlobalEnd,
+					new SimplePoint(featureGlobalStart),
+					new SimplePoint(featureGlobalEnd),
 					Strand.UNDEFINED,
+					isSequenceCircular,
 					ll);
 		}
 		return l;
 	}
 
-	/**
-	 * Reader based version of the parse methods.
-	 *
-	 * @param reader The source of the data; assumes that end of the reader
-	 * stream is the end of the location string to parse
-	 * @return The parsed location
-	 * @throws IOException Thrown with any reader error
-	 * @throws ParserException Thrown with any error with parsing locations
-	 */
+		/**
+         * Reader based version of the parse methods.
+         *
+         * @param reader The source of the data; assumes that end of the reader
+         * stream is the end of the location string to parse
+         * @return The parsed location
+         * @throws IOException Thrown with any reader error
+         * @throws ParserException Thrown with any error with parsing locations
+         */
 	public List<AbstractLocation> parse(Reader reader) throws IOException, ParserException {
 		// use parse(String s) instead!
 		return null;
@@ -186,7 +195,8 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
 			if (!splitQualifier.isEmpty()) {
 				//recursive case
 				int localVersus = splitQualifier.equalsIgnoreCase("complement") ? -1 : 1;
-				List<Location> subLocations = parseLocationString(splitString, versus * localVersus);
+				List<Location> subLocations = parseLocationString(
+						splitString, versus * localVersus);
 
 				switch (complexFeaturesAppendMode) {
 					case FLATTEN:
@@ -228,8 +238,8 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
 
 				String accession = m.group(1);
 				Strand s = versus == 1 ? Strand.POSITIVE : Strand.NEGATIVE;
-				int start = Integer.parseInt(m.group(3));
-				int end = m.group(6) == null ? start : new Integer(m.group(6));
+				int start = Integer.valueOf(m.group(3));
+				int end = m.group(6) == null ? start : Integer.valueOf(m.group(6));
 
 				if (featureGlobalStart > start) {
 					featureGlobalStart = start;
@@ -238,11 +248,35 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
 					featureGlobalEnd = end;
 				}
 
-				AbstractLocation l = new SimpleLocation(
-						start,
-						end,
-						s
-				);
+				AbstractLocation l;
+				if (start <= end) {
+					l = new SimpleLocation(
+							start,
+							end,
+							s
+					);
+				} else {
+					// in case of location spanning the end point, Location contract wants sublocations
+					AbstractLocation l5prime = new SimpleLocation(
+							1,
+							end,
+							Strand.UNDEFINED
+							);
+					AbstractLocation l3prime = new SimpleLocation(
+							start,
+							(int) sequenceLength,
+							Strand.UNDEFINED
+							);
+
+					l = new InsdcLocations.GroupLocation(
+							new SimplePoint(start),
+							new SimplePoint(end),
+							s,
+							isSequenceCircular,
+							l5prime, l3prime
+					);
+
+				}
 
 				if(m.group(4) != null && m.group(4).equals("^")) l.setBetweenCompounds(true);
 

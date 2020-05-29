@@ -22,41 +22,26 @@ package org.biojava.nbio.core.sequence.io;
 
 import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.core.sequence.DNASequence;
-import org.biojava.nbio.core.sequence.RNASequence;
 import org.biojava.nbio.core.sequence.ProteinSequence;
-import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
-import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
-import org.biojava.nbio.core.sequence.compound.DNACompoundSet;
-import org.biojava.nbio.core.sequence.compound.RNACompoundSet;
-import org.biojava.nbio.core.sequence.compound.NucleotideCompound;
+import org.biojava.nbio.core.sequence.RNASequence;
+import org.biojava.nbio.core.sequence.Strand;
+import org.biojava.nbio.core.sequence.compound.*;
 import org.biojava.nbio.core.sequence.features.FeatureInterface;
 import org.biojava.nbio.core.sequence.features.Qualifier;
+import org.biojava.nbio.core.sequence.location.template.AbstractLocation;
 import org.biojava.nbio.core.sequence.template.AbstractSequence;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  *
@@ -229,7 +214,7 @@ public class GenbankReaderTest {
 
 		Assert.assertNotNull(codedBy);
 		Assert.assertTrue(!codedBy.isEmpty());
-		assertEquals(codedBy, "NM_000266.2:503..904");
+		assertEquals("NM_000266.2:503..904", codedBy);
 		assertEquals(5, dbrefs.size());
 
 	}
@@ -348,6 +333,22 @@ public class GenbankReaderTest {
 		assertEquals("ABC12.3_DE", header7.getAccession().getID());
 		assertEquals("AminoAcidCompoundSet", header7.getCompoundSet().getClass().getSimpleName());
 		
+	}
+
+	@Test
+	public void readSequenceWithZeroSpanFeature() throws IOException, CompoundNotFoundException {
+		logger.info("make or read genbank file error when feature spans zero point of circular sequence (issue #855)");
+		final DNASequence seq = readGenbankResource("/feature-spans-zero-point-circular-sequence.gb");
+
+		assertNotNull(seq);
+
+		final FeatureInterface<AbstractSequence<NucleotideCompound>, NucleotideCompound> f = seq.getFeatures().get(33);
+		final AbstractLocation fLocation = f.getLocations();
+
+		assertEquals(true, fLocation.isCircular());
+		assertEquals(7028, (int)fLocation.getStart().getPosition());
+		assertEquals(286, (int)fLocation.getEnd().getPosition());
+		assertEquals(Strand.NEGATIVE, fLocation.getStrand());
 	}
 
 	/**
