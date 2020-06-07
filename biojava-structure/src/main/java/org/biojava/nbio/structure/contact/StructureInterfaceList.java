@@ -74,7 +74,7 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 
 	private static final long serialVersionUID = 1L;
 
-	private List<StructureInterface> list;
+	private final List<StructureInterface> list;
 
 	private List<StructureInterfaceCluster> clusters = null;
 	private List<StructureInterfaceCluster> clustersNcs = null;
@@ -91,6 +91,10 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 
 	public int size() {
 		return this.list.size();
+	}
+
+	public List<StructureInterface> getList() {
+		return list;
 	}
 
 	/**
