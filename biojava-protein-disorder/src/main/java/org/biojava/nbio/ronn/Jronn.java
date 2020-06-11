@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 
 /**
@@ -247,9 +248,7 @@ public class Jronn implements Serializable {
 	 */
 	public static Map<FastaSequence,float[]> getDisorderScores(List<FastaSequence> sequences) {
 		Map<FastaSequence,float[]> results = new TreeMap<FastaSequence, float[]>();
-		for(FastaSequence fsequence : sequences) {
-			results.put(fsequence, predictSerial(fsequence));
-		}
+		results = sequences.stream().collect(Collectors.toMap(sequence ->  sequence, sequence -> predictSerial(sequence)));
 		return results;
 	}
 
@@ -262,6 +261,8 @@ public class Jronn implements Serializable {
 	 */
 	public static Map<FastaSequence,Range[]> getDisorder(List<FastaSequence> sequences) {
 		Map<FastaSequence,Range[]> disorderRanges = new TreeMap<FastaSequence,Range[]>();
+		disorderRanges = sequences.stream()
+															.collect(Collectors.toMap(sequence -> sequence, sequence -> getDisorder(sequence) ));
 		for(FastaSequence fs: sequences) {
 			disorderRanges.put(fs, getDisorder(fs));
 		}

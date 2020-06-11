@@ -534,9 +534,6 @@ public class PeptideProperties {
 	public static final Map<String, Double> getAACompositionString(String sequence){
 		Map<AminoAcidCompound, Double> aa2Composition = getAAComposition(sequence);
 		Map<String, Double> aaString2Composition = new HashMap<String, Double>();
-		for(AminoAcidCompound aaCompound:aa2Composition.keySet()){
-			aaString2Composition.put(aaCompound.getShortName(), aa2Composition.get(aaCompound));
-		}
 		aaString2Composition = aa2Composition.keySet()
 																							.stream()
 																							.collect(Collectors.toMap(aaCompound -> aaCompound.getShortName(),
