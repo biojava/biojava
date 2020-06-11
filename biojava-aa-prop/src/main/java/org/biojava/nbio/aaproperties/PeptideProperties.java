@@ -68,7 +68,7 @@ public class PeptideProperties {
 	static{
 		standardAASet = Arrays.stream(SingleLetterAACode.values())
                                       .map(singleLetterAACode -> singleLetterAACode.toString().charAt(0))
-                        .             .collect(Collectors.toCollection(HashSet::new));
+                                      .collect(Collectors.toCollection(HashSet::new));
 	}
 
 	/**
