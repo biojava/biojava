@@ -261,11 +261,7 @@ public class Jronn implements Serializable {
 	 */
 	public static Map<FastaSequence,Range[]> getDisorder(List<FastaSequence> sequences) {
 		Map<FastaSequence,Range[]> disorderRanges = new TreeMap<FastaSequence,Range[]>();
-		disorderRanges = sequences.stream()
-															.collect(Collectors.toMap(sequence -> sequence, sequence -> getDisorder(sequence) ));
-		for(FastaSequence fs: sequences) {
-			disorderRanges.put(fs, getDisorder(fs));
-		}
+		disorderRanges = sequences.stream().collect(Collectors.toMap(sequence -> sequence, sequence -> getDisorder(sequence) ));
 		return disorderRanges;
 	}
 
