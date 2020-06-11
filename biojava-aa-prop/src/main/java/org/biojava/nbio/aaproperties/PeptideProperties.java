@@ -31,10 +31,12 @@ import org.slf4j.LoggerFactory;
 import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * This is an adaptor class which enable the ease of generating protein properties.
@@ -64,8 +66,9 @@ public class PeptideProperties {
 	 * To initialize the standardAASet
 	 */
 	static{
-		standardAASet = new HashSet<Character>();
-		for(SingleLetterAACode c:SingleLetterAACode.values()) standardAASet.add(c.toString().charAt(0));
+		standardAASet = Arrays.stream(SingleLetterAACode.values())
+                                      .map(singleLetterAACode -> singleLetterAACode.toString().charAt(0))
+                        .             .collect(Collectors.toCollection(HashSet::new));
 	}
 
 	/**

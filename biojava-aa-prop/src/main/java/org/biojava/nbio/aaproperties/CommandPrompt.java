@@ -327,9 +327,7 @@ public class CommandPrompt {
 			}
 		}
 		output.print(header.replace(delimiter, "_"));
-		for(int i = 0; i < dList.size(); i++){
-			output.print(delimiter + Utils.roundToDecimals(dList.get(i), decimalPlace));
-		}
+		dList.forEach(item -> System.out.print(delimiter + Utils.roundToDecimals(dList.get(item), decimalPlace)));
 		output.println();
 		output.flush();
 	}

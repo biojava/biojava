@@ -23,6 +23,7 @@ package org.biojava.nbio.core.sequence.template;
 import org.biojava.nbio.core.sequence.compound.NucleotideCompound;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -66,13 +67,10 @@ public abstract class AbstractNucleotideCompoundSet<C extends NucleotideCompound
 	protected void calculateIndirectAmbiguities() {
 		Map<NucleotideCompound, List<NucleotideCompound>> equivalentsMap = new HashMap<NucleotideCompound, List<NucleotideCompound>>();
 
-		List<NucleotideCompound> ambiguousCompounds = new ArrayList<NucleotideCompound>();
-		for(NucleotideCompound compound: getAllCompounds()) {
-			if (!compound.isAmbiguous()) {
-				continue;
-			}
-			ambiguousCompounds.add(compound);
-		}
+		List<NucleotideCompound> ambiguousCompounds = getAllCompounds().stream()		 
+                                                                               .filter(compound -> compound.isAmbiguous())
+                                                                               .collect(Collectors.toCollection(ArrayList::new));
+                        
 
 		for(NucleotideCompound sourceCompound: ambiguousCompounds) {
 			Set<NucleotideCompound> compoundConstituents = sourceCompound.getConstituents();
