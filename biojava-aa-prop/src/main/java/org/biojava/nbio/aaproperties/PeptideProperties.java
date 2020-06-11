@@ -37,6 +37,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * This is an adaptor class which enable the ease of generating protein properties.
@@ -536,6 +537,10 @@ public class PeptideProperties {
 		for(AminoAcidCompound aaCompound:aa2Composition.keySet()){
 			aaString2Composition.put(aaCompound.getShortName(), aa2Composition.get(aaCompound));
 		}
+		aaString2Composition = aa2Composition.keySet()
+																							.stream()
+																							.collect(Collectors.toMap(aaCompound -> aaCompound.getShortName(),
+																																							aaCompound ->aa2Composition.get(aaCompound)));
 		return aaString2Composition;
 	}
 
