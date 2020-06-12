@@ -31,10 +31,13 @@ import org.slf4j.LoggerFactory;
 import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * This is an adaptor class which enable the ease of generating protein properties.
@@ -64,8 +67,9 @@ public class PeptideProperties {
 	 * To initialize the standardAASet
 	 */
 	static{
-		standardAASet = new HashSet<Character>();
-		for(SingleLetterAACode c:SingleLetterAACode.values()) standardAASet.add(c.toString().charAt(0));
+		standardAASet = Arrays.stream(SingleLetterAACode.values())
+                                      .map(singleLetterAACode -> singleLetterAACode.toString().charAt(0))
+                                      .collect(Collectors.toCollection(HashSet::new));
 	}
 
 	/**
@@ -530,9 +534,7 @@ public class PeptideProperties {
 	public static final Map<String, Double> getAACompositionString(String sequence){
 		Map<AminoAcidCompound, Double> aa2Composition = getAAComposition(sequence);
 		Map<String, Double> aaString2Composition = new HashMap<String, Double>();
-		for(AminoAcidCompound aaCompound:aa2Composition.keySet()){
-			aaString2Composition.put(aaCompound.getShortName(), aa2Composition.get(aaCompound));
-		}
+		aaString2Composition = aa2Composition.keySet().stream() .collect(Collectors.toMap(aaCompound -> aaCompound.getShortName(),aaCompound ->aa2Composition.get(aaCompound)));
 		return aaString2Composition;
 	}
 
