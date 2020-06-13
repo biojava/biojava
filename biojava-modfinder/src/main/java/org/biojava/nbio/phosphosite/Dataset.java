@@ -29,7 +29,10 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Phosphosite is available under the PhosphoSitePlus® is licensed under Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License and is freely available for non-commercial purposes from
@@ -76,27 +79,12 @@ public class Dataset {
 	}
 
 	public File[] getLocalFiles(){
-
 		String[] rfiles = getRemoteFiles();
-
-
 		File dir = getLocalDir();
-
-		List<File> files = new ArrayList<File>();
-		for ( String f : rfiles) {
-
-
-			int slashIndex = f.lastIndexOf("/");
-
-			String fileName = f.substring(slashIndex);
-
-			File localFile = new File(dir+"/" + fileName);
-
-			if (  localFile.exists()){
-				files.add(localFile);
-			}
-
-		}
+		List<File> files =  Arrays.stream(rfiles).map(remoteFileName -> remoteFileName.substring(remoteFileName.lastIndexOf("/")))
+																			.map(localFile -> new File(dir+"/"+localFile))
+																			.filter(file -> file.exists())
+																			.collect(Collectors.toList());
 
 		return files.toArray(new File[files.size()]);
 	}
