@@ -89,7 +89,7 @@ public class Utils {
 	 */
 	public final static int getNumberOfInvalidChar(String sequence,  Set<Character> cSet, boolean ignoreCase){
 		char[] cArray = ignoreCase ? sequence.toUpperCase().toCharArray(): sequence.toCharArray();
-		final Set<Character> characterSet = cSet == null ? cSet : PeptideProperties.standardAASet;
+		final Set<Character> characterSet = cSet == null ?PeptideProperties.standardAASet: cSet ; 
 		int total = (int)CharBuffer.wrap(cArray).chars().filter(character -> !characterSet.contains((char)character)).count();
 		return total;
 	}
