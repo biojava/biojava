@@ -180,11 +180,9 @@ public class Jronn implements Serializable {
 		try {
 			ronn = new ORonn(fsequence, loader);
 			disorder = ronn.call().getMeanScores();
-		} catch (NumberFormatException e) {
+		} catch (NumberFormatException | IOException e) {
 			throw new RuntimeException("Jronn fails to load models " + e.getLocalizedMessage(), e);
-		} catch (IOException e) {
-			throw new RuntimeException("Jronn fails to load models " + e.getLocalizedMessage(), e);
-		}
+		} 
 		return disorder;
 	}
 

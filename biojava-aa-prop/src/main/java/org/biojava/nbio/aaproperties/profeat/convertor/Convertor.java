@@ -20,6 +20,8 @@
  */
 package org.biojava.nbio.aaproperties.profeat.convertor;
 
+import java.util.stream.Collectors;
+
 import org.biojava.nbio.core.sequence.ProteinSequence;
 
 public abstract class Convertor {
@@ -78,12 +80,8 @@ public abstract class Convertor {
 	 * @return the converted sequence
 	 */
 	public String convert(ProteinSequence sequence){
-		String convertedSequence = "";
 		String uppercaseSequence = sequence.getSequenceAsString().toUpperCase();
-		for(int x = 0; x < uppercaseSequence.length(); x++){
-			convertedSequence += String.valueOf(convert(uppercaseSequence.charAt(x)));
-		}
+		String convertedSequence = uppercaseSequence.chars().mapToObj(upperCaseSeq -> String.valueOf(convert((char)(upperCaseSeq)))).collect(Collectors.joining());
 		return convertedSequence;
 	}
-
 }

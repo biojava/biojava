@@ -23,6 +23,7 @@ package org.biojava.nbio.aaproperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.CharBuffer;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -68,10 +69,10 @@ public class Utils {
 	 * 		true if invalid characters are found, else return false.
 	 */
 	public final static boolean doesSequenceContainInvalidChar(String sequence, Set<Character> cSet){
-		for(char c:sequence.toCharArray()){
-			if(!cSet.contains(c)) return true;
-		}
-		return false;
+			boolean result = sequence.chars().filter(c -> !cSet.contains((char) c))
+																 .findFirst()
+																 .isPresent();
+			return result;
 	}
 
 	/**
@@ -86,15 +87,10 @@ public class Utils {
 	 * @return
 	 * 		the number of invalid characters in sequence.
 	 */
-	public final static int getNumberOfInvalidChar(String sequence, Set<Character> cSet, boolean ignoreCase){
-		int total = 0;
-		char[] cArray;
-		if(ignoreCase) cArray = sequence.toUpperCase().toCharArray();
-		else cArray = sequence.toCharArray();
-		if(cSet == null) cSet = PeptideProperties.standardAASet;
-		for(char c:cArray){
-			if(!cSet.contains(c)) total++;
-		}
+	public final static int getNumberOfInvalidChar(String sequence,  Set<Character> cSet, boolean ignoreCase){
+		char[] cArray = ignoreCase ? sequence.toUpperCase().toCharArray(): sequence.toCharArray();
+		final Set<Character> characterSet = cSet == null ? cSet : PeptideProperties.standardAASet;
+		int total = (int)CharBuffer.wrap(cArray).chars().filter(character -> !characterSet.contains((char)character)).count();
 		return total;
 	}
 
