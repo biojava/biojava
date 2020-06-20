@@ -69,10 +69,10 @@ public class Utils {
 	 * 		true if invalid characters are found, else return false.
 	 */
 	public final static boolean doesSequenceContainInvalidChar(String sequence, Set<Character> cSet){
-			boolean result = sequence.chars().filter(c -> !cSet.contains((char) c))
-																 .findFirst()
-																 .isPresent();
-			return result;
+				for(char c:sequence.toCharArray()){
+					if(!cSet.contains(c)) return true;
+				}
+				return false;
 	}
 
 	/**

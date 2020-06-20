@@ -141,7 +141,7 @@ public final class ORonn implements Callable<ORonn> {
 	public ORonn call() throws NumberFormatException, IOException {
 		final String seq = sequence.getSequence();
 		// Calculate for each model
-		Stream.iterate(0, n -> n +1).limit(10).map(modelNumber -> mloader.getModel(modelNumber))
+		Stream.iterate(0, n -> n +1).limit(NUMBER_OF_MODELS).map(modelNumber -> mloader.getModel(modelNumber))
 																 .map(rmodel -> new ORonnModel(seq, rmodel, disorder).detect())
 																 .forEach(score ->addScore(score));
 		final char[] ch = seq.toCharArray();
