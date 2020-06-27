@@ -214,6 +214,9 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 			char singleLetterCode, int sequenceIndexId, int secStructType) {
 		// Get the polymer type
 		ResidueType residueType = ResidueType.getResidueTypeFromString(chemCompType);
+		if (residueType == null)
+			throw new IllegalStateException("Couldn't resolve residue type for "+ chemCompType);
+
 		int polymerType = getGroupTypIndicator(residueType.polymerType);
 		switch (polymerType) {
 		case 1:
