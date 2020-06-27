@@ -39,6 +39,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.*;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 
 /**
@@ -139,13 +141,9 @@ public final class ORonn implements Callable<ORonn> {
 	public ORonn call() throws NumberFormatException, IOException {
 		final String seq = sequence.getSequence();
 		// Calculate for each model
-		for (int m = 0; m < ORonn.NUMBER_OF_MODELS; m++) {
-			final Model model = mloader.getModel(m);
-			final ORonnModel rmodel = new ORonnModel(seq, model, disorder);
-			final float[] scores = rmodel.detect();
-			addScore(scores);
-		}
-
+		Stream.iterate(0, n -> n +1).limit(NUMBER_OF_MODELS).map(modelNumber -> mloader.getModel(modelNumber))
+																 .map(rmodel -> new ORonnModel(seq, rmodel, disorder).detect())
+																 .forEach(score ->addScore(score));
 		final char[] ch = seq.toCharArray();
 		final float[] meanScores = getMeanScores();
 		assert meanScores.length == seq.length() : "Scores are not calculated for "
