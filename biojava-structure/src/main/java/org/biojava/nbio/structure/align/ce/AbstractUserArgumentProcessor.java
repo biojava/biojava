@@ -44,6 +44,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Stream;
 
 
 /**
@@ -796,12 +797,9 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 			Iterator<String> helpIt = paramHelp.iterator();
 
 			buf.append("--- ").append(alg.getAlgorithmName()).append(" parameters: ---").append(newline);
-			for(int i = 0; i< size; i++) {
-				String name = namesIt.next();
-				buf.append("   -").append(Introspector.decapitalize(name));
-				buf.append(" ").append(helpIt.next());
-				buf.append(newline);
-			}
+			Stream.iterate(0, n -> n + 1).limit(size)
+														.map(i -> namesIt.next())
+														.forEach(name -> buf.append("   -").append(Introspector.decapitalize(name)).append(" ").append(helpIt.next()).append(newline));
 		}
 		buf.append(newline);
 

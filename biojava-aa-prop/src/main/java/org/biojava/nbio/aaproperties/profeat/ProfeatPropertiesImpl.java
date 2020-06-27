@@ -44,9 +44,7 @@ public class ProfeatPropertiesImpl implements IProfeatProperties{
 		default: throw new Exception("Unhandled Case: " + group);
 		}
 		int total = 0;
-		for(char c:convertedSeq.toCharArray()){
-			if(c == g) total++;
-		}
+		total = (int)convertedSeq.chars().filter(c ->(char) c == g) .count();
 		return total;
 	}
 
