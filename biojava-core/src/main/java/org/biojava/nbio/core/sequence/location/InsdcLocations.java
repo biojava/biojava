@@ -149,6 +149,7 @@ public class InsdcLocations {
 
 		public GroupLocation(boolean isCircular, Location... subLocations) {
 			this(Arrays.asList(subLocations));
+			setCircular(isCircular);
 		}
 
 		public GroupLocation(Point start, Point end, Strand strand,

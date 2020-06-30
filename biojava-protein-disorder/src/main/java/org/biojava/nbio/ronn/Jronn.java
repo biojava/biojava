@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 
 /**
@@ -179,11 +180,9 @@ public class Jronn implements Serializable {
 		try {
 			ronn = new ORonn(fsequence, loader);
 			disorder = ronn.call().getMeanScores();
-		} catch (NumberFormatException e) {
+		} catch (NumberFormatException | IOException e) {
 			throw new RuntimeException("Jronn fails to load models " + e.getLocalizedMessage(), e);
-		} catch (IOException e) {
-			throw new RuntimeException("Jronn fails to load models " + e.getLocalizedMessage(), e);
-		}
+		} 
 		return disorder;
 	}
 
@@ -247,9 +246,7 @@ public class Jronn implements Serializable {
 	 */
 	public static Map<FastaSequence,float[]> getDisorderScores(List<FastaSequence> sequences) {
 		Map<FastaSequence,float[]> results = new TreeMap<FastaSequence, float[]>();
-		for(FastaSequence fsequence : sequences) {
-			results.put(fsequence, predictSerial(fsequence));
-		}
+		results = sequences.stream().collect(Collectors.toMap(fastaSequence ->  fastaSequence, fastaSequence -> predictSerial(fastaSequence)));
 		return results;
 	}
 
@@ -262,9 +259,7 @@ public class Jronn implements Serializable {
 	 */
 	public static Map<FastaSequence,Range[]> getDisorder(List<FastaSequence> sequences) {
 		Map<FastaSequence,Range[]> disorderRanges = new TreeMap<FastaSequence,Range[]>();
-		for(FastaSequence fs: sequences) {
-			disorderRanges.put(fs, getDisorder(fs));
-		}
+		disorderRanges = sequences.stream().collect(Collectors.toMap(fastaSequence -> fastaSequence, fastaSequence -> getDisorder(fastaSequence) ));
 		return disorderRanges;
 	}
 

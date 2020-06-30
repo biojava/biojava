@@ -1,6 +1,20 @@
 BioJava Changelog
 -----------------
 
+BioJava 5.4.0
+=============
+### Added
+* Minimal read support for mmCIF files with branched entities (upcoming PDB release July 2020). The new entity type is understood now but branched entities are still treated as non-polymers within BioJava. #868
+* InterfaceFinder class to find interfaces of a given PDB assembly #867
+* New switch in Subunit clusterer `useEntityIdForSeqIdentityDetermination` #857 #859
+
+### Changed
+* Now genbank parser will allow 5'<3' for circular DNA #855
+
+### Fixed
+* Issue in bonds between atoms of different alt locs (https://github.com/rcsb/mmtf/issues/44) #854
+* Upgrade ciftools-java dependency to latest java-8 compatible release 0.7.1
+
 BioJava 5.3.0
 =============
 ### New features
