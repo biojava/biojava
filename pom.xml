@@ -42,7 +42,7 @@
 		<maxmem>512M</maxmem>
 		<mmtf.version>1.0.9</mmtf.version>
 		<slf4j.version>1.7.30</slf4j.version>
-		<log4j.version>2.13.1</log4j.version>
+		<log4j.version>2.13.3</log4j.version>
 	</properties>
 	<scm>
 		<connection>scm:git:git://github.com/biojava/biojava.git</connection>
