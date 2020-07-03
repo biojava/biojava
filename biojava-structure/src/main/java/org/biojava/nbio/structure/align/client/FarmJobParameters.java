@@ -22,6 +22,10 @@ package org.biojava.nbio.structure.align.client;
 
 import org.biojava.nbio.structure.align.util.ResourceManager;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.UUID;
+
 public class FarmJobParameters {
 
 
@@ -65,10 +69,25 @@ public class FarmJobParameters {
 
 		stepSize = 	DEFAULT_BATCH_SIZE;
 
-		username = FarmJobRunnable.getRandomUsername();
+		username = getRandomUsername();
 		if ( nrPairsProp != null){
 			stepSize = Integer.parseInt(nrPairsProp);
 		}
+
+	}
+
+	private static String getRandomUsername(){
+		String name = "";
+		try {
+			InetAddress i = InetAddress.getLocalHost();
+			name += i.getHostAddress();
+			name += "_";
+		} catch (UnknownHostException e){
+			throw new RuntimeException(e);
+		}
+		name +=  UUID.randomUUID();
+
+		return name;
 
 	}
 
