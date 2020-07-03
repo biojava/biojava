@@ -74,28 +74,6 @@ public class JFatCatClient {
 
 	}
 
-	public static void main(String[] args) throws Exception {
-		//System.out.println(hasPrecalculatedResult("http://source.rcsb.org/jfatcatserver/align/", "jCE Circular Permutation", "1CDG.A", "1TIM.A"));
-		AtomCache cache = new AtomCache();
-		String name1= "2W72.A";
-		String name2= "1D2Z.D";
-
-		Atom[] ca1 = cache.getAtoms(name1);
-		Atom[] ca2 = cache.getAtoms(name2);
-
-		int timeout = 10000;
-
-		String testServer = "http://source.rcsb.org/jfatcatserver/align/";
-
-		System.out.println(getAFPChainFromServer(testServer, FatCatRigid.algorithmName, name1, name2, ca1, ca2, timeout));
-
-		PdbPairsMessage msg = getPdbPairs(testServer, 1, "test");
-
-		System.out.println(msg);
-
-		System.out.println(getRepresentatives(FarmJobParameters.DEFAULT_SERVER_URL, 40));
-	}
-
 	public static boolean hasPrecalculatedResult(String serverLocation, String method, String name1, String name2 ){
 		return hasPrecalculatedResult(serverLocation, method, name1, name2, DEFAULT_TIMEOUT );
 	}
