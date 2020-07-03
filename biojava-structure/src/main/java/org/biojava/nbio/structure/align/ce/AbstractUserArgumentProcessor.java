@@ -29,7 +29,6 @@ import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureTools;
-import org.biojava.nbio.structure.align.MultiThreadedDBSearch;
 import org.biojava.nbio.structure.align.StructureAlignment;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.util.*;
@@ -175,20 +174,6 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 			}
 		}
 
-		if ( params.getShowDBresult() != null){
-			// user wants to view DB search results:
-
-
-			System.err.println("showing DB results...");
-			try {
-				GuiWrapper.showDBResults(params);
-			} catch (Exception e){
-				System.err.println(e.getMessage());
-				e.printStackTrace();
-			}
-
-		}
-
 		String pdb1  = params.getPdb1();
 		String file1 = params.getFile1();
 
@@ -199,15 +184,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 				return;
 			}
 
-			if ( params.getAlignPairs() != null){
-				runDBSearch();
-				return;
-			}
 
-			if ( params.getSearchFile() != null){
-				runDBSearch();
-				return;
-			}
 		} catch (ConfigurationException e) {
 			System.err.println(e.getLocalizedMessage());
 			System.exit(1); return;
@@ -236,102 +213,6 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 
 
 	}
-
-
-	private void runDBSearch() throws ConfigurationException{
-
-
-		String pdbFilePath = params.getPdbFilePath();
-
-		if ( pdbFilePath == null || pdbFilePath.equals("")){
-
-			UserConfiguration c = new UserConfiguration();
-			pdbFilePath = c.getPdbFilePath();
-			System.err.println("You did not specify the -pdbFilePath parameter. Defaulting to "+pdbFilePath+".");
-		}
-
-		String cacheFilePath = params.getCacheFilePath();
-
-		if ( cacheFilePath == null || cacheFilePath.equals("")){
-			cacheFilePath = pdbFilePath;
-
-		}
-
-
-		AtomCache cache = new AtomCache(pdbFilePath, pdbFilePath);
-
-		String alignPairs = params.getAlignPairs();
-
-		String searchFile = params.getSearchFile();
-
-		if ( alignPairs == null || alignPairs.equals("")) {
-			if ( searchFile == null || searchFile.equals("")){
-				throw new ConfigurationException("Please specify -alignPairs or -searchFile !");
-			}
-		}
-
-		String outputFile = params.getOutFile();
-
-		if ( outputFile == null || outputFile.equals("")){
-			throw new ConfigurationException("Please specify the mandatory argument -outFile!");
-		}
-
-		System.out.println("running DB search with parameters: " + params);
-
-		if ( alignPairs != null && ! alignPairs.equals("")) {
-			runAlignPairs(cache, alignPairs, outputFile);
-		}  else {
-			// must be a searchFile request...
-
-			int useNrCPUs = params.getNrCPU();
-
-			runDbSearch(cache,searchFile, outputFile, useNrCPUs, params);
-		}
-	}
-
-
-	/** Do a DB search with the input file against representative PDB domains
-	 *
-	 * @param cache
-	 * @param searchFile
-	 * @param outputFile
-	 * @throws ConfigurationException
-	 */
-	private void runDbSearch(AtomCache cache, String searchFile,
-			String outputFile,int useNrCPUs, StartupParameters params) throws ConfigurationException {
-
-
-		System.out.println("will use " + useNrCPUs + " CPUs.");
-
-		PDBFileReader reader = new PDBFileReader();
-		Structure structure1 = null ;
-		try {
-			structure1 = reader.getStructure(searchFile);
-		} catch (IOException e) {
-			throw new ConfigurationException("could not parse as PDB file: " + searchFile);
-		}
-
-		File searchF = new File(searchFile);
-		String name1 = "CUSTOM";
-
-
-
-		StructureAlignment algorithm =  getAlgorithm();
-
-		MultiThreadedDBSearch dbSearch = new MultiThreadedDBSearch(name1,
-				structure1,
-				outputFile,
-				algorithm,
-				useNrCPUs,
-				params.isDomainSplit());
-
-		dbSearch.setCustomFile1(searchF.getAbsolutePath());
-
-		dbSearch.run();
-
-
-	}
-
 
 	private void runAlignPairs(AtomCache cache, String alignPairs,
 			String outputFile) {
