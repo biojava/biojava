@@ -297,8 +297,6 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 			}
 		}
 
-
-
 		String name2 = params.getPdb2();
 		String file2 = params.getFile2();
 		if ( name2 == null && file2 == null ){
@@ -449,9 +447,9 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 		}
 	}
 
-	/** check if the result should be written to the local file system
+	/**
+	 * check if the result should be written to the local file system
 	 *
-	 * @param params2
 	 * @param afpChain
 	 * @param ca1
 	 * @param ca2
@@ -525,20 +523,16 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 		FileOutputStream out; // declare a file output object
 		PrintStream p; // declare a print stream object
 
-			// Create a new file output stream
-			out = new FileOutputStream(fileName);
+		// Create a new file output stream
+		out = new FileOutputStream(fileName);
 
-			// Connect print stream to the output stream
-			p = new PrintStream( out );
+		// Connect print stream to the output stream
+		p = new PrintStream( out );
 
-			p.println (output);
+		p.println (output);
 
-			p.close();
-
-
-
+		p.close();
 	}
-
 
 	private String getAutoFileName(AFPChain afpChain){
 		String fileName =afpChain.getName1()+"_" + afpChain.getName2()+"_"+afpChain.getAlgorithmName();
@@ -549,7 +543,6 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 			fileName += ".xml";
 		return fileName;
 	}
-
 
 	private Structure getStructure(AtomCache cache, String name1, String file)
 	{
@@ -652,18 +645,6 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 		buf.append("--- custom searches ---").append(newline);
 		buf.append("   -alignPairs (mandatory) path to a file that contains a set of pairs to compair").append(newline);
 		buf.append("   -outFile (mandatory) a file that will contain the summary of all the pairwise alignments").append(newline);
-		buf.append(newline);
-
-		buf.append("--- database searches ---").append(newline);
-		buf.append("   -searchFile (mandatory) path to a PDB file that should be used in the search").append(newline);
-		buf.append("   -outFile (mandatory) a directory that will contain the results of the DB search").append(newline);
-		buf.append("   -nrCPU (optional) Number of CPUs to use for the database search. By default will use the all, but one CPU in the system.").append(newline);
-		buf.append("   -pdbFilePath (mandatory) Path to the directory in your file system that contains the PDB files.").append(newline);
-		buf.append("   -saveOutputDir (optional) a directory that will contain the detailed outputs of the alignments. By default will write XML files, if used together with -outputPDB, will write PDB files of the alignment.").append(newline);
-		buf.append(newline);
-
-		buf.append(" Once DB seaches are complete it is possible to view the results with:").append(newline);
-		buf.append("   -showDBresult (optional) path to a DB outFile to show. Also provide the -pdbFilePath parameter to enable visualisation of results.").append(newline);
 		buf.append(newline);
 
 		ConfigStrucAligParams params = alg.getParameters();
