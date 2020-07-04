@@ -24,9 +24,9 @@
  */
 package org.biojava.nbio.structure.scop;
 
-import org.biojava.nbio.structure.align.client.JFatCatClient;
 import org.biojava.nbio.structure.align.util.URLConnectionTools;
 import org.biojava.nbio.structure.domain.SerializableCache;
+import org.biojava.nbio.structure.rcsb.ReadUtils;
 import org.biojava.nbio.structure.scop.server.ScopDomains;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -93,7 +93,7 @@ public class CachedRemoteScopInstallation extends SerializableCache<String,ScopD
 		}
 		logger.info("Using " + u + " to download representative domains");
 		InputStream response = URLConnectionTools.getInputStream(u);
-		String xml = JFatCatClient.convertStreamToString(response);
+		String xml = ReadUtils.convertStreamToString(response);
 		ScopDomains results  = ScopDomains.fromXML(xml);
 
 		logger.info("got " + results.getScopDomain().size() + " domain ranges for Scop domains from server.");

@@ -20,10 +20,11 @@
  */
 package org.biojava.nbio.structure.rcsb;
 
-import org.biojava.nbio.structure.align.client.JFatCatClient;
 import org.biojava.nbio.structure.align.client.StructureName;
 import org.biojava.nbio.structure.align.util.URLConnectionTools;
 import org.biojava.nbio.structure.align.xml.RepresentativeXMLConverter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -38,6 +39,8 @@ import java.util.TreeSet;
  * TODO Move this to {@link Representatives}.
  */
 public class GetRepresentatives {
+
+	private static final Logger logger = LoggerFactory.getLogger(GetRepresentatives.class);
 
 	private static String clusterUrl = "http://www.rcsb.org/pdb/rest/representatives?cluster=";
 	private static String allUrl = "http://www.rcsb.org/pdb/rest/getCurrent/";
@@ -72,7 +75,7 @@ public class GetRepresentatives {
 			String xml = null;
 
 			if (stream != null) {
-				xml = JFatCatClient.convertStreamToString(stream);
+				xml = ReadUtils.convertStreamToString(stream);
 
 				SortedSet<String> reps = RepresentativeXMLConverter.fromXML(xml);
 

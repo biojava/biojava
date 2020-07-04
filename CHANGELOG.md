@@ -1,6 +1,13 @@
 BioJava Changelog
 -----------------
 
+BioJava 6.0.0 (future release)
+==============================
+### Removed
+* All code related to All-vs-All structural alignments db calculation and access
+* JFatCatClient and all code depending on it
+* PDP domain providers (depended on JFatCatClient)
+
 BioJava 5.4.0
 =============
 ### Added

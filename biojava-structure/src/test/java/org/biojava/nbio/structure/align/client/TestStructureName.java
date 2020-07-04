@@ -135,11 +135,6 @@ public class TestStructureName {
 		assertTrue(sn.isCathID());
 		assertTrue(sn.getSource() == CATH);
 		assertEquals("1QVR",sn.getPdbId());
-		// PDP
-		sn = new StructureName("PDP:4HHBAa");
-		assertTrue(sn.isPDPDomain());
-		assertTrue(sn.getSource() == PDP);
-		assertEquals("4HHB",sn.getPdbId());
 		// URL
 		sn = new StructureName("URL:http://www.rcsb.org/pdb/files/1B8G.pdb.gz");
 		assertTrue(sn.isURL());
@@ -215,11 +210,6 @@ public class TestStructureName {
 		assertTrue(sn.isCathID());
 		assertTrue(sn.getSource() == CATH);
 		assertEquals("1QVR",sn.getPdbId());
-		// PDP is not guessed
-		sn = new StructureName("4HHBAa");
-		assertFalse(sn.isPDPDomain());
-		assertTrue(sn.getSource() == PDB);
-		assertEquals("4HHBAa",sn.getPdbId());
 		// URL
 		sn = new StructureName("http://www.rcsb.org/pdb/files/1B8G.pdb.gz");
 		assertTrue(sn.isURL());

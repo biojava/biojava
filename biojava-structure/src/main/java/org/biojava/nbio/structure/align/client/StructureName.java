@@ -44,9 +44,6 @@ import org.biojava.nbio.structure.URLIdentifier;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.cath.CathDomain;
 import org.biojava.nbio.structure.cath.CathFactory;
-import org.biojava.nbio.structure.domain.PDPDomain;
-import org.biojava.nbio.structure.domain.PDPProvider;
-import org.biojava.nbio.structure.domain.RemotePDPProvider;
 import org.biojava.nbio.structure.ecod.EcodFactory;
 import org.biojava.nbio.core.util.FileDownloadUtils;
 import org.biojava.nbio.structure.scop.ScopDatabase;
@@ -88,7 +85,6 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 	public enum Source {
 		PDB,
 		SCOP,
-		PDP,
 		CATH,
 		URL,
 		FILE,
@@ -170,10 +166,6 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 				case SCOP:
 					if( ! initFromScop(suffix) )
 						throw new IllegalArgumentException("Malformed SCOP domain name:"+suffix);
-					return;
-				case PDP:
-					if( ! initFromPDP(name) )
-						throw new IllegalArgumentException("Malformed PDP domain name:"+suffix);
 					return;
 				case CATH:
 					if( ! initFromCATH(suffix) )
@@ -266,15 +258,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 		}
 		return false;
 	}
-	private boolean initFromPDP(String name) {
-		Matcher matcher = PDPDomain.PDP_NAME_PATTERN.matcher(name);
-		if( matcher.matches() ) {
-			pdbId = matcher.group(1).toUpperCase();
-			chainName = matcher.group(2);
-			return true;
-		}
-		return false;
-	}
+
 	private boolean initFromCATH(String name) {
 		Matcher matcher = cathPattern.matcher(name);
 		if ( matcher.matches() ){
@@ -399,10 +383,6 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 		return mySource == Source.SCOP;
 	}
 
-	public boolean isPDPDomain(){
-		return mySource == Source.PDP;
-	}
-
 	public boolean isCathID(){
 		return mySource == Source.CATH;
 	}
@@ -500,14 +480,6 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 					base = new URLIdentifier(name);
 				} catch (MalformedURLException e) {
 					throw new StructureException("Invalid URL: "+name,e);
-				}
-				break;
-			case PDP:
-				try {
-					PDPProvider provider = new RemotePDPProvider(false);
-					base = provider.getPDPDomain(name);
-				} catch (IOException e) {
-					throw new StructureException("Unable to fetch PDP domain "+name, e);
 				}
 				break;
 			case BIO:
