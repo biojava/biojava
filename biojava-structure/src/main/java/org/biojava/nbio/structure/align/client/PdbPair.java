@@ -22,7 +22,8 @@ package org.biojava.nbio.structure.align.client;
 
 import org.biojava.nbio.structure.StructureException;
 
-/** A pair for structure alignment
+/**
+ * A pair for structure alignment
  *
  * @author Andreas Prlic
  *
@@ -31,11 +32,13 @@ import org.biojava.nbio.structure.StructureException;
  */
 public class PdbPair implements Comparable<PdbPair> {
 
-	StructureName name1;
-	StructureName name2;
+	private StructureName name1;
+	private StructureName name2;
+
 	public PdbPair(String name1, String name2) {
 		this(new StructureName(name1),new StructureName(name2));
 	}
+
 	public PdbPair(StructureName name1, StructureName name2) {
 		super();
 		this.name1 = name1;

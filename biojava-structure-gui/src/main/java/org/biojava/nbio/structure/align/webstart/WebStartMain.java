@@ -25,7 +25,6 @@ import org.biojava.nbio.structure.align.StructureAlignment;
 import org.biojava.nbio.structure.align.StructureAlignmentFactory;
 import org.biojava.nbio.structure.align.ce.CeCPMain;
 import org.biojava.nbio.structure.align.ce.CeMain;
-import org.biojava.nbio.structure.align.client.FarmJobParameters;
 import org.biojava.nbio.structure.align.client.JFatCatClient;
 import org.biojava.nbio.structure.align.client.PdbPair;
 import org.biojava.nbio.structure.align.fatcat.FatCatFlexible;
@@ -38,6 +37,7 @@ import org.biojava.nbio.structure.align.gui.jmol.StructureAlignmentJmol;
 import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.seq.SmithWaterman3Daligner;
 import org.biojava.nbio.structure.align.util.AtomCache;
+import org.biojava.nbio.structure.align.util.ResourceManager;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
 
 import javax.swing.*;
@@ -46,6 +46,13 @@ import java.io.File;
 
 public class WebStartMain
 {
+
+	private static final ResourceManager resourceManager;
+	private static final String DEFAULT_SERVER_URL;
+	static {
+		resourceManager = ResourceManager.getResourceManager("jfatcat");
+		DEFAULT_SERVER_URL = resourceManager.getString("server.url");
+	}
 
 	static UserConfiguration userConfig;
 
@@ -113,7 +120,7 @@ public class WebStartMain
 			return;
 		}
 
-		String serverLocation = FarmJobParameters.DEFAULT_SERVER_URL;
+		String serverLocation = DEFAULT_SERVER_URL;
 
 		if ( args.length  > 3 ) {
 			// we have 4 arguments.

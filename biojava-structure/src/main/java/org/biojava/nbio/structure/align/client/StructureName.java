@@ -67,7 +67,7 @@ import org.slf4j.LoggerFactory;
  * information may be loaded from one of the factory classes:
  * {@link CathFactory},{@link ScopFactory}, etc.
  *
- * @see #getName the name. e.g. 4hhb, 4hhb.A, d4hhba_, PDP:4HHBAa etc.
+ * @see #getIdentifier() the name. e.g. 4hhb, 4hhb.A, d4hhba_, PDP:4HHBAa etc.
  */
 
 public class StructureName implements Comparable<StructureName>, Serializable, StructureIdentifier {
