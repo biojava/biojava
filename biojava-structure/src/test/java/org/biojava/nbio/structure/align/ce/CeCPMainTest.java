@@ -34,7 +34,9 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -405,15 +407,23 @@ public class CeCPMainTest {
 	@Test
 	public void testCECP1() throws IOException, StructureException{
 
-		String name1 = "PDP:3A2KAc";
+		//String name1 = "PDP:3A2KAc";
+		String pdb1 = "3A2K";
 		String name2 = "d1wy5a2";
-
-
-		CeCPMain algorithm = new CeCPMain();
 
 		AtomCache cache = new AtomCache();
 
-		Atom[] ca1 = cache.getAtoms(name1);
+		// since BioJava 6.0.0, there's no PDP provider. The below corresponds to domain "PDP:3A2KAc"
+		List<ResidueRange> ranges = new ArrayList<>();
+		// 234-333
+		ranges.add(new ResidueRange("A", new ResidueNumber("A",234, null), new ResidueNumber("A", 333, null)));
+		SubstructureIdentifier ssi = new SubstructureIdentifier(pdb1, ranges);
+		Structure structure1 = cache.getStructure(pdb1);
+		ssi.reduce(structure1);
+
+		CeCPMain algorithm = new CeCPMain();
+
+		Atom[] ca1 = StructureTools.getAtomCAArray(structure1);
 		Atom[] ca2 = cache.getAtoms(name2);
 
 		AFPChain afpChain = algorithm.align(ca1, ca2);

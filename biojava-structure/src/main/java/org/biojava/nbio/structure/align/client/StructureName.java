@@ -64,7 +64,7 @@ import org.slf4j.LoggerFactory;
  * information may be loaded from one of the factory classes:
  * {@link CathFactory},{@link ScopFactory}, etc.
  *
- * @see #getIdentifier() the name. e.g. 4hhb, 4hhb.A, d4hhba_, PDP:4HHBAa etc.
+ * @see #getIdentifier() the name. e.g. 4hhb, 4hhb.A, d4hhba_ etc.
  */
 
 public class StructureName implements Comparable<StructureName>, Serializable, StructureIdentifier {
@@ -116,8 +116,6 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 	 *     Examples: 4hhb, 4hhb.A, 4hhb.A:1-50.
 	 * <li><b>SCOP</b> SCOP domain (or SCOPe, depending on the
 	 *     {@link ScopFactory#getSCOP()} version). Example: d1h6w.2
-	 * <li><b>PDP</b> Protein Domain Parser domain. PDP domains are not guessed,
-	 *     making the PDP: prefix obligatory. Example: PDP:4HHBAa
 	 * <li><b>CATH</b> Cath domains. Example: 1qvrC03
 	 * <li><b>URL</b> Arbitrary URLs. Most common protocols are handled,
 	 *     including http://, ftp://, and file://. Some parsing information can

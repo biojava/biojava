@@ -7,6 +7,7 @@ BioJava 6.0.0 (future release)
 * All code related to All-vs-All structural alignments db calculation and access
 * JFatCatClient and all code depending on it
 * PDP domain providers (depended on JFatCatClient)
+* Support for retrieving structure data with prefix "PDP:" (AtomCache, StructureIO)
 
 BioJava 5.4.0
 =============

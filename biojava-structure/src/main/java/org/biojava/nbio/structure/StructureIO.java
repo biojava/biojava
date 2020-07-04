@@ -61,7 +61,6 @@ public class StructureIO {
 		chainID       := [a-zA-Z0-9]
 		scopID        := 'd' pdbID [a-z_][0-9_]
 		biol		  := 'BIO:' pdbID [:]? [0-9]+
-		pdp			  := 'PDP:' pdbID[A-Za-z0-9_]+
 		resNum        := [-+]?[0-9]+[A-Za-z]?
 
 
