@@ -42,9 +42,10 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 public class JFatCatClient {
-	private final static Logger logger = LoggerFactory.getLogger(JFatCatClient.class);
+	
+	private static final Logger logger = LoggerFactory.getLogger(JFatCatClient.class);
 
-	private static ResourceManager resourceManager = ResourceManager.getResourceManager("jfatcat");
+	private static final ResourceManager resourceManager = ResourceManager.getResourceManager("jfatcat");
 
 	private static final String serverAPPEND    = "show?name1=%s&name2=%s";
 
