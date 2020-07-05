@@ -42,7 +42,6 @@ import org.biojava.nbio.structure.io.PDBFileReader;
 import org.biojava.nbio.core.util.FileDownloadUtils;
 import org.biojava.nbio.structure.quaternary.BiologicalAssemblyBuilder;
 import org.biojava.nbio.structure.quaternary.BiologicalAssemblyTransformation;
-import org.biojava.nbio.structure.scop.CachedRemoteScopInstallation;
 import org.biojava.nbio.structure.scop.ScopDatabase;
 import org.biojava.nbio.structure.scop.ScopDescription;
 import org.biojava.nbio.structure.scop.ScopDomain;
@@ -651,23 +650,6 @@ public class AtomCache {
 			StructureException {
 		ScopDomain domain = scopDatabase.getDomainByScopID(scopId);
 		return getStructureForDomain(domain, scopDatabase);
-	}
-
-	/**
-	 * Send a signal to the cache that the system is shutting down. Notifies underlying SerializableCache instances to
-	 * flush themselves...
-	 */
-	public void notifyShutdown() {
-
-		// todo: use a SCOP implementation that is backed by SerializableCache
-		ScopDatabase scopInstallation = ScopFactory.getSCOP();
-		if (scopInstallation != null) {
-			if (scopInstallation instanceof CachedRemoteScopInstallation) {
-				CachedRemoteScopInstallation cacheScop = (CachedRemoteScopInstallation) scopInstallation;
-				cacheScop.flushCache();
-			}
-		}
-
 	}
 
 	/**

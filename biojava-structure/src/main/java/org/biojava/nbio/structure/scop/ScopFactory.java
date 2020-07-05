@@ -31,11 +31,8 @@ import java.util.Map;
 /**
  * Controls the global ScopDatabase being used.
  *
- * <p>Defaults to a {@link RemoteScopInstallation}, which is fast for small numbers
- * of queries. For many queries, using {@link #getSCOP(String, boolean) getSCOP(version,true)}
- * may be faster, since it makes only one network request.
- *
- * <p>Example: Fetch the structure corresponding to an old version of scop
+ * <p>
+ * Example: Fetch the structure corresponding to an old version of scop
  *
  * <pre>
  * ScopInstallation scop = new ScopInstallation();
@@ -45,6 +42,7 @@ import java.util.Map;
  * cache.setFetchFileEvenIfObsolete(true); //fetch older PDBs
  * cache.setStrictSCOP(false); // correct simple errors in domain names
  * Structure s = cache.getStructure("d3hbia_");
+ * </pre>
  * @author sbliven
  *
  */
@@ -123,7 +121,7 @@ public class ScopFactory {
 	 * <p>
 	 * The particular implementation returned is influenced by the <tt>forceLocalData</tt>
 	 * parameter. When false, the instance returned will generally be a
-	 * {@link RemoteScopInstallation}, although this may be influenced by
+	 * remote {@link ScopDatabase}, although this may be influenced by
 	 * previous calls to this class. When true, the result is guaranteed to
 	 * implement {@link LocalScopDatabase} (generally a {@link BerkeleyScopInstallation}).
 	 *
@@ -147,17 +145,8 @@ public class ScopFactory {
 				versionedScopDBs.put(version,berkeley);
 				return berkeley;
 			}
-			return scop;
-		} else {
-			// Use a remote installation
-			if( scop == null ) {
-				logger.info("Creating new {}, version {}", RemoteScopInstallation.class.getSimpleName(), version);
-				scop = new RemoteScopInstallation();
-				scop.setScopVersion(version);
-				versionedScopDBs.put(version,scop);
-			}
-			return scop;
 		}
+		return scop;
 	}
 
 
