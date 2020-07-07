@@ -9,9 +9,10 @@ import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.PDBFileParser;
 import org.junit.Test;
 import org.rcsb.cif.CifIO;
-import org.rcsb.cif.model.CifFile;
-import org.rcsb.cif.model.Column;
+import org.rcsb.cif.model.IntColumn;
 import org.rcsb.cif.model.ValueKind;
+import org.rcsb.cif.schema.StandardSchemata;
+import org.rcsb.cif.schema.mm.MmCifFile;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -210,8 +211,8 @@ public class CifFileConsumerImplTest {
                 "7 1S32 . D . GB  30268542 MET 1 'INTIATING METHIONINE' ? ? 7\n"+
                 "8 1S32 . H . GB  30268542 MET 1 'INTIATING METHIONINE' ? ? 8\n" +
                 "#" ;
-        CifFile cifFile = CifIO.readFromInputStream(new ByteArrayInputStream(mmcifStr.getBytes()));
-        Column column = cifFile.getFirstBlock().getCategory("struct_ref_seq_dif").getColumn("seq_num");
+        MmCifFile cifFile = CifIO.readFromInputStream(new ByteArrayInputStream(mmcifStr.getBytes())).as(StandardSchemata.MMCIF);
+        IntColumn column = cifFile.getFirstBlock().getStructRefSeqDif().getSeqNum();
 
         assertNotNull(column);
         assertTrue(column.isDefined());

@@ -3,8 +3,9 @@ package org.biojava.nbio.structure.io.cif;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.rcsb.cif.CifIO;
-import org.rcsb.cif.model.Block;
 import org.rcsb.cif.model.CifFile;
+import org.rcsb.cif.schema.StandardSchemata;
+import org.rcsb.cif.schema.mm.MmCifBlock;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -104,7 +105,7 @@ public class CifFileConverter {
         consumer.prepare();
 
         // feed individual categories to consumer
-        Block cifBlock = cifFile.getFirstBlock();
+        MmCifBlock cifBlock = cifFile.as(StandardSchemata.MMCIF).getFirstBlock();
 
         consumer.consumeAuditAuthor(cifBlock.getAuditAuthor());
         consumer.consumeAtomSite(cifBlock.getAtomSite());
@@ -125,7 +126,7 @@ public class CifFileConverter {
         consumer.consumePdbxAuditRevisionHistory(cifBlock.getPdbxAuditRevisionHistory());
         consumer.consumePdbxChemCompIdentifier(cifBlock.getPdbxChemCompIdentifier());
         consumer.consumePdbxDatabaseStatus(cifBlock.getPdbxDatabaseStatus());
-        consumer.consumePdbxEntityDescriptor(cifBlock.getPdbxEntityDescriptor());
+        consumer.consumePdbxEntityBranchDescriptor(cifBlock.getPdbxEntityBranchDescriptor());
         consumer.consumePdbxMolecule(cifBlock.getPdbxMolecule());
         consumer.consumePdbxMoleculeFeatures(cifBlock.getPdbxMoleculeFeatures());
         consumer.consumePdbxNonpolyScheme(cifBlock.getPdbxNonpolyScheme());

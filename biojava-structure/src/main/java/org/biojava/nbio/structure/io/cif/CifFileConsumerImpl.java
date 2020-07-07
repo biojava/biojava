@@ -40,51 +40,51 @@ import org.biojava.nbio.structure.xtal.SymoplibParser;
 import org.rcsb.cif.model.FloatColumn;
 import org.rcsb.cif.model.IntColumn;
 import org.rcsb.cif.model.StrColumn;
-import org.rcsb.cif.model.generated.AtomSite;
-import org.rcsb.cif.model.generated.AtomSites;
-import org.rcsb.cif.model.generated.AuditAuthor;
-import org.rcsb.cif.model.generated.Cell;
-import org.rcsb.cif.model.generated.ChemComp;
-import org.rcsb.cif.model.generated.ChemCompBond;
-import org.rcsb.cif.model.generated.DatabasePDBRemark;
-import org.rcsb.cif.model.generated.DatabasePDBRev;
-import org.rcsb.cif.model.generated.DatabasePDBRevRecord;
-import org.rcsb.cif.model.generated.Entity;
-import org.rcsb.cif.model.generated.EntityPoly;
-import org.rcsb.cif.model.generated.EntityPolySeq;
-import org.rcsb.cif.model.generated.EntitySrcGen;
-import org.rcsb.cif.model.generated.EntitySrcNat;
-import org.rcsb.cif.model.generated.Exptl;
-import org.rcsb.cif.model.generated.PdbxAuditRevisionHistory;
-import org.rcsb.cif.model.generated.PdbxChemCompIdentifier;
-import org.rcsb.cif.model.generated.PdbxDatabaseStatus;
-import org.rcsb.cif.model.generated.PdbxEntityDescriptor;
-import org.rcsb.cif.model.generated.PdbxEntitySrcSyn;
-import org.rcsb.cif.model.generated.PdbxMolecule;
-import org.rcsb.cif.model.generated.PdbxMoleculeFeatures;
-import org.rcsb.cif.model.generated.PdbxNonpolyScheme;
-import org.rcsb.cif.model.generated.PdbxReferenceEntityLink;
-import org.rcsb.cif.model.generated.PdbxReferenceEntityList;
-import org.rcsb.cif.model.generated.PdbxReferenceEntityPolyLink;
-import org.rcsb.cif.model.generated.PdbxStructAssembly;
-import org.rcsb.cif.model.generated.PdbxStructAssemblyGen;
-import org.rcsb.cif.model.generated.PdbxStructModResidue;
-import org.rcsb.cif.model.generated.PdbxStructOperList;
-import org.rcsb.cif.model.generated.Refine;
-import org.rcsb.cif.model.generated.Struct;
-import org.rcsb.cif.model.generated.StructAsym;
-import org.rcsb.cif.model.generated.StructConf;
-import org.rcsb.cif.model.generated.StructConn;
-import org.rcsb.cif.model.generated.StructConnType;
-import org.rcsb.cif.model.generated.StructKeywords;
-import org.rcsb.cif.model.generated.StructNcsOper;
-import org.rcsb.cif.model.generated.StructRef;
-import org.rcsb.cif.model.generated.StructRefSeq;
-import org.rcsb.cif.model.generated.StructRefSeqDif;
-import org.rcsb.cif.model.generated.StructSheetRange;
-import org.rcsb.cif.model.generated.StructSite;
-import org.rcsb.cif.model.generated.StructSiteGen;
-import org.rcsb.cif.model.generated.Symmetry;
+import org.rcsb.cif.schema.mm.AtomSite;
+import org.rcsb.cif.schema.mm.AtomSites;
+import org.rcsb.cif.schema.mm.AuditAuthor;
+import org.rcsb.cif.schema.mm.Cell;
+import org.rcsb.cif.schema.mm.ChemComp;
+import org.rcsb.cif.schema.mm.ChemCompBond;
+import org.rcsb.cif.schema.mm.DatabasePDBRemark;
+import org.rcsb.cif.schema.mm.DatabasePDBRev;
+import org.rcsb.cif.schema.mm.DatabasePDBRevRecord;
+import org.rcsb.cif.schema.mm.Entity;
+import org.rcsb.cif.schema.mm.EntityPoly;
+import org.rcsb.cif.schema.mm.EntityPolySeq;
+import org.rcsb.cif.schema.mm.EntitySrcGen;
+import org.rcsb.cif.schema.mm.EntitySrcNat;
+import org.rcsb.cif.schema.mm.Exptl;
+import org.rcsb.cif.schema.mm.PdbxAuditRevisionHistory;
+import org.rcsb.cif.schema.mm.PdbxChemCompIdentifier;
+import org.rcsb.cif.schema.mm.PdbxDatabaseStatus;
+import org.rcsb.cif.schema.mm.PdbxEntityBranchDescriptor;
+import org.rcsb.cif.schema.mm.PdbxEntitySrcSyn;
+import org.rcsb.cif.schema.mm.PdbxMolecule;
+import org.rcsb.cif.schema.mm.PdbxMoleculeFeatures;
+import org.rcsb.cif.schema.mm.PdbxNonpolyScheme;
+import org.rcsb.cif.schema.mm.PdbxReferenceEntityLink;
+import org.rcsb.cif.schema.mm.PdbxReferenceEntityList;
+import org.rcsb.cif.schema.mm.PdbxReferenceEntityPolyLink;
+import org.rcsb.cif.schema.mm.PdbxStructAssembly;
+import org.rcsb.cif.schema.mm.PdbxStructAssemblyGen;
+import org.rcsb.cif.schema.mm.PdbxStructModResidue;
+import org.rcsb.cif.schema.mm.PdbxStructOperList;
+import org.rcsb.cif.schema.mm.Refine;
+import org.rcsb.cif.schema.mm.Struct;
+import org.rcsb.cif.schema.mm.StructAsym;
+import org.rcsb.cif.schema.mm.StructConf;
+import org.rcsb.cif.schema.mm.StructConn;
+import org.rcsb.cif.schema.mm.StructConnType;
+import org.rcsb.cif.schema.mm.StructKeywords;
+import org.rcsb.cif.schema.mm.StructNcsOper;
+import org.rcsb.cif.schema.mm.StructRef;
+import org.rcsb.cif.schema.mm.StructRefSeq;
+import org.rcsb.cif.schema.mm.StructRefSeqDif;
+import org.rcsb.cif.schema.mm.StructSheetRange;
+import org.rcsb.cif.schema.mm.StructSite;
+import org.rcsb.cif.schema.mm.StructSiteGen;
+import org.rcsb.cif.schema.mm.Symmetry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -770,7 +770,7 @@ class CifFileConsumerImpl implements CifFileConsumer<Structure> {
     }
 
     @Override
-    public void consumePdbxEntityDescriptor(PdbxEntityDescriptor pdbxEntityDescriptor) {
+    public void consumePdbxEntityBranchDescriptor(PdbxEntityBranchDescriptor pdbxEntityBranchDescriptor) {
         // TODO not considered in ref
     }
 
