@@ -24,6 +24,8 @@ package org.biojava.nbio.core.sequence.features;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * If a SequenceProxyReader implements this interface then that external source
@@ -32,5 +34,5 @@ import java.util.LinkedHashMap;
  */
 public interface DatabaseReferenceInterface {
 
-	public LinkedHashMap<String,ArrayList<DBReferenceInfo>> getDatabaseReferences();
+	public Map<String, List<DBReferenceInfo>> getDatabaseReferences();
 }
