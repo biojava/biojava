@@ -34,9 +34,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 
 /**
@@ -407,26 +405,13 @@ public class CeCPMainTest {
 	@Test
 	public void testCECP1() throws IOException, StructureException{
 
-		String pdb1 = "3A2K";
-		//String name1 = "PDP:3A2KAc"; // A : 234-333
-		String pdb2 = "1WY5";
-		//String name2 = "d1wy5a2"; // A : 217-311
-
 		AtomCache cache = new AtomCache();
 
 		// since BioJava 6.0.0, there's no PDP provider. The below corresponds to domain "PDP:3A2KAc"
-		List<ResidueRange> ranges = new ArrayList<>();
-		ranges.add(new ResidueRange("A", new ResidueNumber("A",234, null), new ResidueNumber("A", 333, null)));
-		SubstructureIdentifier ssi = new SubstructureIdentifier(pdb1, ranges);
-		Structure structure1 = cache.getStructure(pdb1);
-		ssi.reduce(structure1);
+		Structure structure1 = cache.getStructure("3A2K.A_234-333");
 
 		// since BioJava 6.0.0, there's no RemoteSCOP provider. The below corresponds to domain "d1wy5a2"
-		ranges = new ArrayList<>();
-		ranges.add(new ResidueRange("A", new ResidueNumber("A",217, null), new ResidueNumber("A", 311, null)));
-		ssi = new SubstructureIdentifier(pdb2, ranges);
-		Structure structure2 = cache.getStructure(pdb2);
-		ssi.reduce(structure2);
+		Structure structure2 = cache.getStructure("1WY5.A_217-311");
 
 		CeCPMain algorithm = new CeCPMain();
 
