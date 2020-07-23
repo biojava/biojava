@@ -37,7 +37,7 @@ import org.biojava.nbio.structure.symmetry.internal.CESymmParameters.RefineMetho
 import org.junit.Test;
 
 /**
- * Originally part of {@link CeSymmTest}.
+ * Originally part of {@link TestCeSymm}.
  * @author Spencer Bliven
  */
 public class TestSequenceFunctionOrderDetector {
@@ -45,12 +45,13 @@ public class TestSequenceFunctionOrderDetector {
 	@Test
 	public void testGetSymmetryOrder() throws IOException, StructureException, RefinerFailedException {
 		// List of alignments to try, along with proper symmetry
-		Map<String,Integer> orderMap = new HashMap<String,Integer>();
+		Map<String,Integer> orderMap = new HashMap<>();
 		orderMap.put("1itb.A",3); // b-trefoil, C3
 		orderMap.put("1tim.A",2); // tim-barrel, C8
 		//orderMap.put("d1p9ha_",-1); // not rotational symmetry
 		orderMap.put("3HKE.A",2); // very questionable alignment
-		orderMap.put("d1jlya1",3); // a very nice trefoil
+		// Before BioJava 6.0.0, this used to get a scop domain directly (d1jlya1), now hardcoding range to avoid external resources
+		orderMap.put("1JLY.A_1-153", 3); // a very nice trefoil
 
 		AtomCache cache = new AtomCache();
 
