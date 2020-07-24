@@ -46,12 +46,6 @@
 			<filtered>true</filtered>
 			<fileMode>0755</fileMode>
 		</file>
-		<file>
-			<source>src/main/assembly/startFarmJob.sh</source>
-			<outputDirectory>/</outputDirectory>
-			<filtered>true</filtered>
-			<fileMode>0755</fileMode>
-		</file>
 	</files>
 	
 </assembly>

@@ -34,8 +34,10 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 
 /**
  * Package-level static utilities for parsing XML.
@@ -109,4 +111,25 @@ public class ReadUtils {
 		return null;
 	}
 
+	public static String convertStreamToString(InputStream stream){
+		BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+		StringBuilder sb = new StringBuilder();
+
+		String line = null;
+		try {
+			while ((line = reader.readLine()) != null) {
+				sb.append(line).append("\n");
+			}
+		} catch (IOException e) {
+			logger.error("Couldn't convert stream to string", e); // TODO dmyersturnbull: method should throw; we shouldn't catch here
+		} finally {
+			try {
+				stream.close();
+			} catch (IOException e) {
+				logger.warn("Can't close stream", e);
+			}
+		}
+
+		return sb.toString();
+	}
 }

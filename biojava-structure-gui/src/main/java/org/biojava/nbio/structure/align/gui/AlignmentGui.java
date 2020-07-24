@@ -82,9 +82,6 @@ public class AlignmentGui extends JFrame{
 	JProgressBar progress;
 
 
-	private DBSearchGUI dbsearch;
-
-
 	public static void main(String[] args){
 
 		AlignmentGui.getInstance();
@@ -162,10 +159,6 @@ public class AlignmentGui extends JFrame{
 		masterPane = new JTabbedPane();
 
 		masterPane.addTab("Pairwise Comparison", vBox);
-
-		dbsearch = new DBSearchGUI();
-
-		masterPane.addTab("Database Search",dbsearch);
 
 		//JPanel dir = tab1.getPDBDirPanel(pdbDir);
 
@@ -278,8 +271,6 @@ public class AlignmentGui extends JFrame{
 				int selectedIndex = masterPane.getSelectedIndex();
 				if (selectedIndex == 0)
 					calcAlignment();
-				else if ( selectedIndex == 1)
-					calcDBSearch();
 				else {
 					System.err.println("Unknown TAB: " + selectedIndex);
 				}
@@ -406,110 +397,6 @@ public class AlignmentGui extends JFrame{
 			JOptionPane.showMessageDialog(null,"Could not align structures. Exception: " + e.getMessage());
 		}
 
-	}
-
-
-	private void calcDBSearch() {
-
-		JTabbedPane tabPane = dbsearch.getTabPane();
-		System.out.println("run DB search " + tabPane.getSelectedIndex());
-
-		Structure s = null;
-		boolean domainSplit = dbsearch.isDomainSplit();
-
-		StructurePairSelector tab = null;
-		int pos = tabPane.getSelectedIndex();
-
-		if (pos == 0 ){
-
-			tab = dbsearch.getSelectPDBPanel();
-
-		}  else if (pos == 1){
-
-			tab = dbsearch.getScopSelectPanel();
-
-
-		} else if (pos == 2){
-
-			tab = dbsearch.getPDBUploadPanel();
-
-		}
-
-		try {
-
-			s = tab.getStructure1();
-
-			if ( s == null) {
-				JOptionPane.showMessageDialog(null,"please select structure 1");
-				return ;
-			}
-
-		} catch (Exception e){
-			e.printStackTrace();
-		}
-
-		String name1 = s.getName();
-		if ( name1 == null || name1.equals(""))
-			name1 = s.getPDBCode();
-
-
-
-		System.out.println("name1 in alig gui:" + name1);
-		String file = dbsearch.getOutFileLocation();
-		if ( file == null || file.equals("") ){
-			JOptionPane.showMessageDialog(null,"Please select a directory to contain the DB search results.");
-			return;
-		}
-		File outFile = new File(file);
-		if( !outFile.exists() ) {
-			outFile.mkdirs();
-		}
-		if( !outFile.isDirectory() || !outFile.canWrite()) {
-			JOptionPane.showMessageDialog(null,"Unable to write to "+outFile.getAbsolutePath());
-			return;
-		}
-
-		UserConfiguration config = WebStartMain.getWebStartConfig();
-
-		int totalNrCPUs = Runtime.getRuntime().availableProcessors();
-
-		int useNrCPUs = 1;
-		if ( totalNrCPUs > 1){
-			Object[] options = new Integer[totalNrCPUs];
-			int posX = 0;
-			for ( int i = totalNrCPUs; i> 0 ; i--){
-				options[posX] = i;
-				posX++;
-			}
-			int n = JOptionPane.showOptionDialog(null,
-					"How many would you like to use for the calculations?",
-					"We detected " + totalNrCPUs + " processors on your system.",
-					JOptionPane.OK_CANCEL_OPTION,
-					JOptionPane.QUESTION_MESSAGE,
-					null,
-					options,
-					options[0]);
-
-			if ( n < 0)
-				return;
-			useNrCPUs = (Integer) options[n];
-			System.out.println("will use " + useNrCPUs + " CPUs." );
-		}
-		System.out.println("using domainSplit data");
-		alicalc = new AlignmentCalcDB(this, s,  name1,config,file, domainSplit);
-		alicalc.setNrCPUs(useNrCPUs);
-		abortB.setEnabled(true);
-		progress.setIndeterminate(true);
-		ProgressThreadDrawer drawer = new ProgressThreadDrawer(progress);
-		drawer.start();
-
-		Thread t = new Thread(alicalc);
-		t.start();
-	}
-
-
-	public DBSearchGUI getDBSearch(){
-		return dbsearch;
 	}
 
 	public void notifyCalcFinished(){

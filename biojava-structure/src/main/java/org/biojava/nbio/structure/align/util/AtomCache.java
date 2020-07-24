@@ -33,8 +33,6 @@ import org.biojava.nbio.structure.align.client.StructureName;
 import org.biojava.nbio.structure.cath.CathDatabase;
 import org.biojava.nbio.structure.cath.CathDomain;
 import org.biojava.nbio.structure.cath.CathFactory;
-import org.biojava.nbio.structure.domain.PDPProvider;
-import org.biojava.nbio.structure.domain.RemotePDPProvider;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.LocalPDBDirectory.FetchBehavior;
 import org.biojava.nbio.structure.io.LocalPDBDirectory.ObsoleteBehavior;
@@ -44,7 +42,6 @@ import org.biojava.nbio.structure.io.PDBFileReader;
 import org.biojava.nbio.core.util.FileDownloadUtils;
 import org.biojava.nbio.structure.quaternary.BiologicalAssemblyBuilder;
 import org.biojava.nbio.structure.quaternary.BiologicalAssemblyTransformation;
-import org.biojava.nbio.structure.scop.CachedRemoteScopInstallation;
 import org.biojava.nbio.structure.scop.ScopDatabase;
 import org.biojava.nbio.structure.scop.ScopDescription;
 import org.biojava.nbio.structure.scop.ScopDomain;
@@ -77,14 +74,11 @@ public class AtomCache {
 	public static final String CHAIN_NR_SYMBOL = ":";
 	public static final String CHAIN_SPLIT_SYMBOL = ".";
 
-	public static final String PDP_DOMAIN_IDENTIFIER = "PDP:";
-
 	public static final String UNDERSCORE = "_";
 
 	private static final String FILE_SEPARATOR = System.getProperty("file.separator");
 
 	protected FileParsingParameters params;
-	protected PDPProvider pdpprovider;
 
 	private FetchBehavior fetchBehavior;
 	private ObsoleteBehavior obsoleteBehavior;
@@ -439,10 +433,6 @@ public class AtomCache {
 		return path;
 	}
 
-	public PDPProvider getPdpprovider() {
-		return pdpprovider;
-	}
-
 	/**
 	 * Request a Structure based on a <i>name</i>.
 	 *
@@ -663,30 +653,6 @@ public class AtomCache {
 	}
 
 	/**
-	 * Send a signal to the cache that the system is shutting down. Notifies underlying SerializableCache instances to
-	 * flush themselves...
-	 */
-	public void notifyShutdown() {
-		// System.out.println(" AtomCache got notify shutdown..");
-		if (pdpprovider != null) {
-			if (pdpprovider instanceof RemotePDPProvider) {
-				RemotePDPProvider remotePDP = (RemotePDPProvider) pdpprovider;
-				remotePDP.flushCache();
-			}
-		}
-
-		// todo: use a SCOP implementation that is backed by SerializableCache
-		ScopDatabase scopInstallation = ScopFactory.getSCOP();
-		if (scopInstallation != null) {
-			if (scopInstallation instanceof CachedRemoteScopInstallation) {
-				CachedRemoteScopInstallation cacheScop = (CachedRemoteScopInstallation) scopInstallation;
-				cacheScop.flushCache();
-			}
-		}
-
-	}
-
-	/**
 	 * set the location at which utility data should be cached.
 	 *
 	 * @param cachePath
@@ -762,10 +728,6 @@ public class AtomCache {
 	 */
 	public void setPath(String path) {
 		this.path = FileDownloadUtils.expandUserHome(path);
-	}
-
-	public void setPdpprovider(PDPProvider pdpprovider) {
-		this.pdpprovider = pdpprovider;
 	}
 
 	/**
