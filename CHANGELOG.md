@@ -9,6 +9,9 @@ BioJava 6.0.0 (future release)
 * PDP domain providers (depended on JFatCatClient)
 * Support for retrieving structure data with prefix "PDP:" (AtomCache, StructureIO)
 * RemoteScopInstallation consuming data provided by source.rcsb.org
+* The whole `org.biojava.nbio.structure.rcsb` package, a client for the legacy RCSB PDB APIs (disappearing in Nov 2020)
+* The whole `org.biojava.nbio.structure.validation` package
+* The `org.biojava.nbio.structure.domain.PDBDomainProvider` class to pull domain definitions from legacy RCSB PDB APIs
 
 BioJava 5.4.0
 =============
