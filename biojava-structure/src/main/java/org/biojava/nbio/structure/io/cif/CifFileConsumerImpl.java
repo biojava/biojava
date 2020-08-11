@@ -903,8 +903,9 @@ class CifFileConsumerImpl implements CifFileConsumer<Structure> {
         StrColumn pdbxKeywords = structKeywords.getPdbxKeywords();
         // TODO what is the correct format for these?
         if (pdbxKeywords.isDefined()) {
-            pdbHeader.setDescription(pdbxKeywords.values().collect(Collectors.joining(", ")));
-            pdbHeader.setClassification(pdbxKeywords.values().collect(Collectors.joining(", ")));
+            String keywords = pdbxKeywords.values().collect(Collectors.joining(", "));
+            pdbHeader.setDescription(keywords);
+            pdbHeader.setClassification(keywords);
         }
     }
 
