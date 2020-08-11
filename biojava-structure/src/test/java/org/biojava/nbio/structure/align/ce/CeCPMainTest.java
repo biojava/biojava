@@ -405,16 +405,18 @@ public class CeCPMainTest {
 	@Test
 	public void testCECP1() throws IOException, StructureException{
 
-		String name1 = "PDP:3A2KAc";
-		String name2 = "d1wy5a2";
+		AtomCache cache = new AtomCache();
 
+		// since BioJava 6.0.0, there's no PDP provider. The below corresponds to domain "PDP:3A2KAc"
+		Structure structure1 = cache.getStructure("3A2K.A_234-333");
+
+		// since BioJava 6.0.0, there's no RemoteSCOP provider. The below corresponds to domain "d1wy5a2"
+		Structure structure2 = cache.getStructure("1WY5.A_217-311");
 
 		CeCPMain algorithm = new CeCPMain();
 
-		AtomCache cache = new AtomCache();
-
-		Atom[] ca1 = cache.getAtoms(name1);
-		Atom[] ca2 = cache.getAtoms(name2);
+		Atom[] ca1 = StructureTools.getAtomCAArray(structure1);
+		Atom[] ca2 = StructureTools.getAtomCAArray(structure2);
 
 		AFPChain afpChain = algorithm.align(ca1, ca2);
 		CECalculator calculator = algorithm.getCECalculator();

@@ -27,14 +27,14 @@ import java.util.ResourceBundle;
 
 
 
-/** A class that manages the Strings that are defined in the spice.properties file.
+/**
+ * A class that manages the Strings that are defined in the spice.properties file.
  * This will be usefull for internationalisation.
  *
  * TODO: provide .properties files for other locales.
  * e.g. jfatcat_de_DE.properties, etc.
  *
  * @author Andreas Prlic
- * @since 1:43:04 PM
  * @version %I% %G%
  */
 public class ResourceManager {

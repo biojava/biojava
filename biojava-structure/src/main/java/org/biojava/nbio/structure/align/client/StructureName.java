@@ -44,9 +44,6 @@ import org.biojava.nbio.structure.URLIdentifier;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.cath.CathDomain;
 import org.biojava.nbio.structure.cath.CathFactory;
-import org.biojava.nbio.structure.domain.PDPDomain;
-import org.biojava.nbio.structure.domain.PDPProvider;
-import org.biojava.nbio.structure.domain.RemotePDPProvider;
 import org.biojava.nbio.structure.ecod.EcodFactory;
 import org.biojava.nbio.core.util.FileDownloadUtils;
 import org.biojava.nbio.structure.scop.ScopDatabase;
@@ -67,7 +64,7 @@ import org.slf4j.LoggerFactory;
  * information may be loaded from one of the factory classes:
  * {@link CathFactory},{@link ScopFactory}, etc.
  *
- * @see #getName the name. e.g. 4hhb, 4hhb.A, d4hhba_, PDP:4HHBAa etc.
+ * @see #getIdentifier() the name. e.g. 4hhb, 4hhb.A, d4hhba_ etc.
  */
 
 public class StructureName implements Comparable<StructureName>, Serializable, StructureIdentifier {
@@ -88,7 +85,6 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 	public enum Source {
 		PDB,
 		SCOP,
-		PDP,
 		CATH,
 		URL,
 		FILE,
@@ -120,8 +116,6 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 	 *     Examples: 4hhb, 4hhb.A, 4hhb.A:1-50.
 	 * <li><b>SCOP</b> SCOP domain (or SCOPe, depending on the
 	 *     {@link ScopFactory#getSCOP()} version). Example: d1h6w.2
-	 * <li><b>PDP</b> Protein Domain Parser domain. PDP domains are not guessed,
-	 *     making the PDP: prefix obligatory. Example: PDP:4HHBAa
 	 * <li><b>CATH</b> Cath domains. Example: 1qvrC03
 	 * <li><b>URL</b> Arbitrary URLs. Most common protocols are handled,
 	 *     including http://, ftp://, and file://. Some parsing information can
@@ -170,10 +164,6 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 				case SCOP:
 					if( ! initFromScop(suffix) )
 						throw new IllegalArgumentException("Malformed SCOP domain name:"+suffix);
-					return;
-				case PDP:
-					if( ! initFromPDP(name) )
-						throw new IllegalArgumentException("Malformed PDP domain name:"+suffix);
 					return;
 				case CATH:
 					if( ! initFromCATH(suffix) )
@@ -266,15 +256,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 		}
 		return false;
 	}
-	private boolean initFromPDP(String name) {
-		Matcher matcher = PDPDomain.PDP_NAME_PATTERN.matcher(name);
-		if( matcher.matches() ) {
-			pdbId = matcher.group(1).toUpperCase();
-			chainName = matcher.group(2);
-			return true;
-		}
-		return false;
-	}
+
 	private boolean initFromCATH(String name) {
 		Matcher matcher = cathPattern.matcher(name);
 		if ( matcher.matches() ){
@@ -399,10 +381,6 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 		return mySource == Source.SCOP;
 	}
 
-	public boolean isPDPDomain(){
-		return mySource == Source.PDP;
-	}
-
 	public boolean isCathID(){
 		return mySource == Source.CATH;
 	}
@@ -500,14 +478,6 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 					base = new URLIdentifier(name);
 				} catch (MalformedURLException e) {
 					throw new StructureException("Invalid URL: "+name,e);
-				}
-				break;
-			case PDP:
-				try {
-					PDPProvider provider = new RemotePDPProvider(false);
-					base = provider.getPDPDomain(name);
-				} catch (IOException e) {
-					throw new StructureException("Unable to fetch PDP domain "+name, e);
 				}
 				break;
 			case BIO:

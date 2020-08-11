@@ -30,6 +30,7 @@ import org.biojava.nbio.core.sequence.features.FeatureInterface;
 import org.biojava.nbio.core.sequence.features.Qualifier;
 import org.biojava.nbio.core.sequence.location.template.AbstractLocation;
 import org.biojava.nbio.core.sequence.template.AbstractSequence;
+import org.biojava.nbio.core.sequence.template.Compound;
 import org.junit.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,25 +53,6 @@ import static org.junit.Assert.*;
 public class GenbankReaderTest {
 
 	private final static Logger logger = LoggerFactory.getLogger(GenbankReaderTest.class);
-
-	public GenbankReaderTest() {
-	}
-
-	@BeforeClass
-	public static void setUpClass() throws Exception {
-	}
-
-	@AfterClass
-	public static void tearDownClass() throws Exception {
-	}
-
-	@Before
-	public void setUp() {
-	}
-
-	@After
-	public void tearDown() {
-	}
 
 	/**
 	 * Test of process method, of class GenbankReader.
@@ -154,7 +136,7 @@ public class GenbankReaderTest {
 	 * The underlying {@link InputStream} should remain open until the last call.
 	 */
 	@Test
-	public void testPartialProcess() throws IOException, CompoundNotFoundException, NoSuchFieldException {
+	public void testPartialProcess() throws IOException, CompoundNotFoundException {
 		CheckableInputStream inStream = new CheckableInputStream(this.getClass().getResourceAsStream("/two-dnaseqs.gb"));
 
 		GenbankReader<DNASequence, NucleotideCompound> genbankDNA
@@ -202,7 +184,7 @@ public class GenbankReaderTest {
 		assertTrue(inStream.isclosed());
 
 
-		Assert.assertTrue(proteinSequences.size() == 1);
+		Assert.assertEquals(1, proteinSequences.size());
 		logger.debug("protein sequences: {}", proteinSequences);
 
 		ProteinSequence protein = new ArrayList<>(proteinSequences.values()).get(0);
@@ -213,7 +195,7 @@ public class GenbankReaderTest {
 		List<Qualifier> dbrefs = quals.get("db_xref");
 
 		Assert.assertNotNull(codedBy);
-		Assert.assertTrue(!codedBy.isEmpty());
+		Assert.assertFalse(codedBy.isEmpty());
 		assertEquals("NM_000266.2:503..904", codedBy);
 		assertEquals(5, dbrefs.size());
 
@@ -257,7 +239,7 @@ public class GenbankReaderTest {
 	
 	private AbstractSequence<?> readUnknownGenbankResource(final String resource) throws IOException, CompoundNotFoundException {
 		InputStream inputStream = getClass().getResourceAsStream(resource);
-		GenbankSequenceParser genbankParser = new GenbankSequenceParser();
+		GenbankSequenceParser<AbstractSequence<Compound>, Compound> genbankParser = new GenbankSequenceParser<>();
 		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 		String seqString = genbankParser.getSequence(bufferedReader, 0);
 		String compoundSet = genbankParser.getCompoundType().getClass().getSimpleName();
@@ -287,48 +269,48 @@ public class GenbankReaderTest {
 	public void testLegacyLocusCompatable() throws IOException, CompoundNotFoundException {
 		
 		// Testing opening a genbank file with uppercase units, strand and topology
-		AbstractSequence header0 = readUnknownGenbankResource("/org/biojava/nbio/core/sequence/io/uppercase_locus0.gb");
+		AbstractSequence<? extends Compound> header0 = readUnknownGenbankResource("/org/biojava/nbio/core/sequence/io/uppercase_locus0.gb");
 		assertEquals("ABC12.3_DE   7071 BP DS-DNA   CIRCULAR  SYN       22-JUL-1994", header0.getOriginalHeader());
 		assertEquals("ABC12.3_DE", header0.getAccession().getID());
 		assertEquals("DNACompoundSet", header0.getCompoundSet().getClass().getSimpleName());
 		
 		// Testing uppercase SS strand
-		AbstractSequence header1 = readUnknownGenbankResource("/org/biojava/nbio/core/sequence/io//uppercase_locus1.gb");
+		AbstractSequence<? extends Compound> header1 = readUnknownGenbankResource("/org/biojava/nbio/core/sequence/io//uppercase_locus1.gb");
 		assertEquals("ABC12.3_DE   7071 BP SS-DNA   CIRCULAR  SYN       13-JUL-1994", header1.getOriginalHeader());
 		assertEquals("ABC12.3_DE", header1.getAccession().getID());
 		assertEquals("DNACompoundSet", header0.getCompoundSet().getClass().getSimpleName());
 		
 		// Testing uppercase MS strand
-		AbstractSequence header2 = readUnknownGenbankResource("/org/biojava/nbio/core/sequence/io//uppercase_locus2.gb");
+		AbstractSequence<? extends Compound> header2 = readUnknownGenbankResource("/org/biojava/nbio/core/sequence/io//uppercase_locus2.gb");
 		assertEquals("ABC12.3_DE   7071 BP MS-DNA   CIRCULAR  SYN       13-JUL-1994", header2.getOriginalHeader());
 		assertEquals("ABC12.3_DE", header2.getAccession().getID());
 		assertEquals("DNACompoundSet", header0.getCompoundSet().getClass().getSimpleName());
 		
 		// Testing uppercase LINEAR topology
-		AbstractSequence header3 = readUnknownGenbankResource("/org/biojava/nbio/core/sequence/io//uppercase_locus3.gb");
+		AbstractSequence<? extends Compound> header3 = readUnknownGenbankResource("/org/biojava/nbio/core/sequence/io//uppercase_locus3.gb");
 		assertEquals("ABC12.3_DE   7071 BP DNA   LINEAR    SYN       22-JUL-1994", header3.getOriginalHeader());
 		assertEquals("ABC12.3_DE", header3.getAccession().getID());
 		assertEquals("DNACompoundSet", header0.getCompoundSet().getClass().getSimpleName());
 		
 		// Testing uppercase units with no strand or topology
-		AbstractSequence header4 = readUnknownGenbankResource("/org/biojava/nbio/core/sequence/io//uppercase_locus4.gb");
+		AbstractSequence<? extends Compound> header4 = readUnknownGenbankResource("/org/biojava/nbio/core/sequence/io//uppercase_locus4.gb");
 		assertEquals("ABC12.3_DE   7071 BP RNA             SYN       13-JUL-1994", header4.getOriginalHeader());
 		assertEquals("ABC12.3_DE", header4.getAccession().getID());
 		assertEquals("RNACompoundSet", header4.getCompoundSet().getClass().getSimpleName());
 		
 		// Testing uppercase units with no strand, topology, division or date
-		AbstractSequence header5 = readUnknownGenbankResource("/org/biojava/nbio/core/sequence/io//uppercase_locus5.gb");
+		AbstractSequence<? extends Compound> header5 = readUnknownGenbankResource("/org/biojava/nbio/core/sequence/io//uppercase_locus5.gb");
 		assertEquals("ABC12.3_DE   7071 BP DNA", header5.getOriginalHeader());
 		assertEquals("ABC12.3_DE", header5.getAccession().getID());
 		
 		// Testing uppercase units with no strand, molecule type, topology, division or date
-		AbstractSequence header6 = readUnknownGenbankResource("/org/biojava/nbio/core/sequence/io//uppercase_locus6.gb");
+		AbstractSequence<? extends Compound> header6 = readUnknownGenbankResource("/org/biojava/nbio/core/sequence/io//uppercase_locus6.gb");
 		assertEquals("ABC12.3_DE   7071 BP", header6.getOriginalHeader());
 		assertEquals("ABC12.3_DE", header6.getAccession().getID());
 		assertEquals("DNACompoundSet", header0.getCompoundSet().getClass().getSimpleName());
 		
 		// Testing uppercase protein units
-		AbstractSequence header7 = readUnknownGenbankResource("/org/biojava/nbio/core/sequence/io//uppercase_locus7.gb");
+		AbstractSequence<? extends Compound> header7 = readUnknownGenbankResource("/org/biojava/nbio/core/sequence/io//uppercase_locus7.gb");
 		assertEquals("ABC12.3_DE   7071 AA Protein", header7.getOriginalHeader());
 		assertEquals("ABC12.3_DE", header7.getAccession().getID());
 		assertEquals("AminoAcidCompoundSet", header7.getCompoundSet().getClass().getSimpleName());
@@ -345,7 +327,7 @@ public class GenbankReaderTest {
 		final FeatureInterface<AbstractSequence<NucleotideCompound>, NucleotideCompound> f = seq.getFeatures().get(33);
 		final AbstractLocation fLocation = f.getLocations();
 
-		assertEquals(true, fLocation.isCircular());
+		assertTrue(fLocation.isCircular());
 		assertEquals(7028, (int)fLocation.getStart().getPosition());
 		assertEquals(286, (int)fLocation.getEnd().getPosition());
 		assertEquals(Strand.NEGATIVE, fLocation.getStrand());
@@ -354,7 +336,7 @@ public class GenbankReaderTest {
 	/**
 	 * Helper class to be able to verify the closed state of the input stream.
 	 */
-	private class CheckableInputStream extends BufferedInputStream {
+	private static class CheckableInputStream extends BufferedInputStream {
 
 		private boolean closed;
 

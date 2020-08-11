@@ -153,7 +153,6 @@ public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
 		}
 
 		LinkedHashMap<String,S> sequences = new LinkedHashMap<>();
-		@SuppressWarnings("unchecked")
 		int i=0;
 		while(true) {
 			if(max>0 && i>=max) break;
@@ -171,7 +170,7 @@ public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
 			.forEach(sequence::addFeature);
 
 			// add taxonomy ID to new sequence
-			ArrayList<DBReferenceInfo> dbQualifier = genbankParser.getDatabaseReferences().get("db_xref");
+			List<DBReferenceInfo> dbQualifier = genbankParser.getDatabaseReferences().get("db_xref");
 			if (dbQualifier != null){
 				DBReferenceInfo q = dbQualifier.get(0);
 				sequence.setTaxonomy(new TaxonomyID(q.getDatabase()+":"+q.getId(), DataSource.GENBANK));

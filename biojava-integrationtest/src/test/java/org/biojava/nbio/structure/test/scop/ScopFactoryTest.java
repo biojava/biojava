@@ -21,7 +21,6 @@
 package org.biojava.nbio.structure.test.scop;
 
 import org.biojava.nbio.structure.scop.BerkeleyScopInstallation;
-import org.biojava.nbio.structure.scop.RemoteScopInstallation;
 import org.biojava.nbio.structure.scop.ScopDatabase;
 import org.biojava.nbio.structure.scop.ScopFactory;
 import org.junit.Before;
@@ -76,17 +75,12 @@ public class ScopFactoryTest {
 		scop = ScopFactory.getSCOP(ScopFactory.VERSION_1_75);
 		assertEquals(ScopFactory.VERSION_1_75, scop.getScopVersion());
 
-		ScopFactory.setScopDatabase(ScopFactory.VERSION_1_75, false);
-		scop = ScopFactory.getSCOP();
-		assertEquals(ScopFactory.VERSION_1_75, scop.getScopVersion());
-		assertSame( RemoteScopInstallation.class,scop.getClass());
-
-		ScopFactory.setScopDatabase(ScopFactory.VERSION_1_75, true);
+		ScopFactory.setScopDatabase(ScopFactory.VERSION_1_75);
 		scop = ScopFactory.getSCOP();
 		assertEquals(ScopFactory.VERSION_1_75, scop.getScopVersion());
 		assertSame( BerkeleyScopInstallation.class,scop.getClass());
 
-		ScopFactory.setScopDatabase(ScopFactory.LATEST_VERSION, true);
+		ScopFactory.setScopDatabase(ScopFactory.LATEST_VERSION);
 		scop = ScopFactory.getSCOP();
 		assertEquals(ScopFactory.LATEST_VERSION, scop.getScopVersion());
 		assertSame( BerkeleyScopInstallation.class,scop.getClass());

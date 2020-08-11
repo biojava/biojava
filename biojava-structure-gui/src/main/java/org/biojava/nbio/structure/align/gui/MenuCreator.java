@@ -113,10 +113,6 @@ public class MenuCreator {
 			JMenuItem exportI =  getExportPDBMenuItem(parent);
 			file.add(exportI);
 		}
-		//Open DBI
-		JMenuItem openDBI = getDBResultMenuItem();
-		file.add(openDBI);
-		file.addSeparator();
 		//Print
 		if ( parent != null){
 			JMenuItem print = getPrintMenuItem();
@@ -205,39 +201,6 @@ public class MenuCreator {
 		return menu;
 	}
 
-
-	public static JMenuItem getDBResultMenuItem() {
-
-		ImageIcon saveicon = createImageIcon("/icons/kpdf.png");
-		JMenuItem saveI = null;
-
-		if ( saveicon == null)
-			saveI = new JMenuItem(LOAD_DB_RESULTS);
-		else
-			saveI = new JMenuItem(LOAD_DB_RESULTS, saveicon);
-
-		saveI.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				final JFileChooser fc = new JFileChooser();
-
-				//					In response to a button click:
-				int returnVal = fc.showOpenDialog(null);
-				if ( returnVal == JFileChooser.APPROVE_OPTION) {
-					File file = fc.getSelectedFile();
-
-					UserConfiguration config = WebStartMain.getWebStartConfig();
-					DBResultTable table = new DBResultTable();
-					table.show(file,config);
-				}
-
-			}
-		} );
-
-		return saveI;
-	}
-
 	public static JMenuItem getShowPDBMenuItem() {
 		ImageIcon loadI = createImageIcon("/icons/background.png");
 		JMenuItem openI = null;
@@ -290,7 +253,7 @@ public class MenuCreator {
 	 * @param frame
 	 * @param actionListener
 	 * @param afpChain
-	 * @param MultipleAlignment
+	 * @param msa
 	 * @return a JMenuBar
 	 */
 	public static JMenuBar getAlignmentPanelMenu(JFrame frame,
@@ -797,10 +760,6 @@ public class MenuCreator {
 
 		JMenuItem openI = MenuCreator.getOpenPDBMenuItem();
 		file.add(openI);
-
-		JMenuItem dbI = MenuCreator.getDBResultMenuItem();
-		file.add(dbI);
-		file.addSeparator();
 
 		JMenuItem configI = MenuCreator.getConfigMenuItem();
 		file.add(configI);

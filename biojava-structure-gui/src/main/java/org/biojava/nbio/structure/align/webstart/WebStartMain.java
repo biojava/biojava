@@ -25,8 +25,6 @@ import org.biojava.nbio.structure.align.StructureAlignment;
 import org.biojava.nbio.structure.align.StructureAlignmentFactory;
 import org.biojava.nbio.structure.align.ce.CeCPMain;
 import org.biojava.nbio.structure.align.ce.CeMain;
-import org.biojava.nbio.structure.align.client.FarmJobParameters;
-import org.biojava.nbio.structure.align.client.JFatCatClient;
 import org.biojava.nbio.structure.align.client.PdbPair;
 import org.biojava.nbio.structure.align.fatcat.FatCatFlexible;
 import org.biojava.nbio.structure.align.fatcat.FatCatRigid;
@@ -47,7 +45,7 @@ import java.io.File;
 public class WebStartMain
 {
 
-	static UserConfiguration userConfig;
+	private static UserConfiguration userConfig;
 
 	/**
 	 *  If no arguments, shows AlignmentGui for pairwise alignments.
@@ -113,14 +111,6 @@ public class WebStartMain
 			return;
 		}
 
-		String serverLocation = FarmJobParameters.DEFAULT_SERVER_URL;
-
-		if ( args.length  > 3 ) {
-			// we have 4 arguments.
-			// in this case the 4th has to be the server URL
-			serverLocation = args[3];
-		}
-
 		try {
 
 			String name1 = args[1];
@@ -168,7 +158,7 @@ public class WebStartMain
 					else
 						algorithm = new SmithWaterman3Daligner();
 
-					showStructureAlignment(serverLocation,algorithm ,ca1,ca2,pair.getName1(),pair.getName2());
+					showStructureAlignment(algorithm ,ca1,ca2,pair.getName1(),pair.getName2());
 
 				} catch (Exception e){
 					e.printStackTrace();
@@ -297,35 +287,21 @@ public class WebStartMain
 
 
 
-	private static void showStructureAlignment(String serverLocation, StructureAlignment algorithm, Atom[] ca1, Atom[] ca2, String name1, String name2) throws StructureException{
+	private static void showStructureAlignment(StructureAlignment algorithm, Atom[] ca1, Atom[] ca2, String name1, String name2) throws StructureException{
 		JFrame tmpFrame = new JFrame();
 		tmpFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		String title = "Calculating " + algorithm.getAlgorithmName() + " V." + algorithm.getVersion()+" alignment... ";
 
-
 		showProgressBar(tmpFrame,title, "Calculating the structure alignment.");
 
-
 		//do the actual alignment
-		AFPChain afpChain = null;
-
-		try {
-			// using 10 sec as timeout on server now, since we expect the server to be able to complete the calculation within that time...
-			afpChain =  JFatCatClient.getAFPChainFromServer(serverLocation,algorithm.getAlgorithmName(), name1, name2, ca1, ca2, 10000);
-		} catch (Exception e){
-			e.printStackTrace();
-		}
-
-		if ( afpChain == null )  {
-			afpChain = algorithm.align(ca1, ca2);
-		}
+		AFPChain afpChain = algorithm.align(ca1, ca2);
 
 		afpChain.setName1(name1);
 		afpChain.setName2(name2);
 
 		tmpFrame.dispose();
-
 
 		// show results
 		StructureAlignmentJmol jmol =  StructureAlignmentDisplay.display(afpChain,ca1,ca2);

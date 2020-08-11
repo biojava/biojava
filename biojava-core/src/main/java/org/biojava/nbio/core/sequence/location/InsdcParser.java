@@ -23,17 +23,12 @@ package org.biojava.nbio.core.sequence.location;
 
 import org.biojava.nbio.core.exceptions.ParserException;
 import org.biojava.nbio.core.sequence.AccessionID;
-import org.biojava.nbio.core.sequence.DNASequence;
 import org.biojava.nbio.core.sequence.DataSource;
 import org.biojava.nbio.core.sequence.Strand;
 import org.biojava.nbio.core.sequence.location.template.AbstractLocation;
 import org.biojava.nbio.core.sequence.location.template.Location;
 import org.biojava.nbio.core.sequence.location.template.Point;
-import org.biojava.nbio.core.sequence.template.AbstractSequence;
-import org.biojava.nbio.core.sequence.template.Compound;
 
-import java.io.IOException;
-import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -47,7 +42,7 @@ import java.util.regex.Pattern;
  * @author jgrzebyta
  * @author Paolo Pavan
  */
-public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
+public class InsdcParser {
 
 	private boolean isSequenceCircular;
 	private long sequenceLength;
@@ -58,10 +53,6 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
 	 * parse a location. if group(1) is null than the feature is on the positive
 	 * strand, group(2) start position, group(3) end position.
 	 */
-	// why in the location the first character was ignored?
-	//protected static final Pattern singleLocationPattern = Pattern.compile("(?:[A-Z]([A-Za-z\\.0-9_]*?):)?(<?)(\\d+)(\\.{2}|\\^)?(>?)(\\d+)?(>?)?");
-
-	// fixed issue #254
 	protected static final Pattern singleLocationPattern = Pattern.compile("(?:([A-Za-z\\.0-9_]*?):)?(<?)(\\d+)(\\.{2}|\\^)?(>?)(\\d+)?(>?)?");
 	/**
 	 * Decodes a split pattern. Split patterns are a composition of multiple
@@ -96,9 +87,6 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
 	 * features
 	 */
 	protected Integer featureGlobalStart, featureGlobalEnd;
-
-	//private S referenceSequence = new org.biojava.nbio.core.sequence.DNASequence();
-	private AbstractSequence referenceSequence = new DNASequence();
 
 	enum complexFeaturesAppendEnum {
 
@@ -163,25 +151,10 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
 		return l;
 	}
 
-		/**
-         * Reader based version of the parse methods.
-         *
-         * @param reader The source of the data; assumes that end of the reader
-         * stream is the end of the location string to parse
-         * @return The parsed location
-         * @throws IOException Thrown with any reader error
-         * @throws ParserException Thrown with any error with parsing locations
-         */
-	public List<AbstractLocation> parse(Reader reader) throws IOException, ParserException {
-		// use parse(String s) instead!
-		return null;
-	}
-
 	private List<Location> parseLocationString(String string, int versus) throws ParserException {
 		Matcher m;
 		List<Location> boundedLocationsCollection = new ArrayList<Location>();
 
-		//String[] tokens = string.split(locationSplitPattern);
 		List<String> tokens = splitString(string);
 		for (String t : tokens) {
 			m = genbankSplitPattern.matcher(t);
