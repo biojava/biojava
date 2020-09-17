@@ -68,11 +68,17 @@ public class GFF3Reader {
 	 * @return A FeatureList.
 	 * @throws IOException Something went wrong -- check exception detail message.
 	 */
-
 	public static FeatureList read(String filename, List<String> indexes) throws IOException {
 		return read(Paths.get(filename), indexes);
 	}
 
+	/**
+	 * Read a file into a FeatureList. Each line of the file becomes one Feature object.
+	 *
+	 * @param path The path to the GFF file.
+	 * @return A FeatureList.
+	 * @throws IOException Something went wrong -- check exception detail message.
+	 */
 	public static FeatureList read(Path path, List<String> indexes) throws IOException {
 		logger.info("Reading: {}", path.toString());
 
