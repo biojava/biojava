@@ -20,6 +20,9 @@
  */
 package org.biojava.nbio.genome.parsers.gff;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,11 +70,15 @@ public class GFF3Reader {
 	 */
 
 	public static FeatureList read(String filename, List<String> indexes) throws IOException {
-		logger.info("Reading: {}", filename);
+		return read(Paths.get(filename), indexes);
+	}
+
+	public static FeatureList read(Path path, List<String> indexes) throws IOException {
+		logger.info("Reading: {}", path.toString());
 
 		FeatureList features = new FeatureList();
 		features.addIndexes(indexes);
-		BufferedReader br = new BufferedReader(new FileReader(filename));
+		BufferedReader br = Files.newBufferedReader(path);
 
 		String s;
 		for (s = br.readLine(); null != s; s = br.readLine()) {
@@ -101,6 +108,10 @@ public class GFF3Reader {
 
 	public static FeatureList read(String filename) throws IOException {
 	   return read(filename,new ArrayList<String>(0));
+	}
+
+	public static FeatureList read(Path path) throws IOException {
+		return read(path,new ArrayList<String>(0));
 	}
 
 
