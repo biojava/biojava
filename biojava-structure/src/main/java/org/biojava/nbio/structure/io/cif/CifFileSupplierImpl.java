@@ -9,14 +9,16 @@ import org.biojava.nbio.structure.GroupType;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.xtal.CrystalCell;
 import org.biojava.nbio.structure.xtal.SpaceGroup;
+import org.rcsb.cif.CifBuilder;
 import org.rcsb.cif.model.Category;
 import org.rcsb.cif.model.CifFile;
-import org.rcsb.cif.model.builder.BlockBuilder;
-import org.rcsb.cif.model.builder.CategoryBuilder;
-import org.rcsb.cif.model.builder.CifBuilder;
-import org.rcsb.cif.model.builder.FloatColumnBuilder;
-import org.rcsb.cif.model.builder.IntColumnBuilder;
-import org.rcsb.cif.model.builder.StrColumnBuilder;
+import org.rcsb.cif.model.FloatColumnBuilder;
+import org.rcsb.cif.model.IntColumnBuilder;
+import org.rcsb.cif.model.StrColumnBuilder;
+import org.rcsb.cif.schema.StandardSchemata;
+import org.rcsb.cif.schema.mm.MmCifBlockBuilder;
+import org.rcsb.cif.schema.mm.MmCifCategoryBuilder;
+import org.rcsb.cif.schema.mm.MmCifFileBuilder;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -43,7 +45,7 @@ class CifFileSupplierImpl implements CifFileSupplier<Structure> {
         List<WrappedAtom> wrappedAtoms = collectWrappedAtoms(structure);
         Category atomSite = wrappedAtoms.stream().collect(toAtomSite());
 
-        BlockBuilder blockBuilder = new CifBuilder()
+        MmCifBlockBuilder blockBuilder = CifBuilder.enterFile(StandardSchemata.MMCIF)
                 .enterBlock(structure.getPDBCode());
 
         if (atomSite.isDefined() && atomSite.getRowCount() > 0) {
@@ -187,30 +189,30 @@ class CifFileSupplierImpl implements CifFileSupplier<Structure> {
     }
 
     static class AtomSiteCollector implements Consumer<WrappedAtom> {
-        private final CategoryBuilder.AtomSiteBuilder atomSiteBuilder;
-        private final StrColumnBuilder<CategoryBuilder.AtomSiteBuilder> groupPDB;
-        private final IntColumnBuilder<CategoryBuilder.AtomSiteBuilder> id;
-        private final StrColumnBuilder<CategoryBuilder.AtomSiteBuilder> typeSymbol;
-        private final StrColumnBuilder<CategoryBuilder.AtomSiteBuilder> labelAtomId;
-        private final StrColumnBuilder<CategoryBuilder.AtomSiteBuilder> labelAltId;
-        private final StrColumnBuilder<CategoryBuilder.AtomSiteBuilder> labelCompId;
-        private final StrColumnBuilder<CategoryBuilder.AtomSiteBuilder> labelAsymId;
-        private final StrColumnBuilder<CategoryBuilder.AtomSiteBuilder> labelEntityId;
-        private final IntColumnBuilder<CategoryBuilder.AtomSiteBuilder> labelSeqId;
-        private final StrColumnBuilder<CategoryBuilder.AtomSiteBuilder> pdbxPDBInsCode;
-        private final FloatColumnBuilder<CategoryBuilder.AtomSiteBuilder> cartnX;
-        private final FloatColumnBuilder<CategoryBuilder.AtomSiteBuilder> cartnY;
-        private final FloatColumnBuilder<CategoryBuilder.AtomSiteBuilder> cartnZ;
-        private final FloatColumnBuilder<CategoryBuilder.AtomSiteBuilder> occupancy;
-        private final FloatColumnBuilder<CategoryBuilder.AtomSiteBuilder> bIsoOrEquiv;
-        private final IntColumnBuilder<CategoryBuilder.AtomSiteBuilder> authSeqId;
-        private final StrColumnBuilder<CategoryBuilder.AtomSiteBuilder> authCompId;
-        private final StrColumnBuilder<CategoryBuilder.AtomSiteBuilder> authAsymId;
-        private final StrColumnBuilder<CategoryBuilder.AtomSiteBuilder> authAtomId;
-        private final IntColumnBuilder<CategoryBuilder.AtomSiteBuilder> pdbxPDBModelNum;
+        private final MmCifCategoryBuilder.AtomSiteBuilder atomSiteBuilder;
+        private final StrColumnBuilder<MmCifCategoryBuilder.AtomSiteBuilder, MmCifBlockBuilder, MmCifFileBuilder> groupPDB;
+        private final IntColumnBuilder<MmCifCategoryBuilder.AtomSiteBuilder, MmCifBlockBuilder, MmCifFileBuilder> id;
+        private final StrColumnBuilder<MmCifCategoryBuilder.AtomSiteBuilder, MmCifBlockBuilder, MmCifFileBuilder> typeSymbol;
+        private final StrColumnBuilder<MmCifCategoryBuilder.AtomSiteBuilder, MmCifBlockBuilder, MmCifFileBuilder> labelAtomId;
+        private final StrColumnBuilder<MmCifCategoryBuilder.AtomSiteBuilder, MmCifBlockBuilder, MmCifFileBuilder> labelAltId;
+        private final StrColumnBuilder<MmCifCategoryBuilder.AtomSiteBuilder, MmCifBlockBuilder, MmCifFileBuilder> labelCompId;
+        private final StrColumnBuilder<MmCifCategoryBuilder.AtomSiteBuilder, MmCifBlockBuilder, MmCifFileBuilder> labelAsymId;
+        private final StrColumnBuilder<MmCifCategoryBuilder.AtomSiteBuilder, MmCifBlockBuilder, MmCifFileBuilder> labelEntityId;
+        private final IntColumnBuilder<MmCifCategoryBuilder.AtomSiteBuilder, MmCifBlockBuilder, MmCifFileBuilder> labelSeqId;
+        private final StrColumnBuilder<MmCifCategoryBuilder.AtomSiteBuilder, MmCifBlockBuilder, MmCifFileBuilder> pdbxPDBInsCode;
+        private final FloatColumnBuilder<MmCifCategoryBuilder.AtomSiteBuilder, MmCifBlockBuilder, MmCifFileBuilder> cartnX;
+        private final FloatColumnBuilder<MmCifCategoryBuilder.AtomSiteBuilder, MmCifBlockBuilder, MmCifFileBuilder> cartnY;
+        private final FloatColumnBuilder<MmCifCategoryBuilder.AtomSiteBuilder, MmCifBlockBuilder, MmCifFileBuilder> cartnZ;
+        private final FloatColumnBuilder<MmCifCategoryBuilder.AtomSiteBuilder, MmCifBlockBuilder, MmCifFileBuilder> occupancy;
+        private final FloatColumnBuilder<MmCifCategoryBuilder.AtomSiteBuilder, MmCifBlockBuilder, MmCifFileBuilder> bIsoOrEquiv;
+        private final IntColumnBuilder<MmCifCategoryBuilder.AtomSiteBuilder, MmCifBlockBuilder, MmCifFileBuilder> authSeqId;
+        private final StrColumnBuilder<MmCifCategoryBuilder.AtomSiteBuilder, MmCifBlockBuilder, MmCifFileBuilder> authCompId;
+        private final StrColumnBuilder<MmCifCategoryBuilder.AtomSiteBuilder, MmCifBlockBuilder, MmCifFileBuilder> authAsymId;
+        private final StrColumnBuilder<MmCifCategoryBuilder.AtomSiteBuilder, MmCifBlockBuilder, MmCifFileBuilder> authAtomId;
+        private final IntColumnBuilder<MmCifCategoryBuilder.AtomSiteBuilder, MmCifBlockBuilder, MmCifFileBuilder> pdbxPDBModelNum;
 
         AtomSiteCollector() {
-            this.atomSiteBuilder = new CategoryBuilder.AtomSiteBuilder(null);
+            this.atomSiteBuilder = new MmCifCategoryBuilder.AtomSiteBuilder(null);
             this.groupPDB = atomSiteBuilder.enterGroupPDB();
             this.id = atomSiteBuilder.enterId();
             this.typeSymbol = atomSiteBuilder.enterTypeSymbol();
@@ -286,7 +288,7 @@ class CifFileSupplierImpl implements CifFileSupplier<Structure> {
         }
 
         AtomSiteCollector combine(AtomSiteCollector other) {
-            throw new UnsupportedOperationException("impl by calling addAll for all collection - not feeling like writing that code");
+            throw new UnsupportedOperationException("impl by calling addAll for all collection");
         }
 
         Category get() {

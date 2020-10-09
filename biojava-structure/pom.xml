@@ -20,8 +20,8 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.rcsb</groupId>
-			<artifactId>ciftools-java</artifactId>
-			<version>0.7.1</version>
+			<artifactId>${ciftools.artifact}</artifactId>
+			<version>${ciftools.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.rcsb</groupId>

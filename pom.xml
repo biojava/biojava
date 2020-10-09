@@ -43,6 +43,8 @@
 		<mmtf.version>1.0.9</mmtf.version>
 		<slf4j.version>1.7.30</slf4j.version>
 		<log4j.version>2.13.3</log4j.version>
+		<ciftools.artifact>ciftools-java-jdk8</ciftools.artifact>
+		<ciftools.version>2.0.2</ciftools.version>
 	</properties>
 	<scm>
 		<connection>scm:git:git://github.com/biojava/biojava.git</connection>
