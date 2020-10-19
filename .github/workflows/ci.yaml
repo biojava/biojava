@@ -21,6 +21,7 @@ jobs:
         with:
           java-version: ${{ matrix.java }}
       - name: Test with Maven
-        run: mvn test -B --file pom.xml
+        #run: mvn test --batch-mode verify
+        run: mvn verify
 
 ...
