@@ -23,6 +23,8 @@
  */
 package org.biojava.nbio.structure;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import org.biojava.nbio.structure.align.util.URLConnectionTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,19 +45,22 @@ import java.util.*;
  * Methods for getting the status of a PDB file (current, obsolete, etc)
  * and for accessing different versions of the structure.
  *
- * <p>All methods query the
- * <a href="http://www.rcsb.org/pdb/rest/idStatus?structureId=1HHB,3HHB,4HHB">
- * PDB website.</a>
+ * <p>
+ * All methods query the
+ * <a href="https://data.rcsb.org">
+ * RCSB Data REST API</a>
  *
- * <p>PDB supersessions form a directed acyclic graph, where edges point from an
+ * <p>
+ * PDB supersessions form a directed acyclic graph, where edges point from an
  * obsolete ID to the entry that directly superseded it. For example, here are
- * edges from one portion of the graph:<br/>
- *
+ * edges from one portion of the graph:
+ * <p>
  * 1CAT -> 3CAT<br/>
  * 3CAT -> 7CAT<br/>
  * 3CAT -> 8CAT<br/>
  *
- * <p>The methods {@link #getReplaces(String, boolean) getReplaces(pdbId, false)}/
+ * <p>
+ * The methods {@link #getReplaces(String, boolean) getReplaces(pdbId, false)}/
  * {@link #getReplacement(String, boolean, boolean) getReplacement(pdbId, false, true)}
  * just get the incoming/outgoing edges for a single node. The recursive versions
  * ({@link #getReplaces(String, boolean) getReplaces(pdbId, true)},
@@ -63,39 +68,46 @@ import java.util.*;
  * will do a depth-first search up/down the tree and return a list of all nodes ]
  * reached.
  *
- * <p>Finally, the getCurrent() method returns a single PDB ID from among the
+ * <p>
+ * Finally, the {@link #getCurrent(String)} method returns a single PDB ID from among the
  * results of
- * {@link #getReplacement(String, boolean) getReplacement(pdbId, true)}.
+ * {@link #getReplacement(String, boolean, boolean)}.
  * To be consistent with the old REST ordering, this is the PDB ID that occurs
  * last alphabetically.
  *
- * <p>Results are cached to reduce server load.
+ * <p>
+ * Results are cached to reduce server load.
  *
- * @author Spencer Bliven <sbliven@ucsd.edu>
+ * @author Spencer Bliven
  * @author Amr AL-Hossary
+ * @author Jose Duarte
  * @since 3.0.2
  */
 public class PDBStatus {
 
 	private static final Logger logger = LoggerFactory.getLogger(PDBStatus.class);
 
-	public static final String DEFAULT_PDB_SERVER = "www.rcsb.org";
-	public static final String PDB_SERVER_PROPERTY = "PDB.SERVER";
+	//public static final String DEFAULT_PDB_SERVER = "www.rcsb.org";
+	public static final String DEFAULT_RCSB_DATA_API_SERVER = "data.rcsb.org";
+	public static final String ALL_CURRENT_ENDPOINT = "https://%s/rest/v1/holdings/current/entry_ids";
 
 	/**
 	 * saves the returned results for further use.
 	 *
 	 */
-	//TODO Use SoftReferences to allow garbage collection
-	private static Map<String, Map<String, String>> recordsCache= new Hashtable<String, Map<String, String>>();
+	private static final Map<String, Map<String, String>> recordsCache= new Hashtable<>();
 
 	/**
 	 * Represents the status of PDB IDs. 'OBSOLETE' and 'CURRENT' are the most
 	 * common.
-	 * @author Spencer Bliven <sbliven@ucsd.edu>
+	 * @author Spencer Bliven
 	 *
 	 */
 	public enum Status {
+		// this is the list for unreleased: "AUCO" "AUTH" "HOLD" "HPUB" "POLC" "PROC" "REFI" "REPL" "WAIT" "WDRN"
+		// The remaining from below are removed-related: OBSOLETE, MODEL (not available in Data API).
+		// In Data API in rcsb_repository_holdings_insilico_models.status_code: 3 values "OBS", "TRSF", "WDRN" and 1 in  rcsb_repository_holdings_transferred.status_code: "TRSF"
+		// for current: CURRENT (not available in current API)
 		OBSOLETE,
 		CURRENT,
 		AUTH,
@@ -110,11 +122,7 @@ public class PDBStatus {
 		MODEL,
 		UNKNOWN;
 
-
 		/**
-		 *
-		 * @param statusStr
-		 * @return
 		 * @throws IllegalArgumentException If the string is not recognized
 		 */
 		public static Status fromString(String statusStr) {
@@ -159,7 +167,7 @@ public class PDBStatus {
 	 * @param pdbId
 	 * @return The status, or null if an error occurred.
 	 */
-	public static Status getStatus(String pdbId) {
+	public static Status getStatus(String pdbId) throws IOException {
 		Status[] statuses = getStatus(new String[] {pdbId});
 		if(statuses != null) {
 			assert(statuses.length == 1);
@@ -176,7 +184,7 @@ public class PDBStatus {
 	 * @param pdbIds
 	 * @return The status array, or null if an error occurred.
 	 */
-	public static Status[] getStatus(String[] pdbIds) {
+	public static Status[] getStatus(String[] pdbIds) throws IOException {
 		Status[] statuses = new Status[pdbIds.length];
 
 		List<Map<String,String>> attrList = getStatusIdRecords(pdbIds);
@@ -234,8 +242,8 @@ public class PDBStatus {
 	 * @param oldPdbId
 	 * @return The replacement for oldPdbId, or null if none are found or if an error occurred.
 	 */
-	public static String getCurrent(String oldPdbId) {
-		List<String> replacements =  getReplacement(oldPdbId,true, false);
+	public static String getCurrent(String oldPdbId) throws IOException {
+		List<String> replacements = getReplacement(oldPdbId,true, false);
 		if(replacements != null && !replacements.isEmpty())
 			return replacements.get(0);
 		else
@@ -260,7 +268,7 @@ public class PDBStatus {
 	 * 		current records. A return value of null indicates that the ID has
 	 * 		been removed from the PDB or that an error has occurred.
 	 */
-	public static List<String> getReplacement(String oldPdbId, boolean recurse, boolean includeObsolete) {
+	public static List<String> getReplacement(String oldPdbId, boolean recurse, boolean includeObsolete) throws IOException {
 		List<Map<String,String>> attrList = getStatusIdRecords(new String[] {oldPdbId});
 		//Expect a single record
 		if(attrList == null || attrList.size() != 1) {
@@ -291,7 +299,7 @@ public class PDBStatus {
 		}
 
 		// If we're current, just return
-		LinkedList<String> results = new LinkedList<String>();
+		LinkedList<String> results = new LinkedList<>();
 		switch(status) {
 			case CURRENT:
 				results.add(oldPdbId);
@@ -459,7 +467,7 @@ public class PDBStatus {
 	 * @return A (possibly empty) list of ID(s) of the ancestor(s) of
 	 * 		newPdbId, or <tt>null</tt> if an error occurred.
 	 */
-	public static List<String> getReplaces(String newPdbId, boolean recurse) {
+	public static List<String> getReplaces(String newPdbId, boolean recurse) throws IOException {
 		List<Map<String,String>> attrList = getStatusIdRecords(new String[] {newPdbId});
 		//Expect a single record
 		if(attrList == null || attrList.size() != 1) {
@@ -516,34 +524,34 @@ public class PDBStatus {
 	/**
 	 * Fetches the status of one or more pdbIDs from the server.
 	 *
-	 * <p>Returns the results as a list of Attributes.
+	 * <p>
+	 * Returns the results as a list of Attributes.
 	 * Each attribute should contain "structureId" and "status" attributes, and
 	 * possibly more.
 	 *
-	 * <p>Example:</br>
+	 * <p>
+	 * Example:
+	 * <p>
 	 * <tt>http://www.rcsb.org/pdb/rest/idStatus?structureID=1HHB,4HHB</tt></br>
-	 *<pre>&lt;idStatus&gt;
-	 *  &lt;record structureId="1HHB" status="OBSOLETE" replacedBy="4HHB"/&gt;
-	 *  &lt;record structureId="4HHB" status="CURRENT" replaces="1HHB"/&gt;
-	 *&lt;/idStatus&gt;
+	 * <pre>
+	 * &lt;idStatus&gt;
+	 *   &lt;record structureId="1HHB" status="OBSOLETE" replacedBy="4HHB"/&gt;
+	 *   &lt;record structureId="4HHB" status="CURRENT" replaces="1HHB"/&gt;
+	 * &lt;/idStatus&gt;
 	 * </pre>
 	 *
-	 * <p>Results are not guaranteed to be returned in the same order as pdbIDs.
+	 * <p>
+	 * Results are not guaranteed to be returned in the same order as pdbIDs.
 	 * Refer to the structureId property to match them.
 	 *
-	 * @param pdbIDs
+	 * @param pdbIDs the PDB identifiers
 	 * @return A map between attributes and values
 	 */
-	private static List<Map<String, String>> getStatusIdRecords(String[] pdbIDs) {
+	private static List<Map<String, String>> getStatusIdRecords(String[] pdbIDs) throws IOException {
 
-		List<Map<String,String>> result = new ArrayList<Map<String,String>>(pdbIDs.length);
+		List<Map<String,String>> result = new ArrayList<>(pdbIDs.length);
 
-		String serverName = System.getProperty(PDB_SERVER_PROPERTY);
-
-		if ( serverName == null)
-			serverName = DEFAULT_PDB_SERVER;
-		else
-			logger.info(String.format("Got System property %s=%s",PDB_SERVER_PROPERTY,serverName));
+		String serverName = DEFAULT_RCSB_DATA_API_SERVER;
 
 		// Build REST query URL
 		if(pdbIDs.length < 1) {
@@ -566,143 +574,65 @@ public class PDBStatus {
 			return result;
 		}
 
-		try {
-			logger.info("Fetching {}", urlStr);
+		logger.info("Fetching {}", urlStr);
 
-			URL url = new URL(urlStr);
+		URL url = new URL(urlStr);
 
-			InputStream uStream = url.openStream();
+		InputStream uStream = url.openStream();
 
-			InputSource source = new InputSource(uStream);
-			SAXParserFactory parserFactory = SAXParserFactory.newInstance();
-			SAXParser parser = parserFactory.newSAXParser();
-			XMLReader reader = parser.getXMLReader();
+		InputSource source = new InputSource(uStream);
+		SAXParserFactory parserFactory = SAXParserFactory.newInstance();
+		SAXParser parser = parserFactory.newSAXParser();
+		XMLReader reader = parser.getXMLReader();
 
-			PDBStatusXMLHandler handler = new PDBStatusXMLHandler();
+		PDBStatusXMLHandler handler = new PDBStatusXMLHandler();
 
-			reader.setContentHandler(handler);
-			reader.parse(source);
+		reader.setContentHandler(handler);
+		reader.parse(source);
 
-			// Fetch results of SAX parsing
-			List<Map<String,String>> records = handler.getRecords();
+		// Fetch results of SAX parsing
+		List<Map<String, String>> records = handler.getRecords();
 
-			//add to cache
-			for(Map<String,String> record : records) {
-				String pdbId = record.get("structureId").toUpperCase();
-				if(pdbId != null) {
-					recordsCache.put(pdbId, record);
-				}
+		//add to cache
+		for (Map<String, String> record : records) {
+			String pdbId = record.get("structureId").toUpperCase();
+			if (pdbId != null) {
+				recordsCache.put(pdbId, record);
 			}
-
-			// return results
-			result.addAll(handler.getRecords());
-
-			// TODO should throw these forward and let the caller log
-		} catch (IOException e){
-			logger.error("Problem getting status for {} from PDB server. Error: {}", Arrays.toString(pdbIDs), e.getMessage());
-			return null;
-		} catch (SAXException e) {
-			logger.error("Problem getting status for {} from PDB server. Error: {}", Arrays.toString(pdbIDs), e.getMessage());
-			return null;
-		} catch (ParserConfigurationException e) {
-			logger.error("Problem getting status for {} from PDB server. Error: {}", Arrays.toString(pdbIDs), e.getMessage());
-			return null;
 		}
+
+		// return results
+		result.addAll(handler.getRecords());
 
 		return result;
 	}
 
 	/**
-	 * Handles idStatus xml by storing attributes for all record elements.
+	 * Returns all current PDB IDs
 	 *
-	 * @author Spencer Bliven <sbliven@ucsd.edu>
-	 *
+	 * @return a list of PDB IDs
+	 * @throws IOException if a problem occurs retrieving the information
 	 */
-	private static class PDBStatusXMLHandler extends DefaultHandler {
-		private List<Map<String,String>> records;
-
-		public PDBStatusXMLHandler() {
-			records = new ArrayList<Map<String,String>>();
-		}
-
-		/**
-		 * @param uri
-		 * @param localName
-		 * @param qName
-		 * @param attributes
-		 * @throws SAXException
-		 * @see org.xml.sax.helpers.DefaultHandler#startElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
-		 */
-		@Override
-		public void startElement(String uri, String localName, String qName,
-		                         Attributes attributes) throws SAXException {
-			//System.out.format("Starting element: uri='%s' localName='%s' qName='%s'\n", uri, localName, qName);
-			if(qName.equals("record")) {
-				//Convert attributes into a Map, as it should have been.
-				//Important since SAX reuses Attributes objects for different calls
-				Map<String,String> attrMap = new HashMap<String,String>(attributes.getLength()*2);
-				for(int i=0;i<attributes.getLength();i++) {
-					attrMap.put(attributes.getQName(i), attributes.getValue(i));
-				}
-				records.add(attrMap);
-			}
-		}
-
-
-		/**
-		 * @param e
-		 * @throws SAXException
-		 * @see org.xml.sax.helpers.DefaultHandler#error(org.xml.sax.SAXParseException)
-		 */
-		@Override
-		public void error(SAXParseException e) throws SAXException {
-			logger.error(e.getMessage());
-			super.error(e);
-		}
-
-
-		public List<Map<String, String>> getRecords() {
-			return records;
-		}
-	}
-
-	/** Returns a list of current PDB IDs
-	 *
-	 * @return a list of PDB IDs, or null if a problem occurred
-	 */
-
 	public static SortedSet<String> getCurrentPDBIds() throws IOException {
 
-		SortedSet<String> allPDBs = new TreeSet<String>();
-		String serverName = System.getProperty(PDB_SERVER_PROPERTY);
-
-		if ( serverName == null)
-			serverName = DEFAULT_PDB_SERVER;
-		else
-			logger.info(String.format("Got System property %s=%s",PDB_SERVER_PROPERTY,serverName));
+		//String serverName = System.getProperty(PDB_SERVER_PROPERTY);
+		String serverName = DEFAULT_RCSB_DATA_API_SERVER;
 
 		// Build REST query URL
-
-		String urlStr = String.format("http://%s/pdb/rest/getCurrent",serverName);
+		String urlStr = String.format(ALL_CURRENT_ENDPOINT, serverName);
 		URL u = new URL(urlStr);
 
 		InputStream stream = URLConnectionTools.getInputStream(u, 60000);
 
-		if (stream != null) {
-			BufferedReader reader = new BufferedReader(
-					new InputStreamReader(stream));
+		ObjectMapper objectMapper = new ObjectMapper();
+		TypeFactory typeFactory = objectMapper.getTypeFactory();
+		List<String> pdbIdList = objectMapper.readValue(stream, typeFactory.constructCollectionType(List.class, String.class));
 
-			String line = null;
-
-			while ((line = reader.readLine()) != null) {
-				int index = line.lastIndexOf("structureId=");
-				if (index > 0) {
-					allPDBs.add(line.substring(index + 13, index + 17));
-				}
-			}
-		}
-		return allPDBs;
-
+		return new TreeSet<>(pdbIdList);
 	}
 
+	public static void main(String[] args) throws Exception {
+		SortedSet<String> all = getCurrentPDBIds();
+		System.out.println("Number of current PDB ids is: " + all.size());
+	}
 }
