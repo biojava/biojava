@@ -166,12 +166,7 @@ public class MMCIFFileTools {
 		Field[] allFields = c.getDeclaredFields();
 		Field[] fields = new Field[allFields.length];
 		
-		java.util.Arrays.sort(allFields,new Comparator<Field>() {
-			@Override
-			public int compare(Field o1, Field o2) {
-				return o2.getName().compareTo(o1.getName());				
-			}
-		});
+		Arrays.sort(allFields, (o1, o2) -> o2.getName().compareTo(o1.getName()));
 		
 		int n = 0;
 		for(Field f : allFields) {
