@@ -119,7 +119,7 @@ public class StructureSequenceMatcher {
 
 		for(Chain chain : struct.getChains()) {
 			List<Group> groups = chain.getAtomGroups();
-			Map<Integer,Integer> chainIndexPosition = new HashMap<Integer, Integer>();
+			Map<Integer,Integer> chainIndexPosition = new LinkedHashMap<Integer, Integer>();
 			int prevLen = seqStr.length();
 
 			// get the sequence for this chain
