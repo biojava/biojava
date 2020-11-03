@@ -29,6 +29,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import javax.vecmath.Matrix4d;
 
@@ -148,7 +149,7 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 		// Add the actual chains
 		for(int i=0; i<chainMap.size(); i++) {
 			// Now add the chain information
-			Map<String, Chain> modelChainMap = chainMap.get(i);
+			Map<String, Chain> modelChainMap = new TreeMap<>(chainMap.get(i));
 			for(Chain modelChain : modelChainMap.values()){
 				structure.addChain(modelChain, i);
 				String sequence = chainSequenceMap.get(modelChain.getId());

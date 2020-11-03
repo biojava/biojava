@@ -107,6 +107,14 @@ public class PDBHeader implements PDBRecord {
 
 			Class<?> c = Class.forName(PDBHeader.class.getName());
 			Method[] methods  = c.getMethods();
+			
+			Arrays.sort(methods,new Comparator<Method>() {
+				@Override
+				public int compare(Method o1, Method o2)
+				{
+					return o1.getName().compareTo(o2.getName());
+				}
+			});
 
 			for (Method m : methods) {
 				String name = m.getName();
