@@ -56,10 +56,7 @@ public class TestDSSPParser {
 			List<SecStrucState> file = DSSPParser.parseInputStream(new GZIPInputStream(
 					this.getClass().getResourceAsStream("/org/biojava/nbio/structure/secstruc/"+name+".dssp.gz")), s, false);
 
-			// Test fetching from PDB
-			List<SecStrucState> pdb = DSSPParser.fetch(name, s, false);
-
-			// Test predicting, writting and parsing back
+			// Test predicting, writing and parsing back
 			SecStrucCalc sec = new SecStrucCalc();
 			List<SecStrucState> pred = sec.calculate(s, false);
 
@@ -68,13 +65,10 @@ public class TestDSSPParser {
 
 			assertTrue(
 					"SS assignment lengths do not match",
-					file.size() == pdb.size()
-							&& pred.size() == parseBack.size()
+					pred.size() == parseBack.size()
 							&& pred.size() == file.size());
 
 			for (int i = 0; i < file.size(); i++) {
-				assertEquals("SS assignment position " + (i + 1)
-						+ " does not match", file.get(i), pdb.get(i));
 				assertEquals("SS assignment position " + (i + 1)
 						+ " does not match", pred.get(i), parseBack.get(i));
 				assertEquals("SS assignment position " + (i + 1)
