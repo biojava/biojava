@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -149,7 +150,8 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 		// Add the actual chains
 		for(int i=0; i<chainMap.size(); i++) {
 			// Now add the chain information
-			Map<String, Chain> modelChainMap = new TreeMap<>(chainMap.get(i));
+//			Map<String, Chain> modelChainMap = new TreeMap<>(chainMap.get(i));
+			Map<String, Chain> modelChainMap = chainMap.get(i);
 			for(Chain modelChain : modelChainMap.values()){
 				structure.addChain(modelChain, i);
 				String sequence = chainSequenceMap.get(modelChain.getId());
@@ -179,7 +181,7 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 			int chainCount) {
 		modelNumber = inputModelNumber;
 		structure.addModel(new ArrayList<Chain>(chainCount));
-		chainMap.add(new HashMap<>());
+		chainMap.add(new LinkedHashMap<>());
 	}
 
 	/* (non-Javadoc)
