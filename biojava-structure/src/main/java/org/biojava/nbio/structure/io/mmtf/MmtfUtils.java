@@ -164,13 +164,7 @@ public class MmtfUtils {
 			ssp.calculate(bioJavaStruct, true);
 		}
 		catch(StructureException e) {
-			LOGGER.warn("Could not calculate secondary structure (error {}). Will try to get a DSSP file from the RCSB web server instead.", e.getMessage());
-
-			try {
-				DSSPParser.fetch(bioJavaStruct.getPDBCode(), bioJavaStruct, true); //download from PDB the DSSP result
-			} catch(Exception bige){
-				LOGGER.warn("Could not get a DSSP file from RCSB web server. There will not be secondary structure assignment for this structure ({}). Error: {}", bioJavaStruct.getPDBCode(), bige.getMessage());
-			}
+			LOGGER.warn("Could not calculate secondary structure (error {}). Secondary structure annotation will be missing.", e.getMessage());
 		}
 	}
 
