@@ -30,7 +30,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 import javax.vecmath.Matrix4d;
 
@@ -107,7 +106,7 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 	private List<Chain> chainList;
 
 	/** All the chains as a list of maps */
-	private List<Map<String,Chain>> chainMap;
+	private List<LinkedHashMap<String,Chain>> chainMap;
 
 	private List<double[]> transformList;
 
@@ -150,7 +149,6 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 		// Add the actual chains
 		for(int i=0; i<chainMap.size(); i++) {
 			// Now add the chain information
-//			Map<String, Chain> modelChainMap = new TreeMap<>(chainMap.get(i));
 			Map<String, Chain> modelChainMap = chainMap.get(i);
 			for(Chain modelChain : modelChainMap.values()){
 				structure.addChain(modelChain, i);
