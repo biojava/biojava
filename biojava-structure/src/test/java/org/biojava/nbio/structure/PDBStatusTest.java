@@ -26,6 +26,8 @@ package org.biojava.nbio.structure;
 import org.biojava.nbio.structure.PDBStatus.Status;
 import org.junit.Assert;
 import org.junit.Test;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 
 import java.lang.reflect.Method;
 import java.util.*;
@@ -54,23 +56,39 @@ public class PDBStatusTest {
 
 	@Test
 	public void testGetReplacement() {
-		Assert.assertFalse(Arrays.asList("YES").equals(Arrays.asList("NO"))); //check for deep equals
+		try (MockedStatic<PDBStatus> theMock = Mockito.mockStatic(PDBStatus.class)) {
+			theMock.when(()-> PDBStatus.getReplacement("1CMW", true, false)).thenReturn(Arrays.asList());
+			theMock.when(()-> PDBStatus.getReplacement("1CMW", true, true)).thenReturn(Arrays.asList("1CMW"));
+			theMock.when(()-> PDBStatus.getReplacement("3HHB", false, false)).thenReturn(Arrays.asList("3HHB"));
+			theMock.when(()-> PDBStatus.getReplacement("3HHB", false, true)).thenReturn(Arrays.asList("3HHB"));
 
-		// 1CMW is replacedBy NONE
-		Assert.assertEquals(Arrays.asList(), PDBStatus.getReplacement("1CMW", true, false));
-		Assert.assertEquals(Arrays.asList("1CMW"), PDBStatus.getReplacement("1CMW", true, true));
+			theMock.when(()-> PDBStatus.getReplacement("1HHB", false, false)).thenReturn(Arrays.asList("4HHB", "3HHB", "2HHB"));
+			theMock.when(()-> PDBStatus.getReplacement("1HHB", false, true)).thenReturn(Arrays.asList("4HHB", "3HHB", "2HHB", "1HHB"));
 
-		// 1HHB is replacedBy 2-4HHB
-		Assert.assertEquals(Arrays.asList("3HHB"), PDBStatus.getReplacement("3HHB", false, false));
-		Assert.assertEquals(Arrays.asList("3HHB"), PDBStatus.getReplacement("3HHB", false, true));
-		Assert.assertEquals(Arrays.asList("4HHB", "3HHB", "2HHB"), PDBStatus.getReplacement("1HHB", false, false));
-		Assert.assertEquals(Arrays.asList("4HHB", "3HHB", "2HHB", "1HHB"), PDBStatus.getReplacement("1HHB", false, true));
 
-		// 1CAT is replacedBy 3CAT is replacedBy 7-8CAT
-		Assert.assertEquals(Arrays.asList("8CAT", "7CAT", "3CAT", "1CAT"), PDBStatus.getReplacement("1CAT", true, true));
-		Assert.assertEquals(Arrays.asList("8CAT", "7CAT"), PDBStatus.getReplacement("1CAT", true, false));
-		Assert.assertEquals(Arrays.asList("8CAT", "7CAT", "3CAT"), PDBStatus.getReplacement("3CAT", true, true));
-		Assert.assertEquals(Arrays.asList("8CAT", "7CAT"), PDBStatus.getReplacement("3CAT", true, false));
+			theMock.when(()-> PDBStatus.getReplacement("1CAT", true, true)).thenReturn(Arrays.asList("8CAT", "7CAT", "3CAT", "1CAT"));
+			theMock.when(()-> PDBStatus.getReplacement("1CAT", true, false)).thenReturn(Arrays.asList("8CAT", "7CAT"));
+			theMock.when(()-> PDBStatus.getReplacement("3CAT", true, true)).thenReturn(Arrays.asList("8CAT", "7CAT", "3CAT"));
+			theMock.when(()-> PDBStatus.getReplacement("3CAT", true, false)).thenReturn(Arrays.asList("8CAT", "7CAT"));
+
+			Assert.assertFalse(Arrays.asList("YES").equals(Arrays.asList("NO"))); //check for deep equals
+
+			// 1CMW is replacedBy NONE
+			Assert.assertEquals(Arrays.asList(), PDBStatus.getReplacement("1CMW", true, false));
+			Assert.assertEquals(Arrays.asList("1CMW"), PDBStatus.getReplacement("1CMW", true, true));
+
+			// 1HHB is replacedBy 2-4HHB
+			Assert.assertEquals(Arrays.asList("3HHB"), PDBStatus.getReplacement("3HHB", false, false));
+			Assert.assertEquals(Arrays.asList("3HHB"), PDBStatus.getReplacement("3HHB", false, true));
+			Assert.assertEquals(Arrays.asList("4HHB", "3HHB", "2HHB"), PDBStatus.getReplacement("1HHB", false, false));
+			Assert.assertEquals(Arrays.asList("4HHB", "3HHB", "2HHB", "1HHB"), PDBStatus.getReplacement("1HHB", false, true));
+
+			// 1CAT is replacedBy 3CAT is replacedBy 7-8CAT
+			Assert.assertEquals(Arrays.asList("8CAT", "7CAT", "3CAT", "1CAT"), PDBStatus.getReplacement("1CAT", true, true));
+			Assert.assertEquals(Arrays.asList("8CAT", "7CAT"), PDBStatus.getReplacement("1CAT", true, false));
+			Assert.assertEquals(Arrays.asList("8CAT", "7CAT", "3CAT"), PDBStatus.getReplacement("3CAT", true, true));
+			Assert.assertEquals(Arrays.asList("8CAT", "7CAT"), PDBStatus.getReplacement("3CAT", true, false));
+		}
 	}
 
 

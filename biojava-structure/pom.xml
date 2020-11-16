@@ -117,6 +117,12 @@
 			<version>1.6</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<artifactId>mockito-inline</artifactId>
+			<groupId>org.mockito</groupId>
+			<version>3.6.0</version>
+		</dependency>
+
 
 	</dependencies>
 
