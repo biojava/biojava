@@ -106,7 +106,7 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 	private List<Chain> chainList;
 
 	/** All the chains as a list of maps */
-	private List<Map<String,Chain>> chainMap;
+	private List<LinkedHashMap<String,Chain>> chainMap;
 
 	private List<double[]> transformList;
 
