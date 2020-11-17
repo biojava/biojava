@@ -165,6 +165,9 @@ public class MMCIFFileTools {
 	public static Field[] getFields(Class<?> c) {
 		Field[] allFields = c.getDeclaredFields();
 		Field[] fields = new Field[allFields.length];
+		
+		Arrays.sort(allFields, (o1, o2)-> o2.getName().compareTo(o1.getName()));
+
 		int n = 0;
 		for(Field f : allFields) {
 			f.setAccessible(true);
