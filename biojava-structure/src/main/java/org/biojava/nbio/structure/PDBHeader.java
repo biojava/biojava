@@ -20,7 +20,6 @@
  */
 package org.biojava.nbio.structure;
 
-import org.biojava.nbio.structure.io.mmcif.model.DatabasePdbrevRecord;
 import org.biojava.nbio.structure.quaternary.BioAssemblyInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,7 +76,7 @@ public class PDBHeader implements PDBRecord {
 
 	private Map<Integer,BioAssemblyInfo> bioAssemblies ;
 
-	List<DatabasePdbrevRecord> revisionRecords;
+	List<DatabasePdbRevRecord> revisionRecords;
 
 	public PDBHeader(){
 
@@ -663,11 +662,11 @@ public class PDBHeader implements PDBRecord {
 		return this.bioAssemblies.size();
 	}
 
-	public List<DatabasePdbrevRecord> getRevisionRecords() {
+	public List<DatabasePdbRevRecord> getRevisionRecords() {
 		return revisionRecords;
 	}
 
-	public void setRevisionRecords(List<DatabasePdbrevRecord> revisionRecords) {
+	public void setRevisionRecords(List<DatabasePdbRevRecord> revisionRecords) {
 		this.revisionRecords = revisionRecords;
 	}
 

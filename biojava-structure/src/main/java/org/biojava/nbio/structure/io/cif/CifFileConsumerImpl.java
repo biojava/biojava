@@ -7,6 +7,7 @@ import org.biojava.nbio.structure.AtomImpl;
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.ChainImpl;
 import org.biojava.nbio.structure.DBRef;
+import org.biojava.nbio.structure.DatabasePdbRevRecord;
 import org.biojava.nbio.structure.Element;
 import org.biojava.nbio.structure.EntityInfo;
 import org.biojava.nbio.structure.EntityType;
@@ -30,7 +31,6 @@ import org.biojava.nbio.structure.io.EntityFinder;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.SeqRes2AtomAligner;
 import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
-import org.biojava.nbio.structure.io.mmcif.model.DatabasePdbrevRecord;
 import org.biojava.nbio.structure.quaternary.BioAssemblyInfo;
 import org.biojava.nbio.structure.quaternary.BiologicalAssemblyBuilder;
 import org.biojava.nbio.structure.quaternary.BiologicalAssemblyTransformation;
@@ -97,8 +97,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-// TODO detach the impl from the redundant mmCIF impl
-
 /**
  * An implementation of a CifFileConsumer for BioJava. Will process the information provided by a CifFile instance and
  * use it to build up a {@link Structure} object. The implementation is for the most part really close to that in
@@ -144,7 +142,7 @@ class CifFileConsumerImpl implements CifFileConsumer<Structure> {
     private Map<String, String> asymId2authorId;
     private Matrix4d parsedScaleMatrix;
 
-    private FileParsingParameters params;
+    private final FileParsingParameters params;
 
     public CifFileConsumerImpl(FileParsingParameters params) {
         this.params = params;
@@ -624,7 +622,7 @@ class CifFileConsumerImpl implements CifFileConsumer<Structure> {
 
     @Override
     public void consumeDatabasePDBrevRecord(DatabasePDBRevRecord databasePDBrevRecord) {
-        List<DatabasePdbrevRecord> revRecords = pdbHeader.getRevisionRecords();
+        List<DatabasePdbRevRecord> revRecords = pdbHeader.getRevisionRecords();
         if (revRecords == null) {
             revRecords = new ArrayList<>();
             pdbHeader.setRevisionRecords(revRecords);
@@ -633,10 +631,10 @@ class CifFileConsumerImpl implements CifFileConsumer<Structure> {
         revRecords.addAll(convert(databasePDBrevRecord));
     }
 
-    private List<DatabasePdbrevRecord> convert(DatabasePDBRevRecord databasePDBrevRecord) {
-        List<DatabasePdbrevRecord> revRecords = new ArrayList<>();
+    private List<DatabasePdbRevRecord> convert(DatabasePDBRevRecord databasePDBrevRecord) {
+        List<DatabasePdbRevRecord> revRecords = new ArrayList<>();
         for (int rowIndex = 0; rowIndex < databasePDBrevRecord.getRowCount(); rowIndex++) {
-            DatabasePdbrevRecord revRecord = new DatabasePdbrevRecord();
+            DatabasePdbRevRecord revRecord = new DatabasePdbRevRecord();
             revRecord.setDetails(databasePDBrevRecord.getDetails().get(rowIndex));
             revRecord.setRev_num(databasePDBrevRecord.getRevNum().getStringData(rowIndex));
             revRecord.setType(databasePDBrevRecord.getType().get(rowIndex));
@@ -1297,14 +1295,14 @@ class CifFileConsumerImpl implements CifFileConsumer<Structure> {
         } catch (NumberFormatException e) {
             logger.warn("Could not parse mol_id from string {}. Will use 0 for creating Entity", entityId);
         }
-        
+
         int entityRowIndex = IntStream.range(0, entity.getRowCount())
                 .filter(i -> entity.getId().get(i).equals(entityId))
                 .findFirst()
                 .orElse(-1);
-        
+
         EntityInfo entityInfo = structure.getEntityById(eId);
-        
+
         if (entityInfo == null) {
             entityInfo = new EntityInfo();
             entityInfo.setMolId(eId);
@@ -1320,7 +1318,7 @@ class CifFileConsumerImpl implements CifFileConsumer<Structure> {
                 }
                 addAncilliaryEntityData(asymRowIndex, entityInfo);
                 structure.addEntityInfo(entityInfo);
-                logger.debug("Adding Entity with entity id {} from _entity, with name: {}", eId, 
+                logger.debug("Adding Entity with entity id {} from _entity, with name: {}", eId,
                         entityInfo.getDescription());
             }
         }
