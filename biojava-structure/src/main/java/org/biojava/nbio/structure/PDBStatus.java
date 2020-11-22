@@ -59,7 +59,6 @@ public class PDBStatus {
 	/**
 	 * Represents a simplified 3 state status of PDB IDs.
 	 * @author Spencer Bliven
-	 *
 	 */
 	public enum Status {
 		// the simplified status enum in rcsb_repository_holdings_combined
@@ -87,10 +86,10 @@ public class PDBStatus {
 	}
 
 	/**
-	 * Get the status of the PDB in question.
+	 * Get the status of a PDB id.
 	 *
 	 * @param pdbId the id
-	 * @return The status, or null if an error occurred.
+	 * @return The status.
 	 */
 	public static Status getStatus(String pdbId) throws IOException {
 		URL url = new URL(String.format(STATUS_ENDPOINT, DEFAULT_RCSB_DATA_API_SERVER, pdbId.toUpperCase()));
@@ -100,11 +99,11 @@ public class PDBStatus {
 	}
 
 	/**
-	 * Get the status of the a collection of PDBs in question in a single query.
+	 * Get the status of a collection of PDB ids (in a single API query).
 	 *
 	 * @see #getStatus(String)
 	 * @param pdbIds the ids
-	 * @return The status array, or null if an error occurred.
+	 * @return The status array
 	 */
 	public static Status[] getStatus(String[] pdbIds) throws IOException {
 
@@ -130,6 +129,7 @@ public class PDBStatus {
 	}
 
 	private static Status parseStatusRecord(JsonNode jsonNode) {
+		// e.g.
 		// "rcsb_repository_holdings_combined": {
 		//"id_code_replaced_by_latest": "4HHB",
 		//"status": "REMOVED",
