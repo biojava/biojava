@@ -240,7 +240,7 @@ public class TestQuatSymmetryDetectorExamples {
 		testIds.add("BIO:3JC9:1");
 			testStoichiometries.add("A12B12C12D12E12F12G5H2");
 			localSymmetries = new HashMap<>();
-				localSymmetries.put("A12C12D12E12F12H2","C2");
+				localSymmetries.put("A12B12C12D12E12H2","C2");
 				localSymmetries.put("A12B12C12D12E12F12","C12");
 				localSymmetries.put("G5","H");
 			testLocalSymmetries.add(localSymmetries);
@@ -268,7 +268,7 @@ public class TestQuatSymmetryDetectorExamples {
 			for (QuatSymmetryResults local:foundLocal) {
 				logger.info("Found stoichiometry "+local.getStoichiometry().toString()+" with symmetry "+local.getSymmetry());
 				assertTrue("Stoichiometry "+local.getStoichiometry().toString()+" not expected for "+testIds.get(iTest),
-						refLocal.keySet().contains(local.getStoichiometry().toString()));
+						refLocal.containsKey(local.getStoichiometry().toString()));
 
 				assertEquals("Symmetry "+local.getSymmetry()+" with stoichiometry "+local.getStoichiometry().toString()+
 								" not expected for "+testIds.get(iTest),
