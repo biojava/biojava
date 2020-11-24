@@ -21,7 +21,6 @@
 package org.biojava.nbio.structure;
 
 import org.biojava.nbio.core.util.FlatFileCache;
-import org.biojava.nbio.structure.io.LocalPDBDirectory;
 import org.biojava.nbio.structure.io.mmcif.DownloadChemCompProvider;
 import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.junit.Test;
@@ -45,39 +44,6 @@ public class TestDownloadChemCompProvider {
 		assertNotNull(cc);
 
 		assertEquals(cc.getId(), id);
-	}
-
-	@Test
-	public void testRedirectWorks() {
-		// since August 2017, RCSB is redirecting:
-		// http://rcsb.org/pdb/files/ligand/HEM.cif  ----> http://files.org/ligands/HEM.cif
-		// see #703
-
-		File file = new File(DownloadChemCompProvider.getLocalFileName("HEM"));
-		file.delete();
-
-		DownloadChemCompProvider prov = new DownloadChemCompProvider();
-
-		DownloadChemCompProvider.serverBaseUrl = "http://www.rcsb.org/pdb/files/ligand/";
-
-		ChemComp cc = prov.getChemComp("HEM");
-
-		//System.out.println(file.toString());
-
-		assertTrue(file.exists());
-
-		// just in case the we did get garbage, let's clean up
-		file.delete();
-
-		// very important: we have a memory cache of files, we need to reset it not to pollute the cache for later tests
-		FlatFileCache.clear();
-
-		assertNotNull(cc);
-
-		assertNotNull(cc.getName());
-
-		// reset to default URL or otherwise we could affect other tests
-		DownloadChemCompProvider.serverBaseUrl = DownloadChemCompProvider.DEFAULT_SERVER_URL;
 	}
 
 	@Test
