@@ -227,7 +227,7 @@ public class TestMMCIFWriting {
 		String[] lines = mmcif.split("\n");
 		long atomLines = Arrays.stream(lines).filter(l -> l.startsWith("ATOM")).count();
 		assertNotNull(mmcif);
-		assertEquals(4, atomLines);
+		assertEquals(0, atomLines);
 	}
 
 	private static Structure createDummyStructure() {
