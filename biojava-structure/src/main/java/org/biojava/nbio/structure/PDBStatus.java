@@ -33,7 +33,7 @@ import java.net.URL;
 import java.util.*;
 
 /**
- * Methods for getting the status of a PDB file (current, obsolete, unreleased)
+ * Methods for getting the status of a PDB file (current, removed, unreleased)
  * and for accessing different versions of the structure.
  *
  * <p>
@@ -70,18 +70,16 @@ public class PDBStatus {
 		 * @throws IllegalArgumentException If the string is not recognized
 		 */
 		public static Status fromString(String statusStr) {
-			Status status;
-			String statusStrUpper = statusStr.toUpperCase();
-			if(statusStrUpper.equalsIgnoreCase("REMOVED"))
-				status = Status.REMOVED;
-			else if(statusStrUpper.equalsIgnoreCase("CURRENT"))
-				status = Status.CURRENT;
-			else if(statusStrUpper.equalsIgnoreCase("UNRELEASED"))
-				status = Status.UNRELEASED;
+			if (statusStr == null) return null;
+			if(statusStr.equalsIgnoreCase("REMOVED"))
+				return Status.REMOVED;
+			else if(statusStr.equalsIgnoreCase("CURRENT"))
+				return Status.CURRENT;
+			else if(statusStr.equalsIgnoreCase("UNRELEASED"))
+				return Status.UNRELEASED;
 			else {
-				throw new IllegalArgumentException("Unable to parse status '"+statusStrUpper+"'.");
+				throw new IllegalArgumentException("Unable to parse status '"+statusStr+"'.");
 			}
-			return status;
 		}
 	}
 
