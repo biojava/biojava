@@ -166,6 +166,7 @@ public class MMCIFFileTools {
 		Field[] allFields = c.getDeclaredFields();
 		Field[] fields = new Field[allFields.length];
 		int n = 0;
+		Arrays.sort(allFields, (o1, o2)-> o2.getName().compareTo(o1.getName()));
 		for(Field f : allFields) {
 			f.setAccessible(true);
 			IgnoreField anno = f.getAnnotation(IgnoreField.class);
