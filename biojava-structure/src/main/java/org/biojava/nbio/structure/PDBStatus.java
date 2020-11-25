@@ -70,7 +70,7 @@ public class PDBStatus {
 		 * @throws IllegalArgumentException If the string is not recognized
 		 */
 		public static Status fromString(String statusStr) {
-			if (statusStr == null) return null;
+			if (statusStr == null) throw new IllegalArgumentException("Status string can't be null");
 			if(statusStr.equalsIgnoreCase("REMOVED"))
 				return Status.REMOVED;
 			else if(statusStr.equalsIgnoreCase("CURRENT"))
