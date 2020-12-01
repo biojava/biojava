@@ -320,7 +320,7 @@ public class AlignmentToolsTest {
 		String result,expected;
 		int i=0;
 
-		test = new HashMap<Integer, Integer>();
+		test = new LinkedHashMap<Integer, Integer>();
 		test.put(1, 2);
 		test.put(2, 3);
 		test.put(3, 4);
@@ -331,7 +331,7 @@ public class AlignmentToolsTest {
 		Assert.assertEquals((i++) + ". Linear strings.", expected, result);
 
 
-		test = new HashMap<Integer, Integer>();
+		test = new LinkedHashMap<Integer, Integer>();
 		test.put(1, 2);
 		test.put(2, 3);
 		test.put(3, 1);
@@ -341,7 +341,7 @@ public class AlignmentToolsTest {
 		result = AlignmentTools.toConciseAlignmentString(test);
 		Assert.assertEquals((i++) + ". Cycles.", expected, result);
 
-		test = new HashMap<Integer, Integer>();
+		test = new LinkedHashMap<Integer, Integer>();
 		test.put(1, 2);
 		test.put(2, 3);
 		test.put(3, 1);
@@ -351,7 +351,7 @@ public class AlignmentToolsTest {
 		result = AlignmentTools.toConciseAlignmentString(test);
 		Assert.assertEquals((i++) + ". Complex.", expected, result);
 
-		test = new HashMap<Integer, Integer>();
+		test = new LinkedHashMap<Integer, Integer>();
 		test.put(1, 2);
 		test.put(2, 3);
 		test.put(3, 4);
@@ -376,7 +376,7 @@ public class AlignmentToolsTest {
 		result = AlignmentTools.toConciseAlignmentString(test);
 		Assert.assertEquals((i++) + ". Sub-optimal arrangement", expected, result);
 
-		Map <Integer,Double> test2 = new HashMap<Integer, Double>();
+		Map <Integer,Double> test2 = new LinkedHashMap<Integer, Double>();
 		test2.put(1, 12.);
 		test2.put(2, 13.);
 		test2.put(3, 14.);
