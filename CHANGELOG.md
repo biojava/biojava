@@ -13,6 +13,8 @@ BioJava 6.0.0 (future release)
 * The whole `org.biojava.nbio.structure.validation` package
 * The `org.biojava.nbio.structure.domain.PDBDomainProvider` class to pull domain definitions from legacy RCSB PDB APIs
 * Support for automatically fetching dssp files from RCSB (`org.biojava.nbio.structure.secstruc.DSSPParser.fetch()`)
+* `org.biojava.nbio.structure.PDBStatus`: simplified `Status` enum to 3 states, with OBSOLETE now called REMOVED
+* `org.biojava.nbio.structure.PDBStatus`: removed `getReplacement` and `getReplaces` 
 
 BioJava 5.4.0
 =============
