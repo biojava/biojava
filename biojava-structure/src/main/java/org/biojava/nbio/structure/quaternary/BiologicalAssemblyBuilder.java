@@ -25,9 +25,9 @@ import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.EntityInfo;
 import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.io.mmcif.model.PdbxStructAssembly;
-import org.biojava.nbio.structure.io.mmcif.model.PdbxStructAssemblyGen;
-import org.biojava.nbio.structure.io.mmcif.model.PdbxStructOperList;
+import org.rcsb.cif.schema.mm.PdbxStructAssembly;
+import org.rcsb.cif.schema.mm.PdbxStructAssemblyGen;
+import org.rcsb.cif.schema.mm.PdbxStructOperList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -242,121 +242,86 @@ public class BiologicalAssemblyBuilder {
 	 * Returns a list of transformation matrices for the generation of a macromolecular
 	 * assembly for the specified assembly Id.
 	 *
-	 * @param psa
-	 * @param psags
-	 * @param operators
+	 * @param pdbxStructAssembly
+	 * @param assemblyIndex
+	 * @param pdbxStructAssemblyGen
+	 * @param pdbxStructOperList
 	 * @return list of transformation matrices to generate macromolecular assembly
 	 */
-	public ArrayList<BiologicalAssemblyTransformation> getBioUnitTransformationList(PdbxStructAssembly psa, List<PdbxStructAssemblyGen> psags, List<PdbxStructOperList> operators) {
+	public List<BiologicalAssemblyTransformation> getBioUnitTransformationList(PdbxStructAssembly pdbxStructAssembly,
+																			   int assemblyIndex,
+																			   PdbxStructAssemblyGen pdbxStructAssemblyGen,
+																			   PdbxStructOperList pdbxStructOperList) {
 		init();
 
 		// first we populate the list of all operators from pdbx_struct_oper_list so that we can then
 		// get them from getBioUnitTransformationsListUnaryOperators() and getBioUnitTransformationsListBinaryOperators()
-		for (PdbxStructOperList oper: operators){
+		for (int i = 0; i < pdbxStructOperList.getRowCount(); i++) {
 			try {
 				Matrix4d m = new Matrix4d();
-				m.m00 = Double.parseDouble(oper.getMatrix11());
-				m.m01 = Double.parseDouble(oper.getMatrix12());
-				m.m02 = Double.parseDouble(oper.getMatrix13());
+				m.m00 = pdbxStructOperList.getMatrix11().get(i);
+				m.m01 = pdbxStructOperList.getMatrix12().get(i);
+				m.m02 = pdbxStructOperList.getMatrix13().get(i);
 
-				m.m10 = Double.parseDouble(oper.getMatrix21());
-				m.m11 = Double.parseDouble(oper.getMatrix22());
-				m.m12 = Double.parseDouble(oper.getMatrix23());
+				m.m10 = pdbxStructOperList.getMatrix21().get(i);
+				m.m11 = pdbxStructOperList.getMatrix22().get(i);
+				m.m12 = pdbxStructOperList.getMatrix23().get(i);
 
-				m.m20 = Double.parseDouble(oper.getMatrix31());
-				m.m21 = Double.parseDouble(oper.getMatrix32());
-				m.m22 = Double.parseDouble(oper.getMatrix33());
+				m.m20 = pdbxStructOperList.getMatrix31().get(i);
+				m.m21 = pdbxStructOperList.getMatrix32().get(i);
+				m.m22 = pdbxStructOperList.getMatrix33().get(i);
 
-				m.m03 = Double.parseDouble(oper.getVector1());
-				m.m13 = Double.parseDouble(oper.getVector2());
-				m.m23 = Double.parseDouble(oper.getVector3());
+				m.m03 = pdbxStructOperList.getVector1().get(i);
+				m.m13 = pdbxStructOperList.getVector2().get(i);
+				m.m23 = pdbxStructOperList.getVector3().get(i);
 
 				m.m30 = 0;
 				m.m31 = 0;
 				m.m32 = 0;
 				m.m33 = 1;
 
-				allTransformations.put(oper.getId(), m);
-
+				allTransformations.put(pdbxStructOperList.getId().get(i), m);
 			} catch (NumberFormatException e) {
-				logger.warn("Could not parse a matrix value from pdbx_struct_oper_list for id {}. The operator id will be ignored. Error: {}", oper.getId(), e.getMessage());
+				logger.warn("Could not parse a matrix value from pdbx_struct_oper_list for id {}. The operator id will be ignored. Error: {}", pdbxStructOperList.getId().get(i), e.getMessage());
 			}
 		}
 
-		ArrayList<BiologicalAssemblyTransformation> transformations = getBioUnitTransformationsListUnaryOperators(psa.getId(), psags);
-		transformations.addAll(getBioUnitTransformationsListBinaryOperators(psa.getId(), psags));
+		String assemblyId = pdbxStructAssembly.getId().get(assemblyIndex);
+		ArrayList<BiologicalAssemblyTransformation> transformations = getBioUnitTransformationsListUnaryOperators(assemblyId, pdbxStructAssemblyGen);
+		transformations.addAll(getBioUnitTransformationsListBinaryOperators(assemblyId, pdbxStructAssemblyGen));
 		transformations.trimToSize();
 		return transformations;
 	}
 
-
-	private ArrayList<BiologicalAssemblyTransformation> getBioUnitTransformationsListBinaryOperators(String assemblyId, List<PdbxStructAssemblyGen> psags) {
-
+	private ArrayList<BiologicalAssemblyTransformation> getBioUnitTransformationsListBinaryOperators(String assemblyId, PdbxStructAssemblyGen pdbxStructAssemblyGen) {
 		ArrayList<BiologicalAssemblyTransformation> transformations = new ArrayList<>();
-
 		List<OrderedPair<String>> operators = operatorResolver.getBinaryOperators();
 
-
-		for ( PdbxStructAssemblyGen psag : psags){
-			if ( psag.getAssembly_id().equals(assemblyId)) {
-
-				List<String>asymIds= Arrays.asList(psag.getAsym_id_list().split(","));
-
-				operatorResolver.parseOperatorExpressionString(psag.getOper_expression());
-
-				// apply binary operators to the specified chains
-				// Example 1M4X: generates all products of transformation matrices (1-60)(61-88)
-				for (String chainId : asymIds) {
-
-					for (OrderedPair<String> operator : operators) {
-						Matrix4d original1 = allTransformations.get(operator.getElement1());
-						Matrix4d original2 = allTransformations.get(operator.getElement2());
-						if (original1 == null || original2 == null) {
-							logger.warn("Could not find matrix operator for operator id {} or {}. Assembly id {} will not contain the composed operator.", operator.getElement1(), operator.getElement2(), assemblyId);
-							continue;
-						}
-						Matrix4d composed = new Matrix4d(original1);
-						composed.mul(original2);
-						BiologicalAssemblyTransformation transform = new BiologicalAssemblyTransformation();
-						transform.setChainId(chainId);
-						transform.setId(operator.getElement1() + COMPOSED_OPERATOR_SEPARATOR + operator.getElement2());
-						transform.setTransformationMatrix(composed);
-						transformations.add(transform);
-					}
-				}
+		for (int i = 0; i < pdbxStructAssemblyGen.getRowCount(); i++) {
+			if (!pdbxStructAssemblyGen.getAssemblyId().get(i).equals(assemblyId)) {
+				continue;
 			}
 
-		}
+			String[] asymIds= pdbxStructAssemblyGen.getAsymIdList().get(i).split(",");
+			operatorResolver.parseOperatorExpressionString(pdbxStructAssemblyGen.getOperExpression().get(i));
 
-		return transformations;
-	}
-
-	private ArrayList<BiologicalAssemblyTransformation> getBioUnitTransformationsListUnaryOperators(String assemblyId, List<PdbxStructAssemblyGen> psags) {
-		ArrayList<BiologicalAssemblyTransformation> transformations = new ArrayList<BiologicalAssemblyTransformation>();
-
-
-		for ( PdbxStructAssemblyGen psag : psags){
-			if ( psag.getAssembly_id().equals(assemblyId)) {
-
-				operatorResolver.parseOperatorExpressionString(psag.getOper_expression());
-				List<String> operators = operatorResolver.getUnaryOperators();
-
-				List<String>asymIds= Arrays.asList(psag.getAsym_id_list().split(","));
-
-				// apply unary operators to the specified chains
-				for (String chainId : asymIds) {
-					for (String operator : operators) {
-						Matrix4d original = allTransformations.get(operator);
-						if (original == null) {
-							logger.warn("Could not find matrix operator for operator id {}. Assembly id {} will not contain the operator.", operator, assemblyId);
-							continue;
-						}
-						BiologicalAssemblyTransformation transform = new BiologicalAssemblyTransformation();
-						transform.setChainId(chainId);
-						transform.setId(operator);
-						transform.setTransformationMatrix(original);
-						transformations.add(transform);
+			// apply binary operators to the specified chains
+			// Example 1M4X: generates all products of transformation matrices (1-60)(61-88)
+			for (String chainId : asymIds) {
+				for (OrderedPair<String> operator : operators) {
+					Matrix4d original1 = allTransformations.get(operator.getElement1());
+					Matrix4d original2 = allTransformations.get(operator.getElement2());
+					if (original1 == null || original2 == null) {
+						logger.warn("Could not find matrix operator for operator id {} or {}. Assembly id {} will not contain the composed operator.", operator.getElement1(), operator.getElement2(), assemblyId);
+						continue;
 					}
+					Matrix4d composed = new Matrix4d(original1);
+					composed.mul(original2);
+					BiologicalAssemblyTransformation transform = new BiologicalAssemblyTransformation();
+					transform.setChainId(chainId);
+					transform.setId(operator.getElement1() + COMPOSED_OPERATOR_SEPARATOR + operator.getElement2());
+					transform.setTransformationMatrix(composed);
+					transformations.add(transform);
 				}
 			}
 		}
@@ -364,8 +329,40 @@ public class BiologicalAssemblyBuilder {
 		return transformations;
 	}
 
-	private void init(){
-		operatorResolver= new OperatorResolver();
+	private ArrayList<BiologicalAssemblyTransformation> getBioUnitTransformationsListUnaryOperators(String assemblyId, PdbxStructAssemblyGen pdbxStructAssemblyGen) {
+		ArrayList<BiologicalAssemblyTransformation> transformations = new ArrayList<>();
+
+		for (int i = 0; i < pdbxStructAssemblyGen.getRowCount(); i++) {
+			if (!pdbxStructAssemblyGen.getAssemblyId().get(i).equals(assemblyId)) {
+				continue;
+			}
+
+			operatorResolver.parseOperatorExpressionString(pdbxStructAssemblyGen.getOperExpression().get(i));
+			List<String> operators = operatorResolver.getUnaryOperators();
+			String[] asymIds = pdbxStructAssemblyGen.getAsymIdList().get(i).split(",");
+
+			// apply unary operators to the specified chains
+			for (String chainId : asymIds) {
+				for (String operator : operators) {
+					Matrix4d original = allTransformations.get(operator);
+					if (original == null) {
+						logger.warn("Could not find matrix operator for operator id {}. Assembly id {} will not contain the operator.", operator, assemblyId);
+						continue;
+					}
+					BiologicalAssemblyTransformation transform = new BiologicalAssemblyTransformation();
+					transform.setChainId(chainId);
+					transform.setId(operator);
+					transform.setTransformationMatrix(original);
+					transformations.add(transform);
+				}
+			}
+		}
+
+		return transformations;
+	}
+
+	private void init() {
+		operatorResolver = new OperatorResolver();
 		allTransformations = new HashMap<>();
 	}
 }

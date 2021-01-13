@@ -33,10 +33,10 @@ import org.biojava.nbio.structure.align.client.StructureName;
 import org.biojava.nbio.structure.cath.CathDatabase;
 import org.biojava.nbio.structure.cath.CathDomain;
 import org.biojava.nbio.structure.cath.CathFactory;
+import org.biojava.nbio.structure.io.CifFileReader;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.LocalPDBDirectory.FetchBehavior;
 import org.biojava.nbio.structure.io.LocalPDBDirectory.ObsoleteBehavior;
-import org.biojava.nbio.structure.io.MMCIFFileReader;
 import org.biojava.nbio.structure.io.MMTFFileReader;
 import org.biojava.nbio.structure.io.PDBFileReader;
 import org.biojava.nbio.core.util.FileDownloadUtils;
@@ -879,12 +879,11 @@ public class AtomCache {
 		Structure s;
 		flagLoading(pdbId);
 		try {
-			MMCIFFileReader reader = new MMCIFFileReader(path);
+			CifFileReader reader = new CifFileReader(path);
 			reader.setFetchBehavior(fetchBehavior);
 			reader.setObsoleteBehavior(obsoleteBehavior);
 			reader.setFileParsingParameters(params);
 			s = reader.getStructureById(pdbId.toLowerCase());
-
 		} finally {
 			flagLoadingFinished(pdbId);
 		}

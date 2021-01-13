@@ -24,10 +24,9 @@
 package org.biojava.nbio.structure;
 
 
+import org.biojava.nbio.structure.chem.ChemCompGroupFactory;
+import org.biojava.nbio.structure.chem.PolymerType;
 import org.biojava.nbio.structure.io.FileConvert;
-import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
-import org.biojava.nbio.structure.io.mmcif.chem.PolymerType;
-import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.core.sequence.ProteinSequence;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
@@ -686,7 +685,7 @@ public class ChainImpl implements Chain {
 
 	@Override
 	public String toMMCIF() {
-		return FileConvert.toMMCIF(this, true);
+		return FileConvert.toMMCIF(this);
 	}
 
 	@Override

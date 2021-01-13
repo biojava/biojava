@@ -25,7 +25,6 @@ package org.biojava.nbio.structure;
 
 import org.biojava.nbio.core.sequence.template.Sequence;
 import org.biojava.nbio.structure.io.FileParsingParameters;
-import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 
 import java.io.Serializable;
 import java.util.List;

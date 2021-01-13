@@ -40,9 +40,7 @@ import org.biojava.nbio.structure.GroupType;
 import org.biojava.nbio.structure.PDBHeader;
 import org.biojava.nbio.structure.Site;
 import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.io.mmcif.MMCIFFileTools;
-import org.biojava.nbio.structure.io.mmcif.SimpleMMcifParser;
-import org.biojava.nbio.structure.io.mmcif.model.AtomSite;
+import org.biojava.nbio.structure.io.cif.CifFileConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -595,63 +593,13 @@ public class FileConvert {
 
 
 	public String toMMCIF() {
+		return CifFileConverter.toText(this.structure);	}
 
-		StringBuilder str = new StringBuilder();
-
-		str.append(SimpleMMcifParser.MMCIF_TOP_HEADER+"BioJava_mmCIF_file"+newline);
-
-		if (structure.getPDBHeader()!=null && structure.getPDBHeader().getCrystallographicInfo()!=null &&
-				structure.getPDBHeader().getCrystallographicInfo().getSpaceGroup()!=null &&
-				structure.getPDBHeader().getCrystallographicInfo().getCrystalCell()!=null) {
-
-			str.append(MMCIFFileTools.toMMCIF("_cell",
-					MMCIFFileTools.convertCrystalCellToCell(structure.getPDBHeader().getCrystallographicInfo().getCrystalCell())));
-			str.append(MMCIFFileTools.toMMCIF("_symmetry",
-					MMCIFFileTools.convertSpaceGroupToSymmetry(structure.getPDBHeader().getCrystallographicInfo().getSpaceGroup())));
-
-		}
-
-
-		str.append(getAtomSiteHeader());
-
-		List<AtomSite> list =  MMCIFFileTools.convertStructureToAtomSites(structure);
-
-
-		str.append(MMCIFFileTools.toMMCIF(list,AtomSite.class));
-
-		return str.toString();
+	public static String toMMCIF(Chain chain, String authId, String asymId) {
+		return CifFileConverter.toText(chain, authId, asymId);
 	}
 
-	public static String toMMCIF(Chain chain, String authId, String asymId, boolean writeHeader) {
-		StringBuilder str = new StringBuilder();
-
-		if (writeHeader)
-			str.append(getAtomSiteHeader());
-
-
-		List<AtomSite> list = MMCIFFileTools.convertChainToAtomSites(chain, 1, authId, asymId);
-
-		str.append(MMCIFFileTools.toMMCIF(list,AtomSite.class));
-		return str.toString();
-	}
-
-	public static String toMMCIF(Chain chain, boolean writeHeader) {
-		StringBuilder sb = new StringBuilder();
-		sb.append(SimpleMMcifParser.MMCIF_TOP_HEADER+"BioJava_mmCIF_file"+newline);
-		sb.append(toMMCIF(chain, chain.getName(), chain.getId(),writeHeader));
-		return sb.toString();
-	}
-
-	public static String getAtomSiteHeader() {
-		String header;
-		try {
-			header = MMCIFFileTools.toLoopMmCifHeaderString("_atom_site", AtomSite.class.getName());
-
-		} catch (ClassNotFoundException e) {
-			logger.error("Class not found, will not have a header for this MMCIF category: "+e.getMessage());
-			header = "";
-		}
-
-		return header;
+	public static String toMMCIF(Chain chain) {
+		return CifFileConverter.toText(chain);
 	}
 }

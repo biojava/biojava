@@ -1,5 +1,6 @@
 package org.biojava.nbio.structure.io.cif;
 
+import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.rcsb.cif.CifIO;
@@ -9,6 +10,7 @@ import org.rcsb.cif.schema.mm.MmCifBlock;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -99,7 +101,7 @@ public class CifFileConverter {
      */
     public static Structure fromCifFile(CifFile cifFile, FileParsingParameters parameters) {
         // initialize consumer
-        CifFileConsumer<Structure> consumer = new CifFileConsumerImpl(parameters);
+        StructureConsumer consumer = new StructureConsumerImpl(parameters);
 
         // init structure
         consumer.prepare();
@@ -113,9 +115,9 @@ public class CifFileConverter {
         consumer.consumeCell(cifBlock.getCell());
         consumer.consumeChemComp(cifBlock.getChemComp());
         consumer.consumeChemCompBond(cifBlock.getChemCompBond());
-        consumer.consumeDatabasePDBremark(cifBlock.getDatabasePDBRemark());
-        consumer.consumeDatabasePDBrev(cifBlock.getDatabasePDBRev());
-        consumer.consumeDatabasePDBrevRecord(cifBlock.getDatabasePDBRevRecord());
+        consumer.consumeDatabasePDBRemark(cifBlock.getDatabasePDBRemark());
+        consumer.consumeDatabasePDBRev(cifBlock.getDatabasePDBRev());
+        consumer.consumeDatabasePDBRevRecord(cifBlock.getDatabasePDBRevRecord());
         consumer.consumeEntity(cifBlock.getEntity());
         consumer.consumeEntityPoly(cifBlock.getEntityPoly());
         consumer.consumeEntitySrcGen(cifBlock.getEntitySrcGen());
@@ -183,20 +185,39 @@ public class CifFileConverter {
      * Convert a structure to BCIF format.
      * @param structure the source
      * @return the binary representation of the structure
-     * @throws IOException thrown when writing fails
      */
-    public static byte[] toBinary(Structure structure) throws IOException {
-        return CifIO.writeText(toCifFile(structure));
+    public static byte[] toBinary(Structure structure) {
+        try {
+            return CifIO.writeText(toCifFile(structure));
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
     }
 
     /**
      * Convert a structure to mmCIF format.
      * @param structure the source
      * @return the mmCIF String representation of the structure
-     * @throws IOException thrown when writing fails
      */
-    public static String toText(Structure structure) throws IOException {
-        return new String(CifIO.writeText(toCifFile(structure)));
+    public static String toText(Structure structure) {
+        try {
+            return new String(CifIO.writeText(toCifFile(structure)));
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    /**
+     * Convert a chain to mmCIF format.
+     * @param chain the source
+     * @return the mmCIF String representation of the chain
+     */
+    public static String toText(Chain chain) {
+        try {
+            return new String(CifIO.writeText(toCifFile(chain)));
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
     }
 
     /**
@@ -205,6 +226,15 @@ public class CifFileConverter {
      * @return the target
      */
     public static CifFile toCifFile(Structure structure) {
-        return new CifFileSupplierImpl().get(structure);
+        return new AbstractCifFileSupplier().getStructure(structure);
+    }
+
+    /**
+     * Convert Chain to CifFile
+     * @param chain the source
+     * @return the target
+     */
+    public static CifFile toCifFile(Chain chain) {
+        return new AbstractCifFileSupplier().getChain(chain);
     }
 }

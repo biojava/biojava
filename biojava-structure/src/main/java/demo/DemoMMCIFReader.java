@@ -26,7 +26,6 @@ package demo;
 
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.util.AtomCache;
-import org.biojava.nbio.structure.io.MMCIFFileReader;
 import org.biojava.nbio.structure.io.StructureProvider;
 
 import java.util.List;

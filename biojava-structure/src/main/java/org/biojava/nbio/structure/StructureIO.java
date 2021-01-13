@@ -25,8 +25,10 @@ import java.util.Collections;
 import java.util.List;
 
 import org.biojava.nbio.structure.align.util.AtomCache;
-import org.biojava.nbio.structure.io.MMCIFFileReader;
+import org.biojava.nbio.structure.io.BcifFileReader;
+import org.biojava.nbio.structure.io.CifFileReader;
 import org.biojava.nbio.structure.io.PDBFileReader;
+import org.rcsb.cif.binary.BinaryCifReader;
 
 /**
  * A class that provides static access methods for easy lookup of protein structure related components
@@ -282,7 +284,8 @@ public class StructureIO {
 
 	public static enum StructureFiletype {
 		PDB( (new PDBFileReader()).getExtensions()),
-		CIF( new MMCIFFileReader().getExtensions()),
+		CIF(new CifFileReader().getExtensions()),
+		BCIF(new BcifFileReader().getExtensions()),
 		UNKNOWN(Collections.<String>emptyList());
 
 		private List<String> extensions;

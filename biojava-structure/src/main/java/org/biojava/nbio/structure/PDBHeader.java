@@ -76,7 +76,7 @@ public class PDBHeader implements PDBRecord {
 
 	private Map<Integer,BioAssemblyInfo> bioAssemblies ;
 
-	List<DatabasePdbRevRecord> revisionRecords;
+	List<DatabasePDBRevRecord> revisionRecords;
 
 	public PDBHeader(){
 
@@ -662,11 +662,11 @@ public class PDBHeader implements PDBRecord {
 		return this.bioAssemblies.size();
 	}
 
-	public List<DatabasePdbRevRecord> getRevisionRecords() {
+	public List<DatabasePDBRevRecord> getRevisionRecords() {
 		return revisionRecords;
 	}
 
-	public void setRevisionRecords(List<DatabasePdbRevRecord> revisionRecords) {
+	public void setRevisionRecords(List<DatabasePDBRevRecord> revisionRecords) {
 		this.revisionRecords = revisionRecords;
 	}
 

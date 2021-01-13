@@ -20,10 +20,14 @@
  */
 package org.biojava.nbio.structure;
 
-import java.io.BufferedReader;
+import org.biojava.nbio.structure.StructureIO.StructureFiletype;
+import org.biojava.nbio.structure.align.util.AtomCache;
+import org.biojava.nbio.structure.io.PDBFileReader;
+import org.biojava.nbio.structure.io.cif.CifFileConverter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -35,16 +39,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.biojava.nbio.core.util.InputStreamProvider;
-import org.biojava.nbio.structure.StructureIO.StructureFiletype;
-import org.biojava.nbio.structure.align.util.AtomCache;
-import org.biojava.nbio.structure.io.PDBFileReader;
-import org.biojava.nbio.structure.io.mmcif.MMcifParser;
-import org.biojava.nbio.structure.io.mmcif.SimpleMMcifConsumer;
-import org.biojava.nbio.structure.io.mmcif.SimpleMMcifParser;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Represents a structure loaded from a URL (including a file URL)
@@ -159,27 +153,7 @@ public class URLIdentifier implements StructureIdentifier {
 
 		switch(format) {
 		case CIF:
-			// need to do mmcif parsing!
-
-			InputStreamProvider prov = new InputStreamProvider();
-			InputStream inStream =  prov.getInputStream(url);
-
-			MMcifParser parser = new SimpleMMcifParser();
-
-			SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
-			consumer.setFileParsingParameters(cache.getFileParsingParams());
-
-
-			parser.addMMcifConsumer(consumer);
-
-			try {
-				parser.parse(new BufferedReader(new InputStreamReader(inStream)));
-			} catch (IOException e){
-				e.printStackTrace();
-			}
-
-			// now get the protein structure.
-			return consumer.getStructure();
+			return CifFileConverter.fromURL(url);
 		default:
 		case PDB:
 			// pdb file based parsing
