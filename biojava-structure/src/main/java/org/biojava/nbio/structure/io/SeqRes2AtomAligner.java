@@ -60,9 +60,9 @@ import org.biojava.nbio.structure.HetatomImpl;
 import org.biojava.nbio.structure.NucleotideImpl;
 import org.biojava.nbio.structure.ResidueNumber;
 import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.io.mmcif.chem.PolymerType;
-import org.biojava.nbio.structure.io.mmcif.chem.ResidueType;
-import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
+import org.biojava.nbio.structure.chem.ChemComp;
+import org.biojava.nbio.structure.chem.PolymerType;
+import org.biojava.nbio.structure.chem.ResidueType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -410,7 +410,7 @@ public class SeqRes2AtomAligner {
 						PolymerType.POLYNUCLEOTIDE_ONLY.contains(cc.getPolymerType())
 						) {
 					//System.out.println(cc.getOne_letter_code());
-					String c = cc.getOne_letter_code();
+					String c = cc.getOneLetterCode();
 					if ( c.equals("?")) {
 						if (isNucleotideChain && PolymerType.POLYNUCLEOTIDE_ONLY.contains(cc.getPolymerType())) {
 							// the way to represent unknown nucleotides is with 'N', see https://en.wikipedia.org/wiki/Nucleic_acid_notation

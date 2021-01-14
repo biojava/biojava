@@ -26,6 +26,7 @@ package demo;
 
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.util.AtomCache;
+import org.biojava.nbio.structure.io.CifFileReader;
 import org.biojava.nbio.structure.io.StructureProvider;
 
 import java.util.List;
@@ -79,7 +80,7 @@ public class DemoMMCIFReader
 	public void loadFromDirectAccess(){
 		String pdbId = "1A4W";
 
-		StructureProvider pdbreader = new MMCIFFileReader();
+		StructureProvider pdbreader = new CifFileReader();
 
 		try {
 			Structure s = pdbreader.getStructureById(pdbId);

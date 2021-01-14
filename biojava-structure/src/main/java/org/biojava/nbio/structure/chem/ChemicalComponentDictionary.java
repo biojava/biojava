@@ -3,15 +3,23 @@ package org.biojava.nbio.structure.chem;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * A representation of the Chemical Component Dictionary.
+ *
+ * @author Andreas Prlic
+ * @since 1.7
+ * @see <a href="http://mmcif.rcsb.org/dictionaries/">link into mmCIF dictionary</a>
+ *
+ */
 public class ChemicalComponentDictionary {
-    private final Map<String, ChemComp> dictionary;
-    private final Map<String, String> replaces;
-    private final Map<String, String> isReplacedBy;
+    private Map<String, ChemComp> dictionary;
+    private Map<String,String> replaces;
+    private Map<String,String> isReplacedBy;
 
-    public ChemicalComponentDictionary() {
-        this.dictionary = new HashMap<>();
-        this.replaces = new HashMap<>();
-        this.isReplacedBy = new HashMap<>();
+    public ChemicalComponentDictionary(){
+        dictionary = new HashMap<>();
+        replaces  = new HashMap<>();
+        isReplacedBy = new HashMap<>();
     }
 
     public boolean isReplaced(ChemComp c) {
@@ -22,7 +30,7 @@ public class ChemicalComponentDictionary {
         return isReplacedBy.containsKey(id);
     }
 
-    public boolean isReplacer(ChemComp c){
+    public boolean isReplacer(ChemComp c) {
         return isReplacer(c.getId());
     }
 
@@ -30,27 +38,27 @@ public class ChemicalComponentDictionary {
         return replaces.containsKey(id);
     }
 
-    /** if ChemComp is replaced by another one, get the newer version
-     * otherwise return the same ChemComp again.
+    /**
+     * If ChemComp is replaced by another one, get the newer version otherwise return the same ChemComp again.
      * @param c
      * @return get the component that replaced ChemComp.
      */
-    public ChemComp getReplacer(ChemComp c){
+    public ChemComp getReplacer(ChemComp c) {
         return getReplacer(c.getId());
     }
 
-    public ChemComp getReplacer(String id){
+    public ChemComp getReplacer(String id) {
         if (isReplaced(id)) {
             return dictionary.get(isReplacedBy.get(id));
         }
         return dictionary.get(id);
     }
 
-    /** if ChemComp is replacing another one, get the old version
-     * otherwise return the same ChemComp again.
+    /**
+     * If ChemComp is replacing another one, get the old version otherwise return the same ChemComp again.
      * @param  c the ChemComp for which older versions should be looked up.
      */
-    public ChemComp getReplaced(ChemComp c){
+    public ChemComp getReplaced(ChemComp c) {
         return getReplaced(c.getId());
     }
 
@@ -78,15 +86,15 @@ public class ChemicalComponentDictionary {
      * @param comp
      */
     public void addChemComp(ChemComp comp) {
-        dictionary.put(comp.getId(), comp);
+        dictionary.put(comp.getId(),comp);
         String rep = comp.getPdbxReplaces();
         if (rep != null && !rep.equals("?")) {
-            replaces.put(comp.getId(), rep);
+            replaces.put(comp.getId(),rep);
         }
 
-        String isRep = comp.getPdbxReplacedBy();
-        if (isRep != null && !isRep.equals("?")) {
-            isReplacedBy.put(comp.getId(), isRep);
+        String isrep = comp.getPdbxReplacedBy();
+        if (isrep != null && !isrep.equals("?")) {
+            isReplacedBy.put(comp.getId(), isrep);
         }
     }
 
@@ -94,11 +102,11 @@ public class ChemicalComponentDictionary {
      * Returns the number of ChemComps in this dictionary
      * @return nr. of ChemComps
      */
-    public int size(){
+    public int size() {
         return dictionary.size();
     }
 
-    public ChemComp getChemComp(String id){
+    public ChemComp getChemComp(String id) {
         return dictionary.get(id);
     }
 }

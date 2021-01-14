@@ -1,9 +1,7 @@
 package org.biojava.nbio.structure.chem;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class ChemCompTools {
@@ -96,40 +94,42 @@ public class ChemCompTools {
         bar.put('U',"DU");
         bar.put('T',"DT");
         DNA_LOOKUP_1TO2 = Collections.unmodifiableMap(Collections.synchronizedMap(bar));
-
-
-        // initialise standard chemical components
-        List<String> stdMonIds = new ArrayList<>();
-        stdMonIds.addAll(AMINO_ACID_LOOKUP_3TO1.keySet());
-        stdMonIds.addAll(DNA_LOOKUP_2TO1.keySet());
     }
 
-    public static Character getAminoOneLetter(String chemCompId){
+    public static Character getAminoOneLetter(String chemCompId) {
         return AMINO_ACID_LOOKUP_3TO1.get(chemCompId);
     }
 
-    public static Character getDNAOneLetter(String chemCompId){
+    public static Character getDNAOneLetter(String chemCompId) {
         return DNA_LOOKUP_2TO1.get(chemCompId);
     }
 
-    public static String getAminoThreeLetter(Character c){
+    public static String getAminoThreeLetter(Character c) {
         return AMINO_ACID_LOOKUP_1TO3.get(c);
     }
 
-    public static String getDNATwoLetter(Character c){
+    public static String getDNATwoLetter(Character c) {
         return DNA_LOOKUP_1TO2.get(c);
     }
 
-    public static boolean isStandardChemComp(ChemComp cc){
+    public static PolymerType getPolymerType(ResidueType residueType) {
+        if (residueType != null) {
+            return residueType.polymerType;
+        }
+        return null;
+    }
+
+    public static boolean isStandardChemComp(ChemComp cc) {
         String pid = cc.getMonNstdParentCompId();
         String one = cc.getOneLetterCode();
 
-        PolymerType polymerType = cc.getPolymerType();
+        ResidueType residueType = ResidueType.getResidueTypeFromString(cc.getType());
+        PolymerType polymerType = getPolymerType(residueType);
 
         // standard residues have no parent
-        if ((pid == null) || (pid.equals("?"))) {
+        if (pid == null || pid.equals("?")) {
             // and they have a one letter code
-            if ((one != null) && (!one.equals("?"))) {
+            if (one != null && !one.equals("?")) {
                 // peptides and dpeptides must not have X
                 if (polymerType == PolymerType.peptide || polymerType == PolymerType.dpeptide) {
                     return performPeptideCheck(cc, one);

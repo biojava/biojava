@@ -23,11 +23,10 @@
  */
 package org.biojava.nbio.structure;
 
-import org.biojava.nbio.structure.chem.ChemCompGroupFactory;
+import org.biojava.nbio.structure.chem.ChemComp;
 import org.biojava.nbio.structure.chem.PolymerType;
 import org.biojava.nbio.structure.chem.ResidueType;
 import org.biojava.nbio.structure.io.GroupToSDF;
-import org.rcsb.cif.schema.mm.ChemComp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -336,7 +335,7 @@ public class HetatomImpl implements Group {
 			return getType().equals(GroupType.AMINOACID);
 
 
-		ResidueType rt = ResidueType.getResidueTypeFromString(cc.getType().get(0));
+		ResidueType rt = ResidueType.getResidueTypeFromString(cc.getType());
 
 		if (ResidueType.nonPolymer.equals(rt))
 			return false;
@@ -355,7 +354,7 @@ public class HetatomImpl implements Group {
 		if ( cc == null)
 			return  getType().equals(GroupType.NUCLEOTIDE);
 
-		ResidueType rt = ResidueType.getResidueTypeFromString(cc.getType().get(0));
+		ResidueType rt = ResidueType.getResidueTypeFromString(cc.getType());
 
 		if (ResidueType.nonPolymer.equals(rt))
 			return false;

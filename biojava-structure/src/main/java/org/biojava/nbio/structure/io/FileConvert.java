@@ -593,10 +593,7 @@ public class FileConvert {
 
 
 	public String toMMCIF() {
-		return CifFileConverter.toText(this.structure);	}
-
-	public static String toMMCIF(Chain chain, String authId, String asymId) {
-		return CifFileConverter.toText(chain, authId, asymId);
+		return CifFileConverter.toText(this.structure);
 	}
 
 	public static String toMMCIF(Chain chain) {

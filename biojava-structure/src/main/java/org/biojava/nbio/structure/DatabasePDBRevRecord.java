@@ -2,9 +2,6 @@ package org.biojava.nbio.structure;
 
 import org.biojava.nbio.structure.io.cif.CifBean;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class DatabasePDBRevRecord implements CifBean<org.rcsb.cif.schema.mm.DatabasePDBRevRecord> {
     private static final long serialVersionUID = 1L;
     private String revNum;

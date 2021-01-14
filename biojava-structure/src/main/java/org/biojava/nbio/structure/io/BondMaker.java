@@ -23,6 +23,8 @@
 package org.biojava.nbio.structure.io;
 
 import org.biojava.nbio.structure.*;
+import org.biojava.nbio.structure.chem.ChemComp;
+import org.biojava.nbio.structure.chem.ChemCompBond;
 import org.biojava.nbio.structure.io.util.PDBTemporaryStorageUtils.LinkRecord;
 import org.rcsb.cif.model.ValueKind;
 import org.rcsb.cif.schema.mm.StructConn;
@@ -177,8 +179,8 @@ public class BondMaker {
 
 						for (ChemCompBond chemCompBond : aminoChemComp.getBonds()) {
 							// note we don't check distance to make this call not too expensive
-							formBondAltlocAware(group, chemCompBond.getAtom_id_1(),
-									group, chemCompBond.getAtom_id_2(), -1, chemCompBond.getNumericalBondOrder());
+							formBondAltlocAware(group, chemCompBond.getAtomId1(),
+									group, chemCompBond.getAtomId2(), -1, chemCompBond.getNumericalBondOrder());
 						}
 					}
 				}

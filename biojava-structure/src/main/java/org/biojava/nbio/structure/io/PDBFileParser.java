@@ -69,8 +69,8 @@ import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureImpl;
 import org.biojava.nbio.structure.StructureTools;
+import org.biojava.nbio.structure.chem.ChemCompAtom;
 import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
-import org.biojava.nbio.structure.io.mmcif.model.ChemCompAtom;
 import org.biojava.nbio.structure.io.util.PDBTemporaryStorageUtils.LinkRecord;
 import org.biojava.nbio.structure.secstruc.SecStrucInfo;
 import org.biojava.nbio.structure.secstruc.SecStrucType;
@@ -1878,8 +1878,8 @@ public class PDBFileParser  {
 			String elementSymbol = null;
 			if (currentGroup.getChemComp() != null) {
 				for (ChemCompAtom a : currentGroup.getChemComp().getAtoms()) {
-					if (a.getAtom_id().equals(fullname.trim())) {
-						elementSymbol = a.getType_symbol();
+					if (a.getAtomId().equals(fullname.trim())) {
+						elementSymbol = a.getTypeSymbol();
 						break;
 					}
 				}

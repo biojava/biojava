@@ -49,26 +49,24 @@ public class ChemComp implements CifBean<org.rcsb.cif.schema.mm.ChemComp>, Compa
 
     @Override
     public String toString(){
-        StringBuffer buf = new StringBuffer("ChemComp ");
-        buf.append(id)
-                .append(" ")
-                .append(oneLetterCode)
-                .append(" ")
-                .append(threeLetterCode)
-                .append(" poly:")
-                .append(getPolymerType())
-                .append(" resi:")
-                .append(getResidueType())
-                .append(isStandard() ? " standard" : " modified")
-                .append(" ")
-                .append(name)
-                .append(" ")
-                .append(pdbxType)
-                .append(" ")
-                .append(formula)
-                .append(" parent:")
-                .append(monNstdParentCompId);
-        return buf.toString();
+        return "ChemComp " + id +
+                " " +
+                oneLetterCode +
+                " " +
+                threeLetterCode +
+                " poly:" +
+                getPolymerType() +
+                " resi:" +
+                getResidueType() +
+                (isStandard() ? " standard" : " modified") +
+                " " +
+                name +
+                " " +
+                pdbxType +
+                " " +
+                formula +
+                " parent:" +
+                monNstdParentCompId;
     }
 
     public boolean hasParent(){

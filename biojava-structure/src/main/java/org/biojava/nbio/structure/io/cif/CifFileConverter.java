@@ -226,7 +226,7 @@ public class CifFileConverter {
      * @return the target
      */
     public static CifFile toCifFile(Structure structure) {
-        return new AbstractCifFileSupplier().getStructure(structure);
+        return new StructureSupplierImpl().get(structure);
     }
 
     /**
@@ -235,6 +235,6 @@ public class CifFileConverter {
      * @return the target
      */
     public static CifFile toCifFile(Chain chain) {
-        return new AbstractCifFileSupplier().getChain(chain);
+        return new ChainSupplierImpl().get(chain);
     }
 }

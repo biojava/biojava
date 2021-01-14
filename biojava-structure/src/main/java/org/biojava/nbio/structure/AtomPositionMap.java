@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.NavigableMap;
 import java.util.TreeMap;
 
+import org.biojava.nbio.structure.chem.ChemComp;
 import org.biojava.nbio.structure.chem.PolymerType;
 import org.biojava.nbio.structure.chem.ResidueType;
 import org.slf4j.Logger;
