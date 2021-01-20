@@ -20,13 +20,13 @@
  */
 package org.biojava.nbio.structure;
 
-import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
-import org.biojava.nbio.structure.io.mmcif.ChemCompProvider;
-import org.biojava.nbio.structure.io.mmcif.DownloadChemCompProvider;
-import org.biojava.nbio.structure.io.mmcif.ReducedChemCompProvider;
-import org.biojava.nbio.structure.io.mmcif.chem.PolymerType;
-import org.biojava.nbio.structure.io.mmcif.chem.ResidueType;
-import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
+import org.biojava.nbio.structure.chem.ChemComp;
+import org.biojava.nbio.structure.chem.ChemCompGroupFactory;
+import org.biojava.nbio.structure.chem.ChemCompProvider;
+import org.biojava.nbio.structure.chem.DownloadChemCompProvider;
+import org.biojava.nbio.structure.chem.PolymerType;
+import org.biojava.nbio.structure.chem.ReducedChemCompProvider;
+import org.biojava.nbio.structure.chem.ResidueType;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -69,9 +69,9 @@ public class ChemCompTest {
 
 		assertTrue(" is not mea" , cc.getId().equals(chemID));
 
-		assertEquals(" one letter code is not correct", "F", cc.getOne_letter_code());
+		assertEquals(" one letter code is not correct", "F", cc.getOneLetterCode());
 
-		assertEquals("MEA",cc.getThree_letter_code());
+		assertEquals("MEA",cc.getThreeLetterCode());
 
 		assertNotNull(cc.getPolymerType());
 
@@ -141,7 +141,7 @@ public class ChemCompTest {
 
 	assertTrue(" is not mea" , cc.getId().equals(chemID));
 
-	assertEquals("MEA",cc.getThree_letter_code());
+	assertEquals("MEA",cc.getThreeLetterCode());
 
 
 
@@ -157,7 +157,7 @@ public class ChemCompTest {
 
 	assertTrue(" is not mea" , cc.getId().equals(chemID));
 
-	assertEquals("MEA",cc.getThree_letter_code());
+	assertEquals("MEA",cc.getThreeLetterCode());
 
 	// now we change to reduced chem comp provider
 	ChemCompGroupFactory.setChemCompProvider(new ReducedChemCompProvider());
@@ -169,7 +169,7 @@ public class ChemCompTest {
 	assertTrue(" is not mea" , cc.getId().equals(chemID));
 
 	//the cached description contains all information even with the ReducedProvider
-	assertNotNull(cc.getThree_letter_code());
+	assertNotNull(cc.getThreeLetterCode());
 
 
 	}

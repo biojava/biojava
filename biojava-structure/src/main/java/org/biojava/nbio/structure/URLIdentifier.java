@@ -23,7 +23,7 @@ package org.biojava.nbio.structure;
 import org.biojava.nbio.structure.StructureIO.StructureFiletype;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.PDBFileReader;
-import org.biojava.nbio.structure.io.cif.CifFileConverter;
+import org.biojava.nbio.structure.io.cif.StructureConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -153,7 +153,7 @@ public class URLIdentifier implements StructureIdentifier {
 
 		switch(format) {
 		case CIF:
-			return CifFileConverter.fromURL(url);
+			return StructureConverter.fromURL(url);
 		default:
 		case PDB:
 			// pdb file based parsing

@@ -25,6 +25,7 @@
 package org.biojava.nbio.structure;
 
 import org.biojava.nbio.structure.align.util.AtomCache;
+import org.biojava.nbio.structure.io.CifFileReader;
 import org.biojava.nbio.structure.io.LocalPDBDirectory;
 import org.biojava.nbio.structure.io.LocalPDBDirectory.FetchBehavior;
 import org.biojava.nbio.structure.io.LocalPDBDirectory.ObsoleteBehavior;
@@ -54,7 +55,7 @@ public class TestAtomCache {
 		};
 
 		List<LocalPDBDirectory> readers = new ArrayList<LocalPDBDirectory>();
-		readers.add(new MMCIFFileReader(cache.getPath()) );
+		readers.add(new CifFileReader(cache.getPath()) );
 		readers.add(new PDBFileReader(cache.getPath()) );
 		for(LocalPDBDirectory reader : readers) {
 			reader.setFetchBehavior(cache.getFetchBehavior());

@@ -14,7 +14,7 @@ public class ChemCompBond implements CifBean<org.rcsb.cif.schema.mm.ChemCompBond
     private String valueOrder;
     private String pdbxAromaticFlag;
     private String pdbxStereoConfig;
-    private String pdbxOrdinal;
+    private int pdbxOrdinal;
 
     public static Logger getLogger() {
         return logger;
@@ -68,11 +68,11 @@ public class ChemCompBond implements CifBean<org.rcsb.cif.schema.mm.ChemCompBond
         this.pdbxStereoConfig = pdbxStereoConfig;
     }
 
-    public String getPdbxOrdinal() {
+    public int getPdbxOrdinal() {
         return pdbxOrdinal;
     }
 
-    public void setPdbxOrdinal(String pdbxOrdinal) {
+    public void setPdbxOrdinal(int pdbxOrdinal) {
         this.pdbxOrdinal = pdbxOrdinal;
     }
 

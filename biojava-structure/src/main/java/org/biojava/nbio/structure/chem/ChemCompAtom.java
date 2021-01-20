@@ -8,24 +8,24 @@ public class ChemCompAtom implements CifBean<org.rcsb.cif.schema.mm.ChemCompAtom
     private String atomId;
     private String altAtomId;
     private String typeSymbol;
-    private String charge;
-    private String pdbxAlign;
+    private int charge;
+    private int pdbxAlign;
     private String pdbxAromaticFlag;
     private String pdbxLeavingAtomFlag;
     private String pdbxStereoConfig;
-    private String modelCartnX;
-    private String modelCartnY;
-    private String modelCartnZ;
-    private String pdbxModelCartnXIdeal;
-    private String pdbxModelCartnYIdeal;
-    private String pdbxModelCartnZIdeal;
+    private double modelCartnX;
+    private double modelCartnY;
+    private double modelCartnZ;
+    private double pdbxModelCartnXIdeal;
+    private double pdbxModelCartnYIdeal;
+    private double pdbxModelCartnZIdeal;
     private String pdbxComponentCompId;
     private String pdbxResidueNumbering;
     private String pdbxComponentAtomId;
     private String pdbxPolymerType;
     private String pdbxRefId;
     private String pdbxComponentId;
-    private String pdbxOrdinal;
+    private int pdbxOrdinal;
 
     public String getCompId() {
         return compId;
@@ -59,19 +59,19 @@ public class ChemCompAtom implements CifBean<org.rcsb.cif.schema.mm.ChemCompAtom
         this.typeSymbol = typeSymbol;
     }
 
-    public String getCharge() {
+    public int getCharge() {
         return charge;
     }
 
-    public void setCharge(String charge) {
+    public void setCharge(int charge) {
         this.charge = charge;
     }
 
-    public String getPdbxAlign() {
+    public int getPdbxAlign() {
         return pdbxAlign;
     }
 
-    public void setPdbxAlign(String pdbxAlign) {
+    public void setPdbxAlign(int pdbxAlign) {
         this.pdbxAlign = pdbxAlign;
     }
 
@@ -99,51 +99,51 @@ public class ChemCompAtom implements CifBean<org.rcsb.cif.schema.mm.ChemCompAtom
         this.pdbxStereoConfig = pdbxStereoConfig;
     }
 
-    public String getModelCartnX() {
+    public double getModelCartnX() {
         return modelCartnX;
     }
 
-    public void setModelCartnX(String modelCartnX) {
+    public void setModelCartnX(double modelCartnX) {
         this.modelCartnX = modelCartnX;
     }
 
-    public String getModelCartnY() {
+    public double getModelCartnY() {
         return modelCartnY;
     }
 
-    public void setModelCartnY(String modelCartnY) {
+    public void setModelCartnY(double modelCartnY) {
         this.modelCartnY = modelCartnY;
     }
 
-    public String getModelCartnZ() {
+    public double getModelCartnZ() {
         return modelCartnZ;
     }
 
-    public void setModelCartnZ(String modelCartnZ) {
+    public void setModelCartnZ(double modelCartnZ) {
         this.modelCartnZ = modelCartnZ;
     }
 
-    public String getPdbxModelCartnXIdeal() {
+    public double getPdbxModelCartnXIdeal() {
         return pdbxModelCartnXIdeal;
     }
 
-    public void setPdbxModelCartnXIdeal(String pdbxModelCartnXIdeal) {
+    public void setPdbxModelCartnXIdeal(double pdbxModelCartnXIdeal) {
         this.pdbxModelCartnXIdeal = pdbxModelCartnXIdeal;
     }
 
-    public String getPdbxModelCartnYIdeal() {
+    public double getPdbxModelCartnYIdeal() {
         return pdbxModelCartnYIdeal;
     }
 
-    public void setPdbxModelCartnYIdeal(String pdbxModelCartnYIdeal) {
+    public void setPdbxModelCartnYIdeal(double pdbxModelCartnYIdeal) {
         this.pdbxModelCartnYIdeal = pdbxModelCartnYIdeal;
     }
 
-    public String getPdbxModelCartnZIdeal() {
+    public double getPdbxModelCartnZIdeal() {
         return pdbxModelCartnZIdeal;
     }
 
-    public void setPdbxModelCartnZIdeal(String pdbxModelCartnZIdeal) {
+    public void setPdbxModelCartnZIdeal(double pdbxModelCartnZIdeal) {
         this.pdbxModelCartnZIdeal = pdbxModelCartnZIdeal;
     }
 
@@ -195,11 +195,11 @@ public class ChemCompAtom implements CifBean<org.rcsb.cif.schema.mm.ChemCompAtom
         this.pdbxComponentId = pdbxComponentId;
     }
 
-    public String getPdbxOrdinal() {
+    public int getPdbxOrdinal() {
         return pdbxOrdinal;
     }
 
-    public void setPdbxOrdinal(String pdbxOrdinal) {
+    public void setPdbxOrdinal(int pdbxOrdinal) {
         this.pdbxOrdinal = pdbxOrdinal;
     }
 }

@@ -12,9 +12,9 @@ import java.util.Map;
  *
  */
 public class ChemicalComponentDictionary {
-    private Map<String, ChemComp> dictionary;
-    private Map<String,String> replaces;
-    private Map<String,String> isReplacedBy;
+    private final Map<String, ChemComp> dictionary;
+    private final Map<String,String> replaces;
+    private final Map<String,String> isReplacedBy;
 
     public ChemicalComponentDictionary(){
         dictionary = new HashMap<>();

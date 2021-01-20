@@ -25,6 +25,7 @@ package org.biojava.nbio.structure.io;
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.chem.ChemComp;
 import org.biojava.nbio.structure.chem.ChemCompBond;
+import org.biojava.nbio.structure.chem.ChemCompGroupFactory;
 import org.biojava.nbio.structure.io.util.PDBTemporaryStorageUtils.LinkRecord;
 import org.rcsb.cif.model.ValueKind;
 import org.rcsb.cif.schema.mm.StructConn;

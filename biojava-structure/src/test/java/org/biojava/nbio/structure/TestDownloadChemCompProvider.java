@@ -21,9 +21,9 @@
 package org.biojava.nbio.structure;
 
 import org.biojava.nbio.core.util.FlatFileCache;
+import org.biojava.nbio.structure.chem.ChemComp;
+import org.biojava.nbio.structure.chem.DownloadChemCompProvider;
 import org.biojava.nbio.structure.io.LocalPDBDirectory;
-import org.biojava.nbio.structure.io.mmcif.DownloadChemCompProvider;
-import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.junit.Test;
 import static org.junit.Assert.*;
 

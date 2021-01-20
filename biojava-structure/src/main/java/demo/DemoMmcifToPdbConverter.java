@@ -23,12 +23,10 @@ package demo;
 
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.io.cif.StructureConverter;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 
 /**
@@ -44,13 +42,8 @@ public class DemoMmcifToPdbConverter {
 	}
 
 	public static void convert(File inFile, File outFile) throws IOException {
-		MMcifParser parser = new SimpleMMcifParser();
-		SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
-		parser.addMMcifConsumer(consumer);
-		parser.parse(new BufferedReader(new InputStreamReader(new FileInputStream(inFile))));
-
 		// now get the protein structure.
-		Structure cifStructure = consumer.getStructure();
+		Structure cifStructure = StructureConverter.fromPath(inFile.toPath());
 
 		// and write it out as PDB format
 		PrintWriter pr = new PrintWriter(outFile);

@@ -25,8 +25,8 @@
 package org.biojava.nbio.protmod.structure;
 
 import org.biojava.nbio.structure.*;
-import org.biojava.nbio.structure.io.mmcif.MetalBondParser;
-import org.biojava.nbio.structure.io.mmcif.chem.MetalBondDistance;
+import org.biojava.nbio.structure.chem.MetalBondDistance;
+import org.biojava.nbio.structure.io.cif.MetalBondConverter;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -279,18 +279,14 @@ public final class StructureUtil {
 	}
 
 	private static boolean hasMetalBond(Atom a1, Atom a2, MetalBondDistance definition) {
-
-		double distance = Calc.getDistance(a1,a2);
-
-		Float min = definition.getLowerLimit();
-		Float max = definition.getUpperLimit();
-
-		return ( min < distance && max > distance);
-
+		double distance = Calc.getDistance(a1, a2);
+		float min = definition.getLowerLimit();
+		float max = definition.getUpperLimit();
+		return (min < distance && max > distance);
 	}
 
 	private static MetalBondDistance getMetalDistanceCutoff(String name1, String name2) {
-		Map<String,List<MetalBondDistance>> defs= MetalBondParser.getMetalBondDefinitions();
+		Map<String,List<MetalBondDistance>> defs = MetalBondConverter.getMetalBondDefinitions();
 
 		List<MetalBondDistance> distances = defs.get(name1);
 

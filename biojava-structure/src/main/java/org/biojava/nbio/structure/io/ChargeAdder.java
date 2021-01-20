@@ -30,7 +30,7 @@ import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.chem.ChemComp;
 import org.biojava.nbio.structure.chem.ChemCompAtom;
-import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
+import org.biojava.nbio.structure.chem.ChemCompGroupFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,25 +53,7 @@ public class ChargeAdder {
 					List<ChemCompAtom> chemAtoms = thisChemComp.getAtoms();
 					for (ChemCompAtom chemCompAtom : chemAtoms) {
 						Atom atom = g.getAtom(chemCompAtom.getAtomId());
-						String stringCharge = chemCompAtom.getCharge();
-						short shortCharge = 0;
-						if (stringCharge != null) {
-							if (!stringCharge.equals("?")) {
-								try {
-									shortCharge = Short.parseShort(stringCharge);
-								} catch(NumberFormatException e) {
-									logger.warn("Number format exception. Parsing '{}' to short", stringCharge);
-								}
-							} else {
-								logger.warn("? charge on atom {} in group {}",
-										chemCompAtom.getAtomId(),
-										thisChemComp.getId());
-							}
-						} else {
-							logger.warn("Null charge on atom {} in group {}",
-									chemCompAtom.getAtomId(),
-									thisChemComp.getId());
-						}
+						short shortCharge = (short) chemCompAtom.getCharge();
 						if (atom != null) {
 							atom.setCharge(shortCharge);
 						}

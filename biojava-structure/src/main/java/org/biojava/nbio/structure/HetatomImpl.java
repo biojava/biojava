@@ -24,6 +24,7 @@
 package org.biojava.nbio.structure;
 
 import org.biojava.nbio.structure.chem.ChemComp;
+import org.biojava.nbio.structure.chem.ChemCompGroupFactory;
 import org.biojava.nbio.structure.chem.PolymerType;
 import org.biojava.nbio.structure.chem.ResidueType;
 import org.biojava.nbio.structure.io.GroupToSDF;
@@ -466,9 +467,11 @@ public class HetatomImpl implements Group {
 
 	@Override
 	public ChemComp getChemComp() {
-		if  ( chemComp == null ) {
+		if (chemComp == null) {
 			chemComp = ChemCompGroupFactory.getChemComp(pdb_name);
-			if (chemComp == null) logger.info("getChemComp: " + pdb_name);
+			if (chemComp == null) {
+				logger.info("getChemComp: {}", pdb_name);
+			}
 		}
 		return chemComp;
 	}

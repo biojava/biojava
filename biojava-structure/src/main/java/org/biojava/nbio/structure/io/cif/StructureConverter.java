@@ -18,9 +18,9 @@ import java.nio.file.Path;
 /**
  * Convert BioJava structures to CifFiles and vice versa.
  * @author Sebastian Bittrich <sebastian.bittrich@rcsb.org>
- * @since 5.3.0
+ * @since 6.0.0
  */
-public class CifFileConverter {
+public class StructureConverter {
     /**
      * Read data from a file and convert to Structure without any FileParsingParameters.
      * @param path the source of information - can be gzipped or binary or text data
@@ -66,7 +66,7 @@ public class CifFileConverter {
      * @param inputStream the InputStream of information - can be gzipped or binary or text data
      * @return the target
      * @throws IOException thrown when reading fails
-     * @see CifFileConverter#fromInputStream(InputStream, FileParsingParameters)
+     * @see StructureConverter#fromInputStream(InputStream, FileParsingParameters)
      */
     public static Structure fromInputStream(InputStream inputStream) throws IOException {
         return fromInputStream(inputStream, new FileParsingParameters());
@@ -87,7 +87,7 @@ public class CifFileConverter {
      * Convert CifFile to Structure without any FileParsingParameters.
      * @param cifFile the source
      * @return the target
-     * @see CifFileConverter#fromCifFile(CifFile, FileParsingParameters)
+     * @see StructureConverter#fromCifFile(CifFile, FileParsingParameters)
      */
     public static Structure fromCifFile(CifFile cifFile) {
         return fromCifFile(cifFile, new FileParsingParameters());

@@ -19,14 +19,14 @@ public class ChemComp implements CifBean<org.rcsb.cif.schema.mm.ChemComp>, Compa
     private String formula;
     private String monNstdParentCompId;
     private String pdbxSynonyms;
-    private String pdbxFormalCharge;
+    private int pdbxFormalCharge;
     private String pdbxInitialDate;
     private String pdbxModifiedDate;
     private String pdbxAmbiguousFlag;
     private String pdbxReleaseStatus;
     private String pdbxReplacedBy;
     private String pdbxReplaces;
-    private String formulaWeight;
+    private double formulaWeight;
     private String oneLetterCode;
     private String threeLetterCode;
     private String pdbxModelCoordinatesDetails;
@@ -159,11 +159,11 @@ public class ChemComp implements CifBean<org.rcsb.cif.schema.mm.ChemComp>, Compa
         this.pdbxSynonyms = pdbxSynonyms;
     }
 
-    public String getPdbxFormalCharge() {
+    public int getPdbxFormalCharge() {
         return pdbxFormalCharge;
     }
 
-    public void setPdbxFormalCharge(String pdbxFormalCharge) {
+    public void setPdbxFormalCharge(int pdbxFormalCharge) {
         this.pdbxFormalCharge = pdbxFormalCharge;
     }
 
@@ -215,11 +215,11 @@ public class ChemComp implements CifBean<org.rcsb.cif.schema.mm.ChemComp>, Compa
         this.pdbxReplaces = pdbxReplaces;
     }
 
-    public String getFormulaWeight() {
+    public double getFormulaWeight() {
         return formulaWeight;
     }
 
-    public void setFormulaWeight(String formulaWeight) {
+    public void setFormulaWeight(double formulaWeight) {
         this.formulaWeight = formulaWeight;
     }
 

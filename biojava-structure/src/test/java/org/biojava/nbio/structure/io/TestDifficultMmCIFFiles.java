@@ -44,9 +44,7 @@ import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.align.util.AtomCache;
-import org.biojava.nbio.structure.io.mmcif.MMcifParser;
-import org.biojava.nbio.structure.io.mmcif.SimpleMMcifConsumer;
-import org.biojava.nbio.structure.io.mmcif.SimpleMMcifParser;
+import org.biojava.nbio.structure.io.cif.StructureConverter;
 import org.biojava.nbio.structure.quaternary.BioAssemblyInfo;
 import org.junit.Test;
 
@@ -193,7 +191,7 @@ public class TestDifficultMmCIFFiles {
 		assumeNotNull(file);
 		assumeTrue(file.exists());
 
-		MMCIFFileReader reader = new MMCIFFileReader();
+		CifFileReader reader = new CifFileReader();
 		Structure s = reader.getStructure(file);
 
 		assertNotNull("Failed to load structure from jar",s);
@@ -220,20 +218,10 @@ public class TestDifficultMmCIFFiles {
 	@Test
 	public void testQuotingCornerCase () throws IOException {
 		InputStream inStream = this.getClass().getResourceAsStream("/org/biojava/nbio/structure/io/difficult_mmcif_quoting.cif");
-		MMcifParser parser = new SimpleMMcifParser();
-
-		SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
 
 		FileParsingParameters fileParsingParams = new FileParsingParameters();
 		fileParsingParams.setAlignSeqRes(true);
-
-		consumer.setFileParsingParameters(fileParsingParams);
-
-		parser.addMMcifConsumer(consumer);
-
-		parser.parse(new BufferedReader(new InputStreamReader(inStream)));
-
-		Structure s = consumer.getStructure();
+		Structure s = StructureConverter.fromInputStream(inStream, fileParsingParams);
 
 		assertNotNull(s);
 

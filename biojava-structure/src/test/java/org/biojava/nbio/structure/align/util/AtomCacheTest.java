@@ -51,12 +51,13 @@ import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.StructureIdentifier;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.SubstructureIdentifier;
+import org.biojava.nbio.structure.chem.ChemComp;
+import org.biojava.nbio.structure.chem.ChemCompGroupFactory;
+import org.biojava.nbio.structure.chem.DownloadChemCompProvider;
+import org.biojava.nbio.structure.io.CifFileReader;
 import org.biojava.nbio.structure.io.LocalPDBDirectory;
 import org.biojava.nbio.structure.io.LocalPDBDirectory.FetchBehavior;
 import org.biojava.nbio.structure.io.LocalPDBDirectory.ObsoleteBehavior;
-import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
-import org.biojava.nbio.structure.io.mmcif.DownloadChemCompProvider;
-import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.biojava.nbio.structure.scop.ScopDatabase;
 import org.biojava.nbio.structure.scop.ScopFactory;
 import org.biojava.nbio.structure.test.util.GlobalsHelper;
@@ -203,7 +204,7 @@ public class AtomCacheTest {
 	public void testFetchBehavior() throws IOException, ParseException {
 		// really more of a LocalPDBDirectory test, but throw it in with AtomCache
 		String pdbId = "1hh0"; // A small structure, since we download it multiple times
-		LocalPDBDirectory reader = new MMCIFFileReader(cache.getPath());
+		LocalPDBDirectory reader = new CifFileReader(cache.getPath());
 
 		// delete
 		reader.deleteStructure(pdbId);

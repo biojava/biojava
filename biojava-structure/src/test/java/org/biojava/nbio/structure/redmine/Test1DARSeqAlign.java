@@ -23,10 +23,10 @@ package org.biojava.nbio.structure.redmine;
 
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.util.AtomCache;
+import org.biojava.nbio.structure.chem.ChemCompGroupFactory;
+import org.biojava.nbio.structure.chem.ChemCompProvider;
+import org.biojava.nbio.structure.chem.DownloadChemCompProvider;
 import org.biojava.nbio.structure.io.FileParsingParameters;
-import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
-import org.biojava.nbio.structure.io.mmcif.ChemCompProvider;
-import org.biojava.nbio.structure.io.mmcif.DownloadChemCompProvider;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -50,7 +50,7 @@ public class Test1DARSeqAlign {
 
 		boolean usingReducedChemCompProvider = false;
 
-		ChemCompProvider ccp =ChemCompGroupFactory.getChemCompProvider();
+		ChemCompProvider ccp = ChemCompGroupFactory.getChemCompProvider();
 		if (ccp.getClass().getName().contains("ReducedChemCompProvider") ) {
 			usingReducedChemCompProvider = true;
 

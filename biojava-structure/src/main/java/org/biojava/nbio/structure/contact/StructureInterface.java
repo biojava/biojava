@@ -750,40 +750,41 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 	public String toMMCIF() {
 		StringBuilder sb = new StringBuilder();
 
-		String molecId1 = getMoleculeIds().getFirst();
-		String molecId2 = getMoleculeIds().getSecond();
-
-		if (isSymRelated()) {
-			// if both chains are named equally we want to still named them differently in the output mmcif file
-			// so that molecular viewers can handle properly the 2 chains as separate entities
-			molecId2 = molecId2 + "_" +getTransforms().getSecond().getTransformId();
-		}
-
-		sb.append(SimpleMMcifParser.MMCIF_TOP_HEADER).append("BioJava_interface_").append(getId()).append(System.getProperty("line.separator"));
-
-		sb.append(FileConvert.getAtomSiteHeader());
-
-		// we reassign atom ids if sym related (otherwise atom ids would be duplicated and some molecular viewers can't cope with that)
-		int atomId = 1;
-		List<AtomSite> atomSites = new ArrayList<>();
-		for (Atom atom:this.molecules.getFirst()) {
-			if (isSymRelated()) {
-				atomSites.add(MMCIFFileTools.convertAtomToAtomSite(atom, 1, molecId1, molecId1, atomId));
-			} else {
-				atomSites.add(MMCIFFileTools.convertAtomToAtomSite(atom, 1, molecId1, molecId1));
-			}
-			atomId++;
-		}
-		for (Atom atom:this.molecules.getSecond()) {
-			if (isSymRelated()) {
-				atomSites.add(MMCIFFileTools.convertAtomToAtomSite(atom, 1, molecId2, molecId2, atomId));
-			} else {
-				atomSites.add(MMCIFFileTools.convertAtomToAtomSite(atom, 1, molecId2, molecId2));
-			}
-			atomId++;
-		}
-
-		sb.append(MMCIFFileTools.toMMCIF(atomSites,AtomSite.class));
+		// TODO impl
+//		String molecId1 = getMoleculeIds().getFirst();
+//		String molecId2 = getMoleculeIds().getSecond();
+//
+//		if (isSymRelated()) {
+//			// if both chains are named equally we want to still named them differently in the output mmcif file
+//			// so that molecular viewers can handle properly the 2 chains as separate entities
+//			molecId2 = molecId2 + "_" +getTransforms().getSecond().getTransformId();
+//		}
+//
+//		sb.append(SimpleMMcifParser.MMCIF_TOP_HEADER).append("BioJava_interface_").append(getId()).append(System.getProperty("line.separator"));
+//
+//		sb.append(FileConvert.getAtomSiteHeader());
+//
+//		// we reassign atom ids if sym related (otherwise atom ids would be duplicated and some molecular viewers can't cope with that)
+//		int atomId = 1;
+//		List<AtomSite> atomSites = new ArrayList<>();
+//		for (Atom atom:this.molecules.getFirst()) {
+//			if (isSymRelated()) {
+//				atomSites.add(MMCIFFileTools.convertAtomToAtomSite(atom, 1, molecId1, molecId1, atomId));
+//			} else {
+//				atomSites.add(MMCIFFileTools.convertAtomToAtomSite(atom, 1, molecId1, molecId1));
+//			}
+//			atomId++;
+//		}
+//		for (Atom atom:this.molecules.getSecond()) {
+//			if (isSymRelated()) {
+//				atomSites.add(MMCIFFileTools.convertAtomToAtomSite(atom, 1, molecId2, molecId2, atomId));
+//			} else {
+//				atomSites.add(MMCIFFileTools.convertAtomToAtomSite(atom, 1, molecId2, molecId2));
+//			}
+//			atomId++;
+//		}
+//
+//		sb.append(MMCIFFileTools.toMMCIF(atomSites,AtomSite.class));
 
 		return sb.toString();
 	}

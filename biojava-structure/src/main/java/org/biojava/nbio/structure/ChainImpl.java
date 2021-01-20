@@ -25,6 +25,7 @@ package org.biojava.nbio.structure;
 
 
 import org.biojava.nbio.structure.chem.ChemComp;
+import org.biojava.nbio.structure.chem.ChemCompGroupFactory;
 import org.biojava.nbio.structure.chem.PolymerType;
 import org.biojava.nbio.structure.io.FileConvert;
 import org.biojava.nbio.core.exceptions.CompoundNotFoundException;

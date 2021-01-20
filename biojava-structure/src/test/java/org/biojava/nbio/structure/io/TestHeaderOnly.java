@@ -33,11 +33,9 @@ import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.align.util.AtomCache;
+import org.biojava.nbio.structure.chem.ChemComp;
 import org.biojava.nbio.structure.io.LocalPDBDirectory.FetchBehavior;
-import org.biojava.nbio.structure.io.mmcif.MMcifParser;
-import org.biojava.nbio.structure.io.mmcif.SimpleMMcifConsumer;
-import org.biojava.nbio.structure.io.mmcif.SimpleMMcifParser;
-import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
+import org.biojava.nbio.structure.io.cif.StructureConverter;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -122,7 +120,7 @@ public class TestHeaderOnly {
 	// @Test
 	public void testSpeed() {
 		// Force using a file reader.
-		MMCIFFileReader fr = new MMCIFFileReader();
+		CifFileReader fr = new CifFileReader();
 		FileParsingParameters par = new FileParsingParameters();
 		//par.setAlignSeqRes(true);
 		// par.setHeaderOnly(true);
@@ -169,15 +167,9 @@ public class TestHeaderOnly {
 		double diff = (stop - start) / 1000000000.0;
 		logger.info(String.format("[%s] Elapsed time: %.3f s", s1.getIdentifier(), diff));
 
-		MMcifParser mmcifpars = new SimpleMMcifParser();
-		SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
-		consumer.setFileParsingParameters(params);
-		mmcifpars.addMMcifConsumer(consumer);
-
 		logger.info("Testing mmCIF parsing speed");
 		start = System.nanoTime();
-		mmcifpars.parse(cifStream) ;
-		Structure s2 = consumer.getStructure();
+		Structure s2 = StructureConverter.fromInputStream(cifStream, params);
 		stop = System.nanoTime();
 		diff = (stop - start) / 1000000000.0;
 		logger.info(String.format("[%s] Elapsed time: %.3f s", s2.getIdentifier(), diff));
@@ -269,7 +261,7 @@ public class TestHeaderOnly {
 
 		for (Group g : seqres) {
 			ChemComp c = g.getChemComp();
-			sb.append(c.getOne_letter_code());
+			sb.append(c.getOneLetterCode());
 		}
 
 		return sb.toString();

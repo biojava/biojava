@@ -37,7 +37,7 @@ import org.biojava.nbio.structure.PDBHeader;
 import org.biojava.nbio.structure.ResidueNumber;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureImpl;
-import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
+import org.biojava.nbio.structure.chem.ChemComp;
 import org.junit.Rule;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -95,7 +95,7 @@ public class TestMmtfStructureWriter {
 		group.setPDBName("FKF");
 		ChemComp chemComp = new ChemComp();
 		chemComp.setType("TYPfdl");
-		chemComp.setOne_letter_code("A");
+		chemComp.setOneLetterCode("A");
 		group.setChemComp(chemComp);
 
 		// Create one Atom

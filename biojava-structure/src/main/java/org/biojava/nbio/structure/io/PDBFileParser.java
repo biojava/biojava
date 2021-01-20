@@ -70,7 +70,7 @@ import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureImpl;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.chem.ChemCompAtom;
-import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
+import org.biojava.nbio.structure.chem.ChemCompGroupFactory;
 import org.biojava.nbio.structure.io.util.PDBTemporaryStorageUtils.LinkRecord;
 import org.biojava.nbio.structure.secstruc.SecStrucInfo;
 import org.biojava.nbio.structure.secstruc.SecStrucType;
@@ -301,7 +301,7 @@ public class PDBFileParser  {
 	/** initiate new resNum, either Hetatom, Nucleotide, or AminoAcid */
 	private Group getNewGroup(String recordName,Character aminoCode1, String aminoCode3) {
 
-		Group g =  ChemCompGroupFactory.getGroupFromChemCompDictionary(aminoCode3);
+		Group g = ChemCompGroupFactory.getGroupFromChemCompDictionary(aminoCode3);
 		if ( g != null && !g.getChemComp().isEmpty())
 			return g;
 

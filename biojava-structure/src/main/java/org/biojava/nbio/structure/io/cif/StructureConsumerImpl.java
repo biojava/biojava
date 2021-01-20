@@ -24,6 +24,7 @@ import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureImpl;
 import org.biojava.nbio.structure.StructureTools;
+import org.biojava.nbio.structure.chem.ChemCompGroupFactory;
 import org.biojava.nbio.structure.io.BondMaker;
 import org.biojava.nbio.structure.io.ChargeAdder;
 import org.biojava.nbio.structure.io.EntityFinder;

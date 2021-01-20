@@ -38,9 +38,7 @@ import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.align.util.AtomCache;
-import org.biojava.nbio.structure.io.mmcif.MMcifParser;
-import org.biojava.nbio.structure.io.mmcif.SimpleMMcifConsumer;
-import org.biojava.nbio.structure.io.mmcif.SimpleMMcifParser;
+import org.biojava.nbio.structure.io.cif.StructureConverter;
 import org.biojava.nbio.structure.xtal.CrystalCell;
 import org.junit.Test;
 
@@ -207,20 +205,10 @@ public class TestNonDepositedFiles {
 	@Test
 	public void testPhenixCifFile() throws IOException {
 		InputStream inStream = new GZIPInputStream(this.getClass().getResourceAsStream("/org/biojava/nbio/structure/io/4lup_phenix_output.cif.gz"));
-		MMcifParser parser = new SimpleMMcifParser();
-
-		SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
 
 		FileParsingParameters fileParsingParams = new FileParsingParameters();
 		fileParsingParams.setAlignSeqRes(true);
-
-		consumer.setFileParsingParameters(fileParsingParams);
-
-		parser.addMMcifConsumer(consumer);
-
-		parser.parse(new BufferedReader(new InputStreamReader(inStream)));
-
-		Structure s = consumer.getStructure();
+		Structure s = StructureConverter.fromInputStream(inStream, fileParsingParams);
 
 		assertNotNull(s);
 
@@ -344,12 +332,7 @@ public class TestNonDepositedFiles {
 		int expectedNumLigands = 1;
 		assertEquals(expectedNumLigands, c1.getAtomGroups().size());
 
-		MMcifParser mmcifpars = new SimpleMMcifParser();
-		SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
-		consumer.setFileParsingParameters(params);
-		mmcifpars.addMMcifConsumer(consumer);
-		mmcifpars.parse(cifStream) ;
-		Structure s2 = consumer.getStructure();
+		Structure s2 = StructureConverter.fromInputStream(cifStream, params);
 
 		// The chain B should be present with 1 ligand HEM
 		Chain c2 = s2.getNonPolyChainsByPDB("B").get(0);
@@ -389,11 +372,7 @@ public class TestNonDepositedFiles {
 		// following file is cut-down versions of 4a10
 		InputStream cifStream = new GZIPInputStream(this.getClass().getResourceAsStream("/org/biojava/nbio/structure/io/4a10_short.cif.gz"));
 
-		MMcifParser mmcifpars = new SimpleMMcifParser();
-		SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
-		mmcifpars.addMMcifConsumer(consumer);
-		mmcifpars.parse(cifStream) ;
-		Structure s2 = consumer.getStructure();
+		Structure s2 = StructureConverter.fromInputStream(cifStream);
 
 
 		assertEquals(2, s2.getChains().size());
@@ -451,13 +430,7 @@ public class TestNonDepositedFiles {
 		URL url = new URL("https://raw.githubusercontent.com/pdbxmmcifwg/carbohydrate-extension/master/examples/models/1B5F-carb.cif");
 		InputStream inStream = url.openStream();
 
-		MMcifParser parser = new SimpleMMcifParser();
-
-		SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
-		parser.addMMcifConsumer(consumer);
-		parser.parse(new BufferedReader(new InputStreamReader(inStream)));
-
-		Structure structure = consumer.getStructure();
+		Structure structure = StructureConverter.fromInputStream(inStream);
 
 		assertEquals(7, structure.getEntityInfos().size());
 

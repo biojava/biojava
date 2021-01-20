@@ -26,6 +26,7 @@ import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
+import org.biojava.nbio.structure.io.CifFileReader;
 import org.biojava.nbio.structure.io.PDBFileReader;
 import org.biojava.nbio.structure.io.StructureIOFile;
 import org.slf4j.Logger;
@@ -133,7 +134,7 @@ implements StructurePairSelector {
 		if ( fileFormat.equals(UserConfiguration.PDB_FORMAT)){
 			reader = new PDBFileReader();
 		} else if ( fileFormat.equals(UserConfiguration.MMCIF_FORMAT)){
-			reader = new MMCIFFileReader();
+			reader = new CifFileReader();
 		} else {
 			throw new StructureException("Unkown file format " + fileFormat);
 		}

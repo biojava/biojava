@@ -78,21 +78,21 @@ public class ChemCompTools {
         AMINO_ACID_LOOKUP_1TO3 = Collections.unmodifiableMap(Collections.synchronizedMap(bar));
 
         foo = new HashMap<>();
-        foo.put("DA",'A');
-        foo.put("DC",'C');
-        foo.put("DG",'G');
-        foo.put("DI",'I');
-        foo.put("DU",'U');
-        foo.put("DT",'T');
+        foo.put("DA", 'A');
+        foo.put("DC", 'C');
+        foo.put("DG", 'G');
+        foo.put("DI", 'I');
+        foo.put("DU", 'U');
+        foo.put("DT", 'T');
         DNA_LOOKUP_2TO1 = Collections.unmodifiableMap((Collections.synchronizedMap(foo)));
 
         bar = new HashMap<>();
-        bar.put('A',"DA");
-        bar.put('C',"DC");
-        bar.put('G',"DG");
-        bar.put('I',"DI");
-        bar.put('U',"DU");
-        bar.put('T',"DT");
+        bar.put('A', "DA");
+        bar.put('C', "DC");
+        bar.put('G', "DG");
+        bar.put('I', "DI");
+        bar.put('U', "DU");
+        bar.put('T', "DT");
         DNA_LOOKUP_1TO2 = Collections.unmodifiableMap(Collections.synchronizedMap(bar));
     }
 
