@@ -39,9 +39,9 @@ public class TestExperimentalTechniques {
 
 		StructureIO.setAtomCache(cache);
 
-		cache.setUseMmCif(false);
+		cache.setFiletype(StructureFiletype.PDB);
 		Structure sPdb = StructureIO.getStructure("6F2Q");
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		Structure sCif = StructureIO.getStructure("6F2Q");
 
 		comparePdbToCif(sPdb, sCif);
@@ -69,9 +69,9 @@ public class TestExperimentalTechniques {
 
 		StructureIO.setAtomCache(cache);
 
-		cache.setUseMmCif(false);
+		cache.setFiletype(StructureFiletype.PDB);
 		Structure sPdb = StructureIO.getStructure("3ZPK");
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		Structure sCif = StructureIO.getStructure("3ZPK");
 
 		comparePdbToCif(sPdb, sCif);
@@ -99,9 +99,9 @@ public class TestExperimentalTechniques {
 
 		StructureIO.setAtomCache(cache);
 
-		cache.setUseMmCif(false);
+		cache.setFiletype(StructureFiletype.PDB);
 		Structure sPdb = StructureIO.getStructure("2B6O");
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		Structure sCif = StructureIO.getStructure("2B6O");
 
 		comparePdbToCif(sPdb, sCif);
@@ -129,9 +129,9 @@ public class TestExperimentalTechniques {
 
 		StructureIO.setAtomCache(cache);
 
-		cache.setUseMmCif(false);
+		cache.setFiletype(StructureFiletype.PDB);
 		Structure sPdb = StructureIO.getStructure("4CSO");
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		Structure sCif = StructureIO.getStructure("4CSO");
 
 		comparePdbToCif(sPdb, sCif);

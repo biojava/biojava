@@ -28,6 +28,7 @@ import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureFiletype;
 import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.junit.Test;
@@ -41,7 +42,7 @@ public class TestWriteLargeCoordinatePDB {
 	public void TestWrite5D9Q() throws IOException, StructureException {
 
 		AtomCache cache = new AtomCache();
-		cache.setUseMmCif(false);
+		cache.setFiletype(StructureFiletype.PDB);
 
 		FileParsingParameters params = new FileParsingParameters();
 		params.setHeaderOnly(false);

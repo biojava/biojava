@@ -186,12 +186,12 @@ public class StructureToolsTest {
 
 		//mmCIF files left justify their atom names (eg "CA  "), so can have different behavior
 		AtomCache pdbCache = new AtomCache();
-		pdbCache.setUseMmCif(false);
+		pdbCache.setFiletype(StructureFiletype.PDB);
 		FileParsingParameters params = new FileParsingParameters();
 		pdbCache.setFileParsingParams(params);
 
 		AtomCache mmcifCache = new AtomCache();
-		mmcifCache.setUseMmCif(true);
+		mmcifCache.setFiletype(StructureFiletype.CIF);
 		FileParsingParameters params2 = new FileParsingParameters();
 		mmcifCache.setFileParsingParams(params2);
 

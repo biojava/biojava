@@ -50,7 +50,7 @@ public class TestStructureCrossReferences {
 		boolean emptySeqRes = true;
 
 		AtomCache cache = new AtomCache();
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 
 		FileParsingParameters params = new FileParsingParameters();
 		params.setAlignSeqRes(false); // Store empty seqres groups.
@@ -73,7 +73,7 @@ public class TestStructureCrossReferences {
 		boolean emptySeqRes = false;
 
 		AtomCache cache = new AtomCache();
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 
 		FileParsingParameters params = new FileParsingParameters();
 		params.setAlignSeqRes(true);
@@ -97,7 +97,7 @@ public class TestStructureCrossReferences {
 	public void testCrossReferencesPdb() throws IOException, StructureException {
 		boolean emptySeqRes = true;
 		AtomCache cache = new AtomCache();
-		cache.setUseMmCif(false);
+		cache.setFiletype(StructureFiletype.PDB);
 
 		FileParsingParameters params = new FileParsingParameters();
 		params.setAlignSeqRes(false);  // Store empty seqres groups
@@ -119,7 +119,7 @@ public class TestStructureCrossReferences {
 	public void testCrossReferencesPdbAlignSeqRes() throws IOException, StructureException {
 		boolean emptySeqRes = false;
 		AtomCache cache = new AtomCache();
-		cache.setUseMmCif(false);
+		cache.setFiletype(StructureFiletype.PDB);
 
 		FileParsingParameters params = new FileParsingParameters();
 		params.setAlignSeqRes(true);

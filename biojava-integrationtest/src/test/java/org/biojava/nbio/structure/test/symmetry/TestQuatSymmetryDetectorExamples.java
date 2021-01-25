@@ -27,6 +27,7 @@ import java.util.*;
 
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureFiletype;
 import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.util.AtomCache;
@@ -146,7 +147,7 @@ public class TestQuatSymmetryDetectorExamples {
 	public void testLocal() throws IOException, StructureException {
 
 		AtomCache atomCache = new AtomCache();
-		atomCache.setUseMmtf(true);
+		atomCache.setFiletype(StructureFiletype.MMTF);
 
 		List<String> testIds = new ArrayList<>();
 		List<String> testStoichiometries = new ArrayList<>();
@@ -376,8 +377,7 @@ public class TestQuatSymmetryDetectorExamples {
 	@Test
 	public void testSymDetectionWithClusteringByEntityId() throws IOException, StructureException {
 		AtomCache cache = new AtomCache();
-		cache.setUseMmtf(false);
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		FileParsingParameters params = new FileParsingParameters();
 		params.setAlignSeqRes(true);
 		cache.setFileParsingParams(params);
@@ -404,8 +404,7 @@ public class TestQuatSymmetryDetectorExamples {
 	@Test
 	public void testSymDetectionPerformanceLargeCapsid() throws IOException, StructureException {
 		AtomCache cache = new AtomCache();
-		cache.setUseMmtf(false);
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		FileParsingParameters params = new FileParsingParameters();
 		params.setAlignSeqRes(true);
 		params.setParseBioAssembly(true);

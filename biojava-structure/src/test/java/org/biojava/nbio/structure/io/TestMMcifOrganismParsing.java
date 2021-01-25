@@ -28,6 +28,7 @@ import org.biojava.nbio.structure.EntityInfo;
 import org.biojava.nbio.structure.EntityType;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureFiletype;
 import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.junit.BeforeClass;
@@ -48,7 +49,7 @@ public class TestMMcifOrganismParsing {
 	public static void setUp() throws Exception {
 
 		AtomCache cache = new AtomCache();
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		StructureIO.setAtomCache(cache);
 	}
 

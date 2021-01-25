@@ -47,6 +47,7 @@ import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.ResidueRangeAndLength;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureFiletype;
 import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.StructureIdentifier;
 import org.biojava.nbio.structure.StructureTools;
@@ -372,7 +373,7 @@ public class AtomCacheTest {
 		try {
 			cache.setPath(tmpCache.toString());
 			cache.setCachePath(tmpCache.toString());
-			cache.setUseMmCif(true);
+			cache.setFiletype(StructureFiletype.CIF);
 			ChemCompGroupFactory.setChemCompProvider(new DownloadChemCompProvider(tmpCache.toString()));
 
 			// Create an empty chemcomp
@@ -431,7 +432,7 @@ public class AtomCacheTest {
 		try {
 			cache.setPath(tmpCache.toString());
 			cache.setCachePath(tmpCache.toString());
-			cache.setUseMmCif(true);
+			cache.setFiletype(StructureFiletype.CIF);
 			ChemCompGroupFactory.setChemCompProvider(new DownloadChemCompProvider(tmpCache.toString()));
 
 

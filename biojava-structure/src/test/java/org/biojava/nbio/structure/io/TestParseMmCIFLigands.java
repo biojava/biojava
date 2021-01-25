@@ -29,6 +29,7 @@ import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureFiletype;
 import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.chem.ChemCompGroupFactory;
@@ -50,10 +51,10 @@ public class TestParseMmCIFLigands {
 	public void testLigandConnections()throws IOException, StructureException {
 		AtomCache cache = new AtomCache();
 		// This needs MMCIF
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		StructureIO.setAtomCache(cache);
 
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		ChemCompGroupFactory.setChemCompProvider(new DownloadChemCompProvider());
 
 		FileParsingParameters params = cache.getFileParsingParams();
@@ -93,10 +94,10 @@ public class TestParseMmCIFLigands {
 	public void testMultipleConformations()throws IOException, StructureException {
 		AtomCache cache = new AtomCache();
 		// This needs MMCIF
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		StructureIO.setAtomCache(cache);
 
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		ChemCompGroupFactory.setChemCompProvider(new DownloadChemCompProvider());
 
 		FileParsingParameters params = cache.getFileParsingParams();

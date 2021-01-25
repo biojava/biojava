@@ -20,6 +20,7 @@
  */
 package org.biojava.nbio.structure.test.io;
 
+import org.biojava.nbio.structure.StructureFiletype;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -35,7 +36,7 @@ public class TestStructWithMultiparentChemComp {
 	public void test4Q7U() throws Exception {
 
 		AtomCache cache = new AtomCache();
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		StructureIO.setAtomCache(cache);
 
 		Structure s = StructureIO.getStructure("4q7u");

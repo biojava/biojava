@@ -45,6 +45,7 @@ import org.biojava.nbio.structure.NucleotideImpl;
 import org.biojava.nbio.structure.PDBCrystallographicInfo;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureFiletype;
 import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.chem.ChemComp;
@@ -80,7 +81,7 @@ public class MmtfUtils {
 	public static AtomCache setUpBioJava() {
 		// Set up the atom cache etc
 		AtomCache cache = new AtomCache();
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.MMTF);
 		FileParsingParameters params = cache.getFileParsingParams();
 		params.setCreateAtomBonds(true);
 		params.setAlignSeqRes(true);
@@ -101,7 +102,7 @@ public class MmtfUtils {
 	public static AtomCache setUpBioJava(String extraUrl) {
 		// Set up the atom cache etc
 		AtomCache cache = new AtomCache();
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.MMTF);
 		FileParsingParameters params = cache.getFileParsingParams();
 		params.setCreateAtomBonds(true);
 		params.setAlignSeqRes(true);

@@ -36,6 +36,7 @@ import org.biojava.nbio.structure.EntityInfo;
 import org.biojava.nbio.structure.EntityType;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureFiletype;
 import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.cif.StructureConverter;
@@ -117,7 +118,7 @@ public class TestNonDepositedFiles {
 
 		StructureIO.setAtomCache(cache);
 
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		Structure s = StructureIO.getStructure("1B8G");
 
 		System.out.println("Chains from full deposited file: ");

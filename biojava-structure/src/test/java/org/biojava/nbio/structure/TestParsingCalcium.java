@@ -46,7 +46,7 @@ public class TestParsingCalcium {
 
 		AtomCache cache = new AtomCache();
 		Structure s = cache.getStructure(pdbID);
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 
 		Structure m = cache.getStructure(pdbID);
 

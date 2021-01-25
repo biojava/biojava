@@ -54,7 +54,7 @@ public class TestEntityResIndexMapping {
 
 		StructureIO.setAtomCache(cache);
 
-		cache.setUseMmCif(false);
+		cache.setFiletype(StructureFiletype.PDB);
 		Structure s = StructureIO.getStructure("1B8G");
 
 		Chain chainA = s.getPolyChainByPDB("A");
@@ -76,7 +76,7 @@ public class TestEntityResIndexMapping {
 
 		StructureIO.setAtomCache(cache);
 
-		cache.setUseMmCif(false);
+		cache.setFiletype(StructureFiletype.PDB);
 		Structure s = StructureIO.getStructure("1SMT");
 
 		Chain chainA = s.getPolyChainByPDB("A");

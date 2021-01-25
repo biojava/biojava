@@ -25,6 +25,7 @@ import java.util.List;
 
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureFiletype;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.secstruc.DSSPParser;
@@ -55,7 +56,7 @@ public class DemoLoadSecStruc {
 		cache.setFileParsingParams(params);
 
 		// Use PDB format, because SS cannot be parsed from mmCIF yet
-		cache.setUseMmCif(false);
+		cache.setFiletype(StructureFiletype.CIF);
 
 		// The loaded Structure contains the SS assigned by Author (simple)
 		Structure s = cache.getStructure(pdbID);

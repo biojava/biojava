@@ -32,6 +32,7 @@ import java.util.zip.GZIPInputStream;
 
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureFiletype;
 import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.asa.GroupAsa;
@@ -55,7 +56,7 @@ public class TestInterfaceClustering {
 		FileParsingParameters params = new FileParsingParameters();
 		params.setAlignSeqRes(true);
 		cache.setFileParsingParams(params);
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 
 		StructureIO.setAtomCache(cache);
 
@@ -103,7 +104,7 @@ public class TestInterfaceClustering {
 		FileParsingParameters params = new FileParsingParameters();
 		params.setAlignSeqRes(true);
 		cache.setFileParsingParams(params);
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 
 		StructureIO.setAtomCache(cache);
 

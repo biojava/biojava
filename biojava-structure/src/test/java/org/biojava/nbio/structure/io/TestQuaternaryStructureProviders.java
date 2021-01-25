@@ -59,7 +59,7 @@ public class TestQuaternaryStructureProviders {
 		boolean gotException = false;
 		try {
 			AtomCache cache = new AtomCache();
-			cache.setUseMmCif(true);
+			cache.setFiletype(StructureFiletype.CIF);
 			StructureIO.setAtomCache(cache);
 			StructureIO.getBiologicalAssembly("5LDH",3);
 		} catch (StructureException e) {
@@ -72,7 +72,7 @@ public class TestQuaternaryStructureProviders {
 		gotException = false;
 		try {
 			AtomCache cache = new AtomCache();
-			cache.setUseMmCif(true);
+			cache.setFiletype(StructureFiletype.CIF);
 			StructureIO.setAtomCache(cache);
 			StructureIO.getBiologicalAssembly("5LDH",2);
 		} catch (StructureException e) {
@@ -198,7 +198,7 @@ public class TestQuaternaryStructureProviders {
 	private Structure getPdbBioAssembly(String pdbId, int bioMolecule, boolean multiModel) throws IOException, StructureException {
 		// get bio assembly from PDB file
 		AtomCache cache = new AtomCache();
-		cache.setUseMmCif(false);
+		cache.setFiletype(StructureFiletype.PDB);
 		StructureIO.setAtomCache(cache);
 		Structure pdbS = StructureIO.getBiologicalAssembly(pdbId, bioMolecule, multiModel);
 		return pdbS;
@@ -207,7 +207,7 @@ public class TestQuaternaryStructureProviders {
 	private Structure getMmcifBioAssembly(String pdbId, int bioMolecule, boolean multiModel) throws IOException, StructureException {
 		// get bio assembly from mmcif file
 		AtomCache cache = new AtomCache();
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		StructureIO.setAtomCache(cache);
 		Structure mmcifS = StructureIO.getBiologicalAssembly(pdbId, bioMolecule, multiModel);
 		return mmcifS;

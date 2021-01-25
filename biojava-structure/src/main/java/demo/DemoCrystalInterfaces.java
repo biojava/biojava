@@ -23,6 +23,7 @@ package demo;
 
 import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.StructureFiletype;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.contact.*;
 import org.biojava.nbio.structure.io.FileParsingParameters;
@@ -60,12 +61,10 @@ public class DemoCrystalInterfaces {
 	 * @param args
 	 */
 	public static void main(String[] args) throws Exception {
-
-
 		String pdbCode = "1smt";
 
 		AtomCache cache = new AtomCache();
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 
 		FileParsingParameters params = new FileParsingParameters();
 		params.setAlignSeqRes(true);

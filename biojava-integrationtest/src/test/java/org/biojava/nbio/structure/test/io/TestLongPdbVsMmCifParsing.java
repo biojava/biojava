@@ -567,7 +567,7 @@ public class TestLongPdbVsMmCifParsing {
 
 
 	private Structure getPdbStructure(String pdbId) throws IOException, StructureException {
-		cache.setUseMmCif(false);
+		cache.setFiletype(StructureFiletype.PDB);
 		// set parsing params here:
 		params.setAlignSeqRes(true);
 		//params.setLoadChemCompInfo(true);
@@ -578,7 +578,7 @@ public class TestLongPdbVsMmCifParsing {
 	}
 
 	private Structure getCifStructure(String pdbId) throws IOException, StructureException {
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		// set parsing params here:
 		params.setAlignSeqRes(true);
 		//params.setLoadChemCompInfo(true);

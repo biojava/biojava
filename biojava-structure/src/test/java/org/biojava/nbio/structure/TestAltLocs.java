@@ -47,7 +47,7 @@ public class TestAltLocs {
 	public void testAltLocParsing() throws StructureException, IOException{
 
 		AtomCache cache = new AtomCache();
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		Structure s = cache.getStructure("2CI1");
 
 		Chain a = s.getPolyChainByPDB("A");
@@ -210,7 +210,7 @@ public class TestAltLocs {
 	public void test1AAC() throws IOException, StructureException{
 
 		AtomCache cache = new AtomCache();
-		cache.setUseMmCif(false);
+		cache.setFiletype(StructureFiletype.PDB);
 		StructureIO.setAtomCache(cache);
 
 		Structure s = StructureIO.getStructure("1AAC");
@@ -221,7 +221,7 @@ public class TestAltLocs {
 		testCBAtomInMainGroup(g);
 
 		cache = new AtomCache();
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		StructureIO.setAtomCache(cache);
 
 		Structure s1 = cache.getStructure("1AAC");
@@ -262,7 +262,7 @@ public class TestAltLocs {
 
 		StructureIO.setAtomCache(cache);
 
-		cache.setUseMmCif(false);
+		cache.setFiletype(StructureFiletype.PDB);
 
 		Structure structure = StructureIO.getStructure("3PIU");
 
@@ -428,7 +428,7 @@ public class TestAltLocs {
 
 		StructureIO.setAtomCache(cache);
 
-		cache.setUseMmCif(false);
+		cache.setFiletype(StructureFiletype.PDB);
 
 		Structure structure = StructureIO.getStructure("4CUP");
 
@@ -489,7 +489,7 @@ public class TestAltLocs {
 
 		StructureIO.setAtomCache(cache);
 
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 
 		Structure structure = StructureIO.getStructure("3PIU");
 
@@ -549,7 +549,7 @@ public class TestAltLocs {
 
 		StructureIO.setAtomCache(cache);
 
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		FileParsingParameters params = new FileParsingParameters();
 		params.setAlignSeqRes(true);
 		cache.setFileParsingParams(params);

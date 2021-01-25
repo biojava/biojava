@@ -191,7 +191,7 @@ public class TestCloning {
 	public void testBondCloning() throws IOException, StructureException {
 
 		final AtomCache cache = new AtomCache();
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 
 		final FileParsingParameters params = cache.getFileParsingParams();
 		params.setCreateAtomBonds(true);

@@ -50,8 +50,7 @@ public class TestLoadStructureFromURL {
 			f.mkdir();
 		}
 		AtomCache c = new AtomCache(f.toString(), f.toString());
-		c.setUseMmCif(false);
-		c.setUseMmtf(false);
+		c.setFiletype(StructureFiletype.PDB);
 		// fetch a random small structure
 
 		c.getStructure("1znf");

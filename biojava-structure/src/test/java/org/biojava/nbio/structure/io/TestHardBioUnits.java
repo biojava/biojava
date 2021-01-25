@@ -24,6 +24,7 @@ import org.biojava.nbio.structure.Calc;
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureFiletype;
 import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.util.AtomCache;
@@ -56,8 +57,7 @@ public class TestHardBioUnits {
 		int biolAssemblyNr = 2;
 
 		AtomCache cache = new AtomCache();
-		cache.setUseMmCif(true);
-		cache.setUseMmtf(false);
+		cache.setFiletype(StructureFiletype.CIF);
 		StructureIO.setAtomCache(cache);
 
 		Structure bioAssembly = StructureIO.getBiologicalAssembly(pdbId,biolAssemblyNr);

@@ -42,6 +42,7 @@ import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.ResidueNumber;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureFiletype;
 import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.cif.StructureConverter;
@@ -77,7 +78,7 @@ public class TestDifficultMmCIFFiles {
 		StructureIO.setAtomCache(cache);
 
 
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		Structure sCif = StructureIO.getStructure("2KSA");
 
 		assertNotNull(sCif);
@@ -105,7 +106,7 @@ public class TestDifficultMmCIFFiles {
 
 		StructureIO.setAtomCache(cache);
 
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		Structure sCif = StructureIO.getStructure("2BI6");
 
 		assertNotNull(sCif);
@@ -134,10 +135,10 @@ public class TestDifficultMmCIFFiles {
 		params.setParseBioAssembly(true);
 		StructureIO.setAtomCache(cache);
 
-		cache.setUseMmCif(false);
+		cache.setFiletype(StructureFiletype.PDB);
 		Structure sPdb = StructureIO.getStructure("1GQO");
 
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		Structure sCif = StructureIO.getStructure("1GQO");
 
 		assertNotNull(sCif);
@@ -168,7 +169,7 @@ public class TestDifficultMmCIFFiles {
 	@Test
 	public void testResidueNumbers() throws IOException, StructureException {
 		AtomCache cache = new AtomCache();
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 
 		Structure s = cache.getStructure("2PTC");
 		Chain c = s.getChainByIndex(0);
@@ -248,7 +249,7 @@ public class TestDifficultMmCIFFiles {
 		StructureIO.setAtomCache(cache);
 
 
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		Structure sCif = StructureIO.getStructure("2KLI");
 
 		assertNotNull(sCif);

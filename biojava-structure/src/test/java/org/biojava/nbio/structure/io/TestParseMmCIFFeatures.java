@@ -31,6 +31,7 @@ import org.biojava.nbio.structure.ResidueNumber;
 import org.biojava.nbio.structure.Site;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureFiletype;
 import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.junit.Test;
@@ -45,7 +46,7 @@ public class TestParseMmCIFFeatures {
 
 		StructureIO.setAtomCache(cache);
 
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		FileParsingParameters params = new FileParsingParameters();
 		params.setCreateAtomBonds(true);
 		cache.setFileParsingParams(params);
@@ -77,7 +78,7 @@ public class TestParseMmCIFFeatures {
 
 		StructureIO.setAtomCache(cache);
 
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		FileParsingParameters params = new FileParsingParameters();
 		params.setCreateAtomBonds(true);
 		cache.setFileParsingParams(params);
@@ -147,7 +148,7 @@ public class TestParseMmCIFFeatures {
 
 		StructureIO.setAtomCache(cache);
 
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		Structure sCif = StructureIO.getStructure("4HHB");
 
 		assertNotNull(sCif);
@@ -181,7 +182,7 @@ public class TestParseMmCIFFeatures {
 
 		StructureIO.setAtomCache(cache);
 
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		Structure sCif = StructureIO.getStructure("1A4W");
 
 		assertNotNull(sCif);

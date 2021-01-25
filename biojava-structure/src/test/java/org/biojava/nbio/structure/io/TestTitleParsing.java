@@ -22,6 +22,7 @@ package org.biojava.nbio.structure.io;
 
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureFiletype;
 import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.junit.Test;
@@ -48,9 +49,9 @@ public class TestTitleParsing {
 
 		StructureIO.setAtomCache(cache);
 
-		cache.setUseMmCif(false);
+		cache.setFiletype(StructureFiletype.PDB);
 		Structure sPdb = StructureIO.getStructure("2W6E");
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		Structure sCif = StructureIO.getStructure("2W6E");
 
 

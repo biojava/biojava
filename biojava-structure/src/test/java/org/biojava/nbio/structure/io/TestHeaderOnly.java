@@ -31,6 +31,7 @@ import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureFiletype;
 import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.chem.ChemComp;
@@ -60,7 +61,7 @@ public class TestHeaderOnly {
 
 		// Test 1: with PDB
 		AtomCache cache = new AtomCache();
-		cache.setUseMmCif(false);
+		cache.setFiletype(StructureFiletype.PDB);
 
 		FileParsingParameters params = new FileParsingParameters();
 		params.setHeaderOnly(true);
@@ -74,7 +75,7 @@ public class TestHeaderOnly {
 		Assert.assertEquals(false, doSeqResHaveAtoms(sPDB));
 
 		// Test 2: with mmCIF
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 
 		Structure sCIF = StructureIO.getStructure(pdbID);
 		Assert.assertEquals(false, doSeqResHaveAtoms(sCIF));
@@ -95,7 +96,7 @@ public class TestHeaderOnly {
 
 		// Test 1: with PDB
 		AtomCache cache = new AtomCache();
-		cache.setUseMmCif(false);
+		cache.setFiletype(StructureFiletype.PDB);
 
 		FileParsingParameters params = new FileParsingParameters();
 		params.setHeaderOnly(false);
@@ -109,7 +110,7 @@ public class TestHeaderOnly {
 		check1REPChainC(sPDB); // Check particular residues to be aligned.
 
 		// Test 2: with mmCIF
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 
 		Structure sCIF = StructureIO.getStructure(pdbID);
 		Assert.assertEquals(true, doSeqResHaveAtoms(sCIF));

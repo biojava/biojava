@@ -57,15 +57,12 @@ public class DemoMMCIFReader
 		String pdbId = "4hhb";
 
 		AtomCache cache = new AtomCache();
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 
 		StructureIO.setAtomCache(cache);
-
 		try {
 			Structure s = StructureIO.getStructure(pdbId);
-
 			System.out.println(pdbId + " has nr atoms: " + StructureTools.getNrAtoms(s));
-
 		} catch (Exception e){
 			e.printStackTrace();
 		}

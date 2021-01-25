@@ -9,6 +9,7 @@ import java.util.List;
 import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureFiletype;
 import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.chem.ChemCompGroupFactory;
@@ -89,8 +90,7 @@ public class TestMmtfStructureReader {
         AtomCache cache = new AtomCache();
         FileParsingParameters params = new FileParsingParameters();
         cache.setFileParsingParams(params);
-        cache.setUseMmCif(false);
-        cache.setUseMmtf(true);
+        cache.setFiletype(StructureFiletype.MMTF);
 
         StructureIO.setAtomCache(cache);
 

@@ -22,6 +22,7 @@ package demo;
 
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureFiletype;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.cluster.SubunitClustererMethod;
 import org.biojava.nbio.structure.cluster.SubunitClustererParameters;
@@ -65,7 +66,7 @@ public class DemoQuatSymmetryJmol {
 
 		// Download the biological assembly
 		AtomCache cache = new AtomCache();
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		Structure structure = cache.getStructure("BIO:" + name + ":1");
 
 		QuatSymmetryParameters sp = new QuatSymmetryParameters();

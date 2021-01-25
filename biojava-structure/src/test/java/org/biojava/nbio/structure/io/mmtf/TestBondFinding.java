@@ -20,6 +20,7 @@
  */
 package org.biojava.nbio.structure.io.mmtf;
 
+import org.biojava.nbio.structure.StructureFiletype;
 import org.biojava.nbio.structure.chem.ChemCompGroupFactory;
 import org.biojava.nbio.structure.chem.DownloadChemCompProvider;
 import org.junit.Test;
@@ -81,7 +82,7 @@ public class TestBondFinding {
 
 		// Download parameters
 		AtomCache cache = new AtomCache();
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		cache.setFetchBehavior(FetchBehavior.FETCH_FILES);
 		FileParsingParameters params = cache.getFileParsingParams();
 		params.setCreateAtomBonds(true);

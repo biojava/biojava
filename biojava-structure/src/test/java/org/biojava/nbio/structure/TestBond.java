@@ -52,7 +52,7 @@ public class TestBond {
 
 		cache = new AtomCache();
 
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 
 		FileParsingParameters params = cache.getFileParsingParams();
 

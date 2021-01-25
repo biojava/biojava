@@ -37,6 +37,7 @@ import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureFiletype;
 import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.chem.ChemCompGroupFactory;
@@ -73,7 +74,7 @@ public class TestMmtfRoundTrip {
 		FileParsingParameters params = new FileParsingParameters();
 		params.setParseBioAssembly(true);
 		cache.setFileParsingParams(params);
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 
 		StructureIO.setAtomCache(cache);
 

@@ -46,7 +46,6 @@ public class TestChemCompProvider {
 
 	// Short test with bad ligand name (QNA is bogus)
 	final	String DNAexample =
-
 	"ATOM      1  H   MET A   1      11.756 -15.759  11.647  1.00  7.95\n" +
 	"ATOM      2  N   MET A   1      12.461 -16.373  11.329  1.00  7.95\n" +
 	"ATOM      3  CA  MET A   1      12.297 -17.782  11.674  1.00  7.95\n" +
@@ -181,7 +180,7 @@ public class TestChemCompProvider {
 		long startTime = System.currentTimeMillis();
 		StructureIO.getStructure("4HHM");
 		long finishTime = System.currentTimeMillis();
-		s_logger.info("ZipChemComp time: "+(finishTime-startTime)+ " ms");
+		s_logger.info("ZipChemComp time: {} ms", finishTime - startTime);
 
 		// Not wanted here for testing, but useful for cleaning up downloaded .cif.gz files.
 		// ZipChemCompProvider.purgeTempFiles(pdbdir.toString());
@@ -189,7 +188,6 @@ public class TestChemCompProvider {
 
 	@Test
 	public void testGetOneLetterCode() throws Exception {
-
 		String oneLetter;
 
 		oneLetter = ChemCompGroupFactory.getOneLetterCode(ChemCompGroupFactory.getChemComp("ALA"));
@@ -202,7 +200,5 @@ public class TestChemCompProvider {
 		// multiparent case, we should return ?
 		oneLetter = ChemCompGroupFactory.getOneLetterCode(ChemCompGroupFactory.getChemComp("OIM"));
 		assertEquals("?", oneLetter);
-
 	}
-
 }

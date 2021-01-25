@@ -228,7 +228,8 @@ public class ChemComp implements CifBean<org.rcsb.cif.schema.mm.ChemComp>, Compa
     }
 
     public void setOneLetterCode(String oneLetterCode) {
-        this.oneLetterCode = oneLetterCode;
+        // backwards compatibility that treats missing olc as ?
+        this.oneLetterCode = "".equals(oneLetterCode) ? "?" : oneLetterCode;
         setStandardFlag();
     }
 

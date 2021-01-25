@@ -1,6 +1,7 @@
 package demo;
 
 import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.StructureFiletype;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.FileParsingParameters;
@@ -77,7 +78,7 @@ public class DemoShowLargeAssembly {
 		// we just need this to track where to store PDB files
 		// this checks the PDB_DIR property (and uses a tmp location if not set)
 		AtomCache cache = new AtomCache();
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		FileParsingParameters p = cache.getFileParsingParams();
 
 		// some bio assemblies are large, we want an all atom representation and avoid
