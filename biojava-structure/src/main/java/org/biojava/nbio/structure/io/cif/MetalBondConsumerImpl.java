@@ -31,10 +31,10 @@ public class MetalBondConsumerImpl implements MetalBondConsumer {
 
     @Override
     public void consume(Category category) {
-        StrColumn atomType1 = (StrColumn) category.getColumn("");
-        StrColumn atomType2 = (StrColumn) category.getColumn("");
-        FloatColumn lowerLimit = (FloatColumn) category.getColumn("");
-        FloatColumn upperLimit = (FloatColumn) category.getColumn("");
+        StrColumn atomType1 = (StrColumn) category.getColumn("atom_type_1");
+        StrColumn atomType2 = (StrColumn) category.getColumn("atom_type_2");
+        FloatColumn lowerLimit = (FloatColumn) category.getColumn("lower_limit");
+        FloatColumn upperLimit = (FloatColumn) category.getColumn("upper_limit");
         for (int i = 0; i < category.getRowCount(); i++) {
             MetalBondDistance d = new MetalBondDistance();
 
