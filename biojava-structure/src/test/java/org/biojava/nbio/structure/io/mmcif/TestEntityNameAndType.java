@@ -23,6 +23,7 @@ package org.biojava.nbio.structure.io.mmcif;
 import static org.junit.Assert.assertArrayEquals;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.EntityInfo;
@@ -97,6 +98,8 @@ public class TestEntityNameAndType {
 		assertArrayEquals(descriptionInformation, testDescInfo);
 		assertArrayEquals(typeInformation, testTypeInfo);
 		// Now check these work too
+		System.out.println(Arrays.toString(geneSourceSciName));
+		System.out.println(Arrays.toString(testGeneSourceSciName));
 		assertArrayEquals(geneSourceSciName, testGeneSourceSciName);
 		assertArrayEquals(geneSourceTaxId, testGeneSourceTaxId);
 		assertArrayEquals(hostOrganismSciName, testHostOrganismSciName);

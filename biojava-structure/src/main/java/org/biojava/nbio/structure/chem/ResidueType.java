@@ -88,6 +88,10 @@ public enum ResidueType implements Serializable {
      * @return
      */
     public static ResidueType getResidueTypeFromString(String chem_comp_type) {
+        if (chem_comp_type == null) {
+            return null;
+        }
+
         // Almost all calls to this method are for L-peptide linking. Use this knowledge for a shortcut.
         if (chem_comp_type.equalsIgnoreCase(lPeptideLinking.chem_comp_type)) {
             return lPeptideLinking;
