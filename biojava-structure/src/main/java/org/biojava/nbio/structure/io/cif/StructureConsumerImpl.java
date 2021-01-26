@@ -1315,7 +1315,7 @@ public class StructureConsumerImpl implements StructureConsumer {
         // This is a potentially huge assumption...
 
         for (int rowIndex = 0; rowIndex < entitySrcGen.getRowCount(); rowIndex++) {
-            if (entitySrcGen.getEntityId().get(rowIndex).equals(structAsym.getEntityId().get(asymRowIndex))) {
+            if (!entitySrcGen.getEntityId().get(rowIndex).equals(structAsym.getEntityId().get(asymRowIndex))) {
                 continue;
             }
 
@@ -1323,7 +1323,7 @@ public class StructureConsumerImpl implements StructureConsumer {
         }
 
         for (int rowIndex = 0; rowIndex < entitySrcNat.getRowCount(); rowIndex++) {
-            if (entitySrcNat.getEntityId().get(rowIndex).equals(structAsym.getEntityId().get(asymRowIndex))) {
+            if (!entitySrcNat.getEntityId().get(rowIndex).equals(structAsym.getEntityId().get(asymRowIndex))) {
                 continue;
             }
 
@@ -1331,7 +1331,7 @@ public class StructureConsumerImpl implements StructureConsumer {
         }
 
         for (int rowIndex = 0; rowIndex < entitySrcSyn.getRowCount(); rowIndex++) {
-            if (entitySrcSyn.getEntityId().get(rowIndex).equals(structAsym.getEntityId().get(asymRowIndex))) {
+            if (!entitySrcSyn.getEntityId().get(rowIndex).equals(structAsym.getEntityId().get(asymRowIndex))) {
                 continue;
             }
 

@@ -98,8 +98,6 @@ public class TestEntityNameAndType {
 		assertArrayEquals(descriptionInformation, testDescInfo);
 		assertArrayEquals(typeInformation, testTypeInfo);
 		// Now check these work too
-		System.out.println(Arrays.toString(geneSourceSciName));
-		System.out.println(Arrays.toString(testGeneSourceSciName));
 		assertArrayEquals(geneSourceSciName, testGeneSourceSciName);
 		assertArrayEquals(geneSourceTaxId, testGeneSourceTaxId);
 		assertArrayEquals(hostOrganismSciName, testHostOrganismSciName);
