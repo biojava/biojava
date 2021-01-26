@@ -39,6 +39,7 @@ import org.biojava.nbio.structure.xtal.SymoplibParser;
 import org.rcsb.cif.model.FloatColumn;
 import org.rcsb.cif.model.IntColumn;
 import org.rcsb.cif.model.StrColumn;
+import org.rcsb.cif.model.ValueKind;
 import org.rcsb.cif.schema.mm.AtomSite;
 import org.rcsb.cif.schema.mm.AtomSites;
 import org.rcsb.cif.schema.mm.AuditAuthor;
@@ -829,7 +830,7 @@ public class StructureConsumerImpl implements StructureConsumer {
                 logger.warn("More than 1 Rfree value present, will use last one {} and discard previous {}",
                         lsRFactorRFree, String.format("%4.2f",pdbHeader.getRfree()));
             }
-            if (lsRFactorRFree.isDefined()) {
+            if (lsRFactorRFree.isDefined() && lsRFactorRFree.getValueKind(rowIndex) == ValueKind.PRESENT) {
                 pdbHeader.setRfree((float) lsRFactorRFree.get(rowIndex));
             } else {
                 // some entries like 2ifo haven't got this field at all
@@ -842,7 +843,7 @@ public class StructureConsumerImpl implements StructureConsumer {
                 logger.warn("More than 1 R work value present, will use last one {} and discard previous {} ",
                         lsRFactorRWork, String.format("%4.2f",pdbHeader.getRwork()));
             }
-            if (lsRFactorRWork.isDefined()) {
+            if (lsRFactorRWork.isDefined() && lsRFactorRWork.getValueKind(rowIndex) == ValueKind.PRESENT) {
                 pdbHeader.setRwork((float) lsRFactorRWork.get(rowIndex));
             } else {
                 logger.info("_refine.ls_R_factor_R_work not present, not parsing R-work value");
