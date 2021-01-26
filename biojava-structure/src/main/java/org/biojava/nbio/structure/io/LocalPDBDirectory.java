@@ -492,7 +492,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 			}
 			return downloadStructure(current, splitDirURL,false, existing);
 		} else if(obsoleteBehavior == ObsoleteBehavior.FETCH_OBSOLETE
-				&& PDBStatus.getStatus(pdbId) == Status.OBSOLETE) {
+				&& PDBStatus.getStatus(pdbId) == Status.REMOVED) {
 			return downloadStructure(pdbId, obsoleteDirURL, true, existing);
 		} else {
 			return downloadStructure(pdbId, splitDirURL, false, existing);

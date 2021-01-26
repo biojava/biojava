@@ -28,7 +28,6 @@ import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureFiletype;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.FileParsingParameters;
-import org.biojava.nbio.structure.secstruc.DSSPParser;
 import org.biojava.nbio.structure.secstruc.SecStrucCalc;
 import org.biojava.nbio.structure.secstruc.SecStrucInfo;
 import org.biojava.nbio.structure.secstruc.SecStrucTools;
@@ -63,13 +62,6 @@ public class DemoLoadSecStruc {
 
 		// Print the Author's assignment (from PDB file)
 		System.out.println("Author's assignment: ");
-		printSecStruc(s);
-
-		// If the more detailed DSSP prediction is required call this
-		DSSPParser.fetch(pdbID, s, true);
-
-		// Print the assignment residue by residue
-		System.out.println("DSSP assignment: ");
 		printSecStruc(s);
 
 		// finally use BioJava's built in DSSP-like secondary structure assigner
