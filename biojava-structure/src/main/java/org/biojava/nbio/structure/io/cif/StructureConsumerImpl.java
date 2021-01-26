@@ -1377,14 +1377,17 @@ public class StructureConsumerImpl implements StructureConsumer {
                 operator.setElement(0, 0, structNcsOper.getMatrix11().get(rowIndex));
                 operator.setElement(0, 1, structNcsOper.getMatrix12().get(rowIndex));
                 operator.setElement(0, 2, structNcsOper.getMatrix13().get(rowIndex));
+                operator.setElement(0, 3, structNcsOper.getVector1().get(rowIndex));
 
                 operator.setElement(1, 0, structNcsOper.getMatrix21().get(rowIndex));
                 operator.setElement(1, 1, structNcsOper.getMatrix22().get(rowIndex));
                 operator.setElement(1, 2, structNcsOper.getMatrix23().get(rowIndex));
+                operator.setElement(1, 3, structNcsOper.getVector2().get(rowIndex));
 
                 operator.setElement(2, 0, structNcsOper.getMatrix31().get(rowIndex));
                 operator.setElement(2, 1, structNcsOper.getMatrix32().get(rowIndex));
                 operator.setElement(2, 2, structNcsOper.getMatrix33().get(rowIndex));
+                operator.setElement(2, 3, structNcsOper.getVector3().get(rowIndex));
 
                 operator.setElement(3, 0, 0);
                 operator.setElement(3, 1, 0);

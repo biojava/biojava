@@ -5,6 +5,7 @@ import org.biojava.nbio.structure.align.util.URLConnectionTools;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
 import org.biojava.nbio.structure.io.LocalPDBDirectory;
 import org.biojava.nbio.structure.io.cif.ChemCompConverter;
+import org.rcsb.cif.ParsingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -217,8 +218,14 @@ public class DownloadChemCompProvider implements ChemCompProvider {
         if (haveFile) {
             String filename = getLocalFileName(recordName);
             try {
-                ChemicalComponentDictionary dict = ChemCompConverter.fromPath(Paths.get(filename));
-                ChemComp chemComp = dict.getChemComp(recordName);
+                ChemComp chemComp;
+                try {
+                    ChemicalComponentDictionary dict = ChemCompConverter.fromPath(Paths.get(filename));
+                    chemComp = dict.getChemComp(recordName);
+                } catch (ParsingException e) {
+                    // happens for corrupt files
+                    chemComp = null;
+                }
 
                 // May be null if the file was corrupt. Fall back on ReducedChemCompProvider in that case
                 if (chemComp != null) {

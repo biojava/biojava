@@ -1,6 +1,5 @@
 package org.biojava.nbio.structure.io.cif;
 
-import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.chem.ChemicalComponentDictionary;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.rcsb.cif.CifIO;

@@ -220,45 +220,32 @@ public class TestAtomCache {
 
 	}
 
-
 	@Test
 	public void testSettingFileParsingType(){
-
 		AtomCache cache = new AtomCache();
 
 		//test defaults
-
 		// first is mmtf, second is mmcif
-		testFlags(cache,true,false);
+		testFlags(cache, false, false, true);
 
 		// now change the values
-
 		cache.setFiletype(StructureFiletype.CIF);
-
-		testFlags(cache,false,true);
+		testFlags(cache, false, true, false);
 
 		cache.setFiletype(StructureFiletype.MMTF);
-
-		testFlags(cache,true,false);
+		testFlags(cache, true, false, false);
 
 		// this sets to use PDB!
 		cache.setFiletype(StructureFiletype.PDB);
+		testFlags(cache, false, false, false);
 
-		testFlags(cache,false,false);
-
-		// back to defaults
+		// back to MMTF
 		cache.setFiletype(StructureFiletype.MMTF);
-
-		testFlags(cache,true,false);
-
+		testFlags(cache, true, false, false);
 
 		// back to parsing PDB
 		cache.setFiletype(StructureFiletype.PDB);
-
-		testFlags(cache,false,false);
-
-
-
+		testFlags(cache, false, false, false);
 	}
 
 
@@ -268,15 +255,12 @@ public class TestAtomCache {
 	 * @param useMmTf
 	 * @param useMmCif
 	 */
-	private void testFlags(AtomCache cache ,boolean useMmTf, boolean useMmCif) {
-
+	private void testFlags(AtomCache cache ,boolean useMmTf, boolean useMmCif, boolean useBcif) {
 		assertEquals("flag for parsing mmtf is set to " + cache.getFiletype() + " but should be " + useMmTf,
 				cache.getFiletype() == StructureFiletype.MMTF, useMmTf);
 		assertEquals("flag for parsing mmcif is set to " + cache.getFiletype() + " but should be set to " + useMmCif,
 				cache.getFiletype() == StructureFiletype.CIF, useMmCif);
-
-
-
+		assertEquals("flag for parsing bcif is set to " + cache.getFiletype() + " but should be set to " + useBcif,
+				cache.getFiletype() == StructureFiletype.BCIF, useBcif);
 	}
-
 }
