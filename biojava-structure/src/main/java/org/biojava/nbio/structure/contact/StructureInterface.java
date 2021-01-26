@@ -20,12 +20,6 @@
  */
 package org.biojava.nbio.structure.contact;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.Element;
@@ -40,9 +34,23 @@ import org.biojava.nbio.structure.chem.ChemComp;
 import org.biojava.nbio.structure.chem.PolymerType;
 import org.biojava.nbio.structure.io.FileConvert;
 import org.biojava.nbio.structure.io.FileParsingParameters;
+import org.biojava.nbio.structure.io.cif.AbstractCifFileSupplier;
 import org.biojava.nbio.structure.xtal.CrystalTransform;
+import org.rcsb.cif.CifBuilder;
+import org.rcsb.cif.CifIO;
+import org.rcsb.cif.model.Category;
+import org.rcsb.cif.schema.StandardSchemata;
+import org.rcsb.cif.schema.mm.MmCifBlockBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.io.Serializable;
+import java.io.UncheckedIOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 
 /**
@@ -748,45 +756,46 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 	 * @return the mmCIF-formatted string
 	 */
 	public String toMMCIF() {
-		StringBuilder sb = new StringBuilder();
+		String molecId1 = getMoleculeIds().getFirst();
+		String molecId2 = getMoleculeIds().getSecond();
 
-		// TODO impl
-//		String molecId1 = getMoleculeIds().getFirst();
-//		String molecId2 = getMoleculeIds().getSecond();
-//
-//		if (isSymRelated()) {
-//			// if both chains are named equally we want to still named them differently in the output mmcif file
-//			// so that molecular viewers can handle properly the 2 chains as separate entities
-//			molecId2 = molecId2 + "_" +getTransforms().getSecond().getTransformId();
-//		}
-//
-//		sb.append(SimpleMMcifParser.MMCIF_TOP_HEADER).append("BioJava_interface_").append(getId()).append(System.getProperty("line.separator"));
-//
-//		sb.append(FileConvert.getAtomSiteHeader());
-//
-//		// we reassign atom ids if sym related (otherwise atom ids would be duplicated and some molecular viewers can't cope with that)
-//		int atomId = 1;
-//		List<AtomSite> atomSites = new ArrayList<>();
-//		for (Atom atom:this.molecules.getFirst()) {
-//			if (isSymRelated()) {
-//				atomSites.add(MMCIFFileTools.convertAtomToAtomSite(atom, 1, molecId1, molecId1, atomId));
-//			} else {
-//				atomSites.add(MMCIFFileTools.convertAtomToAtomSite(atom, 1, molecId1, molecId1));
-//			}
-//			atomId++;
-//		}
-//		for (Atom atom:this.molecules.getSecond()) {
-//			if (isSymRelated()) {
-//				atomSites.add(MMCIFFileTools.convertAtomToAtomSite(atom, 1, molecId2, molecId2, atomId));
-//			} else {
-//				atomSites.add(MMCIFFileTools.convertAtomToAtomSite(atom, 1, molecId2, molecId2));
-//			}
-//			atomId++;
-//		}
-//
-//		sb.append(MMCIFFileTools.toMMCIF(atomSites,AtomSite.class));
+		if (isSymRelated()) {
+			// if both chains are named equally we want to still named them differently in the output mmcif file
+			// so that molecular viewers can handle properly the 2 chains as separate entities
+			molecId2 = molecId2 + "_" + getTransforms().getSecond().getTransformId();
+		}
 
-		return sb.toString();
+		MmCifBlockBuilder mmCifBlockBuilder = CifBuilder.enterFile(StandardSchemata.MMCIF)
+				.enterBlock("BioJava_interface_" + getId());
+
+		// we reassign atom ids if sym related (otherwise atom ids would be duplicated and some molecular viewers can't cope with that)
+		int atomId = 1;
+		List<AbstractCifFileSupplier.WrappedAtom> wrappedAtoms = new ArrayList<>();
+		for (Atom atom : this.molecules.getFirst()) {
+			if (isSymRelated()) {
+				wrappedAtoms.add(new AbstractCifFileSupplier.WrappedAtom(1, molecId1, molecId1, atom, atomId));
+			} else {
+				wrappedAtoms.add(new AbstractCifFileSupplier.WrappedAtom(1, molecId1, molecId1, atom, atom.getPDBserial()));
+			}
+			atomId++;
+		}
+		for (Atom atom : this.molecules.getSecond()) {
+			if (isSymRelated()) {
+				wrappedAtoms.add(new AbstractCifFileSupplier.WrappedAtom(1, molecId2, molecId2, atom, atomId));
+			} else {
+				wrappedAtoms.add(new AbstractCifFileSupplier.WrappedAtom(1, molecId2, molecId2, atom, atom.getPDBserial()));
+			}
+			atomId++;
+		}
+
+		Category atomSite = wrappedAtoms.stream().collect(AbstractCifFileSupplier.toAtomSite());
+		mmCifBlockBuilder.addCategory(atomSite);
+
+		try {
+			return new String(CifIO.writeText(mmCifBlockBuilder.leaveBlock().leaveFile()));
+		} catch (IOException e) {
+			throw new UncheckedIOException(e);
+		}
 	}
 
 	@Override

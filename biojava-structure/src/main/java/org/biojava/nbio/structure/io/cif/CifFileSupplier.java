@@ -2,8 +2,6 @@ package org.biojava.nbio.structure.io.cif;
 
 import org.rcsb.cif.model.CifFile;
 
-import java.util.function.Supplier;
-
 /**
  * Create a CifFile instance for a given container of structure data.
  * @param <S> the container type used as source

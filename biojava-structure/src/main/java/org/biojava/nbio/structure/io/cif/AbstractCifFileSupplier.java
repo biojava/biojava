@@ -107,7 +107,7 @@ public abstract class AbstractCifFileSupplier<S> implements CifFileSupplier<S> {
                     continue;
                 }
 
-                uniqueAtoms.put(atom.getPDBserial(), new WrappedAtom(chain, model, chainName, chainId, atom, atom.getPDBserial()));
+                uniqueAtoms.put(atom.getPDBserial(), new WrappedAtom(model, chainName, chainId, atom, atom.getPDBserial()));
             }
 
             if (group.hasAltLoc()) {
@@ -118,7 +118,7 @@ public abstract class AbstractCifFileSupplier<S> implements CifFileSupplier<S> {
                             continue;
                         }
 
-                        uniqueAtoms.put(atom.getPDBserial(), new WrappedAtom(chain, model, chainName, chainId, atom, atom.getPDBserial()));
+                        uniqueAtoms.put(atom.getPDBserial(), new WrappedAtom(model, chainName, chainId, atom, atom.getPDBserial()));
                     }
                 }
             }
@@ -127,25 +127,19 @@ public abstract class AbstractCifFileSupplier<S> implements CifFileSupplier<S> {
         }
     }
 
-    static class WrappedAtom {
-        private final Chain chain;
+    public static class WrappedAtom {
         private final int model;
         private final String chainName;
         private final String chainId;
         private final Atom atom;
         private final int atomId;
 
-        WrappedAtom(Chain chain, int model, String chainName, String chainId, Atom atom, int atomId) {
-            this.chain = chain;
+        public WrappedAtom(int model, String chainName, String chainId, Atom atom, int atomId) {
             this.model = model;
             this.chainName = chainName;
             this.chainId = chainId;
             this.atom = atom;
             this.atomId = atomId;
-        }
-
-        Chain getChain() {
-            return chain;
         }
 
         int getModel() {
@@ -169,7 +163,7 @@ public abstract class AbstractCifFileSupplier<S> implements CifFileSupplier<S> {
         }
     }
 
-    private static Collector<WrappedAtom, ?, Category> toAtomSite() {
+    public static Collector<WrappedAtom, ?, Category> toAtomSite() {
         return Collector.of(AtomSiteCollector::new,
                 AtomSiteCollector::accept,
                 AtomSiteCollector::combine,
@@ -255,7 +249,7 @@ public abstract class AbstractCifFileSupplier<S> implements CifFileSupplier<S> {
             labelEntityId.add(entityId);
             labelSeqId.add(seqId);
             String insCode = "";
-            if (group.getResidueNumber().getInsCode() != null ) {
+            if (group.getResidueNumber().getInsCode() != null) {
                 insCode = Character.toString(group.getResidueNumber().getInsCode());
             }
             if (insCode.isEmpty()) {
@@ -276,7 +270,7 @@ public abstract class AbstractCifFileSupplier<S> implements CifFileSupplier<S> {
         }
 
         AtomSiteCollector combine(AtomSiteCollector other) {
-            throw new UnsupportedOperationException("impl by calling addAll for all collection");
+            throw new UnsupportedOperationException("impl by calling addAll for all collections");
         }
 
         Category get() {
