@@ -33,15 +33,15 @@ public class MetalBondConsumerImpl implements MetalBondConsumer {
     public void consume(Category category) {
         StrColumn atomType1 = (StrColumn) category.getColumn("atom_type_1");
         StrColumn atomType2 = (StrColumn) category.getColumn("atom_type_2");
-        FloatColumn lowerLimit = (FloatColumn) category.getColumn("lower_limit");
-        FloatColumn upperLimit = (FloatColumn) category.getColumn("upper_limit");
+        StrColumn lowerLimit = (StrColumn) category.getColumn("lower_limit");
+        StrColumn upperLimit = (StrColumn) category.getColumn("upper_limit");
         for (int i = 0; i < category.getRowCount(); i++) {
             MetalBondDistance d = new MetalBondDistance();
 
             d.setAtomType1(atomType1.get(i));
             d.setAtomType2(atomType2.get(i));
-            d.setLowerLimit((float) lowerLimit.get(i));
-            d.setUpperLimit((float) upperLimit.get(i));
+            d.setLowerLimit(Float.parseFloat(lowerLimit.get(i)));
+            d.setUpperLimit(Float.parseFloat(upperLimit.get(i)));
 
             List<MetalBondDistance> defs = definitions.computeIfAbsent(d.getAtomType1(), k -> new ArrayList<>());
             defs.add(d);
