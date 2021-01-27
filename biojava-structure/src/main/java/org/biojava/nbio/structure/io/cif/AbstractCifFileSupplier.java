@@ -28,7 +28,7 @@ import java.util.stream.Collector;
 
 /**
  * Convert a BioJava object to a CifFile.
- * @author Sebastian Bittrich <sebastian.bittrich@rcsb.org>
+ * @author Sebastian Bittrich
  * @since 5.3.0
  */
 public abstract class AbstractCifFileSupplier<S> implements CifFileSupplier<S> {
@@ -127,6 +127,10 @@ public abstract class AbstractCifFileSupplier<S> implements CifFileSupplier<S> {
         }
     }
 
+    /**
+     * Wrapped atoms represent individual atoms enriched with model- and chain-level information. Also, gives control
+     * over the atomId field. Useful to convert structures (and subsets thereof) to their mmCIF representation.
+     */
     public static class WrappedAtom {
         private final int model;
         private final String chainName;
@@ -134,6 +138,14 @@ public abstract class AbstractCifFileSupplier<S> implements CifFileSupplier<S> {
         private final Atom atom;
         private final int atomId;
 
+        /**
+         * Construct a new atoms.
+         * @param model the model number
+         * @param chainName the label_asym_id
+         * @param chainId the auth_asym_id
+         * @param atom the atom instance itself
+         * @param atomId the label_atom_id
+         */
         public WrappedAtom(int model, String chainName, String chainId, Atom atom, int atomId) {
             this.model = model;
             this.chainName = chainName;
@@ -142,27 +154,31 @@ public abstract class AbstractCifFileSupplier<S> implements CifFileSupplier<S> {
             this.atomId = atomId;
         }
 
-        int getModel() {
+        public int getModel() {
             return model;
         }
 
-        String getChainName() {
+        public String getChainName() {
             return chainName;
         }
 
-        String getChainId() {
+        public String getChainId() {
             return chainId;
         }
 
-        Atom getAtom() {
+        public Atom getAtom() {
             return atom;
         }
 
-        int getAtomId() {
+        public int getAtomId() {
             return atomId;
         }
     }
 
+    /**
+     * Collects {@link WrappedAtom} instances into one {@link org.rcsb.cif.schema.mm.AtomSite}.
+     * @return an atom site record containing all atoms
+     */
     public static Collector<WrappedAtom, ?, Category> toAtomSite() {
         return Collector.of(AtomSiteCollector::new,
                 AtomSiteCollector::accept,

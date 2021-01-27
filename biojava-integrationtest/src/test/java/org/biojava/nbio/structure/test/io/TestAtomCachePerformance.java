@@ -22,7 +22,7 @@ package org.biojava.nbio.structure.test.io;
 
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.StructureFiletype;
+import org.biojava.nbio.structure.io.StructureFiletype;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.LocalPDBDirectory.FetchBehavior;
 import org.junit.BeforeClass;

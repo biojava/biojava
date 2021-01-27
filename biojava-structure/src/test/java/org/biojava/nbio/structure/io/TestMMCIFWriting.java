@@ -22,9 +22,7 @@ package org.biojava.nbio.structure.io;
 
 import static org.junit.Assert.*;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
@@ -40,12 +38,11 @@ import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.ResidueNumber;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.StructureFiletype;
 import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.StructureImpl;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.util.AtomCache;
-import org.biojava.nbio.structure.io.cif.StructureConverter;
+import org.biojava.nbio.structure.io.cif.CifStructureConverter;
 import org.junit.Test;
 
 public class TestMMCIFWriting {
@@ -96,7 +93,7 @@ public class TestMMCIFWriting {
 
 		FileParsingParameters fileParsingParams = new FileParsingParameters();
 		fileParsingParams.setAlignSeqRes(true);
-		Structure readStruct = StructureConverter.fromPath(outputFile.toPath(), params);
+		Structure readStruct = CifStructureConverter.fromPath(outputFile.toPath(), params);
 
 		assertNotNull(readStruct);
 

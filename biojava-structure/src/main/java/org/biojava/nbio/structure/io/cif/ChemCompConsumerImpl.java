@@ -7,6 +7,10 @@ import org.rcsb.cif.schema.mm.ChemCompBond;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Consumes a CCD file to create the {@link ChemicalComponentDictionary}.
+ * @author Sebastian Bittrich
+ */
 public class ChemCompConsumerImpl implements ChemCompConsumer {
     private static final Logger logger = LoggerFactory.getLogger(ChemCompConsumerImpl.class);
     private final ChemicalComponentDictionary dictionary;

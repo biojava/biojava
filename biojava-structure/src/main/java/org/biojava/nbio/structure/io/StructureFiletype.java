@@ -1,15 +1,12 @@
-package org.biojava.nbio.structure;
-
-import org.biojava.nbio.structure.io.BcifFileReader;
-import org.biojava.nbio.structure.io.CifFileReader;
-import org.biojava.nbio.structure.io.MMTFFileReader;
-import org.biojava.nbio.structure.io.PDBFileReader;
+package org.biojava.nbio.structure.io;
 
 import java.util.Collections;
 import java.util.List;
 
 /**
  * An enum of supported file formats.
+ * @author Sebastian Bittrich
+ * @since 6.0.0
  */
 public enum StructureFiletype {
     PDB(new PDBFileReader().getExtensions()),

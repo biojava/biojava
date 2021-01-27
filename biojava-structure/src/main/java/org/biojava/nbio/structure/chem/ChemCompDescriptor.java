@@ -4,7 +4,12 @@ import org.biojava.nbio.structure.io.cif.CifBean;
 
 import java.util.Objects;
 
-public class ChemCompDescriptor implements CifBean<org.rcsb.cif.schema.mm.PdbxChemCompDescriptor> {
+/**
+ * Properties of the chemical component descriptor.
+ * @author Sebastian Bittrich
+ * @since 6.0.0
+ */
+public class ChemCompDescriptor implements CifBean {
     private static final long serialVersionUID = 1078685833800736278L;
     private String compId;
     private String type;

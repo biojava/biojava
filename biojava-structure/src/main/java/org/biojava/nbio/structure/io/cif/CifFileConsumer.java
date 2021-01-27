@@ -2,9 +2,8 @@ package org.biojava.nbio.structure.io.cif;
 
 /**
  * Defines a rather generic interface which allows to populate some data structure with data parsed from a CIF file.
- *
  * @param <S> the type of container an implementing class will return
- * @author Sebastian Bittrich <sebastian.bittrich@rcsb.org>
+ * @author Sebastian Bittrich
  * @since 5.3.0
  */
 public interface CifFileConsumer<S> {

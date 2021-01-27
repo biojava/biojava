@@ -8,8 +8,10 @@ import java.util.Objects;
 
 /**
  * Properties of a chemical component.
+ * @author Sebastian Bittrich
+ * @since 6.0.0
  */
-public class ChemComp implements CifBean<org.rcsb.cif.schema.mm.ChemComp>, Comparable<ChemComp> {
+public class ChemComp implements CifBean, Comparable<ChemComp> {
     private static final long serialVersionUID = -4736341142030215915L;
 
     private String id;

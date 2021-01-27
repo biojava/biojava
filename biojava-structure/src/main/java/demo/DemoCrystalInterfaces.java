@@ -23,7 +23,7 @@ package demo;
 
 import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureFiletype;
+import org.biojava.nbio.structure.io.StructureFiletype;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.contact.*;
 import org.biojava.nbio.structure.io.FileParsingParameters;

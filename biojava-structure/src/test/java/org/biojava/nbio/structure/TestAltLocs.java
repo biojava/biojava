@@ -27,13 +27,12 @@ import org.biojava.nbio.structure.chem.ChemCompGroupFactory;
 import org.biojava.nbio.structure.chem.PolymerType;
 import org.biojava.nbio.structure.chem.ResidueType;
 import org.biojava.nbio.structure.io.FileParsingParameters;
-import org.biojava.nbio.structure.io.cif.StructureConverter;
+import org.biojava.nbio.structure.io.cif.CifStructureConverter;
+import org.biojava.nbio.structure.io.StructureFiletype;
 import org.junit.Test;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -639,7 +638,7 @@ public class TestAltLocs {
 						"ATOM   117 N NH2 A ARG A 1 13 ? 7.812  17.972 17.172 0.50 24.80 ? 102  ARG A NH2 1\n" +
 						"ATOM   118 N NH2 B ARG A 1 13 ? 8.013  18.115 17.888 0.50 26.52 ? 102  ARG A NH2 1\n";
 
-		Structure s = StructureConverter.fromInputStream(new ByteArrayInputStream(mmcifData.getBytes()));
+		Structure s = CifStructureConverter.fromInputStream(new ByteArrayInputStream(mmcifData.getBytes()));
 		Chain c = s.getPolyChains().get(0);
 		assertEquals(1, c.getAtomGroups().size());
 		Group g = c.getAtomGroup(0);
@@ -718,7 +717,7 @@ public class TestAltLocs {
 						"ATOM   216 C CD  A PRO A 1 23 ? 14.980 32.886 23.580 0.50 6.98  ? 112  PRO A CD  1 \n" +
 						"ATOM   217 C CD  B PRO A 1 23 ? 14.558 33.235 23.153 0.50 14.91 ? 112  PRO A CD  1 \n";
 
-		Structure s = StructureConverter.fromInputStream(new ByteArrayInputStream(mmcifData.getBytes()));
+		Structure s = CifStructureConverter.fromInputStream(new ByteArrayInputStream(mmcifData.getBytes()));
 		Chain c = s.getPolyChains().get(0);
 		assertEquals(1, c.getAtomGroups().size());
 
@@ -803,7 +802,7 @@ public class TestAltLocs {
 		FileParsingParameters params = new FileParsingParameters();
 		params.setCreateAtomBonds(true);
 
-		Structure s = StructureConverter.fromInputStream(new ByteArrayInputStream(mmcifData.getBytes()), params);
+		Structure s = CifStructureConverter.fromInputStream(new ByteArrayInputStream(mmcifData.getBytes()), params);
 		Chain c = s.getPolyChains().get(0);
 		assertEquals(1, c.getAtomGroups().size());
 
@@ -949,7 +948,7 @@ public class TestAltLocs {
 		FileParsingParameters params = new FileParsingParameters();
 		params.setCreateAtomBonds(true);
 
-		Structure s = StructureConverter.fromInputStream(new ByteArrayInputStream(mmcifData.getBytes()), params);
+		Structure s = CifStructureConverter.fromInputStream(new ByteArrayInputStream(mmcifData.getBytes()), params);
 		Chain c = s.getPolyChains().get(0);
 		assertEquals(2, c.getAtomGroups().size());
 

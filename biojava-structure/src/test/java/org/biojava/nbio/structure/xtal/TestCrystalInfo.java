@@ -22,6 +22,7 @@ package org.biojava.nbio.structure.xtal;
 
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.util.AtomCache;
+import org.biojava.nbio.structure.io.StructureFiletype;
 import org.junit.Test;
 
 import java.io.IOException;

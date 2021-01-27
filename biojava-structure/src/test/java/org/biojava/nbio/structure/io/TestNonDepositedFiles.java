@@ -22,11 +22,9 @@ package org.biojava.nbio.structure.io;
 
 import static org.junit.Assert.*;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
@@ -36,10 +34,9 @@ import org.biojava.nbio.structure.EntityInfo;
 import org.biojava.nbio.structure.EntityType;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.StructureFiletype;
 import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.align.util.AtomCache;
-import org.biojava.nbio.structure.io.cif.StructureConverter;
+import org.biojava.nbio.structure.io.cif.CifStructureConverter;
 import org.biojava.nbio.structure.xtal.CrystalCell;
 import org.junit.Test;
 
@@ -209,7 +206,7 @@ public class TestNonDepositedFiles {
 
 		FileParsingParameters fileParsingParams = new FileParsingParameters();
 		fileParsingParams.setAlignSeqRes(true);
-		Structure s = StructureConverter.fromInputStream(inStream, fileParsingParams);
+		Structure s = CifStructureConverter.fromInputStream(inStream, fileParsingParams);
 
 		assertNotNull(s);
 
@@ -333,7 +330,7 @@ public class TestNonDepositedFiles {
 		int expectedNumLigands = 1;
 		assertEquals(expectedNumLigands, c1.getAtomGroups().size());
 
-		Structure s2 = StructureConverter.fromInputStream(cifStream, params);
+		Structure s2 = CifStructureConverter.fromInputStream(cifStream, params);
 
 		// The chain B should be present with 1 ligand HEM
 		Chain c2 = s2.getNonPolyChainsByPDB("B").get(0);
@@ -373,7 +370,7 @@ public class TestNonDepositedFiles {
 		// following file is cut-down versions of 4a10
 		InputStream cifStream = new GZIPInputStream(this.getClass().getResourceAsStream("/org/biojava/nbio/structure/io/4a10_short.cif.gz"));
 
-		Structure s2 = StructureConverter.fromInputStream(cifStream);
+		Structure s2 = CifStructureConverter.fromInputStream(cifStream);
 
 
 		assertEquals(2, s2.getChains().size());
@@ -431,7 +428,7 @@ public class TestNonDepositedFiles {
 		URL url = new URL("https://raw.githubusercontent.com/pdbxmmcifwg/carbohydrate-extension/master/examples/models/1B5F-carb.cif");
 		InputStream inStream = url.openStream();
 
-		Structure structure = StructureConverter.fromInputStream(inStream);
+		Structure structure = CifStructureConverter.fromInputStream(inStream);
 
 		assertEquals(7, structure.getEntityInfos().size());
 

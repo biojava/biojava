@@ -40,7 +40,7 @@ import org.biojava.nbio.structure.GroupType;
 import org.biojava.nbio.structure.PDBHeader;
 import org.biojava.nbio.structure.Site;
 import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.io.cif.StructureConverter;
+import org.biojava.nbio.structure.io.cif.CifStructureConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -592,11 +592,20 @@ public class FileConvert {
 	}
 
 
+	/**
+	 * Convert this structure to its CIF representation.
+	 * @return a String representing this structure as CIF
+	 */
 	public String toMMCIF() {
-		return StructureConverter.toText(this.structure);
+		return CifStructureConverter.toText(this.structure);
 	}
 
+	/**
+	 * Convert a chain to its CIF representation.
+	 * @param chain data
+	 * @return a String representing this chain as CIF
+	 */
 	public static String toMMCIF(Chain chain) {
-		return StructureConverter.toText(chain);
+		return CifStructureConverter.toText(chain);
 	}
 }

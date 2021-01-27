@@ -25,6 +25,7 @@ import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.contact.AtomContact;
 import org.biojava.nbio.structure.contact.AtomContactSet;
 import org.biojava.nbio.structure.contact.GroupContactSet;
+import org.biojava.nbio.structure.io.StructureFiletype;
 
 import java.io.IOException;
 

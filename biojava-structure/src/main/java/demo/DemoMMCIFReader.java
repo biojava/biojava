@@ -28,6 +28,7 @@ import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.CifFileReader;
 import org.biojava.nbio.structure.io.StructureProvider;
+import org.biojava.nbio.structure.io.StructureFiletype;
 
 import java.util.List;
 

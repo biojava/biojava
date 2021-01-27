@@ -1,12 +1,11 @@
 package org.biojava.nbio.structure.io.cif;
 
-import org.rcsb.cif.model.Category;
-
 import java.io.Serializable;
 
 /**
- * Flag for BioJava beans that actually resemble categories defined by the mmCIF schema.
- * @param <C> the modeled ciftools-java category
+ * Flag for BioJava beans that resemble categories defined by the mmCIF schema.
+ * @author Sebastian Bittrich
+ * @since 6.0.0
  */
-public interface CifBean<C extends Category> extends Serializable {
+public interface CifBean extends Serializable {
 }

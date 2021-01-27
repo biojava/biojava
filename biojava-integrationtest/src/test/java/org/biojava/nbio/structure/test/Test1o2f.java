@@ -22,7 +22,7 @@ package org.biojava.nbio.structure.test;
 
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureFiletype;
+import org.biojava.nbio.structure.io.StructureFiletype;
 import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.LocalPDBDirectory.FetchBehavior;

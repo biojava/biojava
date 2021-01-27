@@ -6,7 +6,11 @@ import org.rcsb.cif.model.CifFile;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChainSupplierImpl extends AbstractCifFileSupplier<Chain> {
+/**
+ * Convert a chain to a {@link CifFile}.
+ * @author Sebastian Bittrich
+ */
+public class CifChainSupplierImpl extends AbstractCifFileSupplier<Chain> {
     @Override
     public CifFile get(Chain container) {
         return getInternal(container.getStructure(), collectWrappedAtoms(container));

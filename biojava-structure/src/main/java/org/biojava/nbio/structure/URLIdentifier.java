@@ -20,10 +20,10 @@
  */
 package org.biojava.nbio.structure;
 
-import org.biojava.nbio.structure.StructureFiletype;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.PDBFileReader;
-import org.biojava.nbio.structure.io.cif.StructureConverter;
+import org.biojava.nbio.structure.io.cif.CifStructureConverter;
+import org.biojava.nbio.structure.io.StructureFiletype;
 import org.biojava.nbio.structure.io.mmtf.MmtfActions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +33,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -154,7 +153,7 @@ public class URLIdentifier implements StructureIdentifier {
 
 		switch(format) {
 			case CIF: case BCIF:
-				return StructureConverter.fromURL(url);
+				return CifStructureConverter.fromURL(url);
 			case MMTF:
 				return MmtfActions.readFromInputStream(url.openStream());
 			default: case PDB:

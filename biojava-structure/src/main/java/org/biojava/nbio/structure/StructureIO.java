@@ -21,6 +21,7 @@
 package org.biojava.nbio.structure;
 
 import org.biojava.nbio.structure.align.util.AtomCache;
+import org.biojava.nbio.structure.io.StructureFiletype;
 
 import java.io.IOException;
 import java.util.List;

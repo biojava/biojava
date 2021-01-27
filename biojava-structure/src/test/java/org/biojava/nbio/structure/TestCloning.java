@@ -30,6 +30,7 @@ import java.util.List;
 
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.FileParsingParameters;
+import org.biojava.nbio.structure.io.StructureFiletype;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

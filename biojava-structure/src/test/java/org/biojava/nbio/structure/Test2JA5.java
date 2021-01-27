@@ -26,6 +26,7 @@ import java.io.IOException;
 
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.FileParsingParameters;
+import org.biojava.nbio.structure.io.StructureFiletype;
 import org.junit.Test;
 
 /**

@@ -2,7 +2,12 @@ package org.biojava.nbio.structure.chem;
 
 import org.biojava.nbio.structure.io.cif.CifBean;
 
-public class ChemCompAtom implements CifBean<org.rcsb.cif.schema.mm.ChemCompAtom> {
+/**
+ * Properties of an atom of a chemical component.
+ * @author Sebastian Bittrich
+ * @since 6.0.0
+ */
+public class ChemCompAtom implements CifBean {
     private static final long serialVersionUID = 4070599340294758941L;
     private String compId;
     private String atomId;

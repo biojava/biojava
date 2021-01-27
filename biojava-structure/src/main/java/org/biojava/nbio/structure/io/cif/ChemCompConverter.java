@@ -16,7 +16,7 @@ import java.nio.file.Path;
 
 /**
  * Convert CifFiles to chem comps.
- * @author Sebastian Bittrich <sebastian.bittrich@rcsb.org>
+ * @author Sebastian Bittrich
  * @since 6.0.0
  */
 public class ChemCompConverter {
@@ -44,7 +44,7 @@ public class ChemCompConverter {
      * @param inputStream the InputStream of information - can be gzipped or binary or text data
      * @return the target
      * @throws IOException thrown when reading fails
-     * @see StructureConverter#fromInputStream(InputStream, FileParsingParameters)
+     * @see CifStructureConverter#fromInputStream(InputStream, FileParsingParameters)
      */
     public static ChemicalComponentDictionary fromInputStream(InputStream inputStream) throws IOException {
         return fromCifFile(CifIO.readFromInputStream(inputStream));

@@ -26,7 +26,7 @@ package org.biojava.nbio.structure;
 
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.PDBFileParser;
-import org.biojava.nbio.structure.io.cif.StructureConverter;
+import org.biojava.nbio.structure.io.cif.CifStructureConverter;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -75,7 +75,7 @@ public class Test4hhb {
 
 		params = new FileParsingParameters();
 		params.setAlignSeqRes(true);
-		structure2 = StructureConverter.fromInputStream(inStream, params);
+		structure2 = CifStructureConverter.fromInputStream(inStream, params);
 
 		assertNotNull(structure2);
 

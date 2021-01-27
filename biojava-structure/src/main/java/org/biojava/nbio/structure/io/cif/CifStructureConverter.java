@@ -17,10 +17,10 @@ import java.nio.file.Path;
 
 /**
  * Convert BioJava structures to CifFiles and vice versa.
- * @author Sebastian Bittrich <sebastian.bittrich@rcsb.org>
+ * @author Sebastian Bittrich
  * @since 6.0.0
  */
-public class StructureConverter {
+public class CifStructureConverter {
     /**
      * Read data from a file and convert to Structure without any FileParsingParameters.
      * @param path the source of information - can be gzipped or binary or text data
@@ -66,7 +66,7 @@ public class StructureConverter {
      * @param inputStream the InputStream of information - can be gzipped or binary or text data
      * @return the target
      * @throws IOException thrown when reading fails
-     * @see StructureConverter#fromInputStream(InputStream, FileParsingParameters)
+     * @see CifStructureConverter#fromInputStream(InputStream, FileParsingParameters)
      */
     public static Structure fromInputStream(InputStream inputStream) throws IOException {
         return fromInputStream(inputStream, new FileParsingParameters());
@@ -87,7 +87,7 @@ public class StructureConverter {
      * Convert CifFile to Structure without any FileParsingParameters.
      * @param cifFile the source
      * @return the target
-     * @see StructureConverter#fromCifFile(CifFile, FileParsingParameters)
+     * @see CifStructureConverter#fromCifFile(CifFile, FileParsingParameters)
      */
     public static Structure fromCifFile(CifFile cifFile) {
         return fromCifFile(cifFile, new FileParsingParameters());
@@ -101,7 +101,7 @@ public class StructureConverter {
      */
     public static Structure fromCifFile(CifFile cifFile, FileParsingParameters parameters) {
         // initialize consumer
-        StructureConsumer consumer = new StructureConsumerImpl(parameters);
+        CifStructureConsumer consumer = new CifStructureConsumerImpl(parameters);
 
         // init structure
         consumer.prepare();
@@ -226,7 +226,7 @@ public class StructureConverter {
      * @return the target
      */
     public static CifFile toCifFile(Structure structure) {
-        return new StructureSupplierImpl().get(structure);
+        return new CifStructureSupplierImpl().get(structure);
     }
 
     /**
@@ -235,6 +235,6 @@ public class StructureConverter {
      * @return the target
      */
     public static CifFile toCifFile(Chain chain) {
-        return new ChainSupplierImpl().get(chain);
+        return new CifChainSupplierImpl().get(chain);
     }
 }

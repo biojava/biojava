@@ -23,7 +23,7 @@ package demo;
 
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.io.cif.StructureConverter;
+import org.biojava.nbio.structure.io.cif.CifStructureConverter;
 
 import java.io.File;
 import java.io.IOException;
@@ -43,7 +43,7 @@ public class DemoMmcifToPdbConverter {
 
 	public static void convert(File inFile, File outFile) throws IOException {
 		// now get the protein structure.
-		Structure cifStructure = StructureConverter.fromPath(inFile.toPath());
+		Structure cifStructure = CifStructureConverter.fromPath(inFile.toPath());
 
 		// and write it out as PDB format
 		PrintWriter pr = new PrintWriter(outFile);

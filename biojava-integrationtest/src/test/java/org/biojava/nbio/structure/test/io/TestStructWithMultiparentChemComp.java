@@ -20,7 +20,7 @@
  */
 package org.biojava.nbio.structure.test.io;
 
-import org.biojava.nbio.structure.StructureFiletype;
+import org.biojava.nbio.structure.io.StructureFiletype;
 import org.junit.Test;
 import static org.junit.Assert.*;
 

@@ -2,7 +2,12 @@ package org.biojava.nbio.structure;
 
 import org.biojava.nbio.structure.io.cif.CifBean;
 
-public class DatabasePDBRevRecord implements CifBean<org.rcsb.cif.schema.mm.DatabasePDBRevRecord> {
+/**
+ * Represents revision records for use by {@link PDBHeader}.
+ * @author Sebastian Bittrich
+ * @since 6.0.0
+ */
+public class DatabasePDBRevRecord implements CifBean {
     private static final long serialVersionUID = 1L;
     private String revNum;
     private String type;

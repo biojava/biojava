@@ -12,7 +12,7 @@ import org.biojava.nbio.structure.ResidueNumber;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureImpl;
 import org.biojava.nbio.structure.StructureTools;
-import org.biojava.nbio.structure.io.cif.StructureConverter;
+import org.biojava.nbio.structure.io.cif.CifStructureConverter;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -49,10 +49,10 @@ public class CifFileSupplierIntegrationTest {
 
     private static void testRoundTrip(String pdbId) throws IOException {
         URL url = new URL("https://files.rcsb.org/download/" + pdbId + ".cif");
-        Structure originalStruct = StructureConverter.fromURL(url);
+        Structure originalStruct = CifStructureConverter.fromURL(url);
 
-        InputStream inputStream = new ByteArrayInputStream(StructureConverter.toText(originalStruct).getBytes());
-        Structure readStruct = StructureConverter.fromInputStream(inputStream);
+        InputStream inputStream = new ByteArrayInputStream(CifStructureConverter.toText(originalStruct).getBytes());
+        Structure readStruct = CifStructureConverter.fromInputStream(inputStream);
 
         assertNotNull(readStruct);
         assertEquals(originalStruct.getChains().size(), readStruct.getChains().size());
@@ -113,7 +113,7 @@ public class CifFileSupplierIntegrationTest {
     @Test
     public void testBiounitWriting() throws IOException {
         Structure s = createDummyStructure();
-        String mmcif = StructureConverter.toText(s);
+        String mmcif = CifStructureConverter.toText(s);
         String[] lines = mmcif.split("\n");
         long atomLines = Arrays.stream(lines).filter(l -> l.startsWith("ATOM")).count();
         assertNotNull(mmcif);

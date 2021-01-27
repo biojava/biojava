@@ -17,7 +17,7 @@ import java.util.Map;
 public class MetalBondConverter {
     private static final Logger logger = LoggerFactory.getLogger(MetalBondConverter.class);
     private static final String BONDS_FILE = "org/biojava/nbio/structure/bond_distance_limits.cif.gz";
-    private static Map<String, List<MetalBondDistance>> definitions;
+    private static final Map<String, List<MetalBondDistance>> definitions;
 
     static {
         definitions = init();

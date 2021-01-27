@@ -20,7 +20,7 @@
  */
 package org.biojava.nbio.structure.io.mmtf;
 
-import org.biojava.nbio.structure.StructureFiletype;
+import org.biojava.nbio.structure.io.StructureFiletype;
 import org.biojava.nbio.structure.chem.ChemCompGroupFactory;
 import org.biojava.nbio.structure.chem.DownloadChemCompProvider;
 import org.junit.Test;

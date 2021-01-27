@@ -7,7 +7,11 @@ import org.rcsb.cif.model.CifFile;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StructureSupplierImpl extends AbstractCifFileSupplier<Structure> {
+/**
+ * Convert a structure to a CifFile.
+ * @author Sebastian Bittrich
+ */
+public class CifStructureSupplierImpl extends AbstractCifFileSupplier<Structure> {
     @Override
     public CifFile get(Structure container) {
         return getInternal(container, collectWrappedAtoms(container));

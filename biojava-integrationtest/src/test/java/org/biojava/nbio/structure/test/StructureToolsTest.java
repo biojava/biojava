@@ -29,6 +29,7 @@ import org.biojava.nbio.structure.chem.ChemCompProvider;
 import org.biojava.nbio.structure.chem.DownloadChemCompProvider;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.PDBFileParser;
+import org.biojava.nbio.structure.io.StructureFiletype;
 import org.junit.Before;
 import org.junit.Test;
 

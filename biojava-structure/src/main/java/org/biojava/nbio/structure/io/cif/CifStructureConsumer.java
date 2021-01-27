@@ -47,7 +47,12 @@ import org.rcsb.cif.schema.mm.StructSite;
 import org.rcsb.cif.schema.mm.StructSiteGen;
 import org.rcsb.cif.schema.mm.Symmetry;
 
-public interface StructureConsumer extends CifFileConsumer<Structure> {
+/**
+ * Defines the categories to consume during CIF parsing.
+ * @author Sebastian Bittrich
+ * @since 6.0.0
+ */
+public interface CifStructureConsumer extends CifFileConsumer<Structure> {
     /**
      * Consume a particular Cif category.
      * @param atomSite data

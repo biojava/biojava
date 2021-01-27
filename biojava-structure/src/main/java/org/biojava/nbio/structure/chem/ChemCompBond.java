@@ -4,7 +4,12 @@ import org.biojava.nbio.structure.io.cif.CifBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ChemCompBond implements CifBean<org.rcsb.cif.schema.mm.ChemCompBond> {
+/**
+ * Properties of a bond in a chemical component.
+ * @author Sebastian Bittrich
+ * @since 6.0.0
+ */
+public class ChemCompBond implements CifBean {
     private static final long serialVersionUID = 5905371029161975421L;
     private static final Logger logger = LoggerFactory.getLogger(ChemCompBond.class);
 

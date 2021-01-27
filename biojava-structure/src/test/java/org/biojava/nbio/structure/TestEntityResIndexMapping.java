@@ -31,6 +31,7 @@ import java.util.zip.GZIPInputStream;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.PDBFileParser;
+import org.biojava.nbio.structure.io.StructureFiletype;
 import org.junit.Ignore;
 import org.junit.Test;
 

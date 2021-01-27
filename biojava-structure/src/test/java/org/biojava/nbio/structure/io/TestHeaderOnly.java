@@ -31,12 +31,11 @@ import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.StructureFiletype;
 import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.chem.ChemComp;
 import org.biojava.nbio.structure.io.LocalPDBDirectory.FetchBehavior;
-import org.biojava.nbio.structure.io.cif.StructureConverter;
+import org.biojava.nbio.structure.io.cif.CifStructureConverter;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -170,7 +169,7 @@ public class TestHeaderOnly {
 
 		logger.info("Testing mmCIF parsing speed");
 		start = System.nanoTime();
-		Structure s2 = StructureConverter.fromInputStream(cifStream, params);
+		Structure s2 = CifStructureConverter.fromInputStream(cifStream, params);
 		stop = System.nanoTime();
 		diff = (stop - start) / 1000000000.0;
 		logger.info(String.format("[%s] Elapsed time: %.3f s", s2.getIdentifier(), diff));

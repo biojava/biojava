@@ -100,11 +100,11 @@ import java.util.stream.IntStream;
 /**
  * An implementation of a CifFileConsumer for BioJava. Will process the information provided by a CifFile instance and
  * use it to build up a {@link Structure} object.
- * @author Sebastian Bittrich <sebastian.bittrich@rcsb.org>
+ * @author Sebastian Bittrich
  * @since 6.0.0
  */
-public class StructureConsumerImpl implements StructureConsumer {
-    private static final Logger logger = LoggerFactory.getLogger(StructureConsumerImpl.class);
+public class CifStructureConsumerImpl implements CifStructureConsumer {
+    private static final Logger logger = LoggerFactory.getLogger(CifStructureConsumerImpl.class);
     private static final DateTimeFormatter DATE_FORMAT = new DateTimeFormatterBuilder()
             .parseCaseInsensitive()
             .appendPattern("yyyy-MM-dd")
@@ -141,7 +141,7 @@ public class StructureConsumerImpl implements StructureConsumer {
 
     private final FileParsingParameters params;
 
-    public StructureConsumerImpl(FileParsingParameters params) {
+    public CifStructureConsumerImpl(FileParsingParameters params) {
         this.params = params;
     }
 
