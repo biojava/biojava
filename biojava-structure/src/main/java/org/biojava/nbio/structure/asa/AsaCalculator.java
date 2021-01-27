@@ -491,22 +491,31 @@ public class AsaCalculator {
 		int[] numDistsCalced = null;
 		if (logger.isDebugEnabled()) numDistsCalced = new int[n_neighbor];
 
+		// now we precalculate the squared j radii to compare to in inner loop (which does not depend on each sphere point, but only on i, j
+		double[] sqRadii = new double[n_neighbor];
+		for (int nbArrayInd =0; nbArrayInd<n_neighbor; nbArrayInd++) {
+			int j = neighbor_indices[nbArrayInd];
+			double r = radii[j] + probe;
+			sqRadii[nbArrayInd] = r * r;
+		}
+
 		for (Point3d point: spherePoints){
 			boolean is_accessible = true;
 			Point3d test_point = new Point3d(point.x*radius + atom_i.x,
 					point.y*radius + atom_i.y,
 					point.z*radius + atom_i.z);
 
-			int iter = -1;
-			for (int j : neighbor_indices) {
-				iter++;
+			// note that the neighbors are sorted by distance, achieving optimal performance in this inner loop
+			// See Eisenhaber et al, J Comp Chemistry 1994 (https://onlinelibrary.wiley.com/doi/epdf/10.1002/jcc.540160303)
+
+			for (int nbArrayInd =0; nbArrayInd<n_neighbor; nbArrayInd++) {
+				int j = neighbor_indices[nbArrayInd];
 				Point3d atom_j = atomCoords[j];
-				double r = radii[j] + probe;
 				double diff_sq = test_point.distanceSquared(atom_j);
 
-				if (numDistsCalced!=null) numDistsCalced[iter]++;
+				if (numDistsCalced!=null) numDistsCalced[nbArrayInd]++;
 
-				if (diff_sq < r*r) {
+				if (diff_sq < sqRadii[nbArrayInd]) {
 					is_accessible = false;
 					break;
 				}
