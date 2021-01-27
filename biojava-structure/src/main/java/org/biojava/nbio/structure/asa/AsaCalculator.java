@@ -30,8 +30,7 @@ import javax.vecmath.Point3d;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-
+import java.util.stream.Collectors;
 
 
 /**
@@ -86,8 +85,8 @@ public class AsaCalculator {
 
 	private class AsaCalcWorker implements Runnable {
 
-		private int i;
-		private double[] asas;
+		private final int i;
+		private final double[] asas;
 
 		public AsaCalcWorker(int i, double[] asas) {
 			this.i = i;
@@ -100,12 +99,21 @@ public class AsaCalculator {
 		}
 	}
 
+	private static class IndexAndDistance {
+		private final int index;
+		private final double dist;
+		public IndexAndDistance(int index, double dist) {
+			this.index = index;
+			this.dist = dist;
+		}
+	}
 
-	private Point3d[] atomCoords;
-	private Atom[] atoms;
-	private double[] radii;
-	private double probe;
-	private int nThreads;
+
+	private final Point3d[] atomCoords;
+	private final Atom[] atoms;
+	private final double[] radii;
+	private final double probe;
+	private final int nThreads;
 	private Point3d[] spherePoints;
 	private double cons;
 	private int[][] neighborIndices;
@@ -123,7 +131,6 @@ public class AsaCalculator {
 	 * @param nThreads the number of parallel threads to use for the calculation
 	 * @param hetAtoms if true HET residues are considered, if false they aren't, equivalent to
 	 * NACCESS' -h option
-	 * @see StructureTools#getAllNonHAtomArray
 	 */
 	public AsaCalculator(Structure structure, double probe, int nSpherePoints, int nThreads, boolean hetAtoms) {
 		this.atoms = StructureTools.getAllNonHAtomArray(structure, hetAtoms);
@@ -312,9 +319,7 @@ public class AsaCalculator {
 			//12 threads, time:  0.9s -- x11.4
 
 
-
 			ExecutorService threadPool = Executors.newFixedThreadPool(nThreads);
-
 
 			for (int i=0;i<atomCoords.length;i++) {
 				threadPool.submit(new AsaCalcWorker(i,asas));
@@ -404,14 +409,14 @@ public class AsaCalculator {
 		int initialCapacity = 60;
 
 		List<Contact> contactList = calcContacts();
-		Map<Integer, List<Integer>> indices = new HashMap<>(atomCoords.length);
+		Map<Integer, List<IndexAndDistance>> indices = new HashMap<>(atomCoords.length);
 		for (Contact contact : contactList) {
 			// note contacts are stored 1-way only, with j>i
 			int i = contact.getI();
 			int j = contact.getJ();
 
-			List<Integer> iIndices;
-			List<Integer> jIndices;
+			List<IndexAndDistance> iIndices;
+			List<IndexAndDistance> jIndices;
 			if (!indices.containsKey(i)) {
 				iIndices = new ArrayList<>(initialCapacity);
 				indices.put(i, iIndices);
@@ -428,17 +433,21 @@ public class AsaCalculator {
 			double radius = radii[i] + probe + probe;
 			double dist = contact.getDistance();
 			if (dist < radius + radii[j]) {
-				iIndices.add(j);
-				jIndices.add(i);
+				iIndices.add(new IndexAndDistance(j, dist));
+				jIndices.add(new IndexAndDistance(i, dist));
 			}
 		}
 
 		// convert map to array for fast access
 		int[][] nbsIndices = new int[atomCoords.length][];
-		for (Map.Entry<Integer, List<Integer>> entry : indices.entrySet()) {
-			List<Integer> list = entry.getValue();
+		for (Map.Entry<Integer, List<IndexAndDistance>> entry : indices.entrySet()) {
+			List<IndexAndDistance> list = entry.getValue();
+			// Sorting by closest to farthest away neighbors achieves faster runtimes when checking for occluded sphere sample points in calcSingleAsa.
+			// This follows the ideas exposed in Eisenhaber et al, J Comp Chemistry 1994 (https://onlinelibrary.wiley.com/doi/epdf/10.1002/jcc.540160303)
+			list = list.stream().sorted(Comparator.comparingDouble(o -> o.dist)).collect(Collectors.toList());
 			int[] indicesArray = new int[list.size()];
-			for (int i=0;i<entry.getValue().size();i++) indicesArray[i] = list.get(i);
+			for (int i=0; i<list.size(); i++) indicesArray[i] = list.get(i).index;
+
 			nbsIndices[entry.getKey()] = indicesArray;
 		}
 
@@ -475,10 +484,12 @@ public class AsaCalculator {
 
 		int n_neighbor = neighborIndices[i].length;
 		int[] neighbor_indices = neighborIndices[i];
-		int j_closest_neighbor = 0;
 		double radius = probe + radii[i];
 
 		int n_accessible_point = 0;
+
+		int[] numDistsCalced = null;
+		if (logger.isDebugEnabled()) numDistsCalced = new int[n_neighbor];
 
 		for (Point3d point: spherePoints){
 			boolean is_accessible = true;
@@ -486,23 +497,16 @@ public class AsaCalculator {
 					point.y*radius + atom_i.y,
 					point.z*radius + atom_i.z);
 
-			int[] cycled_indices = new int[n_neighbor];
-			int arind = 0;
-			for (int ind=j_closest_neighbor;ind<n_neighbor;ind++) {
-				cycled_indices[arind] = ind;
-				arind++;
-			}
-			for (int ind=0;ind<j_closest_neighbor;ind++){
-				cycled_indices[arind] = ind;
-				arind++;
-			}
-
-			for (int j: cycled_indices) {
-				Point3d atom_j = atomCoords[neighbor_indices[j]];
-				double r = radii[neighbor_indices[j]] + probe;
+			int iter = -1;
+			for (int j : neighbor_indices) {
+				iter++;
+				Point3d atom_j = atomCoords[j];
+				double r = radii[j] + probe;
 				double diff_sq = test_point.distanceSquared(atom_j);
+
+				if (numDistsCalced!=null) numDistsCalced[iter]++;
+
 				if (diff_sq < r*r) {
-					j_closest_neighbor = j;
 					is_accessible = false;
 					break;
 				}
@@ -511,6 +515,13 @@ public class AsaCalculator {
 				n_accessible_point++;
 			}
 		}
+
+		if (numDistsCalced!=null) {
+			int sum = 0;
+			for (int j = 0; j < n_neighbor; j++) sum += numDistsCalced[j];
+			logger.debug("Number of sample points distances calculated for neighbors of i={} : average {}, all {}", i, (double) sum / (double) n_neighbor, numDistsCalced);
+		}
+
 		return cons*n_accessible_point*radius*radius;
 	}
 
