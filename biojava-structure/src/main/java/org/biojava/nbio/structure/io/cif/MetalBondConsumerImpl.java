@@ -2,7 +2,6 @@ package org.biojava.nbio.structure.io.cif;
 
 import org.biojava.nbio.structure.chem.MetalBondDistance;
 import org.rcsb.cif.model.Category;
-import org.rcsb.cif.model.FloatColumn;
 import org.rcsb.cif.model.StrColumn;
 
 import java.util.ArrayList;
