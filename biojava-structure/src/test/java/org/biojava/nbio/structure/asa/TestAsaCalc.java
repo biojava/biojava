@@ -32,6 +32,7 @@ import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
 import org.biojava.nbio.structure.io.mmcif.DownloadChemCompProvider;
 import static org.junit.Assert.*;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -56,7 +57,6 @@ public class TestAsaCalc {
 		ChemCompGroupFactory.setChemCompProvider(new DownloadChemCompProvider());
 
 		Structure structure = StructureIO.getStructure("3PIU");
-
 
 		AsaCalculator asaCalc = new AsaCalculator(structure,
 				AsaCalculator.DEFAULT_PROBE_SIZE,
@@ -84,6 +84,34 @@ public class TestAsaCalc {
 
 		assertEquals(17462.0, totAtoms, 1.0);
 
+	}
+
+	@Ignore("This is a performance test to be run manually")
+	@Test
+	public void testMultithreadScaling() throws StructureException, IOException {
+
+		// important: without this the tests can fail when running in maven (but not in IDE)
+		// that's because it depends on the order on how tests were run - JD 2018-03-10
+		ChemCompGroupFactory.setChemCompProvider(new DownloadChemCompProvider());
+
+		Structure structure = StructureIO.getStructure("3hbx");
+		int[] numThreads = {1, 2, 3, 4};
+		long timeSingleThread = 0;
+		for (int numThread : numThreads) {
+			AsaCalculator asaCalc = new AsaCalculator(structure,
+					AsaCalculator.DEFAULT_PROBE_SIZE,
+					100, numThread, false);
+
+			long start = System.currentTimeMillis();
+			asaCalc.calculateAsas();
+			long end = System.currentTimeMillis();
+			long time = end - start;
+			if (numThread == 1) {
+				timeSingleThread = time;
+			}
+			System.out.printf("%6d threads : %6d ms (x%3.1f)\n", numThread, time, (double)timeSingleThread/time);
+		}
+		// nothing to assert
 	}
 
 	@Test

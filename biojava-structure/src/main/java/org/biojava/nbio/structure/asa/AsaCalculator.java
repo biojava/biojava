@@ -285,41 +285,6 @@ public class AsaCalculator {
 
 		} else {
 			logger.debug("Will use {} threads for ASA calculation", nThreads);
-			// NOTE the multithreaded calculation does not scale up well in some systems,
-			// why? I guess some memory/garbage collect problem? I tried increasing Xmx in pc8201 but didn't help
-
-			// Following scaling tests are for 3hbx, calculating ASA of full asym unit (6 chains):
-
-			// SCALING test done in merlinl01 (12 cores, Xeon X5670  @ 2.93GHz, 24GB RAM)
-			//1 threads, time:  8.8s -- x1.0
-			//2 threads, time:  4.4s -- x2.0
-			//3 threads, time:  2.9s -- x3.0
-			//4 threads, time:  2.2s -- x3.9
-			//5 threads, time:  1.8s -- x4.9
-			//6 threads, time:  1.6s -- x5.5
-			//7 threads, time:  1.4s -- x6.5
-			//8 threads, time:  1.3s -- x6.9
-
-			// SCALING test done in pc8201 (4 cores, Core2 Quad Q9550  @ 2.83GHz, 8GB RAM)
-			//1 threads, time: 17.2s -- x1.0
-			//2 threads, time:  9.7s -- x1.8
-			//3 threads, time:  7.7s -- x2.2
-			//4 threads, time:  7.9s -- x2.2
-
-			// SCALING test done in eppic01 (16 cores, Xeon E5-2650 0  @ 2.00GHz, 128GB RAM)
-			//1 threads, time: 10.7s -- x1.0
-			//2 threads, time:  5.6s -- x1.9
-			//3 threads, time:  3.6s -- x3.0
-			//4 threads, time:  2.8s -- x3.9
-			//5 threads, time:  2.3s -- x4.8
-			//6 threads, time:  1.8s -- x6.0
-			//7 threads, time:  1.6s -- x6.8
-			//8 threads, time:  1.3s -- x8.0
-			//9 threads, time:  1.3s -- x8.5
-			//10 threads, time:  1.1s -- x10.0
-			//11 threads, time:  1.0s -- x10.9
-			//12 threads, time:  0.9s -- x11.4
-
 
 			ExecutorService threadPool = Executors.newFixedThreadPool(nThreads);
 
