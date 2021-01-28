@@ -568,7 +568,7 @@ public class AsaCalculator {
 					else if (atomCode.equals("CG")) return TETRAHEDRAL_CARBON_VDW;
 
 				default:
-					logger.info("Unexpected carbon atom "+atomCode+" for aminoacid "+aa+", assigning its standard vdw radius");
+					logger.info("Unexpected carbon atom {} for aminoacid {}, assigning its standard vdw radius", atomCode, aa);
 					return Element.C.getVDWRadius();
 				}
 			}
@@ -576,8 +576,7 @@ public class AsaCalculator {
 			// not any of the expected atoms
 		} else {
 			// non standard aas, (e.g. MSE, LLP) will always have this problem,
-			logger.info("Unexpected atom "+atomCode+" for aminoacid "+aa+ " ("+amino.getPDBName()+"), assigning its standard vdw radius");
-
+			logger.debug("Unexpected atom {} for aminoacid {} ({}), assigning its standard vdw radius", atomCode, aa, amino.getPDBName());
 
 			return atom.getElement().getVDWRadius();
 		}
