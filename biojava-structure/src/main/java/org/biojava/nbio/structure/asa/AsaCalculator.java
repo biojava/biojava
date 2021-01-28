@@ -31,7 +31,6 @@ import javax.vecmath.Vector3d;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.stream.Collectors;
 
 
 /**
@@ -42,6 +41,9 @@ import java.util.stream.Collectors;
  * (now source is available at https://github.com/boscoh/asa).
  * Thanks to Bosco K. Ho for a great piece of code and for his fantastic blog.
  * <p>
+ * A few optimizations come from Eisenhaber et al, J Comp Chemistry 1994
+ * (https://onlinelibrary.wiley.com/doi/epdf/10.1002/jcc.540160303)
+ * <p>
  * See
  * Shrake, A., and J. A. Rupley. "Environment and Exposure to Solvent of Protein Atoms.
  * Lysozyme and Insulin." JMB (1973) 79:351-371.
@@ -49,7 +51,6 @@ import java.util.stream.Collectors;
  * Static Accessibility" JMB (1971) 55:379-400
  *
  * @author Jose Duarte
- *
  */
 public class AsaCalculator {
 
@@ -251,7 +252,7 @@ public class AsaCalculator {
 			}
 		}
 
-		return asas.values().toArray(new GroupAsa[asas.size()]);
+		return asas.values().toArray(new GroupAsa[0]);
 	}
 
 	/**
@@ -442,11 +443,7 @@ public class AsaCalculator {
 		IndexAndDistance[][] nbsIndices = new IndexAndDistance[atomCoords.length][];
 		for (Map.Entry<Integer, List<IndexAndDistance>> entry : indices.entrySet()) {
 			List<IndexAndDistance> list = entry.getValue();
-			// Sorting by closest to farthest away neighbors achieves faster runtimes when checking for occluded sphere sample points in calcSingleAsa.
-			// This follows the ideas exposed in Eisenhaber et al, J Comp Chemistry 1994 (https://onlinelibrary.wiley.com/doi/epdf/10.1002/jcc.540160303)
-			list = list.stream().sorted(Comparator.comparingDouble(o -> o.dist)).collect(Collectors.toList());
 			IndexAndDistance[] indexAndDistances = list.toArray(new IndexAndDistance[0]);
-
 			nbsIndices[entry.getKey()] = indexAndDistances;
 		}
 
@@ -483,6 +480,11 @@ public class AsaCalculator {
 
 		int n_neighbor = neighborIndices[i].length;
 		IndexAndDistance[] neighbor_indices = neighborIndices[i];
+		// Sorting by closest to farthest away neighbors achieves faster runtimes when checking for occluded
+		// sphere sample points below. This follows the ideas exposed in
+		// Eisenhaber et al, J Comp Chemistry 1994 (https://onlinelibrary.wiley.com/doi/epdf/10.1002/jcc.540160303)
+		Arrays.sort(neighbor_indices, Comparator.comparingDouble(o -> o.dist));
+
 		double radius_i = probe + radii[i];
 
 		int n_accessible_point = 0;
@@ -508,11 +510,13 @@ public class AsaCalculator {
 			boolean is_accessible = true;
 
 			// note that the neighbors are sorted by distance, achieving optimal performance in this inner loop
-			// See Eisenhaber et al, J Comp Chemistry 1994 (https://onlinelibrary.wiley.com/doi/epdf/10.1002/jcc.540160303)
+			// See Eisenhaber et al, J Comp Chemistry 1994
 
 			for (int nbArrayInd =0; nbArrayInd<n_neighbor; nbArrayInd++) {
 
-				// see equation 3 in Eisenhaber 1994
+				// see equation 3 in Eisenhaber 1994. This is slightly more efficient than
+				// calculating distances to the actual sphere points on atom_i (which would be obtained with:
+				// Point3d test_point = new Point3d(point.x*radius + atom_i.x,point.y*radius + atom_i.y,point.z*radius + atom_i.z))
 				double dotProd = aj_minus_ais[nbArrayInd].dot(new Vector3d(point));
 
 				if (numDistsCalced!=null) numDistsCalced[nbArrayInd]++;
@@ -529,7 +533,7 @@ public class AsaCalculator {
 
 		if (numDistsCalced!=null) {
 			int sum = 0;
-			for (int nbArrayInd = 0; nbArrayInd < n_neighbor; nbArrayInd++) sum += numDistsCalced[nbArrayInd];
+			for (int numDistCalcedForJ : numDistsCalced) sum += numDistCalcedForJ;
 			logger.debug("Number of sample points distances calculated for neighbors of i={} : average {}, all {}", i, (double) sum / (double) n_neighbor, numDistsCalced);
 		}
 
