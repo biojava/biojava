@@ -27,6 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.vecmath.Point3d;
+import javax.vecmath.Vector3d;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -99,9 +100,9 @@ public class AsaCalculator {
 		}
 	}
 
-	private static class IndexAndDistance {
-		private final int index;
-		private final double dist;
+	public static class IndexAndDistance {
+		public final int index;
+		public final double dist;
 		public IndexAndDistance(int index, double dist) {
 			this.index = index;
 			this.dist = dist;
@@ -116,7 +117,7 @@ public class AsaCalculator {
 	private final int nThreads;
 	private Point3d[] spherePoints;
 	private double cons;
-	private int[][] neighborIndices;
+	private IndexAndDistance[][] neighborIndices;
 
 	private boolean useSpatialHashingForNeighbors;
 
@@ -369,17 +370,17 @@ public class AsaCalculator {
 	 * Returns the 2-dimensional array with neighbor indices for every atom.
 	 * @return 2-dimensional array of size: n_atoms x n_neighbors_per_atom
 	 */
-	int[][] findNeighborIndices() {
+	IndexAndDistance[][] findNeighborIndices() {
 
 		// looking at a typical protein case, number of neighbours are from ~10 to ~50, with an average of ~30
 		int initialCapacity = 60;
 
-		int[][] nbsIndices = new int[atomCoords.length][];
+		IndexAndDistance[][] nbsIndices = new IndexAndDistance[atomCoords.length][];
 
 		for (int k=0; k<atomCoords.length; k++) {
 			double radius = radii[k] + probe + probe;
 
-			List<Integer> thisNbIndices = new ArrayList<>(initialCapacity);
+			List<IndexAndDistance> thisNbIndices = new ArrayList<>(initialCapacity);
 
 			for (int i = 0; i < atomCoords.length; i++) {
 				if (i == k) continue;
@@ -387,12 +388,11 @@ public class AsaCalculator {
 				double dist = atomCoords[i].distance(atomCoords[k]);
 
 				if (dist < radius + radii[i]) {
-					thisNbIndices.add(i);
+					thisNbIndices.add(new IndexAndDistance(i, dist));
 				}
 			}
 
-			int[] indicesArray = new int[thisNbIndices.size()];
-			for (int i=0;i<thisNbIndices.size();i++) indicesArray[i] = thisNbIndices.get(i);
+			IndexAndDistance[] indicesArray = thisNbIndices.toArray(new IndexAndDistance[0]);
 			nbsIndices[k] = indicesArray;
 		}
 		return nbsIndices;
@@ -403,7 +403,7 @@ public class AsaCalculator {
 	 * using spatial hashing to avoid all to all distance calculation.
 	 * @return 2-dimensional array of size: n_atoms x n_neighbors_per_atom
 	 */
-	int[][] findNeighborIndicesSpatialHashing() {
+	IndexAndDistance[][] findNeighborIndicesSpatialHashing() {
 
 		// looking at a typical protein case, number of neighbours are from ~10 to ~50, with an average of ~30
 		int initialCapacity = 60;
@@ -439,22 +439,21 @@ public class AsaCalculator {
 		}
 
 		// convert map to array for fast access
-		int[][] nbsIndices = new int[atomCoords.length][];
+		IndexAndDistance[][] nbsIndices = new IndexAndDistance[atomCoords.length][];
 		for (Map.Entry<Integer, List<IndexAndDistance>> entry : indices.entrySet()) {
 			List<IndexAndDistance> list = entry.getValue();
 			// Sorting by closest to farthest away neighbors achieves faster runtimes when checking for occluded sphere sample points in calcSingleAsa.
 			// This follows the ideas exposed in Eisenhaber et al, J Comp Chemistry 1994 (https://onlinelibrary.wiley.com/doi/epdf/10.1002/jcc.540160303)
 			list = list.stream().sorted(Comparator.comparingDouble(o -> o.dist)).collect(Collectors.toList());
-			int[] indicesArray = new int[list.size()];
-			for (int i=0; i<list.size(); i++) indicesArray[i] = list.get(i).index;
+			IndexAndDistance[] indexAndDistances = list.toArray(new IndexAndDistance[0]);
 
-			nbsIndices[entry.getKey()] = indicesArray;
+			nbsIndices[entry.getKey()] = indexAndDistances;
 		}
 
 		// important: some atoms might have no neighbors at all: we need to initialise to empty arrays
 		for (int i=0; i<nbsIndices.length; i++) {
 			if (nbsIndices[i] == null) {
-				nbsIndices[i] = new int[0];
+				nbsIndices[i] = new IndexAndDistance[0];
 			}
 		}
 
@@ -483,39 +482,42 @@ public class AsaCalculator {
 		Point3d atom_i = atomCoords[i];
 
 		int n_neighbor = neighborIndices[i].length;
-		int[] neighbor_indices = neighborIndices[i];
-		double radius = probe + radii[i];
+		IndexAndDistance[] neighbor_indices = neighborIndices[i];
+		double radius_i = probe + radii[i];
 
 		int n_accessible_point = 0;
 
 		int[] numDistsCalced = null;
 		if (logger.isDebugEnabled()) numDistsCalced = new int[n_neighbor];
 
-		// now we precalculate the squared j radii to compare to in inner loop (which does not depend on each sphere point, but only on i, j
+		// now we precalculate anything depending only on i,j in equation 3 in Eisenhaber 1994
 		double[] sqRadii = new double[n_neighbor];
+		Vector3d[] aj_minus_ais = new Vector3d[n_neighbor];
 		for (int nbArrayInd =0; nbArrayInd<n_neighbor; nbArrayInd++) {
-			int j = neighbor_indices[nbArrayInd];
-			double r = radii[j] + probe;
-			sqRadii[nbArrayInd] = r * r;
+			int j = neighbor_indices[nbArrayInd].index;
+			double dist = neighbor_indices[nbArrayInd].dist;
+			double radius_j = radii[j] + probe;
+			// see equation 3 in Eisenhaber 1994
+			sqRadii[nbArrayInd] = (dist*dist + radius_i*radius_i - radius_j*radius_j)/(2*radius_i);
+			Vector3d aj_minus_ai = new Vector3d(atomCoords[j]);
+			aj_minus_ai.sub(atom_i);
+			aj_minus_ais[nbArrayInd] = aj_minus_ai;
 		}
 
 		for (Point3d point: spherePoints){
 			boolean is_accessible = true;
-			Point3d test_point = new Point3d(point.x*radius + atom_i.x,
-					point.y*radius + atom_i.y,
-					point.z*radius + atom_i.z);
 
 			// note that the neighbors are sorted by distance, achieving optimal performance in this inner loop
 			// See Eisenhaber et al, J Comp Chemistry 1994 (https://onlinelibrary.wiley.com/doi/epdf/10.1002/jcc.540160303)
 
 			for (int nbArrayInd =0; nbArrayInd<n_neighbor; nbArrayInd++) {
-				int j = neighbor_indices[nbArrayInd];
-				Point3d atom_j = atomCoords[j];
-				double diff_sq = test_point.distanceSquared(atom_j);
+
+				// see equation 3 in Eisenhaber 1994
+				double dotProd = aj_minus_ais[nbArrayInd].dot(new Vector3d(point));
 
 				if (numDistsCalced!=null) numDistsCalced[nbArrayInd]++;
 
-				if (diff_sq < sqRadii[nbArrayInd]) {
+				if (dotProd > sqRadii[nbArrayInd]) {
 					is_accessible = false;
 					break;
 				}
@@ -527,11 +529,11 @@ public class AsaCalculator {
 
 		if (numDistsCalced!=null) {
 			int sum = 0;
-			for (int j = 0; j < n_neighbor; j++) sum += numDistsCalced[j];
+			for (int nbArrayInd = 0; nbArrayInd < n_neighbor; nbArrayInd++) sum += numDistsCalced[nbArrayInd];
 			logger.debug("Number of sample points distances calculated for neighbors of i={} : average {}, all {}", i, (double) sum / (double) n_neighbor, numDistsCalced);
 		}
 
-		return cons*n_accessible_point*radius*radius;
+		return cons*n_accessible_point*radius_i*radius_i;
 	}
 
 	/**

@@ -98,19 +98,19 @@ public class TestAsaCalc {
 				AsaCalculator.DEFAULT_PROBE_SIZE,
 				1000, 1, false);
 
-		int[][] allNbsSh = asaCalc.findNeighborIndicesSpatialHashing();
+		AsaCalculator.IndexAndDistance[][] allNbsSh = asaCalc.findNeighborIndicesSpatialHashing();
 
-		int[][] allNbs = asaCalc.findNeighborIndices();
+		AsaCalculator.IndexAndDistance[][] allNbs = asaCalc.findNeighborIndices();
 
 		for (int indexToTest =0; indexToTest < asaCalc.getAtomCoords().length; indexToTest++) {
 			//int indexToTest = 198;
-			int[] nbsSh = allNbsSh[indexToTest];
-			int[] nbs = allNbs[indexToTest];
+			AsaCalculator.IndexAndDistance[] nbsSh = allNbsSh[indexToTest];
+			AsaCalculator.IndexAndDistance[] nbs = allNbs[indexToTest];
 
 			List<Integer> listOfMatchingIndices = new ArrayList<>();
 			for (int i = 0; i < nbsSh.length; i++) {
 				for (int j = 0; j < nbs.length; j++) {
-					if (nbs[j] == nbsSh[i]) {
+					if (nbs[j].index == nbsSh[i].index) {
 						listOfMatchingIndices.add(j);
 						break;
 					}
@@ -201,21 +201,21 @@ public class TestAsaCalc {
 				AsaCalculator.DEFAULT_PROBE_SIZE,
 				1000, 1);
 
-		int[][] allNbsSh = asaCalc.findNeighborIndicesSpatialHashing();
+		AsaCalculator.IndexAndDistance[][] allNbsSh = asaCalc.findNeighborIndicesSpatialHashing();
 
-		int[][] allNbs = asaCalc.findNeighborIndices();
+		AsaCalculator.IndexAndDistance[][] allNbs = asaCalc.findNeighborIndices();
 
 		assertEquals(3, allNbs.length);
 		assertEquals(3, allNbsSh.length);
 
 		for (int indexToTest =0; indexToTest < asaCalc.getAtomCoords().length; indexToTest++) {
-			int[] nbsSh = allNbsSh[indexToTest];
-			int[] nbs = allNbs[indexToTest];
+			AsaCalculator.IndexAndDistance[] nbsSh = allNbsSh[indexToTest];
+			AsaCalculator.IndexAndDistance[] nbs = allNbs[indexToTest];
 
 			List<Integer> listOfMatchingIndices = new ArrayList<>();
 			for (int i = 0; i < nbsSh.length; i++) {
 				for (int j = 0; j < nbs.length; j++) {
-					if (nbs[j] == nbsSh[i]) {
+					if (nbs[j].index == nbsSh[i].index) {
 						listOfMatchingIndices.add(j);
 						break;
 					}
