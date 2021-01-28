@@ -90,7 +90,7 @@ public class AsaCalculator {
 		private final int i;
 		private final double[] asas;
 
-		public AsaCalcWorker(int i, double[] asas) {
+		private AsaCalcWorker(int i, double[] asas) {
 			this.i = i;
 			this.asas = asas;
 		}
@@ -101,10 +101,10 @@ public class AsaCalculator {
 		}
 	}
 
-	public static class IndexAndDistance {
-		public final int index;
-		public final double dist;
-		public IndexAndDistance(int index, double dist) {
+	static class IndexAndDistance {
+		final int index;
+		final double dist;
+		IndexAndDistance(int index, double dist) {
 			this.index = index;
 			this.dist = dist;
 		}
