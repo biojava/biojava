@@ -116,7 +116,7 @@ public class AsaCalculator {
 	private final double[] radii;
 	private final double probe;
 	private final int nThreads;
-	private Point3d[] spherePoints;
+	private Vector3d[] spherePoints;
 	private double cons;
 	private IndexAndDistance[][] neighborIndices;
 
@@ -314,20 +314,20 @@ public class AsaCalculator {
 	}
 
 	/**
-	 * Returns list of 3d coordinates of points on a sphere using the
+	 * Returns list of 3d coordinates of points on a unit sphere using the
 	 * Golden Section Spiral algorithm.
 	 * @param nSpherePoints the number of points to be used in generating the spherical dot-density
-	 * @return
+	 * @return the array of points as Vector3d objects
 	 */
-	private Point3d[] generateSpherePoints(int nSpherePoints) {
-		Point3d[] points = new Point3d[nSpherePoints];
+	private Vector3d[] generateSpherePoints(int nSpherePoints) {
+		Vector3d[] points = new Vector3d[nSpherePoints];
 		double inc = Math.PI * (3.0 - Math.sqrt(5.0));
 		double offset = 2.0 / nSpherePoints;
 		for (int k=0;k<nSpherePoints;k++) {
 			double y = k * offset - 1.0 + (offset / 2.0);
 			double r = Math.sqrt(1.0 - y*y);
 			double phi = k * inc;
-			points[k] = new Point3d(Math.cos(phi)*r, y, Math.sin(phi)*r);
+			points[k] = new Vector3d(Math.cos(phi)*r, y, Math.sin(phi)*r);
 		}
 		return points;
 	}
@@ -448,12 +448,14 @@ public class AsaCalculator {
 		// Sorting by closest to farthest away neighbors achieves faster runtimes when checking for occluded
 		// sphere sample points below. This follows the ideas exposed in
 		// Eisenhaber et al, J Comp Chemistry 1994 (https://onlinelibrary.wiley.com/doi/epdf/10.1002/jcc.540160303)
+		// This is essential for performance. In my tests this brings down the number of occlusion checks in loop below to
+		// an average of n_sphere_points/10 per atom i, producing ~ x4 performance gain overall
 		Arrays.sort(neighbor_indices, Comparator.comparingDouble(o -> o.dist));
 
 		double radius_i = probe + radii[i];
 
 		int n_accessible_point = 0;
-
+		// purely for debugging
 		int[] numDistsCalced = null;
 		if (logger.isDebugEnabled()) numDistsCalced = new int[n_neighbor];
 
@@ -471,7 +473,7 @@ public class AsaCalculator {
 			aj_minus_ais[nbArrayInd] = aj_minus_ai;
 		}
 
-		for (Point3d point: spherePoints){
+		for (Vector3d point: spherePoints){
 			boolean is_accessible = true;
 
 			// note that the neighbors are sorted by distance, achieving optimal performance in this inner loop
@@ -482,7 +484,7 @@ public class AsaCalculator {
 				// see equation 3 in Eisenhaber 1994. This is slightly more efficient than
 				// calculating distances to the actual sphere points on atom_i (which would be obtained with:
 				// Point3d test_point = new Point3d(point.x*radius + atom_i.x,point.y*radius + atom_i.y,point.z*radius + atom_i.z))
-				double dotProd = aj_minus_ais[nbArrayInd].dot(new Vector3d(point));
+				double dotProd = aj_minus_ais[nbArrayInd].dot(point);
 
 				if (numDistsCalced!=null) numDistsCalced[nbArrayInd]++;
 
@@ -496,6 +498,7 @@ public class AsaCalculator {
 			}
 		}
 
+		// purely for debugging
 		if (numDistsCalced!=null) {
 			int sum = 0;
 			for (int numDistCalcedForJ : numDistsCalced) sum += numDistCalcedForJ;
