@@ -15,6 +15,16 @@ BioJava 6.0.0 (future release)
 * Support for automatically fetching dssp files from RCSB (`org.biojava.nbio.structure.secstruc.DSSPParser.fetch()`)
 * `org.biojava.nbio.structure.PDBStatus`: simplified `Status` enum to 3 states, with OBSOLETE now called REMOVED
 * `org.biojava.nbio.structure.PDBStatus`: removed `getReplacement` and `getReplaces` 
+* Removed `org.biojava.nbio.structure.io.mmcif` package
+* Removed functionality to write isolated CIF headers from `FileConvert`
+
+### Breaking API changes
+* Extracted `StructureIO.StructureFiletype` enum to `org.biojava.nbio.structure.io.StructureFiletype` (supports `PDB`, `MMTF`, `CIF`, and `BCIF`)
+* `org.biojava.nbio.structure.align.util.AtomCache`: removed `setUseMmCif`, `setUseMmtf`, `isUseMmCif`, and `isUseMmtf` - replaced by `setFiletype` and `getFiletype` that controls parsed content via the `StructureFiletype`
+* `org.biojava.nbio.structure.io.MMCIFFileReader` is now effectively `org.biojava.nbio.structure.io.CifFileReader`
+* Moved `org.biojava.nbio.structure.io.mmcif.model.DatabasePdbrevRecord` to `org.biojava.nbio.structure.DatabasePDBRevRecord.java`
+* Moved all chem-comp model classes from `org.biojava.nbio.structure.io.mmcif.chem` to `org.biojava.nbio.structure.chem`
+* Moved all chem-comp parsing classes from `org.biojava.nbio.structure.io.mmcif.chem` to `org.biojava.nbio.structure.io.cif`
 
 BioJava 5.4.0
 =============
