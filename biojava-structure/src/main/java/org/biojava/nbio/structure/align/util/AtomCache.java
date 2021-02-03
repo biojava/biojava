@@ -525,8 +525,7 @@ public class AtomCache {
 	public Structure getStructureForDomain(ScopDomain domain, ScopDatabase scopDatabase, boolean strictLigandHandling)
 			throws IOException, StructureException {
 		String pdbId = domain.getPdbId();
-		// SMB 1/26/21 - forcing loading MMTF here - TODO why doesn't mmCIF/CIF/BCIF parsing work here?
-		Structure fullStructure = getStructureForPdbIdByMmtf(pdbId);
+		Structure fullStructure = getStructureForPdbId(pdbId);
 		Structure structure = domain.reduce(fullStructure);
 
 		// TODO It would be better to move all of this into the reduce method,
@@ -800,33 +799,6 @@ public class AtomCache {
 				logger.debug("loading from pdb");
 				return loadStructureFromPdbByPdbId(pdbId);
 		}
-	}
-
-	/**
-	 * SCOP parsing depends on MMTF, this a dedicated method to allow for that.
-	 * @param pdbId what to load
-	 * @return a Structure object
-	 * @throws IOException
-	 * @throws StructureException
-	 */
-	private Structure getStructureForPdbIdByMmtf(String pdbId) throws IOException, StructureException {
-		if (pdbId == null)
-			return null;
-		if (pdbId.length() != 4) {
-			throw new StructureException("Unrecognized PDB ID: " + pdbId);
-		}
-		while (checkLoading(pdbId)) {
-			// waiting for loading to be finished...
-
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-				logger.error(e.getMessage());
-			}
-		}
-
-		logger.debug("loading from mmtf");
-		return loadStructureFromMmtfByPdbId(pdbId);
 	}
 
 	/**

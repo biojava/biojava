@@ -178,13 +178,12 @@ public class AtomCacheTest {
 		int expectedLengthA = 135;
 		assertEquals(expectedLengthA, a.getAtomGroups().size());
 
+		assertEquals(2, structure.getNonPolyChains().size());
 
-		assertTrue(structure.hasNonPolyChain("G"));
-		assertTrue(structure.hasNonPolyChain("H"));
-
-		Chain copper  = structure.getNonPolyChain("I");
-		assertEquals(1,copper.getAtomGroups().size());
-
+		Chain copperM  = structure.getNonPolyChain("M");
+		assertEquals(1, copperM.getAtomGroups().size());
+		Chain copperN  = structure.getNonPolyChain("N");
+		assertEquals(1, copperN.getAtomGroups().size());
 	}
 
 	@Test
