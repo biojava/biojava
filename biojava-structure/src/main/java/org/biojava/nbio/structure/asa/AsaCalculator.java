@@ -27,11 +27,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.vecmath.Point3d;
+import javax.vecmath.Vector3d;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-
 
 
 /**
@@ -42,6 +41,9 @@ import java.util.concurrent.Executors;
  * (now source is available at https://github.com/boscoh/asa).
  * Thanks to Bosco K. Ho for a great piece of code and for his fantastic blog.
  * <p>
+ * A few optimizations come from Eisenhaber et al, J Comp Chemistry 1994
+ * (https://onlinelibrary.wiley.com/doi/epdf/10.1002/jcc.540160303)
+ * <p>
  * See
  * Shrake, A., and J. A. Rupley. "Environment and Exposure to Solvent of Protein Atoms.
  * Lysozyme and Insulin." JMB (1973) 79:351-371.
@@ -49,7 +51,6 @@ import java.util.concurrent.Executors;
  * Static Accessibility" JMB (1971) 55:379-400
  *
  * @author Jose Duarte
- *
  */
 public class AsaCalculator {
 
@@ -86,10 +87,10 @@ public class AsaCalculator {
 
 	private class AsaCalcWorker implements Runnable {
 
-		private int i;
-		private double[] asas;
+		private final int i;
+		private final double[] asas;
 
-		public AsaCalcWorker(int i, double[] asas) {
+		private AsaCalcWorker(int i, double[] asas) {
 			this.i = i;
 			this.asas = asas;
 		}
@@ -100,15 +101,24 @@ public class AsaCalculator {
 		}
 	}
 
+	static class IndexAndDistance {
+		final int index;
+		final double dist;
+		IndexAndDistance(int index, double dist) {
+			this.index = index;
+			this.dist = dist;
+		}
+	}
 
-	private Point3d[] atomCoords;
-	private Atom[] atoms;
-	private double[] radii;
-	private double probe;
-	private int nThreads;
-	private Point3d[] spherePoints;
+
+	private final Point3d[] atomCoords;
+	private final Atom[] atoms;
+	private final double[] radii;
+	private final double probe;
+	private final int nThreads;
+	private Vector3d[] spherePoints;
 	private double cons;
-	private int[][] neighborIndices;
+	private IndexAndDistance[][] neighborIndices;
 
 	private boolean useSpatialHashingForNeighbors;
 
@@ -123,7 +133,6 @@ public class AsaCalculator {
 	 * @param nThreads the number of parallel threads to use for the calculation
 	 * @param hetAtoms if true HET residues are considered, if false they aren't, equivalent to
 	 * NACCESS' -h option
-	 * @see StructureTools#getAllNonHAtomArray
 	 */
 	public AsaCalculator(Structure structure, double probe, int nSpherePoints, int nThreads, boolean hetAtoms) {
 		this.atoms = StructureTools.getAllNonHAtomArray(structure, hetAtoms);
@@ -243,7 +252,7 @@ public class AsaCalculator {
 			}
 		}
 
-		return asas.values().toArray(new GroupAsa[asas.size()]);
+		return asas.values().toArray(new GroupAsa[0]);
 	}
 
 	/**
@@ -276,45 +285,8 @@ public class AsaCalculator {
 
 		} else {
 			logger.debug("Will use {} threads for ASA calculation", nThreads);
-			// NOTE the multithreaded calculation does not scale up well in some systems,
-			// why? I guess some memory/garbage collect problem? I tried increasing Xmx in pc8201 but didn't help
-
-			// Following scaling tests are for 3hbx, calculating ASA of full asym unit (6 chains):
-
-			// SCALING test done in merlinl01 (12 cores, Xeon X5670  @ 2.93GHz, 24GB RAM)
-			//1 threads, time:  8.8s -- x1.0
-			//2 threads, time:  4.4s -- x2.0
-			//3 threads, time:  2.9s -- x3.0
-			//4 threads, time:  2.2s -- x3.9
-			//5 threads, time:  1.8s -- x4.9
-			//6 threads, time:  1.6s -- x5.5
-			//7 threads, time:  1.4s -- x6.5
-			//8 threads, time:  1.3s -- x6.9
-
-			// SCALING test done in pc8201 (4 cores, Core2 Quad Q9550  @ 2.83GHz, 8GB RAM)
-			//1 threads, time: 17.2s -- x1.0
-			//2 threads, time:  9.7s -- x1.8
-			//3 threads, time:  7.7s -- x2.2
-			//4 threads, time:  7.9s -- x2.2
-
-			// SCALING test done in eppic01 (16 cores, Xeon E5-2650 0  @ 2.00GHz, 128GB RAM)
-			//1 threads, time: 10.7s -- x1.0
-			//2 threads, time:  5.6s -- x1.9
-			//3 threads, time:  3.6s -- x3.0
-			//4 threads, time:  2.8s -- x3.9
-			//5 threads, time:  2.3s -- x4.8
-			//6 threads, time:  1.8s -- x6.0
-			//7 threads, time:  1.6s -- x6.8
-			//8 threads, time:  1.3s -- x8.0
-			//9 threads, time:  1.3s -- x8.5
-			//10 threads, time:  1.1s -- x10.0
-			//11 threads, time:  1.0s -- x10.9
-			//12 threads, time:  0.9s -- x11.4
-
-
 
 			ExecutorService threadPool = Executors.newFixedThreadPool(nThreads);
-
 
 			for (int i=0;i<atomCoords.length;i++) {
 				threadPool.submit(new AsaCalcWorker(i,asas));
@@ -342,20 +314,20 @@ public class AsaCalculator {
 	}
 
 	/**
-	 * Returns list of 3d coordinates of points on a sphere using the
+	 * Returns list of 3d coordinates of points on a unit sphere using the
 	 * Golden Section Spiral algorithm.
 	 * @param nSpherePoints the number of points to be used in generating the spherical dot-density
-	 * @return
+	 * @return the array of points as Vector3d objects
 	 */
-	private Point3d[] generateSpherePoints(int nSpherePoints) {
-		Point3d[] points = new Point3d[nSpherePoints];
+	private Vector3d[] generateSpherePoints(int nSpherePoints) {
+		Vector3d[] points = new Vector3d[nSpherePoints];
 		double inc = Math.PI * (3.0 - Math.sqrt(5.0));
 		double offset = 2.0 / nSpherePoints;
 		for (int k=0;k<nSpherePoints;k++) {
 			double y = k * offset - 1.0 + (offset / 2.0);
 			double r = Math.sqrt(1.0 - y*y);
 			double phi = k * inc;
-			points[k] = new Point3d(Math.cos(phi)*r, y, Math.sin(phi)*r);
+			points[k] = new Vector3d(Math.cos(phi)*r, y, Math.sin(phi)*r);
 		}
 		return points;
 	}
@@ -364,17 +336,17 @@ public class AsaCalculator {
 	 * Returns the 2-dimensional array with neighbor indices for every atom.
 	 * @return 2-dimensional array of size: n_atoms x n_neighbors_per_atom
 	 */
-	int[][] findNeighborIndices() {
+	IndexAndDistance[][] findNeighborIndices() {
 
 		// looking at a typical protein case, number of neighbours are from ~10 to ~50, with an average of ~30
 		int initialCapacity = 60;
 
-		int[][] nbsIndices = new int[atomCoords.length][];
+		IndexAndDistance[][] nbsIndices = new IndexAndDistance[atomCoords.length][];
 
 		for (int k=0; k<atomCoords.length; k++) {
 			double radius = radii[k] + probe + probe;
 
-			List<Integer> thisNbIndices = new ArrayList<>(initialCapacity);
+			List<IndexAndDistance> thisNbIndices = new ArrayList<>(initialCapacity);
 
 			for (int i = 0; i < atomCoords.length; i++) {
 				if (i == k) continue;
@@ -382,12 +354,11 @@ public class AsaCalculator {
 				double dist = atomCoords[i].distance(atomCoords[k]);
 
 				if (dist < radius + radii[i]) {
-					thisNbIndices.add(i);
+					thisNbIndices.add(new IndexAndDistance(i, dist));
 				}
 			}
 
-			int[] indicesArray = new int[thisNbIndices.size()];
-			for (int i=0;i<thisNbIndices.size();i++) indicesArray[i] = thisNbIndices.get(i);
+			IndexAndDistance[] indicesArray = thisNbIndices.toArray(new IndexAndDistance[0]);
 			nbsIndices[k] = indicesArray;
 		}
 		return nbsIndices;
@@ -398,20 +369,20 @@ public class AsaCalculator {
 	 * using spatial hashing to avoid all to all distance calculation.
 	 * @return 2-dimensional array of size: n_atoms x n_neighbors_per_atom
 	 */
-	int[][] findNeighborIndicesSpatialHashing() {
+	IndexAndDistance[][] findNeighborIndicesSpatialHashing() {
 
 		// looking at a typical protein case, number of neighbours are from ~10 to ~50, with an average of ~30
 		int initialCapacity = 60;
 
 		List<Contact> contactList = calcContacts();
-		Map<Integer, List<Integer>> indices = new HashMap<>(atomCoords.length);
+		Map<Integer, List<IndexAndDistance>> indices = new HashMap<>(atomCoords.length);
 		for (Contact contact : contactList) {
 			// note contacts are stored 1-way only, with j>i
 			int i = contact.getI();
 			int j = contact.getJ();
 
-			List<Integer> iIndices;
-			List<Integer> jIndices;
+			List<IndexAndDistance> iIndices;
+			List<IndexAndDistance> jIndices;
 			if (!indices.containsKey(i)) {
 				iIndices = new ArrayList<>(initialCapacity);
 				indices.put(i, iIndices);
@@ -428,24 +399,23 @@ public class AsaCalculator {
 			double radius = radii[i] + probe + probe;
 			double dist = contact.getDistance();
 			if (dist < radius + radii[j]) {
-				iIndices.add(j);
-				jIndices.add(i);
+				iIndices.add(new IndexAndDistance(j, dist));
+				jIndices.add(new IndexAndDistance(i, dist));
 			}
 		}
 
 		// convert map to array for fast access
-		int[][] nbsIndices = new int[atomCoords.length][];
-		for (Map.Entry<Integer, List<Integer>> entry : indices.entrySet()) {
-			List<Integer> list = entry.getValue();
-			int[] indicesArray = new int[list.size()];
-			for (int i=0;i<entry.getValue().size();i++) indicesArray[i] = list.get(i);
-			nbsIndices[entry.getKey()] = indicesArray;
+		IndexAndDistance[][] nbsIndices = new IndexAndDistance[atomCoords.length][];
+		for (Map.Entry<Integer, List<IndexAndDistance>> entry : indices.entrySet()) {
+			List<IndexAndDistance> list = entry.getValue();
+			IndexAndDistance[] indexAndDistances = list.toArray(new IndexAndDistance[0]);
+			nbsIndices[entry.getKey()] = indexAndDistances;
 		}
 
 		// important: some atoms might have no neighbors at all: we need to initialise to empty arrays
 		for (int i=0; i<nbsIndices.length; i++) {
 			if (nbsIndices[i] == null) {
-				nbsIndices[i] = new int[0];
+				nbsIndices[i] = new IndexAndDistance[0];
 			}
 		}
 
@@ -474,35 +444,51 @@ public class AsaCalculator {
 		Point3d atom_i = atomCoords[i];
 
 		int n_neighbor = neighborIndices[i].length;
-		int[] neighbor_indices = neighborIndices[i];
-		int j_closest_neighbor = 0;
-		double radius = probe + radii[i];
+		IndexAndDistance[] neighbor_indices = neighborIndices[i];
+		// Sorting by closest to farthest away neighbors achieves faster runtimes when checking for occluded
+		// sphere sample points below. This follows the ideas exposed in
+		// Eisenhaber et al, J Comp Chemistry 1994 (https://onlinelibrary.wiley.com/doi/epdf/10.1002/jcc.540160303)
+		// This is essential for performance. In my tests this brings down the number of occlusion checks in loop below to
+		// an average of n_sphere_points/10 per atom i, producing ~ x4 performance gain overall
+		Arrays.sort(neighbor_indices, Comparator.comparingDouble(o -> o.dist));
+
+		double radius_i = probe + radii[i];
 
 		int n_accessible_point = 0;
+		// purely for debugging
+		int[] numDistsCalced = null;
+		if (logger.isDebugEnabled()) numDistsCalced = new int[n_neighbor];
 
-		for (Point3d point: spherePoints){
+		// now we precalculate anything depending only on i,j in equation 3 in Eisenhaber 1994
+		double[] sqRadii = new double[n_neighbor];
+		Vector3d[] aj_minus_ais = new Vector3d[n_neighbor];
+		for (int nbArrayInd =0; nbArrayInd<n_neighbor; nbArrayInd++) {
+			int j = neighbor_indices[nbArrayInd].index;
+			double dist = neighbor_indices[nbArrayInd].dist;
+			double radius_j = radii[j] + probe;
+			// see equation 3 in Eisenhaber 1994
+			sqRadii[nbArrayInd] = (dist*dist + radius_i*radius_i - radius_j*radius_j)/(2*radius_i);
+			Vector3d aj_minus_ai = new Vector3d(atomCoords[j]);
+			aj_minus_ai.sub(atom_i);
+			aj_minus_ais[nbArrayInd] = aj_minus_ai;
+		}
+
+		for (Vector3d point: spherePoints){
 			boolean is_accessible = true;
-			Point3d test_point = new Point3d(point.x*radius + atom_i.x,
-					point.y*radius + atom_i.y,
-					point.z*radius + atom_i.z);
 
-			int[] cycled_indices = new int[n_neighbor];
-			int arind = 0;
-			for (int ind=j_closest_neighbor;ind<n_neighbor;ind++) {
-				cycled_indices[arind] = ind;
-				arind++;
-			}
-			for (int ind=0;ind<j_closest_neighbor;ind++){
-				cycled_indices[arind] = ind;
-				arind++;
-			}
+			// note that the neighbors are sorted by distance, achieving optimal performance in this inner loop
+			// See Eisenhaber et al, J Comp Chemistry 1994
 
-			for (int j: cycled_indices) {
-				Point3d atom_j = atomCoords[neighbor_indices[j]];
-				double r = radii[neighbor_indices[j]] + probe;
-				double diff_sq = test_point.distanceSquared(atom_j);
-				if (diff_sq < r*r) {
-					j_closest_neighbor = j;
+			for (int nbArrayInd =0; nbArrayInd<n_neighbor; nbArrayInd++) {
+
+				// see equation 3 in Eisenhaber 1994. This is slightly more efficient than
+				// calculating distances to the actual sphere points on atom_i (which would be obtained with:
+				// Point3d test_point = new Point3d(point.x*radius + atom_i.x,point.y*radius + atom_i.y,point.z*radius + atom_i.z))
+				double dotProd = aj_minus_ais[nbArrayInd].dot(point);
+
+				if (numDistsCalced!=null) numDistsCalced[nbArrayInd]++;
+
+				if (dotProd > sqRadii[nbArrayInd]) {
 					is_accessible = false;
 					break;
 				}
@@ -511,7 +497,15 @@ public class AsaCalculator {
 				n_accessible_point++;
 			}
 		}
-		return cons*n_accessible_point*radius*radius;
+
+		// purely for debugging
+		if (numDistsCalced!=null) {
+			int sum = 0;
+			for (int numDistCalcedForJ : numDistsCalced) sum += numDistCalcedForJ;
+			logger.debug("Number of sample points distances calculated for neighbors of i={} : average {}, all {}", i, (double) sum / (double) n_neighbor, numDistsCalced);
+		}
+
+		return cons*n_accessible_point*radius_i*radius_i;
 	}
 
 	/**
@@ -577,7 +571,7 @@ public class AsaCalculator {
 					else if (atomCode.equals("CG")) return TETRAHEDRAL_CARBON_VDW;
 
 				default:
-					logger.info("Unexpected carbon atom "+atomCode+" for aminoacid "+aa+", assigning its standard vdw radius");
+					logger.info("Unexpected carbon atom {} for aminoacid {}, assigning its standard vdw radius", atomCode, aa);
 					return Element.C.getVDWRadius();
 				}
 			}
@@ -585,8 +579,7 @@ public class AsaCalculator {
 			// not any of the expected atoms
 		} else {
 			// non standard aas, (e.g. MSE, LLP) will always have this problem,
-			logger.info("Unexpected atom "+atomCode+" for aminoacid "+aa+ " ("+amino.getPDBName()+"), assigning its standard vdw radius");
-
+			logger.debug("Unexpected atom {} for aminoacid {} ({}), assigning its standard vdw radius", atomCode, aa, amino.getPDBName());
 
 			return atom.getElement().getVDWRadius();
 		}
