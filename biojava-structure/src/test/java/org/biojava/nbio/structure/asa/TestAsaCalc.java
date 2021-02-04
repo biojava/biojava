@@ -32,6 +32,7 @@ import static org.junit.Assert.*;
 
 import org.biojava.nbio.structure.chem.ChemCompGroupFactory;
 import org.biojava.nbio.structure.chem.DownloadChemCompProvider;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -56,7 +57,6 @@ public class TestAsaCalc {
 		ChemCompGroupFactory.setChemCompProvider(new DownloadChemCompProvider());
 
 		Structure structure = StructureIO.getStructure("3PIU");
-
 
 		AsaCalculator asaCalc = new AsaCalculator(structure,
 				AsaCalculator.DEFAULT_PROBE_SIZE,
@@ -86,6 +86,34 @@ public class TestAsaCalc {
 
 	}
 
+	@Ignore("This is a performance test to be run manually")
+	@Test
+	public void testMultithreadScaling() throws StructureException, IOException {
+
+		// important: without this the tests can fail when running in maven (but not in IDE)
+		// that's because it depends on the order on how tests were run - JD 2018-03-10
+		ChemCompGroupFactory.setChemCompProvider(new DownloadChemCompProvider());
+
+		Structure structure = StructureIO.getStructure("3hbx");
+		int[] numThreads = {1, 2, 3, 4};
+		long timeSingleThread = 0;
+		for (int numThread : numThreads) {
+			AsaCalculator asaCalc = new AsaCalculator(structure,
+					AsaCalculator.DEFAULT_PROBE_SIZE,
+					100, numThread, false);
+
+			long start = System.currentTimeMillis();
+			asaCalc.calculateAsas();
+			long end = System.currentTimeMillis();
+			long time = end - start;
+			if (numThread == 1) {
+				timeSingleThread = time;
+			}
+			System.out.printf("%6d threads : %6d ms (x%3.1f)\n", numThread, time, (double)timeSingleThread/time);
+		}
+		// nothing to assert
+	}
+
 	@Test
 	public void testNeighborIndicesFinding() throws StructureException, IOException {
 		// important: without this the tests can fail when running in maven (but not in IDE)
@@ -98,19 +126,19 @@ public class TestAsaCalc {
 				AsaCalculator.DEFAULT_PROBE_SIZE,
 				1000, 1, false);
 
-		int[][] allNbsSh = asaCalc.findNeighborIndicesSpatialHashing();
+		AsaCalculator.IndexAndDistance[][] allNbsSh = asaCalc.findNeighborIndicesSpatialHashing();
 
-		int[][] allNbs = asaCalc.findNeighborIndices();
+		AsaCalculator.IndexAndDistance[][] allNbs = asaCalc.findNeighborIndices();
 
 		for (int indexToTest =0; indexToTest < asaCalc.getAtomCoords().length; indexToTest++) {
 			//int indexToTest = 198;
-			int[] nbsSh = allNbsSh[indexToTest];
-			int[] nbs = allNbs[indexToTest];
+			AsaCalculator.IndexAndDistance[] nbsSh = allNbsSh[indexToTest];
+			AsaCalculator.IndexAndDistance[] nbs = allNbs[indexToTest];
 
 			List<Integer> listOfMatchingIndices = new ArrayList<>();
 			for (int i = 0; i < nbsSh.length; i++) {
 				for (int j = 0; j < nbs.length; j++) {
-					if (nbs[j] == nbsSh[i]) {
+					if (nbs[j].index == nbsSh[i].index) {
 						listOfMatchingIndices.add(j);
 						break;
 					}
@@ -201,21 +229,21 @@ public class TestAsaCalc {
 				AsaCalculator.DEFAULT_PROBE_SIZE,
 				1000, 1);
 
-		int[][] allNbsSh = asaCalc.findNeighborIndicesSpatialHashing();
+		AsaCalculator.IndexAndDistance[][] allNbsSh = asaCalc.findNeighborIndicesSpatialHashing();
 
-		int[][] allNbs = asaCalc.findNeighborIndices();
+		AsaCalculator.IndexAndDistance[][] allNbs = asaCalc.findNeighborIndices();
 
 		assertEquals(3, allNbs.length);
 		assertEquals(3, allNbsSh.length);
 
 		for (int indexToTest =0; indexToTest < asaCalc.getAtomCoords().length; indexToTest++) {
-			int[] nbsSh = allNbsSh[indexToTest];
-			int[] nbs = allNbs[indexToTest];
+			AsaCalculator.IndexAndDistance[] nbsSh = allNbsSh[indexToTest];
+			AsaCalculator.IndexAndDistance[] nbs = allNbs[indexToTest];
 
 			List<Integer> listOfMatchingIndices = new ArrayList<>();
 			for (int i = 0; i < nbsSh.length; i++) {
 				for (int j = 0; j < nbs.length; j++) {
-					if (nbs[j] == nbsSh[i]) {
+					if (nbs[j].index == nbsSh[i].index) {
 						listOfMatchingIndices.add(j);
 						break;
 					}
