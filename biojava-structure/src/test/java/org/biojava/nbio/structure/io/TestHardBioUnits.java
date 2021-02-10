@@ -107,10 +107,6 @@ public class TestHardBioUnits {
 		String pdbId = "4A1I";
 		int biolAssemblyNr = 2;
 
-		AtomCache atomCache = new AtomCache();
-		// TODO there seem to be numerical instabilities when parsing BCIF
-		atomCache.setFiletype(StructureFiletype.CIF);
-		StructureIO.setAtomCache(atomCache);
 		Structure bioAssembly = StructureIO.getBiologicalAssembly(pdbId,biolAssemblyNr);
 
 		if ( bioAssembly == null){

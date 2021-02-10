@@ -111,7 +111,7 @@ public final class SuperPositionQCP extends SuperPositionAbstract {
 
 	private static final Logger logger = LoggerFactory.getLogger(SuperPositionQCP.class);
 
-	private double evec_prec = 1E-6;
+	private double evec_prec = 1E-3;
 	private double eval_prec = 1E-11;
 
 	private Point3d[] x;
