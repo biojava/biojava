@@ -293,7 +293,7 @@ public class ZipChemCompProvider implements ChemCompProvider{
 		*/
 
 		// Copy in each file.
-		try (FileSystem zipfs = FileSystems.newFileSystem(zipFile, null)) {
+		try (FileSystem zipfs = FileSystems.newFileSystem(zipFile, (ClassLoader) null)) {
 			Files.createDirectories(pathWithinArchive);
 			for (File f : files) {
 				if (!f.isDirectory() && f.exists()) {

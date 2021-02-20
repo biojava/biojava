@@ -20,7 +20,37 @@
  */
 package org.biojava.nbio.structure.align.util;
 
-import org.biojava.nbio.structure.*;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeMap;
+import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.vecmath.Matrix4d;
+
+import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.AtomImpl;
+import org.biojava.nbio.structure.Calc;
+import org.biojava.nbio.structure.Chain;
+import org.biojava.nbio.structure.ChainImpl;
+import org.biojava.nbio.structure.Group;
+import org.biojava.nbio.structure.ResidueNumber;
+import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.StructureImpl;
+import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.AFPTwister;
 import org.biojava.nbio.structure.align.ce.CECalculator;
 import org.biojava.nbio.structure.align.fatcat.FatCatFlexible;
@@ -32,15 +62,6 @@ import org.biojava.nbio.structure.geometry.SuperPositions;
 import org.biojava.nbio.structure.jama.Matrix;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.io.Writer;
-import java.util.*;
-import java.util.Map.Entry;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.vecmath.Matrix4d;
 
 /**
  * Methods for analyzing and manipulating AFPChains and for
@@ -989,7 +1010,7 @@ public class AlignmentTools {
 	 */
 	public static <S,T> String toConciseAlignmentString(Map<S,T> alignment, Map<T,S> identity) {
 		// Clone input to prevent changes
-		Map<S,T> alig = new HashMap<S,T>(alignment);
+		Map<S,T> alig = new TreeMap<S,T>(alignment);
 
 		// Generate inverse alignment
 		Map<S,List<S>> inverse = new HashMap<S,List<S>>();
