@@ -145,4 +145,19 @@ public final class Fastq
 	{
 		return new FastqBuilder();
 	}
+
+	/**
+	 * Create and return a new FastqBuilder configured from the
+	 * specified FASTQ formatted sequence.
+	 * The FastqBuilder will not be null.
+	 *
+	 * @since 6.0.0
+	 * @param fastq FASTQ formatted sequence, must not be null
+	 * @return a new FastqBuilder configured from the specified FASTQ
+	 *    formatted sequence
+	 */
+	public static final FastqBuilder builder(final Fastq fastq)
+	{
+		return new FastqBuilder(fastq);
+	}
 }

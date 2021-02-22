@@ -112,6 +112,20 @@ public final class FastqTest {
 	}
 
 	@Test
+	public void testBuilderNullFastq()
+	{
+		try
+		{
+			Fastq.builder(null);
+			Assert.fail("builder(null) expected IllegalArgumentException");
+		}
+		catch (IllegalArgumentException e)
+		{
+			// expected
+		}
+	}
+
+	@Test
 	public void testEquals()
 	{
 		Fastq fastq0 = new Fastq("description", "sequence", "quality_", FastqVariant.FASTQ_SANGER);
