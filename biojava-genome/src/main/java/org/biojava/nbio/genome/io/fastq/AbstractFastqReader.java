@@ -152,7 +152,7 @@ abstract class AbstractFastqReader
 	private static final class Collect implements StreamListener
 	{
 		/** List of FASTQ formatted sequences. */
-		private final List<Fastq> result = Lists.newLinkedList();
+		private final List<Fastq> result = Lists.newArrayList();
 
 		@Override
 		public void fastq(final Fastq fastq)
