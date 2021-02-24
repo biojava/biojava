@@ -20,20 +20,19 @@
  */
 package org.biojava.nbio.structure.geometry;
 
-import static org.junit.Assert.*;
-
-import java.util.Random;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
+import java.util.Random;
 
-import org.biojava.nbio.structure.geometry.SuperPositionQuat;
-import org.biojava.nbio.structure.geometry.SuperPositionQCP;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test the Quaternion-Based Characteristic Polynomial {@link SuperPositionQCP}
@@ -166,4 +165,23 @@ public class TestSuperPositionQCP {
 
 	}
 
+	@Ignore("test for https://github.com/biojava/biojava/issues/914")
+	@Test
+	public void shouldHandleTwoFoldSymmetry() {
+		Matrix4d operator = new Matrix4d(-1, 0, 0, 0,
+				0, 1, 0, 0,
+				0, 0, -1, 0,
+				0, 0, 0, 1);
+
+		// add some jitter - otherwise rotation matrix will contain NaN
+		Point3d[] original = new Point3d[] { new Point3d(0, 0, 0), new Point3d(1.001, 0, 0) };
+		Point3d[] transformed = new Point3d[] { new Point3d(0, 0, 0), new Point3d(-1, 0, 0) };
+
+		SuperPosition sqcp = new SuperPositionQCP(false);
+
+		// operator 2 is a 2-fold, trace should be == -1
+		Matrix4d m = sqcp.superposeAndTransform(original, transformed);
+		assertEquals(-1.0, m.m00 + m.m11 + m.m22, 0.001);
+		assertEquals(0.0, CalcPoint.rmsd(original, transformed), 0.001);
+	}
 }
