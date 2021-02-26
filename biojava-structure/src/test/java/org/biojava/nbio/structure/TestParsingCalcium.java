@@ -25,6 +25,7 @@
 package org.biojava.nbio.structure;
 
 import org.biojava.nbio.structure.align.util.AtomCache;
+import org.biojava.nbio.structure.io.StructureFiletype;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -46,7 +47,7 @@ public class TestParsingCalcium {
 
 		AtomCache cache = new AtomCache();
 		Structure s = cache.getStructure(pdbID);
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 
 		Structure m = cache.getStructure(pdbID);
 

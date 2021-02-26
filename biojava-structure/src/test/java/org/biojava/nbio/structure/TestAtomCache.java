@@ -25,11 +25,12 @@
 package org.biojava.nbio.structure;
 
 import org.biojava.nbio.structure.align.util.AtomCache;
+import org.biojava.nbio.structure.io.CifFileReader;
 import org.biojava.nbio.structure.io.LocalPDBDirectory;
 import org.biojava.nbio.structure.io.LocalPDBDirectory.FetchBehavior;
 import org.biojava.nbio.structure.io.LocalPDBDirectory.ObsoleteBehavior;
-import org.biojava.nbio.structure.io.MMCIFFileReader;
 import org.biojava.nbio.structure.io.PDBFileReader;
+import org.biojava.nbio.structure.io.StructureFiletype;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -55,7 +56,7 @@ public class TestAtomCache {
 		};
 
 		List<LocalPDBDirectory> readers = new ArrayList<LocalPDBDirectory>();
-		readers.add(new MMCIFFileReader(cache.getPath()) );
+		readers.add(new CifFileReader(cache.getPath()) );
 		readers.add(new PDBFileReader(cache.getPath()) );
 		for(LocalPDBDirectory reader : readers) {
 			reader.setFetchBehavior(cache.getFetchBehavior());
@@ -156,7 +157,7 @@ public class TestAtomCache {
 		cache.setObsoleteBehavior(ObsoleteBehavior.THROW_EXCEPTION);
 
 		// OBSOLETE PDB; should throw an exception
-		cache.setUseMmCif(false);
+		cache.setFiletype(StructureFiletype.PDB);
 		cache.getStructure("1HHB");
 	}
 
@@ -168,13 +169,13 @@ public class TestAtomCache {
 		cache.setObsoleteBehavior(ObsoleteBehavior.FETCH_CURRENT);
 
 		// OBSOLETE PDB; should throw an exception
-		cache.setUseMmCif(false);
+		cache.setFiletype(StructureFiletype.PDB);
 		try {
 			cache.getStructure("1CMW");
 			fail("Obsolete structure should throw exception");
 		} catch(IOException e) {}
 
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		try {
 			cache.getStructure("1CMW");
 			fail("Obsolete structure should throw exception");
@@ -188,11 +189,11 @@ public class TestAtomCache {
 		cache.setFetchBehavior(FetchBehavior.FETCH_FILES);
 		cache.setObsoleteBehavior(ObsoleteBehavior.FETCH_CURRENT);
 
-		cache.setUseMmCif(false);
+		cache.setFiletype(StructureFiletype.PDB);
 		Structure s = cache.getStructure("1HHB");
 		assertEquals("Failed to get the current ID for 1HHB.","4HHB",s.getPDBCode());
 
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		s = cache.getStructure("1HHB");
 		assertEquals("Failed to get the current ID for 1HHB.","4HHB",s.getPDBCode());
 	}
@@ -204,15 +205,14 @@ public class TestAtomCache {
 		cache.setObsoleteBehavior(ObsoleteBehavior.FETCH_OBSOLETE);
 
 		Structure s;
-		cache.setUseMmtf(false);
-		cache.setUseMmCif(false);
+		cache.setFiletype(StructureFiletype.PDB);
 		s = cache.getStructure("1CMW");
 		assertEquals("Failed to get OBSOLETE file 1CMW.","1CMW", s.getPDBCode());
 
 		s = cache.getStructure("1HHB");
 		assertEquals("Failed to get OBSOLETE file 1HHB.","1HHB", s.getPDBCode());
 
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		s = cache.getStructure("1CMW");
 		assertEquals("Failed to get OBSOLETE file 1CMW.","1CMW", s.getPDBCode());
 
@@ -221,48 +221,32 @@ public class TestAtomCache {
 
 	}
 
-
 	@Test
 	public void testSettingFileParsingType(){
-
 		AtomCache cache = new AtomCache();
 
 		//test defaults
-
-		// by default we either use mmtf or mmcif, but not both.
-		assertNotEquals(cache.isUseMmtf(), cache.isUseMmCif());
-
 		// first is mmtf, second is mmcif
-		testFlags(cache,true,false);
+		testFlags(cache, false, false, true);
 
 		// now change the values
+		cache.setFiletype(StructureFiletype.CIF);
+		testFlags(cache, false, true, false);
 
-		cache.setUseMmCif(true);
-
-		testFlags(cache,false,true);
-
-		cache.setUseMmtf(true);
-
-		testFlags(cache,true,false);
+		cache.setFiletype(StructureFiletype.MMTF);
+		testFlags(cache, true, false, false);
 
 		// this sets to use PDB!
-		cache.setUseMmCif(false);
+		cache.setFiletype(StructureFiletype.PDB);
+		testFlags(cache, false, false, false);
 
-		testFlags(cache,false,false);
-
-		// back to defaults
-		cache.setUseMmtf(true);
-
-		testFlags(cache,true,false);
-
+		// back to MMTF
+		cache.setFiletype(StructureFiletype.MMTF);
+		testFlags(cache, true, false, false);
 
 		// back to parsing PDB
-		cache.setUseMmtf(false);
-
-		testFlags(cache,false,false);
-
-
-
+		cache.setFiletype(StructureFiletype.PDB);
+		testFlags(cache, false, false, false);
 	}
 
 
@@ -272,15 +256,12 @@ public class TestAtomCache {
 	 * @param useMmTf
 	 * @param useMmCif
 	 */
-	private void testFlags(AtomCache cache ,boolean useMmTf, boolean useMmCif) {
-
-		assertEquals("flag for parsing mmtf is set to " + cache.isUseMmtf() + " but should be " + useMmTf,
-				cache.isUseMmtf(), useMmTf);
-		assertEquals("flag for parsing mmcif is set to " + cache.isUseMmCif() + " but should be set to " + useMmCif,
-				cache.isUseMmCif(), useMmCif);
-
-
-
+	private void testFlags(AtomCache cache ,boolean useMmTf, boolean useMmCif, boolean useBcif) {
+		assertEquals("flag for parsing mmtf is set to " + cache.getFiletype() + " but should be " + useMmTf,
+				cache.getFiletype() == StructureFiletype.MMTF, useMmTf);
+		assertEquals("flag for parsing mmcif is set to " + cache.getFiletype() + " but should be set to " + useMmCif,
+				cache.getFiletype() == StructureFiletype.CIF, useMmCif);
+		assertEquals("flag for parsing bcif is set to " + cache.getFiletype() + " but should be set to " + useBcif,
+				cache.getFiletype() == StructureFiletype.BCIF, useBcif);
 	}
-
 }

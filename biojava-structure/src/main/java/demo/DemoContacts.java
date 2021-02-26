@@ -25,6 +25,7 @@ import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.contact.AtomContact;
 import org.biojava.nbio.structure.contact.AtomContactSet;
 import org.biojava.nbio.structure.contact.GroupContactSet;
+import org.biojava.nbio.structure.io.StructureFiletype;
 
 import java.io.IOException;
 
@@ -42,7 +43,7 @@ public class DemoContacts {
 	private static void demoContacts(String pdbCode) throws IOException, StructureException {
 
 		AtomCache cache = new AtomCache();
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 
 		StructureIO.setAtomCache(cache);
 

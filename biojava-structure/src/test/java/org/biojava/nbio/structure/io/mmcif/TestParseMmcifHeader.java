@@ -31,6 +31,7 @@ import java.util.Locale;
 import org.biojava.nbio.structure.PDBHeader;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.io.StructureFiletype;
 import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.junit.Test;
@@ -51,7 +52,7 @@ public class TestParseMmcifHeader {
 	public void testRfactors() throws IOException, StructureException {
 
 		AtomCache atomCache = new AtomCache();
-		atomCache.setUseMmCif(true);
+		atomCache.setFiletype(StructureFiletype.CIF);
 
 		Structure structure = atomCache.getStructure("4cup");
 

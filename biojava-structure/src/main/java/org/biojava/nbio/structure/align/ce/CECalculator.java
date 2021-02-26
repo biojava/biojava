@@ -1545,9 +1545,9 @@ nBestTrace=nTrace;
 				Atom a2 = ca2[j];
 
 				AminoAcidCompound ac1 =
-					set.getCompoundForString(a1.getGroup().getChemComp().getOne_letter_code());
+					set.getCompoundForString(a1.getGroup().getChemComp().getOneLetterCode());
 				AminoAcidCompound ac2 =
-					set.getCompoundForString(a2.getGroup().getChemComp().getOne_letter_code());
+					set.getCompoundForString(a2.getGroup().getChemComp().getOneLetterCode());
 
 
 				if ( ac1 == null || ac2 == null)

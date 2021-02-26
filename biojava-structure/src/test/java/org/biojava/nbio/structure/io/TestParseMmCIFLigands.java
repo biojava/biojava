@@ -31,9 +31,9 @@ import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.align.util.AtomCache;
-import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
-import org.biojava.nbio.structure.io.mmcif.DownloadChemCompProvider;
-import org.biojava.nbio.structure.io.mmcif.chem.PolymerType;
+import org.biojava.nbio.structure.chem.ChemCompGroupFactory;
+import org.biojava.nbio.structure.chem.DownloadChemCompProvider;
+import org.biojava.nbio.structure.chem.PolymerType;
 import org.junit.Test;
 
 /**
@@ -50,10 +50,10 @@ public class TestParseMmCIFLigands {
 	public void testLigandConnections()throws IOException, StructureException {
 		AtomCache cache = new AtomCache();
 		// This needs MMCIF
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		StructureIO.setAtomCache(cache);
 
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		ChemCompGroupFactory.setChemCompProvider(new DownloadChemCompProvider());
 
 		FileParsingParameters params = cache.getFileParsingParams();
@@ -93,10 +93,10 @@ public class TestParseMmCIFLigands {
 	public void testMultipleConformations()throws IOException, StructureException {
 		AtomCache cache = new AtomCache();
 		// This needs MMCIF
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		StructureIO.setAtomCache(cache);
 
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		ChemCompGroupFactory.setChemCompProvider(new DownloadChemCompProvider());
 
 		FileParsingParameters params = cache.getFileParsingParams();

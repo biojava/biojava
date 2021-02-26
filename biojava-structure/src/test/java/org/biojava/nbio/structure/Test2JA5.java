@@ -26,6 +26,7 @@ import java.io.IOException;
 
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.FileParsingParameters;
+import org.biojava.nbio.structure.io.StructureFiletype;
 import org.junit.Test;
 
 /**
@@ -41,7 +42,7 @@ public class Test2JA5 {
 		fileParsingParameters.setHeaderOnly(false); // Need header only off to have chains to match.
 
 		AtomCache cache = new AtomCache();
-		cache.setUseMmCif(false);
+		cache.setFiletype(StructureFiletype.PDB);
 		cache.setFileParsingParams(fileParsingParameters);
 
 		StructureIO.setAtomCache(cache);
@@ -70,7 +71,7 @@ public class Test2JA5 {
 		fileParsingParameters.setHeaderOnly(true);
 
 		AtomCache cache = new AtomCache();
-		cache.setUseMmCif(false);
+		cache.setFiletype(StructureFiletype.PDB);
 		cache.setFileParsingParams(fileParsingParameters);
 
 		StructureIO.setAtomCache(cache);

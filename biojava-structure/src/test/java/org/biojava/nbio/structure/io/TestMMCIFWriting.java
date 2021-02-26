@@ -22,9 +22,7 @@ package org.biojava.nbio.structure.io;
 
 import static org.junit.Assert.*;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
@@ -44,12 +42,7 @@ import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.StructureImpl;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.util.AtomCache;
-import org.biojava.nbio.structure.io.mmcif.MMCIFFileTools;
-import org.biojava.nbio.structure.io.mmcif.MMcifParser;
-import org.biojava.nbio.structure.io.mmcif.SimpleMMcifConsumer;
-import org.biojava.nbio.structure.io.mmcif.SimpleMMcifParser;
-import org.biojava.nbio.structure.io.mmcif.model.CIFLabel;
-import org.biojava.nbio.structure.io.mmcif.model.IgnoreField;
+import org.biojava.nbio.structure.io.cif.CifStructureConverter;
 import org.junit.Test;
 
 public class TestMMCIFWriting {
@@ -77,52 +70,12 @@ public class TestMMCIFWriting {
 		testRoundTrip("1A2C");
 	}
 
-	private static class DemoBean {
-		@IgnoreField
-		String not_a_field;
-
-		@SuppressWarnings("unused")//used by reflection
-		String default_field;
-
-		@CIFLabel(label="custom_label")
-		String custom_field;
-
-		public void setNot_a_field(String not_a_field) {
-			this.not_a_field = not_a_field;
-		}
-		public void setDefault_field(String default_field) {
-			this.default_field = default_field;
-		}
-		public void setCustom_field(String custom_field) {
-			this.custom_field = custom_field;
-		}
-	}
-
-	@Test
-	public void testBeanAnnotations() {
-		DemoBean bean = new DemoBean();
-		bean.setCustom_field("custom_field");
-		bean.setDefault_field(null);
-		bean.setNot_a_field("not_a_field");
-
-
-		// Test (1) should have custom_label (@CIFLabel)
-		//      (2) shouldn't have not_a_field (@IgnoreField)
-		String newline = System.getProperty("line.separator");
-		String mmcif = MMCIFFileTools.toMMCIF("_demo", bean);
-		String expected =
-				  "_demo.default_field   ?" + newline
-				+ "_demo.custom_label    custom_field" + newline
-				+ "#" + newline;
-		assertEquals(expected, mmcif);
-	}
-
 	private static void testRoundTrip(String pdbId) throws IOException, StructureException {
 		AtomCache cache = new AtomCache();
 
 		StructureIO.setAtomCache(cache);
 
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 
 		FileParsingParameters params = new FileParsingParameters();
 		params.setAlignSeqRes(true);
@@ -138,21 +91,9 @@ public class TestMMCIFWriting {
 		fw.write(originalStruct.toMMCIF());
 		fw.close();
 
-
-		MMcifParser parser = new SimpleMMcifParser();
-
-		SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
-
 		FileParsingParameters fileParsingParams = new FileParsingParameters();
 		fileParsingParams.setAlignSeqRes(true);
-
-		consumer.setFileParsingParameters(fileParsingParams);
-
-		parser.addMMcifConsumer(consumer);
-
-		parser.parse(new BufferedReader(new FileReader(outputFile)));
-
-		Structure readStruct = consumer.getStructure();
+		Structure readStruct = CifStructureConverter.fromPath(outputFile.toPath(), params);
 
 		assertNotNull(readStruct);
 

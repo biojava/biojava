@@ -26,14 +26,13 @@ package org.biojava.nbio.structure.test;
 
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.util.AtomCache;
+import org.biojava.nbio.structure.io.CifFileReader;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.PDBFileParser;
-import org.biojava.nbio.structure.io.mmcif.MMcifParser;
-import org.biojava.nbio.structure.io.mmcif.SimpleMMcifConsumer;
-import org.biojava.nbio.structure.io.mmcif.SimpleMMcifParser;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.rcsb.cif.model.CifFile;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -87,17 +86,11 @@ public class Test1a4w {
 		InputStream inStream = this.getClass().getResourceAsStream("/1a4w.cif");
 		Assert.assertNotNull(inStream);
 
-		MMcifParser pdbpars = new SimpleMMcifParser();
-		SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
 		FileParsingParameters params = new FileParsingParameters();
 		params.setAlignSeqRes(true);
-		consumer.setFileParsingParameters(params);
-		pdbpars.addMMcifConsumer(consumer);
-
-		pdbpars.parse(inStream) ;
-		structure2 = consumer.getStructure();
-
-
+		CifFileReader reader = new CifFileReader();
+		reader.setFileParsingParameters(params);
+		structure2 = reader.getStructure(inStream);
 
 		Assert.assertNotNull(structure2);
 

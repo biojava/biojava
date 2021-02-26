@@ -28,8 +28,11 @@ import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.EntityInfo;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.io.StructureFiletype;
 import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.align.util.AtomCache;
+import org.biojava.nbio.structure.chem.ChemCompGroupFactory;
+import org.biojava.nbio.structure.chem.DownloadChemCompProvider;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.junit.Test;
 /**
@@ -44,7 +47,7 @@ public class TestEntityNameAndType {
 
 		// Set up the atom cache to parse on Internal chain id
 		AtomCache cache = new AtomCache();
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		FileParsingParameters params = cache.getFileParsingParams();
 
 		DownloadChemCompProvider cc = new DownloadChemCompProvider();

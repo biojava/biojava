@@ -20,15 +20,12 @@
  */
 package demo;
 
-import org.biojava.nbio.structure.io.mmcif.DownloadChemCompProvider;
+import org.biojava.nbio.structure.chem.DownloadChemCompProvider;
 
 public class ChemCompDistribution {
-
 	public static void main(String[] args){
-
 		DownloadChemCompProvider c = new DownloadChemCompProvider();
 		c.setDownloadAll(true);
 		c.checkDoFirstInstall();
-
 	}
 }

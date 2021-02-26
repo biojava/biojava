@@ -28,6 +28,7 @@ import java.util.List;
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.io.StructureFiletype;
 import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.junit.Test;
@@ -47,7 +48,7 @@ public class TestBioassemblies {
 		AtomCache prevAtomCache = StructureIO.getAtomCache();
 
 		AtomCache cache = new AtomCache();
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		StructureIO.setAtomCache(cache);
 
 		List<Structure> multiModelBioAssemblies = StructureIO.getBiologicalAssemblies("1E17", true);
@@ -79,7 +80,7 @@ public class TestBioassemblies {
 
 		AtomCache prevAtomCache = StructureIO.getAtomCache();
 		AtomCache cache = new AtomCache();
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		StructureIO.setAtomCache(cache);
 
 		List<Structure> multiModelBioAssemblies = StructureIO.getBiologicalAssemblies("4TTX", true);
@@ -124,7 +125,7 @@ public class TestBioassemblies {
 
 		AtomCache prevAtomCache = StructureIO.getAtomCache();
 		AtomCache cache = new AtomCache();
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		StructureIO.setAtomCache(cache);
 
 		Structure flattenedBioAssembly5 = StructureIO.getBiologicalAssembly("1M4X" , 5);
@@ -153,7 +154,7 @@ public class TestBioassemblies {
 
 		AtomCache prevAtomCache = StructureIO.getAtomCache();
 		AtomCache cache = new AtomCache();
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		StructureIO.setAtomCache(cache);
 
 		List<Structure> multiModelBioAssemblies = StructureIO.getBiologicalAssemblies("4OPJ", true);

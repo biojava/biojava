@@ -51,9 +51,9 @@ import org.biojava.nbio.structure.PDBHeader;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureImpl;
 import org.biojava.nbio.structure.StructureTools;
-import org.biojava.nbio.structure.io.mmcif.chem.PolymerType;
-import org.biojava.nbio.structure.io.mmcif.chem.ResidueType;
-import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
+import org.biojava.nbio.structure.chem.ChemComp;
+import org.biojava.nbio.structure.chem.PolymerType;
+import org.biojava.nbio.structure.chem.ResidueType;
 import org.biojava.nbio.structure.quaternary.BioAssemblyInfo;
 import org.biojava.nbio.structure.quaternary.BiologicalAssemblyTransformation;
 import org.biojava.nbio.structure.xtal.CrystalCell;
@@ -70,7 +70,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Anthony Bradley
  * @since 5.0
- * 
+ *
  */
 public class MmtfStructureReader implements StructureAdapterInterface, Serializable {
 
@@ -235,7 +235,7 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 		}
 		atomsInGroup = new ArrayList<>();
 		ChemComp chemComp = new ChemComp();
-		chemComp.setOne_letter_code(String.valueOf(singleLetterCode));
+		chemComp.setOneLetterCode(String.valueOf(singleLetterCode));
 		chemComp.setType(chemCompType.toUpperCase());
 		chemComp.setResidueType(residueType);
 		chemComp.setPolymerType(residueType.polymerType);
@@ -334,14 +334,14 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 	 */
 	@Override
 	public void setGroupBond(int indOne, int indTwo, int bondOrder) {
-		
+
 		// Get the atoms
 		Atom atomOne = atomsInGroup.get(indOne);
 		Atom atomTwo = atomsInGroup.get(indTwo);
-		
+
 		// set the new bond
 		new BondImpl(atomOne, atomTwo, bondOrder);
-		
+
 	}
 
 	/* (non-Javadoc)
@@ -350,12 +350,12 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 	 */
 	@Override
 	public void setInterGroupBond(int indOne, int indTwo, int bondOrder) {
-		
+
 		// Get the atoms
 		Atom atomOne = allAtoms[indOne];
 		Atom atomTwo = allAtoms[indTwo];
-		
-		// set the new bond (this 
+
+		// set the new bond (this
 		new BondImpl(atomOne, atomTwo, bondOrder);
 	}
 

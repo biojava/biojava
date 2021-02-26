@@ -22,6 +22,7 @@ package org.biojava.nbio.structure.xtal;
 
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.util.AtomCache;
+import org.biojava.nbio.structure.io.StructureFiletype;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -45,13 +46,13 @@ public class TestCrystalInfo {
 
 		StructureIO.setAtomCache(cache);
 
-		cache.setUseMmCif(false);
+		cache.setFiletype(StructureFiletype.PDB);
 		Structure s1 = StructureIO.getStructure("1NMR");
 		assertFalse(s1.isCrystallographic());
 		assertTrue(s1.isNmr());
 		assertEquals(s1.getPDBHeader().getExperimentalTechniques().iterator().next(),ExperimentalTechnique.SOLUTION_NMR);
 
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		Structure s2 = StructureIO.getStructure("1NMR");
 		assertFalse(s2.isCrystallographic());
 		assertTrue(s2.isNmr());
@@ -69,14 +70,14 @@ public class TestCrystalInfo {
 
 		StructureIO.setAtomCache(cache);
 
-		cache.setUseMmCif(false);
+		cache.setFiletype(StructureFiletype.PDB);
 		Structure s1 = StructureIO.getStructure("1B8G");
 		assertTrue(s1.isCrystallographic());
 		assertFalse(s1.isNmr());
 		assertEquals(s1.getPDBHeader().getExperimentalTechniques().iterator().next(),ExperimentalTechnique.XRAY_DIFFRACTION);
 
 
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		Structure s2 = StructureIO.getStructure("1B8G");
 		assertTrue(s2.isCrystallographic());
 		assertFalse(s2.isNmr());
@@ -95,7 +96,7 @@ public class TestCrystalInfo {
 
 		StructureIO.setAtomCache(cache);
 
-		cache.setUseMmCif(false);
+		cache.setFiletype(StructureFiletype.PDB);
 		Structure s1 = StructureIO.getStructure("4M7P");
 		assertTrue(s1.isCrystallographic());
 		assertFalse(s1.isNmr());
@@ -103,7 +104,7 @@ public class TestCrystalInfo {
 		assertEquals(s1.getPDBHeader().getExperimentalTechniques().iterator().next(),ExperimentalTechnique.XRAY_DIFFRACTION);
 
 
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		Structure s2 = StructureIO.getStructure("4M7P");
 		assertTrue(s2.isCrystallographic());
 		assertFalse(s2.isNmr());
@@ -123,7 +124,7 @@ public class TestCrystalInfo {
 
 		StructureIO.setAtomCache(cache);
 
-		cache.setUseMmCif(false);
+		cache.setFiletype(StructureFiletype.PDB);
 		Structure s1 = StructureIO.getStructure("2MBQ");
 		assertFalse(s1.isCrystallographic());
 		assertTrue(s1.isNmr());
@@ -131,7 +132,7 @@ public class TestCrystalInfo {
 		assertEquals(s1.getPDBHeader().getExperimentalTechniques().iterator().next(),ExperimentalTechnique.SOLUTION_NMR);
 
 
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		Structure s2 = StructureIO.getStructure("2MBQ");
 		assertFalse(s2.isCrystallographic());
 		assertTrue(s2.isNmr());

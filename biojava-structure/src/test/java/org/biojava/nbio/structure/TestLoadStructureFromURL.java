@@ -23,6 +23,7 @@ package org.biojava.nbio.structure;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
 import org.biojava.nbio.structure.io.PDBFileReader;
+import org.biojava.nbio.structure.io.StructureFiletype;
 import org.junit.Test;
 
 import java.io.File;
@@ -50,8 +51,7 @@ public class TestLoadStructureFromURL {
 			f.mkdir();
 		}
 		AtomCache c = new AtomCache(f.toString(), f.toString());
-		c.setUseMmCif(false);
-		c.setUseMmtf(false);
+		c.setFiletype(StructureFiletype.PDB);
 		// fetch a random small structure
 
 		c.getStructure("1znf");

@@ -33,6 +33,7 @@ import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.contact.StructureInterface;
 import org.biojava.nbio.structure.contact.StructureInterfaceList;
 import org.biojava.nbio.structure.io.FileParsingParameters;
+import org.biojava.nbio.structure.io.StructureFiletype;
 import org.biojava.nbio.structure.xtal.CrystalBuilder;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -50,7 +51,7 @@ public class TestStructureCrossReferences {
 		boolean emptySeqRes = true;
 
 		AtomCache cache = new AtomCache();
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 
 		FileParsingParameters params = new FileParsingParameters();
 		params.setAlignSeqRes(false); // Store empty seqres groups.
@@ -73,7 +74,7 @@ public class TestStructureCrossReferences {
 		boolean emptySeqRes = false;
 
 		AtomCache cache = new AtomCache();
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 
 		FileParsingParameters params = new FileParsingParameters();
 		params.setAlignSeqRes(true);
@@ -97,7 +98,7 @@ public class TestStructureCrossReferences {
 	public void testCrossReferencesPdb() throws IOException, StructureException {
 		boolean emptySeqRes = true;
 		AtomCache cache = new AtomCache();
-		cache.setUseMmCif(false);
+		cache.setFiletype(StructureFiletype.PDB);
 
 		FileParsingParameters params = new FileParsingParameters();
 		params.setAlignSeqRes(false);  // Store empty seqres groups
@@ -119,7 +120,7 @@ public class TestStructureCrossReferences {
 	public void testCrossReferencesPdbAlignSeqRes() throws IOException, StructureException {
 		boolean emptySeqRes = false;
 		AtomCache cache = new AtomCache();
-		cache.setUseMmCif(false);
+		cache.setFiletype(StructureFiletype.PDB);
 
 		FileParsingParameters params = new FileParsingParameters();
 		params.setAlignSeqRes(true);

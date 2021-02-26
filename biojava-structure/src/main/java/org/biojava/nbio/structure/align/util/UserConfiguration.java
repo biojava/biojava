@@ -24,6 +24,7 @@ import org.biojava.nbio.structure.io.LocalPDBDirectory.FetchBehavior;
 import org.biojava.nbio.structure.io.LocalPDBDirectory.ObsoleteBehavior;
 import org.biojava.nbio.core.util.PrettyXMLWriter;
 import org.biojava.nbio.core.util.XMLWriter;
+import org.biojava.nbio.structure.io.StructureFiletype;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,6 +48,7 @@ public class UserConfiguration
 	public static final String PDB_FORMAT   = "PDB";
 	public static final String MMCIF_FORMAT = "mmCif";
 	public static final String MMTF_FORMAT  = "mmtf";
+	public static final String BCIF_FORMAT  = "bcif";
 
 	public static final String TMP_DIR = "java.io.tmpdir";
 
@@ -98,7 +100,7 @@ public class UserConfiguration
 		// note that in initCacheFilePath, we set to the provided one (if readable) or to the same as pdbFilePath
 		cacheFilePath = initCacheFilePath();
 
-		fileFormat = MMTF_FORMAT;
+		fileFormat = BCIF_FORMAT;
 	}
 
 	private String initPdbFilePath() {
@@ -354,9 +356,17 @@ public class UserConfiguration
 		return fileFormat;
 	}
 
-
-
-
-
-
+	public StructureFiletype getStructureFiletype() {
+		switch (fileFormat) {
+			case MMCIF_FORMAT:
+				return StructureFiletype.CIF;
+			case PDB_FORMAT:
+				return StructureFiletype.PDB;
+			case MMTF_FORMAT:
+				return StructureFiletype.MMTF;
+			case BCIF_FORMAT:
+			default:
+				return StructureFiletype.BCIF;
+		}
+	}
 }

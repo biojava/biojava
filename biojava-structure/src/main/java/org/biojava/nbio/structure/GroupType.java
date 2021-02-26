@@ -20,8 +20,8 @@
  */
 package org.biojava.nbio.structure;
 
-import org.biojava.nbio.structure.io.mmcif.chem.PolymerType;
-import org.biojava.nbio.structure.io.mmcif.chem.ResidueType;
+import org.biojava.nbio.structure.chem.PolymerType;
+import org.biojava.nbio.structure.chem.ResidueType;
 
 import java.util.*;
 

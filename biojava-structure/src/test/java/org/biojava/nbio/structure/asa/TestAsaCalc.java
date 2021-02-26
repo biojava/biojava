@@ -28,10 +28,10 @@ import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.StructureTools;
-import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
-import org.biojava.nbio.structure.io.mmcif.DownloadChemCompProvider;
 import static org.junit.Assert.*;
 
+import org.biojava.nbio.structure.chem.ChemCompGroupFactory;
+import org.biojava.nbio.structure.chem.DownloadChemCompProvider;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -144,7 +144,7 @@ public class TestAsaCalc {
 					}
 				}
 			}
-			
+
 //		for (int i = 0; i<nbs.length; i++) {
 //			double dist = asaCalc.getAtomCoords()[i].distance(asaCalc.getAtomCoords()[indexToTest]);
 //			if (listOfMatchingIndices.contains(i)) {

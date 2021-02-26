@@ -64,6 +64,11 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	public static final String PDB_FILE_SERVER_PROPERTY = "PDB.FILE.SERVER";
 
 	/**
+	 * The default server to retrieve BinaryCIF files.
+	 */
+	public static final String DEFAULT_BCIF_FILE_SERVER = "https://models.rcsb.org/";
+
+	/**
 	 * Behaviors for when an obsolete structure is requested.
 	 * @author Spencer Bliven
 	 * @see LocalPDBDirectory#setObsoleteBehavior(ObsoleteBehavior)
@@ -517,8 +522,12 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 
 		String ftp;
 
-		if (getFilename(pdbId).endsWith(".mmtf.gz")){
+		String filename = getFilename(pdbId);
+		if (filename.endsWith(".mmtf.gz")){
 			ftp = CodecUtils.getMmtfEntryUrl(pdbId, true, false);
+		} else if (filename.endsWith(".bcif") || filename.endsWith(".bcif.gz")) {
+			// TODO this should be configurable
+			ftp = DEFAULT_BCIF_FILE_SERVER + filename;
 		} else {
 			ftp = String.format("%s%s/%s/%s",
 			serverName, pathOnServer, pdbId.substring(1,3).toLowerCase(), getFilename(pdbId));

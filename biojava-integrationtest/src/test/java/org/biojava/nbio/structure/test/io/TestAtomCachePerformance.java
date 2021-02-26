@@ -22,6 +22,7 @@ package org.biojava.nbio.structure.test.io;
 
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.io.StructureFiletype;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.LocalPDBDirectory.FetchBehavior;
 import org.junit.BeforeClass;
@@ -94,14 +95,14 @@ public class TestAtomCachePerformance {
 	}
 
 	private Structure getCifStructure(String pdbId) throws IOException, StructureException {
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 
 		return cache.getStructure(pdbId);
 
 	}
 
 	private Structure getPdbStructure(String pdbId) throws IOException, StructureException {
-		cache.setUseMmCif(false);
+		cache.setFiletype(StructureFiletype.PDB);
 
 		return cache.getStructure(pdbId);
 

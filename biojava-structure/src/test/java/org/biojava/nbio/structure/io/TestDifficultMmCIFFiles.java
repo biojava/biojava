@@ -27,11 +27,9 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeNotNull;
 import static org.junit.Assume.assumeTrue;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
@@ -44,9 +42,7 @@ import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.align.util.AtomCache;
-import org.biojava.nbio.structure.io.mmcif.MMcifParser;
-import org.biojava.nbio.structure.io.mmcif.SimpleMMcifConsumer;
-import org.biojava.nbio.structure.io.mmcif.SimpleMMcifParser;
+import org.biojava.nbio.structure.io.cif.CifStructureConverter;
 import org.biojava.nbio.structure.quaternary.BioAssemblyInfo;
 import org.junit.Test;
 
@@ -79,7 +75,7 @@ public class TestDifficultMmCIFFiles {
 		StructureIO.setAtomCache(cache);
 
 
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		Structure sCif = StructureIO.getStructure("2KSA");
 
 		assertNotNull(sCif);
@@ -107,7 +103,7 @@ public class TestDifficultMmCIFFiles {
 
 		StructureIO.setAtomCache(cache);
 
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		Structure sCif = StructureIO.getStructure("2BI6");
 
 		assertNotNull(sCif);
@@ -136,10 +132,10 @@ public class TestDifficultMmCIFFiles {
 		params.setParseBioAssembly(true);
 		StructureIO.setAtomCache(cache);
 
-		cache.setUseMmCif(false);
+		cache.setFiletype(StructureFiletype.PDB);
 		Structure sPdb = StructureIO.getStructure("1GQO");
 
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		Structure sCif = StructureIO.getStructure("1GQO");
 
 		assertNotNull(sCif);
@@ -170,7 +166,7 @@ public class TestDifficultMmCIFFiles {
 	@Test
 	public void testResidueNumbers() throws IOException, StructureException {
 		AtomCache cache = new AtomCache();
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 
 		Structure s = cache.getStructure("2PTC");
 		Chain c = s.getChainByIndex(0);
@@ -193,7 +189,7 @@ public class TestDifficultMmCIFFiles {
 		assumeNotNull(file);
 		assumeTrue(file.exists());
 
-		MMCIFFileReader reader = new MMCIFFileReader();
+		CifFileReader reader = new CifFileReader();
 		Structure s = reader.getStructure(file);
 
 		assertNotNull("Failed to load structure from jar",s);
@@ -220,20 +216,10 @@ public class TestDifficultMmCIFFiles {
 	@Test
 	public void testQuotingCornerCase () throws IOException {
 		InputStream inStream = this.getClass().getResourceAsStream("/org/biojava/nbio/structure/io/difficult_mmcif_quoting.cif");
-		MMcifParser parser = new SimpleMMcifParser();
-
-		SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
 
 		FileParsingParameters fileParsingParams = new FileParsingParameters();
 		fileParsingParams.setAlignSeqRes(true);
-
-		consumer.setFileParsingParameters(fileParsingParams);
-
-		parser.addMMcifConsumer(consumer);
-
-		parser.parse(new BufferedReader(new InputStreamReader(inStream)));
-
-		Structure s = consumer.getStructure();
+		Structure s = CifStructureConverter.fromInputStream(inStream, fileParsingParams);
 
 		assertNotNull(s);
 
@@ -260,7 +246,7 @@ public class TestDifficultMmCIFFiles {
 		StructureIO.setAtomCache(cache);
 
 
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		Structure sCif = StructureIO.getStructure("2KLI");
 
 		assertNotNull(sCif);

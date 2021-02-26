@@ -23,12 +23,12 @@
 package org.biojava.nbio.structure.io;
 
 import org.biojava.nbio.structure.*;
-import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
-import org.biojava.nbio.structure.io.mmcif.ChemCompProvider;
-import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
-import org.biojava.nbio.structure.io.mmcif.model.ChemCompBond;
-import org.biojava.nbio.structure.io.mmcif.model.StructConn;
+import org.biojava.nbio.structure.chem.ChemComp;
+import org.biojava.nbio.structure.chem.ChemCompBond;
+import org.biojava.nbio.structure.chem.ChemCompGroupFactory;
 import org.biojava.nbio.structure.io.util.PDBTemporaryStorageUtils.LinkRecord;
+import org.rcsb.cif.model.ValueKind;
+import org.rcsb.cif.schema.mm.StructConn;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,8 +53,6 @@ import java.util.Set;
  *
  */
 public class BondMaker {
-
-
 	private static final Logger logger = LoggerFactory.getLogger(BondMaker.class);
 
 	/**
@@ -182,8 +180,8 @@ public class BondMaker {
 
 						for (ChemCompBond chemCompBond : aminoChemComp.getBonds()) {
 							// note we don't check distance to make this call not too expensive
-							formBondAltlocAware(group, chemCompBond.getAtom_id_1(),
-									group, chemCompBond.getAtom_id_2(), -1, chemCompBond.getNumericalBondOrder());
+							formBondAltlocAware(group, chemCompBond.getAtomId1(),
+									group, chemCompBond.getAtomId2(), -1, chemCompBond.getNumericalBondOrder());
 						}
 					}
 				}
@@ -366,41 +364,44 @@ public class BondMaker {
 	}
 
 
-	public void formBondsFromStructConn(List<StructConn> structConn) {
-
+	public void formBondsFromStructConn(StructConn conn) {
 		final String symop = "1_555"; // For now - accept bonds within origin asymmetric unit.
-
 		List<Bond> ssbonds = new ArrayList<>();
 
-		for (StructConn conn : structConn) {
-
-			if (!BOND_TYPES_TO_PARSE.contains(conn.getConn_type_id())) continue;
+		for (int i = 0; i < conn.getRowCount(); i++) {
+			if (!BOND_TYPES_TO_PARSE.contains(conn.getConnTypeId().get(i))) continue;
 			String chainId1;
 			String chainId2;
 
-			chainId1 = conn.getPtnr1_label_asym_id();
-			chainId2 = conn.getPtnr2_label_asym_id();
+			chainId1 = conn.getPtnr1LabelAsymId().get(i);
+			chainId2 = conn.getPtnr2LabelAsymId().get(i);
 
 			String insCode1 = "";
-			if (conn.getPdbx_ptnr1_PDB_ins_code() != null &&
-			        !conn.getPdbx_ptnr1_PDB_ins_code().equals("?")) insCode1 = conn.getPdbx_ptnr1_PDB_ins_code();
+			if (conn.getPdbxPtnr1PDBInsCode().getValueKind(i) == ValueKind.PRESENT) {
+				insCode1 = conn.getPdbxPtnr1PDBInsCode().get(i);
+			}
 			String insCode2 = "";
-			if (conn.getPdbx_ptnr2_PDB_ins_code() != null &&
-			        !conn.getPdbx_ptnr2_PDB_ins_code().equals("?")) insCode2 = conn.getPdbx_ptnr2_PDB_ins_code();
+			if (conn.getPdbxPtnr2PDBInsCode().getValueKind(i) == ValueKind.PRESENT) {
+				insCode2 = conn.getPdbxPtnr2PDBInsCode().get(i);
+			}
 
-			String seqId1 = conn.getPtnr1_auth_seq_id();
-			String seqId2 = conn.getPtnr2_auth_seq_id();
-			String resName1 = conn.getPtnr1_label_comp_id();
-			String resName2 = conn.getPtnr2_label_comp_id();
-			String atomName1 = conn.getPtnr1_label_atom_id();
-			String atomName2 = conn.getPtnr2_label_atom_id();
+			String seqId1 = conn.getPtnr1AuthSeqId().getStringData(i);
+			String seqId2 = conn.getPtnr2AuthSeqId().getStringData(i);
+			String resName1 = conn.getPtnr1LabelCompId().get(i);
+			String resName2 = conn.getPtnr2LabelCompId().get(i);
+			String atomName1 = conn.getPtnr1LabelAtomId().get(i);
+			String atomName2 = conn.getPtnr2LabelAtomId().get(i);
 			String altLoc1 = "";
-			if (!conn.getPdbx_ptnr1_label_alt_id().equals("?")) altLoc1 = conn.getPdbx_ptnr1_label_alt_id();
+			if (conn.getPdbxPtnr1LabelAltId().getValueKind(i) == ValueKind.PRESENT) {
+				altLoc1 = conn.getPdbxPtnr1LabelAltId().get(i);
+			}
 			String altLoc2 = "";
-			if (!conn.getPdbx_ptnr2_label_alt_id().equals("?")) altLoc2 = conn.getPdbx_ptnr2_label_alt_id();
+			if (conn.getPdbxPtnr2LabelAltId().getValueKind(i) == ValueKind.PRESENT) {
+				altLoc2 = conn.getPdbxPtnr2LabelAltId().get(i);
+			}
 
 			// TODO: when issue 220 is implemented, add robust symmetry handling to allow bonds between symmetry-related molecules.
-			if (!conn.getPtnr1_symmetry().equals(symop) || !conn.getPtnr2_symmetry().equals(symop) ) {
+			if (!conn.getPtnr1Symmetry().get(i).equals(symop) || !conn.getPtnr2Symmetry().get(i).equals(symop) ) {
 				logger.info("Skipping bond between atoms {}(residue {}{}) and {}(residue {}{}) belonging to different symmetry partners, because it is not supported yet",
 						atomName1, seqId1, insCode1, atomName2, seqId2, insCode2);
 				continue;
@@ -441,20 +442,19 @@ public class BondMaker {
 			}
 
 			// assuming order 1 for all bonds, no information is provided by struct_conn
-			for(int i=0; i<structure.nrModels(); i++){
+			for (int j = 0; j < structure.nrModels(); j++) {
 				Bond bond = null;
-				if(a1.containsKey(i) && a2.containsKey(i)){
-					if(!a1.get(i).equals(a2.get(i))){
-						bond = new BondImpl(a1.get(i), a2.get(i), 1);
+				if (a1.containsKey(j) && a2.containsKey(j)) {
+					if (!a1.get(j).equals(a2.get(j))) {
+						bond = new BondImpl(a1.get(j), a2.get(j), 1);
 					}
 				}
-				if(bond!=null){
-					if (conn.getConn_type_id().equals("disulf")) {
+				if (bond != null) {
+					if (conn.getConnTypeId().get(i).equals("disulf")) {
 						ssbonds.add(bond);
 					}
 				}
 			}
-
 		}
 
 		// only for ss bonds we add a specific map in structure, all the rests are linked only from Atom.getBonds

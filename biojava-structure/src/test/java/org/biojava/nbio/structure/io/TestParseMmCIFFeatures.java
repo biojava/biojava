@@ -45,7 +45,7 @@ public class TestParseMmCIFFeatures {
 
 		StructureIO.setAtomCache(cache);
 
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		FileParsingParameters params = new FileParsingParameters();
 		params.setCreateAtomBonds(true);
 		cache.setFileParsingParams(params);
@@ -77,7 +77,7 @@ public class TestParseMmCIFFeatures {
 
 		StructureIO.setAtomCache(cache);
 
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		FileParsingParameters params = new FileParsingParameters();
 		params.setCreateAtomBonds(true);
 		cache.setFileParsingParams(params);
@@ -147,7 +147,7 @@ public class TestParseMmCIFFeatures {
 
 		StructureIO.setAtomCache(cache);
 
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		Structure sCif = StructureIO.getStructure("4HHB");
 
 		assertNotNull(sCif);
@@ -181,7 +181,7 @@ public class TestParseMmCIFFeatures {
 
 		StructureIO.setAtomCache(cache);
 
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		Structure sCif = StructureIO.getStructure("1A4W");
 
 		assertNotNull(sCif);

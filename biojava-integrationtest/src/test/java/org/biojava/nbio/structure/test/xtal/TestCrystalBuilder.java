@@ -22,6 +22,7 @@ package org.biojava.nbio.structure.test.xtal;
 
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.io.StructureFiletype;
 import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.contact.StructureInterfaceList;
@@ -46,7 +47,7 @@ public class TestCrystalBuilder {
 
 		StructureIO.setAtomCache(cache);
 
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		Structure s1 = StructureIO.getStructure("1NMR");
 
 		CrystalBuilder cb = new CrystalBuilder(s1);
@@ -64,7 +65,7 @@ public class TestCrystalBuilder {
 
 		StructureIO.setAtomCache(cache);
 
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		Structure s1 = StructureIO.getStructure("1B8G");
 		CrystalBuilder cb = new CrystalBuilder(s1);
 		StructureInterfaceList interfaces = cb.getUniqueInterfaces(5.5);
@@ -82,7 +83,7 @@ public class TestCrystalBuilder {
 
 		StructureIO.setAtomCache(cache);
 
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		Structure s1 = StructureIO.getStructure("2MFZ");
 		CrystalBuilder cb = new CrystalBuilder(s1);
 		StructureInterfaceList interfaces = cb.getUniqueInterfaces(5.5);
@@ -99,7 +100,7 @@ public class TestCrystalBuilder {
 
 		StructureIO.setAtomCache(cache);
 
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		Structure s1 = StructureIO.getStructure("4MF8");
 		CrystalBuilder cb = new CrystalBuilder(s1);
 		StructureInterfaceList interfaces = cb.getUniqueInterfaces(5.5);
@@ -112,7 +113,7 @@ public class TestCrystalBuilder {
 		// a virus with NCS operators
 		AtomCache cache = new AtomCache();
 		StructureIO.setAtomCache(cache);
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		Structure s1 = StructureIO.getStructure("1AUY");
 
 		Map<String,Matrix4d> chainNcsOps = new HashMap<>();
@@ -139,7 +140,7 @@ public class TestCrystalBuilder {
 		// a smaller structure with NCS operators
 		AtomCache cache = new AtomCache();
 		StructureIO.setAtomCache(cache);
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		Structure s1 = StructureIO.getStructure("1A37");
 
 		Map<String,Matrix4d> chainNcsOps = new HashMap<>();
@@ -164,7 +165,7 @@ public class TestCrystalBuilder {
 
 		StructureIO.setAtomCache(cache);
 
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		Structure s1 = StructureIO.getStructure("2H2Z");
 		CrystalBuilder cb = new CrystalBuilder(s1);
 		StructureInterfaceList interfaces = cb.getUniqueInterfaces(5.5);
@@ -181,7 +182,7 @@ public class TestCrystalBuilder {
 
 		StructureIO.setAtomCache(cache);
 
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		Structure s1 = StructureIO.getStructure("4HHB");
 		CrystalBuilder cb = new CrystalBuilder(s1);
 		StructureInterfaceList interfaces = cb.getUniqueInterfaces(5.5);

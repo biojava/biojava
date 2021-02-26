@@ -31,6 +31,7 @@ import java.util.zip.GZIPInputStream;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.PDBFileParser;
+import org.biojava.nbio.structure.io.StructureFiletype;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -54,7 +55,7 @@ public class TestEntityResIndexMapping {
 
 		StructureIO.setAtomCache(cache);
 
-		cache.setUseMmCif(false);
+		cache.setFiletype(StructureFiletype.PDB);
 		Structure s = StructureIO.getStructure("1B8G");
 
 		Chain chainA = s.getPolyChainByPDB("A");
@@ -76,7 +77,7 @@ public class TestEntityResIndexMapping {
 
 		StructureIO.setAtomCache(cache);
 
-		cache.setUseMmCif(false);
+		cache.setFiletype(StructureFiletype.PDB);
 		Structure s = StructureIO.getStructure("1SMT");
 
 		Chain chainA = s.getPolyChainByPDB("A");

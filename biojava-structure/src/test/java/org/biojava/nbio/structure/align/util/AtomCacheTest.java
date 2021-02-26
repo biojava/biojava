@@ -47,17 +47,18 @@ import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.ResidueRangeAndLength;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.io.StructureFiletype;
 import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.StructureIdentifier;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.SubstructureIdentifier;
+import org.biojava.nbio.structure.chem.ChemComp;
+import org.biojava.nbio.structure.chem.ChemCompGroupFactory;
+import org.biojava.nbio.structure.chem.DownloadChemCompProvider;
+import org.biojava.nbio.structure.io.CifFileReader;
 import org.biojava.nbio.structure.io.LocalPDBDirectory;
 import org.biojava.nbio.structure.io.LocalPDBDirectory.FetchBehavior;
 import org.biojava.nbio.structure.io.LocalPDBDirectory.ObsoleteBehavior;
-import org.biojava.nbio.structure.io.MMCIFFileReader;
-import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
-import org.biojava.nbio.structure.io.mmcif.DownloadChemCompProvider;
-import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.biojava.nbio.structure.scop.ScopDatabase;
 import org.biojava.nbio.structure.scop.ScopFactory;
 import org.biojava.nbio.structure.test.util.GlobalsHelper;
@@ -177,13 +178,12 @@ public class AtomCacheTest {
 		int expectedLengthA = 135;
 		assertEquals(expectedLengthA, a.getAtomGroups().size());
 
+		assertEquals(2, structure.getNonPolyChains().size());
 
-		assertTrue(structure.hasNonPolyChain("G"));
-		assertTrue(structure.hasNonPolyChain("H"));
-
-		Chain copper  = structure.getNonPolyChain("I");
-		assertEquals(1,copper.getAtomGroups().size());
-
+		Chain copperM  = structure.getNonPolyChain("M");
+		assertEquals(1, copperM.getAtomGroups().size());
+		Chain copperN  = structure.getNonPolyChain("N");
+		assertEquals(1, copperN.getAtomGroups().size());
 	}
 
 	@Test
@@ -204,7 +204,7 @@ public class AtomCacheTest {
 	public void testFetchBehavior() throws IOException, ParseException {
 		// really more of a LocalPDBDirectory test, but throw it in with AtomCache
 		String pdbId = "1hh0"; // A small structure, since we download it multiple times
-		LocalPDBDirectory reader = new MMCIFFileReader(cache.getPath());
+		LocalPDBDirectory reader = new CifFileReader(cache.getPath());
 
 		// delete
 		reader.deleteStructure(pdbId);
@@ -372,7 +372,7 @@ public class AtomCacheTest {
 		try {
 			cache.setPath(tmpCache.toString());
 			cache.setCachePath(tmpCache.toString());
-			cache.setUseMmCif(true);
+			cache.setFiletype(StructureFiletype.CIF);
 			ChemCompGroupFactory.setChemCompProvider(new DownloadChemCompProvider(tmpCache.toString()));
 
 			// Create an empty chemcomp
@@ -431,7 +431,7 @@ public class AtomCacheTest {
 		try {
 			cache.setPath(tmpCache.toString());
 			cache.setCachePath(tmpCache.toString());
-			cache.setUseMmCif(true);
+			cache.setFiletype(StructureFiletype.CIF);
 			ChemCompGroupFactory.setChemCompProvider(new DownloadChemCompProvider(tmpCache.toString()));
 
 

@@ -48,9 +48,9 @@ public class TestTitleParsing {
 
 		StructureIO.setAtomCache(cache);
 
-		cache.setUseMmCif(false);
+		cache.setFiletype(StructureFiletype.PDB);
 		Structure sPdb = StructureIO.getStructure("2W6E");
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		Structure sCif = StructureIO.getStructure("2W6E");
 
 

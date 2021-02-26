@@ -20,10 +20,8 @@
  */
 package org.biojava.nbio.structure.io.mmtf;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,14 +35,13 @@ import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.io.StructureFiletype;
 import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.align.util.AtomCache;
+import org.biojava.nbio.structure.chem.ChemCompGroupFactory;
+import org.biojava.nbio.structure.chem.DownloadChemCompProvider;
 import org.biojava.nbio.structure.io.FileParsingParameters;
-import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
-import org.biojava.nbio.structure.io.mmcif.DownloadChemCompProvider;
-import org.biojava.nbio.structure.io.mmcif.MMcifParser;
-import org.biojava.nbio.structure.io.mmcif.SimpleMMcifConsumer;
-import org.biojava.nbio.structure.io.mmcif.SimpleMMcifParser;
+import org.biojava.nbio.structure.io.cif.CifStructureConverter;
 import org.biojava.nbio.structure.quaternary.BioAssemblyInfo;
 import org.biojava.nbio.structure.quaternary.BiologicalAssemblyTransformation;
 import org.junit.Test;
@@ -75,8 +72,8 @@ public class TestMmtfRoundTrip {
 		FileParsingParameters params = new FileParsingParameters();
 		params.setParseBioAssembly(true);
 		cache.setFileParsingParams(params);
-		cache.setUseMmCif(true);
-		
+		cache.setFiletype(StructureFiletype.CIF);
+
 		StructureIO.setAtomCache(cache);
 
 		ChemCompGroupFactory.setChemCompProvider(new DownloadChemCompProvider());
@@ -146,11 +143,11 @@ public class TestMmtfRoundTrip {
 						System.out.println(groupTwo.getPDBName() + " and type: "+groupTwo.getType());;
 					}
 					// Check the single letter amino acid is correct
-					if(groupOne.getChemComp().getOne_letter_code().length()==1 && groupTwo.getChemComp().getOne_letter_code().length()==1){
-						if(!groupOne.getChemComp().getOne_letter_code().equals(groupTwo.getChemComp().getOne_letter_code())){
+					if(groupOne.getChemComp().getOneLetterCode().length()==1 && groupTwo.getChemComp().getOneLetterCode().length()==1){
+						if(!groupOne.getChemComp().getOneLetterCode().equals(groupTwo.getChemComp().getOneLetterCode())){
 							System.out.println(groupOne.getPDBName());
 						}
-						assertEquals(groupOne.getChemComp().getOne_letter_code(), groupTwo.getChemComp().getOne_letter_code());
+						assertEquals(groupOne.getChemComp().getOneLetterCode(), groupTwo.getChemComp().getOneLetterCode());
 					}
 					assertEquals(groupOne.getType(), groupTwo.getType());
 					assertEquals(groupOne.getPDBName(), groupTwo.getPDBName());
@@ -307,7 +304,7 @@ public class TestMmtfRoundTrip {
 			Group gTwo = chainTwo.getSeqResGroup(i);
 			assertNotNull(gOne.getChemComp());
 			assertNotNull(gTwo.getChemComp());
-			assertEquals(gOne.getChemComp().getOne_letter_code(), gTwo.getChemComp().getOne_letter_code());
+			assertEquals(gOne.getChemComp().getOneLetterCode(), gTwo.getChemComp().getOneLetterCode());
 
 			assertEquals(gOne.getResidueNumber(), gTwo.getResidueNumber());
 			//assertEquals(gOne.getPDBName(), gTwo.getPDBName());
@@ -361,13 +358,7 @@ public class TestMmtfRoundTrip {
 		URL url = new URL("https://raw.githubusercontent.com/pdbxmmcifwg/carbohydrate-extension/master/examples/models/1B5F-carb.cif");
 		InputStream inStream = url.openStream();
 
-		MMcifParser parser = new SimpleMMcifParser();
-
-		SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
-		parser.addMMcifConsumer(consumer);
-		parser.parse(new BufferedReader(new InputStreamReader(inStream)));
-
-		Structure structure = consumer.getStructure();
+		Structure structure = CifStructureConverter.fromInputStream(inStream);
 
 		AdapterToStructureData writerToEncoder = new AdapterToStructureData();
 		new MmtfStructureWriter(structure, writerToEncoder);

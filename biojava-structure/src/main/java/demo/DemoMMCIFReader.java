@@ -26,8 +26,9 @@ package demo;
 
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.util.AtomCache;
-import org.biojava.nbio.structure.io.MMCIFFileReader;
+import org.biojava.nbio.structure.io.CifFileReader;
 import org.biojava.nbio.structure.io.StructureProvider;
+import org.biojava.nbio.structure.io.StructureFiletype;
 
 import java.util.List;
 
@@ -57,15 +58,12 @@ public class DemoMMCIFReader
 		String pdbId = "4hhb";
 
 		AtomCache cache = new AtomCache();
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 
 		StructureIO.setAtomCache(cache);
-
 		try {
 			Structure s = StructureIO.getStructure(pdbId);
-
 			System.out.println(pdbId + " has nr atoms: " + StructureTools.getNrAtoms(s));
-
 		} catch (Exception e){
 			e.printStackTrace();
 		}
@@ -80,7 +78,7 @@ public class DemoMMCIFReader
 	public void loadFromDirectAccess(){
 		String pdbId = "1A4W";
 
-		StructureProvider pdbreader = new MMCIFFileReader();
+		StructureProvider pdbreader = new CifFileReader();
 
 		try {
 			Structure s = pdbreader.getStructureById(pdbId);

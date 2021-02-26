@@ -41,7 +41,7 @@ public class TestWriteLargeCoordinatePDB {
 	public void TestWrite5D9Q() throws IOException, StructureException {
 
 		AtomCache cache = new AtomCache();
-		cache.setUseMmCif(false);
+		cache.setFiletype(StructureFiletype.PDB);
 
 		FileParsingParameters params = new FileParsingParameters();
 		params.setHeaderOnly(false);

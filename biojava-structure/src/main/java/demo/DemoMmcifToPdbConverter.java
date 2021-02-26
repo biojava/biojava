@@ -23,57 +23,37 @@ package demo;
 
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.io.mmcif.MMcifParser;
-import org.biojava.nbio.structure.io.mmcif.SimpleMMcifConsumer;
-import org.biojava.nbio.structure.io.mmcif.SimpleMMcifParser;
+import org.biojava.nbio.structure.io.cif.CifStructureConverter;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 
 /**
  * An example of how to convert mmCIF file to PDB file
  *
  * @author Jose Duarte
- *
  */
-public class DemoMmcifToPdbConverter
-{
-
+public class DemoMmcifToPdbConverter {
 	public static void main(String[] args) throws Exception {
-
 		File inFile = new File(args[0]);
 		File outFile = new File(args[1]);
 		convert(inFile, outFile);
 	}
 
-
-
 	public static void convert(File inFile, File outFile) throws IOException {
+		// now get the protein structure.
+		Structure cifStructure = CifStructureConverter.fromPath(inFile.toPath());
 
-	MMcifParser parser = new SimpleMMcifParser();
-
-	SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
-	parser.addMMcifConsumer(consumer);
-	parser.parse(new BufferedReader(new InputStreamReader(new FileInputStream(inFile))));
-
-	// now get the protein structure.
-	Structure cifStructure = consumer.getStructure();
-
-	// and write it out as PDB format
-	PrintWriter pr = new PrintWriter(outFile);
-	for (Chain c : cifStructure.getChains()) {
-			// we can override the chain name, the mmCIF chain names might have more than 1 character
-			c.setName(c.getName().substring(0, 1));
-			pr.print(c.toPDB());
-			pr.println("TER");
-	}
+		// and write it out as PDB format
+		PrintWriter pr = new PrintWriter(outFile);
+		for (Chain c : cifStructure.getChains()) {
+				// we can override the chain name, the mmCIF chain names might have more than 1 character
+				c.setName(c.getName().substring(0, 1));
+				pr.print(c.toPDB());
+				pr.println("TER");
+		}
 
 		pr.close();
-
-
 	}
 }

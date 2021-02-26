@@ -2,14 +2,14 @@ package org.biojava.nbio.structure.io;
 
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
-import org.biojava.nbio.structure.io.cif.CifFileConverter;
+import org.biojava.nbio.structure.io.cif.CifStructureConverter;
 
 import java.io.IOException;
 import java.io.InputStream;
 
 /**
  * Parse binary Cif files and provide capabilities to store them locally.
- * @author Sebastian Bittrich <sebastian.bittrich@rcsb.org>
+ * @author Sebastian Bittrich
  * @since 5.3.0
  */
 public class BcifFileReader extends LocalPDBDirectory {
@@ -38,7 +38,7 @@ public class BcifFileReader extends LocalPDBDirectory {
 
     @Override
     public Structure getStructure(InputStream inStream) throws IOException {
-        return CifFileConverter.fromInputStream(inStream, getFileParsingParameters());
+        return CifStructureConverter.fromInputStream(inStream, getFileParsingParameters());
     }
 
     @Override

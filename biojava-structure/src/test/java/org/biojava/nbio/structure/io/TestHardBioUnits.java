@@ -29,7 +29,7 @@ import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.geometry.CalcPoint;
 import org.biojava.nbio.structure.geometry.SuperPosition;
-import org.biojava.nbio.structure.geometry.SuperPositionQCP;
+import org.biojava.nbio.structure.geometry.SuperPositionSVD;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -56,8 +56,7 @@ public class TestHardBioUnits {
 		int biolAssemblyNr = 2;
 
 		AtomCache cache = new AtomCache();
-		cache.setUseMmCif(true);
-		cache.setUseMmtf(false);
+		cache.setFiletype(StructureFiletype.CIF);
 		StructureIO.setAtomCache(cache);
 
 		Structure bioAssembly = StructureIO.getBiologicalAssembly(pdbId,biolAssemblyNr);
@@ -174,16 +173,16 @@ public class TestHardBioUnits {
 		Point3d[] atomsTransfChainG = Calc.atomsToPoints(StructureTools.getAtomCAArray(transfChainG));
 		Point3d[] atomsTransfChainB = Calc.atomsToPoints(StructureTools.getAtomCAArray(transfChainB));
 
-		SuperPosition sqcp = new SuperPositionQCP(false);
+		SuperPosition superPosition = new SuperPositionSVD(false);
 
 		// operator 1 is the identity, trace should be == 3
-		Matrix4d m1 = sqcp.superposeAndTransform(atomsOrigChainG, atomsTransfChainG);
+		Matrix4d m1 = superPosition.superposeAndTransform(atomsOrigChainG, atomsTransfChainG);
 		assertEquals(3.0, m1.m00 + m1.m11 + m1.m22, 0.00001);
 		assertEquals(0.0, CalcPoint.rmsd(atomsOrigChainG, atomsTransfChainG), 0.00001);
 
 
 		// operator 2 is a 2-fold, trace should be == -1
-		Matrix4d m2 = sqcp.superposeAndTransform(atomsOrigChainB, atomsTransfChainB);
+		Matrix4d m2 = superPosition.superposeAndTransform(atomsOrigChainB, atomsTransfChainB);
 		assertEquals(-1.0, m2.m00 + m2.m11 + m2.m22, 0.00001);
 		assertEquals(0.0, CalcPoint.rmsd(atomsOrigChainB, atomsTransfChainB), 0.00001);
 

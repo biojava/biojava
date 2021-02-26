@@ -45,16 +45,16 @@ import org.biojava.nbio.structure.NucleotideImpl;
 import org.biojava.nbio.structure.PDBCrystallographicInfo;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.io.StructureFiletype;
 import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.align.util.AtomCache;
+import org.biojava.nbio.structure.chem.ChemComp;
+import org.biojava.nbio.structure.chem.ChemCompGroupFactory;
+import org.biojava.nbio.structure.chem.ChemCompTools;
+import org.biojava.nbio.structure.chem.DownloadChemCompProvider;
 import org.biojava.nbio.structure.io.FileParsingParameters;
-import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
-import org.biojava.nbio.structure.io.mmcif.DownloadChemCompProvider;
-import org.biojava.nbio.structure.io.mmcif.chem.ChemCompTools;
-import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.biojava.nbio.structure.quaternary.BioAssemblyInfo;
 import org.biojava.nbio.structure.quaternary.BiologicalAssemblyTransformation;
-import org.biojava.nbio.structure.secstruc.DSSPParser;
 import org.biojava.nbio.structure.secstruc.SecStrucCalc;
 import org.biojava.nbio.structure.secstruc.SecStrucState;
 import org.biojava.nbio.structure.secstruc.SecStrucType;
@@ -80,7 +80,7 @@ public class MmtfUtils {
 	public static AtomCache setUpBioJava() {
 		// Set up the atom cache etc
 		AtomCache cache = new AtomCache();
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.MMTF);
 		FileParsingParameters params = cache.getFileParsingParams();
 		params.setCreateAtomBonds(true);
 		params.setAlignSeqRes(true);
@@ -101,7 +101,7 @@ public class MmtfUtils {
 	public static AtomCache setUpBioJava(String extraUrl) {
 		// Set up the atom cache etc
 		AtomCache cache = new AtomCache();
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.MMTF);
 		FileParsingParameters params = cache.getFileParsingParams();
 		params.setCreateAtomBonds(true);
 		params.setAlignSeqRes(true);
@@ -493,12 +493,12 @@ public class MmtfUtils {
 	 * @param sequence the sequence of the construct
 	 */
 	public static void addSeqRes(Chain modelChain, String sequence) {
-		
+
 		List<Group> seqResGroups = modelChain.getSeqResGroups();
 		GroupType chainType = getChainType(modelChain.getAtomGroups());
-		
+
 		for(int i=0; i<sequence.length(); i++){
-			
+
 			char singleLetterCode = sequence.charAt(i);
 			Group group = null;
 			if (seqResGroups.size() > i) {
@@ -507,7 +507,7 @@ public class MmtfUtils {
 			if(group!=null){
 				continue;
 			}
-			
+
 			group = getSeqResGroup(singleLetterCode, chainType);
 			addGroupAtId(seqResGroups, group, i);
 		}

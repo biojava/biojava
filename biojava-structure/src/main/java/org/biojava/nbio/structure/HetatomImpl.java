@@ -23,15 +23,19 @@
  */
 package org.biojava.nbio.structure;
 
+import org.biojava.nbio.structure.chem.ChemComp;
+import org.biojava.nbio.structure.chem.ChemCompGroupFactory;
+import org.biojava.nbio.structure.chem.PolymerType;
+import org.biojava.nbio.structure.chem.ResidueType;
 import org.biojava.nbio.structure.io.GroupToSDF;
-import org.biojava.nbio.structure.io.mmcif.ChemCompGroupFactory;
-import org.biojava.nbio.structure.io.mmcif.chem.PolymerType;
-import org.biojava.nbio.structure.io.mmcif.chem.ResidueType;
-import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -332,9 +336,9 @@ public class HetatomImpl implements Group {
 			return getType().equals(GroupType.AMINOACID);
 
 
-		ResidueType rt = cc.getResidueType();
+		ResidueType rt = ResidueType.getResidueTypeFromString(cc.getType());
 
-		if ( rt.equals(ResidueType.nonPolymer))
+		if (ResidueType.nonPolymer.equals(rt))
 			return false;
 
 		PolymerType pt = rt.getPolymerType();
@@ -351,9 +355,9 @@ public class HetatomImpl implements Group {
 		if ( cc == null)
 			return  getType().equals(GroupType.NUCLEOTIDE);
 
-		ResidueType rt = cc.getResidueType();
+		ResidueType rt = ResidueType.getResidueTypeFromString(cc.getType());
 
-		if ( rt.equals(ResidueType.nonPolymer))
+		if (ResidueType.nonPolymer.equals(rt))
 			return false;
 
 		PolymerType pt = rt.getPolymerType();
@@ -463,9 +467,11 @@ public class HetatomImpl implements Group {
 
 	@Override
 	public ChemComp getChemComp() {
-		if  ( chemComp == null ) {
+		if (chemComp == null) {
 			chemComp = ChemCompGroupFactory.getChemComp(pdb_name);
-			if (chemComp == null) logger.info("getChemComp: " + pdb_name);
+			if (chemComp == null) {
+				logger.info("getChemComp: {}", pdb_name);
+			}
 		}
 		return chemComp;
 	}

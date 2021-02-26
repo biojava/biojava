@@ -30,6 +30,7 @@ import java.util.List;
 
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.FileParsingParameters;
+import org.biojava.nbio.structure.io.StructureFiletype;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -191,7 +192,7 @@ public class TestCloning {
 	public void testBondCloning() throws IOException, StructureException {
 
 		final AtomCache cache = new AtomCache();
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 
 		final FileParsingParameters params = cache.getFileParsingParams();
 		params.setCreateAtomBonds(true);

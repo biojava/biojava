@@ -24,6 +24,7 @@ import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.LocalPDBDirectory.ObsoleteBehavior;
+import org.biojava.nbio.structure.io.StructureFiletype;
 import org.biojava.nbio.structure.quaternary.BioAssemblyInfo;
 import org.biojava.nbio.structure.xtal.CrystalCell;
 import org.junit.After;
@@ -567,7 +568,7 @@ public class TestLongPdbVsMmCifParsing {
 
 
 	private Structure getPdbStructure(String pdbId) throws IOException, StructureException {
-		cache.setUseMmCif(false);
+		cache.setFiletype(StructureFiletype.PDB);
 		// set parsing params here:
 		params.setAlignSeqRes(true);
 		//params.setLoadChemCompInfo(true);
@@ -578,7 +579,7 @@ public class TestLongPdbVsMmCifParsing {
 	}
 
 	private Structure getCifStructure(String pdbId) throws IOException, StructureException {
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		// set parsing params here:
 		params.setAlignSeqRes(true);
 		//params.setLoadChemCompInfo(true);

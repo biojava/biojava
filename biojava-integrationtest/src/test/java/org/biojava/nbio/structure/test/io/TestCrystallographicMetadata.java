@@ -20,6 +20,7 @@
  */
 package org.biojava.nbio.structure.test.io;
 
+import org.biojava.nbio.structure.io.StructureFiletype;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -46,7 +47,7 @@ public class TestCrystallographicMetadata {
 
 		AtomCache cache = new AtomCache();
 		// at the moment implemented only in mmcif
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		StructureIO.setAtomCache(cache);
 
 		Structure s = StructureIO.getStructure("4hhb");
@@ -64,7 +65,7 @@ public class TestCrystallographicMetadata {
 
 		AtomCache cache = new AtomCache();
 		// at the moment implemented only in mmcif
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		StructureIO.setAtomCache(cache);
 
 		Structure s = StructureIO.getStructure("1smt");
@@ -82,7 +83,7 @@ public class TestCrystallographicMetadata {
 	public void test1zna() throws Exception {
 		AtomCache cache = new AtomCache();
 		// at the moment implemented only in mmcif
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		StructureIO.setAtomCache(cache);
 
 		Structure s = StructureIO.getStructure("1zna");

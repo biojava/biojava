@@ -23,7 +23,7 @@
  */
 package org.biojava.nbio.structure;
 
-import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
+import org.biojava.nbio.structure.chem.ChemComp;
 
 import java.io.Serializable;
 import java.util.Iterator;
@@ -126,7 +126,7 @@ public interface Group extends Serializable {
 	 * @return an Atom object or null if no such atom exists within this group
 	 */
 	public Atom getAtom(String name) ;
-	
+
 	/**
 	 * Get at atom by position.
 	 *

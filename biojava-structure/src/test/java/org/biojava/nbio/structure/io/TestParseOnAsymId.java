@@ -39,7 +39,7 @@ public class TestParseOnAsymId {
 	public void test4cup() throws IOException, StructureException {
 
 		AtomCache cache = new AtomCache();
-		cache.setUseMmCif(true);
+		cache.setFiletype(StructureFiletype.CIF);
 		FileParsingParameters params = cache.getFileParsingParams();
 
 		cache.setFileParsingParams(params);

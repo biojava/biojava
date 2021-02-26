@@ -33,7 +33,7 @@ import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.PDBCrystallographicInfo;
 import org.biojava.nbio.structure.PDBHeader;
 import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.io.mmcif.model.ChemComp;
+import org.biojava.nbio.structure.chem.ChemComp;
 import org.biojava.nbio.structure.quaternary.BioAssemblyInfo;
 import org.rcsb.mmtf.api.StructureAdapterInterface;
 import org.rcsb.mmtf.dataholders.MmtfStructure;
@@ -43,7 +43,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Class to take Biojava structure data and covert to the DataApi for encoding.
  * Must implement all the functions in {@link StructureAdapterInterface}.
- * 
+ *
  * @author Anthony Bradley
  * @since 5.0
  *
@@ -103,8 +103,8 @@ public class MmtfStructureWriter {
 						insCode=MmtfStructure.UNAVAILABLE_CHAR_VALUE;
 					}
 					char singleLetterCode = 'X';
-					if (chemComp.getOne_letter_code().length()==1){
-						singleLetterCode = chemComp.getOne_letter_code().charAt(0);
+					if (chemComp.getOneLetterCode().length()==1){
+						singleLetterCode = chemComp.getOneLetterCode().charAt(0);
 					}
 					mmtfDecoderInterface.setGroupInfo(group.getPDBName(), group.getResidueNumber().getSeqNum(), insCode.charValue(),
 							chemComp.getType().toUpperCase(), atomsInGroup.size(), MmtfUtils.getNumBondsInGroup(atomsInGroup), singleLetterCode,
