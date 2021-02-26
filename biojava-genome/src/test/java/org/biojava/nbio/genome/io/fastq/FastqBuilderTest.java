@@ -20,9 +20,10 @@
  */
 package org.biojava.nbio.genome.io.fastq;
 
-
 import org.junit.Assert;
 import org.junit.Test;
+
+import org.junit.function.ThrowingRunnable;
 
 /**
  * Unit test for FastqBuilder.
@@ -60,15 +61,12 @@ public final class FastqBuilderTest {
 	@Test
 	public void testConstructorNullFastq()
 	{
-		try
-		{
-			new FastqBuilder(null);
-			Assert.fail("builder(null) expected IllegalArgumentException");
-		}
-		catch (IllegalArgumentException e)
-		{
-			// expected
-		}
+		Assert.assertThrows(IllegalArgumentException.class, new ThrowingRunnable() {
+			@Override
+			public void run() {
+				new FastqBuilder(null);
+			}
+		});
 	}
 
 	@Test
