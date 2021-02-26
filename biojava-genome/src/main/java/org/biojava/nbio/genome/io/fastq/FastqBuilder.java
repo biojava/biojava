@@ -51,6 +51,25 @@ public final class FastqBuilder
 		// empty
 	}
 
+	/**
+	 * Create a new FASTQ formatted sequence builder configured
+	 * from the specified FASTQ formatted sequence.
+	 *
+	 * @since 6.0.0
+	 * @param fastq FASTQ formatted sequence, must not be null
+	 */
+	public FastqBuilder(final Fastq fastq)
+	{
+		if (fastq == null)
+		{
+			throw new IllegalArgumentException("fastq must not be null");
+		}
+		withDescription(fastq.getDescription());
+		withSequence(fastq.getSequence());
+		withQuality(fastq.getQuality());
+		withVariant(fastq.getVariant());
+	}
+
 
 	/**
 	 * Return the description for this FASTQ formatted sequence builder.
