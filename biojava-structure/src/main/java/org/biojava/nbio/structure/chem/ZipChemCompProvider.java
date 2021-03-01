@@ -206,7 +206,8 @@ public class ZipChemCompProvider implements ChemCompProvider{
         final String filename = "chemcomp/" + recordName + ".cif.gz";
 
         // try with resources block to read from the filesystem.
-        try (FileSystem fs = FileSystems.newFileSystem(m_zipFile, null)) {
+        // Don't remove the (ClassLoader) cast! It is required for openjdk 11.
+        try (FileSystem fs = FileSystems.newFileSystem(m_zipFile, (ClassLoader)null)) {
             Path cif = fs.getPath(filename);
 
             if (Files.exists(cif)) {
@@ -255,7 +256,8 @@ public class ZipChemCompProvider implements ChemCompProvider{
 		*/
 
         // Copy in each file.
-        try (FileSystem zipfs = FileSystems.newFileSystem(zipFile, null)) {
+        // Don't remove the (ClassLoader) cast! It is required for openjdk 11.
+        try (FileSystem zipfs = FileSystems.newFileSystem(zipFile, (ClassLoader)null)) {
             Files.createDirectories(pathWithinArchive);
             for (File f : files) {
                 if (!f.isDirectory() && f.exists()) {
