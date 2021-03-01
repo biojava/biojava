@@ -222,6 +222,15 @@ public class TestAtomCache {
 	}
 
 	@Test
+	public void testGetScopDomain() throws IOException, StructureException {
+		String name = "d2gs2a_";
+
+		Structure s = cache.getStructure(name);
+		assertNotNull("Failed to fetch structure from SCOP ID", s);
+		assertEquals("2gs2.A", s.getName());
+	}
+
+	@Test
 	public void testSettingFileParsingType(){
 		AtomCache cache = new AtomCache();
 
