@@ -29,6 +29,7 @@ import javax.vecmath.Matrix4d;
 import javax.vecmath.Tuple3d;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -226,11 +227,11 @@ public abstract class JmolSymmetryScriptGenerator {
 	}
 
 	protected static String f1Dot2(float number) {
-		return String.format("%1.2f", number);
+		return String.format(Locale.US, "%1.2f", number);
 	}
 
 	protected static String fDot2(double number) {
-		return String.format("%.2f", number);
+		return String.format(Locale.US, "%.2f", number);
 	}
 
 	/**
