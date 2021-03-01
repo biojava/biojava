@@ -222,7 +222,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 					Qualifier q = new Qualifier(key, val.replace('\n', ' '));
 					gbFeature.addQualifier(key, q);
 				} else {
-					if (key.equalsIgnoreCase("translation")) {
+					if (key.equalsIgnoreCase("translation") || key.equals("anticodon")) {
 						// strip spaces from sequence
 						val = val.replaceAll("\\s+", "");
 						Qualifier q = new Qualifier(key, val);
