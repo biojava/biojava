@@ -333,7 +333,7 @@ public class GenbankReaderTest {
 	/**
 	 * Biojava fails to parse anticodon and transl_except feature qualifiers when they line wrap.
 	 * https://github.com/biojava/biojava/issues/843
-	 * File NC_018080.gb downloaded from https://www.ncbi.nlm.nih.gov/nuccore/NC_018080
+	 * Except file NC_018080.gb from https://www.ncbi.nlm.nih.gov/nuccore/NC_018080
 	 */
 	@Test
 	public void testGithub843() throws Exception {
