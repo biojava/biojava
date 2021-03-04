@@ -218,9 +218,9 @@
 						<!-- work around for GPG hanging issue http://jira.codehaus.org/browse/MGPG-9 -->
 						<mavenExecutorId>forked-path</mavenExecutorId>
 
-						<!-- needed for jenkins release plugin -->
-						<useReleaseProfile>true</useReleaseProfile>
-						<arguments>-Pgpg-release</arguments>
+						<!-- TODO remove when testing finished -->
+						<pushChanges>false</pushChanges>
+
 					</configuration>
 
 				</plugin>
@@ -339,35 +339,6 @@
 
 		<plugins>
 
-			<!-- for deployment on OSS Sonatype -->
-			<plugin>
-				<groupId>org.sonatype.plugins</groupId>
-				<artifactId>nexus-staging-maven-plugin</artifactId>
-				<version>1.6.8</version>
-				<extensions>true</extensions>
-				<configuration>
-					<serverId>ossrh</serverId>
-					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
-					<autoReleaseAfterClose>true</autoReleaseAfterClose>
-				</configuration>
-			</plugin>
-
-			<!-- for digital signing of code -->
-			<!--<plugin> -->
-			<!--<groupId>org.apache.maven.plugins</groupId> -->
-			<!--<artifactId>maven-gpg-plugin</artifactId> -->
-			<!--<version>1.5</version> -->
-			<!--<executions> -->
-			<!--<execution> -->
-			<!--<id>sign-artifacts</id> -->
-			<!--<phase>verify</phase> -->
-			<!--<goals> -->
-			<!--<goal>sign</goal> -->
-			<!--</goals> -->
-			<!--</execution> -->
-			<!--</executions> -->
-			<!--</plugin> -->
-
 			<!-- give more memory for junit tests -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -378,7 +349,6 @@
 					<forkCount>1</forkCount>
 				</configuration>
 			</plugin>
-
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -403,7 +373,6 @@
 
 			</plugin>
 
-
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>findbugs-maven-plugin</artifactId>
@@ -418,49 +387,6 @@
 				</configuration>
 			</plugin>
 
-			<!-- code coverage plugin -->
-			<!-- coveralls/cobertura seems outdated and has many problems, I think we need to use a different plugin. Commenting out - JD 2018-03-16 -->
-			<!--<plugin>-->
-				<!--<groupId>org.eluder.coveralls</groupId>-->
-				<!--<artifactId>coveralls-maven-plugin</artifactId>-->
-				<!--<version>4.2.0</version>-->
-				<!--&lt;!&ndash;<configuration>&ndash;&gt;-->
-					<!--&lt;!&ndash;<repoToken>YOURTOKENGOESHERE</repoToken>&ndash;&gt;-->
-				<!--&lt;!&ndash;</configuration>&ndash;&gt;-->
-			<!--</plugin>-->
-			<!--<plugin>-->
-				<!--<groupId>org.codehaus.mojo</groupId>-->
-				<!--<artifactId>cobertura-maven-plugin</artifactId>-->
-				<!--<version>2.7</version>-->
-				<!--<configuration>-->
-					<!--<check>true</check>-->
-					<!--<format>xml</format>-->
-					<!--<maxmem>256m</maxmem>-->
-					<!--&lt;!&ndash; aggregated reports for multi-module projects &ndash;&gt;-->
-					<!--<aggregate>true</aggregate>-->
-
-					<!--<instrumentation>-->
-						<!--<excludes>-->
-							<!--<exclude>org/biojava/nbio/structure/io/mmcif/MMCIFFileTools.class</exclude>-->
-							<!--<exclude>org/biojava/nbio/structure/symmetry/utils/SymmetryTools.class</exclude>-->
-							<!--<exclude>demo/DemoFATCAT.class</exclude>-->
-							<!--<exclude>org/biojava/nbio/structure/align/ce/CECalculator.class</exclude>-->
-						<!--</excludes>-->
-						<!--<ignores>-->
-							<!--<ignore>org.biojava.nbio.structure.io.mmcif.MMCIFFileTools*</ignore>-->
-							<!--<ignore>demo.*</ignore>-->
-						<!--</ignores>-->
-					<!--</instrumentation>-->
-				<!--</configuration>-->
-				<!--<executions>-->
-					<!--<execution>-->
-						<!--<goals>-->
-							<!--<goal>clean</goal>-->
-						<!--</goals>-->
-					<!--</execution>-->
-				<!--</executions>-->
-			<!--</plugin>-->
-
 		</plugins>
 
 		<extensions>
@@ -470,8 +396,6 @@
 				<version>2.6</version>
 			</extension>
 		</extensions>
-
-
 
 	</build>
 
@@ -589,12 +513,96 @@
 		</plugins>
 	</reporting>
 
+	<!-- https://central.sonatype.org/pages/apache-maven.html -->
+	<!-- https://github.com/chhh/sonatype-ossrh-parent/blob/master/pom.xml -->
+	<distributionManagement>
+		<snapshotRepository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
+	</distributionManagement>
 
 	<profiles>
+		<profile>
+			<!-- This is the profile needed for release, e.g.:
+			 mvn -Prelease release:clean release:prepare
+			 mvn -Prelease release:perform
+			  -->
+			<id>release</id>
+			<build>
+				<plugins>
+					<!-- for deployment on OSS Sonatype -->
+					<!-- handles propagating the build to the staging repository -->
+					<plugin>
+						<groupId>org.sonatype.plugins</groupId>
+						<artifactId>nexus-staging-maven-plugin</artifactId>
+						<version>1.6.8</version>
+						<extensions>true</extensions>
+						<configuration>
+							<serverId>ossrh</serverId>
+							<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+							<autoReleaseAfterClose>true</autoReleaseAfterClose>
+						</configuration>
+					</plugin>
+
+					<!-- for code signing -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>1.6</version>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+
+					<!-- create source -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+						<version>3.2.0</version>
+						<executions>
+							<execution>
+								<id>attach-sources</id>
+								<goals>
+									<goal>jar-no-fork</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+
+					<!-- create javadoc -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<version>3.2.0</version>
+						<executions>
+							<execution>
+								<id>attach-javadocs</id>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+
+				</plugins>
+			</build>
+		</profile>
 
 		<!-- Note: before you can use this build profile you need to set up an
 			environment that contains correctly signed keys. Configure the keystore properties
 			and the profile in ~/.m2/settings.xml -->
+		<!-- Note: as of March 2021 I'm not sure what this profile is needed for. I don't think it is needed for releases, perhaps for automated snapshot builds? - JD 2021 -->
 		<profile>
 			<id>codesigning</id>
 			<activation>
@@ -636,35 +644,6 @@
 						</configuration>
 					</plugin>
 
-
-				</plugins>
-			</build>
-		</profile>
-
-		<profile>
-			<id>release-sign-artifacts</id>
-			<activation>
-				<property>
-					<name>performRelease</name>
-					<value>true</value>
-				</property>
-			</activation>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-gpg-plugin</artifactId>
-						<version>1.6</version>
-						<executions>
-							<execution>
-								<id>sign-artifacts</id>
-								<phase>verify</phase>
-								<goals>
-									<goal>sign</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
 				</plugins>
 			</build>
 		</profile>
