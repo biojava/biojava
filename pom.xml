@@ -218,9 +218,6 @@
 						<!-- work around for GPG hanging issue http://jira.codehaus.org/browse/MGPG-9 -->
 						<mavenExecutorId>forked-path</mavenExecutorId>
 
-						<!-- TODO remove when testing finished -->
-						<pushChanges>false</pushChanges>
-
 					</configuration>
 
 				</plugin>
