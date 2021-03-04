@@ -111,7 +111,7 @@ public class ChemCompGroupFactory {
         String oneLetter = cc.getOneLetterCode();
         if (oneLetter == null || oneLetter.equals("X") || oneLetter.equals("?")) {
             String parentId = cc.getMonNstdParentCompId();
-            if (parentId == null) {
+            if (parentId == null || parentId.trim().equals("")) {
                 return oneLetter;
             }
             // cases like OIM have multiple parents (comma separated), we shouldn't try grab a chemcomp for those strings
