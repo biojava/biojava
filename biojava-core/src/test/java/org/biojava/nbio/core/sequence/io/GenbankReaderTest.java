@@ -353,11 +353,10 @@ public class GenbankReaderTest {
 		DNASequence dna = new ArrayList<>(dnaSequences.values()).get(0);
 		assertNotNull(dna);
 
-		for (Iterator<FeatureInterface<AbstractSequence<NucleotideCompound>, NucleotideCompound>> it = dna.getFeaturesByType("tRNA").iterator(); it.hasNext();) {
-			FeatureInterface<AbstractSequence<NucleotideCompound>, NucleotideCompound> tRNAFeature = it.next();
-			String anticodon = tRNAFeature.getQualifiers().get("anticodon").get(0).getValue();
-			assertFalse(anticodon.contains(" "));
-		}
+		FeatureInterface<AbstractSequence<NucleotideCompound>, NucleotideCompound> tRNAFeature = dna.getFeaturesByType("tRNA").get(0);
+		String anticodon = tRNAFeature.getQualifiers().get("anticodon").get(0).getValue();
+		assertEquals("(pos:complement(1123552..1123554),aa:Leu,seq:caa)", anticodon);
+
 	}
 
 	/**
