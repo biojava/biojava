@@ -149,7 +149,7 @@ public class ChemComp implements CifBean, Comparable<ChemComp> {
     }
 
     public void setMonNstdParentCompId(String monNstdParentCompId) {
-        this.monNstdParentCompId = monNstdParentCompId.isEmpty() ? null : monNstdParentCompId;
+        this.monNstdParentCompId = (monNstdParentCompId == null || monNstdParentCompId.isEmpty()) ? null : monNstdParentCompId;
         setStandardFlag();
     }
 
