@@ -333,7 +333,6 @@ public class GenbankReaderTest {
 	/**
 	 * Biojava fails to parse anticodon and transl_except feature qualifiers when they line wrap.
 	 * https://github.com/biojava/biojava/issues/843
-	 * Except file NC_018080.gb from https://www.ncbi.nlm.nih.gov/nuccore/NC_018080
 	 */
 	@Test
 	public void testGithub843() throws Exception {
@@ -356,7 +355,8 @@ public class GenbankReaderTest {
 		FeatureInterface<AbstractSequence<NucleotideCompound>, NucleotideCompound> tRNAFeature = dna.getFeaturesByType("tRNA").get(0);
 		String anticodon = tRNAFeature.getQualifiers().get("anticodon").get(0).getValue();
 		assertEquals("(pos:complement(1123552..1123554),aa:Leu,seq:caa)", anticodon);
-
+		String transl_except = tRNAFeature.getQualifiers().get("transl_except").get(0).getValue();
+		assertEquals("(pos:complement(1123552..1123554),aa:Leu)",transl_except);
 	}
 
 	/**
