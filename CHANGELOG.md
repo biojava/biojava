@@ -25,6 +25,7 @@ BioJava 6.0.0 (future release)
 * Moved `org.biojava.nbio.structure.io.mmcif.model.DatabasePdbrevRecord` to `org.biojava.nbio.structure.DatabasePDBRevRecord.java`
 * Moved all chem-comp model classes from `org.biojava.nbio.structure.io.mmcif.chem` to `org.biojava.nbio.structure.chem`
 * Moved all chem-comp parsing classes from `org.biojava.nbio.structure.io.mmcif.chem` to `org.biojava.nbio.structure.io.cif`
+* Moved classes in `org.biojava.nbio.structure.io.mmcif` to `org.biojava.nbio.structure.chem`
 
 BioJava 5.4.0
 =============
