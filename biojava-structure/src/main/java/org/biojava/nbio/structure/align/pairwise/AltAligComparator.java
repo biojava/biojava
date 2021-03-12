@@ -48,20 +48,15 @@ public class AltAligComparator implements Comparator<AlternativeAlignment>, Seri
 
 		if ( s1 > s2)
 			return 1;
-		if ( s1 < s2)
+		else if ( s1 < s2)
 			return -1;
+		else {
+			// seem to have the same length
+			double rms1 = a.getRmsd();
+			double rms2 = b.getRmsd();
+			return Double.compare(rms1, rms2);
+		}
 
-		// seem to have the same length
-
-		double rms1 = a.getRmsd();
-		double rms2 = b.getRmsd();
-
-		if ( rms1 < rms2)
-			return 1;
-		if ( rms1 < rms2)
-			return -1;
-
-		return 0;
 	}
 
 
