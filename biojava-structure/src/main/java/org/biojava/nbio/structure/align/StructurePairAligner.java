@@ -138,12 +138,12 @@ public class StructurePairAligner {
 	private final static Logger logger = LoggerFactory
 			.getLogger(StructurePairAligner.class);
 
-	AlternativeAlignment[] alts;
-	Matrix distanceMatrix;
-	StrucAligParameters params;
-	FragmentPair[] fragPairs;
+	private AlternativeAlignment[] alts;
+	private Matrix distanceMatrix;
+	private StrucAligParameters params;
+	private FragmentPair[] fragPairs;
 
-	List<AlignmentProgressListener> listeners = new ArrayList<AlignmentProgressListener>();
+	private final List<AlignmentProgressListener> listeners = new ArrayList<>();
 
 	public StructurePairAligner() {
 		super();
@@ -202,7 +202,7 @@ public class StructurePairAligner {
 		// the AlternativeAlignment object gives also access to rotation
 		// matrices / shift vectors.
 		for (AlternativeAlignment aa : aligs) {
-			logger.info("Alternative Alignment: ", aa);
+			logger.info("Alternative Alignment: {}", aa);
 		}
 
 		// convert AlternativeAlignemnt 1 to PDB file, so it can be opened with
@@ -386,10 +386,8 @@ public class StructurePairAligner {
 	}
 
 	/**
-	 * calculate the protein structure superimposition, between two sets of
+	 * Calculate the protein structure superimposition, between two sets of
 	 * atoms.
-	 *
-	 *
 	 *
 	 * @param ca1
 	 *            set of Atoms of structure 1
@@ -444,7 +442,7 @@ public class StructurePairAligner {
 		Atom unitvector = new AtomImpl();
 		unitvector.setCoords(utmp[0]);
 
-		List<FragmentPair> fragments = new ArrayList<FragmentPair>();
+		List<FragmentPair> fragments = new ArrayList<>();
 
 		for (int i = 0; i < rows; i++) {
 
@@ -499,8 +497,7 @@ public class StructurePairAligner {
 
 		notifyFragmentListeners(fragments);
 
-		FragmentPair[] fp = fragments
-				.toArray(new FragmentPair[fragments.size()]);
+		FragmentPair[] fp = fragments.toArray(new FragmentPair[0]);
 		setFragmentPairs(fp);
 
 		logger.debug(" got # fragment pairs: {}", fp.length);
@@ -532,11 +529,11 @@ public class StructurePairAligner {
 
 		notifyJointFragments(frags);
 
-		logger.debug(" number joint fragments: ", frags.length);
+		logger.debug(" number joint fragments: {}", frags.length);
 
 		logger.debug("step 3 - refine alignments");
 
-		List<AlternativeAlignment> aas = new ArrayList<AlternativeAlignment>();
+		List<AlternativeAlignment> aas = new ArrayList<>();
 		for (int i = 0; i < frags.length; i++) {
 			JointFragments f = frags[i];
 			AlternativeAlignment a = new AlternativeAlignment();
@@ -556,16 +553,17 @@ public class StructurePairAligner {
 			} catch (StructureException e) {
 				logger.error("Refinement of fragment {} failed", i, e);
 			}
+
 			a.calcScores(ca1, ca2);
 			aas.add(a);
 		}
 
 		// sort the alternative alignments
 		Comparator<AlternativeAlignment> comp = new AltAligComparator();
-		Collections.sort(aas, comp);
+		aas.sort(comp);
 		Collections.reverse(aas);
 
-		alts = aas.toArray(new AlternativeAlignment[aas.size()]);
+		alts = aas.toArray(new AlternativeAlignment[0]);
 		// do final numbering of alternative solutions
 		int aanbr = 0;
 		for (AlternativeAlignment a : alts) {

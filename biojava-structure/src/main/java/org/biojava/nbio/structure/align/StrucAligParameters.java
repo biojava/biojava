@@ -24,7 +24,8 @@ package org.biojava.nbio.structure.align;
 
 import org.biojava.nbio.structure.StructureTools;
 
-/** A class that contains all the parameters of the structure alignment algorithm.
+/**
+ * A class that contains all the parameters of the structure alignment algorithm.
  *
  * @author Andreas Prlic
  * @since 1.5
@@ -304,7 +305,8 @@ public class StrucAligParameters {
 		this.create_co = create_co;
 	}
 
-	/** if this is set to false, the time spent to joint the initial fragments (step 2)
+	/**
+	 * if this is set to false, the time spent to joint the initial fragments (step 2)
 	 * is increased. - particular for large structures this increases calc. time a lot.
 	 * advantage: more combinations of fragments are used.
 	 *

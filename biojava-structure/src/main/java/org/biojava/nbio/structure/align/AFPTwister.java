@@ -40,8 +40,6 @@ import java.util.List;
 
 import javax.vecmath.Matrix4d;
 
-//import org.biojava.nbio.structure.align.gui.jmol.StructureAlignmentJmol;
-
 public class AFPTwister {
 	private final static Logger logger = LoggerFactory
 			.getLogger(AFPTwister.class);
@@ -90,7 +88,7 @@ public class AFPTwister {
 		e2 = 0;
 		b2 = 0;
 
-		logger.debug("blockNUm at twister: ", blockNum);
+		logger.debug("blockNUm at twister: {}", blockNum);
 
 		for (int bk = 0; bk < blockNum; bk++) {
 
@@ -309,7 +307,7 @@ public class AFPTwister {
 			}
 			atoms.add(a);
 		}
-		return atoms.toArray(new Atom[atoms.size()]);
+		return atoms.toArray(new Atom[0]);
 	}
 
 	/**
@@ -329,7 +327,7 @@ public class AFPTwister {
 		// special clone method, can;t use StructureTools.cloneCAArray, since we
 		// access the data
 		// slightly differently here.
-		List<Chain> model = new ArrayList<Chain>();
+		List<Chain> model = new ArrayList<>();
 		for (int i = r1; i < r2; i++) {
 
 			Group g = p2[i].getGroup();

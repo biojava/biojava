@@ -28,8 +28,6 @@ import org.biojava.nbio.structure.align.model.AFPChain;
 
 public abstract class AbstractStructureAlignment implements StructureAlignment{
 
-	public static String newline = System.getProperty("line.separator");
-
 	@Override
 	abstract public  AFPChain align(Atom[] ca1, Atom[] ca2)
 			throws StructureException;

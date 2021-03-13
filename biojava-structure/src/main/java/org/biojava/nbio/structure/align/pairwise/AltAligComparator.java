@@ -26,19 +26,14 @@ import java.io.Serializable;
 import java.util.Comparator;
 
 
-/** a comparator to sort AlternativeAlignments based on their number of equivalent residues
+/**
+ * A comparator to sort AlternativeAlignments based on their number of equivalent residues
  * and RMSD.
  *
  * @author Andreas Prlic
  *
  */
-public class AltAligComparator implements Comparator<AlternativeAlignment>, Serializable {
-	private static final long serialVersionUID = 1;
-
-	public AltAligComparator() {
-		super();
-
-	}
+public class AltAligComparator implements Comparator<AlternativeAlignment> {
 
 	@Override
 	public int compare(AlternativeAlignment a, AlternativeAlignment b) {

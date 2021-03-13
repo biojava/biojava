@@ -27,7 +27,8 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-/** A class that clusters alternative alignments according to their
+/**
+ * A class that clusters alternative alignments according to their
  * similarity.
  *
  * @author Andreas Prlic
@@ -43,15 +44,14 @@ public class ClusterAltAligs {
 		cluster(aligs, DEFAULT_CLUSTER_CUTOFF);
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static void cluster(AlternativeAlignment[] aligs, int cutoff){
 
 
-		List alist = Arrays.asList(aligs);
-		List testAligs = new ArrayList(alist);
+		List<AlternativeAlignment> alist = Arrays.asList(aligs);
+		List<AlternativeAlignment> testAligs = new ArrayList<>(alist);
 
-		List clusters = new ArrayList();
-		List excludeList = new ArrayList();
+		List<List<Integer>> clusters = new ArrayList<>();
+		List<AlternativeAlignment> excludeList = new ArrayList<>();
 
 		// check how similar the eqrs are...
 		for ( int i=0 ; i< aligs.length;i++){
@@ -61,11 +61,11 @@ public class ClusterAltAligs {
 			}
 			int[] idxA = a.getIdx1();
 
-			Iterator iter = testAligs.iterator();
-			List remainList = new ArrayList();
-			List currentCluster = new ArrayList();
+			Iterator<AlternativeAlignment> iter = testAligs.iterator();
+			List<AlternativeAlignment> remainList = new ArrayList<>();
+			List<Integer> currentCluster = new ArrayList<>();
 
-			currentCluster.add( new Integer(i));
+			currentCluster.add(i);
 			excludeList.add(a);
 
 			int j=-1;
@@ -94,7 +94,7 @@ public class ClusterAltAligs {
 				//		" l1:"+ idxA.length + " l2:" + idxB.length + " perpos:" + perpos);
 
 				if ( perpos > cutoff){
-					currentCluster.add(new Integer(j));
+					currentCluster.add(j);
 					excludeList.add(b);
 				} else {
 					remainList.add(b);
@@ -109,17 +109,17 @@ public class ClusterAltAligs {
 
 		// now print the clusters...
 
-		Iterator iter = clusters.iterator();
+		Iterator<List<Integer>> iter = clusters.iterator();
 		int cpos = 0;
 		while (iter.hasNext()){
 			cpos++;
 			//System.out.println("cluster "+cpos+":");
-			List cluster = (List) iter.next();
-			Iterator iter2 = cluster.iterator();
+			List<Integer> cluster = iter.next();
+			Iterator<Integer> iter2 = cluster.iterator();
 			while (iter2.hasNext()){
 				Integer i = (Integer) iter2.next();
 
-				AlternativeAlignment alig = aligs[i.intValue()];
+				AlternativeAlignment alig = aligs[i];
 				alig.setCluster(cpos);
 				//System.out.println( " ("+ aligs[i.intValue()]+")");
 

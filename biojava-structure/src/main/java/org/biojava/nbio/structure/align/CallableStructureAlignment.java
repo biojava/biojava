@@ -20,16 +20,7 @@
  */
 package org.biojava.nbio.structure.align;
 
-/**
- * Simple Callable Class that calculates a pairwise alignment in a different
- * thread, so that multiple pairwise alignments can be run in parallel
- * (examples: all-to-all alignments, DB search alignments).
- * Adapted to a more general implementation since 4.1.0, because before it
- * was thought for DB search only.
- *
- * @author Aleix Lafita
- *
- */
+
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureTools;
@@ -48,6 +39,15 @@ import java.io.OutputStreamWriter;
 import java.util.concurrent.Callable;
 import java.util.zip.GZIPOutputStream;
 
+/**
+ * Simple Callable Class that calculates a pairwise alignment in a different
+ * thread, so that multiple pairwise alignments can be run in parallel
+ * (examples: all-to-all alignments, DB search alignments).
+ * Adapted to a more general implementation since 4.1.0, because before it
+ * was thought for DB search only.
+ *
+ * @author Aleix Lafita
+ */
 public class CallableStructureAlignment implements  Callable<AFPChain> {
 
 	private final static Logger logger = LoggerFactory.getLogger(

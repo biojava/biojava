@@ -36,18 +36,16 @@ import org.biojava.nbio.structure.align.pairwise.AlternativeAlignment;
 import org.biojava.nbio.structure.jama.Matrix;
 
 
-/** Wrapper for the BioJava Structure Alignment Implementation
+/**
+ * Wrapper for the BioJava Structure Alignment Implementation
  *
  * @author Andreas Prlic
- *
  */
-public class BioJavaStructureAlignment
-
-implements StructureAlignment  {
+public class BioJavaStructureAlignment implements StructureAlignment  {
 
 	public static final String algorithmName = "BioJava_structure";
 	private static final float versionNr = 0.1f;
-	StrucAligParameters params;
+	private StrucAligParameters params;
 
 	public BioJavaStructureAlignment(){
 		params = new StrucAligParameters();
@@ -81,15 +79,12 @@ implements StructureAlignment  {
 		return "not implemented yet. Algorithm still under development.";
 	}
 
-
-
 	@Override
 	public AFPChain align(Atom[] ca1, Atom[] ca2) throws StructureException {
 		StrucAligParameters params = StrucAligParameters.getDefaultParameters();
 		return align(ca1,ca2,params);
 
 	}
-
 
 	@Override
 	public AFPChain align(Atom[] ca1, Atom[] ca2, Object params)
@@ -117,8 +112,6 @@ implements StructureAlignment  {
 		return afpChain;
 
 	}
-
-
 
 	private void copyResults(AFPChain afpChain, AlternativeAlignment altAlig, Atom[] ca1, Atom[] ca2) {
 		afpChain.setAlgorithmName(getAlgorithmName());
