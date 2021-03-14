@@ -16,7 +16,7 @@ env:
   - secure: it5av1icAvJn/6UI0aWS23m+En0ij1hCiPKw1QIbDLCE3oJOE4nHR8qINcnontH4XUQYTkmekStDkXj0WVVgp08zArj9o018XBtadYY+15h2QZBBAIpYb3UdlJoQfkcAx8yCv59BMd/u6DhMtcKSTHptVWvsLAS7YGW5hR6ZNYA=
 addons:
  sonarcloud:
-  organization: "biojava_biojava"
+  organization: "biojava"
 script:
  # the following command line builds the project, runs the tests with coverage and then execute the SonarCloud analysis
  - mvn clean verify sonar:sonar -Dsonar.projectKey=biojava_biojava
