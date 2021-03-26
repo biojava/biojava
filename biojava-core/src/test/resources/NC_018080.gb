@@ -1,0 +1,28 @@
+LOCUS       NC_018080            6402658 bp    DNA     circular CON 27-OCT-2020
+DEFINITION  Pseudomonas aeruginosa DK2
+ACCESSION
+VERSION     .0
+KEYWORDS    .
+FEATURES             Location/Qualifiers
+     source          1..6402658
+                     /organism="Pseudomonas aeruginosa DK2"
+                     /mol_type="genomic DNA"
+                     /strain="DK2"
+                     /db_xref="taxon:1093787"
+     gene            complement(1123502..1123588)
+                     /locus_tag="PADK2_RS05265"
+                     /old_locus_tag="PADK2_t29613"
+     tRNA            complement(1123502..1123588)
+                     /locus_tag="PADK2_RS05265"
+                     /old_locus_tag="PADK2_t29613"
+                     /product="tRNA-Leu"
+                     /inference="COORDINATES: profile:tRNAscan-SE:2.0.6"
+                     /note="Derived by automated computational analysis using
+                     gene prediction method: tRNAscan-SE."
+                     /anticodon=(pos:complement(1123552..1123554),aa:Leu,
+                     seq:caa)
+                     /transl_except=(pos:complement(1123552..1123554),
+                     aa:Leu)
+ORIGIN
+        1 tttaaagaga ccggcgattc tagtgaaatc gaacgggcag gtcaatttcc aaccagcgat
+//

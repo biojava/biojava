@@ -36,10 +36,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
@@ -331,6 +328,35 @@ public class GenbankReaderTest {
 		assertEquals(7028, (int)fLocation.getStart().getPosition());
 		assertEquals(286, (int)fLocation.getEnd().getPosition());
 		assertEquals(Strand.NEGATIVE, fLocation.getStrand());
+	}
+
+	/**
+	 * Biojava fails to parse anticodon and transl_except feature qualifiers when they line wrap.
+	 * https://github.com/biojava/biojava/issues/843
+	 */
+	@Test
+	public void testGithub843() throws Exception {
+		CheckableInputStream inStream = new CheckableInputStream(this.getClass().getResourceAsStream("/NC_018080.gb"));
+		assertNotNull(inStream);
+
+		GenbankReader<DNASequence, NucleotideCompound> genbankDNA
+				= new GenbankReader<>(
+				inStream,
+				new GenericGenbankHeaderParser<>(),
+				new DNASequenceCreator(DNACompoundSet.getDNACompoundSet())
+		);
+
+		LinkedHashMap<String, DNASequence> dnaSequences = genbankDNA.process();
+		assertNotNull(dnaSequences);
+
+		DNASequence dna = new ArrayList<>(dnaSequences.values()).get(0);
+		assertNotNull(dna);
+
+		FeatureInterface<AbstractSequence<NucleotideCompound>, NucleotideCompound> tRNAFeature = dna.getFeaturesByType("tRNA").get(0);
+		String anticodon = tRNAFeature.getQualifiers().get("anticodon").get(0).getValue();
+		assertEquals("(pos:complement(1123552..1123554),aa:Leu,seq:caa)", anticodon);
+		String transl_except = tRNAFeature.getQualifiers().get("transl_except").get(0).getValue();
+		assertEquals("(pos:complement(1123552..1123554),aa:Leu)",transl_except);
 	}
 
 	/**
