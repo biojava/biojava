@@ -45,14 +45,9 @@ import org.biojava.nbio.structure.NucleotideImpl;
 import org.biojava.nbio.structure.PDBCrystallographicInfo;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.io.StructureFiletype;
-import org.biojava.nbio.structure.StructureIO;
-import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.chem.ChemComp;
 import org.biojava.nbio.structure.chem.ChemCompGroupFactory;
 import org.biojava.nbio.structure.chem.ChemCompTools;
-import org.biojava.nbio.structure.chem.DownloadChemCompProvider;
-import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.quaternary.BioAssemblyInfo;
 import org.biojava.nbio.structure.quaternary.BiologicalAssemblyTransformation;
 import org.biojava.nbio.structure.secstruc.SecStrucCalc;
@@ -73,49 +68,6 @@ import org.slf4j.LoggerFactory;
 public class MmtfUtils {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MmtfUtils.class);
-
-	/**
-	 * Set up the configuration parameters for BioJava.
-	 */
-	public static AtomCache setUpBioJava() {
-		// Set up the atom cache etc
-		AtomCache cache = new AtomCache();
-		cache.setFiletype(StructureFiletype.MMTF);
-		FileParsingParameters params = cache.getFileParsingParams();
-		params.setCreateAtomBonds(true);
-		params.setAlignSeqRes(true);
-		params.setParseBioAssembly(true);
-		DownloadChemCompProvider cc = new DownloadChemCompProvider();
-		ChemCompGroupFactory.setChemCompProvider(cc);
-		cc.checkDoFirstInstall();
-		cache.setFileParsingParams(params);
-		StructureIO.setAtomCache(cache);
-		return cache;
-	}
-
-	/**
-	 * Set up the configuration parameters for BioJava.
-	 * @param extraUrl the string describing the URL (or file path) from which
-	 * to get missing CCD entries.
-	 */
-	public static AtomCache setUpBioJava(String extraUrl) {
-		// Set up the atom cache etc
-		AtomCache cache = new AtomCache();
-		cache.setFiletype(StructureFiletype.MMTF);
-		FileParsingParameters params = cache.getFileParsingParams();
-		params.setCreateAtomBonds(true);
-		params.setAlignSeqRes(true);
-		params.setParseBioAssembly(true);
-		DownloadChemCompProvider.serverBaseUrl = extraUrl;
-		DownloadChemCompProvider.useDefaultUrlLayout = false;
-		DownloadChemCompProvider cc = new DownloadChemCompProvider();
-		ChemCompGroupFactory.setChemCompProvider(cc);
-		cc.checkDoFirstInstall();
-		cache.setFileParsingParams(params);
-		StructureIO.setAtomCache(cache);
-		return cache;
-	}
-
 
 	/**
 	 * This sets all microheterogeneous groups

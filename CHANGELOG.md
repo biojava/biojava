@@ -17,6 +17,7 @@ BioJava 6.0.0 (future release)
 * `org.biojava.nbio.structure.PDBStatus`: removed `getReplacement` and `getReplaces` 
 * Removed `org.biojava.nbio.structure.io.mmcif` package
 * Removed functionality to write isolated CIF headers from `FileConvert`
+* Removed `org.biojava.nbio.structure.io.mmtf.MmtfUtils.setUpBioJava()`
 
 ### Breaking API changes
 * Extracted `StructureIO.StructureFiletype` enum to `org.biojava.nbio.structure.io.StructureFiletype` (supports `PDB`, `MMTF`, `CIF`, and `BCIF`)

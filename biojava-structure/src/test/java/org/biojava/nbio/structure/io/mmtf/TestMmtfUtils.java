@@ -20,6 +20,11 @@
  */
 package org.biojava.nbio.structure.io.mmtf;
 
+import org.biojava.nbio.structure.align.util.AtomCache;
+import org.biojava.nbio.structure.chem.ChemCompGroupFactory;
+import org.biojava.nbio.structure.chem.DownloadChemCompProvider;
+import org.biojava.nbio.structure.io.FileParsingParameters;
+import org.biojava.nbio.structure.io.StructureFiletype;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -51,7 +56,6 @@ import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.StructureImpl;
-import org.biojava.nbio.structure.io.mmtf.MmtfUtils;
 import org.biojava.nbio.structure.quaternary.BioAssemblyInfo;
 import org.biojava.nbio.structure.quaternary.BiologicalAssemblyTransformation;
 import org.biojava.nbio.structure.xtal.BravaisLattice;
@@ -67,6 +71,25 @@ import org.biojava.nbio.structure.xtal.SpaceGroup;
 public class TestMmtfUtils {
 
 	/**
+	 * Set up the configuration parameters for BioJava.
+	 */
+	public static AtomCache setUpBioJava() {
+		// Set up the atom cache etc
+		AtomCache cache = new AtomCache();
+		cache.setFiletype(StructureFiletype.CIF);
+		FileParsingParameters params = cache.getFileParsingParams();
+		params.setCreateAtomBonds(true);
+		params.setAlignSeqRes(true);
+		params.setParseBioAssembly(true);
+		DownloadChemCompProvider cc = new DownloadChemCompProvider();
+		ChemCompGroupFactory.setChemCompProvider(cc);
+		cc.checkDoFirstInstall();
+		cache.setFileParsingParams(params);
+		StructureIO.setAtomCache(cache);
+		return cache;
+	}
+
+	/**
 	 * Integration test to see that the microheterogenity is being dealt with correctly.
 	 * 
 	 * @throws IOException
@@ -74,7 +97,7 @@ public class TestMmtfUtils {
 	 */
 	@Test
 	public void microHeterogenity() throws IOException, StructureException {
-		MmtfUtils.setUpBioJava();
+		setUpBioJava();
 		Structure inputStructure = StructureIO.getStructure("4ck4");
 		// Count the number of groups
 		Group before = inputStructure.getChains().get(0).getAtomGroup(17);
