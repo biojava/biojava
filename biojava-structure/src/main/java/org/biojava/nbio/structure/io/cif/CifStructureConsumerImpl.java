@@ -332,7 +332,7 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
                 atom.setElement(element);
             }  catch (IllegalArgumentException e) {
                 logger.info("Element {} was not recognised as a BioJava-known element, the element will be " +
-                        "represented as the generic element {}", typeSymbol, Element.R.name());
+                        "represented as the generic element {}", ts, Element.R.name());
                 atom.setElement(Element.R);
             }
 
