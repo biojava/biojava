@@ -153,7 +153,7 @@ public class URLIdentifier implements StructureIdentifier {
 
 		switch(format) {
 			case CIF: case BCIF:
-				return CifStructureConverter.fromURL(url);
+				return CifStructureConverter.fromURL(url, cache.getFileParsingParams());
 			case MMTF:
 				return MmtfActions.readFromInputStream(url.openStream());
 			default: case PDB:
