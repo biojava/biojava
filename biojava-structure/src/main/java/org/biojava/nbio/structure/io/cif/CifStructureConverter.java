@@ -57,7 +57,7 @@ public class CifStructureConverter {
      * @return the target
      * @throws IOException thrown when reading fails
      */
-    private static Structure fromURL(URL url, FileParsingParameters parameters) throws IOException {
+    public static Structure fromURL(URL url, FileParsingParameters parameters) throws IOException {
         return fromInputStream(url.openStream(), parameters);
     }
 
