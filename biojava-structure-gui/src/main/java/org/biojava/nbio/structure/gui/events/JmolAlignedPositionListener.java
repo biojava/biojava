@@ -80,8 +80,8 @@ public class JmolAlignedPositionListener implements AlignmentPositionListener{
 			Chain c = parent.getChain();
 			pdbpos1 = parent.getResidueNumber().toString();
 			//System.out.printlng"chainid 1 is >"+c.getName()+"<");
-			if (! c.getChainID().equals( " ")) {
-				pdbpos1 += ":" + c.getChainID();
+			if (! c.getId().equals( " ")) {
+				pdbpos1 += ":" + c.getId();
 			}
 
 
@@ -96,8 +96,8 @@ public class JmolAlignedPositionListener implements AlignmentPositionListener{
 			pdbpos2 = parent.getResidueNumber().toString();
 			//System.out.println("2:" + parent);
 			//System.out.println("chainid 2 is >"+c.getName()+"<");
-			if (! c.getChainID().equals( " ")) {
-				pdbpos2 += ":" + c.getChainID();
+			if (! c.getId().equals( " ")) {
+				pdbpos2 += ":" + c.getId();
 			}
 			if ( p1 > -1)
 				s +=",";

@@ -411,29 +411,6 @@ public interface Structure extends Cloneable, Serializable {
 	Chain getChainByIndex(int modelnr, int chainIndex);
 
 	/**
-	 * Request a particular chain from a structure.
-	 * by default considers only the first model.
-	 * @param authId name of a chain that should be returned
-	 * @return Chain the requested chain
-	 * @throws StructureException
-	 * @Deprecated use {@link #getPolyChainByPDB(String)} or {@link #getNonPolyChainsByPDB(String)} instead
-	 */
-	@Deprecated
-	Chain findChain(String authId) throws StructureException;
-
-	/**
-	 * Request a particular chain from a particular model
-	 * @param authId the name of a chain that should be returned
-	 * @param modelnr the number of the model to use
-	 * @return Chain the requested chain
-	 * @throws StructureException
-	 * @Deprecated use {@link #getPolyChainByPDB(String, int)} or {@link #getNonPolyChainsByPDB(String, int)} instead
-	 */
-	@Deprecated
-	Chain findChain(String authId, int modelnr) throws StructureException;
-
-
-	/**
 	 * Check if a chain with the chainId aymId is contained in this structure.
 	 *
 	 * @param asymId the Id of the chain
@@ -479,36 +456,6 @@ public interface Structure extends Cloneable, Serializable {
 	 * @throws StructureException
 	 */
 	Group findGroup(String authId, String pdbResnum, int modelnr) throws StructureException;
-
-
-	/**
-	 * Request a chain by its public id (author id) for the first model.
-	 * Before 5.0 it returned a Chain that had both polymeric and non-polymeric groups
-	 * following the PDB-file data model.
-	 * Since 5.0 it only returns the polymeric part of the chain.
-	 *
-	 * @param authId the author id (chainName, public chain id)
-	 * @return the Chain that matches the authId
-	 * @throws StructureException if chain can't be found
-	 * @deprecated use {@link #getPolyChainByPDB(String)} instead
-	 */
-	@Deprecated
-	Chain getChainByPDB(String authId) throws StructureException;
-
-	/**
-	 * Request a chain by its public id (author id) for the given model index.
-	 * Before 5.0 it returned a Chain that had both polymeric and non-polymeric groups
-	 * following the PDB-file data model.
-	 * Since 5.0 it only returns the polymeric part of the chain.
-	 *
-	 * @param authId the author id (chainName, public chain id)
-	 * @param modelIdx the index of the required model (0-based)
-	 * @return the Chain that matches the authId in the model
-	 * @throws StructureException if chain can't be found
-	 * @deprecated use {@link #getPolyChainByPDB(String,int)} instead
-	 */
-	@Deprecated
-	Chain getChainByPDB(String authId, int modelIdx) throws StructureException;
 
 	/**
 	 * Retrieve a Chain (polymeric, non-polymeric or water) based on
@@ -713,16 +660,6 @@ public interface Structure extends Cloneable, Serializable {
 	 * Request a particular entity by its entity id (mol id in legacy PDB format)
 	 *
 	 * @param entityId the number of the entity
-	 * @return a entityInfo
-	 * @deprecated use {@link #getEntityById(int)} instead
-	 */
-	@Deprecated
-	EntityInfo getCompoundById(int entityId);
-
-	/**
-	 * Request a particular entity by its entity id (mol id in legacy PDB format)
-	 *
-	 * @param entityId the number of the entity
 	 * @return an entity, or null if the molId was not found
 	 */
 	EntityInfo getEntityById(int entityId);
@@ -785,19 +722,6 @@ public interface Structure extends Cloneable, Serializable {
 	void setPDBHeader(PDBHeader header);
 
 	/**
-	 * Get the ID used by Hibernate
-	 *
-	 * @return the ID used by Hibernate
-	 */
-	Long getId() ;
-
-	/** set the ID used by Hibernate
-	 *
-	 * @param id the id
-	 */
-	void setId(Long id) ;
-
-	/**
 	 * @param sites the sites to set in the structure
 	 */
 	void setSites(List<Site> sites);
@@ -848,28 +772,6 @@ public interface Structure extends Cloneable, Serializable {
 	 */
 	@Deprecated
 	String getPdbId();
-
-	/**
-	 * Returns the list of {@link ResidueRange ResidueRanges} that this StructureIdentifier defines.
-	 * This is a unique representation.
-	 * @deprecated From BioJava 4.2, use
-	 *  <code>getStructureIdentifier().toCanonical().getResidueRanges()</code>
-	 */
-	@Deprecated
-	List<? extends ResidueRange> getResidueRanges();
-
-	/**
-	 * Returns a list of residue ranges. For example:
-	 * <pre>
-	 * getRanges().get(0): 'A'
-	 * getRanges().get(1): 'B_5-100'
-	 * </pre>
-	 * This is a unique representation.
-	 * @deprecated From BioJava 4.2, use
-	 *  <code>getStructureIdentifier().toCanonical().getRanges()</code>
-	 */
-	@Deprecated
-	List<String> getRanges();
 
 	/**
 	 * Get a string representing this structure's contents. The following places

@@ -350,7 +350,7 @@ public class SequenceDisplay extends JPanel implements ChangeListener {
 		}
 		Atom[] ca1 = structurePairAligner.getAlignmentAtoms(s);
 		Chain c = new ChainImpl();
-		c.setChainID("1");
+		c.setId("1");
 		for (Atom atom : ca1) {
 
 			Group g = atom.getGroup();

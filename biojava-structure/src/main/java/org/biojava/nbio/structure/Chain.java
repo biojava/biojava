@@ -25,7 +25,6 @@ package org.biojava.nbio.structure;
 
 import org.biojava.nbio.core.sequence.template.Sequence;
 import org.biojava.nbio.structure.chem.ChemComp;
-import org.biojava.nbio.structure.io.FileParsingParameters;
 
 import java.io.Serializable;
 import java.util.List;
@@ -33,7 +32,7 @@ import java.util.List;
 /**
  * <p>
  * Defines the interface for a Chain. A Chain corresponds to a Chain in a PDB file.
- * A chain consists out of a list of {@link Group} objects. A Group can either be
+ * A chain consists of a list of {@link Group} objects. A Group can either be
  * an {@link AminoAcid}, {@link HetatomImpl Hetatom} or {@link NucleotideImpl Nucleotide}.
  * </p>
  *
@@ -51,19 +50,22 @@ import java.util.List;
  */
 public interface Chain extends Serializable {
 
-	/** returns an identical copy of this Chain.
+	/**
+	 * Returns an identical copy of this Chain.
 	 * @return  an identical copy of this Chain
 	 */
 	Object clone();
 
-	/** add a group to the list of ATOM record group of this chain.
+	/**
+	 * Add a group to the list of ATOM record group of this chain.
 	 * To add SEQRES records a more complex alignment between ATOM and SEQRES residues
 	 * is required, please see SeqRes2AtomAligner for more details on that.
 	 * @param group  a Group object
 	 */
 	void addGroup(Group group);
 
-	/** Get the 'private' asymId (internal chain IDs in mmCif) for this chain.
+	/**
+	 * Get the 'private' asymId (internal chain IDs in mmCif) for this chain.
 	 *
 	 * @return the asymId
 	 * @see #setId(String)
@@ -227,49 +229,8 @@ public interface Chain extends Serializable {
 	 */
 	EntityInfo getEntityInfo();
 
-	/**
-	 * Sets the 'private' asymId of this chain (Chain id in PDB file ).
-	 * @param asymId  a String specifying the name value
-	 * @see #getChainID()
-	 * @deprecated  use {@link #setId(String asymId)} instead
-	 */
-	@Deprecated
-	void setChainID(String asymId);
-
-
-
-	/**
-	 * Gets the 'private' asymId of this chain.
-	 * @return a String representing the name value
-	 * @see #setChainID(String)
-	 * @deprecated  use getId() instead
-	 */
-	@Deprecated
-	String getChainID();
-
-
-	/**
-	 * If available, returns the internal chain ID that is used in mmCIF files (asym_id), otherwise null
-	 *
-	 * @return String or null
-	 * @since 3.0.5
-	 * @deprecated  use {@link #getId()} instead
-	 */
-	String getInternalChainID();
-
-	/**
-	 * Sets the internal chain ID that is used in mmCif files
-	 *
-	 * @param internalChainID
-	 * @since 3.0.5
-	 * @deprecated use {@link #setId()} instead
-	 */
-	void setInternalChainID(String internalChainID);
-
-
 	@Override
 	String toString();
-
 
 	/**
 	 * Converts the SEQRES groups of a Chain to a Biojava Sequence object.
@@ -280,8 +241,6 @@ public interface Chain extends Serializable {
 
 	/**
 	 * Returns the sequence of amino acids as it has been provided in the ATOM records.
-	 * Non-standard residues will be present in the string only if the property
-	 * {@value org.biojava.nbio.structure.io.PDBFileReader#LOAD_CHEM_COMP_PROPERTY} has been set.
 	 * @return amino acid sequence as string
 	 * @see #getSeqResSequence()
 	 */
@@ -294,21 +253,6 @@ public interface Chain extends Serializable {
 	 * @see #getAtomSequence()
 	 */
 	String getSeqResSequence();
-
-	/**
-	 * Sets the Swissprot id of this chain.
-	 * @param sp_id  a String specifying the swissprot id value
-	 * @see #getSwissprotId()
-	 */
-	void setSwissprotId(String sp_id);
-
-	/**
-	 * Gets the Swissprot id of this chain.
-	 * @return a String representing the swissprot id value
-	 * @see #setSwissprotId(String sp_id)
-	 */
-	String getSwissprotId() ;
-
 
 	/**
 	 * Returns a List of all SEQRES groups of a special type, one of: {@link GroupType#AMINOACID},
@@ -339,16 +283,6 @@ public interface Chain extends Serializable {
 
 	/**
 	 * Sets the back-reference to its parent Structure.
-	 * @param parent the parent Structure object for this Chain
-	 * @see #getStructure()
-	 * @deprecated  use setStructure instead
-	 *
-	 */
-	@Deprecated
-	 void setParent(Structure parent) ;
-
-	/**
-	 * Sets the back-reference to its parent Structure.
 	 *
 	 * @param parent
 	 */
@@ -359,31 +293,8 @@ public interface Chain extends Serializable {
 	 *
 	 * @return the parent Structure object
 	 * @see #setStructure(Structure)
-	 * @deprecated use getStructure(Structure) instead.
-	 */
-	@Deprecated
-	Structure getParent() ;
-
-
-	/**
-	 * Returns the parent Structure of this chain.
-	 *
-	 * @return the parent Structure object
-	 * @see #setStructure(Structure)
 	 */
 	Structure getStructure() ;
-
-	/**
-	 * Gets all groups that are not polymer groups and that are not solvent groups.
-	 * Will automatically fetch Chemical Component files from the PDB web site, even if
-	 * {@link FileParsingParameters#setLoadChemCompInfo(boolean)} has not been set to true.
-	 * Otherwise the Ligands could not correctly be identified.
-	 * @return list of Groups that are ligands
-	 * @deprecated since biojava 5.0 this does not apply anymore. Chains contain either
-	 * polymeric groups or non-polymeric groups
-	 */
-	@Deprecated
-	List<Group> getAtomLigands();
 
 	/**
 	 * Convert this Chain to a String in PDB format
@@ -408,7 +319,7 @@ public interface Chain extends Serializable {
 	/**
 	 * Gets annotated sequence mismatches for this chain. This is based on the STRUCT_REF_SEQ_DIF mmCif category
 	 *
-	 * @returns a list of sequence mismatches (or null if none found)
+	 * @return a list of sequence mismatches (or null if none found)
 	 */
 	List<SeqMisMatch> getSeqMisMatches();
 
@@ -419,13 +330,15 @@ public interface Chain extends Serializable {
 	 */
 	EntityType getEntityType();
 
-	/** Tests if a chain is consisting of water molecules only
+	/**
+	 * Tests if a chain is consisting of water molecules only
 	 *
 	 * @return true if there are only solvent molecules in this chain.
 	 */
 	public boolean isWaterOnly();
 
-	/**  Returns true if the given chain is composed of non-polymeric (including water) groups only.
+	/**
+	 * Returns true if the given chain is composed of non-polymeric (including water) groups only.
 	 *
 	 * @return true if only non-polymeric groups in this chain.
 	 */
@@ -435,7 +348,7 @@ public interface Chain extends Serializable {
 	 * Get the predominant {@link GroupType} for a given Chain, following these
 	 * rules: <li>if the ratio of number of residues of a certain
 	 * {@link GroupType} to total non-water residues is above the threshold
-	 * {@value #org.biojava.nbio.structure.StructureTools.RATIO_RESIDUES_TO_TOTAL}, then that {@link GroupType} is
+	 * {@value org.biojava.nbio.structure.StructureTools#RATIO_RESIDUES_TO_TOTAL}, then that {@link GroupType} is
 	 * returned</li> <li>if there is no {@link GroupType} that is above the
 	 * threshold then the {@link GroupType} with most members is chosen, logging
 	 * it</li>
@@ -446,9 +359,9 @@ public interface Chain extends Serializable {
 	 * their linking.
 	 * </p>
 	 *
-	 * @return
+	 * @return the predominant group type
 	 */
-	public GroupType getPredominantGroupType();
+	GroupType getPredominantGroupType();
 
 	/**
 	 * Tell whether given chain is a protein chain
@@ -456,7 +369,7 @@ public interface Chain extends Serializable {
 	 * @return true if protein, false if nucleotide or ligand
 	 * @see #getPredominantGroupType()
 	 */
-	public  boolean isProtein();
+	boolean isProtein();
 
 	/**
 	 * Tell whether given chain is DNA or RNA
@@ -464,5 +377,5 @@ public interface Chain extends Serializable {
 	 * @return true if nucleic acid, false if protein or ligand
 	 * @see #getPredominantGroupType()
 	 */
-	public  boolean isNucleicAcid();
+	boolean isNucleicAcid();
 }

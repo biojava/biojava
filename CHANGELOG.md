@@ -18,6 +18,9 @@ BioJava 6.0.0 (future release)
 * Removed `org.biojava.nbio.structure.io.mmcif` package
 * Removed functionality to write isolated CIF headers from `FileConvert`
 * Removed `org.biojava.nbio.structure.io.mmtf.MmtfUtils.setUpBioJava()`
+* Removed from `org.biojava.nbio.structure.Chain` interface: `getParent()`, `setParent()`, `getAtomLigands()`, `getSwissprotId()`, `setSwissprotId()`, `getInternalChainID()`, `setInternalChainID()`, `getChainID()`, `setChainID()`
+* Removed from `org.biojava.nbio.structure.Structure` interface: `findChain()`, `getId()`, `setId()`, `getChainByPDB()`, `getCompoundById()`, `getResidueRanges()`, `getRanges()`
+* Removed from `org.biojava.nbio.structure.StructureTools` : `isNucleicAcid()`, `isProtein()`, `getPredominantGroupType()`, `isChainWaterOnly()`, `isChainPureNonPolymer()`
 
 ### Breaking API changes
 * Extracted `StructureIO.StructureFiletype` enum to `org.biojava.nbio.structure.io.StructureFiletype` (supports `PDB`, `MMTF`, `CIF`, and `BCIF`)

@@ -57,20 +57,19 @@ public class ChainImpl implements Chain {
 	 */
 	private static final String DEFAULT_CHAIN_ID = "A";
 
-	private String swissprot_id ;
 	private String authId; // the 'public' chain identifier as assigned by authors in PDB files
+	private String asymId; // the 'internal' chain identifier as used in mmCIF files
 
-	private List <Group> groups;
+	private List<Group> groups;
 	private List<Group> seqResGroups;
 
 	private EntityInfo entity;
 	private Structure parent;
 
-	private Map<String, Integer> pdbResnumMap;
-	private String asymId; // the 'internal' chain identifier as used in mmCIF files
+	private final Map<String, Integer> pdbResnumMap;
 
+	private List<SeqMisMatch> seqMisMatches;
 
-	private List<SeqMisMatch> seqMisMatches = null;
 	/**
 	 *  Constructs a ChainImpl object.
 	 */
@@ -86,86 +85,42 @@ public class ChainImpl implements Chain {
 
 	}
 
-	/** {@inheritDoc}
-	 *
-	 */
 	@Override
 	public String getId() {
 		return asymId;
 	}
 
-	/** {@inheritDoc}
-	 *
-	 */
 	@Override
 	public void setId(String asymId) {
 		this.asymId = asymId;
 	}
 
-	/** {@inheritDoc}
-	 *
-	 */
 	@Override
 	public String getName() { return authId; }
 
-	/** {@inheritDoc}
-	 *
-	 */
 	@Override
 	public void setName(String authId) { this.authId = authId; }
 
-	/** {@inheritDoc}
-	 *
-	 */
-	@Override
-	@Deprecated
-	public void setParent(Structure parent) {
-		setStructure(parent);
-	}
-
-	/** {@inheritDoc}
-	 *
-	 */
 	@Override
 	public void setStructure(Structure parent){
 		this.parent = parent;
 	}
 
-	/** Returns the parent Structure of this chain.
-	 *
-	 * @return the parent Structure object
-	 */
 	@Override
 	public Structure getStructure() {
 
 		return parent;
 	}
 
-
-	/** Returns the parent Structure of this chain.
-	 *
-	 * @return the parent Structure object
-	 * @deprecated  use getStructure instead.
-	 */
-	@Override
-	@Deprecated
-	public Structure getParent() {
-
-		return getStructure();
-	}
-
-	/** Returns an identical copy of this Chain .
-	 * @return an identical copy of this Chain
-	 */
 	@Override
 	public Object clone() {
+
 		// go through all groups and add to new Chain.
 		ChainImpl n = new ChainImpl();
 		// copy chain data:
 
 		n.setId(getId());
 		n.setName(getName());
-		n.setSwissprotId ( getSwissprotId());
 
 		// NOTE the EntityInfo will be reset at the parent level (Structure) if cloning is happening from parent level
 		// here we don't deep-copy it and just keep the same reference, in case the cloning is happening at the Chain level only
@@ -213,43 +168,16 @@ public class ChainImpl implements Chain {
 		return n ;
 	}
 
-	/** {@inheritDoc}
-	 *
-	 */
 	@Override
 	public void setEntityInfo(EntityInfo mol) {
 		this.entity = mol;
 	}
 
-	/** {@inheritDoc}
-	 *
-	 */
 	@Override
 	public EntityInfo getEntityInfo() {
 		return this.entity;
 	}
 
-	/** set the Swissprot id of this chains .
-	 * @param sp_id  a String specifying the swissprot id value
-	 * @see #getSwissprotId
-	 */
-	@Override
-	public void setSwissprotId(String sp_id){
-		swissprot_id = sp_id ;
-	}
-
-	/** get the Swissprot id of this chains .
-	 * @return a String representing the swissprot id value
-	 * @see #setSwissprotId
-	 */
-	@Override
-	public String getSwissprotId() {
-		return swissprot_id ;
-	}
-
-	/** {@inheritDoc}
-	 *
-	 */
 	@Override
 	public void addGroup(Group group) {
 
@@ -288,7 +216,7 @@ public class ChainImpl implements Chain {
 			if (  pdbResnumMap.containsKey(pdbResnum)) {
 
 				logger.warn("Adding residue {}({}) to chain {} but a residue with same residue number is already present: {}({}). Will add only the aminoacid residue (if any) to the lookup, lookups for that residue number won't work properly.",
-						pdbResnum, group.getPDBName(), getChainID(), groups.get(pdbResnumMap.get(pdbResnum)).getResidueNumber(), groups.get(pdbResnumMap.get(pdbResnum)).getPDBName());
+						pdbResnum, group.getPDBName(), getId(), groups.get(pdbResnumMap.get(pdbResnum)).getResidueNumber(), groups.get(pdbResnumMap.get(pdbResnum)).getPDBName());
 				if ( group instanceof AminoAcid)
 					pdbResnumMap.put(pdbResnum,pos);
 			} else
@@ -297,19 +225,12 @@ public class ChainImpl implements Chain {
 
 	}
 
-
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Group getAtomGroup(int position) {
 
 		return groups.get(position);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public List<Group> getAtomGroups(GroupType type){
 
@@ -323,18 +244,11 @@ public class ChainImpl implements Chain {
 		return tmp ;
 	}
 
-
-	/** {@inheritDoc}
-	 *
-	 */
 	@Override
 	public List<Group> getAtomGroups(){
 		return groups ;
 	}
 
-	/** {@inheritDoc}
-	 *
-	 */
 	@Override
 	public void setAtomGroups(List<Group> groups){
 		for (Group g:groups){
@@ -348,9 +262,8 @@ public class ChainImpl implements Chain {
 			throws StructureException {
 		// Short-circut for include all groups
 		if(start == null && end == null) {
-			return groups.toArray(new Group[groups.size()]);
+			return groups.toArray(new Group[0]);
 		}
-
 
 		List<Group> retlst = new ArrayList<>();
 
@@ -363,7 +276,6 @@ public class ChainImpl implements Chain {
 			adding = false;
 			foundStart = false;
 		}
-
 
 		for (Group g: groups){
 
@@ -412,17 +324,11 @@ public class ChainImpl implements Chain {
 			throw new StructureException("did not find end PDB residue number " + end + " in chain " + authId);
 		}
 
-
 		//not checking if the end has been found in this case...
 
-		return retlst.toArray(new Group[retlst.size()] );
+		return retlst.toArray(new Group[0]);
 	}
 
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 */
 	@Override
 	public Group getGroupByPDB(ResidueNumber resNum) throws StructureException {
 		String pdbresnum = resNum.toString();
@@ -434,50 +340,23 @@ public class ChainImpl implements Chain {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 */
 	@Override
 	public Group[] getGroupsByPDB(ResidueNumber start, ResidueNumber end)
 			throws StructureException {
 		return getGroupsByPDB(start, end, false);
 	}
 
-
-
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public int getSeqResLength() {
 		//new method returns the length of the sequence defined in the SEQRES records
 		return seqResGroups.size();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void   setChainID(String asymId) { this.asymId = asymId;   }
-
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String getChainID()           {	return this.asymId;  }
-
-
-
-	/** String representation.
-	 * @return String representation of the Chain
-	 */
 	@Override
 	public String toString(){
 		String newline = System.getProperty("line.separator");
 		StringBuilder str = new StringBuilder();
-		str.append("Chain asymId:").append(getChainID()).append(" authId:").append(getName()).append(newline);
+		str.append("Chain asymId:").append(getId()).append(" authId:").append(getName()).append(newline);
 		if ( entity != null ){
 			if ( entity.getDescription() != null){
 				str.append(entity.getDescription()).append(newline);
@@ -487,12 +366,8 @@ public class ChainImpl implements Chain {
 		.append(getAtomLength()).append(" residues ").append(newline);
 
 		return str.toString() ;
-
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Sequence<?> getBJSequence()  {
 
@@ -508,15 +383,10 @@ public class ChainImpl implements Chain {
 
 		//TODO: return a DNA sequence if the content is DNA...
 		return s;
-
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String getAtomSequence(){
-
 
 		List<Group> groups = getAtomGroups();
 		StringBuilder sequence = new StringBuilder() ;
@@ -535,13 +405,8 @@ public class ChainImpl implements Chain {
 
 		}
 		return sequence.toString();
-
-
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String getSeqResSequence(){
 
@@ -549,7 +414,7 @@ public class ChainImpl implements Chain {
 		for (Group g : seqResGroups) {
 			ChemComp cc = g.getChemComp();
 			if ( cc == null) {
-				logger.warn("Could not load ChemComp for group: ", g);
+				logger.warn("Could not load ChemComp for group: {}", g);
 				str.append(StructureTools.UNKNOWN_GROUP_LABEL);
 			} else if ( PolymerType.PROTEIN_ONLY.contains(cc.getPolymerType()) ||
 					PolymerType.POLYNUCLEOTIDE_ONLY.contains(cc.getPolymerType())){
@@ -580,7 +445,7 @@ public class ChainImpl implements Chain {
 		for (Group g : seqResGroups) {
 			ChemComp cc = g.getChemComp();
 			if ( cc == null) {
-				logger.warn("Could not load ChemComp for group: ", g);
+				logger.warn("Could not load ChemComp for group: {}", g);
 				str.append(StructureTools.UNKNOWN_GROUP_LABEL);
 			} else if ( PolymerType.PROTEIN_ONLY.contains(cc.getPolymerType()) ||
 					PolymerType.POLYNUCLEOTIDE_ONLY.contains(cc.getPolymerType())){
@@ -598,19 +463,11 @@ public class ChainImpl implements Chain {
 		return str.toString();
 	}
 
-
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Group getSeqResGroup(int position) {
-
 		return seqResGroups.get(position);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public List<Group> getSeqResGroups(GroupType type) {
 		List<Group> tmp = new ArrayList<>() ;
@@ -623,17 +480,11 @@ public class ChainImpl implements Chain {
 		return tmp ;
 	}
 
-	/** {@inheritDoc}
-	 *
-	 */
 	@Override
 	public List<Group> getSeqResGroups() {
 		return seqResGroups;
 	}
 
-	/** {@inheritDoc}
-	 *
-	 */
 	@Override
 	public void setSeqResGroups(List<Group> groups){
 		for (Group g: groups){
@@ -644,39 +495,10 @@ public class ChainImpl implements Chain {
 		this.seqResGroups = groups;
 	}
 
-
-	/** {@inheritDoc}
-	 *
-	 */
 	@Override
 	public int getAtomLength() {
 
 		return groups.size();
-	}
-
-	/** {@inheritDoc}
-	 *
-	 */
-	@Override
-	public List<Group> getAtomLigands(){
-		List<Group> ligands = new ArrayList<>();
-
-		for (Group g : groups)
-			if (!seqResGroups.contains(g) && !g.isWater())
-				ligands.add(g);
-
-		return ligands;
-	}
-
-	@Override
-	public String getInternalChainID() {
-		return asymId;
-	}
-
-	@Override
-	public void setInternalChainID(String internalChainID) {
-		this.asymId = internalChainID;
-
 	}
 
 	@Override

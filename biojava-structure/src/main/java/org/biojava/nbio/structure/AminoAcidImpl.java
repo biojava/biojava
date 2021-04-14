@@ -39,7 +39,8 @@ public class AminoAcidImpl extends HetatomImpl implements AminoAcid {
 	/** this is an Amino acid. type is "amino". */
 	public static final GroupType type = GroupType.AMINOACID;
 
-	/** IUPAC amino acid residue names
+	/**
+	 * IUPAC amino acid residue names
 	 */
 	private Character amino_char ;
 

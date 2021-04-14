@@ -61,7 +61,6 @@ public class StructureImpl implements Structure {
 
 	private PDBHeader pdbHeader;
 
-	private Long id;
 	private boolean biologicalAssembly;
 
 	/**
@@ -79,28 +78,8 @@ public class StructureImpl implements Structure {
 		sites          = new ArrayList<>();
 	}
 
-
-	/** get the ID used by Hibernate
-	 *
-	 * @return the ID used by Hibernate
-	 */
-	@Override
-	public Long getId() {
-		return id;
-	}
-
-	/** set the ID used by Hibernate
-	 *
-	 * @param id the hibernate ID
-	 */
-	@Override
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-
-
-	/** Construct a Structure object that only contains a single group
+	/**
+	 * Construct a Structure object that only contains a single group
 	 *
 	 * @param g group object
 	 */
@@ -113,7 +92,8 @@ public class StructureImpl implements Structure {
 		addChain(c);
 	}
 
-	/** construct a Structure object that contains a particular chain
+	/**
+	 * Construct a Structure object that contains a particular chain
 	 *
 	 * @param c chain
 	 */
@@ -122,7 +102,8 @@ public class StructureImpl implements Structure {
 		addChain(c);
 	}
 
-	/** returns an identical copy of this structure .
+	/**
+	 * Returns an identical copy of this structure .
 	 * @return an identical Structure object
 	 */
 	@Override
@@ -187,7 +168,6 @@ public class StructureImpl implements Structure {
 		return n ;
 	}
 
-
 	/** {@inheritDoc} */
 	@Override
 	public Group findGroup(String chainName, String pdbResnum, int modelnr)
@@ -246,26 +226,6 @@ public class StructureImpl implements Structure {
 
 	}
 
-
-
-
-	/** {@inheritDoc} */
-	@Override
-	public Chain findChain(String chainName, int modelnr) throws StructureException {
-
-		return getChainByPDB(chainName, modelnr);
-
-	}
-
-
-	/** {@inheritDoc} */
-	@Override
-	public Chain findChain(String chainId) throws StructureException {
-
-		return findChain(chainId,0);
-	}
-
-
 	/** {@inheritDoc} */
 	@Override
 	public void setPDBCode (String pdb_id_) {
@@ -278,8 +238,6 @@ public class StructureImpl implements Structure {
 		return pdb_id ;
 	}
 
-
-
 	/** {@inheritDoc} */
 	@Override
 	public void   setName(String nam) { name = nam; }
@@ -287,8 +245,6 @@ public class StructureImpl implements Structure {
 	/** {@inheritDoc} */
 	@Override
 	public String getName()           { return name;  }
-
-
 
 	/**
 	 * @return The StructureIdentifier used to create this structure
@@ -652,20 +608,6 @@ public class StructureImpl implements Structure {
 
 	/** {@inheritDoc} */
 	@Override
-	public Chain getChainByPDB(String authId, int modelnr)
-			throws StructureException{
-
-		Chain c = getPolyChainByPDB(authId, modelnr);
-
-		if (c==null ) {
-			throw new StructureException("Could not find chain with authId \"" + authId + "\"" + " for PDB id " + pdb_id + ", model "+modelnr);
-		}
-
-		return c;
-	}
-
-	/** {@inheritDoc} */
-	@Override
 	public Chain getChain(String asymId, int modelnr) {
 
 		List<Chain> chains = getChains(modelnr);
@@ -684,16 +626,6 @@ public class StructureImpl implements Structure {
 
 		return getChain(asymId,0);
 
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public Chain getChainByPDB(String chainId)
-			throws StructureException{
-		if(nrModels() < 1 ) {
-			throw new StructureException("No chains are present.");
-		}
-		return getChainByPDB(chainId,0);
 	}
 
 	@Override
@@ -905,12 +837,6 @@ public class StructureImpl implements Structure {
 
 	/** {@inheritDoc} */
 	@Override
-	public EntityInfo getCompoundById(int molId) {
-		return getEntityById(molId);
-	}
-
-	/** {@inheritDoc} */
-	@Override
 	public EntityInfo getEntityById(int entityId) {
 		for (EntityInfo mol : this.entityInfos){
 			if (mol.getMolId()==entityId){
@@ -1094,22 +1020,9 @@ public class StructureImpl implements Structure {
 		return pdb_id;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void resetModels() {
 		models = new ArrayList<>();
-	}
-	/** {@inheritDoc} */
-	@Deprecated
-	@Override
-	public List<ResidueRange> getResidueRanges() {
-		return toCanonical().getResidueRanges();
-	}
-	/** {@inheritDoc} */
-	@Deprecated
-	@Override
-	public List<String> getRanges() {
-		return ResidueRange.toStrings(getResidueRanges());
 	}
 
 	/**
@@ -1153,9 +1066,5 @@ public class StructureImpl implements Structure {
 		}
 		return new SubstructureIdentifier(getPDBCode(),range);
 	}
-
-
-
-
 
 }

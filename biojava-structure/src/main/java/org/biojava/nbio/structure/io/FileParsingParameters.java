@@ -52,7 +52,6 @@ public class FileParsingParameters implements Serializable
 	private static final long serialVersionUID = 5878292315163939027L;
 
 
-
 	/**
 	 * Flag to detect if the secondary structure info should be read
 	 *

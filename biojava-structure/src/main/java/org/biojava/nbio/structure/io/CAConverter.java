@@ -65,7 +65,6 @@ public class CAConverter {
 		newChain.setId(chain.getId());
 		newChain.setName(chain.getName());
 		newChain.setEntityInfo(chain.getEntityInfo());
-		newChain.setSwissprotId(chain.getSwissprotId());
 
 		List<Group> groups = chain.getAtomGroups();
 

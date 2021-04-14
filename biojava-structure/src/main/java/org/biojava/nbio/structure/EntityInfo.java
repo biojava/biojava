@@ -77,7 +77,7 @@ public class EntityInfo implements Serializable {
 	 * Initialised lazily upon call to {@link #getAlignedResIndex(Group, Chain)}
 	 * Keys are asym_ids of chains, values maps of residue numbers to indices.
 	 */
-	private Map<String, Map<ResidueNumber,Integer>> chains2pdbResNums2ResSerials;
+	private final Map<String, Map<ResidueNumber,Integer>> chains2pdbResNums2ResSerials;
 
 	private String refChainId;
 	private String description = null;

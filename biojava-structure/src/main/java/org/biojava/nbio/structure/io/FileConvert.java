@@ -513,7 +513,6 @@ public class FileConvert {
 				Chain chain = structure.getChainByIndex(modelnr,chainnr);
 				xw.openTag("chain");
 				xw.attribute("id",chain.getId());
-				xw.attribute("SwissprotId",chain.getSwissprotId() );
 				if (structure.nrModels()>1){
 					xw.attribute("model",Integer.toString(modelnr+1));
 				}

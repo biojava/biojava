@@ -30,14 +30,16 @@ import java.io.Serializable;
  */
 public interface PDBRecord extends Serializable {
 
-	/** Returns a PDB file like representation of this record.
+	/**
+	 * Returns a PDB file like representation of this record.
 	 *
 	 * @return a String providing a PDB file like representation of the record.
 	 */
 	public String toPDB();
 
 
-	/** Appends a PDB file like representation of this record to the provided StringBuffer.
+	/**
+	 * Appends a PDB file like representation of this record to the provided StringBuffer.
 	 *
 	 */
 	public void toPDB(StringBuffer buf);

@@ -83,7 +83,6 @@ public class StructureSequenceMatcher {
 				structure.addChain(chain);
 				chain.setEntityInfo(group.getChain().getEntityInfo());
 				chain.setStructure(structure);
-				chain.setSwissprotId(group.getChain().getSwissprotId());
 				chain.setId(group.getChain().getId());
 				chain.setName(group.getChain().getName());
 				currentChain = chain;

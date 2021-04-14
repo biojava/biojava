@@ -132,7 +132,7 @@ implements StructurePairSelector{
 			}
 			if ( debug)
 				System.out.println("using chain " + chain +  " for structure " + structure1.getPDBCode());
-			Chain c1 = structure1.findChain(chain);
+			Chain c1 = structure1.getPolyChainByPDB(chain);
 			tmp1.setPDBCode(structure1.getPDBCode());
 			tmp1.setPDBHeader(structure1.getPDBHeader());
 			tmp1.setPDBCode(structure1.getPDBCode());
