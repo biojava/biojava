@@ -58,7 +58,7 @@ public class TestDownloadChemCompProvider {
 		DownloadChemCompProvider prov = new DownloadChemCompProvider();
 
 		// a fake URL that should give a 404
-		DownloadChemCompProvider.serverBaseUrl = "http://www.rcsb.org/non-existent-ligand-url/";
+		DownloadChemCompProvider.serverBaseUrl = "https://www.rcsb.org/non-existent-ligand-url/";
 
 		ChemComp cc = prov.getChemComp("HEM");
 
