@@ -41,7 +41,7 @@ import java.util.zip.GZIPInputStream;
  */
 public class TestGenomeMapping {
 
-	private static final String geneChromosomeFile = "http://cdn.rcsb.org/gene/hg38/geneChromosome38.tsf.gz";
+	private static final String geneChromosomeFile = "https://cdn.rcsb.org/gene/hg38/geneChromosome38.tsf.gz";
 
 	private List<GeneChromosomePosition> gcps = null;
 
