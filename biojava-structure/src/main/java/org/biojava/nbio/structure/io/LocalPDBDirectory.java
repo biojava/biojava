@@ -43,7 +43,7 @@ import java.util.*;
 
 /**
  * Superclass for classes which download and interact with the PDB's FTP server,
- * specifically {@link PDBFileReader} and {@link MMCIFFileReader}. The basic
+ * specifically {@link PDBFileReader} and {@link CifFileReader}. The basic
  * functionality of downloading structure files from the FTP site is gathered
  * here, making the child classes responsible for only the specific paths and
  * file formats needed.
@@ -56,11 +56,11 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	private static final Logger logger = LoggerFactory.getLogger(LocalPDBDirectory.class);
 
 	/**
-	 * The default server name, prefixed by the protocol string (http:// or ftp://).
+	 * The default server name, prefixed by the protocol string (http://, https:// or ftp://).
 	 * Note that we don't support file stamp retrieving for ftp protocol, thus some of the
 	 * fetch modes will not work properly with ftp protocol
 	 */
-	public static final String DEFAULT_PDB_FILE_SERVER = "http://ftp.wwpdb.org";
+	public static final String DEFAULT_PDB_FILE_SERVER = "https://ftp.wwpdb.org";
 	public static final String PDB_FILE_SERVER_PROPERTY = "PDB.FILE.SERVER";
 
 	/**
