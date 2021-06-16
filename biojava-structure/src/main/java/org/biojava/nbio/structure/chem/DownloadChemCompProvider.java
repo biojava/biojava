@@ -14,7 +14,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -320,8 +319,13 @@ public class DownloadChemCompProvider implements ChemCompProvider {
             try (PrintWriter pw = new PrintWriter(new GZIPOutputStream(new FileOutputStream(newFile)));
                  BufferedReader fileBuffer = new BufferedReader(new InputStreamReader(uconn.getInputStream()))) {
                 String line;
+                boolean success = false;
                 while ((line = fileBuffer.readLine()) != null) {
                     pw.println(line);
+                    success = true;
+                }
+                if(!success) {
+                	throw new IOException("Could not read from URL "+url.toString());
                 }
 
                 pw.flush();
