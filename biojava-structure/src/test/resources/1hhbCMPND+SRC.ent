@@ -1,0 +1,18 @@
+HEADER    OXYGEN TRANSPORT                        01-APR-75   1HHB              
+OBSLTE     18-JUL-84 1HHB      2HHB 3HHB 4HHB                                   
+TITLE     THREE-DIMENSIONAL FOURIER SYNTHESIS OF HUMAN                          
+TITLE    2 DEOXYHEMOGLOBIN AT 2.5 ANGSTROMS RESOLUTION, $I.X-RAY                
+TITLE    3 ANALYSIS                                                             
+COMPND    MOL_ID: 1;                                                            
+COMPND   2 MOLECULE:;                                                           
+COMPND   3 CHAIN: A;                                                            
+COMPND   4 ENGINEERED: YES;                                                     
+COMPND   5 MOL_ID: 2;                                                           
+COMPND   6 MOLECULE:;                                                           
+COMPND   7 CHAIN: B;                                                            
+COMPND   8 ENGINEERED: YES                                                      
+SOURCE    MOL_ID: 1;                                                            
+SOURCE   2 MOL_ID: 2                                                            
+KEYWDS    OXYGEN TRANSPORT                                                      
+EXPDTA    X-RAY DIFFRACTION                                                     
+AUTHOR    G.FERMI,M.F.PERUTZ                                                    
