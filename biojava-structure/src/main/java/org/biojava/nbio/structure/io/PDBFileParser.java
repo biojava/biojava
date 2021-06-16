@@ -2352,7 +2352,7 @@ public class PDBFileParser  {
 	 * SITE     3 AC4 11 HOH A 572 HOH A  582  HOH A 635
 	 * </pre>
 	 * @param line the SITE line record being currently read
-	 * @author Amr AL-Hossary
+	 * @author Amr ALHOSSARY
 	 * @author Jules Jacobsen
 	 */
 	private void pdb_SITE_Handler(String line){

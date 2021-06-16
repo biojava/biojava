@@ -43,7 +43,7 @@ import java.util.*;
  * <p>
  *
  * @author Spencer Bliven
- * @author Amr AL-Hossary
+ * @author Amr ALHOSSARY
  * @author Jose Duarte
  * @since 3.0.2
  */

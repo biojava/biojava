@@ -33,7 +33,7 @@ import java.util.Locale;
 	SITE     2 AC2 10 HIS D  37  ALA D  39  THR D 152  LEU D 153
 	SITE     3 AC2 10 SER D 154  GOL D 172
 	</pre>
- * @author Amr AL-Hossary
+ * @author Amr ALHOSSARY
  * @author Jules Jacobsen
  */
 public class Site implements PDBRecord, Comparable<Site> {
