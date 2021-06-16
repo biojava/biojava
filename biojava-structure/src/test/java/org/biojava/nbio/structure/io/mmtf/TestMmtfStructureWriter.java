@@ -22,7 +22,6 @@ package org.biojava.nbio.structure.io.mmtf;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import org.biojava.nbio.structure.AminoAcidImpl;
@@ -66,7 +65,7 @@ public class TestMmtfStructureWriter {
 	@Test
 	public void testRead() throws IOException {
 		ClassLoader classLoader = getClass().getClassLoader();
-		Structure structure = MmtfActions.readFromFile((Paths.get(classLoader.getResource("org/biojava/nbio/structure/io/mmtf/4CUP.mmtf").getPath())));
+		Structure structure = MmtfActions.readFromFile(new File(classLoader.getResource("org/biojava/nbio/structure/io/mmtf/4CUP.mmtf").getPath()).toPath());
 		assertEquals(structure.getPDBCode(),"4CUP");
 		assertEquals(structure.getChains().size(),6);
 	}
