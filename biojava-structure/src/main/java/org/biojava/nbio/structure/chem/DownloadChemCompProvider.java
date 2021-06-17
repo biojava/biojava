@@ -325,7 +325,7 @@ public class DownloadChemCompProvider implements ChemCompProvider {
                     success = true;
                 }
                 if(!success) {
-                	throw new IOException("Could not read from URL "+url.toString());
+                	throw new IOException("Malformed URL or no content found in "+url.toString());
                 }
 
                 pw.flush();
