@@ -238,39 +238,34 @@ public class EntityFinder {
 
 	private static TreeMap<String,EntityInfo> findEntitiesFromAlignment(List<List<Chain>> polyModels) {
 
-
-
-		TreeMap<String, EntityInfo> chainIds2entities = new TreeMap<String,EntityInfo>();
+		TreeMap<String, EntityInfo> chainIds2entities = new TreeMap<>();
 
 		if (polyModels.isEmpty()) return chainIds2entities;
 
-		Set<Integer> polyChainIndices = new TreeSet<Integer>();
+		Set<Integer> polyChainIndices = new TreeSet<>();
 		for (int i=0;i<polyModels.get(0).size();i++) {
 			polyChainIndices.add(i);
 		}
-
 
 		int molId = 1;
 
 		outer:
 			for (int i:polyChainIndices) {
+				Chain c1 = polyModels.get(0).get(i);
+				// here we use false, which means that X will be used for unknown compounds
+				String str1 = SeqRes2AtomAligner.getFullAtomSequence(c1.getAtomGroups(), new HashMap<>(), false);
+
 				for (int j:polyChainIndices) {
 
 					if (j<=i) continue;
 
-					Chain c1 = polyModels.get(0).get(i);
 					Chain c2 = polyModels.get(0).get(j);
-
-					Map<Integer,Integer> positionIndex1 = new HashMap<Integer, Integer>();
-					Map<Integer,Integer> positionIndex2 = new HashMap<Integer, Integer>();
-					// here we use false, which means that X will be used for unknown compounds
-					String str1 = SeqRes2AtomAligner.getFullAtomSequence(c1.getAtomGroups(), positionIndex1, false);
-					String str2 = SeqRes2AtomAligner.getFullAtomSequence(c2.getAtomGroups(), positionIndex2, false);
+					String str2 = SeqRes2AtomAligner.getFullAtomSequence(c2.getAtomGroups(), new HashMap<>(), false);
 
 					int seq1Length = 0;
 					int seq2Length = 0;
 
-					SequencePair<?,?> pair = null;
+					SequencePair<?,?> pair;
 					if (isProteinSequence(str1) && isProteinSequence(str2)) {
 						ProteinSequence s1 = getProteinSequence(str1);
 						ProteinSequence s2 = getProteinSequence(str2);
@@ -296,10 +291,9 @@ public class EntityFinder {
 						pair = alignRNA(s1,s2);
 
 					} else {
-						logger.debug("Chains {},{} are either different kind of polymers or could not be recognized as protein or nucleotide polymers");
+						logger.debug("Chains {},{} are either different kind of polymers or could not be recognized as protein or nucleotide polymers", c1.getId(), c2.getId());
 						continue;
 					}
-
 
 					int numGaps = getNumGaps(pair);
 					int numGaps1 = getNumGapsQuery(pair);
@@ -318,7 +312,7 @@ public class EntityFinder {
 					if (identity > IDENTITY_THRESHOLD && gapCov1<GAP_COVERAGE_THRESHOLD && gapCov2<GAP_COVERAGE_THRESHOLD) {
 						if (	!chainIds2entities.containsKey(c1.getId()) &&
 								!chainIds2entities.containsKey(c2.getId())) {
-							logger.debug("Creating Compound with chains {},{}",c1.getId(),c2.getId());
+							logger.debug("Creating entity with chains {},{}",c1.getId(),c2.getId());
 
 							EntityInfo ent = new EntityInfo();
 							ent.addChain(c1);
@@ -330,27 +324,24 @@ public class EntityFinder {
 							chainIds2entities.put(c1.getId(), ent);
 							chainIds2entities.put(c2.getId(), ent);
 
-
 						} else {
+							Chain chainToAdd;
 							EntityInfo ent = chainIds2entities.get(c1.getId());
-
 							if (ent==null) {
-								logger.debug("Adding chain {} to entity {}",c1.getId(),c2.getId());
 								ent = chainIds2entities.get(c2.getId());
-								ent.addChain(c1);
-								c1.setEntityInfo(ent);
-								chainIds2entities.put(c1.getId(), ent);
-
+								chainToAdd = c1;
 							} else {
-								logger.debug("Adding chain {} to entity {}",c2.getId(),c1.getId());
-								ent.addChain(c2);
-								c2.setEntityInfo(ent);
-								chainIds2entities.put(c2.getId(), ent);
-
+								chainToAdd = c2;
+							}
+							if (!chainIds2entities.containsKey(chainToAdd.getId())) {
+								logger.debug("Adding chain {} to entity {}", chainToAdd.getId(), ent.getId());
+								ent.addChain(chainToAdd);
+								chainToAdd.setEntityInfo(ent);
+								chainIds2entities.put(chainToAdd.getId(), ent);
 							}
 						}
 						if (!areResNumbersAligned(c1, c2)) {
-							logger.warn("Including 100% identical chains {},{} in same Compound, although they have misaligned residue numbers",
+							logger.warn("Including 100% identical chains {},{} in same entity, although they have misaligned residue numbers",
 									c1.getId(),c2.getId());
 						}
 					}
@@ -370,7 +361,7 @@ public class EntityFinder {
 		for (int i:polyChainIndices) {
 			Chain c = polyModels.get(0).get(i);
 			if (!chainIds2entities.containsKey(c.getId())) {
-				logger.debug("Creating a 1-member Compound for chain {}",c.getId());
+				logger.debug("Creating a 1-member entity for chain {}",c.getId());
 
 				EntityInfo ent = new EntityInfo();
 				ent.addChain(c);
@@ -391,7 +382,6 @@ public class EntityFinder {
 				e.addChain(chain);
 			}
 		}
-
 
 		return chainIds2entities;
 	}

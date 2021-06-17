@@ -301,6 +301,32 @@ public class TestNonDepositedFiles {
 	}
 
 	/**
+	 * Making sure we find the right number of entities and that chains are assigned to entities correctly.
+	 * See https://github.com/biojava/biojava/issues/931
+	 */
+	@Test
+	public void testIssue931() throws IOException {
+		InputStream inStream = new GZIPInputStream(this.getClass().getResourceAsStream("/org/biojava/nbio/structure/io/3zyb_truncated.pdb.gz"));
+		PDBFileParser pdbpars = new PDBFileParser();
+		FileParsingParameters params = new FileParsingParameters();
+		params.setAlignSeqRes(true);
+		pdbpars.setFileParsingParameters(params);
+		Structure s = pdbpars.parsePDBFile(inStream);
+
+		assertEquals(2, s.getEntityInfos().size());
+		assertEquals(4, s.getEntityById(1).getChains().size());
+		assertEquals(3, s.getEntityById(2).getChains().size());
+
+		assertSame(s.getEntityById(1), s.getPolyChains().get(0).getEntityInfo());
+		assertSame(s.getEntityById(1), s.getPolyChains().get(1).getEntityInfo());
+		assertSame(s.getEntityById(1), s.getPolyChains().get(2).getEntityInfo());
+		assertSame(s.getEntityById(1), s.getPolyChains().get(3).getEntityInfo());
+		assertSame(s.getEntityById(2), s.getPolyChains().get(4).getEntityInfo());
+		assertSame(s.getEntityById(2), s.getPolyChains().get(5).getEntityInfo());
+		assertSame(s.getEntityById(2), s.getPolyChains().get(6).getEntityInfo());
+	}
+
+	/**
 	 * This test represents a common situation for a non-deposited structure.
 	 * When building with common crystallography software, the user often adds new
 	 * ligands (or solvent) molecules as new chains.  Only prior to deposition
