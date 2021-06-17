@@ -43,7 +43,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -91,9 +90,7 @@ public class EntityFinder {
 	public static List<EntityInfo> findPolyEntities(List<List<Chain>> polyModels) {
 		TreeMap<String,EntityInfo> chainIds2entities = findEntitiesFromAlignment(polyModels);
 
-		List<EntityInfo> entities = findUniqueEntities(chainIds2entities);
-
-		return entities;
+		return findUniqueEntities(chainIds2entities);
 	}
 
 	/**
@@ -102,7 +99,7 @@ public class EntityFinder {
 	 */
 	private static List<EntityInfo> findUniqueEntities(TreeMap<String,EntityInfo> chainIds2entities) {
 
-		List<EntityInfo> list = new ArrayList<EntityInfo>();
+		List<EntityInfo> list = new ArrayList<>();
 
 		for (EntityInfo cluster:chainIds2entities.values()) {
 			boolean present = false;
@@ -131,12 +128,7 @@ public class EntityFinder {
 		// let's find first the max entity id to assign entity ids to the newly found entities
 		int maxMolId = 0;
 		if (!entities.isEmpty()) {
-			maxMolId = Collections.max(entities, new Comparator<EntityInfo>() {
-				@Override
-				public int compare(EntityInfo o1, EntityInfo o2) {
-					return new Integer(o1.getMolId()).compareTo(o2.getMolId());
-				}
-			}).getMolId();
+			maxMolId = Collections.max(entities, Comparator.comparingInt(EntityInfo::getMolId)).getMolId();
 		}
 		// we go one over the max
 		int molId = maxMolId + 1;
@@ -181,7 +173,6 @@ public class EntityFinder {
 
 		}
 
-
 	}
 
 	private static EntityInfo findNonPolyEntityWithDescription(String description, List<EntityInfo> nonPolyEntities) {
@@ -221,7 +212,6 @@ public class EntityFinder {
 			} catch (StructureException e) {
 				// the group doesn't exist (no density) in the chain, go on
 				countNonExisting++;
-				continue;
 			}
 		}
 
