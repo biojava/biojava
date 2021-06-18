@@ -105,8 +105,6 @@ public class BioJavaStructureAlignment implements StructureAlignment  {
 			AlternativeAlignment altAlig = aligs[0];
 			// copy the results over!
 			copyResults(afpChain,altAlig,ca1,ca2);
-
-
 		}
 
 		return afpChain;
