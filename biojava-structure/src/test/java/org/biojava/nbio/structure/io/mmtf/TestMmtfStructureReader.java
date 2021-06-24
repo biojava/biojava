@@ -2,8 +2,8 @@ package org.biojava.nbio.structure.io.mmtf;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.File;
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.List;
 
 import org.biojava.nbio.structure.Group;
@@ -39,8 +39,7 @@ public class TestMmtfStructureReader {
 		String resource = "org/biojava/nbio/structure/io/mmtf/4CUP.mmtf";
 
 		// Load the structure into memory
-		Structure structure = MmtfActions.readFromFile((
-				Paths.get(classLoader.getResource(resource).getPath())));
+		Structure structure = MmtfActions.readFromFile(new File(classLoader.getResource(resource).getPath()).toPath());
 
 		// Check header properties of the structure
 		assertEquals(structure.getPDBCode(), "4CUP");
@@ -61,8 +60,7 @@ public class TestMmtfStructureReader {
 		String resource = "org/biojava/nbio/structure/io/mmtf/4CUP";
 
 		// Load the structures into memory
-		Structure mmtf = MmtfActions.readFromFile((
-				Paths.get(classLoader.getResource(resource + ".mmtf").getPath())));
+		Structure mmtf = MmtfActions.readFromFile(new File(classLoader.getResource(resource + ".mmtf").getPath()).toPath());
 		Structure mmcif = StructureIO.getStructure(classLoader.getResource(resource + ".cif").getPath());
 
 		// Compare the dates of the structure

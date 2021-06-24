@@ -23,6 +23,7 @@
 package org.biojava.nbio.core.util;
 
 import java.io.*;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.jar.JarEntry;
@@ -117,6 +118,14 @@ public class InputStreamProvider {
 
 	public InputStream getInputStream(URL u)
 	throws IOException{
+		
+		if (u.getProtocol().equals("file")) {
+			try {
+				return getInputStream(new File(u.toURI().getPath()));
+			} catch (URISyntaxException e) {
+				throw new RuntimeException(e);
+			}
+		}
 
 		int magic = 0;
 
