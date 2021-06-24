@@ -53,10 +53,10 @@ public class SourceCompoundTest {
 
 	@Test
 	public void testCompoundColonInFirstToken() {
-		Structure s1 = getStructure("/1hhbCMPND+SRC.ent");
+		Structure s1 = getStructure("/org/biojava/nbio/structure/io/1hhbCMPND+SRC.ent");
 		assertNotNull(s1);
 		assertEquals(2, s1.getEntityInfos().size());
-		Structure s2 = getStructure("/3fdjCMPND+SRC.ent");
+		Structure s2 = getStructure("/org/biojava/nbio/structure/io/3fdjCMPND+SRC.ent");
 		assertNotNull(s2);
 		assertEquals(1, s2.getEntityInfos().size());
 	}
