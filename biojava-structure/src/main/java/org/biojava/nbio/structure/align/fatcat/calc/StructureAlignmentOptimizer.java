@@ -39,31 +39,31 @@ public class StructureAlignmentOptimizer
 
 	//private static final boolean showAlig = false;
 
-	int pro1Len;
-	int pro2Len;
-	int maxLen;
-	Atom[] cod1;
-	Atom[] cod2;
+	private int pro1Len;
+	private int pro2Len;
+	private int maxLen;
+	private Atom[] cod1;
+	private Atom[] cod2;
 
-	int[][] equSet;
-	int equLen;
-	int equLen0;
-	double[][]sij;
+	private int[][] equSet;
+	private int equLen;
+	private int equLen0;
+	private double[][]sij;
 
-	int maxKeepStep;
-	int keepStep;
+	private int maxKeepStep;
+	private int keepStep;
 
-	double  Dc;   //the criteria for structural equivalent residues, eg. 3.0 (CE), 6.0(ProSup)
-	double  rmsdCut;//the criteria for stoping optimization
-	double  increase;
-	double  stopLenPer;
-	double  stopRmsdPer;
-	double  stopRmsd;
+	private double  Dc;   //the criteria for structural equivalent residues, eg. 3.0 (CE), 6.0(ProSup)
+	private double  rmsdCut;//the criteria for stoping optimization
+	private double  increase;
+	private double  stopLenPer;
+	private double  stopRmsdPer;
+	private double  stopRmsd;
 
-	double  gapIni;
-	double  gapExt;
+	private double  gapIni;
+	private double  gapExt;
 
-	double rmsd;
+	private double rmsd;
 
 	private static final boolean debug = FatCatAligner.debug;
 

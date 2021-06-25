@@ -29,34 +29,35 @@ package org.biojava.nbio.structure.align.fatcat.calc;
 public class FCAlignHelper
 {
 
-	int     M; //length of protein 1
-	int     N; //length of protein 2
-	double  g; //gap-create
-	double  h; //gap-extend
-	double  m; //g + h
-	double[][]  sij;
-	char[][]    trace; //trace-record
-	char[][]    etrace; //trace-record
-	char[][]    dtrace; //trace-record
-	int     B1; //beginning position of protein 1 in alignment
-	int     B2; //beginning position of protein 2 in alignment
-	int     E1; //end position of protein 1 in alignment
-	int     E2; //end position of protein 2 in alignment
-	double  alignScore;
-	double  identity;
-	double  similarity;
-	int[]   sapp;
-	int[]     sapp0;
-	int sappPos;
-	int     last;
+	private int     M; //length of protein 1
+	private int     N; //length of protein 2
+	private double  g; //gap-create
+	private double  h; //gap-extend
+	private double  m; //g + h
+	private double[][]  sij;
+	private char[][]    trace; //trace-record
+	private char[][]    etrace; //trace-record
+	private char[][]    dtrace; //trace-record
+	private int     B1; //beginning position of protein 1 in alignment
+	private int     B2; //beginning position of protein 2 in alignment
+	private int     E1; //end position of protein 1 in alignment
+	private int     E2; //end position of protein 2 in alignment
+	private double  alignScore;
+	private double  identity;
+	private double  similarity;
+	private int[]   sapp;
+	private int[]     sapp0;
+	private int sappPos;
+	private int     last;
 
-	char[]    seq1;
-	char[]    seq2;
-	char[]    aln1;
-	char[]    aln2;
-	char[]    mark;
+	private char[]    seq1;
+	private char[]    seq2;
+	private char[]    aln1;
+	private char[]    aln2;
+	private char[]    mark;
 
-	/** do an alignment given the provided matrix sij0
+	/**
+	 * do an alignment given the provided matrix sij0
 	 *
 	 * @param sij0 - the matrix to perform the calculations on.
 	 * @param M0

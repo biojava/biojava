@@ -35,7 +35,8 @@ import org.biojava.nbio.structure.jama.Matrix;
 import java.util.ArrayList;
 import java.util.List;
 
-/** a class that performs calculations on AFPCHains
+/**
+ * A class that performs calculations on AFPChains
  *
  * @author Andreas Prlic
  *
@@ -45,9 +46,7 @@ public class AFPCalculator
 	public static final boolean debug = FatCatAligner.debug;
 
 
-	public static final  void extractAFPChains(FatCatParameters params, AFPChain afpChain,Atom[] ca1,Atom[] ca2) throws StructureException {
-
-
+	public static void extractAFPChains(FatCatParameters params, AFPChain afpChain,Atom[] ca1,Atom[] ca2) throws StructureException {
 
 		List<AFP> afpSet = new ArrayList<AFP>();
 		afpChain.setAfpSet(afpSet);

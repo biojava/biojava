@@ -24,10 +24,9 @@ import org.biojava.nbio.structure.StructureException;
 
 /**
  * A pair for structure alignment
- *
- * @author Andreas Prlic
- *
+ * <p>
  * name1 is always < name2
+ * @author Andreas Prlic
  *
  */
 public class PdbPair implements Comparable<PdbPair> {

@@ -40,7 +40,8 @@ import org.biojava.nbio.structure.align.util.AFPChainScorer;
 import java.util.List;
 
 
-/** A class that does calculations on an AFPChain
+/**
+ * A class that does calculations on an AFPChain
  *
  * @author Andreas Prlic
  *

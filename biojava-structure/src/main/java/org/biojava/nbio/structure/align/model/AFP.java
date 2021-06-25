@@ -24,37 +24,33 @@ import org.biojava.nbio.structure.jama.Matrix;
 
 import java.io.Serializable;
 
-/** A class to represent a FATCAT AFP
+/**
+ * A class to represent a FATCAT aligned fragment pair (AFP)
  *
  * @author Andreas Prlic
  *
  */
-
 public class AFP implements Serializable {
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = 3901209995477111829L;
-	int p1;
-	int p2;
-	int fragLen;
-	double rmsd;
-	Matrix m;
-	double[] t;
-	double score;
 
-	long id;
+	private int p1;
+	private int p2;
+	private int fragLen;
+	private double rmsd;
+	private Matrix m;
+	private double[] t;
+	private double score;
+
+	private long id;
 
 	@Override
-public String toString(){
+	public String toString(){
 
 		// we use the metric of
-
 		// Manfred J. Sippl
 		// On Distance and Similarity in Fold Space
 		// Bioinformatics, 24, pp. 872-873  (2008)
-
 
 		StringBuffer buf = new StringBuffer();
 		buf.append("AFP: p1:");
@@ -123,8 +119,5 @@ public String toString(){
 	public void setScore(double score) {
 		this.score = score;
 	}
-
-
-
 
 }

@@ -26,7 +26,8 @@ package org.biojava.nbio.structure.align.ce;
 
 import java.util.List;
 
-/** Contains the parameters that can be sent to CE
+/**
+ * Contains the parameters that can be sent to CE
  *
  * @author Andreas Prlic
  *

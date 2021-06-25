@@ -43,7 +43,8 @@ import javax.vecmath.Matrix4d;
 
 
 
-/** This is based on the original Combinatorial Extension (CE) source code from 2003 or 2004 (CE version 2.3),
+/**
+ * This is based on the original Combinatorial Extension (CE) source code from 2003 or 2004 (CE version 2.3),
  * as has been originally developed by I. Shindyalov and P.Bourne (1998).
  * The original CE paper is available from here: <a href="http://peds.oxfordjournals.org/cgi/content/short/11/9/739">http://peds.oxfordjournals.org/cgi/content/short/11/9/739</a>.
  *
@@ -52,8 +53,6 @@ import javax.vecmath.Matrix4d;
  *
  * @author Spencer Bliven
  * @author Andreas Prlic
- *
-
  *
  */
 public class CeCalculatorEnhanced {

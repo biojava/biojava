@@ -21,14 +21,13 @@
 package org.biojava.nbio.structure.align.ce;
 
 
-/** a simple bean that contains the parameters that can get set at startup
+/**
+ * A simple bean that contains the parameters that can get set at startup
  *
  * @author Andreas Prlic
  *
  */
 public class StartupParameters {
-
-
 
 	String pdbFilePath;
 	String cacheFilePath;

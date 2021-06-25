@@ -35,7 +35,8 @@ import org.biojava.nbio.structure.jama.Matrix;
 import java.io.StringWriter;
 import java.util.List;
 
-/** A class to convert the data in an AfpChain object to various String outputs.
+/**
+ * A class to convert the data in an AfpChain object to various String outputs.
  *
  * @author Andreas Prlic
  *
@@ -45,7 +46,7 @@ public class AfpChainWriter
 
 	public static final String newline = System.getProperty("line.separator");
 
-	private static int LINELENGTH = 70;
+	private static final int LINELENGTH = 70;
 
 	public static String toFatCat(AFPChain afpChain, Atom[] ca1, Atom[] ca2)
 	{
@@ -1131,8 +1132,6 @@ public class AfpChainWriter
 	public static String toCE(AFPChain afpChain, Atom[] ca1, Atom[] ca2)
 	{
 
-
-
 		String name1 = afpChain.getName1();
 		String name2 = afpChain.getName2();
 
@@ -1142,7 +1141,6 @@ public class AfpChainWriter
 		int alnLength = afpChain.getAlnLength();
 		int gapLen = afpChain.getGapLen();
 
-
 		double similarity = afpChain.getSimilarity();
 		double identity = afpChain.getIdentity();
 		if (similarity <0 || identity <0  ){
@@ -1150,8 +1148,6 @@ public class AfpChainWriter
 			similarity = afpChain.getSimilarity();
 			identity = afpChain.getIdentity();
 		}
-
-
 
 		double probability = afpChain.getProbability();
 
@@ -1166,8 +1162,6 @@ public class AfpChainWriter
 		long calculationTime = afpChain.getCalculationTime();
 
 		// == end of extractation of data values from afpChain
-
-
 
 		StringBuffer txt = new StringBuffer();
 
@@ -1190,8 +1184,6 @@ public class AfpChainWriter
 		int     linelen = 70;
 		String a;
 		String b;
-
-
 
 		int     t = 0;
 		int     ap = alnbeg1;
@@ -1236,13 +1228,6 @@ public class AfpChainWriter
 		txt.append(toRotMat(afpChain));
 
 		return txt.toString();
-
-
 	}
-
-
-
-
-
 
 }
