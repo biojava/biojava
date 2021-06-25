@@ -51,7 +51,7 @@ import java.util.Map;
  *
  * @author Andreas Prlic
  * @author Aleix Lafita
- * @autho Anthony Bradley
+ * @author Anthony Bradley
  *
  */
 public class SecStrucCalc {
@@ -83,7 +83,8 @@ public class SecStrucCalc {
 	/** higher limit for H-bond energy */
 	public static final double HBONDHIGHENERGY = -500.0;
 
-	/** constant for electrostatic energy
+	/**
+	 * constant for electrostatic energy
 	 * <pre>
 	 *      f  *  q1 *   q2  *  scale
 	 * Q = -332 * 0.42 * 0.20 * 1000.0

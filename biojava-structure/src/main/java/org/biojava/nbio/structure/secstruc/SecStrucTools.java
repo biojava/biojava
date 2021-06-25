@@ -50,7 +50,7 @@ public class SecStrucTools {
 	 */
 	public static List<SecStrucInfo> getSecStrucInfo(Structure s) {
 
-		List<SecStrucInfo> listSSI = new ArrayList<SecStrucInfo>();
+		List<SecStrucInfo> listSSI = new ArrayList<>();
 		GroupIterator iter = new GroupIterator(s);
 
 		while (iter.hasNext()) {
@@ -88,7 +88,7 @@ public class SecStrucTools {
 	 */
 	public static List<SecStrucElement> getSecStrucElements(Structure s) {
 
-		List<SecStrucElement> listSSE = new ArrayList<SecStrucElement>();
+		List<SecStrucElement> listSSE = new ArrayList<>();
 		GroupIterator iter = new GroupIterator(s);
 
 		// SecStruc information - initialize
@@ -114,7 +114,7 @@ public class SecStrucTools {
 
 				if (count > 0) {
 					// If chain and type are equal increment counter
-					if (ss.type == type && chainId == g.getChainId()) {
+					if (ss.type == type && chainId.equals(g.getChainId())) {
 						previous = g.getResidueNumber();
 						count++;
 						continue;
@@ -161,7 +161,7 @@ public class SecStrucTools {
 	 */
 	public static List<SecStrucElement> getSecStrucElements(List<Group> groups) {
 
-		List<SecStrucElement> listSSE = new ArrayList<SecStrucElement>();
+		List<SecStrucElement> listSSE = new ArrayList<>();
 
 		// SecStruc information - initialize
 		SecStrucType type = SecStrucType.coil;
@@ -171,7 +171,7 @@ public class SecStrucTools {
 		int count = 0; // counts the number of residues in SSE
 
 		// Create a map for the IDs of the SSE in the structure
-		Map<SecStrucType, Integer> ids = new TreeMap<SecStrucType, Integer>();
+		Map<SecStrucType, Integer> ids = new TreeMap<>();
 		for (SecStrucType t : SecStrucType.values())
 			ids.put(t, 1);
 
@@ -185,7 +185,7 @@ public class SecStrucTools {
 
 				if (count > 0) {
 					// If chain and type are equal increment counter
-					if (ss.type == type && chainId == g.getChainId()) {
+					if (ss.type == type && chainId.equals(g.getChainId())) {
 						previous = g.getResidueNumber();
 						count++;
 						continue;
