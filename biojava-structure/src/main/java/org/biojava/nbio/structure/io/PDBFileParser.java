@@ -931,25 +931,25 @@ public class PDBFileParser  {
 
 		String[] fieldList = line.trim().split("\\s+");
 		int fl = fieldList.length;
-		if ((fl >0 ) && compndFieldValues.contains(fieldList[0])) {
-
-			continuationField = fieldList[0];
-			if (previousContinuationField.equals("")) {
-				previousContinuationField = continuationField;
-			}
-
-		} else if (fl>0) {
-			// the ':' character indicates the end of a field name and should be invalid as part the first data token
-			// e.g. obsolete file 1hhb has a malformed COMPND line that can only be caught with this kind of check
-			if (fieldList[0].contains(":") ) {
+		if (fl > 0) {
+			String field0 = fieldList[0];
+			if (compndFieldValues.contains(field0)) {
+				continuationField = field0;
+				if (previousContinuationField.equals("")) {
+					previousContinuationField = continuationField;
+				}
+			} else if (field0.endsWith(";") && compndFieldValues.contains(field0.substring(0, field0.length()-1)) ) {
+				// the ':' character indicates the end of a field name and should be invalid as part the first data token
+				// e.g. obsolete file 1hhb has a malformed COMPND line that can only be caught with this kind of check
+				// UPDATE: There is no harm of having a ':' in the first data token. e.g. 3fdj contains a ':'.
+				//   The intended case occurs only if the token is a key followed by a colon and a semicolon without spaces, e.g. "COMPND   2 MOLECULE:;"
 				logger.info("COMPND line does not follow the PDB 3.0 format. Note that COMPND parsing is not supported any longer in format 2.3 or earlier");
 				return;
 			}
-
 		} else {
-
 			// the line will be added as data to the previous field
 		}
+
 
 		line = line.replace(continuationField, "").trim();
 
@@ -2352,7 +2352,7 @@ public class PDBFileParser  {
 	 * SITE     3 AC4 11 HOH A 572 HOH A  582  HOH A 635
 	 * </pre>
 	 * @param line the SITE line record being currently read
-	 * @author Amr AL-Hossary
+	 * @author Amr ALHOSSARY
 	 * @author Jules Jacobsen
 	 */
 	private void pdb_SITE_Handler(String line){

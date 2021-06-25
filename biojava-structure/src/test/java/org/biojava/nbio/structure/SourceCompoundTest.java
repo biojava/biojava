@@ -26,6 +26,9 @@ import org.biojava.nbio.structure.io.PDBFileParser;
 import org.junit.Assert;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -48,6 +51,15 @@ public class SourceCompoundTest {
 		return structure;
 	}
 
+	@Test
+	public void testCompoundColonInFirstToken() {
+		Structure s1 = getStructure("/org/biojava/nbio/structure/io/1hhbCMPND+SRC.ent");
+		assertNotNull(s1);
+		assertEquals(2, s1.getEntityInfos().size());
+		Structure s2 = getStructure("/org/biojava/nbio/structure/io/3fdjCMPND+SRC.ent");
+		assertNotNull(s2);
+		assertEquals(1, s2.getEntityInfos().size());
+	}
 
 	@Test
 	public void testCompoundSourceStructure(){

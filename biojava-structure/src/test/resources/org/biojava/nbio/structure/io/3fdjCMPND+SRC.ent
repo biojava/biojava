@@ -1,0 +1,24 @@
+HEADER    STRUCTURAL GENOMICS, UNKNOWN FUNCTION   25-NOV-08   3FDJ              
+TITLE     THE STRUCTURE OF A DEGV FAMILY PROTEIN FROM EUBACTERIUM ELIGENS.      
+COMPND    MOL_ID: 1;                                                            
+COMPND   2 MOLECULE: DEGV FAMILY PROTEIN;                                       
+COMPND   3 CHAIN: A;                                                            
+COMPND   4 ENGINEERED: YES;                                                     
+COMPND   5 OTHER_DETAILS: ASSEMBLY.20070618:0-0:0-0                             
+COMPND   6 (ZVNW5VJFOAACMF8NLOPRFTMWH60:01:1-275) GENE                          
+SOURCE    MOL_ID: 1;                                                            
+SOURCE   2 ORGANISM_SCIENTIFIC: EUBACTERIUM ELIGENS;                            
+SOURCE   3 ORGANISM_TAXID: 39485;                                               
+SOURCE   4 GENE: ASSEMBLY.20070618:0-0:0-0 (ZVNW5VJFOAACMF8NLOPRFTMWH60:01:1-   
+SOURCE   5 275);                                                                
+SOURCE   6 EXPRESSION_SYSTEM: ESCHERICHIA COLI;                                 
+SOURCE   7 EXPRESSION_SYSTEM_TAXID: 562;                                        
+SOURCE   8 EXPRESSION_SYSTEM_STRAIN: BL21(DE3);                                 
+SOURCE   9 EXPRESSION_SYSTEM_VECTOR_TYPE: PLASMID;                              
+SOURCE  10 EXPRESSION_SYSTEM_PLASMID: PMCSG19                                   
+KEYWDS    DEGV, GUT MICROBIOME, STRUCTURAL GENOMICS, PSI-2, PROTEIN STRUCTURE   
+KEYWDS   2 INITIATIVE, MIDWEST CENTER FOR STRUCTURAL GENOMICS, MCSG, UNKNOWN    
+KEYWDS   3 FUNCTION                                                             
+EXPDTA    X-RAY DIFFRACTION                                                     
+AUTHOR    M.E.CUFF,R.HENDRICKS,L.FREEMAN,A.JOACHIMIAK,MIDWEST CENTER FOR        
+AUTHOR   2 STRUCTURAL GENOMICS (MCSG)                                           
