@@ -32,6 +32,9 @@ BioJava 6.0.0 (future release)
 * Moved all chem-comp parsing classes from `org.biojava.nbio.structure.io.mmcif.chem` to `org.biojava.nbio.structure.io.cif`
 * Moved classes in `org.biojava.nbio.structure.io.mmcif` to `org.biojava.nbio.structure.chem`
 
+### Fixed
+* Correct chain assignment to entities when parsing PDB/mmCIF without entity information (in cases with more than 3 chains per entity) #931
+
 BioJava 5.4.0
 =============
 ### Added
