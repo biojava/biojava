@@ -21,6 +21,7 @@ BioJava 6.0.0 (future release)
 * Removed from `org.biojava.nbio.structure.Chain` interface: `getParent()`, `setParent()`, `getAtomLigands()`, `getSwissprotId()`, `setSwissprotId()`, `getInternalChainID()`, `setInternalChainID()`, `getChainID()`, `setChainID()`
 * Removed from `org.biojava.nbio.structure.Structure` interface: `findChain()`, `getId()`, `setId()`, `getChainByPDB()`, `getCompoundById()`, `getResidueRanges()`, `getRanges()`
 * Removed from `org.biojava.nbio.structure.StructureTools` : `isNucleicAcid()`, `isProtein()`, `getPredominantGroupType()`, `isChainWaterOnly()`, `isChainPureNonPolymer()`
+* Removed `org.biojava.nbio.structure.io.SandboxStyleStructureProvider`
 
 ### Breaking API changes
 * Extracted `StructureIO.StructureFiletype` enum to `org.biojava.nbio.structure.io.StructureFiletype` (supports `PDB`, `MMTF`, `CIF`, and `BCIF`)
