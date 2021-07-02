@@ -21,7 +21,10 @@
 
 package org.biojava.nbio.core.sequence.io;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -66,9 +69,9 @@ public class ABITracerTest {
 	@Test
 	public void testURL() throws Exception {
 		URL resource = this.getClass().getResource("/3730.ab1");
-		Assert.assertNotNull(resource);
+		assertNotNull(resource);
 		ABITrace tracer = new ABITrace(resource);
-		Assert.assertNotNull(tracer);
+		assertNotNull(tracer);
 	}
 
 	/**
@@ -77,27 +80,27 @@ public class ABITracerTest {
 	@Test
 	public void testLocal() throws Exception {
 		URL resource = this.getClass().getResource("/3730.ab1");
-		Assert.assertNotNull(resource);
+		assertNotNull(resource);
 		File file = new File(resource.toURI());
-		Assert.assertNotNull(file);
+		assertNotNull(file);
 		ABITrace tracer = new ABITrace(file);
-		Assert.assertNotNull(tracer);
+		assertNotNull(tracer);
 
 		//Test length of tracer for file 3730.ab1
 		final int EXPECTED_TRACE_LENGTH = 16302;
-		Assert.assertEquals(EXPECTED_TRACE_LENGTH, tracer.getTraceLength());
+		assertEquals(EXPECTED_TRACE_LENGTH, tracer.getTraceLength());
 		//Test length of sequence for file 3730.ab1
-		Assert.assertEquals(1165, tracer.getSequenceLength());
+		assertEquals(1165, tracer.getSequenceLength());
 
 		//Test sequence of tracer for file 3730.ab1
-		Assert.assertTrue(sequence.equals(tracer.getSequence().getSequenceAsString()));
+		assertTrue(sequence.equals(tracer.getSequence().getSequenceAsString()));
 		//Test array that represents the quality of tracer for file 3730.ab1
-		Assert.assertArrayEquals(qual, tracer.getQcalls());
+		assertArrayEquals(qual, tracer.getQcalls());
 		//Test array that represents the baseline of tracer for file 3730.ab1
-		Assert.assertArrayEquals(base, tracer.getBasecalls());
+		assertArrayEquals(base, tracer.getBasecalls());
 		//Test image of tracer for file 3730.ab1
 		BufferedImage image = tracer.getImage(100,100);
-		Assert.assertNotNull(image);
+		assertNotNull(image);
 		
 		Assert.assertThrows(CompoundNotFoundException.class, ()->tracer.getTrace("D"));
 		for (String base: Arrays.asList(new String []{"A","T","C","G"})){
