@@ -21,9 +21,14 @@
 
 package org.biojava.nbio.core.sequence.io;
 
+import static org.junit.Assert.assertEquals;
+
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URL;
+import java.util.Arrays;
+
+import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.junit.*;
 
 /**
@@ -79,7 +84,8 @@ public class ABITracerTest {
 		Assert.assertNotNull(tracer);
 
 		//Test length of tracer for file 3730.ab1
-		Assert.assertEquals(16302, tracer.getTraceLength());
+		final int EXPECTED_TRACE_LENGTH = 16302;
+		Assert.assertEquals(EXPECTED_TRACE_LENGTH, tracer.getTraceLength());
 		//Test length of sequence for file 3730.ab1
 		Assert.assertEquals(1165, tracer.getSequenceLength());
 
@@ -92,5 +98,10 @@ public class ABITracerTest {
 		//Test image of tracer for file 3730.ab1
 		BufferedImage image = tracer.getImage(100,100);
 		Assert.assertNotNull(image);
+		
+		Assert.assertThrows(CompoundNotFoundException.class, ()->tracer.getTrace("D"));
+		for (String base: Arrays.asList(new String []{"A","T","C","G"})){
+		    assertEquals(EXPECTED_TRACE_LENGTH, tracer.getTrace(base).length);
+		}
 	}
 }
