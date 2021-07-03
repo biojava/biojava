@@ -239,6 +239,24 @@
 					</configuration>
 
 				</plugin>
+				        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>3.0.0-M5</version>
+            <configuration>
+                <statelessTestsetReporter implementation="org.apache.maven.plugin.surefire.extensions.junit5.JUnit5Xml30StatelessReporter">
+                    <usePhrasedTestSuiteClassName>true</usePhrasedTestSuiteClassName>
+                    <usePhrasedTestCaseClassName>true</usePhrasedTestCaseClassName>
+                    <usePhrasedTestCaseMethodName>true</usePhrasedTestCaseMethodName>
+					<usePhrasedFileName>true</usePhrasedFileName>
+                </statelessTestsetReporter>
+                <statelessTestsetInfoReporter implementation="org.apache.maven.plugin.surefire.extensions.junit5.JUnit5StatelessTestsetInfoReporter">
+                    <usePhrasedClassNameInRunning>true</usePhrasedClassNameInRunning>
+					<usePhrasedFileName>true</usePhrasedFileName>
+                    <usePhrasedClassNameInTestCaseSummary>true</usePhrasedClassNameInTestCaseSummary>
+                </statelessTestsetInfoReporter>
+            </configuration>
+        </plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-shade-plugin</artifactId>
@@ -313,11 +331,7 @@
 					<artifactId>maven-install-plugin</artifactId>
 					<version>3.0.0-M1</version>
 				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-surefire-plugin</artifactId>
-					<version>3.0.0-M5</version>
-				</plugin>
+			
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-site-plugin</artifactId>
@@ -404,6 +418,24 @@
 				<version>4.13.2</version>
 				<scope>test</scope>
 			</dependency>
+			<dependency>
+                                 <groupId>org.junit.vintage</groupId>
+                                 <artifactId>junit-vintage-engine</artifactId>
+                                 <version>5.7.2</version>
+                                 <scope>test</scope>
+                        </dependency>
+		   <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-api</artifactId>
+        <version>5.7.2</version>
+        <scope>test</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-engine</artifactId>
+        <version>5.7.2</version>
+        <scope>test</scope>
+    </dependency>	
 			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-api</artifactId>
