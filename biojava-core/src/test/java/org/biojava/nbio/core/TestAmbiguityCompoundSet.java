@@ -20,7 +20,8 @@
  */
 package org.biojava.nbio.core;
 
-import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.biojava.nbio.core.sequence.DNASequence;
 import org.biojava.nbio.core.sequence.RNASequence;
 import org.biojava.nbio.core.sequence.compound.AmbiguityDNACompoundSet;
@@ -31,9 +32,6 @@ import org.biojava.nbio.core.sequence.template.CompoundSet;
 import org.biojava.nbio.core.sequence.template.Sequence;
 import org.biojava.nbio.core.sequence.transcription.DNAToRNATranslator;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.DisplayName;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * A Test case for https://github.com/biojava/biojava/issues/344
