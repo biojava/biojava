@@ -43,6 +43,7 @@
 		<mmtf.version>1.0.10</mmtf.version>
 		<slf4j.version>1.7.30</slf4j.version>
 		<log4j.version>2.14.0</log4j.version>
+		<junit-jupiter.version>5.7.2</junit-jupiter.version>
 		<ciftools.artifact>ciftools-java-jdk8</ciftools.artifact>
 		<ciftools.version>2.0.2</ciftools.version>
 	</properties>
@@ -243,20 +244,8 @@
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-surefire-plugin</artifactId>
             <version>3.0.0-M5</version>
-            <configuration>
-                <statelessTestsetReporter implementation="org.apache.maven.plugin.surefire.extensions.junit5.JUnit5Xml30StatelessReporter">
-                    <usePhrasedTestSuiteClassName>true</usePhrasedTestSuiteClassName>
-                    <usePhrasedTestCaseClassName>true</usePhrasedTestCaseClassName>
-                    <usePhrasedTestCaseMethodName>true</usePhrasedTestCaseMethodName>
-					<usePhrasedFileName>true</usePhrasedFileName>
-                </statelessTestsetReporter>
-                <statelessTestsetInfoReporter implementation="org.apache.maven.plugin.surefire.extensions.junit5.JUnit5StatelessTestsetInfoReporter">
-                    <usePhrasedClassNameInRunning>true</usePhrasedClassNameInRunning>
-					<usePhrasedFileName>true</usePhrasedFileName>
-                    <usePhrasedClassNameInTestCaseSummary>true</usePhrasedClassNameInTestCaseSummary>
-                </statelessTestsetInfoReporter>
-            </configuration>
-        </plugin>
+            
+             </plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-shade-plugin</artifactId>
@@ -419,23 +408,24 @@
 				<scope>test</scope>
 			</dependency>
 			<dependency>
-                                 <groupId>org.junit.vintage</groupId>
-                                 <artifactId>junit-vintage-engine</artifactId>
-                                 <version>5.7.2</version>
-                                 <scope>test</scope>
-                        </dependency>
-		   <dependency>
-        <groupId>org.junit.jupiter</groupId>
-        <artifactId>junit-jupiter-api</artifactId>
-        <version>5.7.2</version>
-        <scope>test</scope>
-    </dependency>
-    <dependency>
-        <groupId>org.junit.jupiter</groupId>
-        <artifactId>junit-jupiter-engine</artifactId>
-        <version>5.7.2</version>
-        <scope>test</scope>
-    </dependency>	
+                <groupId>org.junit.vintage</groupId>
+                <artifactId>junit-vintage-engine</artifactId>
+                <version>${junit-jupiter.version}</version>
+                <scope>test</scope>
+            </dependency>
+		  
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-engine</artifactId>
+                <version>${junit-jupiter.version}</version>
+                <scope>test</scope>
+            </dependency>
+	        <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-params</artifactId>
+                <version>${junit-jupiter.version}</version>
+                <scope>test</scope>
+            </dependency>	
 			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-api</artifactId>

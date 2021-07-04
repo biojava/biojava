@@ -45,18 +45,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class TestAmbiguityCompoundSet {
 
 	@Test
-	@DisplayName("Convert DNA to RNA")
 	public void testCompountSet() throws Exception {
 
 		CompoundSet<NucleotideCompound> dnaSet = AmbiguityDNACompoundSet.getDNACompoundSet();
 		CompoundSet<NucleotideCompound> rnaSet = AmbiguityRNACompoundSet.getRNACompoundSet();
+
 
 		DNASequence dna = new DNASequence("AGTCS", dnaSet);
 
 		assertEquals("AGTCS", dna.toString());
 
 		RNASequence rna = dna.getRNASequence();
-
 		rna = new RNASequence(dna.getSequenceAsString().replaceAll("T", "U"), AmbiguityRNACompoundSet.getRNACompoundSet()); //fails with missing compound S
 
 		assertEquals("AGUCS", rna.toString());
