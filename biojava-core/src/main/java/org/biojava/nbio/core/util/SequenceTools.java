@@ -119,6 +119,23 @@ public class SequenceTools {
 			return true;
 	}
 
+	/**
+	 * Attempts to parse String as a DNA sequence first.<br/>
+	 * If this fails it tries to  parse as a ProteinSequence.
+	 * <br/>
+	 * This method does not attempt to create an RNASequence.
+	 * <p>
+	 * Also, a sequence such as 'ATCGTA' which is both a
+	 * peptide sequence and a DNA sequence, will always be returned 
+	 * as a DNA sequence.
+	 * </p>
+	 * <p>
+	 * An empty string argument returns a ProteinSequence of length 0.
+	 * A null argument throws a {@link NullPointerException}
+	 * @param sequence
+	 * @return Either a DNASequence or a ProteinSequence
+	 * @throws CompoundNotFoundException
+	 */
 	public Sequence<?> getSequenceFromString(String sequence) throws CompoundNotFoundException {
 
 
@@ -126,6 +143,7 @@ public class SequenceTools {
 			return  new DNASequence(sequence);
 		} else {
 			return new ProteinSequence(sequence);
+
 		}
 
 	}
