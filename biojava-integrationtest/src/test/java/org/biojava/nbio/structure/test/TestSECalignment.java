@@ -22,7 +22,14 @@
  */
 package org.biojava.nbio.structure.test;
 
-import junit.framework.TestCase;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+import java.io.InputStream;
+
+import org.biojava.nbio.core.util.StringManipulationHelper;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.align.StructureAlignment;
 import org.biojava.nbio.structure.align.StructureAlignmentFactory;
@@ -33,9 +40,7 @@ import org.biojava.nbio.structure.align.xml.AFPChainXMLConverter;
 import org.biojava.nbio.structure.align.xml.AFPChainXMLParser;
 import org.biojava.nbio.structure.test.align.fatcat.FlipAFPChainTest;
 import org.biojava.nbio.structure.test.util.StringManipulationTestsHelper;
-import org.biojava.nbio.core.util.StringManipulationHelper;
-
-import java.io.InputStream;
+import org.junit.Test;
 
 /** This test makes sure that the new representation of selenocysteins as SEC amino acids does not
  * affect the structure alignment results.
@@ -43,8 +48,9 @@ import java.io.InputStream;
  * @author andreas
  *
  */
-public class TestSECalignment extends  TestCase {
+public class TestSECalignment {
 
+	@Test
 	public void testOldSecOutput() throws Exception {
 
 		String fileName = "/ce_1fdo.A_2iv2.X.out";

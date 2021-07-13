@@ -46,13 +46,7 @@ public class OptimalCECPMainTest {
 
 	private AtomCache cache = new AtomCache();
 
-	/* (non-Javadoc)
-	 * @see junit.framework.TestCase#setUp()
-	 */
-	@Before
-	public void setUp() throws Exception {
-	}
-
+	
 	/**
 	 * Basic test that alignPermuted(..., 0) is equivalent to a normal CE alignment.
 	 *
