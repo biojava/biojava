@@ -51,6 +51,21 @@ public class SequenceTools {
 	}
 
 	/**
+	 * Improved implementation that is generally 10-100x faster, and fixes some edge-case bugs.
+	 * @param string The string to permute
+	 * @param n The number of characters to permute by; can be positive or negative; values greater than the length of the array are acceptable
+	 * @return
+	 */
+	public static String permuteCyclic2(String string, int n) {
+		String toMutate = string + string;
+		n = n % string.length();
+		if (n < 0) {
+			n = string.length() + n;
+		}
+		return toMutate.substring(n, n + string.length());
+	}
+
+	/**
 	 * Cyclically permute {@code array} <em>forward</em> by {@code n} elements.
 	 * @param array The original result; will not be changed
 	 * @param fill The permuted result will be filled into this array
@@ -104,6 +119,23 @@ public class SequenceTools {
 			return true;
 	}
 
+	/**
+	 * Attempts to parse String as a DNA sequence first.<br/>
+	 * If this fails it tries to  parse as a ProteinSequence.
+	 * <br/>
+	 * This method does not attempt to create an RNASequence.
+	 * <p>
+	 * Also, a sequence such as 'ATCGTA' which is both a
+	 * peptide sequence and a DNA sequence, will always be returned 
+	 * as a DNA sequence.
+	 * </p>
+	 * <p>
+	 * An empty string argument returns a ProteinSequence of length 0.
+	 * A null argument throws a {@link NullPointerException}
+	 * @param sequence
+	 * @return Either a DNASequence or a ProteinSequence
+	 * @throws CompoundNotFoundException
+	 */
 	public Sequence<?> getSequenceFromString(String sequence) throws CompoundNotFoundException {
 
 
@@ -111,6 +143,7 @@ public class SequenceTools {
 			return  new DNASequence(sequence);
 		} else {
 			return new ProteinSequence(sequence);
+
 		}
 
 	}
