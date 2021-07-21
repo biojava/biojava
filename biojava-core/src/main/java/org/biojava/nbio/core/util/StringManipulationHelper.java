@@ -23,6 +23,19 @@
  */
 package org.biojava.nbio.core.util;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.AbstractCollection;
+import java.util.Iterator;
+import java.util.Scanner;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -30,14 +43,6 @@ import org.w3c.dom.DocumentType;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.*;
-import java.util.AbstractCollection;
-import java.util.Iterator;
-import java.util.Scanner;
 
 
 /**
@@ -61,10 +66,6 @@ public class StringManipulationHelper  {
 	private StringManipulationHelper() {
 		// to prevent instantiation
 	}
-
-
-
-
 
 	/**
 	 * @author andreas
@@ -174,12 +175,34 @@ public class StringManipulationHelper  {
 		throw new UnsupportedOperationException("not yet implemented");
 	}
 
+	/**
+	 * Adds padding to left of supplied string
+	 * @param s The String to pad
+	 * @param n an integer >= 1
+	 * @return The left-padded string. 
+	 * @throws IllegalArgumentException if n <= 0
+	 */
 	public static String padLeft(String s, int n) {
+		validatePadding(n);
 	    return String.format("%1$" + n + "s", s);
 	}
 
+	/**
+	 * Adds padding to right of supplied string
+	 * @param s The String to pad
+	 * @param n an integer >= 1
+	 * @return The right-padded string. 
+	 * @throws IllegalArgumentException if n <= 0
+	 */
 	public static String padRight(String s, int n) {
+		validatePadding(n);
 	     return String.format("%1$-" + n + "s", s);
+	}
+
+	private static void validatePadding(int n) {
+		if (n <=0 ) {
+			throw new IllegalArgumentException("padding must be >= 1");
+		}
 	}
 
 	public static String join(AbstractCollection<String> s, String delimiter) {
