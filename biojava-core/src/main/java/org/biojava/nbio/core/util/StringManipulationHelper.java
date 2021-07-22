@@ -68,9 +68,18 @@ public class StringManipulationHelper  {
 	}
 
 	/**
+	 * Converts an InputStream of text to a String, closing the stream
+	 * before returning.
+	 * <ul>
+	 * <li> Newlines are converted to Unix newlines (\n)
+	 * <li> Default charset encoding is used to read the stream.
+	 * <li> Any IOException reading the stream is 'squashed' and not made
+	 *   available to caller
+	 * <li> An additional newline is appended at the end of the string.
+	 * <ul>
 	 * @author andreas
 	 * @param stream
-	 * @return
+	 * @return a possibly empty but non-null String
 	 */
 	public static String convertStreamToString(InputStream stream) {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
@@ -79,8 +88,7 @@ public class StringManipulationHelper  {
 		String line = null;
 		try {
 			while ((line = reader.readLine()) != null) {
-
-		sb.append(line).append(UNIX_NEWLINE);
+			    sb.append(line).append(UNIX_NEWLINE);
 			}
 		} catch (IOException e) {
 			// logger.error("Exception: ", e);
@@ -91,7 +99,6 @@ public class StringManipulationHelper  {
 				logger.error("Exception: ", e);
 			}
 		}
-
 		return sb.toString();
 	}
 
@@ -196,7 +203,7 @@ public class StringManipulationHelper  {
 	 */
 	public static String padRight(String s, int n) {
 		validatePadding(n);
-	     return String.format("%1$-" + n + "s", s);
+	    return String.format("%1$-" + n + "s", s);
 	}
 
 	private static void validatePadding(int n) {
@@ -209,9 +216,8 @@ public class StringManipulationHelper  {
 	    if (s == null || s.isEmpty()) return "";
 	    Iterator<String> iter = s.iterator();
 	    StringBuilder builder = new StringBuilder(iter.next());
-	    while( iter.hasNext() )
-	    {
-		builder.append(delimiter).append(iter.next());
+	    while( iter.hasNext() ){
+		    builder.append(delimiter).append(iter.next());
 	    }
 	    return builder.toString();
 	}
