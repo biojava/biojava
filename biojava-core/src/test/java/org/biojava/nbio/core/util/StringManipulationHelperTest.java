@@ -1,6 +1,9 @@
 package org.biojava.nbio.core.util;
+import static org.biojava.nbio.core.util.StringManipulationHelper.equalsToIgnoreEndline;
 import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -78,6 +81,45 @@ class StringManipulationHelperTest {
         void emptyStreamGeneratesEmptyString() {
             assertEquals("", StringManipulationHelper.convertStreamToString(
                 new ByteArrayInputStream(new byte [0])));
+        }
+    }
+
+    @Nested
+    class equalsToIgnoreEndline{
+        @Test
+        void emptyOrNullStringsAreEqual() {
+            assertTrue(equalsToIgnoreEndline("",""));
+            assertTrue(equalsToIgnoreEndline(null, null));
+        }
+
+        @Test
+        void emptyVsNullStringsAreNotEqual() {
+            assertFalse(equalsToIgnoreEndline(null,""));
+        }
+
+        @Test
+        @DisplayName("multiline strings with different line terminators are equal")
+        void differentLineTerminatorsAreEqual() {
+            assertTrue(equalsToIgnoreEndline("ab\ncd\nef","ab\r\ncd\r\nef"));
+            assertTrue(equalsToIgnoreEndline("ab\r\ncd\nef","ab\rcd\ref"));
+        }
+
+        @Test
+        @DisplayName("comparison is case-sensitive")
+        void caseSensitive() {
+            assertFalse(equalsToIgnoreEndline("ab\ncd\nef","ab\nCD\nef"));
+        }
+
+        @Test
+        @DisplayName("multiline strings with different lengths are  unequal")
+        void s2LongerThanS1() {
+            assertFalse(equalsToIgnoreEndline("ab\ncd\nef","ab\ncd\nef\nextra-line"));
+        }
+
+        @Test
+        @DisplayName("multiline strings with different lengths are  unequal")
+        void s1LongerThanS2() {
+            assertFalse(equalsToIgnoreEndline("ab\ncd\nef\nextra","ab\ncd\nef"));
         }
     }
 }

@@ -103,8 +103,10 @@ public class StringManipulationHelper  {
 	}
 
 	/**
-	 * compares two strings for equality, line by line, ignoring any difference
-	 * of end line delimiters contained within the 2 Strings. This method should
+	 * Compares two strings in a case-sensitive manner for equality, line by line, ignoring any difference
+	 * of end line delimiters contained within the 2 Strings.
+	 * <br/>
+	 * This method should
 	 * be used if and only if two Strings are considered identical when all nodes
 	 * are identical including their relative order. Generally useful when
 	 * asserting identity of <b>automatically regenerated</b> XML or PDB.
@@ -124,24 +126,30 @@ public class StringManipulationHelper  {
 		String line1, line2;
 		while (scanner1.hasNextLine()) {
 			line1 = scanner1.nextLine();
-			line2 = scanner2.nextLine();
-			if (! line1.equals(line2)) {
-				scanner1.close();
-				scanner2.close();
+			if(scanner2.hasNextLine()) {
+				line2 = scanner2.nextLine();
+				if (! line1.equals(line2)) {
+					closeScanners(scanner1, scanner2);
+					return false;
+				}
+			} else {
+				closeScanners(scanner1, scanner2);
 				return false;
 			}
 		}
 		if (scanner2.hasNextLine()) {
-			scanner1.close();
-			scanner2.close();
+			closeScanners(scanner1, scanner2);
 			return false;
 		}
 
-		scanner1.close();
-		scanner2.close();
+		closeScanners(scanner1, scanner2);
 		return true;
 	}
 
+	private static void closeScanners(Scanner s1, Scanner s2) {
+		s1.close();
+		s2.close();
+	}
 
 	public static boolean equalsToXml(String expected, String actual) {
 		Document expectedDocument=null;
