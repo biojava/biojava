@@ -151,4 +151,17 @@ class StringManipulationHelperTest {
             
         }
     }
+
+    @Nested
+    class EqualsToXml {
+
+        String docType ="<!DOCTYPE " +
+        "ex  [ <!ENTITY foo \"foo\"> <!ENTITY bar"+
+        " \"bar\">]> <ex/>";
+        @Test
+        void isNotImplemented() {
+            assertThrows(UnsupportedOperationException.class, 
+            ()->StringManipulationHelper.equalsToXml(docType, docType));
+        }
+    }
 }

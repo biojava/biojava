@@ -150,6 +150,14 @@ public class StringManipulationHelper  {
 		s2.close();
 	}
 
+	/**
+	 * This method is not implemented or used, never returns true
+	 * and should probably be removed.
+	 * @param expected
+	 * @param actual
+	 * @return
+	 * @throws UnsupportedOperationException in most cases
+	 */
 	public static boolean equalsToXml(String expected, String actual) {
 		Document expectedDocument=null;
 		Document actualDocument=null;
@@ -220,7 +228,7 @@ public class StringManipulationHelper  {
 	}
 
 	/**
-	 * Joins Strings together with a delimiter
+	 * Joins Strings together with a delimiter to a single
 	 * @param s An {@link Iterable} of Strings
 	 * @param delimiter
 	 * @return
