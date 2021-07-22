@@ -28,7 +28,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.AbstractCollection;
 import java.util.Iterator;
 import java.util.Scanner;
 
@@ -220,9 +219,18 @@ public class StringManipulationHelper  {
 		}
 	}
 
-	public static String join(AbstractCollection<String> s, String delimiter) {
-	    if (s == null || s.isEmpty()) return "";
+	/**
+	 * Joins Strings together with a delimiter
+	 * @param s An {@link Iterable} of Strings
+	 * @param delimiter
+	 * @return
+	 */
+	public static String join(Iterable<String> s, String delimiter) {
+	    if (s == null) return "";
 	    Iterator<String> iter = s.iterator();
+		if(!iter.hasNext()){
+			return "";
+		}
 	    StringBuilder builder = new StringBuilder(iter.next());
 	    while( iter.hasNext() ){
 		    builder.append(delimiter).append(iter.next());

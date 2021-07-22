@@ -8,6 +8,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -120,6 +122,33 @@ class StringManipulationHelperTest {
         @DisplayName("multiline strings with different lengths are  unequal")
         void s1LongerThanS2() {
             assertFalse(equalsToIgnoreEndline("ab\ncd\nef\nextra","ab\ncd\nef"));
+        }
+    }
+    @Nested
+    class JoinString{   
+        List<String> empty = new ArrayList<>();
+        List<String> items =  new ArrayList<>();
+        void populateItems() {
+            items.add("a");
+            items.add("b");
+            items.add("c");
+        }
+        @Test
+        void join() {
+
+            assertEquals("", StringManipulationHelper.join(empty,","));
+            items.add("a");
+            assertEquals("a", StringManipulationHelper.join(items,","));
+            items.add("b");
+            items.add("c");
+            assertEquals("a,b,c", StringManipulationHelper.join(items,","));
+            assertEquals("abc", StringManipulationHelper.join(items,""));
+        }
+        @Test
+        void delimiterCanBeAnyLength(){
+            populateItems();
+            assertEquals("a---b---c", StringManipulationHelper.join(items,"---"));
+            
         }
     }
 }
