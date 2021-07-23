@@ -28,6 +28,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Scanner;
 
@@ -233,7 +234,7 @@ public class StringManipulationHelper  {
 	 * @param delimiter
 	 * @return
 	 */
-	public static String join(Iterable<String> s, String delimiter) {
+	public static String join(Collection<String> s, String delimiter) {
 	    if (s == null) return "";
 	    Iterator<String> iter = s.iterator();
 		if(!iter.hasNext()){

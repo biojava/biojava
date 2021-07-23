@@ -68,12 +68,29 @@ class StringManipulationHelperTest {
            ByteArrayInputStream bais = new ByteArrayInputStream(multiline.getBytes());
            assertEquals("line1\nline2\n", StringManipulationHelper.convertStreamToString(bais));
         }
+        // in java11 there is a NullInputStream for this
+        class InputStreamTss extends InputStream {
+        	boolean closed = false;
+			@Override
+			public int read() throws IOException {
+				if (closed) {
+					throw  new IOException();
+				}
+				return -1;
+			}
+			public void close() throws IOException {
+				closed = true;
+			}
+        	
+        }
+        
 
         @Test
         void streamIsClosedAfterCompletion() throws IOException{
             // this is a stream that will throw IOException
             // if called after closing
-            InputStream is = InputStream.nullInputStream();
+            InputStream is =  new InputStreamTss();
+
             StringManipulationHelper.convertStreamToString(is);
             // attempt to read again after closing
             assertThrows(IOException.class, ()->is.read());
@@ -137,6 +154,7 @@ class StringManipulationHelperTest {
         void join() {
 
             assertEquals("", StringManipulationHelper.join(empty,","));
+            assertEquals("", StringManipulationHelper.join(null,","));
             items.add("a");
             assertEquals("a", StringManipulationHelper.join(items,","));
             items.add("b");
@@ -147,8 +165,7 @@ class StringManipulationHelperTest {
         @Test
         void delimiterCanBeAnyLength(){
             populateItems();
-            assertEquals("a---b---c", StringManipulationHelper.join(items,"---"));
-            
+            assertEquals("a---b---c", StringManipulationHelper.join(items,"---"));      
         }
     }
 
