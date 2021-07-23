@@ -31,6 +31,7 @@ import java.io.InputStreamReader;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -235,16 +236,8 @@ public class StringManipulationHelper  {
 	 * @return
 	 */
 	public static String join(Collection<String> s, String delimiter) {
-	    if (s == null) return "";
-	    Iterator<String> iter = s.iterator();
-		if(!iter.hasNext()){
-			return "";
-		}
-	    StringBuilder builder = new StringBuilder(iter.next());
-	    while( iter.hasNext() ){
-		    builder.append(delimiter).append(iter.next());
-	    }
-	    return builder.toString();
+		if (s==null) return "";
+		return s.stream().collect(Collectors.joining(delimiter));
 	}
 
 }
