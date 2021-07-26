@@ -181,6 +181,7 @@ public class PDBFileParser  {
 	private List<String> compndLines = new ArrayList<String>();
 	private List<String> sourceLines = new ArrayList<String>();
 	private List<String> journalLines = new ArrayList<String>();
+	private List<String> keywordsLines = new ArrayList<String>();
 	private List<DBRef> dbrefs;
 	private Map<String, Site> siteMap = new LinkedHashMap<String, Site>();
 	private Map<String, List<ResidueNumber>> siteToResidueMap = new LinkedHashMap<String, List<ResidueNumber>>();
@@ -2442,6 +2443,8 @@ public class PDBFileParser  {
 
 	//Site variable related to parsing the REMARK 800 records.
 	Site site;
+
+	private String[] keywords;
 	private void pdb_REMARK_800_Handler(String line){
 
 		if (params.isHeaderOnly()) return;
@@ -2595,6 +2598,7 @@ public class PDBFileParser  {
 		current_compound = null;
 		sourceLines.clear();
 		compndLines.clear();
+		keywordsLines.clear();
 		isLastCompndLine = false;
 		isLastSourceLine = false;
 		prevMolId = -1;
@@ -2660,6 +2664,8 @@ public class PDBFileParser  {
 					sourceLines.add(line); //pdb_SOURCE_Handler
 				else if (recordName.equals("COMPND"))
 					compndLines.add(line); //pdb_COMPND_Handler
+				else if (recordName.equals("KEYWDS"))
+					keywordsLines.add(line);
 				else if (recordName.equals("JRNL"))
 					pdb_JRNL_Handler(line);
 				else if (recordName.equals("EXPDTA"))
@@ -2693,6 +2699,8 @@ public class PDBFileParser  {
 		}
 
 		makeCompounds(compndLines, sourceLines);
+		
+		handlePDBKeywords(keywordsLines);
 
 		triggerEndFileChecks();
 
@@ -2757,6 +2765,52 @@ public class PDBFileParser  {
 
 	}
 
+	/**Parse KEYWODS record of the PDF file.<br>
+	 * A keyword may be split over two lines. whether a keyword ends by the end 
+	 * of a line or it is aplit over two lines, a <code>space</code> is added 
+	 * between the 2 lines's contents, unless the first line ends in 
+	 * a '-' character.
+	 * <pre>
+	 * Record Format
+	 * COLUMNS       DATA  TYPE     FIELD         DEFINITION 
+	 *	---------------------------------------------------------------------------------
+	 *	 1 -  6       Record name    "KEYWDS" 
+	 *	 9 - 10       Continuation   continuation  Allows concatenation of records if necessary.
+	 *	11 - 79       List           keywds        Comma-separated list of keywords relevant
+	 *	                                           to the entry.      
+	 * Example
+	 * 	         1         2         3         4         5         6         7         8
+	 *	12345678901234567890123456789012345678901234567890123456789012345678901234567890
+	 *	KEYWDS    LYASE,  TRICARBOXYLIC ACID CYCLE, MITOCHONDRION, OXIDATIVE
+	 *	KEYWDS   2 METABOLISM
+	 * </pre>
+	 * @param lines The KEWODS record lines.
+	 * @author Amr ALHOSSARY
+	 */
+	private void handlePDBKeywords(List<String> lines) {
+		StringBuilder fullList = new StringBuilder();
+		for (String line : lines) {
+			String kwList = line.substring(10).trim();
+			if(kwList.length() > 0) {
+				if(fullList.length() > 0 && fullList.indexOf("-", fullList.length()-1) < 0) {
+					fullList.append(' ');
+				}
+				fullList.append(kwList);
+			}
+		}
+		String fulllengthList = fullList.toString();
+		keywords = fulllengthList.split("( )*,( )*");
+		ArrayList<String> lst = new ArrayList<String>(keywords.length);
+		for (String keyword : keywords) {
+			if(keyword.length() == 0) {
+				logger.warn("Keyword empty in structure "+ structure.getIdentifier().toString());
+				continue;
+			}
+			lst.add(keyword);
+		}
+		structure.setKeywords(lst);
+	}
+	
 	/**
 	 * Handles creation of all bonds. Looks at LINK records, SSBOND (Disulfide
 	 * bonds), peptide bonds, and intra-residue bonds.

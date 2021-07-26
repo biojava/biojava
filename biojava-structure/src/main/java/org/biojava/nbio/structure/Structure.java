@@ -788,4 +788,18 @@ public interface Structure extends Cloneable, Serializable {
 	 *  returned the same value as {@link #getPDBCode()}
 	 */
 	String getIdentifier();
+	
+	/**
+	 * Gets the keywords (KEYWODS) record of the structure
+	 * @return The keywords in a <code>List&lt;String&gt;</code>
+	 * @since 6.0.0
+	 */
+	List<String> getKeywords();
+	
+	/**
+	 * Sets the KEYWODS record of the structure.
+	 * @param keywords The keywords in a <code>List&lt;String&gt; to set.</code>
+	 * @since 6.0.0
+	 */
+	void setKeywords(List<String> keywords);
 }
