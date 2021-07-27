@@ -23,6 +23,7 @@ package org.biojava.nbio.structure.align.gui;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.swing.Box;
 import javax.swing.JLabel;
@@ -116,7 +117,7 @@ implements StructurePairSelector{
 		} else if ( ! chainId.isEmpty() ){
 			return new SubstructureIdentifier(pdbId, ResidueRange.parseMultiple(chainId));
 		}
-		return new SubstructureIdentifier(pdbId);
+		return new SubstructureIdentifier(pdbId, new ArrayList<ResidueRange>());
 	}
 	public StructureIdentifier getName2() {
 		String pdbId = f2.getText().trim();
@@ -129,7 +130,7 @@ implements StructurePairSelector{
 		} else if ( ! chainId.isEmpty() ){
 			return new SubstructureIdentifier(pdbId, ResidueRange.parseMultiple(chainId));
 		}
-		return new SubstructureIdentifier(pdbId);
+		return new SubstructureIdentifier(pdbId, new ArrayList<ResidueRange>());
 	}
 	@Override
 	public Structure getStructure1() throws StructureException, IOException{

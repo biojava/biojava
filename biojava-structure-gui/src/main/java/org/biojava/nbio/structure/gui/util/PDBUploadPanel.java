@@ -25,6 +25,7 @@ package org.biojava.nbio.structure.gui.util;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureTools;
+import org.biojava.nbio.structure.SubstructureIdentifier;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
 import org.biojava.nbio.structure.io.CifFileReader;
 import org.biojava.nbio.structure.io.PDBFileReader;
@@ -150,7 +151,8 @@ implements StructurePairSelector {
 			throw new StructureException(e);
 		}
 
-		Structure reduced = StructureTools.getReducedStructure(s, chainId.getText());
+//		Structure reduced = StructureTools.getReducedStructure(s, chainId.getText());
+		Structure reduced = new SubstructureIdentifier(s.getPDBId().getId()+"."+ chainId.getText()).reduce(s);  //TODO double check this
 
 		String fileURL = "";
 		try {

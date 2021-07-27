@@ -419,18 +419,22 @@ public class AtomCache {
 	 * 		range         := '('? range (',' range)? ')'?
 	 * 		               | chainID
 	 * 		               | chainID '_' resNum '-' resNum
-	 * 		pdbID         := [0-9][a-zA-Z0-9]{3}
+	 * 		pdbID         := ((PDB|pdb)_[0-9]{4})?[0-9][a-zA-Z0-9]{3}
 	 * 		chainID       := [a-zA-Z0-9]
 	 * 		scopID        := 'd' pdbID [a-z_][0-9_]
 	 * 		resNum        := [-+]?[0-9]+[A-Za-z]?
 	 *
 	 *
 	 * 		Example structures:
-	 * 		1TIM     #whole structure
-	 * 		4HHB.C     #single chain
-	 * 		4GCR.A_1-83     #one domain, by residue number
-	 * 		3AA0.A,B     #two chains treated as one structure
-	 * 		d2bq6a1     #scop domain
+	 * 		1TIM                 #whole structure
+	 * 		4HHB.C               #single chain
+	 * 		4GCR.A_1-83          #one domain, by residue number
+	 * 		3AA0.A,B             #two chains treated as one structure
+	 * 		PDB_00001TIM         #whole structure (extended format)
+	 * 		PDB_00004HHB.C       #single chain (extended format)
+	 * 		PDB_00004GCR.A_1-83  #one domain, by residue number (extended format)
+	 * 		PDB_00003AA0.A,B     #two chains treated as one structure (extended format)
+	 * 		d2bq6a1              #scop domain
 	 * </pre>
 	 *
 	 * With the additional set of rules:
@@ -772,7 +776,7 @@ public class AtomCache {
 	public Structure getStructureForPdbId(String pdbId) throws IOException, StructureException {
 		if (pdbId == null)
 			return null;
-		if (pdbId.length() != 4) {
+		if (! (pdbId.length() == 4 || (pdbId.length() == 12  && pdbId.substring(0, 4).equalsIgnoreCase("pdb_")))) {
 			throw new StructureException("Unrecognized PDB ID: " + pdbId);
 		}
 		while (checkLoading(pdbId)) {

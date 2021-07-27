@@ -24,6 +24,7 @@ package org.biojava.nbio.structure.align.pairwise;
 
 
 import org.biojava.nbio.structure.*;
+import org.biojava.nbio.structure.PDBId.PDBIdException;
 import org.biojava.nbio.structure.align.StrucAligParameters;
 import org.biojava.nbio.structure.align.helper.AligMatEl;
 import org.biojava.nbio.structure.align.helper.IndexPair;
@@ -856,7 +857,11 @@ public class AlternativeAlignment implements Serializable{
 		Calc.shift( s3, currentTranMatrix);
 
 		Structure newpdb = new StructureImpl();
-		newpdb.setPDBCode("Java");
+		try {
+			newpdb.setPDBId(new PDBId("XXXX"));
+		} catch (PDBIdException e) {
+			e.printStackTrace();
+		}
 		newpdb.setName("Aligned with BioJava");
 
 

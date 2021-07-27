@@ -29,6 +29,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.biojava.nbio.structure.PDBId.PDBIdException;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.contact.Grid;
 import org.slf4j.Logger;
@@ -50,18 +51,24 @@ import org.slf4j.LoggerFactory;
  * 		range         := range (',' range)?
  * 		               | chainID
  * 		               | chainID '_' resNum '-' resNum
- * 		pdbID         := [0-9][a-zA-Z0-9]{3}
+ * 		pdbID         := ((PDB|pdb)_[0-9]{4})?[0-9][a-zA-Z0-9]{3}
  * 		chainID       := [a-zA-Z0-9]+
  * 		resNum        := [-+]?[0-9]+[A-Za-z]?
  * </pre>
  * For example:
  * <pre>
- * 		1TIM                            #whole structure
- * 		1tim                            #same as above
- * 		4HHB.C                          #single chain
- * 		3AA0.A,B                        #two chains
- * 		4GCR.A_1-40                     #substructure
- *      3iek.A_17-28,A_56-294,A_320-377 #substructure of 3 disjoint parts
+ * 		1TIM                                    #whole structure (short format)
+ * 		1tim                                    #same as above
+ * 		4HHB.C                                  #single chain
+ * 		3AA0.A,B                                #two chains
+ * 		4GCR.A_1-40                             #substructure
+ *      3iek.A_17-28,A_56-294,A_320-377         #substructure of 3 disjoint parts
+ * 		PDB_00001TIM                            #whole structure (extended format)
+ * 		pdb_00001tim                            #same as above
+ * 		PDB_00004HHB.C                          #single chain
+ * 		PDB_00003AA0.A,B                        #two chains
+ * 		PDB_00004GCR.A_1-40                     #substructure
+ *      pdb_00003iek.A_17-28,A_56-294,A_320-377 #substructure of 3 disjoint parts
  * </pre>
  * More options may be added to the specification at a future time.
 
@@ -75,24 +82,27 @@ public class SubstructureIdentifier implements StructureIdentifier {
 	private static final Logger logger = LoggerFactory.getLogger(SubstructureIdentifier.class);
 
 
-	private final String pdbId;
+	private final PDBId pdbId;
 	private final List<ResidueRange> ranges;
 
 	/**
 	 * Create a new identifier from a string.
 	 * @param id
+	 * @throws PDBIdException 
 	 */
-	public SubstructureIdentifier(String id) {
+	public SubstructureIdentifier(String id) throws PDBIdException {
 		String[] idRange = id.split("\\.");
 		if(1 > idRange.length || idRange.length > 2 ) {
 			throw new IllegalArgumentException(String.format("Malformed %s: %s",getClass().getSimpleName(),id));
 		}
-		if(idRange[0].length() != 4) {
-			this.pdbId = idRange[0];
+		if(idRange[0].length() == 4) {  //Short form
+			this.pdbId = new PDBId(idRange[0]/* .toUpperCase() */);
+		} else if(idRange[0].length() == 12 && idRange[0].substring(0, 4).equalsIgnoreCase("PDB_")) { //extended form
+			this.pdbId = new PDBId(idRange[0]/* .toUpperCase() */);
+		} else {
+			this.pdbId = new PDBId(idRange[0]/* .toUpperCase() */);
 			// Changed from Exception to a warning to support files and stuff -sbliven 2015/01/22
 			logger.warn(String.format("Unrecognized PDB code %s",this.pdbId));
-		} else {
-			this.pdbId = idRange[0].toUpperCase();
 		}
 
 		if( idRange.length == 2) {
@@ -115,7 +125,11 @@ public class SubstructureIdentifier implements StructureIdentifier {
 		if(ranges == null) {
 			throw new NullPointerException("Null ranges list");
 		}
-		this.pdbId = pdbId;
+		try {
+			this.pdbId = new PDBId(pdbId);
+		} catch (PDBIdException e) {
+			throw new IllegalArgumentException(e);
+		}
 		this.ranges = ranges;
 	}
 
@@ -135,14 +149,18 @@ public class SubstructureIdentifier implements StructureIdentifier {
 	 */
 	@Override
 	public String getIdentifier() {
-		if (ranges.isEmpty()) return pdbId;
+		if (ranges.isEmpty()) return pdbId.getId();
 		return pdbId + "." + ResidueRange.toString(ranges);
 	}
 
 	public String getPdbId() {
-		return pdbId;
+		return pdbId.getId();
 	}
 
+	public PDBId getPDBId() {
+		return pdbId;
+	}
+	
 	public List<ResidueRange> getResidueRanges() {
 		return ranges;
 	}
@@ -181,7 +199,7 @@ public class SubstructureIdentifier implements StructureIdentifier {
 		// Create new structure & copy basic properties
 		Structure newS = new StructureImpl();
 
-		newS.setPDBCode(s.getPDBCode());
+		newS.setPDBId(s.getPDBId());
 		newS.setPDBHeader(s.getPDBHeader());
 		newS.setName(this.toString());
 		newS.setDBRefs(s.getDBRefs());

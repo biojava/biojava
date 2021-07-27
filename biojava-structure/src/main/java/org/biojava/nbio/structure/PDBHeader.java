@@ -20,6 +20,7 @@
  */
 package org.biojava.nbio.structure;
 
+import org.biojava.nbio.structure.PDBId.PDBIdException;
 import org.biojava.nbio.structure.quaternary.BioAssemblyInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +49,8 @@ public class PDBHeader implements PDBRecord {
 
 	private String title;
 	private String description;
-	private String idCode;
+//	private String idCode;
+	private PDBId pdbId;
 	private String classification;
 
 	private Date depDate;
@@ -449,20 +451,39 @@ public class PDBHeader implements PDBRecord {
 	 *
 	 * @return the PDB identifier
 	 * @see #setIdCode(String)
+	 * @deprecated use {@link #getPdbId()}
 	 */
 	public String getIdCode() {
-		return idCode;
+		if(this.pdbId == null)
+			return null;
+		return this.pdbId.getId();
 	}
+
 	/** The PDB code for this protein structure.
 	 *
 	 * @param idCode the PDB identifier
 	 * @see #getIdCode()
-	 *
+	 * @deprecated use {@link #setPDBId(PDBId)}
 	 */
 	public void setIdCode(String idCode) {
-		this.idCode = idCode;
+		if(idCode == null) {
+			this.pdbId = null;
+		}else {
+			try {
+				this.pdbId = new PDBId(idCode);
+			} catch (PDBIdException e) {
+				throw new IllegalArgumentException(e);
+			}
+		}
 	}
 
+	public PDBId getPdbId() {
+		return pdbId;
+	}
+	
+	public void setPDBId(PDBId pdbId) {
+		this.pdbId = pdbId;
+	}
 
 	public String getClassification() {
 		return classification;

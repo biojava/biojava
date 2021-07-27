@@ -89,7 +89,7 @@ public interface StructureIdentifier extends Serializable {
 	 * <p>The returned structure may be a shallow copy of the input, with shared
 	 * Chains, Residues, etc.
 	 * @param input A full structure, e.g. as loaded from the PDB. The structure
-	 * ID should match that returned by getPdbId(), if applicable.
+	 * ID should match that returned by getPDBId(), if applicable.
 	 * @return
 	 * @throws StructureException
 	 * @see StructureTools#getReducedStructure(Structure, String)

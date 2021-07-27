@@ -28,6 +28,8 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.biojava.nbio.structure.PDBId;
+import org.biojava.nbio.structure.PDBId.PDBIdException;
 import org.biojava.nbio.structure.StructureException;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -42,26 +44,26 @@ public class TestStructureName {
 		StructureName sn = new StructureName(str);
 
 		assertEquals("AL", sn.getChainId());
-		assertEquals("4V4F", sn.getPdbId());
+		assertEquals(new PDBId("4V4F"), sn.getPdbId());
 
 		str = "4v4f.AL";
 		sn = new StructureName(str);
 
 		assertEquals("AL", sn.getChainId());
-		assertEquals("4V4F", sn.getPdbId());
+		assertEquals(new PDBId("4V4F"), sn.getPdbId());
 
 		str = "4v4f.al";
 		sn = new StructureName(str);
 
 		assertEquals("al", sn.getChainId());
-		assertEquals("4V4F", sn.getPdbId());
+		assertEquals(new PDBId("4V4F"), sn.getPdbId());
 
 
 		str = "4v4f.ABCD";
 		sn = new StructureName(str);
 
 		assertEquals("ABCD", sn.getChainId());
-		assertEquals("4V4F", sn.getPdbId());
+		assertEquals(new PDBId("4V4F"), sn.getPdbId());
 
 
 		// More than 4 characters should work too. In principle there's no limit in mmCIF, though the PDB is
@@ -70,7 +72,7 @@ public class TestStructureName {
 		sn = new StructureName(str);
 
 		assertEquals("ABCDEFGHIJ", sn.getChainId());
-		assertEquals("4V4F", sn.getPdbId());
+		assertEquals(new PDBId("4V4F"), sn.getPdbId());
 
 
 	}
@@ -83,13 +85,13 @@ public class TestStructureName {
 		StructureName sn = new StructureName(str);
 
 		assertEquals("A", sn.getChainId());
-		assertEquals("1SMT", sn.getPdbId());
+		assertEquals(new PDBId("1SMT"), sn.getPdbId());
 
 		str = "1SMT.a";
 		sn = new StructureName(str);
 
 		assertEquals("a", sn.getChainId());
-		assertEquals("1SMT", sn.getPdbId());
+		assertEquals(new PDBId("1SMT"), sn.getPdbId());
 
 
 	}
@@ -106,6 +108,7 @@ public class TestStructureName {
 	/**
 	 * Test explicit prefixes
 	 * @throws StructureException
+	 * @throws PDBIdException 
 	 */
 	@Test
 	public void testPrefixes() throws StructureException {
@@ -115,72 +118,82 @@ public class TestStructureName {
 		sn = new StructureName("PDB:4hhb");
 		assertTrue(sn.isPdbId());
 		assertTrue(sn.getSource() == PDB);
-		assertEquals("4HHB",sn.getPdbId());
+		assertEquals(new PDBId("4HHB"),sn.getPdbId());
 		sn = new StructureName("PDB:4hhb.A:1-50");
 		assertTrue(sn.isPdbId());
 		assertTrue(sn.getSource() == PDB);
-		assertEquals("4HHB",sn.getPdbId());
+		assertEquals(new PDBId("4HHB"),sn.getPdbId());
 		// Invalid strings work too, they just don't load
-		sn = new StructureName("PDB:x");
-		assertTrue(sn.isPdbId());
-		assertTrue(sn.getSource() == PDB);
-		assertEquals("x",sn.getPdbId());
+		try {
+			sn = new StructureName("PDB:x");
+			assertTrue(sn.isPdbId());
+			assertTrue(sn.getSource() == PDB);
+			assertEquals("x",sn.getPdbId());
+			fail("Current PDBId class does not allow malformed PdbId");
+		}catch (IllegalArgumentException e) {
+		}
 		// SCOP
 		sn = new StructureName("SCOP:d2gs2a_");
 		assertTrue(sn.isScopName());
 		assertTrue(sn.getSource() == SCOP);
-		assertEquals("2GS2",sn.getPdbId());
+		assertEquals(new PDBId("2GS2"),sn.getPdbId());
 		// CATH
 		sn = new StructureName("CATH:1qvrC03");
 		assertTrue(sn.isCathID());
 		assertTrue(sn.getSource() == CATH);
-		assertEquals("1QVR",sn.getPdbId());
+		assertEquals(new PDBId("1QVR"),sn.getPdbId());
 		// URL
 		sn = new StructureName("URL:http://www.rcsb.org/pdb/files/1B8G.pdb.gz");
 		assertTrue(sn.isURL());
 		assertTrue(sn.getSource() == URL);
-		assertEquals("1B8G",sn.getPdbId());
+		assertEquals(new PDBId("1B8G"),sn.getPdbId());
 		sn = new StructureName("URL:file:///4hhb.pdb");
 		assertTrue(sn.isURL());
 		assertTrue(sn.getSource() == URL);
-		assertEquals("4HHB",sn.getPdbId());
+		assertEquals(new PDBId("4HHB"),sn.getPdbId());
 		// File: expand home directory (invalid URL)
 		sn = new StructureName("FILE:~/4hhb.pdb");
 		assertTrue(sn.isFile());
 		assertTrue(sn.getSource() == FILE);
-		assertEquals("4HHB",sn.getPdbId());
+		assertEquals(new PDBId("4HHB"),sn.getPdbId());
 		// Relative file (invalid URL)
 		sn = new StructureName("file:4hhb.pdb");
 		assertTrue(sn.isFile());
 		assertTrue(sn.getSource() == FILE);
-		assertEquals("4HHB",sn.getPdbId());
+		assertEquals(new PDBId("4HHB"),sn.getPdbId());
 		// Absolute paths are valid URLs
 		sn = new StructureName("file:/4hhb_other.pdb");
 		assertTrue(sn.isURL());
 		assertTrue(sn.getSource() == URL);
-		assertEquals("4HHB",sn.getPdbId());
+		assertEquals(new PDBId("4HHB"),sn.getPdbId());
 
 		// ECOD
 		sn = new StructureName("e1lyw.1");
 		assertTrue(sn.isEcodDomain());
 		assertTrue(sn.getSource() == ECOD);
-		assertEquals("1LYW",sn.getPdbId());
+		assertEquals(new PDBId("1LYW"),sn.getPdbId());
 		// BIO
 		sn = new StructureName("BIO:2ehz:1");
 		assertTrue(sn.isBioAssembly());
 		assertTrue(sn.getSource() == BIO);
-		assertEquals("2EHZ",sn.getPdbId());
+		assertEquals(new PDBId("2EHZ"),sn.getPdbId());
 
 		// Invalid prefix
 		sn = new StructureName("XXX:2ehz");
 		assertTrue(sn.isPdbId());
 		assertTrue(sn.getSource() == PDB);
-		assertEquals("XXX:2ehz",sn.getPdbId());
+//		assertEquals("XXX:2ehz",sn.getPdbId());
+		try {
+			assertEquals(null,sn.getPdbId());
+			fail("Should NOT work");
+		}catch (PDBIdException e) {
+		}
 
 	}
 	/**
 	 * Test without prefixes
 	 * @throws StructureException
+	 * @throws PDBIdException 
 	 */
 	@Test
 	public void testGuesses() throws StructureException {
@@ -190,35 +203,40 @@ public class TestStructureName {
 		sn = new StructureName("4hhb");
 		assertTrue(sn.isPdbId());
 		assertTrue(sn.getSource() == PDB);
-		assertEquals("4HHB",sn.getPdbId());
+		assertEquals(new PDBId("4HHB"),sn.getPdbId());
 		sn = new StructureName("4hhb.A:1-50");
 		assertTrue(sn.isPdbId());
 		assertTrue(sn.getSource() == PDB);
-		assertEquals("4HHB",sn.getPdbId());
-		// Invalid strings work too, they just don't load
+		assertEquals(new PDBId("4HHB"),sn.getPdbId());
+		// Invalid strings should NOT work.
 		sn = new StructureName("x");
 		assertTrue(sn.isPdbId());
 		assertTrue(sn.getSource() == PDB);
-		assertEquals("x",sn.getPdbId());
+//		assertEquals(null, sn.getPdbId());
+		try {
+			assertEquals(null,sn.getPdbId());
+			fail("Should NOT work");
+		}catch (PDBIdException e) {
+		}
 		// SCOP
 		sn = new StructureName("d2gs2a_");
 		assertTrue(sn.isScopName());
 		assertTrue(sn.getSource() == SCOP);
-		assertEquals("2GS2",sn.getPdbId());
+		assertEquals(new PDBId("2GS2"),sn.getPdbId());
 		// CATH
 		sn = new StructureName("1qvrC03");
 		assertTrue(sn.isCathID());
 		assertTrue(sn.getSource() == CATH);
-		assertEquals("1QVR",sn.getPdbId());
+		assertEquals(new PDBId("1QVR"),sn.getPdbId());
 		// URL
 		sn = new StructureName("http://www.rcsb.org/pdb/files/1B8G.pdb.gz");
 		assertTrue(sn.isURL());
 		assertTrue(sn.getSource() == URL);
-		assertEquals("1B8G",sn.getPdbId());
+		assertEquals(new PDBId("1B8G"),sn.getPdbId());
 		sn = new StructureName("file:///4hhb.pdb");
 		assertTrue(sn.isURL());
 		assertTrue(sn.getSource() == URL);
-		assertEquals("4HHB",sn.getPdbId());
+		assertEquals(new PDBId("4HHB"),sn.getPdbId());
 
 
 		// Files are hard to test, since they rely on existing files
@@ -240,12 +258,16 @@ public class TestStructureName {
 		sn = new StructureName("e1lyw.1");
 		assertTrue(sn.isEcodDomain());
 		assertTrue(sn.getSource() == ECOD);
-		assertEquals("1LYW",sn.getPdbId());
+		assertEquals(new PDBId("1LYW"),sn.getPdbId());
 		// BIO is not guessed
 		sn = new StructureName("2ehz:1");
 		assertFalse(sn.isBioAssembly());
 		assertTrue(sn.getSource() == PDB);
-		assertEquals("2ehz:1",sn.getPdbId());
+		try {
+			assertEquals("2ehz:1",sn.getPdbId());
+			fail("Unknown format should NOT work anymore");
+		} catch (PDBIdException e) {
+		}
 
 	}
 

@@ -63,6 +63,8 @@ import org.biojava.nbio.structure.JournalArticle;
 import org.biojava.nbio.structure.NucleotideImpl;
 import org.biojava.nbio.structure.PDBCrystallographicInfo;
 import org.biojava.nbio.structure.PDBHeader;
+import org.biojava.nbio.structure.PDBId;
+import org.biojava.nbio.structure.PDBId.PDBIdException;
 import org.biojava.nbio.structure.ResidueNumber;
 import org.biojava.nbio.structure.Site;
 import org.biojava.nbio.structure.Structure;
@@ -342,8 +344,9 @@ public class PDBFileParser  {
 	 the PDB
 	 63 - 66        IDcode          idCode          This identifier is unique within PDB
 	</pre>
+	 * @throws PDBIdException 
 	 */
-	private void pdb_HEADER_Handler(String line) {
+	private void pdb_HEADER_Handler(String line) throws PDBIdException {
 
 		String classification  = null;
 		String deposition_date = null;
@@ -371,8 +374,8 @@ public class PDBFileParser  {
 			logger.debug("Parsing entry " + pdbId);
 
 
-			structure.setPDBCode(pdbCode);
-			pdbHeader.setIdCode(pdbCode);
+			structure.setPDBId(new PDBId(pdbCode));
+			pdbHeader.setPDBId(new PDBId(pdbCode));
 		}
 
 		//*really* old files (you'll need to hunt to find these as they
@@ -2693,7 +2696,7 @@ public class PDBFileParser  {
 					else if (recordName.equals("SHEET")) pdb_SHEET_Handler(line ) ;
 					else if (recordName.equals("TURN")) pdb_TURN_Handler(   line ) ;
 				}
-			} catch (StringIndexOutOfBoundsException | NullPointerException ex) {
+			} catch (StringIndexOutOfBoundsException | NullPointerException | PDBIdException ex) {
 				logger.info("Unable to parse [" + line + "]");
 			}
 		}

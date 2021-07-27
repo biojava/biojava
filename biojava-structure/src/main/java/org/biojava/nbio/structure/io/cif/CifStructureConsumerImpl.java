@@ -16,6 +16,8 @@ import org.biojava.nbio.structure.HetatomImpl;
 import org.biojava.nbio.structure.NucleotideImpl;
 import org.biojava.nbio.structure.PDBCrystallographicInfo;
 import org.biojava.nbio.structure.PDBHeader;
+import org.biojava.nbio.structure.PDBId;
+import org.biojava.nbio.structure.PDBId.PDBIdException;
 import org.biojava.nbio.structure.ResidueNumber;
 import org.biojava.nbio.structure.SeqMisMatch;
 import org.biojava.nbio.structure.SeqMisMatchImpl;
@@ -858,8 +860,14 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
         }
 
         if (struct.isDefined() && struct.getEntryId().isDefined()) {
-            pdbHeader.setIdCode(struct.getEntryId().get(0));
-            structure.setPDBCode(struct.getEntryId().get(0));
+            PDBId pdbId = null;
+			try {
+				pdbId = new PDBId(struct.getEntryId().get(0));
+			} catch (PDBIdException e) {
+				throw new IllegalArgumentException(e);
+			}
+			pdbHeader.setPDBId(pdbId);
+            structure.setPDBId(pdbId);
         }
     }
 

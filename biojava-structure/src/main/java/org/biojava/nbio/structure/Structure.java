@@ -23,6 +23,7 @@
  */
 package org.biojava.nbio.structure;
 
+import org.biojava.nbio.structure.PDBId.PDBIdException;
 import org.biojava.nbio.structure.io.FileConvert;
 import org.biojava.nbio.structure.io.PDBFileReader;
 
@@ -181,22 +182,6 @@ public interface Structure extends Cloneable, Serializable {
 	 */
 	@Override
 	String toString();
-
-	/**
-	 * Set PDB code of structure .
-	 *
-	 * @param pdb_id  a String specifying the PDBCode
-	 * @see #getPDBCode
-	 */
-	void setPDBCode (String pdb_id) ;
-
-	/**
-	 * Get PDB code of structure.
-	 *
-	 * @return a String representing the PDBCode value
-	 * @see #setPDBCode
-	 */
-	String  getPDBCode () ;
 
 	/**
 	 * Set biological name of Structure .
@@ -766,14 +751,6 @@ public interface Structure extends Cloneable, Serializable {
 	void resetModels();
 
 	/**
-	 * Returns the PDB identifier associated with this StructureIdentifier.
-	 * @deprecated From BioJava 4.2, use {@link #getPDBCode()} or
-	 *  <code>getStructureIdentifier().toCanonical().getPdbId()</code>
-	 */
-	@Deprecated
-	String getPdbId();
-
-	/**
 	 * Get a string representing this structure's contents. The following places
 	 * are searched for a non-null value, with the first being returned:
 	 * <ol>
@@ -802,4 +779,39 @@ public interface Structure extends Cloneable, Serializable {
 	 * @since 6.0.0
 	 */
 	void setKeywords(List<String> keywords);
+
+	/**
+	 * Get PDB code of structure.
+	 *
+	 * @return a String representing the PDBCode value
+	 * @see #setPDBCode
+	 * @deprecated use {@link #getPDBId()} to get a {@link PDBId} object or getPDBId().getId() to get a {@link String}
+	 */
+	String getPDBCode () ;
+
+	/**
+	 * Set PDB code of structure .
+	 *
+	 * @param pdb_id  a String specifying the PDBCode
+	 * @throws PDBIdException 
+	 * @see #getPDBCode
+	 * @deprecated use {@link #setPDBCode(PDBId)}
+	 */
+	void setPDBCode (String pdb_id) throws PDBIdException ;
+
+//	/**
+//	 * Returns the PDB identifier associated with this StructureIdentifier.
+//	 * @deprecated From BioJava 4.2, use {@link #getPDBCode()} or
+//	 *  <code>getStructureIdentifier().toCanonical().getPdbId()</code>
+//	 */
+//	@Deprecated
+//	String getPdbId();
+//
+//	@Deprecated
+//	void setPdbId(String pdb_id);
+
+
+	PDBId getPDBId();
+	void setPDBId(PDBId pdbId);
+
 }

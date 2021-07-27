@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
+import org.biojava.nbio.structure.PDBId.PDBIdException;
 import org.biojava.nbio.structure.io.FileConvert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +49,7 @@ public class StructureImpl implements Structure {
 
 	private static final Logger logger = LoggerFactory.getLogger(StructureImpl.class);
 
-	private String pdb_id ;
+	private PDBId pdbId ;
 
 	private List<Model> models;
 
@@ -118,7 +119,7 @@ public class StructureImpl implements Structure {
 
 		// copy structure data
 
-		n.setPDBCode(getPDBCode());
+		n.setPDBId(getPDBId());
 		n.setName(getName());
 		//TODO the header data is not being deep-copied, that's a minor issue since it is just some static metadata, but we should recheck this if needed - JD 2014-12-11
 		n.setPDBHeader(pdbHeader);
@@ -229,17 +230,6 @@ public class StructureImpl implements Structure {
 
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public void setPDBCode (String pdb_id_) {
-		pdb_id = pdb_id_ ;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public String  getPDBCode () {
-		return pdb_id ;
-	}
 
 	/** {@inheritDoc} */
 	@Override
@@ -369,7 +359,7 @@ public class StructureImpl implements Structure {
 		str.append("structure ");
 		str.append(name);
 		str.append(" ");
-		str.append(pdb_id);
+		str.append(pdbId);
 		str.append(" ");
 
 		if ( nrModels()>1 ){
@@ -1016,11 +1006,63 @@ public class StructureImpl implements Structure {
 		return toCanonical().getIdentifier();
 	}
 
-	/** {@inheritDoc} */
-	@Deprecated
+	/** 
+	 * {@inheritDoc} 
+	 */
+	/**
+	 * @deprecated use {@link #getPDBId()} to get a {@link PDBId} object or getPDBId().getId() to get a {@link String}
+	 */
 	@Override
-	public String getPdbId() {
-		return pdb_id;
+	public String  getPDBCode () {
+		if(pdbId == null)
+			return null;
+		return this.pdbId.getId() ;
+	}
+	
+	/** {@inheritDoc} 
+	 * @throws PDBIdException 
+	 * @deprecated use {@link #setPDBCode(PDBId)}
+	 * */
+	@Override
+	public void setPDBCode(String pdb_id) throws PDBIdException {
+		if(pdb_id == null) {
+			this.pdbId = null;
+		}else {
+			pdbId = new PDBId(pdb_id);
+//			try {
+//			} catch (PDBIdException e) {
+//				throw new IllegalArgumentException(e);
+//			}
+		}
+	}
+	
+//	/** {@inheritDoc}
+//	 * @deprecated
+//	 *  */
+//	@Override
+//	public String getPdbId() {
+//		return pdbId.getId();
+//	}
+//	
+//	/**
+//	 *@deprecated
+//	 */
+//	@Override
+//	public void setPdbId(String pdb_id) {
+//		try {
+//			this.pdbId = new PDBId(pdb_id);
+//		} catch (PDBIdException e) {
+//			throw new IllegalArgumentException(e);
+//		}
+//	}
+
+
+	public PDBId getPDBId() {
+		return this.pdbId;
+	}
+	
+	public void setPDBId(PDBId pdbId) {
+		this.pdbId = pdbId;
 	}
 
 	/** {@inheritDoc} */

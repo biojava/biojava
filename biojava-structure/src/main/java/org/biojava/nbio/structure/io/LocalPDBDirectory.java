@@ -117,6 +117,9 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	 */
 	public static final long LAST_REMEDIATION_DATE ;
 	private static final String LAST_REMEDIATION_DATE_STRING = "2011/07/12";
+	
+	private static final int SHORT_OFFSET = 1;
+	private static final int LONG_OFFSET  = 9;
 
 	static {
 
@@ -351,7 +354,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	 */
 	protected InputStream getInputStream(String pdbId) throws IOException{
 
-		if ( pdbId.length() != 4)
+		if (! ((pdbId.length() == 4) || (pdbId.length() == 12 && pdbId.substring(0, 4).equalsIgnoreCase("pdb_"))))
 			throw new IOException("The provided ID does not look like a PDB ID : " + pdbId);
 
 		// Check existing
@@ -376,7 +379,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	 * @throws IOException
 	 */
 	public void prefetchStructure(String pdbId) throws IOException {
-		if ( pdbId.length() != 4)
+		if (!((pdbId.length() == 4) || (pdbId.length() == 12 && pdbId.substring(0, 4).equalsIgnoreCase("pdb_"))))
 			throw new IOException("The provided ID does not look like a PDB ID : " + pdbId);
 
 		// Check existing
@@ -441,7 +444,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	 *  fetchBehavior is {@link FetchBehavior#LOCAL_ONLY}
 	 */
 	protected File downloadStructure(String pdbId) throws IOException{
-		if ( pdbId.length() != 4)
+		if (!((pdbId.length() == 4) || (pdbId.length() == 12 && pdbId.substring(0, 4).equalsIgnoreCase("pdb_"))))
 			throw new IOException("The provided ID does not look like a PDB ID : " + pdbId);
 
 		// decide whether download is required
@@ -516,7 +519,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	 */
 	private File downloadStructure(String pdbId, String pathOnServer, boolean obsolete, File existingFile)
 			throws IOException{
-
+		int offset = (pdbId.length() == 4 ? SHORT_OFFSET : LONG_OFFSET);
 		File dir = getDir(pdbId,obsolete);
 		File realFile = new File(dir,getFilename(pdbId));
 
@@ -530,7 +533,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 			ftp = DEFAULT_BCIF_FILE_SERVER + filename;
 		} else {
 			ftp = String.format("%s%s/%s/%s",
-			serverName, pathOnServer, pdbId.substring(1,3).toLowerCase(), getFilename(pdbId));
+			serverName, pathOnServer, pdbId.substring(offset, offset+2).toLowerCase(), getFilename(pdbId));
 		}
 
 		URL url = new URL(ftp);
@@ -621,13 +624,22 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	protected File getDir(String pdbId, boolean obsolete) {
 
 		File dir = null;
+		int offset = -1;
+		if(pdbId.length() == 4) {
+			offset = SHORT_OFFSET;
+		}else if (pdbId.length() == 12 && pdbId.substring(0, 4).equalsIgnoreCase("pdb_")) {
+			offset = LONG_OFFSET;
+		} else {
+			throw new IllegalArgumentException("unexpected file name length");
+		}
+		int end = offset+2;
 
 		if (obsolete) {
 			// obsolete is always split
-			String middle = pdbId.substring(1,3).toLowerCase();
+			String middle = pdbId.substring(offset, end).toLowerCase();
 			dir = new File(obsoleteDirPath, middle);
 		} else {
-			String middle = pdbId.substring(1,3).toLowerCase();
+			String middle = pdbId.substring(offset, end).toLowerCase();
 			dir = new File(splitDirPath, middle);
 		}
 
@@ -647,14 +659,14 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	 * @throws IOException If the file exists but is empty and can't be deleted
 	 */
 	public File getLocalFile(String pdbId) throws IOException {
-
+		int offset = (pdbId.length() == 4 ? SHORT_OFFSET : LONG_OFFSET);
 		// Search for existing files
 
 		// Search directories:
 		// 1) LOCAL_MMCIF_SPLIT_DIR/<middle>/(pdb)?<pdbId>.<ext>
 		// 2) LOCAL_MMCIF_ALL_DIR/<middle>/(pdb)?<pdbId>.<ext>
 		LinkedList<File> searchdirs = new LinkedList<File>();
-		String middle = pdbId.substring(1,3).toLowerCase();
+		String middle = pdbId.substring(offset, offset+2).toLowerCase();
 
 		File splitdir = new File(splitDirPath, middle);
 		searchdirs.add(splitdir);

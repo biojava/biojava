@@ -24,6 +24,7 @@
 
 package org.biojava.nbio.structure;
 
+import org.biojava.nbio.structure.PDBId.PDBIdException;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.CifFileReader;
 import org.biojava.nbio.structure.io.LocalPDBDirectory;
@@ -99,7 +100,7 @@ public class TestAtomCache {
 		try {
 			s = cache.getStructure(name2b);
 			fail("Invalid structure format");
-		} catch(StructureException e) {
+		} catch(PDBIdException e) {
 		}
 
 
@@ -227,7 +228,7 @@ public class TestAtomCache {
 
 		Structure s = cache.getStructure(name);
 		assertNotNull("Failed to fetch structure from SCOP ID", s);
-		assertEquals("2gs2.A", s.getName());
+		assertEquals("2GS2.A", s.getName()); //TODO make sure that updating the case won't cause any harm
 	}
 
 	@Test
