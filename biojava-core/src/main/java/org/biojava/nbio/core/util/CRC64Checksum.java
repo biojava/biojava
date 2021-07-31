@@ -56,6 +56,7 @@ public class CRC64Checksum implements Checksum {
 		crc = low ^ high;
 	}
 
+	// condition loop should be i < offset + length
 	@Override
 	public void update(byte[] b, int offset, int length) {
 		for (int i = offset; i < length; ++i)
