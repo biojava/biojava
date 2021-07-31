@@ -24,6 +24,7 @@ import javax.vecmath.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Locale;
 
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
