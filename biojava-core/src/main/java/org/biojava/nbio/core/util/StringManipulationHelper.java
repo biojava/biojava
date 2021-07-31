@@ -18,10 +18,23 @@
  *      http://www.biojava.org/
  *
  * Created on Sep 14, 2011
- * Author: Amr AL-Hossary
+ * Author: Amr AL-Hossary, Richard Adams
  *
  */
 package org.biojava.nbio.core.util;
+
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.Collection;
+import java.util.Scanner;
+import java.util.stream.Collectors;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,20 +44,13 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.*;
-import java.util.AbstractCollection;
-import java.util.Iterator;
-import java.util.Scanner;
-
 
 /**
  * A utility class for common {@link String} manipulation tasks.
  * All functions are static methods.
  *
  * @author Amr AL-Hossary
+ * @author Richard Adams
  */
 public class StringManipulationHelper  {
 
@@ -62,14 +68,19 @@ public class StringManipulationHelper  {
 		// to prevent instantiation
 	}
 
-
-
-
-
 	/**
+	 * Converts an InputStream of text to a String, closing the stream
+	 * before returning.
+	 * <ul>
+	 * <li> Newlines are converted to Unix newlines (\n)
+	 * <li> Default charset encoding is used to read the stream.
+	 * <li> Any IOException reading the stream is 'squashed' and not made
+	 *   available to caller
+	 * <li> An additional newline is appended at the end of the string.
+	 * <ul>
 	 * @author andreas
 	 * @param stream
-	 * @return
+	 * @return a possibly empty but non-null String
 	 */
 	public static String convertStreamToString(InputStream stream) {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
@@ -78,8 +89,7 @@ public class StringManipulationHelper  {
 		String line = null;
 		try {
 			while ((line = reader.readLine()) != null) {
-
-		sb.append(line).append(UNIX_NEWLINE);
+			    sb.append(line).append(UNIX_NEWLINE);
 			}
 		} catch (IOException e) {
 			// logger.error("Exception: ", e);
@@ -90,13 +100,14 @@ public class StringManipulationHelper  {
 				logger.error("Exception: ", e);
 			}
 		}
-
 		return sb.toString();
 	}
 
 	/**
-	 * compares two strings for equality, line by line, ignoring any difference
-	 * of end line delimiters contained within the 2 Strings. This method should
+	 * Compares two strings in a case-sensitive manner for equality, line by line, ignoring any difference
+	 * of end line delimiters contained within the 2 Strings.
+	 * <br/>
+	 * This method should
 	 * be used if and only if two Strings are considered identical when all nodes
 	 * are identical including their relative order. Generally useful when
 	 * asserting identity of <b>automatically regenerated</b> XML or PDB.
@@ -116,25 +127,39 @@ public class StringManipulationHelper  {
 		String line1, line2;
 		while (scanner1.hasNextLine()) {
 			line1 = scanner1.nextLine();
-			line2 = scanner2.nextLine();
-			if (! line1.equals(line2)) {
-				scanner1.close();
-				scanner2.close();
+			if(scanner2.hasNextLine()) {
+				line2 = scanner2.nextLine();
+				if (! line1.equals(line2)) {
+					closeScanners(scanner1, scanner2);
+					return false;
+				}
+			} else {
+				closeScanners(scanner1, scanner2);
 				return false;
 			}
 		}
 		if (scanner2.hasNextLine()) {
-			scanner1.close();
-			scanner2.close();
+			closeScanners(scanner1, scanner2);
 			return false;
 		}
 
-		scanner1.close();
-		scanner2.close();
+		closeScanners(scanner1, scanner2);
 		return true;
 	}
 
+	private static void closeScanners(Scanner s1, Scanner s2) {
+		s1.close();
+		s2.close();
+	}
 
+	/**
+	 * This method is not implemented or used, never returns true
+	 * and should probably be removed.
+	 * @param expected
+	 * @param actual
+	 * @return
+	 * @throws UnsupportedOperationException in most cases
+	 */
 	public static boolean equalsToXml(String expected, String actual) {
 		Document expectedDocument=null;
 		Document actualDocument=null;
@@ -174,23 +199,45 @@ public class StringManipulationHelper  {
 		throw new UnsupportedOperationException("not yet implemented");
 	}
 
+	/**
+	 * Adds padding to left of supplied string
+	 * @param s The String to pad
+	 * @param n an integer >= 1
+	 * @return The left-padded string. 
+	 * @throws IllegalArgumentException if n <= 0
+	 */
 	public static String padLeft(String s, int n) {
+		validatePadding(n);
 	    return String.format("%1$" + n + "s", s);
 	}
 
+	/**
+	 * Adds padding to right of supplied string
+	 * @param s The String to pad
+	 * @param n an integer >= 1
+	 * @return The right-padded string. 
+	 * @throws IllegalArgumentException if n <= 0
+	 */
 	public static String padRight(String s, int n) {
-	     return String.format("%1$-" + n + "s", s);
+		validatePadding(n);
+	    return String.format("%1$-" + n + "s", s);
 	}
 
-	public static String join(AbstractCollection<String> s, String delimiter) {
-	    if (s == null || s.isEmpty()) return "";
-	    Iterator<String> iter = s.iterator();
-	    StringBuilder builder = new StringBuilder(iter.next());
-	    while( iter.hasNext() )
-	    {
-		builder.append(delimiter).append(iter.next());
-	    }
-	    return builder.toString();
+	private static void validatePadding(int n) {
+		if (n <=0 ) {
+			throw new IllegalArgumentException("padding must be >= 1");
+		}
+	}
+
+	/**
+	 * Joins Strings together with a delimiter to a single
+	 * @param s An {@link Iterable} of Strings
+	 * @param delimiter
+	 * @return
+	 */
+	public static String join(Collection<String> s, String delimiter) {
+		if (s==null) return "";
+		return s.stream().collect(Collectors.joining(delimiter));
 	}
 
 }
