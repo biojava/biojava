@@ -171,7 +171,7 @@ implements StructurePairSelector {
 			e.printStackTrace();
 		}
 
-		reduced.setPDBCode(fileURL);
+		reduced.setPDBCode(fileURL);  //FIXME This usage seems wrong and should be changed.
 		reduced.setName(fileURL);
 		return reduced;
 
