@@ -593,6 +593,6 @@ public class CrystalCell implements Serializable {
 
 	@Override
 	public String toString() {
-		return String.format("a%7.2f b%7.2f c%7.2f alpha%6.2f beta%6.2f gamma%6.2f", a, b, c, alpha, beta, gamma);
+		return String.format(Locale.US, "a%7.2f b%7.2f c%7.2f alpha%6.2f beta%6.2f gamma%6.2f", a, b, c, alpha, beta, gamma);
 	}
 }

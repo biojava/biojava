@@ -30,6 +30,7 @@ import org.biojava.nbio.core.util.PrettyXMLWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Locale;
 
 
 
@@ -187,8 +188,8 @@ public class AFPChainXMLConverter {
 
 		xml.attribute("blockNr", String.valueOf(bk));
 		xml.attribute("blockSize", String.valueOf(blockSize[bk]));
-		xml.attribute("blockScore", String.format("%5.2f",blockScore[bk]).trim());
-		xml.attribute("blockRmsd", String.format("%5.2f",blockRmsd[bk]).trim());
+		xml.attribute("blockScore", String.format(Locale.US, "%5.2f",blockScore[bk]).trim());
+		xml.attribute("blockRmsd", String.format(Locale.US, "%5.2f",blockRmsd[bk]).trim());
 		xml.attribute("blockGap", String.valueOf(blockGap[bk]));
 
 	}
@@ -210,7 +211,7 @@ public class AFPChainXMLConverter {
 		for (int x=0;x<3;x++){
 			for (int y=0;y<3;y++){
 				String key = "mat"+(x+1)+(y+1);
-				xml.attribute(key,String.format("%.6f",matrix.get(x,y)));
+				xml.attribute(key,String.format(Locale.US, "%.6f",matrix.get(x,y)));
 			}
 		}
 		xml.closeTag("matrix");
@@ -218,9 +219,9 @@ public class AFPChainXMLConverter {
 		Atom[]   shifts = afpChain.getBlockShiftVector();
 		Atom shift = shifts[blockNr];
 		xml.openTag("shift");
-		xml.attribute("x", String.format("%.3f",shift.getX()));
-		xml.attribute("y", String.format("%.3f",shift.getY()));
-		xml.attribute("z", String.format("%.3f",shift.getZ()));
+		xml.attribute("x", String.format(Locale.US, "%.3f",shift.getX()));
+		xml.attribute("y", String.format(Locale.US, "%.3f",shift.getY()));
+		xml.attribute("z", String.format(Locale.US, "%.3f",shift.getZ()));
 		xml.closeTag("shift");
 
 	}
