@@ -1,5 +1,7 @@
 package org.biojava.nbio.core.util;
 
+import static org.biojava.nbio.core.util.FileDownloadUtils.getFileExtension;
+import static org.biojava.nbio.core.util.FileDownloadUtils.getFilePrefix;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.File;
@@ -47,6 +49,93 @@ class FileDownloadUtilsTest {
                 }
             }
         }
+    }
 
+    @Nested
+    class FileExtension {
+        @Test
+        void getExtensionHappyCase(){
+            File someFile = new File("sequence.fasta");
+            assertEquals("fasta", getFileExtension(someFile));
+        }
+
+        @Test
+        void lastSuffixOnlyReturned(){
+            File someFile = new File("sequence.1.a.fasta");
+            assertEquals("fasta", getFileExtension(someFile));
+        }
+        
+        @Test
+        void fileNameEndingInDotReturnsEmptyString(){
+            File someFile = new File("noExtension.");
+            assertEquals("", getFileExtension(someFile));
+        }
+
+        @Test
+        void hiddenFile(){
+            File someFile = new File(".m2");
+            assertEquals("m2", getFileExtension(someFile));
+        }
+
+        @Test
+        void noExtension(){
+            File someFile = new File("nameOnly");
+            assertEquals("nameOnly", getFileExtension(someFile));
+        }        
+    }
+
+    @Nested
+    class GetFilePrefix{
+        @Test
+        void standardFileName(){
+            File someFile = new File("sequence.fasta");
+            assertEquals("sequence", getFilePrefix(someFile));
+        }
+        @Test
+        void prefixIsUpToFirstDot(){
+            File someFile = new File("sequence.1.2.fasta");
+            assertEquals("sequence", getFilePrefix(someFile));
+        }
+
+        @Test
+        void noExtension(){
+            File someFile = new File("nameOnly");
+            assertEquals("nameOnly", getFilePrefix(someFile));
+        }
+
+        @Test
+        void hiddenFile(){
+            File someFile = new File(".m2");
+            assertEquals("", getFilePrefix(someFile));
+        }
+    }
+
+    @Nested
+    class ToUnixPath {
+        @Test
+        void windowsToUnixAddsTrailingSlash(){
+            String winPath = "C:\\a\\b\\c";
+            assertEquals("C:/a/b/c/", FileDownloadUtils.toUnixPath(winPath));
+        }
+        @Test
+        void unixPathReturnedUnchanged(){
+            String path = "/a/b/c/";
+            assertEquals(path, FileDownloadUtils.toUnixPath(path));
+        }
+    }
+
+    @Nested
+    class ToUserHome {
+        String currUserHome = System.getProperty("user.home");
+        @Test
+        void simplePath (){
+            String path="~/sequence.gb";
+            assertEquals(currUserHome+File.separator+"sequence.gb", FileDownloadUtils.expandUserHome(path));
+        }
+        @Test
+        void nestedPath (){
+            String path="~/a/b/c/sequence.gb";
+            assertEquals(currUserHome+File.separator+"a/b/c/sequence.gb", FileDownloadUtils.expandUserHome(path));
+        }  
     }
 }
