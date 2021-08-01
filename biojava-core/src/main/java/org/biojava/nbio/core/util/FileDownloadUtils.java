@@ -113,7 +113,7 @@ public class FileDownloadUtils {
 	/**
 	 * Download the content provided at URL url and store the result to a local
 	 * file, using a temp file to cache the content in case something goes wrong
-	 * in download
+	 * in download. A timeout of 60 seconds is hard-coded and 10 retries are attempted.
 	 *
 	 * @param url
 	 * @param destination

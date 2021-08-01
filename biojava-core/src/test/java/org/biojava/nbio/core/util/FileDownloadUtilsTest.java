@@ -3,11 +3,14 @@ package org.biojava.nbio.core.util;
 import static org.biojava.nbio.core.util.FileDownloadUtils.getFileExtension;
 import static org.biojava.nbio.core.util.FileDownloadUtils.getFilePrefix;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -125,7 +128,7 @@ class FileDownloadUtilsTest {
     }
 
     @Nested
-    class ToUserHome {
+    class ExpandUserHome {
         String currUserHome = System.getProperty("user.home");
         @Test
         void simplePath (){
@@ -137,5 +140,44 @@ class FileDownloadUtilsTest {
             String path="~/a/b/c/sequence.gb";
             assertEquals(currUserHome+File.separator+"a/b/c/sequence.gb", FileDownloadUtils.expandUserHome(path));
         }  
+    }
+
+    @Nested
+    class URLMethods {
+        final String availableUrl = "https://www.google.com";
+
+        @Test
+        void pingGoogleOK(){
+            assertTrue(FileDownloadUtils.ping(availableUrl, 1000));
+        }
+
+        @Test
+        void pingNonExistentFalse(){
+            assertFalse(FileDownloadUtils.ping("https://non-existent.biojava", 1));
+        }
+    }
+    @Nested
+    class DeleteDirectory {
+
+        private File createDirectoryTree () throws IOException {
+
+            File tmpdir = Files.createTempDirectory("tmpDirPrefix").toFile();
+            File child1 = new File(tmpdir, "a");
+            File child2 = new File(child1, "b");
+            File child3 = new File(child2, "c");
+            File f = new File(child3, "seq.fa");
+            child3.mkdirs();
+            f.createNewFile();
+            return tmpdir;
+        }
+
+        @Test
+        void deleteFolderTree() throws IOException{
+            File toDelete = createDirectoryTree();
+            assertTrue(toDelete.exists());
+
+            FileDownloadUtils.deleteDirectory(toDelete.getAbsolutePath());
+            assertFalse(toDelete.exists());
+        }
     }
 }
