@@ -12,6 +12,7 @@ class SingleLinkageClustererTest {
     
     // from wikipedia example
     // https://en.wikipedia.org/wiki/Single-linkage_clustering
+    // it should produce clusters ((0,1),2,4),3 at distance 8.5, 10.5 and 14
     double [][] matrix = new double[][]{
         {0, 17, 21,31,23},
         {17,0,30,34,21},
@@ -43,8 +44,6 @@ class SingleLinkageClustererTest {
         assertEquals(5, result.get(1).size());
         result = clusterer.getClusters(Double.MAX_VALUE);
         assertEquals(1, result.get(1).size());
-
-
     }
 
     
