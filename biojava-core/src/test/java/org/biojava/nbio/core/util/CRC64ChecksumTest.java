@@ -1,9 +1,10 @@
 package org.biojava.nbio.core.util;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
@@ -75,19 +76,35 @@ class CRC64ChecksumTest {
     }
 
     @Test 
-    @Disabled
-    // this doesn't work as expected
-    // and doesn't behave according to interface. The 3rd argument
-    // is treated as an index rather than a number of bytes to include
-    void partialbyteRange (){
+    void partialByteRange (){
         byte [] testBytes = new byte [] {1,2,3,4,5};
-        // should update with testBytes[2] but doesn't
         crc64.update(testBytes, 2, 1);
         String partialBytesHex = crc64.toString();
         crc64.reset();
         crc64.update(testBytes[2]);
         assertEquals(partialBytesHex, crc64.toString());
     }
+
+    @Test 
+    void partialByteRangeRejectsInvalidInput (){
+        byte [] testBytes = new byte [] {1,2,3,4,5};
+        assertAll(
+            ()->assertThrows(IllegalArgumentException.class,
+                ()->crc64.update(testBytes, -1, 0)),
+            ()->assertThrows(IllegalArgumentException.class,
+                ()->crc64.update(testBytes, 0, -1)),
+            ()->assertThrows(IllegalArgumentException.class,
+                ()->crc64.update(testBytes, 0, testBytes.length+1)),
+            ()->assertThrows(IllegalArgumentException.class,
+                ()->crc64.update(testBytes,  testBytes.length, 1))
+        );
+        crc64.update(testBytes, 2, 1);
+        String partialBytesHex = crc64.toString();
+        crc64.reset();
+        crc64.update(testBytes[2]);
+        assertEquals(partialBytesHex, crc64.toString());
+    }
+
 
     @Test
     void hexStringIsEqualToValue(){
