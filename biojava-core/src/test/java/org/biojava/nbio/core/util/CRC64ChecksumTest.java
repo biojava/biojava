@@ -98,11 +98,6 @@ class CRC64ChecksumTest {
             ()->assertThrows(IllegalArgumentException.class,
                 ()->crc64.update(testBytes,  testBytes.length, 1))
         );
-        crc64.update(testBytes, 2, 1);
-        String partialBytesHex = crc64.toString();
-        crc64.reset();
-        crc64.update(testBytes[2]);
-        assertEquals(partialBytesHex, crc64.toString());
     }
 
 
