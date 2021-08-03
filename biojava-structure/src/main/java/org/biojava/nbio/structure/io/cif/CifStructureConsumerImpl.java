@@ -1,5 +1,25 @@
 package org.biojava.nbio.structure.io.cif;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.OptionalInt;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+import javax.vecmath.Matrix4d;
+
 import org.biojava.nbio.structure.AminoAcid;
 import org.biojava.nbio.structure.AminoAcidImpl;
 import org.biojava.nbio.structure.Atom;
@@ -87,15 +107,6 @@ import org.rcsb.cif.schema.mm.StructSiteGen;
 import org.rcsb.cif.schema.mm.Symmetry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.vecmath.Matrix4d;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 /**
  * An implementation of a CifFileConsumer for BioJava. Will process the information provided by a CifFile instance and
@@ -885,11 +896,26 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
 
     @Override
     public void consumeStructKeywords(StructKeywords structKeywords) {
+    	//There may be a simpler implementation or a better implementation using
+    	// Java streams. However, I am not sure about the returned value from 
+    	// getText().values()
+    	ArrayList<String> keywordsList = new ArrayList<String>();
+    	Iterator<String> iterator = structKeywords.getText().values().iterator();
+    	while (iterator.hasNext()) {
+			String longString = (String) iterator.next();
+			String[] strings = longString.split(" *, *");
+			for (String string : strings) {
+				keywordsList.add(string.trim());
+			}
+		}
+    	structure.setKeywords(keywordsList);
+
         StrColumn pdbxKeywords = structKeywords.getPdbxKeywords();
-        // TODO what is the correct format for these?
         if (pdbxKeywords.isDefined()) {
+        	//TODO I think no need for the Collectors.joining(", ") part.
             String keywords = pdbxKeywords.values().collect(Collectors.joining(", "));
-            pdbHeader.setDescription(keywords);
+            //TODO What is the right place to fill this field from?
+//        	pdbHeader.setDescription(keywords);
             pdbHeader.setClassification(keywords);
         }
     }

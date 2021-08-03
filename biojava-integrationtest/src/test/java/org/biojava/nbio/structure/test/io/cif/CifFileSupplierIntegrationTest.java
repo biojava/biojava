@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Arrays;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -47,6 +48,18 @@ public class CifFileSupplierIntegrationTest {
         testRoundTrip("1A2C");
     }
 
+    @Test
+    public void test3CDL() throws IOException {
+    	// a structure with insertion codes
+    	testRoundTrip("3CDL");
+    }
+    
+    @Test
+    public void test6ELW() throws IOException {
+    	// a structure with insertion codes
+    	testRoundTrip("6ELW");
+    }
+    
     private static void testRoundTrip(String pdbId) throws IOException {
         URL url = new URL("https://files.rcsb.org/download/" + pdbId + ".cif");
         Structure originalStruct = CifStructureConverter.fromURL(url);
@@ -57,6 +70,10 @@ public class CifFileSupplierIntegrationTest {
         assertNotNull(readStruct);
         assertEquals(originalStruct.getChains().size(), readStruct.getChains().size());
         assertEquals(originalStruct.nrModels(), readStruct.nrModels());
+        
+        assertArrayEquals("Keywords Are not preserved", 
+        		originalStruct.getKeywords().toArray(), 
+        		readStruct.getKeywords().toArray());
 
         for (int i = 0; i < originalStruct.nrModels(); i++) {
             assertEquals(originalStruct.getModel(i).size(), readStruct.getModel(i).size());
