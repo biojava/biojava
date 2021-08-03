@@ -27,7 +27,7 @@ public class TestKeywords {
 	@Test
 	public void testDash() throws IOException {
 		String fileName;
-		fileName = "/pdb6elw.ent.gz";
+		fileName = "/pdb6elw-26lines.ent.gz";
 		InputStream resourceAsStream = getClass().getResourceAsStream(fileName);
 		GZIPInputStream inStream = new GZIPInputStream(resourceAsStream);
 		
