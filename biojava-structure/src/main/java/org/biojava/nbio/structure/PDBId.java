@@ -25,8 +25,8 @@ public class PDBId implements Comparable<PDBId>, Serializable{
 		}
 	}
 
-	public static final String SHORT_PDBID_FORMRMAT		= "\\d{1}\\p{Alnum}{3}";
-	public static final String EXTENDED_PDBID_FORMRMAT	= "PDB_\\d{5}\\p{Alnum}{3}";
+	public static final String SHORT_PDBID_FORMAT		= "\\d{1}\\p{Alnum}{3}";
+	public static final String EXTENDED_PDBID_FORMAT	= "PDB_\\d{5}\\p{Alnum}{3}";
 
 	/**
 	 * keeps the ID in UPPER CASE.
@@ -47,11 +47,11 @@ public class PDBId implements Comparable<PDBId>, Serializable{
 	}
 	
 	public static boolean isShortPDBID(String id) throws NullPointerException {
-		return id.matches(SHORT_PDBID_FORMRMAT);
+		return id.matches(SHORT_PDBID_FORMAT);
 	}
 	
 	public static boolean isExtendedPDBID(String id) throws NullPointerException {
-		return id.matches(EXTENDED_PDBID_FORMRMAT);
+		return id.matches(EXTENDED_PDBID_FORMAT);
 	}
 	
 	public static boolean isShortCompatible(String extendedId) {
