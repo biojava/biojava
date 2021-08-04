@@ -287,7 +287,7 @@ public class TestLongPdbVsMmCifParsing {
 		// description is set in CIF parser to same as classification (_struct_keywords.pdbx_keywords field)
 		// while in PDB parser it is simply not set
 		//assertNotNull("pdb description null",hPdb.getDescription());
-		assertNotNull("cif description null",hCif.getDescription());
+		//assertNotNull("cif description null",hCif.getDescription());  //If we will enable this test again, we may use assertNull instead
 		//assertEquals("failed getDescription:",hPdb.getDescription().toLowerCase(), hCif.getDescription().toLowerCase());
 
 		assertEquals("failed getDepDate:",hPdb.getDepDate(), hCif.getDepDate());

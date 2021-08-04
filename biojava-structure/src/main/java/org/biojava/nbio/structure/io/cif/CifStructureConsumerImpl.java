@@ -7,7 +7,6 @@ import java.time.format.DateTimeFormatterBuilder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -896,27 +895,24 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
 
     @Override
     public void consumeStructKeywords(StructKeywords structKeywords) {
-    	//There may be a simpler implementation or a better implementation using
-    	// Java streams. However, I am not sure about the returned value from 
-    	// getText().values()
-    	ArrayList<String> keywordsList = new ArrayList<String>();
-    	Iterator<String> iterator = structKeywords.getText().values().iterator();
-    	while (iterator.hasNext()) {
-			String longString = (String) iterator.next();
-			String[] strings = longString.split(" *, *");
-			for (String string : strings) {
-				keywordsList.add(string.trim());
-			}
-		}
-    	structure.setKeywords(keywordsList);
+        ArrayList<String> keywordsList = new ArrayList<String>();
+
+        StrColumn text = structKeywords.getText();
+        if (text.isDefined()) {
+            String keywords = text.get(0);
+            String[] strings = keywords.split(" *, *");
+            for (String string : strings) {
+                keywordsList.add(string.trim());
+            }
+        }
+        structure.setKeywords(keywordsList);
 
         StrColumn pdbxKeywords = structKeywords.getPdbxKeywords();
         if (pdbxKeywords.isDefined()) {
-        	//TODO I think no need for the Collectors.joining(", ") part.
-            String keywords = pdbxKeywords.values().collect(Collectors.joining(", "));
-            //TODO What is the right place to fill this field from?
-//        	pdbHeader.setDescription(keywords);
+            String keywords = pdbxKeywords.get(0);
             pdbHeader.setClassification(keywords);
+            //This field should be left empty
+//          pdbHeader.setDescription(keywords);
         }
     }
 
