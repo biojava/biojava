@@ -72,7 +72,7 @@ public class PDBId implements Comparable<PDBId>, Serializable{
 		if (getClass() != obj.getClass())
 			return false;
 		// We are sure they are both objects of the same class and their ID is in the same (UPPER) case.
-		return this.hashCode() == obj.hashCode();
+		return this.getId().equals(((PDBId)obj).getId());
 	}
 	
 	@Override

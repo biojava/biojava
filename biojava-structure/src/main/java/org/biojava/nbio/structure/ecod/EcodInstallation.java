@@ -42,6 +42,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.biojava.nbio.structure.PDBId;
 import org.biojava.nbio.structure.PDBId.PDBIdException;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
 import org.biojava.nbio.core.util.FileDownloadUtils;
@@ -85,7 +86,7 @@ public class EcodInstallation implements EcodDatabase {
 	// Should hold the lock when reading/writing allDomains or domainMap
 	private ReadWriteLock domainsFileLock;
 	private List<EcodDomain> allDomains;
-	private Map<String,List<EcodDomain>> domainMap;//PDB ID -> domains, lazily constructed from allDomains
+	private Map<PDBId,List<EcodDomain>> domainMap;//PDB ID -> domains, lazily constructed from allDomains
 
 	private String url;
 
@@ -124,12 +125,12 @@ public class EcodInstallation implements EcodDatabase {
 
 	/**
 	 * Get a list of all ECOD domains for a particular PDB ID
-	 * @param pdbId
+	 * @param id
 	 * @return the list of domains, or null if no matching domains were found
 	 * @throws IOException
 	 */
 	@Override
-	public List<EcodDomain> getDomainsForPdb(String pdbId) throws IOException {
+	public List<EcodDomain> getDomainsForPdb(String id) throws IOException {
 		domainsFileLock.readLock().lock();
 		try {
 			logger.trace("LOCK readlock");
@@ -142,8 +143,12 @@ public class EcodInstallation implements EcodDatabase {
 				logger.trace("LOCK readlock");
 			}
 
-			if(pdbId != null)
-				pdbId = pdbId.toLowerCase();
+			PDBId pdbId = null;
+			try {
+				pdbId = new PDBId(id);
+			} catch (PDBIdException e) {
+				return null;
+			}
 			List<EcodDomain> doms = domainMap.get(pdbId);
 			if(doms == null) {
 				return null;
@@ -478,17 +483,21 @@ public class EcodInstallation implements EcodDatabase {
 			}
 
 			// Leave enough space for all PDBs as of 2015
-			domainMap = new HashMap<String, List<EcodDomain>>((int) (150000/.85),.85f);
+			domainMap = new HashMap<PDBId, List<EcodDomain>>((int) (150000/.85),.85f);
 
 			// Index with domainMap
 			for(EcodDomain d : allDomains) {
 				// Get the PDB ID, either directly or from the domain ID
-				String pdbId = d.getPDBId().getId();
+				PDBId pdbId = d.getPDBId();
 				if( pdbId == null ) {
 					String ecodId = d.getDomainId();
 					if( ecodId != null && !ecodId.isEmpty() ) {
 						Matcher match = ECOD_RE.matcher(ecodId);
-						pdbId = match.group(1);
+						try {
+							pdbId = new PDBId(match.group(1));
+						} catch (PDBIdException e) {// should not happen
+							throw new RuntimeException("Unexpected Error occurred", e);
+						}
 					}
 				}
 
