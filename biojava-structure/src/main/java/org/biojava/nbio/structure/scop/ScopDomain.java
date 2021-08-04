@@ -77,7 +77,7 @@ public class ScopDomain implements Serializable, Cloneable, StructureIdentifier 
 		StringBuilder buf = new StringBuilder();
 		buf.append(scopId);
 		buf.append("\t") ;
-		buf.append(pdbId);
+		buf.append(pdbId.getId().toLowerCase());
 		buf.append( "\t");
 
 		int rangePos = 0;
