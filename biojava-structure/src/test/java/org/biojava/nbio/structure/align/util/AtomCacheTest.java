@@ -44,6 +44,8 @@ import org.biojava.nbio.core.util.FileDownloadUtils;
 import org.biojava.nbio.structure.AtomPositionMap;
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.Group;
+import org.biojava.nbio.structure.PDBId;
+import org.biojava.nbio.structure.PDBId.PDBIdException;
 import org.biojava.nbio.structure.ResidueRangeAndLength;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
@@ -201,9 +203,10 @@ public class AtomCacheTest {
 	}
 
 	@Test
-	public void testFetchBehavior() throws IOException, ParseException {
+	public void testFetchBehavior() throws IOException, ParseException, PDBIdException {
 		// really more of a LocalPDBDirectory test, but throw it in with AtomCache
-		String pdbId = "1hh0"; // A small structure, since we download it multiple times
+		String id = "1hh0"; // A small structure, since we download it multiple times
+		PDBId pdbId = new PDBId(id);
 		LocalPDBDirectory reader = new CifFileReader(cache.getPath());
 
 		// delete

@@ -30,6 +30,8 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.biojava.nbio.structure.PDBId;
+import org.biojava.nbio.structure.PDBId.PDBIdException;
 import org.biojava.nbio.structure.ResidueRange;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
@@ -54,7 +56,7 @@ public class ScopDomain implements Serializable, Cloneable, StructureIdentifier 
 	private static final long serialVersionUID = 5890476209571654301L;
 
 	String scopId;
-	String pdbId;
+	PDBId pdbId;
 	List<String> ranges;
 	String classificationId;
 	Integer sunid;
@@ -118,12 +120,32 @@ public class ScopDomain implements Serializable, Cloneable, StructureIdentifier 
 	public void setScopId(String scopId) {
 		this.scopId = scopId;
 	}
+	/**
+	 * @return
+	 * @deprecated use {@link #getPDBId()}
+	 */
 	public String getPdbId() {
+		if(pdbId == null)return null;
+		return pdbId.getId();
+	}
+	/**
+	 * @param pdbId
+	 * @throws PDBIdException 
+	 * @deprecated use {@link #setPDBId(PDBId)}
+	 */
+	public void setPdbId(String pdbId) throws PDBIdException {
+		if(pdbId == null) this.pdbId = null;
+		this.pdbId = new PDBId(pdbId);
+	}
+
+	public PDBId getPDBId() {
 		return pdbId;
 	}
-	public void setPdbId(String pdbId) {
+	
+	public void setPDBId(PDBId pdbId) {
 		this.pdbId = pdbId;
 	}
+
 	public List<String> getRanges() {
 		return ranges;
 	}
@@ -196,7 +218,7 @@ public class ScopDomain implements Serializable, Cloneable, StructureIdentifier 
 		n.setDomainId(getDomainId());
 		n.setFamilyId(getFamilyId());
 		n.setFoldId(getFoldId());
-		n.setPdbId(getPdbId());
+		n.setPDBId(getPDBId());
 		n.setPx(getPx());
 		n.setRanges(getRanges());
 		n.setScopId(getScopId());
@@ -231,7 +253,7 @@ public class ScopDomain implements Serializable, Cloneable, StructureIdentifier 
 
 	@Override
 	public SubstructureIdentifier toCanonical() {
-		return new SubstructureIdentifier(getPdbId(), ResidueRange.parseMultiple(getRanges()));
+		return new SubstructureIdentifier(getPDBId(), ResidueRange.parseMultiple(getRanges()));
 	}
 
 	@Override

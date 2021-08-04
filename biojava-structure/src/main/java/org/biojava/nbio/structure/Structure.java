@@ -799,19 +799,20 @@ public interface Structure extends Cloneable, Serializable {
 	 */
 	void setPDBCode (String pdb_id) throws PDBIdException ;
 
-//	/**
-//	 * Returns the PDB identifier associated with this StructureIdentifier.
-//	 * @deprecated From BioJava 4.2, use {@link #getPDBCode()} or
-//	 *  <code>getStructureIdentifier().toCanonical().getPdbId()</code>
-//	 */
-//	@Deprecated
-//	String getPdbId();
-//
-//	@Deprecated
-//	void setPdbId(String pdb_id);
 
 
+	/**
+	 * Returns the PDB identifier associated with this StructureIdentifier.
+	 * @return the {@link PDBId} object
+	 * @since 6.0.0
+	 */
 	PDBId getPDBId();
+	
+	
+	/**Sets the {@link PDBId} identifier associated with this structure.
+	 * @param pdbId the {@link PDBId} identifier object to set
+	 * @since 6.0.0
+	 */
 	void setPDBId(PDBId pdbId);
 
 }

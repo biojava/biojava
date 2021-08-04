@@ -90,21 +90,22 @@ public class SubstructureIdentifier implements StructureIdentifier {
 	 * @param id
 	 * @throws PDBIdException 
 	 */
-	public SubstructureIdentifier(String id) throws PDBIdException {
+	public SubstructureIdentifier(String id) {
 		String[] idRange = id.split("\\.");
 		if(1 > idRange.length || idRange.length > 2 ) {
 			throw new IllegalArgumentException(String.format("Malformed %s: %s",getClass().getSimpleName(),id));
 		}
-		if(idRange[0].length() == 4) {  //Short form
-			this.pdbId = new PDBId(idRange[0]/* .toUpperCase() */);
-		} else if(idRange[0].length() == 12 && idRange[0].substring(0, 4).equalsIgnoreCase("PDB_")) { //extended form
-			this.pdbId = new PDBId(idRange[0]/* .toUpperCase() */);
-		} else {
-			this.pdbId = new PDBId(idRange[0]/* .toUpperCase() */);
+		//used tempId to avoid writing 2 assignment statements to a final field,
+		// although one is in the try block and the other in the catch block.
+		PDBId tempId = null;
+		try {
+			tempId = new PDBId(idRange[0]);
+		} catch (PDBIdException e) {
 			// Changed from Exception to a warning to support files and stuff -sbliven 2015/01/22
-			logger.warn(String.format("Unrecognized PDB code %s",this.pdbId));
+			logger.warn(String.format("Unrecognized PDB code %s", idRange[0]));
 		}
-
+		this.pdbId = tempId;
+		
 		if( idRange.length == 2) {
 			String rangeStr = idRange[1].trim();
 
@@ -120,16 +121,26 @@ public class SubstructureIdentifier implements StructureIdentifier {
 	 * If ranges is empty, includes all residues.
 	 * @param pdbId
 	 * @param ranges
+	 * @throws PDBIdException 
+	 * @deprecated use the {@link #SubstructureIdentifier(PDBId, List)} constructor instead
 	 */
-	public SubstructureIdentifier(String pdbId, List<ResidueRange> ranges) {
+	public SubstructureIdentifier(String pdbId, List<ResidueRange> ranges) throws PDBIdException {
+		this(new PDBId(pdbId), ranges);
+	}
+
+	/**
+	 * Create a new identifier based on a set of ranges.
+	 *
+	 * If ranges is empty, includes all residues.
+	 * @param pdbId
+	 * @param ranges
+	 * @throws PDBIdException 
+	 */
+	public SubstructureIdentifier(PDBId pdbId, List<ResidueRange> ranges) {
 		if(ranges == null) {
 			throw new NullPointerException("Null ranges list");
 		}
-		try {
-			this.pdbId = new PDBId(pdbId);
-		} catch (PDBIdException e) {
-			throw new IllegalArgumentException(e);
-		}
+		this.pdbId = pdbId;
 		this.ranges = ranges;
 	}
 
@@ -153,7 +164,13 @@ public class SubstructureIdentifier implements StructureIdentifier {
 		return pdbId + "." + ResidueRange.toString(ranges);
 	}
 
+	/**
+	 * @return
+	 * @deprecated use {@link #getPDBId()}
+	 */
 	public String getPdbId() {
+		if(this.pdbId == null)
+			return null;
 		return pdbId.getId();
 	}
 
@@ -199,14 +216,18 @@ public class SubstructureIdentifier implements StructureIdentifier {
 		// Create new structure & copy basic properties
 		Structure newS = new StructureImpl();
 
-		newS.setPDBId(s.getPDBId());
+		try {
+			newS.setPDBId(s.getPDBId());
+		} catch (NullPointerException e) {
+			throw new StructureException("NullPointerException Possibly due to malformed PIBId format.", e);
+		}
 		newS.setPDBHeader(s.getPDBHeader());
 		newS.setName(this.toString());
 		newS.setDBRefs(s.getDBRefs());
 		newS.setBiologicalAssembly(s.isBiologicalAssembly());
 		newS.setKeywords(s.getKeywords());
 		newS.getPDBHeader().setDescription(
-				"sub-range " + ranges + " of "  + newS.getPDBCode() + " "
+				"sub-range " + ranges + " of "  + newS.getPDBId() + " "
 						+ s.getPDBHeader().getDescription());
 		newS.setEntityInfos(new ArrayList<>());
 		// TODO The following should be only copied for atoms which are present in the range.

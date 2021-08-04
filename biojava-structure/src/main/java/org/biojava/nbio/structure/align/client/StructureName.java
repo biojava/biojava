@@ -77,7 +77,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 	protected PDBId pdbId;
 	protected String chainName;
 
-	//TODO Double check the modified patterns
+	//TODO Double check all of the modified patterns
 	private static final Pattern cathPattern = Pattern.compile("^(?:CATH:)?((?:pdb_[0-9]{4})?[0-9][a-z0-9]{3})(\\w)([0-9]{2})$",Pattern.CASE_INSENSITIVE);
 	// ds046__ is a special case with no PDB entry
 	private static final Pattern scopPattern = Pattern.compile("^(?:SCOP:)?d((?:pdb_[0-9]{4})?[0-9][a-z0-9]{3}|s046)(\\w|\\.)(\\w)$",Pattern.CASE_INSENSITIVE);
@@ -246,7 +246,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 		}
 
 		// Default to PDB
-		initFromPDB( name );
+		initFromPDB(name);
 	}
 
 	private boolean initFromScop(String name) {
@@ -307,11 +307,9 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 	private boolean initFromPDB(String suffix) {
 		mySource = Source.PDB;
 		SubstructureIdentifier si;
-		try {
-			si = new SubstructureIdentifier(suffix);
-		} catch (PDBIdException e) {
-			return false;
-		}
+
+		si = new SubstructureIdentifier(suffix);
+
 		base = si; // Safe to realize immediately
 
 		pdbId = si.getPDBId();
@@ -364,14 +362,28 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 	 * toCanonical().getPdbId()}
 	 * @return The upper-case PDB Name, or null if not applicable
 	 * @throws StructureException Wraps errors which occur when converting to canonical form
+	 * @deprecated use {@link #getPDBId()}
 	 */
-	public PDBId getPdbId() throws StructureException {
+	public String getPdbId() throws StructureException {
+		return getPDBId().getId();
+	}
+
+	/**
+	 * Get the PDB ID for this name, if any.
+	 *
+	 * Equivalent to {@link SubstructureIdentifier#getPdbId()
+	 * toCanonical().getPdbId()}
+	 * @return The upper-case PDB Name, or null if not applicable
+	 * @throws StructureException Wraps errors which occur when converting to canonical form
+	 * @since 6.0.0
+	 */
+	public PDBId getPDBId() throws StructureException {
 		if( pdbId == null) {
-			pdbId = new PDBId(toCanonical().getPdbId());
+			pdbId = toCanonical().getPDBId();
 		}
 		return pdbId;
 	}
-
+	
 	/**
 	 * Gets the chain ID, for structures where it is unique and well-defined.
 	 * May return '.' for multi-chain ranges, '_' for wildcard chains, or
@@ -476,7 +488,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 					if (chainName.equals("_")) {
 						base = new SubstructureIdentifier(pdbId.getId());
 					} else {
-						base = new SubstructureIdentifier(pdbId.getId(), ResidueRange.parseMultiple(chainName));
+						base = new SubstructureIdentifier(pdbId, ResidueRange.parseMultiple(chainName));
 					}
 					logger.error("Unable to find {}, so using {}",name,base);
 				}
@@ -569,10 +581,10 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 		PDBId pdb1 = null;
 		PDBId pdb2 = null;
 		try {
-			pdb1 = this.getPdbId();
+			pdb1 = this.getPDBId();
 		} catch (StructureException e) {}
 		try {
-			pdb2 = this.getPdbId();
+			pdb2 = this.getPDBId();
 		} catch (StructureException e) {}
 
 		int comp = 0;

@@ -33,6 +33,7 @@ import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Bond;
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.Group;
+import org.biojava.nbio.structure.PDBId.PDBIdException;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.io.StructureFiletype;
@@ -353,7 +354,7 @@ public class TestMmtfRoundTrip {
 	}
 
 	@Test
-	public void testStructWithBranchedEntitiesRoundTrip() throws IOException {
+	public void testStructWithBranchedEntitiesRoundTrip() throws IOException, PDBIdException {
 		// Example carbohydrate remediation file to be released in July 2020
 		URL url = new URL("https://raw.githubusercontent.com/pdbxmmcifwg/carbohydrate-extension/master/examples/models/1B5F-carb.cif");
 		InputStream inStream = url.openStream();

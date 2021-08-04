@@ -39,6 +39,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.biojava.nbio.core.util.ConcurrencyTools;
+import org.biojava.nbio.structure.PDBId.PDBIdException;
 import org.biojava.nbio.structure.ResidueNumber;
 import org.biojava.nbio.structure.ResidueRange;
 import org.biojava.nbio.structure.StructureException;
@@ -155,7 +156,7 @@ public class EcodInstallationTest {
 	}
 
 	@Test
-	public void testParsing() throws IOException {
+	public void testParsing() throws IOException, PDBIdException {
 		EcodDatabase ecod = EcodFactory.getEcodDatabase(VERSION);
 
 		String ecodId;

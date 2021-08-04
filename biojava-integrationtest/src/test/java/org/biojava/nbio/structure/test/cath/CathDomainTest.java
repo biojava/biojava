@@ -20,6 +20,7 @@
  */
 package org.biojava.nbio.structure.test.cath;
 
+import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.cath.CathDomain;
 import org.biojava.nbio.structure.cath.CathFactory;
 import org.junit.Test;
@@ -33,7 +34,7 @@ import static org.junit.Assert.assertEquals;
  */
 public class CathDomainTest {
 	@Test
-	public void test() {
+	public void test() throws StructureException {
 		String id = "1qvrC03";
 		CathDomain domain = CathFactory.getCathDatabase().getDomainByCathId(id);
 		assertEquals("1QVR.C_332-400,C_514-540", domain.toCanonical().getIdentifier());

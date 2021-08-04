@@ -102,7 +102,7 @@ public class URLIdentifier implements StructureIdentifier {
 	 * @return A SubstructureIdentifier without ranges (e.g. including all residues)
 	 */
 	@Override
-	public SubstructureIdentifier toCanonical() {
+	public SubstructureIdentifier toCanonical() throws StructureException{
 		String pdbId = null;
 		List<ResidueRange> ranges = Collections.emptyList();
 		try {
@@ -122,7 +122,7 @@ public class URLIdentifier implements StructureIdentifier {
 			String path = url.getPath();
 			pdbId = guessPDBID(path.substring(path.lastIndexOf("/") + 1));
 		}
-		return new SubstructureIdentifier(pdbId, ranges);
+		return new SubstructureIdentifier(new PDBId(pdbId), ranges);
 	}
 
 	@Override

@@ -25,6 +25,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.PDBId;
 import org.biojava.nbio.structure.ResidueNumber;
 import org.biojava.nbio.structure.ResidueRange;
 import org.biojava.nbio.structure.StructureException;
@@ -108,7 +109,7 @@ public class CeSymmResult {
 		List<StructureIdentifier> repeats = new ArrayList<StructureIdentifier>(
 				numRepeats);
 
-		String pdbId = structureId.toCanonical().getPdbId();
+		PDBId pdbId = structureId.toCanonical().getPDBId();
 		Block align = multipleAlignment.getBlocks().get(0);
 
 		for (int su = 0; su < numRepeats; su++) {

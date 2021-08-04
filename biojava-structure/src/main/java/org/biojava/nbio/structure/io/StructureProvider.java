@@ -20,6 +20,7 @@
  */
 package org.biojava.nbio.structure.io;
 
+import org.biojava.nbio.structure.PDBId;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 
@@ -38,9 +39,18 @@ public interface StructureProvider {
 	 *
 	 * @param pdbId
 	 * @return
+	 * @deprecated use {@link #getStructureById(PDBId)}
 	 */
 	Structure getStructureById(String pdbId) throws StructureException,IOException;
 
+	/**
+	 * Get the structure for a PDB ID
+	 *
+	 * @param pdbId
+	 * @return
+	 */
+	Structure getStructureById(PDBId pdbId) throws StructureException,IOException;
+	
 	/**
 	 * Set the parameters that should be used for file parsing
 	 *

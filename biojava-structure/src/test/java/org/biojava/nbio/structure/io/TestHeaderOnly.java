@@ -29,6 +29,8 @@ import java.util.zip.GZIPInputStream;
 
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.Group;
+import org.biojava.nbio.structure.PDBId;
+import org.biojava.nbio.structure.PDBId.PDBIdException;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
@@ -118,7 +120,7 @@ public class TestHeaderOnly {
 
 	// A better test follows that uses local files.
 	// @Test
-	public void testSpeed() {
+	public void testSpeed() throws PDBIdException {
 		// Force using a file reader.
 		CifFileReader fr = new CifFileReader();
 		FileParsingParameters par = new FileParsingParameters();
@@ -132,7 +134,7 @@ public class TestHeaderOnly {
 		long start = System.nanoTime();
 		try {
 			// Medium sized structure parsed in 0.549s (no header) vs .676s (header) ~ 20% faster
-			s = fr.getStructureById("4WZ6");
+			s = fr.getStructureById(new PDBId("4WZ6"));
 			// A larger structure could be parsed ~ 4.991s (no header) vs 5.867s (header) ~ 16% faster
 			// s = fr.getStructureById("4V60");
 		} catch (IOException e) {

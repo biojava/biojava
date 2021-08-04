@@ -239,18 +239,6 @@ public class StructureIO {
 		return getBiologicalAssemblies(pdbId, AtomCache.DEFAULT_BIOASSEMBLY_STYLE);
 	}
 
-//	private static final String FILE_SEPARATOR = System.getProperty("file.separator");
-//  TODO This function seems to have NO EFFECT. And it is not called anywhere.
-//	/** 
-//	 * Utility method to set the location where PDB files can be found
-//	 *
-//	 * @param pathToPDBFiles
-//	 */
-//	public static void setPdbPath(String pathToPDBFiles) {
-//		if (!pathToPDBFiles.endsWith(FILE_SEPARATOR))
-//			pathToPDBFiles += FILE_SEPARATOR;
-//	}
-
 	/**
 	 * Attempts to guess the type of a structure file based on the extension
 	 * @param filename

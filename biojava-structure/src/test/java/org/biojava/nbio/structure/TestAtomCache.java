@@ -48,7 +48,7 @@ public class TestAtomCache {
 	private AtomCache cache;
 
 	@Before
-	public void setUp() throws IOException {
+	public void setUp() throws IOException, PDBIdException {
 		cache = new AtomCache();
 
 		// Delete files which were cached in previous tests
@@ -64,7 +64,7 @@ public class TestAtomCache {
 			reader.setObsoleteBehavior(cache.getObsoleteBehavior());
 
 			for(String pdbId : uncacheIDs) {
-				reader.deleteStructure(pdbId);
+				reader.deleteStructure(new PDBId(pdbId));
 			}
 		}
 	}
@@ -100,7 +100,7 @@ public class TestAtomCache {
 		try {
 			s = cache.getStructure(name2b);
 			fail("Invalid structure format");
-		} catch(PDBIdException e) {
+		} catch(StructureException e) {
 		}
 
 

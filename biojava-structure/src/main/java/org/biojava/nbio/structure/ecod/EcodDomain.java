@@ -20,6 +20,7 @@
 package org.biojava.nbio.structure.ecod;
 
 import org.biojava.nbio.structure.*;
+import org.biojava.nbio.structure.PDBId.PDBIdException;
 import org.biojava.nbio.structure.align.util.AtomCache;
 
 import java.io.IOException;
@@ -79,7 +80,7 @@ Column 15: Comma-separated value list of non-polymer entities within 4 A of at l
 	private Integer hGroup;
 	private Integer tGroup;
 	private Integer fGroup;
-	private String pdbId;
+	private PDBId pdbId;
 	private String chainId;
 	private String range;
 	private String seqIdRange;
@@ -98,7 +99,7 @@ Column 15: Comma-separated value list of non-polymer entities within 4 A of at l
 			Integer xGroup, Integer hGroup, Integer tGroup, Integer fGroup, String pdbId,
 			String chainId, String range, String architectureName,
 			String xGroupName, String hGroupName, String tGroupName,
-			String fGroupName, Long assemblyId, Set<String> ligands) {
+			String fGroupName, Long assemblyId, Set<String> ligands) throws PDBIdException {
 		this(uid, domainId, manual,
 				xGroup, hGroup, tGroup, fGroup, pdbId,
 				chainId, range, null, architectureName,
@@ -109,7 +110,7 @@ Column 15: Comma-separated value list of non-polymer entities within 4 A of at l
 				Integer xGroup, Integer hGroup, Integer tGroup, Integer fGroup, String pdbId,
 				String chainId, String range, String seqId, String architectureName,
 				String xGroupName, String hGroupName, String tGroupName,
-				String fGroupName, Long assemblyId, Set<String> ligands) {
+				String fGroupName, Long assemblyId, Set<String> ligands) throws PDBIdException {
 		this.uid = uid;
 		this.domainId = domainId;
 		this.manual = manual;
@@ -117,7 +118,7 @@ Column 15: Comma-separated value list of non-polymer entities within 4 A of at l
 		this.hGroup = hGroup;
 		this.tGroup = tGroup;
 		this.fGroup = fGroup;
-		this.pdbId = pdbId;
+		this.pdbId = new PDBId(pdbId);
 		this.chainId = chainId;
 		this.range = range;
 		this.seqIdRange = seqId;
@@ -202,10 +203,22 @@ Column 15: Comma-separated value list of non-polymer entities within 4 A of at l
 	public void setFGroup(Integer fGroup) {
 		this.fGroup = fGroup;
 	}
+	/**
+	 * @return
+	 * @deprecated use {@link #getPdbId()}
+	 */
 	public String getPdbId() {
+		if(pdbId == null)return null;
+		return pdbId.getId();
+	}
+	public void setPdbId(String pdbId) throws PDBIdException {
+		if(pdbId == null) this.pdbId = null;
+		this.pdbId = new PDBId(pdbId);
+	}
+	public PDBId getPDBId() {
 		return pdbId;
 	}
-	public void setPdbId(String pdbId) {
+	public void setPDBId(PDBId pdbId) {
 		this.pdbId = pdbId;
 	}
 	public String getChainId() {
@@ -445,7 +458,7 @@ Column 15: Comma-separated value list of non-polymer entities within 4 A of at l
 
 	@Override
 	public SubstructureIdentifier toCanonical() {
-		return new SubstructureIdentifier(getPdbId(), ResidueRange.parseMultiple(getRange()));
+		return new SubstructureIdentifier(getPDBId(), ResidueRange.parseMultiple(getRange()));
 	}
 
 	@Override

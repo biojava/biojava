@@ -1008,8 +1008,6 @@ public class StructureImpl implements Structure {
 
 	/** 
 	 * {@inheritDoc} 
-	 */
-	/**
 	 * @deprecated use {@link #getPDBId()} to get a {@link PDBId} object or getPDBId().getId() to get a {@link String}
 	 */
 	@Override
@@ -1029,38 +1027,21 @@ public class StructureImpl implements Structure {
 			this.pdbId = null;
 		}else {
 			pdbId = new PDBId(pdb_id);
-//			try {
-//			} catch (PDBIdException e) {
-//				throw new IllegalArgumentException(e);
-//			}
 		}
 	}
 	
-//	/** {@inheritDoc}
-//	 * @deprecated
-//	 *  */
-//	@Override
-//	public String getPdbId() {
-//		return pdbId.getId();
-//	}
-//	
-//	/**
-//	 *@deprecated
-//	 */
-//	@Override
-//	public void setPdbId(String pdb_id) {
-//		try {
-//			this.pdbId = new PDBId(pdb_id);
-//		} catch (PDBIdException e) {
-//			throw new IllegalArgumentException(e);
-//		}
-//	}
 
 
+	/** {@inheritDoc} 
+	 * @since 6.0.0
+	 * */
 	public PDBId getPDBId() {
 		return this.pdbId;
 	}
 	
+	/** {@inheritDoc}
+	 * @since 6.0.0
+	 *  */
 	public void setPDBId(PDBId pdbId) {
 		this.pdbId = pdbId;
 	}
@@ -1119,7 +1100,7 @@ public class StructureImpl implements Structure {
 
 			range.add(new ResidueRange(chain.getName(),first,last));
 		}
-		return new SubstructureIdentifier(getPDBCode(),range);
+		return new SubstructureIdentifier(getPDBId(),range);
 	}
 
 }

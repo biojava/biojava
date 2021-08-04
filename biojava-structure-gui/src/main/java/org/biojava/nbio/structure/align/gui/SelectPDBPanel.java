@@ -31,6 +31,8 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
+import org.biojava.nbio.structure.PDBId;
+import org.biojava.nbio.structure.PDBId.PDBIdException;
 import org.biojava.nbio.structure.ResidueRange;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
@@ -106,11 +108,12 @@ implements StructurePairSelector{
 		this.add(vBox);
 	}
 
-	public StructureIdentifier getName1() {
-		String pdbId = f1.getText().trim();
+	public StructureIdentifier getName1() throws PDBIdException {
+		String id = f1.getText().trim();
 		String chainId = c1.getText().trim();
 		String range = r1.getText().trim();
-
+		
+		PDBId pdbId = new PDBId(id);
 		// Prefer range over chain
 		if( ! range.isEmpty() ) {
 			return new SubstructureIdentifier(pdbId, ResidueRange.parseMultiple(range));
@@ -119,11 +122,12 @@ implements StructurePairSelector{
 		}
 		return new SubstructureIdentifier(pdbId, new ArrayList<ResidueRange>());
 	}
-	public StructureIdentifier getName2() {
-		String pdbId = f2.getText().trim();
+	public StructureIdentifier getName2() throws PDBIdException {
+		String id = f2.getText().trim();
 		String chainId = c2.getText().trim();
 		String range = r2.getText().trim();
-
+		
+		PDBId pdbId = new PDBId(id);
 		// Prefer range over chain
 		if( ! range.isEmpty() ) {
 			return new SubstructureIdentifier(pdbId, ResidueRange.parseMultiple(range));

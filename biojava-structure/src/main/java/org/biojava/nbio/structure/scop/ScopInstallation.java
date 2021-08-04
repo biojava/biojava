@@ -24,18 +24,29 @@
 
 package org.biojava.nbio.structure.scop;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import org.biojava.nbio.core.util.FileDownloadUtils;
+import org.biojava.nbio.core.util.InputStreamProvider;
+import org.biojava.nbio.structure.PDBId.PDBIdException;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
-import org.biojava.nbio.core.util.FileDownloadUtils;
-import org.biojava.nbio.core.util.InputStreamProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.*;
-import java.net.URL;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 
 /**
@@ -138,7 +149,7 @@ public class ScopInstallation implements LocalScopDatabase {
 		this((new UserConfiguration()).getCacheFilePath());
 	}
 
-	public void ensureClaInstalled() throws IOException {
+	public void ensureClaInstalled() throws IOException, PDBIdException {
 		if (installedCla.get()) return;
 		if (!claFileAvailable()) downloadClaFile();
 		parseClassification();
@@ -315,7 +326,7 @@ public class ScopInstallation implements LocalScopDatabase {
 
 		try {
 			ensureClaInstalled();
-		} catch (IOException e) {
+		} catch (IOException | PDBIdException e) {
 			throw new ScopIOException(e);
 		}
 
@@ -347,7 +358,7 @@ public class ScopInstallation implements LocalScopDatabase {
 
 		try {
 			ensureClaInstalled();
-		} catch (IOException e) {
+		} catch (IOException | PDBIdException e) {
 			throw new ScopIOException(e);
 		}
 
@@ -382,7 +393,7 @@ public class ScopInstallation implements LocalScopDatabase {
 	}
 
 
-	private void parseClassification() throws IOException{
+	private void parseClassification() throws IOException, PDBIdException{
 
 		File file = new File(getClaFilename());
 
@@ -535,7 +546,7 @@ public class ScopInstallation implements LocalScopDatabase {
 
 
 
-	private void parseClassification(BufferedReader buffer) throws IOException {
+	private void parseClassification(BufferedReader buffer) throws IOException, PDBIdException {
 		String line = null;
 
 		int counter = 0;
@@ -561,7 +572,11 @@ public class ScopInstallation implements LocalScopDatabase {
 
 			ScopDomain d = new ScopDomain();
 			d.setScopId(scopId);
-			d.setPdbId(pdbId);
+			try {
+				d.setPdbId(pdbId);
+			} catch (PDBIdException e) {
+				logger.warn("could not parse line >>{}<<. Error Message: {}", line, e.getMessage());
+			}
 
 			d.setRanges(extractRanges(range));
 
@@ -832,7 +847,7 @@ public class ScopInstallation implements LocalScopDatabase {
 
 		try {
 			ensureClaInstalled();
-		} catch (IOException e) {
+		} catch (IOException | PDBIdException e) {
 			throw new ScopIOException(e);
 		}
 

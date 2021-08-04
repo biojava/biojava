@@ -42,6 +42,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.biojava.nbio.structure.PDBId.PDBIdException;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
 import org.biojava.nbio.core.util.FileDownloadUtils;
 import org.slf4j.Logger;
@@ -482,7 +483,7 @@ public class EcodInstallation implements EcodDatabase {
 			// Index with domainMap
 			for(EcodDomain d : allDomains) {
 				// Get the PDB ID, either directly or from the domain ID
-				String pdbId = d.getPdbId();
+				String pdbId = d.getPDBId().getId();
 				if( pdbId == null ) {
 					String ecodId = d.getDomainId();
 					if( ecodId != null && !ecodId.isEmpty() ) {
@@ -706,7 +707,7 @@ v1.4 - added seqid_range and headers (develop101)
 
 									EcodDomain domain = new EcodDomain(uid, domainId, manual, xGroup, hGroup, tGroup, fGroup,pdbId, chainId, range, seqId, architectureName, xGroupName, hGroupName, tGroupName, fGroupName, assemblyId, ligands);
 									domainsList.add(domain);
-								} catch(NumberFormatException e) {
+								} catch(NumberFormatException | PDBIdException e) {
 									logger.warn("Error in ECOD parsing at line "+lineNum,e);
 								}
 							} else {
