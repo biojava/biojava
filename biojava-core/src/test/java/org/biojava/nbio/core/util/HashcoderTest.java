@@ -43,8 +43,8 @@ class HashcoderTest {
     @Test
     void hashcodeLongProducesUniqueValues() {
         Set<Integer> hashCodes = new HashSet<>();
-        for (int i =0; i< 1000; i++) {
-            hashCodes.add(Hashcoder.hash(seed, (long)i));
+        for (long i =0; i< 1000; i++) {
+            hashCodes.add(Hashcoder.hash(seed, i));
         }
         assertEquals(1000, hashCodes.size());
       

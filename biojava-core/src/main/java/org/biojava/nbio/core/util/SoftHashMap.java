@@ -33,9 +33,12 @@ import org.slf4j.LoggerFactory;
 
 /** A in memory cache using soft references. (can be garbage collected)
  * This code is based on: http://java-interview-faqs.blogspot.com/2008/09/building-faster-and-efficient-cache.html
+ * <p/>
+ * Note that entrySet() is not implemented and therefore many methods such as keySet(),
+ * containsKey(), values() etc do not work.
+ * <p/>
+ * This class is therefore best used as a cache simply to put and get items by a known key
  */
-
-
 public class SoftHashMap<K, V> extends AbstractMap<K, V> {
 
 	private final static Logger logger = LoggerFactory.getLogger(SoftHashMap.class);
@@ -58,6 +61,10 @@ public class SoftHashMap<K, V> extends AbstractMap<K, V> {
 		this(1000);
 	}
 
+	/**
+	 * @param hardSize A maximum number of items to maintain hard references to
+	 * that will not be eligible for garbage collection
+	 */
 	public SoftHashMap(int hardSize) {
 		max_limit = hardSize;
 	}
