@@ -29,7 +29,6 @@ class FlatFileCacheTest {
         return f;
     }
 
-    int seed = Hashcoder.SEED;
     @Test
     void flatFileRetrieve () throws IOException {
         File aDNAFile = createSmallTmpFile();
