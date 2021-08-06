@@ -51,10 +51,10 @@ class SoftHashMapTest {
     @Disabled("requires to run in conditions nearly throwing an OOM")
     void softMapRemovesRefsToSaveMemory() throws InterruptedException{
        
-        //Using a regular Map with hard references will probably
+        // Using a regular Map with hard references will probably
         // cause an OOM error if running with -Xmx=5M. Uncomment this
         // and comment out the next line to observe this.
-        //Map<String, TestObject> map =new HashMap<>(1);
+        // Map<String, TestObject> map =new HashMap<>(1);
 
         // set the maximum number of hard references to 1 (minimum)
         // to expose behaviour of soft references better. 
@@ -89,8 +89,6 @@ class SoftHashMapTest {
         } 
         return nonNullValues;
     }
-
-    
     
     @Test
     void basicMapOperations() throws InterruptedException{
