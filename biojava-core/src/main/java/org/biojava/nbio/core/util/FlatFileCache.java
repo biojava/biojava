@@ -58,7 +58,7 @@ public class FlatFileCache {
 
 	/**
 	 * The file is read and the bytes stored immediately.
-	 * <p/>
+	 * <p/> 
 	 * Once added, {@code fileToCache} can be modified or deleted and the cached values will not change.
 	 * @param key
 	 * @param fileToCache A readable file, of Integer.MAX bytes length or less.
@@ -76,7 +76,7 @@ public class FlatFileCache {
 			// to ensure that file is not larger than Integer.MAX_VALUE.
 			if (length > Integer.MAX_VALUE) {
 				// File is too large
-				throw new IllegalArgumentException("File must be <= " + Integer.MAX_VALUE + "bytes long");
+				throw new IllegalArgumentException("File must be <= " + Integer.MAX_VALUE + " bytes long");
 			}
 
 			// Create the byte array to hold the data

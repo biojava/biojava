@@ -32,16 +32,16 @@ class FlatFileCacheTest {
     int seed = Hashcoder.SEED;
     @Test
     void flatFileRetrieve () throws IOException {
-        File anyFile = createSmallTmpFile();
+        File aDNAFile = createSmallTmpFile();
         assertEquals(0, FlatFileCache.size());
-        FlatFileCache.addToCache("key", anyFile);
+        FlatFileCache.addToCache("key", aDNAFile);
         assertEquals(1, FlatFileCache.size());
 
         InputStream is = FlatFileCache.getInputStream("key");
         assertNotNull(is);
         byte [] b = new byte[1024];
         int read = is.read(b);
-        assertEquals(anyFile.length(), (long)read );
+        assertEquals(aDNAFile.length(), (long)read );
         assertEquals(aDNA, new String(b, "UTF8").substring(0,4));
     }
 
@@ -53,8 +53,6 @@ class FlatFileCacheTest {
         assertEquals(10, FlatFileCache.size());
         FlatFileCache.clear();
         assertEquals(0, FlatFileCache.size());
-
-
     }
 
     @Test
@@ -64,16 +62,19 @@ class FlatFileCacheTest {
 
     @Test
     void fileCanBeModifiedButCachedValueIsUnchanged() throws IOException{
-        File anyFile = createSmallTmpFile();
-        FlatFileCache.addToCache("key", anyFile);
-        Files.writeString(Path.of(anyFile.getAbsolutePath()), aProtein);
+        File aDNAFile = createSmallTmpFile();
+        FlatFileCache.addToCache("key", aDNAFile);
+        long originalLength = aDNAFile.length();
+        
+        // write new content to original file
+        Files.writeString(Path.of(aDNAFile.getAbsolutePath()), aProtein);
+
+        // retrieve from cache, is unchanged
         InputStream is = FlatFileCache.getInputStream("key");
         byte [] b = new byte[1024];
         int read = is.read(b);
-        assertEquals(aDNA.length(), (long)read );
+        assertEquals(originalLength, (long)read );
         assertEquals(aDNA, new String(b, "UTF8").substring(0,4));
     }
 
-    
-    
 }
