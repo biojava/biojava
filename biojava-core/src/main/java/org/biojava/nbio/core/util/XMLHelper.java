@@ -50,13 +50,24 @@ import static org.biojava.nbio.core.sequence.io.util.IOUtils.openFile;
  */
 public class XMLHelper {
 
-	static public Element addChildElement(Element parentElement, String elementName) {
+	/**
+	 * Creates a new elemend called {@code}elementName{@code} and adds it to {@code}parentElement{@code}
+	 * @param parentElement
+	 * @param elementName
+	 * @return the new child element
+	 */
+	public static Element addChildElement(Element parentElement, String elementName) {
 		Element childElement = parentElement.getOwnerDocument().createElement(elementName);
 		parentElement.appendChild(childElement);
 		return childElement;
 	}
 
-	static public Document getNewDocument() throws ParserConfigurationException  {
+	/**
+	 * Create a new, empty {@code}org.w3c.dom.Document{@code}
+	 * @return a new {@code}org.w3c.dom.Document{@code}
+	 * @throws ParserConfigurationException
+	 */
+	public static Document getNewDocument() throws ParserConfigurationException  {
 
 		//Create instance of DocumentBuilderFactory
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -67,14 +78,22 @@ public class XMLHelper {
 		return doc;
 	}
 
-	static public Document loadXML(String fileName) throws SAXException, IOException, ParserConfigurationException  {
+	public static Document loadXML(String fileName) throws SAXException, IOException, ParserConfigurationException  {
 		InputStream is = openFile(new File(fileName));
 		Document doc = inputStreamToDocument(new BufferedInputStream(is));
 		close(is);
 		return doc;
 	}
 
-	static public Document inputStreamToDocument(InputStream inputStream) throws SAXException, IOException, ParserConfigurationException  {
+	/**
+	 * Creates an {@code}org.w3c.dom.Document{@code} from the content of the {@code}inputStream{@code}
+	 * @param inputStream
+	 * @return a {@code}Document{@code}
+	 * @throws SAXException
+	 * @throws IOException
+	 * @throws ParserConfigurationException
+	 */
+	public static Document inputStreamToDocument(InputStream inputStream) throws SAXException, IOException, ParserConfigurationException  {
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 
 		DocumentBuilder db = dbf.newDocumentBuilder();
@@ -85,7 +104,7 @@ public class XMLHelper {
 		return doc;
 	}
 
-	static public void outputToStream(Document document, OutputStream outputStream) throws TransformerException {
+	public static void outputToStream(Document document, OutputStream outputStream) throws TransformerException {
 		// Use a Transformer for output
 		TransformerFactory tFactory = TransformerFactory.newInstance();
 		Transformer transformer = tFactory.newTransformer();
@@ -98,7 +117,7 @@ public class XMLHelper {
 
 	}
 
-	static public void outputToStream(Element document, OutputStream outputStream) throws TransformerException  {
+	public static void outputToStream(Element document, OutputStream outputStream) throws TransformerException  {
 		// Use a Transformer for output
 		TransformerFactory tFactory = TransformerFactory.newInstance();
 		Transformer transformer = tFactory.newTransformer();
@@ -111,7 +130,7 @@ public class XMLHelper {
 	}
 	//static XPath xpath = XPathFactory.newInstance().newXPath();
 
-	static public Element selectParentElement(Element element, String parentName) {
+	public static Element selectParentElement(Element element, String parentName) {
 		Element parentElement = (Element) element.getParentNode();
 		if (parentElement == null) {
 			return null;
@@ -122,7 +141,7 @@ public class XMLHelper {
 		return selectParentElement(parentElement, parentName);
 	}
 
-	static public Element selectSingleElement(Element element, String xpathExpression) throws XPathExpressionException {
+	public static Element selectSingleElement(Element element, String xpathExpression) throws XPathExpressionException {
 		if (xpathExpression.indexOf("/") == -1) {
 			NodeList nodeList = element.getChildNodes();
 			for (int i = 0; i < nodeList.getLength(); i++) {
@@ -144,7 +163,7 @@ public class XMLHelper {
 		}
 	}
 
-	static public ArrayList<Element> selectElements(Element element, String xpathExpression) throws XPathExpressionException {
+	public static ArrayList<Element> selectElements(Element element, String xpathExpression) throws XPathExpressionException {
 		ArrayList<Element> resultVector = new ArrayList<Element>();
 		if (element == null) {
 			return resultVector;
