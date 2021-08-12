@@ -45,7 +45,7 @@ import static org.biojava.nbio.core.sequence.io.util.IOUtils.close;
 import static org.biojava.nbio.core.sequence.io.util.IOUtils.openFile;
 
 /**
- *
+ * Helper methods to simplify boilerplate XML parsing code for  {@code}org.w3c.dom{@code} XML objects
  * @author Scooter
  */
 public class XMLHelper {
@@ -78,6 +78,14 @@ public class XMLHelper {
 		return doc;
 	}
 
+	/**
+	 * Given a path to an XML file, parses into an {@code}org.w3c.dom.Document{@code} 
+	 * @param fileName path to a readable XML file
+	 * @return
+	 * @throws SAXException
+	 * @throws IOException
+	 * @throws ParserConfigurationException
+	 */
 	public static Document loadXML(String fileName) throws SAXException, IOException, ParserConfigurationException  {
 		InputStream is = openFile(new File(fileName));
 		Document doc = inputStreamToDocument(new BufferedInputStream(is));
@@ -104,6 +112,12 @@ public class XMLHelper {
 		return doc;
 	}
 
+	/**
+	 * Given an {@code}org.w3c.dom.Document{@code}, writes it to the given {@code}outputStream{@code}
+	 * @param document
+	 * @param outputStream
+	 * @throws TransformerException
+	 */
 	public static void outputToStream(Document document, OutputStream outputStream) throws TransformerException {
 		// Use a Transformer for output
 		TransformerFactory tFactory = TransformerFactory.newInstance();
@@ -113,26 +127,29 @@ public class XMLHelper {
 		DOMSource source = new DOMSource(document);
 		StreamResult result = new StreamResult(outputStream);
 		transformer.transform(source, result);
-
-
 	}
 
-	public static void outputToStream(Element document, OutputStream outputStream) throws TransformerException  {
-		// Use a Transformer for output
-		TransformerFactory tFactory = TransformerFactory.newInstance();
-		Transformer transformer = tFactory.newTransformer();
-		//     transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-
-		DOMSource source = new DOMSource(document);
-		StreamResult result = new StreamResult(outputStream);
-		transformer.transform(source, result);
-
-	}
 	//static XPath xpath = XPathFactory.newInstance().newXPath();
 
+	/**
+	 * Given an element, searches upwards through ancestor Elements till the first Element
+	 * matching the requests {@code}parentName{@code} is found.
+	 * @param element The starting element
+	 * @param parentName The tag name of the requested Element.
+	 * @return The found element, or {@code}null{@code} if no matching element is found,
+	 */
 	public static Element selectParentElement(Element element, String parentName) {
-		Element parentElement = (Element) element.getParentNode();
-		if (parentElement == null) {
+		
+	    Node parentNode =  element.getParentNode();
+		if (parentNode == null) {
+			return null;
+		}
+		// chek that parent is actually an element, else return null
+		// this is to prevent ClassCastExceptions if 'element's parent is not an Element.
+		Element parentElement = null;
+		if (Node.ELEMENT_NODE == parentNode.getNodeType()){
+			parentElement = (Element)parentNode;
+		} else {
 			return null;
 		}
 		if (parentElement.getTagName().equals(parentName)) {
