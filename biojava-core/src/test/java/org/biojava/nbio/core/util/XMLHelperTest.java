@@ -14,6 +14,7 @@ import java.nio.file.Path;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -81,13 +82,41 @@ class XMLHelperTest {
     @Test
     void selectParentElement() throws SAXException, IOException, ParserConfigurationException{
         Document doc = readTestDoc();
+        // get a a grandchild element
         NodeList nodes = doc.getElementsByTagName("a");
+        // can get root node
         Element el = (Element)nodes.item(0);
         Element root = XMLHelper.selectParentElement(el, "root");
         assertNotNull(root);
+        // non-existing element or if is root node returns null
         assertNull(XMLHelper.selectParentElement(el, "notexisting"));
         assertNull(XMLHelper.selectParentElement(root, "notexisting"));
 
+    }
+
+    @Test
+    void selectSingleElement() throws SAXException, IOException, ParserConfigurationException, XPathExpressionException{
+        Document doc = readTestDoc();
+        Element root = (Element)doc.getElementsByTagName("root").item(0);
+
+        // not direct child
+        assertNull(XMLHelper.selectSingleElement(root, "a"));
+
+        // direct child
+        assertNotNull(XMLHelper.selectSingleElement(root, "list"));
+
+        // xpath match
+        Element found = XMLHelper.selectSingleElement(root, "/root/list/a[@id = \"2\"]");
+        assertNotNull(found);
+        assertEquals("2", found.getAttribute("id"));
+
+        // xpath no match
+        Element Notfound = XMLHelper.selectSingleElement(root, "/root/list/a[@id = \"45\"]");
+        assertNull(Notfound);
+
+        // xpath returning multiple elements returns 1st element
+        Element mult = XMLHelper.selectSingleElement(root, "/root/list/a");
+        assertNotNull(mult);
     }
     void assertParsedDocument (Document doc){
         assertNotNull(doc);

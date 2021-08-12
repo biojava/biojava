@@ -158,6 +158,17 @@ public class XMLHelper {
 		return selectParentElement(parentElement, parentName);
 	}
 
+	/**
+	 * If {@code}xpathExpression{@code} is a plain string with no '/' characterr, this is 
+	 * interpreted as a child element name to search for. 
+	 * <b/>
+	 * If {@code}xpathExpression{@code} is an XPath expression, this is evaluated and is assumed
+	 * to identify a single element.
+	 * @param element
+	 * @param xpathExpression
+	 * @return A single element or null if no match or the 1st match if matches more than 1
+	 * @throws XPathExpressionException
+	 */
 	public static Element selectSingleElement(Element element, String xpathExpression) throws XPathExpressionException {
 		if (xpathExpression.indexOf("/") == -1) {
 			NodeList nodeList = element.getChildNodes();
