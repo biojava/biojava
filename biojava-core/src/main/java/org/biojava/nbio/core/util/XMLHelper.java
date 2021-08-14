@@ -51,7 +51,7 @@ import static org.biojava.nbio.core.sequence.io.util.IOUtils.openFile;
 public class XMLHelper {
 
 	/**
-	 * Creates a new elemend called {@code}elementName{@code} and adds it to {@code}parentElement{@code}
+	 * Creates a new element called {@code}elementName{@code} and adds it to {@code}parentElement{@code}
 	 * @param parentElement
 	 * @param elementName
 	 * @return the new child element
@@ -144,8 +144,8 @@ public class XMLHelper {
 		if (parentNode == null) {
 			return null;
 		}
-		// chek that parent is actually an element, else return null
-		// this is to prevent ClassCastExceptions if 'element's parent is not an Element.
+		// check that parent is actually an element, else return null
+		// this is to prevent ClassCastExceptions if element's parent is not an Element.
 		Element parentElement = null;
 		if (Node.ELEMENT_NODE == parentNode.getNodeType()){
 			parentElement = (Element)parentNode;

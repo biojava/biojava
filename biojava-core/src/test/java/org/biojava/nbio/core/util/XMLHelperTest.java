@@ -29,6 +29,7 @@ import org.xml.sax.SAXException;
 
 class XMLHelperTest {
 
+    // simple XML used in most of the tests:
     final String TEST_XML = "<root><list><a id=\"1\"/> <a id=\"2\"/> </list></root>";
 
     @Test
@@ -84,16 +85,18 @@ class XMLHelperTest {
     @Test
     void selectParentElement() throws SAXException, IOException, ParserConfigurationException {
         Document doc = readTestDoc();
+        
         // get a a grandchild element
         NodeList nodes = doc.getElementsByTagName("a");
+        
         // can get root node
         Element el = (Element) nodes.item(0);
         Element root = XMLHelper.selectParentElement(el, "root");
         assertNotNull(root);
+        
         // non-existing element or if is root node returns null
         assertNull(XMLHelper.selectParentElement(el, "notexisting"));
         assertNull(XMLHelper.selectParentElement(root, "notexisting"));
-
     }
 
     @Nested
@@ -128,7 +131,6 @@ class XMLHelperTest {
         void invalidInput() throws XPathExpressionException {
             assertNull(XMLHelper.selectSingleElement(null, "root"));
         }
-
     }
 
     @Nested
@@ -149,6 +151,7 @@ class XMLHelperTest {
             ArrayList<Element> selected = XMLHelper.selectElements(root, "/root/list/a");
             assertEquals(2, selected.size());
         }
+
         @Test
         void selectMultipleElementsWithXPathSearchesWholeTree()
                 throws  XPathExpressionException {
@@ -173,7 +176,6 @@ class XMLHelperTest {
         void invalidInputtoSelectElements() throws XPathExpressionException {
             assertEquals(0, XMLHelper.selectElements(null, "root").size());
         }
-
     }
 
     void assertParsedDocument(Document doc) {
@@ -183,9 +185,9 @@ class XMLHelperTest {
     }
 
     Document createDocumentWithRootElement() throws ParserConfigurationException {
-        Document d = XMLHelper.getNewDocument();
-        Element root = d.createElement("root");
-        d.appendChild(root);
-        return d;
+        Document doc = XMLHelper.getNewDocument();
+        Element root = doc.createElement("root");
+        doc.appendChild(root);
+        return doc;
     }
 }

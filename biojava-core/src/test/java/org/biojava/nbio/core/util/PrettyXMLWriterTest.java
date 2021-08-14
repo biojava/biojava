@@ -84,6 +84,4 @@ class PrettyXMLWriterTest {
 
         assertEquals(EXPECTED, sw.toString());
     }
-
-
 }
