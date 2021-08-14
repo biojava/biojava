@@ -170,6 +170,9 @@ public class XMLHelper {
 	 * @throws XPathExpressionException
 	 */
 	public static Element selectSingleElement(Element element, String xpathExpression) throws XPathExpressionException {
+		if (element == null) {
+			return null;
+		}
 		if (xpathExpression.indexOf("/") == -1) {
 			NodeList nodeList = element.getChildNodes();
 			for (int i = 0; i < nodeList.getLength(); i++) {
@@ -191,6 +194,16 @@ public class XMLHelper {
 		}
 	}
 
+	/**
+	 * Gets a list of elements matching {@code}xpathExpression{@code}. If xpathExpression lacks
+	 * a '/' character, only immediate children o {@code}element{@code} are searched over.
+	 * <br/>
+	 * If {@code}xpathExpression{@code} contains an '/' character, a full XPath search is made
+	 * @param element
+	 * @param xpathExpression
+	 * @return A possibly empty but non-null {@code}ArrayList{@code}
+	 * @throws XPathExpressionException
+	 */
 	public static ArrayList<Element> selectElements(Element element, String xpathExpression) throws XPathExpressionException {
 		ArrayList<Element> resultVector = new ArrayList<Element>();
 		if (element == null) {
