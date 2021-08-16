@@ -25,6 +25,7 @@ import org.biojava.nbio.structure.xtal.SpaceGroup;
 
 import javax.vecmath.Matrix4d;
 import java.io.Serializable;
+import java.util.Locale;
 
 /**
  * A class to hold crystallographic information about a PDB structure.
@@ -233,7 +234,7 @@ public class PDBCrystallographicInfo implements Serializable {
 				(sg==null?"no SG":sg.getShortSymbol())+" - "+
 
 				(cell==null?"no Cell":
-				String.format("%.2f %.2f %.2f, %.2f %.2f %.2f",
+				String.format(Locale.US, "%.2f %.2f %.2f, %.2f %.2f %.2f",
 						cell.getA(),cell.getB(),cell.getC(),cell.getAlpha(),cell.getBeta(),cell.getGamma()) )+
 				(ncsOperators==null? "" : String.format(" - %d NCS operators",ncsOperators.length) )+
 				"]";

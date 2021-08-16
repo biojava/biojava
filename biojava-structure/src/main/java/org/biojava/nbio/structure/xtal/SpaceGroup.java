@@ -43,6 +43,7 @@ import java.io.PrintStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -433,9 +434,9 @@ public class SpaceGroup implements Serializable {
 
 	private static String formatCoef(double c, boolean leading) {
 		if (leading) {
-			return (deltaComp(Math.abs(c),1,DELTA)?(c>0?"":"-"):String.format("%4.2f",c));
+			return (deltaComp(Math.abs(c),1,DELTA)?(c>0?"":"-"):String.format(Locale.US, "%4.2f",c));
 		} else {
-			return (deltaComp(Math.abs(c),1,DELTA)?(c>0?"+":"-"):String.format("%+4.2f",c));
+			return (deltaComp(Math.abs(c),1,DELTA)?(c>0?"+":"-"):String.format(Locale.US, "%+4.2f",c));
 		}
 	}
 
@@ -719,4 +720,3 @@ public class SpaceGroup implements Serializable {
 	}
 
 }
-

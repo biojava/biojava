@@ -85,7 +85,7 @@ public class CutDomain {
 		}
 
 		if(verbose)
-			System.out.println(String.format("   C ... Cutting at position(s): %d %d %f\n",site,val.site2,dom.score));
+			System.out.printf("   C ... Cutting at position(s): %d %d %f%n%n",site,val.site2,dom.score);
 
 		cut_sites.cut_sites[cut_sites.ncuts++] = site;
 

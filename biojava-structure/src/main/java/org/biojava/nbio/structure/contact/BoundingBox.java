@@ -27,6 +27,7 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Locale;
 
 
 /**
@@ -246,6 +247,6 @@ public class BoundingBox implements Serializable {
 
 	@Override
 	public String toString() {
-		return String.format("[(%7.2f,%7.2f),(%7.2f,%7.2f),(%7.2f,%7.2f)]", xmin,xmax,ymin,ymax,zmin,zmax);
+		return String.format(Locale.US, "[(%7.2f,%7.2f),(%7.2f,%7.2f),(%7.2f,%7.2f)]", xmin,xmax,ymin,ymax,zmin,zmax);
 	}
 }

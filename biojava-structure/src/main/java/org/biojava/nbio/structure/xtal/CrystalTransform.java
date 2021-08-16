@@ -25,6 +25,7 @@ import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3i;
 import javax.vecmath.Vector3d;
 import java.io.Serializable;
+import java.util.Locale;
 
 import static java.lang.Math.abs;
 
@@ -451,7 +452,7 @@ public class CrystalTransform implements Serializable {
 		}
 
 		// Give up and use floating point;
-		return String.format("%.3f", coef);
+		return String.format(Locale.US, "%.3f", coef);
 	}
 
 	/**
