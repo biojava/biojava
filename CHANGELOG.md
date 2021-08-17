@@ -31,6 +31,8 @@ BioJava 6.0.0 (future release)
 * Moved all chem-comp model classes from `org.biojava.nbio.structure.io.mmcif.chem` to `org.biojava.nbio.structure.chem`
 * Moved all chem-comp parsing classes from `org.biojava.nbio.structure.io.mmcif.chem` to `org.biojava.nbio.structure.io.cif`
 * Moved classes in `org.biojava.nbio.structure.io.mmcif` to `org.biojava.nbio.structure.chem`
+* Fixed `CRC64Checksum#public void update(byte[] b, int offset, int length)` to use
+the `length` argument correctly as specified in `java.util.zip.Checksum` interface.
 
 ### Fixed
 * Correct chain assignment to entities when parsing PDB/mmCIF without entity information (in cases with more than 3 chains per entity) #931

@@ -34,6 +34,7 @@ import org.biojava.nbio.structure.jama.Matrix;
 
 import java.io.StringWriter;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * A class to convert the data in an AfpChain object to various String outputs.
@@ -67,7 +68,7 @@ public class AfpChainWriter
 
 		if ( afpChain.getAlgorithmName().startsWith("CE")) {
 			writer.append("Z-score " );
-			writer.append(String.format("%.2f", afpChain.getProbability()));
+			writer.append(String.format(Locale.US, "%.2f", afpChain.getProbability()));
 			writer.append(newline);
 		}
 
@@ -196,10 +197,10 @@ public class AfpChainWriter
 			txt.append("Short match");
 			return txt.toString();
 		}
-		//txt.append(String.format("raw-score: %.2f norm.-score: %.2f ", alignScore, normAlignScore));
+		//txt.append(String.format(Locale.US, "raw-score: %.2f norm.-score: %.2f ", alignScore, normAlignScore));
 
 		if ( longHeader ) {
-			txt.append(String.format( "Twists %d ini-len %d ini-rmsd %.2f opt-equ %d opt-rmsd %.2f chain-rmsd %.2f Score %.2f align-len %d gaps %d (%.2f%%)",
+			txt.append(String.format(Locale.US, "Twists %d ini-len %d ini-rmsd %.2f opt-equ %d opt-rmsd %.2f chain-rmsd %.2f Score %.2f align-len %d gaps %d (%.2f%%)",
 					blockNum - 1, totalLenIni, totalRmsdIni, optLength, totalRmsdOpt, chainRmsd, alignScore,
 					alnLength, gapLen, (100.0 * gapLen/alnLength)) );
 			txt.append(newline);
@@ -213,12 +214,12 @@ public class AfpChainWriter
 		}
 
 
-		//txt.append(String.format("P-value %.2e Afp-num %d Identity %.2f%% Similarity %.2f%% norm.-score: %.2f"+newline, probability, afpNum, identity * 100, similarity * 100, normAlignScore));
+		//txt.append(String.format(Locale.US, "P-value %.2e Afp-num %d Identity %.2f%% Similarity %.2f%% norm.-score: %.2f"+newline, probability, afpNum, identity * 100, similarity * 100, normAlignScore));
 
 		if ( longHeader) {
 			printScore(txt,algorithmName,probability,longHeader);
 
-			txt.append(String.format("Afp-num %d Identity %.2f%% Similarity %.2f%%", afpNum, identity * 100, similarity * 100));
+			txt.append(String.format(Locale.US, "Afp-num %d Identity %.2f%% Similarity %.2f%%", afpNum, identity * 100, similarity * 100));
 			txt.append(newline);
 		}
 
@@ -229,7 +230,7 @@ public class AfpChainWriter
 			int fragLen = 8 ; // FatCatParameters.DEFAULT_FRAGLEN;
 			for(i = 0; i < blockNum; i ++)  {
 				gap = blockGap[i] /( (double)blockGap[i] + fragLen * blockSize[i]);
-				txt.append(String.format( "Block %2d afp %2d score %5.2f rmsd %5.2f gap %d (%.2f%%)",
+				txt.append(String.format(Locale.US, "Block %2d afp %2d score %5.2f rmsd %5.2f gap %d (%.2f%%)",
 						i, blockSize[i], blockScore[i], blockRmsd[i], blockGap[i], gap));
 				txt.append(newline);
 			}
@@ -389,29 +390,29 @@ public class AfpChainWriter
 			int alnLength, int gapLen, double identity, double similarity, StringBuffer txt)
 	{
 		if ( blockNum - 1 > 0) {
-			txt.append(String.format( "Twists %d ", blockNum -1 ));
+			txt.append(String.format(Locale.US, "Twists %d ", blockNum -1 ));
 			txt.append(newline);
 		}
 
-		txt.append(String.format("Equ: %d ", optLength));
+		txt.append(String.format(Locale.US, "Equ: %d ", optLength));
 		txt.append(newline);
-		txt.append(String.format("RMSD: %.2f ", totalRmsdOpt));
+		txt.append(String.format(Locale.US, "RMSD: %.2f ", totalRmsdOpt));
 		txt.append(newline);
-		txt.append(String.format("Score: %.2f ", alignScore));
+		txt.append(String.format(Locale.US, "Score: %.2f ", alignScore));
 		txt.append(newline);
-		txt.append(String.format("Align-len: %d ", alnLength));
+		txt.append(String.format(Locale.US, "Align-len: %d ", alnLength));
 		txt.append(newline);
-		txt.append(String.format("Gaps: %d (%.2f%%)",
+		txt.append(String.format(Locale.US, "Gaps: %d (%.2f%%)",
 				gapLen, (100.0 * gapLen/alnLength)) );
 		txt.append(newline);
 		if ( afpChain.getTMScore() >= 0) {
-			txt.append(String.format("TM-score: %.2f",afpChain.getTMScore()));
+			txt.append(String.format(Locale.US, "TM-score: %.2f",afpChain.getTMScore()));
 			txt.append(newline);
 		}
 		txt.append(newline);
-		txt.append(String.format("Identity: %.2f%% ", identity * 100 ));
+		txt.append(String.format(Locale.US, "Identity: %.2f%% ", identity * 100 ));
 		txt.append(newline);
-		txt.append(String.format("Similarity: %.2f%%", similarity * 100));
+		txt.append(String.format(Locale.US, "Similarity: %.2f%%", similarity * 100));
 		txt.append(newline);
 	}
 
@@ -421,16 +422,16 @@ public class AfpChainWriter
 			boolean longHeader)
 	{
 		if ( algorithmName.equalsIgnoreCase(CeMain.algorithmName) || algorithmName.equalsIgnoreCase(CeSideChainMain.algorithmName) ){
-			txt.append(String.format("Z-score %.2f ", probability));
+			txt.append(String.format(Locale.US, "Z-score %.2f ", probability));
 			if ( ! longHeader)
 				txt.append(newline);
 		} else if ( algorithmName.equalsIgnoreCase(SmithWaterman3Daligner.algorithmName)) {
 
 		} else {
 			if ( longHeader ){
-				txt.append(String.format("P-value %.2e ",probability));
+				txt.append(String.format(Locale.US, "P-value %.2e ",probability));
 			}  else {
-				txt.append(String.format("P-value: %.2e ",probability));
+				txt.append(String.format(Locale.US, "P-value: %.2e ",probability));
 				txt.append(newline);
 			}
 		}
@@ -1065,15 +1066,15 @@ public class AfpChainWriter
 		str.append("\t");
 		str.append(afpChain.getName2());
 		str.append("\t");
-		str.append(String.format("%.2f",afpChain.getAlignScore()));
+		str.append(String.format(Locale.US, "%.2f",afpChain.getAlignScore()));
 		str.append("\t");
 		if ( afpChain.getAlgorithmName().equalsIgnoreCase(CeMain.algorithmName)){
-			str.append(String.format("%.2f",afpChain.getProbability()));
+			str.append(String.format(Locale.US, "%.2f",afpChain.getProbability()));
 		} else {
-			str.append(String.format("%.2e",afpChain.getProbability()));
+			str.append(String.format(Locale.US, "%.2e",afpChain.getProbability()));
 		}
 		str.append("\t");
-		str.append(String.format("%.2f",afpChain.getTotalRmsdOpt()));
+		str.append(String.format(Locale.US, "%.2f",afpChain.getTotalRmsdOpt()));
 		str.append("\t");
 		str.append(afpChain.getCa1Length());
 		str.append("\t");
@@ -1083,7 +1084,7 @@ public class AfpChainWriter
 		str.append("\t");
 		str.append(afpChain.getCoverage2());
 		str.append("\t");
-		str.append(String.format("%.2f",afpChain.getIdentity()));
+		str.append(String.format(Locale.US, "%.2f",afpChain.getIdentity()));
 		str.append("\t");
 		str.append(afpChain.getDescription2());
 		str.append("\t");
@@ -1119,11 +1120,11 @@ public class AfpChainWriter
 				origString = String.valueOf(blockNr);
 
 
-			txt.append(String.format("     X"+(blockNr+1)+" = (%9.6f)*X"+ origString +" + (%9.6f)*Y"+ origString +" + (%9.6f)*Z"+ origString +" + (%12.6f)",m.get(0,0),m.get(1,0), m.get(2,0), shift.getX()));
+			txt.append(String.format(Locale.US, "     X"+(blockNr+1)+" = (%9.6f)*X"+ origString +" + (%9.6f)*Y"+ origString +" + (%9.6f)*Z"+ origString +" + (%12.6f)",m.get(0,0),m.get(1,0), m.get(2,0), shift.getX()));
 			txt.append( newline);
-			txt.append(String.format("     Y"+(blockNr+1)+" = (%9.6f)*X"+ origString +" + (%9.6f)*Y"+ origString +" + (%9.6f)*Z"+ origString +" + (%12.6f)",m.get(0,1),m.get(1,1), m.get(2,1), shift.getY()));
+			txt.append(String.format(Locale.US, "     Y"+(blockNr+1)+" = (%9.6f)*X"+ origString +" + (%9.6f)*Y"+ origString +" + (%9.6f)*Z"+ origString +" + (%12.6f)",m.get(0,1),m.get(1,1), m.get(2,1), shift.getY()));
 			txt.append( newline);
-			txt.append(String.format("     Z"+(blockNr+1)+" = (%9.6f)*X"+ origString +" + (%9.6f)*Y"+ origString +" + (%9.6f)*Z"+ origString +" + (%12.6f)",m.get(0,2),m.get(1,2), m.get(2,2), shift.getZ()));
+			txt.append(String.format(Locale.US, "     Z"+(blockNr+1)+" = (%9.6f)*X"+ origString +" + (%9.6f)*Y"+ origString +" + (%9.6f)*Z"+ origString +" + (%12.6f)",m.get(0,2),m.get(1,2), m.get(2,2), shift.getZ()));
 			txt.append(newline);
 		}
 		return txt.toString();
@@ -1178,8 +1179,8 @@ public class AfpChainWriter
 		txt.append(")");
 		txt.append(newline);
 		txt.append(newline);
-		txt.append(String.format("Alignment length = %d Rmsd = %.2fA Z-Score = %.1f",optLength,totalRmsdOpt,probability));
-		txt.append(String.format(" Gaps = %d(%.1f%%) CPU = %d ms. Sequence identities = %.1f%%",gapLen,( gapLen*100.0/optLength),calculationTime,identity*100));
+		txt.append(String.format(Locale.US, "Alignment length = %d Rmsd = %.2fA Z-Score = %.1f",optLength,totalRmsdOpt,probability));
+		txt.append(String.format(Locale.US, " Gaps = %d(%.1f%%) CPU = %d ms. Sequence identities = %.1f%%",gapLen,( gapLen*100.0/optLength),calculationTime,identity*100));
 
 		int     linelen = 70;
 		String a;

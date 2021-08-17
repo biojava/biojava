@@ -56,9 +56,27 @@ public class CRC64Checksum implements Checksum {
 		crc = low ^ high;
 	}
 
+	 /**
+     * Updates the CRC-64 checksum with the specified array of bytes.
+	 * <br/>
+	 * Note that BioJava before version 6.0 implemented this method incorrectly,
+	 * using {@code length} as an index.
+     *
+     * @throws IllegalArgumentException
+     *         if {@code offset} is negative, or {@code length} is negative, or
+     *         {@code offset+length} is negative or greater than the length of
+     *         the array {@code b}.
+     */
 	@Override
 	public void update(byte[] b, int offset, int length) {
-		for (int i = offset; i < length; ++i)
+		if (b == null) {
+            throw new IllegalArgumentException("byte array cannot be null");
+        }
+        if (offset < 0 || length < 0 || offset > b.length - length) {
+            throw new IllegalArgumentException("Offset and length must be non-negative"+
+			 " and their sum cannot be greater than length of byte array");
+        }
+		for (int i = offset; i < length + offset; ++i)
 			update(b[i]);
 	}
 

@@ -36,6 +36,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Locale;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Map;
@@ -635,9 +636,9 @@ public class BasePairParameters implements Serializable {
 		for (int i = 0; i < pairingParameters.length; i++) {
 			result.append(pairingNames.get(i)+": ");
 			for (int j = 0; j < 6; j++)
-				result.append(String.format("%5.4f", pairingParameters[i][j]) + " ");
+				result.append(String.format(Locale.US, "%5.4f", pairingParameters[i][j]) + " ");
 			for (int j = 0; j < 6; j++)
-				result.append(String.format("%5.4f", stepParameters[i][j]) + " ");
+				result.append(String.format(Locale.US, "%5.4f", stepParameters[i][j]) + " ");
 			result.append("\n");
 		}
 		return result.toString();

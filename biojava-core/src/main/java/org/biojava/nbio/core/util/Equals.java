@@ -44,6 +44,8 @@ public class Equals {
 
 	/**
 	 * Does not compare class types.
+	 * However, if the two arguments are non-null references to distinct objects,
+	 *  the object's equals() method is called - which may well compare class types.
 	 * @see #classEqual(Object, Object)
 	 */
 	public static boolean equal(Object one, Object two) {
@@ -78,7 +80,7 @@ public class Equals {
 	 *          The first object to test
 	 * @param two
 	 *          The second object to test
-	 * @return A boolean indicating if the logic agrees that these two objects are
+	 * @return A boolean indicating if  these two objects are
 	 *         equal at the class level
 	 */
 	public static boolean classEqual(Object one, Object two) {

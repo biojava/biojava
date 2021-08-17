@@ -252,11 +252,11 @@ public class FCAlignHelper
 	private void checkAlign(){
 
 		if(sapp[0] != 0)        {
-			System.err.println(String.format("warn: not a local-alignment result, first operation %d\n", sapp[0]));
+			System.err.printf("warn: not a local-alignment result, first operation %d%n%n", sapp[0]);
 		}
 		double  sco = checkScore();
 		if(Math.abs(sco - alignScore) > 1e-3)       {
-			System.err.println(String.format("FCAlignHelper: warn: alignment scores are different %f(check) %f(align)\n", sco, alignScore));
+			System.err.printf("FCAlignHelper: warn: alignment scores are different %f(check) %f(align)%n%n", sco, alignScore);
 		}
 	}
 
@@ -330,5 +330,3 @@ public class FCAlignHelper
 	}
 
 }
-
-

@@ -20,6 +20,8 @@
  */
 package org.biojava.nbio.structure.secstruc;
 
+import java.util.Locale;
+
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.StructureTools;
@@ -321,44 +323,44 @@ public class SecStrucState extends SecStrucInfo {
 		double e1 = (accept1.getEnergy() / 1000.0);
 		if (e1 < 0.0)
 			p1 -= index;
-		buf.append(String.format("%6d,%4.1f", p1, e1));
+		buf.append(String.format(Locale.US, "%6d,%4.1f", p1, e1));
 
 		// O-->H-N
 		int p2 = donor1.getPartner();
 		double e2 = (donor1.getEnergy() / 1000.0);
 		if (e2 < 0.0)
 			p2 -= index;
-		buf.append(String.format("%6d,%4.1f", p2, e2));
+		buf.append(String.format(Locale.US, "%6d,%4.1f", p2, e2));
 
 		// N-H-->O
 		int p3 = accept2.getPartner();
 		double e3 = (accept2.getEnergy() / 1000.0);
 		if (e3 < 0.0)
 			p3 -= index;
-		buf.append(String.format("%6d,%4.1f", p3, e3));
+		buf.append(String.format(Locale.US, "%6d,%4.1f", p3, e3));
 
 		// O-->H-N
 		int p4 = donor2.getPartner();
 		double e4 = (donor2.getEnergy() / 1000.0);
 		if (e4 < 0.0)
 			p4 -= index;
-		buf.append(String.format("%6d,%4.1f", p4, e4));
+		buf.append(String.format(Locale.US, "%6d,%4.1f", p4, e4));
 
 		// TCO TODO
 		buf.append("        ");
 
 		// KAPPA
-		buf.append(String.format("%6.1f", kappa));
+		buf.append(String.format(Locale.US, "%6.1f", kappa));
 
 		// ALPHA TODO
 		buf.append("      ");
 
 		// PHI PSI
-		buf.append(String.format("%6.1f %6.1f ", phi, psi));
+		buf.append(String.format(Locale.US, "%6.1f %6.1f ", phi, psi));
 
 		// X-CA Y-CA Z-CA
 		Atom ca = parent.getAtom("CA");
-		buf.append(String.format("%6.1f %6.1f %6.1f", ca.getX(), ca.getY(),
+		buf.append(String.format(Locale.US, "%6.1f %6.1f %6.1f", ca.getX(), ca.getY(),
 				ca.getZ()));
 
 		return buf.toString();

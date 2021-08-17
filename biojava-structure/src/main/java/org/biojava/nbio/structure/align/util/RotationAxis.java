@@ -21,6 +21,7 @@
 package org.biojava.nbio.structure.align.util;
 
 import java.io.StringWriter;
+import java.util.Locale;
 
 import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Matrix3d;
@@ -460,7 +461,7 @@ public final class RotationAxis {
 
 		// draw axis of rotation
 		result.append(
-				String.format("draw ID rot"+axisID+" CYLINDER {%f,%f,%f} {%f,%f,%f} WIDTH %f COLOR %s ;",
+				String.format(Locale.US, "draw ID rot"+axisID+" CYLINDER {%f,%f,%f} {%f,%f,%f} WIDTH %f COLOR %s ;",
 						axisMin.getX(),axisMin.getY(),axisMin.getZ(),
 						axisMax.getX(),axisMax.getY(),axisMax.getZ(), width, axisColor ));
 
@@ -468,14 +469,14 @@ public final class RotationAxis {
 		boolean positiveScrew = Math.signum(rotationAxis.getX()) == Math.signum(screwTranslation.getX());
 		if( positiveScrew ) {
 			// screw is in the same direction as the axis
-			result.append( String.format(
+			result.append( String.format(Locale.US,
 					"draw ID screw"+axisID+" VECTOR {%f,%f,%f} {%f,%f,%f} WIDTH %f COLOR %s ;",
 					axisMax.getX(),axisMax.getY(),axisMax.getZ(),
 					screwTranslation.getX(),screwTranslation.getY(),screwTranslation.getZ(),
 					width, screwColor ));
 		} else {
 			// screw is in the opposite direction as the axis
-			result.append( String.format(
+			result.append( String.format(Locale.US,
 					"draw ID screw"+axisID+" VECTOR {%f,%f,%f} {%f,%f,%f} WIDTH %f COLOR %s ;",
 					axisMin.getX(),axisMin.getY(),axisMin.getZ(),
 					screwTranslation.getX(),screwTranslation.getY(),screwTranslation.getZ(),
@@ -485,7 +486,7 @@ public final class RotationAxis {
 		// draw angle of rotation
 		if(rotationPos != null) {
 			result.append(System.getProperty("line.separator"));
-			result.append(String.format("draw ID rotArc"+axisID+" ARC {%f,%f,%f} {%f,%f,%f} {0,0,0} {0,%f,%d} SCALE 500 DIAMETER %f COLOR %s;",
+			result.append(String.format(Locale.US, "draw ID rotArc"+axisID+" ARC {%f,%f,%f} {%f,%f,%f} {0,0,0} {0,%f,%d} SCALE 500 DIAMETER %f COLOR %s;",
 					axisMin.getX(),axisMin.getY(),axisMin.getZ(),
 					axisMax.getX(),axisMax.getY(),axisMax.getZ(),
 					Math.toDegrees(theta),
