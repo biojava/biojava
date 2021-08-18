@@ -32,6 +32,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.util.Locale;
 
 
 
@@ -133,7 +134,7 @@ public final class ORonnModel {
 		}
 	}
 	for (int i = 0; i < scores.length; i++) {
-		output.printf("%c\t%f\n", query[i], scores[i]);
+		output.printf(Locale.US, "%c\t%f\n", query[i], scores[i]);
 	}
 	output.close();
 	}

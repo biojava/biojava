@@ -30,6 +30,7 @@ import org.biojava.nbio.core.util.PrettyXMLWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Locale;
 
 
 
@@ -187,8 +188,8 @@ public class AFPChainXMLConverter {
 
 		xml.attribute("blockNr", String.valueOf(bk));
 		xml.attribute("blockSize", String.valueOf(blockSize[bk]));
-		xml.attribute("blockScore", String.format("%5.2f",blockScore[bk]).trim());
-		xml.attribute("blockRmsd", String.format("%5.2f",blockRmsd[bk]).trim());
+		xml.attribute("blockScore", String.format(Locale.US, "%5.2f",blockScore[bk]).trim());
+		xml.attribute("blockRmsd", String.format(Locale.US, "%5.2f",blockRmsd[bk]).trim());
 		xml.attribute("blockGap", String.valueOf(blockGap[bk]));
 
 	}
@@ -210,7 +211,7 @@ public class AFPChainXMLConverter {
 		for (int x=0;x<3;x++){
 			for (int y=0;y<3;y++){
 				String key = "mat"+(x+1)+(y+1);
-				xml.attribute(key,String.format("%.6f",matrix.get(x,y)));
+				xml.attribute(key,String.format(Locale.US, "%.6f",matrix.get(x,y)));
 			}
 		}
 		xml.closeTag("matrix");
@@ -218,9 +219,9 @@ public class AFPChainXMLConverter {
 		Atom[]   shifts = afpChain.getBlockShiftVector();
 		Atom shift = shifts[blockNr];
 		xml.openTag("shift");
-		xml.attribute("x", String.format("%.3f",shift.getX()));
-		xml.attribute("y", String.format("%.3f",shift.getY()));
-		xml.attribute("z", String.format("%.3f",shift.getZ()));
+		xml.attribute("x", String.format(Locale.US, "%.3f",shift.getX()));
+		xml.attribute("y", String.format(Locale.US, "%.3f",shift.getY()));
+		xml.attribute("z", String.format(Locale.US, "%.3f",shift.getZ()));
 		xml.closeTag("shift");
 
 	}
@@ -243,24 +244,24 @@ public class AFPChainXMLConverter {
 		xml.attribute("optLength", afpChain.getOptLength() + "");
 		xml.attribute("totalLenIni", afpChain.getTotalLenIni() + "");
 
-		xml.attribute("alignScore", String.format("%5.2f", afpChain.getAlignScore() ).trim());
-		xml.attribute("chainRmsd",  String.format("%5.2f", afpChain.getChainRmsd() ).trim());
-		xml.attribute("identity",String.format("%5.4f", afpChain.getIdentity() ).trim());
-		xml.attribute("normAlignScore", String.format("%5.2f",afpChain.getNormAlignScore()).trim());
-		xml.attribute("probability", String.format("%.2e", afpChain.getProbability() ).trim());
-		xml.attribute("similarity", String.format("%5.4f", afpChain.getSimilarity() ).trim());
+		xml.attribute("alignScore", String.format(Locale.US, "%5.2f", afpChain.getAlignScore() ).trim());
+		xml.attribute("chainRmsd",  String.format(Locale.US, "%5.2f", afpChain.getChainRmsd() ).trim());
+		xml.attribute("identity",String.format(Locale.US, "%5.4f", afpChain.getIdentity() ).trim());
+		xml.attribute("normAlignScore", String.format(Locale.US, "%5.2f",afpChain.getNormAlignScore()).trim());
+		xml.attribute("probability", String.format(Locale.US, "%.2e", afpChain.getProbability() ).trim());
+		xml.attribute("similarity", String.format(Locale.US, "%5.4f", afpChain.getSimilarity() ).trim());
 
 		xml.attribute("similarity1", afpChain.getCoverage1() + "");
 		xml.attribute("similarity2", afpChain.getCoverage2() + "");
-		xml.attribute("totalRmsdIni", String.format("%5.2f",afpChain.getTotalRmsdIni() ).trim());
-		xml.attribute("totalRmsdOpt", String.format("%5.2f",afpChain.getTotalRmsdOpt() ).trim());
+		xml.attribute("totalRmsdIni", String.format(Locale.US, "%5.2f",afpChain.getTotalRmsdIni() ).trim());
+		xml.attribute("totalRmsdOpt", String.format(Locale.US, "%5.2f",afpChain.getTotalRmsdOpt() ).trim());
 		xml.attribute("ca1Length", afpChain.getCa1Length()+"");
 		xml.attribute("ca2Length", afpChain.getCa2Length()+"");
 		xml.attribute("afpNum",afpChain.getAfpSet().size()+"");
-		xml.attribute("alignScoreUpdate",String.format("%5.2f",afpChain.getAlignScoreUpdate()).trim());
+		xml.attribute("alignScoreUpdate",String.format(Locale.US, "%5.2f",afpChain.getAlignScoreUpdate()).trim());
 		xml.attribute("time", String.format("%d",afpChain.getCalculationTime()));
 		if ( afpChain.getTMScore() != -1){
-			xml.attribute("tmScore", String.format("%.2f",afpChain.getTMScore()));
+			xml.attribute("tmScore", String.format(Locale.US, "%.2f",afpChain.getTMScore()));
 		}
 
 		// test if alignment is CP:

@@ -80,6 +80,12 @@ public class FileDownloadUtils {
 		}
 	}
 
+	/**
+	 * Gets the file extension of a file, excluding '.'.
+	 * If the file name has no extension the file name is returned.
+	 * @param f a File
+	 * @return The extension
+	 */
 	public static String getFileExtension(File f) {
 		String fileName = f.getName();
 		String ext = "";
@@ -88,20 +94,26 @@ public class FileDownloadUtils {
 		return ext;
 	}
 
+	/**
+	 * Gets the file name up to and excluding the first
+	 * '.' character. If there is no extension, the full filename
+	 * is returned.
+	 * @param f A file
+	 * @return A possibly empty but non-null String.
+	 */
 	public static String getFilePrefix(File f) {
 		String fileName = f.getName();
-		String fname = "";
-
 		int mid = fileName.indexOf(".");
-		fname = fileName.substring(0, mid);
-
-		return fname;
+		if (mid < 0) {
+			return fileName;
+		}
+		return fileName.substring(0, mid);
 	}
 
 	/**
 	 * Download the content provided at URL url and store the result to a local
 	 * file, using a temp file to cache the content in case something goes wrong
-	 * in download
+	 * in download. A timeout of 60 seconds is hard-coded and 10 retries are attempted.
 	 *
 	 * @param url
 	 * @param destination
@@ -152,7 +164,7 @@ public class FileDownloadUtils {
 
 	/**
 	 * Converts path to Unix convention and adds a terminating slash if it was
-	 * omitted
+	 * omitted. 
 	 *
 	 * @param path original platform dependent path
 	 * @return path in Unix convention
@@ -179,10 +191,11 @@ public class FileDownloadUtils {
 	 *
 	 * <p>
 	 * This does not work for some special cases for paths: Other users' homes
-	 * (~user/...), and Tilde expansion within the path (/.../~/...)
+	 * (~user/...), and Tilde expansion within the path (/.../~/...). In these cases
+	 *  the original argument is returned.
 	 *
-	 * @param file
-	 * @return
+	 * @param file A filepath starting with a tilde
+	 * @return An absolute path
 	 */
 	public static String expandUserHome(String file) {
 		if (file.startsWith("~" + File.separator)) {
