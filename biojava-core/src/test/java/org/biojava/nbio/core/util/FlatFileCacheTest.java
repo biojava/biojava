@@ -5,8 +5,10 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -25,8 +27,13 @@ class FlatFileCacheTest {
 
     File createSmallTmpFile() throws IOException{
         File f = File.createTempFile("flatFile","txt");
-        Files.writeString(Path.of(f.getAbsolutePath()), aDNA);
+       writeToFile( aDNA, f);
         return f;
+    }
+
+    private void writeToFile(String aDNA, File f) throws IOException {
+        FileOutputStream fos = new FileOutputStream(f);
+        fos.write(aDNA.getBytes(StandardCharsets.UTF_8));
     }
 
     @Test
@@ -66,7 +73,7 @@ class FlatFileCacheTest {
         long originalLength = aDNAFile.length();
         
         // write new content to original file
-        Files.writeString(Path.of(aDNAFile.getAbsolutePath()), aProtein);
+        writeToFile( aProtein , aDNAFile);
 
         // retrieve from cache, is unchanged
         InputStream is = FlatFileCache.getInputStream("key");

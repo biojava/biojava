@@ -65,15 +65,6 @@ class CRC64ChecksumTest {
         assertEquals(allBytesHex, crc64.toString());
     }
 
-    @Test
-    void allRangeIsSameAsAllArray (){
-        byte [] testBytes = new byte [] {1,2,3,4,5};
-        crc64.update(testBytes, 0, testBytes.length);
-        Long valueFromAllRange = crc64.getValue();
-        crc64.reset();
-        crc64.update(testBytes);
-        assertEquals(valueFromAllRange, crc64.getValue());
-    }
 
     @Test 
     void partialByteRange (){
