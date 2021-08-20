@@ -64,7 +64,7 @@ class CRC64ChecksumTest {
         }
         assertEquals(allBytesHex, crc64.toString());
     }
-    
+
     @Test 
     void partialByteRange (){
         byte [] testBytes = new byte [] {1,2,3,4,5};

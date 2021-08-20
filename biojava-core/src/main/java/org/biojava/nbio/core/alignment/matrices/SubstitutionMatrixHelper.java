@@ -68,7 +68,10 @@ public class SubstitutionMatrixHelper implements Serializable {
 
 	}
 
-
+	/**
+	 * Gets identity matrix where matches score 1 and mismatches score -10000
+	 * @return
+	 */
 	public static SubstitutionMatrix<AminoAcidCompound> getIdentity() {
 		return getAminoAcidMatrix("identity");
 	}
@@ -231,8 +234,8 @@ public class SubstitutionMatrixHelper implements Serializable {
 
 	/**
 	 * Returns a substitution matrix for {@link AminoAcidCompound amino acids} given by the name {@code name}.
-	 * Searches first in the default AAINDEX file (see @link {@link #getMatrixFromAAINDEX(String)}), then in the classpath.
-	 * If the required matrix does not exist, null is returned.
+	 * Searches first in the default AAINDEX file (see @link {@link #getMatrixFromAAINDEX(String)}), then in the classpath
+	 * in src/main/resources/matrices.
 	 * Example names:
 	 * <ul>
 	 * <li>blosum62</li>
@@ -241,6 +244,7 @@ public class SubstitutionMatrixHelper implements Serializable {
 	 * <li>gonnet250</li>
 	 * </ul>
 	 * @param name Either a common name or an AAINDEX name
+	 * @throws  NullPointerException if the matrix does not exist.
 	 */
 	public static SubstitutionMatrix<AminoAcidCompound> getAminoAcidSubstitutionMatrix(String name) {
 		SubstitutionMatrix<AminoAcidCompound> matrix = getMatrixFromAAINDEX(name);
