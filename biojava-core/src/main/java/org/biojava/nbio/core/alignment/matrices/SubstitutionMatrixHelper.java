@@ -29,6 +29,7 @@ import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava.nbio.core.sequence.compound.NucleotideCompound;
 
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.util.HashMap;
@@ -244,7 +245,7 @@ public class SubstitutionMatrixHelper implements Serializable {
 	 * <li>gonnet250</li>
 	 * </ul>
 	 * @param name Either a common name or an AAINDEX name
-	 * @throws  NullPointerException if the matrix does not exist.
+	 * @return a {@code} SubstitutionMatrix {@code} or {@code}null{@code} if no matrix is found
 	 */
 	public static SubstitutionMatrix<AminoAcidCompound> getAminoAcidSubstitutionMatrix(String name) {
 		SubstitutionMatrix<AminoAcidCompound> matrix = getMatrixFromAAINDEX(name);
@@ -255,8 +256,12 @@ public class SubstitutionMatrixHelper implements Serializable {
 	// reads in an amino acid substitution matrix, if necessary
 	private static SubstitutionMatrix<AminoAcidCompound> getAminoAcidMatrix(String file) {
 		if (!aminoAcidMatrices.containsKey(file)) {
+			InputStreamReader reader = getReader(file);
+			if (reader == null) {
+				return null;
+			}
 			aminoAcidMatrices.put(file, new SimpleSubstitutionMatrix<AminoAcidCompound>(
-					AminoAcidCompoundSet.getAminoAcidCompoundSet(), getReader(file), file));
+					AminoAcidCompoundSet.getAminoAcidCompoundSet(), reader , file));
 		}
 		return aminoAcidMatrices.get(file);
 	}
@@ -273,8 +278,12 @@ public class SubstitutionMatrixHelper implements Serializable {
 	// reads in a substitution matrix from a resource file
 	private static InputStreamReader getReader(String file) {
 		String resourcePathPrefix = "matrices/";
-		return new InputStreamReader(SubstitutionMatrixHelper.class.getResourceAsStream(String.format("/%s.txt",
-				resourcePathPrefix+file)));
+		InputStream is = SubstitutionMatrixHelper.class.getResourceAsStream(String.format("/%s.txt",
+		resourcePathPrefix+file));
+		if (is == null) {
+			return null;
+		}
+		return new InputStreamReader(is);
 	}
 
 }

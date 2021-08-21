@@ -146,6 +146,6 @@ class SubstitutionMatrixHelperTest {
 
     @Test
     void unknownMatrixReturnsNull() {
-        assertThrows(NullPointerException.class, () -> SubstitutionMatrixHelper.getAminoAcidSubstitutionMatrix("?????"));
+        assertNull( SubstitutionMatrixHelper.getAminoAcidSubstitutionMatrix("?????"));
     }
 }
