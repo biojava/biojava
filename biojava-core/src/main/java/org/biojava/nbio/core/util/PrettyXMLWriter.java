@@ -50,6 +50,11 @@ public class PrettyXMLWriter implements XMLWriter {
 		this.writer = writer;
 	}
 
+	/**
+	 * Declare a namespace for current and following elements
+	 * 'prefixHint' is ignored entirely in this implementation	
+	 * 
+	 */
 	@Override
 	public void declareNamespace(String nsURI, String prefixHint)
 		throws IOException
@@ -269,6 +274,7 @@ public class PrettyXMLWriter implements XMLWriter {
 	afterNewline = false;
 	}
 
+	// does not work for adding literal XML elements.
 	@Override
 	public void printRaw(String data)
 		throws IOException
