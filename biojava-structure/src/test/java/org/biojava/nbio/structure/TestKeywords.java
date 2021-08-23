@@ -19,9 +19,9 @@ public class TestKeywords {
 
 		PDBFileParser pdbpars = new PDBFileParser();
 		Structure structure = pdbpars.parsePDBFile(inStream);
-		List<String> keywords = structure.getKeywords();
-		assertEquals(keywords.size(), 12);
-		assertEquals(keywords.get(11), "TRANSCRIPTION REGULATOR");
+		List<String> keywords = structure.getPDBHeader().getKeywords();
+		assertEquals(12, keywords.size());
+		assertEquals("TRANSCRIPTION REGULATOR", keywords.get(11));
 	}
 
 	@Test
@@ -33,9 +33,9 @@ public class TestKeywords {
 		
 		Structure structure =  new PDBFileParser().parsePDBFile(inStream);
 		
-		List<String> keywords = structure.getKeywords();
-		assertEquals(keywords.size(), 6);
-		assertEquals(keywords.get(3), "THIOREDOXIN-FOLD");
-		assertEquals(keywords.get(4), "ANTI-OXIDATVE DEFENSE SYSTEM");
+		List<String> keywords = structure.getPDBHeader().getKeywords();
+		assertEquals(6, keywords.size());
+		assertEquals("THIOREDOXIN-FOLD", keywords.get(3));
+		assertEquals("ANTI-OXIDATVE DEFENSE SYSTEM", keywords.get(4));
 	}
 }

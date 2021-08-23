@@ -2808,7 +2808,7 @@ public class PDBFileParser  {
 			}
 			lst.add(keyword);
 		}
-		structure.setKeywords(lst);
+		pdbHeader.setKeywords(lst);
 	}
 	
 	/**

@@ -57,7 +57,6 @@ public class StructureImpl implements Structure {
 	private List<Bond> ssbonds;
 	private List<Site> sites;
 	private String name ;
-	private List<String> keywords;
 	private StructureIdentifier structureIdentifier;
 
 	private PDBHeader pdbHeader;
@@ -77,7 +76,6 @@ public class StructureImpl implements Structure {
 		pdbHeader      = new PDBHeader();
 		ssbonds        = new ArrayList<>();
 		sites          = new ArrayList<>();
-		keywords       = new ArrayList<>();
 	}
 
 	/**
@@ -124,7 +122,6 @@ public class StructureImpl implements Structure {
 		n.setPDBHeader(pdbHeader);
 		n.setDBRefs(this.getDBRefs());
 		n.setSites(getSites());
-		n.setKeywords(this.getKeywords());
 
 
 		// go through each chain and clone chain
@@ -1021,16 +1018,6 @@ public class StructureImpl implements Structure {
 	@Override
 	public String getPdbId() {
 		return pdb_id;
-	}
-
-	/** {@inheritDoc} */
-	public List<String> getKeywords() {
-		return keywords;
-	}
-
-	/** {@inheritDoc} */
-	public void setKeywords(List<String> keywords) {
-		this.keywords = keywords;
 	}
 
 	@Override

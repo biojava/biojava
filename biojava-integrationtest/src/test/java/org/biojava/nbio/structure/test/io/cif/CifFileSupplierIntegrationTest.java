@@ -72,8 +72,8 @@ public class CifFileSupplierIntegrationTest {
         assertEquals(originalStruct.nrModels(), readStruct.nrModels());
         
         assertArrayEquals("Keywords Are not preserved", 
-        		originalStruct.getKeywords().toArray(), 
-        		readStruct.getKeywords().toArray());
+        		originalStruct.getPDBHeader().getKeywords().toArray(), 
+        		readStruct.getPDBHeader().getKeywords().toArray());
 
         for (int i = 0; i < originalStruct.nrModels(); i++) {
             assertEquals(originalStruct.getModel(i).size(), readStruct.getModel(i).size());

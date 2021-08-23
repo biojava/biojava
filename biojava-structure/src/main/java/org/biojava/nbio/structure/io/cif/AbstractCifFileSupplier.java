@@ -46,7 +46,7 @@ public abstract class AbstractCifFileSupplier<S> implements CifFileSupplier<S> {
                 .enterBlock(structure.getPDBCode());
 
         blockBuilder.enterStructKeywords().enterText()
-        .add(String.join(", ", structure.getKeywords()))
+        .add(String.join(", ", structure.getPDBHeader().getKeywords()))
         .leaveColumn().leaveCategory();
 
         if (atomSite.isDefined() && atomSite.getRowCount() > 0) {

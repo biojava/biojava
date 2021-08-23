@@ -905,14 +905,14 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
                 keywordsList.add(string.trim());
             }
         }
-        structure.setKeywords(keywordsList);
+        structure.getPDBHeader().setKeywords(keywordsList);
 
         StrColumn pdbxKeywords = structKeywords.getPdbxKeywords();
         if (pdbxKeywords.isDefined()) {
             String keywords = pdbxKeywords.get(0);
             pdbHeader.setClassification(keywords);
-            //This field should be left empty
-//          pdbHeader.setDescription(keywords);
+            //This field should be left empty. TODO The next line should be removed later
+            pdbHeader.setDescription(keywords);
         }
     }
 
