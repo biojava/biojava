@@ -42,9 +42,7 @@ public class DefaultAAIndexProvider implements AAIndexProvider {
 
 	public DefaultAAIndexProvider(){
 
-
 		InputStream inStream = getInputStreamToAAindexFile();
-
 		AAIndexFileParser parser = new AAIndexFileParser();
 
 		try {
@@ -54,14 +52,11 @@ public class DefaultAAIndexProvider implements AAIndexProvider {
 		}
 
 		matrices = parser.getMatrices();
-
 	}
 
 	@Override
 	public SubstitutionMatrix<AminoAcidCompound> getMatrix(String matrixName) {
-
 		return matrices.get(matrixName);
-
 	}
 
 	public InputStream getInputStreamToAAindexFile(){

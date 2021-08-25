@@ -26,5 +26,11 @@ import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
 
 public interface AAIndexProvider {
 
-	public SubstitutionMatrix<AminoAcidCompound> getMatrix(String matrixName);
+	 /**
+	  * Gets a substitution matrix by its name. The matrices are defined in
+	    {@code}src/main/resources/matrices/AAINDEX.txt{@code}
+	  * @param matrixName
+	  * @return The @{code}SubstitutionMatrix{@code} or null if not exists
+	  */
+	 SubstitutionMatrix<AminoAcidCompound> getMatrix(String matrixName);
 }
