@@ -33,40 +33,37 @@ import org.biojava.nbio.ontology.Synonym;
  */
 public interface OboFileEventListener {
 
-	/** starting to parse a new OBO file
-	 *
-	 *
+	/** 
+	 * starting to parse a new OBO file
 	 */
-	public void documentStart();
+	 void documentStart();
 
-	/** end of parsing a new OBO file
-	 *
-	 *
+	/** 
+	 * end of parsing a new OBO file
 	 */
-	public void documentEnd();
+	 void documentEnd();
 
-	/** parsed a new OBO file header
-	 *
-	 *
+	/**
+	 *  parsed a new OBO file header
 	 */
-	public void newOboFileHeader();
+	 void newOboFileHeader();
 
-	/** parsed a new stanza in the file
-	 *
+	/**
+	 *  parsed a new stanza in the file
 	 * @param stanza
 	 */
-	public void newStanza(String stanza);
+	 void newStanza(String stanza);
 
-	/**found a new key in the file
-	 *
+	/**
+	 * found a new key in the file
 	 * @param key
 	 * @param value
 	 */
-	public void newKey(String key, String value );
+	 void newKey(String key, String value );
 
 	/** a new synonym has been found
 	 *
 	 * @param synonym
 	 */
-	public void newSynonym(Synonym synonym);
+	 void newSynonym(Synonym synonym);
 }
