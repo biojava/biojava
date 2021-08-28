@@ -153,7 +153,7 @@ public class OboFileHandler implements OboFileEventListener {
 				// ignore obsolete Terms...
 				//logger.info("obsolete: {}", currentTerm);
 				Annotation anno = currentTerm.getAnnotation();
-				anno.setProperty(IS_OBSOLETE, new Boolean(true));
+				anno.setProperty(IS_OBSOLETE, Boolean.TRUE);
 
 			} else if (key.equals(IS_A) ||
 					key.equals(RELATIONSHIP) ||
