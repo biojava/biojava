@@ -600,15 +600,19 @@ public class PDBHeader implements PDBRecord {
 		this.title = title;
 	}
 	
-	/**@deprecated will be removed later. Use {@link #getKeywords()}
+	/**@deprecated will be removed later. Use {@link #getKeywords()} if you use 
+	 * <code>description</code> to keep the keywords.
 	 * @return
 	 */
+	@Deprecated
 	public String getDescription() {
 		return description;
 	}
-	/**@deprecated will be removed later. Use {@link #setKeywords(List)}
+	/**@deprecated will be removed later. Use {@link #getKeywords()} if you use 
+	 * <code>description</code> to keep the keywords.
 	 * @param description
 	 */
+	@Deprecated
 	public void setDescription(String description) {
 		this.description = description;
 	}

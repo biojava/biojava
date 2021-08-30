@@ -2765,7 +2765,7 @@ public class PDBFileParser  {
 
 	}
 
-	/**Parse KEYWODS record of the PDF file.<br>
+	/**Parse KEYWODS record of the PDB file.<br>
 	 * A keyword may be split over two lines. whether a keyword ends by the end 
 	 * of a line or it is aplit over two lines, a <code>space</code> is added 
 	 * between the 2 lines's contents, unless the first line ends in 
