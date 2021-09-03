@@ -167,7 +167,7 @@ public class BondMaker {
 						continue;
 					}
 					// Now add support for altLocGroup
-					List<Group> totList = new ArrayList<Group>();
+					List<Group> totList = new ArrayList<>();
 					totList.add(mainGroup);
 					totList.addAll(mainGroup.getAltLocs());
 
@@ -333,7 +333,7 @@ public class BondMaker {
 			return;
 
 		try {
-			// The PDB format uses author chain ids to reference. But one author chain id corresponds to multiple asym ids,
+			// The PDB format uses author chain ids to reference chains. But one author chain id corresponds to multiple asym ids,
 			// thus we need to grab all the possible asym ids (poly and nonpoly) and then try to find the atoms
 			// See issue https://github.com/biojava/biojava/issues/943
 			String polyChainId1 = structure.getPolyChainByPDB(linkRecord.getChainID1()).getId();
