@@ -8,5 +8,6 @@
 *.iml
 /*/target
 *.swp
+biojava-core/main-runner/cp.txt
 target
 *~
