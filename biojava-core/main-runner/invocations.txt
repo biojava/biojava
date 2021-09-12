@@ -1,0 +1,3 @@
+org.biojava.nbio.core.sequence.ProteinSequence
+org.biojava.nbio.core.sequence.io.FastaWriter
+org.biojava.nbio.core.util.UncompressInputStream ../src/test/resources/org/biojava/nbio/core/util/compress_test.txt.Z
