@@ -41,12 +41,16 @@ public class ParseGO {
 
 	private static final Logger logger = LoggerFactory.getLogger(ParseGO.class);
 
+	/**
+	 * Downloads Biosapiens OBO file from Sourceforge and prints out name/description pairs
+	 * @param args
+	 */
 	public static void main(String[] args){
 
-		String u = "http://sourceforge.net/p/song/svn/HEAD/tree/trunk/subsets/biosapiens.obo?format=raw";
+		final String BIOSAPIENS_GO_URL = "https://sourceforge.net/p/song/svn/HEAD/tree/trunk/subsets/biosapiens.obo?format=raw";
 
 		try {
-			URL url = new URL(u);
+			URL url = new URL(BIOSAPIENS_GO_URL);
 
 			OboParser parser = new OboParser();
 			InputStream inStream = url.openStream();
