@@ -22,6 +22,7 @@ BioJava 6.0.0 (future release)
 * Removed from `org.biojava.nbio.structure.Structure` interface: `findChain()`, `getId()`, `setId()`, `getChainByPDB()`, `getCompoundById()`, `getResidueRanges()`, `getRanges()`
 * Removed from `org.biojava.nbio.structure.StructureTools` : `isNucleicAcid()`, `isProtein()`, `getPredominantGroupType()`, `isChainWaterOnly()`, `isChainPureNonPolymer()`
 * Removed `org.biojava.nbio.structure.io.SandboxStyleStructureProvider`
+* In `org.biojava.nbio.structure.align.xml.MultipleAlignmentXMLParser` made all methods private except `parseXMLfile`
 
 ### Breaking API changes
 * Extracted `StructureIO.StructureFiletype` enum to `org.biojava.nbio.structure.io.StructureFiletype` (supports `PDB`, `MMTF`, `CIF`, and `BCIF`)
