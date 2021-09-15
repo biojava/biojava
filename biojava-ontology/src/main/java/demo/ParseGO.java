@@ -42,7 +42,7 @@ public class ParseGO {
 	private static final Logger logger = LoggerFactory.getLogger(ParseGO.class);
 
 	/**
-	 * Downloads Biosapiens OBO file from Sourceforge and prints out name/description pairs
+	 * Parses Biosapiens OBO file from Sourceforge and prints out name/description pairs
 	 * @param args
 	 */
 	public static void main(String[] args){
@@ -61,10 +61,10 @@ public class ParseGO {
 			Iterator<Term> iter = keys.iterator();
 			while (iter.hasNext()){
 				Term t = iter.next();
-				logger.info("{} [{}]", t.getName(), t.getDescription());
+				System.out.println(t.getName() + " " +  t.getDescription());
 			}
 		} catch (Exception e){
-			logger.error("Exception: ", e);
+			System.err.println("Exception: " +  e);
 		}
 	}
 }
