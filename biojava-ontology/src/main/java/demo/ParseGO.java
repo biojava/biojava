@@ -27,44 +27,41 @@ package demo;
 import org.biojava.nbio.ontology.Ontology;
 import org.biojava.nbio.ontology.Term;
 import org.biojava.nbio.ontology.io.OboParser;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URL;
+
 import java.util.Iterator;
 import java.util.Set;
 
 public class ParseGO {
 
-	private static final Logger logger = LoggerFactory.getLogger(ParseGO.class);
-
 	/**
-	 * Parses Biosapiens OBO file from Sourceforge and prints out name/description pairs
+	 * Parses Biosapiens OBO file and prints out name/description
+	 * pairs
+	 * 
 	 * @param args
 	 */
-	public static void main(String[] args){
-
+	public static void main(String[] args) {
 
 		try {
 
 			OboParser parser = new OboParser();
 			InputStream inStream = OboParser.class.getResourceAsStream("/ontology/biosapiens.obo");
 
-			BufferedReader oboFile = new BufferedReader ( new InputStreamReader ( inStream ) );
+			BufferedReader oboFile = new BufferedReader(new InputStreamReader(inStream));
 
 			Ontology ontology = parser.parseOBO(oboFile, "BioSapiens", "the BioSapiens ontology");
 
 			Set<Term> keys = ontology.getTerms();
 			Iterator<Term> iter = keys.iterator();
-			while (iter.hasNext()){
+			while (iter.hasNext()) {
 				Term t = iter.next();
-				System.out.println(t.getName() + " " +  t.getDescription());
+				System.out.println(t.getName() + " " + t.getDescription());
 			}
-		} catch (Exception e){
-			System.err.println("Exception: " +  e);
+		} catch (Exception e) {
+			System.err.println("Exception: " + e);
 		}
 	}
 }
