@@ -47,13 +47,11 @@ public class ParseGO {
 	 */
 	public static void main(String[] args){
 
-		final String BIOSAPIENS_GO_URL = "https://sourceforge.net/p/song/svn/HEAD/tree/trunk/subsets/biosapiens.obo?format=raw";
 
 		try {
-			URL url = new URL(BIOSAPIENS_GO_URL);
 
 			OboParser parser = new OboParser();
-			InputStream inStream = url.openStream();
+			InputStream inStream = OboParser.class.getResourceAsStream("/ontology/biosapiens.obo");
 
 			BufferedReader oboFile = new BufferedReader ( new InputStreamReader ( inStream ) );
 
