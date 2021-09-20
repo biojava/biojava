@@ -35,8 +35,13 @@ BioJava 6.0.0 (future release)
 * Fixed `CRC64Checksum#public void update(byte[] b, int offset, int length)` to use
 the `length` argument correctly as specified in `java.util.zip.Checksum` interface.
 
+### Added
+* New keywords fields in `PDBHeader` class, populated by PDB and mmCIF parsers #946
+* OBO parsing now supports multiple altids, #960
+
 ### Fixed
 * Correct chain assignment to entities when parsing PDB/mmCIF without entity information (in cases with more than 3 chains per entity) #931
+* Dealing with chain ids correctly when parsing bonds in PDB-format files #943
 
 BioJava 5.4.0
 =============
