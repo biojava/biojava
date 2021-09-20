@@ -2803,7 +2803,7 @@ public class PDBFileParser  {
 		ArrayList<String> lst = new ArrayList<String>(keywords.length);
 		for (String keyword : keywords) {
 			if(keyword.length() == 0) {
-				logger.warn("Keyword empty in structure "+ structure.getIdentifier().toString());
+				logger.debug("Keyword empty in structure {}", structure.getIdentifier().toString());
 				continue;
 			}
 			lst.add(keyword);
