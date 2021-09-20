@@ -33,36 +33,35 @@ import org.slf4j.LoggerFactory;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URL;
+
 import java.util.Iterator;
 import java.util.Set;
 
 public class ParseGO {
 
-	private static final Logger logger = LoggerFactory.getLogger(ParseGO.class);
+	static final Logger logger = LoggerFactory.getLogger(ParseGO.class);
 
-	public static void main(String[] args){
+	/**
+	 * Parses Biosapiens OBO file and logs name/description at INFO level
+	 * 
+	 * @param args
+	 */
+	public static void main(String[] args) {
 
-		String u = "http://sourceforge.net/p/song/svn/HEAD/tree/trunk/subsets/biosapiens.obo?format=raw";
-
-		try {
-			URL url = new URL(u);
-
-			OboParser parser = new OboParser();
-			InputStream inStream = url.openStream();
-
-			BufferedReader oboFile = new BufferedReader ( new InputStreamReader ( inStream ) );
-
+		OboParser parser = new OboParser();
+		try (InputStream inStream = OboParser.class.getResourceAsStream("/ontology/bio sapiens.obo");
+				BufferedReader oboFile = new BufferedReader(new InputStreamReader(inStream))) {
 			Ontology ontology = parser.parseOBO(oboFile, "BioSapiens", "the BioSapiens ontology");
-
 			Set<Term> keys = ontology.getTerms();
 			Iterator<Term> iter = keys.iterator();
-			while (iter.hasNext()){
+			while (iter.hasNext()) {
 				Term t = iter.next();
 				logger.info("{} [{}]", t.getName(), t.getDescription());
 			}
-		} catch (Exception e){
-			logger.error("Exception: ", e);
+
+		} catch (Exception e) {
+			logger.error("Exception: " + e);
+			System.exit(1);
 		}
 	}
 }
