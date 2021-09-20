@@ -10,7 +10,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -68,7 +68,7 @@ class XMLHelperTest {
     @Test
     void fileToDocument() throws IOException, SAXException, ParserConfigurationException {
         File tmpFile = File.createTempFile("xml", ".xml");
-        Files.write(Path.of(tmpFile.getAbsolutePath()), TEST_XML.getBytes());
+        Files.write(Paths.get(tmpFile.getAbsolutePath()), TEST_XML.getBytes());
         Document doc = XMLHelper.loadXML(tmpFile.getAbsolutePath());
         assertParsedDocument(doc);
     }
