@@ -35,7 +35,12 @@ import java.util.*;
 
 /**
  * A class that contains PDB Header information.
- *
+ * In contrast to what the name suggests, this class does not represent a
+ * direct mapping of the Header section of the PDB legacy file format.
+ * Instead, it holds the information that is not directly related to the 
+ * structure data. Such information may exist in some cases and may not exist in
+ * other cases.
+ * 
  * @author Andreas Prlic
  * @since 1.6
  *
@@ -47,7 +52,10 @@ public class PDBHeader implements PDBRecord {
 	private static final Logger logger = LoggerFactory.getLogger(PDBHeader.class);
 
 	private String title;
+	/**@deprecated This field should not be used. It will be removed later. 
+	 * Use {@link #getKeywords()} instead. */
 	private String description;
+	private List<String> keywords;
 	private String idCode;
 	private String classification;
 
@@ -91,6 +99,8 @@ public class PDBHeader implements PDBRecord {
 
 		bioAssemblies = new LinkedHashMap<Integer, BioAssemblyInfo>();
 		crystallographicInfo = new PDBCrystallographicInfo();
+
+		keywords       = new ArrayList<>();
 
 	}
 
@@ -589,9 +599,20 @@ public class PDBHeader implements PDBRecord {
 	public void setTitle(String title) {
 		this.title = title;
 	}
+	
+	/**@deprecated will be removed later. Use {@link #getKeywords()} if you use 
+	 * <code>description</code> to keep the keywords.
+	 * @return
+	 */
+	@Deprecated
 	public String getDescription() {
 		return description;
 	}
+	/**@deprecated will be removed later. Use {@link #getKeywords()} if you use 
+	 * <code>description</code> to keep the keywords.
+	 * @param description
+	 */
+	@Deprecated
 	public void setDescription(String description) {
 		this.description = description;
 	}
@@ -682,5 +703,23 @@ public class PDBHeader implements PDBRecord {
 	 */
 	public void setRwork(float rWork) {
 		this.rWork = rWork;
+	}
+
+	/**
+	 * Gets the keywords (KEYWODS) record of the structure
+	 * @return The keywords in a <code>List&lt;String&gt;</code>
+	 * @since 6.0.0
+	 */
+	public List<String> getKeywords() {
+		return keywords;
+	}
+
+	/**
+	 * Sets the KEYWODS record of the structure.
+	 * @param keywords The keywords in a <code>List&lt;String&gt; to set.</code>
+	 * @since 6.0.0
+	 */
+	public void setKeywords(List<String> keywords) {
+		this.keywords = keywords;
 	}
 }

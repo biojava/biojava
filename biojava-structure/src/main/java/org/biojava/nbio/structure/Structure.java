@@ -665,7 +665,9 @@ public interface Structure extends Cloneable, Serializable {
 	EntityInfo getEntityById(int entityId);
 
 	/**
-	 * Return the header information for this PDB file
+	 * Return the header information for this PDB file.
+	 * <b>N.B.</b> Take care when you blindly use the returned object from this method,
+	 * because it might be null in some cases.
 	 *
 	 * @return the PDBHeader object
 	 */
@@ -788,4 +790,5 @@ public interface Structure extends Cloneable, Serializable {
 	 *  returned the same value as {@link #getPDBCode()}
 	 */
 	String getIdentifier();
+	
 }
