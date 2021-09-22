@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 public class PDBId implements Comparable<PDBId>, Serializable{
 	
-	private static final String XXXX = "XXXX";
 	private static final long serialVersionUID = -5400143283145477754L;
 	public static final boolean PREFER_SHORT = true;
 	public static final boolean PREFER_EXTENDED = false;
@@ -32,13 +31,29 @@ public class PDBId implements Comparable<PDBId>, Serializable{
 	 * keeps the ID in UPPER CASE.
 	 */
 	private String idCode;
+	private static final String XXXX_STRING = "XXXX";
+
+	public static final PDBId XXXX = getXxxx();
+
+	/*
+	 * using a static method instead of static initializer because the later cant't
+	 * easily handle initializing a final field with an object whose constructor
+	 * throws a checked exception correctly.
+	 */	
+	private static PDBId getXxxx(){ 
+		try {
+			return new PDBId(XXXX_STRING);
+		} catch (PDBIdException e) {
+			return null; //will never happen
+		}
+	}
 	
 	public PDBId(String id) throws PDBIdException {
 		if (id == null) {
 			throw new PDBIdException("ID can not be null");
 		}
-		if(accept_xxxx && XXXX.equalsIgnoreCase(id)) {// the only exception
-			this.idCode = toExtendedId(XXXX);
+		if(accept_xxxx && XXXX_STRING.equalsIgnoreCase(id)) {// the only exception
+			this.idCode = toExtendedId(XXXX_STRING);
 		}else if (isExtendedPDBID(id)) {
 			this.idCode = id.toUpperCase();
 		} else {
@@ -114,7 +129,7 @@ public class PDBId implements Comparable<PDBId>, Serializable{
 	}
 	
 	public static String toExtendedId(String shortId) throws PDBIdException{
-		if (isShortPDBID(shortId) || XXXX.equalsIgnoreCase(shortId)) {
+		if (isShortPDBID(shortId) || XXXX_STRING.equalsIgnoreCase(shortId)) {
 			return ("PDB_0000"+shortId).toUpperCase();
 		}else if (isExtendedPDBID(shortId)) {
 			return shortId.toUpperCase();
