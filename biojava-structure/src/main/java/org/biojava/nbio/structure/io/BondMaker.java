@@ -295,7 +295,7 @@ public class BondMaker {
 		try {
 			// The PDB format uses author chain ids to reference chains. But one author chain id corresponds to multiple asym ids,
 			// thus we need to grab all the possible asym ids (poly and nonpoly) and then try to find the atoms
-			// See issue https://github.com/biojava/biojava/issues/943
+			// See issue https://github.com/biojava/biojava/issues/929
 			String polyChainId1 = structure.getPolyChainByPDB(disulfideBond.getChainID1()).getId();
 			String polyChainId2 = structure.getPolyChainByPDB(disulfideBond.getChainID2()).getId();
 			List<Chain> nonpolyChains1 = structure.getNonPolyChainsByPDB(disulfideBond.getChainID1());
