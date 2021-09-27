@@ -113,6 +113,9 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 		this.moleculeIds = new Pair<>(firstMoleculeId,secondMoleculeId);
 		this.contacts = contacts;
 		this.transforms = new Pair<>(firstTransf, secondTransf);
+
+		this.groupAsas1 = new TreeMap<>();
+		this.groupAsas2 = new TreeMap<>();
 	}
 
 	/**
@@ -290,12 +293,8 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 		Atom[] atoms2 = getSecondAtomsForAsa(cofactorSizeToUse);
 
 		Atom[] atoms = new Atom[atoms1.length+atoms2.length];
-		for (int i=0;i<atoms1.length;i++) {
-			atoms[i] = atoms1[i];
-		}
-		for (int i=0;i<atoms2.length;i++) {
-			atoms[i+atoms1.length] = atoms2[i];
-		}
+		System.arraycopy(atoms1, 0, atoms, 0, atoms1.length);
+		System.arraycopy(atoms2, 0, atoms, atoms1.length, atoms2.length);
 
 		return atoms;
 	}
@@ -326,7 +325,7 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 			atoms.add(a);
 
 		}
-		return atoms.toArray(new Atom[atoms.size()]);
+		return atoms.toArray(new Atom[0]);
 	}
 
 	/**
@@ -425,11 +424,11 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 		groupAsas1.put(groupAsa.getGroup().getResidueNumber(), groupAsa);
 	}
 
-	void setFirstGroupAsas(Map<ResidueNumber, GroupAsa> firstGroupAsas) {
+	public void setFirstGroupAsas(Map<ResidueNumber, GroupAsa> firstGroupAsas) {
 		this.groupAsas1 = firstGroupAsas;
 	}
 
-	void setSecondGroupAsas(Map<ResidueNumber, GroupAsa> secondGroupAsas) {
+	public void setSecondGroupAsas(Map<ResidueNumber, GroupAsa> secondGroupAsas) {
 		this.groupAsas2 = secondGroupAsas;
 	}
 
@@ -587,8 +586,8 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 	}
 
 	/**
-	 * Calculates the contact overlap score between this StructureInterface and
-	 * the given one. The calculation assumes that both interfaces come from the same structure. The ouput
+	 * Calculates the Jaccard contact set score (intersection over union) between this StructureInterface and
+	 * the given one. The calculation assumes that both interfaces come from the same structure. The output
 	 * will not necessarily make sense if the two interfaces come from different structures.
 	 * The two sides of the given StructureInterface need to match this StructureInterface
 	 * in the sense that they must come from the same Entity, i.e.
