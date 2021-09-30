@@ -457,7 +457,7 @@
 			<dependency>
 				<groupId>org.biojava.thirdparty</groupId>
 				<artifactId>forester</artifactId>
-				<version>1.038</version>
+				<version>1.039</version>
 			</dependency>
 			<dependency>
 			    <groupId>javax.xml.bind</groupId>
