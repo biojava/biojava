@@ -1,6 +1,6 @@
 package org.biojava.nbio.core.util;
 
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -57,8 +57,8 @@ class PrettyXMLWriterTest {
 
         xw.closeTag("to");
         System.out.println(sw.toString());
-        if(! StringManipulationHelper.equalsToIgnoreEndline(EXPECTED, sw.toString()))
-        	fail(String.format("Strings are not equal (ignoring endline differences. expected: [%s], but it was:[%s]", EXPECTED, sw.toString()));
+        assertTrue(StringManipulationHelper.equalsToIgnoreEndline(EXPECTED, sw.toString()),
+        	String.format("Strings are not equal (ignoring endline differences. expected: [%s], but it was:[%s]", EXPECTED, sw.toString()));
     }
 
     @Test
@@ -68,8 +68,8 @@ class PrettyXMLWriterTest {
         xw.print("<code>some literal xml </code>");
         xw.closeTag("dt");
 
-        if(! StringManipulationHelper.equalsToIgnoreEndline(EXPECTED, sw.toString()))
-        	fail(String.format("Strings are not equal (ignoring endline differences. expected: [%s], but it was:[%s]", EXPECTED, sw.toString()));
+        assertTrue(StringManipulationHelper.equalsToIgnoreEndline(EXPECTED, sw.toString()),
+            	String.format("Strings are not equal (ignoring endline differences. expected: [%s], but it was:[%s]", EXPECTED, sw.toString()));
     }
 
     @Test
@@ -83,7 +83,7 @@ class PrettyXMLWriterTest {
         xw.print("<code>some literal xml </code>");
         xw.closeTag(HTTP_TEST_NAMESPACE, "dt");
 
-        if(! StringManipulationHelper.equalsToIgnoreEndline(EXPECTED, sw.toString()))
-        	fail(String.format("Strings are not equal (ignoring endline differences. expected: [%s], but it was:[%s]", EXPECTED, sw.toString()));
+        assertTrue(StringManipulationHelper.equalsToIgnoreEndline(EXPECTED, sw.toString()),
+            	String.format("Strings are not equal (ignoring endline differences. expected: [%s], but it was:[%s]", EXPECTED, sw.toString()));
     }
 }
