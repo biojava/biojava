@@ -64,7 +64,6 @@ import org.biojava.nbio.structure.scop.ScopFactory;
 import org.biojava.nbio.structure.test.util.GlobalsHelper;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -167,7 +166,6 @@ public class AtomCacheTest {
 	 * @throws IOException
 	 * @throws StructureException
 	 */
-	@Ignore("SCOP files < 2.08 are no longer available")
 	@Test
 	public void testGetStructureForChainlessDomains() throws IOException, StructureException {
 		ScopDatabase scop = ScopFactory.getSCOP(ScopFactory.VERSION_1_71); // Uses the range '1-135' without a chain
