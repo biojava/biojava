@@ -138,7 +138,12 @@ class FileDownloadUtilsTest {
         @Test
         void nestedPath (){
             String path="~/a/b/c/sequence.gb";
-            assertEquals(currUserHome+File.separator+"a/b/c/sequence.gb", FileDownloadUtils.expandUserHome(path));
+            assertEquals(currUserHome+File.separator
+            		+ "a" + File.separator 
+            		+ "b" + File.separator 
+            		+ "c" + File.separator 
+            		+ "sequence.gb", 
+            		FileDownloadUtils.expandUserHome(path));
         }  
     }
 

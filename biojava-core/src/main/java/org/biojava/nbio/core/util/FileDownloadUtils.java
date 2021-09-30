@@ -198,6 +198,8 @@ public class FileDownloadUtils {
 	 * @return An absolute path
 	 */
 	public static String expandUserHome(String file) {
+		// replace any / with the proper separator (/ or \ for Linux and Windows respectively).
+		file = file.replaceAll("/", "\\"+File.separator); //The "\\" is to escape the separator if needed.
 		if (file.startsWith("~" + File.separator)) {
 			file = System.getProperty("user.home") + file.substring(1);
 		}
