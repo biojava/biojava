@@ -101,10 +101,10 @@ public class DownloadChemCompProvider implements ChemCompProvider {
     /**
      * Set the path to append to the serverBaseUrl (settable in {@link #setServerBaseUrl(String)}).
      * The string can contain placeholders that will be expanded at runtime:
-     * <li>{ccd_id} to be replaced by the chemical component identifier, in capitals</li>
-     * <li>{ccd_id:beginIndex-endIndex} to be replaced by a substring of the chemical component identifier in capitals,
+     * <li>"{ccd_id}" to be replaced by the chemical component identifier, in capitals</li>
+     * <li>"{ccd_id:beginIndex-endIndex}" to be replaced by a substring of the chemical component identifier in capitals,
      * with indices following the same convention as {@link String#substring(int, int)} </li>
-     * <li>{ccd_id:index} to be replaced by a substring of the chemical component identifier in capitals,
+     * <li>"{ccd_id:index}" to be replaced by a substring of the chemical component identifier in capitals,
      * with index either a positive or negative integer to substring from left or right of the string respectively.</li>
      * If any of the indices are off-bounds, then the full chemical component identifier is replaced
      */
@@ -314,6 +314,13 @@ public class DownloadChemCompProvider implements ChemCompProvider {
         return !f.exists();
     }
 
+    /**
+     * Expands the given path URL template, replacing the placeholders as specified in {@link #setChemCompPathUrlTemplate(String)}
+     * by the ccdId given (or its substrings, if indices are present in the template)
+     * @param templateStr the template string with placeholders for ccd ids
+     * @param ccdId the ccd id to replace (in full or a substring)
+     * @return the input templateStr with placeholders replaced
+     */
     static String expandPathUrlTemplate(String templateStr, String ccdId) {
         Matcher m = CCD_ID_TEMPLATE_REGEX.matcher(templateStr);
         StringBuilder output = new StringBuilder();

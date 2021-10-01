@@ -136,6 +136,13 @@ public class TestDownloadChemCompProvider {
 		String e2 = "/my/path/D/hello/D/dir/abcdef/D/12345/D.cif";
 		String r2 = DownloadChemCompProvider.expandPathUrlTemplate(templateStr,"D");
 		assertEquals(e2, r2);
+
+		String e3 = "/my/path//hello//dir/abcdef//12345/.cif";
+		String r3 = DownloadChemCompProvider.expandPathUrlTemplate(templateStr,"");
+		assertEquals(e3, r3);
+
+		templateStr = "/my/fixed/dir";
+		assertEquals(templateStr, DownloadChemCompProvider.expandPathUrlTemplate(templateStr, "" ));
 	}
 
 }
