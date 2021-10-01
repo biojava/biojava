@@ -79,8 +79,8 @@ public class BondMaker {
 	 */
 	private static final double MAX_NUCLEOTIDE_BOND_LENGTH = 2.1;
 
-	private Structure structure;
-	private FileParsingParameters params;
+	private final Structure structure;
+	private final FileParsingParameters params;
 
 	public BondMaker(Structure structure, FileParsingParameters params) {
 		this.structure = structure;
@@ -282,7 +282,7 @@ public class BondMaker {
 
 	/**
 	 * Creates disulfide bond objects and references in the corresponding Atoms objects, given
-	 * a list of {@link SSBondImpl}s parsed from a PDB/mmCIF file.
+	 * a list of {@link SSBondImpl}s parsed from a PDB file.
 	 * @param disulfideBonds
 	 */
 	public void formDisulfideBonds(List<SSBondImpl> disulfideBonds) {
@@ -293,12 +293,24 @@ public class BondMaker {
 
 	private void formDisulfideBond(SSBondImpl disulfideBond) {
 		try {
-			Map<Integer, Atom> a = getAtomFromRecord("SG", "",
-					disulfideBond.getChainID1(), disulfideBond.getResnum1(),
-					disulfideBond.getInsCode1());
-			Map<Integer, Atom> b = getAtomFromRecord("SG", "",
-					disulfideBond.getChainID2(), disulfideBond.getResnum2(),
-					disulfideBond.getInsCode2());
+			// The PDB format uses author chain ids to reference chains. But one author chain id corresponds to multiple asym ids,
+			// thus we need to grab all the possible asym ids (poly and nonpoly) and then try to find the atoms
+			// See issue https://github.com/biojava/biojava/issues/929
+			String polyChainId1 = structure.getPolyChainByPDB(disulfideBond.getChainID1()).getId();
+			String polyChainId2 = structure.getPolyChainByPDB(disulfideBond.getChainID2()).getId();
+			List<Chain> nonpolyChains1 = structure.getNonPolyChainsByPDB(disulfideBond.getChainID1());
+			List<Chain> nonpolyChains2 = structure.getNonPolyChainsByPDB(disulfideBond.getChainID2());
+
+			List<String> allChainIds1 = new ArrayList<>();
+			List<String> allChainIds2 = new ArrayList<>();
+			if (polyChainId1!=null) allChainIds1.add(polyChainId1);
+			if (polyChainId2!=null) allChainIds2.add(polyChainId2);
+			if (nonpolyChains1!=null) nonpolyChains1.forEach(npc -> allChainIds1.add(npc.getId()));
+			if (nonpolyChains2!=null) nonpolyChains2.forEach(npc -> allChainIds2.add(npc.getId()));
+
+			Map<Integer, Atom> a = getAtomFromRecordTryMultipleChainIds("SG", "", disulfideBond.getResnum1(), disulfideBond.getInsCode1(), allChainIds1);
+
+			Map<Integer, Atom> b = getAtomFromRecordTryMultipleChainIds("SG", "", disulfideBond.getResnum2(), disulfideBond.getInsCode2(), allChainIds2);
 
 			for(int i=0; i<structure.nrModels(); i++){
 				if(a.containsKey(i) && b.containsKey(i)){
@@ -340,6 +352,8 @@ public class BondMaker {
 			String polyChainId2 = structure.getPolyChainByPDB(linkRecord.getChainID2()).getId();
 			List<Chain> nonpolyChains1 = structure.getNonPolyChainsByPDB(linkRecord.getChainID1());
 			List<Chain> nonpolyChains2 = structure.getNonPolyChainsByPDB(linkRecord.getChainID2());
+			Chain waterChain1 = structure.getWaterChainByPDB(linkRecord.getChainID1());
+			Chain waterChain2 = structure.getWaterChainByPDB(linkRecord.getChainID2());
 
 			List<String> allChainIds1 = new ArrayList<>();
 			List<String> allChainIds2 = new ArrayList<>();
@@ -347,6 +361,8 @@ public class BondMaker {
 			if (polyChainId2!=null) allChainIds2.add(polyChainId2);
 			if (nonpolyChains1!=null) nonpolyChains1.forEach(npc -> allChainIds1.add(npc.getId()));
 			if (nonpolyChains2!=null) nonpolyChains2.forEach(npc -> allChainIds2.add(npc.getId()));
+			if (waterChain1!=null && linkRecord.getResName1().equals("HOH")) allChainIds1.add(waterChain1.getId());
+			if (waterChain2!=null && linkRecord.getResName2().equals("HOH")) allChainIds2.add(waterChain2.getId());
 
 			Map<Integer, Atom> a = getAtomFromRecordTryMultipleChainIds(linkRecord.getName1(), linkRecord.getAltLoc1(), linkRecord.getResSeq1(), linkRecord.getiCode1(), allChainIds1);
 

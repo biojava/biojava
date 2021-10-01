@@ -31,4 +31,27 @@ class TestBondParsing {
         assertEquals(3, zn.getAtom("ZN").getBonds().size());
 
     }
+
+    /**
+     * Integration test for SS bond parsing in PDB-format, where author chain ids and asym ids differ and can cause
+     * problems. See https://github.com/biojava/biojava/issues/929
+     */
+    @Test
+    public void testIssue929() throws Exception {
+        PDBFileReader reader = new PDBFileReader();
+        FileParsingParameters params = new FileParsingParameters();
+        params.setCreateAtomBonds(true);
+        reader.setFileParsingParameters(params);
+        Structure s = reader.getStructureById("1a4w");
+
+        Group cysB = s.getPolyChain("B").getAtomGroup(118);
+        Atom sgCysB = cysB.getAtom("SG");
+        assertEquals(2, sgCysB.getBonds().size());
+
+        Group cysA = s.getPolyChain("A").getAtomGroup(1);
+        Atom sgCysA = cysA.getAtom("SG");
+        assertEquals(2, sgCysA.getBonds().size());
+
+
+    }
 }
