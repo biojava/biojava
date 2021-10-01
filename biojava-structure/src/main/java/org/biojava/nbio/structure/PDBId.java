@@ -5,9 +5,11 @@ import java.io.Serializable;
 public class PDBId implements Comparable<PDBId>, Serializable{
 	
 	private static final long serialVersionUID = -5400143283145477754L;
-	public static final boolean PREFER_SHORT = true;
-	public static final boolean PREFER_EXTENDED = false;
-	private static boolean defaultShorteningBehaviour = PREFER_SHORT;
+	public enum Behavior{
+		PREFER_SHORT,
+		PREFER_EXTENDED
+	}
+	private static Behavior defaultShorteningBehaviour = Behavior.PREFER_SHORT;
 
 	private static boolean accept_xxxx = true;
 
@@ -28,7 +30,7 @@ public class PDBId implements Comparable<PDBId>, Serializable{
 	public static final String EXTENDED_PDBID_FORMAT	= "PDB_\\d{5}\\p{Alnum}{3}";
 
 	/**
-	 * keeps the ID in UPPER CASE.
+	 * Keeps the ID in UPPER CASE.
 	 */
 	private String idCode;
 	private static final String XXXX_STRING = "XXXX";
@@ -115,11 +117,11 @@ public class PDBId implements Comparable<PDBId>, Serializable{
 	}
 	
 	/**
-	 * @param prefereShort When <code>true</code>, the class will try to produce the short ID whenever possible.
-	 * @return The PDBId in short format if possible and <code>prefereShort</code> is <code>true</code>, the extended PdBID form otherwise.
+	 * @param b when it equals <code>Behavior.PREFER_SHORT</code>, the class will try to produce the short ID whenever possible.
+	 * @return The PDBId in short format if possible and <code>b</code> equals <code>Behavior.PREFER_SHORT</code>, the extended PdBID form otherwise.
 	 */
-	public String getId(boolean prefereShort) {
-		if (prefereShort && isShortCompatible(idCode))
+	public String getId(Behavior b) {
+		if (b == Behavior.PREFER_SHORT && isShortCompatible(idCode))
 			return toShortNoCheck(idCode);
 		return idCode;
 	}
