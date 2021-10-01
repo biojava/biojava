@@ -24,6 +24,7 @@ package org.biojava.nbio.protmod.phosphosite;
 import org.biojava.nbio.phosphosite.Dataset;
 import org.biojava.nbio.phosphosite.Site;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -91,6 +92,7 @@ public class TestAcetylation  {
 	 * Tests that the acetylation file can get parsed without problems.
 	 *
 	 */
+	@Ignore("The file needed from the phosphosite resource is no longer available. See #975")
 	@Test
 	public void testAcetylation() throws IOException {
 
