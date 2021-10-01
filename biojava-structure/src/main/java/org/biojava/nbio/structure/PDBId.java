@@ -1,6 +1,7 @@
 package org.biojava.nbio.structure;
 
 import java.io.Serializable;
+import java.util.regex.Pattern;
 
 public class PDBId implements Comparable<PDBId>, Serializable{
 	
@@ -26,8 +27,8 @@ public class PDBId implements Comparable<PDBId>, Serializable{
 		}
 	}
 
-	public static final String SHORT_PDBID_FORMAT		= "\\d{1}\\p{Alnum}{3}";
-	public static final String EXTENDED_PDBID_FORMAT	= "PDB_\\d{5}\\p{Alnum}{3}";
+	public static final Pattern PATTERN_SHORT_PDBID = Pattern.compile("\\d{1}\\p{Alnum}{3}");
+	public static final Pattern PATTERN_EXTENDED_PDBID = Pattern.compile("PDB_\\d{5}\\p{Alnum}{3}");
 
 	/**
 	 * Keeps the ID in UPPER CASE.
@@ -64,11 +65,11 @@ public class PDBId implements Comparable<PDBId>, Serializable{
 	}
 	
 	public static boolean isShortPDBID(String id) throws NullPointerException {
-		return id.matches(SHORT_PDBID_FORMAT);
+		return PATTERN_SHORT_PDBID.matcher(id).matches();
 	}
 	
 	public static boolean isExtendedPDBID(String id) throws NullPointerException {
-		return id.matches(EXTENDED_PDBID_FORMAT);
+		return PATTERN_EXTENDED_PDBID.matcher(id).matches();
 	}
 	
 	public static boolean isShortCompatible(String extendedId) {
