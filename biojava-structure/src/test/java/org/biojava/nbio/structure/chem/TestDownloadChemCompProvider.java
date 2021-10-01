@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  */
-package org.biojava.nbio.structure;
+package org.biojava.nbio.structure.chem;
 
 import org.biojava.nbio.core.util.FlatFileCache;
 import org.biojava.nbio.structure.chem.ChemComp;
@@ -106,6 +106,17 @@ public class TestDownloadChemCompProvider {
 		FlatFileCache.clear();
 
 		assertNull(cc.getName());
+	}
+
+	@Test
+	public void testPathUrlTemplateExpansion() {
+		DownloadChemCompProvider.setChemCompPathUrlTemplate("/my/path/{ccd_id:1-2}/dir/{ccd_id}.cif");
+		String e1 = "/my/path/T/dir/ATP.cif";
+		String r1 = DownloadChemCompProvider.expandPathUrlTemplate("ATP");
+		//String r2 = DownloadChemCompProvider.expandPathUrlTemplate("A");
+		//String r3 = DownloadChemCompProvider.expandPathUrlTemplate("AP");
+
+		assertEquals(e1, r1);
 	}
 
 }

@@ -25,6 +25,8 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.zip.GZIPOutputStream;
 
 /**
@@ -42,17 +44,19 @@ import java.util.zip.GZIPOutputStream;
 public class DownloadChemCompProvider implements ChemCompProvider {
     private static final Logger logger = LoggerFactory.getLogger(DownloadChemCompProvider.class);
 
+    private static final String NEWLINE = System.getProperty("line.separator");
+
     public static final String CHEM_COMP_CACHE_DIRECTORY = "chemcomp";
     public static final String DEFAULT_SERVER_URL = "https://files.rcsb.org/ligands/download/";
+    public static final String DEFAULT_CHEMCOMP_PATHURL_TEMPLATE = "{ccd_id}.cif";
+
     public static String serverBaseUrl = DEFAULT_SERVER_URL;
-    /**
-     * Use default RCSB server layout (true) or internal RCSB server layout (false)
-     */
-    public static boolean useDefaultUrlLayout = true;
 
     private static File path;
-    //private static final String FILE_SEPARATOR = System.getProperty("file.separator");
-    private static final String NEWLINE = System.getProperty("line.separator");
+
+    private static String chemCompPathUrlTemplate = DEFAULT_CHEMCOMP_PATHURL_TEMPLATE;
+
+    private static final Pattern CCD_ID_TEMPLATE_REGEX = Pattern.compile("^\\{ccd_id:?(\\d+)(?:-(\\d+))?}$");
 
 
     // flags to make sure there is only one thread running that is loading the dictionary
@@ -84,6 +88,27 @@ public class DownloadChemCompProvider implements ChemCompProvider {
         if (cacheFilePath != null) {
             path = new File(cacheFilePath);
         }
+    }
+
+    /**
+     * Set the base URL for the location of all chemical component CIF files, to which the chemCompPathUrlTemplate
+     * is appended, settable in {@link #setChemCompPathUrlTemplate(String)}. Must have a trailing slash.
+     */
+    public static void setServerBaseUrl(String serverBaseUrl) {
+        DownloadChemCompProvider.serverBaseUrl = serverBaseUrl;
+    }
+
+    /**
+     * Set the path to append to the serverBaseUrl (settable in {@link #setServerBaseUrl(String)}).
+     * The string can contain placeholders that will be expanded at runtime:
+     * <li>{ccd_id} to be replaced by the chemical component identifier, in capitals</li>
+     * <li>{ccd_id:beginIndex-endIndex} to be replaced by a substring of the chemical component identifier in capitals,
+     * with indices following the same convention as {@link String#substring(int, int)} </li>
+     * <li>{ccd_id:index} to be replaced by a substring of the chemical component identifier in capitals,
+     * with index either a positive or negative integer to substring from left or right of the string respectively.</li>
+     */
+    public static void setChemCompPathUrlTemplate(String chemCompPathUrlTemplate) {
+        DownloadChemCompProvider.chemCompPathUrlTemplate = chemCompPathUrlTemplate;
     }
 
     /**
@@ -288,6 +313,39 @@ public class DownloadChemCompProvider implements ChemCompProvider {
         return !f.exists();
     }
 
+    static String expandPathUrlTemplate(String ccdId) {
+        Matcher m = CCD_ID_TEMPLATE_REGEX.matcher(chemCompPathUrlTemplate);
+        StringBuilder sb = new StringBuilder();
+        while (m.find()) {
+            String repString = ccdId;
+            int numCaptures = m.groupCount();
+            if (numCaptures == 0) {
+                // no substringing
+                repString = ccdId;
+            } else if (numCaptures == 1) {
+                // TODO deal with out of bounds
+                // left/right substring
+                int idx = Integer.parseInt(m.group(0));
+                if (idx < 0) {
+                    // right substring
+                    repString = ccdId.substring(ccdId.length() + idx);
+                } else {
+                    // left substring
+                    repString = ccdId.substring(0, idx);
+                }
+            } else if (numCaptures == 2) {
+                // TODO deal with out of bounds
+                // start and end index
+                int begIdx = Integer.parseInt(m.group(0));
+                int endIdx = Integer.parseInt(m.group(1));
+                repString = ccdId.substring(begIdx, endIdx);
+            }
+            // TODO implement
+            //m.appendReplacement(sb, repString);
+        }
+        return null;
+    }
+
     /**
      * @param recordName : three-letter name
      * @return true if successful download
@@ -302,14 +360,10 @@ public class DownloadChemCompProvider implements ChemCompProvider {
             logger.error("Could not write to temp directory {} to create the chemical component download temp file", System.getProperty("java.io.tmpdir"));
             return false;
         }
-        String u;
-        if (useDefaultUrlLayout) {
-            u = serverBaseUrl + recordName + ".cif";
-        } else {
-            u = serverBaseUrl + recordName.charAt(0) + "/"  + recordName + "/" + recordName + ".cif";
-        }
 
-        logger.debug("downloading {}", u);
+        String u = serverBaseUrl + expandPathUrlTemplate(recordName);
+
+        logger.debug("Downloading chem comp definition from {}", u);
 
         URL url = null;
         try {
