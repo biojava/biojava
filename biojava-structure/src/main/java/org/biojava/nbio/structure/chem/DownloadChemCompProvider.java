@@ -56,7 +56,7 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 
     private static String chemCompPathUrlTemplate = DEFAULT_CHEMCOMP_PATHURL_TEMPLATE;
 
-    private static final Pattern CCD_ID_TEMPLATE_REGEX = Pattern.compile("^\\{ccd_id:?(\\d+)(?:-(\\d+))?}$");
+    static final Pattern CCD_ID_TEMPLATE_REGEX = Pattern.compile("\\{ccd_id(?::(\\d+_\\d+|[-+]?\\d+))?}");
 
 
     // flags to make sure there is only one thread running that is loading the dictionary
@@ -106,6 +106,7 @@ public class DownloadChemCompProvider implements ChemCompProvider {
      * with indices following the same convention as {@link String#substring(int, int)} </li>
      * <li>{ccd_id:index} to be replaced by a substring of the chemical component identifier in capitals,
      * with index either a positive or negative integer to substring from left or right of the string respectively.</li>
+     * If any of the indices are off-bounds, then the full chemical component identifier is replaced
      */
     public static void setChemCompPathUrlTemplate(String chemCompPathUrlTemplate) {
         DownloadChemCompProvider.chemCompPathUrlTemplate = chemCompPathUrlTemplate;
@@ -313,37 +314,45 @@ public class DownloadChemCompProvider implements ChemCompProvider {
         return !f.exists();
     }
 
-    static String expandPathUrlTemplate(String ccdId) {
-        Matcher m = CCD_ID_TEMPLATE_REGEX.matcher(chemCompPathUrlTemplate);
-        StringBuilder sb = new StringBuilder();
+    static String expandPathUrlTemplate(String templateStr, String ccdId) {
+        Matcher m = CCD_ID_TEMPLATE_REGEX.matcher(templateStr);
+        StringBuilder output = new StringBuilder();
+        int lastIndex = 0;
         while (m.find()) {
             String repString = ccdId;
-            int numCaptures = m.groupCount();
-            if (numCaptures == 0) {
-                // no substringing
-                repString = ccdId;
-            } else if (numCaptures == 1) {
-                // TODO deal with out of bounds
-                // left/right substring
-                int idx = Integer.parseInt(m.group(0));
-                if (idx < 0) {
-                    // right substring
-                    repString = ccdId.substring(ccdId.length() + idx);
-                } else {
-                    // left substring
-                    repString = ccdId.substring(0, idx);
+            String indicesStr = m.group(1);
+            try {
+                if (indicesStr == null) {
+                    // no substringing
+                    repString = ccdId;
+                } else if (!indicesStr.contains("_")) {
+                    // left/right substring
+                    int idx = Integer.parseInt(indicesStr);
+                    if (idx < 0) { // right substring
+                        repString = ccdId.substring(ccdId.length() + idx);
+                    } else { // left substring
+                        repString = ccdId.substring(0, idx);
+                    }
+                } else if (indicesStr.contains("_")) {
+                    // start and end index
+                    String[] tokens = indicesStr.split("_");
+                    int begIdx = Integer.parseInt(tokens[0]);
+                    int endIdx = Integer.parseInt(tokens[1]);
+                    repString = ccdId.substring(begIdx, endIdx);
                 }
-            } else if (numCaptures == 2) {
-                // TODO deal with out of bounds
-                // start and end index
-                int begIdx = Integer.parseInt(m.group(0));
-                int endIdx = Integer.parseInt(m.group(1));
-                repString = ccdId.substring(begIdx, endIdx);
+            } catch (IndexOutOfBoundsException e) {
+                // we don't set repString, it keeps original value ccdId
+                logger.debug("Indices included in path URL template {} are out of bounds for string {}", templateStr, ccdId);
             }
-            // TODO implement
-            //m.appendReplacement(sb, repString);
+            output.append(templateStr, lastIndex, m.start()).append(repString);
+
+            lastIndex = m.end();
+            // TODO when we upgrade to java 11, use the new methods introduced in java 9, see https://stackoverflow.com/questions/9605716/java-regular-expression-find-and-replace
         }
-        return null;
+        if (lastIndex < templateStr.length()) {
+            output.append(templateStr, lastIndex, templateStr.length());
+        }
+        return output.toString();
     }
 
     /**
@@ -361,7 +370,7 @@ public class DownloadChemCompProvider implements ChemCompProvider {
             return false;
         }
 
-        String u = serverBaseUrl + expandPathUrlTemplate(recordName);
+        String u = serverBaseUrl + expandPathUrlTemplate(chemCompPathUrlTemplate, recordName);
 
         logger.debug("Downloading chem comp definition from {}", u);
 

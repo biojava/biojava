@@ -31,6 +31,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.regex.Matcher;
 import java.util.zip.GZIPOutputStream;
 
 public class TestDownloadChemCompProvider {
@@ -109,14 +110,32 @@ public class TestDownloadChemCompProvider {
 	}
 
 	@Test
-	public void testPathUrlTemplateExpansion() {
-		DownloadChemCompProvider.setChemCompPathUrlTemplate("/my/path/{ccd_id:1-2}/dir/{ccd_id}.cif");
-		String e1 = "/my/path/T/dir/ATP.cif";
-		String r1 = DownloadChemCompProvider.expandPathUrlTemplate("ATP");
-		//String r2 = DownloadChemCompProvider.expandPathUrlTemplate("A");
-		//String r3 = DownloadChemCompProvider.expandPathUrlTemplate("AP");
+	public void testPathUrlTemplateRegex() {
+		String[] shouldMatch = {"{ccd_id}", "{ccd_id:1_2}", "{ccd_id:1}", "{ccd_id:-1}", "abcde{ccd_id}abcde", "abcde{ccd_id:1_2}abcde", "abcde{ccd_id:-1}abcde"};
+		String[] expectedCaptures = {null, "1_2", "1", "-1", null, "1_2", "-1"};
+		for (int i=0; i<shouldMatch.length; i++) {
+			Matcher m = DownloadChemCompProvider.CCD_ID_TEMPLATE_REGEX.matcher(shouldMatch[i]);
+			assertTrue("String '"+shouldMatch[i]+"' should match the regex",m.find());
+			assertEquals(expectedCaptures[i], m.group(1));
+		}
+		String[] shouldntMatch = {"{ccd_id:}", "{ccd_id:-1_2}", "{ccd_id:x1}", "{ccd_id:1_-2}"};
+		for (String testStr : shouldntMatch) {
+			Matcher m = DownloadChemCompProvider.CCD_ID_TEMPLATE_REGEX.matcher(testStr);
+			assertFalse("String '"+testStr+"' should not match the regex",m.find());
+		}
+	}
 
+	@Test
+	public void testPathUrlTemplateExpansion() {
+		String templateStr = "/my/path/{ccd_id:1_2}/hello/{ccd_id:-1}/dir/abcdef/{ccd_id:2}/12345/{ccd_id}.cif";
+
+		String e1 = "/my/path/T/hello/P/dir/abcdef/AT/12345/ATP.cif";
+		String r1 = DownloadChemCompProvider.expandPathUrlTemplate(templateStr,"ATP");
 		assertEquals(e1, r1);
+
+		String e2 = "/my/path/D/hello/D/dir/abcdef/D/12345/D.cif";
+		String r2 = DownloadChemCompProvider.expandPathUrlTemplate(templateStr,"D");
+		assertEquals(e2, r2);
 	}
 
 }
