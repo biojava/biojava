@@ -352,6 +352,8 @@ public class BondMaker {
 			String polyChainId2 = structure.getPolyChainByPDB(linkRecord.getChainID2()).getId();
 			List<Chain> nonpolyChains1 = structure.getNonPolyChainsByPDB(linkRecord.getChainID1());
 			List<Chain> nonpolyChains2 = structure.getNonPolyChainsByPDB(linkRecord.getChainID2());
+			Chain waterChain1 = structure.getWaterChainByPDB(linkRecord.getChainID1());
+			Chain waterChain2 = structure.getWaterChainByPDB(linkRecord.getChainID2());
 
 			List<String> allChainIds1 = new ArrayList<>();
 			List<String> allChainIds2 = new ArrayList<>();
@@ -359,6 +361,8 @@ public class BondMaker {
 			if (polyChainId2!=null) allChainIds2.add(polyChainId2);
 			if (nonpolyChains1!=null) nonpolyChains1.forEach(npc -> allChainIds1.add(npc.getId()));
 			if (nonpolyChains2!=null) nonpolyChains2.forEach(npc -> allChainIds2.add(npc.getId()));
+			if (waterChain1!=null && linkRecord.getResName1().equals("HOH")) allChainIds1.add(waterChain1.getId());
+			if (waterChain2!=null && linkRecord.getResName2().equals("HOH")) allChainIds2.add(waterChain2.getId());
 
 			Map<Integer, Atom> a = getAtomFromRecordTryMultipleChainIds(linkRecord.getName1(), linkRecord.getAltLoc1(), linkRecord.getResSeq1(), linkRecord.getiCode1(), allChainIds1);
 
