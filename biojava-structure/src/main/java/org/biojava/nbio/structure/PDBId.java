@@ -27,8 +27,9 @@ public class PDBId implements Comparable<PDBId>, Serializable{
 		}
 	}
 
-	public static final Pattern PATTERN_SHORT_PDBID = Pattern.compile("\\d{1}\\p{Alnum}{3}");
-	public static final Pattern PATTERN_EXTENDED_PDBID = Pattern.compile("PDB_\\d{5}\\p{Alnum}{3}");
+	public static final Pattern PATTERN_SHORT_PDBID = Pattern.compile("[1-9]\\p{Alnum}{3}");
+//	public static final Pattern PATTERN_EXTENDED_PDBID = Pattern.compile("(PDB|pdb)_\\d{4}[1-9]\\p{Alnum}{3}");//Shall we allow lower case?
+	public static final Pattern PATTERN_EXTENDED_PDBID = Pattern.compile("PDB_\\d{4}[1-9]\\p{Alnum}{3}"); 
 
 	/**
 	 * Keeps the ID in UPPER CASE, in a reduced form (without the <code>PDB_</code> prefix).
@@ -70,8 +71,14 @@ public class PDBId implements Comparable<PDBId>, Serializable{
 		return PATTERN_EXTENDED_PDBID.matcher(id).matches();
 	}
 	
+	/**Checks whether an Extended PDBId is shortable, <i>assuming it is a valid extended PDBId</i>.
+	 * If you are not sure the String represents a valid extended PDBId, use {@link #isExtendedPDBID(String)} first.
+	 * @see #isExtendedPDBID(String)
+	 * @param extendedId
+	 * @return
+	 */
 	public static boolean isShortCompatible(String extendedId) {
-		return extendedId.substring(0, 8).equalsIgnoreCase("PDB_0000");
+		return extendedId.length() >= 8 && extendedId.substring(0, 8).equals/*IgnoreCase*/("PDB_0000");
 	}
 	
 	@Override
@@ -94,7 +101,7 @@ public class PDBId implements Comparable<PDBId>, Serializable{
 	@Override
 	protected Object clone() throws CloneNotSupportedException {
 		try {
-			return new PDBId(idCode);
+			return new PDBId(this.getId());
 		} catch (PDBIdException e) {
 			e.printStackTrace();  // Can never happen. Do nothing
 			throw new CloneNotSupportedException("Unexpected error");
