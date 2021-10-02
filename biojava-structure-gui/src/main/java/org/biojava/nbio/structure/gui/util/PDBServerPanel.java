@@ -24,6 +24,7 @@
 package org.biojava.nbio.structure.gui.util;
 
 import org.biojava.nbio.structure.Chain;
+import org.biojava.nbio.structure.PDBId;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureImpl;
@@ -86,17 +87,17 @@ implements StructurePairSelector{
 
 
 	private Structure fromPDB(JTextField f, JTextField c) throws StructureException{
-		String pdb = f.getText();
+		String pdbIdString = f.getText();
 
 
-		if ( pdb.length() < 4) {
+		if ( pdbIdString.length() < 4) {
 			f.setText("!!!");
 			return null;
 		}
 
 		String chain = c.getText();
 		if ( debug )
-			System.out.println("file :" + pdb + " " +  chain);
+			System.out.println("file :" + pdbIdString + " " +  chain);
 		/// prepare structures
 
 		// load them from the file system
@@ -108,7 +109,7 @@ implements StructurePairSelector{
 		Structure tmp1 = new StructureImpl();
 
 		try {
-			Structure structure1 = reader.getStructureById(pdb);
+			Structure structure1 = reader.getStructureById(new PDBId(pdbIdString));
 
 			// no chain has been specified
 			// return whole structure
@@ -116,7 +117,7 @@ implements StructurePairSelector{
 				return structure1;
 			}
 			if ( debug)
-				System.out.println("using chain " + chain +  " for structure " + structure1.getPDBCode());
+				System.out.println("using chain " + chain +  " for structure " + structure1.getPDBId().getId());
 			Chain c1 = structure1.getPolyChainByPDB(chain);
 //			tmp1.setPDBId(structure1.getPDBId());  //Isn't it duplicate?
 			tmp1.setPDBHeader(structure1.getPDBHeader());
