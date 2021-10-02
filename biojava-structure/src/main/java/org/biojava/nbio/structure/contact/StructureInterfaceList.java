@@ -365,7 +365,7 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 
 	/**
 	 * Calculate the interface clusters for this StructureInterfaceList
-	 * using a contact overlap score to measure the similarity of interfaces.
+	 * using Jaccard contact set scores to measure the similarity of interfaces.
 	 * Subsequent calls will use the cached value without recomputing the clusters.
 	 * The clusters will be assigned ids by sorting descending by {@link StructureInterfaceCluster#getTotalArea()}
 	 * @param contactOverlapScoreClusterCutoff the contact overlap score above which a pair will be
@@ -382,6 +382,7 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 		// nothing to do if we have no interfaces
 		if (list.size()==0) return clusters;
 
+		logger.debug("Calculating all-vs-all Jaccard scores for {} interfaces", list.size());
 		double[][] matrix = new double[list.size()][list.size()];
 
 		for (int i=0;i<list.size();i++) {
@@ -399,6 +400,7 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 
 		}
 
+		logger.debug("Will now cluster {} interfaces based on full all-vs-all Jaccard scores matrix", list.size());
 		SingleLinkageClusterer slc = new SingleLinkageClusterer(matrix, true);
 
 		Map<Integer, Set<Integer>> clusteredIndices = slc.getClusters(contactOverlapScoreClusterCutoff);
@@ -434,11 +436,11 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 				interf.setCluster(cluster);
 			}
 		}
+		logger.debug("Done clustering {} interfaces based on full all-vs-all Jaccard scores matrix. Found a total of {} clusters", list.size(), clusters.size());
 
 		// now we sort by areas (descending) and assign ids based on that sorting
-		clusters.sort((o1, o2) -> {
-			return Double.compare(o2.getTotalArea(), o1.getTotalArea()); //note we invert so that sorting is descending
-		});
+		clusters.sort((o1, o2) -> Double.compare(o2.getTotalArea(), o1.getTotalArea())); //note we invert so that sorting is descending
+
 		int id = 1;
 		for (StructureInterfaceCluster cluster:clusters) {
 			cluster.setId(id);

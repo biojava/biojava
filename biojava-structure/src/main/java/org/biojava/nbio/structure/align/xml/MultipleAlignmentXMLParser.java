@@ -101,7 +101,7 @@ public class MultipleAlignmentXMLParser {
 		return ensembles;
 	}
 
-	public static MultipleAlignmentEnsemble parseEnsemble(Node root){
+	private static MultipleAlignmentEnsemble parseEnsemble(Node root){
 
 		MultipleAlignmentEnsemble ensemble =
 				new MultipleAlignmentEnsembleImpl();
@@ -127,7 +127,7 @@ public class MultipleAlignmentXMLParser {
 		return ensemble;
 	}
 
-	public static MultipleAlignment parseMultipleAlignment(Node root,
+	private static MultipleAlignment parseMultipleAlignment(Node root,
 			MultipleAlignmentEnsemble ensemble) {
 
 		MultipleAlignment msa = new MultipleAlignmentImpl(ensemble);
@@ -147,7 +147,7 @@ public class MultipleAlignmentXMLParser {
 		return msa;
 	}
 
-	public static BlockSet parseBlockSet(Node root, MultipleAlignment msa) {
+	private static BlockSet parseBlockSet(Node root, MultipleAlignment msa) {
 
 		BlockSet bs = new BlockSetImpl(msa);
 		List<Matrix4d> transforms = new ArrayList<Matrix4d>();
@@ -175,7 +175,7 @@ public class MultipleAlignmentXMLParser {
 		return bs;
 	}
 
-	public static Block parseBlock(Node root, BlockSet blockSet) {
+	private static Block parseBlock(Node root, BlockSet blockSet) {
 
 		Block b = new BlockImpl(blockSet);
 		List<List<Integer>> alignRes = new ArrayList<List<Integer>>();
@@ -216,7 +216,7 @@ public class MultipleAlignmentXMLParser {
 		return b;
 	}
 
-	public static Matrix4d parseMatrix4d(Node node) {
+	private static Matrix4d parseMatrix4d(Node node) {
 
 		Matrix4d m = new Matrix4d();
 		NamedNodeMap atts = node.getAttributes();
@@ -231,7 +231,7 @@ public class MultipleAlignmentXMLParser {
 		return m;
 	}
 
-	public static void parseScoresCache(Node root, ScoresCache cache) {
+	private static void parseScoresCache(Node root, ScoresCache cache) {
 
 		NodeList children = root.getChildNodes();
 
@@ -247,7 +247,7 @@ public class MultipleAlignmentXMLParser {
 		}
 	}
 
-	public static void parseHeader(Node node,
+	private static void parseHeader(Node node,
 			MultipleAlignmentEnsemble ensemble) {
 
 		NamedNodeMap atts = node.getAttributes();
@@ -273,7 +273,7 @@ public class MultipleAlignmentXMLParser {
 		}
 	}
 
-	public static void parseStructures(Node root,
+	private static void parseStructures(Node root,
 			MultipleAlignmentEnsemble ensemble) {
 
 		List<StructureIdentifier> names = new ArrayList<StructureIdentifier>();

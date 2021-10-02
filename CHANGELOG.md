@@ -22,6 +22,7 @@ BioJava 6.0.0 (future release)
 * Removed from `org.biojava.nbio.structure.Structure` interface: `findChain()`, `getId()`, `setId()`, `getChainByPDB()`, `getCompoundById()`, `getResidueRanges()`, `getRanges()`
 * Removed from `org.biojava.nbio.structure.StructureTools` : `isNucleicAcid()`, `isProtein()`, `getPredominantGroupType()`, `isChainWaterOnly()`, `isChainPureNonPolymer()`
 * Removed `org.biojava.nbio.structure.io.SandboxStyleStructureProvider`
+* In `org.biojava.nbio.structure.align.xml.MultipleAlignmentXMLParser` made all methods private except `parseXMLfile`
 
 ### Breaking API changes
 * Extracted `StructureIO.StructureFiletype` enum to `org.biojava.nbio.structure.io.StructureFiletype` (supports `PDB`, `MMTF`, `CIF`, and `BCIF`)
@@ -31,9 +32,16 @@ BioJava 6.0.0 (future release)
 * Moved all chem-comp model classes from `org.biojava.nbio.structure.io.mmcif.chem` to `org.biojava.nbio.structure.chem`
 * Moved all chem-comp parsing classes from `org.biojava.nbio.structure.io.mmcif.chem` to `org.biojava.nbio.structure.io.cif`
 * Moved classes in `org.biojava.nbio.structure.io.mmcif` to `org.biojava.nbio.structure.chem`
+* Fixed `CRC64Checksum#public void update(byte[] b, int offset, int length)` to use
+the `length` argument correctly as specified in `java.util.zip.Checksum` interface.
+
+### Added
+* New keywords fields in `PDBHeader` class, populated by PDB and mmCIF parsers #946
+* OBO parsing now supports multiple altids, #960
 
 ### Fixed
 * Correct chain assignment to entities when parsing PDB/mmCIF without entity information (in cases with more than 3 chains per entity) #931
+* Dealing with chain ids correctly when parsing bonds in PDB-format files #943 #929
 
 BioJava 5.4.0
 =============

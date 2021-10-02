@@ -24,10 +24,14 @@
 
 package org.biojava.nbio.core.util;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.*;
 
 /**
  * Provides a cache for storing multiple small files in memory. Can be used to e.g cache gzip compressed PDB files
@@ -52,11 +56,17 @@ public class FlatFileCache {
 
 	}
 
-
+	/**
+	 * The file is read and the bytes stored immediately.
+	 * <p/> 
+	 * Once added, {@code fileToCache} can be modified or deleted and the cached values will not change.
+	 * @param key
+	 * @param fileToCache A readable file, of Integer.MAX bytes length or less.
+	 */
 	public  static void addToCache(String key, File fileToCache){
 		//logger.debug("storing " + key + " on file cache (cache size: " + cache.size() + ")");
-		try {
-			InputStream is = new FileInputStream(fileToCache);
+		try (InputStream is = new FileInputStream(fileToCache)){
+			
 			// Get the size of the file
 			long length = fileToCache.length();
 
@@ -66,6 +76,7 @@ public class FlatFileCache {
 			// to ensure that file is not larger than Integer.MAX_VALUE.
 			if (length > Integer.MAX_VALUE) {
 				// File is too large
+				throw new IllegalArgumentException("File must be <= " + Integer.MAX_VALUE + " bytes long");
 			}
 
 			// Create the byte array to hold the data
@@ -94,7 +105,12 @@ public class FlatFileCache {
 			logger.error("Error adding to cache! " + e.getMessage(), e);
 		}
 	}
-
+	/**
+	 * Gets the cached file as an InputStream.
+	 * Clients should check for null as the item might have expired in the  cache.
+	 * @param key
+	 * @return An {@code InputStream} or null. 
+	 */
 	public  static InputStream getInputStream(String key){
 		//logger.debug("returning " + key + " from file cache (cache size: " + cache.size() + ")");
 		byte[] bytes = cache.get(key);
@@ -105,6 +121,11 @@ public class FlatFileCache {
 
 	}
 
+	/**
+	 * Returns the number of items in the cache.
+	 * If the cache is {@}, returns -1
+	 * @return
+	 */
 	public static int size() {
 		if ( cache != null)
 			return cache.size();
@@ -112,10 +133,11 @@ public class FlatFileCache {
 			return -1;
 	}
 
+	/**
+	 * Removes all elements from the cache
+	 */
 	public static void clear(){
 	   cache.clear();
 	}
-
-
 
 }

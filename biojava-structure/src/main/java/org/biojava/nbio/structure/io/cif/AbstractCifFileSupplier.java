@@ -45,6 +45,10 @@ public abstract class AbstractCifFileSupplier<S> implements CifFileSupplier<S> {
         MmCifBlockBuilder blockBuilder = CifBuilder.enterFile(StandardSchemata.MMCIF)
                 .enterBlock(structure.getPDBCode());
 
+        blockBuilder.enterStructKeywords().enterText()
+        .add(String.join(", ", structure.getPDBHeader().getKeywords()))
+        .leaveColumn().leaveCategory();
+
         if (atomSite.isDefined() && atomSite.getRowCount() > 0) {
             // set atom site
             blockBuilder.addCategory(atomSite);

@@ -151,7 +151,7 @@ public class AFPChainer
 
 		int     currafp = maxafp;
 		if(debug)
-			System.out.println(String.format("maximum score %f, %d\n", maxsco, twi[currafp]));
+			System.out.printf("maximum score %f, %d%n%n", maxsco, twi[currafp]);
 
 		//trace-back from maxafp (maxsco)
 

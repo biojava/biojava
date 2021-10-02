@@ -80,7 +80,6 @@ public class OboFileHandler implements OboFileEventListener {
 
 		//Term isa = onto.importTerm(OntoTools.IS_A, null);
 		//Term partof = onto.importTerm(OntoTools.PART_OF, null);;
-
 	}
 
 	@Override
@@ -108,7 +107,6 @@ public class OboFileHandler implements OboFileEventListener {
 		} else {
 			isTerm = false;
 		}
-
 	}
 
 	@Override
@@ -155,7 +153,7 @@ public class OboFileHandler implements OboFileEventListener {
 				// ignore obsolete Terms...
 				//logger.info("obsolete: {}", currentTerm);
 				Annotation anno = currentTerm.getAnnotation();
-				anno.setProperty(IS_OBSOLETE, new Boolean(true));
+				anno.setProperty(IS_OBSOLETE, Boolean.TRUE);
 
 			} else if (key.equals(IS_A) ||
 					key.equals(RELATIONSHIP) ||
@@ -174,8 +172,16 @@ public class OboFileHandler implements OboFileEventListener {
 				Annotation anno = currentTerm.getAnnotation();
 				anno.setProperty(COMMENT, value);
 			} else if (key.equals(ALT_ID)){
+				// #964
 				Annotation anno = currentTerm.getAnnotation();
-				anno.setProperty(ALT_ID, value);
+				if (anno.containsProperty(ALT_ID)) {
+					List<String> alts = (List<String>) anno.getProperty(ALT_ID);
+					alts.add(value);
+				} else {
+					List<String> alts = new ArrayList<>();
+					alts.add(value);
+					anno.setProperty(ALT_ID, alts);
+				}
 			}
 			else if (key.equals(REPLACED_BY)) {
 				Annotation anno = currentTerm.getAnnotation();

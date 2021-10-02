@@ -25,6 +25,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.vecmath.Matrix4d;
 
@@ -215,7 +216,7 @@ public class MultipleAlignmentWriter {
 			for (int str = 0; str < alignment.size(); str++) {
 				String origString = "ref";
 
-				txt.append(String.format("     X"+(str+1)+ " = (%9.6f)*X"+
+				txt.append(String.format(Locale.US, "     X"+(str+1)+ " = (%9.6f)*X"+
 						origString +" + (%9.6f)*Y"+
 						origString +" + (%9.6f)*Z"+
 						origString +" + (%12.6f)",
@@ -224,7 +225,7 @@ public class MultipleAlignmentWriter {
 						btransforms.get(str).getElement(0,2),
 						btransforms.get(str).getElement(0,3)));
 				txt.append( "\n");
-				txt.append(String.format("     Y"+(str+1)+" = (%9.6f)*X"+
+				txt.append(String.format(Locale.US, "     Y"+(str+1)+" = (%9.6f)*X"+
 						origString +" + (%9.6f)*Y"+
 						origString +" + (%9.6f)*Z"+
 						origString +" + (%12.6f)",
@@ -233,7 +234,7 @@ public class MultipleAlignmentWriter {
 						btransforms.get(str).getElement(1,2),
 						btransforms.get(str).getElement(1,3)));
 				txt.append( "\n");
-				txt.append(String.format("     Z"+(str+1)+" = (%9.6f)*X"+
+				txt.append(String.format(Locale.US, "     Z"+(str+1)+" = (%9.6f)*X"+
 						origString +" + (%9.6f)*Y"+
 						origString +" + (%9.6f)*Z"+
 						origString +" + (%12.6f)",

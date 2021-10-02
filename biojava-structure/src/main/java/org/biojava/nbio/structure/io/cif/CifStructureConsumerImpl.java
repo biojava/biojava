@@ -1,5 +1,24 @@
 package org.biojava.nbio.structure.io.cif;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.OptionalInt;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+import javax.vecmath.Matrix4d;
+
 import org.biojava.nbio.structure.AminoAcid;
 import org.biojava.nbio.structure.AminoAcidImpl;
 import org.biojava.nbio.structure.Atom;
@@ -89,15 +108,6 @@ import org.rcsb.cif.schema.mm.StructSiteGen;
 import org.rcsb.cif.schema.mm.Symmetry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.vecmath.Matrix4d;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 /**
  * An implementation of a CifFileConsumer for BioJava. Will process the information provided by a CifFile instance and
@@ -893,12 +903,24 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
 
     @Override
     public void consumeStructKeywords(StructKeywords structKeywords) {
+        ArrayList<String> keywordsList = new ArrayList<String>();
+
+        StrColumn text = structKeywords.getText();
+        if (text.isDefined()) {
+            String keywords = text.get(0);
+            String[] strings = keywords.split(" *, *");
+            for (String string : strings) {
+                keywordsList.add(string.trim());
+            }
+        }
+        structure.getPDBHeader().setKeywords(keywordsList);
+
         StrColumn pdbxKeywords = structKeywords.getPdbxKeywords();
-        // TODO what is the correct format for these?
         if (pdbxKeywords.isDefined()) {
-            String keywords = pdbxKeywords.values().collect(Collectors.joining(", "));
-            pdbHeader.setDescription(keywords);
+            String keywords = pdbxKeywords.get(0);
             pdbHeader.setClassification(keywords);
+            //This field should be left empty. TODO The next line should be removed later
+            pdbHeader.setDescription(keywords);
         }
     }
 

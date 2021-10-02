@@ -650,7 +650,9 @@ public interface Structure extends Cloneable, Serializable {
 	EntityInfo getEntityById(int entityId);
 
 	/**
-	 * Return the header information for this PDB file
+	 * Return the header information for this PDB file.
+	 * <b>N.B.</b> Take care when you blindly use the returned object from this method,
+	 * because it might be null in some cases.
 	 *
 	 * @return the PDBHeader object
 	 */
@@ -765,20 +767,6 @@ public interface Structure extends Cloneable, Serializable {
 	 *  returned the same value as {@link #getPDBCode()}
 	 */
 	String getIdentifier();
-	
-	/**
-	 * Gets the keywords (KEYWODS) record of the structure
-	 * @return The keywords in a <code>List&lt;String&gt;</code>
-	 * @since 6.0.0
-	 */
-	List<String> getKeywords();
-	
-	/**
-	 * Sets the KEYWODS record of the structure.
-	 * @param keywords The keywords in a <code>List&lt;String&gt; to set.</code>
-	 * @since 6.0.0
-	 */
-	void setKeywords(List<String> keywords);
 
 	/**
 	 * Get PDB code of structure.

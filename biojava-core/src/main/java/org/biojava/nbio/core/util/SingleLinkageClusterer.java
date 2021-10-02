@@ -69,7 +69,7 @@ public class SingleLinkageClusterer {
 			if (closestDistance==Double.MAX_VALUE) {
 				closestDistStr = String.format("%6s", "inf");
 			} else {
-				closestDistStr = String.format("%6.2f",closestDistance);
+				closestDistStr = String.format(Locale.US, "%6.2f",closestDistance);
 			}
 
 			return "["+first+","+second+"-"+closestDistStr+"]";
@@ -386,11 +386,11 @@ public class SingleLinkageClusterer {
 				}
 				else if (i<j) {
 					if (matrix[i][j]==Double.MAX_VALUE) sb.append(String.format("%6s ","inf"));
-					else sb.append(String.format("%6.2f ",matrix[i][j]));
+					else sb.append(String.format(Locale.US, "%6.2f ",matrix[i][j]));
 				}
 				else {
 					if (matrix[j][i]==Double.MAX_VALUE) sb.append(String.format("%6s ","inf"));
-					else sb.append(String.format("%6.2f ",matrix[j][i]));
+					else sb.append(String.format(Locale.US, "%6.2f ",matrix[j][i]));
 				}
 			}
 			sb.append("\n");
@@ -400,4 +400,3 @@ public class SingleLinkageClusterer {
 	}
 
 }
-

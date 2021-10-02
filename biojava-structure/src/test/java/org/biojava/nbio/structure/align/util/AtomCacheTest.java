@@ -90,7 +90,7 @@ public class AtomCacheTest {
 		StructureIO.setAtomCache(cache);
 
 		// Use a fixed SCOP version for stability
-		ScopFactory.setScopDatabase(ScopFactory.VERSION_1_75B);
+		ScopFactory.setScopDatabase(ScopFactory.LATEST_VERSION);
 	}
 
 	@After

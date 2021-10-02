@@ -225,7 +225,6 @@ public class SubstructureIdentifier implements StructureIdentifier {
 		newS.setName(this.toString());
 		newS.setDBRefs(s.getDBRefs());
 		newS.setBiologicalAssembly(s.isBiologicalAssembly());
-		newS.setKeywords(s.getKeywords());
 		newS.getPDBHeader().setDescription(
 				"sub-range " + ranges + " of "  + newS.getPDBId() + " "
 						+ s.getPDBHeader().getDescription());

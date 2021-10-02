@@ -111,8 +111,8 @@ public final class ORonn implements Callable<ORonn> {
 			out.println(">" + sequence.getId());
 			if (layout == ResultLayout.VERTICAL) {
 				for (int i = 0; i < meanScores.length; i++) {
-					out.printf("%c\t%.2f%n", seqs[i], meanScores[i]);
-					//out.printf("%c\t%f%n", seqs[i], meanScores[i]);
+					out.printf(Locale.US, "%c\t%.2f%n", seqs[i], meanScores[i]);
+					//out.printf(Locale.US, "%c\t%f%n", seqs[i], meanScores[i]);
 				}
 			} else {
 				final StringBuilder seqLine = new StringBuilder();

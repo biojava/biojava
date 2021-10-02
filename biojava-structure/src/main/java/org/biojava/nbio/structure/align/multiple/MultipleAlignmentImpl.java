@@ -23,6 +23,7 @@ package org.biojava.nbio.structure.align.multiple;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.StructureException;
@@ -138,7 +139,7 @@ public class MultipleAlignmentImpl extends AbstractScoresCache implements
 				+ " \nCore Length: " + getCoreLength();
 		for (String score : getScores()) {
 			resume += " \n" + score + ": ";
-			resume += String.format("%.2f", getScore(score));
+			resume += String.format(Locale.US, "%.2f", getScore(score));
 		}
 		return resume;
 	}

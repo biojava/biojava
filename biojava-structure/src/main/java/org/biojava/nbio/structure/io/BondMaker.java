@@ -79,8 +79,8 @@ public class BondMaker {
 	 */
 	private static final double MAX_NUCLEOTIDE_BOND_LENGTH = 2.1;
 
-	private Structure structure;
-	private FileParsingParameters params;
+	private final Structure structure;
+	private final FileParsingParameters params;
 
 	public BondMaker(Structure structure, FileParsingParameters params) {
 		this.structure = structure;
@@ -96,7 +96,7 @@ public class BondMaker {
 	 * nucleotide bonds: inferred from sequence and distances
 	 * </li>
 	 * <li>
-	 * intra-group (residue) bonds: read from the chemical component dictionary, via {@link ChemCompProvider}
+	 * intra-group (residue) bonds: read from the chemical component dictionary, via {@link org.biojava.nbio.structure.chem.ChemCompProvider}
 	 * </li>
 	 */
 	public void makeBonds() {
@@ -167,7 +167,7 @@ public class BondMaker {
 						continue;
 					}
 					// Now add support for altLocGroup
-					List<Group> totList = new ArrayList<Group>();
+					List<Group> totList = new ArrayList<>();
 					totList.add(mainGroup);
 					totList.addAll(mainGroup.getAltLocs());
 
@@ -282,7 +282,7 @@ public class BondMaker {
 
 	/**
 	 * Creates disulfide bond objects and references in the corresponding Atoms objects, given
-	 * a list of {@link SSBondImpl}s parsed from a PDB/mmCIF file.
+	 * a list of {@link SSBondImpl}s parsed from a PDB file.
 	 * @param disulfideBonds
 	 */
 	public void formDisulfideBonds(List<SSBondImpl> disulfideBonds) {
@@ -293,12 +293,24 @@ public class BondMaker {
 
 	private void formDisulfideBond(SSBondImpl disulfideBond) {
 		try {
-			Map<Integer, Atom> a = getAtomFromRecord("SG", "", "CYS",
-					disulfideBond.getChainID1(), disulfideBond.getResnum1(),
-					disulfideBond.getInsCode1());
-			Map<Integer, Atom> b = getAtomFromRecord("SG", "", "CYS",
-					disulfideBond.getChainID2(), disulfideBond.getResnum2(),
-					disulfideBond.getInsCode2());
+			// The PDB format uses author chain ids to reference chains. But one author chain id corresponds to multiple asym ids,
+			// thus we need to grab all the possible asym ids (poly and nonpoly) and then try to find the atoms
+			// See issue https://github.com/biojava/biojava/issues/929
+			String polyChainId1 = structure.getPolyChainByPDB(disulfideBond.getChainID1()).getId();
+			String polyChainId2 = structure.getPolyChainByPDB(disulfideBond.getChainID2()).getId();
+			List<Chain> nonpolyChains1 = structure.getNonPolyChainsByPDB(disulfideBond.getChainID1());
+			List<Chain> nonpolyChains2 = structure.getNonPolyChainsByPDB(disulfideBond.getChainID2());
+
+			List<String> allChainIds1 = new ArrayList<>();
+			List<String> allChainIds2 = new ArrayList<>();
+			if (polyChainId1!=null) allChainIds1.add(polyChainId1);
+			if (polyChainId2!=null) allChainIds2.add(polyChainId2);
+			if (nonpolyChains1!=null) nonpolyChains1.forEach(npc -> allChainIds1.add(npc.getId()));
+			if (nonpolyChains2!=null) nonpolyChains2.forEach(npc -> allChainIds2.add(npc.getId()));
+
+			Map<Integer, Atom> a = getAtomFromRecordTryMultipleChainIds("SG", "", disulfideBond.getResnum1(), disulfideBond.getInsCode1(), allChainIds1);
+
+			Map<Integer, Atom> b = getAtomFromRecordTryMultipleChainIds("SG", "", disulfideBond.getResnum2(), disulfideBond.getInsCode2(), allChainIds2);
 
 			for(int i=0; i<structure.nrModels(); i++){
 				if(a.containsKey(i) && b.containsKey(i)){
@@ -324,7 +336,7 @@ public class BondMaker {
 
 	/**
 	 * Creates bond objects from a LinkRecord as parsed from a PDB file
-	 * @param linkRecord
+	 * @param linkRecord the PDB-format LINK record
 	 */
 	public void formLinkRecordBond(LinkRecord linkRecord) {
 		// only work with atoms that aren't alternate locations
@@ -333,15 +345,28 @@ public class BondMaker {
 			return;
 
 		try {
-			Map<Integer, Atom> a = getAtomFromRecord(linkRecord.getName1(),
-					linkRecord.getAltLoc1(), linkRecord.getResName1(),
-					linkRecord.getChainID1(), linkRecord.getResSeq1(),
-					linkRecord.getiCode1());
+			// The PDB format uses author chain ids to reference chains. But one author chain id corresponds to multiple asym ids,
+			// thus we need to grab all the possible asym ids (poly and nonpoly) and then try to find the atoms
+			// See issue https://github.com/biojava/biojava/issues/943
+			String polyChainId1 = structure.getPolyChainByPDB(linkRecord.getChainID1()).getId();
+			String polyChainId2 = structure.getPolyChainByPDB(linkRecord.getChainID2()).getId();
+			List<Chain> nonpolyChains1 = structure.getNonPolyChainsByPDB(linkRecord.getChainID1());
+			List<Chain> nonpolyChains2 = structure.getNonPolyChainsByPDB(linkRecord.getChainID2());
+			Chain waterChain1 = structure.getWaterChainByPDB(linkRecord.getChainID1());
+			Chain waterChain2 = structure.getWaterChainByPDB(linkRecord.getChainID2());
 
-			Map<Integer, Atom> b = getAtomFromRecord(linkRecord.getName2(),
-					linkRecord.getAltLoc2(), linkRecord.getResName2(),
-					linkRecord.getChainID2(), linkRecord.getResSeq2(),
-					linkRecord.getiCode2());
+			List<String> allChainIds1 = new ArrayList<>();
+			List<String> allChainIds2 = new ArrayList<>();
+			if (polyChainId1!=null) allChainIds1.add(polyChainId1);
+			if (polyChainId2!=null) allChainIds2.add(polyChainId2);
+			if (nonpolyChains1!=null) nonpolyChains1.forEach(npc -> allChainIds1.add(npc.getId()));
+			if (nonpolyChains2!=null) nonpolyChains2.forEach(npc -> allChainIds2.add(npc.getId()));
+			if (waterChain1!=null && linkRecord.getResName1().equals("HOH")) allChainIds1.add(waterChain1.getId());
+			if (waterChain2!=null && linkRecord.getResName2().equals("HOH")) allChainIds2.add(waterChain2.getId());
+
+			Map<Integer, Atom> a = getAtomFromRecordTryMultipleChainIds(linkRecord.getName1(), linkRecord.getAltLoc1(), linkRecord.getResSeq1(), linkRecord.getiCode1(), allChainIds1);
+
+			Map<Integer, Atom> b = getAtomFromRecordTryMultipleChainIds(linkRecord.getName2(), linkRecord.getAltLoc2(), linkRecord.getResSeq2(), linkRecord.getiCode2(), allChainIds2);
 
 			for(int i=0; i<structure.nrModels(); i++){
 				if(a.containsKey(i) && b.containsKey(i)){
@@ -352,7 +377,7 @@ public class BondMaker {
 					}
 				}
 			}
-		}catch (StructureException e) {
+		} catch (StructureException e) {
 			// Note, in Calpha only mode the link atoms may not be present.
 			if (! params.isParseCAOnly()) {
 				logger.warn("Could not find atoms specified in LINK record: {}",linkRecord.toString());
@@ -361,6 +386,23 @@ public class BondMaker {
 			}
 
 		}
+	}
+
+	private Map<Integer, Atom> getAtomFromRecordTryMultipleChainIds(String name, String altLoc, String resSeq, String iCode, List<String> chainIds) throws StructureException {
+		Map<Integer, Atom> a = null;
+		for (String chainId : chainIds) {
+			try {
+				a = getAtomFromRecord(name, altLoc, chainId, resSeq, iCode);
+				// first instance that doesn't give an exception will be considered the right one. Not much more we can do here
+				break;
+			} catch (StructureException e) {
+				logger.debug("Tried to get atom {} {} {} (alt loc {}) from chain id {}, but did not find it", name, resSeq, iCode, altLoc, chainId);
+			}
+		}
+		if (a == null) {
+			throw new StructureException("Could not find atom "+name+" "+resSeq+" "+iCode+" (alt loc "+altLoc+")");
+		}
+		return a;
 	}
 
 
@@ -415,7 +457,7 @@ public class BondMaker {
 			Map<Integer,Atom> a2 = null;
 
 			try {
-				a1 = getAtomFromRecord(atomName1, altLoc1, resName1, chainId1, seqId1, insCode1);
+				a1 = getAtomFromRecord(atomName1, altLoc1, chainId1, seqId1, insCode1);
 
 			} catch (StructureException e) {
 
@@ -423,7 +465,7 @@ public class BondMaker {
 				continue;
 			}
 			try {
-				a2 = getAtomFromRecord(atomName2, altLoc2, resName2, chainId2, seqId2, insCode2);
+				a2 = getAtomFromRecord(atomName2, altLoc2, chainId2, seqId2, insCode2);
 			} catch (StructureException e) {
 
 				logger.warn("Could not find atom specified in struct_conn record: {}{}({}) in chain {}, atom {} {}", seqId2, insCode2, resName2, chainId2, atomName2, altLocStr2);
@@ -461,7 +503,7 @@ public class BondMaker {
 		structure.setSSBonds(ssbonds);
 	}
 
-	private Map<Integer,Atom> getAtomFromRecord(String name, String altLoc, String resName, String chainID, String resSeq, String iCode)
+	private Map<Integer,Atom> getAtomFromRecord(String name, String altLoc, String chainID, String resSeq, String iCode)
 			throws StructureException {
 
 		if (iCode==null || iCode.isEmpty()) {

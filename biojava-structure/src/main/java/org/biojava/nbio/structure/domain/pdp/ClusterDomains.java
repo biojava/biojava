@@ -99,9 +99,11 @@ public class ClusterDomains {
 					 */
 
 					double S_value= total_contacts/(double)total_max_contacts;
-					if(verbose) System.out.println(String.format(" size1=%d size2=%d minDomSize=%5.2f maxDomSize=%5.2f total_contacts = %d ", size1,size2,minDomSize,maxDomSize,total_contacts));
-					if(verbose) System.out.println(String.format(" total_contacts = %d total_max_contacts = %d", total_contacts, total_max_contacts));
-					if(verbose) System.out.println(String.format(" maximum_value = %f S_value = %f\n",maximum_value, S_value));
+					if(verbose) {
+						System.out.printf(" size1=%d size2=%d minDomSize=%5.2f maxDomSize=%5.2f total_contacts = %d %n", size1,size2,minDomSize,maxDomSize,total_contacts);
+						System.out.printf(" total_contacts = %d total_max_contacts = %d%n", total_contacts, total_max_contacts);
+						System.out.printf(" maximum_value = %f S_value = %f%n%n",maximum_value, S_value);
+					}
 
 					if (S_value > maximum_value) {
 						maximum_value = S_value;
@@ -134,8 +136,8 @@ public class ClusterDomains {
 			avd=(domains.get(Si).avd+domains.get(Sj).avd)/2;
 				 */
 				if(verbose) System.out.println(" Criteria 1 matched");
-				if(verbose) System.out.println(String.format(" maximum_value = %f", maximum_value));
-				if(verbose) System.out.println(String.format(" Si = %d Sj = %d ", Si, Sj));
+				if(verbose) System.out.printf(" maximum_value = %f%n", maximum_value);
+				if(verbose) System.out.printf(" Si = %d Sj = %d %n", Si, Sj);
 				domains = combine(domains,Si, Sj, maximum_value);
 				maximum_value = PDPParameters.CUT_OFF_VALUE1-.1;
 				maximum_values = PDPParameters.CUT_OFF_VALUE1S-.1;
@@ -152,8 +154,8 @@ public class ClusterDomains {
 			avd=(domains[Sim].avd+domains[Sjm].avd)/2;
 				 */
 				if(verbose) System.out.println(" Criteria 2 matched");
-				if(verbose) System.out.println(String.format(" maximum_values = %f", maximum_valuem));
-				if(verbose) System.out.println(String.format(" Sim = %d Sjm = %d", Sim, Sjm));
+				if(verbose) System.out.printf(" maximum_values = %f%n", maximum_valuem);
+				if(verbose) System.out.printf(" Sim = %d Sjm = %d%n", Sim, Sjm);
 				domains = combine(domains, Sim, Sjm, maximum_valuem);
 				maximum_value =  PDPParameters.CUT_OFF_VALUE1-.1;
 				maximum_values = PDPParameters.CUT_OFF_VALUE1S-.1;
@@ -170,8 +172,8 @@ public class ClusterDomains {
 			avd=(domains[Sis].avd+domains[Sjs].avd)/2;
 				 */
 				if(verbose) System.out.println(" Criteria 3 matched");
-				if(verbose) System.out.println(String.format(" maximum_values = %f", maximum_values));
-				if(verbose) System.out.println(String.format(" Sis = %d Sjs = %d", Sis, Sjs));
+				if(verbose) System.out.printf(" maximum_values = %f%n", maximum_values);
+				if(verbose) System.out.printf(" Sis = %d Sjs = %d%n", Sis, Sjs);
 				domains = combine(domains, Sis, Sjs, maximum_values);
 				maximum_value = PDPParameters.CUT_OFF_VALUE1-.1;
 				maximum_values = PDPParameters.CUT_OFF_VALUE1S-.1;
@@ -180,11 +182,11 @@ public class ClusterDomains {
 			domains[Sis].avd=domcont(domains[Sis]);
 			domains[Sjs].avd=domcont(domains[Sjs]);
 				 */
-				if(verbose) System.out.println(String.format(" Listing the domains after combining..."));
+				if(verbose) System.out.println(" Listing the domains after combining...");
 				if(verbose) listdomains(domains);
 			}
 			else {
-				if(verbose) System.out.println(String.format(" Maximum value is less than cut off value. (max:" + maximum_value+")" ));
+				if(verbose) System.out.printf(" Maximum value is less than cut off value. (max:%d)%n", maximum_value);
 				maximum_value = -1.0;
 				maximum_values = -1.0;
 				maximum_valuem = -1.0;
