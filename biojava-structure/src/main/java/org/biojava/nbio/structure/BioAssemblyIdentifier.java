@@ -54,8 +54,9 @@ public class BioAssemblyIdentifier implements StructureIdentifier {
 	 * @param pdbCode
 	 * @param biolNr
 	 * @throws PDBIdException
-	 * @Deprecated use {@link #BioAssemblyIdentifier(PDBId, int)} instead
+	 * @deprecated use {@link #BioAssemblyIdentifier(PDBId, int)} instead
 	 */
+	@Deprecated
 	public BioAssemblyIdentifier(String pdbCode, int biolNr) throws PDBIdException {
 		this(new PDBId(pdbCode), biolNr);
 	}

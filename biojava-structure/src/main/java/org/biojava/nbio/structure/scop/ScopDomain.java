@@ -124,6 +124,7 @@ public class ScopDomain implements Serializable, Cloneable, StructureIdentifier 
 	 * @return
 	 * @deprecated use {@link #getPDBId()}
 	 */
+	@Deprecated
 	public String getPdbId() {
 		if(pdbId == null)return null;
 		return pdbId.getId();
@@ -133,6 +134,7 @@ public class ScopDomain implements Serializable, Cloneable, StructureIdentifier 
 	 * @throws PDBIdException 
 	 * @deprecated use {@link #setPDBId(PDBId)}
 	 */
+	@Deprecated
 	public void setPdbId(String pdbId) throws PDBIdException {
 		if(pdbId == null) this.pdbId = null;
 		this.pdbId = new PDBId(pdbId);

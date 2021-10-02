@@ -34,7 +34,7 @@ import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.contact.Grid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+//TODO Review the Regular Expressions
 /**
  * This is the canonical way to identify a part of a structure.
  *
@@ -51,7 +51,7 @@ import org.slf4j.LoggerFactory;
  * 		range         := range (',' range)?
  * 		               | chainID
  * 		               | chainID '_' resNum '-' resNum
- * 		pdbID         := ((PDB|pdb)_[0-9]{4})?[0-9][a-zA-Z0-9]{3}
+ * 		pdbID         := ((PDB|pdb)_[0-9]{4})?[1-9][a-zA-Z0-9]{3}
  * 		chainID       := [a-zA-Z0-9]+
  * 		resNum        := [-+]?[0-9]+[A-Za-z]?
  * </pre>
@@ -88,7 +88,6 @@ public class SubstructureIdentifier implements StructureIdentifier {
 	/**
 	 * Create a new identifier from a string.
 	 * @param id
-	 * @throws PDBIdException 
 	 */
 	public SubstructureIdentifier(String id) {
 		String[] idRange = id.split("\\.");
@@ -124,6 +123,7 @@ public class SubstructureIdentifier implements StructureIdentifier {
 	 * @throws PDBIdException 
 	 * @deprecated use the {@link #SubstructureIdentifier(PDBId, List)} constructor instead
 	 */
+	@Deprecated 
 	public SubstructureIdentifier(String pdbId, List<ResidueRange> ranges) throws PDBIdException {
 		this(new PDBId(pdbId), ranges);
 	}
@@ -168,6 +168,7 @@ public class SubstructureIdentifier implements StructureIdentifier {
 	 * @return
 	 * @deprecated use {@link #getPDBId()}
 	 */
+	@Deprecated
 	public String getPdbId() {
 		if(this.pdbId == null)
 			return null;

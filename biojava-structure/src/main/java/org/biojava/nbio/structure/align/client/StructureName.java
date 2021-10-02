@@ -364,6 +364,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 	 * @throws StructureException Wraps errors which occur when converting to canonical form
 	 * @deprecated use {@link #getPDBId()}
 	 */
+	@Deprecated
 	public String getPdbId() throws StructureException {
 		return getPDBId().getId();
 	}

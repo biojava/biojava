@@ -230,6 +230,7 @@ public class AtomCache {
 	 * @since 3.2
 	 * @deprecated use {@link #getBiologicalAssembly(PDBId, int, boolean)} instead
 	 */
+	@Deprecated
 	public Structure getBiologicalAssembly(String pdbId, int bioAssemblyId, boolean multiModel)
 			throws StructureException, IOException {
 		return getBiologicalAssembly(new PDBId(pdbId), bioAssemblyId, multiModel);
@@ -434,6 +435,7 @@ public class AtomCache {
 		return path;
 	}
 
+	//TODO Review the Regular Expressions
 	/**
 	 * Request a Structure based on a <i>name</i>.
 	 *

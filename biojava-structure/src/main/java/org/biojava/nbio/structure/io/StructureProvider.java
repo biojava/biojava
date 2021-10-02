@@ -41,6 +41,7 @@ public interface StructureProvider {
 	 * @return
 	 * @deprecated use {@link #getStructureById(PDBId)}
 	 */
+	@Deprecated
 	Structure getStructureById(String pdbId) throws StructureException,IOException;
 
 	/**

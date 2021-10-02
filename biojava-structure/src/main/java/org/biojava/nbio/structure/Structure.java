@@ -775,6 +775,7 @@ public interface Structure extends Cloneable, Serializable {
 	 * @see #setPDBCode
 	 * @deprecated use {@link #getPDBId()} to get a {@link PDBId} object or getPDBId().getId() to get a {@link String}
 	 */
+	@Deprecated
 	String getPDBCode () ;
 
 	/**
@@ -785,6 +786,7 @@ public interface Structure extends Cloneable, Serializable {
 	 * @see #getPDBCode
 	 * @deprecated use {@link #setPDBCode(PDBId)}
 	 */
+	@Deprecated
 	void setPDBCode (String pdb_id) throws PDBIdException ;
 
 

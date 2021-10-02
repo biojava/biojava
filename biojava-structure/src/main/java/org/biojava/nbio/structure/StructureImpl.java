@@ -1007,6 +1007,7 @@ public class StructureImpl implements Structure {
 	 * {@inheritDoc} 
 	 * @deprecated use {@link #getPDBId()} to get a {@link PDBId} object or getPDBId().getId() to get a {@link String}
 	 */
+	@Deprecated
 	@Override
 	public String  getPDBCode () {
 		if(pdbId == null)
@@ -1018,6 +1019,7 @@ public class StructureImpl implements Structure {
 	 * @throws PDBIdException 
 	 * @deprecated use {@link #setPDBCode(PDBId)}
 	 * */
+	@Deprecated
 	@Override
 	public void setPDBCode(String pdb_id) throws PDBIdException {
 		if(pdb_id == null) {

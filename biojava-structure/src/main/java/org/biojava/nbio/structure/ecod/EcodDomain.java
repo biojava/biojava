@@ -207,6 +207,7 @@ Column 15: Comma-separated value list of non-polymer entities within 4 A of at l
 	 * @return
 	 * @deprecated use {@link #getPdbId()}
 	 */
+	@Deprecated
 	public String getPdbId() {
 		if(pdbId == null)return null;
 		return pdbId.getId();

@@ -463,6 +463,7 @@ public class PDBHeader implements PDBRecord {
 	 * @see #setIdCode(String)
 	 * @deprecated use {@link #getPdbId()}
 	 */
+	@Deprecated
 	public String getIdCode() {
 		if(this.pdbId == null)
 			return null;
@@ -475,6 +476,7 @@ public class PDBHeader implements PDBRecord {
 	 * @see #getIdCode()
 	 * @deprecated use {@link #setPDBId(PDBId)}
 	 */
+	@Deprecated
 	public void setIdCode(String idCode) {
 		if(idCode == null) {
 			this.pdbId = null;
