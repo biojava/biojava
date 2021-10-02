@@ -70,7 +70,7 @@ implements StructurePairSelector {
 
 
 
-	private JComboBox fileType ;
+	private JComboBox<String> fileType ;
 
 	JTextField filePath1;
 	JTextField filePath2;
@@ -183,7 +183,7 @@ implements StructurePairSelector {
 			e.printStackTrace();
 		}
 
-		reduced.setPDBCode(fileURL);  //FIXME This usage seems wrong and should be changed.
+		reduced.setPDBCode(fileURL);  //TODO FIXME This usage seems wrong and should be changed.
 		reduced.setName(fileURL);
 		return reduced;
 

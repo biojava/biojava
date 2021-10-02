@@ -36,6 +36,7 @@ import java.util.List;
 public class StructureIO {
 	private static AtomCache cache ;
 
+	//TODO review the Regular Expressions
 	/**
 	 * Loads a structure based on a name. Supported naming conventions are:
 	 *
@@ -51,7 +52,7 @@ public class StructureIO {
 		range         := '('? range (',' range)? ')'?
 					   | chainID
 					   | chainID '_' resNum '-' resNum
-		pdbID         := ((PDB|pdb)_[0-9]{4})?[0-9][a-zA-Z0-9]{3}
+		pdbID         := ((PDB|pdb)_[0-9]{4})?[1-9][a-zA-Z0-9]{3}
 		chainID       := [a-zA-Z0-9]
 		scopID        := 'd' pdbID [a-z_][0-9_]
 		biol		  := 'BIO:' pdbID [:]? [0-9]+
