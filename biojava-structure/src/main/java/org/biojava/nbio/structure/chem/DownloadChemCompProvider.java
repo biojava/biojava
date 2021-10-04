@@ -25,6 +25,8 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.zip.GZIPOutputStream;
 
 /**
@@ -42,17 +44,23 @@ import java.util.zip.GZIPOutputStream;
 public class DownloadChemCompProvider implements ChemCompProvider {
     private static final Logger logger = LoggerFactory.getLogger(DownloadChemCompProvider.class);
 
+    private static final String NEWLINE = System.getProperty("line.separator");
+
     public static final String CHEM_COMP_CACHE_DIRECTORY = "chemcomp";
     public static final String DEFAULT_SERVER_URL = "https://files.rcsb.org/ligands/download/";
-    public static String serverBaseUrl = DEFAULT_SERVER_URL;
+    public static final String DEFAULT_CHEMCOMP_PATHURL_TEMPLATE = "{ccd_id}.cif";
+
     /**
-     * Use default RCSB server layout (true) or internal RCSB server layout (false)
+     * The base URL to which the full path specified via {@link #setChemCompPathUrlTemplate(String)} is appended.
+     * It is assumed that it has a trailing slash.
      */
-    public static boolean useDefaultUrlLayout = true;
+    public static String serverBaseUrl = DEFAULT_SERVER_URL;
 
     private static File path;
-    //private static final String FILE_SEPARATOR = System.getProperty("file.separator");
-    private static final String NEWLINE = System.getProperty("line.separator");
+
+    private static String chemCompPathUrlTemplate = DEFAULT_CHEMCOMP_PATHURL_TEMPLATE;
+
+    static final Pattern CCD_ID_TEMPLATE_REGEX = Pattern.compile("\\{ccd_id(?::(\\d+_\\d+|[-+]?\\d+))?}");
 
 
     // flags to make sure there is only one thread running that is loading the dictionary
@@ -84,6 +92,32 @@ public class DownloadChemCompProvider implements ChemCompProvider {
         if (cacheFilePath != null) {
             path = new File(cacheFilePath);
         }
+    }
+
+    /**
+     * Set the base URL for the location of all chemical component CIF files, to which the chemCompPathUrlTemplate
+     * is appended, settable in {@link #setChemCompPathUrlTemplate(String)}. A trailing slash is appended
+     * if not present.
+     */
+    public static void setServerBaseUrl(String serverBaseUrl) {
+        if (!serverBaseUrl.endsWith("/")) {
+            serverBaseUrl = serverBaseUrl + "/";
+        }
+        DownloadChemCompProvider.serverBaseUrl = serverBaseUrl;
+    }
+
+    /**
+     * Set the path to append to the serverBaseUrl (settable in {@link #setServerBaseUrl(String)}).
+     * The string can contain placeholders that will be expanded at runtime:
+     * <li>"{ccd_id}" to be replaced by the chemical component identifier, in capitals</li>
+     * <li>"{ccd_id:beginIndex-endIndex}" to be replaced by a substring of the chemical component identifier in capitals,
+     * with indices following the same convention as {@link String#substring(int, int)} </li>
+     * <li>"{ccd_id:index}" to be replaced by a substring of the chemical component identifier in capitals,
+     * with index either a positive or negative integer to substring from left or right of the string respectively.</li>
+     * If any of the indices are off-bounds, then the full chemical component identifier is replaced
+     */
+    public static void setChemCompPathUrlTemplate(String chemCompPathUrlTemplate) {
+        DownloadChemCompProvider.chemCompPathUrlTemplate = chemCompPathUrlTemplate;
     }
 
     /**
@@ -289,6 +323,54 @@ public class DownloadChemCompProvider implements ChemCompProvider {
     }
 
     /**
+     * Expands the given path URL template, replacing the placeholders as specified in {@link #setChemCompPathUrlTemplate(String)}
+     * by the ccdId given (or its substrings, if indices are present in the template)
+     * @param templateStr the template string with placeholders for ccd ids
+     * @param ccdId the ccd id to replace (in full or a substring)
+     * @return the input templateStr with placeholders replaced
+     */
+    static String expandPathUrlTemplate(String templateStr, String ccdId) {
+        Matcher m = CCD_ID_TEMPLATE_REGEX.matcher(templateStr);
+        StringBuilder output = new StringBuilder();
+        int lastIndex = 0;
+        while (m.find()) {
+            String repString = ccdId;
+            String indicesStr = m.group(1);
+            try {
+                if (indicesStr == null) {
+                    // no substringing
+                    repString = ccdId;
+                } else if (!indicesStr.contains("_")) {
+                    // left/right substring
+                    int idx = Integer.parseInt(indicesStr);
+                    if (idx < 0) { // right substring
+                        repString = ccdId.substring(ccdId.length() + idx);
+                    } else { // left substring
+                        repString = ccdId.substring(0, idx);
+                    }
+                } else if (indicesStr.contains("_")) {
+                    // start and end index
+                    String[] tokens = indicesStr.split("_");
+                    int begIdx = Integer.parseInt(tokens[0]);
+                    int endIdx = Integer.parseInt(tokens[1]);
+                    repString = ccdId.substring(begIdx, endIdx);
+                }
+            } catch (IndexOutOfBoundsException e) {
+                // we don't set repString, it keeps original value ccdId
+                logger.debug("Indices included in path URL template {} are out of bounds for string {}", templateStr, ccdId);
+            }
+            output.append(templateStr, lastIndex, m.start()).append(repString);
+
+            lastIndex = m.end();
+            // TODO when we upgrade to java 11, use the new methods introduced in java 9, see https://stackoverflow.com/questions/9605716/java-regular-expression-find-and-replace
+        }
+        if (lastIndex < templateStr.length()) {
+            output.append(templateStr, lastIndex, templateStr.length());
+        }
+        return output.toString();
+    }
+
+    /**
      * @param recordName : three-letter name
      * @return true if successful download
      */
@@ -302,14 +384,10 @@ public class DownloadChemCompProvider implements ChemCompProvider {
             logger.error("Could not write to temp directory {} to create the chemical component download temp file", System.getProperty("java.io.tmpdir"));
             return false;
         }
-        String u;
-        if (useDefaultUrlLayout) {
-            u = serverBaseUrl + recordName + ".cif";
-        } else {
-            u = serverBaseUrl + recordName.charAt(0) + "/"  + recordName + "/" + recordName + ".cif";
-        }
 
-        logger.debug("downloading {}", u);
+        String u = serverBaseUrl + expandPathUrlTemplate(chemCompPathUrlTemplate, recordName);
+
+        logger.debug("Downloading chem comp definition from {}", u);
 
         URL url = null;
         try {

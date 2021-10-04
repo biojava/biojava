@@ -34,6 +34,8 @@ BioJava 6.0.0 (future release)
 * Moved classes in `org.biojava.nbio.structure.io.mmcif` to `org.biojava.nbio.structure.chem`
 * Fixed `CRC64Checksum#public void update(byte[] b, int offset, int length)` to use
 the `length` argument correctly as specified in `java.util.zip.Checksum` interface.
+* Removed `DownloadChemCompProvider.useDefaultUrlLayout` with a more flexible system to provide templated URLs `DownloadChemCompProvider.setChemCompPathUrlTemplate()` 
+and `DownloadChemCompProvider.setServerBaseUrl()`
 
 ### Added
 * New keywords fields in `PDBHeader` class, populated by PDB and mmCIF parsers #946
