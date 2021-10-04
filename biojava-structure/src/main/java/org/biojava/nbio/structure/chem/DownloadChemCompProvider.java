@@ -92,9 +92,12 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 
     /**
      * Set the base URL for the location of all chemical component CIF files, to which the chemCompPathUrlTemplate
-     * is appended, settable in {@link #setChemCompPathUrlTemplate(String)}. Must have a trailing slash.
+     * is appended, settable in {@link #setChemCompPathUrlTemplate(String)}.
      */
     public static void setServerBaseUrl(String serverBaseUrl) {
+        if (!serverBaseUrl.endsWith("/")) {
+            serverBaseUrl = serverBaseUrl + "/";
+        }
         DownloadChemCompProvider.serverBaseUrl = serverBaseUrl;
     }
 
