@@ -50,6 +50,10 @@ public class DownloadChemCompProvider implements ChemCompProvider {
     public static final String DEFAULT_SERVER_URL = "https://files.rcsb.org/ligands/download/";
     public static final String DEFAULT_CHEMCOMP_PATHURL_TEMPLATE = "{ccd_id}.cif";
 
+    /**
+     * The base URL to which the full path specified via {@link #setChemCompPathUrlTemplate(String)} is appended.
+     * It is assumed that it has a trailing slash.
+     */
     public static String serverBaseUrl = DEFAULT_SERVER_URL;
 
     private static File path;
@@ -92,7 +96,8 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 
     /**
      * Set the base URL for the location of all chemical component CIF files, to which the chemCompPathUrlTemplate
-     * is appended, settable in {@link #setChemCompPathUrlTemplate(String)}.
+     * is appended, settable in {@link #setChemCompPathUrlTemplate(String)}. A trailing slash is appended
+     * if not present.
      */
     public static void setServerBaseUrl(String serverBaseUrl) {
         if (!serverBaseUrl.endsWith("/")) {
