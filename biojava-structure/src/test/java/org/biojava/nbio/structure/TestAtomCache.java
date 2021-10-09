@@ -24,7 +24,6 @@
 
 package org.biojava.nbio.structure;
 
-import org.biojava.nbio.structure.PDBId.PDBIdException;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.CifFileReader;
 import org.biojava.nbio.structure.io.LocalPDBDirectory;
@@ -48,7 +47,7 @@ public class TestAtomCache {
 	private AtomCache cache;
 
 	@Before
-	public void setUp() throws IOException, PDBIdException {
+	public void setUp() throws IOException {
 		cache = new AtomCache();
 
 		// Delete files which were cached in previous tests

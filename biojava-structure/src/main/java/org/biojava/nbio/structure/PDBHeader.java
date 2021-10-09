@@ -20,18 +20,24 @@
  */
 package org.biojava.nbio.structure;
 
-import org.biojava.nbio.structure.PDBId.PDBIdException;
-import org.biojava.nbio.structure.quaternary.BioAssemblyInfo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.EnumSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+
+import org.biojava.nbio.structure.quaternary.BioAssemblyInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -481,11 +487,7 @@ public class PDBHeader implements PDBRecord {
 		if(idCode == null) {
 			this.pdbId = null;
 		}else {
-			try {
-				this.pdbId = new PDBId(idCode);
-			} catch (PDBIdException e) {
-				throw new IllegalArgumentException(e);
-			}
+			this.pdbId = new PDBId(idCode);
 		}
 	}
 

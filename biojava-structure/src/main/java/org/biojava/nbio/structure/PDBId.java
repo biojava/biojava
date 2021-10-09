@@ -5,6 +5,11 @@ import java.util.regex.Pattern;
 
 public class PDBId implements Comparable<PDBId>, Serializable{
 	
+	private static final String PREFIX_PDB_ = "PDB_";
+	private static final String STRING_0000 = "0000";
+	private static final String PDB_0000 = PREFIX_PDB_ + STRING_0000;
+	private static final String XXXX_STRING = "XXXX";
+
 	private static final long serialVersionUID = -5400143283145477754L;
 	public enum Behavior{
 		PREFER_SHORT,
@@ -14,18 +19,6 @@ public class PDBId implements Comparable<PDBId>, Serializable{
 
 	private static boolean accept_xxxx = true;
 
-	public static class PDBIdException extends StructureException{
-		private static final long serialVersionUID = -9166852283492713918L;
-		public PDBIdException(String message) {
-			super(message);
-		}
-		public PDBIdException(String message, Throwable cause) {
-			super(message, cause);
-		}
-		public PDBIdException(Throwable cause) {
-			super(cause);
-		}
-	}
 
 	public static final Pattern PATTERN_SHORT_PDBID = Pattern.compile("[1-9]\\p{Alnum}{3}");
 //	public static final Pattern PATTERN_EXTENDED_PDBID = Pattern.compile("(PDB|pdb)_\\d{4}[1-9]\\p{Alnum}{3}");//Shall we allow lower case?
@@ -35,26 +28,12 @@ public class PDBId implements Comparable<PDBId>, Serializable{
 	 * Keeps the ID in UPPER CASE, in a reduced form (without the <code>PDB_</code> prefix).
 	 */
 	private String idCode;
-	private static final String XXXX_STRING = "XXXX";
 
-	public static final PDBId XXXX = getXxxx();
+	public static final PDBId XXXX = new PDBId(XXXX_STRING);
 
-	/*
-	 * using a static method instead of static initializer because the later cant't
-	 * easily handle initializing a final field with an object whose constructor
-	 * throws a checked exception correctly.
-	 */	
-	private static PDBId getXxxx(){ 
-		try {
-			return new PDBId(XXXX_STRING);
-		} catch (PDBIdException e) {
-			return null; //will never happen
-		}
-	}
-	
-	public PDBId(String id) throws PDBIdException {
+	public PDBId(String id){
 		if (id == null) {
-			throw new PDBIdException("ID can not be null");
+			throw new IllegalArgumentException("ID can not be null");
 		}
 		if(accept_xxxx && XXXX_STRING.equalsIgnoreCase(id)) {// the only exception
 			this.idCode = toInternalFormat(XXXX_STRING);
@@ -63,22 +42,22 @@ public class PDBId implements Comparable<PDBId>, Serializable{
 		}
 	}
 	
-	public static boolean isShortPDBID(String id) throws NullPointerException {
+	public static boolean isValidShortPDBID(String id) throws NullPointerException {
 		return PATTERN_SHORT_PDBID.matcher(id).matches();
 	}
 	
-	public static boolean isExtendedPDBID(String id) throws NullPointerException {
+	public static boolean isValidExtendedPDBID(String id) throws NullPointerException {
 		return PATTERN_EXTENDED_PDBID.matcher(id).matches();
 	}
 	
 	/**Checks whether an Extended PDBId is shortable, <i>assuming it is a valid extended PDBId</i>.
-	 * If you are not sure the String represents a valid extended PDBId, use {@link #isExtendedPDBID(String)} first.
-	 * @see #isExtendedPDBID(String)
+	 * If you are not sure the String represents a valid extended PDBId, use {@link #isValidExtendedPDBID(String)} first.
+	 * @see #isValidExtendedPDBID(String)
 	 * @param extendedId
 	 * @return
 	 */
 	public static boolean isShortCompatible(String extendedId) {
-		return extendedId.length() >= 8 && extendedId.substring(0, 8).equals/*IgnoreCase*/("PDB_0000");
+		return extendedId.length() >= 8 && extendedId.substring(0, 8).equals/*IgnoreCase*/(PDB_0000);
 	}
 	
 	@Override
@@ -100,12 +79,7 @@ public class PDBId implements Comparable<PDBId>, Serializable{
 	
 	@Override
 	protected Object clone() throws CloneNotSupportedException {
-		try {
-			return new PDBId(this.getId());
-		} catch (PDBIdException e) {
-			e.printStackTrace();  // Can never happen. Do nothing
-			throw new CloneNotSupportedException("Unexpected error");
-		}
+		return new PDBId(this.getId());
 	}
 
 	@Override
@@ -129,63 +103,55 @@ public class PDBId implements Comparable<PDBId>, Serializable{
 	public String getId(Behavior b) {
 		if (b == Behavior.PREFER_SHORT && isInternalShortCompatible(idCode))
 			return internalToShortNoCheck(idCode);
-		return internalToExtendedFormat(idCode);
+		return PREFIX_PDB_ + idCode;
 	}
 	
-	public String getShortId() throws PDBIdException{
+	public String getShortId() throws StructureException{
 		if(isInternalShortCompatible(idCode)) {
 			return internalToShortNoCheck(idCode);
 		} else {
-			throw new PDBIdException("ID ("+getId()+") is not short format compatible");
+			throw new StructureException("ID (" + getId() + ") is not short format compatible");
 		}
 	}
 	
-	public static String toExtendedId(String shortId) throws PDBIdException{
-		if (isShortPDBID(shortId) || XXXX_STRING.equalsIgnoreCase(shortId)) {
-			return ("PDB_0000"+shortId).toUpperCase();
-		}else if (isExtendedPDBID(shortId)) {
+	public static String toExtendedId(String shortId) throws StructureException{
+		if (isValidShortPDBID(shortId) || XXXX_STRING.equalsIgnoreCase(shortId)) {
+			return PDB_0000 + shortId.toUpperCase();
+		}else if (isValidExtendedPDBID(shortId)) {
 			return shortId.toUpperCase();
 		} else {
-			throw new PDBIdException("Unknown format ["+shortId+"]");
+			throw new StructureException("Unknown format ["+shortId+"]");
 		}
 	}
 	
-	public static String toShortId(String extendedId) throws PDBIdException{
-		if (isExtendedPDBID(extendedId) && isShortCompatible(extendedId)) {
-			return toShortNoCheck(extendedId);
-		} else if (isShortPDBID(extendedId)) {
+	public static String toShortId(String extendedId) throws StructureException{
+		if (isValidExtendedPDBID(extendedId) && isShortCompatible(extendedId)) {
+			return extendedId.substring(8).toUpperCase();
+		} else if (isValidShortPDBID(extendedId)) {
 			return extendedId.toUpperCase();
 		} else {
-			throw new PDBIdException("Conversion not possible of ID ["+extendedId+"]");
+			throw new StructureException("Conversion not possible of ID ["+extendedId+"]");
 		}
 	}
 
 	private static boolean isInternalShortCompatible(String intId) {
-		return intId.substring(0, 4).equalsIgnoreCase("0000");
+		return intId.substring(0, 4).equals(STRING_0000);
 	}
 	
-	private static String toInternalFormat(String id) throws PDBIdException {
-		if (isShortPDBID(id) || XXXX_STRING.equalsIgnoreCase(id)) {
-			return ("0000"+id).toUpperCase();
-		}else if (isExtendedPDBID(id)) {
+	private static String toInternalFormat(String id) throws IllegalArgumentException {
+		if (isValidShortPDBID(id) || XXXX_STRING.equalsIgnoreCase(id)) {
+			return STRING_0000  + id.toUpperCase();
+		}else if (isValidExtendedPDBID(id)) {
 			return id.substring(4).toUpperCase();
 		} else {
-			throw new PDBIdException("Unknown format ["+id+"]");
+			throw new IllegalArgumentException("Unknown format [" + id + "]");
 		}
-	}
-	
-	private static String internalToExtendedFormat(String id){
-		return "PDB_" + id;
 	}
 	
 	private static String internalToShortNoCheck(String extendedId) {
 		return extendedId.substring(4).toUpperCase();
 	}
 	
-	private static String toShortNoCheck(String extendedId) {
-		return extendedId.substring(8).toUpperCase();
-	}
-
 	@Override
 	public int compareTo(PDBId o) {
 		return this.idCode.compareTo(o.idCode);

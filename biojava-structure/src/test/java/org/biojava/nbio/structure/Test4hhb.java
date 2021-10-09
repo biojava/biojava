@@ -24,7 +24,6 @@
 
 package org.biojava.nbio.structure;
 
-import org.biojava.nbio.structure.PDBId.PDBIdException;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.PDBFileParser;
 import org.biojava.nbio.structure.io.cif.CifStructureConverter;
@@ -45,8 +44,7 @@ import static org.junit.Assert.*;
 public class Test4hhb {
 
 	@Test
-	public void test4hhbPDBFile() throws IOException, PDBIdException
-	{
+	public void test4hhbPDBFile() throws IOException {
 
 		Structure structure = null;
 

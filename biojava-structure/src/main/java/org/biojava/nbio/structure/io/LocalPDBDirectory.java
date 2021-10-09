@@ -38,7 +38,6 @@ import java.util.Locale;
 import org.biojava.nbio.core.util.FileDownloadUtils;
 import org.biojava.nbio.core.util.InputStreamProvider;
 import org.biojava.nbio.structure.PDBId;
-import org.biojava.nbio.structure.PDBId.PDBIdException;
 import org.biojava.nbio.structure.PDBStatus;
 import org.biojava.nbio.structure.PDBStatus.Status;
 import org.biojava.nbio.structure.Structure;
@@ -339,11 +338,10 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 
 	/**
 	 *{@inheritDoc}
-	 * @throws PDBIdException 
 	 *@deprecated use {@link #getStructureById(org.biojava.nbio.structure.PDBId)
 	 */
 	@Override
-	public Structure getStructureById(String pdbId) throws IOException, PDBIdException {
+	public Structure getStructureById(String pdbId) throws IOException {
 		return getStructureById(new PDBId(pdbId));
 	}
 
@@ -393,9 +391,8 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	 * Used to pre-fetch large numbers of structures.
 	 * @param pdbId
 	 * @throws IOException
-	 * @throws PDBIdException 
 	 */
-	public void prefetchStructure(String pdbId) throws IOException, PDBIdException {
+	public void prefetchStructure(String pdbId) throws IOException {
 		
 		// Check existing
 		File file = downloadStructure(new PDBId(pdbId));
@@ -405,7 +402,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 		}
 	}
 
-	public boolean deleteStructure(String pdbId) throws IOException, PDBIdException{
+	public boolean deleteStructure(String pdbId) throws IOException {
 		return deleteStructure(new PDBId(pdbId));
 	}
 	/**
@@ -460,7 +457,6 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	 * @return The file, or null if it was unavailable for download
 	 * @throws IOException for errors downloading or writing, or if the
 	 *  fetchBehavior is {@link FetchBehavior#LOCAL_ONLY}
-	 * @throws PDBIdException 
 	 */
 	protected File downloadStructure(PDBId pdbId) throws IOException {
 
@@ -515,11 +511,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 				// either an error or there is not current entry
 				pdbIdToDownload = pdbId;
 			}else {
-				try {
-					pdbIdToDownload = new PDBId(current);
-				} catch (PDBIdException e) {
-					throw new RuntimeException("Unexpected Error", e);
-				}
+				pdbIdToDownload = new PDBId(current);
 			}
 			return downloadStructure(pdbIdToDownload, splitDirURL,false, existing);
 		} else if(obsoleteBehavior == ObsoleteBehavior.FETCH_OBSOLETE
@@ -666,10 +658,9 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	 * @param pdbId
 	 * @return A file pointing to the existing file, or null if not found
 	 * @throws IOException If the file exists but is empty and can't be deleted
-	 * @throws PDBIdException 
 	 * @deprecated use {@link #getLocalFile(PDBId)}
 	 */
-	public File getLocalFile(String pdbId) throws IOException, PDBIdException {
+	public File getLocalFile(String pdbId) throws IOException {
 		return getLocalFile(new PDBId(pdbId));
 	}
 	/**
@@ -719,7 +710,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 		return null;
 	}
 
-	protected boolean checkFileExists(String pdbId) throws PDBIdException{
+	protected boolean checkFileExists(String pdbId) {
 		return checkFileExists(new PDBId(pdbId));
 	}
 	protected boolean checkFileExists(PDBId pdbId){

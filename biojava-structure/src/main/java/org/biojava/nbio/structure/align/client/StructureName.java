@@ -36,7 +36,6 @@ import java.util.regex.Pattern;
 
 import org.biojava.nbio.structure.BioAssemblyIdentifier;
 import org.biojava.nbio.structure.PDBId;
-import org.biojava.nbio.structure.PDBId.PDBIdException;
 import org.biojava.nbio.structure.ResidueRange;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
@@ -253,11 +252,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 		Matcher matcher = scopPattern.matcher(name);
 		if ( matcher.matches() ) {
 			mySource = Source.SCOP;
-			try {
-				pdbId = new PDBId(matcher.group(1).toUpperCase());
-			} catch (PDBIdException e) {
-				throw new IllegalArgumentException(e);
-			}
+			pdbId = new PDBId(matcher.group(1));
 			chainName = matcher.group(2);
 			return true;
 		}
@@ -268,11 +263,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 		Matcher matcher = cathPattern.matcher(name);
 		if ( matcher.matches() ){
 			mySource = Source.CATH;
-			try {
-				pdbId = new PDBId(matcher.group(1).toUpperCase());
-			} catch (PDBIdException e) {
-				throw new IllegalArgumentException(e);
-			}
+			pdbId = new PDBId(matcher.group(1));
 			chainName = matcher.group(2);
 			return true;
 		}
@@ -282,11 +273,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 		Matcher matcher = ecodPattern.matcher(name);
 		if ( matcher.matches() ){
 			mySource = Source.ECOD;
-			try {
-				pdbId = new PDBId(matcher.group(1).toUpperCase());
-			} catch (PDBIdException e) {
-				throw new IllegalArgumentException(e);
-			}
+			pdbId = new PDBId(matcher.group(1));
 			chainName = null;
 			return true;
 		}
@@ -295,11 +282,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 	private boolean initFromBIO(String name) {
 		Matcher matcher = BioAssemblyIdentifier.BIO_NAME_PATTERN.matcher(name);
 		if( matcher.matches() ) {
-			try {
-				pdbId = new PDBId(matcher.group(1).toUpperCase());
-			} catch (PDBIdException e) {
-				throw new IllegalArgumentException(e);
-			}
+			pdbId = new PDBId(matcher.group(1));
 			return true;
 		}
 		return false;
@@ -332,7 +315,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 			pdbId = new PDBId(URLIdentifier.guessPDBID( path.substring(path.lastIndexOf('/')+1) ));
 			chainName = null; // Don't bother checking query params here
 			return true;
-		} catch(MalformedURLException | PDBIdException e) {
+		} catch(MalformedURLException e) {
 			return false;
 		}
 	}

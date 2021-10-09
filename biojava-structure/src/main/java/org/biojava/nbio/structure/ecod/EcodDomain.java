@@ -20,7 +20,6 @@
 package org.biojava.nbio.structure.ecod;
 
 import org.biojava.nbio.structure.*;
-import org.biojava.nbio.structure.PDBId.PDBIdException;
 import org.biojava.nbio.structure.align.util.AtomCache;
 
 import java.io.IOException;
@@ -99,7 +98,7 @@ Column 15: Comma-separated value list of non-polymer entities within 4 A of at l
 			Integer xGroup, Integer hGroup, Integer tGroup, Integer fGroup, String pdbId,
 			String chainId, String range, String architectureName,
 			String xGroupName, String hGroupName, String tGroupName,
-			String fGroupName, Long assemblyId, Set<String> ligands) throws PDBIdException {
+			String fGroupName, Long assemblyId, Set<String> ligands) {
 		this(uid, domainId, manual,
 				xGroup, hGroup, tGroup, fGroup, pdbId,
 				chainId, range, null, architectureName,
@@ -110,7 +109,7 @@ Column 15: Comma-separated value list of non-polymer entities within 4 A of at l
 				Integer xGroup, Integer hGroup, Integer tGroup, Integer fGroup, String pdbId,
 				String chainId, String range, String seqId, String architectureName,
 				String xGroupName, String hGroupName, String tGroupName,
-				String fGroupName, Long assemblyId, Set<String> ligands) throws PDBIdException {
+				String fGroupName, Long assemblyId, Set<String> ligands) {
 		this.uid = uid;
 		this.domainId = domainId;
 		this.manual = manual;
@@ -212,7 +211,7 @@ Column 15: Comma-separated value list of non-polymer entities within 4 A of at l
 		if(pdbId == null)return null;
 		return pdbId.getId();
 	}
-	public void setPdbId(String pdbId) throws PDBIdException {
+	public void setPdbId(String pdbId) {
 		if(pdbId == null) this.pdbId = null;
 		this.pdbId = new PDBId(pdbId);
 	}

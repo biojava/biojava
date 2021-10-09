@@ -43,7 +43,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.biojava.nbio.structure.PDBId;
-import org.biojava.nbio.structure.PDBId.PDBIdException;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
 import org.biojava.nbio.core.util.FileDownloadUtils;
 import org.slf4j.Logger;
@@ -146,7 +145,7 @@ public class EcodInstallation implements EcodDatabase {
 			PDBId pdbId = null;
 			try {
 				pdbId = new PDBId(id);
-			} catch (PDBIdException e) {
+			} catch (IllegalArgumentException e) {
 				return null;
 			}
 			List<EcodDomain> doms = domainMap.get(pdbId);
@@ -493,11 +492,7 @@ public class EcodInstallation implements EcodDatabase {
 					String ecodId = d.getDomainId();
 					if( ecodId != null && !ecodId.isEmpty() ) {
 						Matcher match = ECOD_RE.matcher(ecodId);
-						try {
-							pdbId = new PDBId(match.group(1));
-						} catch (PDBIdException e) {// should not happen
-							throw new RuntimeException("Unexpected Error occurred", e);
-						}
+						pdbId = new PDBId(match.group(1));
 					}
 				}
 
@@ -716,7 +711,7 @@ v1.4 - added seqid_range and headers (develop101)
 
 									EcodDomain domain = new EcodDomain(uid, domainId, manual, xGroup, hGroup, tGroup, fGroup,pdbId, chainId, range, seqId, architectureName, xGroupName, hGroupName, tGroupName, fGroupName, assemblyId, ligands);
 									domainsList.add(domain);
-								} catch(NumberFormatException | PDBIdException e) {
+								} catch(NumberFormatException e) {
 									logger.warn("Error in ECOD parsing at line "+lineNum,e);
 								}
 							} else {

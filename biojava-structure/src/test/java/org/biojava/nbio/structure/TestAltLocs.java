@@ -20,17 +20,11 @@
  */
 package org.biojava.nbio.structure;
 
-import org.biojava.nbio.structure.PDBId.PDBIdException;
-import org.biojava.nbio.structure.align.util.AtomCache;
-import org.biojava.nbio.structure.chem.ChemComp;
-import org.biojava.nbio.structure.chem.ChemCompBond;
-import org.biojava.nbio.structure.chem.ChemCompGroupFactory;
-import org.biojava.nbio.structure.chem.PolymerType;
-import org.biojava.nbio.structure.chem.ResidueType;
-import org.biojava.nbio.structure.io.FileParsingParameters;
-import org.biojava.nbio.structure.io.cif.CifStructureConverter;
-import org.biojava.nbio.structure.io.StructureFiletype;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -39,7 +33,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static org.junit.Assert.*;
+import org.biojava.nbio.structure.align.util.AtomCache;
+import org.biojava.nbio.structure.chem.ChemComp;
+import org.biojava.nbio.structure.chem.ChemCompBond;
+import org.biojava.nbio.structure.chem.ChemCompGroupFactory;
+import org.biojava.nbio.structure.chem.PolymerType;
+import org.biojava.nbio.structure.chem.ResidueType;
+import org.biojava.nbio.structure.io.FileParsingParameters;
+import org.biojava.nbio.structure.io.StructureFiletype;
+import org.biojava.nbio.structure.io.cif.CifStructureConverter;
+import org.junit.Test;
 
 public class TestAltLocs {
 
@@ -596,7 +599,7 @@ public class TestAltLocs {
 	}
 
 	@Test
-	public void testMmcifConversionPartialAltlocs() throws IOException, PDBIdException {
+	public void testMmcifConversionPartialAltlocs() throws IOException {
 		String mmcifData =
 				"data_test\n" +
 						"loop_\n" +
@@ -678,7 +681,7 @@ public class TestAltLocs {
 	}
 
 	@Test
-	public void testMmcifConversionAllAltlocs() throws IOException, PDBIdException {
+	public void testMmcifConversionAllAltlocs() throws IOException {
 		String mmcifData =
 				"data_test\n" +
 						"loop_\n" +
@@ -743,10 +746,9 @@ public class TestAltLocs {
 	/**
 	 * Test that intra-residue bonds between alt locs link atoms with same altloc codes
 	 * https://github.com/rcsb/mmtf/issues/44
-	 * @throws PDBIdException 
 	 */
 	@Test
-	public void testIntraResidueBondsBetweenAltlocs() throws IOException, PDBIdException {
+	public void testIntraResidueBondsBetweenAltlocs() throws IOException {
 		// from 5MOO
 		String mmcifData =
 				"data_test\n" +
@@ -840,10 +842,9 @@ public class TestAltLocs {
 	/**
 	 * Test that inter-residue bonds between alt locs link atoms with same altloc codes or default alt loc to all alt locs
 	 * https://github.com/rcsb/mmtf/issues/44
-	 * @throws PDBIdException 
 	 */
 	@Test
-	public void testInterResidueBondsBetweenAltlocs() throws IOException, PDBIdException {
+	public void testInterResidueBondsBetweenAltlocs() throws IOException {
 		//  from 5MOO
 		String mmcifData =
 				"data_test\n" +

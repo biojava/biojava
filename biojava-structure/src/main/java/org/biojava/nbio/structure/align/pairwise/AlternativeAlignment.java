@@ -24,7 +24,6 @@ package org.biojava.nbio.structure.align.pairwise;
 
 
 import org.biojava.nbio.structure.*;
-import org.biojava.nbio.structure.PDBId.PDBIdException;
 import org.biojava.nbio.structure.align.StrucAligParameters;
 import org.biojava.nbio.structure.align.helper.AligMatEl;
 import org.biojava.nbio.structure.align.helper.IndexPair;

@@ -37,7 +37,6 @@ import java.util.Map;
 
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.Group;
-import org.biojava.nbio.structure.PDBId.PDBIdException;
 import org.biojava.nbio.structure.ResidueNumber;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
@@ -213,10 +212,9 @@ public class TestDifficultMmCIFFiles {
 	 * data values as long as some rules of the STAR format are followed.
 	 * For instance Phenix produces mmCIF files with non-quoted strings containing single quote characters
 	 * @throws IOException
-	 * @throws PDBIdException 
 	 */
 	@Test
-	public void testQuotingCornerCase () throws IOException, PDBIdException {
+	public void testQuotingCornerCase () throws IOException {
 		InputStream inStream = this.getClass().getResourceAsStream("/org/biojava/nbio/structure/io/difficult_mmcif_quoting.cif");
 
 		FileParsingParameters fileParsingParams = new FileParsingParameters();

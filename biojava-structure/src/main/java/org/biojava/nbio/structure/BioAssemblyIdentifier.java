@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.biojava.nbio.structure.PDBId.PDBIdException;
 import org.biojava.nbio.structure.align.util.AtomCache;
 
 public class BioAssemblyIdentifier implements StructureIdentifier {
@@ -37,7 +36,7 @@ public class BioAssemblyIdentifier implements StructureIdentifier {
 
 	public static final Pattern BIO_NAME_PATTERN = Pattern.compile("^(?:BIO:)([0-9][a-z0-9]{3})(?::([0-9]+))?$", Pattern.CASE_INSENSITIVE);
 
-	public BioAssemblyIdentifier(String name) throws PDBIdException {
+	public BioAssemblyIdentifier(String name) {
 		Matcher match = BIO_NAME_PATTERN.matcher(name);
 		if(! match.matches() ) {
 			throw new IllegalArgumentException("Invalid BIO identifier");
@@ -53,11 +52,10 @@ public class BioAssemblyIdentifier implements StructureIdentifier {
 	/**
 	 * @param pdbCode
 	 * @param biolNr
-	 * @throws PDBIdException
 	 * @deprecated use {@link #BioAssemblyIdentifier(PDBId, int)} instead
 	 */
 	@Deprecated
-	public BioAssemblyIdentifier(String pdbCode, int biolNr) throws PDBIdException {
+	public BioAssemblyIdentifier(String pdbCode, int biolNr) {
 		this(new PDBId(pdbCode), biolNr);
 	}
 	public BioAssemblyIdentifier(PDBId pdbId, int biolNr) {

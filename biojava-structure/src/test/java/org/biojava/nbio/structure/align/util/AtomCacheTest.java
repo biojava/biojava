@@ -45,11 +45,9 @@ import org.biojava.nbio.structure.AtomPositionMap;
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.PDBId;
-import org.biojava.nbio.structure.PDBId.PDBIdException;
 import org.biojava.nbio.structure.ResidueRangeAndLength;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.io.StructureFiletype;
 import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.StructureIdentifier;
 import org.biojava.nbio.structure.StructureTools;
@@ -61,6 +59,7 @@ import org.biojava.nbio.structure.io.CifFileReader;
 import org.biojava.nbio.structure.io.LocalPDBDirectory;
 import org.biojava.nbio.structure.io.LocalPDBDirectory.FetchBehavior;
 import org.biojava.nbio.structure.io.LocalPDBDirectory.ObsoleteBehavior;
+import org.biojava.nbio.structure.io.StructureFiletype;
 import org.biojava.nbio.structure.scop.ScopDatabase;
 import org.biojava.nbio.structure.scop.ScopFactory;
 import org.biojava.nbio.structure.test.util.GlobalsHelper;
@@ -203,7 +202,7 @@ public class AtomCacheTest {
 	}
 
 	@Test
-	public void testFetchBehavior() throws IOException, ParseException, PDBIdException {
+	public void testFetchBehavior() throws IOException, ParseException {
 		// really more of a LocalPDBDirectory test, but throw it in with AtomCache
 		String id = "1hh0"; // A small structure, since we download it multiple times
 		PDBId pdbId = new PDBId(id);

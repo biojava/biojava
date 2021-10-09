@@ -64,7 +64,6 @@ import org.biojava.nbio.structure.NucleotideImpl;
 import org.biojava.nbio.structure.PDBCrystallographicInfo;
 import org.biojava.nbio.structure.PDBHeader;
 import org.biojava.nbio.structure.PDBId;
-import org.biojava.nbio.structure.PDBId.PDBIdException;
 import org.biojava.nbio.structure.ResidueNumber;
 import org.biojava.nbio.structure.Site;
 import org.biojava.nbio.structure.Structure;
@@ -344,9 +343,8 @@ public class PDBFileParser  {
 	 the PDB
 	 63 - 66        IDcode          idCode          This identifier is unique within PDB
 	</pre>
-	 * @throws PDBIdException 
 	 */
-	private void pdb_HEADER_Handler(String line) throws PDBIdException {
+	private void pdb_HEADER_Handler(String line) {
 
 		String classification  = null;
 		String deposition_date = null;
@@ -2696,7 +2694,7 @@ public class PDBFileParser  {
 					else if (recordName.equals("SHEET")) pdb_SHEET_Handler(line ) ;
 					else if (recordName.equals("TURN")) pdb_TURN_Handler(   line ) ;
 				}
-			} catch (StringIndexOutOfBoundsException | NullPointerException | PDBIdException ex) {
+			} catch (StringIndexOutOfBoundsException | NullPointerException ex) {
 				logger.info("Unable to parse [" + line + "]");
 			}
 		}

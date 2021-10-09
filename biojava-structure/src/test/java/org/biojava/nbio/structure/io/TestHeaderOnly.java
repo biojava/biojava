@@ -30,7 +30,6 @@ import java.util.zip.GZIPInputStream;
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.PDBId;
-import org.biojava.nbio.structure.PDBId.PDBIdException;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
@@ -120,7 +119,7 @@ public class TestHeaderOnly {
 
 	// A better test follows that uses local files.
 	// @Test
-	public void testSpeed() throws PDBIdException {
+	public void testSpeed() {
 		// Force using a file reader.
 		CifFileReader fr = new CifFileReader();
 		FileParsingParameters par = new FileParsingParameters();

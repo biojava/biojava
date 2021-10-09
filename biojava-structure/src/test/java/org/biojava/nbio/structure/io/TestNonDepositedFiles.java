@@ -20,7 +20,12 @@
  */
 package org.biojava.nbio.structure.io;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -32,7 +37,6 @@ import java.util.zip.GZIPInputStream;
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.EntityInfo;
 import org.biojava.nbio.structure.EntityType;
-import org.biojava.nbio.structure.PDBId.PDBIdException;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
@@ -200,10 +204,9 @@ public class TestNonDepositedFiles {
 	 * This is the file submitted to the PDB for deposition of entry 4lup
 	 * See github issue #234
 	 * @throws IOException
-	 * @throws PDBIdException 
 	 */
 	@Test
-	public void testPhenixCifFile() throws IOException, PDBIdException {
+	public void testPhenixCifFile() throws IOException {
 		InputStream inStream = new GZIPInputStream(this.getClass().getResourceAsStream("/org/biojava/nbio/structure/io/4lup_phenix_output.cif.gz"));
 
 		FileParsingParameters fileParsingParams = new FileParsingParameters();
@@ -335,10 +338,9 @@ public class TestNonDepositedFiles {
 	 * then relabel them so that they belong to the same chain as the polymeric residues.
 	 *
 	 * In this case, the ligands represent valuable information and should not be discarded.
-	 * @throws PDBIdException 
 	 */
 	@Test
-	public void testNewLigandChain() throws IOException, PDBIdException {
+	public void testNewLigandChain() throws IOException {
 		// Test the file parsing speed when the files are already downloaded.
 
 		InputStream pdbStream = new GZIPInputStream(this.getClass().getResourceAsStream("/ligandTest.pdb.gz"));
@@ -394,7 +396,7 @@ public class TestNonDepositedFiles {
 	}
 
 	@Test
-	public void testWaterOnlyChainCif() throws IOException, PDBIdException {
+	public void testWaterOnlyChainCif() throws IOException {
 
 		// following file is cut-down versions of 4a10
 		InputStream cifStream = new GZIPInputStream(this.getClass().getResourceAsStream("/org/biojava/nbio/structure/io/4a10_short.cif.gz"));
@@ -452,7 +454,7 @@ public class TestNonDepositedFiles {
 	}
 
 	@Test
-	public void testStructureWithBranchedEntities() throws IOException, PDBIdException {
+	public void testStructureWithBranchedEntities() throws IOException {
 		// Example carbohydrate remediation file to be released in July 2020
 		URL url = new URL("https://raw.githubusercontent.com/pdbxmmcifwg/carbohydrate-extension/master/examples/models/1B5F-carb.cif");
 		InputStream inStream = url.openStream();

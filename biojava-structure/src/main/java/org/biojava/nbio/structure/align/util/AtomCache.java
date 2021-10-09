@@ -29,7 +29,6 @@ import java.util.TreeSet;
 
 import org.biojava.nbio.core.util.InputStreamProvider;
 import org.biojava.nbio.structure.*;
-import org.biojava.nbio.structure.PDBId.PDBIdException;
 import org.biojava.nbio.structure.align.client.StructureName;
 import org.biojava.nbio.structure.cath.CathDatabase;
 import org.biojava.nbio.structure.cath.CathDomain;
@@ -844,7 +843,7 @@ public class AtomCache {
 	}
 
 	
-	protected Structure loadStructureFromMmtfByPdbId(String pdbId) throws IOException, PDBIdException {
+	protected Structure loadStructureFromMmtfByPdbId(String pdbId) throws IOException {
 		return loadStructureFromMmtfByPdbId(new PDBId(pdbId));
 	}
 
@@ -862,7 +861,7 @@ public class AtomCache {
 		return reader.getStructureById(pdbId);
 	}
 
-	protected Structure loadStructureFromCifByPdbId(String pdbId) throws IOException, PDBIdException {
+	protected Structure loadStructureFromCifByPdbId(String pdbId) throws IOException {
 		return loadStructureFromCifByPdbId(new PDBId(pdbId));
 	}
 	
@@ -883,7 +882,7 @@ public class AtomCache {
 		return s;
 	}
 
-	protected Structure loadStructureFromBcifByPdbId(String pdbId) throws IOException, PDBIdException {
+	protected Structure loadStructureFromBcifByPdbId(String pdbId) throws IOException {
 		return loadStructureFromBcifByPdbId(new PDBId(pdbId));
 	}
 	protected Structure loadStructureFromBcifByPdbId(PDBId pdbId) throws IOException {
@@ -903,7 +902,7 @@ public class AtomCache {
 		return s;
 	}
 
-	protected Structure loadStructureFromPdbByPdbId(String pdbId) throws IOException, PDBIdException {
+	protected Structure loadStructureFromPdbByPdbId(String pdbId) throws IOException {
 		return loadStructureFromPdbByPdbId(new PDBId(pdbId));
 	}
 

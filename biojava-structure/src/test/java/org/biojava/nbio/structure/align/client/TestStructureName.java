@@ -20,8 +20,17 @@
  */
 package org.biojava.nbio.structure.align.client;
 
-import static org.biojava.nbio.structure.align.client.StructureName.Source.*;
-import static org.junit.Assert.*;
+import static org.biojava.nbio.structure.align.client.StructureName.Source.BIO;
+import static org.biojava.nbio.structure.align.client.StructureName.Source.CATH;
+import static org.biojava.nbio.structure.align.client.StructureName.Source.ECOD;
+import static org.biojava.nbio.structure.align.client.StructureName.Source.FILE;
+import static org.biojava.nbio.structure.align.client.StructureName.Source.PDB;
+import static org.biojava.nbio.structure.align.client.StructureName.Source.SCOP;
+import static org.biojava.nbio.structure.align.client.StructureName.Source.URL;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,7 +38,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.biojava.nbio.structure.PDBId;
-import org.biojava.nbio.structure.PDBId.PDBIdException;
 import org.biojava.nbio.structure.StructureException;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -108,7 +116,6 @@ public class TestStructureName {
 	/**
 	 * Test explicit prefixes
 	 * @throws StructureException
-	 * @throws PDBIdException 
 	 */
 	@Test
 	public void testPrefixes() throws StructureException {
@@ -185,7 +192,6 @@ public class TestStructureName {
 	/**
 	 * Test without prefixes
 	 * @throws StructureException
-	 * @throws PDBIdException 
 	 */
 	@Test
 	public void testGuesses() throws StructureException {

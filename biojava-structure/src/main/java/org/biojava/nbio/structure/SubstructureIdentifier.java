@@ -29,7 +29,6 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.biojava.nbio.structure.PDBId.PDBIdException;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.contact.Grid;
 import org.slf4j.Logger;
@@ -99,7 +98,7 @@ public class SubstructureIdentifier implements StructureIdentifier {
 		PDBId tempId = null;
 		try {
 			tempId = new PDBId(idRange[0]);
-		} catch (PDBIdException e) {
+		} catch (IllegalArgumentException e) {
 			// Changed from Exception to a warning to support files and stuff -sbliven 2015/01/22
 			logger.warn(String.format("Unrecognized PDB code %s", idRange[0]));
 		}
@@ -120,11 +119,10 @@ public class SubstructureIdentifier implements StructureIdentifier {
 	 * If ranges is empty, includes all residues.
 	 * @param pdbId
 	 * @param ranges
-	 * @throws PDBIdException 
 	 * @deprecated use the {@link #SubstructureIdentifier(PDBId, List)} constructor instead
 	 */
 	@Deprecated 
-	public SubstructureIdentifier(String pdbId, List<ResidueRange> ranges) throws PDBIdException {
+	public SubstructureIdentifier(String pdbId, List<ResidueRange> ranges) {
 		this(new PDBId(pdbId), ranges);
 	}
 
@@ -134,7 +132,6 @@ public class SubstructureIdentifier implements StructureIdentifier {
 	 * If ranges is empty, includes all residues.
 	 * @param pdbId
 	 * @param ranges
-	 * @throws PDBIdException 
 	 */
 	public SubstructureIdentifier(PDBId pdbId, List<ResidueRange> ranges) {
 		if(ranges == null) {

@@ -23,7 +23,6 @@
  */
 package org.biojava.nbio.structure;
 
-import org.biojava.nbio.structure.PDBId.PDBIdException;
 import org.biojava.nbio.structure.io.FileConvert;
 import org.biojava.nbio.structure.io.PDBFileReader;
 
@@ -782,12 +781,11 @@ public interface Structure extends Cloneable, Serializable {
 	 * Set PDB code of structure .
 	 *
 	 * @param pdb_id  a String specifying the PDBCode
-	 * @throws PDBIdException 
 	 * @see #getPDBCode
 	 * @deprecated use {@link #setPDBCode(PDBId)}
 	 */
 	@Deprecated
-	void setPDBCode (String pdb_id) throws PDBIdException ;
+	void setPDBCode (String pdb_id);
 
 
 

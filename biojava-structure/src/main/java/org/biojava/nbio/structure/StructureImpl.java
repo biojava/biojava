@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
-import org.biojava.nbio.structure.PDBId.PDBIdException;
 import org.biojava.nbio.structure.io.FileConvert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -1016,12 +1015,11 @@ public class StructureImpl implements Structure {
 	}
 	
 	/** {@inheritDoc} 
-	 * @throws PDBIdException 
 	 * @deprecated use {@link #setPDBCode(PDBId)}
 	 * */
 	@Deprecated
 	@Override
-	public void setPDBCode(String pdb_id) throws PDBIdException {
+	public void setPDBCode(String pdb_id){
 		if(pdb_id == null) {
 			this.pdbId = null;
 		}else {

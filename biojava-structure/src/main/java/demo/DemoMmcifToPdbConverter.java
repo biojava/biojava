@@ -22,7 +22,6 @@
 package demo;
 
 import org.biojava.nbio.structure.Chain;
-import org.biojava.nbio.structure.PDBId.PDBIdException;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.io.cif.CifStructureConverter;
 
@@ -42,7 +41,7 @@ public class DemoMmcifToPdbConverter {
 		convert(inFile, outFile);
 	}
 
-	public static void convert(File inFile, File outFile) throws IOException, PDBIdException {
+	public static void convert(File inFile, File outFile) throws IOException {
 		// now get the protein structure.
 		Structure cifStructure = CifStructureConverter.fromPath(inFile.toPath());
 

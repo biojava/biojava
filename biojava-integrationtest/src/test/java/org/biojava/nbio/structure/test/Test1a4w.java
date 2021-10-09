@@ -25,7 +25,6 @@
 package org.biojava.nbio.structure.test;
 
 import org.biojava.nbio.structure.*;
-import org.biojava.nbio.structure.PDBId.PDBIdException;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.CifFileReader;
 import org.biojava.nbio.structure.io.FileParsingParameters;
@@ -68,8 +67,7 @@ public class Test1a4w {
 
 
 	@Test
-	public void test1a4wPDBFile() throws IOException, PDBIdException
-	{
+	public void test1a4wPDBFile() throws IOException {
 
 		//		structure = null;
 

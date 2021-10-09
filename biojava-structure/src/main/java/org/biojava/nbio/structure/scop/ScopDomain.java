@@ -31,7 +31,6 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.biojava.nbio.structure.PDBId;
-import org.biojava.nbio.structure.PDBId.PDBIdException;
 import org.biojava.nbio.structure.ResidueRange;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
@@ -131,11 +130,10 @@ public class ScopDomain implements Serializable, Cloneable, StructureIdentifier 
 	}
 	/**
 	 * @param pdbId
-	 * @throws PDBIdException 
 	 * @deprecated use {@link #setPDBId(PDBId)}
 	 */
 	@Deprecated
-	public void setPdbId(String pdbId) throws PDBIdException {
+	public void setPdbId(String pdbId) {
 		if(pdbId == null) this.pdbId = null;
 		this.pdbId = new PDBId(pdbId);
 	}
