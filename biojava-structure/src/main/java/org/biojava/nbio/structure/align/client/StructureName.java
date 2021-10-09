@@ -77,11 +77,11 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 	protected String chainName;
 
 	//TODO Double check all of the modified patterns
-	private static final Pattern cathPattern = Pattern.compile("^(?:CATH:)?((?:pdb_[0-9]{4})?[0-9][a-z0-9]{3})(\\w)([0-9]{2})$",Pattern.CASE_INSENSITIVE);
+	private static final Pattern cathPattern = Pattern.compile("^(?:CATH:)?([0-9][a-z0-9]{3})(\\w)([0-9]{2})$",Pattern.CASE_INSENSITIVE);
 	// ds046__ is a special case with no PDB entry
-	private static final Pattern scopPattern = Pattern.compile("^(?:SCOP:)?d((?:pdb_[0-9]{4})?[0-9][a-z0-9]{3}|s046)(\\w|\\.)(\\w)$",Pattern.CASE_INSENSITIVE);
+	private static final Pattern scopPattern = Pattern.compile("^(?:SCOP:)?d([0-9][a-z0-9]{3}|s046)(\\w|\\.)(\\w)$",Pattern.CASE_INSENSITIVE);
 	// ECOD chains and domains can't be automatically distinguished. Ex: e3j9zS13 is chain 'S1', e1wz2B14 is chain 'B'
-	private static final Pattern ecodPattern = Pattern.compile("^(?:ECOD:)?e((?:pdb_[0-9]{4})?[0-9][a-z0-9]{3})(?:\\w|\\.)\\w+$",Pattern.CASE_INSENSITIVE);
+	private static final Pattern ecodPattern = Pattern.compile("^(?:ECOD:)?e([0-9][a-z0-9]{3})(?:\\w|\\.)\\w+$",Pattern.CASE_INSENSITIVE);
 
 	// Names are automatically used as prefixes
 	public enum Source {

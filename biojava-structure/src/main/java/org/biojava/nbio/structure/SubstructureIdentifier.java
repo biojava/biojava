@@ -50,7 +50,8 @@ import org.slf4j.LoggerFactory;
  * 		range         := range (',' range)?
  * 		               | chainID
  * 		               | chainID '_' resNum '-' resNum
- * 		pdbID         := ((PDB|pdb)_[0-9]{4})?[1-9][a-zA-Z0-9]{3}
+ *		pdbID         := [1-9][a-zA-Z0-9]{3}
+ *		               | PDB_[0-9]{4}[1-9][a-zA-Z0-9]{3}
  * 		chainID       := [a-zA-Z0-9]+
  * 		resNum        := [-+]?[0-9]+[A-Za-z]?
  * </pre>
