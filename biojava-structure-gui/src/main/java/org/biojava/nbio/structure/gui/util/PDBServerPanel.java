@@ -119,7 +119,6 @@ implements StructurePairSelector{
 			if ( debug)
 				System.out.println("using chain " + chain +  " for structure " + structure1.getPDBId().getId());
 			Chain c1 = structure1.getPolyChainByPDB(chain);
-//			tmp1.setPDBId(structure1.getPDBId());  //Isn't it duplicate?
 			tmp1.setPDBHeader(structure1.getPDBHeader());
 			tmp1.setPDBId(structure1.getPDBId());
 			tmp1.addChain(c1);

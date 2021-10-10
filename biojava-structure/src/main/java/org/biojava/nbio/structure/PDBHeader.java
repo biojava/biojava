@@ -63,7 +63,6 @@ public class PDBHeader implements PDBRecord {
 	 * Use {@link #getKeywords()} instead. */
 	private String description;
 	private List<String> keywords;
-//	private String idCode;
 	private PDBId pdbId;
 	private String classification;
 
