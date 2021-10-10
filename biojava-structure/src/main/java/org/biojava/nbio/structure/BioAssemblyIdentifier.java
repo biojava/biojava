@@ -52,12 +52,15 @@ public class BioAssemblyIdentifier implements StructureIdentifier {
 	/**
 	 * @param pdbCode
 	 * @param biolNr
-	 * @deprecated use {@link #BioAssemblyIdentifier(PDBId, int)} instead
 	 */
-	@Deprecated
 	public BioAssemblyIdentifier(String pdbCode, int biolNr) {
 		this(new PDBId(pdbCode), biolNr);
 	}
+
+	/**
+	 * @param pdbCode
+	 * @param biolNr
+	 */
 	public BioAssemblyIdentifier(PDBId pdbId, int biolNr) {
 		this.pdbId = pdbId;
 		this.biolNr = biolNr;

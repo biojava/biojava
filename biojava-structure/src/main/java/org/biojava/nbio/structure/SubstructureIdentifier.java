@@ -120,9 +120,7 @@ public class SubstructureIdentifier implements StructureIdentifier {
 	 * If ranges is empty, includes all residues.
 	 * @param pdbId
 	 * @param ranges
-	 * @deprecated use the {@link #SubstructureIdentifier(PDBId, List)} constructor instead
 	 */
-	@Deprecated 
 	public SubstructureIdentifier(String pdbId, List<ResidueRange> ranges) {
 		this(new PDBId(pdbId), ranges);
 	}
@@ -162,8 +160,8 @@ public class SubstructureIdentifier implements StructureIdentifier {
 		return pdbId + "." + ResidueRange.toString(ranges);
 	}
 
-	/**
-	 * @return
+	/**get the PDB identifier part of the SubstructureIdentifier
+	 * @return the PDB ID
 	 * @deprecated use {@link #getPDBId()}
 	 */
 	@Deprecated
@@ -173,6 +171,9 @@ public class SubstructureIdentifier implements StructureIdentifier {
 		return pdbId.getId();
 	}
 
+	/**get the PDB identifier part of the SubstructureIdentifier
+	 * @return the PDB ID
+	 */
 	public PDBId getPDBId() {
 		return pdbId;
 	}

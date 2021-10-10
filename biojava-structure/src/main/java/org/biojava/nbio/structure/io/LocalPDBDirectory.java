@@ -338,9 +338,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 
 	/**
 	 *{@inheritDoc}
-	 *@deprecated use {@link #getStructureById(org.biojava.nbio.structure.PDBId)
 	 */
-	@Override
 	public Structure getStructureById(String pdbId) throws IOException {
 		return getStructureById(new PDBId(pdbId));
 	}
@@ -402,12 +400,19 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 		}
 	}
 
+	/**
+	 * Attempts to delete all versions of a structure from the local directory.
+	 * @param pdbId a String representing the PDB ID.
+	 * @return True if one or more files were deleted
+	 * @throws IOException if the file cannot be deleted
+	 */
 	public boolean deleteStructure(String pdbId) throws IOException {
 		return deleteStructure(new PDBId(pdbId));
 	}
+
 	/**
 	 * Attempts to delete all versions of a structure from the local directory.
-	 * @param pdbId
+	 * @param pdbId The PDB ID
 	 * @return True if one or more files were deleted
 	 * @throws IOException if the file cannot be deleted
 	 */
@@ -658,7 +663,6 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	 * @param pdbId
 	 * @return A file pointing to the existing file, or null if not found
 	 * @throws IOException If the file exists but is empty and can't be deleted
-	 * @deprecated use {@link #getLocalFile(PDBId)}
 	 */
 	public File getLocalFile(String pdbId) throws IOException {
 		return getLocalFile(new PDBId(pdbId));

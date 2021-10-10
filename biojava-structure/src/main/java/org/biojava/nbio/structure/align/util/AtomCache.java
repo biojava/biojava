@@ -225,11 +225,8 @@ public class AtomCache {
 	 * @return a structure object
 	 * @throws IOException
 	 * @throws StructureException if biassemblyId < 0 or other problems while loading structure
-	 * @author Peter Rose
 	 * @since 3.2
-	 * @deprecated use {@link #getBiologicalAssembly(PDBId, int, boolean)} instead
 	 */
-	@Deprecated
 	public Structure getBiologicalAssembly(String pdbId, int bioAssemblyId, boolean multiModel)
 			throws StructureException, IOException {
 		return getBiologicalAssembly(new PDBId(pdbId), bioAssemblyId, multiModel);
@@ -252,8 +249,6 @@ public class AtomCache {
 	 * @return a structure object
 	 * @throws IOException
 	 * @throws StructureException if biassemblyId < 0 or other problems while loading structure
-	 * @author Peter Rose
-	 * @author Amr ALHOSSARY
 	 * @since 6.0.0
 	 */
 	public Structure getBiologicalAssembly(PDBId pdbId, int bioAssemblyId, boolean multiModel)

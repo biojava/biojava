@@ -491,10 +491,20 @@ public class PDBHeader implements PDBRecord {
 		}
 	}
 
+	/** The PDB identifier for this protein structure.
+	 *
+	 * @return the PDB identifier
+	 * @see #setPDBId(String)
+	 */
 	public PDBId getPdbId() {
 		return pdbId;
 	}
 	
+	/** sets the identifier code for this protein structure.
+	 *
+	 * @param idCode the PDB identifier
+	 * @see #getPDBId()
+	 */
 	public void setPDBId(PDBId pdbId) {
 		this.pdbId = pdbId;
 	}
