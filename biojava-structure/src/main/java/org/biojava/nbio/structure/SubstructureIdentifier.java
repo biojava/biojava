@@ -156,7 +156,8 @@ public class SubstructureIdentifier implements StructureIdentifier {
 	 */
 	@Override
 	public String getIdentifier() {
-		if (ranges.isEmpty()) return pdbId.getId();
+		String pdbId = this.pdbId == null? "": this.pdbId.getId();
+		if (ranges.isEmpty()) return pdbId;
 		return pdbId + "." + ResidueRange.toString(ranges);
 	}
 

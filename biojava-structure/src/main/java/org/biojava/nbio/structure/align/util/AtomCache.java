@@ -781,8 +781,9 @@ public class AtomCache {
 	}
 
 	protected void flagLoading(PDBId pdbId) {
-		if (!currentlyLoading.contains(pdbId.getId())) {
-			currentlyLoading.add(pdbId.getId());
+		String id = pdbId.getId();
+		if (!currentlyLoading.contains(id)) {
+			currentlyLoading.add(id);
 		}
 	}
 
