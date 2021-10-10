@@ -42,11 +42,21 @@ public class PDBId implements Comparable<PDBId>, Serializable{
 		}
 	}
 	
-	public static boolean isValidShortPDBID(String id) throws NullPointerException {
+	/**
+	 * @param id
+	 * @return
+	 * @throws NullPointerException
+	 */
+	public static boolean isValidShortPDBID(String id) {
 		return PATTERN_SHORT_PDBID.matcher(id).matches();
 	}
 	
-	public static boolean isValidExtendedPDBID(String id) throws NullPointerException {
+	/**
+	 * @param id
+	 * @return
+	 * @throws NullPointerException
+	 */
+	public static boolean isValidExtendedPDBID(String id) {
 		return PATTERN_EXTENDED_PDBID.matcher(id).matches();
 	}
 	
