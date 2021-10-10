@@ -20,7 +20,7 @@ BioJava 6.0.0 (future release)
 * Removed `org.biojava.nbio.structure.io.mmtf.MmtfUtils.setUpBioJava()`
 * Removed from `org.biojava.nbio.structure.Chain` interface: `getParent()`, `setParent()`, `getAtomLigands()`, `getSwissprotId()`, `setSwissprotId()`, `getInternalChainID()`, `setInternalChainID()`, `getChainID()`, `setChainID()`
 * Removed from `org.biojava.nbio.structure.Structure` interface: `findChain()`, `getId()`, `setId()`, `getChainByPDB()`, `getCompoundById()`, `getResidueRanges()`, `getRanges()`
-* Removed from `org.biojava.nbio.structure.StructureTools` : `isNucleicAcid()`, `isProtein()`, `getPredominantGroupType()`, `isChainWaterOnly()`, `isChainPureNonPolymer()`
+* Removed from `org.biojava.nbio.structure.StructureTools` : `isNucleicAcid()`, `isProtein()`, `getPredominantGroupType()`, `isChainWaterOnly()`, `isChainPureNonPolymer()`, `getReducedStructure()`
 * Removed `org.biojava.nbio.structure.io.SandboxStyleStructureProvider`
 * In `org.biojava.nbio.structure.align.xml.MultipleAlignmentXMLParser` made all methods private except `parseXMLfile`
 
