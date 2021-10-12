@@ -28,6 +28,7 @@ import javax.vecmath.Vector3d;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Locale;
+import java.util.Objects;
 
 
 /**
@@ -73,8 +74,11 @@ public class BoundingBox implements Serializable {
 	 * Constructs a BoundingBox by calculating maxs and mins of given array of atoms.
 	 * @param atoms the atom array
 	 * @throws IllegalArgumentException if atom array is empty
+	 * @throws NullPointerException if input is null
 	 */
 	public BoundingBox (Point3d[] atoms) {
+
+		Objects.requireNonNull(atoms);
 
 		if (atoms.length==0)
 			throw new IllegalArgumentException("Empty list of atoms is not allowed for BoundingBox construction");
@@ -103,8 +107,11 @@ public class BoundingBox implements Serializable {
 	 * Given a set of bounding boxes returns a bounding box that bounds all of them.
 	 * @param boxes an array of bounding boxes
 	 * @throws IllegalArgumentException if input array is empty
+	 * @throws NullPointerException if input is null
 	 */
 	public BoundingBox(BoundingBox[] boxes) {
+
+		Objects.requireNonNull(boxes);
 
 		if (boxes.length==0)
 			throw new IllegalArgumentException("Empty list of bounding boxes is not allowed for BoundingBox construction");

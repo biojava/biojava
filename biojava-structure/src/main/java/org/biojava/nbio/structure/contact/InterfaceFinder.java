@@ -1,14 +1,18 @@
 package org.biojava.nbio.structure.contact;
 
-import org.biojava.nbio.structure.*;
+import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.Calc;
+import org.biojava.nbio.structure.Chain;
+import org.biojava.nbio.structure.Group;
+import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.xtal.CrystalTransform;
 import org.biojava.nbio.structure.xtal.SpaceGroup;
 
 import javax.vecmath.Point3d;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Collection;
 import java.util.List;
-import java.util.stream.IntStream;
 
 /**
  * A class containing methods to find interfaces in a given structure.
@@ -37,11 +41,10 @@ public class InterfaceFinder {
      * Remove polymer chains with 0 atoms.
      */
     private void trimPolyChains() {
-        Iterator<Chain> it = polyChains.iterator();
-        while (it.hasNext()) {
-            int count = it.next().getAtomGroups().stream().flatMapToInt(g-> IntStream.of(g.getAtoms().size())).sum();
-            if (count==0) it.remove();
-        }
+        polyChains.removeIf(chain -> {
+            int count = chain.getAtomGroups().stream().map(Group::getAtoms).mapToInt(Collection::size).sum();
+            return count == 0;
+        });
     }
 
     /**
