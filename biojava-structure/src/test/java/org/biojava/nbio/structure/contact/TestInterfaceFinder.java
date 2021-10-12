@@ -29,7 +29,7 @@ public class TestInterfaceFinder {
 
     @Test
     public void testGetAllInterfaces() {
-        Structure s = mockStructure();
+        Structure s = mockStructure(false);
         InterfaceFinder finder = new InterfaceFinder(s);
 
         StructureInterfaceList list = finder.getAllInterfaces();
@@ -51,10 +51,26 @@ public class TestInterfaceFinder {
     }
 
     /**
+     * Check that interfaces can be calculated if one polymer chain has no atoms at all
+     */
+    @Test
+    public void testGetAllInterfacesNoAtomsPoly() {
+        Structure s = mockStructure(true);
+        InterfaceFinder finder = new InterfaceFinder(s);
+
+        StructureInterfaceList list = finder.getAllInterfaces();
+
+        assertEquals(1, list.size());
+
+        // make sure we did not alter the original poly chains
+        assertEquals(3, s.getPolyChains().size());
+    }
+
+    /**
      * Create a mock structure with 2 entities 1 (chains A, B) and 2 (chain C).
      * @return a structure
      */
-    private Structure mockStructure() {
+    private Structure mockStructure(boolean addNoAtomsPolyChain) {
         Structure structure = new StructureImpl();
         EntityInfo entity1 = new EntityInfo();
         entity1.setMolId(1);
@@ -91,7 +107,13 @@ public class TestInterfaceFinder {
         chainB.setSeqResGroups(bGroups);
         chainB.setEntityInfo(entity1);
 
-        List<Group> cGroups = getGroupList(20, "GLY", chainC, new Point3d(0, 4, 0));
+        int size;
+        if (addNoAtomsPolyChain)
+            size = 0;
+        else
+            size = 20;
+
+        List<Group> cGroups = getGroupList(size, "GLY", chainC, new Point3d(0, 4, 0));
         chainC.setAtomGroups(new ArrayList<>(cGroups));
         chainC.setSeqResGroups(cGroups);
         chainC.setEntityInfo(entity2);

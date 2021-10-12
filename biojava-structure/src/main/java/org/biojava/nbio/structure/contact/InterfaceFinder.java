@@ -8,6 +8,7 @@ import javax.vecmath.Point3d;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.IntStream;
 
 /**
  * A class containing methods to find interfaces in a given structure.
@@ -38,11 +39,8 @@ public class InterfaceFinder {
     private void trimPolyChains() {
         Iterator<Chain> it = polyChains.iterator();
         while (it.hasNext()) {
-            int count = 0;
-            for (Group g:it.next().getAtomGroups())
-                count += g.getAtoms().size();
-            if (count==0)
-                it.remove();
+            int count = it.next().getAtomGroups().stream().flatMapToInt(g-> IntStream.of(g.getAtoms().size())).sum();
+            if (count==0) it.remove();
         }
     }
 
