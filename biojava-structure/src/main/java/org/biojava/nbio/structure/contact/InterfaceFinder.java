@@ -1,14 +1,12 @@
 package org.biojava.nbio.structure.contact;
 
-import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.Calc;
-import org.biojava.nbio.structure.Chain;
-import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureTools;
+import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.xtal.CrystalTransform;
 import org.biojava.nbio.structure.xtal.SpaceGroup;
 
 import javax.vecmath.Point3d;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -23,14 +21,29 @@ public class InterfaceFinder {
     private static final CrystalTransform IDENTITY_TRANSFORM = new CrystalTransform((SpaceGroup) null);
     private static final boolean INCLUDE_HETATOMS = true;
 
-    private Structure structure;
+    private List<Chain> polyChains;
     private double cutoff;
 
     private BoundingBox[] boundingBoxes;
 
     public InterfaceFinder(Structure structure) {
-        this.structure = structure;
+        this.polyChains = new ArrayList<>(structure.getPolyChains());
+        trimPolyChains();
         this.cutoff = DEFAULT_CONTACT_CUTOFF;
+    }
+
+    /**
+     * Remove polymer chains with 0 atoms.
+     */
+    private void trimPolyChains() {
+        Iterator<Chain> it = polyChains.iterator();
+        while (it.hasNext()) {
+            int count = 0;
+            for (Group g:it.next().getAtomGroups())
+                count += g.getAtoms().size();
+            if (count==0)
+                it.remove();
+        }
     }
 
     /**
@@ -52,7 +65,6 @@ public class InterfaceFinder {
 
         StructureInterfaceList list = new StructureInterfaceList();
 
-        List<Chain> polyChains = structure.getPolyChains();
         for (int i = 0; i<polyChains.size(); i++) {
             for (int j = i + 1; j<polyChains.size(); j++) {
                 if (! boundingBoxes[i].overlaps(boundingBoxes[j], cutoff)) {
@@ -68,7 +80,6 @@ public class InterfaceFinder {
     }
 
     private void initBoundingBoxes() {
-        List<Chain> polyChains = structure.getPolyChains();
         boundingBoxes = new BoundingBox[polyChains.size()];
         for (int i = 0; i<polyChains.size(); i++) {
             Atom[] atoms = StructureTools.getAllNonHAtomArray(polyChains.get(i), INCLUDE_HETATOMS);
