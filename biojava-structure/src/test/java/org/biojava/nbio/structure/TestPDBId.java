@@ -227,7 +227,7 @@ public class TestPDBId {
 		//Now let the real test begins
 		boolean foundEqualButNotTheSame = false;
 		for (int i = 0; i < expected.length; i++) {
-			if(expected[i] == array[i]) {
+			if(expected[i] != array[i]) {
 				foundEqualButNotTheSame = true;
 				break;
 			}
