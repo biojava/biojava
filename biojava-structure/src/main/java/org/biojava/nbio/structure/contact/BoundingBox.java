@@ -78,8 +78,6 @@ public class BoundingBox implements Serializable {
 	 */
 	public BoundingBox (Point3d[] atoms) {
 
-		Objects.requireNonNull(atoms);
-
 		if (atoms.length==0)
 			throw new IllegalArgumentException("Empty list of atoms is not allowed for BoundingBox construction");
 
@@ -110,8 +108,6 @@ public class BoundingBox implements Serializable {
 	 * @throws NullPointerException if input is null
 	 */
 	public BoundingBox(BoundingBox[] boxes) {
-
-		Objects.requireNonNull(boxes);
 
 		if (boxes.length==0)
 			throw new IllegalArgumentException("Empty list of bounding boxes is not allowed for BoundingBox construction");
