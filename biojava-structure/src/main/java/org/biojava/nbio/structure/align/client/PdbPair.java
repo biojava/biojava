@@ -26,7 +26,7 @@ import org.biojava.nbio.structure.StructureException;
 
 /**
  * A pair for structure alignment.
- * a pair is considered equal to another pair if their two poles are equal regardless to their order.
+ * a pair is considered equal to another pair if their two respective tuple poles are equal either in their original or reversed order.
  * i.e. both <code>new PdbPair("1abc", "2abc").equals(new PdbPair("1abc", "2abc"))</code> and 
  * <code>new PdbPair("1abc", "2abc").equals(new PdbPair("2abc", "1abc"))</code> are <code>true</code>.
  * @author Andreas Prlic
@@ -67,9 +67,7 @@ public class PdbPair implements Comparable<PdbPair> {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		return prime * name1.hashCode() + 
-				prime * name2.hashCode();
+		return Objects.hashCode(name1) + Objects.hashCode(name2);
 	}
 
 	@Override
