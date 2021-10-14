@@ -1,15 +1,19 @@
 package org.biojava.nbio.structure;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertSame;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
 
 public class TestPdbId {
 
@@ -58,99 +62,80 @@ public class TestPdbId {
 	
 	@Test
 	public void testGetIdInShortFormat() {
-		try {
+		assertDoesNotThrow(() -> {
 			PdbId pdbId = new PdbId("1abc");
 			String id = pdbId.getShortId();
 			assertEquals(id, "1ABC");
-		} catch (StructureException e) {
-			e.printStackTrace();
-			fail("Unexpected Exception thrown");
-		}
-		
-		try {
+		}, "Unexpected Exception thrown");
+
+		assertThrows(StructureException.class, () -> {
 			PdbId pdbId = new PdbId("PDB_55551abc");
 			pdbId.getShortId();
-			fail("wrongly shortened a non-shortable ID");
-		} catch (StructureException e) {}
+		}, "wrongly shortened a non-shortable ID");
 	}
 	
 	
 	@Test
 	public void testIsShortPDBID() {
-		assertTrue("Didn't accept lower case", PdbId.isValidShortPdbId("1abc"));
-		assertTrue("Didn't accept upper case", PdbId.isValidShortPdbId("4HHB"));
-		assertFalse("Accepted wrong format", PdbId.isValidShortPdbId("HHHB"));
-		assertFalse("Accepted extended format", PdbId.isValidShortPdbId("PDB_00001ABC"));
+		assertTrue(PdbId.isValidShortPdbId("1abc"), "Didn't accept lower case");
+		assertTrue(PdbId.isValidShortPdbId("4HHB"), "Didn't accept upper case");
+		assertFalse(PdbId.isValidShortPdbId("HHHB"), "Accepted wrong format");
+		assertFalse(PdbId.isValidShortPdbId("PDB_00001ABC"), "Accepted extended format");
 	}
 	
 	@Test
 	public void testIsExtendedPDBID() {
-		assertTrue("Didn't accept lower case", PdbId.isValidExtendedPdbId("PDB_00001abc"));
-		assertTrue("Didn't accept upper case", PdbId.isValidExtendedPdbId("PDB_00004HHB"));
-		assertTrue("Didn't accept upper case", PdbId.isValidExtendedPdbId("PDB_22224HHB"));
-		assertFalse("Accepted wrong format", PdbId.isValidExtendedPdbId("PDB_AAAA4HHB"));
-		assertFalse("Accepted short format", PdbId.isValidExtendedPdbId("1ABC"));
+		assertTrue(PdbId.isValidExtendedPdbId("PDB_00001abc"), "Didn't accept lower case");
+		assertTrue(PdbId.isValidExtendedPdbId("PDB_00004HHB"), "Didn't accept upper case");
+		assertTrue(PdbId.isValidExtendedPdbId("PDB_22224HHB"), "Didn't accept upper case");
+		assertFalse(PdbId.isValidExtendedPdbId("PDB_AAAA4HHB"), "Accepted wrong format");
+		assertFalse(PdbId.isValidExtendedPdbId("1ABC"), "Accepted short format");
 	}
 
 	@Test
 	public void testIsShortCompatible() {
-		assertTrue("Didn't accept lower case", PdbId.isShortCompatible("PDB_00001abc"));
-		assertTrue("Didn't accept upper case", PdbId.isShortCompatible("PDB_00004HHB"));
-		assertFalse("Accepted short format", PdbId.isShortCompatible("1ABC"));
-		assertFalse("Accepted wrong format", PdbId.isShortCompatible("PDB_AAAA4HHB"));
+		assertTrue(PdbId.isShortCompatible("PDB_00001abc"), "Didn't accept lower case");
+		assertTrue(PdbId.isShortCompatible("PDB_00004HHB"), "Didn't accept upper case");
+		assertFalse(PdbId.isShortCompatible("1ABC"), "Accepted short format");
+		assertFalse(PdbId.isShortCompatible("PDB_AAAA4HHB"), "Accepted wrong format");
 
 		//Although this is wrong, returning true is the expected behavior of 
 		// this method; because it does NOT validate the passed in string.
-		assertTrue("Accepted wrong format", PdbId.isShortCompatible("PDB_0000XXXXXXXXXXXXX"));
+		assertTrue(PdbId.isShortCompatible("PDB_0000XXXXXXXXXXXXX"), "Accepted wrong format");
 	}
 	
 	@Test
 	public void testToExtendedFormat() {
-		try {
+		assertDoesNotThrow(() -> {
 			assertEquals(PdbId.toExtendedId("1abc"), "PDB_00001ABC");
-		} catch (StructureException e) {
-			e.printStackTrace();
-			fail("Couldn't extend Id");
-		}
+		}, "Couldn't extend Id");
 
-		try {
+		assertDoesNotThrow(() -> {
 			assertEquals(PdbId.toExtendedId("PDB_00001abc"), "PDB_00001ABC");
-		} catch (StructureException e) {
-			e.printStackTrace();
-			fail("Didn't recognize extended format");
-		}
+		}, "Didn't recognize extended format");
 		
-		try {
+		assertThrows(StructureException.class, () -> {
 			PdbId.toExtendedId("PDB_aaaa1abc");
-			fail("Accepted wrong format");
-		} catch (StructureException e) {}
+		}, "Accepted wrong format");
 	}
 	
 	@Test
 	public void testToShortFormat() {
-		try {
+		assertDoesNotThrow(() -> {
 			assertEquals(PdbId.toShortId("PDB_00001ABC"), "1ABC");
-		} catch (StructureException e) {
-			e.printStackTrace();
-			fail("Couldn't shorten Id");
-		}
+		}, "Couldn't shorten Id");
 		
-		try {
+		assertDoesNotThrow(() -> {
 			assertEquals(PdbId.toShortId("1abc"), "1ABC");
-		} catch (StructureException e) {
-			e.printStackTrace();
-			fail("Didn't recognize short format");
-		}
+		}, "Didn't recognize short format");
 		
-		try {
+		assertThrows(StructureException.class, () -> {
 			PdbId.toShortId("PDB_aaaa1abc");
-			fail("Accepted wrong format");
-		} catch (StructureException e) {}
+		}, "Accepted wrong format");
 		
-		try {
+		assertThrows(StructureException.class, () -> {
 			PdbId.toShortId("aabc");
-			fail("Accepted wrong format");
-		} catch (StructureException e) {}
+		}, "Accepted wrong format");
 	}
 	
 	@Test
@@ -176,18 +161,14 @@ public class TestPdbId {
 
 	@Test
 	public void testClone() {
-		PdbId id1, clone;
-		try {
-			id1 = new PdbId("1abc");
-			clone = (PdbId) id1.clone();
+		assertDoesNotThrow(() -> {
+			PdbId id1 = new PdbId("1abc");
+			PdbId clone = (PdbId) id1.clone();
 			
-			assertFalse(id1 == clone);
-			assertTrue(id1.equals(clone));
+			assertNotSame(id1, clone);
+			assertEquals(id1, clone);
 			assertEquals(id1.hashCode(), clone.hashCode());
-		} catch (CloneNotSupportedException e) {
-			e.printStackTrace();
-			fail("unexpected exception thrown while cloning");
-		}
+		}, "unexpected exception thrown while cloning");
 	}
 	
 
@@ -225,13 +206,11 @@ public class TestPdbId {
 //		System.out.println(Arrays.deepToString(expected));
 		assertArrayEquals(expected, array); // They should be.
 		//Now let the real test begins
-		boolean foundEqualButNotTheSame = false;
-		for (int i = 0; i < expected.length; i++) {
-			if(expected[i] != array[i]) {
-				foundEqualButNotTheSame = true;
-				break;
-			}
+		for (int i = 0; i < 2; i++) {
+			assertNotSame("Couldn't detect 2 objects that are equal but not the same", expected[i], array[i]);
 		}
-		assertTrue("Couldn't detect 2 objects that are equal but not the same", foundEqualButNotTheSame);
+		for (int i = 2; i < expected.length; i++) {
+			assertSame(expected[i], array[i]);
+		}
 	}
 }
