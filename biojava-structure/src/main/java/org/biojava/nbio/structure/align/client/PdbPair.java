@@ -22,6 +22,7 @@ package org.biojava.nbio.structure.align.client;
 
 import java.util.Objects;
 
+import org.biojava.nbio.structure.PdbId;
 import org.biojava.nbio.structure.StructureException;
 
 /**
@@ -96,16 +97,49 @@ public class PdbPair implements Comparable<PdbPair> {
 		return name2.compareTo(o.name2);
 	}
 
+	/**
+	 * @deprecated use {@link #getPDBCode1()} instead
+	 * @return
+	 * @throws StructureException
+	 */
 	public String getPDBCode1() throws StructureException {
-		return name1.getPdbId().getId();
-	}
-	public String getPDBCode2() throws StructureException{
-		return name2.getPdbId().getId();
+		PdbId pdbId = name1.getPdbId();
+		return pdbId == null? null: pdbId.getId();
 	}
 
+	/**
+	 * @deprecated use {@link #getPDBCode2()} instead
+	 * @return
+	 * @throws StructureException
+	 */
+	@Deprecated
+	public String getPDBCode2() throws StructureException{
+		PdbId pdbId = name2.getPdbId();
+		return pdbId == null? null: pdbId.getId();
+	}
+	
+	/**
+	 * @since 6.0.0
+	 * @return
+	 * @throws StructureException
+	 */
+	public PdbId getPdbId1() throws StructureException{
+		return name1.getPdbId();
+	}
+
+	/**
+	 * @since 6.0.0
+	 * @return
+	 * @throws StructureException
+	 */
+	public PdbId getPdbId2() throws StructureException{
+		return name2.getPdbId();
+	}
+	
 	public String getChainId1(){
 		return  name1.getChainId();
 	}
+
 	public String getChainId2(){
 		return name2.getChainId();
 	}
