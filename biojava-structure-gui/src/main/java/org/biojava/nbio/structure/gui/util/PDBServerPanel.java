@@ -24,7 +24,7 @@
 package org.biojava.nbio.structure.gui.util;
 
 import org.biojava.nbio.structure.Chain;
-import org.biojava.nbio.structure.PDBId;
+import org.biojava.nbio.structure.PdbId;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureImpl;
@@ -109,7 +109,7 @@ implements StructurePairSelector{
 		Structure tmp1 = new StructureImpl();
 
 		try {
-			Structure structure1 = reader.getStructureById(new PDBId(pdbIdString));
+			Structure structure1 = reader.getStructureById(new PdbId(pdbIdString));
 
 			// no chain has been specified
 			// return whole structure
@@ -117,10 +117,10 @@ implements StructurePairSelector{
 				return structure1;
 			}
 			if ( debug)
-				System.out.println("using chain " + chain +  " for structure " + structure1.getPDBId().getId());
+				System.out.println("using chain " + chain +  " for structure " + structure1.getPdbId().getId());
 			Chain c1 = structure1.getPolyChainByPDB(chain);
 			tmp1.setPDBHeader(structure1.getPDBHeader());
-			tmp1.setPDBId(structure1.getPDBId());
+			tmp1.setPdbId(structure1.getPdbId());
 			tmp1.addChain(c1);
 			System.out.println("ok");
 

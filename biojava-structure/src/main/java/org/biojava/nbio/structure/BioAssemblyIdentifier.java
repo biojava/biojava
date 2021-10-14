@@ -31,7 +31,7 @@ public class BioAssemblyIdentifier implements StructureIdentifier {
 
 	private static final long serialVersionUID = -356206725119993449L;
 
-	private PDBId pdbId;
+	private PdbId pdbId;
 	private int biolNr;
 
 	public static final Pattern BIO_NAME_PATTERN = Pattern.compile("^(?:BIO:)([0-9][a-z0-9]{3})(?::([0-9]+))?$", Pattern.CASE_INSENSITIVE);
@@ -41,7 +41,7 @@ public class BioAssemblyIdentifier implements StructureIdentifier {
 		if(! match.matches() ) {
 			throw new IllegalArgumentException("Invalid BIO identifier");
 		}
-		pdbId = new PDBId(match.group(1));
+		pdbId = new PdbId(match.group(1));
 		if(match.group(2) != null) {
 			biolNr = Integer.parseInt(match.group(2));
 		} else {
@@ -54,14 +54,14 @@ public class BioAssemblyIdentifier implements StructureIdentifier {
 	 * @param biolNr
 	 */
 	public BioAssemblyIdentifier(String pdbCode, int biolNr) {
-		this(new PDBId(pdbCode), biolNr);
+		this(new PdbId(pdbCode), biolNr);
 	}
 
 	/**
 	 * @param pdbCode
 	 * @param biolNr
 	 */
-	public BioAssemblyIdentifier(PDBId pdbId, int biolNr) {
+	public BioAssemblyIdentifier(PdbId pdbId, int biolNr) {
 		this.pdbId = pdbId;
 		this.biolNr = biolNr;
 	}

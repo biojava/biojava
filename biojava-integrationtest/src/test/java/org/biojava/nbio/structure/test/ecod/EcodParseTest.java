@@ -83,7 +83,7 @@ public class EcodParseTest {
 			Atom[] ca1;
 			Structure struct;
 			try {
-				struct = cache.getStructure(d.getPdbId());
+				struct = cache.getStructure(d.getPdbId().getId());
 				ca1 = StructureTools.getRepresentativeAtomArray(struct);
 			} catch (IOException e) {
 				logger.error("Error getting structure for "+d.getDomainId(),e);

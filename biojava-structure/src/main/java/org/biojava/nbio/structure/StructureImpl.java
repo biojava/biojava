@@ -48,7 +48,7 @@ public class StructureImpl implements Structure {
 
 	private static final Logger logger = LoggerFactory.getLogger(StructureImpl.class);
 
-	private PDBId pdbId ;
+	private PdbId pdbId ;
 
 	private List<Model> models;
 
@@ -116,7 +116,7 @@ public class StructureImpl implements Structure {
 
 		// copy structure data
 
-		n.setPDBId(getPDBId());
+		n.setPdbId(getPdbId());
 		n.setName(getName());
 		//TODO the header data is not being deep-copied, that's a minor issue since it is just some static metadata, but we should recheck this if needed - JD 2014-12-11
 		n.setPDBHeader(pdbHeader);
@@ -1004,7 +1004,7 @@ public class StructureImpl implements Structure {
 
 	/** 
 	 * {@inheritDoc} 
-	 * @deprecated use {@link #getPDBId()} to get a {@link PDBId} object or getPDBId().getId() to get a {@link String}
+	 * @deprecated use {@link #getPdbId()} to get a {@link PdbId} object or getPdbId().getId() to get a {@link String}
 	 */
 	@Deprecated
 	@Override
@@ -1015,7 +1015,7 @@ public class StructureImpl implements Structure {
 	}
 	
 	/** {@inheritDoc} 
-	 * @deprecated use {@link #setPDBCode(PDBId)}
+	 * @deprecated use {@link #setPDBCode(PdbId)}
 	 * */
 	@Deprecated
 	@Override
@@ -1023,7 +1023,7 @@ public class StructureImpl implements Structure {
 		if(pdb_id == null) {
 			this.pdbId = null;
 		}else {
-			pdbId = new PDBId(pdb_id);
+			pdbId = new PdbId(pdb_id);
 		}
 	}
 	
@@ -1032,14 +1032,14 @@ public class StructureImpl implements Structure {
 	/** {@inheritDoc} 
 	 * @since 6.0.0
 	 * */
-	public PDBId getPDBId() {
+	public PdbId getPdbId() {
 		return this.pdbId;
 	}
 	
 	/** {@inheritDoc}
 	 * @since 6.0.0
 	 *  */
-	public void setPDBId(PDBId pdbId) {
+	public void setPdbId(PdbId pdbId) {
 		this.pdbId = pdbId;
 	}
 
@@ -1087,7 +1087,7 @@ public class StructureImpl implements Structure {
 
 			range.add(new ResidueRange(chain.getName(),first,last));
 		}
-		return new SubstructureIdentifier(getPDBId(),range);
+		return new SubstructureIdentifier(getPdbId(),range);
 	}
 
 }

@@ -31,7 +31,7 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
-import org.biojava.nbio.structure.PDBId;
+import org.biojava.nbio.structure.PdbId;
 import org.biojava.nbio.structure.ResidueRange;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
@@ -112,7 +112,7 @@ implements StructurePairSelector{
 		String chainId = c1.getText().trim();
 		String range = r1.getText().trim();
 		
-		PDBId pdbId = new PDBId(id);
+		PdbId pdbId = new PdbId(id);
 		// Prefer range over chain
 		if( ! range.isEmpty() ) {
 			return new SubstructureIdentifier(pdbId, ResidueRange.parseMultiple(range));
@@ -126,7 +126,7 @@ implements StructurePairSelector{
 		String chainId = c2.getText().trim();
 		String range = r2.getText().trim();
 		
-		PDBId pdbId = new PDBId(id);
+		PdbId pdbId = new PdbId(id);
 		// Prefer range over chain
 		if( ! range.isEmpty() ) {
 			return new SubstructureIdentifier(pdbId, ResidueRange.parseMultiple(range));

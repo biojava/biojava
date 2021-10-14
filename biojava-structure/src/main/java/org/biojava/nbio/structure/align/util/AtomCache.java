@@ -229,7 +229,7 @@ public class AtomCache {
 	 */
 	public Structure getBiologicalAssembly(String pdbId, int bioAssemblyId, boolean multiModel)
 			throws StructureException, IOException {
-		return getBiologicalAssembly(new PDBId(pdbId), bioAssemblyId, multiModel);
+		return getBiologicalAssembly(new PdbId(pdbId), bioAssemblyId, multiModel);
 	}
 	
 	/**
@@ -251,7 +251,7 @@ public class AtomCache {
 	 * @throws StructureException if biassemblyId < 0 or other problems while loading structure
 	 * @since 6.0.0
 	 */
-	public Structure getBiologicalAssembly(PDBId pdbId, int bioAssemblyId, boolean multiModel)
+	public Structure getBiologicalAssembly(PdbId pdbId, int bioAssemblyId, boolean multiModel)
 			throws StructureException, IOException {
 		if (bioAssemblyId < 0) {
 			throw new StructureException("bioAssemblyID must be nonnegative: " + pdbId + " bioAssemblyId "
@@ -553,7 +553,7 @@ public class AtomCache {
 	 */
 	public Structure getStructureForDomain(ScopDomain domain, ScopDatabase scopDatabase, boolean strictLigandHandling)
 			throws IOException, StructureException {
-		String pdbId = domain.getPdbId();
+		PdbId pdbId = domain.getPdbId();
 		Structure fullStructure = getStructureForPdbId(pdbId);
 		Structure structure = domain.reduce(fullStructure);
 
@@ -743,7 +743,7 @@ public class AtomCache {
 		this.filetype = filetype;
 	}
 
-	private boolean checkLoading(PDBId pdbId) {
+	private boolean checkLoading(PdbId pdbId) {
 		return currentlyLoading.contains(pdbId.getId());
 	}
 
@@ -780,14 +780,14 @@ public class AtomCache {
 		return n;
 	}
 
-	protected void flagLoading(PDBId pdbId) {
+	protected void flagLoading(PdbId pdbId) {
 		String id = pdbId.getId();
 		if (!currentlyLoading.contains(id)) {
 			currentlyLoading.add(id);
 		}
 	}
 
-	protected void flagLoadingFinished(PDBId pdbId) {
+	protected void flagLoadingFinished(PdbId pdbId) {
 		currentlyLoading.remove(pdbId.getId());
 	}
 
@@ -801,7 +801,7 @@ public class AtomCache {
 	public Structure getStructureForPdbId(String id) throws IOException, StructureException {
 		if (id == null)
 			return null;
-		return getStructureForPdbId(new PDBId(id));
+		return getStructureForPdbId(new PdbId(id));
 	}
 	/**
 	 * Loads a structure directly by PDB ID
@@ -810,7 +810,7 @@ public class AtomCache {
 	 * @throws IOException
 	 * @throws StructureException
 	 */
-	public Structure getStructureForPdbId(PDBId pdbId) throws IOException {
+	public Structure getStructureForPdbId(PdbId pdbId) throws IOException {
 		if (pdbId == null)
 			return null;
 		
@@ -841,7 +841,7 @@ public class AtomCache {
 
 	
 	protected Structure loadStructureFromMmtfByPdbId(String pdbId) throws IOException {
-		return loadStructureFromMmtfByPdbId(new PDBId(pdbId));
+		return loadStructureFromMmtfByPdbId(new PdbId(pdbId));
 	}
 
 	/**
@@ -850,7 +850,7 @@ public class AtomCache {
 	 * @return the {@link Structure} object of the parsed structure
 	 * @throws IOException error reading from Web or file system
 	 */
-	protected Structure loadStructureFromMmtfByPdbId(PDBId pdbId) throws IOException {
+	protected Structure loadStructureFromMmtfByPdbId(PdbId pdbId) throws IOException {
 		logger.debug("Loading structure {} from mmtf file.", pdbId);
 		MMTFFileReader reader = new MMTFFileReader();
 		reader.setFetchBehavior(fetchBehavior);
@@ -859,10 +859,10 @@ public class AtomCache {
 	}
 
 	protected Structure loadStructureFromCifByPdbId(String pdbId) throws IOException {
-		return loadStructureFromCifByPdbId(new PDBId(pdbId));
+		return loadStructureFromCifByPdbId(new PdbId(pdbId));
 	}
 	
-	protected Structure loadStructureFromCifByPdbId(PDBId pdbId) throws IOException {
+	protected Structure loadStructureFromCifByPdbId(PdbId pdbId) throws IOException {
 		logger.debug("Loading structure {} from mmCIF file {}.", pdbId, path);
 		Structure s;
 		flagLoading(pdbId);
@@ -880,9 +880,9 @@ public class AtomCache {
 	}
 
 	protected Structure loadStructureFromBcifByPdbId(String pdbId) throws IOException {
-		return loadStructureFromBcifByPdbId(new PDBId(pdbId));
+		return loadStructureFromBcifByPdbId(new PdbId(pdbId));
 	}
-	protected Structure loadStructureFromBcifByPdbId(PDBId pdbId) throws IOException {
+	protected Structure loadStructureFromBcifByPdbId(PdbId pdbId) throws IOException {
 		logger.debug("Loading structure {} from BinaryCIF file {}.", pdbId, path);
 		Structure s;
 		flagLoading(pdbId);
@@ -900,10 +900,10 @@ public class AtomCache {
 	}
 
 	protected Structure loadStructureFromPdbByPdbId(String pdbId) throws IOException {
-		return loadStructureFromPdbByPdbId(new PDBId(pdbId));
+		return loadStructureFromPdbByPdbId(new PdbId(pdbId));
 	}
 
-	protected Structure loadStructureFromPdbByPdbId(PDBId pdbId) throws IOException {
+	protected Structure loadStructureFromPdbByPdbId(PdbId pdbId) throws IOException {
 		logger.debug("Loading structure {} from PDB file {}.", pdbId, path);
 		Structure s;
 		flagLoading(pdbId);

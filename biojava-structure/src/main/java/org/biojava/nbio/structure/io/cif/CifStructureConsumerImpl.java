@@ -35,7 +35,7 @@ import org.biojava.nbio.structure.HetatomImpl;
 import org.biojava.nbio.structure.NucleotideImpl;
 import org.biojava.nbio.structure.PDBCrystallographicInfo;
 import org.biojava.nbio.structure.PDBHeader;
-import org.biojava.nbio.structure.PDBId;
+import org.biojava.nbio.structure.PdbId;
 import org.biojava.nbio.structure.ResidueNumber;
 import org.biojava.nbio.structure.SeqMisMatch;
 import org.biojava.nbio.structure.SeqMisMatchImpl;
@@ -869,10 +869,10 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
         }
 
         if (struct.isDefined() && struct.getEntryId().isDefined()) {
-            PDBId pdbId = null;
-            pdbId = new PDBId(struct.getEntryId().get(0));
-			pdbHeader.setPDBId(pdbId);
-            structure.setPDBId(pdbId);
+            PdbId pdbId = null;
+            pdbId = new PdbId(struct.getEntryId().get(0));
+			pdbHeader.setPdbId(pdbId);
+            structure.setPdbId(pdbId);
         }
     }
 
@@ -936,7 +936,7 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
 
             DBRef dbRef = new DBRef();
 
-            dbRef.setIdCode(structRefSeq.getPdbxPDBIdCode().get(rowIndex));
+            dbRef.setIdCode(structRefSeq.getPdbxPDBIdCode().get(rowIndex));  //TODO Shall we change this as well?
             dbRef.setDbAccession(structRefSeq.getPdbxDbAccession().get(rowIndex));
             dbRef.setDbIdCode(structRefSeq.getPdbxDbAccession().get(rowIndex));
             dbRef.setChainName(structRefSeq.getPdbxStrandId().get(rowIndex));

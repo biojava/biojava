@@ -772,7 +772,7 @@ public interface Structure extends Cloneable, Serializable {
 	 *
 	 * @return a String representing the PDBCode value
 	 * @see #setPDBCode
-	 * @deprecated use {@link #getPDBId()} to get a {@link PDBId} object or getPDBId().getId() to get a {@link String}
+	 * @deprecated use {@link #getPdbId()} to get a {@link PdbId} object or getPdbId().getId() to get a {@link String}
 	 */
 	@Deprecated
 	String getPDBCode () ;
@@ -782,7 +782,7 @@ public interface Structure extends Cloneable, Serializable {
 	 *
 	 * @param pdb_id  a String specifying the PDBCode
 	 * @see #getPDBCode
-	 * @deprecated use {@link #setPDBCode(PDBId)}
+	 * @deprecated use {@link #setPDBCode(PdbId)}
 	 */
 	@Deprecated
 	void setPDBCode (String pdb_id);
@@ -791,16 +791,16 @@ public interface Structure extends Cloneable, Serializable {
 
 	/**
 	 * Returns the PDB identifier associated with this StructureIdentifier.
-	 * @return the {@link PDBId} object
+	 * @return the {@link PdbId} object
 	 * @since 6.0.0
 	 */
-	PDBId getPDBId();
+	PdbId getPdbId();
 	
 	
-	/**Sets the {@link PDBId} identifier associated with this structure.
-	 * @param pdbId the {@link PDBId} identifier object to set
+	/**Sets the {@link PdbId} identifier associated with this structure.
+	 * @param pdbId the {@link PdbId} identifier object to set
 	 * @since 6.0.0
 	 */
-	void setPDBId(PDBId pdbId);
+	void setPdbId(PdbId pdbId);
 
 }

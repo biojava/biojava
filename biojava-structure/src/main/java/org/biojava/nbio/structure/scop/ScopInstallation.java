@@ -364,7 +364,7 @@ public class ScopInstallation implements LocalScopDatabase {
 		if ( scopId.length() < 6) {
 			throw new ScopIOException("Does not look like a scop ID! " + scopId);
 		}
-		String pdbId = scopId.substring(1,5); //TODO handle this when you handle extended PDBId (PDB ID)
+		String pdbId = scopId.substring(1,5); //TODO handle this when you handle extended PdbId (PDB ID)
 		List<ScopDomain> doms = getDomainsForPDB(pdbId);
 		if ( doms == null)
 			return null;

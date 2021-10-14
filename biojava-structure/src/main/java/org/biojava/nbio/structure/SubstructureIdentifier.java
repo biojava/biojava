@@ -82,7 +82,7 @@ public class SubstructureIdentifier implements StructureIdentifier {
 	private static final Logger logger = LoggerFactory.getLogger(SubstructureIdentifier.class);
 
 
-	private final PDBId pdbId;
+	private final PdbId pdbId;
 	private final List<ResidueRange> ranges;
 
 	/**
@@ -96,9 +96,9 @@ public class SubstructureIdentifier implements StructureIdentifier {
 		}
 		//used tempId to avoid writing 2 assignment statements to a final field,
 		// although one is in the try block and the other in the catch block.
-		PDBId tempId = null;
+		PdbId tempId = null;
 		try {
-			tempId = new PDBId(idRange[0]);
+			tempId = new PdbId(idRange[0]);
 		} catch (IllegalArgumentException e) {
 			// Changed from Exception to a warning to support files and stuff -sbliven 2015/01/22
 			logger.warn(String.format("Unrecognized PDB code %s", idRange[0]));
@@ -122,7 +122,7 @@ public class SubstructureIdentifier implements StructureIdentifier {
 	 * @param ranges
 	 */
 	public SubstructureIdentifier(String pdbId, List<ResidueRange> ranges) {
-		this(new PDBId(pdbId), ranges);
+		this(new PdbId(pdbId), ranges);
 	}
 
 	/**
@@ -132,7 +132,7 @@ public class SubstructureIdentifier implements StructureIdentifier {
 	 * @param pdbId
 	 * @param ranges
 	 */
-	public SubstructureIdentifier(PDBId pdbId, List<ResidueRange> ranges) {
+	public SubstructureIdentifier(PdbId pdbId, List<ResidueRange> ranges) {
 		if(ranges == null) {
 			throw new NullPointerException("Null ranges list");
 		}
@@ -163,19 +163,8 @@ public class SubstructureIdentifier implements StructureIdentifier {
 
 	/**get the PDB identifier part of the SubstructureIdentifier
 	 * @return the PDB ID
-	 * @deprecated use {@link #getPDBId()}
 	 */
-	@Deprecated
-	public String getPdbId() {
-		if(this.pdbId == null)
-			return null;
-		return pdbId.getId();
-	}
-
-	/**get the PDB identifier part of the SubstructureIdentifier
-	 * @return the PDB ID
-	 */
-	public PDBId getPDBId() {
+	public PdbId getPdbId() {
 		return pdbId;
 	}
 	
@@ -218,7 +207,7 @@ public class SubstructureIdentifier implements StructureIdentifier {
 		Structure newS = new StructureImpl();
 
 		try {
-			newS.setPDBId(s.getPDBId());
+			newS.setPdbId(s.getPdbId());
 		} catch (NullPointerException e) {
 			throw new StructureException("NullPointerException Possibly due to malformed PIBId format.", e);
 		}
@@ -227,7 +216,7 @@ public class SubstructureIdentifier implements StructureIdentifier {
 		newS.setDBRefs(s.getDBRefs());
 		newS.setBiologicalAssembly(s.isBiologicalAssembly());
 		newS.getPDBHeader().setDescription(
-				"sub-range " + ranges + " of "  + newS.getPDBId() + " "
+				"sub-range " + ranges + " of "  + newS.getPdbId() + " "
 						+ s.getPDBHeader().getDescription());
 		newS.setEntityInfos(new ArrayList<>());
 		// TODO The following should be only copied for atoms which are present in the range.
@@ -330,7 +319,7 @@ public class SubstructureIdentifier implements StructureIdentifier {
 	 */
 	@Override
 	public Structure loadStructure(AtomCache cache) throws IOException, StructureException {
-		String pdb = getPdbId();
+		PdbId pdb = getPdbId();
 		if(pdb == null)
 			return null;
 		return cache.getStructureForPdbId(pdb);

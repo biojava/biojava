@@ -79,7 +79,7 @@ Column 15: Comma-separated value list of non-polymer entities within 4 A of at l
 	private Integer hGroup;
 	private Integer tGroup;
 	private Integer fGroup;
-	private PDBId pdbId;
+	private PdbId pdbId;
 	private String chainId;
 	private String range;
 	private String seqIdRange;
@@ -117,7 +117,7 @@ Column 15: Comma-separated value list of non-polymer entities within 4 A of at l
 		this.hGroup = hGroup;
 		this.tGroup = tGroup;
 		this.fGroup = fGroup;
-		this.pdbId = new PDBId(pdbId);
+		this.pdbId = new PdbId(pdbId);
 		this.chainId = chainId;
 		this.range = range;
 		this.seqIdRange = seqId;
@@ -203,20 +203,25 @@ Column 15: Comma-separated value list of non-polymer entities within 4 A of at l
 		this.fGroup = fGroup;
 	}
 
-	public String getPdbId() {
-		if(pdbId == null)return null;
-		return pdbId.getId();
-	}
 	public void setPdbId(String pdbId) {
-		if(pdbId == null) this.pdbId = null;
-		this.pdbId = new PDBId(pdbId);
+		if (pdbId == null)
+			this.pdbId = null;
+		else
+			setPdbId(new PdbId(pdbId));
 	}
-	public PDBId getPDBId() {
+
+	public PdbId getPdbId() {
 		return pdbId;
 	}
-	public void setPDBId(PDBId pdbId) {
+	
+	/**
+	 * @param pdbId
+	 * @since 6.0.0
+	 */
+	public void setPdbId(PdbId pdbId) {
 		this.pdbId = pdbId;
 	}
+
 	public String getChainId() {
 		return chainId;
 	}
@@ -454,7 +459,7 @@ Column 15: Comma-separated value list of non-polymer entities within 4 A of at l
 
 	@Override
 	public SubstructureIdentifier toCanonical() {
-		return new SubstructureIdentifier(getPDBId(), ResidueRange.parseMultiple(getRange()));
+		return new SubstructureIdentifier(getPdbId(), ResidueRange.parseMultiple(getRange()));
 	}
 
 	@Override

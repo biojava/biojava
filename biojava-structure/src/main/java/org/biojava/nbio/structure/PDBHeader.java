@@ -63,7 +63,7 @@ public class PDBHeader implements PDBRecord {
 	 * Use {@link #getKeywords()} instead. */
 	private String description;
 	private List<String> keywords;
-	private PDBId pdbId;
+	private PdbId pdbId;
 	private String classification;
 
 	private Date depDate;
@@ -479,32 +479,34 @@ public class PDBHeader implements PDBRecord {
 	 *
 	 * @param idCode the PDB identifier
 	 * @see #getIdCode()
-	 * @deprecated use {@link #setPDBId(PDBId)}
+	 * @deprecated use {@link #setPdbId(PdbId)}
 	 */
 	@Deprecated
 	public void setIdCode(String idCode) {
 		if(idCode == null) {
 			this.pdbId = null;
 		}else {
-			this.pdbId = new PDBId(idCode);
+			this.pdbId = new PdbId(idCode);
 		}
 	}
 
 	/** The PDB identifier for this protein structure.
 	 *
 	 * @return the PDB identifier
-	 * @see #setPDBId(String)
+	 * @see #setPdbId(String)
 	 */
-	public PDBId getPdbId() {
+	public PdbId getPdbId() {
 		return pdbId;
 	}
 	
-	/** sets the identifier code for this protein structure.
+	/** 
+	 * Sets the PDB identifier code for this protein structure.
 	 *
-	 * @param idCode the PDB identifier
-	 * @see #getPDBId()
+	 * @param pdbId the PDB identifier
+	 * @see #getPdbId()
+	 * @since 6.0.0
 	 */
-	public void setPDBId(PDBId pdbId) {
+	public void setPdbId(PdbId pdbId) {
 		this.pdbId = pdbId;
 	}
 

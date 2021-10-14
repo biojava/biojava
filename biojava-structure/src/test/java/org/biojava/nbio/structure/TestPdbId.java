@@ -11,55 +11,55 @@ import java.util.Arrays;
 
 import org.junit.Test;
 
-public class TestPDBId {
+public class TestPdbId {
 
 
 	@Test
 	public void testGetIdInDefaultFormat() {
-		PDBId pdbId;
+		PdbId pdbId;
 		String id;
 
-		pdbId = new PDBId("1abc");
+		pdbId = new PdbId("1abc");
 		id = pdbId.getId();
 		assertEquals(id, "1ABC");
 
-		pdbId = new PDBId("PDB_55551abc");
+		pdbId = new PdbId("PDB_55551abc");
 		id = pdbId.getId();
 		assertEquals(id, "PDB_55551ABC");
 	}
 
 	@Test
 	public void testGetIdPrefereShortFormat() {
-		PDBId pdbId;
+		PdbId pdbId;
 		String id;
 
-		pdbId = new PDBId("1abc");
-		id = pdbId.getId(PDBId.Behavior.PREFER_SHORT);
+		pdbId = new PdbId("1abc");
+		id = pdbId.getId(PdbId.Behavior.PREFER_SHORT);
 		assertEquals(id, "1ABC");
 
-		pdbId = new PDBId("PDB_55551abc");
-		id = pdbId.getId(PDBId.Behavior.PREFER_SHORT);
+		pdbId = new PdbId("PDB_55551abc");
+		id = pdbId.getId(PdbId.Behavior.PREFER_SHORT);
 		assertEquals(id, "PDB_55551ABC");
 	}
 
 	@Test
 	public void testGetIdPrefereExtendedFormat() {
-		PDBId pdbId;
+		PdbId pdbId;
 		String id;
 
-		pdbId = new PDBId("1abc");
-		id = pdbId.getId(PDBId.Behavior.PREFER_EXTENDED);
+		pdbId = new PdbId("1abc");
+		id = pdbId.getId(PdbId.Behavior.PREFER_EXTENDED);
 		assertEquals(id, "PDB_00001ABC");
 
-		pdbId = new PDBId("PDB_55551abc");
-		id = pdbId.getId(PDBId.Behavior.PREFER_EXTENDED);
+		pdbId = new PdbId("PDB_55551abc");
+		id = pdbId.getId(PdbId.Behavior.PREFER_EXTENDED);
 		assertEquals(id, "PDB_55551ABC");
 	}
 	
 	@Test
 	public void testGetIdInShortFormat() {
 		try {
-			PDBId pdbId = new PDBId("1abc");
+			PdbId pdbId = new PdbId("1abc");
 			String id = pdbId.getShortId();
 			assertEquals(id, "1ABC");
 		} catch (StructureException e) {
@@ -68,7 +68,7 @@ public class TestPDBId {
 		}
 		
 		try {
-			PDBId pdbId = new PDBId("PDB_55551abc");
+			PdbId pdbId = new PdbId("PDB_55551abc");
 			pdbId.getShortId();
 			fail("wrongly shortened a non-shortable ID");
 		} catch (StructureException e) {}
@@ -77,51 +77,51 @@ public class TestPDBId {
 	
 	@Test
 	public void testIsShortPDBID() {
-		assertTrue("Didn't accept lower case", PDBId.isValidShortPDBID("1abc"));
-		assertTrue("Didn't accept upper case", PDBId.isValidShortPDBID("4HHB"));
-		assertFalse("Accepted wrong format", PDBId.isValidShortPDBID("HHHB"));
-		assertFalse("Accepted extended format", PDBId.isValidShortPDBID("PDB_00001ABC"));
+		assertTrue("Didn't accept lower case", PdbId.isValidShortPdbId("1abc"));
+		assertTrue("Didn't accept upper case", PdbId.isValidShortPdbId("4HHB"));
+		assertFalse("Accepted wrong format", PdbId.isValidShortPdbId("HHHB"));
+		assertFalse("Accepted extended format", PdbId.isValidShortPdbId("PDB_00001ABC"));
 	}
 	
 	@Test
 	public void testIsExtendedPDBID() {
-		assertTrue("Didn't accept lower case", PDBId.isValidExtendedPDBID("PDB_00001abc"));
-		assertTrue("Didn't accept upper case", PDBId.isValidExtendedPDBID("PDB_00004HHB"));
-		assertTrue("Didn't accept upper case", PDBId.isValidExtendedPDBID("PDB_22224HHB"));
-		assertFalse("Accepted wrong format", PDBId.isValidExtendedPDBID("PDB_AAAA4HHB"));
-		assertFalse("Accepted short format", PDBId.isValidExtendedPDBID("1ABC"));
+		assertTrue("Didn't accept lower case", PdbId.isValidExtendedPdbId("PDB_00001abc"));
+		assertTrue("Didn't accept upper case", PdbId.isValidExtendedPdbId("PDB_00004HHB"));
+		assertTrue("Didn't accept upper case", PdbId.isValidExtendedPdbId("PDB_22224HHB"));
+		assertFalse("Accepted wrong format", PdbId.isValidExtendedPdbId("PDB_AAAA4HHB"));
+		assertFalse("Accepted short format", PdbId.isValidExtendedPdbId("1ABC"));
 	}
 
 	@Test
 	public void testIsShortCompatible() {
-		assertTrue("Didn't accept lower case", PDBId.isShortCompatible("PDB_00001abc"));
-		assertTrue("Didn't accept upper case", PDBId.isShortCompatible("PDB_00004HHB"));
-		assertFalse("Accepted short format", PDBId.isShortCompatible("1ABC"));
-		assertFalse("Accepted wrong format", PDBId.isShortCompatible("PDB_AAAA4HHB"));
+		assertTrue("Didn't accept lower case", PdbId.isShortCompatible("PDB_00001abc"));
+		assertTrue("Didn't accept upper case", PdbId.isShortCompatible("PDB_00004HHB"));
+		assertFalse("Accepted short format", PdbId.isShortCompatible("1ABC"));
+		assertFalse("Accepted wrong format", PdbId.isShortCompatible("PDB_AAAA4HHB"));
 
 		//Although this is wrong, returning true is the expected behavior of 
 		// this method; because it does NOT validate the passed in string.
-		assertTrue("Accepted wrong format", PDBId.isShortCompatible("PDB_0000XXXXXXXXXXXXX"));
+		assertTrue("Accepted wrong format", PdbId.isShortCompatible("PDB_0000XXXXXXXXXXXXX"));
 	}
 	
 	@Test
 	public void testToExtendedFormat() {
 		try {
-			assertEquals(PDBId.toExtendedId("1abc"), "PDB_00001ABC");
+			assertEquals(PdbId.toExtendedId("1abc"), "PDB_00001ABC");
 		} catch (StructureException e) {
 			e.printStackTrace();
 			fail("Couldn't extend Id");
 		}
 
 		try {
-			assertEquals(PDBId.toExtendedId("PDB_00001abc"), "PDB_00001ABC");
+			assertEquals(PdbId.toExtendedId("PDB_00001abc"), "PDB_00001ABC");
 		} catch (StructureException e) {
 			e.printStackTrace();
 			fail("Didn't recognize extended format");
 		}
 		
 		try {
-			PDBId.toExtendedId("PDB_aaaa1abc");
+			PdbId.toExtendedId("PDB_aaaa1abc");
 			fail("Accepted wrong format");
 		} catch (StructureException e) {}
 	}
@@ -129,39 +129,39 @@ public class TestPDBId {
 	@Test
 	public void testToShortFormat() {
 		try {
-			assertEquals(PDBId.toShortId("PDB_00001ABC"), "1ABC");
+			assertEquals(PdbId.toShortId("PDB_00001ABC"), "1ABC");
 		} catch (StructureException e) {
 			e.printStackTrace();
 			fail("Couldn't shorten Id");
 		}
 		
 		try {
-			assertEquals(PDBId.toShortId("1abc"), "1ABC");
+			assertEquals(PdbId.toShortId("1abc"), "1ABC");
 		} catch (StructureException e) {
 			e.printStackTrace();
 			fail("Didn't recognize short format");
 		}
 		
 		try {
-			PDBId.toShortId("PDB_aaaa1abc");
+			PdbId.toShortId("PDB_aaaa1abc");
 			fail("Accepted wrong format");
 		} catch (StructureException e) {}
 		
 		try {
-			PDBId.toShortId("aabc");
+			PdbId.toShortId("aabc");
 			fail("Accepted wrong format");
 		} catch (StructureException e) {}
 	}
 	
 	@Test
 	public void testHashCodeAndEquals() {
-		PDBId id1, id2, id3/* , id4 */;
-		PDBId other;
-		id1 = new PDBId("1abc");
-		id2 = new PDBId("PDB_00001ABC");
-		id3 = new PDBId("1ABC");
-//		id4 = new PDBId("pdb_00001abc");
-		other = new PDBId("2ABC");
+		PdbId id1, id2, id3/* , id4 */;
+		PdbId other;
+		id1 = new PdbId("1abc");
+		id2 = new PdbId("PDB_00001ABC");
+		id3 = new PdbId("1ABC");
+//		id4 = new PdbId("pdb_00001abc");
+		other = new PdbId("2ABC");
 		
 		assertEquals(id1.hashCode(), id2.hashCode());
 		assertEquals(id1.hashCode(), id3.hashCode());
@@ -176,10 +176,10 @@ public class TestPDBId {
 
 	@Test
 	public void testClone() {
-		PDBId id1, clone;
+		PdbId id1, clone;
 		try {
-			id1 = new PDBId("1abc");
-			clone = (PDBId) id1.clone();
+			id1 = new PdbId("1abc");
+			clone = (PdbId) id1.clone();
 			
 			assertFalse(id1 == clone);
 			assertTrue(id1.equals(clone));
@@ -193,35 +193,35 @@ public class TestPDBId {
 
 	@Test
 	public void testCompareTo() {
-		PDBId id1, id2, id3, id4, id5 ;
-		PDBId[] array, expected;
-		id1 = new PDBId("1abc");
-		id2 = new PDBId("PDB_00011ABC");
-		id3 = new PDBId("2ABC");
-		id4 = new PDBId("PDB_00001ABA");
-		id5 = new PDBId("1100");
+		PdbId id1, id2, id3, id4, id5 ;
+		PdbId[] array, expected;
+		id1 = new PdbId("1abc");
+		id2 = new PdbId("PDB_00011ABC");
+		id3 = new PdbId("2ABC");
+		id4 = new PdbId("PDB_00001ABA");
+		id5 = new PdbId("1100");
 		
-		array = new PDBId[] {id1, id2, id3, id4, id5};
+		array = new PdbId[] {id1, id2, id3, id4, id5};
 		System.out.println(Arrays.deepToString(array));
 		Arrays.sort(array);
 		System.out.println(Arrays.deepToString(array));
-		expected = new PDBId[] {id5, id4, id1, id3, id2};
+		expected = new PdbId[] {id5, id4, id1, id3, id2};
 		System.out.println(Arrays.deepToString(expected));
 		assertArrayEquals(expected, array);
 		
 		
 		//let's try to have some "distinct but equal" objects.
-		id1 = new PDBId("1abc");
-		id2 = new PDBId("PDB_00011ABC");
-		id3 = new PDBId("2ABC");
-		id4 = new PDBId("PDB_00001ABA");
-		id5 = new PDBId("1ABA");
+		id1 = new PdbId("1abc");
+		id2 = new PdbId("PDB_00011ABC");
+		id3 = new PdbId("2ABC");
+		id4 = new PdbId("PDB_00001ABA");
+		id5 = new PdbId("1ABA");
 		
-		array = new PDBId[] {id1, id2, id3, id4, id5};
+		array = new PdbId[] {id1, id2, id3, id4, id5};
 //		System.out.println(Arrays.deepToString(array));
 		Arrays.sort(array);
 //		System.out.println(Arrays.deepToString(array));
-		expected = new PDBId[] {id5, id4, id1, id3, id2};
+		expected = new PdbId[] {id5, id4, id1, id3, id2};
 //		System.out.println(Arrays.deepToString(expected));
 		assertArrayEquals(expected, array); // They should be.
 		//Now let the real test begins

@@ -35,7 +35,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.biojava.nbio.structure.BioAssemblyIdentifier;
-import org.biojava.nbio.structure.PDBId;
+import org.biojava.nbio.structure.PdbId;
 import org.biojava.nbio.structure.ResidueRange;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
@@ -73,7 +73,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 	private static final Logger logger = LoggerFactory.getLogger(StructureName.class);
 
 	protected String name;
-	protected PDBId pdbId;
+	protected PdbId pdbId;
 	protected String chainName;
 
 	//TODO Double check all of the modified patterns
@@ -252,7 +252,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 		Matcher matcher = scopPattern.matcher(name);
 		if ( matcher.matches() ) {
 			mySource = Source.SCOP;
-			pdbId = new PDBId(matcher.group(1));
+			pdbId = new PdbId(matcher.group(1));
 			chainName = matcher.group(2);
 			return true;
 		}
@@ -263,7 +263,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 		Matcher matcher = cathPattern.matcher(name);
 		if ( matcher.matches() ){
 			mySource = Source.CATH;
-			pdbId = new PDBId(matcher.group(1));
+			pdbId = new PdbId(matcher.group(1));
 			chainName = matcher.group(2);
 			return true;
 		}
@@ -273,7 +273,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 		Matcher matcher = ecodPattern.matcher(name);
 		if ( matcher.matches() ){
 			mySource = Source.ECOD;
-			pdbId = new PDBId(matcher.group(1));
+			pdbId = new PdbId(matcher.group(1));
 			chainName = null;
 			return true;
 		}
@@ -282,7 +282,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 	private boolean initFromBIO(String name) {
 		Matcher matcher = BioAssemblyIdentifier.BIO_NAME_PATTERN.matcher(name);
 		if( matcher.matches() ) {
-			pdbId = new PDBId(matcher.group(1));
+			pdbId = new PdbId(matcher.group(1));
 			return true;
 		}
 		return false;
@@ -295,7 +295,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 
 		base = si; // Safe to realize immediately
 
-		pdbId = si.getPDBId();
+		pdbId = si.getPdbId();
 		// Set chainName if unique
 		Set<String> chains = getChainNames(si);
 		if(chains.size() == 1) {
@@ -312,7 +312,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 			URL url = new URL(suffix);
 			String path = url.getPath();
 			mySource = Source.URL;
-			pdbId = new PDBId(URLIdentifier.guessPDBID( path.substring(path.lastIndexOf('/')+1) ));
+			pdbId = new PdbId(URLIdentifier.guessPDBID( path.substring(path.lastIndexOf('/')+1) ));
 			chainName = null; // Don't bother checking query params here
 			return true;
 		} catch(MalformedURLException e) {
@@ -345,25 +345,11 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 	 * toCanonical().getPdbId()}
 	 * @return The upper-case PDB Name, or null if not applicable
 	 * @throws StructureException Wraps errors which occur when converting to canonical form
-	 * @deprecated use {@link #getPDBId()}
-	 */
-	@Deprecated
-	public String getPdbId() throws StructureException {
-		return getPDBId().getId();
-	}
-
-	/**
-	 * Get the PDB ID for this name, if any.
-	 *
-	 * Equivalent to {@link SubstructureIdentifier#getPdbId()
-	 * toCanonical().getPdbId()}
-	 * @return The upper-case PDB Name, or null if not applicable
-	 * @throws StructureException Wraps errors which occur when converting to canonical form
 	 * @since 6.0.0
 	 */
-	public PDBId getPDBId() throws StructureException {
+	public PdbId getPdbId() throws StructureException {
 		if( pdbId == null) {
-			pdbId = toCanonical().getPDBId();
+			pdbId = toCanonical().getPdbId();
 		}
 		return pdbId;
 	}
@@ -562,13 +548,13 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 		if ( this.equals(o))
 			return 0;
 
-		PDBId pdb1 = null;
-		PDBId pdb2 = null;
+		PdbId pdb1 = null;
+		PdbId pdb2 = null;
 		try {
-			pdb1 = this.getPDBId();
+			pdb1 = this.getPdbId();
 		} catch (StructureException e) {}
 		try {
-			pdb2 = this.getPDBId();
+			pdb2 = this.getPdbId();
 		} catch (StructureException e) {}
 
 		int comp = 0;

@@ -79,7 +79,7 @@ public class TestURLIdentifier {
 
 		full = id.loadStructure(cache);
 		assertNotNull(full);
-		assertEquals("2POS",id.toCanonical().getPdbId());
+		assertEquals(new PdbId("2POS"), id.toCanonical().getPdbId());
 //		assertEquals("2POS",full.getName()); // What should this get set to with identifiers?
 
 		url = new URL("file://" + base + "?residues=A:1-5");
@@ -106,7 +106,7 @@ public class TestURLIdentifier {
 
 			full = id.loadStructure(cache);
 			assertNotNull(full);
-			assertEquals("1B8G",id.toCanonical().getPdbId());
+			assertEquals(new PdbId("1B8G"), id.toCanonical().getPdbId());
 		} catch(UnknownHostException e) {
 			logger.error("Unable to connect to rcsb.org");
 			// still pass

@@ -63,7 +63,7 @@ import org.biojava.nbio.structure.JournalArticle;
 import org.biojava.nbio.structure.NucleotideImpl;
 import org.biojava.nbio.structure.PDBCrystallographicInfo;
 import org.biojava.nbio.structure.PDBHeader;
-import org.biojava.nbio.structure.PDBId;
+import org.biojava.nbio.structure.PdbId;
 import org.biojava.nbio.structure.ResidueNumber;
 import org.biojava.nbio.structure.Site;
 import org.biojava.nbio.structure.Structure;
@@ -372,8 +372,8 @@ public class PDBFileParser  {
 			logger.debug("Parsing entry " + pdbId);
 
 
-			structure.setPDBId(new PDBId(pdbCode));
-			pdbHeader.setPDBId(new PDBId(pdbCode));
+			structure.setPdbId(new PdbId(pdbCode));
+			pdbHeader.setPdbId(new PdbId(pdbCode));
 		}
 
 		//*really* old files (you'll need to hunt to find these as they

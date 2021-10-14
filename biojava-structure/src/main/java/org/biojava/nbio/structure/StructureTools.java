@@ -1640,7 +1640,7 @@ public class StructureTools {
 
 		// copy structure data
 
-		n.setPDBId(s.getPDBId());
+		n.setPdbId(s.getPdbId());
 		n.setName(s.getName());
 
 		// TODO: do deep copying of data!

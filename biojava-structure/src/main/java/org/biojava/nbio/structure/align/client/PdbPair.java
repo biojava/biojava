@@ -97,10 +97,10 @@ public class PdbPair implements Comparable<PdbPair> {
 	}
 
 	public String getPDBCode1() throws StructureException {
-		return name1.getPDBId().getId();
+		return name1.getPdbId().getId();
 	}
 	public String getPDBCode2() throws StructureException{
-		return name2.getPDBId().getId();
+		return name2.getPdbId().getId();
 	}
 
 	public String getChainId1(){

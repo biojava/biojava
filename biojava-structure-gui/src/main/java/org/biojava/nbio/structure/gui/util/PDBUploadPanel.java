@@ -162,8 +162,8 @@ implements StructurePairSelector {
 		}
 
 //		Structure reduced = StructureTools.getReducedStructure(s, chainId.getText());
-//		Structure reduced = new SubstructureIdentifier(s.getPDBId().getId()+"."+ chainId.getText()).reduce(s);  //TODO double check this
-		Structure reduced = new SubstructureIdentifier(s.getPDBId(),
+//		Structure reduced = new SubstructureIdentifier(s.getPdbId().getId()+"."+ chainId.getText()).reduce(s);  //TODO double check this
+		Structure reduced = new SubstructureIdentifier(s.getPdbId(),
 				Arrays.asList(new ResidueRange(chainId.getText(), (String) null, null))).reduce(s);
 
 		String fileURL = "";
