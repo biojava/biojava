@@ -21,7 +21,6 @@ public class PdbId implements Comparable<PdbId>, Serializable{
 
 
 	public static final Pattern PATTERN_SHORT_PDBID = Pattern.compile("[1-9]\\p{Alnum}{3}");
-//	public static final Pattern PATTERN_EXTENDED_PDBID = Pattern.compile("(PDB|pdb)_\\d{4}[1-9]\\p{Alnum}{3}");//Shall we allow lower case?
 	public static final Pattern PATTERN_EXTENDED_PDBID = Pattern.compile("PDB_\\d{4}[1-9]\\p{Alnum}{3}"); 
 
 	/**

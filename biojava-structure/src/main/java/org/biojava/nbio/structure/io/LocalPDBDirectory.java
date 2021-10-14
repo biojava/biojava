@@ -124,9 +124,6 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	public static final long LAST_REMEDIATION_DATE ;
 	private static final String LAST_REMEDIATION_DATE_STRING = "2011/07/12";
 	
-	private static final int SHORT_OFFSET = 1;
-	private static final int LONG_OFFSET  = 9;
-
 	static {
 
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd", Locale.US);
@@ -540,8 +537,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	private File downloadStructure(PdbId pdbId, String pathOnServer, boolean obsolete, File existingFile)
 			throws IOException{
 		String id = pdbId.getId().toLowerCase();
-		int offset = (id.length() == 4 ? SHORT_OFFSET : LONG_OFFSET);
-		File dir = getDir(id,obsolete);
+		File dir = getDir(id, obsolete);
 		File realFile = new File(dir,getFilename(id));
 
 		String ftp;
@@ -554,7 +550,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 			ftp = DEFAULT_BCIF_FILE_SERVER + filename;
 		} else {
 			ftp = String.format("%s%s/%s/%s",
-			serverName, pathOnServer, id.substring(offset, offset+2).toLowerCase(), getFilename(id));
+			serverName, pathOnServer, id.substring(id.length()-3, id.length()-1), getFilename(id));
 		}
 
 		URL url = new URL(ftp);
@@ -630,22 +626,14 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	protected File getDir(String pdbId, boolean obsolete) {
 
 		File dir = null;
-		int offset = -1;
-		if(pdbId.length() == 4) {
-			offset = SHORT_OFFSET;
-		}else if (pdbId.length() == 12 && pdbId.substring(0, 4).equalsIgnoreCase("pdb_")) {
-			offset = LONG_OFFSET;
-		} else {
-			throw new IllegalArgumentException("unexpected file name length");
-		}
-		int end = offset+2;
+		int offset = pdbId.length() - 3;
 
 		if (obsolete) {
 			// obsolete is always split
-			String middle = pdbId.substring(offset, end).toLowerCase();
+			String middle = pdbId.substring(offset, offset + 2).toLowerCase();
 			dir = new File(obsoleteDirPath, middle);
 		} else {
-			String middle = pdbId.substring(offset, end).toLowerCase();
+			String middle = pdbId.substring(offset, offset + 2).toLowerCase();
 			dir = new File(splitDirPath, middle);
 		}
 
@@ -675,7 +663,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	 */
 	public File getLocalFile(PdbId pdbId) throws IOException {
 		String id = pdbId.getId();
-		int offset = (id.length() == 4 ? SHORT_OFFSET : LONG_OFFSET);
+		int offset = id.length() - 3;
 		// Search for existing files
 
 		// Search directories:

@@ -97,11 +97,12 @@ public class SubstructureIdentifier implements StructureIdentifier {
 		//used tempId to avoid writing 2 assignment statements to a final field,
 		// although one is in the try block and the other in the catch block.
 		PdbId tempId = null;
-		try {
-			tempId = new PdbId(idRange[0]);
-		} catch (IllegalArgumentException e) {
+		String idRange0 = idRange[0];
+		if(idRange0 != null) {
+			tempId = new PdbId(idRange0);
+		} else {
 			// Changed from Exception to a warning to support files and stuff -sbliven 2015/01/22
-			logger.warn(String.format("Unrecognized PDB code %s", idRange[0]));
+			logger.warn(String.format("PDB code is null"));
 		}
 		this.pdbId = tempId;
 		
@@ -206,11 +207,10 @@ public class SubstructureIdentifier implements StructureIdentifier {
 		// Create new structure & copy basic properties
 		Structure newS = new StructureImpl();
 
-		try {
-			newS.setPdbId(s.getPdbId());
-		} catch (NullPointerException e) {
-			throw new StructureException("NullPointerException Possibly due to malformed PIBId format.", e);
-		}
+		PdbId pdbId2 = s.getPdbId();
+		if(pdbId2 == null)
+			throw new StructureException("NullPointerException Possibly due to malformed PIBId format.");
+		newS.setPdbId(pdbId2);
 		newS.setPDBHeader(s.getPDBHeader());
 		newS.setName(this.toString());
 		newS.setDBRefs(s.getDBRefs());

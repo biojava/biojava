@@ -41,6 +41,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.biojava.nbio.core.util.FileDownloadUtils;
 import org.biojava.nbio.core.util.InputStreamProvider;
+import org.biojava.nbio.structure.PdbId;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
@@ -571,11 +572,13 @@ public class ScopInstallation implements LocalScopDatabase {
 
 			ScopDomain d = new ScopDomain();
 			d.setScopId(scopId);
+			PdbId tempPdbId = null;
 			try {
-				d.setPdbId(pdbId);
-			} catch (Exception e) {
+				tempPdbId = new PdbId(pdbId);
+			} catch (NullPointerException | IllegalArgumentException e) {
 				logger.warn("could not parse line >>{}<<. Error Message: {}", line, e.getMessage());
 			}
+			d.setPdbId(tempPdbId);
 
 			d.setRanges(extractRanges(range));
 

@@ -227,7 +227,7 @@ public class TestAtomCache {
 
 		Structure s = cache.getStructure(name);
 		assertNotNull("Failed to fetch structure from SCOP ID", s);
-		assertEquals("2GS2.A", s.getName()); //TODO make sure that updating the case won't cause any harm
+		assertEquals("2GS2.A", s.getName());
 	}
 
 	@Test
