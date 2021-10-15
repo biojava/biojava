@@ -20,12 +20,15 @@
  */
 package org.biojava.nbio.structure.align.client;
 
+import java.util.Objects;
+
 import org.biojava.nbio.structure.StructureException;
 
 /**
- * A pair for structure alignment
- * <p>
- * name1 is always < name2
+ * A pair for structure alignment.
+ * a pair is considered equal to another pair if their two respective tuple poles are equal either in their original or reversed order.
+ * i.e. both <code>new PdbPair("1abc", "2abc").equals(new PdbPair("1abc", "2abc"))</code> and 
+ * <code>new PdbPair("1abc", "2abc").equals(new PdbPair("2abc", "1abc"))</code> are <code>true</code>.
  * @author Andreas Prlic
  *
  */
@@ -35,26 +38,26 @@ public class PdbPair implements Comparable<PdbPair> {
 	private StructureName name2;
 
 	public PdbPair(String name1, String name2) {
-		this(new StructureName(name1),new StructureName(name2));
+		this(new StructureName(Objects.requireNonNull(name1)),
+				new StructureName(Objects.requireNonNull(name1)));
 	}
 
 	public PdbPair(StructureName name1, StructureName name2) {
-		super();
-		this.name1 = name1;
-		this.name2 = name2;
+		this.name1 = Objects.requireNonNull(name1);
+		this.name2 = Objects.requireNonNull(name2);
 	}
 
 	public String getName1() {
 		return name1.getIdentifier();
 	}
 	public void setName1(String name1) {
-		this.name1 = new StructureName(name1);
+		this.name1 = new StructureName(Objects.requireNonNull(name1));
 	}
 	public String getName2() {
 		return name2.getIdentifier();
 	}
 	public void setName2(String name2) {
-		this.name2 = new StructureName(name2);
+		this.name2 = new StructureName(Objects.requireNonNull(name2));
 	}
 
 	@Override
@@ -64,11 +67,7 @@ public class PdbPair implements Comparable<PdbPair> {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((name1 == null) ? 0 : name1.hashCode());
-		result = prime * result + ((name2 == null) ? 0 : name2.hashCode());
-		return result;
+		return Objects.hashCode(name1) + Objects.hashCode(name2);
 	}
 
 	@Override
@@ -80,23 +79,16 @@ public class PdbPair implements Comparable<PdbPair> {
 		if (getClass() != obj.getClass())
 			return false;
 		PdbPair other = (PdbPair) obj;
-		if (name1 == null) {
-			if (other.name1 != null)
-				return false;
-		} else if (!name1.equals(other.name1))
-			return false;
-		if (name2 == null) {
-			if (other.name2 != null)
-				return false;
-		} else if (!name2.equals(other.name2))
-			return false;
-		return true;
+		return (this.name1.equals(other.name1) && this.name2.equals(other.name2)) ||
+				(this.name1.equals(other.name2) && this.name2.equals(other.name1));
 	}
 
 	@Override
 	public int compareTo(PdbPair o) {
+		//make sure they are not just reverse.
 		if ( this.equals(o))
 			return 0;
+
 		// Use StructureName's compareTo method
 		int c = name1.compareTo(o.name1);
 		if ( c != 0 )
@@ -119,7 +111,6 @@ public class PdbPair implements Comparable<PdbPair> {
 	}
 
 	public PdbPair getReverse() {
-		PdbPair newPair = new PdbPair(name2, name1);
-		return newPair;
+		return new PdbPair(name2, name1);
 	}
 }
