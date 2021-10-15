@@ -289,9 +289,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 	}
 	private boolean initFromPDB(String suffix) {
 		mySource = Source.PDB;
-		SubstructureIdentifier si;
-
-		si = new SubstructureIdentifier(suffix);
+		SubstructureIdentifier si = new SubstructureIdentifier(suffix);
 
 		base = si; // Safe to realize immediately
 

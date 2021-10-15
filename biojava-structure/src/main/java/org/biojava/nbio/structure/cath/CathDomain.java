@@ -166,7 +166,7 @@ public class CathDomain implements Serializable, StructureIdentifier {
 	/**
 	 * Returns the PDB ID.
 	 */
-	public String getThePdbId() { //TODO follow up how will the Extended PDBID affect this 
+	public String getThePdbId() {
 		return domainName.substring(0, 4);
 	}
 
