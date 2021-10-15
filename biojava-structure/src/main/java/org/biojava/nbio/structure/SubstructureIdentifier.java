@@ -162,7 +162,8 @@ public class SubstructureIdentifier implements StructureIdentifier {
 		return pdbId + "." + ResidueRange.toString(ranges);
 	}
 
-	/**get the PDB identifier part of the SubstructureIdentifier
+	/**
+	 * Get the PDB identifier part of the SubstructureIdentifier
 	 * @return the PDB ID
 	 */
 	public PdbId getPdbId() {

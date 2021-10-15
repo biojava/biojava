@@ -210,6 +210,12 @@ Column 15: Comma-separated value list of non-polymer entities within 4 A of at l
 			setPdbId(new PdbId(pdbId));
 	}
 
+	/**
+	 * Gets the {@link PdbId} object.<br>
+	 * Before 6.0.0, this method used to return a {@link String}.
+	 * @return the {@link PdbId} object associated with this domain.
+	 * @since 6.0.0
+	 */
 	public PdbId getPdbId() {
 		return pdbId;
 	}

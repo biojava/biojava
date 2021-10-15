@@ -119,6 +119,19 @@ public class ScopDomain implements Serializable, Cloneable, StructureIdentifier 
 	public void setScopId(String scopId) {
 		this.scopId = scopId;
 	}
+
+	/** 
+	 * Gets the PDB identifier for this protein structure.
+	 * Before BioJava 6.0.0, this method used to return a {@link String}.
+	 *
+	 * @return the {@link PdbId} PDB identifier
+	 * @see #setPdbId(PdbId)
+	 * @since 6.0.0
+	 */
+	public PdbId getPdbId() {
+		return pdbId;
+	}
+
 	/**
 	 * @param pdbId
 	 * @deprecated use {@link #setPdbId(PdbId)}
@@ -129,9 +142,6 @@ public class ScopDomain implements Serializable, Cloneable, StructureIdentifier 
 		this.pdbId = new PdbId(pdbId);
 	}
 
-	public PdbId getPdbId() {
-		return pdbId;
-	}
 	
 	/**
 	 * @param pdbId
