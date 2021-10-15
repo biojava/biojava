@@ -28,6 +28,7 @@ import javax.vecmath.Vector3d;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Locale;
+import java.util.Objects;
 
 
 /**
@@ -71,11 +72,14 @@ public class BoundingBox implements Serializable {
 
 	/**
 	 * Constructs a BoundingBox by calculating maxs and mins of given array of atoms.
-	 * @param atoms
+	 * @param atoms the atom array
+	 * @throws IllegalArgumentException if atom array is empty
+	 * @throws NullPointerException if input is null
 	 */
 	public BoundingBox (Point3d[] atoms) {
 
-		if (atoms.length==0) logger.error("Error! Empty list of atoms");
+		if (atoms.length==0)
+			throw new IllegalArgumentException("Empty list of atoms is not allowed for BoundingBox construction");
 
 		xmax = atoms[0].x;
 		xmin = xmax;
@@ -97,30 +101,16 @@ public class BoundingBox implements Serializable {
 
 	}
 
-
-	/** Returns the dimensions of this bounding box.
-	 *
-	 * @return a double array (x,y,z) with the dimensions of the box.
-	 */
-	public double[] getDimensions(){
-
-		double[] dim = new double[3];
-
-		dim[0] = xmax-xmin;
-		dim[1] = ymax-ymin;
-		dim[2] = zmax-zmin;
-
-		return dim;
-
-	}
-
 	/**
 	 * Given a set of bounding boxes returns a bounding box that bounds all of them.
-	 * @param boxes
+	 * @param boxes an array of bounding boxes
+	 * @throws IllegalArgumentException if input array is empty
+	 * @throws NullPointerException if input is null
 	 */
 	public BoundingBox(BoundingBox[] boxes) {
 
-		if (boxes.length==0) logger.error("Error! Empty list of bounding boxes");
+		if (boxes.length==0)
+			throw new IllegalArgumentException("Empty list of bounding boxes is not allowed for BoundingBox construction");
 
 		xmax = boxes[0].xmax;
 		xmin = boxes[0].xmin;
@@ -140,7 +130,7 @@ public class BoundingBox implements Serializable {
 
 	}
 
-	private class Bound implements Comparable<Bound> {
+	private static class Bound implements Comparable<Bound> {
 		int cardinal;
 		double value;
 		public Bound(int cardinal,double value) {
@@ -155,6 +145,19 @@ public class BoundingBox implements Serializable {
 		public String toString() {
 			return "["+cardinal+","+value+"]";
 		}
+	}
+
+	/**
+	 * Returns the dimensions of this bounding box.
+	 *
+	 * @return a double array (x,y,z) with the dimensions of the box.
+	 */
+	public double[] getDimensions(){
+		double[] dim = new double[3];
+		dim[0] = xmax-xmin;
+		dim[1] = ymax-ymin;
+		dim[2] = zmax-zmin;
+		return dim;
 	}
 
 	/**
