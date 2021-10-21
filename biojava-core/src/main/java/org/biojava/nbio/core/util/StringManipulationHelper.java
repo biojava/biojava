@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Sep 14, 2011
- * Author: Amr AL-Hossary, Richard Adams
+ * Author: Amr ALHOSSARY, Richard Adams
  *
  */
 package org.biojava.nbio.core.util;
@@ -49,7 +49,7 @@ import org.xml.sax.SAXException;
  * A utility class for common {@link String} manipulation tasks.
  * All functions are static methods.
  *
- * @author Amr AL-Hossary
+ * @author Amr ALHOSSARY
  * @author Richard Adams
  */
 public class StringManipulationHelper  {

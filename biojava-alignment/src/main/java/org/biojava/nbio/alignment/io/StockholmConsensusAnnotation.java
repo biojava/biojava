@@ -27,7 +27,7 @@ package org.biojava.nbio.alignment.io;
  * Stores all the content parsed from the #=GC lines
  *
  * @since 3.0.5
- * @author Amr AL-Hossary
+ * @author Amr ALHOSSARY
  * @author Marko Vaz
  *
  */

@@ -32,7 +32,7 @@ import java.util.Set;
  * Stores all the content parsed from the #=GS lines
  *
  * @since 3.0.5
- * @author Amr AL-Hossary
+ * @author Amr ALHOSSARY
  * @author Marko Vaz
  *
  */

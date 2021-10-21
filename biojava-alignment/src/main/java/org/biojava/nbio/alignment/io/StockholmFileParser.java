@@ -88,7 +88,7 @@ import java.util.Scanner;
  * </pre>
  *
  * @since 3.0.5
- * @author Amr AL-Hossary
+ * @author Amr ALHOSSARY
  * @author Marko Vaz
  *
  */
