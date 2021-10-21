@@ -35,6 +35,11 @@ import java.util.Arrays;
 import org.junit.jupiter.api.Test;
 
 
+/**
+ * Tests for {@link PdbId} parsing and its usability to convert between PDB ID formats
+ * @author Amr ALHOSSARY
+ * @since 6.0.0
+ */
 public class TestPdbId {
 
 
