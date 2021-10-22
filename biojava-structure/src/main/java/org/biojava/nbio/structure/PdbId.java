@@ -30,7 +30,8 @@ import java.util.regex.Pattern;
  * upcoming (extended) <code>PDB_\d{4}[1-9][09-A-Z]</code> PDB ID format.<br>
  * Instances of this class are <em>immutable</em>.<br>
  * Creation of PdBId instance follows strict PDB ID convention.
- * There is only one exception to this rule which is <b>XXXX</b>. However, this exception might be removed later, so do NOT depend on it much.
+ * There is only one exception to this rule which is <b>XXXX</b>. XXXX objects 
+ * are not considered equal (unless they are the one and the same object).
  * @author Amr ALHOSSARY
  * @since 6.0.0
  *
@@ -40,8 +41,8 @@ public class PdbId implements Comparable<PdbId>, Serializable{
 	private static final String PREFIX_PDB_ = "PDB_";
 	private static final String STRING_0000 = "0000";
 	private static final String PDB_0000 = PREFIX_PDB_ + STRING_0000;
-	private static final String XXXX_STRING = "XXXX";
-	private static final long serialVersionUID = -3533095530236775660L;
+	public static final String XXXX_STRING = "XXXX";
+	private static final long serialVersionUID = -5577433541029161356L;
 
 	/**
 	 * How the PDB ID output/conversion should go, if possible.
@@ -75,11 +76,7 @@ public class PdbId implements Comparable<PdbId>, Serializable{
 	 */
 	private String idCode;
 
-	/**
-	 * A constant <code>PdbId</code> that <i>can</i> be used to indicate an unknown Identifier. It may be removed later.
-	 */
-	public static final PdbId XXXX = new PdbId(XXXX_STRING);
-
+	private static final String XXXX_INTERNAL = toInternalFormat(XXXX_STRING);
 	/**
 	 * @param id A <i>valid</i> PDB ID in either <i>short (case insensitive)</i> or <i>extended</i> format.
 	 * @throws IllegalArgumentException If <code>id</code> is not a valid identifier.
@@ -141,6 +138,12 @@ public class PdbId implements Comparable<PdbId>, Serializable{
 		if (obj == null)
 			return false;
 		if (getClass() != obj.getClass())
+			return false;
+		// Time for checking for XXXX. If this is XXXX or obj is XXXX return false.
+		// Checking whether this is XXXX only is enough because Checking whether
+		//   obj is XXXX is implicitly included in the next check. So no need to
+		//   waste some machine cycles checking it here.
+		if(XXXX_INTERNAL.equals(this.idCode))
 			return false;
 		// We are sure they are both objects of the same class and their respective IDs are in the same (UPPER) case.
 		return this.idCode.equals(((PdbId)obj).idCode);

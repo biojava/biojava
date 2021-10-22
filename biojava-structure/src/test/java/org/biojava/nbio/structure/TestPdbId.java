@@ -185,6 +185,18 @@ public class TestPdbId {
 	}
 
 	@Test
+	public void testXXXX() {
+		PdbId x1 = new PdbId(PdbId.XXXX_STRING);
+		PdbId x2 = new PdbId(PdbId.XXXX_STRING);
+		assertFalse(x1 == x2);
+		assertEquals(x1.getId(), x2.getId());
+		assertEquals(x1.hashCode(), x2.hashCode());
+		assertEquals(x1, x1);
+		assertEquals(x2, x2);
+		assertNotEquals(x1, x2);
+	}
+
+	@Test
 	public void testClone() {
 		assertDoesNotThrow(() -> {
 			PdbId id1 = new PdbId("1abc");
