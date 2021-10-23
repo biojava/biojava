@@ -869,7 +869,12 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
         }
 
         if (struct.isDefined() && struct.getEntryId().isDefined()) {
-            PdbId pdbId = new PdbId(struct.getEntryId().get(0));
+            PdbId pdbId;
+			try {
+				pdbId = new PdbId(struct.getEntryId().get(0));
+			} catch (IllegalArgumentException e) {
+				pdbId = null;
+			}
             pdbHeader.setPdbId(pdbId);
             structure.setPdbId(pdbId);
         }

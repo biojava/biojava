@@ -38,11 +38,10 @@ import java.util.regex.Pattern;
  */
 public class PdbId implements Comparable<PdbId>, Serializable{
 	
+	private static final long serialVersionUID = -7740865530486255113L;
 	private static final String PREFIX_PDB_ = "PDB_";
 	private static final String STRING_0000 = "0000";
 	private static final String PDB_0000 = PREFIX_PDB_ + STRING_0000;
-	public static final String XXXX_STRING = "XXXX";
-	private static final long serialVersionUID = -5577433541029161356L;
 
 	/**
 	 * How the PDB ID output/conversion should go, if possible.
@@ -59,8 +58,6 @@ public class PdbId implements Comparable<PdbId>, Serializable{
 	}
 	private static Behavior defaultShorteningBehaviour = Behavior.PREFER_SHORT;
 
-	private static boolean accept_xxxx = true;
-
 
 	/**
 	 * A regular expression that matches a PDB ID in the short format.
@@ -76,7 +73,6 @@ public class PdbId implements Comparable<PdbId>, Serializable{
 	 */
 	private String idCode;
 
-	private static final String XXXX_INTERNAL = toInternalFormat(XXXX_STRING);
 	/**
 	 * @param id A <i>valid</i> PDB ID in either <i>short (case insensitive)</i> or <i>extended</i> format.
 	 * @throws IllegalArgumentException If <code>id</code> is not a valid identifier.
@@ -86,11 +82,7 @@ public class PdbId implements Comparable<PdbId>, Serializable{
 		if (id == null) {
 			throw new IllegalArgumentException("ID can not be null");
 		}
-		if(accept_xxxx && XXXX_STRING.equalsIgnoreCase(id)) {// the only exception
-			this.idCode = toInternalFormat(XXXX_STRING);
-		}else {
-			this.idCode = toInternalFormat(id);
-		}
+		this.idCode = toInternalFormat(id);
 	}
 	
 	/**
@@ -138,12 +130,6 @@ public class PdbId implements Comparable<PdbId>, Serializable{
 		if (obj == null)
 			return false;
 		if (getClass() != obj.getClass())
-			return false;
-		// Time for checking for XXXX. If this is XXXX or obj is XXXX return false.
-		// Checking whether this is XXXX only is enough because Checking whether
-		//   obj is XXXX is implicitly included in the next check. So no need to
-		//   waste some machine cycles checking it here.
-		if(XXXX_INTERNAL.equals(this.idCode))
 			return false;
 		// We are sure they are both objects of the same class and their respective IDs are in the same (UPPER) case.
 		return this.idCode.equals(((PdbId)obj).idCode);
@@ -205,7 +191,7 @@ public class PdbId implements Comparable<PdbId>, Serializable{
 	 * @throws StructureException if the conversion was not possible.
 	 */
 	public static String toExtendedId(String shortId) throws StructureException{
-		if (isValidShortPdbId(shortId) || XXXX_STRING.equalsIgnoreCase(shortId)) {
+		if (isValidShortPdbId(shortId)) {
 			return PDB_0000 + shortId.toUpperCase();
 		}else if (isValidExtendedPdbId(shortId)) {
 			return shortId.toUpperCase();
@@ -238,7 +224,7 @@ public class PdbId implements Comparable<PdbId>, Serializable{
 	}
 	
 	private static String toInternalFormat(String id) throws IllegalArgumentException {
-		if (isValidShortPdbId(id) || XXXX_STRING.equalsIgnoreCase(id)) {
+		if (isValidShortPdbId(id)) {
 			return STRING_0000  + id.toUpperCase();
 		}else if (isValidExtendedPdbId(id)) {
 			return id.substring(4).toUpperCase();

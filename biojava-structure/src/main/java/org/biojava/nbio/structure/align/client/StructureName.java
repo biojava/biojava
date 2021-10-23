@@ -310,7 +310,11 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 			URL url = new URL(suffix);
 			String path = url.getPath();
 			mySource = Source.URL;
-			pdbId = new PdbId(URLIdentifier.guessPDBID( path.substring(path.lastIndexOf('/')+1) ));
+			try {
+				pdbId = new PdbId(URLIdentifier.guessPDBID( path.substring(path.lastIndexOf('/')+1) ));
+			} catch (IllegalArgumentException e) {
+				pdbId = null;
+			}
 			chainName = null; // Don't bother checking query params here
 			return true;
 		} catch(MalformedURLException e) {

@@ -372,8 +372,14 @@ public class PDBFileParser  {
 			logger.debug("Parsing entry " + pdbId);
 
 
-			structure.setPdbId(new PdbId(pdbCode));
-			pdbHeader.setPdbId(new PdbId(pdbCode));
+			PdbId pdbIdToSet;
+			try {
+				pdbIdToSet = new PdbId(pdbCode);
+			} catch (IllegalArgumentException e) {
+				pdbIdToSet = null;
+			}
+			structure.setPdbId(pdbIdToSet);
+			pdbHeader.setPdbId(pdbIdToSet);
 		}
 
 		//*really* old files (you'll need to hunt to find these as they
