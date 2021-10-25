@@ -460,11 +460,11 @@ public class QuatSymmetryDetector {
 		List<SubunitCluster> globalClusters = globalComposition.getClusters();
 		List<SubunitCluster> localClusters = new ArrayList<>();
 
-		Set<Integer> usedClusterIds =
+		TreeSet<Integer> usedClusterIds =
 				usedSubunitIds.stream().
 					map(allSubunitClusterIds::get).
 					distinct().
-					collect(Collectors.toSet());
+					collect(Collectors.toCollection(TreeSet::new));
 
 		// for each used cluster, remove unused subunits
 		for(Integer usedClusterId:usedClusterIds) {
