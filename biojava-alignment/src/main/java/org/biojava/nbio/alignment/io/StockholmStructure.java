@@ -75,7 +75,7 @@ import java.util.Map;
  * </table>
  *
  * @since 3.0.5
- * @author Amr AL-Hossary
+ * @author Amr ALHOSSARY
  * @author Marko Vaz
  *
  */

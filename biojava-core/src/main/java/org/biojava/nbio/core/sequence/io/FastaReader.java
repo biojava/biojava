@@ -124,7 +124,7 @@ public class FastaReader<S extends Sequence<?>, C extends Compound> {
 	 * <li>remember to close the underlying resource when you are done.</li>
 	 * </ul>
 	 * @see #process()
-	 * @author Amr AL-Hossary
+	 * @author Amr ALHOSSARY
 	 * @since 3.0.6
 	 * @param max maximum number of records to return, <code>-1</code> for infinity.
 	 * @return {@link HashMap} containing maximum <code>max</code> parsed fasta records

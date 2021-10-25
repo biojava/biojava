@@ -33,7 +33,7 @@ import org.biojava.nbio.core.sequence.template.Compound;
  * over the data then they can create their own implementation of a
  * FastaHeaderParserInterface
  *
- * @author Amr AL-Hossary
+ * @author Amr ALHOSSARY
  * @since 3.0.6
  */
 public class PlainFastaHeaderParser<S extends AbstractSequence<C>, C extends Compound>
