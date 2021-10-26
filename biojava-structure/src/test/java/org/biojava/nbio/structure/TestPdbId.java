@@ -63,11 +63,11 @@ public class TestPdbId {
 		String id;
 
 		pdbId = new PdbId("1abc");
-		id = pdbId.getId(PdbId.Behavior.PREFER_SHORT);
+		id = pdbId.getId(true);
 		assertEquals(id, "1ABC");
 
 		pdbId = new PdbId("PDB_55551abc");
-		id = pdbId.getId(PdbId.Behavior.PREFER_SHORT);
+		id = pdbId.getId(true);
 		assertEquals(id, "PDB_55551ABC");
 	}
 
@@ -77,11 +77,11 @@ public class TestPdbId {
 		String id;
 
 		pdbId = new PdbId("1abc");
-		id = pdbId.getId(PdbId.Behavior.PREFER_EXTENDED);
+		id = pdbId.getId(false);
 		assertEquals(id, "PDB_00001ABC");
 
 		pdbId = new PdbId("PDB_55551abc");
-		id = pdbId.getId(PdbId.Behavior.PREFER_EXTENDED);
+		id = pdbId.getId(false);
 		assertEquals(id, "PDB_55551ABC");
 	}
 	
@@ -113,7 +113,7 @@ public class TestPdbId {
 		assertTrue(PdbId.isValidExtendedPdbId("PDB_00001abc"), "Didn't accept lower case");
 		assertTrue(PdbId.isValidExtendedPdbId("PDB_00004HHB"), "Didn't accept upper case");
 		assertTrue(PdbId.isValidExtendedPdbId("PDB_22224HHB"), "Didn't accept upper case");
-		assertFalse(PdbId.isValidExtendedPdbId("PDB_AAAA4HHB"), "Accepted wrong format");
+		assertTrue(PdbId.isValidExtendedPdbId("PDB_AAAA4HHB"), "It should accept any 8 alphanumeric values");
 		assertFalse(PdbId.isValidExtendedPdbId("1ABC"), "Accepted short format");
 	}
 
@@ -123,10 +123,8 @@ public class TestPdbId {
 		assertTrue(PdbId.isShortCompatible("PDB_00004HHB"), "Didn't accept upper case");
 		assertFalse(PdbId.isShortCompatible("1ABC"), "Accepted short format");
 		assertFalse(PdbId.isShortCompatible("PDB_AAAA4HHB"), "Accepted wrong format");
-
-		//Although this is wrong, returning true is the expected behavior of 
-		// this method; because it does NOT validate the passed in string.
-		assertTrue(PdbId.isShortCompatible("PDB_0000XXXXXXXXXXXXX"), "Accepted wrong format");
+		assertFalse(PdbId.isShortCompatible("PDB_0000AHHB"), "Accepted letter (1HHB should pass but AHHB should not pass");
+		assertFalse(PdbId.isShortCompatible("PDB_0000AHHBBBBB"), "should be a valid extended PDB ID");
 	}
 	
 	@Test
@@ -139,9 +137,9 @@ public class TestPdbId {
 			assertEquals(PdbId.toExtendedId("PDB_00001abc"), "PDB_00001ABC");
 		}, "Didn't recognize extended format");
 		
-		assertThrows(StructureException.class, () -> {
+		assertDoesNotThrow(() -> {
 			PdbId.toExtendedId("PDB_aaaa1abc");
-		}, "Accepted wrong format");
+		}, "Should accept any 8 alphanumeric values");
 	}
 	
 	@Test

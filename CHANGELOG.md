@@ -35,14 +35,12 @@ BioJava 6.0.0 (future release)
 * Fixed `CRC64Checksum#public void update(byte[] b, int offset, int length)` to use the `length` argument correctly as specified in `java.util.zip.Checksum` interface.
 * In `SubstructureIdentifier`, `StructureName`, `EcodDomain`, `ScopDomain` : `getPdbId()` returns `PdbId` object instead of `String`.
 * Removed `DownloadChemCompProvider.useDefaultUrlLayout` with a more flexible system to provide templated URLs `DownloadChemCompProvider.setChemCompPathUrlTemplate()` and `DownloadChemCompProvider.setServerBaseUrl()`
+* In `Structure` (and `StructureImple`), the accessor methods `String getPdbId()` and `setPdbId(String)` were previously depricated. They were revived in BioJava 6.0.0 but as `PdbId getPdbId()` and `setPdbId(PdbId)` instead.n
 
 ### Added
 * New `keywords` field in `PDBHeader` class, populated by PDB and mmCIF parsers #946
 * OBO parsing now supports multiple altids, #960
 * New class `PdbId` that wrapps a PDB Identifier and handles conversion between current short PDBID format and upcoming extended PDBID format #930
-
-### revived
-* In `Structure` (and `StructureImple`), the accessor methods `String getPdbId()` and `setPdbId(String)` were previously depricated. They were revived in BioJava 6.0.0 but as `PdbId getPdbId()` and `setPdbId(PdbId)` instead.
 
 ### Fixed
 * Correct chain assignment to entities when parsing PDB/mmCIF without entity information (in cases with more than 3 chains per entity) #931

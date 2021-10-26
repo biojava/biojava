@@ -376,6 +376,7 @@ public class PDBFileParser  {
 			try {
 				pdbIdToSet = new PdbId(pdbCode);
 			} catch (IllegalArgumentException e) {
+				logger.info("Malformed (or null) PDB ID {}. setting PdbId to null", pdbCode);
 				pdbIdToSet = null;
 			}
 			structure.setPdbId(pdbIdToSet);

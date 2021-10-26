@@ -870,9 +870,11 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
 
         if (struct.isDefined() && struct.getEntryId().isDefined()) {
             PdbId pdbId;
+            String pdbCode = struct.getEntryId().get(0);
 			try {
-				pdbId = new PdbId(struct.getEntryId().get(0));
+				pdbId = new PdbId(pdbCode);
 			} catch (IllegalArgumentException e) {
+				logger.info("Malformed (or null) PDB ID {}. setting PdbId to null", pdbCode);
 				pdbId = null;
 			}
             pdbHeader.setPdbId(pdbId);
@@ -940,7 +942,7 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
 
             DBRef dbRef = new DBRef();
 
-            dbRef.setIdCode(structRefSeq.getPdbxPDBIdCode().get(rowIndex));  //TODO Shall we change this as well?
+            dbRef.setIdCode(structRefSeq.getPdbxPDBIdCode().get(rowIndex));
             dbRef.setDbAccession(structRefSeq.getPdbxDbAccession().get(rowIndex));
             dbRef.setDbIdCode(structRefSeq.getPdbxDbAccession().get(rowIndex));
             dbRef.setChainName(structRefSeq.getPdbxStrandId().get(rowIndex));

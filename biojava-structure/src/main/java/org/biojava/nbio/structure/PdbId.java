@@ -44,19 +44,10 @@ public class PdbId implements Comparable<PdbId>, Serializable{
 	private static final String PDB_0000 = PREFIX_PDB_ + STRING_0000;
 
 	/**
-	 * How the PDB ID output/conversion should go, if possible.
+	 * Controls how the PDB ID output/conversion should go, if possible.
+	 * The default is to try to produce short PDB ID. If failed, produce extended PDB ID.
 	 */
-	public enum Behavior{
-		/**
-		 * Try to produce short PDB ID. If failed, produce extended PDB ID.
-		 */
-		PREFER_SHORT,
-		/**
-		 * Always produce Extended PDB ID.
-		 */
-		PREFER_EXTENDED
-	}
-	private static Behavior defaultShorteningBehaviour = Behavior.PREFER_SHORT;
+	private static final boolean defaultShorteningBehaviour = true;
 
 
 	/**
@@ -66,7 +57,11 @@ public class PdbId implements Comparable<PdbId>, Serializable{
 	/**
 	 * A regular expression that matches a PDB ID in the extended format.
 	 */
-	public static final Pattern PATTERN_EXTENDED_PDBID = Pattern.compile("PDB_\\d{4}[1-9]\\p{Alnum}{3}"); 
+	public static final Pattern PATTERN_EXTENDED_PDBID = Pattern.compile("(pdb|PDB)_\\p{Alnum}{8}"); 
+	/**
+/	 * A regular expression that matches an extended PDB ID that is compatible with the short format.
+	 */
+	public static final Pattern PATTERN_SHORTABLE_EXTENDED_PDBID = Pattern.compile("(pdb|PDB)_0000[1-9]\\p{Alnum}{3}"); 
 
 	/**
 	 * Keeps the ID in <b>UPPER CASE</b>, in a <em>reduced</em> form (without the <code>PDB_</code> prefix).
@@ -109,13 +104,13 @@ public class PdbId implements Comparable<PdbId>, Serializable{
 	
 	/**
 	 * Checks whether an Extended PDB ID is shortable, <i>assuming it is a valid extended PDB ID</i>.
-	 * If you are not sure the String represents a valid extended PdbId, use {@link #isValidExtendedPdbId(String)} first.
 	 * @see #isValidExtendedPdbId(String)
 	 * @param extendedId the supposedly valid extended PDB ID.
-	 * @return <code>true</code> if <code>extendedId</code> starts with "PDB_0000", <code>false</code> otherwise.
+	 * @return <code>true</code> if <code>extendedId</code> can be shortened 
+	 * (ie. it matches the regular expression "(pdb|PDB)_0000[1-9][a-zA-Z0-9]{3}"), <code>false</code> otherwise.
 	 */
 	public static boolean isShortCompatible(String extendedId) {
-		return extendedId.length() >= 8 && extendedId.substring(0, 8).equals/*IgnoreCase*/(PDB_0000);
+		return PATTERN_SHORTABLE_EXTENDED_PDBID.matcher(extendedId).matches();
 	}
 	
 	@Override
@@ -158,17 +153,17 @@ public class PdbId implements Comparable<PdbId>, Serializable{
 	
 	/**
 	 * Get a <code>String</code> representation of this PdbId instance, using the <i>passed in</i> behavior.<br>
-	 * @param b when it equals <code>Behavior.PREFER_SHORT</code>, the class will try to produce the short ID whenever possible.
-	 * @return The PdbId in short format if possible and <code>b</code> equals <code>Behavior.PREFER_SHORT</code>, the extended PDB ID form otherwise.
+	 * @param prefereShort when it is <code>true</code>, the class will try to produce the short ID whenever possible.
+	 * @return The PdbId in short format if possible and <code>prefereShort</code> is <code>true</code>, the extended PDB ID form otherwise.
 	 */
-	public String getId(Behavior b) {
-		if (b == Behavior.PREFER_SHORT && isInternalShortCompatible(idCode))
+	public String getId(boolean prefereShort) {
+		if (prefereShort && isInternalShortCompatible(idCode))
 			return internalToShortNoCheck(idCode);
 		return PREFIX_PDB_ + idCode;
 	}
 	
 	/**
-	 * Get the PDB Id in the sort format. Throws an exception if the conversion is not possible.<br>
+	 * Get the PDB Id in the short format. Throws an exception if the conversion is not possible.<br>
 	 * Use this method only if you know that this PDB ID is shortable.
 	 * @return the PDB ID in the short format.
 	 * @throws StructureException if the conversion was not possible.
@@ -183,7 +178,7 @@ public class PdbId implements Comparable<PdbId>, Serializable{
 	
 	/**
 	 * Converts <code>shortId</code> to the PDB ID extended format.
-	 * If <code>shortId</code> is a valid short PDB ID (or XXXX), it would be converted to an extended ID,
+	 * If <code>shortId</code> is a valid short PDB ID, it would be converted to an extended ID,
 	 * if <code>shortId</code> is a valid extended PDB ID, it would be returned in UPPER CASE,
 	 * a {@link StructureException} is thrown otherwise.
 	 * @param shortId the PDB ID to convert to extended format
@@ -210,7 +205,7 @@ public class PdbId implements Comparable<PdbId>, Serializable{
 	 * @throws StructureException if the conversion was not possible.
 	 */
 	public static String toShortId(String extendedId) throws StructureException{
-		if (isValidExtendedPdbId(extendedId) && isShortCompatible(extendedId)) {
+		if (isShortCompatible(extendedId)) {
 			return extendedId.substring(8).toUpperCase();
 		} else if (isValidShortPdbId(extendedId)) {
 			return extendedId.toUpperCase();

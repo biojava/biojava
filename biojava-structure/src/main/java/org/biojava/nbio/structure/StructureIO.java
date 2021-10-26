@@ -53,7 +53,7 @@ public class StructureIO {
 					   | chainID
 					   | chainID '_' resNum '-' resNum
 		pdbID         := [1-9][a-zA-Z0-9]{3}
-					   | PDB_[0-9]{4}[1-9][a-zA-Z0-9]{3}
+					   | PDB_[a-zA-Z0-9]{8}
 		chainID       := [a-zA-Z0-9]
 		scopID        := 'd' pdbID [a-z_][0-9_]
 		biol		  := 'BIO:' pdbID [:]? [0-9]+
