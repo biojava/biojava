@@ -33,7 +33,6 @@ import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.contact.Grid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-//TODO Review the Regular Expressions
 /**
  * This is the canonical way to identify a part of a structure.
  *

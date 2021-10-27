@@ -429,7 +429,6 @@ public class AtomCache {
 		return path;
 	}
 
-	//TODO Review the Regular Expressions
 	/**
 	 * Request a Structure based on a <i>name</i>.
 	 *

@@ -36,7 +36,6 @@ import java.util.List;
 public class StructureIO {
 	private static AtomCache cache ;
 
-	//TODO review the Regular Expressions
 	/**
 	 * Loads a structure based on a name. Supported naming conventions are:
 	 *
