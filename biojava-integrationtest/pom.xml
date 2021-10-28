@@ -48,18 +48,9 @@
         	<artifactId>slf4j-api</artifactId>
     	</dependency>
     	<!-- binding for log4j2, scope=runTime set in parent pom -->
- 		<dependency>
-    		<groupId>org.apache.logging.log4j</groupId>
-    		<artifactId>log4j-slf4j-impl</artifactId>
-  		</dependency>
-  		<dependency>
-    		<groupId>org.apache.logging.log4j</groupId>
-    		<artifactId>log4j-api</artifactId>
-  		</dependency>
-  		<dependency>
-    		<groupId>org.apache.logging.log4j</groupId>
-    		<artifactId>log4j-core</artifactId>
-  		</dependency>
+ 		
+  		
+  		
   </dependencies>
   <description>A module which only has the purpose to run slow running integration tests.
 
