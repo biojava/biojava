@@ -183,22 +183,6 @@ public interface Structure extends Cloneable, Serializable {
 	String toString();
 
 	/**
-	 * Set PDB code of structure .
-	 *
-	 * @param pdb_id  a String specifying the PDBCode
-	 * @see #getPDBCode
-	 */
-	void setPDBCode (String pdb_id) ;
-
-	/**
-	 * Get PDB code of structure.
-	 *
-	 * @return a String representing the PDBCode value
-	 * @see #setPDBCode
-	 */
-	String  getPDBCode () ;
-
-	/**
 	 * Set biological name of Structure .
 	 *
 	 * @param name  a String specifying the biological name of the Structure
@@ -768,14 +752,6 @@ public interface Structure extends Cloneable, Serializable {
 	void resetModels();
 
 	/**
-	 * Returns the PDB identifier associated with this StructureIdentifier.
-	 * @deprecated From BioJava 4.2, use {@link #getPDBCode()} or
-	 *  <code>getStructureIdentifier().toCanonical().getPdbId()</code>
-	 */
-	@Deprecated
-	String getPdbId();
-
-	/**
 	 * Get a string representing this structure's contents. The following places
 	 * are searched for a non-null value, with the first being returned:
 	 * <ol>
@@ -790,5 +766,41 @@ public interface Structure extends Cloneable, Serializable {
 	 *  returned the same value as {@link #getPDBCode()}
 	 */
 	String getIdentifier();
+
+	/**
+	 * Get PDB code of structure.
+	 *
+	 * @return a String representing the PDBCode value
+	 * @see #setPDBCode
+	 * @deprecated use {@link #getPdbId()} to get a {@link PdbId} object or getPdbId().getId() to get a {@link String}
+	 */
+	@Deprecated
+	String getPDBCode () ;
+
+	/**
+	 * Set PDB code of structure .
+	 *
+	 * @param pdb_id  a String specifying the PDBCode
+	 * @see #getPDBCode
+	 * @deprecated use {@link #setPDBCode(PdbId)}
+	 */
+	@Deprecated
+	void setPDBCode (String pdb_id);
+
+
+
+	/**
+	 * Returns the PDB identifier associated with this StructureIdentifier.
+	 * @return the {@link PdbId} object
+	 * @since 6.0.0
+	 */
+	PdbId getPdbId();
 	
+	
+	/**Sets the {@link PdbId} identifier associated with this structure.
+	 * @param pdbId the {@link PdbId} identifier object to set
+	 * @since 6.0.0
+	 */
+	void setPdbId(PdbId pdbId);
+
 }

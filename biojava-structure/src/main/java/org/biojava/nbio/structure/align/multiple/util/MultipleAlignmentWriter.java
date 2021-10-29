@@ -31,6 +31,7 @@ import javax.vecmath.Matrix4d;
 
 import org.biojava.nbio.core.util.PrettyXMLWriter;
 import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.PdbId;
 import org.biojava.nbio.structure.ResidueRange;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIdentifier;
@@ -327,7 +328,7 @@ public class MultipleAlignmentWriter {
 		StructureIdentifier tName = alignment.getEnsemble().getStructureIdentifiers()
 				.get(templateIndex);
 		SubstructureIdentifier canon = tName.toCanonical();
-		String tPdbId = canon.getPdbId();
+		PdbId tPdbId = canon.getPdbId();
 		String tChain = null;
 		for(ResidueRange range : canon.getResidueRanges()) {
 			tChain = range.getChainName();

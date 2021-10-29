@@ -63,6 +63,7 @@ import org.biojava.nbio.structure.JournalArticle;
 import org.biojava.nbio.structure.NucleotideImpl;
 import org.biojava.nbio.structure.PDBCrystallographicInfo;
 import org.biojava.nbio.structure.PDBHeader;
+import org.biojava.nbio.structure.PdbId;
 import org.biojava.nbio.structure.ResidueNumber;
 import org.biojava.nbio.structure.Site;
 import org.biojava.nbio.structure.Structure;
@@ -371,8 +372,15 @@ public class PDBFileParser  {
 			logger.debug("Parsing entry " + pdbId);
 
 
-			structure.setPDBCode(pdbCode);
-			pdbHeader.setIdCode(pdbCode);
+			PdbId pdbIdToSet;
+			try {
+				pdbIdToSet = new PdbId(pdbCode);
+			} catch (IllegalArgumentException e) {
+				logger.info("Malformed (or null) PDB ID {}. setting PdbId to null", pdbCode);
+				pdbIdToSet = null;
+			}
+			structure.setPdbId(pdbIdToSet);
+			pdbHeader.setPdbId(pdbIdToSet);
 		}
 
 		//*really* old files (you'll need to hunt to find these as they

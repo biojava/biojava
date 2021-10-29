@@ -30,6 +30,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.biojava.nbio.structure.PdbId;
 import org.biojava.nbio.structure.ResidueRange;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
@@ -54,7 +55,7 @@ public class ScopDomain implements Serializable, Cloneable, StructureIdentifier 
 	private static final long serialVersionUID = 5890476209571654301L;
 
 	String scopId;
-	String pdbId;
+	PdbId pdbId;
 	List<String> ranges;
 	String classificationId;
 	Integer sunid;
@@ -75,7 +76,7 @@ public class ScopDomain implements Serializable, Cloneable, StructureIdentifier 
 		StringBuilder buf = new StringBuilder();
 		buf.append(scopId);
 		buf.append("\t") ;
-		buf.append(pdbId);
+		buf.append(pdbId.getId().toLowerCase());
 		buf.append( "\t");
 
 		int rangePos = 0;
@@ -118,12 +119,38 @@ public class ScopDomain implements Serializable, Cloneable, StructureIdentifier 
 	public void setScopId(String scopId) {
 		this.scopId = scopId;
 	}
-	public String getPdbId() {
+
+	/** 
+	 * Gets the PDB identifier for this protein structure.
+	 * Before BioJava 6.0.0, this method used to return a {@link String}.
+	 *
+	 * @return the {@link PdbId} PDB identifier
+	 * @see #setPdbId(PdbId)
+	 * @since 6.0.0
+	 */
+	public PdbId getPdbId() {
 		return pdbId;
 	}
+
+	/**
+	 * @param pdbId
+	 * @deprecated use {@link #setPdbId(PdbId)}
+	 */
+	@Deprecated
 	public void setPdbId(String pdbId) {
+		if(pdbId == null) this.pdbId = null;
+		this.pdbId = new PdbId(pdbId);
+	}
+
+	
+	/**
+	 * @param pdbId
+	 * @since 6.0.0
+	 */
+	public void setPdbId(PdbId pdbId) {
 		this.pdbId = pdbId;
 	}
+
 	public List<String> getRanges() {
 		return ranges;
 	}

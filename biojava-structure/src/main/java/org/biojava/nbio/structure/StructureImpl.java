@@ -48,7 +48,7 @@ public class StructureImpl implements Structure {
 
 	private static final Logger logger = LoggerFactory.getLogger(StructureImpl.class);
 
-	private String pdb_id ;
+	private PdbId pdbId ;
 
 	private List<Model> models;
 
@@ -116,7 +116,7 @@ public class StructureImpl implements Structure {
 
 		// copy structure data
 
-		n.setPDBCode(getPDBCode());
+		n.setPdbId(getPdbId());
 		n.setName(getName());
 		//TODO the header data is not being deep-copied, that's a minor issue since it is just some static metadata, but we should recheck this if needed - JD 2014-12-11
 		n.setPDBHeader(pdbHeader);
@@ -226,17 +226,6 @@ public class StructureImpl implements Structure {
 
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public void setPDBCode (String pdb_id_) {
-		pdb_id = pdb_id_ ;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public String  getPDBCode () {
-		return pdb_id ;
-	}
 
 	/** {@inheritDoc} */
 	@Override
@@ -366,7 +355,7 @@ public class StructureImpl implements Structure {
 		str.append("structure ");
 		str.append(name);
 		str.append(" ");
-		str.append(pdb_id);
+		str.append(pdbId);
 		str.append(" ");
 
 		if ( nrModels()>1 ){
@@ -1013,11 +1002,45 @@ public class StructureImpl implements Structure {
 		return toCanonical().getIdentifier();
 	}
 
-	/** {@inheritDoc} */
+	/** 
+	 * {@inheritDoc} 
+	 * @deprecated use {@link #getPdbId()} to get a {@link PdbId} object or getPdbId().getId() to get a {@link String}
+	 */
 	@Deprecated
 	@Override
-	public String getPdbId() {
-		return pdb_id;
+	public String  getPDBCode () {
+		if(pdbId == null)
+			return null;
+		return this.pdbId.getId() ;
+	}
+	
+	/** {@inheritDoc} 
+	 * @deprecated use {@link #setPDBCode(PdbId)}
+	 * */
+	@Deprecated
+	@Override
+	public void setPDBCode(String pdb_id){
+		if(pdb_id == null) {
+			this.pdbId = null;
+		}else {
+			pdbId = new PdbId(pdb_id);
+		}
+	}
+	
+
+
+	/** {@inheritDoc} 
+	 * @since 6.0.0
+	 * */
+	public PdbId getPdbId() {
+		return this.pdbId;
+	}
+	
+	/** {@inheritDoc}
+	 * @since 6.0.0
+	 *  */
+	public void setPdbId(PdbId pdbId) {
+		this.pdbId = pdbId;
 	}
 
 	@Override
@@ -1064,7 +1087,7 @@ public class StructureImpl implements Structure {
 
 			range.add(new ResidueRange(chain.getName(),first,last));
 		}
-		return new SubstructureIdentifier(getPDBCode(),range);
+		return new SubstructureIdentifier(getPdbId(),range);
 	}
 
 }

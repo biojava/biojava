@@ -63,7 +63,7 @@ public class TestAtomCache {
 			reader.setObsoleteBehavior(cache.getObsoleteBehavior());
 
 			for(String pdbId : uncacheIDs) {
-				reader.deleteStructure(pdbId);
+				reader.deleteStructure(new PdbId(pdbId));
 			}
 		}
 	}
@@ -191,11 +191,11 @@ public class TestAtomCache {
 
 		cache.setFiletype(StructureFiletype.PDB);
 		Structure s = cache.getStructure("1HHB");
-		assertEquals("Failed to get the current ID for 1HHB.","4HHB",s.getPDBCode());
+		assertEquals("Failed to get the current ID for 1HHB.","4HHB",s.getPdbId().getId());
 
 		cache.setFiletype(StructureFiletype.CIF);
 		s = cache.getStructure("1HHB");
-		assertEquals("Failed to get the current ID for 1HHB.","4HHB",s.getPDBCode());
+		assertEquals("Failed to get the current ID for 1HHB.","4HHB",s.getPdbId().getId());
 	}
 
 	// Fetching obsolete directly
@@ -207,17 +207,17 @@ public class TestAtomCache {
 		Structure s;
 		cache.setFiletype(StructureFiletype.PDB);
 		s = cache.getStructure("1CMW");
-		assertEquals("Failed to get OBSOLETE file 1CMW.","1CMW", s.getPDBCode());
+		assertEquals("Failed to get OBSOLETE file 1CMW.","1CMW", s.getPdbId().getId());
 
 		s = cache.getStructure("1HHB");
-		assertEquals("Failed to get OBSOLETE file 1HHB.","1HHB", s.getPDBCode());
+		assertEquals("Failed to get OBSOLETE file 1HHB.","1HHB", s.getPdbId().getId());
 
 		cache.setFiletype(StructureFiletype.CIF);
 		s = cache.getStructure("1CMW");
-		assertEquals("Failed to get OBSOLETE file 1CMW.","1CMW", s.getPDBCode());
+		assertEquals("Failed to get OBSOLETE file 1CMW.","1CMW", s.getPdbId().getId());
 
 		s = cache.getStructure("1HHB");
-		assertEquals("Failed to get OBSOLETE file 1HHB.","1HHB", s.getPDBCode());
+		assertEquals("Failed to get OBSOLETE file 1HHB.","1HHB", s.getPdbId().getId());
 
 	}
 
@@ -227,7 +227,7 @@ public class TestAtomCache {
 
 		Structure s = cache.getStructure(name);
 		assertNotNull("Failed to fetch structure from SCOP ID", s);
-		assertEquals("2gs2.A", s.getName());
+		assertEquals("2GS2.A", s.getName());
 	}
 
 	@Test

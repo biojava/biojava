@@ -31,7 +31,7 @@ public class BioAssemblyIdentifier implements StructureIdentifier {
 
 	private static final long serialVersionUID = -356206725119993449L;
 
-	private String pdbCode;
+	private PdbId pdbId;
 	private int biolNr;
 
 	public static final Pattern BIO_NAME_PATTERN = Pattern.compile("^(?:BIO:)([0-9][a-z0-9]{3})(?::([0-9]+))?$", Pattern.CASE_INSENSITIVE);
@@ -41,7 +41,7 @@ public class BioAssemblyIdentifier implements StructureIdentifier {
 		if(! match.matches() ) {
 			throw new IllegalArgumentException("Invalid BIO identifier");
 		}
-		pdbCode = match.group(1);
+		pdbId = new PdbId(match.group(1));
 		if(match.group(2) != null) {
 			biolNr = Integer.parseInt(match.group(2));
 		} else {
@@ -49,17 +49,29 @@ public class BioAssemblyIdentifier implements StructureIdentifier {
 		}
 	}
 
+	/**
+	 * @param pdbCode
+	 * @param biolNr
+	 */
 	public BioAssemblyIdentifier(String pdbCode, int biolNr) {
-		this.pdbCode = pdbCode;
+		this(new PdbId(pdbCode), biolNr);
+	}
+
+	/**
+	 * @param pdbCode
+	 * @param biolNr
+	 */
+	public BioAssemblyIdentifier(PdbId pdbId, int biolNr) {
+		this.pdbId = pdbId;
 		this.biolNr = biolNr;
 	}
 
 	@Override
 	public String getIdentifier() {
 		if( biolNr < 0) {
-			return "BIO:"+pdbCode;
+			return "BIO:"+pdbId.getId();
 		} else {
-			return String.format("BIO:%s:%d",pdbCode,biolNr);
+			return String.format("BIO:%s:%d",pdbId.getId(),biolNr);
 		}
 	}
 	@Override
@@ -70,12 +82,12 @@ public class BioAssemblyIdentifier implements StructureIdentifier {
 	@Override
 	public Structure loadStructure(AtomCache cache) throws StructureException,
 			IOException {
-		return cache.getBiologicalAssembly(pdbCode, biolNr, AtomCache.DEFAULT_BIOASSEMBLY_STYLE);
+		return cache.getBiologicalAssembly(pdbId, biolNr, AtomCache.DEFAULT_BIOASSEMBLY_STYLE);
 	}
 
 	@Override
 	public SubstructureIdentifier toCanonical() throws StructureException {
-		return new SubstructureIdentifier(pdbCode, new ArrayList<ResidueRange>());
+		return new SubstructureIdentifier(pdbId, new ArrayList<ResidueRange>());
 	}
 
 	@Override

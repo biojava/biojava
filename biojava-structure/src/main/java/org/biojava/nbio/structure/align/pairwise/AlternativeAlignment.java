@@ -856,7 +856,7 @@ public class AlternativeAlignment implements Serializable{
 		Calc.shift( s3, currentTranMatrix);
 
 		Structure newpdb = new StructureImpl();
-		newpdb.setPDBCode("Java");
+		newpdb.setPdbId(null);
 		newpdb.setName("Aligned with BioJava");
 
 

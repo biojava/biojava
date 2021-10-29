@@ -22,22 +22,33 @@
 package org.biojava.nbio.structure.gui.util;
 
 
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.util.Arrays;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
+import org.biojava.nbio.structure.ResidueRange;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.StructureTools;
+import org.biojava.nbio.structure.SubstructureIdentifier;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
 import org.biojava.nbio.structure.io.CifFileReader;
 import org.biojava.nbio.structure.io.PDBFileReader;
 import org.biojava.nbio.structure.io.StructureIOFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
 
 /** A JPanel to upload 2 custom PDB files.
  *
@@ -59,16 +70,16 @@ implements StructurePairSelector {
 
 
 
-	private JComboBox fileType ;
+	private JComboBox<String> fileType ;
 
 	JTextField filePath1;
 	JTextField filePath2;
 	JTextField chain1;
 	JTextField chain2;
 
-	public static JComboBox getFileFormatSelect(){
-		JComboBox fileType = new JComboBox();
-			fileType = new JComboBox(new String[] {UserConfiguration.PDB_FORMAT,UserConfiguration.MMCIF_FORMAT});
+	public static JComboBox<String> getFileFormatSelect(){
+		JComboBox<String> fileType = new JComboBox<>();
+			fileType = new JComboBox<String>(new String[] {UserConfiguration.PDB_FORMAT,UserConfiguration.MMCIF_FORMAT});
 			fileType.setSelectedIndex(0);
 			fileType.setMaximumSize(new Dimension(10,50));
 
@@ -150,7 +161,10 @@ implements StructurePairSelector {
 			throw new StructureException(e);
 		}
 
-		Structure reduced = StructureTools.getReducedStructure(s, chainId.getText());
+//		Structure reduced = StructureTools.getReducedStructure(s, chainId.getText());
+//		Structure reduced = new SubstructureIdentifier(s.getPdbId().getId()+"."+ chainId.getText()).reduce(s);  //TODO double check this
+		Structure reduced = new SubstructureIdentifier(s.getPdbId(),
+				Arrays.asList(new ResidueRange(chainId.getText(), (String) null, null))).reduce(s);
 
 		String fileURL = "";
 		try {
@@ -169,7 +183,7 @@ implements StructurePairSelector {
 			e.printStackTrace();
 		}
 
-		reduced.setPDBCode(fileURL);
+		reduced.setPDBCode(fileURL);  //TODO FIXME This usage seems wrong and should be changed.
 		reduced.setName(fileURL);
 		return reduced;
 

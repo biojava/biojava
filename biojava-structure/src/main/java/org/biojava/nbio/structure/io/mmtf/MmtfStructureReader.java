@@ -48,6 +48,7 @@ import org.biojava.nbio.structure.HetatomImpl;
 import org.biojava.nbio.structure.NucleotideImpl;
 import org.biojava.nbio.structure.PDBCrystallographicInfo;
 import org.biojava.nbio.structure.PDBHeader;
+import org.biojava.nbio.structure.PdbId;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureImpl;
 import org.biojava.nbio.structure.StructureTools;
@@ -166,7 +167,7 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 	@Override
 	public void initStructure(int totalNumBonds, int totalNumAtoms, int totalNumGroups,
 			int totalNumChains, int totalNumModels, String modelId) {
-		structure.setPDBCode(modelId);
+		structure.setPdbId(new PdbId(modelId));
 		allAtoms = new Atom[totalNumAtoms];
 	}
 

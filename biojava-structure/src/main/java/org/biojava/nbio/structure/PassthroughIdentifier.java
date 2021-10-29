@@ -48,7 +48,7 @@ public class PassthroughIdentifier implements StructureIdentifier {
 	 */
 	@Override
 	public SubstructureIdentifier toCanonical() {
-		return new SubstructureIdentifier(null, new ArrayList<ResidueRange>());
+		return new SubstructureIdentifier((PdbId)null, new ArrayList<ResidueRange>());
 	}
 
 	@Override

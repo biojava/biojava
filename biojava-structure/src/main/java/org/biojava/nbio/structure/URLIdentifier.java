@@ -61,8 +61,11 @@ public class URLIdentifier implements StructureIdentifier {
 	private static final Logger logger = LoggerFactory.getLogger(URLIdentifier.class);
 
 	// Used for guessing the PDB ID from the filename
-	private static final Pattern PDBID_REGEX = Pattern.compile("^([0-9][a-z0-9]{3})([._-]|\\s).*", Pattern.CASE_INSENSITIVE);
-
+	//UPDATE: It seems that this RegEx rarely succeeded , because the file
+	//name is most of the time in the format pdbxxxx.EXT not xxxx.EXT.
+	private static final Pattern PDBID_REGEX = Pattern.compile("^(?:pdb)?([0-9][a-z0-9]{3})([._-]|\\s).*", Pattern.CASE_INSENSITIVE);
+//	private static final Pattern PDBID_REGEX = Pattern.compile("^(?:pdb)?((PDB_[0-9]{4})?[0-9][a-z0-9]{3})([._-]|\\s).*", Pattern.CASE_INSENSITIVE);
+	
 	/** URL parameter specifying the file format (PDB or CIF) */
 	public static final String FORMAT_PARAM = "format";
 	/** URL parameter specifying the PDB ID */
@@ -99,7 +102,7 @@ public class URLIdentifier implements StructureIdentifier {
 	 * @return A SubstructureIdentifier without ranges (e.g. including all residues)
 	 */
 	@Override
-	public SubstructureIdentifier toCanonical() {
+	public SubstructureIdentifier toCanonical() throws StructureException{
 		String pdbId = null;
 		List<ResidueRange> ranges = Collections.emptyList();
 		try {
@@ -119,7 +122,7 @@ public class URLIdentifier implements StructureIdentifier {
 			String path = url.getPath();
 			pdbId = guessPDBID(path.substring(path.lastIndexOf("/") + 1));
 		}
-		return new SubstructureIdentifier(pdbId, ranges);
+		return new SubstructureIdentifier(new PdbId(pdbId), ranges);
 	}
 
 	@Override
@@ -176,10 +179,9 @@ public class URLIdentifier implements StructureIdentifier {
 		Matcher match = PDBID_REGEX.matcher(name);
 		if (match.matches()) {
 			return match.group(1).toUpperCase();
-		} else {
-			// Give up if doesn't match
-			return null;
 		}
+		// Give up if doesn't match
+		return null;
 	}
 
 	/**

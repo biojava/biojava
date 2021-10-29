@@ -44,8 +44,7 @@ import static org.junit.Assert.*;
 public class Test4hhb {
 
 	@Test
-	public void test4hhbPDBFile() throws IOException
-	{
+	public void test4hhbPDBFile() throws IOException {
 
 		Structure structure = null;
 

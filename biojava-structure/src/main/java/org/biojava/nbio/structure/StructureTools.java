@@ -1259,67 +1259,6 @@ public class StructureTools {
 				|| nucleotides23.containsKey(code);
 	}
 
-	/**
-	 * Reduce a structure to provide a smaller representation . Only takes the
-	 * first model of the structure. If chainName is provided only return a
-	 * structure containing that Chain ID. Converts lower case chain IDs to
-	 * upper case if structure does not contain a chain with that ID.
-	 *
-	 * @param s
-	 * @param chainId
-	 * @return Structure
-	 * @since 3.0
-	 * @deprecated Use {@link StructureIdentifier#reduce(Structure)} instead (v. 4.2.0)
-	 */
-	@Deprecated
-	public static Structure getReducedStructure(Structure s,
-			String chainId) throws StructureException {
-		// since we deal here with structure alignments,
-		// only use Model 1...
-
-		Structure newS = new StructureImpl();
-		newS.setPDBCode(s.getPDBCode());
-		newS.setPDBHeader(s.getPDBHeader());
-		newS.setName(s.getName());
-		newS.setSSBonds(s.getSSBonds());
-		newS.setDBRefs(s.getDBRefs());
-		newS.setSites(s.getSites());
-		newS.setBiologicalAssembly(s.isBiologicalAssembly());
-		newS.setEntityInfos(s.getEntityInfos());
-		newS.setSSBonds(s.getSSBonds());
-		newS.setSites(s.getSites());
-
-		if (chainId != null)
-			chainId = chainId.trim();
-
-		if (chainId == null || chainId.equals("")) {
-			// only get model 0
-			List<Chain> model0 = s.getModel(0);
-			for (Chain c : model0) {
-				newS.addChain(c);
-			}
-			return newS;
-
-		}
-
-		Chain c = s.getPolyChainByPDB(chainId);
-
-		if (c != null) {
-			newS.addChain(c);
-			for (EntityInfo comp : s.getEntityInfos()) {
-				if (comp.getChainIds() != null
-						&& comp.getChainIds().contains(c.getId())) {
-					// found matching entity info. set description...
-					newS.getPDBHeader().setDescription(
-							"Chain " + c.getId() + " of " + s.getPDBCode()
-							+ " " + comp.getDescription());
-				}
-			}
-		}
-
-		return newS;
-	}
-
 	public static String convertAtomsToSeq(Atom[] atoms) {
 
 		StringBuilder buf = new StringBuilder();
@@ -1701,7 +1640,7 @@ public class StructureTools {
 
 		// copy structure data
 
-		n.setPDBCode(s.getPDBCode());
+		n.setPdbId(s.getPdbId());
 		n.setName(s.getName());
 
 		// TODO: do deep copying of data!

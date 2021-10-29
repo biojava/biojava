@@ -24,18 +24,29 @@
 
 package org.biojava.nbio.structure.scop;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import org.biojava.nbio.core.util.FileDownloadUtils;
+import org.biojava.nbio.core.util.InputStreamProvider;
+import org.biojava.nbio.structure.PdbId;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
-import org.biojava.nbio.core.util.FileDownloadUtils;
-import org.biojava.nbio.core.util.InputStreamProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.*;
-import java.net.URL;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 
 /**
@@ -354,7 +365,7 @@ public class ScopInstallation implements LocalScopDatabase {
 		if ( scopId.length() < 6) {
 			throw new ScopIOException("Does not look like a scop ID! " + scopId);
 		}
-		String pdbId = scopId.substring(1,5); //TODO handle this when you handle extended PDBId (PDB ID)
+		String pdbId = scopId.substring(1,5); //TODO handle this when you handle extended PdbId (PDB ID)
 		List<ScopDomain> doms = getDomainsForPDB(pdbId);
 		if ( doms == null)
 			return null;
@@ -382,7 +393,7 @@ public class ScopInstallation implements LocalScopDatabase {
 	}
 
 
-	private void parseClassification() throws IOException{
+	private void parseClassification() throws IOException {
 
 		File file = new File(getClaFilename());
 
@@ -393,7 +404,7 @@ public class ScopInstallation implements LocalScopDatabase {
 
 	}
 
-	private void parseHierarchy() throws IOException{
+	private void parseHierarchy() throws IOException {
 
 		File file = new File(getHieFilename());
 
@@ -561,7 +572,13 @@ public class ScopInstallation implements LocalScopDatabase {
 
 			ScopDomain d = new ScopDomain();
 			d.setScopId(scopId);
-			d.setPdbId(pdbId);
+			PdbId tempPdbId = null;
+			try {
+				tempPdbId = new PdbId(pdbId);
+			} catch (NullPointerException | IllegalArgumentException e) {
+				logger.warn("could not parse line >>{}<<. Error Message: {}", line, e.getMessage());
+			}
+			d.setPdbId(tempPdbId);
 
 			d.setRanges(extractRanges(range));
 

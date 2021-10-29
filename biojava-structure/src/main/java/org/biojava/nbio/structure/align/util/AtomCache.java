@@ -225,10 +225,33 @@ public class AtomCache {
 	 * @return a structure object
 	 * @throws IOException
 	 * @throws StructureException if biassemblyId < 0 or other problems while loading structure
-	 * @author Peter Rose
 	 * @since 3.2
 	 */
 	public Structure getBiologicalAssembly(String pdbId, int bioAssemblyId, boolean multiModel)
+			throws StructureException, IOException {
+		return getBiologicalAssembly(new PdbId(pdbId), bioAssemblyId, multiModel);
+	}
+	
+	/**
+	 * Returns the biological assembly for a given PDB ID and bioAssemblyId, by building the
+	 * assembly from the biounit annotations found in {@link Structure#getPDBHeader()}
+	 * <p>
+	 * Note, the number of available biological unit files
+	 * varies. Many entries don't have a biological assembly specified (e.g. NMR structures), many entries have only one
+	 * biological assembly (bioAssemblyId=1), and some structures have multiple biological assemblies.
+	 *
+	 * @param pdbId
+	 *            the PDB ID
+	 * @param bioAssemblyId
+	 *            the 1-based index of the biological assembly (0 gets the asymmetric unit)
+	 * @param multiModel if true the output Structure will be a multi-model one with one transformId per model,
+	 * if false the outputStructure will be as the original with added chains with renamed asymIds (in the form originalAsymId_transformId and originalAuthId_transformId).
+	 * @return a structure object
+	 * @throws IOException
+	 * @throws StructureException if biassemblyId < 0 or other problems while loading structure
+	 * @since 6.0.0
+	 */
+	public Structure getBiologicalAssembly(PdbId pdbId, int bioAssemblyId, boolean multiModel)
 			throws StructureException, IOException {
 		if (bioAssemblyId < 0) {
 			throw new StructureException("bioAssemblyID must be nonnegative: " + pdbId + " bioAssemblyId "
@@ -419,18 +442,23 @@ public class AtomCache {
 	 * 		range         := '('? range (',' range)? ')'?
 	 * 		               | chainID
 	 * 		               | chainID '_' resNum '-' resNum
-	 * 		pdbID         := [0-9][a-zA-Z0-9]{3}
+	 *		pdbID         := [1-9][a-zA-Z0-9]{3}
+	 *		               | PDB_[a-zA-Z0-9]{8}
 	 * 		chainID       := [a-zA-Z0-9]
 	 * 		scopID        := 'd' pdbID [a-z_][0-9_]
 	 * 		resNum        := [-+]?[0-9]+[A-Za-z]?
 	 *
 	 *
 	 * 		Example structures:
-	 * 		1TIM     #whole structure
-	 * 		4HHB.C     #single chain
-	 * 		4GCR.A_1-83     #one domain, by residue number
-	 * 		3AA0.A,B     #two chains treated as one structure
-	 * 		d2bq6a1     #scop domain
+	 * 		1TIM                 #whole structure
+	 * 		4HHB.C               #single chain
+	 * 		4GCR.A_1-83          #one domain, by residue number
+	 * 		3AA0.A,B             #two chains treated as one structure
+	 * 		PDB_00001TIM         #whole structure (extended format)
+	 * 		PDB_00004HHB.C       #single chain (extended format)
+	 * 		PDB_00004GCR.A_1-83  #one domain, by residue number (extended format)
+	 * 		PDB_00003AA0.A,B     #two chains treated as one structure (extended format)
+	 * 		d2bq6a1              #scop domain
 	 * </pre>
 	 *
 	 * With the additional set of rules:
@@ -524,7 +552,7 @@ public class AtomCache {
 	 */
 	public Structure getStructureForDomain(ScopDomain domain, ScopDatabase scopDatabase, boolean strictLigandHandling)
 			throws IOException, StructureException {
-		String pdbId = domain.getPdbId();
+		PdbId pdbId = domain.getPdbId();
 		Structure fullStructure = getStructureForPdbId(pdbId);
 		Structure structure = domain.reduce(fullStructure);
 
@@ -714,8 +742,8 @@ public class AtomCache {
 		this.filetype = filetype;
 	}
 
-	private boolean checkLoading(String name) {
-		return currentlyLoading.contains(name);
+	private boolean checkLoading(PdbId pdbId) {
+		return currentlyLoading.contains(pdbId.getId());
 	}
 
 	/**
@@ -751,15 +779,15 @@ public class AtomCache {
 		return n;
 	}
 
-	protected void flagLoading(String name) {
-		if (!currentlyLoading.contains(name)) {
-
-			currentlyLoading.add(name);
+	protected void flagLoading(PdbId pdbId) {
+		String id = pdbId.getId();
+		if (!currentlyLoading.contains(id)) {
+			currentlyLoading.add(id);
 		}
 	}
 
-	protected void flagLoadingFinished(String name) {
-		currentlyLoading.remove(name);
+	protected void flagLoadingFinished(PdbId pdbId) {
+		currentlyLoading.remove(pdbId.getId());
 	}
 
 	/**
@@ -769,15 +797,24 @@ public class AtomCache {
 	 * @throws IOException
 	 * @throws StructureException
 	 */
-	public Structure getStructureForPdbId(String pdbId) throws IOException, StructureException {
+	public Structure getStructureForPdbId(String id) throws IOException, StructureException {
+		if (id == null)
+			return null;
+		return getStructureForPdbId(new PdbId(id));
+	}
+	/**
+	 * Loads a structure directly by PDB ID
+	 * @param pdbId
+	 * @return
+	 * @throws IOException
+	 * @throws StructureException
+	 */
+	public Structure getStructureForPdbId(PdbId pdbId) throws IOException {
 		if (pdbId == null)
 			return null;
-		if (pdbId.length() != 4) {
-			throw new StructureException("Unrecognized PDB ID: " + pdbId);
-		}
+		
 		while (checkLoading(pdbId)) {
 			// waiting for loading to be finished...
-
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException e) {
@@ -801,21 +838,30 @@ public class AtomCache {
 		}
 	}
 
+	
+	protected Structure loadStructureFromMmtfByPdbId(String pdbId) throws IOException {
+		return loadStructureFromMmtfByPdbId(new PdbId(pdbId));
+	}
+
 	/**
 	 * Load a {@link Structure} from MMTF either from the local file system.
 	 * @param pdbId the input PDB id
 	 * @return the {@link Structure} object of the parsed structure
 	 * @throws IOException error reading from Web or file system
 	 */
-	private Structure loadStructureFromMmtfByPdbId(String pdbId) throws IOException {
+	protected Structure loadStructureFromMmtfByPdbId(PdbId pdbId) throws IOException {
 		logger.debug("Loading structure {} from mmtf file.", pdbId);
 		MMTFFileReader reader = new MMTFFileReader();
 		reader.setFetchBehavior(fetchBehavior);
 		reader.setObsoleteBehavior(obsoleteBehavior);
-		return reader.getStructureById(pdbId.toLowerCase());
+		return reader.getStructureById(pdbId);
 	}
 
 	protected Structure loadStructureFromCifByPdbId(String pdbId) throws IOException {
+		return loadStructureFromCifByPdbId(new PdbId(pdbId));
+	}
+	
+	protected Structure loadStructureFromCifByPdbId(PdbId pdbId) throws IOException {
 		logger.debug("Loading structure {} from mmCIF file {}.", pdbId, path);
 		Structure s;
 		flagLoading(pdbId);
@@ -824,7 +870,7 @@ public class AtomCache {
 			reader.setFetchBehavior(fetchBehavior);
 			reader.setObsoleteBehavior(obsoleteBehavior);
 			reader.setFileParsingParameters(params);
-			s = reader.getStructureById(pdbId.toLowerCase());
+			s = reader.getStructureById(pdbId);
 		} finally {
 			flagLoadingFinished(pdbId);
 		}
@@ -833,6 +879,9 @@ public class AtomCache {
 	}
 
 	protected Structure loadStructureFromBcifByPdbId(String pdbId) throws IOException {
+		return loadStructureFromBcifByPdbId(new PdbId(pdbId));
+	}
+	protected Structure loadStructureFromBcifByPdbId(PdbId pdbId) throws IOException {
 		logger.debug("Loading structure {} from BinaryCIF file {}.", pdbId, path);
 		Structure s;
 		flagLoading(pdbId);
@@ -841,7 +890,7 @@ public class AtomCache {
 			reader.setFetchBehavior(fetchBehavior);
 			reader.setObsoleteBehavior(obsoleteBehavior);
 			reader.setFileParsingParameters(params);
-			s = reader.getStructureById(pdbId.toLowerCase());
+			s = reader.getStructureById(pdbId);
 		} finally {
 			flagLoadingFinished(pdbId);
 		}
@@ -850,6 +899,10 @@ public class AtomCache {
 	}
 
 	protected Structure loadStructureFromPdbByPdbId(String pdbId) throws IOException {
+		return loadStructureFromPdbByPdbId(new PdbId(pdbId));
+	}
+
+	protected Structure loadStructureFromPdbByPdbId(PdbId pdbId) throws IOException {
 		logger.debug("Loading structure {} from PDB file {}.", pdbId, path);
 		Structure s;
 		flagLoading(pdbId);
@@ -860,7 +913,7 @@ public class AtomCache {
 
 			reader.setFileParsingParameters(params);
 
-			s = reader.getStructureById(pdbId.toLowerCase());
+			s = reader.getStructureById(pdbId);
 		} finally {
 			flagLoadingFinished(pdbId);
 		}

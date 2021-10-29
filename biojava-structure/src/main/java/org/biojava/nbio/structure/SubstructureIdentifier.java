@@ -33,7 +33,6 @@ import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.contact.Grid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 /**
  * This is the canonical way to identify a part of a structure.
  *
@@ -50,18 +49,25 @@ import org.slf4j.LoggerFactory;
  * 		range         := range (',' range)?
  * 		               | chainID
  * 		               | chainID '_' resNum '-' resNum
- * 		pdbID         := [0-9][a-zA-Z0-9]{3}
+ *		pdbID         := [1-9][a-zA-Z0-9]{3}
+ *		               | PDB_[a-zA-Z0-9]{8}
  * 		chainID       := [a-zA-Z0-9]+
  * 		resNum        := [-+]?[0-9]+[A-Za-z]?
  * </pre>
  * For example:
  * <pre>
- * 		1TIM                            #whole structure
- * 		1tim                            #same as above
- * 		4HHB.C                          #single chain
- * 		3AA0.A,B                        #two chains
- * 		4GCR.A_1-40                     #substructure
- *      3iek.A_17-28,A_56-294,A_320-377 #substructure of 3 disjoint parts
+ * 		1TIM                                    #whole structure (short format)
+ * 		1tim                                    #same as above
+ * 		4HHB.C                                  #single chain
+ * 		3AA0.A,B                                #two chains
+ * 		4GCR.A_1-40                             #substructure
+ *      3iek.A_17-28,A_56-294,A_320-377         #substructure of 3 disjoint parts
+ * 		PDB_00001TIM                            #whole structure (extended format)
+ * 		pdb_00001tim                            #same as above
+ * 		PDB_00004HHB.C                          #single chain
+ * 		PDB_00003AA0.A,B                        #two chains
+ * 		PDB_00004GCR.A_1-40                     #substructure
+ *      pdb_00003iek.A_17-28,A_56-294,A_320-377 #substructure of 3 disjoint parts
  * </pre>
  * More options may be added to the specification at a future time.
 
@@ -75,7 +81,7 @@ public class SubstructureIdentifier implements StructureIdentifier {
 	private static final Logger logger = LoggerFactory.getLogger(SubstructureIdentifier.class);
 
 
-	private final String pdbId;
+	private final PdbId pdbId;
 	private final List<ResidueRange> ranges;
 
 	/**
@@ -87,14 +93,17 @@ public class SubstructureIdentifier implements StructureIdentifier {
 		if(1 > idRange.length || idRange.length > 2 ) {
 			throw new IllegalArgumentException(String.format("Malformed %s: %s",getClass().getSimpleName(),id));
 		}
-		if(idRange[0].length() != 4) {
-			this.pdbId = idRange[0];
+		//used tempId to avoid writing 2 assignment statements to a final field,
+		// although one is in the try block and the other in the catch block.
+		PdbId tempId = null;
+		try {
+			tempId = new PdbId(idRange[0]);
+		} catch (IllegalArgumentException e) {
 			// Changed from Exception to a warning to support files and stuff -sbliven 2015/01/22
-			logger.warn(String.format("Unrecognized PDB code %s",this.pdbId));
-		} else {
-			this.pdbId = idRange[0].toUpperCase();
+			logger.warn(String.format("Unrecognized PDB code %s", idRange[0]));
 		}
-
+		this.pdbId = tempId;
+		
 		if( idRange.length == 2) {
 			String rangeStr = idRange[1].trim();
 
@@ -112,6 +121,17 @@ public class SubstructureIdentifier implements StructureIdentifier {
 	 * @param ranges
 	 */
 	public SubstructureIdentifier(String pdbId, List<ResidueRange> ranges) {
+		this(new PdbId(pdbId), ranges);
+	}
+
+	/**
+	 * Create a new identifier based on a set of ranges.
+	 *
+	 * If ranges is empty, includes all residues.
+	 * @param pdbId
+	 * @param ranges
+	 */
+	public SubstructureIdentifier(PdbId pdbId, List<ResidueRange> ranges) {
 		if(ranges == null) {
 			throw new NullPointerException("Null ranges list");
 		}
@@ -135,14 +155,19 @@ public class SubstructureIdentifier implements StructureIdentifier {
 	 */
 	@Override
 	public String getIdentifier() {
+		String pdbId = this.pdbId == null? "": this.pdbId.getId();
 		if (ranges.isEmpty()) return pdbId;
 		return pdbId + "." + ResidueRange.toString(ranges);
 	}
 
-	public String getPdbId() {
+	/**
+	 * Get the PDB identifier part of the SubstructureIdentifier
+	 * @return the PDB ID
+	 */
+	public PdbId getPdbId() {
 		return pdbId;
 	}
-
+	
 	public List<ResidueRange> getResidueRanges() {
 		return ranges;
 	}
@@ -178,16 +203,19 @@ public class SubstructureIdentifier implements StructureIdentifier {
 	public Structure reduce(Structure s) throws StructureException {
 		// Follows StructureImpl.clone()
 
+		if(s == null)
+			throw new StructureException("NullPointerException Possibly due to malformed PIBId format.");
+
 		// Create new structure & copy basic properties
 		Structure newS = new StructureImpl();
 
-		newS.setPDBCode(s.getPDBCode());
+		newS.setPdbId(s.getPdbId());
 		newS.setPDBHeader(s.getPDBHeader());
 		newS.setName(this.toString());
 		newS.setDBRefs(s.getDBRefs());
 		newS.setBiologicalAssembly(s.isBiologicalAssembly());
 		newS.getPDBHeader().setDescription(
-				"sub-range " + ranges + " of "  + newS.getPDBCode() + " "
+				"sub-range " + ranges + " of "  + newS.getPdbId() + " "
 						+ s.getPDBHeader().getDescription());
 		newS.setEntityInfos(new ArrayList<>());
 		// TODO The following should be only copied for atoms which are present in the range.
@@ -290,7 +318,7 @@ public class SubstructureIdentifier implements StructureIdentifier {
 	 */
 	@Override
 	public Structure loadStructure(AtomCache cache) throws IOException, StructureException {
-		String pdb = getPdbId();
+		PdbId pdb = getPdbId();
 		if(pdb == null)
 			return null;
 		return cache.getStructureForPdbId(pdb);

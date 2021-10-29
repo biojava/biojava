@@ -23,6 +23,7 @@ package org.biojava.nbio.structure.align.gui;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.swing.Box;
 import javax.swing.JLabel;
@@ -30,6 +31,7 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
+import org.biojava.nbio.structure.PdbId;
 import org.biojava.nbio.structure.ResidueRange;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
@@ -106,30 +108,32 @@ implements StructurePairSelector{
 	}
 
 	public StructureIdentifier getName1() {
-		String pdbId = f1.getText().trim();
+		String id = f1.getText().trim();
 		String chainId = c1.getText().trim();
 		String range = r1.getText().trim();
-
+		
+		PdbId pdbId = new PdbId(id);
 		// Prefer range over chain
 		if( ! range.isEmpty() ) {
 			return new SubstructureIdentifier(pdbId, ResidueRange.parseMultiple(range));
 		} else if ( ! chainId.isEmpty() ){
 			return new SubstructureIdentifier(pdbId, ResidueRange.parseMultiple(chainId));
 		}
-		return new SubstructureIdentifier(pdbId);
+		return new SubstructureIdentifier(pdbId, new ArrayList<ResidueRange>());
 	}
 	public StructureIdentifier getName2() {
-		String pdbId = f2.getText().trim();
+		String id = f2.getText().trim();
 		String chainId = c2.getText().trim();
 		String range = r2.getText().trim();
-
+		
+		PdbId pdbId = new PdbId(id);
 		// Prefer range over chain
 		if( ! range.isEmpty() ) {
 			return new SubstructureIdentifier(pdbId, ResidueRange.parseMultiple(range));
 		} else if ( ! chainId.isEmpty() ){
 			return new SubstructureIdentifier(pdbId, ResidueRange.parseMultiple(chainId));
 		}
-		return new SubstructureIdentifier(pdbId);
+		return new SubstructureIdentifier(pdbId, new ArrayList<ResidueRange>());
 	}
 	@Override
 	public Structure getStructure1() throws StructureException, IOException{

@@ -51,7 +51,8 @@ public class StructureIO {
 		range         := '('? range (',' range)? ')'?
 					   | chainID
 					   | chainID '_' resNum '-' resNum
-		pdbID         := [0-9][a-zA-Z0-9]{3}
+		pdbID         := [1-9][a-zA-Z0-9]{3}
+					   | PDB_[a-zA-Z0-9]{8}
 		chainID       := [a-zA-Z0-9]
 		scopID        := 'd' pdbID [a-z_][0-9_]
 		biol		  := 'BIO:' pdbID [:]? [0-9]+
@@ -59,10 +60,14 @@ public class StructureIO {
 
 
 		Example structures:
-		1TIM     	#whole structure - asym unit
-		4HHB.C     	#single chain
-		4GCR.A_1-83 #one domain, by residue number
-		3AA0.A,B    #two chains treated as one structure
+		1TIM                #whole structure - asym unit (short format)
+		4HHB.C              #single chain
+		4GCR.A_1-83         #one domain, by residue number
+		3AA0.A,B            #two chains treated as one structure
+		PDB_00001TIM        #whole structure - asym unit (extended format)
+		PDB_00004HHB.C      #single chain
+		PDB_00004GCR.A_1-83 #one domain, by residue number
+		PDB_00003AA0.A,B    #two chains treated as one structure
 		d2bq6a1     #scop domain
 		BIO:1fah   #biological assembly nr 1 for 1fah
 		BIO:1fah:0 #asym unit for 1fah
@@ -233,18 +238,6 @@ public class StructureIO {
 	 */
 	public static List<Structure> getBiologicalAssemblies(String pdbId) throws IOException, StructureException {
 		return getBiologicalAssemblies(pdbId, AtomCache.DEFAULT_BIOASSEMBLY_STYLE);
-	}
-
-	private static final String FILE_SEPARATOR = System.getProperty("file.separator");
-
-	/**
-	 * Utility method to set the location where PDB files can be found
-	 *
-	 * @param pathToPDBFiles
-	 */
-	public static void setPdbPath(String pathToPDBFiles) {
-		if (!pathToPDBFiles.endsWith(FILE_SEPARATOR))
-			pathToPDBFiles += FILE_SEPARATOR;
 	}
 
 	/**

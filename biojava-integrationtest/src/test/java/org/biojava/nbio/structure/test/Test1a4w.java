@@ -67,8 +67,7 @@ public class Test1a4w {
 
 
 	@Test
-	public void test1a4wPDBFile() throws IOException
-	{
+	public void test1a4wPDBFile() throws IOException {
 
 		//		structure = null;
 

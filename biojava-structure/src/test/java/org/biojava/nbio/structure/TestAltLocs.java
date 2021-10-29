@@ -20,16 +20,11 @@
  */
 package org.biojava.nbio.structure;
 
-import org.biojava.nbio.structure.align.util.AtomCache;
-import org.biojava.nbio.structure.chem.ChemComp;
-import org.biojava.nbio.structure.chem.ChemCompBond;
-import org.biojava.nbio.structure.chem.ChemCompGroupFactory;
-import org.biojava.nbio.structure.chem.PolymerType;
-import org.biojava.nbio.structure.chem.ResidueType;
-import org.biojava.nbio.structure.io.FileParsingParameters;
-import org.biojava.nbio.structure.io.cif.CifStructureConverter;
-import org.biojava.nbio.structure.io.StructureFiletype;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -38,7 +33,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static org.junit.Assert.*;
+import org.biojava.nbio.structure.align.util.AtomCache;
+import org.biojava.nbio.structure.chem.ChemComp;
+import org.biojava.nbio.structure.chem.ChemCompBond;
+import org.biojava.nbio.structure.chem.ChemCompGroupFactory;
+import org.biojava.nbio.structure.chem.PolymerType;
+import org.biojava.nbio.structure.chem.ResidueType;
+import org.biojava.nbio.structure.io.FileParsingParameters;
+import org.biojava.nbio.structure.io.StructureFiletype;
+import org.biojava.nbio.structure.io.cif.CifStructureConverter;
+import org.junit.Test;
 
 public class TestAltLocs {
 

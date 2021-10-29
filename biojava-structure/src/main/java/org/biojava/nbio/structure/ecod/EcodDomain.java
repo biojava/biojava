@@ -79,7 +79,7 @@ Column 15: Comma-separated value list of non-polymer entities within 4 A of at l
 	private Integer hGroup;
 	private Integer tGroup;
 	private Integer fGroup;
-	private String pdbId;
+	private PdbId pdbId;
 	private String chainId;
 	private String range;
 	private String seqIdRange;
@@ -117,7 +117,7 @@ Column 15: Comma-separated value list of non-polymer entities within 4 A of at l
 		this.hGroup = hGroup;
 		this.tGroup = tGroup;
 		this.fGroup = fGroup;
-		this.pdbId = pdbId;
+		this.pdbId = new PdbId(pdbId);
 		this.chainId = chainId;
 		this.range = range;
 		this.seqIdRange = seqId;
@@ -202,12 +202,32 @@ Column 15: Comma-separated value list of non-polymer entities within 4 A of at l
 	public void setFGroup(Integer fGroup) {
 		this.fGroup = fGroup;
 	}
-	public String getPdbId() {
+
+	public void setPdbId(String pdbId) {
+		if (pdbId == null)
+			this.pdbId = null;
+		else
+			setPdbId(new PdbId(pdbId));
+	}
+
+	/**
+	 * Gets the {@link PdbId} object.<br>
+	 * Before 6.0.0, this method used to return a {@link String}.
+	 * @return the {@link PdbId} object associated with this domain.
+	 * @since 6.0.0
+	 */
+	public PdbId getPdbId() {
 		return pdbId;
 	}
-	public void setPdbId(String pdbId) {
+	
+	/**
+	 * @param pdbId
+	 * @since 6.0.0
+	 */
+	public void setPdbId(PdbId pdbId) {
 		this.pdbId = pdbId;
 	}
+
 	public String getChainId() {
 		return chainId;
 	}

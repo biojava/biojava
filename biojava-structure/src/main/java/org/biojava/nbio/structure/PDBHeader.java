@@ -20,17 +20,24 @@
  */
 package org.biojava.nbio.structure;
 
-import org.biojava.nbio.structure.quaternary.BioAssemblyInfo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.EnumSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+
+import org.biojava.nbio.structure.quaternary.BioAssemblyInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -56,7 +63,7 @@ public class PDBHeader implements PDBRecord {
 	 * Use {@link #getKeywords()} instead. */
 	private String description;
 	private List<String> keywords;
-	private String idCode;
+	private PdbId pdbId;
 	private String classification;
 
 	private Date depDate;
@@ -455,24 +462,57 @@ public class PDBHeader implements PDBRecord {
 	}
 
 
-	/** The PDB code for this protein structure.
+	/** 
+	 * The PDB code for this protein structure.
 	 *
 	 * @return the PDB identifier
 	 * @see #setIdCode(String)
+	 * @deprecated use {@link #getPdbId()}
 	 */
+	@Deprecated
 	public String getIdCode() {
-		return idCode;
+		if(this.pdbId == null)
+			return null;
+		return this.pdbId.getId();
 	}
-	/** The PDB code for this protein structure.
+
+	/** 
+	 * The PDB code for this protein structure.
 	 *
 	 * @param idCode the PDB identifier
 	 * @see #getIdCode()
-	 *
+	 * @deprecated use {@link #setPdbId(PdbId)}
 	 */
+	@Deprecated
 	public void setIdCode(String idCode) {
-		this.idCode = idCode;
+		if(idCode == null) {
+			this.pdbId = null;
+		}else {
+			this.pdbId = new PdbId(idCode);
+		}
 	}
 
+	/** 
+	 * Gets the PDB identifier for this protein structure.
+	 *
+	 * @return the {@link PdbId} PDB identifier
+	 * @see #setPdbId(PdbId)
+	 * @since 6.0.0
+	 */
+	public PdbId getPdbId() {
+		return pdbId;
+	}
+	
+	/** 
+	 * Sets the PDB identifier code for this protein structure.
+	 *
+	 * @param pdbId the PDB identifier
+	 * @see #getPdbId()
+	 * @since 6.0.0
+	 */
+	public void setPdbId(PdbId pdbId) {
+		this.pdbId = pdbId;
+	}
 
 	public String getClassification() {
 		return classification;

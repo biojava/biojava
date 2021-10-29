@@ -20,7 +20,7 @@ BioJava 6.0.0 (future release)
 * Removed `org.biojava.nbio.structure.io.mmtf.MmtfUtils.setUpBioJava()`
 * Removed from `org.biojava.nbio.structure.Chain` interface: `getParent()`, `setParent()`, `getAtomLigands()`, `getSwissprotId()`, `setSwissprotId()`, `getInternalChainID()`, `setInternalChainID()`, `getChainID()`, `setChainID()`
 * Removed from `org.biojava.nbio.structure.Structure` interface: `findChain()`, `getId()`, `setId()`, `getChainByPDB()`, `getCompoundById()`, `getResidueRanges()`, `getRanges()`
-* Removed from `org.biojava.nbio.structure.StructureTools` : `isNucleicAcid()`, `isProtein()`, `getPredominantGroupType()`, `isChainWaterOnly()`, `isChainPureNonPolymer()`
+* Removed from `org.biojava.nbio.structure.StructureTools` : `isNucleicAcid()`, `isProtein()`, `getPredominantGroupType()`, `isChainWaterOnly()`, `isChainPureNonPolymer()`, `getReducedStructure()`
 * Removed `org.biojava.nbio.structure.io.SandboxStyleStructureProvider`
 * In `org.biojava.nbio.structure.align.xml.MultipleAlignmentXMLParser` made all methods private except `parseXMLfile`
 
@@ -32,14 +32,15 @@ BioJava 6.0.0 (future release)
 * Moved all chem-comp model classes from `org.biojava.nbio.structure.io.mmcif.chem` to `org.biojava.nbio.structure.chem`
 * Moved all chem-comp parsing classes from `org.biojava.nbio.structure.io.mmcif.chem` to `org.biojava.nbio.structure.io.cif`
 * Moved classes in `org.biojava.nbio.structure.io.mmcif` to `org.biojava.nbio.structure.chem`
-* Fixed `CRC64Checksum#public void update(byte[] b, int offset, int length)` to use
-the `length` argument correctly as specified in `java.util.zip.Checksum` interface.
-* Removed `DownloadChemCompProvider.useDefaultUrlLayout` with a more flexible system to provide templated URLs `DownloadChemCompProvider.setChemCompPathUrlTemplate()` 
-and `DownloadChemCompProvider.setServerBaseUrl()`
+* Fixed `CRC64Checksum#public void update(byte[] b, int offset, int length)` to use the `length` argument correctly as specified in `java.util.zip.Checksum` interface.
+* In `SubstructureIdentifier`, `StructureName`, `EcodDomain`, `ScopDomain` : `getPdbId()` returns `PdbId` object instead of `String`.
+* Removed `DownloadChemCompProvider.useDefaultUrlLayout` with a more flexible system to provide templated URLs `DownloadChemCompProvider.setChemCompPathUrlTemplate()` and `DownloadChemCompProvider.setServerBaseUrl()`
+* In `Structure` (and `StructureImple`), the accessor methods `String getPdbId()` and `setPdbId(String)` were previously depricated. They were revived in BioJava 6.0.0 but as `PdbId getPdbId()` and `setPdbId(PdbId)` instead.n
 
 ### Added
-* New keywords fields in `PDBHeader` class, populated by PDB and mmCIF parsers #946
+* New `keywords` field in `PDBHeader` class, populated by PDB and mmCIF parsers #946
 * OBO parsing now supports multiple altids, #960
+* New class `PdbId` that wrapps a PDB Identifier and handles conversion between current short PDBID format and upcoming extended PDBID format #930
 
 ### Fixed
 * Correct chain assignment to entities when parsing PDB/mmCIF without entity information (in cases with more than 3 chains per entity) #931

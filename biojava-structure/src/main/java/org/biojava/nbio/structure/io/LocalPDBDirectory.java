@@ -21,17 +21,6 @@
  */
 package org.biojava.nbio.structure.io;
 
-import org.biojava.nbio.structure.PDBStatus;
-import org.biojava.nbio.structure.PDBStatus.Status;
-import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.align.util.UserConfiguration;
-import org.biojava.nbio.core.util.FileDownloadUtils;
-import org.rcsb.mmtf.utils.CodecUtils;
-import org.biojava.nbio.core.util.InputStreamProvider;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,7 +28,24 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
+
+import org.biojava.nbio.core.util.FileDownloadUtils;
+import org.biojava.nbio.core.util.InputStreamProvider;
+import org.biojava.nbio.structure.PdbId;
+import org.biojava.nbio.structure.PDBStatus;
+import org.biojava.nbio.structure.PDBStatus.Status;
+import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.align.util.UserConfiguration;
+import org.rcsb.mmtf.utils.CodecUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Superclass for classes which download and interact with the PDB's FTP server,
@@ -117,7 +123,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	 */
 	public static final long LAST_REMEDIATION_DATE ;
 	private static final String LAST_REMEDIATION_DATE_STRING = "2011/07/12";
-
+	
 	static {
 
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd", Locale.US);
@@ -327,10 +333,19 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	}
 
 
-	@Override
+	/**
+	 *{@inheritDoc}
+	 */
 	public Structure getStructureById(String pdbId) throws IOException {
-		InputStream inStream = getInputStream(pdbId);
+		return getStructureById(new PdbId(pdbId));
+	}
 
+	/**
+	 *{@inheritDoc}
+	 */
+	@Override
+	public Structure getStructureById(PdbId pdbId) throws IOException {
+		InputStream inStream = getInputStream(pdbId);
 		return getStructure(inStream);
 	}
 
@@ -349,10 +364,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	 * @return
 	 * @throws IOException
 	 */
-	protected InputStream getInputStream(String pdbId) throws IOException{
-
-		if ( pdbId.length() != 4)
-			throw new IOException("The provided ID does not look like a PDB ID : " + pdbId);
+	protected InputStream getInputStream(PdbId pdbId) throws IOException{
 
 		// Check existing
 		File file = downloadStructure(pdbId);
@@ -376,11 +388,9 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	 * @throws IOException
 	 */
 	public void prefetchStructure(String pdbId) throws IOException {
-		if ( pdbId.length() != 4)
-			throw new IOException("The provided ID does not look like a PDB ID : " + pdbId);
-
+		
 		// Check existing
-		File file = downloadStructure(pdbId);
+		File file = downloadStructure(new PdbId(pdbId));
 
 		if(!file.exists()) {
 			throw new IOException("Structure "+pdbId+" not found and unable to download.");
@@ -389,11 +399,21 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 
 	/**
 	 * Attempts to delete all versions of a structure from the local directory.
-	 * @param pdbId
+	 * @param pdbId a String representing the PDB ID.
 	 * @return True if one or more files were deleted
 	 * @throws IOException if the file cannot be deleted
 	 */
-	public boolean deleteStructure(String pdbId) throws IOException{
+	public boolean deleteStructure(String pdbId) throws IOException {
+		return deleteStructure(new PdbId(pdbId));
+	}
+
+	/**
+	 * Attempts to delete all versions of a structure from the local directory.
+	 * @param pdbId The PDB ID
+	 * @return True if one or more files were deleted
+	 * @throws IOException if the file cannot be deleted
+	 */
+	public boolean deleteStructure(PdbId pdbId) throws IOException{
 		boolean deleted = false;
 		// Force getLocalFile to check in obsolete locations
 		ObsoleteBehavior obsolete = getObsoleteBehavior();
@@ -440,9 +460,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	 * @throws IOException for errors downloading or writing, or if the
 	 *  fetchBehavior is {@link FetchBehavior#LOCAL_ONLY}
 	 */
-	protected File downloadStructure(String pdbId) throws IOException{
-		if ( pdbId.length() != 4)
-			throw new IOException("The provided ID does not look like a PDB ID : " + pdbId);
+	protected File downloadStructure(PdbId pdbId) throws IOException {
 
 		// decide whether download is required
 		File existing =  getLocalFile(pdbId);
@@ -489,15 +507,17 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 
 		// Force the download now
 		if(obsoleteBehavior == ObsoleteBehavior.FETCH_CURRENT) {
-			String current = PDBStatus.getCurrent(pdbId);
-
+			String current = PDBStatus.getCurrent(pdbId.getId());
+			PdbId pdbIdToDownload = null;
 			if(current == null) {
 				// either an error or there is not current entry
-				current = pdbId;
+				pdbIdToDownload = pdbId;
+			}else {
+				pdbIdToDownload = new PdbId(current);
 			}
-			return downloadStructure(current, splitDirURL,false, existing);
+			return downloadStructure(pdbIdToDownload, splitDirURL,false, existing);
 		} else if(obsoleteBehavior == ObsoleteBehavior.FETCH_OBSOLETE
-				&& PDBStatus.getStatus(pdbId) == Status.REMOVED) {
+				&& PDBStatus.getStatus(pdbId.getId()) == Status.REMOVED) {
 			return downloadStructure(pdbId, obsoleteDirURL, true, existing);
 		} else {
 			return downloadStructure(pdbId, splitDirURL, false, existing);
@@ -514,23 +534,23 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	 * @return
 	 * @throws IOException
 	 */
-	private File downloadStructure(String pdbId, String pathOnServer, boolean obsolete, File existingFile)
+	private File downloadStructure(PdbId pdbId, String pathOnServer, boolean obsolete, File existingFile)
 			throws IOException{
-
-		File dir = getDir(pdbId,obsolete);
-		File realFile = new File(dir,getFilename(pdbId));
+		String id = pdbId.getId().toLowerCase();
+		File dir = getDir(id, obsolete);
+		File realFile = new File(dir,getFilename(id));
 
 		String ftp;
 
-		String filename = getFilename(pdbId);
+		String filename = getFilename(id);
 		if (filename.endsWith(".mmtf.gz")){
-			ftp = CodecUtils.getMmtfEntryUrl(pdbId, true, false);
+			ftp = CodecUtils.getMmtfEntryUrl(id, true, false);
 		} else if (filename.endsWith(".bcif") || filename.endsWith(".bcif.gz")) {
 			// TODO this should be configurable
 			ftp = DEFAULT_BCIF_FILE_SERVER + filename;
 		} else {
 			ftp = String.format("%s%s/%s/%s",
-			serverName, pathOnServer, pdbId.substring(1,3).toLowerCase(), getFilename(pdbId));
+			serverName, pathOnServer, id.substring(id.length()-3, id.length()-1), getFilename(id));
 		}
 
 		URL url = new URL(ftp);
@@ -557,21 +577,6 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 		logger.info("Writing to "+ realFile);
 
 		FileDownloadUtils.downloadFile(url, realFile);
-
-		// Commented out following code used for setting the modified date to the downloaded file - JD 2015-01-15
-		// The only reason to have it was in order to get an rsync-like behavior, respecting the timestamps
-		// but the issue is that it would make the FETCH_REMEDIATED mode redownload files with timestamps before
-		// the remediation.
-		//if (serverFileDate==null)
-		//	serverFileDate = getLastModifiedTime(url);
-		//
-		//if (serverFileDate!=null) {
-		//	logger.debug("Setting modified time of downloaded file {} to {}",realFile,serverFileDate.toString());
-		//	realFile.setLastModified(serverFileDate.getTime());
-		//} else {
-		//	logger.warn("Unknown modified time of file {}, will set its modified time to now.", ftp);
-		//}
-
 
 		return realFile;
 	}
@@ -621,13 +626,14 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	protected File getDir(String pdbId, boolean obsolete) {
 
 		File dir = null;
+		int offset = pdbId.length() - 3;
 
 		if (obsolete) {
 			// obsolete is always split
-			String middle = pdbId.substring(1,3).toLowerCase();
+			String middle = pdbId.substring(offset, offset + 2).toLowerCase();
 			dir = new File(obsoleteDirPath, middle);
 		} else {
-			String middle = pdbId.substring(1,3).toLowerCase();
+			String middle = pdbId.substring(offset, offset + 2).toLowerCase();
 			dir = new File(splitDirPath, middle);
 		}
 
@@ -647,14 +653,24 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	 * @throws IOException If the file exists but is empty and can't be deleted
 	 */
 	public File getLocalFile(String pdbId) throws IOException {
-
+		return getLocalFile(new PdbId(pdbId));
+	}
+	/**
+	 * Searches for previously downloaded files
+	 * @param pdbId
+	 * @return A file pointing to the existing file, or null if not found
+	 * @throws IOException If the file exists but is empty and can't be deleted
+	 */
+	public File getLocalFile(PdbId pdbId) throws IOException {
+		String id = pdbId.getId();
+		int offset = id.length() - 3;
 		// Search for existing files
 
 		// Search directories:
 		// 1) LOCAL_MMCIF_SPLIT_DIR/<middle>/(pdb)?<pdbId>.<ext>
 		// 2) LOCAL_MMCIF_ALL_DIR/<middle>/(pdb)?<pdbId>.<ext>
 		LinkedList<File> searchdirs = new LinkedList<File>();
-		String middle = pdbId.substring(1,3).toLowerCase();
+		String middle = id.substring(offset, offset+2).toLowerCase();
 
 		File splitdir = new File(splitDirPath, middle);
 		searchdirs.add(splitdir);
@@ -670,7 +686,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 		for( File searchdir :searchdirs){
 			for( String prefix : prefixes) {
 				for(String ex : getExtensions() ){
-					File f = new File(searchdir,prefix + pdbId.toLowerCase() + ex) ;
+					File f = new File(searchdir,prefix + id.toLowerCase() + ex) ;
 					if ( f.exists()) {
 						// delete files that are too short to have contents
 						if( f.length() < MIN_PDB_FILE_SIZE ) {
@@ -686,7 +702,10 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 		return null;
 	}
 
-	protected boolean checkFileExists(String pdbId){
+	protected boolean checkFileExists(String pdbId) {
+		return checkFileExists(new PdbId(pdbId));
+	}
+	protected boolean checkFileExists(PdbId pdbId){
 		try {
 			File path =  getLocalFile(pdbId);
 			if ( path != null)

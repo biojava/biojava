@@ -35,6 +35,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.biojava.nbio.structure.BioAssemblyIdentifier;
+import org.biojava.nbio.structure.PdbId;
 import org.biojava.nbio.structure.ResidueRange;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
@@ -72,9 +73,10 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 	private static final Logger logger = LoggerFactory.getLogger(StructureName.class);
 
 	protected String name;
-	protected String pdbId;
+	protected PdbId pdbId;
 	protected String chainName;
 
+	//TODO Double check all of the modified patterns
 	private static final Pattern cathPattern = Pattern.compile("^(?:CATH:)?([0-9][a-z0-9]{3})(\\w)([0-9]{2})$",Pattern.CASE_INSENSITIVE);
 	// ds046__ is a special case with no PDB entry
 	private static final Pattern scopPattern = Pattern.compile("^(?:SCOP:)?d([0-9][a-z0-9]{3}|s046)(\\w|\\.)(\\w)$",Pattern.CASE_INSENSITIVE);
@@ -243,14 +245,14 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 		}
 
 		// Default to PDB
-		initFromPDB( name );
+		initFromPDB(name);
 	}
 
 	private boolean initFromScop(String name) {
 		Matcher matcher = scopPattern.matcher(name);
 		if ( matcher.matches() ) {
 			mySource = Source.SCOP;
-			pdbId = matcher.group(1).toUpperCase();
+			pdbId = new PdbId(matcher.group(1));
 			chainName = matcher.group(2);
 			return true;
 		}
@@ -261,7 +263,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 		Matcher matcher = cathPattern.matcher(name);
 		if ( matcher.matches() ){
 			mySource = Source.CATH;
-			pdbId = matcher.group(1).toUpperCase();
+			pdbId = new PdbId(matcher.group(1));
 			chainName = matcher.group(2);
 			return true;
 		}
@@ -271,7 +273,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 		Matcher matcher = ecodPattern.matcher(name);
 		if ( matcher.matches() ){
 			mySource = Source.ECOD;
-			pdbId = matcher.group(1).toUpperCase();
+			pdbId = new PdbId(matcher.group(1));
 			chainName = null;
 			return true;
 		}
@@ -280,7 +282,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 	private boolean initFromBIO(String name) {
 		Matcher matcher = BioAssemblyIdentifier.BIO_NAME_PATTERN.matcher(name);
 		if( matcher.matches() ) {
-			pdbId = matcher.group(1).toUpperCase();
+			pdbId = new PdbId(matcher.group(1));
 			return true;
 		}
 		return false;
@@ -288,6 +290,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 	private boolean initFromPDB(String suffix) {
 		mySource = Source.PDB;
 		SubstructureIdentifier si = new SubstructureIdentifier(suffix);
+
 		base = si; // Safe to realize immediately
 
 		pdbId = si.getPdbId();
@@ -307,7 +310,11 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 			URL url = new URL(suffix);
 			String path = url.getPath();
 			mySource = Source.URL;
-			pdbId = URLIdentifier.guessPDBID( path.substring(path.lastIndexOf('/')+1) );
+			try {
+				pdbId = new PdbId(URLIdentifier.guessPDBID( path.substring(path.lastIndexOf('/')+1) ));
+			} catch (IllegalArgumentException e) {
+				pdbId = null;
+			}
 			chainName = null; // Don't bother checking query params here
 			return true;
 		} catch(MalformedURLException e) {
@@ -340,14 +347,15 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 	 * toCanonical().getPdbId()}
 	 * @return The upper-case PDB Name, or null if not applicable
 	 * @throws StructureException Wraps errors which occur when converting to canonical form
+	 * @since 6.0.0
 	 */
-	public String getPdbId() throws StructureException {
+	public PdbId getPdbId() throws StructureException {
 		if( pdbId == null) {
 			pdbId = toCanonical().getPdbId();
 		}
 		return pdbId;
 	}
-
+	
 	/**
 	 * Gets the chain ID, for structures where it is unique and well-defined.
 	 * May return '.' for multi-chain ranges, '_' for wildcard chains, or
@@ -450,9 +458,9 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 					// Guessing didn't work, so just use the PDBID and Chain from name
 					// Guess that '_' means 'whole structure'
 					if (chainName.equals("_")) {
-						base = new SubstructureIdentifier(pdbId);
+						base = new SubstructureIdentifier(pdbId.getId());
 					} else {
-						base = new SubstructureIdentifier(pdbId,ResidueRange.parseMultiple(chainName));
+						base = new SubstructureIdentifier(pdbId, ResidueRange.parseMultiple(chainName));
 					}
 					logger.error("Unable to find {}, so using {}",name,base);
 				}
@@ -542,8 +550,8 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 		if ( this.equals(o))
 			return 0;
 
-		String pdb1 = null;
-		String pdb2 = null;
+		PdbId pdb1 = null;
+		PdbId pdb2 = null;
 		try {
 			pdb1 = this.getPdbId();
 		} catch (StructureException e) {}
@@ -570,11 +578,11 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 		}
 
 		// break tie with full identifiers
-		pdb1 = this.getIdentifier();
-		pdb2 = o.getIdentifier();
+		String pdb1Str = this.getIdentifier();
+		String pdb2Str = o.getIdentifier();
 
 		// Throws NPE for nulls
-		return pdb1.compareTo(pdb2);
+		return pdb1Str.compareTo(pdb2Str);
 	}
 
 	/**
