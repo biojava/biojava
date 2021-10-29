@@ -1,7 +1,7 @@
 BioJava Changelog
 -----------------
 
-BioJava 6.0.0 (future release)
+BioJava 6.0.0 
 ==============================
 ### Removed
 * All code related to All-vs-All structural alignments db calculation and access
