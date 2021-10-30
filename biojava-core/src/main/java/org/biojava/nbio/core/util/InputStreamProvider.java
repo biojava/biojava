@@ -196,34 +196,32 @@ public class InputStreamProvider {
 
 		else if ( fileName.endsWith(".zip")){
 
-			try (ZipFile zipfile = new ZipFile(f)) {
+			ZipFile zipfile = new ZipFile(f);
 
-				// stream to first entry is returned ...
-				ZipEntry entry;
-				Enumeration<? extends ZipEntry> e = zipfile.entries();
-				if (e.hasMoreElements()) {
-					entry = e.nextElement();
-					inputStream = zipfile.getInputStream(entry);
-				} else {
-					throw new IOException("Zip file has no entries");
-				}
+			// stream to first entry is returned ...
+			ZipEntry entry;
+			Enumeration<? extends ZipEntry> e = zipfile.entries();
+			if ( e.hasMoreElements()){
+				entry = e.nextElement();
+				inputStream = zipfile.getInputStream(entry);
+			} else {
+				throw new IOException ("Zip file has no entries");
 			}
 
 		}
 
 		else if ( fileName.endsWith(".jar")) {
 
-			try (JarFile jarFile = new JarFile(f)) {
+			JarFile jarFile = new JarFile(f);
 
-				// stream to first entry is returned
-				JarEntry entry;
-				Enumeration<JarEntry> e = jarFile.entries();
-				if (e.hasMoreElements()) {
-					entry = e.nextElement();
-					inputStream = jarFile.getInputStream(entry);
-				} else {
-					throw new IOException("Jar file has no entries");
-				}
+			// stream to first entry is returned
+			JarEntry entry;
+			Enumeration<JarEntry> e = jarFile.entries();
+			if ( e.hasMoreElements()){
+				entry = e.nextElement();
+				inputStream = jarFile.getInputStream(entry);
+			} else {
+				throw new IOException ("Jar file has no entries");
 			}
 		}
 
@@ -282,10 +280,8 @@ public class InputStreamProvider {
 	private InputStream openCompressedURL(URL u)
 	throws IOException{
 
-		InputStream inputStream;
-		try (InputStream is = u.openStream()) {
-			inputStream = new UncompressInputStream(is);
-		}
+		InputStream is           =  u.openStream();
+		InputStream inputStream =  new UncompressInputStream(is);
 		return inputStream;
 	}
 
@@ -301,10 +297,8 @@ public class InputStreamProvider {
 	private InputStream openGZIPURL(URL u)
 	throws IOException{
 
-		InputStream inputStream;
-		try (InputStream is = u.openStream()) {
-			inputStream = new GZIPInputStream(is);
-		}
+		InputStream is      = u.openStream();
+		InputStream inputStream = new GZIPInputStream(is);
 		return inputStream;
 	}
 }
