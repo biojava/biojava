@@ -99,11 +99,11 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
 	 */
 	private boolean init() throws IOException, CompoundNotFoundException {
 
-		BufferedReader br = new BufferedReader(new FileReader(file));
-		br.skip(sequenceStartIndex);
-		String sequence = sequenceParser.getSequence(br, sequenceLength);
-		setContents(sequence);
-		br.close(); // close file to prevent too many being open
+		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+			br.skip(sequenceStartIndex);
+			String sequence = sequenceParser.getSequence(br, sequenceLength);
+			setContents(sequence);
+		}
 
 		return true;
 	}

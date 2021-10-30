@@ -22,6 +22,7 @@ package org.biojava.nbio.core.sequence.io;
 
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava.nbio.core.sequence.compound.DNACompoundSet;
+import org.biojava.nbio.core.sequence.compound.RNACompoundSet;
 import org.biojava.nbio.core.sequence.features.FeatureInterface;
 import org.biojava.nbio.core.sequence.io.template.GenbankHeaderFormatInterface;
 import org.biojava.nbio.core.sequence.template.AbstractSequence;
@@ -76,20 +77,6 @@ public class GenericGenbankHeaderFormat<S extends AbstractSequence<C>, C extends
 		}
 		return output;
 	}
-
-	/**
-	 * used for DBLINK and any similar later line types. If the list of strings
-	 * is empty, nothing is written.
-	 *
-	 * @param tag
-	 * @param text_list
-	 */
-	/*
-	 * private String _write_multi_entries(String tag, ArrayList<String>
-	 * text_list) { String output = _write_single_line(tag,text_list.remove(0));
-	 * for(String s : text_list) { output += _write_single_line("", s); } return
-	 * output; }
-	 */
 
 	private String _get_date(S sequence) {
 		Date sysdate = Calendar.getInstance().getTime();
@@ -150,7 +137,6 @@ public class GenericGenbankHeaderFormat<S extends AbstractSequence<C>, C extends
 	 * Write the LOCUS line.
 	 *
 	 * @param sequence
-	 * @param seqType
 	 */
 	private String _write_the_first_line(S sequence) {
 		/*
@@ -174,7 +160,7 @@ public class GenericGenbankHeaderFormat<S extends AbstractSequence<C>, C extends
 		if (sequence.getCompoundSet() instanceof DNACompoundSet) {
 			units = "bp";
 			mol_type = "DNA";
-		} else if (sequence.getCompoundSet() instanceof DNACompoundSet) {
+		} else if (sequence.getCompoundSet() instanceof RNACompoundSet) {
 			units = "bp";
 			mol_type = "RNA";
 		} else if (sequence.getCompoundSet() instanceof AminoAcidCompoundSet) {

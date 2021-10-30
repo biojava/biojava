@@ -535,9 +535,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 			//       logger.debug(sb.toString());
 			Document document = XMLHelper.inputStreamToDocument(new ByteArrayInputStream(sb.toString().getBytes()));
 			return document;
-		} catch (SAXException e) {
-			logger.error("Exception on xml parse of: {}", sb.toString());
-		} catch (ParserConfigurationException e) {
+		} catch (SAXException | ParserConfigurationException e) {
 			logger.error("Exception on xml parse of: {}", sb.toString());
 		}
 		return null;
@@ -545,9 +543,9 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 
 	private void writeCache(StringBuilder sb, String accession) throws IOException {
 		File f = new File(uniprotDirectoryCache + File.separatorChar + accession + ".xml");
-		FileWriter fw = new FileWriter(f);
-		fw.write(sb.toString());
-		fw.close();
+		try (FileWriter fw = new FileWriter(f)) {
+			fw.write(sb.toString());
+		}
 	}
 
 	/**
@@ -645,11 +643,12 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 		File f = new File(uniprotDirectoryCache + File.separatorChar + key + ".xml");
 		StringBuilder sb = new StringBuilder();
 		if (f.exists()) {
-			FileReader fr = new FileReader(f);
-			int size = (int) f.length();
-			char[] data = new char[size];
-			fr.read(data);
-			fr.close();
+			char[] data;
+			try (FileReader fr = new FileReader(f)) {
+				int size = (int) f.length();
+				data = new char[size];
+				fr.read(data);
+			}
 			sb.append(data);
 			index = sb.indexOf("xmlns="); //strip out name space stuff to make it easier on xpath
 			if (index != -1) {

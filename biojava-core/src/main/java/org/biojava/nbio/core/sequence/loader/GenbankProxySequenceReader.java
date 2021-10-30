@@ -116,20 +116,20 @@ public class GenbankProxySequenceReader<C extends Compound> extends StringProxyS
 	}
 
 	private void copyInputStreamToFile(InputStream in, File f) throws IOException, InterruptedException {
-		FileOutputStream out = new FileOutputStream(f);
-		byte[] buffer = new byte[1024];
-		int len = in.read(buffer);
-		while (len != -1) {
-			out.write(buffer, 0, len);
-			len = in.read(buffer);
-			if (Thread.interrupted()) {
-				in.close();
-				out.close();
-				throw new InterruptedException();
+		try (FileOutputStream out = new FileOutputStream(f)) {
+			byte[] buffer = new byte[1024];
+			int len = in.read(buffer);
+			while (len != -1) {
+				out.write(buffer, 0, len);
+				len = in.read(buffer);
+				if (Thread.interrupted()) {
+					in.close();
+					out.close();
+					throw new InterruptedException();
+				}
 			}
+			in.close();
 		}
-		in.close();
-		out.close();
 	}
 
 	private InputStream getEutilsInputStream(String accessionID, String db) throws IOException {
