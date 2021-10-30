@@ -25,4 +25,8 @@ jobs:
         with:
           java-version: ${{ matrix.java }}
       - name: Build and test, no integration tests
-        run: mvn verify -pl '!biojava-integrationtest'
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        # The following builds the project, runs the tests with coverage (no integration tests) and then executes the SonarCloud analysis
+        run: mvn verify -pl '!biojava-integrationtest' org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=biojava_biojava
