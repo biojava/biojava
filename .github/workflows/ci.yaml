@@ -1,14 +1,15 @@
----
 name: Java CI
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
   test:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-18.04, macOS-latest]
+        # We do one OS only to reduce resource utilization. To do macOS to this would be needed:
+        #os: [ubuntu-20.04, macOS-latest]
+        os: [ubuntu-latest]
         java: [11]
       fail-fast: false
       max-parallel: 4
@@ -22,5 +23,3 @@ jobs:
           java-version: ${{ matrix.java }}
       - name: Test with Maven
         run: mvn verify
-
-...
