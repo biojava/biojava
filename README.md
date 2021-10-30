@@ -1,6 +1,6 @@
 # Welcome to <img src="logo-full.png" height="35"/>
 
-![Build](https://github.com/biojava/biojava/actions/workflows/ci.yaml/badge.svg)
+![Build](https://github.com/biojava/biojava/actions/workflows/master.yml/badge.svg)
 [![Version](http://img.shields.io/badge/version-6.0.0-blue.svg?style=flat)](https://github.com/biojava/biojava/releases/tag/biojava-6.0.0) [![License](http://img.shields.io/badge/license-LGPL_2.1-blue.svg?style=flat)](https://github.com/biojava/biojava/blob/master/LICENSE) [![Join the chat at https://gitter.im/biojava/biojava](https://badges.gitter.im/biojava/biojava.svg)](https://gitter.im/biojava/biojava?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 

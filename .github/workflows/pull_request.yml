@@ -1,0 +1,31 @@
+name: PR Build
+
+on: 
+  push:
+    branches:
+      - '!master'
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        # We do one OS only to reduce resource utilization. To do macOS to this would be needed:
+        #os: [ubuntu-20.04, macOS-latest]
+        os: [ubuntu-latest]
+        java: [11]
+      fail-fast: false
+      max-parallel: 4
+    name: Test JDK ${{ matrix.java }}, ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: ${{ matrix.java }}
+      - name: Build, test and integration test
+        run: mvn verify
