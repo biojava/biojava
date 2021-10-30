@@ -26,6 +26,7 @@ jobs:
           java-version: ${{ matrix.java }}
       - name: Build, test (no integration) and Sonarqube analyse
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         # The following builds the project, runs the tests with coverage (no integration tests) and then executes the SonarCloud analysis
