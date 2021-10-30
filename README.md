@@ -18,7 +18,7 @@ Full javadocs are available at the [BioJava website](http://biojava.org/docs/api
 
 ### Maven Repository
 
-BioJava release are available from Maven Central. Snapshot builds are distributed using [OSS Sonatype](https://oss.sonatype.org/content/repositories/snapshots/org/biojava)
+BioJava release are available from Maven Central.
 
 ### Quick Installation
 
@@ -35,25 +35,6 @@ If you are using Maven you can add the BioJava repository by adding the followin
     </dependencies>
 ```
 
-### Snapshot builds
-
-To use the latest builds from BioJava, you can add the following config your project's pom.xml:
-
-```xml
-<repositories>
-    <repository>
-      <id>oss.sonatype.org-snapshot</id>
-      <url>http://oss.sonatype.org/content/repositories/snapshots</url>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </repository>
-  </repositories>
-  ```
-
 ### Mailing Lists
 
 BioJava has one main mailing list. In order to avoid SPAM the list only accepts postings from list members. Anybody can become a list member, so please subscribe before you post. If you send without being subscribed your mail might get stuck in the moderation loop, which can cause several weeks of delay (no fun to read through all that spam).
@@ -69,7 +50,6 @@ This list is intended for general discussion, advice, questions, offers of help,
 A [dev mailing list](http://lists.open-bio.org/mailman/listinfo/biojava-dev) used to exist, but it has now been shut down. For dev discussions we now use github issues. Please search existing issues and if you don't find the answer to your question submit a new issue.
 
 ### Please cite
-
 
 **BioJava 5: A community driven open-source bioinformatics library**<br/>
 *Aleix Lafita, Spencer Bliven, Andreas Prlić, Dmytro Guzenko, Peter W. Rose, Anthony Bradley, Paolo Pavan, Douglas Myers-Turnbull, Yana Valasatava, Michael Heuer, Matt Larson, Stephen K. Burley, Jose M. Duarte* <br/>
