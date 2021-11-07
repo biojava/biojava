@@ -140,6 +140,7 @@ public enum PolymerType implements Serializable {
 
         tmp = new HashSet<>();
         tmp.add(peptide);
+        tmp.add(dpeptide);
         PROTEIN_ONLY = Collections.unmodifiableSet(tmp);
 
         tmp = new HashSet<>();
