@@ -1802,7 +1802,7 @@ public class StructureTools {
 		List<Group> groups = new ArrayList<>();
 		for (Group g : allGroups) {
 
-			if ( g.isPolymeric())
+			if ( g.isPolymeric())  //TODO shall we change this condition to include an aminoacid came as a ligand as well?
 				continue;
 
 			if (!g.isWater()) {
