@@ -1931,7 +1931,7 @@ public class PDBFileParser  {
 
 
 
-			}
+	}
 
 
 	private Group getCorrectAltLocGroup( Character altLoc,
