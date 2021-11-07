@@ -200,7 +200,7 @@ public class FileDownloadUtils {
 	public static String expandUserHome(String file) {
 		// replace any / with the proper separator (/ or \ for Linux and Windows respectively).
 		file = file.replaceAll("/", "\\"+File.separator); //The "\\" is to escape the separator if needed.
-		if (file.startsWith("~" + File.separator)) {
+		if (file.startsWith("~") && (file.length() == 1 || File.separator.equals(file.substring(1, 2)))) {
 			file = System.getProperty("user.home") + file.substring(1);
 		}
 		return file;

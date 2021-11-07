@@ -131,6 +131,11 @@ class FileDownloadUtilsTest {
     class ExpandUserHome {
         String currUserHome = System.getProperty("user.home");
         @Test
+        void minimalPath (){
+        	String path="~";
+        	assertEquals(currUserHome, FileDownloadUtils.expandUserHome(path));
+        }
+        @Test
         void simplePath (){
             String path="~/sequence.gb";
             assertEquals(currUserHome+File.separator+"sequence.gb", FileDownloadUtils.expandUserHome(path));
