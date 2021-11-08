@@ -1726,7 +1726,7 @@ public class PDBFileParser  {
 		startOfMolecule = false;
 
 
-		Character altLoc   = new Character(line.substring (16, 17).charAt(0));
+		Character altLoc   = line.substring (16, 17).charAt(0);
 		Group altGroup = null;
 
 
@@ -1931,7 +1931,7 @@ public class PDBFileParser  {
 
 
 
-			}
+	}
 
 
 	private Group getCorrectAltLocGroup( Character altLoc,
