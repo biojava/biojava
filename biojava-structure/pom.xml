@@ -26,21 +26,21 @@
 		<dependency>
 			<groupId>org.rcsb</groupId>
 			<artifactId>mmtf-api</artifactId>
-            <version>${mmtf.version}</version>
+			<version>${mmtf.version}</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.rcsb</groupId>
 			<artifactId>mmtf-serialization</artifactId>
-            <version>${mmtf.version}</version>
+			<version>${mmtf.version}</version>
 			<scope>compile</scope>
 		</dependency>
-		      <dependency>
-            <groupId>org.rcsb</groupId>
-            <artifactId>mmtf-codec</artifactId>
-            <version>${mmtf.version}</version>
-            <scope>compile</scope>
-        </dependency>
+		<dependency>
+			<groupId>org.rcsb</groupId>
+			<artifactId>mmtf-codec</artifactId>
+			<version>${mmtf.version}</version>
+			<scope>compile</scope>
+		</dependency>
 		<dependency>
 			<groupId>org.biojava</groupId>
 			<artifactId>biojava-alignment</artifactId>
@@ -62,48 +62,41 @@
 
 		<dependency>
 			<groupId>org.jgrapht</groupId>
-  			<artifactId>jgrapht-core</artifactId>
-  			<version>1.5.1</version>
+			<artifactId>jgrapht-core</artifactId>
+			<!-- Pin! Java 8 requires 1.3.0 -->
+			<version>1.3.0</version>
 		</dependency>
 
 		<!-- JAXb explicit dependency is needed since Java 9. See https://stackoverflow.com/questions/43574426/how-to-resolve-java-lang-noclassdeffounderror-javax-xml-bind-jaxbexception-in-j
 		  Note versions are set in parent pom in dependency management section -->
 		<dependency>
-		    <groupId>javax.xml.bind</groupId>
-		    <artifactId>jaxb-api</artifactId>
+			<groupId>javax.xml.bind</groupId>
+			<artifactId>jaxb-api</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.sun.xml.bind</groupId>
-			<artifactId>jaxb-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.sun.xml.bind</groupId>
-			<artifactId>jaxb-impl</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>javax.activation</groupId>
-			<artifactId>activation</artifactId>
+			<groupId>org.glassfish.jaxb</groupId>
+			<artifactId>jaxb-runtime</artifactId>
 		</dependency>
 
 		<!-- logging dependencies (managed by parent pom, don't set versions or
 			scopes here) -->
 		<dependency>
-        	<groupId>org.slf4j</groupId>
-        	<artifactId>slf4j-api</artifactId>
-    	</dependency>
-    	<!-- binding for log4j2, scope=runTime set in parent pom -->
- 		<dependency>
-    		<groupId>org.apache.logging.log4j</groupId>
-    		<artifactId>log4j-slf4j-impl</artifactId>
-  		</dependency>
-  		<dependency>
-    		<groupId>org.apache.logging.log4j</groupId>
-    		<artifactId>log4j-api</artifactId>
-  		</dependency>
-  		<dependency>
-    		<groupId>org.apache.logging.log4j</groupId>
-    		<artifactId>log4j-core</artifactId>
-  		</dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+		<!-- binding for log4j2, scope=runTime set in parent pom -->
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-slf4j-impl</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+		</dependency>
 		<!--  Testing related dependencies -->
 		<dependency>
 			<groupId>junit</groupId>
@@ -142,15 +135,15 @@
 
 			<!-- Excluding demo package is required for avoiding namespace clashes
 				(demo package is in all modules) for signing the jar. See issue #387 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <configuration>
-                    <excludes>
-                        <exclude>demo/**</exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>demo/**</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -182,4 +175,3 @@
 
 
 </project>
-
