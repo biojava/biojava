@@ -63,8 +63,8 @@
 		<dependency>
 			<groupId>org.jgrapht</groupId>
 			<artifactId>jgrapht-core</artifactId>
-			<!-- Pin! Java 8 requires 1.3.0 -->
-			<version>1.3.0</version>
+			<!-- Pin! Java 8 requires 1.4.0 -->
+			<version>1.4.0</version>
 		</dependency>
 
 		<!-- JAXb explicit dependency is needed since Java 9. See https://stackoverflow.com/questions/43574426/how-to-resolve-java-lang-noclassdeffounderror-javax-xml-bind-jaxbexception-in-j
