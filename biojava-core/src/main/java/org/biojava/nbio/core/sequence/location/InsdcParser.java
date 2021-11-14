@@ -303,26 +303,4 @@ public class InsdcParser {
 		return returnStrand;
 	}
 
-	public static void main(String[] args){
-		String[] testStrings = {
-			"J00194.1:100..202",
-			"A00001.5:34..45",
-			"43..129",
-			"bond(55,110)",
-			"bond(34,35),join(56..80),complement(45,73)",
-			"order(complement(30,40),70..80),bond(34,35),join(56,80),complement(45..56)",
-			"join(join(complement(30,40),complement(70..80)),bond(34,35),join(56,80),complement(45..56))",
-			"complement(join(complement(2000..4000),complement(70..80)),bond(34,35),join(56,80),complement(45..56))",
-
-		};
-		InsdcParser p = new InsdcParser();
-		p.setComplexFeaturesAppendMode(complexFeaturesAppendEnum.HIERARCHICAL);
-
-		for (String s: testStrings){
-			Location l = p.parse(s);
-			System.out.println(l.toString());
-		}
-
-	}
-
 }

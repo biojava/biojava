@@ -20,9 +20,12 @@
  */
 package org.biojava.nbio.core.sequence.location;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import java.util.Arrays;
 import java.util.Collection;
 import org.biojava.nbio.core.sequence.DataSource;
+import org.biojava.nbio.core.sequence.location.InsdcParser.complexFeaturesAppendEnum;
 import org.biojava.nbio.core.sequence.location.template.Location;
 import org.junit.Assert;
 import org.junit.Test;
@@ -74,4 +77,26 @@ public class InsdcParserTest {
 			Assert.assertEquals(expected, loc.getAccession().getID());
 		}
 	}
+
+	@Test
+	public void testParser(){
+	String[] testStrings = {
+		"J00194.1:100..202",
+		"A00001.5:34..45",
+		"43..129",
+		"bond(55,110)",
+		"bond(34,35),join(56..80),complement(45,73)",
+		"order(complement(30,40),70..80),bond(34,35),join(56,80),complement(45..56)",
+		"join(join(complement(30,40),complement(70..80)),bond(34,35),join(56,80),complement(45..56))",
+		"complement(join(complement(2000..4000),complement(70..80)),bond(34,35),join(56,80),complement(45..56))",
+
+	};
+	InsdcParser p = new InsdcParser();
+	p.setComplexFeaturesAppendMode(complexFeaturesAppendEnum.HIERARCHICAL);
+
+	for (String s: testStrings){
+		Location l = p.parse(s);
+		assertNotNull(l);
+	}
+}
 }
