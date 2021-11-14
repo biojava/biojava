@@ -715,18 +715,6 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 		uniprotDirectoryCache = aUniprotDirectoryCache;
 	}
 
-	public static void main(String[] args) {
-
-		try {
-			UniprotProxySequenceReader<AminoAcidCompound> uniprotSequence = new UniprotProxySequenceReader<AminoAcidCompound>("YA745_GIBZE", AminoAcidCompoundSet.getAminoAcidCompoundSet());
-			ProteinSequence proteinSequence = new ProteinSequence(uniprotSequence);
-			logger.info("Accession: {}", proteinSequence.getAccession().getID());
-			logger.info("Sequence: {}", proteinSequence.getSequenceAsString());
-		} catch (Exception e) {
-			logger.error("Exception: ", e);
-		}
-
-	}
 
 	/**
 	 * Get the gene name associated with this sequence.
