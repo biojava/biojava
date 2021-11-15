@@ -189,11 +189,4 @@ public class FastaReaderHelper {
 		return rnaSequences;
 	}
 
-	public static void main(String[] args) throws Exception {
-
-		LinkedHashMap<String, DNASequence> dnaSequences = FastaReaderHelper.readFastaDNASequence(new File("fasta.fna"));
-		for (DNASequence sequence : dnaSequences.values()) {
-			sequence.getRNASequence().getProteinSequence().getSequenceAsString();
-		}
-	}
 }
