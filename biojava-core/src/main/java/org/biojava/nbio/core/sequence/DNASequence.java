@@ -166,14 +166,5 @@ public class DNASequence extends AbstractSequence<NucleotideCompound> {
 	public void setDNAType(DNAType dnaType) {
 		this.dnaType = dnaType;
 	}
-
-	public static void main(String[] args) throws Exception {
-		DNASequence dnaSequence = new DNASequence("ATCG");
-		logger.info("DNA Sequence: {}", dnaSequence.toString());
-
-		StringProxySequenceReader<NucleotideCompound> sequenceStringProxyLoader =
-				new StringProxySequenceReader<NucleotideCompound>("GCTA", DNACompoundSet.getDNACompoundSet());
-		DNASequence dnaSequenceFromProxy = new DNASequence(sequenceStringProxyLoader);
-		logger.info("DNA Sequence from Proxy: {}", dnaSequenceFromProxy.toString());
-	}
+	
 }
