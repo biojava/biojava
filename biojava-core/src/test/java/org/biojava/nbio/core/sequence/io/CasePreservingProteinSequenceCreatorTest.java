@@ -22,35 +22,56 @@ package org.biojava.nbio.core.sequence.io;
 
 import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.core.sequence.ProteinSequence;
+import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
-import org.junit.Test;
+import org.biojava.nbio.core.sequence.template.AbstractSequence;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Collection;
+import java.util.Iterator;
 
-import static org.junit.Assert.*;
-
-public class CasePreservingProteinSequenceCreatorTest {
+class CasePreservingProteinSequenceCreatorTest {
 
 	@Test
-	public void testConstructor() throws CompoundNotFoundException {
-		CasePreservingProteinSequenceCreator creator = new CasePreservingProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet());
+	void testConstructor() throws CompoundNotFoundException {
+		CasePreservingProteinSequenceCreator creator = new CasePreservingProteinSequenceCreator(
+				AminoAcidCompoundSet.getAminoAcidCompoundSet());
 
 		String seq = "aCDEfgHI-Jkl";
 		ProteinSequence prot = (ProteinSequence) creator.getSequence(seq, 0);
 		Collection<Object> uppercase = prot.getUserCollection();
 
-		//test some assumptions. Hopefully work on non-english locals too?
+		// test some assumptions. Hopefully work on non-english locals too?
 		assertFalse(Character.isUpperCase('-'));
 		assertFalse(Character.isUpperCase('.'));
 
-		assertEquals("Lengths differ",seq.length(),uppercase.size());
+		assertEquals(seq.length(), uppercase.size(), "Lengths differ");
 
-		int i=0;
-		for(Object obj : uppercase) {
-			assertTrue("Not a Boolean",obj instanceof Boolean);
-			Boolean bool = (Boolean)obj;
-			assertEquals("Doesn't match case of "+seq.charAt(i),Character.isUpperCase(seq.charAt(i)),bool);
+		int i = 0;
+		for (Object obj : uppercase) {
+			assertTrue(obj instanceof Boolean, "Not a Boolean");
+			Boolean bool = (Boolean) obj;
+			assertEquals(Character.isUpperCase(seq.charAt(i)), bool, "Doesn't match case of " + seq.charAt(i));
 			i++;
 		}
 	}
+
+	@Test
+	void booleanConversion() throws CompoundNotFoundException {
+		CasePreservingProteinSequenceCreator creator = new CasePreservingProteinSequenceCreator(
+				AminoAcidCompoundSet.getAminoAcidCompoundSet());
+		AbstractSequence<AminoAcidCompound> seq = creator.getSequence("aaAA", 0);
+		assertEquals("AAAA", seq.getSequenceAsString());
+		Boolean[] expected = new Boolean[] { Boolean.FALSE, Boolean.FALSE, Boolean.TRUE, Boolean.TRUE };
+		Iterator<Object> userCollection = seq.getUserCollection().iterator();
+		for (int i = 0; i < seq.getLength(); i++) {
+			assertEquals(expected[i], userCollection.next());
+		}
+
+	}
+
 }
