@@ -220,16 +220,4 @@ public class GenbankReaderHelper {
 		return rnaSequences;
 	}
 
-	public static void main(String[] args) throws Exception {
-
-		LinkedHashMap<String, DNASequence> dnaSequences = GenbankReaderHelper.readGenbankDNASequence(new File("src/test/resources/NM_000266.gb"), true);
-		for (DNASequence sequence : dnaSequences.values()) {
-			logger.info("DNA Sequence: {}", sequence.getRNASequence().getProteinSequence().getSequenceAsString());
-		}
-
-		LinkedHashMap<String, ProteinSequence> proteinSequences = GenbankReaderHelper.readGenbankProteinSequence(new File("src/test/resources/BondFeature.gb"), true);
-		for (ProteinSequence sequence : proteinSequences.values()) {
-			logger.info("Protein Sequence: {}", sequence.getSequenceAsString());
-		}
-	}
 }
