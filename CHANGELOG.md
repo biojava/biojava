@@ -36,6 +36,7 @@ BioJava 6.0.0
 * In `SubstructureIdentifier`, `StructureName`, `EcodDomain`, `ScopDomain` : `getPdbId()` returns `PdbId` object instead of `String`.
 * Removed `DownloadChemCompProvider.useDefaultUrlLayout` with a more flexible system to provide templated URLs `DownloadChemCompProvider.setChemCompPathUrlTemplate()` and `DownloadChemCompProvider.setServerBaseUrl()`
 * In `Structure` (and `StructureImple`), the accessor methods `String getPdbId()` and `setPdbId(String)` were previously depricated. They were revived in BioJava 6.0.0 but as `PdbId getPdbId()` and `setPdbId(PdbId)` instead.n
+* `GeneSequence#public ExonSequence addExon(AccessionID accession, int begin, int end)` no longer declares a checked exception #966
 
 ### Added
 * New `keywords` field in `PDBHeader` class, populated by PDB and mmCIF parsers #946
