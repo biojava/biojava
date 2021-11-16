@@ -71,7 +71,6 @@ class CasePreservingProteinSequenceCreatorTest {
 		for (int i = 0; i < seq.getLength(); i++) {
 			assertEquals(expected[i], userCollection.next());
 		}
-
 	}
 
 }

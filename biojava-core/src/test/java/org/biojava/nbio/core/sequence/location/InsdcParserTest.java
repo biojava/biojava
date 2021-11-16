@@ -43,11 +43,6 @@ public class InsdcParserTest {
 
 	private Logger log = LoggerFactory.getLogger(getClass());
 
-	static Collection<String[]> data() {
-		return Arrays.asList(new String[][] {
-
-		});
-	}
 
 	/**
 	 * Test for issue #254
