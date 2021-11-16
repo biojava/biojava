@@ -23,7 +23,7 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
 					<debug>true</debug>
-                </configuration>
+				</configuration>
 			</plugin>
 
 			<plugin>
@@ -31,9 +31,9 @@
 				<artifactId>maven-jar-plugin</artifactId>
 				<configuration>
 					<!-- Excluding demo package is required for avoiding namespace clashes (demo package is in all modules) for signing the jar. See issue #387 -->
-				    <excludes>
-                        <exclude>demo/**</exclude>
-                    </excludes>
+					<excludes>
+						<exclude>demo/**</exclude>
+					</excludes>
 
 					<descriptorRefs>
 						<descriptorRef>bin</descriptorRef>
@@ -85,8 +85,12 @@
 			<artifactId>log4j-core</artifactId>
 		</dependency>
 		<dependency>
-		    <groupId>javax.xml.bind</groupId>
-		    <artifactId>jaxb-api</artifactId>
+			<groupId>javax.xml.bind</groupId>
+			<artifactId>jaxb-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.jaxb</groupId>
+			<artifactId>jaxb-runtime</artifactId>
 		</dependency>
 	</dependencies>
 
