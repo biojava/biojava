@@ -257,11 +257,11 @@ public class GeneSequence extends DNASequence {
 	 * @param begin
 	 * @param end
 	 * @return exon sequence
+	 * @throws IllegalArgumentException if accessionID is already added.
 	 */
-	public ExonSequence addExon(AccessionID accession, int begin, int end) throws Exception {
-		// TODO should be IllegalArgumentException, is more specific
+	public ExonSequence addExon(AccessionID accession, int begin, int end) {
 		if (exonSequenceHashMap.containsKey(accession.getID())) {
-			throw new Exception("Duplicate accesion id " + accession.getID());
+			throw new IllegalArgumentException("Duplicate accesion id " + accession.getID());
 		}
 
 		ExonSequence exonSequence = new ExonSequence(this, begin, end); //sense should be the same as parent
