@@ -116,7 +116,8 @@ public class GeneSequence extends DNASequence {
 		for (int i = 0; i < exonSequenceList.size() - 1; i++) {
 			ExonSequence exon1 = exonSequenceList.get(i);
 			ExonSequence exon2 = exonSequenceList.get(i + 1);
-			this.addIntron(new AccessionID(this.getAccession().getID() + "-" + "intron" + intronIndex), exon1.getBioEnd() - shift, exon2.getBioBegin() + shift);
+			AccessionID intronId= new AccessionID(this.getAccession().getID() + "-" + "intron" + intronIndex);
+			this.addIntron(intronId, exon1.getBioEnd() - shift, exon2.getBioBegin() + shift);
 			intronIndex++;
 		}
 
@@ -194,7 +195,7 @@ public class GeneSequence extends DNASequence {
 	/**
 	 * Remove the intron by accession
 	 * @param accession
-	 * @return intron sequence
+	 * @return the removed intron sequence, or null if no intron with that accession exists.
 	 */
 	public IntronSequence removeIntron(String accession) {
 		for (IntronSequence intronSequence : intronSequenceList) {
