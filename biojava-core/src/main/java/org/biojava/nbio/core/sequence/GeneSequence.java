@@ -261,7 +261,7 @@ public class GeneSequence extends DNASequence {
 	 */
 	public ExonSequence addExon(AccessionID accession, int begin, int end) {
 		if (exonSequenceHashMap.containsKey(accession.getID())) {
-			throw new IllegalArgumentException("Duplicate accesion id " + accession.getID());
+			throw new IllegalArgumentException("Duplicate accession id: " + accession.getID());
 		}
 
 		ExonSequence exonSequence = new ExonSequence(this, begin, end); //sense should be the same as parent
