@@ -289,7 +289,7 @@ public class GeneSequence extends DNASequence {
 	/**
 	 * Try to give method clarity where you want a DNASequence coding in the 5' to 3' direction
 	 * Returns the DNASequence representative of the 5' and 3' reading based on strand
-	 * @return dna sequence
+	 * @return dna sequence or null if sequence could not be generated.
 	 */
 	public DNASequence getSequence5PrimeTo3Prime() {
 		String sequence = getSequenceAsString(this.getBioBegin(), this.getBioEnd(), this.getStrand());
@@ -307,11 +307,11 @@ public class GeneSequence extends DNASequence {
 		DNASequence dnaSequence = null;
 		try {
 			dnaSequence = new DNASequence(sequence.toUpperCase());
+		    dnaSequence.setAccession(new AccessionID(this.getAccession().getID()));
 		} catch (CompoundNotFoundException e) {
 			// this should not happen, the sequence is DNA originally, if it does, there's a bug somewhere
 			logger.error("Could not create new DNA sequence in getSequence5PrimeTo3Prime(). Error: {}",e.getMessage());
 		}
-		dnaSequence.setAccession(new AccessionID(this.getAccession().getID()));
 		return dnaSequence;
 	}
 }
