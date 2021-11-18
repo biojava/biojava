@@ -125,13 +125,11 @@ public class ChromosomeSequence extends DNASequence {
 	 * which actually contains the sequence data. Strand is important for positive and negative
 	 * direction where negative strand means we need reverse complement. If negative strand then
 	 * bioBegin will be greater than bioEnd
-	 *
-	 *
 	 * @param accession
-	 * @param begin
-	 * @param end
+	 * @param bioBegin
+	 * @param bioEnd
 	 * @param strand
-	 * @return
+	 * @return A GeneSequence
 	 */
 	public GeneSequence addGene(AccessionID accession, int bioBegin, int bioEnd, Strand strand) {
 		GeneSequence geneSequence = new GeneSequence(this, bioBegin, bioEnd, strand);

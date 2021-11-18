@@ -60,7 +60,7 @@ public class GeneSequence extends DNASequence {
 	 *
 	 * This is also a key class in the biojava-3-genome module for reading and writing GFF3 files
 	 *
-	 * @param parentDNASequence
+	 * @param parentSequence
 	 * @param begin
 	 * @param end inclusive of end
 	 * @param strand force a gene to have strand and transcription sequence will inherit

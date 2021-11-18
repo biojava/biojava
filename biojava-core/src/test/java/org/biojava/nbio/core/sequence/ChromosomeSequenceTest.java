@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ChromosomeSequenceTest {
 
-    private final String chromosome_seq = "ATATATATATATATATATATATATATATATATACGCGCGCGCGCGCGCGCGCGCGCGCGCGCGCATATATATATATATATATATATACGCGCGCGCGCGCGCGCATATATATATATATATATATATATATATATATACGCGCGCGCGCGCGCGCGCGCGCGCGCGCGCATATATATATATATATATATATACGCGCGCGCGCGCGCGC";
+    static final String CHROMOSOME_SEQ = "ATATATATATATATATATATATATATATATATACGCGCGCGCGCGCGCGCGCGCGCGCGCGCGCATATATATATATATATATATATACGCGCGCGCGCGCGCGCATATATATATATATATATATATATATATATATACGCGCGCGCGCGCGCGCGCGCGCGCGCGCGCATATATATATATATATATATATACGCGCGCGCGCGCGCGC";
 
     @Nested
     class AfterValidConstruction {
@@ -20,7 +20,7 @@ class ChromosomeSequenceTest {
 
         @BeforeEach
         void before() throws CompoundNotFoundException {
-            seq = new ChromosomeSequence(chromosome_seq);
+            seq = new ChromosomeSequence(CHROMOSOME_SEQ);
         }
 
         @Test
@@ -76,7 +76,7 @@ class ChromosomeSequenceTest {
     @ParameterizedTest
     @ValueSource(ints = {Integer.MAX_VALUE, Integer.MIN_VALUE, 100, 0, -1, -100})
     void anyIntegerIsValidChromosomeNumber(int value) throws CompoundNotFoundException {
-        ChromosomeSequence seq = new ChromosomeSequence(chromosome_seq);
+        ChromosomeSequence seq = new ChromosomeSequence(CHROMOSOME_SEQ);
         seq.setChromosomeNumber(value);
         assertEquals(value, seq.getChromosomeNumber());
     }
@@ -84,7 +84,7 @@ class ChromosomeSequenceTest {
     @ParameterizedTest
     @EnumSource(DNASequence.DNAType.class)
     void anyDNATypeIsValid(DNASequence.DNAType dnaType) throws CompoundNotFoundException {
-        ChromosomeSequence seq = new ChromosomeSequence(chromosome_seq);
+        ChromosomeSequence seq = new ChromosomeSequence(CHROMOSOME_SEQ);
         seq.setDNAType(dnaType);
         assertEquals(dnaType, seq.getDNAType());
     }
@@ -94,7 +94,7 @@ class ChromosomeSequenceTest {
         ChromosomeSequence seq = null;
         @BeforeEach
         void before() throws CompoundNotFoundException {
-            seq = new ChromosomeSequence(chromosome_seq);
+            seq = new ChromosomeSequence(CHROMOSOME_SEQ);
         }
         @Test
         void canAddSameGeneTwice(){
@@ -117,7 +117,6 @@ class ChromosomeSequenceTest {
             assertEquals(1, seq.getGeneSequences().size());
             seq.removeGeneSequence(accessionId);
             assertEquals(0, seq.getGeneSequences().size());
-
         }
 
         @Test
@@ -138,7 +137,7 @@ class ChromosomeSequenceTest {
 
     @Test
     void addAndRemoveGeneSequence() throws CompoundNotFoundException {
-        ChromosomeSequence seq = new ChromosomeSequence(chromosome_seq);
+        ChromosomeSequence seq = new ChromosomeSequence(CHROMOSOME_SEQ);
         seq.addGene(new AccessionID("ABCDE1"), 1, 20, Strand.POSITIVE);
         assertEquals(1, seq.getGeneSequences().size());
 

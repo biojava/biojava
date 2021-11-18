@@ -26,7 +26,7 @@ import org.biojava.nbio.core.util.Equals;
 import org.biojava.nbio.core.util.Hashcoder;
 
 /**
- * Used in Sequences as the unique indentifier. If possible, set the {@link DataSource} to know the
+ * Used in Sequences as the unique identifier. If possible, set the {@link DataSource} to know the
  * source of the id. This allows a SequenceProxy to gather features or related sequences
  * Protein->Gene as an example. When parsing a Blast file it is also possible
  * to identify the type of ID
@@ -42,26 +42,22 @@ public class AccessionID {
 	private String identifier = null;
 
 	/**
-	 *
+	 * Default constructor sets id t empty string
 	 */
-
 	public AccessionID(){
 		id = "";
-
 	}
 
 	/**
-	 *
-	 * @param id
+	 * Creates an id with default DataSource.LOCAL source
+	 * @param id non-null
 	 */
 	public AccessionID(String id) {
 		this.id = id.trim();
 		this.source = DataSource.LOCAL;
 	}
 
-
 	/**
-	 *
 	 * @param id
 	 * @param source
 	 */
@@ -114,11 +110,6 @@ public class AccessionID {
 		return r;
 	}
 
-//   public void setDataSource(DataSource dataSource){
-//       source = dataSource;
-//   }
-
-
 	/**
 	 * In case if the {@link #getID() } is not unique keeps the id version.
 	 * @return the version
@@ -132,10 +123,8 @@ public class AccessionID {
 	}
 
 	/**
-	 * In case if {@link #getID() } in not unique keeps the alternative id, eg. NCBI GI number.
-	 *
-	 * This may null.
-	 *
+	 * In case if {@link #getID() } is not unique, keeps the alternative id, e.g. NCBI GI number.
+	 * This may be null.
 	 * @return
 	 */
 	public String getIdentifier() {
