@@ -514,26 +514,5 @@ public class UncompressInputStream extends FilterInputStream {
 
 	private static final boolean debugTiming = false;
 
-	/**
-	 * Reads a file, uncompresses it, and sends the result to stdout.
-	 * Also writes trivial statistics to stderr.
-	 * @param args An array with one String element, the name of the file to read.
-	 * @throws IOException for any failure
-	 */
-	public static void main(String[] args) throws Exception {
-		if (args.length != 1) {
-			logger.info("Usage: UncompressInputStream <file>");
-			System.exit(1);
-		}
-		long beg = System.currentTimeMillis();
-
-		long tot;
-		try (InputStream in = new FileInputStream(args[0])) {
-			tot = uncompress(in, System.out);
-		}
-
-		long end = System.currentTimeMillis();
-		logger.info("Decompressed {} bytes", tot);
-		logger.info("Time: {} seconds", (end - beg) / 1000);
-	}
+	
 }

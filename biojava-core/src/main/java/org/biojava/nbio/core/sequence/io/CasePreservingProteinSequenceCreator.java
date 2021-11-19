@@ -23,7 +23,6 @@ package org.biojava.nbio.core.sequence.io;
 import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.core.sequence.ProteinSequence;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
-import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava.nbio.core.sequence.template.AbstractSequence;
 import org.biojava.nbio.core.sequence.template.CompoundSet;
 import org.biojava.nbio.core.sequence.template.ProxySequenceReader;
@@ -53,7 +52,6 @@ import java.util.Locale;
  */
 public class CasePreservingProteinSequenceCreator extends ProteinSequenceCreator {
 
-	private final static Logger logger = LoggerFactory.getLogger(CasePreservingProteinSequenceCreator.class);
 
 	public CasePreservingProteinSequenceCreator(
 			CompoundSet<AminoAcidCompound> compoundSet) {
@@ -116,12 +114,6 @@ public class CasePreservingProteinSequenceCreator extends ProteinSequenceCreator
 		return types;
 	}
 
-	public static void main(String[] args) throws Exception {
-		CasePreservingProteinSequenceCreator creator = new CasePreservingProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet());
-		AbstractSequence<AminoAcidCompound> seq = creator.getSequence("aaAA",0);
-		logger.info("Sequence: {}", seq.getSequenceAsString()); //"AAAA"
-		logger.info("User Collection: {}", seq.getUserCollection()); //"[false, false, true, true]"
-	}
 
 	/**
 	 * Takes a {@link ProteinSequence} which was created by a

@@ -229,47 +229,5 @@ public class FastaReader<S extends Sequence<?>, C extends Compound> {
 		}
 		this.line=this.header = null;
 	}
-
-	public static void main(String[] args) {
-		try {
-			String inputFile = "/PF00104_small.fasta";
-			InputStream is = FastaReader.class.getResourceAsStream(inputFile);
-
-
-			if ( is == null)
-				System.err.println("Could not get input file " + inputFile);
-			FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = new FastaReader<ProteinSequence, AminoAcidCompound>(is, new GenericFastaHeaderParser<ProteinSequence,AminoAcidCompound>(), new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
-			LinkedHashMap<String,ProteinSequence> proteinSequences = fastaReader.process();
-			is.close();
-
-
-			//logger.info("Protein Sequences: {}", proteinSequences);
-
-			File file = new File(inputFile);
-			FastaReader<ProteinSequence,AminoAcidCompound> fastaProxyReader =
-					new FastaReader<ProteinSequence,AminoAcidCompound>(
-							file,
-							new GenericFastaHeaderParser<ProteinSequence,AminoAcidCompound>(),
-							new FileProxyProteinSequenceCreator(
-									file,
-									AminoAcidCompoundSet.getAminoAcidCompoundSet(),
-									new FastaSequenceParser()
-							)
-					);
-			LinkedHashMap<String,ProteinSequence> proteinProxySequences = fastaProxyReader.process();
-
-			for(String key : proteinProxySequences.keySet()){
-				ProteinSequence proteinSequence = proteinProxySequences.get(key);
-				logger.info("Protein Proxy Sequence Key: {}", key);
-//                if(key.equals("Q98SJ1_CHICK/15-61")){
-//                    int dummy = 1;
-//                }
-				logger.info("Protein Sequence: {}", proteinSequence.toString());
-
-			}
-
-		} catch (Exception e) {
-			logger.warn("Exception: ", e);
-		}
-	}
+	
 }

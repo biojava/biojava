@@ -28,7 +28,6 @@ import org.biojava.nbio.core.sequence.features.FeatureInterface;
 import org.biojava.nbio.core.sequence.io.DNASequenceCreator;
 import org.biojava.nbio.core.sequence.io.FastaReader;
 import org.biojava.nbio.core.sequence.io.PlainFastaHeaderParser;
-import org.biojava.nbio.core.sequence.loader.StringProxySequenceReader;
 import org.biojava.nbio.core.sequence.location.InsdcParser;
 import org.biojava.nbio.core.sequence.location.template.Location;
 import org.biojava.nbio.core.sequence.template.AbstractSequence;
@@ -199,13 +198,4 @@ public class ProteinSequence extends AbstractSequence<AminoAcidCompound> {
 		}
 	}
 
-	public static void main(String[] args) throws Exception {
-		ProteinSequence proteinSequence = new ProteinSequence("ARNDCEQGHILKMFPSTWYVBZJX");
-		logger.info("Protein Sequence: {}", proteinSequence.toString());
-
-		StringProxySequenceReader<AminoAcidCompound> sequenceStringProxyLoader = new StringProxySequenceReader<AminoAcidCompound>("XRNDCEQGHILKMFPSTWYVBZJA", AminoAcidCompoundSet.getAminoAcidCompoundSet());
-		ProteinSequence proteinSequenceFromProxy = new ProteinSequence(sequenceStringProxyLoader);
-		logger.info("Protein Sequence from Proxy: {}", proteinSequenceFromProxy.toString());
-
-	}
 }

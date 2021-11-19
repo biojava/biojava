@@ -132,38 +132,6 @@ public class GenbankWriter<S extends Sequence<?>, C extends Compound> {
 
 	}
 
-	/*
-	 * public static void main(String[] args) { try { FileInputStream is = new
-	 * FileInputStream("/Users/Scooter/scripps/dyadic/c1-454Scaffolds.faa");
-	 *
-	 *
-	 * FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = new
-	 * FastaReader<ProteinSequence, AminoAcidCompound>(is, new
-	 * GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>(), new
-	 * ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
-	 * LinkedHashMap<String, ProteinSequence> proteinSequences =
-	 * fastaReader.process(); is.close();
-	 *
-	 *
-	 * // System.out.println(proteinSequences);
-	 *
-	 * FileOutputStream fileOutputStream = new
-	 * FileOutputStream("/Users/Scooter/scripps/dyadic/c1-454Scaffolds_temp.faa"
-	 * );
-	 *
-	 * BufferedOutputStream bo = new BufferedOutputStream(fileOutputStream);
-	 * long start = System.currentTimeMillis(); FastaWriter<ProteinSequence,
-	 * AminoAcidCompound> fastaWriter = new FastaWriter<ProteinSequence,
-	 * AminoAcidCompound>(bo, proteinSequences.values(), new
-	 * GenericFastaHeaderFormat<ProteinSequence, AminoAcidCompound>());
-	 * fastaWriter.process(); bo.close(); long end = System.currentTimeMillis();
-	 * System.out.println("Took " + (end - start) + " seconds");
-	 *
-	 * fileOutputStream.close();
-	 *
-	 *
-	 * } catch (Exception e) { e.printStackTrace(); } }
-	 */
 	/**
 	 * @return the lineLength
 	 */

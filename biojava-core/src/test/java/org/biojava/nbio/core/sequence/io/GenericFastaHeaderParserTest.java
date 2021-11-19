@@ -36,27 +36,6 @@ import static org.junit.Assert.assertEquals;
  */
 public class GenericFastaHeaderParserTest {
 
-	private final static Logger logger = LoggerFactory.getLogger(GenericFastaHeaderParserTest.class);
-
-	public GenericFastaHeaderParserTest() {
-	}
-
-	@BeforeClass
-	public static void setUpClass() throws Exception {
-	}
-
-	@AfterClass
-	public static void tearDownClass() throws Exception {
-	}
-
-	@Before
-	public void setUp() {
-	}
-
-	@After
-	public void tearDown() {
-	}
-
 	/**
 	 * GenBank                           gi|gi-number|gb|accession|locus
 	 * ENA Data Library                 gi|gi-number|emb|accession|locus
@@ -77,7 +56,6 @@ public class GenericFastaHeaderParserTest {
 	 */
 	@Test
 	public void testParseHeader() throws CompoundNotFoundException {
-		logger.info("parseHeader");
 		String header = "";
 		ProteinSequence sequence = new ProteinSequence("");
 		GenericFastaHeaderParser<ProteinSequence,AminoAcidCompound> instance = new GenericFastaHeaderParser<ProteinSequence,AminoAcidCompound>();
@@ -151,7 +129,6 @@ public class GenericFastaHeaderParserTest {
 		instance.parseHeader(header, sequence);
 		assertEquals("identifier", sequence.getAccession().getID());
 		assertEquals(sequence.getAccession().getDataSource(), DataSource.LOCAL);
-		// TODO review the generated test code and remove the default call to fail.
-		//fail("The test case is a prototype.");
+		
 	}
 }
