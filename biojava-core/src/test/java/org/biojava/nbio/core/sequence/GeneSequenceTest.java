@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class GeneSequenceTest {
@@ -101,14 +103,28 @@ class GeneSequenceTest {
     }
 
     @Test
-    void removeExon() {
+    void addRemoveExon() throws Exception {
+        geneSequence = new GeneSequence(chromosomeSequence, 5,150, Strand.POSITIVE);
+        geneSequence.addExon(new AccessionID("a"), 20, 50);
+        geneSequence.addExon(new AccessionID("c"), 20, 50);
+        geneSequence.setAccession(new AccessionID("mygene"));
+        assertEquals(2, geneSequence.getExonSequences().size());
+        geneSequence.removeExon("unknown");
+        assertEquals(2, geneSequence.getExonSequences().size());
+        // this causes NPE in equals() methods as sequence proxy loader isn't set.
+        // either call super constructor in GeneSequence (which will require adding exception)
+        // or alter equals()  in AbstractSequence not to use properties like sequenceStorage, that may be null.
+        // geneSequence.removeExon("b");
+        // assertEquals(1, geneSequence.getExonSequences().size());
     }
 
-    @Test
-    void addExon() {
-    }
-
-    @Test
-    void getSequence5PrimeTo3Prime() {
-    }
+   @Test
+    void returnedCollectionsAreMutable() throws Exception {
+       geneSequence = new GeneSequence(chromosomeSequence, 5,150, Strand.POSITIVE);
+       geneSequence.addExon(new AccessionID("a"), 20, 50);
+       List<ExonSequence> exons  =  geneSequence.getExonSequences();
+       // this breaks encapsulation of the collections
+       exons.remove(0);
+       assertEquals(0, geneSequence.getExonSequences().size());
+   }
 }

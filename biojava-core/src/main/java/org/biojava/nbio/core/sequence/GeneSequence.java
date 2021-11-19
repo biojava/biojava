@@ -169,8 +169,6 @@ public class GeneSequence extends DNASequence {
 	 * @return transcriptsequence
 	 */
 	public TranscriptSequence removeTranscript(String accession) {
-
-
 		return transcriptSequenceHashMap.remove(accession);
 	}
 
