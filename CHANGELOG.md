@@ -1,8 +1,15 @@
 BioJava Changelog
 -----------------
 
+BioJava 6.0.1
+==============================
+### Fixed
+* Now actually runnable in a java-8 JRE. Previous release 6.0.0 had a java-11 dependency that made it incompatible. #996
+* Switch JAXB to glassfish implementation for better java 15+ support. Now biojava should run under a java-15 JRE. #996
+
 BioJava 6.0.0 
 ==============================
+Note that BioJava 6.0.0 was intended as java-8 runtime compatible. However, a java-11 dependency crept in making it java-8 incompatible. Please use 6.0.1 instead.
 ### Removed
 * All code related to All-vs-All structural alignments db calculation and access
 * JFatCatClient and all code depending on it
