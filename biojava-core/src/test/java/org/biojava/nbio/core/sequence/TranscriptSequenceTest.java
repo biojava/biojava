@@ -1,0 +1,100 @@
+package org.biojava.nbio.core.sequence;
+
+import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class TranscriptSequenceTest {
+    GeneSequence anyGeneSequence;
+    GeneSequence anyNegativeGeneSequence;
+    TranscriptSequence transcriptSeq;
+    TranscriptSequence transcriptNegativeSeq;
+
+
+    @BeforeEach
+    void setUp() throws CompoundNotFoundException {
+        anyGeneSequence = SequenceTestUtils.anyGeneSequence();
+        transcriptSeq = new TranscriptSequence(anyGeneSequence, 5, 100);
+        anyNegativeGeneSequence = SequenceTestUtils.any3GeneSequence();
+        transcriptNegativeSeq = new TranscriptSequence(anyNegativeGeneSequence, 5, 100);
+    }
+
+    @Nested
+    class AfterValidConstruction {
+        @Test
+        void lengthIsTSLength() {
+            assertEquals(96, transcriptSeq.getLength());
+        }
+
+        @Test
+        void strandIsSameAsGene() {
+            assertEquals(anyGeneSequence.getStrand(), transcriptSeq.getStrand());
+            assertEquals(anyNegativeGeneSequence.getStrand(), transcriptNegativeSeq.getStrand());
+        }
+
+        @Test
+        void CDSListIsEmpty() {
+            assertEquals(0, transcriptSeq.getCDSSequences().size());
+        }
+
+        @Test
+        @Disabled("NPE thrown from AbstractSequence 'getAsList'")
+        void equals() {
+            assertFalse(transcriptSeq.equals(transcriptNegativeSeq));
+        }
+
+        @Test
+        @Disabled("NPE thrown from AbstractSequence 'getAsList'")
+        void hashcode() {
+            assertFalse(transcriptSeq.hashCode() == (transcriptNegativeSeq.hashCode()));
+        }
+    }
+
+    @Test
+    void addCDS() throws Exception {
+        transcriptSeq.addCDS(new AccessionID("b"), 40, 50, 1);
+        assertEquals(1, transcriptSeq.getCDSSequences().size());
+    }
+
+    @Test
+    void getCDNASeqPositiveStrand() throws Exception {
+        String chrSeq = ChromosomeSequenceTest.CHROMOSOME_SEQ;
+        // must set this to avoid NPE when generating sequence
+
+        transcriptSeq.setAccession(new AccessionID("T1"));
+        // make 2 CDS that are contiguous. These can be added in any order and are sorted OK
+        CDSSequence s1 = transcriptSeq.addCDS(new AccessionID("a"), 11, 20, 1);
+        assertEquals(chrSeq, s1.getSequenceAsString());
+
+        CDSSequence s2 = transcriptSeq.addCDS(new AccessionID("b"), 1, 10, 1);
+        assertEquals(chrSeq, s2.getSequenceAsString());
+
+        DNASequence cDNA = transcriptSeq.getDNACodingSequence();
+        assertEquals(chrSeq.substring(0, 20), cDNA.getSequenceAsString());
+        assertEquals(20, cDNA.getLength());
+    }
+
+    @Test
+    @Disabled("is reversed, not complemented?")
+    void getCDNASeqNegativeStrand() throws Exception {
+        TranscriptSequence ts = SequenceTestUtils.transcriptFromSequence("AAAAACCCCCTTTTGGGGGG", 3, 10, Strand.NEGATIVE);
+        CDSSequence s2 = ts.addCDS(new AccessionID("b"), 1, 10, 0);
+        // this should be GGGGGTTTTT( ie the reverse complement of the chromosome sequence,
+        // but is just reversed and generates CCCCCAAAAA
+        //assertEquals("GGGGGTTTTT", ts.getDNACodingSequence());
+    }
+
+    @Test
+    @Disabled("Can't  remove, as NPE thrown from equals()")
+    void removeCDS() throws Exception {
+        transcriptSeq.addCDS(new AccessionID("a"), 50, 60, 1);
+        assertEquals(1, transcriptSeq.getCDSSequences().size());
+        // throws NPE
+        transcriptSeq.removeCDS("a");
+        assertEquals(0, transcriptSeq.getCDSSequences().size());
+    }
+}

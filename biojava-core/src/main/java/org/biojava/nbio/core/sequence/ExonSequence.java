@@ -22,15 +22,12 @@
  */
 package org.biojava.nbio.core.sequence;
 
-
-
 /**
  * A gene contains a collection of Exon sequences
  * @author Scooter Willis
  */
 public class ExonSequence extends DNASequence {
 
-	//private static final Logger log = Logger.getLogger(ExonSequence.class.getName());
 
 	/**
 	 * Need a parent gene sequence and the bioBegin and bioEnd. An Exon sequence doesn't actually imply what the

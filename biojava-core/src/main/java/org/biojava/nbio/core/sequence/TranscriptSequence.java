@@ -59,7 +59,6 @@ public class TranscriptSequence extends DNASequence {
 		setBioBegin(begin);
 		setBioEnd(end);
 		this.setCompoundSet(DNACompoundSet.getDNACompoundSet());
-
 	}
 
 		@Override
@@ -108,7 +107,7 @@ public class TranscriptSequence extends DNASequence {
 	 */
 	public CDSSequence addCDS(AccessionID accession, int begin, int end, int phase) throws Exception {
 		if (cdsSequenceHashMap.containsKey(accession.getID())) {
-			throw new Exception("Duplicate accesion id " + accession.getID());
+			throw new Exception("Duplicate accession id " + accession.getID());
 		}
 		CDSSequence cdsSequence = new CDSSequence(this, begin, end, phase); //sense should be the same as parent
 		cdsSequence.setAccession(accession);

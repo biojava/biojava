@@ -93,12 +93,14 @@ class GeneSequenceTest {
     }
 
     @Test
-    @Disabled("not complementing - seems to complement twice???")
-    void getNegativeStrandSequence5To3Prime() {
-        geneSequence = new GeneSequence(chromosomeSequence, 5,15, Strand.NEGATIVE);
+   @Disabled("not complementing - seems to complement twice???")
+    void getNegativeStrandSequence5To3Prime() throws CompoundNotFoundException {
+        ChromosomeSequence shortChrSeq= new ChromosomeSequence("TTTTTTTTTTTTTTT");
+        geneSequence = new GeneSequence(shortChrSeq, 5,10, Strand.NEGATIVE);
         // this must be set to avoid NPE
         geneSequence.setAccession(new AccessionID("geneId"));
         DNASequence seq = geneSequence.getSequence5PrimeTo3Prime();
+        //This should be sequence of A's ( as it's on complemetnary strand)but it is TTTTTTTT
         System.err.println(  geneSequence.getSequence5PrimeTo3Prime().getSequenceAsString());
     }
 

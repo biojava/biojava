@@ -26,8 +26,8 @@ class ChromosomeSequenceTest {
         @Test
         void beginAndEndAreLengthOfSequence() {
             assertEquals(1, seq.getBioBegin());
-            assertEquals(208, seq.getBioEnd());
-            assertEquals(208, seq.getLength());
+            assertEquals(210, seq.getBioEnd());
+            assertEquals(210, seq.getLength());
         }
 
         @Test

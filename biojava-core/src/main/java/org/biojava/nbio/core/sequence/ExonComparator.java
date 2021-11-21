@@ -37,7 +37,6 @@ public class ExonComparator implements Comparator<ExonSequence>, Serializable{
 
 	@Override
 	public int compare(ExonSequence o1, ExonSequence o2) {
-
 		return o1.getBioBegin() - o2.getBioBegin();
 	}
 
