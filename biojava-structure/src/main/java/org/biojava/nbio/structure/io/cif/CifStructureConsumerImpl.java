@@ -622,8 +622,8 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
 
                 String date = databasePDBrev.getDate().get(rowIndex);
                 final Date relDate = convert(LocalDate.parse(date, DATE_FORMAT));
-				pdbHeader.setRelDate(relDate);
-				modDate = relDate;
+                pdbHeader.setRelDate(relDate);
+                modDate = relDate;
             } else {
                 String dbrev = databasePDBrev.getDate().get(rowIndex);
                 modDate = convert(LocalDate.parse(dbrev, DATE_FORMAT));
@@ -743,7 +743,7 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
             if (pdbxAuditRevisionHistory.getOrdinal().get(rowIndex) == 1) {
                 String release = pdbxAuditRevisionHistory.getRevisionDate().get(rowIndex);
                 date = convert(LocalDate.parse(release, DATE_FORMAT));
-				pdbHeader.setRelDate(date);
+                pdbHeader.setRelDate(date);
             } else {
                 // all other dates are revision dates;
                 // since this method may be called multiple times,
