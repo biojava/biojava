@@ -614,17 +614,21 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
     public void consumeDatabasePDBRev(DatabasePDBRev databasePDBrev) {
         logger.debug("got a database revision:" + databasePDBrev);
 
+        Date modDate = null;
         for (int rowIndex = 0; rowIndex < databasePDBrev.getRowCount(); rowIndex++) {
             if (databasePDBrev.getNum().get(rowIndex) == 1) {
                 String dateOriginal = databasePDBrev.getDateOriginal().get(rowIndex);
                 pdbHeader.setDepDate(convert(LocalDate.parse(dateOriginal, DATE_FORMAT)));
 
                 String date = databasePDBrev.getDate().get(rowIndex);
-                pdbHeader.setRelDate(convert(LocalDate.parse(date, DATE_FORMAT)));
+                final Date relDate = convert(LocalDate.parse(date, DATE_FORMAT));
+                pdbHeader.setRelDate(relDate);
+                modDate = relDate;
             } else {
                 String dbrev = databasePDBrev.getDate().get(rowIndex);
-                pdbHeader.setModDate(convert(LocalDate.parse(dbrev, DATE_FORMAT)));
+                modDate = convert(LocalDate.parse(dbrev, DATE_FORMAT));
             }
+            pdbHeader.setModDate(modDate);
         }
     }
 
@@ -733,18 +737,21 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
 
     @Override
     public void consumePdbxAuditRevisionHistory(PdbxAuditRevisionHistory pdbxAuditRevisionHistory) {
+    	Date date = null;
         for (int rowIndex = 0; rowIndex < pdbxAuditRevisionHistory.getRowCount(); rowIndex++) {
             // first entry in revision history is the release date
             if (pdbxAuditRevisionHistory.getOrdinal().get(rowIndex) == 1) {
                 String release = pdbxAuditRevisionHistory.getRevisionDate().get(rowIndex);
-                pdbHeader.setRelDate(convert(LocalDate.parse(release, DATE_FORMAT)));
+                date = convert(LocalDate.parse(release, DATE_FORMAT));
+                pdbHeader.setRelDate(date);
             } else {
                 // all other dates are revision dates;
                 // since this method may be called multiple times,
                 // the last revision date will "stick"
                 String revision = pdbxAuditRevisionHistory.getRevisionDate().get(rowIndex);
-                pdbHeader.setModDate(convert(LocalDate.parse(revision, DATE_FORMAT)));
+                date = convert(LocalDate.parse(revision, DATE_FORMAT));
             }
+            pdbHeader.setModDate(date);
         }
     }
 

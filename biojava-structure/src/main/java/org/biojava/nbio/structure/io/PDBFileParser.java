@@ -2877,9 +2877,8 @@ public class PDBFileParser  {
 
 			if (! depositionDate.equals(modDate)){
 				// depDate is 0000-00-00
-				pdbHeader.setDepDate(depositionDate);
+				pdbHeader.setModDate(depositionDate);
 			}
-
 		}
 
 		structure.setPDBHeader(pdbHeader);
