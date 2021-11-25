@@ -52,13 +52,19 @@ public class TranscriptSequence extends DNASequence {
 	 * @param parentDNASequence
 	 * @param begin
 	 * @param end inclusive of end
+	 * @throws  IllegalArgumentException if the parentDNASequence is incompatible with DNACompoundSet
 	 */
 	public TranscriptSequence(GeneSequence parentDNASequence, int begin, int end) {
+		setCompoundSet(DNACompoundSet.getDNACompoundSet());
+		try {
+			initSequenceStorage(parentDNASequence.getSequenceAsString());
+		} catch (CompoundNotFoundException e) {
+			throw new IllegalArgumentException(e);
+		}
 		setParentSequence(parentDNASequence);
 		this.parentGeneSequence = parentDNASequence;
 		setBioBegin(begin);
 		setBioEnd(end);
-		this.setCompoundSet(DNACompoundSet.getDNACompoundSet());
 	}
 
 		@Override

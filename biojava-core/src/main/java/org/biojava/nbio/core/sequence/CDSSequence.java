@@ -23,6 +23,7 @@
 package org.biojava.nbio.core.sequence;
 
 
+import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.core.sequence.compound.DNACompoundSet;
 import org.biojava.nbio.core.sequence.compound.NucleotideCompound;
 import org.biojava.nbio.core.sequence.template.CompoundSet;
@@ -46,8 +47,15 @@ public class CDSSequence extends DNASequence {
 	 * @param bioBegin
 	 * @param bioEnd
 	 * @param phase
+	 * @throws  IllegalArgumentException if  parentSequence is incompatible with DNACompoundSet
 	 */
 	public CDSSequence(TranscriptSequence parentSequence, int bioBegin, int bioEnd, int phase) {
+		setCompoundSet(DNACompoundSet.getDNACompoundSet());
+		try {
+			initSequenceStorage(parentSequence.getSequenceAsString());
+		} catch (CompoundNotFoundException e) {
+			throw new IllegalArgumentException(e);
+		}
 		parentTranscriptSequence = parentSequence;
 		this.setParentSequence(parentTranscriptSequence);
 		setBioBegin(bioBegin);

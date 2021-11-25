@@ -22,6 +22,9 @@
  */
 package org.biojava.nbio.core.sequence;
 
+import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
+import org.biojava.nbio.core.sequence.compound.DNACompoundSet;
+
 /**
  * A gene contains a collection of Exon sequences
  * @author Scooter Willis
@@ -41,6 +44,12 @@ public class ExonSequence extends DNASequence {
 	 * @param bioEnd
 	 */
 	public ExonSequence(GeneSequence parentGeneSequence, int bioBegin, int bioEnd) {
+		setCompoundSet(DNACompoundSet.getDNACompoundSet());
+		try {
+			initSequenceStorage(parentGeneSequence.getSequenceAsString());
+		} catch (CompoundNotFoundException e) {
+			throw new IllegalArgumentException(e);
+		}
 		this.setParentSequence(parentGeneSequence);
 		setBioBegin(bioBegin);
 		setBioEnd(bioEnd);

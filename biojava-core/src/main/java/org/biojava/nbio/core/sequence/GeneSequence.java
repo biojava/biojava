@@ -65,13 +65,18 @@ public class GeneSequence extends DNASequence {
 	 * @param end inclusive of end
 	 * @param strand force a gene to have strand and transcription sequence will inherit
 	 */
-	public GeneSequence(ChromosomeSequence parentSequence, int begin, int end, Strand strand) {
+	public GeneSequence(ChromosomeSequence parentSequence,  int begin, int end, Strand strand) {
+		setCompoundSet(DNACompoundSet.getDNACompoundSet());
+		try {
+			initSequenceStorage(parentSequence.getSequenceAsString());
+		} catch (CompoundNotFoundException e) {
+			throw new IllegalArgumentException(e);
+		}
 		chromosomeSequence = parentSequence;
 		setParentSequence(parentSequence);
 		setBioBegin(begin);
 		setBioEnd(end);
 		setStrand(strand);
-		this.setCompoundSet(DNACompoundSet.getDNACompoundSet());
 	}
 
 	/**

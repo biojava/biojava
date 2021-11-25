@@ -16,8 +16,7 @@ class ExonSequenceTest {
     }
 
     @Test
-    @Disabled("getAsList throws NPE in AbstractSequence#equals")
-    void equalsAndHaschcode() throws CompoundNotFoundException {
+    void equalsAndHashcode() throws CompoundNotFoundException {
         GeneSequence gene = anyGeneSequence();
         ExonSequence es = new ExonSequence(gene, 30, 40);
         ExonSequence es2 = new ExonSequence(gene, 30, 40);

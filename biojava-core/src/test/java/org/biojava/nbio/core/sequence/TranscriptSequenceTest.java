@@ -42,15 +42,19 @@ class TranscriptSequenceTest {
         }
 
         @Test
-        @Disabled("NPE thrown from AbstractSequence 'getAsList'")
+        // whether it's -ve or +ve doesn't affect equals?
         void equals() {
-            assertFalse(transcriptSeq.equals(transcriptNegativeSeq));
+            assertTrue(transcriptSeq.equals(transcriptSeq));
+        }
+
+        // whether it's -ve or +ve doesn't affect equals?
+        void equalsDoesntDependOnStrand() {
+            assertTrue(transcriptSeq.equals(transcriptNegativeSeq));
         }
 
         @Test
-        @Disabled("NPE thrown from AbstractSequence 'getAsList'")
         void hashcode() {
-            assertFalse(transcriptSeq.hashCode() == (transcriptNegativeSeq.hashCode()));
+            assertTrue(transcriptSeq.hashCode() == (transcriptNegativeSeq.hashCode()));
         }
     }
 
@@ -89,7 +93,6 @@ class TranscriptSequenceTest {
     }
 
     @Test
-    @Disabled("Can't  remove, as NPE thrown from equals()")
     void removeCDS() throws Exception {
         transcriptSeq.addCDS(new AccessionID("a"), 50, 60, 1);
         assertEquals(1, transcriptSeq.getCDSSequences().size());

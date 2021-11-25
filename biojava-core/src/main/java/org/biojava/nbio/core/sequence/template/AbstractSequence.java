@@ -88,6 +88,11 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 	 */
 	public AbstractSequence(String seqString, CompoundSet<C> compoundSet) throws CompoundNotFoundException {
 		setCompoundSet(compoundSet);
+		initSequenceStorage(seqString);
+	}
+
+	//  so it can be called from subclass constructors
+	protected void initSequenceStorage(String seqString) throws CompoundNotFoundException {
 		sequenceStorage = new ArrayListSequenceReader<C>();
 		sequenceStorage.setCompoundSet(this.getCompoundSet());
 		sequenceStorage.setContents(seqString);

@@ -113,11 +113,9 @@ class GeneSequenceTest {
         assertEquals(2, geneSequence.getExonSequences().size());
         geneSequence.removeExon("unknown");
         assertEquals(2, geneSequence.getExonSequences().size());
-        // this causes NPE in equals() methods as sequence proxy loader isn't set.
-        // either call super constructor in GeneSequence (which will require adding exception)
-        // or alter equals()  in AbstractSequence not to use properties like sequenceStorage, that may be null.
-        // geneSequence.removeExon("b");
-        // assertEquals(1, geneSequence.getExonSequences().size());
+
+         geneSequence.removeExon("c");
+         assertEquals(1, geneSequence.getExonSequences().size());
     }
 
    @Test
