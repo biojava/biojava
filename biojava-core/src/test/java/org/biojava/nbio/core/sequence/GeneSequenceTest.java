@@ -16,7 +16,7 @@ class GeneSequenceTest {
     @BeforeEach
     void before() throws CompoundNotFoundException {
         chromosomeSequence = new ChromosomeSequence(ChromosomeSequenceTest.CHROMOSOME_SEQ);
-        geneSequence = new GeneSequence(chromosomeSequence, 10,19, Strand.POSITIVE);
+        geneSequence = new GeneSequence(chromosomeSequence, new AccessionID("mygene"), 10,19, Strand.POSITIVE);
     }
 
     @Nested
@@ -50,11 +50,10 @@ class GeneSequenceTest {
 
     @Test
     void addIntronsUsingExonsPositiveStrand() throws Exception {
-        geneSequence = new GeneSequence(chromosomeSequence, 10,150, Strand.POSITIVE);
+        geneSequence = new GeneSequence(chromosomeSequence,new AccessionID("geneId"), 10,150, Strand.POSITIVE);
         geneSequence.addExon( new AccessionID("a"), 10,29);
         geneSequence.addExon( new AccessionID("b"), 33,80);
         geneSequence.addExon( new AccessionID("c"), 100,120);
-        geneSequence.setAccession(new AccessionID("geneId"));
         geneSequence.addIntronsUsingExons();
         assertEquals(2, geneSequence.getIntronSequences().size());
         assertEquals(30, geneSequence.getIntronSequences().get(0).getBioBegin());
@@ -66,14 +65,13 @@ class GeneSequenceTest {
     @Test
     @Disabled("gives odd results for intron coords")
     void addIntronsUsingExonsNegativeStrand() throws Exception {
-        geneSequence = new GeneSequence(chromosomeSequence, 150,10, Strand.NEGATIVE);
+        geneSequence = new GeneSequence(chromosomeSequence,new AccessionID("geneId"), 150,10, Strand.NEGATIVE);
         ExonSequence e1 = geneSequence.addExon( new AccessionID("c"), 120,100);
 
         geneSequence.addExon( new AccessionID("b"), 80,33);
         geneSequence.addExon( new AccessionID("a"), 29,10);
 
         // this MUST be set in order to avoid NPE when adding introns
-        geneSequence.setAccession(new AccessionID("geneId"));
         geneSequence.addIntronsUsingExons();
         // actual values generated are (9,81) for I1 and (32,121) for I2
         assertEquals(2, geneSequence.getIntronSequences().size());
@@ -85,9 +83,8 @@ class GeneSequenceTest {
 
     @Test
     void getPositiveStrandSequence5To3Prime() {
-        geneSequence = new GeneSequence(chromosomeSequence, 10,150, Strand.POSITIVE);
+        geneSequence = new GeneSequence(chromosomeSequence, new AccessionID("geneId"), 10,150, Strand.POSITIVE);
         // this must be set to avoid NPE
-        geneSequence.setAccession(new AccessionID("geneId"));
         assertEquals(chromosomeSequence.getSequenceAsString().substring(9,150),
                 geneSequence.getSequence5PrimeTo3Prime().getSequenceAsString());
     }
@@ -96,9 +93,8 @@ class GeneSequenceTest {
    @Disabled("not complementing - seems to complement twice???")
     void getNegativeStrandSequence5To3Prime() throws CompoundNotFoundException {
         ChromosomeSequence shortChrSeq= new ChromosomeSequence("TTTTTTTTTTTTTTT");
-        geneSequence = new GeneSequence(shortChrSeq, 5,10, Strand.NEGATIVE);
+        geneSequence = new GeneSequence(shortChrSeq, new AccessionID("geneId"),5,10, Strand.NEGATIVE);
         // this must be set to avoid NPE
-        geneSequence.setAccession(new AccessionID("geneId"));
         DNASequence seq = geneSequence.getSequence5PrimeTo3Prime();
         //This should be sequence of A's ( as it's on complemetnary strand)but it is TTTTTTTT
         System.err.println(  geneSequence.getSequence5PrimeTo3Prime().getSequenceAsString());
@@ -106,21 +102,20 @@ class GeneSequenceTest {
 
     @Test
     void addRemoveExon() throws Exception {
-        geneSequence = new GeneSequence(chromosomeSequence, 5,150, Strand.POSITIVE);
+        geneSequence = new GeneSequence(chromosomeSequence, new AccessionID("mygene"),5,150, Strand.POSITIVE);
         geneSequence.addExon(new AccessionID("a"), 20, 50);
         geneSequence.addExon(new AccessionID("c"), 20, 50);
-        geneSequence.setAccession(new AccessionID("mygene"));
         assertEquals(2, geneSequence.getExonSequences().size());
         geneSequence.removeExon("unknown");
         assertEquals(2, geneSequence.getExonSequences().size());
 
-         geneSequence.removeExon("c");
-         assertEquals(1, geneSequence.getExonSequences().size());
+        geneSequence.removeExon("c");
+        assertEquals(1, geneSequence.getExonSequences().size());
     }
 
    @Test
     void returnedCollectionsAreMutable() throws Exception {
-       geneSequence = new GeneSequence(chromosomeSequence, 5,150, Strand.POSITIVE);
+       geneSequence = new GeneSequence(chromosomeSequence, new AccessionID("geneId"), 5,150, Strand.POSITIVE);
        geneSequence.addExon(new AccessionID("a"), 20, 50);
        List<ExonSequence> exons  =  geneSequence.getExonSequences();
        // this breaks encapsulation of the collections

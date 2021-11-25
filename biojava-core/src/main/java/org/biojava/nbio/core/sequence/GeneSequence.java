@@ -51,19 +51,13 @@ public class GeneSequence extends DNASequence {
 	private ChromosomeSequence chromosomeSequence;
 
 	/**
-	 * A class that keeps track of the details of a GeneSequence which is difficult to properly model. Two important concepts that is difficult
-	 * to make everything flexible but still work. You can have GFF features that only describe Exons or Exons/Introns or CDS regions and one
-	 * or more Transcriptions. You can have exon sequences but that does not imply transcription to the actual protein.
-	 *
-	 * The GeneSequence will keep track of Exons and Introns but to get a Protein sequence you need to start with a
-	 * TranscriptSequence and then add CDS sequences.
-	 *
-	 * This is also a key class in the biojava-3-genome module for reading and writing GFF3 files
-	 *
+	 * Use GeneSequence(ChromosomeSequence parentSequence, AccessionID accessionId,  int begin, int end, Strand strand)
+	 * which mandates an accessionID.
 	 * @param parentSequence
 	 * @param begin
 	 * @param end inclusive of end
 	 * @param strand force a gene to have strand and transcription sequence will inherit
+	 * @deprecated
 	 */
 	public GeneSequence(ChromosomeSequence parentSequence,  int begin, int end, Strand strand) {
 		setCompoundSet(DNACompoundSet.getDNACompoundSet());
@@ -77,6 +71,27 @@ public class GeneSequence extends DNASequence {
 		setBioBegin(begin);
 		setBioEnd(end);
 		setStrand(strand);
+	}
+
+	/**
+	 * A class that keeps track of the details of a GeneSequence which is difficult to properly model. Two important concepts that is difficult
+	 * to make everything flexible but still work. You can have GFF features that only describe Exons or Exons/Introns or CDS regions and one
+	 * or more Transcriptions. You can have exon sequences but that does not imply transcription to the actual protein.
+	 *
+	 * The GeneSequence will keep track of Exons and Introns but to get a Protein sequence you need to start with a
+	 * TranscriptSequence and then add CDS sequences.
+	 *
+	 * This is also a key class in the biojava-3-genome module for reading and writing GFF3 files
+	 *
+	 * @param parentSequence
+	 * @param accessionId An identifier for the gene.
+	 * @param begin
+	 * @param end
+	 * @param strand force a gene to have strand and transcription sequence will inherit
+	 */
+	public GeneSequence(ChromosomeSequence parentSequence, AccessionID accessionId,  int begin, int end, Strand strand) {
+		this(parentSequence,begin,end,strand);
+		setAccession(accessionId);
 	}
 
 	/**

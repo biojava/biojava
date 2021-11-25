@@ -48,11 +48,9 @@ public class TranscriptSequence extends DNASequence {
 	private GeneSequence parentGeneSequence = null;
 
 	/**
-	 *
-	 * @param parentDNASequence
-	 * @param begin
-	 * @param end inclusive of end
-	 * @throws  IllegalArgumentException if the parentDNASequence is incompatible with DNACompoundSet
+	 * Use {@code}public TranscriptSequence(GeneSequence parentDNASequence, AccessionID accessionID, int begin, int end){@code}
+	 * that requires an explicit accessionID
+	 * @deprecated
 	 */
 	public TranscriptSequence(GeneSequence parentDNASequence, int begin, int end) {
 		setCompoundSet(DNACompoundSet.getDNACompoundSet());
@@ -65,6 +63,19 @@ public class TranscriptSequence extends DNASequence {
 		this.parentGeneSequence = parentDNASequence;
 		setBioBegin(begin);
 		setBioEnd(end);
+	}
+
+	/**
+	 *
+	 * @param parentDNASequence
+	 * @param accessionID
+	 * @param begin
+	 * @param end inclusive of end
+	 * @throws  IllegalArgumentException if the parentDNASequence is incompatible with DNACompoundSet
+	 */
+	public TranscriptSequence(GeneSequence parentDNASequence, AccessionID accessionID, int begin, int end) {
+		this(parentDNASequence, begin, end);
+		setAccession(accessionID);
 	}
 
 		@Override
@@ -251,7 +262,10 @@ public class TranscriptSequence extends DNASequence {
 	}
 
 	/**
-	 * @param startCodonSequence the startCodonSequence to set
+	 *
+	 * @param accession
+	 * @param begin
+	 * @param end
 	 */
 	public void addStartCodonSequence(AccessionID accession, int begin, int end) {
 		this.startCodonSequence = new StartCodonSequence(this, begin, end);
@@ -266,7 +280,10 @@ public class TranscriptSequence extends DNASequence {
 	}
 
 	/**
-	 * @param stopCodonSequence the stopCodonSequence to set
+	 *
+	 * @param accession
+	 * @param begin
+	 * @param end
 	 */
 	public void addStopCodonSequence(AccessionID accession, int begin, int end) {
 		this.stopCodonSequence = new StopCodonSequence(this, begin, end);

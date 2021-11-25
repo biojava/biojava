@@ -18,9 +18,9 @@ class TranscriptSequenceTest {
     @BeforeEach
     void setUp() throws CompoundNotFoundException {
         anyGeneSequence = SequenceTestUtils.anyGeneSequence();
-        transcriptSeq = new TranscriptSequence(anyGeneSequence, 5, 100);
+        transcriptSeq = new TranscriptSequence(anyGeneSequence, new AccessionID("T5"), 5, 100);
         anyNegativeGeneSequence = SequenceTestUtils.any3GeneSequence();
-        transcriptNegativeSeq = new TranscriptSequence(anyNegativeGeneSequence, 5, 100);
+        transcriptNegativeSeq = new TranscriptSequence(anyNegativeGeneSequence, new AccessionID("T3"), 5, 100);
     }
 
     @Nested
@@ -69,7 +69,7 @@ class TranscriptSequenceTest {
         String chrSeq = ChromosomeSequenceTest.CHROMOSOME_SEQ;
         // must set this to avoid NPE when generating sequence
 
-        transcriptSeq.setAccession(new AccessionID("T1"));
+
         // make 2 CDS that are contiguous. These can be added in any order and are sorted OK
         CDSSequence s1 = transcriptSeq.addCDS(new AccessionID("a"), 11, 20, 1);
         assertEquals(chrSeq, s1.getSequenceAsString());

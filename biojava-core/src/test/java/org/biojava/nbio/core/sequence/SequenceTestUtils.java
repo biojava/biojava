@@ -15,7 +15,7 @@ public class SequenceTestUtils {
      */
     static GeneSequence anyGeneSequence() throws CompoundNotFoundException {
         ChromosomeSequence chr = new ChromosomeSequence(ChromosomeSequenceTest.CHROMOSOME_SEQ);
-        GeneSequence gene = new GeneSequence(chr, 10, 200, Strand.POSITIVE);
+        GeneSequence gene = new GeneSequence(chr, new AccessionID("someGeneId"), 10, 200, Strand.POSITIVE);
         return gene;
     }
 
@@ -27,13 +27,12 @@ public class SequenceTestUtils {
      */
     static GeneSequence any3GeneSequence() throws CompoundNotFoundException {
         ChromosomeSequence chr = new ChromosomeSequence(ChromosomeSequenceTest.CHROMOSOME_SEQ);
-        GeneSequence gene = new GeneSequence(chr, 10, 200, Strand.NEGATIVE);
+        GeneSequence gene = new GeneSequence(chr, new AccessionID("some3PrimeGeneId"),10, 200, Strand.NEGATIVE);
         return gene;
     }
 
     /**
      * Generate a GeneSequence as a subsequence of defined chromosome sequence.
-     * Accession ID is  set to avoid NPE thrown
      *
      * @param chromosomeSequence
      * @param bioStart
@@ -44,7 +43,7 @@ public class SequenceTestUtils {
      */
     static GeneSequence fromSequence(String chromosomeSequence, int bioStart, int bioEnd, Strand strand) throws CompoundNotFoundException {
         ChromosomeSequence chr = new ChromosomeSequence(chromosomeSequence);
-        GeneSequence gene = new GeneSequence(chr, bioStart, bioEnd, strand);
+        GeneSequence gene = new GeneSequence(chr, new AccessionID("Gene"), bioStart, bioEnd, strand);
         gene.setAccession(new AccessionID("Gene1"));
         return gene;
     }
@@ -52,7 +51,6 @@ public class SequenceTestUtils {
     /**
      * Creates a transcript from coordinates on the supplied chromosome sequence.
      * The GeneSequence is set to same length as Chromosomal sequence for simplicity.
-     * Accession ID is set to avoid NPE thrown from some methods
      *
      * @param chromosomeSequence
      * @param bioStart
@@ -63,7 +61,7 @@ public class SequenceTestUtils {
      */
     static TranscriptSequence transcriptFromSequence(String chromosomeSequence, int bioStart, int bioEnd, Strand strand) throws CompoundNotFoundException {
         GeneSequence gene = fromSequence(chromosomeSequence, 1, chromosomeSequence.length(), strand);
-        TranscriptSequence ts = new TranscriptSequence(gene, bioStart, bioEnd);
+        TranscriptSequence ts = new TranscriptSequence(gene, new AccessionID("Transcript"), bioStart, bioEnd);
         ts.setAccession(new AccessionID("Transcript1"));
         return ts;
     }
