@@ -42,7 +42,6 @@ class TranscriptSequenceTest {
         }
 
         @Test
-        // whether it's -ve or +ve doesn't affect equals?
         void equals() {
             assertTrue(transcriptSeq.equals(transcriptSeq));
         }

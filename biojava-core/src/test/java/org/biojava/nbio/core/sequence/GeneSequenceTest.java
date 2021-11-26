@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -114,12 +115,23 @@ class GeneSequenceTest {
     }
 
    @Test
-    void returnedCollectionsAreMutable() throws Exception {
+    void returnedExonCollectionsAreNotMutable() throws Exception {
        geneSequence = new GeneSequence(chromosomeSequence, new AccessionID("geneId"), 5,150, Strand.POSITIVE);
        geneSequence.addExon(new AccessionID("a"), 20, 50);
        List<ExonSequence> exons  =  geneSequence.getExonSequences();
        // this breaks encapsulation of the collections
        exons.remove(0);
-       assertEquals(0, geneSequence.getExonSequences().size());
+       assertEquals(1, geneSequence.getExonSequences().size());
    }
+    @Test
+    void returnedIntronCollectionsAreNotMutable() throws Exception {
+        geneSequence = SequenceTestUtils.anyGeneSequence();
+        geneSequence.addExon(new AccessionID("a"), 20, 50);
+        geneSequence.addExon(new AccessionID("b"), 80, 100);
+        geneSequence.addIntronsUsingExons();
+        ArrayList<IntronSequence> introns  =  geneSequence.getIntronSequences();
+        assertEquals(1, introns.size());
+        introns.remove(0);
+        assertEquals(1, geneSequence.getIntronSequences().size());
+    }
 }

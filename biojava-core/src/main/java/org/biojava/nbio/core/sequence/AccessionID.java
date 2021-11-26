@@ -53,8 +53,7 @@ public class AccessionID {
 	 * @param id non-null
 	 */
 	public AccessionID(String id) {
-		this.id = id.trim();
-		this.source = DataSource.LOCAL;
+		this(id, DataSource.LOCAL);
 	}
 
 	/**

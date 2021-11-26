@@ -290,19 +290,19 @@ public class GeneSequence extends DNASequence {
 	}
 
 	/**
-	 * Get the exons as an ArrayList
+	 * Get the exons as an ArrayList. Modifying this list will not modify the underlying collection
 	 * @return exons
 	 */
 	public ArrayList<ExonSequence> getExonSequences() {
-		return exonSequenceList;
+		return new ArrayList<>(exonSequenceList);
 	}
 
 	/**
-	 * Get the introns as an ArrayList
+	 * Get the introns as an ArrayList. Modifying this list will not modify the underlying collection
 	 * @return introns
 	 */
 	public ArrayList<IntronSequence> getIntronSequences() {
-		return intronSequenceList;
+		return  new ArrayList<>(intronSequenceList);
 	}
 
 	/**
