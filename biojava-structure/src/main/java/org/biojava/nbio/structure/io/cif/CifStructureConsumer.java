@@ -10,6 +10,7 @@ import org.rcsb.cif.schema.mm.ChemCompBond;
 import org.rcsb.cif.schema.mm.DatabasePDBRemark;
 import org.rcsb.cif.schema.mm.DatabasePDBRev;
 import org.rcsb.cif.schema.mm.DatabasePDBRevRecord;
+import org.rcsb.cif.schema.mm.Em3dReconstruction;
 import org.rcsb.cif.schema.mm.Entity;
 import org.rcsb.cif.schema.mm.EntityPoly;
 import org.rcsb.cif.schema.mm.EntityPolySeq;
@@ -107,7 +108,13 @@ public interface CifStructureConsumer extends CifFileConsumer<Structure> {
      */
     void consumeDatabasePDBRevRecord(DatabasePDBRevRecord databasePDBrevRecord);
 
-    /**
+	/**
+	 * Consume Electron Microscopy 3D reconstruction data
+	 * @param em3dReconstruction
+	 */
+	void consumeEm3dReconstruction(Em3dReconstruction em3dReconstruction);
+
+	/**
      * Consume a particular Cif category.
      * @param entity data
      */
