@@ -58,7 +58,7 @@ class FastaGeneWriterTest {
         fastaWriter.process();
 
         String output = new String(os.toByteArray(), "UTF-8");
-        String [] lines =  output.split("\r?\n");
+        String [] lines =  output.split("\\R");
         assertEquals(4,lines.length);
         assertEquals(">gene1", lines[0]);
         assertEquals("ATATATATATaTATAtatat", lines[1]);
