@@ -175,9 +175,7 @@ public class BondImpl implements Bond {
 	/**
 	 * Gets the distance between the two atoms of this bond.
 	 * <p>
-	 * This distance is calculated by {@link Calc#getDistance(Atom, Atom)}, but
-	 * this method will suppress the empty threat of a
-	 * {@link StructureException} that method makes.
+	 * This distance is calculated by {@link Calc#getDistance(Atom, Atom)}.
 	 *
 	 * @return the distance between the two atoms of this bond.
 	 */

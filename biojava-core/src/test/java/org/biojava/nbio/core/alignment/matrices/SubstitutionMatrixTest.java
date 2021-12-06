@@ -54,8 +54,8 @@ class SubstitutionMatrixTest {
     void matrixToString(){
         String asString = sm.toString();
         // description + 5*2 for ATCGNatcgn + 1 header + 1  for '-'
-        assertEquals(13, asString.split("\n").length);
-        String header = asString.split("\r?\n")[1];
+        assertEquals(13, asString.split("\\n").length);
+        String header = asString.split("\\R")[1];
         assertTrue(header.replaceAll(" ","").matches("[ATCGatcgNn-]+"));
     }
 
@@ -64,8 +64,8 @@ class SubstitutionMatrixTest {
         String asString = sm.getMatrixAsString();
 
         // 5*2 for ATCGNatcgn + 1 header + 1  for '-'
-        assertEquals(12, asString.split("\n").length);
-        String header = asString.split("\r?\n")[0];
+        assertEquals(12, asString.split("\\n").length);
+        String header = asString.split("\\R")[0];
         assertTrue(header.replaceAll(" ","").matches("[ATCGatcgNn-]+"));
     }
 }

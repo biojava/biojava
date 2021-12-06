@@ -185,10 +185,9 @@ public class FlipAFPChainTest {
 	}
 
 
-	private static final String newline = System.getProperty("line.separator");
 	private void printFirstMismatch(String s1, String s2){
-		String[] spl1 = s1.split(newline);
-		String[] spl2 = s2.split(newline);
+		String[] spl1 = s1.split("\\R");
+		String[] spl2 = s2.split("\\R");
 
 		for (int i = 0 ; i < spl1.length ; i++){
 

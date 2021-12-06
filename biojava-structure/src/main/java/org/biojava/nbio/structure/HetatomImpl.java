@@ -168,7 +168,7 @@ public class HetatomImpl implements Group {
 				String altLocStr = "";
 				char altLoc = atom.getAltLoc();
 				if (altLoc != ' ') altLocStr = "(alt loc '" + altLoc + "')";
-				logger.warn("An atom with name " + atom.getName() + " " + altLocStr + " is already present in group: " + this.toString() + ". The atom with serial " + atom.getPDBserial() + " will be ignored in look-ups.");
+				logger.warn("An atom with name " + atom.getName() + " " + altLocStr + " is already present in group: " + this.toString() + ". The atom with serial " + existingAtom.getPDBserial() + " will be ignored in look-ups.");
 			}
 		}
 	}
