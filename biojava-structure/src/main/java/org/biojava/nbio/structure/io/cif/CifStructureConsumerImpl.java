@@ -844,7 +844,7 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
         for (int rowIndex = 0; rowIndex < refine.getRowCount(); rowIndex++) {
             // RESOLUTION
         	ValueKind valueKind = refine.getLsDResHigh().getValueKind(rowIndex);
-        	if (ValueKind.NOT_PRESENT.equals(valueKind)) {
+        	if (! ValueKind.PRESENT.equals(valueKind)) {
         		continue;
         	}
             // in very rare cases (for instance hybrid methods x-ray + neutron diffraction, e.g. 3ins, 4n9m)
