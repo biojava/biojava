@@ -580,6 +580,16 @@ public class PDBHeader implements PDBRecord {
 		this.crystallographicInfo = crystallographicInfo;
 	}
 
+	/**
+	 * Returns the resolution (or effective resolution) of the experiment. This is
+	 * related to <code>_refine.ls_d_res_high</code> (DIFFRACTION) or
+	 * <code>_em_3d_reconstruction.resolution</code> (ELECTRON MICROSCOPY) for mmCif
+	 * format, or to <code>REMARK 2</code> or <code>REMARK 3</code> for PDB legacy
+	 * format. If more than one value is available (in rare cases), the last one is
+	 * reported. If no value is available, it defaults to 99.
+	 * 
+	 * @return The reported experiment resolution, 99 if no value is available.
+	 */
 	public float getResolution() {
 		return resolution;
 	}

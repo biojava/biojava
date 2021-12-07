@@ -651,8 +651,10 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
     public void consumeEm3dReconstruction(Em3dReconstruction em3dReconstruction) {
     	this.em3dReconstruction = em3dReconstruction;
     	
-        for (int rowIndex = 0; rowIndex < em3dReconstruction.getRowCount(); rowIndex++) {
-        	pdbHeader.setResolution((float) em3dReconstruction.getResolution().get(rowIndex)); //can it have more than 1 value?
+        for (int rowIndex = 0; rowIndex < em3dReconstruction.getRowCount(); rowIndex++) { //can it have more than 1 value?
+        	final FloatColumn resolution = em3dReconstruction.getResolution();
+			if (ValueKind.PRESENT.equals(resolution.getValueKind(rowIndex)))
+        		pdbHeader.setResolution((float) resolution.get(rowIndex));
         }
         //TODO other fields (maybe RFree)?
     }
