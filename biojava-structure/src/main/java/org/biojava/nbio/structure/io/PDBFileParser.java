@@ -1351,7 +1351,7 @@ public class PDBFileParser  {
 		if (line.startsWith("REMARK 800")) {
 			pdb_REMARK_800_Handler(line);
 
-		}  else if ( line.startsWith("REMARK 350")){
+		} else if ( line.startsWith("REMARK 350")){
 
 			if ( params.isParseBioAssembly()) {
 
@@ -1361,6 +1361,10 @@ public class PDBFileParser  {
 
 				bioAssemblyParser.pdb_REMARK_350_Handler(line);
 			}
+		} else if (line.startsWith("REMARK   2")) {
+			//REMARK   2 RESOLUTION.
+			Pattern pR = Pattern.compile("^REMARK   2 RESOLUTION.\\s+(\\d+\\.\\d+)\\s+ANGSTROMS\\..*");
+			handleResolutionLine(line, pR);
 
 		// REMARK 3 (for R free)
 		// note: if more than 1 value present (occurring in hybrid experimental technique entries, e.g. 3ins, 4n9m)
@@ -1396,21 +1400,29 @@ public class PDBFileParser  {
 		// then last one encountered will be taken
 		} else if (line.startsWith("REMARK   3   RESOLUTION RANGE HIGH")){
 			Pattern pR = Pattern.compile("^REMARK   3   RESOLUTION RANGE HIGH \\(ANGSTROMS\\) :\\s+(\\d+\\.\\d+).*");
-			Matcher mR = pR.matcher(line);
-			if (mR.matches()) {
-				try {
-					float res = Float.parseFloat(mR.group(1));
-					if (pdbHeader.getResolution()!=PDBHeader.DEFAULT_RESOLUTION) {
-						logger.warn("More than 1 resolution value present, will use last one {} and discard previous {} "
-								,mR.group(1), String.format("%4.2f",pdbHeader.getResolution()));
-					}
-					pdbHeader.setResolution(res);
-				} catch (NumberFormatException e) {
-					logger.info("Could not parse resolution '{}', ignoring it",mR.group(1));
+			handleResolutionLine(line, pR);
+		} else if (line.startsWith("REMARK   3   EFFECTIVE RESOLUTION")){
+			Pattern pR = Pattern.compile("^REMARK   3   EFFECTIVE RESOLUTION \\(ANGSTROMS\\)\\s+:\\s+(\\d+\\.\\d+).*");
+			handleResolutionLine(line, pR);
+		}
+	}
+
+	public void handleResolutionLine(String line, Pattern pR) {
+		Matcher mR = pR.matcher(line);
+		if (mR.matches()) {
+			final String resString = mR.group(1);
+			try {
+				float res = Float.parseFloat(resString);
+				final float resInHeader = pdbHeader.getResolution();
+				if (resInHeader!=PDBHeader.DEFAULT_RESOLUTION && resInHeader != res) {
+					logger.warn("More than 1 resolution value present, will use last one {} and discard previous {} "
+							,resString, String.format("%4.2f",resInHeader));
 				}
+				pdbHeader.setResolution(res);
+			} catch (NumberFormatException e) {
+				logger.info("Could not parse resolution '{}', ignoring it",resString);
 			}
 		}
-
 	}
 
 

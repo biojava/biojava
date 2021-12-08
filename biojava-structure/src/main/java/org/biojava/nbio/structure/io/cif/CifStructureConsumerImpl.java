@@ -69,6 +69,7 @@ import org.rcsb.cif.schema.mm.ChemCompBond;
 import org.rcsb.cif.schema.mm.DatabasePDBRemark;
 import org.rcsb.cif.schema.mm.DatabasePDBRev;
 import org.rcsb.cif.schema.mm.DatabasePDBRevRecord;
+import org.rcsb.cif.schema.mm.Em3dReconstruction;
 import org.rcsb.cif.schema.mm.Entity;
 import org.rcsb.cif.schema.mm.EntityPoly;
 import org.rcsb.cif.schema.mm.EntityPolySeq;
@@ -128,6 +129,7 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
     private List<Chain> currentModel;
     private PDBHeader pdbHeader;
     private String currentNmrModelNumber;
+	private Em3dReconstruction em3dReconstruction;
     private List<Chain> entityChains;
 
     private Entity entity;
@@ -644,6 +646,18 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
             revRecords.add(new org.biojava.nbio.structure.DatabasePDBRevRecord(databasePDBrevRecord, i));
         }
     }
+    
+    @Override
+    public void consumeEm3dReconstruction(Em3dReconstruction em3dReconstruction) {
+    	this.em3dReconstruction = em3dReconstruction;
+    	
+        for (int rowIndex = 0; rowIndex < em3dReconstruction.getRowCount(); rowIndex++) { //can it have more than 1 value?
+        	final FloatColumn resolution = em3dReconstruction.getResolution();
+			if (ValueKind.PRESENT.equals(resolution.getValueKind(rowIndex)))
+        		pdbHeader.setResolution((float) resolution.get(rowIndex));
+        }
+        //TODO other fields (maybe RFree)?
+    }
 
     @Override
     public void consumeEntity(Entity entity) {
@@ -831,6 +845,10 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
     public void consumeRefine(Refine refine) {
         for (int rowIndex = 0; rowIndex < refine.getRowCount(); rowIndex++) {
             // RESOLUTION
+        	ValueKind valueKind = refine.getLsDResHigh().getValueKind(rowIndex);
+        	if (! ValueKind.PRESENT.equals(valueKind)) {
+        		continue;
+        	}
             // in very rare cases (for instance hybrid methods x-ray + neutron diffraction, e.g. 3ins, 4n9m)
             // there are 2 resolution values, one for each method
             // we take the last one found so that behaviour is like in PDB file parsing

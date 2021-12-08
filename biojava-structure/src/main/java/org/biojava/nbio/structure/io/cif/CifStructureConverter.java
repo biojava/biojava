@@ -118,6 +118,7 @@ public class CifStructureConverter {
         consumer.consumeDatabasePDBRemark(cifBlock.getDatabasePDBRemark());
         consumer.consumeDatabasePDBRev(cifBlock.getDatabasePDBRev());
         consumer.consumeDatabasePDBRevRecord(cifBlock.getDatabasePDBRevRecord());
+        consumer.consumeEm3dReconstruction(cifBlock.getEm3dReconstruction());
         consumer.consumeEntity(cifBlock.getEntity());
         consumer.consumeEntityPoly(cifBlock.getEntityPoly());
         consumer.consumeEntitySrcGen(cifBlock.getEntitySrcGen());
