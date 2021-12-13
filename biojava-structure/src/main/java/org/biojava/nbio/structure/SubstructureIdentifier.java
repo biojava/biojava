@@ -193,11 +193,10 @@ public class SubstructureIdentifier implements StructureIdentifier {
 	 * ligands (technically non-water non-polymer atoms) within
 	 * {@link StructureTools#DEFAULT_LIGAND_PROXIMITY_CUTOFF} of the selected
 	 * range are included, regardless of chain.
-	 * @param input A full structure, e.g. as loaded from the PDB. The structure
+	 * @param s A full structure, e.g. as loaded from the PDB. The structure
 	 * ID should match that returned by getPdbId().
 	 * @return
 	 * @throws StructureException
-	 * @see StructureTools#getReducedStructure(Structure, String)
 	 */
 	@Override
 	public Structure reduce(Structure s) throws StructureException {
@@ -310,7 +309,7 @@ public class SubstructureIdentifier implements StructureIdentifier {
 	/**
 	 * Loads the complete structure based on {@link #getPdbId()}.
 	 *
-	 * @param AtomCache A source of structures
+	 * @param cache A source of structures
 	 * @return A Structure containing at least the atoms identified by this,
 	 *  or null if no PDB ID is set
 	 * @throws StructureException For errors loading and parsing the structure
