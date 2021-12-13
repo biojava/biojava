@@ -1,6 +1,12 @@
 BioJava Changelog
 -----------------
 
+BioJava 6.0.2
+==============================
+### Fixed
+* Log4j dependency upgraded to 2.15.0, to avoid log4hshell vulnerability
+* PDB and mmCIF resolution parsing fixes. #1000
+
 BioJava 6.0.1
 ==============================
 ### Fixed
