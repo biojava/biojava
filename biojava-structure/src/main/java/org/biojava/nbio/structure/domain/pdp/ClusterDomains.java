@@ -186,7 +186,7 @@ public class ClusterDomains {
 				if(verbose) listdomains(domains);
 			}
 			else {
-				if(verbose) System.out.printf(" Maximum value is less than cut off value. (max:%d)%n", maximum_value);
+				if(verbose) System.out.printf(" Maximum value is less than cut off value. (max:%f)%n", maximum_value);
 				maximum_value = -1.0;
 				maximum_values = -1.0;
 				maximum_valuem = -1.0;
