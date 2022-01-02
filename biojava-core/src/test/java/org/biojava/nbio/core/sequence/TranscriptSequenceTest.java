@@ -26,7 +26,7 @@ class TranscriptSequenceTest {
     @Nested
     class AfterValidConstruction {
         @Test
-        void lengthIsTSLength() {
+        void lengthIsTranscriptLength() {
             assertEquals(96, transcriptSeq.getLength());
         }
 
