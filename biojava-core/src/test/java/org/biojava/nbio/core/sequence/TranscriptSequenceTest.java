@@ -99,4 +99,20 @@ class TranscriptSequenceTest {
         transcriptSeq.removeCDS("a");
         assertEquals(0, transcriptSeq.getCDSSequences().size());
     }
+
+    @Test
+    void addGetStartCodonSequence () {
+        assertNull(transcriptSeq.getStartCodonSequence());
+        transcriptSeq.addStartCodonSequence(new AccessionID("cds"), 40,42);
+        StartCodonSequence scs = transcriptSeq.getStartCodonSequence();
+        assertEquals(3, scs.getLength());
+    }
+
+    @Test
+    void addGetStopCodonSequence () {
+        assertNull(transcriptSeq.getStopCodonSequence());
+        transcriptSeq.addStopCodonSequence(new AccessionID("cds"), 40,42);
+        StopCodonSequence scs = transcriptSeq.getStopCodonSequence();
+        assertEquals(3, scs.getLength());
+    }
 }

@@ -262,7 +262,8 @@ public class TranscriptSequence extends DNASequence {
 	}
 
 	/**
-	 *
+	 * Sets the start codon sequence at given begin /  end location. Note that calling this method multiple times
+	 * will replace any existing value.
 	 * @param accession
 	 * @param begin
 	 * @param end
@@ -280,7 +281,8 @@ public class TranscriptSequence extends DNASequence {
 	}
 
 	/**
-	 *
+	 * Sets the stop codon sequence at given begin /  end location. Note that calling this method multiple times
+	 * will replace any existing value.
 	 * @param accession
 	 * @param begin
 	 * @param end
