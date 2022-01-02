@@ -31,11 +31,11 @@ package org.biojava.nbio.core.sequence;
 public class TaxonomyID {
    //TODO this should implement equals and hashcode if is value object?
 
-
 	private String id = null;
 	DataSource dataSource = DataSource.UNKNOWN;
 
 	public TaxonomyID(String id, DataSource dataSource) {
+		// TODO should throw IAE if null args?
 		this.id = id;
 		this.dataSource = dataSource;
 	}

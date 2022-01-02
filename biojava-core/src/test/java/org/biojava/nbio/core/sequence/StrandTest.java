@@ -19,7 +19,7 @@ class StrandTest {
         assertEquals("-", Strand.NEGATIVE.getStringRepresentation());
         assertEquals(".", Strand.UNDEFINED.getStringRepresentation());
     }
-    
+
     @Test
     void numberRepresentation() {
         assertEquals(1, Strand.POSITIVE.getNumericRepresentation());
