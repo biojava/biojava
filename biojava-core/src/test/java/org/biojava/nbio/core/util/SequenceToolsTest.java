@@ -57,25 +57,11 @@ class SequenceToolsTest {
 		@DisplayName("Edge case fixed")
 		void permuteCycleIntMaxMin2(String original, String expected) {
 			assertAll(
-					()->assertEquals(expected, SequenceTools.permuteCyclic2(original, Integer.MAX_VALUE)),
-					()->assertEquals(expected, SequenceTools.permuteCyclic2(original, Integer.MIN_VALUE))
+					()->assertEquals(expected, SequenceTools.permuteCyclic(original, Integer.MAX_VALUE)),
+					()->assertEquals(expected, SequenceTools.permuteCyclic(original, Integer.MIN_VALUE))
 				);
 		}
-		
-		@Test
-		void permuteCyclicPerformance() {
-			String dna = randomDNA(10_000_000);
-			long start = System.currentTimeMillis();
-			String rotated = SequenceTools.permuteCyclic(dna, 5_000_000);
-			long end = System.currentTimeMillis();
-			System.err.println(end-start);
-			
-			long start2 = System.currentTimeMillis();
-			String rotated2 = SequenceTools.permuteCyclic2(dna, 5_000_000);
-			long end2 = System.currentTimeMillis();
-			System.err.println(end2-start2);
-			assertTrue((end-start)/(end2-start2) > 5);
-		}
+
 	}
 
 	@Nested
