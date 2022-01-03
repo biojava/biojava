@@ -35,16 +35,6 @@ public class SequenceTools {
 	 * @param n The number of characters to permute by; can be positive or negative; values greater than the length of the array are acceptable
 	 */
 	public static String permuteCyclic(String string, int n) {
-		return permuteCyclic2(string, n);
-	}
-
-	/*
-	 * Improved implementation that is generally 10-100x faster, and fixes some edge-case bugs.
-	 * @param string The string to permute
-	 * @param n The number of characters to permute by; can be positive or negative; values greater than the length of the array are acceptable
-	 * @return
-	 */
-	private static String permuteCyclic2(String string, int n) {
 		String toMutate = string + string;
 		n = n % string.length();
 		if (n < 0) {
