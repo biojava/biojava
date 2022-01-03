@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class TaxonomyIDTest {
-    
+
     @Test
     void createTaxonomyID(){
         TaxonomyID tId = new TaxonomyID("abc1", DataSource.GENBANK);
