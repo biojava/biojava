@@ -28,24 +28,34 @@ import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava.nbio.core.sequence.compound.DNACompoundSet;
 import org.biojava.nbio.core.sequence.compound.NucleotideCompound;
-import org.junit.Before;
-import org.junit.Test;
+import org.biojava.nbio.core.sequence.template.LightweightProfile;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class MultipleSequenceAlignmentTest {
+
+class MultipleSequenceAlignmentTest {
 
 	private MultipleSequenceAlignment<ProteinSequence, AminoAcidCompound> msaProteins;
 	private MultipleSequenceAlignment<DNASequence,NucleotideCompound> msaDNA;
 
-	@Before
-	public void setup() throws CompoundNotFoundException {
+	private static final String aaSeq = "ARNDCEQGHILKMFPSTWYVBZJX";
+	@BeforeEach
+	 void setup() throws CompoundNotFoundException {
 		msaProteins = new MultipleSequenceAlignment<>();
 		for (int i = 0; i < 8; i++) {
-			msaProteins.addAlignedSequence(new ProteinSequence("ARNDCEQGHILKMFPSTWYVBZJX"));
+			ProteinSequence ps = new ProteinSequence(aaSeq);
+			ps.setAccession(new AccessionID(i+""));
+			msaProteins.addAlignedSequence(ps);
 		}
 		msaDNA = new MultipleSequenceAlignment<>();
 		for (int i = 0; i < 7; i++) {
@@ -54,7 +64,46 @@ public class MultipleSequenceAlignmentTest {
 	}
 
 	@Test
-	public void testGetCompoundsAt() {
+	void allSequencesMustBeSameLength() throws CompoundNotFoundException {
+		ProteinSequence differentLength = new ProteinSequence("ARNDC");
+		assertThrows(IllegalArgumentException.class, ()->msaProteins.addAlignedSequence(differentLength));
+	}
+
+	@Test
+	void addRemoveAlignments() throws CompoundNotFoundException {
+		assertEquals(8, msaProteins.getSize());
+		assertEquals(8, msaProteins.getAlignedSequences().size());
+		assertEquals(aaSeq.length(), msaProteins.getLength());
+		msaProteins.removeAlignedSequence(new ProteinSequence(aaSeq));
+		assertEquals(7, msaProteins.getSize());
+		assertEquals(7, msaProteins.getAlignedSequences().size());
+	}
+
+	@ParameterizedTest
+	@EnumSource(LightweightProfile.StringFormat.class)
+	void formattedAlignmentToString(LightweightProfile.StringFormat format){
+		String formatted = msaProteins.toString(format);
+		assertTrue(formatted.length() > 0);
+	}
+
+	@Test
+	void alignmentToBasicString(){
+		String alnStr = msaProteins.toString();
+		String [] lines  = alnStr.split(System.lineSeparator());
+		assertEquals(8, lines.length);
+
+		//lines all same length
+		Set<Integer> collect = Arrays.stream(lines).map(String::length).collect(Collectors.toSet());
+		assertEquals(1, collect.size());
+	}
+	@Test
+	void alignmentToWidth() {
+		String alnStr = msaProteins.toString(10);
+		assertEquals(29, alnStr.split(System.lineSeparator()).length);
+	}
+
+	@Test
+	 void testGetCompoundsAt() {
 		AminoAcidCompound aminoAcid = AminoAcidCompoundSet.getAminoAcidCompoundSet().getCompoundForString("N");
 		List<AminoAcidCompound> colProteins = new ArrayList<>();
 		for (int i = 0; i < 8; i++) {
@@ -68,5 +117,6 @@ public class MultipleSequenceAlignmentTest {
 		}
 		assertEquals(msaDNA.getCompoundsAt(3), colDNA);
 	}
+
 
 }

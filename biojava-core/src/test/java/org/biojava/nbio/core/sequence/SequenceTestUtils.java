@@ -15,8 +15,7 @@ public class SequenceTestUtils {
      */
     static GeneSequence anyGeneSequence() throws CompoundNotFoundException {
         ChromosomeSequence chr = new ChromosomeSequence(ChromosomeSequenceTest.CHROMOSOME_SEQ);
-        GeneSequence gene = new GeneSequence(chr, new AccessionID("someGeneId"), 10, 200, Strand.POSITIVE);
-        return gene;
+        return new GeneSequence(chr, new AccessionID("someGeneId"), 10, 200, Strand.POSITIVE);
     }
 
     /**
