@@ -43,11 +43,11 @@ public class MultipleSequenceAlignmentTest {
 
 	@Before
 	public void setup() throws CompoundNotFoundException {
-		msaProteins = new MultipleSequenceAlignment<ProteinSequence, AminoAcidCompound>();
+		msaProteins = new MultipleSequenceAlignment<>();
 		for (int i = 0; i < 8; i++) {
 			msaProteins.addAlignedSequence(new ProteinSequence("ARNDCEQGHILKMFPSTWYVBZJX"));
 		}
-		msaDNA = new MultipleSequenceAlignment<DNASequence, NucleotideCompound>();
+		msaDNA = new MultipleSequenceAlignment<>();
 		for (int i = 0; i < 7; i++) {
 			msaDNA.addAlignedSequence(new DNASequence("ATCGATCGATCGATCG"));
 		}
@@ -56,13 +56,13 @@ public class MultipleSequenceAlignmentTest {
 	@Test
 	public void testGetCompoundsAt() {
 		AminoAcidCompound aminoAcid = AminoAcidCompoundSet.getAminoAcidCompoundSet().getCompoundForString("N");
-		List<AminoAcidCompound> colProteins = new ArrayList<AminoAcidCompound>();
+		List<AminoAcidCompound> colProteins = new ArrayList<>();
 		for (int i = 0; i < 8; i++) {
 			colProteins.add(aminoAcid);
 		}
 		assertEquals(msaProteins.getCompoundsAt(3), colProteins);
 		NucleotideCompound nucleotide = DNACompoundSet.getDNACompoundSet().getCompoundForString("C");
-		List<NucleotideCompound> colDNA = new ArrayList<NucleotideCompound>();
+		List<NucleotideCompound> colDNA = new ArrayList<>();
 		for (int i = 0; i < 7; i++) {
 			colDNA.add(nucleotide);
 		}
