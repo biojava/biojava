@@ -1,6 +1,14 @@
 BioJava Changelog
 -----------------
 
+BioJava 6.0.4
+==============================
+### Fixed
+* Log4j dependency upgraded to 2.17.1 to avoid new vulnerabilities
+* Some new tests
+* Fixes in tests and docs
+* Bugfix in LocalProteinDomainParser #1009 
+
 BioJava 6.0.3
 ==============================
 ### Fixed
