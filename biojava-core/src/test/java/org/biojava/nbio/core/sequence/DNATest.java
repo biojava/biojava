@@ -31,6 +31,7 @@ import org.biojava.nbio.core.sequence.template.*;
 import org.biojava.nbio.core.sequence.transcription.Frame;
 import org.biojava.nbio.core.sequence.views.ComplementSequenceView;
 import org.biojava.nbio.core.sequence.views.ReversedSequenceView;
+import org.hamcrest.MatcherAssert;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -39,7 +40,10 @@ import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 
 public class DNATest {
 

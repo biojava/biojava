@@ -180,7 +180,7 @@ public class MultipleSequenceAlignment<S extends Sequence<C>, C extends Compound
 	// helper methods
 
 	/**
-	 * Helper method that does all the formating work
+	 * Helper method that does all the formatting work
 	 * @param width
 	 * @param header
 	 * @param idFormat

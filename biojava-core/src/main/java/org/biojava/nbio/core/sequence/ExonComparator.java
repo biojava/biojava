@@ -28,7 +28,7 @@ import java.util.Comparator;
 
 
 /**
- * Sort Exon where it is a little confusing if exons shoud always be ordered left to right
+ * Sort Exon where it is a little confusing if exons should always be ordered left to right
  * where a negative stranded gene should go the other direction. Need to think about this?
  * @author Scooter Willis <willishf at gmail dot com>
  */
@@ -37,7 +37,6 @@ public class ExonComparator implements Comparator<ExonSequence>, Serializable{
 
 	@Override
 	public int compare(ExonSequence o1, ExonSequence o2) {
-
 		return o1.getBioBegin() - o2.getBioBegin();
 	}
 

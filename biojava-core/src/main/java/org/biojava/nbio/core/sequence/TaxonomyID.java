@@ -26,14 +26,16 @@ package org.biojava.nbio.core.sequence;
 /**
  * A sequence can be associated with a species or Taxonomy ID
  * @author Scooter Willis
+ *
  */
 public class TaxonomyID {
-
+   //TODO this should implement equals and hashcode if is value object?
 
 	private String id = null;
 	DataSource dataSource = DataSource.UNKNOWN;
 
 	public TaxonomyID(String id, DataSource dataSource) {
+		// TODO should throw IAE if null args?
 		this.id = id;
 		this.dataSource = dataSource;
 	}

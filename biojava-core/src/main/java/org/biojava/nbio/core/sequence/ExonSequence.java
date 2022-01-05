@@ -22,7 +22,8 @@
  */
 package org.biojava.nbio.core.sequence;
 
-
+import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
+import org.biojava.nbio.core.sequence.compound.DNACompoundSet;
 
 /**
  * A gene contains a collection of Exon sequences
@@ -30,7 +31,6 @@ package org.biojava.nbio.core.sequence;
  */
 public class ExonSequence extends DNASequence {
 
-	//private static final Logger log = Logger.getLogger(ExonSequence.class.getName());
 
 	/**
 	 * Need a parent gene sequence and the bioBegin and bioEnd. An Exon sequence doesn't actually imply what the
@@ -44,6 +44,12 @@ public class ExonSequence extends DNASequence {
 	 * @param bioEnd
 	 */
 	public ExonSequence(GeneSequence parentGeneSequence, int bioBegin, int bioEnd) {
+		setCompoundSet(DNACompoundSet.getDNACompoundSet());
+		try {
+			initSequenceStorage(parentGeneSequence.getSequenceAsString());
+		} catch (CompoundNotFoundException e) {
+			throw new IllegalArgumentException(e);
+		}
 		this.setParentSequence(parentGeneSequence);
 		setBioBegin(bioBegin);
 		setBioEnd(bioEnd);

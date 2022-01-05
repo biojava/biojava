@@ -48,18 +48,34 @@ public class TranscriptSequence extends DNASequence {
 	private GeneSequence parentGeneSequence = null;
 
 	/**
-	 *
-	 * @param parentDNASequence
-	 * @param begin
-	 * @param end inclusive of end
+	 * Use {@code}public TranscriptSequence(GeneSequence parentDNASequence, AccessionID accessionID, int begin, int end){@code}
+	 * that requires an explicit accessionID
+	 * @deprecated
 	 */
 	public TranscriptSequence(GeneSequence parentDNASequence, int begin, int end) {
+		setCompoundSet(DNACompoundSet.getDNACompoundSet());
+		try {
+			initSequenceStorage(parentDNASequence.getSequenceAsString());
+		} catch (CompoundNotFoundException e) {
+			throw new IllegalArgumentException(e);
+		}
 		setParentSequence(parentDNASequence);
 		this.parentGeneSequence = parentDNASequence;
 		setBioBegin(begin);
 		setBioEnd(end);
-		this.setCompoundSet(DNACompoundSet.getDNACompoundSet());
+	}
 
+	/**
+	 *
+	 * @param parentDNASequence
+	 * @param accessionID
+	 * @param begin
+	 * @param end inclusive of end
+	 * @throws  IllegalArgumentException if the parentDNASequence is incompatible with DNACompoundSet
+	 */
+	public TranscriptSequence(GeneSequence parentDNASequence, AccessionID accessionID, int begin, int end) {
+		this(parentDNASequence, begin, end);
+		setAccession(accessionID);
 	}
 
 		@Override
@@ -108,7 +124,7 @@ public class TranscriptSequence extends DNASequence {
 	 */
 	public CDSSequence addCDS(AccessionID accession, int begin, int end, int phase) throws Exception {
 		if (cdsSequenceHashMap.containsKey(accession.getID())) {
-			throw new Exception("Duplicate accesion id " + accession.getID());
+			throw new Exception("Duplicate accession id " + accession.getID());
 		}
 		CDSSequence cdsSequence = new CDSSequence(this, begin, end, phase); //sense should be the same as parent
 		cdsSequence.setAccession(accession);
@@ -246,7 +262,11 @@ public class TranscriptSequence extends DNASequence {
 	}
 
 	/**
-	 * @param startCodonSequence the startCodonSequence to set
+	 * Sets the start codon sequence at given begin /  end location. Note that calling this method multiple times
+	 * will replace any existing value.
+	 * @param accession
+	 * @param begin
+	 * @param end
 	 */
 	public void addStartCodonSequence(AccessionID accession, int begin, int end) {
 		this.startCodonSequence = new StartCodonSequence(this, begin, end);
@@ -261,7 +281,11 @@ public class TranscriptSequence extends DNASequence {
 	}
 
 	/**
-	 * @param stopCodonSequence the stopCodonSequence to set
+	 * Sets the stop codon sequence at given begin /  end location. Note that calling this method multiple times
+	 * will replace any existing value.
+	 * @param accession
+	 * @param begin
+	 * @param end
 	 */
 	public void addStopCodonSequence(AccessionID accession, int begin, int end) {
 		this.stopCodonSequence = new StopCodonSequence(this, begin, end);

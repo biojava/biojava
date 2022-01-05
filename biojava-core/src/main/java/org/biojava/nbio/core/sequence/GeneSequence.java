@@ -51,6 +51,29 @@ public class GeneSequence extends DNASequence {
 	private ChromosomeSequence chromosomeSequence;
 
 	/**
+	 * Use GeneSequence(ChromosomeSequence parentSequence, AccessionID accessionId,  int begin, int end, Strand strand)
+	 * which mandates an accessionID.
+	 * @param parentSequence
+	 * @param begin
+	 * @param end inclusive of end
+	 * @param strand force a gene to have strand and transcription sequence will inherit
+	 * @deprecated
+	 */
+	public GeneSequence(ChromosomeSequence parentSequence,  int begin, int end, Strand strand) {
+		setCompoundSet(DNACompoundSet.getDNACompoundSet());
+		try {
+			initSequenceStorage(parentSequence.getSequenceAsString());
+		} catch (CompoundNotFoundException e) {
+			throw new IllegalArgumentException(e);
+		}
+		chromosomeSequence = parentSequence;
+		setParentSequence(parentSequence);
+		setBioBegin(begin);
+		setBioEnd(end);
+		setStrand(strand);
+	}
+
+	/**
 	 * A class that keeps track of the details of a GeneSequence which is difficult to properly model. Two important concepts that is difficult
 	 * to make everything flexible but still work. You can have GFF features that only describe Exons or Exons/Introns or CDS regions and one
 	 * or more Transcriptions. You can have exon sequences but that does not imply transcription to the actual protein.
@@ -60,18 +83,15 @@ public class GeneSequence extends DNASequence {
 	 *
 	 * This is also a key class in the biojava-3-genome module for reading and writing GFF3 files
 	 *
-	 * @param parentDNASequence
+	 * @param parentSequence
+	 * @param accessionId An identifier for the gene.
 	 * @param begin
-	 * @param end inclusive of end
+	 * @param end
 	 * @param strand force a gene to have strand and transcription sequence will inherit
 	 */
-	public GeneSequence(ChromosomeSequence parentSequence, int begin, int end, Strand strand) {
-		chromosomeSequence = parentSequence;
-		setParentSequence(parentSequence);
-		setBioBegin(begin);
-		setBioEnd(end);
-		setStrand(strand);
-		this.setCompoundSet(DNACompoundSet.getDNACompoundSet());
+	public GeneSequence(ChromosomeSequence parentSequence, AccessionID accessionId,  int begin, int end, Strand strand) {
+		this(parentSequence,begin,end,strand);
+		setAccession(accessionId);
 	}
 
 	/**
@@ -116,7 +136,8 @@ public class GeneSequence extends DNASequence {
 		for (int i = 0; i < exonSequenceList.size() - 1; i++) {
 			ExonSequence exon1 = exonSequenceList.get(i);
 			ExonSequence exon2 = exonSequenceList.get(i + 1);
-			this.addIntron(new AccessionID(this.getAccession().getID() + "-" + "intron" + intronIndex), exon1.getBioEnd() - shift, exon2.getBioBegin() + shift);
+			AccessionID intronId= new AccessionID(this.getAccession().getID() + "-" + "intron" + intronIndex);
+			this.addIntron(intronId, exon1.getBioEnd() - shift, exon2.getBioBegin() + shift);
 			intronIndex++;
 		}
 
@@ -168,8 +189,6 @@ public class GeneSequence extends DNASequence {
 	 * @return transcriptsequence
 	 */
 	public TranscriptSequence removeTranscript(String accession) {
-
-
 		return transcriptSequenceHashMap.remove(accession);
 	}
 
@@ -194,7 +213,7 @@ public class GeneSequence extends DNASequence {
 	/**
 	 * Remove the intron by accession
 	 * @param accession
-	 * @return intron sequence
+	 * @return the removed intron sequence, or null if no intron with that accession exists.
 	 */
 	public IntronSequence removeIntron(String accession) {
 		for (IntronSequence intronSequence : intronSequenceList) {
@@ -272,25 +291,25 @@ public class GeneSequence extends DNASequence {
 	}
 
 	/**
-	 * Get the exons as an ArrayList
+	 * Get the exons as an ArrayList. Modifying this list will not modify the underlying collection
 	 * @return exons
 	 */
 	public ArrayList<ExonSequence> getExonSequences() {
-		return exonSequenceList;
+		return new ArrayList<>(exonSequenceList);
 	}
 
 	/**
-	 * Get the introns as an ArrayList
+	 * Get the introns as an ArrayList. Modifying this list will not modify the underlying collection
 	 * @return introns
 	 */
 	public ArrayList<IntronSequence> getIntronSequences() {
-		return intronSequenceList;
+		return  new ArrayList<>(intronSequenceList);
 	}
 
 	/**
 	 * Try to give method clarity where you want a DNASequence coding in the 5' to 3' direction
 	 * Returns the DNASequence representative of the 5' and 3' reading based on strand
-	 * @return dna sequence
+	 * @return dna sequence or null if sequence could not be generated.
 	 */
 	public DNASequence getSequence5PrimeTo3Prime() {
 		String sequence = getSequenceAsString(this.getBioBegin(), this.getBioEnd(), this.getStrand());
@@ -308,11 +327,11 @@ public class GeneSequence extends DNASequence {
 		DNASequence dnaSequence = null;
 		try {
 			dnaSequence = new DNASequence(sequence.toUpperCase());
+		    dnaSequence.setAccession(new AccessionID(this.getAccession().getID()));
 		} catch (CompoundNotFoundException e) {
 			// this should not happen, the sequence is DNA originally, if it does, there's a bug somewhere
 			logger.error("Could not create new DNA sequence in getSequence5PrimeTo3Prime(). Error: {}",e.getMessage());
 		}
-		dnaSequence.setAccession(new AccessionID(this.getAccession().getID()));
 		return dnaSequence;
 	}
 }
