@@ -49,7 +49,7 @@ public class ParseGO {
 	public static void main(String[] args) {
 
 		OboParser parser = new OboParser();
-		try (InputStream inStream = OboParser.class.getResourceAsStream("/ontology/bio sapiens.obo");
+		try (InputStream inStream = OboParser.class.getResourceAsStream("/ontology/biosapiens.obo");
 				BufferedReader oboFile = new BufferedReader(new InputStreamReader(inStream))) {
 			Ontology ontology = parser.parseOBO(oboFile, "BioSapiens", "the BioSapiens ontology");
 			Set<Term> keys = ontology.getTerms();
