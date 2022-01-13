@@ -176,6 +176,7 @@
 					<configuration>
 						<source>${jdk.version}</source>
 						<target>${jdk.version}</target>
+						<fork>true</fork>
 					</configuration>
 				</plugin>
 				<plugin>
