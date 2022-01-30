@@ -23,11 +23,13 @@ package org.biojava.nbio.structure.symmetry.internal;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureTools;
+import org.biojava.nbio.structure.io.PDBFileParser;
 import org.biojava.nbio.structure.symmetry.internal.CeSymm;
 import org.junit.Test;
 
@@ -57,5 +59,16 @@ public class TestCeSymm {
 			assertTrue(result.isSignificant());
 			assertEquals(result.getNumRepeats(), orders[i]);
 		}
+	}
+
+	@Test
+	public void testAlphafold() throws IOException, StructureException {
+		PDBFileParser parser = new PDBFileParser();
+		InputStream inStream = this.getClass().getResourceAsStream("/AF-A0A0R4IYF1-F1-model_v2.pdb");
+		assertNotNull(inStream);
+		Structure s = parser.parsePDBFile(inStream);
+		Atom[] atoms = StructureTools.getRepresentativeAtomArray(s);
+		CeSymmResult result = CeSymm.analyze(atoms);
+		assertNotNull(result);
 	}
 }
