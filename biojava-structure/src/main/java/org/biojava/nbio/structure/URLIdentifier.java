@@ -122,7 +122,11 @@ public class URLIdentifier implements StructureIdentifier {
 			String path = url.getPath();
 			pdbId = guessPDBID(path.substring(path.lastIndexOf("/") + 1));
 		}
-		return new SubstructureIdentifier(new PdbId(pdbId), ranges);
+		PdbId pdbIdObj = null;
+		if (pdbId != null) {
+			pdbIdObj = new PdbId(pdbId);
+		}
+		return new SubstructureIdentifier(pdbIdObj, ranges);
 	}
 
 	@Override
