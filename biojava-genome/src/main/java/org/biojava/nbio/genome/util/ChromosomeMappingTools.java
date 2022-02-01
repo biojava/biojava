@@ -899,8 +899,8 @@ public class ChromosomeMappingTools {
 	public static List<Range<Integer>> getCDSRegions(List<Integer> origExonStarts, List<Integer> origExonEnds, int cdsStart, int cdsEnd) {
 
 		// remove exons that are fully landed in UTRs
-		List<Integer> exonStarts = new ArrayList<Integer>(origExonStarts);
-		List<Integer> exonEnds = new ArrayList<Integer>(origExonEnds);
+		List<Integer> exonStarts = new ArrayList<>(origExonStarts);
+		List<Integer> exonEnds = new ArrayList<>(origExonEnds);
 
 		int j=0;
 		for (int i = 0; i < origExonStarts.size(); i++) {
@@ -920,7 +920,7 @@ public class ChromosomeMappingTools {
 		exonEnds.remove(nExons-1);
 		exonEnds.add(cdsEnd);
 
-		List<Range<Integer>> cdsRegion = new ArrayList<Range<Integer>>();
+		List<Range<Integer>> cdsRegion = new ArrayList<>();
 		for ( int i=0; i<nExons; i++ ) {
 			Range<Integer> r = Range.closed(exonStarts.get(i), exonEnds.get(i));
 			cdsRegion.add(r);
@@ -956,17 +956,17 @@ public class ChromosomeMappingTools {
 
 		List<Range<Integer>> cdsRegion = getCDSRegions(exonStarts, exonEnds, cdsStart, cdsEnd);
 
-		String dnaSequence = "";
+		StringBuilder dnaSequence = new StringBuilder();
 		for (Range<Integer> range : cdsRegion) {
 			String exonSequence = twoBitFacade.getSequence(chromosome,range.lowerEndpoint(), range.upperEndpoint());
-			dnaSequence += exonSequence;
+			dnaSequence.append(exonSequence);
 		}
 		if (orientation.equals('-')) {
-			dnaSequence = new StringBuilder(dnaSequence).reverse().toString();
-			DNASequence dna = new DNASequence(dnaSequence);
+			dnaSequence = new StringBuilder(new StringBuilder(dnaSequence.toString()).reverse().toString());
+			DNASequence dna = new DNASequence(dnaSequence.toString());
 			SequenceView<NucleotideCompound> compliment = dna.getComplement();
-			dnaSequence = compliment.getSequenceAsString();
+			dnaSequence = new StringBuilder(compliment.getSequenceAsString());
 		}
-		return new DNASequence(dnaSequence.toUpperCase());
+		return new DNASequence(dnaSequence.toString().toUpperCase());
 	}
 }

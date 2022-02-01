@@ -22,7 +22,8 @@ package org.biojava.nbio.genome.parsers.twobit;
 
 import java.io.File;
 
-/** A facade that makes it easier to work with a 2bit file.
+/**
+ * A facade that makes it easier to work with a 2bit file.
  *
  * Created by yana on 3/27/17.
  */
@@ -49,7 +50,8 @@ public class TwoBitFacade {
 
 	}
 
-	/** Sets a chromosome for TwoBitParser.
+	/**
+	 * Sets a chromosome for TwoBitParser.
 	 *
 	 * @param chr The chromosome name (e.g. chr21)
 	 */
@@ -67,7 +69,8 @@ public class TwoBitFacade {
 		}
 	}
 
-	/** Extract a sequence from a chromosome, using chromosomal coordinates
+	/**
+	 * Extract a sequence from a chromosome, using chromosomal coordinates
 	 *
 	 * @param chromosomeName
 	 * @param start
