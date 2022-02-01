@@ -1,6 +1,11 @@
 BioJava Changelog
 -----------------
 
+BioJava 6.0.5
+==============================
+### Fixed
+* Null handling in a few places related to loading PDB, CIF, mmtf files (issue introduced in 6.0.0). #1019
+
 BioJava 6.0.4
 ==============================
 ### Fixed
