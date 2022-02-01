@@ -138,8 +138,10 @@ public class ScopDomain implements Serializable, Cloneable, StructureIdentifier 
 	 */
 	@Deprecated
 	public void setPdbId(String pdbId) {
-		if(pdbId == null) this.pdbId = null;
-		this.pdbId = new PdbId(pdbId);
+		if (pdbId == null)
+			this.pdbId = null;
+		else
+			this.pdbId = new PdbId(pdbId);
 	}
 
 	

@@ -167,7 +167,9 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 	@Override
 	public void initStructure(int totalNumBonds, int totalNumAtoms, int totalNumGroups,
 			int totalNumChains, int totalNumModels, String modelId) {
-		structure.setPdbId(new PdbId(modelId));
+		if (modelId != null) {
+			structure.setPdbId(new PdbId(modelId));
+		}
 		allAtoms = new Atom[totalNumAtoms];
 	}
 

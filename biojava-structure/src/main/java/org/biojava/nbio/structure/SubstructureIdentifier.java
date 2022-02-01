@@ -117,8 +117,8 @@ public class SubstructureIdentifier implements StructureIdentifier {
 	 * Create a new identifier based on a set of ranges.
 	 *
 	 * If ranges is empty, includes all residues.
-	 * @param pdbId
-	 * @param ranges
+	 * @param pdbId a pdb id, can't be null
+	 * @param ranges the ranges
 	 */
 	public SubstructureIdentifier(String pdbId, List<ResidueRange> ranges) {
 		this(new PdbId(pdbId), ranges);
