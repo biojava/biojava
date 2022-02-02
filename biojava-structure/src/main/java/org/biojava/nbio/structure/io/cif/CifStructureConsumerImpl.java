@@ -646,11 +646,11 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
             revRecords.add(new org.biojava.nbio.structure.DatabasePDBRevRecord(databasePDBrevRecord, i));
         }
     }
-    
+
     @Override
     public void consumeEm3dReconstruction(Em3dReconstruction em3dReconstruction) {
     	this.em3dReconstruction = em3dReconstruction;
-    	
+
         for (int rowIndex = 0; rowIndex < em3dReconstruction.getRowCount(); rowIndex++) { //can it have more than 1 value?
         	final FloatColumn resolution = em3dReconstruction.getResolution();
 			if (ValueKind.PRESENT.equals(resolution.getValueKind(rowIndex)))
@@ -896,12 +896,16 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
         if (struct.isDefined() && struct.getEntryId().isDefined()) {
             PdbId pdbId;
             String pdbCode = struct.getEntryId().get(0);
-			try {
-				pdbId = new PdbId(pdbCode);
-			} catch (IllegalArgumentException e) {
-				logger.info("Malformed (or null) PDB ID {}. setting PdbId to null", pdbCode);
-				pdbId = null;
-			}
+            if(pdbCode.isBlank()){
+                pdbId = null;
+            } else {
+                try {
+                    pdbId = new PdbId(pdbCode);
+                } catch (IllegalArgumentException e) {
+                    logger.warn("Malformed PDB ID {}. setting PdbId to null", pdbCode);
+                    pdbId = null;
+                }
+            }
             pdbHeader.setPdbId(pdbId);
             structure.setPdbId(pdbId);
         }
