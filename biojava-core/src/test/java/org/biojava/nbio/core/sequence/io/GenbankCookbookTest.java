@@ -20,6 +20,7 @@
  */
 package org.biojava.nbio.core.sequence.io;
 
+import nz.ac.wgtn.saflate.network.junit4.SanitiseNetworkDependenciesRule;
 import org.biojava.nbio.core.sequence.DNASequence;
 import org.biojava.nbio.core.sequence.ProteinSequence;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
@@ -39,7 +40,8 @@ import java.util.LinkedHashMap;
  * @author Scooter Willis <willishf at gmail dot com>
  */
 public class GenbankCookbookTest {
-
+	@Rule
+	public SanitiseNetworkDependenciesRule rule = new SanitiseNetworkDependenciesRule();
 	private final static Logger logger = LoggerFactory.getLogger(GenbankCookbookTest.class);
 
 	public GenbankCookbookTest() {

@@ -34,6 +34,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 
+import nz.ac.wgtn.saflate.network.junit4.SanitiseNetworkDependenciesRule;
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.EntityInfo;
 import org.biojava.nbio.structure.EntityType;
@@ -43,6 +44,7 @@ import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.cif.CifStructureConverter;
 import org.biojava.nbio.structure.xtal.CrystalCell;
+import org.junit.Rule;
 import org.junit.Test;
 
 /**
@@ -56,7 +58,8 @@ import org.junit.Test;
  *
  */
 public class TestNonDepositedFiles {
-
+	@Rule
+	public SanitiseNetworkDependenciesRule rule = new SanitiseNetworkDependenciesRule();
 	@Test
 	public void test1B8GnoSeqresPdb() throws IOException, StructureException {
 

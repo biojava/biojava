@@ -24,23 +24,22 @@ import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import nz.ac.wgtn.saflate.network.junit4.SanitiseNetworkDependenciesRule;
 import org.biojava.nbio.core.search.io.Hit;
 import org.biojava.nbio.core.search.io.Hsp;
 import org.biojava.nbio.core.search.io.Result;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
+
 import static org.junit.Assert.*;
-import org.junit.Ignore;
 
 /**
  *
  * @author Paolo Pavan
  */
 public class BlastXMLParserTest {
-
+	@Rule
+	public SanitiseNetworkDependenciesRule rule = new SanitiseNetworkDependenciesRule();
 	public BlastXMLParserTest() {
 	}
 

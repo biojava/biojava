@@ -470,6 +470,13 @@
 				<version>2.3.5</version>
 				<scope>runtime</scope>
 			</dependency>
+			<dependency>
+				<groupId>io.github.jensdietrich.saflate</groupId>
+				<artifactId>saflate-network-junit4</artifactId>
+				<version>1.0.0</version>
+				<scope>test</scope>
+			</dependency>
+
 		</dependencies>
 	</dependencyManagement>
 

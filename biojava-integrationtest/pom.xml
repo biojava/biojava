@@ -60,6 +60,12 @@
     		<groupId>org.apache.logging.log4j</groupId>
     		<artifactId>log4j-core</artifactId>
   		</dependency>
+        <dependency>
+            <groupId>io.github.jensdietrich.saflate</groupId>
+            <artifactId>saflate-network-junit4</artifactId>
+            <version>1.0.0</version>
+            <scope>test</scope>
+        </dependency>
   </dependencies>
   <description>A module which only has the purpose to run slow running integration tests.
 

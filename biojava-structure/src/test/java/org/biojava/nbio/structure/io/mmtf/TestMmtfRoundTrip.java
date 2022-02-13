@@ -29,6 +29,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
+import nz.ac.wgtn.saflate.network.junit4.SanitiseNetworkDependenciesRule;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Bond;
 import org.biojava.nbio.structure.Chain;
@@ -44,6 +45,7 @@ import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.cif.CifStructureConverter;
 import org.biojava.nbio.structure.quaternary.BioAssemblyInfo;
 import org.biojava.nbio.structure.quaternary.BiologicalAssemblyTransformation;
+import org.junit.Rule;
 import org.junit.Test;
 import org.rcsb.mmtf.decoder.StructureDataToAdapter;
 import org.rcsb.mmtf.encoder.AdapterToStructureData;
@@ -57,8 +59,8 @@ import static org.junit.Assert.*;
  *
  */
 public class TestMmtfRoundTrip {
-
-	/**
+	@Rule
+	public SanitiseNetworkDependenciesRule rule = new SanitiseNetworkDependenciesRule();	/**
 	 * Test that we can round trip a simple structure.
 	 *
 	 * @throws IOException an error reading the file

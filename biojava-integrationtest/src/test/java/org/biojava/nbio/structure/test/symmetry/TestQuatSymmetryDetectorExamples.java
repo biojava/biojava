@@ -25,6 +25,7 @@ import static org.junit.Assert.*;
 import java.io.IOException;
 import java.util.*;
 
+import nz.ac.wgtn.saflate.network.junit4.SanitiseNetworkDependenciesRule;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.io.StructureFiletype;
@@ -42,6 +43,7 @@ import org.biojava.nbio.structure.symmetry.core.QuatSymmetryParameters;
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetryResults;
 import org.biojava.nbio.structure.symmetry.core.Stoichiometry;
 import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,7 +57,8 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class TestQuatSymmetryDetectorExamples {
-
+	@Rule
+	public SanitiseNetworkDependenciesRule rule = new SanitiseNetworkDependenciesRule();
 	private static final Logger logger = LoggerFactory.getLogger(TestQuatSymmetryDetectorExamples.class);
 
 	/**

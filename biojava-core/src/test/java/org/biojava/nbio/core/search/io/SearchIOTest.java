@@ -22,12 +22,11 @@ package org.biojava.nbio.core.search.io;
 
 import java.io.File;
 import java.net.URL;
+
+import nz.ac.wgtn.saflate.network.junit4.SanitiseNetworkDependenciesRule;
 import org.biojava.nbio.core.search.io.blast.BlastXMLParser;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
+
 import static org.junit.Assert.*;
 
 /**
@@ -40,7 +39,8 @@ import static org.junit.Assert.*;
  */
 
 public class SearchIOTest {
-
+	@Rule
+	public SanitiseNetworkDependenciesRule rule = new SanitiseNetworkDependenciesRule();
 	public SearchIOTest() {
 	}
 
