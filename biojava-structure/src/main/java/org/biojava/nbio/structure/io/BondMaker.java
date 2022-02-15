@@ -296,15 +296,15 @@ public class BondMaker {
 			// The PDB format uses author chain ids to reference chains. But one author chain id corresponds to multiple asym ids,
 			// thus we need to grab all the possible asym ids (poly and nonpoly) and then try to find the atoms
 			// See issue https://github.com/biojava/biojava/issues/929
-			String polyChainId1 = structure.getPolyChainByPDB(disulfideBond.getChainID1()).getId();
-			String polyChainId2 = structure.getPolyChainByPDB(disulfideBond.getChainID2()).getId();
+			Chain polyChain1 = structure.getPolyChainByPDB(disulfideBond.getChainID1());
+			Chain polyChain2 = structure.getPolyChainByPDB(disulfideBond.getChainID2());
 			List<Chain> nonpolyChains1 = structure.getNonPolyChainsByPDB(disulfideBond.getChainID1());
 			List<Chain> nonpolyChains2 = structure.getNonPolyChainsByPDB(disulfideBond.getChainID2());
 
 			List<String> allChainIds1 = new ArrayList<>();
 			List<String> allChainIds2 = new ArrayList<>();
-			if (polyChainId1!=null) allChainIds1.add(polyChainId1);
-			if (polyChainId2!=null) allChainIds2.add(polyChainId2);
+			if (polyChain1!=null) allChainIds1.add(polyChain1.getId());
+			if (polyChain2!=null) allChainIds2.add(polyChain2.getId());
 			if (nonpolyChains1!=null) nonpolyChains1.forEach(npc -> allChainIds1.add(npc.getId()));
 			if (nonpolyChains2!=null) nonpolyChains2.forEach(npc -> allChainIds2.add(npc.getId()));
 
@@ -348,8 +348,8 @@ public class BondMaker {
 			// The PDB format uses author chain ids to reference chains. But one author chain id corresponds to multiple asym ids,
 			// thus we need to grab all the possible asym ids (poly and nonpoly) and then try to find the atoms
 			// See issue https://github.com/biojava/biojava/issues/943
-			String polyChainId1 = structure.getPolyChainByPDB(linkRecord.getChainID1()).getId();
-			String polyChainId2 = structure.getPolyChainByPDB(linkRecord.getChainID2()).getId();
+			Chain polyChain1 = structure.getPolyChainByPDB(linkRecord.getChainID1());
+			Chain polyChain2 = structure.getPolyChainByPDB(linkRecord.getChainID2());
 			List<Chain> nonpolyChains1 = structure.getNonPolyChainsByPDB(linkRecord.getChainID1());
 			List<Chain> nonpolyChains2 = structure.getNonPolyChainsByPDB(linkRecord.getChainID2());
 			Chain waterChain1 = structure.getWaterChainByPDB(linkRecord.getChainID1());
@@ -357,8 +357,8 @@ public class BondMaker {
 
 			List<String> allChainIds1 = new ArrayList<>();
 			List<String> allChainIds2 = new ArrayList<>();
-			if (polyChainId1!=null) allChainIds1.add(polyChainId1);
-			if (polyChainId2!=null) allChainIds2.add(polyChainId2);
+			if (polyChain1!=null) allChainIds1.add(polyChain1.getId());
+			if (polyChain2!=null) allChainIds2.add(polyChain2.getId());
 			if (nonpolyChains1!=null) nonpolyChains1.forEach(npc -> allChainIds1.add(npc.getId()));
 			if (nonpolyChains2!=null) nonpolyChains2.forEach(npc -> allChainIds2.add(npc.getId()));
 			if (waterChain1!=null && linkRecord.getResName1().equals("HOH")) allChainIds1.add(waterChain1.getId());
