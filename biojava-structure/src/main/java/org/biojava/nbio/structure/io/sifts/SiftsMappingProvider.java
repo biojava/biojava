@@ -87,9 +87,14 @@ public class SiftsMappingProvider {
 		if ( ! dest.exists()){
 			String u = String.format(fileLoc,pdbId);
 			URL url = new URL(u);
+			logger.debug("Downloading SIFTS file {} validation metadata.",url);
+			FileDownloadUtils.createValidationFiles(url, dest, null);
 			logger.debug("Downloading SIFTS file {} to {}",url,dest);
 			FileDownloadUtils.downloadFile(url, dest);
 		}
+
+		if(! FileDownloadUtils.validateFile(dest))
+			throw new IOException("Downloaded file invalid: "+dest);
 
 		InputStreamProvider prov = new InputStreamProvider();
 		InputStream is = prov.getInputStream(dest);

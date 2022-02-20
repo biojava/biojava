@@ -23,9 +23,11 @@ package org.biojava.nbio.core.util;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintStream;
 import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URL;
@@ -39,6 +41,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Scanner;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -160,6 +163,64 @@ public class FileDownloadUtils {
 		// delete the tmp file
 		tempFile.delete();
 
+	}
+	
+	public static void createValidationFiles(URL url, File localDestination, URL hashURL){
+		try {
+			URLConnection resourceConnection = url.openConnection();
+			createValidationFiles(resourceConnection, localDestination, hashURL);
+		} catch (IOException e) {
+			logger.warn("could not open connection to resource file due to exception", e);
+		}
+	}
+	public static void createValidationFiles(URLConnection resourceUrlConnection, File localDestination, URL hashURL){
+		long size = resourceUrlConnection.getContentLengthLong();
+		if(size != -1) {
+			System.out.println("Content-Length: " + size);
+			File sizeFile = new File(localDestination.getParentFile(), localDestination.getName()+".size");
+			try (PrintStream sizePrintStream = new PrintStream(sizeFile)) {
+				sizePrintStream.print(size);
+				sizePrintStream.close();
+			} catch (FileNotFoundException e) {
+				logger.warn("could not write validation size file due to exception", e);
+			}
+		}
+		
+		if(hashURL == null)
+			return;
+
+		try {
+			File hashFile = new File(localDestination.getParentFile(), localDestination.getName()+".hash");
+			downloadFile(hashURL, hashFile);
+		} catch (IOException e) {
+			logger.warn("could not write validation hash file due to exception", e);
+		}
+	}
+	
+	public static boolean validateFile(File localFile) {
+		File sizeFile = new File(localFile.getParentFile(), localFile.getName()+".size");
+		if(sizeFile.exists()) {
+			Scanner scanner = null;
+			try {
+				scanner = new Scanner(sizeFile);
+				long expectedSize = scanner.nextLong();
+				if (expectedSize != localFile.length()) {
+					logger.warn("File size does not match expected");
+					return false;
+				}
+			} catch (FileNotFoundException e) {
+				logger.warn("could not validate size of file ["+ localFile+ "] due to exception", e);
+			} finally {
+				scanner.close();
+			}
+		}
+
+		File hashFile = new File(localFile.getParentFile(), localFile.getName()+".hash");
+		if(hashFile.exists()) {
+			throw new UnsupportedOperationException("Not yet implemented");
+		}
+		
+		return true;
 	}
 
 	/**

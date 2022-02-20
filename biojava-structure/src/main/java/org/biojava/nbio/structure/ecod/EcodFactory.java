@@ -89,6 +89,9 @@ public class EcodFactory {
 					}
 				} catch (IOException e) {
 					// For parsing errors, just use the requested version
+					// What about corrupted downloading errors?? Amr
+					logger.warn("Cound not get Ecod version, or file is corrupted", e);
+					return null;
 				}
 			}
 			logger.trace("Releasing EcodFactory lock after getting version "+version);

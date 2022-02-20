@@ -373,6 +373,9 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 			throw new IOException("Structure "+pdbId+" not found and unable to download.");
 		}
 
+		if(! FileDownloadUtils.validateFile(file))
+			throw new IOException("Downloaded file invalid: "+file);
+		
 		InputStreamProvider isp = new InputStreamProvider();
 
 		InputStream inputStream = isp.getInputStream(file);
@@ -395,6 +398,8 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 		if(!file.exists()) {
 			throw new IOException("Structure "+pdbId+" not found and unable to download.");
 		}
+		if(! FileDownloadUtils.validateFile(file))
+			throw new IOException("Downloaded file invalid: "+file);
 	}
 
 	/**
@@ -576,7 +581,10 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 		logger.info("Fetching " + ftp);
 		logger.info("Writing to "+ realFile);
 
+		FileDownloadUtils.createValidationFiles(url, realFile, null);
 		FileDownloadUtils.downloadFile(url, realFile);
+		if(! FileDownloadUtils.validateFile(realFile))
+			throw new IOException("Downloaded file invalid: "+realFile);
 
 		return realFile;
 	}

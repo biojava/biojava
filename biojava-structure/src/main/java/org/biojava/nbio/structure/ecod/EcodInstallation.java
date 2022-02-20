@@ -369,7 +369,7 @@ public class EcodInstallation implements EcodDatabase {
 		try {
 			File f = getDomainFile();
 
-			if (!f.exists() || f.length() <= 0 )
+			if (! (f.exists() && FileDownloadUtils.validateFile(f)))
 				return false;
 
 			// Re-download old copies of "latest"
@@ -406,7 +406,10 @@ public class EcodInstallation implements EcodDatabase {
 			File localFile = getDomainFile();
 
 			logger.info("Downloading {} to: {}",domainsURL, localFile);
+			FileDownloadUtils.createValidationFiles(domainsURL, localFile, null);
 			FileDownloadUtils.downloadFile(domainsURL, localFile);
+			if(! FileDownloadUtils.validateFile(localFile))
+				throw new IOException("Downloaded file invalid: "+ localFile);
 		} catch (MalformedURLException e) {
 			logger.error("Malformed url: "+ url + DOMAINS_PATH + getDomainFilename(),e);
 		} finally {

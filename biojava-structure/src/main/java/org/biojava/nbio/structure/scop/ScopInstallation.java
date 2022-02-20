@@ -741,7 +741,10 @@ public class ScopInstallation implements LocalScopDatabase {
 
 	protected void downloadFileFromRemote(URL remoteURL, File localFile) throws IOException{
 		logger.info("Downloading " + remoteURL + " to: " + localFile);
+		FileDownloadUtils.createValidationFiles(remoteURL, localFile, null);
 		FileDownloadUtils.downloadFile(remoteURL, localFile);
+		if(! FileDownloadUtils.validateFile(localFile))
+			throw new IOException("Downloaded file invalid: "+localFile);
 	}
 
 	private boolean claFileAvailable(){
@@ -749,14 +752,14 @@ public class ScopInstallation implements LocalScopDatabase {
 
 		File f = new File(fileName);
 
-		return f.exists() && f.length()>0;
+		return f.exists() && FileDownloadUtils.validateFile(f);
 	}
 
 	private boolean desFileAvailable(){
 		String fileName = getDesFilename();
 
 		File f = new File(fileName);
-		return f.exists() && f.length()>0;
+		return f.exists() && FileDownloadUtils.validateFile(f);
 	}
 
 	private boolean hieFileAvailable(){
@@ -764,7 +767,7 @@ public class ScopInstallation implements LocalScopDatabase {
 
 		File f = new File(fileName);
 
-		return f.exists() && f.length()>0;
+		return f.exists() && FileDownloadUtils.validateFile(f);
 	}
 
 	private boolean comFileAvailable(){
@@ -772,7 +775,7 @@ public class ScopInstallation implements LocalScopDatabase {
 
 		File f = new File(fileName);
 
-		return f.exists() && f.length()>0;
+		return f.exists() && FileDownloadUtils.validateFile(f);
 	}
 
 	protected String getClaFilename(){
