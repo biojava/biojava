@@ -395,8 +395,8 @@ public class EcodInstallation implements EcodDatabase {
 	}
 
 	/**
-	 * Downloads the domains file, overwriting any existing file
-	 * @throws IOException
+	 * Downloads the domains file +/- its validation metadata, overwriting any existing file
+	 * @throws IOException in cases of file I/O, including failure to download a healthy (non-corrupted) file.
 	 */
 	private void downloadDomains() throws IOException {
 		domainsFileLock.writeLock().lock();

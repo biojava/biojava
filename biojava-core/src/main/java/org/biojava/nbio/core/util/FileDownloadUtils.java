@@ -165,6 +165,17 @@ public class FileDownloadUtils {
 
 	}
 	
+	/**
+	 * Creates validation files beside a file to be downloaded.<br>
+	 * Whenever possible, for a <code>file.ext</code> file, it creates 
+	 * <code>file.ext.size</code> and <code>file.hash</code> for in the same 
+	 * folder where <code>file.ext</code> exists.
+	 * If the file connection size could not be deduced from the URL, no size file is created. 
+	 * If <code>hashURL</code> is <code>null</code>, no hash file is created.
+	 * @param url the remote file URL to download
+	 * @param localDestination the local file to download into
+	 * @param hashURL the URL of the hash file to download. Can be <code>null</code>.
+	 */
 	public static void createValidationFiles(URL url, File localDestination, URL hashURL){
 		try {
 			URLConnection resourceConnection = url.openConnection();
@@ -173,6 +184,19 @@ public class FileDownloadUtils {
 			logger.warn("could not open connection to resource file due to exception", e);
 		}
 	}
+	/**
+	 * Creates validation files beside a file to be downloaded.<br>
+	 * Whenever possible, for a <code>file.ext</code> file, it creates 
+	 * <code>file.ext.size</code> and <code>file.hash</code> for in the same 
+	 * folder where <code>file.ext</code> exists.
+	 * If the file connection size could not be deduced from the resourceUrlConnection 
+	 * {@link URLConnection}, no size file is created. 
+	 * If <code>hashURL</code> is <code>null</code>, no hash file is created.
+	 * @param resourceUrlConnection the remote file URLConnection to download
+	 * @param localDestination the local file to download into
+	 * @param hashURL the URL of the hash file to download. Can be <code>null</code>.
+	 * @since 6.0.6
+	 */
 	public static void createValidationFiles(URLConnection resourceUrlConnection, File localDestination, URL hashURL){
 		long size = resourceUrlConnection.getContentLengthLong();
 		if(size != -1) {
@@ -197,6 +221,20 @@ public class FileDownloadUtils {
 		}
 	}
 	
+	/**
+	 * Validate a local file based on pre-existing metadata files for size and hash.<br>
+	 * If the passed in <code>localFile</code> parameter is a file named <code>file.ext</code>, the function searches in the same folder for:
+	 * <ul>
+	 * <li><code>file.ext.size</code>: if found, it compares the size stored in it to the length of <code>localFile</code> (in bytes).</li>
+	 * <li><code>file.ext.hash</code>: if found, it compares the size stored in it to the hash code of <code>localFile</code>.</li>
+	 * </ul>
+	 * If any of these comparisons fail, the function returns <code>false</code>. otherwise it returns true.
+	 * <p>
+	 * This function does not implement hash code verification yet.
+	 * @param localFile The file to validate
+	 * @return <code>false</code> if any of the size or hash code metadata files exists but its contents does not match the expected value in the file, <code>true'</code> otherwise.
+	 * @since 6.0.6
+	 */
 	public static boolean validateFile(File localFile) {
 		File sizeFile = new File(localFile.getParentFile(), localFile.getName()+".size");
 		if(sizeFile.exists()) {

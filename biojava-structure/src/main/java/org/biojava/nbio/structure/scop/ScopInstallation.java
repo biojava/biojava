@@ -739,6 +739,12 @@ public class ScopInstallation implements LocalScopDatabase {
 		throw new IOException("Unable to download SCOP .com file",exception);
 	}
 
+	/**
+	 * Downloads the SCOP installation file +/- its validation metadata files.
+	 * @param remoteURL The remote file to download
+	 * @param localFile the local file to download to
+	 * @throws IOException in cases of file I/O, including failure to download a healthy (non-corrupted) file.
+	 */
 	protected void downloadFileFromRemote(URL remoteURL, File localFile) throws IOException{
 		logger.info("Downloading " + remoteURL + " to: " + localFile);
 		FileDownloadUtils.createValidationFiles(remoteURL, localFile, null);
