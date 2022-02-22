@@ -199,14 +199,16 @@ public class FileDownloadUtils {
 	 */
 	public static void createValidationFiles(URLConnection resourceUrlConnection, File localDestination, URL hashURL){
 		long size = resourceUrlConnection.getContentLengthLong();
-		if(size != -1) {
+		if(size == -1) {
+			logger.warn("could not find expected file size for resource {}.", resourceUrlConnection.getURL());
+		} else {
 			System.out.println("Content-Length: " + size);
 			File sizeFile = new File(localDestination.getParentFile(), localDestination.getName()+".size");
 			try (PrintStream sizePrintStream = new PrintStream(sizeFile)) {
 				sizePrintStream.print(size);
 				sizePrintStream.close();
 			} catch (FileNotFoundException e) {
-				logger.warn("could not write validation size file due to exception", e);
+				logger.warn("could not write size validation file due to exception", e);
 			}
 		}
 		
