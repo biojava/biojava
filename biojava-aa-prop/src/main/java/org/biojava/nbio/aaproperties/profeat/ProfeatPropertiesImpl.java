@@ -36,38 +36,43 @@ public class ProfeatPropertiesImpl implements IProfeatProperties{
 	}
 
 	private int getTotalCount(String convertedSeq, GROUPING group) throws Exception{
-		char g;
-		switch(group){
-		case GROUP1: g = Convertor.group1; break;
-		case GROUP2: g = Convertor.group2; break;
-		case GROUP3: g = Convertor.group3; break;
-		default: throw new Exception("Unhandled Case: " + group);
-		}
+		char g = getGroup(group);
 		int total = 0;
 		total = (int)convertedSeq.chars().filter(c ->(char) c == g) .count();
 		return total;
+	}
+
+	private char getGroup(GROUPING group) {
+		char g;
+		switch(group){
+			case GROUP1: g = Convertor.group1; break;
+			case GROUP2: g = Convertor.group2; break;
+			case GROUP3: g = Convertor.group3; break;
+			default: throw new UnsupportedOperationException("Unhandled Case: " + group);
+		}
+		return g;
 	}
 
 	@Override
 	public double getTransition(ProteinSequence sequence, ATTRIBUTE attribute, TRANSITION transition) throws Exception{
 		Convertor convertor = getConvertor(attribute);
 		String convertedSequence = convertor.convert(sequence);
-		char t1;
-		char t2;
+		char transition1;
+		char transition2;
 		switch(transition){
-		case BETWEEN_11: t1 = '1'; t2 = '1'; break;
-		case BETWEEN_22: t1 = '2'; t2 = '2'; break;
-		case BETWEEN_33: t1 = '3'; t2 = '3'; break;
-		case BETWEEN_12: t1 = '1'; t2 = '2'; break;
-		case BETWEEN_13: t1 = '1'; t2 = '3'; break;
-		case BETWEEN_23: t1 = '2'; t2 = '3'; break;
+		case BETWEEN_11: transition1 = '1'; transition2 = '1'; break;
+		case BETWEEN_22: transition1 = '2'; transition2 = '2'; break;
+		case BETWEEN_33: transition1 = '3'; transition2 = '3'; break;
+		case BETWEEN_12: transition1 = '1'; transition2 = '2'; break;
+		case BETWEEN_13: transition1 = '1'; transition2 = '3'; break;
+		case BETWEEN_23: transition1 = '2'; transition2 = '3'; break;
 		default: throw new Exception("Unhandled Case: " + transition);
 		}
 		int total = 0;
 		for(int i = 0; i < convertedSequence.length() - 1; i++){
-			char s1 = convertedSequence.charAt(i);
-			char s2 = convertedSequence.charAt(i + 1);
-			if((t1 == s1 && t2 == s2) || (t2 == s1 && t1 == s2)) total++;
+			char firstSequence = convertedSequence.charAt(i);
+			char secondSequence = convertedSequence.charAt(i + 1);
+			if((transition1 == firstSequence && transition2 == secondSequence) || (transition2 == firstSequence && transition1 == secondSequence)) total++;
 		}
 		return total / (convertedSequence.length() - 1.0);
 	}
@@ -88,13 +93,7 @@ public class ProfeatPropertiesImpl implements IProfeatProperties{
 		default: throw new Exception("Unhandled Case: " + distribution);
 		}
 
-		char g;
-		switch(group){
-		case GROUP1: g = Convertor.group1; break;
-		case GROUP2: g = Convertor.group2; break;
-		case GROUP3: g = Convertor.group3; break;
-		default: throw new Exception("Unhandled Case: " + group);
-		}
+		char g = getGroup(group);
 
 		int currentCount = 0;
 		int dist = 0;
