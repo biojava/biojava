@@ -22,6 +22,7 @@ package org.biojava.nbio.genome.parsers.gff;
 
 import org.biojava.nbio.genome.GeneFeatureHelper;
 import org.biojava.nbio.core.sequence.*;
+import org.biojava.nbio.genome.GeneGFF2FeatureHelper;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -142,7 +143,7 @@ public class GFF3Writer {
 
 		if (true) {
 			FileOutputStream fo = new FileOutputStream("/Users/Scooter/scripps/dyadic/geneid/geneid/c1-geneid.gff3");//-16
-			LinkedHashMap<String, ChromosomeSequence> dnaSequenceList = GeneFeatureHelper.loadFastaAddGeneFeaturesFromGeneIDGFF2(new File("/Users/Scooter/scripps/dyadic/analysis/454Scaffolds/454Scaffolds.fna"), new File("/Users/Scooter/scripps/dyadic/geneid/geneid/c1_geneid.gff"));
+			LinkedHashMap<String, ChromosomeSequence> dnaSequenceList = GeneGFF2FeatureHelper.loadFastaAddGeneFeaturesFromGeneIDGFF2(new File("/Users/Scooter/scripps/dyadic/analysis/454Scaffolds/454Scaffolds.fna"), new File("/Users/Scooter/scripps/dyadic/geneid/geneid/c1_geneid.gff"));
 			GFF3Writer gff3Writer = new GFF3Writer();
 			gff3Writer.write(fo, dnaSequenceList);
 

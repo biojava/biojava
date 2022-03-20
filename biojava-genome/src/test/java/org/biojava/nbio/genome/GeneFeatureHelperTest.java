@@ -97,7 +97,7 @@ public class GeneFeatureHelperTest {
 		File fastaSequenceFile = new File("src/test/resources/volvox_all.fna");
 		File gffFile = File.createTempFile("volvox_length", "gff3");
 		gffFile.deleteOnExit();
-		GeneFeatureHelper.outputFastaSequenceLengthGFF3(fastaSequenceFile, gffFile);
+		GeneGFF3FeatureHelper.outputFastaSequenceLengthGFF3(fastaSequenceFile, gffFile);
 		FileAssert.assertEquals("volvox_length.gff3 and volvox_length_output.gff3 are not equal", gffFile,
 				new File("src/test/resources/volvox_length_reference.gff3"));
 
@@ -111,7 +111,7 @@ public class GeneFeatureHelperTest {
 
 	@Test
 	public void testAddGFF3Note() throws Exception {
-		LinkedHashMap<String, ChromosomeSequence> chromosomeSequenceList = GeneFeatureHelper
+		LinkedHashMap<String, ChromosomeSequence> chromosomeSequenceList = GeneGFF3FeatureHelper
 				.loadFastaAddGeneFeaturesFromGmodGFF3(new File("src/test/resources/volvox_all.fna"), new File(
 						"src/test/resources/volvox.gff3"), false);
 		ChromosomeSequence ctgASequence = chromosomeSequenceList.get("ctgA");
@@ -127,7 +127,7 @@ public class GeneFeatureHelperTest {
 	 */
 	@Test
 	public void testGetProteinSequences() throws Exception {
-		LinkedHashMap<String, ChromosomeSequence> chromosomeSequenceList = GeneFeatureHelper
+		LinkedHashMap<String, ChromosomeSequence> chromosomeSequenceList = GeneGFF3FeatureHelper
 				.loadFastaAddGeneFeaturesFromGmodGFF3(new File("src/test/resources/volvox_all.fna"), new File(
 						"src/test/resources/volvox.gff3"), false);
 		LinkedHashMap<String, ProteinSequence> proteinSequenceList = GeneFeatureHelper
@@ -148,7 +148,7 @@ public class GeneFeatureHelperTest {
 	@Test
 	public void testGetGeneSequences() throws Exception {
 		// logger.info("getGeneSequences");
-		LinkedHashMap<String, ChromosomeSequence> chromosomeSequenceList = GeneFeatureHelper
+		LinkedHashMap<String, ChromosomeSequence> chromosomeSequenceList = GeneGFF3FeatureHelper
 				.loadFastaAddGeneFeaturesFromGmodGFF3(new File("src/test/resources/volvox_all.fna"), new File(
 						"src/test/resources/volvox.gff3"), true);
 		LinkedHashMap<String, GeneSequence> geneSequenceHashMap = GeneFeatureHelper
