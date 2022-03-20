@@ -33,7 +33,7 @@ public class GetDistanceMatrix {
 	public  PDPDistanceMatrix getDistanceMatrix(Atom[] protein) throws StructureException{
 		int[][] dist = new int[protein.length+3][protein.length+3];
 		int i,j;
-		double d,dt1,dt2,dt3,dt4;
+		double dt1,dt2,dt3,dt4;
 		int nclose=0;
 		int[] iclose = new int[protein.length*protein.length];
 		int[] jclose= new int[protein.length*protein.length];
@@ -47,8 +47,6 @@ public class GetDistanceMatrix {
 				dist[i][j]=0;
 				dist[j][i]=0;
 
-				d=0;
-
 				Atom ca1 = protein[i];
 				Atom ca2 = protein[j];
 				Group g1 = ca1.getGroup();
@@ -56,32 +54,14 @@ public class GetDistanceMatrix {
 
 				Atom cb1 = getCBeta(g1);
 				Atom cb2 = getCBeta(g2);
-				boolean hasCbeta1 = cb1 != null;
-				boolean hasCbeta2 = cb2 != null;
+
 
 				dt1=81;
 				dt2=64;
 				dt3=49;
 				dt4=36;
 
-				if(hasCbeta1 && hasCbeta2) {
-					double distance = Calc.getDistance(cb1,cb2);
-					d+= distance*distance;
-				}
-				else if(hasCbeta1 && ! hasCbeta2) {
-					double distance = 999;
-
-					distance = Calc.getDistance(cb1, ca2);
-					d += distance * distance;
-				}
-				else if(!hasCbeta1&&hasCbeta2) {
-					double distance = Calc.getDistance(ca1, cb2);
-					d += distance * distance;
-				}
-				else if( ! hasCbeta1&&!hasCbeta2) {
-					double distance = Calc.getDistance(ca1, ca2);
-					d += distance * distance;
-				}
+				double d = getDistance( cb1, cb2, ca1, ca2);
 
 				if(d<dt1) {
 					dist[i][j]=1;
@@ -154,6 +134,30 @@ public class GetDistanceMatrix {
 
 	}
 
+	private double getDistance(Atom cb1, Atom cb2, Atom ca1, Atom ca2) {
+		boolean hasCbeta1 = cb1 != null;
+		boolean hasCbeta2 = cb2 != null;
+		double d = 0;
+		if(hasCbeta1 && hasCbeta2) {
+			double distance = Calc.getDistance(cb1,cb2);
+			d+= distance*distance;
+		}
+		else if(hasCbeta1) {
+			double distance = 999;
+
+			distance = Calc.getDistance(cb1, ca2);
+			d += distance * distance;
+		}
+		else if(hasCbeta2) {
+			double distance = Calc.getDistance(ca1, cb2);
+			d += distance * distance;
+		}
+		else if(! hasCbeta1) {
+			double distance = Calc.getDistance(ca1, ca2);
+			d += distance * distance;
+		}
+		return d;
+	}
 
 
 	private Atom getCBeta(Group g1) {
