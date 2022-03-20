@@ -28,7 +28,7 @@ package org.biojava.nbio.core.sequence;
  * Used to map the stop codon sequence on a gene
  * @author Scooter Willis
  */
-public class StopCodonSequence extends DNASequence {
+public class StopCodonSequence extends GenomeSequence {
 
 public DNASequence parentGeneSequence = null;
 
@@ -40,8 +40,4 @@ public DNASequence parentGeneSequence = null;
 	}
 
 
-		@Override
-	public int getLength() {
-		return Math.abs(this.getBioEnd() - this.getBioBegin()) + 1;
-	}
 }

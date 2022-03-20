@@ -30,7 +30,7 @@ package org.biojava.nbio.core.sequence;
  *
  * @author Scooter Willis
  */
-public class IntronSequence extends DNASequence{
+public class IntronSequence extends GenomeSequence {
 
 
 	/**
@@ -47,9 +47,5 @@ public class IntronSequence extends DNASequence{
 
 	}
 
-		@Override
-	public int getLength() {
-		return Math.abs(this.getBioEnd() - this.getBioBegin()) + 1;
-	}
 
 }

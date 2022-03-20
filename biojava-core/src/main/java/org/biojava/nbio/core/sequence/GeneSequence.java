@@ -37,7 +37,7 @@ import java.util.LinkedHashMap;
  *
  * @author Scooter Willis
  */
-public class GeneSequence extends DNASequence {
+public class GeneSequence extends GenomeSequence {
 
 	private final static Logger logger = LoggerFactory.getLogger(GeneSequence.class);
 
@@ -100,11 +100,6 @@ public class GeneSequence extends DNASequence {
 	 */
 	public ChromosomeSequence getParentChromosomeSequence() {
 		return chromosomeSequence;
-	}
-
-	@Override
-	public int getLength() {
-		return Math.abs(this.getBioEnd() - this.getBioBegin()) + 1;
 	}
 
 	/**
