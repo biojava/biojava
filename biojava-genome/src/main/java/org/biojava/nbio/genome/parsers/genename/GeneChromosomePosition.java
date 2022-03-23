@@ -23,6 +23,8 @@
 
 package org.biojava.nbio.genome.parsers.genename;
 
+import org.biojava.nbio.genome.util.ChromosomeMappingTools;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -150,6 +152,27 @@ public class GeneChromosomePosition implements Comparable<GeneChromosomePosition
 		this.exonEnds = exonEnds;
 	}
 
+	/**
+	 * Get the length of the CDS in nucleotides.
+	 *
+	 * @param chromPos
+	 * @return length of the CDS in nucleotides.
+	 */
+	public static int getCDSLength(GeneChromosomePosition chromPos) {
+
+		List<Integer> exonStarts = chromPos.getExonStarts();
+		List<Integer> exonEnds = chromPos.getExonEnds();
+
+		int cdsStart = chromPos.getCdsStart();
+		int cdsEnd = chromPos.getCdsEnd();
+
+		int codingLength;
+		if (chromPos.getOrientation().equals('+'))
+			codingLength = ChromosomeMappingTools.getCDSLengthForward(exonStarts, exonEnds, cdsStart, cdsEnd);
+		else
+			codingLength = ChromosomeMappingTools.getCDSLengthReverse(exonStarts, exonEnds, cdsStart, cdsEnd);
+		return codingLength;
+	}
 
 	@Override
 	public int compareTo(GeneChromosomePosition o) {
