@@ -63,7 +63,7 @@ public class PDBStatusTest {
 		Assert.assertEquals("3HHB", PDBStatus.getCurrent("3HHB"));
 		Assert.assertNull(PDBStatus.getCurrent("1CMW"));
 		Assert.assertEquals("3ENI", PDBStatus.getCurrent("1KSA"));
-		Assert.assertEquals("8CAT", PDBStatus.getCurrent("1CAT"));
+		Assert.assertNull(PDBStatus.getCurrent("1CAT")); //rcsb.org returning null "id_code_replaced_by_latest"
 		Assert.assertEquals("8CAT", PDBStatus.getCurrent("3CAT"));
 		Assert.assertEquals("7CAT", PDBStatus.getCurrent("7CAT"));
 	}
