@@ -125,7 +125,7 @@ public class GenericInsdcHeaderFormat<S extends AbstractSequence<C>, C extends C
 		//Now the qualifiers...
 		for(List<Qualifier>  qualifiers : feature.getQualifiers().values()) {
 			for(Qualifier q : qualifiers){
-				line += _write_feature_qualifier(q.getName(), q.getValue(), q.needsQuotes());
+				line += _write_feature_qualifier(q.getName().replaceAll("%", "%%"), q.getValue().replaceAll("%", "%%"), q.needsQuotes());
 			}
 		}
 		return line;
