@@ -165,4 +165,16 @@ public class TestDNAAlignment {
 		PairwiseSequenceAligner<DNASequence, NucleotideCompound> aligner = Alignments.getPairwiseAligner(query, target, PairwiseSequenceAlignerType.GLOBAL, gapP, matrix);
 		Assert.assertEquals(String.format("GTAAAA-G----------%nG-AAAACGTTTTTTTTTT%n"), aligner.getPair().toString());;
 	}
+	/**
+	* @author aegugup
+	*/
+	@Test
+	public void testLinearAlignmentLocal() throws CompoundNotFoundException {
+		DNASequence query = new DNASequence("TGTTACGG", DNACompoundSet.getDNACompoundSet());
+		DNASequence target = new DNASequence("GGTTGACTA", DNACompoundSet.getDNACompoundSet());
+		SubstitutionMatrix<NucleotideCompound> matrix = SubstitutionMatrixHelper.getNuc4_4();
+		SimpleGapPenalty gapP = new SimpleGapPenalty((short)0, (short)8);
+		PairwiseSequenceAligner<DNASequence, NucleotideCompound> aligner = Alignments.getPairwiseAligner(query, target, PairwiseSequenceAlignerType.LOCAL, gapP, matrix);
+		Assert.assertEquals(String.format("GTT-AC%nGTTGAC%n"), aligner.getPair().toString());;
+	}
 }
