@@ -581,7 +581,7 @@ public class AlignerHelper {
 		if (x == xb) {
 			pointers = new Last[ye + 1][1];
 		} else {
-			pointers = new Last[ye + 1][];
+			pointers = new Last[ye + 1][1];
 			pointers[0] = new Last[1];
 			for (int y = 1; y < scores[x].length; y++) {
 				pointers[y][0] = setScorePoint(x, y, gep, subs[y], scores);
