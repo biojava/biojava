@@ -27,6 +27,7 @@ import org.biojava.nbio.core.sequence.Strand;
 import org.biojava.nbio.core.sequence.features.FeatureInterface;
 import org.biojava.nbio.core.sequence.features.Qualifier;
 import org.biojava.nbio.core.sequence.location.template.AbstractLocation;
+import org.biojava.nbio.core.sequence.location.template.Location;
 import org.biojava.nbio.core.sequence.location.template.Point;
 import org.biojava.nbio.core.sequence.template.AbstractSequence;
 import org.biojava.nbio.core.sequence.template.Compound;
@@ -101,7 +102,7 @@ public class GenericInsdcHeaderFormat<S extends AbstractSequence<C>, C extends C
 		if(location.length() <= length) {
 			return location;
 		}
-		int index = location.substring(length).lastIndexOf(",");
+		int index = location.substring(0, length).lastIndexOf(",");
 		if(-1 == index) {
 			//No good place to split (!)
 			return location;
@@ -115,6 +116,7 @@ public class GenericInsdcHeaderFormat<S extends AbstractSequence<C>, C extends C
 	 */
 	protected String _write_feature(FeatureInterface<AbstractSequence<C>, C> feature, int record_length) {
 		String location = _insdc_feature_location_string(feature, record_length);
+		
 		String f_type = feature.getType().replace(" ", "_");
 		StringBuilder sb = new StringBuilder();
 		Formatter formatter = new Formatter(sb,Locale.US);
@@ -125,7 +127,7 @@ public class GenericInsdcHeaderFormat<S extends AbstractSequence<C>, C extends C
 		//Now the qualifiers...
 		for(List<Qualifier>  qualifiers : feature.getQualifiers().values()) {
 			for(Qualifier q : qualifiers){
-				line += _write_feature_qualifier(q.getName().replaceAll("%", "%%"), q.getValue().replaceAll("%", "%%"), q.needsQuotes());
+				line += _write_feature_qualifier(q.getName().replaceAll("%","%%"), q.getValue().replaceAll("%","%%"), q.needsQuotes());
 			}
 		}
 		return line;
@@ -168,21 +170,72 @@ public class GenericInsdcHeaderFormat<S extends AbstractSequence<C>, C extends C
 	 * @param record_length
 	 */
 	private String _insdc_feature_location_string(FeatureInterface<AbstractSequence<C>, C> feature, int record_length) {
+		
 		if(feature.getChildrenFeatures().isEmpty()) {
-			//Non-recursive.
-			String location = _insdc_location_string_ignoring_strand_and_subfeatures(feature.getLocations(), record_length);
-			if(feature.getLocations().getStrand() == Strand.NEGATIVE) {
+			
+			if(feature.getLocations().getSubLocations().isEmpty()) {
+				
+				//Non-recursive.
+				String location = _insdc_location_string_ignoring_strand_and_subfeatures(feature.getLocations(), record_length);
+				if(feature.getLocations().getStrand() == Strand.NEGATIVE) {
+					StringBuilder sb = new StringBuilder();
+					Formatter formatter = new Formatter(sb,Locale.US);
+					formatter.format("complement(%s)", location);
+					String output = formatter.toString();
+					formatter.close();
+					location = output;
+				}
+				return location;	
+				
+			} else if (feature.getLocations().getStrand() == Strand.NEGATIVE) {
+				
+				// As noted above, treat reverse complement strand features carefully:
+
+				// check if any of the sublocations strand differs from the parent features strand
+				for(Location l  : feature.getLocations().getSubLocations()) {					
+					if (l.getStrand() != Strand.NEGATIVE) {						
+						StringBuilder sb = new StringBuilder();
+						Formatter formatter = new Formatter(sb, Locale.US);
+						formatter.format("Inconsistent strands: %s for parent, %s for child",
+								feature.getLocations().getStrand(), l.getStrand());
+						String output = formatter.toString();
+						formatter.close();
+						throw new RuntimeException(output);						
+					}					
+				}
+				
 				StringBuilder sb = new StringBuilder();
-				Formatter formatter = new Formatter(sb,Locale.US);
-				formatter.format("complement(%s)", location);
+				Formatter formatter = new Formatter(sb, Locale.US);
+				ArrayList<String> locations = new ArrayList<String>();
+				for(Location l  : feature.getLocations().getSubLocations()) {	
+					locations.add(_insdc_location_string_ignoring_strand_and_subfeatures((AbstractLocation) l, record_length));					
+				}
+				String location = StringManipulationHelper.join(locations, ",");
+				formatter.format("complement(%s(%s))", /* feature.location_operator */ "join", location);
 				String output = formatter.toString();
 				formatter.close();
-				location = output;
+				return output;
+
+			} else {
+				//Convert feature sub-locations into joins
+				//This covers typical forward strand features, and also an evil mixed strand:
+				StringBuilder sb = new StringBuilder();
+				Formatter formatter = new Formatter(sb,Locale.US);
+				ArrayList<String> locations = new ArrayList<String>();
+				for(Location l  : feature.getLocations().getSubLocations()) {	
+					locations.add(_insdc_location_string_ignoring_strand_and_subfeatures((AbstractLocation) l, record_length));					
+				}
+				String location =  StringManipulationHelper.join(locations, ",");
+				formatter.format("%s(%s)", /*feature.location_operator*/ "join", location);
+				String output = formatter.toString();
+				formatter.close();
+				return output;
 			}
-			return location;
+			
 		}
 		// As noted above, treat reverse complement strand features carefully:
 		if(feature.getLocations().getStrand() == Strand.NEGATIVE) {
+			
 			for(FeatureInterface<?, ?> f  : feature.getChildrenFeatures()) {
 				if(f.getLocations().getStrand() != Strand.NEGATIVE) {
 					StringBuilder sb = new StringBuilder();

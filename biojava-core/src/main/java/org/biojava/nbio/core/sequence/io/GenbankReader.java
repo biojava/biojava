@@ -26,6 +26,7 @@
 package org.biojava.nbio.core.sequence.io;
 
 import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
+import org.biojava.nbio.core.sequence.AccessionID;
 import org.biojava.nbio.core.sequence.DataSource;
 import org.biojava.nbio.core.sequence.TaxonomyID;
 import org.biojava.nbio.core.sequence.features.DBReferenceInfo;
@@ -162,8 +163,16 @@ public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
 			if(seqString==null) break;
 			@SuppressWarnings("unchecked")
 			S sequence = (S) sequenceCreator.getSequence(seqString, 0);
-			genbankParser.getSequenceHeaderParser().parseHeader(genbankParser.getHeader(), sequence);
-
+			GenericGenbankHeaderParser<S, C> genbankHeaderParser = genbankParser.getSequenceHeaderParser();
+			
+			genbankHeaderParser.parseHeader(genbankParser.getHeader(), sequence);
+			
+			String id = genbankHeaderParser.getAccession();
+			int version = genbankHeaderParser.getVersion();
+			String identifier = genbankHeaderParser.getIdentifier();
+			AccessionID accession = new AccessionID(id , DataSource.UNKNOWN, version, identifier);
+			sequence.setAccession(accession);
+			
 			// add features to new sequence
 			genbankParser.getFeatures().values().stream()
 			.flatMap(List::stream)

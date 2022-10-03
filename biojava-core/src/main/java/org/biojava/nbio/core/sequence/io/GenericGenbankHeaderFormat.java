@@ -20,6 +20,7 @@
  */
 package org.biojava.nbio.core.sequence.io;
 
+import org.biojava.nbio.core.sequence.AccessionID;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava.nbio.core.sequence.compound.DNACompoundSet;
 import org.biojava.nbio.core.sequence.compound.RNACompoundSet;
@@ -38,6 +39,7 @@ public class GenericGenbankHeaderFormat<S extends AbstractSequence<C>, C extends
 	private static final int HEADER_WIDTH = 12;
 	private static final String lineSep = "%n";
 	private String seqType = null;
+	private Boolean useOriginalHeader = false;
 
 	public GenericGenbankHeaderFormat() {
 		seqType = null;
@@ -45,6 +47,10 @@ public class GenericGenbankHeaderFormat<S extends AbstractSequence<C>, C extends
 
 	public GenericGenbankHeaderFormat(String seqType) {
 		this.seqType = seqType;
+	}
+	
+	public GenericGenbankHeaderFormat(Boolean useOriginalHeader) {
+		this.useOriginalHeader = useOriginalHeader;
 	}
 
 	/**
@@ -223,6 +229,22 @@ public class GenericGenbankHeaderFormat<S extends AbstractSequence<C>, C extends
 	}
 
 	/**
+	 * Write the original LOCUS line.
+	 *
+	 * @param sequence
+	 */
+	private String _write_original_first_line(S sequence) {
+
+		StringBuilder sb = new StringBuilder();
+		Formatter formatter = new Formatter(sb, Locale.US);
+		formatter.format("LOCUS       %s" + lineSep,
+				StringManipulationHelper.padRight(sequence.getOriginalHeader(), 16));
+		String output = formatter.toString();
+		formatter.close();
+		return output;
+	}
+	
+	/**
 	 * This is a bit complicated due to the range of possible ways people might
 	 * have done their annotation... Currently the parser uses a single string
 	 * with newlines. A list of lines is also reasonable. A single (long) string
@@ -243,12 +265,30 @@ public class GenericGenbankHeaderFormat<S extends AbstractSequence<C>, C extends
 
 	@Override
 	public String getHeader(S sequence) {
-		String header = _write_the_first_line(sequence);
-		String acc_with_version;
+		
+		String header;
+		
+		if (useOriginalHeader) {
+			header = _write_original_first_line(sequence);
+		} else {
+			header = _write_the_first_line(sequence);
+		}
+		
+		AccessionID accessionIdObj = sequence.getAccession();
 		String accession;
+		String acc_with_version;
+		
 		try {
-			acc_with_version = sequence.getAccession().getID();
-			accession = acc_with_version.split("\\.", 1)[0];
+			accession = accessionIdObj.getID();
+
+			if (accessionIdObj.getIdentifier() != null) {
+				acc_with_version = sequence.getAccession().getID() + "." + sequence.getAccession().getVersion() + " GI:"
+						+ accessionIdObj.getIdentifier();
+
+			} else {
+				acc_with_version = sequence.getAccession().getID() + "." + sequence.getAccession().getVersion();
+			}
+
 		} catch (Exception e) {
 			acc_with_version = "";
 			accession = "";
@@ -262,13 +302,6 @@ public class GenericGenbankHeaderFormat<S extends AbstractSequence<C>, C extends
 		header += _write_multi_line("VERSION", acc_with_version);
 
 		/*
-		 * gi = self._get_annotation_str(record, "gi", just_first=True)
-		 *
-		 * self._write_single_line("ACCESSION", accession) if gi != ".":
-		 * self._write_single_line("VERSION", "%s  GI:%s" \ % (acc_with_version,
-		 * gi)) else: self._write_single_line("VERSION", "%s" %
-		 * (acc_with_version))
-		 *
 		 * #The NCBI only expect two types of link so far, #e.g. "Project:28471"
 		 * and "Trace Assembly Archive:123456" #TODO - Filter the dbxrefs list
 		 * to just these? self._write_multi_entries("DBLINK", record.dbxrefs)
@@ -319,7 +352,7 @@ public class GenericGenbankHeaderFormat<S extends AbstractSequence<C>, C extends
 			header += _write_feature(feature, rec_length);
 		}
 
-		return header;
+		return String.format(header);
 	}
 
 }
