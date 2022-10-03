@@ -97,7 +97,6 @@ public class GenericGenbankHeaderParser<S extends AbstractSequence<C>, C extends
 	@Override
 	public void parseHeader(String header, S sequence) {
 		sequence.setOriginalHeader(header);
-		sequence.setLocusName(name);
 		sequence.setAccession(new AccessionID(accession, DataSource.GENBANK, version, identifier));
 		sequence.setDescription(description);
 		sequence.setComments(comments);

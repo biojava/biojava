@@ -27,10 +27,14 @@ package org.biojava.nbio.core.sequence.io;
 import org.biojava.nbio.core.sequence.AccessionID;
 import org.biojava.nbio.core.sequence.DNASequence;
 import org.biojava.nbio.core.sequence.features.AbstractFeature;
+import org.biojava.nbio.core.sequence.features.FeatureInterface;
 import org.biojava.nbio.core.sequence.features.Qualifier;
 import org.biojava.nbio.core.sequence.features.TextFeature;
 import org.biojava.nbio.core.sequence.location.SimpleLocation;
+import org.biojava.nbio.core.sequence.location.template.Location;
+import org.biojava.nbio.core.sequence.template.AbstractSequence;
 import org.biojava.nbio.core.sequence.Strand;
+import org.biojava.nbio.core.sequence.compound.NucleotideCompound;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -110,7 +114,7 @@ public class GenbankWriterTest {
 				Arrays.asList(seq), 
 				GenbankWriterHelper.LINEAR_DNA);
 		fragwriter.close();
-		System.out.println(fragwriter.toString().replaceAll("\r\n", "\n"));
+		//System.out.println(fragwriter.toString().replaceAll("\r\n", "\n"));
 		
 		// now read in the file that was created and check that the qualifiers were created correctly
 		InputStream readerInputStream = new ByteArrayInputStream(fragwriter.toByteArray());
@@ -138,6 +142,200 @@ public class GenbankWriterTest {
 		
 		assertEquals("note7", newQualifiers.get("note7").get(0).getName());
 		assertEquals("50%", newQualifiers.get("note7").get(0).getValue());
+		
+	}
+	
+	@Test
+	public void testLocationJoins() throws Exception {
+		
+		// First read a GenBank file containing location joins
+		InputStream inStream = GenbankWriterTest.class.getResourceAsStream("/with_joins.gb");
+		DNASequence sequence = GenbankReaderHelper.readGenbankDNASequence(inStream).values().iterator().next();
+		
+		// Check the joins are read correctly
+		List<FeatureInterface<AbstractSequence<NucleotideCompound>, NucleotideCompound>> features = sequence.getFeatures();
+		
+		FeatureInterface<AbstractSequence<NucleotideCompound>, NucleotideCompound> join1 = features.get(0);
+		List<Location> join1SubLocs = join1.getLocations().getSubLocations();
+		
+		assertEquals("join1, getType()", "CDS", join1.getType());
+		assertEquals("join1, getLocations().getStrand()", "POSITIVE", join1.getLocations().getStrand().toString());
+		assertEquals("join1, getLocations().getSubLocations().size()", 8, join1SubLocs.size());
+		
+		assertEquals("join1, SubLocation 1)", 3356, join1SubLocs.get(0).getStart().getPosition().intValue());
+		assertEquals("join1, SubLocation 1)", 3356, join1SubLocs.get(0).getEnd().getPosition().intValue());
+		
+		assertEquals("join1, SubLocation 2)", 3500, join1SubLocs.get(1).getStart().getPosition().intValue());
+		assertEquals("join1, SubLocation 2)", 3792, join1SubLocs.get(1).getEnd().getPosition().intValue());
+		
+		assertEquals("join1, SubLocation 3)", 3793, join1SubLocs.get(2).getStart().getPosition().intValue());
+		assertEquals("join1, SubLocation 3)", 3793, join1SubLocs.get(2).getEnd().getPosition().intValue());
+		
+		assertEquals("join1, SubLocation 4)", 4185, join1SubLocs.get(3).getStart().getPosition().intValue());
+		assertEquals("join1, SubLocation 4)", 4228, join1SubLocs.get(3).getEnd().getPosition().intValue());
+		
+		assertEquals("join1, SubLocation 5)", 4229, join1SubLocs.get(4).getStart().getPosition().intValue());
+		assertEquals("join1, SubLocation 5)", 4229, join1SubLocs.get(4).getEnd().getPosition().intValue());
+		
+		assertEquals("join1, SubLocation 6)", 4348, join1SubLocs.get(5).getStart().getPosition().intValue());
+		assertEquals("join1, SubLocation 6)", 4676, join1SubLocs.get(5).getEnd().getPosition().intValue());
+		
+		assertEquals("join1, SubLocation 7)", 4677, join1SubLocs.get(6).getStart().getPosition().intValue());
+		assertEquals("join1, SubLocation 7)", 4677, join1SubLocs.get(6).getEnd().getPosition().intValue());
+		
+		assertEquals("join1, SubLocation 8)", 4775, join1SubLocs.get(7).getStart().getPosition().intValue());
+		assertEquals("join1, SubLocation 8)", 5094, join1SubLocs.get(7).getEnd().getPosition().intValue());
+		
+		//qualifiers
+		assertEquals("join1, getType()", "Joined feature", join1.getQualifiers().get("standard_name").get(0).getValue());
+		
+		//Join 2
+		FeatureInterface<AbstractSequence<NucleotideCompound>, NucleotideCompound> join2 = features.get(1);
+		List<Location> join2SubLocs = join1.getLocations().getSubLocations();
+		
+		assertEquals("join1, getType()", "CDS", join2.getType());
+		assertEquals("join1, getLocations().getStrand()", "NEGATIVE", join2.getLocations().getStrand().toString());
+		assertEquals("join1, getLocations().getSubLocations().size()", 8, join2SubLocs.size());
+		
+		assertEquals("join2, SubLocation 1)", 3356, join2SubLocs.get(0).getStart().getPosition().intValue());
+		assertEquals("join2, SubLocation 1)", 3356, join2SubLocs.get(0).getEnd().getPosition().intValue());
+		
+		assertEquals("join2, SubLocation 2)", 3500, join2SubLocs.get(1).getStart().getPosition().intValue());
+		assertEquals("join2, SubLocation 2)", 3792, join2SubLocs.get(1).getEnd().getPosition().intValue());
+		
+		assertEquals("join2, SubLocation 3)", 3793, join2SubLocs.get(2).getStart().getPosition().intValue());
+		assertEquals("join2, SubLocation 3)", 3793, join2SubLocs.get(2).getEnd().getPosition().intValue());
+		
+		assertEquals("join2, SubLocation 4)", 4185, join2SubLocs.get(3).getStart().getPosition().intValue());
+		assertEquals("join2, SubLocation 4)", 4228, join2SubLocs.get(3).getEnd().getPosition().intValue());
+		
+		assertEquals("join2, SubLocation 5)", 4229, join2SubLocs.get(4).getStart().getPosition().intValue());
+		assertEquals("join2, SubLocation 5)", 4229, join2SubLocs.get(4).getEnd().getPosition().intValue());
+	
+		assertEquals("join2, SubLocation 6)", 4348, join2SubLocs.get(5).getStart().getPosition().intValue());
+		assertEquals("join2, SubLocation 6)", 4676, join2SubLocs.get(5).getEnd().getPosition().intValue());
+		
+		assertEquals("join2, SubLocation 7)", 4677, join2SubLocs.get(6).getStart().getPosition().intValue());
+		assertEquals("join2, SubLocation 7)", 4677, join2SubLocs.get(6).getEnd().getPosition().intValue());
+		
+		assertEquals("join2, SubLocation 8)", 4775, join2SubLocs.get(7).getStart().getPosition().intValue());
+		assertEquals("join2, SubLocation 8)", 5094, join2SubLocs.get(7).getEnd().getPosition().intValue());
+		
+		//qualifiers
+		assertEquals("join1, getType()", "Joined feature on complement", join2.getQualifiers().get("standard_name").get(0).getValue());
+		
+		// Now write the joins back to a file using the GenbankWriterHelper
+		ByteArrayOutputStream fragwriter = new ByteArrayOutputStream();
+		GenbankWriterHelper.writeNucleotideSequenceOriginal(
+				fragwriter, 
+				Arrays.asList(sequence));
+		fragwriter.close();
+		
+		System.out.println(fragwriter.toString().replaceAll("\r\n", "\n"));
+		
+		// Read the output file and test that no information is lost
+		InputStream readerInputStream = new ByteArrayInputStream(fragwriter.toByteArray());
+		DNASequence newSequence = GenbankReaderHelper.readGenbankDNASequence(readerInputStream).values().iterator().next();
+		
+		List<FeatureInterface<AbstractSequence<NucleotideCompound>, NucleotideCompound>> newFeatures = newSequence.getFeatures();
+		
+		// Check the output matches the original sequence feature
+		for (int i=0; i < features.size(); i++ ) {
+			assertEquals("getFeatures(), getType()", features.get(i).getType(), newFeatures.get(i).getType());
+			assertEquals("getFeatures(), getLocations()", features.get(i).getLocations(), newFeatures.get(i).getLocations());
+			assertEquals("getFeatures(), getStrand()", features.get(i).getLocations().getStrand(), newFeatures.get(i).getLocations().getStrand());
+
+			List<Location> subLocations = features.get(i).getLocations().getSubLocations();
+			List<Location> newSubLocations = newFeatures.get(i).getLocations().getSubLocations();
+			assertEquals("getSubLocations()", subLocations.size(), newSubLocations.size());
+		
+			assertEquals("getSubLocations()", subLocations, newSubLocations);
+			
+			for (int j=0; j < subLocations.size(); j++ ) {
+				assertEquals("getSubLocations()", subLocations.get(j).toString(), newSubLocations.get(j).toString());
+			}
+			
+			Map<String, List<Qualifier>> qualifiers = features.get(i).getQualifiers();
+			Map<String, List<Qualifier>> newQualifiers = newFeatures.get(i).getQualifiers();
+			
+			for (String qualifierType:  qualifiers.keySet()) {
+				assertEquals("getSubLocations()", qualifiers.get(qualifierType).get(0).getValue(), newQualifiers.get(qualifierType).get(0).getValue());				
+			}
+			
+		}
+		
+	}
+	
+	/**
+	 * Going from GenBank file -> DNASequence object -> GenBank file looses information
+	 * https://github.com/biojava/biojava/issues/942
+	 */
+	@Test
+	public void testGithub942() throws Exception {
+		
+		// Important information is lost when reading and writing a
+		// GenBank file through GenbankReaderHelper & GenbankWriterHelper
+
+		// First read the sample GenBank file from
+		// https://www.ncbi.nlm.nih.gov/Sitemap/samplerecord.html using the
+		// GenbankReaderHelper
+		InputStream inStream = GenbankWriterTest.class.getResourceAsStream("/NC_000913.gb");
+		DNASequence sequence = GenbankReaderHelper.readGenbankDNASequence(inStream).values().iterator().next();
+
+		// Then write sequence back to a file using the GenbankWriterHelper
+		ByteArrayOutputStream fragwriter = new ByteArrayOutputStream();
+		GenbankWriterHelper.writeNucleotideSequenceOriginal(
+				fragwriter, 
+				Arrays.asList(sequence));
+		fragwriter.close();
+		
+		// Test no important information is lost
+		InputStream readerInputStream = new ByteArrayInputStream(fragwriter.toByteArray());
+		DNASequence newSequence = GenbankReaderHelper.readGenbankDNASequence(readerInputStream).values().iterator().next();
+		
+		//System.out.println(fragwriter.toString().replaceAll("\r\n", "\n"));
+
+		assertEquals("getOriginalHeader()", sequence.getOriginalHeader(), newSequence.getOriginalHeader());
+		assertEquals("getLength()", sequence.getLength(), newSequence.getLength());
+		assertEquals("getAccession().getID()", sequence.getAccession().getID(), newSequence.getAccession().getID());
+		assertEquals("getAccession().getVersion()", sequence.getAccession().getVersion(), newSequence.getAccession().getVersion());
+		assertEquals("getDescription()", sequence.getDescription(), newSequence.getDescription());
+		assertEquals("getSource()", sequence.getSource(), newSequence.getSource());
+		assertEquals("getDNAType()", sequence.getDNAType(), newSequence.getDNAType());
+		assertEquals("getTaxonomy()", sequence.getTaxonomy(), newSequence.getTaxonomy());		
+		assertEquals("getReferences()", sequence.getReferences(), newSequence.getReferences());
+		assertEquals("getComments()", sequence.getComments(), newSequence.getComments());
+		assertEquals("getNotesList()", sequence.getNotesList(), newSequence.getNotesList());
+		
+		List<FeatureInterface<AbstractSequence<NucleotideCompound>, NucleotideCompound>> features = sequence.getFeatures();
+		List<FeatureInterface<AbstractSequence<NucleotideCompound>, NucleotideCompound>> newFeatures = newSequence.getFeatures();
+				
+		//feature locations and qualifiers
+		for (int i=0; i < features.size(); i++ ) {
+			assertEquals("getFeatures(), getType()", features.get(i).getType(), newFeatures.get(i).getType());
+			assertEquals("getFeatures(), getLocations()", features.get(i).getLocations(), newFeatures.get(i).getLocations());
+			assertEquals("getFeatures(), getStrand()", features.get(i).getLocations().getStrand(), newFeatures.get(i).getLocations().getStrand());
+
+			List<Location> subLocations = features.get(i).getLocations().getSubLocations();
+			List<Location> newSubLocations = newFeatures.get(i).getLocations().getSubLocations();
+			assertEquals("getSubLocations()", subLocations.size(), newSubLocations.size());
+		
+			assertEquals("getSubLocations()", subLocations, newSubLocations);
+			
+			for (int j=0; j < subLocations.size(); j++ ) {
+				assertEquals("getSubLocations()", subLocations.get(j).toString(), newSubLocations.get(j).toString());
+			}
+			
+			Map<String, List<Qualifier>> qualifiers = features.get(i).getQualifiers();
+			Map<String, List<Qualifier>> newQualifiers = newFeatures.get(i).getQualifiers();
+			
+			for (String qualifierType:  qualifiers.keySet()) {
+				assertEquals("getSubLocations()", qualifiers.get(qualifierType).get(0).getValue(), newQualifiers.get(qualifierType).get(0).getValue());				
+			}
+			
+		}
+		
+		assertEquals("getSequenceAsString()", sequence.getSequenceAsString(), newSequence.getSequenceAsString());
 		
 	}
 }

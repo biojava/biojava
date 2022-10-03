@@ -1,0 +1,15 @@
+LOCUS                         4 bp    DNA     circular SYN 26-SEP-2022
+DEFINITION  .
+ACCESSION   .
+VERSION     .
+KEYWORDS    .
+SOURCE      .      
+FEATURES             Location/Qualifiers
+     CDS             join(3356,3500..3792,3793,4185..4228,4229,4348..4676,4677,
+                     4775..5094)
+                     /standard_name="Joined feature"
+     CDS             complement(join(3356,3500..3792,3793,4185..4228,4229,4348..4676,4677,4775..5094))
+                     /standard_name="Joined feature on complement"                     
+ORIGIN      
+        1 acgg
+//
