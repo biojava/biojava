@@ -170,7 +170,7 @@ public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
 			String id = genbankHeaderParser.getAccession();
 			int version = genbankHeaderParser.getVersion();
 			String identifier = genbankHeaderParser.getIdentifier();
-			AccessionID accession = new AccessionID(id , DataSource.UNKNOWN, version, identifier);
+			AccessionID accession = new AccessionID(id , DataSource.GENBANK, version, identifier);
 			sequence.setAccession(accession);
 			
 			// add features to new sequence
