@@ -5,10 +5,11 @@ VERSION     .
 KEYWORDS    .
 SOURCE      .      
 FEATURES             Location/Qualifiers
-     CDS             join(3356,3500..3792,3793,4185..4228,4229,4348..4676,4677,
-                     4775..5094)
+     CDS             join(1,10..12,30,41..42,43..46,
+                     47..50)
                      /standard_name="Joined feature"
-     CDS             complement(join(3356,3500..3792,3793,4185..4228,4229,4348..4676,4677,4775..5094))
+     CDS             complement(join(33,35..37,41..42,
+                     43..46,47..50))
                      /standard_name="Joined feature on complement"
 ORIGIN      
         1 acgg
