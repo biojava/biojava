@@ -160,69 +160,54 @@ public class GenbankWriterTest {
 		
 		assertEquals("join1, getType()", "CDS", join1.getType());
 		assertEquals("join1, getLocations().getStrand()", "POSITIVE", join1.getLocations().getStrand().toString());
-		assertEquals("join1, getLocations().getSubLocations().size()", 8, join1SubLocs.size());
+		assertEquals("join1, getLocations().getSubLocations().size()", 6, join1SubLocs.size());
 		
-		assertEquals("join1, SubLocation 1)", 3356, join1SubLocs.get(0).getStart().getPosition().intValue());
-		assertEquals("join1, SubLocation 1)", 3356, join1SubLocs.get(0).getEnd().getPosition().intValue());
+		assertEquals("join1, SubLocation 1)", 1, join1SubLocs.get(0).getStart().getPosition().intValue());
+		assertEquals("join1, SubLocation 1)", 1, join1SubLocs.get(0).getEnd().getPosition().intValue());
 		
-		assertEquals("join1, SubLocation 2)", 3500, join1SubLocs.get(1).getStart().getPosition().intValue());
-		assertEquals("join1, SubLocation 2)", 3792, join1SubLocs.get(1).getEnd().getPosition().intValue());
+		assertEquals("join1, SubLocation 2)", 10, join1SubLocs.get(1).getStart().getPosition().intValue());
+		assertEquals("join1, SubLocation 2)", 12, join1SubLocs.get(1).getEnd().getPosition().intValue());
 		
-		assertEquals("join1, SubLocation 3)", 3793, join1SubLocs.get(2).getStart().getPosition().intValue());
-		assertEquals("join1, SubLocation 3)", 3793, join1SubLocs.get(2).getEnd().getPosition().intValue());
+		assertEquals("join1, SubLocation 3)", 30, join1SubLocs.get(2).getStart().getPosition().intValue());
+		assertEquals("join1, SubLocation 3)", 30, join1SubLocs.get(2).getEnd().getPosition().intValue());
 		
-		assertEquals("join1, SubLocation 4)", 4185, join1SubLocs.get(3).getStart().getPosition().intValue());
-		assertEquals("join1, SubLocation 4)", 4228, join1SubLocs.get(3).getEnd().getPosition().intValue());
+		assertEquals("join1, SubLocation 3)", 35, join1SubLocs.get(3).getStart().getPosition().intValue());
+		assertEquals("join1, SubLocation 3)", 38, join1SubLocs.get(3).getEnd().getPosition().intValue());
 		
-		assertEquals("join1, SubLocation 5)", 4229, join1SubLocs.get(4).getStart().getPosition().intValue());
-		assertEquals("join1, SubLocation 5)", 4229, join1SubLocs.get(4).getEnd().getPosition().intValue());
+		assertEquals("join1, SubLocation 5)", 43, join1SubLocs.get(4).getStart().getPosition().intValue());
+		assertEquals("join1, SubLocation 5)", 46, join1SubLocs.get(4).getEnd().getPosition().intValue());
 		
-		assertEquals("join1, SubLocation 6)", 4348, join1SubLocs.get(5).getStart().getPosition().intValue());
-		assertEquals("join1, SubLocation 6)", 4676, join1SubLocs.get(5).getEnd().getPosition().intValue());
-		
-		assertEquals("join1, SubLocation 7)", 4677, join1SubLocs.get(6).getStart().getPosition().intValue());
-		assertEquals("join1, SubLocation 7)", 4677, join1SubLocs.get(6).getEnd().getPosition().intValue());
-		
-		assertEquals("join1, SubLocation 8)", 4775, join1SubLocs.get(7).getStart().getPosition().intValue());
-		assertEquals("join1, SubLocation 8)", 5094, join1SubLocs.get(7).getEnd().getPosition().intValue());
+		assertEquals("join1, SubLocation 6)", 47, join1SubLocs.get(5).getStart().getPosition().intValue());
+		assertEquals("join1, SubLocation 6)", 50, join1SubLocs.get(5).getEnd().getPosition().intValue());
 		
 		//qualifiers
 		assertEquals("join1, getType()", "Joined feature", join1.getQualifiers().get("standard_name").get(0).getValue());
 		
 		//Join 2
 		FeatureInterface<AbstractSequence<NucleotideCompound>, NucleotideCompound> join2 = features.get(1);
-		List<Location> join2SubLocs = join1.getLocations().getSubLocations();
+		List<Location> join2SubLocs = join2.getLocations().getSubLocations();
 		
-		assertEquals("join1, getType()", "CDS", join2.getType());
-		assertEquals("join1, getLocations().getStrand()", "NEGATIVE", join2.getLocations().getStrand().toString());
-		assertEquals("join1, getLocations().getSubLocations().size()", 8, join2SubLocs.size());
+		assertEquals("join2, getType()", "CDS", join2.getType());
+		assertEquals("join2, getLocations().getStrand()", "NEGATIVE", join2.getLocations().getStrand().toString());
+		assertEquals("join2, getLocations().getSubLocations().size()", 5, join2SubLocs.size());
 		
-		assertEquals("join2, SubLocation 1)", 3356, join2SubLocs.get(0).getStart().getPosition().intValue());
-		assertEquals("join2, SubLocation 1)", 3356, join2SubLocs.get(0).getEnd().getPosition().intValue());
+		assertEquals("join2, SubLocation 1)", 33, join2SubLocs.get(0).getStart().getPosition().intValue());
+		assertEquals("join2, SubLocation 1)", 33, join2SubLocs.get(0).getEnd().getPosition().intValue());
 		
-		assertEquals("join2, SubLocation 2)", 3500, join2SubLocs.get(1).getStart().getPosition().intValue());
-		assertEquals("join2, SubLocation 2)", 3792, join2SubLocs.get(1).getEnd().getPosition().intValue());
+		assertEquals("join2, SubLocation 2)", 35, join2SubLocs.get(1).getStart().getPosition().intValue());
+		assertEquals("join2, SubLocation 2)", 37, join2SubLocs.get(1).getEnd().getPosition().intValue());
 		
-		assertEquals("join2, SubLocation 3)", 3793, join2SubLocs.get(2).getStart().getPosition().intValue());
-		assertEquals("join2, SubLocation 3)", 3793, join2SubLocs.get(2).getEnd().getPosition().intValue());
+		assertEquals("join2, SubLocation 3)", 41, join2SubLocs.get(2).getStart().getPosition().intValue());
+		assertEquals("join2, SubLocation 3)", 43, join2SubLocs.get(2).getEnd().getPosition().intValue());
 		
-		assertEquals("join2, SubLocation 4)", 4185, join2SubLocs.get(3).getStart().getPosition().intValue());
-		assertEquals("join2, SubLocation 4)", 4228, join2SubLocs.get(3).getEnd().getPosition().intValue());
+		assertEquals("join2, SubLocation 4)", 44, join2SubLocs.get(3).getStart().getPosition().intValue());
+		assertEquals("join2, SubLocation 4)", 46, join2SubLocs.get(3).getEnd().getPosition().intValue());
 		
-		assertEquals("join2, SubLocation 5)", 4229, join2SubLocs.get(4).getStart().getPosition().intValue());
-		assertEquals("join2, SubLocation 5)", 4229, join2SubLocs.get(4).getEnd().getPosition().intValue());
-	
-		assertEquals("join2, SubLocation 6)", 4348, join2SubLocs.get(5).getStart().getPosition().intValue());
-		assertEquals("join2, SubLocation 6)", 4676, join2SubLocs.get(5).getEnd().getPosition().intValue());
-		
-		assertEquals("join2, SubLocation 7)", 4677, join2SubLocs.get(6).getStart().getPosition().intValue());
-		assertEquals("join2, SubLocation 7)", 4677, join2SubLocs.get(6).getEnd().getPosition().intValue());
-		
-		assertEquals("join2, SubLocation 8)", 4775, join2SubLocs.get(7).getStart().getPosition().intValue());
-		assertEquals("join2, SubLocation 8)", 5094, join2SubLocs.get(7).getEnd().getPosition().intValue());
+		assertEquals("join2, SubLocation 5)", 47, join2SubLocs.get(4).getStart().getPosition().intValue());
+		assertEquals("join2, SubLocation 5)", 50, join2SubLocs.get(4).getEnd().getPosition().intValue());
 		
 		//qualifiers
-		assertEquals("join1, getType()", "Joined feature on complement", join2.getQualifiers().get("standard_name").get(0).getValue());
+		assertEquals("join2, getType()", "Joined feature on complement", join2.getQualifiers().get("standard_name").get(0).getValue());
 		
 		// Now write the joins back to a file using the GenbankWriterHelper
 		ByteArrayOutputStream fragwriter = new ByteArrayOutputStream();
@@ -231,7 +216,7 @@ public class GenbankWriterTest {
 				Arrays.asList(sequence));
 		fragwriter.close();
 		
-		//System.out.println(fragwriter.toString().replaceAll("\r\n", "\n"));
+		System.out.println(fragwriter.toString().replaceAll("\r\n", "\n"));
 		
 		// Read the output file and test that no information is lost
 		InputStream readerInputStream = new ByteArrayInputStream(fragwriter.toByteArray());
@@ -242,17 +227,17 @@ public class GenbankWriterTest {
 		// Check the output matches the original sequence feature
 		for (int i=0; i < features.size(); i++ ) {
 			assertEquals("getFeatures(), getType()", features.get(i).getType(), newFeatures.get(i).getType());
-			assertEquals("getFeatures(), getLocations()", features.get(i).getLocations(), newFeatures.get(i).getLocations());
+			assertEquals("getFeatures(), getStart()", features.get(i).getLocations().getStart(), newFeatures.get(i).getLocations().getStart());
+			assertEquals("getFeatures(), getEnd()", features.get(i).getLocations().getEnd(), newFeatures.get(i).getLocations().getEnd());
 			assertEquals("getFeatures(), getStrand()", features.get(i).getLocations().getStrand(), newFeatures.get(i).getLocations().getStrand());
 
 			List<Location> subLocations = features.get(i).getLocations().getSubLocations();
 			List<Location> newSubLocations = newFeatures.get(i).getLocations().getSubLocations();
 			assertEquals("getSubLocations()", subLocations.size(), newSubLocations.size());
-		
-			assertEquals("getSubLocations()", subLocations, newSubLocations);
-			
-			for (int j=0; j < subLocations.size(); j++ ) {
-				assertEquals("getSubLocations()", subLocations.get(j).toString(), newSubLocations.get(j).toString());
+		for (int j=0; j < subLocations.size(); j++ ) {
+				assertEquals("getSubLocations(), getStart()",  subLocations.get(j).getStart(), newSubLocations.get(j).getStart());
+				assertEquals("getSubLocations(), getEnd()",    subLocations.get(j).getEnd(), newSubLocations.get(j).getEnd());
+				assertEquals("getSubLocations(), getStrand()", subLocations.get(j).getStrand(), newSubLocations.get(j).getStrand());
 			}
 			
 			Map<String, List<Qualifier>> qualifiers = features.get(i).getQualifiers();
