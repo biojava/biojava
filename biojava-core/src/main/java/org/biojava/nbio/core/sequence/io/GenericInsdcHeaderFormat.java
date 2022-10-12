@@ -283,6 +283,8 @@ public class GenericInsdcHeaderFormat<S extends AbstractSequence<C>, C extends C
 		ref = ""
 	assert not location.ref_db
 	*/
+		
+		
 		String ref = "";
 		if(!sequenceLocation.getStart().isUncertain() && !sequenceLocation.getEnd().isUncertain() && sequenceLocation.getStart() == sequenceLocation.getEnd()) {
 			//Special case, for 12:12 return 12^13
@@ -338,7 +340,20 @@ public class GenericInsdcHeaderFormat<S extends AbstractSequence<C>, C extends C
 			}
 		} else {
 			//Typical case, e.g. 12..15 gets mapped to 11:15
-			return ref + _insdc_feature_position_string(sequenceLocation.getStart(), 0) + ".." + _insdc_feature_position_string(sequenceLocation.getEnd());
+			String start = _insdc_feature_position_string(sequenceLocation.getStart());
+			String end = _insdc_feature_position_string(sequenceLocation.getEnd()); 
+			
+			if (sequenceLocation.isPartial()) {
+				if (sequenceLocation.isPartialOn5prime()) {
+					start = "<" + start;
+				}
+				
+				if (sequenceLocation.isPartialOn3prime()) {
+					end = ">" + end;
+				}	
+			}
+			
+			return ref + start + ".." + end;
 		}
 	}
 	private String _insdc_feature_position_string(Point location) {
