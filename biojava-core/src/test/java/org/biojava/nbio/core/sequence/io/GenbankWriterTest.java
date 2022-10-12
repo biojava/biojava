@@ -231,7 +231,7 @@ public class GenbankWriterTest {
 				Arrays.asList(sequence));
 		fragwriter.close();
 		
-		System.out.println(fragwriter.toString().replaceAll("\r\n", "\n"));
+		//System.out.println(fragwriter.toString().replaceAll("\r\n", "\n"));
 		
 		// Read the output file and test that no information is lost
 		InputStream readerInputStream = new ByteArrayInputStream(fragwriter.toByteArray());
@@ -279,7 +279,7 @@ public class GenbankWriterTest {
 		// First read the sample GenBank file from
 		// https://www.ncbi.nlm.nih.gov/Sitemap/samplerecord.html using the
 		// GenbankReaderHelper
-		InputStream inStream = GenbankWriterTest.class.getResourceAsStream("/NC_000913.gb");
+		InputStream inStream = GenbankWriterTest.class.getResourceAsStream("/NM_000266.gb");
 		DNASequence sequence = GenbankReaderHelper.readGenbankDNASequence(inStream).values().iterator().next();
 
 		// Then write sequence back to a file using the GenbankWriterHelper
