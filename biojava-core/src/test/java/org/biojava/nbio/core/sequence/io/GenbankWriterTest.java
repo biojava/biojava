@@ -216,7 +216,7 @@ public class GenbankWriterTest {
 				Arrays.asList(sequence));
 		fragwriter.close();
 		
-		System.out.println(fragwriter.toString().replaceAll("\r\n", "\n"));
+		//System.out.println(fragwriter.toString().replaceAll("\r\n", "\n"));
 		
 		// Read the output file and test that no information is lost
 		InputStream readerInputStream = new ByteArrayInputStream(fragwriter.toByteArray());
