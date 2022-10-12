@@ -200,10 +200,12 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 				if (gbFeature == null) {
 					throw new ParserException("Malformed GenBank file: found a qualifier without feature.");
 				}
+				Boolean needsQuotes = false;
 				key = key.substring(1); // strip leading slash
 				val = val.replaceAll("\\s*[\\n\\r]+\\s*", " ").trim();
 				if (val.endsWith("\"")) {
 					val = val.substring(1, val.length() - 1); // strip quotes
+					needsQuotes = true; // as the value has quotes then set that it needs quotes when written back out					
 				}
 				// parameter on old feature
 				if (key.equals("db_xref")) {
@@ -221,17 +223,17 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 						throw new ParserException("Bad dbxref");
 					}
 				} else if (key.equalsIgnoreCase("organism")) {
-					Qualifier q = new Qualifier(key, val.replace('\n', ' '));
+					Qualifier q = new Qualifier(key, val.replace('\n', ' '), needsQuotes);
 					gbFeature.addQualifier(key, q);
 				} else {
 					if (key.equalsIgnoreCase("translation") || key.equals("anticodon")
 							|| key.equals("transl_except")) {
 						// strip spaces from sequence
 						val = val.replaceAll("\\s+", "");
-						Qualifier q = new Qualifier(key, val);
+						Qualifier q = new Qualifier(key, val, needsQuotes);
 						gbFeature.addQualifier(key, q);
 					} else {
-						Qualifier q = new Qualifier(key, val);
+						Qualifier q = new Qualifier(key, val, needsQuotes);
 						gbFeature.addQualifier(key, q);
 					}
 				}
