@@ -163,10 +163,8 @@ public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
 			if(seqString==null) break;
 			@SuppressWarnings("unchecked")
 			S sequence = (S) sequenceCreator.getSequence(seqString, 0);
-			GenericGenbankHeaderParser<S, C> genbankHeaderParser = genbankParser.getSequenceHeaderParser();
-			
-			genbankHeaderParser.parseHeader(genbankParser.getHeader(), sequence);
-			
+			GenericGenbankHeaderParser<S, C> genbankHeaderParser = genbankParser.getSequenceHeaderParser();			
+			genbankHeaderParser.parseHeader(genbankParser.getHeader(), sequence);			
 			String id = genbankHeaderParser.getAccession();
 			int version = genbankHeaderParser.getVersion();
 			String identifier = genbankHeaderParser.getIdentifier();
