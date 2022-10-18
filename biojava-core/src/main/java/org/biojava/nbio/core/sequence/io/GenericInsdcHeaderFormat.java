@@ -235,7 +235,7 @@ public class GenericInsdcHeaderFormat<S extends AbstractSequence<C>, C extends C
 			}			
 		}
 		// As noted above, treat reverse complement strand features carefully:
-		if(feature.getLocations().getStrand() == Strand.NEGATIVE) {			
+		if(feature.getLocations().getStrand() == Strand.NEGATIVE) {
 			for(FeatureInterface<?, ?> f  : feature.getChildrenFeatures()) {
 				if(f.getLocations().getStrand() != Strand.NEGATIVE) {
 					StringBuilder sb = new StringBuilder();
