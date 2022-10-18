@@ -203,9 +203,10 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 				Boolean needsQuotes = false;
 				key = key.substring(1); // strip leading slash
 				val = val.replaceAll("\\s*[\\n\\r]+\\s*", " ").trim();
+				
 				if (val.endsWith("\"")) {
 					val = val.substring(1, val.length() - 1); // strip quotes
-					needsQuotes = true; // as the value has quotes then set that it needs quotes when written back out					
+					needsQuotes = true; // as the value has quotes then set that it needs quotes when written back out
 				}
 				// parameter on old feature
 				if (key.equals("db_xref")) {
@@ -214,6 +215,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 						String dbname = m.group(1);
 						String raccession = m.group(2);
 						DBReferenceInfo xref = new DBReferenceInfo(dbname, raccession);
+						xref.setNeedsQuotes(needsQuotes);
 						gbFeature.addQualifier(key, xref);
 
 						ArrayList<DBReferenceInfo> listDBEntry = new ArrayList<>();
