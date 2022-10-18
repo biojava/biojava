@@ -47,7 +47,7 @@ public class DBReferenceInfo extends Qualifier {
 	 * @param id
 	 */
 	public DBReferenceInfo(String database, String id){
-		super("dbxref","");
+		super("db_xref","");
 		this.database = database;
 		this.id = id;
 	}
