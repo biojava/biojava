@@ -202,8 +202,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 				}
 				Boolean needsQuotes = false;
 				key = key.substring(1); // strip leading slash
-				val = val.replaceAll("\\s*[\\n\\r]+\\s*", " ").trim();
-				
+				val = val.replaceAll("\\s*[\\n\\r]+\\s*", " ").trim();				
 				if (val.endsWith("\"")) {
 					val = val.substring(1, val.length() - 1); // strip quotes
 					needsQuotes = true; // as the value has quotes then set that it needs quotes when written back out
@@ -272,8 +271,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 		headerParser.addReference(genbankReference);
 	}
 
-	private void parseVersionTag(List<String[]> section) {
-		
+	private void parseVersionTag(List<String[]> section) {		
 		String ver = section.get(0)[1];
 		Matcher m = vp.matcher(ver);
 		if (m.matches()) {
@@ -311,8 +309,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 		String loc = section.get(0)[1];
 		header = loc;
 		Matcher m = lp.matcher(loc);
-		Matcher m2 = lp2.matcher(loc);
-		
+		Matcher m2 = lp2.matcher(loc);		
 		if (m.matches()) {
 			//remove any preceding or trailing whitespace from the locus name
 			String name = m.group(1).trim().replaceAll(" ","_");		
@@ -387,8 +384,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 	// key->value tuples
 	// reads an indented section, combining split lines and creating a list of
 	// key->value tuples
-	private List<String[]> readSection(BufferedReader bufferedReader) {
-		
+	private List<String[]> readSection(BufferedReader bufferedReader) {		
 		List<String[]> section = new ArrayList<>();
 		String line;
 
