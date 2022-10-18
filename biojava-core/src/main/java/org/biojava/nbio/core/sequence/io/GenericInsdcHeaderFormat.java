@@ -116,8 +116,7 @@ public class GenericInsdcHeaderFormat<S extends AbstractSequence<C>, C extends C
 	 * @param record_length
 	 */
 	protected String _write_feature(FeatureInterface<AbstractSequence<C>, C> feature, int record_length) {
-		String location = _insdc_feature_location_string(feature, record_length);
-		
+		String location = _insdc_feature_location_string(feature, record_length);		
 		String f_type = feature.getType().replace(" ", "_");
 		StringBuilder sb = new StringBuilder();
 		Formatter formatter = new Formatter(sb,Locale.US);
@@ -176,11 +175,8 @@ public class GenericInsdcHeaderFormat<S extends AbstractSequence<C>, C extends C
 	 * @param record_length
 	 */
 	private String _insdc_feature_location_string(FeatureInterface<AbstractSequence<C>, C> feature, int record_length) {
-		
-		if(feature.getChildrenFeatures().isEmpty()) {
-			
+		if(feature.getChildrenFeatures().isEmpty()) {			
 			if(feature.getLocations().getSubLocations().isEmpty()) {
-				
 				//Non-recursive.
 				String location = _insdc_location_string_ignoring_strand_and_subfeatures(feature.getLocations(), record_length);
 				if(feature.getLocations().getStrand() == Strand.NEGATIVE) {
@@ -236,8 +232,7 @@ public class GenericInsdcHeaderFormat<S extends AbstractSequence<C>, C extends C
 				String output = formatter.toString();
 				formatter.close();
 				return output;
-			}
-			
+			}			
 		}
 		// As noted above, treat reverse complement strand features carefully:
 		if(feature.getLocations().getStrand() == Strand.NEGATIVE) {
@@ -288,9 +283,7 @@ public class GenericInsdcHeaderFormat<S extends AbstractSequence<C>, C extends C
 	else:
 		ref = ""
 	assert not location.ref_db
-	*/
-		
-		
+	*/		
 		String ref = "";
 		if(!sequenceLocation.getStart().isUncertain() && !sequenceLocation.getEnd().isUncertain() && sequenceLocation.getStart() == sequenceLocation.getEnd()) {
 			//Special case, for 12:12 return 12^13
