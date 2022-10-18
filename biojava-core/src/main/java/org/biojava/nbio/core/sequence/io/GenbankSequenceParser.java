@@ -271,7 +271,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 		headerParser.addReference(genbankReference);
 	}
 
-	private void parseVersionTag(List<String[]> section) {		
+	private void parseVersionTag(List<String[]> section) {
 		String ver = section.get(0)[1];
 		Matcher m = vp.matcher(ver);
 		if (m.matches()) {
@@ -384,7 +384,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 	// key->value tuples
 	// reads an indented section, combining split lines and creating a list of
 	// key->value tuples
-	private List<String[]> readSection(BufferedReader bufferedReader) {		
+	private List<String[]> readSection(BufferedReader bufferedReader) {
 		List<String[]> section = new ArrayList<>();
 		String line;
 
