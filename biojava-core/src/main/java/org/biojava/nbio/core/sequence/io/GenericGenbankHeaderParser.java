@@ -161,7 +161,7 @@ public class GenericGenbankHeaderParser<S extends AbstractSequence<C>, C extends
 		}
 	}
 
-	
+
 	/**
 	 * {@inheritDoc}
 	 * The last accession passed to this routine will always be the one used.
