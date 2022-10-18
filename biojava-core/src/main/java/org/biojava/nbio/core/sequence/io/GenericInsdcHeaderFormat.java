@@ -24,6 +24,7 @@
 package org.biojava.nbio.core.sequence.io;
 
 import org.biojava.nbio.core.sequence.Strand;
+import org.biojava.nbio.core.sequence.features.DBReferenceInfo;
 import org.biojava.nbio.core.sequence.features.FeatureInterface;
 import org.biojava.nbio.core.sequence.features.Qualifier;
 import org.biojava.nbio.core.sequence.location.template.AbstractLocation;
@@ -127,7 +128,12 @@ public class GenericInsdcHeaderFormat<S extends AbstractSequence<C>, C extends C
 		//Now the qualifiers...
 		for(List<Qualifier>  qualifiers : feature.getQualifiers().values()) {
 			for(Qualifier q : qualifiers){
-				line += _write_feature_qualifier(q.getName().replaceAll("%","%%"), q.getValue().replaceAll("%","%%"), q.needsQuotes());
+				if (q instanceof DBReferenceInfo) {
+					DBReferenceInfo db = (DBReferenceInfo) q;
+					line += _write_feature_qualifier(q.getName().replaceAll("%","%%"), db.getDatabase().replaceAll("%","%%") + ":" + db.getId().replaceAll("%","%%"), db.needsQuotes());	
+				} else {
+					line += _write_feature_qualifier(q.getName().replaceAll("%","%%"), q.getValue().replaceAll("%","%%"), q.needsQuotes());
+				}
 			}
 		}
 		return line;
