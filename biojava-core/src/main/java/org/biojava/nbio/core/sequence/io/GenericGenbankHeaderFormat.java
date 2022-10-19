@@ -39,7 +39,7 @@ public class GenericGenbankHeaderFormat<S extends AbstractSequence<C>, C extends
 	private static final int HEADER_WIDTH = 12;
 	private static final String lineSep = "%n";
 	private String seqType = null;
-	private Boolean useOriginalHeader = false;
+	private boolean useOriginalHeader = false;
 
 	public GenericGenbankHeaderFormat() {
 		seqType = null;
@@ -49,7 +49,7 @@ public class GenericGenbankHeaderFormat<S extends AbstractSequence<C>, C extends
 		this.seqType = seqType;
 	}
 	
-	public GenericGenbankHeaderFormat(Boolean useOriginalHeader) {
+	public GenericGenbankHeaderFormat(boolean useOriginalHeader) {
 		this.useOriginalHeader = useOriginalHeader;
 	}
 
