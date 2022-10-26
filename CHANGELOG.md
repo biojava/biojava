@@ -5,16 +5,16 @@ BioJava Changelog
 BioJava 6.1.0
 ==============================
 ### Added
-* GenBankWriterHelper method that uses the original locus line rather than creating a new one, preventing loss of information
+* GenBankWriterHelper - method that uses the original locus line rather than creating a new one, preventing loss of information
 * GenBankReader - the ability to successfully parse GenBank files with a LOCUS ID containing white space
-* GenBankReadr - the ability to successfully parse GenBank files missing a LOCUS ID
+* GenBankReader - the ability to successfully parse GenBank files missing a LOCUS ID
 
 ### Fixed
 * GenBankWriter - outputting db_xref feature qualifiers
 * GenBankWriter - outputting the accession version and GI ID
 * GenBankWriter - outputting feature locations containing joins and partial locations
 * GenBankReader - reading locations split over multiple lines
-* GenBankReader - set if a feature qualifier values requires quotes
+* GenBankReader - set if feature qualifier values require quotes
 
 BioJava 6.0.5
 ==============================
