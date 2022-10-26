@@ -17,7 +17,9 @@ BioJava 6.1.0
 * GenBankReader - reading locations split over multiple lines
 * GenBankReader - set if feature qualifier values require quotes
 * Local alignment with linear gap penalty was producing an NPE #1036
-* New default server for PDB files
+* New default server for PDB files. Note that from Aug 2023 older versions of BioJava will 
+not be able to fetch PDB files unless PDB.FILE.SERVER system property is used to override 
+the default server
 * Dependency upgrades
 
 BioJava 6.0.5
