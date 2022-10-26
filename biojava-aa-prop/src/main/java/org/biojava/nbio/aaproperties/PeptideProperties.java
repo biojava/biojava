@@ -590,16 +590,16 @@ public class PeptideProperties {
 		}
 		return polarity;
 	}
-        
-        /**
+
+	/**
 	 * An adaptor method to return the aromaticity value of sequence. The sequence argument
 	 * must be a protein sequence consisting of only non-ambiguous characters.
-	 * 
-         * Calculates the aromaticity value of a protein according to Lobry, 1994. 
-         * It is simply the relative frequency of Phe+Trp+Tyr.
-         * 	 *
-	 * @param sequence
-	 * 		a protein sequence consisting of non-ambiguous characters only
+	 * <p>
+	 * Calculates the aromaticity value of a protein according to Lobry, 1994.
+	 * It is simply the relative frequency of Phe+Trp+Tyr.
+	 * *
+	 *
+	 * @param sequence a protein sequence consisting of non-ambiguous characters only
 	 * @return the aromaticity value of sequence
 	 */
 	public static final double getAromaticity(String sequence) {
