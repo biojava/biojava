@@ -10,6 +10,7 @@ BioJava 6.1.0
 * GenBankReader - the ability to successfully parse GenBank files missing a LOCUS ID
 
 ### Fixed
+* String Formatter error when key or value of Qualifier has character "%", #886
 * GenBankWriter - outputting db_xref feature qualifiers
 * GenBankWriter - outputting the accession version and GI ID
 * GenBankWriter - outputting feature locations containing joins and partial locations
