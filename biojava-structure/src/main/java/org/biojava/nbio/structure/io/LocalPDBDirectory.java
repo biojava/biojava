@@ -66,7 +66,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	 * Note that we don't support file stamp retrieving for ftp protocol, thus some of the
 	 * fetch modes will not work properly with ftp protocol
 	 */
-	public static final String DEFAULT_PDB_FILE_SERVER = "https://ftp.wwpdb.org";
+	public static final String DEFAULT_PDB_FILE_SERVER = "https://files.wwpdb.org";
 	public static final String PDB_FILE_SERVER_PROPERTY = "PDB.FILE.SERVER";
 
 	/**
@@ -123,7 +123,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	 */
 	public static final long LAST_REMEDIATION_DATE ;
 	private static final String LAST_REMEDIATION_DATE_STRING = "2011/07/12";
-	
+
 	static {
 
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd", Locale.US);
@@ -388,7 +388,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	 * @throws IOException
 	 */
 	public void prefetchStructure(String pdbId) throws IOException {
-		
+
 		// Check existing
 		File file = downloadStructure(new PdbId(pdbId));
 

@@ -8,6 +8,7 @@ BioJava 6.1.0
 * GenBankWriterHelper - method that uses the original locus line rather than creating a new one, preventing loss of information
 * GenBankReader - the ability to successfully parse GenBank files with a LOCUS ID containing white space
 * GenBankReader - the ability to successfully parse GenBank files missing a LOCUS ID
+* Aromaticity calculation in biojava-aa-prop module
 
 ### Fixed
 * GenBankWriter - outputting db_xref feature qualifiers
@@ -15,6 +16,9 @@ BioJava 6.1.0
 * GenBankWriter - outputting feature locations containing joins and partial locations
 * GenBankReader - reading locations split over multiple lines
 * GenBankReader - set if feature qualifier values require quotes
+* Local alignment with linear gap penalty was producing an NPE #1036
+* New default server for PDB files
+* Dependency upgrades
 
 BioJava 6.0.5
 ==============================
