@@ -78,6 +78,12 @@
 			<artifactId>jaxb-runtime</artifactId>
 		</dependency>
 
+		<!-- Used for json deserialization in PDBStatus -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.13.4.2</version>
+		</dependency>
 		<!-- logging dependencies (managed by parent pom, don't set versions or
 			scopes here) -->
 		<dependency>

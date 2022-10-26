@@ -17,20 +17,6 @@
 		</license>
 	</licenses>
 
-	<repositories>
-		<repository>
-			<id>biojava-maven-repo</id>
-			<name>BioJava repository</name>
-			<url>http://www.biojava.org/download/maven/</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-		</repository>
-	</repositories>
-	<url>http://maven.apache.org</url>
 	<build>
 		<plugins>
 

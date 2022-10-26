@@ -40,9 +40,9 @@
 		<!-- needed for failsafe plugin in integrationtest module - JD 2018-03-08 -->
     	<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<maxmem>512M</maxmem>
-		<mmtf.version>1.0.10</mmtf.version>
+		<mmtf.version>1.0.11</mmtf.version>
 		<slf4j.version>1.7.30</slf4j.version>
-		<log4j.version>2.17.1</log4j.version>
+		<log4j.version>2.17.2</log4j.version>
 		<junit-jupiter.version>5.7.2</junit-jupiter.version>
 		<ciftools.artifact>ciftools-java-jdk8</ciftools.artifact>
 		<ciftools.version>4.0.2</ciftools.version>
