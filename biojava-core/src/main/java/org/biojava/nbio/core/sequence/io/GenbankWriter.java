@@ -92,10 +92,9 @@ public class GenbankWriter<S extends Sequence<?>, C extends Compound> {
 		PrintWriter writer = new PrintWriter(os);
 		for (S sequence : sequences) {
 			String header = headerFormat.getHeader(sequence);
-			writer.format(header);
+			writer.print(header);
 			writer.println();
-			// os.write(lineSep);
-
+			// os.write(lineSep);			
 			/*
 			 * if isinstance(record.seq, UnknownSeq): #We have already recorded
 			 * the length, and there is no need #to record a long sequence of

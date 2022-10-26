@@ -66,7 +66,7 @@ public class InsdcParser {
 	 * complement(location,location...location): consider locations in their
 	 * complement versus
 	 *
-	 * takes in input a comma splitted location string. The split must be done
+	 * takes in input a comma split location string. The split must be done
 	 * for outer level commas group(1) is the qualifier group(2) is the location
 	 * string to getFeatures. In case of complex splits it will contain the
 	 * nested expression
@@ -74,7 +74,7 @@ public class InsdcParser {
 	 * Not really sure that they are not declared obsolete but they are still in
 	 * several files.
 	 */
-	protected static final Pattern genbankSplitPattern = Pattern.compile("^\\s?(join|order|bond|complement|)\\(?(.+)\\)?");
+	protected static final Pattern genbankSplitPattern = Pattern.compile("^\\s?(join|order|bond|complement|)\\(?([\\s\\S]+)\\)?");
 	/**
 	 * designed to recursively split a location string in tokens. Valid tokens
 	 * are those divided by coma that are not inside a bracket. I. e. split on
