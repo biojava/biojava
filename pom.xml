@@ -45,7 +45,7 @@
 		<log4j.version>2.17.2</log4j.version>
 		<junit-jupiter.version>5.7.2</junit-jupiter.version>
 		<ciftools.artifact>ciftools-java-jdk8</ciftools.artifact>
-		<ciftools.version>4.0.2</ciftools.version>
+		<ciftools.version>4.0.3</ciftools.version>
 	</properties>
 	<scm>
 		<connection>scm:git:git://github.com/biojava/biojava.git</connection>
@@ -153,6 +153,10 @@
 		</developer>
 		<developer>
 			<name>Scooter Willis</name>
+		</developer>
+		<developer>
+			<id>JonStargaryen</id>
+			<name>Sebastian Bittrich</name>
 		</developer>
 		<developer>
 			<name>Spencer Bliven</name>
