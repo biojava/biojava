@@ -11,17 +11,18 @@ BioJava 6.1.0
 * Aromaticity calculation in biojava-aa-prop module
 
 ### Fixed
-* String Formatter error when key or value of Qualifier has character "%", #886
+* GenBankWriter - String Formatter error when key or value of Qualifier has character "%", #886
 * GenBankWriter - outputting db_xref feature qualifiers
 * GenBankWriter - outputting the accession version and GI ID
 * GenBankWriter - outputting feature locations containing joins and partial locations
 * GenBankReader - reading locations split over multiple lines
 * GenBankReader - set if feature qualifier values require quotes
-* Local alignment with linear gap penalty was producing an NPE #1036
+* Local alignment with linear gap penalty was producing an NPE, #1036
 * New default server for PDB files. Note that from Aug 2023 older versions of BioJava will 
 not be able to fetch PDB files unless PDB.FILE.SERVER system property is used to override 
 the default server
 * Dependency upgrades
+* Some bug and security fixes
 
 BioJava 6.0.5
 ==============================
