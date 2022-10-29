@@ -20,10 +20,12 @@
  */
 package org.biojava.nbio.structure;
 
+import nz.ac.wgtn.saflate.network.junit4.SanitiseNetworkDependenciesRule;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
 import org.biojava.nbio.structure.io.PDBFileReader;
 import org.biojava.nbio.structure.io.StructureFiletype;
+import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.File;
@@ -34,7 +36,8 @@ import static org.junit.Assert.assertNotNull;
 
 
 public class TestLoadStructureFromURL {
-
+	@Rule
+	public SanitiseNetworkDependenciesRule rule = new SanitiseNetworkDependenciesRule();
 	public static final String lineSplit = System.getProperty("file.separator");
 
 

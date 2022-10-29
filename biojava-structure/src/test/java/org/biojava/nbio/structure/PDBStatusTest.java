@@ -20,8 +20,10 @@
  */
 package org.biojava.nbio.structure;
 
+import nz.ac.wgtn.saflate.network.junit4.SanitiseNetworkDependenciesRule;
 import org.biojava.nbio.structure.PDBStatus.Status;
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -31,6 +33,8 @@ import java.io.IOException;
  *
  */
 public class PDBStatusTest {
+	@Rule
+	public SanitiseNetworkDependenciesRule rule = new SanitiseNetworkDependenciesRule();
 
 	/**
 	 * Test {@link PDBStatus#getStatus(String)}.

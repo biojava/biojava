@@ -1,5 +1,6 @@
 package org.biojava.nbio.structure.test.io.cif;
 
+import nz.ac.wgtn.saflate.network.junit4.SanitiseNetworkDependenciesRule;
 import org.biojava.nbio.structure.AminoAcidImpl;
 import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.AtomImpl;
@@ -13,6 +14,7 @@ import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureImpl;
 import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.io.cif.CifStructureConverter;
+import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -26,6 +28,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 public class CifFileSupplierIntegrationTest {
+    @Rule
+    public SanitiseNetworkDependenciesRule rule = new SanitiseNetworkDependenciesRule();
     @Test
     public void test1SMT() throws IOException {
         // an x-ray structure

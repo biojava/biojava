@@ -20,10 +20,12 @@
  */
 package org.biojava.nbio.structure.chem;
 
+import nz.ac.wgtn.saflate.network.junit4.SanitiseNetworkDependenciesRule;
 import org.biojava.nbio.core.util.FlatFileCache;
 import org.biojava.nbio.structure.chem.ChemComp;
 import org.biojava.nbio.structure.chem.DownloadChemCompProvider;
 import org.biojava.nbio.structure.io.LocalPDBDirectory;
+import org.junit.Rule;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -35,7 +37,8 @@ import java.util.regex.Matcher;
 import java.util.zip.GZIPOutputStream;
 
 public class TestDownloadChemCompProvider {
-
+	@Rule
+	public SanitiseNetworkDependenciesRule rule = new SanitiseNetworkDependenciesRule();
 	@Test
 	public void testProtectedIDs(){
 

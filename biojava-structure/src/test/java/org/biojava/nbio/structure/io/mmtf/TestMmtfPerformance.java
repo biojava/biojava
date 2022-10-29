@@ -20,7 +20,9 @@
  */
 package org.biojava.nbio.structure.io.mmtf;
 
+import nz.ac.wgtn.saflate.network.junit4.SanitiseNetworkDependenciesRule;
 import org.biojava.nbio.structure.io.PDBFileParser;
+import org.junit.Rule;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +41,8 @@ import static org.junit.Assert.assertTrue;
  *
  */
 public class TestMmtfPerformance {
-
+	@Rule
+	public SanitiseNetworkDependenciesRule rule = new SanitiseNetworkDependenciesRule();
 	private static final Logger logger = LoggerFactory.getLogger(TestMmtfPerformance.class);
 
 	private static final int NUMBER_OF_REPEATS = 10;

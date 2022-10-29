@@ -23,9 +23,11 @@ package org.biojava.nbio.structure.io;
 
 import java.io.IOException;
 
+import nz.ac.wgtn.saflate.network.junit4.SanitiseNetworkDependenciesRule;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
 import org.biojava.nbio.structure.StructureIO;
+import org.junit.Rule;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -33,7 +35,8 @@ import static org.junit.Assert.*;
  * Created by ap3 on 31/07/2015.
  */
 public class TestURLBasedFileParsing {
-
+	@Rule
+	public SanitiseNetworkDependenciesRule rule = new SanitiseNetworkDependenciesRule();
 	@Test
 	public void testMMcifURL() throws StructureException, IOException{
 		String u = "https://files.wwpdb.org/pub/pdb/data/assemblies/mmCIF/divided/nw/4nwr-assembly1.cif.gz";

@@ -20,6 +20,7 @@
  */
 package org.biojava.nbio.core.sequence.loader;
 
+import nz.ac.wgtn.saflate.network.junit4.SanitiseNetworkDependenciesRule;
 import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.core.sequence.ProteinSequence;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
@@ -30,6 +31,7 @@ import org.biojava.nbio.core.sequence.features.Qualifier;
 import org.biojava.nbio.core.sequence.template.AbstractSequence;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -55,6 +57,8 @@ import java.util.Map;
  */
 @RunWith(Parameterized.class)
 public class GenbankProxySequenceReaderTest {
+	@Rule
+	public SanitiseNetworkDependenciesRule rule = new SanitiseNetworkDependenciesRule();
 
 	private String gi;
 	private final static Logger logger = LoggerFactory.getLogger(GenbankProxySequenceReaderTest.class);

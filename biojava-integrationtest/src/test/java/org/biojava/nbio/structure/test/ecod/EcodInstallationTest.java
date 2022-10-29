@@ -38,6 +38,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import nz.ac.wgtn.saflate.network.junit4.SanitiseNetworkDependenciesRule;
 import org.biojava.nbio.core.util.ConcurrencyTools;
 import org.biojava.nbio.structure.ResidueNumber;
 import org.biojava.nbio.structure.ResidueRange;
@@ -59,7 +60,8 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class EcodInstallationTest {
-
+	@Rule
+	public SanitiseNetworkDependenciesRule rule = new SanitiseNetworkDependenciesRule();
 	private static final Logger logger = LoggerFactory.getLogger(EcodInstallationTest.class);
 	private static final String VERSION = "develop204"; // Should be updated periodically
 

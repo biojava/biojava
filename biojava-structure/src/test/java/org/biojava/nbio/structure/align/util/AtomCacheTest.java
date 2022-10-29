@@ -40,6 +40,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.zip.GZIPOutputStream;
 
+import nz.ac.wgtn.saflate.network.junit4.SanitiseNetworkDependenciesRule;
 import org.biojava.nbio.core.util.FileDownloadUtils;
 import org.biojava.nbio.structure.AtomPositionMap;
 import org.biojava.nbio.structure.Chain;
@@ -65,6 +66,7 @@ import org.biojava.nbio.structure.scop.ScopFactory;
 import org.biojava.nbio.structure.test.util.GlobalsHelper;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,7 +78,8 @@ import org.slf4j.LoggerFactory;
  * @since 3.0.6
  */
 public class AtomCacheTest {
-
+	@Rule
+	public SanitiseNetworkDependenciesRule rule = new SanitiseNetworkDependenciesRule();
 	private static Logger logger = LoggerFactory.getLogger(AtomCacheTest.class);
 	private AtomCache cache;
 
