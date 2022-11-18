@@ -25,6 +25,7 @@ import static org.junit.Assert.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Arrays;
 
 import org.biojava.nbio.structure.AminoAcidImpl;
@@ -83,7 +84,7 @@ public class TestMMCIFWriting {
 
 		Structure originalStruct = StructureIO.getStructure(pdbId);
 
-		File outputFile = File.createTempFile("biojava_testing_", ".cif");
+		File outputFile = Files.createTempFile("biojava_testing_",".cif").toFile();
 		outputFile.deleteOnExit();
 
 

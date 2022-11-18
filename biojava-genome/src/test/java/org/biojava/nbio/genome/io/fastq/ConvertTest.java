@@ -22,6 +22,7 @@ package org.biojava.nbio.genome.io.fastq;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
 
@@ -74,7 +75,7 @@ public final class ConvertTest {
 				FastqWriter writer = writers.get(variant2);
 				String expectedFileName = expectedFileNames.get(new FastqVariantPair(variant1, variant2));
 
-				File tmp = File.createTempFile("convertTest", "fastq");
+				File tmp = Files.createTempFile("convertTest","fastq").toFile();
 				FileWriter fileWriter = new FileWriter(tmp);
 
 				for (Fastq fastq : reader.read(getClass().getResource(inputFileName))) {

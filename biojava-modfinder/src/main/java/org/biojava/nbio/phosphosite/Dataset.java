@@ -152,7 +152,7 @@ public class Dataset {
 
 		logger.info("Downloading " + u);
 
-		File tmp = File.createTempFile("tmp","phosphosite");
+		File tmp = Files.createTempFile("tmp","phosphosite").toFile();
 
 		InputStream is = u.openStream();
 

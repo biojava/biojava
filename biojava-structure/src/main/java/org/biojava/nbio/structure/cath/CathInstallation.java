@@ -31,6 +31,7 @@ import org.biojava.nbio.core.util.InputStreamProvider;
 
 import java.io.*;
 import java.net.URL;
+import java.nio.file.Files;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -639,7 +640,7 @@ public class CathInstallation implements CathDatabase{
 		LOGGER.info("Downloading file {} to local file {}", remoteURL, localFile);
 
 		long timeS = System.currentTimeMillis();
-		File tempFile  = File.createTempFile(FileDownloadUtils.getFilePrefix(localFile), "."+ FileDownloadUtils.getFileExtension(localFile));
+		File tempFile  = Files.createTempFile(FileDownloadUtils.getFilePrefix(localFile),"." + FileDownloadUtils.getFileExtension(localFile)).toFile();
 
 		FileOutputStream out = new FileOutputStream(tempFile);
 

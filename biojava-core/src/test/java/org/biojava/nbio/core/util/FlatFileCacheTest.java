@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,7 +25,7 @@ class FlatFileCacheTest {
     }
 
     File createSmallTmpFile() throws IOException{
-        File f = File.createTempFile("flatFile","txt");
+        File f = Files.createTempFile("flatFile", "txt").toFile();
        writeToFile( aDNA, f);
         return f;
     }

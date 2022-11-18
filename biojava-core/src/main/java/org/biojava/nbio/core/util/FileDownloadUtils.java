@@ -124,7 +124,7 @@ public class FileDownloadUtils {
 		int maxTries = 10;
 		int timeout = 60000; //60 sec
 
-		File tempFile = File.createTempFile(getFilePrefix(destination), "." + getFileExtension(destination));
+		File tempFile = Files.createTempFile(getFilePrefix(destination), "." + getFileExtension(destination)).toFile();
 
 		// Took following recipe from stackoverflow:
 		// http://stackoverflow.com/questions/921262/how-to-download-and-save-a-file-from-internet-using-java

@@ -43,6 +43,7 @@ import org.junit.Test;
 import org.xml.sax.SAXException;
 
 import java.io.*;
+import java.nio.file.Files;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -164,7 +165,7 @@ public class FastaAFPChainConverterTest {
 		assertEquals("Wrong number of alnLength",53,afpChain.getAlnLength());
 		String xml = AFPChainXMLConverter.toXML(afpChain);
 		File expected = new File("src/test/resources/1w0p_1qdm.xml");
-		File x = File.createTempFile("1w0p_1qdm_output", "xml.tmp");
+		File x = Files.createTempFile("1w0p_1qdm_output","xml.tmp").toFile();
 		x.deleteOnExit();
 		BufferedWriter bw = new BufferedWriter(new FileWriter(x));
 		bw.write(xml);
