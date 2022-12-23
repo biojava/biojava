@@ -214,7 +214,7 @@ class FileDownloadUtilsTest {
     		FileDownloadUtils.downloadFile(sourceUrl, destFile);
     		assertTrue(destFile.exists(), "couldn't create dest file");
 
-    		assertTrue(FileDownloadUtils.validateFile(destFile), "file not detected to be invalid although there are no validation files");
+    		assertTrue(FileDownloadUtils.validateFile(destFile), "file detected to be invalid although there are no validation files");
 
     		PrintStream temp1 = new PrintStream(sizeFile);
     		temp1.print(15); // some wrong size value
@@ -232,7 +232,7 @@ class FileDownloadUtilsTest {
     		//This is not yet implemented. I am using this test for documentation purpose.
     		assertThrows(UnsupportedOperationException.class, 
     				() -> FileDownloadUtils.validateFile(destFile), 
-    				"file not detected to be invalid although size value is wrong.");
+    				"file not detected to be invalid although hash value is wrong.");
     		
     		destFile.delete();
     		sizeFile.delete();

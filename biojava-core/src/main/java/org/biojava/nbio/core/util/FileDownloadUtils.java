@@ -195,7 +195,7 @@ public class FileDownloadUtils {
 	 * @param resourceUrlConnection the remote file URLConnection to download
 	 * @param localDestination the local file to download into
 	 * @param hashURL the URL of the hash file to download. Can be <code>null</code>.
-	 * @since 6.0.6
+	 * @since 6.1.1
 	 */
 	public static void createValidationFiles(URLConnection resourceUrlConnection, File localDestination, URL hashURL){
 		long size = resourceUrlConnection.getContentLengthLong();
@@ -234,8 +234,8 @@ public class FileDownloadUtils {
 	 * <p>
 	 * This function does not implement hash code verification yet.
 	 * @param localFile The file to validate
-	 * @return <code>false</code> if any of the size or hash code metadata files exists but its contents does not match the expected value in the file, <code>true'</code> otherwise.
-	 * @since 6.0.6
+	 * @return <code>false</code> if any of the size or hash code metadata files exists but its contents does not match the expected value in the file, <code>true</code> otherwise.
+	 * @since 6.1.1
 	 */
 	public static boolean validateFile(File localFile) {
 		File sizeFile = new File(localFile.getParentFile(), localFile.getName()+".size");
