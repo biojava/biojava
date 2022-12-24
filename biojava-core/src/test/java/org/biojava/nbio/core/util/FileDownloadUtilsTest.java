@@ -202,7 +202,7 @@ class FileDownloadUtilsTest {
     		URL sourceUrl = new URL("https://ftp.wwpdb.org/pub/pdb/data/structures/divided/mmCIF/45/145d.cif.gz");
     		File destFile = new File(System.getProperty("java.io.tmpdir"), "145d.cif.gz");
     		File sizeFile = new File(destFile.getParentFile(), destFile.getName()+".size");
-    		File hashFile = new File(destFile.getParentFile(), destFile.getName()+".hash");
+    		File hashFile = new File(destFile.getParentFile(), destFile.getName()+".hash_MD5");
     		System.out.println(destFile.getAbsolutePath());
     		destFile.delete();
     		sizeFile.delete();
@@ -222,7 +222,7 @@ class FileDownloadUtilsTest {
     		assertFalse(FileDownloadUtils.validateFile(destFile), "file not detected to be invalid although size value is wrong.");
     		System.out.println("Just ignore the previous warning. It is expected.");
     		
-    		FileDownloadUtils.createValidationFiles(sourceUrl, destFile, null);
+    		FileDownloadUtils.createValidationFiles(sourceUrl, destFile, null, FileDownloadUtils.Hash.UNKNOWN);
     		assertTrue(sizeFile.exists(), "couldn't create size file");
     		assertTrue(FileDownloadUtils.validateFile(destFile), "file not detected to be invalid although there is correct size validation file");
 

@@ -406,7 +406,7 @@ public class EcodInstallation implements EcodDatabase {
 			File localFile = getDomainFile();
 
 			logger.info("Downloading {} to: {}",domainsURL, localFile);
-			FileDownloadUtils.createValidationFiles(domainsURL, localFile, null);
+			FileDownloadUtils.createValidationFiles(domainsURL, localFile, null, FileDownloadUtils.Hash.UNKNOWN);
 			FileDownloadUtils.downloadFile(domainsURL, localFile);
 			if(! FileDownloadUtils.validateFile(localFile))
 				throw new IOException("Downloaded file invalid: "+ localFile);

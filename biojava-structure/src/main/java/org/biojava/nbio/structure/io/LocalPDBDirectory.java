@@ -581,7 +581,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 		logger.info("Fetching " + ftp);
 		logger.info("Writing to "+ realFile);
 
-		FileDownloadUtils.createValidationFiles(url, realFile, null);
+		FileDownloadUtils.createValidationFiles(url, realFile, null, FileDownloadUtils.Hash.UNKNOWN);
 		FileDownloadUtils.downloadFile(url, realFile);
 		if(! FileDownloadUtils.validateFile(realFile))
 			throw new IOException("Downloaded file invalid: "+realFile);

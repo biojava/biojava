@@ -88,7 +88,7 @@ public class SiftsMappingProvider {
 			String u = String.format(fileLoc,pdbId);
 			URL url = new URL(u);
 			logger.debug("Downloading SIFTS file {} validation metadata.",url);
-			FileDownloadUtils.createValidationFiles(url, dest, null);
+			FileDownloadUtils.createValidationFiles(url, dest, null, FileDownloadUtils.Hash.UNKNOWN);
 			logger.debug("Downloading SIFTS file {} to {}",url,dest);
 			FileDownloadUtils.downloadFile(url, dest);
 		}

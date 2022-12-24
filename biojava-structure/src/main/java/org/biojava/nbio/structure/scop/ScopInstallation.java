@@ -747,7 +747,7 @@ public class ScopInstallation implements LocalScopDatabase {
 	 */
 	protected void downloadFileFromRemote(URL remoteURL, File localFile) throws IOException{
 		logger.info("Downloading " + remoteURL + " to: " + localFile);
-		FileDownloadUtils.createValidationFiles(remoteURL, localFile, null);
+		FileDownloadUtils.createValidationFiles(remoteURL, localFile, null, FileDownloadUtils.Hash.UNKNOWN);
 		FileDownloadUtils.downloadFile(remoteURL, localFile);
 		if(! FileDownloadUtils.validateFile(localFile))
 			throw new IOException("Downloaded file invalid: "+localFile);
