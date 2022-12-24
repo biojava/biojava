@@ -48,6 +48,8 @@ import org.slf4j.LoggerFactory;
 
 public class FileDownloadUtils {
 
+	private static final String SIZE_EXT = ".size";
+	private static final String HASH_EXT = ".hash";
 	private static final Logger logger = LoggerFactory.getLogger(FileDownloadUtils.class);
 
 	/**
@@ -157,7 +159,7 @@ public class FileDownloadUtils {
 			}
 		}
 
-		logger.debug("Copying temp file {} to final location {}", tempFile, destination);
+		logger.debug("Copying temp file [{}] to final location [{}]", tempFile, destination);
 		copy(tempFile, destination);
 
 		// delete the tmp file
@@ -181,7 +183,7 @@ public class FileDownloadUtils {
 			URLConnection resourceConnection = url.openConnection();
 			createValidationFiles(resourceConnection, localDestination, hashURL);
 		} catch (IOException e) {
-			logger.warn("could not open connection to resource file due to exception", e);
+			logger.warn("could not open connection to resource file due to exception:\n\t", e.getMessage());
 		}
 	}
 	/**
@@ -202,13 +204,13 @@ public class FileDownloadUtils {
 		if(size == -1) {
 			logger.warn("could not find expected file size for resource {}.", resourceUrlConnection.getURL());
 		} else {
-			System.out.println("Content-Length: " + size);
-			File sizeFile = new File(localDestination.getParentFile(), localDestination.getName()+".size");
+			logger.debug("Content-Length: " + size);
+			File sizeFile = new File(localDestination.getParentFile(), localDestination.getName() + SIZE_EXT);
 			try (PrintStream sizePrintStream = new PrintStream(sizeFile)) {
 				sizePrintStream.print(size);
 				sizePrintStream.close();
 			} catch (FileNotFoundException e) {
-				logger.warn("could not write size validation file due to exception", e);
+				logger.warn("could not write size validation file due to exception:\n\t", e.getMessage());
 			}
 		}
 		
@@ -216,10 +218,10 @@ public class FileDownloadUtils {
 			return;
 
 		try {
-			File hashFile = new File(localDestination.getParentFile(), localDestination.getName()+".hash");
+			File hashFile = new File(localDestination.getParentFile(), localDestination.getName() + HASH_EXT);
 			downloadFile(hashURL, hashFile);
 		} catch (IOException e) {
-			logger.warn("could not write validation hash file due to exception", e);
+			logger.warn("could not write validation hash file due to exception:\n\t{}", e.getMessage());
 		}
 	}
 	
@@ -238,24 +240,25 @@ public class FileDownloadUtils {
 	 * @since 6.1.1
 	 */
 	public static boolean validateFile(File localFile) {
-		File sizeFile = new File(localFile.getParentFile(), localFile.getName()+".size");
+		File sizeFile = new File(localFile.getParentFile(), localFile.getName() + SIZE_EXT);
 		if(sizeFile.exists()) {
 			Scanner scanner = null;
 			try {
 				scanner = new Scanner(sizeFile);
 				long expectedSize = scanner.nextLong();
-				if (expectedSize != localFile.length()) {
-					logger.warn("File size does not match expected");
+				long actualLSize = localFile.length();
+				if (expectedSize != actualLSize) {
+					logger.warn("File [{}] size ({}) does not match expected size ({}).", localFile, actualLSize, expectedSize);
 					return false;
 				}
 			} catch (FileNotFoundException e) {
-				logger.warn("could not validate size of file ["+ localFile+ "] due to exception", e);
+				logger.warn("could not validate size of file [{}] because no size metadata file exists.", localFile);
 			} finally {
 				scanner.close();
 			}
 		}
 
-		File hashFile = new File(localFile.getParentFile(), localFile.getName()+".hash");
+		File hashFile = new File(localFile.getParentFile(), localFile.getName() + HASH_EXT);
 		if(hashFile.exists()) {
 			throw new UnsupportedOperationException("Not yet implemented");
 		}
