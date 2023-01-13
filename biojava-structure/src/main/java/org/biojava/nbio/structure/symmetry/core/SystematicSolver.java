@@ -176,7 +176,7 @@ public class SystematicSolver implements QuatSymmetrySolver {
 		List<Integer> seqClusterId = subunits.getClusterIds();
 		for (int i = 0; i < permutation.size(); i++) {
 			int j = permutation.get(i);
-			if (seqClusterId.get(i) != seqClusterId.get(j)) {
+			if (seqClusterId.get(i) != null && !seqClusterId.get(i).equals(seqClusterId.get(j))) {
 				return false;
 			}
 		}

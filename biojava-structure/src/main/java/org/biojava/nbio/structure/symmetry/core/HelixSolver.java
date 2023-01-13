@@ -366,7 +366,7 @@ public class HelixSolver {
 			int permutation = -1;
 			double minDistSq = Double.MAX_VALUE;
 			for (int j = 0; j < centers.size(); j++) {
-				if (seqClusterId.get(i) == seqClusterId.get(j)) {
+				if (seqClusterId.get(i) != null && seqClusterId.get(i).equals(seqClusterId.get(j))) {
 					if (!used[j]) {
 						double dSq = tCenter.distanceSquared(centers.get(j));
 						if (dSq < minDistSq && dSq <= rmsdThresholdSq) {

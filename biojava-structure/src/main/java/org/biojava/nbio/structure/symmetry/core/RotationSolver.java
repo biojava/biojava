@@ -334,7 +334,7 @@ public class RotationSolver implements QuatSymmetrySolver {
 		int selfaligned = 0;
 		for (int i = 0; i < permutation.size(); i++) {
 			int j = permutation.get(i);
-			if ( seqClusterId.get(i) != seqClusterId.get(j)) {
+			if ( seqClusterId.get(i) != null && !seqClusterId.get(i).equals(seqClusterId.get(j))) {
 				return false;
 			}
 			if(i == j ) {
