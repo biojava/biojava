@@ -22,7 +22,7 @@
 	<url>http://www.biojava.org</url>
 	<organization>
 		<name>BioJava</name>
-		<url>http://www.biojava.org</url>
+		<url>http ://www.biojava.org</url>
 	</organization>
 	<licenses>
 		<license>
@@ -34,7 +34,6 @@
 	<properties>
 		<!-- Notice: if using java 9 or 10 jres, it is possible to simply use here "8", "9" or "10". But if using java 8 jre, "8" is not an allowed value but only "1.8"-->
 		<jdk.version>11</jdk.version>
-		<maven.enforcer.jdk-version>1.8</maven.enforcer.jdk-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.build.targetEncoding>UTF-8</project.build.targetEncoding>
 		<!-- needed for failsafe plugin in integrationtest module - JD 2018-03-08 -->
@@ -312,7 +311,7 @@
 							<configuration>
 								<rules>
 									<requireJavaVersion>
-										<version>${maven.enforcer.jdk-version}</version>
+										<version>${jdk.version}</version>
 									</requireJavaVersion>
 								</rules>
 							</configuration>
