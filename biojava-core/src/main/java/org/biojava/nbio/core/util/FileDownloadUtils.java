@@ -189,7 +189,7 @@ public class FileDownloadUtils {
 			URLConnection resourceConnection = url.openConnection();
 			createValidationFiles(resourceConnection, localDestination, hashURL, FileDownloadUtils.Hash.UNKNOWN);
 		} catch (IOException e) {
-			logger.warn("could not open connection to resource file due to exception:\n\t", e.getMessage());
+			logger.warn("could not open connection to resource file due to exception: {}", e.getMessage());
 		}
 	}
 	/**
@@ -205,7 +205,7 @@ public class FileDownloadUtils {
 	 * @param localDestination the local file to download into
 	 * @param hashURL the URL of the hash file to download. Can be <code>null</code>.
 	 * @param hash The Hashing algorithm. Ignored if <code>hashURL</code> is <code>null</code>.
-	 * @since 6.1.1
+	 * @since 7.0.0
 	 */
 	public static void createValidationFiles(URLConnection resourceUrlConnection, File localDestination, URL hashURL, Hash hash){
 		long size = resourceUrlConnection.getContentLengthLong();
@@ -218,7 +218,7 @@ public class FileDownloadUtils {
 				sizePrintStream.print(size);
 				sizePrintStream.close();
 			} catch (FileNotFoundException e) {
-				logger.warn("could not write size validation file due to exception:\n\t", e.getMessage());
+				logger.warn("could not write size validation file due to exception: {}", e.getMessage());
 			}
 		}
 		
@@ -231,7 +231,7 @@ public class FileDownloadUtils {
 			File hashFile = new File(localDestination.getParentFile(), String.format("%s%s_%s", localDestination.getName(), HASH_EXT, hash));
 			downloadFile(hashURL, hashFile);
 		} catch (IOException e) {
-			logger.warn("could not write validation hash file due to exception:\n\t{}", e.getMessage());
+			logger.warn("could not write validation hash file due to exception: {}", e.getMessage());
 		}
 	}
 	
@@ -247,7 +247,7 @@ public class FileDownloadUtils {
 	 * <b>N.B.</b> None of the 3 common verification hashing algorithms are implement yet.
 	 * @param localFile The file to validate
 	 * @return <code>false</code> if any of the size or hash code metadata files exists but its contents does not match the expected value in the file, <code>true</code> otherwise.
-	 * @since 6.1.1
+	 * @since 7.0.0
 	 */
 	public static boolean validateFile(File localFile) {
 		File sizeFile = new File(localFile.getParentFile(), localFile.getName() + SIZE_EXT);
