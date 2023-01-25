@@ -19,10 +19,10 @@
         manipulation of sequences and 3D structures. The goal of the biojava project is to facilitate rapid application
         development for bioinformatics.
         </description>
-	<url>http://www.biojava.org</url>
+	<url>https://www.biojava.org</url>
 	<organization>
 		<name>BioJava</name>
-		<url>http ://www.biojava.org</url>
+		<url>https://www.biojava.org</url>
 	</organization>
 	<licenses>
 		<license>
