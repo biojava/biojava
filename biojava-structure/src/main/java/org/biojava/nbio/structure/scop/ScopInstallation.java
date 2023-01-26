@@ -739,9 +739,18 @@ public class ScopInstallation implements LocalScopDatabase {
 		throw new IOException("Unable to download SCOP .com file",exception);
 	}
 
+	/**
+	 * Downloads the SCOP installation file +/- its validation metadata files.
+	 * @param remoteURL The remote file to download
+	 * @param localFile the local file to download to
+	 * @throws IOException in cases of file I/O, including failure to download a healthy (non-corrupted) file.
+	 */
 	protected void downloadFileFromRemote(URL remoteURL, File localFile) throws IOException{
 		logger.info("Downloading " + remoteURL + " to: " + localFile);
+		FileDownloadUtils.createValidationFiles(remoteURL, localFile, null, FileDownloadUtils.Hash.UNKNOWN);
 		FileDownloadUtils.downloadFile(remoteURL, localFile);
+		if(! FileDownloadUtils.validateFile(localFile))
+			throw new IOException("Downloaded file invalid: "+localFile);
 	}
 
 	private boolean claFileAvailable(){
@@ -749,14 +758,14 @@ public class ScopInstallation implements LocalScopDatabase {
 
 		File f = new File(fileName);
 
-		return f.exists() && f.length()>0;
+		return f.exists() && FileDownloadUtils.validateFile(f);
 	}
 
 	private boolean desFileAvailable(){
 		String fileName = getDesFilename();
 
 		File f = new File(fileName);
-		return f.exists() && f.length()>0;
+		return f.exists() && FileDownloadUtils.validateFile(f);
 	}
 
 	private boolean hieFileAvailable(){
@@ -764,7 +773,7 @@ public class ScopInstallation implements LocalScopDatabase {
 
 		File f = new File(fileName);
 
-		return f.exists() && f.length()>0;
+		return f.exists() && FileDownloadUtils.validateFile(f);
 	}
 
 	private boolean comFileAvailable(){
@@ -772,7 +781,7 @@ public class ScopInstallation implements LocalScopDatabase {
 
 		File f = new File(fileName);
 
-		return f.exists() && f.length()>0;
+		return f.exists() && FileDownloadUtils.validateFile(f);
 	}
 
 	protected String getClaFilename(){
