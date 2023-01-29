@@ -1403,8 +1403,8 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
     }
 
     private void addInformationFromEntitySrcNat(int rowIndex, EntityInfo entityInfo) {
-        entityInfo.setAtcc(entitySrcNat.getPdbxAtcc().get(rowIndex));
-        entityInfo.setCell(entitySrcNat.getPdbxCell().get(rowIndex));
+        entityInfo.setAtcc(entitySrcNat.getPdbxAtcc().values().skip(rowIndex).findFirst().orElse(""));
+        entityInfo.setCell(entitySrcNat.getPdbxCell().values().skip(rowIndex).findFirst().orElse(""));
         entityInfo.setOrganismCommon(entitySrcNat.getCommonName().get(rowIndex));
         entityInfo.setOrganismScientific(entitySrcNat.getPdbxOrganismScientific().get(rowIndex));
         entityInfo.setOrganismTaxId(entitySrcNat.getPdbxNcbiTaxonomyId().get(rowIndex));
