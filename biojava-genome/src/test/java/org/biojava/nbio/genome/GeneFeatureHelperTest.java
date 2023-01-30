@@ -36,6 +36,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.nio.file.Files;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 
@@ -78,7 +79,7 @@ public class GeneFeatureHelperTest {
 				.loadFastaAddGeneFeaturesFromUpperCaseExonFastaFile(fastaSequenceFile, uppercaseFastaFile,
 						throwExceptionGeneNotFound);
 
-		File tmp = File.createTempFile("volvox_all_genes_exon_uppercase", "gff3");
+		File tmp = Files.createTempFile("volvox_all_genes_exon_uppercase","gff3").toFile();
 		tmp.deleteOnExit();
 		FileOutputStream fo = new FileOutputStream(tmp);
 		GFF3Writer gff3Writer = new GFF3Writer();
@@ -95,7 +96,7 @@ public class GeneFeatureHelperTest {
 		// logger.info("outputFastaSequenceLengthGFF3");
 
 		File fastaSequenceFile = new File("src/test/resources/volvox_all.fna");
-		File gffFile = File.createTempFile("volvox_length", "gff3");
+		File gffFile = Files.createTempFile("volvox_length","gff3").toFile();
 		gffFile.deleteOnExit();
 		GeneFeatureHelper.outputFastaSequenceLengthGFF3(fastaSequenceFile, gffFile);
 		FileAssert.assertEquals("volvox_length.gff3 and volvox_length_output.gff3 are not equal", gffFile,
@@ -135,7 +136,7 @@ public class GeneFeatureHelperTest {
 		// for(ProteinSequence proteinSequence : proteinSequenceList.values()){
 		// logger.info("Output={}", proteinSequence.getSequenceAsString());
 		// }
-		File tmp = File.createTempFile("volvox_all", "faa");
+		File tmp = Files.createTempFile("volvox_all","faa").toFile();
 		tmp.deleteOnExit();
 		FastaWriterHelper.writeProteinSequence(tmp, proteinSequenceList.values());
 		FileAssert.assertEquals("volvox_all_reference.faa and volvox_all.faa are not equal", new File(
@@ -155,7 +156,7 @@ public class GeneFeatureHelperTest {
 				.getGeneSequences(chromosomeSequenceList.values());
 		Collection<GeneSequence> geneSequences = geneSequenceHashMap.values();
 
-		File tmp = File.createTempFile("volvox_all_genes_exon_uppercase", "fna");
+		File tmp = Files.createTempFile("volvox_all_genes_exon_uppercase","fna").toFile();
 		tmp.deleteOnExit();
 		FastaWriterHelper.writeGeneSequence(tmp, geneSequences, true);
 	}

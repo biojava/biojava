@@ -67,7 +67,7 @@ class XMLHelperTest {
 
     @Test
     void fileToDocument() throws IOException, SAXException, ParserConfigurationException {
-        File tmpFile = File.createTempFile("xml", ".xml");
+        File tmpFile = Files.createTempFile("xml", ".xml").toFile();
         Files.write(Paths.get(tmpFile.getAbsolutePath()), TEST_XML.getBytes());
         Document doc = XMLHelper.loadXML(tmpFile.getAbsolutePath());
         assertParsedDocument(doc);

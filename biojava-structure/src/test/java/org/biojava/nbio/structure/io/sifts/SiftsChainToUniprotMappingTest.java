@@ -30,6 +30,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.nio.file.Files;
 
 import static org.junit.Assert.assertEquals;
 
@@ -44,7 +45,7 @@ public class SiftsChainToUniprotMappingTest {
 
 	@Test
 	public void test() throws IOException {
-		SiftsChainToUniprotMapping.DEFAULT_FILE = File.createTempFile("biojavaSiftsTest-", "");
+		SiftsChainToUniprotMapping.DEFAULT_FILE = Files.createTempFile("biojavaSiftsTest-","").toFile();
 		SiftsChainToUniprotMapping.DEFAULT_FILE.deleteOnExit();
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("mock_sifts.tsv")));

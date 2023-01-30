@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.net.URL;
+import java.nio.file.Files;
 
 
 /**
@@ -132,7 +133,7 @@ public abstract class AbstractFastqReaderTest {
 	public void testReadEmptyFile() throws Exception
 	{
 		FastqReader reader = createFastqReader();
-		File empty = File.createTempFile("abstractFastqReaderTest", null);
+		File empty = Files.createTempFile("abstractFastqReaderTest",null).toFile();
 		Iterable<Fastq> iterable = reader.read(empty);
 		Assert.assertNotNull(iterable);
 		int count = 0;
@@ -148,7 +149,7 @@ public abstract class AbstractFastqReaderTest {
 	public void testReadRoundTripSingleFile() throws Exception
 	{
 		FastqReader reader = createFastqReader();
-		File single = File.createTempFile("abstractFastqReaderTest", null);
+		File single = Files.createTempFile("abstractFastqReaderTest",null).toFile();
 		Fastq fastq = createFastq();
 		FastqWriter writer = createFastqWriter();
 		writer.write(single, fastq);
@@ -167,7 +168,7 @@ public abstract class AbstractFastqReaderTest {
 	public void testReadRoundTripMultipleFile() throws Exception
 	{
 		FastqReader reader = createFastqReader();
-		File multiple = File.createTempFile("abstractFastqReaderTest", null);
+		File multiple = Files.createTempFile("abstractFastqReaderTest",null).toFile();
 		Fastq fastq0 = createFastq();
 		Fastq fastq1 = createFastq();
 		Fastq fastq2 = createFastq();

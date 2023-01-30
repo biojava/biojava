@@ -26,6 +26,7 @@ import org.junit.Test;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.OutputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -134,15 +135,15 @@ public abstract class AbstractFastqWriterTest {
 		Fastq fastq0 = createFastq();
 		Fastq fastq1 = createFastq();
 		Fastq fastq2 = createFastq();
-		File file0 = File.createTempFile("abstractFastqWriterTest", null);
+		File file0 = Files.createTempFile("abstractFastqWriterTest",null).toFile();
 		writer.write(file0, fastq0);
-		File file1 = File.createTempFile("abstractFastqWriterTest", null);
+		File file1 = Files.createTempFile("abstractFastqWriterTest",null).toFile();
 		writer.write(file1, fastq0, fastq1);
-		File file2 = File.createTempFile("abstractFastqWriterTest", null);
+		File file2 = Files.createTempFile("abstractFastqWriterTest",null).toFile();
 		writer.write(file2, fastq0, fastq1, fastq2);
-		File file3 = File.createTempFile("abstractFastqWriterTest", null);
+		File file3 = Files.createTempFile("abstractFastqWriterTest",null).toFile();
 		writer.write(file3, fastq0, fastq1, fastq2, null);
-		File file4 = File.createTempFile("abstractFastqWriterTest", null);
+		File file4 = Files.createTempFile("abstractFastqWriterTest",null).toFile();
 		writer.write(file4, (Fastq) null);
 
 		try
@@ -164,26 +165,26 @@ public abstract class AbstractFastqWriterTest {
 		Fastq fastq1 = createFastq();
 		Fastq fastq2 = createFastq();
 		List<Fastq> list = new ArrayList<Fastq>();
-		File file0 = File.createTempFile("abstractFastqWriterTest", null);
+		File file0 = Files.createTempFile("abstractFastqWriterTest",null).toFile();
 		writer.write(file0, list);
 
 		list.add(fastq0);
-		File file1 = File.createTempFile("abstractFastqWriterTest", null);
+		File file1 = Files.createTempFile("abstractFastqWriterTest",null).toFile();
 		writer.write(file1, list);
 
 		list.add(fastq1);
-		File file2 = File.createTempFile("abstractFastqWriterTest", null);
+		File file2 = Files.createTempFile("abstractFastqWriterTest",null).toFile();
 		writer.write(file2, list);
 
 		list.add(fastq2);
-		File file3 = File.createTempFile("abstractFastqWriterTest", null);
+		File file3 = Files.createTempFile("abstractFastqWriterTest",null).toFile();
 		writer.write(file3, list);
 
 		list.add(null);
-		File file4 = File.createTempFile("abstractFastqWriterTest", null);
+		File file4 = Files.createTempFile("abstractFastqWriterTest",null).toFile();
 		writer.write(file4, list);
 
-		File file5 = File.createTempFile("abstractFastqWriterTest", null);
+		File file5 = Files.createTempFile("abstractFastqWriterTest",null).toFile();
 
 		try
 		{

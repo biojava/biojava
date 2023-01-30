@@ -25,7 +25,7 @@ class FileDownloadUtilsTest {
         
         private File createSrcFile () throws IOException {
             byte [] toSave = new byte []{1,2,3,4,5};
-            File src = File.createTempFile("test", ".dat");
+            File src = Files.createTempFile("test", ".dat").toFile();
             try (FileOutputStream fos = new FileOutputStream(src);){
                 fos.write(toSave);
             }
@@ -37,7 +37,7 @@ class FileDownloadUtilsTest {
             File src = createSrcFile();
             //sanity check
             assertEquals(5, src.length());
-            File dest = File.createTempFile("dest", ".dat");
+            File dest = Files.createTempFile("dest", ".dat").toFile();
             assertEquals(0, dest.length());
             FileDownloadUtils.copy(src, dest);
             assertEquals(5, dest.length());
