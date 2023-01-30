@@ -14,7 +14,6 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.OptionalInt;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import javax.vecmath.Matrix4d;
@@ -1397,27 +1396,34 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
     }
 
     private void addInformationFromEntitySrcSyn(int rowIndex, EntityInfo entityInfo) {
-        entityInfo.setOrganismCommon(entitySrcSyn.getOrganismCommonName().get(rowIndex));
-        entityInfo.setOrganismScientific(entitySrcSyn.getOrganismScientific().get(rowIndex));
-        entityInfo.setOrganismTaxId(entitySrcSyn.getNcbiTaxonomyId().get(rowIndex));
+        entityInfo.setOrganismCommon(getCifFieldNullAware(entitySrcSyn.getOrganismCommonName(), rowIndex, null));
+        entityInfo.setOrganismScientific(getCifFieldNullAware(entitySrcSyn.getOrganismScientific(), rowIndex, null));
+        entityInfo.setOrganismTaxId(getCifFieldNullAware(entitySrcSyn.getNcbiTaxonomyId(), rowIndex, null));
     }
 
     private void addInformationFromEntitySrcNat(int rowIndex, EntityInfo entityInfo) {
-        entityInfo.setAtcc(entitySrcNat.getPdbxAtcc().get(rowIndex));
-        entityInfo.setCell(entitySrcNat.getPdbxCell().get(rowIndex));
-        entityInfo.setOrganismCommon(entitySrcNat.getCommonName().get(rowIndex));
-        entityInfo.setOrganismScientific(entitySrcNat.getPdbxOrganismScientific().get(rowIndex));
-        entityInfo.setOrganismTaxId(entitySrcNat.getPdbxNcbiTaxonomyId().get(rowIndex));
+        entityInfo.setAtcc(getCifFieldNullAware(entitySrcNat.getPdbxAtcc(), rowIndex, null));
+        entityInfo.setCell(getCifFieldNullAware(entitySrcNat.getPdbxCell(), rowIndex, null));
+        entityInfo.setOrganismCommon(getCifFieldNullAware(entitySrcNat.getCommonName(), rowIndex, null));
+        entityInfo.setOrganismScientific(getCifFieldNullAware(entitySrcNat.getPdbxOrganismScientific(), rowIndex, null));
+        entityInfo.setOrganismTaxId(getCifFieldNullAware(entitySrcNat.getPdbxNcbiTaxonomyId(), rowIndex, null));
     }
 
     private void addInformationFromEntitySrcGen(int rowIndex, EntityInfo entityInfo) {
-        entityInfo.setAtcc(entitySrcGen.getPdbxGeneSrcAtcc().get(rowIndex));
-        entityInfo.setCell(entitySrcGen.getPdbxGeneSrcCell().get(rowIndex));
-        entityInfo.setOrganismCommon(entitySrcGen.getGeneSrcCommonName().get(rowIndex));
-        entityInfo.setOrganismScientific(entitySrcGen.getPdbxGeneSrcScientificName().get(rowIndex));
-        entityInfo.setOrganismTaxId(entitySrcGen.getPdbxGeneSrcNcbiTaxonomyId().get(rowIndex));
-        entityInfo.setExpressionSystemTaxId(entitySrcGen.getPdbxHostOrgNcbiTaxonomyId().get(rowIndex));
-        entityInfo.setExpressionSystem(entitySrcGen.getPdbxHostOrgScientificName().get(rowIndex));
+        entityInfo.setAtcc(getCifFieldNullAware(entitySrcGen.getPdbxGeneSrcAtcc(), rowIndex, null));
+        entityInfo.setCell(getCifFieldNullAware(entitySrcGen.getPdbxGeneSrcCell(), rowIndex, null));
+        entityInfo.setOrganismCommon(getCifFieldNullAware(entitySrcGen.getGeneSrcCommonName(), rowIndex, null));
+        entityInfo.setOrganismScientific(getCifFieldNullAware(entitySrcGen.getPdbxGeneSrcScientificName(), rowIndex, null));
+        entityInfo.setOrganismTaxId(getCifFieldNullAware(entitySrcGen.getPdbxGeneSrcNcbiTaxonomyId(), rowIndex, null));
+        entityInfo.setExpressionSystemTaxId(getCifFieldNullAware(entitySrcGen.getPdbxHostOrgNcbiTaxonomyId(), rowIndex, null));
+        entityInfo.setExpressionSystem(getCifFieldNullAware(entitySrcGen.getPdbxHostOrgScientificName(), rowIndex, null));
+    }
+
+    private String getCifFieldNullAware(StrColumn column, int rowIndex, String defaultValue) {
+        if (column.isDefined())
+            return column.get(rowIndex);
+        else
+            return defaultValue;
     }
 
     private void setStructNcsOps() {
