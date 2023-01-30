@@ -312,4 +312,14 @@ public interface IPeptideProperties{
 	 * @see AminoAcidCompound
 	 */
 	public Map<AminoAcidCompound, Double> getAAComposition(ProteinSequence sequence);
+
+	/**
+	 * Calculates the aromaticity value of a protein according to Lobry, 1994.
+	 * It is simply the relative frequency of Phe+Trp+Tyr.
+	 *
+	 * @param sequence a protein sequence consisting of non-ambiguous characters only
+	 * @return the aromaticity of a protein sequence
+	 * @see ProteinSequence
+	 */
+	public double getAromaticity(ProteinSequence sequence);
 }

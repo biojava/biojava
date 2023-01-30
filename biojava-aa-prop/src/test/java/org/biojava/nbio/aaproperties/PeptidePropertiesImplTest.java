@@ -358,4 +358,12 @@ public class PeptidePropertiesImplTest {
 	public void testNetChargeNull(){
 		assertEquals(8.6, PeptideProperties.getNetCharge(null), delta);
 	}
+
+	@Test
+	public void testAromaticity() {
+		assertEquals(1, PeptideProperties.getAromaticity("WWWYYYYFFFWWWYYYYFFF"), 0.001);
+		assertEquals(0.5, PeptideProperties.getAromaticity("WWWYYYYFFFAAAAAAAAAA"), 0.001);
+		assertEquals(0.08, PeptideProperties.getAromaticity(sequence), 0.001);
+		assertEquals(0.0, PeptideProperties.getAromaticity(fullInvalidSequence), 0.001);
+	}
 }

@@ -136,6 +136,24 @@ public class GenbankWriterHelper {
 	}
 
 	/**
+	 * Write a collection of NucleotideSequences to a file using the NucleotideSequences
+	 * original header as the LOCUS line rather than generating it
+	 *
+	 * @param outputStream
+	 * @param dnaSequences
+	 * @throws Exception
+	 */
+
+	public static void writeNucleotideSequenceOriginal(OutputStream outputStream, Collection<DNASequence> dnaSequences)
+			throws Exception {
+		GenericGenbankHeaderFormat<DNASequence, NucleotideCompound> genericGenbankHeaderFormat = new GenericGenbankHeaderFormat<DNASequence, NucleotideCompound>(
+				true);
+		GenbankWriter<DNASequence, NucleotideCompound> genbankWriter = new GenbankWriter<DNASequence, NucleotideCompound>(
+				outputStream, dnaSequences, genericGenbankHeaderFormat);
+		genbankWriter.process();
+	}
+	
+	/**
 	 * Write a sequence to a file
 	 *
 	 * @param file

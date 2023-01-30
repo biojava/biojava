@@ -590,4 +590,28 @@ public class PeptideProperties {
 		}
 		return polarity;
 	}
+
+	/**
+	 * An adaptor method to return the aromaticity value of sequence. The sequence argument
+	 * must be a protein sequence consisting of only non-ambiguous characters.
+	 * <p>
+	 * Calculates the aromaticity value of a protein according to Lobry, 1994.
+	 * It is simply the relative frequency of Phe+Trp+Tyr.
+	 * *
+	 *
+	 * @param sequence a protein sequence consisting of non-ambiguous characters only
+	 * @return the aromaticity value of sequence
+	 */
+	public static final double getAromaticity(String sequence) {
+		sequence = Utils.checkSequence(sequence);
+		ProteinSequence pSequence = null;
+		try {
+			pSequence = new ProteinSequence(sequence);
+		} catch (CompoundNotFoundException e) {
+			// the sequence was checked with Utils.checkSequence, this shouldn't happen
+			logger.error("The protein sequence contains invalid characters ({}), this should not happen. This is most likely a bug in Utils.checkSequence()", e.getMessage());
+		}
+		IPeptideProperties pp = new PeptidePropertiesImpl();
+		return pp.getAromaticity(pSequence);
+	}
 }

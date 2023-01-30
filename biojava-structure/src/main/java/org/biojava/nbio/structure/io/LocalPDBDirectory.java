@@ -66,7 +66,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	 * Note that we don't support file stamp retrieving for ftp protocol, thus some of the
 	 * fetch modes will not work properly with ftp protocol
 	 */
-	public static final String DEFAULT_PDB_FILE_SERVER = "https://ftp.wwpdb.org";
+	public static final String DEFAULT_PDB_FILE_SERVER = "https://files.wwpdb.org";
 	public static final String PDB_FILE_SERVER_PROPERTY = "PDB.FILE.SERVER";
 
 	/**
@@ -123,7 +123,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	 */
 	public static final long LAST_REMEDIATION_DATE ;
 	private static final String LAST_REMEDIATION_DATE_STRING = "2011/07/12";
-	
+
 	static {
 
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd", Locale.US);
@@ -362,7 +362,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	 * for direct parsing.
 	 * @param pdbId
 	 * @return
-	 * @throws IOException
+	 * @throws IOException in cases of file I/O, including failure to download a healthy (non-corrupted) file.
 	 */
 	protected InputStream getInputStream(PdbId pdbId) throws IOException{
 
@@ -373,6 +373,9 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 			throw new IOException("Structure "+pdbId+" not found and unable to download.");
 		}
 
+		if(! FileDownloadUtils.validateFile(file))
+			throw new IOException("Downloaded file invalid: "+file);
+		
 		InputStreamProvider isp = new InputStreamProvider();
 
 		InputStream inputStream = isp.getInputStream(file);
@@ -385,16 +388,18 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	 *
 	 * Used to pre-fetch large numbers of structures.
 	 * @param pdbId
-	 * @throws IOException
+	 * @throws IOException in cases of file I/O, including failure to download a healthy (non-corrupted) file.
 	 */
 	public void prefetchStructure(String pdbId) throws IOException {
-		
+
 		// Check existing
 		File file = downloadStructure(new PdbId(pdbId));
 
 		if(!file.exists()) {
 			throw new IOException("Structure "+pdbId+" not found and unable to download.");
 		}
+		if(! FileDownloadUtils.validateFile(file))
+			throw new IOException("Downloaded file invalid: "+file);
 	}
 
 	/**
@@ -525,14 +530,14 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	}
 
 	/**
-	 * Download a file from the ftp server, replacing any existing files if needed
+	 * Download a file from the ftp server +/- its validation metadata, replacing any existing files if needed
 	 * @param pdbId PDB ID
 	 * @param pathOnServer Path on the FTP server, e.g. data/structures/divided/pdb
 	 * @param obsolete Whether or not file should be saved to the obsolete location locally
 	 * @param existingFile if not null and checkServerFileDate is true, the last modified date of the
 	 * server file and this file will be compared to decide whether to download or not
 	 * @return
-	 * @throws IOException
+	 * @throws IOException in cases of file I/O, including failure to download a healthy (non-corrupted) file.
 	 */
 	private File downloadStructure(PdbId pdbId, String pathOnServer, boolean obsolete, File existingFile)
 			throws IOException{
@@ -576,7 +581,10 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 		logger.info("Fetching " + ftp);
 		logger.info("Writing to "+ realFile);
 
+		FileDownloadUtils.createValidationFiles(url, realFile, null, FileDownloadUtils.Hash.UNKNOWN);
 		FileDownloadUtils.downloadFile(url, realFile);
+		if(! FileDownloadUtils.validateFile(realFile))
+			throw new IOException("Downloaded file invalid: "+realFile);
 
 		return realFile;
 	}

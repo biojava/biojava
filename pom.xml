@@ -12,7 +12,7 @@
 	<groupId>org.biojava</groupId>
 	<artifactId>biojava</artifactId>
 	<packaging>pom</packaging>
-	<version>6.0.6-SNAPSHOT</version>
+	<version>6.1.1-SNAPSHOT</version>
 	<name>biojava</name>
 	<description>BioJava is an open-source project dedicated to providing a Java framework for processing biological
         data. It provides analytical and statistical routines, parsers for common file formats and allows the
@@ -40,12 +40,12 @@
 		<!-- needed for failsafe plugin in integrationtest module - JD 2018-03-08 -->
     	<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<maxmem>512M</maxmem>
-		<mmtf.version>1.0.10</mmtf.version>
+		<mmtf.version>1.0.11</mmtf.version>
 		<slf4j.version>1.7.30</slf4j.version>
-		<log4j.version>2.17.1</log4j.version>
+		<log4j.version>2.17.2</log4j.version>
 		<junit-jupiter.version>5.7.2</junit-jupiter.version>
 		<ciftools.artifact>ciftools-java-jdk8</ciftools.artifact>
-		<ciftools.version>3.0.0</ciftools.version>
+		<ciftools.version>4.0.5</ciftools.version>
 	</properties>
 	<scm>
 		<connection>scm:git:git://github.com/biojava/biojava.git</connection>
@@ -153,6 +153,10 @@
 		</developer>
 		<developer>
 			<name>Scooter Willis</name>
+		</developer>
+		<developer>
+			<id>JonStargaryen</id>
+			<name>Sebastian Bittrich</name>
 		</developer>
 		<developer>
 			<name>Spencer Bliven</name>

@@ -582,4 +582,41 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 		}
 		return aa2Composition;
 	}
+
+
+	@Override
+	public double getAromaticity(ProteinSequence sequence) {
+		int validLength = sequence.getSequenceAsString().length();
+
+		if (validLength == 0) {
+			logger.warn("Valid length of sequence is 0, can't divide by 0 to calculate aromaticity: setting aromaticity to 0");
+			return 0.0;
+		}
+
+		//Phe - Phenylalanine
+		int totalF = 0;
+		//Tyr - Tyrosine
+		int totalY = 0;
+		//Trp - Tryptophan
+		int totalW = 0;
+
+		char[] seq = this.getSequence(sequence.toString(), true);
+		for (char aa : seq) {
+			char amino = Character.toUpperCase(aa);
+			switch (amino) {
+				case 'F':
+					totalF++;
+					break;
+				case 'Y':
+					totalY++;
+					break;
+				case 'W':
+					totalW++;
+					break;
+			}
+		}
+
+		return (totalF + totalY + totalW) / (double) (validLength);
+	}
 }
+

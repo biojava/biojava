@@ -109,8 +109,10 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 	protected static final String PRIMARY = "PRIMARY";
 	protected static final String DBLINK = "DBLINK";
 	protected static final String END_SEQUENCE_TAG = "//";
-	// locus line
-	protected static final Pattern lp = Pattern.compile("^(\\S+)\\s+(\\d+)\\s+(bp|BP|aa|AA)\\s{0,4}(([dmsDMS][sS]-)?(\\S+))?\\s*(circular|CIRCULAR|linear|LINEAR)?\\s*(\\S+)?\\s*(\\S+)?$");
+	// locus line with name that may contain spaces but must start and end with non whitespace character
+	protected static final Pattern lp = Pattern.compile("^(\\S+[\\S ]*\\S*)\\s+(\\d+)\\s+(bp|BP|aa|AA)\\s{0,4}(([dmsDMS][sS]-)?(\\S+))?\\s*(circular|CIRCULAR|linear|LINEAR)?\\s*(\\S+)?\\s*(\\S+)?$");
+	// locus line with no name
+	protected static final Pattern lp2 = Pattern.compile("^(\\d+)\\s+(bp|BP|aa|AA)\\s{0,4}(([dmsDMS][sS]-)?(\\S+))?\\s*(circular|CIRCULAR|linear|LINEAR)?\\s*(\\S+)?\\s*(\\S+)?$");	
 	// version line
 	protected static final Pattern vp = Pattern.compile("^(\\S*?)(\\.(\\d+))?(\\s+GI:(\\S+))?$");
 	// reference line
@@ -198,10 +200,12 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 				if (gbFeature == null) {
 					throw new ParserException("Malformed GenBank file: found a qualifier without feature.");
 				}
+				Boolean needsQuotes = false;
 				key = key.substring(1); // strip leading slash
-				val = val.replaceAll("\\s*[\\n\\r]+\\s*", " ").trim();
+				val = val.replaceAll("\\s*[\\n\\r]+\\s*", " ").trim();				
 				if (val.endsWith("\"")) {
 					val = val.substring(1, val.length() - 1); // strip quotes
+					needsQuotes = true; // as the value has quotes then set that it needs quotes when written back out
 				}
 				// parameter on old feature
 				if (key.equals("db_xref")) {
@@ -210,6 +214,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 						String dbname = m.group(1);
 						String raccession = m.group(2);
 						DBReferenceInfo xref = new DBReferenceInfo(dbname, raccession);
+						xref.setNeedsQuotes(needsQuotes);
 						gbFeature.addQualifier(key, xref);
 
 						ArrayList<DBReferenceInfo> listDBEntry = new ArrayList<>();
@@ -219,17 +224,17 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 						throw new ParserException("Bad dbxref");
 					}
 				} else if (key.equalsIgnoreCase("organism")) {
-					Qualifier q = new Qualifier(key, val.replace('\n', ' '));
+					Qualifier q = new Qualifier(key, val.replace('\n', ' '), needsQuotes);
 					gbFeature.addQualifier(key, q);
 				} else {
 					if (key.equalsIgnoreCase("translation") || key.equals("anticodon")
 							|| key.equals("transl_except")) {
 						// strip spaces from sequence
 						val = val.replaceAll("\\s+", "");
-						Qualifier q = new Qualifier(key, val);
+						Qualifier q = new Qualifier(key, val, needsQuotes);
 						gbFeature.addQualifier(key, q);
 					} else {
-						Qualifier q = new Qualifier(key, val);
+						Qualifier q = new Qualifier(key, val, needsQuotes);
 						gbFeature.addQualifier(key, q);
 					}
 				}
@@ -304,9 +309,12 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 		String loc = section.get(0)[1];
 		header = loc;
 		Matcher m = lp.matcher(loc);
+		Matcher m2 = lp2.matcher(loc);		
 		if (m.matches()) {
-			headerParser.setName(m.group(1));
-			headerParser.setAccession(m.group(1)); // default if no accession found
+			//remove any preceding or trailing whitespace from the locus name
+			String name = m.group(1).trim().replaceAll(" ","_");		
+			headerParser.setName(name);
+			headerParser.setAccession(name); // default if no accession found			
 			long sequenceLength = Long.valueOf(m.group(2));
 			String lengthUnits = m.group(3);
 			String type = m.group(6);
@@ -333,6 +341,37 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 
 			log.debug("compound type: {}", compoundType.getClass().getSimpleName());
 
+		} else if (m2.matches()) {
+			// Locus Name Missing - use different Locus regex
+			headerParser.setName("");
+			headerParser.setAccession(""); // default if no accession found			
+			long sequenceLength = Long.valueOf(m2.group(1));
+			String lengthUnits = m2.group(2);
+			String type = m2.group(5);
+
+			if (lengthUnits.equalsIgnoreCase("aa")) {
+				compoundType = AminoAcidCompoundSet.getAminoAcidCompoundSet();
+			} else if (lengthUnits.equalsIgnoreCase("bp")) {
+				if (type != null) {
+					if (type.contains("RNA")) {
+						compoundType = RNACompoundSet.getRNACompoundSet();
+					} else {
+						compoundType = DNACompoundSet.getDNACompoundSet();
+					}
+				} else {
+					compoundType = DNACompoundSet.getDNACompoundSet();
+				}
+			}
+
+			if (m2.group(6) != null) isCircularSequence = m2.group(6).equalsIgnoreCase("circular");
+
+			// configure location parser with needed information
+			locationParser.setSequenceLength(sequenceLength);
+			locationParser.setSequenceCircular(isCircularSequence);
+
+			log.debug("compound type: {}", compoundType.getClass().getSimpleName());
+			
+			
 		} else {
 			throw new ParserException("Bad locus line");
 		}

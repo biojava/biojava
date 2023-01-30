@@ -23,9 +23,12 @@ package org.biojava.nbio.core.util;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintStream;
 import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URL;
@@ -39,13 +42,20 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Scanner;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class FileDownloadUtils {
 
+	private static final String SIZE_EXT = ".size";
+	private static final String HASH_EXT = ".hash";
 	private static final Logger logger = LoggerFactory.getLogger(FileDownloadUtils.class);
+
+	public enum Hash{
+		MD5, SHA1, SHA256, UNKNOWN
+	}
 
 	/**
 	 * Copy the content of file src to dst TODO since java 1.7 this is provided
@@ -154,12 +164,133 @@ public class FileDownloadUtils {
 			}
 		}
 
-		logger.debug("Copying temp file {} to final location {}", tempFile, destination);
+		logger.debug("Copying temp file [{}] to final location [{}]", tempFile, destination);
 		copy(tempFile, destination);
 
 		// delete the tmp file
 		tempFile.delete();
 
+	}
+	
+	/**
+	 * Creates validation files beside a file to be downloaded.<br>
+	 * Whenever possible, for a <code>file.ext</code> file, it creates 
+	 * <code>file.ext.size</code> and <code>file.hash</code> for in the same 
+	 * folder where <code>file.ext</code> exists.
+	 * If the file connection size could not be deduced from the URL, no size file is created. 
+	 * If <code>hashURL</code> is <code>null</code>, no hash file is created.
+	 * @param url the remote file URL to download
+	 * @param localDestination the local file to download into
+	 * @param hashURL the URL of the hash file to download. Can be <code>null</code>.
+	 * @param hash The Hashing algorithm. Ignored if <code>hashURL</code> is <code>null</code>.
+	 */
+	public static void createValidationFiles(URL url, File localDestination, URL hashURL, Hash hash){
+		try {
+			URLConnection resourceConnection = url.openConnection();
+			createValidationFiles(resourceConnection, localDestination, hashURL, FileDownloadUtils.Hash.UNKNOWN);
+		} catch (IOException e) {
+			logger.warn("could not open connection to resource file due to exception: {}", e.getMessage());
+		}
+	}
+	/**
+	 * Creates validation files beside a file to be downloaded.<br>
+	 * Whenever possible, for a <code>file.ext</code> file, it creates 
+	 * <code>file.ext.size</code> and <code>file.hash_XXXX</code> in the same 
+	 * folder where <code>file.ext</code> exists (XXXX may be DM5, SHA1, or SHA256).
+	 * If the file connection size could not be deduced from the resourceUrlConnection 
+	 * {@link URLConnection}, no size file is created. 
+	 * If <code>hashURL</code> is <code>null</code>, no hash file is created.<br>
+	 * <b>N.B.</b> None of the hashing algorithms is implemented (yet), because we did not need any of them yet.
+	 * @param resourceUrlConnection the remote file URLConnection to download
+	 * @param localDestination the local file to download into
+	 * @param hashURL the URL of the hash file to download. Can be <code>null</code>.
+	 * @param hash The Hashing algorithm. Ignored if <code>hashURL</code> is <code>null</code>.
+	 * @since 7.0.0
+	 */
+	public static void createValidationFiles(URLConnection resourceUrlConnection, File localDestination, URL hashURL, Hash hash){
+		long size = resourceUrlConnection.getContentLengthLong();
+		if(size == -1) {
+			logger.warn("could not find expected file size for resource {}.", resourceUrlConnection.getURL());
+		} else {
+			logger.debug("Content-Length: " + size);
+			File sizeFile = new File(localDestination.getParentFile(), localDestination.getName() + SIZE_EXT);
+			try (PrintStream sizePrintStream = new PrintStream(sizeFile)) {
+				sizePrintStream.print(size);
+				sizePrintStream.close();
+			} catch (FileNotFoundException e) {
+				logger.warn("could not write size validation file due to exception: {}", e.getMessage());
+			}
+		}
+		
+		if(hashURL == null)
+			return;
+
+		if(hash == Hash.UNKNOWN)
+			throw new IllegalArgumentException("Hash URL given but algorithm is unknown");
+		try {
+			File hashFile = new File(localDestination.getParentFile(), String.format("%s%s_%s", localDestination.getName(), HASH_EXT, hash));
+			downloadFile(hashURL, hashFile);
+		} catch (IOException e) {
+			logger.warn("could not write validation hash file due to exception: {}", e.getMessage());
+		}
+	}
+	
+	/**
+	 * Validate a local file based on pre-existing metadata files for size and hash.<br>
+	 * If the passed in <code>localFile</code> parameter is a file named <code>file.ext</code>, the function searches in the same folder for:
+	 * <ul>
+	 * <li><code>file.ext.size</code>: If found, it compares the size stored in it to the length of <code>localFile</code> (in bytes).</li>
+	 * <li><code>file.ext.hash_XXXX (where XXXX is DM5, SHA1, or SHA256)</code>: If found, it compares the size stored in it to the hash code of <code>localFile</code>.</li>
+	 * </ul>
+	 * If any of these comparisons fail, the function returns <code>false</code>. otherwise it returns true.
+	 * <p>
+	 * <b>N.B.</b> None of the 3 common verification hashing algorithms are implement yet.
+	 * @param localFile The file to validate
+	 * @return <code>false</code> if any of the size or hash code metadata files exists but its contents does not match the expected value in the file, <code>true</code> otherwise.
+	 * @since 7.0.0
+	 */
+	public static boolean validateFile(File localFile) {
+		File sizeFile = new File(localFile.getParentFile(), localFile.getName() + SIZE_EXT);
+		if(sizeFile.exists()) {
+			Scanner scanner = null;
+			try {
+				scanner = new Scanner(sizeFile);
+				long expectedSize = scanner.nextLong();
+				long actualLSize = localFile.length();
+				if (expectedSize != actualLSize) {
+					logger.warn("File [{}] size ({}) does not match expected size ({}).", localFile, actualLSize, expectedSize);
+					return false;
+				}
+			} catch (FileNotFoundException e) {
+				logger.warn("could not validate size of file [{}] because no size metadata file exists.", localFile);
+			} finally {
+				scanner.close();
+			}
+		}
+
+		File[] hashFiles = localFile.getParentFile().listFiles(new FilenameFilter() {
+			String hashPattern = String.format("%s%s_(%s|%s|%s)", localFile.getName(), HASH_EXT, Hash.MD5, Hash.SHA1, Hash.SHA256);
+			@Override
+			public boolean accept(File dir, String name) {
+				return name.matches(hashPattern);
+			}
+		});
+		if(hashFiles.length > 0) {
+			File hashFile = hashFiles[0];
+			String name = hashFile.getName();
+			String algo = name.substring(name.lastIndexOf('_') + 1);
+			switch (Hash.valueOf(algo)) {
+			case MD5:
+			case SHA1:
+			case SHA256:
+				throw new UnsupportedOperationException("Not yet implemented");
+			case UNKNOWN:
+			default: // No need. Already checked above
+				throw new IllegalArgumentException("Hashing algorithm not known: " + algo);
+			}
+		}
+		
+		return true;
 	}
 
 	/**
