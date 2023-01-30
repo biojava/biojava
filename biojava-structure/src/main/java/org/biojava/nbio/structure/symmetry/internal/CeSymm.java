@@ -242,8 +242,10 @@ public class CeSymm {
 		optimalAFP = selfAlignments.get(0);
 		StructureIdentifier id = atoms[0].getGroup().getChain().getStructure()
 				.getStructureIdentifier();
-		optimalAFP.setName1(id.getIdentifier());
-		optimalAFP.setName2(id.getIdentifier());
+		if(id != null) {
+			optimalAFP.setName1(id.getIdentifier());
+			optimalAFP.setName2(id.getIdentifier());
+		}
 
 		// Store the optimal self-alignment
 		result.setSelfAlignment(optimalAFP);

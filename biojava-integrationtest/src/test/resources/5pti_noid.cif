@@ -1,0 +1,73 @@
+data_
+# 
+loop_
+_entity.id 
+_entity.type 
+_entity.src_method 
+_entity.pdbx_description 
+_entity.formula_weight 
+_entity.pdbx_number_of_molecules 
+_entity.details 
+1 polymer     man 'TRYPSIN INHIBITOR'   6527.598 1  ? 
+# 
+loop_
+_struct_asym.id 
+_struct_asym.pdbx_blank_PDB_chainid_flag 
+_struct_asym.pdbx_modified 
+_struct_asym.entity_id 
+_struct_asym.details 
+A N N 1 ? 
+# 
+loop_
+_atom_site.group_PDB 
+_atom_site.id 
+_atom_site.type_symbol 
+_atom_site.label_atom_id 
+_atom_site.label_alt_id 
+_atom_site.label_comp_id 
+_atom_site.label_asym_id 
+_atom_site.label_entity_id 
+_atom_site.label_seq_id 
+_atom_site.pdbx_PDB_ins_code 
+_atom_site.Cartn_x 
+_atom_site.Cartn_y 
+_atom_site.Cartn_z 
+_atom_site.occupancy 
+_atom_site.B_iso_or_equiv 
+_atom_site.Cartn_x_esd 
+_atom_site.Cartn_y_esd 
+_atom_site.Cartn_z_esd 
+_atom_site.occupancy_esd 
+_atom_site.B_iso_or_equiv_esd 
+_atom_site.pdbx_formal_charge 
+_atom_site.auth_seq_id 
+_atom_site.auth_comp_id 
+_atom_site.auth_asym_id 
+_atom_site.auth_atom_id 
+_atom_site.pdbx_PDB_model_num 
+ATOM   1    N N    . ARG A 1 1  ? 32.231 15.281 -13.143 1.00 28.28 ? ? ? ? ? ? 1   ARG A N    1 
+ATOM   2    C CA   . ARG A 1 1  ? 32.184 14.697 -11.772 1.00 27.90 ? ? ? ? ? ? 1   ARG A CA   1 
+ATOM   3    C C    . ARG A 1 1  ? 33.438 13.890 -11.387 1.00 24.90 ? ? ? ? ? ? 1   ARG A C    1 
+ATOM   4    O O    . ARG A 1 1  ? 34.102 13.070 -12.066 1.00 24.44 ? ? ? ? ? ? 1   ARG A O    1 
+ATOM   5    C CB   . ARG A 1 1  ? 30.797 14.065 -11.625 1.00 27.88 ? ? ? ? ? ? 1   ARG A CB   1 
+ATOM   6    C CG   . ARG A 1 1  ? 30.976 12.589 -11.819 1.00 29.61 ? ? ? ? ? ? 1   ARG A CG   1 
+ATOM   7    C CD   . ARG A 1 1  ? 29.608 12.016 -11.694 1.00 31.91 ? ? ? ? ? ? 1   ARG A CD   1 
+ATOM   8    N NE   . ARG A 1 1  ? 28.942 12.335 -12.945 1.00 33.51 ? ? ? ? ? ? 1   ARG A NE   1 
+ATOM   9    C CZ   . ARG A 1 1  ? 27.670 12.696 -13.050 1.00 34.29 ? ? ? ? ? ? 1   ARG A CZ   1 
+ATOM   10   N NH1  . ARG A 1 1  ? 26.901 12.777 -11.999 1.00 34.48 ? ? ? ? ? ? 1   ARG A NH1  1 
+ATOM   11   N NH2  . ARG A 1 1  ? 27.161 12.963 -14.255 1.00 35.44 ? ? ? ? ? ? 1   ARG A NH2  1 
+ATOM   12   D D1   . ARG A 1 1  ? 32.983 14.824 -13.703 1.00 27.71 ? ? ? ? ? ? 1   ARG A D1   1 
+ATOM   13   D D2   . ARG A 1 1  ? 31.275 15.112 -13.535 1.00 28.50 ? ? ? ? ? ? 1   ARG A D2   1 
+ATOM   14   D D3   . ARG A 1 1  ? 32.174 16.346 -13.050 1.00 28.23 ? ? ? ? ? ? 1   ARG A D3   1 
+ATOM   15   H HA   . ARG A 1 1  ? 32.192 15.563 -11.115 1.00 26.97 ? ? ? ? ? ? 1   ARG A HA   1 
+ATOM   16   H HB2  . ARG A 1 1  ? 30.392 14.428 -10.697 1.00 28.71 ? ? ? ? ? ? 1   ARG A HB2  1 
+ATOM   17   H HB3  . ARG A 1 1  ? 30.182 14.438 -12.437 1.00 28.97 ? ? ? ? ? ? 1   ARG A HB3  1 
+ATOM   18   H HG2  . ARG A 1 1  ? 31.369 12.359 -12.800 1.00 29.44 ? ? ? ? ? ? 1   ARG A HG2  1 
+ATOM   19   H HG3  . ARG A 1 1  ? 31.591 12.143 -11.105 1.00 29.52 ? ? ? ? ? ? 1   ARG A HG3  1 
+ATOM   20   H HD2  . ARG A 1 1  ? 29.656 10.965 -11.482 1.00 31.41 ? ? ? ? ? ? 1   ARG A HD2  1 
+ATOM   21   H HD3  . ARG A 1 1  ? 29.218 12.381 -10.794 1.00 31.29 ? ? ? ? ? ? 1   ARG A HD3  1 
+ATOM   22   D DE   . ARG A 1 1  ? 29.457 12.292 -13.843 1.00 34.62 ? ? ? ? ? ? 1   ARG A DE   1 
+ATOM   23   D DH11 . ARG A 1 1  ? 25.930 13.038 -12.118 1.00 34.80 ? ? ? ? ? ? 1   ARG A DH11 1 
+ATOM   24   D DH12 . ARG A 1 1  ? 27.324 12.549 -11.100 1.00 34.71 ? ? ? ? ? ? 1   ARG A DH12 1 
+ATOM   25   D DH21 . ARG A 1 1  ? 27.786 12.886 -15.076 1.00 33.93 ? ? ? ? ? ? 1   ARG A DH21 1 
+ATOM   26   D DH22 . ARG A 1 1  ? 26.154 13.214 -14.269 1.00 34.53 ? ? ? ? ? ? 1   ARG A DH22 1 

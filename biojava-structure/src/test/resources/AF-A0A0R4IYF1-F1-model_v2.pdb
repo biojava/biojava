@@ -1,0 +1,86 @@
+HEADER                                            01-JUL-21                     
+TITLE     ALPHAFOLD MONOMER V2.0 PREDICTION FOR INTERLEUKIN-1 (A0A0R4IYF1)      
+COMPND    MOL_ID: 1;                                                            
+COMPND   2 MOLECULE: INTERLEUKIN-1;                                             
+COMPND   3 CHAIN: A                                                             
+SOURCE    MOL_ID: 1;                                                            
+SOURCE   2 ORGANISM_SCIENTIFIC: DANIO RERIO;                                    
+SOURCE   3 ORGANISM_TAXID: 7955                                                 
+REMARK   1                                                                      
+REMARK   1 REFERENCE 1                                                          
+REMARK   1  AUTH   JOHN JUMPER, RICHARD EVANS, ALEXANDER PRITZEL, TIM GREEN,    
+REMARK   1  AUTH 2 MICHAEL FIGURNOV, OLAF RONNEBERGER, KATHRYN TUNYASUVUNAKOOL, 
+REMARK   1  AUTH 3 RUSS BATES, AUGUSTIN ZIDEK, ANNA POTAPENKO, ALEX BRIDGLAND,  
+REMARK   1  AUTH 4 CLEMENS MEYER, SIMON A A KOHL, ANDREW J BALLARD,             
+REMARK   1  AUTH 5 ANDREW COWIE, BERNARDINO ROMERA-PAREDES, STANISLAV NIKOLOV,  
+REMARK   1  AUTH 6 RISHUB JAIN, JONAS ADLER, TREVOR BACK, STIG PETERSEN,        
+REMARK   1  AUTH 7 DAVID REIMAN, ELLEN CLANCY, MICHAL ZIELINSKI,                
+REMARK   1  AUTH 8 MARTIN STEINEGGER, MICHALINA PACHOLSKA, TAMAS BERGHAMMER,    
+REMARK   1  AUTH 9 DAVID SILVER, ORIOL VINYALS, ANDREW W SENIOR,                
+REMARK   1  AUTH10 KORAY KAVUKCUOGLU, PUSHMEET KOHLI, DEMIS HASSABIS            
+REMARK   1  TITL   HIGHLY ACCURATE PROTEIN STRUCTURE PREDICTION WITH ALPHAFOLD  
+REMARK   1  REF    NATURE                        V. 596   583 2021              
+REMARK   1  REFN                   ISSN 0028-0836                               
+REMARK   1  PMID   34265844                                                     
+REMARK   1  DOI    10.1038/s41586-021-03819-2                                   
+REMARK   1                                                                      
+REMARK   1 DISCLAIMERS                                                          
+REMARK   1 ALPHAFOLD DATA, COPYRIGHT (2021) DEEPMIND TECHNOLOGIES LIMITED. THE  
+REMARK   1 INFORMATION PROVIDED IS THEORETICAL MODELLING ONLY AND CAUTION SHOULD
+REMARK   1 BE EXERCISED IN ITS USE. IT IS PROVIDED "AS-IS" WITHOUT ANY WARRANTY 
+REMARK   1 OF ANY KIND, WHETHER EXPRESSED OR IMPLIED. NO WARRANTY IS GIVEN THAT 
+REMARK   1 USE OF THE INFORMATION SHALL NOT INFRINGE THE RIGHTS OF ANY THIRD    
+REMARK   1 PARTY. THE INFORMATION IS NOT INTENDED TO BE A SUBSTITUTE FOR        
+REMARK   1 PROFESSIONAL MEDICAL ADVICE, DIAGNOSIS, OR TREATMENT, AND DOES NOT   
+REMARK   1 CONSTITUTE MEDICAL OR OTHER PROFESSIONAL ADVICE. IT IS AVAILABLE FOR 
+REMARK   1 ACADEMIC AND COMMERCIAL PURPOSES, UNDER CC-BY 4.0 LICENCE.
+REMARK 111 NOTE this is a truncated file, added to BioJava for testing purposes
+DBREF  XXXX A    1   284  UNP    A0A0R4IYF1 A0A0R4IYF1_DANRE     1    284       
+SEQRES   1 A  4  MET ARG LYS GLN
+CRYST1    1.000    1.000    1.000  90.00  90.00  90.00 P 1           1          
+ORIGX1      1.000000  0.000000  0.000000        0.00000                         
+ORIGX2      0.000000  1.000000  0.000000        0.00000                         
+ORIGX3      0.000000  0.000000  1.000000        0.00000                         
+SCALE1      1.000000  0.000000  0.000000        0.00000                         
+SCALE2      0.000000  1.000000  0.000000        0.00000                         
+SCALE3      0.000000  0.000000  1.000000        0.00000                         
+MODEL        1                                                                  
+ATOM      1  N   MET A   1      19.682  12.062  34.184  1.00 39.14           N  
+ATOM      2  CA  MET A   1      20.443  10.838  34.522  1.00 39.14           C  
+ATOM      3  C   MET A   1      20.073   9.731  33.538  1.00 39.14           C  
+ATOM      4  CB  MET A   1      20.138  10.405  35.966  1.00 39.14           C  
+ATOM      5  O   MET A   1      19.030   9.110  33.696  1.00 39.14           O  
+ATOM      6  CG  MET A   1      20.829  11.294  37.004  1.00 39.14           C  
+ATOM      7  SD  MET A   1      20.292  10.920  38.687  1.00 39.14           S  
+ATOM      8  CE  MET A   1      21.522  11.848  39.645  1.00 39.14           C  
+ATOM      9  N   ARG A   2      20.850   9.531  32.464  1.00 38.04           N  
+ATOM     10  CA  ARG A   2      20.614   8.428  31.516  1.00 38.04           C  
+ATOM     11  C   ARG A   2      21.360   7.192  32.016  1.00 38.04           C  
+ATOM     12  CB  ARG A   2      21.010   8.815  30.077  1.00 38.04           C  
+ATOM     13  O   ARG A   2      22.578   7.197  32.112  1.00 38.04           O  
+ATOM     14  CG  ARG A   2      19.854   9.506  29.332  1.00 38.04           C  
+ATOM     15  CD  ARG A   2      20.250   9.851  27.888  1.00 38.04           C  
+ATOM     16  NE  ARG A   2      19.107  10.368  27.105  1.00 38.04           N  
+ATOM     17  NH1 ARG A   2      20.285  11.015  25.235  1.00 38.04           N  
+ATOM     18  NH2 ARG A   2      18.073  11.268  25.278  1.00 38.04           N  
+ATOM     19  CZ  ARG A   2      19.161  10.879  25.883  1.00 38.04           C  
+ATOM     20  N   LYS A   3      20.589   6.174  32.391  1.00 33.68           N  
+ATOM     21  CA  LYS A   3      21.032   4.888  32.935  1.00 33.68           C  
+ATOM     22  C   LYS A   3      21.760   4.115  31.825  1.00 33.68           C  
+ATOM     23  CB  LYS A   3      19.758   4.189  33.472  1.00 33.68           C  
+ATOM     24  O   LYS A   3      21.111   3.629  30.901  1.00 33.68           O  
+ATOM     25  CG  LYS A   3      19.960   3.207  34.636  1.00 33.68           C  
+ATOM     26  CD  LYS A   3      18.588   2.749  35.176  1.00 33.68           C  
+ATOM     27  CE  LYS A   3      18.733   1.906  36.451  1.00 33.68           C  
+ATOM     28  NZ  LYS A   3      17.418   1.494  37.015  1.00 33.68           N  
+ATOM     29  N   GLN A   4      23.091   4.048  31.878  1.00 37.59           N  
+ATOM     30  CA  GLN A   4      23.877   3.144  31.035  1.00 37.59           C  
+ATOM     31  C   GLN A   4      23.517   1.704  31.419  1.00 37.59           C  
+ATOM     32  CB  GLN A   4      25.384   3.446  31.184  1.00 37.59           C  
+ATOM     33  O   GLN A   4      23.656   1.303  32.573  1.00 37.59           O  
+ATOM     34  CG  GLN A   4      25.896   4.332  30.030  1.00 37.59           C  
+ATOM     35  CD  GLN A   4      27.116   5.178  30.386  1.00 37.59           C  
+ATOM     36  NE2 GLN A   4      28.052   5.368  29.481  1.00 37.59           N  
+ATOM     37  OE1 GLN A   4      27.214   5.742  31.460  1.00 37.59           O
+ENDMDL                                                                          
+END                                                                             

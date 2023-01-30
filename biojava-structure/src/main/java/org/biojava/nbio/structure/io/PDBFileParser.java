@@ -371,13 +371,16 @@ public class PDBFileParser  {
 
 			logger.debug("Parsing entry " + pdbId);
 
-
 			PdbId pdbIdToSet;
-			try {
-				pdbIdToSet = new PdbId(pdbCode);
-			} catch (IllegalArgumentException e) {
-				logger.info("Malformed (or null) PDB ID {}. setting PdbId to null", pdbCode);
+			if(pdbCode.isBlank()) {
 				pdbIdToSet = null;
+			} else {
+				try {
+					pdbIdToSet = new PdbId(pdbCode);
+				} catch (IllegalArgumentException e) {
+					logger.warn("Malformed PDB ID {}. setting PdbId to null", pdbCode);
+					pdbIdToSet = null;
+				}
 			}
 			structure.setPdbId(pdbIdToSet);
 			pdbHeader.setPdbId(pdbIdToSet);
@@ -2719,7 +2722,7 @@ public class PDBFileParser  {
 		}
 
 		makeCompounds(compndLines, sourceLines);
-		
+
 		handlePDBKeywords(keywordsLines);
 
 		triggerEndFileChecks();
@@ -2786,18 +2789,18 @@ public class PDBFileParser  {
 	}
 
 	/**Parse KEYWODS record of the PDB file.<br>
-	 * A keyword may be split over two lines. whether a keyword ends by the end 
-	 * of a line or it is aplit over two lines, a <code>space</code> is added 
-	 * between the 2 lines's contents, unless the first line ends in 
+	 * A keyword may be split over two lines. whether a keyword ends by the end
+	 * of a line or it is aplit over two lines, a <code>space</code> is added
+	 * between the 2 lines's contents, unless the first line ends in
 	 * a '-' character.
 	 * <pre>
 	 * Record Format
-	 * COLUMNS       DATA  TYPE     FIELD         DEFINITION 
+	 * COLUMNS       DATA  TYPE     FIELD         DEFINITION
 	 *	---------------------------------------------------------------------------------
-	 *	 1 -  6       Record name    "KEYWDS" 
+	 *	 1 -  6       Record name    "KEYWDS"
 	 *	 9 - 10       Continuation   continuation  Allows concatenation of records if necessary.
 	 *	11 - 79       List           keywds        Comma-separated list of keywords relevant
-	 *	                                           to the entry.      
+	 *	                                           to the entry.
 	 * Example
 	 * 	         1         2         3         4         5         6         7         8
 	 *	12345678901234567890123456789012345678901234567890123456789012345678901234567890
@@ -2830,7 +2833,7 @@ public class PDBFileParser  {
 		}
 		pdbHeader.setKeywords(lst);
 	}
-	
+
 	/**
 	 * Handles creation of all bonds. Looks at LINK records, SSBOND (Disulfide
 	 * bonds), peptide bonds, and intra-residue bonds.
