@@ -19,10 +19,10 @@
         manipulation of sequences and 3D structures. The goal of the biojava project is to facilitate rapid application
         development for bioinformatics.
         </description>
-	<url>http://www.biojava.org</url>
+	<url>https://www.biojava.org</url>
 	<organization>
 		<name>BioJava</name>
-		<url>http://www.biojava.org</url>
+		<url>https://www.biojava.org</url>
 	</organization>
 	<licenses>
 		<license>
@@ -33,8 +33,7 @@
 	</licenses>
 	<properties>
 		<!-- Notice: if using java 9 or 10 jres, it is possible to simply use here "8", "9" or "10". But if using java 8 jre, "8" is not an allowed value but only "1.8"-->
-		<jdk.version>1.8</jdk.version>
-		<maven.enforcer.jdk-version>1.8</maven.enforcer.jdk-version>
+		<jdk.version>11</jdk.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.build.targetEncoding>UTF-8</project.build.targetEncoding>
 		<!-- needed for failsafe plugin in integrationtest module - JD 2018-03-08 -->
@@ -44,8 +43,8 @@
 		<slf4j.version>1.7.30</slf4j.version>
 		<log4j.version>2.17.2</log4j.version>
 		<junit-jupiter.version>5.7.2</junit-jupiter.version>
-		<ciftools.artifact>ciftools-java-jdk8</ciftools.artifact>
-		<ciftools.version>4.0.5</ciftools.version>
+		<ciftools.artifact>ciftools-java</ciftools.artifact>
+		<ciftools.version>5.0.0</ciftools.version>
 	</properties>
 	<scm>
 		<connection>scm:git:git://github.com/biojava/biojava.git</connection>
@@ -312,7 +311,7 @@
 							<configuration>
 								<rules>
 									<requireJavaVersion>
-										<version>${maven.enforcer.jdk-version}</version>
+										<version>${jdk.version}</version>
 									</requireJavaVersion>
 								</rules>
 							</configuration>
