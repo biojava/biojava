@@ -1,6 +1,20 @@
 BioJava Changelog
 -----------------
 
+BioJava 7.0.0
+==============================
+### Breaking
+* BioJava is now compiled at JDK 11 compatibility level. It will not work anymore under older JREs (e.g. JRE 8). 
+This is the main reason for the major version bump.
+
+### Added
+* Better handling of downloads: file download validation #1024
+
+### Fixed
+* Upgrade to latest ciftools-java, fixes non-US locale issue #1049
+* Issue with some edge cases in CIF parsing #1054
+* Minor security issue #1046
+ 
 
 BioJava 6.1.0
 ==============================
@@ -130,6 +144,18 @@ BioJava 5.3.0
 * Bug fix in GenbankReader #800 #829 
 * Dependencies and maven plugin upgrades
 
+BioJava 7.0.0
+==============================
+### Breaking
+* BioJava is now compiled at JDK 11 level. It will not work anymore under older JREs (e.g. JRE 8). 
+This is the main reason for the major bump.
+
+### Added
+* Better handling of partial downloads 
+
+### Fixed
+* Issue with some edge cases in CIF parsing: #1054
+ 
 
 BioJava 5.2.1
 =============
