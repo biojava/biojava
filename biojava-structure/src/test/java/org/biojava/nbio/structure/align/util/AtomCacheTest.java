@@ -102,13 +102,14 @@ public class AtomCacheTest {
 	 */
 	@Test
 	public void testGetStructureForDomain1() throws IOException, StructureException {
-		String ranges = "A:328-396,B:518-527";
-		Structure whole = cache.getStructure("1h6w");
+		// note that prior to Apr 2023, the example here was 1h6w, but it was obsoleted
+		String ranges = "A:246-262,B:263-345";
+		Structure whole = cache.getStructure("3bzy");
 		AtomPositionMap map = new AtomPositionMap(StructureTools.getAllAtomArray(whole), AtomPositionMap.ANYTHING_MATCHER);
 		List<ResidueRangeAndLength> rrs = ResidueRangeAndLength.parseMultiple(ranges, map);
 		int expectedLengthA = rrs.get(0).getLength();
 		int expectedLengthB = rrs.get(1).getLength();
-		Structure structure = cache.getStructureForDomain("d1h6w.2");
+		Structure structure = cache.getStructureForDomain("d3bzy.1");
 		assertEquals(2, structure.getPolyChains().size());
 		Chain a = structure.getPolyChainByPDB("A");
 		Chain b = structure.getPolyChainByPDB("B");

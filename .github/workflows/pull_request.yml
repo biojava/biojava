@@ -31,4 +31,4 @@ jobs:
         with:
           java-version: ${{ matrix.java }}
       - name: Build, test and integration test
-        run: mvn verify
+        run: mvn verify --no-transfer-progress
