@@ -52,8 +52,8 @@ public class TestCrystallographicMetadata {
 
 		Structure s = StructureIO.getStructure("4hhb");
 
-		// 4hhb is one of the few entries that aren't in the standard coordinate frame convention
-		assertTrue(s.getCrystallographicInfo().isNonStandardCoordFrameConvention());
+		// 4hhb was one of the few entries in a non-standard coordinate frame convention: but after a remediation in early 2023 it was finally fixed
+		assertFalse(s.getCrystallographicInfo().isNonStandardCoordFrameConvention());
 
 		// 4hhn has a standard SG
 		assertFalse(s.getCrystallographicInfo().isNonStandardSg());
