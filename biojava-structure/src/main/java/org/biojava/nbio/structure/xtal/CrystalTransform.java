@@ -180,24 +180,27 @@ public class CrystalTransform implements Serializable {
 	 */
 	public boolean isPureTranslation() {
 		if (isPureCrystalTranslation()) return true;
-		if (SpaceGroup.deltaComp(matTransform.m00,1,SpaceGroup.DELTA) &&
-			SpaceGroup.deltaComp(matTransform.m01,0,SpaceGroup.DELTA) &&
-			SpaceGroup.deltaComp(matTransform.m02,0,SpaceGroup.DELTA) &&
-
-			SpaceGroup.deltaComp(matTransform.m10,0,SpaceGroup.DELTA) &&
-			SpaceGroup.deltaComp(matTransform.m11,1,SpaceGroup.DELTA) &&
-			SpaceGroup.deltaComp(matTransform.m12,0,SpaceGroup.DELTA) &&
-
-			SpaceGroup.deltaComp(matTransform.m20,0,SpaceGroup.DELTA) &&
-			SpaceGroup.deltaComp(matTransform.m21,0,SpaceGroup.DELTA) &&
-			SpaceGroup.deltaComp(matTransform.m22,1,SpaceGroup.DELTA) &&
-			(	Math.abs(matTransform.m03-0.0)>SpaceGroup.DELTA ||
-				Math.abs(matTransform.m13-0.0)>SpaceGroup.DELTA ||
-				Math.abs(matTransform.m23-0.0)>SpaceGroup.DELTA)) {
-			return true;
-		}
-
+		if (isPureMatrixTranslation()) return true;
 		return false;
+	}
+
+	/**
+	 * This method will help check if the matrix translation is pure or not.
+	 * @return boolean
+	 */
+	private boolean isPureMatrixTranslation(){
+		return 	SpaceGroup.deltaComp(matTransform.m00,1,SpaceGroup.DELTA) &&
+				SpaceGroup.deltaComp(matTransform.m01,0,SpaceGroup.DELTA) &&
+				SpaceGroup.deltaComp(matTransform.m02,0,SpaceGroup.DELTA) &&
+
+				SpaceGroup.deltaComp(matTransform.m10,0,SpaceGroup.DELTA) &&
+				SpaceGroup.deltaComp(matTransform.m11,1,SpaceGroup.DELTA) &&
+				SpaceGroup.deltaComp(matTransform.m12,0,SpaceGroup.DELTA) &&
+
+				SpaceGroup.deltaComp(matTransform.m20,0,SpaceGroup.DELTA) &&
+				SpaceGroup.deltaComp(matTransform.m21,0,SpaceGroup.DELTA) &&
+				SpaceGroup.deltaComp(matTransform.m22,1,SpaceGroup.DELTA) &&
+				(Math.abs(matTransform.m03-0.0)>SpaceGroup.DELTA || Math.abs(matTransform.m13-0.0)>SpaceGroup.DELTA || Math.abs(matTransform.m23-0.0)>SpaceGroup.DELTA);
 	}
 
 	/**
