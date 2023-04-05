@@ -359,7 +359,6 @@
 
 				<configuration>
 					<archive>
-						<addMavenDescriptor>false</addMavenDescriptor>
 						<manifest>
 							<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
 							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
@@ -692,8 +691,4 @@
 		<system>Github</system>
 		<url>https://github.com/biojava/biojava/issues</url>
 	</issueManagement>
-	<ciManagement>
-			<system>Travis</system>
-			<url>https://travis-ci.org/biojava/biojava</url>
-	</ciManagement>
 </project>
