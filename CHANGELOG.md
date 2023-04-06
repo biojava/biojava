@@ -1,6 +1,12 @@
 BioJava Changelog
 -----------------
 
+BioJava 7.0.1
+==============================
+### Fixed
+* The jar packages now contain pom.properties files #1057
+* Some minor improvements in a few biojava-structure methods #1058
+
 BioJava 7.0.0
 ==============================
 ### Breaking
