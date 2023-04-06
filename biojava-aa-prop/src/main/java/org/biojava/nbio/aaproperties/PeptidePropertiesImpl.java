@@ -50,6 +50,10 @@ import java.util.Map;
 public class PeptidePropertiesImpl implements IPeptideProperties{
 
 	private final static Logger logger = LoggerFactory.getLogger(PeptidePropertiesImpl.class);
+	private final static String ALANINE = "A";
+	private final static String VALAINE = "V";
+	private final static String ISOLEUCINE = "I";
+	private final static String LEUCINE = "L";
 
 	/**
 	 * @return the molecular weight of water
@@ -247,13 +251,23 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 //		Ala => A, Val => V, Ile => I, Leu => L
 		AminoAcidCompoundSet aaSet = new AminoAcidCompoundSet();
 		Map<AminoAcidCompound, Double> aa2Composition = getAAComposition(sequence);
-		final double a = 2.9;
-		final double b = 3.9;
-		double xAla = aa2Composition.get(aaSet.getCompoundForString("A"));
-		double xVal = aa2Composition.get(aaSet.getCompoundForString("V"));
-		double xIle = aa2Composition.get(aaSet.getCompoundForString("I"));
-		double xLeu = aa2Composition.get(aaSet.getCompoundForString("L"));
-		return (xAla + (a * xVal) + (b * (xIle + xLeu))) * 100;
+
+		final double valineVolume = 2.9;
+		final double leucineVolume = 3.9;
+
+		double xAlanine = aa2Composition.get(aaSet.getCompoundForString(ALANINE));
+		double xValine = aa2Composition.get(aaSet.getCompoundForString(VALAINE));
+		double xIsoleucine = aa2Composition.get(aaSet.getCompoundForString(ISOLEUCINE));
+		double xLeucine = aa2Composition.get(aaSet.getCompoundForString(LEUCINE));
+
+		double valContribution = valineVolume * xValine;
+		double ileLeuContribution = leucineVolume * (xIsoleucine + xLeucine);
+		/*
+			Aliphatic index = X(Ala) + (valineVolume * X(Val)) + (leucineVolume * ( X(Ile) + X(Leu)))
+			Here X(Ala),X(Val),X(Ile),X(Leu) are xAlanine, xValine, xIsoleucine, xLeucine for readability,
+			and are in fraction form which when multiplied * 100 is retuning the percentage.
+		 */
+		return (xAlanine + valContribution + ileLeuContribution) * 100;
 	}
 
 	@Override
@@ -275,6 +289,7 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 		}
 
 		return total / validLength;
+
 	}
 
 	@Override
