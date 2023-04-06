@@ -167,6 +167,9 @@ public class StructureTools {
 
 	private static final Set<Element> hBondDonorAcceptors;
 
+	private static final Set<String> NUCLEOTIDE_BACKBONE_ATOMS;
+	private static final Set<String> AMINOACID_BACKBONE_ATOMS;
+
 	static {
 		nucleotides30 = new HashMap<String, Character>();
 		nucleotides30.put("DA", 'A');
@@ -255,6 +258,9 @@ public class StructureTools {
 		hBondDonorAcceptors.add(Element.N);
 		hBondDonorAcceptors.add(Element.O);
 		hBondDonorAcceptors.add(Element.S);
+
+		NUCLEOTIDE_BACKBONE_ATOMS = new HashSet<>(Arrays.asList(C1_ATOM_NAME, C2_ATOM_NAME, C3_ATOM_NAME, C4_ATOM_NAME, O2_ATOM_NAME, O3_ATOM_NAME, O4_ATOM_NAME, O5_ATOM_NAME, OP1_ATOM_NAME, OP2_ATOM_NAME, P_ATOM_NAME));
+		AMINOACID_BACKBONE_ATOMS = new HashSet<>(Arrays.asList(CA_ATOM_NAME, C_ATOM_NAME, N_ATOM_NAME, O_ATOM_NAME));
 
 	}
 
@@ -1128,64 +1134,35 @@ public class StructureTools {
 	 * @return an Atom[] array
 	 */
 	public static Atom[] getBackboneAtomArray(Structure s) {
-
 		List<Atom> atoms = new ArrayList<>();
-
 		for (Chain c : s.getChains()) {
 			for (Group g : c.getAtomGroups()) {
 				if (g.hasAminoAtoms()) {
-					// this means we will only take atoms grom groups that have
-					// complete backbones
-					for (Atom a : g.getAtoms()) {
-						switch (g.getType()) {
-						case NUCLEOTIDE:
-							// Nucleotide backbone
-							if (a.getName().equals(C1_ATOM_NAME))
-								atoms.add(a);
-							if (a.getName().equals(C2_ATOM_NAME))
-								atoms.add(a);
-							if (a.getName().equals(C3_ATOM_NAME))
-								atoms.add(a);
-							if (a.getName().equals(C4_ATOM_NAME))
-								atoms.add(a);
-							if (a.getName().equals(O2_ATOM_NAME))
-								atoms.add(a);
-							if (a.getName().equals(O3_ATOM_NAME))
-								atoms.add(a);
-							if (a.getName().equals(O4_ATOM_NAME))
-								atoms.add(a);
-							if (a.getName().equals(O5_ATOM_NAME))
-								atoms.add(a);
-							if (a.getName().equals(OP1_ATOM_NAME))
-								atoms.add(a);
-							if (a.getName().equals(OP2_ATOM_NAME))
-								atoms.add(a);
-							if (a.getName().equals(P_ATOM_NAME))
-								atoms.add(a);
-							// TODO Allow C4* names as well as C4'? -SB 3/2015
-							break;
-						case AMINOACID:
-						default:
-							// we do it this way instead of with g.getAtom() to
-							// be sure we always use the same order as original
-							if (a.getName().equals(CA_ATOM_NAME))
-								atoms.add(a);
-							if (a.getName().equals(C_ATOM_NAME))
-								atoms.add(a);
-							if (a.getName().equals(N_ATOM_NAME))
-								atoms.add(a);
-							if (a.getName().equals(O_ATOM_NAME))
-								atoms.add(a);
-							break;
-						}
+					if (g.getType() == GroupType.NUCLEOTIDE) {
+						addNucleotideAndAminoAtoms(atoms, g, NUCLEOTIDE_BACKBONE_ATOMS);
+					} else {
+						addNucleotideAndAminoAtoms(atoms, g, AMINOACID_BACKBONE_ATOMS);
 					}
 				}
 			}
-
 		}
-
 		return atoms.toArray(new Atom[0]);
 	}
+
+	/**
+	 * This method will be used to add the Nucleotide and Amino atoms to the backbone Atom arrays based on the pre-defined Atom names.
+	 * @param atoms
+	 * @param g
+	 * @param atomNames
+	 */
+	private static void addNucleotideAndAminoAtoms(List<Atom> atoms, Group g, Set<String> atomNames) {
+		for (Atom a : g.getAtoms()) {
+			if (atomNames.contains(a.getName())) {
+				atoms.add(a);
+			}
+		}
+	}
+
 
 	/**
 	 * Convert three character amino acid codes into single character e.g.

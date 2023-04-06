@@ -616,10 +616,7 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 		Pair<EntityInfo> thisCompounds = new Pair<EntityInfo>(thisChains.getFirst().getEntityInfo(), thisChains.getSecond().getEntityInfo());
 		Pair<EntityInfo> otherCompounds = new Pair<EntityInfo>(otherChains.getFirst().getEntityInfo(), otherChains.getSecond().getEntityInfo());
 
-		if ( (  (thisCompounds.getFirst().getMolId() == otherCompounds.getFirst().getMolId()) &&
-				(thisCompounds.getSecond().getMolId() == otherCompounds.getSecond().getMolId())   )  ||
-			 (  (thisCompounds.getFirst().getMolId() == otherCompounds.getSecond().getMolId()) &&
-				(thisCompounds.getSecond().getMolId() == otherCompounds.getFirst().getMolId())   )	) {
+		if (checkMolIdMatch(thisCompounds,otherCompounds)) {
 
 			int common = 0;
 			GroupContactSet thisContacts = getGroupContacts();
@@ -653,6 +650,17 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 		}
 	}
 
+	/**
+	 * This method check if two compounds have same MolIds or not.
+	 * @param thisCompounds
+	 * @param otherCompounds
+	 * @return
+	 */
+	private boolean checkMolIdMatch(Pair<EntityInfo> thisCompounds, Pair<EntityInfo> otherCompounds){
+		boolean firstMatch = thisCompounds.getFirst().getMolId() == otherCompounds.getFirst().getMolId() && thisCompounds.getSecond().getMolId() == otherCompounds.getSecond().getMolId();
+		boolean secondMatch = thisCompounds.getFirst().getMolId() == otherCompounds.getSecond().getMolId() && thisCompounds.getSecond().getMolId() == otherCompounds.getFirst().getMolId();
+		return firstMatch || secondMatch;
+	}
 	public GroupContactSet getGroupContacts() {
 		if (groupContacts==null) {
 			this.groupContacts  = new GroupContactSet(contacts);
