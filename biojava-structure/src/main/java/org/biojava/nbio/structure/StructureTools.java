@@ -167,6 +167,9 @@ public class StructureTools {
 
 	private static final Set<Element> hBondDonorAcceptors;
 
+	private static final Set<String> NUCLEOTIDE_BACKBONE_ATOMS;
+	private static final Set<String> AMINOACID_BACKBONE_ATOMS;
+
 	static {
 		nucleotides30 = new HashMap<String, Character>();
 		nucleotides30.put("DA", 'A');
@@ -255,6 +258,9 @@ public class StructureTools {
 		hBondDonorAcceptors.add(Element.N);
 		hBondDonorAcceptors.add(Element.O);
 		hBondDonorAcceptors.add(Element.S);
+
+		NUCLEOTIDE_BACKBONE_ATOMS = new HashSet<>(Arrays.asList(C1_ATOM_NAME, C2_ATOM_NAME, C3_ATOM_NAME, C4_ATOM_NAME, O2_ATOM_NAME, O3_ATOM_NAME, O4_ATOM_NAME, O5_ATOM_NAME, OP1_ATOM_NAME, OP2_ATOM_NAME, P_ATOM_NAME));
+		AMINOACID_BACKBONE_ATOMS = new HashSet<>(Arrays.asList(CA_ATOM_NAME, C_ATOM_NAME, N_ATOM_NAME, O_ATOM_NAME));
 
 	}
 
@@ -1129,16 +1135,13 @@ public class StructureTools {
 	 */
 	public static Atom[] getBackboneAtomArray(Structure s) {
 		List<Atom> atoms = new ArrayList<>();
-		Set<String> nucleotideAtomNames = new HashSet<>(Arrays.asList(C1_ATOM_NAME, C2_ATOM_NAME, C3_ATOM_NAME, C4_ATOM_NAME, O2_ATOM_NAME, O3_ATOM_NAME, O4_ATOM_NAME, O5_ATOM_NAME, OP1_ATOM_NAME, OP2_ATOM_NAME, P_ATOM_NAME));
-		Set<String> aminoAcidAtomNames = new HashSet<>(Arrays.asList(CA_ATOM_NAME, C_ATOM_NAME, N_ATOM_NAME, O_ATOM_NAME));
-
 		for (Chain c : s.getChains()) {
 			for (Group g : c.getAtomGroups()) {
 				if (g.hasAminoAtoms()) {
 					if (g.getType() == GroupType.NUCLEOTIDE) {
-						addNucleotideAndAminoAtoms(atoms, g, nucleotideAtomNames);
+						addNucleotideAndAminoAtoms(atoms, g, NUCLEOTIDE_BACKBONE_ATOMS);
 					} else {
-						addNucleotideAndAminoAtoms(atoms, g, aminoAcidAtomNames);
+						addNucleotideAndAminoAtoms(atoms, g, AMINOACID_BACKBONE_ATOMS);
 					}
 				}
 			}
