@@ -166,5 +166,16 @@ public class DNASequence extends AbstractSequence<NucleotideCompound> {
 	public void setDNAType(DNAType dnaType) {
 		this.dnaType = dnaType;
 	}
+
+	/** Converts the DNA sequence to protein sequence.
+	 *
+	 * @param dnaSequence the DNA sequence
+	 *
+	 * @return the protein sequence
+	 */
+	public ProteinSequence convertDNAtoProteinSequence(DNASequence dnaSequence) throws CompoundNotFoundException {
+		RNASequence mRNA = dnaSequence.getRNASequence();
+		return mRNA.getProteinSequence();
+	}
 	
 }
