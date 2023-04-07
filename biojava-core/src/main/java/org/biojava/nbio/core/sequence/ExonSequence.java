@@ -29,8 +29,7 @@ import org.biojava.nbio.core.sequence.compound.DNACompoundSet;
  * A gene contains a collection of Exon sequences
  * @author Scooter Willis
  */
-public class
-ExonSequence extends DNASequence {
+public class ExonSequence extends DNAExtractSequence {
 
 
 	/**
@@ -57,10 +56,6 @@ ExonSequence extends DNASequence {
 
 	}
 
-	@Override
-	public int getLength() {
-		return Math.abs(this.getBioEnd() - this.getBioBegin()) + 1;
-	}
 
 
 }

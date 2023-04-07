@@ -37,7 +37,7 @@ import java.util.LinkedHashMap;
  * ChromosomeSequence then getting a GeneSequence and then a TranscriptSequence
  * @author Scooter Willis
  */
-public class TranscriptSequence extends DNASequence {
+public class TranscriptSequence extends DNAExtractSequence {
 
 	private final static Logger logger = LoggerFactory.getLogger(TranscriptSequence.class);
 
@@ -78,10 +78,6 @@ public class TranscriptSequence extends DNASequence {
 		setAccession(accessionID);
 	}
 
-		@Override
-	public int getLength() {
-		return Math.abs(this.getBioEnd() - this.getBioBegin()) + 1;
-	}
 
 	/**
 	 * @return the strand

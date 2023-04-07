@@ -35,7 +35,7 @@ import org.biojava.nbio.core.sequence.template.CompoundSet;
  * to a gff3 file. {@link http://www.sequenceontology.org/gff3.shtml}
  * @author Scooter Willis
  */
-public class CDSSequence extends DNASequence {
+public class CDSSequence extends DNAExtractSequence {
 
 	//private static final Logger log = Logger.getLogger(CDSSequence.class.getName());
 	Integer phase = 0; // 0, 1, 2
@@ -63,11 +63,6 @@ public class CDSSequence extends DNASequence {
 		this.phase = phase;
 		this.setCompoundSet(DNACompoundSet.getDNACompoundSet());
 
-	}
-
-		@Override
-	public int getLength() {
-		return Math.abs(this.getBioEnd() - this.getBioBegin()) + 1;
 	}
 
 	/**
