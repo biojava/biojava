@@ -40,6 +40,7 @@ import java.util.Set;
 
 import javax.vecmath.Point3d;
 
+import org.biojava.nbio.core.util.FileOperationUtils;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.contact.AtomContactSet;
 import org.biojava.nbio.structure.contact.Grid;
@@ -1696,7 +1697,7 @@ public class StructureTools {
 	 */
 	public static Structure getStructure(String name, PDBFileParser parser,
 			AtomCache cache) throws IOException, StructureException {
-		File f = new File(FileDownloadUtils.expandUserHome(name));
+		File f = new File(FileOperationUtils.expandUserHome(name));
 		if (f.exists()) {
 			if (parser == null) {
 				parser = new PDBFileParser();

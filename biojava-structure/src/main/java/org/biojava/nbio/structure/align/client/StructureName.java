@@ -34,6 +34,7 @@ import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.biojava.nbio.core.util.FileOperationUtils;
 import org.biojava.nbio.structure.BioAssemblyIdentifier;
 import org.biojava.nbio.structure.PdbId;
 import org.biojava.nbio.structure.ResidueRange;
@@ -220,7 +221,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 			return;
 
 		// Guess FILE based on file existence
-		File file = new File(FileDownloadUtils.expandUserHome(name));
+		File file = new File(FileOperationUtils.expandUserHome(name));
 		if( file.canRead() && !file.isDirectory() ) {
 			// an attempt to mitigate issue #398. It doesn't fix it but it catches the most common case of passing a pdb id and finding a file in working dir matching it
 			if (name.matches("\\d\\w\\w\\w")) {
@@ -474,7 +475,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 					} else {
 						filename = name;
 					}
-					filename = FileDownloadUtils.expandUserHome(filename);
+					filename = FileOperationUtils.expandUserHome(filename);
 					base = new URLIdentifier(new File(filename).toURI().toURL());
 				} catch (MalformedURLException e) {
 					// Should never happen

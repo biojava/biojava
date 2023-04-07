@@ -23,6 +23,7 @@
 
 package org.biojava.nbio.structure.cath;
 
+import org.biojava.nbio.core.util.FileOperationUtils;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
 import org.biojava.nbio.core.util.FileDownloadUtils;
 import org.slf4j.Logger;
@@ -640,7 +641,7 @@ public class CathInstallation implements CathDatabase{
 		LOGGER.info("Downloading file {} to local file {}", remoteURL, localFile);
 
 		long timeS = System.currentTimeMillis();
-		File tempFile  = Files.createTempFile(FileDownloadUtils.getFilePrefix(localFile),"." + FileDownloadUtils.getFileExtension(localFile)).toFile();
+		File tempFile  = Files.createTempFile(FileOperationUtils.getFilePrefix(localFile),"." + FileOperationUtils.getFileExtension(localFile)).toFile();
 
 		FileOutputStream out = new FileOutputStream(tempFile);
 
@@ -653,7 +654,7 @@ public class CathInstallation implements CathDatabase{
 		in.close();
 		out.close();
 
-		FileDownloadUtils.copy(tempFile,localFile);
+		FileOperationUtils.copy(tempFile,localFile);
 
 		// delete the tmp file
 		tempFile.delete();

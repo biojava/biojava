@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.Locale;
 
 import org.biojava.nbio.core.util.FileDownloadUtils;
+import org.biojava.nbio.core.util.FileOperationUtils;
 import org.biojava.nbio.core.util.InputStreamProvider;
 import org.biojava.nbio.structure.PdbId;
 import org.biojava.nbio.structure.PDBStatus;
@@ -183,7 +184,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 			path = config.getPdbFilePath();
 			logger.debug("Initialising from system property/environment variable to path: {}", path);
 		} else {
-			path = FileDownloadUtils.expandUserHome(path);
+			path = FileOperationUtils.expandUserHome(path);
 			logger.debug("Initialising with path {}", path);
 		}
 		this.path = new File(path);
@@ -205,7 +206,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	 * Sets the path for the directory where PDB files are read/written
 	 */
 	public void setPath(String p){
-		path = new File(FileDownloadUtils.expandUserHome(p)) ;
+		path = new File(FileOperationUtils.expandUserHome(p)) ;
 		initPaths();
 	}
 
@@ -311,7 +312,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	@Override
 	public Structure getStructure(String filename) throws IOException
 	{
-		filename = FileDownloadUtils.expandUserHome(filename);
+		filename = FileOperationUtils.expandUserHome(filename);
 		File f = new File(filename);
 		return getStructure(f);
 

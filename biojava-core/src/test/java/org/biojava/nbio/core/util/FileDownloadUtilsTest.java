@@ -1,7 +1,5 @@
 package org.biojava.nbio.core.util;
 
-import static org.biojava.nbio.core.util.FileDownloadUtils.getFileExtension;
-import static org.biojava.nbio.core.util.FileDownloadUtils.getFilePrefix;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -39,7 +37,7 @@ class FileDownloadUtilsTest {
             assertEquals(5, src.length());
             File dest = Files.createTempFile("dest", ".dat").toFile();
             assertEquals(0, dest.length());
-            FileDownloadUtils.copy(src, dest);
+            FileOperationUtils.copy(src, dest);
             assertEquals(5, dest.length());
 
             //original is unaffected
@@ -62,31 +60,31 @@ class FileDownloadUtilsTest {
         @Test
         void getExtensionHappyCase(){
             File someFile = new File("sequence.fasta");
-            assertEquals("fasta", getFileExtension(someFile));
+            assertEquals("fasta", FileOperationUtils.getFileExtension(someFile));
         }
 
         @Test
         void lastSuffixOnlyReturned(){
             File someFile = new File("sequence.1.a.fasta");
-            assertEquals("fasta", getFileExtension(someFile));
+            assertEquals("fasta", FileOperationUtils.getFileExtension(someFile));
         }
         
         @Test
         void fileNameEndingInDotReturnsEmptyString(){
             File someFile = new File("noExtension.");
-            assertEquals("", getFileExtension(someFile));
+            assertEquals("", FileOperationUtils.getFileExtension(someFile));
         }
 
         @Test
         void hiddenFile(){
             File someFile = new File(".m2");
-            assertEquals("m2", getFileExtension(someFile));
+            assertEquals("m2", FileOperationUtils.getFileExtension(someFile));
         }
 
         @Test
         void noExtension(){
             File someFile = new File("nameOnly");
-            assertEquals("nameOnly", getFileExtension(someFile));
+            assertEquals("nameOnly", FileOperationUtils.getFileExtension(someFile));
         }        
     }
 
@@ -95,24 +93,24 @@ class FileDownloadUtilsTest {
         @Test
         void standardFileName(){
             File someFile = new File("sequence.fasta");
-            assertEquals("sequence", getFilePrefix(someFile));
+            assertEquals("sequence", FileOperationUtils.getFilePrefix(someFile));
         }
         @Test
         void prefixIsUpToFirstDot(){
             File someFile = new File("sequence.1.2.fasta");
-            assertEquals("sequence", getFilePrefix(someFile));
+            assertEquals("sequence", FileOperationUtils.getFilePrefix(someFile));
         }
 
         @Test
         void noExtension(){
             File someFile = new File("nameOnly");
-            assertEquals("nameOnly", getFilePrefix(someFile));
+            assertEquals("nameOnly", FileOperationUtils.getFilePrefix(someFile));
         }
 
         @Test
         void hiddenFile(){
             File someFile = new File(".m2");
-            assertEquals("", getFilePrefix(someFile));
+            assertEquals("", FileOperationUtils.getFilePrefix(someFile));
         }
     }
 
@@ -121,12 +119,12 @@ class FileDownloadUtilsTest {
         @Test
         void windowsToUnixAddsTrailingSlash(){
             String winPath = "C:\\a\\b\\c";
-            assertEquals("C:/a/b/c/", FileDownloadUtils.toUnixPath(winPath));
+            assertEquals("C:/a/b/c/", FileOperationUtils.toUnixPath(winPath));
         }
         @Test
         void unixPathReturnedUnchanged(){
             String path = "/a/b/c/";
-            assertEquals(path, FileDownloadUtils.toUnixPath(path));
+            assertEquals(path, FileOperationUtils.toUnixPath(path));
         }
     }
 
@@ -136,12 +134,12 @@ class FileDownloadUtilsTest {
         @Test
         void minimalPath (){
         	String path="~";
-        	assertEquals(currUserHome, FileDownloadUtils.expandUserHome(path));
+        	assertEquals(currUserHome, FileOperationUtils.expandUserHome(path));
         }
         @Test
         void simplePath (){
             String path="~/sequence.gb";
-            assertEquals(currUserHome+File.separator+"sequence.gb", FileDownloadUtils.expandUserHome(path));
+            assertEquals(currUserHome+File.separator+"sequence.gb", FileOperationUtils.expandUserHome(path));
         }
         @Test
         void nestedPath (){
@@ -150,8 +148,8 @@ class FileDownloadUtilsTest {
             		+ "a" + File.separator 
             		+ "b" + File.separator 
             		+ "c" + File.separator 
-            		+ "sequence.gb", 
-            		FileDownloadUtils.expandUserHome(path));
+            		+ "sequence.gb",
+                    FileOperationUtils.expandUserHome(path));
         }  
     }
 
@@ -189,7 +187,7 @@ class FileDownloadUtilsTest {
             File toDelete = createDirectoryTree();
             assertTrue(toDelete.exists());
 
-            FileDownloadUtils.deleteDirectory(toDelete.getAbsolutePath());
+            FileOperationUtils.deleteDirectory(toDelete.getAbsolutePath());
             assertFalse(toDelete.exists());
         }
     }

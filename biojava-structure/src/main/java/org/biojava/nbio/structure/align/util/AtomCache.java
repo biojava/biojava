@@ -27,6 +27,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.TreeSet;
 
+import org.biojava.nbio.core.util.FileOperationUtils;
 import org.biojava.nbio.core.util.InputStreamProvider;
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.align.client.StructureName;
@@ -723,7 +724,7 @@ public class AtomCache {
 	 *            to a directory
 	 */
 	public void setPath(String path) {
-		this.path = FileDownloadUtils.expandUserHome(path);
+		this.path = FileOperationUtils.expandUserHome(path);
 	}
 
 	/**
