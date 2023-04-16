@@ -31,10 +31,7 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Quat4d;
 import javax.vecmath.Vector3d;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 
 /**
@@ -176,7 +173,7 @@ public class SystematicSolver implements QuatSymmetrySolver {
 		List<Integer> seqClusterId = subunits.getClusterIds();
 		for (int i = 0; i < permutation.size(); i++) {
 			int j = permutation.get(i);
-			if (seqClusterId.get(i) != seqClusterId.get(j)) {
+			if (!Objects.equals(seqClusterId.get(i), seqClusterId.get(j))) {
 				return false;
 			}
 		}

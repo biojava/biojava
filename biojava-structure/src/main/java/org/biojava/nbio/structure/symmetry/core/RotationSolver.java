@@ -21,12 +21,7 @@
 
 package org.biojava.nbio.structure.symmetry.core;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Matrix4d;
@@ -90,7 +85,7 @@ public class RotationSolver implements QuatSymmetrySolver {
 		// isSpherical check added 08-04-11
 		if (maxSymOps % 60 == 0 && isSpherical) {
 			maxSymOps = 60;
-		 }
+		}
 
 		AxisAngle4d sphereAngle = new AxisAngle4d();
 		Matrix4d transformation = new Matrix4d();
@@ -122,7 +117,7 @@ public class RotationSolver implements QuatSymmetrySolver {
 
 				// get permutation of subunits and check validity/uniqueness
 				List<Integer> permutation = getPermutation();
-	//              System.out.println("Rotation Solver: permutation: " + i + ": " + permutation);
+				//              System.out.println("Rotation Solver: permutation: " + i + ": " + permutation);
 
 				// check if novel
 				if ( evaluatedPermutations.containsKey(permutation)) {
@@ -277,7 +272,7 @@ public class RotationSolver implements QuatSymmetrySolver {
 		int n = subunits.getSubunitCount();
 		// for spherical symmetric cases, n cannot be higher than 60
 		if (n % 60 == 0 && isSpherical()) {
-			 n = 60;
+			n = 60;
 		}
 		List<Integer> folds = subunits.getFolds();
 		List<Double> angles = new ArrayList<Double>(folds.size()-1);
@@ -334,7 +329,7 @@ public class RotationSolver implements QuatSymmetrySolver {
 		int selfaligned = 0;
 		for (int i = 0; i < permutation.size(); i++) {
 			int j = permutation.get(i);
-			if ( seqClusterId.get(i) != seqClusterId.get(j)) {
+			if (!Objects.equals(seqClusterId.get(i), seqClusterId.get(j))) {
 				return false;
 			}
 			if(i == j ) {
@@ -344,6 +339,7 @@ public class RotationSolver implements QuatSymmetrySolver {
 		// either identity (all self aligned) or all unique
 		return selfaligned == 0 || selfaligned == permutation.size();
 	}
+
 	/**
 	 * Adds translational component to rotation matrix
 	 * @param rotation
@@ -407,7 +403,7 @@ public class RotationSolver implements QuatSymmetrySolver {
 			int closest = -1;
 			double minDist = Double.MAX_VALUE;
 
-			 for (int j : neighbors) {
+			for (int j : neighbors) {
 				double dist = t.distanceSquared(originalCoords[j]);
 				if (dist < minDist) {
 					closest = j;
@@ -417,7 +413,7 @@ public class RotationSolver implements QuatSymmetrySolver {
 
 			sum += minDist;
 			if (closest == -1) {
-				 break;
+				break;
 			}
 			permutation.add(closest);
 		}
