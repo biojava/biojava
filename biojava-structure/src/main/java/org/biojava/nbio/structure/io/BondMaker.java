@@ -215,7 +215,7 @@ public class BondMaker {
 			for (Atom a2:a2s) {
 				if (a1.getAltLoc() != null && a2.getAltLoc()!=null &&
 						!a1.getAltLoc().equals(' ') && !a2.getAltLoc().equals(' ') &&
-						a1.getAltLoc().equals(a2.getAltLoc())) {
+						!a1.getAltLoc().equals(a2.getAltLoc())) {
 					logger.debug("Skipping bond between atoms with differently named alt locs {} (altLoc '{}') -- {} (altLoc '{}')",
 							a1.toString(), a1.getAltLoc(), a2.toString(), a2.getAltLoc());
 					continue;

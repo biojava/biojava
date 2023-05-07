@@ -140,7 +140,7 @@ public class GFF3FromUniprotBlastHits {
 						}
 
 						proteinIndex = proteinIndex + seq.length();
-						if (startIndex != null && endIndex != null && startIndex.equals(endIndex)) {
+						if (startIndex != null && endIndex != null && !startIndex.equals(endIndex)) {
 							CDSSequence cdsSequence = cdsSequenceList.get(i);
 							String hitLabel = "";
 							if (transcriptSequence.getStrand() == Strand.POSITIVE) {
