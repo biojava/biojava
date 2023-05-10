@@ -1,12 +1,6 @@
 package org.biojava.nbio.structure.io.cif;
 
-import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.Chain;
-import org.biojava.nbio.structure.Element;
-import org.biojava.nbio.structure.EntityType;
-import org.biojava.nbio.structure.Group;
-import org.biojava.nbio.structure.GroupType;
-import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.xtal.CrystalCell;
 import org.biojava.nbio.structure.xtal.SpaceGroup;
 import org.rcsb.cif.CifBuilder;
@@ -23,8 +17,10 @@ import org.rcsb.cif.schema.mm.MmCifFileBuilder;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 /**
  * Convert a BioJava object to a CifFile.
@@ -41,9 +37,11 @@ public abstract class AbstractCifFileSupplier<S> implements CifFileSupplier<S> {
         SpaceGroup spaceGroup = structure.getPDBHeader().getCrystallographicInfo().getSpaceGroup();
         // atom_site
         Category atomSite = wrappedAtoms.stream().collect(toAtomSite());
+        // entity information
+        List<EntityInfo> entityInfos = structure.getEntityInfos();
 
         MmCifBlockBuilder blockBuilder = CifBuilder.enterFile(StandardSchemata.MMCIF)
-                .enterBlock(structure.getPDBCode());
+                .enterBlock(structure.getPdbId() == null? "" : structure.getPdbId().getId());
 
         blockBuilder.enterStructKeywords().enterText()
         .add(String.join(", ", structure.getPDBHeader().getKeywords()))
@@ -89,6 +87,49 @@ public abstract class AbstractCifFileSupplier<S> implements CifFileSupplier<S> {
                     .enterSpaceGroupNameH_M()
                     .add(spaceGroup.getShortSymbol())
                     .leaveColumn()
+                    .leaveCategory();
+        }
+
+        if (entityInfos != null) {
+
+            String[] entityIds = new String[entityInfos.size()];
+            String[] entityTypes = new String[entityInfos.size()];
+            String[] entityDescriptions = new String[entityInfos.size()];
+
+            for (int i=0; i<entityInfos.size(); i++) {
+                EntityInfo e = entityInfos.get(i);
+                entityIds[i] = Integer.toString(e.getMolId());
+                entityTypes[i] = e.getType().getEntityType();
+                entityDescriptions[i] = e.getDescription();
+            }
+
+            String[] polyEntityIds = entityInfos.stream().filter(e -> e.getType() == EntityType.POLYMER).map(e -> Integer.toString(e.getMolId())).collect(Collectors.toList()).toArray(new String[]{});
+            String[] entitySeqs = entityInfos.stream().filter(e -> e.getType() == EntityType.POLYMER).map(e -> e.getChains().get(0).getSeqResSequence()).collect(Collectors.toList()).toArray(new String[]{});
+
+            blockBuilder.enterEntity()
+                    .enterId()
+                    .add(entityIds)
+                    .leaveColumn()
+
+                    .enterType()
+                    .add(entityTypes)
+                    .leaveColumn()
+
+                    .enterPdbxDescription()
+                    .add(entityDescriptions)
+                    .leaveColumn()
+
+                    .leaveCategory();
+
+            blockBuilder.enterEntityPoly()
+                    .enterEntityId()
+                    .add(polyEntityIds)
+                    .leaveColumn()
+
+                    .enterPdbxSeqOneLetterCodeCan()
+                    .add(entitySeqs)
+                    .leaveColumn()
+
                     .leaveCategory();
         }
 
