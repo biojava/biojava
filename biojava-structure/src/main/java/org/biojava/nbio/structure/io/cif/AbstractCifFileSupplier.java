@@ -100,11 +100,11 @@ public abstract class AbstractCifFileSupplier<S> implements CifFileSupplier<S> {
                 EntityInfo e = entityInfos.get(i);
                 entityIds[i] = Integer.toString(e.getMolId());
                 entityTypes[i] = e.getType().getEntityType();
-                entityDescriptions[i] = e.getDescription();
+                entityDescriptions[i] = e.getDescription() == null? "?" : e.getDescription();
             }
 
             String[] polyEntityIds = entityInfos.stream().filter(e -> e.getType() == EntityType.POLYMER).map(e -> Integer.toString(e.getMolId())).collect(Collectors.toList()).toArray(new String[]{});
-            String[] entitySeqs = entityInfos.stream().filter(e -> e.getType() == EntityType.POLYMER).map(e -> e.getChains().get(0).getSeqResSequence()).collect(Collectors.toList()).toArray(new String[]{});
+            String[] polyEntitySeqs = entityInfos.stream().filter(e -> e.getType() == EntityType.POLYMER).map(e -> e.getChains().get(0).getSeqResSequence()).collect(Collectors.toList()).toArray(new String[]{});
 
             blockBuilder.enterEntity()
                     .enterId()
@@ -127,7 +127,7 @@ public abstract class AbstractCifFileSupplier<S> implements CifFileSupplier<S> {
                     .leaveColumn()
 
                     .enterPdbxSeqOneLetterCodeCan()
-                    .add(entitySeqs)
+                    .add(polyEntitySeqs)
                     .leaveColumn()
 
                     .leaveCategory();

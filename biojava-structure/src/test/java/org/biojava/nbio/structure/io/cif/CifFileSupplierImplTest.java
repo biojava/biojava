@@ -10,8 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.GZIPInputStream;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class CifFileSupplierImplTest {
 
@@ -29,6 +28,7 @@ public class CifFileSupplierImplTest {
         String cifText = CifStructureConverter.toText(s);
         assertTrue(cifText.contains("_entity.type"));
         assertTrue(cifText.contains("_entity_poly.pdbx_seq_one_letter_code_can"));
+        assertFalse(cifText.contains("null"));
 
         InputStream inputStream = new ByteArrayInputStream(cifText.getBytes());
         Structure readStruct = CifStructureConverter.fromInputStream(inputStream);
