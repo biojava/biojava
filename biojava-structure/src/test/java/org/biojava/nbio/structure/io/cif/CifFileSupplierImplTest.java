@@ -29,6 +29,7 @@ public class CifFileSupplierImplTest {
         assertTrue(cifText.contains("_entity.type"));
         assertTrue(cifText.contains("_entity_poly.pdbx_seq_one_letter_code_can"));
         assertFalse(cifText.contains("null"));
+        assertTrue(cifText.contains("MSEQLTDQVLVERVQKGDQKAFNLLVVRYQHKVASLVSRYVPSGDVPDVVQEAFIKA"));
 
         InputStream inputStream = new ByteArrayInputStream(cifText.getBytes());
         Structure readStruct = CifStructureConverter.fromInputStream(inputStream);
