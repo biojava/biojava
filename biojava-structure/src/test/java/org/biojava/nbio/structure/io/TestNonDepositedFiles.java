@@ -99,7 +99,8 @@ public class TestNonDepositedFiles {
 		//System.out.println("Chains from incomplete header file: ");
 		//checkChains(s);
 
-
+		// we should have seqres groups (testing getSeqResSequence() is equivalent)
+		assertFalse(s.getPolyChains().get(0).getSeqResSequence().isEmpty());
 
 		// trying without seqAlignSeqRes
 		params.setAlignSeqRes(false);
@@ -145,6 +146,9 @@ public class TestNonDepositedFiles {
 		assertTrue(s.nrModels()>1);
 		assertNull(s.getPDBHeader().getExperimentalTechniques());
 
+		// we should have seqres groups (testing getSeqResSequence() is equivalent)
+		assertFalse(s.getPolyChains().get(0).getSeqResSequence().isEmpty());
+
 	}
 
 	@Test
@@ -165,6 +169,8 @@ public class TestNonDepositedFiles {
 		assertTrue(s.nrModels()>1);
 		assertNull(s.getPDBHeader().getExperimentalTechniques());
 
+		// we should have seqres groups (testing getSeqResSequence() is equivalent)
+		assertFalse(s.getPolyChains().get(0).getSeqResSequence().isEmpty());
 	}
 
 	@Test
@@ -187,6 +193,9 @@ public class TestNonDepositedFiles {
 
 		// testing that on single chain pdb files we assign an entity type, issue #767
 		assertEquals(EntityType.POLYMER, s.getEntityById(1).getType());
+
+		// we should have seqres groups (testing getSeqResSequence() is equivalent)
+		assertFalse(s.getPolyChains().get(0).getSeqResSequence().isEmpty());
 	}
 
 	private void checkChains(Structure s) {
@@ -227,6 +236,8 @@ public class TestNonDepositedFiles {
 		assertEquals(1, counts[1]);
 		assertEquals(1, counts[2]);
 
+		// we should have seqres groups (testing getSeqResSequence() is equivalent)
+		assertFalse(s.getPolyChains().get(0).getSeqResSequence().isEmpty());
 
 	}
 
@@ -255,6 +266,8 @@ public class TestNonDepositedFiles {
 		assertEquals(1, counts[1]);
 		assertEquals(1, counts[2]);
 
+		// we should have seqres groups (testing getSeqResSequence() is equivalent)
+		assertFalse(s.getPolyChains().get(0).getSeqResSequence().isEmpty());
 	}
 
 	@Test
@@ -275,6 +288,9 @@ public class TestNonDepositedFiles {
 		assertEquals(2, s.getChains().size());
 
 		assertEquals(1, s.getEntityInfos().size());
+
+		// we should have seqres groups (testing getSeqResSequence() is equivalent)
+		assertFalse(s.getPolyChains().get(0).getSeqResSequence().isEmpty());
 	}
 
 
@@ -303,6 +319,9 @@ public class TestNonDepositedFiles {
 		assertEquals(1, counts[1]);
 		assertEquals(1, counts[2]);
 
+		// we should have seqres groups (testing getSeqResSequence() is equivalent)
+		assertFalse(s.getPolyChains().get(0).getSeqResSequence().isEmpty());
+
 	}
 
 	/**
@@ -329,6 +348,9 @@ public class TestNonDepositedFiles {
 		assertSame(s.getEntityById(2), s.getPolyChains().get(4).getEntityInfo());
 		assertSame(s.getEntityById(2), s.getPolyChains().get(5).getEntityInfo());
 		assertSame(s.getEntityById(2), s.getPolyChains().get(6).getEntityInfo());
+
+		// we should have seqres groups (testing getSeqResSequence() is equivalent)
+		assertFalse(s.getPolyChains().get(0).getSeqResSequence().isEmpty());
 	}
 
 	/**

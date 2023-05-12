@@ -819,18 +819,14 @@ public class SeqRes2AtomAligner {
 	 */
 	public static void storeUnAlignedSeqRes(Structure structure, List<Chain> seqResChains, boolean headerOnly) {
 
-
 		if (headerOnly) {
-
 			List<Chain> atomChains = new ArrayList<>();
 			for (Chain seqRes: seqResChains) {
 				// In header-only mode skip ATOM records.
 				// Here we store chains with SEQRES instead of AtomGroups.
 				seqRes.setSeqResGroups(seqRes.getAtomGroups());
 				seqRes.setAtomGroups(new ArrayList<>()); // clear out the atom groups.
-
 				atomChains.add(seqRes);
-
 			}
 			structure.setChains(0, atomChains);
 
@@ -838,21 +834,20 @@ public class SeqRes2AtomAligner {
 
 			for (int i = 0; i < structure.nrModels(); i++) {
 				List<Chain> atomChains   = structure.getModel(i);
-
+				if (seqResChains.isEmpty()) {
+					// in files without SEQRES, seqResChains object is empty: we replace by atomChains resulting below in a trivial alignment and a copy of atom groups to seqres groups
+					seqResChains = atomChains;
+				}
 				for (Chain seqRes: seqResChains){
-					Chain atomRes;
-
 					// Otherwise, we find a chain with AtomGroups
 					// and set this as SEQRES groups.
 					// TODO no idea if new parameter useChainId should be false or true here, used true as a guess - JD 2016-05-09
-					atomRes = SeqRes2AtomAligner.getMatchingAtomRes(seqRes,atomChains,true);
+					Chain atomRes = SeqRes2AtomAligner.getMatchingAtomRes(seqRes,atomChains,true);
 					if ( atomRes != null)
 						atomRes.setSeqResGroups(seqRes.getAtomGroups());
 					else
 						logger.warn("Could not find atom records for chain " + seqRes.getId());
 				}
-
-
 			}
 		}
 	}
