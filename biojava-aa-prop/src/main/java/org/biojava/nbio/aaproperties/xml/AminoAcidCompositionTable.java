@@ -132,7 +132,7 @@ public class AminoAcidCompositionTable {
 	 * @throws NullPointerException
 	 * 	thrown if AminoAcidCompositionTable.computeMolecularWeight(ElementTable) is not called before this method
 	 */
-	public double getMolecularWeight(Character aaSymbol) throws NullPointerException{
+	public double getMolecularWeight(Character aaSymbol) {
 		if(this.aaSymbol2MolecularWeight == null){
 			throw new NullPointerException("Please call AminoAcidCompositionTable.computeMolecularWeight(ElementTable) before this method");
 		}

@@ -78,7 +78,7 @@ public interface Annotation  {
 	 *
 	 *
 	 */
-	Object getProperty(Object key) throws NoSuchElementException;
+	Object getProperty(Object key);
 
 	/**
 	 * <p>
@@ -100,7 +100,7 @@ public interface Annotation  {
 	 *         if the change was vetoed.
 	 */
 	void setProperty(Object key, Object value)
-			throws IllegalArgumentException;
+	;
 
 	/**
 	 * Delete a property. Normal raw access to the property. For cleverer access, use
@@ -114,7 +114,7 @@ public interface Annotation  {
 	 */
 
 	public void removeProperty(Object key)
-			throws NoSuchElementException;
+	;
 
 	/**
 	 * Returns whether there the property is defined. Normal raw access to the property. For cleverer access, use

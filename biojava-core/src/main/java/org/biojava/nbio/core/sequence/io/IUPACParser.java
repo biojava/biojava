@@ -242,7 +242,7 @@ public class IUPACParser {
 		 * {@link #getCodons(CompoundSet, CompoundSet)} was not called first.
 		 */
 				@Override
-		public boolean isStart(AminoAcidCompound compound) throws IllegalStateException {
+		public boolean isStart(AminoAcidCompound compound) {
 			if(this.codons.isEmpty()) {
 				throw new IllegalStateException("Codons are empty; please request getCodons() fist before asking this");
 			}

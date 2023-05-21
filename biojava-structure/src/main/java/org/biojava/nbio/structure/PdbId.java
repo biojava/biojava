@@ -218,7 +218,7 @@ public class PdbId implements Comparable<PdbId>, Serializable{
 		return intId.substring(0, 4).equals(STRING_0000);
 	}
 	
-	private static String toInternalFormat(String id) throws IllegalArgumentException {
+	private static String toInternalFormat(String id) {
 		if (isValidShortPdbId(id)) {
 			return STRING_0000  + id.toUpperCase();
 		}else if (isValidExtendedPdbId(id)) {

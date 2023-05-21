@@ -41,7 +41,7 @@ class EmptyAnnotation
 
 implements Annotation, Serializable {
 	@Override
-	public Object getProperty(Object key) throws NoSuchElementException {
+	public Object getProperty(Object key) {
 		throw new NoSuchElementException(
 			"There are no keys in the Empty Annotation object: " +
 			key

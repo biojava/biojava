@@ -263,7 +263,7 @@ public class JoiningSequenceReader<C extends Compound> implements ProxySequenceR
 
 
 			@Override
-			public void remove() throws UnsupportedOperationException {
+			public void remove() {
 				throw new UnsupportedOperationException("Cannot remove from this Sequence");
 			}
 		};
@@ -289,7 +289,7 @@ public class JoiningSequenceReader<C extends Compound> implements ProxySequenceR
 
 
 	@Override
-	public AccessionID getAccession() throws UnsupportedOperationException {
+	public AccessionID getAccession() {
 		throw new UnsupportedOperationException();
 	}
 

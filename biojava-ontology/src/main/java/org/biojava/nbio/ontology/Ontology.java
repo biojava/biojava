@@ -91,7 +91,7 @@ public interface Ontology  {
 	 * @throws NoSuchElementException if no term exists with that name
 	 */
 
-	public Term getTerm(String name) throws NoSuchElementException;
+	public Term getTerm(String name);
 
 	/**
 	 * Return all triples from this ontology which match the supplied
@@ -134,9 +134,9 @@ public interface Ontology  {
 
 	public Term createTerm(String name)
 			throws
-			AlreadyExistsException,
+			AlreadyExistsException
 
-			IllegalArgumentException;
+	;
 
 	/**
 	 * Create a new term in this ontology.
@@ -153,9 +153,9 @@ public interface Ontology  {
 
 	public Term createTerm(String name, String description)
 			throws
-			AlreadyExistsException,
+			AlreadyExistsException
 
-			IllegalArgumentException;
+	;
 
 	/**
 	 * Create a new term in this ontology.
@@ -173,9 +173,9 @@ public interface Ontology  {
 
 	public Term createTerm(String name, String description, Object[] synonyms)
 			throws
-			AlreadyExistsException,
+			AlreadyExistsException
 
-			IllegalArgumentException;
+	;
 
 	/**
 	 * Create a new term in this ontology that is used as a variable.
@@ -192,9 +192,9 @@ public interface Ontology  {
 
 	public Variable createVariable(String name, String description)
 			throws
-			AlreadyExistsException,
+			AlreadyExistsException
 
-			IllegalArgumentException;
+	;
 
 	/**
 	 * Create a view of a term from another ontology.  If the requested term
@@ -213,9 +213,9 @@ public interface Ontology  {
 	 */
 
 	public Term importTerm(Term t, String localName)
-			throws
+		
 
-			IllegalArgumentException;
+	;
 
 	/**
 	 * Creates a new Triple.
@@ -342,8 +342,8 @@ public interface Ontology  {
 
 		@Override
 		public Term getTerm(String name)
-				throws NoSuchElementException
-				{
+		
+			{
 			Term t = terms.get(name);
 			if (t == null) {
 				throw new NoSuchElementException("No term named '" + name + "'");
@@ -402,8 +402,8 @@ public interface Ontology  {
 		}
 
 		private void addTerm(Term t)
-				throws AlreadyExistsException, IllegalArgumentException
-				{
+				throws AlreadyExistsException 
+			{
 			if (terms.containsKey(t.getName())) {
 				throw new AlreadyExistsException("Ontology " + getName() + " already contains " + t.toString());
 			}
@@ -415,8 +415,8 @@ public interface Ontology  {
 
 		@Override
 		public Term createTerm(String name)
-				throws AlreadyExistsException, IllegalArgumentException
-				{
+				throws AlreadyExistsException 
+			{
 			Term t = new Term.Impl(this, name);
 			addTerm(t);
 			return t;
@@ -424,8 +424,8 @@ public interface Ontology  {
 
 		@Override
 		public Term createTerm(String name, String description)
-				throws AlreadyExistsException, IllegalArgumentException
-				{
+				throws AlreadyExistsException 
+			{
 			Term t = new Term.Impl(this, name, description);
 			addTerm(t);
 			return t;
@@ -433,8 +433,8 @@ public interface Ontology  {
 
 		@Override
 		public Term createTerm(String name, String description, Object[] synonyms)
-				throws AlreadyExistsException, IllegalArgumentException
-				{
+				throws AlreadyExistsException 
+			{
 			Term t = new Term.Impl(this, name, description, synonyms);
 			addTerm(t);
 			return t;
@@ -443,9 +443,9 @@ public interface Ontology  {
 		@Override
 		public Variable createVariable(String name, String description)
 				throws
-				AlreadyExistsException,
+				AlreadyExistsException
 
-				IllegalArgumentException {
+	 {
 			Variable var = new Variable.Impl(this, name, description);
 			addTerm(var);
 			return var;
@@ -462,8 +462,8 @@ public interface Ontology  {
 
 		@Override
 		public Term importTerm(Term t, String name)
-				throws IllegalArgumentException
-				{
+		
+			{
 			// unpack any potential indirection - belt & braces
 			while(t instanceof RemoteTerm) {
 				t = ((RemoteTerm) t).getRemoteTerm();
@@ -530,11 +530,11 @@ public interface Ontology  {
 				String name,
 				String description)
 						throws
-						AlreadyExistsException,
-						IllegalArgumentException,
-						NullPointerException,
-						IllegalArgumentException
-						{
+						AlreadyExistsException
+		
+		
+		
+					{
 			Triple t = new Triple.Impl(subject, object, predicate, name, description);
 			if (!containsTerm(subject)) {
 				throw new IllegalArgumentException("Ontology " + getName() + " doesn't contain " + subject);

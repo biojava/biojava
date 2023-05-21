@@ -138,7 +138,7 @@ public final class ORonn implements Callable<ORonn> {
 	}
 
 	@Override
-	public ORonn call() throws NumberFormatException, IOException {
+	public ORonn call() throws IOException {
 		final String seq = sequence.getSequence();
 		// Calculate for each model
 		Stream.iterate(0, n -> n +1).limit(NUMBER_OF_MODELS).map(modelNumber -> mloader.getModel(modelNumber))
@@ -277,8 +277,8 @@ public final class ORonn implements Callable<ORonn> {
 		return prms;
 	}
 
-	public static void main(final String[] args) throws NumberFormatException,
-	IOException {
+	public static void main(final String[] args) throws 
+IOException {
 
 		if ((args.length == 0) || (args.length > 5)) {
 			ORonn.printUsage();
@@ -332,7 +332,7 @@ public final class ORonn implements Callable<ORonn> {
 
 	static void predictSerial(final List<FastaSequence> fsequences,
 			final InputParameters prms, final ModelLoader mloader)
-					throws NumberFormatException, IOException {
+					throws IOException {
 		for (final FastaSequence sequence : fsequences) {
 			if (!ORonn.isValidSequenceForRonn(sequence, prms.getStatWriter())) {
 				continue;
@@ -345,7 +345,7 @@ public final class ORonn implements Callable<ORonn> {
 
 	static void predictParallel(final List<FastaSequence> fsequences,
 			final InputParameters prms, final ModelLoader mloader)
-					throws NumberFormatException, IOException {
+					throws IOException {
 		final PrintWriter stat = prms.getStatWriter();
 
 		// Do parallel execution

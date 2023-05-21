@@ -161,7 +161,7 @@ public final class ModelLoader {
 	return ModelLoader.models.get(modelNum);
 	}
 
-	void loadModels() throws NumberFormatException, IOException {
+	void loadModels() throws IOException {
 
 		for (int i = 0; i < 10; i++) {
 			final BufferedReader bfr = new BufferedReader(
@@ -191,8 +191,8 @@ public final class ModelLoader {
 		}
 	}
 
-	public static void main(final String[] args) throws NumberFormatException,
-		IOException {
+	public static void main(final String[] args) throws 
+	IOException {
 	final ModelLoader loader = new ModelLoader();
 	loader.loadModels();
 	logger.info("{}", ModelLoader.models.get(0));

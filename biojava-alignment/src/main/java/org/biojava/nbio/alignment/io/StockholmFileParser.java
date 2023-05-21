@@ -283,7 +283,7 @@ public class StockholmFileParser {
 	 * @throws ParserException
 	 *             if unexpected format is encountered
 	 */
-	public StockholmStructure parse(String filename) throws IOException, ParserException {
+	public StockholmStructure parse(String filename) throws IOException {
 		InputStream inStream = new InputStreamProvider().getInputStream(filename);
 		StockholmStructure structure = parse(inStream);
 		inStream.close();
@@ -307,7 +307,7 @@ public class StockholmFileParser {
 	 * @throws ParserException
 	 *             if unexpected format is encountered
 	 */
-	public List<StockholmStructure> parse(String filename, int max) throws IOException, ParserException {
+	public List<StockholmStructure> parse(String filename, int max) throws IOException {
 		InputStreamProvider isp = new InputStreamProvider();
 		InputStream inStream = isp.getInputStream(filename);
 		return parse(inStream, max);
@@ -325,7 +325,7 @@ public class StockholmFileParser {
 	 * @throws IOException
 	 * @throws ParserException
 	 */
-	public StockholmStructure parse(InputStream inStream) throws ParserException, IOException {
+	public StockholmStructure parse(InputStream inStream) throws IOException {
 		return parse(inStream, 1).get(0);
 	}
 
@@ -391,7 +391,7 @@ public class StockholmFileParser {
 	 * @throws IOException
 	 * @throws Exception
 	 */
-	StockholmStructure parse(Scanner scanner) throws ParserException, IOException {
+	StockholmStructure parse(Scanner scanner) throws IOException {
 		if (scanner == null) {
 			if (internalScanner != null) {
 				scanner = internalScanner;
@@ -528,7 +528,7 @@ public class StockholmFileParser {
 	 *            the line to be parsed
 	 * @throws Exception
 	 */
-	private void handleSequenceLine(String line) throws ParserException {
+	private void handleSequenceLine(String line) {
 		String[] lineContent = line.split("\\s+");
 		if (lineContent.length != 2) {
 			throw new ParserException("Could not split sequence line into sequence name and sequence:\n" + line);

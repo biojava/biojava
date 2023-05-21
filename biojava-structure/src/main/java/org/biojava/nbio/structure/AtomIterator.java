@@ -146,7 +146,7 @@ public class AtomIterator implements Iterator<Atom> {
 	 */
 	@Override
 	public Atom next()
-	throws NoSuchElementException
+
 	{
 		current_atom_pos++ ;
 		if ( current_atom_pos >= group.size() ) {

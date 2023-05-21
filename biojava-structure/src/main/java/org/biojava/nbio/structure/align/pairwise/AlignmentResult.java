@@ -166,7 +166,7 @@ public String toString(){
 		this.ioTime = ioTime;
 	}
 	public void serialize (File output)
-	throws FileNotFoundException, IOException{
+	throws IOException{
 		// save alignment result:
 
 		FileOutputStream outStream = new FileOutputStream(output);
@@ -177,7 +177,7 @@ public String toString(){
 	}
 
 	public static AlignmentResult deserialize(File output)
-	throws FileNotFoundException, IOException, ClassNotFoundException{
+	throws IOException, ClassNotFoundException{
 		FileInputStream fin = new FileInputStream(output);
 		ObjectInputStream objIn = new ObjectInputStream(fin);
 		AlignmentResult result = (AlignmentResult) objIn.readObject();
