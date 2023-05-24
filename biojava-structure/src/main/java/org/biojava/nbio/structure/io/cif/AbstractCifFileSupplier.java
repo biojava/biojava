@@ -103,8 +103,8 @@ public abstract class AbstractCifFileSupplier<S> implements CifFileSupplier<S> {
                 entityDescriptions[i] = e.getDescription() == null? "?" : e.getDescription();
             }
 
-            String[] polyEntityIds = entityInfos.stream().filter(e -> e.getType() == EntityType.POLYMER).map(e -> Integer.toString(e.getMolId())).collect(Collectors.toList()).toArray(new String[]{});
-            String[] polyEntitySeqs = entityInfos.stream().filter(e -> e.getType() == EntityType.POLYMER).map(e -> e.getChains().get(0).getSeqResSequence()).collect(Collectors.toList()).toArray(new String[]{});
+            String[] polyEntityIds = entityInfos.stream().filter(e -> e.getType() == EntityType.POLYMER).map(e -> Integer.toString(e.getMolId())).toArray(String[]::new);
+            String[] polyEntitySeqs = entityInfos.stream().filter(e -> e.getType() == EntityType.POLYMER).map(e -> e.getChains().get(0).getSeqResSequence()).toArray(String[]::new);
 
             blockBuilder.enterEntity()
                     .enterId()
