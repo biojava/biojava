@@ -60,7 +60,7 @@ public class OperatorResolver {
 	 *
 	 * @param operatorExpression the operator expression to be parsed
 	 */
-	public  void parseOperatorExpressionString(String operatorExpression) throws IllegalArgumentException {
+	public  void parseOperatorExpressionString(String operatorExpression) {
 		String expression = operatorExpression.trim();
 
 		// remove single quotes, i.e. '(1-49)' in 1CGM

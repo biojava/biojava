@@ -385,7 +385,7 @@ public enum Element {
 	 * @param elementSymbol element symbol to specify Element.
 	 * @return the Element specified by the element symbol.
 	 */
-	public static Element valueOfIgnoreCase(String elementSymbol) throws IllegalArgumentException {
+	public static Element valueOfIgnoreCase(String elementSymbol) {
 
 		Element e = allElements.get(elementSymbol.toLowerCase());
 		if ( e != null)

@@ -96,7 +96,7 @@ implements Ontology {
 	}
 
 	@Override
-	public Term getTerm(String s) throws NoSuchElementException {
+	public Term getTerm(String s) {
 		int val = Integer.parseInt(s);
 		return resolveInt(val);
 	}
@@ -117,37 +117,37 @@ implements Ontology {
 	}
 
 	@Override
-	public Term createTerm(String name) throws AlreadyExistsException,  IllegalArgumentException {
+	public Term createTerm(String name) throws AlreadyExistsException  {
 		throw new IllegalArgumentException(getName() + " is immutable");
 	}
 
 	@Override
 	public Term createTerm(String name, String description)
 			throws
-			AlreadyExistsException,
+			AlreadyExistsException
 
-			IllegalArgumentException
-			{
+	
+		{
 		throw new IllegalArgumentException(getName() + " is immutable");
 			}
 
 	@Override
 	public Term createTerm(String name, String description, Object[] synonyms)
 			throws
-			AlreadyExistsException,
+			AlreadyExistsException
 
-			IllegalArgumentException
-			{
+	
+		{
 		throw new IllegalArgumentException(getName() + " is immutable");
 			}
 
 	@Override
 	public Variable createVariable(String name, String description)
 			throws
-			AlreadyExistsException,
+			AlreadyExistsException
 
-			IllegalArgumentException
-			{
+	
+		{
 		throw new IllegalArgumentException(getName() + " is immutable");
 			}
 

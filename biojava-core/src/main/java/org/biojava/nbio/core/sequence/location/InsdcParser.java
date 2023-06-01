@@ -131,7 +131,7 @@ public class InsdcParser {
 	 * @return The parsed location
 	 * @throws ParserException thrown in the event of any error during parsing
 	 */
-	public Location parse(String locationString) throws ParserException {
+	public Location parse(String locationString) {
 		featureGlobalStart = Integer.MAX_VALUE;
 		featureGlobalEnd = 1;
 
@@ -151,7 +151,7 @@ public class InsdcParser {
 		return l;
 	}
 
-	private List<Location> parseLocationString(String string, int versus) throws ParserException {
+	private List<Location> parseLocationString(String string, int versus) {
 		Matcher m;
 		List<Location> boundedLocationsCollection = new ArrayList<Location>();
 

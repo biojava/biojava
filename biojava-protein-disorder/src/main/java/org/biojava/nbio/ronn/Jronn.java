@@ -272,7 +272,7 @@ public class Jronn implements Serializable {
 	 * @see #getDisorder(FastaSequence)
 	 * @see #Jronn.Range
 	 */
-	public static Map<FastaSequence,Range[]> getDisorder(String fastaFile) throws FileNotFoundException, IOException {
+	public static Map<FastaSequence,Range[]> getDisorder(String fastaFile) throws IOException {
 		final List<FastaSequence> sequences = SequenceUtil.readFasta(new FileInputStream(fastaFile));
 		return getDisorder(sequences);
 	}

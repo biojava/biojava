@@ -58,11 +58,11 @@ public class BioAssemblyTools {
 		return ! (first == 0 && last > first);
 	}
 
-	public static List<String> parseUnaryOperatorExpression(String operatorExpression) throws IllegalArgumentException {
+	public static List<String> parseUnaryOperatorExpression(String operatorExpression) {
 		return parseSubExpression(operatorExpression);
 	}
 
-	private static List<String> parseSubExpression(String expression) throws IllegalArgumentException {
+	private static List<String> parseSubExpression(String expression) {
 		// remove parenthesis, if any
 		String tmp = expression.replace("(", "");
 		tmp = tmp.replace(")", "");
@@ -93,7 +93,7 @@ public class BioAssemblyTools {
 	 * @return list of items in range
 	 * @throws IllegalArgumentException
 	 */
-	private static List<String> expandRange(String expression) throws IllegalArgumentException {
+	private static List<String> expandRange(String expression) {
 		int first = 0;
 		int last = 0;
 		try {
@@ -112,7 +112,7 @@ public class BioAssemblyTools {
 	}
 
 	public static List<OrderedPair<String>> parseBinaryOperatorExpression(String expression)
-			throws IllegalArgumentException {
+ {
 		// split operator expression, i.e. (1,2,3)(4,5) into two subexpressions
 		String[] subExpressions = null;
 		try {
@@ -267,7 +267,7 @@ public class BioAssemblyTools {
 	 * @throws IllegalArgumentException if structure is null
 	 */
 
-	public static double[] getBiologicalMoleculeCentroid( final Structure asymUnit,List<BiologicalAssemblyTransformation> transformations ) throws IllegalArgumentException {
+	public static double[] getBiologicalMoleculeCentroid( final Structure asymUnit,List<BiologicalAssemblyTransformation> transformations ) {
 		if ( asymUnit == null ) {
 			throw new IllegalArgumentException( "null structure" );
 		}

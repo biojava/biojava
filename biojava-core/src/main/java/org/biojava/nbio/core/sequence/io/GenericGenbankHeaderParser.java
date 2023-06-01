@@ -165,7 +165,7 @@ public class GenericGenbankHeaderParser<S extends AbstractSequence<C>, C extends
 	 * {@inheritDoc}
 	 * The last accession passed to this routine will always be the one used.
 	 */
-	public void setVersion(int version) throws ParserException {
+	public void setVersion(int version) {
 		if (this.versionSeen) throw new ParserException("Current BioEntry already has a version");
 		else {
 			try {
@@ -182,7 +182,7 @@ public class GenericGenbankHeaderParser<S extends AbstractSequence<C>, C extends
 	 * {@inheritDoc}
 	 * The last accession passed to this routine will always be the one used.
 	 */
-	public void setAccession(String accession) throws ParserException {
+	public void setAccession(String accession) {
 		if (accession==null) throw new ParserException("Accession cannot be null");
 		this.accession = accession;
 	}
@@ -190,7 +190,7 @@ public class GenericGenbankHeaderParser<S extends AbstractSequence<C>, C extends
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setDescription(String description) throws ParserException {
+	public void setDescription(String description) {
 		if (this.description!=null) throw new ParserException("Current BioEntry already has a description");
 		this.description = description;
 	}
@@ -198,7 +198,7 @@ public class GenericGenbankHeaderParser<S extends AbstractSequence<C>, C extends
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setIdentifier(String identifier) throws ParserException {
+	public void setIdentifier(String identifier) {
 		if (identifier==null) throw new ParserException("Identifier cannot be null");
 		if (this.identifier!=null) throw new ParserException("Current BioEntry already has a identifier");
 		this.identifier = identifier;
@@ -207,7 +207,7 @@ public class GenericGenbankHeaderParser<S extends AbstractSequence<C>, C extends
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setName(String name) throws ParserException {
+	public void setName(String name) {
 		if (name==null) throw new ParserException("Name cannot be null");
 		if (this.name!=null) throw new ParserException("Current BioEntry already has a name");
 		this.name = name;
@@ -216,7 +216,7 @@ public class GenericGenbankHeaderParser<S extends AbstractSequence<C>, C extends
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setComment(String comment) throws ParserException {
+	public void setComment(String comment) {
 		if (comment==null) throw new ParserException("Comment cannot be null");
 		this.comments.add(comment);
 	}

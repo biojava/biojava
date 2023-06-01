@@ -638,7 +638,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 	 * @throws IOException
 	 */
 	private StringBuilder fetchFromCache(String key)
-			throws FileNotFoundException, IOException {
+			throws IOException {
 		int index;
 		File f = new File(uniprotDirectoryCache + File.separatorChar + key + ".xml");
 		StringBuilder sb = new StringBuilder();

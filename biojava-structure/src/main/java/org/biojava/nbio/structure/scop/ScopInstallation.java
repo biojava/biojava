@@ -284,7 +284,7 @@ public class ScopInstallation implements LocalScopDatabase {
 	 * @see org.biojava.nbio.structure.scop.ScopDatabase#filterByDescription(java.lang.String)
 	 */
 	@Override
-	public List<ScopDescription> filterByDescription(String query) throws ScopIOException {
+	public List<ScopDescription> filterByDescription(String query) {
 		try {
 			ensureDesInstalled();
 		} catch (IOException e) {
@@ -654,7 +654,7 @@ public class ScopInstallation implements LocalScopDatabase {
 		return ranges;
 	}
 
-	protected void downloadClaFile() throws FileNotFoundException, IOException{
+	protected void downloadClaFile() throws IOException{
 		if(mirrors.size()<1) {
 			initScopURLs();
 		}
@@ -675,7 +675,7 @@ public class ScopInstallation implements LocalScopDatabase {
 		throw new IOException("Unable to download SCOP .cla file",exception);
 	}
 
-	protected void downloadDesFile() throws FileNotFoundException, IOException{
+	protected void downloadDesFile() throws IOException{
 		if(mirrors.size()<1) {
 			initScopURLs();
 		}
@@ -718,7 +718,7 @@ public class ScopInstallation implements LocalScopDatabase {
 
 	}
 
-	protected void downloadComFile() throws FileNotFoundException, IOException{
+	protected void downloadComFile() throws IOException{
 		if(mirrors.size()<1) {
 			initScopURLs();
 		}

@@ -368,7 +368,7 @@ public class BitSequenceReader<C extends Compound> implements ProxySequenceReade
 		 * @return Byte representation of the compound
 		 * @throws IllegalStateException Done whenever this method is invoked
 		 */
-		protected byte processUnknownCompound(C compound, int position) throws IllegalStateException {
+		protected byte processUnknownCompound(C compound, int position) {
 			throw new IllegalStateException("Do not know how to translate the compound " + compound + " to a " + bitsPerCompound() + "bit representation");
 		}
 

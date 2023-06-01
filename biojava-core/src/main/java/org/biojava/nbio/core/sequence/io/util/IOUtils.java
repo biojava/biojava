@@ -87,7 +87,7 @@ public class IOUtils {
 	 * @param processor The processor to invoke on all lines
 	 * @throws ParserException Can throw this if we cannot parse the given reader
 	 */
-	public static void processReader(BufferedReader br, ReaderProcessor processor) throws ParserException {
+	public static void processReader(BufferedReader br, ReaderProcessor processor) {
 		String line;
 		try {
 			while( (line = br.readLine()) != null ) {
@@ -109,7 +109,7 @@ public class IOUtils {
 	 * @return List of Strings
 	 * @throws ParserException Can throw this if we cannot parse the given reader
 	 */
-	public static List<String> getList(BufferedReader br) throws ParserException {
+	public static List<String> getList(BufferedReader br) {
 		final List<String> list = new ArrayList<String>();
 		processReader(br, new ReaderProcessor() {
 			@Override
@@ -130,7 +130,7 @@ public class IOUtils {
 	 * @throws ParserException Can throw this if the file is not a file or we
 	 * cannot parse it
 	 */
-	public static List<String> getList(InputStream is) throws ParserException {
+	public static List<String> getList(InputStream is) {
 		return getList(new BufferedReader(new InputStreamReader(is)));
 	}
 

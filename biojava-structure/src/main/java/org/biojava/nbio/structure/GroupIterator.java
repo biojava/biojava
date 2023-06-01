@@ -159,7 +159,7 @@ public class GroupIterator implements Iterator<Group> {
 	 */
 	@Override
 	public Group next()
-	throws NoSuchElementException
+
 	{
 
 		return getNextGroup(current_model_pos,current_chain_pos,current_group_pos+1);
@@ -170,7 +170,7 @@ public class GroupIterator implements Iterator<Group> {
 	 * @see #next
 	 */
 	private Group getNextGroup(int tmp_model,int tmp_chain,int tmp_group)
-	throws NoSuchElementException
+
 	{
 
 		if ( tmp_model >= structure.nrModels()){

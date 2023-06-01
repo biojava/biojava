@@ -84,7 +84,7 @@ public abstract class AbstractAnnotation
 
 
 	@Override
-	public Object getProperty(Object key) throws NoSuchElementException {
+	public Object getProperty(Object key) {
 		if(propertiesAllocated()) {
 			Map prop = getProperties();
 			if(prop.containsKey(key)) {
@@ -104,8 +104,8 @@ public abstract class AbstractAnnotation
 
 	@Override
 	public void removeProperty(Object key)
-		throws  NoSuchElementException
-	{
+ 
+{
 		if (!getProperties().containsKey(key)) {
 				throw new NoSuchElementException("Can't remove key " + key.toString());
 		}
