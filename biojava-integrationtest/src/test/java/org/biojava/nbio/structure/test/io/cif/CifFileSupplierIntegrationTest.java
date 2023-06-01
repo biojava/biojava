@@ -59,6 +59,12 @@ public class CifFileSupplierIntegrationTest {
     	// a structure with insertion codes
     	testRoundTrip("6ELW");
     }
+
+    @Test
+    public void test4HHB() throws IOException {
+        // a structure with multiple poly entities
+        testRoundTrip("4HHB");
+    }
     
     private static void testRoundTrip(String pdbId) throws IOException {
         URL url = new URL("https://files.rcsb.org/download/" + pdbId + ".cif");
@@ -121,6 +127,14 @@ public class CifFileSupplierIntegrationTest {
         // Test cell and symmetry
         assertEquals(originalStruct.getCrystallographicInfo().getSpaceGroup(),
                 readStruct.getCrystallographicInfo().getSpaceGroup());
+
+        // entity
+        assertEquals(originalStruct.getEntityInfos().size(), readStruct.getEntityInfos().size());
+        for (int i=0; i<originalStruct.getEntityInfos().size(); i++) {
+            assertEquals(originalStruct.getEntityInfos().get(i).getMolId(), readStruct.getEntityInfos().get(i).getMolId());
+            assertEquals(originalStruct.getEntityInfos().get(i).getType(), readStruct.getEntityInfos().get(i).getType());
+        }
+
     }
 
     /**

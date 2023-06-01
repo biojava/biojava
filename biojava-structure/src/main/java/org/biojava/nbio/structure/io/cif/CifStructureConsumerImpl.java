@@ -1612,7 +1612,12 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
         // fix SEQRES residue numbering for all models
 
         for (int model = 0; model < structure.nrModels(); model++) {
-            List<Chain> atomList   = structure.getModel(model);
+            List<Chain> atomList   = structure.getPolyChains(model);
+
+            if (seqResChains.isEmpty()) {
+                // in files without _entity, seqResChains object is empty: we replace by atomChains resulting below in a trivial alignment and a copy of atom groups to seqres groups
+                seqResChains = atomList;
+            }
 
             for (Chain seqResChain : seqResChains){
 
