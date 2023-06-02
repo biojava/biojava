@@ -1,6 +1,14 @@
 BioJava Changelog
 -----------------
 
+BioJava 7.0.2
+==============================
+### Added
+* Some more categories related to entity are now written in mmCIF writer #1063
+
+### Fixed
+* Not declaring anymore unchecked exceptions in signatures #1062
+
 BioJava 7.0.1
 ==============================
 ### Fixed
