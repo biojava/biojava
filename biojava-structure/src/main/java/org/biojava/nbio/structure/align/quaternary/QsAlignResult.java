@@ -47,8 +47,8 @@ public class QsAlignResult {
 
 	private List<SubunitCluster> clusters;
 
-	private List<Subunit> subunits1;
-	private List<Subunit> subunits2;
+	private final List<Subunit> subunits1;
+	private final List<Subunit> subunits2;
 
 	private Map<Integer, Integer> subunitMap;
 	private MultipleAlignment alignment;
@@ -234,7 +234,7 @@ public class QsAlignResult {
 	 */
 	public List<Subunit> getAlignedSubunits1() {
 
-		List<Subunit> aligned = new ArrayList<Subunit>(subunitMap.size());
+		List<Subunit> aligned = new ArrayList<>(subunitMap.size());
 
 		for (Integer key : subunitMap.keySet())
 			aligned.add(subunits1.get(key));
@@ -250,7 +250,7 @@ public class QsAlignResult {
 	 */
 	public List<Subunit> getAlignedSubunits2() {
 
-		List<Subunit> aligned = new ArrayList<Subunit>(subunitMap.size());
+		List<Subunit> aligned = new ArrayList<>(subunitMap.size());
 
 		for (Integer key : subunitMap.keySet())
 			aligned.add(subunits2.get(subunitMap.get(key)));

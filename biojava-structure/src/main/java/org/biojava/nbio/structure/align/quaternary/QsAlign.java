@@ -98,9 +98,9 @@ public class QsAlign {
 		for (int i = 0; i < c1.size(); i++) {
 			for (int j = 0; j < c2.size(); j++) {
 
-				if (clusterMap.keySet().contains(i))
+				if (clusterMap.containsKey(i))
 					break;
-				if (clusterMap.values().contains(j))
+				if (clusterMap.containsValue(j))
 					continue;
 
 				// Use structural alignment to match the subunit clusters
@@ -154,9 +154,9 @@ public class QsAlign {
 				for (int i = 0; i < index2; i++) {
 					for (int j = index2; j < clust1.size(); j++) {
 
-						if (subunitMap.keySet().contains(i))
+						if (subunitMap.containsKey(i))
 							break;
-						if (subunitMap.values().contains(j))
+						if (subunitMap.containsValue(j))
 							continue;
 
 						// Obtain cumulative transformation matrix
@@ -294,8 +294,7 @@ public class QsAlign {
 				if (result.getAlignment() == null) {
 					result.setSubunitMap(subunitMap);
 					result.setAlignment(msa);
-				} else if (msa.getScore(MultipleAlignmentScorer.RMSD) < result
-						.getRmsd()) {
+				} else if (msa.getScore(MultipleAlignmentScorer.RMSD) < result.getRmsd()) {
 					result.setSubunitMap(subunitMap);
 					result.setAlignment(msa);
 					logger.info("Better result found: " + result.toString());
@@ -324,8 +323,8 @@ public class QsAlign {
 			List<SubunitCluster> clusters,
 			Map<Integer, Map<Integer, Integer>> clusterSubunitMap) {
 
-		List<Atom> atomArray1 = new ArrayList<Atom>();
-		List<Atom> atomArray2 = new ArrayList<Atom>();
+		List<Atom> atomArray1 = new ArrayList<>();
+		List<Atom> atomArray2 = new ArrayList<>();
 
 		// For each cluster of subunits
 		for (int key : clusterSubunitMap.keySet()) {
@@ -348,9 +347,9 @@ public class QsAlign {
 			}
 
 		}
-		return new Pair<Atom[]>(
-				atomArray1.toArray(new Atom[atomArray1.size()]),
-				atomArray2.toArray(new Atom[atomArray2.size()]));
+		return new Pair<>(
+				atomArray1.toArray(new Atom[0]),
+				atomArray2.toArray(new Atom[0]));
 	}
 
 	/**
@@ -364,12 +363,10 @@ public class QsAlign {
 	 * @param clusterSubunitMap
 	 *            map from cluster id to subunit matching
 	 * @return transformation matrix
-	 * @throws StructureException
 	 */
 	private static Matrix4d getTransformForClusterSubunitMap(
 			List<SubunitCluster> clusters,
-			Map<Integer, Map<Integer, Integer>> clusterSubunitMap)
-			throws StructureException {
+			Map<Integer, Map<Integer, Integer>> clusterSubunitMap) {
 
 		Pair<Atom[]> pair = getAlignedAtomsForClusterSubunitMap(clusters,
 				clusterSubunitMap);
