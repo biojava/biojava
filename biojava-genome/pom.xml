@@ -61,7 +61,7 @@
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 			<scope>compile</scope>
-			<version>31.1-jre</version>
+			<version>32.0.1-jre</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
