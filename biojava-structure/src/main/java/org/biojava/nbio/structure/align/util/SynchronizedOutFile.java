@@ -43,7 +43,7 @@ public class SynchronizedOutFile {
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	public SynchronizedOutFile(File f, boolean gzipCompress) throws FileNotFoundException, IOException{
+	public SynchronizedOutFile(File f, boolean gzipCompress) throws IOException{
 		if ( f.isDirectory())
 			throw new FileNotFoundException("please provide a file and not a directory");
 
@@ -62,7 +62,7 @@ public class SynchronizedOutFile {
 	 *
 	 * @param f
 	 */
-	public SynchronizedOutFile(File f) throws FileNotFoundException, IOException{
+	public SynchronizedOutFile(File f) throws IOException{
 
 		this(f,false);
 
