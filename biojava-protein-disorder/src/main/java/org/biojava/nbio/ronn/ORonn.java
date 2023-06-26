@@ -81,8 +81,8 @@ public final class ORonn implements Callable<ORonn> {
 
 
 	ORonn(final FastaSequence sequence, final ModelLoader mloader,
-			final InputParameters params) throws NumberFormatException,
-			IOException {
+			final InputParameters params) throws 
+		IOException {
 		this.sequence = sequence;
 		this.mloader = mloader;
 		out = params.getOutputWriter();
@@ -93,8 +93,8 @@ public final class ORonn implements Callable<ORonn> {
 		timer = new Timer(TimeUnit.MILLISECONDS);
 	}
 	//This constructor is for API calls where the caller collects the results directly
-	ORonn(final FastaSequence sequence, final ModelLoader mloader) throws NumberFormatException,
-	IOException {
+	ORonn(final FastaSequence sequence, final ModelLoader mloader) throws 
+IOException {
 		this.sequence = sequence;
 		this.mloader = mloader;
 		out = new PrintWriter(new NullOutputStream());

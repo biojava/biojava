@@ -169,7 +169,7 @@ public final class ORonnModel {
 	}
 
 	public ORonnModel(final String sequence, final Model model,
-		final float disorder) throws NumberFormatException {
+		final float disorder) {
 	this.disorder_weight = disorder;
 	this.model = model;
 	query = sequence.toCharArray();
