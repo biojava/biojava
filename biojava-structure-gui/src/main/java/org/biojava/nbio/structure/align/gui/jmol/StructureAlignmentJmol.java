@@ -257,12 +257,12 @@ public class StructureAlignmentJmol extends AbstractAlignmentJmol implements Cha
 		zoomSlider.setPaintTicks(true);
 
 		Hashtable<Integer, JLabel> labelTable = new Hashtable<Integer, JLabel>();
-		labelTable.put(new Integer(0),new JLabel("0%"));
-		labelTable.put(new Integer(100),new JLabel("100%"));
-		labelTable.put(new Integer(200),new JLabel("200%"));
-		labelTable.put(new Integer(300),new JLabel("300%"));
-		labelTable.put(new Integer(400),new JLabel("400%"));
-		labelTable.put(new Integer(500),new JLabel("500%"));
+		labelTable.put(0,new JLabel("0%"));
+		labelTable.put(100,new JLabel("100%"));
+		labelTable.put(200,new JLabel("200%"));
+		labelTable.put(300,new JLabel("300%"));
+		labelTable.put(400,new JLabel("400%"));
+		labelTable.put(500,new JLabel("500%"));
 
 		zoomSlider.setLabelTable(labelTable);
 		zoomSlider.setPaintLabels(true);

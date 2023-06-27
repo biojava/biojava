@@ -2034,7 +2034,7 @@ public class PDBFileParser  {
 
 		if ( ! sbond.equals("")) {
 			bond = Integer.parseInt(sbond);
-			b = new Integer(bond);
+			b = bond;
 		}
 
 		return b ;
@@ -2091,7 +2091,7 @@ public class PDBFileParser  {
 			//System.out.println(atomserial+ " "+ bond1 +" "+bond2+ " " +bond3+" "+bond4+" "+
 			//		   hyd1+" "+hyd2 +" "+salt1+" "+hyd3+" "+hyd4+" "+salt2);
 			HashMap<String, Integer> cons = new HashMap<String, Integer>();
-			cons.put("atomserial",new Integer(atomserial));
+			cons.put("atomserial",atomserial);
 
 			if ( bond1 != null) cons.put("bond1",bond1);
 			if ( bond2 != null) cons.put("bond2",bond2);
@@ -3164,7 +3164,7 @@ public class PDBFileParser  {
 			if (c[0]=='A') {
 				c[1] = getNextChar(c[1]);
 			}
-			return new String(c);
+			return String.valueOf(c);
 		} else if (asymId.length()==3) {
 			char[] c = new char[3];
 			asymId.getChars(0, 3, c, 0);
@@ -3175,7 +3175,7 @@ public class PDBFileParser  {
 					c[2] = getNextChar(c[2]);
 				}
 			}
-			return new String(c);
+			return String.valueOf(c);
 		}
 		return null;
 	}

@@ -434,7 +434,7 @@ public class ABITrace {
 		for (int x = 0; x <= seqLength - 1; ++x) {
 			tempseq[x] = (char) traceData[PBAS2 + x];
 		}
-		sequence = new String(tempseq);
+		sequence = String.valueOf(tempseq);
 	}
 
 	/**

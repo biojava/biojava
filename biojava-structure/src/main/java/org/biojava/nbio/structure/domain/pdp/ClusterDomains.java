@@ -77,8 +77,8 @@ public class ClusterDomains {
 					if(minDomSize>150&&maxDomSize>1.5*minDomSize) maxDomSize=1.5*minDomSize;
 					else if(maxDomSize>2*minDomSize) maxDomSize=2*minDomSize;
 
-					long size1= new Double(Math.min(PDPParameters.MAXSIZE,minDomSize)).longValue();
-					long size2= new Double(Math.min(PDPParameters.MAXSIZE,maxDomSize)).longValue();
+					long size1= Double.valueOf(Math.min(PDPParameters.MAXSIZE,minDomSize)).longValue();
+					long size2= Double.valueOf(Math.min(PDPParameters.MAXSIZE,maxDomSize)).longValue();
 					minDomSize=Math.min(Math.pow(minDomSize,1.6/3)+PDPParameters.RG1,Math.pow(minDomSize,1.4/3)+Math.pow(PDPParameters.TD1,1.6/3)+PDPParameters.RG1);
 					maxDomSize=Math.min(Math.pow(maxDomSize,1.6/3)+PDPParameters.RG1,Math.pow(maxDomSize,1.4/3)+Math.pow(PDPParameters.TD1,1.6/3)+PDPParameters.RG1);
 
@@ -90,8 +90,8 @@ public class ClusterDomains {
 					/*
 				total_max_contacts = min(x*y,MAXCONT);
 					 */
-					total_max_contacts=new Double(minDomSize*maxDomSize*10).longValue();
-					if(size1>130) total_max_contacts=new Double(minDomSize*maxDomSize*9).longValue();
+					total_max_contacts=Double.valueOf(minDomSize*maxDomSize*10).longValue();
+					if(size1>130) total_max_contacts=Double.valueOf(minDomSize*maxDomSize*9).longValue();
 					/*
 	avd=(domains.get(i).avd+domains.get(j).avd)/2;
 

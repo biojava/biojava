@@ -202,7 +202,7 @@ public class MultipleAlignmentXMLParser {
 					if (residue.equals("null")){
 						alignRes.get(str-1).add(null);
 					} else {
-						alignRes.get(str-1).add(new Integer(residue));
+						alignRes.get(str-1).add(Integer.valueOf(residue));
 					}
 
 					str++;
@@ -225,7 +225,7 @@ public class MultipleAlignmentXMLParser {
 			for (int y=0; y<4; y++){
 				String key = "mat"+(x+1)+(y+1);
 				String value = atts.getNamedItem(key).getTextContent();
-				m.setElement(x, y, new Double(value));
+				m.setElement(x, y, Double.valueOf(value));
 			}
 		}
 		return m;
@@ -241,7 +241,7 @@ public class MultipleAlignmentXMLParser {
 			NamedNodeMap atts = child.getAttributes();
 			if (atts != null) {
 				Node score = atts.getNamedItem("value");
-				Double value = new Double(score.getTextContent());
+				Double value = Double.valueOf(score.getTextContent());
 				cache.putScore(child.getNodeName(), value);
 			}
 		}
@@ -264,12 +264,12 @@ public class MultipleAlignmentXMLParser {
 
 		String ioTime = atts.getNamedItem("IOTime").getTextContent();
 		if (!ioTime.equals("null")){
-			ensemble.setIoTime(new Long(ioTime));
+			ensemble.setIoTime(Long.valueOf(ioTime));
 		}
 
 		String time = atts.getNamedItem("CalculationTime").getTextContent();
 		if (!time.equals("null")){
-			ensemble.setCalculationTime(new Long(time));
+			ensemble.setCalculationTime(Long.valueOf(time));
 		}
 	}
 

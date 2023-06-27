@@ -153,13 +153,13 @@ public class CliTools {
 
 					if (propType == Integer.TYPE) {
 						try {
-							propVal = new Integer(args[++i]);
+							propVal = Integer.valueOf(args[++i]);
 						} catch (Exception ex) {
 							throw new ConfigurationException("Option " + arg + " requires an integer parameter");
 						}
 					} else if (propType == Double.TYPE || propType == Double.class ) {
 						try {
-							propVal = new Double(args[++i]);
+							propVal = Double.valueOf(args[++i]);
 						} catch (Exception ex) {
 							throw new ConfigurationException("Option " + arg + " requires a numerical parameter");
 						}
