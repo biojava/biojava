@@ -37,7 +37,7 @@ public class GenericGenbankHeaderFormat<S extends AbstractSequence<C>, C extends
 		extends GenericInsdcHeaderFormat<S, C> implements
 		GenbankHeaderFormatInterface<S, C> {
 	private static final int HEADER_WIDTH = 12;
-	private static final String lineSep = "%n";
+	private static final String lineSep = System.lineSeparator();
 	private String seqType = null;
 	private boolean useOriginalHeader = false;
 

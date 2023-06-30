@@ -49,7 +49,7 @@ public class GenericInsdcHeaderFormat<S extends AbstractSequence<C>, C extends C
 	protected static final int QUALIFIER_INDENT = 21;
 	protected static final String QUALIFIER_INDENT_STR = "                     ";
 	protected static final String QUALIFIER_INDENT_TMP = "     %s                ";
-	private static final String lineSep = "%n";
+	private static final String lineSep = System.lineSeparator();
 
 	/**
 	 * Format a feature qualifier using the MAX_WIDTH (default 80)
