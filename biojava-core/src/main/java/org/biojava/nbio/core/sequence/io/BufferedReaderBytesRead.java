@@ -76,8 +76,8 @@ public class BufferedReaderBytesRead extends Reader {
 	private boolean skipLF = false;
 	/** The skipLF flag when the mark was set */
 	private boolean markedSkipLF = false;
-	private static int defaultCharBufferSize = 8192;
-	private static int defaultExpectedLineLength = 80;
+	private static final int defaultCharBufferSize = 8192;
+	private static final int defaultExpectedLineLength = 80;
 	long bytesRead = 0;
 
 	/**
@@ -451,7 +451,7 @@ public class BufferedReaderBytesRead extends Reader {
 						nextChar++;
 					}
 				}
-				long d = nChars - nextChar;
+				long d = (long)nChars - nextChar;
 				if (r <= d) {
 					nextChar += r;
 					r = 0;
