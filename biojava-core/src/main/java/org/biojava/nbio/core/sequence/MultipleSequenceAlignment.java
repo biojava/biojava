@@ -304,7 +304,7 @@ public class MultipleSequenceAlignment<S extends Sequence<C>, C extends Compound
 		if (idFormat != null) {
 			AccessionID ac1 = sequences.get(0).getAccession();
 			String id1 = (ac1 == null) ? "null" : ac1.getID();
-			id1 = id1.replaceAll(".", " ");
+			id1 = id1.replaceAll("\\.", " ");
 			s.append(String.format(idFormat, id1));
 		}
 
