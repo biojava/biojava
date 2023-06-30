@@ -83,30 +83,30 @@ public class GFF3Reader {
 
 		FeatureList features = new FeatureList();
 		features.addIndexes(indexes);
-		BufferedReader br = Files.newBufferedReader(path);
+		try (BufferedReader br = Files.newBufferedReader(path)) {
 
-		String s;
-		for (s = br.readLine(); null != s; s = br.readLine()) {
-			s = s.trim();
+			String s;
+			for (s = br.readLine(); null != s; s = br.readLine()) {
+				s = s.trim();
 
-			if (s.length() > 0) {
-				if (s.charAt(0) == '#') {
-					//ignore comment lines
-					if(s.startsWith("##fasta"))
-						break;
-				} else {
+				if (s.length() > 0) {
+					if (s.charAt(0) == '#') {
+						//ignore comment lines
+						if (s.startsWith("##fasta"))
+							break;
+					} else {
 
-					FeatureI f = parseLine(s);
-					if (f != null) {
-						features.add(f);
+						FeatureI f = parseLine(s);
+						if (f != null) {
+							features.add(f);
 
+						}
 					}
 				}
+
 			}
 
 		}
-
-		br.close();
 		return features;
 	}
 

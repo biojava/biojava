@@ -20,11 +20,8 @@
  */
 package org.biojava.nbio.genome.parsers.gff;
 
-import org.biojava.nbio.genome.GeneFeatureHelper;
 import org.biojava.nbio.core.sequence.*;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,8 +35,8 @@ public class GFF3Writer {
 
 	/**
 	 * Output gff3 format for a DNA Sequence
-	 * @param fileName
-	 * @param chromosomeSequence
+	 * @param outputStream
+	 * @param chromosomeSequenceList
 	 * @throws Exception
 	 */
 	public void write(OutputStream outputStream, LinkedHashMap<String, ChromosomeSequence> chromosomeSequenceList) throws Exception {
@@ -118,7 +115,6 @@ public class GFF3Writer {
 
 		}
 
-
 	}
 
 	private String getGFF3Note(ArrayList<String> notesList) {
@@ -138,39 +134,4 @@ public class GFF3Writer {
 		return notes;
 	}
 
-	public static void main(String[] args) throws Exception {
-
-		if (true) {
-			FileOutputStream fo = new FileOutputStream("/Users/Scooter/scripps/dyadic/geneid/geneid/c1-geneid.gff3");//-16
-			LinkedHashMap<String, ChromosomeSequence> dnaSequenceList = GeneFeatureHelper.loadFastaAddGeneFeaturesFromGeneIDGFF2(new File("/Users/Scooter/scripps/dyadic/analysis/454Scaffolds/454Scaffolds.fna"), new File("/Users/Scooter/scripps/dyadic/geneid/geneid/c1_geneid.gff"));
-			GFF3Writer gff3Writer = new GFF3Writer();
-			gff3Writer.write(fo, dnaSequenceList);
-
-
-	 //       LinkedHashMap<String, ProteinSequence> proteinSequenceList = GeneFeatureHelper.getProteinSequences(chromosomeSequenceList.values());
-	 //       for(String id : proteinSequenceList.keySet()){
-	 //           ProteinSequence sequence = proteinSequenceList.get(id);
-	 //           System.out.println(id + " " + sequence.getSequenceAsString());
-
-	 //       }
-			fo.close();
-		}
-/*
-		if (false) {
-			FileOutputStream fo = new FileOutputStream("/Users/Scooter/scripps/dyadic/analysis/454Scaffolds/genemark_hmm.gff3");//-16
-			LinkedHashMap<String, ChromosomeSequence> dnaSequenceList = GeneFeatureHelper.loadFastaAddGeneFeaturesFromGeneMarkGTF(new File("/Users/Scooter/scripps/dyadic/analysis/454Scaffolds/454Scaffolds.fna"), new File("/Users/Scooter/scripps/dyadic/analysis/454Scaffolds/genemark_hmm.gtf"));
-			GFF3Writer gff3Writer = new GFF3Writer();
-			gff3Writer.write(fo, dnaSequenceList);
-			fo.close();
-		}
-
-		if (false) {
-			LinkedHashMap<String, ChromosomeSequence> dnaSequenceList = GeneFeatureHelper.loadFastaAddGeneFeaturesFromGlimmerGFF3(new File("/Users/Scooter/scripps/dyadic/analysis/454Scaffolds/454Scaffolds-16.fna"), new File("/Users/Scooter/scripps/dyadic/GlimmerHMM/c1_glimmerhmm-16.gff"));
-			GFF3Writer gff3Writer = new GFF3Writer();
-			gff3Writer.write(System.out, dnaSequenceList);
-		}
-		*/
-//        System.out.println(listGenes);
-		//	GeneMarkGTF.write( list, args[1] );
-	}
 }
