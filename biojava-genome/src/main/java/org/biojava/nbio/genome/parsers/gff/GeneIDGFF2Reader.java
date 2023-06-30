@@ -147,9 +147,9 @@ public class GeneIDGFF2Reader {
 		end = s.indexOf('#', start);
 		String attributes = null;
 		if (end < 0) {
-			attributes = new String(s.substring(start));
+			attributes = s.substring(start);
 		} else {
-			attributes = new String(s.substring(start, end));
+			attributes = s.substring(start, end);
 		}
 		//need to add in attribute assignment for geneid where it just provides a gene name and will make it gtf like
 		attributes = "gene_id " + '"' + attributes + '"' + ";";

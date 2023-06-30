@@ -91,7 +91,7 @@ public class TwoBitParser extends InputStream {
 			int name_len = raf.read();
 			char[] chars = new char[name_len];
 			for(int j=0;j<name_len;j++) chars[j] = (char)raf.read();
-			seq_names[i] = new String(chars);
+			seq_names[i] = String.valueOf(chars);
 			long pos = readFourBytes();
 			seq2pos.put(seq_names[i],pos);
 			logger.debug("2bit: Sequence name=[{}], pos={}", seq_names[i], pos);

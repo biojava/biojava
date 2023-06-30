@@ -136,23 +136,23 @@ public class BlastTabularParser implements ResultFactory {
 
 					String currentSubjectId=subjectId;
 					while (currentSubjectId.equals(subjectId) && lineNumber < fileLinesCount){
-						if (new Double(evalue) > maxEScore) {
+						if (Double.valueOf(evalue) > maxEScore) {
 							line = fetchData(scanner);
 							lineNumber++;
 							continue;
 						}
 						BlastHspBuilder hspBuilder = new BlastHspBuilder();
 						hspBuilder
-							.setHspAlignLen(new Integer(alnLength))
-							.setHspGaps(new Integer(gapOpenCount))
-							.setHspQueryFrom(new Integer(queryStart))
-							.setHspQueryTo(new Integer(queryEnd))
-							.setHspHitFrom(new Integer(subjectStart))
-							.setHspHitTo(new Integer(subjectEnd))
-							.setHspEvalue(new Double(evalue))
-							.setHspBitScore(new Double(bitScore))
-							.setPercentageIdentity(new Double(percIdentity)/100)
-							.setMismatchCount(new Integer(mismatchCount));
+							.setHspAlignLen(Integer.valueOf(alnLength))
+							.setHspGaps(Integer.valueOf(gapOpenCount))
+							.setHspQueryFrom(Integer.valueOf(queryStart))
+							.setHspQueryTo(Integer.valueOf(queryEnd))
+							.setHspHitFrom(Integer.valueOf(subjectStart))
+							.setHspHitTo(Integer.valueOf(subjectEnd))
+							.setHspEvalue(Double.valueOf(evalue))
+							.setHspBitScore(Double.valueOf(bitScore))
+							.setPercentageIdentity(Double.valueOf(percIdentity)/100)
+							.setMismatchCount(Integer.valueOf(mismatchCount));
 						hsps.add(hspBuilder.createBlastHsp());
 						if (scanner.hasNext()) line = fetchData(scanner);
 						lineNumber++;

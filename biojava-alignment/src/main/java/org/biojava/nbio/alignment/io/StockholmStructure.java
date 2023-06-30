@@ -256,9 +256,8 @@ public class StockholmStructure {
 			}
 			String[] seqDetails = splitSeqName(sequencename);
 			seq.setDescription(seqDetails[0]);
-			seq.setBioBegin((seqDetails[1] == null || seqDetails[1].trim().equals("") ? null : new Integer(
-					seqDetails[1])));
-			seq.setBioEnd((seqDetails[2] == null || seqDetails[2].trim().equals("") ? null : new Integer(seqDetails[2])));
+			seq.setBioBegin((seqDetails[1] == null || seqDetails[1].trim().equals("") ? null : Integer.valueOf(seqDetails[1])));
+			seq.setBioEnd((seqDetails[2] == null || seqDetails[2].trim().equals("") ? null : Integer.valueOf(seqDetails[2])));
 
 			seqs.add(seq);
 		}

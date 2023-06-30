@@ -125,16 +125,16 @@ public class StrucAligParameters {
 		StringBuffer buf = new StringBuffer();
 		String t = " ";
 
-		Object[] params = new Object[]{new Integer(initialK) ,new Integer(seedFragmentLength),
-				new Float(seedRmsdCutoff),
-				new Integer(fragmentLength),
-				new Integer(diagonalDistance), new Integer(diagonalDistance2), new Float(fragmentMiniDistance),
-				new Integer(angleDiff),
-				new Float(fragCompat), new Integer(maxrefine),
-				new Boolean(reduceInitialFragments), new Double(joinRMSCutoff), new Boolean(joinPlo),
-				new Boolean(doAngleCheck), new Boolean(doDistanceCheck), new Boolean(doRMSCheck),
-				new Boolean(doDensityCheck), new Float(densityCutoff), new Float(create_co), new Integer(maxIter),
-				new Float(gapOpen), new Float(gapExtension), new Integer(permutationSize), new Float(evalCutoff)};
+		Object[] params = new Object[]{Integer.valueOf(initialK) ,Integer.valueOf(seedFragmentLength),
+				Float.valueOf(seedRmsdCutoff),
+				Integer.valueOf(fragmentLength),
+				Integer.valueOf(diagonalDistance), Integer.valueOf(diagonalDistance2), Float.valueOf(fragmentMiniDistance),
+				Integer.valueOf(angleDiff),
+				Float.valueOf(fragCompat), Integer.valueOf(maxrefine),
+				Boolean.valueOf(reduceInitialFragments), Double.valueOf(joinRMSCutoff), Boolean.valueOf(joinPlo),
+				Boolean.valueOf(doAngleCheck), Boolean.valueOf(doDistanceCheck), Boolean.valueOf(doRMSCheck),
+				Boolean.valueOf(doDensityCheck), Float.valueOf(densityCutoff), Float.valueOf(create_co), Integer.valueOf(maxIter),
+				Float.valueOf(gapOpen), Float.valueOf(gapExtension), Integer.valueOf(permutationSize), Float.valueOf(evalCutoff)};
 
 		for (int i=0 ; i< params.length ; i++){
 			buf.append(params[i]);
