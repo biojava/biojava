@@ -114,22 +114,17 @@ public class TwoBitSequenceReader<C extends NucleotideCompound> extends BitSeque
 		 * Returns a Map which encodes TCAG into positions 0,1,2,3.
 		 */
 		@Override
-		@SuppressWarnings("serial")
 		protected Map<C, Integer> generateCompoundsToIndex() {
 			final CompoundSet<C> cs = getCompoundSet();
-			return new HashMap<C, Integer>() {
-
-				{
-					put(cs.getCompoundForString("T"), 0);
-					put(cs.getCompoundForString("C"), 1);
-					put(cs.getCompoundForString("A"), 2);
-					put(cs.getCompoundForString("G"), 3);
-					put(cs.getCompoundForString("t"), 0);
-					put(cs.getCompoundForString("c"), 1);
-					put(cs.getCompoundForString("a"), 2);
-					put(cs.getCompoundForString("g"), 3);
-				}
-			};
+			return Map.of(
+					cs.getCompoundForString("T"), 0,
+					cs.getCompoundForString("C"), 1,
+					cs.getCompoundForString("A"), 2,
+					cs.getCompoundForString("G"), 3,
+					cs.getCompoundForString("t"), 0,
+					cs.getCompoundForString("c"), 1,
+					cs.getCompoundForString("a"), 2,
+					cs.getCompoundForString("g"), 3);
 		}
 
 		/**
@@ -140,7 +135,6 @@ public class TwoBitSequenceReader<C extends NucleotideCompound> extends BitSeque
 			CompoundSet<C> cs = getCompoundSet();
 			List<C> result = new ArrayList<C>();
 			result.add( cs.getCompoundForString("T"));
-
 
 			result.add( cs.getCompoundForString("C"));
 			result.add( cs.getCompoundForString("A"));
