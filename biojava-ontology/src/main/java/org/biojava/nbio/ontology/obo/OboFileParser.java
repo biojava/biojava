@@ -67,21 +67,21 @@ public class OboFileParser {
 		new HashMap<Character, Character>();
 
 	static {
-		escapeChars.put(new Character('n'), new Character('\n'));
-		escapeChars.put(new Character('W'), new Character(' '));
-		escapeChars.put(new Character('t'), new Character('\t'));
-		escapeChars.put(new Character(':'), new Character(':'));
-		escapeChars.put(new Character(','), new Character(','));
-		escapeChars.put(new Character('"'), new Character('"'));
-		escapeChars.put(new Character('\''), new Character('\''));
-		escapeChars.put(new Character('\\'), new Character('\\'));
-		escapeChars.put(new Character('{'), new Character('{'));
-		escapeChars.put(new Character('}'), new Character('}'));
-		escapeChars.put(new Character('('), new Character('('));
-		escapeChars.put(new Character(')'), new Character(')'));
-		escapeChars.put(new Character('['), new Character('['));
-		escapeChars.put(new Character(']'), new Character(']'));
-		escapeChars.put(new Character('!'), new Character('!'));
+		escapeChars.put('n', '\n');
+		escapeChars.put('W', ' ');
+		escapeChars.put('t', '\t');
+		escapeChars.put(':', ':');
+		escapeChars.put(',', ',');
+		escapeChars.put('"', '"');
+		escapeChars.put('\'', '\'');
+		escapeChars.put('\\', '\\');
+		escapeChars.put('{', '{');
+		escapeChars.put('}', '}');
+		escapeChars.put('(', '(');
+		escapeChars.put(')', ')');
+		escapeChars.put('[', '[');
+		escapeChars.put(']', ']');
+		escapeChars.put('!', '!');
 		Iterator <Character> it = escapeChars.keySet().iterator();
 		while (it.hasNext()) {
 			Character key = it.next();
@@ -417,7 +417,7 @@ public class OboFileParser {
 		StringBuffer out = new StringBuffer();
 		for (int i = 0; i < str.length(); i++) {
 			char c = str.charAt(i);
-			Object o = unescapeChars.get(new Character(c));
+			Object o = unescapeChars.get(c);
 			if (o == null)
 				out.append(c);
 			else {
@@ -449,7 +449,7 @@ public class OboFileParser {
 				i++;
 				c = str.charAt(i);
 				Character mapchar = escapeChars
-				.get(new Character(c));
+				.get(c);
 				if (mapchar == null)
 					throw new IOException("Unrecognized escape"
 							+ " character " + c + " found.");

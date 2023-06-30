@@ -126,12 +126,12 @@ extends JFrame{
 		for ( int i=0;i< aligs.length;i++){
 			AlternativeAlignment alig = aligs[i];
 
-			data[i][0] = new Integer(i+1);
-			data[i][1] = new Integer(alig.getEqr());
-			data[i][2] = new Double(alig.getScore());
-			data[i][3] = new Double(alig.getRmsd());
-			data[i][4] = new Integer(alig.getGaps());
-			data[i][5] = new Integer(alig.getCluster());
+			data[i][0] = Integer.valueOf(i+1);
+			data[i][1] = Integer.valueOf(alig.getEqr());
+			data[i][2] = Double.valueOf(alig.getScore());
+			data[i][3] = Double.valueOf(alig.getRmsd());
+			data[i][4] = Integer.valueOf(alig.getGaps());
+			data[i][5] = Integer.valueOf(alig.getCluster());
 			JButton maxb = new JButton("Distance Matrix");
 			maxb.addMouseListener(new MatrixMouseListener(this,i));
 

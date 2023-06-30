@@ -117,10 +117,10 @@ public class BlastXMLParser implements ResultFactory {
 
 				// Iteration* section keys:
 				resultBuilder
-					.setIterationNumber(new Integer(XMLHelper.selectSingleElement(element,"Iteration_iter-num").getTextContent()))
+					.setIterationNumber(Integer.valueOf(XMLHelper.selectSingleElement(element,"Iteration_iter-num").getTextContent()))
 					.setQueryID(XMLHelper.selectSingleElement(element,"Iteration_query-ID").getTextContent())
 					.setQueryDef(XMLHelper.selectSingleElement(element, "Iteration_query-def").getTextContent())
-					.setQueryLength(new Integer(XMLHelper.selectSingleElement(element,"Iteration_query-len").getTextContent()));
+					.setQueryLength(Integer.valueOf(XMLHelper.selectSingleElement(element,"Iteration_query-len").getTextContent()));
 
 				if (queryReferences != null) resultBuilder.setQuerySequence(queryReferencesMap.get(
 						XMLHelper.selectSingleElement(element,"Iteration_query-ID").getTextContent()
@@ -135,11 +135,11 @@ public class BlastXMLParser implements ResultFactory {
 				for (Element hitElement : hitList) {
 					BlastHitBuilder blastHitBuilder = new BlastHitBuilder();
 					blastHitBuilder
-						.setHitNum(new Integer(XMLHelper.selectSingleElement(hitElement, "Hit_num").getTextContent()))
+						.setHitNum(Integer.valueOf(XMLHelper.selectSingleElement(hitElement, "Hit_num").getTextContent()))
 						.setHitId(XMLHelper.selectSingleElement(hitElement, "Hit_id").getTextContent())
 						.setHitDef(XMLHelper.selectSingleElement(hitElement, "Hit_def").getTextContent())
 						.setHitAccession(XMLHelper.selectSingleElement(hitElement, "Hit_accession").getTextContent())
-						.setHitLen(new Integer(XMLHelper.selectSingleElement(hitElement, "Hit_len").getTextContent()));
+						.setHitLen(Integer.valueOf(XMLHelper.selectSingleElement(hitElement, "Hit_len").getTextContent()));
 
 					if (databaseReferences != null) blastHitBuilder.setHitSequence(databaseReferencesMap.get(
 						XMLHelper.selectSingleElement(hitElement, "Hit_id").getTextContent()
@@ -150,26 +150,26 @@ public class BlastXMLParser implements ResultFactory {
 
 					hspsCollection = new ArrayList<Hsp>();
 					for (Element hspElement : hspList) {
-						Double evalue = new Double(XMLHelper.selectSingleElement(hspElement, "Hsp_evalue").getTextContent());
+						Double evalue = Double.valueOf(XMLHelper.selectSingleElement(hspElement, "Hsp_evalue").getTextContent());
 
 						// add the new hsp only if it pass the specified threshold. It can save lot of memory and some parsing time
 						if (evalue <= maxEScore) {
 							BlastHspBuilder blastHspBuilder = new BlastHspBuilder();
 							blastHspBuilder
-								.setHspNum(new Integer(XMLHelper.selectSingleElement(hspElement, "Hsp_num").getTextContent()))
-								.setHspBitScore(new Double(XMLHelper.selectSingleElement(hspElement, "Hsp_bit-score").getTextContent()))
-								.setHspScore(new Integer(XMLHelper.selectSingleElement(hspElement, "Hsp_score").getTextContent()))
+								.setHspNum(Integer.valueOf(XMLHelper.selectSingleElement(hspElement, "Hsp_num").getTextContent()))
+								.setHspBitScore(Double.valueOf(XMLHelper.selectSingleElement(hspElement, "Hsp_bit-score").getTextContent()))
+								.setHspScore(Integer.valueOf(XMLHelper.selectSingleElement(hspElement, "Hsp_score").getTextContent()))
 								.setHspEvalue(evalue)
-								.setHspQueryFrom(new Integer(XMLHelper.selectSingleElement(hspElement, "Hsp_query-from").getTextContent()))
-								.setHspQueryTo(new Integer(XMLHelper.selectSingleElement(hspElement, "Hsp_query-to").getTextContent()))
-								.setHspHitFrom(new Integer(XMLHelper.selectSingleElement(hspElement, "Hsp_hit-from").getTextContent()))
-								.setHspHitTo(new Integer(XMLHelper.selectSingleElement(hspElement, "Hsp_hit-to").getTextContent()))
-								.setHspQueryFrame(new Integer(XMLHelper.selectSingleElement(hspElement, "Hsp_query-frame").getTextContent()))
-								.setHspHitFrame(new Integer(XMLHelper.selectSingleElement(hspElement, "Hsp_hit-frame").getTextContent()))
-								.setHspIdentity(new Integer(XMLHelper.selectSingleElement(hspElement, "Hsp_identity").getTextContent()))
-								.setHspPositive(new Integer(XMLHelper.selectSingleElement(hspElement, "Hsp_positive").getTextContent()))
-								.setHspGaps(new Integer(XMLHelper.selectSingleElement(hspElement, "Hsp_gaps").getTextContent()))
-								.setHspAlignLen(new Integer(XMLHelper.selectSingleElement(hspElement, "Hsp_align-len").getTextContent()))
+								.setHspQueryFrom(Integer.valueOf(XMLHelper.selectSingleElement(hspElement, "Hsp_query-from").getTextContent()))
+								.setHspQueryTo(Integer.valueOf(XMLHelper.selectSingleElement(hspElement, "Hsp_query-to").getTextContent()))
+								.setHspHitFrom(Integer.valueOf(XMLHelper.selectSingleElement(hspElement, "Hsp_hit-from").getTextContent()))
+								.setHspHitTo(Integer.valueOf(XMLHelper.selectSingleElement(hspElement, "Hsp_hit-to").getTextContent()))
+								.setHspQueryFrame(Integer.valueOf(XMLHelper.selectSingleElement(hspElement, "Hsp_query-frame").getTextContent()))
+								.setHspHitFrame(Integer.valueOf(XMLHelper.selectSingleElement(hspElement, "Hsp_hit-frame").getTextContent()))
+								.setHspIdentity(Integer.valueOf(XMLHelper.selectSingleElement(hspElement, "Hsp_identity").getTextContent()))
+								.setHspPositive(Integer.valueOf(XMLHelper.selectSingleElement(hspElement, "Hsp_positive").getTextContent()))
+								.setHspGaps(Integer.valueOf(XMLHelper.selectSingleElement(hspElement, "Hsp_gaps").getTextContent()))
+								.setHspAlignLen(Integer.valueOf(XMLHelper.selectSingleElement(hspElement, "Hsp_align-len").getTextContent()))
 								.setHspQseq(XMLHelper.selectSingleElement(hspElement, "Hsp_qseq").getTextContent())
 								.setHspHseq(XMLHelper.selectSingleElement(hspElement, "Hsp_hseq").getTextContent())
 								.setHspIdentityString(XMLHelper.selectSingleElement(hspElement, "Hsp_midline").getTextContent());

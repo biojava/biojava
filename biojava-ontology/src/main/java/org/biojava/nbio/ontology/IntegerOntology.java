@@ -190,7 +190,7 @@ implements Ontology {
 	}
 
 	public IntTerm resolveInt(int val) {
-		Integer i = new Integer(val);
+		Integer i = val;
 		IntTerm term = (IntTerm) termCache.get(i);
 
 		if(term == null) {

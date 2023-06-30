@@ -447,8 +447,8 @@ public class AFPChain implements Serializable, Cloneable {
 		afpChainTwiNum = 0;
 		alignScore = 0;
 		alignScoreUpdate = 0;
-		conn = new Double(0);
-		dvar = new Double(0);
+		conn = Double.valueOf(0);
+		dvar = Double.valueOf(0);
 		calculationTime = 0;
 
 		similarity = -1;

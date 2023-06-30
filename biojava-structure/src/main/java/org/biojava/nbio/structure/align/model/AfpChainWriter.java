@@ -263,9 +263,9 @@ public class AfpChainWriter
 
 
 			//System.err.println("t,len:"+t+":"+len);
-			String lseq1 = new String(alnseq1).substring(t,t+len);
-			String lseq2 = new String(alnseq2).substring(t,t+len);
-			String lsymb = new String(alnsymb).substring(t,t+len);
+			String lseq1 = String.valueOf(alnseq1).substring(t,t+len);
+			String lseq2 = String.valueOf(alnseq2).substring(t,t+len);
+			String lsymb = String.valueOf(alnsymb).substring(t,t+len);
 
 			//System.err.println("B:" + b);
 
@@ -1197,8 +1197,8 @@ public class AfpChainWriter
 
 
 			//System.err.println("t,len:"+t+":"+len);
-			a = new String(alnseq1).substring(t,t+len);
-			b = new String(alnseq2).substring(t,t+len);
+			a = String.valueOf(alnseq1).substring(t,t+len);
+			b = String.valueOf(alnseq2).substring(t,t+len);
 
 			//System.err.println("B:" + b);
 
