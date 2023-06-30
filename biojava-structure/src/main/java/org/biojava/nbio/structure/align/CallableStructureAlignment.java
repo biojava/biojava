@@ -177,12 +177,9 @@ public class CallableStructureAlignment implements  Callable<AFPChain> {
 			// Create file
 			File newF = new File(outFileF, "dbsearch_" +name1+"_" + name2+".xml.gz");
 
-			FileOutputStream fstream = new FileOutputStream(newF);
-
-			GZIPOutputStream gz = new GZIPOutputStream(fstream);
-			OutputStreamWriter writer = new OutputStreamWriter(gz);
-			writer.write(xml);
-			writer.close();
+			try (OutputStreamWriter writer = new OutputStreamWriter(new GZIPOutputStream(new FileOutputStream(newF)))) {
+				writer.write(xml);
+			}
 		} catch (Exception e){//Catch exception if any
 			logger.error("Exception: ", e);
 		}
