@@ -62,27 +62,27 @@ public class GeneIDGFF2Reader {
 		logger.info("Reading: {}", filename);
 
 		FeatureList features = new FeatureList();
-		BufferedReader br = new BufferedReader(new FileReader(filename));
+		try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
 
-		String s;
-		for (s = br.readLine(); null != s; s = br.readLine()) {
-			s = s.trim();
+			String s;
+			for (s = br.readLine(); null != s; s = br.readLine()) {
+				s = s.trim();
 
-			if (s.length() > 0) {
-				if (s.charAt(0) == '#') {
-					//ignore comment lines
-				} else {
+				if (s.length() > 0) {
+					if (s.charAt(0) == '#') {
+						//ignore comment lines
+					} else {
 
-					FeatureI f = parseLine(s);
-					if (f != null) {
-						features.add(f);
+						FeatureI f = parseLine(s);
+						if (f != null) {
+							features.add(f);
+						}
 					}
 				}
+
 			}
 
 		}
-
-		br.close();
 		return features;
 	}
 

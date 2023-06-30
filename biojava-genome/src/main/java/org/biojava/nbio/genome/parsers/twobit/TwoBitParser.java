@@ -371,32 +371,31 @@ public class TwoBitParser extends InputStream {
 			logger.info("Resulting fasta data will be written in stdout.");
 			return;
 		}
-		TwoBitParser p = new TwoBitParser(new File(args[0]));
-		if(args.length==1) {
-			String[] names = p.getSequenceNames();
-			for(int i=0;i<names.length;i++) {
-				p.setCurrentSequence(names[i]);
-				p.printFastaSequence();
+		try (TwoBitParser p = new TwoBitParser(new File(args[0]))) {
+			if (args.length == 1) {
+				String[] names = p.getSequenceNames();
+				for (int i = 0; i < names.length; i++) {
+					p.setCurrentSequence(names[i]);
+					p.printFastaSequence();
+					p.close();
+				}
+			} else {
+				String name = args[1];
+				p.setCurrentSequence(name);
+				if (args.length > 2) {
+					long start = Long.parseLong(args[2]);
+					p.skip(start);
+				}
+				if (args.length > 3) {
+					long len = Long.parseLong(args[3]);
+					p.printFastaSequence(len);
+				} else {
+					p.printFastaSequence();
+				}
 				p.close();
 			}
+			p.closeParser();
 		}
-		else {
-			String name = args[1];
-			p.setCurrentSequence(name);
-			if(args.length>2) {
-				long start = Long.parseLong(args[2]);
-				p.skip(start);
-			}
-			if(args.length>3) {
-				long len = Long.parseLong(args[3]);
-				p.printFastaSequence(len);
-			}
-			else {
-				p.printFastaSequence();
-			}
-			p.close();
-		}
-		p.closeParser();
 	}
 }
 
