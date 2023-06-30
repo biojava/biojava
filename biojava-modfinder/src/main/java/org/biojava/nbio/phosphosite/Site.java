@@ -42,15 +42,17 @@ public class Site {
 
 	public static List<Site> parseSites(File f) throws IOException {
 
-		InputStream inStream = new FileInputStream(f);
-		InputStream gzipStream = new GZIPInputStream(inStream);
+		InputStream gzipStream;
+		try (InputStream inStream = new FileInputStream(f)) {
+			gzipStream = new GZIPInputStream(inStream);
+		}
 
 		Reader decoder = new InputStreamReader(gzipStream);
 		BufferedReader buf = new BufferedReader(decoder);
 
 		String line = null;
 
-		List<Site > data = new ArrayList<Site>();
+		List<Site > data = new ArrayList<>();
 
 		List<String> headerFields = null;
 
@@ -131,7 +133,7 @@ public class Site {
 	private static List<String> parseHeaderFields(String line) {
 		String[] spl = line.split("\t");
 
-		List<String> h = new ArrayList<String>();
+		List<String> h = new ArrayList<>();
 		for (String s: spl){
 			h.add(s);
 
