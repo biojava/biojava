@@ -88,9 +88,9 @@ public class TestCrystallographicMetadata {
 
 		Structure s = StructureIO.getStructure("1zna");
 
-		// 1zna is one of the few entries that has a non-standard SG
-		assertTrue(s.getCrystallographicInfo().isNonStandardSg());
-		assertNull(s.getCrystallographicInfo().getSpaceGroup());
+		// 1zna was one of the few entries in a non-standard coordinate frame convention: but after a remediation in July 2023 it was finally fixed
+		assertFalse(s.getCrystallographicInfo().isNonStandardSg());
+		assertNotNull(s.getCrystallographicInfo().getSpaceGroup());
 	}
 
 
