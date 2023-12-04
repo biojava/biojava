@@ -26,6 +26,7 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
+          distribution: 'oracle'
           java-version: ${{ matrix.java }}
       - name: Build, test (no integration) and Sonarqube analyse
         env:
