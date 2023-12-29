@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>biojava</artifactId>
 		<groupId>org.biojava</groupId>
-		<version>7.0.3-SNAPSHOT</version>
+		<version>8.0.0.JAXB-SNAPSHOT</version>
 	</parent>
 	<artifactId>biojava-modfinder</artifactId>
 	<name>biojava-modfinder</name>
@@ -31,7 +31,7 @@
 		<dependency>
 			<groupId>org.biojava</groupId>
 			<artifactId>biojava-structure</artifactId>
-			<version>7.0.3-SNAPSHOT</version>
+			<version>8.0.0.JAXB-SNAPSHOT</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
@@ -54,12 +54,15 @@
 			<artifactId>log4j-core</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>javax.xml.bind</groupId>
-			<artifactId>jaxb-api</artifactId>
+			<groupId>jakarta.xml.bind</groupId>
+			<artifactId>jakarta.xml.bind-api</artifactId>
+			<version>4.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.glassfish.jaxb</groupId>
 			<artifactId>jaxb-runtime</artifactId>
+			<version>4.0.3</version>
+			<scope>runtime</scope>
 		</dependency>
 	</dependencies>
 	<build>

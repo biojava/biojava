@@ -20,7 +20,7 @@
  */
 package org.biojava.nbio.aaproperties.xml;
 
-import javax.xml.bind.annotation.*;
+import jakarta.xml.bind.annotation.*;
 import java.util.List;
 
 @XmlRootElement(name = "compoundcomposition", namespace ="http://biojava.org")

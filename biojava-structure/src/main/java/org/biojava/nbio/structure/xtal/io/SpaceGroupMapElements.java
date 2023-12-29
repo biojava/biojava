@@ -25,7 +25,7 @@ package org.biojava.nbio.structure.xtal.io;
 
 import org.biojava.nbio.structure.xtal.SpaceGroup;
 
-import javax.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlElement;
 
 public class SpaceGroupMapElements {
 
