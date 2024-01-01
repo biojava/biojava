@@ -12,7 +12,7 @@
 	<groupId>org.biojava</groupId>
 	<artifactId>biojava</artifactId>
 	<packaging>pom</packaging>
-	<version>8.0.0.JAXB-SNAPSHOT</version>
+	<version>7.0.3-SNAPSHOT</version>
 	<name>biojava</name>
 	<description>BioJava is an open-source project dedicated to providing a Java framework for processing biological
         data. It provides analytical and statistical routines, parsers for common file formats and allows the
@@ -33,7 +33,7 @@
 	</licenses>
 	<properties>
 		<!-- Notice: if using java 9 or 10 jres, it is possible to simply use here "8", "9" or "10". But if using java 8 jre, "8" is not an allowed value but only "1.8"-->
-		<jdk.version>17</jdk.version>
+		<jdk.version>11</jdk.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.build.targetEncoding>UTF-8</project.build.targetEncoding>
 		<!-- needed for failsafe plugin in integrationtest module - JD 2018-03-08 -->
