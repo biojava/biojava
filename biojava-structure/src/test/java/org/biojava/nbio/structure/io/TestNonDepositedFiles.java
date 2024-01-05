@@ -478,12 +478,12 @@ public class TestNonDepositedFiles {
 	@Test
 	public void testStructureWithBranchedEntities() throws IOException {
 		// Example carbohydrate remediation file to be released in July 2020
-		URL url = new URL("https://raw.githubusercontent.com/pdbxmmcifwg/carbohydrate-extension/master/examples/models/1B5F-carb.cif");
-		InputStream inStream = url.openStream();
+		URL url = new URL("https://models.rcsb.org/1B5F.bcif.gz");
+		InputStream inStream = new GZIPInputStream(url.openStream());
 
 		Structure structure = CifStructureConverter.fromInputStream(inStream);
 
-		assertEquals(7, structure.getEntityInfos().size());
+		assertEquals(6, structure.getEntityInfos().size());
 
 		assertEquals(2, structure.getEntityById(1).getChains().size());
 		assertEquals(2, structure.getEntityById(2).getChains().size());
