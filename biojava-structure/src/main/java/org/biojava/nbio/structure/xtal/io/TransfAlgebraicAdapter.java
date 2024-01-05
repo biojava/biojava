@@ -24,7 +24,7 @@
 
 package org.biojava.nbio.structure.xtal.io;
 
-import javax.xml.bind.annotation.adapters.XmlAdapter;
+import jakarta.xml.bind.annotation.adapters.XmlAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
