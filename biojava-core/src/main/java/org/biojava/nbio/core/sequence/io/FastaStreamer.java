@@ -5,14 +5,12 @@ import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava.nbio.core.sequence.io.template.SequenceCreatorInterface;
 import org.biojava.nbio.core.sequence.io.template.SequenceHeaderParserInterface;
-import org.biojava.nbio.core.util.MagicNumber;
+import org.biojava.nbio.core.util.InputStreamProvider;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -23,7 +21,6 @@ import java.util.Spliterators;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
-import java.util.zip.GZIPInputStream;
 
 public class FastaStreamer {
 
@@ -73,8 +70,8 @@ public class FastaStreamer {
 	 * @throws IOException if there is an error opening the file
 	 */
 	public Stream<ProteinSequence> stream() throws IOException {
-		InputStream rawInput = Files.newInputStream(getPath(), StandardOpenOption.READ);
-		InputStream input = MagicNumber.isGZIP(getPath()) ? new GZIPInputStream(rawInput) : rawInput;
+		InputStreamProvider provider = new InputStreamProvider();
+		InputStream input = provider.getInputStream(getPath().toFile());
 		FastaReader<ProteinSequence, AminoAcidCompound> reader = new FastaReader<>(input, getHeaderParser(), getSequenceCreator());
 		Spliterator<ProteinSequence> source = new Spliterators.AbstractSpliterator<>(Integer.MAX_VALUE, Spliterator.IMMUTABLE | Spliterator.NONNULL) {
 			@Override
