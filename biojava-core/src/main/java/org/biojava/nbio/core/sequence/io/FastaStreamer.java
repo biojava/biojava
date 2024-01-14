@@ -72,13 +72,33 @@ public class FastaStreamer {
 	}
 
 	/**
+	 * Enable iteration through the proteins in the file using syntax such as:
+	 * <pre>
+	 *     for(ProteinSequence sequence : FastaStreamer.from(path).each()) {
+	 *         .
+	 *         .
+	 *         .
+	 *     }
+	 * </pre>
+	 *
+	 * @return an iterable suitable for an iteration loop
+	 */
+	public Iterable<ProteinSequence> each() {
+		return () -> stream().iterator();
+	}
+
+	/**
 	 * Create a stream of protein sequences from the contents of the path
 	 * @return the stream
-	 * @throws IOException if there is an error opening the file
 	 */
-	public Stream<ProteinSequence> stream() throws IOException {
+	public Stream<ProteinSequence> stream() {
 		InputStreamProvider provider = new InputStreamProvider();
-		InputStream input = provider.getInputStream(getPath().toFile());
+		InputStream input;
+		try {
+			input = provider.getInputStream(getPath().toFile());
+		} catch (IOException exception) {
+			throw new RuntimeException(exception);
+		}
 		FastaReader<ProteinSequence, AminoAcidCompound> reader = new FastaReader<>(input, getHeaderParser(), getSequenceCreator());
 		Spliterator<ProteinSequence> source = new Spliterators.AbstractSpliterator<>(Integer.MAX_VALUE, Spliterator.IMMUTABLE | Spliterator.NONNULL) {
 			@Override

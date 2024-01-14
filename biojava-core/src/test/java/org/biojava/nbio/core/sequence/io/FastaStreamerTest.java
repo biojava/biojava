@@ -36,4 +36,15 @@ public class FastaStreamerTest {
 				.collect(Collectors.toList());
 		Assert.assertEquals("Count", 283, sequences.size());
 	}
+
+	@Test
+	public void iterate() {
+		String file = this.getClass().getResource("PF00104_small.fasta.gz").getFile();
+		Path path = Paths.get(file);
+		int count = 0;
+		for (ProteinSequence sequence : FastaStreamer.from(path).each()) {
+			count++;
+		}
+		Assert.assertEquals("Count", 283, count);
+	}
 }
