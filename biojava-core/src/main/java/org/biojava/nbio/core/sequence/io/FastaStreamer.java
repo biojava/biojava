@@ -22,6 +22,13 @@ import java.util.function.Consumer;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+/**
+ * Read from a FASTA file (or gzipped FASTA file) and create a Java stream of {@link ProteinSequence} objects
+ * for use in a functional programming paradigm.
+ *
+ * @author Gary Murphy
+ * @since 7.0.3
+ */
 public class FastaStreamer {
 
 	private final Path path;
@@ -123,7 +130,7 @@ public class FastaStreamer {
 
 	/**
 	 * Create the sequence with the information from the header.  This implementation return the sequence as-is, but
-	 * this is an opportunity for the implementer to build specifc information into the user collection space
+	 * this is an opportunity for the implementer to build specific information into the user collection space
 	 * of the sequence
 	 *
 	 * @param header the original header
