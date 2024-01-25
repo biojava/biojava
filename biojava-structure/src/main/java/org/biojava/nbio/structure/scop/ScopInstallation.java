@@ -85,8 +85,8 @@ public class ScopInstallation implements LocalScopDatabase {
 	public static final String comFileName = "dir.com.scop.txt_";
 
 	// Download locations
-	public static final String SCOP_DOWNLOAD = "http://scop.berkeley.edu/downloads/parse/";
-	public static final String SCOP_DOWNLOAD_ALTERNATE = "http://scop.berkeley.edu/downloads/parse/";
+	public static final String SCOP_DOWNLOAD = "https://scop.berkeley.edu/downloads/parse/";
+	public static final String SCOP_DOWNLOAD_ALTERNATE = "https://scop.berkeley.edu/downloads/parse/";
 
 	//public static final String NEWLINE = System.getProperty("line.separator");
 	public static final String FILESPLIT = System.getProperty("file.separator");
@@ -913,10 +913,19 @@ public class ScopInstallation implements LocalScopDatabase {
 		// first, try default scop
 		ScopMirror primary = new ScopMirror();
 		// If unreachable, try alternate Berkeley location
-		ScopMirror alt = new ScopMirror(
-				SCOP_DOWNLOAD_ALTERNATE,
-				"dir.cla.scop.%s.txt","dir.des.scop.%s.txt",
-				"dir.hie.scop.%s.txt","dir.com.scop.%s.txt");
+		ScopMirror alt;
+		if (scopVersion.startsWith("2.")) {
+			alt = new ScopMirror(
+					SCOP_DOWNLOAD_ALTERNATE,
+					"dir.cla.scope.%s.txt","dir.des.scope.%s.txt",
+					"dir.hie.scope.%s.txt","dir.com.scope.%s.txt");
+		}
+		else {
+			alt = new ScopMirror(
+					SCOP_DOWNLOAD_ALTERNATE,
+					"dir.cla.scop.%s.txt","dir.des.scop.%s.txt",
+					"dir.hie.scop.%s.txt","dir.com.scop.%s.txt");
+		}
 		mirrors.add(primary);
 		mirrors.add(alt);
 	}
