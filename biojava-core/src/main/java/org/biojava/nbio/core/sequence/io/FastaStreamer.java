@@ -10,6 +10,7 @@ import org.biojava.nbio.core.util.InputStreamProvider;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.Iterator;
@@ -27,7 +28,7 @@ import java.util.stream.StreamSupport;
  * for use in a functional programming paradigm.
  *
  * @author Gary Murphy
- * @since 7.0.3
+ * @since 7.1.0
  */
 public class FastaStreamer {
 
@@ -135,12 +136,12 @@ public class FastaStreamer {
 					}
 					if (iterator.hasNext()) {
 						Map.Entry<String, ProteinSequence> entry = iterator.next();
-						return createSequence(entry.getKey(), entry.getValue());
+						return createSequence(entry.getValue());
 					}
 					closed = true;
 					reader.close();
 				} catch (IOException exception) {
-					throw new RuntimeException(String.format("I/O error reading the FASTA file from '%s'", getPath()));
+					throw new UncheckedIOException(String.format("I/O error reading the FASTA file from '%s'", getPath()), exception);
 				}
 				return null;
 			}
@@ -153,11 +154,10 @@ public class FastaStreamer {
 	 * this is an opportunity for the implementer to build specific information into the user collection space
 	 * of the sequence
 	 *
-	 * @param header the original header
 	 * @param sequence the protein sequence
 	 * @return the sequence
 	 */
-	protected ProteinSequence createSequence(String header, ProteinSequence sequence) {
+	protected ProteinSequence createSequence(ProteinSequence sequence) {
 		return sequence;
 	}
 
