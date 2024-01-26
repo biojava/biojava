@@ -98,7 +98,7 @@ public class FastaStreamer {
 		try {
 			input = provider.getInputStream(getPath().toFile());
 		} catch (IOException exception) {
-			throw new RuntimeException(exception);
+			throw new UncheckedIOException(exception);
 		}
 		FastaReader<ProteinSequence, AminoAcidCompound> reader = new FastaReader<>(input, getHeaderParser(), getSequenceCreator());
 		Spliterator<ProteinSequence> source = new Spliterators.AbstractSpliterator<>(Integer.MAX_VALUE, Spliterator.IMMUTABLE | Spliterator.NONNULL) {
