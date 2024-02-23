@@ -1,6 +1,12 @@
 BioJava Changelog
 -----------------
 
+BioJava 7.1.0 - future release
+==============================
+### Added
+* Class `FastaStreamer` to read FASTA-formatted files using Java streams
+
+
 BioJava 7.0.2
 ==============================
 ### Added
