@@ -1,10 +1,16 @@
 BioJava Changelog
 -----------------
 
-BioJava 7.1.0 - future release
+BioJava 7.1.0
 ==============================
 ### Added
 * Class `FastaStreamer` to read FASTA-formatted files using Java streams
+
+### Fixed
+* Various minor fixes for code smells
+* Some dependency upgrades
+* Now using Jakarta as the JAXB implementation #1076 
+* Fixed SCOP URL #1077
 
 
 BioJava 7.0.2
