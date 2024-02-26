@@ -73,7 +73,7 @@ public class ChemComp implements CifBean, Comparable<ChemComp> {
 
     public boolean hasParent(){
         String pid = monNstdParentCompId;
-        return (pid != null) && (!pid.equals("?"));
+        return (pid != null) && (!"?".equals(pid));
     }
 
     public boolean isStandard(){
@@ -401,6 +401,6 @@ public class ChemComp implements CifBean, Comparable<ChemComp> {
      */
     public boolean isEmpty() {
         // Is this the best flag for it being empty?
-        return id == null || getThreeLetterCode() == null || getThreeLetterCode().equals("???");
+        return id == null || getThreeLetterCode() == null || "???".equals(getThreeLetterCode());
     }
 }

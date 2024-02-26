@@ -233,7 +233,7 @@ public class DownloadChemCompProvider implements ChemCompProvider {
         recordName = recordName.toUpperCase().trim();
 
         boolean haveFile = true;
-        if (recordName.equals("?")) {
+        if ("?".equals(recordName)) {
             return null;
         }
 

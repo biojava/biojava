@@ -167,7 +167,7 @@ public class InsdcParser {
 
 			if (!splitQualifier.isEmpty()) {
 				//recursive case
-				int localVersus = splitQualifier.equalsIgnoreCase("complement") ? -1 : 1;
+				int localVersus = "complement".equalsIgnoreCase(splitQualifier) ? -1 : 1;
 				List<Location> subLocations = parseLocationString(
 						splitString, versus * localVersus);
 
@@ -187,13 +187,13 @@ public class InsdcParser {
 											max
 									);
 
-							if (splitQualifier.equalsIgnoreCase("join")) {
+							if ("join".equalsIgnoreCase(splitQualifier)) {
 								motherLocation = new InsdcLocations.GroupLocation(subLocations);
 							}
-							if (splitQualifier.equalsIgnoreCase("order")) {
+							if ("order".equalsIgnoreCase(splitQualifier)) {
 								motherLocation = new InsdcLocations.OrderLocation(subLocations);
 							}
-							if (splitQualifier.equalsIgnoreCase("bond")) {
+							if ("bond".equalsIgnoreCase(splitQualifier)) {
 								motherLocation = new InsdcLocations.BondLocation(subLocations);
 							}
 							motherLocation.setStrand(getGroupLocationStrand(subLocations));
@@ -251,12 +251,12 @@ public class InsdcParser {
 
 				}
 
-				if(m.group(4) != null && m.group(4).equals("^")) l.setBetweenCompounds(true);
+				if("^".equals(m.group(4))) l.setBetweenCompounds(true);
 
-				if (m.group(2).equals("<")) {
+				if ("<".equals(m.group(2))) {
 					l.setPartialOn5prime(true);
 				}
-				if (m.group(5) != null && (m.group(5).equals(">") || m.group(7).equals(">"))) {
+				if (m.group(5) != null && (">".equals(m.group(5)) || ">".equals(m.group(7)))) {
 					l.setPartialOn3prime(true);
 				}
 

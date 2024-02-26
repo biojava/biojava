@@ -152,7 +152,7 @@ public final class ProteinModificationXmlReader {
 						for (Node compIdNode : compIdNodes) {
 							NamedNodeMap compIdNodeAttr = compIdNode.getAttributes();
 							Node compIdSource = compIdNodeAttr.getNamedItem("source");
-							if (compIdSource!=null && compIdSource.getTextContent().equals("PDBCC")) {
+							if (compIdSource!=null && "PDBCC".equals(compIdSource.getTextContent())) {
 								String strComps = compIdNode.getTextContent();
 								if (strComps.isEmpty()) {
 									throw new RuntimeException("Empty component." +
@@ -178,9 +178,9 @@ public final class ProteinModificationXmlReader {
 									"each component. See Modification "+id+".");
 						}
 						String nc = compTermNode.get(0).getTextContent();
-						if (nc.equals("N")) {
+						if ("N".equals(nc)) {
 							nTerminal = true;
-						} else if (nc.equals("C")) {
+						} else if ("C".equals(nc)) {
 							cTerminal = true;
 						} else {
 							throw new RuntimeException("Only N or C is allowed for <Terminal>." +
@@ -305,11 +305,11 @@ public final class ProteinModificationXmlReader {
 						xrefName = xrefNode.get(0).getTextContent();
 					}
 
-					if (xrefDb.equals("PDBCC")) {
+					if ("PDBCC".equals(xrefDb)) {
 						modBuilder.setPdbccId(xrefId).setPdbccName(xrefName);
-					} else if (xrefDb.equals("RESID")) {
+					} else if ("RESID".equals(xrefDb)) {
 						modBuilder.setResidId(xrefId).setResidName(xrefName);
-					} else if (xrefDb.equals("PSI-MOD")) {
+					} else if ("PSI-MOD".equals(xrefDb)) {
 						modBuilder.setPsimodId(xrefId).setPsimodName(xrefName);
 					}
 				}

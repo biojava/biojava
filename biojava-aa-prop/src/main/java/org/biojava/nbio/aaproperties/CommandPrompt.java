@@ -116,8 +116,8 @@ public class CommandPrompt {
 				case 'o': outputLocation = args[++i]; break;
 				case 'f':
 					i++;
-					if(args[i].equalsIgnoreCase("csv")) delimiter = ",";
-					else if(args[i].equalsIgnoreCase("tsv")) delimiter = "\t";
+					if("csv".equalsIgnoreCase(args[i])) delimiter = ",";
+					else if("tsv".equalsIgnoreCase(args[i])) delimiter = "\t";
 					else throw new Error("Invalid value for -f: " + args[i] + ". Please choose either csv or tsv only.");
 					break;
 				case 'x': aminoAcidCompositionLocation = args[++i]; break;

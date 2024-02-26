@@ -1419,7 +1419,7 @@ public class WorkSheet {
 
 		for (String row : rows) {
 			for (String column : w1Columns) {
-				if (column.equals("META_DATA")) {
+				if ("META_DATA".equals(column)) {
 					continue;
 				}
 				String value = w1.getCell(row, column);
@@ -1429,7 +1429,7 @@ public class WorkSheet {
 
 		for (String row : rows) {
 			for (String column : w2Columns) {
-				if (column.equals("META_DATA")) {
+				if ("META_DATA".equals(column)) {
 					continue;
 				}
 				String value = w2.getCell(row, column);
@@ -1619,11 +1619,11 @@ public class WorkSheet {
 				String value = getCell(row, col);
 				outputStream.write(delimitter);
 				if (!this.isMetaDataColumn(col) && !this.isMetaDataRow(row)) {
-					if (value == null || value.length() == 0 || value.equalsIgnoreCase("null")) {
+					if (value == null || value.length() == 0 || "null".equalsIgnoreCase(value)) {
 						value = "NaN";
 					}
 				} else {
-					if (value == null || value.length() == 0 || value.equalsIgnoreCase("null")) {
+					if (value == null || value.length() == 0 || "null".equalsIgnoreCase(value)) {
 						value = "";
 					}
 				}

@@ -166,10 +166,10 @@ public class GFF3FromUniprotBlastHits {
 									if (keyWords.size() > 0) {
 										notes = ";Note=";
 										for (String note : keyWords) {
-											if (note.equals("Complete proteome")) {
+											if ("Complete proteome".equals(note)) {
 												continue;
 											}
-											if (note.equals("Direct protein sequencing")) {
+											if ("Direct protein sequencing".equals(note)) {
 												continue;
 											}
 
@@ -230,7 +230,7 @@ public class GFF3FromUniprotBlastHits {
 											geneSequence.addNote(note.getId()); // add note/keyword which can be output in fasta header if needed
 											LinkedHashMap<String, String> properties = note.getProperties();
 											for (String propertytype : properties.keySet()) {
-												if (propertytype.equals("evidence")) {
+												if ("evidence".equals(propertytype)) {
 													continue;
 												}
 												String property = properties.get(propertytype);

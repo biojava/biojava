@@ -104,7 +104,7 @@ public class DemoChangeChemCompProvider {
 		for (int i = 0; i < struc.nrModels(); i++) {
 			// loop chain
 			for (Chain ch : struc.getModel(i)) {
-				if (!ch.getName().equals("A")) {
+				if (!"A".equals(ch.getName())) {
 					continue;
 				}
 				System.out.println(pdbid + ">>>" + ch.getName() + ">>>" + ch.getAtomSequence());

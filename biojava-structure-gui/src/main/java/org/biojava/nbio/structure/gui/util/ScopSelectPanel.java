@@ -128,7 +128,7 @@ implements StructurePairSelector
 	private Structure getStructure(String domainID) throws StructureException{
 		//PDBFileReader reader = new PDBFileReader();
 
-		if ( domainID == null || domainID.equals(""))
+		if ( domainID == null || "".equals(domainID))
 			return null;
 
 

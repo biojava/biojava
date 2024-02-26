@@ -34,7 +34,7 @@ implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String cmd = e.getActionCommand();
-		if ( cmd.equals("Open PDB file")){
+		if ( "Open PDB file".equals(cmd)){
 			final JFileChooser fc = new JFileChooser();
 
 			//					In response to a button click:

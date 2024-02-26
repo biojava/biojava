@@ -67,46 +67,46 @@ public class EmblReader {
 					if (line.length() > 1) {
 						lineInfo = line.substring(2, line.length()).trim();
 						lineIdentifier = line.substring(0, 2);
-						if (lineIdentifier.equals("ID"))
+						if ("ID".equals(lineIdentifier))
 							emblRecord.setEmblId(populateID(lineInfo));
-						else if (lineIdentifier.equals("AC"))
+						else if ("AC".equals(lineIdentifier))
 							populateAccessionNumber(line, accessionNumber);
-						else if (lineIdentifier.equals("DT") && line.contains("Created"))
+						else if ("DT".equals(lineIdentifier) && line.contains("Created"))
 							emblRecord.setCreatedDate(lineInfo);
-						else if (lineIdentifier.equals("DT") && line.contains("updated"))
+						else if ("DT".equals(lineIdentifier) && line.contains("updated"))
 							emblRecord.setLastUpdatedDate(lineInfo);
-						else if (lineIdentifier.equals("DE"))
+						else if ("DE".equals(lineIdentifier))
 							emblRecord.setSequenceDescription(lineInfo);
-						else if (lineIdentifier.equals("KW"))
+						else if ("KW".equals(lineIdentifier))
 							keyword.add(lineInfo);
-						else if (lineIdentifier.equals("OS"))
+						else if ("OS".equals(lineIdentifier))
 							emblRecord.setOrganismSpecies(lineInfo);
-						else if (lineIdentifier.equals("OC"))
+						else if ("OC".equals(lineIdentifier))
 							emblRecord.setOrganismClassification(lineInfo);
-						else if (lineIdentifier.equals("OG"))
+						else if ("OG".equals(lineIdentifier))
 							emblRecord.setOrGanelle(lineInfo);
-						else if (lineIdentifier.equals("RN") || lineIdentifier.equals("RP")
-								|| lineIdentifier.equals("RX") || lineIdentifier.equals("RG")
-								|| lineIdentifier.equals("RA") || lineIdentifier.equals("RT")
-								|| lineIdentifier.equals("RL"))
+						else if ("RN".equals(lineIdentifier) || "RP".equals(lineIdentifier)
+								|| "RX".equals(lineIdentifier) || "RG".equals(lineIdentifier)
+								|| "RA".equals(lineIdentifier) || "RT".equals(lineIdentifier)
+								|| "RL".equals(lineIdentifier))
 							populateEmblReferences(lineIdentifier, lineInfo, emblReference, emblReferences);
-						else if (lineIdentifier.equals("DR"))
+						else if ("DR".equals(lineIdentifier))
 							emblRecord.setDatabaseCrossReference(lineInfo);
-						else if (lineIdentifier.equals("AH"))
+						else if ("AH".equals(lineIdentifier))
 							emblRecord.setAssemblyHeader(lineInfo);
-						else if (lineIdentifier.equals("AS"))
+						else if ("AS".equals(lineIdentifier))
 							emblRecord.setAssemblyInformation(lineInfo);
-						else if (lineIdentifier.equals("CO"))
+						else if ("CO".equals(lineIdentifier))
 							emblRecord.setConstructedSequence(lineInfo);
-						else if (lineIdentifier.equals("FH"))
+						else if ("FH".equals(lineIdentifier))
 							emblRecord.setFeatureHeader(lineInfo);
-						else if (lineIdentifier.equals("FT"))
+						else if ("FT".equals(lineIdentifier))
 							emblRecord.setFeatureTable(lineInfo);
-						else if (lineIdentifier.equals("SQ"))
+						else if ("SQ".equals(lineIdentifier))
 							emblRecord.setSequenceHeader(lineInfo);
-						else if (lineIdentifier.equals("  ") && !lineIdentifier.equals("//"))
+						else if ("  ".equals(lineIdentifier) && !"//".equals(lineIdentifier))
 							populateSequence(line, sequence);
-						else if (lineIdentifier.equals("//")) {
+						else if ("//".equals(lineIdentifier)) {
 							emblRecord.setKeyword(keyword);
 							emblRecord.setEmblReference(emblReferences);
 							emblRecord.setAccessionNumber(accessionNumber);
@@ -129,19 +129,19 @@ public class EmblReader {
 
 	private static void populateEmblReferences(String lineIdentifier, String lineInfo, EmblReference emblReference
 			, LinkedList<EmblReference> emblReferences) {
-		if (lineIdentifier.equals("RN"))
+		if ("RN".equals(lineIdentifier))
 			emblReference.setReferenceNumber(lineInfo);
-		else if (lineIdentifier.equals("RP"))
+		else if ("RP".equals(lineIdentifier))
 			emblReference.setReferencePosition(lineInfo);
-		else if (lineIdentifier.equals("RX"))
+		else if ("RX".equals(lineIdentifier))
 			emblReference.setReferenceCrossReference(lineInfo);
-		else if (lineIdentifier.equals("RG"))
+		else if ("RG".equals(lineIdentifier))
 			emblReference.setReferenceGroup(lineInfo);
-		else if (lineIdentifier.equals("RA"))
+		else if ("RA".equals(lineIdentifier))
 			emblReference.setReferenceAuthor(lineInfo);
-		else if (lineIdentifier.equals("RT"))
+		else if ("RT".equals(lineIdentifier))
 			emblReference.setReferenceTitle(lineInfo);
-		else if (lineIdentifier.equals("RL")) {
+		else if ("RL".equals(lineIdentifier)) {
 			emblReference.setReferenceLocation(lineInfo);
 			emblReferences.add(emblReference.copyEmblReference(emblReference));
 		}

@@ -58,7 +58,7 @@ public class ZipChemCompProvider implements ChemCompProvider{
         this.m_zipFile = Paths.get(chemicalComponentDictionaryFile);
 
         // Use a default temporary directory if not passed a value.
-        if (tempDir == null || tempDir.equals("")) {
+        if (tempDir == null || "".equals(tempDir)) {
             this.m_tempDir = Paths.get(System.getProperty("java.io.tmpdir"));
         } else {
             this.m_tempDir = Paths.get(tempDir);

@@ -37,7 +37,7 @@ implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String cmd = e.getActionCommand();
-		if ( cmd.equals("Show By ID")){
+		if ( "Show By ID".equals(cmd)){
 
 			JCheckBox useBioAssembly = new JCheckBox("Show Biological Assembly");
 

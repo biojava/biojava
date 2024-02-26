@@ -305,7 +305,7 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
                     currentGroup.setResidueNumber(residueNumber);
                     currentGroup.setHetAtomInFile(isHetAtmInFile);
                 } else {
-                    if (altLocation != null && !altLocation.isEmpty() && !altLocation.equals(".")) {
+                    if (altLocation != null && !altLocation.isEmpty() && !".".equals(altLocation)) {
                         altGroup = getAltLocGroup(recordName, altLocation.charAt(0), oneLetterCode, compId, seqId);
                         if (altGroup.getChain() == null) {
                             altGroup.setChain(currentChain);
@@ -332,7 +332,7 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
             atom.setOccupancy((float) occupancy.get(atomIndex));
             atom.setTempFactor((float) bIsoOrEquiv.get(atomIndex));
 
-            if (altLocation == null || altLocation.isEmpty() || altLocation.equals(".")) {
+            if (altLocation == null || altLocation.isEmpty() || ".".equals(altLocation)) {
                 atom.setAltLoc(' ');
             } else {
                 atom.setAltLoc(altLocation.charAt(0));
@@ -1291,7 +1291,7 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
             seqMisMatch.setDetails(structRefSeqDif.getDetails().get(rowIndex));
 
             String insCode = structRefSeqDif.getPdbxPdbInsCode().get(rowIndex);
-                if (insCode != null && insCode.equals("?")) {
+                if ("?".equals(insCode)) {
                 insCode = null;
             }
             seqMisMatch.setInsCode(insCode);
@@ -1505,7 +1505,7 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
             String auth_seq_id = structSiteGen.getAuthSeqId().get(rowIndex); // Res num
 
             String insCode = structSiteGen.getPdbxAuthInsCode().get(rowIndex);
-            if (insCode != null && insCode.equals("?")) {
+            if ("?".equals(insCode)) {
                 insCode = null;
             }
 

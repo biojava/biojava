@@ -339,7 +339,7 @@ public class AFPChainXMLParser
 					Node block       = listOfBlocks.item(i);
 
 					// we only look at blocks.
-					if (! block.getNodeName().equals("block"))
+					if (! "block".equals(block.getNodeName()))
 						continue;
 
 					processBlock(block, a, minLength);
@@ -421,7 +421,7 @@ public class AFPChainXMLParser
 			if(!eqr.hasAttributes()) continue;
 
 
-			if ( eqr.getNodeName().equals("eqr")) {
+			if ( "eqr".equals(eqr.getNodeName())) {
 				nrEqr++;
 				NamedNodeMap atts = eqr.getAttributes();
 
@@ -445,7 +445,7 @@ public class AFPChainXMLParser
 				optAln[blockNr][0][eqrNr] = pos1;
 				optAln[blockNr][1][eqrNr] = pos2;
 				 */
-			} else if ( eqr.getNodeName().equals("matrix")){
+			} else if ( "matrix".equals(eqr.getNodeName())){
 				// process Matrix
 				Matrix m = new Matrix(3,3);
 
@@ -459,7 +459,7 @@ public class AFPChainXMLParser
 				}
 				ms[blockNr] = m;
 
-			} else if ( eqr.getNodeName().equals("shift")){
+			} else if ( "shift".equals(eqr.getNodeName())){
 				Atom shift = new AtomImpl();
 				double x = Double.parseDouble(getAttribute(eqr, "x"));
 				double y = Double.parseDouble(getAttribute(eqr, "y"));
@@ -520,7 +520,7 @@ public class AFPChainXMLParser
 		ResidueNumber residueNumber =  ResidueNumber.fromString(pdbresnum);
 		residueNumber.setChainName(authId);
 
-		boolean blankChain = authId == null || authId.equalsIgnoreCase("null") || authId.equals("_");
+		boolean blankChain = authId == null || "null".equalsIgnoreCase(authId) || "_".equals(authId);
 
 		for ( int i =0; i< atoms.length ;i++){
 			Group g = atoms[i].getGroup();

@@ -156,8 +156,8 @@ public class DBRef implements PDBRecord {
 			for (Method m : methods) {
 				String name = m.getName();
 
-				if (name.substring(0, 3).equals("get")) {
-					if (name.equals("getClass")) {
+				if ("get".equals(name.substring(0, 3))) {
+					if ("getClass".equals(name)) {
 						continue;
 					}
 					Object o = m.invoke(this);

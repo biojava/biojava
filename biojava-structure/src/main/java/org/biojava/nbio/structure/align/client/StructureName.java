@@ -457,7 +457,7 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 				if(base == null) {
 					// Guessing didn't work, so just use the PDBID and Chain from name
 					// Guess that '_' means 'whole structure'
-					if (chainName.equals("_")) {
+					if ("_".equals(chainName)) {
 						base = new SubstructureIdentifier(pdbId.getId());
 					} else {
 						base = new SubstructureIdentifier(pdbId, ResidueRange.parseMultiple(chainName));
@@ -624,9 +624,9 @@ public class StructureName implements Comparable<StructureName>, Serializable, S
 			for (ScopDomain potentialSCOP : scopDB.getDomainsForPDB(pdbID)) {
 				Matcher potMatch = scopPattern.matcher(potentialSCOP.getScopId());
 				if (potMatch.matches()) {
-					if (chainName.equals(potMatch.group(2)) || chainName.equals("_") || chainName.equals(".")
-							|| potMatch.group(2).equals("_") || potMatch.group(2).equals(".")) {
-						if (domainID.equals(potMatch.group(3)) || domainID.equals("_") || potMatch.group(3).equals("_")) {
+					if (chainName.equals(potMatch.group(2)) || "_".equals(chainName) || ".".equals(chainName)
+							|| "_".equals(potMatch.group(2)) || ".".equals(potMatch.group(2))) {
+						if (domainID.equals(potMatch.group(3)) || "_".equals(domainID) || "_".equals(potMatch.group(3))) {
 							// Match, or near match
 							matches.add(potentialSCOP);
 						}

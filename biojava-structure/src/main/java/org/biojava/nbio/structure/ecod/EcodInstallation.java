@@ -686,7 +686,7 @@ v1.4 - added seqid_range and headers (develop101)
 									String assemblyStr = fields[i++];
 									if(assemblyStr.equals(NOT_DOMAIN_ASSEMBLY)) {
 										assemblyId = uid;
-									} else if(assemblyStr.equals("IS_DOMAIN_ASSEMBLY") ) {
+									} else if("IS_DOMAIN_ASSEMBLY".equals(assemblyStr) ) {
 										if(warnIsDomainAssembly > 1) {
 											logger.info("Deprecated 'IS_DOMAIN_ASSEMBLY' value ignored in line {}.",lineNum);
 											warnIsDomainAssembly--;
@@ -701,7 +701,7 @@ v1.4 - added seqid_range and headers (develop101)
 
 									String ligandStr = fields[i++];
 									Set<String> ligands = null;
-									if( ligandStr.equals("NO_LIGANDS_4A") || ligandStr.isEmpty() ) {
+									if( "NO_LIGANDS_4A".equals(ligandStr) || ligandStr.isEmpty() ) {
 										ligands = Collections.emptySet();
 									} else {
 										String[] ligSplit = ligandStr.split(",");

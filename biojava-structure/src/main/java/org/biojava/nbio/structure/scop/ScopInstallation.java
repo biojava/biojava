@@ -442,7 +442,7 @@ public class ScopInstallation implements LocalScopDatabase {
 			List<Integer> chis = new ArrayList<Integer>();
 
 			for ( String id : childIds){
-				if ( id.equals("-"))
+				if ( "-".equals(id))
 					continue;
 				chis.add(Integer.parseInt(id));
 			}

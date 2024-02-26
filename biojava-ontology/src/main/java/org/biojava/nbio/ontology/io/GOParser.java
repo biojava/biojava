@@ -63,17 +63,17 @@ public class GOParser {
 				StringTokenizer toke = new StringTokenizer(line, "%<$", true);
 				String parentRel = toke.nextToken();
 				Term term = parseTerm(onto, toke.nextToken());
-				if (parentRel.equals("%")) {
+				if ("%".equals(parentRel)) {
 					safeAddTriple(onto, term, termStack.get(leadSpaces - 1), isa);
-				} else if (parentRel.equals("<")) {
+				} else if ("<".equals(parentRel)) {
 					safeAddTriple(onto, term, termStack.get(leadSpaces - 1), partof);
 				}
 				while (toke.hasMoreTokens()) {
 					String altRel = toke.nextToken();
 					Term altTerm = parseTerm(onto, toke.nextToken());
-					if (altRel.equals("%")) {
+					if ("%".equals(altRel)) {
 						safeAddTriple(onto, term, altTerm, isa);
-					} else if (altRel.equals("<")) {
+					} else if ("<".equals(altRel)) {
 						safeAddTriple(onto, term, altTerm, partof);
 					}
 				}

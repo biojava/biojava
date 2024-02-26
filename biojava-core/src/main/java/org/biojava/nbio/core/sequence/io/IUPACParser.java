@@ -150,7 +150,7 @@ public class IUPACParser {
 		String name, aa, starts, baseone, basetwo, basethree;
 		name = aa = starts = baseone = basetwo = basethree = null;
 		for (String line : lines) {
-			if (line.equalsIgnoreCase("//")) {
+			if ("//".equalsIgnoreCase(line)) {
 				localTables.add(new IUPACTable(name, id, aa, starts, baseone, basetwo,
 						basethree));
 				name = aa = starts = baseone = basetwo = basethree = null;
@@ -158,19 +158,19 @@ public class IUPACParser {
 			}
 			else {
 				String[] keyValue = line.split("\\s*=\\s*");
-				if (keyValue[0].equals("AAs")) {
+				if ("AAs".equals(keyValue[0])) {
 					aa = keyValue[1];
 				}
-				else if (keyValue[0].equals("Starts")) {
+				else if ("Starts".equals(keyValue[0])) {
 					starts = keyValue[1];
 				}
-				else if (keyValue[0].equals("Base1")) {
+				else if ("Base1".equals(keyValue[0])) {
 					baseone = keyValue[1];
 				}
-				else if (keyValue[0].equals("Base2")) {
+				else if ("Base2".equals(keyValue[0])) {
 					basetwo = keyValue[1];
 				}
-				else if (keyValue[0].equals("Base3")) {
+				else if ("Base3".equals(keyValue[0])) {
 					basethree = keyValue[1];
 				}
 				else {

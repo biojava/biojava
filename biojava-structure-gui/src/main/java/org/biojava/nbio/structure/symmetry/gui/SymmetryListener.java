@@ -57,27 +57,27 @@ public class SymmetryListener implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent ae) {
 		String cmd = ae.getActionCommand();
-		if (cmd.equals("New Symmetry Analysis"))
+		if ("New Symmetry Analysis".equals(cmd))
 			SymmetryGui.getInstance();
 
 		if (symm == null)
 			logger.error("Currently not displaying a symmetry!");
 
 		try {
-			if (cmd.equals("Repeats Superposition")) {
+			if ("Repeats Superposition".equals(cmd)) {
 				MultipleAlignmentJmol j = SymmetryDisplay.displayRepeats(symm);
 				String s = SymmetryDisplay.printSymmetryAxes(symm, false);
 				j.evalString(s);
 				j.evalString("save STATE state_1");
 
 
-			} else if (cmd.equals("Multiple Structure Alignment")) {
+			} else if ("Multiple Structure Alignment".equals(cmd)) {
 				MultipleAlignmentJmol j = SymmetryDisplay.displayFull(symm);
 				String s = SymmetryDisplay.printSymmetryAxes(symm);
 				j.evalString(s);
 				j.evalString("save STATE state_1");
 
-			} else if (cmd.equals("Optimal Self Alignment")) {
+			} else if ("Optimal Self Alignment".equals(cmd)) {
 				Atom[] cloned = StructureTools.cloneAtomArray(symm.getAtoms());
 				AbstractAlignmentJmol jmol = StructureAlignmentDisplay.display(
 						symm.getSelfAlignment(), symm.getAtoms(), cloned);
@@ -85,11 +85,11 @@ public class SymmetryListener implements ActionListener {
 				jmol.evalString(axis.getJmolScript(symm.getAtoms()));
 				jmol.setTitle(SymmetryDisplay.getSymmTitle(symm));
 
-			} else if (cmd.equals("Show Symmetry Group")) {
+			} else if ("Show Symmetry Group".equals(cmd)) {
 				String script = SymmetryDisplay.printSymmetryGroup(symm);
 				jmol.evalString(script);
 
-			} else if (cmd.equals("Show Symmetry Axes")) {
+			} else if ("Show Symmetry Axes".equals(cmd)) {
 				String s = SymmetryDisplay.printSymmetryAxes(symm);
 				jmol.evalString(s);
 			}

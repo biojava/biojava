@@ -142,14 +142,14 @@ public class ModifiedCompoundXMLConverter {
 					if(!listOfConditions.hasAttributes()) continue;
 
 
-					if ( listOfConditions.getNodeName().equals("proteinModification")) {
+					if ( "proteinModification".equals(listOfConditions.getNodeName())) {
 						//modification = ProteinModificationXMLConverter.fromXML(listOfConditions);
 						String modId = getAttribute(listOfConditions, "id");
 						modification = ProteinModificationRegistry.getById(modId);
 						if (modification==null) {
 							logger.warn("Error: no modification information.");
 						}
-					} else if ( listOfConditions.getNodeName().equals("linkage")) {
+					} else if ( "linkage".equals(listOfConditions.getNodeName())) {
 						double dist = Double.parseDouble(getAttribute(listOfConditions, "distance"));
 						int pos = Integer.parseInt(getAttribute(listOfConditions,"pos"));
 						int total = Integer.parseInt(getAttribute(listOfConditions,"total"));
@@ -161,7 +161,7 @@ public class ModifiedCompoundXMLConverter {
 						StructureAtomLinkage linkage = new StructureAtomLinkage(atom1, atom2, dist);
 						//linkages.add(linkage);
 						linkages[pos] = linkage;
-					} else if (listOfConditions.getNodeName().equals("structureGroup")) {
+					} else if ("structureGroup".equals(listOfConditions.getNodeName())) {
 						StructureGroup group = StructureGroupXMLConverter.fromXML(listOfConditions);
 						structureGroups.add(group);
 //						logger.info("structureGroups size:" + structureGroups.size());

@@ -340,8 +340,8 @@ public class BondMaker {
 	 */
 	public void formLinkRecordBond(LinkRecord linkRecord) {
 		// only work with atoms that aren't alternate locations
-		if (linkRecord.getAltLoc1().equals(" ")
-				|| linkRecord.getAltLoc2().equals(" "))
+		if (" ".equals(linkRecord.getAltLoc1())
+				|| " ".equals(linkRecord.getAltLoc2()))
 			return;
 
 		try {
@@ -361,8 +361,8 @@ public class BondMaker {
 			if (polyChain2!=null) allChainIds2.add(polyChain2.getId());
 			if (nonpolyChains1!=null) nonpolyChains1.forEach(npc -> allChainIds1.add(npc.getId()));
 			if (nonpolyChains2!=null) nonpolyChains2.forEach(npc -> allChainIds2.add(npc.getId()));
-			if (waterChain1!=null && linkRecord.getResName1().equals("HOH")) allChainIds1.add(waterChain1.getId());
-			if (waterChain2!=null && linkRecord.getResName2().equals("HOH")) allChainIds2.add(waterChain2.getId());
+			if (waterChain1!=null && "HOH".equals(linkRecord.getResName1())) allChainIds1.add(waterChain1.getId());
+			if (waterChain2!=null && "HOH".equals(linkRecord.getResName2())) allChainIds2.add(waterChain2.getId());
 
 			Map<Integer, Atom> a = getAtomFromRecordTryMultipleChainIds(linkRecord.getName1(), linkRecord.getAltLoc1(), linkRecord.getResSeq1(), linkRecord.getiCode1(), allChainIds1);
 

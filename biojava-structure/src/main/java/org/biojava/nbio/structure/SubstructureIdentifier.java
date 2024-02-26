@@ -245,7 +245,7 @@ public class SubstructureIdentifier implements StructureIdentifier {
 
 //					StructureTools.addGroupsToStructure(newS, groups, modelNr, false);
 					Chain polyChain; //polymer
-					if(chainName.equals("_") ) {
+					if("_".equals(chainName) ) {
 						// Handle special case of "_" chain for single-chain proteins
 						polyChain = s.getPolyChains(modelNr).get(0);
 						chainName = polyChain.getName();

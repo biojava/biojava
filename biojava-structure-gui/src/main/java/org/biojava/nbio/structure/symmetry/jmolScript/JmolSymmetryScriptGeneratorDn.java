@@ -39,7 +39,7 @@ public class JmolSymmetryScriptGeneratorDn extends JmolSymmetryScriptGeneratorPo
 
 		// special case for D2. Since there is no 2-fold prism, draw a 4-fold
 		// prism that encases the D2 structure
-		if (axisTransformation.getRotationGroup().getPointGroup().equals("D2")) {
+		if ("D2".equals(axisTransformation.getRotationGroup().getPointGroup())) {
 			fold = 4;
 		}
 
@@ -76,7 +76,7 @@ public class JmolSymmetryScriptGeneratorDn extends JmolSymmetryScriptGeneratorPo
 	 */
 	@Override
 	public String getOrientationName(int index) {
-		if (index == 0 && getAxisTransformation().getRotationGroup().getPointGroup().equals("D2")) {
+		if (index == 0 && "D2".equals(getAxisTransformation().getRotationGroup().getPointGroup())) {
 			return "Front C2 axis";
 		} else {
 			return getPolyhedron().getViewName(index);

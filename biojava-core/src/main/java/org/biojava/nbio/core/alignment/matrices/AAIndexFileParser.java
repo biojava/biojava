@@ -107,7 +107,7 @@ public class AAIndexFileParser {
 			}
 
 			// special case: MEHP950101
-			if (values[i].equals("-")) {
+			if ("-".equals(values[i])) {
 				values[i] = "0";
 			}
 			if ( scale == -1 ) {

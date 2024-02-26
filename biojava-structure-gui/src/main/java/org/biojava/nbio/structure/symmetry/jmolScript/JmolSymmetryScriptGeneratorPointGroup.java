@@ -225,7 +225,7 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 	 */
 	@Override
 	public String drawAxes() {
-		if (rotationGroup.getPointGroup().equals("C1")) {
+		if ("C1".equals(rotationGroup.getPointGroup())) {
 			return drawInertiaAxes();
 		} else {
 			return drawSymmetryAxes();
@@ -257,7 +257,7 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 
 		// draw point group
 
-		if ( rotationGroup.getPointGroup().equals("C1")) {
+		if ( "C1".equals(rotationGroup.getPointGroup())) {
 			s.append(drawFooter("Asymmetric", "white"));
 		} else {
 			s.append(drawFooter("Point group " + rotationGroup.getPointGroup(), "white"));
@@ -395,7 +395,7 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 			colorMap = getCnColorMap();
 			// complex cases
 		} else if ((pointGroup.startsWith("D") && orbits.size() > 2) ||
-				pointGroup.equals("T")|| pointGroup.equals("O") || pointGroup.equals("I")) {
+				"T".equals(pointGroup)|| "O".equals(pointGroup) || "I".equals(pointGroup)) {
 			int nColor = 0;
 			if (orbits.size() % 2 == 0) {
 				nColor = orbits.size()/2;
@@ -582,7 +582,7 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 		String pointGroup = rotationGroup.getPointGroup();
 		Color[] col = null;
 		Color4f[] colors = null;
-		if (pointGroup.equals("C1")) {
+		if ("C1".equals(pointGroup)) {
 			col = ColorBrewer.Greys.getColorPalette(nColors);
 			colors = ColorConverter.convertColor4f(col);
 		} else if (pointGroup.startsWith("C")) {
@@ -591,13 +591,13 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 		} else if (pointGroup.startsWith("D")) {
 			col = ColorBrewer.YlOrRd.getColorPalette(nColors);
 			colors = ColorConverter.convertColor4f(col);
-		} else if (pointGroup.equals("T")) {
+		} else if ("T".equals(pointGroup)) {
 			col = ColorBrewer.Greens.getColorPalette(nColors);
 			colors = ColorConverter.convertColor4f(col);
-		} else if (pointGroup.equals("O")) {
+		} else if ("O".equals(pointGroup)) {
 			col = ColorBrewer.Blues.getColorPalette(nColors);
 			colors = ColorConverter.convertColor4f(col);
-		} else if (pointGroup.equals("I")) {
+		} else if ("I".equals(pointGroup)) {
 			col = ColorBrewer.BuPu.getColorPalette(nColors);
 			colors = ColorConverter.convertColor4f(col);
 		} else {

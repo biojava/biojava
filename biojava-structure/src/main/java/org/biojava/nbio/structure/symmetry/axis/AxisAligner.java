@@ -40,7 +40,7 @@ public abstract class AxisAligner {
 	public static AxisAligner getInstance(QuatSymmetryResults results) {
 		String symmetry = results.getSymmetry();
 
-		if (symmetry.equals("H")) {
+		if ("H".equals(symmetry)) {
 			return new HelixAxisAligner(results);
 		} else {
 			return new RotationAxisAligner(results);

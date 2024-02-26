@@ -88,12 +88,12 @@ public class ChemicalComponentDictionary {
     public void addChemComp(ChemComp comp) {
         dictionary.put(comp.getId(),comp);
         String rep = comp.getPdbxReplaces();
-        if (rep != null && !rep.equals("?")) {
+        if (rep != null && !"?".equals(rep)) {
             replaces.put(comp.getId(),rep);
         }
 
         String isrep = comp.getPdbxReplacedBy();
-        if (isrep != null && !isrep.equals("?")) {
+        if (isrep != null && !"?".equals(isrep)) {
             isReplacedBy.put(comp.getId(), isrep);
         }
     }

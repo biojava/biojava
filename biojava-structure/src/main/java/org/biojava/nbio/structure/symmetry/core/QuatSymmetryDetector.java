@@ -315,7 +315,7 @@ public class QuatSymmetryDetector {
 			QuatSymmetryResults localResult =
 					calcQuatSymmetry(nontrivialComposition.getComponent(i),symmParams);
 
-			if(localResult!=null && !localResult.getSymmetry().equals("C1")) {
+			if(localResult!=null && !"C1".equals(localResult.getSymmetry())) {
 				localResult.setLocal(true);
 				clusterSymmetries.add(localResult);
 				Set<Integer> knownResult = new HashSet<>(clusterIdToSubunitIds.get(i));
@@ -346,7 +346,7 @@ public class QuatSymmetryDetector {
 				//check if grouped clusters also have symmetry
 				QuatSymmetryResults localResult = calcQuatSymmetry(groupComposition,symmParams);
 
-				if(localResult!=null && !localResult.getSymmetry().equals("C1")) {
+				if(localResult!=null && !"C1".equals(localResult.getSymmetry())) {
 					localResult.setLocal(true);
 					clusterSymmetries.add(localResult);
 					// find subunit ids in this cluster list
@@ -417,7 +417,7 @@ public class QuatSymmetryDetector {
 			}
 
 			QuatSymmetryResults localResult = calcQuatSymmetry(localStoichiometry,symmParams);
-			if(localResult!=null && !localResult.getSymmetry().equals("C1")) {
+			if(localResult!=null && !"C1".equals(localResult.getSymmetry())) {
 				localResult.setLocal(true);
 				localSymmetries.add(localResult);
 				continue;
@@ -544,8 +544,8 @@ public class QuatSymmetryDetector {
 				double hRmsd = helixLayers.getScores().getRmsd();
 				// System.out.println("cRMSD: " + cRmsd + " hRMSD: " + hRmsd);
 				double deltaRmsd = hRmsd - cRmsd;
-				if (symmetry.equals("C1")
-						|| (!symmetry.equals("C1") && deltaRmsd <= parameters
+				if ("C1".equals(symmetry)
+						|| (!"C1".equals(symmetry) && deltaRmsd <= parameters
 								.getHelixRmsdThreshold())) {
 					method = SymmetryPerceptionMethod.ROTO_TRANSLATION;
 					results = new QuatSymmetryResults(composition, helixLayers,

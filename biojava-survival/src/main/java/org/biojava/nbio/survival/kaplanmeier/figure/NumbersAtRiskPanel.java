@@ -104,7 +104,7 @@ public class NumbersAtRiskPanel extends JPanel {
 			g2.drawLine(15, row - fontHeight/2, left - 5, row - fontHeight/2);
 			g2.setColor(Color.BLACK);
 			StrataInfo si = sfiHashMap.get(group);
-			if(kmf.title.toString().equals("[APOBEC1 Transhera Observation Arm]")){
+			if("[APOBEC1 Transhera Observation Arm]".equals(kmf.title.toString())){
 				//int dummy = 1;
 			}
 //           System.out.println(kmf.title + " Group " +  group);

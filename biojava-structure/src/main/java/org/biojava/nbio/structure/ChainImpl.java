@@ -421,7 +421,7 @@ public class ChainImpl implements Chain {
 				// an amino acid residue.. use for alignment
 				String oneLetter= ChemCompGroupFactory.getOneLetterCode(cc);
 				// AB oneLetter.length() should be one. e.g. in 1EMA it is 3 and this makes mapping residue to sequence impossible.
-				if ( oneLetter == null || oneLetter.isEmpty() || oneLetter.equals("?")) {
+				if ( oneLetter == null || oneLetter.isEmpty() || "?".equals(oneLetter)) {
 					oneLetter = Character.toString(StructureTools.UNKNOWN_GROUP_LABEL);
 				}
 				str.append(oneLetter);
@@ -452,7 +452,7 @@ public class ChainImpl implements Chain {
 				// an amino acid residue.. use for alignment
 				String oneLetter= ChemCompGroupFactory.getOneLetterCode(cc);
 				// AB oneLetter.length() should be one. e.g. in 1EMA it is 3 and this makes mapping residue to sequence impossible.
-				if ( oneLetter == null || oneLetter.isEmpty() || oneLetter.equals("?") || oneLetter.length()!=1) {
+				if ( oneLetter == null || oneLetter.isEmpty() || "?".equals(oneLetter) || oneLetter.length()!=1) {
 					oneLetter = Character.toString(StructureTools.UNKNOWN_GROUP_LABEL);
 				}
 				str.append(oneLetter);

@@ -113,13 +113,13 @@ public class MultipleAlignmentXMLParser {
 		for (int i=0; i<children.getLength(); i++) {
 
 			Node child = children.item(i);
-			if (child.getNodeName().equals("MultipleAlignment")){
+			if ("MultipleAlignment".equals(child.getNodeName())){
 				parseMultipleAlignment(child, ensemble);
 			}
-			else if (child.getNodeName().equals("Structures")){
+			else if ("Structures".equals(child.getNodeName())){
 				parseStructures(child, ensemble);
 			}
-			else if (child.getNodeName().equals("ScoresCache")){
+			else if ("ScoresCache".equals(child.getNodeName())){
 				parseScoresCache(child, ensemble);
 			}
 		}
@@ -137,10 +137,10 @@ public class MultipleAlignmentXMLParser {
 
 			Node child = children.item(i);
 
-			if (child.getNodeName().equals("BlockSet")){
+			if ("BlockSet".equals(child.getNodeName())){
 				parseBlockSet(child, msa);
 			}
-			else if (child.getNodeName().equals("ScoresCache")){
+			else if ("ScoresCache".equals(child.getNodeName())){
 				parseScoresCache(child, msa);
 			}
 		}
@@ -157,14 +157,14 @@ public class MultipleAlignmentXMLParser {
 
 			Node child = children.item(i);
 
-			if (child.getNodeName().equals("Block")){
+			if ("Block".equals(child.getNodeName())){
 				parseBlock(child, bs);
 			}
-			else if (child.getNodeName().equals("Matrix4d")){
+			else if ("Matrix4d".equals(child.getNodeName())){
 				Matrix4d t = parseMatrix4d(child);
 				transforms.add(t);
 			}
-			else if (child.getNodeName().equals("ScoresCache")){
+			else if ("ScoresCache".equals(child.getNodeName())){
 				parseScoresCache(child, bs);
 			}
 		}
@@ -199,7 +199,7 @@ public class MultipleAlignmentXMLParser {
 					}
 
 					String residue = node.getTextContent();
-					if (residue.equals("null")){
+					if ("null".equals(residue)){
 						alignRes.get(str-1).add(null);
 					} else {
 						alignRes.get(str-1).add(Integer.valueOf(residue));
@@ -209,7 +209,7 @@ public class MultipleAlignmentXMLParser {
 					node = atts.getNamedItem("str"+str);
 				}
 			}
-			else if (child.getNodeName().equals("ScoresCache")){
+			else if ("ScoresCache".equals(child.getNodeName())){
 				parseScoresCache(child, b);
 			}
 		}
@@ -253,22 +253,22 @@ public class MultipleAlignmentXMLParser {
 		NamedNodeMap atts = node.getAttributes();
 
 		String algo = atts.getNamedItem("Algorithm").getTextContent();
-		if (!algo.equals("null")){
+		if (!"null".equals(algo)){
 			ensemble.setAlgorithmName(algo);
 		}
 
 		String version = atts.getNamedItem("Version").getTextContent();
-		if (!version.equals("null")){
+		if (!"null".equals(version)){
 			ensemble.setVersion(version);
 		}
 
 		String ioTime = atts.getNamedItem("IOTime").getTextContent();
-		if (!ioTime.equals("null")){
+		if (!"null".equals(ioTime)){
 			ensemble.setIoTime(Long.valueOf(ioTime));
 		}
 
 		String time = atts.getNamedItem("CalculationTime").getTextContent();
-		if (!time.equals("null")){
+		if (!"null".equals(time)){
 			ensemble.setCalculationTime(Long.valueOf(time));
 		}
 	}

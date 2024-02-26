@@ -116,8 +116,8 @@ public class GenericFastaHeaderParser<S extends AbstractSequence<C>, C extends C
 
 		if (data.length == 1) {
 			sequence.setAccession(new AccessionID(data[0]));
-		} else  if (data[0].equalsIgnoreCase("sp") || data[0].equalsIgnoreCase("tr")) {
-			if (data[0].equalsIgnoreCase("sp")) {
+		} else  if ("sp".equalsIgnoreCase(data[0]) || "tr".equalsIgnoreCase(data[0])) {
+			if ("sp".equalsIgnoreCase(data[0])) {
 				sequence.setAnnotationType(AnnotationType.CURATED);
 			} else {
 				sequence.setAnnotationType(AnnotationType.PREDICTED);
@@ -128,41 +128,41 @@ public class GenericFastaHeaderParser<S extends AbstractSequence<C>, C extends C
 				sequence.setDescription(data[2]);
 			}
 
-		} else if (data[0].equalsIgnoreCase("gi")) {
+		} else if ("gi".equalsIgnoreCase(data[0])) {
 			DataSource giSource = DataSource.UNKNOWN;
 			if (data.length >= 3) {
-				if (data[2].equalsIgnoreCase("gb")) {
+				if ("gb".equalsIgnoreCase(data[2])) {
 					giSource = DataSource.GENBANK;
-				} else if (data[2].equalsIgnoreCase("emb")) {
+				} else if ("emb".equalsIgnoreCase(data[2])) {
 					giSource = DataSource.ENA;
-				} else if (data[2].equalsIgnoreCase("dbj")) {
+				} else if ("dbj".equalsIgnoreCase(data[2])) {
 					giSource = DataSource.DDBJ;
 				}
 				sequence.setAccession(new AccessionID(data[3], giSource));
 			} else {
 				sequence.setAccession(new AccessionID(header, giSource));
 			}
-		} else if (data[0].equalsIgnoreCase("pir")) {
+		} else if ("pir".equalsIgnoreCase(data[0])) {
 			sequence.setAccession(new AccessionID(data[2], DataSource.NBRF));
-		} else if (data[0].equalsIgnoreCase("prf")) {
+		} else if ("prf".equalsIgnoreCase(data[0])) {
 			sequence.setAccession(new AccessionID(data[2], DataSource.PRF));
-		} else if (data[0].equalsIgnoreCase("pdb")) {
+		} else if ("pdb".equalsIgnoreCase(data[0])) {
 			sequence.setAccession(new AccessionID(data[1] + ":" + data[2], DataSource.PDB1));
 		} else if (data[0].startsWith("PDB")) {
 			String[] pdbe = data[0].split(" ");
 			String[] pdbaccession = pdbe[0].split(":");
 			sequence.setAccession(new AccessionID(pdbaccession[1], DataSource.PDBe));
-		} else if (data[0].indexOf(":") != -1 && data.length > 1 && data[1].equals("PDBID")) {
+		} else if (data[0].indexOf(":") != -1 && data.length > 1 && "PDBID".equals(data[1])) {
 			sequence.setAccession(new AccessionID(data[0], DataSource.PDB2));
-		} else if (data[0].equalsIgnoreCase("pat")) {
+		} else if ("pat".equalsIgnoreCase(data[0])) {
 			sequence.setAccession(new AccessionID(data[2], DataSource.PATENTS));
-		} else if (data[0].equalsIgnoreCase("bbs")) {
+		} else if ("bbs".equalsIgnoreCase(data[0])) {
 			sequence.setAccession(new AccessionID(data[1], DataSource.GENINFO));
-		} else if (data[0].equalsIgnoreCase("gnl")) {
+		} else if ("gnl".equalsIgnoreCase(data[0])) {
 			sequence.setAccession(new AccessionID(data[2], DataSource.GENERAL));
-		} else if (data[0].equalsIgnoreCase("ref")) {
+		} else if ("ref".equalsIgnoreCase(data[0])) {
 			sequence.setAccession(new AccessionID(data[1], DataSource.NCBI));
-		} else if (data[0].equalsIgnoreCase("lcl")) {
+		} else if ("lcl".equalsIgnoreCase(data[0])) {
 			sequence.setAccession(new AccessionID(data[1], DataSource.LOCAL));
 		} else {
 			sequence.setAccession(new AccessionID(data[0])); // avoid the common problem of picking up all the comments original header in getOriginalHeader

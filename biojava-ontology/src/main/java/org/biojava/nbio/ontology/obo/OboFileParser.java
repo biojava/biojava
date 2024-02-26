@@ -271,15 +271,15 @@ public class OboFileParser {
 			String token = tokenizer.nextToken();
 			//logger.info("TOKEN:" +token);
 			if (i == 0) {
-				if (token.equals("RELATED"))
+				if ("RELATED".equals(token))
 					scope = Synonym.RELATED_SYNONYM;
-				else if (token.equals("UNSPECIFIED"))
+				else if ("UNSPECIFIED".equals(token))
 					scope = Synonym.RELATED_SYNONYM;
-				else if (token.equals("EXACT"))
+				else if ("EXACT".equals(token))
 					scope = Synonym.EXACT_SYNONYM;
-				else if (token.equals("BROAD"))
+				else if ("BROAD".equals(token))
 					scope = Synonym.BROAD_SYNONYM;
-				else if (token.equals("NARROW"))
+				else if ("NARROW".equals(token))
 					scope = Synonym.NARROW_SYNONYM;
 				else
 					throw new IOException("Found unexpected scope "

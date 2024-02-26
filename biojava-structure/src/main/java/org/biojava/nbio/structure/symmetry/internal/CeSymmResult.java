@@ -203,7 +203,7 @@ public class CeSymmResult {
 					} catch (StructureException e) {
 						symmGroup = "C1";
 					}
-					if (symmGroup.equals("C1"))
+					if ("C1".equals(symmGroup))
 						symmGroup = "R"; // could not find group
 				} else {
 					// in case significant but not refined

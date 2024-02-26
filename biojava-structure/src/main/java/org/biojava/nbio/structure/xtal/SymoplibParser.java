@@ -167,7 +167,7 @@ public class SymoplibParser {
 
 		// PDB uses group "P 1-" for 13 racemic mixture entries (as of Sep2011), e.g. 3e7r
 		// they call the space group "P 1-" unusually (symop.lib and everyone else call it "P -1")
-		if (shortName.equals("P 1-")) shortName="P -1";
+		if ("P 1-".equals(shortName)) shortName="P -1";
 
 		// enantiomorphic space groups contain sometime letters indicating glide planes which should always be lower case
 		// in some PDB entries like 4gwv they are in upper case, we fix that here: convert any non-first letter to lower case

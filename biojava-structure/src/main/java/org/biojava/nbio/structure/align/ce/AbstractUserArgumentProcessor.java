@@ -118,14 +118,14 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 			String arg   = argv[i];
 
 			// help string
-			if(arg.equalsIgnoreCase("-h") || arg.equalsIgnoreCase("-help")
-					|| arg.equalsIgnoreCase("--help") )
+			if("-h".equalsIgnoreCase(arg) || "-help".equalsIgnoreCase(arg)
+					|| "--help".equalsIgnoreCase(arg) )
 			{
 				System.out.println(printHelp());
 				return;
 			}
 			// version
-			if(arg.equalsIgnoreCase("-version") || arg.equalsIgnoreCase("--version")) {
+			if("-version".equalsIgnoreCase(arg) || "--version".equalsIgnoreCase(arg)) {
 				StructureAlignment alg = getAlgorithm();
 				System.out.println(alg.getAlgorithmName() + " v." + alg.getVersion() );
 				return;
@@ -591,12 +591,12 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 	 */
 	private Structure fixStructureName(Structure s, String file) {
 
-		if ( s.getName() != null && (! s.getName().equals("")))
+		if ( s.getName() != null && (! "".equals(s.getName())))
 			return s;
 
 		s.setName(s.getPDBCode());
 
-		if ( s.getName() == null || s.getName().equals("")){
+		if ( s.getName() == null || "".equals(s.getName())){
 			File f = new File(file);
 			s.setName(f.getName());
 		}

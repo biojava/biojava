@@ -64,7 +64,7 @@ public class ComponentXMLConverter {
 	public static Component fromXML(Node componentN) {
 
 		String name = componentN.getNodeName();
-		if ( ! name.equals("component"))
+		if ( ! "component".equals(name))
 			throw new RuntimeException("did not get component element, but " + name);
 
 		//String type = getAttribute(componentN, "type");
@@ -86,7 +86,7 @@ public class ComponentXMLConverter {
 			if(!pdbccN.hasAttributes()) continue;
 
 
-			if ( pdbccN.getNodeName().equals("pdbccID")) {
+			if ( "pdbccID".equals(pdbccN.getNodeName())) {
 				String id = getAttribute(pdbccN, "id");
 				pdbccIds.add(id);
 			}

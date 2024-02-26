@@ -54,7 +54,7 @@ public class GeneChromosomePositionParser {
 			logger.info("got {} gene positions", genePositions.size());
 
 			for (GeneChromosomePosition pos : genePositions){
-				if ( pos.getGeneName().equals("FOLH1")) {
+				if ( "FOLH1".equals(pos.getGeneName())) {
 					logger.info("Gene Position: {}", pos);
 					break;
 				}
