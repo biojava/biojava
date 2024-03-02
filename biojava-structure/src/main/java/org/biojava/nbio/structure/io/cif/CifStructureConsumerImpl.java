@@ -217,7 +217,10 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
                 isHetAtmInFile = true;
             }
 
-            String insCodeString = pdbxPDBInsCode.get(atomIndex);
+            String insCodeString = null;
+            if (pdbxPDBInsCode.isDefined()) {
+                insCodeString = pdbxPDBInsCode.get(atomIndex);
+            }
             Character insCode = null;
             if (insCodeString != null && !insCodeString.isEmpty() && !"?".equals(insCodeString)) {
                 insCode = insCodeString.charAt(0);
@@ -246,7 +249,13 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
             }
 
             String asymId = labelAsymId.get(atomIndex);
-            String authId = authAsymId.get(atomIndex);
+            String authId;
+            if (authAsymId.isDefined()) {
+                authId = authAsymId.get(atomIndex);
+            } else {
+                authId = String.valueOf(asymId);
+            }
+
             if (currentChain == null) {
                 currentChain = new ChainImpl();
                 currentChain.setName(authId);
@@ -277,7 +286,13 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
                 }
             }
 
-            ResidueNumber residueNumber = new ResidueNumber(authId, authSeqId.get(atomIndex), insCode);
+            int authSeqIdInt;
+            if (authSeqId.isDefined()) {
+                authSeqIdInt = authSeqId.get(atomIndex);
+            } else {
+                authSeqIdInt = (int)seqId;
+            }
+            ResidueNumber residueNumber = new ResidueNumber(authId, authSeqIdInt, insCode);
 
             String recordName = groupPDB.get(atomIndex);
             String compId = labelCompId.get(atomIndex);
@@ -289,7 +304,10 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
             }
 
             Group altGroup = null;
-            String altLocation = labelAltId.get(atomIndex);
+            String altLocation = null;
+            if (labelAltId.isDefined()) {
+                altLocation = labelAltId.get(atomIndex);
+            }
 
             if (startOfNewChain) {
                 currentGroup = createGroup(recordName, oneLetterCode, compId, seqId);
