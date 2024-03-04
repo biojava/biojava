@@ -12,14 +12,37 @@ permissions:
   contents: read # to fetch code (actions/checkout)
 
 jobs:
-  test:
+  testopenjdk:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         # We do one OS only to reduce resource utilization. To do macOS to this would be needed:
         #os: [ubuntu-20.04, macOS-latest]
         os: [ubuntu-latest]
-        java: [11, 17, 21]
+        java: [17, 21]
+      fail-fast: false
+      max-parallel: 4
+    name: Test JDK ${{ matrix.java }}, ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'oracle'
+          java-version: ${{ matrix.java }}
+      - name: Build, test and integration test
+        run: mvn verify --no-transfer-progress
+
+  # Note that 11 is not available in openjdk. So we need to do it with the Zulu distribution (see https://github.com/actions/setup-java)
+  testzulu:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        # We do one OS only to reduce resource utilization. To do macOS to this would be needed:
+        #os: [ubuntu-20.04, macOS-latest]
+        os: [ubuntu-latest]
+        java: [11]
       fail-fast: false
       max-parallel: 4
     name: Test JDK ${{ matrix.java }}, ${{ matrix.os }}
