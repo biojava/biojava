@@ -181,7 +181,7 @@ public class CifFileConsumerImplTest {
 
     /**
      * This tests for cases where dots appear in integer fields. Unusual but it happens in some PDB entries like 1s32.
-     * See issue https://github.com/biojava/biojava/issues/368
+     * See issue <a href="https://github.com/biojava/biojava/issues/368">...</a>
      */
     @Test
     public void specialCases() throws IOException {
@@ -219,5 +219,52 @@ public class CifFileConsumerImplTest {
         assertEquals(8, column.getRowCount());
         column.valueKinds().forEach(vk -> assertEquals(ValueKind.NOT_PRESENT, vk));
         column.stringData().forEach(sd -> assertTrue(sd.isEmpty()));
+    }
+
+    /**
+     * Testing files with atom_site that doesn't have author fields. E.g. cif files from Meta's ESM Atlas (<a href="https://esmatlas.com">...</a>)
+     */
+    @Test
+    public void testAtomSiteWithMissingAuthFields() throws IOException {
+        // taken from MGYP000911143359.cif
+        String mmcifStr =
+                "data_\n" +
+                        "loop_\n" +
+                        "_atom_site.group_PDB\n" +
+                        "_atom_site.id\n" +
+                        "_atom_site.type_symbol\n" +
+                        "_atom_site.label_atom_id\n" +
+                        "_atom_site.label_comp_id\n" +
+                        "_atom_site.label_asym_id\n" +
+                        "_atom_site.label_entity_id\n" +
+                        "_atom_site.label_seq_id\n" +
+                        "_atom_site.Cartn_x\n" +
+                        "_atom_site.Cartn_y\n" +
+                        "_atom_site.Cartn_z\n" +
+                        "_atom_site.occupancy\n" +
+                        "_atom_site.B_iso_or_equiv\n" +
+                        "_atom_site.pdbx_PDB_model_num\n" +
+                        "\n" +
+                        "ATOM 1 N N MET A 1 1 -26.091 68.903 7.841 1.00 90.0 1\n" +
+                        "ATOM 2 C CA MET A 1 1 -26.275 67.677 7.069 1.00 91.0 1\n" +
+                        "ATOM 3 C C MET A 1 1 -24.933 67.025 6.755 1.00 90.0 1\n" +
+                        "ATOM 4 C CB MET A 1 1 -27.033 67.967 5.773 1.00 89.0 1\n" +
+                        "ATOM 5 O O MET A 1 1 -24.314 67.331 5.734 1.00 90.0 1\n" +
+                        "ATOM 6 C CG MET A 1 1 -28.544 67.973 5.934 1.00 86.0 1\n" +
+                        "ATOM 7 S SD MET A 1 1 -29.390 68.904 4.598 1.00 86.0 1\n" +
+                        "ATOM 8 C CE MET A 1 1 -29.202 67.734 3.224 1.00 83.0 1\n" +
+                        "ATOM 9 N N ASN A 1 2 -24.267 66.233 7.730 1.00 90.0 1\n" +
+                        "ATOM 10 C CA ASN A 1 2 -22.897 65.827 8.029 1.00 91.0 1\n" +
+                        "ATOM 11 C C ASN A 1 2 -22.600 64.427 7.500 1.00 90.0 1\n" +
+                        "ATOM 12 C CB ASN A 1 2 -22.634 65.893 9.535 1.00 88.0 1\n" +
+                        "ATOM 13 O O ASN A 1 2 -23.092 63.436 8.044 1.00 89.0 1\n" +
+                        "ATOM 14 C CG ASN A 1 2 -22.191 67.269 9.990 1.00 86.0 1\n" +
+                        "ATOM 15 N ND2 ASN A 1 2 -22.255 67.511 11.294 1.00 87.0 1\n" +
+                        "ATOM 16 O OD1 ASN A 1 2 -21.795 68.108 9.177 1.00 87.0 1\n" ;
+        MmCifFile cifFile = CifIO.readFromInputStream(new ByteArrayInputStream(mmcifStr.getBytes())).as(StandardSchemata.MMCIF);
+        Structure s = CifStructureConverter.fromCifFile(cifFile);
+        assertNotNull(s);
+        assertEquals(2, s.getPolyChain("A").getAtomGroups().size());
+        assertEquals(2, s.getPolyChainByPDB("A").getAtomGroups().size());
     }
 }
