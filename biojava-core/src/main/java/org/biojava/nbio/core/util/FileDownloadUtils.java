@@ -215,9 +215,9 @@ public class FileDownloadUtils {
 		if(sizeFile.exists()) {
             try (Scanner scanner = new Scanner(sizeFile)) {
                 long expectedSize = scanner.nextLong();
-                long actualLSize = localFile.length();
-                if (expectedSize != actualLSize) {
-                    logger.warn("File [{}] size ({}) does not match expected size ({}).", localFile, actualLSize, expectedSize);
+                long actualSize = localFile.length();
+                if (expectedSize != actualSize) {
+                    logger.warn("File [{}] size ({}) does not match expected size ({}).", localFile, actualSize, expectedSize);
                     return false;
                 }
             } catch (FileNotFoundException e) {
