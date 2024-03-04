@@ -33,6 +33,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -390,7 +391,7 @@ public class AtomCacheTest {
 			Files.createDirectories(testCif.getParent());
 			URL resource = AtomCacheTest.class.getResource("/atp.cif.gz");
 			File src = new File(resource.getPath());
-			FileDownloadUtils.copy(src, testCif.toFile());
+			Files.copy(src.toPath(), testCif, StandardCopyOption.REPLACE_EXISTING);
 
 			// Load structure
 			Structure s = cache.getStructure("1ABC");
@@ -453,7 +454,7 @@ public class AtomCacheTest {
 			Files.createDirectories(testCif.getParent());
 			URL resource = AtomCacheTest.class.getResource("/atp.cif.gz");
 			File src = new File(resource.getPath());
-			FileDownloadUtils.copy(src, testCif.toFile());
+			Files.copy(src.toPath(), testCif, StandardCopyOption.REPLACE_EXISTING);
 
 			// Load structure
 			Structure s = cache.getStructure("1ABC");

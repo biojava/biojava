@@ -32,6 +32,7 @@ import org.biojava.nbio.core.util.InputStreamProvider;
 import java.io.*;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -653,7 +654,7 @@ public class CathInstallation implements CathDatabase{
 		in.close();
 		out.close();
 
-		FileDownloadUtils.copy(tempFile,localFile);
+		Files.copy(tempFile.toPath(), localFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
 		// delete the tmp file
 		tempFile.delete();
