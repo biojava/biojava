@@ -35,6 +35,7 @@ jobs:
         run: mvn verify --no-transfer-progress
 
   # Note that 11 is not available in openjdk. So we need to do it with the Zulu distribution (see https://github.com/actions/setup-java)
+  # When we drop 11, it will be safe to drop the copy-pasted workflow excerpt below
   testzulu:
     runs-on: ${{ matrix.os }}
     strategy:
