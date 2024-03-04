@@ -52,7 +52,7 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
-          distribution: 'oracle'
+          distribution: 'zulu'
           java-version: ${{ matrix.java }}
       - name: Build, test and integration test
         run: mvn verify --no-transfer-progress
