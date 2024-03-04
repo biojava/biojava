@@ -47,21 +47,21 @@ public enum CathCategory {
 	static final String lut = "CATHSOLID";
 
 	public static CathCategory fromString(String type) {
-		if ( type.equals("C") ) {
+		if ( "C".equals(type) ) {
 			return Class;
-		} else if ( type.equals("A") ) {
+		} else if ( "A".equals(type) ) {
 			return Architecture;
-		} else if ( type.equals("T") ) {
+		} else if ( "T".equals(type) ) {
 			return Topolgy;
-		} else if ( type.equals("H") ) {
+		} else if ( "H".equals(type) ) {
 			return Homology;
-		} else if ( type.equals("S") ) {
+		} else if ( "S".equals(type) ) {
 			return SequenceFamily;
-		} else if ( type.equals("O") ) {
+		} else if ( "O".equals(type) ) {
 			return OrthologousSequenceFamily;
-		} else if ( type.equals("L") ) {
+		} else if ( "L".equals(type) ) {
 			return LikeSequenceFamily;
-		} else if ( type.equals("I") ) {
+		} else if ( "I".equals(type) ) {
 			return IdenticalSequenceFamily;
 //        } else if ( type.equals("D") ) {
 		} else {

@@ -145,7 +145,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 			sectionKey = section.get(0)[0];
 			if (sectionKey == null) {
 				//if we reach the end of the file, section contains empty strings
-				if(section.get(0)[1]==null || section.get(0)[1].equals("") ||
+				if(section.get(0)[1]==null || "".equals(section.get(0)[1]) ||
 						section.get(0)[1].length()==0) {
 					throw new ParserException(Messages.ENDOFFILE);
 				}
@@ -208,7 +208,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 					needsQuotes = true; // as the value has quotes then set that it needs quotes when written back out
 				}
 				// parameter on old feature
-				if (key.equals("db_xref")) {
+				if ("db_xref".equals(key)) {
 					Matcher m = dbxp.matcher(val);
 					if (m.matches()) {
 						String dbname = m.group(1);
@@ -223,12 +223,12 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 					} else {
 						throw new ParserException("Bad dbxref");
 					}
-				} else if (key.equalsIgnoreCase("organism")) {
+				} else if ("organism".equalsIgnoreCase(key)) {
 					Qualifier q = new Qualifier(key, val.replace('\n', ' '), needsQuotes);
 					gbFeature.addQualifier(key, q);
 				} else {
-					if (key.equalsIgnoreCase("translation") || key.equals("anticodon")
-							|| key.equals("transl_except")) {
+					if ("translation".equalsIgnoreCase(key) || "anticodon".equals(key)
+							|| "transl_except".equals(key)) {
 						// strip spaces from sequence
 						val = val.replaceAll("\\s+", "");
 						Qualifier q = new Qualifier(key, val, needsQuotes);
@@ -319,9 +319,9 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 			String lengthUnits = m.group(3);
 			String type = m.group(6);
 
-			if (lengthUnits.equalsIgnoreCase("aa")) {
+			if ("aa".equalsIgnoreCase(lengthUnits)) {
 				compoundType = AminoAcidCompoundSet.getAminoAcidCompoundSet();
-			} else if (lengthUnits.equalsIgnoreCase("bp")) {
+			} else if ("bp".equalsIgnoreCase(lengthUnits)) {
 				if (type != null) {
 					if (type.contains("RNA")) {
 						compoundType = RNACompoundSet.getRNACompoundSet();
@@ -333,7 +333,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 				}
 			}
 
-			if (m.group(7) != null) isCircularSequence = m.group(7).equalsIgnoreCase("circular");
+			if (m.group(7) != null) isCircularSequence = "circular".equalsIgnoreCase(m.group(7));
 
 			// configure location parser with needed information
 			locationParser.setSequenceLength(sequenceLength);
@@ -349,9 +349,9 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 			String lengthUnits = m2.group(2);
 			String type = m2.group(5);
 
-			if (lengthUnits.equalsIgnoreCase("aa")) {
+			if ("aa".equalsIgnoreCase(lengthUnits)) {
 				compoundType = AminoAcidCompoundSet.getAminoAcidCompoundSet();
-			} else if (lengthUnits.equalsIgnoreCase("bp")) {
+			} else if ("bp".equalsIgnoreCase(lengthUnits)) {
 				if (type != null) {
 					if (type.contains("RNA")) {
 						compoundType = RNACompoundSet.getRNACompoundSet();
@@ -363,7 +363,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 				}
 			}
 
-			if (m2.group(6) != null) isCircularSequence = m2.group(6).equalsIgnoreCase("circular");
+			if (m2.group(6) != null) isCircularSequence = "circular".equalsIgnoreCase(m2.group(6));
 
 			// configure location parser with needed information
 			locationParser.setSequenceLength(sequenceLength);

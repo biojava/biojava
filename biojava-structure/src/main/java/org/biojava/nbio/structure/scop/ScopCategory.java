@@ -41,17 +41,17 @@ public enum ScopCategory implements Serializable
 	Class,Fold, Superfamily,  Family, Domain, Species, Px;
 
 	public static ScopCategory fromString(String type){
-		if ( type.equals("cl"))
+		if ( "cl".equals(type))
 			return Class;
-		else if ( type.equals("cf"))
+		else if ( "cf".equals(type))
 			return Fold;
-		else if ( type.equals("sf"))
+		else if ( "sf".equals(type))
 			return Superfamily;
-		else if ( type.equals("fa"))
+		else if ( "fa".equals(type))
 			return Family;
-		else if ( type.equals("dm"))
+		else if ( "dm".equals(type))
 			return Domain;
-		else if ( type.equals("sp"))
+		else if ( "sp".equals(type))
 			return Species;
 		else
 			return Px;

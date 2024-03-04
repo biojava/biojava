@@ -223,7 +223,7 @@ public class RotationAxisAligner extends AxisAligner{
 			}
 			calcReverseTransformation();
 			calcBoundaries();
-			if (! rotationGroup.getPointGroup().equals("Helical")) {
+			if (! "Helical".equals(rotationGroup.getPointGroup())) {
 				calcAlignedOrbits();
 			}
 			modified = false;
@@ -340,7 +340,7 @@ public class RotationAxisAligner extends AxisAligner{
 
 
 	private void calcTransformation() {
-		if (rotationGroup.getPointGroup().equals("C1")) {
+		if ("C1".equals(rotationGroup.getPointGroup())) {
 			calcTransformationByInertiaAxes();
 		} else {
 			calcTransformationBySymmetryAxes();
@@ -675,13 +675,13 @@ public class RotationAxisAligner extends AxisAligner{
 			referenceVector = getReferenceAxisCylic();
 		} else if (rotationGroup.getPointGroup().startsWith("D")) {
 			referenceVector = getReferenceAxisDihedral();
-		} else if (rotationGroup.getPointGroup().equals("T")) {
+		} else if ("T".equals(rotationGroup.getPointGroup())) {
 			referenceVector = getReferenceAxisTetrahedral();
-		} else if (rotationGroup.getPointGroup().equals("O")) {
+		} else if ("O".equals(rotationGroup.getPointGroup())) {
 			referenceVector = getReferenceAxisOctahedral();
-		} else if (rotationGroup.getPointGroup().equals("I")) {
+		} else if ("I".equals(rotationGroup.getPointGroup())) {
 			referenceVector = getReferenceAxisIcosahedral();
-		} else if (rotationGroup.getPointGroup().equals("Helical")) {
+		} else if ("Helical".equals(rotationGroup.getPointGroup())) {
 			// TODO what should the reference vector be??
 			referenceVector = getReferenceAxisCylic();
 		}
@@ -735,7 +735,7 @@ public class RotationAxisAligner extends AxisAligner{
 	 * @return
 	 */
 	private Vector3d getReferenceAxisCylic() {
-		if (rotationGroup.getPointGroup().equals("C2")) {
+		if ("C2".equals(rotationGroup.getPointGroup())) {
 			Vector3d vr = new Vector3d(subunits.getOriginalCenters().get(0));
 			vr.sub(subunits.getCentroid());
 			vr.normalize();
@@ -765,7 +765,7 @@ public class RotationAxisAligner extends AxisAligner{
 	 * @return reference vector
 	 */
 	private Vector3d getReferenceAxisCylicWithSubunitAlignment() {
-		if (rotationGroup.getPointGroup().equals("C2")) {
+		if ("C2".equals(rotationGroup.getPointGroup())) {
 			return referenceVector;
 		}
 
@@ -797,7 +797,7 @@ public class RotationAxisAligner extends AxisAligner{
 		for (int i = 0; i < rotationGroup.getOrder(); i++) {
 			if (rotationGroup.getRotation(i).getDirection() == 1 &&
 					(rotationGroup.getRotation(i).getFold() < maxFold) ||
-					rotationGroup.getPointGroup().equals("D2")) {
+					"D2".equals(rotationGroup.getPointGroup())) {
 
 				AxisAngle4d axisAngle = rotationGroup.getRotation(i).getAxisAngle();
 				Vector3d v = new Vector3d(axisAngle.x, axisAngle.y, axisAngle.z);

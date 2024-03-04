@@ -200,7 +200,7 @@ public class Dataset {
 
 				logger.info("Got " + sites.size() + " sites");
 				for (Site s : sites) {
-					if (s.getUniprot().equals("P50225") || s.getUniprot().equals("P48025")) {
+					if ("P50225".equals(s.getUniprot()) || "P48025".equals(s.getUniprot())) {
 						logger.info(s.toString());
 					}
 				}

@@ -198,8 +198,8 @@ public final class StructureUtil {
 						namesOfAtomOnGroup2, bondLengthTolerance);
 				if (atoms != null) {
 					if (ignoreNCLinkage &&
-							((atoms[0].getName().equals("N") && atoms[1].getName().equals("C"))
-									|| (atoms[0].getName().equals("C") && atoms[1].getName().equals("N")))
+							(("N".equals(atoms[0].getName()) && "C".equals(atoms[1].getName()))
+									|| ("C".equals(atoms[0].getName()) && "N".equals(atoms[1].getName())))
 							) {
 						continue;
 					}

@@ -55,7 +55,7 @@ public class StructureAtomXMLConverter {
 	public static StructureAtom fromXML(Node structureAtomElement){
 
 		String name = structureAtomElement.getNodeName();
-		if ( ! name.equals("structureAtom"))
+		if ( ! "structureAtom".equals(name))
 			throw new RuntimeException("Node is not a structureAtom, but " +name);
 
 		String atomName = getAttribute( structureAtomElement,"name");
@@ -70,7 +70,7 @@ public class StructureAtomXMLConverter {
 			if(!nodes.hasAttributes()) continue;
 
 
-			if ( nodes.getNodeName().equals("structureGroup")) {
+			if ( "structureGroup".equals(nodes.getNodeName())) {
 				group = StructureGroupXMLConverter.fromXML(nodes);
 			}
 		}

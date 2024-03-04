@@ -548,7 +548,7 @@ public class MenuCreator {
 			public void actionPerformed(ActionEvent e) {
 				String cmd = e.getActionCommand();
 
-				if ( cmd.equals("Quit")){
+				if ( "Quit".equals(cmd)){
 					System.exit(0);
 				}
 			}
@@ -606,7 +606,7 @@ public class MenuCreator {
 			public void actionPerformed(ActionEvent e) {
 				String cmd = e.getActionCommand();
 
-				if ( cmd.equals("Close Frame")){
+				if ( "Close Frame".equals(cmd)){
 					f.dispose();
 				}
 			}
@@ -885,7 +885,7 @@ public class MenuCreator {
 			public void actionPerformed(ActionEvent e) {
 				String cmd = e.getActionCommand();
 
-				if ( cmd.equals("Settings")){
+				if ( "Settings".equals(cmd)){
 					ConfigPDBInstallPanel.showDialog();
 				}
 			}

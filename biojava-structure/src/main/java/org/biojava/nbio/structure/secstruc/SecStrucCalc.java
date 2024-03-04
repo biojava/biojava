@@ -798,7 +798,7 @@ public class SecStrucCalc {
 
 		SecStrucGroup one = groups[i];
 
-		if (one.getPDBName().equals("PRO")){
+		if ("PRO".equals(one.getPDBName())){
 			logger.debug("Ignore: PRO {}", one.getResidueNumber());
 			return;
 		}
@@ -877,7 +877,7 @@ public class SecStrucCalc {
 	 */
 	private  void trackHBondEnergy(int i, int j, double energy) {
 
-		if (groups[i].getPDBName().equals("PRO")) {
+		if ("PRO".equals(groups[i].getPDBName())) {
 			logger.debug("Ignore: PRO {}",groups[i].getResidueNumber());
 			return;
 		}

@@ -171,9 +171,9 @@ public class CliTools {
 						if ( val == null )
 							propVal = Boolean.TRUE;
 						else {
-							if ( val.equalsIgnoreCase("true") || val.equalsIgnoreCase("t"))
+							if ( "true".equalsIgnoreCase(val) || "t".equalsIgnoreCase(val))
 								propVal = Boolean.TRUE;
-							else if( val.equalsIgnoreCase("false") || val.equalsIgnoreCase("f"))
+							else if( "false".equalsIgnoreCase(val) || "f".equalsIgnoreCase(val))
 								propVal = Boolean.FALSE;
 							else
 								throw new ConfigurationException("Option "+arg+" requires a boolean parameter");

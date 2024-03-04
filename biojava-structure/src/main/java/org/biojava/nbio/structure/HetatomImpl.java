@@ -137,7 +137,7 @@ public class HetatomImpl implements Group {
 		//if (s.length() != 3) {
 		//throw new PDBParseException("amino acid name is not of length 3!");
 		//}
-		if (s != null && s.equals("?")) logger.info("invalid pdbname: ?");
+		if ("?".equals(s)) logger.info("invalid pdbname: ?");
 		pdb_name =s ;
 
 	}

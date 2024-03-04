@@ -102,7 +102,7 @@ public class NCBIQBlastAlignmentProperties implements RemotePairwiseAlignmentPro
 	 */
 	public BlastProgramEnum getBlastProgram() {
 		BlastProgramEnum program = BlastProgramEnum.valueOf(getAlignmentOption(PROGRAM));
-		boolean isMegablast = BlastProgramEnum.blastn == program && getAlignmentOption(MEGABLAST).equals("on");
+		boolean isMegablast = BlastProgramEnum.blastn == program && "on".equals(getAlignmentOption(MEGABLAST));
 		return !isMegablast ? program : BlastProgramEnum.megablast;
 	}
 

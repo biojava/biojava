@@ -71,7 +71,7 @@ public class InputStreamProvider {
 		cacheRawFiles = false;
 
 		String prop = System.getProperty(CACHE_PROPERTY);
-		if ( prop != null && prop.equals("true")) {
+		if ( "true".equals(prop)) {
 			cacheRawFiles = true;
 
 		}
@@ -119,7 +119,7 @@ public class InputStreamProvider {
 	public InputStream getInputStream(URL u)
 	throws IOException{
 		
-		if (u.getProtocol().equals("file")) {
+		if ("file".equals(u.getProtocol())) {
 			try {
 				return getInputStream(new File(u.toURI().getPath()));
 			} catch (URISyntaxException e) {

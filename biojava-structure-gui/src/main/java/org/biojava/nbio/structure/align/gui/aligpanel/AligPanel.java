@@ -450,7 +450,7 @@ public void mouseOverPosition(AlignedPosition p) {
 						select2 = JmolTools.getPdbInfo(a2);
 
 					// nothing to display
-					if ( select1.equals("") && select2.equals(""))
+					if ( "".equals(select1) && "".equals(select2))
 						continue;
 
 					if ( nrSelected > 0)

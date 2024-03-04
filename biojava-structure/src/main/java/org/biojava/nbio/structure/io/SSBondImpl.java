@@ -261,8 +261,8 @@ public class SSBondImpl implements PDBRecord, Cloneable {
 	 */
 	public static SSBondImpl toSsBond(Bond bond) {
 
-		if (!bond.getAtomA().getGroup().getPDBName().equals("CYS") ||
-			!bond.getAtomB().getGroup().getPDBName().equals("CYS")    ) {
+		if (!"CYS".equals(bond.getAtomA().getGroup().getPDBName()) ||
+			!"CYS".equals(bond.getAtomB().getGroup().getPDBName())    ) {
 
 			throw new IllegalArgumentException("Trying to create a SSBond from a Bond between 2 groups that are not CYS");
 		}

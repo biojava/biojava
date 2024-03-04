@@ -191,13 +191,13 @@ public class ABITrace {
 	 * @throws CompoundNotFoundException if the base is not valid
 	 */
 	public int[] getTrace (String base) throws CompoundNotFoundException {
-		if (base.equals("A")) {
+		if ("A".equals(base)) {
 			return A;
-		} else if (base.equals("C")) {
+		} else if ("C".equals(base)) {
 			return C;
-		} else if (base.equals("G")) {
+		} else if ("G".equals(base)) {
 			return G;
-		} else if (base.equals("T")) {
+		} else if ("T".equals(base)) {
 			return T;
 		} else {
 			throw new CompoundNotFoundException("Don't know base: " + base);
@@ -492,9 +492,9 @@ public class ABITrace {
 		for (int record = 0; record <= NumRecords - 1; record++) {
 			getSubArray(RecNameArray, (indexBase + (record * 28)));
 			RecName = new String(RecNameArray);
-			if (RecName.equals("FWO_"))
+			if ("FWO_".equals(RecName))
 				FWO = indexBase + (record * 28) + 20;
-			if (RecName.equals("DATA")) {
+			if ("DATA".equals(RecName)) {
 				++DataCounter;
 				if (DataCounter == 9)
 					DATA9 = indexBase + (record * 28) + 20;
@@ -505,17 +505,17 @@ public class ABITrace {
 				if (DataCounter == 12)
 					DATA12 = indexBase + (record * 28) + 20;
 			}
-			if (RecName.equals("PBAS")) {
+			if ("PBAS".equals(RecName)) {
 				++PBASCounter;
 				if (PBASCounter == 2)
 					PBAS2 = indexBase + (record * 28) + 20;
 			}
-			if (RecName.equals("PLOC")) {
+			if ("PLOC".equals(RecName)) {
 				++PLOCCounter;
 				if (PLOCCounter == 2)
 					PLOC = indexBase + (record * 28) + 20;
 			}
-			if (RecName.equals("PCON")) {
+			if ("PCON".equals(RecName)) {
 				++PCONCounter;
 				if (PCONCounter == 2)
 					PCON = indexBase + (record * 28) + 20;

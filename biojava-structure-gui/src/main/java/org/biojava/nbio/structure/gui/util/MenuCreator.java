@@ -60,7 +60,7 @@ public class MenuCreator {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String cmd = e.getActionCommand();
-				if ( cmd.equals("Open")){
+				if ( "Open".equals(cmd)){
 					final JFileChooser fc = new JFileChooser();
 
 //					In response to a button click:
@@ -95,7 +95,7 @@ public class MenuCreator {
 			public void actionPerformed(ActionEvent e) {
 				String cmd = e.getActionCommand();
 
-				if ( cmd.equals("Exit")){
+				if ( "Exit".equals(cmd)){
 					System.exit(0);
 				}
 			}
@@ -111,7 +111,7 @@ public class MenuCreator {
 			public void actionPerformed(ActionEvent e) {
 				String cmd = e.getActionCommand();
 
-				if ( cmd.equals("2 protein structures")){
+				if ( "2 protein structures".equals(cmd)){
 					MenuCreator.showPairDialog();
 				}
 			}
@@ -129,7 +129,7 @@ public class MenuCreator {
 			public void actionPerformed(ActionEvent e) {
 				String cmd = e.getActionCommand();
 
-				if ( cmd.equals("PDBview")){
+				if ( "PDBview".equals(cmd)){
 					MenuCreator.showAboutDialog();
 				}
 			}

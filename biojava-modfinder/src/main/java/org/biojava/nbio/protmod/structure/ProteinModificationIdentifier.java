@@ -745,7 +745,7 @@ public class ProteinModificationIdentifier {
 
 			List<String> potentialNamesOfAtomOnGroup1 = linkage.getPDBNameOfPotentialAtomsOnComponent1();
 			for (String name : potentialNamesOfAtomOnGroup1) {
-				if (name.equals("*")) {
+				if ("*".equals(name)) {
 					// wildcard
 					potentialNamesOfAtomOnGroup1 = null; // search all atoms
 					break;
@@ -754,7 +754,7 @@ public class ProteinModificationIdentifier {
 
 			List<String> potentialNamesOfAtomOnGroup2 = linkage.getPDBNameOfPotentialAtomsOnComponent2();
 			for (String name : potentialNamesOfAtomOnGroup2) {
-				if (name.equals("*")) {
+				if ("*".equals(name)) {
 					// wildcard
 					potentialNamesOfAtomOnGroup2 = null; // search all atoms
 					break;

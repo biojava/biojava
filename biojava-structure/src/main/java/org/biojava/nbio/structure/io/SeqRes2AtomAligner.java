@@ -411,7 +411,7 @@ public class SeqRes2AtomAligner {
 						) {
 					//System.out.println(cc.getOne_letter_code());
 					String c = cc.getOneLetterCode();
-					if ( c.equals("?")) {
+					if ( "?".equals(c)) {
 						if (isNucleotideChain && PolymerType.POLYNUCLEOTIDE_ONLY.contains(cc.getPolymerType())) {
 							// the way to represent unknown nucleotides is with 'N', see https://en.wikipedia.org/wiki/Nucleic_acid_notation
 							c = "N";

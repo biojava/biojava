@@ -71,11 +71,11 @@ public class PDBStatus {
 		 */
 		public static Status fromString(String statusStr) {
 			if (statusStr == null) throw new IllegalArgumentException("Status string can't be null");
-			if(statusStr.equalsIgnoreCase("REMOVED"))
+			if("REMOVED".equalsIgnoreCase(statusStr))
 				return Status.REMOVED;
-			else if(statusStr.equalsIgnoreCase("CURRENT"))
+			else if("CURRENT".equalsIgnoreCase(statusStr))
 				return Status.CURRENT;
-			else if(statusStr.equalsIgnoreCase("UNRELEASED"))
+			else if("UNRELEASED".equalsIgnoreCase(statusStr))
 				return Status.UNRELEASED;
 			else {
 				throw new IllegalArgumentException("Unable to parse status '"+statusStr+"'.");

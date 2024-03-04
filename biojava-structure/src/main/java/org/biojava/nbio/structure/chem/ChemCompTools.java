@@ -127,9 +127,9 @@ public class ChemCompTools {
         PolymerType polymerType = getPolymerType(residueType);
 
         // standard residues have no parent
-        if (pid == null || pid.equals("?")) {
+        if (pid == null || "?".equals(pid)) {
             // and they have a one letter code
-            if (one != null && !one.equals("?")) {
+            if (one != null && !"?".equals(one)) {
                 // peptides and dpeptides must not have X
                 if (polymerType == PolymerType.peptide || polymerType == PolymerType.dpeptide) {
                     return performPeptideCheck(cc, one);

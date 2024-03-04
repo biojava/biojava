@@ -176,7 +176,7 @@ public class CathDomain implements Serializable, StructureIdentifier {
 	 */
 	public String getPdbIdAndChain() {
 		return domainName.substring(0, 4) +
-				(!domainName.substring(4, 5).equals("0") ? "." + domainName.substring(4, 5) : "");
+				(!"0".equals(domainName.substring(4, 5)) ? "." + domainName.substring(4, 5) : "");
 	}
 
 	public Integer getDomainId() {

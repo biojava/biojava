@@ -53,7 +53,7 @@ public class StructureGroupXMLConverter {
 
 		ResidueNumber resNum = new ResidueNumber();
 		resNum.setChainName(chainID);
-		if ( ( insCode != null) && (! insCode.equals("null")) && insCode.length() == 1)
+		if ( ( insCode != null) && (! "null".equals(insCode)) && insCode.length() == 1)
 		resNum.setInsCode(insCode.charAt(0));
 		resNum.setSeqNum(Integer.parseInt(resN));
 

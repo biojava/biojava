@@ -78,7 +78,7 @@ public class ChemCompGroupFactory {
             AminoAcid aa = new AminoAcidImpl();
 
             String one_letter = cc.getOneLetterCode();
-            if (one_letter == null || one_letter.equals("X") || one_letter.equals("?") || one_letter.length() == 0) {
+            if (one_letter == null || "X".equals(one_letter) || "?".equals(one_letter) || one_letter.length() == 0) {
                 String parent = cc.getMonNstdParentCompId();
                 if (parent != null && parent.length() == 3) {
                     String parentid = cc.getMonNstdParentCompId();
@@ -87,7 +87,7 @@ public class ChemCompGroupFactory {
                 }
             }
 
-            if (one_letter == null || one_letter.length() == 0 || one_letter.equals("?")) {
+            if (one_letter == null || one_letter.length() == 0 || "?".equals(one_letter)) {
                 // e.g. problem with PRR, which probably should have a parent of ALA, but as of 20110127 does not.
                 logger.warn("Problem with chemical component: {} Did not find one letter code! Setting it to 'X'",
                         recordName);
@@ -109,7 +109,7 @@ public class ChemCompGroupFactory {
 
     public static String getOneLetterCode(ChemComp cc) {
         String oneLetter = cc.getOneLetterCode();
-        if (oneLetter == null || oneLetter.equals("X") || oneLetter.equals("?")) {
+        if (oneLetter == null || "X".equals(oneLetter) || "?".equals(oneLetter)) {
             String parentId = cc.getMonNstdParentCompId();
             if (parentId == null) {
                 return oneLetter;

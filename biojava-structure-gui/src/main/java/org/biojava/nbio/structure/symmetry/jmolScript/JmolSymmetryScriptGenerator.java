@@ -44,19 +44,19 @@ public abstract class JmolSymmetryScriptGenerator {
 	public static JmolSymmetryScriptGenerator getInstance(AxisAligner axisAligner, String name) {
 		String symmetry = axisAligner.getSymmetry();
 
-		if (symmetry.equals("C1")) {
+		if ("C1".equals(symmetry)) {
 			return new JmolSymmetryScriptGeneratorC1((RotationAxisAligner)axisAligner, name);
 		} else if (symmetry.startsWith("C")) {
 			return new JmolSymmetryScriptGeneratorCn((RotationAxisAligner)axisAligner, name);
 		} else if (symmetry.startsWith("D")) {
 			return new JmolSymmetryScriptGeneratorDn((RotationAxisAligner)axisAligner, name);
-		} else if (symmetry.equals("T")) {
+		} else if ("T".equals(symmetry)) {
 			return new JmolSymmetryScriptGeneratorT((RotationAxisAligner)axisAligner, name);
-		} else if (symmetry.equals("O")) {
+		} else if ("O".equals(symmetry)) {
 			return new JmolSymmetryScriptGeneratorO((RotationAxisAligner)axisAligner, name);
-		} else if (symmetry.equals("I")) {
+		} else if ("I".equals(symmetry)) {
 			return new JmolSymmetryScriptGeneratorI((RotationAxisAligner)axisAligner, name);
-		} else if (symmetry.equals("H")) {
+		} else if ("H".equals(symmetry)) {
 			return new JmolSymmetryScriptGeneratorH((HelixAxisAligner)axisAligner, name);
 		}
 

@@ -127,8 +127,8 @@ public class PDBHeader implements PDBRecord {
 			for (Method m : methods) {
 				String name = m.getName();
 
-				if (name.substring(0, 3).equals("get")) {
-					if (name.equals("getClass")) {
+				if ("get".equals(name.substring(0, 3))) {
+					if ("getClass".equals(name)) {
 						continue;
 					}
 					Object o = m.invoke(this);
@@ -232,7 +232,7 @@ public class PDBHeader implements PDBRecord {
 		String authors = getAuthors();
 		if ( authors == null)
 			return;
-		if ( authors.equals("")){
+		if ( "".equals(authors)){
 			return;
 		}
 
@@ -424,8 +424,8 @@ public class PDBHeader implements PDBRecord {
 			for (Method m : methods) {
 				String name = m.getName();
 
-				if (name.substring(0, 3).equals("get")) {
-					if (name.equals("getClass")) {
+				if ("get".equals(name.substring(0, 3))) {
+					if ("getClass".equals(name)) {
 						continue;
 					}
 					Object a = m.invoke(this);

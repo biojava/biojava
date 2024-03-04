@@ -471,7 +471,7 @@ public class StockholmFileParser {
 					this.stockholmStructure = new StockholmStructure();
 					this.stockholmStructure.getFileAnnotation().setFormat(header[1]);
 					this.stockholmStructure.getFileAnnotation().setVersion(header[2]);
-				} else if (line.trim().equals("//")) {
+				} else if ("//".equals(line.trim())) {
 					// status = STATUS_OUTSIDE_FILE;
 					break;// should we just break immediately or jump next empty lines?
 				} else /* if (!line.startsWith("#")) */{

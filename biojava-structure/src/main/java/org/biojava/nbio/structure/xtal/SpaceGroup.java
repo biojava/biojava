@@ -212,15 +212,15 @@ public class SpaceGroup implements Serializable {
 				sign = m.group(1);
 			}
 			double s = 1.0;
-			if (sign.equals("-")){
+			if ("-".equals(sign)){
 				s = -1.0;
 			}
 			String coord = m.group(2);
-			if (coord.equals("X")) {
+			if ("X".equals(coord)) {
 				coefficients[0] = s;
-			} else if (coord.equals("Y")) {
+			} else if ("Y".equals(coord)) {
 				coefficients[1] = s;
-			} else if (coord.equals("Z")) {
+			} else if ("Z".equals(coord)) {
 				coefficients[2] = s;
 			}
 		}

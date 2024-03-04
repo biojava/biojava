@@ -36,7 +36,7 @@ public class JmolSymmetryScriptGeneratorCn extends JmolSymmetryScriptGeneratorPo
 
 	public JmolSymmetryScriptGeneratorCn(RotationAxisAligner axisTransformation, String name) {
 		super(axisTransformation, name);
-		if (axisTransformation.getRotationGroup().getPointGroup().equals("C2")) {
+		if ("C2".equals(axisTransformation.getRotationGroup().getPointGroup())) {
 			setPolyhedron(new RectangularPrism(axisTransformation.getDimension().z*2, axisTransformation.getDimension().x*2, axisTransformation.getDimension().y*2));
 		} else {
 			Prism p = new Prism(axisTransformation.getRotationGroup().getRotation(0).getFold());
@@ -64,7 +64,7 @@ public class JmolSymmetryScriptGeneratorCn extends JmolSymmetryScriptGeneratorPo
 	@Override
 	public int getOrientationCount() {
 		//  the last two views (top, bottom) are not that interesting.
-		if (getAxisTransformation().getRotationGroup().getPointGroup().equals("C2")) {
+		if ("C2".equals(getAxisTransformation().getRotationGroup().getPointGroup())) {
 		    return getPolyhedron().getViewCount()-2;
 		}
 		return getPolyhedron().getViewCount();
@@ -77,7 +77,7 @@ public class JmolSymmetryScriptGeneratorCn extends JmolSymmetryScriptGeneratorPo
 	 */
 	@Override
 	public String getOrientationName(int index) {
-		if (getAxisTransformation().getRotationGroup().getPointGroup().equals("C2")) {
+		if ("C2".equals(getAxisTransformation().getRotationGroup().getPointGroup())) {
 			if (index == 0) {
 				return "Front C2 axis";
 			} else if (index == 2) {

@@ -591,13 +591,13 @@ public class CathInstallation implements CathDatabase{
 //                    String chainLetter = token[domIdx+segIdx]; // Redundant unless some domains cross chain boundaries.
 					sstart = Integer.parseInt( token[domIdx + segIdx + 1] );
 					String sstartInsertion = token[domIdx + segIdx + 2];
-					sstartInsertion = sstartInsertion.equals("-") ? "" : sstartInsertion;
+					sstartInsertion = "-".equals(sstartInsertion) ? "" : sstartInsertion;
 //                    String chainLetter = token[domIdx+segIdx+4]; // Redundant unless some segments cross chain boundaries.
 					segment.setStart(sstart + sstartInsertion);
 
 					sstop = Integer.parseInt( token[domIdx + segIdx + 4] );
 					String sstopInsertion = token[domIdx + segIdx + 5];
-					sstopInsertion = sstopInsertion.equals("-") ? "" : sstopInsertion;
+					sstopInsertion = "-".equals(sstopInsertion) ? "" : sstopInsertion;
 
 					segment.setStart(sstart + sstartInsertion);
 					segment.setStop(sstop + sstopInsertion);
@@ -617,12 +617,12 @@ public class CathInstallation implements CathDatabase{
 //                    String chainLetter = token[domIdx]; // Redundant unless some fragments cross chain boundaries.
 					fstart = Integer.parseInt( token[domIdx+1] );
 					String fstartInsertion = token[domIdx + 2];
-					fstartInsertion = fstartInsertion.equals("-") ? "" : fstartInsertion;
+					fstartInsertion = "-".equals(fstartInsertion) ? "" : fstartInsertion;
 					fragment.setStart(fstart + fstartInsertion);
 //                    String chainLetter = token[domIdx+3]; // Redundant unless some fragments cross chain boundaries.
 					fstop = Integer.parseInt( token[domIdx+4] );
 					String fstopInsertion = token[domIdx + 5];
-					fstopInsertion = fstopInsertion.equals("-") ? "" : fstopInsertion;
+					fstopInsertion = "-".equals(fstopInsertion) ? "" : fstopInsertion;
 					fragment.setStop(fstop + fstopInsertion);
 					flength = Integer.parseInt( token[domIdx + 6].replaceAll("[^0-9]","") );
 					fragment.setLength(flength);

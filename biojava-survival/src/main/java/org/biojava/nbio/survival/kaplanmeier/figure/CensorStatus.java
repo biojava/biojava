@@ -126,7 +126,7 @@ public class CensorStatus implements Comparable<CensorStatus> {
 			if (censored.equals(o.censored)) {
 				return 0;
 			}
-			if (censored.equals("0")) {
+			if ("0".equals(censored)) {
 				return -1;
 			} else {
 				return 1;

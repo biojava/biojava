@@ -422,7 +422,7 @@ public class EntityFinder {
 	private static int getNumGapsQuery(SequencePair<?, ?> pair) {
 		int numGaps = 0;
 		for (int alignmentIndex=1;alignmentIndex<=pair.getLength();alignmentIndex++) {
-			if (pair.getCompoundInQueryAt(alignmentIndex).getShortName().equals("-")) {
+			if ("-".equals(pair.getCompoundInQueryAt(alignmentIndex).getShortName())) {
 				numGaps++;
 			}
 		}
@@ -432,7 +432,7 @@ public class EntityFinder {
 	private static int getNumGapsTarget(SequencePair<?, ?> pair) {
 		int numGaps = 0;
 		for (int alignmentIndex=1;alignmentIndex<=pair.getLength();alignmentIndex++) {
-			if (pair.getCompoundInTargetAt(alignmentIndex).getShortName().equals("-")) {
+			if ("-".equals(pair.getCompoundInTargetAt(alignmentIndex).getShortName())) {
 				numGaps++;
 			}
 		}

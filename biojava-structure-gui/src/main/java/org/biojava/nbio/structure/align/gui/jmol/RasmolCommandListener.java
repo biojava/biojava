@@ -69,7 +69,7 @@ MouseListener {
 		// now comes history part:
 
 		// no need for history:
-		if ( cmd.equals("")) return;
+		if ( "".equals(cmd)) return;
 
 		// check last command in history
 		// if equivalent, don't add,

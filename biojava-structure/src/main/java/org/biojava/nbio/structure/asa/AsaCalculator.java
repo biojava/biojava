@@ -531,19 +531,19 @@ public class AsaCalculator {
 			return SULFUR_VDW;
 		}
 		else if (atom.getElement()==Element.N) {
-			if (atomCode.equals("NZ")) return TETRAHEDRAL_NITROGEN_VDW; // tetrahedral Nitrogen
+			if ("NZ".equals(atomCode)) return TETRAHEDRAL_NITROGEN_VDW; // tetrahedral Nitrogen
 			return TRIGONAL_NITROGEN_VDW;								// trigonal Nitrogen
 		}
 		else if (atom.getElement()==Element.C) { // it must be a carbon
-			if (atomCode.equals("C") ||
-					atomCode.equals("CE1") || atomCode.equals("CE2") || atomCode.equals("CE3") ||
-					atomCode.equals("CH2") ||
-					atomCode.equals("CZ") || atomCode.equals("CZ2") || atomCode.equals("CZ3")) {
+			if ("C".equals(atomCode) ||
+					"CE1".equals(atomCode) || "CE2".equals(atomCode) || "CE3".equals(atomCode) ||
+					"CH2".equals(atomCode) ||
+					"CZ".equals(atomCode) || "CZ2".equals(atomCode) || "CZ3".equals(atomCode)) {
 				return TRIGONAL_CARBON_VDW; 							// trigonal Carbon
 			}
-			else if (atomCode.equals("CA") || atomCode.equals("CB") ||
-					atomCode.equals("CE") ||
-					atomCode.equals("CG1") || atomCode.equals("CG2")) {
+			else if ("CA".equals(atomCode) || "CB".equals(atomCode) ||
+					"CE".equals(atomCode) ||
+					"CG1".equals(atomCode) || "CG2".equals(atomCode)) {
 				return TETRAHEDRAL_CARBON_VDW;							// tetrahedral Carbon
 			}
 			// the rest of the cases (CD, CD1, CD2, CG) depend on amino acid
@@ -567,8 +567,8 @@ public class AsaCalculator {
 
 				case 'Q':
 				case 'E':
-					if (atomCode.equals("CD")) return TRIGONAL_CARBON_VDW;
-					else if (atomCode.equals("CG")) return TETRAHEDRAL_CARBON_VDW;
+					if ("CD".equals(atomCode)) return TRIGONAL_CARBON_VDW;
+					else if ("CG".equals(atomCode)) return TETRAHEDRAL_CARBON_VDW;
 
 				default:
 					logger.info("Unexpected carbon atom {} for aminoacid {}, assigning its standard vdw radius", atomCode, aa);

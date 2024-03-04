@@ -258,19 +258,19 @@ public class JournalArticle implements Serializable {
 		}
 		refString.append(ref);
 		jrnlString.append(refString).append(eol);
-		if (!publisher.equals("")) {
+		if (!"".equals(publisher)) {
 			publString.append(publisher);
 			jrnlString.append(publString).append(eol);
 		}
-		if (!refn.equals("")) {
+		if (!"".equals(refn)) {
 			refnString.append(refn);
 			jrnlString.append(refnString).append(eol);
 		}
-		if (!pmid.equals("")) {
+		if (!"".equals(pmid)) {
 			pmidString.append(pmid);
 			jrnlString.append(pmidString).append(eol);
 		}
-		if (!doi.equals("")) {
+		if (!"".equals(doi)) {
 			doiString.append(doi);
 			jrnlString.append(doiString).append(eol);
 		}

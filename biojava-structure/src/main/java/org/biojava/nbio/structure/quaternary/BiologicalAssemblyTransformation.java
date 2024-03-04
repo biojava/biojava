@@ -268,10 +268,10 @@ public class BiologicalAssemblyTransformation implements Cloneable, Comparable<B
 				Node block       = listOfChildren.item(i);
 
 				// we only look at blocks.
-				if ( block.getNodeName().equals("matrix"))
+				if ( "matrix".equals(block.getNodeName()))
 					max.setRotationMatrix(getMatrixFromXML(block));
 
-				if ( block.getNodeName().equals("shift"))
+				if ( "shift".equals(block.getNodeName()))
 					max.setTranslation(getVectorFromXML(block));
 
 			}

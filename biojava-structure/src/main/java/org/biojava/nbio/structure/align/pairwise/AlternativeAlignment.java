@@ -677,11 +677,11 @@ public class AlternativeAlignment implements Serializable{
 			String pdb2 = p2.getResidueNumber().toString();
 
 
-			if ( ! cid1.equals(" "))
+			if ( ! " ".equals(cid1))
 				pdb1 += ":" + cid1;
 
 
-			if ( ! cid2.equals(" "))
+			if ( ! " ".equals(cid2))
 				pdb2 += ":" + cid2;
 
 

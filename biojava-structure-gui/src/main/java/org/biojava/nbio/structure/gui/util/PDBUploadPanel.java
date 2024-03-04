@@ -171,7 +171,7 @@ implements StructurePairSelector {
 
 			URL u ;
 
-			if ( chainId.getText() == null || chainId.getText().equals("")){
+			if ( chainId.getText() == null || "".equals(chainId.getText())){
 
 				u = f.toURI().toURL();
 			} else {

@@ -99,12 +99,12 @@ public class WebStartMain
 
 		String arg0 = args[0];
 
-		if (! (arg0.equals("fatcat") ||
-				arg0.equals("biojava") ||
-				arg0.equals("fatcat_flexible") ||
-				arg0.equals("ce") ||
-				arg0.equals("ce_cp") ||
-				arg0.equals("sw")
+		if (! ("fatcat".equals(arg0) ||
+				"biojava".equals(arg0) ||
+				"fatcat_flexible".equals(arg0) ||
+				"ce".equals(arg0) ||
+				"ce_cp".equals(arg0) ||
+				"sw".equals(arg0)
 		)){
 			JOptionPane.showMessageDialog(null,
 					"Wrong arguments. First argument has to be \"fatcat\", \"ce\", \"ce_cp\", \"sw\", \"fatcat_flexible\", or \"biojava\", but got " + arg0);
@@ -139,21 +139,21 @@ public class WebStartMain
 			System.out.println("done reading structures");
 
 
-			if (arg0.equalsIgnoreCase("ce") ||
-					arg0.equalsIgnoreCase("ce_cp") ||
-					arg0.equalsIgnoreCase("sw") ||
-					arg0.equalsIgnoreCase("fatcat") ||
-					arg0.equalsIgnoreCase("fatcat_flexible")){
+			if ("ce".equalsIgnoreCase(arg0) ||
+					"ce_cp".equalsIgnoreCase(arg0) ||
+					"sw".equalsIgnoreCase(arg0) ||
+					"fatcat".equalsIgnoreCase(arg0) ||
+					"fatcat_flexible".equalsIgnoreCase(arg0)){
 				try {
 
 					StructureAlignment algorithm ;
-					if ( arg0.equalsIgnoreCase("ce"))
+					if ( "ce".equalsIgnoreCase(arg0))
 						algorithm = StructureAlignmentFactory.getAlgorithm(CeMain.algorithmName);
-					else if ( arg0.equalsIgnoreCase("ce_cp"))
+					else if ( "ce_cp".equalsIgnoreCase(arg0))
 						algorithm = StructureAlignmentFactory.getAlgorithm(CeCPMain.algorithmName);
-					else if ( arg0.equalsIgnoreCase("fatcat"))
+					else if ( "fatcat".equalsIgnoreCase(arg0))
 						algorithm = StructureAlignmentFactory.getAlgorithm(FatCatRigid.algorithmName);
-					else if ( arg0.equalsIgnoreCase("fatcat_flexible"))
+					else if ( "fatcat_flexible".equalsIgnoreCase(arg0))
 						algorithm = StructureAlignmentFactory.getAlgorithm(FatCatFlexible.algorithmName);
 					else
 						algorithm = new SmithWaterman3Daligner();
@@ -167,7 +167,7 @@ public class WebStartMain
 				}
 
 
-			} else if ( arg0.equalsIgnoreCase("biojava")){
+			} else if ( "biojava".equalsIgnoreCase(arg0)){
 				try {
 					//showBiojava(ca1,ca2);
 				} catch (Exception e){

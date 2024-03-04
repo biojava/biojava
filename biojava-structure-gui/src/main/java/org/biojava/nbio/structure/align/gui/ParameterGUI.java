@@ -108,7 +108,7 @@ public class ParameterGUI extends JFrame{
 
 				String[] values = new String[]{"true","false"};
 				JComboBox jcbox = new JComboBox(values);
-				if ( data.equalsIgnoreCase("false"))
+				if ( "false".equalsIgnoreCase(data))
 					jcbox.setSelectedIndex(1);
 				else
 					jcbox.setSelectedIndex(0);
@@ -203,7 +203,7 @@ public class ParameterGUI extends JFrame{
 				field.updateUI();
 			}  else if ( type == Boolean.class){
 				JComboBox field = (JComboBox)  textFields.get(i);
-				if ( data.toString().equalsIgnoreCase("false"))
+				if ( "false".equalsIgnoreCase(data.toString()))
 					field.setSelectedIndex(1);
 				else
 					field.setSelectedIndex(0);

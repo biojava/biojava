@@ -49,7 +49,7 @@ public class ConfigXMLHandler extends DefaultHandler {
 	@Override
 	public void startElement (String uri, String name, String qName, Attributes atts){
 		//System.out.println("new element >" + name + "< >" + qName+"<" + uri);
-		if ( qName.equals("PDBFILEPATH")){
+		if ( "PDBFILEPATH".equals(qName)){
 
 			String path = atts.getValue("path");
 			// default path is system tmp...
@@ -58,7 +58,7 @@ public class ConfigXMLHandler extends DefaultHandler {
 
 			//Deprecated property; supported for backwards compatibility
 			String autoFetch = atts.getValue("autoFetch");
-			if(autoFetch == null || !autoFetch.equals("false")) {
+			if(autoFetch == null || !"false".equals(autoFetch)) {
 				config.setFetchBehavior(FetchBehavior.DEFAULT);
 			} else {
 				config.setFetchBehavior(FetchBehavior.LOCAL_ONLY);

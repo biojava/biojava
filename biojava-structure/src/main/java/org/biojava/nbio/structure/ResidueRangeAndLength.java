@@ -100,7 +100,7 @@ public class ResidueRangeAndLength extends ResidueRange {
 		String chain = rr.getChainName();
 
 		// handle special "_" chain
-		if(chain == null || chain.equals("_")) {
+		if(chain == null || "_".equals(chain)) {
 			ResidueNumber first = map.getNavMap().firstKey();
 			chain = first.getChainName();
 			// Quick check for additional chains. Not guaranteed if the atoms are out of order.

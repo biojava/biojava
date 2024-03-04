@@ -233,12 +233,12 @@ public class SiftsXMLParser {
 
 				//	System.out.println(dbSource + " " + dbCoordSys + " " + dbAccessionId + " " + dbResNum + " " + dbResName + " " + dbChainId);
 
-					if ( dbSource.equals("PDB") && ( dbCoordSys.equals("PDBresnum"))){
+					if ( "PDB".equals(dbSource) && "PDBresnum".equals(dbCoordSys)){
 						res.setPdbResNum(dbResNum);
 						res.setPdbResName(dbResName);
 						res.setChainId(dbChainId);
 						res.setPdbId(dbAccessionId);
-					} else if ( dbSource.equals("UniProt")){
+					} else if ( "UniProt".equals(dbSource)){
 						res.setUniProtPos(Integer.parseInt(dbResNum));
 						res.setUniProtResName(dbResName);
 						res.setUniProtAccessionId(dbAccessionId);

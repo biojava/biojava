@@ -61,7 +61,7 @@ public class GeneNamesParser {
 			logger.info("got {} gene names", geneNames.size());
 
 			for ( GeneName g : geneNames){
-				if ( g.getApprovedSymbol().equals("FOLH1"))
+				if ( "FOLH1".equals(g.getApprovedSymbol()))
 					logger.info("Gene Name: {}", g);
 			}
 			// and returns a list of beans that contains key-value pairs for each gene name
