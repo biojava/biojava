@@ -217,7 +217,8 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
                 isHetAtmInFile = true;
             }
 
-            String insCodeString = pdbxPDBInsCode.get(atomIndex);
+            String insCodeString = pdbxPDBInsCode.isDefined()? pdbxPDBInsCode.get(atomIndex) : null;
+
             Character insCode = null;
             if (insCodeString != null && !insCodeString.isEmpty() && !"?".equals(insCodeString)) {
                 insCode = insCodeString.charAt(0);
@@ -246,7 +247,8 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
             }
 
             String asymId = labelAsymId.get(atomIndex);
-            String authId = authAsymId.get(atomIndex);
+            String authId = authAsymId.isDefined()? authAsymId.get(atomIndex) : asymId;
+
             if (currentChain == null) {
                 currentChain = new ChainImpl();
                 currentChain.setName(authId);
@@ -277,7 +279,9 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
                 }
             }
 
-            ResidueNumber residueNumber = new ResidueNumber(authId, authSeqId.get(atomIndex), insCode);
+            int authSeqIdInt = authSeqId.isDefined()? authSeqId.get(atomIndex) : (int)seqId;
+
+            ResidueNumber residueNumber = new ResidueNumber(authId, authSeqIdInt, insCode);
 
             String recordName = groupPDB.get(atomIndex);
             String compId = labelCompId.get(atomIndex);
@@ -289,7 +293,7 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
             }
 
             Group altGroup = null;
-            String altLocation = labelAltId.get(atomIndex);
+            String altLocation = labelAltId.isDefined()? labelAltId.get(atomIndex) : null;
 
             if (startOfNewChain) {
                 currentGroup = createGroup(recordName, oneLetterCode, compId, seqId);
