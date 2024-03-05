@@ -375,10 +375,10 @@ public class FragmentJoiner {
 		List<JointFragments> fll = new ArrayList<JointFragments>();
 
 		double adiff = angleDiff * Math.PI / 180d;
-		logger.debug("addiff" + adiff);
+		logger.debug("addiff{}", adiff);
 		//distance between two unit vectors with angle adiff
 		double ddiff = Math.sqrt(2.0-2.0*Math.cos(adiff));
-		logger.debug("ddiff" + ddiff);
+		logger.debug("ddiff{}", ddiff);
 
 		// the fpairs in the flist have to be sorted with respect to their positions
 

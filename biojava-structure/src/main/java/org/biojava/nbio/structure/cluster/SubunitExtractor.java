@@ -82,7 +82,7 @@ public class SubunitExtractor {
 		// Calculate the minimum length of a Subunit
 		int adjustedMinLen = calcAdjustedMinimumSequenceLength(subunits,
 				absMinLen, fraction, minLen);
-		logger.debug("Adjusted minimum sequence length: " + adjustedMinLen);
+		logger.debug("Adjusted minimum sequence length: {}", adjustedMinLen);
 
 		// Filter out short Subunits
 		for (int s = subunits.size() - 1; s >= 0; s--) {

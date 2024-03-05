@@ -128,8 +128,7 @@ public class CeSymmIterative {
 		if ((atoms.length <= params.getWinSize()
 				|| atoms.length <= params.getMinCoreLength())
 				&& !levels.isEmpty()) {
-			logger.debug("Aborting iteration due to insufficient Atom "
-					+ "array length: %d", atoms.length);
+			logger.debug("Aborting iteration due to insufficient Atom array length: %d", atoms.length);
 			return;
 		}
 

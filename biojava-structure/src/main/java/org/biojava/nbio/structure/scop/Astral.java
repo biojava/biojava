@@ -222,7 +222,7 @@ public class Astral {
 						String scopId = line.split("\\s")[0].substring(1);
 						names.add(scopId);
 						if (i % 1000 == 0) {
-							logger.debug("Reading ASTRAL line for " + scopId);
+							logger.debug("Reading ASTRAL line for {}", scopId);
 						}
 						i++;
 					} catch (RuntimeException e) {

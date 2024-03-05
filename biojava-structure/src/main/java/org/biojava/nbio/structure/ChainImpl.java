@@ -597,14 +597,7 @@ public class ChainImpl implements Chain {
 				max = GroupType.HETATM;
 			}
 		}
-		logger.debug(
-				"Ratio of residues to total for chain with asym_id {} is below {}. Assuming it is a {} chain. "
-						+ "Counts: # aa residues: {}, # nuc residues: {}, # non-water het residues: {}, # waters: {}, "
-						+ "ratio aa/total: {}, ratio nuc/total: {}",
-				getId(), ratioResiduesToTotal, max, sizeAminos,
-				sizeNucleotides, sizeHetatomsWithoutWater, sizeWaters,
-				(double) sizeAminos / (double) fullSize,
-				(double) sizeNucleotides / (double) fullSize);
+		logger.debug("Ratio of residues to total for chain with asym_id {} is below {}. Assuming it is a {} chain. Counts: # aa residues: {}, # nuc residues: {}, # non-water het residues: {}, # waters: {}, ratio aa/total: {}, ratio nuc/total: {}{}{}{}{}", getId(), ratioResiduesToTotal, max, sizeAminos, sizeNucleotides, sizeHetatomsWithoutWater, sizeWaters, (double) sizeAminos, (double) fullSize, (double) sizeNucleotides, (double) fullSize);
 
 		return max;
 	}

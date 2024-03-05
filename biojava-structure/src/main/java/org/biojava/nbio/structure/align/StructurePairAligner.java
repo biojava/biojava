@@ -407,8 +407,8 @@ public class StructurePairAligner {
 
 		// step 1 get all Diagonals of length X that are similar between both
 		// structures
-		logger.debug(" length atoms1:" + ca1.length);
-		logger.debug(" length atoms2:" + ca2.length);
+		logger.debug(" length atoms1:{}", ca1.length);
+		logger.debug(" length atoms2:{}", ca2.length);
 
 		logger.debug("step 1 - get fragments with similar intramolecular distances ");
 

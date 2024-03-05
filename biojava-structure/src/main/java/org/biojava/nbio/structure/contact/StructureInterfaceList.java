@@ -468,13 +468,13 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 	public static StructureInterfaceList calculateInterfaces(Structure struc) {
 		CrystalBuilder builder = new CrystalBuilder(struc);
 		StructureInterfaceList interfaces = builder.getUniqueInterfaces();
-		logger.debug("Calculating ASA for "+interfaces.size()+" potential interfaces");
+		logger.debug("Calculating ASA for {} potential interfaces", interfaces.size());
 		interfaces.calcAsas(StructureInterfaceList.DEFAULT_ASA_SPHERE_POINTS, //fewer for performance
 				Runtime.getRuntime().availableProcessors(),
 				StructureInterfaceList.DEFAULT_MIN_COFACTOR_SIZE);
 		interfaces.removeInterfacesBelowArea();
 		interfaces.getClusters();
-		logger.debug("Found "+interfaces.size()+" interfaces");
+		logger.debug("Found {} interfaces", interfaces.size());
 		return interfaces;
 	}
 

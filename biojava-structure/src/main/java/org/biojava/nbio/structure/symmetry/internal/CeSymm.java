@@ -431,7 +431,7 @@ public class CeSymm {
 					msa = optimizer.optimize();
 					result.setMultipleAlignment(msa);
 				} catch (RefinerFailedException e) {
-					logger.debug("Optimization failed:" + e.getMessage());
+					logger.debug("Optimization failed:{}", e.getMessage());
 				}
 			}
 		}

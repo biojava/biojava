@@ -140,7 +140,7 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
 			throw new StructureException("Empty alignment for sequences "+s1+" and "+s2);
 		}
 
-		logger.debug("Smith-Waterman alignment is: "+pair.toString(100));
+		logger.debug("Smith-Waterman alignment is: {}", pair.toString(100));
 
 		// convert to a 3D alignment...
 		afpChain = convert(ca1,ca2,pair, smithWaterman);

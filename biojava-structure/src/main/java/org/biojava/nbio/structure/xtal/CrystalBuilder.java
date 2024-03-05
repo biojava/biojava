@@ -280,12 +280,12 @@ public class CrystalBuilder {
 			int neighbors = (2*numCells+1)*(2*numCells+1)*(2*numCells+1)-1;
 			int auTrials = (numPolyChainsAu*(numPolyChainsAu-1))/2;
 			int trials = numPolyChainsAu*numOperatorsSg*numPolyChainsAu*neighbors;
-			logger.debug("Chain clash trials within original AU: "+auTrials);
+			logger.debug("Chain clash trials within original AU: {}", auTrials);
 			logger.debug(
 					"Chain clash trials between the original AU and the neighbouring "+neighbors+
 					" whole unit cells ("+numCells+" neighbours)" +
 					"(2x"+numPolyChainsAu+"chains x "+numOperatorsSg+"AUs x "+neighbors+"cells) : "+trials);
-			logger.debug("Total trials: "+(auTrials+trials));
+			logger.debug("Total trials: {}", (auTrials+trials));
 		}
 
 		List<Chain> polyChains = structure.getPolyChains();
@@ -404,12 +404,12 @@ public class CrystalBuilder {
 		}
 
 		end = System.currentTimeMillis();
-		logger.debug("\n"+trialCount+" chain-chain clash trials done. Time "+(end-start)/1000+"s");
-		logger.debug("  skipped (not overlapping AUs)       : "+skippedAUsNoOverlap);
-		logger.debug("  skipped (not overlapping chains)    : "+skippedChainsNoOverlap);
-		logger.debug("  skipped (sym redundant op pairs)    : "+skippedRedundant);
-		logger.debug("  skipped (sym redundant self op)     : "+skippedSelfEquivalent);
-		logger.debug("Found "+set.size()+" interfaces.");
+		logger.debug("\n{} chain-chain clash trials done. Time {}{}s", trialCount, (end-start), 1000);
+		logger.debug("  skipped (not overlapping AUs)       : {}", skippedAUsNoOverlap);
+		logger.debug("  skipped (not overlapping chains)    : {}", skippedChainsNoOverlap);
+		logger.debug("  skipped (sym redundant op pairs)    : {}", skippedRedundant);
+		logger.debug("  skipped (sym redundant self op)     : {}", skippedSelfEquivalent);
+		logger.debug("Found {} interfaces.", set.size());
 	}
 
 

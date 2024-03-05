@@ -212,7 +212,7 @@ public class FileDownloadUtils {
 		if(size == -1) {
 			logger.warn("could not find expected file size for resource {}.", resourceUrlConnection.getURL());
 		} else {
-			logger.debug("Content-Length: " + size);
+			logger.debug("Content-Length: {}", size);
 			File sizeFile = new File(localDestination.getParentFile(), localDestination.getName() + SIZE_EXT);
 			try (PrintStream sizePrintStream = new PrintStream(sizeFile)) {
 				sizePrintStream.print(size);

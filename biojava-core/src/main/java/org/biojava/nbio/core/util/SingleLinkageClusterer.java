@@ -135,7 +135,7 @@ public class SingleLinkageClusterer {
 		dendrogram = new LinkedPair[numItems-1];
 
 
-		logger.debug("Initial matrix: \n"+matrixToString());
+		logger.debug("Initial matrix: \n{}", matrixToString());
 
 
 		for (int m=0;m<numItems-1;m++) {
@@ -309,11 +309,11 @@ public class SingleLinkageClusterer {
 					}
 				}
 
-				logger.debug("Within cutoff:     "+dendrogram[i]);
+				logger.debug("Within cutoff:     {}", dendrogram[i]);
 
 			} else {
 
-				logger.debug("Not within cutoff: "+dendrogram[i]);
+				logger.debug("Not within cutoff: {}", dendrogram[i]);
 
 			}
 		}
@@ -344,7 +344,7 @@ public class SingleLinkageClusterer {
 
 		}
 
-		logger.debug("Clusters: \n"+clustersToString(finalClusters));
+		logger.debug("Clusters: \n{}", clustersToString(finalClusters));
 
 		return finalClusters;
 	}

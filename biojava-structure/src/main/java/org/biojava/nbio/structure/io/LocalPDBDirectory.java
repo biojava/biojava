@@ -436,7 +436,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 				// delete file
 				boolean success = existing.delete();
 				if(success) {
-					logger.debug("Deleting "+existing.getAbsolutePath());
+					logger.debug("Deleting {}", existing.getAbsolutePath());
 				}
 				deleted = deleted || success;
 
@@ -445,7 +445,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 				if(parent != null) {
 					success = parent.delete();
 					if(success) {
-						logger.debug("Deleting "+parent.getAbsolutePath());
+						logger.debug("Deleting {}", parent.getAbsolutePath());
 					}
 				}
 
