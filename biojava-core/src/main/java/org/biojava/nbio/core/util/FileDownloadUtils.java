@@ -22,7 +22,6 @@
 package org.biojava.nbio.core.util;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
@@ -34,13 +33,8 @@ import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.channels.Channels;
-import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.SimpleFileVisitor;
+import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Scanner;
 
@@ -58,39 +52,6 @@ public class FileDownloadUtils {
 	}
 
 	/**
-	 * Copy the content of file src to dst TODO since java 1.7 this is provided
-	 * in java.nio.file.Files
-	 *
-	 * @param src
-	 * @param dst
-	 * @throws IOException
-	 */
-	@SuppressWarnings("resource")
-	public static void copy(File src, File dst) throws IOException {
-
-		// Took following recipe from
-		// http://stackoverflow.com/questions/106770/standard-concise-way-to-copy-a-file-in-java
-		// The nio package seems to be the most efficient way to copy a file
-		FileChannel source = null;
-		FileChannel destination = null;
-
-		try {
-			// we need the supress warnings here (the warning that the stream is not closed is harmless)
-			// see http://stackoverflow.com/questions/12970407/does-filechannel-close-close-the-underlying-stream
-			source = new FileInputStream(src).getChannel();
-			destination = new FileOutputStream(dst).getChannel();
-			destination.transferFrom(source, 0, source.size());
-		} finally {
-			if (source != null) {
-				source.close();
-			}
-			if (destination != null) {
-				destination.close();
-			}
-		}
-	}
-
-	/**
 	 * Gets the file extension of a file, excluding '.'.
 	 * If the file name has no extension the file name is returned.
 	 * @param f a File
@@ -100,7 +61,7 @@ public class FileDownloadUtils {
 		String fileName = f.getName();
 		String ext = "";
 		int mid = fileName.lastIndexOf(".");
-		ext = fileName.substring(mid + 1, fileName.length());
+		ext = fileName.substring(mid + 1);
 		return ext;
 	}
 
@@ -165,7 +126,7 @@ public class FileDownloadUtils {
 		}
 
 		logger.debug("Copying temp file [{}] to final location [{}]", tempFile, destination);
-		copy(tempFile, destination);
+		Files.copy(tempFile.toPath(), destination.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
 		// delete the tmp file
 		tempFile.delete();
@@ -252,24 +213,20 @@ public class FileDownloadUtils {
 	public static boolean validateFile(File localFile) {
 		File sizeFile = new File(localFile.getParentFile(), localFile.getName() + SIZE_EXT);
 		if(sizeFile.exists()) {
-			Scanner scanner = null;
-			try {
-				scanner = new Scanner(sizeFile);
-				long expectedSize = scanner.nextLong();
-				long actualLSize = localFile.length();
-				if (expectedSize != actualLSize) {
-					logger.warn("File [{}] size ({}) does not match expected size ({}).", localFile, actualLSize, expectedSize);
-					return false;
-				}
-			} catch (FileNotFoundException e) {
-				logger.warn("could not validate size of file [{}] because no size metadata file exists.", localFile);
-			} finally {
-				scanner.close();
-			}
+            try (Scanner scanner = new Scanner(sizeFile)) {
+                long expectedSize = scanner.nextLong();
+                long actualSize = localFile.length();
+                if (expectedSize != actualSize) {
+                    logger.warn("File [{}] size ({}) does not match expected size ({}).", localFile, actualSize, expectedSize);
+                    return false;
+                }
+            } catch (FileNotFoundException e) {
+                logger.warn("could not validate size of file [{}] because no size metadata file exists.", localFile);
+            }
 		}
 
 		File[] hashFiles = localFile.getParentFile().listFiles(new FilenameFilter() {
-			String hashPattern = String.format("%s%s_(%s|%s|%s)", localFile.getName(), HASH_EXT, Hash.MD5, Hash.SHA1, Hash.SHA256);
+			final String hashPattern = String.format("%s%s_(%s|%s|%s)", localFile.getName(), HASH_EXT, Hash.MD5, Hash.SHA1, Hash.SHA256);
 			@Override
 			public boolean accept(File dir, String name) {
 				return name.matches(hashPattern);
@@ -401,7 +358,7 @@ public class FileDownloadUtils {
 	public static void deleteDirectory(Path dir) throws IOException {
 		if(dir == null || !Files.exists(dir))
 			return;
-		Files.walkFileTree(dir, new SimpleFileVisitor<Path>() {
+		Files.walkFileTree(dir, new SimpleFileVisitor<>() {
 	        @Override
 	        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
 	            Files.delete(file);

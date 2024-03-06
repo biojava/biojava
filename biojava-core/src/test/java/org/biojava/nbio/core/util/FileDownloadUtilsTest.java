@@ -8,8 +8,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.URL;
@@ -19,43 +17,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 class FileDownloadUtilsTest {
-
-    @Nested
-    class FileCopy {   
-        
-        private File createSrcFile () throws IOException {
-            byte [] toSave = new byte []{1,2,3,4,5};
-            File src = Files.createTempFile("test", ".dat").toFile();
-            try (FileOutputStream fos = new FileOutputStream(src);){
-                fos.write(toSave);
-            }
-            return src;
-        }
-
-        @Test
-        void copyFile() throws IOException {
-            File src = createSrcFile();
-            //sanity check
-            assertEquals(5, src.length());
-            File dest = Files.createTempFile("dest", ".dat").toFile();
-            assertEquals(0, dest.length());
-            FileDownloadUtils.copy(src, dest);
-            assertEquals(5, dest.length());
-
-            //original is unaffected
-            assertEquals(5, src.length());
-            
-            // bytes are identical
-            try (FileInputStream fis1 = new FileInputStream(src);
-                FileInputStream fis2 =  new FileInputStream(dest)) {
-                int b = -1;
-                while (( b = fis1.read()) != -1) {
-                    int b2 = fis2.read();
-                    assertEquals (b, b2);
-                }
-            }
-        }
-    }
 
     @Nested
     class FileExtension {
