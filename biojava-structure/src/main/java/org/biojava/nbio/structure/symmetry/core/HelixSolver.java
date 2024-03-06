@@ -87,7 +87,7 @@ public class HelixSolver {
 
 		for (Entry<Integer[], Integer> entry : interactionMap.entrySet()) {
 			Integer[] pair = entry.getKey();
-			logger.debug("HelixSolver: pair: " + Arrays.toString(pair));
+			logger.debug("HelixSolver: pair: {}", Arrays.toString(pair));
 
 			int contacts = entry.getValue();
 			Point3d[] h1 = CalcPoint.clonePoint3dArray(repeatUnits.get(pair[0]));
@@ -125,7 +125,7 @@ public class HelixSolver {
 				continue;
 			}
 			permutations.add(permutation);
-			logger.debug("Permutation: " + permutation);
+			logger.debug("Permutation: {}", permutation);
 
 
 			// keep track of which subunits are permuted
@@ -238,10 +238,10 @@ public class HelixSolver {
 					repeatUnitCenters.get(pair[1]));
 			angle = getAngle(transformation);
 
-			logger.debug("Trace rmsd: " + traceRmsd);
-			logger.debug("Trace rise: " + rise);
-			logger.debug("Trace angle: " + Math.toDegrees(angle));
-			logger.debug("Permutation: " + permutation);
+			logger.debug("Trace rmsd: {}", traceRmsd);
+			logger.debug("Trace rise: {}", rise);
+			logger.debug("Trace angle: {}", Math.toDegrees(angle));
+			logger.debug("Permutation: {}", permutation);
 
 			if (traceRmsd > parameters.getRmsdThreshold()) {
 				continue;
@@ -280,7 +280,7 @@ public class HelixSolver {
 			helix.setFold(fold);
 			helix.setContacts(contacts);
 			helix.setRepeatUnits(unit.getRepeatUnitIndices());
-			logger.debug("Layerlines: " + helix.getLayerLines());
+			logger.debug("Layerlines: {}", helix.getLayerLines());
 
 			for (List<Integer> line : helix.getLayerLines()) {
 				maxLayerLineLength = Math.max(maxLayerLineLength, line.size());

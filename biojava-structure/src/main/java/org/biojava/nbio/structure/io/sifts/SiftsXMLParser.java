@@ -131,13 +131,13 @@ public class SiftsXMLParser {
 
 					SiftsSegment s = getSiftsSegment(el);
 
-					logger.debug("new segment: " + s);
+					logger.debug("new segment: {}", s);
 					entity.addSegment(s);
 
 				}
 			}
 
-			logger.debug("new SIFTS entity: " + entity);
+			logger.debug("new SIFTS entity: {}", entity);
 			return entity;
 		}
 

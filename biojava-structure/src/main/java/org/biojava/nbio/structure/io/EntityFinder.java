@@ -297,7 +297,7 @@ public class EntityFinder {
 
 					logger.debug("Alignment for chain pair {},{}: identity: {}, gap coverage 1: {}, gap coverage 2: {}",
 							c1.getId(), c2.getId(), String.format("%4.2f",identity), String.format("%4.2f",gapCov1), String.format("%4.2f",gapCov2));
-					logger.debug("\n"+pair.toString(100));
+					logger.debug("\n{}", pair.toString(100));
 
 					if (identity > IDENTITY_THRESHOLD && gapCov1<GAP_COVERAGE_THRESHOLD && gapCov2<GAP_COVERAGE_THRESHOLD) {
 						if (	!chainIds2entities.containsKey(c1.getId()) &&

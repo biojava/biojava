@@ -127,7 +127,7 @@ public class SerializableCache <K,V>{
 
 		try{
 
-			logger.debug("Reloading from cache " + f.getAbsolutePath());
+			logger.debug("Reloading from cache {}", f.getAbsolutePath());
 
 			FileInputStream fis = new FileInputStream(f);
 			ObjectInputStream ois = new ObjectInputStream(fis);

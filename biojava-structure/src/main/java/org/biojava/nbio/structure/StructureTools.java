@@ -834,10 +834,7 @@ public class StructureTools {
 			for (String atomName : atomNames) {
 				Atom a = g.getAtom(atomName);
 				if (a == null) {
-					logger.debug("Group " + g.getResidueNumber() + " ("
-							+ g.getPDBName()
-							+ ") does not have the required atom '" + atomName
-							+ "'");
+					logger.debug("Group {} ({}) does not have the required atom '{}'", g.getResidueNumber(), g.getPDBName(), atomName);
 					// this group does not have a required atom, skip it...
 					thisGroupAllAtoms = false;
 					break;

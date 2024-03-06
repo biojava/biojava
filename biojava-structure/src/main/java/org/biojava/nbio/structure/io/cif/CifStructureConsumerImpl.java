@@ -560,8 +560,7 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
                 // If the entry describes a structure determined by a technique other than X-ray crystallography,
                 // cell is (sometimes!) a = b = c = 1.0, alpha = beta = gamma = 90 degrees
                 // if so we don't add and CrystalCell will be null
-                logger.debug("The crystal cell read from file does not have reasonable dimensions (at least one " +
-                        "dimension is below {}), discarding it.", CrystalCell.MIN_VALID_CELL_SIZE);
+                logger.debug("The crystal cell read from file does not have reasonable dimensions (at least one dimension is below {}), discarding it.", CrystalCell.MIN_VALID_CELL_SIZE);
                 return;
             }
 
@@ -617,7 +616,7 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
 
     @Override
     public void consumeDatabasePDBRev(DatabasePDBRev databasePDBrev) {
-        logger.debug("got a database revision:" + databasePDBrev);
+        logger.debug("got a database revision:{}", databasePDBrev);
 
         Date modDate = null;
         for (int rowIndex = 0; rowIndex < databasePDBrev.getRowCount(); rowIndex++) {
@@ -715,8 +714,7 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
                     // the group is actually a nucleotide group...
                     g = new NucleotideImpl();
                 } else {
-                    logger.debug("Residue {} {} is not a standard aminoacid or nucleotide, will create a het group " +
-                            "for it", entityPolySeq.getNum().get(rowIndex), entityPolySeq.getMonId().get(rowIndex));
+                    logger.debug("Residue {} {} is not a standard aminoacid or nucleotide, will create a het group for it", entityPolySeq.getNum().get(rowIndex), entityPolySeq.getMonId().get(rowIndex));
                     g = new HetatomImpl();
                 }
             }
@@ -1595,8 +1593,7 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
             if (lastResNum == null || !lastResNum.equals(currentResNum)) {
                 trimmedChain.addGroup(g);
             } else {
-                logger.debug("Removing seqres group because it seems to be repeated in entity_poly_seq, most likely " +
-                        "has hetero='y': {}", g);
+                logger.debug("Removing seqres group because it seems to be repeated in entity_poly_seq, most likely has hetero='y': {}", g);
             }
             lastResNum = currentResNum;
 

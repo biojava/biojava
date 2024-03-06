@@ -81,7 +81,7 @@ public class SiftsMappingProvider {
 		}
 		File dest = new File( hashDir, pdbId + ".sifts.xml.gz");
 
-		logger.debug("testing SIFTS file " + dest.getAbsolutePath());
+		logger.debug("testing SIFTS file {}", dest.getAbsolutePath());
 
 
 		if ( ! dest.exists()){

@@ -312,7 +312,7 @@ public class SeqRes2AtomAligner {
 			//			}
 
 			if ( seqResPos >= seqResGroups.size()){
-				logger.debug("seqres groups don't match atom indices " + seqResPos);
+				logger.debug("seqres groups don't match atom indices {}", seqResPos);
 				if ( atomResGroup instanceof AminoAcid )
 					return null;
 				else
@@ -521,7 +521,7 @@ public class SeqRes2AtomAligner {
 
 
 
-		logger.debug("Alignment:\n"+pair.toString(100));
+		logger.debug("Alignment:\n{}", pair.toString(100));
 
 
 		boolean noMatchFound = mapDNAChains(seqRes,atomRes,pair,seqresIndexPosition, atomIndexPosition );
@@ -617,7 +617,7 @@ public class SeqRes2AtomAligner {
 		}
 
 
-		logger.debug("Alignment:\n"+pair.toString(100));
+		logger.debug("Alignment:\n{}", pair.toString(100));
 
 
 		boolean noMatchFound = mapChains(seqRes,atomRes,pair,seqresIndexPosition, atomIndexPosition );

@@ -231,12 +231,12 @@ public class ChromosomeMappingTools {
 	 */
 	public static ChromPos getChromosomePosForCDScoordinate(int cdsNucleotidePosition, GeneChromosomePosition chromPos) {
 
-		logger.debug(" ? Checking chromosome position for CDS position " + cdsNucleotidePosition);
+		logger.debug(" ? Checking chromosome position for CDS position {}", cdsNucleotidePosition);
 
 		List<Integer> exonStarts = chromPos.getExonStarts();
 		List<Integer> exonEnds = chromPos.getExonEnds();
 
-		logger.debug(" Exons:" + exonStarts.size());
+		logger.debug(" Exons:{}", exonStarts.size());
 
 		int cdsStart = chromPos.getCdsStart();
 		int cdsEnd = chromPos.getCdsEnd();
@@ -378,7 +378,7 @@ public class ChromosomeMappingTools {
 
 					if ( tmp > (end - start ) ) {
 						tmp = (end - start );
-						logger.debug("changing tmp to " + tmp);
+						logger.debug("changing tmp to {}", tmp);
 					}
 					logger.debug("     " + cdsPos + " " + codingLength + " | " + (cdsPos - codingLength) + " | " + (end -start) + " | " + tmp);
 					logger.debug("     Exon        : " + format(start+1) + " - " + format(end) + " | " + format(end - start) + " | " + codingLength + " | " + (codingLength % 3));
@@ -397,7 +397,7 @@ public class ChromosomeMappingTools {
 			logger.debug("     coding length: " + codingLength + "(phase:" + (codingLength % 3) + ") CDS POS trying to map:" + cdsPos);
 		}
 
-		logger.debug("length exons: " + lengthExons);
+		logger.debug("length exons: {}", lengthExons);
 		// could not map, or map over the full length??
 		return new ChromPos(-1,-1);
 
@@ -811,11 +811,11 @@ public class ChromosomeMappingTools {
 
 		// the genetic coordinate is not in a coding region
 		if ( (chromPos < (cdsStart+base) ) || ( chromPos > (cdsEnd+base) ) ) {
-			logger.debug("The "+format(chromPos)+" position is not in a coding region");
+			logger.debug("The {} position is not in a coding region", format(chromPos));
 			return -1;
 		}
 
-		logger.debug("looking for CDS position for " +format(chromPos));
+		logger.debug("looking for CDS position for {}", format(chromPos));
 
 		// map the genetic coordinates of coding region on a stretch of a reverse strand
 		List<Range<Integer>> cdsRegions = getCDSRegions(exonStarts, exonEnds, cdsStart, cdsEnd);
@@ -858,11 +858,11 @@ public class ChromosomeMappingTools {
 
 		// the genetic coordinate is not in a coding region
 		if ( (chromPos < (cdsStart+base)) || ( chromPos > (cdsEnd+base) ) ) {
-			logger.debug("The "+format(chromPos)+" position is not in a coding region");
+			logger.debug("The {} position is not in a coding region", format(chromPos));
 			return -1;
 		}
 
-		logger.debug("looking for CDS position for " +format(chromPos));
+		logger.debug("looking for CDS position for {}", format(chromPos));
 
 		// map the genetic coordinate on a stretch of a reverse strand
 		List<Range<Integer>> cdsRegions = getCDSRegions(exonStarts, exonEnds, cdsStart, cdsEnd);

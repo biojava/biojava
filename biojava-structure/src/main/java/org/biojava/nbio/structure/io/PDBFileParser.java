@@ -369,7 +369,7 @@ public class PDBFileParser  {
 			pdbCode         = line.substring (62, min(len,66)).trim() ;
 			pdbId = pdbCode;
 
-			logger.debug("Parsing entry " + pdbId);
+			logger.debug("Parsing entry {}", pdbId);
 
 			PdbId pdbIdToSet;
 			if(pdbCode.isBlank()) {
@@ -917,14 +917,10 @@ public class PDBFileParser  {
 	 */
 	private void pdb_COMPND_Handler(String line) {
 
-		logger.debug("previousContinuationField  is "
-					+ previousContinuationField);
-		logger.debug("current continuationField  is "
-					+ continuationField);
-		logger.debug("current continuationString is "
-					+ continuationString);
-		logger.debug("current compound           is "
-					+ current_compound);
+		logger.debug("previousContinuationField  is {}", previousContinuationField);
+		logger.debug("current continuationField  is {}", continuationField);
+		logger.debug("current continuationString is {}", continuationString);
+		logger.debug("current compound           is {}", current_compound);
 
 
 		// In legacy PDB files the line ends with the PDB code and a serial number, chop those off!
@@ -979,13 +975,12 @@ public class PDBFileParser  {
 			if (previousContinuationField.equals(continuationField)
 					&& compndFieldValues.contains(continuationField)) {
 
-				logger.debug("Still in field " + continuationField);
-				logger.debug("token = " + token);
+				logger.debug("Still in field {}", continuationField);
+				logger.debug("token = {}", token);
 
 				continuationString = continuationString.concat(token + " ");
 
-				logger.debug("continuationString = "
-							+ continuationString);
+				logger.debug("continuationString = {}", continuationString);
 
 			}
 			if (!continuationField.equals(previousContinuationField)) {
@@ -1148,16 +1143,11 @@ public class PDBFileParser  {
 
 
 
-		logger.debug("current continuationNo     is "
-				+ continuationNr);
-		logger.debug("previousContinuationField  is "
-				+ previousContinuationField);
-		logger.debug("current continuationField  is "
-				+ continuationField);
-		logger.debug("current continuationString is "
-				+ continuationString);
-		logger.debug("current compound           is "
-				+ current_compound);
+		logger.debug("current continuationNo     is {}", continuationNr);
+		logger.debug("previousContinuationField  is {}", previousContinuationField);
+		logger.debug("current continuationField  is {}", continuationField);
+		logger.debug("current continuationString is {}", continuationString);
+		logger.debug("current compound           is {}", current_compound);
 
 
 		// following the docs, the last valid character should be 79, chop off the rest
@@ -1167,7 +1157,7 @@ public class PDBFileParser  {
 
 		line = line.substring(10, line.length());
 
-		logger.debug("LINE: >" + line + "<");
+		logger.debug("LINE: >{}<", line);
 
 		String[] fieldList = line.split("\\s+");
 
@@ -1216,12 +1206,11 @@ public class PDBFileParser  {
 			if (previousContinuationField.equals(continuationField)
 					&& sourceFieldValues.contains(continuationField)) {
 
-				logger.debug("Still in field " + continuationField);
+				logger.debug("Still in field {}", continuationField);
 
 				continuationString = continuationString.concat(token + " ");
 
-				logger.debug("continuationString = "
-							+ continuationString);
+				logger.debug("continuationString = {}", continuationString);
 			}
 			if (!continuationField.equals(previousContinuationField)) {
 
@@ -2174,7 +2163,7 @@ public class PDBFileParser  {
 	 */
 	private void pdb_DBREF_Handler(String line){
 
-		logger.debug("Parsing DBREF " + line);
+		logger.debug("Parsing DBREF {}", line);
 
 		DBRef dbref = new DBRef();
 		String idCode      = line.substring(7,11);
@@ -2385,7 +2374,7 @@ public class PDBFileParser  {
 
 		//  make a map of: SiteId to List<ResidueNumber>
 
-		logger.debug("Site Line:"+line);
+		logger.debug("Site Line:{}", line);
 
 
 		String siteID = line.substring(11, 14);
@@ -2398,7 +2387,7 @@ public class PDBFileParser  {
 			siteToResidueMap.put(siteID.trim(), siteResidues);
 
 			logger.debug(String.format("New Site made: %s %s", siteID,  siteResidues));
-			logger.debug("Now made " + siteMap.size() + " sites");
+			logger.debug("Now made {} sites", siteMap.size());
 
 		}
 
@@ -2414,7 +2403,7 @@ public class PDBFileParser  {
 		while (!"          ".equals((groupString = line.substring(0, 10)))) {
 			//groupstring: 'ARG H 221A'
 
-			logger.debug("groupString: '" + groupString + "'");
+			logger.debug("groupString: '{}'", groupString);
 
 			//set the residue name
 			//residueName = 'ARG'
@@ -2444,7 +2433,7 @@ public class PDBFileParser  {
 			ResidueNumber residueNumber = new ResidueNumber();
 
 
-			logger.debug("pdbCode: '" + resNum + insCode + "'");
+			logger.debug("pdbCode: '{}{}'", resNum, insCode);
 
 			residueNumber.setChainName(chainId);
 			residueNumber.setSeqNum(resNum);
@@ -2457,7 +2446,7 @@ public class PDBFileParser  {
 			line = line.substring(11);
 		}
 
-		logger.debug("Current SiteMap (contains "+ siteToResidueMap.keySet().size() + " sites):");
+		logger.debug("Current SiteMap (contains {} sites):", siteToResidueMap.keySet().size());
 		for (String key : siteToResidueMap.keySet()) {
 			logger.debug(key + " : " + siteToResidueMap.get(key));
 		}
@@ -2481,7 +2470,7 @@ public class PDBFileParser  {
 				//                    remark800Counter++;
 				String siteID = fields[1].trim();
 
-				logger.debug("siteID: '" + siteID +"'");
+				logger.debug("siteID: '{}'", siteID);
 
 				//fetch the siteResidues from the map
 				site = siteMap.get(siteID);
@@ -2491,8 +2480,8 @@ public class PDBFileParser  {
 					site = new Site(siteID, new ArrayList<Group>());
 					siteMap.put(site.getSiteID(), site);
 
-					logger.debug("New Site made: " + site);
-					logger.debug("Now made " + siteMap.size() + " sites");
+					logger.debug("New Site made: {}", site);
+					logger.debug("Now made {} sites", siteMap.size());
 
 				}
 			}
@@ -2500,7 +2489,7 @@ public class PDBFileParser  {
 				//                    remark800Counter++;
 				String evCode = fields[1].trim();
 
-				logger.debug("evCode: '" + evCode +"'");
+				logger.debug("evCode: '{}'", evCode);
 
 				//fetch the siteResidues from the map
 				site.setEvCode(evCode);
@@ -2509,12 +2498,12 @@ public class PDBFileParser  {
 				//                    remark800Counter++;
 				String desc = fields[1].trim();
 
-				logger.debug("desc: '" + desc +"'");
+				logger.debug("desc: '{}'", desc);
 
 				//fetch the siteResidues from the map
 				site.setDescription(desc);
 
-				logger.debug("Finished making REMARK 800 for site " + site.getSiteID());
+				logger.debug("Finished making REMARK 800 for site {}", site.getSiteID());
 				logger.debug(site.remark800toPDB());
 
 			}
@@ -3417,7 +3406,7 @@ public class PDBFileParser  {
 			if ("AUTH".equals(subField)) {
 				auth.append(line.substring(19, line.length()).trim());
 
-				logger.debug("AUTH '" + auth.toString() + "'");
+				logger.debug("AUTH '{}'", auth.toString());
 
 			}
 			if ("TITL".equals(subField)) {
@@ -3425,26 +3414,26 @@ public class PDBFileParser  {
 				//words on the join won't be concatenated
 				titl.append(line.substring(19, line.length()).trim()).append(" ");
 
-				logger.debug("TITL '" + titl.toString() + "'");
+				logger.debug("TITL '{}'", titl.toString());
 
 			}
 			if ("EDIT".equals(subField)) {
 				edit.append(line.substring(19, line.length()).trim());
 
-				logger.debug("EDIT '" + edit.toString() + "'");
+				logger.debug("EDIT '{}'", edit.toString());
 
 			}
 			//        JRNL        REF    NAT.IMMUNOL.                  V.   8   430 2007
 			if ("REF ".equals(subField)) {
 				ref.append(line.substring(19, line.length()).trim()).append(" ");
 
-				logger.debug("REF '" + ref.toString() + "'");
+				logger.debug("REF '{}'", ref.toString());
 
 			}
 			if ("PUBL".equals(subField)) {
 				publ.append(line.substring(19, line.length()).trim()).append(" ");
 
-				logger.debug("PUBL '" + publ.toString() + "'");
+				logger.debug("PUBL '{}'", publ.toString());
 
 			}
 			//        JRNL        REFN                   ISSN 1529-2908
@@ -3455,21 +3444,21 @@ public class PDBFileParser  {
 				}
 				refn.append(line.substring(35, line.length()).trim());
 
-				logger.debug("REFN '" + refn.toString() + "'");
+				logger.debug("REFN '{}'", refn.toString());
 
 			}
 			//        JRNL        PMID   17351618
 			if ("PMID".equals(subField)) {
 				pmid.append(line.substring(19, line.length()).trim());
 
-				logger.debug("PMID '" + pmid.toString() + "'");
+				logger.debug("PMID '{}'", pmid.toString());
 
 			}
 			//        JRNL        DOI    10.1038/NI1450
 			if ("DOI ".equals(subField)) {
 				doi.append(line.substring(19, line.length()).trim());
 
-				logger.debug("DOI '" + doi.toString() + "'");
+				logger.debug("DOI '{}'", doi.toString());
 
 			}
 		}
@@ -3509,7 +3498,7 @@ public class PDBFileParser  {
 
 		public JournalParser(String ref) {
 
-			logger.debug("JournalParser init '" + ref + "'");
+			logger.debug("JournalParser init '{}'", ref);
 
 
 			if ("TO BE PUBLISHED ".equals(ref)) {
@@ -3599,7 +3588,7 @@ public class PDBFileParser  {
 			if (!"    ".equals(journalString)) {
 				journalName = journalString;
 
-				logger.debug("JournalParser set journalName " + journalName);
+				logger.debug("JournalParser set journalName {}", journalName);
 
 			}
 		}
@@ -3649,14 +3638,14 @@ public class PDBFileParser  {
 			Author author = new Author();
 			author.setSurname(authors[0]);
 
-			logger.debug("Set consortium author name " + author.getSurname());
+			logger.debug("Set consortium author name {}", author.getSurname());
 
 			authorList.add(author);
 		} else {
 			for (int i = 0; i < authors.length; i++) {
 				String authorFullName = authors[i];
 
-				logger.debug("Building author " + authorFullName);
+				logger.debug("Building author {}", authorFullName);
 
 				Author author = new Author();
 				String regex = "\\.";
@@ -3679,7 +3668,7 @@ public class PDBFileParser  {
 				else if (authorNames.length == 1) {
 					author.setSurname(authorNames[0]);
 
-					logger.debug("Set consortium author name in multiple author block " + author.getSurname
+					logger.debug("Set consortium author name in multiple author block {}", author.getSurname
 								());
 
 				} else {
@@ -3693,14 +3682,14 @@ public class PDBFileParser  {
 						initials += initial + ".";
 					}
 
-					logger.debug("built initials '" + initials + "'");
+					logger.debug("built initials '{}'", initials);
 
 					author.setInitials(initials);
 					//surname is always last
 					int lastName = authorNames.length - 1;
 					String surname = authorNames[lastName];
 
-					logger.debug("built author surname " + surname);
+					logger.debug("built author surname {}", surname);
 
 					author.setSurname(surname);
 
