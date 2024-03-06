@@ -1,6 +1,15 @@
 BioJava Changelog
 -----------------
 
+BioJava 7.1.1
+==============================
+### Fixed
+* Now mmCIF files that have no author fields in atom_site can be read (e.g. from PyMol or ESMAtlas) #775 #1083
+* No evaluations of arguments in debug level log statements #1086 #789
+
+### Removed
+* Minor removal from biojava-core: FileDownloadUtils::copy, replaced by Files::copy
+
 BioJava 7.1.0
 ==============================
 ### Added
