@@ -152,9 +152,9 @@ public class GroupContactSet implements Serializable, Iterable<GroupContact>{
 	}
 
 	private Pair<ResidueIdentifier> getResIdPairFromContact(GroupContact groupContact) {
-		return new Pair<ResidueIdentifier>(
-				new ResidueIdentifier(groupContact.getPair().getFirst()),
-				new ResidueIdentifier(groupContact.getPair().getSecond()) );
-
+		Pair<Group> groupContactPair = groupContact.getPair();
+		ResidueIdentifier first = new ResidueIdentifier(groupContactPair.getFirst());
+		ResidueIdentifier second = new ResidueIdentifier(groupContactPair.getSecond());
+		return new Pair<ResidueIdentifier>(first, second);
 	}
 }

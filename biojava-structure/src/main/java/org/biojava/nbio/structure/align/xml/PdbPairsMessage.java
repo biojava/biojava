@@ -25,6 +25,7 @@
 package org.biojava.nbio.structure.align.xml;
 
 import org.biojava.nbio.structure.align.client.PdbPair;
+import org.biojava.nbio.structure.align.fatcat.FatCatRigid;
 
 import java.io.StringWriter;
 import java.util.SortedSet;
@@ -38,7 +39,7 @@ public class PdbPairsMessage {
 
 	public PdbPairsMessage(){
 
-		method = PdbPairXMLConverter.DEFAULT_METHOD_NAME;
+		method = FatCatRigid.algorithmName;
 
 		pairs = new TreeSet<PdbPair>();
 

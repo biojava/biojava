@@ -20,26 +20,14 @@
  */
 package org.biojava.nbio.structure.cluster;
 
-import org.biojava.nbio.alignment.Alignments;
 import org.biojava.nbio.alignment.Alignments.PairwiseSequenceAlignerType;
 import org.biojava.nbio.alignment.SimpleGapPenalty;
 import org.biojava.nbio.alignment.template.GapPenalty;
-import org.biojava.nbio.alignment.template.PairwiseSequenceAligner;
-import org.biojava.nbio.core.alignment.matrices.SubstitutionMatrixHelper;
 import org.biojava.nbio.core.alignment.template.SubstitutionMatrix;
 import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
-import org.biojava.nbio.core.sequence.ProteinSequence;
 import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
 import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.Chain;
-import org.biojava.nbio.structure.EntityInfo;
-import org.biojava.nbio.structure.Group;
-import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.align.StructureAlignment;
-import org.biojava.nbio.structure.align.StructureAlignmentFactory;
-import org.biojava.nbio.structure.align.ce.ConfigStrucAligParams;
-import org.biojava.nbio.structure.align.model.AFPChain;
 import org.biojava.nbio.structure.align.multiple.Block;
 import org.biojava.nbio.structure.align.multiple.BlockImpl;
 import org.biojava.nbio.structure.align.multiple.BlockSet;
@@ -49,7 +37,6 @@ import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsembleImpl;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentImpl;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
 import org.biojava.nbio.structure.align.multiple.util.ReferenceSuperimposer;
-import org.biojava.nbio.structure.quaternary.BiologicalAssemblyBuilder;
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetrySubunits;
 import org.biojava.nbio.structure.symmetry.internal.CESymmParameters;
 import org.biojava.nbio.structure.symmetry.internal.CeSymm;
@@ -57,8 +44,6 @@ import org.biojava.nbio.structure.symmetry.internal.CeSymmResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -109,6 +94,36 @@ public class SubunitCluster {
 	 */
 	public void setAlpha(String alpha) {
 		this.alpha = alpha;
+	}
+
+	/**
+	 * Setter for method, to be used by SubunitClusterMerge.
+	 *
+	 * @param  method
+	 *          SubunitClustererMethod
+	 */
+	public void setMethod(SubunitClustererMethod method) {
+		this.method = method;
+	}
+
+	/**
+	 * Setter for pseudoStoichiometric, to be used by SubunitClusterMerge.
+	 *
+	 * @param  pseudoStoichiometric
+	 *          boolean
+	 */
+	public void setPseudoStoichiometric(boolean pseudoStoichiometric) {
+		this.pseudoStoichiometric = pseudoStoichiometric;
+	}
+
+	/**
+	 * Setter for representative, to be used by SubunitClusterMerge.
+	 *
+	 * @param  representative
+	 *          boolean
+	 */
+	public void setRepresentative(int representative) {
+		this.representative = representative;
 	}
 
 	/**
@@ -164,443 +179,7 @@ public class SubunitCluster {
 	 * @return an unmodifiable view of the original List
 	 */
 	public List<Subunit> getSubunits() {
-		return Collections.unmodifiableList(subunits);
-	}
-
-	/**
-	 * Tells whether the other SubunitCluster contains exactly the same Subunit.
-	 * This is checked by String equality of their residue one-letter sequences.
-	 *
-	 * @param other
-	 *            SubunitCluster
-	 * @return true if the SubunitClusters are identical, false otherwise
-	 */
-	public boolean isIdenticalTo(SubunitCluster other) {
-		String thisSequence = this.subunits.get(this.representative)
-				.getProteinSequenceString();
-		String otherSequence = other.subunits.get(other.representative)
-				.getProteinSequenceString();
-		return thisSequence.equals(otherSequence);
-	}
-
-	/**
-	 * Tells whether the other SubunitCluster contains exactly the same Subunit.
-	 * This is checked by equality of their entity identifiers if they are present.
-	 *
-	 * @param other
-	 *            SubunitCluster
-	 * @return true if the SubunitClusters are identical, false otherwise
-	 */
-	public boolean isIdenticalByEntityIdTo(SubunitCluster other) {
-		Subunit thisSub = this.subunits.get(this.representative);
-		Subunit otherSub = other.subunits.get(other.representative);
-		String thisName = thisSub.getName();
-		String otherName = otherSub.getName();
-
-		Structure thisStruct = thisSub.getStructure();
-		Structure otherStruct = otherSub.getStructure();
-		if (thisStruct == null || otherStruct == null) {
-			logger.info("SubunitClusters {}-{} have no referenced structures. Ignoring identity check by entity id",
-					thisName,
-					otherName);
-			return false;
-		}
-		if (thisStruct != otherStruct) {
-			// different object references: will not cluster even if entity id is same
-			return false;
-		}
-		Chain thisChain = thisStruct.getChain(thisName);
-		Chain otherChain = otherStruct.getChain(otherName);
-		if (thisChain == null || otherChain == null) {
-			logger.info("Can't determine entity ids of SubunitClusters {}-{}. Ignoring identity check by entity id",
-					thisName,
-					otherName);
-			return false;
-		}
-		if (thisChain.getEntityInfo() == null || otherChain.getEntityInfo() == null) {
-			logger.info("Can't determine entity ids of SubunitClusters {}-{}. Ignoring identity check by entity id",
-					thisName,
-					otherName);
-			return false;
-		}
-		int thisEntityId = thisChain.getEntityInfo().getMolId();
-		int otherEntityId = otherChain.getEntityInfo().getMolId();
-		return thisEntityId == otherEntityId;
-	}
-
-	/**
-	 * Merges the other SubunitCluster into this one if it contains exactly the
-	 * same Subunit. This is checked by {@link #isIdenticalTo(SubunitCluster)}.
-	 *
-	 * @param other
-	 *            SubunitCluster
-	 * @return true if the SubunitClusters were merged, false otherwise
-	 */
-	public boolean mergeIdentical(SubunitCluster other) {
-
-		if (!isIdenticalTo(other))
-			return false;
-
-		logger.info("SubunitClusters {}-{} are identical in sequence",
-				this.subunits.get(this.representative).getName(),
-				other.subunits.get(other.representative).getName());
-
-		this.subunits.addAll(other.subunits);
-		this.subunitEQR.addAll(other.subunitEQR);
-
-		return true;
-	}
-
-	/**
-	 * Merges the other SubunitCluster into this one if it contains exactly the
-	 * same Subunit. This is checked by comparing the entity identifiers of the subunits
-	 * if one can be found.
-	 * Thus this only makes sense when the subunits are complete chains of a
-	 * deposited PDB entry.
-	 *
-	 * @param other
-	 *            SubunitCluster
-	 * @return true if the SubunitClusters were merged, false otherwise
-	 */
-	public boolean mergeIdenticalByEntityId(SubunitCluster other) {
-
-		if (!isIdenticalByEntityIdTo(other))
-			return false;
-
-		Subunit thisSub = this.subunits.get(this.representative);
-		Subunit otherSub = other.subunits.get(other.representative);
-		String thisName = thisSub.getName();
-		String otherName = otherSub.getName();
-
-		logger.info("SubunitClusters {}-{} belong to same entity. Assuming they are identical",
-				thisName,
-				otherName);
-
-		List<Integer> thisAligned = new ArrayList<>();
-		List<Integer> otherAligned = new ArrayList<>();
-
-		// we've merged by entity id, we can assume structure, chain and entity are available (checked in isIdenticalByEntityIdTo())
-		Structure thisStruct = thisSub.getStructure();
-		Structure otherStruct = otherSub.getStructure();
-		Chain thisChain = thisStruct.getChain(thisName);
-		Chain otherChain = otherStruct.getChain(otherName);
-		EntityInfo entityInfo = thisChain.getEntityInfo();
-
-		// Extract the aligned residues of both Subunits
-		for (int thisIndex=0; thisIndex < thisSub.size(); thisIndex++) {
-
-			Group g = thisSub.getRepresentativeAtoms()[thisIndex].getGroup();
-
-			int seqresIndex = entityInfo.getAlignedResIndex(g, thisChain);
-
-			if (seqresIndex == -1) {
-				// this might mean that FileParsingParameters.setAlignSeqRes() wasn't set to true during parsing
-				continue;
-			}
-
-			// note the seqresindex is 1-based
-			Group otherG = otherChain.getSeqResGroups().get(seqresIndex - 1);
-
-			int otherIndex = otherChain.getAtomGroups().indexOf(otherG);
-			if (otherIndex == -1) {
-				// skip residues that are unobserved in other sequence ("gaps" in the entity SEQRES alignment)
-				continue;
-			}
-
-			// Only consider residues that are part of the SubunitCluster
-			if (this.subunitEQR.get(this.representative).contains(thisIndex)
-					&& other.subunitEQR.get(other.representative).contains(otherIndex)) {
-				thisAligned.add(thisIndex);
-				otherAligned.add(otherIndex);
-			}
-		}
-
-		if (thisAligned.size() == 0 && otherAligned.size() == 0) {
-			logger.warn("No equivalent aligned atoms found between SubunitClusters {}-{} via entity SEQRES alignment. Is FileParsingParameters.setAlignSeqRes() set?", thisName, otherName);
-		}
-
-		updateEquivResidues(other, thisAligned, otherAligned);
-
-		return true;
-	}
-
-	/**
-	 * Merges the other SubunitCluster into this one if their representatives
-	 * sequences are similar (according to the criteria in params).
-	 * <p>
-	 * The sequence alignment is performed using linear {@link SimpleGapPenalty} and
-	 * BLOSUM62 as scoring matrix.
-	 *
-	 * @param other
-	 *            SubunitCluster
-	 * @param params
-	 *            SubunitClustererParameters, with information whether to use local
-	 *            or global alignment, sequence identity and coverage thresholds.
-	 *            Threshold values lower than 0.7 are not recommended.
-	 *            Use {@link #mergeStructure} for lower values.
-	 * @return true if the SubunitClusters were merged, false otherwise
-	 * @throws CompoundNotFoundException
-	 */
-
-	public boolean mergeSequence(SubunitCluster other, SubunitClustererParameters params) throws CompoundNotFoundException {
-		PairwiseSequenceAlignerType alignerType = PairwiseSequenceAlignerType.LOCAL;
-		if (params.isUseGlobalMetrics()) {
-			alignerType = PairwiseSequenceAlignerType.GLOBAL;
-		}
-		return mergeSequence(other, params,alignerType
-				, new SimpleGapPenalty(),
-				SubstitutionMatrixHelper.getBlosum62());
-	}
-
-	/**
-	 * Merges the other SubunitCluster into this one if their representatives
-	 * sequences are similar (according to the criteria in params).
-	 * <p>
-	 * The sequence alignment is performed using linear {@link SimpleGapPenalty} and
-	 * BLOSUM62 as scoring matrix.
-	 *
-	 * @param other
-	 *            SubunitCluster
-	 * @param params
-	 *            {@link SubunitClustererParameters}, with information whether to use local
-	 *            or global alignment, sequence identity and coverage thresholds.
-	 *            Threshold values lower than 0.7 are not recommended.
-	 *            Use {@link #mergeStructure} for lower values.
-	 * @param alignerType
-	 *            parameter for the sequence alignment algorithm
-	 * @param gapPenalty
-	 *            parameter for the sequence alignment algorithm
-	 * @param subsMatrix
-	 *            parameter for the sequence alignment algorithm
-	 * @return true if the SubunitClusters were merged, false otherwise
-	 * @throws CompoundNotFoundException
-	 */
-
-	public boolean mergeSequence(SubunitCluster other, SubunitClustererParameters params,
-								 PairwiseSequenceAlignerType alignerType,
-								 GapPenalty gapPenalty,
-								 SubstitutionMatrix<AminoAcidCompound> subsMatrix)
-			throws CompoundNotFoundException {
-
-		// Extract the protein sequences as BioJava alignment objects
-		ProteinSequence thisSequence = this.subunits.get(this.representative)
-				.getProteinSequence();
-		ProteinSequence otherSequence = other.subunits
-				.get(other.representative).getProteinSequence();
-
-		// Perform the alignment with provided parameters
-		PairwiseSequenceAligner<ProteinSequence, AminoAcidCompound> aligner = Alignments
-				.getPairwiseAligner(thisSequence, otherSequence, alignerType,
-						gapPenalty, subsMatrix);
-
-		double sequenceIdentity;
-		if(params.isUseGlobalMetrics()) {
-			sequenceIdentity = aligner.getPair().getPercentageOfIdentity(true);
-		} else {
-			sequenceIdentity = aligner.getPair().getPercentageOfIdentity(false);
-		}
-
-		if (sequenceIdentity < params.getSequenceIdentityThreshold())
-			return false;
-
-		double sequenceCoverage = 0;
-		if(params.isUseSequenceCoverage()) {
-			// Calculate real coverage (subtract gaps in both sequences)
-			double gaps1 = aligner.getPair().getAlignedSequence(1)
-					.getNumGapPositions();
-			double gaps2 = aligner.getPair().getAlignedSequence(2)
-					.getNumGapPositions();
-			double lengthAlignment = aligner.getPair().getLength();
-			double lengthThis = aligner.getQuery().getLength();
-			double lengthOther = aligner.getTarget().getLength();
-			sequenceCoverage = (lengthAlignment - gaps1 - gaps2)
-					/ Math.max(lengthThis, lengthOther);
-
-			if (sequenceCoverage < params.getSequenceCoverageThreshold())
-				return false;
-		}
-
-		logger.info(String.format("SubunitClusters %s-%s are similar in sequence "
-						+ "with %.2f sequence identity and %.2f coverage",
-				this.subunits.get(this.representative).getName(),
-				other.subunits.get(other.representative).getName(),
-				sequenceIdentity, sequenceCoverage));
-
-		// If coverage and sequence identity sufficient, merge other and this
-		List<Integer> thisAligned = new ArrayList<>();
-		List<Integer> otherAligned = new ArrayList<>();
-
-		// Extract the aligned residues of both Subunit
-		for (int p = 1; p < aligner.getPair().getLength() + 1; p++) {
-
-			// Skip gaps in any of the two sequences
-			if (aligner.getPair().getAlignedSequence(1).isGap(p))
-				continue;
-			if (aligner.getPair().getAlignedSequence(2).isGap(p))
-				continue;
-
-			int thisIndex = aligner.getPair().getIndexInQueryAt(p) - 1;
-			int otherIndex = aligner.getPair().getIndexInTargetAt(p) - 1;
-
-			// Only consider residues that are part of the SubunitCluster
-			if (this.subunitEQR.get(this.representative).contains(thisIndex)
-					&& other.subunitEQR.get(other.representative).contains(otherIndex)) {
-				thisAligned.add(thisIndex);
-				otherAligned.add(otherIndex);
-			}
-		}
-
-		updateEquivResidues(other, thisAligned, otherAligned);
-
-		this.method = SubunitClustererMethod.SEQUENCE;
-		pseudoStoichiometric = !params.isHighConfidenceScores(sequenceIdentity,sequenceCoverage);
-
-		return true;
-	}
-
-	/**
-	 * Merges the other SubunitCluster into this one if their representative
-	 * Atoms are structurally similar (according to the criteria in params).
-	 * <p>
-	 *
-	 * @param other
-	 *            SubunitCluster
-	 * @param params
-	 *            {@link SubunitClustererParameters}, with information on what alignment
-	 *            algorithm to use, RMSD/TMScore and structure coverage thresholds.
-	 * @return true if the SubunitClusters were merged, false otherwise
-	 * @throws StructureException
-	 */
-
-	public boolean mergeStructure(SubunitCluster other, SubunitClustererParameters params) throws StructureException {
-
-		StructureAlignment aligner = StructureAlignmentFactory.getAlgorithm(params.getSuperpositionAlgorithm());
-		ConfigStrucAligParams aligner_params = aligner.getParameters();
-
-		Method setOptimizeAlignment = null;
-		try {
-			setOptimizeAlignment = aligner_params.getClass().getMethod("setOptimizeAlignment", boolean.class);
-		} catch (NoSuchMethodException e) {
-			//alignment algorithm does not have an optimization switch, moving on
-		}
-		if (setOptimizeAlignment != null) {
-			try {
-				setOptimizeAlignment.invoke(aligner_params, params.isOptimizeAlignment());
-			} catch (IllegalAccessException|InvocationTargetException e) {
-				logger.warn("Could not set alignment optimisation switch");
-			}
-		}
-
-		AFPChain afp = aligner.align(this.subunits.get(this.representative)
-				.getRepresentativeAtoms(),
-				other.subunits.get(other.representative)
-						.getRepresentativeAtoms());
-
-		// Convert AFPChain to MultipleAlignment for convenience
-		MultipleAlignment msa = new MultipleAlignmentEnsembleImpl(
-				afp,
-				this.subunits.get(this.representative).getRepresentativeAtoms(),
-				other.subunits.get(other.representative)
-						.getRepresentativeAtoms(), false)
-				.getMultipleAlignment(0);
-
-		double structureCoverage = Math.min(msa.getCoverages().get(0), msa
-				.getCoverages().get(1));
-
-		if(params.isUseStructureCoverage() && structureCoverage < params.getStructureCoverageThreshold()) {
-			return false;
-		}
-
-		double rmsd = afp.getTotalRmsdOpt();
-		if (params.isUseRMSD() && rmsd > params.getRMSDThreshold()) {
-			return false;
-		}
-
-		double tmScore = afp.getTMScore();
-		if (params.isUseTMScore() && tmScore < params.getTMThreshold()) {
-			return false;
-		}
-
-		logger.info(String.format("SubunitClusters are structurally similar with "
-				+ "%.2f RMSD %.2f coverage", rmsd, structureCoverage));
-
-		// Merge clusters
-		List<List<Integer>> alignedRes = msa.getBlock(0).getAlignRes();
-		List<Integer> thisAligned = new ArrayList<>();
-		List<Integer> otherAligned = new ArrayList<>();
-
-		// Extract the aligned residues of both Subunit
-		for (int p = 0; p < msa.length(); p++) {
-
-			// Skip gaps in any of the two sequences
-			if (alignedRes.get(0).get(p) == null)
-				continue;
-			if (alignedRes.get(1).get(p) == null)
-				continue;
-
-			int thisIndex = alignedRes.get(0).get(p);
-			int otherIndex = alignedRes.get(1).get(p);
-
-			// Only consider residues that are part of the SubunitCluster
-			if (this.subunitEQR.get(this.representative).contains(thisIndex)
-					&& other.subunitEQR.get(other.representative).contains(
-							otherIndex)) {
-				thisAligned.add(thisIndex);
-				otherAligned.add(otherIndex);
-			}
-		}
-
-		updateEquivResidues(other, thisAligned, otherAligned);
-
-		this.method = SubunitClustererMethod.STRUCTURE;
-		pseudoStoichiometric = true;
-
-		return true;
-	}
-
-	private void updateEquivResidues(SubunitCluster other, List<Integer> thisAligned, List<Integer> otherAligned) {
-		// Do a List intersection to find out which EQR columns to remove
-		List<Integer> thisRemove = new ArrayList<>();
-		List<Integer> otherRemove = new ArrayList<>();
-
-		for (int t = 0; t < this.subunitEQR.get(this.representative).size(); t++) {
-			// If the index is aligned do nothing, otherwise mark as removing
-			if (!thisAligned.contains(this.subunitEQR.get(this.representative).get(t)))
-				thisRemove.add(t);
-		}
-
-		for (int t = 0; t < other.subunitEQR.get(other.representative).size(); t++) {
-			// If the index is aligned do nothing, otherwise mark as removing
-			if (!otherAligned.contains(other.subunitEQR.get(other.representative).get(t)))
-				otherRemove.add(t);
-		}
-		// Now remove unaligned columns, from end to start
-		Collections.sort(thisRemove);
-		Collections.reverse(thisRemove);
-		Collections.sort(otherRemove);
-		Collections.reverse(otherRemove);
-
-		for (int t = 0; t < thisRemove.size(); t++) {
-			for (List<Integer> eqr : this.subunitEQR) {
-				int column = thisRemove.get(t);
-				eqr.remove(column);
-			}
-		}
-
-		for (int t = 0; t < otherRemove.size(); t++) {
-			for (List<Integer> eqr : other.subunitEQR) {
-				int column = otherRemove.get(t);
-				eqr.remove(column);
-			}
-		}
-
-		// The representative is the longest sequence
-		if (this.subunits.get(this.representative).size() < other.subunits.get(other.representative).size())
-			this.representative = other.representative + subunits.size();
-
-		this.subunits.addAll(other.subunits);
-		this.subunitEQR.addAll(other.subunitEQR);
-
+		return subunits;
 	}
 
 	/**
@@ -735,6 +314,20 @@ public class SubunitCluster {
 	 */
 	public int length() {
 		return subunitEQR.get(representative).size();
+	}
+
+	/**
+	 * @return the representative number
+	 */
+	public int getRepresentative() {
+		return representative;
+	}
+
+	/**
+	 * @return the subunitEQR list
+	 */
+	public List<List<Integer>> getSubunitEQR() {
+		return subunitEQR;
 	}
 
 	/**

@@ -142,8 +142,8 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 	 */
 	public Pair<String> getCrystalIds() {
 		return new Pair<>(
-			moleculeIds.getFirst()+transforms.getFirst().getTransformId()+transforms.getFirst().getCrystalTranslation(),
-			moleculeIds.getSecond()+transforms.getSecond().getTransformId()+transforms.getSecond().getCrystalTranslation());
+				moleculeIds.getFirst()+transforms.getFirst().getTransformId()+transforms.getFirst().getCrystalTranslation(),
+				moleculeIds.getSecond()+transforms.getSecond().getTransformId()+transforms.getSecond().getCrystalTranslation());
 	}
 
 	/**
@@ -235,7 +235,7 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 			Group g = atoms[i].getGroup();
 
 			if (!g.getType().equals(GroupType.HETATM) ||
-				isInChain(g)) {
+					isInChain(g)) {
 				// interface area should be only for protein/nucleotide but not hetatoms that are not part of the chain
 				this.totalArea += (asas1[i] - complexAsas[i]);
 			}
@@ -256,7 +256,7 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 			Group g = atoms[i+asas1.length].getGroup();
 
 			if (!g.getType().equals(GroupType.HETATM) ||
-				isInChain(g)) {
+					isInChain(g)) {
 				// interface area should be only for protein/nucleotide but not hetatoms that are not part of the chain
 				this.totalArea += (asas2[i] - complexAsas[i+asas1.length]);
 			}
@@ -317,8 +317,8 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 
 			Group g = a.getGroup();
 			if (g.getType().equals(GroupType.HETATM) &&
-				!isInChain(g) &&
-				getSizeNoH(g)<minSizeHetAtomToInclude) {
+					!isInChain(g) &&
+					getSizeNoH(g)<minSizeHetAtomToInclude) {
 				continue;
 			}
 
@@ -368,15 +368,6 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 	}
 
 	/**
-	 * Tells whether the interface corresponds to one mediated by crystallographic symmetry,
-	 * i.e. it is between symmetry-related molecules (with same chain identifier)
-	 * @return
-	 */
-	public boolean isSymRelated() {
-		return moleculeIds.getFirst().equals(moleculeIds.getSecond());
-	}
-
-	/**
 	 * Returns true if the transformation applied to the second molecule of this interface
 	 * has an infinite character (pure translation or screw rotation)
 	 * and both molecules of the interface have the same asymmetric unit identifier (chain id): in such cases the
@@ -384,7 +375,7 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 	 * @return
 	 */
 	public boolean isInfinite() {
-		return ((isSymRelated() && transforms.getSecond().getTransformType().isInfinite()));
+		return ((moleculeIds.isSymRelated() && transforms.getSecond().getTransformType().isInfinite()));
 	}
 
 	/**
@@ -400,7 +391,7 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 			return true;
 		}
 		return
-			first.getRepresentative().getId().equals(second.getRepresentative().getId());
+				first.getRepresentative().getId().equals(second.getRepresentative().getId());
 	}
 
 	/**
@@ -606,7 +597,7 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 		Pair<Chain> otherChains = other.getParentChains();
 
 		if (thisChains.getFirst().getEntityInfo() == null || thisChains.getSecond().getEntityInfo() == null ||
-			otherChains.getFirst().getEntityInfo() == null || otherChains.getSecond().getEntityInfo() == null ) {
+				otherChains.getFirst().getEntityInfo() == null || otherChains.getSecond().getEntityInfo() == null ) {
 			// this happens in cases like 2uub
 			logger.warn("Found chains with null compounds while comparing interfaces {} and {}. Contact overlap score for them will be 0.",
 					this.getId(), other.getId());
@@ -766,7 +757,7 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 		String molecId1 = getMoleculeIds().getFirst();
 		String molecId2 = getMoleculeIds().getSecond();
 
-		if (isSymRelated()) {
+		if (moleculeIds.isSymRelated()) {
 			// if both chains are named equally we want to still named them differently in the output mmcif file
 			// so that molecular viewers can handle properly the 2 chains as separate entities
 			molecId2 = molecId2 + "_" + getTransforms().getSecond().getTransformId();
@@ -779,7 +770,7 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 		int atomId = 1;
 		List<AbstractCifFileSupplier.WrappedAtom> wrappedAtoms = new ArrayList<>();
 		for (Atom atom : this.molecules.getFirst()) {
-			if (isSymRelated()) {
+			if (moleculeIds.isSymRelated()) {
 				wrappedAtoms.add(new AbstractCifFileSupplier.WrappedAtom(1, molecId1, molecId1, atom, atomId));
 			} else {
 				wrappedAtoms.add(new AbstractCifFileSupplier.WrappedAtom(1, molecId1, molecId1, atom, atom.getPDBserial()));
@@ -787,7 +778,7 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 			atomId++;
 		}
 		for (Atom atom : this.molecules.getSecond()) {
-			if (isSymRelated()) {
+			if (moleculeIds.isSymRelated()) {
 				wrappedAtoms.add(new AbstractCifFileSupplier.WrappedAtom(1, molecId2, molecId2, atom, atomId));
 			} else {
 				wrappedAtoms.add(new AbstractCifFileSupplier.WrappedAtom(1, molecId2, molecId2, atom, atom.getPDBserial()));

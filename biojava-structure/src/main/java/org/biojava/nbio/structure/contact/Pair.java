@@ -97,4 +97,14 @@ public final class Pair<T> implements Serializable {
 	public String toString() {
 		return "<" + first.toString() + ", " + second.toString() + ">";
 	}
+
+	/**
+	 * Tells whether the interface corresponds to one mediated by crystallographic symmetry,
+	 * i.e. it is between symmetry-related molecules (with same chain identifier)
+	 * @return
+	 */
+	public boolean isSymRelated() {
+		return first.equals(second);
+	}
+
 }

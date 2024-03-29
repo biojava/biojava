@@ -198,14 +198,32 @@ public class AtomPositionMap {
 		int count = 0;
 		// Inefficient search
 		for (Map.Entry<ResidueNumber, Integer> entry : treeMap.entrySet()) {
-			if (entry.getKey().getChainName().equals(startingChain)
-					&& positionStart <= entry.getValue()
-					&& entry.getValue() <= positionEnd)
-			{
+			if (equalToStartingChain(entry,startingChain) && inRange(entry,positionStart,positionEnd)){
 				count++;
 			}
 		}
 		return count;
+	}
+
+	/**
+	 * Checks if the entry is equal to the starting chain
+	 * @param entry Map of residue number
+	 * @param startingChain Case-sensitive chain
+	 * @return True if the entry is equal to the starting chain
+	 */
+	private boolean equalToStartingChain(Map.Entry<ResidueNumber, Integer> entry, String startingChain){
+		return entry.getKey().getChainName().equals(startingChain);
+	}
+
+	/**
+	 * Checks if the entry is in a specific range
+	 * @param entry Map of residue number
+	 * @param positionStart index of the start position
+	 * @param positionEnd index of the end position
+	 * @return True if the entry is in the range
+	 */
+	private boolean inRange(Map.Entry<ResidueNumber, Integer> entry, int positionStart, int positionEnd){
+		return positionStart <= entry.getValue() && entry.getValue() <= positionEnd;
 	}
 
 

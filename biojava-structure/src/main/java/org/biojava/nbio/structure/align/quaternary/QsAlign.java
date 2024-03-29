@@ -43,11 +43,7 @@ import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsembleImpl;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentImpl;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
 import org.biojava.nbio.structure.align.multiple.util.ReferenceSuperimposer;
-import org.biojava.nbio.structure.cluster.Subunit;
-import org.biojava.nbio.structure.cluster.SubunitCluster;
-import org.biojava.nbio.structure.cluster.SubunitClusterer;
-import org.biojava.nbio.structure.cluster.SubunitClustererParameters;
-import org.biojava.nbio.structure.cluster.SubunitExtractor;
+import org.biojava.nbio.structure.cluster.*;
 import org.biojava.nbio.structure.contact.Pair;
 import org.biojava.nbio.structure.geometry.SuperPositions;
 import org.biojava.nbio.structure.geometry.UnitQuaternions;
@@ -104,7 +100,8 @@ public class QsAlign {
 					continue;
 
 				// Use structural alignment to match the subunit clusters
-				if (c1.get(i).mergeStructure(c2.get(j),cParams)) {
+				SubunitClusterMerge subunitClusterMerge = new SubunitClusterMerge(c1.get(i));
+				if (subunitClusterMerge.mergeStructure(c2.get(j),cParams)) {
 					clusterMap.put(i, j);
 				}
 			}
