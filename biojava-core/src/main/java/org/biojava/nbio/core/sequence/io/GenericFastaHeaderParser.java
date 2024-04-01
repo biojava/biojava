@@ -93,9 +93,9 @@ public class GenericFastaHeaderParser<S extends AbstractSequence<C>, C extends C
 					sb.append(header.charAt(i));
 				}
 
-				data = new String[values.size()];
-				values.toArray(data);
 			}
+			data = new String[values.size()];
+			values.toArray(data);
 		} else {
 			data = header.split(" ");
 		}
