@@ -31,8 +31,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class TestQuaternaryStructureProviders {
 
@@ -51,35 +50,20 @@ public class TestQuaternaryStructureProviders {
 	public void test5LDH() throws IOException, StructureException{
 		comparePdbVsMmcif("5LDH",1, 4);
 
-		// the pdb file of 5ldh contains only 1 bioassembly, whilst the mmcif contains 2,
-		// thus we can't test here the comparison between the 2
-		//testID("5LDH",2, 2);
+		// Note 1: since v5 remediation there's 4 bioassemblies with numerical ids for 5ldh, no more PAU and XAU
+		// Note 2: before March 2024 remediation, this entry had 4 assemblies. Now only 1
 
-		// since v5 remediation there's 4 bioassemblies with numerical ids for 5ldh, no more PAU and XAU
+		// bioassembly 1 does exist in mmcif file, let's check that
 		boolean gotException = false;
 		try {
 			AtomCache cache = new AtomCache();
 			cache.setFiletype(StructureFiletype.CIF);
 			StructureIO.setAtomCache(cache);
-			StructureIO.getBiologicalAssembly("5LDH",3);
+			StructureIO.getBiologicalAssembly("5LDH",1);
 		} catch (StructureException e) {
 			gotException = true;
 		}
-
-		assertTrue("Bioassembly 3 for PDB id 5LDH should fail with a StructureException!", !gotException);
-
-		// bioassembly 2 does exist in mmcif file, let's check that
-		gotException = false;
-		try {
-			AtomCache cache = new AtomCache();
-			cache.setFiletype(StructureFiletype.CIF);
-			StructureIO.setAtomCache(cache);
-			StructureIO.getBiologicalAssembly("5LDH",2);
-		} catch (StructureException e) {
-			gotException = true;
-		}
-		assertTrue("Bioassembly 2 for PDB id 5LDH should not fail with a StructureException!", !gotException);
-
+        assertFalse("Bioassembly 1 for PDB id 5LDH should exist and not fail with a StructureException!", gotException);
 	}
 
 	@Test
@@ -94,16 +78,8 @@ public class TestQuaternaryStructureProviders {
 
 	@Test
 	public void test1EI7() throws IOException, StructureException {
-
 		comparePdbVsMmcif("1ei7",1, 68);
-
 	}
-
-	@Test
-	public void testGetNrBioAssemblies5LDH() throws IOException, StructureException {
-		assertEquals("There should be 4 bioassemblies for 5LDH, see github issue #230", 4, StructureIO.getBiologicalAssemblies("5LDH").size());
-	}
-
 
 	/**
 	 * Bioassembly tests for a single PDB entry
@@ -115,9 +91,7 @@ public class TestQuaternaryStructureProviders {
 	 */
 	private void comparePdbVsMmcif(String pdbId, int bioMolecule, int mmSize) throws IOException, StructureException{
 
-
 		Structure pdbS = getPdbBioAssembly(pdbId, bioMolecule, true);
-
 		Structure mmcifS = getMmcifBioAssembly(pdbId, bioMolecule, true);
 
 		PDBHeader pHeader = pdbS.getPDBHeader();
@@ -129,15 +103,12 @@ public class TestQuaternaryStructureProviders {
 		// mmcif files contain sometimes partial virus assemblies, so they can contain more info than pdb
 		assertTrue(pHeader.getNrBioAssemblies() <= mHeader.getNrBioAssemblies());
 
-
 		Map<Integer, BioAssemblyInfo> pMap = pHeader.getBioAssemblies();
 		Map<Integer, BioAssemblyInfo> mMap = mHeader.getBioAssemblies();
-
 
 		assertTrue(pMap.keySet().size()<= mMap.keySet().size());
 
 		assertEquals(mmSize, mMap.get(bioMolecule).getMacromolecularSize());
-
 
 		for ( int k : pMap.keySet()) {
 			assertTrue(mMap.containsKey(k));
@@ -154,45 +125,32 @@ public class TestQuaternaryStructureProviders {
 
 			//assertEquals(pL.size(), mL.size());
 
-
-			for (BiologicalAssemblyTransformation m1 : pL){
-
+			for (BiologicalAssemblyTransformation m1 : pL) {
 				boolean found = false;
-				for ( BiologicalAssemblyTransformation m2 : mL){
-
-					if  (! m1.getChainId().equals(m2.getChainId()))
+				for (BiologicalAssemblyTransformation m2 : mL) {
+					if (! m1.getChainId().equals(m2.getChainId()))
 						continue;
 
-					if ( ! m1.getTransformationMatrix().epsilonEquals(m2.getTransformationMatrix(), 0.0001))
+					if (! m1.getTransformationMatrix().epsilonEquals(m2.getTransformationMatrix(), 0.0001))
 						continue;
 
 					found = true;
-
 				}
-
-				if ( ! found ){
+				if (! found) {
 					System.err.println("did not find matching matrix " + m1);
 					System.err.println(mL);
 				}
 				assertTrue(found);
-
 			}
 		}
-
 
 		assertEquals("Not the same number of chains!" , pdbS.size(),mmcifS.size());
 
 		Atom[] pdbA = StructureTools.getAllAtomArray(pdbS);
-
 		Atom[] mmcifA = StructureTools.getAllAtomArray(mmcifS);
 
 		assertEquals(pdbA.length, mmcifA.length);
-
 		assertEquals(pdbA[0].toPDB(), mmcifA[0].toPDB());
-
-
-
-
 	}
 
 	private Structure getPdbBioAssembly(String pdbId, int bioMolecule, boolean multiModel) throws IOException, StructureException {
@@ -212,7 +170,5 @@ public class TestQuaternaryStructureProviders {
 		Structure mmcifS = StructureIO.getBiologicalAssembly(pdbId, bioMolecule, multiModel);
 		return mmcifS;
 	}
-
-
 
 }
