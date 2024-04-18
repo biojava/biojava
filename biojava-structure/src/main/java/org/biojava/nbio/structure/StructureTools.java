@@ -171,7 +171,7 @@ public class StructureTools {
 	private static final Set<String> AMINOACID_BACKBONE_ATOMS;
 
 	static {
-		nucleotides30 = new HashMap<String, Character>();
+		nucleotides30 = new HashMap<>();
 		nucleotides30.put("DA", 'A');
 		nucleotides30.put("DC", 'C');
 		nucleotides30.put("DG", 'G');
@@ -215,14 +215,14 @@ public class StructureTools {
 		// store nucleic acids (C, G, A, T, U, and I), and
 		// the modified versions of nucleic acids (+C, +G, +A, +T, +U, and +I),
 		// and
-		nucleotides23 = new HashMap<String, Character>();
+		nucleotides23 = new HashMap<>();
 		String[] names = { "C", "G", "A", "T", "U", "I", "+C", "+G", "+A",
 				"+T", "+U", "+I" };
 		for (String n : names) {
 			nucleotides23.put(n, n.charAt(n.length() - 1));
 		}
 
-		aminoAcids = new HashMap<String, Character>();
+		aminoAcids = new HashMap<>();
 		aminoAcids.put("GLY", 'G');
 		aminoAcids.put("ALA", 'A');
 		aminoAcids.put("VAL", 'V');
@@ -254,7 +254,7 @@ public class StructureTools {
 		aminoAcids.put("PYH", 'O');
 		aminoAcids.put("PYL", 'O');
 
-		hBondDonorAcceptors = new HashSet<Element>();
+		hBondDonorAcceptors = new HashSet<>();
 		hBondDonorAcceptors.add(Element.N);
 		hBondDonorAcceptors.add(Element.O);
 		hBondDonorAcceptors.add(Element.S);
@@ -320,7 +320,7 @@ public class StructureTools {
 	public static Atom[] getAtomArray(Structure s, String[] atomNames) {
 		List<Chain> chains = s.getModel(0);
 
-		List<Atom> atoms = new ArrayList<Atom>();
+		List<Atom> atoms = new ArrayList<>();
 
 		extractAtoms(atomNames, chains, atoms);
 		return atoms.toArray(new Atom[0]);
@@ -787,7 +787,7 @@ public class StructureTools {
 			for (Group g : c.getAtomGroups()) {
 
 				// a temp container for the atoms of this group
-				List<Atom> thisGroupAtoms = new ArrayList<Atom>();
+				List<Atom> thisGroupAtoms = new ArrayList<>();
 				// flag to check if this group contains all the requested atoms.
 				boolean thisGroupAllAtoms = true;
 				for (String atomName : atomNames) {
@@ -927,7 +927,7 @@ public class StructureTools {
 	public static Atom[] cloneAtomArray(Atom[] ca) {
 		Atom[] newCA = new Atom[ca.length];
 
-		List<Chain> model = new ArrayList<Chain>();
+		List<Chain> model = new ArrayList<>();
 		int apos = -1;
 		for (Atom a : ca) {
 			apos++;
@@ -973,7 +973,7 @@ public class StructureTools {
 	public static Group[] cloneGroups(Atom[] ca) {
 		Group[] newGroup = new Group[ca.length];
 
-		List<Chain> model = new ArrayList<Chain>();
+		List<Chain> model = new ArrayList<>();
 		int apos = -1;
 		for (Atom a : ca) {
 			apos++;
@@ -1081,7 +1081,7 @@ public class StructureTools {
 	 */
 	public static Atom[] getAtomCAArray(Structure s) {
 
-		List<Atom> atoms = new ArrayList<Atom>();
+		List<Atom> atoms = new ArrayList<>();
 
 		for (Chain c : s.getChains()) {
 			for (Group g : c.getAtomGroups()) {
@@ -1460,12 +1460,12 @@ public class StructureTools {
 		// for speed, we avoid calculating square roots
 		radius = radius * radius;
 
-		Map<Group, Double> distances = new HashMap<Group, Double>();
+		Map<Group, Double> distances = new HashMap<>();
 
 		// we only need this if we're averaging distances
 		// note that we can't use group.getAtoms().size() because some the
 		// group's atoms be outside the shell
-		Map<Group, Integer> atomCounts = new HashMap<Group, Integer>();
+		Map<Group, Integer> atomCounts = new HashMap<>();
 
 		for (Chain chain : structure.getChains()) {
 			groupLoop: for (Group chainGroup : chain.getAtomGroups()) {

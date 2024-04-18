@@ -82,7 +82,7 @@ public class ParameterGUI extends JFrame{
 		assert(names.size() == types.size());
 		assert(names.size() == helps.size());
 
-		textFields = new ArrayList<Component>();
+		textFields = new ArrayList<>();
 		Box vBox = Box.createVerticalBox();
 
 		for (int i = 0 ; i < keys.size(); i++){

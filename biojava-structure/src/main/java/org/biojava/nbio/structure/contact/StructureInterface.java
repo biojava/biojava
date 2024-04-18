@@ -522,7 +522,7 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 			}
 		}
 
-		return new Pair<List<Group>>(rim1, rim2);
+		return new Pair<>(rim1, rim2);
 	}
 
 	/**
@@ -613,8 +613,8 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 			return 0;
 		}
 
-		Pair<EntityInfo> thisCompounds = new Pair<EntityInfo>(thisChains.getFirst().getEntityInfo(), thisChains.getSecond().getEntityInfo());
-		Pair<EntityInfo> otherCompounds = new Pair<EntityInfo>(otherChains.getFirst().getEntityInfo(), otherChains.getSecond().getEntityInfo());
+		Pair<EntityInfo> thisCompounds = new Pair<>(thisChains.getFirst().getEntityInfo(), thisChains.getSecond().getEntityInfo());
+		Pair<EntityInfo> otherCompounds = new Pair<>(otherChains.getFirst().getEntityInfo(), otherChains.getSecond().getEntityInfo());
 
 		if (checkMolIdMatch(thisCompounds,otherCompounds)) {
 
@@ -706,7 +706,7 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 			logger.warn("Could not find parents chains, compounds will be null");
 			return null;
 		}
-		return new Pair<EntityInfo>(chains.getFirst().getEntityInfo(), chains.getSecond().getEntityInfo());
+		return new Pair<>(chains.getFirst().getEntityInfo(), chains.getSecond().getEntityInfo());
 	}
 
 	private Structure getParentStructure() {

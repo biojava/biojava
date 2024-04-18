@@ -87,7 +87,7 @@ public class KMFigureInfo {
 	 *
 	 */
 	public Color[] legendColor = {Color.RED, Color.BLUE, Color.GREEN, Color.CYAN, Color.ORANGE, Color.YELLOW, Color.MAGENTA, Color.PINK};
-	public ArrayList<Double> xAxisLabels = new ArrayList<Double>();//new ArrayList<Double>(Arrays.asList(0.0, 5.0, 10.0, 15.0, 20.0));
+	public ArrayList<Double> xAxisLabels = new ArrayList<>();//new ArrayList<Double>(Arrays.asList(0.0, 5.0, 10.0, 15.0, 20.0));
 	public String xAxisLegend = "";
 	public String yAxisLegend = "";
 	public Color getColor(int index) {

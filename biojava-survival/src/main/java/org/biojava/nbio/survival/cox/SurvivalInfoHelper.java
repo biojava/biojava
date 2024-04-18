@@ -86,13 +86,13 @@ public class SurvivalInfoHelper {
 	public static void categorizeData(ArrayList<SurvivalInfo> DataT) {
 
 		//Go through and get all variable value pairs
-		LinkedHashMap<String, LinkedHashMap<String, Double>> valueMap = new LinkedHashMap<String, LinkedHashMap<String, Double>>();
+		LinkedHashMap<String, LinkedHashMap<String, Double>> valueMap = new LinkedHashMap<>();
 		for (SurvivalInfo si : DataT) {
 
 			for (String key : si.unknownDataType.keySet()) {
 				LinkedHashMap<String, Double> map = valueMap.get(key);
 				if (map == null) {
-					map = new LinkedHashMap<String, Double>();
+					map = new LinkedHashMap<>();
 					valueMap.put(key, map);
 				}
 				map.put(si.unknownDataType.get(key), null);
@@ -102,7 +102,7 @@ public class SurvivalInfoHelper {
 		for (String variable : valueMap.keySet()) {
 			LinkedHashMap<String, Double> values = valueMap.get(variable);
 			if (isCategorical(values)) {
-				ArrayList<String> categories = new ArrayList<String>(values.keySet());
+				ArrayList<String> categories = new ArrayList<>(values.keySet());
 				Collections.sort(categories); //go ahead and put in alphabetical order
 				if (categories.size() == 2) {
 					for (String value : values.keySet()) {
@@ -147,7 +147,7 @@ public class SurvivalInfoHelper {
 	 * @return
 	 */
 	public static ArrayList<String> addInteraction(String variable1, String variable2, ArrayList<SurvivalInfo> survivalInfoList) {
-		ArrayList<String> variables = new ArrayList<String>();
+		ArrayList<String> variables = new ArrayList<>();
 		variables.add(variable1);
 		variables.add(variable2);
 		variables.add(variable1 + ":" + variable2);
@@ -170,7 +170,7 @@ public class SurvivalInfoHelper {
 	 * @throws Exception
 	 */
 	public static void groupByRange(double[] range, String variable, String groupName, ArrayList<SurvivalInfo> survivalInfoList) throws Exception {
-		ArrayList<String> labels = new ArrayList<String>();
+		ArrayList<String> labels = new ArrayList<>();
 		for (int i = 0; i < range.length; i++) {
 			String label = "";
 			if (i == 0) {
@@ -184,7 +184,7 @@ public class SurvivalInfoHelper {
 			}
 			labels.add(label);
 		}
-		ArrayList<String> validLabels = new ArrayList<String>();
+		ArrayList<String> validLabels = new ArrayList<>();
 
 		//need to find the categories so we can set 1 and 0 and not include ranges with no values
 		for (SurvivalInfo si : survivalInfoList) {

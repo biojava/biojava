@@ -124,7 +124,7 @@ public class ResidualsCoxph {
 	 * @return
 	 */
 	private static double[][] rowsum(double[][] rr, ArrayList<String> sets) throws Exception {
-		LinkedHashMap<String, Double> sumMap = new LinkedHashMap<String, Double>();
+		LinkedHashMap<String, Double> sumMap = new LinkedHashMap<>();
 		if (rr.length != sets.size()) {
 			throw new Exception("Cluster value for each sample are not of equal length n=" + rr.length + " cluster length=" + sets.size());
 		}
@@ -144,7 +144,7 @@ public class ResidualsCoxph {
 				sum = new double[sumMap.size()][rr[0].length];
 			}
 
-			ArrayList<String> index = new ArrayList<String>(sumMap.keySet());
+			ArrayList<String> index = new ArrayList<>(sumMap.keySet());
 			//sorting does seem to make a difference in test cases at the .0000000001
 	   //     ArrayList<Integer> in = new ArrayList<Integer>();
 	   //     for (String s : index) {

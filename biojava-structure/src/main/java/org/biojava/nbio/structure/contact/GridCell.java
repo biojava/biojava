@@ -40,8 +40,8 @@ public class GridCell {
 	private ArrayList<Integer> jIndices;
 
 	public GridCell(Grid parent){
-		iIndices = new ArrayList<Integer>();
-		jIndices = new ArrayList<Integer>();
+		iIndices = new ArrayList<>();
+		jIndices = new ArrayList<>();
 		this.grid = parent;
 	}
 
@@ -70,7 +70,7 @@ public class GridCell {
 	 */
 	public List<Contact> getContactsWithinCell(){
 
-		List<Contact> contacts = new ArrayList<Contact>();
+		List<Contact> contacts = new ArrayList<>();
 
 		Point3d[] iAtoms = grid.getIAtoms();
 		Point3d[] jAtoms = grid.getJAtoms();
@@ -110,7 +110,7 @@ public class GridCell {
 	 */
 	public List<Contact> getContactsToOtherCell(GridCell otherCell){
 
-		List<Contact> contacts = new ArrayList<Contact>();
+		List<Contact> contacts = new ArrayList<>();
 
 		Point3d[] iAtoms = grid.getIAtoms();
 		Point3d[] jAtoms = grid.getJAtoms();

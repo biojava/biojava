@@ -42,7 +42,7 @@ public class Site implements PDBRecord, Comparable<Site> {
 	private static final String lineEnd = System.getProperty("line.separator");
 
 	private String siteID = "";
-	private List<Group> groups = new ArrayList<Group>();
+	private List<Group> groups = new ArrayList<>();
 	//variables for REMARK 800
 	private String evCode = "";
 	private String description = "";

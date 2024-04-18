@@ -50,9 +50,9 @@ public class SubstitutionMatrixHelper implements Serializable {
 	private static final long serialVersionUID = 148491724604653225L;
 
 	private static Map<String, SubstitutionMatrix<AminoAcidCompound>> aminoAcidMatrices =
-			new HashMap<String, SubstitutionMatrix<AminoAcidCompound>>();
+			new HashMap<>();
 	private static Map<String, SubstitutionMatrix<NucleotideCompound>> nucleotideMatrices =
-			new HashMap<String, SubstitutionMatrix<NucleotideCompound>>();
+			new HashMap<>();
 
 	// prevents instantiation
 	private SubstitutionMatrixHelper() { }

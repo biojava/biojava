@@ -52,16 +52,16 @@ public class PowerSet<T> {
 	 * @return the set of power Sets of the original Set
 	 */
 	public Set<Set<T>> powerSet(Set<T> originalSet) {
-		Set<Set<T>> sets = new LinkedHashSet<Set<T>>();
+		Set<Set<T>> sets = new LinkedHashSet<>();
 		if (originalSet.isEmpty()) {
 			sets.add(new LinkedHashSet<T>());
 			return sets;
 		}
-		List<T> list = new ArrayList<T>(originalSet);
+		List<T> list = new ArrayList<>(originalSet);
 		T head = list.get(0);
-		Set<T> rest = new LinkedHashSet<T>(list.subList(1, list.size()));
+		Set<T> rest = new LinkedHashSet<>(list.subList(1, list.size()));
 		for (Set<T> set : powerSet(rest)) {
-			Set<T> newSet = new LinkedHashSet<T>();
+			Set<T> newSet = new LinkedHashSet<>();
 			newSet.add(head);
 			newSet.addAll(set);
 			sets.add(newSet);

@@ -134,7 +134,7 @@ public class RemoteHmmerScan implements HmmerScan {
 
 		// process the response and build up a container for the data.
 
-		SortedSet<HmmerResult> results = new TreeSet<HmmerResult>();
+		SortedSet<HmmerResult> results = new TreeSet<>();
 		try {
 			JSONObject json =  JSONObject.fromObject(result.toString());
 
@@ -170,7 +170,7 @@ public class RemoteHmmerScan implements HmmerScan {
 
 				JSONArray hmmdomains = hit.getJSONArray("domains");
 
-				SortedSet<HmmerDomain> domains = new TreeSet<HmmerDomain>();
+				SortedSet<HmmerDomain> domains = new TreeSet<>();
 				for ( int j= 0 ; j < hmmdomains.size() ; j++){
 					JSONObject d = hmmdomains.getJSONObject(j);
 					Integer is_included = getInteger(d.get("is_included"));

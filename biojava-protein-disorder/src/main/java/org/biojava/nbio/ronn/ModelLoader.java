@@ -155,7 +155,7 @@ public final class ModelLoader {
 
 	}
 
-	private static final Map<Integer, Model> models = new HashMap<Integer, Model>();
+	private static final Map<Integer, Model> models = new HashMap<>();
 
 	public Model getModel(final int modelNum) {
 	return ModelLoader.models.get(modelNum);

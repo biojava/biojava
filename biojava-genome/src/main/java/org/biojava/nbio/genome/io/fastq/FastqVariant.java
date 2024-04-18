@@ -186,7 +186,7 @@ public enum FastqVariant
 
 
 	/** Map of FASTQ sequence format variants keyed by name and lowercase-with-dashes name. */
-	private static final Map<String, FastqVariant> FASTQ_VARIANTS = new HashMap<String, FastqVariant>(6);
+	private static final Map<String, FastqVariant> FASTQ_VARIANTS = new HashMap<>(6);
 
 	static
 	{

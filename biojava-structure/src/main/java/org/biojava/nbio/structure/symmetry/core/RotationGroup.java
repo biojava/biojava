@@ -35,7 +35,7 @@ import java.util.List;
  * @author Peter
  */
 public class RotationGroup implements Iterable<Rotation> {
-	private List<Rotation> rotations = new ArrayList<Rotation>();
+	private List<Rotation> rotations = new ArrayList<>();
 	private int principalAxisIndex = 0;
 	private int higherOrderRotationAxis = 0;
 	private int twoFoldsPerpendicular = 0;
@@ -61,7 +61,7 @@ public class RotationGroup implements Iterable<Rotation> {
 
 	public void setC1(int n) {
 		Rotation r = new Rotation();
-		List<Integer> permutation = new ArrayList<Integer>(n);
+		List<Integer> permutation = new ArrayList<>(n);
 		for (int i = 0; i < n; i++) {
 			permutation.add(i);
 		}

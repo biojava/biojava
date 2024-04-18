@@ -105,7 +105,7 @@ public class SpaceGroup implements Serializable {
 		this.shortSymbol = shortSymbol;
 		this.altShortSymbol = altShortSymbol;
 		transformations = new ArrayList<Matrix4d>(multiplicity);
-		transfAlgebraic = new ArrayList<String>(multiplicity);
+		transfAlgebraic = new ArrayList<>(multiplicity);
 		cellTranslations = new Vector3d[multiplicity/primitiveMultiplicity];
 		this.bravLattice = bravLattice;
 	}
@@ -649,7 +649,7 @@ public class SpaceGroup implements Serializable {
 			transformations = new ArrayList<Matrix4d>(transfAlgebraic.size());
 
 		if ( this.transfAlgebraic == null || this.transfAlgebraic.size() == 0)
-			this.transfAlgebraic = new ArrayList<String>(transfAlgebraic.size());
+			this.transfAlgebraic = new ArrayList<>(transfAlgebraic.size());
 
 		for ( String transf : transfAlgebraic){
 			addTransformation(transf);

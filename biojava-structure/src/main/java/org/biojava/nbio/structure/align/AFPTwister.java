@@ -295,7 +295,7 @@ public class AFPTwister {
 	private static Atom[] getAtoms(Atom[] ca, int[] positions, int length,
 			boolean clone) {
 
-		List<Atom> atoms = new ArrayList<Atom>();
+		List<Atom> atoms = new ArrayList<>();
 		for (int i = 0; i < length; i++) {
 			int p = positions[i];
 			Atom a;

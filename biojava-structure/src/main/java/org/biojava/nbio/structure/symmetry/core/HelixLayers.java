@@ -29,7 +29,7 @@ import java.util.List;
  * @author Peter
  */
 public class HelixLayers {
-	private List<Helix> helices = new ArrayList<Helix>();
+	private List<Helix> helices = new ArrayList<>();
 	private double symmetryDeviation = 0;
 
 	public int size() {

@@ -177,15 +177,15 @@ public class PDBFileParser  {
 	private boolean isLastCompndLine = false;
 	private boolean isLastSourceLine = false;
 	private EntityInfo current_compound;
-	private List<EntityInfo> entities = new ArrayList<EntityInfo>();
-	private HashMap<Integer,List<String>> compoundMolIds2chainIds = new HashMap<Integer, List<String>>();
-	private List<String> compndLines = new ArrayList<String>();
-	private List<String> sourceLines = new ArrayList<String>();
-	private List<String> journalLines = new ArrayList<String>();
-	private List<String> keywordsLines = new ArrayList<String>();
+	private List<EntityInfo> entities = new ArrayList<>();
+	private HashMap<Integer,List<String>> compoundMolIds2chainIds = new HashMap<>();
+	private List<String> compndLines = new ArrayList<>();
+	private List<String> sourceLines = new ArrayList<>();
+	private List<String> journalLines = new ArrayList<>();
+	private List<String> keywordsLines = new ArrayList<>();
 	private List<DBRef> dbrefs;
-	private Map<String, Site> siteMap = new LinkedHashMap<String, Site>();
-	private Map<String, List<ResidueNumber>> siteToResidueMap = new LinkedHashMap<String, List<ResidueNumber>>();
+	private Map<String, Site> siteMap = new LinkedHashMap<>();
+	private Map<String, List<ResidueNumber>> siteToResidueMap = new LinkedHashMap<>();
 
 	private List<SSBondImpl> ssbonds = new ArrayList<>();
 
@@ -207,7 +207,7 @@ public class PDBFileParser  {
 	private float rfreeStandardLine = -1;
 	private float rfreeNoCutoffLine = -1;
 
-	private static  final List<String> compndFieldValues = new ArrayList<String>(
+	private static  final List<String> compndFieldValues = new ArrayList<>(
 			Arrays.asList(
 					"MOL_ID:", "MOLECULE:", "CHAIN:", "SYNONYM:",
 					"EC:", "FRAGMENT:", "ENGINEERED:", "MUTATION:",
@@ -215,14 +215,14 @@ public class PDBFileParser  {
 					));
 
 
-	private static final List<String> ignoreCompndFieldValues = new ArrayList<String>(
+	private static final List<String> ignoreCompndFieldValues = new ArrayList<>(
 			Arrays.asList(
 					"HETEROGEN:","ENGINEEREED:","FRAGMENT,",
 					"MUTANT:","SYNTHETIC:"
 					));
 	// ENGINEEREED in pdb219d
 
-	private static final List<String> sourceFieldValues = new ArrayList<String>(
+	private static final List<String> sourceFieldValues = new ArrayList<>(
 			Arrays.asList("ENGINEERED:", "MOL_ID:", "SYNTHETIC:", "FRAGMENT:",
 					"ORGANISM_SCIENTIFIC:", "ORGANISM_COMMON:",
 					"ORGANISM_TAXID:","STRAIN:",
@@ -274,14 +274,14 @@ public class PDBFileParser  {
 
 		pdbHeader 	  = new PDBHeader();
 		crystallographicInfo = new PDBCrystallographicInfo();
-		connects      = new ArrayList<Map<String,Integer>>() ;
+		connects      = new ArrayList<>() ;
 
 
-		helixList     = new ArrayList<Map<String,String>>();
-		strandList    = new ArrayList<Map<String,String>>();
-		turnList      = new ArrayList<Map<String,String>>();
+		helixList     = new ArrayList<>();
+		strandList    = new ArrayList<>();
+		turnList      = new ArrayList<>();
 		current_compound = null;
-		dbrefs        = new ArrayList<DBRef>();
+		dbrefs        = new ArrayList<>();
 		siteMap = null;
 		dateFormat = new SimpleDateFormat("dd-MMM-yy", Locale.US);
 		atomCount = 0;
@@ -294,7 +294,7 @@ public class PDBFileParser  {
 		loadMaxAtoms = params.getMaxAtoms();
 		atomCAThreshold = params.getAtomCaThreshold();
 
-		linkRecords = new ArrayList<LinkRecord>();
+		linkRecords = new ArrayList<>();
 
 		blankChainIdsPresent = false;
 
@@ -486,7 +486,7 @@ public class PDBFileParser  {
 		//System.out.println(initResName + " " + initChainId + " " + initSeqNum + " " + initICode + " " +
 		//        endResName + " " + endChainId + " " + endSeqNum + " " + endICode);
 
-		Map<String,String> m = new HashMap<String,String>();
+		Map<String,String> m = new HashMap<>();
 
 		m.put("initResName",initResName);
 		m.put("initChainId", initChainId);
@@ -573,7 +573,7 @@ public class PDBFileParser  {
 		//System.out.println(initResName + " " + initChainId + " " + initSeqNum + " " + initICode + " " +
 		//        endResName + " " + endChainId + " " + endSeqNum + " " + endICode);
 
-		Map<String,String> m = new HashMap<String,String>();
+		Map<String,String> m = new HashMap<>();
 
 		m.put("initResName",initResName);
 		m.put("initChainId", initChainId);
@@ -638,7 +638,7 @@ public class PDBFileParser  {
 		//System.out.println(initResName + " " + initChainId + " " + initSeqNum + " " + initICode + " " +
 		//        endResName + " " + endChainId + " " + endSeqNum + " " + endICode);
 
-		Map<String,String> m = new HashMap<String,String>();
+		Map<String,String> m = new HashMap<>();
 
 		m.put("initResName",initResName);
 		m.put("initChainId", initChainId);
@@ -1055,7 +1055,7 @@ public class PDBFileParser  {
 		if ("CHAIN:".equals(field)) {
 			//System.out.println(value);
 			StringTokenizer chainTokens = new StringTokenizer(value, ",");
-			List<String> chains = new ArrayList<String>();
+			List<String> chains = new ArrayList<>();
 
 			while (chainTokens.hasMoreTokens()) {
 				String chainID = chainTokens.nextToken().trim();
@@ -1070,7 +1070,7 @@ public class PDBFileParser  {
 		if ("SYNONYM:".equals(field)) {
 
 			StringTokenizer synonyms = new StringTokenizer(value, ",");
-			List<String> names = new ArrayList<String>();
+			List<String> names = new ArrayList<>();
 
 			while (synonyms.hasMoreTokens()) {
 				names.add(synonyms.nextToken());
@@ -1083,7 +1083,7 @@ public class PDBFileParser  {
 		if ("EC:".equals(field)) {
 
 			StringTokenizer ecNumTokens = new StringTokenizer(value, ",");
-			List<String> ecNums = new ArrayList<String>();
+			List<String> ecNums = new ArrayList<>();
 
 			while (ecNumTokens.hasMoreTokens()) {
 				ecNums.add(ecNumTokens.nextToken());
@@ -2079,7 +2079,7 @@ public class PDBFileParser  {
 
 			//System.out.println(atomserial+ " "+ bond1 +" "+bond2+ " " +bond3+" "+bond4+" "+
 			//		   hyd1+" "+hyd2 +" "+salt1+" "+hyd3+" "+hyd4+" "+salt2);
-			HashMap<String, Integer> cons = new HashMap<String, Integer>();
+			HashMap<String, Integer> cons = new HashMap<>();
 			cons.put("atomserial",atomserial);
 
 			if ( bond1 != null) cons.put("bond1",bond1);
@@ -2383,7 +2383,7 @@ public class PDBFileParser  {
 
 		//if the siteResidues doesn't yet exist, make a new one.
 		if (siteResidues == null || ! siteToResidueMap.containsKey(siteID.trim())){
-			siteResidues = new ArrayList<ResidueNumber>();
+			siteResidues = new ArrayList<>();
 			siteToResidueMap.put(siteID.trim(), siteResidues);
 
 			logger.debug(String.format("New Site made: %s %s", siteID,  siteResidues));
@@ -2600,10 +2600,10 @@ public class PDBFileParser  {
 		startOfMolecule = true;
 		startOfModel = true;
 
-		seqResChains  = new ArrayList<Chain>();
-		siteMap = new LinkedHashMap<String, Site>();
+		seqResChains  = new ArrayList<>();
+		siteMap = new LinkedHashMap<>();
 		pdbHeader     = new PDBHeader();
-		connects      = new ArrayList<Map<String,Integer>>();
+		connects      = new ArrayList<>();
 		previousContinuationField = "";
 		continuationField = "";
 		continuationString = "";
@@ -2621,7 +2621,7 @@ public class PDBFileParser  {
 		lengthCheck = -1;
 		atomCount = 0;
 		atomOverflow = false;
-		linkRecords = new ArrayList<LinkRecord>();
+		linkRecords = new ArrayList<>();
 		siteToResidueMap.clear();
 
 		blankChainIdsPresent = false;
@@ -2812,7 +2812,7 @@ public class PDBFileParser  {
 		}
 		String fulllengthList = fullList.toString();
 		keywords = fulllengthList.split("( )*,( )*");
-		ArrayList<String> lst = new ArrayList<String>(keywords.length);
+		ArrayList<String> lst = new ArrayList<>(keywords.length);
 		for (String keyword : keywords) {
 			if(keyword.length() == 0) {
 				logger.debug("Keyword empty in structure {}", structure.getIdentifier().toString());
@@ -3317,7 +3317,7 @@ public class PDBFileParser  {
 		List<Site> sites = null;
 		//check that there are chains with which to associate the groups
 		if (structure.getChains().isEmpty()) {
-			sites = new ArrayList<Site>(siteMap.values());
+			sites = new ArrayList<>(siteMap.values());
 			logger.info("No chains to link Site Groups with - Sites will not be present in the Structure");
 			return;
 		}
@@ -3360,7 +3360,7 @@ public class PDBFileParser  {
 
 		//System.out.println("SITEMAP: " + siteMap);
 
-		sites = new ArrayList<Site>(siteMap.values());
+		sites = new ArrayList<>(siteMap.values());
 		structure.setSites(sites);
 		//System.out.println("STRUCTURE SITES: " + structure.getSites().size());
 		//            for (Site site : structure.getSites()) {
@@ -3611,7 +3611,7 @@ public class PDBFileParser  {
 	}
 
 	private List<Author> authorBuilder(String authorString) {
-		ArrayList<Author> authorList = new ArrayList<Author>();
+		ArrayList<Author> authorList = new ArrayList<>();
 
 		if ("".equals(authorString)) {
 			return authorList;

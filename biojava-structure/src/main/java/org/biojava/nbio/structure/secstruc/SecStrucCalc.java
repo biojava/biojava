@@ -104,8 +104,8 @@ public class SecStrucCalc {
 	private AtomContactSet contactSet;
 	private Map<ResidueNumber, Integer> indResMap;
 	public SecStrucCalc(){
-		ladders = new ArrayList<Ladder>();
-		bridges = new ArrayList<BetaBridge>();
+		ladders = new ArrayList<>();
+		bridges = new ArrayList<>();
 	}
 
 
@@ -120,11 +120,11 @@ public class SecStrucCalc {
 	public List<SecStrucState> calculate(Structure s, boolean assign)
 			throws StructureException {
 
-		List<SecStrucState> secstruc = new ArrayList<SecStrucState>();
+		List<SecStrucState> secstruc = new ArrayList<>();
 		for(int i=0; i<s.nrModels(); i++) {
 			// Reinitialise the global vars
-			ladders = new ArrayList<Ladder>();
-			bridges = new ArrayList<BetaBridge>();
+			ladders = new ArrayList<>();
+			bridges = new ArrayList<>();
 			groups = initGroupArray(s, i);
 			// Initialise the contact set for this structure
 			initContactSet();
@@ -424,7 +424,7 @@ public class SecStrucCalc {
 	private void findBridges() {
 		// Get the interator of contacts
 		Iterator<AtomContact> myIter = contactSet.iterator();
-		List<Pair<Integer>> outList = new ArrayList<Pair<Integer>>();
+		List<Pair<Integer>> outList = new ArrayList<>();
 
 		// Now iterate through this
 		while(myIter.hasNext()){
@@ -461,7 +461,7 @@ public class SecStrucCalc {
 				continue;
 			}
 
-			Pair<Integer> thisPair = new Pair<Integer>(i,j);
+			Pair<Integer> thisPair = new Pair<>(i,j);
 			outList.add(thisPair);
 		}
 		//
@@ -705,7 +705,7 @@ public class SecStrucCalc {
 	}
 
 	private static SecStrucGroup[] initGroupArray(Structure s, int modelId) {
-		List<SecStrucGroup> groupList = new ArrayList<SecStrucGroup>();
+		List<SecStrucGroup> groupList = new ArrayList<>();
 		//
 		for ( Chain c : s.getChains(modelId)){
 

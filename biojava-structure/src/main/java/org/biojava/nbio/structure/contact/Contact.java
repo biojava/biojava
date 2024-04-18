@@ -42,7 +42,7 @@ public class Contact implements Serializable {
 	}
 
 	public Pair<Integer> getIndexPair() {
-		return new Pair<Integer>(i,j);
+		return new Pair<>(i,j);
 	}
 
 	public int getI() {

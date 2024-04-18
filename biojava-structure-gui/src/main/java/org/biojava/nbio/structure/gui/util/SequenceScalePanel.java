@@ -105,7 +105,7 @@ extends JPanel{
 		setPrefSize();
 		coordManager = new CoordManager();
 
-		apos = new ArrayList<AlignedPosition>();
+		apos = new ArrayList<>();
 
 	}
 

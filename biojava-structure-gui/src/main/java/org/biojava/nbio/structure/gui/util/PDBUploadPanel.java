@@ -79,7 +79,7 @@ implements StructurePairSelector {
 
 	public static JComboBox<String> getFileFormatSelect(){
 		JComboBox<String> fileType = new JComboBox<>();
-			fileType = new JComboBox<String>(new String[] {UserConfiguration.PDB_FORMAT,UserConfiguration.MMCIF_FORMAT});
+			fileType = new JComboBox<>(new String[] {UserConfiguration.PDB_FORMAT,UserConfiguration.MMCIF_FORMAT});
 			fileType.setSelectedIndex(0);
 			fileType.setMaximumSize(new Dimension(10,50));
 

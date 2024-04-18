@@ -48,7 +48,7 @@ public class FlatFileCache {
 	/**
 	 * The cache singleton.
 	 */
-	private static SoftHashMap<String, byte[]> cache = new SoftHashMap<String, byte[]>(0);
+	private static SoftHashMap<String, byte[]> cache = new SoftHashMap<>(0);
 
 
 	// no public constructor;

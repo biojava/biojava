@@ -61,7 +61,7 @@ public class GradientMapper implements ContinuousColorMapper, Map<Double, Color>
 		this(negInf,posInf,ColorSpace.getInstance(ColorSpace.CS_sRGB));
 	}
 	public GradientMapper(Color negInf, Color posInf, ColorSpace cspace) {
-		mapping = new TreeMap<Double,Color>();
+		mapping = new TreeMap<>();
 		mapping.put(Double.NEGATIVE_INFINITY, negInf);
 		mapping.put(Double.POSITIVE_INFINITY, posInf);
 		interpolator = new LinearColorInterpolator(cspace);

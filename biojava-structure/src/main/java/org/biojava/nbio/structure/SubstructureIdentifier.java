@@ -109,7 +109,7 @@ public class SubstructureIdentifier implements StructureIdentifier {
 
 			this.ranges = ResidueRange.parseMultiple(rangeStr);
 		} else {
-			this.ranges = new LinkedList<ResidueRange>();
+			this.ranges = new LinkedList<>();
 		}
 	}
 

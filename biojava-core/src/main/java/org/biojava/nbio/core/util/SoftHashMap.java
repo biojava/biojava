@@ -46,16 +46,16 @@ public class SoftHashMap<K, V> extends AbstractMap<K, V> {
 	public static final int DEFAULT_LIMIT = 1;
 
 	/** The internal HashMap that stores SoftReference to actual data. */
-	private final Map<K, SoftReference<V>> map = new HashMap<K, SoftReference<V>>();
+	private final Map<K, SoftReference<V>> map = new HashMap<>();
 
 	/** Maximum Number of references you dont want GC to collect. */
 	private final int max_limit;
 
 	/** The FIFO list of hard references, order of last access. */
-	private final LinkedList<V> hardCache = new LinkedList<V>();
+	private final LinkedList<V> hardCache = new LinkedList<>();
 
 	/** Reference queue for cleared SoftReference objects. */
-	private final ReferenceQueue<V> queue = new ReferenceQueue<V>();
+	private final ReferenceQueue<V> queue = new ReferenceQueue<>();
 
 	public SoftHashMap() {
 		this(1000);

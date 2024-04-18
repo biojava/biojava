@@ -184,7 +184,7 @@ public class BiologicalAssemblyBuilder {
 	 * @return
 	 */
 	private List<String> getChainIds(Structure asymUnit) {
-		List<String> chainIds = new ArrayList<String>();
+		List<String> chainIds = new ArrayList<>();
 		for ( Chain c : asymUnit.getChains()){
 			String intChainID = c.getId();
 			chainIds.add(intChainID);

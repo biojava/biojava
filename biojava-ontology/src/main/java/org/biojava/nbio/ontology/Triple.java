@@ -182,7 +182,7 @@ extends Term {
 			this.name = name;
 			this.description = description;
 
-			this.synonyms = new TreeSet<Object>();
+			this.synonyms = new TreeSet<>();
 			if (synonyms!=null) this.synonyms.addAll(Arrays.asList(synonyms));
 		}
 

@@ -108,7 +108,7 @@ public enum ModificationCategory {
 
 	private static Map<String, ModificationCategory> mapLabelCat;
 	static {
-		mapLabelCat = new HashMap<String, ModificationCategory>();
+		mapLabelCat = new HashMap<>();
 		for (ModificationCategory cat:ModificationCategory.values()) {
 			mapLabelCat.put(cat.label, cat);
 		}

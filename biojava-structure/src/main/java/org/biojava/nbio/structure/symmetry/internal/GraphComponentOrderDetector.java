@@ -59,7 +59,7 @@ public class GraphComponentOrderDetector implements OrderDetector {
 		List<Set<Integer>> components = inspector.connectedSets();
 
 		// The order maximizes the residues aligned
-		Map<Integer, Integer> counts = new HashMap<Integer, Integer>();
+		Map<Integer, Integer> counts = new HashMap<>();
 		for (Set<Integer> c : components) {
 			if (counts.containsKey(c.size()))
 				counts.put(c.size(), counts.get(c.size()) + c.size());

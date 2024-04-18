@@ -356,7 +356,7 @@ public class StockholmFileParser {
 		if (internalScanner == null) {
 			internalScanner = new Scanner(inStream);
 		}
-		ArrayList<StockholmStructure> structures = new ArrayList<StockholmStructure>();
+		ArrayList<StockholmStructure> structures = new ArrayList<>();
 		while (max != INFINITY && max-- > 0) {
 			StockholmStructure structure = parse(internalScanner);
 			if (structure != null) {

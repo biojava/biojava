@@ -43,7 +43,7 @@ public class GroupContactSet implements Serializable, Iterable<GroupContact>{
 	private HashMap<Pair<ResidueIdentifier>, GroupContact> contacts;
 
 	public GroupContactSet() {
-		contacts = new HashMap<Pair<ResidueIdentifier>, GroupContact>();
+		contacts = new HashMap<>();
 	}
 
 	/**
@@ -52,7 +52,7 @@ public class GroupContactSet implements Serializable, Iterable<GroupContact>{
 	 * @param atomContacts
 	 */
 	public GroupContactSet(AtomContactSet atomContacts) {
-		contacts = new HashMap<Pair<ResidueIdentifier>, GroupContact>();
+		contacts = new HashMap<>();
 		atoms2groups(atomContacts);
 	}
 
@@ -69,8 +69,8 @@ public class GroupContactSet implements Serializable, Iterable<GroupContact>{
 			// we skip the self-residue contacts
 			if (iResidue.equals(jResidue)) continue;
 
-			Pair<Group> residuePair = new Pair<Group> (iResidue, jResidue);
-			Pair<ResidueIdentifier> pair = new Pair<ResidueIdentifier>(new ResidueIdentifier(iResidue), new ResidueIdentifier(jResidue));
+			Pair<Group> residuePair = new Pair<> (iResidue, jResidue);
+			Pair<ResidueIdentifier> pair = new Pair<>(new ResidueIdentifier(iResidue), new ResidueIdentifier(jResidue));
 
 			if (!contacts.containsKey(pair)) {
 
@@ -152,7 +152,7 @@ public class GroupContactSet implements Serializable, Iterable<GroupContact>{
 	}
 
 	private Pair<ResidueIdentifier> getResIdPairFromContact(GroupContact groupContact) {
-		return new Pair<ResidueIdentifier>(
+		return new Pair<>(
 				new ResidueIdentifier(groupContact.getPair().getFirst()),
 				new ResidueIdentifier(groupContact.getPair().getSecond()) );
 

@@ -69,7 +69,7 @@ public class SymbolTable<Key extends Comparable<Key>, Value> implements Iterable
 	 * Create an empty symbol table.
 	 */
 	public SymbolTable() {
-		st = new TreeMap<Key, Value>();
+		st = new TreeMap<>();
 	}
 
 	/**

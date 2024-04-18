@@ -541,7 +541,7 @@ public class SymmetryAxes {
 	 * @return List of first Repeats of each index, sorted in ascending order
 	 */
 	public List<Integer> getFirstRepeats(int level) {
-		List<Integer> firstRepeats = new ArrayList<Integer>();
+		List<Integer> firstRepeats = new ArrayList<>();
 		int m = getNumRepeats(level+1); //size of the level
 		int d = axes.get(level).getOrder(); //degree of this level
 		int n = m*d; // number of repeats included in each axis

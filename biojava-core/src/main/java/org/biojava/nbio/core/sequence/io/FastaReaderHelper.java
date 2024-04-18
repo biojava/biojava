@@ -57,7 +57,7 @@ public class FastaReaderHelper {
 		}
 
 		FastaReader<DNASequence, NucleotideCompound> fastaProxyReader =
-				new FastaReader<DNASequence, NucleotideCompound>(
+				new FastaReader<>(
 						file,
 						new GenericFastaHeaderParser<DNASequence, NucleotideCompound>(),
 						new FileProxyDNASequenceCreator(
@@ -85,7 +85,7 @@ public class FastaReaderHelper {
 		}
 
 		FastaReader<RNASequence, NucleotideCompound> fastaProxyReader =
-				new FastaReader<RNASequence, NucleotideCompound>(
+				new FastaReader<>(
 						file,
 						new GenericFastaHeaderParser<RNASequence, NucleotideCompound>(),
 						new FileProxyRNASequenceCreator(
@@ -124,7 +124,7 @@ public class FastaReaderHelper {
 	 */
 	public static LinkedHashMap<String, ProteinSequence> readFastaProteinSequence(
 			InputStream inStream) throws IOException {
-		FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = new FastaReader<ProteinSequence, AminoAcidCompound>(
+		FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = new FastaReader<>(
 				inStream,
 				new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>(),
 				new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
@@ -139,7 +139,7 @@ public class FastaReaderHelper {
 	 */
 	public static LinkedHashMap<String, DNASequence> readFastaDNASequence(
 			InputStream inStream) throws IOException {
-		FastaReader<DNASequence, NucleotideCompound> fastaReader = new FastaReader<DNASequence, NucleotideCompound>(
+		FastaReader<DNASequence, NucleotideCompound> fastaReader = new FastaReader<>(
 				inStream,
 				new GenericFastaHeaderParser<DNASequence, NucleotideCompound>(),
 				new DNASequenceCreator(DNACompoundSet.getDNACompoundSet()));
@@ -168,7 +168,7 @@ public class FastaReaderHelper {
 	 */
 	public static LinkedHashMap<String, RNASequence> readFastaRNASequence(
 			InputStream inStream) throws IOException {
-		FastaReader<RNASequence, NucleotideCompound> fastaReader = new FastaReader<RNASequence, NucleotideCompound>(
+		FastaReader<RNASequence, NucleotideCompound> fastaReader = new FastaReader<>(
 				inStream,
 				new GenericFastaHeaderParser<RNASequence, NucleotideCompound>(),
 				new RNASequenceCreator(RNACompoundSet.getRNACompoundSet()));

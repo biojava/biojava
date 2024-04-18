@@ -77,7 +77,7 @@ public class MultipleAlignmentXMLParser {
 			throws ParserConfigurationException, SAXException, IOException {
 
 		List<MultipleAlignmentEnsemble> ensembles =
-				new ArrayList<MultipleAlignmentEnsemble>();
+				new ArrayList<>();
 
 		//Convert string to XML document
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -178,7 +178,7 @@ public class MultipleAlignmentXMLParser {
 	private static Block parseBlock(Node root, BlockSet blockSet) {
 
 		Block b = new BlockImpl(blockSet);
-		List<List<Integer>> alignRes = new ArrayList<List<Integer>>();
+		List<List<Integer>> alignRes = new ArrayList<>();
 		b.setAlignRes(alignRes);
 		NodeList children = root.getChildNodes();
 
@@ -276,7 +276,7 @@ public class MultipleAlignmentXMLParser {
 	private static void parseStructures(Node root,
 			MultipleAlignmentEnsemble ensemble) {
 
-		List<StructureIdentifier> names = new ArrayList<StructureIdentifier>();
+		List<StructureIdentifier> names = new ArrayList<>();
 		ensemble.setStructureIdentifiers(names);
 
 		NamedNodeMap atts = root.getAttributes();

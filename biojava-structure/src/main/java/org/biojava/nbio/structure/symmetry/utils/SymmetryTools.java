@@ -443,7 +443,7 @@ public class SymmetryTools {
 	public static List<List<Integer>> buildSymmetryGraph(List<AFPChain> afps,
 			Atom[] atoms, boolean undirected) {
 
-		List<List<Integer>> graph = new ArrayList<List<Integer>>();
+		List<List<Integer>> graph = new ArrayList<>();
 
 		for (int n = 0; n < atoms.length; n++) {
 			graph.add(new ArrayList<Integer>());
@@ -512,7 +512,7 @@ public class SymmetryTools {
 		Atom[] atoms = symmetry.getAtoms();
 		Set<Group> allGroups = StructureTools.getAllGroupsFromSubset(atoms, GroupType.HETATM);
 		List<StructureIdentifier> repeatsId = symmetry.getRepeatsID();
-		List<Structure> repeats = new ArrayList<Structure>(order);
+		List<Structure> repeats = new ArrayList<>(order);
 
 		// Create new structure containing the repeat atoms
 		for (int i = 0; i < order; i++) {
@@ -613,7 +613,7 @@ public class SymmetryTools {
 
 		MultipleAlignment repeats = newEnsemble.getMultipleAlignment(0);
 		Block block = repeats.getBlock(0);
-		List<Atom[]> atomArrays = new ArrayList<Atom[]>();
+		List<Atom[]> atomArrays = new ArrayList<>();
 
 		for (Structure s : repSt)
 			atomArrays.add(StructureTools.getRepresentativeAtomArray(s));
@@ -737,7 +737,7 @@ public class SymmetryTools {
 	 */
 	public static List<Group> getGroups(Atom[] rAtoms) {
 
-		List<Group> groups = new ArrayList<Group>(rAtoms.length);
+		List<Group> groups = new ArrayList<>(rAtoms.length);
 
 		for (Atom a : rAtoms) {
 			Group g = a.getGroup();
@@ -774,8 +774,8 @@ public class SymmetryTools {
 			for (int level = 0; level < axes.getNumLevels(); level++) {
 
 				// Calculate the aligned atom arrays to superimpose
-				List<Atom> list1 = new ArrayList<Atom>();
-				List<Atom> list2 = new ArrayList<Atom>();
+				List<Atom> list1 = new ArrayList<>();
+				List<Atom> list2 = new ArrayList<>();
 
 				for (int firstRepeat : axes.getFirstRepeats(level)) {
 
@@ -866,7 +866,7 @@ public class SymmetryTools {
 		else {
 
 			// Get Atoms of all models
-			List<Atom> atomList = new ArrayList<Atom>();
+			List<Atom> atomList = new ArrayList<>();
 			for (int m = 0; m < structure.nrModels(); m++) {
 				for (Chain c : structure.getModel(m))
 					atomList.addAll(Arrays.asList(StructureTools
@@ -888,7 +888,7 @@ public class SymmetryTools {
 	 */
 	public static List<Integer> getValidFolds(List<Integer> stoichiometry) {
 
-		List<Integer> denominators = new ArrayList<Integer>();
+		List<Integer> denominators = new ArrayList<>();
 
 		if (stoichiometry.isEmpty())
 			return denominators;
@@ -896,7 +896,7 @@ public class SymmetryTools {
 		int nChains = Collections.max(stoichiometry);
 
 		// Remove duplicate stoichiometries
-		Set<Integer> nominators = new TreeSet<Integer>(stoichiometry);
+		Set<Integer> nominators = new TreeSet<>(stoichiometry);
 
 		// find common denominators
 		for (int d = 1; d <= nChains; d++) {

@@ -90,7 +90,7 @@ public class SelectMultiplePanel extends JPanel {
 
 	public List<Structure> getStructures() throws StructureException {
 
-		List<Structure> structures = new ArrayList<Structure>();
+		List<Structure> structures = new ArrayList<>();
 
 		for (StructureIdentifier name:getNames()){
 			structures.add(getStructure(name));
@@ -100,7 +100,7 @@ public class SelectMultiplePanel extends JPanel {
 
 	public List<StructureIdentifier> getNames() {
 
-		List<StructureIdentifier> names = new ArrayList<StructureIdentifier>();
+		List<StructureIdentifier> names = new ArrayList<>();
 
 		String raw = input.getText().trim();
 		String[] split = raw.split(" ");

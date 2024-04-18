@@ -55,7 +55,7 @@ public class CoxVariables {
 		String link = geneSet + "_" + cohortName;
 		return link.hashCode();
 	}
-	private LinkedHashMap<String, CoxInfo> coxInfoHashMap = new LinkedHashMap<String, CoxInfo>();
+	private LinkedHashMap<String, CoxInfo> coxInfoHashMap = new LinkedHashMap<>();
 
 	/**
 	 *

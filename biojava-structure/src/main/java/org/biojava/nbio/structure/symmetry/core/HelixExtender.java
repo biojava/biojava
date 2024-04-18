@@ -40,7 +40,7 @@ public class HelixExtender {
 		List<List<Integer>> layerLines = helix.getLayerLines();
 
 		// get list of subunit indices to be used for helix extension
-		List<Integer> indices = new ArrayList<Integer>();
+		List<Integer> indices = new ArrayList<>();
 		for (List<Integer> line: layerLines) {
 			if (steps < 0) {
 				indices.add(line.get(0));

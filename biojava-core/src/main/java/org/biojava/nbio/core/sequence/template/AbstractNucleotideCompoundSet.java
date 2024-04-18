@@ -46,7 +46,7 @@ public abstract class AbstractNucleotideCompoundSet<C extends NucleotideCompound
 		C upper = newNucleotideCompound(base.toUpperCase(), complement.toUpperCase(), upperEquivalents);
 		C lower = newNucleotideCompound(base.toLowerCase(), complement.toLowerCase(), lowerEquivalents);
 
-		List<C> equivalentCompounds = new ArrayList<C>();
+		List<C> equivalentCompounds = new ArrayList<>();
 
 		for(int i=0; i<equivalents.length; i++) {
 			equivalentCompounds.add(getCompoundForString(upperEquivalents[i]));
@@ -65,7 +65,7 @@ public abstract class AbstractNucleotideCompoundSet<C extends NucleotideCompound
 	 */
 	@SuppressWarnings("unchecked")
 	protected void calculateIndirectAmbiguities() {
-		Map<NucleotideCompound, List<NucleotideCompound>> equivalentsMap = new HashMap<NucleotideCompound, List<NucleotideCompound>>();
+		Map<NucleotideCompound, List<NucleotideCompound>> equivalentsMap = new HashMap<>();
 
 		List<NucleotideCompound> ambiguousCompounds = getAllCompounds().stream()		 
                                                                                .filter(compound -> compound.isAmbiguous())
@@ -116,7 +116,7 @@ public abstract class AbstractNucleotideCompoundSet<C extends NucleotideCompound
 
 			List<NucleotideCompound> listS = equivalentsMap.get(key);
 			if ( listS == null){
-				listS = new ArrayList<NucleotideCompound>();
+				listS = new ArrayList<>();
 				equivalentsMap.put(key, listS);
 			}
 			listS.add(value);
@@ -137,7 +137,7 @@ private NucleotideCompound toLowerCase(NucleotideCompound compound) {
 	 * @return The ambiguity symbol which represents this set of nucleotides best
 	 */
 	public NucleotideCompound getAmbiguity(NucleotideCompound... compounds) {
-		Set<NucleotideCompound> settedCompounds = new HashSet<NucleotideCompound>();
+		Set<NucleotideCompound> settedCompounds = new HashSet<>();
 		for(NucleotideCompound compound: compounds) {
 			for(NucleotideCompound subCompound: compound.getConstituents()) {
 				settedCompounds.add(getCompoundForString(subCompound.getBase().toUpperCase()));

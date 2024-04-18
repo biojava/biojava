@@ -51,7 +51,7 @@ public class SiftsXMLParser {
 
 	static boolean debug = false;
 	public SiftsXMLParser(){
-		entities = new ArrayList<SiftsEntity>();
+		entities = new ArrayList<>();
 	}
 
 	public List<SiftsEntity> getEntities(){
@@ -60,7 +60,7 @@ public class SiftsXMLParser {
 
 
 	public void parseXmlFile(InputStream is){
-		entities = new ArrayList<SiftsEntity>();
+		entities = new ArrayList<>();
 
 		//get the factory
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -269,7 +269,7 @@ public class SiftsXMLParser {
 		}
 
 	private List<String> getTextValues(Element ele, String tagName) {
-		List<String>values = new ArrayList<String>();
+		List<String>values = new ArrayList<>();
 		NodeList nl = ele.getElementsByTagName(tagName);
 		if(nl != null && nl.getLength() > 0) {
 			for ( int i = 0 ;i < nl.getLength() ; i ++) {

@@ -81,7 +81,7 @@ public class DemoAlignmentFromFasta {
 		//   "4HHB.A:1-15" (residue range)
 		// For this example, the built-in fasta parser will extract the correct accession.
 		SequenceHeaderParserInterface<ProteinSequence, AminoAcidCompound> headerParser;
-		headerParser = new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>();
+		headerParser = new GenericFastaHeaderParser<>();
 
 		// Create AtomCache to fetch structures from the PDB
 		AtomCache cache = new AtomCache();

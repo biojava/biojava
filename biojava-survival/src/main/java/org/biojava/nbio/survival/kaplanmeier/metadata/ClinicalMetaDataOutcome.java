@@ -66,7 +66,7 @@ public class ClinicalMetaDataOutcome {
 	public static void main(String[] args) {
 
 		try {
-			LinkedHashMap<String, String> censorMap = new LinkedHashMap<String, String>();
+			LinkedHashMap<String, String> censorMap = new LinkedHashMap<>();
 			censorMap.put("a", "0");
 			censorMap.put("d", "1");
 			censorMap.put("d-d.s.", "1");
@@ -74,7 +74,7 @@ public class ClinicalMetaDataOutcome {
 			String timeColumn = "TIME";
 			String sensorMapColumn = "last_follow_up_status"; // "survstat3";
 			double timeScale = 1.0;
-			ArrayList<MetaDataInfo> metaDataInfoList = new ArrayList<MetaDataInfo>();
+			ArrayList<MetaDataInfo> metaDataInfoList = new ArrayList<>();
 			metaDataInfoList.add(new MetaDataInfo("age_at_diagnosis", true, new MeanQuantizer()));
 			metaDataInfoList.add(new MetaDataInfo("size", true, new MeanQuantizer()));
 			metaDataInfoList.add(new MetaDataInfo("lymph_nodes_positive", true, new MeanQuantizer()));

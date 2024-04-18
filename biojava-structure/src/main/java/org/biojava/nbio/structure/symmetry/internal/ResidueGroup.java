@@ -48,7 +48,7 @@ public class ResidueGroup {
 	 */
 	public ResidueGroup(Set<Integer> component) {
 		// Transform component into sorted List of residues
-		residues = new ArrayList<Integer>(component);
+		residues = new ArrayList<>(component);
 		Collections.sort(residues);
 	}
 

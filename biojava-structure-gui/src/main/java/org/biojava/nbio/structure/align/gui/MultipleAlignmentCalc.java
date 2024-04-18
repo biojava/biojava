@@ -78,7 +78,7 @@ public class MultipleAlignmentCalc implements AlignmentCalculationRunnable {
 				parent.getMultipleStructureAligner();
 		try {
 
-			List<Atom[]> atomArrays = new ArrayList<Atom[]>();
+			List<Atom[]> atomArrays = new ArrayList<>();
 			for (Structure s:structures){
 				Atom[] ca = StructureTools.getRepresentativeAtomArray(s);
 				atomArrays.add(ca);

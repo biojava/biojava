@@ -40,7 +40,7 @@ import java.util.Map;
  */
 public abstract class AbstractFeature<S extends AbstractSequence<C>, C extends Compound>
 		implements FeatureInterface<S, C> {
-	List<FeatureInterface<S, C>> childrenFeatures = new ArrayList<FeatureInterface<S, C>>();
+	List<FeatureInterface<S, C>> childrenFeatures = new ArrayList<>();
 	FeatureInterface<S, C> parentFeature;
 	AbstractLocation sequenceLocation;
 	String type = "";
@@ -48,7 +48,7 @@ public abstract class AbstractFeature<S extends AbstractSequence<C>, C extends C
 	private String description = "";
 	private String shortDescription = "";
 	private Object userObject = null;
-	private Map<String, List<Qualifier>> Qualifiers = new HashMap<String, List<Qualifier>>();
+	private Map<String, List<Qualifier>> Qualifiers = new HashMap<>();
 
 	/**
 	 * A feature has a type and a source
@@ -292,7 +292,7 @@ public abstract class AbstractFeature<S extends AbstractSequence<C>, C extends C
 			vals.add(qualifier);
 			Qualifiers.put(key, vals);
 		} else {
-			List<Qualifier> vals = new ArrayList<Qualifier>();
+			List<Qualifier> vals = new ArrayList<>();
 			vals.add(qualifier);
 			Qualifiers.put(key, vals);
 		}

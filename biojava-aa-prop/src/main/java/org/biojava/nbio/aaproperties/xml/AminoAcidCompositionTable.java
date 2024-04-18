@@ -83,7 +83,7 @@ public class AminoAcidCompositionTable {
 	 * 		Stores the mass of elements and isotopes
 	 */
 	public void computeMolecularWeight(ElementTable eTable){
-		this.aaSymbol2MolecularWeight = new HashMap<Character, Double>();
+		this.aaSymbol2MolecularWeight = new HashMap<>();
 		for(AminoAcidComposition a:aminoacid){
 			//Check to ensure that the symbol is of single character
 			if(a.getSymbol().length() != 1){

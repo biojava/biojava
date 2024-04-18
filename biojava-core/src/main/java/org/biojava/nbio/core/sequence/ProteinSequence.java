@@ -160,7 +160,7 @@ public class ProteinSequence extends AbstractSequence<AminoAcidCompound> {
 		InputStream is = url.openConnection().getInputStream();
 
 		FastaReader<DNASequence, NucleotideCompound> parentReader
-				= new FastaReader<DNASequence, NucleotideCompound>(is,
+				= new FastaReader<>(is,
 						new PlainFastaHeaderParser<DNASequence, NucleotideCompound>(),
 						new DNASequenceCreator(AmbiguityDNACompoundSet.getDNACompoundSet()));
 		LinkedHashMap<String, DNASequence> seq = parentReader.process();

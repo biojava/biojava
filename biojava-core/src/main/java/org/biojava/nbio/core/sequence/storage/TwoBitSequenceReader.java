@@ -133,7 +133,7 @@ public class TwoBitSequenceReader<C extends NucleotideCompound> extends BitSeque
 		@Override
 		protected List<C> generateIndexToCompounds() {
 			CompoundSet<C> cs = getCompoundSet();
-			List<C> result = new ArrayList<C>();
+			List<C> result = new ArrayList<>();
 			result.add( cs.getCompoundForString("T"));
 
 			result.add( cs.getCompoundForString("C"));

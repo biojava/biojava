@@ -74,7 +74,7 @@ public class GenbankProxySequenceReader<C extends Compound> extends StringProxyS
 		String db = compoundSet instanceof AminoAcidCompoundSet ? "protein" : "nuccore";
 
 		InputStream inStream = getBufferedInputStream(accessionID, db);
-		genbankParser = new GenbankSequenceParser<AbstractSequence<C>, C>();
+		genbankParser = new GenbankSequenceParser<>();
 
 		setContents(genbankParser.getSequence(new BufferedReader(new InputStreamReader(inStream)), 0));
 		headerParser = genbankParser.getSequenceHeaderParser();

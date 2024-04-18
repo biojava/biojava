@@ -267,9 +267,9 @@ public class ProteinModificationIdentifier {
 		}
 
 
-		residues = new ArrayList<Group>();
-		List<Group> ligands = new ArrayList<Group>();
-		Map<Component, Set<Group>> mapCompGroups = new HashMap<Component, Set<Group>>();
+		residues = new ArrayList<>();
+		List<Group> ligands = new ArrayList<>();
+		Map<Component, Set<Group>> mapCompGroups = new HashMap<>();
 
 		for (Chain chain : chains) {
 
@@ -292,7 +292,7 @@ public class ProteinModificationIdentifier {
 			}
 			logger.warn("No amino acids found for {}. Either you did not parse the PDB file with alignSEQRES records, or this record does not contain any amino acids.", pdbId);
 		}
-		List<ModifiedCompound> modComps = new ArrayList<ModifiedCompound>();
+		List<ModifiedCompound> modComps = new ArrayList<>();
 
 		for (ProteinModification mod : potentialModifications) {
 			ModificationCondition condition = mod.getCondition();
@@ -333,10 +333,10 @@ public class ProteinModificationIdentifier {
 	}
 
 	private void reset() {
-		identifiedModifiedCompounds = new LinkedHashSet<ModifiedCompound>();
+		identifiedModifiedCompounds = new LinkedHashSet<>();
 		if (recordUnidentifiableModifiedCompounds) {
-			unidentifiableAtomLinkages = new LinkedHashSet<StructureAtomLinkage>();
-			unidentifiableModifiedResidues = new LinkedHashSet<StructureGroup>();
+			unidentifiableAtomLinkages = new LinkedHashSet<>();
+			unidentifiableModifiedResidues = new LinkedHashSet<>();
 		}
 
 	}
@@ -392,7 +392,7 @@ public class ProteinModificationIdentifier {
 		// ligands to amino acid bonds for same modification of unknown category
 		// will be combined in mergeModComps()
 		// TODO: how about chain-chain links?
-		List<Group> identifiedGroups = new ArrayList<Group>();
+		List<Group> identifiedGroups = new ArrayList<>();
 		for (StructureGroup num : mc.getGroups(false)) {
 			Group group;
 			try {
@@ -464,7 +464,7 @@ public class ProteinModificationIdentifier {
 	 * Merge identified modified compounds if linked.
 	 */
 	private void mergeModComps(List<ModifiedCompound> modComps) {
-		TreeSet<Integer> remove = new TreeSet<Integer>();
+		TreeSet<Integer> remove = new TreeSet<>();
 		int n = modComps.size();
 		for (int icurr=1; icurr<n; icurr++) {
 			ModifiedCompound curr = modComps.get(icurr);
@@ -512,7 +512,7 @@ public class ProteinModificationIdentifier {
 			List<Group> ligands) {
 
 		// first put identified linkages in a map for fast query
-		Set<StructureAtomLinkage> identifiedLinkages = new HashSet<StructureAtomLinkage>();
+		Set<StructureAtomLinkage> identifiedLinkages = new HashSet<>();
 		for (ModifiedCompound mc : modComps) {
 			identifiedLinkages.addAll(mc.getAtomLinkages());
 		}
@@ -555,7 +555,7 @@ public class ProteinModificationIdentifier {
 	}
 
 	private void recordUnidentifiableModifiedResidues(List<ModifiedCompound> modComps) {
-		Set<StructureGroup> identifiedComps = new HashSet<StructureGroup>();
+		Set<StructureGroup> identifiedComps = new HashSet<>();
 		for (ModifiedCompound mc : modComps) {
 			identifiedComps.addAll(mc.getGroups(true));
 		}
@@ -592,7 +592,7 @@ public class ProteinModificationIdentifier {
 			throw new IllegalArgumentException("Null argument(s).");
 		}
 
-		Map<Component,Set<Component>> mapSingleMultiComps = new HashMap<Component,Set<Component>>();
+		Map<Component,Set<Component>> mapSingleMultiComps = new HashMap<>();
 		for (ProteinModification mod : modifications) {
 			ModificationCondition condition = mod.getCondition();
 			for (Component comp : condition.getComponents()) {
@@ -601,7 +601,7 @@ public class ProteinModificationIdentifier {
 							comp.isNTerminal(), comp.isCTerminal());
 					Set<Component> mult = mapSingleMultiComps.get(single);
 					if (mult == null) {
-						mult = new HashSet<Component>();
+						mult = new HashSet<>();
 						mapSingleMultiComps.put(single, mult);
 					}
 					mult.add(comp);
@@ -621,7 +621,7 @@ public class ProteinModificationIdentifier {
 				for (Component comp : unionComponentSet(ligandsWildCard, comps)) {
 					Set<Group> gs = saveTo.get(comp);
 					if (gs==null) {
-						gs = new LinkedHashSet<Group>();
+						gs = new LinkedHashSet<>();
 						saveTo.put(comp, gs);
 					}
 					gs.add(group);
@@ -647,7 +647,7 @@ public class ProteinModificationIdentifier {
 				for (Component comp : unionComponentSet(residuesWildCard, comps)) {
 					Set<Group> gs = saveTo.get(comp);
 					if (gs==null) {
-						gs = new LinkedHashSet<Group>();
+						gs = new LinkedHashSet<>();
 						saveTo.put(comp, gs);
 					}
 					gs.add(group);
@@ -671,7 +671,7 @@ public class ProteinModificationIdentifier {
 				for (Component comp : unionComponentSet(nTermWildCard, comps)) {
 					Set<Group> gs = saveTo.get(comp);
 					if (gs==null) {
-						gs = new LinkedHashSet<Group>();
+						gs = new LinkedHashSet<>();
 						saveTo.put(comp, gs);
 					}
 					gs.add(res);
@@ -693,7 +693,7 @@ public class ProteinModificationIdentifier {
 				for (Component comp : unionComponentSet(cTermWildCard, comps)) {
 					Set<Group> gs = saveTo.get(comp);
 					if (gs==null) {
-						gs = new LinkedHashSet<Group>();
+						gs = new LinkedHashSet<>();
 						saveTo.put(comp, gs);
 					}
 					gs.add(res);
@@ -712,7 +712,7 @@ public class ProteinModificationIdentifier {
 		if (set2 == null)
 			return set1;
 
-		Set<Component> set = new HashSet<Component>(set1.size()+set2.size());
+		Set<Component> set = new HashSet<>(set1.size()+set2.size());
 		set.addAll(set1);
 		set.addAll(set2);
 
@@ -728,7 +728,7 @@ public class ProteinModificationIdentifier {
 		int nLink = linkages.size();
 
 		List<List<Atom[]>> matchedAtomsOfLinkages =
-				new ArrayList<List<Atom[]>>(nLink);
+				new ArrayList<>(nLink);
 
 		for (int iLink=0; iLink<nLink; iLink++) {
 			ModificationLinkage linkage = linkages.get(iLink);
@@ -741,7 +741,7 @@ public class ProteinModificationIdentifier {
 			Set<Group> groups1 = mapCompGroups.get(comp1);
 			Set<Group> groups2 = mapCompGroups.get(comp2);
 
-			List<Atom[]> list = new ArrayList<Atom[]>();
+			List<Atom[]> list = new ArrayList<>();
 
 			List<String> potentialNamesOfAtomOnGroup1 = linkage.getPDBNameOfPotentialAtomsOnComponent1();
 			for (String name : potentialNamesOfAtomOnGroup1) {
@@ -810,9 +810,9 @@ public class ProteinModificationIdentifier {
 
 		int nLink = matchedAtomsOfLinkages.size();
 		int[] indices = new int[nLink];
-		Set<ModifiedCompound> identifiedCompounds = new HashSet<ModifiedCompound>();
+		Set<ModifiedCompound> identifiedCompounds = new HashSet<>();
 		while (indices[0]<matchedAtomsOfLinkages.get(0).size()) {
-			List<Atom[]> atomLinkages = new ArrayList<Atom[]>(nLink);
+			List<Atom[]> atomLinkages = new ArrayList<>(nLink);
 			for (int iLink=0; iLink<nLink; iLink++) {
 				Atom[] atoms = matchedAtomsOfLinkages.get(iLink).get(indices[iLink]);
 				atomLinkages.add(atoms);
@@ -821,7 +821,7 @@ public class ProteinModificationIdentifier {
 				// matched
 
 				int n = atomLinkages.size();
-				List<StructureAtomLinkage> linkages = new ArrayList<StructureAtomLinkage>(n);
+				List<StructureAtomLinkage> linkages = new ArrayList<>(n);
 				for (int i=0; i<n; i++) {
 					Atom[] linkage = atomLinkages.get(i);
 					StructureAtomLinkage link = StructureUtil.getStructureAtomLinkage(

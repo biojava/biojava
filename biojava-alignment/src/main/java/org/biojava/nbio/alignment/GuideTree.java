@@ -182,7 +182,7 @@ public class GuideTree<S extends Sequence<C>, C extends Compound> implements Ite
 			distance = node.getDistanceToParent();
 			name = node.getName();
 			if(isLeaf = node.isExternal()) {
-				profile = new SimpleProfile<S, C>(sequences.get(distances.getIndex(name)));
+				profile = new SimpleProfile<>(sequences.get(distances.getIndex(name)));
 			} else {
 				child1 = new Node(node.getChildNode1(), this);
 				child2 = new Node(node.getChildNode2(), this);
@@ -237,7 +237,7 @@ public class GuideTree<S extends Sequence<C>, C extends Compound> implements Ite
 
 		@Override
 		public Enumeration<GuideTreeNode<S, C>> children() {
-			Vector<GuideTreeNode<S, C>> children = new Vector<GuideTreeNode<S, C>>();
+			Vector<GuideTreeNode<S, C>> children = new Vector<>();
 			children.add(getChild1());
 			children.add(getChild2());
 			return children.elements();
@@ -305,7 +305,7 @@ public class GuideTree<S extends Sequence<C>, C extends Compound> implements Ite
 
 		private PostOrderIterator() {
 			getRoot().clearVisited();
-			nodes = new Stack<Node>();
+			nodes = new Stack<>();
 			nodes.push(getRoot());
 		}
 
