@@ -139,7 +139,7 @@ implements AlignmentPositionListener, WindowListener {
 		this.multAln = ensemble.getMultipleAlignment(0);
 
 		//Create the sequence alignment and the structure-sequence mapping.
-		this.mapSeqToStruct = new ArrayList<Integer>();
+		this.mapSeqToStruct = new ArrayList<>();
 		this.alnSeq = MultipleAlignmentTools.getSequenceAlignment(
 				this.multAln, this.mapSeqToStruct);
 
@@ -162,7 +162,7 @@ implements AlignmentPositionListener, WindowListener {
 		this.multAln = msa;
 
 		//Create the sequence alignment and the structure-sequence mapping.
-		this.mapSeqToStruct = new ArrayList<Integer>();
+		this.mapSeqToStruct = new ArrayList<>();
 		this.alnSeq = MultipleAlignmentTools.getSequenceAlignment(
 				this.multAln, this.mapSeqToStruct);
 
@@ -225,7 +225,7 @@ implements AlignmentPositionListener, WindowListener {
 			else isGapped = true;
 
 			//Loop through every structure to get all the points
-			List<Point> points = new ArrayList<Point>();
+			List<Point> points = new ArrayList<>();
 			for (int str=0; str<size; str++) points.add(
 					coordManager.getPanelPos(str,i));
 			Point p1 = points.get(0);

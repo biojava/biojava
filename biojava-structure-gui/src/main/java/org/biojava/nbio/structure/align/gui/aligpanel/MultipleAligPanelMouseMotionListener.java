@@ -52,7 +52,7 @@ implements MouseMotionListener, MouseListener {
 
 	public MultipleAligPanelMouseMotionListener(MultipleAligPanel parent){
 		this.parent = parent;
-		aligPosListeners = new ArrayList<AlignmentPositionListener>();
+		aligPosListeners = new ArrayList<>();
 		prevPos = -1;
 		isDragging = false;
 		selectionStart = null;

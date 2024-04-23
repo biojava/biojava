@@ -332,7 +332,7 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 				Color4f c = colors[colorIndex];
 				List<String> ids = colorMap.get(c);
 				if (ids == null) {
-					ids = new ArrayList<String>();
+					ids = new ArrayList<>();
 					colorMap.put(c,  ids);
 				}
 				String id = getChainSpecification(modelNumbers, chainIds, subunit);
@@ -362,7 +362,7 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 			Color4f c = colors[seqClusterIds.get(i)];
 			List<String> ids = colorMap.get(c);
 			if (ids == null) {
-				ids = new ArrayList<String>();
+				ids = new ArrayList<>();
 				colorMap.put(c,  ids);
 			}
 			String id = getChainSpecification(modelNumbers, chainIds, i);
@@ -414,7 +414,7 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 				Color4f c = colors[colorIndex];
 				List<String> ids = colorMap.get(c);
 				if (ids == null) {
-					ids = new ArrayList<String>();
+					ids = new ArrayList<>();
 					colorMap.put(c,  ids);
 				}
 				for (int subunit: orbits.get(i)) {
@@ -431,7 +431,7 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 				Color4f c = new Color4f(colors[i]);
 				List<String> ids = colorMap.get(c);
 				if (ids == null) {
-					ids = new ArrayList<String>();
+					ids = new ArrayList<>();
 					colorMap.put(c,  ids);
 				}
 				List<Integer> orbit = orbits.get(i);
@@ -542,7 +542,7 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 				Color4f c = colors[i];
 				List<String> ids = colorMap.get(c);
 				if (ids == null) {
-					ids = new ArrayList<String>();
+					ids = new ArrayList<>();
 					colorMap.put(c, ids);
 				}
 				ids.add(id);
@@ -947,7 +947,7 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 
 
 	private List<Rotation> getUniqueAxes() {
-		List<Rotation> uniqueRotations = new ArrayList<Rotation>();
+		List<Rotation> uniqueRotations = new ArrayList<>();
 
 		for (int i = 0, n = rotationGroup.getOrder(); i < n; i++) {
 			Rotation rotationI = rotationGroup.getRotation(i);

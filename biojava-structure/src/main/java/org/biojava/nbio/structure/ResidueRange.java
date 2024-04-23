@@ -137,7 +137,7 @@ public class ResidueRange {
 		}
 
 		String[] parts = s.split(",");
-		List<ResidueRange> list = new ArrayList<ResidueRange>(parts.length);
+		List<ResidueRange> list = new ArrayList<>(parts.length);
 		for (String part : parts) {
 			list.add(parse(part));
 		}
@@ -352,7 +352,7 @@ public class ResidueRange {
 	}
 
 	public static List<ResidueRange> parseMultiple(List<String> ranges) {
-		List<ResidueRange> rrs = new ArrayList<ResidueRange>(ranges.size());
+		List<ResidueRange> rrs = new ArrayList<>(ranges.size());
 		for (String range : ranges) {
 			ResidueRange rr = ResidueRange.parse(range);
 			if (rr != null) rrs.add(rr);
@@ -361,7 +361,7 @@ public class ResidueRange {
 	}
 
 	public static List<String> toStrings(List<? extends ResidueRange> ranges) {
-		List<String> list = new ArrayList<String>(ranges.size());
+		List<String> list = new ArrayList<>(ranges.size());
 		for (ResidueRange range : ranges) {
 			list.add(range.toString());
 		}

@@ -45,7 +45,7 @@ public class AgScore {
 		//double temp;
 		int n = survivalInfoList.size();
 
-		ArrayList<String> variables = new ArrayList<String>(coxInfo.getCoefficientsList().keySet());
+		ArrayList<String> variables = new ArrayList<>(coxInfo.getCoefficientsList().keySet());
 		int nvar = variables.size();
 
 

@@ -64,7 +64,7 @@ public final class StandardAminoAcid {
 	 * @author Tamas Horvath provided the standard amino acids
 	 */
 	static {
-		aminoAcids = new HashMap<String,AminoAcid>();
+		aminoAcids = new HashMap<>();
 
 
 		InputStream fileStream = StandardAminoAcid.class.getClassLoader().getResourceAsStream(STANDARD_AMINOS_FILE);

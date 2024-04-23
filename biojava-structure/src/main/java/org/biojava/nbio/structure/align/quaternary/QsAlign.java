@@ -94,7 +94,7 @@ public class QsAlign {
 		List<SubunitCluster> c2 = SubunitClusterer.cluster(s2, cParams).getClusters();
 
 		// STEP 2: match each subunit cluster between groups O(N^2*L^2) - inter
-		Map<Integer, Integer> clusterMap = new HashMap<Integer, Integer>();
+		Map<Integer, Integer> clusterMap = new HashMap<>();
 		for (int i = 0; i < c1.size(); i++) {
 			for (int j = 0; j < c2.size(); j++) {
 
@@ -123,15 +123,15 @@ public class QsAlign {
 			// Take a cluster match as reference
 			int index1 = 0;
 			int index2 = clust1.size() - clust2.size();
-			Map<Integer, Integer> subunitMap = new HashMap<Integer, Integer>();
+			Map<Integer, Integer> subunitMap = new HashMap<>();
 			subunitMap.put(index1, index2);
 
 			// Map cluster id to their subunit matching
-			Map<Integer, Map<Integer, Integer>> clustSubunitMap = new HashMap<Integer, Map<Integer, Integer>>();
+			Map<Integer, Map<Integer, Integer>> clustSubunitMap = new HashMap<>();
 			clustSubunitMap.put(globalKey, subunitMap);
 
 			// Change order of key set so that globalKey is first
-			List<Integer> keySet = new ArrayList<Integer>(clusterMap.keySet());
+			List<Integer> keySet = new ArrayList<>(clusterMap.keySet());
 			keySet.remove((Integer) globalKey);
 			keySet.add(0, globalKey);
 
@@ -141,7 +141,7 @@ public class QsAlign {
 				if (key == globalKey)
 					subunitMap = clustSubunitMap.get(key);
 				else
-					subunitMap = new HashMap<Integer, Integer>();
+					subunitMap = new HashMap<>();
 
 				// Obtain the clusters of each subunit group
 				clust1 = c1.get(key);
@@ -224,11 +224,11 @@ public class QsAlign {
 			logger.info("Cluster Subunit Map: " + clustSubunitMap.toString());
 
 			// Unfold the nested map into subunit map and alignment
-			subunitMap = new HashMap<Integer, Integer>();
-			List<Integer> alignRes1 = new ArrayList<Integer>();
-			List<Integer> alignRes2 = new ArrayList<Integer>();
-			List<Atom> atomArray1 = new ArrayList<Atom>();
-			List<Atom> atomArray2 = new ArrayList<Atom>();
+			subunitMap = new HashMap<>();
+			List<Integer> alignRes1 = new ArrayList<>();
+			List<Integer> alignRes2 = new ArrayList<>();
+			List<Atom> atomArray1 = new ArrayList<>();
+			List<Atom> atomArray2 = new ArrayList<>();
 
 			for (int key : clustSubunitMap.keySet()) {
 
@@ -274,7 +274,7 @@ public class QsAlign {
 			// Fill in the alignment information
 			BlockSet bs = new BlockSetImpl(msa);
 			Block b = new BlockImpl(bs);
-			List<List<Integer>> alignRes = new ArrayList<List<Integer>>(2);
+			List<List<Integer>> alignRes = new ArrayList<>(2);
 			alignRes.add(alignRes1);
 			alignRes.add(alignRes2);
 			b.setAlignRes(alignRes);

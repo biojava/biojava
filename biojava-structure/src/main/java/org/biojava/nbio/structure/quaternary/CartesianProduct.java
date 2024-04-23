@@ -60,7 +60,7 @@ public class CartesianProduct<T> {
 	 * @return the list of ordered pairs
 	 */
 	public List<OrderedPair<T>> getOrderedPairs() {
-		List<OrderedPair<T>> pairs = new ArrayList<OrderedPair<T>>(list1.size()*list2.size());
+		List<OrderedPair<T>> pairs = new ArrayList<>(list1.size()*list2.size());
 
 		for (T element1: list1) {
 			for (T element2: list2) {

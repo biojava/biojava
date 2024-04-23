@@ -42,7 +42,7 @@ public class AtomContactSet implements Serializable, Iterable<AtomContact> {
 
 	public AtomContactSet(double cutoff) {
 		this.cutoff = cutoff;
-		this.contacts = new HashMap<Pair<AtomIdentifier>,AtomContact>();
+		this.contacts = new HashMap<>();
 	}
 
 	public void add(AtomContact contact) {
@@ -87,7 +87,7 @@ public class AtomContactSet implements Serializable, Iterable<AtomContact> {
 	}
 
 	private Pair<AtomIdentifier> getAtomIdPairFromContact(AtomContact contact) {
-		Pair<AtomIdentifier> pair = new Pair<AtomIdentifier>(
+		Pair<AtomIdentifier> pair = new Pair<>(
 				new AtomIdentifier(contact.getPair().getFirst().getPDBserial(),contact.getPair().getFirst().getGroup().getChainId()),
 				new AtomIdentifier(contact.getPair().getSecond().getPDBserial(),contact.getPair().getSecond().getGroup().getChainId()));
 
@@ -132,7 +132,7 @@ public class AtomContactSet implements Serializable, Iterable<AtomContact> {
 					String.format("%.2f", distance)+" is larger than contacts' distance cutoff "+
 					String.format("%.2f", cutoff));
 
-		List<AtomContact> list = new ArrayList<AtomContact>();
+		List<AtomContact> list = new ArrayList<>();
 		for (AtomContact contact:this.contacts.values()) {
 			if (contact.getDistance()<distance) {
 				list.add(contact);

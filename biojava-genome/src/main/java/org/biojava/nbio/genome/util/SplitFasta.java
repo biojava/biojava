@@ -52,7 +52,7 @@ public class SplitFasta {
 			}else{
 				fileName = fileName + uniqueid + dnaSequence.getAccession().getID() + ".fna";
 			}
-			ArrayList<DNASequence> dnaList = new ArrayList<DNASequence>();
+			ArrayList<DNASequence> dnaList = new ArrayList<>();
 			dnaList.add(dnaSequence);
 			FastaWriterHelper.writeNucleotideSequence(new File(fileName), dnaList);
 		}

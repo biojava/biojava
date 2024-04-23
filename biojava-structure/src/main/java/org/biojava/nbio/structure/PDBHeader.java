@@ -104,7 +104,7 @@ public class PDBHeader implements PDBRecord {
 		rFree = DEFAULT_RFREE;
 		rWork = DEFAULT_RFREE;
 
-		bioAssemblies = new LinkedHashMap<Integer, BioAssemblyInfo>();
+		bioAssemblies = new LinkedHashMap<>();
 		crystallographicInfo = new PDBCrystallographicInfo();
 
 		keywords       = new ArrayList<>();

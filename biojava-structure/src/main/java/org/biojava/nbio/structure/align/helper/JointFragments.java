@@ -40,7 +40,7 @@ public class JointFragments {
 
 		List<int[]> idxlist;
 		public JointFragments(){
-			idxlist = new ArrayList<int[]>();
+			idxlist = new ArrayList<>();
 			rms = 999;
 		}
 

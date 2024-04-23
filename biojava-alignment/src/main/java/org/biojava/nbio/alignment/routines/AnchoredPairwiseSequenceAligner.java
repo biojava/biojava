@@ -111,7 +111,7 @@ public class AnchoredPairwiseSequenceAligner<S extends Sequence<C>, C extends Co
 	 * @param anchors list of points that are tied to the given indices in the target
 	 */
 	public void setAnchors(int[] anchors) {
-		super.anchors = new ArrayList<Anchor>();
+		super.anchors = new ArrayList<>();
 		if (anchors != null) {
 			for (int i = 0; i < anchors.length; i++) {
 				if (anchors[i] >= 0) {
@@ -133,7 +133,7 @@ public class AnchoredPairwiseSequenceAligner<S extends Sequence<C>, C extends Co
 
 	@Override
 	protected void setProfile(List<Step> sx, List<Step> sy) {
-		profile = pair = new SimpleSequencePair<S, C>(getQuery(), getTarget(), sx, sy);
+		profile = pair = new SimpleSequencePair<>(getQuery(), getTarget(), sx, sy);
 	}
 
 }

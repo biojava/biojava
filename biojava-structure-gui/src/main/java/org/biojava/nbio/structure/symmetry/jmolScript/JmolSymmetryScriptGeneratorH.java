@@ -423,7 +423,7 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 					Color4f c = colors[i];
 					List<String> ids = colorMap.get(c);
 					if (ids == null) {
-						ids = new ArrayList<String>();
+						ids = new ArrayList<>();
 						colorMap.put(c,  ids);
 					}
 					String id = getChainSpecification(modelNumbers, chainIds, j);
@@ -454,7 +454,7 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 			Color4f c = colors[seqClusterIds.get(i)];
 			List<String> ids = colorMap.get(c);
 			if (ids == null) {
-				ids = new ArrayList<String>();
+				ids = new ArrayList<>();
 				colorMap.put(c,  ids);
 			}
 			String id = getChainSpecification(modelNumbers, chainIds, i);
@@ -504,7 +504,7 @@ public class JmolSymmetryScriptGeneratorH extends JmolSymmetryScriptGenerator {
 					c.scale(scale);
 					List<String> ids = colorMap.get(c);
 					if (ids == null) {
-						ids = new ArrayList<String>();
+						ids = new ArrayList<>();
 						colorMap.put(c,  ids);
 					}
 					String id = getChainSpecification(modelNumbers, chainIds, subunit);

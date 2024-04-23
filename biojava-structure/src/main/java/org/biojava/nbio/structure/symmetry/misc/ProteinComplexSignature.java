@@ -29,7 +29,7 @@ public class ProteinComplexSignature {
 	private BlastClustReader blastClust = null;
 	private String pdbId = "";
 	private List<String> chainIds = null;
-	private List<ChainSignature> chainSignatures = new ArrayList<ChainSignature>();
+	private List<ChainSignature> chainSignatures = new ArrayList<>();
 
 
 	public ProteinComplexSignature(String pdbId, List<String> chainIds, BlastClustReader blastClust) {
@@ -75,15 +75,15 @@ public class ProteinComplexSignature {
 	private List<ChainSignature> getChainSignatures() {
 		String alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-		Map<String,Integer> mapCounts = new TreeMap<String,Integer>();
-		Map<String,List<String>> mapChainIds = new TreeMap<String, List<String>>();
+		Map<String,Integer> mapCounts = new TreeMap<>();
+		Map<String,List<String>> mapChainIds = new TreeMap<>();
 
 		for (String chainId: chainIds) {
 			String rep = blastClust.getRepresentativeChain(pdbId, chainId);
 			Integer value = mapCounts.get(rep);
 			if (value == null) {
 				mapCounts.put(rep, 1);
-				List<String> list = new ArrayList<String>();
+				List<String> list = new ArrayList<>();
 				list.add(chainId);
 				mapChainIds.put(rep, list);
 			} else {

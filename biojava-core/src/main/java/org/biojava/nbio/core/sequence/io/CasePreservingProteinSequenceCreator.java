@@ -90,7 +90,7 @@ public class CasePreservingProteinSequenceCreator extends ProteinSequenceCreator
 	public AbstractSequence<AminoAcidCompound> getSequence(
 			List<AminoAcidCompound> list) {
 		AbstractSequence<AminoAcidCompound> seq =super.getSequence(list);
-		Collection<Object> strCase = new ArrayList<Object>(seq.getLength());
+		Collection<Object> strCase = new ArrayList<>(seq.getLength());
 		for(int i=0;i<seq.getLength();i++) {
 			strCase.add(true);
 		}
@@ -107,7 +107,7 @@ public class CasePreservingProteinSequenceCreator extends ProteinSequenceCreator
 	 * This list contains only Booleans.
 	 */
 	private static List<Object> getStringCase(String str) {
-		List<Object> types = new ArrayList<Object>(str.length());
+		List<Object> types = new ArrayList<>(str.length());
 		for(int i=0;i<str.length();i++) {
 			types.add(Character.isUpperCase(str.charAt(i)));
 		}

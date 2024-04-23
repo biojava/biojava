@@ -117,8 +117,8 @@ public class SequenceFunctionRefiner implements SymmetryRefiner {
 		//  2. f^K-1(x) is defined
 		//	3. score(f^K-1(x))>0
 
-		TreeSet<Integer> forwardLoops = new TreeSet<Integer>();
-		TreeSet<Integer> backwardLoops = new TreeSet<Integer>();
+		TreeSet<Integer> forwardLoops = new TreeSet<>();
+		TreeSet<Integer> backwardLoops = new TreeSet<>();
 
 
 		List<Integer> eligible = null;
@@ -240,7 +240,7 @@ public class SequenceFunctionRefiner implements SymmetryRefiner {
 
 		// Assume all residues are eligible to start
 		if(eligible == null) {
-			eligible = new LinkedList<Integer>(alignment.keySet());
+			eligible = new LinkedList<>(alignment.keySet());
 		}
 
 		// Precalculate f^K-1(x)
@@ -334,8 +334,8 @@ public class SequenceFunctionRefiner implements SymmetryRefiner {
 	private static Map<Integer, Integer> applyAlignmentAndCheckCycles(Map<Integer, Integer> alignmentMap, int k, List<Integer> eligible) {
 
 		// Convert to lists to establish a fixed order (avoid concurrent modification)
-		List<Integer> preimage = new ArrayList<Integer>(alignmentMap.keySet()); // currently unmodified
-		List<Integer> image = new ArrayList<Integer>(preimage);
+		List<Integer> preimage = new ArrayList<>(alignmentMap.keySet()); // currently unmodified
+		List<Integer> image = new ArrayList<>(preimage);
 
 		for (int n = 1; n <= k; n++) {
 			// apply alignment
@@ -351,7 +351,7 @@ public class SequenceFunctionRefiner implements SymmetryRefiner {
 			}
 		}
 
-		Map<Integer, Integer> imageMap = new HashMap<Integer, Integer>(alignmentMap.size());
+		Map<Integer, Integer> imageMap = new HashMap<>(alignmentMap.size());
 
 		// now populate with actual values
 		for (int i = 0; i < preimage.size(); i++) {
@@ -372,7 +372,7 @@ public class SequenceFunctionRefiner implements SymmetryRefiner {
 	private static Map<Integer, Double> initializeScores(Map<Integer, Integer> alignment,
 			Map<Integer, Double> scores, int k) {
 		if(scores == null) {
-			scores = new HashMap<Integer, Double>(alignment.size());
+			scores = new HashMap<>(alignment.size());
 		} else {
 			scores.clear();
 		}
@@ -444,7 +444,7 @@ public class SequenceFunctionRefiner implements SymmetryRefiner {
 		int repeatLen = afpChain.getOptLength()/order;
 
 		//Extract all the residues considered in the first chain of the alignment
-		List<Integer> alignedRes = new ArrayList<Integer>();
+		List<Integer> alignedRes = new ArrayList<>();
 		for (int su=0; su<afpChain.getBlockNum(); su++){
 			for (int i=0; i<afpChain.getOptLen()[su]; i++){
 				alignedRes.add(afpChain.getOptAln()[su][0][i]);

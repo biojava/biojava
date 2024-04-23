@@ -52,7 +52,7 @@ public class TwoBitParser extends InputStream {
 	private File f;
 	private boolean reverse = false;
 	private String[] seq_names;
-	private HashMap<String,Long> seq2pos = new HashMap<String,Long>();
+	private HashMap<String,Long> seq2pos = new HashMap<>();
 	private String cur_seq_name;
 	private long[][] cur_nn_blocks;
 	private long[][] cur_mask_blocks;

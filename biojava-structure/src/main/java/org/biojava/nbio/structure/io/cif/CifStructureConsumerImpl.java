@@ -934,7 +934,7 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
 
     @Override
     public void consumeStructKeywords(StructKeywords structKeywords) {
-        ArrayList<String> keywordsList = new ArrayList<String>();
+        ArrayList<String> keywordsList = new ArrayList<>();
 
         StrColumn text = structKeywords.getText();
         if (text.isDefined()) {

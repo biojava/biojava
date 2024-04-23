@@ -42,7 +42,7 @@ class SpaceGroupMapAdapter extends XmlAdapter<SpaceGroupMapElements[], Map<Integ
 
 	@Override
 	public Map<Integer, SpaceGroup> unmarshal(SpaceGroupMapElements[] arg0) throws Exception {
-		Map<Integer, SpaceGroup> r = new TreeMap<Integer, SpaceGroup>();
+		Map<Integer, SpaceGroup> r = new TreeMap<>();
 		for (SpaceGroupMapElements mapelement : arg0)
 			r.put(mapelement.key, mapelement.value);
 		return r;

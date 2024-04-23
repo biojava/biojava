@@ -29,8 +29,8 @@ import java.util.LinkedHashMap;
  */
 public class SurvFitInfo {
 
-	private LinkedHashMap<String, StrataInfo> strataInfoHashMap = new LinkedHashMap<String, StrataInfo>();
-	private LinkedHashMap<String, StrataInfo> unweightedStrataInfoHashMap = new LinkedHashMap<String, StrataInfo>();
+	private LinkedHashMap<String, StrataInfo> strataInfoHashMap = new LinkedHashMap<>();
+	private LinkedHashMap<String, StrataInfo> unweightedStrataInfoHashMap = new LinkedHashMap<>();
 	private boolean weighted = false;
 
 

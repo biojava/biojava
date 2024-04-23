@@ -97,9 +97,9 @@ public class DemoMultipleMC {
 		//Load the CA atoms of the structures
 		AtomCache cache = new AtomCache();
 
-		List<StructureIdentifier> identifiers = new ArrayList<StructureIdentifier>();
+		List<StructureIdentifier> identifiers = new ArrayList<>();
 
-		List<Atom[]> atomArrays = new ArrayList<Atom[]>();
+		List<Atom[]> atomArrays = new ArrayList<>();
 		for (String name:names)	{
 			atomArrays.add(cache.getAtoms(name));
 			identifiers.add(new SubstructureIdentifier(name));

@@ -78,13 +78,13 @@ public interface Edit<C extends Compound> {
 		@Override
 		public Sequence<C> edit(Sequence<C> editingSequence) {
 			Sequence<C> targetSequence = getTargetSequence(editingSequence);
-			List<Sequence<C>> sequences = new ArrayList<Sequence<C>>();
+			List<Sequence<C>> sequences = new ArrayList<>();
 
 			sequences.add(getFivePrime(editingSequence));
 			sequences.add(targetSequence);
 			sequences.add(getThreePrime(editingSequence));
 
-			return new JoiningSequenceReader<C>(sequences);
+			return new JoiningSequenceReader<>(sequences);
 		}
 		private int start = -1;
 		private int end = -1;
@@ -119,7 +119,7 @@ public interface Edit<C extends Compound> {
 		public Sequence<C> getTargetSequence(Sequence<C> editingSequence) {
 			if (sequence == null && stringSequence != null) {
 				try {
-					sequence = new BasicSequence<C>(
+					sequence = new BasicSequence<>(
 								stringSequence, editingSequence.getCompoundSet());
 				} catch (CompoundNotFoundException e) {
 					// TODO is there a better way to handle this exception?
@@ -136,7 +136,7 @@ public interface Edit<C extends Compound> {
 		protected Sequence<C> getEmptySequence(Sequence<C> editingSequence) {
 			Sequence<C> s = null;
 			try {
-				s = new BasicSequence<C>("", editingSequence.getCompoundSet());
+				s = new BasicSequence<>("", editingSequence.getCompoundSet());
 			} catch (CompoundNotFoundException e) {
 				// should not happen
 				logger.error("Could not construct empty sequence. {}. This is most likely a bug.", e.getMessage());

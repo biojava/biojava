@@ -110,7 +110,7 @@ public class ModifiedCompoundXMLConverter {
 		ProteinModification modification = null;
 		//Collection<StructureAtomLinkage> linkages = new ArrayList<StructureAtomLinkage>();
 		StructureAtomLinkage[] linkages = null;
-		List<StructureGroup> structureGroups = new ArrayList<StructureGroup>();
+		List<StructureGroup> structureGroups = new ArrayList<>();
 		try
 		{
 			//Convert string to XML document

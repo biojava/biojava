@@ -130,7 +130,7 @@ public class GroupToSDF {
 
 	private static List<Number> getAtomCharges(Group group) {
 		// The list to store the answer
-		List<Number> outArr = new ArrayList<Number>();
+		List<Number> outArr = new ArrayList<>();
 		// Get the atom charge Information
 		for(Atom a: group.getAtoms()){
 			outArr.add(a.getCharge());

@@ -453,8 +453,8 @@ public class SeqRes2AtomAligner {
 
 	private boolean alignNucleotideGroups(List<Group> seqRes, List<Group> atomRes) {
 
-		Map<Integer,Integer> seqresIndexPosition = new HashMap<Integer, Integer>();
-		Map<Integer,Integer> atomIndexPosition   = new HashMap<Integer, Integer>();
+		Map<Integer,Integer> seqresIndexPosition = new HashMap<>();
+		Map<Integer,Integer> atomIndexPosition   = new HashMap<>();
 
 		String seq1 = getFullAtomSequence(seqRes, seqresIndexPosition, true);
 		//
@@ -573,8 +573,8 @@ public class SeqRes2AtomAligner {
 	 */
 	private boolean alignProteinChains(List<Group> seqRes, List<Group> atomRes) {
 
-		Map<Integer,Integer> seqresIndexPosition = new HashMap<Integer, Integer>();
-		Map<Integer,Integer> atomIndexPosition   = new HashMap<Integer, Integer>();
+		Map<Integer,Integer> seqresIndexPosition = new HashMap<>();
+		Map<Integer,Integer> atomIndexPosition   = new HashMap<>();
 
 		String seq1 = getFullAtomSequence(seqRes, seqresIndexPosition, false);
 		//

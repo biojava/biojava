@@ -40,7 +40,7 @@ public class StructureInterfaceCluster implements Serializable {
 
 
 	public StructureInterfaceCluster() {
-		this.members = new ArrayList<StructureInterface>();
+		this.members = new ArrayList<>();
 	}
 
 	public List<StructureInterface> getMembers() {

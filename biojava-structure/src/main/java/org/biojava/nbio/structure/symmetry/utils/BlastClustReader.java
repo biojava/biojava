@@ -102,7 +102,7 @@ public class BlastClustReader implements Serializable {
 		loadClusters(sequenceIdentity);
 		String pdbIdUpper = pdbId.toUpperCase();
 
-		List<List<String>> matches = new ArrayList<List<String>>();
+		List<List<String>> matches = new ArrayList<>();
 		for (List<String> cluster: clusters) {
 			for (String chainId: cluster) {
 				if (chainId.startsWith(pdbIdUpper)) {
@@ -117,14 +117,14 @@ public class BlastClustReader implements Serializable {
 	public List<List<String>> getChainIdsInEntry(String pdbId) {
 		loadClusters(sequenceIdentity);
 
-		List<List<String>> matches = new ArrayList<List<String>>();
+		List<List<String>> matches = new ArrayList<>();
 		List<String> match = null;
 
 		for (List<String> cluster: clusters) {
 			for (String chainId: cluster) {
 				if (chainId.startsWith(pdbId)) {
 					if (match == null) {
-						match = new ArrayList<String>();
+						match = new ArrayList<>();
 					}
 					match.add(chainId.substring(5));
 				}

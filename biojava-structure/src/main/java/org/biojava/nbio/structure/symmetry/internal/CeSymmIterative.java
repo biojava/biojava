@@ -89,7 +89,7 @@ public class CeSymmIterative {
 	public CeSymmIterative(CESymmParameters param) {
 		params = param;
 		alignGraph = new SimpleGraph<Integer, DefaultEdge>(DefaultEdge.class);
-		levels = new ArrayList<CeSymmResult>();
+		levels = new ArrayList<>();
 	}
 
 	/**
@@ -231,7 +231,7 @@ public class CeSymmIterative {
 		ConnectivityInspector<Integer, DefaultEdge> inspector = new ConnectivityInspector<Integer, DefaultEdge>(
 				alignGraph);
 		List<Set<Integer>> comps = inspector.connectedSets();
-		List<ResidueGroup> groups = new ArrayList<ResidueGroup>(comps.size());
+		List<ResidueGroup> groups = new ArrayList<>(comps.size());
 		for (Set<Integer> comp : comps)
 			groups.add(new ResidueGroup(comp));
 

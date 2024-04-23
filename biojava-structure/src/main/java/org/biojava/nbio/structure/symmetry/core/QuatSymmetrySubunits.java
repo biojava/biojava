@@ -105,7 +105,7 @@ public class QuatSymmetrySubunits {
 	 */
 	public List<String> getChainIds() {
 
-		List<String> chains = new ArrayList<String>(getSubunitCount());
+		List<String> chains = new ArrayList<>(getSubunitCount());
 
 		// Loop through all subunits in the clusters and fill Lists
 		for (int c = 0; c < clusters.size(); c++) {
@@ -125,7 +125,7 @@ public class QuatSymmetrySubunits {
 	 */
 	public List<Integer> getModelNumbers() {
 
-		List<Integer> models = new ArrayList<Integer>(getSubunitCount());
+		List<Integer> models = new ArrayList<>(getSubunitCount());
 
 		// Loop through all subunits in the clusters and fill Lists
 		for (int c = 0; c < clusters.size(); c++) {

@@ -190,7 +190,7 @@ public class SingleLinkageClusterer {
 	private void updateIndicesToCheck(int m) {
 
 		if (indicesToCheck==null) {
-			indicesToCheck = new ArrayList<Integer>(numItems);
+			indicesToCheck = new ArrayList<>(numItems);
 
 			for (int i=0;i<numItems;i++) {
 				indicesToCheck.add(i);
@@ -250,7 +250,7 @@ public class SingleLinkageClusterer {
 			clusterIt();
 		}
 
-		Map<Integer, Set<Integer>> clusters = new TreeMap<Integer, Set<Integer>>();
+		Map<Integer, Set<Integer>> clusters = new TreeMap<>();
 
 		int clusterId = 1;
 
@@ -276,7 +276,7 @@ public class SingleLinkageClusterer {
 
 				if (firstClusterId==-1 && secondClusterId==-1) {
 					// neither member is in a cluster yet, let's assign a new cluster and put them both in
-					Set<Integer> members = new TreeSet<Integer>();
+					Set<Integer> members = new TreeSet<>();
 					members.add(dendrogram[i].getFirst());
 					members.add(dendrogram[i].getSecond());
 					clusters.put(clusterId, members);
@@ -319,7 +319,7 @@ public class SingleLinkageClusterer {
 		}
 
 		// reassigning cluster numbers by creating a new map (there can be gaps in the numbering if cluster-joining happened)
-		Map<Integer,Set<Integer>> finalClusters = new TreeMap<Integer, Set<Integer>>();
+		Map<Integer,Set<Integer>> finalClusters = new TreeMap<>();
 		int newClusterId = 1;
 		for (int oldClusterId:clusters.keySet()) {
 			finalClusters.put(newClusterId, clusters.get(oldClusterId));
@@ -336,7 +336,7 @@ public class SingleLinkageClusterer {
 				}
 			}
 			if (!isAlreadyClustered) {
-				Set<Integer> members = new TreeSet<Integer>();
+				Set<Integer> members = new TreeSet<>();
 				members.add(i);
 				finalClusters.put(newClusterId, members);
 				newClusterId++;

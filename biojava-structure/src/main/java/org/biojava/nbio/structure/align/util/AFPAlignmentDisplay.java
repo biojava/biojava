@@ -90,7 +90,7 @@ public class AFPAlignmentDisplay
 	}
 
 	public static Atom[] getAlignedAtoms1(AFPChain afpChain,Atom[] ca1){
-		List<Atom> atoms = new ArrayList<Atom>();
+		List<Atom> atoms = new ArrayList<>();
 
 		int blockNum = afpChain.getBlockNum();
 
@@ -111,7 +111,7 @@ public class AFPAlignmentDisplay
 	}
 	public static Atom[] getAlignedAtoms2(AFPChain afpChain,Atom[] ca2){
 
-		List<Atom> atoms = new ArrayList<Atom>();
+		List<Atom> atoms = new ArrayList<>();
 
 		int blockNum = afpChain.getBlockNum();
 
@@ -329,7 +329,7 @@ public class AFPAlignmentDisplay
 
 		if ( seq1 == null || seq2 == null){
 			logger.warn("Can't calc %ID for an empty alignment! ");
-			Map<String, Double> m = new HashMap<String, Double>();
+			Map<String, Double> m = new HashMap<>();
 			m.put("similarity", similarity);
 			m.put("identity", identity);
 			return m;
@@ -369,7 +369,7 @@ public class AFPAlignmentDisplay
 			similarity = (similarity) / eqr;
 			identity = identity/eqr;
 		}
-		Map<String, Double> m = new HashMap<String, Double>();
+		Map<String, Double> m = new HashMap<>();
 		m.put("similarity", similarity);
 		m.put("identity", identity);
 
@@ -400,7 +400,7 @@ public class AFPAlignmentDisplay
 
 		Group[] twistedGroups = AlignmentTools.prepareGroupsForDisplay(afpChain,ca1, ca2);
 
-		List<Atom> twistedAs = new ArrayList<Atom>();
+		List<Atom> twistedAs = new ArrayList<>();
 
 		for ( Group g: twistedGroups){
 			if ( g == null )
@@ -412,8 +412,8 @@ public class AFPAlignmentDisplay
 		}
 		Atom[] twistedAtoms = twistedAs.toArray(new Atom[twistedAs.size()]);
 
-		List<Group> hetatms  = new ArrayList<Group>();
-		List<Group> nucs1    = new ArrayList<Group>();
+		List<Group> hetatms  = new ArrayList<>();
+		List<Group> nucs1    = new ArrayList<>();
 		Group g1 = ca1[0].getGroup();
 		Chain c1 = null;
 		if ( g1 != null) {
@@ -423,8 +423,8 @@ public class AFPAlignmentDisplay
 				nucs1  = c1.getAtomGroups(GroupType.NUCLEOTIDE);
 			}
 		}
-		List<Group> hetatms2 = new ArrayList<Group>();
-		List<Group> nucs2    = new ArrayList<Group>();
+		List<Group> hetatms2 = new ArrayList<>();
+		List<Group> nucs2    = new ArrayList<>();
 		Group g2 = ca2[0].getGroup();
 		Chain c2 = null;
 		if ( g2 != null){

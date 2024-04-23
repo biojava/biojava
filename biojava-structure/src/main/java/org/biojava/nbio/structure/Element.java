@@ -191,7 +191,7 @@ public enum Element {
 	private static final Map<String,Element> allElements ;
 
 	static {
-		allElements = new HashMap<String,Element>();
+		allElements = new HashMap<>();
 		for (Element e : Element.values()){
 			allElements.put(e.toString().toLowerCase(), e);
 		}

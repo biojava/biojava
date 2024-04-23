@@ -47,7 +47,7 @@ import java.util.List;
 public class MomentsOfInertia {
 
 	private List<Point3d> points = new ArrayList<Point3d>();
-	private List<Double> masses = new ArrayList<Double>();
+	private List<Double> masses = new ArrayList<>();
 
 	private boolean modified = true;
 

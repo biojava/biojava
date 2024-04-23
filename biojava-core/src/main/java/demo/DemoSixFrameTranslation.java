@@ -106,7 +106,7 @@ public class DemoSixFrameTranslation {
 			CompoundSet<NucleotideCompound> nucleotideCompoundSet = AmbiguityRNACompoundSet.getRNACompoundSet();
 
 			FastaReader<DNASequence, NucleotideCompound> proxy =
-					new FastaReader<DNASequence, NucleotideCompound>(
+					new FastaReader<>(
 							stream,
 							new GenericFastaHeaderParser<DNASequence, NucleotideCompound>(),
 							new DNASequenceCreator(ambiguityDNACompoundSet));

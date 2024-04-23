@@ -73,7 +73,7 @@ public enum ModificationOccurrenceType {
 
 	private static Map<String, ModificationOccurrenceType> mapLabelOcc;
 	static {
-		mapLabelOcc = new HashMap<String, ModificationOccurrenceType>();
+		mapLabelOcc = new HashMap<>();
 		for (ModificationOccurrenceType occ:ModificationOccurrenceType.values()) {
 			mapLabelOcc.put(occ.label, occ);
 		}

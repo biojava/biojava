@@ -69,7 +69,7 @@ public class NumbersAtRiskPanel extends JPanel {
 		g2.setStroke(kmfi.kmStroke);
 		SurvFitInfo sfi = kmf.getSurvivalFitInfo();
 
-		LinkedHashMap<String, StrataInfo> sfiHashMap = new LinkedHashMap<String, StrataInfo>();
+		LinkedHashMap<String, StrataInfo> sfiHashMap = new LinkedHashMap<>();
 		if(sfi.isWeighted()){
 			sfiHashMap = sfi.getUnweightedStrataInfoHashMap();
 		}else{
@@ -94,7 +94,7 @@ public class NumbersAtRiskPanel extends JPanel {
 		ArrayList<Double> xaxisTimeValues = kmf.getxAxisTimeValues();
 		ArrayList<Integer> xAxisTimeCoordinates = kmf.getxAxisTimeCoordinates();
 
-		ArrayList<String> labels = new ArrayList<String>(sfiHashMap.keySet());
+		ArrayList<String> labels = new ArrayList<>(sfiHashMap.keySet());
 		Collections.sort(labels);
 
 		for (String group : labels) {

@@ -76,7 +76,7 @@ public class GenbankWriterHelper {
 	public static void writeProteinSequence(OutputStream outputStream,
 			Collection<ProteinSequence> proteinSequences) throws Exception {
 
-		GenbankWriter<ProteinSequence, AminoAcidCompound> genbankWriter = new GenbankWriter<ProteinSequence, AminoAcidCompound>(
+		GenbankWriter<ProteinSequence, AminoAcidCompound> genbankWriter = new GenbankWriter<>(
 				outputStream,
 				proteinSequences,
 				new GenericGenbankHeaderFormat<ProteinSequence, AminoAcidCompound>());
@@ -126,10 +126,10 @@ public class GenbankWriterHelper {
 	public static void writeNucleotideSequence(OutputStream outputStream,
 			Collection<DNASequence> dnaSequences, String seqType)
 			throws Exception {
-		GenericGenbankHeaderFormat<DNASequence, NucleotideCompound> genericGenbankHeaderFormat = new GenericGenbankHeaderFormat<DNASequence, NucleotideCompound>(
+		GenericGenbankHeaderFormat<DNASequence, NucleotideCompound> genericGenbankHeaderFormat = new GenericGenbankHeaderFormat<>(
 				seqType);
 		// genericGenbankHeaderFormat.setLineSeparator(lineSep);
-		GenbankWriter<DNASequence, NucleotideCompound> genbankWriter = new GenbankWriter<DNASequence, NucleotideCompound>(
+		GenbankWriter<DNASequence, NucleotideCompound> genbankWriter = new GenbankWriter<>(
 				outputStream, dnaSequences, genericGenbankHeaderFormat);
 		// genbankWriter.setLineSeparator(lineSep);
 		genbankWriter.process();
@@ -146,9 +146,9 @@ public class GenbankWriterHelper {
 
 	public static void writeNucleotideSequenceOriginal(OutputStream outputStream, Collection<DNASequence> dnaSequences)
 			throws Exception {
-		GenericGenbankHeaderFormat<DNASequence, NucleotideCompound> genericGenbankHeaderFormat = new GenericGenbankHeaderFormat<DNASequence, NucleotideCompound>(
+		GenericGenbankHeaderFormat<DNASequence, NucleotideCompound> genericGenbankHeaderFormat = new GenericGenbankHeaderFormat<>(
 				true);
-		GenbankWriter<DNASequence, NucleotideCompound> genbankWriter = new GenbankWriter<DNASequence, NucleotideCompound>(
+		GenbankWriter<DNASequence, NucleotideCompound> genbankWriter = new GenbankWriter<>(
 				outputStream, dnaSequences, genericGenbankHeaderFormat);
 		genbankWriter.process();
 	}
@@ -189,7 +189,7 @@ public class GenbankWriterHelper {
 
 	private static Collection<Sequence<?>> singleSeqToCollection(
 			Sequence<?> sequence) {
-		Collection<Sequence<?>> sequences = new ArrayList<Sequence<?>>();
+		Collection<Sequence<?>> sequences = new ArrayList<>();
 		sequences.add(sequence);
 		return sequences;
 	}
@@ -219,7 +219,7 @@ public class GenbankWriterHelper {
 			;
 		};
 
-		GenbankWriter<Sequence<?>, Compound> genbankWriter = new GenbankWriter<Sequence<?>, Compound>(
+		GenbankWriter<Sequence<?>, Compound> genbankWriter = new GenbankWriter<>(
 				outputStream, sequences, fhfi);
 
 		genbankWriter.process();

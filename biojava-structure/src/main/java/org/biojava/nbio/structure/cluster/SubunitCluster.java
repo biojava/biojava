@@ -679,9 +679,9 @@ public class SubunitCluster {
 		}
 
 		// Divide the Subunits in their repeats
-		List<Subunit> newSubunits = new ArrayList<Subunit>(subunits.size()
+		List<Subunit> newSubunits = new ArrayList<>(subunits.size()
 				* columns.size());
-		List<List<Integer>> newSubunitEQR = new ArrayList<List<Integer>>(
+		List<List<Integer>> newSubunitEQR = new ArrayList<>(
 				subunits.size() * columns.size());
 
 		for (int s = 0; s < subunits.size(); s++) {
@@ -700,7 +700,7 @@ public class SubunitCluster {
 						.get(s).getStructure()));
 
 				// Recalculate equivalent residues
-				List<Integer> eqr = new ArrayList<Integer>();
+				List<Integer> eqr = new ArrayList<>();
 				for (int p = 0; p < columns.get(r).size(); p++) {
 					eqr.add(subunitEQR.get(s).get(columns.get(r).get(p))
 							- start);

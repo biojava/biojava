@@ -30,7 +30,7 @@ public class HelicalRepeatUnit {
 	private QuatSymmetrySubunits subunits = null;
 	private List<Point3d> repeatUnitCenters = new ArrayList<Point3d>();
 	private List<Point3d[]> repeatUnits = new ArrayList<Point3d[]>();
-	private List<List<Integer>> repeatUnitIndices = new ArrayList<List<Integer>>();
+	private List<List<Integer>> repeatUnitIndices = new ArrayList<>();
 	private Map<Integer[], Integer> interactingNeighbors = Collections.emptyMap();
 
 public HelicalRepeatUnit(QuatSymmetrySubunits subunits) {
@@ -74,10 +74,10 @@ private void run() {
 private List<Point3d> calcRepeatUnitCenters() {
 
 	// TODO why do we use models here? it should not matter. Setting to 0 all
-	List<Integer> models = new ArrayList<Integer>(subunits.getSubunitCount());
+	List<Integer> models = new ArrayList<>(subunits.getSubunitCount());
 	for (int s = 0; s <subunits.getSubunitCount(); s++)
 		models.add(0);
-	Set<Integer> uniqueModels = new HashSet<Integer>(Arrays.asList(1));
+	Set<Integer> uniqueModels = new HashSet<>(Arrays.asList(1));
 
 	int modelCount = uniqueModels.size();
 	List<Integer> folds = this.subunits.getFolds();
@@ -90,7 +90,7 @@ private List<Point3d> calcRepeatUnitCenters() {
 	if (maxFold%modelCount == 0 && modelCount > 1 && subunits.getSubunitCount() > 3) {
 //		System.out.println("calcRepeatUnitCenters case 1");
 		for (int i = 0; i < modelCount; i++) {
-			List<Integer> subunitIndices = new ArrayList<Integer>();
+			List<Integer> subunitIndices = new ArrayList<>();
 			Point3d p = new Point3d();
 			int count = 0;
 //			System.out.println("Models: " + models.size());
@@ -113,7 +113,7 @@ private List<Point3d> calcRepeatUnitCenters() {
 		// Case of 3B5U: A14, but seems to form (A2)*7 and symmetry related subunits don't have direct contact
 		List<Integer> sequenceClusterIds = subunits.getClusterIds();
 		for (int i = 0; i < subunits.getSubunitCount(); i++) {
-			List<Integer> subunitIndices = new ArrayList<Integer>(1);
+			List<Integer> subunitIndices = new ArrayList<>(1);
 			if (sequenceClusterIds.get(i) == 0) {
 				repeatCenters.add(new Point3d(centers.get(i)));
 //				System.out.println("Orig Repeat unit: " + centers.get(i));
@@ -135,11 +135,11 @@ private List<Point3d> calcRepeatUnitCenters() {
 private List<Point3d[]> calcRepeatUnits() {
 
 	// TODO why do we use models here? it should not matter. Setting to 0 all
-	List<Integer> models = new ArrayList<Integer>(
+	List<Integer> models = new ArrayList<>(
 			subunits.getSubunitCount());
 	for (int s = 0; s < subunits.getSubunitCount(); s++)
 		models.add(0);
-	Set<Integer> uniqueModels = new HashSet<Integer>(Arrays.asList(1));
+	Set<Integer> uniqueModels = new HashSet<>(Arrays.asList(1));
 
 	int modelCount = uniqueModels.size();
 	List<Integer> folds = this.subunits.getFolds();
@@ -180,7 +180,7 @@ private List<Point3d[]> calcRepeatUnits() {
 }
 
 private Map<Integer[], Integer> findInteractingNeigbors() {
-	Map<Integer[], Integer>  contactMap = new HashMap<Integer[], Integer>();
+	Map<Integer[], Integer>  contactMap = new HashMap<>();
 
 	Map<Integer, List<Integer[]>> distanceMap = findClosestPairs(8);
 	for (List<Integer[]> pairs: distanceMap.values())
@@ -196,9 +196,9 @@ private Map<Integer[], Integer> findInteractingNeigbors() {
 }
 
 private Map<Integer, List<Integer[]>> findClosestPairs(int maxNeighbors) {
-	Map<Integer, List<Integer[]>>  reducedMap = new TreeMap<Integer, List<Integer[]>>();
+	Map<Integer, List<Integer[]>>  reducedMap = new TreeMap<>();
 
-	Map<Integer, List<Integer[]>>  distanceMap = new TreeMap<Integer, List<Integer[]>>();
+	Map<Integer, List<Integer[]>>  distanceMap = new TreeMap<>();
 	int nCenters = repeatUnitCenters.size();
 //	System.out.println("repeatUnitCenters: " + repeatUnitCenters);
 
@@ -212,7 +212,7 @@ private Map<Integer, List<Integer[]>> findClosestPairs(int maxNeighbors) {
 			List<Integer[]> pairs = distanceMap.get(intDist);
 			// save only one representative pair for each distance
 			if (pairs == null) {
-				pairs = new ArrayList<Integer[]>();
+				pairs = new ArrayList<>();
 			}
 			Integer[] pair = new Integer[2];
 			pair[0] = i;

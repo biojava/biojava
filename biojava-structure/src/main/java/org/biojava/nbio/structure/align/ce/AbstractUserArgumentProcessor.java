@@ -82,7 +82,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 
 	protected StartupParameters params ;
 
-	public static final List<String> mandatoryArgs= new ArrayList<String>();
+	public static final List<String> mandatoryArgs= new ArrayList<>();
 
 	protected AbstractUserArgumentProcessor(){
 		params = getStartupParametersInstance();

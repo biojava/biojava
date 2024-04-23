@@ -118,7 +118,7 @@ public class StructureSequenceMatcher {
 
 		for(Chain chain : struct.getChains()) {
 			List<Group> groups = chain.getAtomGroups();
-			Map<Integer,Integer> chainIndexPosition = new HashMap<Integer, Integer>();
+			Map<Integer,Integer> chainIndexPosition = new HashMap<>();
 			int prevLen = seqStr.length();
 
 			// get the sequence for this chain
@@ -162,7 +162,7 @@ public class StructureSequenceMatcher {
 	public static ResidueNumber[] matchSequenceToStructure(ProteinSequence seq, Structure struct) {
 
 		//1. Create ProteinSequence for struct while remembering to which group each residue corresponds
-		Map<Integer,Group> atomIndexPosition   = new HashMap<Integer, Group>();
+		Map<Integer,Group> atomIndexPosition   = new HashMap<>();
 
 		ProteinSequence structSeq = getProteinSequenceForStructure(struct,atomIndexPosition);
 
@@ -171,10 +171,10 @@ public class StructureSequenceMatcher {
 		// Identity substitution matrix with +1 for match, -1 for mismatch
 		// TODO
 		SubstitutionMatrix<AminoAcidCompound> matrix =
-			new SimpleSubstitutionMatrix<AminoAcidCompound>(
+			new SimpleSubstitutionMatrix<>(
 					AminoAcidCompoundSet.getAminoAcidCompoundSet(),
 					(short)1, (short)-1 );
-		matrix = new SimpleSubstitutionMatrix<AminoAcidCompound>(
+		matrix = new SimpleSubstitutionMatrix<>(
 				AminoAcidCompoundSet.getAminoAcidCompoundSet(),
 				new InputStreamReader(
 						SimpleSubstitutionMatrix.class.getResourceAsStream("/matrices/blosum100.txt")),

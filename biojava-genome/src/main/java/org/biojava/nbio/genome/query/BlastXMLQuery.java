@@ -47,7 +47,7 @@ public class BlastXMLQuery {
 	}
 
 	public LinkedHashMap<String, ArrayList<String>> getHitsQueryDef(double maxEScore) throws Exception {
-		LinkedHashMap<String, ArrayList<String>> hitsHashMap = new LinkedHashMap<String, ArrayList<String>>();
+		LinkedHashMap<String, ArrayList<String>> hitsHashMap = new LinkedHashMap<>();
 		logger.info("Query for hits");
 		ArrayList<Element> elementList = XMLHelper.selectElements(blastDoc.getDocumentElement(), "BlastOutput_iterations/Iteration[Iteration_hits]");
 		logger.info("{} hits", elementList.size());
@@ -69,7 +69,7 @@ public class BlastXMLQuery {
 					if (evalue <= maxEScore) {
 						ArrayList<String> hits = hitsHashMap.get(querydef);
 						if (hits == null) {
-							hits = new ArrayList<String>();
+							hits = new ArrayList<>();
 							hitsHashMap.put(querydef, hits);
 						}
 						hits.add(hitaccession);

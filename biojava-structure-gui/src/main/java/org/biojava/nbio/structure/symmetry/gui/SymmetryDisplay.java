@@ -239,7 +239,7 @@ public class SymmetryDisplay {
 		for (Axis a : symmAxes) {
 			RotationAxis rot = a.getRotationAxis();
 			List<List<Integer>> cyclicForm = axes.getRepeatsCyclicForm(a);
-			List<Atom> repAtoms = new ArrayList<Atom>();
+			List<Atom> repAtoms = new ArrayList<>();
 			for(List<Integer> cycle : cyclicForm) {
 				for(Integer repeat : cycle) {
 					repAtoms.addAll(Arrays.asList(repeats.get(repeat)));

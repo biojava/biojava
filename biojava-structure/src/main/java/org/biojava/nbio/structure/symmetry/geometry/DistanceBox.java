@@ -63,12 +63,12 @@ public class DistanceBox<T> {
 		1 + ( 1 * 10000) + ( 1 * 1000000000L)
 	};
 
-	private List<T> tempBox = new ArrayList<T>(offset.length);
+	private List<T> tempBox = new ArrayList<>(offset.length);
 
 	/** Creates a new instance of DistanceBox */
 	public DistanceBox(double binWidth) {
-		map = new HashMap<Long, List<T>>();
-		layerMap = new HashMap<Long, List<T>>();
+		map = new HashMap<>();
+		layerMap = new HashMap<>();
 		this.inverseBinWidth = 1.0f/binWidth;
 		this.modified = true;
 	}
@@ -82,7 +82,7 @@ public class DistanceBox<T> {
 		List<T> box = map.get(location);
 
 		if (box == null) {
-			box = new ArrayList<T>();
+			box = new ArrayList<>();
 			map.put(location, box);
 		}
 
@@ -127,8 +127,8 @@ public class DistanceBox<T> {
 	}
 
 	public List<T> getIntersection(DistanceBox<T> distanceBox) {
-		List<T> intersection = new ArrayList<T>();
-		HashSet<Long> checkedLocations = new HashSet<Long>();
+		List<T> intersection = new ArrayList<>();
+		HashSet<Long> checkedLocations = new HashSet<>();
 
 		for (Iterator<Long> iter = map.keySet().iterator(); iter.hasNext();) {
 			long location = iter.next();
@@ -171,7 +171,7 @@ public class DistanceBox<T> {
 		} else if (tempBox.size() == 1) {
 			boxTwo = Collections.singletonList(tempBox.get(0));
 		} else {
-			boxTwo = new ArrayList<T>(tempBox);
+			boxTwo = new ArrayList<>(tempBox);
 		}
 		return boxTwo;
 	}

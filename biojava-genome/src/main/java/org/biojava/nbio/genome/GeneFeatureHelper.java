@@ -42,7 +42,7 @@ public class GeneFeatureHelper {
 	private static final Logger logger = LoggerFactory.getLogger(GeneFeatureHelper.class);
 
 	static public LinkedHashMap<String, ChromosomeSequence> loadFastaAddGeneFeaturesFromUpperCaseExonFastaFile(File fastaSequenceFile, File uppercaseFastaFile, boolean throwExceptionGeneNotFound) throws Exception {
-		LinkedHashMap<String, ChromosomeSequence> chromosomeSequenceList = new LinkedHashMap<String, ChromosomeSequence>();
+		LinkedHashMap<String, ChromosomeSequence> chromosomeSequenceList = new LinkedHashMap<>();
 		LinkedHashMap<String, DNASequence> dnaSequenceList = FastaReaderHelper.readFastaDNASequence(fastaSequenceFile);
 		for (String accession : dnaSequenceList.keySet()) {
 			DNASequence contigSequence = dnaSequenceList.get(accession);
@@ -91,7 +91,7 @@ public class GeneFeatureHelper {
 						dnaSequence.getAccession().toString(), contigDNASequence.getAccession().toString(), bioStart, bioEnd, strand);
 				ChromosomeSequence chromosomeSequence = chromosomeSequenceList.get(accession);
 
-				ArrayList<Integer> exonBoundries = new ArrayList<Integer>();
+				ArrayList<Integer> exonBoundries = new ArrayList<>();
 
 				//look for transitions from lowercase to upper case
 				for (int i = 0; i < geneSequence.length(); i++) {
@@ -314,7 +314,7 @@ public class GeneFeatureHelper {
 	}
 
 	static public LinkedHashMap<String, ChromosomeSequence> getChromosomeSequenceFromDNASequence(LinkedHashMap<String, DNASequence> dnaSequenceList) {
-		LinkedHashMap<String, ChromosomeSequence> chromosomeSequenceList = new LinkedHashMap<String, ChromosomeSequence>();
+		LinkedHashMap<String, ChromosomeSequence> chromosomeSequenceList = new LinkedHashMap<>();
 		for (String key : dnaSequenceList.keySet()) {
 			DNASequence dnaSequence = dnaSequenceList.get(key);
 			ChromosomeSequence chromosomeSequence = new ChromosomeSequence(dnaSequence.getProxySequenceReader()); //we want the underlying sequence but don't need storage
@@ -836,7 +836,7 @@ public class GeneFeatureHelper {
 	}
 
 	static public LinkedHashMap<String, ProteinSequence> getProteinSequences(Collection<ChromosomeSequence> chromosomeSequences) throws Exception {
-		LinkedHashMap<String, ProteinSequence> proteinSequenceHashMap = new LinkedHashMap<String, ProteinSequence>();
+		LinkedHashMap<String, ProteinSequence> proteinSequenceHashMap = new LinkedHashMap<>();
 		for (ChromosomeSequence dnaSequence : chromosomeSequences) {
 			for (GeneSequence geneSequence : dnaSequence.getGeneSequences().values()) {
 				for (TranscriptSequence transcriptSequence : geneSequence.getTranscripts().values()) {
@@ -865,7 +865,7 @@ public class GeneFeatureHelper {
 	}
 
 	static public LinkedHashMap<String, GeneSequence> getGeneSequences(Collection<ChromosomeSequence> chromosomeSequences) throws Exception {
-		LinkedHashMap<String, GeneSequence> geneSequenceHashMap = new LinkedHashMap<String, GeneSequence>();
+		LinkedHashMap<String, GeneSequence> geneSequenceHashMap = new LinkedHashMap<>();
 		for (ChromosomeSequence chromosomeSequence : chromosomeSequences) {
 			for (GeneSequence geneSequence : chromosomeSequence.getGeneSequences().values()) {
 				geneSequenceHashMap.put(geneSequence.getAccession().getID(), geneSequence);

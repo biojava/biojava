@@ -71,7 +71,7 @@ public class FastaWriterHelper {
 	public static void writeProteinSequence(OutputStream outputStream,
 			Collection<ProteinSequence> proteinSequences) throws Exception {
 
-		FastaWriter<ProteinSequence, AminoAcidCompound> fastaWriter = new FastaWriter<ProteinSequence, AminoAcidCompound>(
+		FastaWriter<ProteinSequence, AminoAcidCompound> fastaWriter = new FastaWriter<>(
 				outputStream, proteinSequences,
 				new GenericFastaHeaderFormat<ProteinSequence, AminoAcidCompound>());
 		fastaWriter.process();
@@ -132,7 +132,7 @@ public class FastaWriterHelper {
 	 */
 
 	public static void writeNucleotideSequence(OutputStream outputStream, Collection<DNASequence> dnaSequences) throws Exception {
-		FastaWriter<DNASequence, NucleotideCompound> fastaWriter = new FastaWriter<DNASequence, NucleotideCompound>(
+		FastaWriter<DNASequence, NucleotideCompound> fastaWriter = new FastaWriter<>(
 				outputStream, dnaSequences,
 				new GenericFastaHeaderFormat<DNASequence, NucleotideCompound>());
 		fastaWriter.process();
@@ -170,7 +170,7 @@ public class FastaWriterHelper {
 	 */
 
 	private static Collection<Sequence<?>> singleSeqToCollection(Sequence<?> sequence) {
-		Collection<Sequence<?>> sequences = new ArrayList<Sequence<?>>();
+		Collection<Sequence<?>> sequences = new ArrayList<>();
 		sequences.add(sequence);
 		return sequences;
 	}
@@ -199,7 +199,7 @@ public class FastaWriterHelper {
 				};
 
 		FastaWriter<Sequence<?>, Compound> fastaWriter =
-				new FastaWriter<Sequence<?>, Compound>(outputStream,
+				new FastaWriter<>(outputStream,
 				sequences, fhfi);
 
 		fastaWriter.process();

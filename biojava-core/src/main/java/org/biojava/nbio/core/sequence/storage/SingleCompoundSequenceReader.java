@@ -146,7 +146,7 @@ public class SingleCompoundSequenceReader<C extends Compound> implements ProxySe
 
 	@Override
 	public SequenceView<C> getSubSequence(Integer start, Integer end) {
-		return new SequenceProxyView<C>(this, start, end);
+		return new SequenceProxyView<>(this, start, end);
 	}
 
 	/**
@@ -182,7 +182,7 @@ public class SingleCompoundSequenceReader<C extends Compound> implements ProxySe
 
 	@Override
 	public Iterator<C> iterator() {
-		return new SequenceMixin.SequenceIterator<C>(this);
+		return new SequenceMixin.SequenceIterator<>(this);
 	}
 
 	@Override

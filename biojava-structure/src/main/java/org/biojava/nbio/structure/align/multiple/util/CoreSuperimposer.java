@@ -127,8 +127,8 @@ public class CoreSuperimposer implements MultipleSuperimposer {
 				Atom[] ref = atomArrays.get(reference);
 				Atom[] curr = atomArrays.get(i);
 
-				List<Atom> atomSet1 = new ArrayList<Atom>();
-				List<Atom> atomSet2 = new ArrayList<Atom>();
+				List<Atom> atomSet1 = new ArrayList<>();
+				List<Atom> atomSet2 = new ArrayList<>();
 
 				for( Block blk : bs.getBlocks() ) {
 

@@ -68,7 +68,7 @@ public class GraphComponentRefiner implements SymmetryRefiner {
 		List<Set<Integer>> components = inspector.connectedSets();
 
 		// Filter components with size != order, and transform to ResidueGroups
-		List<ResidueGroup> groups = new ArrayList<ResidueGroup>();
+		List<ResidueGroup> groups = new ArrayList<>();
 		for (Set<Integer> comp : components) {
 			if (comp.size() == order) {
 				ResidueGroup group = new ResidueGroup(comp);
@@ -103,7 +103,7 @@ public class GraphComponentRefiner implements SymmetryRefiner {
 		}
 
 		// The compatibility score is the sum of rows of the matrix
-		List<Integer> rowScores = new ArrayList<Integer>(size);
+		List<Integer> rowScores = new ArrayList<>(size);
 		for (int i = 0; i < size; i++) {
 			GVector row = new GVector(size);
 			matrix.getRow(i, row);
@@ -113,7 +113,7 @@ public class GraphComponentRefiner implements SymmetryRefiner {
 		}
 
 		// Refined multiple alignment Block as a result
-		List<List<Integer>> alignRes = new ArrayList<List<Integer>>(order);
+		List<List<Integer>> alignRes = new ArrayList<>(order);
 		for (int i = 0; i < order; i++)
 			alignRes.add(new ArrayList<Integer>());
 

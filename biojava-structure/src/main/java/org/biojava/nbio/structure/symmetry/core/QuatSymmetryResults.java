@@ -72,7 +72,7 @@ public class QuatSymmetryResults {
 		this.stoichiometry = stoichiometry;
 		this.clusters = stoichiometry.getClusters();
 
-		subunits = new ArrayList<Subunit>();
+		subunits = new ArrayList<>();
 		for (SubunitCluster c : clusters) {
 			subunits.addAll(c.getSubunits());
 		}
@@ -95,7 +95,7 @@ public class QuatSymmetryResults {
 		this.stoichiometry = stoichiometry;
 		this.clusters = stoichiometry.getClusters();
 
-		subunits = new ArrayList<Subunit>();
+		subunits = new ArrayList<>();
 		for (SubunitCluster c : clusters) {
 			subunits.addAll(c.getSubunits());
 		}

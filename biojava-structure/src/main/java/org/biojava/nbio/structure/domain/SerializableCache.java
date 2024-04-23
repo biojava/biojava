@@ -117,7 +117,7 @@ public class SerializableCache <K,V>{
 
 		File f = getCacheFile();
 
-		serializedCache = new HashMap<K,V>();
+		serializedCache = new HashMap<>();
 
 		// has never been cached here before
 		if( ! f.exists()) {

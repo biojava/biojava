@@ -189,7 +189,7 @@ public class CeSymm {
 		CECalculator calculator = new CECalculator(params);
 		Matrix lastMatrix = null;
 
-		List<AFPChain> selfAlignments = new ArrayList<AFPChain>();
+		List<AFPChain> selfAlignments = new ArrayList<>();
 		AFPChain optimalAFP = null;
 
 		// STEP 2: perform the self-alignments of the structure

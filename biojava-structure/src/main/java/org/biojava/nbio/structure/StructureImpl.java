@@ -126,7 +126,7 @@ public class StructureImpl implements Structure {
 
 		// go through each chain and clone chain
 		for (int i=0;i<nrModels();i++){
-			List<Chain> cloned_model = new ArrayList<Chain>();
+			List<Chain> cloned_model = new ArrayList<>();
 
 			for (int j=0;j<size(i);j++){
 

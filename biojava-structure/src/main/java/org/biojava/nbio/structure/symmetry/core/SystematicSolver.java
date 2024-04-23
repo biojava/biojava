@@ -50,7 +50,7 @@ public class SystematicSolver implements QuatSymmetrySolver {
 	private RotationGroup rotations = new RotationGroup();
 	private Vector3d centroid = new Vector3d();
 	private Matrix4d centroidInverse = new Matrix4d();
-	private Set<List<Integer>> hashCodes = new HashSet<List<Integer>>();
+	private Set<List<Integer>> hashCodes = new HashSet<>();
 
 	public SystematicSolver(QuatSymmetrySubunits subunits, QuatSymmetryParameters parameters) {
 		if (subunits.getSubunitCount()== 2) {
@@ -77,7 +77,7 @@ public class SystematicSolver implements QuatSymmetrySolver {
 		// loop over all permutations
 		while (g.hasMore()) {
 			int[] perm = g.getNext();
-			List<Integer> permutation = new ArrayList<Integer>(perm.length);
+			List<Integer> permutation = new ArrayList<>(perm.length);
 			for (int j = 0; j < n; j++) {
 				permutation.add(perm[j]);
 			}

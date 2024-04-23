@@ -41,7 +41,7 @@ import static org.biojava.nbio.ws.alignment.qblast.BlastOutputParameterEnum.*;
 public class NCBIQBlastOutputProperties implements RemotePairwiseAlignmentOutputProperties {
 	private static final long serialVersionUID = -9202060390925345163L;
 
-	private Map<BlastOutputParameterEnum, String> param = new HashMap<BlastOutputParameterEnum, String>();
+	private Map<BlastOutputParameterEnum, String> param = new HashMap<>();
 
 	/**
 	 * This constructor builds the parameters for the output of the GET command sent to the QBlast service with default
@@ -96,7 +96,7 @@ public class NCBIQBlastOutputProperties implements RemotePairwiseAlignmentOutput
 	 */
 	@Override
 	public Set<String> getOutputOptions() {
-		Set<String> result = new HashSet<String>();
+		Set<String> result = new HashSet<>();
 		for (BlastOutputParameterEnum parameter : param.keySet()) {
 			result.add(parameter.name());
 		}

@@ -134,8 +134,8 @@ public class IUPACParser {
 
 	private void populateLookups() {
 		if(nameLookup == null) {
-			nameLookup = new HashMap<String, IUPACTable>();
-			idLookup = new HashMap<Integer, IUPACTable>();
+			nameLookup = new HashMap<>();
+			idLookup = new HashMap<>();
 			for(IUPACTable t: getTables()) {
 				nameLookup.put(t.getName(), t);
 				idLookup.put(t.getId(), t);
@@ -144,7 +144,7 @@ public class IUPACParser {
 	}
 
 	private List<IUPACTable> parseTables() {
-		List<IUPACTable> localTables = new ArrayList<IUPACTable>();
+		List<IUPACTable> localTables = new ArrayList<>();
 		List<String> lines = IOUtils.getList(is);
 		Integer id = null;
 		String name, aa, starts, baseone, basetwo, basethree;
@@ -198,7 +198,7 @@ public class IUPACParser {
 		private final String       baseTwo;
 		private final String       baseThree;
 
-		private final List<Codon>  codons    = new ArrayList<Codon>();
+		private final List<Codon>  codons    = new ArrayList<>();
 		private CompoundSet<Codon> compounds = null;
 
 		public IUPACTable(String name, int id, String aminoAcidString,
@@ -328,7 +328,7 @@ public class IUPACParser {
 		}
 
 		private List<List<String>> codonStrings() {
-			List<List<String>> codons = new ArrayList<List<String>>();
+			List<List<String>> codons = new ArrayList<>();
 			for (int i = 0; i < baseOne.length(); i++) {
 				List<String> codon = Arrays.asList(Character
 						.toString(baseOne.charAt(i)),
@@ -348,7 +348,7 @@ public class IUPACParser {
 		}
 
 		private List<String> split(String string) {
-			List<String> split = new ArrayList<String>();
+			List<String> split = new ArrayList<>();
 			for (int i = 0; i < string.length(); i++) {
 				split.add(Character.toString(string.charAt(i)));
 			}

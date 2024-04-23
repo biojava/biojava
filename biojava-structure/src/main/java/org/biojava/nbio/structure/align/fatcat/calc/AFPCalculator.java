@@ -48,7 +48,7 @@ public class AFPCalculator
 
 	public static void extractAFPChains(FatCatParameters params, AFPChain afpChain,Atom[] ca1,Atom[] ca2) throws StructureException {
 
-		List<AFP> afpSet = new ArrayList<AFP>();
+		List<AFP> afpSet = new ArrayList<>();
 		afpChain.setAfpSet(afpSet);
 
 		if ( debug )

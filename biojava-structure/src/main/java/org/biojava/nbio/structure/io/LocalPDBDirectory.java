@@ -174,7 +174,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	 * @param path Path to the PDB file directory
 	 */
 	public LocalPDBDirectory(String path) {
-		extensions    = new ArrayList<String>();
+		extensions    = new ArrayList<>();
 
 		params = new FileParsingParameters();
 
@@ -677,7 +677,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 		// Search directories:
 		// 1) LOCAL_MMCIF_SPLIT_DIR/<middle>/(pdb)?<pdbId>.<ext>
 		// 2) LOCAL_MMCIF_ALL_DIR/<middle>/(pdb)?<pdbId>.<ext>
-		LinkedList<File> searchdirs = new LinkedList<File>();
+		LinkedList<File> searchdirs = new LinkedList<>();
 		String middle = id.substring(offset, offset+2).toLowerCase();
 
 		File splitdir = new File(splitDirPath, middle);

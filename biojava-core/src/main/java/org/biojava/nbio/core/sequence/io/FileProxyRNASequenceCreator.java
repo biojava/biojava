@@ -78,7 +78,7 @@ public class FileProxyRNASequenceCreator implements
 	 */
 	@Override
 	public AbstractSequence<NucleotideCompound> getSequence(String sequence, long index ) throws CompoundNotFoundException, IOException {
-		SequenceFileProxyLoader<NucleotideCompound> sequenceFileProxyLoader = new SequenceFileProxyLoader<NucleotideCompound>(
+		SequenceFileProxyLoader<NucleotideCompound> sequenceFileProxyLoader = new SequenceFileProxyLoader<>(
 				file,
 				sequenceParser,
 				index,

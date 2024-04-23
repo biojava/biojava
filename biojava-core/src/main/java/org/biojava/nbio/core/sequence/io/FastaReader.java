@@ -148,7 +148,7 @@ public class FastaReader<S extends Sequence<?>, C extends Compound> {
 		boolean keepGoing = true;
 
 
-		LinkedHashMap<String,S> sequences = new LinkedHashMap<String,S>();
+		LinkedHashMap<String,S> sequences = new LinkedHashMap<>();
 
 		do {
 			line = line.trim(); // nice to have but probably not needed

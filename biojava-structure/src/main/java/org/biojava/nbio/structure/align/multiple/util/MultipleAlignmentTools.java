@@ -108,7 +108,7 @@ public class MultipleAlignmentTools {
 			MultipleAlignment alignment, final List<Integer> mapSeqToStruct) {
 
 		// Initialize sequence variables
-		List<String> alnSequences = new ArrayList<String>();
+		List<String> alnSequences = new ArrayList<>();
 		for (int str = 0; str < alignment.size(); str++)
 			alnSequences.add("");
 		mapSeqToStruct.clear();
@@ -116,13 +116,13 @@ public class MultipleAlignmentTools {
 		int globalPos = -1;
 
 		// Initialize helper variables in constucting the sequence alignment
-		List<SortedSet<Integer>> freePool = new ArrayList<SortedSet<Integer>>();
-		List<SortedSet<Integer>> blockStarts = new ArrayList<SortedSet<Integer>>();
-		List<List<Integer>> aligned = new ArrayList<List<Integer>>();
+		List<SortedSet<Integer>> freePool = new ArrayList<>();
+		List<SortedSet<Integer>> blockStarts = new ArrayList<>();
+		List<List<Integer>> aligned = new ArrayList<>();
 
 		// Generate freePool residues from the ones not aligned
 		for (int i = 0; i < alignment.size(); i++) {
-			List<Integer> residues = new ArrayList<Integer>();
+			List<Integer> residues = new ArrayList<>();
 			freePool.add(new TreeSet<Integer>());
 			blockStarts.add(new TreeSet<Integer>());
 			for (BlockSet bs : alignment.getBlockSets()) {
@@ -346,7 +346,7 @@ public class MultipleAlignmentTools {
 			MultipleAlignment alignment, List<Integer> mapSeqToStruct) {
 
 		// Initialize sequence variables
-		List<String> alnSequences = new ArrayList<String>();
+		List<String> alnSequences = new ArrayList<>();
 		for (int str = 0; str < alignment.size(); str++)
 			alnSequences.add("");
 		mapSeqToStruct.clear();
@@ -661,7 +661,7 @@ public class MultipleAlignmentTools {
 		}
 
 		List<Atom[]> atomArrays = alignment.getAtomArrays();
-		List<Atom[]> transformed = new ArrayList<Atom[]>(atomArrays.size());
+		List<Atom[]> transformed = new ArrayList<>(atomArrays.size());
 
 		// Loop through structures
 		for (int i = 0; i < atomArrays.size(); i++) {
@@ -729,7 +729,7 @@ public class MultipleAlignmentTools {
 	 */
 	public static List<Integer> getCorePositions(Block block) {
 
-		List<Integer> corePositions = new ArrayList<Integer>();
+		List<Integer> corePositions = new ArrayList<>();
 
 		for (int col = 0; col < block.length(); col++) {
 			boolean core = true;
@@ -800,9 +800,9 @@ public class MultipleAlignmentTools {
 							+ "the structures aligned are not proteins");
 		}
 
-		MultipleSequenceAlignment<ProteinSequence, AminoAcidCompound> msa = new MultipleSequenceAlignment<ProteinSequence, AminoAcidCompound>();
+		MultipleSequenceAlignment<ProteinSequence, AminoAcidCompound> msa = new MultipleSequenceAlignment<>();
 
-		Map<String, Integer> uniqueID = new HashMap<String, Integer>();
+		Map<String, Integer> uniqueID = new HashMap<>();
 		List<String> seqs = getSequenceAlignment(msta);
 		for (int i = 0; i < msta.size(); i++) {
 			// Make sure the identifiers are unique (required by AccessionID)
@@ -875,7 +875,7 @@ public class MultipleAlignmentTools {
 			for (int j = i; j < msa.size(); j++) {
 				if (i == j)
 					rmsdMat.set(i, j, 0.0);
-				List<Atom[]> compared = new ArrayList<Atom[]>();
+				List<Atom[]> compared = new ArrayList<>();
 				compared.add(superposed.get(i));
 				compared.add(superposed.get(j));
 				double rmsd = MultipleAlignmentScorer.getRMSD(compared);
@@ -947,7 +947,7 @@ public class MultipleAlignmentTools {
 		BasicSymmetricalDistanceMatrix rmsdDist = (BasicSymmetricalDistanceMatrix) DistanceMatrixCalculator
 				.structuralDistance(rmsdMat, 1, 5, 0.4);
 		// Set the identifiers of the matrix
-		Map<String, Integer> alreadySeen = new HashMap<String, Integer>();
+		Map<String, Integer> alreadySeen = new HashMap<>();
 		for (int i = 0; i < msta.size(); i++) {
 			// Make sure the identifiers are unique
 			String id = msta.getStructureIdentifier(i).toString();

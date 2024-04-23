@@ -214,7 +214,7 @@ public class Jronn implements Serializable {
 
 		int count=0;
 		int regionLen=0;
-		List<Range> ranges = new ArrayList<Range>();
+		List<Range> ranges = new ArrayList<>();
 		for(float score: scores) {
 			count++;
 			// Round to 2 decimal points before comparison
@@ -245,7 +245,7 @@ public class Jronn implements Serializable {
 	 * @see #getDisorder(FastaSequence)
 	 */
 	public static Map<FastaSequence,float[]> getDisorderScores(List<FastaSequence> sequences) {
-		Map<FastaSequence,float[]> results = new TreeMap<FastaSequence, float[]>();
+		Map<FastaSequence,float[]> results = new TreeMap<>();
 		results = sequences.stream().collect(Collectors.toMap(fastaSequence ->  fastaSequence, fastaSequence -> predictSerial(fastaSequence)));
 		return results;
 	}
@@ -258,7 +258,7 @@ public class Jronn implements Serializable {
 	 * @see #getDisorder(FastaSequence)
 	 */
 	public static Map<FastaSequence,Range[]> getDisorder(List<FastaSequence> sequences) {
-		Map<FastaSequence,Range[]> disorderRanges = new TreeMap<FastaSequence,Range[]>();
+		Map<FastaSequence,Range[]> disorderRanges = new TreeMap<>();
 		disorderRanges = sequences.stream().collect(Collectors.toMap(fastaSequence -> fastaSequence, fastaSequence -> getDisorder(fastaSequence) ));
 		return disorderRanges;
 	}

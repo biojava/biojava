@@ -423,7 +423,7 @@ public class CathDomain implements Serializable, StructureIdentifier {
 	 * @throws StructureException 
 	 */
 	public Set<String> getChains() throws StructureException {
-		Set<String> chains = new HashSet<String>();
+		Set<String> chains = new HashSet<>();
 		List<ResidueRange> rrs = toCanonical().getResidueRanges();
 		for (ResidueRange rr : rrs) chains.add(rr.getChainName());
 		return chains;
@@ -436,7 +436,7 @@ public class CathDomain implements Serializable, StructureIdentifier {
 
 	@Override
 	public SubstructureIdentifier toCanonical() throws StructureException{
-		List<ResidueRange> ranges = new ArrayList<ResidueRange>();
+		List<ResidueRange> ranges = new ArrayList<>();
 		String chain = String.valueOf(getDomainName().charAt(getDomainName().length() - 3));
 		for (CathSegment segment : this.getSegments()) {
 			ranges.add(new ResidueRange(chain, segment.getStart(), segment.getStop()));

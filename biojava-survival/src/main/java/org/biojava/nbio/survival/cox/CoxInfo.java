@@ -59,9 +59,9 @@ public class CoxInfo {
 	int numSamples = 0;
 	int numEvents = 0;
 	private LinkedHashMap<String, String> metaDataFilter = null;
-	private LinkedHashMap<String, CoxCoefficient> coefficientsList = new LinkedHashMap<String, CoxCoefficient>();
-	LinkedHashMap<Double, Double> baselineSurvivorFunction = new LinkedHashMap<Double, Double>();
-	ArrayList<SurvivalInfo> survivalInfoList = new ArrayList<SurvivalInfo>();
+	private LinkedHashMap<String, CoxCoefficient> coefficientsList = new LinkedHashMap<>();
+	LinkedHashMap<Double, Double> baselineSurvivorFunction = new LinkedHashMap<>();
+	ArrayList<SurvivalInfo> survivalInfoList = new ArrayList<>();
 	/**
 	 *
 	 */
@@ -184,7 +184,7 @@ public class CoxInfo {
 	 * @return
 	 */
 	public double[][] getVariableResiduals() {
-		ArrayList<String> variables = new ArrayList<String>(coefficientsList.keySet());
+		ArrayList<String> variables = new ArrayList<>(coefficientsList.keySet());
 		double[][] rr = new double[survivalInfoList.size()][variables.size()];
 		int p = 0;
 		for (SurvivalInfo si : this.survivalInfoList) {
@@ -204,7 +204,7 @@ public class CoxInfo {
 	 * @param rr
 	 */
 	public void setVariableResiduals(double[][] rr) {
-		ArrayList<String> variables = new ArrayList<String>(coefficientsList.keySet());
+		ArrayList<String> variables = new ArrayList<>(coefficientsList.keySet());
 
 		int p = 0;
 		for (SurvivalInfo si : this.survivalInfoList) {
@@ -320,7 +320,7 @@ public class CoxInfo {
 
 		//beta
 
-		ArrayList<String> variables = new ArrayList<String>(coefficientsList.keySet());
+		ArrayList<String> variables = new ArrayList<>(coefficientsList.keySet());
 		for (int i = 0; i < variables.size(); i++) {
 			String variable = variables.get(i);
 			CoxCoefficient coe = coefficientsList.get(variable);

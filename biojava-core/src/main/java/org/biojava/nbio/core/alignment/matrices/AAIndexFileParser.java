@@ -52,7 +52,7 @@ public class AAIndexFileParser {
 	boolean symmetricMatrix ;
 
 	public AAIndexFileParser(){
-		matrices  = new HashMap<String, SubstitutionMatrix<AminoAcidCompound>>();
+		matrices  = new HashMap<>();
 	}
 
 	/** Parse an inputStream that points to an AAINDEX database file
@@ -154,8 +154,8 @@ public class AAIndexFileParser {
 
 		matrix = new short[nrRows][nrCols];
 
-		rows = new ArrayList<AminoAcidCompound>();
-		cols = new ArrayList<AminoAcidCompound>();
+		rows = new ArrayList<>();
+		cols = new ArrayList<>();
 
 		//System.out.println(">" + currentRows+"<");
 		AminoAcidCompoundSet compoundSet = AminoAcidCompoundSet.getAminoAcidCompoundSet();
