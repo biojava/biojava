@@ -16,9 +16,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        # We do one OS only to reduce resource utilization. To do macOS to this would be needed:
-        #os: [ubuntu-20.04, macOS-latest]
-        os: [ubuntu-latest]
+        # Linux and Windows only (MacOS is quite close to Linux, so less of a risk)
+        os: [ubuntu-latest, windows-latest]
         java: [17, 21]
       fail-fast: false
       max-parallel: 4
