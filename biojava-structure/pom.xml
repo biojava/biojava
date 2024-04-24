@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>biojava</artifactId>
 		<groupId>org.biojava</groupId>
-		<version>7.1.2-SNAPSHOT</version>
+		<version>7.1.3-SNAPSHOT</version>
 	</parent>
 	<artifactId>biojava-structure</artifactId>
 	<name>biojava-structure</name>
@@ -44,13 +44,13 @@
 		<dependency>
 			<groupId>org.biojava</groupId>
 			<artifactId>biojava-alignment</artifactId>
-			<version>7.1.2-SNAPSHOT</version>
+			<version>7.1.3-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.biojava</groupId>
 			<artifactId>biojava-core</artifactId>
-			<version>7.1.2-SNAPSHOT</version>
+			<version>7.1.3-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 
