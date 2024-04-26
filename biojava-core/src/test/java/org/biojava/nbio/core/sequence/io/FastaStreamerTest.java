@@ -5,6 +5,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -16,9 +18,9 @@ import java.util.stream.Collectors;
 public class FastaStreamerTest {
 
 	@Test
-	public void stream() throws IOException {
-		String file = this.getClass().getResource("PF00104_small.fasta.gz").getFile();
-		Path path = Paths.get(file);
+	public void stream() throws IOException, URISyntaxException {
+		URI fileUri = this.getClass().getResource("PF00104_small.fasta.gz").toURI();
+		Path path = Paths.get(fileUri);
 		List<ProteinSequence> sequences;
 
 		sequences = FastaStreamer.from(path).stream().collect(Collectors.toList());
@@ -38,9 +40,9 @@ public class FastaStreamerTest {
 	}
 
 	@Test
-	public void iterate() {
-		String file = this.getClass().getResource("PF00104_small.fasta.gz").getFile();
-		Path path = Paths.get(file);
+	public void iterate() throws URISyntaxException {
+		URI fileUri = this.getClass().getResource("PF00104_small.fasta.gz").toURI();
+		Path path = Paths.get(fileUri);
 		int count = 0;
 		for (ProteinSequence sequence : FastaStreamer.from(path).each()) {
 			count++;
