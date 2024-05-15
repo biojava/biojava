@@ -63,7 +63,7 @@ public class GenbankWriterTest {
 
 		InputStream inStream = GenbankWriterTest.class.getResourceAsStream("/NM_000266.gb");
 		//File dnaFile = new File("src/test/resources/NM_000266.gb");
-		LinkedHashMap<String, DNASequence> dnaSequences = GenbankReaderHelper.readGenbankDNASequence( inStream );
+		Map<String, DNASequence> dnaSequences = GenbankReaderHelper.readGenbankDNASequence( inStream );
 		ByteArrayOutputStream fragwriter = new ByteArrayOutputStream();
 		ArrayList<DNASequence> seqs = new ArrayList<DNASequence>();
 		for(DNASequence seq : dnaSequences.values()) {

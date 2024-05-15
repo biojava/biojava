@@ -31,6 +31,8 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This is the sequence if you want to go from a gene sequence to a protein sequence. Need to start with a
@@ -41,8 +43,8 @@ public class TranscriptSequence extends DNASequence {
 
 	private final static Logger logger = LoggerFactory.getLogger(TranscriptSequence.class);
 
-	private final ArrayList<CDSSequence> cdsSequenceList = new ArrayList<>();
-	private final LinkedHashMap<String, CDSSequence> cdsSequenceHashMap = new LinkedHashMap<>();
+	private final List<CDSSequence> cdsSequenceList = new ArrayList<>();
+	private final Map<String, CDSSequence> cdsSequenceHashMap = new LinkedHashMap<>();
 	private StartCodonSequence startCodonSequence = null;
 	private StopCodonSequence stopCodonSequence = null;
 	private GeneSequence parentGeneSequence = null;
@@ -110,7 +112,7 @@ public class TranscriptSequence extends DNASequence {
 	 * Get the CDS sequences that have been added to the TranscriptSequences
 	 * @return
 	 */
-	public LinkedHashMap<String, CDSSequence> getCDSSequences() {
+	public Map<String, CDSSequence> getCDSSequences() {
 		return cdsSequenceHashMap;
 	}
 
@@ -152,8 +154,8 @@ public class TranscriptSequence extends DNASequence {
 	 *
 	 * @return
 	 */
-	public ArrayList<ProteinSequence> getProteinCDSSequences() {
-		ArrayList<ProteinSequence> proteinSequenceList = new ArrayList<>();
+	public List<ProteinSequence> getProteinCDSSequences() {
+		List<ProteinSequence> proteinSequenceList = new ArrayList<>();
 		for (int i = 0; i < cdsSequenceList.size(); i++) {
 			CDSSequence cdsSequence = cdsSequenceList.get(i);
 			String codingSequence = cdsSequence.getCodingSequence();

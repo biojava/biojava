@@ -37,6 +37,7 @@ import org.biojava.nbio.core.search.io.ResultFactory;
 import org.biojava.nbio.core.sequence.template.Sequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import java.util.Map;
 
 /**
  * Designed by Paolo Pavan.
@@ -71,7 +72,7 @@ public class BlastTabularParser implements ResultFactory {
 
 	// data imported private:
 	int queryIdNumber = 0;
-	HashMap<String,String> queryIdMapping = new HashMap<>();
+	Map<String, String> queryIdMapping = new HashMap<>();
 	String programName=null, queryName = null, databaseFile = null;
 	private String queryId      ;
 	private String subjectId    ;

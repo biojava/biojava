@@ -26,6 +26,8 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -39,7 +41,7 @@ public class GFF3Writer {
 	 * @param chromosomeSequenceList
 	 * @throws Exception
 	 */
-	public void write(OutputStream outputStream, LinkedHashMap<String, ChromosomeSequence> chromosomeSequenceList) throws Exception {
+	public void write(OutputStream outputStream, Map<String, ChromosomeSequence> chromosomeSequenceList) throws Exception {
 
 		outputStream.write("##gff-version 3\n".getBytes());
 		for (String key : chromosomeSequenceList.keySet()) {
@@ -117,7 +119,7 @@ public class GFF3Writer {
 
 	}
 
-	private String getGFF3Note(ArrayList<String> notesList) {
+	private String getGFF3Note(List<String> notesList) {
 		String notes = "";
 
 		if (notesList.size() > 0) {

@@ -43,6 +43,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TestDNAAlignment {
 
@@ -75,7 +76,7 @@ public class TestDNAAlignment {
 	private static List<DNASequence> getDNAFASTAFile() throws Exception {
 
 		InputStream inStream = TestDNAAlignment.class.getResourceAsStream(String.format("/dna-fasta.txt"));
-		LinkedHashMap<String, DNASequence> fastas = FastaReaderHelper.readFastaDNASequence(inStream);
+		Map<String, DNASequence> fastas = FastaReaderHelper.readFastaDNASequence(inStream);
 
 		List<DNASequence> sequences = new ArrayList<DNASequence>();
 

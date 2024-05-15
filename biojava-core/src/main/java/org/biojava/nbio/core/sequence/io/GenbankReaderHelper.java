@@ -37,6 +37,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  *
@@ -55,7 +56,7 @@ public class GenbankReaderHelper {
 	 * @return
 	 * @throws Exception
 	 */
-	public static LinkedHashMap<String, DNASequence> readGenbankDNASequence(File file, boolean lazySequenceLoad) throws Exception {
+	public static Map<String, DNASequence> readGenbankDNASequence(File file, boolean lazySequenceLoad) throws Exception {
 		if (!lazySequenceLoad) {
 			return readGenbankDNASequence(file);
 		}
@@ -83,7 +84,7 @@ public class GenbankReaderHelper {
 	 * @return
 	 * @throws Exception
 	 */
-	public static LinkedHashMap<String, ProteinSequence> readGenbankProteinSequence(File file, boolean lazySequenceLoad) throws Exception {
+	public static Map<String, ProteinSequence> readGenbankProteinSequence(File file, boolean lazySequenceLoad) throws Exception {
 		if (!lazySequenceLoad) {
 			return readGenbankProteinSequence(file);
 		}
@@ -111,7 +112,7 @@ public class GenbankReaderHelper {
 	 * @return
 	 * @throws Exception
 	 */
-	public static LinkedHashMap<String, RNASequence> readGenbankRNASequence(File file, boolean lazySequenceLoad) throws Exception {
+	public static Map<String, RNASequence> readGenbankRNASequence(File file, boolean lazySequenceLoad) throws Exception {
 		if (!lazySequenceLoad) {
 			return readGenbankRNASequence(file);
 		}
@@ -138,10 +139,10 @@ public class GenbankReaderHelper {
 	 * @return
 	 * @throws Exception
 	 */
-	public static LinkedHashMap<String, ProteinSequence> readGenbankProteinSequence(
+	public static Map<String, ProteinSequence> readGenbankProteinSequence(
 			File file) throws Exception {
 		FileInputStream inStream = new FileInputStream(file);
-		LinkedHashMap<String, ProteinSequence> proteinSequences = readGenbankProteinSequence(inStream);
+		Map<String, ProteinSequence> proteinSequences = readGenbankProteinSequence(inStream);
 		inStream.close();
 		return proteinSequences;
 	}
@@ -154,7 +155,7 @@ public class GenbankReaderHelper {
 	 * @return
 	 * @throws Exception
 	 */
-	public static LinkedHashMap<String, ProteinSequence> readGenbankProteinSequence(
+	public static Map<String, ProteinSequence> readGenbankProteinSequence(
 			InputStream inStream) throws Exception {
 		GenbankReader<ProteinSequence, AminoAcidCompound> GenbankReader = new GenbankReader<>(
 				inStream,
@@ -169,7 +170,7 @@ public class GenbankReaderHelper {
 	 * @return
 	 * @throws Exception
 	 */
-	public static LinkedHashMap<String, DNASequence> readGenbankDNASequence(
+	public static Map<String, DNASequence> readGenbankDNASequence(
 			InputStream inStream) throws Exception {
 		GenbankReader<DNASequence, NucleotideCompound> GenbankReader = new GenbankReader<>(
 				inStream,
@@ -184,10 +185,10 @@ public class GenbankReaderHelper {
 	 * @return
 	 * @throws Exception
 	 */
-	public static LinkedHashMap<String, DNASequence> readGenbankDNASequence(
+	public static Map<String, DNASequence> readGenbankDNASequence(
 			File file) throws Exception {
 		FileInputStream inStream = new FileInputStream(file);
-		LinkedHashMap<String, DNASequence> dnaSequences = readGenbankDNASequence(inStream);
+		Map<String, DNASequence> dnaSequences = readGenbankDNASequence(inStream);
 		inStream.close();
 		return dnaSequences;
 	}
@@ -197,7 +198,7 @@ public class GenbankReaderHelper {
 	 * @return
 	 * @throws Exception
 	 */
-	public static LinkedHashMap<String, RNASequence> readGenbankRNASequence(
+	public static Map<String, RNASequence> readGenbankRNASequence(
 			InputStream inStream) throws Exception {
 		GenbankReader<RNASequence, NucleotideCompound> GenbankReader = new GenbankReader<>(
 				inStream,
@@ -212,10 +213,10 @@ public class GenbankReaderHelper {
 	 * @return
 	 * @throws Exception
 	 */
-	public static LinkedHashMap<String, RNASequence> readGenbankRNASequence(
+	public static Map<String, RNASequence> readGenbankRNASequence(
 			File file) throws Exception {
 		FileInputStream inStream = new FileInputStream(file);
-		LinkedHashMap<String, RNASequence> rnaSequences = readGenbankRNASequence(inStream);
+		Map<String, RNASequence> rnaSequences = readGenbankRNASequence(inStream);
 		inStream.close();
 		return rnaSequences;
 	}

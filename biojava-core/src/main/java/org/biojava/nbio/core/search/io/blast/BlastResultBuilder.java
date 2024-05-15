@@ -24,6 +24,7 @@ import org.biojava.nbio.core.search.io.Hit;
 import java.util.HashMap;
 import java.util.List;
 import org.biojava.nbio.core.sequence.template.Sequence;
+import java.util.Map;
 
 /**
  * Designed by Paolo Pavan.
@@ -39,7 +40,7 @@ public class BlastResultBuilder {
 	private String version;
 	private String reference;
 	private String dbFile;
-	private HashMap<String, String> programSpecificParameters;
+	private Map<String, String> programSpecificParameters;
 	private int iterationNumber;
 	private String queryID;
 	private String queryDef;
@@ -70,7 +71,7 @@ public class BlastResultBuilder {
 		return this;
 	}
 
-	public BlastResultBuilder setProgramSpecificParameters(HashMap<String, String> programSpecificParameters) {
+	public BlastResultBuilder setProgramSpecificParameters(Map<String, String> programSpecificParameters) {
 		this.programSpecificParameters = programSpecificParameters;
 		return this;
 	}

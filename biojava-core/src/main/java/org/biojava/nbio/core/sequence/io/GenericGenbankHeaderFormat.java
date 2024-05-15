@@ -76,7 +76,7 @@ public class GenericGenbankHeaderFormat<S extends AbstractSequence<C>, C extends
 			text = "";
 		}
 		int max_len = MAX_WIDTH - HEADER_WIDTH;
-		ArrayList<String> lines = _split_multi_line(text, max_len);
+		List<String> lines = _split_multi_line(text, max_len);
 		String output = _write_single_line(tag, lines.get(0));
 		for (int i = 1; i < lines.size(); i++) {
 			output += _write_single_line("", lines.get(i));
@@ -254,7 +254,7 @@ public class GenericGenbankHeaderFormat<S extends AbstractSequence<C>, C extends
 	 * @param sequence
 	 */
 	private String _write_comment(S sequence) {
-		ArrayList<String> comments = sequence.getNotesList();
+		List<String> comments = sequence.getNotesList();
 		String output = _write_multi_line("COMMENT", comments.remove(0));
 		for (String comment : comments) {
 			output += _write_multi_line("", comment);

@@ -27,6 +27,7 @@ import java.util.Set;
 import java.util.NoSuchElementException;
 
 import org.biojava.nbio.core.sequence.template.Sequence;
+import java.util.Map;
 
 /**
  * This class models a search result.
@@ -46,7 +47,7 @@ public abstract class Result implements Iterable<Hit>{
 	private String reference;
 	private String dbFile;
 
-	private HashMap<String,String> programSpecificParameters;
+	private Map<String, String> programSpecificParameters;
 
 	private int iterationNumber;
 	private String queryID;
@@ -56,7 +57,7 @@ public abstract class Result implements Iterable<Hit>{
 	private List<Hit> hits;
 	private int hitCounter = -1;
 
-	public Result(String program, String version, String reference, String dbFile, HashMap<String, String> programSpecificParameters, int iterationNumber, String queryID, String queryDef, int queryLength, List<Hit> hits, Sequence querySequence) {
+	public Result(String program, String version, String reference, String dbFile, Map<String, String> programSpecificParameters, int iterationNumber, String queryID, String queryDef, int queryLength, List<Hit> hits, Sequence querySequence) {
 		this.program = program;
 		this.version = version;
 		this.reference = reference;

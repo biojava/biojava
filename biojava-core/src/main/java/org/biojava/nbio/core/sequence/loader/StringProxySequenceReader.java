@@ -83,7 +83,7 @@ public class StringProxySequenceReader<C extends Compound> implements ProxySeque
 		}
 	}
 
-	public void setContents(String sequence, ArrayList features) throws CompoundNotFoundException{
+	public void setContents(String sequence, List features) throws CompoundNotFoundException{
 		setContents(sequence);
 	}
 

@@ -129,7 +129,7 @@ class GeneSequenceTest {
         geneSequence.addExon(new AccessionID("a"), 20, 50);
         geneSequence.addExon(new AccessionID("b"), 80, 100);
         geneSequence.addIntronsUsingExons();
-        ArrayList<IntronSequence> introns  =  geneSequence.getIntronSequences();
+        List<IntronSequence> introns  =  geneSequence.getIntronSequences();
         assertEquals(1, introns.size());
         introns.remove(0);
         assertEquals(1, geneSequence.getIntronSequences().size());

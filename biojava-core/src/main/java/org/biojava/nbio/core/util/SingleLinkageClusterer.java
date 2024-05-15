@@ -87,7 +87,7 @@ public class SingleLinkageClusterer {
 
 	//private Set<Integer> toSkip;
 
-	private ArrayList<Integer> indicesToCheck;
+	private List<Integer> indicesToCheck;
 
 
 	/**

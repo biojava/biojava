@@ -87,7 +87,7 @@ public class GFF3FromUniprotBlastHits {
 
 
 					String predictedProteinSequence = transcriptSequence.getProteinSequence().getSequenceAsString();
-					ArrayList<ProteinSequence> cdsProteinList = transcriptSequence.getProteinCDSSequences();
+					List<ProteinSequence> cdsProteinList = transcriptSequence.getProteinCDSSequences();
 
 					ArrayList<CDSSequence> cdsSequenceList = new ArrayList<>(transcriptSequence.getCDSSequences().values());
 					String testSequence = "";
@@ -228,7 +228,7 @@ public class GFF3FromUniprotBlastHits {
 										for (DBReferenceInfo note : goList) {
 											notes = notes + " " + note.getId();
 											geneSequence.addNote(note.getId()); // add note/keyword which can be output in fasta header if needed
-											LinkedHashMap<String, String> properties = note.getProperties();
+											Map<String, String> properties = note.getProperties();
 											for (String propertytype : properties.keySet()) {
 												if ("evidence".equals(propertytype)) {
 													continue;
@@ -292,7 +292,7 @@ public class GFF3FromUniprotBlastHits {
 		*/
 
 			try {
-				LinkedHashMap<String, ChromosomeSequence> dnaSequenceHashMap = GeneFeatureHelper.loadFastaAddGeneFeaturesFromGlimmerGFF3(new File("/Users/Scooter/scripps/dyadic/analysis/454Scaffolds/454Scaffolds-16.fna"), new File("/Users/Scooter/scripps/dyadic/GlimmerHMM/c1_glimmerhmm-16.gff"));
+				Map<String, ChromosomeSequence> dnaSequenceHashMap = GeneFeatureHelper.loadFastaAddGeneFeaturesFromGlimmerGFF3(new File("/Users/Scooter/scripps/dyadic/analysis/454Scaffolds/454Scaffolds-16.fna"), new File("/Users/Scooter/scripps/dyadic/GlimmerHMM/c1_glimmerhmm-16.gff"));
 				LinkedHashMap<String, GeneSequence> geneSequenceList = GeneFeatureHelper.getGeneSequences(dnaSequenceHashMap.values());
 				FileOutputStream fo = new FileOutputStream("/Users/Scooter/scripps/dyadic/outputGlimmer/genemark_uniprot_match-16.gff3");
 				LinkedHashMap<String, ArrayList<String>> blasthits = BlastHomologyHits.getMatches(new File("/Users/Scooter/scripps/dyadic/blastresults/c1_glimmer_in_uniprot.xml"), 1E-10);

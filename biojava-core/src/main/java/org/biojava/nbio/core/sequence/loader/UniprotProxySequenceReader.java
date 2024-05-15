@@ -340,14 +340,14 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 	 * @return
 	 * @throws XPathExpressionException
 	 */
-	public ArrayList<AccessionID> getAccessions() throws XPathExpressionException {
-		ArrayList<AccessionID> accessionList = new ArrayList<>();
+	public List<AccessionID> getAccessions() throws XPathExpressionException {
+		List<AccessionID> accessionList = new ArrayList<>();
 		if (uniprotDoc == null) {
 			return accessionList;
 		}
 		Element uniprotElement = uniprotDoc.getDocumentElement();
 		Element entryElement = XMLHelper.selectSingleElement(uniprotElement, "entry");
-		ArrayList<Element> keyWordElementList = XMLHelper.selectElements(entryElement, "accession");
+		List<Element> keyWordElementList = XMLHelper.selectElements(entryElement, "accession");
 		for (Element element : keyWordElementList) {
 			AccessionID accessionID = new AccessionID(element.getTextContent(), DataSource.UNIPROT);
 			accessionList.add(accessionID);
@@ -363,7 +363,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 	 * @return
 	 * @throws XPathExpressionException
 	 */
-	public ArrayList<String> getAliases() throws XPathExpressionException {
+	public List<String> getAliases() throws XPathExpressionException {
 
 		return getProteinAliases();
 	}
@@ -372,8 +372,8 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 	 * @return
 	 * @throws XPathExpressionException
 	 */
-	public ArrayList<String> getProteinAliases() throws XPathExpressionException {
-		ArrayList<String> aliasList = new ArrayList<>();
+	public List<String> getProteinAliases() throws XPathExpressionException {
+		List<String> aliasList = new ArrayList<>();
 		if (uniprotDoc == null) {
 			return aliasList;
 		}
@@ -381,7 +381,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 		Element entryElement = XMLHelper.selectSingleElement(uniprotElement, "entry");
 		Element proteinElement = XMLHelper.selectSingleElement(entryElement, "protein");
 		
-		ArrayList<Element> keyWordElementList;
+		List<Element> keyWordElementList;
 		getProteinAliasesFromNameGroup(aliasList, proteinElement);
 		
 		keyWordElementList = XMLHelper.selectElements(proteinElement, "component");
@@ -439,9 +439,9 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 	 * @param proteinElement
 	 * @throws XPathExpressionException
 	 */
-	private void getProteinAliasesFromNameGroup(ArrayList<String> aliasList, Element proteinElement)
+	private void getProteinAliasesFromNameGroup(List<String> aliasList, Element proteinElement)
 			throws XPathExpressionException {
-		ArrayList<Element> keyWordElementList = XMLHelper.selectElements(proteinElement, "alternativeName");
+		List<Element> keyWordElementList = XMLHelper.selectElements(proteinElement, "alternativeName");
 		for (Element element : keyWordElementList) {
 			getProteinAliasesFromElement(aliasList, element);
 		}
@@ -457,7 +457,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 	 * @param element
 	 * @throws XPathExpressionException
 	 */
-	private void getProteinAliasesFromElement(ArrayList<String> aliasList, Element element)
+	private void getProteinAliasesFromElement(List<String> aliasList, Element element)
 			throws XPathExpressionException {
 		Element fullNameElement = XMLHelper.selectSingleElement(element, "fullName");
 		aliasList.add(fullNameElement.getTextContent());
@@ -475,16 +475,16 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 	 * @return
 	 * @throws XPathExpressionException
 	 */
-	public ArrayList<String> getGeneAliases() throws XPathExpressionException {
-		ArrayList<String> aliasList = new ArrayList<>();
+	public List<String> getGeneAliases() throws XPathExpressionException {
+		List<String> aliasList = new ArrayList<>();
 		if (uniprotDoc == null) {
 			return aliasList;
 		}
 		Element uniprotElement = uniprotDoc.getDocumentElement();
 		Element entryElement = XMLHelper.selectSingleElement(uniprotElement, "entry");
-		ArrayList<Element> proteinElements = XMLHelper.selectElements(entryElement, "gene");
+		List<Element> proteinElements = XMLHelper.selectElements(entryElement, "gene");
 		for(Element proteinElement : proteinElements) {
-			ArrayList<Element> keyWordElementList = XMLHelper.selectElements(proteinElement, "name");
+			List<Element> keyWordElementList = XMLHelper.selectElements(proteinElement, "name");
 			for (Element element : keyWordElementList) {
 				aliasList.add(element.getTextContent());
 			}
@@ -774,8 +774,8 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 	 * @return
 	 */
 	@Override
-	public ArrayList<String> getKeyWords() {
-		ArrayList<String> keyWordsList = new ArrayList<>();
+	public List<String> getKeyWords() {
+		List<String> keyWordsList = new ArrayList<>();
 		if (uniprotDoc == null) {
 			return keyWordsList;
 		}
@@ -783,7 +783,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 			Element uniprotElement = uniprotDoc.getDocumentElement();
 
 			Element entryElement = XMLHelper.selectSingleElement(uniprotElement, "entry");
-			ArrayList<Element> keyWordElementList = XMLHelper.selectElements(entryElement, "keyword");
+			List<Element> keyWordElementList = XMLHelper.selectElements(entryElement, "keyword");
 			for (Element element : keyWordElementList) {
 				keyWordsList.add(element.getTextContent());
 			}
@@ -809,7 +809,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 		try {
 			Element uniprotElement = uniprotDoc.getDocumentElement();
 			Element entryElement = XMLHelper.selectSingleElement(uniprotElement, "entry");
-			ArrayList<Element> dbreferenceElementList = XMLHelper.selectElements(entryElement, "dbReference");
+			List<Element> dbreferenceElementList = XMLHelper.selectElements(entryElement, "dbReference");
 			for (Element element : dbreferenceElementList) {
 				String type = element.getAttribute("type");
 				String id = element.getAttribute("id");
@@ -819,7 +819,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 					databaseReferencesHashMap.put(type, idlist);
 				}
 				DBReferenceInfo dbreferenceInfo = new DBReferenceInfo(type, id);
-				ArrayList<Element> propertyElementList = XMLHelper.selectElements(element, "property");
+				List<Element> propertyElementList = XMLHelper.selectElements(element, "property");
 				for (Element propertyElement : propertyElementList) {
 					String propertyType = propertyElement.getAttribute("type");
 					String propertyValue = propertyElement.getAttribute("value");

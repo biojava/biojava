@@ -33,6 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  *
@@ -90,12 +91,12 @@ public class GenbankCookbookTest {
 		//File protFile = new File("src/test/resources/BondFeature.gb");
 		ClasspathResource protResource = new ClasspathResource("BondFeature.gb");
 
-		LinkedHashMap<String, DNASequence> dnaSequences = GenbankReaderHelper.readGenbankDNASequence(dnaResource.getInputStream());
+		Map<String, DNASequence> dnaSequences = GenbankReaderHelper.readGenbankDNASequence(dnaResource.getInputStream());
 		for (DNASequence sequence : dnaSequences.values()) {
 			logger.debug("DNA Sequence: {}", sequence.getSequenceAsString());
 		}
 
-		LinkedHashMap<String, ProteinSequence> protSequences = GenbankReaderHelper.readGenbankProteinSequence(protResource.getInputStream());
+		Map<String, ProteinSequence> protSequences = GenbankReaderHelper.readGenbankProteinSequence(protResource.getInputStream());
 		for (ProteinSequence sequence : protSequences.values()) {
 			logger.debug("Protein Sequence: {}", sequence.getSequenceAsString());
 		}
