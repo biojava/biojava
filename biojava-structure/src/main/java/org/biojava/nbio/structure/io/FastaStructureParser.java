@@ -35,6 +35,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 /**
@@ -109,7 +110,7 @@ public class FastaStructureParser {
 	 */
 	public void process() throws IOException, StructureException {
 		if(sequences == null) { // only process once, then return cached values
-			LinkedHashMap<String, ProteinSequence> sequenceMap = reader.process();
+			Map<String, ProteinSequence> sequenceMap = reader.process();
 
 			sequences = sequenceMap.values().toArray(new ProteinSequence[0]);
 			accessions = new String[sequences.length];

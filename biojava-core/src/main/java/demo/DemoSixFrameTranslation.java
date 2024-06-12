@@ -112,7 +112,7 @@ public class DemoSixFrameTranslation {
 							new DNASequenceCreator(ambiguityDNACompoundSet));
 
 			// has only one entry in this example, but could be easily extended to parse a FASTA file with multiple sequences
-			LinkedHashMap<String, DNASequence> dnaSequences = proxy.process();
+			Map<String, DNASequence> dnaSequences = proxy.process();
 
 			// Initialize the Transcription Engine
 			TranscriptionEngine engine = new

@@ -30,6 +30,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.logging.Level;
 
 /**
@@ -70,7 +71,7 @@ public class FastaReaderTest {
 
 
 		FastaReader<ProteinSequence,AminoAcidCompound> fastaReader = new FastaReader<ProteinSequence,AminoAcidCompound>(inStream, new GenericFastaHeaderParser<ProteinSequence,AminoAcidCompound>(), new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
-		LinkedHashMap<String,ProteinSequence> proteinSequences = fastaReader.process();
+		Map<String,ProteinSequence> proteinSequences = fastaReader.process();
 		inStream.close();
 
 		//Should have 282 sequences
@@ -107,7 +108,7 @@ public class FastaReaderTest {
 		InputStream inStream = this.getClass().getResourceAsStream("/PF00104_small.fasta");
 		Assert.assertNotNull(inStream);
 		FastaReader<ProteinSequence,AminoAcidCompound> fastaReader = new FastaReader<ProteinSequence,AminoAcidCompound>(inStream, new GenericFastaHeaderParser<ProteinSequence,AminoAcidCompound>(), new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
-		LinkedHashMap<String,ProteinSequence> proteinSequences = fastaReader.process(200);
+		Map<String,ProteinSequence> proteinSequences = fastaReader.process(200);
 
 		//Should have 200 sequences
 		//logger.debug("Expecting 200 got " + proteinSequences.size());
@@ -169,7 +170,7 @@ public class FastaReaderTest {
 				new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>(),
 				new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
 
-		LinkedHashMap<String, ProteinSequence> b;
+		Map<String, ProteinSequence> b;
 
 		int nrSeq = 0;
 
@@ -200,7 +201,7 @@ public class FastaReaderTest {
 
 		int nrSeq = 0;
 
-		LinkedHashMap<String, ProteinSequence> b = fastaReader.process();
+		Map<String, ProteinSequence> b = fastaReader.process();
 
 		Assert.assertNotNull(b);
 

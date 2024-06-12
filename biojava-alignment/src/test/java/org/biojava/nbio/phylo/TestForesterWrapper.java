@@ -24,6 +24,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.biojava.nbio.core.sequence.MultipleSequenceAlignment;
 import org.biojava.nbio.core.sequence.ProteinSequence;
@@ -61,7 +62,7 @@ public class TestForesterWrapper {
 				new ProteinSequenceCreator(AminoAcidCompoundSet
 						.getAminoAcidCompoundSet()));
 
-		LinkedHashMap<String, ProteinSequence> proteinSequences = fastaReader
+		Map<String, ProteinSequence> proteinSequences = fastaReader
 				.process();
 
 		inStream.close();

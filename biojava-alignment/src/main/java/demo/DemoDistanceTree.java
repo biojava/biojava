@@ -22,6 +22,7 @@ package demo;
 
 import java.io.InputStream;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.biojava.nbio.core.alignment.matrices.SubstitutionMatrixHelper;
 import org.biojava.nbio.core.alignment.template.SubstitutionMatrix;
@@ -64,7 +65,7 @@ public class DemoDistanceTree {
 				new ProteinSequenceCreator(AminoAcidCompoundSet
 						.getAminoAcidCompoundSet()));
 
-		LinkedHashMap<String, ProteinSequence> proteinSequences =
+		Map<String, ProteinSequence> proteinSequences =
 				fastaReader.process();
 
 		inStream.close();

@@ -35,6 +35,7 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Use FastaReaderHelper as an example of how to use this class where FastaReaderHelper should be the
@@ -104,8 +105,8 @@ public class FastaReader<S extends Sequence<?>, C extends Compound> {
 	 * present, starting current fileIndex onwards.
 	 * @throws IOException if an error occurs reading the input file
 	 */
-	public LinkedHashMap<String,S> process() throws IOException {
-		LinkedHashMap<String,S> sequences = process(-1);
+	public Map<String, S> process() throws IOException {
+		Map<String, S> sequences = process(-1);
 		close();
 
 		return sequences;
@@ -131,7 +132,7 @@ public class FastaReader<S extends Sequence<?>, C extends Compound> {
 	 * present, starting current fileIndex onwards.
 	 * @throws IOException if an error occurs reading the input file
 	 */
-	public LinkedHashMap<String,S> process(int max) throws IOException {
+	public Map<String, S> process(int max) throws IOException {
 
 
 		String line = "";
@@ -148,7 +149,7 @@ public class FastaReader<S extends Sequence<?>, C extends Compound> {
 		boolean keepGoing = true;
 
 
-		LinkedHashMap<String,S> sequences = new LinkedHashMap<>();
+		Map<String, S> sequences = new LinkedHashMap<>();
 
 		do {
 			line = line.trim(); // nice to have but probably not needed
