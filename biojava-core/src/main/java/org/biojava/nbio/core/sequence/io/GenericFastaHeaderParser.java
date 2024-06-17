@@ -34,6 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The default fasta header parser where some headers are well defined based on the source
@@ -71,7 +72,7 @@ public class GenericFastaHeaderParser<S extends AbstractSequence<C>, C extends C
 	 */
 	private String[] getHeaderValues(String header) {
 		String[] data = new String[0];
-		ArrayList<String> values = new ArrayList<>();
+		List<String> values = new ArrayList<>();
 		StringBuffer sb = new StringBuffer();
 		//commented out 1/11/2012 to resolve an issue where headers do contain a length= at the end that are not recognized
 		//if(header.indexOf("length=") != -1){

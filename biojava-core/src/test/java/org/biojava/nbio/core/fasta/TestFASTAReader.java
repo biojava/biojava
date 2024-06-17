@@ -22,6 +22,7 @@ package org.biojava.nbio.core.fasta;
 
 import java.io.InputStream;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 import static org.junit.Assert.* ;
 import static org.hamcrest.CoreMatchers.* ;
@@ -46,7 +47,7 @@ public class TestFASTAReader {
 					inStream,
 					new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>(),
 					new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
-			LinkedHashMap<String, ProteinSequence> sequences = fastaReader.process();
+			Map<String, ProteinSequence> sequences = fastaReader.process();
 			assertThat(sequences,is(notNullValue()));
 			assertThat(sequences.size(),is(1));
 			assertThat(sequences.containsKey("P02768"),is(true));
@@ -86,12 +87,12 @@ public class TestFASTAReader {
 					inStream,
 					new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>(),
 					new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
-			LinkedHashMap<String,ProteinSequence> out1 = fastaReader.process(1);
+			Map<String,ProteinSequence> out1 = fastaReader.process(1);
 			assertThat(out1,is(notNullValue()));
 			assertThat(out1.size(),is(1));
 			assertThat(out1.containsKey("P02768"),is(true));
 			assertThat(out1.get("P02768").getLength(),is(609));
-			LinkedHashMap<String,ProteinSequence> out2 = fastaReader.process(1);
+			Map<String,ProteinSequence> out2 = fastaReader.process(1);
 			assertThat(out2,is(nullValue()));
 		} finally {
 			if(fastaReader != null) fastaReader.close();
@@ -128,17 +129,17 @@ public class TestFASTAReader {
 					inStream,
 					new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>(),
 					new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
-			LinkedHashMap<String,ProteinSequence> out1 = fastaReader.process(1);
+			Map<String,ProteinSequence> out1 = fastaReader.process(1);
 			assertThat(out1,is(notNullValue()));
 			assertThat(out1.size(),is(1));
 			assertThat(out1.containsKey("P02768"),is(true));
 			assertThat(out1.get("P02768").getLength(),is(609));
-			LinkedHashMap<String,ProteinSequence> out2 = fastaReader.process(1);
+			Map<String,ProteinSequence> out2 = fastaReader.process(1);
 			assertThat(out2,is(notNullValue()));
 			assertThat(out2.size(),is(1));
 			assertThat(out2.containsKey("P00698"),is(true));
 			assertThat(out2.get("P00698").getLength(),is(147));
-			LinkedHashMap<String,ProteinSequence> out3 = fastaReader.process(1);
+			Map<String,ProteinSequence> out3 = fastaReader.process(1);
 			assertThat(out3,is(nullValue()));
 		} finally {
 			if(fastaReader != null) fastaReader.close();

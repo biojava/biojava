@@ -30,6 +30,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 /**
@@ -44,7 +45,7 @@ public class SplitFasta {
 		if(!outputDirectory.exists())
 			outputDirectory.mkdirs();
 
-		LinkedHashMap<String,DNASequence> dnaSequenceHashMap = FastaReaderHelper.readFastaDNASequence(fastaFileName);
+		Map<String,DNASequence> dnaSequenceHashMap = FastaReaderHelper.readFastaDNASequence(fastaFileName);
 		for(DNASequence dnaSequence : dnaSequenceHashMap.values()){
 			String fileName = outputDirectory.getAbsolutePath() + File.separatorChar;
 			if(uniqueid.length() > 0){

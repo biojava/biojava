@@ -39,6 +39,7 @@ import java.io.FileOutputStream;
 import java.nio.file.Files;
 import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  *
@@ -112,7 +113,7 @@ public class GeneFeatureHelperTest {
 
 	@Test
 	public void testAddGFF3Note() throws Exception {
-		LinkedHashMap<String, ChromosomeSequence> chromosomeSequenceList = GeneFeatureHelper
+		Map<String, ChromosomeSequence> chromosomeSequenceList = GeneFeatureHelper
 				.loadFastaAddGeneFeaturesFromGmodGFF3(new File("src/test/resources/volvox_all.fna"), new File(
 						"src/test/resources/volvox.gff3"), false);
 		ChromosomeSequence ctgASequence = chromosomeSequenceList.get("ctgA");
@@ -128,10 +129,10 @@ public class GeneFeatureHelperTest {
 	 */
 	@Test
 	public void testGetProteinSequences() throws Exception {
-		LinkedHashMap<String, ChromosomeSequence> chromosomeSequenceList = GeneFeatureHelper
+		Map<String, ChromosomeSequence> chromosomeSequenceList = GeneFeatureHelper
 				.loadFastaAddGeneFeaturesFromGmodGFF3(new File("src/test/resources/volvox_all.fna"), new File(
 						"src/test/resources/volvox.gff3"), false);
-		LinkedHashMap<String, ProteinSequence> proteinSequenceList = GeneFeatureHelper
+		Map<String, ProteinSequence> proteinSequenceList = GeneFeatureHelper
 				.getProteinSequences(chromosomeSequenceList.values());
 		// for(ProteinSequence proteinSequence : proteinSequenceList.values()){
 		// logger.info("Output={}", proteinSequence.getSequenceAsString());
@@ -149,10 +150,10 @@ public class GeneFeatureHelperTest {
 	@Test
 	public void testGetGeneSequences() throws Exception {
 		// logger.info("getGeneSequences");
-		LinkedHashMap<String, ChromosomeSequence> chromosomeSequenceList = GeneFeatureHelper
+		Map<String, ChromosomeSequence> chromosomeSequenceList = GeneFeatureHelper
 				.loadFastaAddGeneFeaturesFromGmodGFF3(new File("src/test/resources/volvox_all.fna"), new File(
 						"src/test/resources/volvox.gff3"), true);
-		LinkedHashMap<String, GeneSequence> geneSequenceHashMap = GeneFeatureHelper
+		Map<String, GeneSequence> geneSequenceHashMap = GeneFeatureHelper
 				.getGeneSequences(chromosomeSequenceList.values());
 		Collection<GeneSequence> geneSequences = geneSequenceHashMap.values();
 

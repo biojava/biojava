@@ -217,7 +217,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
 						xref.setNeedsQuotes(needsQuotes);
 						gbFeature.addQualifier(key, xref);
 
-						ArrayList<DBReferenceInfo> listDBEntry = new ArrayList<>();
+						List<DBReferenceInfo> listDBEntry = new ArrayList<>();
 						listDBEntry.add(xref);
 						mapDB.put(key, listDBEntry);
 					} else {

@@ -42,6 +42,7 @@ import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.List;
 import org.biojava.nbio.core.sequence.features.Qualifier;
+import java.util.Map;
 
 /**
  * The representation of a ProteinSequence
@@ -163,7 +164,7 @@ public class ProteinSequence extends AbstractSequence<AminoAcidCompound> {
 				= new FastaReader<>(is,
 						new PlainFastaHeaderParser<DNASequence, NucleotideCompound>(),
 						new DNASequenceCreator(AmbiguityDNACompoundSet.getDNACompoundSet()));
-		LinkedHashMap<String, DNASequence> seq = parentReader.process();
+		Map<String, DNASequence> seq = parentReader.process();
 
 		DNASequence parentSeq = null;
 		if (seq.size() == 1) {

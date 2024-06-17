@@ -44,6 +44,7 @@ import java.util.ArrayList;
 
 import static org.biojava.nbio.core.sequence.io.util.IOUtils.close;
 import static org.biojava.nbio.core.sequence.io.util.IOUtils.openFile;
+import java.util.List;
 
 /**
  * Helper methods to simplify boilerplate XML parsing code for  {@code}org.w3c.dom{@code} XML objects
@@ -206,8 +207,8 @@ public class XMLHelper {
 	 * @return A possibly empty but non-null {@code}ArrayList{@code}
 	 * @throws XPathExpressionException
 	 */
-	public static ArrayList<Element> selectElements(Element element, String xpathExpression) throws XPathExpressionException {
-		ArrayList<Element> resultVector = new ArrayList<>();
+	public static List<Element> selectElements(Element element, String xpathExpression) throws XPathExpressionException {
+		List<Element> resultVector = new ArrayList<>();
 		if (element == null) {
 			return resultVector;
 		}

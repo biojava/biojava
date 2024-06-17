@@ -90,9 +90,9 @@ public class BlastXMLParser implements ResultFactory {
 		// create mappings between sequences and blast id
 		mapIds();
 
-		ArrayList<Result> resultsCollection;
-		ArrayList<Hit> hitsCollection;
-		ArrayList<Hsp> hspsCollection;
+		List<Result> resultsCollection;
+		List<Hit> hitsCollection;
+		List<Hsp> hspsCollection;
 
 		try {
 			// select top level elements
@@ -102,7 +102,7 @@ public class BlastXMLParser implements ResultFactory {
 			String dbFile = XMLHelper.selectSingleElement(blastDoc.getDocumentElement(),"BlastOutput_db").getTextContent();
 
 			logger.info("Query for hits in "+ targetFile);
-			ArrayList<Element> IterationsList = XMLHelper.selectElements(blastDoc.getDocumentElement(), "BlastOutput_iterations/Iteration[Iteration_hits]");
+			List<Element> IterationsList = XMLHelper.selectElements(blastDoc.getDocumentElement(), "BlastOutput_iterations/Iteration[Iteration_hits]");
 			logger.info(IterationsList.size() + " results");
 
 			resultsCollection = new ArrayList<>();
@@ -129,7 +129,7 @@ public class BlastXMLParser implements ResultFactory {
 
 
 				Element iterationHitsElement = XMLHelper.selectSingleElement(element, "Iteration_hits");
-				ArrayList<Element> hitList = XMLHelper.selectElements(iterationHitsElement, "Hit");
+				List<Element> hitList = XMLHelper.selectElements(iterationHitsElement, "Hit");
 
 				hitsCollection = new ArrayList<>();
 				for (Element hitElement : hitList) {
@@ -146,7 +146,7 @@ public class BlastXMLParser implements ResultFactory {
 					));
 
 					Element hithspsElement = XMLHelper.selectSingleElement(hitElement, "Hit_hsps");
-					ArrayList<Element> hspList = XMLHelper.selectElements(hithspsElement, "Hsp");
+					List<Element> hspList = XMLHelper.selectElements(hithspsElement, "Hsp");
 
 					hspsCollection = new ArrayList<>();
 					for (Element hspElement : hspList) {
@@ -195,7 +195,7 @@ public class BlastXMLParser implements ResultFactory {
 
 	@Override
 	public List<String> getFileExtensions(){
-		ArrayList<String> extensions = new ArrayList<>(1);
+		List<String> extensions = new ArrayList<>(1);
 		extensions.add("blastxml");
 		return extensions;
 	}

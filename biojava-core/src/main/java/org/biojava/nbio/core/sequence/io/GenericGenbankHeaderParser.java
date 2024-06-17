@@ -67,7 +67,7 @@ public class GenericGenbankHeaderParser<S extends AbstractSequence<C>, C extends
 
 	private boolean versionSeen;
 
-	private ArrayList<String> comments = new ArrayList<>();
+	private List<String> comments = new ArrayList<>();
 
 	/**
 	 * Publications by the authors of the sequence that discuss the data reported in
@@ -134,7 +134,7 @@ public class GenericGenbankHeaderParser<S extends AbstractSequence<C>, C extends
 		return version;
 	}
 
-	public ArrayList<String> getComments() {
+	public List<String> getComments() {
 		return comments;
 	}
 

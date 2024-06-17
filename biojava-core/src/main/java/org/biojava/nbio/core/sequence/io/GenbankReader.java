@@ -48,6 +48,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Use {@link GenbankReaderHelper} as an example of how to use this class where {@link GenbankReaderHelper} should be the
@@ -119,8 +120,8 @@ public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
 	 * @throws CompoundNotFoundException
 	 * @throws OutOfMemoryError if the input resource is larger than the allocated heap.
 	 */
-	public LinkedHashMap<String,S> process() throws IOException, CompoundNotFoundException {
-		LinkedHashMap<String,S> result = process(-1);
+	public Map<String, S> process() throws IOException, CompoundNotFoundException {
+		Map<String, S> result = process(-1);
 		close();
 		return result;
 	}
@@ -147,13 +148,13 @@ public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
 	 * @throws IOException
 	 * @throws CompoundNotFoundException
 	 */
-	public LinkedHashMap<String,S> process(final int max) throws IOException, CompoundNotFoundException {
+	public Map<String, S> process(final int max) throws IOException, CompoundNotFoundException {
 
 		if(closed){
 			throw new IOException("Cannot perform action: resource has been closed.");
 		}
 
-		LinkedHashMap<String,S> sequences = new LinkedHashMap<>();
+		Map<String, S> sequences = new LinkedHashMap<>();
 		int i=0;
 		while(true) {
 			if(max>0 && i>=max) break;

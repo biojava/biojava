@@ -68,7 +68,7 @@ public class GenbankReaderTest {
 						new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet())
 				);
 
-		LinkedHashMap<String, ProteinSequence> proteinSequences = genbankProtein.process();
+		Map<String, ProteinSequence> proteinSequences = genbankProtein.process();
 
 		assertThat(proteinSequences.get("NP_000257").getComments().get(0),is(
 				"VALIDATED REFSEQ: This record has undergone validation or\n" +
@@ -114,7 +114,7 @@ public class GenbankReaderTest {
 						new GenericGenbankHeaderParser<>(),
 						new DNASequenceCreator(DNACompoundSet.getDNACompoundSet())
 				);
-		LinkedHashMap<String, DNASequence> dnaSequences = genbankDNA.process();
+		Map<String, DNASequence> dnaSequences = genbankDNA.process();
 
 		assertNotNull(dnaSequences);
 		assertEquals(1, dnaSequences.size());
@@ -144,7 +144,7 @@ public class GenbankReaderTest {
 		);
 
 		// First call to process(1) returns the first sequence
-		LinkedHashMap<String, DNASequence> dnaSequences = genbankDNA.process(1);
+		Map<String, DNASequence> dnaSequences = genbankDNA.process(1);
 
 		assertFalse(inStream.isclosed());
 		assertNotNull(dnaSequences);
@@ -177,7 +177,7 @@ public class GenbankReaderTest {
 						new GenericGenbankHeaderParser<>(),
 						new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet())
 				);
-		LinkedHashMap<String, ProteinSequence> proteinSequences = GenbankProtein.process();
+		Map<String, ProteinSequence> proteinSequences = GenbankProtein.process();
 		assertTrue(inStream.isclosed());
 
 
@@ -206,7 +206,7 @@ public class GenbankReaderTest {
 				new GenericGenbankHeaderParser<>(),
 				new DNASequenceCreator(DNACompoundSet.getDNACompoundSet())
 				);
-		LinkedHashMap<String, DNASequence> dnaSequences = genbankDNA.process();
+		Map<String, DNASequence> dnaSequences = genbankDNA.process();
 		return dnaSequences.values().iterator().next();
 	}
 	
@@ -218,7 +218,7 @@ public class GenbankReaderTest {
 				new GenericGenbankHeaderParser<>(),
 				new RNASequenceCreator(RNACompoundSet.getRNACompoundSet())
 				);
-		LinkedHashMap<String, RNASequence> rnaSequences = genbankRNA.process();
+		Map<String, RNASequence> rnaSequences = genbankRNA.process();
 		return rnaSequences.values().iterator().next();	
 	}
 	
@@ -230,7 +230,7 @@ public class GenbankReaderTest {
 				new GenericGenbankHeaderParser<>(),
 				new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet())
 				);
-		LinkedHashMap<String, ProteinSequence> proteinSequences = genbankProtein.process();
+		Map<String, ProteinSequence> proteinSequences = genbankProtein.process();
 		return proteinSequences.values().iterator().next();	
 	}
 	
@@ -346,7 +346,7 @@ public class GenbankReaderTest {
 				new DNASequenceCreator(DNACompoundSet.getDNACompoundSet())
 		);
 
-		LinkedHashMap<String, DNASequence> dnaSequences = genbankDNA.process();
+		Map<String, DNASequence> dnaSequences = genbankDNA.process();
 		assertNotNull(dnaSequences);
 
 		DNASequence dna = new ArrayList<>(dnaSequences.values()).get(0);

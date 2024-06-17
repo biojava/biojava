@@ -25,6 +25,7 @@ package org.biojava.nbio.core.sequence.features;
 import org.biojava.nbio.core.sequence.loader.UniprotProxySequenceReader;
 
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * If you have a uniprot ID then it is possible to get a collection
@@ -37,7 +38,7 @@ import java.util.LinkedHashMap;
  * @author Paolo Pavan
  */
 public class DBReferenceInfo extends Qualifier {
-	private LinkedHashMap<String, String> properties = new LinkedHashMap<>();
+	private Map<String, String> properties = new LinkedHashMap<>();
 	private String database = "";
 	private String id = "";
 
@@ -66,14 +67,14 @@ public class DBReferenceInfo extends Qualifier {
 	 * Get the properties
 	 * @return the properties
 	 */
-	public LinkedHashMap<String, String> getProperties() {
+	public Map<String, String> getProperties() {
 		return properties;
 	}
 
 	/**
 	 * @param properties the properties to set
 	 */
-	public void setProperties(LinkedHashMap<String, String> properties) {
+	public void setProperties(Map<String, String> properties) {
 		this.properties = properties;
 	}
 

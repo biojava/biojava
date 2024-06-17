@@ -36,7 +36,7 @@ public class FastaStreamer {
 	private int batchSize = 1_000;
 	private SequenceHeaderParserInterface<ProteinSequence, AminoAcidCompound> headerParser;
 	private SequenceCreatorInterface<AminoAcidCompound> sequenceCreator;
-	private LinkedHashMap<String, ProteinSequence> chunk = new LinkedHashMap<>();
+	private Map<String, ProteinSequence> chunk = new LinkedHashMap<>();
 	private Iterator<Map.Entry<String, ProteinSequence>> iterator = Collections.emptyIterator();
 	private boolean closed = false;
 

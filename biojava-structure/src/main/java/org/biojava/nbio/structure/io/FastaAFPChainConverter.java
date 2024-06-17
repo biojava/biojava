@@ -87,7 +87,7 @@ public class FastaAFPChainConverter {
 		SequenceCreatorInterface<AminoAcidCompound> creator = new CasePreservingProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet());
 		SequenceHeaderParserInterface<ProteinSequence, AminoAcidCompound> headerParser = new GenericFastaHeaderParser<>();
 		FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = new FastaReader<>(inStream, headerParser, creator);
-		LinkedHashMap<String, ProteinSequence> sequences = fastaReader.process();
+		Map<String, ProteinSequence> sequences = fastaReader.process();
 		inStream.close();
 		Iterator<ProteinSequence> iter = sequences.values().iterator();
 		ProteinSequence first = iter.next();
@@ -199,7 +199,7 @@ public class FastaAFPChainConverter {
 		SequenceHeaderParserInterface<ProteinSequence, AminoAcidCompound> headerParser = new GenericFastaHeaderParser<>();
 		FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = new FastaReader<>(
 				inStream, headerParser, creator);
-		LinkedHashMap<String, ProteinSequence> sequences = fastaReader.process();
+		Map<String, ProteinSequence> sequences = fastaReader.process();
 		inStream.close();
 		return fastaToAfpChain(sequences, structure1, structure2);
 	}

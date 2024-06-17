@@ -82,7 +82,7 @@ public class CommandPrompt {
 		else
 			output = System.out;
 		printHeader(output, propertyList, specificList, delimiter);
-		LinkedHashMap<String, ProteinSequence> a = readInputFile(inputLocation, aaTable);
+		Map<String, ProteinSequence> a = readInputFile(inputLocation, aaTable);
 		//Need for the last sequence
 		for(Entry<String, ProteinSequence> entry:a.entrySet()){
 			compute(output, entry.getValue().getOriginalHeader(), entry.getValue().getSequenceAsString().trim(), delimiter, aaTable, propertyList, specificList,
@@ -169,7 +169,7 @@ public class CommandPrompt {
 		readInputAndGenerateOutput(outputLocation, propertyList, specificList, delimiter, inputLocation, aaTable, decimalPlace);
 	}
 
-	private static LinkedHashMap<String, ProteinSequence> readInputFile(String inputLocation, AminoAcidCompositionTable aaTable) throws Exception{
+	private static Map<String, ProteinSequence> readInputFile(String inputLocation, AminoAcidCompositionTable aaTable) throws Exception{
 		FileInputStream inStream = new FileInputStream(inputLocation);
 		CompoundSet<AminoAcidCompound>	set;
 		if(aaTable == null){
@@ -177,7 +177,7 @@ public class CommandPrompt {
 		}else{
 			set = aaTable.getAminoAcidCompoundSet();
 		}
-		LinkedHashMap<String, ProteinSequence> ret;
+		Map<String, ProteinSequence> ret;
 		if ( inputLocation.toLowerCase().contains(".gb")) {
 			GenbankReader<ProteinSequence, AminoAcidCompound> genbankReader = new GenbankReader<>(
 					inStream, new GenericGenbankHeaderParser<ProteinSequence, AminoAcidCompound>(),

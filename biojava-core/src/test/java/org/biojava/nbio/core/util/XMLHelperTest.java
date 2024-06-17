@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -148,7 +149,7 @@ class XMLHelperTest {
         @Test
         void selectMultipleElementsWithXPath()
                 throws  XPathExpressionException {
-            ArrayList<Element> selected = XMLHelper.selectElements(root, "/root/list/a");
+            List<Element> selected = XMLHelper.selectElements(root, "/root/list/a");
             assertEquals(2, selected.size());
         }
 
@@ -157,7 +158,7 @@ class XMLHelperTest {
                 throws  XPathExpressionException {
             Element a1  = (Element) doc.getElementsByTagName("a").item(0);
             
-            ArrayList<Element> selected = XMLHelper.selectElements(a1, "/root");
+            List<Element> selected = XMLHelper.selectElements(a1, "/root");
             assertEquals(1, selected.size());
             assertEquals("root", selected.get(0).getTagName());
         }

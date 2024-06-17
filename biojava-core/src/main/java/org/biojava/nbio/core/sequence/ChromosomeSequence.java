@@ -29,6 +29,7 @@ import org.biojava.nbio.core.sequence.template.CompoundSet;
 import org.biojava.nbio.core.sequence.template.SequenceReader;
 
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * A ChromosomeSequence is a DNASequence but keeps track of geneSequences
@@ -37,7 +38,7 @@ import java.util.LinkedHashMap;
 public class ChromosomeSequence extends DNASequence {
 
 	private int chromosomeNumber;
-	private LinkedHashMap<String, GeneSequence> geneSequenceHashMap = new LinkedHashMap<>();
+	private Map<String, GeneSequence> geneSequenceHashMap = new LinkedHashMap<>();
 
 	/**
 	 * Empty constructor used by tools that need a proper Bean that allows the actual
@@ -106,7 +107,7 @@ public class ChromosomeSequence extends DNASequence {
 	 * @return
 	 */
 
-	public LinkedHashMap<String, GeneSequence> getGeneSequences() {
+	public Map<String, GeneSequence> getGeneSequences() {
 		return geneSequenceHashMap;
 	}
 

@@ -32,6 +32,8 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.List;
 
 /**
  *
@@ -41,11 +43,11 @@ public class GeneSequence extends DNASequence {
 
 	private final static Logger logger = LoggerFactory.getLogger(GeneSequence.class);
 
-	private final LinkedHashMap<String, TranscriptSequence> transcriptSequenceHashMap = new LinkedHashMap<>();
-	private final LinkedHashMap<String, IntronSequence> intronSequenceHashMap = new LinkedHashMap<>();
-	private final LinkedHashMap<String, ExonSequence> exonSequenceHashMap = new LinkedHashMap<>();
-	private final ArrayList<IntronSequence> intronSequenceList = new ArrayList<>();
-	private final ArrayList<ExonSequence> exonSequenceList = new ArrayList<>();
+	private final Map<String, TranscriptSequence> transcriptSequenceHashMap = new LinkedHashMap<>();
+	private final Map<String, IntronSequence> intronSequenceHashMap = new LinkedHashMap<>();
+	private final Map<String, ExonSequence> exonSequenceHashMap = new LinkedHashMap<>();
+	private final List<IntronSequence> intronSequenceList = new ArrayList<>();
+	private final List<ExonSequence> exonSequenceList = new ArrayList<>();
 	boolean intronAdded = false; // need to deal with the problem that typically introns are not added when validating the list and adding in introns as the regions not included in exons
 	private Strand strand = Strand.UNDEFINED;
 	private ChromosomeSequence chromosomeSequence;
@@ -179,7 +181,7 @@ public class GeneSequence extends DNASequence {
 	 * Get the collection of transcription sequences assigned to this gene
 	 * @return transcripts
 	 */
-	public LinkedHashMap<String, TranscriptSequence> getTranscripts() {
+	public Map<String, TranscriptSequence> getTranscripts() {
 		return transcriptSequenceHashMap;
 	}
 
@@ -294,7 +296,7 @@ public class GeneSequence extends DNASequence {
 	 * Get the exons as an ArrayList. Modifying this list will not modify the underlying collection
 	 * @return exons
 	 */
-	public ArrayList<ExonSequence> getExonSequences() {
+	public List<ExonSequence> getExonSequences() {
 		return new ArrayList<>(exonSequenceList);
 	}
 
@@ -302,7 +304,7 @@ public class GeneSequence extends DNASequence {
 	 * Get the introns as an ArrayList. Modifying this list will not modify the underlying collection
 	 * @return introns
 	 */
-	public ArrayList<IntronSequence> getIntronSequences() {
+	public List<IntronSequence> getIntronSequences() {
 		return  new ArrayList<>(intronSequenceList);
 	}
 

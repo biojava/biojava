@@ -65,14 +65,14 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 	private Integer bioEnd = null;
 	private AbstractSequence<?> parentSequence = null;
 	private String source = null;
-	private ArrayList<String> notesList = new ArrayList<>();
+	private List<String> notesList = new ArrayList<>();
 	private Double sequenceScore = null;
 	private FeaturesKeyWordInterface featuresKeyWord = null;
 	private DatabaseReferenceInterface databaseReferences = null;
 	private FeatureRetriever featureRetriever = null;
-	private ArrayList<FeatureInterface<AbstractSequence<C>, C>> features =
+	private List<FeatureInterface<AbstractSequence<C>, C>> features =
 			new ArrayList<>();
-	private LinkedHashMap<String, ArrayList<FeatureInterface<AbstractSequence<C>, C>>> groupedFeatures =
+	private Map<String, List<FeatureInterface<AbstractSequence<C>, C>>> groupedFeatures =
 			new LinkedHashMap<>();
 	private List<String> comments = new ArrayList<>();
 	private List<AbstractReference> references;
@@ -139,7 +139,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 			}
 			// success of next statement guaranteed because source is a compulsory field
 			//DBReferenceInfo dbQualifier = (DBReferenceInfo)ff.get("source").get(0).getQualifiers().get("db_xref");
-			ArrayList<DBReferenceInfo> dbQualifiers = (ArrayList)ff.get("source").get(0).getQualifiers().get("db_xref");
+			List<DBReferenceInfo> dbQualifiers = (ArrayList)ff.get("source").get(0).getQualifiers().get("db_xref");
 			DBReferenceInfo dbQualifier = dbQualifiers.get(0);
 
 			if (dbQualifier != null) this.setTaxonomy(new TaxonomyID(dbQualifier.getDatabase()+":"+dbQualifier.getId(), DataSource.UNKNOWN));
@@ -303,14 +303,14 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 	/**
 	 * @return the notesList
 	 */
-	public ArrayList<String> getNotesList() {
+	public List<String> getNotesList() {
 		return notesList;
 	}
 
 	/**
 	 * @param notesList the notesList to set
 	 */
-	public void setNotesList(ArrayList<String> notesList) {
+	public void setNotesList(List<String> notesList) {
 		this.notesList = notesList;
 	}
 
@@ -353,7 +353,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 	 * @return
 	 */
 	public List<FeatureInterface<AbstractSequence<C>, C>> getFeatures(String featureType, int bioSequencePosition) {
-		ArrayList<FeatureInterface<AbstractSequence<C>, C>> featureHits =
+		List<FeatureInterface<AbstractSequence<C>, C>> featureHits =
 				new ArrayList<>();
 		List<FeatureInterface<AbstractSequence<C>, C>> features = getFeaturesByType(featureType);
 		if (features != null) {
@@ -372,7 +372,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 	 * @return
 	 */
 	public List<FeatureInterface<AbstractSequence<C>, C>> getFeatures(int bioSequencePosition) {
-		ArrayList<FeatureInterface<AbstractSequence<C>, C>> featureHits =
+		List<FeatureInterface<AbstractSequence<C>, C>> featureHits =
 				new ArrayList<>();
 		if (features != null) {
 			for (FeatureInterface<AbstractSequence<C>, C> feature : features) {
@@ -414,7 +414,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 	 */
 	public void addFeature(FeatureInterface<AbstractSequence<C>, C> feature) {
 		features.add(feature);
-		ArrayList<FeatureInterface<AbstractSequence<C>, C>> featureList = groupedFeatures.get(feature.getType());
+		List<FeatureInterface<AbstractSequence<C>, C>> featureList = groupedFeatures.get(feature.getType());
 		if (featureList == null) {
 			featureList = new ArrayList<>();
 			groupedFeatures.put(feature.getType(), featureList);
@@ -430,7 +430,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 	 */
 	public void removeFeature(FeatureInterface<AbstractSequence<C>, C> feature) {
 		features.remove(feature);
-		ArrayList<FeatureInterface<AbstractSequence<C>, C>> featureList = groupedFeatures.get(feature.getType());
+		List<FeatureInterface<AbstractSequence<C>, C>> featureList = groupedFeatures.get(feature.getType());
 		if (featureList != null) {
 			featureList.remove(feature);
 			if (featureList.isEmpty()) {
