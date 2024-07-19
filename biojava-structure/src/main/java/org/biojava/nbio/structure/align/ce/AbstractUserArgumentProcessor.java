@@ -175,8 +175,11 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 				return;
 			}
 
-
-		} catch (ConfigurationException e) {
+			if ( params.getAlignPairs() != null){
+				runAlignPairs();
+				return;
+			}
+		} catch (Exception e) {
 			System.err.println(e.getLocalizedMessage());
 			System.exit(1); return;
 		}
@@ -193,6 +196,33 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 		String build   = about.getString("build");
 
 		System.out.println("Protein Comparison Tool " + version + " " + build);
+	}
+
+	private void runAlignPairs() throws ConfigurationException, StructureException, IOException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+
+		String pdbFilePath = params.getPdbFilePath();
+
+		if ( pdbFilePath == null || pdbFilePath.equals("")){
+			UserConfiguration c = new UserConfiguration();
+			pdbFilePath = c.getPdbFilePath();
+			System.err.println("You did not specify the -pdbFilePath parameter. Defaulting to "+pdbFilePath+".");
+		}
+
+		AtomCache cache = new AtomCache(pdbFilePath, pdbFilePath);
+
+		String alignPairs = params.getAlignPairs();
+
+		if ( alignPairs == null || alignPairs.equals("")) {
+			throw new ConfigurationException("Please specify -alignPairs!");
+		}
+
+		String outputFile = params.getOutFile();
+
+		if ( outputFile == null || outputFile.equals("")){
+			throw new ConfigurationException("Please specify the mandatory argument -outFile!");
+		}
+
+		runAlignPairs(cache, alignPairs, outputFile);
 	}
 
 	private void runAlignPairs(AtomCache cache, String alignPairs, String outputFile) throws IOException, StructureException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, IllegalAccessException {
