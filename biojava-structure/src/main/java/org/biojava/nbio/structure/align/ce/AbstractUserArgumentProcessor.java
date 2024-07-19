@@ -74,11 +74,10 @@ import java.util.stream.Stream;
  *
  * @author Andreas
  * @author Spencer
- *
  */
 public abstract class AbstractUserArgumentProcessor implements UserArgumentProcessor {
 
-	public static String newline = System.getProperty("line.separator");
+	public static String newline = System.lineSeparator();
 
 	protected StartupParameters params ;
 
@@ -109,11 +108,6 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 
 		printAboutMe();
 
-//		if(argv.length == 0 ) {
-//			System.out.println(printHelp());
-//			return;
-//		}
-
 		for (int i = 0 ; i < argv.length; i++){
 			String arg   = argv[i];
 
@@ -143,8 +137,6 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 
 
 			String[] tmp = {arg,value};
-
-			//System.out.println(arg + " " + value);
 
 			try {
 
@@ -177,7 +169,6 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 		String pdb1  = params.getPdb1();
 		String file1 = params.getFile1();
 
-
 		try {
 			if (pdb1 != null || file1 != null){
 				runPairwise();
@@ -195,90 +186,76 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 		System.exit(1); return;
 	}
 
-
-
-
-
 	public static void printAboutMe() {
-		try {
-			ResourceManager about = ResourceManager.getResourceManager("about");
+		ResourceManager about = ResourceManager.getResourceManager("about");
 
-			String version = about.getString("project_version");
-			String build   = about.getString("build");
+		String version = about.getString("project_version");
+		String build   = about.getString("build");
 
-			System.out.println("Protein Comparison Tool " + version + " " + build);
-		} catch (Exception e){
-			e.printStackTrace();
-		}
-
-
+		System.out.println("Protein Comparison Tool " + version + " " + build);
 	}
 
-	private void runAlignPairs(AtomCache cache, String alignPairs,
-			String outputFile) {
-		try {
-			File f = new File(alignPairs);
+	private void runAlignPairs(AtomCache cache, String alignPairs, String outputFile) throws IOException, StructureException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, IllegalAccessException {
 
-			BufferedReader is = new BufferedReader (new InputStreamReader(new FileInputStream(f)));
+		File f = new File(alignPairs);
 
-			BufferedWriter out = new BufferedWriter(new FileWriter(outputFile, true));
+		BufferedReader is = new BufferedReader (new InputStreamReader(new FileInputStream(f)));
 
-			StructureAlignment algorithm =  getAlgorithm();
+		BufferedWriter out = new BufferedWriter(new FileWriter(outputFile, true));
 
-			String header = "# algorithm:" + algorithm.getAlgorithmName();
-			out.write(header);
-			out.write(newline);
+		StructureAlignment algorithm =  getAlgorithm();
 
-			out.write("#Legend: " + newline );
-			String legend = getDbSearchLegend();
-			out.write(legend + newline );
-			System.out.println(legend);
-			String line = null;
-			while ( (line = is.readLine()) != null){
-				if ( line.startsWith("#"))
-					continue;
+		String header = "# algorithm:" + algorithm.getAlgorithmName();
+		out.write(header);
+		out.write(newline);
 
-				String[] spl = line.split(" ");
+		out.write("#Legend: " + newline );
+		String legend = getDbSearchLegend();
+		out.write(legend + newline );
+		System.out.println(legend);
+		String line = null;
+		while ( (line = is.readLine()) != null){
+			if ( line.startsWith("#"))
+				continue;
 
-				if ( spl.length != 2) {
-					System.err.println("wrongly formattted line. Expected format: 4hhb.A 4hhb.B but found " + line);
-					continue;
-				}
+			String[] spl = line.split(" ");
 
-				String pdb1 = spl[0];
-				String pdb2 = spl[1];
-
-
-				Structure structure1 = cache.getStructure(pdb1);
-				Structure structure2 = cache.getStructure(pdb2);
-
-				Atom[] ca1;
-				Atom[] ca2;
-
-
-				ca1 = StructureTools.getRepresentativeAtomArray(structure1);
-				ca2 = StructureTools.getRepresentativeAtomArray(structure2);
-
-				Object jparams = getParameters();
-
-				AFPChain afpChain;
-
-				afpChain = algorithm.align(ca1, ca2, jparams);
-				afpChain.setName1(pdb1);
-				afpChain.setName2(pdb2);
-
-				String result = getDbSearchResult(afpChain);
-				out.write(result);
-				System.out.print(result);
-
-				checkWriteFile(afpChain,ca1,ca2,true);
+			if ( spl.length != 2) {
+				System.err.println("wrongly formattted line. Expected format: 4hhb.A 4hhb.B but found " + line);
+				continue;
 			}
 
-			out.close();
-			is.close();
-		} catch(Exception e){
-			e.printStackTrace();
+			String pdb1 = spl[0];
+			String pdb2 = spl[1];
+
+
+			Structure structure1 = cache.getStructure(pdb1);
+			Structure structure2 = cache.getStructure(pdb2);
+
+			Atom[] ca1;
+			Atom[] ca2;
+
+
+			ca1 = StructureTools.getRepresentativeAtomArray(structure1);
+			ca2 = StructureTools.getRepresentativeAtomArray(structure2);
+
+			Object jparams = getParameters();
+
+			AFPChain afpChain;
+
+			afpChain = algorithm.align(ca1, ca2, jparams);
+			afpChain.setName1(pdb1);
+			afpChain.setName2(pdb2);
+
+			String result = getDbSearchResult(afpChain);
+			out.write(result);
+			System.out.print(result);
+
+			checkWriteFile(afpChain,ca1,ca2,true);
 		}
+
+		out.close();
+		is.close();
 	}
 
 
@@ -411,9 +388,6 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 
 			checkWriteFile(afpChain,ca1, ca2, false);
 
-
-
-
 			if ( params.isPrintXML()){
 				String fatcatXML = AFPChainXMLConverter.toXML(afpChain,ca1,ca2);
 				System.out.println(fatcatXML);
@@ -426,26 +400,12 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 				System.out.println(afpChain.toCE(ca1, ca2));
 			}
 
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.exit(1); return;
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-			System.exit(1); return;
-		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
-			System.exit(1); return;
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-			System.exit(1); return;
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-			System.exit(1); return;
-		} catch (StructureException e) {
+		} catch (IOException | ClassNotFoundException | NoSuchMethodException | InvocationTargetException |
+                 IllegalAccessException | StructureException e) {
 			e.printStackTrace();
 			System.exit(1); return;
 		}
-	}
+    }
 
 	/**
 	 * check if the result should be written to the local file system
