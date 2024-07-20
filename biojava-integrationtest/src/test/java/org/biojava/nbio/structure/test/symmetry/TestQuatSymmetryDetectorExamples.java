@@ -147,7 +147,6 @@ public class TestQuatSymmetryDetectorExamples {
 	public void testLocal() throws IOException, StructureException {
 
 		AtomCache atomCache = new AtomCache();
-		atomCache.setFiletype(StructureFiletype.MMTF);
 
 		List<String> testIds = new ArrayList<>();
 		List<String> testStoichiometries = new ArrayList<>();
