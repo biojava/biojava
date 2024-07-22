@@ -171,15 +171,14 @@ public class FileDownloadUtils {
 	public static void createValidationFiles(URLConnection resourceUrlConnection, File localDestination, URL hashURL, Hash hash){
 		long size = resourceUrlConnection.getContentLengthLong();
 		if(size == -1) {
-			logger.warn("could not find expected file size for resource {}.", resourceUrlConnection.getURL());
+			logger.debug("Could not find expected file size for resource {}. Size validation metadata file won't be available for this download.", resourceUrlConnection.getURL());
 		} else {
 			logger.debug("Content-Length: {}", size);
 			File sizeFile = new File(localDestination.getParentFile(), localDestination.getName() + SIZE_EXT);
 			try (PrintStream sizePrintStream = new PrintStream(sizeFile)) {
 				sizePrintStream.print(size);
-				sizePrintStream.close();
 			} catch (FileNotFoundException e) {
-				logger.warn("could not write size validation file due to exception: {}", e.getMessage());
+				logger.warn("Could not write size validation metadata file due to exception: {}", e.getMessage());
 			}
 		}
 		
@@ -192,7 +191,7 @@ public class FileDownloadUtils {
 			File hashFile = new File(localDestination.getParentFile(), String.format("%s%s_%s", localDestination.getName(), HASH_EXT, hash));
 			downloadFile(hashURL, hashFile);
 		} catch (IOException e) {
-			logger.warn("could not write validation hash file due to exception: {}", e.getMessage());
+			logger.warn("Could not write validation hash file due to exception: {}", e.getMessage());
 		}
 	}
 	

@@ -85,22 +85,6 @@ public class MmtfActions {
 		outputStream.write(outputBytes,0,outputBytes.length);
 	}
 
-
-	/**
-	 * Get a Biojava structure from the mmtf REST service.
-	 * @param pdbId the PDB code of the required structure
-	 * @return a Structure object relating to the input byte array
-	 * @throws IOException
-	 */
-	public static Structure readFromWeb(String pdbId) throws IOException {
-		// Get the reader - this is the bit that people need to implement.
-		MmtfStructureReader mmtfStructureReader = new MmtfStructureReader();
-		// Do the inflation
-		new StructureDataToAdapter(new GenericDecoder(ReaderUtils.getDataFromUrl(pdbId)), mmtfStructureReader);
-		// Get the structue
-		return mmtfStructureReader.getStructure();
-	}
-
 	/**
 	 * Read a Biojava structure from an {@link InputStream}
 	 * @param inStream the {@link InputStream} to read from

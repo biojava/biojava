@@ -38,7 +38,6 @@ import org.biojava.nbio.structure.io.CifFileReader;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.LocalPDBDirectory.FetchBehavior;
 import org.biojava.nbio.structure.io.LocalPDBDirectory.ObsoleteBehavior;
-import org.biojava.nbio.structure.io.MMTFFileReader;
 import org.biojava.nbio.structure.io.PDBFileReader;
 import org.biojava.nbio.core.util.FileDownloadUtils;
 import org.biojava.nbio.structure.io.StructureFiletype;
@@ -829,32 +828,10 @@ public class AtomCache {
 			case BCIF:
 				logger.debug("loading from bcif");
 				return loadStructureFromBcifByPdbId(pdbId);
-			case MMTF:
-				logger.debug("loading from mmtf");
-				return loadStructureFromMmtfByPdbId(pdbId);
 			case PDB: default:
 				logger.debug("loading from pdb");
 				return loadStructureFromPdbByPdbId(pdbId);
 		}
-	}
-
-	
-	protected Structure loadStructureFromMmtfByPdbId(String pdbId) throws IOException {
-		return loadStructureFromMmtfByPdbId(new PdbId(pdbId));
-	}
-
-	/**
-	 * Load a {@link Structure} from MMTF either from the local file system.
-	 * @param pdbId the input PDB id
-	 * @return the {@link Structure} object of the parsed structure
-	 * @throws IOException error reading from Web or file system
-	 */
-	protected Structure loadStructureFromMmtfByPdbId(PdbId pdbId) throws IOException {
-		logger.debug("Loading structure {} from mmtf file.", pdbId);
-		MMTFFileReader reader = new MMTFFileReader();
-		reader.setFetchBehavior(fetchBehavior);
-		reader.setObsoleteBehavior(obsoleteBehavior);
-		return reader.getStructureById(pdbId);
 	}
 
 	protected Structure loadStructureFromCifByPdbId(String pdbId) throws IOException {
