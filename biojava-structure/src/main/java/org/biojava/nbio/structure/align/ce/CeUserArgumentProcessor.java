@@ -28,7 +28,8 @@ package org.biojava.nbio.structure.align.ce;
 import org.biojava.nbio.structure.align.StructureAlignment;
 import org.biojava.nbio.structure.align.ce.CeParameters.ScoringStrategy;
 
-/** process the arguments from command line
+/**
+ * Process the arguments from command line
  *
  * @author Andreas Prlic
  *
@@ -154,7 +155,6 @@ public class CeUserArgumentProcessor extends AbstractUserArgumentProcessor {
 					.append(showMenu).append(", printPDB=").append(printPDB)
 					.append(", isDomainSplit=").append(isDomainSplit)
 					.append(", alignPairs=").append(alignPairs)
-					.append(", searchFile=").append(searchFile)
 					.append(", saveOutputDir=").append(saveOutputDir)
 					.append(", nrCPU=").append(nrCPU).append("]");
 			return builder.toString();
