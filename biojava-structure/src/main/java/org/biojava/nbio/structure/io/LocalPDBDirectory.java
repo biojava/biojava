@@ -133,12 +133,10 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 			Date d = formatter.parse(LAST_REMEDIATION_DATE_STRING);
 			t = d.getTime();
 		} catch (ParseException e){
-			logger.error("Unexpected error! could not parse LAST_REMEDIATION_DATE: "+e.getMessage());
+			logger.error("Unexpected error! could not parse LAST_REMEDIATION_DATE: {}", e.getMessage());
 		}
 		LAST_REMEDIATION_DATE = t;
 	}
-
-	protected static final String lineSplit = System.getProperty("file.separator");
 
 	/** Minimum size for a valid structure file (CIF or PDB), in bytes */
 	public static final long MIN_PDB_FILE_SIZE = 40;  // Empty gzip files are 20bytes. Add a few more for buffer.
@@ -267,8 +265,8 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	 * if {@link #isAutoFetch()} is false. Note that an obsolete entry may still be
 	 * returned even this is FETCH_CURRENT if the entry is found locally.
 	 *
-	 * @param fetchFileEvenIfObsolete Whether to fetch obsolete records
-	 * @see #setFetchCurrent(boolean)
+	 * @param behavior Whether to fetch obsolete records
+	 * @see #setFetchBehavior(FetchBehavior)
 	 * @since 4.0.0
 	 */
 	public void setObsoleteBehavior(ObsoleteBehavior behavior) {
@@ -530,9 +528,9 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	}
 
 	/**
-	 * Download a file from the ftp server +/- its validation metadata, replacing any existing files if needed
+	 * Download a file from the http server +/- its validation metadata, replacing any existing files if needed
 	 * @param pdbId PDB ID
-	 * @param pathOnServer Path on the FTP server, e.g. data/structures/divided/pdb
+	 * @param pathOnServer Path on the http server, e.g. data/structures/divided/pdb
 	 * @param obsolete Whether or not file should be saved to the obsolete location locally
 	 * @param existingFile if not null and checkServerFileDate is true, the last modified date of the
 	 * server file and this file will be compared to decide whether to download or not
@@ -548,9 +546,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 		String ftp;
 
 		String filename = getFilename(id);
-		if (filename.endsWith(".mmtf.gz")){
-			ftp = CodecUtils.getMmtfEntryUrl(id, true, false);
-		} else if (filename.endsWith(".bcif") || filename.endsWith(".bcif.gz")) {
+		if (filename.endsWith(".bcif") || filename.endsWith(".bcif.gz")) {
 			// TODO this should be configurable
 			ftp = DEFAULT_BCIF_FILE_SERVER + filename;
 		} else {
@@ -578,8 +574,8 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 			}
 		}
 
-		logger.info("Fetching " + ftp);
-		logger.info("Writing to "+ realFile);
+		logger.info("Fetching {}", ftp);
+		logger.info("Writing to {}", realFile);
 
 		FileDownloadUtils.createValidationFiles(url, realFile, null, FileDownloadUtils.Hash.UNKNOWN);
 		FileDownloadUtils.downloadFile(url, realFile);
