@@ -1,6 +1,17 @@
 BioJava Changelog
 -----------------
 
+BioJava 7.1.2
+==============================
+### Fixed
+* Brought back a command line argument for protein comparison tool #1096
+* Upgraded the log facade framework to slf4j2 #1094
+* Code smell fixes (Sonar issues S2293, S1319) #1095 #1091
+* Various small fixes
+### Removed
+* Removed capability of automatic download/caching of PDB archive files in MMTF format, following deprecation 
+by RCSB PDB. Code to encode/decode in MMTF format is still in place #1099
+
 BioJava 7.1.1
 ==============================
 ### Fixed
