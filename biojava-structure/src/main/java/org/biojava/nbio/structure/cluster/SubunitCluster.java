@@ -512,6 +512,12 @@ public class SubunitCluster {
 				other.subunits.get(other.representative)
 						.getRepresentativeAtoms());
 
+		if (afp.getOptLength() < 1) {
+			// alignment failed (eg if chains were too short)
+			throw new StructureException(
+					String.format("Subunits failed to align using %s", params.getSuperpositionAlgorithm()));
+		}
+
 		// Convert AFPChain to MultipleAlignment for convenience
 		MultipleAlignment msa = new MultipleAlignmentEnsembleImpl(
 				afp,

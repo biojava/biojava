@@ -76,6 +76,10 @@ public class QuatSymmetrySubunits {
 				clusterIds.add(c);
 				Atom[] atoms = clusters.get(c).getAlignedAtomsSubunit(s);
 
+				if( atoms.length == 0) {
+					throw new IllegalArgumentException("No aligned atoms in subunit");
+				}
+
 				Point3d[] points = Calc.atomsToPoints(atoms);
 
 				caCoords.add(points);
