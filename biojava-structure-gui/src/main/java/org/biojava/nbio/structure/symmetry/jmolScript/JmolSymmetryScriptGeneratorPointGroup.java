@@ -684,7 +684,8 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 		return s.toString();
 	}
 
-	private Vector3d getAligmentVector(Point3d point, Vector3d axis) {
+
+	private Vector3d getAlignmentVector(Point3d point, Vector3d axis) {
 		// for system with a single Cn axis
 		if (rotationGroup.getPointGroup().startsWith("C") || rotationGroup.getPointGroup().startsWith("D")) {
 			// if axis is orthogonal to principal axis, use principal axis as reference axis
@@ -760,14 +761,14 @@ public abstract class JmolSymmetryScriptGeneratorPointGroup extends JmolSymmetry
 		if (drawPolygon) {
 			double polygonRadius = getMeanExtension() * 0.06;
 			if (n == 2) {
-				referenceAxis = getAligmentVector(p1, axis);
+				referenceAxis = getAlignmentVector(p1, axis);
 				s.append(getC2PolygonJmol(i, p1, referenceAxis, axis, color, polygonRadius, name));
-				referenceAxis = getAligmentVector(p2, axis);
+				referenceAxis = getAlignmentVector(p2, axis);
 				s.append(getC2PolygonJmol(j, p2,  referenceAxis, axis, color, polygonRadius, name));
 			} else if (n > 2) {
-				referenceAxis = getAligmentVector(p1, axis);
+				referenceAxis = getAlignmentVector(p1, axis);
 				s.append(getPolygonJmol(i, p1, referenceAxis, axis, n, color, polygonRadius, name));
-				referenceAxis = getAligmentVector(p2, axis);
+				referenceAxis = getAlignmentVector(p2, axis);
 				s.append(getPolygonJmol(j, p2, referenceAxis, axis, n, color, polygonRadius, name));
 			}
 		}

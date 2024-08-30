@@ -210,7 +210,7 @@ public class MultipleMcOptimizer implements Callable<MultipleAlignment> {
 			}
 		}
 
-		// Set the superposition and score for the seed aligment
+		// Set the superposition and score for the seed alignment
 		checkGaps();
 		msa.clear();
 		imposer.superimpose(msa);

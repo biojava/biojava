@@ -101,7 +101,7 @@ public class SymmOptimizer {
 	private List<Double> mcScoreHistory;
 
 	/**
-	 * Constructor with a seed MultipleAligment storing a refined symmetry
+	 * Constructor with a seed MultipleAlignment storing a refined symmetry
 	 * alignment of the repeats. To perform the optimization use the call or
 	 * optimize methods after instantiation.
 	 *

@@ -76,7 +76,7 @@ public class MenuCreator {
 	 * Menus included:
 	 * <ul><li>File: open, save, export, import, exit.
 	 * <li>Align: new pairwise alignment, new multiple alignment.
-	 * <li>View: aligment panel, aligned pairs, text format,
+	 * <li>View: alignment panel, aligned pairs, text format,
 	 * FatCat format, distance matrices, dot plot.
 	 * <li>Help
 	 * </ul>

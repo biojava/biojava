@@ -721,7 +721,7 @@ public class MultipleAlignmentTools {
 
 	/**
 	 * Calculate a List of alignment indicies that correspond to the core of a
-	 * Block, which means that all structures have a residue in that positon.
+	 * Block, which means that all structures have a residue in that position.
 	 *
 	 * @param block
 	 *            alignment Block
