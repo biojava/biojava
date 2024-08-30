@@ -93,7 +93,7 @@ public class TestCeSymm {
 		assertNotNull(result);
 		assertTrue(result.isSignificant());
 		assertEquals(9, result.getNumRepeats());
-		assertEquals("R",result.getSymmGroup());
+		assertEquals("H",result.getSymmGroup());
 		assertNotNull(result.getAxes());
 		assertNotEquals("Error", result.getReason());
 
