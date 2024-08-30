@@ -159,6 +159,22 @@ public class SubunitCluster {
 	}
 
 	/**
+	 * Create the cluster manually by specifying subunits and the equivalent residues
+	 * @param subunits List of aligned subunits
+	 * @param subunitEQR Double list giving the aligned residue indices in each subunit
+	 */
+	public SubunitCluster(List<Subunit> subunits, List<List<Integer>> subunitEQR) {
+		if(subunits.size() != subunitEQR.size()) {
+			throw new IllegalArgumentException("Mismatched subunit length");
+		}
+		this.subunits = subunits;
+		this.subunitEQR = subunitEQR;
+		this.representative = 0;
+		this.method = SubunitClustererMethod.MANUAL;
+		this.pseudoStoichiometric = false;
+	}
+
+	/**
 	 * Subunits contained in the SubunitCluster.
 	 *
 	 * @return an unmodifiable view of the original List

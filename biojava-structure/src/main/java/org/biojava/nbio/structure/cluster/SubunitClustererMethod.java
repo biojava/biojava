@@ -59,6 +59,10 @@ public enum SubunitClustererMethod {
 	 * sequence and structure clustering differ, the cluster contains
 	 * pseudosymmetry (by definition).
 	 */
-	SEQUENCE_STRUCTURE
-}
+	SEQUENCE_STRUCTURE,
 
+	/**
+	 * Some other method was used when clustering.
+	 */
+	MANUAL,
+}
