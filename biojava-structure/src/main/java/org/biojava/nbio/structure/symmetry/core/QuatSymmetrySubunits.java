@@ -76,6 +76,10 @@ public class QuatSymmetrySubunits {
 				clusterIds.add(c);
 				Atom[] atoms = clusters.get(c).getAlignedAtomsSubunit(s);
 
+				if( atoms.length == 0) {
+					throw new IllegalArgumentException("No aligned atoms in subunit");
+				}
+
 				Point3d[] points = Calc.atomsToPoints(atoms);
 
 				caCoords.add(points);
@@ -213,7 +217,7 @@ public class QuatSymmetrySubunits {
 		calcOriginalCenters();
 		calcCentroid();
 		calcCenters();
-		calcMomentsOfIntertia();
+		calcMomentsOfInertia();
 	}
 
 	private void calcOriginalCenters() {
@@ -272,7 +276,7 @@ public class QuatSymmetrySubunits {
 		return upper;
 	}
 
-	private void calcMomentsOfIntertia() {
+	private void calcMomentsOfInertia() {
 		for (Point3d[] trace : caCoords) {
 			for (Point3d p : trace) {
 				momentsOfInertia.addPoint(p, 1.0f);

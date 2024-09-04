@@ -22,6 +22,7 @@ package org.biojava.nbio.structure.symmetry.internal;
 
 import static org.junit.Assert.*;
 import static org.junit.Assume.assumeNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -60,7 +61,7 @@ public class TestCeSymm {
 			CeSymmResult result = CeSymm.analyze(atoms);
 
 			assertTrue(result.isSignificant());
-			assertEquals(result.getNumRepeats(), orders[i]);
+			assertEquals(orders[i], result.getNumRepeats());
 		}
 	}
 
@@ -74,5 +75,27 @@ public class TestCeSymm {
 		Atom[] atoms = StructureTools.getRepresentativeAtomArray(s);
 		CeSymmResult result = CeSymm.analyze(atoms);
 		assertNotNull(result);
+	}
+
+	@Test
+	public void testShort() throws IOException, StructureException {
+		// ERIC2_c35200, a near-perfect 15 residue beta-solenoid
+		// At 15 residues this should reliably trigger rcsb/symmetry#118
+		URL url = this.getClass().getResource("/AF-V9WDR2-F1-model_v4.cif");
+		assumeNotNull(url);
+		String file = url.getPath();
+		Structure s = StructureIO.getStructure(file);
+		assertNull(s.getPdbId());
+		Atom[] atoms = StructureTools.getRepresentativeAtomArray(s);
+		CESymmParameters params = new CESymmParameters();
+		params.setMinCoreLength(10); // Ensure it gets refined (should be 15 long)
+		CeSymmResult result = CeSymm.analyze(atoms, params);
+		assertNotNull(result);
+		assertTrue(result.isSignificant());
+		assertEquals(9, result.getNumRepeats());
+		assertEquals("H",result.getSymmGroup());
+		assertNotNull(result.getAxes());
+		assertNotEquals("Error", result.getReason());
+
 	}
 }

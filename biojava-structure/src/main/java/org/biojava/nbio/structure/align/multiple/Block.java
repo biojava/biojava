@@ -124,8 +124,8 @@ public interface Block extends ScoresCache {
 
 	/**
 	 * Calculates and returns the first position of the specified structure in
-	 * the alignment that is not null. This will return the aligment index, not
-	 * the reisude aligned in that position.
+	 * the alignment that is not null. This will return the alignment index, not
+	 * the residue aligned in that position.
 	 *
 	 * @param str
 	 *            structure index
@@ -148,8 +148,8 @@ public interface Block extends ScoresCache {
 
 	/**
 	 * Calculates and returns the last position of the specified structure in
-	 * the alignment that is not null. This will return the aligment index, not
-	 * the reisude aligned in that position.
+	 * the alignment that is not null. This will return the alignment index, not
+	 * the residue aligned in that position.
 	 *
 	 * @param str
 	 *            structure index

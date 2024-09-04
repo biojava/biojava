@@ -53,8 +53,10 @@ import org.biojava.nbio.structure.align.multiple.MultipleAlignmentEnsembleImpl;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignmentImpl;
 import org.biojava.nbio.structure.align.multiple.util.CoreSuperimposer;
 import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentScorer;
+import org.biojava.nbio.structure.align.multiple.util.MultipleAlignmentTools;
 import org.biojava.nbio.structure.align.multiple.util.MultipleSuperimposer;
 import org.biojava.nbio.structure.cluster.Subunit;
+import org.biojava.nbio.structure.cluster.SubunitCluster;
 import org.biojava.nbio.structure.cluster.SubunitClustererMethod;
 import org.biojava.nbio.structure.cluster.SubunitClustererParameters;
 import org.biojava.nbio.structure.geometry.SuperPositions;
@@ -62,6 +64,7 @@ import org.biojava.nbio.structure.jama.Matrix;
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetryDetector;
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetryParameters;
 import org.biojava.nbio.structure.symmetry.core.QuatSymmetryResults;
+import org.biojava.nbio.structure.symmetry.core.Stoichiometry;
 import org.biojava.nbio.structure.symmetry.internal.CeSymmResult;
 import org.biojava.nbio.structure.symmetry.internal.SymmetryAxes;
 import org.jgrapht.Graph;
@@ -706,21 +709,18 @@ public class SymmetryTools {
 			throws StructureException {
 
 		// Obtain the subunits of the repeats
-		List<Atom[]> atoms = toRepeatsAlignment(result).getAtomArrays();
+		MultipleAlignment msa = toRepeatsAlignment(result);
+		List<Atom[]> atoms = msa.getAtomArrays();
 		List<Subunit> subunits = atoms.stream()
 				.map(a -> new Subunit(a, null, null, null))
 				.collect(Collectors.toList());
-
-		// The clustering thresholds are set to 0 so that all always merged
-		SubunitClustererParameters cp = new SubunitClustererParameters();
-		cp.setClustererMethod(SubunitClustererMethod.STRUCTURE);
-		cp.setRMSDThreshold(10.0);
-		cp.setStructureCoverageThreshold(0.0);
+		List<List<Integer>> eqr = MultipleAlignmentTools.getEquivalentResidues(msa, true);
+		SubunitCluster cluster = new SubunitCluster(subunits, eqr);
+		Stoichiometry composition = new Stoichiometry(Arrays.asList(cluster));
 
 		QuatSymmetryParameters sp = new QuatSymmetryParameters();
-
 		QuatSymmetryResults gSymmetry = QuatSymmetryDetector
-				.calcGlobalSymmetry(subunits, sp, cp);
+				.calcGlobalSymmetry(composition, sp);
 
 		return gSymmetry;
 	}

@@ -93,6 +93,15 @@ public class MultipleAlignmentJmolDisplay  {
 	}
 
 	/**
+	 * @deprecated Replace with {@see showMultipleAlignmentPanel}
+	 */
+	@Deprecated
+	public static void showMultipleAligmentPanel(MultipleAlignment multAln,
+			AbstractAlignmentJmol jmol) throws StructureException {
+		showMultipleAlignmentPanel(multAln, jmol);
+	}
+
+	/**
 	 * Creates a new Frame with the MultipleAlignment Sequence Panel.
 	 * The panel can communicate with the Jmol 3D visualization by
 	 * selecting the aligned residues of every structure.
@@ -102,7 +111,7 @@ public class MultipleAlignmentJmolDisplay  {
 
 	 * @throws StructureException
 	 */
-	public static void showMultipleAligmentPanel(MultipleAlignment multAln,
+	public static void showMultipleAlignmentPanel(MultipleAlignment multAln,
 			AbstractAlignmentJmol jmol) throws StructureException {
 
 		MultipleAligPanel me = new MultipleAligPanel(multAln, jmol);

@@ -385,7 +385,7 @@ public class MultipleAlignmentJmol extends AbstractAlignmentJmol {
 						.showAlignmentImage(multAln, result);
 
 			} else if (cmd.equals(MenuCreator.ALIGNMENT_PANEL)) {
-				MultipleAlignmentJmolDisplay.showMultipleAligmentPanel(multAln,
+				MultipleAlignmentJmolDisplay.showMultipleAlignmentPanel(multAln,
 						this);
 
 			} else if (cmd.equals(MenuCreator.FATCAT_TEXT)) {

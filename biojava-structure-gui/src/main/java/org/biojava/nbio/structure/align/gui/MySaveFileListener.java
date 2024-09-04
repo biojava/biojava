@@ -47,7 +47,7 @@ import java.io.FileWriter;
  * and from a Jmol view an XML format is saved.
  *
  * @author Aleix Lafita
- * @version 2.0 - adapted for MultipleAligments
+ * @version 2.0 - adapted for MultipleAlignments
  *
  */
 public class MySaveFileListener implements ActionListener {

@@ -57,6 +57,7 @@ import org.biojava.nbio.structure.align.multiple.Block;
 import org.biojava.nbio.structure.align.multiple.BlockSet;
 import org.biojava.nbio.structure.align.multiple.MultipleAlignment;
 import org.biojava.nbio.structure.align.util.AlignmentTools;
+import org.biojava.nbio.structure.cluster.SubunitCluster;
 import org.biojava.nbio.structure.jama.Matrix;
 import org.forester.evoinference.matrix.distance.BasicSymmetricalDistanceMatrix;
 import org.forester.phylogeny.Phylogeny;
@@ -721,7 +722,7 @@ public class MultipleAlignmentTools {
 
 	/**
 	 * Calculate a List of alignment indicies that correspond to the core of a
-	 * Block, which means that all structures have a residue in that positon.
+	 * Block, which means that all structures have a residue in that position.
 	 *
 	 * @param block
 	 *            alignment Block
@@ -964,4 +965,46 @@ public class MultipleAlignmentTools {
 		return tree;
 	}
 
+	/**
+	 * Convert an MSA into a matrix of equivalent residues.
+	 *
+	 * This concatenates all blocks, meaning that the indices might not be
+	 * sequential.
+	 *
+	 * Indices should be consistent with `msa.getAtomArrays()`.
+	 * @param msa Multiple alignment
+	 * @param coreOnly Include only core (ungapped) columns. Otherwise gaps are
+	 *        represented with null.
+	 * @return
+	 */
+	public static List<List<Integer>> getEquivalentResidues(MultipleAlignment msa, boolean coreOnly) {
+		List<List<Integer>> eqr = new ArrayList<>();
+		for (int str = 0; str < msa.size(); str++) {
+			eqr.add(new ArrayList<>());
+		}
+
+		for(Block block: msa.getBlocks()) {
+			List<List<Integer>> aln = block.getAlignRes();
+			for (int col = 0; col < block.length(); col++) {
+				// skip non-core columns
+				if(coreOnly) {
+					boolean core = true;
+					for (int str = 0; str < block.size(); str++) {
+						if (aln.get(str).get(col) == null) {
+							core = false;
+							break;
+						}
+					}
+					if(!core) {
+						continue;
+					}
+				}
+				// add column to eqr
+				for (int str = 0; str < block.size(); str++) {
+					eqr.get(str).add(aln.get(str).get(col));
+				}
+			}
+		}
+		return eqr;
+	}
 }
