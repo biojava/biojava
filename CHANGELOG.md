@@ -1,6 +1,11 @@
 BioJava Changelog
 -----------------
 
+BioJava 7.1.3
+==============================
+### Fixed
+* Bug in symmetry detection #1101 and rcsb/symmetry#118
+
 BioJava 7.1.2
 ==============================
 ### Fixed
