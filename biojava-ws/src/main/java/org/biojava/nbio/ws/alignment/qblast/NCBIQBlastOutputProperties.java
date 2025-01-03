@@ -119,7 +119,7 @@ public class NCBIQBlastOutputProperties implements RemotePairwiseAlignmentOutput
 
 	/**
 	 * Sets the stream output format to get from the QBlast service
-	 * <p/>
+	 * <p>
 	 * If {@code HTML} format is selected, also adds the following parameters (which are removed if another output
 	 * format is chosen):
 	 *

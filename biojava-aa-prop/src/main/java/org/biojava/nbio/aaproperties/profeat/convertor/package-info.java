@@ -20,7 +20,7 @@
  */
 /**
  * Set of classes that enable the conversion protein sequences into various attributes.
- * The seven different attributes are<p/>
+ * The seven different attributes are<p>
  * Hydrophobicity (Polar, Neutral, Hydrophobicity)<br/>
  * Normalized van der Waals volume (Range 0 - 2.78, 2.95 - 4.0, 4.03 - 8.08)<br/>
  * Polarity (Value 4.9 - 6.2, 8.0 - 9.2, 10.4 - 13.0)<br/>

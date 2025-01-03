@@ -36,7 +36,7 @@ import static org.biojava.nbio.ws.alignment.qblast.BlastAlignmentParameterEnum.*
  * This class wraps a QBlast search request parameter {@code Map} by adding several convenient parameter addition
  * methods. Other QBlast URL API parameters should be added using
  * {@link #setAlignmentOption(BlastAlignmentParameterEnum, String)}
- * <p/>
+ * <p>
  * Required parameters are {@code PROGRAM} and {@code DATABASE}, other parameters are optional
  *
  * @author Sylvain Foisy, Diploide BioIT

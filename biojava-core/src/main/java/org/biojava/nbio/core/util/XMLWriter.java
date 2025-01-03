@@ -113,7 +113,7 @@ public interface XMLWriter {
 	 * avoid namespaces that are used only in leaf-nodes of a tree being re-defined
 	 * every time they are used. The XMLWriter will generally try to use the
 	 * suggested prefix for this namespace, but there is no guarantee of this.
-	 * <p/>
+	 * <p>
 	 * 
 	 * In particular, if the namespace is already in use, the current prefix will still
 	 * be used. Similarly if the suggested prefix has already been used for another

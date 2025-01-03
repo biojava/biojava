@@ -28,7 +28,7 @@ public interface IProfeatProperties {
 	/**
 	 * Based on Table 2 of http://nar.oxfordjournals.org/content/34/suppl_2/W32.full.pdf<br/>
 	 * An interface class to generate the properties of a protein sequence based on its converted attributes.<br/>
-	 * The seven different attributes are<p/>
+	 * The seven different attributes are<p>
 	 * Hydrophobicity (Polar, Neutral, Hydrophobicity)<br/>
 	 * Normalized van der Waals volume (Range 0 - 2.78, 2.95 - 4.0, 4.03 - 8.08)<br/>
 	 * Polarity (Value 4.9 - 6.2, 8.0 - 9.2, 10.4 - 13.0)<br/>

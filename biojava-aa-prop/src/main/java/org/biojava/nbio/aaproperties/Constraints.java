@@ -30,7 +30,7 @@ import java.util.Map;
 /**
  * This class is used to support the implementation of properties stated in IPeptideProperties.
  * It initializes several values that would be needed for the computation of properties such as
- * <p/>
+ * <p>
  * Molecular weight<br/>
  * Instability index<br/>
  * Hydropathy value<br/>

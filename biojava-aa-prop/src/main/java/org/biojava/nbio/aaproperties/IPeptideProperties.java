@@ -35,7 +35,7 @@ import java.util.Map;
 /**
  * An interface to generate some basic physico-chemical properties of protein sequences.<br/>
  * The following properties could be generated:
- * <p/>
+ * <p>
  * Molecular weight<br/>
  * Absorbance<br/>
  * Extinction coefficient<br/>

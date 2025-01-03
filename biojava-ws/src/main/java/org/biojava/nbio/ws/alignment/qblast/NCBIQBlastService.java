@@ -248,7 +248,7 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
 
 	/**
 	 * Checks for completion of request.
-	 * <p/>
+	 * <p>
 	 * If expected execution time (RTOE) is available for request, this method will always return false until that time
 	 * passes. This is done to prevent sending unnecessary requests to the server.
 	 *
@@ -307,7 +307,7 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
 	/**
 	 * Extracts the actual Blast report for given request id according to options provided in {@code outputProperties}
 	 * argument.
-	 * <p/>
+	 * <p>
 	 * If the results are not ready yet, sleeps until they are available. If sleeping is not desired, call this method
 	 * after {@code isReady} returns true
 	 *

@@ -58,7 +58,7 @@ public class FlatFileCache {
 
 	/**
 	 * The file is read and the bytes stored immediately.
-	 * <p/> 
+	 * <p> 
 	 * Once added, {@code fileToCache} can be modified or deleted and the cached values will not change.
 	 * @param key
 	 * @param fileToCache A readable file, of Integer.MAX bytes length or less.
