@@ -41,7 +41,7 @@ public interface SequencePair<S extends Sequence<C>, C extends Compound> extends
 	 *
 	 * @param alignmentIndex column index in alignment
 	 * @return the query sequence element
-	 * @throws IndexOutOfBoundsException if alignmentIndex < 1 or alignmentIndex > {@link #getLength()}
+	 * @throws IndexOutOfBoundsException if alignmentIndex &lt; 1 or alignmentIndex &gt; {@link #getLength()}
 	 */
 	C getCompoundInQueryAt(int alignmentIndex);
 
@@ -50,7 +50,7 @@ public interface SequencePair<S extends Sequence<C>, C extends Compound> extends
 	 *
 	 * @param alignmentIndex column index in alignment
 	 * @return the target sequence element
-	 * @throws IndexOutOfBoundsException if alignmentIndex < 1 or alignmentIndex > {@link #getLength()}
+	 * @throws IndexOutOfBoundsException if alignmentIndex &lt; 1 or alignmentIndex &gt; {@link #getLength()}
 	 */
 	C getCompoundInTargetAt(int alignmentIndex);
 
@@ -59,7 +59,7 @@ public interface SequencePair<S extends Sequence<C>, C extends Compound> extends
 	 *
 	 * @param alignmentIndex column index in alignment
 	 * @return index in query {@link Sequence}
-	 * @throws IndexOutOfBoundsException if alignmentIndex < 1 or alignmentIndex > {@link #getLength()}
+	 * @throws IndexOutOfBoundsException if alignmentIndex &lt; 1 or alignmentIndex &gt; {@link #getLength()}
 	 */
 	int getIndexInQueryAt(int alignmentIndex);
 
@@ -68,7 +68,7 @@ public interface SequencePair<S extends Sequence<C>, C extends Compound> extends
 	 *
 	 * @param targetIndex index in target {@link Sequence}
 	 * @return index in query {@link Sequence}
-	 * @throws IndexOutOfBoundsException if targetIndex < 1 or targetIndex > {@link #getTarget()}.getLength()
+	 * @throws IndexOutOfBoundsException if targetIndex &lt; 1 or targetIndex &gt; {@link #getTarget()}.getLength()
 	 */
 	int getIndexInQueryForTargetAt(int targetIndex);
 
@@ -77,7 +77,7 @@ public interface SequencePair<S extends Sequence<C>, C extends Compound> extends
 	 *
 	 * @param alignmentIndex column index in alignment
 	 * @return index in target {@link Sequence}
-	 * @throws IndexOutOfBoundsException if alignmentIndex < 1 or alignmentIndex > {@link #getLength()}
+	 * @throws IndexOutOfBoundsException if alignmentIndex &lt; 1 or alignmentIndex &gt; {@link #getLength()}
 	 */
 	int getIndexInTargetAt(int alignmentIndex);
 
@@ -86,7 +86,7 @@ public interface SequencePair<S extends Sequence<C>, C extends Compound> extends
 	 *
 	 * @param queryIndex index in query {@link Sequence}
 	 * @return index in target {@link Sequence}
-	 * @throws IndexOutOfBoundsException if queryIndex < 1 or queryIndex > {@link #getQuery()}.getLength()
+	 * @throws IndexOutOfBoundsException if queryIndex &lt; 1 or queryIndex &gt; {@link #getQuery()}.getLength()
 	 */
 	int getIndexInTargetForQueryAt(int queryIndex);
 

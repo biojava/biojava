@@ -350,7 +350,7 @@ public class FileDownloadUtils {
 	}
 
 	/**
-	 * Recursively delete a folder & contents
+	 * Recursively delete a folder &amp; contents
 	 *
 	 * @param dir directory to delete
 	 */
@@ -375,7 +375,7 @@ public class FileDownloadUtils {
 	    });
 	}
 	/**
-	 * Recursively delete a folder & contents
+	 * Recursively delete a folder &amp; contents
 	 *
 	 * @param dir directory to delete
 	 */

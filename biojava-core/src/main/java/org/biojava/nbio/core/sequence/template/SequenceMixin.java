@@ -285,7 +285,7 @@ public class SequenceMixin {
 
 	/**
 	 * Used to generate overlapping k-mers such i.e. ATGTA will give rise to
-	 * ATG, TGT & GTA
+	 * ATG, TGT &amp; GTA
 	 *
 	 * @param <C> Compound to use
 	 * @param sequence Sequence to build from
@@ -343,7 +343,7 @@ public class SequenceMixin {
 	/**
 	 * A case-insensitive manner of comparing two sequence objects together.
 	 * We will throw out any compounds which fail to match on their sequence
-	 * length & compound sets used. The code will also bail out the moment
+	 * length &amp; compound sets used. The code will also bail out the moment
 	 * we find something is wrong with a Sequence. Cost to run is linear to
 	 * the length of the Sequence.
 	 *
@@ -359,7 +359,7 @@ public class SequenceMixin {
 	/**
 	 * A case-sensitive manner of comparing two sequence objects together.
 	 * We will throw out any compounds which fail to match on their sequence
-	 * length & compound sets used. The code will also bail out the moment
+	 * length &amp; compound sets used. The code will also bail out the moment
 	 * we find something is wrong with a Sequence. Cost to run is linear to
 	 * the length of the Sequence.
 	 *

@@ -202,9 +202,9 @@ public class StringManipulationHelper  {
 	/**
 	 * Adds padding to left of supplied string
 	 * @param s The String to pad
-	 * @param n an integer >= 1
+	 * @param n an integer &gt;= 1
 	 * @return The left-padded string. 
-	 * @throws IllegalArgumentException if n <= 0
+	 * @throws IllegalArgumentException if n &lt;= 0
 	 */
 	public static String padLeft(String s, int n) {
 		validatePadding(n);
@@ -214,9 +214,9 @@ public class StringManipulationHelper  {
 	/**
 	 * Adds padding to right of supplied string
 	 * @param s The String to pad
-	 * @param n an integer >= 1
+	 * @param n an integer &gt;= 1
 	 * @return The right-padded string. 
-	 * @throws IllegalArgumentException if n <= 0
+	 * @throws IllegalArgumentException if n &lt;= 0
 	 */
 	public static String padRight(String s, int n) {
 		validatePadding(n);

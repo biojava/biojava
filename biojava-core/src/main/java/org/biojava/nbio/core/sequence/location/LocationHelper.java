@@ -307,7 +307,7 @@ public class LocationHelper {
 	}
 
 	/**
-	 * Assumes that the first element is the start & clones it
+	 * Assumes that the first element is the start &amp; clones it
 	 */
 	public static Point detectStart(List<Location> subLocations) {
 		return subLocations.get(0).getStart().clonePoint();
