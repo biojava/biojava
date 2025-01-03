@@ -43,7 +43,7 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author Scooter Willis <willishf at gmail dot com>
+ * @author Scooter Willis 
  * @author Jacek Grzebyta
  * @author Philippe Soares
  */

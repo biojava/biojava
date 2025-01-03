@@ -29,7 +29,7 @@ import java.util.Comparator;
 
 /**
  * Used to sort sequences in ascending order of  bioBegin property.
- * @author Scooter Willis <willishf at gmail dot com>
+ * @author Scooter Willis 
  */
 public class SequenceComparator implements Comparator<AbstractSequence<?>>, Serializable{
 	private static final long serialVersionUID = 1;

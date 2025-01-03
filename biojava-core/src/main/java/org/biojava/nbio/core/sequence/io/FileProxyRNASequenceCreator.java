@@ -45,7 +45,7 @@ import java.util.List;
  * Same approach can be used for genome sequence data stored in a local fasta file, in a database or via http
  * interface to a remote server
  *
- * @author Scooter Willis <willishf at gmail dot com>
+ * @author Scooter Willis 
  */
 public class FileProxyRNASequenceCreator implements
 		SequenceCreatorInterface<NucleotideCompound> {

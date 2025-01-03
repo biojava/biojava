@@ -44,7 +44,7 @@ import java.util.LinkedHashMap;
  * and that is used when writing to the stream. This behavior can be overwritten by implementing
  * a custom FastaHeaderFormatInterface.
  *
- * @author Scooter Willis <willishf at gmail dot com>
+ * @author Scooter Willis 
  */
 public class FastaWriter<S extends Sequence<?>, C extends Compound> {
 

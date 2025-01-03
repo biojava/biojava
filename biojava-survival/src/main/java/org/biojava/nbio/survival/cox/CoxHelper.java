@@ -30,7 +30,7 @@ import java.util.ArrayList;
  * Given the number of options for adjusting the calculations using weighting, strata, clustering etc the helper class can be used to hide
  * the complexity for typical use case.
  *
- * @author Scooter Willis <willishf at gmail dot com>
+ * @author Scooter Willis 
  */
 public class CoxHelper {
 

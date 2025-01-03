@@ -26,7 +26,7 @@ import org.biojava.nbio.core.sequence.template.Compound;
 
 /**
  * A implmentation of AbstractFeature
- * @author Scooter Willis <willishf at gmail dot com>
+ * @author Scooter Willis 
  */
 public class TextFeature<S extends AbstractSequence<C>, C extends Compound> extends AbstractFeature<S, C> {
 

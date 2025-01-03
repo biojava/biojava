@@ -106,7 +106,7 @@ import java.util.Collections;
  * <p>
  * the data must be sorted by ascending time within strata
  *
- * @author Scooter Willis <willishf at gmail dot com>
+ * @author Scooter Willis 
  */
 public class CoxR {
 

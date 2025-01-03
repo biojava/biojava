@@ -28,7 +28,7 @@ import java.util.List;
  * Models the keywords that are annotated for a protein sequence at Uniprot. If a ProxySequenceReader
  * implements this interface then the sequence will call this method
  *
- * @author Scooter Willis <willishf at gmail dot com>
+ * @author Scooter Willis 
  */
 public interface FeaturesKeyWordInterface {
 

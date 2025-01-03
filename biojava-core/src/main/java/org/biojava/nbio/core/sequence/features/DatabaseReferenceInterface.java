@@ -30,7 +30,7 @@ import java.util.Map;
 /**
  * If a SequenceProxyReader implements this interface then that external source
  * has a list of cross reference id(s)
- * @author Scooter Willis <willishf at gmail dot com>
+ * @author Scooter Willis 
  */
 public interface DatabaseReferenceInterface {
 

@@ -27,7 +27,7 @@ import java.util.Comparator;
 
 /**
  *
- * @author Scooter Willis <willishf at gmail dot com>
+ * @author Scooter Willis 
  */
 public class SurvivalInfoComparator implements Comparator<SurvivalInfo>, Serializable {
 	private static final long serialVersionUID = 1;

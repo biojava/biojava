@@ -27,7 +27,7 @@ import java.io.IOException;
 
 /**
  *
- * @author Scooter Willis <willishf at gmail dot com>
+ * @author Scooter Willis 
  */
 public interface SequenceParserInterface {
 	/**

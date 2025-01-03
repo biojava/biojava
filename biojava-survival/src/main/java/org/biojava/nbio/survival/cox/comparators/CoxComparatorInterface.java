@@ -27,7 +27,7 @@ import java.util.Comparator;
 
 /**
  *
- * @author Scooter Willis <willishf at gmail dot com>
+ * @author Scooter Willis 
  */
 public interface CoxComparatorInterface extends Comparator<CoxVariables> {
 	public String getDescription();

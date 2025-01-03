@@ -35,7 +35,7 @@ import java.util.List;
 /**
  * Used to create a RNA sequence
  *
- * @author Scooter Willis <willishf at gmail dot com>
+ * @author Scooter Willis 
  */
 public class RNASequenceCreator implements
 		SequenceCreatorInterface<NucleotideCompound> {

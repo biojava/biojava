@@ -27,7 +27,7 @@ import org.biojava.nbio.core.sequence.template.Sequence;
 
 /**
  *
- * @author Scooter Willis <willishf at gmail dot com>
+ * @author Scooter Willis 
  * @param <C> the compound type
  * @param <S> the sequence type
  */

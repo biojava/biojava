@@ -37,7 +37,7 @@ import java.util.List;
  * Used to create a ProteinSequence from a String to allow for details
  * about the location of the sequence etc.
  *
- * @author Scooter Willis <willishf at gmail dot com>
+ * @author Scooter Willis 
  */
 public class ProteinSequenceCreator implements
 		SequenceCreatorInterface<AminoAcidCompound> {

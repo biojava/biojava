@@ -34,7 +34,7 @@ import java.util.Map;
  * Currently implement when the {@link UniprotProxySequenceReader} is used
  * to load a protein sequence
  *
- * @author Scooter Willis <willishf at gmail dot com>
+ * @author Scooter Willis 
  * @author Paolo Pavan
  */
 public class DBReferenceInfo extends Qualifier {

@@ -22,7 +22,7 @@ package org.biojava.nbio.survival.cox;
 
 /**
  * Not used and probably should be deleted
- * @author Scooter Willis <willishf at gmail dot com>
+ * @author Scooter Willis 
  */
 public class SurvivalInfoIndex implements Comparable<SurvivalInfoIndex> {
 

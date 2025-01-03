@@ -39,7 +39,7 @@ import java.util.Collection;
 
 /**
  * The class that should be used to write out fasta file of a sequence collection
- * @author Scooter Willis <willishf at gmail dot com>
+ * @author Scooter Willis 
  */
 public class FastaWriterHelper {
 

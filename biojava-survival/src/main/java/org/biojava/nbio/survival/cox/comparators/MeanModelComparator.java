@@ -28,7 +28,7 @@ import java.util.Comparator;
 
 /**
  *
- * @author Scooter Willis <willishf at gmail dot com>
+ * @author Scooter Willis 
  */
 public class MeanModelComparator implements Comparator<CoxVariables>, Serializable {
 	private static final long serialVersionUID = 1;

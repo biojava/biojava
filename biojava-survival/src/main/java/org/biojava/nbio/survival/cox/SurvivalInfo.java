@@ -29,7 +29,7 @@ import java.util.LinkedHashMap;
  * The code handles figuring out if a variables is continuous or categorical. If categorical will
  * convert to numerical values.
  *
- * @author Scooter Willis <willishf at gmail dot com>
+ * @author Scooter Willis 
  */
 public class SurvivalInfo implements Comparable<SurvivalInfo> {
 

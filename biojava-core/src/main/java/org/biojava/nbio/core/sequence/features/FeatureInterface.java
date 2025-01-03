@@ -37,7 +37,7 @@ import org.biojava.nbio.core.sequence.template.Compound;
  * A feature can contain features to handle cases where a domain is a feature and the secondary structures covered by that domain
  * and other requirements for grouping.
  *
- * @author Scooter Willis <willishf at gmail dot com>
+ * @author Scooter Willis 
  * @author Paolo Pavan
  */
 public interface FeatureInterface<S extends AbstractSequence<C>, C extends Compound> {

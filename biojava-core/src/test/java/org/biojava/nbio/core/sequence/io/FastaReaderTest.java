@@ -35,7 +35,7 @@ import java.util.logging.Level;
 
 /**
  *
- * @author Scooter Willis <willishf at gmail dot com>
+ * @author Scooter Willis 
  */
 public class FastaReaderTest {
 
