@@ -28,16 +28,18 @@ import org.biojava.nbio.core.sequence.template.Sequence;
 
 /**
  * @author mckeee1
- *
+ * @param <C> the compound type
+ * @param <S> the sequence type
  */
 public interface GenbankHeaderFormatInterface<S extends Sequence<?>, C extends Compound> {
+
+	public static final String UNKNOWN_DNA = "UNK";
+
 	/**
 	 *
 	 * @param sequence
 	 * @return
 	 */
-	public static final String UNKNOWN_DNA = "UNK";
-
-	public String getHeader(S sequence);
+	String getHeader(S sequence);
 
 }

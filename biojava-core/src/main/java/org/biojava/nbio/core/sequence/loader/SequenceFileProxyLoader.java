@@ -51,7 +51,7 @@ import java.util.List;
  *
  *
  * @author Scooter Willis <willishf at gmail dot com>
- * @param <C>
+ * @param <C> the compound type
  */
 public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenceReader<C> {
 

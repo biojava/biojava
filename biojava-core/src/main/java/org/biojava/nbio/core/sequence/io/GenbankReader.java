@@ -53,7 +53,8 @@ import java.util.Map;
 /**
  * Use {@link GenbankReaderHelper} as an example of how to use this class where {@link GenbankReaderHelper} should be the
  * primary class used to read Genbank files
- *
+ * @param <S> the sequence type
+ * @param <C> the compound type
  */
 public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
 

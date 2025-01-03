@@ -34,6 +34,7 @@ import org.biojava.nbio.core.sequence.template.Sequence;
  * @author Mark Chapman
  * @author Paolo Pavan
  * @param <C> each element of the {@link AlignedSequence} is a {@link Compound} of type C
+ * @param <S> the sequence type
  */
 public interface MutableAlignedSequence<S extends Sequence<C>, C extends Compound> extends AlignedSequence<S, C> {
 

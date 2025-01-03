@@ -39,6 +39,8 @@ import org.slf4j.LoggerFactory;
  * containsKey(), values() etc do not work.
  * <p>
  * This class is therefore best used as a cache simply to put and get items by a known key
+ * @param <K> the key type
+ * @param <V> the value type
  */
 public class SoftHashMap<K, V> extends AbstractMap<K, V> {
 

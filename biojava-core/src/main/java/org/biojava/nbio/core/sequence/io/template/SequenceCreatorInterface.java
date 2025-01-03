@@ -33,6 +33,7 @@ import java.util.List;
 /**
  *
  * @author Scooter Willis <willishf at gmail dot com>
+ * @param <C> the compound type
  */
 public interface SequenceCreatorInterface<C extends Compound> {
 	/**

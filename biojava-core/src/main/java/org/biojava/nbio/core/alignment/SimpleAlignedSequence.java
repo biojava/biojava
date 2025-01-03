@@ -44,6 +44,7 @@ import java.util.List;
  *
  * @author Mark Chapman
  * @param <C> each element of the {@link Sequence} is a {@link Compound} of type C
+ * @param <S> the sequence type
  */
 public class SimpleAlignedSequence<S extends Sequence<C>, C extends Compound> implements Serializable, AlignedSequence<S, C> {
 

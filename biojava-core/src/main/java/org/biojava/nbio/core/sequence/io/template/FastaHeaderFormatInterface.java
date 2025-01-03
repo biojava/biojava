@@ -28,12 +28,15 @@ import org.biojava.nbio.core.sequence.template.Sequence;
 /**
  *
  * @author Scooter Willis <willishf at gmail dot com>
+ * @param <C> the compound type
+ * @param <S> the sequence type
  */
 public interface FastaHeaderFormatInterface<S extends Sequence<?>, C extends Compound> {
+
 	/**
 	 *
 	 * @param sequence
 	 * @return
 	 */
-	public String getHeader(S sequence);
+	String getHeader(S sequence);
 }

@@ -40,15 +40,16 @@ import org.slf4j.LoggerFactory;
 /**
  * This class models a search Hsp.
  * You will retrieve a list of this using iterator of a Hit
- *
+ * <p>
  * Designed by Paolo Pavan.
  * You may want to find my contacts on Github and LinkedIn for code info
  * or discuss major changes.
  * https://github.com/paolopavan
  *
  * @author Paolo Pavan
+ * @param <C> the compound type
+ * @param <S> the sequence type
  */
-
 public abstract class Hsp <S extends Sequence<C>, C extends Compound> {
 	private static final Logger logger = LoggerFactory.getLogger(Hsp.class);
 	private Integer hspNum;

@@ -28,6 +28,8 @@ import org.biojava.nbio.core.sequence.template.Sequence;
 /**
  *
  * @author Scooter Willis <willishf at gmail dot com>
+ * @param <C> the compound type
+ * @param <S> the sequence type
  */
 public interface SequenceHeaderParserInterface<S extends Sequence<?>, C extends Compound> {
 	/**
