@@ -33,8 +33,8 @@ import java.util.concurrent.Callable;
  * Implements a concurrency wrapper for a {@link ProfileProfileAligner}.
  *
  * @author Mark Chapman
- * @param <S> each {@link Sequence} of the {@link Profile} pair is of type S
- * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
+ * @param <S> each {@link Sequence} of the profile pair is of type S
+ * @param <C> each element of a sequence is a {@link Compound} of type C
  */
 public class CallableProfileProfileAligner<S extends Sequence<C>, C extends Compound>
 		implements Callable<ProfilePair<S, C>> {

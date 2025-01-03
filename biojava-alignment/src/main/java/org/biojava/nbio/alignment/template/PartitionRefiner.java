@@ -28,11 +28,11 @@ import org.biojava.nbio.core.sequence.template.Compound;
 import org.biojava.nbio.core.sequence.template.Sequence;
 
 /**
- * Defines an algorithm which computes a new alignment {@link Profile} by splitting a current alignment and realigning.
+ * Defines an algorithm which computes a new alignment profile by splitting a current alignment and realigning.
  *
  * @author Mark Chapman
- * @param <S> each element of the alignment {@link Profile} is of type S
- * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
+ * @param <S> each element of the alignment profile is of type S
+ * @param <C> each element of a sequence is a {@link Compound} of type C
  */
 public interface PartitionRefiner<S extends Sequence<C>, C extends Compound> extends Aligner<S, C>,
 		ProfileProfileScorer<S, C> {

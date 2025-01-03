@@ -32,7 +32,7 @@ import org.biojava.nbio.core.sequence.template.Sequence;
  *
  * @author Mark Chapman
  * @param <S> each {@link Sequence} of the alignment pair is of type S
- * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
+ * @param <C> each element of a sequence is a {@link Compound} of type C
  */
 public interface PairInProfileScorer<S extends Sequence<C>, C extends Compound> extends PairwiseSequenceScorer<S, C> {
 

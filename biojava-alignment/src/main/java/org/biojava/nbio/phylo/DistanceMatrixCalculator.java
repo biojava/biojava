@@ -54,9 +54,9 @@ public class DistanceMatrixCalculator {
 	 * that differ between two aligned sequences. The percentage of identity
 	 * (PID) is the fraction of identical sites between two aligned sequences.
 	 *
-	 * <pre>
+	 * <code>
 	 * D = 1 - PID
-	 * </pre>
+	 * </code>
 	 *
 	 * The gapped positons in the alignment are ignored in the calculation. This
 	 * method is a wrapper to the forester implementation of the calculation:
@@ -65,7 +65,7 @@ public class DistanceMatrixCalculator {
 	 * @param msa
 	 *            MultipleSequenceAlignment
 	 * @return DistanceMatrix
-	 * @throws Exception
+	 * @throws IOException
 	 */
 	public static <C extends Sequence<D>, D extends Compound> DistanceMatrix fractionalDissimilarity(
 			MultipleSequenceAlignment<C, D> msa) throws IOException {
@@ -81,9 +81,9 @@ public class DistanceMatrixCalculator {
 	 * The Poisson (correction) evolutionary distance (d) is a function of the
 	 * fractional dissimilarity (D), given by:
 	 *
-	 * <pre>
+	 * <code>
 	 * d = -log(1 - D)
-	 * </pre>
+	 * </code>
 	 *
 	 * The gapped positons in the alignment are ignored in the calculation. This
 	 * method is a wrapper to the forester implementation of the calculation:
@@ -109,14 +109,14 @@ public class DistanceMatrixCalculator {
 	 * dissimilarity (D) specially needed for large evolutionary distances. It
 	 * is given by:
 	 *
-	 * <pre>
+	 * <code>
 	 * d = -log(1 - D - 0.2 * D<sup>2</sup>)
-	 * </pre>
+	 * </code>
 	 *
 	 * The equation is derived by fitting the relationship between the
 	 * evolutionary distance (d) and the fractional dissimilarity (D) according
 	 * to the PAM model of evolution (it is an empirical approximation for the
-	 * method {@link #pamDistance(MultipleSequenceAlignment}). The gapped
+	 * method {@link #pamMLdistance(MultipleSequenceAlignment)}). The gapped
 	 * positons in the alignment are ignored in the calculation. This method is
 	 * a wrapper to the forester implementation of the calculation:
 	 * {@link PairwiseDistanceCalculator#calcKimuraDistances(Msa)}.
@@ -190,9 +190,9 @@ public class DistanceMatrixCalculator {
 	 * The fractional dissimilarity score (Ds) is a relative measure of the
 	 * dissimilarity between two aligned sequences. It is calculated as:
 	 *
-	 * <pre>
+	 * <code>
 	 * Ds = sum( max(M) - M<sub>ai,bi</sub> ) / (max(M)-min(M)) ) / L
-	 * </pre>
+	 * </code>
 	 *
 	 * Where the sum through i runs for all the alignment positions, ai and bi
 	 * are the AA at position i in the first and second aligned sequences,
@@ -270,9 +270,9 @@ public class DistanceMatrixCalculator {
 	 * maximum similarity score between self-alignments (each sequence against
 	 * itself). Calculation of the score is as follows:
 	 *
-	 * <pre>
+	 * <code>
 	 * Ds = maxScore - sum<sub>i</sub>(M<sub>ai,bi</sub>)
-	 * </pre>
+	 * </code>
 	 *
 	 * It is recommended to use the method
 	 * {@link #fractionalDissimilarityScore(MultipleSequenceAlignment, SubstitutionMatrix)}
@@ -362,9 +362,9 @@ public class DistanceMatrixCalculator {
 	 * substitution rate of 1% per site. The fractional dissimilarity (D) of two
 	 * aligned sequences is related with the PAM distance (d) by the equation:
 	 *
-	 * <pre>
+	 * <code>
 	 * D = sum(fi * (1 - M<sub>ii</sub><sup>d</sup>))
-	 * </pre>
+	 * </code>
 	 *
 	 * Where the sum is for all 20 AA, fi denotes the natural fraction of the
 	 * given AA and M is the substitution matrix (in this case the PAM1 matrix).
@@ -373,9 +373,9 @@ public class DistanceMatrixCalculator {
 	 * likelihood (ML) approach is used, which consists in finding d that
 	 * maximazies the function:
 	 *
-	 * <pre>
+	 * <code>
 	 * L(d) = product(f<sub>ai</sub> * (1 - M<sub>ai,bi</sub><sup>d</sup>))
-	 * </pre>
+	 * </code>
 	 *
 	 * Where the product is for every position i in the alignment, and ai and bi
 	 * are the AA at position i in the first and second aligned sequences,
@@ -400,11 +400,11 @@ public class DistanceMatrixCalculator {
 	 * strutures. It is based on the diffusive model for protein fold evolution
 	 * (Grishin 1995). The structural deviations are captured as RMS deviations.
 	 *
-	 * <pre>
+	 * <code>
 	 * d<sub>Sij</sub> = (rmsd<sub>max</sub><sup>2</sup> / alpha<sup>2</sup>) *
 	 *        ln( (rmsd<sub>max</sub><sup>2</sup> - rmsd<sub>0</sub><sup>2</sup>) /
 	 *        (rmsd<sub>max</sub><sup>2</sup> - (rmsd<sub>ij</sub><sup>2</sup>) )
-	 * </pre>
+	 * </code>
 	 *
 	 * @param rmsdMat
 	 *            RMSD matrix for all structure pairs (symmetric matrix)

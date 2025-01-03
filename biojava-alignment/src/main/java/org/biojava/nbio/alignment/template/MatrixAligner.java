@@ -30,8 +30,8 @@ import org.biojava.nbio.core.sequence.template.Sequence;
  * Defines an {@link Aligner} which builds a score matrix during computation.
  *
  * @author Mark Chapman
- * @param <S> each element of the alignment {@link Profile} is of type S
- * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
+ * @param <S> each element of the alignment profile is of type S
+ * @param <C> each element of a sequence is a {@link Compound} of type C
  */
 public interface MatrixAligner<S extends Sequence<C>, C extends Compound> extends Aligner<S, C> {
 

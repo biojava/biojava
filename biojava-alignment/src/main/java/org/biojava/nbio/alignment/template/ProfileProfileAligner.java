@@ -28,11 +28,11 @@ import org.biojava.nbio.core.sequence.template.Compound;
 import org.biojava.nbio.core.sequence.template.Sequence;
 
 /**
- * Defines an {@link Aligner} for a pair of {@link Profile}s.
+ * Defines an {@link Aligner} for a pair of profiles.
  *
  * @author Mark Chapman
- * @param <S> each {@link Sequence} in the pair of alignment {@link Profile}s is of type S
- * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
+ * @param <S> each {@link Sequence} in the pair of alignment profiles is of type S
+ * @param <C> each element of a sequence is a {@link Compound} of type C
  */
 public interface ProfileProfileAligner<S extends Sequence<C>, C extends Compound> extends Aligner<S, C>,
 		ProfileProfileScorer<S, C> {

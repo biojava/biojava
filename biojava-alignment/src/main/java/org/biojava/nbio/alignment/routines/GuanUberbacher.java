@@ -34,7 +34,7 @@ import org.biojava.nbio.core.sequence.template.Sequence;
  * {@link Compound} of each {@link Sequence}).  This class performs such global sequence comparisons efficiently by
  * dynamic programming with a space requirement reduced from quadratic (a multiple of query sequence length times
  * target sequence length) to only linear (a multiple of query sequence length).  The counterpoint to this reduction in
- * space complexity is a modest (a multiple < 2) increase in time.
+ * space complexity is a modest (a multiple &lt; 2) increase in time.
  *
  * @author Mark Chapman
  * @param <S> each {@link Sequence} of the alignment pair is of type S

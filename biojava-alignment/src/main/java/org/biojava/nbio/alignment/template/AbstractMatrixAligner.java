@@ -46,7 +46,7 @@ import static org.biojava.nbio.alignment.routines.AlignerHelper.setSteps;
  * @author Mark Chapman
  * @author Daniel Cameron
  * @param <S> each element of the alignment {@link Profile} is of type S
- * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
+ * @param <C> each element of a sequence is a {@link Compound} of type C
  */
 public abstract class AbstractMatrixAligner<S extends Sequence<C>, C extends Compound> extends AbstractScorer
 		implements MatrixAligner<S, C> {

@@ -34,7 +34,7 @@ import java.util.concurrent.Callable;
  *
  * @author Mark Chapman
  * @param <S> each {@link Sequence} of the alignment pair is of type S
- * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
+ * @param <C> each element of a sequence is a {@link Compound} of type C
  */
 public class CallablePairwiseSequenceAligner<S extends Sequence<C>, C extends Compound>
 		implements Callable<SequencePair<S, C>> {

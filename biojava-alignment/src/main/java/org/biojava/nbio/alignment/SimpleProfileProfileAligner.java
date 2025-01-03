@@ -41,7 +41,7 @@ import java.util.concurrent.Future;
  *
  * @author Mark Chapman
  * @param <S> each {@link Sequence} in the pair of alignment {@link Profile}s is of type S
- * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
+ * @param <C> each element of a sequence is a {@link Compound} of type C
  */
 public class SimpleProfileProfileAligner<S extends Sequence<C>, C extends Compound>
 		extends AbstractProfileProfileAligner<S, C> {

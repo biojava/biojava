@@ -42,7 +42,7 @@ import java.util.List;
  * will connect the query sequence to the target sequence at the <em>anchors</em>.  This class performs such global
  * sequence comparisons efficiently by dynamic programming with a space requirement reduced from quadratic (a multiple
  * of query sequence length times target sequence length) to only linear (a multiple of query sequence length).  The
- * counterpoint to this reduction in space complexity is a modest (a multiple < 2) increase in time.
+ * counterpoint to this reduction in space complexity is a modest (a multiple &lt; 2) increase in time.
  *
  * @author Mark Chapman
  * @author Daniel Cameron
@@ -67,7 +67,6 @@ public class AnchoredPairwiseSequenceAligner<S extends Sequence<C>, C extends Co
 	 * @param target the second {@link Sequence} of the pair to align
 	 * @param gapPenalty the gap penalties used during alignment
 	 * @param subMatrix the set of substitution scores used during alignment
-	 * @param cutsPerSection the number of cuts added to each section during each pass
 	 */
 	public AnchoredPairwiseSequenceAligner(S query, S target, GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix) {
 		this(query, target, gapPenalty, subMatrix, null);
@@ -80,7 +79,6 @@ public class AnchoredPairwiseSequenceAligner<S extends Sequence<C>, C extends Co
 	 * @param target the second {@link Sequence} of the pair to align
 	 * @param gapPenalty the gap penalties used during alignment
 	 * @param subMatrix the set of substitution scores used during alignment
-	 * @param cutsPerSection the number of cuts added to each section during each pass
 	 * @param anchors the initial list of anchors
 	 */
 	public AnchoredPairwiseSequenceAligner(S query, S target, GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix, int[] anchors) {
