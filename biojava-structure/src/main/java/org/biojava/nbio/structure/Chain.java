@@ -199,7 +199,7 @@ public interface Chain extends Serializable {
 	 * @return the length
 	 * @see #getAtomGroup(int)
 	 * @see #getAtomGroups()
-	 * @see #getSeqResLength())
+	 * @see #getSeqResLength()
 	 */
 	int getAtomLength();
 
@@ -346,18 +346,20 @@ public interface Chain extends Serializable {
 
 	/**
 	 * Get the predominant {@link GroupType} for a given Chain, following these
-	 * rules: <li>if the ratio of number of residues of a certain
+	 * rules:
+	 * <ul>
+	 * <li>if the ratio of number of residues of a certain
 	 * {@link GroupType} to total non-water residues is above the threshold
 	 * {@value org.biojava.nbio.structure.StructureTools#RATIO_RESIDUES_TO_TOTAL}, then that {@link GroupType} is
 	 * returned</li> <li>if there is no {@link GroupType} that is above the
 	 * threshold then the {@link GroupType} with most members is chosen, logging
 	 * it</li>
+	 * </ul>
 	 * <p>
 	 * See also {@link ChemComp#getPolymerType()} and
 	 * {@link ChemComp#getResidueType()} which follow the PDB chemical component
 	 * dictionary and provide a much more accurate description of groups and
 	 * their linking.
-	 * </p>
 	 *
 	 * @return the predominant group type
 	 */

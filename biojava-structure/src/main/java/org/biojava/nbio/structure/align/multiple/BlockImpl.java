@@ -52,7 +52,6 @@ public class BlockImpl extends AbstractScoresCache implements Serializable,
 	 *
 	 * @param blockSet
 	 *            the parent BlockSet of the BlockImpl instance.
-	 * @return BlockImpl a BlockImpl instance linked to its parent BlockSet.
 	 */
 	public BlockImpl(BlockSet blockSet) {
 
@@ -69,7 +68,6 @@ public class BlockImpl extends AbstractScoresCache implements Serializable,
 	 *
 	 * @param b
 	 *            BlockImpl object to be copied.
-	 * @return BlockImpl an identical copy of the input BlockImpl object.
 	 */
 	public BlockImpl(BlockImpl b) {
 

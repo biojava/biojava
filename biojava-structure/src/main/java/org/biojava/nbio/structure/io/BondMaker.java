@@ -89,6 +89,7 @@ public class BondMaker {
 
 	/**
 	 * Creates bond objects and corresponding references in Atom objects:
+	 * <ul>
 	 * <li>
 	 * peptide bonds: inferred from sequence and distances
 	 * </li>
@@ -98,6 +99,7 @@ public class BondMaker {
 	 * <li>
 	 * intra-group (residue) bonds: read from the chemical component dictionary, via {@link org.biojava.nbio.structure.chem.ChemCompProvider}
 	 * </li>
+	 * </ul>
 	 */
 	public void makeBonds() {
 		logger.debug("Going to start making bonds");

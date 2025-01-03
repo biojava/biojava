@@ -55,7 +55,6 @@ public class BlockSetImpl extends AbstractScoresCache implements Serializable,
 	 *
 	 * @param alignment
 	 *            MultipleAlignment parent of the BlockSet.
-	 * @return BlockSet an instance linked to the parent alignment.
 	 */
 	public BlockSetImpl(MultipleAlignment alignment) {
 
@@ -76,7 +75,6 @@ public class BlockSetImpl extends AbstractScoresCache implements Serializable,
 	 *
 	 * @param bs
 	 *            BlockSet object to be copied.
-	 * @return BlockSet an identical copy of the input object.
 	 */
 	public BlockSetImpl(BlockSetImpl bs) {
 

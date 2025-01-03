@@ -327,9 +327,9 @@ public class Calc {
 	}
 
 	/**
-	 * Test if two amino acids are connected, i.e. if the distance from C to N <
+	 * Test if two amino acids are connected, i.e. if the distance from C to N &lt;
 	 * 2.5 Angstrom.
-	 *
+	 * <p>
 	 * If one of the AminoAcids has an atom missing, returns false.
 	 *
 	 * @param a

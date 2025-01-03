@@ -82,7 +82,6 @@ public class CeSymm {
 	 * <li>2.2 - run multiple symmetry levels recursively to find PG and
 	 * hierarchical symmetries.
 	 * </ul>
-	 * </li>
 	 */
 	public static final String version = "2.2";
 	public static final String algorithmName = "jCE-symm";
@@ -364,7 +363,7 @@ public class CeSymm {
 	 *
 	 * @param atoms
 	 *            representative Atom array of the Structure
-	 * @param param
+	 * @param params
 	 *            CeSymmParameters bean
 	 * @return CeSymmResult
 	 * @throws StructureException

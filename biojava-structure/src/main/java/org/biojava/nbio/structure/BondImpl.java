@@ -44,7 +44,7 @@ public class BondImpl implements Bond {
 	 * Note that by forming a bond between atoms 'A' and 'B' with this
 	 * constructor, atoms 'A' and 'B' will be updated to have this bond in their
 	 * list of bonds. If you do not want this automatic updating, instead use
-	 * {@link #Bond(Atom, Atom, int, boolean)} with the
+	 * {@link Bond(Atom, Atom, int, boolean)} with the
 	 * <code>addSelfToAtoms</code> flag set to <code>false</code>.
 	 *
 	 * @param atomA one of the atoms in this bond
@@ -83,7 +83,7 @@ public class BondImpl implements Bond {
 	 * include this bond.
 	 * <p>
 	 * If you created your Bond with the constructor
-	 * {@link #Bond(Atom, Atom, int)}, this method has already been called for
+	 * {@link Bond(Atom, Atom, int)}, this method has already been called for
 	 * you and should not be called again.
 	 */
 	// TODO first check if those bonds haven't been made already

@@ -262,12 +262,11 @@ public class BioAssemblyTools {
 
 	/**
 	 * Returns the centroid of the biological molecule.
-	 * @param structure
+	 * @param asymUnit
 	 * @return centroid
 	 * @throws IllegalArgumentException if structure is null
 	 */
-
-	public static double[] getBiologicalMoleculeCentroid( final Structure asymUnit,List<BiologicalAssemblyTransformation> transformations ) {
+	public static double[] getBiologicalMoleculeCentroid( final Structure asymUnit, List<BiologicalAssemblyTransformation> transformations ) {
 		if ( asymUnit == null ) {
 			throw new IllegalArgumentException( "null structure" );
 		}
