@@ -96,7 +96,7 @@ public class FastaWriterHelper {
 	/**
 	 * Write a collection of GeneSequences to a file where if the gene is negative strand it will flip and complement the sequence
 	 * @param outputStream
-	 * @param dnaSequences
+	 * @param geneSequences
 	 * @throws Exception
 	 */
 

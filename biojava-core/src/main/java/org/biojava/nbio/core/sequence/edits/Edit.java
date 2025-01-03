@@ -114,7 +114,7 @@ public interface Edit<C extends Compound> {
 		 * @param editingSequence Asked for in-case we need to do String to
 		 * Sequence conversion so we need a CompoundSet which is given
 		 * by the Sequence we are editing
-		 * @return The Sequence<C> object we wish to insert
+		 * @return The {@link Sequence<C>} object we wish to insert
 		 */
 		public Sequence<C> getTargetSequence(Sequence<C> editingSequence) {
 			if (sequence == null && stringSequence != null) {

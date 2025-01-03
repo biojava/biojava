@@ -56,8 +56,9 @@ public class FileProxyDNASequenceCreator implements
 
 	/**
 	 * Need File so that we can store full path name in SequenceFileProxyLoader for Random File access as a quick read
-	 * @param fastaFile
+	 * @param file
 	 * @param compoundSet
+	 * @param sequenceParser
 	 */
 	public FileProxyDNASequenceCreator(File file,
 			CompoundSet<NucleotideCompound> compoundSet,

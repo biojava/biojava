@@ -336,8 +336,8 @@ public class FileDownloadUtils {
 	 * </code>
 	 * <p>
 	 *
-	 * <bold>NB. User should execute connect() method before getting input
-	 * stream.</bold>
+	 * <strong>NB. User should execute connect() method before getting input
+	 * stream.</strong>
 	 * @return
 	 * @throws IOException
 	 * @author Jacek Grzebyta

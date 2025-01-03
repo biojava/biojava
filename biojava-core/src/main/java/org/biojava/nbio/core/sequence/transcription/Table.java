@@ -57,8 +57,8 @@ public interface Table {
 	/**
 	 * Instance of a Codon which is 3 {@link NucleotideCompound}s, its
 	 * corresponding {@link AminoAcidCompound} and if it is a start or stop codon.
-	 * The object implements hashCode & equals but according to the nucleotide
-	 * compounds & not to the designation of it being a start, stop & amino
+	 * The object implements hashCode &amp; equals but according to the nucleotide
+	 * compounds &amp; not to the designation of it being a start, stop &amp; amino
 	 * acid compound
 	 *
 	 * @author ayates

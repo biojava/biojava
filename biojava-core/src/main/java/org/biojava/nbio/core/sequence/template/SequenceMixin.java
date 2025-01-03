@@ -150,7 +150,7 @@ public class SequenceMixin {
 	 * converting to a full length String and then writing the data out
 	 *
 	 * @param <C> Type of compound
-	 * @param writer The writer to send data to
+	 * @param appendable The writer to send data to
 	 * @param sequence The sequence to write out
 	 * @throws IOException Thrown if we encounter a problem
 	 */
@@ -244,7 +244,7 @@ public class SequenceMixin {
 	 * Implements sequence shuffling by first materializing the given
 	 * {@link Sequence} into a {@link List}, applying
 	 * {@link Collections#shuffle(List)} and then returning the shuffled
-	 * elements in a new instance of {@link SequenceBackingStore} which behaves
+	 * elements in a new instance of {@link Sequence} which behaves
 	 * as a {@link Sequence}.
 	 */
 	public static <C extends Compound> Sequence<C> shuffle(Sequence<C> sequence) {

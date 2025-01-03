@@ -157,7 +157,7 @@ public class IOUtils {
 	 *
 	 * @param file File which may or may not be GZipped
 	 * @return The final stream
-	 * @throws IOExceptio n
+	 * @throws IOException
 	 */
 	public static InputStream openFile(File file) throws IOException {
 		final InputStream is;
@@ -178,7 +178,7 @@ public class IOUtils {
 
 	/**
 	 * Closure interface used when working with
-	 * {@link IOUtils#processReader(String)}. Each time a line is encountered
+	 * {@link IOUtils#processReader(BufferedReader, ReaderProcessor)}. Each time a line is encountered
 	 * the object that implements this interface will be invoked.
 	 *
 	 * @author ayates

@@ -17,7 +17,7 @@
  * @author Bubba Puryear
  * @author George Waldon
  * @author Deepak Sheoran
- * @author Karl Nicholas <github:karlnicholas>
+ * @author Karl Nicholas &lt;github:karlnicholas&gt;
  * @author Jacek Grzebyta
  * @author Paolo Pavan
  *

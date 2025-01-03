@@ -164,7 +164,7 @@ public class XMLHelper {
 	/**
 	 * If {@code}xpathExpression{@code} is a plain string with no '/' characterr, this is 
 	 * interpreted as a child element name to search for. 
-	 * <b/>
+	 * <p>
 	 * If {@code}xpathExpression{@code} is an XPath expression, this is evaluated and is assumed
 	 * to identify a single element.
 	 * @param element

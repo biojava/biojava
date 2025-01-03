@@ -123,7 +123,7 @@ public class FlatFileCache {
 
 	/**
 	 * Returns the number of items in the cache.
-	 * If the cache is {@}, returns -1
+	 * If the cache is empty, returns -1
 	 * @return
 	 */
 	public static int size() {

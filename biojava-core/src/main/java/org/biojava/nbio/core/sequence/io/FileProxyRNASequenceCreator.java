@@ -56,7 +56,7 @@ public class FileProxyRNASequenceCreator implements
 
 	/**
 	 * Need File so that we can store full path name in SequenceFileProxyLoader for Random File access as a quick read
-	 * @param fastaFile
+	 * @param file
 	 * @param compoundSet
 	 */
 	public FileProxyRNASequenceCreator(File file,

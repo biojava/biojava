@@ -113,7 +113,7 @@ public class LocationHelper {
 	 * other location builder this allows you to express your input
 	 * location on the reverse strand
 	 *
-	 * @param location The location which currently expresses the outer
+	 * @param start The location which currently expresses the outer
 	 * bounds of a circular location.
 	 * @param length The length of the circular genomic unit
 	 * @return The circular location; can optionally return a normal non

@@ -69,7 +69,6 @@ public class GenbankWriter<S extends Sequence<?>, C extends Compound> {
 	 * @param headerFormat
 	 * @param lineLength
 	 */
-
 	public GenbankWriter(OutputStream os, Collection<S> sequences,
 			GenbankHeaderFormatInterface<S, C> headerFormat, int lineLength) {
 		this.os = os;
@@ -82,9 +81,7 @@ public class GenbankWriter<S extends Sequence<?>, C extends Compound> {
 	 * Allow an override of operating system line separator for programs that
 	 * needs a specific CRLF or CR or LF option
 	 *
-	 * @param lineSeparator
 	 */
-
 	public void process() throws Exception {
 		// Loosely based on code from Howard Salis
 		// TODO - Force lower case?

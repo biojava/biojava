@@ -32,10 +32,10 @@ import java.io.IOException;
 public interface SequenceParserInterface {
 	/**
 	 *
-	 * @param dataInput
+	 * @param bufferedReader
 	 * @param sequenceLength
 	 * @return
-	 * @throws Exception
+	 * @throws IOException
 	 */
-	public String getSequence(BufferedReader bufferedReader,int sequenceLength) throws IOException;
+	String getSequence(BufferedReader bufferedReader,int sequenceLength) throws IOException;
 }

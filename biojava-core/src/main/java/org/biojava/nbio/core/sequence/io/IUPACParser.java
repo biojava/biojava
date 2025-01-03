@@ -266,7 +266,7 @@ public class IUPACParser {
 		 * @param aminoAcids The target amino acid compounds objects
 		 */
 				@Override
-		public List<Codon> getCodons(CompoundSet<NucleotideCompound> nucelotides,
+		public List<Codon> getCodons(CompoundSet<NucleotideCompound> nucleotides,
 				CompoundSet<AminoAcidCompound> aminoAcids) {
 
 			if (this.codons.isEmpty()) {
@@ -277,9 +277,9 @@ public class IUPACParser {
 				for (int i = 0; i < aminoAcidStrings.size(); i++) {
 
 					List<String> codonString    = codonStrings.get(i);
-					NucleotideCompound one      = getCompound(codonString, 0, nucelotides);
-					NucleotideCompound two      = getCompound(codonString, 1, nucelotides);
-					NucleotideCompound three    = getCompound(codonString, 2, nucelotides);
+					NucleotideCompound one      = getCompound(codonString, 0, nucleotides);
+					NucleotideCompound two      = getCompound(codonString, 1, nucleotides);
+					NucleotideCompound three    = getCompound(codonString, 2, nucleotides);
 					boolean start               = ("M".equals(startCodonStrings.get(i)));
 					boolean stop                = ("*".equals(aminoAcidStrings.get(i)));
 					AminoAcidCompound aminoAcid = aminoAcids

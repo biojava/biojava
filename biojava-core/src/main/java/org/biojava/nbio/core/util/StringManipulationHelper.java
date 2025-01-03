@@ -77,7 +77,7 @@ public class StringManipulationHelper  {
 	 * <li> Any IOException reading the stream is 'squashed' and not made
 	 *   available to caller
 	 * <li> An additional newline is appended at the end of the string.
-	 * <ul>
+	 * </ul>
 	 * @author andreas
 	 * @param stream
 	 * @return a possibly empty but non-null String

@@ -34,7 +34,6 @@ import org.biojava.nbio.core.sequence.template.Sequence;
  *
  * @author Paolo Pavan
  */
-
 public interface ResultFactory {
 	/**
 	 * returns a list of file extensions associated to this ResultFactory
@@ -49,7 +48,8 @@ public interface ResultFactory {
 	 *
 	 * @param maxEScore
 	 * @return
-	 * @throws Exception
+	 * @throws IOException
+	 * @throws ParseException
 	 */
 	List<Result> createObjects(double maxEScore) throws IOException, ParseException;
 	/**
@@ -57,7 +57,8 @@ public interface ResultFactory {
 	 * to a file in the same format that it is able to read.
 	 *
 	 * @param results
-	 * @throws Exception
+	 * @throws IOException
+	 * @throws ParseException
 	 */
 	void storeObjects(List<Result> results) throws IOException, ParseException;
 

@@ -120,7 +120,6 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 	 * @param xml
 	 * @param compoundSet
 	 * @return UniprotProxySequenceReader
-	 * @throws Exception
 	 */
 	public static <C extends Compound> UniprotProxySequenceReader<C> parseUniprotXMLString(String xml, CompoundSet<C> compoundSet) {
 		try {

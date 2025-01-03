@@ -171,9 +171,9 @@ public class ABITrace {
 	}
 
 	/**
-	 * Returns the original programmatically determined (unedited) sequence as a <code>AbstractSequence<NucleotideCompound></code>.
+	 * Returns the original programmatically determined (unedited) sequence as a {@link AbstractSequence<NucleotideCompound>}.
 	 *
-	 * @return AbstractSequence<NucleotideCompound> sequence
+	 * @return sequence
 	 */
 	public AbstractSequence<NucleotideCompound> getSequence() throws CompoundNotFoundException {
 		DNASequenceCreator creator = new DNASequenceCreator(ABITracerCompoundSet.getABITracerCompoundSet());
