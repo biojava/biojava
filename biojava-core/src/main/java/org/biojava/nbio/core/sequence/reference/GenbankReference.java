@@ -24,7 +24,7 @@ package org.biojava.nbio.core.sequence.reference;
  * For Genbank format file only.
  *
  * @since 5.0.0
- * @Author Jim Tang
+ * @author Jim Tang
  */
 public class GenbankReference extends AbstractReference {
 
