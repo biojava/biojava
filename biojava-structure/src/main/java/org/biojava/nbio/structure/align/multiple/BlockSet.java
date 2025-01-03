@@ -111,7 +111,7 @@ public interface BlockSet extends ScoresCache {
 	 * This may trigger other properties to update which depend on the
 	 * superposition.
 	 *
-	 * @param matrices
+	 * @param transformations
 	 */
 	public void setTransformations(List<Matrix4d> transformations);
 

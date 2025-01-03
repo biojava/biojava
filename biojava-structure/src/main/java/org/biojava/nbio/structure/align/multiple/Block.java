@@ -89,7 +89,7 @@ public interface Block extends ScoresCache {
 	 * Returns the total number of aligned positions (columns) in the Block.
 	 *
 	 * @return int number of aligned residues.
-	 * @see #getCoreLength();
+	 * @see #getCoreLength()
 	 * @see #size()
 	 */
 	public int length();
