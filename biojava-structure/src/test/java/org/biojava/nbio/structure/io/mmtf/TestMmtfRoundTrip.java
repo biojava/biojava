@@ -354,8 +354,8 @@ public class TestMmtfRoundTrip {
 
 	@Test
 	public void testStructWithBranchedEntitiesRoundTrip() throws IOException {
-		// Example carbohydrate remediation file to be released in July 2020
-		URL url = new URL("https://raw.githubusercontent.com/pdbxmmcifwg/carbohydrate-extension/master/examples/models/1B5F-carb.cif");
+		// Example carbohydrate remediation, remediated in July 2020
+		URL url = new URL("https://files.rcsb.org/download/1B5F.cif.gz");
 		InputStream inStream = url.openStream();
 
 		Structure structure = CifStructureConverter.fromInputStream(inStream);
@@ -366,7 +366,7 @@ public class TestMmtfRoundTrip {
 		new StructureDataToAdapter(writerToEncoder, mmtfStructureReader);
 		Structure structure2 = mmtfStructureReader.getStructure();
 
-		assertEquals(7, structure2.getEntityInfos().size());
+		assertEquals(6, structure2.getEntityInfos().size());
 
 		assertEquals(2, structure2.getEntityById(1).getChains().size());
 		assertEquals(2, structure2.getEntityById(2).getChains().size());
