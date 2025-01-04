@@ -53,7 +53,7 @@ import java.util.Locale;
  * 	decomposition classes.  These decompositions are accessed by the Matrix
  * 	class to compute solutions of simultaneous linear equations, determinants,
  * 	inverses and other matrix functions.  The five decompositions are:
- * <P><UL>
+ * <UL>
  * 	<LI>Cholesky Decomposition of symmetric, positive definite matrices.
  * 	<LI>LU Decomposition of rectangular matrices.
  * 	<LI>QR Decomposition of rectangular matrices.

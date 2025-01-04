@@ -65,7 +65,6 @@ import java.util.List;
  *
  *
  * <hr/>
- * </hr>
  * <p>
  * Q: How can I get a Structure object from a PDB file?
  * </p>
@@ -88,7 +87,6 @@ import java.util.List;
  *  </pre>
  *
  * <hr>
- * </hr>
  * <p>
  * Q: How can I calculate Phi and Psi angles of AminoAcids?
  * </p>
@@ -157,10 +155,6 @@ import java.util.List;
  * 		}
  * </pre>
  * <hr>
- * </hr>
- *
- *
- *
  *
  * @author Andreas Prlic
  * @since 1.4
