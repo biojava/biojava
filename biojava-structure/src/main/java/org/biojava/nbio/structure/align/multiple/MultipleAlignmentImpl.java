@@ -53,7 +53,6 @@ public class MultipleAlignmentImpl extends AbstractScoresCache implements
 	/**
 	 * Default Constructor. Empty alignment. No structures assigned.
 	 *
-	 * @return MultipleAlignment an empty MultipleAlignment instance.
 	 */
 	public MultipleAlignmentImpl() {
 		this(new MultipleAlignmentEnsembleImpl()); // assign an empty ensemble.
@@ -65,7 +64,6 @@ public class MultipleAlignmentImpl extends AbstractScoresCache implements
 	 *
 	 * @param ensemble
 	 *            parent MultipleAlignmentEnsemble.
-	 * @return MultipleAlignment an alignment instance part of an ensemble.
 	 */
 	public MultipleAlignmentImpl(MultipleAlignmentEnsemble ensemble) {
 
@@ -87,7 +85,6 @@ public class MultipleAlignmentImpl extends AbstractScoresCache implements
 	 *
 	 * @param ma
 	 *            MultipleAlignmentImpl to copy.
-	 * @return MultipleAlignmentImpl identical copy of the alignment.
 	 */
 	public MultipleAlignmentImpl(MultipleAlignmentImpl ma) {
 

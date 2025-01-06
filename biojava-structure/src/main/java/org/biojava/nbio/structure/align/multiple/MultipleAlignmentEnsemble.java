@@ -147,7 +147,6 @@ public interface MultipleAlignmentEnsemble extends ScoresCache {
 	 * structure.
 	 *
 	 * @return List of Matrix interatomic distance matrices.
-	 * @see #updateDistanceMatrix()
 	 */
 	public List<Matrix> getDistanceMatrix();
 
@@ -155,7 +154,6 @@ public interface MultipleAlignmentEnsemble extends ScoresCache {
 	 * Returns the List of MultipleAlignments in the ensemble.
 	 *
 	 * @return List of MultipleAlignment in the ensemble.
-	 * @see #setMultipleAlignments()
 	 */
 	public List<MultipleAlignment> getMultipleAlignments();
 
@@ -165,7 +163,6 @@ public interface MultipleAlignmentEnsemble extends ScoresCache {
 	 * accessing an index of a List
 	 *
 	 * @return MultipleAlignment at the index in the ensemble.
-	 * @see #setMultipleAlignments()
 	 */
 	public MultipleAlignment getMultipleAlignment(int index);
 

@@ -67,7 +67,6 @@ public class MultipleAlignmentEnsembleImpl extends AbstractScoresCache
 	/**
 	 * Default Constructor. Empty ensemble, no structures assigned.
 	 *
-	 * @return MultipleAlignmentEnsemble an empty ensemble instance.
 	 */
 	public MultipleAlignmentEnsembleImpl() {
 
@@ -88,7 +87,6 @@ public class MultipleAlignmentEnsembleImpl extends AbstractScoresCache
 	 * @param structureIdentifiers
 	 *            List of Structure names, that can be parsed by
 	 *            {@link AtomCache}.
-	 * @return MultipleAlignmentEnsemble an ensemble with the structures.
 	 */
 	public MultipleAlignmentEnsembleImpl(
 			List<StructureIdentifier> structureIdentifiers) {
@@ -102,7 +100,6 @@ public class MultipleAlignmentEnsembleImpl extends AbstractScoresCache
 	 *
 	 * @param e
 	 *            MultipleAlignmentEnsemble to copy.
-	 * @return MultipleAlignmentEnsemble identical copy of the input ensemble.
 	 */
 	public MultipleAlignmentEnsembleImpl(MultipleAlignmentEnsembleImpl e) {
 
@@ -153,7 +150,6 @@ public class MultipleAlignmentEnsembleImpl extends AbstractScoresCache
 	 *            Atoms of the second structure
 	 * @param flexible
 	 *            true if the alignment is flexible (use BlockSets)
-	 * @return MultipleAlignmentEnsemble an ensemble
 	 */
 	public MultipleAlignmentEnsembleImpl(AFPChain afp, Atom[] ca1, Atom[] ca2,
 			boolean flexible) {

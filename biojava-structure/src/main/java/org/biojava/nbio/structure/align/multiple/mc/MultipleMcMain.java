@@ -91,7 +91,7 @@ public class MultipleMcMain implements MultipleStructureAligner {
 	/**
 	 * Default constructor.
 	 * Default parameters are used.
-	 * @param pairwise the pairwise structure alignment used to generate the
+	 * @param pairwiseAlgo the pairwise structure alignment used to generate the
 	 * 			multiple alignment seed.
 	 */
 	public MultipleMcMain(StructureAlignment pairwiseAlgo){
@@ -177,7 +177,7 @@ public class MultipleMcMain implements MultipleStructureAligner {
 	 * lowest average RMSD against all others.
 	 * The index of this structure is returned.
 	 *
-	 * @param alignments List double containing all-to-all pairwise alignments
+	 * @param afpAlignments List double containing all-to-all pairwise alignments
 	 * @return int reference index
 	 */
 	private static int chooseReferenceRMSD(List<List<AFPChain>> afpAlignments){
@@ -209,7 +209,7 @@ public class MultipleMcMain implements MultipleStructureAligner {
 	 * It uses the blocks in AFPChain as {@link Block}s in the
 	 * MultipleAlignment, so considers non-topological
 	 * alignments, if the alignment is rigid. If the alignment is flexible,
-	 * it considers the blocks as {@link BlockSets}.
+	 * it considers the blocks as {@link BlockSet}s.
 	 *
 	 * @param afpList the list of pairwise alignments to the reference
 	 * @param atomArrays List of Atoms of the structures
