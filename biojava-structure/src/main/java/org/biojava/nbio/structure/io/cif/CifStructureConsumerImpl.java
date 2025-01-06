@@ -972,9 +972,9 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
 
             DBRef dbRef = new DBRef();
 
-            dbRef.setIdCode(structRefSeq.getPdbxPDBIdCode().get(rowIndex));
-            dbRef.setDbAccession(structRefSeq.getPdbxDbAccession().get(rowIndex));
-            dbRef.setDbIdCode(structRefSeq.getPdbxDbAccession().get(rowIndex));
+            dbRef.setIdCode(structRefSeq.getPdbxPDBIdCode().isDefined()? structRefSeq.getPdbxPDBIdCode().get(rowIndex):null);
+            dbRef.setDbAccession(structRefSeq.getPdbxDbAccession().isDefined()? structRefSeq.getPdbxDbAccession().get(rowIndex):null);
+            dbRef.setDbIdCode(structRefSeq.getPdbxDbAccession().isDefined()? structRefSeq.getPdbxDbAccession().get(rowIndex):null);
             dbRef.setChainName(structRefSeq.getPdbxStrandId().get(rowIndex));
 
             OptionalInt structRefRowIndex = IntStream.range(0, structRef.getRowCount())
@@ -1330,7 +1330,7 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
     private String getEntityDescription(String entityId) {
         return IntStream.range(0, entity.getRowCount())
                 .filter(i -> entity.getId().get(i).equals(entityId))
-                .mapToObj(i -> entity.getPdbxDescription().get(i))
+                .mapToObj(i -> entity.getPdbxDescription().isDefined()? entity.getPdbxDescription().get(i):"")
                 .findFirst()
                 .orElseThrow(() -> new NoSuchElementException("could not find entity with id " + entityId));
     }
