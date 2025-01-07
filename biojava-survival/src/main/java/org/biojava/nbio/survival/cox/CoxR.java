@@ -75,7 +75,7 @@ import java.util.Collections;
  *      weights(n)   :case weights
  *      init         :initial estimate for the coefficients
  *      eps          :tolerance for convergence.  Iteration continues until
- *                      the percent change in loglikelihood is <= eps.
+ *                      the percent change in loglikelihood is &lt;= eps.
  *      chol_tol     : tolerance for the Cholesky decompostion
  *      method       : 0=Breslow, 1=Efron
  *      doscale      : 0=don't scale the X matrix, 1=scale the X matrix

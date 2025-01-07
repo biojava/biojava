@@ -103,8 +103,8 @@ public interface IProfeatProperties {
 	 * Computes and return the position with respect to the sequence where the given distribution of the grouping can be found.<br/>
 	 * Example: "1111122222"<br/>
 	 * For the above example,<br/>
-	 * position of the GROUPING.GROUP1 && DISTRIBUTION.FIRST = 0/10 (because the first occurrence of '1' is at position 0)<br/>
-	 * position of the GROUPING.GROUP1 && DISTRIBUTION.ALL = 4/10 (because all occurrences of '1' happens on and before position 4)<br/>
+	 * position of the GROUPING.GROUP1 &amp; DISTRIBUTION.FIRST = 0/10 (because the first occurrence of '1' is at position 0)<br/>
+	 * position of the GROUPING.GROUP1 &amp; DISTRIBUTION.ALL = 4/10 (because all occurrences of '1' happens on and before position 4)<br/>
 	 *
 	 * @param sequence
 	 * 	a protein sequence consisting of non-ambiguous characters only
