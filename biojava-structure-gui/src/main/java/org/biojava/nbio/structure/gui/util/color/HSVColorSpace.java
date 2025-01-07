@@ -79,9 +79,8 @@ public class HSVColorSpace extends ColorSpace {
 
 
 	}
+
 	/**
-	 * @param type
-	 * @param numcomponents
 	 */
 	public HSVColorSpace() {
 		super(ColorSpace.TYPE_HSV, 3);

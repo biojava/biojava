@@ -154,8 +154,8 @@ implements AlignmentPositionListener, WindowListener {
 	/**
 	 * Constructor using a MultipleAlignment.
 	 *
-	 * @param multAln
-	 * @param colors
+	 * @param msa
+	 * @param jm
 	 */
 	public MultipleAligPanel(MultipleAlignment msa, AbstractAlignmentJmol jm) {
 		this();

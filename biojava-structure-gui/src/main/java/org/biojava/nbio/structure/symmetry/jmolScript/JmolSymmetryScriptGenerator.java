@@ -38,7 +38,7 @@ public abstract class JmolSymmetryScriptGenerator {
 	/**
 	 * Returns an instance of a JmolSymmetryScriptGenerator, based on the symmetry of a structure (factory method)
 	 * @param axisAligner
-	 * @param rotationGroup
+	 * @param name
 	 * @return instance of JmolSymmetryScriptGenerator
 	 */
 	public static JmolSymmetryScriptGenerator getInstance(AxisAligner axisAligner, String name) {

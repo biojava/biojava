@@ -60,7 +60,7 @@ public abstract class ContinuousColorMapperTransform implements ContinuousColorM
 
 	/**
 	 * An arbitrary transform over reals
-	 * @param the input value
+	 * @param value the input value
 	 * @return the transformed value
 	 */
 	public abstract double transform(double value);

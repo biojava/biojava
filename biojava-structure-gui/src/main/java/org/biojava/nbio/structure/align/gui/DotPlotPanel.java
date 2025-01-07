@@ -56,7 +56,6 @@ public class DotPlotPanel extends ScaleableMatrixPanel {
 	/**
 	 *
 	 * @param alignment The alignment to plot
-	 * @param background [Optional]A matrix of 'background colors' over which to draw the alignment.
 	 *
 	 *	Originally designed as a matrix of RMSD values between AFPs, so it is colorized
 	 *	accordingly from red (0) to black (>10).

@@ -43,7 +43,8 @@ import org.biojava.nbio.structure.align.webstart.WebStartMain;
 import org.biojava.nbio.structure.gui.util.StructurePairSelector;
 
 
-/** A Panel that allows user to specify PDB & chain ID, as well as sub-ranges
+/**
+ * A Panel that allows user to specify PDB and chain ID, as well as sub-ranges
  *
  * @author Andreas
  *

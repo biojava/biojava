@@ -19,7 +19,6 @@
  *
  */
 /**
- * <BODY>
  * <P>
  * A general-purpose API for ontologies.
  * These are directed graphs consisting of <code>Term</code> obects.  Each
@@ -30,5 +29,4 @@
  * <P>Some interfaces and implementations from this package are extended in
  * {@link org.biojavax.ontology biojavax} to better facilitate their persistence to
  * biosql.</P>
- * </BODY>
  */
