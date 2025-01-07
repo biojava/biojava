@@ -54,7 +54,7 @@ import java.util.StringTokenizer;
  * the core ontology.
  * </p>
  *
- * <code><pre>
+ * <pre>
  * ...
  * triple	is-a	any
  * triple	has-a	source
@@ -62,7 +62,7 @@ import java.util.StringTokenizer;
  * triple	has-a	predicate
  * (triple,has-a,any)	size	3
  * ...
- * </pre></code>
+ * </pre>
  *
  * <p>
  * The first four lines just associate triple with some type with a predicate

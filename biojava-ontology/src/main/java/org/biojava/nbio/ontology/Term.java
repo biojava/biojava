@@ -32,7 +32,7 @@ import java.util.TreeSet;
 
 
 /**
- * A term in an ontology.  This has an {@link org.biojava.nbio.Annotation Annotation}
+ * A term in an ontology.  This has an {@link Annotation Annotation}
  * which can be used for storing additional human-displayable information.  It
  * is strongly recommended that the Annotation is not used for any machine-readable
  * data -- this should be represented by relations in the ontology instead.
@@ -51,9 +51,7 @@ import java.util.TreeSet;
  * @author Thomas Down
  * @author Matthew Pocock
  * @since 1.4
- * @see org.biojavax.ontology.ComparableTerm
  */
-
 public interface Term extends Annotatable {
 	/**
 	 * ChangeType which indicates that this term's ontology has been
@@ -113,7 +111,6 @@ public interface Term extends Annotatable {
 
 	/**
 	 * Simple in-memory implementation of an ontology term.
-	 * @see org.biojavax.ontology.SimpleComparableTerm
 	 * This can be used to implement Ontology.createTerm
 	 */
 
