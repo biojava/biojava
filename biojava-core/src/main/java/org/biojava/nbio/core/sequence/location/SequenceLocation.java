@@ -31,7 +31,7 @@ import org.biojava.nbio.core.sequence.template.Compound;
 import java.util.List;
 /**
  * A location in a sequence that keeps a reference to its parent sequence
- * @author Scooter Willis <willishf at gmail dot com>
+ * @author Scooter Willis 
  * @author Paolo Pavan
  */
 public class SequenceLocation<S extends AbstractSequence<C>, C extends Compound> extends SimpleLocation {

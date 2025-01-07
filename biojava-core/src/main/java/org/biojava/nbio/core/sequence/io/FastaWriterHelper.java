@@ -39,7 +39,7 @@ import java.util.Collection;
 
 /**
  * The class that should be used to write out fasta file of a sequence collection
- * @author Scooter Willis <willishf at gmail dot com>
+ * @author Scooter Willis 
  */
 public class FastaWriterHelper {
 
@@ -96,7 +96,7 @@ public class FastaWriterHelper {
 	/**
 	 * Write a collection of GeneSequences to a file where if the gene is negative strand it will flip and complement the sequence
 	 * @param outputStream
-	 * @param dnaSequences
+	 * @param geneSequences
 	 * @throws Exception
 	 */
 

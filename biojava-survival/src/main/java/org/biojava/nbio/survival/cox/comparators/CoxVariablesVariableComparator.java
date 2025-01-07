@@ -25,7 +25,7 @@ import org.biojava.nbio.survival.cox.CoxVariables;
 
 /**
  *
- * @author Scooter Willis <willishf at gmail dot com>
+ * @author Scooter Willis 
  */
 public class CoxVariablesVariableComparator implements CoxComparatorInterface {
 

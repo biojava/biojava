@@ -11,7 +11,7 @@
  * Copyright for this code is held jointly by the individual
  * authors.  These should be listed in @author doc comments.
  *
- * @author Karl Nicholas <github:karlnicholas>
+ * @author Karl Nicholas &lt;github:karlnicholas&gt;
  *
  * For more information on the BioJava project and its aims,
  * or to join the biojava-l mailing list, visit the home page
@@ -42,8 +42,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author Karl Nicholas <github:karlnicholas>
- * @author Jacek Grzebyta <github:jgrzebyta>
+ * @author Karl Nicholas &lt;github:karlnicholas&gt;
+ * @author Jacek Grzebyta &lt;github:jgrzebyta&gt;
  */
 public class GenbankProxySequenceReader<C extends Compound> extends StringProxySequenceReader<C> implements FeaturesKeyWordInterface, DatabaseReferenceInterface, FeatureRetriever {
 

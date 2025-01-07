@@ -27,7 +27,7 @@ import org.junit.Test;
 import java.io.IOException;
 
 /**
- * @author Spencer Bliven <sbliven@ucsd.edu>
+ * @author Spencer Bliven sbliven@ucsd.edu
  *
  */
 public class PDBStatusTest {

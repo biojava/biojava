@@ -168,7 +168,7 @@ public class SingleCompoundSequenceReader<C extends Compound> implements ProxySe
 	}
 
 	/**
-	 * Delegates to {@link SequenceMixin#countCompounds(org.biojava.nbio.core.sequence.template.Sequence, C[]) }
+	 * Delegates to {@link SequenceMixin#countCompounds}
 	 */
 
 	@Override

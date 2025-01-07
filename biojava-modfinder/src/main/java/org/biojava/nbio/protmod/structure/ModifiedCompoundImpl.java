@@ -65,7 +65,6 @@ implements ModifiedCompound, Serializable, Comparable<ModifiedCompound> {
 	 * Use this constructor for a modified residue.
 	 * @param modification {@link ProteinModification}.
 	 * @param modifiedResidue modified group.
-	 * @return a {@link ModifiedCompound}.
 	 * @throws IllegalArgumentException if either argument is null.
 	 */
 	public ModifiedCompoundImpl (

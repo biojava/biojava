@@ -28,7 +28,7 @@ public interface IProfeatProperties {
 	/**
 	 * Based on Table 2 of http://nar.oxfordjournals.org/content/34/suppl_2/W32.full.pdf<br/>
 	 * An interface class to generate the properties of a protein sequence based on its converted attributes.<br/>
-	 * The seven different attributes are<p/>
+	 * The seven different attributes are<p>
 	 * Hydrophobicity (Polar, Neutral, Hydrophobicity)<br/>
 	 * Normalized van der Waals volume (Range 0 - 2.78, 2.95 - 4.0, 4.03 - 8.08)<br/>
 	 * Polarity (Value 4.9 - 6.2, 8.0 - 9.2, 10.4 - 13.0)<br/>
@@ -103,8 +103,8 @@ public interface IProfeatProperties {
 	 * Computes and return the position with respect to the sequence where the given distribution of the grouping can be found.<br/>
 	 * Example: "1111122222"<br/>
 	 * For the above example,<br/>
-	 * position of the GROUPING.GROUP1 && DISTRIBUTION.FIRST = 0/10 (because the first occurrence of '1' is at position 0)<br/>
-	 * position of the GROUPING.GROUP1 && DISTRIBUTION.ALL = 4/10 (because all occurrences of '1' happens on and before position 4)<br/>
+	 * position of the GROUPING.GROUP1 &amp; DISTRIBUTION.FIRST = 0/10 (because the first occurrence of '1' is at position 0)<br/>
+	 * position of the GROUPING.GROUP1 &amp; DISTRIBUTION.ALL = 4/10 (because all occurrences of '1' happens on and before position 4)<br/>
 	 *
 	 * @param sequence
 	 * 	a protein sequence consisting of non-ambiguous characters only

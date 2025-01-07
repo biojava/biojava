@@ -374,8 +374,7 @@ public final class RotationAxis {
 	 * @param atoms Some atoms from the protein, used for determining the bounds
 	 *  	  of the axis.
 	 *
-	 * @return The Jmol script, suitable for calls to
-	 * {@link org.biojava.nbio.structure.align.gui.jmol.StructureAlignmentJmol#evalString() jmol.evalString()}
+	 * @return The Jmol script
 	 */
 	public String getJmolScript(Atom[] atoms){
 		return getJmolScript(atoms, 0);
@@ -442,8 +441,7 @@ public final class RotationAxis {
 	 * @param axisID in case of representing more than one axis in the same jmol
 	 * 		  panel, indicate the ID number.
 	 *
-	 * @return The Jmol script, suitable for calls to
-	 * {@link org.biojava.nbio.structure.align.gui.jmol.StructureAlignmentJmol#evalString() jmol.evalString()}
+	 * @return The Jmol script
 	 */
 	public String getJmolScript(Atom[] atoms, int axisID){
 		final double width=.5;// width of JMol object

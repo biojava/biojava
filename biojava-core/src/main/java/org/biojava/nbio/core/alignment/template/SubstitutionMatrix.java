@@ -103,7 +103,7 @@ public interface SubstitutionMatrix<C extends Compound> {
 	 * Rescales the matrix so that to {@link #getMaxValue()} - {@link #getMinValue()} = scale.
 	 *
 	 * @param scale new normalization scale of this matrix
-	 * @throws IllegalArgumentException if scale < 1
+	 * @throws IllegalArgumentException if scale &lt; 1
 	 */
 	SubstitutionMatrix<C> normalizeMatrix(short scale);
 

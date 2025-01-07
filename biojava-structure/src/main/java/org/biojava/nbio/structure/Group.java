@@ -346,7 +346,7 @@ public interface Group extends Serializable {
 	 * The main group (this group) will contain the first altloc (be it the default '.' or 'A' or a mix of '.' and 'A').
 	 * <p>
 	 * This method will return the altloc groups that are not the main group, e.g.:
-	 *
+	 * <ul>
 	 * <li> if '.' (default), 'A' and 'B' altlocs are present in file, the main group will contain
 	 * the default '.' and this method will return 2 altloc groups
 	 * </li>
@@ -354,7 +354,7 @@ public interface Group extends Serializable {
 	 * <li> if 'A' and 'B' are present in file without a default '.' group, then the main group will contain the 'A'
 	 * location whilst this method will return only 1 altloc group with the 'B' location
 	 * </li>
-	 *
+	 * </ul>
 	 * <p>
 	 * Note that atoms with the default altloc (.) are included in all groups. Atoms with other altlocs (typically A, B, etc)
 	 * will be sorted into groups by altloc.

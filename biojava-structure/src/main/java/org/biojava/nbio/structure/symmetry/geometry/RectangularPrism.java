@@ -82,9 +82,6 @@ public class RectangularPrism implements Polyhedron {
 
 	/**
 	 * Returns the vertices of an n-fold polygon of given radius and center
-	 * @param n
-	 * @param radius
-	 * @param center
 	 * @return
 	 */
 	@Override

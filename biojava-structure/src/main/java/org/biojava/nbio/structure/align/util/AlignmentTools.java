@@ -72,7 +72,7 @@ public class AlignmentTools {
 	 * Since algorithms which create non-sequential alignments split the
 	 * alignment into multiple blocks, some computational time can be saved
 	 * by only checking block boundaries for sequentiality. Setting
-	 * <tt>checkWithinBlocks</tt> to <tt>true</tt> makes this function slower,
+	 * <code>checkWithinBlocks</code> to <code>true</code> makes this function slower,
 	 * but detects AFPChains with non-sequential blocks.
 	 *
 	 * Note that this method should give the same results as
@@ -209,7 +209,7 @@ public class AlignmentTools {
 	 * @param <T>
 	 * @param alignmentMap The input function, as a map (see {@link AlignmentTools#alignmentAsMap(AFPChain)})
 	 * @param identity An identity-like function providing the isomorphism between
-	 *  the codomain of alignmentMap (of type <T>) and the domain (type <S>).
+	 *  the codomain of alignmentMap (of type T) and the domain (type S).
 	 * @param k The number of times to apply the alignment
 	 * @return A new alignment. If the input function is not automorphic
 	 *  (one-to-one), then some inputs may map to null, indicating that the
@@ -238,8 +238,6 @@ public class AlignmentTools {
 				image.set(i, post);
 			}
 		}
-
-
 
 		Map<S, T> imageMap = new HashMap<>(alignmentMap.size());
 
@@ -282,7 +280,7 @@ public class AlignmentTools {
 	 */
 	public static int getSymmetryOrder(Map<Integer, Integer> alignment,
 									   final int maxSymmetry, final float minimumMetricChange) {
-		return getSymmetryOrder(alignment, new IdentityMap<Integer>(), maxSymmetry, minimumMetricChange);
+		return getSymmetryOrder(alignment, new IdentityMap<>(), maxSymmetry, minimumMetricChange);
 	}
 	/**
 	 * Tries to detect symmetry in an alignment.
@@ -303,7 +301,7 @@ public class AlignmentTools {
 	 * identity. If <i>n</i> corresponds to the intrinsic order of the alignment,
 	 * this will be small. This algorithm tries increasing values of <i>n</i>
 	 * and looks for abrupt decreases in the root mean squared offset.
-	 * If none are found at <i>n</i><=maxSymmetry, the alignment is reported as
+	 * If none are found at <i>n</i>&lt;=maxSymmetry, the alignment is reported as
 	 * non-symmetric.
 	 *
 	 * @param alignment The alignment to test for symmetry
@@ -314,7 +312,7 @@ public class AlignmentTools {
 	 *  the calculation time and can lead to overfitting.
 	 * @param minimumMetricChange Percent decrease in root mean squared offsets
 	 *  in order to declare symmetry. 0.4f seems to work well for CeSymm.
-	 * @return The order of symmetry of alignment, or 1 if no order <=
+	 * @return The order of symmetry of alignment, or 1 if no order &lt;=
 	 *  maxSymmetry is found.
 	 *
 	 * @see IdentityMap For a simple identity function
@@ -470,9 +468,10 @@ public class AlignmentTools {
 	 * Retrieves the optimum alignment from an AFPChain and returns it as a
 	 * java collection. The result is indexed in the same way as
 	 * {@link AFPChain#getOptAln()}, but has the correct size().
-	 * <pre>
+	 * <pre>{@code
 	 * List<List<List<Integer>>> aln = getOptAlnAsList(AFPChain afpChain);
-	 * aln.get(blockNum).get(structureNum={0,1}).get(pos)</pre>
+	 * aln.get(blockNum).get(structureNum={0,1}).get(pos)
+	 * }</pre>
 	 *
 	 * @param afpChain
 	 * @return
@@ -503,7 +502,7 @@ public class AlignmentTools {
 
 
 	/**
-	 * A Map<K,V> can be viewed as a function from K to V. This class represents
+	 * A {@code Map<K,V>} can be viewed as a function from K to V. This class represents
 	 * the identity function. Getting a value results in the value itself.
 	 *
 	 * <p>The class is a bit inconsistent when representing its contents. On
@@ -850,7 +849,7 @@ public class AlignmentTools {
 	 * @param ca1
 	 * @param ca2 Second set of ca atoms. Will be modified based on the superposition
 	 * @throws StructureException
-	 * @see {@link CECalculator#calc_rmsd(Atom[], Atom[], int, boolean)}
+	 * @see CECalculator#calc_rmsd(Atom[], Atom[], int, boolean)
 	 *  contains much of the same code, but stores results in a CECalculator
 	 *  instance rather than an AFPChain
 	 */
@@ -979,12 +978,13 @@ public class AlignmentTools {
 	 * <p>Note that more concise representations may be possible.</p>
 	 *
 	 * Examples:
+	 * <ul>
 	 * <li>1>2>3>1</li>
 	 * <li>1>2>3>2 4>3</li>
-	 *
+	 * </ul>
 	 * @param alignment The input function, as a map (see {@link AlignmentTools#alignmentAsMap(AFPChain)})
 	 * @param identity An identity-like function providing the isomorphism between
-	 *  the codomain of alignment (of type <T>) and the domain (type <S>).
+	 *  the codomain of alignment (of type T) and the domain (type S).
 	 * @return
 	 */
 	public static <S,T> String toConciseAlignmentString(Map<S,T> alignment, Map<T,S> identity) {
@@ -1076,9 +1076,9 @@ public class AlignmentTools {
 
 	/**
 	 * Method that calculates the number of gaps in each subunit block of an optimal AFP alignment.
-	 *
-	 * INPUT: an optimal alignment in the format int[][][].
-	 * OUTPUT: an int[] array of <order> length containing the gaps in each block as int[block].
+	 * @param optAln
+	 * 				an optimal alignment in the format int[][][]
+	 * @return an int[] array of order length containing the gaps in each block as int[block]
 	 */
 	public static int[] calculateBlockGap(int[][][] optAln){
 
@@ -1197,7 +1197,6 @@ public class AlignmentTools {
 	 * Does NOT rotate anything.
 	 * @param ca
 	 * @return a list of Chains that is built up from the Atoms in the ca array
-	 * @throws StructureException
 	 */
 	public static final List<Chain> getAlignedModel(Atom[] ca){
 

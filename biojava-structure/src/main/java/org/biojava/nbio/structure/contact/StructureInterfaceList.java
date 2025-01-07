@@ -52,7 +52,7 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 	/**
 	 * Default minimum area for a contact between two chains to be considered a
 	 * valid interface.
-	 * @see #removeInterfacesBelowArea(double);
+	 * @see #removeInterfacesBelowArea(double)
 	 */
 	public static final double DEFAULT_MINIMUM_INTERFACE_AREA = 35.0;
 	/**

@@ -30,7 +30,7 @@ import java.util.*;
  * contains information about a certain Component.
  * The Component class uses the extensible enum pattern.
  * You can't instantiate Component directly, instead
- * you have to use one of the {@link register} and {@link of} methods.
+ * you have to use one of the register and {@link #of} methods.
  *
  * @author Jianjiong Gao
  * @since 3.0
@@ -109,7 +109,7 @@ public final class Component {
 	/**
 	 * Get a Component that does not have to occur at terminals. If the
 	 * corresponding component has already been registered, return that one.
-	 * @param pdbccIds possible Protein Data Bank ID.
+	 * @param pdbccId possible Protein Data Bank ID.
 	 * @return a component.
 	 * @throws IllegalArgumentException if pdbccId or type is null,
 	 *  or the pdbccId has been registered as a different type.

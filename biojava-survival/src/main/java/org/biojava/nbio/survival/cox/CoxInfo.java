@@ -32,7 +32,7 @@ import java.util.LinkedHashMap;
 
 /**
  * Holds the results of a cox analysis where calling dump(), toString() will give an output similar to R
- * @author Scooter Willis <willishf at gmail dot com>
+ * @author Scooter Willis 
  */
 public class CoxInfo {
 

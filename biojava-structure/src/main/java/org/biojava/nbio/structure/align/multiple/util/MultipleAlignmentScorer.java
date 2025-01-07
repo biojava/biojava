@@ -304,7 +304,7 @@ public class MultipleAlignmentScorer {
 	 * length.
 	 *
 	 * @param alignment
-	 * @param reference
+	 * @param ref
 	 *            Index of the reference structure
 	 * @return
 	 * @throws StructureException
@@ -427,7 +427,7 @@ public class MultipleAlignmentScorer {
 	 * Complexity: T(n,l) = O(l*n^2), if n=number of structures and l=alignment
 	 * length.
 	 *
-	 * @param transformed
+	 * @param trans
 	 *            List of transformed Atom arrays
 	 * @param d0
 	 *            parameter for the half-score distance

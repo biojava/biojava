@@ -206,7 +206,7 @@ public class ProteinModificationRegistry {
 
 	/**
 	 * Remove a modification from registry.
-	 * @param mod
+	 * @param modification
 	 */
 	public static void unregister(ProteinModification modification) {
 		if (modification==null) throw new IllegalArgumentException("modification == null!");

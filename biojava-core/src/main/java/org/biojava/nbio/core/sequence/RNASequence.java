@@ -39,7 +39,7 @@ import org.biojava.nbio.core.sequence.views.ReversedSequenceView;
 
 /**
  * RNASequence where RNACompoundSet are the allowed values
- * @author Scooter Willis <willishf at gmail dot com>
+ * @author Scooter Willis 
  */
 
 public class RNASequence extends AbstractSequence<NucleotideCompound> {

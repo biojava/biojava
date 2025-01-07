@@ -39,17 +39,17 @@ import java.util.List;
 
 import javax.vecmath.Matrix4d;
 
-/** a class to chain AFPs to an alignment
+/**
+ * A class to chain AFPs to an alignment
  *
  * @author Andreas Prlic
- *
  */
 public class AFPChainer
 {
 	public static final boolean debug = FatCatAligner.debug;
 	// private static final boolean showAlig = false;
 
-	/**
+	/*
 	// Key function: chain (assembly) the AFPs
 	// a AFP (k) is defined as (i, j, k), with i and j are staring points
 	// AFP extension (eg. AFP(k-1) -> AFP(k) ) requiring

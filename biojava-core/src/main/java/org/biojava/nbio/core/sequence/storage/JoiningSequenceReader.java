@@ -56,7 +56,7 @@ public class JoiningSequenceReader<C extends Compound> implements ProxySequenceR
 	private int[] minSequenceIndex;
 
 	/**
-	 * Allows creation of the store from Vargs Sequence<C> objects. CompoundSet
+	 * Allows creation of the store from Vargs {@link Sequence<C>} objects. CompoundSet
 	 * defaults to the first element of the array (assuming there are elements
 	 * available during construction otherwise we will throw an illegal
 	 * state exception).
@@ -66,7 +66,7 @@ public class JoiningSequenceReader<C extends Compound> implements ProxySequenceR
 	}
 
 	/**
-	 * Allows creation of the store from List<Sequence<C>>. CompoundSet
+	 * Allows creation of the store from {@link List<Sequence<C>>}. CompoundSet
 	 * defaults to the first element of the List (assuming there are elements
 	 * available during construction otherwise we will throw an illegal
 	 * state exception).
@@ -217,7 +217,7 @@ public class JoiningSequenceReader<C extends Compound> implements ProxySequenceR
 
 	/**
 	 * Iterator implementation which attempts to move through the 2D structure
-	 * attempting to skip onto the next sequence as & when it is asked to
+	 * attempting to skip onto the next sequence as &amp; when it is asked to
 	 */
 
 	@Override

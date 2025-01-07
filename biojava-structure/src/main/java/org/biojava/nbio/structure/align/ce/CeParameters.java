@@ -342,7 +342,8 @@ public class CeParameters implements ConfigStrucAligParams  {
 
 
 
-	/** Get the Original RMSD threshold from which the alignment optimization is started
+	/**
+	 * Get the Original RMSD threshold from which the alignment optimization is started
 	 *
 	 * @return oRMSDThreshold
 	 */
@@ -353,7 +354,8 @@ public class CeParameters implements ConfigStrucAligParams  {
 
 
 
-	/** Set the Original RMSD threshold from which the alignment optimization is started
+	/**
+	 * Set the Original RMSD threshold from which the alignment optimization is started
 	 *
 	 * @param oRmsdThr the threshold
 	 */
@@ -363,16 +365,17 @@ public class CeParameters implements ConfigStrucAligParams  {
 	}
 
 
-	/** Get the maximum nr of times the (slow) optimiziation of alignment should iterate. Default: unlimited
+	/**
+	 * Get the maximum nr of times the (slow) optimiziation of alignment should iterate. Default: unlimited
 	 *
-	 * @param maxNrIterationsForOptimization
 	 */
 	public int getMaxNrIterationsForOptimization() {
 		return maxNrIterationsForOptimization;
 	}
 
 
-	/** Set the maximum nr of times the (slow) optimiziation of alignment should iterate. Default: unlimited
+	/**
+	 * Set the maximum nr of times the (slow) optimiziation of alignment should iterate. Default: unlimited
 	 *
 	 * @param maxNrIterationsForOptimization
 	 */
@@ -381,7 +384,8 @@ public class CeParameters implements ConfigStrucAligParams  {
 	}
 
 
-	/** Should sequence conservation be considered as part of the alignment? If yes, this weight factor allows to determine how much.
+	/**
+	 * Should sequence conservation be considered as part of the alignment? If yes, this weight factor allows to determine how much.
 	 *  By default this is set to 0, meaning no contribution of the sequence alignment score.
 	 *
 	 * @return seqWeight the weight factor (default 0)
@@ -392,7 +396,8 @@ public class CeParameters implements ConfigStrucAligParams  {
 	}
 
 
-	/** Should sequence conservation be considered as part of the alignment? If yes, this weight factor allows to determine how much.
+	/**
+	 * Should sequence conservation be considered as part of the alignment? If yes, this weight factor allows to determine how much.
 	 *  By default this is set to 0, meaning no contribution of the sequence alignment score.
 	 *
 	 * @param seqWeight the weight factor (default 0)

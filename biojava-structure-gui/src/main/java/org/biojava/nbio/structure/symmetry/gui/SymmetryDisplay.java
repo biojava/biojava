@@ -104,7 +104,7 @@ public class SymmetryDisplay {
 	 * Displays a single structure in a cartoon representation with each
 	 * symmetric repeat colored differently.
 	 *
-	 * @param msa
+	 * @param symmResult
 	 *            the symmetry multiple alignment obtained from CeSymm
 	 * @throws StructureException
 	 */

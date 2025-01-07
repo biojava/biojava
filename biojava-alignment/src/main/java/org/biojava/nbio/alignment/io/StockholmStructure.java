@@ -38,7 +38,8 @@ import java.util.Map;
  * In general, Stockholm File contains the alignment mark-up lines.<br>
  * <br>
  *
- * <Table border="1" align="center">
+ * <table>
+ * <caption></caption>
  * <tr>
  * <td><b>Header Section</b></td>
  * </tr>
@@ -56,18 +57,24 @@ import java.util.Map;
  * Sequence letters may include any characters except whitespace. Gaps may be indicated by "." or "-".<br>
  * Mark-up lines may include any characters except whitespace. Use underscore ("_") instead of space.<br>
  *
- * <Table border="1">
+ * <table>
+ * <caption></caption>
+ * <tr>
  * <th>section field</th>
  * <th>preferred location</th>
+ * </tr>
  * <tr>
  * <td>#=GF &lt;feature&gt; &lt;Generic per-File annotation, free text&gt;</td>
  * <td>Above the alignment</td>
+ * </tr>
  * <tr>
  * <td>#=GC &lt;feature&gt; &lt;Generic per-Column annotation, exactly 1 char per column&gt;</td>
  * <td>Below the alignment</td>
+ * </tr>
  * <tr>
  * <td>#=GS &lt;seqname&gt; &lt;feature&gt; &lt;Generic per-Sequence annotation, free text&gt;</td>
  * <td>Above the alignment or just below the corresponding sequence</td>
+ * </tr>
  * <tr>
  * <td>#=GR &lt;seqname&gt; &lt;feature&gt; &lt;Generic per-Residue annotation, exactly 1 char per residue&gt;</td>
  * <td>Just below the corresponding sequence</td>

@@ -33,12 +33,13 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 
-/** A class to parse the content of an OBO file. It delegates handling of the
+/**
+ * A class to parse the content of an OBO file. It delegates handling of the
  * content to the OBOFileEventListener implementation.
  *
  * This file contains parts of the OBO-Edit file OBOParseEngine, (particularly the encoding and decoding part)
  *
- * http://geneontology.cvs.sourceforge.net/geneontology/go-dev/java/oboedit/sources/org/geneontology/oboedit/dataadapter/OBOParseEngine.java?revision=1.10&view=markup
+ * See <a href="http://geneontology.cvs.sourceforge.net/geneontology/go-dev/java/oboedit/sources/org/geneontology/oboedit/dataadapter/OBOParseEngine.java?revision=1.10&view=markup">link</a>
  * Thanks to the OboEdit developers for giving permission to release this in BioJava.
  *
  *

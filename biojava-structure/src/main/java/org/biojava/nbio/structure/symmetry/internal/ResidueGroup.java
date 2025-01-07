@@ -76,7 +76,7 @@ public class ResidueGroup {
 	 * ResidueGroups {A,B,C}, if A is compatible with B and B is compatible with
 	 * C, then A is not necessarily compatible with C.
 	 *
-	 * @param c2
+	 * @param other
 	 *            second maximally connected component
 	 * @return true if compatible, false otherwise
 	 */

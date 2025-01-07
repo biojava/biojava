@@ -45,7 +45,7 @@ public class AngleOrderDetectorPlus implements OrderDetector {
 	private boolean normalizeError;
 
 	/**
-	 * @param error
+	 * @param angleError
 	 *            maximum angular error, in radians
 	 */
 	public AngleOrderDetectorPlus(double angleError) {
@@ -61,7 +61,7 @@ public class AngleOrderDetectorPlus implements OrderDetector {
 	 *
 	 * @param maxOrder
 	 *            maximum order to consider
-	 * @param error
+	 * @param angleError
 	 *            maximum angular error, in radians
 	 */
 	public AngleOrderDetectorPlus(int maxOrder, double angleError) {
@@ -82,7 +82,7 @@ public class AngleOrderDetectorPlus implements OrderDetector {
 	 *
 	 * @param maxOrder
 	 *            maximum order to consider
-	 * @param error
+	 * @param angleError
 	 *            maximum angular error
 	 * @param normalize
 	 *            indicates whether error should be normalized by the order

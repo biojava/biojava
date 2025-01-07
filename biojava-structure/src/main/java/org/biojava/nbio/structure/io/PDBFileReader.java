@@ -30,27 +30,17 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * <p>
  *  The wrapper class for parsing a PDB file.
- *  </p>
  *
- *
- *  <p>
+ * <p>
  *  Several flags can be set for this class
- *  <ul>
- *
- * <li> {@link #setAutoFetch(boolean)} - if the PDB file can not be found locally, should it be fetched
- *  from the PDB ftp servers? (default:false)</li>
- *  <li> Other parameters can be set using the {@link #setFileParsingParameters(FileParsingParameters)}</li>
- *  </ul>
- *  </p>
- *
- *
+ * <ul>
+ * <li> Parameters can be set using the {@link #setFileParsingParameters(FileParsingParameters)}</li>
+ * </ul>
  *
  *<h2>Example</h2>
  * <p>
  * Q: How can I get a Structure object from a PDB file?
- * </p>
  * <p>
  * A:
  * <pre>

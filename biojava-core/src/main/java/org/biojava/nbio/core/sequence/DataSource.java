@@ -35,8 +35,8 @@ package org.biojava.nbio.core.sequence;
  * General database identifier       gnl|database|identifier
  * NCBI Reference Sequence           ref|accession|locus
  * Local Sequence identifier         lcl|identifier
- * </pr>
- * @author Scooter Willis <willishf at gmail dot com>
+ * </pre>
+ * @author Scooter Willis 
  */
 
 public enum DataSource {

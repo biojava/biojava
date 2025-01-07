@@ -64,7 +64,7 @@ public class BitSequenceReader<C extends Compound> implements ProxySequenceReade
 	}
 
 	/**
-	 * Class is immutable & so this is unsupported
+	 * Class is immutable, so this is unsupported
 	 */
 	@Override
 	public void setCompoundSet(CompoundSet<C> compoundSet) {
@@ -72,7 +72,7 @@ public class BitSequenceReader<C extends Compound> implements ProxySequenceReade
 	}
 
 	/**
-	 * Class is immutable & so this is unsupported
+	 * Class is immutable, so this is unsupported
 	 */
 	@Override
 	public void setContents(String sequence) throws CompoundNotFoundException {

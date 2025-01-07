@@ -32,7 +32,7 @@ import static org.junit.Assert.assertEquals;
 
 /**
  *
- * @author Scooter Willis <willishf at gmail dot com>
+ * @author Scooter Willis 
  */
 public class GenericFastaHeaderParserTest {
 
@@ -52,7 +52,7 @@ public class GenericFastaHeaderParserTest {
 	 * NCBI Reference Sequence           ref|accession|locus
 	 * Local Sequence identifier         lcl|identifier
 	 *
-	 * @author Scooter Willis <willishf at gmail dot com>
+	 * @author Scooter Willis 
 	 */
 	@Test
 	public void testParseHeader() throws CompoundNotFoundException {

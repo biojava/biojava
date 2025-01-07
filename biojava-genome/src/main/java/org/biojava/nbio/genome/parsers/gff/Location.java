@@ -409,9 +409,9 @@ public class Location implements Iterable<Location>
 	 * The part of this location before the specified position. If position is negative,
 	 * count backwards from the end.
 	 * <br><br>
-	 * For position >= 0, return Location( start, start + position ).
+	 * For position &gt;= 0, return Location( start, start + position ).
 	 * <br>
-	 * For position < 0, return Location( start, end + position ).
+	 * For position &lt; 0, return Location( start, end + position ).
 	 * <br>
 	 * @return New location from start of this location to directly before position.
 	 * @param position Where the prefix ends.
@@ -451,9 +451,9 @@ public class Location implements Iterable<Location>
 	 * The part of this location after the specified position. If position is negative, count backwards
 	 * from the end.
 	 * <br><br>
-	 * For position >= 0, return Location( start + position, end ).
+	 * For position &gt;= 0, return Location( start + position, end ).
 	 * <br>
-	 * For position < 0, return Location( end - position, end ).
+	 * For position &lt; 0, return Location( end - position, end ).
 	 * <br>
 	 * @return New location from position to end of this location.
 	 * @param position Where the suffix starts.

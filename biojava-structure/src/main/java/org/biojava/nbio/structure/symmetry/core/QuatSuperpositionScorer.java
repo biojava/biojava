@@ -40,7 +40,7 @@ public class QuatSuperpositionScorer {
 	 * TM score: Yang Zhang and Jeffrey Skolnick, PROTEINS: Structure, Function, and Bioinformatics 57:702–710 (2004)
 	 * @param subunits subunits to be scored
 	 * @param transformation transformation matrix
-	 * @param permutations permutation that determines which subunits are superposed
+	 * @param permutation permutation that determines which subunits are superposed
 	 * @return
 	 */
 	public static QuatSymmetryScores calcScores(QuatSymmetrySubunits subunits, Matrix4d transformation, List<Integer> permutation) {

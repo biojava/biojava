@@ -58,7 +58,7 @@ public interface Profile<S extends Sequence<C>, C extends Compound> extends Iter
 	 *
 	 * @param listIndex index of sequence in profile
 	 * @return desired sequence
-	 * @throws IndexOutOfBoundsException if listIndex < 1 or listIndex > number of sequences
+	 * @throws IndexOutOfBoundsException if listIndex &lt; 1 or listIndex &gt; number of sequences
 	 */
 	AlignedSequence<S, C> getAlignedSequence(int listIndex);
 
@@ -101,8 +101,8 @@ public interface Profile<S extends Sequence<C>, C extends Compound> extends Iter
 	 * @param listIndex index of sequence in profile
 	 * @param alignmentIndex column index within an alignment
 	 * @return the sequence element
-	 * @throws IndexOutOfBoundsException if listIndex < 1, listIndex > number of sequences, alignmentIndex < 1, or
-	 *     alignmentIndex > {@link #getLength()}
+	 * @throws IndexOutOfBoundsException if listIndex &lt; 1, listIndex &gt; number of sequences, alignmentIndex &lt; 1, or
+	 *     alignmentIndex &gt; {@link #getLength()}
 	 */
 	C getCompoundAt(int listIndex, int alignmentIndex);
 
@@ -113,7 +113,7 @@ public interface Profile<S extends Sequence<C>, C extends Compound> extends Iter
 	 * @param sequence either an {@link AlignedSequence} or an original {@link Sequence}
 	 * @param alignmentIndex column index within an alignment
 	 * @return the sequence element
-	 * @throws IndexOutOfBoundsException if alignmentIndex < 1 or alignmentIndex > {@link #getLength()}
+	 * @throws IndexOutOfBoundsException if alignmentIndex &lt; 1 or alignmentIndex &gt; {@link #getLength()}
 	 */
 	C getCompoundAt(S sequence, int alignmentIndex);
 
@@ -122,7 +122,7 @@ public interface Profile<S extends Sequence<C>, C extends Compound> extends Iter
 	 *
 	 * @param alignmentIndex column index within an alignment
 	 * @return list of counts
-	 * @throws IndexOutOfBoundsException if alignmentIndex < 1 or alignmentIndex > {@link #getLength()}
+	 * @throws IndexOutOfBoundsException if alignmentIndex &lt; 1 or alignmentIndex &gt; {@link #getLength()}
 	 */
 	int[] getCompoundCountsAt(int alignmentIndex);
 
@@ -132,7 +132,7 @@ public interface Profile<S extends Sequence<C>, C extends Compound> extends Iter
 	 * @param alignmentIndex column index within an alignment
 	 * @param compounds list of compounds to count
 	 * @return corresponding list of counts
-	 * @throws IndexOutOfBoundsException if alignmentIndex < 1 or alignmentIndex > {@link #getLength()}
+	 * @throws IndexOutOfBoundsException if alignmentIndex &lt; 1 or alignmentIndex &gt; {@link #getLength()}
 	 */
 	int[] getCompoundCountsAt(int alignmentIndex, List<C> compounds);
 
@@ -141,7 +141,7 @@ public interface Profile<S extends Sequence<C>, C extends Compound> extends Iter
 	 *
 	 * @param alignmentIndex column index within an alignment
 	 * @return the sequence elements
-	 * @throws IndexOutOfBoundsException if alignmentIndex < 1 or alignmentIndex > {@link #getLength()}
+	 * @throws IndexOutOfBoundsException if alignmentIndex &lt; 1 or alignmentIndex &gt; {@link #getLength()}
 	 */
 	List<C> getCompoundsAt(int alignmentIndex);
 
@@ -157,7 +157,7 @@ public interface Profile<S extends Sequence<C>, C extends Compound> extends Iter
 	 *
 	 * @param alignmentIndex column index within an alignment
 	 * @return list of fractional weights
-	 * @throws IndexOutOfBoundsException if alignmentIndex < 1 or alignmentIndex > {@link #getLength()}
+	 * @throws IndexOutOfBoundsException if alignmentIndex &lt; 1 or alignmentIndex &gt; {@link #getLength()}
 	 */
 	float[] getCompoundWeightsAt(int alignmentIndex);
 
@@ -167,7 +167,7 @@ public interface Profile<S extends Sequence<C>, C extends Compound> extends Iter
 	 * @param alignmentIndex column index within an alignment
 	 * @param compounds list of compounds to count
 	 * @return corresponding list of fractional weights
-	 * @throws IndexOutOfBoundsException if alignmentIndex < 1 or alignmentIndex > {@link #getLength()}
+	 * @throws IndexOutOfBoundsException if alignmentIndex &lt; 1 or alignmentIndex &gt; {@link #getLength()}
 	 */
 	float[] getCompoundWeightsAt(int alignmentIndex, List<C> compounds);
 
@@ -177,7 +177,7 @@ public interface Profile<S extends Sequence<C>, C extends Compound> extends Iter
 	 *
 	 * @param alignmentIndex column index within an alignment
 	 * @return the sequence indices
-	 * @throws IndexOutOfBoundsException if alignmentIndex < 1 or alignmentIndex > {@link #getLength()}
+	 * @throws IndexOutOfBoundsException if alignmentIndex &lt; 1 or alignmentIndex &gt; {@link #getLength()}
 	 */
 	int[] getIndicesAt(int alignmentIndex);
 
@@ -236,7 +236,7 @@ public interface Profile<S extends Sequence<C>, C extends Compound> extends Iter
 	 *
 	 * @param alignmentIndex column index within an alignment
 	 * @return true if any {@link AlignedSequence} has a gap at the given index
-	 * @throws IndexOutOfBoundsException if alignmentIndex < 1 or alignmentIndex > {@link #getLength()}
+	 * @throws IndexOutOfBoundsException if alignmentIndex &lt; 1 or alignmentIndex &gt; {@link #getLength()}
 	 */
 	boolean hasGap(int alignmentIndex);
 

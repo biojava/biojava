@@ -47,7 +47,7 @@ import java.util.*;
 /**
  *
  * The base class for DNA, RNA and Protein sequences.
- * @param <C>
+ * @param <C> the compound type
  */
 public abstract class AbstractSequence<C extends Compound> implements Sequence<C> {
 

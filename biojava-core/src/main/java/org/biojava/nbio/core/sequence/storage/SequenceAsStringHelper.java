@@ -29,7 +29,7 @@ import java.util.List;
 /**
  * This is a common method that can be used across multiple storage/proxy implementations to
  * handle Negative strand and other interesting elements of sequence data.
- * @author Scooter Willis <willishf at gmail dot com>
+ * @author Scooter Willis 
  */
 public class SequenceAsStringHelper<C extends Compound> {
 

@@ -23,7 +23,7 @@ package org.biojava.nbio.survival.data;
 
 /**
  *
- * @author Scooter Willis <willishf at gmail dot com>
+ * @author Scooter Willis 
  */
 public interface ChangeValue {
 

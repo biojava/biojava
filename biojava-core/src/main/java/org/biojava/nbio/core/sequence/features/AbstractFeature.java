@@ -36,7 +36,7 @@ import java.util.Map;
  * A feature is currently any descriptive item that can be associated with a sequence position(s)
  * A feature has a type and a source which is currently a string to allow flexibility for the user
  * Ideally well defined features should have a class to describe attributes of that feature
- * @author Scooter Willis <willishf at gmail dot com>
+ * @author Scooter Willis 
  */
 public abstract class AbstractFeature<S extends AbstractSequence<C>, C extends Compound>
 		implements FeatureInterface<S, C> {

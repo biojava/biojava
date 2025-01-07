@@ -35,7 +35,7 @@ import java.util.Map;
 /**
  * An interface to generate some basic physico-chemical properties of protein sequences.<br/>
  * The following properties could be generated:
- * <p/>
+ * <p>
  * Molecular weight<br/>
  * Absorbance<br/>
  * Extinction coefficient<br/>
@@ -258,7 +258,7 @@ public interface IPeptideProperties{
 	 * Returns the net charge of sequence at pH 7. The sequence argument must be
 	 * a protein sequence consisting of only non-ambiguous characters.
 	 * The net charge will be computed using the approach stated in
-	 * <a href="http://www.innovagen.se/custom-peptide-synthesis/peptide-property-calculator/peptide-property-calculator-notes.asp#NetCharge>here</a>
+	 * <a href="http://www.innovagen.se/custom-peptide-synthesis/peptide-property-calculator/peptide-property-calculator-notes.asp#NetCharge">here</a>
 	 *
 	 * pKa values used will be either
 	 * those used by Expasy which referenced "Electrophoresis 1994, 15, 529-539"

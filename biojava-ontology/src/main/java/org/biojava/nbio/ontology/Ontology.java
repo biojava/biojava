@@ -40,7 +40,6 @@ import java.util.*;
  * @author Matthew Pocock
  *
  * @since 1.4
- * @see org.biojavax.ontology.ComparableOntology
  */
 
 public interface Ontology  {
@@ -129,7 +128,6 @@ public interface Ontology  {
 	 *         some other constraint of this implementation.
 	 * @throws AlreadyExistsException if a term of this name already exists
 	 * @return The newly created term.
-	 * @throws ChangeVetoException
 	 */
 
 	public Term createTerm(String name)
@@ -148,7 +146,6 @@ public interface Ontology  {
 	 *         some other constraint of this implementation.
 	 * @throws AlreadyExistsException if a term of this name already exists
 	 * @return The newly created term.
-	 * @throws ChangeVetoException
 	 */
 
 	public Term createTerm(String name, String description)
@@ -168,7 +165,6 @@ public interface Ontology  {
 	 *         some other constraint of this implementation.
 	 * @throws AlreadyExistsException if a term of this name already exists
 	 * @return The newly created term.
-	 * @throws ChangeVetoException
 	 */
 
 	public Term createTerm(String name, String description, Object[] synonyms)
@@ -187,7 +183,6 @@ public interface Ontology  {
 	 *         some other constraint of this implementation.
 	 * @throws AlreadyExistsException if a term of this name already exists
 	 * @return The newly created term.
-	 * @throws ChangeVetoException
 	 */
 
 	public Variable createVariable(String name, String description)
@@ -208,7 +203,6 @@ public interface Ontology  {
 	 * @param t  the Term to import
 	 * @param localName  the local name to import it under, optionally null
 	 * @return a Term
-	 * @throws ChangeVetoException
 	 * @throws IllegalArgumentException
 	 */
 
@@ -228,7 +222,6 @@ public interface Ontology  {
 	 * @return  a new Triple over these three terms
 	 * @throws AlreadyExistsException if a triple already exists with the same
 	 *      subject, object and predicate, regardless of the name and description
-	 * @throws ChangeVetoException
 	 * @throws NullPointerException if subject, object or predicate are null
 	 * @throws IllegalArgumentException if subject, object or predicate are not all
 	 *      from the same ontology
@@ -251,7 +244,6 @@ public interface Ontology  {
 	/**
 	 * Remove a term from an ontology, together with all triples which refer to it.
 	 * @param t
-	 * @throws ChangeVetoException
 	 */
 
 	public void deleteTerm(Term t) ;

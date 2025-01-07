@@ -194,7 +194,7 @@ public class MultipleAlignmentWriter {
 	 * Converts the transformation Matrices of the alignment into a String
 	 * output.
 	 *
-	 * @param afpChain
+	 * @param alignment
 	 * @return String transformation Matrices
 	 */
 	public static String toTransformMatrices(MultipleAlignment alignment) {
@@ -289,7 +289,7 @@ public class MultipleAlignmentWriter {
 	 * ATOM   2004  CA  ARG     4      32.662 -25.111   7.172  132 ARG
 	 * ATOM   2005  CA  GLY     5      29.121 -25.194   8.602  133 ARG
 	 *
-	 * Column 1 -30: Atom & Residue records of query sequence.
+	 * Column 1 -30: Atom and Residue records of query sequence.
 	 * Column 31-54: Coordinates of atoms in query copied from corresponding atoms in template.
 	 * Column 55-59: Corresponding residue number in template based on alignment
 	 * Column 60-64: Corresponding residue name in template

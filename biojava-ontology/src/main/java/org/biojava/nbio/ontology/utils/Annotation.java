@@ -53,7 +53,6 @@ import java.util.Set;
  *
  * @author Matthew Pocock
  * @author Thomas Down
- * @see org.biojavax.RichAnnotation
  *
  *
  * @since 1.0
@@ -96,8 +95,6 @@ public interface Annotation  {
 	 * @param value the new value for this key
 	 * @throws IllegalArgumentException if the property <code>key</code> is not
 	 *         legal
-	 * @throws ChangeVetoException if this annotation object can't be changed, or
-	 *         if the change was vetoed.
 	 */
 	void setProperty(Object key, Object value)
 	;
@@ -108,7 +105,6 @@ public interface Annotation  {
 	 *
 	 * @param key the key object
 	 * @throws NoSuchElementException if the property doesn't exist
-	 * @throws ChangeVetoException if the change is vetoed
 	 * @since 1.3
 	 *
 	 */
@@ -147,7 +143,7 @@ public interface Annotation  {
 	 * A really useful empty and immutable annotation object.
 	 * </p>
 	 *
-	 * Be careful when stooring Annotation arguments to
+	 * Be careful when storing Annotation arguments to
 	 *  constructors. It is possible that you have been passed EMPTY_ANNOTATION but
 	 * that code later on will access this object believing it to be
 	 * mutable. For example, the SeqIO factory code clones some

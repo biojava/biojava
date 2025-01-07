@@ -72,7 +72,7 @@ public interface Block extends ScoresCache {
 	 * alignRes.get(structure).get(residue) = alignRes.get(size).get(length).
 	 *
 	 * @return List a double List of aligned residues for each structure.
-	 * @see #setAlignRes()
+	 * @see #setAlignRes(List)
 	 */
 	public List<List<Integer>> getAlignRes();
 
@@ -89,7 +89,7 @@ public interface Block extends ScoresCache {
 	 * Returns the total number of aligned positions (columns) in the Block.
 	 *
 	 * @return int number of aligned residues.
-	 * @see #getCoreLength();
+	 * @see #getCoreLength()
 	 * @see #size()
 	 */
 	public int length();
@@ -108,7 +108,6 @@ public interface Block extends ScoresCache {
 	 * Block.
 	 *
 	 * @return int number of aligned residues.
-	 * @see #updateCoreLength()
 	 * @see #length()
 	 * @see #size()
 	 */

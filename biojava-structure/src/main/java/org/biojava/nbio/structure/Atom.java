@@ -48,7 +48,7 @@ public interface Atom extends Cloneable, PDBRecord {
 	 * @param s  a trimmed String specifying the name value
 	 * @see #getName
 	 */
-	public void   setName(String s);
+	void   setName(String s);
 
 	/**
 	 * Get atom name, e.g. "CA".
@@ -57,42 +57,42 @@ public interface Atom extends Cloneable, PDBRecord {
 	 * @return a trimmed String representing the name value
 	 * @see #setName
 	 */
-	public String getName();
+	String getName();
 
 	/**
 	 * Set element of the atom name, e.g. {@link Element#Fe}
 	 * @param e  an Element enumeration
 	 * @see #getElement
 	 */
-	public void   setElement(Element e);
+	void   setElement(Element e);
 
 	/**
 	 * Get element of the atom, e.g. {@link Element#Ca}
 	 * @return an Element enumeration
 	 * @see #setElement
 	 */
-	public Element getElement();
+	Element getElement();
 
 	/**
 	 * Set PDB atom number.
 	 * @param i  an int specifying the PDBserial value
 	 * @see #getPDBserial
 	 */
-	public void setPDBserial(int i) ;
+	void setPDBserial(int i) ;
 
 	/**
 	 * Get PDB atom number.
 	 * @return an int representing the PDBserial value
 	 * @see #setPDBserial
 	 */
-	public int  getPDBserial() ;
+	int  getPDBserial() ;
 
 	/**
 	 * Set the coordinates.
 	 * @param c  an array of doubles specifying the coords value
 	 * @see #getCoords
 	 */
-	public void    setCoords(double[] c);
+	void    setCoords(double[] c);
 
 	/**
 	 * Get the coordinates.
@@ -100,7 +100,7 @@ public interface Atom extends Cloneable, PDBRecord {
 	 * @see #setCoords
 	 * @see #getCoordsAsPoint3d()
 	 */
-	public double[] getCoords() ;
+	double[] getCoords() ;
 
 	/**
 	 * Get the coordinates.
@@ -110,56 +110,56 @@ public interface Atom extends Cloneable, PDBRecord {
 	 * @return a reference to the Point3d coordinates
 	 * @see #getCoords()
 	 */
-	public Point3d getCoordsAsPoint3d();
+	Point3d getCoordsAsPoint3d();
 
 	/**
 	 * Set the X coordinate.
 	 * @param x  a double
 	 * @see #getX()
 	 */
-	public void setX(double x);
+	void setX(double x);
 
 	/**
 	 * Set the Y coordinate.
 	 * @param y  a double
 	 * @see #getY()
 	 */
-	public void setY(double y);
+	void setY(double y);
 
 	/**
 	 * Set the Z coordinate.
 	 * @param z  a double
 	 * @see #getZ()
 	 */
-	public void setZ(double z);
+	void setZ(double z);
 
 	/**
 	 * Get coordinate X.
 	 * @return a double
 	 * @see #setX(double)
 	 */
-	public double getX() ;
+	double getX() ;
 
 	/**
 	 * Get coordinate Y.
 	 * @return a double
 	 * @see #setY(double)
 	 */
-	public double getY() ;
+	double getY() ;
 
 	/**
 	 * Get coordinate Z.
 	 * @return a double
 	 * @see #setZ(double)
 	 */
-	public double getZ() ;
+	double getZ() ;
 
 	/**
 	 * Set alternate Location.
 	 * @param c  a Character object specifying the alt loc value
 	 * @see #getAltLoc
 	 */
-	public void setAltLoc(Character c);
+	void setAltLoc(Character c);
 
 	/**
 	 * Get alternate Location.
@@ -167,41 +167,41 @@ public interface Atom extends Cloneable, PDBRecord {
 	 * is represented by ' ' (space character, ascii 32).
 	 * @see #setAltLoc
 	 */
-	public Character getAltLoc();
+	Character getAltLoc();
 
 	/**
 	 * Set occupancy.
 	 * @param occupancy  a float specifying the occupancy value
 	 * @see #getOccupancy
 	 */
-	public void setOccupancy(float occupancy) ;
+	void setOccupancy(float occupancy) ;
 
 	/**
 	 * Get occupancy.
 	 * @return a float representing the occupancy value
 	 * @see #setOccupancy
 	 */
-	public float getOccupancy();
+	float getOccupancy();
 
 	/**
 	 * Set temp factor .
 	 * @param temp  a float specifying the temp factor value
 	 * @see #getTempFactor
 	 */
-	public void   setTempFactor(float temp) ;
+	void   setTempFactor(float temp) ;
 
 	/**
 	 * Get temp factor.
 	 * @return a float representing the temp factor value
 	 * @see #setTempFactor
 	 */
-	public float getTempFactor() ;
+	float getTempFactor() ;
 
 	/**
 	 * Return an identical copy of this  object .
 	 * @return  an identical copy of this  object
 	 */
-	public Object clone();
+	Object clone();
 
 	/**
 	 * Set the back-reference to its parent Group.
@@ -209,7 +209,7 @@ public interface Atom extends Cloneable, PDBRecord {
 	 * @see #getGroup()
 	 */
 
-	public void setGroup(Group parent);
+	void setGroup(Group parent);
 
 	/**
 	 * Return the parent Group of the Atom.
@@ -217,28 +217,27 @@ public interface Atom extends Cloneable, PDBRecord {
 	 * @return Group the parent Group of the Atom, or null
 	 * @see #setGroup(Group)
 	 */
-	public Group getGroup();
+	Group getGroup();
 
 	/**
 	 * Add a bond
 	 * @param bond to be added
 	 * @see #getBonds()
 	 */
-	public void addBond(Bond bond);
+	void addBond(Bond bond);
 
 	/**
 	 * Get all {@link Bond}s this atom is part of.
 	 *
 	 * @return a list of {@link Bond}s or null if no bonds exist for this Atom
 	 */
-	public List<Bond> getBonds();
+	List<Bond> getBonds();
 
 	/**
 	 * Sets the bonds
 	 * @param bonds
 	 */
-	public void setBonds(List<Bond> bonds);
-
+	void setBonds(List<Bond> bonds);
 
 	/**
 	 * Test if another atom has a bond to this atom
@@ -246,19 +245,18 @@ public interface Atom extends Cloneable, PDBRecord {
 	 * @param other
 	 * @return
 	 */
-	public boolean hasBond(Atom other);
+	boolean hasBond(Atom other);
 
 	/**
 	 * Get the charge of this atom
 	 *
 	 * @return a the integer charge.
 	 */
-	public short getCharge();
+	short getCharge();
 
 	/**
 	 * Set the charge of this atom
 	 *
-	 * @return void.
 	 */
-	public void setCharge(short charge);
+	void setCharge(short charge);
 }

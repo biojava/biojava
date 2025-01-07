@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on 3/1/2010
- * @author Scooter Willis <willishf at gmail dot com>
+ * @author Scooter Willis 
  */
 
 package org.biojava.nbio.core.sequence;

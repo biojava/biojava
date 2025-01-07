@@ -78,7 +78,7 @@ public class SubstitutionMatrixHelper implements Serializable {
 	}
 
 	/**
-	 * Returns Blosum 100 matrix by Henikoff & Henikoff
+	 * Returns Blosum 100 matrix by Henikoff &amp; Henikoff
 	 * @return Blosum 100 matrix
 	 */
 	public static SubstitutionMatrix<AminoAcidCompound> getBlosum100() {
@@ -86,7 +86,7 @@ public class SubstitutionMatrixHelper implements Serializable {
 	}
 
 	/**
-	 * Returns Blosum 30 matrix by Henikoff & Henikoff
+	 * Returns Blosum 30 matrix by Henikoff &amp; Henikoff
 	 * @return Blosum 30 matrix
 	 */
 	public static SubstitutionMatrix<AminoAcidCompound> getBlosum30() {
@@ -94,7 +94,7 @@ public class SubstitutionMatrixHelper implements Serializable {
 	}
 
 	/**
-	 * Returns Blosum 35 matrix by Henikoff & Henikoff
+	 * Returns Blosum 35 matrix by Henikoff &amp; Henikoff
 	 * @return Blosum 35 matrix
 	 */
 	public static SubstitutionMatrix<AminoAcidCompound> getBlosum35() {
@@ -102,7 +102,7 @@ public class SubstitutionMatrixHelper implements Serializable {
 	}
 
 	/**
-	 * Returns Blosum 40 matrix by Henikoff & Henikoff
+	 * Returns Blosum 40 matrix by Henikoff &amp; Henikoff
 	 * @return Blosum 40 matrix
 	 */
 	public static SubstitutionMatrix<AminoAcidCompound> getBlosum40() {
@@ -110,7 +110,7 @@ public class SubstitutionMatrixHelper implements Serializable {
 	}
 
 	/**
-	 * Returns Blosum 45 matrix by Henikoff & Henikoff
+	 * Returns Blosum 45 matrix by Henikoff &amp; Henikoff
 	 * @return Blosum 45 matrix
 	 */
 	public static SubstitutionMatrix<AminoAcidCompound> getBlosum45() {
@@ -118,7 +118,7 @@ public class SubstitutionMatrixHelper implements Serializable {
 	}
 
 	/**
-	 * Returns Blosum 50 matrix by Henikoff & Henikoff
+	 * Returns Blosum 50 matrix by Henikoff &amp; Henikoff
 	 * @return Blosum 50 matrix
 	 */
 	public static SubstitutionMatrix<AminoAcidCompound> getBlosum50() {
@@ -126,7 +126,7 @@ public class SubstitutionMatrixHelper implements Serializable {
 	}
 
 	/**
-	 * Returns Blosum 55 matrix by Henikoff & Henikoff
+	 * Returns Blosum 55 matrix by Henikoff &amp; Henikoff
 	 * @return Blosum 55 matrix
 	 */
 	public static SubstitutionMatrix<AminoAcidCompound> getBlosum55() {
@@ -134,7 +134,7 @@ public class SubstitutionMatrixHelper implements Serializable {
 	}
 
 	/**
-	 * Returns Blosum 60 matrix by Henikoff & Henikoff
+	 * Returns Blosum 60 matrix by Henikoff &amp; Henikoff
 	 * @return Blosum 60 matrix
 	 */
 	public static SubstitutionMatrix<AminoAcidCompound> getBlosum60() {
@@ -142,7 +142,7 @@ public class SubstitutionMatrixHelper implements Serializable {
 	}
 
 	/**
-	 * Returns Blosum 62 matrix by Henikoff & Henikoff
+	 * Returns Blosum 62 matrix by Henikoff &amp; Henikoff
 	 * @return Blosum 62 matrix
 	 */
 	public static SubstitutionMatrix<AminoAcidCompound> getBlosum62() {
@@ -150,7 +150,7 @@ public class SubstitutionMatrixHelper implements Serializable {
 	}
 
 	/**
-	 * Returns Blosum 65 matrix by Henikoff & Henikoff
+	 * Returns Blosum 65 matrix by Henikoff &amp; Henikoff
 	 * @return Blosum 65 matrix
 	 */
 	public static SubstitutionMatrix<AminoAcidCompound> getBlosum65() {
@@ -158,7 +158,7 @@ public class SubstitutionMatrixHelper implements Serializable {
 	}
 
 	/**
-	 * Returns Blosum 70 matrix by Henikoff & Henikoff
+	 * Returns Blosum 70 matrix by Henikoff &amp; Henikoff
 	 * @return Blosum 70 matrix
 	 */
 	public static SubstitutionMatrix<AminoAcidCompound> getBlosum70() {
@@ -166,7 +166,7 @@ public class SubstitutionMatrixHelper implements Serializable {
 	}
 
 	/**
-	 * Returns Blosum 75 matrix by Henikoff & Henikoff
+	 * Returns Blosum 75 matrix by Henikoff &amp; Henikoff
 	 * @return Blosum 75 matrix
 	 */
 	public static SubstitutionMatrix<AminoAcidCompound> getBlosum75() {
@@ -174,7 +174,7 @@ public class SubstitutionMatrixHelper implements Serializable {
 	}
 
 	/**
-	 * Returns Blosum 80 matrix by Henikoff & Henikoff
+	 * Returns Blosum 80 matrix by Henikoff &amp; Henikoff
 	 * @return Blosum 80 matrix
 	 */
 	public static SubstitutionMatrix<AminoAcidCompound> getBlosum80() {
@@ -182,7 +182,7 @@ public class SubstitutionMatrixHelper implements Serializable {
 	}
 
 	/**
-	 * Returns Blosum 85 matrix by Henikoff & Henikoff
+	 * Returns Blosum 85 matrix by Henikoff &amp; Henikoff
 	 * @return Blosum 85 matrix
 	 */
 	public static SubstitutionMatrix<AminoAcidCompound> getBlosum85() {
@@ -190,7 +190,7 @@ public class SubstitutionMatrixHelper implements Serializable {
 	}
 
 	/**
-	 * Returns Blosum 90 matrix by Henikoff & Henikoff
+	 * Returns Blosum 90 matrix by Henikoff &amp; Henikoff
 	 * @return Blosum 90 matrix
 	 */
 	public static SubstitutionMatrix<AminoAcidCompound> getBlosum90() {
@@ -198,7 +198,7 @@ public class SubstitutionMatrixHelper implements Serializable {
 	}
 
 	/**
-	 * Returns PAM 250 matrix by Gonnet, Cohen & Benner
+	 * Returns PAM 250 matrix by Gonnet, Cohen &amp; Benner
 	 * @return Gonnet 250 matrix
 	 */
 	public static SubstitutionMatrix<AminoAcidCompound> getGonnet250() {

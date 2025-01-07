@@ -259,10 +259,10 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	 *   Load the requested ID from the PDB's obsolete repository
 	 * <li>{@link ObsoleteBehavior#FETCH_CURRENT FETCH_CURRENT}
 	 *   Load the most recent version of the requested structure
-	 *
+	 * </ul>
 	 * <p>This setting may be silently ignored by implementations which do not have
 	 * access to the server to determine whether an entry is obsolete, such as
-	 * if {@link #isAutoFetch()} is false. Note that an obsolete entry may still be
+	 * certain {@link FetchBehavior}s. Note that an obsolete entry may still be
 	 * returned even this is FETCH_CURRENT if the entry is found locally.
 	 *
 	 * @param behavior Whether to fetch obsolete records
@@ -276,7 +276,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	/**
 	 * Returns how this instance deals with obsolete entries. Note that this
 	 * setting may be ignored by some implementations or in some situations,
-	 * such as when {@link #isAutoFetch()} is false.
+	 * such as certain {@link FetchBehavior}s.
 	 *
 	 * <p>For most implementations, the default value is
 	 * {@link ObsoleteBehavior#THROW_EXCEPTION THROW_EXCEPTION}.
@@ -295,10 +295,9 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	public FetchBehavior getFetchBehavior() {
 		return fetchBehavior;
 	}
+
 	/**
 	 * Set the behavior for fetching files from the server.
-	 * This replaces the {@link #setAutoFetch(boolean)} method with a more
-	 * extensive set of options.
 	 * @param fetchBehavior
 	 */
 	public void setFetchBehavior(FetchBehavior fetchBehavior) {

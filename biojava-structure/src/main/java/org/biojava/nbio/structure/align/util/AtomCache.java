@@ -162,7 +162,6 @@ public class AtomCache {
 	 * @return an array of Atoms.
 	 * @throws IOException
 	 * @throws StructureException
-	 * @see
 	 */
 	public Atom[] getAtoms(String name) throws IOException, StructureException {
 		return getAtoms(new StructureName(name));
@@ -189,7 +188,6 @@ public class AtomCache {
 	 * @return an array of Atoms.
 	 * @throws IOException
 	 * @throws StructureException
-	 * @see
 	 */
 	public Atom[] getRepresentativeAtoms(String name) throws IOException, StructureException {
 		return getRepresentativeAtoms(new StructureName(name));
@@ -223,7 +221,7 @@ public class AtomCache {
 	 * if false the outputStructure will be as the original with added chains with renamed asymIds (in the form originalAsymId_transformId and originalAuthId_transformId).
 	 * @return a structure object
 	 * @throws IOException
-	 * @throws StructureException if biassemblyId < 0 or other problems while loading structure
+	 * @throws StructureException if biassemblyId &lt; 0 or other problems while loading structure
 	 * @since 3.2
 	 */
 	public Structure getBiologicalAssembly(String pdbId, int bioAssemblyId, boolean multiModel)
@@ -247,7 +245,7 @@ public class AtomCache {
 	 * if false the outputStructure will be as the original with added chains with renamed asymIds (in the form originalAsymId_transformId and originalAuthId_transformId).
 	 * @return a structure object
 	 * @throws IOException
-	 * @throws StructureException if biassemblyId < 0 or other problems while loading structure
+	 * @throws StructureException if biassemblyId &lt; 0 or other problems while loading structure
 	 * @since 6.0.0
 	 */
 	public Structure getBiologicalAssembly(PdbId pdbId, int bioAssemblyId, boolean multiModel)
@@ -305,7 +303,7 @@ public class AtomCache {
 	 * the asymmetric unit will be returned, e.g. for NMR structures.
 	 *
 	 * <p>Biological assemblies can also be accessed using
-	 * <tt>getStructure("BIO:<i>[pdbId]</i>")</tt>
+	 * <code>getStructure("BIO:<i>[pdbId]</i>")</code>
 	 * @param pdbId the PDB id
 	 * @param multiModel if true the output Structure will be a multi-model one with one transformId per model,
 	 * if false the outputStructure will be as the original with added chains with renamed asymIds (in the form originalAsymId_transformId and originalAuthId_transformId).
@@ -466,8 +464,7 @@ public class AtomCache {
 	 * <li>If only a PDB code is provided, the whole structure will be return including ligands, but the first model
 	 * only (for NMR).
 	 * <li>Chain IDs are case sensitive, PDB ids are not. To specify a particular chain write as: 4hhb.A or 4HHB.A</li>
-	 * <li>To specify a SCOP domain write a scopId e.g. d2bq6a1. Some flexibility can be allowed in SCOP domain names,
-	 * see {@link #setStrictSCOP(boolean)}</li>
+	 * <li>To specify a SCOP domain write a scopId e.g. d2bq6a1. </li>
 	 * <li>URLs are accepted as well</li>
 	 * </ul>
 	 *
@@ -670,14 +667,14 @@ public class AtomCache {
 	 *   Load the requested ID from the PDB's obsolete repository
 	 * <li>{@link ObsoleteBehavior#FETCH_CURRENT FETCH_CURRENT}
 	 *   Load the most recent version of the requested structure
+	 * </ul>
 	 *
 	 * <p>This setting may be silently ignored by implementations which do not have
 	 * access to the server to determine whether an entry is obsolete, such as
-	 * if {@link #isAutoFetch()} is false. Note that an obsolete entry may still be
+	 * certain {@link FetchBehavior}s. Note that an obsolete entry may still be
 	 * returned even this is FETCH_CURRENT if the entry is found locally.
 	 *
-	 * @param fetchFileEvenIfObsolete Whether to fetch obsolete records
-	 * @see #setFetchCurrent(boolean)
+	 * @param behavior Whether to fetch obsolete records
 	 * @since 4.0.0
 	 */
 	public void setObsoleteBehavior(ObsoleteBehavior behavior) {
@@ -687,7 +684,7 @@ public class AtomCache {
 	/**
 	 * Returns how this instance deals with obsolete entries. Note that this
 	 * setting may be ignored by some implementations or in some situations,
-	 * such as when {@link #isAutoFetch()} is false.
+	 * such as certain {@link FetchBehavior}s.
 	 *
 	 * <p>For most implementations, the default value is
 	 * {@link ObsoleteBehavior#THROW_EXCEPTION THROW_EXCEPTION}.
@@ -791,7 +788,7 @@ public class AtomCache {
 
 	/**
 	 * Loads a structure directly by PDB ID
-	 * @param pdbId
+	 * @param id
 	 * @return
 	 * @throws IOException
 	 * @throws StructureException
@@ -806,7 +803,6 @@ public class AtomCache {
 	 * @param pdbId
 	 * @return
 	 * @throws IOException
-	 * @throws StructureException
 	 */
 	public Structure getStructureForPdbId(PdbId pdbId) throws IOException {
 		if (pdbId == null)

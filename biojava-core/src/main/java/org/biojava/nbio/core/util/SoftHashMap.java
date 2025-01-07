@@ -31,13 +31,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-/** A in memory cache using soft references. (can be garbage collected)
+/**
+ * An in memory cache using soft references. (can be garbage collected)
  * This code is based on: http://java-interview-faqs.blogspot.com/2008/09/building-faster-and-efficient-cache.html
- * <p/>
+ * <p>
  * Note that entrySet() is not implemented and therefore many methods such as keySet(),
  * containsKey(), values() etc do not work.
- * <p/>
+ * <p>
  * This class is therefore best used as a cache simply to put and get items by a known key
+ * @param <K> the key type
+ * @param <V> the value type
  */
 public class SoftHashMap<K, V> extends AbstractMap<K, V> {
 

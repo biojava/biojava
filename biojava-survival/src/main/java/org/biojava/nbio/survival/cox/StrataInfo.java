@@ -27,7 +27,7 @@ import java.util.LinkedHashMap;
 /**
  * Information needed to represent a survival curve
  *
- * @author Scooter Willis <willishf at gmail dot com>
+ * @author Scooter Willis 
  */
 public class StrataInfo {
 

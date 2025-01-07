@@ -12,7 +12,7 @@
  * authors.  These should be listed in @author doc comments.
  *
  * @author Scooter Willis ;lt;willishf at gmail dot com&gt;
- * @author Karl Nicholas <github:karlnicholas>
+ * @author Karl Nicholas &lt;github:karlnicholas&gt;
  * @author Paolo Pavan
  *
  * For more information on the BioJava project and its aims,
@@ -53,7 +53,8 @@ import java.util.Map;
 /**
  * Use {@link GenbankReaderHelper} as an example of how to use this class where {@link GenbankReaderHelper} should be the
  * primary class used to read Genbank files
- *
+ * @param <S> the sequence type
+ * @param <C> the compound type
  */
 public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
 

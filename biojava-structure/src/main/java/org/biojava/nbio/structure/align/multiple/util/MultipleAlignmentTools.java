@@ -309,7 +309,7 @@ public class MultipleAlignmentTools {
 	 * Blocks is indicated by a gap in all positions, meaning that there is a
 	 * possible discontinuity.
 	 *
-	 * @param alignment
+	 * @param msa
 	 *            input MultipleAlignment
 	 * @return String for each row in the alignment, giving the 1-letter code
 	 *         for each aligned residue.
@@ -466,7 +466,7 @@ public class MultipleAlignmentTools {
 	 * gap in all positions, meaning that there is something unaligned
 	 * inbetween.
 	 *
-	 * @param alignment
+	 * @param ma
 	 *            input MultipleAlignment
 	 * @return String for each row in the alignment, giving the 1-letter code
 	 *         for each aligned residue.
@@ -479,7 +479,7 @@ public class MultipleAlignmentTools {
 	 * Returns the Atom of the specified structure that is aligned in the
 	 * sequence alignment position specified.
 	 *
-	 * @param multAln
+	 * @param msa
 	 *            the MultipleAlignment object from where the sequence alignment
 	 *            has been generated
 	 * @param mapSeqToStruct
@@ -568,7 +568,7 @@ public class MultipleAlignmentTools {
 	 * Complexity: T(n,l) = O(l*n^2), if n=number of structures and l=alignment
 	 * length.
 	 *
-	 * @param alignment
+	 * @param msa
 	 *            MultipleAlignment
 	 * @return Matrix containing all average residue distances
 	 */
@@ -644,7 +644,7 @@ public class MultipleAlignmentTools {
 	 * <p>
 	 * For each structure in the alignment, returns an atom for each
 	 * representative atom in the aligned columns, omitting unaligned residues
-	 * (i.e. an array of length <tt>alignment.length()</tt> ).
+	 * (i.e. an array of length <code>alignment.length()</code> ).
 	 * <p>
 	 * All blocks are concatenated together, so Atoms may not appear in the same
 	 * order as in their parent structure. If the alignment blocks contain null
@@ -940,7 +940,6 @@ public class MultipleAlignmentTools {
 	 * @param msta
 	 *            MultipleAlignment of protein structures
 	 * @return Phylogeny phylogenetic tree
-	 * @throws CompoundNotFoundException
 	 */
 	public static Phylogeny getStructuralTree(MultipleAlignment msta) {
 		double[][] rmsdMat = MultipleAlignmentTools.getRMSDMatrix(msta)

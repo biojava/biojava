@@ -31,7 +31,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * @see http://en.wikipedia.org/wiki/Rotation_group_SO(3)
+ * See <a href="http://en.wikipedia.org/wiki/Rotation_group_SO(3)">http://en.wikipedia.org/wiki/Rotation_group_SO(3)</a>
  * @author Peter
  */
 public class RotationGroup implements Iterable<Rotation> {

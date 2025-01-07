@@ -28,7 +28,7 @@ import java.util.ArrayList;
 
 /**
  *
- * @author Scooter Willis <willishf at gmail dot com>
+ * @author Scooter Willis 
  */
 public class AgScore {
 

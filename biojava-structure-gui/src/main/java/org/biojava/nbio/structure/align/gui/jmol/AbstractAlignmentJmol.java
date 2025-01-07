@@ -196,7 +196,7 @@ implements MouseMotionListener, MouseListener, WindowListener, ActionListener {
 
 	/**
 	 * Set the title of the AlignmentJmol window.
-	 * @param label
+	 * @param title
 	 */
 	public void setTitle(String title){
 		frame.setTitle(title);

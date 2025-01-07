@@ -41,11 +41,11 @@ public class MapToStringTransformer {
 	/**
 	 * Creates {@code MapToStringTransformer} with defaults:
 	 *
-	 * <pre>
+	 * <pre>{@code
 	 * mappingSequence = "=";
 	 * separatorSequence = "&";
 	 * nullValue = "null";
-	 * </pre>
+	 * }</pre>
 	 */
 	public MapToStringTransformer() {
 		this("=", "&", "null");
@@ -76,7 +76,7 @@ public class MapToStringTransformer {
 	 * <p>
 	 * For example, if we have a map with two entries: {@code ("key1", "1")} and
 	 * {@code ("key2", "2")} this method would return {@code "key1=1&key2=2"} if
-	 * {@code mappingSequence} is "=" and separator sequence is "&";
+	 * {@code mappingSequence} is "=" and separator sequence is "&amp;";
 	 *
 	 * @param map map of arguments
 	 * @return String resulting string

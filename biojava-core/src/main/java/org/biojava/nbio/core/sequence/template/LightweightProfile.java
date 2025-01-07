@@ -52,7 +52,7 @@ public interface LightweightProfile<S extends Sequence<C>, C extends Compound> {
 	 *
 	 * @param listIndex index of sequence in profile
 	 * @return desired sequence
-	 * @throws IndexOutOfBoundsException if listIndex < 1 or listIndex > number of sequences
+	 * @throws IndexOutOfBoundsException if listIndex &lt; 1 or listIndex &gt; number of sequences
 	 */
 	S getAlignedSequence(int listIndex);
 
@@ -68,7 +68,7 @@ public interface LightweightProfile<S extends Sequence<C>, C extends Compound> {
 	 *
 	 * @param alignmentIndex column index within an alignment
 	 * @return the sequence elements
-	 * @throws IndexOutOfBoundsException if alignmentIndex < 1 or alignmentIndex > {@link #getLength()}
+	 * @throws IndexOutOfBoundsException if alignmentIndex &lt; 1 or alignmentIndex &gt; {@link #getLength()}
 	 */
 	List<C> getCompoundsAt(int alignmentIndex);
 

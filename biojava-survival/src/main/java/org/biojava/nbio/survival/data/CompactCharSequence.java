@@ -25,7 +25,7 @@ import java.io.UnsupportedEncodingException;
 
 /**
  *http://www.javamex.com/tutorials/memory/ascii_charsequence.shtml
- * @author Scooter Willis <willishf at gmail dot com>
+ * @author Scooter Willis 
  */
 public class CompactCharSequence implements CharSequence, Serializable {
 

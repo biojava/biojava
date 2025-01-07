@@ -34,7 +34,7 @@ import java.util.LinkedHashMap;
  * Ported from survfitKM.S When combining multiple entries with same time not
  * sure how the weighting adds up
  *
- * @author Scooter Willis <willishf at gmail dot com>
+ * @author Scooter Willis 
  */
 public class SurvFitKM {
 

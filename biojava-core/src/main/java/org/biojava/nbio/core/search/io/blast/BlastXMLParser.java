@@ -43,7 +43,7 @@ import org.xml.sax.SAXException;
 
 /**
  * Re-designed by Paolo Pavan on the footprint of:
- * org.biojava.nbio.genome.query.BlastXMLQuery by Scooter Willis <willishf at gmail dot com>
+ * org.biojava.nbio.genome.query.BlastXMLQuery by Scooter Willis 
  *
  * You may want to find my contacts on Github and LinkedIn for code info
  * or discuss major changes.

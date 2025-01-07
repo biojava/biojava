@@ -41,7 +41,6 @@ import java.util.TreeSet;
  * @author Thomas Down
  * @author Matthew Pocock
  * @since 1.4
- * @see org.biojavax.ontology.ComparableTriple
  */
 
 public interface Triple
@@ -79,7 +78,6 @@ extends Term {
 	 * If you do not implement hashcode in this way then you have no guarantee
 	 * that your Triple objects will be found in an ontology and that they will
 	 * not be duplicated.
-	 * </p>
 	 */
 	@Override
 	public int hashCode();
@@ -90,7 +88,7 @@ extends Term {
 	 * <p>
 	 * Two triples are equivalent if they have the same subject, object and
 	 * predicate fields.
-	 * <pre>
+	 * <pre>{@code
 	 * if (! (o instanceof Triple)) {
 	 *     return false;
 	 * }
@@ -98,11 +96,10 @@ extends Term {
 	 * return to.getSubject() == getSubject() &&
 	 *        to.getObject() == getObject() &&
 	 *        to.getPredicate() == getPredicate();
-	 * </pre>
+	 * }</pre>
 	 * If you do not implement equals in this way then you have no guarantee
 	 * that your Triple objects will be found in an ontology and that they will
 	 * not be duplicated.
-	 * </p>
 	 */
 	@Override
 	public boolean equals(Object obj);
@@ -111,9 +108,7 @@ extends Term {
 	 * Basic in-memory implementation of a Triple in an ontology
 	 *
 	 * This can be used to implement Ontology.createTriple
-	 * @see org.biojavax.ontology.SimpleComparableTriple
 	 */
-
 	public static final class Impl
 
 	implements Triple, java.io.Serializable {

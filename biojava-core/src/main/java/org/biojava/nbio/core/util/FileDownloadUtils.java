@@ -336,8 +336,8 @@ public class FileDownloadUtils {
 	 * </code>
 	 * <p>
 	 *
-	 * <bold>NB. User should execute connect() method before getting input
-	 * stream.</bold>
+	 * <strong>NB. User should execute connect() method before getting input
+	 * stream.</strong>
 	 * @return
 	 * @throws IOException
 	 * @author Jacek Grzebyta
@@ -350,7 +350,7 @@ public class FileDownloadUtils {
 	}
 
 	/**
-	 * Recursively delete a folder & contents
+	 * Recursively delete a folder &amp; contents
 	 *
 	 * @param dir directory to delete
 	 */
@@ -375,7 +375,7 @@ public class FileDownloadUtils {
 	    });
 	}
 	/**
-	 * Recursively delete a folder & contents
+	 * Recursively delete a folder &amp; contents
 	 *
 	 * @param dir directory to delete
 	 */

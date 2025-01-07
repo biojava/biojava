@@ -25,7 +25,7 @@ import org.biojava.nbio.survival.cox.stats.Chsolve2;
 
 /**
  *
- * @author Scooter Willis <willishf at gmail dot com>
+ * @author Scooter Willis 
  */
 public class WaldTest {
 //coxph_wtest, df=as.integer(nvar),as.integer(ntest),as.double(var),tests= as.double(b),solve= double(nvar*ntest),as.double(toler.chol))

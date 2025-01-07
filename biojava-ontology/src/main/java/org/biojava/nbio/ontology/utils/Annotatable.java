@@ -75,7 +75,6 @@ package org.biojava.nbio.ontology.utils;
  * @author  Matthew Pocock
  * @author <a href="mailto:kdj@sanger.ac.uk">Keith James</a> (docs).
  * @author  Kalle Näslund (docs)
- * @see org.biojavax.RichAnnotatable
  * @since 1.0
  */
 public interface Annotatable  {

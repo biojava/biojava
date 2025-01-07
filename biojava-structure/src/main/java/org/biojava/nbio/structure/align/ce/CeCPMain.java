@@ -61,7 +61,7 @@ public class CeCPMain extends CeMain {
 	/**
 	 *  version history:
 	 *  1.5 - Added more parameters to the command line, including -maxOptRMSD
-	 *  1.4 - Added DuplicationHint parameter & default to duplicating the shorter chain
+	 *  1.4 - Added DuplicationHint parameter and default to duplicating the shorter chain
 	 *  1.3 - Short CPs are now discarded
 	 *  1.2 - now supports check AlignmentTools.isSequentialAlignment. XML protocol
 	 *  1.1 - skipped, (trying to avoid confusion with jfatcat in all vs. all comparisons)

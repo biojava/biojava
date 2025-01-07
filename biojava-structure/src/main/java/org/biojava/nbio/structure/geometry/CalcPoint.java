@@ -40,7 +40,7 @@ public class CalcPoint {
 	}
 
 	/**
-	 * Center a cloud of points. This means subtracting the {@lin
+	 * Center a cloud of points. This means subtracting the {@link
 	 * #centroid(Point3d[])} of the cloud to each point.
 	 *
 	 * @param x

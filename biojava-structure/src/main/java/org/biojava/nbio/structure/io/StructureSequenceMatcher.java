@@ -59,8 +59,7 @@ public class StructureSequenceMatcher {
 	 * @param sequence The input protein sequence
 	 * @param wholeStructure The structure from which to take a substructure
 	 * @return The resulting structure
-	 * @throws StructureException
-	 * @see {@link #matchSequenceToStructure(ProteinSequence, Structure)}
+	 * @see #matchSequenceToStructure(ProteinSequence, Structure)
 	 */
 	public static Structure getSubstructureMatchingProteinSequence(ProteinSequence sequence, Structure wholeStructure) {
 		ResidueNumber[] rns = matchSequenceToStructure(sequence, wholeStructure);
@@ -104,8 +103,7 @@ public class StructureSequenceMatcher {
 	 * @return A ProteinSequence with the full sequence of struct. Chains are
 	 *  concatenated in the same order as the input structures
 	 *
-	 * @see {@link SeqRes2AtomAligner#getFullAtomSequence(List, Map)}, which
-	 * 	does the heavy lifting.
+	 * @see SeqRes2AtomAligner#getFullAtomSequence(List, Map, boolean)
 	 *
 	 */
 	public static ProteinSequence getProteinSequenceForStructure(Structure struct, Map<Integer,Group> groupIndexPosition ) {

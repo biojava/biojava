@@ -59,7 +59,7 @@ import java.util.List;
  * NCBI Reference Sequence           ref|accession|locus
  * Local Sequence identifier         lcl|identifier
  *</pre>
- * @author Scooter Willis <willishf at gmail dot com>
+ * @author Scooter Willis 
  */
 public class GenericFastaHeaderParser<S extends AbstractSequence<C>, C extends Compound> implements SequenceHeaderParserInterface<S,C> {
 

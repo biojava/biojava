@@ -67,7 +67,7 @@ public class Icosahedron implements Polyhedron {
 	/**
 	 * Sets the radius of an inscribed sphere, that is tangent to each
 	 * of the icosahedron's faces
-	 * @param inscribedRadius the inscribedRadius to set
+	 * @param radius the inscribedRadius to set
 	 */
 	public void setInscribedRadius(double radius) {
 		double side = getSideLengthFromInscribedRadius(radius);
@@ -88,7 +88,7 @@ public class Icosahedron implements Polyhedron {
 	/**
 	 * Sets the radius of radius of a sphere, that is tangent to each
 	 * of the icosahedron's edges
-	 * @param midRadius the midRadius to set
+	 * @param radius the midRadius to set
 	 */
 	public void setMidRadius(double radius) {
 		double side = getSideLengthFromMiddleRadius(radius);

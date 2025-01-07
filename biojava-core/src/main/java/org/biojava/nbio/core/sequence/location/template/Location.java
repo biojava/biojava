@@ -71,7 +71,7 @@ public interface Location extends Iterable<Location>, Accessioned {
 	/**
 	 * Gives access to the sub locations for this location. However this does
 	 * not return sub-locations of sub-locations. For that functionality use
-	 * {@link #getAllSubLocations()}.
+	 * {@link #getRelevantSubLocations()}.
 	 *
 	 * @return A list of a single level of sub-locations
 	 */
@@ -107,7 +107,7 @@ public interface Location extends Iterable<Location>, Accessioned {
 	 * Will return a SequenceReader object which represents the outer bounds
 	 * of this Location
 	 *
-	 * @param &lt;C&gt; The type of compound to use
+	 * @param <C> The type of compound to use
 	 * @param sequence The sequence object to work with
 	 * @return The sequence
 	 */
@@ -118,7 +118,7 @@ public interface Location extends Iterable<Location>, Accessioned {
 	 * locations i.e. those locations which are not complex and define the
 	 * true Sequence represented
 	 *
-	 * @param &lt;C&gt; The type of compound to use
+	 * @param <C> The type of compound to use
 	 * @param sequence The sequence object to work with
 	 * @return The full assembled sequence
 	 */
@@ -166,7 +166,7 @@ public interface Location extends Iterable<Location>, Accessioned {
 		 * other location builder this allows you to express your input
 		 * location on the reverse strand
 		 *
-		 * @param location The location which currently expresses the outer
+		 * @param start The location which currently expresses the outer
 		 * bounds of a circular location.
 		 * @param length The length of the circular genomic unit
 		 * @return The circular location; can optionally return a normal non

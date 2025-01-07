@@ -238,7 +238,7 @@ public class Stoichiometry {
 	}
 
 	/**
-	 * Make a combined Stoichiometry object of <i>this</> and the <i>other</>.
+	 * Make a combined Stoichiometry object of <i>this</i> and the <i>other</i>.
 	 * The combined list of clusters will be ordered by the number of subunits.
 	 * @return new {@link Stoichiometry} object.
 	 */

@@ -142,7 +142,7 @@ public class LinearColorInterpolator implements ColorInterpolator {
 	 * InterpolationDirections.
 	 *
 	 * @param colorSpace The color space for interpolation
-	 * @param interpDirection An array of size colorSpace.getNumComponents()
+	 * @param dir An array of size colorSpace.getNumComponents()
 	 * 		giving the interpolation direction for each component.
 	 */
 	public void setColorSpace(ColorSpace colorSpace, InterpolationDirection[] dir) {

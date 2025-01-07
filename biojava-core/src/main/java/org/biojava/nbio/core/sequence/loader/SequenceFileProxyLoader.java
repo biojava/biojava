@@ -50,8 +50,8 @@ import java.util.List;
  * data was loaded and then after X amount of time clear the contents to free up memory.
  *
  *
- * @author Scooter Willis <willishf at gmail dot com>
- * @param <C>
+ * @author Scooter Willis 
+ * @param <C> the compound type
  */
 public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenceReader<C> {
 

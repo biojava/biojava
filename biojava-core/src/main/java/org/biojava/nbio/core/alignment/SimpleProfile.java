@@ -159,7 +159,7 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
 	 /**
 	 * Creates a profile for the already aligned sequences.
 	 * @param alignedSequences the already aligned sequences
-	 * @throws IllegalArgument if aligned sequences differ in length or
+	 * @throws IllegalArgumentException if aligned sequences differ in length or
 	 * collection is empty.
 	 */
 	public SimpleProfile(Collection<AlignedSequence<S,C>> alignedSequences) {

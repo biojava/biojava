@@ -64,7 +64,7 @@ public class EmblRecord {
 	 * 6. Taxonomic division
 	 * 7. Sequence length
 	 *
-	 * @return EmblId
+	 * @return
 	 */
 	public EmblId getEmblId() {
 		return emblId;
@@ -80,7 +80,7 @@ public class EmblRecord {
 	 * The citations provide access to the papers from which the data has been
 	 * abstracted.
 	 *
-	 * @return EmblReference
+	 * @return
 	 */
 	public List<EmblReference> getEmblReference() {
 		return emblReference;
@@ -94,7 +94,7 @@ public class EmblRecord {
 	 * The AC (Accession number) line lists the accession numbers associated with
 	 * the entry.
 	 *
-	 * @return List<String>
+	 * @return
 	 */
 	public List<String> getAccessionNumber() {
 		return accessionNumber;
@@ -119,7 +119,7 @@ public class EmblRecord {
 	 * The OG (OrGanelle) linetype indicates the sub-cellular location of non-nuclear
 	 * sequences.
 	 *
-	 * @return String
+	 * @return
 	 */
 	public String getOrGanelle() {
 		return orGanelle;
@@ -132,7 +132,7 @@ public class EmblRecord {
 	/**
 	 * The DT  line shows when an entry first appeared in the database
 	 *
-	 * @return String
+	 * @return
 	 */
 	public String getCreatedDate() {
 		return createdDate;
@@ -146,7 +146,7 @@ public class EmblRecord {
 	 * The FH (Feature Header) lines are present only to improve readability of
 	 * an entry when it is printed or displayed on a terminal screen.
 	 *
-	 * @return String
+	 * @return
 	 */
 	public String getFeatureHeader() {
 		return featureHeader;
@@ -161,7 +161,7 @@ public class EmblRecord {
 	 * sequence data. Regions or sites in the sequence which are of interest are
 	 * listed in the table.
 	 *
-	 * @return String
+	 * @return
 	 */
 	public String getFeatureTable() {
 		return featureTable;
@@ -190,7 +190,7 @@ public class EmblRecord {
 	 * sequence codes, the region of the genome from which it is derived, or other
 	 * information which helps to identify the sequence.
 	 *
-	 * @return String
+	 * @return
 	 */
 	public String getSequenceDescription() {
 		return sequenceDescription;
@@ -205,7 +205,7 @@ public class EmblRecord {
 	 * cross-reference indexes of the sequence entries based on functional,
 	 * structural, or other categories deemed important.
 	 *
-	 * @return List<String>
+	 * @return
 	 */
 	public List<String> getKeyword() {
 		return keyword;
@@ -235,7 +235,7 @@ public class EmblRecord {
 	 * The OC (Organism Classification) lines contain the taxonomic classification
 	 * Of the source organism
 	 *
-	 * @return String
+	 * @return
 	 */
 	public String getOrganismClassification() {
 		return organismClassification;
@@ -249,7 +249,7 @@ public class EmblRecord {
 	 * The DR (Database Cross-reference) line cross-references other databases which
 	 * contain information related to the entry in which the DR line appears.
 	 *
-	 * @return String
+	 * @return
 	 */
 	public String getDatabaseCrossReference() {
 		return databaseCrossReference;
@@ -262,7 +262,7 @@ public class EmblRecord {
 	/**
 	 * The AH (Assembly Header) line provides column headings for the assembly information.
 	 *
-	 * @return String
+	 * @return
 	 */
 	public String getAssemblyHeader() {
 		return assemblyHeader;
@@ -290,7 +290,7 @@ public class EmblRecord {
 	 * Con(structed) sequences in the CON data classes represent complete
 	 * chromosomes, genomes and other long sequences constructed from segment entries.
 	 *
-	 * @return String
+	 * @return
 	 */
 	public String getConstructedSequence() {
 		return constructedSequence;
@@ -304,7 +304,7 @@ public class EmblRecord {
 	 * The SQ (SeQuence header) line marks the beginning of the sequence data and
 	 * Gives a summary of its content.
 	 *
-	 * @return String
+	 * @return
 	 */
 	public String getSequenceHeader() {
 		return sequenceHeader;
@@ -317,7 +317,7 @@ public class EmblRecord {
 	/**
 	 * The Sequence Data Line
 	 *
-	 * @return String
+	 * @return
 	 */
 	public String getSequence() {
 		return sequence;

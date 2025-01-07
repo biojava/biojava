@@ -34,11 +34,12 @@ import org.biojava.nbio.core.sequence.template.Sequence;
  * @author Mark Chapman
  * @author Paolo Pavan
  * @param <C> each element of the {@link Sequence} is a {@link Compound} of type C
+ * @param <S> the sequence type
  */
 public interface AlignedSequence<S extends Sequence<C>, C extends Compound> extends Sequence<C> {
 
 	/**
-	 * Defines an alignment step in order to pass alignment information from an {@link Aligner} to a constructor.
+	 * Defines an alignment step in order to pass alignment information from an Aligner to a constructor.
 	 */
 	enum Step { COMPOUND, GAP }
 
@@ -65,7 +66,7 @@ public interface AlignedSequence<S extends Sequence<C>, C extends Compound> exte
 	 *
 	 * @param sequenceIndex index in the original {@link Sequence}
 	 * @return column index within an alignment
-	 * @throws IndexOutOfBoundsException if sequenceIndex < 1 or sequenceIndex >
+	 * @throws IndexOutOfBoundsException if sequenceIndex &lt; 1 or sequenceIndex >
 	 *         {@link #getOriginalSequence()}.{@link #getLength()}
 	 */
 	int getAlignmentIndexAt(int sequenceIndex);
@@ -130,7 +131,7 @@ public interface AlignedSequence<S extends Sequence<C>, C extends Compound> exte
 	 *
 	 * @param alignmentIndex column index within an alignment
 	 * @return index in the original {@link Sequence}
-	 * @throws IndexOutOfBoundsException if alignmentIndex < 1 or alignmentIndex > {@link #getLength()}
+	 * @throws IndexOutOfBoundsException if alignmentIndex &lt; 1 or alignmentIndex &gt; {@link #getLength()}
 	 */
 	int getSequenceIndexAt(int alignmentIndex);
 
@@ -154,7 +155,7 @@ public interface AlignedSequence<S extends Sequence<C>, C extends Compound> exte
 	 *
 	 * @param alignmentIndex column index within an alignment
 	 * @return true if this column has a gap
-	 * @throws IndexOutOfBoundsException if alignmentIndex < 1 or alignmentIndex > {@link #getLength()}
+	 * @throws IndexOutOfBoundsException if alignmentIndex &lt; 1 or alignmentIndex &gt; {@link #getLength()}
 	 */
 	boolean isGap(int alignmentIndex);
 

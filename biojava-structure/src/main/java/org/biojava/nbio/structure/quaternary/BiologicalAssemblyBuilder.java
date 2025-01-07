@@ -75,6 +75,7 @@ public class BiologicalAssemblyBuilder {
 	 * Builds a Structure object containing the quaternary structure built from given asymUnit and transformations,
 	 * by adding symmetry partners as new models.
 	 * The output Structure will be different depending on the multiModel parameter:
+	 * <ul>
 	 * <li>
 	 * the symmetry-expanded chains are added as new models, one per transformId. All original models but
 	 * the first one are discarded.
@@ -83,6 +84,7 @@ public class BiologicalAssemblyBuilder {
 	 * as original with symmetry-expanded chains added with renamed chain ids and names (in the form
 	 * originalAsymId_transformId and originalAuthId_transformId)
 	 * </li>
+	 * </ul>
 	 * @param asymUnit
 	 * @param transformations
 	 * @param useAsymIds if true use {@link Chain#getId()} to match the ids in the BiologicalAssemblyTransformation (needed if data read from mmCIF),

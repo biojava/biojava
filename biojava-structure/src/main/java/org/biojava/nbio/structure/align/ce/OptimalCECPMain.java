@@ -300,7 +300,7 @@ public class OptimalCECPMain extends CeMain {
 	/**
 	 * Modifies the {@link AFPChain#setOptAln(int[][][]) optAln} of an AFPChain
 	 * by permuting the second protein.
-	 *
+	 * <p>
 	 * Sets residue numbers in the second protein to <i>(i-cp)%len</i>
 	 *
 	 * @param afpChain
@@ -425,7 +425,7 @@ public class OptimalCECPMain extends CeMain {
 	/**
 	 * Finds the optimal alignment between two proteins allowing for a circular
 	 * permutation (CP).
-	 *
+	 * <p>
 	 * The precise algorithm is controlled by the
 	 * {@link OptimalCECPParameters parameters}. If the parameter
 	 * {@link OptimalCECPParameters#isTryAllCPs() tryAllCPs} is true, all possible
@@ -456,10 +456,9 @@ public class OptimalCECPMain extends CeMain {
 	/**
 	 * Finds the optimal alignment between two proteins allowing for a circular
 	 * permutation (CP).
-	 *
+	 * <p>
 	 * This algorithm performs a CE alignment for each possible CP site. This is
-	 * quite slow. Use {@link #alignHeuristic(Atom[], Atom[], Object)} for a
-	 * faster algorithm.
+	 * quite slow.
 	 *
 	 * @param ca1 CA atoms of the first protein
 	 * @param ca2 CA atoms of the second protein

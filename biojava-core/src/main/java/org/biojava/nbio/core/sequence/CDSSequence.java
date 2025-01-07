@@ -32,7 +32,7 @@ import org.biojava.nbio.core.sequence.template.CompoundSet;
  * Represents a exon or coding sequence in a gene. It has a parent {@link TranscriptSequence}
  * where a TranscriptSequence is the child of a GeneSequence
  * Not important for protein construction but the phase is used if outputting the gene
- * to a gff3 file. {@link http://www.sequenceontology.org/gff3.shtml}
+ * to a gff3 file. <a href="http://www.sequenceontology.org/gff3.shtml">http://www.sequenceontology.org/gff3.shtml</a>
  * @author Scooter Willis
  */
 public class CDSSequence extends DNASequence {
@@ -90,8 +90,8 @@ public class CDSSequence extends DNASequence {
 	 * A CDS sequence if negative stranded needs to be reverse complement
 	 * to represent the actual coding sequence. When getting a ProteinSequence
 	 * from a TranscriptSequence this method is callled for each CDSSequence
-	 * {@link http://www.sequenceontology.org/gff3.shtml}
-	 * {@link http://biowiki.org/~yam/bioe131/GFF.ppt}
+	 * <a href="http://www.sequenceontology.org/gff3.shtml">http://www.sequenceontology.org/gff3.shtml</a>
+	 * <a href="http://biowiki.org/~yam/bioe131/GFF.ppt">http://biowiki.org/~yam/bioe131/GFF.ppt</a>
 	 * @return coding sequence
 	 */
 	public String getCodingSequence() {

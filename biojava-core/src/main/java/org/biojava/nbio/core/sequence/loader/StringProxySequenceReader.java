@@ -38,10 +38,9 @@ import java.util.List;
 
 /**
  * An example of a ProxySequenceReader that is created from a String. Used for testing
- * @author Scooter Willis <willishf at gmail dot com>
- * @param <C>
+ * @author Scooter Willis 
+ * @param <C> the compound type
  */
-
 public class StringProxySequenceReader<C extends Compound> implements ProxySequenceReader<C> {
 
 	private String sequence;

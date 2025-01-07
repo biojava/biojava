@@ -35,7 +35,7 @@ import java.util.Collection;
  * A Gene sequence has a Positive or Negative Strand where we want to write out to a stream the 5 to 3 prime version.
  * It is also an option to write out the gene sequence where the exon regions are upper case
  * 6/22/2010 FastaWriter needs to be sequence aware to handle writing out a GeneSequence which is negative Strand with the proper sequence
- * @author Scooter Willis <willishf at gmail dot com>
+ * @author Scooter Willis 
  */
 public class FastaGeneWriter {
 

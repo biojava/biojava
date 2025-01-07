@@ -39,7 +39,7 @@ import java.util.List;
 /**
  * Stores a Sequence as a collection of compounds in an ArrayList
  *
- * @param <C>
+ * @param <C> the compound type
  */
 public class ArrayListSequenceReader<C extends Compound> implements SequenceReader<C> {
 

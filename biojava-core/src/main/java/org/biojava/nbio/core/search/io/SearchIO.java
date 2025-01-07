@@ -64,7 +64,6 @@ public class SearchIO implements Iterable<Result>{
 	 * file extension.
 	 *
 	 * @param f
-	 * @throws Exception
 	 */
 	public SearchIO (File f)  throws IOException, ParseException{
 		factory = guessFactory(f);

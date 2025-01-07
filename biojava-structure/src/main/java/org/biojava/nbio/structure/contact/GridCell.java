@@ -103,9 +103,6 @@ public class GridCell {
 	 * within the given cutoff as a list of Contacts containing the indices of the pair and the calculated distance.
 	 *
 	 * @param otherCell
-	 * @param iAtoms the first set of atom coordinates to which the iIndices correspond
-	 * @param jAtoms the second set of atom coordinates to which the jIndices correspond, if null distances are within the iAtoms only
-	 * @param cutoff
 	 * @return
 	 */
 	public List<Contact> getContactsToOtherCell(GridCell otherCell){

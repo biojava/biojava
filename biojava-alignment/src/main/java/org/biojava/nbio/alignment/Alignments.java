@@ -122,7 +122,7 @@ public class Alignments {
 	 * {@link ConcurrencyTools} utility.
 	 *
 	 * @param <S> each {@link Sequence} of an alignment pair is of type S
-	 * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
+	 * @param <C> each element of a sequence is a {@link Compound} of type C
 	 * @param sequences the {@link List} of {@link Sequence}s to align
 	 * @param type chosen type from list of pairwise sequence alignment routines
 	 * @param gapPenalty the gap penalties used during alignment
@@ -203,7 +203,7 @@ public class Alignments {
 	 * Factory method which computes a sequence alignment for the given {@link Sequence} pair.
 	 *
 	 * @param <S> each {@link Sequence} of the pair is of type S
-	 * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
+	 * @param <C> each element of a sequence is a {@link Compound} of type C
 	 * @param query the first {@link Sequence}s to align
 	 * @param target the second {@link Sequence}s to align
 	 * @param type chosen type from list of pairwise sequence alignment routines
@@ -223,7 +223,7 @@ public class Alignments {
 	 * Factory method which sets up a sequence alignment for all {@link Sequence} pairs in the given {@link List}.
 	 *
 	 * @param <S> each {@link Sequence} of an alignment pair is of type S
-	 * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
+	 * @param <C> each element of a sequence is a {@link Compound} of type C
 	 * @param sequences the {@link List} of {@link Sequence}s to align
 	 * @param type chosen type from list of pairwise sequence alignment routines
 	 * @param gapPenalty the gap penalties used during alignment
@@ -309,7 +309,7 @@ public class Alignments {
 	 * Factory method which constructs a pairwise sequence aligner.
 	 *
 	 * @param <S> each {@link Sequence} of an alignment pair is of type S
-	 * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
+	 * @param <C> each element of a sequence is a {@link Compound} of type C
 	 * @param query the first {@link Sequence} to align
 	 * @param target the second {@link Sequence} to align
 	 * @param type chosen type from list of pairwise sequence alignment routines
@@ -399,7 +399,7 @@ public class Alignments {
 	 * Factory method which constructs a profile-profile aligner.
 	 *
 	 * @param <S> each {@link Sequence} of an alignment profile is of type S
-	 * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
+	 * @param <C> each element of a sequence is a {@link Compound} of type C
 	 * @param profile1 the first {@link Profile} to align
 	 * @param profile2 the second {@link Profile} to align
 	 * @param type chosen type from list of profile-profile alignment routines
@@ -429,7 +429,7 @@ public class Alignments {
 	 * Factory method which constructs a profile-profile aligner.
 	 *
 	 * @param <S> each {@link Sequence} of an alignment profile is of type S
-	 * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
+	 * @param <C> each element of a sequence is a {@link Compound} of type C
 	 * @param profile1 the first {@link Profile} to align
 	 * @param profile2 the second {@link Profile} to align
 	 * @param type chosen type from list of profile-profile alignment routines
@@ -459,7 +459,7 @@ public class Alignments {
 	 * Factory method which constructs a profile-profile aligner.
 	 *
 	 * @param <S> each {@link Sequence} of an alignment profile is of type S
-	 * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
+	 * @param <C> each element of a sequence is a {@link Compound} of type C
 	 * @param profile1 the first {@link Profile} to align
 	 * @param profile2 the second {@link Profile} to align
 	 * @param type chosen type from list of profile-profile alignment routines
@@ -489,7 +489,7 @@ public class Alignments {
 	 * Factory method which constructs a profile-profile aligner.
 	 *
 	 * @param <S> each {@link Sequence} of an alignment profile is of type S
-	 * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
+	 * @param <C> each element of a sequence is a {@link Compound} of type C
 	 * @param profile1 the first {@link Profile} to align
 	 * @param profile2 the second {@link Profile} to align
 	 * @param type chosen type from list of profile-profile alignment routines
@@ -519,7 +519,7 @@ public class Alignments {
 	 * Factory method which computes a profile alignment for the given {@link Profile} pair.
 	 *
 	 * @param <S> each {@link Sequence} of the {@link Profile} pair is of type S
-	 * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
+	 * @param <C> each element of a sequence is a {@link Compound} of type C
 	 * @param profile1 the first {@link Profile} to align
 	 * @param profile2 the second {@link Profile} to align
 	 * @param type chosen type from list of profile-profile alignment routines
@@ -539,7 +539,7 @@ public class Alignments {
 	 * of the {@link ConcurrencyTools} utility.
 	 *
 	 * @param <S> each {@link Sequence} of the {@link Profile} pair is of type S
-	 * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
+	 * @param <C> each element of a sequence is a {@link Compound} of type C
 	 * @param tree guide tree to follow aligning profiles from leaves to root
 	 * @param type chosen type from list of profile-profile alignment routines
 	 * @param gapPenalty the gap penalties used during alignment
@@ -592,7 +592,7 @@ public class Alignments {
 	 * submitting all of the alignment tasks to the shared thread pool of the {@link ConcurrencyTools} utility.
 	 *
 	 * @param <S> each {@link Sequence} of an alignment pair is of type S
-	 * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
+	 * @param <C> each element of a sequence is a {@link Compound} of type C
 	 * @param aligners list of alignments to run
 	 * @return list of {@link SequencePair} results from running alignments
 	 */
@@ -612,7 +612,7 @@ public class Alignments {
 	 * all of the scoring tasks to the shared thread pool of the {@link ConcurrencyTools} utility.
 	 *
 	 * @param <S> each {@link Sequence} of an alignment pair is of type S
-	 * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
+	 * @param <C> each element of a sequence is a {@link Compound} of type C
 	 * @param scorers list of scorers to run
 	 * @return list of score results from running scorers
 	 */
@@ -637,7 +637,7 @@ public class Alignments {
 	 * submitting all of the alignment tasks to the shared thread pool of the {@link ConcurrencyTools} utility.
 	 *
 	 * @param <S> each {@link Sequence} of the {@link Profile} pair is of type S
-	 * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
+	 * @param <C> each element of a sequence is a {@link Compound} of type C
 	 * @param aligners list of alignments to run
 	 * @return list of {@link ProfilePair} results from running alignments
 	 */

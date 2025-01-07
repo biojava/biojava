@@ -37,7 +37,7 @@ import java.util.List;
  * A helper class that allows different ways to read a string and create a DNA sequence. Used in FastaReaderHelper
  * and probably a layer that isn't needed
  *
- * @author Scooter Willis <willishf at gmail dot com>
+ * @author Scooter Willis 
  */
 public class DNASequenceCreator implements
 		SequenceCreatorInterface<NucleotideCompound> {

@@ -30,7 +30,7 @@ import java.util.Comparator;
 /**
  * Sort Exon where it is a little confusing if exons should always be ordered left to right
  * where a negative stranded gene should go the other direction. Need to think about this?
- * @author Scooter Willis <willishf at gmail dot com>
+ * @author Scooter Willis 
  */
 public class ExonComparator implements Comparator<ExonSequence>, Serializable{
 	private static final long serialVersionUID = 1;

@@ -27,7 +27,7 @@ import java.util.LinkedHashMap;
 
 /**
  * Used to work with SurvivalInfo
- * @author Scooter Willis <willishf at gmail dot com>
+ * @author Scooter Willis 
  */
 public class SurvivalInfoHelper {
 

@@ -35,7 +35,6 @@ import java.util.*;
  *
  * @since 1.0 as part of Annotation
  * @since 1.4 as top-level class
- * @see org.biojavax.EmptyRichAnnotation
  */
 class EmptyAnnotation
 

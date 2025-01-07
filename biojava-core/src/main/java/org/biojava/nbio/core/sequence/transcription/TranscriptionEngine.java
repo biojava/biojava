@@ -39,7 +39,7 @@ import java.util.Map;
  * Protein sequence.
  *
  * In order to build one look at @ TranscriptionEngine.Builder} which provides
- * intelligent defaults & allows you to build an engine which is nearly the same
+ * intelligent defaults and allows you to build an engine which is nearly the same
  * as the default one but with a few changes. All of the engine is customisable.
  *
  * By default the code will attempt to:
@@ -48,7 +48,7 @@ import java.util.Map;
  * <li>Trim Stops</li>
  * <li>Convert initiating codons to M</li>
  * <li>Allow for the fuzzy translation of Codons i.e. if it contains an N that
- * produces a {@link Sequence}&lt;{@link{AminoAcidCompound}&gt; with an X at
+ * produces a {@link Sequence<AminoAcidCompound>} with an X at
  * that position
  * </ul>
  *
@@ -170,7 +170,7 @@ public class TranscriptionEngine {
 	}
 
 	/**
-	 * This class is the way to create a {@link TranslationEngine}.
+	 * This class is the way to create a {@link TranscriptionEngine}.
 	 */
 	public static class Builder {
 

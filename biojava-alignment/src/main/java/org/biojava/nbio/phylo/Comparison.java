@@ -38,9 +38,9 @@ public class Comparison {
 	/**
 	 * this is a gapped PID calculation
 	 *
-	 * @param s1
+	 * @param seq1
 	 *            SequenceI
-	 * @param s2
+	 * @param seq2
 	 *            SequenceI
 	 * @return float
 	 */

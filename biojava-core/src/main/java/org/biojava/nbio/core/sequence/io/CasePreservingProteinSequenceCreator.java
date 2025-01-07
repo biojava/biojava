@@ -41,14 +41,15 @@ import java.util.Locale;
  * <p>The user collection will be the same length as the resulting ProteinSequence.
  * Each object can be cast to a Boolean. If true, the corresponding position in
  * the input file was uppercase.
- *
- * <h3>Example</h3>
- * <code><pre>CasePreservingProteinSequenceCreator creator =
+ * <p>
+ * Example
+ * <code>
+ *    CasePreservingProteinSequenceCreator creator =
  *    new CasePreservingProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet());
- *AbstractSequence<AminoAcidCompound> seq = creator.getSequence("aaAA",0);
- *System.out.println(seq.getSequenceAsString()); //"AAAA"
- *System.out.println(seq.getUserCollection()); //"[false, false, true, true]"
- *</code></pre>
+ *    AbstractSequence&lt;AminoAcidCompound&gt; seq = creator.getSequence("aaAA",0);
+ *    System.out.println(seq.getSequenceAsString()); //"AAAA"
+ *    System.out.println(seq.getUserCollection()); //"[false, false, true, true]"
+ * </code>
  */
 public class CasePreservingProteinSequenceCreator extends ProteinSequenceCreator {
 

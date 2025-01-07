@@ -306,7 +306,6 @@ public class UserConfiguration
 	 * @param xw the XML writer to use
 	 * @return the writer again
 	 * @throws IOException
-	 * @see org.biojava.nbio.structure.align.webstart.ConfigXMLHandler
 	 */
 
 	public XMLWriter toXML(XMLWriter xw)

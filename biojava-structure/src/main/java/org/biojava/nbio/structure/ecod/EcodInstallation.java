@@ -97,7 +97,7 @@ public class EcodInstallation implements EcodDatabase {
 	 * installations at the same path can lead to race conditions when downloading
 	 * files.
 	 * @param cacheLocation Location to save files, typically from the PDB_CACHE_DIR parameter
-	 * @param requestedVersion ECOD requestedVersion to fetch
+	 * @param version ECOD requestedVersion to fetch
 	 */
 	public EcodInstallation(String cacheLocation, String version) {
 		domainsFileLock = new ReentrantReadWriteLock();
@@ -295,7 +295,7 @@ public class EcodInstallation implements EcodDatabase {
 
 	/**
 	 * Specify a different mirror for the ECOD server.
-	 * @param urlFormat the urlFormat to set
+	 * @param url the urlFormat to set
 	 */
 	public void setUrl(String url) {
 		this.url = url;

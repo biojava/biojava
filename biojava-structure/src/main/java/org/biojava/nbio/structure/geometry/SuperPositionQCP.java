@@ -74,12 +74,12 @@ import org.slf4j.LoggerFactory;
  * <p>
  * Citations:
  * <p>
- * Liu P, Agrafiotis DK, & Theobald DL (2011) Reply to comment on: "Fast
+ * Liu P, Agrafiotis DK, &amp; Theobald DL (2011) Reply to comment on: "Fast
  * determination of the optimal rotation matrix for macromolecular
  * superpositions." Journal of Computational Chemistry 32(1):185-186.
  * [http://dx.doi.org/10.1002/jcc.21606]
  * <p>
- * Liu P, Agrafiotis DK, & Theobald DL (2010) "Fast determination of the optimal
+ * Liu P, Agrafiotis DK, &amp; Theobald DL (2010) "Fast determination of the optimal
  * rotation matrix for macromolecular superpositions." Journal of Computational
  * Chemistry 31(7):1561-1563. [http://dx.doi.org/10.1002/jcc.21439]
  * <p>
@@ -96,7 +96,7 @@ import org.slf4j.LoggerFactory;
  * <p>
  * dtheobald@brandeis.edu
  * <p>
- * Pu Liu Johnson & Johnson Pharmaceutical Research and Development, L.L.C. 665
+ * Pu Liu Johnson &amp; Johnson Pharmaceutical Research and Development, L.L.C. 665
  * Stockton Drive Exton, PA 19341 USA
  * <p>
  * pliu24@its.jnj.com
@@ -587,7 +587,7 @@ public final class SuperPositionQCP extends SuperPositionAbstract {
 	 * @param fixed
 	 * @param moved
 	 * @param weight
-	 *            array of weigths for each equivalent point position
+	 *            array of weights for each equivalent point position
 	 * @return weighted RMSD.
 	 */
 	public double getWeightedRmsd(Point3d[] fixed, Point3d[] moved, double[] weight) {
@@ -598,13 +598,11 @@ public final class SuperPositionQCP extends SuperPositionAbstract {
 	/**
 	 * The QCP method can be used as a two-step calculation: first compute the
 	 * RMSD (fast) and then compute the superposition.
-	 *
+	 * <p>
 	 * This method assumes that the RMSD of two arrays of points has been
 	 * already calculated using {@link #getRmsd(Point3d[], Point3d[])} method
 	 * and calculates the transformation of the same two point arrays.
 	 *
-	 * @param fixed
-	 * @param moved
 	 * @return transformation matrix as a Matrix4d to superpose moved onto fixed
 	 *         point arrays
 	 */

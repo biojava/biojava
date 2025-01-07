@@ -51,7 +51,7 @@ import java.util.Date;
 
 
 /**
- * Tracks Memory allocated & used, displayed in graph form.
+ * Tracks Memory allocated and used, displayed in graph form.
  */
 public class MemoryMonitor extends JPanel {
 

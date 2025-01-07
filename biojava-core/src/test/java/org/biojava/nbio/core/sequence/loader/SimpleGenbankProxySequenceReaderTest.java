@@ -34,7 +34,6 @@ import org.slf4j.LoggerFactory;
  *
  * @author Jacek Grzebyta
  * @author Paolo Pavan
- * @see InfoTask
  */
 public class SimpleGenbankProxySequenceReaderTest {
 

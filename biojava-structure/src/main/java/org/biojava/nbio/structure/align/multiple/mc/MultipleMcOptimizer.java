@@ -108,7 +108,6 @@ public class MultipleMcOptimizer implements Callable<MultipleAlignment> {
 	 *            the parameter beam
 	 * @param reference
 	 *            the index of the most similar structure to all others
-	 * @throws StructureException
 	 */
 	public MultipleMcOptimizer(MultipleAlignment seedAln,
 			MultipleMcParameters params, int reference) {
@@ -235,7 +234,7 @@ public class MultipleMcOptimizer implements Callable<MultipleAlignment> {
 	 * <li>Shrink Block: move a block column to the freePool.
 	 * <li>Insert gap: insert a gap in a random position of the alignment.
 	 * </ul>
-	 * </li>
+	 *
 	 */
 	public MultipleAlignment optimize() throws StructureException {
 

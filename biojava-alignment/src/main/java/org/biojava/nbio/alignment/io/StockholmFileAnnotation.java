@@ -160,7 +160,7 @@ public class StockholmFileAnnotation {
 		this.dbReferences = dbReferences;
 	}
 	/**
-	 * @param dbReference the string without the initial annotation identifier ( #=GS DR )
+	 * @param dbReferenceRepresentingString the string without the initial annotation identifier ( #=GS DR )
 	 */
 	public void addDBReference(String dbReferenceRepresentingString) {
 		if (this.dbReferences == null) {

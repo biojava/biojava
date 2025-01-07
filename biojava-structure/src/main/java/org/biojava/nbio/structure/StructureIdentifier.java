@@ -33,12 +33,12 @@ import org.biojava.nbio.structure.align.util.AtomCache;
  * An identifier that <em>uniquely</em> identifies a whole {@link Structure} or
  * arbitrary substructure. Common examples would be reducing a structure to a
  * single chain, domain, or residue range.
- *
+ * <p>
  * StructureIdentifiers are represented by unique strings. The getId() and fromId()
  * methods convert to and from the string representation.
- *
+ * <p>
  * Implementations should provide a constructor which takes a String. A static
- * <tt>fromId(String)</tt> method is also recommended.
+ * <code>fromId(String)</code> method is also recommended.
  *
  * @author dmyersturnbull
  * @author Spencer Bliven
@@ -48,7 +48,7 @@ public interface StructureIdentifier extends Serializable {
 	/**
 	 * Get the String form of this identifier.
 	 *
-	 * It is recommended that the {@link #toString()} method also return the
+	 * It is recommended that the toString() method also return the
 	 * identifier, for consistency during serialization.
 	 * @return The String form of this identifier
 	 */
@@ -59,11 +59,11 @@ public interface StructureIdentifier extends Serializable {
 	 * Loads a structure encompassing the structure identified.
 	 * The Structure returned should be suitable for passing as
 	 * the input to {@link #reduce(Structure)}.
-	 *
+	 * <p>
 	 * It is recommended that the most complete structure available be returned
 	 * (e.g. the full PDB) to allow processing of unselected portions where
 	 * appropriate.
-	 * @param AtomCache A potential sources of structures
+	 * @param cache A potential sources of structures
 	 * @return A Structure containing at least the atoms identified by this,
 	 *  or null if Structures are not applicable.
 	 * @throws StructureException For errors loading and parsing the structure
@@ -92,7 +92,6 @@ public interface StructureIdentifier extends Serializable {
 	 * ID should match that returned by getPdbId(), if applicable.
 	 * @return
 	 * @throws StructureException
-	 * @see StructureTools#getReducedStructure(Structure, String)
 	 */
 	Structure reduce(Structure input) throws StructureException;
 

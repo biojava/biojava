@@ -38,7 +38,7 @@ public class UncompressFile {
 	 * Reads a file, uncompresses it, and sends the result to stdout.
 	 * Also writes trivial statistics to stderr.
 	 * @param args An array with one String element, the name of the file to read.
-	 * @throws IOException for any failure
+	 * @throws Exception for any failure
 	 */
 	public static void main(String[] args) throws Exception {
 

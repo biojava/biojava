@@ -27,7 +27,7 @@ import java.util.*;
  * Need to handle very large spreadsheets of expression data so keep memory
  * footprint low
  *
- * @author Scooter Willis <willishf at gmail dot com>
+ * @author Scooter Willis 
  */
 public class WorkSheet {
 
@@ -1464,7 +1464,7 @@ public class WorkSheet {
 	/**
 	 * Read a CSV/Tab delimited file where you pass in the delimiter
 	 *
-	 * @param f
+	 * @param is
 	 * @param delimiter
 	 * @return
 	 * @throws Exception

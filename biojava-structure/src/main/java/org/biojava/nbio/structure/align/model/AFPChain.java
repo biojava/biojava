@@ -973,6 +973,10 @@ public class AFPChain implements Serializable, Cloneable {
 		this.optRmsd = optRmsd;
 	}
 
+	/**
+	 * The number of aligned residues in the final alignment.
+	 * @return
+	 */
 	public int getOptLength()
 	{
 		return optLength;
@@ -1023,7 +1027,7 @@ public class AFPChain implements Serializable, Cloneable {
 
 	/**
 	 * @return The total length of the alignment, including gaps
-	 * @see #getOptLength(), the number of aligned residues in the final alignment.
+	 * @see #getOptLength()
 	 */
 	public int getAlnLength()
 	{
@@ -1308,7 +1312,7 @@ public class AFPChain implements Serializable, Cloneable {
 	 * up to the alignment algorithm.
 	 *
 	 * <p>Note:
-	 * A {@link org.biojava.nbio.structure.gui.JMatrixPanel}, which is used in
+	 * The org.biojava.nbio.structure.gui.JMatrixPanel, used in
 	 * the structure-gui package to display distance matrices, will display the
 	 * transpose of this matrix. Be sure to take that into account when debugging
 	 * visually.
