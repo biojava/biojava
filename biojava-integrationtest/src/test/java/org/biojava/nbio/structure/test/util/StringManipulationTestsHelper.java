@@ -42,7 +42,7 @@ public class StringManipulationTestsHelper {
 
 	/**
 	 * Asserts that two XML-representing strings are equal, by recursively
-	 * comparing each node's set of properties & children nodes. This method
+	 * comparing each node's set of properties and children nodes. This method
 	 * should be used when two XMLs are considered identical when all nodes are
 	 * identical regardless to their order
 	 *
