@@ -19,10 +19,8 @@
  *
  */
 /**
- * <BODY>
- * <P>
  * Interfaces and classes for protein structure (PDB).
- * </P>
+ *
  * <p>
  * See also the <a href="https://github.com/biojava/biojava3-tutorial/blob/master/structure/README.md">BioJava 3 tutorial</a> for more information on the protein structure modules.
  * </p>
@@ -62,8 +60,7 @@
  * For more documentation on how to work with the Structure API please
  * see <a href="http://biojava.org/wiki/BioJava:CookBook#Protein_Structure" target="_top">
  * http://biojava.org/wiki/BioJava:CookBook#Protein_Structure</a>
- * </p>
- * </BODY>
+ *
  * @since 1.5
  */
 package org.biojava.nbio.structure;

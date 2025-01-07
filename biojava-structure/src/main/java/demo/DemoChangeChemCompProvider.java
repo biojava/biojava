@@ -37,17 +37,18 @@ import java.util.List;
  *  componentsby using the {@link DownloadChemCompProvider}. It fetches and locally caches chemical component
  *  definitions as they are encountered during file parsing. It can be enabled by using the
  *  {@link FileParsingParameters#setLoadChemCompInfo(boolean)} method.
- *
+ * <p>
  * The {@link AllChemCompProvider} downloads and unpacks all chemcomps. It is slower and requires more memory than the
  * default {@link DownloadChemCompProvider}, but it avoids network access to the FTP site, if a new chemcomp is
  * detected, that has not been downloaded yet.
- *
+ * <p>
  * Since all chemcomps will be kept in memory, the standard memory that is available to a JVM will not be sufficient
  * in order to run this demo. Please start with -Xmx200M
  *
  * @author Andreas Prlic
  */
 public class DemoChangeChemCompProvider {
+
 	public static void main(String[] args){
 		String pdbId = "1O1G";
 		boolean loadChemComp = true;

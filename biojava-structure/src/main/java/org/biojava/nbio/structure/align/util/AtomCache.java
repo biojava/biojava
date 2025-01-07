@@ -162,7 +162,6 @@ public class AtomCache {
 	 * @return an array of Atoms.
 	 * @throws IOException
 	 * @throws StructureException
-	 * @see
 	 */
 	public Atom[] getAtoms(String name) throws IOException, StructureException {
 		return getAtoms(new StructureName(name));
@@ -189,7 +188,6 @@ public class AtomCache {
 	 * @return an array of Atoms.
 	 * @throws IOException
 	 * @throws StructureException
-	 * @see
 	 */
 	public Atom[] getRepresentativeAtoms(String name) throws IOException, StructureException {
 		return getRepresentativeAtoms(new StructureName(name));
@@ -223,7 +221,7 @@ public class AtomCache {
 	 * if false the outputStructure will be as the original with added chains with renamed asymIds (in the form originalAsymId_transformId and originalAuthId_transformId).
 	 * @return a structure object
 	 * @throws IOException
-	 * @throws StructureException if biassemblyId < 0 or other problems while loading structure
+	 * @throws StructureException if biassemblyId &lt; 0 or other problems while loading structure
 	 * @since 3.2
 	 */
 	public Structure getBiologicalAssembly(String pdbId, int bioAssemblyId, boolean multiModel)
@@ -247,7 +245,7 @@ public class AtomCache {
 	 * if false the outputStructure will be as the original with added chains with renamed asymIds (in the form originalAsymId_transformId and originalAuthId_transformId).
 	 * @return a structure object
 	 * @throws IOException
-	 * @throws StructureException if biassemblyId < 0 or other problems while loading structure
+	 * @throws StructureException if biassemblyId &lt; 0 or other problems while loading structure
 	 * @since 6.0.0
 	 */
 	public Structure getBiologicalAssembly(PdbId pdbId, int bioAssemblyId, boolean multiModel)
@@ -305,7 +303,7 @@ public class AtomCache {
 	 * the asymmetric unit will be returned, e.g. for NMR structures.
 	 *
 	 * <p>Biological assemblies can also be accessed using
-	 * <tt>getStructure("BIO:<i>[pdbId]</i>")</tt>
+	 * <code>getStructure("BIO:<i>[pdbId]</i>")</code>
 	 * @param pdbId the PDB id
 	 * @param multiModel if true the output Structure will be a multi-model one with one transformId per model,
 	 * if false the outputStructure will be as the original with added chains with renamed asymIds (in the form originalAsymId_transformId and originalAuthId_transformId).
@@ -791,7 +789,7 @@ public class AtomCache {
 
 	/**
 	 * Loads a structure directly by PDB ID
-	 * @param pdbId
+	 * @param id
 	 * @return
 	 * @throws IOException
 	 * @throws StructureException
@@ -806,7 +804,6 @@ public class AtomCache {
 	 * @param pdbId
 	 * @return
 	 * @throws IOException
-	 * @throws StructureException
 	 */
 	public Structure getStructureForPdbId(PdbId pdbId) throws IOException {
 		if (pdbId == null)

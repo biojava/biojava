@@ -63,7 +63,6 @@ import org.slf4j.LoggerFactory;
  * <li>Repeat the last two steps until no more significant results are found.
  * <li>Map back all residues in a multiple alignment of the repeats.
  * </ul>
- * </li>
  *
  * @author Aleix Lafita
  * @since 4.1.1

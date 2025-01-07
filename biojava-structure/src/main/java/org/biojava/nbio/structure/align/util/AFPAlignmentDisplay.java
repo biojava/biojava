@@ -168,8 +168,9 @@ public class AFPAlignmentDisplay
 	 * <ul>
 	 * <li>{@link AFPChain#getOptAln()} and lengths
 	 * </ul>
-	 *
-	 * <section>Known Bugs</section>
+	 * <p>
+	 * Known Bugs:
+	 * <p>
 	 * Expects the alignment to have linear topology. May give odd results
 	 * for circular permutations and other complicated topologies.
 	 *

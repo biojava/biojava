@@ -39,7 +39,7 @@ import org.biojava.nbio.structure.jama.Matrix;
  * The original CE paper is available from here: <a href="http://peds.oxfordjournals.org/cgi/content/short/11/9/739">http://peds.oxfordjournals.org/cgi/content/short/11/9/739</a>
  *
  * For a demo of how to use this algorithm, visit the BioJava web site:
- * <a href="">CE usage example</a>.
+ * <a href="https://github.com/biojava/biojava-tutorial/blob/master/structure/alignment.md">CE usage example</a>.
  *
  * The BioJava CE version is based on CE version 2.3 (2003 or 2004).
  *

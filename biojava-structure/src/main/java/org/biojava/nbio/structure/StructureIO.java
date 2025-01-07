@@ -206,6 +206,7 @@ public class StructureIO {
 	 * Returns all biological assemblies for the given PDB id.
 	 * <p>
 	 * The output Structure will be different depending on the multiModel parameter:
+	 * <ul>
 	 * <li>
 	 * the symmetry-expanded chains are added as new models, one per transformId. All original models but
 	 * the first one are discarded.
@@ -214,6 +215,7 @@ public class StructureIO {
 	 * as original with symmetry-expanded chains added with renamed chain ids and names (in the form
 	 * originalAsymId_transformId and originalAuthId_transformId)
 	 * </li>
+	 * </ul>
 	 * If only one biological assembly is required use {@link #getBiologicalAssembly(String)} or {@link #getBiologicalAssembly(String, int)} instead.
 	 * @param pdbId
 	 * @param multiModel if true the output Structure will be a multi-model one with one transformId per model,

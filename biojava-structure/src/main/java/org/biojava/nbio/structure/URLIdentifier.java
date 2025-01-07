@@ -42,15 +42,15 @@ import java.util.regex.Pattern;
 
 /**
  * Represents a structure loaded from a URL (including a file URL)
- *
+ * <p>
  * A few custom query parameters are supported:
  *
  * <ul>
- * <li><tt>format=[pdb|cif]</tt> Specify the file format (will otherwise be
+ * <li><code>format=[pdb|cif]</code> Specify the file format (will otherwise be
  *     guessed from the extension)
- * <li><tt>pdbId=[String]</tt> Specify the PDB ID (also guessed from the filename)
- * <li><tt>chainID=[String]</tt> A single chain from the structure
- * <li><tt>residues=[String]</tt> Residue ranges, in a form understood by
+ * <li><code>pdbId=[String]</code> Specify the PDB ID (also guessed from the filename)
+ * <li><code>chainID=[String]</code> A single chain from the structure
+ * <li><code>residues=[String]</code> Residue ranges, in a form understood by
  *     {@link SubstructureIdentifier}
  * </ul>
  * @author Spencer Bliven

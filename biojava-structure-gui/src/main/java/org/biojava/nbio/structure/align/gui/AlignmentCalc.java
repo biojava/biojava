@@ -35,13 +35,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-/** A class that obtains two structures via DAS and aligns them
+/**
+ * A class that obtains two structures via DAS and aligns them
  *  This is done in a separate thread.
  *  It is possible to register Event listeners to get notification of when the download has finished.
  *
  * @author Andreas Prlic
  * @since 1.7
- * @version %I% %G%
  */
 public class AlignmentCalc implements AlignmentCalculationRunnable {
 

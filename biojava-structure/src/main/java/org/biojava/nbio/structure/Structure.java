@@ -31,9 +31,8 @@ import java.util.List;
 
 
 /**
- *
  * Interface for a structure object. Provides access to the data of a PDB file.
- *
+ * <p>
  * A structure object allows to access the PDB header information as well
  * as to the data from the ATOM records. The header information is
  * currently available through the following objects:
@@ -61,27 +60,16 @@ import java.util.List;
  *
  * <p>
  *  The tutorial for the BioJava structure modules can be found at <a href="https://github.com/biojava/biojava3-tutorial/tree/master/structure">github</a>.
- * </p>
- *
- *
  * <hr/>
  * <p>
  * Q: How can I get a Structure object from a PDB file?
- * </p>
  * <p>
  * A:
- * </p>
  * <pre>
- *  {@link Structure} loadStructure(String pathToPDBFile){
- * 		{@link PDBFileReader} pdbreader = new {@link PDBFileReader}();
- *
- * 		{@link Structure} structure = null;
- * 		try{
- * 			structure = pdbreader.getStructure(pathToPDBFile);
- * 			System.out.println(structure);
- * 		} catch (IOException e) {
- * 			e.printStackTrace();
- * 		}
+ *  Structure loadStructure(String pathToPDBFile) {
+ * 		PDBFileReader pdbreader = new PDBFileReader();
+ * 		Structure structure = pdbreader.getStructure(pathToPDBFile);
+ * 		System.out.println(structure);
  * 		return structure;
  * 	}
  *  </pre>
@@ -89,20 +77,16 @@ import java.util.List;
  * <hr>
  * <p>
  * Q: How can I calculate Phi and Psi angles of AminoAcids?
- * </p>
  * <p>
  * A:
- * </p>
- * <pre>
- *  void calcPhiPsi({@link Structure} structure){
- *
+ * <pre>{@code
+ *  void calcPhiPsi(Structure structure) {
  *
  * 		// get the first chain from the structure
- *
- * 		{@link Chain} chain  = structure.getChain(0);
+ * 		Chain chain  = structure.getChain(0);
  *
  * 		// A protein chain consists of a number of groups. These can be either
- * 		// {@link AminoAcid}, {@link HetatomImpl Hetatom} or {@link NucleotideImpl Nucleotide} groups.
+ * 		// AminoAcid, HetatomImpl or NucleotideImpl groups.
  * 		//
  * 		// Note: BioJava provides access to both the ATOM and SEQRES data in a PDB file.
  * 		// since we are interested in doing calculations here, we only request the groups
@@ -111,54 +95,35 @@ import java.util.List;
  * 		//  get the Groups of the chain that are AminoAcids.
  * 		List<Group> groups = chain.getAtomGroups(GroupType.AMINOACID);
  *
- * 		{@link AminoAcid} a;
- * 		{@link AminoAcid} b;
- * 		{@link AminoAcid} c ;
- *
- * 		for ( int i=0; i < groups.size(); i++){
- *
+ * 		AminoAcid a;
+ * 		AminoAcid b;
+ * 		AminoAcid c;
+ * 		for (int i=0; i < groups.size(); i++) {
  * 			// since we requested only groups of type AMINOACID they will always be amino acids
  * 			// Nucleotide and Hetatom groups will not be present in the groups list.
+ * 			b = (AminoAcid)groups.get(i);
+ * 			double phi = 360.0;
+ * 			double psi = 360.0;
  *
- * 			b = ({@link AminoAcid})groups.get(i);
- *
- * 			double phi =360.0;
- * 			double psi =360.0;
- *
- * 			if ( i > 0) {
- * 				a = ({@link AminoAcid})groups.get(i-1) ;
- * 				try {
- *
- * 					// the Calc class provides utility methods for various calculations on
- * 					// structures, groups and atoms
- *
- * 					phi = {@link Calc}.getPhi(a,b);
- * 				} catch ({@link StructureException} e){
- * 					e.printStackTrace();
- * 					phi = 360.0 ;
- * 				}
+ * 			if (i > 0) {
+ * 				a = (AminoAcid)groups.get(i-1) ;
+ * 				// the Calc class provides utility methods for various calculations on
+ * 				// structures, groups and atoms
+ * 				phi = Calc.getPhi(a,b);
  * 			}
- * 			if ( i < groups.size()-1) {
- * 				c = ({@link AminoAcid})groups.get(i+1) ;
- * 				try {
- * 					psi = {@link Calc}.getPsi(b,c);
- * 				}catch ({@link StructureException} e){
- * 					e.printStackTrace();
- * 					psi = 360.0 ;
- * 				}
+ * 			if (i < groups.size()-1) {
+ * 				c = (AminoAcid)groups.get(i+1) ;
+ * 				psi = Calc.getPsi(b, c);
  * 			}
- *
  * 			System.out.print(b.getPDBCode() + " " + b.getPDBName() + ":"  );
- *
  * 			System.out.println(String.format("\tphi: %+7.2f psi: %+7.2f", phi, psi));
- *
  * 		}
- * </pre>
+ * 	}
+ * }</pre>
  * <hr>
  *
  * @author Andreas Prlic
  * @since 1.4
- * @version %I% %G%
  */
 public interface Structure extends Cloneable, Serializable {
 
@@ -776,12 +741,10 @@ public interface Structure extends Cloneable, Serializable {
 	 *
 	 * @param pdb_id  a String specifying the PDBCode
 	 * @see #getPDBCode
-	 * @deprecated use {@link #setPDBCode(PdbId)}
+	 * @deprecated use {@link #setPdbId(PdbId)}
 	 */
 	@Deprecated
 	void setPDBCode (String pdb_id);
-
-
 
 	/**
 	 * Returns the PDB identifier associated with this StructureIdentifier.
@@ -789,7 +752,6 @@ public interface Structure extends Cloneable, Serializable {
 	 * @since 6.0.0
 	 */
 	PdbId getPdbId();
-	
 	
 	/**Sets the {@link PdbId} identifier associated with this structure.
 	 * @param pdbId the {@link PdbId} identifier object to set

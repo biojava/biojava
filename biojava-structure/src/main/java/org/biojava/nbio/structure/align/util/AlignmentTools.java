@@ -470,10 +470,10 @@ public class AlignmentTools {
 	 * Retrieves the optimum alignment from an AFPChain and returns it as a
 	 * java collection. The result is indexed in the same way as
 	 * {@link AFPChain#getOptAln()}, but has the correct size().
-	 * <pre>
+	 * <pre>{@code
 	 * List<List<List<Integer>>> aln = getOptAlnAsList(AFPChain afpChain);
 	 * aln.get(blockNum).get(structureNum={0,1}).get(pos)
-	 * </pre>
+	 * }</pre>
 	 *
 	 * @param afpChain
 	 * @return
@@ -504,7 +504,7 @@ public class AlignmentTools {
 
 
 	/**
-	 * A Map<K,V> can be viewed as a function from K to V. This class represents
+	 * A {@code Map<K,V>} can be viewed as a function from K to V. This class represents
 	 * the identity function. Getting a value results in the value itself.
 	 *
 	 * <p>The class is a bit inconsistent when representing its contents. On
@@ -1078,9 +1078,9 @@ public class AlignmentTools {
 
 	/**
 	 * Method that calculates the number of gaps in each subunit block of an optimal AFP alignment.
-	 *
-	 * INPUT: an optimal alignment in the format int[][][].
-	 * OUTPUT: an int[] array of <order> length containing the gaps in each block as int[block].
+	 * @param optAln
+	 * 				an optimal alignment in the format int[][][]
+	 * @return an int[] array of order length containing the gaps in each block as int[block]
 	 */
 	public static int[] calculateBlockGap(int[][][] optAln){
 

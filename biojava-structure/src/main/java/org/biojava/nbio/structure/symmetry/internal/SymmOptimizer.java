@@ -43,7 +43,7 @@ import org.slf4j.LoggerFactory;
  * Optimizes a symmetry alignment by a Monte Carlo score optimization of the
  * repeat multiple alignment. The superposition of the repeats is not free
  * (felxible), because it is constrained on the symmetry axes found in the
- * structure. This is the main difference to the {@link MultipleMC} algorithm in
+ * structure. This is the main difference to the {@link org.biojava.nbio.structure.align.multiple.mc.MultipleMcMain} algorithm in
  * biojava. Another major difference is that the free Pool is shared for all
  * repeats, so that no residue can appear to more than one repeat at a time.
  * <p>
