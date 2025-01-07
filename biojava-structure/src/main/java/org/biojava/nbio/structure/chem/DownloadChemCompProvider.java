@@ -109,11 +109,13 @@ public class DownloadChemCompProvider implements ChemCompProvider {
     /**
      * Set the path to append to the serverBaseUrl (settable in {@link #setServerBaseUrl(String)}).
      * The string can contain placeholders that will be expanded at runtime:
+     * <ul>
      * <li>"{ccd_id}" to be replaced by the chemical component identifier, in capitals</li>
      * <li>"{ccd_id:beginIndex-endIndex}" to be replaced by a substring of the chemical component identifier in capitals,
      * with indices following the same convention as {@link String#substring(int, int)} </li>
      * <li>"{ccd_id:index}" to be replaced by a substring of the chemical component identifier in capitals,
      * with index either a positive or negative integer to substring from left or right of the string respectively.</li>
+     * </ul>
      * If any of the indices are off-bounds, then the full chemical component identifier is replaced
      */
     public static void setChemCompPathUrlTemplate(String chemCompPathUrlTemplate) {

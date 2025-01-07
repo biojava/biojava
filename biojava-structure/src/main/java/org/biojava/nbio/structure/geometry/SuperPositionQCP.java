@@ -587,7 +587,7 @@ public final class SuperPositionQCP extends SuperPositionAbstract {
 	 * @param fixed
 	 * @param moved
 	 * @param weight
-	 *            array of weigths for each equivalent point position
+	 *            array of weights for each equivalent point position
 	 * @return weighted RMSD.
 	 */
 	public double getWeightedRmsd(Point3d[] fixed, Point3d[] moved, double[] weight) {
@@ -598,13 +598,11 @@ public final class SuperPositionQCP extends SuperPositionAbstract {
 	/**
 	 * The QCP method can be used as a two-step calculation: first compute the
 	 * RMSD (fast) and then compute the superposition.
-	 *
+	 * <p>
 	 * This method assumes that the RMSD of two arrays of points has been
 	 * already calculated using {@link #getRmsd(Point3d[], Point3d[])} method
 	 * and calculates the transformation of the same two point arrays.
 	 *
-	 * @param fixed
-	 * @param moved
 	 * @return transformation matrix as a Matrix4d to superpose moved onto fixed
 	 *         point arrays
 	 */

@@ -940,7 +940,6 @@ public class MultipleAlignmentTools {
 	 * @param msta
 	 *            MultipleAlignment of protein structures
 	 * @return Phylogeny phylogenetic tree
-	 * @throws CompoundNotFoundException
 	 */
 	public static Phylogeny getStructuralTree(MultipleAlignment msta) {
 		double[][] rmsdMat = MultipleAlignmentTools.getRMSDMatrix(msta)

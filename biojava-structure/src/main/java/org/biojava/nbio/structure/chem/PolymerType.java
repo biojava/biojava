@@ -106,22 +106,22 @@ public enum PolymerType implements Serializable {
     }
 
     /**
-     * Convenience <tt>Set</tt> of polymer types classified as protein.  This only contains {@link #peptide}
+     * Convenience <code>Set</code> of polymer types classified as protein.  This only contains {@link #peptide}
      */
     public static final Set<PolymerType> PROTEIN_ONLY;
 
     /**
-     * Convenience <tt>Set</tt> of polymer types classified as DNA.  This only contains {@link #dna}
+     * Convenience <code>Set</code> of polymer types classified as DNA.  This only contains {@link #dna}
      */
     public static final Set<PolymerType> DNA_ONLY;
 
     /**
-     * Convenience <tt>Set</tt> of polymer types classified as RNA.  This only contains {@link #rna}
+     * Convenience <code>Set</code> of polymer types classified as RNA.  This only contains {@link #rna}
      */
     public static final Set<PolymerType> RNA_ONLY;
 
     /**
-     * Convenience <tt>Set</tt> of polymer types classified as DNA.  This contains:
+     * Convenience <code>Set</code> of polymer types classified as DNA.  This contains:
      * <ul>
      * <li>{@link #dna}</li>
      * <li>{@link #rna}</li>
@@ -131,7 +131,7 @@ public enum PolymerType implements Serializable {
     public static final Set<PolymerType> POLYNUCLEOTIDE_ONLY;
 
     /**
-     * Convenience <tt>Set</tt> of all polymer types.
+     * Convenience <code>Set</code> of all polymer types.
      */
     public static final Set<PolymerType> ALL_POLYMER_TYPES;
 

@@ -58,7 +58,7 @@ public class BioAssemblyIdentifier implements StructureIdentifier {
 	}
 
 	/**
-	 * @param pdbCode
+	 * @param pdbId
 	 * @param biolNr
 	 */
 	public BioAssemblyIdentifier(PdbId pdbId, int biolNr) {

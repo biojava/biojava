@@ -1015,7 +1015,7 @@ public class StructureImpl implements Structure {
 	}
 	
 	/** {@inheritDoc} 
-	 * @deprecated use {@link #setPDBCode(PdbId)}
+	 * @deprecated use {@link #setPdbId(PdbId)}
 	 * */
 	@Deprecated
 	@Override

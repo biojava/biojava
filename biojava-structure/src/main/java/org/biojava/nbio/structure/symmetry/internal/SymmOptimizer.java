@@ -107,8 +107,6 @@ public class SymmOptimizer {
 	 *
 	 * @param symmResult
 	 *            CeSymmResult with all the information
-	 * @throws RefinerFailedException
-	 * @throws StructureException
 	 */
 	public SymmOptimizer(CeSymmResult symmResult) {
 
@@ -181,11 +179,12 @@ public class SymmOptimizer {
 	 * Optimization method based in a Monte-Carlo approach. Starting from the
 	 * refined alignment uses 4 types of moves:
 	 * <p>
+	 * <ul>
 	 * <li>1- Shift Row: if there are enough freePool residues available.
 	 * <li>2- Expand Block: add another alignment column.
 	 * <li>3- Shrink Block: move a block column to the freePool.
 	 * <li>4- Insert gap: insert a gap in a position of the alignment.
-	 *
+	 * </ul>
 	 * @throws StructureException
 	 * @throws RefinerFailedException
 	 *             if the alignment is not symmetric or too short.

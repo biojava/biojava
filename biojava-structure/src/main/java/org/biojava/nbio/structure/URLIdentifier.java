@@ -75,7 +75,7 @@ public class URLIdentifier implements StructureIdentifier {
 	//TODO: should this get renamed to chainname or asymid?
 	public static final String CHAINID_PARAM = "chainid";
 	/**
-	 * URL parameter specifying residue ranges to include, e.g. <tt>residues=A:1-70</tt>
+	 * URL parameter specifying residue ranges to include, e.g. <code>residues=A:1-70</code>
 	 * @see SubstructureIdentifier
 	 */
 	public static final String RESIDUES_PARAM = "residues";

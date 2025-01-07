@@ -618,7 +618,7 @@ public class AsaCalculator {
 	 *
 	 * If atom is neither part of a nucleotide nor of a standard aminoacid,
 	 * the default vdw radius for the element is returned. If atom is of
-	 * unknown type (element) the vdw radius of {@link Element().N} is returned
+	 * unknown type (element) the vdw radius of {@link Element#N} is returned
 	 *
 	 * @param atom
 	 * @return

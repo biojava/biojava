@@ -35,7 +35,7 @@ import java.util.TreeMap;
  *  Does not allow duplicate keys.
  *
  *  This class represents an ordered symbol table. It assumes that
- *  the elements are <tt>Comparable</tt>.
+ *  the elements are <code>Comparable</code>.
  *  It supports the usual <em>put</em>, <em>get</em>, <em>contains</em>,
  *  and <em>delete</em> methods.
  *  It also provides ordered methods for finding the <em>minimum</em>,
@@ -111,9 +111,9 @@ public class SymbolTable<Key extends Comparable<Key>, Value> implements Iterable
 	}
 
 	/**
-	 * Return an <tt>Iterator</tt> for the keys in the table.
-	 * To iterate over all of the keys in the symbol table <tt>st</tt>, use the
-	 * foreach notation: <tt>for (Key key : st)</tt>.
+	 * Return an <code>Iterator</code> for the keys in the table.
+	 * To iterate over all of the keys in the symbol table <code>st</code>, use the
+	 * foreach notation: <code>for (Key key : st)</code>.
 	 */
 	@Override
 	public Iterator<Key> iterator() {
@@ -121,9 +121,9 @@ public class SymbolTable<Key extends Comparable<Key>, Value> implements Iterable
 	}
 
 	/**
-	 * Return an <tt>Iterable</tt> for the keys in the table.
-	 * To iterate over all of the keys in the symbol table <tt>st</tt>, use the
-	 * foreach notation: <tt>for (Key key : st.keys())</tt>.
+	 * Return an <code>Iterable</code> for the keys in the table.
+	 * To iterate over all of the keys in the symbol table <code>st</code>, use the
+	 * foreach notation: <code>for (Key key : st.keys())</code>.
 	 */
 	public Iterable<Key> keys() {
 		return st.keySet();
@@ -153,7 +153,7 @@ public class SymbolTable<Key extends Comparable<Key>, Value> implements Iterable
 	}
 
 	/**
-	 * Return the largest key in the table <= k.
+	 * Return the largest key in the table &lt;= k.
 	 */
 	public Key floor(Key k) {
 		if (st.containsKey(k)) return k;

@@ -237,7 +237,6 @@ public class MultipleAlignmentImpl extends AbstractScoresCache implements
 	/**
 	 * Updates all cached properties
 	 *
-	 * @throws StructureException
 	 */
 	protected void updateCache() {
 		updateCoreLength();

@@ -48,7 +48,7 @@ public interface StructureIdentifier extends Serializable {
 	/**
 	 * Get the String form of this identifier.
 	 *
-	 * It is recommended that the {@link #toString()} method also return the
+	 * It is recommended that the toString() method also return the
 	 * identifier, for consistency during serialization.
 	 * @return The String form of this identifier
 	 */
@@ -63,7 +63,7 @@ public interface StructureIdentifier extends Serializable {
 	 * It is recommended that the most complete structure available be returned
 	 * (e.g. the full PDB) to allow processing of unselected portions where
 	 * appropriate.
-	 * @param AtomCache A potential sources of structures
+	 * @param cache A potential sources of structures
 	 * @return A Structure containing at least the atoms identified by this,
 	 *  or null if Structures are not applicable.
 	 * @throws StructureException For errors loading and parsing the structure
@@ -92,7 +92,6 @@ public interface StructureIdentifier extends Serializable {
 	 * ID should match that returned by getPdbId(), if applicable.
 	 * @return
 	 * @throws StructureException
-	 * @see StructureTools#getReducedStructure(Structure, String)
 	 */
 	Structure reduce(Structure input) throws StructureException;
 

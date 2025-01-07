@@ -147,7 +147,7 @@ public class Rotation {
 	}
 
 	/**
-	 * @param direction the direction to set
+	 * @param axis the direction to set
 	 */
 	public void setDirection(int axis) {
 		this.direction = axis;

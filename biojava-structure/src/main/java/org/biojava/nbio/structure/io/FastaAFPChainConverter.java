@@ -51,7 +51,7 @@ import java.io.InputStream;
 import java.util.*;
 
 /**
- * A collection of static utilities to convert between {@link AFPChain AFPChains} and {@link FastaSequence FastaSequences}.
+ * A collection of static utilities to convert between {@link AFPChain AFPChains} and FastaSequences.
  *
  * @author dmyersturnbull
  * @see StructureSequenceMatcher
@@ -73,7 +73,7 @@ public class FastaAFPChainConverter {
 
 	/**
 	 * Takes a structure and sequence corresponding to an alignment between a structure or sequence and itself (or even a structure with a sequence), where the result has a circular permutation site
-	 * {@link cpSite} residues to the right.
+	 * <code>cpSite</code> residues to the right.
 	 *
 	 * @param fastaFile A FASTA file containing exactly 2 sequences, the first unpermuted and the second permuted
 	 * @param cpSite
@@ -97,7 +97,7 @@ public class FastaAFPChainConverter {
 
 	/**
 	 * Takes a structure and sequence corresponding to an alignment between a structure or sequence and itself (or even a structure with a sequence), where the result has a circular permutation site
-	 * {@link cpSite} residues to the right.
+	 * <code>cpSite</code> residues to the right.
 	 *
 	 * @param first The unpermuted sequence
 	 * @param second The sequence permuted by cpSite

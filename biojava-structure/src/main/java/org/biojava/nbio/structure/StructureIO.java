@@ -81,7 +81,7 @@ public class StructureIO {
 	 *  <ul>
 	 *  <li>If only a PDB code is provided, the whole structure will be return including ligands, but the first model only (for NMR).
 	 *	<li>Chain IDs are case sensitive, PDB ids are not. To specify a particular chain write as: 4hhb.A or 4HHB.A </li>
-	 *  <li>To specify a SCOP domain write a scopId e.g. d2bq6a1. Some flexibility can be allowed in SCOP domain names, see {@link #setStrictSCOP(boolean)}</li>
+	 *  <li>To specify a SCOP domain write a scopId e.g. d2bq6a1</li>
 	 *  <li>URLs are accepted as well</li>
 	 *  </ul>
 	 *
@@ -116,6 +116,7 @@ public class StructureIO {
 	 * Returns the first biological assembly that is available for the given PDB id.
 	 * <p>
 	 * The output Structure will be different depending on the multiModel parameter:
+	 * <ul>
 	 * <li>
 	 * the symmetry-expanded chains are added as new models, one per transformId. All original models but
 	 * the first one are discarded.
@@ -124,9 +125,10 @@ public class StructureIO {
 	 * as original with symmetry-expanded chains added with renamed chain ids and names (in the form
 	 * originalAsymId_transformId and originalAuthId_transformId)
 	 * </li>
+	 * </ul>
 	 * <p>
 	 * For more documentation on quaternary structures see:
-	 * {@link http://pdb101.rcsb.org/learn/guide-to-understanding-pdb-data/biological-assemblies}
+	 * <a href="http://pdb101.rcsb.org/learn/guide-to-understanding-pdb-data/biological-assemblies">http://pdb101.rcsb.org/learn/guide-to-understanding-pdb-data/biological-assemblies</a>
 	 *
 	 *
 	 * @param pdbId

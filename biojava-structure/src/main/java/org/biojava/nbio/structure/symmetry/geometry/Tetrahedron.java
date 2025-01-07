@@ -66,7 +66,7 @@ public class Tetrahedron implements Polyhedron {
 	/**
 	 * Sets the radius of an inscribed sphere, that is tangent to each
 	 * of the tetrahedron's faces
-	 * @param inscribedRadius the inscribedRadius to set
+	 * @param radius the inscribedRadius to set
 	 */
 	public void setInscribedRadius(double radius) {
 		double side = getSideLengthFromInscribedRadius(radius);
@@ -87,7 +87,7 @@ public class Tetrahedron implements Polyhedron {
 	/**
 	 * Sets the radius of radius of a sphere, that is tangent to each
 	 * of the tetrahedron's edges
-	 * @param midRadius the midRadius to set
+	 * @param radius the midRadius to set
 	 */
 	public void setMidRadius(double radius) {
 		double side = getSideLengthFromMiddleRadius(radius);
@@ -96,9 +96,6 @@ public class Tetrahedron implements Polyhedron {
 
 	/**
 	 * Returns the vertices of an n-fold polygon of given radius and center
-	 * @param n
-	 * @param radius
-	 * @param center
 	 * @return
 	 */
 	@Override

@@ -103,8 +103,7 @@ public class StructureSequenceMatcher {
 	 * @return A ProteinSequence with the full sequence of struct. Chains are
 	 *  concatenated in the same order as the input structures
 	 *
-	 * @see SeqRes2AtomAligner#getFullAtomSequence(List, Map, boolean), which
-	 * 	does the heavy lifting.
+	 * @see SeqRes2AtomAligner#getFullAtomSequence(List, Map, boolean)
 	 *
 	 */
 	public static ProteinSequence getProteinSequenceForStructure(Structure struct, Map<Integer,Group> groupIndexPosition ) {

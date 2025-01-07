@@ -670,14 +670,14 @@ public class AtomCache {
 	 *   Load the requested ID from the PDB's obsolete repository
 	 * <li>{@link ObsoleteBehavior#FETCH_CURRENT FETCH_CURRENT}
 	 *   Load the most recent version of the requested structure
+	 * </ul>
 	 *
 	 * <p>This setting may be silently ignored by implementations which do not have
 	 * access to the server to determine whether an entry is obsolete, such as
 	 * if {@link #isAutoFetch()} is false. Note that an obsolete entry may still be
 	 * returned even this is FETCH_CURRENT if the entry is found locally.
 	 *
-	 * @param fetchFileEvenIfObsolete Whether to fetch obsolete records
-	 * @see #setFetchCurrent(boolean)
+	 * @param behavior Whether to fetch obsolete records
 	 * @since 4.0.0
 	 */
 	public void setObsoleteBehavior(ObsoleteBehavior behavior) {

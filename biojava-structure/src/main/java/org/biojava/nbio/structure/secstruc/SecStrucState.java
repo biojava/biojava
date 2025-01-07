@@ -107,7 +107,7 @@ public class SecStrucState extends SecStrucInfo {
 
 	/**
 	 * Set the turn column corresponding to 3,4 or 5 helix patterns. If starting
-	 * > or ending < was set and the opposite is being set, the value will be
+	 * &gt; or ending &lt; was set and the opposite is being set, the value will be
 	 * converted to X. If a number was set, it will be overwritten by the new
 	 * character.
 	 *

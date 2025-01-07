@@ -101,7 +101,6 @@ public class Helix {
 
 	/**
 	 * Returns the pitch angle of the helix
-	 * @param transformation helix transformation
 	 * @return
 	 */
 	public double getAngle() {
@@ -110,7 +109,6 @@ public class Helix {
 
 	/**
 	 * Returns the AxisAngle of the helix transformation
-	 * @param transformation helix transformation
 	 * @return
 	 */
 	public AxisAngle4d getAxisAngle() {
