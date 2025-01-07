@@ -47,7 +47,7 @@ public interface ModifiedCompound {
 
 	/**
 	 *
-	 * @return {@link ProteinModificationBean} occurred on the residue.
+	 * @return {@link ProteinModification} occurred on the residue.
 	 */
 	public ProteinModification getModification();
 
@@ -73,19 +73,18 @@ public interface ModifiedCompound {
 	/**
 	 *
 	 * @return a set of atom linkages.
-	 * @see #getLinkedGroupPairs
 	 * @see StructureAtomLinkage
 	 */
 	public Set<StructureAtomLinkage> getAtomLinkages();
 
-	/** Set atom linkages
+	/**
+	 * Set atom linkages
 	 *
-	 * @return
 	 */
 	public void setAtomLinkages(Set<StructureAtomLinkage> linkages);
 
 	/**
-	 * Add a linkage. Add new the involved groups first using {@link addGroup}.
+	 * Add a linkage. Add new the involved groups first using addGroup.
 	 * @param linkage an atom linkage.
 	 * @return true if this linkage was not already contained.
 	 * @see StructureAtomLinkage

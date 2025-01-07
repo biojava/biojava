@@ -54,10 +54,10 @@ public class ModificationLinkage {
 	 *
 	 * @param components {@link Component}s involved in a modification.
 	 * @param indexOfComponent1 index of the first component.
-	 * @param labelOfAtomOnComponent1 label of the atom on the first
+	 * @param pdbNameOfAtomsOnComponent1 label of the atom on the first
 	 *  component.
 	 * @param indexOfComponent2 index of the second component.
-	 * @param labelOfAtomOnComponent2 label of the atom on the second
+	 * @param pdbNameOfAtomsOnComponent2 label of the atom on the second
 	 *  component.
 	 */
 	public ModificationLinkage(
@@ -77,10 +77,10 @@ public class ModificationLinkage {
 	 *
 	 * @param components {@link Component}s involved in a modification.
 	 * @param indexOfComponent1 index of the first component.
-	 * @param labelOfAtomOnComponent1 label of the atom on the first
+	 * @param pdbNameOfPotentialAtomsOnComponent1 label of the atom on the first
 	 *  component.
 	 * @param indexOfComponent2 index of the second component.
-	 * @param labelOfAtomOnComponent2 label of the atom on the second
+	 * @param pdbNameOfPotentialAtomsOnComponent2 label of the atom on the second
 	 *  component.
 	 */
 	public ModificationLinkage(
