@@ -185,7 +185,7 @@ public class SymoplibParser {
 	 * A parser for the symop.lib file provided by CCP4. Note: this file is not getting re-distributed by BioJava.
 	 * It can be downloaded from:
 	 *
-	 * <a href="http://www.ccp4.ac.uk/cvs/viewvc.cgi/libccp4/data/symop.lib?revision=1.10&view=markup">http://www.ccp4.ac.uk/cvs/viewvc.cgi/libccp4/data/symop.lib?revision=1.10&view=markup</a>
+	 * <a href="http://www.ccp4.ac.uk/cvs/viewvc.cgi/libccp4/data/symop.lib?revision=1.10&view=markup">http://www.ccp4.ac.uk/cvs/viewvc.cgi/libccp4/data/symop.lib?revision=1.10&amp;view=markup</a>
 	 * <p>
 	 * Note: this file is not needed by BioJava. BioJava loads equivalent information from the file spacegroups.xml
 	 *

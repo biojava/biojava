@@ -501,7 +501,7 @@ public class SymmetryTools {
 	 * @param symmetry
 	 *            CeSymmResult
 	 * @throws StructureException
-	 * @result List of structures, by repeat index sequentially
+	 * @return List of structures, by repeat index sequentially
 	 *
 	 */
 	public static List<Structure> divideStructure(CeSymmResult symmetry)

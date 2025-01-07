@@ -149,7 +149,7 @@ public class StructureIO {
 	 * using multiModel={@value AtomCache#DEFAULT_BIOASSEMBLY_STYLE}
 	 * <p>
 	 * For more documentation on quaternary structures see:
-	 * {@link http://pdb101.rcsb.org/learn/guide-to-understanding-pdb-data/biological-assemblies}
+	 * <a href="http://pdb101.rcsb.org/learn/guide-to-understanding-pdb-data/biological-assemblies">http://pdb101.rcsb.org/learn/guide-to-understanding-pdb-data/biological-assemblies</a>
 	 *
 	 *
 	 * @param pdbId
@@ -165,6 +165,7 @@ public class StructureIO {
 	 * Returns the biological assembly for the given PDB id and bioassembly identifier.
 	 * <p>
 	 * The output Structure will be different depending on the multiModel parameter:
+	 * <ul>
 	 * <li>
 	 * the symmetry-expanded chains are added as new models, one per transformId. All original models but
 	 * the first one are discarded.
@@ -173,6 +174,7 @@ public class StructureIO {
 	 * as original with symmetry-expanded chains added with renamed chain ids and names (in the form
 	 * originalAsymId_transformId and originalAuthId_transformId)
 	 * </li>
+	 * </ul>
 	 * @param pdbId
 	 * @param biolAssemblyNr - the ith biological assembly that is available for a PDB ID (we start counting at 1, 0 represents the asym unit).
 	 * @param multiModel if true the output Structure will be a multi-model one with one transformId per model,

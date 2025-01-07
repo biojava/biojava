@@ -973,6 +973,10 @@ public class AFPChain implements Serializable, Cloneable {
 		this.optRmsd = optRmsd;
 	}
 
+	/**
+	 * The number of aligned residues in the final alignment.
+	 * @return
+	 */
 	public int getOptLength()
 	{
 		return optLength;
@@ -1023,7 +1027,7 @@ public class AFPChain implements Serializable, Cloneable {
 
 	/**
 	 * @return The total length of the alignment, including gaps
-	 * @see #getOptLength(), the number of aligned residues in the final alignment.
+	 * @see #getOptLength()
 	 */
 	public int getAlnLength()
 	{
