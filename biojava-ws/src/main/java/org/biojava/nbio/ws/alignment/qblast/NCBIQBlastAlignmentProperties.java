@@ -137,11 +137,9 @@ public class NCBIQBlastAlignmentProperties implements RemotePairwiseAlignmentPro
 	/**
 	 * Sets the database to be used with blastall
 	 * <p>
-	 * A list of available databases can be acquired by calling {@link NCBIQBlastService#printRemoteBlastInfo()}
-	 * <p>
 	 * Blastall equivalent: -d
 	 *
-	 * @param db : a valid name to a NCBI blastable database
+	 * @param database a valid name to a NCBI blastable database
 	 */
 	public void setBlastDatabase(String database) {
 		setAlignmentOption(DATABASE, database);
