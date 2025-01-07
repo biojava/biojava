@@ -35,10 +35,7 @@ import java.io.InputStream;
  * <p>
  *  Several flags can be set for this class
  * <ul>
- *
- * <li> {@link #setAutoFetch(boolean)} - if the PDB file can not be found locally, should it be fetched
- *  from the PDB ftp servers? (default:false)</li>
- * <li> Other parameters can be set using the {@link #setFileParsingParameters(FileParsingParameters)}</li>
+ * <li> Parameters can be set using the {@link #setFileParsingParameters(FileParsingParameters)}</li>
  * </ul>
  *
  *<h2>Example</h2>

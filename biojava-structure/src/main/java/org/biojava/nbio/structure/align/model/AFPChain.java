@@ -1312,7 +1312,7 @@ public class AFPChain implements Serializable, Cloneable {
 	 * up to the alignment algorithm.
 	 *
 	 * <p>Note:
-	 * A {@link org.biojava.nbio.structure.gui.JMatrixPanel}, which is used in
+	 * The org.biojava.nbio.structure.gui.JMatrixPanel, used in
 	 * the structure-gui package to display distance matrices, will display the
 	 * transpose of this matrix. Be sure to take that into account when debugging
 	 * visually.

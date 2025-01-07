@@ -239,8 +239,6 @@ public class AlignmentTools {
 			}
 		}
 
-
-
 		Map<S, T> imageMap = new HashMap<>(alignmentMap.size());
 
 		//TODO handle nulls consistently.
@@ -282,7 +280,7 @@ public class AlignmentTools {
 	 */
 	public static int getSymmetryOrder(Map<Integer, Integer> alignment,
 									   final int maxSymmetry, final float minimumMetricChange) {
-		return getSymmetryOrder(alignment, new IdentityMap<Integer>(), maxSymmetry, minimumMetricChange);
+		return getSymmetryOrder(alignment, new IdentityMap<>(), maxSymmetry, minimumMetricChange);
 	}
 	/**
 	 * Tries to detect symmetry in an alignment.

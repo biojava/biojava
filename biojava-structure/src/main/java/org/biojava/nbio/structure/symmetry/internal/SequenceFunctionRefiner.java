@@ -61,12 +61,12 @@ public class SequenceFunctionRefiner implements SymmetryRefiner {
 
 	/**
 	 * Refines a CE-Symm alignment so that it is perfectly symmetric.
-	 *
+	 * <p>
 	 * The resulting alignment will have a one-to-one correspondance between
 	 * aligned residues of each symmetric part.
 	 *
 	 * @param afpChain Input alignment from CE-Symm
-	 * @param k Symmetry order. This can be guessed by {@link CeSymm#getSymmetryOrder(AFPChain)}
+	 * @param k Symmetry order. This can be guessed by {@link AlignmentTools#getSymmetryOrder(Map, Map, int, float)}
 	 * @return The refined alignment
 	 * @throws StructureException
 	 * @throws RefinerFailedException
@@ -97,11 +97,11 @@ public class SequenceFunctionRefiner implements SymmetryRefiner {
 
 	/**
 	 * Refines a CE-Symm alignment so that it is perfectly symmetric.
-	 *
+	 * <p>
 	 * The resulting alignment will have a one-to-one correspondance between
 	 * aligned residues of each symmetric part.
 	 * @param alignment The input alignment, as a map. This will be modified.
-	 * @param k Symmetry order. This can be guessed by {@link CeSymm#getSymmetryOrder(AFPChain)}
+	 * @param k Symmetry order. This can be guessed by {@link AlignmentTools#getSymmetryOrder(Map, Map, int, float)}
 	 * @return A modified map with the refined alignment
 	 * @throws StructureException
 	 */

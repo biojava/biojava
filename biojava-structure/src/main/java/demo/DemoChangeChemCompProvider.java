@@ -34,9 +34,8 @@ import java.util.List;
 
 /**
  *  This demo shows how to use an alternative ChemCompProvider. The default mechanism in BioJava is to access chemical
- *  componentsby using the {@link DownloadChemCompProvider}. It fetches and locally caches chemical component
- *  definitions as they are encountered during file parsing. It can be enabled by using the
- *  {@link FileParsingParameters#setLoadChemCompInfo(boolean)} method.
+ *  components by using the {@link DownloadChemCompProvider}. It fetches and locally caches chemical component
+ *  definitions as they are encountered during file parsing.
  * <p>
  * The {@link AllChemCompProvider} downloads and unpacks all chemcomps. It is slower and requires more memory than the
  * default {@link DownloadChemCompProvider}, but it avoids network access to the FTP site, if a new chemcomp is

@@ -29,7 +29,7 @@ import java.util.List;
 
 /**
  *
- * @author Jules Jacobsen <jacobsen@ebi.ac.uk>
+ * @author Jules Jacobsen jacobsen@ebi.ac.uk
  */
 public class HetatomImplTest {
 

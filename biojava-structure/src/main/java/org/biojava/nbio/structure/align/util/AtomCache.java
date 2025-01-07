@@ -464,8 +464,7 @@ public class AtomCache {
 	 * <li>If only a PDB code is provided, the whole structure will be return including ligands, but the first model
 	 * only (for NMR).
 	 * <li>Chain IDs are case sensitive, PDB ids are not. To specify a particular chain write as: 4hhb.A or 4HHB.A</li>
-	 * <li>To specify a SCOP domain write a scopId e.g. d2bq6a1. Some flexibility can be allowed in SCOP domain names,
-	 * see {@link #setStrictSCOP(boolean)}</li>
+	 * <li>To specify a SCOP domain write a scopId e.g. d2bq6a1. </li>
 	 * <li>URLs are accepted as well</li>
 	 * </ul>
 	 *
@@ -672,7 +671,7 @@ public class AtomCache {
 	 *
 	 * <p>This setting may be silently ignored by implementations which do not have
 	 * access to the server to determine whether an entry is obsolete, such as
-	 * if {@link #isAutoFetch()} is false. Note that an obsolete entry may still be
+	 * certain {@link FetchBehavior}s. Note that an obsolete entry may still be
 	 * returned even this is FETCH_CURRENT if the entry is found locally.
 	 *
 	 * @param behavior Whether to fetch obsolete records
@@ -685,7 +684,7 @@ public class AtomCache {
 	/**
 	 * Returns how this instance deals with obsolete entries. Note that this
 	 * setting may be ignored by some implementations or in some situations,
-	 * such as when {@link #isAutoFetch()} is false.
+	 * such as certain {@link FetchBehavior}s.
 	 *
 	 * <p>For most implementations, the default value is
 	 * {@link ObsoleteBehavior#THROW_EXCEPTION THROW_EXCEPTION}.

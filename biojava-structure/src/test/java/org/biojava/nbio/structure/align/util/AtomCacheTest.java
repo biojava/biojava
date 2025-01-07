@@ -165,7 +165,7 @@ public class AtomCacheTest {
 	}
 
 	/**
-	 * Test parsing of chain-less ranges (present in SCOP < 1.73)
+	 * Test parsing of chain-less ranges (present in SCOP &lt; 1.73)
 	 * @throws IOException
 	 * @throws StructureException
 	 */
