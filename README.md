@@ -40,6 +40,7 @@ If you are using Maven you can add the BioJava repository by adding the followin
 Release biojava to maven central:
 - `mvn -Prelease release:prepare`
 - `mvn -Prelease release:perform`
+
 Publish new javadocs:
 - `mvn site` this will write `target/site`, but that's not enough for a multimodule project. See [docs](https://maven.apache.org/plugins/maven-site-plugin/examples/multimodule.html)
 - `mvn site:stage` this will write the full html directory tree to `target/staging`
