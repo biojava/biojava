@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.biojava</groupId>
     <artifactId>biojava</artifactId>
-    <version>7.1.4</version>
+    <version>7.1.5-SNAPSHOT</version>
   </parent>
 
   <artifactId>biojava-ontology</artifactId>
