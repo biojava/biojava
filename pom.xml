@@ -543,8 +543,9 @@
 		<site>
 			<!-- Needed for site plugin, to do mvn site:stage (without which a multimodule project won't have all the correct directory structure)
 			     Note that the values here are not actually used for deployment (for that we'd need some sort of proper git+ssh url I guess) - JD 2024-01-07 -->
-			<id>deploy</id>
-			<name>biojava.org</name>
+			<id>biojava.org</id>
+			<name>The biojava.org site</name>
+			<!-- NOTE this is not a proper URL supported by mvn site:deploy . That's why in site configuration for release profile we disable deployment with skipDeploy -->
 			<url>git:github.com:biojava/biojava.github.io.git</url>
 		</site>
 	</distributionManagement>
@@ -629,6 +630,16 @@
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-enforcer-plugin</artifactId>
 						<version>3.5.0</version>
+					</plugin>
+
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-site-plugin</artifactId>
+						<version>3.21.0</version>
+						<configuration>
+							<!-- In distributionManagement we have a site setting with a fake url (needed for mvn site:stage to work). This is here to skip the deployment that would fail for the fake url -->
+							<skipDeploy>true</skipDeploy>
+						</configuration>
 					</plugin>
 
 				</plugins>
