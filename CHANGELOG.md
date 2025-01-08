@@ -1,6 +1,13 @@
 BioJava Changelog
 -----------------
 
+BioJava 7.1.4
+==============================
+### Fixed
+* More lenient mmCIF parsing, now can read files produced by [Gemmi](https://gemmi.readthedocs.io/en/latest/) #1103
+* Javadocs: all javadoc lint errors fixed
+* Plugin updates and fixed issues in maven release process
+
 BioJava 7.1.3
 ==============================
 ### Fixed
