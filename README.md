@@ -35,6 +35,16 @@ If you are using Maven you can add the BioJava repository by adding the followin
     </dependencies>
 ```
 
+### For developers
+
+Release biojava to maven central:
+- `mvn -Prelease release:prepare`
+- `mvn -Prelease release:perform`
+Publish new javadocs:
+- `mvn site` this will write `target/site`, but that's not enough for a multimodule project. See [docs](https://maven.apache.org/plugins/maven-site-plugin/examples/multimodule.html)
+- `mvn site:stage` this will write the full html directory tree to `target/staging`
+- Push the contents of `target/staging` to the [biojava.github.io repo](https://github.com/biojava/biojava.github.io) under directory `docs/api` for it to be published in biojava.org
+
 ### Mailing Lists
 
 BioJava has one main mailing list. In order to avoid SPAM the list only accepts postings from list members. Anybody can become a list member, so please subscribe before you post. If you send without being subscribed your mail might get stuck in the moderation loop, which can cause several weeks of delay (no fun to read through all that spam).

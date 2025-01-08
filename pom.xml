@@ -534,6 +534,13 @@
 			<id>ossrh</id>
 			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
 		</repository>
+		<site>
+			<!-- Needed for site plugin, to do mvn site:stage (without which a multimodule project won't have all the correct directory structure)
+			     Note that the values here are not actually used for deployment (for that we'd need some sort of proper git+ssh url I guess) - JD 2024-01-07 -->
+			<id>deploy</id>
+			<name>biojava.org</name>
+			<url>git:github.com:biojava/biojava.github.io.git</url>
+		</site>
 	</distributionManagement>
 
 	<profiles>
