@@ -487,6 +487,18 @@
 		<plugins>
 			<plugin>
 				<artifactId>maven-javadoc-plugin</artifactId>
+				<!-- Make a single javadoc site at target/site/apidocs subdir with all sub-modules, see:
+				 https://stackoverflow.com/questions/5927590/maven-multi-module-project-site-with-javadocs (main solution)
+				 https://stackoverflow.com/questions/39489567/intellij-maven-site-plugin-reportplugins-showing-error-havent-even-done-anyt (to make intellij happy) -->
+				<reportSets>
+					<reportSet>
+						<id>aggregate</id>
+						<reports>
+							<report>aggregate</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+
 				<configuration>
 					<goal>javadoc:aggregate</goal>
 					<breakiterator>true</breakiterator>
@@ -541,12 +553,13 @@
 			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
 		</repository>
 		<site>
-			<!-- Needed for site plugin, to do mvn site:stage (without which a multimodule project won't have all the correct directory structure)
-			     Note that the values here are not actually used for deployment (for that we'd need some sort of proper git+ssh url I guess) - JD 2024-01-07 -->
+			<!-- Needed for site plugin, to do mvn site:stage (without which a multimodule project won't have all the correct directory structure) -->
+			<!-- Also seems to be needed at mvn release:perform time, where a mvn site:deploy runs and complains if this is not present -->
 			<id>biojava.org</id>
 			<name>The biojava.org site</name>
 			<!-- NOTE this is not a proper URL supported by mvn site:deploy . That's why in site configuration for release profile we disable deployment with skipDeploy -->
-			<url>git:github.com:biojava/biojava.github.io.git</url>
+			<!-- NOTE we don't actually deploy the "site" but just the "apidocs" part of it to /docs/api -->
+			<url>https://biojava.org/docs/site</url>
 		</site>
 	</distributionManagement>
 

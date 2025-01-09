@@ -42,9 +42,8 @@ Release biojava to maven central:
 - `mvn -Prelease release:perform`
 
 Publish new javadocs:
-- `mvn site` this will write `target/site`, but that's not enough for a multimodule project. See [docs](https://maven.apache.org/plugins/maven-site-plugin/examples/multimodule.html)
-- `mvn site:stage` this will write the full html directory tree to `target/staging`
-- Push the contents of `target/staging` to the [biojava.github.io repo](https://github.com/biojava/biojava.github.io) under directory `docs/api` for it to be published in biojava.org
+- `mvn -Prelease site` this will write `target/site`
+- Push the contents of `target/site/apidocs` to the [biojava.github.io repo](https://github.com/biojava/biojava.github.io) under directory `docs/apiM.m.p` (e.g. docs/api7.1.4) and then link `docs/api` to `docs/apiM.m.p`, for it to be published in biojava.org
 
 ### Mailing Lists
 
