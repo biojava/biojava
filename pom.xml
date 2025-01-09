@@ -392,6 +392,7 @@
 				</configuration>
 			</plugin>
 
+			<!-- Forcing the enforcer-plugin version: somehow the one declared in pluginManagement doesn't go through without this. No idea why. Other plugins do respect the version in pluginManagement -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-enforcer-plugin</artifactId>
