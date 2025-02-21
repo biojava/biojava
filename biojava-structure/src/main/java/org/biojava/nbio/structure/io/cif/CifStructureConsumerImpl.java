@@ -975,7 +975,7 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
             dbRef.setIdCode(structRefSeq.getPdbxPDBIdCode().isDefined()? structRefSeq.getPdbxPDBIdCode().get(rowIndex):null);
             dbRef.setDbAccession(structRefSeq.getPdbxDbAccession().isDefined()? structRefSeq.getPdbxDbAccession().get(rowIndex):null);
             dbRef.setDbIdCode(structRefSeq.getPdbxDbAccession().isDefined()? structRefSeq.getPdbxDbAccession().get(rowIndex):null);
-            dbRef.setChainName(structRefSeq.getPdbxStrandId().get(rowIndex));
+            dbRef.setChainName(structRefSeq.getPdbxStrandId().isDefined()? structRefSeq.getPdbxStrandId().get(rowIndex):null);
 
             OptionalInt structRefRowIndex = IntStream.range(0, structRef.getRowCount())
                     .filter(i -> structRef.getId().get(i).equals(refId))
@@ -990,34 +990,39 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
 
             int seqBegin;
             int seqEnd;
-
-            try {
-                seqBegin = Integer.parseInt(structRefSeq.getPdbxAuthSeqAlignBeg().get(rowIndex));
-                seqEnd = Integer.parseInt(structRefSeq.getPdbxAuthSeqAlignEnd().get(rowIndex));
-            } catch (NumberFormatException e) {
-                // this happens in a few entries, annotation error? e.g. 6eoj
-                logger.warn("Couldn't parse pdbx_auth_seq_align_beg/end in _struct_ref_seq. Will not store dbref " +
-                        "alignment info for accession {}. Error: {}", dbRef.getDbAccession(), e.getMessage());
-                return;
-            }
-
             char beginInsCode = ' ';
-            String pdbxSeqAlignBegInsCode = structRefSeq.getPdbxSeqAlignBegInsCode().get(rowIndex);
-            if (pdbxSeqAlignBegInsCode.length() > 0) {
-                beginInsCode = pdbxSeqAlignBegInsCode.charAt(0);
-            }
-
             char endInsCode = ' ';
-            String pdbxSeqAlignEndInsCode = structRefSeq.getPdbxSeqAlignEndInsCode().get(rowIndex);
-            if (pdbxSeqAlignEndInsCode.length() > 0) {
-                endInsCode = pdbxSeqAlignEndInsCode.charAt(0);
-            }
 
-            if (beginInsCode == '?') {
-                beginInsCode = ' ';
-            }
-            if (endInsCode == '?') {
-                endInsCode = ' ';
+            if (structRefSeq.getPdbxAuthSeqAlignBeg().isDefined() && structRefSeq.getPdbxAuthSeqAlignEnd().isDefined()) {
+                try {
+                    seqBegin = Integer.parseInt(structRefSeq.getPdbxAuthSeqAlignBeg().get(rowIndex));
+                    seqEnd = Integer.parseInt(structRefSeq.getPdbxAuthSeqAlignEnd().get(rowIndex));
+                } catch (NumberFormatException e) {
+                    // this happens in a few entries, annotation error? e.g. 6eoj
+                    logger.warn("Couldn't parse pdbx_auth_seq_align_beg/end in _struct_ref_seq. Will not store dbref " +
+                            "alignment info for accession {}. Error: {}", dbRef.getDbAccession(), e.getMessage());
+                    return;
+                }
+
+                String pdbxSeqAlignBegInsCode = structRefSeq.getPdbxSeqAlignBegInsCode().get(rowIndex);
+                if (pdbxSeqAlignBegInsCode.length() > 0) {
+                    beginInsCode = pdbxSeqAlignBegInsCode.charAt(0);
+                }
+
+                String pdbxSeqAlignEndInsCode = structRefSeq.getPdbxSeqAlignEndInsCode().get(rowIndex);
+                if (pdbxSeqAlignEndInsCode.length() > 0) {
+                    endInsCode = pdbxSeqAlignEndInsCode.charAt(0);
+                }
+
+                if (beginInsCode == '?') {
+                    beginInsCode = ' ';
+                }
+                if (endInsCode == '?') {
+                    endInsCode = ' ';
+                }
+            } else {
+                seqBegin = structRefSeq.getSeqAlignBeg().get(rowIndex);
+                seqEnd = structRefSeq.getSeqAlignEnd().get(rowIndex);
             }
 
             dbRef.setSeqBegin(seqBegin);
