@@ -126,7 +126,37 @@ public class AsaCalculator {
 	 * Constructs a new AsaCalculator. Subsequently call {@link #calculateAsas()}
 	 * or {@link #getGroupAsas()} to calculate the ASAs
 	 * Only non-Hydrogen atoms are considered in the calculation.
-	 * @param structure the structure, all non-H atoms will be used
+	 * @param structure the structure, all non-H atoms of given model number will be used
+	 * @param probe the probe size
+	 * @param nSpherePoints the number of points to be used in generating the spherical
+	 *                         dot-density, the more points the more accurate (and slower) calculation
+	 * @param nThreads the number of parallel threads to use for the calculation
+	 * @param hetAtoms if true HET residues are considered, if false they aren't, equivalent to
+	 * @param modelNr the model number from which we want atoms extracted
+	 * NACCESS' -h option
+	 */
+	public AsaCalculator(Structure structure, double probe, int nSpherePoints, int nThreads, boolean hetAtoms, int modelNr) {
+		this.atoms = StructureTools.getAllNonHAtomArray(structure, hetAtoms, modelNr);
+		this.atomCoords = Calc.atomsToPoints(atoms);
+		this.probe = probe;
+		this.nThreads = nThreads;
+
+		this.useSpatialHashingForNeighbors = DEFAULT_USE_SPATIAL_HASHING;
+
+		// initialising the radii by looking them up through AtomRadii
+		radii = new double[atomCoords.length];
+		for (int i=0;i<atomCoords.length;i++) {
+			radii[i] = getRadius(atoms[i]);
+		}
+
+		initSpherePoints(nSpherePoints);
+	}
+
+	/**
+	 * Constructs a new AsaCalculator. Subsequently call {@link #calculateAsas()}
+	 * or {@link #getGroupAsas()} to calculate the ASAs
+	 * Only non-Hydrogen atoms are considered in the calculation.
+	 * @param structure the structure, all non-H atoms of model 1 will be used
 	 * @param probe the probe size
 	 * @param nSpherePoints the number of points to be used in generating the spherical
 	 *                         dot-density, the more points the more accurate (and slower) calculation
@@ -135,7 +165,7 @@ public class AsaCalculator {
 	 * NACCESS' -h option
 	 */
 	public AsaCalculator(Structure structure, double probe, int nSpherePoints, int nThreads, boolean hetAtoms) {
-		this.atoms = StructureTools.getAllNonHAtomArray(structure, hetAtoms);
+		this.atoms = StructureTools.getAllNonHAtomArray(structure, hetAtoms, 1);
 		this.atomCoords = Calc.atomsToPoints(atoms);
 		this.probe = probe;
 		this.nThreads = nThreads;
