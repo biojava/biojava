@@ -333,7 +333,7 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
             atom.setY(cartnY.get(atomIndex));
             atom.setZ(cartnZ.get(atomIndex));
 
-            atom.setOccupancy((float) occupancy.get(atomIndex));
+            atom.setOccupancy((float) (occupancy.isDefined()? occupancy.get(atomIndex) : 1.0));
             atom.setTempFactor((float) bIsoOrEquiv.get(atomIndex));
 
             if (altLocation == null || altLocation.isEmpty() || ".".equals(altLocation)) {
